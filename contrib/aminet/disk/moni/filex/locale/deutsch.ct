@@ -1,0 +1,798 @@
+## version $VER: FileX.catalog 2.0 (10.5.94) by Klaas Hermanns
+## codeset 0
+## language deutsch
+;
+MSG_MENU_PROJECT
+Projekt
+;
+MSG_MENU_PROJECT_NEW
+*\000Neu
+;
+MSG_MENU_PROJECT_OPEN
+O\000Öffnen...
+;
+MSG_MENU_PROJECT_OPENPREVIOUSLOADED
+=\000Öffne zuletzt geladene...
+; *****
+MSG_MENU_PROJECT_SAVE
+S\000Speichern
+;
+MSG_MENU_PROJECT_SAVEAS
+A\000Speichern als...
+;
+MSG_MENU_PROJECT_GRABMEMORY
+G\000Speicher edieren...
+;
+MSG_MENU_PROJECT_PRINT
+P\000Drucken
+;
+MSG_MENU_PROJECT_ICONIFY
+Y\000Verbergen
+;
+MSG_MENU_PROJECT_ABOUT
+?\000Über...
+;
+MSG_MENU_PROJECT_QUIT
+!\000Beenden...
+;
+MSG_MENU_EDIT
+Edit
+;
+MSG_MENU_EDIT_MARKBLOCK
+M\000Block markieren
+;
+MSG_MENU_EDIT_CUT
+X\000Ausschneiden
+;
+MSG_MENU_EDIT_COPY
+C\000Kopieren
+;
+MSG_MENU_EDIT_FILL
+^\000Füllen...
+;
+MSG_MENU_EDIT_PASTE
+V\000Einsetzen
+;
+MSG_MENU_EDIT_INSERT
+I\000Einfügen
+;
+MSG_MENU_EDIT_APPEND
+$\000Anhängen
+;
+MSG_MENU_EDIT_PRINT
+#\000Drucken
+;
+MSG_MENU_EDIT_LOADBLOCK
+\\\000Block laden...
+;
+MSG_MENU_EDIT_SAVEBLOCK
+|\000Block speichern...
+;
+MSG_MENU_EDIT_UNDO
+Z\000Undo
+;
+MSG_MENU_EDIT_REDO
+T\000Redo
+;
+MSG_MENU_EDIT_SWITCH
+Ä\000Wechsel
+;
+MSG_MENU_SEARCH
+Suchen und ersetzen
+;
+MSG_MENU_SEARCH_SEARCH
+F\000Suchen...
+;
+MSG_MENU_SEARCH_REPLACE
+R\000Suchen und ersetzen...
+;
+MSG_MENU_SEARCH_REPLACENEXT
+N\000Nächstes suchen(und ersetzen)
+;
+MSG_MENU_SEARCH_REPLACEPREVIOUS
+B\000Vorheriges suchen(und ersetzen)
+;
+MSG_MENU_SETTING
+Einstellungen
+;
+MSG_MENU_SETTINGS_ADJUSTWINDOW
+W\000Windowgröße anpassen
+;
+MSG_MENU_SETTINGS_DISPLAY
+Darstellung
+;
+MSG_MENU_SETTINGS_DISPLAY_CHARACTERS
+Buchstaben
+;
+MSG_MENU_SETTINGS_DISPLAY_ASCII
+Ascii ($20-$7F)
+;
+MSG_MENU_SETTINGS_DISPLAY_ALL
+Alles
+;
+MSG_MENU_SETTINGS_DISPLAY_USERDEFINED
+Benutzer definiert
+;
+MSG_MENU_SETTINGS_DISPLAY_LOAD
+Laden...
+;
+MSG_MENU_SETTINGS_FONT
+Zeichensatz...
+;
+MSG_MENU_SETTINGS_SCREEN
+Bildschirm
+;
+MSG_MENU_SETTINGS_SCREEN_DEFAULTPUBLIC
+Standard öffentlicher Bildschirm
+;
+MSG_MENU_SETTINGS_SCREEN_WORKBENCH
+Workbench
+;
+MSG_MENU_SETTINGS_SCREEN_PUBLIC
+Öffentlicher Bildschirm...
+;
+MSG_MENU_SETTINGS_SCREEN_OWNPUBLIC
+Eigener...
+;
+MSG_MENU_SETTINGS_PALETTE
+Farben...
+;
+MSG_MENU_SETTINGS_MISCELLANEOUS
+U\000Verschiedenes...
+;
+MSG_MENU_SETTINGS_LOADSETTINGS
+Einstellungen laden...
+;
+MSG_MENU_SETTINGS_SAVESETTINGS
+Einstellungen speichern
+;
+MSG_MENU_SETTINGS_SAVESETTINGSAS
+Einstellungen speichern als...
+;
+MSG_MENU_MOVE
+Bewegen
+;
+MSG_MENU_MOVE_JUMPTOBYTE
+J\000Springe zu Byte...
+;
+MSG_MENU_MOVE_MARKLOCATION
+K\000Position merken...
+;
+MSG_MENU_MOVE_JUMPTOMARK
+L\000Springe zu Marke
+;
+MSG_MENU_AREXX
+ARexx
+;
+MSG_MENU_AREXX_COMMANDSHELL
+H\000Kommandoshell...
+;
+MSG_MENU_AREXX_EXECUTECOMMAND
+~\000Kommando ausführen...
+;
+MSG_MENU_AREXX_ASSIGNCOMMAND
+`\000Kommando zuweisen...
+;
+MSG_MENU_AREXX_LOADCOMMANDS
+Kommandos laden...
+;
+MSG_MENU_AREXX_SAVECOMMANDS
+Kommandos speichern
+;
+MSG_MENU_AREXX_SAVECOMMANDSAS
+Kommandos speichern als...
+;
+MSG_MENU_AREXX_EMPTYCOMMANDX
+Leeres Kommando #%ld
+;
+MSG_MENU_MISC
+Tools
+;
+MSG_MENU_MISC_OPENCALC
+(\000Öffne Taschenrechner...
+;
+MSG_MENU_MISC_OPENCLIPCONV
+)\000Öffne Clipboardkonverter...
+;
+MSG_MENU_VIEW
+Ansicht
+;
+MSG_MENU_VIEW_NEW
+E\000Neue
+;
+MSG_MENU_VIEW_CLOSE
+Q\000Schließen...
+;
+MSG_MENU_VIEW_SAVE_AND_CLOSE
+Speichern und schließen
+;
+MSG_MENU_VIEW_NEXT
+.\000Nächte
+;
+MSG_MENU_VIEW_PREVIOUS
+,\000Vorherige
+;
+MSG_MENU_VIEW_EXPAND
++\000Ausdehnen
+;
+MSG_MENU_VIEW_GROW
+-\000Vergrößern
+;
+MSG_MENU_VIEW_SHRINK
+_\000Verkleinern
+;
+MSG_MENU_VIEW_SPLIT
+D\000Aufspalten
+;
+MSG_MENU_WINDOW
+Fenster
+;
+MSG_MENU_WINDOW_NEW
+Neues
+;
+MSG_MENU_WINDOW_CLOSE
+Schließen...
+;
+MSG_MENU_WINDOW_NEXT
+>\000Nächstes
+;
+MSG_MENU_WINDOW_PREVIOUS
+<\000Vorheriges
+;
+MSG_MENU_WINDOW_SPLIT
+Aufspalten in
+;
+MSG_WINDOWTITLE_INFO
+Meldung
+;
+MSG_WINDOWTITLE_JUMPTOBYTE
+Springe zu Byte
+;
+MSG_WINDOWTITLE_LOCATIONNUMBER
+Markierungsnummer?
+;
+MSG_WINDOWTITLE_GRAB
+Speicher edieren
+;
+MSG_WINDOWTITLE_SELECTCOMMAND
+Wähle Kommando aus
+;
+MSG_WINDOWTITLE_SELECTDISPLAYFILE
+Wähle Darstellungsdatei
+;
+MSG_WINDOWTITLE_GRABMODE
+Pos: %9s Speicher edieren %9s to %9s
+;
+MSG_WINDOWTITLE_FILEMODE
+Pos: %9s Länge: %9s Name: %s
+;
+MSG_WINDOWTITLE_SAVEFILEAS
+Speichern als
+;
+MSG_WINDOWTITLE_PALETTE
+Ändere Farben
+;
+MSG_WINDOWTITLE_SEARCH
+Suchen
+;
+MSG_WINDOWTITLE_FILL
+Füllen
+;
+MSG_WINDOWTITLE_LOADBLOCK
+Lade Block
+;
+MSG_WINDOWTITLE_SAVEBLOCK
+Block speichern als
+;
+MSG_WINDOWTITLE_LOADSETTINGS
+Einstellungen laden
+;
+MSG_WINDOWTITLE_SAVESETTINGS
+Einstellungen speichern
+;
+MSG_WINDOWTITLE_LOADCOMMANDS
+Kommandos laden
+;
+MSG_WINDOWTITLE_SAVECOMMANDS
+Kommandos speichern
+;
+MSG_WINDOWTITLE_MISC
+Verschiedens
+;
+MSG_WINDOWTITLE_PUBLICSCREENLIST
+Wähle Bildschirm
+;
+MSG_WINDOWTITLE_SELECTFONT
+Wähle Zeichensatz
+;
+MSG_WINDOWTITLE_SCREENMODE
+Wähle Bildschirmmodus
+;
+MSG_WINDOWTITLE_ENTERCOMMANDNUMBER
+Gib Kommandonummer ein
+;
+MSG_WINDOWTITLE_SELECTCOMMANDNAME
+Wähle Kommando
+;
+MSG_WINDOWTITLE_OPENFILE
+Öffne
+;
+MSG_WINDOWTITLE_CALCULATOR
+Taschenrechner
+;
+MSG_WINDOWTITLE_CLIPCONV
+Clipboardkonverter
+;
+MSG_WINDOWTITLE_PREVIOUSFILES
+Wähle zuletzt geladene
+;
+MSG_GADGET_OK
+_Ok
+;
+MSG_GADGET_CANCEL
+_Abbruch
+;
+MSG_GADGET_STOPPRINTING
+Stopp!
+;
+MSG_GADGET_CONTINUE
+Weiter
+;
+MSG_GADGET_YESNO
+_Ja|_Nein
+;
+MSG_GADGET_CHANGES
+_Ja|_Nein
+;
+MSG_GADGET_REPLACE
+_Ja|All_e|_Letztes|_Abbruch|_Nein
+;
+MSG_GADGET_ABOUT1
+Mehr|Über verlassen
+;
+MSG_GADGET_ABOUT2
+Noch mehr|Über verlassen
+;
+MSG_GADGET_REGISTERED
+!\\_ö/!
+;
+MSG_GADGET_GRAB_START
+_Start
+;
+MSG_GADGET_GRAB_END
+_Ende
+;
+MSG_GADGET_MISC_ALTJUMP
+Altsprun_g
+;
+MSG_GADGET_MISC_SCROLLBORDER
+_Scrollrand
+;
+MSG_GADGET_MISC_MAXUNDOLEVEL
+Maximale Undozah_l
+;
+MSG_GADGET_MISC_MAXUNDOMEM
+_Maximaler Undospeicher(KB)
+;
+MSG_GADGET_MISC_CLIPBOARDUNIT
+Clipboard_unit
+;
+MSG_GADGET_MISC_PROGRAMPRIORITY
+_Programpriorität
+;
+MSG_GADGET_MISC_USEASLLIBRARY
+asl_.library gebrauchen
+;
+MSG_GADGET_MISC_OVERWRITE
+_Überschreiben
+;
+MSG_GADGET_MISC_COMMANDSHELLWINDOW
+Kommandos_hellfenster
+;
+MSG_GADGET_MISC_COMMANDWINDOW
+Kommando_fenster
+;
+MSG_GADGET_MISC_DISPLAY
+An_zeige
+;
+MSG_GADGET_MISC_SPACE
+Lüc_ken
+;
+MSG_GADGET_MISC_HEX
+Hex
+;
+MSG_GADGET_MISC_ASCII
+Ascii
+;
+MSG_GADGET_MISC_HEXANDASCII
+Hex und ascii
+;
+MSG_GADGET_MISC_LONG
+Long
+;
+MSG_GADGET_MISC_WORD
+Word
+;
+MSG_GADGET_MISC_BYTE
+Byte
+;
+MSG_GADGET_MISC_NO
+Keine
+;
+MSG_GADGET_SEARCH_CASESENSITIV
+_Groß != Klein
+;
+MSG_GADGET_SEARCH_WILDCARDS
+_Muster
+;
+MSG_GADGET_SEARCH_STRINGSEARCH
+_Textsuche
+;
+MSG_GADGET_SEARCH_REPLACEMODE
+E_rsetzen
+;
+MSG_GADGET_SEARCH_SEARCHSTRING
+_Finde
+;
+MSG_GADGET_SEARCH_REPLACESTRING
+_Ersatz
+;
+MSG_GADGET_FILL_STRING
+Fü_llen mit
+;
+MSG_GADGET_SEARCH_NEXT
+_Nächstes
+;
+MSG_GADGET_SEARCH_PREVIOUS
+Vorheriges (_b)
+;
+MSG_GADGET_FILL_STRINGFILL
+_Textfüllen
+;
+MSG_GADGET_FILL_FILL
+_Füllen
+;
+MSG_GADGET_PUBLICSCREENLIST_PUBLICSCREENLIST
+_öffentliche Bildschirme
+;
+MSG_GADGET_JUMPTO_NUMBER
+_Hex Position
+;
+MSG_GADGET_NUMBER_NUMBER
+_Nummer
+;
+MSG_GADGET_STRING_STRING
+_Zeichenkette
+;
+MSG_GADGET_CLIPCONV_CONVERT
+Konvertieren
+;
+MSG_GADGET_CLIPCONV_CYCLE_TEXT
+Text
+;
+MSG_GADGET_CLIPCONV_CYCLE_RAW
+Roh
+;
+MSG_GADGET_CLIPCONV_CYCLE_BIN
+Bin
+;
+MSG_GADGET_CLIPCONV_CYCLE_DEC
+Dez
+;
+MSG_GADGET_CLIPCONV_CYCLE_HEX
+Hex
+;
+MSG_GADGET_CLIPCONV_CYCLE_OCT
+Oct
+;
+MSG_GADGET_CALC_CYCLE_BIN
+Bin
+;
+MSG_GADGET_CALC_CYCLE_DEC
+Dez
+;
+MSG_GADGET_CALC_CYCLE_HEX
+Hex
+;
+MSG_GADGET_CALC_CYCLE_OCT
+Oct
+;
+MSG_INFO_GLOBAL_NOSCREENMODEREQ
+OS 2.1(oder höher) oder Reqtoolslibrary werden\nfür den Screenmoderequester benötigt!
+;
+MSG_INFO_GLOBAL_ICONIFYFAILED
+Verbergen gescheitert!
+;
+MSG_INFO_GLOBAL_CANTOPENFONT
+Kann Font "%s" Größe %ld nicht öffnen!
+;
+MSG_INFO_PRINT_NOTHINGTOPRINT
+Nichts zum Drucken vorhanden!
+;
+MSG_INFO_PRINT_PRINTERNOTREADY
+Drucker nicht bereit!
+;
+MSG_INFO_PRINT_PRINTING
+Drucke...
+;
+MSG_INFO_GRAB_ENDBEFORESTART
+Ende vor Start!
+;
+MSG_INFO_GRAB_STARTEQUALTOEND
+Start und Ende sind gleich!
+;
+MSG_INFO_GLOBAL_ILLEGALCHARACTERS
+Hexzeichenkette\n\"%s\"\nenthält ungültige Zeichen!
+;
+MSG_INFO_GLOBAL_CANTOPENWINDOW
+Kann Fenster nicht öffnen (%ld)!
+;
+MSG_INFO_GLOBAL_FAILEDTOCREATEPROCESS
+Konnte keinen Prozess erstellen!
+;
+MSG_INFO_GLOBAL_CANTOPENFILE
+Konnte "%s" nicht öffnen!
+;
+MSG_INFO_GLOBAL_CANTALLOCMEM
+Konnte keine %ld Bytes Speicher allokieren!
+;
+MSG_INFO_GLOBAL_CANTALLOCSOMEMEM
+Kann nicht genügend Speicher allokieren!
+;
+MSG_INFO_GLOBAL_FILEALREADYEXISTS
+Datei "%s" existiert bereits! Überschreiben?
+;
+MSG_INFO_GLOBAL_CANTSAVEFILE
+Kann "%s" nicht speichern!
+;
+MSG_INFO_GLOBAL_CHANGESTOFILES
+Insgesamt %ld Änderungen wurden an %ld Datein vorgenommen!\nDiese gehen alle verloren.
+;
+MSG_INFO_GLOBAL_CHANGESTOFILE
+%ld Änderungen wurden an \"%s\" vorgenommen!\nDiese gehen alle verloren.
+;
+MSG_INFO_GLOBAL_WANTTOQUIT
+FileX wirklich beenden?
+;
+MSG_INFO_GLOBAL_WANTTOCLOSEVIEW
+Anzeige wirklich schließen?
+;
+MSG_INFO_GLOBAL_WANTTOCLOSEWINDOW
+Fenster wirklich schließen?
+;
+MSG_INFO_GLOBAL_WANTTOCLEAR
+Anzeige wirklich löschen?
+;
+MSG_INFO_GLOBAL_WANTTOGRAB
+Wirklich Speicher edieren?
+;
+MSG_INFO_GLOBAL_WANTTOOPEN
+Wirklich eine neue Datei öffnen?
+;
+MSG_INFO_GLOBAL_CANTALLOCFILEREQ
+Kann Filerequester nicht allokieren!
+;
+MSG_INFO_GLOBAL_CANTALLOCFONTREQ
+Kann Fontrequester nicht allokieren!
+;
+MSG_INFO_GLOBAL_CANTALLOCSCREENMODEREQ
+Kann Screenmoderequester nicht allokieren!
+;
+MSG_INFO_GLOBAL_CANTCREATEMSGPORT
+Kann MsgPort nicht erstellen!
+;
+MSG_INFO_GLOBAL_CANTOPENLIBRARY
+Kann "%s" (V%ld) nicht öffnen!
+;
+MSG_INFO_GLOBAL_HEXSTRINGNICHTBYTEALIGNED
+Hexzeichenkette\n"%s"\nnicht auf Bytegrenze!
+;
+MSG_INFO_GLOBAL_BLOCKDOESNTFIT
+Block paßt nicht. %ld Byte(s) zu lang.\nTrotzdem einen Teil einfügen?
+;
+MSG_INFO_GLOBAL_BUFFEREMPTY
+Blockspeicher leer!
+;
+MSG_INFO_GLOBAL_CANTLOADSETTINGS
+Kann Einstellungen "%s" nicht laden!
+;
+MSG_INFO_GLOBAL_UNKNOWNVERSIONCANTLOADSETTINGS
+Unbekannte Version!\nKann Einstellungen "%s" nicht laden!
+;
+MSG_INFO_GLOBAL_CANTSAVESETTINGS
+Kann Einstellungen "%s" nicht speichern!
+;
+MSG_INFO_GLOBAL_CANTSETUPSCREEN
+Kann Screen nicht bereitstellen(%ld)!
+;
+MSG_INFO_GLOBAL_SCREENUSED
+Alle fremden Fenster müssen geschlossen werden\nbevor der FileX Bildschirm geschlossen werden kann!
+;
+MSG_INFO_GLOBAL_NONOTPRIVATEPUBLICSCREENSFOUND
+Keine öffentlichen Bildschirme gefunden!
+;
+MSG_INFO_GLOBAL_CANTOPENINFOFILE
+Kann "%s.info" nicht öffnen!
+;
+MSG_INFO_GLOBAL_NERVREQUESTER
+    FileX V2.0 (9.6.94) Shareware 20 DM oder 15 US-Dollar,    \
+          Copyright © 1993-1994 bei Klaas Hermanns,           \
+                   alle Rechte vorbehalten.                   \
+                                                              \
+  Um mich zu erreichen, schreib an eine dieser Adressen:      \
+                                                              \
+  Elektronische Post: dalton@cocuni.GUN.de                    \
+                                                              \
+  Normale Post:       Klaas Hermanns                          \
+                      Weberstraße 42                          \
+                      47533 Kleve                             \
+                      Deutschland                             \
+                                                              \
+  Danke an die wenigen registrierten FileX V1.1 Benutzer!     \
+;
+MSG_INFO_GLOBAL_ABOUTTEXT1
+FileX %s Version %s (%s)\n\
+Copyright © 1993-1994 bei Klaas Hermanns\n\
+Shareware 20 DM oder 15 US-Dollar,\n\
+alle Rechte vorbehalten.\n\n\
+Der Autor ist unter folgenden Adressen erreichbar:\n\n\
+Elektronische Post:\n\
+dalton@cocuni.GUN.de\n\n\
+Normale Post:\n\
+Klaas Hermanns, Weberstraße 42, 47533 Kleve, Germany
+;
+MSG_INFO_GLOBAL_ABOUTTEXT2
+Mein Dank geht besonders an:\n\n\
+Robert Gorthmanns,Thomas Hornik,\n\
+Benjamin Schörner, Jörg Groenewald,\n\
+Thomas Hertz für ihr Betatesting.\n\n\
+Michael Balzer für seine `ARexxBox',\n\
+die als Grundstock für die ARexx-\n\
+schnittstelle diente.
+;
+MSG_INFO_GLOBAL_REGISTERED
+Dies ist Nr. %04ld registriert auf `%s'!
+;
+MSG_INFO_GLOBAL_NOTREGISTERED
+Dies ist eine unregistrierte Version.\nLaß Dich registrieren und entlaste damit Dein Gewissen:-)
+;
+MSG_INFO_GLOBAL_PATCHED
+Hmm, das Keyfile ist verändert worden!
+;
+MSG_INFO_GLOBAL_NOTHINGTOUNDO
+Nichts mehr rückgängig zu machen!
+;
+MSG_INFO_GLOBAL_NOTHINGTOREDO
+Kein Undo mehr rückgängig zu machen!
+;
+MSG_INFO_GLOBAL_CUTTINGNOTPOSSIBLEINGRABMODE
+Ausschneiden ist während des Speicheredierens nicht möglich!
+;
+MSG_INFO_GLOBAL_INSERTINGNOTPOSSIBLEINGRABMODE
+Einfügen ist während des Speicheredierens nicht möglich!
+;
+MSG_INFO_GLOBAL_APPENDINGNOTPOSSIBLEINGRABMODE
+Anhängen ist während des Speicheredierens nicht möglich!
+;
+MSG_INFO_GLOBAL_NOBLOCKMARKED
+Kein Block markiert!
+;
+MSG_INFO_GLOBAL_REQTOOLSLIBRARYREQUIRED
+Benötige `reqtools.library'!
+;
+MSG_INFO_GLOBAL_UNNAMED
+<unbenannt>
+;
+MSG_INFO_AREXX_CANTSETUPAREXXHOST
+Kann ARexxhost nicht erstellen!
+;
+MSG_INFO_AREXX_NOTIFY
+Beachte
+;
+MSG_INFO_AREXX_VARHASTOBEANUMBER
+VAR muß eine Nummer sein!
+;
+MSG_INFO_AREXX_VARHASTOBETRUEORFALSE
+VAR muß TRUE oder FALSE sein!
+;
+MSG_INFO_AREXX_FIELDISREADONLY
+Feld ist nur lesbar!
+;
+MSG_INFO_AREXX_OBJECTNOTFOUND
+Objekt nicht gefunden!
+;
+MSG_INFO_AREXX_FIELDNOTFOUND
+Feld nicht gefunden!
+;
+MSG_INFO_AREXX_FROMSTEMNOTPOSSIBLEINCOMMANDSHELL
+FROMSTEM nicht möglich in Kommandoshell!
+;
+MSG_INFO_AREXX_FROMVARREQUIRED
+FROMVAR benötigt!
+;
+MSG_INFO_AREXX_FROMVARANDFIELDREQUIRED
+FROMVAR und FIELD benötigt!
+;
+MSG_INFO_AREXX_CANTGETVAR
+Kann Variabel nicht ermitteln!
+;
+MSG_INFO_AREXX_FROMSTEMORFIELDREQUIRED
+FROMSTEM oder FIELD benötigt!
+;
+MSG_INFO_AREXX_FROMVARORFROMSTEMREQUIRED
+FROMVAR oder FROMSTEM benotigt!
+;
+MSG_INFO_AREXX_CANTSETVAR
+Kann Variabel nicht setzen!
+;
+MSG_INFO_AREXX_FAULTFAILED
+FAULT gescheitert!
+;
+MSG_INFO_AREXX_UNKNOWNCOMMAND
+Unbekanntes Kommando!
+;
+MSG_INFO_AREXX_RXCANTOPENWINDOW
+RX Kann Window nicht öffnen!
+;
+MSG_INFO_AREXX_RXCANTSENDAREXXCOMMAND
+RX Kann ARexxkommando nicht senden!
+;
+MSG_INFO_AREXX_BLOCKTOOLONG
+Block zu lang!
+;
+MSG_INFO_AREXX_BLOCKCONTAINSILLEGALCHARACTERS
+Block enthält ungültige Zeichen!
+;
+MSG_INFO_AREXX_NUMBERTOOHIGH
+Nummer zu groß!
+;
+MSG_INFO_AREXX_HEXSTRINGTOOLONG
+Hexzeichenkette zu lang!
+;
+MSG_INFO_AREXX_HEXSTRINGCONTAINSILLEGALCHARACTERS
+Hexzeichenkette enthält ungültige Zeichen!
+;
+MSG_INFO_AREXX_INVALID_ID
+Ungültige ID!
+;
+MSG_INFO_AREXX_CANT_LOCK_GUI
+Kann GUI nicht sperren!
+;
+MSG_INFO_SEARCH_BYTESNOTEQUAL
+Anzahl der Bytes verschieden!
+;
+MSG_INFO_SEARCH_CHARSNOTEQUAL
+Anzahl der Buchstaben verschieden!
+;
+MSG_INFO_SEARCH_FOUNDTOREPLACE
+"%s" gefunden. Ersetzen durch "%s"?
+;
+MSG_INFO_SEARCH_STRINGNOTFOUND
+"%s" nicht gefunden!
+;
+MSG_INFO_CALC_CLIPCONTENTSNOTANUMBER
+Im Clipboard befindet sich keine Zahl!
+;
+MSG_INFO_CALC_DIVISONBYZERO
+Division durch Null!
+;
+MSG_INFO_CALC_OVERFLOW
+Überlauf!
+;
+MSG_INFO_SEARCH_SEARCHING
+Suche...
+;
+MSG_INFO_CLIPCONV_NOTVALID
+Nicht gültig!
+;
+MSG_INFO_CLIPCONV_EMPTY
+<leer>
+;
+MSG_INFO_CLIPCONV_NOTCONVERTIBLE
+Nicht konvertierbar!
+;
+MSG_SCREENTITLE
+FileX © 1993-1994 bei Klaas Hermanns. Bildschirmname = \"%s\".
+;
+MSG_APPICONNAME
+FileX

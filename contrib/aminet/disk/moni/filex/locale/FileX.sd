@@ -1,0 +1,12 @@
+##rem $Id$
+##stringtype C
+##shortstrings
+/****************************************************************
+   This file was created automatically by `%fv'
+   from "%f0".
+
+   Do NOT edit by hand!
+****************************************************************/
+
+#define %i "%2a" %s
+

@@ -1,0 +1,239 @@
+Beta2:
+Wednesday, 06 Apr 1994, 14:25:38:
+---------------------------------
+Bugs:
+- Fehler in der Darstellung im Blockmodus. Cursor rechts/links. Falls
+  man an die Scrollborder stoß, wurde die ganze Zeile, anstatt nur eines
+  Nuchstaben markiert. (Report: Thomas Hornik)
+
+- Falls Displayspaces auf No stand und man Alt-Cursor Rechts/Links
+  betätigte, ging der Cursor genau in die entgegengesetzte Richtung.
+  (Report: Thomas Hornik)
+
+- Hexposition im JumpTo Requester mußte byte-aligned sein:-)
+  (Gefunden: Klaas)
+
+neue Features:
+- Taschenrechner: Überlaufabfrage eingebaut. (Vorschlag: Thomas Hornik)
+
+- Nervrequester. (Idee: Klaas)
+
+Beta3:
+------
+Thursday, 07 Apr 1994, 14:13:43:
+--------------------------------
+Bugs:
+- Mehrere Files. Änderte man die MaxUndoLevel Einstellung, wurde
+  Speicher mit flascher Größe freigegeben. (Report: Jörg Groenewald)
+
+Änderung:
+- Taschenrechner. Wenn man zwei Operatoren hintereinander eingibt,
+  wird nun keine Rechnung mehr ausgeführt, sondern nur der alte
+  Operator durch den neuen ersetzt. (Report: Thomas Hornik)
+
+Samstag 16-Apr-94  16:41:32:
+----------------------------
+- Ich bin auf The Edge umgestiegen und muß mich erstmal etwas umgewöhnen.
+- Da meine Picollo keine Masken bei graphics/Text() unterstützt, hab ich
+  das Darstellungssystem umstellen müssen. Für den Benutzter sollte sich
+  aber nichts geändert haben.
+- Schups, ich gebrauche wieder CED, da Edge keine mehreren Views unterstützt.
+
+Samstag 16-Apr-94  17:27:46:
+----------------------------
+- Pubscreen Argument funktionierte nicht.(Klaas Hermanns)
+- Falls man die Einstellungen auf einem PubScreen abspeicherte und dann
+  FileX neustartete, stürte FileX ab. (Report: Thomas Hertz)
+- Bei Fehlerhaften Argumenten wird nun eine Fehlermeldung ausgegeben.
+  (Klaas Hermanns)
+- Falls es soviele Views in einem Fenster gab, daß nicht alle übereinander
+  paßten, wurde das Fenster immer wieder neuaufgebaut. Dies konnte nur
+  passieren, wenn man den Font vergrößerte oder auf einen kleineren(nicht
+  so hohen) Screen wechselte. (Thomas Hertz)
+- Palettenrequester öffnete immer auf Workbench. (Thomas Hertz)
+- Sprungmarken wurden für jedes Display gepeichert. Jetzt werden sie pro
+  File gemerkt.(Thomas Hertz)
+- Im Sprungmarkenrequester kann man jetzt mit den Tasten 0-9 die Nummer
+  angeben.(Thomas Hertz)
+
+Sunday, 17 Apr 1994, 03:33:47:
+------------------------------
+- Scrollrand funktionierte nur für erstes Fenster. (Klaas Hermanns)
+
+Tuesday, 19 Apr 1994, 14:31:09:
+-------------------------------
+- FileX auf eigenem Screen. Calc oder Clipconv offen. Iconify meldet, FileX
+  Screen könnte nicht geschlossen werden, da noch Besucherfenster offen
+  wären. Jetzt werden zuerst der Taschenrechner und der Konverter geschlossen.
+  (Klaas Hermanns)
+
+Thursday, 21 Apr 1994, 20:05:06:
+--------------------------------
+- Space in Clipconv => aktuelles Edierfenster aktivieren.
+- Fensterbreite wurde nicht gespeichert. (Thomas Hornik)
+- Nur das erste Edierfenster hatte die Einstellungen, die
+  abgespeichert wurden.
+
+Friday, 22 Apr 1994, 17:57:00:
+------------------------------
+- Falls der erste von mehreren Views in einem Fenster geschlossen wird, wird
+  nun nicht mehr der letzte zum aktuellen, sondern der erste(wie bei CED).
+
+Saturday, 23 Apr 1994, 15:57:43:
+--------------------------------
+- Enforcerhit beim Drucken eines Files weg.
+
+Sunday, 24 Apr 1994, 02:48:09:
+------------------------------
+- Menu: 'Save and Quit' (Robert Gorthmanns)
+
+Bekannter Bug, der nicht behoben wird:
+- Falls ein Keyfile eingeladen wird, das kein Keyfile ist, kann
+  es zu Enforcerhits kommen. Dieser Fehler kann auch nicht so einfach
+  behoben werden, da das Decodierverfahren einige Annahmen über den Aufbau
+  der Keyfiles macht.
+
+Sunday, 24 Apr 1994, 22:29:34:
+------------------------------
+- ARexxport vollständig und relativ gut getestet.
+
+Beta4:
+Tuesday, 26 Apr 1994, 12:57:35:
+-------------------------------
+- Doppelbelegung des Shortcuts '*'. Jetzt nurnoch bei New. (Thomas Hornik)
+- $Append. (Thomas Hornik)
+- Menu:ARexx/LoadCommands konnte FileX haengen lassen. (Jörg Groenewald)
+
+Beta5:
+Thursday, 28 Apr 1994, 17:10:03:
+--------------------------------
+- About- und Nervrequester ein wenig angepaßt und aktualisiert.
+
+Beta6:
+Thursday, 28 Apr 1994, 22:10:03:
+--------------------------------
+- Deutsche Katalogdatei
+- nicht gebrauchte Strings im Katalog entfernt
+- kleines geheimes Etwas
+
+Friday, 29 Apr 1994, 13:56:30:
+------------------------------
+- Falls man einen Statusbalken verschieben wollte, konnte es sein,
+  daß das komplementierte Rechteck beim ersten Anklicken an einer
+  nicht möglichen Position stand. (Benjamin Schörner)
+
+- Zwei nicht benutzte Debugfunktionen rausgeworfen. Code kürzer.
+
+Saturday, 30 Apr 1994, 14:57:36:
+--------------------------------
+- Taschenrechner: '±' hatte keine Wirkung auf die Rechnung, falls
+  man die Taste bei einem Ergebnis einer Rechnung gedrückt hat und
+  nicht bei der Eingabe einer Zahl. (Thomas Hornik)
+
+- ScreenModerequester: Mögliche Enforcerhits beim Öffnen von einem
+  eigenen Screen aus. (Thomas Hornik)
+
+Saturday, 30 Apr 1994, 17:54:12:
+--------------------------------
+- Clipconv: Binärwerte aus dem Clipboard wurden falsch konvertiert.
+
+
+Beta7:
+Monday, 02 May 1994, 22:09:13:
+------------------------------
+- Menu: ARexx/Assign Command: Konnte FileX zum Absturz bringen. Manchmal
+  blieb auch nur das Menu hängen. (Jörg Groenewald)
+
+Tuesday, 03 May 1994, 14:34:15:
+-------------------------------
+- *(Stern) für Datei geändert. (Benny und andere)
+
+Friday, 06 May 1994, 15:44:34:
+------------------------------
+- Zufällig bei Schreiben der ARexxanleitung auf Fehler in
+  CHANGEWINDOW gestossen, der immer zum Absturz führte.
+
+Sunday, 08 May 1994, 00:27:18:
+------------------------------
+- Major Bug: Undo funktionierte nicht so wie es funktionieren sollte.
+  Beispiel: Datei verändern, mehrere Änderungen zurücknehmen, wieder
+            einmal verändern: Nun konnte man noch Redo anwählen.
+
+  Durch den Fehler konnte auch Speicher verloren gehen, wobei dann
+  aber auch die Meldung "FreeUndosstructs[...]" im Shusifenster kam.
+  Die Debugmeldung ist immer noch drin, sollte aber nie mehr angezeigt
+  werden. Wenn doch, Bescheid sagen, dann ist noch ein Bug drin.
+
+- Falls eine Datei mehrere Ansichten hatte, konnte es vorkommen, daß
+  die Statuszeilen nicht mehr aktuelle Werte anzeigten. Beispielsweise
+  die Länge, wenn man in einer zeige was ausgeschnitten hat.
+
+- Enforcerhit bei SETATTR mit FROMSTEM-Variable.
+
+- Setzen des Suchtextes über AREXX klappte nicht richtig.
+
+
+Beta8:
+Tuesday, 10 May 1994, 14:34:41:
+-------------------------------
+- Taschenrechner: Fehler mit +- trat noch auf, wenn man das Gadget
+  angeklickt hat. (Thomas Hornik)
+
+- Menu:"Edit/Switch" im deutschen Katalog durch "Wechsel" ersetzt.
+  (Thomas Hertz)
+
+- Grabmemory: Menu:"Bewegen/Spring zu Byte..." sprang nicht an
+  die eingegebene Adresse. (Thomas Hertz)
+
+- Grabmemory: Bei Änderungen kommt keine Sicherheitsabfrage mehr.
+  (Thomas Hertz und ich).
+
+- Unbenannte Datei: Requester `Änderungen an "" vorgenommen' ersetzt
+  durch `Änderungen an "<unbenannt>" vorgenommen'.
+
+- "..." hinter "Open Calculator" und "Open Cliboard converter" im
+  internen Catalog gesetzt.
+
+- "Groß = Klein" im Suchenrequester ersetzt durch "Groß != Klein" :-)
+
+- MAJOR BUG:
+  Suchen mit Muster: Falls ein Platzhalter am Ende oder am Anfang
+  eingefügt wurde, suchte FileX endlos. (Thomas Hertz).
+
+  Der Bug war schon in der 1.0 drin:-)
+
+Beta9:
+Friday, 13 May 1994, 02:46:24:
+------------------------------
+- Im Grab und im Springe Requester können nun nur noch Zeichen von a-f und 1-9
+  eingegeben werden.
+
+Monday, 16 May 1994, 15:35:52:
+------------------------------
+- Optimierte Version erstellt. Dabei einige überflüssigen Sachen
+  rausgeschmissen.
+
+- Defaultwerte für Undo geändert.
+
+Sunday, 22 May 1994, 02:59:22:
+------------------------------
+- Taschenrechner(oder ClipConv) öffnen, Größe verändern, schließen. Wieder
+  öffnen. Jetzt konnte man ihn nicht kleiner machen. (Benjamin Schörner)
+
+Beta10:
+Friday, 27 May 1994, 20:48:02:
+------------------------------
+- ASL Filerequester: Pattern blieb auch zwischen verschiedenen Requestern
+  erhalten (ARexx/Open/Save).
+
+- Neue Funktion!: Mit Doppelklick kann man Blöcke markieren.
+  (Benny, Thomas, Robert und Teijo:-)
+
+- Geänderte Funktion: Wenn man mit der Maus einen View gescrollt hat,
+  wurde das Scrolling gestoppt, sobald man den View verlassen hat. Nun funktioniert
+  es wie bei CED. Das Scrolling bleibt, wird sogar schneller, je weiter man
+  die Maus wegbewegt. (Teijo Kinnunen)
+
+- Neues ARexxattribute: FILE/MEMPOS: Adresse der Datei im Speicher. Dadurch
+  kann man dann z.B. im Hintergrund einen Debugger starten und sich die
+  Datei disassemblieren lassen. (Teijo Kinnunen)

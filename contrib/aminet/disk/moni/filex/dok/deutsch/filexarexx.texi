@@ -1,0 +1,1979 @@
+\input texinfo
+@setfilename dummi
+@settitle FileX
+@setchapternewpage odd
+
+@titlepage
+@sp 10
+@center @titlefont{FileX Dokumentation}
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1993-1994 bei Klaas Hermanns
+@end titlepage
+
+@node Main, Einführung, (dir), (dir)
+@center
+@center $VER: FileXARexxDokumentation 2.0 (6.5.94)
+@center
+@center FileX - Ein Binäreditor
+@center © Copyright 1993-1994 bei Klaas Hermanns
+@center Shareware, alle Rechte vorbehalten.
+
+@menu
+* Einführung::
+* Kommandoübersicht::
+* Attribute::
+@end menu
+
+@node Einführung, Kommandoübersicht, Main, Main
+@chapter Einführung
+
+FileX hat eine weitgehend an die Richtlinien aus Commodores Amiga User
+Interface Style Guide angelehnte ARexxschnittstelle.
+
+Falls nicht über das Schlüsselwort PORTNAME beim Start ein anderer Name
+angegeben wird, erhält der Port den Namen `FILEX'.  Sollte unter diesem
+Namen bereits ein Port existieren, wird an den Namen eine Zahl angehangen
+und diese solange erhöht bis ein noch nicht existierender Portname gefunden
+wird (`NAME'->`NAME.1'->`NAME.2').
+
+Die Argumente der Befehle werden AmigaDOS üblich ausgewertet.  Falls die
+verschiedenen Typen nicht bekannt sein sollten, hier ein kurze Auflistung:
+
+@table
+@item <arg>
+Eine einfache Zeichenkette.  Es ist nicht notwendig den Namen des Arguments
+anzugeben.
+@item <arg>/S
+Schalter.  Durch Angabe des Arguments wird er gesetzt.
+@item <arg>/K
+Schlüsselwort.  Das Argument muß mit dem Argumentnamen angegeben werden
+(`<arg> = wert' oder `<arg> wert'.
+@item <arg>/N
+Nummer.  Das Argument muß eine Dezimalzahl sein.
+@item <arg>/T
+Wechselschalter.  Durch Angabe des Arguments ändert ein Wert seinen
+Zustand.
+@item <arg>/A
+Das Argument muß angegeben werden.
+@item <arg>/F
+Der Rest der Zeile wird als Argument angenommen, auch wenn dort noch
+Schlüsselwörter vorkommen.
+@item <arg>/M
+Mehrere Werte sind möglich.
+@end table
+
+Bei allen Kommandos, die einen Wert zurückgeben, ist es möglich durch
+Angabe einer Variablen mittels des Arguments VAR, eine Variable auf das
+Ergebnis setzen zu lassen. Gleiches gilt für das Argument STEM und
+Stemvariablen.
+
+Alle Kommandos, denen eine ID übergeben werden kann, liefern 
+rc = 5, falls es sich bei der ID um eine ungültige ID handelt.
+Falls keine ID angegeben wird, wird für das Kommando die aktuelle
+Ansicht, das aktuelle Fenster oder die aktuelle Datei benutzt.
+
+@node Kommandoübersicht, Attribute, Einführung, Main
+@chapter Kommandoübersicht (alphabetische geordnet)
+
+@example
+Name:             Argumente => Rückgabewerte:
+---------------------------------------------
+ACTIVATE
+ACTIVATEVIEW     VIEWID=VID/K/N
+ACTIVATEWINDOW   WINDOWID=WID/K/N
+ADJUSTWINDOWSIZE WINDOWID=WID/K/N
+APPEND           VIEWID=VID/K/N
+ASSIGNCOMMAND    NUMBER/K/N,NAME/K
+CHANGEWINDOW     LEFTEDGE/K/N,TOPEDGE/K/N,HEIGHT/K/N,WIDTH/K/N,WINDOWID=WID/K/N
+CLEAR            FORCE/S,VIEWID=VID/K/N
+CLOSE            VIEW/S,WINDOW/S,FORCE/S,VIEWID=VID=WINDOWID=WID/K/N
+COLUMN           DELTA/N/A,VIEWID=VID/K/N
+CURSOR           UP/S,DOWN/S,LEFT/S,RIGHT/S,VIEWID=VID/K/N
+CUT              VIEWID=VID/K/N
+DEACTIVATE
+EXECUTECOMMAND   NUMBER/K/N,NAME/K
+EXPANDVIEW       VIEWID=VID/K/N
+FAULT            VAR/K,STEM/K,NUMBER/N/A => DESCRIPTION
+FILL             VIEWID=VID/K/N
+FIND             PROMPT/S,HEX/S,BACKWARDS/S,QUIET/S,TEXT/F,VIEWID=VID/K/N
+FINDCHANGE       PROMPT/S,HEX/S,ALL/S,BACKWARDS/S,QUIET/S,FIND,CHANGE,VIEWID=VID/K/N
+FINDNEXT         BACKWARDS/S,QUIET/S,VIEWID=VID/K/N
+FONT             NAME/A,SIZE/N/A,WINDOWID=WID/K/N
+GETATTR          OBJECT/A,FIELD,ID/K/N,STEM/K,VAR/K
+GETBLOCK         VAR/K,STEM/K => BLOCK
+GETBYTES         VAR/K,STEM/K,POS/N/A,NUMBER/N/A,FILEID=FID/K/N => HEXSTRING
+GOTOBOOKMARK     NUMBER/N,VIEWID=VID/K/N
+GOTOBYTE         POS/N/A,VIEWID=VID/K/N
+GOTOCOLUMN       COLUMN/N/A,VIEWID=VID/K/N
+GOTOLINE         LINE/N/A,VIEWID=VID/K/N
+GRABMEMORY       START/N/A,END/N/A,FORCE/S,VIEWID=VID/K/N
+GROWVIEW         VIEWID=VID/K/N
+HELP             VAR/K,STEM/K,COMMAND => COMMANDDESC,COMMANDLIST/M
+INSERT           VIEWID=VID/K/N
+LINE             DELTA/N/A,VIEWID=VID/K/N
+LOADBLOCK        NAME
+LOADCOMMANDS     NAME
+LOADDISPLAYTYP   NAME
+LOADSETTINGS     NAME
+LOCKGUI
+MOVEWINDOW       LEFTEDGE/N,TOPEDGE/N,WINDOWID=WID/K/N
+NEW              VIEW/S,WINDOW/S
+NEXT             VIEW/S,WINDOW/S
+NOP
+OPEN             FILENAME,FORCE/S,VIEWID=VID/K/N
+PASTE            VIEWID=VID/K/N
+POSITION         SOF/S,EOF/S,SOL/S,EOL/S,VIEWID=VID/K/N
+PREVIOUS         VIEW/S,WINDOW/S
+PRINT            FILEID=FID/K/N
+PRINTBLOCK
+QUIT             FORCE/S
+REDO             NUMBER/N,FILEID=FID/K/N
+REQUESTFILE      VAR/K,STEM/K,TITLE/K,PATH/K,FILE/K,PATTERN/K => FILENAME
+REQUESTNOTIFY    PROMPT
+REQUESTRESPONSE  BUTTONS/K,PROMPT/K
+REQUESTSTRING    VAR/K,STEM/K,PROMPT/K,DEFAULT/K => STRING
+RX               VAR/K,STEM/K,CONSOLE/S,ASYNC/S,COMMAND/F => RC/N,RESULT
+SAVE             FILEID=FID/K/N
+SAVEAS           NAME,FILEID=FID/K/N
+SAVEBLOCK        NAME
+SAVECOMMANDS
+SAVECOMMANDSAS   NAME
+SAVESETTINGS
+SAVESETTINGSAS   NAME
+SETATTR          OBJECT/A,FIELD,ID/K/N,FROMSTEM/K,FROMVAR/K
+SETBLOCK         BLOCK/A
+SETBLOCKMARK     VIEWID=VID/K/N
+SETBOOKMARK      NUMBER/N,VIEWID=VID/K/N
+SETBYTES         POS/N/A,HEXSTRING/A,FILEID=FID/K/N
+SETSCREEN        NAME/K,OWN/S
+SHRINKVIEW       VIEWID=VID/K/N
+SIZEWINDOW       HEIGHT/N,WIDTH/N,WINDOWID=WID/K/N
+SPLIT            VIEW/S,WINDOW/S
+UNDO             NUMBER/N,FILEID=FID/K/N
+UNLOCKGUI
+WINDOWTOBACK     WINDOWID=WID/K/N
+WINDOWTOFRONT    WINDOWID=WID/K/N
+ZIPWINDOW        WINDOWID=WID/K/N
+@end example
+
+@ifinfo
+@menu
+Name:               Argumente => Rückgabewerte:
+* ACTIVATE::
+* ACTIVATEVIEW::      VIEWID=VID/K/N
+* ACTIVATEWINDOW::    WINDOWID=WID/K/N
+* ADJUSTWINDOWSIZE::  WINDOWID=WID/K/N
+* APPEND::            VIEWID=VID/K/N
+* ASSIGNCOMMAND::     NUMBER/K/N,NAME/K
+* CHANGEWINDOW::      LEFTEDGE/K/N,TOPEDGE/K/N,HEIGHT/K/N,WIDTH/K/N,WINDOWID=WID/K/N
+* CLEAR::             FORCE/S,VIEWID=VID/K/N
+* CLOSE::             VIEW/S,WINDOW/S,FORCE/S,VIEWID=VID=WINDOWID=WID/K/N
+* COLUMN::            DELTA/N/A,VIEWID=VID/K/N
+* COPY::              VIEWID=VID/K/N
+* CURSOR::            UP/S,DOWN/S,LEFT/S,RIGHT/S,VIEWID=VID/K/N
+* CUT::               VIEWID=VID/K/N
+* DEACTIVATE::
+* EXECUTECOMMAND::    NUMBER/K/N,NAME/K
+* EXPANDVIEW::        VIEWID=VID/K/N
+* FAULT::             VAR/K,STEM/K,NUMBER/N/A => DESCRIPTION
+* FILL::              VIEWID=VID/K/N
+* FIND::              PROMPT/S,HEX/S,BACKWARDS/S,QUIET/S,TEXT/F,VIEWID=VID/K/N
+* FINDCHANGE::        PROMPT/S,HEX/S,ALL/S,BACKWARDS/S,QUIET/S,FIND,CHANGE,VIEWID=VID/K/N
+* FINDNEXT::          BACKWARDS/S,QUIET/S,VIEWID=VID/K/N
+* FONT::              NAME/A,SIZE/N/A,WINDOWID=WID/K/N
+* GETATTR::           OBJECT/A,FIELD,ID/K/N,STEM/K,VAR/K
+* GETBLOCK::          VAR/K,STEM/K => BLOCK
+* GETBYTES::          VAR/K,STEM/K,POS/N/A,NUMBER/N/A,FILEID=FID/K/N => HEXSTRING
+* GOTOBOOKMARK::      NUMBER/N,VIEWID=VID/K/N
+* GOTOBYTE::          POS/N/A,VIEWID=VID/K/N
+* GOTOCOLUMN::        COLUMN/N/A,VIEWID=VID/K/N
+* GOTOLINE::          LINE/N/A,VIEWID=VID/K/N
+* GRABMEMORY::        START/N/A,END/N/A,FORCE/S,VIEWID=VID/K/N
+* GROWVIEW::          VIEWID=VID/K/N
+* HELP::              VAR/K,STEM/K,COMMAND => COMMANDDESC,COMMANDLIST/M
+* INSERT::            VIEWID=VID/K/N
+* LINE::              DELTA/N/A,VIEWID=VID/K/N
+* LOADBLOCK::         NAME
+* LOADCOMMANDS::      NAME
+* LOADDISPLAYTYP::    NAME
+* LOADSETTINGS::      NAME
+* LOCKGUI::
+* MOVEWINDOW::        LEFTEDGE/N,TOPEDGE/N,WINDOWID=WID/K/N
+* NEW::               VIEW/S,WINDOW/S
+* NEXT::              VIEW/S,WINDOW/S
+* NOP::
+* OPEN::              FILENAME,FORCE/S,VIEWID=VID/K/N
+* PASTE::             VIEWID=VID/K/N
+* POSITION::          SOF/S,EOF/S,SOL/S,EOL/S,VIEWID=VID/K/N
+* PREVIOUS::          VIEW/S,WINDOW/S
+* PRINT::             FILEID=FID/K/N
+* PRINTBLOCK::
+* QUIT::              FORCE/S
+* REDO::              NUMBER/N,FILEID=FID/K/N
+* REQUESTFILE::       VAR/K,STEM/K,TITLE/K,PATH/K,FILE/K,PATTERN/K => FILENAME
+* REQUESTNOTIFY::     PROMPT
+* REQUESTRESPONSE::   BUTTONS/K,PROMPT/K
+* REQUESTSTRING::     VAR/K,STEM/K,PROMPT/K,DEFAULT/K => STRING
+* RX::                VAR/K,STEM/K,CONSOLE/S,ASYNC/S,COMMAND/F => RC/N,RESULT
+* SAVE::              FILEID=FID/K/N
+* SAVEAS::            NAME,FILEID=FID/K/N
+* SAVEBLOCK::         NAME
+* SAVECOMMANDS::
+* SAVECOMMANDSAS::    NAME
+* SAVESETTINGS::
+* SAVESETTINGSAS::    NAME
+* SETATTR::           OBJECT/A,FIELD,ID/K/N,FROMSTEM/K,FROMVAR/K
+* SETBLOCK::          BLOCK/A
+* SETBLOCKMARK::      VIEWID=VID/K/N
+* SETBOOKMARK::       NUMBER/N,VIEWID=VID/K/N
+* SETBYTES::          POS/N/A,HEXSTRING/A,FILEID=FID/K/N
+* SETSCREEN::         NAME/K,OWN/S
+* SHRINKVIEW::        VIEWID=VID/K/N
+* SIZEWINDOW::        HEIGHT/N,WIDTH/N,WINDOWID=WID/K/N
+* SPLIT::             VIEW/S,WINDOW/S
+* UNDO::              NUMBER/N,FILEID=FID/K/N
+* UNLOCKGUI::
+* WINDOWTOBACK::      WINDOWID=WID/K/N
+* WINDOWTOFRONT::     WINDOWID=WID/K/N
+* ZIPWINDOW::         WINDOWID=WID/K/N
+@end menu
+@end ifinfo
+
+@chapter Befehlsbeschreibungen
+@node ACTIVATE, ACTIVATEVIEW, Kommandoübersicht, Kommandoübersicht
+@section ACTIVATE
+@table
+@item Aufbau:
+ACTIVATE
+@item Funktion:
+Aktiviert FileX aus dem Iconify.
+@item Beispiel:
+@example
+DEACTIVATE      /* Entspricht Menu: `Project/Iconify' */
+
+/* Jetzt liegt ein Icon auf der Workbench und FileX schläft */
+
+ACTIVATE        /* Fenster wird wieder geöffnet */
+@end example
+@item Siehe auch:
+DEACTIVATE
+@end table
+
+
+@node ACTIVATEVIEW, ACTIVATEWINDOW, ACTIVATE, Kommandoübersicht
+@section ACTIVATEVIEW
+@table
+@item Aufbau:
+ACTIVATEVIEW VIEWID=VID/K/N
+@item Funktion:
+Aktiviert eine Anicht.
+@item Argumente:
+@table
+@item VIEWID=VID/K/N:
+ID der Ansicht, die aktiviert werden soll.
+@end table
+@end table
+
+
+@node ACTIVATEWINDOW, ADJUSTWINDOWSIZE, ACTIVATEVIEW, Kommandoübersicht
+@section ACTIVATEWINDOW
+@table
+@item Aufbau:
+ACTIVATEWINDOW WINDOWID=WID/K/N
+@item Funktion:
+Aktiviert ein Edierfenster.
+@item Argumente:
+@table
+@item WINDOWID=WID/K/N:
+ID eines Fensters, das aktiviert werden soll.
+@end table
+@end table
+
+
+@node ADJUSTWINDOWSIZE, APPEND, ACTIVATEWINDOW, Kommandoübersicht
+@section ADJUSTWINDOWSIZE
+@table
+@item Aufbau:
+ADJUSTWINDOWSIZE WINDOWID=WID/K/N
+@item Funktion:
+Paßt die größe eines Fensters, an die größe der Darstellungsboxen an.
+@item Argumente:
+@table
+@item WINDOWID=WID/K/N:
+ID eines Fensters.
+@end table
+@item Siehe auch:
+Menu: `Settings/Adjust window size'
+@end table
+
+
+@node APPEND, ASSIGNCOMMAND, ADJUSTWINDOWSIZE, Kommandoübersicht
+@section APPEND
+@table
+@item Aufbau:
+APPEND VIEWID=VID/K/N
+@item Funktion:
+Der aktuelle Block wird an das Dateiende angehangen.
+@item Argumente:
+@table
+@item VIEWID=VID/K/N:
+ID einer Ansicht, zu der die Datei gehört.
+@end table
+
+@item Siehe auch:
+Menu: `Edit/Append'
+@end table
+
+
+@node ASSIGNCOMMAND, CHANGEWINDOW, APPEND, Kommandoübersicht
+@section ASSIGNCOMMAND
+@table
+@item Aufbau:
+ASSIGNCOMMAND NUMBER/K/N,NAME/K
+@item Funktion:
+Setzt eines der ARexxkommandos im Menu `ARexx'.
+@item Argumente:
+@table
+@item NUMBER/K/N:
+Nummer zwischen 0 und 10, die die Position des Kommandos bestimmt.  Falls
+nicht angegeben, erscheint ein Requester zur Eingabe der Nummer.
+@item NAME/K:
+Filename des Kommandos.
+Falls nicht angegeben, erscheint ein
+Filerequester zur Auswahl eines Files.
+@end table
+@item Beispiel:
+ASSIGNCOMMAND 0 'dh0:meinearexxbefehle/filexbefehl'
+@item Siehe auch:
+Menu: `ARexx/Assign command',
+LOADCOMMANDS, SAVECOMMANDS, SAVECOMMANDSAS
+@end table        
+
+
+
+@node CHANGEWINDOW, CLEAR, ASSIGNCOMMAND, Kommandoübersicht
+@section CHANGEWINDOW
+@table
+@item Aufbau:
+CHANGEWINDOW LEFTEDGE/K/N,TOPEDGE/K/N,HEIGHT/K/N,WIDTH/K/N,WINDOWID=WID/K/N
+@item Funktion:
+Verändert die Größe und/oder Lage des Edierfensters.
+@item Argumente:
+@table
+@item LEFTEDGE/K/N:
+Neuer linker Abstand des Fensters.
+@item TOPEDGE/K/N:
+Neuer oberer Abstand des Fensters.
+@item HEIGHT/K/N:
+Neue Höhe des Fensters.
+@item WIDTH/K/N:
+Neue Breite des Fensters.
+@item WINDOWID=WID/K/N
+ID eines Windows, das geändert werden soll.
+@end table
+
+Falls ein Wert nicht angegeben, bleibt er unverändert.
+@item Beispiel:
+@example
+   /* Fenster auf maximale Größe bringen */
+CHANGEWINDOW LEFTEDGE 0 TOPEDGE 0 HEIGHT 4000 WIDTH 4000
+@end example
+@item Siehe auch:
+ZIPWINDOW, MOVEWINDOW, SIZEWINDOW, Attribute:  `WINDOW/#?'
+@end table
+
+
+
+@node CLEAR, CLOSE, CHANGEWINDOW, Kommandoübersicht
+@section CLEAR
+@table
+@item Aufbau:
+CLEAR FORCE/S,VIEWID=VID/K/N
+@item Funktion:
+Löscht eine Anzeige.
+@item Argumente:
+@table
+@item FORCE/S:
+Die Sicherheitsabfrage wird unterdrückt.
+@item VIEWID=VID/K/N
+ID einer Ansicht, die gelöscht werden soll.
+@end table
+@item Rückgabewerte:
+rc = 5, falls die Sicherheitsabfrage abgebrochen wurde.
+@item Siehe auch:
+Menu: `Project/New'
+@end table
+
+
+@node CLOSE, COLUMN, CLEAR, Kommandoübersicht
+@section CLOSE
+@table
+@item Aufbau:
+VIEW/S,WINDOW/S,FORCE/S,VIEWID=VID=WINDOWID=WID/K/N
+@item Funktion:
+Schließt eine Anischt bzw. ein ganzes Edierfenster.
+@item Argumente:
+@table
+@item VIEW/S:
+Falls gesetzt, wird die ID als Ansicht ID aufgefasst und es wird versucht
+eine Ansicht zu schließen.
+@item WINDOW/S:
+Falls gesetzt, wird die ID als Fenster ID aufgefasst und es wird versucht
+ein Edierfenster zu schließen.
+@item FORCE/S:
+Falls gesetzt, wird der Sicherheitsrequester unterbunden, der über verlorengehende
+Änderungen informiert.
+@item VIEWID=VID=WINDOWID=WID/K/N:
+ID der Ansicht bzw. des Fensters, das geschlossen werden soll.
+@end table
+@item Siehe auch:
+QUIT
+@end table
+
+@node COLUMN, COPY, CLOSE, Kommandoübersicht
+@section COLUMN
+@table
+@item Aufbau:
+COLUMN DELTA/N/A,VIEWID=VID/K/N
+@item Funktion:
+Verschiebt den Cursor nach rechts oder links.
+@item Argumente:
+@table
+@item DELTA/N/A:
+Anzahl der Schritte, um die der Cursor verschoben werden soll.  Positive
+Zahlen verschieben den Cursor nach rechts, negative nach links.
+@item VIEWID=VID/K/N
+ID einer Ansicht, in der der Cursor verschoben werden soll.
+@end table
+@item Siehe auch:
+GOTOBYTE, GOTOCOLUMN, GOTOLINE, LINE
+@end table
+
+@node COPY, CURSOR, COLUMN, Kommandoübersicht
+@section COPY
+@table
+@item Aufbau:
+COPY VIEWID=VID/K/N
+@item Funktion:
+Kopiert den aktuell makierten Block in den Blockspeicher.
+@item Argumente:
+@table
+@item VIEWID=VID/K/N
+ID einer Ansicht, aus der der Block kopiert werden soll.
+@end table
+@item Siehe auch:
+Menu: `Edit/Copy', SETBLOCKMARK
+@end table
+
+@node CURSOR, CUT, COPY, Kommandoübersicht
+@section CURSOR
+@table
+@item Aufbau:
+CURSOR UP/S,DOWN/S,LEFT/S,RIGHT/S,VIEWID=VID/K/N
+@item Funktion:
+Verschiebt den Cursor.
+@item Argumente:
+@table
+@item UP/S:
+Den Cursor um eins nach oben verschieben.
+@item DOWN/S:
+Den Cursor um eins nach unten verschieben.
+@item LEFT/S:
+Den Cursor um eins nach links verschieben.
+@item RIGHT/S:
+Den Cursor um eins nach rechts verschieben.
+@item VIEWID=VID/K/N:
+ID einer Ansicht, in der der Cursor verschoben werden soll.
+@end table
+
+UP und DOWN sowie LEFT und RIGHT schliessen sich gegenseitig aus.
+@item Siehe auch:
+GOTOBYTE, LINE, COLUMN
+@end table
+
+@node CUT, DEACTIVATE, CURSOR, Kommandoübersicht
+@section CUT
+@table
+@item Aufbau:
+CUT VIEWID=VID/K/N
+@item Funktion:
+Kopiert den aktuell makierten Block in den Blockspeicher und schneidet ihn
+dabei aus der Datei aus.
+@item Argumente:
+@table
+@item VIEWID=VID/K/N:
+ID einer Ansicht, aus der der Block kopiert werden soll
+@end table
+@item Siehe auch:
+Menu: `Edit/Cut', SETBLOCKMARK
+@end table
+
+
+@node DEACTIVATE, EXECUTECOMMAND, CUT, Kommandoübersicht
+@section DEACTIVATE
+@table
+@item Aufbau:
+DEACTIVATE
+@item Funktion:
+Bringt FileX in den Iconify-Modus. Das Fenster wird geschlossen und ein
+Icon auf die Workbench erzeugt.
+
+ACHTUNG!: Alle ARexxbefehle, die eine Ausgabe in einem Fenster machen oder
+diese in einer anderen Art verändern, können während des Iconify-Modus zum
+Absturz führen!
+@item Siehe auch:
+ACTIVATE
+@end table
+
+
+@node EXECUTECOMMAND, EXPANDVIEW, DEACTIVATE, Kommandoübersicht
+@section EXECUTECOMMAND
+@table
+@item Aufbau:
+EXECUTECOMMAND NUMBER/K/N,NAME/K
+@item Funktion:
+Startet ein ARexxkommando.
+@item Argumente:
+@table
+@item NUMBER/K/N:
+Nummer zwischen 0 und 9 eines mit ASSIGNCOMMAND installierten Kommandos.
+@item NAME/K:
+Name eines ARexxscript.
+@end table
+Beide Argumente schließen sich aus.
+@item Siehe auch:
+ASSIGNCOMMAND
+@end table
+
+@node EXPANDVIEW, FAULT, EXECUTECOMMAND, Kommandoübersicht
+@section EXPANDVIEW
+@table
+@item Aufbau:
+EXPANDVIEW VIEWID=VID/K/N
+@item Funktion:
+Vergrößert die aktuelle Ansicht auf ihre maximale Größe. Alle anderen
+Ansichten im Fenster sind nach dem Kommando nur noch eine Zeile hoch.
+@item Argumente:
+@table
+@item VIEWID=VID/K/N:
+ID einer Ansicht, die auf maximale Größe gebracht werden soll.
+@end table
+@item Siehe auch:
+SHRINKVIEW, GROWVIEW
+@end table
+
+@node FAULT, FILL, EXPANDVIEW, Kommandoübersicht
+@section FAULT
+@table
+@item Aufbau:
+FAULT VAR/K,STEM/K,NUMBER/N/A => DESCRIPTION
+@item Funktion:
+Ermittelt den zur Dosfehlernummer gehörenden Fehlertext.
+@item Argumente:
+@table
+@item NUMBER/N/A:
+Dosfehlernummer.
+@end table
+@item Rückgabewerte:
+@table
+@item DESCRIPTION:
+Der zugehörige Text.
+@end table
+@item Beispiel:
+@example
+FAULT 114
+
+/* Result hat bei lokalisierter Workbbench den Wert: */
+/* `: Falsches Namensmuster' */
+@end example
+@end table
+
+
+
+@node FILL, FIND, FAULT, Kommandoübersicht
+@section FILL
+@table
+@item Aufbau:
+FILL VIEWID=VID/K/N
+@item Funktion:
+Füllt den aktuell markierten Bereich mit dem aktuellem Füllstring.
+@item Argumente:
+@table
+@item VIEWID=VID/K/N:
+ID einer Ansicht, in der der aktuell markierte Block gefüllt werden soll.
+@end table
+@item Beispiel:
+@example
+   /* Falls gerade ein Block markiert ist, */
+   /* die Markierung aufheben */
+
+GETATTR VIEW MARK
+if result=TRUE then SETBLOCKMARK
+
+   /* Füllstring setzten auf `Füll füllherum!' */
+
+SETATTR APPLICATION FILLSTRING FROMVAR '"Füll füllherum!"'
+
+   /* Cursor auf Start des Füllbereiches setzen */
+GOTOBYTE 10
+
+   /* Blockmarke setzen */
+SETBLOCKMARK
+
+   /* Cursor verschieben */
+GOTOBYTE 100
+
+   /* Bereich füllen */
+FILL
+
+   /* Blockmarkierung aufheben */
+SETBLOCKMARK
+@end example
+@item Siehe auch:
+Menu: `Edit/Fill', SETBLOCKMARK, SETATTR
+@end table
+
+@node FIND, FINDCHANGE, FILL, Kommandoübersicht
+@section FIND
+@table
+@item Aufbau:
+FIND PROMPT/S,HEX/S,BACKWARDS/S,QUIET/S,TEXT/F,VIEWID=VID/K/N
+@item Funktion:
+Sucht in der aktuellen Ansicht nach einer Zeichenkette oder einer
+Hexzahlenfolge und positioniert bei Erfolg den Cursor an den Anfang dieser.
+Die Suche beginnt an der aktuellen Cursorposition.
+@item Argumente:
+@table
+@item PROMPT/S:
+Öffnet den Suchrequester.  BACKWARDS und QUIET werden dabei ignoriert.
+@item HEX/S:
+Bei den Suchtext handelt es sich um eine Hexzahlenfolge.
+@item BACKWARDS/S:
+Rückwärts suchen
+@item QUIET/S:
+Keinen Requester bei Mißerfolg öffnen.
+@item TEXT/F:
+Der Suchtext oder die Suchhexzahlenfolge.
+@item VIEWID=VID/K/N:
+ID einer Ansicht, in der gesucht werden soll.
+@end table
+@item Rückgabewerte:
+rc = 5, falls die Zeichenkette nicht gefunden werden konnte.
+@item Beispiel:
+@example
+   /* Sucht nach `$VER:' ohne bei Mißerfolg einen */
+   /* Requester zu öffnen */
+FIND QUIET TEXT '$VER:'
+@end example
+@item Siehe auch:
+Attribute: `APPLICATION/#?SEARCH', FINDNEXT, FINDCHANGE, Menu: `Search&Replace/#?'
+@end table
+
+@node FINDCHANGE, FINDNEXT, FIND, Kommandoübersicht
+@section FINDCHANGE
+@table
+@item Aufbau:
+FINDCHANGE PROMPT/S,HEX/S,ALL/S,BACKWARDS/S,QUIET/S,FIND,CHANGE,VIEWID=VID/K/N
+@item Funktion:
+Sucht in der Datei nach einer Zeichenkette oder einer Hexzahlenfolge und
+ersetzt diese durch eine andere (ggf.  erscheint vorher ein Requester, der
+fragt, ob die Stelle wirklich ersetzt werden soll).  Die Suche beginnt an
+der aktuellen Cursorposition.
+@item Argumente:
+@table
+@item PROMPT/S:
+Öffnet den Suchenundersetzenrequester.
+ALL,BACKWARDS und QUIET werden dabei
+ignoriert.
+@item HEX/S:
+Bei den Suchtext handelt es sich um eine Hexzahlenfolge.
+@item ALL/S:
+Alle gefunden Stellen werden ohne einen Requester ersetzt.
+@item BACKWARDS/S:
+Rückwärts suchen.
+@item QUIET/S:
+Keinen Requester bei Mißerfolg öffnen.
+@item FIND:
+Der Suchtext oder die Suchhexzahlenfolge.
+@item CHANGE:
+Der Ersetzentext oder die Ersetzen-
+hexzahlenfolge.
+@item VIEWID=VID/K/N:
+ID einer Ansicht, in der gesucht werden soll.
+@end table
+@item Rückgabewerte:
+rc = 5, falls die Zeichenkette nicht gefunden werden konnte.
+@item Beispiel:
+@example
+   /* Ersetzt alle `Claas' durch `Klaas' */
+FINDCHANGE QUIET ALL 'Claas' 'Klaas'
+FINDCHANGE BACKWARDS QUIET ALL 'Claas' 'Klaas'
+@end example
+@item Siehe auch:
+FINDNEXT, FIND, Menu: `Search&Replace/#?'
+@end table
+
+
+@node FINDNEXT, FONT, FINDCHANGE, Kommandoübersicht
+@section FINDNEXT
+@table
+@item Aufbau:
+FINDNEXT BACKWARDS/S,QUIET/S,VIEWID=VID/K/N
+@item Funktion:
+Setzt die letzte Suche fort, d.h.  entweder Suchen oder
+Suchen_und_Ersetzen.
+@item Argumente:
+@table
+@item BACKWARDS/S:
+Rückwärts weitersuchen.
+@item QUIET/S:
+Keine Requester öffnen.
+@item VIEWID=VID/K/N:
+ID einer Ansicht, in der gesucht werden soll.
+@end table
+@item Rückgabewerte:
+rc = 5, falls Suche fehlschlägt.
+@item Siehe auch:
+FIND, FINDCHANGE
+@end table
+
+@node FONT, GETATTR, FINDNEXT, Kommandoübersicht
+@section FONT
+@table
+@item Aufbau:
+FONT NAME/A,SIZE/N/A,WINDOWID=WID/K/N
+@item Funktion:
+Setzt den von eimem Edierfenster benutzten Zeichensatz.
+@item Argumente:
+@table
+@item NAME/A:
+Name des Fonts.
+@item SIZE/N/A:
+Größe des Fonts.
+@item WINDOWID=WID/K/N:
+ID eines Edierfensters, dessen Zeichensatz geändert werden soll.
+@end table
+@item Beispiel:
+FONT 'horror.font' 8
+@end table
+
+@node GETATTR, GETBLOCK, FONT, Kommandoübersicht
+@section GETATTR
+@table
+@item Aufbau:
+GETATTR OBJECT/A,FIELD,ID/K/N,STEM/K,VAR/K
+@item Funktion:
+Ermittelt den Wert einer oder mehrerer im Programm verwendeten Variablen.
+@item Argumente:
+@table
+@item OBJECT/A:
+Name des Objekts.
+@item FIELD:
+Name des Felds.
+@item ID/K/N:
+Möglich bei den Objekten WINDOW, VIEW und FILE. Falls nicht angegeben,
+werden bei diesen Objekten Informationen des aktuellen Edierfensters,
+der aktuellen Ansicht oder der aktuellen Datei ermittelt.
+@end table
+
+Falls FIELD nicht angegeben wird, muß eine STEM-Variable angegeben werden,
+in der dann alle Werte des Objekts abgelegt werden.
+@item Beispiel:
+@example
+GETATTR WINDOW TITLE
+
+   /* Result enthält jetzt den Titel des Windows */
+   /* Nicht sehr interessant, ich weiß :-) */
+@end example
+@item Siehe auch:
+Attribute, SETATTR
+@end table
+
+
+@node GETBLOCK, GETBYTES, GETATTR, Kommandoübersicht
+@section GETBLOCK
+@table
+@item Aufbau:
+GETBLOCK VAR/K,STEM/K => BLOCK
+@item Funktion:
+Ermittelt den Inhalt des Blockspeichers. Dieser entspricht dem Inhalt des
+Clipboards.
+@item Rückgabewerte:
+@table
+@item BLOCK:
+Enthält den Block als Hexzeichenfolge.
+@end table
+@item Siehe auch:
+SETBLOCK
+@end table
+
+@node GETBYTES, GOTOBOOKMARK, GETBLOCK, Kommandoübersicht
+@section GETBYTES
+@table
+@item Aufbau:
+GETBYTES VAR/K,STEM/K,POS/N/A,NUMBER/N/A,FILEID=FID/K/N => HEXSTRING
+@item Funktion:
+Ermittelt den Wert von einer bestimmten Anzahl Bytes an einer Stelle der
+Datei.
+@item Argumente:
+@table
+@item POS/N/A:
+Position der zur ermittelnden Bytes.
+@item NUMBER/N/A:
+Anzahl der Bytes (max:32767).
+@end table
+@item Rückgabewerte:
+@table
+@item HEXSTRING:
+Hexzahlenfolge der Bytes.
+@item FILEID=FID/K/N:
+ID einer Datei, aus der die Bytefolge bestimmt werden soll.
+@end table
+@item Siehe auch:
+SETBYTES
+@end table
+
+@node GOTOBOOKMARK, GOTOBYTE, GETBYTES, Kommandoübersicht
+@section GOTOBOOKMARK
+@table
+@item Aufbau:
+GOTOBOOKMARK NUMBER/N,VIEWID=VID/K/N
+@item Funktion:
+Setzt den Cursor an eine vorher mit SETBOOKMARK bestimmte Stelle.
+@item Argumente:
+@table
+@item NUMBER/N/A:
+Nummer zw. 1 und 10 der Stelle.
+@item VIEWID=VID/K/N:
+ID der Ansicht, in der der Cursor bewegt werden soll.
+@end table
+@item Siehe auch:
+SETBOOKMARK
+@end table
+
+@node GOTOBYTE, GOTOCOLUMN, GOTOBOOKMARK, Kommandoübersicht
+@section GOTOBYTE
+@table
+@item Aufbau:
+GOTOBYTE POS/N/A,VIEWID=VID/K/N
+@item Funktion:
+Setzt den Cursor an eine bestimmte Stelle.
+@item Argumente:
+@table
+@item POS/N/A:
+Abstand in Bytes zum Dateianfang.
+@item VIEWID=VID/K/N:
+ID einer Ansicht, in der der Cursor bewegt werden soll.
+@end table
+@item Siehe auch:
+COLUMN, GOTOCOLUMN, GOTOLINE, LINE
+@end table
+
+
+@node GOTOCOLUMN, GOTOLINE, GOTOBYTE, Kommandoübersicht
+@section GOTOCOLUMN
+@table
+@item Aufbau:
+GOTOCOLUMN COLUMN/N/A,VIEWID=VID/K/N
+@item Funktion:
+Setzt den Cursor in eine bestimmte Spalte.
+@item Argumente:
+@table
+@item COLUMN/N/A:
+Spalte zwischen 1 und 16.
+@item VIEWID=VID/K/N:
+ID einer Ansicht, in der der Cursor bewegt werden soll.
+@end table
+@item Siehe auch:
+COLUMN, GOTOBYTE, GOTOLINE, LINE
+@end table
+
+@node GOTOLINE, GRABMEMORY, GOTOCOLUMN, Kommandoübersicht
+@section GOTOLINE
+@table
+@item Aufbau:
+GOTOLINE LINE/N/A,VIEWID=VID/K/N
+@item Funktion:
+Setzt den Cursor in eine bestimmte Zeile.
+@item Argumente:
+@table
+@item LINE/N/A:
+Zeilennummer.
+@item VIEWID=VID/K/N:
+ID einer Ansicht, in der der Cursor bewegt werden soll.
+@end table
+@item Siehe auch:
+COLUMN, GOTOBYTE, GOTOCOLUMN, LINE
+@end table
+
+@node GRABMEMORY, GROWVIEW, GOTOLINE, Kommandoübersicht
+@section GRABMEMORY
+@table
+@item Aufbau:
+GRABMEMORY START/N/A,END/N/A,FORCE/S,VIEWID=VID/K/N
+@item Funktion:
+Stellt einen Speicherbereich statt eines Files dar.
+@item Argumente:
+@table
+@item START/N/A:
+Anfang des Speicherbereichs.
+@item END/N/A:
+Ende des Speicherbereichs.
+@item FORCE/S:
+Die Sicherheitsabfrage bei Änderungen wird unterbunden.
+@end table
+@item Rückgabewerte:
+rc = 5, falls der Befehl scheiterte (Sicherheitsabfrage abgebrochen).
+@item Beispiel:
+GRABMEMORY 200000 280000 FORCE
+@item Siehe auch:
+Menu: `Project/Grab memory'
+@end table
+
+@node GROWVIEW, HELP, GRABMEMORY, Kommandoübersicht
+@section GROWVIEW
+@table
+@item Aufbau:
+GROWVIEW VIEWID=VID/K/N
+@item Funktion:
+Eine Ansicht wird um eine Zeile vergrößert, falls es möglich ist.
+@item Argumente:
+@table
+@item VIEWID=VID/K/N:
+ID einer Ansicht, die vergrößert werden soll.
+@end table
+@item Siehe auch:
+SHRINKVIEW, EXPANDVIEW
+@end table
+
+
+@node HELP, INSERT, GROWVIEW, Kommandoübersicht
+@section HELP
+@table
+@item Aufbau:
+HELP VAR/K,STEM/K,COMMAND => COMMANDDESC,COMMANDLIST/M
+@item Funktion:
+Ermittelt entweder eine List aller Befehle der ARexxschnittstelle von FileX
+oder den Aufbau eines speziellen Befehls.
+@item Argumente:
+@table
+@item COMMAND:
+Name des Kommandos, von dem der Aufbau ermittelt werden soll.
+@end table
+
+Falls COMMAND nicht angegeben wird, erhält man eine
+Kommandoliste.
+@item Rückgabewerte:
+Falls COMMAND angegeben:
+@table
+@item COMMANDDESC:
+Aufbau des Kommandos.
+@end table
+Sonst:
+@table
+@item COMMANDLIST/M:
+Kommandozahl und eine Liste aller Kommandos.
+@end table
+@end table
+
+@node INSERT, LINE, HELP, Kommandoübersicht
+@section INSERT
+@table
+@item Aufbau:
+INSERT VIEWID=VID/K/N
+@item Funktion:
+Fügt den Block aus dem Blockspeicher an der aktuellen Cursorposition in die
+Datei ein.
+@item Argumente:
+@table
+@item VIEWID=VID/K/N:
+ID einer Ansicht, in der der Block eingefügt werden soll.
+@end table
+@item Siehe auch:
+Menu: `Edit/Insert', SETBLOCKMARK
+@end table
+
+@node LINE, LOADBLOCK, INSERT, Kommandoübersicht
+@section LINE
+@table
+@item Aufbau:
+LINE DELTA/N/A,VIEWID=VID/K/N
+@item Funktion:
+Verschiebt den Cursor um eine bestimmte Anzahl Zeilen.
+@item Argumente:
+@table
+@item LINE/N/A:
+Anzahl der Zeilen. Positiv nach unten.
+@item VIEWID=VID/K/N:
+ID einer Ansicht, in der der Cursor bewegt werden soll.
+@end table
+@item Siehe auch:
+COLUMN, GOTOBYTE, GOTOCOLUMN, GOTOLINE
+@end table
+
+
+@node LOADBLOCK, LOADCOMMANDS, LINE, Kommandoübersicht
+@section LOADBLOCK
+@table
+@item Aufbau:
+LOADBLOCK NAME
+@item Funktion:
+Läd einen Block in den Blockspeicher.
+@item Argumente:
+@table
+@item NAME:
+Dateiname des Blocks.  Falls nicht angegeben, öffnet sich ein Filerequester
+zur Auswahl.
+@end table
+@item Rückgabewerte:
+rc = 5, falls das Laden scheiterte.
+@item Siehe auch:
+SAVEBLOCK
+@end table
+
+@node LOADCOMMANDS, LOADDISPLAYTYP, LOADBLOCK, Kommandoübersicht
+@section LOADCOMMANDS
+@table
+@item Aufbau:
+LOADCOMMANDS NAME
+@item Funktion:
+Läd ARexxkommandos ein.
+@item Argumente:
+@table
+@item NAME:
+Dateiname der Kommandos.  Falls nicht angegeben, öffnet sich ein
+Filerequester zur Auswahl.
+@end table
+@item Rückgabewerte:
+rc = 5, falls das Laden scheiterte.
+@item Siehe auch:
+Menu: `ARexx/Load commands', SAVECOMMANDS, SAVECOMMANDSAS
+@end table
+
+@node LOADDISPLAYTYP, LOADSETTINGS, LOADCOMMANDS, Kommandoübersicht
+@section LOADDISPLAYTYP
+@table
+@item Aufbau:
+LOADDISPLAYTYP NAME
+@item Funktion:
+Läd den frei bestimmbaren Displaytyp ein.
+@item Argumente:
+@table
+@item NAME:
+Dateiname des Displaytyp.  Falls nicht angegeben, öffnet sich ein
+Filerequester zur Auswahl.
+@end table
+@item Rückgabewerte:
+rc = 5, falls das Laden scheiterte.
+@item Siehe auch:
+Menu: `Settings/Display/#?'
+@end table
+
+@node LOADSETTINGS, LOCKGUI, LOADDISPLAYTYP, Kommandoübersicht
+@section LOADSETTINGS
+@table
+@item Aufbau:
+LOADSETTINGS NAME
+@item Funktion:
+Läd eine Einstellungsdatei ein.
+@item Argumente:
+@table
+@item NAME:
+Dateiname der Einstellungsdatei.  Falls nicht angegeben, öffnet sich ein
+Filerequester zur Auswahl.
+@end table
+@item Rückgabewerte:
+rc = 5, falls das Laden scheiterte.
+@item Siehe auch:
+Menu: `Settings/Load Settings...'
+@end table
+
+@node LOCKGUI, MOVEWINDOW, LOADSETTINGS, Kommandoübersicht
+@section LOCKGUI
+@table
+@item Aufbau:
+LOCKGUI
+@item Funktion:
+Sperrt alle Edierfenster für Benutzereingaben. Nur die Größe und Position
+der Fenster kann noch geändert werden.
+@item Rückgabewerte:
+rc = 5, falls die Fenster nicht gesperrt werden können. Dies ist der Fall,
+wenn noch ein Requester offen ist.
+@item Siehe auch:
+LOCKGUI
+@end table
+
+@node MOVEWINDOW, NEW, LOCKGUI, Kommandoübersicht
+@section MOVEWINDOW
+@table
+@item Aufbau:
+MOVEWINDOW LEFTEDGE/N,TOPEDGE/N,WINDOWID=WID/K/N
+@item Funktion:
+Verändert die Lage des Edierfensters.
+@item Argumente:
+@table
+@item LEFTEDGE/N:
+Neuer linker Abstand des Fensters.
+@item TOPEDGE/N:
+Neuer oberer Abstand des Fensters.
+@item WINDOWID=WID/K/N:
+ID eines Edierfensters, das bewegt werden soll.
+@end table
+@end table
+
+@node NEW, NEXT, MOVEWINDOW, Kommandoübersicht
+@section NEW
+@table
+@item Aufbau:
+NEW VIEW/S,WINDOW/S
+@item Funktion:
+Eine neue Ansicht wird geöffnet.
+@item Argumente:
+@table
+@item VIEW/S:
+Die aktuelle Ansicht wird in zwei Hälften geteilt.
+@item WINDOW/S:
+Es wird ein neues Fenster geöffnet.
+@end table
+@item Siehe auch:
+Menu: `Project/(View|Window)/New', SPLIT
+@end table
+
+
+@node NEXT, NOP, NEW, Kommandoübersicht
+@section NEXT
+@table
+@item Aufbau:
+NEXT VIEW/S,WINDOW/S
+@item Funktion:
+Es wird die nächste Ansicht oder das nächste Edierfenster aktiviert.
+@item Argumente:
+@table
+@item VIEW/S:
+Die nächste Ansicht im aktuellen Edierfenster wird aktiviert.
+@item WINDOW/S:
+Das nächste Edierfenster wird aktiviert.
+@end table
+@item Siehe auch:
+PREVIOUS
+@end table
+
+@node NOP, OPEN, NEXT, Kommandoübersicht
+@section NOP
+@table
+@item Aufbau:
+NOP
+@item Funktion:
+Diese Kommando macht nichts. Wirklich rein gar nichts:-)
+@end table
+
+@node OPEN, PASTE, NOP, Kommandoübersicht
+@section OPEN
+@table
+@item Aufbau:
+OPEN FILENAME,FORCE/S,VIEWID=VID/K/N
+@item Funktion:
+Öffnet eine Datei.
+@item Argumente:
+@table
+@item FILENAME:
+Name der Datei.  Falls nicht angegeben, öffnet sich ein Filerequester zur
+Auswahl.
+@item FORCE/S:
+Die Sicherheitsabfrage wird unterdrückt.
+@item VIEWID=VID/K/N:
+ID einer Ansicht, in der eine neue Datei geladen werden soll.
+@end table
+@item Rückgabewerte:
+rc = 5, falls das Laden scheiterte.
+@item Siehe auch:
+CLEAR, SAVE, SAVEAS
+@end table
+
+@node PASTE, POSITION, OPEN, Kommandoübersicht
+@section PASTE
+@table
+@item Aufbau:
+PASTE VIEWID=VID/K/N
+@item Funktion:
+Schreibt den Block aus dem Blockspeicher an der aktuellen Cursorposition in
+die Datei.
+@item Argumente:
+@table
+@item VIEWID=VID/K/N:
+ID der Ansicht, in die der Block geschrieben werden soll.
+@end table
+@item Siehe auch:
+Menu: `Edit/Paste', SETBLOCKMARK
+@end table
+
+@node POSITION, PREVIOUS, PASTE, Kommandoübersicht
+@section POSITION
+@table
+@item Aufbau:
+POSITION SOF/S,EOF/S,SOL/S,EOL/S,VIEWID=VID/K/N
+@item Funktion:
+Positioniert den Cursor.
+@item Argumente:
+@table
+@item SOF/S:
+Cursor an den Anfang der Datei.
+@item EOF/S:
+Cursor an das Ende der Datei.
+@item SOL/S:
+Cursor an den Anfang der Zeile.
+@item EOL/S:
+Cursor an das Ende der Zeile.
+@item VIEWID=VID/K/N:
+ID einer Ansicht, in der der Cursor bewegt werden soll.
+@end table
+
+SOF und EOF sowie SOL und EOL schließen sich
+gegenseitig aus.
+@end table
+
+@node PREVIOUS, PRINT, POSITION, Kommandoübersicht
+@section PREVIOUS
+@table
+@item Aufbau:
+PREVIOUS VIEW/S,WINDOW/S
+@item Funktion:
+Es wird die vorherige Ansicht oder das vorherige Edierfenster aktiviert.
+@item Argumente:
+@table
+@item VIEW/S:
+Die vorherige Ansicht im aktuellen Edierfenster wird aktiviert.
+@item WINDOW/S:
+Das vorherige Edierfenster wird aktiviert.
+@end table
+@item Siehe auch:
+NEXT
+@end table
+
+@node PRINT, PRINTBLOCK, PREVIOUS, Kommandoübersicht
+@section PRINT
+@table
+@item Aufbau:
+PRINT FILEID=FID/K/N
+@item Funktion:
+Druckt eine vollständige Datei aus.
+@item Argumente:
+@table FILEID=FID/K:
+ID einer Datei, die ausgedruckt werden soll.
+@end table
+@end table
+
+@node PRINTBLOCK, QUIT, PRINT, Kommandoübersicht
+@section PRINTBLOCK
+@table
+@item Aufbau:
+PRINTBLOCK
+@table
+@item Aufbau:
+PRINTBLOCK
+@item Funktion:
+Druck den Block aus dem Blockspeicher.
+@end table
+@end table
+
+@node QUIT, REDO, PRINTBLOCK, Kommandoübersicht
+@section QUIT
+@table
+@item Aufbau:
+QUIT FORCE/S
+@item Funktion:
+Beendet das Programm.
+@item Argumente:
+@table
+@item FORCE/S:
+Eine Sicherheitsabfrage wird unterdrückt.
+unterdrückt.
+@end table
+@item Siehe auch:
+CLOSE
+@end table
+
+@node REDO, REQUESTFILE, QUIT, Kommandoübersicht
+@section REDO
+@table
+@item Aufbau:
+REDO NUMBER/N,FILEID=FID/K/N
+@item Funktion:
+Eine bestimmte Anzahl `Undos' wird rückgängig gemacht.
+@item Argumente:
+@table
+@item NUMBER/N:
+Anzahl der `Undos', die rückgängig gemacht werden sollen.  Falls nicht
+angegeben, wird nur das letzte `Undo' rückgängig gemacht.
+@item FILEID=FID/K/N:
+ID einer Datei, in der die `Undos' rückgängig gemacht werden sollen.
+@end table
+@end table
+
+
+@node REQUESTFILE, REQUESTNOTIFY, REDO, Kommandoübersicht
+@section REQUESTFILE
+@table
+@item Aufbau:
+REQUESTFILE VAR/K,STEM/K,TITLE/K,PATH/K,FILE/K,PATTERN/K => FILENAME
+@item Funktion:
+Öffnet einen Filerequester und gibt ggf.  einen ausgewählten Dateinamen
+zurück.
+@item Argumente:
+@table
+@item TITLE/K:
+Titel des Filerequesters.
+@item PATH/K:
+Voreingestellter Pfadname.
+@item FILE/K:
+Voreingestellter Filename.
+@item PATTERN/K:
+Muster.
+@end table
+@item Rückgabewerte:
+Falls rc = 5, wurde der Filerequester abgebrochen.
+
+Sonst:
+@table
+@item FILENAME:
+Ausgewählter Filename mit Pfad.
+@end table
+@item Beispiel:
+REQUESTFILE TITLE '"Bitte ein Script auswählen:"' PATTERN '#?.filex'
+@end table
+
+@node REQUESTNOTIFY, REQUESTRESPONSE, REQUESTFILE, Kommandoübersicht
+@section REQUESTNOTIFY
+@table
+@item Aufbau:
+REQUESTNOTIFY PROMPT
+@item Funktion:
+Öffnet eine einfachen Mitteilungsrequester mit einem Gadget.
+@item Argumente:
+@table
+@item PROMPT:
+Titeltext.
+@end table
+@end table
+
+
+@node REQUESTRESPONSE, REQUESTSTRING, REQUESTNOTIFY, Kommandoübersicht
+@section REQUESTRESPONSE
+@table
+@item Aufbau:
+REQUESTRESPONSE BUTTONS/K,PROMPT/K
+@item Funktion:
+Öffnet einen Requester mit mehreren Gadgets zur Auswahl und liefert die
+Nummer des angewählten Gadgets.
+@item Argumente:
+@table
+@item BUTTONS/K:
+Eine Zeichenkette, die den Aufbau der Gadgets bestimmt (siehe Beispiel).
+@item PROMPT/K:
+Titeltext.
+@end table
+@item Rückgabewerte:
+rc enthält die Nummer des ausgewählten Gadgets.  Das Gadget, das ganz
+rechts liegt, hat die Nummer 0.  Alle anderen werden von links nach rechts
+mit 1 beginnend durchnummeriert.
+@item Beispiel:
+@example
+   /* Requster mit 4 Gadgets öffnen */
+REQUESTRESPONSE BUTTONS `"Gadget 1|Gadget2|Gadget 3|Gadget 0"'
+
+say 'Du hast Gadget Nummer' rc 'ausgewählt.'
+@end example
+@end table
+
+@node REQUESTSTRING, RX, REQUESTRESPONSE, Kommandoübersicht
+@section REQUESTSTRING
+@table
+@item Aufbau:
+REQUESTSTRING VAR/K,STEM/K,PROMPT/K,DEFAULT/K => STRING
+@item Funktion:
+Öffnet einen Requester zur Eingabe einer Zeichenkette.
+@item Argumente:
+@table
+@item PROMPT/K:
+Titeltext.
+@item DEFAULT/K:
+Voreingestellte Zeichenkette.
+@end table
+@item Rückgabewerte:
+rc = 5, falls der Requester abgebrochen worden ist.
+
+Sonst:
+@table
+@item STRING
+Eingegebene Zeichenkette.
+@end table
+@end table
+
+
+@node RX, SAVE, REQUESTSTRING, Kommandoübersicht
+@section RX
+@table
+@item Aufbau:
+RX VAR/K,STEM/K,CONSOLE/S,ASYNC/S,COMMAND/F => RC/N,RESULT
+@item Funktion:
+Startet ein ARexxscript.
+@item Argumente:
+@table
+@item CONSOLE/S:
+Falls angegeben, wird ein Fenster für ein und
+ausgabe geöffnet.
+@item ASYNC/S:
+Das Script soll asyncron ausgeführt werden.
+@item COMMAND/F:
+Der Name des Kommandos.
+@end table
+@item Rückgabewerte:
+Falls syncron ausgeführt:
+@table
+@item RC/N,RESULT:
+Rückgabewerte des Scripts.
+@end table
+@end table
+
+@node SAVE, SAVEAS, RX, Kommandoübersicht
+@section SAVE
+@table
+@item Aufbau:
+SAVE FILEID=FID/K/N
+@item Funktion:
+Speichert die Datei unter dem aktuellen Namen ab.  Falls die Datei noch
+keinen Namen hatte, erscheint ein Filerequester.
+@item Funktion:
+
+@item Argumente:
+@table
+@item FILEID=FID/K/N:
+ID einer Datei, die gespeichert werden soll.
+@end table
+@item Rückgabewerte:
+rc = 5, falls die Datei nicht abgespeichert werden konnte.
+@end table
+
+@node SAVEAS, SAVEBLOCK, SAVE, Kommandoübersicht
+@section SAVEAS
+@table
+@item Aufbau:
+SAVEAS NAME,FILEID=FID/K/N
+@item Funktion:
+Speichert die Datei unter einem neuen Namen ab.
+@item Argumente:
+@table
+@item NAME:
+Name, unter dem die Datei abgespeichert werden soll.  Falls nicht
+angegeben, erscheint ein Filerequester.
+@item FILEID=FID/K/N:
+ID einer Datei, die gespeichert werden soll.
+@end table
+@item Rückgabewerte:
+rc = 5, falls die Datei nicht abgespeichert werden konnte.
+@end table
+
+@node SAVEBLOCK, SAVECOMMANDS, SAVEAS, Kommandoübersicht
+@section SAVEBLOCK
+@table
+@item Aufbau:
+SAVEBLOCK NAME
+@item Funktion:
+Speichert den Block aus dem Blockspeicher ab.
+@item Argumente:
+@table
+@item NAME:
+Name, unter dem der Block abgespeichert werden soll.  Falls nicht
+angegeben, erscheint ein Filerequester.
+@end table
+@item Rückgabewerte:
+rc = 5, falls der Block nicht abgespeichert werden konnte.
+@end table
+
+@node SAVECOMMANDS, SAVECOMMANDSAS, SAVEBLOCK, Kommandoübersicht
+@section SAVECOMMANDS
+@table
+@item Aufbau:
+SAVECOMMANDS
+@item Funktion:
+Speichert die im Menu installierten ARexxkommandos unter dem aktuellen
+Namen ab.
+@item Rückgabewerte:
+rc = 5, falls die Kommandos nicht abgespeichert werden konnten.
+@end table
+
+@node SAVECOMMANDSAS, SAVESETTINGS, SAVECOMMANDS, Kommandoübersicht
+@section SAVECOMMANDSAS
+@table
+@item Aufbau:
+SAVECOMMANDSAS NAME
+@item Funktion:
+Speichert die im Menu installierten ARexxkommandos unter einem neuen Namen
+ab.
+@item Argumente:
+@table
+@item NAME:
+Dateiname der Kommandos.  Falls nicht angegeben, öffnet sich ein
+Filerequester.
+@end table
+@item Rückgabewerte:
+rc = 5, falls die Kommandos nicht abgespeichert werden konnten.
+@end table
+
+@node SAVESETTINGS, SAVESETTINGSAS, SAVECOMMANDSAS, Kommandoübersicht
+@section SAVESETTINGS
+@table
+@item Aufbau:
+SAVESETTINGS
+@item Funktion:
+Speichert die aktuellen Einstellungens unter dem aktuellen Namen ab.
+@item Rückgabewerte:
+rc = 5, falls die Einstellungen nicht abgespeichert werden konnten.
+@end table
+
+@node SAVESETTINGSAS, SETATTR, SAVESETTINGS, Kommandoübersicht
+@section SAVESETTINGSAS
+@table
+@item Aufbau:
+SAVESETTINGSAS NAME
+@item Funktion:
+Speichert die aktuellen Einstellungens unter einem neuen Namen ab.
+@item Argumente:
+@table
+@item NAME:
+Dateiname der Einstellungen.  Falls nicht angegeben, öffnet sich ein
+Filerequester.
+@end table
+@item Rückgabewerte:
+rc = 5, falls die Einstellungen nicht abgespeichert werden konnten.
+@end table
+
+@node SETATTR, SETBLOCK, SAVESETTINGSAS, Kommandoübersicht
+@section SETATTR
+@table
+@item Aufbau:
+SETATTR          OBJECT/A,FIELD,ID/K/N,FROMSTEM/K,FROMVAR/K
+@item Funktion:
+Setzt den Wert einer oder mehrerer im Programm verwendeten Variablen.
+@item Argumente:
+@table
+@item OBJECT/A:
+Name des Objekts.
+@item FIELD:
+Name des Felds.
+@item ID/K/N:
+Möglich bei den Objekten WINDOW, VIEW und FILE. Falls nicht angegeben,
+werden bei diesen Objekten Informationen des aktuellen Edierfensters,
+der aktuellen Ansicht oder der aktuellen Datei gesetzt.
+@item FROMSTEM/K:
+Name einer STEM-Variablen, die die zu setztenden Werte enthält.
+@item FROMVAR/K:
+Name einer Variablen, die einen zu setztenden Wert enthält.
+@end table
+
+Falls FIELD nicht angegeben wird, muß eine FROMSTEM-Variable angegeben
+werden, in der dann mehrere Werte des Objekts enthalten sein können.
+@item Beispiel:
+@example
+meinestemvariable.STRINGFILL = TRUE
+meinestemvariable.FILLSTRING = 'Klaas ist blöd.'
+
+SETATTR APPLICATION FROMSTEM meinestemvariable
+@end example
+@item Siehe auch:
+Attribute, GETATTR
+@end table
+
+
+@node SETBLOCK, SETBLOCKMARK, SETATTR, Kommandoübersicht
+@section SETBLOCK
+@table
+@item Aufbau:
+SETBLOCK BLOCK/A
+@item Funktion:
+Setzt eine Bytefolge im Blockspeicher. Dieser entspricht dem
+Clipboard.
+@item Argumente:
+@table
+@item BLOCK/A:
+Hexzahlenfolge.
+@end table
+@item Beispiel:
+SETBLOCK '"0071 12feee de"'
+@end table
+
+@node SETBLOCKMARK, SETBOOKMARK, SETBLOCK, Kommandoübersicht
+@section SETBLOCKMARK
+@table
+@item Aufbau:
+SETBLOCKMARK VIEWID=VID/K/N
+@item Funktion:
+Wechselt zwischen dem Block-Markieren-Modus und dem normalen Modus.
+@item Argumente:
+@table
+@item VIEWID=VID/K/N:
+ID einer Ansicht, in der der Modus gewechselt werden soll.
+@end table
+@item Siehe auch:
+Menu: `Edit/Mark', Attribute: `PROJECT/MARK', COPY, CUT, FILL
+@end table
+
+@node SETBOOKMARK, SETBYTES, SETBLOCKMARK, Kommandoübersicht
+@section SETBOOKMARK
+@table
+@item Aufbau:
+SETBOOKMARK NUMBER/N,VIEWID=VID/K/N
+@item Funktion:
+Setzen einer Marke an der aktuellen Position im der Datei, die über
+GOTOBOOKMARK wieder angesprungen werden kann.
+
+@item Argumente:
+@table
+@item NUMBER/N:
+Nummer zwischen 1 und 10, die die Nummer
+der Marke bestimmt.
+@item VIEWID=VID/K/N:
+ID einer Ansicht, von der die Cursorposition gemerkt werden soll.
+@end table
+@item Siehe auch:
+GOTOBOOKMARK
+@end table
+
+@node SETBYTES, SETSCREEN, SETBOOKMARK, Kommandoübersicht
+@section SETBYTES
+@table
+@item Aufbau:
+SETBYTES POS/N/A,HEXSTRING/A,FILEID=FID/K/N
+@item Funktion:
+Setzen einer bestimmten Anzahl Bytes an einer bestimmten Position.
+@item Argumente:
+@table
+@item POS/N/A:
+Position, an der die Bytes gesetzt werden sollen.
+@item HEXSTRING/A:
+Hexzahlenfolge der Bytes.
+@item FILEID=FID/K/N:
+ID einer Datei, in der die Bytefolge gesetz werden soll.
+@end table
+@item Beispiel:
+@example
+SETBYTES        200 '"4b6c 6161 73"'
+@end example
+@item Siehe auch:
+GETBYTES
+@end table
+
+@node SETSCREEN, SHRINKVIEW, SETBYTES, Kommandoübersicht
+@section SETSCREEN
+@table
+@item Aufbau:
+SETSCREEN NAME/K,OWN/S
+@item Funktion:
+Bestimmung des Screens auf den das FileXfenster geöffnet sein soll.
+@item Argumente:
+@table
+@item NAME/K:
+Name eines Publicscreens.
+@item OWN/S:
+Es soll ein eigener Screen geöffnet werden. Ein Requester läßt
+den User Breite, Höhe usw. einstellen.
+@end table
+@end table
+
+@node SHRINKVIEW, SIZEWINDOW, SETSCREEN, Kommandoübersicht
+@section SHRINKVIEW
+@table
+@item Aufbau:
+SHRINKVIEW VIEWID=VID/K/N
+@item Funktion:
+Eine Ansicht wird um eine Zeile verkleinert, falls es möglich ist.
+@item Argumente:
+@table
+@item VIEWID=VID/K/N:
+ID einer Ansicht, die verkleinert werden soll.
+@end table
+@item Siehe auch:
+EXPANDVIEW, GROWVIEW
+@end table
+
+@node SIZEWINDOW, SPLIT, SHRINKVIEW, Kommandoübersicht
+@section SIZEWINDOW
+@table
+@item Aufbau:
+SIZEWINDOW HEIGHT/N,WIDTH/N,WINDOWID=WID/K/N
+@item Funktion:
+Die Höhe und die Breite des Edierfensters werden geändert.
+@item Argumente:
+@table
+@item HEIGHT/N:
+Neue Höhe des Fensters.
+@item WIDTH/N:
+Neue Breite des Fensters.
+@item WINDOWID=WID/K/N:
+ID eines Edierfensters, dessen Größe verändert werden soll.
+@end table
+@end table
+
+@node SPLIT, UNDO, SIZEWINDOW, Kommandoübersicht
+@section SPLIT
+@table
+@item Aufbau:
+SPLIT VIEW/S,WINDOW/S
+@item Funktion:
+Eine neue Ansicht wird geöffnet, die die gleiche Datei anzeigt wie die
+aktuelle Ansicht.
+@item Argumente:
+@table
+@item VIEW/S:
+Die aktuelle Ansicht wird in zwei Hälften geteilt.
+@item WINDOW/S:
+Es wird ein neues Fenster geöffnet.
+@end table
+@item Siehe auch:
+Menu: `Project/(View|Window)/Split', NEW
+@end table
+
+
+@node UNDO, UNLOCKGUI, SPLIT, Kommandoübersicht
+@section UNDO
+@table
+@item Aufbau:
+UNDO NUMBER/N,FILEID=FID/K/N
+@item Funktion:
+Eine bestimmte Anzahl Veränderungen der Datei werden rückgängig gemacht.
+@item Argumente:
+@table
+@item NUMBER/N:
+Anzahl der Veränderungen, die rückgängig gemacht werden sollen.  Falls
+nicht angegeben, wird nur die letzte Änderung rückgängig gemacht.
+@item FILEID=FID/K/N:
+ID einer Datei, in der die Veränderung(en) rückgängig gemacht werden soll.
+@end table
+@end table
+
+@node UNLOCKGUI, WINDOWTOBACK, UNDO, Kommandoübersicht
+@section UNLOCKGUI
+@table
+@item Aufbau:
+UNLOCKGUI
+@item Funktion:
+Der Befehl LOCKGUI wird wieder aufgehoben. Der Benutzer kann wieder
+Eingaben machen.
+@item Siehe auch:
+LOCKGUI
+@end table
+
+
+@node WINDOWTOBACK, WINDOWTOFRONT, UNLOCKGUI, Kommandoübersicht
+@section WINDOWTOBACK
+@table
+@item Aufbau:
+WINDOWTOBACK WINDOWID=WID/K/N
+@item Funktion:
+Das Edierfenster wird in den Hintergrund gebracht.
+@item Argumente:
+@table
+@item WINDOWID=WID/K/N:
+ID eines Edierfensters, das in den Hintergrund gebracht werden soll.
+@end table
+@end table
+
+
+@node WINDOWTOFRONT, ZIPWINDOW, WINDOWTOBACK, Kommandoübersicht
+@section WINDOWTOFRONT
+@table
+@item Aufbau:
+WINDOWTOFRONT WINDOWID=WID/K/N
+@item Funktion:
+Das Edierfenster wird in den Vordergrund gebracht.
+@item Argumente:
+@table
+@item WINDOWID=WID/K/N:
+ID eines Edierfensters, das in den Vordergrund gebracht werden soll.
+@end table
+@end table
+
+
+@node ZIPWINDOW, , WINDOWTOFRONT, Kommandoübersicht
+@section ZIPWINDOW
+@table
+@item Aufbau:
+ZIPWINDOW WINDOWID=WID/K/N
+@item Funktion:
+Gleiche Funktion wie das Zipgadget eines Fensters. Das Edier Fenster wird
+gezipt.
+@item Argumente:
+@table
+@item WINDOWID=WID/K/N:
+ID eines Edierfensters, das gezipt werden soll.
+@end table
+@end table
+
+
+@node Attribute, , Kommandoübersicht, Main
+@chapter Attribute
+
+Einige Variablen des Programms können durch den Befehl GETATTR abgerufen
+und eventuell auch durch SETATTR verändert werden.  Beide Befehle erwarten
+mindestens einen Objekt- und gegebenenfalls auch einen Feldnamen oder eine
+ID.
+
+Es gibt drei verschiedene Feldtypen: Texte, Zahlen und boolsche
+Wahrheitswerte(`TRUE'(wahr) oder `FALSE'(nicht wahr)).
+
+Nachfolgend alle Objekte mit zugehörigen Feldern.  Für jedes Feld wird der
+Name und der Typ genannt.  Ggf.  noch, ob man es nur lesen kann.  Darauf
+folgt eine Beschreibung des Inhalts.
+
+@section APPLICATION-Objekt:
+@table
+@item "SCREEN", Text, nur lesbar:
+Name des öffentlichen Bildschirms auf dem Filex sein Fenster geöffnet hat.
+@item "VERSION", Text, nur lesbar:
+Versionsnummer als Zeichenkette.
+@item "REGNUMBER", Zahl, nur lesbar:
+Registriernummer. 0 für unregistriert.
+@item "REGNAME", Text, nur lesbar:
+Name des Benutzers, auf den diese Version registriert ist.
+@item "AREXX", Text, nur lesbar:
+Name des ARexxports.
+@item "MAXUNDOMEMSIZE",Zahl:
+Maximale Größe des Undospeichers.
+@item "MAXUNDOLEVEL",Zahl:
+Maximale Undozahl.
+@item "ALTJUMP",Zahl:
+Sprungweite in Zeilen von Alt-CURSORUP/DOWN.
+@item "SCROLLBORDER",Zahl:
+Abstand in Zeilen zur oberen/unteren Begrenzung, ab der eine Ansicht
+gescrollt wird.
+@item "CLIPBOARDUNIT",Zahl:
+Nummer des Clipboards für den Blockspeicher.
+@item "COMMANDSHELLWINDOW",Text:
+Beschreibung des Commandshellwindows.
+@item "COMMANDWINDOW",Text:
+Beschreibung des Ein-/Ausgabefenster für ARexxscripts.
+@item "OVERWRITE",Bool:
+TRUE, falls keine Abfrage vor dem Speichern einer breits existierenden
+Datei kommen soll.
+@item "USEASL",Bool:
+TRUE, falls die Asllibrary und Intuitionlibrary für die Requester
+gebraucht werden sollen. Andernfalls wird die Reqtoolslibrary
+gebraucht.
+@item "PRIORITY",Zahl:
+Taskpriorität von FileX.
+@item "SEARCHSTRING",Text:
+Suchzeichenkette oder Hexzahlenfolge.
+@item "REPLACESTRING",Text:
+Ersatzzeichenkette oder Hexzahlenfolge.
+@item "STRINGSEARCH",Bool:
+TRUE, falls nach einer Zeichenkette gesucht werden soll. FALSE, um nach
+eine Hexzahlenfolge zu suchen.
+@item "CASESENSITIVSEARCH",Bool:
+Falls TRUE, wird bei der Textsuche zwischen Groß- und Kleinschreibung
+unterschieden.
+@item "WILDSEARCH",Bool:
+Falls TRUE, wird das Fragezeichen(`?') bei der Textsuche als Platzhalter
+für ein beliebiges Zeichen verstanden.
+@item "FILLSTRING",Text:
+Zeichenkette oder Hexzahlenfolge für die Füllfunktion.
+@item "STRINGFILL",Bool:
+TRUE, falls der Fillstring als Zeichenkette aufgefasst werden soll.
+@end table
+
+@section "WINDOWS"-Objekt:
+@table
+@item 1..n
+ID eines Fensters.
+@item "COUNT", Zahl, nur lesbar:
+Anzahl der IDs, d.h. gleichzeitig Anzahl der offenen Fenster.
+@end table
+
+@section "WINDOW"-Objekt:
+@table
+@item "LEFT", Zahl, nur lesbar:
+Linker Randabstand des Fensters.
+@item "TOP", Zahl, nur lesbar:
+Rechter Randabstand des Fensters.
+@item "WIDTH", Zahl, nur lesbar:
+Breite des Fensters.
+@item "HEIGHT", Zahl, nur lesbar:
+Höhe des Fensters.
+@item "TITLE", Text, nur lesbar:
+Aktueller Titel des Fensters.
+@item "MIN_WIDTH", Zahl, nur lesbar:
+Minimale Breite des Fensters.
+@item "MIN_HEIGHT", Zahl, nur lesbar:
+Minimale Höhe des Fensters.
+@item "MAX_WIDTH", Zahl, nur lesbar:
+Maximale Breite des Fensters.
+@item "MAX_HEIGHT", Zahl, nur lesbar:
+Maximale Höhe des Fensters.
+@item "VIEWCOUNT", Zahl, nur lesbar:
+Anzahl der Ansichten.
+@item "VIEWS", Text, nur lesbar:
+IDs aller Ansichten, die im Edierfenster darstellt werden. Durch ein
+Leerzeichen voneinander getrennt.
+@end table
+
+@section "FILES"-Objekt:
+@table
+@item 1..n
+ID einer Datei.
+@item "COUNT", Zahl, nur lesbar:
+Anzahl der IDs, d.h. gleichzeitig Anzahl der offenen Dateien.
+@end table
+
+@section "FILE"-Objekt:
+@table
+@item "FULLNAME",Text:
+Voller Name mit gesamtem Pfad.
+@item "PATH",Text:
+Pfad der Datei.
+@item "NAME",Text:
+Name der Datei.
+@item "CHANGES", Zahl, nur lesbar:
+Anzahl der Änderungen in der Datei.
+@item "FILELEN", Zahl, nur lesbar:
+Länge der Datei.
+@item "MEMPOS", Zahl, nur lesbar:
+Die Anfangsadresse der Datei im Speicher. Durch Änderungen an der Datei, die
+die Länge verändern, kann sich auch die Anfangsadresse ändern.
+@item "VIEWCOUNT", Zahl, nur lesbar:
+Anzahl der Ansichten, die die Datei darstellen.
+@item "VIEWS", Text, nur lesbar:
+IDs aller Ansichten, die die Datei darstellen. Durch ein Leerzeichen
+voneinander getrennt.
+@end table
+
+@section "VIEW"-Objekt:
+@table
+@item "LINES", Zahl, nur lesbar:
+Anzahl der Zeilen.
+@item "BYTESPERLINE", Zahl, nur lesbar:
+Anzahl der Bytes in einer Zeile.
+@item "DISPLAYTYP",Zahl:
+Aktuell eingestellter Displaytyp.
+@item "DISPLAY",Zahl:
+Bestimmt die Aufteilung der Ansicht: 1 = nur Hexdarstellung, 2 = nur
+Asciidarstellung, 3 = Hex-ASCII gemischte Darstelllung.
+@item "DISPLAYSPACES",Zahl:
+Bestimmt die Größe der Blöcke bei der Hexdarstellung: 3 = keine
+Zwischenräume in der Hexdarstellung, 0 = Nach jedem Byte ein
+Leerzeichen, 1 = alle zwei Bytes ein Leerzeichen, 2 = alle vier
+Bytes ein Leerzeichen.
+@item "CURSORPOS", Zahl, nur lesbar:
+Aktuelle Cursorposition.
+@item "MARKPOS", Zahl, nur lesbar:
+Position des Markierungsanfangs.
+@item "EDITASCII",Bool:
+TRUE, falls der aktive Cursor im Asciibereich steht.
+@item "MARK", Bool, nur lesbar:
+TRUE, falls gerade ein Block markiert wird.
+@item "FILE", Zahl, nur lesbar:
+ID der Datei, die dargestellt wird.
+@item "WINDOW", Zahl, nur lesbar:
+ID des Edierfensters, in dem sich die Anzeige befindet.
+@end table
+
+@bye

@@ -1,0 +1,42 @@
+Hallo Spezis!
+
+######WARNUNG!#######
+Damit's keiner übersieht:
+Es besteht eine gewisse Wahrscheinlichkeit, daß das Programm
+abstürzt. Also bitte vorher alle wichtigen Dinge, die verloren
+gehen könnten, sichern (User ggf. aus der Box werfen:-))
+#####################
+
+Dies ist die erste Betaversion von meinem Binäreditor FileX.
+Sie enthält bestimmt noch massenhaft Fehler, aber ich hab
+auch noch so gut wie nichts richtig ausgetestet. Deshalb,
+um mir etwas Arbeit abzunehmen, bitte ich Euch, vielleicht
+mal ein bißchen rumzutesten. Dafür könnt ihr dann auch noch
+direkt ein paar Verbesserungen anbringen, die ich versuchen
+werde noch in die Version 1.0 einzubauen. In der Zwischzeit
+schreib ich die Anleitung zu Ende.
+
+Ein paar Fragen, zu denen mich Eure Meinung interessieren
+würde:
+
+1. Sollte man `Search' in `Find' und `Search & Replace'
+   `Find & Change' unbennen?
+
+2. Das Programm ist Shareware. Welches Hinternis sollte
+   man in die unregistrierte Version einbauen?
+
+   a) nur Files kürzer als z.B. 150 KB einladbar.
+
+   b) ein Zeitbegrenzung
+
+   c) ein Nervrequester
+
+   d) nur Files mit einem Namen kürzer als 10 Zeichen einladbar
+
+   e) nur jedes durchschnittlich 2. File einladbar
+      (Checksumme über den Namen).
+
+Klaas.
+
+PS: Diese Version auf keinen Fall weitegeben!
+

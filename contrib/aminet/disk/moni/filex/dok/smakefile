@@ -1,0 +1,31 @@
+makeinfo = pd:tex/makeguide/makeinfo
+
+all: Deutsch English
+
+Deutsch: Deutsch/FileX.dok Deutsch/FileXARexx.dok Deutsch/FileX.guide Deutsch/FileXARexx.guide
+
+Deutsch/FileX.dok: Deutsch/FileX.texi
+	$(makeinfo) --amiga-39 --no-headers -o Deutsch/FileX.dok Deutsch/FileX.texi
+
+Deutsch/FileX.guide: Deutsch/FileX.texi
+	$(makeinfo) --amiga-39 -o Deutsch/FileX.guide Deutsch/FileX.texi
+
+Deutsch/FileXARexx.dok: Deutsch/FileXARexx.texi
+	$(makeinfo) --amiga-39 --no-headers -o Deutsch/FileXARexx.dok Deutsch/FileXARexx.texi
+
+Deutsch/FileXARexx.guide: Deutsch/FileXARexx.texi
+	$(makeinfo) --amiga-39 -o Deutsch/FileXARexx.guide Deutsch/FileXARexx.texi
+
+English: English/FileX.doc English/FileXARexx.doc English/FileX.guide English/FileXARexx.guide
+
+English/FileX.doc: English/FileX.texi
+	$(makeinfo) --amiga-39 --no-headers -o English/FileX.doc English/FileX.texi
+
+English/FileX.guide: English/FileX.texi
+	$(makeinfo) --amiga-39 -o English/FileX.guide English/FileX.texi
+
+English/FileXARexx.doc: English/FileXARexx.texi
+	$(makeinfo) --amiga-39 --no-headers -o English/FileXARexx.doc English/FileXARexx.texi
+
+English/FileXARexx.guide: English/FileXARexx.texi
+	$(makeinfo) --amiga-39 -o English/FileXARexx.guide English/FileXARexx.texi

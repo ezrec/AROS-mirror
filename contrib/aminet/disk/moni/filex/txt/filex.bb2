@@ -1,0 +1,31 @@
+Programmname...: FileX
+Brett..........: /DISKTOOLS
+Version........: 1.1 vom 16.10.93
+Archivlänge....: 180511 Bytes
+Autor..........: Klaas Hermanns (DALTON@COCUNI.ZER)
+Source.........: nein
+AmigaOS........: ab 2.04
+FD-Typ.........: Shareware
+Libraries......:
+Beschreibung...:
+
+   FileX ist ein sogenannter Binäreditor und bietet folgende Features:
+
+   - OS 2.0/3.0 Oberfläche
+   - Das Editorfenster kann auf jedem öffentlichen Bildschirm
+     geöffnet werden und läßt sich beliebig in der Größe verändern.
+   - Fontsensitiv
+   - Localeunterstüzung ab OS 2.1(Deutsch und Englisch bis jetzt)
+   - Undo und Redo(nur durch vorhandenen Speicher begrenzt)
+   - Suchen und ersetzen
+   - Umfangreiche Blockfunktionen
+   - Clipboardunterstützung
+   - ARexxschnittstelle mit mehr als 66 Befehlen und Kommandoshell
+   - Drucken als Hexdump
+   - `Grab memory' zum Anzeigen und Verändern des Speichers
+   - AppWindow. Falls FileX auf der Workbench läuft, können Icons in
+     das FileXfenster gezogen werden, wodurch die zugehörige Datei
+     automatisch geladen wird.
+   - Iconify(AppIcon)
+   - Wird weiterentwickelt
+

@@ -1,0 +1,65 @@
+----------------------------------------------------------------------------
+                                                      Sa 09.04.1994,14:19:47
+----------------------------------------------------------------------------
+Empfänger   : /Z-NETZ/RECHNER/AMIGA/SOFTWARE
+Betreff     : * * * FileX - Ankuendigung
+Absender    : DALTON@COCUNI.zer.sub.org
+Route       : 
+----------------------------------------------------------------------------
+ZNetz V 3.8-Nachricht:
+Z-Netz-Emp  : /Z-NETZ/RECHNER/AMIGA/SOFTWARE
+Z-Netz-Abs  : DALTON@COCUNI.ZER
+Z-Netz-ID   : 1DBC0B37TA@COCUNI
+----------------------------------------------------------------------------
+Datum/Zeit  : Fr 22.10.1993/21:01:00 Uhr
+Msg-ID      : 1DBC0B37TA@cocuni.zer.sub.org
+Länge       : 1514 Bytes
+----------------------------------------------------------------------------
+
+
+               ######  ##   ##           ##    ##
+               ##           ##            ##  ##
+               ##      ##   ##    ####     ####
+               ####    ##   ##   ##  ##     ##
+               ##      ##   ##   ######    ####
+               ##      ##   ##   ##       ##  ##
+               ##       ##   ##   ####   ##    ##
+
+                       V1.1 - Ein Binäreditior
+
+                           Shareware 20 DM
+
+                  Copyright 1993 bei Klaas Hermanns
+
+   - Lauffähig ab Kickstart 2.04
+   - OS 2.0/3.0 Oberfläche
+   - Das Editorfenster kann auf jedem öffentlichen Bildschirm
+     geöffnet werden und läßt sich beliebig in der Größe verändern.
+   - Fontsensitiv
+   - Localeunterstüzung ab OS 2.1(Deutsch und Englisch bis jetzt)
+   - Undo und Redo(nur durch vorhandenen Speicher begrenzt)
+   - Suchen und ersetzen
+   - Umfangreiche Blockfunktionen
+   - Clipboardunterstützung
+   - ARexxschnittstelle mit mehr als 66 Befehlen und Kommandoshell
+   - Drucken als Hexdump
+   - `Grab memory' zum Anzeigen und Verändern des Speichers
+   - AppWindow. Falls FileX auf der Workbench läuft, können Icons in
+     das FileXfenster gezogen werden, wodurch die zugehörige Datei
+     automatisch geladen wird.
+   - Iconify(AppIcon)
+   - Wird weiterentwickelt!
+
+Die *uneingeschränkte* Demoversion gibt's jetzt zum Saugen in jeder
+
+  FrAS-Netz-Box
+
+oder in der
+
+  COCUNI: 02832/80861
+  Login : GAST
+  Brett : !COCUNI/BIN/AMIGA/ARCHIV
+
+Klaas Hermanns.
+
+

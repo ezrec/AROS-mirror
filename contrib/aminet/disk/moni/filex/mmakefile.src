@@ -1,0 +1,60 @@
+#   $Id$
+#
+#   Makefile to make FileX.
+
+include $(TOP)/config/make.cfg
+
+FILES := start \
+	 main \
+	 convert \
+	 listreq \
+	 calc \
+	 clipconv \
+	 grab \
+	 iconify \
+	 cursor \
+	 set \
+	 filexdata \
+	 undo \
+	 rest \
+	 cut \
+	 search \
+	 misc \
+	 print \
+	 settings \
+	 filexwindow \
+	 mainwindow \
+	 filexmenu \
+	 display
+	 
+#    	 filexarexx \
+#    	 FileXARexx_rxcl \
+#     	 filexarexx_rxif \
+
+USER_CFLAGS := -DUSE_PROTO_INCLUDES \
+    	       -DNEED_UTILITYBASE_UTILITYBASE \
+    	       -D__saveds="" \
+	       -D__inline="" \
+	       -D__chip="" \
+	       -D__stdargs="" \
+	       -D__asm=""
+	 	 
+EXEDIR := $(CONTRIBDIR)/aminet
+EXE := $(EXEDIR)/filex
+
+USE_AROSLIB 	:= yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB 	:= yes
+USE_MLIB    	:= yes
+USE_REQTOOLSLIB := yes
+
+#MM aminet-disk-moni-filex : includes linklibs setup-filex-catalogs
+
+%make_prog_setup mmake=aminet-disk-moni-filex
+
+aminet-disk-moni-filex : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps

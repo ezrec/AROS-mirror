@@ -1,0 +1,40 @@
+Teijo Kinnunen
+Oksantie 19
+FIN-86300  OULAINEN
+FINLAND				May 19 1994
+Fido: 2:228/402
+
+
+I was attempting to send this stuff by email, but even failed to get
+the message on its way :-).. Below's the letter:
+--
+
+Hi again, Klaas!
+
+Thanks a lot for the latest beta of FileX! It looks very nice indeed!!!
+
+Anyway, I found at least one bug (if you think that all have been killed,
+there's certainly one more :-)... This happens only when the asl-requesters
+are in use. Open ARexx/Execute Command..., you can see that the pattern
+is #?.filex. Click cancel. Then choose Project/Open..., you can see that
+the same pattern remains, although it shouldn't.
+
+A couple of new suggestions:
+* marking range by double-clicking the cursor with the mouse
+* when scrolling up/down, if the mouse is moved off the window, the
+  scrolling stops - it should continue
+* a feature to get the actual memory position of the current byte
+  (even when editing files!), sometimes useful when disassembling things :-)
+
+Also in this archive, there's a new Finnish .ct-file for 2.0... I think
+it's a bit better translated than the one I did for V1.1. I hope it works
+fine.
+
+Please let me know as soon as you receive this so that I don't have to
+resend it by mail.
+
+Best regards,
+
+Teijo
+
+P.S. You asked about my age... I'm 19, far too much :-)

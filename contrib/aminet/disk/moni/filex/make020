@@ -1,0 +1,1 @@
+smake machine=68020 cf=define=__M68020 -a

@@ -1,0 +1,622 @@
+\input texinfo
+@setfilename ew
+@settitle FileX
+@setchapternewpage odd
+
+@titlepage
+@sp 10
+@center @titlefont{FileX Documentation}
+@page
+@vskip 0pt plus 1filll
+FileX Copyright @copyright{} 1993 by Klaas Hermanns
+@end titlepage
+
+@node Main, What is FileX?, (dir), (dir)
+@center
+@center $VER: FileXDocumentation 1.1 (05.10.93)
+@center
+@center FileX - A binaryeditor
+@center © Copyright 1993 by Klaas Hermanns
+@center Shareware, all rights reserved.
+
+@menu
+* What is FileX?::
+* How to start FileX::
+* The menus::
+* The requesters::
+* The arexxport::
+* Todo::
+* Notice!::
+* Thanks to::
+* License::
+* Localization::
+* Distribution::
+* Contactaddress::
+* History::
+@end menu
+
+
+
+@node What is FileX?, How to start FileX, Main, Main
+@chapter What is FileX?
+@cindex Features
+FileX is as so called binaryeditor and has following features:
+
+@itemize @minus
+@item
+The Editwindow can be opened on any publicscreen and sized to any
+dimension you want.
+@item
+Fontsensitive
+@item
+Localization under OS 2.1 and above(English and German so far)
+@item
+Undo and redo(only depending on your free memory)
+@item
+Search and replace
+@item
+Extensive blockfunctions
+@item
+Clipboardsupport
+@item
+Arexxport with more than 66 commands and commandshell
+@item
+Printing as hexdump
+@item
+`Grab memory' to show and edit memory
+@item
+AppWindow. If FileX is runnig on the workbench, you can drop
+an icon in the FileXwindow and its belonging file is
+automatically loaded.
+@item
+Iconify(AppIcon)
+@item
+Developement is going on...
+@end itemize
+
+
+
+@node How to start FileX, The menus, What is FileX?, Main
+@chapter How to start FileX
+@section Workbench-Start
+If you start from workbench, following tooltypes will be checked:
+
+@table
+@item PUBSCREEN
+Name of a publicscreen, FileX shall be opened on. If this tooltype
+isn't given, FileX will be opened on the default publicscreen.
+@item PORTNAME
+Name of the FileX arexxport.
+If a port with this name allready exists, a number will be
+put at the end of the name, and increased until a not already
+existing port is found(`NAME'->`NAME.1'->`NAME.2').
+Standardname: `FILEX'.
+@item STARTUP
+Name of the arexxscript to be executed right at the start.
+@item SETTINGS
+Name of a settingsfile to be loaded right at the begining.
+If there's no settingsfilename given, the first thing FileX tries
+is to load the file 'Filex.prefs' from the current directory.
+After this, it will try to open `ENVARC:FileX/FileX.prefs'.
+If both fails, the internal settings will be used.
+@item COMMANDS
+Name of a file with the arexxcommandsettings. If this
+tooltype isn't set, first FileX will try to load the
+file `FileXARexxCommands.prefs' from the current directory,
+then the file `ENVARC:FileX/FileXARexxCommands.prefs'
+and if both fails, the arexxcommands will be unset.
+@item FILE
+File to be opened at the begining.
+@end table
+@section CLI-Start
+Following arguments will be checked:
+
+@table
+@item PUBSCREEN/K
+@item PORTNAME/K
+@item STARTUP/K
+@item SETTINGS/K
+@item COMMANDS/K
+Just like the workbenchtooltypes.
+@item SYNC/S
+FileX don't detaches from shell.
+@end table
+
+
+@node The menus, The requesters, How to start FileX, Main
+@chapter The menus
+
+@section Project
+@table
+
+@item New...
+Erases the current file from memory.
+
+@item Open... 
+Opens a new file.
+
+@item Save
+Saves the current file with it's current name. If there's no name
+previously given, a filerequester will be opened.
+
+@item Save As...
+Saves the current file with a new name.
+        
+@item Grab memory
+Opens the `Grab memory'-requester.  It allows to show and edit
+memory.
+        
+@item Print
+Prints the whole file as a hexdump.
+
+@item Iconify
+Iconifies FileX. The window will be closed and a icon will appear
+on the workbench. Per double-click or per droping another
+Icon on the FileXicon, the program will be activated again.
+
+@item About...
+Shows some important(funny) information.
+        
+@item Quit...
+Quits the programm.
+@end table
+        
+@section Edit
+
+@table
+@item Mark Block
+Turns the block-marking on/off.
+
+@item Cut
+Cuts the currently marked block out of the file and puts
+it into the blockbuffer.
+
+@item Copy
+Coppies the currently marked block into the blockbuffer.
+
+@item Fill
+Fills the currently marked block. The 'Fill'-requester to enter the
+character, number,  word or sentence, to be filled with, appears.
+
+@item Paste
+Overwrites the file from the current cursorposition with the block from
+the blockbuffer. If the space is to small, a requester asks you, if the
+beginning of the block should be pasted nevertheless.
+
+@item Insert
+Inserts the blockbuffer at the current cursorpositions. So the file
+becomes longer.
+
+@item Append
+Appends the buffered block to the end of the file.
+
+@item Print
+Print the blockbuffer as a hexdump.
+
+@item Load block...
+Load a block into the blockbuffer.
+
+@item Save block...
+Saves the blockbuffer to a file.
+
+@item Load block from clip
+Coppies the current Clipboardcontent to the blockbuffer.
+
+@item Save block to clip
+Coppies the block from the blockbuffer into the clipboard.
+
+@item Undo
+Executes UNDO. The last change will be undone.
+
+@item Redo
+Executes REDO. The last UNDO will be undone.
+
+@item Edit Ascii
+Switches between edit-ASCII and edit-HEX.
+
+@item Editable File
+Switches between editable- and non editable-file.
+
+@end table
+
+@section Search&Replace
+@table
+@item Search...
+Opens the 'search'-requester to search a string or hexstring. 
+
+@item Search and replace..
+Opens the 'search and replace'-requester to search and replace a string
+or hexstring.
+
+@item Search(and replace) next
+Repeats the last search(and replace)command towards the end of the file.
+
+@item Search(and replace) previous
+Repeats the last search(and replace)command towards the beginning of the file.
+
+@end table
+
+@section Settings
+
+@table
+@item Adjust Windowsize
+Adjusts the windowsize to the size of the displaybevelboxes.
+
+@item Display
+Defines what translationtable is used to display the ASCII-chars.
+
+@table
+@item Characters
+Show only characters. The rest is displayed as spaces.
+
+@item ASCII ($20-$7F)
+Show only hex 20 to 7f.
+
+@item all
+Show all characters with their corresponding ASCII-character.
+
+@item User defined
+Use the user definable translationtable for display.
+
+@item Load...
+Loads a free definable translationtable. This is a 256 bytes long file,
+that defines one ASCII-character for each byte.
+@end table
+
+@item Font...
+Opens a fontrequester to choose a font.
+
+@item Screen
+Here you can define the screen on what FileX will be opened:
+
+@table
+@item Default public
+The standard publicscreen.
+
+@item Workbench
+The workbenchscreen.
+
+@item Public...
+A publicscreen. A requester to choose it appears.
+
+@item Own public...
+An own public screen. A requester to choose the screenmode appears.
+
+@end table
+
+@item Palette...
+Opens a palletterequester to set the colours. Requires reqtools.library!
+
+@item Miscellaneous...
+Opens the 'Miscellaneous'-requester to set various different things.
+
+@item Load Settings...
+Opens a settingsfile. 
+
+@item Save Settings
+Saves the current settings with their current name.
+
+@item Save Settings As...
+Saves the current settings with a different name.
+
+@end table
+
+@section Move
+@table
+@item Jump to byte...
+Move the cursor to a special position in the file.
+
+@item Mark location...
+Sets a mark at the current cursorposition. A requester requests, with
+what number the mark shall be remembered(1-10).
+
+@item Jump to mark...
+Sets the cursor to a previously remembered place. The number will be chosen
+per requester.
+
+@end table
+
+@section ARexx
+@table
+@item Command shell...
+Opens a commandshell. Here you can send arexxcommands to FileX in an easy
+way. The results will be displayed directly.
+
+@item Execute command...
+Executes an arexxscript. A Filerequester to choose the name appears.
+
+@item Assign command...
+Gives one of the following 10 menuitems an arexxscript. A Filerequester
+to choose the name and a requester to chose the position(0-9) appear.
+
+@item Empty command #[0-9] ([0-9])
+10 Menuitems for Arexxscripts, for an often and fast use of the scripts.
+
+@item Load commands...
+Opens the preferences for the arexxscript-menuitems. As a standardsetting
+FileX will try to find these in the files "FileXARexxCommands.prefs" or 
+"ENVARC:FileX/FileXARexxCommands.prefs".
+
+@item Save commands
+Saves them with the current name.
+
+@item Save commands as...
+Saves them with a new name.
+@end table
+
+@node The requesters, The arexxport, The menus, Main
+@chapter The requesters
+
+All requesters can be cancled by pressing the 'ESC'-key and left with 'OK'
+by pressing the RETURN/ENTER-key.
+
+@section Changes
+This requester appears everytime files can be lost, if the current file
+has been changed but not saved. There are three gadgets to choose:
+
+@table
+@item Save First
+Saves the file first and executes the chosen command afterwards.
+
+@item Continue
+Executes the chosen command. The current file will get lost.
+
+@item Cancel
+Cancles the chosen command.
+@end table
+
+@section Fill
+
+In the 'Fill'-requester you can set the pattern for 'Edit/Fill':
+
+@table
+@item String
+Filltext.
+
+@item Hex
+Fillhexstring.
+
+@item Fill
+The currently marked block will be filled.
+@end table
+
+@section Grab memory
+
+Here you can enter the part of the memory that should be displayed:
+
+@table
+@item Start
+Startaddress in hex.
+
+@item End
+Endaddress in hex.
+
+@item Grab
+Displays the memory.
+@end table
+
+@section Miscellaneous
+
+The `Miscellaneous'-requester is used to set various things:
+
+@table
+@item Alt-Jump
+Number of lines the cursor shall jump when pressing alt-cursorup/down.
+
+@item Scrollborder
+Distance to the upper/lower border, when the display shall be scrolled.
+
+@item Max Undo Level
+Maximum number of UNDOs.
+
+@item Max Undo Mem
+Maximum memory for UNDO/REDO.
+
+@item Clipboard unit
+Clipboard unit, that shall be used for the blockfunctions.
+
+@item Programm priority
+Priority of the program.  Normally numbers bigger than 20 or smaller than
+-20 make no sense.
+
+@item Use `asl.library'
+If set, the `asl.library' will be used for file- and font-requesters
+ans the `intuition.library' for the normal inforequester.
+
+@item Overwrite
+If set, no requester appears if an existing file may be overwritten.
+
+@item Commandshellwindow
+Commandshellwindowdefinition.
+
+@item Commandwindow
+Settings for the window being used when executing an arexxscript.
+@item Display
+Defines, if the file should be displayed in hex and ascii or in
+just one of them.
+
+@item Spaces (Lücken)
+Defines after how many bytes a space is inserted in the hexdisplay.
+After a longword(4 bytes), a word(2 bytes), a byte or never.
+@end table
+
+@section Search
+Here you can set the string that shall be searched for, and the search-
+options.
+
+@table
+@item String
+The textstring to be searched for.
+
+@item Hex
+The hexstring to be searched for. Only spaces, to recieve a better
+overview, 'A-F' and numbers are allowed. E.g.: '46494c4548 0A'
+
+@item casesensitiv
+If set, FileX will search case-sensitive.
+
+@item wildcards
+If set, the Questionmark('?') can be used as a pattern.
+
+@item Next <
+Search towards the end.
+
+@item Previous >
+Search towards the beginning.
+@end table
+
+@section Search and Relpace
+The 'search and replace'-requester is nearly the same as the 'search'-
+requester. There are two more gadgets to enter the strings to replace
+with.
+
+@node The arexxport, Todo, The requesters, Main
+@chapter The arexxport
+
+FileX has an arexxport with more than 66 commands. You can find its
+documentation in the file 'FileXarexx.doc'. There are some examplescripts
+in the arexx-directory.
+
+@node Todo, Notice!, The arexxport, Main
+@chapter Planned for the next version:
+
+@itemize @minus
+@item
+Onlinehelp
+@item
+XPK-support
+@item
+Several files at the same time
+@end itemize
+
+
+@node Notice!, Thanks to, Todo, Main
+@chapter Notice!:
+
+For the File-, Font-, Screenmode- and Paletterequester and for the normal
+requesters, the 'reqtools.library' eventually is used and it's copyright by
+Nico François.
+
+The program ARexxBox by Michael Balzer has been used to create the basis
+of the arexxport.
+
+
+@node Thanks to, License, Notice!, Main
+@chapter Thanks to
+
+@table
+@item Benjamin Schörner
+for his existence, the Betatesting and his quick and accordingly bad
+English translation (Robert, *DU* bist gefragt!(Klaas)).
+@item Robert Gorthmanns, Thomas Hornik
+for their bugreports, comments and suggestions.
+@item Reinhard Geisler
+for the COCUNI(++49/2832/80861, the best bbs at the Niederrhein)!
+@item Michael Balzer
+for his ARexxBox.
+@item Nico François
+for his `reqtools.library'.
+@item SAS
+for their great C-Development System
+@end table
+
+@node License, Distribution, Thanks to, Main
+@chapter License
+
+The copyright for FileX is in every case by the author!
+
+FileX is *NOT* Public Domain! FileX is Shareware. If you use the program
+for longer than two weeks, you've got to register. A registered version and
+an update is available for 20 DM or 15 US Dollar. Without special
+permission of the author, the registered version may only be used by one
+person.
+
+At the moment the unregistered version has no restriction to the
+registered. If only a few people will register, I'll restrict the next
+version of FileX.
+
+To register please use the form from the file `FileX.reg'. Send it either per
+standard mail or per EMail. EMail is only possible if you transfer the money.
+
+Instead of money I accept one of the following things:
+
+@itemize @minus
+@item
+LPs, videos and books by or about Supertramp and Roger Hodgson.
+
+@item
+M*A*S*H-videos.
+
+@item
+At least 10 postcards from different places.
+@end itemize
+
+@node Distribution, Localization, License, Main
+@chapter Distribution
+
+The registered version may *NOT* be spread in any way.
+
+The unregistered version may only be spread together with following files:
+
+@example
+[... MUß noch ausgefüllt werden ...]
+@end example
+
+If no file is missing or changed, FileX may be spread per disk or EMail.
+Disks may not cost more than 5 DM.
+
+Not allowed is the commercial use of FileX without my written permission.
+
+For *any* damage caused by FileX, I take *no* liability. But I can assure
+the program has been testes enough, so it's very improbable that there's any
+error.
+
+@node Localization, Contactaddress, Distribution, Main
+@chapter Lokalisierung
+
+Since Version 1.1 its possible to localize FileX under OS 2.1
+or above. This means, that all texts used in the program can 
+be translated and used instead of the english. The required
+Catalogdescription and -translationfiles you can find in the
+`Catalogs' directory. At the moment there is only a Translation
+for german user. If someone translates the texts in his/her language,
+I would be very pleased to get the corresponding Catalogtranslationfile.
+So I can include it in the next version.
+
+@node Contactaddress, History, Localization, Main
+@chapter Contactaddress:-)
+
+For bugreports!, postcards, suggestions for improvement, new ideas, problems,
+gifts and anything else you can reach me under following addresses:
+
+@example
+Klaas Hermanns
+Weberstraße 42
+47533 Kleve
+Germany
+
+Usenet: dalton@@cocuni.gun.de
+Z-Netz: DALTON@@COCUNI.ZER
+
+Acc. 539 7088, Bank Code 324 500 00, Sparkasse Kleve.
+@end example
+
+@node History, , Contactaddress, Main
+
+@chapter History
+
+What's new in Version...
+
+V1.1:
+@itemize @minus
+@item
+Localesuppport(english/german)
+@item
+The Windowwidth is now variable.
+@item
+Additional to the hex+ascii-display you can, there's a only ascii
+and only hex display.
+@item
+In the hexdisplay you can define the blocksize(longwords,words,bytes,no).
+@end itemize
+@bye

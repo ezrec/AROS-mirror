@@ -1,0 +1,1928 @@
+\input texinfo
+@setfilename dummi
+@settitle FileX
+@setchapternewpage odd
+
+@titlepage
+@sp 10
+@center @titlefont{FileX Documentation}
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 1993-1994 by Klaas Hermanns
+@end titlepage
+
+@node Main, Introduction, (dir), (dir)
+@center
+@center $VER: FileXARexxDocumentation 2.0 (29.5.94)
+@center
+@center FileX - A binary editor
+@center © Copyright 1993-1994 by Klaas Hermanns
+@center Shareware, all rights reserved.
+
+@menu
+* Introduction::
+* Command overview::
+* Attributes::
+@end menu
+
+@node Introduction, Command overview, Main, Main
+@chapter Introduction
+
+FileX has an arexx port which is based on the Commodore Amiga User
+Interface Style Guide.
+
+If there is nothing different specified for the PORTNAME at the
+beginning, the port will be named `FILEX'. In case that this port name
+does already exist, a number is being added to the name and increased
+until a not already used name is found. (`NAME'->`NAME.1'->`NAME.2')
+
+The arguments will be evaluated in the way AmigaDOS does. If the different
+argument types are unknown, the following list can be used as a reference.
+
+@table
+@item <arg>
+A simple string. It's not necessary to specify the argument's name.
+@item <arg>/S
+Switch. Will be set through declaring an argument.
+@item <arg>/K
+Key word.  This argument must be given with an argument's name.
+(`<arg> = value' oder `<arg> value'.
+@item <arg>/N
+Number.  This argument must be a decimal number.
+@item <arg>/T
+Changing switch.  Through specification of this argument a value
+will change its condition.
+@item <arg>/A
+This argument must be given.
+@item <arg>/F
+The rest of the line will be understood as an argument, although if
+there are some more keywords
+@item <arg>/M
+Serveral values are possible.
+@end table
+
+For all commands that return something it's possible to set a
+variable to the return value by specifing the name of it with the
+argument VAR.  The same applies to the argument STEM and its
+stemvariables.
+
+All commands with an ID argument return rc = 5, if the ID is invalid. If
+there is no ID given the current file/view/window is used for the command.
+
+@node Command overview, Attributes, Introduction, Main
+@chapter Command overview
+
+@example
+Name:             Arguments => Return codes:
+--------------------------------------------
+ACTIVATE
+ACTIVATEVIEW     VIEWID=VID/K/N
+ACTIVATEWINDOW   WINDOWID=WID/K/N
+ADJUSTWINDOWSIZE WINDOWID=WID/K/N
+APPEND           VIEWID=VID/K/N
+ASSIGNCOMMAND    NUMBER/K/N,NAME/K
+CHANGEWINDOW     LEFTEDGE/K/N,TOPEDGE/K/N,HEIGHT/K/N,WIDTH/K/N,WINDOWID=WID/K/N
+CLEAR            FORCE/S,VIEWID=VID/K/N
+CLOSE            VIEW/S,WINDOW/S,FORCE/S,VIEWID=VID=WINDOWID=WID/K/N
+COLUMN           DELTA/N/A,VIEWID=VID/K/N
+CURSOR           UP/S,DOWN/S,LEFT/S,RIGHT/S,VIEWID=VID/K/N
+CUT              VIEWID=VID/K/N
+DEACTIVATE
+EXECUTECOMMAND   NUMBER/K/N,NAME/K
+EXPANDVIEW       VIEWID=VID/K/N
+FAULT            VAR/K,STEM/K,NUMBER/N/A => DESCRIPTION
+FILL             VIEWID=VID/K/N
+FIND             PROMPT/S,HEX/S,BACKWARDS/S,QUIET/S,TEXT/F,VIEWID=VID/K/N
+FINDCHANGE       PROMPT/S,HEX/S,ALL/S,BACKWARDS/S,QUIET/S,FIND,CHANGE,VIEWID=VID/K/N
+FINDNEXT         BACKWARDS/S,QUIET/S,VIEWID=VID/K/N
+FONT             NAME/A,SIZE/N/A,WINDOWID=WID/K/N
+GETATTR          OBJECT/A,FIELD,ID/K/N,STEM/K,VAR/K
+GETBLOCK         VAR/K,STEM/K => BLOCK
+GETBYTES         VAR/K,STEM/K,POS/N/A,NUMBER/N/A,FILEID=FID/K/N => HEXSTRING
+GOTOBOOKMARK     NUMBER/N,VIEWID=VID/K/N
+GOTOBYTE         POS/N/A,VIEWID=VID/K/N
+GOTOCOLUMN       COLUMN/N/A,VIEWID=VID/K/N
+GOTOLINE         LINE/N/A,VIEWID=VID/K/N
+GRABMEMORY       START/N/A,END/N/A,FORCE/S,VIEWID=VID/K/N
+GROWVIEW         VIEWID=VID/K/N
+HELP             VAR/K,STEM/K,COMMAND => COMMANDDESC,COMMANDLIST/M
+INSERT           VIEWID=VID/K/N
+LINE             DELTA/N/A,VIEWID=VID/K/N
+LOADBLOCK        NAME
+LOADCOMMANDS     NAME
+LOADDISPLAYTYP   NAME
+LOADSETTINGS     NAME
+LOCKGUI
+MOVEWINDOW       LEFTEDGE/N,TOPEDGE/N,WINDOWID=WID/K/N
+NEW              VIEW/S,WINDOW/S
+NEXT             VIEW/S,WINDOW/S
+NOP
+OPEN             FILENAME,FORCE/S,VIEWID=VID/K/N
+PASTE            VIEWID=VID/K/N
+POSITION         SOF/S,EOF/S,SOL/S,EOL/S,VIEWID=VID/K/N
+PREVIOUS         VIEW/S,WINDOW/S
+PRINT            FILEID=FID/K/N
+PRINTBLOCK
+QUIT             FORCE/S
+REDO             NUMBER/N,FILEID=FID/K/N
+REQUESTFILE      VAR/K,STEM/K,TITLE/K,PATH/K,FILE/K,PATTERN/K => FILENAME
+REQUESTNOTIFY    PROMPT
+REQUESTRESPONSE  BUTTONS/K,PROMPT/K
+REQUESTSTRING    VAR/K,STEM/K,PROMPT/K,DEFAULT/K => STRING
+RX               VAR/K,STEM/K,CONSOLE/S,ASYNC/S,COMMAND/F => RC/N,RESULT
+SAVE             FILEID=FID/K/N
+SAVEAS           NAME,FILEID=FID/K/N
+SAVEBLOCK        NAME
+SAVECOMMANDS
+SAVECOMMANDSAS   NAME
+SAVESETTINGS
+SAVESETTINGSAS   NAME
+SETATTR          OBJECT/A,FIELD,ID/K/N,FROMSTEM/K,FROMVAR/K
+SETBLOCK         BLOCK/A
+SETBLOCKMARK     VIEWID=VID/K/N
+SETBOOKMARK      NUMBER/N,VIEWID=VID/K/N
+SETBYTES         POS/N/A,HEXSTRING/A,FILEID=FID/K/N
+SETSCREEN        NAME/K,OWN/S
+SHRINKVIEW       VIEWID=VID/K/N
+SIZEWINDOW       HEIGHT/N,WIDTH/N,WINDOWID=WID/K/N
+SPLIT            VIEW/S,WINDOW/S
+UNDO             NUMBER/N,FILEID=FID/K/N
+UNLOCKGUI
+WINDOWTOBACK     WINDOWID=WID/K/N
+WINDOWTOFRONT    WINDOWID=WID/K/N
+ZIPWINDOW        WINDOWID=WID/K/N
+@end example
+
+@ifinfo
+@menu
+Name:               Argumente => Rückgabewerte:
+* ACTIVATE::
+* ACTIVATEVIEW::      VIEWID=VID/K/N
+* ACTIVATEWINDOW::    WINDOWID=WID/K/N
+* ADJUSTWINDOWSIZE::  WINDOWID=WID/K/N
+* APPEND::            VIEWID=VID/K/N
+* ASSIGNCOMMAND::     NUMBER/K/N,NAME/K
+* CHANGEWINDOW::      LEFTEDGE/K/N,TOPEDGE/K/N,HEIGHT/K/N,WIDTH/K/N,WINDOWID=WID/K/N
+* CLEAR::             FORCE/S,VIEWID=VID/K/N
+* CLOSE::             VIEW/S,WINDOW/S,FORCE/S,VIEWID=VID=WINDOWID=WID/K/N
+* COLUMN::            DELTA/N/A,VIEWID=VID/K/N
+* COPY::              VIEWID=VID/K/N
+* CURSOR::            UP/S,DOWN/S,LEFT/S,RIGHT/S,VIEWID=VID/K/N
+* CUT::               VIEWID=VID/K/N
+* DEACTIVATE::
+* EXECUTECOMMAND::    NUMBER/K/N,NAME/K
+* EXPANDVIEW::        VIEWID=VID/K/N
+* FAULT::             VAR/K,STEM/K,NUMBER/N/A => DESCRIPTION
+* FILL::              VIEWID=VID/K/N
+* FIND::              PROMPT/S,HEX/S,BACKWARDS/S,QUIET/S,TEXT/F,VIEWID=VID/K/N
+* FINDCHANGE::        PROMPT/S,HEX/S,ALL/S,BACKWARDS/S,QUIET/S,FIND,CHANGE,VIEWID=VID/K/N
+* FINDNEXT::          BACKWARDS/S,QUIET/S,VIEWID=VID/K/N
+* FONT::              NAME/A,SIZE/N/A,WINDOWID=WID/K/N
+* GETATTR::           OBJECT/A,FIELD,ID/K/N,STEM/K,VAR/K
+* GETBLOCK::          VAR/K,STEM/K => BLOCK
+* GETBYTES::          VAR/K,STEM/K,POS/N/A,NUMBER/N/A,FILEID=FID/K/N => HEXSTRING
+* GOTOBOOKMARK::      NUMBER/N,VIEWID=VID/K/N
+* GOTOBYTE::          POS/N/A,VIEWID=VID/K/N
+* GOTOCOLUMN::        COLUMN/N/A,VIEWID=VID/K/N
+* GOTOLINE::          LINE/N/A,VIEWID=VID/K/N
+* GRABMEMORY::        START/N/A,END/N/A,FORCE/S,VIEWID=VID/K/N
+* GROWVIEW::          VIEWID=VID/K/N
+* HELP::              VAR/K,STEM/K,COMMAND => COMMANDDESC,COMMANDLIST/M
+* INSERT::            VIEWID=VID/K/N
+* LINE::              DELTA/N/A,VIEWID=VID/K/N
+* LOADBLOCK::         NAME
+* LOADCOMMANDS::      NAME
+* LOADDISPLAYTYP::    NAME
+* LOADSETTINGS::      NAME
+* LOCKGUI::
+* MOVEWINDOW::        LEFTEDGE/N,TOPEDGE/N,WINDOWID=WID/K/N
+* NEW::               VIEW/S,WINDOW/S
+* NEXT::              VIEW/S,WINDOW/S
+* NOP::
+* OPEN::              FILENAME,FORCE/S,VIEWID=VID/K/N
+* PASTE::             VIEWID=VID/K/N
+* POSITION::          SOF/S,EOF/S,SOL/S,EOL/S,VIEWID=VID/K/N
+* PREVIOUS::          VIEW/S,WINDOW/S
+* PRINT::             FILEID=FID/K/N
+* PRINTBLOCK::
+* QUIT::              FORCE/S
+* REDO::              NUMBER/N,FILEID=FID/K/N
+* REQUESTFILE::       VAR/K,STEM/K,TITLE/K,PATH/K,FILE/K,PATTERN/K => FILENAME
+* REQUESTNOTIFY::     PROMPT
+* REQUESTRESPONSE::   BUTTONS/K,PROMPT/K
+* REQUESTSTRING::     VAR/K,STEM/K,PROMPT/K,DEFAULT/K => STRING
+* RX::                VAR/K,STEM/K,CONSOLE/S,ASYNC/S,COMMAND/F => RC/N,RESULT
+* SAVE::              FILEID=FID/K/N
+* SAVEAS::            NAME,FILEID=FID/K/N
+* SAVEBLOCK::         NAME
+* SAVECOMMANDS::
+* SAVECOMMANDSAS::    NAME
+* SAVESETTINGS::
+* SAVESETTINGSAS::    NAME
+* SETATTR::           OBJECT/A,FIELD,ID/K/N,FROMSTEM/K,FROMVAR/K
+* SETBLOCK::          BLOCK/A
+* SETBLOCKMARK::      VIEWID=VID/K/N
+* SETBOOKMARK::       NUMBER/N,VIEWID=VID/K/N
+* SETBYTES::          POS/N/A,HEXSTRING/A,FILEID=FID/K/N
+* SETSCREEN::         NAME/K,OWN/S
+* SHRINKVIEW::        VIEWID=VID/K/N
+* SIZEWINDOW::        HEIGHT/N,WIDTH/N,WINDOWID=WID/K/N
+* SPLIT::             VIEW/S,WINDOW/S
+* UNDO::              NUMBER/N,FILEID=FID/K/N
+* UNLOCKGUI::
+* WINDOWTOBACK::      WINDOWID=WID/K/N
+* WINDOWTOFRONT::     WINDOWID=WID/K/N
+* ZIPWINDOW::         WINDOWID=WID/K/N
+@end menu
+@end ifinfo
+
+@chapter Befehlsbeschreibungen
+@node ACTIVATE, ACTIVATEVIEW, Command overview, Command overview
+@section ACTIVATE
+@table
+@item Synopsis:
+ACTIVATE
+@item Function:
+Reactivates FileX from iconify.
+@item Example:
+@example
+DEACTIVATE      /* Equivalent to menu: `Project/Iconify' */
+
+/* Now an icon will appear on the workbench. FileX `sleeps'. */
+
+ACTIVATE        /* Open FileX with all windows again */
+@end example
+@item See also:
+DEACTIVATE
+@end table
+
+
+@node ACTIVATEVIEW, ACTIVATEWINDOW, ACTIVATE, Command overview
+@section ACTIVATEVIEW
+@table
+@item Synopsis:
+ACTIVATEVIEW VIEWID=VID/K/N
+@item Function:
+Activates an view.
+@item Arguments:
+@table
+@item VIEWID=VID/K/N:
+ID of a view that should be activated.
+@end table
+@end table
+
+
+@node ACTIVATEWINDOW, ADJUSTWINDOWSIZE, ACTIVATEVIEW, Command overview
+@section ACTIVATEWINDOW
+@table
+@item Synopsis:
+ACTIVATEWINDOW WINDOWID=WID/K/N
+@item Function:
+Activates an edit window.
+@item Arguments:
+@table
+@item WINDOWID=WID/K/N:
+ID of a edit window that should be activated.
+@end table
+@end table
+
+
+@node ADJUSTWINDOWSIZE, APPEND, ACTIVATEWINDOW, Command overview
+@section ADJUSTWINDOWSIZE
+@table
+@item Synopsis:
+ADJUSTWINDOWSIZE WINDOWID=WID/K/N
+@item Function:
+Adjusts the window to the size of edit views.
+@item Arguments:
+@table
+@item WINDOWID=WID/K/N:
+ID of a window.
+@end table
+@item See also:
+Menu: `Settings/Adjust window size'
+@end table
+
+
+@node APPEND, ASSIGNCOMMAND, ADJUSTWINDOWSIZE, Command overview
+@section APPEND
+@table
+@item Synopsis:
+APPEND VIEWID=VID/K/N
+@item Function:
+Appends the current block to the end of a file.
+@item Arguments:
+@table
+@item VIEWID=VID/K/N:
+ID of a view that belongs to the file.
+@end table
+
+@item See also:
+Menu: `Edit/Append'
+@end table
+
+
+@node ASSIGNCOMMAND, CHANGEWINDOW, APPEND, Command overview
+@section ASSIGNCOMMAND
+@table
+@item Synopsis:
+ASSIGNCOMMAND NUMBER/K/N,NAME/K
+@item Function:
+Set one of the commands in the arexx menu.
+@item Arguments:
+@table
+@item NUMBER/K/N:
+Number between 0 and 10 which defines the command's position. A requester will appear
+if no number has been specified.
+@item NAME/K:
+Command's file name. If no name is given a file requester will appear.
+@end table
+@item Example:
+ASSIGNCOMMAND 0 'dh5:myarexxcommands/filexcommand'
+@item See also:
+Menu: `ARexx/Assign command',
+LOADCOMMANDS, SAVECOMMANDS, SAVECOMMANDSAS
+@end table        
+
+
+
+@node CHANGEWINDOW, CLEAR, ASSIGNCOMMAND, Command overview
+@section CHANGEWINDOW
+@table
+@item Synopsis:
+CHANGEWINDOW LEFTEDGE/K/N,TOPEDGE/K/N,HEIGHT/K/N,WIDTH/K/N,WINDOWID=WID/K/N
+@item Function:
+Changes the position and/or size of a edit window.
+@item Arguments:
+@table
+@item LEFTEDGE/K/N:
+New left offset.
+@item TOPEDGE/K/N:
+New top offset.
+@item HEIGHT/K/N:
+New height.
+@item WIDTH/K/N:
+Neq width.
+@item WINDOWID=WID/K/N
+ID of a edit window that should be changed.
+@end table
+
+If one of these arguments is not given, it is not changed.
+@item Example:
+@example
+   /* Window to maximum size */
+CHANGEWINDOW LEFTEDGE 0 TOPEDGE 0 HEIGHT 4000 WIDTH 4000
+@end example
+@item See also:
+ZIPWINDOW, MOVEWINDOW, SIZEWINDOW, Attributes: `WINDOW/#?'
+@end table
+
+
+
+@node CLEAR, CLOSE, CHANGEWINDOW, Command overview
+@section CLEAR
+@table
+@item Synopsis:
+CLEAR FORCE/S,VIEWID=VID/K/N
+@item Function:
+Clears a view.
+@item Arguments:
+@table
+@item FORCE/S:
+The changes requester will be suppressed.
+@item VIEWID=VID/K/N
+ID of a view that sould be cleared.
+@end table
+@item Return codes:
+rc = 5, if the requester is cancelled.
+@item See also:
+Menu: `Project/New'
+@end table
+
+
+@node CLOSE, COLUMN, CLEAR, Command overview
+@section CLOSE
+@table
+@item Synopsis:
+VIEW/S,WINDOW/S,FORCE/S,VIEWID=VID=WINDOWID=WID/K/N
+@item Function:
+Closes a view or a window.
+@item Arguments:
+@table
+@item VIEW/S:
+The ID is an view ID.
+@item WINDOW/S:
+The ID is an window ID.
+@item FORCE/S:
+The changes requester will be suppressed.
+@item VIEWID=VID=WINDOWID=WID/K/N:
+ID of a view resp. window that should be closed.
+@end table
+@item See also:
+QUIT
+@end table
+
+@node COLUMN, COPY, CLOSE, Command overview
+@section COLUMN
+@table
+@item Synopsis:
+COLUMN DELTA/N/A,VIEWID=VID/K/N
+@item Function:
+Moves the cursor to the left or to the right.
+@item Arguments:
+@table
+@item DELTA/N/A:
+Number of steps. Positive numbers move the cursor to the right.
+@item VIEWID=VID/K/N
+ID of a view.
+@end table
+@item See also:
+GOTOBYTE, GOTOCOLUMN, GOTOLINE, LINE
+@end table
+
+@node COPY, CURSOR, COLUMN, Command overview
+@section COPY
+@table
+@item Synopsis:
+COPY VIEWID=VID/K/N
+@item Function:
+Copies the current marked block to the block buffer.
+@item Arguments:
+@table
+@item VIEWID=VID/K/N
+ID of a view.
+@end table
+@item See also:
+Menu: `Edit/Copy', SETBLOCKMARK
+@end table
+
+@node CURSOR, CUT, COPY, Command overview
+@section CURSOR
+@table
+@item Synopsis:
+CURSOR UP/S,DOWN/S,LEFT/S,RIGHT/S,VIEWID=VID/K/N
+@item Function:
+Move the cursor.
+@item Arguments:
+@table
+@item UP/S:
+Moves the cursor one step up.
+@item DOWN/S:
+Moves the cursor one step down.
+@item LEFT/S:
+Moves the cursor one step to the left.
+@item RIGHT/S:
+Moves the cursor one step to the right.
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+
+UP and DOWN as well as LEFT and RIGHT exclude each other.
+@item See also:
+GOTOBYTE, LINE, COLUMN
+@end table
+
+@node CUT, DEACTIVATE, CURSOR, Command overview
+@section CUT
+@table
+@item Synopsis:
+CUT VIEWID=VID/K/N
+@item Function:
+Cuts the current marked block out.
+@item Arguments:
+@table
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item See also:
+Menu: `Edit/Cut', SETBLOCKMARK
+@end table
+
+
+@node DEACTIVATE, EXECUTECOMMAND, CUT, Command overview
+@section DEACTIVATE
+@table
+@item Synopsis:
+DEACTIVATE
+@item Function:
+Iconifies FileX. The window will be closed and an icon will appear on
+the workbench.
+
+ATTENTION!: All arexx comannds which output something in an edit window or
+change an edit window in any way, can lead to a crash during the iconify.
+@item See also:
+ACTIVATE
+@end table
+
+
+@node EXECUTECOMMAND, EXPANDVIEW, DEACTIVATE, Command overview
+@section EXECUTECOMMAND
+@table
+@item Synopsis:
+EXECUTECOMMAND NUMBER/K/N,NAME/K
+@item Function:
+Executes an arexx command.
+@item Arguments:
+@table
+@item NUMBER/K/N:
+Number between 0 and 9 of an with ASSIGNCOMMAND installed command.
+@item NAME/K:
+Name of an arexx script.
+@end table
+Both arguments exclude each other.
+@item See also:
+ASSIGNCOMMAND
+@end table
+
+@node EXPANDVIEW, FAULT, EXECUTECOMMAND, Command overview
+@section EXPANDVIEW
+@table
+@item Synopsis:
+EXPANDVIEW VIEWID=VID/K/N
+@item Function:
+Expands the current view to its maximum size. All other views in
+the window will become one line height.
+@item Arguments:
+@table
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item See also:
+SHRINKVIEW, GROWVIEW
+@end table
+
+@node FAULT, FILL, EXPANDVIEW, Command overview
+@section FAULT
+@table
+@item Synopsis:
+FAULT VAR/K,STEM/K,NUMBER/N/A => DESCRIPTION
+@item Function:
+Determines the text belonging to an dos error code.
+@item Arguments:
+@table
+@item NUMBER/N/A:
+Dos error code.
+@end table
+@item Return codes:
+@table
+@item DESCRIPTION:
+The error text.
+@end table
+@item Example:
+@example
+FAULT 114
+
+/* Result value using localized workbench: */
+/* `: Falsches Namensmuster' */
+@end example
+@end table
+
+
+
+@node FILL, FIND, FAULT, Command overview
+@section FILL
+@table
+@item Synopsis:
+FILL VIEWID=VID/K/N
+@item Function:
+Fills the current marked block with the curent fill string.
+@item Arguments:
+@table
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item Example:
+@example
+   /* If there is a block already marked, */
+   /* then neutralize it. */
+
+GETATTR VIEW MARK
+if result=TRUE then SETBLOCKMARK
+
+   /* Set fillstring to `Fill fillaround!' */
+
+SETATTR APPLICATION FILLSTRING FROMVAR '"Fill fillaround!"'
+
+   /* Set cursor to the fill-area's beginning */
+GOTOBYTE 10
+
+   /* Set block mark */
+SETBLOCKMARK
+
+   /* Move cursor */
+GOTOBYTE 100
+
+   /* Fill the area */
+FILL
+
+   /* Remove block marking */
+SETBLOCKMARK
+@end example
+@item See also:
+Menu: `Edit/Fill', SETBLOCKMARK, SETATTR
+@end table
+
+@node FIND, FINDCHANGE, FILL, Command overview
+@section FIND
+@table
+@item Synopsis:
+FIND PROMPT/S,HEX/S,BACKWARDS/S,QUIET/S,TEXT/F,VIEWID=VID/K/N
+@item Function:
+Searches a string or a hex string within the current file. By
+success, the cursor is being positioned at the string's beginning.
+The search begins at the current cursor position.
+@item Arguments:
+@table
+@item PROMPT/S:
+Opens the searchrequester. BACKWARDS and QUIET will be
+ignored.
+@item HEX/S:
+Hex search.
+@item BACKWARDS/S:
+Search backwards.
+@item QUIET/S:
+No requester if the search fails.
+@item TEXT/F:
+The search string or the hex search string.
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item Return codes:
+rc = 5, if the search fails.
+@item Example:
+@example
+   /* Search the string `$VER:' without opening */
+   /* a requester by failure */
+FIND QUIET TEXT '$VER:'
+@end example
+@item See also:
+Attributes: `APPLICATION/#?SEARCH', FINDNEXT, FINDCHANGE, Menu: `Search&Replace/#?'
+@end table
+
+@node FINDCHANGE, FINDNEXT, FIND, Command overview
+@section FINDCHANGE
+@table
+@item Synopsis:
+FINDCHANGE PROMPT/S,HEX/S,ALL/S,BACKWARDS/S,QUIET/S,FIND,CHANGE,VIEWID=VID/K/N
+@item Function:
+Searches a string or a hexstring within a file and replaces it
+throgh a new one. Maybe a requester appears to verify the
+replacement.  The search will start from the current
+cursorposition.
+@item Arguments:
+@table
+@item PROMPT/S:
+Opens the search requester.
+ALL, BACKWARDS and QUIET will be ignored.
+ignoriert.
+@item HEX/S:
+Hex search.
+@item ALL/S:
+All found positions will be replaced without requester each time.
+@item BACKWARDS/S:
+Search backwards.
+@item QUIET/S:
+No reqeuster if the search fails.
+@item FIND:
+Search text or hex string.
+@item CHANGE:
+Replace text or hex string.
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item Return codes:
+rc = 5, if the search fails.
+@item Example:
+@example
+   /* Replaces `Claas' by `Klaas' */
+FINDCHANGE QUIET ALL 'Claas' 'Klaas'
+FINDCHANGE BACKWARDS QUIET ALL 'Claas' 'Klaas'
+@end example
+@item See also:
+FINDNEXT, FIND, Menu: `Search&Replace/#?'
+@end table
+
+
+@node FINDNEXT, FONT, FINDCHANGE, Command overview
+@section FINDNEXT
+@table
+@item Synopsis:
+FINDNEXT BACKWARDS/S,QUIET/S,VIEWID=VID/K/N
+@item Function:
+Continues the last search operation, i.e. either search or
+search&replace.
+@item Arguments:
+@table
+@item BACKWARDS/S:
+Coninue search backwards.
+@item QUIET/S:
+No requester if the search fails.
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item Return codes:
+rc = 5, if search fails.
+@item See also:
+FIND, FINDCHANGE
+@end table
+
+@node FONT, GETATTR, FINDNEXT, Command overview
+@section FONT
+@table
+@item Synopsis:
+FONT NAME/A,SIZE/N/A,WINDOWID=WID/K/N
+@item Function:
+Sets the font of an edit window.
+@item Arguments:
+@table
+@item NAME/A:
+Font name.
+@item SIZE/N/A:
+Font size.
+@item WINDOWID=WID/K/N:
+ID of a window.
+@end table
+@item Example:
+FONT 'horror.font' 8
+@end table
+
+@node GETATTR, GETBLOCK, FONT, Command overview
+@section GETATTR
+@table
+@item Synopsis:
+GETATTR OBJECT/A,FIELD,ID/K/N,STEM/K,VAR/K
+@item Function:
+Gets the value of one or more variables used in the program.
+@item Arguments:
+@table
+@item OBJECT/A:
+Name of the object.
+@item FIELD:
+Name of the field.
+@item ID/K/N:
+Possible with the objects WINDOW, VIEW and FILE. If not given,
+the current view/window/file is used to determine the value.
+@end table
+
+If FIELD is not given, a STEM variable must be specified which
+will be filled with all values of the object.
+@item Example:
+@example
+GETATTR WINDOW TITLE
+
+   /* Result contains now the titel of the window */
+   /* Not very interesting, but who cares :-) */
+@end example
+@item See also:
+Attributes, SETATTR
+@end table
+
+
+@node GETBLOCK, GETBYTES, GETATTR, Command overview
+@section GETBLOCK
+@table
+@item Synopsis:
+GETBLOCK VAR/K,STEM/K => BLOCK
+@item Function:
+Determines the contents of the block buffer, i.e. the contents clipboard.
+@item Return codes:
+@table
+@item BLOCK:
+The block buffer as a hex string.
+@end table
+@item See also:
+SETBLOCK
+@end table
+
+@node GETBYTES, GOTOBOOKMARK, GETBLOCK, Command overview
+@section GETBYTES
+@table
+@item Synopsis:
+GETBYTES VAR/K,STEM/K,POS/N/A,NUMBER/N/A,FILEID=FID/K/N => HEXSTRING
+@item Function:
+Determines the value of a number of bytes at a position in the file.
+@item Arguments:
+@table
+@item POS/N/A:
+Start of the block.
+@item NUMBER/N/A:
+Number of bytes to get.
+@end table
+@item Return codes:
+@table
+@item HEXSTRING:
+Block as a hex string.
+@item FILEID=FID/K/N:
+ID of a file.
+@end table
+@item See also:
+SETBYTES
+@end table
+
+@node GOTOBOOKMARK, GOTOBYTE, GETBYTES, Command overview
+@section GOTOBOOKMARK
+@table
+@item Synopsis:
+GOTOBOOKMARK NUMBER/N,VIEWID=VID/K/N
+@item Function:
+Sets the cursor to a position previously marked with SETBOOKMARK.
+@item Arguments:
+@table
+@item NUMBER/N/A:
+Number between 1 and 10.
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item See also:
+SETBOOKMARK
+@end table
+
+@node GOTOBYTE, GOTOCOLUMN, GOTOBOOKMARK, Command overview
+@section GOTOBYTE
+@table
+@item Synopsis:
+GOTOBYTE POS/N/A,VIEWID=VID/K/N
+@item Function:
+Set the cursor to a specified position.
+@item Arguments:
+@table
+@item POS/N/A:
+Offset to the start of the file.
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item See also:
+COLUMN, GOTOCOLUMN, GOTOLINE, LINE
+@end table
+
+
+@node GOTOCOLUMN, GOTOLINE, GOTOBYTE, Command overview
+@section GOTOCOLUMN
+@table
+@item Synopsis:
+GOTOCOLUMN COLUMN/N/A,VIEWID=VID/K/N
+@item Function:
+Sets the cursor to a specified column.
+@item Arguments:
+@table
+@item COLUMN/N/A:
+Column number.
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item See also:
+COLUMN, GOTOBYTE, GOTOLINE, LINE
+@end table
+
+@node GOTOLINE, GRABMEMORY, GOTOCOLUMN, Command overview
+@section GOTOLINE
+@table
+@item Synopsis:
+GOTOLINE LINE/N/A,VIEWID=VID/K/N
+@item Function:
+Sets the cursor to a specified line.
+@item Arguments:
+@table
+@item LINE/N/A:
+Line number.
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item See also:
+COLUMN, GOTOBYTE, GOTOCOLUMN, LINE
+@end table
+
+@node GRABMEMORY, GROWVIEW, GOTOLINE, Command overview
+@section GRABMEMORY
+@table
+@item Synopsis:
+GRABMEMORY START/N/A,END/N/A,FORCE/S,VIEWID=VID/K/N
+@item Function:
+Displays a memory area instead of a file.
+@item Arguments:
+@table
+@item START/N/A:
+Start of the memory area.
+@item END/N/A:
+End of the memory area.
+@item FORCE/S:
+If the current file is changed, the requester will be suppressed.
+@end table
+@item Return codes:
+rc = 5, if the requester is cancelled.
+@item Example:
+GRABMEMORY 200000 280000 FORCE
+@item See also:
+Menu: `Project/Grab memory'
+@end table
+
+@node GROWVIEW, HELP, GRABMEMORY, Command overview
+@section GROWVIEW
+@table
+@item Synopsis:
+GROWVIEW VIEWID=VID/K/N
+@item Function:
+If possible the the view grows one line.
+@item Arguments:
+@table
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item See also:
+SHRINKVIEW, EXPANDVIEW
+@end table
+
+
+@node HELP, INSERT, GROWVIEW, Command overview
+@section HELP
+@table
+@item Synopsis:
+HELP VAR/K,STEM/K,COMMAND => COMMANDDESC,COMMANDLIST/M
+@item Function:
+Finds out either an overview of all specified arexx commands or the
+synopsis of a command.
+@item Arguments:
+@table
+@item COMMAND:
+Commands name, whose synopsis shall be determined.
+@end table
+
+If COMMAND is not specified, a command overview will be returned.
+@item Return codes:
+If COMMAND is given:
+@table
+@item COMMANDDESC:
+Synopsis of the command.
+@end table
+Else:
+@table
+@item COMMANDLIST/M:
+Number of commands and overview of all commands.
+@end table
+@end table
+
+@node INSERT, LINE, HELP, Command overview
+@section INSERT
+@table
+@item Synopsis:
+INSERT VIEWID=VID/K/N
+@item Function:
+Insert the current block of the block buffer at the current cursor position.
+@item Arguments:
+@table
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item See also:
+Menu: `Edit/Insert', SETBLOCKMARK
+@end table
+
+@node LINE, LOADBLOCK, INSERT, Command overview
+@section LINE
+@table
+@item Synopsis:
+LINE DELTA/N/A,VIEWID=VID/K/N
+@item Function:
+Moves the cursor a specified number of lines up or down.
+@item Arguments:
+@table
+@item LINE/N/A:
+Number of lines. Positive numbers move the cursor down.
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item See also:
+COLUMN, GOTOBYTE, GOTOCOLUMN, GOTOLINE
+@end table
+
+
+@node LOADBLOCK, LOADCOMMANDS, LINE, Command overview
+@section LOADBLOCK
+@table
+@item Synopsis:
+LOADBLOCK NAME
+@item Function:
+Loads a block into the block buffer(clipboard).
+@item Arguments:
+@table
+@item NAME:
+Block name. If not given, a file requester will pop up.
+@end table
+@item Return codes:
+rc = 5, if the block couldn't be loaded.
+@item See also:
+SAVEBLOCK
+@end table
+
+@node LOADCOMMANDS, LOADDISPLAYTYP, LOADBLOCK, Command overview
+@section LOADCOMMANDS
+@table
+@item Synopsis:
+LOADCOMMANDS NAME
+@item Function:
+Loads a set of arexx comannds.
+@item Arguments:
+@table
+@item NAME:
+If not given, a file requester pops up.
+@end table
+@item Return codes:
+rc = 5, if the file couldn't be loaded.
+@item See also:
+Menu: `ARexx/Load commands', SAVECOMMANDS, SAVECOMMANDSAS
+@end table
+
+@node LOADDISPLAYTYP, LOADSETTINGS, LOADCOMMANDS, Command overview
+@section LOADDISPLAYTYP
+@table
+@item Synopsis:
+LOADDISPLAYTYP NAME
+@item Function:
+Loads the user display typ.
+@item Arguments:
+@table
+@item NAME:
+If not given, a file requester will pop up.
+@end table
+@item Return codes:
+rc = 5, if the file couldn't be loaded.
+@item See also:
+Menu: `Settings/Display/#?'
+@end table
+
+@node LOADSETTINGS, LOCKGUI, LOADDISPLAYTYP, Command overview
+@section LOADSETTINGS
+@table
+@item Synopsis:
+LOADSETTINGS NAME
+@item Function:
+Loads a settings file.
+@item Arguments:
+@table
+@item NAME:
+If not given, a file requester will pop up.
+@end table
+@item Return codes:
+rc = 5, if the file couldn't be loaded.
+@item See also:
+Menu: `Settings/Load Settings...'
+@end table
+
+@node LOCKGUI, MOVEWINDOW, LOADSETTINGS, Command overview
+@section LOCKGUI
+@table
+@item Synopsis:
+LOCKGUI
+@item Function:
+Locks all edit windows. The user can't make any input. Just size
+and position of the windows can be modified.
+@item Return codes:
+rc = 5, if the windows cannot be locked. This is possible when
+there's still a requester open.
+@item See also:
+LOCKGUI
+@end table
+
+@node MOVEWINDOW, NEW, LOCKGUI, Command overview
+@section MOVEWINDOW
+@table
+@item Synopsis:
+MOVEWINDOW LEFTEDGE/N,TOPEDGE/N,WINDOWID=WID/K/N
+@item Function:
+Moves the edit window.
+@item Arguments:
+@table
+@item LEFTEDGE/N:
+New left offset.
+@item TOPEDGE/N:
+New top offset.
+@item WINDOWID=WID/K/N:
+ID of a window.
+@end table
+@end table
+
+@node NEW, NEXT, MOVEWINDOW, Command overview
+@section NEW
+@table
+@item Synopsis:
+NEW VIEW/S,WINDOW/S
+@item Function:
+Opens a new view(and window).
+@item Arguments:
+@table
+@item VIEW/S:
+The current view is divided into two new views.
+@item WINDOW/S:
+Opens a new edit window.
+@end table
+@item See also:
+Menu: `Project/(View|Window)/New', SPLIT
+@end table
+
+
+@node NEXT, NOP, NEW, Command overview
+@section NEXT
+@table
+@item Synopsis:
+NEXT VIEW/S,WINDOW/S
+@item Function:
+Activates the next view/window.
+@item Arguments:
+@table
+@item VIEW/S:
+The next view in the current window is activated.
+@item WINDOW/S:
+The next window is activated.
+@end table
+@item See also:
+PREVIOUS
+@end table
+
+@node NOP, OPEN, NEXT, Command overview
+@section NOP
+@table
+@item Synopsis:
+NOP
+@item Function:
+This command does nothing.
+@end table
+
+@node OPEN, PASTE, NOP, Command overview
+@section OPEN
+@table
+@item Synopsis:
+OPEN FILENAME,FORCE/S,VIEWID=VID/K/N
+@item Function:
+Opens a file.
+@item Arguments:
+@table
+@item FILENAME:
+If not given, a file requester will pop up.
+Auswahl.
+@item FORCE/S:
+The changes requester will be suppressed.
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item Return codes:
+rc = 5, if the file can't be loaded.
+@item See also:
+CLEAR, SAVE, SAVEAS
+@end table
+
+@node PASTE, POSITION, OPEN, Command overview
+@section PASTE
+@table
+@item Synopsis:
+PASTE VIEWID=VID/K/N
+@item Function:
+Pastes the current block into the file at the current cursor position.
+@item Arguments:
+@table
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item See also:
+Menu: `Edit/Paste', SETBLOCKMARK
+@end table
+
+@node POSITION, PREVIOUS, PASTE, Command overview
+@section POSITION
+@table
+@item Synopsis:
+POSITION SOF/S,EOF/S,SOL/S,EOL/S,VIEWID=VID/K/N
+@item Function:
+Sets the cursor.
+@item Arguments:
+@table
+@item SOF/S:
+Start of file.
+@item EOF/S:
+End of file.
+@item SOL/S:
+Start of line.
+@item EOL/S:
+End of line.
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+
+As well SOF and EOF as SOL and EOL exclude each other.
+@end table
+
+@node PREVIOUS, PRINT, POSITION, Command overview
+@section PREVIOUS
+@table
+@item Synopsis:
+PREVIOUS VIEW/S,WINDOW/S
+@item Function:
+Activate the previous view resp. edit window.
+@item Arguments:
+@table
+@item VIEW/S:
+The previous view should be activated.
+@item WINDOW/S:
+The previous window should be activated.
+@end table
+@item See also:
+NEXT
+@end table
+
+@node PRINT, PRINTBLOCK, PREVIOUS, Command overview
+@section PRINT
+@table
+@item Synopsis:
+PRINT FILEID=FID/K/N
+@item Function:
+Prints the whole file.
+@item Arguments:
+@table FILEID=FID/K:
+ID of a file.
+@end table
+@end table
+
+@node PRINTBLOCK, QUIT, PRINT, Command overview
+@section PRINTBLOCK
+@table
+@item Synopsis:
+PRINTBLOCK
+@table
+@item Synopsis:
+PRINTBLOCK
+@item Function:
+Prints the contents of the block buffer(clipboard).
+@end table
+@end table
+
+@node QUIT, REDO, PRINTBLOCK, Command overview
+@section QUIT
+@table
+@item Synopsis:
+QUIT FORCE/S
+@item Function:
+Quits FileX.
+@item Arguments:
+@table
+@item FORCE/S:
+The changes requester is suppressed.
+@end table
+@item See also:
+CLOSE
+@end table
+
+@node REDO, REQUESTFILE, QUIT, Command overview
+@section REDO
+@table
+@item Synopsis:
+REDO NUMBER/N,FILEID=FID/K/N
+@item Function:
+Redos a number of `undos'.
+@item Arguments:
+@table
+@item NUMBER/N:
+Number of steps. If not given, just the last `undo' is redone.
+@item FILEID=FID/K/N:
+ID of a file.
+@end table
+@end table
+
+
+@node REQUESTFILE, REQUESTNOTIFY, REDO, Command overview
+@section REQUESTFILE
+@table
+@item Synopsis:
+REQUESTFILE VAR/K,STEM/K,TITLE/K,PATH/K,FILE/K,PATTERN/K => FILENAME
+@item Function:
+Opens a file requester and returns a file name.
+@item Arguments:
+@table
+@item TITLE/K:
+Title of the file requester.
+@item PATH/K:
+Default path.
+@item FILE/K:
+Default file.
+@item PATTERN/K:
+A pattern.
+@end table
+@item Return codes:
+Falls rc = 5, if the requester was cancelled.
+
+Sonst:
+@table
+@item FILENAME:
+Select file with path.
+@end table
+@item Example:
+REQUESTFILE TITLE '"Select a script:"' PATTERN '#?.filex'
+@end table
+
+@node REQUESTNOTIFY, REQUESTRESPONSE, REQUESTFILE, Command overview
+@section REQUESTNOTIFY
+@table
+@item Synopsis:
+REQUESTNOTIFY PROMPT
+@item Function:
+Opens a simple notify requester with just one lonely gadget.
+@item Arguments:
+@table
+@item PROMPT:
+Title of the requester.
+@end table
+@end table
+
+
+@node REQUESTRESPONSE, REQUESTSTRING, REQUESTNOTIFY, Command overview
+@section REQUESTRESPONSE
+@table
+@item Synopsis:
+REQUESTRESPONSE BUTTONS/K,PROMPT/K
+@item Function:
+Opens a Requester with several gadgets.
+@item Arguments:
+@table
+@item BUTTONS/K:
+A string that defines the gadgets(see example).
+@item PROMPT/K:
+Title.
+@end table
+@item Return codes:
+rc contains the number of the selected gadgets. The right most gadget
+has got the nuber 0. All others are enumerated from left to right beginning
+with 1.
+@item Example:
+@example
+   /* Requester with four gadgets */
+REQUESTRESPONSE BUTTONS `"Gadget 1|Gadget2|Gadget 3|Gadget 0"'
+
+say '"You''ve chosen gadget number"' rc '.'
+@end example
+@end table
+
+@node REQUESTSTRING, RX, REQUESTRESPONSE, Command overview
+@section REQUESTSTRING
+@table
+@item Synopsis:
+REQUESTSTRING VAR/K,STEM/K,PROMPT/K,DEFAULT/K => STRING
+@item Function:
+Opens a requester to enter a string.
+@item Arguments:
+@table
+@item PROMPT/K:
+Title.
+@item DEFAULT/K:
+Default string.
+@end table
+@item Return codes:
+rc = 5, if the requester was cancelled.
+
+Else:
+@table
+@item STRING
+Entered string.
+@end table
+@end table
+
+
+@node RX, SAVE, REQUESTSTRING, Command overview
+@section RX
+@table
+@item Synopsis:
+RX VAR/K,STEM/K,CONSOLE/S,ASYNC/S,COMMAND/F => RC/N,RESULT
+@item Function:
+Executes an arexx script.
+@item Arguments:
+@table
+@item CONSOLE/S:
+If set, a console window for input and output will be opened.
+@item ASYNC/S:
+Start the script asyncron.
+@item COMMAND/F:
+Name of the arexx script.
+@end table
+@item Return codes:
+If executed synchronous.
+@table
+@item RC/N,RESULT:
+Return codes of the script.
+@end table
+@end table
+
+@node SAVE, SAVEAS, RX, Command overview
+@section SAVE
+@table
+@item Synopsis:
+SAVE FILEID=FID/K/N
+@item Function:
+Saves the file. If the file does not have a name, a file requester
+will pop up.
+@item Arguments:
+@table
+@item FILEID=FID/K/N:
+ID of a file.
+@end table
+@item Return codes:
+rc = 5, if saving failed.
+@end table
+
+@node SAVEAS, SAVEBLOCK, SAVE, Command overview
+@section SAVEAS
+@table
+@item Synopsis:
+SAVEAS NAME,FILEID=FID/K/N
+@item Function:
+Saves the file under a new name.
+@item Arguments:
+@table
+@item NAME:
+New name of the file. If not given, a file requester will pop up.
+@item FILEID=FID/K/N:
+ID of a file.
+@end table
+@item Return codes:
+rc = 5, if saving failed.
+@end table
+
+@node SAVEBLOCK, SAVECOMMANDS, SAVEAS, Command overview
+@section SAVEBLOCK
+@table
+@item Synopsis:
+SAVEBLOCK NAME
+@item Function:
+Saves the current contents of the block buffer(clipboard).
+@item Arguments:
+@table
+@item NAME:
+If not given, a file requester will pop up.
+@end table
+@item Return codes:
+rc = 5, if saving failed.
+@end table
+
+@node SAVECOMMANDS, SAVECOMMANDSAS, SAVEBLOCK, Command overview
+@section SAVECOMMANDS
+@table
+@item Synopsis:
+SAVECOMMANDS
+@item Function:
+Saves the arexx command list from the menu under the current name.
+@item Return codes:
+rc = 5, if saving failed.
+@end table
+
+@node SAVECOMMANDSAS, SAVESETTINGS, SAVECOMMANDS, Command overview
+@section SAVECOMMANDSAS
+@table
+@item Synopsis:
+SAVECOMMANDSAS NAME
+@item Function:
+Saves the arexx command list from the menu under a new name.
+@item Arguments:
+@table
+@item NAME:
+If not given, a file requester will pop up.
+@end table
+@item Return codes:
+rc = 5, if saving failed.
+@end table
+
+@node SAVESETTINGS, SAVESETTINGSAS, SAVECOMMANDSAS, Command overview
+@section SAVESETTINGS
+@table
+@item Synopsis:
+SAVESETTINGS
+@item Function:
+Saves the current settings under their current name.
+@item Return codes:
+rc = 5, if saving failed.
+@end table
+
+@node SAVESETTINGSAS, SETATTR, SAVESETTINGS, Command overview
+@section SAVESETTINGSAS
+@table
+@item Synopsis:
+SAVESETTINGSAS NAME
+@item Function:
+Saves the current settings under a new name.
+@item Arguments:
+@table
+@item NAME:
+If not given, a ... ehh, what do you guess? ... file requester will pop up.
+@end table
+@item Return codes:
+rc = 5, if saving failed.
+@end table
+
+@node SETATTR, SETBLOCK, SAVESETTINGSAS, Command overview
+@section SETATTR
+@table
+@item Synopsis:
+SETATTR          OBJECT/A,FIELD,ID/K/N,FROMSTEM/K,FROMVAR/K
+@item Function:
+Set one or more variables of the program to a new value.
+@item Arguments:
+@table
+@item OBJECT/A:
+Object name.
+@item FIELD:
+Field name.
+@item ID/K/N:
+Possible with the objects WINDOW, VIEW and FILE. If not given,
+the variable of the current view/window/file is set.
+@item FROMSTEM/K:
+Name of a stem variable containing the values.
+@item FROMVAR/K:
+Name of a variable containing the value.
+@end table
+
+If FIELD is not specified, a FROMSTEM-variable must be specified.
+In this variable, several values of the object can be stored.
+@item Example:
+@example
+meinestemvariable.STRINGFILL = TRUE
+meinestemvariable.FILLSTRING = 'Klaas ist stupid!'
+
+SETATTR APPLICATION FROMSTEM meinestemvariable
+@end example
+@item See also:
+Attributes, GETATTR
+@end table
+
+
+@node SETBLOCK, SETBLOCKMARK, SETATTR, Command overview
+@section SETBLOCK
+@table
+@item Synopsis:
+SETBLOCK BLOCK/A
+@item Function:
+Puts a number of bytes in the block buffer(clipboard).
+@item Arguments:
+@table
+@item BLOCK/A:
+Hex string.
+@end table
+@item Example:
+SETBLOCK '"0071 12feee de"'
+@end table
+
+@node SETBLOCKMARK, SETBOOKMARK, SETBLOCK, Command overview
+@section SETBLOCKMARK
+@table
+@item Synopsis:
+SETBLOCKMARK VIEWID=VID/K/N
+@item Function:
+Switches between block mark mode and normal mode.
+@item Arguments:
+@table
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item See also:
+Menu: `Edit/Mark', Attributes: `PROJECT/MARK', COPY, CUT, FILL
+@end table
+
+@node SETBOOKMARK, SETBYTES, SETBLOCKMARK, Command overview
+@section SETBOOKMARK
+@table
+@item Synopsis:
+SETBOOKMARK NUMBER/N,VIEWID=VID/K/N
+@item Function:
+Sets a mark at the current cursorposition. By using GOTOBOOKMARK,
+this mark can be jumped at.
+
+@item Arguments:
+@table
+@item NUMBER/N:
+Number between 1 and 10, which defines the mark's number.
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item See also:
+GOTOBOOKMARK
+@end table
+
+@node SETBYTES, SETSCREEN, SETBOOKMARK, Command overview
+@section SETBYTES
+@table
+@item Synopsis:
+SETBYTES POS/N/A,HEXSTRING/A,FILEID=FID/K/N
+@item Function:
+Sets a defined number of bytes at a specified position.
+@item Arguments:
+@table
+@item POS/N/A:
+Position, the bytes shall be set to.
+@item HEXSTRING/A:
+Hex string containing the bytes.
+@item FILEID=FID/K/N:
+ID of a file.
+@end table
+@item Example:
+@example
+SETBYTES        200 '"4b6c 6161 73"'
+@end example
+@item See also:
+GETBYTES
+@end table
+
+@node SETSCREEN, SHRINKVIEW, SETBYTES, Command overview
+@section SETSCREEN
+@table
+@item Synopsis:
+SETSCREEN NAME/K,OWN/S
+@item Function:
+Definition of the screen FileX shall be opened on.
+@item Arguments:
+@table
+@item NAME/K:
+Name of an public screen.
+@item OWN/S:
+An own screen shall be opened. A screen mode requester will pop up.
+@end table
+@end table
+
+@node SHRINKVIEW, SIZEWINDOW, SETSCREEN, Command overview
+@section SHRINKVIEW
+@table
+@item Synopsis:
+SHRINKVIEW VIEWID=VID/K/N
+@item Function:
+Shrinks a view by one line.
+@item Arguments:
+@table
+@item VIEWID=VID/K/N:
+ID of a view.
+@end table
+@item See also:
+EXPANDVIEW, GROWVIEW
+@end table
+
+@node SIZEWINDOW, SPLIT, SHRINKVIEW, Command overview
+@section SIZEWINDOW
+@table
+@item Synopsis:
+SIZEWINDOW HEIGHT/N,WIDTH/N,WINDOWID=WID/K/N
+@item Function:
+The FileX window height and width may be modified.
+@item Arguments:
+@table
+@item HEIGHT/N:
+New height.
+@item WIDTH/N:
+New width.
+@item WINDOWID=WID/K/N:
+ID of a window.
+@end table
+@end table
+
+@node SPLIT, UNDO, SIZEWINDOW, Command overview
+@section SPLIT
+@table
+@item Synopsis:
+SPLIT VIEW/S,WINDOW/S
+@item Function:
+Opens a new view with the same file as the current one.
+@item Arguments:
+@table
+@item VIEW/S:
+The current view is divided into two new views.
+@item WINDOW/S:
+Opens a new edit window.
+@end table
+@item See also:
+Menu: `Project/(View|Window)/Split', NEW
+@end table
+
+
+@node UNDO, UNLOCKGUI, SPLIT, Command overview
+@section UNDO
+@table
+@item Synopsis:
+UNDO NUMBER/N,FILEID=FID/K/N
+@item Function:
+A defined number of changes made to the file will be undone.
+@item Arguments:
+@table
+@item NUMBER/N:
+Number of changes which shall be possible to be undone.
+If not specified, only the last change will be undone.
+@item FILEID=FID/K/N:
+ID of a file.
+@end table
+@end table
+
+@node UNLOCKGUI, WINDOWTOBACK, UNDO, Command overview
+@section UNLOCKGUI
+@table
+@item Synopsis:
+UNLOCKGUI
+@item Function:
+If the GUI was locked, it will be unlocked.
+@item See also:
+LOCKGUI
+@end table
+
+
+@node WINDOWTOBACK, WINDOWTOFRONT, UNLOCKGUI, Command overview
+@section WINDOWTOBACK
+@table
+@item Synopsis:
+WINDOWTOBACK WINDOWID=WID/K/N
+@item Function:
+The window will be moved to the back.
+@item Arguments:
+@table
+@item WINDOWID=WID/K/N:
+ID of a window.
+@end table
+@end table
+
+
+@node WINDOWTOFRONT, ZIPWINDOW, WINDOWTOBACK, Command overview
+@section WINDOWTOFRONT
+@table
+@item Synopsis:
+WINDOWTOFRONT WINDOWID=WID/K/N
+@item Function:
+The window will be moved to the front.
+@item Arguments:
+@table
+@item WINDOWID=WID/K/N:
+ID of a window.
+@end table
+@end table
+
+
+@node ZIPWINDOW, , WINDOWTOFRONT, Command overview
+@section ZIPWINDOW
+@table
+@item Synopsis:
+ZIPWINDOW WINDOWID=WID/K/N
+@item Function:
+Same function as the zip gadget of the FileX window has got.
+@item Arguments:
+@table
+@item WINDOWID=WID/K/N:
+ID of a window.
+@end table
+@end table
+
+
+@node Attributes, , Command overview, Main
+@chapter Attributes
+
+Some variables of FileX can be read by the option GETATTR. Probably
+they may also be modified through SETATTR.  Both commands require at
+least the objectname and maybe a fieldname or an ID, too.
+
+There are three different fieldtypes: Strings, numbers and boolean
+values (`TRUE' or `FALSE').
+
+Following are all objects and their belonging fields. For every
+field, its name and the type will be displayed, moreover if it can only
+be read. After that, a contents description follows.
+
+@section APPLICATION-Objekt:
+@table
+@item "SCREEN", String, read only:
+Name of the public screen FileX is opened on.
+@item "VERSION", String, read only:
+Versionnumber of FileX.
+@item "REGNUMBER", Number, read only:
+Registration number. 0 statnds for the unregistered version.
+@item "REGNAME", String, read only:
+Name of registered user.
+@item "AREXX", String, read only:
+Name of the arexx port.
+@item "MAXUNDOMEMSIZE", Number:
+Maximum size of the undo memory.
+@item "MAXUNDOLEVEL", Number:
+Maximum number of undo levels.
+@item "ALTJUMP", Number:
+Jump width in lines for Alt-CURSORUP/DOWN.
+@item "SCROLLBORDER", Number:
+Distance in lines to the upper/lower limit from where on the window
+shall be scrolled.
+@item "CLIPBOARDUNIT", Number:
+Unit that should be used for the block buffer.
+@item "COMMANDSHELLWINDOW", String:
+Description of the command shell window.
+@item "COMMANDWINDOW", String:
+Description of the shell window for arexx scripts.
+@item "OVERWRITE", Bool:
+TRUE, if no requester before saving an already existing file shall
+appear.
+@item "USEASL", Bool:
+TRUE, if the Asl library and the Intuition library should be used instead
+of the Reqtools library.
+@item "PRIORITY", Number:
+Taskpriority of FileX.
+@item "SEARCHSTRING", String:
+Search string.
+@item "REPLACESTRING", String:
+Replace string.
+@item "STRINGSEARCH", Bool:
+TRUE for string search, FALSE for hex search.
+@item "CASESENSITIVSEARCH", Bool:
+TRUE for casesensitiv searching.
+@item "WILDSEARCH", Bool:
+TRUE to use the question mark(`?') as a wildcard.
+@item "FILLSTRING", String:
+Fill string.
+@item "STRINGFILL", Bool:
+TRUE for stringfill, FALSE for hex fill.
+@end table
+
+@section "WINDOWS"-Objekt:
+@table
+@item 1..n
+ID of a window.
+@item "COUNT", Number, read only:
+Number of IDs, i.e. the number of opened edit windows.
+@end table
+
+@section "WINDOW"-Objekt:
+@table
+@item "LEFT", Number, read only:
+Window offset to the left border.
+@item "TOP", Number, read only:
+Window offset to the right border.
+@item "WIDTH", Number, read only:
+Width of the window.
+@item "HEIGHT", Number, read only:
+Height of the window.
+@item "TITLE", String, read only:
+Current title of the window.
+@item "MIN_WIDTH", Number, read only:
+Minimun width of the window.
+@item "MIN_HEIGHT", Number, read only:
+Minimum height of tht window.
+@item "MAX_WIDTH", Number, read only:
+Maximum width of the window.
+@item "MAX_HEIGHT", Number, read only:
+Minimun height of the window.
+@item "VIEWCOUNT", Number, read only:
+Number of views.
+@item "VIEWS", String, read only:
+IDs of all views in this window. Separated by a space.
+@end table
+
+@section "FILES"-Objekt:
+@table
+@item 1..n
+ID of a file.
+@item "COUNT", Number, read only:
+Number of IDs, i.e. the number of opened files.
+@end table
+
+@section "FILE"-Objekt:
+@table
+@item "FULLNAME", String:
+Full file name with path.
+@item "PATH", String:
+Path of the file name.
+@item "NAME", String:
+Name without path.
+@item "CHANGES", Number, read only:
+Number of changes.
+@item "FILELEN", Number, read only:
+Length of the file.
+@item "MEMPOS", Number, read only:
+Start address of the file in the memory. If the lenght of the file is changed,
+the start address might change, too.
+@item "VIEWCOUNT", Number, read only:
+Number of views showing the file.
+@item "VIEWS", String, read only:
+IDs of all views showing the file. Separated by a space.
+@end table
+
+@section "VIEW"-Objekt:
+@table
+@item "LINES", Number, read only:
+Number of lines.
+@item "BYTESPERLINE", Number, read only:
+Number of bytes per line.
+@item "DISPLAYTYP", Number:
+Current display type.
+@item "DISPLAY", Number:
+Defines in which form the file shall be displayed: 1 = only
+hexddisplay, 2 = only Asciidisplay, 3 = Hex-ASCII mixed display.
+@item "DISPLAYSPACES", Number:
+Defines how many Bytes shall be grouped to a block in the
+hexdisplay: 3 = no blocks, 0 = one byte blocks, 1 = word blocks, 2
+= long word blocks.
+@item "CURSORPOS", Number, read only:
+Current cursor position.
+@item "MARKPOS", Number, read only:
+Position of the mark's beginning.
+@item "EDITASCII", Bool:
+TRUE, when the active cursor is in the ascii area.
+@item "MARK", Bool, read only:
+TRUE, if a block is being marked at the moment.
+@item "FILE", Number, read only:
+ID of the displayed file.
+@item "WINDOW", Number, read only:
+ID of the belonging edit window.
+@end table
+
+@bye

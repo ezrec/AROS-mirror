@@ -1,0 +1,85 @@
+- Objectorientiertere Verwaltung der DD, DI und FDs.
+- Prefsstrucktur
+- Funktion, die einen Bereich in bestimmten Farben neu zeichnet.
+
+
+Diskurs:
+--------
+- Wenn man zu einer Byte-Position springt, die es nicht mehr gibt,
+sollte FileX nicht ans Dateiende springen, sondern kurz _blinken_
+---------------------------------------------------------------------
+
+*** Testen unter 2.0
+
+Aktuell:
+--------
+Nummer der Anzeige bei Multifileanzeige
+Consolefenster mit Argumenten: %s für den Screennamen
+Searchhistory, die sich merkt, ob es eine Hexsuche war.
+Ersatztext für Please register....
+Screenmoderequester: Defaultmode
+Filerequester, Start: Mehrere Files anwählen
+Undo in mehreren Views->Cursor weg
+Split nicht nur für aktuellen View!
+Blockierung der Fenster, falls ein neues hinzukommt
+ARexxflag bei Commandos die nur mit ohne Iconify laufen?
+Verschiedenlange Search and Replace
+
+Globaler Font?
+Tastaturwechsel zw. Clip/Calc/Main ?
+
+Noch zu implementieren:
+-----------------------
+- Minimal/Maximalwerte
+- Iconifygadget
+- Hotkeys?
+- Hexgadgets bei Suche dürfen nur Hexwerte akzeptieren
+- Toolmanagerfehler finden
+- Tastaturwiederholung
+- Vergleich von Files
+- ARexx:
+  -ALIAS-Befehl
+  -CMDSHELL-Befehl
+-Masken weg?
+
+-Edit on Device
+-Onlinehilfen
+
+Offene Fragen:
+--------------
+- Reqtoolsrequester müssen Fenster blockieren?
+- Wie kann man die Statuszeile erweitern?
+  - Zahl Binär,Oktal (Formatstring?)
+  - Blocknummer von gedachten Blöcken
+- Wieso wurde Grab auf f80000 begrenzt?
+- Hexsuchen mit Muster?
+- Search abbrechen?
+- Suchen an geraden/durch vier teilbaren Adressen?
+- Adressen an/aus?
+- TeX-Anleitung?
+- Menus disablen?
+- Markierung per Mouse.
+- Erstellung einer RAW->VANILLA Tabelle
+- Trotz Speichermangels cutten!
+- Arexxscripte zur Anzeige von Struckturen?
+- Windowbreite/höhe speichern oder BPR/Zeilen ?
+- Menus anders anordnen?
+
+Implementiert bisher, Funktion ggf. noch prüfen:
+------------------------------------------------
+- Sicherheitsabfragen wieder einbauen, wo QuitRequester war.
+- Alle Requester dem Screen zuweisen bzw. Nichts zuweisen
+- Bei Displaywechsel CheckItemMenus
+- Alle Windows werden blockiert bei Requestern
+- Gadgetshortcuts aus Stringgadgets anwählbar
+- Searchhistory
+- Textfontzeiger
+- Iconify
+- Fontlänge, String oder Zeiger nicht vorhanden -> Settings.228/328
+- direkte Clipboardansprache
+- Suchen geändert/verbessert
+
+Known Bugs:
+-----------
+- Schnelles Fenster Verkleinern ohne daß FileX es bemerkt => Darstellung gelöscht
+- Enforcerhits bei falschem Key

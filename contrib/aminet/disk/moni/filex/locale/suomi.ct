@@ -1,0 +1,1095 @@
+## version $VER: FileX.catalog 2.0 (19.05.94) by Teijo Kinnunen
+## codeset 0
+## language suomi
+;
+MSG_MENU_PROJECT
+Tiedosto
+; Project
+;
+MSG_MENU_PROJECT_NEW
+*\000Uusi
+; *\000New
+;
+MSG_MENU_PROJECT_OPEN
+A\000Avaa...
+; O\000Open...
+;
+MSG_MENU_PROJECT_OPENPREVIOUSLOADED
+=\000Avaa muistissa oleva...
+; =\000Open previous loaded...
+;
+MSG_MENU_PROJECT_SAVE
+S\000Tallenna
+; S\000Save
+;
+MSG_MENU_PROJECT_SAVEAS
+N\000Tallenna nimellä...
+; A\000Save as...
+;
+MSG_MENU_PROJECT_GRABMEMORY
+S\000Sieppaa muistista...
+; G\000Grab memory...
+;
+MSG_MENU_PROJECT_PRINT
+P\000Tulosta
+; P\000Print
+;
+MSG_MENU_PROJECT_ICONIFY
+Y\000Ikonisoi
+; Y\000Iconify
+;
+MSG_MENU_PROJECT_ABOUT
+?\000Tietoja ohjelmasta...
+; ?\000About...
+;
+MSG_MENU_PROJECT_QUIT
+L\000Lopeta...
+; !\000Quit...
+;
+MSG_MENU_EDIT
+Muokkaus
+; Edit
+;
+MSG_MENU_EDIT_MARKBLOCK
+M\000Merkitse Lohko
+; M\000Mark Block
+;
+MSG_MENU_EDIT_CUT
+X\000Leikkaa
+; X\000Cut
+;
+MSG_MENU_EDIT_COPY
+C\000Kopioi
+; C\000Copy
+;
+MSG_MENU_EDIT_FILL
+^\000Täytä...
+; ^\000Fill...
+;
+MSG_MENU_EDIT_PASTE
+V\000Sijoita
+; V\000Paste
+;
+MSG_MENU_EDIT_INSERT
+I\000Lisää
+; I\000Insert
+;
+MSG_MENU_EDIT_APPEND
+$\000Liitä loppuun
+; $\000Append
+;
+MSG_MENU_EDIT_PRINT
+#\000Tulosta
+; #\000Print
+;
+MSG_MENU_EDIT_LOADBLOCK
+\\\000Lataa lohko...
+; \\\000Load block...
+;
+MSG_MENU_EDIT_SAVEBLOCK
+|\000Tallenna lohko...
+; |\000Save block...
+;
+MSG_MENU_EDIT_UNDO
+Z\000Peru muutos
+; Z\000Undo
+;
+MSG_MENU_EDIT_REDO
+T\000Palauta muutos
+; T\000Redo
+;
+MSG_MENU_EDIT_SWITCH
+:\000Vaihda kursori
+; :\000Switch
+;
+MSG_MENU_SEARCH
+Etsintä
+; Search and replace
+;
+MSG_MENU_SEARCH_SEARCH
+F\000Etsi...
+; F\000Search...
+;
+MSG_MENU_SEARCH_REPLACE
+R\000Etsi ja korvaa...
+; R\000Search and replace...
+;
+MSG_MENU_SEARCH_REPLACENEXT
+N\000Etsi (ja korvaa) seuraava
+; N\000Search(and replace) next
+;
+MSG_MENU_SEARCH_REPLACEPREVIOUS
+B\000Etsi (ja korvaa) edellinen
+; B\000Search(and replace) previous
+;
+MSG_MENU_SETTING
+Asetukset
+; Settings
+;
+MSG_MENU_SETTINGS_ADJUSTWINDOW
+W\000Sovita ikkunan koko
+; W\000Adjust window size
+;
+MSG_MENU_SETTINGS_DISPLAY
+Näytä
+; Display
+;
+MSG_MENU_SETTINGS_DISPLAY_CHARACTERS
+Kirjaimet
+; Characters
+;
+MSG_MENU_SETTINGS_DISPLAY_ASCII
+Ascii ($20-$7F)
+; Ascii ($20-$7F)
+;
+MSG_MENU_SETTINGS_DISPLAY_ALL
+Kaikki
+; All
+;
+MSG_MENU_SETTINGS_DISPLAY_USERDEFINED
+Itse määritelty
+; User defined
+;
+MSG_MENU_SETTINGS_DISPLAY_LOAD
+Lataa...
+; Load...
+;
+MSG_MENU_SETTINGS_FONT
+Fontti...
+; Font...
+;
+MSG_MENU_SETTINGS_SCREEN
+Näyttö
+; Screen
+;
+MSG_MENU_SETTINGS_SCREEN_DEFAULTPUBLIC
+Oletus julkinen
+; Default public
+;
+MSG_MENU_SETTINGS_SCREEN_WORKBENCH
+Workbench
+; Workbench
+;
+MSG_MENU_SETTINGS_SCREEN_PUBLIC
+Julkinen...
+; Public...
+;
+MSG_MENU_SETTINGS_SCREEN_OWNPUBLIC
+Oma (julkinen)...
+; Own public...
+;
+MSG_MENU_SETTINGS_PALETTE
+Värit...
+; Palette...
+;
+MSG_MENU_SETTINGS_MISCELLANEOUS
+U\000Sekalaiset...
+; U\000Miscellaneous...
+;
+MSG_MENU_SETTINGS_LOADSETTINGS
+Lataa asetukset...
+; Load settings...
+;
+MSG_MENU_SETTINGS_SAVESETTINGS
+Tallenna asetukset
+; Save settings
+;
+MSG_MENU_SETTINGS_SAVESETTINGSAS
+Tallenna asetukset nimellä...
+; Save settings as...
+;
+MSG_MENU_MOVE
+Siirry
+; Move
+;
+MSG_MENU_MOVE_JUMPTOBYTE
+J\000Siirry kohtaan...
+; J\000Jump to byte...
+;
+MSG_MENU_MOVE_MARKLOCATION
+K\000Merkitse paikka...
+; K\000Mark location...
+;
+MSG_MENU_MOVE_JUMPTOMARK
+L\000Siirry merkkiin...
+; L\000Jump to mark...
+;
+MSG_MENU_AREXX
+ARexx
+; ARexx
+;
+MSG_MENU_AREXX_COMMANDSHELL
+H\000Komentotulkki...
+; H\000Command shell...
+;
+MSG_MENU_AREXX_EXECUTECOMMAND
+~\000Suorita komento...
+; ~\000Execute command...
+;
+MSG_MENU_AREXX_ASSIGNCOMMAND
+`\000Aseta komento...
+; `\000Assign command...
+;
+MSG_MENU_AREXX_LOADCOMMANDS
+Lataa komennot...
+; Load commands...
+;
+MSG_MENU_AREXX_SAVECOMMANDS
+Tallenna komennot
+; Save commands
+;
+MSG_MENU_AREXX_SAVECOMMANDSAS
+Tallenna komennot nimellä...
+; Save commands as...
+;
+MSG_MENU_AREXX_EMPTYCOMMANDX
+Tyhjä komento #%ld
+; Empty command #%ld
+;
+MSG_MENU_MISC
+Muut
+; Misc
+;
+MSG_MENU_MISC_OPENCALC
+(\000Avaa laskin...
+; (\000Open calculator...
+;
+MSG_MENU_MISC_OPENCLIPCONV
+)\000Avaa leikepöydän muunnin...
+; )\000Open clipboard converter...
+;
+MSG_MENU_VIEW
+Ikkunan osio
+; View
+;
+MSG_MENU_VIEW_NEW
+E\000Uusi
+; E\000New
+;
+MSG_MENU_VIEW_CLOSE
+Q\000Sulje...
+; Q\000Close...
+;
+MSG_MENU_VIEW_SAVE_AND_CLOSE
+Tallenna ja sulje
+; Save and close
+;
+MSG_MENU_VIEW_NEXT
+.\000Seuraava
+; .\000Next
+;
+MSG_MENU_VIEW_PREVIOUS
+,\000Edellinen
+; ,\000Previous
+;
+MSG_MENU_VIEW_EXPAND
++\000Laajenna
+; +\000Expand
+;
+MSG_MENU_VIEW_GROW
+-\000Suurenna
+; -\000Grow
+;
+MSG_MENU_VIEW_SHRINK
+_\000Pienennä
+; _\000Shrink
+;
+MSG_MENU_VIEW_SPLIT
+D\000Jaa
+; D\000Split
+;
+MSG_MENU_WINDOW
+Ikkuna
+; Window
+;
+MSG_MENU_WINDOW_NEW
+Uusi
+; New
+;
+MSG_MENU_WINDOW_CLOSE
+Sulje...
+; Close...
+;
+MSG_MENU_WINDOW_NEXT
+>\000Seuraava
+; >\000Next
+;
+MSG_MENU_WINDOW_PREVIOUS
+<\000Edellinen
+; <\000Previous
+;
+MSG_MENU_WINDOW_SPLIT
+Jaa
+; Split to
+;
+MSG_WINDOWTITLE_INFO
+Tiedote
+; Request
+;
+MSG_WINDOWTITLE_JUMPTOBYTE
+Siirry kohtaan
+; Jump to byte
+;
+MSG_WINDOWTITLE_LOCATIONNUMBER
+Merkin numero?
+; Location number?
+;
+MSG_WINDOWTITLE_GRAB
+Sieppaa muisti
+; Grab memory
+;
+MSG_WINDOWTITLE_SELECTCOMMAND
+Valitse komento
+; Select command
+;
+MSG_WINDOWTITLE_SELECTDISPLAYFILE
+Valitse näytönmääritystiedosto
+; Select display file
+;
+MSG_WINDOWTITLE_GRABMODE
+Kohta: %9s Käsiteltävä muistialue %9s - %9s
+; Pos: %9s Grabbing memory %9s to %9s
+;
+MSG_WINDOWTITLE_FILEMODE
+Kohta: %9s Pituus: %9s Nimi: %s
+; Pos: %9s Length: %9s Name: %s
+;
+MSG_WINDOWTITLE_SAVEFILEAS
+Tallenna tiedosto nimellä
+; Save file as
+;
+MSG_WINDOWTITLE_PALETTE
+Muuta värejä
+; Change palette
+;
+MSG_WINDOWTITLE_SEARCH
+Etsi ja korvaa
+; Search and replace
+;
+MSG_WINDOWTITLE_FILL
+Täytä
+; Fill
+;
+MSG_WINDOWTITLE_LOADBLOCK
+Lataa lohko
+; Load block
+;
+MSG_WINDOWTITLE_SAVEBLOCK
+Tallenna lohko
+; Save block
+;
+MSG_WINDOWTITLE_LOADSETTINGS
+Lataa asetukset
+; Load settings
+;
+MSG_WINDOWTITLE_SAVESETTINGS
+Tallenna asetukset
+; Save settings
+;
+MSG_WINDOWTITLE_LOADCOMMANDS
+Lataa komennot
+; Load commands
+;
+MSG_WINDOWTITLE_SAVECOMMANDS
+Tallenna komennot
+; Save commands
+;
+MSG_WINDOWTITLE_MISC
+Sekalaista
+; Miscellaneous
+;
+MSG_WINDOWTITLE_PUBLICSCREENLIST
+Valitse julkinen näyttö
+; Select public screen
+;
+MSG_WINDOWTITLE_SELECTFONT
+Valitse fontti
+; Select font
+;
+MSG_WINDOWTITLE_SCREENMODE
+Valitse näyttötila
+; Select screenmode
+;
+MSG_WINDOWTITLE_ENTERCOMMANDNUMBER
+Anna komennon numero
+; Enter command number
+;
+MSG_WINDOWTITLE_SELECTCOMMANDNAME
+Valitse komennon nimi
+; Select command name
+;
+MSG_WINDOWTITLE_OPENFILE
+Avaa tiedosto
+; Open file
+;
+MSG_WINDOWTITLE_CALCULATOR
+Laskin
+; Calculator
+;
+MSG_WINDOWTITLE_CLIPCONV
+Leikepöydän muunnin
+; Clipboard Converter
+;
+MSG_WINDOWTITLE_PREVIOUSFILES
+Valitse muistissa oleva tiedosto
+; Select previous loaded file
+;
+MSG_GADGET_OK
+_Ok
+; _Ok
+;
+MSG_GADGET_CANCEL
+_Peru
+; _Cancel
+;
+MSG_GADGET_STOPPRINTING
+Seis!
+; Stop!
+;
+MSG_GADGET_CONTINUE
+Jatka
+; Continue
+;
+MSG_GADGET_YESNO
+_Kyllä|_Ei
+; _Yes|_No
+;
+MSG_GADGET_CHANGES
+_Ok|_Peru
+; _Ok|_Cancel
+;
+MSG_GADGET_REPLACE
+_Kyllä|K_aikki|_Vielä tämä|_Lopeta|_Ei
+; _Yes|_All|_Last|_Quit|_No
+;
+MSG_GADGET_ABOUT1
+Lisää|Pois
+; More|Leave about
+;
+MSG_GADGET_ABOUT2
+Lisää|Pois
+; More|Leave about
+;
+MSG_GADGET_REGISTERED
+!\\_ö/!
+; !\\_ö/!
+;
+MSG_GADGET_GRAB_START
+_Alku
+; _Start
+;
+MSG_GADGET_GRAB_END
+_Loppu
+; _End
+;
+MSG_GADGET_MISC_ALTJUMP
+_Alt-hyppy
+; _Altjump
+;
+MSG_GADGET_MISC_SCROLLBORDER
+Vieritys_reunus
+; _Scroll border
+;
+MSG_GADGET_MISC_MAXUNDOLEVEL
+Max perumis_taso
+; Max undo _level
+;
+MSG_GADGET_MISC_MAXUNDOMEM
+_Max perumismuisti (kB)
+; _Max undo mem(KB)
+;
+MSG_GADGET_MISC_CLIPBOARDUNIT
+Leikepöydän _yksikkö
+; Clipboard _unit
+;
+MSG_GADGET_MISC_PROGRAMPRIORITY
+Ohjelman _prioriteetti
+; _Program priority
+;
+MSG_GADGET_MISC_USEASLLIBRARY
+Käytä asl_.librarya
+; Use asl_.library
+;
+MSG_GADGET_MISC_OVERWRITE
+_Kirjoita päälle
+; O_verwrite
+;
+MSG_GADGET_MISC_COMMANDSHELLWINDOW
+Komentotulkin _ikkuna
+; Command s_hell window
+;
+MSG_GADGET_MISC_COMMANDWINDOW
+Komento ikkun_a
+; Command _window
+;
+MSG_GADGET_MISC_DISPLAY
+_Näytä
+; _Display
+;
+MSG_GADGET_MISC_SPACE
+Jaksotus
+; Spac_es
+;
+MSG_GADGET_MISC_HEX
+Heksa
+; Hex
+;
+MSG_GADGET_MISC_ASCII
+Ascii
+; Ascii
+;
+MSG_GADGET_MISC_HEXANDASCII
+Heksa ja ascii
+; Hex and ascii
+;
+MSG_GADGET_MISC_LONG
+Pitkin sanoin
+; Long
+;
+MSG_GADGET_MISC_WORD
+Sanoittain
+; Word
+;
+MSG_GADGET_MISC_BYTE
+Tavuittain
+; Byte
+;
+MSG_GADGET_MISC_NO
+Ei jaksotusta
+; No
+;
+MSG_GADGET_SEARCH_CASESENSITIV
+E_rota isot ja pienet kirjaimet
+; C_ase sensitiv
+;
+MSG_GADGET_SEARCH_WILDCARDS
+_Jokerimerkit
+; _Wildcards
+;
+MSG_GADGET_SEARCH_STRINGSEARCH
+_Merkkijonon etsintä
+; S_tring search
+;
+MSG_GADGET_SEARCH_REPLACEMODE
+K_orvaa
+; R_eplace
+;
+MSG_GADGET_SEARCH_SEARCHSTRING
+_Etsi
+; _Find
+;
+MSG_GADGET_SEARCH_REPLACESTRING
+_Korvaa
+; _Replace
+;
+MSG_GADGET_FILL_STRING
+_Täytä
+; _Fill
+;
+MSG_GADGET_SEARCH_NEXT
+_Seuraava
+; _Next
+;
+MSG_GADGET_SEARCH_PREVIOUS
+Edellinen (_a)
+; Previous (_b)
+;
+MSG_GADGET_FILL_STRINGFILL
+Täytä _merkkijonolla
+; S_tring fill
+;
+MSG_GADGET_FILL_FILL
+_Täytä
+; _Fill
+;
+MSG_GADGET_PUBLICSCREENLIST_PUBLICSCREENLIST
+_Julkiset näytöt
+; _Public screen list
+;
+MSG_GADGET_JUMPTO_NUMBER
+_Sijainti (heksa)
+; _Hex position
+;
+MSG_GADGET_NUMBER_NUMBER
+_Numero
+; _Number
+;
+MSG_GADGET_STRING_STRING
+_Merkkijono
+; _String
+;
+MSG_GADGET_CLIPCONV_CONVERT
+Muunna
+; Convert
+;
+MSG_GADGET_CLIPCONV_CYCLE_TEXT
+Teksti
+; Text
+;
+MSG_GADGET_CLIPCONV_CYCLE_RAW
+Raaka
+; Raw
+;
+MSG_GADGET_CLIPCONV_CYCLE_BIN
+Binääri
+; Bin
+;
+MSG_GADGET_CLIPCONV_CYCLE_DEC
+10-järj
+; Dec
+;
+MSG_GADGET_CLIPCONV_CYCLE_HEX
+Heksa
+; Hex
+;
+MSG_GADGET_CLIPCONV_CYCLE_OCT
+Oktaali
+; Oct
+;
+MSG_GADGET_CALC_CYCLE_BIN
+Binääri
+; Bin
+;
+MSG_GADGET_CALC_CYCLE_DEC
+10-järj
+; Dec
+;
+MSG_GADGET_CALC_CYCLE_HEX
+Heksa
+; Hex
+;
+MSG_GADGET_CALC_CYCLE_OCT
+Oktaali
+; Oct
+;
+MSG_INFO_GLOBAL_NOSCREENMODEREQ
+OS 2.1 (tai uudempi) tai reqtools.library\ntarvitaan näyttötilan valintaan!
+; OS 2.1(or higher) or reqtoolslibrary\nrequired for screenmode requester!
+;
+MSG_INFO_GLOBAL_ICONIFYFAILED
+Ikonisointi epäonnistui!
+; Failed to iconify!
+;
+MSG_INFO_GLOBAL_CANTOPENFONT
+En löydä fonttia \"%s\" koko %ld!
+; Can't open font \"%s\" size %ld!
+;
+MSG_INFO_PRINT_NOTHINGTOPRINT
+Ei tulostettavaa!
+; Nothing to print!
+;
+MSG_INFO_PRINT_PRINTERNOTREADY
+Kirjoitin ei valmis!
+; Printer not ready!
+;
+MSG_INFO_PRINT_PRINTING
+Tulostan...
+; Printing...
+;
+MSG_INFO_GRAB_ENDBEFORESTART
+Loppuosoite pienempi kuin alku!
+; End before start!
+;
+MSG_INFO_GRAB_STARTEQUALTOEND
+Alku- ja loppuosoite samat!
+; Start equal to end!
+;
+MSG_INFO_GLOBAL_ILLEGALCHARACTERS
+Heksajono\n\"%s\"\nsisältää asiaankuulumattomia merkkejä!
+; Hex string\n\"%s\"\ncontains illegal characters!
+;
+MSG_INFO_GLOBAL_CANTOPENWINDOW
+En pysty avaamaan ikkunaa (%ld)!
+; Can't open window (%ld)!
+;
+MSG_INFO_GLOBAL_FAILEDTOCREATEPROCESS
+En pysty luomaan uutta prosessia!
+; Failed to create new process!
+;
+MSG_INFO_GLOBAL_CANTOPENFILE
+En pysty avaamaan tiedostoa \"%s\"!
+; Can't open file \"%s\"!
+;
+MSG_INFO_GLOBAL_CANTALLOCMEM
+En pysty varaamaan %ld tavua muistia!
+; Can't allocate %ld bytes!
+;
+MSG_INFO_GLOBAL_CANTALLOCSOMEMEM
+En pysty varaamaan muistia!
+; Can't allocate mem!
+;
+MSG_INFO_GLOBAL_FILEALREADYEXISTS
+Tiedosto \"%s\" on jo olemassa! Kirjoitanko päälle?
+; File \"%s\" already exists! Overwrite?
+;
+MSG_INFO_GLOBAL_CANTSAVEFILE
+En pysty tallentamaan \"%s\"!
+; Can't save \"%s\"!
+;
+MSG_INFO_GLOBAL_CHANGESTOFILES
+Yhteensä %ld muutosta on tehty %ld tiedostoon!\nKaikki muutokset häviävät.
+; Totally %ld changes have been made to %ld files!\nThey will all be lost. 
+;
+MSG_INFO_GLOBAL_CHANGESTOFILE
+%ld muutosta on tehty tiedostoon \"%s\"!\nNe kaikki häviävät.
+; %ld changes have been made to \"%s\"!\nThey will all be lost. 
+;
+MSG_INFO_GLOBAL_WANTTOQUIT
+Haluatko todella lopettaa FileX:n?
+; Do you really want to quit FileX?
+;
+MSG_INFO_GLOBAL_WANTTOCLOSEVIEW
+Haluatko todella sulkea osion?
+; Do you really want to close the view?
+;
+MSG_INFO_GLOBAL_WANTTOCLOSEWINDOW
+Haluatko todella sulkea ikkunan?
+; Do you really want to close the window?
+;
+MSG_INFO_GLOBAL_WANTTOCLEAR
+Haluatko todella tyhjentää osion?
+; Do you really want to clear the view?
+;
+MSG_INFO_GLOBAL_WANTTOGRAB
+Haluatko todella siepata muistia?
+; Do you really want to grab memory?
+;
+MSG_INFO_GLOBAL_WANTTOOPEN
+Haluatko todella avata uuden tiedoston?
+; Do you really want to open a new file?
+;
+MSG_INFO_GLOBAL_CANTALLOCFILEREQ
+En pysty varaamaan tiedostovalikkoa!
+; Can't alloc file requester!
+;
+MSG_INFO_GLOBAL_CANTALLOCFONTREQ
+En pysty varaamaan fonttivalikkoa!
+; Can't alloc font requester!
+;
+MSG_INFO_GLOBAL_CANTALLOCSCREENMODEREQ
+En pysty varaamaan näyttötilavalikkoa!
+; Can't alloc screenmode requester!
+;
+MSG_INFO_GLOBAL_CANTCREATEMSGPORT
+En pysty luomaan viestiporttia!
+; Can't create msgport!
+;
+MSG_INFO_GLOBAL_CANTOPENLIBRARY
+En pysty avaamaan kirjastoa \"%s\" (V%ld)!
+; Can't open \"%s\" (V%ld)!
+;
+MSG_INFO_GLOBAL_HEXSTRINGNICHTBYTEALIGNED
+Heksajono\n\"%s\"\nei sovi tavuihin jaettavaksi!
+; Hex string\n\"%s\"\nnot byte-aligned!
+;
+MSG_INFO_GLOBAL_BLOCKDOESNTFIT
+Lohko ei sovi. %ld tavua liian pitkä.\nHaluatko todella sijoittaa?
+; Block doesn't fit. %ld Byte(s) too long.\nDo you really want to paste?
+;
+MSG_INFO_GLOBAL_BUFFEREMPTY
+Lohkopuskuri tyhjä!
+; Blockbuffer empty!
+;
+MSG_INFO_GLOBAL_CANTLOADSETTINGS
+En pysty lataamaan asetuksia \"%s\"!
+; Can't load settings \"%s\"!
+;
+MSG_INFO_GLOBAL_UNKNOWNVERSIONCANTLOADSETTINGS
+Tuntematon versio!\nEn pysty lataamaan asetuksia \"%s\"!
+; Unknown version!\nCan't load settings \"%s\"!
+;
+MSG_INFO_GLOBAL_CANTSAVESETTINGS
+En pysty tallentamaan asetuksia \"%s\"!
+; Can't save settings \"%s\"!
+;
+MSG_INFO_GLOBAL_CANTSETUPSCREEN
+En pysty asettamaan näyttöä (%ld)!
+; Can't setup screen (%ld)!
+;
+MSG_INFO_GLOBAL_SCREENUSED
+Kaikki vieraat ikkunat täytyy sulkea\nennen FileX:n näytön sulkemista!
+; You must close all visitor windows\nbefore closing the FileX screen!
+;
+MSG_INFO_GLOBAL_NONOTPRIVATEPUBLICSCREENSFOUND
+Yksityisiä julkisia näyttöjä ei löytynyt!
+; No not private public screens found!
+;
+MSG_INFO_GLOBAL_CANTOPENINFOFILE
+En pysty avaamaan \"%s.info\"!
+; Can't open \"%s.info\"!
+;
+MSG_INFO_GLOBAL_NERVREQUESTER
+   FileX V2.0 (9.6.94) Shareware 20 DM tai 15 US-Dollaria,    \
+            Copyright © 1993-1994 by Klaas Hermanns,          \
+                   kaikki oikeudet pidätetään.                \
+                                                              \
+   Yhteydenotot seuraaviin osoitteisiin (vain englanniksi     \
+   tai saksaksi!):                                            \
+   Sähköposti:    : dalton@cocuni.GUN.de                      \
+                                                              \
+   Normaali posti:  Klaas Hermanns                            \
+                    Weberstrasse 42                           \
+                    47533 Kleve                               \
+                    Germany                                   \
+                                                              \
+   Kiitokset niille, jotka ovat rekisteröineet FileX V1.1!    
+;   FileX V2.0ß5 (28.4.94) Shareware 20 DM or 15 US-Dollar,    \
+;            Copyright © 1993-1994 by Klaas Hermanns,          \
+;                   all rights reserved.                       \
+;                                                              \
+;   To contact me write to one of the following addresses:     \
+;                                                              \
+;   Electronic mail: dalton@cocuni.GUN.de                      \
+;                                                              \
+;   Standard mail:   Klaas Hermanns                            \
+;                    Weberstrasse 42                           \
+;                    47533 Kleve                               \
+;                    Germany                                   \
+;                                                              \
+;   Thanks to the few who have registered for FileX V1.1:      
+;***************************************************************
+;NOTE:
+;Each line has to be 62 chars long, there are exactly 14 lines.
+;
+MSG_INFO_GLOBAL_ABOUTTEXT1
+FileX %s Versio %s (%s)\n\
+Copyright © 1993-1994 by Klaas Hermanns\n\
+Shareware 20 DM tai 15 US-Dollaria,\n\
+kaikki oikeudet pidätetään.\n\
+\n\
+Yhteydenotot johonkin seuraavista osoitteista:\n\
+\n\
+Sähköposti:\n\
+dalton@cocuni.GUN.de\n\
+\n\
+Normaali posti:\n\
+Klaas Hermanns,Weberstrasse 42, 47533 Kleve, Germany
+;FileX %s Version %s (%s)\n\
+;Copyright © 1993-1994 by Klaas Hermanns\n\
+;Shareware 20 DM or 15 US-Dollar,\n\
+;all rights reserved.\n\
+;\n\
+;To contact me write to one of the following addresses:\n\
+;\n\
+;Electronic mail:\n\
+;dalton@cocuni.GUN.de\n\
+;\n\
+;Standard mail:\n\
+;Klaas Hermanns,Weberstrasse 42, 47533 Kleve, Germany
+;
+MSG_INFO_GLOBAL_ABOUTTEXT2
+Erityiset kiitokset (ei erityisessä järjestyksessä):\n\
+\n\
+Robert Gorthmanns,Thomas Hornik,\n\
+Benjamin Schörner, Jörg Groenewald,\n\
+Thomas Hertz betatestauksesta.\n\
+\n\
+Michael Balzer `ARexxBox':ista\n\
+jonka pohjalta ARexx-portti on\n\
+luotu.
+;Special thanks in no order to:\n\
+;\n\
+;Robert Gorthmanns,Thomas Hornik,\n\
+;Benjamin Schörner, Jörg Groenewald,\n\
+;Thomas Hertz for betatesting.\n\
+;\n\
+;Michael Balzer for his `ARexxBox'\n\
+;which was used to create the basis\n\
+;of the arexx port.
+;
+MSG_INFO_GLOBAL_REGISTERED
+Tämä on n:o %04ld rekisteröity nimelle `%s'!
+; This is No. %04ld registered to `%s'!
+;
+MSG_INFO_GLOBAL_NOTREGISTERED
+Tämä on rekisteröimätön versio.\n*OLE HYVÄ*(!) rekisteröi ja voi paremmin:-)
+; This is an unregistered version.\n*PLEASE*(!) register and feel better:-)
+;
+MSG_INFO_GLOBAL_PATCHED
+Valitan, joku sotki avaimen!
+; Sorry, someone patched the key!
+;
+MSG_INFO_GLOBAL_NOTHINGTOUNDO
+Ei peruttavaa!
+; Nothing to undo!
+;
+MSG_INFO_GLOBAL_NOTHINGTOREDO
+Ei palautettavaa!
+; Nothing to redo!
+;
+MSG_INFO_GLOBAL_CUTTINGNOTPOSSIBLEINGRABMODE
+Leikkaus ei mahdollista käsiteltäessä muistia!
+; Cutting not possible while grabbing memory!
+;
+MSG_INFO_GLOBAL_INSERTINGNOTPOSSIBLEINGRABMODE
+Lisäys ei mahdollista käsiteltäessä muistia!
+; Inserting not possible while grabbing memory!
+;
+MSG_INFO_GLOBAL_APPENDINGNOTPOSSIBLEINGRABMODE
+Liittäminen ei mahdollista käsiteltäessä muistia!
+; Appending not possible while grabbing memory!
+;
+MSG_INFO_GLOBAL_NOBLOCKMARKED
+Lohkoa ei merkitty!
+; No block marked!
+;
+MSG_INFO_GLOBAL_REQTOOLSLIBRARYREQUIRED
+`reqtools.library' tarvitaan!
+; `reqtools.library' required!
+;
+MSG_INFO_GLOBAL_UNNAMED
+<nimetön>
+; <unnamed>
+;
+MSG_INFO_AREXX_CANTSETUPAREXXHOST
+En pysty asettamaan ARexx-isäntää!
+; Can't setup arexx host!
+;
+MSG_INFO_AREXX_NOTIFY
+ARexx huomautus!
+; Arexx notify!
+;
+MSG_INFO_AREXX_VARHASTOBEANUMBER
+VAR täytyy olla numero!
+; VAR has to be a number!
+;
+MSG_INFO_AREXX_VARHASTOBETRUEORFALSE
+VAR täytyy olla TRUE tai FALSE!
+; VAR has to be TRUE or FALSE!
+;
+MSG_INFO_AREXX_FIELDISREADONLY
+Kenttä on vain luettava!
+; Field is read-only!
+;
+MSG_INFO_AREXX_OBJECTNOTFOUND
+Kohdetta ei löydy!
+; Object not found!
+;
+MSG_INFO_AREXX_FIELDNOTFOUND
+Kenttää ei löydy!
+; Field not found!
+;
+MSG_INFO_AREXX_FROMSTEMNOTPOSSIBLEINCOMMANDSHELL
+FROMSTEM ei mahdollinen komentotulkista!
+; FROMSTEM not possible in command shell!
+;
+MSG_INFO_AREXX_FROMVARREQUIRED
+FROMVAR tarvitaan!
+; FROMVAR required!
+;
+MSG_INFO_AREXX_FROMVARANDFIELDREQUIRED
+FROMVAR ja FIELD tarvitaan!
+; FROMVAR and FIELD required!
+;
+MSG_INFO_AREXX_CANTGETVAR
+En pysty lukemaan muuttujaa!
+; Can't get var!
+;
+MSG_INFO_AREXX_FROMSTEMORFIELDREQUIRED
+FROMSTEM tai FIELD tarvitaan!
+; FROMSTEM or FIELD required!
+;
+MSG_INFO_AREXX_FROMVARORFROMSTEMREQUIRED
+FROMVAR tai FROMSTEM tarvitaan!
+; FROMVAR or FROMSTEM required!
+;
+MSG_INFO_AREXX_CANTSETVAR
+En pysty asettamaan muuttujaa!
+; Can't set var!
+;
+MSG_INFO_AREXX_FAULTFAILED
+FAULT epäonnistui!
+; FAULT failed!
+;
+MSG_INFO_AREXX_UNKNOWNCOMMAND
+Tuntematon komento!
+; Unknown command!
+;
+MSG_INFO_AREXX_RXCANTOPENWINDOW
+RX ei pysty avaamaan ikkunaa!
+; RX can't open window!
+;
+MSG_INFO_AREXX_RXCANTSENDAREXXCOMMAND
+RX ei pysty lähettämään ARexx-komentoa!
+; RX can't send ARexx command!
+;
+MSG_INFO_AREXX_BLOCKTOOLONG
+Lohko liian pitkä!
+; Block too long!
+;
+MSG_INFO_AREXX_BLOCKCONTAINSILLEGALCHARACTERS
+Lohko sisältää asiaankuulumattomia merkkejä!
+; Block contains illegal characters!
+;
+MSG_INFO_AREXX_NUMBERTOOHIGH
+Numero liian suuri!
+; Number too high!
+;
+MSG_INFO_AREXX_HEXSTRINGTOOLONG
+Heksajono liian pitkä!
+; Hex string too long!
+;
+MSG_INFO_AREXX_HEXSTRINGCONTAINSILLEGALCHARACTERS
+Heksajono sisältää asiaankuulumattomia merkkejä!
+; Hex string contains illegal characters!
+;
+MSG_INFO_AREXX_INVALID_ID
+Kelvoton ID!
+; Invalid ID!
+;
+MSG_INFO_AREXX_CANT_LOCK_GUI
+En pysty lukitsemaan käyttäjäliittymää!
+; Can't lock gui!
+;
+MSG_INFO_SEARCH_BYTESNOTEQUAL
+Etsittäviä ja korvattavia tavuja eri määrä!
+; Search and replace number of bytes differ!
+;
+MSG_INFO_SEARCH_CHARSNOTEQUAL
+Etsittäviä ja korvattavia merkkejä eri määrä!
+; Search and replace number of characters differ!
+;
+MSG_INFO_SEARCH_FOUNDTOREPLACE
+Löytyi \"%s\". Korvataanko \"%s\"?
+; Found \"%s\". Replace with \"%s\"?
+;
+MSG_INFO_SEARCH_STRINGNOTFOUND
+\"%s\" ei löydy!
+; \"%s\" not found!
+;
+MSG_INFO_CALC_CLIPCONTENTSNOTANUMBER
+Leikepöydän sisältö ei ole numero!
+; Clipboard contents is not a number!
+;
+MSG_INFO_CALC_DIVISONBYZERO
+Jako nollalla!
+; Divison by zero!
+;
+MSG_INFO_CALC_OVERFLOW
+Ylivuoto!
+; Overflow!
+;
+MSG_INFO_SEARCH_SEARCHING
+Etsin...
+; Searching...
+;
+MSG_INFO_CLIPCONV_NOTVALID
+Ei kelpaa!
+; Not valid!
+;
+MSG_INFO_CLIPCONV_EMPTY
+<tyhjä>
+; <empty>
+;
+MSG_INFO_CLIPCONV_NOTCONVERTIBLE
+Ei muunnettavissa!
+; Not convertible!
+;
+MSG_SCREENTITLE
+FileX © 1993-1994 by Klaas Hermanns. Julkinen näyttö = \"%s\".
+; FileX © 1993-1994 by Klaas Hermanns. Publicscreenname = \"%s\".
+;
+MSG_APPICONNAME
+FileX
+; FileX
+;

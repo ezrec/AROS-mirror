@@ -1,0 +1,63 @@
+                                   FileX
+
+                         V2.0 - Ein Binäreditior
+
+                             Shareware 20 DM
+
+                  Copyright 1993-1994 bei Klaas Hermanns
+
+   FileX ist ein sogenannter Binäreditor und bietet folgende Features:
+
+   - Mehrere Files können in mehreren Edierfenster und/oder
+     Edieransichten gleichzeitig bearbeitet werden.
+   - Die Edierfenster können auf jedem öffentlichen Bildschirm
+     geöffnet werden und lassen sich beliebig in der Größe verändern.
+   - Taschenrechner
+   - Clipboardkonverter
+   - Fontsensitiv
+   - Localeunterstüzung ab OS 2.1 (Deutsch/ Englisch/ Finnisch/
+     Französisch/ Niederländisch/ Norwegisch/ Swedisch)
+   - Undo und Redo(nur durch vorhandenen Speicher begrenzt)
+   - Suchen und Ersetzen
+   - Umfangreiche Blockfunktionen
+   - ARexxschnittstelle mit 77 Befehlen und asynchroner Kommandoshell
+   - Drucken als Hexdump
+   - `Grab memory' zum Anzeigen und Verändern des Speichers
+   - AppWindow. Falls FileX auf der Workbench läuft, können Icons in
+     die Edierfenster gezogen werden, wodurch die zugehörige Datei
+     automatisch geladen wird.
+   - Iconify
+   - Wird weiterentwickelt
+
+History:
+   V2.0:
+   - Mehrere Files können gleichzeitig ediert werden. Dazu läßt sich
+     zum einen das Fenster in mehrere Edierbereiche(wie bei CED)
+     aufteilen oder es können sogar mehrere Fenster(wie bei TheEdge
+     oder GoldEd) geöffnet werden.
+   - Endlich gibt es eine Statuszeile, in der die aktuelle
+     Cursorposition, der Name und die Länge einer Datei angezeigt
+     werden.
+   - Keyfiles für registrierte Benutzer. Dadurch ist es auch möglich
+     Updates oder registrierte Versionen einfach und schnell über DFÜ
+     zu beziehen.
+   - In Stringgadgets kann man nun mit der rechten Amigataste
+     Gadgetshortcuts anwählen.
+   - Das Clipboard wird nun dirket unterstützt. Es ist nicht mehr
+     nötig "Load from Clip" bzw. "Save to Clip" aufzurufen.
+   - Ein kleiner Taschenrechner ermöglicht einfache Rechnungen in
+     hexadezimaler, octaler, dezimaler und binärer Form.
+   - Der Suchrequester wurde ein wenig vereinfacht. Es gibt nur noch
+     zwei Eingabegadgets. Eins für den zu suchenden Wert und eins für
+     den Ersatzwert.  Über einen Schalter läßt sich zwischen nur
+     Suchen und Suchen und Ersetzen wechseln. Eine Historyfunktion wie
+     in der Shell merkt sich alte Suchwerte.
+   - Ein Clipboardkonverter ermöglicht es, den Inhalt des Clipboards
+     auf verschiedene Weise zu wandeln. Beispielsweise läßt sich eine
+     Zeichenkette, die eine Zahl beinhaltet, in die entsprechende Zahl
+     umwandlen.
+   - FileX merkt sich die Namen aller Dateien, die es seit dem Start
+     eingeladen hat. Über einen Listrequester lassen sich bequem alte
+     Dateien anwählen und einladen.
+   - Der ARexxport wurde erweitert, um die neuen Funktionen zu
+     unterstützen. Außerdem arbeitet die Kommandoshell jetzt asynchron.

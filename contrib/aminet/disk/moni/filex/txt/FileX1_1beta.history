@@ -1,0 +1,94 @@
+Was wurde verbessert?
+---------------------
+Dienstag 25-Mai-93  22:25:02,
+  Commandwindow, Commandshellwindow und Overwrite aus den Misc-Settings
+  werden nun auch abgepeichert. Alte Settings können nicht mehr verwendet
+  werden. Sorry.
+
+Dienstag 25-Mai-93  22:25:17,
+  An die Defaulteinstellungen der Windowdefinitionen ein `/SCREEN FILEX'
+  angehangen, damit man sieht, daß man diese auch auf anderen Screens
+  öffnen lassen kann.
+
+Dienstag 25-Mai-93  22:52:10:
+  Leere Files können nun auch eingeladen werden.
+
+Thursday, 15 Jul 1993, 16:27:14:
+--------------------------------
+Leere ARexxkommandos(im Menu) können nicht mehr ausgeführt werden
+und werden nicht mehr abgespeichert.
+
+Thursday, 15 Jul 1993, 16:42:51:
+--------------------------------
+Mit RETURN/ENTER können nun alle Requester mit `Okay' beendet werden.
+Wenn der Search(&Replace)-Requester geöffnet wird, wird automatisch
+das Stringgadget des letzten Suchmodus aktiviert.
+
+Friday, 16 Jul 1993, 00:59:11:
+------------------------------
+Bugs entfernt:
+* Beim Start hing FileX, falls eine Datei geladen werden
+  sollte, die nicht geöffnet werden konnte.
+
+* Beim Beenden von FileX nach dem Start von der WB wurde
+  die WBStartupmessage nicht beantwortet, wodurch einiges
+  an Speicher fehlte.
+
+* Taskpri wurde nicht gesetzt beim laden von Einstellungen
+  bei dem Start mit gleichzeitigem Abkoppeln vom CLI.
+
+* Overwrite aus den Misc-Settings wurde immer noch nicht abgepeichert.
+  Alte Settings können nicht mehr verwendet werden. Sorry.
+
+Neues Feature:
+* Über Projekticon läßt sich FileX nun auch starten, so daß man
+  als DefaultTool nur FileX eintragen muß und die zugehörige
+  Datei wird bei Doppelklick gestartet.
+
+Monday, 19 Jul 1993, 00:04:20:
+------------------------------
+Bug entfernt:
+* Falls man beim `Changes'-Requester `Save First' auswählte und
+  die Datei noch keinen Namen hatte, konnte die Datei nicht
+  abgespeichert werden.
+
+Tuesday, 20 Jul 1993, 14:04:57:
+-------------------------------
+Bug entfernt:
+* Falls man am Ende der Datei stand und das Fenster größer oder
+  kleiner machte, kam die Darstellung etwas durcheinander.
+  (Komisch, ich dachte, daß ich das schonmal behoben hätte.)
+
+Tuesday, 20 Jul 1993, 16:47:26:
+-------------------------------
+In letzter Sekunde noch ein Bug entfernt:
+* ARexx REQUESTFILE: Falls ein File ausgewählt wurde, schmierte
+  der Rechner ab. Speicher wurde für den Filenamen nich allokiert.
+
+Tuesday, 20 Jul 1993, 17:30:49:
+-------------------------------
+Und hopp, dito:
+* File kleiner als Anzeige, dann Anzeige noch größer => Darstellung
+  durcheinander.
+
+Wednesday, 21 Jul 1993, 00:20:15:
+---------------------------------
+Und noch einer weg:
+* Blockmarkieren: Blockstart am Scrollrand und dann mit dem Cursor
+  an der Seite raus => Falsche Markierung.
+
+Wednesday, 21 Jul 1993, 00:39:52:
+---------------------------------
+* Cursor in letzter Zeile bei Files kleiner als Anzeige. Shift Cursorhoch
+  funkte nicht.
+
+Thursday, 30 Juli 1993:
+-----------------------
+* Fehler beim Allokieren von Speicher für 2 Strings gefunden, der
+  zum Absturtz direkt nach dem Start bei vielen Rechnern führte.
+
+Thursday, 19 Aug 1993, 23:21:25:
+--------------------------------
+* New: Das aktuelle File wurde noch angezeigt, obwohl es nicht
+  mehr im Speicher war.
+

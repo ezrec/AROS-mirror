@@ -1,0 +1,90 @@
+Short: V2.0 - Greatest Binary Editor
+Type: disk/moni
+Uploader: <your address>
+Author: dalton@cocuni.GUN.de
+
+TITLE
+
+     FileX
+
+VERSION
+
+     2.0
+
+AUTHOR
+
+     Klaas Hermanns
+     Weberstraﬂe 42
+     47533 Kleve
+     Germany
+     
+     e-mail: dalton@cocuni.GUN.de
+
+DESCRIPTION
+
+     FileX is a binary file editor which offers the following features:
+
+     - Several files can be modified in several windows and/or views at
+       the same time.
+     - The edit windows can be opened on any public screen and sized to
+       any dimension you want.
+     - Small calculator
+     - Clipboard converter
+     - Fontsensitivity
+     - Locale support if you have OS 2.1 or higher. (English, Finnish,
+       French, German, Swedish (Dutch, Norwegian (not yet included)))
+     - Undo and Redo (only limited to your free memory)
+     - Search and replace with history
+     - Extensive blockfunctions
+     - ARexxport with 77 commands and asynchronical command shell
+     - Printing as hexdump
+     - `Grab memory' to show and modify memory
+     - AppWindow. If FileX runs on the workbench, icons can be moved onto
+       the FileX window and the related file will be loaded automatically.
+     - Iconify
+
+NEW FEATURES
+
+     V2.0:
+
+     - Several Files can be edited at the same time. So you can divide
+       one window in several editareas (like CED) or even use several
+       windows at the same time (like TheEdge or GoldEd).
+     - Finally there is a status line in which you can see the current
+       cursorposition, the name and the length of the file.
+     - Key files for registered users. So it's very easy to get your
+       registered version by e-mail.
+     - In string gadgets you can select gadget shortcuts with the right
+       amiga key now.
+     - The clipboard is now supported directly. You don't need to use
+       "Load from Clip" or "Save from Clip" anymore.
+     - A small calculator for simple operations in hexadecimal, decimal,
+       octal or binary.
+     - The search requester is even more easy now. There are only two
+       string gadgets, one for the search and one for the replace string.
+       With a switch you can swap between 'search' and 'search and
+       replace'.A history function, like the one in the shell, remembers
+       all previously entered search strings.
+     - A clipboard converter allows you to convert the contents of the
+       clipboard in varius ways. So you can change a textstring,
+       including a number, into the right number.
+     - FileX remembers all the names of the files read from the
+       beginning. Per list requester you can choose old files and open
+       them again.
+     - The ARexx port has been expanded to support the new functions.
+       The command shell is now asynchron.
+
+SPECIAL REQUIREMENTS
+
+     Needs OS 2.04 or higher.
+     Localization requires OS 2.1 or higher.
+ 
+PRICE
+
+     Shareware, 15 $ or 20 DM
+
+DISTRIBUTABILITY
+
+     FileX Copyright 1993-1994 by Klaas Hermanns.
+     Shareware, all rights reserved.
+

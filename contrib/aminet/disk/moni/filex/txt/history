@@ -1,0 +1,164 @@
+Neu an V1.1
+
+- Variable Fensterbreite
+- nur Hex/ASCII-Darstellung
+- Localeunterstüzung
+- Einstellbarer Lückenabstand
+
+Version V1.1 an Reinhard, Jörg, Seth, Robert raus.
+
+Monday, 20 Sep 1993, 12:49:21:
+------------------------------
+- ASL Screenmoderequester ab V38
+
+Wednesday, 22 Sep 1993, 22:23:02:
+---------------------------------
+- Absturz, der manchmal beim Fehlen der locale.library auftrat,
+  behoben. (Report: Thomas Hornik)
+
+Thursday, 23 Sep 1993, 22:24:04:
+--------------------------------
+- AltCursorLeft/Right auf verschiedene Spacelücken angepaßt.
+  Long = 4er Sprünge, Word = 2er Sprünge.
+
+Monday, 27 Sep 1993, 14:38:24:
+------------------------------
+- Zwei doppelt belegte Tasten im Verschiedenes-Requester entfernt.
+  (Report: Benjamin Schörner)
+- Beim Suchen(und Ersetzen), Fill-Requester die Hexgadgets zu
+  echten Hexgadgets gemacht. Keine Eingabe von andere Zeichen
+  als Space, A-F und 1-9 mehr. (Report: Benjamin Schörner)
+
+Monday, 27 Sep 1993, 18:03:55:
+------------------------------
+Bugs entfernt:
+- Falls die locale.library nicht geöffnet werden konnte,
+  gab es keine Menutexte. (Report: Thomas Hornik)
+- Unter 68000er stürzte FileX oft bei Positionieren des Cursors
+  mit der Maus ab. (Report: Benjamin Schörner)
+
+Tuesday, 28 Sep 1993, 15:19:32:
+-------------------------------
+- Größengadgets, Autoscrollgadget und Overscangadget in ASL-Screenmode-
+  Requester eingeschaltet.
+- Das Display wurde immer ganz neu aufgebaut, falls man sich Zeile 0
+  befindet.
+
+Thursday, 30 Sep 1993, 18:35:28:
+--------------------------------
+New Feature:
+- Falls in dem Misc-Requester eingestellt ist, daß die asl.library
+  gebraucht werden soll, wird dies jetzt auch bei den "normalen"
+  Requestern getan (In de.comp.amiga.misc war man einstimmig der
+  Meinung, daß jedes vernünftige Programm auch ohne Reqtoolslibrary
+  laufen sollte.). 
+
+Sunday, 03 Oct 1993, 17:08:26:
+------------------------------
+Bugs weg:
+- Die Positionsangabe am Anfang jder Zeile beim Ausdruck war unter
+  Kick2.04 etwas verstümmelt. (Report: Thomas Hornik)
+
+- Unter Kick2.04 wurde im `Grab memory'- und im `Jump To'-Requster
+  nur ein X anstatt der zuletzt eingegebenen Werte angezeigt.
+  (Report: Thomas Hornik)
+
+Sunday, 03 Oct 1993, 22:19:30:
+------------------------------
+New Features:
+- Move/Mark Location: Ein eigner Requester mir Slidergadget dient
+  ab nun zur Einstellung der Locationnumber.
+
+- ARexx/Requeststring: Eigener Requester. (Intressiert hier keinen, oder?)
+
+Bunny weg(bin ich heute wieder witzig!:):
+- ARexx/Help konnte zum Absturz führen.
+
+Tuesday, 05 Oct 1993, 15:43:31:
+-------------------------------
+- Die Reqtoolslibrary wird jetzt nicht mehr unbedingt benötigt. Falls
+  sie nicht vorhanden ist, werden ASL-Requester benutzt. Dies ist
+  bis auf den Palettenrequester überall möglich.
+
+Tuesday, 05 Oct 1993, 16:26:14:
+-------------------------------
+- Checkmenuitems überarbeitet. Sollten jetzt immer den richtigen Wert
+  anzeigen. (Report: Klaas Hermanns, Robert Gorthmanns, Benjamin Schörner,
+  Thomas Hornik (in chronologischer Reihenfolge der Meldungen))
+
+Friday, 08 Oct 1993, 13:45:03:
+------------------------------
+- Abfrage der Checkboxgadgets war unter Kick2.04 nicht ganz korrekt.
+  Manchmal wurde der Wechsel nicht erkannt. (Report: Benjamin Schörner)
+
+- Hex/String-Checkboxgadgets im Search/Replace/Fill-Requester werden
+  jetzt beim Verlassen eines Stringgadgets auf dessen
+  Suchart/Füllart (Hex/String) eingestellt.
+  (Wiedererweckung der Idee: Robert Gorthmanns)
+
+- Evtl. hätte es zu Grafikfehlern kommen können. IDCMP_REFRESHWINDOW
+  wurde nicht gadtoolsgemäß verarbeitet.
+
+- Proportionalgadget war unter Kick2.04 etwas zu hoch und hatte einen
+  3D-Knob im deativiertem Zustand des Windows. Jetzt müßte es dem
+  Aussehen der Workbenchproportionalgadgets vollkommen entsprechen.
+
+- 68000er Bug beim Setzen des Cursors mit der Maus nun hoffentlich
+  endlich behoben. (Report: Nochmal Benjamin Schörner)
+
+Monday, 11 Oct 1993, 00:57:51:
+------------------------------
+- Neues Tooltype LANGUAGE zum Einstellen der zu verwendenden Sprache.
+  Überschreibt den eingestellten Wert aus den Prefs.
+
+Monday, 11 Oct 1993, 17:57:28:
+------------------------------
+- Spaces sind in allen Hexgadgets wieder möglich.
+  (Report: Robert Gorthmanns)
+
+Monday, 11 Oct 1993, 18:51:06:
+------------------------------
+- Menu: ARexx/assgin command machte nicht das, was es sollte, sondern
+  garnichts.
+
+Monday, 11 Oct 1993, 23:09:05:
+------------------------------
+- ARexx/Projectobject: DISPLAY, DISPLAYSPACES und USEASL hinzugefügt.
+  Nun kann man diese Einstellungen auch über ARexx ändern.
+
+Tuesday, 12 Oct 1993, 14:53:18:
+-------------------------------
+- Windowbreite kann nun auch über die ARexxkommandos CHANGEWINDOW und
+  SIZEWINDOW geändert werden.
+
+Thursday, 14 Oct 1993, 00:09:28:
+--------------------------------
+- Fehler bei der automatischen Aktivierung des
+  Stringsearch/fillcheckboxgadgets behoben. Es wurde z.B. nach einem String
+  gesucht, obwohl das Gadget auf Hexsuche gestellt wurde.
+
+Saturday, 16 Oct 1993, 14:33:32:
+--------------------------------
+- Falscher Text: Beim Füllen, wenn File nicht edierbar ist.
+  (Report: Benjamin Schörner)
+
+Tuesday, 19 Oct 1993, 17:43:31:
+-------------------------------
+- Im Aboutrequester wird jetzt angezeigt, ob es sich um die 68000er oder
+  68020er Version handelt.
+
+Wednesday, 20 Oct 1993, 16:28:44:
+---------------------------------
+- Wenn man einen Block ausschnitten hat und der Start des Blockes nicht
+  in der Anzeige war, konnte es sein das der Cursor nicht in der Anzeige
+  zu sehen war.
+
+Wednesday, 20 Oct 1993, 16:42:43:
+---------------------------------
+- Enforcerhit beim Öffnen aller Filerequesters. Peinlich:-(
+
+Friday, 22 Oct 1993, 14:25:49:
+------------------------------
+- Falls FileX nicht im aktuellen Verzeichnis ist, gab's unter Kick2.04
+  nach dem Iconify kein Icon.
+
