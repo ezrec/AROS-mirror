@@ -62,6 +62,9 @@ BOOL PreClassInitFunc( void )
 	{
 		if ( ( DiskfontBase = OpenLibrary( "diskfont.library", 37L ) ) )
 		{
+		#ifdef _AROS
+		    ioreq.io_Message.mn_Length = sizeof(ioreq);
+		#endif
 			if ( !OpenDevice( "console.device", -1L, (struct IORequest *)&ioreq, 0L ) )
 			{
 				ConsoleDevice = (struct Device *)ioreq.io_Device;
