@@ -11,6 +11,7 @@ FILES := \
 	environment \
 	amigamodule \
 	Doslibmodule \
+	IntuitionLibrary \
 	_codecsmodule \
 	_sre \
 	_testcapimodule \
