@@ -379,7 +379,7 @@ DEFUSERCMD("downadd", 0, 0, void, do_downadd, (void),)
     ED	  * ep = Ep;
     UBYTE * ptr;
 
-    if (GetLine(ep) + 1 == GetLines(ep))
+    if (GetLine(ep) + 1 >= GetLines(ep))
     {
 	SETF_MODIFIED (ep, 1);
 
