@@ -26,6 +26,10 @@ descriptions = {
     'docs-html' :
        '''Documentation in HTML format. Contains everything 
        available on the website, but adapted for offline reading.''',
+    'i386-freebsd-system' : 
+        '''The hosted version for FreeBSD-5.x/i386. This archive
+        contains all AROS system binaries compiled from the CVS
+        tree.''',
     'i386-linux-system' : 
         '''The hosted version for Linux/i386. This is the most 
         complete and mature port, which means that you can run
