@@ -30,6 +30,7 @@ contrib-development-nasm : setup $(EXE)
 #MM
 setup ::
 	%mkdirs_q $(EXEDIR)
+	cp test/arostest.s test/arostest.README $(EXEDIR)
 
 %common
 %include_deps
