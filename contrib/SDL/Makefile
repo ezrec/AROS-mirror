@@ -1,5 +1,12 @@
 # Makefile for gcc version of SDL
 
+PUBLIC_HEADERS = begin_code.h     SDL_copying.h  SDL_mouse.h   SDL_rwops.h    SDL_video.h \
+				 close_code.h     SDL_endian.h   SDL_joystick.h  SDL_mutex.h   SDL_syswm.h \
+			     SDL_active.h     SDL_error.h    SDL_keyboard.h  SDL_name.h    SDL_thread.h \
+				 SDL_audio.h      SDL_events.h   SDL_keysym.h    SDL_timer.h \
+			     SDL_byteorder.h  SDL_getenv.h   SDL_main.h      SDL_opengl.h  SDL_types.h \
+				 SDL_cdrom.h      SDL.h          SDL_quit.h    SDL_version.h
+
 BASEDIR = $(TOP)/bin/$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)
 
 CC = $(BASEDIR)/tools/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-aros-gcc
@@ -10,7 +17,7 @@ GCCDEFINES = -DENABLE_CYBERGRAPHICS -DNO_SIGNAL_H -DAROS
 # -DHAVE_OPENGL -DMORPHOS -DENABLE_AHI 
 
 LFLAGS =  -nostdlib -nostartfiles -L. -lSDL -lamiga -larosc -larosm -lautoinit -larossupport -larosc
-STARTUP = $(BASEDIR)/AROS/lib/startup.o
+STARTUP = $(BASEDIR)/AROS/Development/Lib/startup.o
 
 OBJS = SDL_error.o SDL_fatal.o SDL_RLEaccel.o SDL_blit.o SDL_blit_0.o  \
    SDL_blit_1.o SDL_blit_A.o SDL_blit_N.o \
@@ -39,13 +46,16 @@ examples:
 		$(CC) -o tests/$$example $(STARTUP) -I.. -I. -L.. tests/$$example.c $(LFLAGS) ; \
 	done;
     
-install: examples
+install: libSDL.a examples
 	list='$(EXAMPLES)'; for subdir in $$list; do \
 		echo "Installing $$subdir"; \
-		cp tests/$$subdir $(BASEDIR)/AROS/test/ ; \
+		cp tests/$$subdir $(BASEDIR)/AROS/Tests/ ; \
 	done;
-	cp tests/*.bmp $(BASEDIR)/AROS/test/
-
+	cp tests/*.bmp $(BASEDIR)/AROS/Tests/
+	cp libSDL.a $(BASEDIR)/AROS/Development/Lib/
+	mkdir -p $(BASEDIR)/AROS/Development/Include/SDL
+	cp $(PUBLIC_HEADERS) $(BASEDIR)/AROS/Development/Include/SDL
+	
 libSDL.a: $(OBJS)
 	-rm -f libSDL.a
 	ar cru libSDL.a $(OBJS)

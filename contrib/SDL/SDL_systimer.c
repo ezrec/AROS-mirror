@@ -183,14 +183,20 @@ void SDL_Delay (Uint32 ms)
 
 	if(ms<50)
 	{
+#ifndef USE_SYSTIME
 		clock_t to_wait=clock();
-
-#ifndef __SASC
+// most archs have clocks per sec == 1000
+#if CLOCKS_PER_SEC != 1000
 		ms*=(CLOCKS_PER_SEC/1000);
 #endif
 		to_wait+=ms;
 
 		while(clock()<to_wait);
+#else
+        Uint32 to_wait = SDL_GetTicks() + ms;
+
+        while(SDL_GetTicks() < to_wait);
+#endif
 	}
 	else
 	{
