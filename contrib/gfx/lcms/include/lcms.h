@@ -32,6 +32,10 @@
 
 #ifndef __cms_H
 
+#ifdef __AROS__
+#include <aros/machine.h>
+#endif
+
 // ********** Configuration toggles ****************************************
 
 //   Optimization mode.
@@ -39,10 +43,17 @@
 // Note that USE_ASSEMBLER Is fastest by far, but it is limited to Pentium.
 // USE_FLOAT are the generic floating-point routines. USE_C should work on
 // virtually any machine.
-
 // #define USE_FLOAT        1
-#define USE_C            1
 // #define USE_ASSEMBLER    1
+// #define USE_C            1
+
+#ifdef __AROS__
+#   ifdef __i386__
+#       define USA_ASSEMBLER 1
+#   else
+#       define USE_C         1
+#   endif
+#endif 
 
 // 3D interpolation method - Tetrahedral is slightly faster, but not always
 // is proper.  Also, tetrahedral algorithm seems it was
@@ -67,10 +78,16 @@
 // when NON_WINDOWS is used)
 // #define USE_BIG_ENDIAN   1
 
+#if defined(__AROS__) && AROS_BIG_ENDIAN
+#   define USE_BIG_ENDIAN   1
+#endif
+
 // Uncomment this one if your compiler/machine does support the
 // "long long" type This will speedup fixed point math. (USE_C only)
-#define USE_INT64        1
-
+// FIXME: Assuming we have "long long" on AROS.
+#if USE_C
+#   define USE_INT64        1
+#endif
 
 // Some machines does not have a reliable 'swab' function. Usually
 // leave commented unless the testbed diagnoses the contrary.
@@ -148,10 +165,19 @@
 #   include <sys/unistd.h>
 #endif
 
-typedef unsigned char BYTE, *LPBYTE; 
-typedef unsigned short WORD, *LPWORD;
-typedef unsigned int DWORD, *LPDWORD;
+#ifdef __AROS__
+#define BYTE UBYTE
+#define WORD UWORD
+typedef BYTE  *LPBYTE;
+typedef UWORD *LPWORD;
+typedef ULONG  DWORD, *LPDWORD;
+#else
+typedef unsigned char  BYTE,  *LPBYTE; 
+typedef unsigned short WORD,  *LPWORD;
+typedef unsigned int   DWORD, *LPDWORD;
 typedef int BOOL;
+#endif
+
 typedef char *LPSTR;
 typedef void *LPVOID;
 typedef void* LCMSHANDLE;
@@ -835,7 +861,7 @@ typedef int (* _cmsSAMPLER)(register WORD In[],
                             register WORD Out[],
                             register LPVOID Cargo);
 
-LCMSAPI int LCMSEXPORT cmsSample3DGrid(LPLUT Lut, _cmsSAMPLER Sampler, LPVOID Cargo, DWORD dwFlags);
+LCMSAPI BOOL LCMSEXPORT cmsSample3DGrid(LPLUT Lut, _cmsSAMPLER Sampler, LPVOID Cargo, DWORD dwFlags);
 
 // ***************************************************************************
 // End of Little cms API From here functions are private

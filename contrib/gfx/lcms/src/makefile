@@ -21,7 +21,7 @@ OBJS = $(SRCS:.c=.o)
 
 
 
-all:	liblcms.a liblcms.so.${VERSION} 
+all:	liblcms.a
 
 
 #
@@ -61,4 +61,4 @@ test:
 #
 
 clean:
-	-rm $(OBJS)  liblcms.a liblcms.so.${VERSION} liblcms.so.1 liblcms.so
+	-@rm -f $(OBJS) liblcms.a 
