@@ -79,8 +79,8 @@ config.py : site.conf
 lxr :
 	echo $(BASEDIR)
 	$(RM) -rf $(BASEDIR)/lxr/source
-	$(MKDIR) $(BASEDIR)/lxr/source
-	$(CP) -r $(AROSDIR)/bin/*/AROS/Include $(BASEDIR)/lxr/source/include
+	$(MKDIR) $(BASEDIR)/lxr/source/include
+	$(CP) -r $(AROSDIR)/bin/*/AROS/Include/* $(BASEDIR)/lxr/source/include/
 	$(CP) -r $(AROSDIR)/config $(AROSDIR)/rom $(AROSDIR)/workbench \
 		$(BASEDIR)/lxr/source
 	$(ALLOW_READ) $(BASEDIR)/lxr/source
