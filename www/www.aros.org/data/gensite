@@ -278,6 +278,8 @@ def genLinks ():
 
     page = PageMeat ('Links', 'links.html')
     page.append (
+	Href ('#Mirrors', 'Mirrors'),
+	BR(),
 	Href ('#More Related', 'More Related'),
 	BR(),
 	Href ('#Articles', 'Articles'),
