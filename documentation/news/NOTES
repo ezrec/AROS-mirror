@@ -32,7 +32,8 @@ brackets ("[]").
 
 20030404:
  * Very positive response from render.library/guigfx author. [dlc]
-
+ * Positive response from FlexCat author: license is GNU GPL. [chodorowski]
+ 
 20030403:
  * thinking about moving at least Regina, Freetype, jpeg.datatype
    and JanoEditor into the main tree [chodorowski]
