@@ -161,7 +161,6 @@ caveman:bdf4c3f9H3fh2:Rob Ostensen:rob.o@myrealbox.com:
 orgin:baRpSiRE8y2xM:Björn Hagström:bjorn.hagstrom@sema.se:
 recoil:dbBd99HBw9PwE:Mark Hulme-Jones:mjones@guideguide.com:
 dmcminn:aaDHc2LoXGP2Y:David McMinn:dave@blitz-2000.co.uk:
-amis:abzd67g/ts1qw:Ivanov Alexey Vladimirovich:amis@amiga.org.ru:
 bloodline:xxQXtX6.FQWwc:Matt Parsons:matt@bloodline.freeserve.co.uk:
 wilco:xxwOf5OuLoHWw:Anders Wallden:walle@null.net:
 cjean-marie:adBKyaQXPxJUo:Chris Jean-Marie:chris.jean-marie@sympatico.ca:
@@ -280,4 +279,4 @@ rob:d9uWzmOWYiwuk:Robert Norris:rob@cataclysm.cx:
 aliem:98Af2/VRv5ocU:Lorenzo Giuliani:lgiulian@cli.di.unipi.it:
 htn:ccE8t47VRN6DQ:Mateusz Popiel:hateen@wp.pl:
 cartmanau:98EwOrN9vqzsE:Nathan Carter:magnaboy@westnet.com.au:
-amis:17ZKgo5666oe6:Alexey Ivanov:amis@amiga.org.ru:
+amis:17ZKgo5666oe6:Alexey Ivanov Vladimirovich:amis@amiga.org.ru:
