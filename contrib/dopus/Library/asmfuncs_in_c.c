@@ -977,14 +977,16 @@ void LSprintf(char *str, char *fmt, ...)
 	AROS_LIBFUNC_INIT
 	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
-	/* MAke place for null-termination */
-	len --;
+	while (len-- >= 0)
+	{
+	    char *c = *from++;
+	    
+	    *to++ = c;
+	    
+	    if (c == '\0') break;
+	}
 	
-	
-	while ( len -- && ( *to ++ = *from ++ ))
-		;
-	
-	*to = 0;
+	to[-1] = '\0';
 	
 	AROS_LIBFUNC_EXIT
 }
