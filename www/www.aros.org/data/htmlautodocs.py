@@ -1,8 +1,9 @@
 
 import string, re, os
-from util import Page, arosdir, DefinitionList, Text, Href, BR, TT, Dummy, \
+from util import PageMeat, arosdir, DefinitionList, Text, Href, BR, TT, Dummy, \
     Name, SeriesDocument, MyRawText, Heading, Paragraph, \
-    NonBulletList, TableLite, TR, TD, relpath, RawText
+    NonBulletList, TableLite, TR, TD, relpath, RawText, \
+    mainLinks2
 import code2html, xml2html
 
 codeConverter = code2html.AROSCodeConverter ('..')
@@ -28,36 +29,41 @@ def getFilename (lib, func):
 	)
     )
 
-class AutoDocPage (Page):
+class AutoDocPage (PageMeat):
     def __init__ (self, lib, func):
-	Page.__init__ (self)
+	PageMeat.__init__ (self, 'Documentation/AutoDocs/%s/%s' % (
+		lib.longName, func.name,
+	    ),
+	    getFilename (lib, func)
+	)
+
+    def createLinkBox (self):
+	#print 'createLinkBox',self
+	linkBox = []
+	node = mainLinks2.getNode (self)
+	#print node.parent
+	library = node.parent
+	libraries = library.parent
+
+	parentList = []
+	current = libraries
+	while current.parent:
+	    parentList.insert (0, current)
+	    current = current.parent
 	
-	self.filename = getFilename (lib, func)
+	indent = 0
+	for node in parentList:
+	    linkBox.extend (self.nodeToUrl (node, indent))
+	    indent = indent + 1
+	
+	for lib in libraries.order:
+	    linkBox.extend (self.nodeToUrl (lib, indent))
 
-#    def relurl (self, dest):
-#	absdest = os.path.abspath (dest)
-#	url = relpath (self.absname, absdest)
-#	#print "AD::relurl(%s)->%s" % (dest, url)
-#	return url
+	    if lib == library:
+		for func in lib.order:
+		    linkBox.extend (self.nodeToUrl (func, indent+1))
 
-    def write (self):
-	self.gotop = self.relurl (os.getcwd (),
-	    os.path.join (autodocdir, 'index.html'))
-	self.background = self.relurl (autodocdir, self.background)
-
-	self.createNavBar ()
-
-	for link in self.linksToFix:
-	    #print link
-	    link.url = self.relurl (autodocdir, link.url)
-	    #print link
-
-	for img in self.imagesToFix:
-	    #print img
-	    self.calc_rel_path (img, self.filename)
-	    #print img
-
-	SeriesDocument.write (self, self.filename)
+	return linkBox
 
 class AutoDocItem:
     def __init__ (self, contents):
@@ -130,7 +136,7 @@ def genPage (db, lib, func):
 	page.title = 'AROS - %s/%s' % (lib.longName, func.name)
 
 	dl = DefinitionList ()
-	page.meat = page.meat + [dl]
+	page.append (dl)
 
 	list = []
 	hasIncludes = 0
@@ -226,7 +232,7 @@ def genPage (db, lib, func):
 	dl.append (('INTERNALS', AutoDocTextItem (func.section['INTERNALS'])))
 	#dl.append (('HISTORY', AutoDocItem (func.section['HISTORY'])))
 
-	func.url = page.filename
+	func.url = page.url
 	page.write ()
     except:
 	print 'Error in %s/%s' % (lib.name, func.name)
@@ -260,7 +266,9 @@ def gen ():
 	for func in lib.functions.values ():
 	    genPage (adocs, lib, func)
 
-    page = Page (linkBoxItem='AutoDocs')
+    page = PageMeat ('Documentation/AutoDocs', 
+	os.path.join ('autodocs', 'index.html')
+    )
 
     meat = []
     # --- Create table of libraries -----------------------------------------
@@ -301,6 +309,9 @@ def gen ():
 	funcs.sort ()
 	allFunctions = allFunctions + funcs
 
+	libNode = mainLinks2.findNode ('Documentation/AutoDocs/' + lib.longName)
+	libNode.data = libNode.order[0].data
+
 	processFuncList (funcs, meat)
 
     # --- Create table of functions -----------------------------------------
@@ -339,6 +350,6 @@ def gen ():
     if list:
 	processFuncList (list, meat)
 
-    page.meat = page.meat + meat
-    page.write (os.path.join ('autodocs', 'index.html'))
+    page.extend (meat)
+    page.write ()
 

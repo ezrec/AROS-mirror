@@ -2,11 +2,16 @@ TODO
 
 - Make a logo contest
 
-- Split the code which generates the pages into separate scripts and
-use a "config database" (probably a python object which is accessed
-via cPickle) to create the inter-links.
+o Check if the contents of a page has changes and update it.
 
-When this is done, create a list of "recently changed" pages.
+The current scheme updates the pages if the contents (meat) changes
+but it should also update the page if the linkbox and the navlinks
+change.
+
+- Make the scripts which create the various pages more independent of
+each other.
+
+- Create a list of "recently changed" pages.
 
 o Convert the C source files into hyperlinked HTML docs.
     - Generate lxr.conf from site.conf.

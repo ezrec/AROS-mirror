@@ -177,3 +177,23 @@ lessRelated = (
     ),
 )
 
+downloadLinks = (
+    Link ('ftp://ftp.aros.org/pub/aros/', 'FTP Server',
+	'The official main AROS FTP Server',
+    ),
+    Link ('ftp://ftp.aros.org/pub/aros/DiskImages/',
+	'Disk images on our FTP server',
+	'These images are copies of the ones made by Sebastian Heutling'
+    ),
+    Link ('http://www.bloodline.freeserve.co.uk/aros/index.html',
+	'Disk Images by Matt Parsons',
+	'Matt creates his own disk images and tries them on several'
+	' computers before uploading them so they tend to work better'
+	' than the official ones.'
+    ),
+    Link ('http://wh2-315.st.uni-magdeburg.de/~sheutlin/aros/',
+	'Disk Images by Sebastian Heutling',
+	'These are copied every night to the main site so please'
+	' use the link above before draining his quota :-)'
+    ),
+)

@@ -1,30 +1,42 @@
 
 import string, os
 from util import Page, Heading, Paragraph, MyDataList, MyStackedBarChart, \
-    Paragraph, Href, Image, lightBlue, darkBlue, WHITE, BR
+    Paragraph, Href, Image, lightBlue, darkBlue, WHITE, BR, Name, RawText, \
+    HR
+import util
 
 def cmpNoCase (s1, s2):
     return cmp (string.lower (s1), string.lower (s2))
 
-def gen ():
+def gen (Page):
     '''Create the status page. This page contains two images (jpg&png)
     with graphs of the sizes of repositories.'''
 
     import jobs, time
 
-    page = Page (linkBoxItem='Status')
-    body = []
-    body.append (Heading (2, 'Status'))
-    body.append (Paragraph (
-	'There is a total of %d functions of which %d (%5.2f%%) are finished,'
-	' %d (%5.2f%%) are being worked on and %d (%5.2f%%) are still open.'
-	' This status was generated %s' % (
-	    jobs.jobsTotal, jobs.jobsDone, jobs.status[2],
-	    jobs.jobsInWork, jobs.status[1],
-	    jobs.jobsTodo, jobs.status[0],
-	    time.strftime ('%d. %B %Y', time.localtime (time.time ()))
+    page = Page ('NEWS/Status', 'status.html')
+    page.append (
+	Href ('#Status', '1. Status'),
+	BR (),
+	Href ('#SizeAROS', '2. Size of AROS sources'),
+	BR (),
+	Href ('#SizeContrib', '3. Size of contributed sources'),
+	BR (), BR(), HR(), BR(),
+	Name ('Status'),
+	RawText ('\n'),
+	Heading (2, '1. Status'),
+	RawText ('\n'),
+	Paragraph (
+	    'There is a total of %d functions of which %d (%5.2f%%) are finished,'
+	    ' %d (%5.2f%%) are being worked on and %d (%5.2f%%) are still open.'
+	    ' This status was generated %s.\n' % (
+		jobs.jobsTotal, jobs.jobsDone, jobs.status[2],
+		jobs.jobsInWork, jobs.status[1],
+		jobs.jobsTodo, jobs.status[0],
+		time.strftime ('%d. %B %Y', time.localtime (time.time ()))
+	    ),
 	)
-    ))
+    )
 
     data = []
     data.append (('Total',
@@ -51,41 +63,43 @@ def gen ():
     chart.bar_shade = WHITE
     chart.title = 'AROS Status'
     
-    body.append (chart)
-    body.append (BR ())
-    body.append (Heading (2, 'Size of AROS sources'))
+    page.append (chart)
+    page.append (BR ())
+    page.append (Name ('SizeAROS'))
+    page.append (Heading (2, '2. Size of AROS sources'))
 
-    body.append (Paragraph (Image ('aros_size.png')))
-    body.append (Paragraph (Href ('aros_size.jpg', 'Also as JPEG')))
-    body.append (Paragraph (Image ('aros_allsize.png')))
-    body.append (Paragraph (Href ('aros_allsize.jpg', 'Also as JPEG')))
+    page.append (Paragraph (Image ('aros_size.png')))
+    page.append (Paragraph (Href ('aros_size.jpg', 'Also as JPEG')))
+    page.append (Paragraph (Image ('aros_allsize.png')))
+    page.append (Paragraph (Href ('aros_allsize.jpg', 'Also as JPEG')))
 
-    body.append (Heading (2, 'Size of contributed sources'))
+    page.append (Name ('SizeContrib'))
+    page.append (Heading (2, 'Size of contributed sources'))
 
-    body.append (Paragraph (Image ('contrib_size.png')))
-    body.append (Paragraph (Href ('contrib_size.jpg', 'Also as JPEG')))
-    body.append (Paragraph (Image ('contrib_allsize.png')))
-    body.append (Paragraph (Href ('contrib_allsize.jpg', 'Also as JPEG')))
+    page.append (Paragraph (Image ('contrib_size.png')))
+    page.append (Paragraph (Href ('contrib_size.jpg', 'Also as JPEG')))
+    page.append (Paragraph (Image ('contrib_allsize.png')))
+    page.append (Paragraph (Href ('contrib_allsize.jpg', 'Also as JPEG')))
 
-    page.meat = page.meat + body
-    page.write ('status.html')
+    page.write ()
 
     #from docs.src.credits import credits
     from credits import credits
-    page = Page (linkBoxItem='Credits')
-    body = []
-    body.append (Heading (2, 'Credits'))
+    page = Page ('NEWS/Credits', 'credits.html')
+    page.append (Heading (2, 'Credits'))
     for area, names in credits:
-	body.append (Heading (3, area))
-	body.append (Paragraph (string.join (names, ', ')))
-    page.meat = page.meat + body
+	page.append (
+	    Heading (3, area),
+	    Paragraph (string.join (names, ', '))
+	)
 
     # Fix paths
     path = os.getcwd ()
     for color in chart.colors:
 	colorFile = os.path.abspath (chart.barfiles[color])
-	chart.barfiles[color] = page.relurl (path, colorFile)
+	#chart.barfiles[color] = page.relurl (path, colorFile)
+	chart.barfiles[color] = util.relpath (path, colorFile)
 	
-    page.write ('credits.html')
+    page.write ()
 
 

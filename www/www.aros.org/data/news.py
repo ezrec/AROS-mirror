@@ -1,7 +1,7 @@
 
 import glob, os
-from util import TR, TD, Page, TableLite, Paragraph, Name, MyRawText, Href, \
-	newsColor, Center, Text, Image
+from util import PageMeat, TR, TD, TableLite, Paragraph, Name, MyRawText, \
+	Href, newsColor, Center, Text, Image, Heading
 
 def prepareNewsItem (filename):
     '''Convert a single news item into HTML.'''
@@ -28,15 +28,15 @@ def prepareNewsItem (filename):
     
     return row
 	    
-def genPage (items, filename, linkBoxItem, mtime=0):
+def genPage (key, filename, items):
     '''Convert a list of news items into an HTML page and save
     it in filename. items must be a list of files with newsitems.
     The filenames must be dates in the form YYYYMMDD.'''
 
-    page = Page (linkBoxItem=linkBoxItem)
+    page = PageMeat (key, filename)
 
     if filename == 'index.html':
-	page.meat = page.meat + [
+	page.append (
 	    Paragraph (
 		Text ('You are visitor no. '),
 		Image (('/cgi-bin/wwwcount.cgi?df=aros.dat&dd=B&comma=Y&pad=Y&md=7', 94, 30),
@@ -44,28 +44,27 @@ def genPage (items, filename, linkBoxItem, mtime=0):
 		),
 		Text (' since 12. October 1999.'),
 		align="center",
-	    )
-	]
+	    ),
+	    Heading (2, "NEWS"),
+	)
+    else:
+	page.append (
+	    Heading (2, "Old News"),
+	)
 	
     table = TableLite ()
-    page.meat = page.meat + [table,]
+    page.append (table)
 
     for file in items:
 	item = prepareNewsItem (file)
-	fmtime = os.path.getmtime (file)
-	if mtime < fmtime:
-	    mtime = fmtime
 	table.append (item)
 
     if filename == 'index.html':
 	p = Paragraph ()
 	p.append (Href ('oldnews.html', 'Older News'))
-	page.meat = page.meat + [p]
+	page.append (p)
 
-    page.mtime = mtime
-    page.write (filename)
-
-    return mtime
+    page.write ()
 
 def gen (datadir):
     '''Create the news page (index.html, oldnews.html).'''
@@ -78,6 +77,6 @@ def gen (datadir):
     
     # Create a main page with the Top 5 news items and another page
     # with the rest.
-    mtime = genPage (list[:5], 'index.html', 'NEWS')
-    genPage (list[5:], 'oldnews.html', 'Old News', mtime)
+    genPage ('NEWS', 'index.html', list[:5])
+    genPage ('NEWS/Old News', 'oldnews.html', list[5:])
 

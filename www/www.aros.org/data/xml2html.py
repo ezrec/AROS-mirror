@@ -404,7 +404,9 @@ class XmlPage (Page):
 
 	self.mtime = xmlfile.mtime
 
-def elementToHtml (element, page):
+def elementToHtml (element):
+    result = []
+
     xmlfile = xmlsupport.AROSXmlFile ()
 
     XML2HTML = Xml2HtmlProcessor ()
@@ -416,10 +418,12 @@ def elementToHtml (element, page):
     xmlfile.tree = element
     xmlfile.process (XML2HTML)
     if XML2HTML.toc:
-	page.meat = page.meat + XML2HTML.toc + [BR(), HR (), BR()]
+	result = result + XML2HTML.toc + [BR(), HR (), BR()]
 	
-    page.meat = page.meat + [RawText (XML2HTML.fh.getvalue ())]
+    result = result + [RawText (XML2HTML.fh.getvalue ())]
     XML2HTML.fh.close ()
+
+    return result
 
 def xmlStringToHtmlString (s):
     xmlfile = xmlsupport.AROSXmlFile ()

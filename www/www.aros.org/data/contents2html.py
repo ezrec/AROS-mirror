@@ -1,7 +1,7 @@
 
-import contents, sys, os, os.path
+import contents, sys, os, os.path, string
 import xml2html, xmlsupport
-from util import Page, arosdir, DefinitionList, Text, Href, Heading, \
+from util import arosdir, DefinitionList, Text, Href, Heading, \
     MyRawText, Paragraph
 
 def list2html (list):
@@ -17,9 +17,9 @@ def convertParagraph (page, list):
 	p = xmlsupport.Tag ('p')
 	p.setContents (list)
 	list = p
-    xml2html.elementToHtml (list, page)
+    page.extend (xml2html.elementToHtml (list))
 
-def convertItem (page, c, dirlist, item):
+def convertItem (Page, page, c, dirlist, item):
     list = ('contents',) + dirlist
     path = apply (os.path.join, list)
 
@@ -33,7 +33,7 @@ def convertItem (page, c, dirlist, item):
 	    list.append (Href (os.path.join (dir, 'contents.html'),
 		'%s/' % dir))
 	    
-	    convertContents (child, dirlist+(dir,), item)
+	    convertContents (Page, child, dirlist+(dir,), item)
 
 	list.append (Text (', '))
 
@@ -44,32 +44,38 @@ def convertItem (page, c, dirlist, item):
     if list:
 	del list[-1]
 
-    page.meat = page.meat + [Heading (2, list2html (list))]
+    page.append (Heading (2, list2html (list)))
 
     list = item.description[:]
     if list:
 	convertParagraph (page, list)
     else:
-	page.meat = page.meat + [Paragraph ('No description for this entry available.')]
+	page.append (Paragraph ('No description for this entry available.'))
 
-def convertContents (c, dirlist, parent):
-    list = ('contents',) + dirlist
-    path = apply (os.path.join, list)
+def convertContents (Page, c, dirlist, parent):
+    if dirlist:
+	partPath = apply (os.path.join, dirlist)
+    else:
+	partPath = '.'
+    path = os.path.join ('contents', partPath)
     filename = os.path.join (path, 'contents.html')
 
     if not os.path.exists (path):
 	os.makedirs (path)
 
-    page = Page (linkBoxItem='Contents')
-
-    list = ['..'] * len (dirlist)
-    if list:
-	relPath = apply (os.path.join, list)
+    relRoot = ['..'] * len (dirlist)
+    if relRoot:
+	relPath = apply (os.path.join, relRoot)
 	rootUrl = os.path.join (relPath, 'contents.html')
     else:
 	relPath = '.'
 	rootUrl = 'contents.html'
     
+    nodeName = 'Documentation/Contents'
+    if dirlist:
+	nodeName = nodeName + '/' + string.join (dirlist, '/')
+    page = Page (nodeName, filename)
+
     #print filename, relPath
     
     list = [Href (rootUrl, 'AROS'), Text (' / ')]
@@ -79,7 +85,7 @@ def convertContents (c, dirlist, parent):
 	list.append (Href (os.path.join (path, 'contents.html'), dir))
 	list.append (Text (' / '))
 
-    page.meat = page.meat + [Heading (1, list2html (list))]
+    page.append (Heading (1, list2html (list)))
 
     if c.description:
 	convertParagraph (page, c.description)
@@ -87,14 +93,14 @@ def convertContents (c, dirlist, parent):
 	convertParagraph (page, parent.description)
 
     for item in c.items:
-	convertItem (page, c, dirlist, item)
+	convertItem (Page, page, c, dirlist, item)
     
-    page.write (filename)
+    page.write ()
     
-def gen ():
+def gen (Page):
     c = contents.Contents (os.path.join (arosdir, 'contents.xml'))
 
-    convertContents (c, (), None)
+    convertContents (Page, c, (), None)
 
 if __name__ == '__main__':
     gen ()

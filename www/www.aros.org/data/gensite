@@ -1,35 +1,70 @@
 #!/usr/bin/env python
 
-'''Generate the AROS WWW site.'''
+'''Generate the AROS WWW site.
+
+The process works like this:
+
+- First, the contents of all manually created pages is converted to
+partial HTML. Manually created pages are pages where the content comes
+from some kind of source file. Partial HTML is HTML which goes into
+the "meat" part of the page and which can contain placeholders, namely
+VHREFs or virtual HRefs like this:
+
+    <a vhref="Documentation">
+
+These will be replaced by normal hrefs which point to the document
+which is known as "Documentation".
+'''
 
 import glob
 from util import *
 
-import news
-news.gen (datadir)
-
-import status
-status.gen ()
-
 def genDocumentation ():
+    page = PageMeat ('Documentation', 'documentation.html')
+    page.append (
+	Heading (2, 'Documentation'),
+	Paragraph ('Please choose a link to the left'),
+    )
+    page.write ()
+    #n = mainLinks2.getNode (page)
+    #print "n=",n
+    #print "n.parent=",n.parent
+    #print "n.parent.parent=",n.parent.parent
+    return page
 
-    page = Page (linkBoxItem='Documentation')
-    # Put the old docs here
-    page.meat = page.meat + [Text ('Please choose a link to the left')]
-    page.write ('documentation.html')
+#print 'root=',mainLinks2.root
+#pm = PageMeat ('Test1', 'test1.html')
+#pm.append (Text ('Test1'))
+#pm.write ()
+#pm = PageMeat ('Test2', 'test1.html')
+#pm.append (Text ('Test2'))
+#pm.write ()
+#pm = PageMeat ('Test2/Test', 'test1.html')
+#pm.append (Text ('Test2'))
+#pm.write ()
+#print 'root.order=',mainLinks2.root.order
+#node = mainLinks2.getNode (pm)
+#print 'node=',node
+#print 'node.parent=',node.parent
+#print 'node.parent.parent=',node.parent.parent
 
 def genScreenshots ():
     '''Create a page with screenshots.'''
 
-    page = Page (linkBoxItem='Screenshots')
+    page = PageMeat ('Screenshots', 'screenshots.html')
 
     # First, the pictures of AROS developers, etc.
     tn1 = Thumbnail ('pics/developers/Digulla-2.jpg')
     tn2 = Thumbnail ('pics/developers/Digulla-1.jpg')
     tn3 = Thumbnail ('pics/developers/nlorentz.jpg')
-    page.meat = page.meat + [
-	Name ('Pictures around AROS'),
-	Heading (2, 'Pictures around AROS'),
+    page.append (
+	Href ('#PicturesAroundAROS', '1. Pictures around AROS'),
+	BR (),
+	Href ('#Screenshots', '1. Screenshots'),
+	BR (),
+	BR(), HR(), BR(),
+	Name ('PicturesAroundAROS'),
+	Heading (2, '1. Pictures around AROS'),
 	Paragraph ('If you ever wanted to know what Aaron "Optimizer" Digulla'
 	    ' looks like, here are two pictures:'),
 	ThumbnailTable (tn1, tn2),
@@ -38,8 +73,8 @@ def genScreenshots ():
 	Paragraph ('Hopefully, more pictures of AROS developers will'
 	    ' show up here :-)'),
 	Name ('Screenshots'),
-	Heading (2, 'Screenshots'),
-    ]
+	Heading (2, '2. Screenshots'),
+    )
 
     page.linksToFix.append (tn1.href)
     page.imagesToFix.append (tn1.img)
@@ -90,24 +125,35 @@ def genScreenshots ():
     dirs.sort ()
     dirs.reverse ()
     for dir in dirs:
-	page.meat = page.meat + processDir (dir)
+	page.extend (processDir (dir))
 
-    page.write ('screenshots.html')
+    page.write ()
+
+import links
 
 def genDownload ():
-    page = Page (linkBoxItem='Download')
+    page = PageMeat ('Downloads', 'download.html')
     # Create the page for downloads
-    page.meat = page.meat + [Text ('Please choose a link to the left.')]
-    page.write ('download.html')
+    page.extend ((
+	Heading (2, 'Downloads'),
+	Paragraph ('Some places where you can find files related to AROS:'),
+    ))
+    page.append (processLinks (links.downloadLinks))
+    page.write ()
 
 def genSnapshots ():
     '''Create the page with the snapshots with sizes and links for
     download.'''
-    page = Page (linkBoxItem='Snapshots')
+    page = PageMeat ('Snapshots', 'snapshots.html')
+    page.append (
+	Heading (2, "Snapshots"),
+    )
 
     files = glob.glob (os.path.join (ftpdir, 'snapshots/*.tgz'))
     if not files:
-        page.meat = page.meat + [Text ('No snapshots found')]
+        page.append (
+	    Text ('No snapshots found')
+	)
     else:
 	dict = {}
 	columns = {}
@@ -128,7 +174,7 @@ def genSnapshots ():
 	    days[ss.date] = None
 	
 	table = TableLite (cellpadding=15, border=2)
-	page.meat = page.meat + [table]
+	page.append (table)
 	
 	colList = columns.keys ()
 	colList.sort ()
@@ -181,7 +227,7 @@ def genSnapshots ():
 
 		row = row + [TD (t)]
 
-    page.write ('snapshots.html')
+    page.write ()
 
 def processLinks (links):
     list = List ()
@@ -230,49 +276,99 @@ def genLinks ():
 
 	return body
 
-    page = Page (linkBoxItem='Links')
+    page = PageMeat ('Links', 'links.html')
+    page.append (
+	Href ('#More Related', 'More Related'),
+	BR(),
+	Href ('#Articles', 'Articles'),
+	BR(),
+	Href ('#Homepages', 'Homepages'),
+	BR(),
+	Href ('#Less Related', 'Less Related'),
+	BR(),
+	BR(), HR(), BR(),
+    )
 
-    from links import moreRelated, articles, homepages, lessRelated
+    page.extend (processSection (links.moreRelated, 'More Related'))
+    page.extend (processSection (links.articles, 'Articles'))
+    page.extend (processSection (links.homepages, 'Homepages'))
+    page.extend (processSection (links.lessRelated, 'Less Related'))
 
-    page.meat = page.meat \
-	+ processSection (moreRelated, 'More Related') \
-	+ processSection (articles, 'Articles') \
-	+ processSection (homepages, 'Homepages') \
-	+ processSection (lessRelated, 'Less Related')
+    page.write ()
 
-    page.write ('links.html')
+import xml2html, xmlsupport
 
-import xml2html
+class XmlPageMeat (PageMeat):
+    def __init__ (self, key, url, xmlfilename):
+	PageMeat.__init__ (self, key, url)
 
-def genXmlPage (filename, linkBoxItem):
-    xml2html.XmlPage (os.path.join (arosdir, 'docs', 'src', filename + '.xml'),
-	linkBoxItem=linkBoxItem,
-    ).write (filename + '.html')
+	xmlfile = xmlsupport.AROSXmlFile ()
 
+	XML2HTML = xml2html.Xml2HtmlProcessor ()
+	XML2HTML.toccount = [0, 0, 0, 0, 0]
+	XML2HTML.toc = []
+
+	xmlfile.parse (xmlfilename)
+	xmlfile.process (XML2HTML)
+	if XML2HTML.toc:
+	    self.extend (XML2HTML.toc)
+	    self.extend ((BR(), HR (), BR()))
+	self.append (RawText (XML2HTML.fh.getvalue ()))
+	XML2HTML.fh.close ()
+
+docsrcdir = os.path.join (arosdir, 'docs', 'src')
+def DocSrcDir (path):
+    return os.path.join (docsrcdir, path)
+
+def genPartialXmlPage (key, basename):
+    xmlfilename = DocSrcDir(basename+'.xml')
+    pp = XmlPageMeat (key, basename+'.html', xmlfilename)
+    pp.write ()
+
+def genPartialFAQ ():
+    import faq
+
+    faqobj = faq.FAQ (os.path.join (arosdir, 'docs', 'faq'),)
+    xml = faqobj.toXml ()
+
+    pm = PageMeat ('Documentation/FAQ', 'faq.html')
+    pm.extend (xml2html.elementToHtml (xml))
+    pm.write ()
+    
 # Call all generators in turn
+import news
+news.gen (datadir)
+
+import status
+status.gen (PageMeat)
+
 genDocumentation ()
-
-genXmlPage ('background', 'Background')
-genXmlPage ('cvs', 'CVS')
-
-import faq2html
-faq2html.gen (arosRC, 'FAQ', os.path.join (arosdir, 'docs', 'faq')).write ('faq.html')
-
-genXmlPage ('mmake', 'MetaMake')
-genXmlPage ('style', 'Coding Style')
-genXmlPage ('xml', 'AROS XML')
-genXmlPage ('hidd-intro', 'HIDD Intro')
-genXmlPage ('hidd-model', 'HIDD Model')
-genXmlPage ('filesys', 'Filesystems')
-genXmlPage ('ideas', 'Random Ideas')
+genPartialXmlPage ('Documentation/Background', 'background')
+genPartialFAQ ()
+genPartialXmlPage ('Documentation/CVS', 'cvs')
+genPartialXmlPage ('Documentation/MetaMake', 'mmake')
+genPartialXmlPage ('Documentation/Coding Style', 'style')
+genPartialXmlPage ('Documentation/AROS XML', 'xml')
+genPartialXmlPage ('Documentation/Filesystems', 'filesys')
+genPartialXmlPage ('Documentation/HIDD Intro', 'hidd-intro')
+genPartialXmlPage ('Documentation/HIDD Model', 'hidd-model')
 
 import contents2html
-contents2html.gen ()
+contents2html.gen (PageMeat)
 
 import htmlautodocs
 htmlautodocs.gen ()
+
+genPartialXmlPage ('Documentation/Random Ideas', 'ideas')
+
+node = mainLinks2.findNode ('Documentation/AutoDocs')
+node.order.sort ()
+#print node,node.order
 
 genScreenshots ()
 genDownload ()
 genSnapshots ()
 genLinks ()
+
+processPartialPages ()
+
