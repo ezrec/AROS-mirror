@@ -31,6 +31,11 @@ brackets ("[]").
 200304??:
  <next day here>
 
+20030414:
+
++ AHI ported partly [Martin Blom]
++ sparse bugs, discovered by Blom, hunted and blasted [falemagn]
+
 20030412:
 
 + PNG datatype in contrib [stegerg]
