@@ -1,0 +1,39 @@
+# $Id$
+#
+# Makefile for SDL test programs
+
+include $(TOP)/config/make.cfg
+
+FILES  := testsprite
+DATAFILES := icon.bmp
+
+EXEDIR := $(CONTRIBDIR)/sdl/test
+EXES   := $(foreach f,$(FILES),$(EXEDIR)/$(f))
+DATAS  := $(foreach f,$(DATAFILES),$(EXEDIR)/$(f))
+
+USE_CLIB_SHARED := yes
+USE_AMIGALIB    := yes
+USE_AROSLIB     := yes
+USE_SDLLIB  	:= yes
+
+USER_INCLUDES := -I$(AROS_INCLUDES)/SDL
+
+#MM test-sdl : includes linklibs linklibs-SDL
+
+%make_prog_setup mmake=test-sdl
+
+LIBS := $(LIBS) -lamiga -larossupport #urk :-(
+
+test-sdl : setup $(EXES) $(DATAS)
+
+%make_prog_single dir=$(EXEDIR)
+
+#MM setup
+setup :: 
+	%mkdirs_q $(EXEDIR)
+
+$(EXEDIR)/%.bmp : %.bmp
+	@$(CP) $< $@
+
+%common
+%include_deps
