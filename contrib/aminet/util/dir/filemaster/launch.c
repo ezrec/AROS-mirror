@@ -20,7 +20,7 @@
 #include <proto/locale.h>
 #include <proto/exec.h>
 #include <proto/alib.h>
-
+ 
 #include <proto/icon.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -91,7 +91,7 @@ launch (void (*address) (void), struct CMenuConfig *cmc, WORD flag,
   struct IntuiMessage *imsg;
   WORD cnt;
   WORD ret = 0;
-
+  
   if (!address)
     return (1);
   for (cnt = 0; cnt < LISTS; cnt++)
@@ -100,9 +100,10 @@ launch (void (*address) (void), struct CMenuConfig *cmc, WORD flag,
   if (!pmsg)
     return (0);
   pmsg->cmc = cmc;
+  D(bug("launch.c 103...........\n")); 
   SetSignal (0, SIGBREAKF_CTRL_F);
   fmmain.pmsg = pmsg;
-
+  D(bug("launch.c 106...........\n")); 
   if (subproc & MSUBPROC)
     {
       //flag?"FM Timer":"<<<FileMaster Unknown>>>"
@@ -113,6 +114,7 @@ launch (void (*address) (void), struct CMenuConfig *cmc, WORD flag,
 			      "FM", TAG_DONE)))
 	goto fail;
       Signal ((struct Task *) proc, SIGBREAKF_CTRL_F);
+	D(bug("launch.c 117...........\n")); 
       while (fmmain.pmsg)
 	Wait (SIGBREAKF_CTRL_F);
       ret = 1;
@@ -130,7 +132,7 @@ fail:
       while (imsg = (struct IntuiMessage *) GetMsg (fmmain.ikkuna->UserPort))
 	ReplyMsg ((struct Message *) imsg);
     }
-  return (ret);
+return (ret);
 }
 
 void
@@ -139,7 +141,7 @@ runcommand (struct GadKeyTab *gkt)
   WORD apu1;
   struct Gadget *g;
   struct CMenuConfig *cmc;
-  D (bug ("launch.c 142...........\n"));
+D(bug("launch.c 142...........\n")); 
   ReportMouse (0, fmmain.ikkuna);
   for (apu1 = 0; apu1 < LISTS; apu1++)
     fmlist[apu1].lastclicked = 0;
@@ -184,7 +186,7 @@ deinitproc (struct ProcMsg *pm)
   CloseLibrary (CxBase);
   CloseLibrary (DataTypesBase);
 #endif
-  D (bug ("launch.c 187...........\n"));
+D(bug("launch.c 187...........\n"));      
   CloseLibrary ((struct Library *) DOSBase);
   CloseLibrary ((struct Library *) GfxBase);
   CloseLibrary ((struct Library *) IntuitionBase);
@@ -212,18 +214,18 @@ extern UBYTE datlib[];
 extern UBYTE icolib[];
 
 
-struct ProcMsg *__saveds
-sinitproc (void)
+struct ProcMsg *__saveds sinitproc (void)
 {
   struct ProcMsg *msg;
-  D (bug ("launch.c 216...........\n"));
+D(bug("launch.c 216...........\n")); 
   Wait (SIGBREAKF_CTRL_F);
   msg = fmmain.pmsg;
   fmmain.pmsg = 0;
-  D (bug ("launch.c 220...........\n"));
+D(bug("launch.c 220...........\n")); 
   Signal ((struct Task *) fmmain.myproc, SIGBREAKF_CTRL_F);
-  D (bug ("launch.c 222...........\n"));
-  OpenLibrary ("dos.library", 0);
+D(bug("launch.c 222...........\n")); 
+/* 
+ OpenLibrary ("dos.library", 0);
   OpenLibrary (gfxlib, 0);
   OpenLibrary (intlib, 0);
   OpenLibrary (utilib, 0);
@@ -238,10 +240,11 @@ sinitproc (void)
   OpenLibrary (comlib, 0);
   OpenLibrary (datlib, 0);
 #endif
+*/
   return (msg);
 }
 
-#ifndef AROS
+#ifndef AROS  
 void
 priority (struct CMenuConfig *cmc)
 {
@@ -404,7 +407,7 @@ offgadget (struct Gadget *gadg, WORD cnt)
   while (cnt-- && gadg)
     {
       pos = RemoveGadget (fmmain.ikkuna, gadg);
-      gadg->Flags |= GADGDISABLED;
+      gadg->Flags|=GADGDISABLED;
       AddGadget (fmmain.ikkuna, gadg, pos);
       gadg = gadg->NextGadget;
       cntv++;
@@ -464,10 +467,8 @@ testabort (struct FMList *list)
       while (message =
 	     (struct IntuiMessage *) GetMsg (fmmain.ikkuna->UserPort))
 	{
-	  if (message->Class == MOUSEBUTTONS && message->Code == MENUDOWN
-	      && list->flags & LACTIVE)
-	    list->flags |= LABORTREQ;
-	  ReplyMsg ((struct Message *) message);
+	  if (message->Class==MOUSEBUTTONS && message->Code==MENUDOWN && list->flags&LACTIVE) list->flags|=LABORTREQ;
+	  ReplyMsg((struct Message*)message);
 	}
     }
   if (list->flags & LACTIVE && list->flags & LABORTREQ)
