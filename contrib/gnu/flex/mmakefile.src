@@ -1,0 +1,26 @@
+#   $Id$
+#
+#   Makefile to make libfl.a
+
+include $(TOP)/config/make.cfg
+
+LIB     := fl
+FILES   := libmain libyywrap
+GNUDIR  := $(CONTRIBDIR)/Development/gnu
+
+#-------------------------------------------------
+
+DEFS = -DHAVE_CONFIG_H
+USER_CFLAGS := $(DEFS) -I.
+
+#-------------------------------------------------
+
+#MM linklibs-fl : setup
+
+%make_linklib_setup mmake=linklibs-fl
+
+%make_linklib
+
+%common
+%include_deps
+
