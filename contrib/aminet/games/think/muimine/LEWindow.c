@@ -103,7 +103,8 @@ void SetEditLevel(struct LEWindowData * data, struct EditLevelData * edData);
 SAVEDS ASM LONG LevelListDisplayFunc(REG(a2) char **array,
                                      REG(a1) struct EditLevelData *data)
 #else
-AROS_UFH2(LONG, LevelListDisplayFunc,
+AROS_UFH3(LONG, LevelListDisplayFunc,
+ AROS_UFHA(struct Hook *    	 , hook  , A0),
  AROS_UFHA(char **               , array , A2),
  AROS_UFHA(struct EditLevelData *, data  , A1))
 #endif
