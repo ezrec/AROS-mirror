@@ -814,6 +814,9 @@
    streng *arexx_randu( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_getspace( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_freespace( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_import( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_export( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_storage( tsd_t *TSD, cparamboxptr parm1 );
 #if defined(_AMIGA) || defined(__AROS__)
    streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_remlib( tsd_t *TSD, cparamboxptr parm1 );

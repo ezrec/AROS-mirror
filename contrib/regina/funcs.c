@@ -108,6 +108,7 @@ static const struct function_type functions[] = {
   { 0,              arexx_eof, "EOF" },
 #endif
   { 0,              std_errortext, "ERRORTEXT" },
+  { 0,              arexx_export, "EXPORT" },
 #ifdef VMS
   { 0,              vms_f_cvsi, "F$CVSI" },
   { 0,              vms_f_cvtime, "F$CVTIME" },
@@ -163,6 +164,7 @@ static const struct function_type functions[] = {
   { 0,              arexx_getspace, "GETSPACE" },
   { 0,              unx_gettid, "GETTID" },
   { 0,              arexx_hash, "HASH" },
+  { 0,              arexx_import, "IMPORT" },
   { 0,              cms_index, "INDEX" },
   { 0,              std_insert, "INSERT" },
   { 0,              cms_justify, "JUSTIFY" },
@@ -221,6 +223,7 @@ static const struct function_type functions[] = {
   { 0,              std_sourceline, "SOURCELINE" },
   { 0,              std_space, "SPACE" },
   { 0,              cms_state, "STATE" },
+  { 0,              arexx_storage, "STORAGE" },
   { 0,              std_stream, "STREAM" },
   { 0,              std_strip, "STRIP" },
   { 0,              std_substr, "SUBSTR" },

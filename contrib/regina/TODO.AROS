@@ -7,11 +7,8 @@
 * Add ARexx specific functions
   To implement:
   - EXISTS
-  - EXPORT
-  - IMPORT
   - PRAGMA
   - SHOW
-  - STORAGE
   Implemented:
   - CLOSE
   - EOF
@@ -39,6 +36,9 @@
   - GETCLIP
   - FREESPACE
   - GETSPACE
+  - EXPORT
+  - IMPORT
+  - STORAGE
 * Fix the ARexx vs. ANSI REXX incompatibilies.
   These are: ^ is XOR in ARexx but is not in ANSI REXX.
   Multiple line strings in ARexx are not there in ASNI REXX and are said

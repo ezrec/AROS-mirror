@@ -720,7 +720,10 @@ streng *arexx_randu( tsd_t *TSD, cparamboxptr parm1 )
 }
 
 
-/* Two memory allocation/deallocation functions: getspace and freespace */
+
+/*
+ * Two memory allocation/deallocation functions: getspace and freespace
+ */
 streng *arexx_getspace( tsd_t *TSD, cparamboxptr parm1 )
 {
   int length, error;
@@ -735,6 +738,7 @@ streng *arexx_getspace( tsd_t *TSD, cparamboxptr parm1 )
     exiterror( ERR_INCORRECT_CALL, 14, "READCH", 1, tmpstr_of( TSD, parm1->value ) );
 
   ptr = Malloc_TSD( TSD, length );
+  memset( ptr, 0, length );
   if ( ptr == NULL )
     exiterror( ERR_STORAGE_EXHAUSTED, 0 );
   
@@ -744,7 +748,8 @@ streng *arexx_getspace( tsd_t *TSD, cparamboxptr parm1 )
 
 streng *arexx_freespace( tsd_t *TSD, cparamboxptr parm1 )
 {
-  /* For backwards compatibility there may be two arguments */
+  /* For backwards compatibility there may be two arguments
+     But the second argument is ignored in regina */
   checkparam( parm1, 0, 2, "FREESPACE" );
   
   if ( parm1 == NULL || parm1->value == NULL || parm1->value->len == 0 )
@@ -763,6 +768,159 @@ streng *arexx_freespace( tsd_t *TSD, cparamboxptr parm1 )
 }
 
 
+
+
+/*
+ * ARexx memory <-> string conversion routines: IMPORT, EXPORT, STORAGE
+ */
+streng *arexx_import( tsd_t *TSD, cparamboxptr parm1 )
+{
+  void *memptr;
+  cparamboxptr parm2;
+  int len, error;
+  
+  checkparam( parm1, 1, 2, "IMPORT" );
+  
+  if ( parm1->value->len != sizeof(void *) )
+    exiterror( ERR_INCORRECT_CALL, 0 );
+  
+  memptr = *((void **)parm1->value->value);
+
+  parm2 = parm1->next;
+  if ( parm2 == NULL || parm2->value == NULL || parm2->value->len == 0 )
+    len = strlen((char *)memptr);
+  else
+  {
+    len = streng_to_int( TSD, parm2->value, &error );
+    if ( error )
+      exiterror( ERR_INCORRECT_CALL, 11, "IMPORT", 2, tmpstr_of( TSD, parm2->value ) );
+    if ( len<=0 )
+      exiterror( ERR_INCORRECT_CALL, 14, "IMPORT", 2, tmpstr_of( TSD, parm2->value ) );
+  }
+  
+  return Str_ncre_TSD( TSD, memptr, len );
+}
+
+
+streng *arexx_export( tsd_t *TSD, cparamboxptr parm1 )
+{
+  void *memptr;
+  cparamboxptr parm2 = NULL, parm3 = NULL, parm4 = NULL;
+  int len, error;
+  char fill;
+  streng *src;
+  
+  checkparam( parm1, 1, 4, "EXPORT" );
+
+  if ( parm1->value == NULL || parm1->value->len == 0 )
+    exiterror( ERR_INCORRECT_CALL, 21, "EXPORT", 1 );
+  memptr = *((void **)parm1->value->value);
+  
+  parm2 = parm1->next;
+  if ( parm2 != NULL )
+    parm3 = parm2->next;
+  if ( parm3 != NULL )
+    parm4 = parm3->next;
+  
+  if ( parm2 == NULL || parm2->value == NULL || parm2->value->len == 0 )
+    src = nullstringptr();
+  else
+    src = Str_dup_TSD( TSD, parm2->value );
+  
+  if ( parm3 == NULL || parm3->value == NULL || parm3->value->len == 0 )
+    len = src->len;
+  else
+  {
+    len = streng_to_int( TSD, parm3->value, &error );
+    if ( error )
+      exiterror( ERR_INCORRECT_CALL, 11, "EXPORT", 3, tmpstr_of( TSD, parm3->value ) );
+    if ( len<0 )
+      exiterror( ERR_INCORRECT_CALL, 13, "EXPORT", 3, tmpstr_of( TSD, parm3->value ) );
+  }
+  
+  if ( parm4 == NULL || parm4->value == NULL || parm4->value->len == 0 )
+    fill = 0;
+  else
+    fill = parm4->value->value[0];
+  
+  if (len > src->len)
+  {
+    memcpy( memptr, src->value, src->len );
+    memset( memptr+src->len, fill, len - src->len );
+  }
+  else
+    memcpy( memptr, src->value, len );
+
+  Free_string_TSD( TSD, src );
+  
+  return int_to_streng( TSD, len );
+}
+
+
+streng *arexx_storage( tsd_t *TSD, cparamboxptr parm1 )
+{
+  void *memptr;
+  cparamboxptr parm2 = NULL, parm3 = NULL, parm4 = NULL;
+  int len, error;
+  char fill;
+  streng *src, *retval;
+  
+  checkparam( parm1, 0, 4, "STORAGE" );
+
+  if ( parm1 == NULL )
+    return arexx_getspace( TSD, NULL );
+
+  if ( parm1->value == NULL || parm1->value->len == 0 )
+    exiterror( ERR_INCORRECT_CALL, 21, "STORAGE", 1 );
+  memptr = *((void **)parm1->value->value);
+  
+  parm2 = parm1->next;
+  if ( parm2 != NULL )
+    parm3 = parm2->next;
+  if ( parm3 != NULL )
+    parm4 = parm3->next;
+  
+  if ( parm2 == NULL || parm2->value == NULL || parm2->value->len == 0 )
+    src = nullstringptr();
+  else
+    src = Str_dup_TSD( TSD, parm2->value );
+  
+  if ( parm3 == NULL || parm3->value == NULL || parm3->value->len == 0 )
+    len = src->len;
+  else
+  {
+    len = streng_to_int( TSD, parm3->value, &error );
+    if ( error )
+      exiterror( ERR_INCORRECT_CALL, 11, "EXPORT", 3, tmpstr_of( TSD, parm3->value ) );
+    if ( len<0 )
+      exiterror( ERR_INCORRECT_CALL, 13, "EXPORT", 3, tmpstr_of( TSD, parm3->value ) );
+  }
+  
+  if ( parm4 == NULL || parm4->value == NULL || parm4->value->len == 0 )
+    fill = 0;
+  else
+    fill = parm4->value->value[0];
+
+  retval = Str_ncre_TSD( TSD, memptr, len );
+  
+  if (len > src->len)
+  {
+    memcpy( memptr, src->value, src->len );
+    memset( memptr+src->len, fill, len - src->len );
+  }
+  else
+    memcpy( memptr, src->value, len );
+
+  Free_string_TSD( TSD, src );
+  
+  return retval;
+}
+
+
+
+/* Now the function are given which are only valid in amiga or compatible
+ * platforms (e.g. AROS, ... )
+ */
 #if defined(_AMIGA) || defined(__AROS__)
 
 #include <proto/dos.h>
