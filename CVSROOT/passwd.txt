@@ -11,3 +11,4 @@ winter:dbg5HYnm/h.ZQ:aros::winter@freebsd1.foo.bar
 daniel:b9bwcTjXjo3Gc:aros::daniel@brainstorm.eu.org
 mroth:da/M1jS3sNsHg:aros:Michael Roth:mroth@inlet.lake.de
 mreckt:cbWLerEivCr6I:aros:Martin Recktenwald:klaus21@t-online.de
+lpd:6u5hVWs926luc:aros:Lennard voor den Dag:ldp@worldonline.nl
