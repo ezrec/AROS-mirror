@@ -13,7 +13,8 @@ int main(void)
 {
     struct RexxMsg *msg, *reply;
     struct MsgPort *port, *replyport;
-    const char *command = "rexxdir een test  ";
+//    const char *command = "rexxdir een test  ";
+    const char *command = "'say hello everybody'";
     
     RexxSysBase = OpenLibrary("rexxsyslib.library", 44);
     if (RexxSysBase == NULL)

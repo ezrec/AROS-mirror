@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include <aros/debug.h>
+
 struct Library *ReginaBase;
 struct RxsLib *RexxSysBase;
 struct IntuitionBase *IntuitionBase;
@@ -71,7 +73,7 @@ int main(int argc, char **argv)
         }
         sscanf(argv[2], "%p", &msg);
         StartFileSlave(msg);
-        ReplyMsg(msg);
+        ReplyMsg((struct Message *)msg);
 
         CloseLibrary(ReginaBase);
         CloseLibrary((struct Library *)RexxSysBase);
@@ -153,7 +155,7 @@ int main(int argc, char **argv)
 		    }
 		}
 	        if (reply)
-		    ReplyMsg(msg);
+		    ReplyMsg((struct Message *)msg);
 	    }
 	}
     } while(!done);
@@ -178,97 +180,132 @@ static void StartFile(struct RexxMsg *msg)
 
 static void StartFileSlave(struct RexxMsg *msg)
 {
-    UBYTE *s, *filename;
-    RXSTRING rxresult, rxargs[15];
-    USHORT rc;
+    UBYTE *comm = (UBYTE *)msg->rm_Args[0];
     BPTR lock, oldlock;
-    unsigned int len=0, extlen, argcount=0;
-    BOOL iscommand = ((msg->rm_Action & RXCODEMASK) == RXCOMM);
+    unsigned int len=0, extlen, commlen = LengthArgstring(comm);
     struct FileHandle *input = NULL, *output = NULL, *error = NULL;
     struct Process *process = (struct Process *)msg->rm_Node.mn_ReplyPort->mp_SigTask;
-    
-    if (iscommand)
+
+    /* Input arguments for calling the RexxStart procedure */
+    LONG argcount = 0;
+    RXSTRING rxargs[15], rxresult;
+    PSZ progname = NULL;
+    PRXSTRING instore = NULL;
+    USHORT rc;
+
+    if ((msg->rm_Action & RXFF_STRING))
     {
-	/* For a command the characters up to the first space is the filename */
-	s = (UBYTE *)msg->rm_Args[0];
-	while (*s != 0 && !isspace(*s)) s++;
-	len = s - (UBYTE *)msg->rm_Args[0];
+        void *t;
+
+        instore = malloc(2*sizeof(RXSTRING));
+        t = malloc(commlen);
+        memcpy(t, comm, commlen);
+        MAKERXSTRING(instore[0], t, commlen);
+        MAKERXSTRING(instore[1], NULL, 0);
+    }
+    else if (comm[0] == '\'' || comm[0] == '"')
+    {
+        char c = comm[0];
+        int i;
+        void *t;
+        
+        for (i = 1; comm[i] != c && i < commlen; i++)
+	    ;
+
+        progname = strdup("intern");
+        instore = malloc(2*sizeof(RXSTRING));
+        t = malloc(i-1);
+        memcpy(t, comm + 1, i - 1);
+        MAKERXSTRING(instore[0], t, i-1);
+        MAKERXSTRING(instore[1], NULL, 0);
     }
     else
     {
-	/* For a function whole ARG0 is the filename */
-	len = LengthArgstring((UBYTE *)msg->rm_Args[0]);
-    }
-    extlen = msg->rm_FileExt==NULL ? 5 : strlen(msg->rm_FileExt);
+        BOOL iscommand = ((msg->rm_Action & RXCODEMASK) == RXCOMM);
+        UBYTE *s = comm;
 
-    filename = malloc(len + 6 + extlen);
-    memcpy(filename, (char *)msg->rm_Args[0], len);
-    filename[len] = 0;
-    if (strchr(filename, ':') == NULL)
-    {
-	strcpy(filename, "REXX:");
-	strncat(filename, (char *)msg->rm_Args[0], len);
-    }
-    lock = Lock(filename, ACCESS_READ);
-    if (lock == NULL)
-    {
-	strcat(filename, msg->rm_FileExt==NULL ? ".rexx" : (const char *)msg->rm_FileExt);
-	lock = Lock(filename, ACCESS_READ);
-    }
-    if (lock == NULL)
-    {
-	msg->rm_Result1 = 5;
-	msg->rm_Result2 = 1;
-	free(filename);
-	return;
-    }
-    UnLock(lock);
+        if (iscommand)
+        {
+	    /* For a command the characters up to the first space is the progname */
+	    while (*s != 0 && !isspace(*s)) s++;
+	    len = s - comm;
+        }
+        else
+        {
+	    /* For a function whole ARG0 is the progname */
+	    len = LengthArgstring((UBYTE *)msg->rm_Args[0]);
+        }
+        extlen = msg->rm_FileExt==NULL ? 5 : strlen(msg->rm_FileExt);
 
-    if (iscommand)
-    {
-	while (isspace(*s))
-	    s++;
+        progname = malloc(len + 6 + extlen);
+        memcpy(progname, (char *)msg->rm_Args[0], len);
+        progname[len] = 0;
+        if (strchr(progname, ':') == NULL)
+        {
+	    strcpy(progname, "REXX:");
+	    strncat(progname, (char *)msg->rm_Args[0], len);
+        }
+        lock = Lock(progname, ACCESS_READ);
+        if (lock == NULL)
+        {
+	    strcat(progname, msg->rm_FileExt==NULL ? ".rexx" : (const char *)msg->rm_FileExt);
+	    lock = Lock(progname, ACCESS_READ);
+        }
+        if (lock == NULL)
+        {
+	    msg->rm_Result1 = 5;
+	    msg->rm_Result2 = 1;
+	    free(progname);
+	    return;
+        }
+        UnLock(lock);
+
+        if (iscommand)
+        {
+	    while (isspace(*s))
+	        s++;
 	
-	if (!(msg->rm_Action & RXFF_TOKEN))
-	{
-	    if (*s == 0)
-		argcount = 0;
+	    if (!(msg->rm_Action & RXFF_TOKEN))
+	    {
+	        if (*s == 0)
+		    argcount = 0;
+	        else
+	        {
+		    argcount = 1;
+		    len = LengthArgstring((UBYTE *)msg->rm_Args[0]) - (s - (UBYTE *)msg->rm_Args[0]);
+		    MAKERXSTRING(rxargs[0], s, len);
+	        }
+	    }
 	    else
 	    {
-		argcount = 1;
-		len = LengthArgstring((UBYTE *)msg->rm_Args[0]) - (s - (UBYTE *)msg->rm_Args[0]);
-		MAKERXSTRING(rxargs[0], s, len);
-	    }
-	}
-	else
-	{
-	    UBYTE *s2;
-	    while (*s != 0)
-	    {
-		s2 = s;
-		while((*s2 != 0) && !isspace(*s2)) s2++;
-		MAKERXSTRING(rxargs[argcount], s, s2-s);
+	        UBYTE *s2;
+	        while (*s != 0)
+	        {
+		    s2 = s;
+		    while((*s2 != 0) && !isspace(*s2)) s2++;
+		    MAKERXSTRING(rxargs[argcount], s, s2-s);
 		
-		while(isspace(*s2)) s2++;
-		s = s2;
-		argcount++;
+		    while((*s2 != 0) && isspace(*s2) ) s2++;
+		    s = s2;
+		    argcount++;
+	        }
+	    }
+        }
+        else /* is a function call */
+        { 
+	    int arguments = msg->rm_Action & RXARGMASK;
+      
+	    for (argcount = 0; argcount < arguments; argcount++)
+	    { 
+	        UBYTE *argstr = (UBYTE *)msg->rm_Args[1+argcount];
+	        if (argstr == NULL)
+		    MAKERXSTRING(rxargs[argcount], NULL, 0);
+	        else
+		    MAKERXSTRING(rxargs[argcount], argstr, LengthArgstring(argstr));
 	    }
 	}
     }
-    else /* is a function call */
-    {
-        int arguments = msg->rm_Action & RXARGMASK;
-      
-	for (argcount = 0; argcount < arguments; argcount++)
-	{
-	    UBYTE *argstr = (UBYTE *)msg->rm_Args[1+argcount];
-	    if (argstr == NULL)
-	        MAKERXSTRING(rxargs[argcount], NULL, 0);
-	    else
-	        MAKERXSTRING(rxargs[argcount], argstr, LengthArgstring(argstr));
-	}
-    }
-    
+  
     /* Set input/output to the task that sent the message */
     if (!(msg->rm_Action & RXFF_NOIO))
     {
@@ -299,7 +336,7 @@ static void StartFileSlave(struct RexxMsg *msg)
     }
 
     MAKERXSTRING(rxresult, NULL, 0);
-    RexxStart(argcount, rxargs, filename, NULL, msg->rm_CommAddr, RXFUNCTION, NULL, &rc, &rxresult);
+    RexxStart(argcount, rxargs, progname, instore, msg->rm_CommAddr, RXFUNCTION, NULL, &rc, &rxresult);
 
     /* Return to the old input/output if it was changed */
     if (!(msg->rm_Action & RXFF_NOIO))
@@ -322,10 +359,15 @@ static void StartFileSlave(struct RexxMsg *msg)
     else
         msg->rm_Result2 = NULL;
 
-    if (RXSTRPTR(rxresult)!=NULL)
+    if (RXSTRPTR(rxresult) != NULL)
 	free(RXSTRPTR(rxresult));
-    
-    free(filename);
+    if (progname != NULL)
+        free(progname);
+    if (instore != NULL)
+    {
+        free(RXSTRPTR(instore[0]));
+        free(instore);
+    }
 }
 
 static void AddLib(struct RexxMsg *msg)
@@ -342,7 +384,7 @@ static void AddLib(struct RexxMsg *msg)
   rsrc = (struct RexxRsrc *)AllocMem(sizeof(struct RexxRsrc), MEMF_ANY | MEMF_CLEAR);
   rsrc->rr_Size = sizeof(struct RexxRsrc);
   rsrc->rr_Node.ln_Pri = atoi((char *)msg->rm_Args[1]);
-  rsrc->rr_Node.ln_Name = CreateArgstring(msg->rm_Args[0], strlen(msg->rm_Args[0]));
+  rsrc->rr_Node.ln_Name = CreateArgstring((UBYTE *)msg->rm_Args[0], strlen((char *)msg->rm_Args[0]));
   
   if ((msg->rm_Action & RXCODEMASK) == RXADDLIB)
   {
@@ -503,21 +545,21 @@ static void AddCon(struct RexxMsg *msg)
     struct RexxRsrc *rsrc;
   
     LockRexxBase(0);
-    rsrc = (struct RexxRsrc *)FindName(&RexxSysBase->rl_ClipList, msg->rm_Args[0]);
+    rsrc = (struct RexxRsrc *)FindName(&RexxSysBase->rl_ClipList, (char *)msg->rm_Args[0]);
     if (rsrc == NULL)
     {
         rsrc = (struct RexxRsrc *)AllocMem(sizeof(struct RexxRsrc), MEMF_ANY | MEMF_CLEAR);
         rsrc->rr_Node.ln_Type = RRT_CLIP;
-        rsrc->rr_Node.ln_Name = CreateArgstring(msg->rm_Args[0], strlen(msg->rm_Args[0]));
+        rsrc->rr_Node.ln_Name = CreateArgstring((UBYTE *)msg->rm_Args[0], strlen((char *)msg->rm_Args[0]));
         rsrc->rr_Size = sizeof(struct RexxRsrc);
-        rsrc->rr_Arg1 = CreateArgstring(msg->rm_Args[1], (ULONG)msg->rm_Args[2]);
+        rsrc->rr_Arg1 = (IPTR)CreateArgstring((UBYTE *)msg->rm_Args[1], (ULONG)msg->rm_Args[2]);
         
         AddTail(&RexxSysBase->rl_ClipList, (struct Node *)rsrc);
     }
     else
     {
-        DeleteArgstring(rsrc->rr_Arg1);
-        rsrc->rr_Arg1 = CreateArgstring(msg->rm_Args[1], (ULONG)msg->rm_Args[2]);
+        DeleteArgstring((UBYTE *)rsrc->rr_Arg1);
+        rsrc->rr_Arg1 = (IPTR)CreateArgstring((UBYTE *)msg->rm_Args[1], (ULONG)msg->rm_Args[2]);
     }
     UnlockRexxBase(0);
   
@@ -531,7 +573,7 @@ static void RemCon(struct RexxMsg *msg)
     struct RexxRsrc *rsrc;
 
     LockRexxBase(0);
-    rsrc = (struct RexxRsrc *)FindName(&RexxSysBase->rl_ClipList, msg->rm_Args[0]);
+    rsrc = (struct RexxRsrc *)FindName(&RexxSysBase->rl_ClipList, (STRPTR)msg->rm_Args[0]);
     if (rsrc == NULL)
     {
         msg->rm_Result1 = 0;
@@ -540,7 +582,7 @@ static void RemCon(struct RexxMsg *msg)
     {
 	Remove(&rsrc->rr_Node);
         DeleteArgstring(rsrc->rr_Node.ln_Name);
-        DeleteArgstring(rsrc->rr_Arg1);
+        DeleteArgstring((UBYTE *)rsrc->rr_Arg1);
         FreeMem(rsrc, rsrc->rr_Size);
       
         msg->rm_Result1 = 0;
