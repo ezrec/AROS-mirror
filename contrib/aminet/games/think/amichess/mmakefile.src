@@ -33,7 +33,7 @@ setup :
 $(BOARDDIR)/%/Dark : Boards/%/Dark
 	@$(CP) $< $@
 
-$(BOARDDIR)/Boards/%/Light : Boards/%/Light
+$(BOARDDIR)/%/Light : Boards/%/Light
 	@$(CP) $< $@
 
 $(PIECESDIR)/1024/% : Pieces/1024/%
