@@ -2,5 +2,6 @@
 
 #MM- aminet-games-think : aminet-games-think-yahzee \
 #MM	aminet-games-think-newmastermind \
-#MM	aminet-games-think-lazymines \
-#MM	aminet-games-think-soliton
+#MM	aminet-games-think-lazymines 
+
+##MM	aminet-games-think-soliton
