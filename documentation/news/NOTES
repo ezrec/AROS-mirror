@@ -33,6 +33,7 @@ brackets ("[]").
 
 20030423:
 
++ Several fixes to ide.device to improve stability (race conditions) [stegerg]
 + Several more icons [Mason]
 
 20030421:
