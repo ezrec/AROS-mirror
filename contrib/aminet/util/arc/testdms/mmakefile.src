@@ -1,0 +1,36 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(CONTRIBDIR)/aminet
+
+FILES := testdms
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+LIBS := -L$(LIBDIR) -larosc_shared -lamiga -larossupport -larosm -lautoinit
+
+EXE := $(DESTDIR)/testdms
+
+.PHONY : all clean
+
+#MM aminet-util-arc-testdms : setup-aminet-util-arc-testdms
+aminet-util-arc-testdms 	: $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-aminet-util-arc-testdms :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	%link_q from=$(OBJS)
+
+#MM
+clean-aminet :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
