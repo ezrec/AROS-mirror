@@ -8,7 +8,7 @@ Georg Steger fixed a few bugs which made the nightly build fail and removed
 some globals in the x11.hidd. He also moved a lot of the code in config/hidd/*
 back into the graphics.library. He started to move the gfx function
 implementations out of graphics_driver.c back into the actual library
-functions. Finally, he found a soltion to make the Opaque utility use
+functions. Finally, he found a solution to make the Opaque utility use
 MoveWindow() instead of ChangeWindowBox() without having these
 relative-coords problems and he improved the locking during refreshs
 by the app and intuition as the autodocs suggest.

@@ -8,8 +8,8 @@ He added a script called "startsomedemos" which starts nine (9!)
 demos and places them on the screen in such a way that you can see
 all of them (more of less if you have only 800x600). On a 1.4GHz
 Athlon all nine run pretty smoothly :-) To achieve this, he added
-the options to all demos to specify where they should open their windows.
-And, most importantly, AROS windows on X11 have now their own icon !
+options to all demos to specify where they should open their windows.
+And, most importantly, AROS windows on X11 have now their own icon!
 
 Adam Chodorowski began moving the generated contrib files to SYS:Contrib/
 (from C: or SYS:Utilities/).

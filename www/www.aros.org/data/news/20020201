@@ -15,6 +15,6 @@ Johan Grip worked some more on the pci.hidd.
 
 Adam Chodorowski began porting AROS to OpenBSD/i386.
 
-Michael Schulz release his first version of an nVidia driver and made
+Michael Schulz released his first version of an nVidia driver and made
 good use of the pci.hidd with it. Georg Steger helped him to sort out
 some bugs.
