@@ -6,24 +6,12 @@
 #MM- fish : fish-microemacs fish-lotto fish-henon fish-bcubic fish-input
 #MM- fish : fish-bezier1 fish-bezier2 fish-tree fish-grep fish-lines
 #MM- fish : fish-304_clines fish-304_lines fish-screenzap fish-watchman
-#MM- fish : fish-sunmaze fish-fiveinline
+#MM- fish : fish-sunmaze fish-fiveinline fish-362_rubik fish-yachtc
+#MM- fish : fish-rubik
 
 # The apps below are not working yet as functions are still missing
 
 
-# Missing for fish-rubik:
-#   AreaEnd, ClipBlit, Flood, InitBitMap, MakeScreen, RethinkDisplay, ScrollVPort
-#   WaitBlit
-
-# M fish : fish-rubik
-
-# Missing for fish-yachtc
-#   SetMenuStrip
-
-# M fish : fish-yachtc
-
-# M fish : fish-362_rubik
-#   AreaEnd, ClipBlit, Flood, InitTmpRas
 
 # M fish : fish-371_fractal
 #   SetMenuStrip, ShowTitle
