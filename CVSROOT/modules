@@ -113,3 +113,6 @@ developers binaries/developers
 
 # WWW
 www www
+
+# XDME texteditor
+xdme -d contrib/aminet/text/edit/xdme contrib/aminet/text/edit/xdme
