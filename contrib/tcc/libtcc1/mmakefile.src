@@ -1,9 +1,0 @@
-include $(TOP)/config/make.cfg
-LIB       := libtcc1
-FILES = libtcc1
-#MM contrib-development-compilers-tcc-libtcc1 : linklib-libtcc1
-#MM
-%make_linklib_setup mmake=linklib-libtcc1
-%make_linklib
-%common
-%include_deps
