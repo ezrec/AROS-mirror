@@ -603,8 +603,7 @@ static int is_path_relative(char *path)
 #ifdef _WIN32    	
     is_relative = ((*path != '\\') && ((strchr(path,':') == NULL)));
 #elif defined(__AROS__)
-    is_relative = strchr(path,':') == NULL;
-    printf("is_relative = %d\n", is_relative);
+    is_relative = (strchr(path,':') == NULL);
 #else			    
     is_relative = (*path != '/');
 #endif

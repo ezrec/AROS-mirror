@@ -141,25 +141,17 @@ static char theme_dir[512];
 static char theme_path[512];
 void theme_set_dir( char *name )
 {
-    kprintf("=== 1 === %s\n", name);
-
     if ( name[0] == '~' )
-{        snprintf( theme_dir, sizeof(theme_dir)-1, "%s/%s/lbreakout2-themes/%s", 
+        snprintf( theme_dir, sizeof(theme_dir)-1, "%s/%s/lbreakout2-themes/%s", 
                  (getenv( "HOME" )?getenv( "HOME" ):"."), CONFIG_DIR_NAME, name + 1 );
-    kprintf("=== 2 === %s\n", theme_dir);
- }   else {
+    else {
         if ( STRCMP( SRC_DIR, "." ) ) {
             getcwd( theme_dir, 511 );
             strcat( theme_dir, "/gfx/" );
             strcat( theme_dir, name );
-    kprintf("=== 3 === %s\n", theme_dir);
-
         }
         else
-        {
             snprintf( theme_dir, sizeof(theme_dir)-1, "%s/gfx/%s", SRC_DIR, name );
-              kprintf("=== 4 === %s\n", theme_dir);
-}
     }
 }
 
@@ -175,14 +167,10 @@ SDL_Surface* theme_load_surf( char *name )
     SDL_Surface *surf = 0;
     sprintf( theme_path, "%s/%s", theme_dir, name );
     
-    kprintf("theme_path = %s\n", theme_path);
-
     if ( stat( theme_path, &filestat ) == -1 || 
          ( surf = stk_surface_load( SDL_SWSURFACE | SDL_NONFATAL, theme_path ) ) == 0 )
         surf = stk_surface_load( SDL_SWSURFACE, name );
     
-    kprintf("surf = %p\n", surf);
-
     return surf;
 }
 #ifdef AUDIO_ENABLED
