@@ -62,5 +62,7 @@ tT85.:db.2ZKYLqIvaY:???:hmichelo@so-razor.ms.sophia.schneider.fr:
 paul:dduLZ9yokBXXk:Paul Firth:paul@minds-eye.net:
 vitas:db5VTm//PP8yA:Vitas Povilaitis:vitas@wavemark.com:
 bsidhi:ipMAO8VFGp3Wk:Bill Sidhipong:vsidhi@enteract.com:
+zeus:abS0bFu15KvNE:Cristiano Contin:zeus77@dei.unipd.it:
+kingsmurf:ach2LTJWBViOU:Lars S. Jessen:ljessen@post1.netmaster.dk:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
