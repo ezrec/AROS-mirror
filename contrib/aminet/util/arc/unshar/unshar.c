@@ -320,14 +320,14 @@ int n;
  */
 
 /*
- *		index()
+ *		myindex()
  *		-------
  *		Like standard Unix index(), but skips over quotes if skip == true.
  *		Also skips over chars prefixed by a \. Returns pointer to first
  *		occurance of char c inside string s, or NULL.
  */
-#undef index
-char *index(s,c,skip)
+
+char *myindex(s,c,skip)
 char *s,c;
 int skip;
 {
@@ -413,7 +413,7 @@ char *filename;
 
 	p = filename;
 
-	while (p = index(p, '/', 1)) {
+	while (p = myindex(p, '/', 1)) {
 
 		/* Dir exists, so copy dir part of filename into dir name area */
 
@@ -491,7 +491,7 @@ int echofilename, overwrite;
 #define ISOK(s)			(s[1] == '/' && ISPREFIX(s[-1]) && !ISMETA(s[-2]))
 
 			p = s;
-			while ((p = index(p,'s',0)) != NULL && !ISOK(p))
+			while ((p = myindex(p,'s',0)) != NULL && !ISOK(p))
 				p++;
 			if (p != NULL) {
 				p += 2;				/* Skip over the 's/' bit	*/
@@ -506,7 +506,7 @@ int echofilename, overwrite;
 			if (found == NO) {
 				found = YES;
 			}
-			if ((p = index(s,'>',1)) == NULL) {
+			if ((p = myindex(s,'>',1)) == NULL) {
 				print3(ErrorMsg, numtostr(linenum), "(a)\n");
 			} else {
 				/*
@@ -520,7 +520,7 @@ int echofilename, overwrite;
 					append = NO;
 				getname(p,filename,MODE_FILE);
 				p = s;
-				while ((p = index(p,'<',1)) && (p[1] != '<'))
+				while ((p = myindex(p,'<',1)) && (p[1] != '<'))
 					;
 				if (p)
 					getname(p+2,endmarker,MODE_TEXT);
