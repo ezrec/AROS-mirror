@@ -60,7 +60,9 @@ extern xcolnr xcolors[4096];
 
  /* Keyboard and mouse */
 
-static int keystate[256];
+static int  keystate[256];
+static int  screen_is_picasso;
+static char picasso_invalid_lines[1200];
 
 extern int buttonstate[3];
 extern int lastmx, lastmy;
@@ -231,13 +233,8 @@ void uaedisplay_eventhandler(struct IntuiMessage *imsg)
 	   /* fall trough */
 
         case IDCMP_MOUSEMOVE:
-
 	    lastmx = imsg->MouseX;
             lastmy = imsg->MouseY;
-
-	    oldmx = imsg->MouseX;
-	    oldmy = imsg->MouseY;
-
 	    break;
 
        case IDCMP_MOUSEBUTTONS:
@@ -317,6 +314,10 @@ void LED(int on)
 
 void DX_Invalidate (int first, int last)
 {
+    do {
+	picasso_invalid_lines[first] = 1;
+	first++;
+    } while (first <= last);
 }
 
 int DX_BitsPerCannon (void)
@@ -326,11 +327,25 @@ int DX_BitsPerCannon (void)
 
 void DX_SetPalette(int start, int count)
 {
+    if (!screen_is_picasso || picasso_vidinfo.pixbytes != 1)
+	return;
+
+    abort();
 }
 
 int DX_FillResolutions (uae_u16 *ppixel_format)
 {
-    return 0;
+    int count = 0;
+
+    DisplayModes[count].res.width  = 640;
+    DisplayModes[count].res.height = 480;
+    DisplayModes[count].depth      = 4;
+    DisplayModes[count].refresh    = 75;
+
+    count++;
+    *ppixel_format |= RGBFF_CHUNKY;
+
+    return count;
 }
 
 void gfx_set_picasso_modeinfo (int w, int h, int depth)
