@@ -1,0 +1,37 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(CONTRIBDIR)/aminet
+
+FILES := buffer language subwin mainwin system hotkey \
+	settings miscwin patches snoopdos testcalls 
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+
+LIBS := -L$(LIBDIR) -larosc -lamiga -larossupport -larosm
+
+EXE := $(DESTDIR)/SnoopDos
+
+.PHONY : all clean
+
+#MM aminet-util-moni-snoopdos : setup-aminet-util-moni-snoopdos
+aminet-util-moni-snoopdos : $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-aminet-util-moni-snoopdos :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	%link_q from=$(OBJS)
+
+#MM
+clean-aminet :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
