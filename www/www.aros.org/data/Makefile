@@ -8,21 +8,14 @@ CP = cp
 NOP = true # A command which does nothing
 ALLOW_READ = chmod a+r
 MKDIR = mkdir -p
-# Comment these definitions out if you don't have them. Then the graphs
-# for the size of the repositories will not be generated.
-GNUPLOT = #gnuplot # gnuplot
-CONVERT = convert # ImageMagick
 
 # Collect files
 DEVPICS := $(subst $(BINDIR)/developers/,$(HTMLDIR)/pics/developers/,$(wildcard $(BINDIR)/developers/*.*))
 SCREENSHOTS := $(subst $(BINDIR)/screenshots/,$(SCREENSHOTDIR)/,$(wildcard $(BINDIR)/screenshots/*.* $(BINDIR)/screenshots/[0-9]*/*.* $(BINDIR)/screenshots/[0-9]*/README))
 SCREENSHOTDIRS := $(subst $(BINDIR)/screenshots/,$(SCREENSHOTDIR)/,$(wildcard $(BINDIR)/screenshots/[0-9]*))
 
-all : dummy pics makedirs check-html .stamp apache.conf
+all : pics makedirs check-html .stamp apache.conf
 	@$(NOP)
-
-dummy :
-	echo "x$(GNUPLOT)x"
 
 # These two rules will make sure that gensite is run if one of the
 # files gensite creates is missing.
