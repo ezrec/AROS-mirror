@@ -2,7 +2,7 @@
 #include "nsmtracker.h"
 #include "disk.h"
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 #include "plug-ins/disk_camd_i_plugin_proc.h"
 #include "plug-ins/camd_i_plugin_proc.h"
 #endif
@@ -22,7 +22,7 @@ DC_start("PATCH");
 	DC_SSI("maxvel",patch->maxvel);
 	DC_SSI("standardvel",patch->standardvel);
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 	SavePatchData(patch->patchdata);
 #endif
 
@@ -44,7 +44,7 @@ struct Patch *LoadPatch(void){
 	struct Patch *patch=DC_alloc(sizeof(struct Patch));
 	patch->l.num=DC_LoadN();
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 	patch->playnote=CAMDplaynote;
 	patch->stopnote=CAMDstopnote;
 	patch->changevelocity=CAMDchangevelocity;
@@ -69,7 +69,7 @@ var3:
 	goto start;
 
 obj0:
-#ifdef _AMIGA
+#ifdef AMIAROS
 	patch->patchdata=LoadPatchData();
 #endif
 	goto start;

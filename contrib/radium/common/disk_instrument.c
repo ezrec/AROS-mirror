@@ -84,12 +84,12 @@ extern void CAMDPP_Update(struct Instruments *instrument,struct Patch *patch);
 extern void *CAMD_CopyInstrumentData(struct Tracks *track);
 extern void *CAMDLoadFX(struct FX *fx,struct Tracks *track);
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 #include "plug-ins/camd_playfromstart_proc.h"
 #endif
 
 void DLoadInstrument(struct Instruments *instrument){
-#ifdef _AMIGA
+#ifdef AMIAROS
 	instrument->instrumentname="CAMD instrument";
 	instrument->getStandardVelocity= &CAMDgetStandardVelocity;
 	instrument->getMaxVelocity= &CAMDgetMaxVelocity;

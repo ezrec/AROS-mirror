@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 #include "time_proc.h"
 #include "blocklist_proc.h"
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 #include <proto/exec.h>					//Has to be removed!
 #endif
 
@@ -60,7 +60,7 @@ int visit=0;
 
 extern struct Task *mytask;
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 extern LONG clocksig;
 #endif
 
@@ -101,7 +101,7 @@ void PlayerNewBlock(STime time,struct PEventQueue *peq,int doit){
 	if(PC_GetPlayBlock(1)==NULL){
 		pc->isplaying=false;
 		ReturnPEQelement(peq);
-#ifdef _AMIGA
+#ifdef AMIAROS
 		Signal(mytask,1L<<clocksig);
 #endif
 		return;

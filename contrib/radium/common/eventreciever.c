@@ -62,7 +62,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 #include "new/backwards_proc.h"
 #include "new/invert_proc.h"
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 #include "Amiga_colors_proc.h"
 #endif
 

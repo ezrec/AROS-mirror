@@ -14,7 +14,7 @@
 #include "wblocks_proc.h"
 #include "windows_proc.h"
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 #include "Amiga_bs.h"
 #include "instrprop/Amiga_instrprop.h"
 #include "plug-ins/disk_camd_mymidilinks_proc.h"
@@ -25,7 +25,7 @@
 #include "undo.h"
 #include "player_proc.h"
 
-#ifdef _AMIGa
+#ifdef AMIAROS
 #include "mmd2loader/mmd2load_proc.h"
 #endif
 
@@ -34,7 +34,7 @@
 
 extern struct Root *root;
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 extern NInt currpatch;
 #endif
 
@@ -114,7 +114,7 @@ bool Load(char *filename){
 
 	def_instrument=root->def_instrument;
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 	CloseHelpWindow();
 	CloseCPPWindowWindow();
 	CloseBlockSelectWindow();
@@ -127,7 +127,7 @@ bool Load(char *filename){
 
 
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 	currpatch=-1;
 #endif
 
@@ -138,7 +138,7 @@ bool Load(char *filename){
 extern int num_undos;
 extern int max_num_undos;
 
-#ifdef _AMIGA
+#ifdef AMIAROS
 extern char *mmp2filename;
 #endif
 
@@ -183,7 +183,7 @@ bool Load_CurrPos(struct Tracker_Windows *window){
 			!strcmp(filename+strlen(filename)-5,".mmd3") ||
 			!strcmp(filename+strlen(filename)-4,".mmd")
 		){
-#ifdef _AMIGA
+#ifdef AMIAROS
 			mmp2filename=filename;
 #endif
 			return Load("radium:Init.rad");
