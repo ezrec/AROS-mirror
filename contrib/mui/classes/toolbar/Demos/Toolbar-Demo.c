@@ -10,7 +10,7 @@
 */
 
 /* ANSI C */
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <stdio.h> /* exit() */
 
 /* MUI */
@@ -38,28 +38,37 @@
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
 #endif
 
-//#define REG(x) register __ ## x
+#if !defined(__AROS__)
+#define REG(x) register __ ## x
+#endif
 
 enum {NEW=0, OPEN, CUT=3, COPY, PASTE, UNDO };
 enum {BOLD=0, ITALIC, UNDERLINED, LEFT=4, CENTER, RIGHT };
 
 #include <MUI/Toolbar_mcc.h>
 
+#if !defined(__AROS__)
 struct Library *MUIMasterBase;
 
-//VOID TestFunc(REG(a0) struct Hook *hook, REG(a1) ULONG *prms)
+VOID TestFunc(REG(a0) struct Hook *hook, REG(a1) ULONG *prms)
+#else
 AROS_UFH3(void, TestFunc,
     AROS_UFHA(struct Hook *, hook, A0),
     AROS_UFHA(void *, unused, A2),
     AROS_UFHA(ULONG *, prms, A1))
+#endif
 {
+#if defined(__AROS__)
 	AROS_USERFUNC_INIT
+#endif
 
 	ULONG qualifier = prms[0];
 
 	printf("Qualifier: %x\n", qualifier);
 
+#if defined(__AROS__)
 	AROS_USERFUNC_EXIT
+#endif
 }
 
 const struct Hook TestHook  = { { NULL,NULL }, (HOOKFUNC)TestFunc,NULL,NULL };
@@ -95,19 +104,20 @@ int main(int argc,char *argv[])
 
 	struct MUIP_Toolbar_Description bank2[] =
 	{
-		{ TDT_BUTTON, 0, TDF_TOGGLE | TDF_SELECTED,			0,	"Bold text",			0},
-		{ TDT_BUTTON, 0, TDF_TOGGLE,								0,	"Italic text",			0},
-		{ TDT_BUTTON, 0, TDF_TOGGLE,								0,	"Underlined text",	0},
+		{ TDT_BUTTON, 0, TDF_TOGGLE | TDF_SELECTED, 0, "Bold text", 0},
+		{ TDT_BUTTON, 0, TDF_TOGGLE, 0, "Italic text", 0},
+		{ TDT_BUTTON, 0, TDF_TOGGLE, 0, "Underlined text", 0},
 		{ TDT_SPACE, NULL, NULL, NULL, NULL, NULL },
 	/* Notice the mutual-exclude flag in the three following buttons. The bit pattern correspond
 		to the buttons/fields which should be deactivated. */
-		{ TDT_BUTTON, 0, TDF_RADIOTOGGLE | TDF_SELECTED, 	0,	"Left aligned",		0x0020 | 0x0040},
-		{ TDT_BUTTON, 0, TDF_RADIOTOGGLE,						0,	"Centered",				0x0010 | 0x0040},
-		{ TDT_BUTTON, 0, TDF_RADIOTOGGLE,						0,	"Right aligned",		0x0010 | 0x0020},
+		{ TDT_BUTTON, 0, TDF_RADIOTOGGLE | TDF_SELECTED, 0, "Left aligned", 0x0020 | 0x0040},
+		{ TDT_BUTTON, 0, TDF_RADIOTOGGLE, 0, "Centered", 0x0010 | 0x0040},
+		{ TDT_BUTTON, 0, TDF_RADIOTOGGLE, 0, "Right aligned", 0x0010 | 0x0020},
 		{ TDT_END, 0, 0, 0, 0, 0 }
 	};
 
 	/* Let us make sure we have enough stack-space - we'll ad 4Kb to the stack */
+#if !defined(__AROS__)
 	struct StackSwapStruct stackswap;
 	struct Task *mytask   = FindTask(NULL);
 	ULONG  stacksize      = (ULONG)mytask->tc_SPUpper-(ULONG)mytask->tc_SPLower+4096;
@@ -120,8 +130,9 @@ int main(int argc,char *argv[])
 	if(newstack)
 	{
 		StackSwap(&stackswap);
-		//if (MUIMasterBase = OpenLibrary(MUIMASTER_NAME, 19))
-		//{
+		if (MUIMasterBase = OpenLibrary(MUIMASTER_NAME, 19))
+		{
+#endif
 			app = ApplicationObject,
 				MUIA_Application_Title      , "Toolbar-Demo",
 				MUIA_Application_Version    , "$VER: Toolbar-Demo V1.1 (26-Feb-00)",
@@ -255,9 +266,13 @@ int main(int argc,char *argv[])
 				MUI_DisposeObject(app);
 			}
 			CloseLibrary(MUIMasterBase);
-		//}
+#if !defined(__AROS__)
+		}
 		StackSwap(&stackswap);
 		FreeVec(newstack);
 	}
 	exit(res);
+#else
+	return 0;
+#endif
 }
