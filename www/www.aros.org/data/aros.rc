@@ -2,7 +2,7 @@
 from HTMLcolors import *
 from HTMLgen import *
 
-stylesheet = 'HTMLgen.css'
+#stylesheet = 'HTMLgen.css'
 author = 'Aaron &quot;Optimzer&quot; Digulla'
 email = 'digulla@aros.org'
 bgcolor = WHITE
