@@ -333,6 +333,11 @@ def shellToHtml (p, xmlfile, item):
     xmlfile.processRecursive (p, item.content)
     p.fh.write ('</tt>')
     
+def codeToHtml (p, xmlfile, item):
+    p.fh.write ('<pre>')
+    xmlfile.processRecursive (p, item.content)
+    p.fh.write ('</pre>')
+    
 def filenameToHtml (p, xmlfile, item):
     p.fh.write ('<tt>')
     xmlfile.processRecursive (p, item.content)
@@ -342,6 +347,21 @@ def classToHtml (p, xmlfile, item):
     p.fh.write ('<strong><tt>')
     xmlfile.processRecursive (p, item.content)
     p.fh.write ('</tt></strong>')
+
+def ideaToHtml (p, xmlfile, item):
+    p.fh.write (str (Heading (2, item.attr['title'])))
+    p.fh.write ('\n<p><strong>By %s</strong></p>\n\n' % item.attr['by'])
+    xmlfile.processRecursive (p, item.content)
+
+def commentToHtml (p, xmlfile, item):
+    p.fh.write (str (Heading (3, 'Comment by %s' % item.attr['by'])))
+    xmlfile.processRecursive (p, item.content)
+
+import code2html
+
+def codeToHtml (p, xmlfile, item):
+    c = code2html.AROSCodeConverter ('.')
+    p.fh.write (c.convert (item.content[0].text))
 
 def descriptionToHtml (p, xmlfile, item):
     p.fh.write ('<p><dl>\n')
@@ -354,9 +374,9 @@ def descriptionToHtml (p, xmlfile, item):
 	    line.dump (0)
 	    raise 'Expected "item"'
 	
-	p.fh.write ('<dt>')
+	p.fh.write ('<dt><strong>')
 	xmlfile.processRecursive (p, itemTitle.content)
-	p.fh.write ('</dt>\n<dd>')
+	p.fh.write ('</strong></dt>\n<dd>')
 	xmlfile.processRecursive (p, line.content[1:])
 	p.fh.write ('<dd>\n')
 
@@ -458,6 +478,9 @@ class XmlPage (Page):
 	XML2HTML.add ('description', descriptionToHtml)
 	XML2HTML.add ('class', classToHtml)
 	XML2HTML.add ('tree', treeToHtml)
+	XML2HTML.add ('code', codeToHtml)
+	XML2HTML.add ('idea', ideaToHtml)
+	XML2HTML.add ('comment', commentToHtml)
 	xmlfile.addEntity ('AROS', 'AROS')
 	xmlfile.addEntity ('AMIGA', 'Amiga®')
 	xmlfile.addEntity ('AMIGAOS', 'AmigaOS')
@@ -485,6 +508,9 @@ XmlPage (os.path.join (datadir, 'hidd-intro.xml'),
 XmlPage (os.path.join (datadir, 'hidd-model.xml'),
     linkBoxItem='HIDD Model',
 ).write ('hidd-model.html')
+XmlPage (os.path.join (datadir, 'ideas.xml'),
+    linkBoxItem='Random Ideas',
+).write ('ideas.html')
 
 import htmlautodocs
 htmlautodocs.gen ()
