@@ -181,7 +181,7 @@ NAME
     This field contains all necessary prototypes to use the function
     from the user point of view and the name of the function in a `AROS_LH#?()`
     macro (Library Header). These macros are used to make the same code work on
-    different kind of hardwares. The name of the macro depends on the amount of
+    different kind of hardware. The name of the macro depends on the amount of
     parameters and whether the function needs the library base. `AddHead()`
     does not and therefore an "I" is appended to the macros name. If it need
     the library base (like `AddTask()`), then the "I" is omitted.
@@ -486,7 +486,7 @@ This file describes how to port AROS to a new kind of hardware.
    from x86 to your CPU.
 
 6. Populate $(KERNEL)/. It is recommended that you make a copy of i386-emul,
-   because that is the most uptodate version of the kernel.
+   because that is the most up to date version of the kernel.
 
 7. Type "make machine". It will compile a program and run it. The output
    can be used to modify $(KERNEL)/machine.h.
