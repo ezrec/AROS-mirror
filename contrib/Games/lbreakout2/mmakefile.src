@@ -15,7 +15,7 @@ lb2_real: $(GENDIR)/$(CURDIR)/.configured
 	@DATADIR=$(EXEDIR)/data $(MAKE) -C $(GENDIR)/$(CURDIR) install
 
 $(GENDIR)/$(CURDIR)/.configured: mmakefile
-	@%mkdirs_q $(GENDIR)/$(CURDIR)
+	%mkdirs_q $(GENDIR)/$(CURDIR)
 	@(\
             cd $(GENDIR)/$(CURDIR);\
 	    $(RM) config.cache; \
