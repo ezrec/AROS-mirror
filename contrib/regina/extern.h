@@ -91,6 +91,7 @@
 #if !defined(HAVE__FULLPATH) && !defined(HAVE__TRUENAME)
    int my_fullpath( char *dst, const char *src, int size ) ;
 #endif
+   streng *arexx_exists( tsd_t *TSD, cparamboxptr parms ) ;
 
 /*
  * Routines in expr.c

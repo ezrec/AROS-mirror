@@ -108,6 +108,7 @@ static const struct function_type functions[] = {
   { 0,              arexx_eof, "EOF" },
 #endif
   { 0,              std_errortext, "ERRORTEXT" },
+  { 0,              arexx_exists, "EXISTS" },
   { 0,              arexx_export, "EXPORT" },
 #ifdef VMS
   { 0,              vms_f_cvsi, "F$CVSI" },

@@ -4720,6 +4720,28 @@ streng *unx_close( tsd_t *TSD, cparamboxptr parms )
 }
 #endif
 
+
+/*
+ * a function called exists that checks if a file with a certain name
+ * exists. This function was taken from the ARexx API.
+ */
+streng *arexx_exists( tsd_t *TSD, cparamboxptr parms )
+{
+   char *name;
+   streng *retval;
+   struct stat st;
+  
+   checkparam( parms, 1, 1, "EXISTS" ) ;
+  
+   name = str_of( TSD, parms->value ) ;
+   retval = int_to_streng( TSD, stat( name, &st ) != -1 ) ;
+   Free_TSD( TSD, name ) ;
+  
+   return retval;
+}
+
+
+
 /*
  * The code in this function borrows heavily from code supplied by
  * Keith Patton (keith,patton@dssi-jcl.com)
