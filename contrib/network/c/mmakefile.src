@@ -20,7 +20,6 @@ USE_AROSLIB := yes
 #MM workbench-c : includes linklibs network-includes
 
 %make_prog_setup mmake=workbench-c
-%make_vpath
 
 workbench-c : setup $(EXES)
 
