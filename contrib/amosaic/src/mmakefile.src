@@ -48,7 +48,7 @@ USE_MUILIB := yes
 
 USER_INCLUDES := -I../../mui/libs/muimaster -I$(INCDIR)/libwww2
 PRELIBS := $(PRELIBS) -lwww2
-#MM mui-amosaic : includes linklibs contrib-regina
+#MM mui-amosaic : includes linklibs 
 
 %make_prog_setup mmake=mui-amosaic
 
