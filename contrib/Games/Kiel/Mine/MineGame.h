@@ -235,15 +235,11 @@ void MaleSpielfeld()
 {
 BYTE x,y;
   clearwin();
-/* AROS */
-for(y=0;y<height;y++)
-  for(x=0;x<width;x++)
-    drawfield(x*box_width+left+1,oben+1+y*box_width,(x+1)*box_width+left-1,box_width+oben-1+y*box_width);
 
-/*    drawfield(x*box_width+left+1,oben+1,(x+1)*box_width+left-1,box_width+oben-1); */
-/*  for(y=1;y<height;y++) */
-/* AROS unimplemented */
-/*    copypic(left,oben,width*box_width,box_width,left,oben+y*box_width); */
+  for(x=0;x<width;x++)
+    drawfield(x*box_width+left+1,oben+1,(x+1)*box_width+left-1,box_width+oben-1);
+  for(y=1;y<height;y++)
+    copypic(left,oben,width*box_width,box_width,left,oben+y*box_width);
 
   drawfield(left-6,oben-6,width*box_width+5+left,height*box_width+5+oben);
   drawfield(width*box_width+6+left,height*box_width+6+oben,left-7,oben-7);

@@ -92,7 +92,7 @@ struct NewWindow NeuesWindow =
 {
   10,10,350,200,
   -1,-1,
-  IDCMP_CLOSEWINDOW|IDCMP_MOUSEBUTTONS|IDCMP_GADGETUP|IDCMP_RAWKEY,
+  IDCMP_CLOSEWINDOW|IDCMP_MOUSEBUTTONS|IDCMP_GADGETUP|IDCMP_RAWKEY|IDCMP_NEWSIZE,
   WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_GIMMEZEROZERO,
   NULL,
   NULL,
@@ -168,6 +168,7 @@ void globalInit()
 BYTE i;
   open_lib();
   open_window(&NeuesWindow);
+
   time( &tstart );
   srand(tstart);
   width=22;
@@ -264,7 +265,7 @@ BOOL endreq()
 BOOL weiter=FALSE,ret=FALSE;
   WinSize(Window,200,100);
   clearwin();
- Delay(5);
+
   write_text(20,13,"Wirklich beenden???",2);
   drawfield(50,25,100,75);
   write_text(60,55,"Ja.",1);
