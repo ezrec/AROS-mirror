@@ -123,7 +123,7 @@ articles = (
 	    '.'
 	),
     ),
-    Link ('http://elwoodb.free.fr/article/AROS/',
+    Link ('http://elwoodb.free.fr/articles/AROS/',
 	'Interview with A. Digulla (Head of Development)',
     ),
 )
