@@ -1,29 +1,25 @@
 Short:    GamePack - Tiny Games for Amiga/AROS
-Author:   Henning Kiel (henning@tilt.prima.ruhr.de)
+Author:   Henning Kiel (hkiel@aros.org)
 Uploader: Henning Kiel
-Version:  pre_1.0 AROS-Source 970823
+Version:  pre_1.1 AROS-Source 20000214
 Type:     misc/emu/AROS/game
 
 This is a package of some tiny games I started to program some time ago.
-Now, I'm `porting` it to OS2.0 + AROS.
-This is the pre-release of some of them. While AROS is being developed,
-only some of the OS' features are implemented, and so things may change
-when AROS is (a) complete (operating system).
+This is the pre-release of some of them.
 
 DESCRIPTIONS:
 -------------
-Mine -	is a clone of the well known game Mine-Sweeper. As long as
-	window-gadgets are not supported for the linux version of AROS
-	the escape-key is used to quit the program (only in menus).
+Mine -	is a clone of the well known game Mine-Sweeper.
 	The main feature provided with this version is a solving-helper,
 	which does all the 'dirty' work, i.e. the clicking-around at
 	obvious places.
+
 Jump -	is a solitair game on which you have to jump with one stone across
 	another (next to it, which has to be in the same row or column) which
 	will then be removed. You win when you managed to remove all stones
 	exept one, which should be in the middle.
 JumpEd-	is the Editor for the starting-combination of the above game.
-	Quit with escape-key.
+
 Quad -	is another solitair game. First, you choose the starting combination
 	on the left half and the finish combination on the right half, then
 	the game is started with the start button. It can be aborted with the
@@ -37,8 +33,20 @@ Quad -	is another solitair game. First, you choose the starting combination
 	If you push 2, 1,2,3 are inverted, 4->1,4,7;6->3,6,9;8->7,8,9
 	If you push 1, 1,2,4,5 are inverted, 3->2,3,5,6;7->4,5,7,8;9->5,6,8,9
 
+Rotate-	is an experimental game. You get an heap of colored tiles.
+	By pressing on one tile you rotate the tiles around this tile
+	anti-clockwise. If four or more tiles with the same color are in a
+	row, these tiles are deleted and the tiles above fall down.
+	Goal is to lower the height of the heap beneath a certain level or
+	to delete as many tiles as possible with a certain number of rotates
+	or to use as litte rotates as possible to delete a ceratin number of
+	tiles.
+
 Wumpus-	Is the well-known game in which you have to hunt for Wumpus in his
 	caves.
 
 MainSite:
-	http://student.physik.uni-dortmund.de/homepages/kiel/prgs.html
+	http://student.physik.uni-dortmund.de/~kiel/prgs.html
+	anonymous CVS:
+	:pserver:anon@cvs.aros.org:/home/cvs/aros/contrib/Games/Kiel
+
