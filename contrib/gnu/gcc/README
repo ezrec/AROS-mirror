@@ -18,7 +18,7 @@ INDEX
 2. Required knowledges
 
   This README is not for everyone. You need to know a few things before 
-  you attempt to build a native or crosscompiler, and this documentation
+  you attempt to build a native or cross compiler, and this documentation
   does not attempt to explain to you those things.
   
   You need to know the following things:
@@ -36,7 +36,7 @@ INDEX
        how to use a compiler and, more specifically, a crosscompiler 
        for AROS.
        
-  Failure to meed any of the above requirements will most likely result 
+  Failure to meet any of the above requirements will most likely result 
   in anger and frustration, you've been warned! :-) 
   
 3. What is and how to build a cross compiler for AROS?
