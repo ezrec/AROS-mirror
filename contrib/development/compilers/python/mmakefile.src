@@ -31,6 +31,7 @@ LIBS := \
 	-lpython-modules \
 	-lpython-parser \
 	-lpython-python \
+	-lexpat \
 	$(LIBS)
 
 contrib-python : setup $(EXE)

@@ -663,6 +663,9 @@
 /* Define if you have the <utime.h> header file.  */
 #define HAVE_UTIME_H 1
 
+/* Define if you have the <expat.h> header file. */
+#define HAVE_EXPAT_H 1
+
 /* Define if you have the dl library (-ldl).  */
 /* #undef HAVE_LIBDL */
 

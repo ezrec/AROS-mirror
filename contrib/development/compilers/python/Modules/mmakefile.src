@@ -51,13 +51,13 @@ FILES := \
 	mathmodule \
 	cmathmodule \
 	pypcre \
-	pcremodule
+	pcremodule \
+	pyexpat
 	
 # Modules that need more work to compile.
 #	fcntlmodule
 
 # Modules that need a bit of work to be ported.
-#	pyexpat
 #	socketmodule
 #	threadmodule
 #	cryptmodule

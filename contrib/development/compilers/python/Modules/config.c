@@ -37,6 +37,7 @@ extern void initoperator(void);
 extern void initparser(void);
 extern void initpcre(void);
 extern void initpure(void);
+extern void initpyexpat(void);
 extern void initregex(void);
 extern void initrgbimg(void);
 extern void initrotor(void);
@@ -78,6 +79,7 @@ struct _inittab _PyImport_Inittab[] = {
 	{"parser",           initparser},
 	{"pcre",    	     initpcre},
 	{"pure",             initpure},
+	{"pyexpat",          initpyexpat},
 	{"regex",            initregex},
 	{"rgbimg",           initrgbimg},
 	{"rotor",            initrotor},
