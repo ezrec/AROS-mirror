@@ -1,6 +1,0 @@
-#!/bin/sh
-
-export CVSFILE="$1"
-export OUT="$CVSROOT/CVSROOT/commitlog"
-
-tee -a /tmp/AROS.log | gawk -f $CVSROOT/CVSROOT/commitlog.awk
