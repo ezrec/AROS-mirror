@@ -992,6 +992,9 @@ case $os in
         -*mint | -*MiNT)
 	        os=-mint
 		;;
+        -aros)
+                os=-aros
+                ;;
 	-none)
 		;;
 	*)
