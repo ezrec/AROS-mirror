@@ -208,13 +208,9 @@ ULONG signals;
 #endif
     global->SysBase = SysBase;
     global->DosProc = (PROC *) FindTask(NULL);
-/*    WaitPort(&global->DosProc->pr_MsgPort);
-    msg = GetMsg(&global->DosProc->pr_MsgPort);
-    if (global->DosProc->pr_CLI)
-      return RETURN_FAIL;*/
     global->DOSBase = (struct DOSBase *)OpenLibrary("dos.library",37);
     global->UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library",37);
-#ifndef NDEBUG
+#if !defined(NDEBUG) || defined(DEBUG_SECTORS)
     global->DBDisable = 0;				  /*  Init. globals	  */
     global->Dbport = global->Dback = NULL;
 
@@ -324,6 +320,7 @@ ULONG signals;
 	{
 		signals = Wait(global->g_dos_sigbit | global->g_timer_sigbit | global->g_app_sigbit);
 	} while	(handlemessage(signals));
+    BUG(dbprintf("Terminating the handler\n");)
     /* remove timer device and any pending timer requests: */
     if (global->g_timer_sigbit)
       Cleanup_Timer_Device ();
@@ -388,6 +385,7 @@ UBYTE   notdone = 1;
 		/* retry opening the SCSI device (every 2 seconds): */
 		if (!global->g_cd && (global->g_time & 1))
 		{
+                        BUG(dbprintf("Device is closed, attempting to open\n");)
 #ifdef __AROS__
 			Get_Startup((struct FileSysStartupMsg *)-1);
 #else
@@ -398,7 +396,10 @@ UBYTE   notdone = 1;
 		{
 			/* icon retry (every second): */
 			if (global->g_retry_show_cdda_icon)
+                        {
+                                BUG(dbprintf("Showing CDDA icon\n");)
 				Show_CDDA_Icon ();
+                        }
 			/* diskchange check: */
 			if (global->g_scan_interval)
 			{
@@ -417,6 +418,7 @@ UBYTE   notdone = 1;
 	if (signals & global->g_app_sigbit)
 	{
 	struct Message *msg;
+                BUG(dbprintf("CDDA icon double-clicked\n");)
 		while ((msg = GetMsg (global->g_app_port)))
 		{
 			ReplyMsg (msg);
@@ -450,17 +452,14 @@ UBYTE   notdone = 1;
 		packet->dp_Res1 = DOSTRUE;
 		packet->dp_Res2 = 0;
 		error = 0;
-#ifndef NDEBUG
-		dbprintf
-		(
+		BUG(dbprintf(
 			"Packet: %3ld %08lx %08lx %08lx %10s ",
 			packet->dp_Type,
 			packet->dp_Arg1,
 			packet->dp_Arg2,
 			packet->dp_Arg3,
 			typetostr(packet->dp_Type)
-		);
-#endif
+		);)
 		if (!global->g_cd)
 		{
 			switch (packet->dp_Type)
@@ -1511,7 +1510,7 @@ void Unmount (int p_remove_seglist)
 
   if (global->DevList) {
 
-    BUG(dbprintf("***unmounting***");)
+    BUG(dbprintf("***unmounting*** ");)
     
     Close_Object (global->g_top_level_obj);
     

@@ -18,6 +18,8 @@ FILES := \
 	rock \
 	volumes
 
+USER_CFLAGS := -DAROS_KERNEL -DNDEBUG
+
 %build_module_macro mmake=aminet-disk-cdrom-amicdrom \
   modname=cdrom modtype=handler \
   initfile=arosdevice files=$(FILES) \

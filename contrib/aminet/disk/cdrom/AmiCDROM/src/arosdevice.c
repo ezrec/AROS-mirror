@@ -6,6 +6,7 @@
 #include <exec/resident.h>
 
 #include "acdrbase.h"
+#include "devsupp.h"
 
 extern const char name[];
 extern const char version[];
@@ -45,7 +46,7 @@ const struct Resident ACDR_resident=
 };
 
 static const char name[]="cdrom.handler";
-static const char version[]="$VER: cdrom.handler 1.15 (2002-07-07)\n";
+static const char version[]="$VER: " HANDLER_VERSION;
 
 static const APTR inittab[4]=
 {

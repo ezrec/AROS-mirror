@@ -564,12 +564,6 @@ void debugmain (void)
     PutMsg(global->Dback,&global->DummyMsg);	      /*  Kill handshake  */
 }
 
-#ifdef __MORPHOS__
-#define CODETYPE NP_CodeType, CODETYPE_PPC,
-#else
-#define CODETYPE
-#endif
-
 void dbinit (void)
 {
     TASK *task = FindTask(NULL);
@@ -580,7 +574,6 @@ void dbinit (void)
         		   NP_Name, "DEV_DB",
        			   NP_Priority, task->tc_Node.ln_Pri+1,
        			   NP_StackSize, 4096,
-                           CODETYPE
        			   TAG_DONE)) {
       WaitPort(global->Dback);				    /* handshake startup    */
       GetMsg(global->Dback);				    /* remove dummy msg     */

@@ -50,6 +50,8 @@
 #include <limits.h>
 #include <string.h>
 
+#include <stdio.h>
+
 #include "cdrom.h"
 #include "globals.h"
 
@@ -65,15 +67,11 @@ extern struct Globals *global;
 void Determine_Drive_Type(CDROM *p_cd) {
 t_inquiry_data data;
 char buf[33];
-  
-	p_cd->scsi_compliance = 1;
+
 	p_cd->model = MODEL_ANY;
 
 	if (!Inquire (p_cd, &data))
 		return;
-
-	if ((data.version & 0x7) >= 2)
-		p_cd->scsi_compliance = 2;
 
 	if (StrNCmp (data.vendor, "TOSHIBA", 7) == 0)
 	{
@@ -87,7 +85,9 @@ char buf[33];
 		CopyMem(data.product, buf, 32);
 		buf[32] = 0;
 		if (StrStr (buf, "CDU-8002"))
+                {
 			p_cd->model = MODEL_CDU_8002;
+                }
 	}
 }
 
@@ -592,20 +592,56 @@ int i, j, len;
 	return cnt;
 }
 
-int Start_Play_Audio(CDROM *p_cd) {
-static unsigned char cmd[10] = { 0x48, 0, 0, 0, 0, 1, 0, 99, 1, 0 };
-int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
+inline void lba_to_msf (int lba, unsigned char *m, unsigned char *s, unsigned char *f)
+{
+	lba += CD_MSF_OFFSET;
+	lba &= 0xffffff;  /* negative lbas use only 24 bits */
+	*m = lba / (CD_SECS * CD_FRAMES);
+	lba %= (CD_SECS * CD_FRAMES);
+	*s = lba / CD_FRAMES;
+	*f = lba % CD_FRAMES;
+}
 
-	if (
-			p_cd->use_trackdisk ||
-			(p_cd->scsi_compliance == 1 && p_cd->model == MODEL_ANY)
-		)
-		return FALSE;
+int Start_Play_Audio(CDROM *p_cd) {
+//static unsigned char cmd[10] = { 0x48, 0, 0, 0, 0, 1, 0, 99, 1, 0 };
+static unsigned char cmd[10] = { GPCMD_PLAY_AUDIO_MSF, 0, 0, 0, 0, 0, 1, 99, 1, 0 };
+
+int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
+unsigned long start,end;
+t_toc_header hdr;
+t_toc_data *toc;
+int i, len;
+
+	if (p_cd->use_trackdisk)
+	        return FALSE;
 
 	if (p_cd->model == MODEL_CDU_8002)
 		cmd[0] = 0xC9;
 
-	cmd[4] = Has_Audio_Tracks(p_cd);
+        toc = Read_TOC (p_cd, &hdr);
+	if (!toc)
+		return FALSE;
+
+	len = hdr.length / 8;
+	for (i=0; i<len; i++)
+	{
+		if (toc[i].track_number <= 99 && !(toc[i].flags & 4))
+                {
+                        start=toc[i].address;
+                        goto FoundStart;
+                }
+	}
+	return FALSE;
+FoundStart:
+        for (; i<len; i++)
+	{
+		if (toc[i].track_number > 99 || (toc[i].flags & 4))
+                        break;
+	}
+        end=toc[i-1].address;
+
+        lba_to_msf(start, &cmd[3], &cmd[4], &cmd[5]);
+	lba_to_msf(end-1, &cmd[6], &cmd[7], &cmd[8]);
 
 	return Do_SCSI_Command(p_cd,p_cd->buffers[dummy_buf],0,cmd,10,SCSIF_WRITE);
 }

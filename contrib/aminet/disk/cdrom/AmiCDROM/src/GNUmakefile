@@ -1,6 +1,14 @@
 #
-# Makefile for AmiCDROM with GNUC v2.5.8
+# Makefile for AmiCDROM with GNUC
 #
+
+#Turn these flags on to enable debugging
+DEBUGLIBS  = -ldebug
+DEBUGFLAGS = -DDEBUG
+
+#And these ones are for normal operation
+#DEBUGLIBS  =
+#DEBUGFLAGS = -DNDEBUG
 
 # some shortcuts
 
@@ -21,7 +29,7 @@ LDFLAGS2	= -noixemul
 
 OS=$(shell uname)
 ifeq "$(OS)" "MorphOS"
-LDLIBS1 = -ldebug
+LDLIBS1 =
 else
 LDLIBS1 = -lamiga
 endif
@@ -29,7 +37,7 @@ endif
 LDLIBS2		=
 
 .c.o:
-		$(CC) $(CFLAGS) -o $@ $< -c
+		$(CC) $(CFLAGS) $(DEBUGFLAGS) -o $@ $< -c
 
 # all object files we have
 
@@ -44,8 +52,8 @@ OBJS4		= checkcd.o cdrom.o iso9660.o rock.o hfs.o generic.o path.o
 all:		cdrom-handler cdrom cdcontrol checkcd
 
 cdrom-handler:	$(OBJS1)
-		$(CC) $(LDFLAGS1) -o $@ $(OBJS1) $(LDLIBS1)
-#	         $(NOEXEC) $@
+		$(CC) $(LDFLAGS1) -o $@ $(OBJS1) $(LDLIBS1) $(DEBUGLIBS)
+		$(NOEXEC) $@
 
 cdrom:		$(OBJS2)
 		$(CC) $(LDFLAGS2) -o $@ $(OBJS2) $(LDLIBS2)
