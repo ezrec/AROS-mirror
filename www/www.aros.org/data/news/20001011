@@ -1,0 +1,8 @@
+Cleanup of the AROS source tree by Bernardo Innocenti, primitive
+hardfile support of FFS-formatted floppy disks (ADF) by Georg
+Steger and better mouse support for AROS Native/x86 by Tobias Seiler
+(mouse buttons work now). Georg threw in some additional code to
+change the position of the mouse pointer on the screen and now
+you can move the window around. Since VGA.HIDD doesn't support
+the XOR drawing mode, yet, there is still some garbage when you
+move the window but that should be fixed, soon :-)

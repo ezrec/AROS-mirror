@@ -1,0 +1,8 @@
+The clipboard.device, written by Johan Alfredsson is now
+ready (kudos for fixing the last bugs and testing it go
+to Georg Steger). Also, we have now ConClip.
+
+We also have a working datatypes.library (for a while now)
+but Georg Steger has ported some datatypes (text and ascii
+to be precise) from Aminet. The binary datatype will be next
+and maybe we'll have a picture.datatype soon, too.

@@ -1,0 +1,5 @@
+There is now a new tool to generate shared libraries,
+devices, gadgets, datatypes and HIDDs. And we have
+macros to access the PC speaker (which should help
+to debug AROS Native/x86). Credits go to Lars Bischoff
+and Georg Steger.
