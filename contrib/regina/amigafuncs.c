@@ -117,14 +117,10 @@ static streng *getlistnames( tsd_t *TSD, struct List *list, const streng *sep )
   struct Node *ln;
   streng *retval, *tmpstr;
 
+  retval = Str_cre_TSD( TSD, "" );
   ForeachNode( list, ln )
   {
-    if ( first )
-    {
-      retval = Str_cre_TSD( TSD, ln->ln_Name );
-      first = 0;
-    }
-    else
+    if ( !first )
     {
       tmpstr = Str_cat_TSD( TSD, retval, sep );
       if ( tmpstr != retval )
@@ -132,12 +128,16 @@ static streng *getlistnames( tsd_t *TSD, struct List *list, const streng *sep )
 	Free_string_TSD( TSD, retval );
 	retval = tmpstr;
       }
-      tmpstr = Str_catstr_TSD( TSD, retval, ln->ln_Name );
-      if ( tmpstr != retval )
-      {
-	Free_string_TSD( TSD, retval );
-	retval = tmpstr;
-      }
+    }
+    else
+    {
+      first = 0;
+    }
+    tmpstr = Str_catstr_TSD( TSD, retval, ln->ln_Name );
+    if ( tmpstr != retval )
+    {
+      Free_string_TSD( TSD, retval );
+      retval = tmpstr;
     }
   }
 
@@ -1228,7 +1228,7 @@ streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
     offset = -30;
   else
   {
-    offset = streng_to_int( TSD, parm2->value, &error );
+    offset = streng_to_int( TSD, parm3->value, &error );
     if ( error || offset >= 0 )
       exiterror( ERR_INCORRECT_CALL, 11, "ADDLIB", 3, tmpstr_of( TSD, parm3->value ) );
   }
@@ -1241,9 +1241,9 @@ streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
   {
     version = streng_to_int( TSD, parm4->value, &error );
     if ( error )
-      exiterror( ERR_INCORRECT_CALL, 11, "ADDLIB", 4, tmpstr_of( TSD, parm2->value ) );
+      exiterror( ERR_INCORRECT_CALL, 11, "ADDLIB", 4, tmpstr_of( TSD, parm4->value ) );
     if ( version < 0 )
-      exiterror( ERR_INCORRECT_CALL, 13, "ADDLIB", 4, tmpstr_of( TSD, parm2->value ) );
+      exiterror( ERR_INCORRECT_CALL, 13, "ADDLIB", 4, tmpstr_of( TSD, parm4->value ) );
   }
 
   name = str_of( TSD, parm1->value );
