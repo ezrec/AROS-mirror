@@ -1,0 +1,35 @@
+#   $Id$
+#
+#   Makefile to make the Python parser.
+
+include $(TOP)/config/make.cfg
+
+LIB   := python-parser
+
+FILES := \
+	acceler \
+	bitset \
+	firstsets \
+	grammar \
+	grammar1 \
+	listnode \
+	metagrammar \
+	myreadline \
+	node \
+	parser \
+	parsetok \
+	printgrammar \
+	tokenizer 
+
+# Needs more work to compile.
+#	intrcheck
+
+USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR)
+
+#MM linklibs-python-parser
+
+%make_linklib_setup mmake=linklibs-python-parser
+%make_linklib 
+
+%common
+%include_deps
