@@ -54,7 +54,7 @@ def genPage (items, filename, linkBoxItem):
     for file in items:
 	item = prepareNewsItem (file)
 	fmtime = os.path.getmtime (file)
-	if mtime < fmtime
+	if mtime < fmtime:
 	    mtime = fmtime
 	table.append (item)
 
