@@ -20,7 +20,7 @@ all : pics makedirs gen-html apache.conf
 
 # Run gensite if .stamp is missing or if one of the source files
 # is newer.
-gen-html :
+gen-html : config.py
 	python gensite
 
 apache.conf : genconf apache.conf.in site.conf
