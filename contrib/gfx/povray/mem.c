@@ -28,7 +28,7 @@
 #include "mem.h"
 #include "parse.h"              /* MAError() */
 #include "povray.h"             /* stats[] global var */
-
+#include <stdlib.h>             /* for calloc */
 
 /************************************************************************
 * AUTHOR

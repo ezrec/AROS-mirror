@@ -226,12 +226,14 @@
 #define max3(x,y,z) (((x)>(y))?(((x)>(z))?(x):(z)):(((y)>(z))?(y):(z)))
 #define min3(x,y,z) (((x)<(y))?(((x)<(z))?(x):(z)):(((y)<(z))?(y):(z)))
 
+#ifndef _AROS
 #ifndef labs      /* Absolute value of the long integer x. */
 #define labs(x) (long) (((x)<0)?-(x):(x))
 #endif
 
 #ifndef fabs      /* Absolute value of the double x. */
 #define fabs(x) ((x) < 0.0 ? -(x) : (x))
+#endif
 #endif
 
 
@@ -638,7 +640,9 @@ typedef DBL MATRIX [4][4];
 typedef DBL EXPRESS [5];
 typedef COLC COLOUR [5];
 typedef COLC RGB [3];
+#ifndef _AROS
 typedef short WORD;
+#endif
 
 /* Stuff for bounding boxes. */
 

@@ -123,13 +123,15 @@
 
 /* Type definitions to match the TTF spec, makes code clearer */
 typedef char CHAR;
-typedef unsigned char BYTE;
 typedef short SHORT;
 typedef unsigned short USHORT;
-typedef long LONG;
-typedef unsigned long ULONG;
 typedef short FWord;
 typedef unsigned short uFWord;
+#ifndef _AROS
+typedef unsigned char BYTE;
+typedef long LONG;
+typedef unsigned long ULONG;
+#endif
 
 #if !defined(MACOS)
 typedef long Fixed;
