@@ -32,7 +32,8 @@ $(HTMLDIR)/%.html :
 # Run gensite if .stamp is missing or if one of the source files
 # is newer.
 .stamp : HTMLcolors.py HTMLgen.py aros.rc gensite imgsize.py \
-	    config.py \
+	    config.py htmlautodocs.py mainlinks.py news.py status.py \
+	    util.py xmlsupport.py $(wildcard *.xml) \
 	    $(wildcard news/*) links.py $(DEVPICS) $(SCREENSHOTS)
 	@python gensite
 	@touch $@

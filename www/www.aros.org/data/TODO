@@ -1,5 +1,9 @@
 TODO
 
+- Make the current item in the navbar stand out
+
+- Make a logo contest
+
 - Add Link to edenmarket (those guys host our server for free :-)
 
 - Split the code which generates the pages into separate scripts and
@@ -12,6 +16,7 @@ o Convert the C source files into hyperlinked HTML docs.
 o Add support for AutoDocs.
     - Navigation in the autodocs is clumsy: prev/next is missing,
 	"Top" doesn't move to the library
+    * See also is useless
 
 - Think about a way to update the news section remotely (CGI ? Form ?
 EMail ?)
