@@ -3,6 +3,6 @@
 
 include ../make.cfg
 
-##MM- contrib-gnu : contrib-gnu-bc
+#MM- contrib-gnu : contrib-gnu-bc
 	
 %build_with_configure mmake=contrib-gnu-bc nix=yes prefix=$(CONTRIBDIR)/GNU/bc
