@@ -326,6 +326,7 @@ def buildWWW():
         [
             'targets/www/images/trustec-small.png',
             'targets/www/images/genesi-small.gif',
+            'targets/www/images/noeupatents-small.png',
             'targets/www/images/bullet.gif',
             'targets/www/images/aros.png',
             'targets/www/images/aros.png',

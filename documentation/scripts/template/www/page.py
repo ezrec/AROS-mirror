@@ -118,7 +118,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                             src = 'http://sourceforge.net/sflogo.php?group_id=43586&type=1', 
                             width = 88, height = 31, border = 0, alt = 'SourceForge Logo'
                         ),
-                        href = 'http://sourceforge.net'
+                        href = 'http://sourceforge.net/'
                     )
                 )
             )
@@ -130,7 +130,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
         contents = [
             TR( 
                 valign = 'top', contents = [
-                    TD( rowspan = 6, width = 10 ),
+                    TD( rowspan = 8, width = 10 ),
                     TD()
                 ]
             ),
@@ -138,7 +138,23 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
             TR( TD(), height=15 ),
             TR( valign = 'top', contents = TD( align = 'center', contents = counter ) ),
             TR( TD(), height=15 ),
-            TR( valign = 'top', contents = TD( align = 'center', contents = sponsors ) )
+            TR( valign = 'top', contents = TD( align = 'center', contents = sponsors ) ),
+            TR( TD(), height=15 ),
+            TR \
+            (
+                valign = 'top', contents = TD \
+                (
+                    align = 'center', contents = A \
+                    (
+                        Img \
+                        (
+                            src = '%(ROOT)simages/noeupatents-small.png', 
+                            border = 0
+                        ),
+                        href = 'http://petition.eurolinux.org/'
+                    )
+                )
+            )
         ]
     )
 
