@@ -64,10 +64,10 @@ static float lmarg, rmarg;
 #define SQ_BAR 0x40
 #define SQ_EXTRA 0x50
 #define SQ_NOTE 0x70
-static unsigned char seq_tb[15] = {	/* sequence # indexed by symbol type */
-	SQ_EXTRA, SQ_EXTRA, SQ_NOTE, SQ_NOTE, SQ_BAR,
-	SQ_CLEF, SQ_SIG, SQ_SIG, SQ_ANY, SQ_ANY,
-	SQ_NOTE, SQ_ANY, SQ_NOTE, SQ_GRACE, SQ_ANY
+static unsigned char seq_tb[14] = {	/* sequence # indexed by symbol type */
+	SQ_EXTRA, SQ_NOTE, SQ_NOTE, SQ_BAR, SQ_CLEF,
+	SQ_SIG, SQ_SIG, SQ_ANY, SQ_ANY, SQ_NOTE,
+	SQ_ANY, SQ_NOTE, SQ_GRACE, SQ_ANY
 };
 
 static void get_clef(struct SYMBOL *s);
@@ -157,7 +157,7 @@ static void gchord_adjust(struct SYMBOL *s)
 	freegchord = cfmt.freegchord;
 	p = s->as.text;
 	if (strchr("^_<>@", *p) != 0)
-		freegchord = 1;
+		freegchord = 1;		/* annotation */
 /*fixme: treat 'dim' as 'o', 'halfdim' as '/o', and 'maj' as a triangle*/
 	while (*p != '\0') {
 		switch (*p) {
@@ -297,12 +297,15 @@ static char *get_lyric(unsigned char *p)
 						break;
 					switch (p[1]) {
 					case '~':
+						if (w < &word[sizeof word - 1])
+							*w++ = c;
+						/* fall thru */
 					case '_':
 					case '*':
 					case '|':
 					case '-':
-						c = p[1];
 						p++;
+						c = *p;
 						break;
 					}
 					/* fall thru */
@@ -478,6 +481,16 @@ static void get_over(struct SYMBOL *s)
 			s2->time = ctime;
 			s2->seq = SQ_BAR;
 		}
+	}
+	if (s1 != 0 && ctime == s->time)
+	    for (s1 = s1->next;			/* may have many bars */
+		 s1 != 0  && s1->type == BAR;
+		 s1 = s1->next) {
+		s2 = add_sym(p_voice2, BAR);
+		s2->as.linenum = linenum;
+		s2->as.u.bar.type = s1->as.u.bar.type;
+		s2->time = ctime;
+		s2->seq = SQ_BAR;
 	}
 	p_voice2->time = ctime;
 	curvoice = p_voice2;
@@ -665,9 +678,10 @@ static void voice_init(void)
 	     i++, p_voice++) {
 		p_voice->sym = 0;
 		p_voice->clone = -1;
-		p_voice->bar_start = -1;
+		p_voice->bar_start = 0;
 		p_voice->time = 0;
 		p_voice->r_plet = 0;
+		p_voice->slur_start = 0;
 	}
 }
 
@@ -736,6 +750,7 @@ static void get_info(struct SYMBOL *s,
 		add_text(p, TEXT_H);
 		return;
 	case 'I':
+		process_pscomment(&s->as);	/* same as pseudo-comment */
 		return;
 	case 'K':
 		get_key(s);
@@ -748,7 +763,7 @@ static void get_info(struct SYMBOL *s,
 			bskip(cfmt.topspace);
 		write_heading();
 		reset_gen();
-		nbar = cfmt.measurefirst;	/* measure numbering */
+		nbar = nbar_rep = cfmt.measurefirst;	/* measure numbering */
 		curvoice = first_voice;		/* switch to the 1st voice */
 		return;
 	case 'L':
@@ -804,6 +819,8 @@ static void get_info(struct SYMBOL *s,
 		return;
 	case 'S':
 		inf->src = p;
+		return;
+	case 's':
 		return;
 	case 'T':
 		switch (s->as.state) {
@@ -956,29 +973,26 @@ void identify_note(struct SYMBOL *s,
 static void get_bar(struct SYMBOL *s)
 {
 	int bar_type;
+	struct SYMBOL *s2;
 
 	bar_type = s->as.u.bar.type;
 
 	/* remove the invisible repeat bars of the 1st voice */
 	if (curvoice == first_voice
 	    && bar_type == B_INVIS) {
-		struct SYMBOL *s2;
-
 		s2 = curvoice->last_symbol;
 		if (s2 != 0 && s2->type == BAR
 		    && s2->as.text == 0) {
 			s2->as.text = s->as.text;
+			s2->as.u.bar.repeat_bar = s->as.u.bar.repeat_bar;
 			if (s->sflags & S_EOLN)
 				s2->sflags |= S_EOLN;
-			s2->as.u.bar.repeat_bar = s->as.u.bar.repeat_bar;
 			return;
 		}
 	}
 
 	/* merge back-to-back repeat bars */
 	if (bar_type == B_LREP && s->as.text == 0) {
-		struct SYMBOL *s2;
-
 		s2 = curvoice->last_symbol;
 		if (s2 != 0 && s2->type == BAR
 		    && s2->as.u.bar.type == B_RREP) {
@@ -996,7 +1010,7 @@ static void get_bar(struct SYMBOL *s)
 		do {
 			bar_type >>= 4;
 		} while ((bar_type & 0xf0) != 0);
-		if (bar_type == B_COL || bar_type == B_CBRA)
+		if (bar_type == B_COL)
 			s->sflags |= S_RRBAR;
 	}
 
@@ -1009,15 +1023,13 @@ static void get_bar(struct SYMBOL *s)
 	/* the bar must be before a key signature */
 	if (s->prev != 0
 	    && s->prev->type == KEYSIG) {
-		struct SYMBOL *s3;
-
-		s3 = s->prev;
-		curvoice->last_symbol = s3;
-		s3->next = 0;
-		s3->prev->next = s;
-		s->prev = s3->prev;
-		s->next = s3;
-		s3->prev = s;
+		s2 = s->prev;
+		curvoice->last_symbol = s2;
+		s2->next = 0;
+		s2->prev->next = s;
+		s->prev = s2->prev;
+		s->next = s2;
+		s2->prev = s;
 	}
 
 	/* convert the decorations */
@@ -1262,6 +1274,7 @@ static void get_key(struct SYMBOL *s)
 		break;
 	    }
 	case ABC_S_TUNE:
+	case ABC_S_EMBED:
 		if (curvoice->sym == 0) {
 
 			/* if first symbol of the first voice, change all voices */
@@ -1280,8 +1293,6 @@ static void get_key(struct SYMBOL *s)
 			}
 			break;
 		}
-		/* fall thru */
-	case ABC_S_EMBED:
 		sym_link(s);
 		s->type = KEYSIG;
 		s->u = curvoice->sfp;		/* old key signature */
@@ -1309,14 +1320,13 @@ static void get_meter(struct SYMBOL *s)
 		break;
 	    }
 	case ABC_S_TUNE:
+	case ABC_S_EMBED:
 		if (curvoice->sym == 0) {
 			memcpy(&curvoice->meter, &s->as.u.meter,
 			       sizeof curvoice->meter);
 			reset_gen();	/* (display the time signature) */
 			break;
 		}
-		/* fall thru */
-	case ABC_S_EMBED:
 		if (s->as.u.meter.nmeter == 0)
 			break;		/* M:none */
 		sym_link(s);
@@ -1355,7 +1365,7 @@ static void get_voice(struct SYMBOL *s)
 				;
 			p_voice2->next = p_voice;
 			p_voice->prev = p_voice2;
-		}
+		} else	p_voice->staff = nstaff + 1;
 	}
 
 	/* if in tune, switch to this voice */
@@ -1380,14 +1390,16 @@ static void get_voice(struct SYMBOL *s)
 /* -- note or rest -- */
 static void get_note(struct SYMBOL *s)
 {
-	s->nhd = s->as.u.note.nhd;
+	int i, m;
+
+	s->nhd = m = s->as.u.note.nhd;
 	if (!s->as.u.note.grace) {	/* normal note/rest */
 		if (grace_head != 0)
 			grace_head = 0;
 		sym_link(s);
 		s->multi = curvoice->stem;
 	} else {			/* in a grace note sequence */
-		int i, div;
+		int div;
 
 		if (grace_head == 0) {
 			struct SYMBOL *s2;
@@ -1416,17 +1428,14 @@ static void get_note(struct SYMBOL *s)
 					div = 2;
 			}
 		} else	div = 8;
-		s->as.u.note.len /= div;
-		for (i = 0; i <= s->nhd; i++)
+		for (i = 0; i <= m; i++)
 			s->as.u.note.lens[i] /= div;
 		s->multi = s->stem = 1;
 	}
-	if (s->as.type == ABC_T_NOTE)
-		s->type = NOTE;
-	else	s->type = REST;
+	s->type = s->as.type == ABC_T_NOTE ? NOTE : REST;
 
 	/* set the note duration */
-	s->len = s->as.u.note.len;
+	s->len = s->as.u.note.lens[0];
 	if (s->len >= BASE_LEN)
 		s->as.u.note.stemless = 1;
 	if (grace_head == 0) {
@@ -1450,25 +1459,48 @@ static void get_note(struct SYMBOL *s)
 		}
 	}
 
+	/* sort by pitch the notes of the chord (lowest first) */
+	for (;;) {
+		int nx = 0;
+
+		for (i = 1; i <= m; i++) {
+			if (s->as.u.note.pits[i] < s->as.u.note.pits[i-1]) {
+				int k;
+
+#define xch(a, b) k = a; a = b; b = k
+				xch(s->as.u.note.pits[i], s->as.u.note.pits[i-1]);
+				xch(s->as.u.note.lens[i], s->as.u.note.lens[i-1]);
+				xch(s->as.u.note.accs[i], s->as.u.note.accs[i-1]);
+				xch(s->as.u.note.sl1[i], s->as.u.note.sl1[i-1]);
+				xch(s->as.u.note.sl2[i], s->as.u.note.sl2[i-1]);
+				xch(s->as.u.note.ti1[i], s->as.u.note.ti1[i-1]);
+				xch(s->as.u.note.ti2[i], s->as.u.note.ti2[i-1]);
+#undef xch
+				nx++;
+			}
+		}
+		if (nx == 0)
+			break;
+	}
+
 	memcpy(s->pits, s->as.u.note.pits, sizeof s->pits);
 
 	/* get the max head type, number of dots and number of flags */
 	{
-		int head, dots, nflags, i, l;
+		int head, dots, nflags, l;
 
 		if ((l = s->as.u.note.lens[0]) != 0) {
-			identify_note(s, l,
-				      &head, &dots, &nflags);
+			identify_note(s, l, &head, &dots, &nflags);
 			s->head = head;
 			s->dots = dots;
 			s->nflags = nflags;
 		}
 
-		for (i = 1; i <= s->nhd; i++)
+		for (i = 1; i <= m; i++)
 			if (s->as.u.note.lens[i] != l)
 				break;
-		if (i <= s->nhd) {
-			for (i = 1; i <= s->nhd; i++) {
+		if (i <= m) {
+			for (i = 1; i <= m; i++) {
 				if (s->as.u.note.lens[i] == l)
 					continue;
 				identify_note(s, s->as.u.note.lens[i],
@@ -1502,7 +1534,6 @@ static void get_note(struct SYMBOL *s)
 static struct abcsym *process_pscomment(struct abcsym *as)
 {
 	unsigned char *p;
-	char *q;
 	char w[32];
 	float h1;
 	struct SYMBOL *s = (struct SYMBOL *) as;
@@ -1511,7 +1542,6 @@ static struct abcsym *process_pscomment(struct abcsym *as)
 	if (strncasecmp(p, "fmt ", 4) == 0)
 		p += 4;			/* skip 'fmt' */
 
-	q = p;
 	p = get_str(w, p, sizeof w);
 	switch (w[0]) {
 	case 'b':
@@ -1713,7 +1743,6 @@ static struct abcsym *process_pscomment(struct abcsym *as)
 			if (as->state == ABC_S_TUNE) {
 				output_music();
 				voice_init();
-/*				reset_gen(); */
 			}
 			get_staves((struct SYMBOL *) as);
 			curvoice = first_voice;
@@ -1762,7 +1791,7 @@ static struct abcsym *process_pscomment(struct abcsym *as)
 			return as;
 		}
 	}
-	if (interpret_format_line(q) == 0)
+	if (interpret_format_line(w, p) == 0)
 		ops_into_fmt();
 	return as;
 }
@@ -1778,7 +1807,7 @@ static void set_nplet(struct SYMBOL *s)
 	for (;;) {
 		if (s->type == NOTE
 		    || s->type == REST) {
-			l += s->as.u.note.len;
+			l += s->as.u.note.lens[0];
 			if ((r = s->as.u.note.r_plet) != 0)
 				break;
 		}
@@ -1790,13 +1819,13 @@ static void set_nplet(struct SYMBOL *s)
 	for (;;) {
 		if (s->type == NOTE
 		    || s->type == REST) {
-			s->len = (s->as.u.note.len * lplet) / l;
+			s->len = (s->as.u.note.lens[0] * lplet) / l;
 			if (--r == 0) {
 				s->sflags |= S_NPLET_END;
 				curvoice->time = time;
 				break;
 			}
-			l -= s->as.u.note.len;
+			l -= s->as.u.note.lens[0];
 			lplet -= s->len;
 			time += s->len;
 			s->sflags |= (S_NPLET_ST|S_NPLET_END);
@@ -1809,7 +1838,7 @@ static void set_nplet(struct SYMBOL *s)
 	/* set the beam break on the last note */
 	for (; s != 0; s = s->prev) {
 		if (s->type == NOTE) {
-			if (s->as.u.note.len < QUAVER)
+			if (s->as.u.note.lens[0] < QUAVER)
 				s->sflags |= S_BEAM_BREAK;
 			break;
 		}

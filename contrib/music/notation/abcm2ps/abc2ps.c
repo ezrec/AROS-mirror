@@ -63,9 +63,11 @@ int epsf;			/* for EPSF postscript output */
 int choose_outname;		/* 1 names outfile w. title/fnam */
 
 char outf[STRL1];		/* output file name */
-
 int  file_initialized;		/* for output file */
 FILE *fout;			/* output file */
+
+int s_argc;			/* command line arguments */
+char **s_argv;
 
 struct WHISTLE_S whistle_tb[MAXWHISTLE];
 int nwhistle;
@@ -129,7 +131,7 @@ static void write_version(void);
 
 /* -- main program -- */
 int main(int argc,
-	 char *argv[])
+	 char **argv)
 {
 	int j;
 	char *p;
@@ -142,10 +144,10 @@ int main(int argc,
 
 	/* -- initialize -- */
 	strcpy(outf, OUTPUTFILE);
-	clrarena(0);
-	clrarena(1);
-	clrarena(2);
-	clrarena(3);
+	clrarena(0);			/* global dexription */
+	clrarena(1);			/* tune description */
+	clrarena(2);			/* tune generation */
+	clrarena(3);			/* line generation */
 	clear_buffer();
 	abc_init((void *(*)(int size)) getarena, /* alloc */
 		 0,				/* free */
@@ -153,6 +155,8 @@ int main(int argc,
 		 sizeof(struct SYMBOL) - sizeof(struct abcsym),
 		 0);			/* don't keep comments */
 	set_format();
+	s_argc = argc;
+	s_argv = argv;
 
 	/* parse the arguments - as soon as a file ends, it is treated */
 	while (--argc > 0) {
@@ -197,6 +201,17 @@ int main(int argc,
 				if (in_fname != 0)
 					output_file();
 				in_fname = "";		/* read from stdin */
+				continue;
+			}
+			if (p[1] == '-') {
+				p += 2;
+				if (--argc <= 0) {
+					fprintf(stderr,
+						"++++ No argument for '--'\n");
+					return 2;
+				}
+				argv++;
+				interpret_format_line(p, *argv);
 				continue;
 			}
 			while (*++p != '\0') {
@@ -706,8 +721,7 @@ void strext(char *fid,
 /* -- display usage and exit -- */
 static void usage(void)
 {
-	fprintf(stderr, 
-		"ABC to Postscript translator.\n"
+	printf(	"ABC to Postscript translator.\n"
 		"Usage: abcm2ps [options] file [file_options] ..\n"
 		"where:\n"
 		" file        input ABC file, or '-'\n"
@@ -728,9 +742,9 @@ static void usage(void)
 		"     -l      landscape mode\n"
 		"     -I xx   indent 1st line (cm/in/pt)\n"
 		"     -x      include xref numbers in output\n"
-		"     -M      don't ouput the lyrics\n"
+		"     -M      don't output the lyrics\n"
 		"     -n      include notes and history in output\n"
-		"     -N n    set page number mode to n\n"
+		"     -N n    set page number mode to n=\n"
 		"             0=off 1=left 2=right 3=even left,odd right 4=even right,odd left\n"
 		"     -1      write one tune per page\n"
 		"     -G      no slur in grace notes\n"

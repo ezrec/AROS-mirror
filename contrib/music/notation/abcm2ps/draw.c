@@ -626,15 +626,15 @@ void draw_staff(int first_line,
 
 	/* draw the staves */
 	for (i = nstaff; i >= 0; i--) {
-		PUT2("0 %.2f M %.2f staff\n",
-		     staff_tb[i].y, realwidth);
+		PUT2("%.2f 0 %.2f staff\n",
+		     realwidth, staff_tb[i].y);
 	}
 
 	if (nstaff != 0)
 		draw_lstaff(0);
 }
 
-/* -- draw_timesig -- */
+/* -- draw the time signature -- */
 static void draw_timesig(float x,
 			 struct SYMBOL *s)
 {
@@ -756,21 +756,27 @@ static void draw_keysig(struct VOICE_S *p_voice,
 		/* if less sharps or flats, put neutrals */
 		/* sharps */
 		} else if (s->as.u.key.sf > 0) {
-			clef_shift = sharp_cl[clef_ix];
-			for (i = s->as.u.key.sf; i < old_sf; i++) {
-				if ((shift = sharp_tb[i] + clef_shift) < -3)
-					shift += 21;
-				PUT2("%.1f %.1f nt0 ", x, staffb + shift);
-				x += 5;
+			if (s->as.u.key.sf < old_sf) {
+				clef_shift = sharp_cl[clef_ix];
+				for (i = s->as.u.key.sf; i < old_sf; i++) {
+					if ((shift = sharp_tb[i] + clef_shift) < -3)
+						shift += 21;
+					PUT2("%.1f %.1f nt0 ", x, staffb + shift);
+					x += 5;
+				}
+				x += 3;		/* extra space */
 			}
 		/* flats */
 		} else /*if (s->as.u.key.sf < 0)*/ {
-			clef_shift = flat_cl[clef_ix];
-			for (i = s->as.u.key.sf; i > old_sf; i--) {
-				if ((shift = flat_tb[-i] + clef_shift) < -3)
-					shift += 21;
-				PUT2("%.1f %.1f nt0 ", x, staffb + shift);
-				x += 5;
+			if (s->as.u.key.sf > old_sf) {
+				clef_shift = flat_cl[clef_ix];
+				for (i = s->as.u.key.sf; i > old_sf; i--) {
+					if ((shift = flat_tb[-i] + clef_shift) < -3)
+						shift += 21;
+					PUT2("%.1f %.1f nt0 ", x, staffb + shift);
+					x += 5;
+				}
+				x += 3;		/* extra space */
 			}
 		}
 
@@ -844,6 +850,7 @@ static void draw_bar(float x,
 	bar_type = s->as.u.bar.type;
 	switch (bar_type) {
 	case B_OBRA:
+	case B_CBRA:
 	case (B_OBRA << 4) + B_CBRA:
 		return;
 	case B_COL:
@@ -938,14 +945,18 @@ static char *rest_tb[9] = {
 	i = 4 - s->nflags;		/* rest_tb index */
 
 	/* if rest alone in the measure, do it semibreve and center */
-	if (s->as.u.note.len == voice_tb[s->voice].meter.wmeasure) {
+	if (s->len == voice_tb[s->voice].meter.wmeasure) {
+		struct SYMBOL *prev;
 /*fixme: vertical spacing pb may occur when multi-voice*/
 		i = 6;			/* r1 */
 		s->dots = 0;
 		if (s->next != 0)
 			x = s->next->x;
 		else	x = realwidth;
-		x = (x + s->prev->x) * 0.5;
+		prev = s->prev;
+		while (prev->type == TEMPO || prev->type == PART)
+			prev = prev->prev;
+		x = (x + prev->x) * 0.5;
 
 		/* center the associated decorations */
 		if (s->as.u.note.dc.n > 0)
@@ -1654,16 +1665,6 @@ static void output_slur(float x1,
 	}
 }
 
-/* -- return min or max, depending on s -- */
-static float extreme(int s,
-		     float a,
-		     float b)
-{
-	if (s > 0)
-		return a > b ? a : b;
-	return a > b ? b : a;
-}
-
 /* -- decide whether a slur goes up or down -- */
 static int slur_direction(struct SYMBOL *k1,
 			  struct SYMBOL *k2)
@@ -1716,8 +1717,7 @@ static void draw_slur(struct SYMBOL *k1,
 {
 	struct SYMBOL *k;
 	float x1, y1, x2, y2, height, addx, addy;
-	float hmin, a;
-	float y, z, h, dx, dy;
+	float a, y, z, h, dx, dy;
 	int s, nn;
 	int upstaff;
 	int two_staves;
@@ -1898,7 +1898,6 @@ if (two_staves) fprintf(stderr, "*** multi-staves slurs not treated\n");
 		switch (k->type) {
 		case NOTE:
 		case REST:
-#if 1
 			if (s > 0) {
 				y = k->ymx + 6;
 				if (y < k->ys + 2)
@@ -1914,14 +1913,6 @@ if (two_staves) fprintf(stderr, "*** multi-staves slurs not treated\n");
 				if (y < h)
 					h = y;
 			}
-#else
-			y = (s > 0 ? k->ymx : k->ymn);
-			y = extreme(s,
-				    y + 6 * s,
-				    k->ys + 2 * s);
-			y -= a * k->x + addy;
-			h = extreme(s, h, y);
-#endif
 			break;
 		case GRACE: {
 			struct SYMBOL *g;
@@ -1943,15 +1934,24 @@ if (two_staves) fprintf(stderr, "*** multi-staves slurs not treated\n");
 		}
 	}
 
-	y1 += 0.4 * h;
-	y2 += 0.4 * h;
-	h *= 0.6;
+	y1 += 0.45 * h;
+	y2 += 0.45 * h;
+	h *= 0.65;
 
 	if (nn > 3)
-		hmin = (0.12 * (x2 - x1) + 12.) * s;
-	else	hmin = (0.03 * (x2 - x1) + 8.) * s;
-	height = extreme(s, hmin, 3.0 * h);
-	height = extreme(-s, height, 50. * s);
+		height = (0.08 * (x2 - x1) + 12.) * s;
+	else	height = (0.03 * (x2 - x1) + 8.) * s;
+	if (s > 0) {
+		if (height < 3 * h)
+			height = 3 * h;
+		if (height > 40)
+			height = 40;
+	} else {
+		if (height > 3 * h)
+			height = 3 * h;
+		if (height < -40)
+			height = -40;
+	}
 
 	y = y2 - y1;
 	if (y < 0)
@@ -2001,6 +2001,7 @@ static struct SYMBOL *next_scut(struct SYMBOL *s)
 			|| s->as.u.bar.type == B_THIN_THICK
 			|| s->as.u.bar.type == B_THICK_THIN
 			|| (s->as.u.bar.repeat_bar
+			    && s->as.text != 0
 			    && s->as.text[0] != '1')))
 			return s;
 		prev = s;
@@ -2017,15 +2018,12 @@ static struct SYMBOL *prev_scut(struct SYMBOL *s)
 	voice = s->voice;
 	for ( ; s != 0; s = s->prev) {
 		if (s->type == BAR
-#if 1
-		    && ((s->as.u.bar.type & ~0x0f)
-#else
 		    && (s->as.u.bar.type == B_RREP
 			|| s->as.u.bar.type == B_DREP
 			|| s->as.u.bar.type == B_THIN_THICK
 			|| s->as.u.bar.type == B_THICK_THIN
-#endif
 			|| (s->as.u.bar.repeat_bar
+			    && s->as.text != 0
 			    && s->as.text[0] != '1')))
 			return s;
 	}
@@ -2041,24 +2039,22 @@ static struct SYMBOL *prev_scut(struct SYMBOL *s)
 }
 
 /* -- draw the ties between two notes/chords -- */
-static void draw_chord_ties(struct SYMBOL *k1,
-			    struct SYMBOL *k2,
-			    int nslur,
-			    int *mhead1,
-			    int *mhead2,
-			    int job)
+static void draw_note_ties(struct SYMBOL *k1,
+			   struct SYMBOL *k2,
+			   int nslur,
+			   int *mhead1,
+			   int *mhead2,
+			   int job)
 {
-	struct SYMBOL *cut;
-	int i, m1, p1, p2, y;
-	int s0, s1, s;
-	float x1, y1, x2, y2, height, addx, addy;
+	int i, s0, s1, s;
+	float x1, x2, height;
 
 	s1 = 0;
 	if ((s0 = k1->multi) == 0
 	    && (s0 = k2->multi) == 0)
 		s1 = slur_direction(k1, k2);
 	for (i = 0; i < nslur; i++) {
-		int m2;
+		int m1, m2, p1, p2, y1, y2;
 
 		m1 = mhead1[i];
 		p1 = k1->pits[m1];
@@ -2066,7 +2062,7 @@ static void draw_chord_ties(struct SYMBOL *k1,
 		p2 = k2->pits[m2];
 		if ((s = s0) == 0) {
 
-			/* try to have the same tie direction as the next one*/
+			/* try to have the same tie direction as the next one */
 			if (job != 2
 			    && k2->nhd != 0
 			    && m2 == k2->nhd
@@ -2084,72 +2080,56 @@ static void draw_chord_ties(struct SYMBOL *k1,
 		x1 = k1->x + k1->shhd[m1];
 		x2 = k2->x;
 		if (job == 2) {		/* half slurs from last note in line */
-			cut = next_scut(k1);
-			x2 = cut->x;
-			if (cut == k1) {
-				x2 = realwidth;
-#if 0
-				if (x2 < x1 + 20.)
-					x2 = x1 + 20.;
-#endif
-			}
+			p2 = p1;
+			x2 -= k2->wl;
+			if (k1 == k2)
+				x2 = realwidth - 2;
 		} else if (job == 1) {	/* half slurs to first note in line */
-			cut = prev_scut(k1);
-			x1 = cut->x;
-			if (cut == k1->prev) {
-				x1 = cut->x + cut->wr;
-				if (x1 > x2 - 20.)
-					x1 = x2 - 20.;
-			}
+			p1 = p2;
+/*			if (k1 == k2->prev) { */
+				x1 = k1->x + k1->wr;
+				if (x1 > x2 - 20)
+					x1 = x2 - 20;
+/*			} */
 		}
-
-		addx = 0.04 * (x2 - x1);
-		if (addx > 3.0)
-			addx = 3.0;
-		addy = 0.02 * (x2 - x1);
-		if (addy > 3.0)
-			addy = 3.0;
-
-		x1 += 3. + addx;
-		x2 -= 3. + addx;
+		x1 += 2;
+		x2 -= 2;
+		y1 = 3 * (p1 - 18) + 2 * s;
+		y2 = 3 * (p2 - 18) + 2 * s;
+		if (k1->nhd != 0)
+			x1 += 4.5;
+		else	y1 += ((p1 % 2) ? 3 : 2) * s;
+		if (k2->nhd != 0)
+			x2 -= 4.5;
+		else	y2 += ((p2 % 2) ? 3 : 2) * s;
 		if (s > 0) {
-			if (k1->stem > 0)
-				x1 += 1.5;
+			if (k1->nflags > -2 && k1->stem > 0
+			    && k1->nhd == 0)
+				x1 += 4.5;
+			if (!(p1 % 2) && k1->dots > 0)
+				y1 = 3 * (p1 - 18) + 6;
 		} else /*if (s < 0)*/ {
-			if (k2->stem < 0)
-				x2 -= 1.5;
+			if (k2->nflags > -2 && k2->stem < 0
+			    && k2->nhd == 0)
+				x2 -= 4.5;
 		}
 
+		/* tie between 2 staves */
 		if (k1->staff != k2->staff) {
-
-			/* tie between 2 staves */
 			s = k1->staff - k2->staff;
-			y1 = (float) (3 * (p1 - 18) + 6 * s)
-				+ staff_tb[k1->staff].y;
-			y2 = (float) (3 * (p2 - 18) - 6 * s)
-				+ staff_tb[k2->staff].y;
-			PUT4("%.1f %.2f M %.1f %.2f lineto stroke\n",
-			     x1, y1, x2, y2);
+			y1 = 3 * (p1 - 18) + 3 * s;
+			y2 = 3 * (p2 - 18) - 3 * s;
+			x1 += 4;
+			x2 -= 4;
+			PUT4("%.1f %.1f M %.1f %.1f lineto stroke\n",
+			     x1, staff_tb[k1->staff].y + y1,
+			     x2, staff_tb[k2->staff].y + y2);
 			continue;
 		}
 
-		y = 3 * (p1 - 18);
-		y1 = y + (4. + addy) * s;
-		y = 3 * (p2 - 18);
-		y2 = y + (4. + addy) * s;
-
-#if 0 /*??*/
-		if (s > 0 && !(y % 6) && k1->dots > 0) {
-			y2 = y1 = y + (5.5 + addy) * s;
-			x1 -= 2;
-			x2 += 2;
-		}
-#endif
-		y1 += staff_tb[k1->staff].y;
-		y2 += staff_tb[k2->staff].y;
-
-		height = (0.04 * (x2 - x1) + 5.) * s;
-		output_slur(x1, y1, x2, y2,
+		height = (0.04 * (x2 - x1) + 8) * s;
+		output_slur(x1, staff_tb[k1->staff].y + y1,
+			    x2, staff_tb[k1->staff].y + y2,
 			    s, height, -1);
 	}
 }
@@ -2183,7 +2163,7 @@ static void draw_ties(struct SYMBOL *k1,
 			}
 		}
 		if (nslur > 0)
-			draw_chord_ties(k1, k1,
+			draw_note_ties(k1, k2,
 					nslur, mhead1, mhead1, job);
 		return;
 	}
@@ -2191,13 +2171,13 @@ static void draw_ties(struct SYMBOL *k1,
 	if (job == 1) {			/* half slurs to first note in line */
 		/* (ti2 is just used in this case) */
 		for (i = 0; i <= nh1; i++) {
-			if (k1->as.u.note.ti2[i]) {
+			if (k2->as.u.note.ti2[i]) {
 				mhead1[nslur] = i;
 				nslur++;
 			}
 			j = i + 1;
 			for (m1 = 0; m1 <= nh1; m1++) {
-				if (k1->as.u.note.sl2[m1] == j) {
+				if (k2->as.u.note.sl2[m1] == j) {
 					mhead1[nslur] = m1;
 					nslur++;
 					break;
@@ -2205,7 +2185,7 @@ static void draw_ties(struct SYMBOL *k1,
 			}
 		}
 		if (nslur > 0)
-			draw_chord_ties(k1, k1,
+			draw_note_ties(k1, k2,
 					nslur, mhead1, mhead1, job);
 		return;
 	}
@@ -2235,7 +2215,7 @@ static void draw_ties(struct SYMBOL *k1,
 		}
 	}
 	if (nslur > 0)
-		draw_chord_ties(k1, k2,
+		draw_note_ties(k1, k2,
 				nslur, mhead1, mhead2, job);
 }
 
@@ -2244,39 +2224,61 @@ static void draw_all_ties(struct SYMBOL *sym)
 {
 	struct SYMBOL *s1, *s2;
 
-	for (s1 = sym; s1 != 0; s1 = s1->next) {
-		if (s1->type == NOTE)
+	for (s1 = sym; s1 != 0; s1 = s1->next)
+		if (s1->type != CLEF && s1->type != KEYSIG
+		    && s1->type != TIMESIG)
+			break;
+	for (s2 = s1; s2 != 0; s2 = s2->next) {
+		if (s2->type == NOTE)
 			break;
 	}
-	if (s1 == 0)
+	if (s2 == 0)
 		return;
-	draw_ties(s1, s1, 1);
-  
+	draw_ties(s1, s2, 1);		/* 1st note */
+
 	for (;;) {
-		for (s2 = s1->next; s2 != 0; s2 = s2->next) {
+		s1 = s2;		/* keep the last note */
+		for (s2 = s2->next; s2 != 0; s2 = s2->next) {
 			if (s2->type == NOTE)
+				break;
+			if (s2->type == BAR
+			    && (s2->as.u.bar.type == B_RREP
+				|| s2->as.u.bar.type == B_DREP
+				|| s2->as.u.bar.type == B_THIN_THICK
+				|| s2->as.u.bar.type == B_THICK_THIN
+				|| (s2->as.u.bar.repeat_bar
+				    && s2->as.text != 0
+				    && s2->as.text[0] != '1')))
 				break;
 		}
 		if (s2 == 0)
 			break;
-		draw_ties(s1, s2, 0);
-		s1 = s2;
+		draw_ties(s1, s2, s2->type == NOTE ? 0 : 2);
+		if (s2->type != NOTE) {
+			for (s2 = s2->next; s2 != 0; s2 = s2->next) {
+				if (s2->type == NOTE)
+					break;
+			}
+			if (s2 == 0)
+				break;
+		}
 	}
-	draw_ties(s1, s1, 2);
+	s2 = next_scut(s1);
+	draw_ties(s1, s2, 2);
 }
 
 /* -- draw all phrasing slurs for one staff -- */
 /* (the staves are not yet defined) */
-static void draw_all_slurs(struct SYMBOL *sym)
+static void draw_all_slurs(struct VOICE_S *p_voice)
 {
 	struct SYMBOL *s, *s1, *k;
 	struct SYMBOL *cut, *gr1, *gr2;
-	int pass, num, gr1_out;
+	int num, gr1_out;
 
-	for (pass = 0; ; pass++) {
+	for (;;) {
 		num = 0;
 		gr1 = gr2 = 0;
-		s = sym;
+		s = p_voice->sym;
 		for (;;) {
 			if (s == 0) {
 				if (gr1 == 0
@@ -2316,6 +2318,7 @@ static void draw_all_slurs(struct SYMBOL *sym)
 					s1 = s1->grace;
 					continue;
 				}
+/*fixme: stop on special bar.. this avoids next_scut/prev_scut*/
 				if (s1->type != NOTE
 				    && s1->type != REST) {
 					s1 = s1->next;
@@ -2351,7 +2354,8 @@ static void draw_all_slurs(struct SYMBOL *sym)
 			s->as.u.note.slur_st--;
 			k->as.u.note.slur_end--;
 			cut = next_scut(s);
-			for (s1 = cut->next; s1 != 0; s1 = s1->next) {
+			if (cut->time <= k->time)
+			    for (s1 = cut->next; s1 != 0; s1 = s1->next) {
 				if (s1 == k) {
 					draw_slur(s, cut);
 					s = prev_scut(k);
@@ -2378,19 +2382,54 @@ static void draw_all_slurs(struct SYMBOL *sym)
 	}
 
 	/* do unbalanced slurs still left over */
-	for (s = sym; s != 0; s = s->next) {
+	num = p_voice->slur_start;
+	p_voice->slur_start = 0;
+	for (s = p_voice->sym; s != 0; s = s->next) {
 		if (s->type != NOTE
 		    && s->type != REST)
 			continue;
-		if (s->as.u.note.slur_end) {
+		while (s->as.u.note.slur_end) {
 			cut = prev_scut(s);
 			draw_slur(cut, s);
+			if (cut->type != BAR
+			    || (cut->as.u.bar.type != B_RREP
+				&& cut->as.u.bar.type != B_DREP
+				&& cut->as.u.bar.type != B_THIN_THICK
+				&& cut->as.u.bar.type != B_THICK_THIN
+				&& (!cut->as.u.bar.repeat_bar
+				    || cut->as.text == 0
+				    || cut->as.text[0] == '1')))
+				num--;
+			s->as.u.note.slur_end--;
 		}
-		if (s->as.u.note.slur_st) {
+		while (s->as.u.note.slur_st) {
 			cut = next_scut(s);
 			draw_slur(s, cut);
-/*fixme: a slur may end in the row after the next one */
+			if (cut->type != BAR
+			    || (cut->as.u.bar.type != B_RREP
+				&& cut->as.u.bar.type != B_DREP
+				&& cut->as.u.bar.type != B_THIN_THICK
+				&& cut->as.u.bar.type != B_THICK_THIN
+				&& (!cut->as.u.bar.repeat_bar
+				    || cut->as.text == 0
+				    || cut->as.text[0] == '1')))
+				p_voice->slur_start++;
+			s->as.u.note.slur_st--;
 		}
+	}
+	s = prev_scut(p_voice->sym);
+	while (--num >= 0) {
+		cut = next_scut(s);
+		draw_slur(s, cut);
+		if (cut->type != BAR
+		    || (cut->as.u.bar.type != B_RREP
+			&& cut->as.u.bar.type != B_DREP
+			&& cut->as.u.bar.type != B_THIN_THICK
+			&& cut->as.u.bar.type != B_THICK_THIN
+			&& (!cut->as.u.bar.repeat_bar
+			    || cut->as.text == 0
+			    || cut->as.text[0] == '1')))
+			p_voice->slur_start++;
 	}
 }
 
@@ -2585,7 +2624,7 @@ void draw_sym_near(void)
 	draw_deco_note();
 
 	for (p_voice = first_voice; p_voice; p_voice = p_voice->next)
-		draw_all_slurs(p_voice->sym);
+		draw_all_slurs(p_voice);
 
 	draw_deco_staff();
 }
@@ -2703,7 +2742,6 @@ void draw_symbols(struct VOICE_S *p_voice)
 		case GRACE:
 			draw_gracenotes(x, s);
 			break;
-		case INVISIBLE:
 		case TEMPO:
 		case STAVES:
 		case PART:

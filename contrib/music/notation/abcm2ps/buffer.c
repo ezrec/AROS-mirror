@@ -57,7 +57,7 @@ static void init_ps(char *str,
 {
 	time_t ltime;
 	char tstr[41];
-	int enc;
+	int enc, i;
 
 	if (is_epsf) {
 /*fixme: no landscape for EPS?*/
@@ -75,15 +75,24 @@ static void init_ps(char *str,
 	/* CreationDate */
 	time(&ltime);
 	strcpy(tstr, ctime(&ltime));
-	tstr[24]='\0';
+/* Wed Jun 30 21:49:08 1993\n */
+	tstr[10]='\0';
 	tstr[16]='\0';
-	fprintf(fout, "%%%%Creator: abcm2ps " VERSION "\n"
-		"%%%%CreationDate: %s %s\n", tstr + 4, tstr + 20);
+	tstr[24]='\0';
+	fprintf(fout, "%%%%Creator: abcm2ps-" VERSION "\n"
+		"%%%%CreationDate: %s, %s %s\n", &tstr[4], &tstr[20], &tstr[11]);
 	if (!is_epsf)
 		fprintf(fout, "%%%%Pages: (atend)\n");
 	fprintf(fout, "%%%%LanguageLevel: %d\n"
-		"%%%%EndComments\n\n",
+		"%%%%EndComments\n"
+		"%%CommandLine:",
 		PS_LEVEL);
+	for (i = 1; i < s_argc; i++) {
+		fprintf(fout,
+			strchr(s_argv[i], ' ') != 0 ? " \'%s\'" : " %s",
+			s_argv[i]);
+	}
+	fprintf(fout, "\n\n");
 
 	if (is_epsf)
 		fprintf(fout,
@@ -170,6 +179,7 @@ static void format_hf(char *p)
 {
 	char *q;
 	char s[256];
+	time_t ltime;
 
 	for (;;) {
 		if (*p == '\0')
@@ -181,6 +191,15 @@ static void format_hf(char *p)
 			break;
 		p = q + 1;
 		switch (*p) {
+		case 'D':
+			time(&ltime);
+			strcpy(s, ctime(&ltime));
+/* Wed Jun 30 21:49:08 1993\n */
+			s[10]='\0';
+			s[16]='\0';
+			s[24]='\0';
+			fprintf(fout, "%s, %s %s", &s[4], &s[20], &s[11]);
+			break;
 		case 'F':		/* ABC file name */
 			fprintf(fout, "%s", in_fname);
 			break;
@@ -199,6 +218,9 @@ static void format_hf(char *p)
 		case 'T':		/* tune title */
 			tex_str(s, info.title[0], sizeof s, 0);
 			fprintf(fout, "%s", s);
+			break;
+		case 'V':
+			fprintf(fout,"abcm2ps-"  VERSION);
 			break;
 		default:
 			continue;

@@ -1,4 +1,4 @@
-			--- abcm2ps version 3.1.x ---
+			--- abcm2ps version 4.x.x ---
 
 Overview
 ========
@@ -33,11 +33,14 @@ know the list of the command line options).
 Documentation
 =============
 
-- abc-draft.txt is the ABC draft on which abcm2ps is developped.
 - options.txt contains the list of the command line options.
 - format.txt contains the list of the format parameters.
 - features.txt lists some differences from, and extensions to
   the ABC standard.
+
+abcm2ps tries to follow the ABC standard version 2.0:
+
+	http://abc.sourceforge.net/standard/abc2-draft.html
 
 
 Differences with abc2ps
@@ -51,14 +54,13 @@ Differences with abc2ps
 	- '-e' accepts only one parameter.
 	- '-C', '-R', '-S', '-T' don't exist anymore. If you want such
 	  filtering, you should to use some external script or program instead.
-- abcm2ps has no interactive mode ('-i' - did anybody use it?).
+- abcm2ps has no interactive mode ('-i').
 
 
 Limits
 ======
 
 Many limits may be changed at compilation time (number of voices, staves, ..).
-The current version does not handle correctly more than 2 voices per staff.
 
 
 Contacts
@@ -68,7 +70,7 @@ The primary abcm2ps site is:
 
 	http://moinejf.free.fr/
 
-My friend Guido Gonzatto maintains Win32 and RedHat binaries at:
+Guido Gonzatto maintains Win32 and RedHat binaries at:
 
 	http://abcplus.sourceforge.net/
 
@@ -79,7 +81,7 @@ abc2ps was developped by Michael Methfessel:
 
 To know more about the ABC notation, have a look at:
 
-	 http://www.gre.ac.uk/~c.walshaw/abc/
+	 http://abc.sourceforge.net/
 
 For any comment:
 	mailto:moinejf@free.fr

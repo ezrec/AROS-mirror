@@ -40,7 +40,6 @@ struct note {		/* note or rest */
 	char sl2[MAXHD];	/* which slur ends on this head */
 	char ti1[MAXHD];	/* flag to start tie here */
 	char ti2[MAXHD];	/* flag to end tie here */
-	short len;		/* note length (shortest in chords) */
 	unsigned invis:1;	/* invisible rest */
 	unsigned word_end:1;	/* 1 if word ends here */
 	unsigned stemless:1;	/* note with no stem */
@@ -203,7 +202,6 @@ struct abctune *abc_parse(char *file_api);
 char *get_str(unsigned char *d,
 	      unsigned char *s,
 	      int maxlen);
-void note_sort(struct abcsym *s);
 unsigned char *parse_deco(unsigned char *p,
 			  struct deco *deco);
 #if defined(__cplusplus)

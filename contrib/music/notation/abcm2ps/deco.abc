@@ -22,17 +22,17 @@
 %
 % -- draw octava indication
 %%postscript /octava{	% usage: len x y octava
-%%postscript	exch -9 add exch 2 copy 
+%%postscript	exch -10 add exch 2 copy
 %%postscript	M 0 10 RM /Times-Roman 16 selectfont (8) show
 %%postscript	/Times-Roman 12 selectfont (va) show
 %%postscript	M 0 6 RL currentpoint stroke M
 %%postscript	[6] 0 setdash 30 add 0 RL currentpoint stroke M
 %%postscript	[] 0 setdash 0 -6 RL stroke}!
 %%postscript /octavab{	% usage: len x y octavab
-%%postscript	exch -10 add exch 2 copy 
-%%postscript	M 0 -10 RM /Times-Roman 16 selectfont (8) show
+%%postscript	exch -14 add exch 2 copy 
+%%postscript	M 0 2 RM /Times-Roman 16 selectfont (8) show
 %%postscript	/Times-Roman 12 selectfont (va basso) show
-%%postscript	10 add M 0 -6 RL currentpoint stroke M
+%%postscript	22 add M 0 -6 RL currentpoint stroke M
 %%postscript	[6] 0 setdash 30 add 0 RL stroke
 %%postscript	[] 0 setdash}!
 %

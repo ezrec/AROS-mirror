@@ -147,20 +147,19 @@ struct SYMBOL { 		/* struct for a drawable symbol */
 	struct SYMBOL *next, *prev;	/* voice linkage */
 	unsigned char type;	/* symbol type */
 #define NO_TYPE		0	/* invalid type */
-#define INVISIBLE	1	/* valid symbol types */
-#define NOTE		2
-#define REST		3
-#define BAR		4
-#define CLEF		5
-#define TIMESIG 	6
-#define KEYSIG		7
-#define TEMPO		8
-#define STAVES		9
-#define MREST		10
-#define PART		11
-#define MREP		12
-#define GRACE		13
-#define FMTCHG		14
+#define NOTE		1	/* valid symbol types */
+#define REST		2
+#define BAR		3
+#define CLEF		4
+#define TIMESIG 	5
+#define KEYSIG		6
+#define TEMPO		7
+#define STAVES		8
+#define MREST		9
+#define PART		10
+#define MREP		11
+#define GRACE		12
+#define FMTCHG		13
 	unsigned char seq;	/* sequence # - see parse.c */
 	unsigned char voice;	/* voice (0..nvoice) */
 	unsigned char staff;	/* staff (0..nstaff) */
@@ -242,10 +241,12 @@ struct FORMAT { 		/* struct for page layout */
 	int	splittune, encoding, partsbox, infoline, printtempo, autoclef;
 	int	measurenb, measurefirst, measurebox, flatbeams, squarebreve;
 	int	exprabove, exprbelow, breathlow, vocalabove, freegchord;
+	int	printparts, gchordbox, contbarnb;
 	char	*footer, *header;
-	struct FONTSPEC titlefont, subtitlefont, vocalfont, textfont, tempofont;
-	struct FONTSPEC composerfont, partsfont, gchordfont, wordsfont;
-	struct FONTSPEC footerfont, headerfont, infofont;
+	struct FONTSPEC titlefont, subtitlefont, vocalfont, textfont;
+	struct FONTSPEC tempofont, composerfont, partsfont, gchordfont;
+	struct FONTSPEC wordsfont, footerfont, headerfont, infofont;
+	struct FONTSPEC repeatfont, measurefont, annotationfont;
 };
 
 extern struct FORMAT cfmt;	/* current format for output */
@@ -258,6 +259,7 @@ extern char page_init[201];	/* initialization string after page break */
 extern int tunenum;		/* number of current tune */
 extern int pagenum;		/* current page number */
 extern int nbar;		/* current measure number */
+extern int nbar_rep;		/* last repeat bar number */
 
 extern int in_page;
 
@@ -272,6 +274,17 @@ extern char *in_fname;			/* current input file name */
 
 extern int file_initialized;		/* for output file */
 extern FILE *fout;			/* output file */
+
+#define MAXWHISTLE	4	/* max number of whistle tablature */
+struct WHISTLE_S {
+	short voice;		/* voice number */
+	short pitch;		/* absolute key pitch */
+};
+extern struct WHISTLE_S whistle_tb[MAXWHISTLE];
+extern int nwhistle;
+
+extern int s_argc;		/* command line arguments */
+extern char **s_argv;
 
 struct STAFF {
 	struct clef_s clef;	/* base clef */
@@ -313,6 +326,7 @@ struct VOICE_S {
 	unsigned char staff;	/* staff (0..n-1) */
 	signed char sfp;	/* key signature while parsing */
 	signed char stem;	/* stem direction while parsing */
+	char slur_start;	/* number of slurs at start of staff */
 };
 extern struct VOICE_S voice_tb[MAXVOICE];	/* voice table */
 extern int nvoice;		/* (0..MAXVOICE-1) */
@@ -323,14 +337,6 @@ extern float realwidth;		/* real staff width while generating */
 
 #define SPACETB_SZ 9
 extern float space_tb[SPACETB_SZ], dot_space;	/* note spacing */
-
-#define MAXWHISTLE	4	/* max number of whistle tablature */
-struct WHISTLE_S {
-	short voice;		/* voice number */
-	short pitch;		/* absolute key pitch */
-};
-extern struct WHISTLE_S whistle_tb[MAXWHISTLE];
-extern int nwhistle;
 
 /* PUTn: add to buffer with n arguments */
 #define PUT0(f) do {sprintf(mbf,f); a2b(); } while (0)
@@ -384,7 +390,8 @@ void draw_sym_near(void);
 void draw_symbols(struct VOICE_S *p_voice);
 void draw_whistle(void);
 /* format.c */
-int interpret_format_line(char *l);
+int interpret_format_line(char *w,
+			  char *p);
 void define_fonts(void);
 void make_font_list(void);
 void print_format(void);

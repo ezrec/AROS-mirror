@@ -840,7 +840,7 @@ void write_heading(void)
 	}
 
 	/* parts */
-	if (info.parts) {
+	if (info.parts && cfmt.printparts) {
 		down1 = cfmt.partsspace + cfmt.partsfont.size - down1;
 		if (down1 > 0)
 			down2 += down1;

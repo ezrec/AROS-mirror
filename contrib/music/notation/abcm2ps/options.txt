@@ -12,23 +12,26 @@ List of the options
   -
 	Read the abc file from stdin.
 
+  --<format> <value>
+	Set the format parameter to <value>. See format.txt.
+
   -a<float>
-	See: format - maxshrink <float>
+	See: format.txt - maxshrink <float>
 
   -B<int>, +B
-	See: format - barsperstaff <int>
+	See: format.txt - barsperstaff <int>
 
   -b<int>
-	See: format - measurefirst <int>
+	See: format.txt - measurefirst <int>
 
   -c, +c
-	See: format - continueall <bool>
+	See: format.txt - continueall <bool>
 
   -D<dir>
 	Search the format files in the directory <dir>.
 
   -d<unit>
-	See: format - staffsep <unit>
+	See: format.txt - staffsep <unit>
 
   -E, +E
 	Produce EPS output instead of simple PS.
@@ -63,10 +66,10 @@ List of the options
 	format file ('default.fmt') is not read.
 
   -f
-	See: format - flatbeams <bool>
+	See: format.txt - flatbeams <bool>
 
   -G, +G
-	See: format - graceslurs <bool>
+	See: format.txt - graceslurs <bool>
 
   -H
 	Display the current format values.
@@ -76,25 +79,25 @@ List of the options
 	This also shows the default settings for some parameters.
 
   -I<unit>
-	See: format - indent <unit>
+	See: format.txt - indent <unit>
 
   -j<int>[b], +j
-	See: format - measurenb <int>
+	See: format.txt - measurenb <int>
 
   -k<int>[b], +k
-	See: format - measurenb <int>
+	See: format.txt - measurenb <int>
 
   -L<int>
-	See: format - encoding <int>
+	See: format.txt - encoding <int>
 
   -l, +l
-	See: format - landscape <bool>
+	See: format.txt - landscape <bool>
 
   -M, +M
-	See: format - musiconly <bool>
+	See: format.txt - musiconly <bool>
 
   -m<unit>
-	See: format - leftmargin <unit>
+	See: format.txt - leftmargin <unit>
 
   -N<int>, +N
 	Number the pages.
@@ -109,7 +112,7 @@ List of the options
 	If a header is defined ('%%header'), this option is ignored.
 
   -n, +n
-	See: format - writehistory <bool>
+	See: format.txt - writehistory <bool>
 
   -O<name>, +O
 	Define the output file name.
@@ -122,7 +125,7 @@ List of the options
 	If <name> is '-', the result is written on stdout.
 
   -s<float>
-	See: format - scale <float>
+	See: format.txt - scale <float>
 
   -u
 	Select the abc2ps implicit decorations.
@@ -131,20 +134,20 @@ List of the options
 	Show the version number.
 
   -w<unit>
-	See: format - staffwidth <unit>
+	See: format.txt - staffwidth <unit>
 
   -W<voice><keypitch>, +W
 	Display a tin whistle tablature for the voice number <voice>.
-	This number ('1' to '9' only) is the number internally
+	This number (range '1' to '9' only) is the number internally
 	incremented as new voices are encountered; it is not the voice
 	name. Up to 4 tablatures may be defined.
 	Ex: '-W1c -W2Bb,'.
 
   -x, +x
-	See: format - withxrefs <bool>
+	See: format.txt - withxrefs <bool>
 
   -0, +0
-	See: format - splittune <bool>
+	See: format.txt - splittune <bool>
 
   -1, +1
-	See: format - oneperpage <bool>
+	See: format.txt - oneperpage <bool>

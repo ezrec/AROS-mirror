@@ -90,8 +90,9 @@ X:5
 T:Annotations in guitar chords
 M:C
 L:1/8
+%%gchordbox 1
 K:C
-"^normal"CD"_below"EG "<left"cd">right"ec|\
+"^normal""in box"CD"_below"EG "<left"cd">right"ec|\
 "@20,-50anywhere"gf"<("">)"ed (c4y)||
 
 X:6

@@ -23,7 +23,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 
 #include "abcparse.h"
 #include "abc2ps.h"
@@ -40,8 +39,7 @@ static char ps_head[] =
 	"/lshow{dup stringwidth pop neg 0 RM show}!\n"
 
 	/* str showb - show in box */
-	"/showb{\n"
-	"	dup currentpoint 3 -1 roll show\n"
+	"/showb{	dup currentpoint 3 -1 roll show\n"
 	"	0.6 setlinewidth\n"
 #if PS_LEVEL >= 2
 	"	exch 2 sub exch 3 sub 3 -1 roll\n"
@@ -70,7 +68,7 @@ static char ps_head[] =
 	"/whf{3 add 3 3 1 roll wln}!\n"
 
 	/* x y tclef - treble clef */
-	"/tclef{M\n"
+	"/tclef{	M\n"
 	"	-1.9 3.7 RM\n"
 	"	-3.3 1.9 -3.1 6.8 2.4 8.6 RC\n"
 	"	7.0 0.0 9.8 -8.0 4.1 -11.7 RC\n"
@@ -92,8 +90,7 @@ static char ps_head[] =
 	"	-4.0 -0.2 -4.8 -3.1 -2.7 -5.7 RC\n"
 	"	fill}!\n"
 
-	"/stclef{\n"
-	"	exch 0.85 div exch 0.85 div gsave 0.85 dup scale tclef grestore}!\n"
+	"/stclef{exch 0.85 div exch 0.85 div gsave 0.85 dup scale tclef grestore}!\n"
 
 	/* x y octu - upper '8' */
 	"/octu{/Times-Roman 12 selectfont M -1.5 34 RM (8) show}!\n"
@@ -101,7 +98,7 @@ static char ps_head[] =
 	"/octl{/Times-Roman 12 selectfont M -3.5 -19 RM (8) show}!\n"
 
 	/* x y bclef - bass clef */
-	"/bclef{M\n"
+	"/bclef{	M\n"
 	"	-8.8 3.5 RM\n"
 	"	6.3 1.9 10.2 5.6 10.5 10.8 RC\n"
 	"	0.3 4.9 -0.5 8.1 -2.6 8.8 RC\n"
@@ -118,11 +115,9 @@ static char ps_head[] =
 	"	0.0 -1.5 -2.0 -1.5 -2.0 0.0 RC\n"
 	"	fill}!\n"
 
-	"/sbclef{\n"
-	"	exch 0.85 div exch 0.85 div gsave 0.85 dup scale 0 3 T bclef grestore}!\n"
+	"/sbclef{exch 0.85 div exch 0.85 div gsave 0.85 dup scale 0 3 T bclef grestore}!\n"
 
-	"/cchalf{\n"
-	"	0 0 M 0.0 12.0 RM\n"
+	"/cchalf{0 0 M 0.0 12.0 RM\n"
 	"	2.6 5.0 RL\n"
 	"	2.3 -5.8 5.2 -2.4 4.7 1.6 RC\n"
 	"	0.4 3.9 -3.0 6.7 -5.1 4.0 RC\n"
@@ -133,23 +128,21 @@ static char ps_head[] =
 	"	fill}!\n"
 
 	/* x y cclef */
-	"/cclef{\n"
-	"	gsave T\n"
+	"/cclef{	gsave T\n"
 	"	cchalf 0 24 T 1 -1 scale cchalf\n"
 	"	-5.0 0 M 0 24 RL 3 0 RL 0 -24 RL fill\n"
 	"	-0.5 0 M 0 24 RL 0.8 setlinewidth stroke grestore}!\n"
 
-	"/scclef{\n"
-	"	exch 0.85 div exch 0.85 div gsave 0.85 dup scale 0 2 T cclef grestore}!"
+	"/scclef{exch 0.85 div exch 0.85 div gsave 0.85 dup scale\n"
+	"	0 2 T cclef grestore}!\n"
 
 	/* x y pclef */
-	"/pclef{\n"
-	"	M 1.4 setlinewidth -2.7 2 RM\n"
+	"/pclef{	M 1.4 setlinewidth -2.7 2 RM\n"
 	"	0 20 RL 5.4 0 RL 0 -20 RL -5.4 0 RL stroke}!\n"
+	"/spclef{pclef}!\n"
 
 	/* t dx dy x y bm - beam, depth t */
-	"/bm{\n"
-	"	M 3 copy RL neg 0 exch RL\n"
+	"/bm{	M 3 copy RL neg 0 exch RL\n"
 	"	neg exch neg exch RL 0 exch RL fill}!\n"
 
 	/* str x y bnum - number on beam */
@@ -159,28 +152,23 @@ static char ps_head[] =
 	"/hbr{M dlw lineto 0 -3 RL stroke}!\n"
 
 	/* x y r00 - longa rest */
-	"/r00{\n"
-	"	xymove\n"
+	"/r00{	xymove\n"
 	"	-1 6 RM 0 -12 RL 3 0 RL 0 12 RL fill}!\n"
 
 	/* x y r0 - breve rest */
-	"/r0{\n"
-	"	xymove\n"
+	"/r0{	xymove\n"
 	"	-1 6 RM 0 -6 RL 3 0 RL 0 6 RL fill}!\n"
 
 	/* x y r1 - rest */
-	"/r1{\n"
-	"	xymove\n"
-	"	-3 6 RM 0 -3 RL 6 0 RL 0 3 RL fill}!\n"
+	"/r1{	xymove\n"
+	"	-3 6 RM 0 -3 RL 7 0 RL 0 3 RL fill}!\n"
 
 	/* x y r2 - half rest */
-	"/r2{\n"
-	"	xymove\n"
-	"	-3 0 RM 0 3 RL 6 0 RL 0 -3 RL fill}!\n"
+	"/r2{	xymove\n"
+	"	-3 0 RM 0 3 RL 7 0 RL 0 -3 RL fill}!\n"
 
 	/* x y r4 - quarter rest */
-	"/r4{\n"
-	"	xymove\n"
+	"/r4{	xymove\n"
 	"	-0.5 8.9 RM\n"
 	"	1.3 -3.4 RL\n"
 	"	-2.0 -4.5 RL\n"
@@ -193,30 +181,26 @@ static char ps_head[] =
 	"	fill}!\n"
 
 	/* 1/8 .. 1/64 rest element */
-	"/r8e{\n"
-	"	-1.5 -1.5 -2.4 -2.0 -3.6 -2.0 RC\n"
+	"/r8e{	-1.5 -1.5 -2.4 -2.0 -3.6 -2.0 RC\n"
 	"	2.4 2.8 -2.8 4.0 -2.8 1.2 RC\n"
 	"	0.0 -2.7 4.3 -2.4 5.9 -0.6 RC\n"
 	"	fill}!\n"
 
 	/* x y r8 - eighth rest */
-	"/r8{\n"
-	"	xymove\n"
+	"/r8{	xymove\n"
 	"	0.5 setlinewidth 3.3 4.0 RM\n"
 	"	-3.4 -9.6 RL stroke\n"
 	"	x y M 3.4 4.0 RM r8e}!\n"
 
 	/* x y r16 - 16th rest */
-	"/r16{\n"
-	"	xymove\n"
+	"/r16{	xymove\n"
 	"	0.5 setlinewidth 3.3 4.0 RM\n"
 	"	-4.0 -15.6 RL stroke\n"
 	"	x y M 3.4 4.0 RM r8e\n"
 	"	x y M 1.9 -2.0 RM r8e}!\n"
 
 	/* x y r32 - 32th rest */
-	"/r32{\n"
-	"	xymove\n"
+	"/r32{	xymove\n"
 	"	0.5 setlinewidth 4.8 10.0 RM\n"
 	"	-5.5 -21.6 RL stroke\n"
 	"	x y M 4.9 10.0 RM r8e\n"
@@ -224,8 +208,7 @@ static char ps_head[] =
 	"	x y M 1.9 -2.0 RM r8e}!\n"
 
 	/* x y r64 - 64th rest */
-	"/r64{\n"
-	"	xymove\n"
+	"/r64{	xymove\n"
 	"	0.5 setlinewidth 4.8 10.0 RM\n"
 	"	-7.0 -27.6 RL stroke\n"
 	"	x y M 4.9 10.0 RM r8e\n"
@@ -237,8 +220,7 @@ static char ps_head[] =
 	"/dt{y add exch x add exch M currentpoint 1.2 0 360 arc fill}!\n"
 
 	/* x y hld - fermata */
-	"/hld{\n"
-	"	1.5 add 2 copy 1.5 add M currentpoint 1.3 0 360 arc\n"
+	"/hld{	1.5 add 2 copy 1.5 add M currentpoint 1.3 0 360 arc\n"
 	"	M -7.5 0 RM\n"
 	"	0 11.5 15 11.5 15 0 RC\n"
 	"	-0.25 0 RL\n"
@@ -246,8 +228,7 @@ static char ps_head[] =
 	"	fill}!\n"
 
 	/* x y dnb - down bow */
-	"/dnb{\n"
-	"	dlw M\n"
+	"/dnb{	dlw M\n"
 	"	-3.2 2.0 RM\n"
 	"	0.0 7.2 RL\n"
 	"	6.4 0.0 RM\n"
@@ -260,15 +241,13 @@ static char ps_head[] =
 	"	fill}!\n"
 
 	/* x y upb - up bow */
-	"/upb{\n"
-	"	dlw M -2.6 9.4 RM\n"
+	"/upb{	dlw M -2.6 9.4 RM\n"
 	"	2.6 -8.8 RL\n"
 	"	2.6 8.8 RL\n"
 	"	stroke}!\n"
 
 	/* x y grm - gracing mark */
-	"/grm{\n"
-	"	M -5 2.5 RM\n"
+	"/grm{	M -5 2.5 RM\n"
 	"	5.0 8.5 5.5 -4.5 10.0 2.0 RC\n"
 	"	-5.0 -8.5 -5.5 4.5 -10.0 -2.0 RC fill}!\n"
 
@@ -276,38 +255,32 @@ static char ps_head[] =
 	"/stc{M currentpoint 1.2 0 360 arc fill}!\n"
 
 	/* x y emb - emphasis bar */
-	"/emb{\n"
-	"	1.2 setlinewidth 1 setlinecap M\n"
-	"	-2.5 0 RM 5 0 RL stroke}!\n"
+	"/emb{	1.2 setlinewidth 1 setlinecap M\n"
+	"	-2.5 0 RM 5 0 RL stroke 0 setlinecap}!\n"
 
 	/* x y cpu - roll sign above head */
-	"/cpu{\n"
-	"	M -6 0 RM\n"
+	"/cpu{	M -6 0 RM\n"
 	"	0.4 7.3 11.3 7.3 11.7 0 RC\n"
 	"	-1.3 6 -10.4 6 -11.7 0 RC fill}!\n"
 
 	/* x y sld - slide */
-	"/sld{\n"
-	"	M -7.2 -4.8 RM\n"
+	"/sld{	M -7.2 -4.8 RM\n"
 	"	1.8 -0.7 4.5 0.2 7.2 4.8 RC\n"
 	"	-2.1 -5.0 -5.4 -6.8 -7.6 -6.0 RC fill}!\n"
 
 	/* x y trl - trill sign */
-	"/trl{\n"
-	"	/Times-BoldItalic 16 selectfont\n"
+	"/trl{	/Times-BoldItalic 16 selectfont\n"
 	"	M -4 2 RM (tr) show}!\n"
 
 	/* x y umrd - upper mordent */
-	"/umrd{\n"
-	"	4 add M\n"
+	"/umrd{	4 add M\n"
 	"	2.2 2.2 RL 2.1 -2.9 RL 0.7 0.7 RL\n"
 	"	-2.2 -2.2 RL -2.1 2.9 RL -0.7 -0.7 RL\n"
 	"	-2.2 -2.2 RL -2.1 2.9 RL -0.7 -0.7 RL\n"
 	"	2.2 2.2 RL 2.1 -2.9 RL 0.7 0.7 RL fill}!\n"
 
 	/* x y lmrd - lower mordent */
-	"/lmrd{\n"
-	"	2 copy umrd 8 add M\n"
+	"/lmrd{	2 copy umrd 8 add M\n"
 	"	0.6 setlinewidth 0 -8 RL stroke}!\n"
 
 	/* str x y fng - finger (0-5) */
@@ -323,21 +296,18 @@ static char ps_head[] =
 	"/pf{/Times-BoldItalic 16 selectfont 5 add M cshow}!\n"
 
 	/* str x y sfz */
-	"/sfz{\n"
-	"	exch 4 sub exch 5 add M pop\n"
+	"/sfz{	exch 4 sub exch 5 add M pop\n"
 	"	/Times-Italic 14 selectfont (s) show\n"
 	"	/Times-BoldItalic 16 selectfont (f) show\n"
 	"	/Times-Italic 14 selectfont (z) show}!\n"
 
 	/* x y coda - coda */
-	"/coda{\n"
-	"	1 setlinewidth 2 add 2 copy M 0 20 RL\n"
+	"/coda{	1 setlinewidth 2 add 2 copy M 0 20 RL\n"
 	"	2 copy 10 add exch -10 add exch M 20 0 RL stroke\n"
 	"	10 add 6 0 360 arc 1.7 setlinewidth stroke}!\n"
 
 	/* x y sgno - segno */
-	"/sgno{\n"
-	"	M 0 3 RM currentpoint currentpoint currentpoint\n"
+	"/sgno{	M 0 3 RM currentpoint currentpoint currentpoint\n"
 	"	1.5 -1.7 6.4 0.3 3.0 3.7 RC\n"
 	"	-10.4 7.8 -8.0 10.6 -6.5 11.9 RC\n"
 	"	4.0 1.9 5.9 -1.7 4.2 -2.6 RC\n"
@@ -352,23 +322,19 @@ static char ps_head[] =
 	"	8 add exch 6 add exch 1.2 0 360 arc fill}!\n"
 
 	/* w x y cresc - (de)crescendo */
-	"/cresc{\n"
-	"	1.2 setlinewidth 6 add M\n"
+	"/cresc{	1.2 setlinewidth 6 add M\n"
 	"	dup 4 RL neg 4 RL stroke}!\n"
 
 	/* x y dplus - + decoration */
-	"/dplus{\n"
-	"	1.2 setlinewidth M 0 0.5 RM 0 6 RL\n"
+	"/dplus{	1.2 setlinewidth M 0 0.5 RM 0 6 RL\n"
 	"	-3 -3 RM 6 0 RL stroke}!\n"
 
 	/* x y accent - accent */
-	"/accent{\n"
-	"	1.2 setlinewidth M -4 2 RM\n"
+	"/accent{1.2 setlinewidth M -4 2 RM\n"
 	"	8 2 RL -8 2 RL stroke}!\n"
 
 	/* x y turn - turn */
-	"/turn{\n"
-	"	M 5.2 8 RM\n"
+	"/turn{	M 5.2 8 RM\n"
 	"	1.4 -0.5 0.9 -4.8 -2.2 -2.8 RC\n"
 	"	-4.8 3.5 RL\n"
 	"	-3.0 2.0 -5.8 -1.8 -3.6 -4.4 RC\n"
@@ -382,8 +348,7 @@ static char ps_head[] =
 	"	fill}!\n"
 
 	/* x y trnx - turn with line through it */
-	"/turnx{\n"
-	"	2 copy turn M\n"
+	"/turnx{	2 copy turn M\n"
 	"	0.6 setlinewidth 0 1.5 RM 0 9 RL stroke}!\n"
 
 	/* x y lphr - longphrase */
@@ -395,9 +360,8 @@ static char ps_head[] =
 	/* x y sphr - shortphrase */
 	"/sphr{1.2 setlinewidth M 0 -6 RL stroke}!\n"
 
-	/* len xleft y ltr - long trill */
-	"/ltr{\n"
-	"	gsave 4 add T\n"
+	/* len x y ltr - long trill */
+	"/ltr{	gsave 4 add T\n"
 	"	0 6 3 -1 roll{\n"
 	/*		% first loop draws left half of squiggle; second draws right\n*/
 	"		0 1 1{\n"
@@ -423,33 +387,28 @@ static char ps_head[] =
 	"/opend{dlw M currentpoint 3 add 2.5 -90 270 arc stroke}!\n"
 
 	/* x y snap - 'snap' sign */
-	"/snap{\n"
-	"	dlw M currentpoint -3 6 RM\n"
+	"/snap{	dlw M currentpoint -3 6 RM\n"
 	"	0 5 6 5 6 0 RC\n"
 	"	0 -5 -6 -5 -6 0 RC\n"
 	"	5 add M 0 -6 RL stroke}!\n"
 
 	/* x y thumb - 'thumb' sign */
-	"/thumb{\n"
-	"	dlw M currentpoint -2.5 7 RM\n"
+	"/thumb{	dlw M currentpoint -2.5 7 RM\n"
 	"	0 6 5 6 5 0 RC\n"
 	"	0 -6 -5 -6 -5 0 RC\n"
 	"	2 add M 0 -4 RL stroke}!\n"
 
 	/* y hl - helper line at height y */
-	"/hl{\n"
-	"	0.8 setlinewidth x -6.5 add exch M\n"
+	"/hl{	0.8 setlinewidth x -6.5 add exch M\n"
 	"	13 0 RL stroke}!\n"
 
 	/* y hl1 - longer helper line */
-	"/hl1{\n"
-	"	0.8 setlinewidth x -8 add exch M\n"
+	"/hl1{	0.8 setlinewidth x -8 add exch M\n"
 	"	16 0 RL stroke}!\n"
 
 	/* -- accidentals -- */
 	/* x y sh0 - sharp sign */
-	"/sh0{\n"
-	"	gsave T 0.9 setlinewidth\n"
+	"/sh0{	gsave T 0.9 setlinewidth\n"
 	"	-1.2 -8.4 M 0 15.4 RL\n"
 	"	1.4 -7.2 M 0 15.4 RL stroke\n"
 	"	-2.6 -3 M 5.4 1.6 RL 0 -2.2 RL -5.4 -1.6 RL 0 2.2 RL fill\n"
@@ -458,8 +417,7 @@ static char ps_head[] =
 	/* dx sh - sharp relative to head */
 	"/sh{x add y sh0}!\n"
 	/* x y ft0 - flat sign */
-	"/ft0{\n"
-	"	gsave T 0.8 setlinewidth\n"
+	"/ft0{	gsave T 0.8 setlinewidth\n"
 	"	-1.8 2.5 M\n"
 	"	6.4 3.3 6.5 -3.6 0 -6.6 RC\n"
 	"	4.6 3.9 4.5 7.6 0 5.7 RC\n"
@@ -469,8 +427,7 @@ static char ps_head[] =
 	/* dx ft - flat relative to head */
 	"/ft{x add y ft0}!\n"
 	/* x y nt0 - natural sign */
-	"/nt0{\n"
-	"	gsave T 0.5 setlinewidth\n"
+	"/nt0{	gsave T 0.5 setlinewidth\n"
 	"	-2 -4.3 M 0 12.2 RL\n"
 	"	1.3 -7.8 M 0 12.2 RL stroke\n"
 	"	2.1 setlinewidth\n"
@@ -480,8 +437,7 @@ static char ps_head[] =
 	/* dx nt - natural relative to head */
 	"/nt{x add y nt0}!\n"
 	/* x y ftx - narrow flat sign */
-	"/ftx{\n"
-	"	M -1.4 2.7 RM\n"
+	"/ftx{	M -1.4 2.7 RM\n"
 	"	5.7 3.1 5.7 -3.6 0.0 -6.7 RC\n"
 	"	3.9 4.0 4.0 7.6 0.0 5.8 RC\n"
 	"	currentpoint fill M\n"
@@ -491,8 +447,7 @@ static char ps_head[] =
 	/* dx dft - double flat relative to head */
 	"/dft{x add y dft0}!\n"
 	/* x y dsh0 - double sharp */
-	"/dsh0{\n"
-	"	2 copy M 0.7 setlinewidth\n"
+	"/dsh0{	2 copy M 0.7 setlinewidth\n"
 	"	-2 -2 RM 4 4 RL\n"
 	"	-4 0 RM 4 -4 RL stroke\n"
 	"	0.5 setlinewidth 2 copy M 1.3 -1.3 RM\n"
@@ -530,6 +485,14 @@ static char ps_head[] =
 	"	    ifelse}\n"
 	"	  ifelse pop}\n"
 	"	forall}!\n"
+	/* x y w h box - draw a box */
+	"/box{0.6 setlinewidth"
+#if PS_LEVEL >= 2
+	" rectstroke}!\n"
+#else
+	" 4 2 roll M 2 copy\n"
+	"	0 exch RL 0 RL neg 0 exch RL neg 0 RL stroke}!\n"
+#endif
 
 	/* h x y bar - thin bar */
 	"/bar{M dlw 0 exch RL stroke}!\n"
@@ -541,13 +504,11 @@ static char ps_head[] =
 	"/thbar{M dup 0 exch RL 3 0 RL 0 exch neg RL fill}!\n"
 
 	/* x y rdots - repeat dots */
-	"/rdots{\n"
-	"	9 add M currentpoint 2 copy 1.2 0 360 arc\n"
+	"/rdots{	9 add M currentpoint 2 copy 1.2 0 360 arc\n"
 	"	6 add M currentpoint 1.2 0 360 arc fill}!\n"
 
 	/* x y csig - C timesig */
-	"/csig{\n"
-	"	M\n"
+	"/csig{	M\n"
 	"	1.0 17.3 RM\n"
 	"	0.9 -0.0 2.3 -0.7 2.4 -2.2 RC\n"
 	"	-1.2 2.0 -3.6 -0.1 -1.6 -1.7 RC\n"
@@ -562,19 +523,16 @@ static char ps_head[] =
 	"/ctsig{dlw 2 copy csig 4 add M 0 16 RL stroke}!\n"
 
 	/* (top) (bot) x y tsig - time signature */
-	"/tsig{\n"
-	"	M gsave /Times-Bold 16 selectfont 1.2 1 scale\n"
+	"/tsig{	M gsave /Times-Bold 16 selectfont 1.2 1 scale\n"
 	"	0 1 RM currentpoint 3 -1 roll cshow\n"
 	"	M 0 12 RM cshow grestore}!\n"
 
 	/* (meter) x y stsig - single time signature */
-	"/stsig{\n"
-	"	M gsave /Times-Bold 18 selectfont 1.2 1 scale\n"
+	"/stsig{	M gsave /Times-Bold 18 selectfont 1.2 1 scale\n"
 	"	0 6 RM cshow grestore}!\n"
 
-	/* l staff - draw staff */
-	"/staff{\n"
-	"	dlw dup 0 RL dup neg 6 RM\n"
+	/* l x y staff - 5 lines staff */
+	"/staff{	M dlw dup 0 RL dup neg 6 RM\n"
 	"	dup 0 RL dup neg 6 RM\n"
 	"	dup 0 RL dup neg 6 RM\n"
 	"	dup 0 RL dup neg 6 RM\n"
@@ -583,21 +541,18 @@ static char ps_head[] =
 	/* x1 x2 sep0 - hline separator */
 	"/sep0{dlw 0 M 0 lineto stroke}!\n"
 
-	"/hbrce{\n"
-	"	-2.5 1.0 RM\n"
+	"/hbrce{	-2.5 1.0 RM\n"
 	"	-4.5 -4.6 -7.5 -12.2 -4.4 -26.8 RC\n"
 	"	3.5 -14.3 3.2 -21.7 -2.1 -24.2 RC\n"
 	"	7.4 2.4 7.3 14.2 3.5 29.5 RC\n"
 	"	-2.7 9.5 -1.5 16.2 3.0 21.5 RC\n"
 	"	fill}!\n"
 	/* h x y brace */
-	"/brace{\n"
-	"	gsave T 0 0 M 0.01 mul 1.0 exch scale hbrce\n"
+	"/brace{	gsave T 0 0 M 0.01 mul 1.0 exch scale hbrce\n"
 	"	0 -100 M 1 -1 scale hbrce grestore}!\n"
 
 	/* h x y bracket */
-	"/bracket{\n"
-	"	M dlw -5 2 RM currentpoint\n"
+	"/bracket{M dlw -5 2 RM currentpoint\n"
 	"	-1.7 2 RM 10.5 -1 12 4.5 12 3.5 RC\n"
 	"	0 -1 -3.5 -5.5 -8.5 -5.5 RC fill\n"
 	"	3 setlinewidth M 0 2 RM\n"
@@ -607,49 +562,37 @@ static char ps_head[] =
 	"	0 1 -3.5 5.5 -8.5 5.5 RC fill}!\n"
 
 	/* nb_measures x y mrest */
-	"/mrest{\n"
-	"	gsave T 1 setlinewidth\n"
+	"/mrest{	gsave T 1 setlinewidth\n"
 	"	-20 6 M 0 12 RL 20 6 M 0 12 RL stroke\n"
 	"	5 setlinewidth -20 12 M 40 0 RL stroke\n"
 	"	/Times-Bold 15 selectfont 0 28 M cshow grestore}!\n"
 
 	/* x y mrep - measure repeat */
-	"/mrep{\n"
-	"	2 copy 2 copy\n"
+	"/mrep{	2 copy 2 copy\n"
 	"	M -5 16 RM currentpoint 1.4 0 360 arc\n"
 	"	M 5 8 RM currentpoint 1.4 0 360 arc\n"
 	"	M -7 6 RM 11 12 RL 3 0 RL -11 -12 RL -3 0 RL\n"
 	"	fill}!\n"
 
 	/* x y mrep2 - measure repeat 2 times */
-	"/mrep2{\n"
-	"	2 copy 2 copy\n"
+	"/mrep2{	2 copy 2 copy\n"
 	"	M -5 18 RM currentpoint 1.4 0 360 arc\n"
 	"	M 5 6 RM currentpoint 1.4 0 360 arc fill\n"
 	"	M 1.8 setlinewidth\n"
 	"	-7 4 RM 14 10 RL -14 -4 RM 14 10 RL\n"
 	"	stroke}!\n"
 
-	/* str dx x y end1 - mark first ending */
-	"/end1{\n"
-	"	gsave dlw T 0 -20 M\n"
-	"	0 20 RL 0 RL 0 -20 RL stroke\n"
-	"	4 -13 M /Times-Roman 13 selectfont 1.2 0.95 scale\n"
-	"	show grestore}!\n"
-
-	/* str dx x y end2 - mark second ending */
-	"/end2{\n"
-	"	gsave dlw T 0 -20 M\n"
-	"	0 20 RL 0 RL stroke\n"
-	"	4 -13 M /Times-Roman 13 selectfont 1.2 0.95 scale\n"
-	"	show grestore}!\n"
+	/* str bracket_type dx x y repbra - repeat bracket */
+	"/repbra{gsave dlw T 0 -20 M\n"
+	"	0 20 3 index 1 ne {RL} {RM} ifelse 0 RL 0 ne {0 -20 RL} if stroke\n"
+	"	4 -13 M show grestore}!\n"
 
 	/* pp2x pp1x p1 pp1 pp2 p2 p1 SL */
 	"/SL{M curveto RL curveto fill}!\n"
 
 	/* -- text -- */
 	"/dsp{dup stringwidth pop}!\n"
-	"/glue{2 copy length exch length add string dup 4 2 roll 2 index 0 3 index\n"
+	"/glue{	2 copy length exch length add string dup 4 2 roll 2 index 0 3 index\n"
 	"	putinterval exch length exch putinterval}!\n"
 	"/TXT{/txt exch def}!\n"
 	"/rejoin{( ) search pop exch glue}!\n"
@@ -662,29 +605,25 @@ static char ps_head[] =
 	"/justify{jproc 1 sub 3 2 roll exch popzero 0 32 4 3 roll widthshow} def\n"
 
 	/* str lwidth P1 */
-	"/P1{\n"
-	"	/textwidth exch def () TXT\n"
+	"/P1{	/textwidth exch def () TXT\n"
 	"	dup spacecount{\n"
 	"		rejoin measure {gsave txt show grestore LF () TXT join}{join} ifelse\n"
 	"	} repeat gsave txt show grestore LF () TXT pop}!\n"
 
 	/* str lwidth P2 */
-	"/P2{\n"
-	"	/textwidth exch def () TXT\n"
+	"/P2{	/textwidth exch def () TXT\n"
 	"	dup spacecount{\n"
 	"		rejoin measure {gsave txt justify grestore LF () TXT join}{join} ifelse\n"
 	"	} repeat gsave txt show grestore LF () TXT pop}!\n"
 
 	/* x y hd - full head */
-	"/hd{\n"
-	"	xymove\n"
+	"/hd{	xymove\n"
 	"	3.5 2.0 RM\n"
 	"	-2.0 3.5 -9.0 -0.5 -7.0 -4.0 RC\n"
 	"	2.0 -3.5 9.0 0.5 7.0 4.0 RC fill}!\n"
 
 	/* x y Hd - open head for half */
-	"/Hd{\n"
-	"	xymove\n"
+	"/Hd{	xymove\n"
 	"	3.0 1.6 RM\n"
 	"	-1.0 1.8 -7.0 -1.4 -6.0 -3.2 RC\n"
 	"	1.0 -1.8 7.0 1.4 6.0 3.2 RC\n"
@@ -694,8 +633,7 @@ static char ps_head[] =
 	"	fill}!\n"
 
 	/* x y HD - open head for whole */
-	"/HD{\n"
-	"	xymove\n"
+	"/HD{	xymove\n"
 	"	-1.6 2.4 RM\n"
 	"	2.8 1.6 6.0 -3.2 3.2 -4.8 RC\n"
 	"	-2.8 -1.6 -6.0 3.2 -3.2 4.8 RC\n"
@@ -707,30 +645,26 @@ static char ps_head[] =
 	"	fill}!\n"
 
 	/* x y HDD - round breve */
-	"/HDD{\n"
-	"	dlw HD\n"
+	"/HDD{	dlw HD\n"
 	"	x y M -6 -4 RM 0 8 RL\n"
 	"	x y M 6 -4 RM 0 8 RL stroke}!\n"
 
 	/* x y breve - square breve */
-	"/breve{\n"
-	"	xymove\n"
+	"/breve{	xymove\n"
 	"	2.5 setlinewidth -6 -2.7 RM 12 0 RL\n"
 	"	0 5.4 RM -12 0 RL stroke\n"
 	"	dlw x y M -6 -5 RM 0 10 RL\n"
 	"	x y M 6 -5 RM 0 10 RL stroke}!\n"
 
 	/* x y longa */
-	"/longa{\n"
-	"	xymove\n"
+	"/longa{	xymove\n"
 	"	2.5 setlinewidth -6 -2.7 RM 12 0 RL\n"
 	"	0 5.4 RM -12 0 RL stroke\n"
 	"	dlw x y M -6 -5 RM 0 10 RL\n"
 	"	x y M 6 -10 RM 0 15 RL stroke}!\n"
 
 	/* tin whistle */
-	"/tw_head{\n"
-	"	/Helvetica 8.0 selectfont\n"
+	"/tw_head{/Helvetica 8.0 selectfont\n"
 	"	0 -45 M 90 rotate (WHISTLE) show -90 rotate\n"
 	"	/Helvetica-Bold 36.0 selectfont\n"
 	"	0 -45 M show .5 setlinewidth newpath}!\n"
@@ -740,16 +674,11 @@ static char ps_head[] =
 	"/tw_over{\n"
 	"	1 index 2.5 sub -3 M 2.5 2.5 RL 2.5 -2.5 RL\n"
 	"	-2.5 2.5 RM 0 -6 RL stroke}!\n"
-	"/tw_0{\n"
-	"	7 sub 2 copy 3.5 sub 3 0 360 arc stroke}!\n"
-	"/tw_1{\n"
-	"	7 sub 2 copy 3.5 sub 2 copy 3 90 270 arc fill 3 270 90 arc stroke}!\n"
-	"/tw_2{\n"
-	"	7 sub 2 copy 3.5 sub 3 0 360 arc fill}!\n"
-	"/tw_p{\n"
-	"	pop -55 M 0 6 RL -3 -3 RM 6 0 RL stroke}!\n"
-	"/tw_pp{\n"
-	"	pop 3 sub -53.5 M 6 0 RL\n"
+	"/tw_0{7 sub 2 copy 3.5 sub 3 0 360 arc stroke}!\n"
+	"/tw_1{7 sub 2 copy 3.5 sub 2 copy 3 90 270 arc fill 3 270 90 arc stroke}!\n"
+	"/tw_2{7 sub 2 copy 3.5 sub 3 0 360 arc fill}!\n"
+	"/tw_p{pop -55 M 0 6 RL -3 -3 RM 6 0 RL stroke}!\n"
+	"/tw_pp{	pop 3 sub -53.5 M 6 0 RL\n"
 	"	-1.5 -1.5 RM 0 3 RL\n"
 	"	-3 0 RM 0 -3 RL stroke}!\n";
 
@@ -907,8 +836,7 @@ static void def_stems(FILE *fp)
 static void def_flags(FILE *fp)
 {
 	/* n len sfu - stem and n flag up */
-	fprintf(fp, "/sfu{\n"
-		"	dlw x y M %.1f %.1f RM\n"
+	fprintf(fp, "/sfu{	dlw x y M %.1f %.1f RM\n"
 		"	%.1f sub 0 exch RL currentpoint stroke\n"
 		"	M dup 1 eq\n"
 		"	  {\n"
@@ -931,8 +859,7 @@ static void def_flags(FILE *fp)
 		STEM_XOFF, STEM_YOFF, STEM_YOFF);
 
 	/* n len sfd - stem and n flag down */
-	fprintf(fp, "/sfd{\n"
-		"	dlw x y M -%.1f -%.1f RM\n"
+	fprintf(fp, "/sfd{	dlw x y M -%.1f -%.1f RM\n"
 		"	neg %.1f add 0 exch RL currentpoint stroke\n"
 		"	M dup 1 eq\n"
 		"	  {\n"
@@ -955,8 +882,7 @@ static void def_flags(FILE *fp)
 		STEM_XOFF, STEM_YOFF, STEM_YOFF);
 
 	/* n len sfs - stem and n straight flag down */
-	fprintf(fp, "/sfs{\n"
-		"	dlw x y M -%.1f -%.1f RM\n"
+	fprintf(fp, "/sfs{	dlw x y M -%.1f -%.1f RM\n"
 		"	neg %.1f add 0 exch RL currentpoint stroke\n"
 		"	M 1 1 3 -1 roll {\n"
 		"		pop currentpoint\n"
@@ -973,21 +899,18 @@ static void def_flags(FILE *fp)
 static void def_gnote(FILE *fp)
 {
 	/* x y ghd - grace note head */
-	fprintf(fp, "/ghd{\n"
-		"	xymove\n"
+	fprintf(fp, "/ghd{	xymove\n"
 		"	-1.3 1.5 RM\n"
 		"	2.4 2 5 -1 2.6 -3 RC\n"
-		"	-2.4 -2 -5 1 -2.6 3 RC fill\n}!"
+		"	-2.4 -2 -5 1 -2.6 3 RC fill}!\n"
 
 		/* l gu - grace note stem */
-		"/gu{\n"
-		"	0.6 setlinewidth x y M\n"
+		"/gu{	0.6 setlinewidth x y M\n"
 		"	%.1f 0 RM 0 exch RL stroke}!\n",
 		GSTEM_XOFF);
 
 	/* n len sgu - gnote stem and n flag up */
-	fprintf(fp, "/sgu{\n"
-		"	0.6 setlinewidth x y M %.1f 0 RM\n"
+	fprintf(fp, "/sgu{	0.6 setlinewidth x y M %.1f 0 RM\n"
 		"	0 exch RL currentpoint stroke\n"
 		"	M dup 1 eq\n"
 		"	  {\n"
@@ -1007,8 +930,7 @@ static void def_gnote(FILE *fp)
 		GSTEM_XOFF);
 
 	/* n len sgs - gnote stem and n straight flag up */
-	fprintf(fp, "/sgs{\n"
-		"	0.6 setlinewidth x y M %.1f 0 RM\n"
+	fprintf(fp, "/sgs{	0.6 setlinewidth x y M %.1f 0 RM\n"
 		"	0 exch RL currentpoint stroke\n"
 		"	M 1 1 3 -1 roll {\n"
 		"		pop currentpoint\n"
@@ -1022,8 +944,7 @@ static void def_gnote(FILE *fp)
 		"/ga{x y M -1 4 RM 9 5 RL stroke}!\n"
 
 		/* x y ghl - grace note helper line */
-		"/ghl{\n"
-		"	0.6 setlinewidth x -3 add exch M\n"
+		"/ghl{	0.6 setlinewidth x -3 add exch M\n"
 		"	6 0 RL stroke}!\n"
 
 		/* x1 y2 x2 y2 x3 y3 x0 y0 gsl */

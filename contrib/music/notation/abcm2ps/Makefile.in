@@ -8,6 +8,7 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 
 CPPFLAGS = @CFLAGS@ @DEFS@ -I.
+LDFLAGS = -lm	# @LDFLAGS@
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -23,7 +24,7 @@ OBJECTS=abc2ps.o \
 	abcparse.o buffer.o deco.o draw.o format.o music.o parse.o \
 	subs.o syms.o
 abcm2ps: $(OBJECTS)
-	$(CC) $(CFLAGS) -o abcm2ps $(OBJECTS)
+	$(CC) -o abcm2ps $(OBJECTS) $(LDFLAGS)
 $(OBJECTS): abcparse.h abc2ps.h config.h
 
 # win32 with a cross-compiler
@@ -61,7 +62,6 @@ dist:
 		abcm2ps-$(VERSION)/Makefile.w32 \
 		abcm2ps-$(VERSION)/Makefile.in \
 		abcm2ps-$(VERSION)/README \
-		abcm2ps-$(VERSION)/abc-draft.txt \
 		abcm2ps-$(VERSION)/abc2ps.c \
 		abcm2ps-$(VERSION)/abc2ps.h \
 		abcm2ps-$(VERSION)/abcparse.c \
@@ -94,6 +94,7 @@ dist:
 		abcm2ps-$(VERSION)/sample2.abc \
 		abcm2ps-$(VERSION)/sample3.abc \
 		abcm2ps-$(VERSION)/sample3.eps \
+		abcm2ps-$(VERSION)/sample4.abc \
 		abcm2ps-$(VERSION)/subs.c \
 		abcm2ps-$(VERSION)/syms.c \
 		abcm2ps-$(VERSION)/tight.fmt \
@@ -101,5 +102,20 @@ dist:
 	rm abcm2ps-$(VERSION)
 #zip: abcm2ps.exe
 #	zip abcm2ps-$(VERSION).zip abcm2ps.exe License
+
+EXAMPLES = deco.ps \
+	journey.ps \
+	mtunes1.ps \
+	mtunes2.ps \
+	newfeatures.ps \
+	sample.ps \
+	sample2.ps \
+	sample3.ps \
+	voices.ps
+
+test:	$(EXAMPLES)
+%.ps: %.abc
+	./abcm2ps -O $@ $<
+
 clean:
-	rm -f *.o # *.obj
+	rm -f *.o $(EXAMPLES) # *.obj

@@ -1,5 +1,5 @@
-		Format parameters
-		=================
+			Format parameters
+			=================
 
 The general layout of the printed scores may be changed in four ways:
 	1- at compilation time setting the values in abc2ps.h,
@@ -19,13 +19,24 @@ The pseudo-comments used for formatting have the format:
 
 	%%parameter [parameter list]
 
+Format parameters may appear in the command line by:
+
+	--parameter [parameter list]
+
 Some pseudo-comments are treated while being parsed and cannot appear
-in a format file. These ones are listed at the end of this file and are
-fully described in the file features.txt.
+in a format file nor in the command line. These ones are listed at the
+end of this file and are fully described in the file features.txt.
 
 
 List of the format parameters
 -----------------------------
+
+  annotationfont <font> <size>
+	Default: Helvetica 12
+	Compilation: none
+	Command line: none
+	Description:
+		Set the annotation font to <font> with a size <size>.
 
   autoclef <bool>
 	Default: 1
@@ -33,6 +44,9 @@ List of the format parameters
 	Command line: none
 	Description:
 		Adjust the clefs when not defined in K: or V:.
+
+  barnumbers <int>
+	Same as 'measurenb'.
 
   barsperstaff <int>
 	Default: 0
@@ -61,6 +75,15 @@ List of the format parameters
 	Command line: none
 	Description:
 		Set the vertical space before the composer to <unit>.
+
+  contbarnb <bool>
+	Default: 0
+	Compilation: none
+	Command line: none
+	Description:
+		If 0, the bar number of the second repeat(s) is reset to
+		the number of the first repeat.
+		If 1, the bars are sequencially numbered.
 
   continueall <bool>
 	Default: 0
@@ -156,13 +179,14 @@ List of the format parameters
 		These areas are separated by tabulations (real TABs,
 		not '\t') and may be empty (if the left area is empty,
 		quote the string - see sample3.abc for example).
-		The character '$' introduces variable expension:
+		The character '$' introduces variable expansion:
+			- '$D' is the current date and time,
 			- '$F' is the current input file name,
-			- '$N' is the current tune title,
 			- '$P' is the current page number,
-			- '$P0' and '$P1' are also the page number,
-			  but only when this one is even ('0') or
-			  odd ('1'),
+			- '$P0' and '$P1' are also the page number, but only
+			   when this one is even ('0') or odd ('1'),
+			- '$T' is the current tune title,
+			- '$V' is 'abcm2ps-' followed by the program version.
 		For example, the command line option '-N3' is the same
 		as:
 			%%header "$P0		$P1"
@@ -186,12 +210,21 @@ List of the format parameters
 		When this flag is set, displaying accidental may be forced
 		escaping the characters ('\#', '\b' and '\=').
 
-  gchordfont <font> <size>
+  gchordbox <bool>
+	Default: 0
+	Compilation: none
+	Command line: none
+	Description:
+		Draw a box around the guitar chords.
+		This value may be set to 'true' by %%gchordfont.
+
+  gchordfont <font> <size> [box]
 	Default: Helvetica 12
 	Compilation: none
 	Command line: none
 	Description:
 		Set the guitar chord font to <font> with a size <size>.
+		If 'box' is present, draw a box around the guitar chords.
 
   graceslurs <bool>
 	Default: 1
@@ -274,6 +307,14 @@ List of the format parameters
 		are chosen automatically.
 		<float> must be between 0 and 1.
 
+  measurebox <bool>
+	Default: 0
+	Compilation: none
+	Command line: trailing 'b' at end of -j or -k - see measurenb.
+	Description:
+		Draw a box around the measure numbers.
+		This value may be set to 'true' by %%measurefont.
+
   measurefirst <int>
 	Default: 1
 	Compilation: none
@@ -283,21 +324,23 @@ List of the format parameters
 		If the measure number needs to be changed inside a tune,
 		use '%%setbarnb' (see features.txt).
 
-  measurebox <bool>
-	Default: 0
+  measurefont <font> <size> [box]
+	Default: Times-Italic 14
 	Compilation: none
-	Command line: trailing 'b' at end of -j or -k - see measurenb.
+	Command line: none
 	Description:
-		Draw a box around the measure numbers.
+		Set the measure font to <font> with a size <size>.
+		If 'box' is present, draw a box around the measure
+		number.
 
   measurenb <int>
 	Default: -1
 	Compilation: none
 	Command line: -j<int>[b] or -k<int>[b]
 	Description:
-		Draw the measure number each <int> bars.
+		If positive, draw the measure number each <int> bars.
 		If <int> = 0, the measure number appears only on the left
-		of each staff.
+		of each staff system.
 		On the command line, if a trailing 'b' is present, a box
 		is drawn around the measure numbers.
 
@@ -366,6 +409,7 @@ List of the format parameters
 	Command line: none
 	Description:
 		Draw a box around the part names.
+		This value may be set to 'true' by %%partsfont.
 
   partsfont <font> <size> [box]
 	Default: Times-Roman 15
@@ -401,6 +445,13 @@ List of the format parameters
 	Command line: -Q (on) / +Q (off)
 	Description:
 		Print the tempo indications (Q:).
+
+  repeatfont <font> <size>
+	Default: Times-Roman 13
+	Compilation: none
+	Command line: none
+	Description:
+		Set the repeat number/text font to <font> with a size <size>.
 
   rightmargin <unit>
 	Default: 1.8cm

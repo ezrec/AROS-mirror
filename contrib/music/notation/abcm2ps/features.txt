@@ -1,4 +1,4 @@
-Features in abcm2ps 3.6.2 (J.F. Moine, June 2003)
+Features in abcm2ps 4.0.0 (J.F. Moine, November 2003)
 =================================================
 
 ----- EPS inclusion -----
@@ -102,9 +102,9 @@ to L: (or M:). Instead, for compatibility, it is:
 Grace notes greater than crotchets are drawn as crotchets.
 
 The decorations (dynamics, accents, ..) are either indicated by
-'!decoration_name!' (or a single letter - see 'U:') before the notes
-or in a separate decoration line starting with 'd:' (both may be
-mixed).
+'!decoration_name!' or '+decoration_name+' (or a single letter - see 'U:')
+before the notes or in a separate decoration line starting with 'd:' or
+'s:' (both may bemixed).
 In the decoration lines, as in the lyric lines ('w:'), '|' skips to
 the next bar and '*' skips one note. Note that, in such lines, you
 cannot set decorations on bars and rests.
@@ -122,7 +122,7 @@ Measure bars may have any shape, using a sequence of '|' (thin bar),
 '[' or ']' (thick bar), and ':' (dots). Ex: '|[|', '[|:::'.
 
 Invisible bars are indicated by '[]' or '[|]', and dashed bars by
-a single ':'.
+a single ':' or '.|'.
 
 The repeat indication may be explicitly stopped with a ']'.
 
@@ -165,6 +165,8 @@ A note length starting with '0' (zero) indicates a stemless black note
 
 The header field 'X:' may be ommited: a new tune may start directly on
 the first 'T:'.
+
+Lines starting with '\' (back-slash) are ignored (abc2mtex compatibility).
 
 
 ----- Clef specification -----
@@ -464,13 +466,12 @@ and a command-line flag overrides everything else.
 
 Some more details:
 
-1. Format files are searched in the current directory. In config.h,
-   the line "#define DEFAULT_FDIR .." can be used to set a default
-   directory which is searched whenever a fmt file is not local.
-   Flag -D can also be used to specify this default directory.
-   (The idea is, even if a PC user only has the executable available,
-   he could make something like an alias to get his standard
-   fmt directory into the path.)
+1. Format files ('-F') are searched in the current directory.
+   In config.h, the line "#define DEFAULT_FDIR .." can be used to set a
+   default directory which is searched whenever a fmt file is not local.
+   The flag -D can also be used to specify this default directory.
+   When no '+F' is present at the beginning of the command line,
+   abcm2ps reads the format file 'default.fmt' (as if '-F default').
 
 2. To see the settings for all the parameters, use flag -H.
    When used in conjunction with other flags such as -F,

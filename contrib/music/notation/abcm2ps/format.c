@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <math.h>
 
 #include "abcparse.h"
@@ -50,10 +51,13 @@ static struct format {
 	void *v;
 } format_tb[] = {
 	{"autoclef", FORMAT_B, 0, &cfmt.autoclef},
+	{"annotationfont", FORMAT_F, 0, &cfmt.annotationfont},
+	{"barnumbers", FORMAT_I, 0, &cfmt.measurenb},
 	{"barsperstaff", FORMAT_I, 0, &cfmt.barsperstaff},
 	{"botmargin", FORMAT_U, 0, &cfmt.botmargin},
 	{"composerfont", FORMAT_F, 0, &cfmt.composerfont},
 	{"composerspace", FORMAT_U, 0, &cfmt.composerspace},
+	{"contbarnb", FORMAT_B, 0, &cfmt.contbarnb},
 	{"continueall", FORMAT_B, 0, &cfmt.continueall},
 	{"encoding", FORMAT_I, 1, &cfmt.encoding},
 	{"exprabove", FORMAT_B, 0, &cfmt.exprabove},
@@ -62,7 +66,8 @@ static struct format {
 	{"footerfont", FORMAT_F, 0, &cfmt.footerfont},
 	{"freegchord", FORMAT_B, 0, &cfmt.freegchord},
 	{"flatbeams", FORMAT_B, 0, &cfmt.flatbeams},
-	{"gchordfont", FORMAT_F, 0, &cfmt.gchordfont},
+	{"gchordbox", FORMAT_B, 0, &cfmt.gchordbox},
+	{"gchordfont", FORMAT_F, 3, &cfmt.gchordfont},
 	{"graceslurs", FORMAT_B, 0, &cfmt.graceslurs},
 	{"header", FORMAT_S, 0, &cfmt.header},
 	{"headerfont", FORMAT_F, 0, &cfmt.headerfont},
@@ -76,6 +81,7 @@ static struct format {
 	{"maxshrink", FORMAT_R, 0, &cfmt.maxshrink},
 	{"measurebox", FORMAT_B, 0, &cfmt.measurebox},
 	{"measurefirst", FORMAT_I, 2, &cfmt.measurefirst},
+	{"measurefont", FORMAT_F, 2, &cfmt.measurefont},
 	{"measurenb", FORMAT_I, 0, &cfmt.measurenb},
 	{"musiconly", FORMAT_B, 0, &cfmt.musiconly},
 	{"musicspace", FORMAT_U, 0, &cfmt.musicspace},
@@ -87,7 +93,9 @@ static struct format {
 	{"partsbox", FORMAT_B, 0, &cfmt.partsbox},
 	{"partsfont", FORMAT_F, 1, &cfmt.partsfont},
 	{"partsspace", FORMAT_U, 0, &cfmt.partsspace},
+	{"printparts", FORMAT_B, 0, &cfmt.printparts},
 	{"printtempo", FORMAT_B, 0, &cfmt.printtempo},
+	{"repeatfont", FORMAT_F, 0, &cfmt.repeatfont},
 	{"rightmargin", FORMAT_U, 0, &cfmt.rightmargin},
 	{"scale", FORMAT_R, 0, &cfmt.scale},
 	{"slurheight", FORMAT_R, 0, &cfmt.slurheight},
@@ -192,6 +200,9 @@ void make_font_list(void)
 	used_font[f->infofont.fnum] = 1;
 	used_font[f->footerfont.fnum] = 1;
 	used_font[f->headerfont.fnum] = 1;
+	used_font[f->repeatfont.fnum] = 1;
+	used_font[f->measurefont.fnum] = 1;
+	used_font[f->annotationfont.fnum] = 1;
 }
 
 /* -- set the default format -- */
@@ -226,6 +237,7 @@ void set_format(void)
 	f->parskipfac	= 0.4;
 	f->measurenb = -1;
 	f->measurefirst = 1;
+	f->printparts = 1;
 	f->printtempo = 1;
 	f->autoclef = 1;
 	f->notespacingfactor = 1.414;
@@ -241,6 +253,9 @@ void set_format(void)
 	fontspec(&f->infofont,	"Times-Italic", 14.0); /* same as composer by default */
 	fontspec(&f->footerfont, "Times-Roman", 12.0);	/* not scaled */
 	fontspec(&f->headerfont, "Times-Roman", 12.0);	/* not scaled */
+	fontspec(&f->repeatfont, "Times-Roman", 13.0);
+	fontspec(&f->measurefont, "Times-Italic", 14.0);
+	fontspec(&f->annotationfont, "Helvetica", 12.0);
 }
 /* -- print the current format -- */
 void print_format(void)
@@ -271,8 +286,9 @@ static char yn[2][5]={"no","yes"};
 
 			s = (struct FONTSPEC *) fd->v;
 			printf("%s %.1f", fontnames[s->fnum], s->size);
-			if (fd->subtype == 1
-			    && cfmt.partsbox)
+			if ((fd->subtype == 1 && cfmt.partsbox)
+			    || (fd->subtype == 2 && cfmt.measurebox)
+			    || (fd->subtype == 3 && cfmt.gchordbox))
 				printf(" box");
 			printf("\n");
 			break;
@@ -280,15 +296,19 @@ static char yn[2][5]={"no","yes"};
 		case FORMAT_U:
 			if (fd->subtype == 0)
 				printf("%.2fcm\n", *((float *) fd->v) / CM);
-			else	printf("%.2fcm\n", (cfmt.pagewidth
-						    - cfmt.leftmargin - cfmt.rightmargin)
+			else	printf("%.2fcm\n",
+					(cfmt.pagewidth
+						- cfmt.leftmargin
+						- cfmt.rightmargin)
 					/ CM);
 			break;
 		case FORMAT_B:
 			printf("%s\n", yn[*((int *) fd->v)]);
 			break;
 		case FORMAT_S:
-			printf("%s\n", ((char *) fd->v));
+			if ((char *) fd->v != 0)
+				printf("\"%s\"\n", (char *) fd->v);
+			else	printf("\"\"\n");
 			break;
 		}
 	}
@@ -348,15 +368,14 @@ static void g_fspc(char *p,
  *	0: format modified
  *	1: 'end' found
  *	2: format not modified */
-int interpret_format_line(char *p)
+int interpret_format_line(char *w,		/* keyword */
+			  char *p)		/* argument */
 {
 	struct format *fd;
-	char w[81];
 
-	if (*p == '\0'
-	    || *p == '%')
+	if (*w == '\0'
+	    || *w == '%')
 		return 2;
-	p = get_str(w, p, sizeof w);
 	if (strcmp(w, "end") == 0)
 		return 1;
 
@@ -388,7 +407,7 @@ int interpret_format_line(char *p)
 				}
 				break;
 			case 2:
-				nbar = cfmt.measurefirst;
+				nbar = nbar_rep = cfmt.measurefirst;
 				break;
 			}
 			break;
@@ -416,11 +435,24 @@ int interpret_format_line(char *p)
 				}
 			}
 			break;
-		case FORMAT_F:
+		case FORMAT_F: {
+			int b;
+
 			g_fspc(p, (struct FONTSPEC *) fd->v);
-			if (fd->subtype == 1)
-				cfmt.partsbox = strstr(p, "box") != 0;
+			b = strstr(p, "box") != 0;
+			switch (fd->subtype) {
+			case 1:
+				cfmt.partsbox = b;
+				break;
+			case 2:
+				cfmt.measurebox = b;
+				break;
+			case 3:
+				cfmt.gchordbox = b;
+				break;
+			}
 			break;
+		    }
 		case FORMAT_U:
 			*((float *) fd->v) = scan_u(p);
 			if (fd->subtype == 1) {
@@ -453,8 +485,7 @@ int interpret_format_line(char *p)
 	if (!strcmp(w, "font")) {
 		int fnum;
 
-		get_str(w, p, sizeof w);
-		fnum = add_font(w);
+		fnum = add_font(p);
 		used_font[fnum] = 1;
 		return 0;
 	}
@@ -479,19 +510,29 @@ int read_fmt_file(char *filename,
 	}
 
 	for (;;) {
-		char line[BSIZE];
+		char line[BSIZE], *p, *q;
 
 		if (!fgets(line, sizeof line, fp))
 			break;
 		line[strlen(line) - 1] = '\0';	/* remove '\n' */
-		if (interpret_format_line(line) == 1)
+		q = line;
+		while (isspace(*q))
+			q++;
+		p = q;
+		while (*p != '\0' && !isspace(*p))
+			p++;
+		if (*p != '\0')
+			*p++ = '\0';
+		while (isspace(*p))
+			p++;
+		if (interpret_format_line(q, p) == 1)
 			break;
 	}
 	fclose(fp);
 	return 0;
 }
 
-/* -- set_font -- */
+/* -- start a new font -- */
 void set_font(struct FONTSPEC *font)
 {
 	int fnum;
