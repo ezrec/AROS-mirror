@@ -7,6 +7,12 @@
  */
 #include <sys/types.h>
 
+#ifdef AROS
+
+#include <sys/stat.h>
+
+#else
+
 #ifndef _BOOL_T
 #define _BOOL_T
      typedef int bool_t;
@@ -169,5 +175,7 @@ int fstat(int fd, struct stat *buf);
 
 #define EBADF		9	/* bad file handle			*/
 #define ENOMEM		12	/* no memory				*/
+
+#endif
 
 #endif /* _SYS_STAT_INCLUDED */
