@@ -55,14 +55,12 @@ site.conf : site.conf.in
 ifdef GNUPLOT
 pics : $(HTMLDIR)/aros_size.png $(HTMLDIR)/contrib_size.png
 
-$(HTMLDIR)/%_size.png : %.size size2plot
-	$(SED) -e "s;@OUTPUTFILE@;$@;" \
-            -e "s;@SIZEFILE@;$<;" \
-	    -e "s;@XAXIS@;$$(python -c "import time; start=time.time()-3600*24*90; print time.strftime ('%d.%m.%Y', time.localtime(start));");" \
-            size2plot > size2plot.gp
-	$(GNUPLOT) size2plot.gp
+$(HTMLDIR)/%_size.png : %.size size2plot.py
+	python size2plot.py $(subst _size.png,,$@) $<
+ifdef CONVERT
 	$(CONVERT) $@ $(basename $@).jpg
-	@$(RM) size2plot.gp
+	$(CONVERT) $(subst _size.png,_allsize.png,$@) $(subst _size.png,_allsize.jpg,$@)
+endif
 else
 pics :
 	@$(NOP)
