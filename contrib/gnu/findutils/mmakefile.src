@@ -1,0 +1,25 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+##MM- contrib-gnu : contrib-gnu-findutils
+##MM- contrib-gnu-findutils : development-findutils
+
+#MM- development : development-findutils
+#MM development-findutils-quick : development-findutils-fetch
+
+ORIGINS := http://ftp.gnu.org/pub/gnu/findutils
+
+ARCHBASE := findutils-4.1
+
+#MM
+development-findutils-fetch :
+	%fetch archive=$(ARCHBASE).tar.gz destination=$(PORTSDIR)/findutils archive_origins="$(ORIGINS)" \
+	patches_specs=findutils-4.1-aros.diff:findutils-4.1:-p1
+
+%build_with_configure mmake=development-findutils srcdir=$(PORTSDIR)/findutils/$(ARCHBASE) \
+     nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
+     extraoptions="--target=$(AROS_TARGET_CPU)-aros --build=local --disable-nls"
+
+
