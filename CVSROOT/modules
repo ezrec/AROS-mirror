@@ -116,3 +116,7 @@ www www
 
 # XDME texteditor
 xdme -d contrib/aminet/text/edit/xdme contrib/aminet/text/edit/xdme
+
+# JanoEditor texteditor
+janoeditor -d contrib/aminet/text/edit/janoeditor contrib/aminet/text/edit/janoeditor
+
