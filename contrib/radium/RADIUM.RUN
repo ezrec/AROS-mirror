@@ -1,0 +1,32 @@
+
+failat 21
+
+assign >nil: radium: EXISTS
+IF WARN
+
+	echo "Can not find Radium: Assigning it to S:"
+	assign Radium: s:
+
+EndIf
+
+
+IF EXISTS DEVS:midi
+
+    assign >nil: RAD: EXISTS
+    If WARN
+      echo "Rad: not mounted. Mounting..."
+      mount >nil: RAD:
+      Wait 3 SECS
+    EndIf
+
+    Radium
+
+Else
+
+  echo "Devs:midi not found"
+  Wait 10 SECS
+
+Endif
+
+
+
