@@ -20,7 +20,9 @@
 
 	// Keep this one handy
 
+#ifndef __AROS__
 VOID kprintf(STRPTR,...);
+#endif
 
 /*****************************************************************************/
 
