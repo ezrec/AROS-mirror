@@ -6,20 +6,8 @@
 ##MM- contrib-gnu : contrib-gnu-binutils
 ##MM- contrib-gnu-binutils : development-binutils
 
-#MM- development : development-binutils
-#MM development-binutils-quick : development-binutils-fetch
+REPOSITORIES := http://ftp.gnu.org/pub/gnu/binutils
 
-ORIGINS := http://ftp.gnu.org/pub/gnu/binutils
-
-ARCHBASE := binutils-2.15
-
-#MM
-development-binutils-fetch :
-	%fetch archive=$(ARCHBASE).tar.bz2 destination=$(PORTSDIR)/binutils archive_origins="$(ORIGINS)"
-	
-
-%build_with_configure mmake=development-binutils srcdir=$(PORTSDIR)/binutils/$(ARCHBASE) \
-     nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
-     extraoptions="--target=$(AROS_TARGET_CPU)-aros  --build=local --disable-nls"
-
-
+%fetch_and_build_gnu_development package=binutils version=2.15 \
+    package_repo=$(REPOSITORIES) \
+    extraoptions="--target=$(AROS_TARGET_CPU)-aros --build=local --disable-nls"
