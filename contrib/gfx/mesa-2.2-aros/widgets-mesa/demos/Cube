@@ -1,0 +1,9 @@
+! Cube --
+! $Id$
+!
+! X11 Resources for the Mesa Widget
+*GLwDrawingArea.width: 300
+*GLwDrawingArea.height: 300
+*GLwDrawingArea.rgba: true
+*GLwDrawingArea.installColormap: true
+*GLwDrawingArea.doublebuffer: true
