@@ -20,5 +20,7 @@ $(INSTDIR)/% : %
 	$(CP) $< $@
 
 #MM
-clean :
+clean ::
 	$(RM) $(INSTDIR)
+
+%common
