@@ -91,6 +91,7 @@ char nullstring[]="                                                             
 	int a,addcount=0;
 
 	while (view && (addcount<count)) {
+
 		view->key=NULL; view->selected=NULL;
 		view->gadadd=0; view->chk=view->itemselected;
 		if (view->items)
@@ -105,6 +106,7 @@ char nullstring[]="                                                             
 			LFreeRemember(&view->key);
 			break;
 		}
+
 		if (view->selectarray) CopyMem(view->selectarray,view->selected,view->count);
 		if (view->slidercol==-1) view->slidercol=1;
 		if (view->sliderbgcol==-1) view->slidercol=0;
@@ -143,6 +145,7 @@ char nullstring[]="                                                             
 		Do3DBox(rp,view->x+view->w+4,view->y+view->h-14,view->sliderwidth+4,6,view->boxhi,view->boxlo);
 		DoArrow(rp,view->x+view->w+4,view->y+view->h-6,view->sliderwidth+4,6,view->arrowfg,view->arrowbg,1);
 		Do3DBox(rp,view->x+view->w+4,view->y+view->h-6,view->sliderwidth+4,6,view->boxhi,view->boxlo);
+
 		if (view->title) {
 			SetAPen(rp,view->textcol);
 			a=strlen(view->title);
@@ -150,6 +153,7 @@ char nullstring[]="                                                             
 			else Move(rp,view->x-6-(a*view->fw),view->yo+view->fb);
 			Text(rp,view->title,a);
 		}
+
 		view->listimage->Width=view->sliderwidth; view->listimage->Height=view->h-18;
 		view->listimage->Depth=1; view->listimage->PlaneOnOff=view->slidercol;
 		view->listprop->Flags=FREEVERT|PROPBORDERLESS;
@@ -174,21 +178,26 @@ char nullstring[]="                                                             
 		view->listgads[1].Activation=GADGIMMEDIATE|RELVERIFY;
 		view->listgads[1].GadgetType=BOOLGADGET;
 		view->listgads[1].GadgetID=LIST_IDBASE+(view->listid*3)+1;
+
 		CopyMem((char *)&view->listgads[1],(char *)&view->listgads[2],sizeof(struct Gadget));
 		view->listgads[1].NextGadget=&view->listgads[2];
 		view->listgads[2].TopEdge+=8;
 		view->listgads[2].GadgetID++;
+
 		if (view->flags&DLVF_HIREC)
 			AddGadgetBorders(&view->key,&view->listgads[1],2,view->boxhi,view->boxlo);
+
 		AddGList(view->window,view->listgads,-1,3,NULL);
 		view->gadadd=3;
 		view->mx=view->xo+(view->columns*view->fw)-1;
 		view->my=view->yo+(view->lines*view->fh)-1;
 		view->oldoffset=-1;
 		restorepens(view);
+
 		FixSliderBody(view->window,&view->listgads[0],view->count,view->lines,0);
 		FixSliderPot(view->window,&view->listgads[0],view->topitem,view->count,view->lines,2);
 		DisplayView(view);
+
 		view=view->next;
 		++addcount;
 	}
@@ -456,10 +465,9 @@ char nullstring[]="                                                             
 			RectFill(r,gad->LeftEdge+ot,y-1,gad->LeftEdge+ob,y-1);
 		}
 	}
-#warning Faulty DrawImage() goes into endless loop because of the below
-#if 0
+
 	DrawImage(r,image,gad->LeftEdge,gad->TopEdge);
-#endif
+
 	SetAPen(r,old_pen);
 	SetDrMd(r,old_mode);
 	
@@ -491,6 +499,7 @@ struct DOpusListView *view;
 		dir=-view->fh;
 	}
 	else return;
+
 	rp=view->window->RPort;
 	SetAPen(rp,view->itemfg); SetBPen(rp,view->itembg);
 	SetDrMd(rp,JAM2);
@@ -502,10 +511,23 @@ struct DOpusListView *view;
 			start=end-1; end=view->topitem-1; step=-1;
 		}
 	}
-	if (!dir && view->flags&DLVF_CHECK) ScrollRaster(rp,0,view->lines*view->fh,view->x,view->yo,view->xo-1,view->my);
+
+	if (!dir && view->flags&DLVF_CHECK)
+	{
+	    /* AROSBUG */
+#warning AROS-DOpus (Library/listview.c) uses ScrollRaster with a dy which is bigger than the scroll area height. AROS does not like this.
+
+	    kprintf("AROS-dopus: buggy scrollraster: rp = %x  dx = %d  dy = %d area = %d,%d - %d,%d\n",
+	    	     rp,0,view->lines*view->fh,view->x,view->yo,view->xo-1,view->my);
+		     
+	    //ScrollRaster(rp,0,view->lines*view->fh,view->x,view->yo,view->xo-1,view->my);
+	}
+
 	w=view->w-(view->xo-view->x);
 	for (a=start;a!=end;a+=step) {
+
 		if (a>=top && a<=bot) {
+
 			CopyMem(nullstring,buf,view->columns);
 			if (view->items && a<view->count && view->items[a] &&
 				(!(view->flags&DLVF_ENDNL) || view->items[a][0])) {
@@ -513,6 +535,7 @@ struct DOpusListView *view;
 				CopyMem(view->items[a],buf,b);
 			}
 			Move(rp,view->xo,y);
+
 			if (dir) {
 				if (dir<0) ClipBlit(rp,view->xo,view->yo,rp,view->xo,view->yo+view->fh,
 					w,(view->lines-1)*view->fh,0xc0);
@@ -520,6 +543,7 @@ struct DOpusListView *view;
 					w,(view->lines-1)*view->fh,0xc0);
 				if (view->flags&DLVF_CHECK) ScrollRaster(rp,0,dir,view->x,view->yo,view->xo-1,view->my);
 			}
+
 			Text(rp,buf,view->columns);
 			if (view->selectarray && view->selectarray[a]&LVARRAY_DISABLED) {
 				rp->AreaPtrn=ditherdata; rp->AreaPtSz=1;
@@ -530,6 +554,7 @@ struct DOpusListView *view;
 				SetDrMd(rp,JAM2);
 				rp->AreaPtrn=NULL; rp->AreaPtSz=0;
 			}
+
 			if (a<view->count) {
 				if ((view->flags&DLVF_MULTI && view->selected[a]&LVARRAY_SELECTED) ||
 					(view->flags&DLVF_LEAVE && view->itemselected==a)) {
@@ -546,11 +571,14 @@ struct DOpusListView *view;
 					}
 				}
 			}
+
 		}
 		if (!dir) y+=view->fh;
 	}
 	view->oldoffset=view->topitem;
 	restorepens(view);
+	
+
 }
 
 /*****************************************************************************
