@@ -301,9 +301,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                                 contents = Font(
                                     size = '-1', color = '#aaaaaa',
                                     contents = [
+                                        BR(),
                                         _M['copyright'],
                                         BR(),
-                                        _M['trademarks'] 
+                                        _M['trademarks'],
+                                        BR(), BR()
                                     ]
                                 )
                             )                                
