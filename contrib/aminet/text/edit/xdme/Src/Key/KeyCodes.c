@@ -410,7 +410,7 @@ UBYTE *cqtoa (KEYSPEC *ks)
 **	U might uncomment it, if U wanna get information about
 **	which quals have been set with QUALIFIER
 */
-    if (KS_CODE(ks) == (-1)) {
+    if (KS_CODE(ks) == (TCODE)(-1)) {
 /* printf("U used a wrong undef\n"); */
 	*ptr = 0;
 	return(buf); /* do not append a code-value */
