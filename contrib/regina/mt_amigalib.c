@@ -40,12 +40,17 @@ static void MTFree(const tsd_t *TSD,void *chunk)
 /* Lowest level exit handler. Use this indirection to prevent errors. */
 static void MTExit(int code)
 {
-   tsd_t *TSD = __regina_get_tsd();
-   mt_tsd_t *mt = (mt_tsd_t *)TSD->mt_tsd;
-  
-   DeletePool( mt->mempool );
-
    exit(code);
+}
+
+static void cleanup(void)
+{
+  tsd_t *TSD = __regina_get_tsd();
+  mt_tsd_t *mt = (mt_tsd_t *)TSD->mt_tsd;
+
+  DeletePool( mt->mempool );
+  
+  FindTask(NULL)->tc_UserData=NULL;
 }
 
 tsd_t *ReginaInitializeThread(void)
@@ -135,6 +140,7 @@ tsd_t *__regina_get_tsd(void)
   {
     TSD=ReginaInitializeThread();
     FindTask(NULL)->tc_UserData=TSD;
+    atexit(cleanup);
   }
   
   return TSD;
