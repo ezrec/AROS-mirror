@@ -10,7 +10,7 @@ geert:cbGlFwvZi5iZY:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m6
 turrican:bcRFEzJmi8r7Y:Kars de Jong:jongk@prac.cs.utwente.nl:misc
 nlorentz:db6KtfPCmtZIQ:Nils Henrik Lorentzen:nlorentz@online.no:GadTools, Asl, input.device
 ruppert:aaIqf1gX0RDUU:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
-vmc:abw2.qX7kAnnM:Harald Frank:support@isdntown.east.de:Amiga port
+vmc:abZN7WlNN.1yU:Harald Frank:support@isdntown.east.de:Amiga port
 helios:acwZVMiQtI78o:Martin Steigerwald:Martin-Steigerwald@gmx.net:Beta tester
 srittau:bcTJngqBSdc4U:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Gadtools, Docs
 laguest:baLtYMMsFjGms:L. A. Guest:L.A.Guest@comp.brad.ac.uk:CLI tools
