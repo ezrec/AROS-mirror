@@ -1,0 +1,43 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS	:= $(USER_DEFINES) -O2 -Wall $(SPECIAL_CFLAGS) $(INCLUDES)
+OBJDIR	:= $(GENDIR)/$(CURDIR)
+DESTDIR := $(CONTRIBDIR)/aminet
+
+FILES := BackEval BackMenu BackScreen Backgammon
+
+SRCS := $(foreach f, $(FILES), $(f).c)
+OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+DEPS := $(foreach f, $(FILES), $(OBJDIR)/$(f).d)
+
+LIBS := -L$(LIBDIR) -larosc -lamiga -larossupport -larosm
+
+EXE := $(DESTDIR)/Backgammon
+
+.PHONY : all clean
+
+#MM aminet-games-board-backgammon : setup-aminet-games-board-backgammon
+aminet-games-board-backgammon : $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-aminet-games-board-backgammon :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	%link_q from=$(OBJS)
+
+$(OBJDIR)/%.o : %.c
+%compile_q
+
+$(OBJDIR)/%.d : %.c
+%mkdepend_q 
+
+%include_deps
+
+#MM
+clean-aminet :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
