@@ -1,6 +1,6 @@
 Georg Steger improved diskfont.library and AMosaic.
 
-Matt Parsons fixed mistaked in the user docs.
+Matt Parsons fixed mistakes in the user docs.
 
 Fabio Alemagna fixed compiler warnings in the asl.library and the
 timer.resource.
@@ -9,9 +9,8 @@ Sebastian Bauer continued to work on Zune.
 
 Henning Kiel fixed many MetaTargets (used by the mmake building tool).
 
-Iain Templeton imported a new version of the m.lib (math link
-library).
+Iain Templeton imported a new version of the m.lib (math link library).
 
 Adam Chodorowski started to port AROS to the Solaris platform!
 
-Sebastian Heutling fixed a but which prevented AROS to boot from the CD image.
+Sebastian Heutling fixed a bug which prevented AROS to boot from the CD image.
