@@ -5,6 +5,11 @@
 # set, then the various scripts try to figure this out themselves.
 #BASEDIR=
 
+# Comment these definitions out if you don't have them. Then the graphs
+# for the size of the repositories will not be generated.
+GNUPLOT=gnuplot # gnuplot
+CONVERT=convert # ImageMagick
+
 # The name of the virtual host on which AROS is hosted. To create a local
 # copy for testing purposes, add this line to /etc/hosts:
 #
