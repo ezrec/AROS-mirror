@@ -48,8 +48,8 @@ compile the contrib programs). In the latter case, you need to checkout the
 ``AROS`` module, and also the ``necessary`` module if you want to compile the
 i389-pc port.
 
-__ http://www.aros.org/download
-__ http://www.aros.org/documentation/developers/contribute#the-cvs-repository
+__ ../../download
+__ ../../documentation/developers/contribute#the-cvs-repository
 
 
 Building
