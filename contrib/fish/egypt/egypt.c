@@ -8,6 +8,7 @@
 
 #include <exec/types.h>
 #include <intuition/intuition.h>
+#include <graphics/gfxbase.h>
 
 #include "gfx.h"
 
@@ -177,7 +178,7 @@ struct IntuiText OGadget7_Text =
 struct Gadget OGadget7 =
     {
 	NULL,
-	376, 82, 26, 11,
+	376, 92, 26, 11,
 	GADGHIMAGE,
 	GADGIMMEDIATE | RELVERIFY,
 	BOOLGADGET,
@@ -204,7 +205,7 @@ struct IntuiText OGadget6_Text =
 struct Gadget OGadget6 =
     {
 	&OGadget7,
-	158, 94, 26, 11,
+	158, 114, 26, 11,
 	GADGHIMAGE,
 	GADGIMMEDIATE | RELVERIFY,
 	BOOLGADGET,
@@ -231,7 +232,7 @@ struct IntuiText OGadget5_Text =
 struct Gadget OGadget5 =
     {
 	&OGadget6,
-	130, 94, 26, 11,
+	130, 114, 26, 11,
 	GADGHIMAGE,
 	GADGIMMEDIATE | RELVERIFY,
 	BOOLGADGET,
@@ -258,7 +259,7 @@ struct IntuiText OGadget4_Text =
 struct Gadget OGadget4 =
     {
 	&OGadget5,
-	158, 82, 26, 11,
+	158, 92, 26, 11,
 	GADGHIMAGE,
 	GADGIMMEDIATE | RELVERIFY,
 	BOOLGADGET,
@@ -285,7 +286,7 @@ struct IntuiText OGadget3_Text =
 struct Gadget OGadget3 =
     {
 	&OGadget4,
-	130, 82, 26, 11,
+	130, 92, 26, 11,
 	GADGHIMAGE,
 	GADGIMMEDIATE | RELVERIFY,
 	BOOLGADGET,
@@ -382,6 +383,8 @@ struct Player Player2;
 UBYTE world[100][100];
 SHORT worldx = 50;
 SHORT worldy = 50;
+WORD fontheight = 8;
+WORD wintop = 11;
 
 BOOL GameMode = TRUE;
 
@@ -405,6 +408,25 @@ BOOL openlibs(void)
   if (!GfxBase || !IntuitionBase)
     return FALSE;
   
+  {
+    struct Screen *scr = LockPubScreen(NULL);
+    if (scr)
+    {
+    	fontheight = GfxBase->DefaultFont->tf_YSize;
+	wintop = scr->WBorTop + scr->Font->ta_YSize + 1;
+	
+	OGadget1.TopEdge += wintop - 11;
+	OGadget2.TopEdge += wintop - 11;
+	OGadget3.TopEdge += wintop - 11;
+	OGadget4.TopEdge += wintop - 11;
+	OGadget5.TopEdge += wintop - 11;
+	OGadget6.TopEdge += wintop - 11;
+	OGadget7.TopEdge += wintop - 11;
+	
+    	UnlockPubScreen(NULL, scr);
+    }
+  }
+  
   return TRUE;
 }
 
@@ -420,7 +442,8 @@ int main()
 
       if (openlibs())
       {
-
+    	nw.Height += wintop - 11;
+	
 	window = (struct Window *)OpenWindow(&nw);
 
 	if ( window )
@@ -469,20 +492,20 @@ SHORT SelectOption()
 	char Buffer[40];
 
 	SetAPen(rp, 0);
-	RectFill(rp, 5, 11, 535, 147);
+	RectFill(rp, 5, wintop, 535, 134 + wintop);
 
 	SetAPen(rp, 1);
-	PrintAt(20, 80, "World Size :");
+	PrintAt(20, 69 + wintop, "World Size :");
 	sprintf(Buffer, "Width  : %3u", worldx);
-	PrintAt(28, 90, Buffer);
+	PrintAt(28, 89 + wintop, Buffer);
 	sprintf(Buffer, "Height : %3u", worldy);
-	PrintAt(28, 102, Buffer);
+	PrintAt(28, 111 + wintop, Buffer);
 
-	PrintAt(280, 80, "Game mode :");
+	PrintAt(280, 69 + wintop, "Game mode :");
 	if ( GameMode )
-	    PrintAt(288, 90, "One Player");
+	    PrintAt(288, 89 + wintop, "One Player");
 	else
-	    PrintAt(288, 90, "Two Player");
+	    PrintAt(288, 89 + wintop, "Two Player");
 
 	OGadget7.NextGadget = window->FirstGadget;
 	window->FirstGadget = &OGadget1;
@@ -523,7 +546,7 @@ SHORT SelectOption()
 							worldx--;
 							SetAPen(rp, 1);
 							sprintf(Buffer, "Width  : %3u", worldx);
-							PrintAt(28, 90, Buffer);
+							PrintAt(28, 89 + wintop, Buffer);
 							Delay(2);
 						    }
 						break;
@@ -533,7 +556,7 @@ SHORT SelectOption()
 							worldx++;
 							SetAPen(rp, 1);
 							sprintf(Buffer, "Width  : %3u", worldx);
-							PrintAt(28, 90, Buffer);
+							PrintAt(28, 89 + wintop, Buffer);
 							Delay(2);
 						    }
 						break;
@@ -543,7 +566,7 @@ SHORT SelectOption()
 							worldy--;
 							SetAPen(rp, 1);
 							sprintf(Buffer, "Height : %3u", worldy);
-							PrintAt(28, 102, Buffer);
+							PrintAt(28, 111 + wintop, Buffer);
 							Delay(2);
 						    }
 						break;
@@ -553,7 +576,7 @@ SHORT SelectOption()
 							worldy++;
 							SetAPen(rp, 1);
 							sprintf(Buffer, "Height : %3u", worldy);
-							PrintAt(28, 102, Buffer);
+							PrintAt(28, 111 + wintop, Buffer);
 							Delay(2);
 						    }
 						break;
@@ -561,9 +584,9 @@ SHORT SelectOption()
 						GameMode = !GameMode;
 						SetAPen(rp, 1);
 						if ( GameMode )
-						    PrintAt(288, 90, "One Player");
+						    PrintAt(288, 89 + wintop, "One Player");
 						else
-						    PrintAt(288, 90, "Two Player");
+						    PrintAt(288, 89 + wintop, "Two Player");
 						break;
 					}
 				    break;
@@ -584,16 +607,16 @@ BOOL About()
 	window->FirstGadget = OGadget7.NextGadget;
 
 	SetAPen(rp, 0);
-	RectFill(rp, 5, 11, 535, 147);
+	RectFill(rp, 5, wintop, 535, 134 + wintop);
 
-	DrawImage(rp, &AboutImage, 197, 20);
+	DrawImage(rp, &AboutImage, 197, wintop + 11);
 
 	SetAPen(rp, 1);
-	PrintAt(170, 80, "Coding & Graphics by Pink");
-	PrintAt(210, 90, "Idea by Romulus");
+	PrintAt(170, wintop + 69, "Coding & Graphics by Pink");
+	PrintAt(210, wintop + 79, "Idea by Romulus");
 
 	SetAPen(rp, 3);
-	PrintAt(154, 110, "Read .doc for more information");
+	PrintAt(154, wintop + 99, "Read .doc for more information");
 
 	while ( loop )
 	    {
@@ -704,25 +727,25 @@ BOOL Game()
 		SHORT x, y;
 
 		SetAPen(rp, 0);
-		RectFill(rp, 5, 11, 535, 147);
+		RectFill(rp, 5, wintop, 535, 134 + wintop);
 
 		SetAPen(rp, 3);
-		RectFill(rp, 20, 30, 259, 139);
+		RectFill(rp, 20, 19 + wintop, 259, 128 + wintop);
 
 		for ( x = 0 ; x < 12 ; x++ )
 		    for ( y = 0 ; y < 11 ; y++ )
 			PutField(&Player1, x+Player1.xwin, y+Player1.ywin);
 
 		SetAPen(rp, 3);
-		RectFill(rp, 280, 30, 499, 139);
+		RectFill(rp, 280, 19 + wintop, 499, 128 + wintop);
 
 		for ( x = 0 ; x < 12 ; x++ )
 		    for ( y = 0 ; y < 11 ; y++ )
 			PutField(&Player2, x+Player2.xwin, y+Player2.ywin);
 
 		SetAPen(rp, 1);
-		PrintAt(20, 25, "Moves :   0  Chests : 0");
-		PrintAt(280, 25, "Moves :   0  Chests : 0");
+		PrintAt(20, wintop + 1 + rp->TxBaseline, "Moves :   0  Chests : 0");
+		PrintAt(280, wintop + 1 + rp->TxBaseline, "Moves :   0  Chests : 0");
 
 		ChangePos(&Player1);
 		ChangePos(&Player2);
@@ -792,22 +815,22 @@ BOOL Game()
 		BOOL loop = TRUE;
 
 		SetAPen(rp, 0);
-		RectFill(rp, 5, 11, 535, 147);
+		RectFill(rp, 5, wintop, 535, 134 + wintop);
 
 		if ( Player1.Chests == 3 )
 		    {
 			SetAPen(rp, 1);
-			PrintAt(218, 80, "Player 1 wins");
+			PrintAt(218, 69 + wintop, "Player 1 wins");
 		    }
 		else if ( Player2.Chests == 3 )
 		    {
 			SetAPen(rp, 1);
-			PrintAt(218, 80, "Player 2 wins");
+			PrintAt(218, 68 + wintop, "Player 2 wins");
 		    }
 		else
 		    {
 			SetAPen(rp, 1);
-			PrintAt(214, 80, "No Player wins");
+			PrintAt(214, 69 + wintop, "No Player wins");
 		    }
 
 
@@ -841,7 +864,7 @@ void ChangePos(__A0 struct Player *p)
 	p->mask[x]  [y-1] = TRUE; PutField(p, x,   y-1);
 	p->mask[x-1][y-1] = TRUE; PutField(p, x-1, y-1);
 	p->mask[x+1][y]   = TRUE; PutField(p, x+1, y);
-	p->mask[x]  [y]   = TRUE; DrawImage(rp, &ManImage, xs*20+p->xoff, ys*10+30);
+	p->mask[x]  [y]   = TRUE; DrawImage(rp, &ManImage, xs*20+p->xoff, ys*10+19+wintop);
 	p->mask[x-1][y]   = TRUE; PutField(p, x-1, y);
 	p->mask[x+1][y+1] = TRUE; PutField(p, x+1, y+1);
 	p->mask[x]  [y+1] = TRUE; PutField(p, x,   y+1);
@@ -854,7 +877,7 @@ BOOL DoPlayer(__A0 struct Player *p, __D0 UBYTE dir)
 
 	SetAPen(rp, 1);
 	sprintf(Buffer, "Moves : %3u  Chests : %u", p->Moves, p->Chests);
-	PrintAt(p->xoff, 25, Buffer);
+	PrintAt(p->xoff, wintop + 1 + rp->TxBaseline, Buffer);
 
 	ChangePos(p);
 
@@ -877,7 +900,7 @@ BOOL DoPlayer(__A0 struct Player *p, __D0 UBYTE dir)
 				    {
 					SHORT i;
 
-					ScrollRaster(rp, 0, -10, p->xoff, 30, p->xoff+239, 139);
+					ScrollRaster(rp, 0, -10, p->xoff, 19 + wintop, p->xoff+239, 128 + wintop);
 
 					p->ywin--;
 					for ( i = 0 ; i < 12 ; i++ )
@@ -907,7 +930,7 @@ BOOL DoPlayer(__A0 struct Player *p, __D0 UBYTE dir)
 				    {
 					SHORT i;
 
-					ScrollRaster(rp, 0, 10, p->xoff, 30, p->xoff+239, 139);
+					ScrollRaster(rp, 0, 10, p->xoff, 19 + wintop, p->xoff+239, 128 + wintop);
 
 					p->ywin++;
 					for ( i = 0 ; i < 12 ; i++ )
@@ -937,7 +960,7 @@ BOOL DoPlayer(__A0 struct Player *p, __D0 UBYTE dir)
 				    {
 					SHORT i;
 
-					ScrollRaster(rp, -20, 0, p->xoff, 30, p->xoff+239, 139);
+					ScrollRaster(rp, -20, 0, p->xoff, 19 + wintop, p->xoff+239, 128 + wintop);
 
 					p->xwin--;
 					for ( i = 0 ; i < 11 ; i++ )
@@ -967,7 +990,7 @@ BOOL DoPlayer(__A0 struct Player *p, __D0 UBYTE dir)
 				    {
 					SHORT i;
 
-					ScrollRaster(rp, 20, 0, p->xoff, 30, p->xoff+239, 139);
+					ScrollRaster(rp, 20, 0, p->xoff, 19 + wintop, p->xoff+239, 128 + wintop);
 
 					p->xwin++;
 					for ( i = 0 ; i < 11 ; i++ )
@@ -1088,10 +1111,10 @@ void CreateWorld()
 	SHORT i;
 
 	SetAPen(rp, 0);
-	RectFill(rp, 5, 11, 535, 147);
+	RectFill(rp, 5, wintop, 535, 134 + wintop);
 
 	SetAPen(rp, 1);
-	PrintAt(198, 80, "Creating Map...");
+	PrintAt(198, 69 + wintop, "Creating Map...");
 
 	for ( x = 0 ; x <= worldx ; x++ )
 	    {
@@ -1201,7 +1224,7 @@ void CreateWorld()
 void PutField(__A0 struct Player *p, __D0 SHORT x, __D1 SHORT y)
     {
 	SHORT xs = (x - p->xwin) * 20 + p->xoff;
-	SHORT ys = (y - p->ywin) * 10 + 30;
+	SHORT ys = (y - p->ywin) * 10 + 19 + wintop;
 
 	if ( p->mask[x][y] )
 	    if ( ((Player1.x == x) && (Player1.y == y)) || ((Player2.x == x) && (Player2.y == y)) )
