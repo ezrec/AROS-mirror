@@ -50,6 +50,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 #include <proto/gadtools.h>
 #include <proto/graphics.h>
 #include <proto/utility.h>
+#ifdef __AROS__
+#include <proto/arossupport.h>
+#endif
 
 #include "Amiga_instrprop.h"
 
