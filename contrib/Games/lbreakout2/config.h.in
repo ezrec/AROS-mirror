@@ -1,0 +1,17 @@
+/* config.h.in.  Generated automatically from configure.in by autoheader 2.13.  */
+
+/* Define if you have the m library (-lm).  */
+#undef HAVE_LIBM
+
+/* Define if you have the png library (-lpng).  */
+#undef HAVE_LIBPNG
+
+/* Define if you have the z library (-lz).  */
+#undef HAVE_LIBZ
+
+/* Name of package */
+#undef PACKAGE
+
+/* Version number of package */
+#undef VERSION
+
