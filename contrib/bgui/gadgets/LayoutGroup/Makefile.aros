@@ -1,6 +1,5 @@
-TOP = ../../../..
-
-include $(TOP)/config/host.cfg
+include $(TOP)/config/make.cfg
+include ../../make.cfg
 
 # Must reset TARGET_ARCH here since it is implicitly used by make
 TARGET_ARCH := 
@@ -59,6 +58,9 @@ $(DEMO) : $(DEMO).c
 	@$(CC) $(FLAGS) $(STARTUP) $@.o -o $@ $(LIBS)
 	@$(ECHO) Installing $@
 	@$(CP) $@ $(BINDIR)/bgui
+
+%.o : %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 all : $(LIBTARGETS) $(GADGET) $(DEMO)
 
