@@ -84,7 +84,8 @@ struct Gadget biggadget =	/* this will be snapshot gadget */
     &drag_gadget,
     0, 0, 0, 0,
     GRELWIDTH | GADGHCOMP,
-    RELVERIFY
+    RELVERIFY,
+    GTYP_BOOLGADGET
 /* rest is 0/NULL */
 };
 
