@@ -55,9 +55,9 @@ never programmed an Amiga before, or go directly to "Developing inside AROS"
 if they already did. So there is a starting point and a stop point for 
 everyone.
 
-It is important to realise that this guide is meant for AROS, not Amiga. So 
+It is important to realize that this guide is meant for AROS, not Amiga. So 
 even if you owned an Amiga for years, you might need to read "Using AROS" too. 
-This is not an embarassment: you will notice that using AROS is very slightly 
+This is not an embarrassment: you will notice that using AROS is very slightly 
 different from using AmigaOS. (This is because our Workbench is not finished 
 :-). At the moment the whole system works through a AmigaDos shell (or Cli to 
 older users), although we do have a Workbench, you can not navigate disks with 
@@ -77,9 +77,9 @@ strange: an OS running on top of an other OS, that's emulation, right?
 A nice term for what AROS does is "API emulation". API is a three-letter 
 acronym for Application Programmer's Interface. In plain English: an API 
 provides (C Language) functions that a programmer can use. The AmigaOS API 
-constists of a load of library calls that an Amiga programmer can use to make 
+consists of a load of library calls that an Amiga programmer can use to make 
 an Amiga program. AROS emulates the AmigaOS API: it tries to provide the same 
-library calls as AmigaOS. An Amiga emulator, such as UAE_; emulates the amiga 
+library calls as AmigaOS. An Amiga emulator, such as UAE_; emulates the Amiga 
 *computer*: the processor, the connected hardware, everything. This has its 
 advantages, like being able to play binary Amiga games on different hardware, 
 and its disadvantages, like not being able to use the emulator as a "real" OS, 
@@ -116,7 +116,7 @@ you use.
 
 On an Amiga, you can place the native code somewhere on you harddisk, 
 double-click the "boot" icon, do a reset and enjoy a complete Amiga system. 
-This is because it is not *really* native. The boot program just temporarilly 
+This is because it is not *really* native. The boot program just temporarily 
 replaces a few AmigaOS libraries with AROS libraries. For testing purposes this 
 is of course good, but in the end you still run good ol' AmigaOS and not plain 
 native AROS. This will change as we build a more complete 68k AROS system.
