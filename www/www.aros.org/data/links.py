@@ -37,7 +37,11 @@ moreRelated = (
 	'Sebastians site with Disk Images',
 	'The images here are mirrored on the AROS main site above.'
     ),
-    # FIXME Add Link to images by Matt 'Crazy' Parsons
+    Link ('http://www.bloodline.freeserve.co.uk/aros/AROS-ibmpc-bin.zip',
+	"Matt 'Crazy' Parsons Disk Image",
+	'This image was usually tested on several different PCs, so chances'
+	' that it works for you are much higher',
+    ),
     ( Link ('/mailman/listinfo/',
 	'Mailing lists',
 	'There are a couple of mailing lists for AROS. Follow the links'
@@ -136,6 +140,13 @@ homepages = (
 )
 
 lessRelated = (
+    Link ('http://www.edenmarket.de/', 'Edenmarket',
+	(   'These people provide us with web space. If you need Java'
+	    'development or courses in Germany, contact them !',
+	    BR(),
+	    Href ('http://www.edenmarket.de/', Image ('pics/edenmarket_still.png')),
+	),
+    ),
     Link ('http://www.amiga.com/', 'Amiga, Inc.'),
     Link ('http://www.ninemoons.com/GG/'
 	'Geek Gadgets is an ongoing effort to port Unix tools to non-Unix'
@@ -146,8 +157,16 @@ lessRelated = (
     Link ('http://www.satanicdreams.com/scalos/index.html', 'Official Scalos Site'),
     Link ('http://www.crosswinds.net/~osap/', 'Open Source Amiga Projects'),
     Link ('http://www.mentasm.com/~mramiga/dos1.shtml',
-	'AmigaDOS Online Reference Manual',
-	( Image ('pics/ados1.gif'), ),
+	'AmigaDOS Online Reference Manual.',
+	(
+	    'This site contains a *lot* of information for developers and users'
+	    ' of the AmigaOS: Workbench, ARexx, system utilities and commands'
+	    ' and lots more.',
+	    BR(),
+	    Href ('http://www.mentasm.com/~mramiga/dos1.shtml',
+		Image ('pics/ados1.gif')
+	    ),
+	),
     ),
     Link ('http://www.amiga.org/', 'Amiga.org', '"Your Gateway to the Amiga"'),
     Link ('http://www.intercom.it/~fsoft/afc.html',
