@@ -19,7 +19,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
             Tree \
             ( [
                 _N['status'],
-                _N['screenshots'],
+                A( _N['screenshots'], hclass='done', href='%(ROOT)spictures/screenshots' ),
                 A( _N['ports'], hclass='done', href='%(ROOT)sintroduction/ports' )
             ] ),
             A( _N['download'], hclass='almost', href='%(ROOT)sdownload' ),
@@ -60,6 +60,12 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 A( _N['irc-channels'], hclass='done', href='%(ROOT)scontact#irc-channels' )
             ] ),
             A( _N['credits'], hclass='done', href='%(ROOT)scredits' ),
+            _N['pictures'],
+            Tree \
+            ( [
+                A( _N['developers'], hclass='done', href='%(ROOT)spictures/developers' ),
+                A( _N['developers-together'], hclass='done', href='%(ROOT)spictures/developers-together' )
+            ] ),
             A( _N['sponsors'], hclass='done', href='%(ROOT)ssponsors' ),
             A( _N['links'], hclass='done', href='%(ROOT)slinks' )
         ] )
