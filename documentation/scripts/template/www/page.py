@@ -185,7 +185,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                                 ),
                                 TD \
                                 ( 
-                                    align = 'center', contents = Img \
+                                    align = 'center', height='100%%', contents = Img \
                                     ( 
                                         src='%(BASE)simages/aros-logo.png' 
                                     )
