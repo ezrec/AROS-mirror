@@ -1,0 +1,38 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+MODNAME := render
+MODTYPE := library
+
+FILES := lib_global 	\
+    	 rnd_memory 	\
+	 rnd_histogram  \
+	 rnd_palette 	\
+	 rnd_quant  	\
+	 rnd_mapping 	\
+	 rnd_conversion \
+	 rnd_render 	\
+	 rnd_diversity \
+	 rnd_alpha  	\
+	 rnd_scale
+    	    
+FUNCS := render_funcs
+
+USE_AMIGALIB    := yes
+USE_MUILIB      := yes
+USE_CLIB_STATIC := yes
+USE_MLIB        := yes
+
+USER_INCLUDES := -I.
+
+#MM- contrib-gfx-libs-render : setup includes linklibs \
+#MM	contrib-gfx-libs-render-module
+
+%make_module_setup mmake=contrib-gfx-libs-render
+%make_module_cpak
+%make_module mmake=contrib-gfx-libs-render
+%make_lib_includes
+
+%common
+%include_deps

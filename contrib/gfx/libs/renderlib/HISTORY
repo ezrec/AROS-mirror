@@ -1,0 +1,621 @@
+
+history
+-----------------------------
+
+    - morphos version compiled by Sigbjørn Skjæret. added.
+
+  40.3
+    - HAM8 rendering was not 100% accurate. should be correct now.
+    - added missing semaphore locks
+    - minor cleanup
+
+  40.2
+    - the remaining alpha-channel functions have been implemented.
+    
+  40.1
+    - source added to the package.
+    - major overall performance improvements
+    - SortPalette() completed
+    - rendering to HAM6 and HAM8 has been completed. dithering to HAM
+      modes is no longer supported, sorry.
+    - tags to RGBArrayDiversity() and ChunkyArrayDiversity() did not
+      correctly handle palette/mapengine arguments. fixed.
+    - definitions added in render/render.h: CONV_NO_DATA, REND_NO_DATA
+
+  40.0
+    - rewritten in C
+
+
+* 31.0
+	- simplified the over-complex quantization algorithm.
+	  the new algorithm leads to similar results, with much
+	  better performance
+
+	- semaphores are (finally!) correctly initialized to zero
+	
+	- minor cleanup
+
+* 30.0
+	- improved memory management: RMHTYPE_POOL allocations are
+	  now internally semaphore-protected for cross-task
+	  allocations. this allows guigfx.library (v16) to be reset
+	  to pooled memory environment.
+
+  29.1
+	- SortPalette() crashed with sort-modes that required a histogram,
+	  and when the histogram was a non-TURBO type. this bug hasn't
+	  been fixed, but 'de-implemented'. SortPalette() now returns
+	  SORTP_NOT_IMPLEMENTED in this situation.
+	- bug fixed in the clib declaration of FreeRenderMem()
+
+* 29.0
+	- version number bumped
+
+  28.4
+	- RGBArrayDiversity() was broken, and it returned only nonsense.
+	  it must have been out of order for eons. fixed.
+
+	- fixed LMSGTYPE_LINE_FETCH linehook messages when applied to scaling
+	  engines. RND_LMsg_row contained the destination row instead of
+	  the source row. 
+
+  28.3
+	- minor clean-ups
+
+  28.2
+	- fixed overflow problems in texture-mapping engines
+  	
+  28.1
+  	- fixed EDD dithering with mapping-engines.
+  	- FS-Dithering with mapping engines didn't render zigzag. fixed.
+
+  28.0
+  	- added EDD dithering. thanks to dante and axis
+  	  for the suggestion.
+  	- implemented zigzag dithering for floyd-steinberg and EDD.
+  	  (zigzag rendering is not available in HAM modes.)
+
+  27.3
+  	- texturemapping-engines now handle triangles (i.e. when
+  	  one coordinate is specified twice).
+  	- improved PALMODE_SIGNIFICANCE.
+
+* 27.2
+  	- fixed some semaphore lockup problems with palettes
+  	  and histograms accessed from different tasks. 
+
+  27.1
+  	- fixed a bug in MixAlphaChannel() with one alpha-channel enabled
+
+  27.0
+  	- added internal support functions.
+
+  25.1
+  	- fixed heavy bugs in the texturemapping code and
+  	  optimized it a lot.
+
+  25.0
+	- implemented texture-mapping via scaling-engines.
+
+  24.0
+  	- added documentation for TintRGBArrayA().
+  	- added texture-mapping [preliminary, for internal use only].
+
+  23.1
+  	- SortPalette() now uses and updates an already existing
+  	  p2Table. 
+
+  23.0
+  	- added TintRGBArrayA().
+
+* 22.4
+  	- fixed a minor bug when dithering with
+  	  (width % 4) != 0
+        - slightly optimized CLUT dither preparation code.
+	- slightly modified legal and author text files.
+	- added support site URL.
+
+  22.3
+  	- removed some lines of garbage from the HAM-dither code
+  	  that might have caused problems under certain conditions.
+
+* 22.2
+	- completed autodocs for alpha-channel functions
+
+  22.1
+  	- the internal memcopy routine now handles odd lengths
+  	  and addresses to allow overlapping memory transfers
+  	  in all situations.
+
+  22.0
+  	- implemented CreateAlphaArray()
+ 	- implemented MixAlphaChannel()
+ 	- added tags RND_SourceWidth2, RND_AlphaChannel2,
+ 	  RND_AlphaWidth2 and RND_AlphaModulo2 for 3-channel
+ 	  alpha-channel operations. it is now possible to
+ 	  do 'weighted' compositions with two alpha-channels!
+
+  21.0
+  	- implemented AllocRenderVecClear()
+  	- added definition of PIXFMT_RGB_24 - this is currently
+  	  not supported by render.library, but required for
+  	  guigfx.library 1.92.
+
+  20.3
+  	- MixRGBArray and ApplyAlphaChannel heavily optimized for
+  	  superscalarity and few memory accesses
+  	- Histogram creation could still corrupt memory, when
+  	  0xaarrggbb data were added. Fixed.
+
+  20.2
+	- 'Debug' text file included to the documentation.
+	- clib/render_protos.h did not define a return value
+	  for Chunky2RGB(). Fixed.
+	- some text files revised
+
+* 20.1
+	- fixed FD, clib and pragma files for MixRGBArray().
+	- extended ApplyAlphaChannel().
+	  The alpha-channel is still by default assumed to be
+	  in the source array, but it may be explicitely set with
+	  the new tag RND_AlphaChannel. The alphachannel pixel
+	  modulo may be set with RND_AlphaModulo, and the
+	  alpha-channel-array's total width can be specified with
+	  RND_AlphaWidth.
+	- fixed ApplyAlphaChannel(), ExtractAlphaChannel() and
+	  InsertAlphaChannel(): Registers were not preserved
+	  correctly.
+	- tutorial lectored and slightly revised.
+
+  20.0
+	- implemented MixRGBArray()
+	- fixed a bug in Render() and ConvertChunky() when
+	  rendering with mapping-engines to (width & ~7) != 0
+
+  19.9
+  	- Due to an error in parsing the taglist, ConvertChunky()
+  	  did not use Mapping-Engines. Fixed.
+  	- ApplyAlphaChannel() fixed.
+  	- InsertAlphaChannel() function interface slightly modified.
+  	- tutorial textfile included to the documentation
+	- minor optimizations
+
+  19.8
+	- fixed a bug in Chunky2RGB(). The RND_LeftEdge tag
+	  was not handled correctly in HAM modes.
+  	- added InsertAlphaChannel(), ExtractAlphaChannel() and
+  	  ApplyAlphaChannel()
+  	- Mapping-Engines may be passed to Render() and
+  	  ConvertChunky() now.
+  	- improved FS-Dithering performance: error calculation
+  	  and shifting now takes place in registers solely. with a
+  	  mapping-engine supplied, the code now fits to a
+  	  68020/68030 instruction cache.
+
+  19.7
+	- Render() and ConvertChunky() now accept RND_ScaleEngine
+	  as an additional tag argument. This allows scaling and
+	  rendering in a single pass. The scaling-engine is
+	  defined to be applied to to the source data.
+	- Scale() now handles RND_LineHook, and it has got a
+	  returncode.
+
+  19.6
+	- supplied Chunky2RGB() with RND_LineHook tag
+	- ImportPalette() and ExportPalette() PALFMT_RGB4
+	  were broken. Fixed.
+	- implemented PALFMT_PALETTE for ImportPalette().
+	- Updated all text files.
+	- Lectored and revised autodocs.
+	- Added tag RND_Weight for AddHistogram().
+	- BestPen() did not work at all. Fixed.
+	- BestPen() no longer creates a p2table, but it
+	  will use it when available.
+
+  19.5
+	- slightly improved Chunky2RGB() speed in HAM modes
+	- included ChunkyArrayDiversity().
+	- included MapChunkyArray().
+	- Heavy bug removed from ConvertChunky().
+
+  19.4
+        - AddRGBImage() no longer violates memory with
+          0xARGB (A=Alphachannel) data.
+        - prevented Render() from false rendering
+          with 0xARGB (A=Alphachannel) data. 
+        - Updated autodocs for mapping-engines.
+        - Implemented RGBArrayDiversity() for Mapping-Engines
+          and Palettes.
+        - one more bug removed from the palette administration
+          code. "Zu wahr um schön zu sein" [I. Jache]
+        - removed a small bug in the mapping-engine's
+          palette-update-administration code for
+          mapping-engines that are coupled with a histogram.
+        - added Roadmap.GIF to the documentation.
+        - updated autodocs for RGBArrayDiversity().
+        - updated memory information text file.
+        - updated CPU information text file.
+        - CreateMapEngine() no longer handles RND_PenTable.
+          This tag has to be passed to MapRGBArray() instead.
+
+  19.3
+	- Finally- got- rid- of- that- $%^&?#§- palette- bug-
+	  "I can't eat as much as I want to puke" [Liebermann]
+	- Updated legal information text file.
+
+  19.2
+	- another memory violation bug removed from the
+	  palette administration code.
+
+  19.1
+        - ConvertChunky() did not semaphore-protect the
+          destination palette correctly. Fixed.
+        - Render() did not semaphore-protect the destination
+          palette correctly. Exclusive and shared locks to the
+          palette nested, and this won't work prior to exec v39.
+        - Removed a serious bug inside the palette-buffer
+          administration code that was introduced in v19.0
+
+  19.0
+	- SortPalette() did not semaphore-protect its palette
+	  and did not invalidate the palette's buffers. Fixed.
+        - ConvertChunky() has got a returncode now.
+	- Introduced a new functional class: Mapping-Engines.
+	  Mapping-Engines are low-level conversion units which
+	  provide mindblasting render speed.
+	  New functions: CreateMappingEngine(),
+	  DeleteMappingEngine(), MapRGBArray()
+
+  18.9
+	- minor bug in HSTYPE_12BIT_TURBO interpolation code fixed.
+	  The blue component was not correctly interpolated -
+	  2 bits were missing.
+	- Speed heavily improved for most histogram-related functions.
+	  Especially AddRGBImage() is significantly faster.
+
+  18.8
+  	- ConvertChunky() has been rewritten. Now it is equivalent
+  	  to Render(), except for that it does accept chunky data
+  	  as input and is not able to render to HAM modes. Finally,
+  	  there is no need to convert chunky data to RGB when
+  	  dithering is required.
+  	  ConvertChunky() handles the following additional tags:
+  	  RND_DitherMode, RND_DitherAmount, RND_ProgressHook,
+  	  RND_LineHook, RND_OffsetColorZero. In addition to that,
+  	  the dest-palette's pen-adaptor is correctly handled
+  	  and updated. ConvertChunky() itself is slower than
+  	  before, but overall performance should be better when
+  	  called multiple times.
+
+  18.7
+  	- 18.4 did NOT fix the mentioned bug. Thanks again to
+  	  Stefan Sommerfeld. This bug did not occur in the
+  	  68060 version and I didn't get rid of it. Now fixed.
+  	- REND_CALLBACK_ABORTED wasn't returned when a 
+  	  Progress-Callback was aborted in Render(). Fixed.
+
+* 18.6
+	- v18.5 bug removed that produced false dithering with
+	  15Bit / 18Bit palettes in COLORMODE_CLUT
+
+  18.5
+  	- Render speed improved by up to 40% (depending on the CPU
+  	  and the selected render mode). Remarkably faster on 68060
+  	  systems and CLUT without dithering.
+
+  18.4
+        - fixed a bug in CreateScaleEngine(). Registers were not
+          preserved correctly. Thanks to Stefan Sommerfeld who reported
+          this bug.
+
+  18.3
+	- major internal rework in preparation for new dither modes
+	  and other features.
+
+  18.2
+  	- Now line hooks have to return TRUE or FALSE for
+  	  continuation respective abortion.
+
+  18.1
+	- Improved line hooks. A line hook is called twice now:
+	  Once before rendering a line (msgtype LMSGTYPE_LINE_FETCH),
+	  once after rendering a line (msgtype LMSGTYPE_LINE_RENDERED).
+	  This solves many outstanding problems:
+	  Now you can convert, draw, render, save etc. in a single go,
+	  and there's no need to have intermediate buffers to keep
+	  a complete image in memory.
+	  Also read the annotations in renderhooks.h
+
+  18.0
+  	- removed bug from the 68020 version: Quantization
+  	  crashed without FPU.
+  	- implemented random dithering (DITHERMODE_RANDOM). 
+  	  New Tag: RND_DitherAmount (Range 0-255).
+  	  The code is not satisfyingly optimized yet.
+	- fixed several minor problems
+
+  17.6
+  	- implemented RND_PenTable for Chunky2RGB(). This tag is
+  	  currently not defined for HAM modes.
+  	- Major internal rework of Render(). Now the
+  	  generalized-line-conversion-interface is used.
+  	- RND_LineHook implemented to Render().
+
+  17.5
+  	- implemented RND_PenTable tag for Render().
+
+  17.4
+	- updated the 'legal' text file.
+	- minor autodoc changes
+
+* 17.3
+	- implemented ScaleOrdinate().
+
+  17.2
+	- removed a bug that occured when a progress hook was aborted
+	  inside AddChunkyImage: I freed a semaphore that wasn't obtained.
+	  "Needless to say, havoc breaks out [...]" (exec doc)
+
+  17.1
+	- minor corrections with the FD and LVO files:
+	  SortPalette renamed to SortPaletteA, AddHistogram renamed
+	  to AddHistogramA.
+
+  17.0
+	- Implemented AddHistogram()
+
+  16.3
+	- More bugs removed from SortPalette():
+	  - PALMODE_SIGNIFICANCE crashed in the 68020 and 68040 versions. Fixed.
+	  - PALMODE_SATURATION did not work at all. Fixed.
+	  - Bugs removed from PALMODE_POPULARITY and PALMODE_SIGNIFICANCE.
+
+* 16.2
+	- initial public beta release.
+	- removed heavy bugs from SortPalette().
+
+  16.1
+  	- fixed problems with RND_ColorOffsetZero 
+
+  16.0
+	- mainly cosmetic. major reworks and clean-ups to
+	  autodoc and includes
+
+  15.2
+	- Removed a heavy bug from AddRGBImage() that caused
+	  random crashes.
+	- 24bit scaling implemented. The new tag is
+	  RND_PixelFormat, valid types are PIXFMT_CHUNKY_CLUT
+	  and PIXFMT_0RGB_32.
+
+  15.1
+	- The scaling code has been rewritten completely.
+	  Scaling engines use the generalized conversion system.
+	  All scaling functions are highly accurate now.
+	  Horizontal enlarge is significantly faster than before.
+
+  15.0
+	- introduced a new generalized concept for
+	  line-oriented conversion functions (internal).
+	- Chunky2RGB has been completely rewritten due to this
+	  new concept. The HAM conversion is much faster now.
+	- Added RGB_ProgressHook tag to Chunky2RGB.
+	- implemented PMSGTYPE_LINES_CONVERTED.
+	- Chunky2RGB has got a returncode (CONV_...).
+	- updated the renderhooks include files.
+	- finally implemented EXTP_CALLBACK_ABORTED
+
+  14.4
+	- removed bug from SortPalette().
+	- implemented PALMODE_SATURATION sort mode.
+
+  14.3	
+	- Implemented SortPalette(). RND_PaletteMode is obsolete.
+	- New tag for ExtractPalette(): RND_RMHandler. This tag
+	  specifies a custom memory handler for quantization.
+	  Default is the histogram's memhandler.
+	- EXTP_SORTING_FAILED is obsolete.
+	- Default for RND_NewPalette is toggled to TRUE for
+	  backwards compatibility.
+
+  14.2
+	- removed heavy bug from AddChunkyImage() that could
+	  produce completely corrupt histograms.
+
+	- introduced PALMODE_SIGNIFICANCE. In this mode, a palette's
+	  entries are sorted by their optical significance for the
+	  human eye. This is helpful for many purposes, e.g. you get
+	  excellent results with ObtainBestPen() if you allocate
+	  a palette in this sequence.
+	- fixed a memory-corruption bug in the quantization code.
+
+  14.1
+	- RND_NumColors is used instead of RND_NumEntries.
+	  RND_NumEntries is obsolete. RND_FirstEntry has
+	  been renamed to RND_FirstColor.
+
+  14.0
+	- implemented RND_FirstEntry tag for ExtractPalette(),
+	  ImportPalette() and ExportPalette().
+	- implemented RND_NumEntries tag for ImportPalette()
+	- implemented semaphore protection for histograms and
+	  palettes
+	- lots of internal reorganization and clean-up
+	- implemented FlushPalette()
+	- implemented the RND_NewPalette tag for ImportPalette().
+
+  13.0
+	- fixed minor problems with offset_color_zero and
+	  p2table-adaption
+	- fixed minor problems with ConvertChunky() and
+	  CreatePenTable() with a secondary pen conversion table
+	  specified.
+	- implemented CountRGB()
+	- implemented BestPen()
+	- fixed minor problems with CreatePalette()
+	- FD and pragma for CreatePenTable() was corrupt. Fixed.
+	- CreatePenTable() has been slightly optimized.
+
+  12.0
+	- adapted CreatePenTable() to palette objects.
+	- removed a deadly bug from ImportPalette().
+	- added RND_EHBPalette tag for ImportPalette().
+	- updated all includes and autodocs.
+	- ModifyHistogram() is obsolete. It has been removed.
+	- The function interface for QueryHistogram() has been
+	  changed. You do no longer pass a taglist, but instead
+	  a single tag argument.
+	- Parts of the code have been cleaned up.
+
+  11.0
+	- adapted autodocs and includes to palette objects.
+	- adapted AddChunkyImage to use palette objects.
+	  AddChunkyImage has been completely rewritten and
+	  optimized.
+
+  10.0
+	- adapted Render() to palette objects. 
+
+  0.81
+	- removed the v0.80 speed-up. It didn't work together with
+	  the low-memory adaption system.
+	- Introduced new functions: CreatePalette(),
+	  DeletePalette(), ImportPalette(), ExportPalette().
+	- Modified ExtractPalette() to operate with palette objects.
+
+  0.80
+	- The major changes in v0.79 introduced a bug that occured
+	  when you rendered to HAM modes. This has been fixed.
+	- Rendering to CLUT with dither has been sped up.
+
+  0.79
+	- The color-adaption code was heavily broken for odd
+	  numbers of palette entries (68020/68040 versions only).
+	  This long outstanding bug has been fixed.
+	- p1Table-Render removed. Instead I've implemented an
+	  EXTREMELY efficient p2table-Render. Overall performance
+	  should be at least the same in most cases.
+	  This step has some profound conceptional consequences.
+	  It seems as if the whole library layout could be simplified
+	  even further. Maybe there will be another rework to some
+	  function interfaces. (Don't kill me, beta-testers...
+	  this stuff isn't trivial!)
+
+  0.78
+	- ConvertChunky() is now able to convert a chunky image
+	  over itself. If you tried to do so with elder versions,
+	  the result was okay, but the routine was by some hundered
+	  times slower than it could (reason unknwon).
+
+  0.77
+	- removed a bug that was introduced in v0.69.
+	  If you created a turbo histogram, rendered to CLUT
+	  without dither, and didn't specify a progress hook,
+	  the code ran into a deadlock.
+	- Chunky2RGB() HAM8 bit sequence changed to %SSMMMMMM.
+	- Planar2Chunky()'s interface changed and supplied with an
+	  additional taglist parameter
+	
+  0.76
+	- very nasty bug removed from AddChunkyImageA(). If you
+	  specified a progress hook, the histogram was completely
+	  corrupt.
+
+  0.75
+	- removed a silly bug from Chunky2RGB that was introduced
+	  in v0.73
+	- new tag for CreateRMHandlerA: RMHTYPE_MemFlags.
+
+  0.74
+	- new autodocs completed.
+	- RND_MemHandler renamed to RND_RMHandler.
+	- Some constants have changed. You must recompile.
+	- Includes once again reworked.
+	- new terminology: libcall functions which receive taglist
+	  parameters end with "...A" instead of "...TagList".
+	  tagcall vararg stubs no longer end with "...Tags".
+
+  0.73
+	- a histogram created by CreateHistogram() now has a default
+	  palette consisting of 16 grey tones.
+	- AddChunkyImage() now calls a progress hook. Therefore you
+	  may specify the RND_ProgressHook tag in AddChunkyImage()'s
+	  taglist.
+	- some optimizations
+	- CreateConversionTable() has been renamed to
+	  CreatePenTable().
+	- ConvertChunkyImage() has been renamed to ConvertChunky().
+	- RND_ConversionTable has been renamed to RND_PenTable
+
+  0.72
+	- Heavy bugs removed from AddRGBImage(), ExtractPalette(),
+	  and other functions.
+	- C includes were completely unusable. Fixed.
+	- Major rework of most include files.
+
+  0.71
+	- There were the 0.69 versions of render.library in the
+	  0.70 archive
+	- DeleteScaleEngine() was missing in the includes. Fixed.
+	- DeleteScaleEngine() crashed when the scaling-engine wasn't
+	  created with a custom memhandler.
+
+  0.70
+	- New interfaces for CreateRenderMemHandler, CreateHistogram,
+	  Render, AddChunkyImage, AddRGBImage, ExtractPalette,
+	  SetRenderPalette.
+	- Removed SetRGBWeight, SetProgressHook, SetRenderMode,
+	  SetPaletteMode
+	- New functions: ModifyHistogram, QueryHistogram
+	- Autodocs not yet updated
+
+  0.69
+	- p2table searcher now adapts to low-memory situations (not
+	  fully tested yet)
+	- InitPenConversionTable() is no longer defined. A custom
+	  conversion table may be passed to Chunky2BitMap() directly.
+	- p1table adaption callback is now executed every 128th
+	  adaption. after completion the callback hook is once more
+	  executed. This corrects minor optical problems with
+	  progress bars.
+	- forgot E include renderhooks.m. Now included.
+	- New qualitative color reduction algorithm implemented.
+	  Slightly faster. Very stable results even with different
+	  histogram resolutions. Much better output with dither and
+	  few colors.
+
+  0.68
+	- I actually forgot to include the SetPaletteMode entry in
+	  the library's build-up table. The machine crashed when
+	  executed. Fixed.
+	- IMPORTANT: Interface for Scale() has changed - Scale now
+	  handles two additional arguments: totalwidth for source and
+	  destination. This allows processing of clip areas.
+	- The chunky8 scaling engine now requires less memory.
+	- chunky8 scaling optimized for vertical enlarge
+	- Heavy autodoc improvements, especially in respect to
+	  amigaguide links to be created with AD2AG.
+
+  0.67
+	- new function: SetPaletteMode.
+	- some palette sort methods implemented.
+	- minor autodoc and includes bugs fixed
+	- CreateChunkyConversionTable renamed to
+	  CreateConversionTable
+	- fixed minor accuracy problems with the chunky scaling
+	  engine
+
+  0.66
+	- new functions: CreateChunkyConversionTable and
+	  ConvertChunkyImage.
+	- removed two subtle bugs in the FS-dither code. The blue
+	  error component was treat incorrectly.
+
+  0.65
+	- CreateScaleEngine8, DeleteScaleEngine und Scale
+	  implemented.
+	- Autodocs updated
+
+  0.64
+	- initial internal beta release
+

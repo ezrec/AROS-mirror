@@ -1,0 +1,99 @@
+Short:    render library v40
+Author:   Timm S. Müller
+Uploader: Timm S. Müller (tmueller@neoscientists.org)
+Type:     dev/misc
+Version:  40.3 (beta)
+Requires: 68020, 68881
+
+API-conformant re-implementation of render.library in ANSI C.
+this version is a drop-in replacement for render.library,
+which was written in 68k assembler (versions prior to v40).
+
+if your software doesn't work with this release, submit problem
+reports to tmueller@neoscientists.org
+
+
+implementation notes
+-----------------------------
+
+- RenderA() and ConvertChunky() now have additional return codes,
+REND_NO_DATA and CONV_NO_DATA respectively, if required
+arguments are missing. some other functions may check for
+illegal parameters as well, but don't rely on this.
+
+- render.library objects (palettes, histograms, scaling-engines and
+mapping-engines) are inherently thread-safe. you do not need to
+explicitely protect them in multitasked use. (this may be a
+questionable choice, but that's the way render.library was designed
+originally.)
+
+- many parametric 'issues' improved. scaling-engines, for example,
+seem to handle larger numbers correctly. histograms, however, still
+use 32bit integers and can overflow quite early.
+
+- some calculations now use floating point arithmetics and better
+algorithms. brightness, for instance, is now calculated correctly
+(i.e. in the sense of 'lumincance' like in YUV) in SortPalette() and
+CreateAlphaArray().
+
+- dithering to HAM is no longer supported. yuck.
+
+- the bresenham-like integer scaling algorithm was better in the
+previous version. (float sucks if you can't handle it. should be fixed
+some day. :)
+
+- these functions are untested: MixAlphaChannelA(),
+CreateAlphaArray(). they seem to be used nowhere...
+
+- mapping-engines are currently fake entities and do not actually lead
+to improved performance. they don't harm either. but you don't know
+this, simply stick to the autodocs. maybe they'll be put back into
+action later.
+
+- all histograms are now digital trees, using a much more
+sophisticated algorithm than before. albeit much more elegant and
+memory-saving, this is probably slower than before.
+
+
+performance issues
+-----------------------------
+
+- on 68060 processors, most functions in this implementation are not
+significantly slower than before.
+
+- expect a massive speed loss on <68040.
+
+- chunky to bitmap conversion (and vice versa) is implemented in an
+extremely lazy way. these functions do crawl.
+
+- quantization is faster and more accurate than before.
+
+- general memory consumption is lower than before.
+
+
+
+recent changes
+-----------------------------
+
+    - morphos version compiled by Sigbjørn Skjæret. added.
+
+  40.3
+    - HAM8 rendering was not 100% accurate. should be correct now.
+    - added missing semaphore locks
+    - minor cleanup
+
+  40.2
+    - the remaining alpha-channel functions have been implemented.
+    
+  40.1
+    - source added to the package.
+    - major overall performance improvements
+    - SortPalette() completed
+    - rendering to HAM6 and HAM8 has been completed. dithering to HAM
+      modes is no longer supported, sorry.
+    - tags to RGBArrayDiversity() and ChunkyArrayDiversity() did not
+      correctly handle palette/mapengine arguments. fixed.
+    - definitions added in render/render.h: CONV_NO_DATA, REND_NO_DATA
+
+  40.0
+    - rewritten in C
