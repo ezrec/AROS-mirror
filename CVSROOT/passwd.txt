@@ -10,7 +10,7 @@ geert:cbGlFwvZi5iZY:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m6
 turrican:bcRFEzJmi8r7Y:Kars de Jong:jongk@prac.cs.utwente.nl:misc
 nlorentz:aaoEn/1St7MB7JtA8mAs:Nils Henrik Lorentzen:nlorentz@sn.no:diskfont,icons
 ruppert:bbtwjwdJnQGas:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
-vms:abVary.zhDODw:Harald Frank:support@isdntown.east.de:Amiga port
+vmc:abVary.zhDODw:Harald Frank:support@isdntown.east.de:Amiga port
 
 stepan:dcIM.xvdbd/R.:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:KIHh6YtTnh0KY:Christopher D. Judd:juddc@rpi.edu:
