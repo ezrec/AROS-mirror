@@ -65,6 +65,22 @@ static PyObject *CanvasObject_setPen( CanvasObject *self, PyObject *args )
     return Py_None;
 }
 
+// move(), or movePenTo()? canvas.move() seems confusing (am I moving the canvas? no)
+// movePenTo() seems long. movePen() would imply relative coords, I think
+
+static PyObject *CanvasObject_movePenTo( CanvasObject *self, PyObject *args )
+{
+    LONG x, y;
+    
+    if( !CanvasObject_Check( self ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "ii:movePenTo", &x, &y ) ) return NULL;
+    
+    Move( self->rastport, x, y );
+    
+    Py_INCREF( Py_None );
+    return Py_None;
+}
+
 static PyObject *CanvasObject_writePixel( CanvasObject *self, PyObject *args )
 {
     int x, y;
@@ -92,13 +108,28 @@ static PyObject *CanvasObject_drawLine( CanvasObject *self, PyObject *args )
     return Py_None; 
 }
 
+static PyObject *CanvasObject_drawText( CanvasObject *self, PyObject *args )
+{
+    char *text;
+
+    if( !CanvasObject_Check( self ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "s:drawText", &text ) ) return NULL;
+
+    Text( self->rastport, text, strlen( text ) );    
+    
+    Py_INCREF( Py_None );
+    return Py_None;
+}
+
 /**** CanvasObject method table **********************************************/
 
 static PyMethodDef CanvasObject_Methods[] =
 {
     { "setPen",     (PyCFunction) CanvasObject_setPen,     METH_VARARGS },
+    { "movePenTo",  (PyCFunction) CanvasObject_movePenTo,  METH_VARARGS },
     { "writePixel", (PyCFunction) CanvasObject_writePixel, METH_VARARGS },
     { "drawLine",   (PyCFunction) CanvasObject_drawLine,   METH_VARARGS },
+    { "drawText",   (PyCFunction) CanvasObject_drawText,   METH_VARARGS },
     
     { NULL, NULL }
 }; 
