@@ -1461,36 +1461,36 @@ makedir:
 	@echo make makedir is no longer necessary, just type make
 
 maketree:
-	%mkdir_q $(OBJDIR)
-	%mkdir_q $(OBJDIR)/cpu 
-	%mkdir_q $(OBJDIR)/cpu/z80 
-	%mkdir_q $(OBJDIR)/cpu/z80gb 
-	%mkdir_q $(OBJDIR)/cpu/m6502 
-	%mkdir_q $(OBJDIR)/cpu/h6280 
-	%mkdir_q $(OBJDIR)/cpu/i86 
-	%mkdir_q $(OBJDIR)/cpu/nec 
-	%mkdir_q $(OBJDIR)/cpu/i8039
-	%mkdir_q $(OBJDIR)/cpu/i8085 
-	%mkdir_q $(OBJDIR)/cpu/m6800 
-	%mkdir_q $(OBJDIR)/cpu/m6805 
-	%mkdir_q $(OBJDIR)/cpu/m6809 
-	%mkdir_q $(OBJDIR)/cpu/konami 
-	%mkdir_q $(OBJDIR)/cpu/m68000 
-	%mkdir_q $(OBJDIR)/cpu/s2650 
-	%mkdir_q $(OBJDIR)/cpu/t11 
-	%mkdir_q $(OBJDIR)/cpu/tms34010 
-	%mkdir_q $(OBJDIR)/cpu/tms9900 
-	%mkdir_q $(OBJDIR)/cpu/z8000 
-	%mkdir_q $(OBJDIR)/cpu/tms32010 
-	%mkdir_q $(OBJDIR)/cpu/ccpu 
-	%mkdir_q $(OBJDIR)/cpu/adsp2100 
-	%mkdir_q $(OBJDIR)/cpu/pdp1 
-	%mkdir_q $(OBJDIR)/sound 
-	%mkdir_q $(OBJDIR)/drivers 
-	%mkdir_q $(OBJDIR)/machine 
-	%mkdir_q $(OBJDIR)/vidhrdw 
-	%mkdir_q $(OBJDIR)/sndhrdw 
-	%mkdir_q $(OBJDIR)/aros
+	%mkdir_q dir=$(OBJDIR)
+	%mkdir_q dir=$(OBJDIR)/cpu 
+	%mkdir_q dir=$(OBJDIR)/cpu/z80 
+	%mkdir_q dir=$(OBJDIR)/cpu/z80gb 
+	%mkdir_q dir=$(OBJDIR)/cpu/m6502 
+	%mkdir_q dir=$(OBJDIR)/cpu/h6280 
+	%mkdir_q dir=$(OBJDIR)/cpu/i86 
+	%mkdir_q dir=$(OBJDIR)/cpu/nec 
+	%mkdir_q dir=$(OBJDIR)/cpu/i8039
+	%mkdir_q dir=$(OBJDIR)/cpu/i8085 
+	%mkdir_q dir=$(OBJDIR)/cpu/m6800 
+	%mkdir_q dir=$(OBJDIR)/cpu/m6805 
+	%mkdir_q dir=$(OBJDIR)/cpu/m6809 
+	%mkdir_q dir=$(OBJDIR)/cpu/konami 
+	%mkdir_q dir=$(OBJDIR)/cpu/m68000 
+	%mkdir_q dir=$(OBJDIR)/cpu/s2650 
+	%mkdir_q dir=$(OBJDIR)/cpu/t11 
+	%mkdir_q dir=$(OBJDIR)/cpu/tms34010 
+	%mkdir_q dir=$(OBJDIR)/cpu/tms9900 
+	%mkdir_q dir=$(OBJDIR)/cpu/z8000 
+	%mkdir_q dir=$(OBJDIR)/cpu/tms32010 
+	%mkdir_q dir=$(OBJDIR)/cpu/ccpu 
+	%mkdir_q dir=$(OBJDIR)/cpu/adsp2100 
+	%mkdir_q dir=$(OBJDIR)/cpu/pdp1 
+	%mkdir_q dir=$(OBJDIR)/sound 
+	%mkdir_q dir=$(OBJDIR)/drivers 
+	%mkdir_q dir=$(OBJDIR)/machine 
+	%mkdir_q dir=$(OBJDIR)/vidhrdw 
+	%mkdir_q dir=$(OBJDIR)/sndhrdw 
+	%mkdir_q dir=$(OBJDIR)/aros
 
 mame-clean:
 	$(RM) -R $(OBJDIR)
