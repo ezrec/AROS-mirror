@@ -5,7 +5,8 @@
 
 #MM- fish : fish-microemacs fish-lotto fish-henon fish-bcubic fish-input
 #MM- fish : fish-bezier1 fish-bezier2 fish-tree fish-grep fish-lines
-#MM- fish : fish-304_clines fish-304_lines fish-screenzap
+#MM- fish : fish-304_clines fish-304_lines fish-screenzap fish-watchman
+#MM- fish : fish-sunmaze fish-fiveinline
 
 # The apps below are not working yet as functions are still missing
 
