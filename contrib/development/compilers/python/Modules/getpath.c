@@ -557,6 +557,7 @@ calculate_path(void)
        MAXPATHLEN bytes long.
     */
 
+#ifndef AROS
     if (!(pfound = search_for_prefix(argv0_path, home))) {
         if (!Py_FrozenFlag)
             fprintf(stderr,
@@ -579,6 +580,7 @@ calculate_path(void)
     if ((!pfound || !efound) && !Py_FrozenFlag)
         fprintf(stderr,
                 "Consider setting $PYTHONHOME to <prefix>[:<exec_prefix>]\n");
+#endif /* AROS */
 
     /* Calculate size of return buffer.
      */
