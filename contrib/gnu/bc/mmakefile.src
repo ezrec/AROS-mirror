@@ -1,0 +1,8 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+include ../make.cfg
+
+##MM- contrib-gnu : contrib-gnu-bc
+	
+%build_with_configure mmake=contrib-gnu-bc nix=yes prefix=$(CONTRIBDIR)/GNU/bc
