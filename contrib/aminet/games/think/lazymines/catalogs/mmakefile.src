@@ -4,9 +4,10 @@ DESTDIR := $(BINDIR)/Locale/Catalogs
 
 CATALOGS := dansk deutsch italiano norsk polski svenska
 CATDESC := lazymines
-CATNAME := lazymines
-INCLUDE := ../strings.h
-CODEFILE := ../strings.c
+CATNAME := LazyMines
+INCLUDE1 := ../lazymines_strings
+INCLUDE2 := ../strings
+CODEFILE := ../lazymines_strings
 
 SRCS    := $(foreach f, $(CATALOGS), $(f).ct)
 OBJS    := $(foreach f, $(CATALOGS), $(DESTDIR)/$(f)/$(CATDESC).catalog)
@@ -24,8 +25,9 @@ create_catalogs:
 
 create_include:
 	@$(ECHO) "Creating include file"
-	$(FLEXCAT) $(CATDESC).cd $(INCLUDE)=$(TOOLDIR)/C_h_orig.sd
-	$(FLEXCAT) $(CATDESC).cd $(CODEFILE)=$(TOOLDIR)/C_c_orig.sd
+	@$(FLEXCAT) $(CATDESC).cd $(INCLUDE1).h=$(TOOLDIR)/C_h_orig.sd
+	@$(FLEXCAT) $(CATDESC).cd $(INCLUDE2).h=$(TOOLDIR)/C_h_orig.sd
+	@$(FLEXCAT) $(CATDESC).cd $(CODEFILE).c=$(TOOLDIR)/C_c_orig.sd
 
 create_dirs:
 	@$(FOR) dir in $(CATDIRS) ; do \
