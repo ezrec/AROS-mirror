@@ -15,6 +15,8 @@ extern struct ExecBase * SysBase;
 #define LC_NO_CLOSELIB
 #define LC_RESIDENTPRI	    -120
 
+#define AROS_LC_SETFUNCS
+
 #include <libcore/libheader.c>
 
 
