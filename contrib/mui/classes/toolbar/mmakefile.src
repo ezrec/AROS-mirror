@@ -1,0 +1,6 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+#MM- contrib-zune-classes-toolbar-demos : contrib-zune-classes-toolbar-demo
+#MM- contrib-zune-classes-toolbar :  contrib-zune-classes-toolbar-class  contrib-zune-classes-toolbar-mcp contrib-zune-classes-toolbar-demos
+

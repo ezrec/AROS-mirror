@@ -1,11 +1,11 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-#MM contrib-zune-classes-nlistviewsmcp : includes linklibs
+#MM contrib-zune-classes-nlistviews-mcp : includes linklibs
 
 USER_INCLUDES = -I../commonaros
 
-%build_module_macro mmake=contrib-zune-classes-nlistviewsmcp \
+%build_module_macro mmake=contrib-zune-classes-nlistviews-mcp \
   modname=NListviews modtype=mcp dir=$(CONTRIBDIR)/MCC_NList/Classes/Zune \
   initfile=library files=NListviews \
   uselibs="amiga mui rom m"

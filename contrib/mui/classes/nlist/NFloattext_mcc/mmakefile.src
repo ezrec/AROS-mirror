@@ -1,11 +1,11 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-#MM contrib-zune-classes-nfloattext : setup includes linklibs contrib-zune-classes-nlist
+#MM contrib-zune-classes-nfloattext-class : setup includes linklibs contrib-zune-classes-nlist
 
 USER_INCLUDES = -I../commonaros
 
-%build_module_macro mmake=contrib-zune-classes-nfloattext \
+%build_module_macro mmake=contrib-zune-classes-nfloattext-class \
   modname=NFloattext modtype=mcc dir=$(CONTRIBDIR)/MCC_NList/Classes/Zune \
   initfile=library files=NFloattext \
   uselibs="amiga mui rom m"
