@@ -98,7 +98,7 @@ main()
 	NewWindow.Title = "A Simple Window";
 	NewWindow.Flags = WINDOWCLOSE | SMART_REFRESH |
 				WINDOWDRAG | WINDOWDEPTH | WINDOWSIZING;
-	NewWindow.IDCMPFlags = CLOSEWINDOW | NEWSIZE ;
+	NewWindow.IDCMPFlags = CLOSEWINDOW | NEWSIZE | RAWKEY;
 	NewWindow.Type = CUSTOMSCREEN;
 	NewWindow.FirstGadget = NULL;
 	NewWindow.CheckMark = NULL;
@@ -195,6 +195,7 @@ main()
 			switch(msg->Class)
 			{
 
+			case RAWKEY:
 			case CLOSEWINDOW:	/* that's all folks */
 				notdone = 0;
 				ReplyMsg((struct Message *)msg);
@@ -207,6 +208,7 @@ main()
 				ReplyMsg((struct Message *)msg);
 			}
 		}
+		Delay(1);
 	}
 	
 
@@ -242,10 +244,7 @@ init()
 		to[j].x = 0; to[j].y = 0;
 	}
 	/* attempt to ramdomize the random number generator */
-#warning Call to CurrentTime() deactivated  	
-  	/*
-  	  CurrentTime(&seconds,&micros);
-  	*/
+	CurrentTime(&seconds,&micros);
 	srand(micros);
 	
 	from[0].x = range_rand(minx,maxx);
@@ -267,11 +266,12 @@ init()
 	RectFill(RP,minx,miny,maxx,maxy);
 }
 
-range_rand(minv,maxv)
+int range_rand(minv,maxv)
 {
 	register int i1;
 	
 	i1 = minv + (rand() % (maxv - minv));
+	return i1;
 }
 
 mv_point(p,dp)
@@ -301,11 +301,12 @@ register _Point *p, *dp;
 		;
 }
 
-getdelta()
+int getdelta()
 {
 	register int x;
 
 	x = (8 - (rand() % 16));
+	return x;
 }
 
 
