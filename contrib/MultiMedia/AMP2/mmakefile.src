@@ -1,0 +1,58 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#
+# Makefile for AMP2 (030415)
+#
+
+# Objects
+
+AROSFILES = aros/arossupport
+
+AMIGAOS = amigaos/aga amigaos/cgfx amigaos/video amigaos/req amigaos/font
+
+AUDIO=audio/ahi audio/audio_main audio/paula audio/paula_int
+
+COMMON = common/amp common/find_plugin common/core common/ampio
+
+MAIN = main/main main/prefs main/plugin main/types main/keyfile main/buffer \
+main/version main/mpegio main/mount
+
+REFRESH = refresh/refresh refresh/osd refresh/subtitle \
+refresh/yuv2ham6 refresh/yuv2ham8 refresh/yuv2aga refresh/yuv2rgb \
+refresh/yuv2gray refresh/yuv2lut refresh/yuv2win refresh/yuv2overlay \
+refresh/argb2ham6 refresh/argb2ham8 refresh/argb2aga refresh/argb2rgb \
+refresh/argb2gray refresh/argb2lut refresh/argb2win refresh/argb2overlay \
+refresh/lut2aga refresh/lut2rgb refresh/lut2gray refresh/lut2lut \
+refresh/lut2win refresh/lut2overlay
+
+DVD = parser/dvd/dvdnav/decoder parser/dvd/dvdnav/dvdnav parser/dvd/dvdnav/vm \
+parser/dvd/dvdnav/vmcmd parser/dvd/dvdnav/read_cache parser/dvd/dvdnav/navigation \
+parser/dvd/dvdnav/highlight parser/dvd/dvdnav/searching parser/dvd/dvdnav/settings \
+parser/dvd/dvdread/ifo_read parser/dvd/dvdread/nav_read parser/dvd/dvdread/dvd_udf \
+parser/dvd/dvdread/dvd_reader \
+parser/dvd/dvdcss/decss parser/dvd/dvdcss/dvd parser/dvd/dvdcss/css-auth \
+parser/dvd/dvdcss/findkey \
+parser/dvd/dvd_main parser/dvd/spu
+
+PARSER = parser/rm/rm parser/avi/avi parser/stream/stream parser/mpeg/mpeg \
+parser/vcd/vcd \
+parser/qt/quicktime parser/qt/atom parser/qt/mdat parser/qt/moov parser/qt/mvhd \
+parser/qt/matrix parser/qt/trak parser/qt/stco parser/qt/stsz parser/qt/stsc \
+parser/qt/mdia parser/qt/tkhd parser/qt/edts parser/qt/minf parser/qt/hdlr \
+parser/qt/mdhd parser/qt/vmhd parser/qt/smhd parser/qt/dinf parser/qt/stbl \
+parser/qt/stsd parser/qt/stts parser/qt/stss parser/qt/udta parser/qt/ctab \
+parser/qt/elst parser/qt/dref parser/qt/stsdtable parser/qt/util parser/qt/qt
+
+OBJS = $(MAIN) $(AROSFILES) $(AMIGAOS) $(COMMON) $(AUDIO) $(REFRESH) $(DVD) $(PARSER)
+
+EXEDIR := $(CONTRIBDIR)/MultiMedia/AMP2
+
+USER_CFLAGS := -Iaros -Iamigaos -Iaudio -Icommon -Imain -Iparser -Iparser/dvd -Iparser/dvd/dvdnav -Iparser/dvd/dvdread  -Iparser/mpeg  -Iparser/vcd  -Iparser/qt -Iplugin -Irefresh
+
+#MM contrib-mmedia-amp2 : includes linklibs
+
+%build_prog mmake=contrib-mmedia-amp2 progname=AMP targetdir=$(EXEDIR) files=$(OBJS) uselibs="arossupport amiga arosc z m"
+
+%common
