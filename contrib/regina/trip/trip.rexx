@@ -491,15 +491,25 @@ if (rcsave \== '-1000') then
 
 strings_2:
 
-'rm -f ./1'
-'ln -s /bin/true ./1'
+parse source os .
+if os = "AMIGA" | os = "AROS" then do
+  'delete quiet 1'
+  'makelink from 1 to true'
+end
+else do
+  'rm -f ./1'
+  'ln -s /bin/true ./1'
+end
 
 rc = -1000
 123 <= "hallo"
 if (rc \== '0') then
    call complain 'Command was not executed, somehow'
 
-'rm -f ./1'
+if os = "AMIGA" | os = "AROS" then
+  'delete quiet 1'
+else
+  'rm -f ./1'
 
 
 /*--------------------------------------------------------------------*/

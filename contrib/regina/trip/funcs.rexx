@@ -23,6 +23,14 @@
 
 written = 0 
 
+parse source os .
+if os = 'AMIGA' | os = 'AROS' then do
+  rm = 'delete QUIET'
+end
+else do
+  rm = 'rm -f'
+end
+
 /*========= test recursivity in arguments ==============*/
 call notify 'arguments'
    call ch echoargs( echoarg(1), echoarg(2) ),  "1 2"
@@ -46,7 +54,7 @@ call notify 'labels'
 call notify 'external'
    signal on notready 
    call stream 'testfile', 'c', 'close'
-   'rm -f testfile'
+   rm' testfile'
    file = 'testfile'
    call lineout file, 'if (arg(1)=0) then'
    call lineout file, '   return 0'

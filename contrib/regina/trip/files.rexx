@@ -26,24 +26,25 @@ written = 0
 signal on notready
 
    simple = 'simple'
-   if os = 'UNIX' | os = 'BEOS' | os = 'QNX' | os = 'AMIGA' then
+   if os = 'UNIX' | os = 'BEOS' | os = 'QNX' | os = 'LINUX' then
      do
        eol = 'LF'
-       queue "First line"
-       queue "Second line"
-       queue "Third line"
-       "LIFO> cat >"simple 
        oscopy = 'cp'
        osdel1 = 'rm -f'
        tonul = ' > /dev/null 2>&1'
        file = '/tmp/rexx.test'
      end
+   else if os = 'AMIGA' | os = 'AROS' then
+     do
+       eol = 'LF'
+       oscopy = 'copy'
+       osdel1 = 'delete'
+       tonul = ' >NIL: '
+       file = 'T:rexx.test'
+     end
    else
      do
        eol = 'CRLF'
-       'echo First line > simple'
-       'echo Second line >> simple'
-       'echo Third line >> simple'
        oscopy = 'copy'
        osdel1 = 'del'
        tonul = '> nul'
@@ -51,9 +52,12 @@ signal on notready
      end
 
    osdel1 file tonul
+   'echo "First line" > simple'
+   'echo "Second line" >> simple'
+   'echo "Third line" >> simple'
 
 
-/* signal test020 */
+/* signal test023 */
 
 test001:
 /* === 001 : simple write and read  ============================ */
@@ -104,7 +108,7 @@ test003:
    if res\=='' then
       call complain 'nullstring not returned at EOF'
 
-   call stream file, 'command', 'reset'
+/*   call stream file, 'command', 'reset' */
    call stream file, 'c', 'close'
    signal on notready
    
@@ -248,7 +252,7 @@ test008:
    call stream exist,    'c', 'close'
    call stream nonexist, 'c', 'close'
 
-   'rm -f' nonexist
+   osdel1 nonexist
    res = length(charin(nonexist,,10)) + length('cp'(exist,nonexist))   + foo +,
          length(charin(exist,,10))    + foo + length(linein(exist,1))  + foo +,
          length(charin(nonexist,,10)) + foo + length(linein(nonexist)) + foo +,
@@ -277,7 +281,7 @@ test009:
 /* === 009 : If rest of line is a EOL, what does linein return? ====== */
    call notify 'halfline'
 
-   'rm -f' file
+   osdel1 file
    'echo "First line" >'file
    'echo "Second line" >>'file
    'echo "Third line" >>'file
@@ -349,7 +353,7 @@ test011:
    foo = 0 
 
    call stream none, 'c', 'close'
-   'rm -f' none
+   osdel1 none
 
    call on notready name trap011
    res = lineout(none,"Foobar") + lineout(none,"HeppHepp")
@@ -837,8 +841,56 @@ call notify 'empty_out'
 
    call lineout simple
    signal on notready
+   signal test023
 
 
+test023:
+/* === 023 : Positioning of file using STREAM ===== */
+call notify 'positioning'
+   signal off notready 
+
+   call stream simple, 'c', 'close'
+   do i = 1 to 100
+      call lineout simple, Left('line 'i, 10, '*')
+   end
+   if eol = 'LF' then line_length = 11
+   else line_length = 12
+   call stream simple, 'c', 'close'
+   call stream simple, 'c', 'open both'
+   if stream( simple, 'c', 'open both' ) \= 'READY:' then
+      call complain "STREAM(fn,'C','OPEN BOTH') didn't work"
+   if stream( simple, 'c', 'seek =30 read line' ) \= 30 then
+      call complain "STREAM(fn,'C','SEEK =30 READ LINE) didn't position correctly"
+   if stream( simple, 'c', 'query seek read char' ) \= 1+(29*line_length) then
+      call complain "STREAM(fn,'C','QUERY SEEK READ CHAR) returns the wrong value"
+   if stream( simple, 'c', 'query seek read line' ) \= 30 then
+      call complain "STREAM(fn,'C','QUERY SEEK READ LINE) returns the wrong value"
+   if stream( simple, 'c', 'query seek write char' ) \= 1+(100*line_length) then
+      call complain "STREAM(fn,'C','QUERY SEEK WRITE CHAR) returns the wrong value"
+   if stream( simple, 'c', 'query seek write line' ) \= 101 then
+      call complain "STREAM(fn,'C','QUERY SEEK WRITE LINE) returns the wrong value"
+   if stream( simple, 'c', 'seek +30 read line' ) \= 60 then
+      call complain "STREAM(fn,'C','SEEK +30 READ LINE) didn't position correctly"
+   if stream( simple, 'c', 'query seek read char' ) \= 1+(59*line_length) then
+      call complain "STREAM(fn,'C','QUERY SEEK READ CHAR) returns the wrong value"
+   if stream( simple, 'c', 'query seek read line' ) \= 60 then
+      call complain "STREAM(fn,'C','QUERY SEEK READ LINE) returns the wrong value"
+   if stream( simple, 'c', 'query seek write char' ) \= 1+(100*line_length) then
+      call complain "STREAM(fn,'C','QUERY SEEK WRITE CHAR) returns the wrong value"
+   if stream( simple, 'c', 'query seek write line' ) \= 101 then
+      call complain "STREAM(fn,'C','QUERY SEEK WRITE LINE) returns the wrong value"
+   if stream( simple, 'c', 'seek -10 read line' ) \= 50 then
+      call complain "STREAM(fn,'C','SEEK +30 READ LINE) didn't position correctly"
+   if stream( simple, 'c', 'query seek read char' ) \= 1+(49*line_length) then
+      call complain "STREAM(fn,'C','QUERY SEEK READ CHAR) returns the wrong value"
+   if stream( simple, 'c', 'query seek read line' ) \= 50 then
+      call complain "STREAM(fn,'C','QUERY SEEK READ LINE) returns the wrong value"
+   if stream( simple, 'c', 'query seek write char' ) \= 1+(100*line_length) then
+      call complain "STREAM(fn,'C','QUERY SEEK WRITE CHAR) returns the wrong value"
+   if stream( simple, 'c', 'query seek write line' ) \= 101 then
+      call complain "STREAM(fn,'C','QUERY SEEK WRITE LINE) returns the wrong value"
+   call stream simple, 'c', 'close'
+   signal on notready
 
 
 /* CHARIN():

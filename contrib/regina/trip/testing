@@ -27,18 +27,23 @@ say center(' Testing 'ver' ',72,'=')
 parse source os .
 select
   when os = 'OS/2' | os = 'WIN32' | os = 'DOS' then do
-     rc = 'rc.exe'
+     rcname = 'rc.exe'
      true = 'true.exe'
-     ls = 'dir /b'
+     files = 'dir'( '/b *.rexx' )
+     end
+  when os = 'AMIGA' | os = 'AROS' then do
+     rcname = 'rc'
+     true = 'true'
+     files = 'list'( '#?.rexx lformat "%N" nohead' )
      end
   otherwise do
-     rc = 'rc'
+     rcname = 'rc'
      true = 'true'
-     ls = 'ls'
+     files = 'ls'( '*.rexx' )
      end
 end
 
-if  stream(rc,'c','query exists') = '' then do
+if  stream(rcname,'c','query exists') = '' then do
     say 'You must compile rc.c first'
     exit 1
     end
@@ -47,9 +52,6 @@ if  stream(true,'c','query exists') = '' then do
     say 'You must compile true.c first'
     exit 1
     end
-
-if ls = 'ls' then files = 'ls'( '*.rexx' )
-else files = 'dir'( '/b *.rexx' )
 
 do while files \= ''
    parse var files file files
