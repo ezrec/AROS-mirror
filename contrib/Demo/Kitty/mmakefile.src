@@ -1,0 +1,29 @@
+#   $Id$
+#
+#   Makefile to make Kitty demo
+
+include $(TOP)/config/make.cfg
+
+FILES 	    := main 
+IMAGES      := kittysprite
+SRCIMAGES   := $(foreach f, $(IMAGES), pics/$(f).ilbm)
+C_IMAGES    := $(foreach f, $(IMAGES), $(f)_image.c)
+EXEDIR      := $(CONTRIBDIR)/Demos/Kitty
+EXE 	    := $(EXEDIR)/Kitty
+
+USE_AROSLIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+
+#MM demo-kitty : includes linklibs demo-kitty
+
+%make_prog_setup mmake=demo-kitty
+demo-kitty : setup $(C_IMAGES) $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+./%_image.c : pics/%.ilbm
+	@$(ILBMTOC) $< >$@    	
+
+%common
+%include_deps
