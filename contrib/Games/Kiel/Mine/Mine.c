@@ -5,36 +5,38 @@
     Desc: Mine Game
     Lang: german
 */
+#define ENABLE_RT   1
 
 /*****************************************************************************
 
     NAME
 
-        Mine
+	Mine
 
     SYNOPSIS
 
     LOCATION
 
-        Workbench:Games
+	Workbench:Games
 
     BUGS
 
     SEE ALSO
 
-        Jump JumpEd Quad Wumpus
+	Jump JumpEd Quad Wumpus
 
     INTERNALS
 
     HISTORY
 
-        24-Aug-1997     hkiel     Initial inclusion into the AROS tree
+	24-Aug-1997	hkiel	  Initial inclusion into the AROS tree
 
 ******************************************************************************/
 
 static const char version[] = "$VER: Mine 0.1 (29.08.1997)\n";
 
 #include "Mineincl.h"
+#include <aros/rt.h>
 
 #define maxbreite 30
 #define maxhoehe 20
@@ -161,25 +163,25 @@ SetAPen(rp,0);
     {
       case IDCMP_RAWKEY :
       case IDCMP_CLOSEWINDOW  : return(TRUE);
-                          weiter=TRUE;
-                          break;
+			  weiter=TRUE;
+			  break;
       case IDCMP_MOUSEBUTTONS : if(code==SELECTUP)
-                          {
-                            if((mausx>links+feldbreite*breite/2-25)&&(mausy>5)&&(mausx<links+feldbreite*breite/2+25)&&(mausy<35))
-                            {
-                              menuean=FALSE;
-                              weiter=TRUE;
-                              return(FALSE);
-  			    }
-                            if((mausx>links+feldbreite*breite/2-30)&&(mausy>oben+feldbreite*hoehe/2-30)&&(mausx<links+feldbreite*breite/2+30)&&(mausy<oben+feldbreite*hoehe/2+30))
-                            {
-                              menuean=TRUE;
-                              weiter=TRUE;
-                              return(FALSE);
-                            }
-                          }
-                          break;
-      default           : break;
+			  {
+			    if((mausx>links+feldbreite*breite/2-25)&&(mausy>5)&&(mausx<links+feldbreite*breite/2+25)&&(mausy<35))
+			    {
+			      menuean=FALSE;
+			      weiter=TRUE;
+			      return(FALSE);
+			    }
+			    if((mausx>links+feldbreite*breite/2-30)&&(mausy>oben+feldbreite*hoehe/2-30)&&(mausx<links+feldbreite*breite/2+30)&&(mausy<oben+feldbreite*hoehe/2+30))
+			    {
+			      menuean=TRUE;
+			      weiter=TRUE;
+			      return(FALSE);
+			    }
+			  }
+			  break;
+      default		: break;
     }
   }
 }
@@ -207,20 +209,20 @@ BOOL weiter=FALSE;
     switch(class)
     {
       case IDCMP_MOUSEBUTTONS : if(code==SELECTUP)
-                          {
-                            if((mausx>50)&&(mausy>25)&&(mausx<100)&&(mausy<75))
-                            {
-                              weiter=TRUE;
-                              return(TRUE);
-  			    }
-                            if((mausx>110)&&(mausy>25)&&(mausx<160)&&(mausy<75))
-                            {
-                              weiter=TRUE;
-                              return(FALSE);
-                            }
-                          }
-                          break;
-      default           : break;
+			  {
+			    if((mausx>50)&&(mausy>25)&&(mausx<100)&&(mausy<75))
+			    {
+			      weiter=TRUE;
+			      return(TRUE);
+			    }
+			    if((mausx>110)&&(mausy>25)&&(mausx<160)&&(mausy<75))
+			    {
+			      weiter=TRUE;
+			      return(FALSE);
+			    }
+			  }
+			  break;
+      default		: break;
     }
   }
 }
@@ -233,7 +235,7 @@ void CleanUp()
   schliesselib();
 }
 
-/* ---------------------------    HauptProgramm    -------------------------- */
+/* ---------------------------	  HauptProgramm    -------------------------- */
 
 void wbmain()
 {
@@ -242,6 +244,7 @@ void wbmain()
 
 void main()
 {
+  RT_Init ();
   WEnde=FALSE;
   globalInit();
   while(!WEnde)
@@ -253,11 +256,12 @@ void main()
       Spiel();
       if(!ende)
       {
-        Auswertung();
-        ende=Frage();
+	Auswertung();
+	ende=Frage();
       }
     }
     WEnde=endreq();
   }
   CleanUp();
+  RT_Exit ();
 }
