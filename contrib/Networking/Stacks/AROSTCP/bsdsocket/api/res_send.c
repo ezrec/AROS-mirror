@@ -118,7 +118,7 @@ res_send(struct SocketBase *	libPtr,
 #endif /* RES_DEBUG */
 	    host.sin_len = sizeof(host);
 	    host.sin_family = AF_INET;
-	    host.sin_port = NAMESERVER_PORT;
+	    host.sin_port = htons(NAMESERVER_PORT);
 	    host.sin_addr = ns->nsn_Ent.ns_addr;
 	    aligned_bzero_const(&host.sin_zero, sizeof(host.sin_zero));
 	usevc:
