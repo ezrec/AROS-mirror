@@ -9,6 +9,8 @@
 
 #include "socket_intern.h"
 
+#define LIBNAME "bsdsocket.library"
+
 #define MYDEBUG
 #include "debug.h"
 
@@ -18,10 +20,9 @@ void Thread_Free(struct ThreadData *data);
 
 #ifdef __AROS
 
-AROS_UFH4(struct SocketBase_intern *,LIB_init,
+AROS_UFH3(struct SocketBase_intern *,LIB_init,
         AROS_LHA(struct SocketBase_intern *, SocketBase, D0),
         AROS_LHA(ULONG, seglist, A0),
-        AROS_LHA(long, len, D1),
 	AROS_LHA(struct ExecBase *, sysbase, A6))
 
 
@@ -31,31 +32,32 @@ __asm struct SocketBase_intern *LIB_init(register __d0 struct SocketBase_intern 
 {
     SocketBase->sysbase = sysbase;
     SocketBase->library.lib_Node.ln_Type = NT_LIBRARY;
-    SocketBase->library.lib_Node.ln_Name =  "bsdsocket.library";
+    SocketBase->library.lib_Node.ln_Name = LIBNAME;
     SocketBase->library.lib_Flags = LIBF_SUMUSED | LIBF_CHANGED;
     SocketBase->library.lib_Version = 1;
     SocketBase->library.lib_Revision = 0;
-    SocketBase->library.lib_IdString = "bsdsocket.library";
+    SocketBase->library.lib_IdString = LIBNAME;
 
     SocketBase->orgbase = SocketBase;
     SocketBase->data = NULL;
 
     if (!(SocketBase->gldata = GlobalData_New(&SocketBase->library)))
     {
-    	D(bug("bsdsocket.library: Init failed\n"));
+    	D(bug(LIBNAME ": Init failed\n"));
 #warning free Library base here
 	return NULL;
     }
 
-    D(bug("bsdsocket.library: Init succesfull\n"));
+    D(bug(LIBNAME ": Init succesfull\n"));
     return SocketBase;
 }
 
-#ifndef _AROS
+#ifndef __AROS
 __asm struct SocketBase_intern *LIB_open(register __a6 struct SocketBase_intern *SocketBase)
 #else
-AROS_UFH1(struct SocketBase_intern *, LIB_open,
-        AROS_LHA(struct SocketBase_intern *, SocketBase, A6))
+AROS_LH1(struct SocketBase_intern *, LIB_open,
+    AROS_LHA(ULONG, version, D0),
+    struct SocketBase_intern *, SocketBase, 1, Socket)
 #endif
 {
     void *newlib;
@@ -77,7 +79,7 @@ AROS_UFH1(struct SocketBase_intern *, LIB_open,
     /* Copy over data */
     memcpy(newlib, (char*)orgbase - orgbase->library.lib_NegSize, orgbase->library.lib_NegSize + orgbase->library.lib_PosSize);
 
-    D(bug("bsdsocket.library: openlib() allocated a new library base at 0x%lx (taskname=%s)\n",newlib,FindTask(NULL)->tc_Node.ln_Name));
+    D(bug(LIBNAME ": openlib() allocated a new library base at 0x%lx (taskname=%s)\n",newlib,FindTask(NULL)->tc_Node.ln_Name));
     SocketBase = (void*)(((char*)newlib) + orgbase->library.lib_NegSize);
 
     if (!(SocketBase->data = Thread_Alloc()))
@@ -101,8 +103,8 @@ AROS_UFH1(struct SocketBase_intern *, LIB_open,
 #ifndef __AROS
 __asm ULONG LIB_expunge(register __a6 struct SocketBase_intern *SocketBase)
 #else
-AROS_UFH1(ULONG,LIB_expunge,
-        AROS_LHA(struct SocketBase_intern *, SocketBase, A6))
+AROS_LH0(struct SocketBase_intern *, LIB_expunge,
+    struct SocketBase_intern *, SocketBase, 1, Socket)
 #endif
 {
     long size;
@@ -132,11 +134,13 @@ AROS_UFH1(ULONG,LIB_expunge,
 #ifndef __AROS
 __asm ULONG LIB_close(register __a6 struct SocketBase_intern *SocketBase)
 #else
-AROS_UFH1(ULONG,LIB_close,
-        AROS_LHA(struct SocketBase_intern *, SocketBase, D0))
+AROS_LH0(struct SocketBase_intern *, LIB_close,
+    struct SocketBase_intern *, SocketBase, 1, Socket)
 #endif
 {
     ULONG ret = NULL;
+
+    D(bug("Socket_close\n"));
 
     if (SocketBase != SocketBase->orgbase)
     {
@@ -156,7 +160,11 @@ AROS_UFH1(ULONG,LIB_close,
 	if (SocketBase->library.lib_Flags & LIBF_DELEXP)
 	{
 	    /* There is a delayed expunge waiting */
+#ifndef __AROS
 	    ret = LIB_expunge(SocketBase);
+#else
+	    ret = AROS_LC0(BPTR, LIB_expunge, struct SocketBase_intern *, SocketBase, 3, Socket);
+#endif
 	}
     }
     return ret;
@@ -206,13 +214,27 @@ extern void AROS_SLIB_ENTRY(LIB_Inet_NetOf, Socket)(void);
 extern void AROS_SLIB_ENTRY(LIB_Inet_MakeAddr, Socket)(void);
 extern void AROS_SLIB_ENTRY(LIB_inet_network, Socket)(void);
 extern void AROS_SLIB_ENTRY(LIB_gethostbyname, Socket)(void);
+
+extern void AROS_SLIB_ENTRY(LIB_gethostbyaddr, Socket)(void);
+extern void AROS_SLIB_ENTRY(LIB_getnetbyname, Socket)(void);
+extern void AROS_SLIB_ENTRY(LIB_getnetbyaddr, Socket)(void);
+extern void AROS_SLIB_ENTRY(LIB_getservbyname, Socket)(void);
+extern void AROS_SLIB_ENTRY(LIB_getservbyport, Socket)(void);
+extern void AROS_SLIB_ENTRY(LIB_getprotobyname, Socket)(void);
+extern void AROS_SLIB_ENTRY(LIB_getprotobynumber, Socket)(void);
+extern void AROS_SLIB_ENTRY(LIB_SyslogA, Socket)(void);
+extern void AROS_SLIB_ENTRY(LIB_Dup2Socket, Socket)(void);
+extern void AROS_SLIB_ENTRY(LIB_SendMsg, Socket)(void);
+extern void AROS_SLIB_ENTRY(LIB_RecvMsg, Socket)(void);
+extern void AROS_SLIB_ENTRY(LIB_GetHostName, Socket)(void);
+extern void AROS_SLIB_ENTRY(LIB_GetHostId, Socket)(void);
 extern void AROS_SLIB_ENTRY(LIB_SocketBaseTagList, Socket)(void); /* -294 */
 
 static void *function_array[] =
 {
-  LIB_open,
-  LIB_close,
-  LIB_expunge,
+  AROS_SLIB_ENTRY(LIB_open, Socket),
+  AROS_SLIB_ENTRY(LIB_close, Socket),
+  AROS_SLIB_ENTRY(LIB_expunge, Socket),
   LIB_reserved,
   AROS_SLIB_ENTRY(LIB_socket, Socket),
   AROS_SLIB_ENTRY(LIB_bind, Socket),
@@ -251,18 +273,27 @@ static void *function_array[] =
 /* Must use the global sysbase */
 #undef SysBase
 
+static struct Library *dummy = NULL;
+
 int LIB_add(void)
 {
     socketlib = MakeLibrary(function_array,NULL,(ULONG (* const )())LIB_init,sizeof(struct SocketBase_intern),NULL);
     if (socketlib)
     {
 	AddLibrary(socketlib);
+	/* keep an opener to prevent flushing */
+	dummy = OpenLibrary(LIBNAME, 0);
+	if (!dummy)
+	    return 0;
 	return 1;
     }
+    return 0;
 }
 
 int LIB_remove(void)
 {
+    if (dummy)
+	CloseLibrary(dummy);
     if (socketlib)
     {
 	RemLibrary(socketlib);
