@@ -1,9 +1,12 @@
 .purify
 config.log
-config.h
 config.cache
 config.status
 Makefile
 buildno
 python
+build
+Makefile.pre
+platform
+pyconfig.h
 mmakefile
