@@ -77,5 +77,6 @@ eirikns:ba5EqokvhpnPc:Eirik Nicolai Synnes:eirikns@ifi.uio.no:
 phillwooller:ac4kAjAMFmiLc:Phill Wooller:phillwooller@noelite.freeserve.co.uk:
 stegerg:bdYHJK6vZiYUo:Helmut Steger:steger@pass.dnet.it:
 jadamcze:acf4uH7RbVseI:Jonathan Adamczewski:jadamcze@utas.edu.au:
+rmt:cbqm.TnecbSvE:Richard Tew:RMT38@student.canterbury.ac.nz:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
