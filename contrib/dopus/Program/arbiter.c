@@ -68,7 +68,7 @@ int install_arbiter()
 #else
 	struct Process *arbiter;
 	struct TagItem arbiter_tags[] = {
-		{ NP_StackSize,	4000},
+		{ NP_StackSize,	AROS_STACKSIZE},
 		{ NP_Name,	(IPTR)"dopus.arbiter"},
 		{ NP_Priority,	0 },
 		{ NP_Entry,	(IPTR)arbiter_process },
@@ -203,6 +203,7 @@ void /* __saveds */ arbiter_process()
 					else remove=1;
 					break;
 				case ARBITER_LAUNCH:
+kprintf("++++++++ ARBITER_PROCESS LAUNCH 1\n");
 					if (message_reply &&
 						(launch=AllocMem(sizeof(struct LaunchList),MEMF_CLEAR))) {
 						struct ArbiterLaunch *arb_launch;
@@ -218,6 +219,45 @@ void /* __saveds */ arbiter_process()
 
 						launch->memory=arb_launch->launch_memory;
 
+#if 1
+						{
+							struct Process *pr;
+							struct TagItem pr_tags[] = 
+							{
+								{ NP_StackSize	, AROS_STACKSIZE			},
+								{ NP_Name	, (IPTR)arb_launch->launch_name	},
+								{ NP_Priority	, 0 				},
+								{ NP_Entry	, (IPTR)arb_launch->launch_code	},
+								{ TAG_DONE	, 0				}
+							};
+
+
+							launch->launch_msg.msg.mn_Node.ln_Type=NT_MESSAGE;
+							launch->launch_msg.msg.mn_ReplyPort=message_reply;
+							launch->launch_msg.msg.mn_Length=sizeof(struct ArbiterMessage);
+
+							launch->launch_msg.command=arb_msg->command;
+							launch->launch_msg.data=arb_launch->data;
+							launch->launch_msg.flags=arb_msg->flags;
+							
+							if ((pr = CreateNewProc(pr_tags)))
+							{
+							    	port = &pr->pr_MsgPort;
+							    	PutMsg(port,(struct Message *)&launch->launch_msg);
+							     	if (arb_msg->flags&ARB_WAIT) {
+									launch->reply_msg=arb_msg;
+									arb_msg=NULL;
+								}
+								else ret=1;
+							} else {
+							        FreeMem(launch, sizeof(struct LaunchList));
+							}
+							
+							
+							
+						}
+						
+#else
 						if ((launch->seglist=LAllocRemember(&launch->memory,
 							sizeof(struct ProcessStart),MEMF_PUBLIC|MEMF_CLEAR))) {
 
@@ -244,8 +284,10 @@ void /* __saveds */ arbiter_process()
 						}
 						else {
 							LFreeRemember(&launch->memory);
-							FreeMem(launch,sizeof(struct ProcessStart));
+							FreeMem(launch,sizeof(struct LaunchStart)); /* AROS FIX AMIGAOS FIX!? */
 						}
+#endif
+						
 					}
 					break;
 			}
