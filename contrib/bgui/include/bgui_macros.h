@@ -1,5 +1,5 @@
-#ifndef LIBRARIES_BGUI_MACROS_H
-#define LIBRARIES_BGUI_MACROS_H
+#ifndef BGUI_BGUI_MACROS_H
+#define BGUI_BGUI_MACROS_H
 /*
  * @(#) $Header$
  *
@@ -13,6 +13,19 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 20:01:52  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.3  1999/08/13 04:36:26  mlemos
+ * Changed the pre-processor define to denote that this file was included.
+ *
+ * Revision 41.10.2.2  1999/02/19 05:00:57  mlemos
+ * Added support for Storm C.
+ *
+ * Revision 41.10.2.1  1998/10/12 01:42:27  mlemos
+ * Made the definition of compiler specific macros conditionally dependeing on
+ * wether the macros are already defined.
+ *
  * Revision 41.10  1998/02/25 21:13:54  mlemos
  * Bumping to 41.10
  *
@@ -30,13 +43,35 @@
  * Compiler specific stuff.
  */
 #ifdef _DCC
+#ifndef SAVEDS
 #define SAVEDS    __geta4
+#endif
+#ifndef ASM
 #define ASM
+#endif
+#ifndef REG
 #define REG(x)    __ ## x
-#else
+#endif
+#elif __STORM__
+#ifndef SAVEDS
 #define SAVEDS    __saveds
-#define ASM       __asm
+#endif
+#ifndef ASM
+#define ASM
+#endif
+#ifndef REG
 #define REG(x)    register __ ## x
+#endif
+#else
+#ifndef SAVEDS
+#define SAVEDS    __saveds
+#endif
+#ifndef ASM
+#define ASM       __asm
+#endif
+#ifndef REG
+#define REG(x)    register __ ## x
+#endif
 #endif
 
 /*****************************************************************************
@@ -1008,4 +1043,4 @@
 #define DoRequest(object)\
         DoMethod( object, ASLM_DOREQUEST )
 
-#endif /* LIBRARIES_BGUI_MACROS_H */
+#endif /* BGUI_BGUI_MACROS_H */

@@ -1,0 +1,32 @@
+<?
+/*
+ * bgui_src.lha
+ *
+ * @(#) $Header$
+ *
+ */
+
+$configuring=0;
+$include_path=".:bugs";
+$bugs_configuration_path="./";
+require("bugs_globals.php");
+
+if($configuration->access_password_file!="")
+{
+	include("bugs_accounts.php");
+	if(!BugsValidateAccess("bgui-dev"))
+	{
+		echo "The access to this resource is restricted to BGUI developers.";
+		exit;
+	}
+}
+if(($archive=fopen("bin/bgui_src.lha","r")))
+{
+	Header("Content-Type: application/octet-stream");
+	Header("Content-length: ".filesize("bin/bgui_src.lha"));
+	Header("Date: ".gmdate("D d F Y H:i:s GMT",filectime("bin/bgui_src.lha")));
+	fpassthru($archive);
+}
+else
+	Header("HTTP/1.0 404 File not found");
+?>

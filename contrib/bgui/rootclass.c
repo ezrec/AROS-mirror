@@ -11,6 +11,31 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:55:01  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.7  1999/07/31 01:56:37  mlemos
+ * Added calls to the code that keeps track of the created objects.
+ *
+ * Revision 41.10.2.6  1999/07/03 15:17:45  mlemos
+ * Replaced the calls to CallHookPkt to BGUI_CallHookPkt.
+ *
+ * Revision 41.10.2.5  1998/11/21 00:27:15  mlemos
+ * Fixed erroneous code in OM_UPDATE.
+ *
+ * Revision 41.10.2.4  1998/11/19 01:23:33  mlemos
+ * Fixed the return value type of BASE_ADDMAP value.
+ *
+ * Revision 41.10.2.3  1998/09/19 01:54:21  mlemos
+ * Made BASE_ADDHOOK method return TRUE on success rather than the hook linet
+ * entry pointer.
+ *
+ * Revision 41.10.2.2  1998/03/02 23:49:04  mlemos
+ * Switched vector allocation functions calls to BGUI allocation functions.
+ *
+ * Revision 41.10.2.1  1998/03/01 15:39:19  mlemos
+ * Added support to track BaseInfo memory leaks.
+ *
  * Revision 41.10  1998/02/25 21:13:01  mlemos
  * Bumping to 41.10
  *
@@ -97,6 +122,9 @@ METHOD(RootClassNew, struct opSet *ops)
        * Initialize the notification lists.
        */
       NewList((struct List *)&rd->rd_NotifyList);
+#ifdef DEBUG_BGUI
+      TrackNewObject((Object *)rc,ops->ops_AttrList);
+#endif
    }
    return rc;
 }
@@ -244,7 +272,7 @@ METHOD(RootClassNotify, struct opUpdate *opu)
          break;
 
       case NOTIFY_HOOK:
-         if (!CallHookPkt(((HOOK *)n)->h_Hook, (void *)obj, (void *)opu))
+         if (!BGUI_CallHookPkt(((HOOK *)n)->h_Hook, (void *)obj, (void *)opu))
             return rc;
          break;
       };
@@ -291,6 +319,9 @@ METHOD(RootClassDispose, Msg msg)
    /*
     * Let the superclass dispose of us.
     */
+#ifdef DEBUG_BGUI
+   TrackDisposedObject(obj);
+#endif
    return AsmDoSuperMethodA(cl, obj, msg);
 }
 ///
@@ -300,8 +331,13 @@ METHOD(RootClassDispose, Msg msg)
  */
 METHOD(RootClassUpdateX, struct opUpdate *opu)
 {
-   return AsmDoMethod(obj, RM_SETM, opu->opu_GInfo, (opu->opu_Flags & OPUF_INTERIM) ? RAF_INTERIM|RAF_UPDATE : RAF_UPDATE,
-                                    opu->opu_AttrList);
+   ULONG rc = AsmCoerceMethod(cl,obj, RM_SETM, opu->opu_AttrList, (opu->opu_Flags & OPUF_INTERIM) ? RAF_INTERIM|RAF_UPDATE : RAF_UPDATE);
+
+   if (opu->opu_GInfo
+   && !(opu->opu_Flags & OPUF_INTERIM))
+      AsmDoMethod(obj, RM_REFRESH, opu->opu_GInfo, rc);
+
+   return rc;
 }
 ///
 /// OM_SET
@@ -738,7 +774,7 @@ makeproto Object *ListTailObject(struct List *lh)
 
 METHOD(BaseClassAddMap, struct bmAddMap *bam)
 {
-   return AsmDoMethod(obj, RM_ADDMAP, 0, 0, 0, 0, bam->bam_Object, bam->bam_MapList);
+   return((ULONG)(AsmDoMethod(obj, RM_ADDMAP, 0, 0, 0, 0, bam->bam_Object, bam->bam_MapList)!=NULL));
 }
 ///
 /// BASE_ADDMETHOD
@@ -750,7 +786,7 @@ METHOD(BaseClassAddMethod, struct bmAddMethod *bam)
    int    size = bam->bam_Size * sizeof(ULONG);
    ULONG  nh = 0;
 
-   if (ram = AllocVec(sizeof(struct bmAddMethod) + size, MEMF_CLEAR))
+   if (ram = BGUI_AllocPoolMem(sizeof(struct bmAddMethod) + size))
    {
       ram->MethodID   = RM_ADDMETHOD;
       ram->ram_Object = bam->bam_Object;
@@ -761,7 +797,7 @@ METHOD(BaseClassAddMethod, struct bmAddMethod *bam)
 
       nh = AsmDoMethodA(obj, (Msg)ram);
 
-      FreeVec(ram);
+      BGUI_FreePoolMem(ram);
    };
    return nh;
 }
@@ -788,7 +824,7 @@ METHOD(BaseClassAddConditional, struct bmAddConditional *bac)
 
 METHOD(BaseClassAddHook, struct bmAddHook *bah)
 {
-   return AsmDoMethod(obj, RM_ADDHOOK, 0, 0, 0, 0, bah->bah_Hook);
+   return((ULONG)(AsmDoMethod(obj, RM_ADDHOOK, 0, 0, 0, 0, bah->bah_Hook)!=NULL));
 }
 ///
 
@@ -801,7 +837,11 @@ METHOD(ImageClassDraw, struct impDraw *imp)
    ULONG            rc;
    struct BaseInfo *bi;
 
+#ifdef DEBUG_BGUI
+   if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_RastPort, imp->imp_RPort, BI_DrawInfo, imp->imp_DrInfo, TAG_DONE))
+#else
    if (bi = AllocBaseInfo(BI_RastPort, imp->imp_RPort, BI_DrawInfo, imp->imp_DrInfo, TAG_DONE))
+#endif
    {
       if (x) IMAGE(obj)->LeftEdge += x;
       if (y) IMAGE(obj)->TopEdge  += y;

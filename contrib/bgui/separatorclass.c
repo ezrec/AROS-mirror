@@ -11,6 +11,15 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:55:05  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.2  1999/07/28 23:18:15  mlemos
+ * Fixed superclass call to dispose the objects.
+ *
+ * Revision 41.10.2.1  1998/11/23 14:59:51  mlemos
+ * Removed needless OM_GET method code.
+ *
  * Revision 41.10  1998/02/25 21:13:06  mlemos
  * Bumping to 41.10
  *
@@ -68,7 +77,7 @@ METHOD(SepClassDispose, Msg msg)
 
    if (sd->sd_Title) DisposeObject(sd->sd_Title);
 
-   return AsmDoSuperMethod(cl, obj, msg);
+   return AsmDoSuperMethodA(cl, obj, msg);
 }
 ///
 /// OM_SET
@@ -137,20 +146,6 @@ METHOD(SepClassSet, struct opSet *ops)
          if (sd->sd_Title) DoSetMethodNG(sd->sd_Title, TEXTA_TextID, data, TAG_DONE);
          break;
       };
-   };
-   return rc;
-}
-///
-/// OM_GET
-METHOD(SepClassGet, struct opGet *opg)
-{
-   ULONG     rc = 1, *store = opg->opg_Storage;
-
-   switch (opg->opg_AttrID)
-   {
-   default:
-      rc = AsmDoSuperMethodA(cl, obj, (Msg)opg);
-      break;
    };
    return rc;
 }
@@ -377,7 +372,6 @@ STATIC DPFUNC ClassFunc[] = {
    OM_NEW,               (FUNCPTR)SepClassNew,
    OM_DISPOSE,           (FUNCPTR)SepClassDispose,
    OM_SET,               (FUNCPTR)SepClassSet,
-   OM_GET,               (FUNCPTR)SepClassGet,
    BASE_LOCALIZE,        (FUNCPTR)SepClassLocalize,
    DF_END,               NULL
 };

@@ -11,6 +11,32 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:55:21  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.7  1999/08/10 22:38:03  mlemos
+ * Removed comments of escape sequences not implemented.
+ *
+ * Revision 41.10.2.6  1999/07/23 19:46:18  mlemos
+ * Added support to set draw mode to JAM1, JAM2 or complement in the text
+ * command sequences.
+ *
+ * Revision 41.10.2.5  1998/12/06 22:30:11  mlemos
+ * Fixed bug of using the wrong RastPort to compute XPos of text string.
+ *
+ * Revision 41.10.2.4  1998/05/22 03:51:25  mlemos
+ * Added new line characters to the assertion debug messages that warn about
+ * NULL text strings being passed to TotalWidth and TotalHeight.
+ *
+ * Revision 41.10.2.3  1998/03/01 18:46:12  mlemos
+ * Fixed short allocation for label text string.
+ *
+ * Revision 41.10.2.2  1998/03/01 15:39:39  mlemos
+ * Added support to track BaseInfo memory leaks.
+ *
+ * Revision 41.10.2.1  1998/02/28 02:42:26  mlemos
+ * Added debug assert code to trap attempts to pass NULL text pointers to TextHeight and TextWidth functions.
+ *
  * Revision 41.10  1998/02/25 21:13:23  mlemos
  * Bumping to 41.10
  *
@@ -76,7 +102,7 @@ static void Text_Set(TD *td, char *text)
 
    if (text && (td->td_Flags & TEXTF_COPY))
    {
-      if (td->td_Text = BGUI_AllocPoolMem(strlen(text)))
+      if (td->td_Text = BGUI_AllocPoolMem(strlen(text)+1))
       {
          strcpy(td->td_Text, text);
          td->td_Flags |= TEXTF_COPIED;
@@ -347,7 +373,6 @@ makeproto SAVEDS ASM VOID BGUI_InfoText( REG(a0) struct RastPort *rp, REG(a1) UB
  * \33c     Center this and the following lines
  * \33r     Right-align this and the following lines
  * \33l     Left-align this and the following lines
- * \33j     Full justify this and the following lines
  * \33k     Keep style flags.
  * \33w     Wrap text.
  * \33d<n>  Switch to DrawInfo pen <n>
@@ -355,7 +380,6 @@ makeproto SAVEDS ASM VOID BGUI_InfoText( REG(a0) struct RastPort *rp, REG(a1) UB
  * \33D<n>  Switch to background DrawInfo pen <n>
  * \33P<n>  Switch to background pen <n>
  *
- * \21i<
  */
 
 /// ParseCommSeq
@@ -471,6 +495,16 @@ STATIC UBYTE *ParseCommSeq(struct BaseInfo *bi, UBYTE *text, UWORD *old_style, U
       BSetPenB(bi, strtol(text, &text, 0));
       break;
       
+   case '1':
+      BSetDrMd(bi, JAM1);
+      break;
+   case '2':
+      BSetDrMd(bi, JAM2);
+      break;
+   case 'C':
+      BSetDrMd(bi, COMPLEMENT);
+      break;
+
    case '\33':                         /* Do nothing. */
       break;
       
@@ -539,7 +573,7 @@ STATIC WORD XPos(struct BaseInfo *bi, UBYTE *text, UWORD *old_style, struct IBox
             /*
              * Determine their length.
              */
-            line_len += TextWidthNum(rp, text, i);
+            line_len += TextWidthNum(&rp2, text, i);
 
             /*
              * Adjust pointer.
@@ -577,6 +611,11 @@ makeproto UWORD ASM TotalHeight( REG(a0) struct RastPort *rp, REG(a1) UBYTE *tex
    /*
     * Count the number of lines.
     */
+   if(text==NULL)
+   {
+      D(bug("*** NULL text pointer in TotalHeight function (%s,%ld)\n",__FILE__,__LINE__));
+      return(0);
+   }
    while (c = *text++)
    {
       if (c == '\n') nl++;
@@ -608,6 +647,11 @@ makeproto UWORD ASM TotalWidth(REG(a0) struct RastPort *rp, REG(a1) UBYTE *text)
    /*
     * Scan text.
     */
+   if(text==NULL)
+   {
+      D(bug("*** NULL text pointer in TotalWidth function (%s,%ld)\n",__FILE__,__LINE__));
+      return(0);
+   }
    while (*text)
    {
       /*
@@ -664,8 +708,8 @@ makeproto UWORD ASM TotalWidth(REG(a0) struct RastPort *rp, REG(a1) UBYTE *text)
          };
          text += i;
          break;
-      };
-   };
+      }
+   }
    return (UWORD)len;
 }
 ///
@@ -677,7 +721,11 @@ makeproto void RenderInfoText(struct RastPort *rp, UBYTE *text, UWORD *pens, str
 {
    struct BaseInfo *bi;
 
+#ifdef DEBUG_BGUI
+   if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_RastPort, rp, BI_Pens, pens, TAG_DONE))
+#else
    if (bi = AllocBaseInfo(BI_RastPort, rp, BI_Pens, pens, TAG_DONE))
+#endif
    {
       if (!pens) pens = DefDriPens;
 

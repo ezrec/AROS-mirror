@@ -11,6 +11,16 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:55:14  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.2  1999/08/05 01:40:28  mlemos
+ * Added Jilles Tjoelker fix to assure that OM_GET always get a STRING_LongVal
+ * value within the integer range limits.
+ *
+ * Revision 41.10.2.1  1998/07/05 19:27:59  mlemos
+ * Made calls to RectFill be made to safe RectFill instead.
+ *
  * Revision 41.10  1998/02/25 21:13:15  mlemos
  * Bumping to 41.10
  *
@@ -379,6 +389,16 @@ METHOD(StringClassGet, struct opGet *opg)
        * Then the superclass.
        */
       if (!rc) rc = AsmDoSuperMethodA(cl, obj, (Msg)opg);
+
+      /*
+       * Clamp the integer value between min and max
+       * Use: if the program does GetAttr() when the user has typed a
+       * value but did not press return, or if the strgclass OM_GET failed
+       * for some reason.
+       */
+      if (opg->opg_AttrID == STRINGA_LongVal) {
+         *(opg->opg_Storage) = range(*(opg->opg_Storage), sd->sd_IntegerMin, sd->sd_IntegerMax);
+      }
       break;
    };
    return rc;
@@ -542,7 +562,7 @@ METHOD(StringClassGoActive, struct gpInput *gpi)
              * Clear the area and render the object.
              */
             SetAPen(rp, 0);
-            RectFill(rp, x, y, x + w - 1, y + h - 1);
+            SRectFill(rp, x, y, x + w - 1, y + h - 1);
             AsmDoMethod(obj, GM_RENDER, gi, rp, GREDRAW_REDRAW);
 
             ReleaseGIRPort(rp);

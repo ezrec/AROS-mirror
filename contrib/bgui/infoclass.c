@@ -11,6 +11,12 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:27  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.1  1998/11/29 22:51:52  mlemos
+ * Removed needless code of OM_GET.
+ *
  * Revision 41.10  1998/02/25 21:12:18  mlemos
  * Bumping to 41.10
  *
@@ -147,20 +153,6 @@ METHOD(InfoClassSetUpdate, struct opSet *ops)
    return 1;
 }
 ///
-/// OM_GET
-METHOD(InfoClassGet, struct opGet *opg)
-{
-   ULONG     rc = 1, *store = opg->opg_Storage;
-
-   switch (opg->opg_AttrID)
-   {
-   default:
-      rc = AsmDoSuperMethodA(cl, obj, (Msg)opg);
-      break;
-   };
-   return rc;
-}
-///
 /// BASE_RENDER
 /*
  * Render the object.
@@ -253,7 +245,6 @@ STATIC DPFUNC ClassFunc[] = {
    OM_NEW,           (FUNCPTR)InfoClassNew,
    OM_SET,           (FUNCPTR)InfoClassSetUpdate,
    OM_UPDATE,        (FUNCPTR)InfoClassSetUpdate,
-   OM_GET,           (FUNCPTR)InfoClassGet,
    OM_DISPOSE,       (FUNCPTR)InfoClassDispose,
    GM_HITTEST,       (FUNCPTR)InfoClassHitTest,
    DF_END,            NULL,

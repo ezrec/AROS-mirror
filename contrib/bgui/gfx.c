@@ -11,6 +11,15 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:20  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.2  1999/07/04 05:16:05  mlemos
+ * Added a debuging version of the function BRectFill.
+ *
+ * Revision 41.10.2.1  1998/07/05 19:26:58  mlemos
+ * Added debugging code to trap invalid RectFill calls.
+ *
  * Revision 41.10  1998/02/25 21:12:07  mlemos
  * Bumping to 41.10
  *
@@ -179,13 +188,35 @@ makeproto VOID RenderBevelBox(struct BaseInfo *bi, WORD l, WORD t, WORD r, WORD 
    if (!thin) VLine(rp, r - 1, t + 1, b - 1);
 }
 
+#ifdef DEBUG_BGUI
+makeproto ASM VOID SRectFillDebug(REG(a0) struct RastPort *rp, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b,REG(a1) STRPTR file,REG(d4) ULONG line)
+{
+#else
+ASM VOID SRectFill(REG(a0) struct RastPort *rp, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b)
+{
+#endif
+   if ((r >= l) && (b >= t))
+      RectFill(rp, l, t, r, b);
+#ifdef DEBUG_BGUI
+   else
+	   D(bug("***Invalid RectFill (%lx,%ld,%ld,%ld,%ld) (%s,%lu)\n",rp,l,t,r,b,file ? file : (STRPTR)"Unknown file",line));
+#endif
+}
+
 /*
  * Do a safe rect-fill.
  */
-makeproto ASM VOID BRectFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b)
+#ifdef DEBUG_BGUI
+makeproto ASM VOID BRectFillDebug(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b,REG(a1) STRPTR file,REG(d4) ULONG line)
 {
-   if ((r >= l) && (b >= t)) RectFill(bi->bi_RPort, l, t, r, b);
+   SRectFillDebug(bi->bi_RPort, l, t, r, b,file,line);
 }
+#else
+ASM VOID BRectFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG r, REG(d3) LONG b)
+{
+   SRectFill(bi->bi_RPort, l, t, r, b);
+}
+#endif
 
 makeproto ASM VOID BRectFillA(REG(a0) struct BaseInfo *bi, REG(a1) struct Rectangle *rect)
 {
@@ -194,7 +225,7 @@ makeproto ASM VOID BRectFillA(REG(a0) struct BaseInfo *bi, REG(a1) struct Rectan
 
 makeproto ASM VOID BBoxFill(REG(a0) struct BaseInfo *bi, REG(d0) LONG l, REG(d1) LONG t, REG(d2) LONG w, REG(d3) LONG h)
 {
-   if ((w > 0) && (h > 0)) RectFill(bi->bi_RPort, l, t, l + w - 1, t + h - 1);
+   SRectFill(bi->bi_RPort, l, t, l + w - 1, t + h - 1);
 }
 
 makeproto ASM VOID BBoxFillA(REG(a0) struct BaseInfo *bi, REG(a1) struct IBox *box)
@@ -265,9 +296,13 @@ makeproto ASM VOID RenderBackFill(REG(a0) struct RastPort *rp, REG(a1) struct IB
    RenderBackFillRaster(rp, ib, pens[apen], pens[bpen]);
 }
 
-makeproto ASM VOID RenderBackFillRaster(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib,
-   REG(d0) UWORD apen, REG(d1) UWORD bpen)
+#ifdef DEBUG_BGUI
+makeproto ASM VOID RenderBackFillRasterDebug(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(d0) UWORD apen, REG(d1) UWORD bpen,REG(a2) STRPTR file, REG(d2) ULONG line)
 {
+#else
+ASM VOID RenderBackFillRaster(REG(a0) struct RastPort *rp, REG(a1) struct IBox *ib, REG(d0) UWORD apen, REG(d1) UWORD bpen)
+{
+#endif
    static UWORD pat[] = { 0x5555, 0xAAAA };
    /*
     * Setup RastPort.
@@ -288,7 +323,11 @@ makeproto ASM VOID RenderBackFillRaster(REG(a0) struct RastPort *rp, REG(a1) str
    /*
     * Render...
     */
-   RectFill(rp, ib->Left, ib->Top, ib->Left + ib->Width - 1, ib->Top + ib->Height - 1);
+#ifdef DEBUG_BGUI
+   SRectFillDebug(rp, ib->Left, ib->Top, ib->Left + ib->Width - 1, ib->Top + ib->Height - 1,file,line);
+#else
+   SRectFill(rp, ib->Left, ib->Top, ib->Left + ib->Width - 1, ib->Top + ib->Height - 1);
+#endif
 
    /*
     * Clear area pattern.

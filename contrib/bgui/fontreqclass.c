@@ -11,6 +11,13 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:15  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.1  1999/08/11 02:30:38  mlemos
+ * Assured that the initial values passed to the font requester match the
+ * defaults of the ASLRequest() call.
+ *
  * Revision 41.10  1998/02/25 21:12:02  mlemos
  * Bumping to 41.10
  *
@@ -51,6 +58,16 @@ METHOD(FontReqClassNew, struct opSet *ops)
     */
    if (rc = NewSuperObject(cl, obj, tags))
    {
+      FD  *fd = INST_DATA(cl, rc);
+
+      fd->fd_Name[0]='\0';
+      fd->fd_TextAttr.ta_YSize=8;
+      fd->fd_TextAttr.ta_Style=FS_NORMAL;
+      fd->fd_TextAttr.ta_Flags=FPF_ROMFONT;
+      fd->fd_FrontPen=1;
+      fd->fd_BackPen=0;
+      fd->fd_DrawMode=JAM1;
+
       /*
        * Setup user attributes.
        */

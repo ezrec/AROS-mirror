@@ -1,0 +1,152 @@
+/* REXX script for rexxbgui.library: AWeb modes */
+
+if ~show('l','rexxbgui.library') then do
+	if ~addlib('rexxbgui.library',0,-30) then do
+		exit(20)
+	end
+	else nop
+end
+else nop
+
+options results
+
+if substr(address(),1,5)~='AWEB.' then do
+   ports = show('P')
+   parse var ports dummy 'AWEB.' portnr .
+   address value 'AWEB.' || portnr
+   'GET ACTIVEPORT'
+   address value result
+end
+else nop
+'JAVASCRIPT SOURCE "window.status=*"Opening window...*""'
+
+parse arg '"' pubscrname '"'
+if pubscrname='' then do
+	'GET SCREEN VAR pubscrname'
+end
+else nop
+
+call bguiopen('AWebModes') /* causes error 12 if it did not work */
+/* supply a second argument for a '0' return code instead of an ARexx
+   error */
+
+signal on syntax /* important: bguiclose() MUST be called */
+signal on halt
+signal on break_c
+
+esc='1B'x
+lf='0A'x
+cr='0D'x
+grspace.narrow=-1
+grspace.normal=-2
+grspace.wide=-3
+FixMinSize=bguilayout(LGO_FixMinWidth,1,LGO_FixMinHeight,1)
+
+/* using ARexx feature: ,<newline> is translated to nothing */
+/* the || are essential - any added space will cause trouble */
+/* redefining the same ID makes previous buttons unaccessible */
+/* do not redefine winclose etc. */
+
+g=bguivgroup(,
+	bguivgroup(,
+		bguicheckbox('gframes','HTML _frames usage',1)FixMinSize||,
+		bguicheckbox('gnframe','_Nominal (fixed) frame size',0)FixMinSize||,
+		bguicheckbox('gjs','_Javascript usage',0)FixMinSize||,
+		bguicheckbox('ganon','_Browse anonymously (no HTTP referrer header)',0)FixMinSize||,
+		bguicheckbox('gmime','_Ignore server MIME type',0)FixMinSize||,
+	'',-2,'F')||bguilayout(LGO_FixMinHeight,1)||,
+	bguihgroup(,
+		bguihgroup(,
+			bguivarspace(50)||,
+			bguimx('ghtml',,bguilist('hmtx','_0 Strict','_1 Tolerant','_2 Compatible'),'R')||FixMinSize||,
+			bguivarspace(50),
+		,,'F','HTML zm-zode')||,
+		bguihgroup(,
+			bguivarspace(50)||,
+			bguimx('gspoof',,bguilist('snames','(AWeb)','MSIE/4.0','Mozilla/3.0','Mozilla/4.0'),'R')||FixMinSize||,
+			bguivarspace(50),
+		,,'F','zS-zpoof as')||bguilayout(LGO_FixMinHeight,1),
+	)||bguilayout(LGO_FixMinHeight,1)||,
+	bguihgroup(,
+		bguibutton('ok',esc'bOK_'cr)||,
+		bguibutton('apply','_Apply')||,
+		bguibutton('update','_Get')||,
+		bguibutton('cancel','_Cancel'),
+	)||bguilayout(LGO_FixMinHeight,1),
+,grspace.normal,grspace.normal)
+
+drop hmtx.
+
+call bguiset(obj.ghtml,,BT_Key,'m')
+call bguiset(obj.gspoof,,BT_Key,'s')
+call bguiaddcondit(obj.gframes,obj.gnframe,GA_Selected,0,GA_Disabled,1,GA_Disabled,0)
+
+'GET VERSION'
+winobj=bguiwindow('AWeb v'result 'modes',g,'-','-',,pubscrname,'M')
+call getsettings()
+if bguiwinopen(winobj)=0 then bguierror(12)
+'JAVASCRIPT SOURCE "window.status=*"*""'
+id=0
+do while bguiwinwaitevent(winobj,'ID')~=id.winclose
+	select
+		when id=id.winactive then nop
+		when id=id.wininactive then nop
+		when id=id.update then call getsettings()
+		when id=id.cancel then leave
+		when id=id.ok then do; call setsettings(); leave; end
+		when id=id.apply then call setsettings()
+		when id=id.winclose then nop
+		otherwise nop
+	end
+end
+rc=0
+
+syntax:
+if rc~=0 then say '+++ ['rc']' errortext(rc) 'at line' sigl
+call bguiclose()
+exit 0
+
+break_c:
+halt:
+rc=0
+say '+++ Break at line' sigl
+signal syntax
+
+getsettings:
+'GetCFG HTMLMODE'; call bguiset(obj.ghtml,winobj,MX_Active,result)
+'GetCFG FRAMES'; call bguiset(obj.gframes,winobj,GA_Selected,result)
+'GetCFG NOMINALFRAME'; call bguiset(obj.gnframe,winobj,GA_Selected,result)
+'GetCFG JAVASCRIPT'; call bguiset(obj.gjs,winobj,GA_Selected,result)
+'GetCFG ANONYMOUS'; call bguiset(obj.ganon,winobj,GA_Selected,result)
+'GetCFG IGNOREMIME'; call bguiset(obj.gmime,winobj,GA_Selected,result)
+
+'GetCFG SPOOFAS'
+select
+	when result='MSIE/4.0' then n=1
+	when result='Mozilla/3.0' then n=2
+	when result='Mozilla/4.0' then n=3
+	otherwise n=0
+end
+call bguiset(obj.gspoof,winobj,MX_Active,n)
+return 1
+
+setsettings:
+call bguiwinbusy(winobj)
+i=1
+NEWCFG.i.ITEM=HTMLMODE; NEWCFG.i.VALUE=bguiget(obj.ghtml,MX_Active); i=i+1
+NEWCFG.i.ITEM=FRAMES; NEWCFG.i.VALUE=bguiget(obj.gframes,GA_Selected); i=i+1
+NEWCFG.i.ITEM=NOMINALFRAME; NEWCFG.i.VALUE=bguiget(obj.gnframe,GA_Selected); i=i+1
+NEWCFG.i.ITEM=JAVASCRIPT; NEWCFG.i.VALUE=bguiget(obj.gjs,GA_Selected); i=i+1
+NEWCFG.i.ITEM=ANONYMOUS; NEWCFG.i.VALUE=bguiget(obj.ganon,GA_Selected); i=i+1
+NEWCFG.i.ITEM=IGNOREMIME; NEWCFG.i.VALUE=bguiget(obj.gmime,GA_Selected); i=i+1
+
+NEWCFG.i.ITEM=SPOOFAS
+n=bguiget(obj.gspoof,MX_Active)
+if n=0 then NEWCFG.i.VALUE=''; else NEWCFG.i.VALUE=snames.n
+i=i+1
+
+NEWCFG.0=i-1
+'SetCFG STEM NEWCFG'
+'GetCFG HTMLMODE' /* wait */
+call bguiwinready(winobj)
+return 1

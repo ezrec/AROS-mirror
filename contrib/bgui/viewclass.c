@@ -11,6 +11,30 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:55:27  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.4  1999/08/01 22:49:31  mlemos
+ * Assured proper replacement of scroller bars after the object is created.
+ *
+ * Revision 41.10.2.3  1999/08/01 19:23:33  mlemos
+ * Assured that external scroller gadgets are redrawn when the view position
+ * is updated.
+ *
+ * Revision 41.10.2.2  1999/08/01 04:13:48  mlemos
+ * Assured that the rendering of a view within a view is not clipped against
+ * the window boundaries.
+ * Assured that the view of the self created scroll bars is the same as of the
+ * view object.
+ * Made the scroll bars be rendered or updated in the GM_RENDER method.
+ * Added support for the VIEW_CLIP method to not clip against the parent view
+ * if requested.
+ *
+ * Revision 41.10.2.1  1998/12/06 22:36:10  mlemos
+ * Set parent window of contained object on the view object creation.
+ * Set parent window and parent view of of the scroller gadgets on the view
+ * object creation.
+ *
  * Revision 41.10  1998/02/25 21:13:31  mlemos
  * Bumping to 41.10
  *
@@ -50,6 +74,10 @@ typedef struct {
    Object            *vd_Parent;          /* Parent window.            */
    Object            *vd_ParentView;      /* Parent view.              */
    struct Rectangle   vd_ClipRect;        /* Clipping rectangle.       */
+   UWORD              vd_CachedWidth;     /* Cached width of object.   */
+   UWORD              vd_CachedHeight;    /* Cached height of object.  */
+   BOOL               vd_OwnVScroller;    /* Own Vertical scroller.    */
+   BOOL               vd_OwnHScroller;    /* Own Horizontal scroller.  */
 }  VD;
 
 #define VDF_NODISPOSEOBJECT   (1<<0)      /* Don't dispose object.     */
@@ -80,7 +108,6 @@ METHOD(ViewClassNew, struct opSet *ops)
    VD             *vd;
    ULONG           rc;
    struct TagItem *tstate, *tag, *tags;
-   Object         *vscroll, *hscroll;
 
    tags = DefTagList(BGUI_VIEW_GADGET, ops->ops_AttrList);
 
@@ -98,7 +125,11 @@ METHOD(ViewClassNew, struct opSet *ops)
        */
       if (vd->vd_Object)
       {
-         DoSetMethodNG(vd->vd_Object, BT_ParentView, rc, TAG_DONE);
+         BC *bc = BASE_DATA(rc);
+
+         DoSetMethodNG(vd->vd_Object, BT_ParentView, rc, BT_ParentGroup, rc, BT_ParentWindow, vd->vd_Parent, TAG_DONE);
+
+         vd->vd_OwnHScroller=vd->vd_OwnVScroller=TRUE;
 
          /*
           * Filter out frame and label attributes.
@@ -124,6 +155,16 @@ METHOD(ViewClassNew, struct opSet *ops)
                tag->ti_Tag = TAG_IGNORE;
                break;
 
+            case VIEW_HScroller:
+               tag->ti_Tag = TAG_IGNORE;
+               vd->vd_OwnHScroller=FALSE;
+               break;
+
+            case VIEW_VScroller:
+               tag->ti_Tag = TAG_IGNORE;
+               vd->vd_OwnVScroller=FALSE;
+               break;
+
             default:
                if (FRM_TAG(tag->ti_Tag) || LAB_TAG(tag->ti_Tag))
                   tag->ti_Tag = TAG_IGNORE;
@@ -131,19 +172,45 @@ METHOD(ViewClassNew, struct opSet *ops)
             };
          };
 
-         /*
-          * Create a scroller.
-          */
-         vscroll = BGUI_NewObject(BGUI_PROP_GADGET, GA_ID, GADGET(rc)->GadgetID,
-            PGA_DontTarget, TRUE, PGA_Freedom, FREEVERT, PGA_Arrows, FALSE, TAG_MORE, tags);
+         if(vd->vd_OwnHScroller)
+         {
+            Object *scroller;
 
-         hscroll = BGUI_NewObject(BGUI_PROP_GADGET, GA_ID, GADGET(rc)->GadgetID,
-            PGA_DontTarget, TRUE, PGA_Freedom, FREEHORIZ, PGA_Arrows, FALSE, TAG_MORE, tags);
+            vd->vd_OwnHScroller=FALSE;
+            if((scroller = BGUI_NewObject(BGUI_PROP_GADGET,
+               GA_ID, GADGET(rc)->GadgetID,
+               PGA_DontTarget, TRUE, 
+               PGA_Freedom, FREEHORIZ,
+               PGA_Arrows, FALSE,
+               BT_ParentView, bc->bc_View,
+               BT_ParentWindow, vd->vd_Parent,
+               TAG_MORE, tags)))
+            {
+               DoSetMethodNG((Object *)rc, VIEW_HScroller, scroller, TAG_DONE);
+               vd->vd_OwnHScroller=TRUE;
+               vd->vd_ScrollerH = 14;
+            }
+         }
 
-         DoSetMethodNG((Object *)rc, VIEW_VScroller, vscroll, VIEW_HScroller, hscroll, TAG_DONE);
+         if(vd->vd_OwnVScroller)
+         {
+            Object *scroller;
 
-         if (vd->vd_VScroller) vd->vd_ScrollerW = 14;
-         if (vd->vd_HScroller) vd->vd_ScrollerH = 14;
+            vd->vd_OwnVScroller=FALSE;
+            if((scroller = BGUI_NewObject(BGUI_PROP_GADGET,
+               GA_ID, GADGET(rc)->GadgetID,
+               PGA_DontTarget, TRUE, 
+               PGA_Freedom, FREEVERT,
+               PGA_Arrows, FALSE,
+               BT_ParentView, bc->bc_View,
+               BT_ParentWindow, vd->vd_Parent,
+               TAG_MORE, tags)))
+            {
+               DoSetMethodNG((Object *)rc, VIEW_VScroller, scroller, TAG_DONE);
+               vd->vd_OwnVScroller=TRUE;
+               vd->vd_ScrollerW = 14;
+            }
+         }
 
          return rc;
       }
@@ -167,8 +234,8 @@ METHOD(ViewClassDispose, Msg msg)
 {
    VD             *vd = INST_DATA(cl, obj);
 
-   if (vd->vd_ScrollerW) DisposeObject(vd->vd_VScroller);
-   if (vd->vd_ScrollerH) DisposeObject(vd->vd_HScroller);
+   if (vd->vd_OwnVScroller) DisposeObject(vd->vd_VScroller);
+   if (vd->vd_OwnHScroller) DisposeObject(vd->vd_HScroller);
 
    if (vd->vd_ObjectBuffer) BGUI_FreeRPortBitMap(vd->vd_ObjectBuffer);
    
@@ -247,20 +314,30 @@ METHOD(ViewClassSet, struct opSet *ops)
          break;
 
       case VIEW_VScroller:
-         if (vd->vd_VScroller) DisposeObject(vd->vd_VScroller);
+         if (vd->vd_OwnVScroller)
+         {
+            DisposeObject(vd->vd_VScroller);
+            vd->vd_OwnVScroller=FALSE;
+         }
          if (vd->vd_VScroller = (Object *)data)
          {
             AsmDoMethod(vd->vd_VScroller, BASE_ADDMAP, obj, VProp2View);
             vd->vd_ScrollerW = 0;
+            update=TRUE;
          };
          break;
 
       case VIEW_HScroller:
-         if (vd->vd_HScroller) DisposeObject(vd->vd_HScroller);
+         if (vd->vd_OwnHScroller)
+         {
+            DisposeObject(vd->vd_HScroller);
+            vd->vd_OwnHScroller=FALSE;
+         }
          if (vd->vd_HScroller = (Object *)data)
          {
             AsmDoMethod(vd->vd_HScroller, BASE_ADDMAP, obj, HProp2View);
             vd->vd_ScrollerH = 0;
+            update=TRUE;
          };
          break;
 
@@ -279,7 +356,9 @@ METHOD(ViewClassSet, struct opSet *ops)
    if (vd->vd_ScaleWidth  < 100) vd->vd_ScaleWidth  = 100;
    if (vd->vd_ScaleHeight < 100) vd->vd_ScaleHeight = 100;
 
-   if (update) DoRenderMethod(obj, ops->ops_GInfo, GREDRAW_UPDATE);
+   if (update
+   &&  ops->ops_GInfo)
+      DoRenderMethod(obj, ops->ops_GInfo, GREDRAW_UPDATE);
    
    return rc;
 }
@@ -397,7 +476,6 @@ METHOD(ViewClassRender, struct gpRender *gpr)
    UWORD              ow, oh, vw, vh, sw, sh;
    struct Rectangle   cr;
    struct IBox       *box;
-   BOOL               bars = TRUE;
 
    DoSetMethodNG(bc->bc_Frame, FRM_OuterOffsetRight,  vd->vd_ScrollerW,
                                FRM_OuterOffsetBottom, vd->vd_ScrollerH,
@@ -413,80 +491,88 @@ METHOD(ViewClassRender, struct gpRender *gpr)
    {
       if ((gpr->gpr_Redraw == GREDRAW_REDRAW) || !vd->vd_ObjectBuffer)
       {
-         AsmDoMethod(o, GRM_DIMENSIONS, gi, rp, &ow, &oh, 0);
+         AsmDoMethod(o, GRM_DIMENSIONS, gi, rp, &vd->vd_CachedWidth, &vd->vd_CachedHeight, 0);
+      }
 
-         ow = ScaleWeight(ow, 100, vd->vd_ScaleWidth);
-         oh = ScaleWeight(oh, 100, vd->vd_ScaleHeight);
+      ow = ScaleWeight(vd->vd_CachedWidth, 100, vd->vd_ScaleWidth);
+      oh = ScaleWeight(vd->vd_CachedHeight, 100, vd->vd_ScaleHeight);
 
-         vscroll = vd->vd_VScroller;
-         hscroll = vd->vd_HScroller;
+      vscroll = vd->vd_VScroller;
+      hscroll = vd->vd_HScroller;
 
-         sw = vd->vd_ScrollerW;
-         sh = vd->vd_ScrollerH;
+      sw = vd->vd_ScrollerW;
+      sh = vd->vd_ScrollerH;
 
-         if ((ow < bc->bc_OuterBox.Width) && (oh < bc->bc_OuterBox.Height))
-         {
-            vd->vd_Flags |= VDF_DIRECT;
+      if ((ow < bc->bc_OuterBox.Width) && (oh < bc->bc_OuterBox.Height))
+      {
+         vd->vd_Flags |= VDF_DIRECT;
 
-            if (sw) vscroll = 0;
-            if (sh) hscroll = 0;
+         if (sw) vscroll = 0;
+         if (sh) hscroll = 0;
 
-            box = &bc->bc_OuterBox;
-         }
-         else
-         {
-            vd->vd_Flags &= ~VDF_DIRECT;
+         box = &bc->bc_OuterBox;
+      }
+      else
+      {
+         vd->vd_Flags &= ~VDF_DIRECT;
 
-            box = &bc->bc_InnerBox;
-         };
+         box = &bc->bc_InnerBox;
+      };
 
-         vw = box->Width;
-         vh = box->Height;
+      vw = box->Width;
+      vh = box->Height;
 
-         if (ow < vw) ow = vw;
-         if (oh < vh) oh = vh;
+      if (ow < vw) ow = vw;
+      if (oh < vh) oh = vh;
 
-         vd->vd_ObjectWidth  = ow;
-         vd->vd_ObjectHeight = oh;
+      vd->vd_ObjectWidth  = ow;
+      vd->vd_ObjectHeight = oh;
 
-         vd->vd_X = range(vd->vd_X, 0, ow - vw);
-         vd->vd_Y = range(vd->vd_Y, 0, oh - vh);
+      vd->vd_X = range(vd->vd_X, 0, ow - vw);
+      vd->vd_Y = range(vd->vd_Y, 0, oh - vh);
 
-         if (hscroll) DoSetMethodNG(hscroll, PGA_Top, vd->vd_X, PGA_Total, ow, PGA_Visible, vw, TAG_DONE);
-         if (vscroll) DoSetMethodNG(vscroll, PGA_Top, vd->vd_Y, PGA_Total, oh, PGA_Visible, vh, TAG_DONE);
+      if (hscroll) DoSetMethodNG(hscroll, PGA_Top, vd->vd_X, PGA_Total, ow, PGA_Visible, vw, TAG_DONE);
+      if (vscroll) DoSetMethodNG(vscroll, PGA_Top, vd->vd_Y, PGA_Total, oh, PGA_Visible, vh, TAG_DONE);
 
+      DoSetMethodNG(o, GA_Left, 0, GA_Top, 0, GA_Width, ow, GA_Height, oh, TAG_DONE);
+      if ((gpr->gpr_Redraw == GREDRAW_REDRAW) || !vd->vd_ObjectBuffer)
+      {
          if (vd->vd_ObjectBuffer) BGUI_FreeRPortBitMap(vd->vd_ObjectBuffer);
 
          if (!(vd->vd_ObjectBuffer = BGUI_CreateRPortBitMap(rp, ow, oh, FGetDepth(rp))))
             return 0;
 
-         DoSetMethodNG(o, GA_Left, 0, GA_Top, 0, GA_Width, ow, GA_Height, oh, TAG_DONE);
          AsmDoMethod(o, GM_RENDER, gi, vd->vd_ObjectBuffer, GREDRAW_REDRAW);
+      }
 
-         if (!(vd->vd_Flags & VDF_DIRECT))
+      if (hscroll
+      &&  (!(vd->vd_Flags & VDF_DIRECT) 
+      ||   !sw))
+      {
+         if (sw)
          {
-            if (sh)
-            {
-               DoSetMethodNG(hscroll, GA_Left,     bc->bc_OuterBox.Left,
-                                      GA_Top,      bc->bc_OuterBox.Top + bc->bc_OuterBox.Height - sh,
-                                      GA_Width,    bc->bc_OuterBox.Width - sw,
-                                      GA_Height,   sh,
-                                      TAG_DONE);
-            };
-
-            if (sw)
-            {
-               DoSetMethodNG(vscroll, GA_Left,     bc->bc_OuterBox.Left + bc->bc_OuterBox.Width - sw,
-                                      GA_Top,      bc->bc_OuterBox.Top,
-                                      GA_Width,    sw,
-                                      GA_Height,   bc->bc_OuterBox.Height - sh,
-                                      TAG_DONE);
-            };
-
-            if (sh && hscroll) AsmDoMethod(hscroll, GM_RENDER, gi, rp, GREDRAW_REDRAW);
-            if (sw && vscroll) AsmDoMethod(vscroll, GM_RENDER, gi, rp, GREDRAW_REDRAW);
-         };
-      };
+            DoSetMethodNG(hscroll, GA_Left,     bc->bc_OuterBox.Left,
+                                   GA_Top,      bc->bc_OuterBox.Top + bc->bc_OuterBox.Height - sh,
+                                   GA_Width,    bc->bc_OuterBox.Width - sw,
+                                   GA_Height,   sh,
+                                   TAG_DONE);
+         }
+         AsmDoMethod(hscroll, GM_RENDER, gi, rp, gpr->gpr_Redraw);
+      }
+      if (vscroll
+      &&  (!(vd->vd_Flags & VDF_DIRECT)
+      ||   !sh))
+      {
+         if (sh)
+         {
+            DoSetMethodNG(vscroll, GA_Left,     bc->bc_OuterBox.Left + bc->bc_OuterBox.Width - sw,
+                                   GA_Top,      bc->bc_OuterBox.Top,
+                                   GA_Width,    sw,
+                                   GA_Height,   bc->bc_OuterBox.Height - sh,
+                                   TAG_DONE);
+         }
+         AsmDoMethod(vscroll, GM_RENDER, gi, rp, gpr->gpr_Redraw);
+      }
 
       box = (vd->vd_Flags & VDF_DIRECT) ? &bc->bc_OuterBox : &bc->bc_InnerBox;
 
@@ -498,7 +584,7 @@ METHOD(ViewClassRender, struct gpRender *gpr)
       cr.MaxX = box->Left + box->Width  - 1;
       cr.MaxY = box->Top  + box->Height - 1;
 
-      AsmDoMethod(obj, VIEW_CLIP, &cr);
+      AsmDoMethod(obj, VIEW_CLIP, &cr, FALSE);
       ClipBlit(vd->vd_ObjectBuffer, vd->vd_X, vd->vd_Y,
                rp, cr.MinX, cr.MinY, cr.MaxX - cr.MinX + 1, cr.MaxY - cr.MinY + 1, 0xC0);
 
@@ -861,7 +947,9 @@ METHOD(ViewClassClip, struct vmClip *vmc)
    if (vmc->vmc_Rectangle->MinY < y1) vmc->vmc_Rectangle->MinY = y1;
    if (vmc->vmc_Rectangle->MaxY > y2) vmc->vmc_Rectangle->MaxY = y2;
 
-   if (vd->vd_ParentView) AsmDoMethodA(vd->vd_ParentView, (Msg)vmc);
+   if (vmc->vmc_WindowClip
+   &&  vd->vd_ParentView)
+      AsmDoMethodA(vd->vd_ParentView, (Msg)vmc);
 
    return 1;
 }

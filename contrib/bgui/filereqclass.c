@@ -11,6 +11,12 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:14  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.1  1999/07/03 15:17:35  mlemos
+ * Replaced the calls to CallHookPkt to BGUI_CallHookPkt.
+ *
  * Revision 41.10  1998/02/25 21:12:00  mlemos
  * Bumping to 41.10
  *
@@ -205,7 +211,7 @@ METHOD(FileReqClassDoRequest, Msg msg)
              * Any multi-selections made?
              */
             if (fr->fr_NumArgs)
-               CallHookPkt(fd->fd_MultiHook, (VOID *)obj, (VOID *)fr);
+               BGUI_CallHookPkt(fd->fd_MultiHook, (VOID *)obj, (VOID *)fr);
          };
          
       } else

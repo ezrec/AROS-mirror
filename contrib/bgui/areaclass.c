@@ -11,6 +11,13 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:53:42  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.1  1998/11/23 14:58:28  mlemos
+ * Made the BaseInfo pointer passed to DoNotifyMethod be casted to GadgetInfo
+ * pointer to avoid a compiler warning.
+ *
  * Revision 41.10  1998/02/25 21:11:28  mlemos
  * Bumping to 41.10
  *
@@ -119,7 +126,7 @@ METHOD(AreaClassRender, struct bmRender *bmr)
    /*
     * Notify the main program.
     */
-   DoNotifyMethod(obj, bmr->bmr_BInfo, 0, GA_ID, GADGET(obj)->GadgetID, TAG_DONE);
+   DoNotifyMethod(obj, (struct GadgetInfo *)bmr->bmr_BInfo, 0, GA_ID, GADGET(obj)->GadgetID, TAG_DONE);
 
    return 1;
 }

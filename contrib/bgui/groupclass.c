@@ -11,6 +11,49 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:22  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.11  1999/08/30 04:57:41  mlemos
+ * Made the methods that change group members on-fly setup the gadget
+ * attributes using the window WINDOW_SETUPGADGET method.
+ *
+ * Revision 41.10.2.10  1999/08/29 20:21:59  mlemos
+ * Renamed the GRM_RELAYOUT to BASE_RELAYOUT.
+ *
+ * Revision 41.10.2.9  1999/08/29 18:58:51  mlemos
+ * Added support to the LGO_Relayout attribute to be able to not relayout a
+ * when calling GRM_ADDMEMBER, GRM_INSERTMEMBER, GRM_REPLACEMEMBER.
+ *
+ * Revision 41.10.2.8  1998/10/14 04:07:55  mlemos
+ * Fixed the computation of group members minimum, maximum and nominam sizes.
+ *
+ * Revision 41.10.2.7  1998/07/05 19:19:26  mlemos
+ * Fixed bug of Group node instance data pointer be passed instead of the
+ * object pointer.
+ *
+ * Revision 41.10.2.6  1998/03/02 01:31:21  mlemos
+ * Fixed members list memory leak when group has no members.
+ * Added functions to obtain and release the members list.
+ *
+ * Revision 41.10.2.5  1998/03/02 00:22:18  mlemos
+ * Fixed extention determination when a group is empty.
+ *
+ * Revision 41.10.2.4  1998/03/01 17:36:48  mlemos
+ * Fixed memory leaks from group member list allocations.
+ * Prevented nest calls to retrieve copies of the group members list.
+ *
+ * Revision 41.10.2.3  1998/02/28 02:44:06  mlemos
+ * Made GRM_DIMENSIONS method obtain the group members list.
+ *
+ * Revision 41.10.2.2  1998/02/26 22:37:53  mlemos
+ * Commented out unused variables.
+ * Added casts to GadgetInfo structure where BaseInfo is passed.
+ * Fixed Group Node Class RM_REMOVE call.
+ *
+ * Revision 41.10.2.1  1998/02/26 17:45:40  mlemos
+ * Added support for getting a group node object
+ *
  * Revision 41.10  1998/02/25 21:12:11  mlemos
  * Bumping to 41.10
  *
@@ -195,7 +238,7 @@ METHOD(GroupNodeClassNew, struct opSet *ops)
 
       if (md->md_Object && md->md_Group)
       {
-         DoSetMethodNG(md->md_Object, BT_GroupMember,  md,
+         DoSetMethodNG(md->md_Object, BT_GroupMember,  rc,
                                       BT_ParentGroup,  md->md_Group,
                                       BT_ParentWindow, BASE_DATA(md->md_Group)->bc_Window,
                                       TAG_DONE);
@@ -249,6 +292,9 @@ METHOD(GroupNodeClassGet, struct opGet *opg)
    case LGO_NomHeight:
       STORE md->md_NomHeight;
       break;
+   case LGO_Object:
+      STORE md->md_Object;
+      break;
    default:
       rc = AsmDoSuperMethodA(cl, obj, (Msg)opg);
       break;
@@ -267,7 +313,7 @@ METHOD(GroupNodeClassRemove, Msg msg)
    if (md->md_Object)
      DoSetMethodNG(md->md_Object, BT_ParentWindow, NULL, BT_ParentGroup, NULL, BT_GroupMember, NULL, TAG_DONE);
    
-   return AsmDoSuperMethod(cl, obj, msg);
+   return AsmDoSuperMethodA(cl, obj, msg);
 }
 ///
 
@@ -645,6 +691,8 @@ METHOD(GroupClassNew, struct opSet *ops)
        */
       NewList((struct List *)&gd->gd_Members);
       InitSemaphore(&gd->gd_Lock);
+      gd->gd_MD=NULL;
+      gd->gd_NumMembers=0;
 
       tstate = tags;
       /*
@@ -817,6 +865,30 @@ METHOD(GroupClassGet, struct opGet *opg)
    };
    return rc;
 }
+
+static Object **ObtainMembers(Object *obj,GD *gd,BOOL *got_members_list)
+{
+   if(gd->gd_MD==NULL)
+   {
+      if (!(gd->gd_MD = (Object **)AsmDoMethod(obj, GROUPM_OBTAINMEMBERS, GROMF_WAIT|GROMF_VISIBLE, &gd->gd_NumMembers)))
+         return 0;
+      *got_members_list=TRUE;
+   }
+   else
+      *got_members_list=FALSE;
+   return(gd->gd_MD);
+}
+
+static VOID ReleaseMembers(Object *obj,GD *gd,BOOL got_members_list)
+{
+   if(got_members_list)
+   {
+      AsmDoMethod(obj, GROUPM_RELEASEMEMBERS, gd->gd_MD);
+      gd->gd_MD=NULL;
+      gd->gd_NumMembers=0;
+   }
+}
+
 ///
 /// BASE_LAYOUT
 /*
@@ -829,9 +901,9 @@ METHOD(GroupClassLayout, struct bmLayout *bml)
    Object       *m;
    MD           *md;
    TD           *td, *cd, *rd;
-   BOOL          changed;
+   BOOL          changed,got_members_list;
    ULONG         totalweight, totalsize, tw, th;
-   UBYTE         align;
+/*   UBYTE         align; */
    int           r, c, size, last;
    int           x, y, dx, dy, w, h;
 
@@ -845,10 +917,13 @@ METHOD(GroupClassLayout, struct bmLayout *bml)
       w = bc->bc_InnerBox.Width  - (HSpace(gd->gd_SpaceX) * (gd->gd_Columns - 1));
       h = bc->bc_InnerBox.Height - (VSpace(gd->gd_SpaceY) * (gd->gd_Rows - 1));
 
-      if (!(gd->gd_MD = (Object **)AsmDoMethod(obj, GROUPM_OBTAINMEMBERS, GROMF_WAIT|GROMF_VISIBLE, &gd->gd_NumMembers)))
-         return 0;
-
-      if (!gd->gd_NumMembers) return 1;
+      if(ObtainMembers(obj,gd,&got_members_list)==NULL)
+         return(0);
+      if (!gd->gd_NumMembers)
+      {
+         ReleaseMembers(obj,gd,got_members_list);
+         return 1;
+      }
 
       /*
        * Set starting values.
@@ -1055,8 +1130,8 @@ METHOD(GroupClassLayout, struct bmLayout *bml)
             y += rd->td_Size + VSpace(gd->gd_SpaceY);
          };
          x += cd->td_Size + HSpace(gd->gd_SpaceX);
-      };
-      AsmDoMethod(obj, GROUPM_RELEASEMEMBERS, gd->gd_MD);
+      }
+      ReleaseMembers(obj,gd,got_members_list);
    };
 
    return 1;
@@ -1099,7 +1174,7 @@ METHOD(GroupClassRender, struct bmRender *bmr)
    struct Process    *proc;
    struct MsgPort    *msgport = NULL;
    struct SubRender  *sr;
-   ULONG              rc = 0;
+/*   ULONG              rc = 0; */
    BOOL               subrender = FALSE; // no multitasking yet
    int                render_count = 0;
 
@@ -1126,9 +1201,6 @@ METHOD(GroupClassRender, struct bmRender *bmr)
       Move(rp, bc->bc_OuterBox.Left, bc->bc_OuterBox.Top + 1);
       Draw(rp, bc->bc_OuterBox.Left, bc->bc_OuterBox.Top + bc->bc_OuterBox.Height - 1);
    };
-
-   if (!(gd->gd_MD = (Object **)AsmDoMethod(obj, GROUPM_OBTAINMEMBERS, GROMF_WAIT|GROMF_VISIBLE, &gd->gd_NumMembers)))
-      return 0;
 
    if (subrender)
    {
@@ -1163,7 +1235,7 @@ METHOD(GroupClassRender, struct bmRender *bmr)
          sr->sr_Message.mn_ReplyPort = msgport;
          sr->sr_Message.mn_Length    = sizeof(struct SubRender);
          sr->sr_Object               = md->md_Object;
-         sr->sr_GInfo                = bi;
+         sr->sr_GInfo                = (struct GadgetInfo *)bi;
          sr->sr_RPort                = rp;
 
          PutMsg(&proc->pr_MsgPort, &sr->sr_Message);
@@ -1189,8 +1261,6 @@ METHOD(GroupClassRender, struct bmRender *bmr)
       };
       DeleteMsgPort(msgport);
    };
-   AsmDoMethod(obj, GROUPM_RELEASEMEMBERS, gd->gd_MD);
-
    return 1;
 }
 ///
@@ -1344,10 +1414,14 @@ METHOD(GroupClassAddMember, struct grmAddMember *grma)
        */
       AsmDoMethod(m, RM_ADDTAIL, &gd->gd_Members);
 
+      if(BASE_DATA(obj)->bc_Window)
+         AsmDoMethod(BASE_DATA(obj)->bc_Window, WM_SETUPGADGET, grma->grma_Member, NULL);
+
       /*
        * Try to re-layout the group.
        */
-      if (!RelayoutGroup(obj))
+      if(GetTagData(LGO_Relayout, TRUE, (struct TagItem *)&grma->grma_Attr)
+      && !RelayoutGroup(obj))
       {
          DisposeObject(m);
          RelayoutGroup(obj);
@@ -1381,10 +1455,14 @@ METHOD(GroupClassInsert, struct grmInsertMember *grmi)
    {
       AsmDoMethod(m, RM_INSERT, &gd->gd_Members, FindObNode(gd, grmi->grmi_Pred));
 
+      if(BASE_DATA(obj)->bc_Window)
+         AsmDoMethod(BASE_DATA(obj)->bc_Window, WM_SETUPGADGET, grmi->grmi_Member, NULL);
+
       /*
        * Try to re-layout the group.
        */
-      if (!RelayoutGroup(obj))
+      if(GetTagData(LGO_Relayout, TRUE, (struct TagItem *)&grmi->grmi_Attr)
+      && !RelayoutGroup(obj))
       {
          DisposeObject(m);
          RelayoutGroup(obj);
@@ -1424,10 +1502,14 @@ METHOD(GroupClassReplace, struct grmReplaceMember *grrm)
          AsmDoMethod(m, RM_INSERT, &gd->gd_Members, old);
          AsmDoMethod(old, RM_REMOVE);
 
+         if(BASE_DATA(obj)->bc_Window)
+            AsmDoMethod(BASE_DATA(obj)->bc_Window, WM_SETUPGADGET, grrm->grrm_MemberB, NULL);
+
          /*
           * Try to re-layout the group.
           */
-         if (!RelayoutGroup(obj))
+         if(GetTagData(LGO_Relayout, TRUE, (struct TagItem *)&grrm->grrm_Attr)
+         && !RelayoutGroup(obj))
          {
             AsmDoMethod(old, RM_INSERT, &gd->gd_Members);
             DisposeObject(m);
@@ -1535,7 +1617,6 @@ METHOD(GroupClassObtainMembers, struct gmObtainMembers *gmom)
    };
 
    if (gmom->gmom_Number) *(gmom->gmom_Number) = n;
-
    return (ULONG)(o - n);
 }
 ///
@@ -1553,10 +1634,14 @@ METHOD(GroupClassReleaseMembers, struct gmReleaseMembers *gmrm)
       {
          rc = gd->gd_Lock.ss_NestCount - 1;
 
-         BGUI_FreePoolMem(o);
          ReleaseSemaphore(&gd->gd_Lock);
       };
-   };
+      BGUI_FreePoolMem(o);
+   }
+#ifdef DEBUG_BGUI
+   else
+      D(bug("*** Attempt to free an invalid group members list\n"));
+#endif
    return (ULONG)rc;     // rc < 0 = failure, rc = 0 is freed, rc > 0 still locked.
 }
 ///
@@ -1566,7 +1651,7 @@ makeproto ASM ULONG RelayoutGroup(REG(a0) Object *obj)
 {
    BC                 *bc = BASE_DATA(obj);
    struct Window      *w = NULL;
-   struct grmRelayout  grmr;
+   struct bmRelayout  bmr;
    ULONG               rc = 1;
 
    if (bc->bc_Window)
@@ -1575,10 +1660,11 @@ makeproto ASM ULONG RelayoutGroup(REG(a0) Object *obj)
 
       if (w)
       {
-         grmr.MethodID   = GRM_RELAYOUT;
-         grmr.grmr_RPort = w->RPort;
+         bmr.MethodID   = BASE_RELAYOUT;
+         bmr.bmr_GInfo = NULL;
+         bmr.bmr_RPort = w->RPort;
 
-         rc = BGUI_DoGadgetMethodA(obj, w, NULL, (Msg)&grmr);
+         rc = BGUI_DoGadgetMethodA(obj, w, NULL, (Msg)&bmr);
       };
    };
    return rc;
@@ -1598,10 +1684,10 @@ METHOD(MemberDimensions, struct bmDimensions *bmd)
    ULONG              minw, minh, nomw, nomh, maxw, maxh;
    ULONG              tmin, tmax, tnom;
    int                r, c;
+   BOOL               got_members_list;
 
-   if (!(gd->gd_MD = (Object **)AsmDoMethod(obj, GROUPM_OBTAINMEMBERS, GROMF_WAIT|GROMF_VISIBLE, &gd->gd_NumMembers)))
-      return 0;
-
+   if(ObtainMembers(obj,gd,&got_members_list)==NULL)
+      return(0);
    if (gd->gd_NumMembers)
    {
       if (gd->gd_Style == GRSTYLE_HORIZONTAL)
@@ -1655,8 +1741,8 @@ METHOD(MemberDimensions, struct bmDimensions *bmd)
          };
 
          tmin = 0;
-         tnom = 0xFFFF;
-         tmax = 0xFFFF;
+         tnom = 0;
+         tmax = 0;
 
          for (r = 0; r < gd->gd_Rows; r++)
          {
@@ -1675,21 +1761,14 @@ METHOD(MemberDimensions, struct bmDimensions *bmd)
 
                if (r == 0) td->td_Weight = md->md_Weight;
 
-               if (!(md->md_Flags & MDF_SPACING))
-               {
-                  /*
-                   * Adjust the minimum width with the maximum extention.
-                   */
-                  tmin = max(tmin, md->md_MinWidth + md->md_HBLeft);
-                  tnom = min(tnom, md->md_NomWidth + md->md_HBLeft);
-                  tmax = min(tmax, md->md_MaxWidth);
-               };
+               /*
+                * Adjust the minimum width with the maximum extention.
+                */
+               tmin = max(tmin, md->md_MinWidth + md->md_HBLeft);
+               tnom = max(tnom, md->md_NomWidth + md->md_HBLeft);
+               tmax = max(tmax, md->md_MaxWidth);
             };
          };
-         /*
-          * Just in case all were spacing objects.
-          */
-         if (tnom == 0xFFFF) tnom = 0;
 
          td->td_Min = tmin;
          td->td_Max = tmax;
@@ -1702,8 +1781,8 @@ METHOD(MemberDimensions, struct bmDimensions *bmd)
       for (r = 0, td = gd->gd_RD; r < gd->gd_Rows; r++, td++)
       {
          tmin = 0;
-         tnom = 0xFFFF;
-         tmax = 0xFFFF;
+         tnom = 0;
+         tmax = 0;
 
          for (c = 0; c < gd->gd_Columns; c++)
          {
@@ -1713,18 +1792,11 @@ METHOD(MemberDimensions, struct bmDimensions *bmd)
 
                if (c == 0) td->td_Weight = md->md_Weight;
 
-               if (!(md->md_Flags & MDF_SPACING))
-               {
-                  if (md->md_MinHeight > tmin) tmin = md->md_MinHeight;
-                  if (md->md_NomHeight < tnom) tnom = md->md_NomHeight;
-                  if (md->md_MaxHeight < tmax) tmax = md->md_MaxHeight;
-               };
+               tmin = max(tmin, md->md_MinHeight);
+               tnom = max(tnom, md->md_NomHeight);
+               tmax = max(tmax, md->md_MaxHeight);
             };
          };
-         /*
-          * Just in case all were spacing objects.
-          */
-         if (tnom == 0xFFFF) tnom = 0;
 
          td->td_Min = tmin;
          td->td_Max = tmax;
@@ -1759,7 +1831,7 @@ METHOD(MemberDimensions, struct bmDimensions *bmd)
       maxw = maxh = 0xFFFF;
    };
 
-   AsmDoMethod(obj, GROUPM_RELEASEMEMBERS, gd->gd_MD);
+   ReleaseMembers(obj,gd,got_members_list);
 
    minw = max(minw, 1);
    minh = max(minh, 1);
@@ -1787,7 +1859,7 @@ METHOD(MemberDimensions, struct bmDimensions *bmd)
 METHOD(GroupClassDimensions, struct bmDimensions *bmd)
 {
    GD                   *gd = INST_DATA(cl, obj);
-   BC                   *bc = BASE_DATA(obj);
+/*   BC                   *bc = BASE_DATA(obj); */
    Object               *m;
    MD                   *md;
    struct grmDimensions  dim;
@@ -1795,7 +1867,7 @@ METHOD(GroupClassDimensions, struct bmDimensions *bmd)
    ULONG                 rc;
 
    dim.MethodID            = GRM_DIMENSIONS;
-   dim.grmd_GInfo          = bmd->bmd_BInfo;
+   dim.grmd_GInfo          = (struct GadgetInfo *)bmd->bmd_BInfo;
    dim.grmd_RPort          = bmd->bmd_BInfo->bi_RPort;
    dim.grmd_Flags          = bmd->bmd_Flags | GDIMF_MAXIMUM|GDIMF_NOMINAL;
    dim.grmd_MinSize.Width  = &minw;
@@ -1871,6 +1943,21 @@ METHOD(GroupClassDimensions, struct bmDimensions *bmd)
    return rc;
 }
 ///
+/// GRM_DIMENSIONS
+METHOD(GroupClassDimensionsX, struct grmDimensions *dim)
+{
+   GD    *gd = INST_DATA(cl, obj);
+   ULONG rc=0;
+   BOOL got_members_list;
+
+   if(ObtainMembers(obj,gd,&got_members_list)==NULL)
+      return(0);
+   rc=AsmDoSuperMethodA(cl, obj, (Msg)dim);
+   ReleaseMembers(obj,gd,got_members_list);
+   return(rc);
+}
+
+///
 /// BASE_SHOWHELP
 /*
  * Pass on the help message.
@@ -1941,7 +2028,12 @@ METHOD(GroupClassLeftExt, struct bmLeftExt *le)
    /*
     * Get the biggest in the first column.
     */
-   *(le->bmle_Extention) = gd->gd_CD[0].td_PreAlign;
+   if(gd->gd_CD)
+      *(le->bmle_Extention) = gd->gd_CD[0].td_PreAlign;
+   else
+   {
+      *(le->bmle_Extention)=0;
+   }
 
    return 1;
 }
@@ -2057,6 +2149,7 @@ STATIC DPFUNC ClassFunc[] = {
    BASE_RENDER,            (FUNCPTR)GroupClassRender,
    BASE_LAYOUT,            (FUNCPTR)GroupClassLayout,
    BASE_DIMENSIONS,        (FUNCPTR)GroupClassDimensions,
+   GRM_DIMENSIONS,         (FUNCPTR)GroupClassDimensionsX,
 
    OM_NEW,                 (FUNCPTR)GroupClassNew,
    OM_SET,                 (FUNCPTR)GroupClassSet,

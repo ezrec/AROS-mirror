@@ -1,0 +1,146 @@
+<?
+/*
+ * index.html
+ *
+ * @(#) $Header$
+ *
+ */
+
+$configuring=0;
+$include_path=".:bugs";
+$bugs_configuration_path="./";
+require("bugs_globals.php");
+require("bugs_locale.php");
+include(IncludeRelativePath($configuration->shared_include_file));
+commonHeader("BGUI site");
+?>
+<HR>
+<H2>This page contents:</H2>
+<UL>
+<H3><LI>For users</LI></H3>
+<UL>
+<LI><A HREF="#what">What is BGUI?</A></LI>
+<LI><A HREF="manifest.html">BGUI Manifest - Past, Present and Future.</A></LI>
+<LI><A HREF="screenshots.html">BGUI Screenshots</A></LI>
+<LI><A HREF="#library">BGUI 41.11 final LhA archive</A></LI>
+<LI><A HREF="#users-mailing-list">User Support Mailing List</A></LI>
+</UL>
+<H3><LI>For developers</LI></H3>
+<UL>
+<LI><A HREF="#joining">Joining BGUI developers team</A></LI>
+<LI><A HREF="#developers-mailing-list">Developers Mailing List</A></LI>
+<LI><A HREF="#developers">BGUI 41.11 final developers kit LhA archive</A></LI>
+<LI><A HREF="#e">BGUI 41.10 beta E language developers kit LhA archive</A></LI>
+<LI><A HREF="#arexx">BGUI ARexx interface library 4.0 LhA archive</A></LI>
+<LI><A HREF="#source">BGUI 41.11 final source LhA archive</A></LI>
+<LI><A HREF="#documentation">BGUI 41.11 documentation</A></LI>
+<LI><A HREF="bugs.html">BGUI Bug Report Database</A></LI>
+<LI><A HREF="#cvsweb">Web Interface to BGUI Development CVS tree</A></LI>
+</UL>
+</UL>
+<HR>
+<H2>For users</H2>
+<UL>
+<A NAME="what"><HR></A>
+<H3><LI>What is BGUI?</LI></H3>
+<P>BGUI stands for <B>B</B>OOPSI <B>G</B>raphical <B>U</B>ser <B>I</B>nterface. BGUI is <B>free</B> GUI toolkit for the Amiga OS.</P>
+<UL>
+<P>BGUI comes with:</P>
+<LI><A HREF="#developers">Software development kit</A> for programming Amiga OS applications in C and E languages.</LI>
+<LI><A HREF="screenshots.html#builder">GUI builder</A></LI>
+<LI><A HREF="#documentation">Documentation</A> in Autodoc, AmigaGuide and HTML formats.</LI>
+<LI><A HREF="screenshots.html#editor">Documentation editor</A></LI>
+<LI>Library to create <A HREF="#arexx">BGUI programs in ARexx</A></LI>
+<LI><A HREF="screenshots.html#preferences">Preferences editor</A> to customize BGUI programs look and feel.</LI>
+</UL>
+<A NAME="library"><HR></A>
+<H3><LI><A HREF="bgui.lha">BGUI 41.11 final LhA archive</A></LI></H3>
+<P>Version of  <? echo Date("d-F-Y H:i:s",filectime("bin/bgui.lha"))," (",filesize("bin/bgui.lha")," bytes)"; ?></P>
+<UL>
+<P><B>Includes:</B></P>
+<P><LI><B>BGUI library standard version for all Amigas</B></LI></P>
+<P><LI><B>BGUI library enhanced version for Amigas 68020 and OS 3 or better</B></LI></P>
+<P><LI><B>BGUI preferences editor</B></LI></P>
+<P><LI><B>Example programs with source code in C</B></LI></P>
+</UL>
+<A NAME="users-mailing-list"><HR></A>
+<H3><LI>User Support Mailing List</LI></H3>
+<P>There is a mailing list to discuss this BGUI library user matters.  Send a
+message to <A HREF="mailto:bgui-users-subscribe@egroups.com">&lt;bgui-users-subscribe@egroups.com&gt;</A>
+to subscribe this list, or fill and submit the following form:</P>
+<form method=GET action="http://www.egroups.com/subscribe">
+<input type=hidden name="listname" value="bgui-users">
+<P><CENTER><B>Enter your e-mail address</B>: <input type=text name="emailaddr" value="" size=21></CENTER></P>
+<P><CENTER><input type=submit name="SubmitAction" VALUE="Subscribe"></CENTER></P>
+</form>
+<P>The list archive is available from the Web page: <A HREF="http://www.egroups.com/list/bgui-users/">http://www.egroups.com/list/bgui-users/</A>.</P>
+</UL>
+<HR>
+<H2>For developers</H2>
+<UL>
+<A NAME="joining"><HR></A>
+<H3><LI>Joining BGUI developers team</LI></H3>
+<P>Would you like to join the BGUI developers team to help fixing existing bugs or add new features?</P>
+<P>BGUI has been integrated in the AROS project (Amiga Replacement Operating System project).
+If you would like you help in BGUI development, join <A HREF="http://www.aros.org/">AROS</A> (<TT>&lt;http://www.aros.org/&gt;</TT>).</P>
+<A NAME="developers-mailing-list"><HR></A>
+<H3><LI>Developers Mailing List</LI></H3>
+<P>There is a mailing list to discuss this BGUI library development matters.  Send a
+message to <A HREF="mailto:bgui-dev-subscribe@egroups.com">&lt;bgui-dev-subscribe@egroups.com&gt;</A>
+to subscribe this list, or fill and submit the following form:</P>
+<form method=GET action="http://www.egroups.com/subscribe">
+<input type=hidden name="listname" value="bgui-dev">
+<P><CENTER><B>Enter your e-mail address</B>: <input type=text name="emailaddr" value="" size=21></CENTER></P>
+<P><CENTER><input type=submit name="SubmitAction" VALUE="Subscribe"></CENTER></P>
+</form>
+<P>The list archive is available from the Web page: <A HREF="http://www.egroups.com/list/bgui-dev/">http://www.egroups.com/list/bgui-dev/</A>.</P>
+<A NAME="developers"><HR></A>
+<H3><LI><A HREF="bgui_dev.lha">BGUI 41.11 final developers kit LhA archive</A></LI></H3>
+<P>Version of <? echo Date("d-F-Y H:i:s",filectime("bin/bgui_dev.lha"))," (",filesize("bin/bgui_dev.lha")," bytes)"; ?></P>
+<UL>
+<P><B>Includes:</B></P>
+<P><LI><B>BGUI library special version for debugging</B></LI></P>
+<P><LI><B>Documentation in Autodoc files</B></LI></P>
+<P><LI><B>Include files for C</B></LI></P>
+<P><LI><B>BGUIBuilder - user interface editor program</B></LI></P>
+<P><LI><B>CAD - Autodoc editor program</B></LI></P>
+<P><LI><B>Tap - program to listen to debugging messages</B></LI></P>
+<P><LI><B>KillBGUI - utility to purge BGUI library from memory</B></LI></P>
+</UL>
+<A NAME="e"><HR></A>
+<H3><LI><A HREF="bgui_e.lha">BGUI 41.10 beta E language developers kit LhA archive</A></LI></H3>
+<P>Version of <? echo Date("d-F-Y H:i:s",filectime("bin/bgui_e.lha"))," (",filesize("bin/bgui_e.lha")," bytes)"; ?></P>
+<UL>
+<P><B>Includes:</B></P>
+<P><LI><B>Modules to program BGUI with the E language</B></LI></P>
+<P><LI><B>Example programs with source code in E</B></LI></P>
+</UL>
+<A NAME="arexx"><HR></A>
+<H3><LI><A HREF="bgui_rexx.lha">BGUI ARexx interface library 4.0 LhA archive</A></LI></H3>
+<P>Version of <? echo Date("d-F-Y H:i:s",filectime("bin/bgui_rexx.lha"))," (",filesize("bin/bgui_rexx.lha")," bytes)"; ?></P>
+<UL>
+<P><B>Includes:</B>
+<P><LI><B>ARexx library</B>
+<P><LI><B>Documentation</B>
+<P><LI><B>Example ARexx scripts</B>
+</UL>
+<A NAME="source"><HR></A>
+<H3><LI><A HREF="bgui_src.lha">BGUI 41.11 final source LhA archive</A></LI></H3>
+<P>Version of <? echo Date("d-F-Y H:i:s",filectime("bin/bgui_src.lha"))," (",filesize("bin/bgui_src.lha")," bytes)"; ?></P>
+<P><B>Access restricted to the BGUI developers team</B></P>
+<A NAME="documentation"><HR></A>
+<H3><LI>BGUI 41.11 documentation</A></LI></H3>
+<UL>
+<H4><LI><A HREF="./bgui_documentation/index.html">Documentation pages online</A></LI></H4>
+<H4><LI><A HREF="bgui_html_documentation.lha">Documentation LhA archive in HTML format</A></LI></H4>
+<P>Version of <? echo Date("d-F-Y H:i:s",filectime("bin/bgui_html_documentation.lha"))," (",filesize("bin/bgui_html_documentation.lha")," bytes)"; ?></P>
+<H4><LI><A HREF="bgui_guide_documentation.lha">Documentation LhA archive in AmigaGuide format</A></LI></H4>
+<P>Version of <? echo Date("d-F-Y H:i:s",filectime("bin/bgui_guide_documentation.lha"))," (",filesize("bin/bgui_guide_documentation.lha")," bytes)"; ?></P>
+</UL>
+<A NAME="cvsweb"><HR></A>
+<H3><LI>Web Interface to BGUI Development CVS tree</LI></H3>
+<P>Since it was integrated into <A HREF="http://www.aros.org/">AROS</A>, BGUI Development CVS tree is only accessible through the AROS CVS server.<P>
+</UL>
+<?
+commonFooter();
+?>

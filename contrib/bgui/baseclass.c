@@ -11,6 +11,61 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:53:49  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.15  1999/08/30 00:46:12  mlemos
+ * Fixed rendering a object in BASE_RELAYOUT when the minimum dimensions did
+ * not change.
+ *
+ * Revision 41.10.2.14  1999/08/30 00:20:01  mlemos
+ * Assured that the object is not rendered in BASE_RELAYOUT if it is inhibited.
+ *
+ * Revision 41.10.2.13  1999/08/29 20:21:55  mlemos
+ * Renamed the GRM_RELAYOUT to BASE_RELAYOUT.
+ *
+ * Revision 41.10.2.12  1999/08/01 04:15:28  mlemos
+ * Avoided trying to copy invisible rendered portions of an object in a view.
+ *
+ * Revision 41.10.2.11  1999/07/26 22:17:33  mlemos
+ * Re-enabled drag token conversion into a window while stopped.
+ *
+ * Revision 41.10.2.10  1999/07/03 15:17:31  mlemos
+ * Replaced the calls to CallHookPkt to BGUI_CallHookPkt.
+ *
+ * Revision 41.10.2.9  1998/12/08 03:28:20  mlemos
+ * Ensured that whenever the gadget border activation flags are changed the
+ * the IMAGE_Border attribute of the frame and the label will reflect the
+ * current gadget position.
+ * Corrected the choice of background color for erasing the area of a gadget
+ * in the border without any parents with frames.
+ *
+ * Revision 41.10.2.8  1998/12/07 14:46:15  mlemos
+ * Ensured that any previously opened font is closed when setting BT_TextAttr.
+ *
+ * Revision 41.10.2.7  1998/12/07 03:36:59  mlemos
+ * Fixed potential text font leak.
+ *
+ * Revision 41.10.2.6  1998/12/07 03:06:54  mlemos
+ * Replaced OpenFont and CloseFont calls by the respective BGUI debug macros.
+ *
+ * Revision 41.10.2.5  1998/11/13 16:44:18  mlemos
+ * Fixed missing Rastport assignment in GM_RENDER that was preventing view
+ * class to work.
+ *
+ * Revision 41.10.2.4  1998/07/05 19:34:11  mlemos
+ * Made calls to AllocBaseInfo in BaseClassDragActive and BaseClassDragUpdate
+ * ensure that the rastport is properly obtained.
+ *
+ * Revision 41.10.2.3  1998/03/01 17:26:15  mlemos
+ * Fixed BaseInfo memory leak.
+ *
+ * Revision 41.10.2.2  1998/03/01 15:36:46  mlemos
+ * Removed tracing debugging statements.
+ *
+ * Revision 41.10.2.1  1998/03/01 15:33:31  mlemos
+ * Added support to track BaseInfo memory leaks.
+ *
  * Revision 41.10  1998/02/25 21:11:33  mlemos
  * Bumping to 41.10
  *
@@ -302,7 +357,29 @@ METHOD(BaseClassSet, struct rmAttr *ra)
             };
          };
       };
-   };
+   }
+   else
+   {
+      switch(ra->ra_Attr->ti_Tag)
+      {
+         case GA_TopBorder:
+         case GA_BottomBorder:
+         case GA_LeftBorder:
+         case GA_RightBorder:
+            bd = (BD *)INST_DATA(cl, obj);
+            if (bd->bd_Frame)
+            {
+               DoSetMethodNG(bd->bd_Frame, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_END);
+               rc |= RAF_REDRAW;
+            };
+            if (bd->bd_Label)
+            {
+               DoSetMethodNG(bd->bd_Label, IMAGE_InBorder, GADGET(obj)->Activation & BORDERMASK, TAG_END);
+               rc |= RAF_REDRAW;
+            };
+            break;
+      }
+   }
    return rc;
 }
 ///
@@ -350,9 +427,11 @@ METHOD(BaseClassSetCustom, struct rmAttr *ra)
        */
       if (ta = (struct TextAttr *)data)
       {
-         if (tf = OpenFont(ta))
+         if (tf = BGUI_OpenFont(ta))
          {
             bd->bd_TextAttr = ta;
+            if(bd->bd_TextFont)
+            	BGUI_CloseFont(bd->bd_TextFont);
             bd->bd_TextFont = tf;
             bd->bd_Flags   &= ~BDF_GOT_LABEL_EXT;
 
@@ -422,6 +501,8 @@ METHOD(BaseClassDispose, Msg msg)
       DisposeObject(bd->bd_Label);
    if (bd->bd_PreBuffer)
       BGUI_FreeRPortBitMap(bd->bd_PreBuffer);
+   if (bd->bd_TextFont)
+      BGUI_CloseFont(bd->bd_TextFont);
 
    /*
     * Let the superclass dispose
@@ -494,7 +575,9 @@ METHOD(BaseClassRenderX, struct gpRender *gpr)
        * Use buffer?
        */
       if (bd->bd_Window)
+      {
          Get_Attr(bd->bd_Window, WINDOW_BufferRP, (ULONG *)&rp);
+      }
    };
 
    if (!rp) rp = gpr->gpr_RPort;
@@ -507,9 +590,13 @@ METHOD(BaseClassRenderX, struct gpRender *gpr)
       Get_Attr(bd->bd_View, VIEW_ObjectBuffer, (ULONG *)&rp);
    };
 
-   if (rp)
+   if (bd->bd_RPort = rp)
    {
+#ifdef DEBUG_BGUI
+      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gpr->gpr_GInfo, BI_RastPort, rp, TAG_DONE))
+#else
       if (bi = AllocBaseInfo(BI_GadgetInfo, gpr->gpr_GInfo, BI_RastPort, rp, TAG_DONE))
+#endif
       {
          bi->bi_Window = bd->bd_Parent;
 
@@ -552,7 +639,7 @@ METHOD(BaseClassRenderX, struct gpRender *gpr)
             to.Width  += to.Left - 1;
             to.Height += to.Top  - 1;
 
-            AsmDoMethod(bd->bd_View, VIEW_CLIP, &to);
+            AsmDoMethod(bd->bd_View, VIEW_CLIP, &to, TRUE);
 
             /*
              * Convert from rectangle to ibox.
@@ -569,7 +656,9 @@ METHOD(BaseClassRenderX, struct gpRender *gpr)
             /*
              * Copy the object to the window.
              */
-            ClipBlit(rp, from_x, from_y, gpr->gpr_RPort, to.Left, to.Top, to.Width, to.Height, 0xC0);
+            if(to.Width>0
+            && to.Height>0)
+               ClipBlit(rp, from_x, from_y, gpr->gpr_RPort, to.Left, to.Top, to.Width, to.Height, 0xC0);
 
             //if (BASE_DATA(bd->bd_View)->bc_View)
             //{
@@ -594,7 +683,9 @@ METHOD(BaseClassRenderX, struct gpRender *gpr)
             /*
              * Blast the GUI to the window.
              */
-            ClipBlit(rp, box->Left, box->Top, gpr->gpr_RPort, box->Left,  box->Top, box->Width, box->Height, 0xC0);
+            if(box->Width>0
+            && box->Height>0)
+               ClipBlit(rp, box->Left, box->Top, gpr->gpr_RPort, box->Left, box->Top, box->Width, box->Height, 0xC0);
          };
       };
    };
@@ -742,10 +833,28 @@ METHOD(BaseClassRender, struct bmRender *bmr)
 
          if (!parent)
          {
+            UWORD apen;
+
             /*
              * If we do not have a frame, we need to clear the area ourselves.
              */
-            BSetDPenA(bi, BACKGROUNDPEN);
+            switch (state)
+            {
+               case IDS_SELECTED:
+                  apen = FILLPEN;
+                  break;
+               case IDS_INACTIVESELECTED:
+               case IDS_INACTIVENORMAL:
+                  apen = BACKGROUNDPEN;
+                  break;
+               default:
+                  /*
+                   * And BACKGROUNDPEN for normal frames.
+                   */
+                  apen = (GADGET(obj)->Activation & BORDERMASK) ? FILLPEN : BACKGROUNDPEN;
+                  break;
+            };
+            BSetDPenA(bi, apen);
             BSetDrMd(bi, JAM1);
             BClearAfPt(bi);
             BBoxFillA(bi, &bd->bd_InnerBox);
@@ -844,7 +953,7 @@ METHOD(BaseClassHelp, struct bmShowHelp *bsh)
          {  /*
              * Help Hook ?
              */
-            rc = CallHookPkt(bd->bd_HelpHook, obj, NULL);
+            rc = BGUI_CallHookPkt(bd->bd_HelpHook, obj, NULL);
          }
          else if (bd->bd_HelpText)
          {
@@ -909,7 +1018,11 @@ METHOD(BaseClassDimensionsX, struct grmDimensions *dim)
    struct bguiExtent  be;
    ULONG              rc = 0;
 
+#ifdef DEBUG_BGUI
+   if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, dim->grmd_GInfo, BI_RastPort, dim->grmd_RPort, TAG_DONE))
+#else
    if (bi = AllocBaseInfo(BI_GadgetInfo, dim->grmd_GInfo, BI_RastPort, dim->grmd_RPort, TAG_DONE))
+#endif
    {
       if (rc = AsmDoMethod(obj, BASE_DIMENSIONS, bi, &be, 0))
       {
@@ -936,19 +1049,20 @@ METHOD(BaseClassDimensionsX, struct grmDimensions *dim)
             *(dim->grmd_NomSize.Height) = be.be_Nom.Height;
          };
       };
+      FreeBaseInfo(bi);
    };
    return rc;
 }
 ///
-/// GRM_RELAYOUT
+/// BASE_RELAYOUT
 
-METHOD(BaseClassRelayout, struct grmRelayout *grmr)
+METHOD(BaseClassRelayout, struct bmRelayout *bmr)
 {
    BD                *bd = INST_DATA(cl, obj);
    UWORD              minw, minh, maxw = 0xFFFF, maxh = 0xFFFF;
    ULONG              rc = 0;
-   struct GadgetInfo *gi = grmr->grmr_GInfo;
-   struct RastPort   *rp = grmr->grmr_RPort;
+   struct GadgetInfo *gi = bmr->bmr_GInfo;
+   struct RastPort   *rp = bmr->bmr_RPort;
    Object            *wo = bd->bd_Window;
 
    if (!wo) return 0;
@@ -957,14 +1071,24 @@ METHOD(BaseClassRelayout, struct grmRelayout *grmr)
 
    if ((minw <= bd->bd_OuterBox.Width) && (minh <= bd->bd_OuterBox.Height))
    {
-      // Wrong RP!!!!
-      rc = AsmDoMethod(obj, GM_RENDER, gi, rp, GREDRAW_REDRAW);
+      if(!(bd->bd_Flags & BDF_INHIBITED))
+      {
+         if((rp=BGUI_ObtainGIRPort(gi)))
+         {
+            rc=AsmDoMethod(obj,GM_RENDER,gi,rp,GREDRAW_REDRAW);
+            ReleaseGIRPort(rp);
+         }
+         else
+            rc=0;
+      }
+      else
+         rc=1;
    }
    else
    {
       if (bd->bd_Group)
       {
-         rc = AsmDoMethodA(bd->bd_Group, (Msg)grmr);
+         rc = AsmDoMethodA(bd->bd_Group, (Msg)bmr);
       }
       else
       {
@@ -1302,7 +1426,11 @@ METHOD(BaseClassDragActive, struct bmDragMsg *bmdm)
    /*
     * Let's show'm were active.
     */
-   if (bi = AllocBaseInfo(BI_GadgetInfo, bmdm->bmdm_GInfo, TAG_DONE))
+#ifdef DEBUG_BGUI
+   if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, bmdm->bmdm_GInfo, BI_RastPort, NULL, TAG_DONE))
+#else
+   if (bi = AllocBaseInfo(BI_GadgetInfo, bmdm->bmdm_GInfo, BI_RastPort, NULL, TAG_DONE))
+#endif
    {
       /*
        * Draw the box.
@@ -1329,7 +1457,11 @@ METHOD(BaseClassDragUpdate, struct bmDragPoint *bmdp)
 
    if (bd->bd_Flags & BDF_MOVE_DROPBOX)
    {
-      if (bi = AllocBaseInfo(BI_GadgetInfo, bmdp->bmdp_GInfo, TAG_DONE))
+#ifdef DEBUG_BGUI
+      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, bmdp->bmdp_GInfo, BI_RastPort, NULL, TAG_DONE))
+#else
+      if (bi = AllocBaseInfo(BI_GadgetInfo, bmdp->bmdp_GInfo, BI_RastPort, NULL, TAG_DONE))
+#endif
       {
          DottedBox(bi, &bd->bd_HitBox);
          FreeBaseInfo(bi);
@@ -1607,7 +1739,7 @@ STATIC DPFUNC ClassFunc[] =
    
    GM_RENDER,              (FUNCPTR)BaseClassRenderX,
    GRM_DIMENSIONS,         (FUNCPTR)BaseClassDimensionsX,
-   GRM_RELAYOUT,           (FUNCPTR)BaseClassRelayout,
+   BASE_RELAYOUT,          (FUNCPTR)BaseClassRelayout,
 
    GM_HITTEST,             (FUNCPTR)BaseClassHitTest,
    GM_HELPTEST,            (FUNCPTR)BaseClassHelpTest,

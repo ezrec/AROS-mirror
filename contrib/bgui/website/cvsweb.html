@@ -1,0 +1,76 @@
+<?
+$configuring=0;
+$include_path=".:bugs";
+$bugs_configuration_path="./";
+require("bugs_globals.php");
+require("bugs_locale.php");
+include(IncludeRelativePath($configuration->shared_include_file));
+
+if($configuration->require_authenticated_access)
+{
+	include("bugs_accounts.php");
+	if(!BugsValidateAccess(""))
+	{
+		commonHeader(LocaleText("restricted-access-page"));
+		commonFooter();
+		exit;
+	}
+}
+
+if(!IsSet($perl_path)
+|| !file_exists($perl_path))
+	$configuration->Debug("CVS Web configuration problem","It was not defined a valid path for perl!\n");
+if(!IsSet($cvsroot)
+|| !@is_dir($cvsroot))
+	$configuration->Debug("CVS Web configuration problem","It was not defined a valid cvs root directory!\n");
+Unset($output);
+$command=
+	"PATH_INFO=\"".getenv("PATH_INFO")."\" ".
+	"SCRIPT_NAME=\"".getenv("SCRIPT_NAME")."\" ".
+	"QUERY_STRING=\"".getenv("QUERY_STRING")."\" ".
+	"SERVER_ADMIN=\"".getenv("SERVER_ADMIN")."\" ".
+	"SERVER_NAME=\"".getenv("SERVER_NAME")."\" ".
+	"HTTP_USER_AGENT=\"".getenv("HTTP_USER_AGENT")."\" ".
+	"HTTP_ACCEPT_ENCODING=\"".getenv("HTTP_ACCEPT_ENCODING")."\" ".
+	($cvs_path!="" ? "PATH=\"".$cvs_path.":\$PATH\" " : "").
+	"CVSROOT=\"".$cvsroot."\" ".
+	"CVSWEB_CONFIG=cvsweb.conf ".
+	$perl_path." 2>&1 -ws ./cvsweb";
+Exec($command,$output,$status);
+if($status)
+	$configuration->Debug("CVS Web execution problem","Command: \"$command\"\nStatus: $status!\nOutput:\n".implode($output,"\n"));
+for($in_headers=1,$headers=array(),$content_type="",$line=0;$line<count($output);$line++)
+{
+	if($in_headers)
+	{
+		switch(strtok(strtolower($output[$line]),":\n\r"))
+		{
+			case "":
+				$in_headers=0;
+				if(IsSet($PHP_AUTH_USER)
+				&& $PHP_AUTH_USER!="bgui-dev"
+				&& $content_type!=" text/html")
+				{
+					Header("WWW-authenticate: basic realm=\"$configuration->access_realm\"");
+					Header("HTTP/1.0 401 Unauthorized");
+					Header("Content-Type: text/plain");
+					echo "The access to this resource is restricted to BGUI developers.";
+					exit;
+				}
+				for($header=0;$header<count($headers);$header++)
+					Header($headers[$header]);
+				break;
+			case "status":
+				$headers[]="HTTP/1.0 ".strtok("\n\r");
+				break;
+			case "content-type":
+				$content_type=strtok("\n\r");
+			default:
+				$headers[]=strtok($output[$line],"\n\r");
+				break;
+		}
+	}
+	else
+		echo $output[$line],"\n";
+}
+?>

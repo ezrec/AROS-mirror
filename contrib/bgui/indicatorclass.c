@@ -11,6 +11,12 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:25  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.1  1998/03/01 19:55:15  mlemos
+ * Fixed short allocation for indicator text string.
+ *
  * Revision 41.10  1998/02/25 21:12:15  mlemos
  * Bumping to 41.10
  *
@@ -156,7 +162,7 @@ METHOD(IClassSetUpdate, struct opUpdate *opu)
          break;
 
       case INDIC_FormatString:
-         if (full_format = BGUI_AllocPoolMem(2 + strlen((UBYTE *)data)))
+         if (full_format = BGUI_AllocPoolMem(3 + strlen((UBYTE *)data)))
          {
             sprintf(full_format, "\033l%s", data);
             DoSetMethodNG(id->id_Text, TEXTA_Text, full_format, TEXTA_CopyText, TRUE, TAG_DONE);

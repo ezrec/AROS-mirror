@@ -1,0 +1,79 @@
+<?
+/*
+ * screenshots.html
+ *
+ * @(#) $Header$
+ *
+ */
+
+$configuring=0;
+$include_path=".:bugs";
+$bugs_configuration_path="./";
+require("bugs_globals.php");
+require("bugs_locale.php");
+include(IncludeRelativePath($configuration->shared_include_file));
+commonHeader("BGUI Screenshots");
+?>
+<HR>
+<UL>
+<H2><LI>BGUI example screenshots:</LI></H2>
+<UL>
+<LI><A HREF="#groups">Flexible group layout</A></LI>
+<LI><A HREF="#backfill">Background fill support</A></LI>
+<LI><A HREF="#textformat">Formatted text display</A></LI>
+<LI><A HREF="#tooltips">Information tool tips</A></LI>
+<LI><A HREF="#palette">Palette color choosing</A></LI>
+<LI><A HREF="#draganddrop">Drag and Drop</A></LI>
+<LI><A HREF="#treeview">Tree list view gadget</A></LI>
+<LI><A HREF="#virtual">Scrollable (virtual) gadgets</A></LI>
+<LI><A HREF="#boopsi">Interface with BOOPSI gadgets</A></LI>
+<LI><A HREF="#bar">2D scroll bar</A></LI>
+<LI><A HREF="#table">Table layout group</A></LI>
+<LI><A HREF="#builder">GUI Builder</A></LI>
+<LI><A HREF="#editor">Documentation editor</A></LI>
+<LI><A HREF="#preferences">Preferences editor</A></LI>
+</UL>
+<P><LI><A HREF="index.html">Back to the BGUI site main page</A></LI></P>
+<HR>
+<?
+
+Function DisplayImage($name,$description)
+{
+	echo "<TD VALIGN=middle><CENTER><A NAME=$name HREF=\"graphics/$name.gif\" ALT=\"$description\"><IMG SRC=\"graphics/$name"."_thumb.gif\" ALT=\"$description\"";
+	$size=GetImageSize("graphics/$name"."_thumb.gif");
+	if($size[2]!=0)
+		echo " WIDTH=".$size[0]." HEIGHT=".$size[1];
+	echo "><BR>$description</A></CENTER></TD>\n";
+}
+
+?>
+<CENTER><TABLE>
+<TR>
+<? DisplayImage("groups","Flexible group layout"); ?>
+<? DisplayImage("backfill","Background fill support"); ?>
+<? DisplayImage("textformat","Formatted text display"); ?>
+<? DisplayImage("tooltips","Information tool tips"); ?>
+</TR>
+<TR>
+<? DisplayImage("palette","Palette color choosing"); ?>
+<? DisplayImage("draganddrop","Drag and drop action"); ?>
+<? DisplayImage("treeview","Tree list view gadget"); ?>
+<? DisplayImage("virtual","Scrollable (virtual) gadgets"); ?>
+</TR>
+<TR>
+<? DisplayImage("boopsi","Interface with BOOPSI gadgets"); ?>
+<? DisplayImage("bar","2D scroll bar"); ?>
+<? DisplayImage("table","Table layout group"); ?>
+</TR>
+<TR>
+<? DisplayImage("builder","GUI Builder"); ?>
+<? DisplayImage("editor","Documentation editor"); ?>
+<? DisplayImage("preferences","Preferences editor"); ?>
+</TR>
+</TABLE></CENTER>
+<HR>
+<P><LI><A HREF="index.html">Back to the BGUI site main page</A></LI></P>
+</UL>
+<?
+commonFooter();
+?>

@@ -11,6 +11,77 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:37  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.17  1999/08/08 23:05:11  mlemos
+ * Assured that the list is redrawn when the list font or the default font
+ * changes.
+ * Made the entry height be always recomputed every time the list is rendered.
+ *
+ * Revision 41.10.2.16  1999/07/28 06:34:32  mlemos
+ * Added rendering damage list after the ScrollRaster() call.
+ *
+ * Revision 41.10.2.15  1999/07/18 06:15:42  mlemos
+ * Fixed the problem of very quick drop without dragging.
+ *
+ * Revision 41.10.2.14  1999/07/03 15:17:40  mlemos
+ * Replaced the calls to CallHookPkt to BGUI_CallHookPkt.
+ *
+ * Revision 41.10.2.13  1999/05/24 20:20:43  mlemos
+ * Added fix for attempt to free BaseInfo handle twice when dragging 10 or
+ * more entries.
+ *
+ * Revision 41.10.2.12  1998/12/20 01:37:42  mlemos
+ * Ensured that the list is fully redrawn when a change like adding a new
+ * entry that makes the list partially invisible, makes the list overhead
+ * increase.
+ * Fixed computation of the top overhead area of a list view with title to
+ * include the height of the separator line (2 pixels).
+ *
+ * Revision 41.10.2.11  1998/12/07 03:07:03  mlemos
+ * Replaced OpenFont and CloseFont calls by the respective BGUI debug macros.
+ *
+ * Revision 41.10.2.10  1998/12/07 00:49:52  mlemos
+ * Fixed range checking bug of new list top entry when the number of visible
+ * entries is larger than the total entries.
+ *
+ * Revision 41.10.2.9  1998/12/06 21:38:21  mlemos
+ * Ensured that when the parent view and window are passed to the listview
+ * scroller gadget on its creation or when are set by OM_SET OM_UPDATE.
+ *
+ * Revision 41.10.2.8  1998/12/06 21:20:41  mlemos
+ * Ensured that the key activation selects the previous or the next selected
+ * entries in Multi Selection lists.
+ * Ensured that selecting the previous or the next selected entries in Multi
+ * Selection lists always deselects any previously selected entries.
+ *
+ * Revision 41.10.2.7  1998/11/28 13:45:17  mlemos
+ * Made the default flag of the list to pre clear the entries.
+ *
+ * Revision 41.10.2.6  1998/11/12 16:23:33  mlemos
+ * Passed NULL rastport pointer to AllocBaseInfo in the methods
+ * BASE_DRAGACTIVE, BASE_DRAGINACTIVE and BASE_DRAGUPDATE to ensure that it
+ * legally obtains the Rastport.
+ *
+ * Revision 41.10.2.5  1998/10/11 15:28:58  mlemos
+ * Enforced the columns minimum width value.
+ *
+ * Revision 41.10.2.4  1998/10/11 14:50:21  mlemos
+ * Fixed the computation of the initial offset of the column bars when the
+ * user starts to drag them.
+ *
+ * Revision 41.10.2.3  1998/06/16 01:22:10  mlemos
+ * Passed NULL rastport pointer to AllocBaseInfo in DrawDragLine to ensure
+ * that it legally obtains the Rastport.
+ *
+ * Revision 41.10.2.2  1998/06/15 21:48:43  mlemos
+ * Passed NULL rastport pointer to AllocBaseInfo in NewTop to ensure that it
+ * legally obtains the Rastport.
+ *
+ * Revision 41.10.2.1  1998/03/01 15:38:05  mlemos
+ * Added support to track BaseInfo memory leaks.
+ *
  * Revision 41.10  1998/02/25 21:12:31  mlemos
  * Bumping to 41.10
  *
@@ -91,7 +162,6 @@ typedef struct ld_ {
    UBYTE             *ld_Title;        /* Title.                     */
 // struct Hook       *ld_Filter;       /* Filter hook.               */
    struct TextAttr   *ld_ListFont;     /* List font.                 */
-   struct TextAttr   *ld_DefaultFont;  /* Default font.              */
    struct TextFont   *ld_Font;         /* List font.                 */
    APTR               ld_MemoryPool;   /* OS 3.0 memory pool.        */
    ULONG              ld_MultiStart;   /* Start of multi-(de)select. */
@@ -350,7 +420,7 @@ STATIC ASM VOID AddEntryInList( REG(a0) LD *ld, REG(a1) Object *obj, REG(a2) LVE
          {
             lvc.lvc_EntryA = lve->lve_Entry;
             lvc.lvc_EntryB = tmp->lve_Entry;
-            if ((LONG)CallHookPkt(ld->ld_Compare, (VOID *)obj, (VOID *)&lvc) >= 0)
+            if ((LONG)BGUI_CallHookPkt(ld->ld_Compare, (VOID *)obj, (VOID *)&lvc) >= 0)
                break;
          };
          /*
@@ -425,7 +495,7 @@ STATIC ASM BOOL AddEntries(REG(a0) LD *ld, REG(a1) APTR *entries, REG(a2) Object
             /*
              * Let the hook make the entry.
              */
-            lve->lve_Entry = (APTR)CallHookPkt(ld->ld_Resource, (void *)obj, (void *)&lvr);
+            lve->lve_Entry = (APTR)BGUI_CallHookPkt(ld->ld_Resource, (void *)obj, (void *)&lvr);
          }
          else
          {
@@ -544,8 +614,14 @@ STATIC ASM VOID NewTop(REG(a0) LD *ld, REG(a1) struct GadgetInfo *gi, REG(a2) Ob
       /*
        * Create rastport.
        */
-      if (bi = AllocBaseInfo(BI_GadgetInfo, gi, TAG_DONE))
+#ifdef DEBUG_BGUI
+      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+#else
+      if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+#endif
       {
+         BOOL needs_refresh=FALSE;
+
          /*
           * Setup font.
           */
@@ -580,6 +656,7 @@ STATIC ASM VOID NewTop(REG(a0) LD *ld, REG(a1) struct GadgetInfo *gi, REG(a2) Ob
                  ld->ld_ListArea.Left,  ld->ld_ListArea.Top,
                  ld->ld_ListArea.Left + ld->ld_ListArea.Width - 1,
                  ld->ld_ListArea.Top  + ld->ld_ListArea.Height - 1);
+            needs_refresh=(bi->bi_RPort->Layer->Flags & LAYERREFRESH);
          };             
 
          ColumnSeparators(ld, bi, bc->bc_InnerBox.Left, bc->bc_InnerBox.Top, bc->bc_InnerBox.Height);
@@ -607,6 +684,17 @@ STATIC ASM VOID NewTop(REG(a0) LD *ld, REG(a1) struct GadgetInfo *gi, REG(a2) Ob
           * Dump BaseInfo.
           */
          FreeBaseInfo(bi);
+
+         if(needs_refresh)
+         {
+            BOOL update;
+
+            if(!(update=BeginUpdate(gi->gi_Layer)))
+               EndUpdate(gi->gi_Layer,FALSE);
+            DoRenderMethod( obj, gi, GREDRAW_REDRAW );
+            if(update)
+               EndUpdate(gi->gi_Layer,TRUE);
+         }
 
          /*
           * Needed by RenderEntry().
@@ -686,6 +774,7 @@ STATIC BOOL GetColumnPositions(Object *obj, LD *ld)
             {
                w = (cd->cd_Weight * totalwidth) / totalweight;
                if (w > cd->cd_MaxWidth) w = cd->cd_MaxWidth;
+               if (w < cd->cd_MinWidth) w = cd->cd_MinWidth;
 
                dw = w - cd->cd_Width;
                if (dw > listwidth - columnwidth)
@@ -736,7 +825,11 @@ STATIC ASM VOID DrawDragLine(REG(a0) LD *ld, REG(a1) struct GadgetInfo *gi)
 
    struct BaseInfo *bi;
 
-   if (bi = AllocBaseInfo(BI_GadgetInfo, gi, TAG_DONE))
+#ifdef DEBUG_BGUI
+   if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+#else
+   if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+#endif
    {
       BSetDrMd(bi, COMPLEMENT);
       BRectFill(bi, x1, y1, x2, y2);
@@ -770,7 +863,7 @@ METHOD(ListClassNew, struct opSet *ops)
       ld              = INST_DATA(cl, rc);
       ld->ld_BC       = BASE_DATA(rc);
 
-      ld->ld_Flags    = LDF_REFRESH_ALL;
+      ld->ld_Flags    = LDF_REFRESH_ALL|LDF_PRE_CLEAR;
       ld->ld_MinShown = 3;
       ld->ld_Columns  = 1;
       ld->ld_Prop     = (Object *)~0;
@@ -854,7 +947,7 @@ METHOD(ListClassNew, struct opSet *ops)
              * Create a scroller.
              */
             ld->ld_Prop = BGUI_NewObject(BGUI_PROP_GADGET, GA_ID, GADGET(rc)->GadgetID,
-               PGA_DontTarget, TRUE, TAG_MORE, tags);
+               PGA_DontTarget, TRUE, BT_ParentView, ld->ld_BC->bc_View, BT_ParentWindow, ld->ld_BC->bc_Window,TAG_MORE, tags);
          };
 
          if (ld->ld_Prop)
@@ -948,16 +1041,22 @@ METHOD(ListClassSetUpdate, struct opUpdate *opu)
          /*
           * Pickup superclass font.
           */
-         Get_SuperAttr(cl, obj, BT_TextAttr, &ld->ld_DefaultFont);
+         if (ld->ld_Font)
+         {
+            BGUI_CloseFont(ld->ld_Font);
+            ld->ld_Font = NULL;
+         };
+         vc=TRUE;
          break;
 
       case LISTV_ListFont:
          ld->ld_ListFont = (struct TextAttr *)data;
          if (ld->ld_Font)
          {
-            CloseFont(ld->ld_Font);
+            BGUI_CloseFont(ld->ld_Font);
             ld->ld_Font = NULL;
          };
+         vc=TRUE;
          break;
 
       case LISTV_Top:
@@ -965,7 +1064,7 @@ METHOD(ListClassSetUpdate, struct opUpdate *opu)
          /*
           * Make sure we stay in range.
           */
-         ntop = range(data, 0, ld->ld_Total - ld->ld_Visible);
+         ntop = range(data, 0, (ld->ld_Total > ld->ld_Visible) ? ld->ld_Total - ld->ld_Visible : 0);
          break;
 
       case LISTV_MakeVisible:
@@ -1122,7 +1221,7 @@ METHOD(ListClassSetUpdate, struct opUpdate *opu)
                   /*
                    * Already selected?
                    */
-                  if (( ! ( lve->lve_Flags & LVEF_SELECTED )) && ( ! ( ld->ld_Flags & LDF_READ_ONLY ))) {
+                  if (((( tag->ti_Tag != LISTV_SelectMulti ) && ( tag->ti_Tag != LISTV_SelectMultiNotVisible )) || ! ( lve->lve_Flags & LVEF_SELECTED )) && ( ! ( ld->ld_Flags & LDF_READ_ONLY ))) {
                      /*
                       * No? DeSelect all other labels if we are not
                       * multi-selecting.
@@ -1169,6 +1268,7 @@ METHOD(ListClassSetUpdate, struct opUpdate *opu)
          break;
 
       case BT_ParentWindow:
+      case BT_ParentView:
          DoSetMethodNG(ld->ld_Prop, tag->ti_Tag, data, TAG_DONE);
          break;
       };
@@ -1288,7 +1388,7 @@ METHOD(ListClassDispose, Msg msg)
          /*
           * Call the hook.
           */
-         CallHookPkt(ld->ld_Resource, (VOID *)obj, (VOID *)&lvr);
+         BGUI_CallHookPkt(ld->ld_Resource, (VOID *)obj, (VOID *)&lvr);
       }
       else
       {
@@ -1311,7 +1411,7 @@ METHOD(ListClassDispose, Msg msg)
 
    if (ld->ld_CD) BGUI_FreePoolMem(ld->ld_CD);
 
-   if (ld->ld_Font) CloseFont(ld->ld_Font);
+   if (ld->ld_Font) BGUI_CloseFont(ld->ld_Font);
    
    /*
     * The superclass takes care of the rest.
@@ -1429,7 +1529,11 @@ STATIC ASM SAVEDS VOID RenderColumn(REG(a0) char *text, REG(a2) Object *obj, REG
       };
    }
    
+#ifdef DEBUG_BGUI
+   if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_DrawInfo, lvr->lvr_DrawInfo, BI_RastPort, lvr->lvr_RPort, TAG_DONE))
+#else
    if (bi = AllocBaseInfo(BI_DrawInfo, lvr->lvr_DrawInfo, BI_RastPort, lvr->lvr_RPort, TAG_DONE))
+#endif
    {
       /*
        * Render entry.
@@ -1544,7 +1648,7 @@ STATIC VOID RenderEntry(Object *obj, LD *ld, struct BaseInfo *bi, LVE *lve, ULON
                /*
                 * Call the hook.
                 */
-               txt = (UBYTE *)CallHookPkt(hook, (void *)obj, (void *)&lvr);
+               txt = (UBYTE *)BGUI_CallHookPkt(hook, (void *)obj, (void *)&lvr);
             }
             else
             {
@@ -1627,6 +1731,7 @@ METHOD(ListClassRender, struct bmRender *bmr)
    ULONG              num, a, rc = 0;
    LVE               *lve;
    int                x, y, w, h, sw;
+   UWORD              overhead;
 
    /*
     * Render the baseclass.
@@ -1646,7 +1751,7 @@ METHOD(ListClassRender, struct bmRender *bmr)
    {
       if (lf)
       {
-         if (tf = OpenFont(lf))
+         if (tf = BGUI_OpenFont(lf))
          {
             ld->ld_Font = tf;
             BSetFont(bi, tf);
@@ -1660,11 +1765,14 @@ METHOD(ListClassRender, struct bmRender *bmr)
       {
          tf = of;
       };
-      /*
-       * Setup entry height always even.
-       */
-      ld->ld_EntryHeight = (tf->tf_YSize + 1) & (ULONG)~1;
    };
+
+   /*
+    * Setup entry height always even.
+    */
+   ld->ld_EntryHeight = (tf->tf_YSize + 1) & (ULONG)~1;
+
+   overhead=ld->ld_Overhead;
 
    /*
     * Setup the list area bounds.
@@ -1677,15 +1785,19 @@ METHOD(ListClassRender, struct bmRender *bmr)
    /*
     * Complete redraw?
     */
-   if (bmr->bmr_Flags == GREDRAW_REDRAW)
+   if (overhead<ld->ld_Overhead
+   || bmr->bmr_Flags == GREDRAW_REDRAW)
    {
+      if(overhead<ld->ld_Overhead)
+         overhead=ld->ld_Overhead;
+
       /*
        * Clear the overhead.
        */
-      if (h = ld->ld_Overhead >> 1)
+      if (h = overhead >> 1)
       {
          y = bc->bc_InnerBox.Top;
-         if (ld->ld_Title || ld->ld_TitleHook) y += ld->ld_EntryHeight;
+         if (ld->ld_Title || ld->ld_TitleHook) y += ld->ld_EntryHeight+2;
 
          rect.MinX = x;  rect.MaxX = x + w - 1;
          rect.MinY = y;  rect.MaxY = y + h - 1;
@@ -1693,7 +1805,7 @@ METHOD(ListClassRender, struct bmRender *bmr)
          AsmDoMethod(bc->bc_Frame, FRAMEM_BACKFILL, bi, &rect, IDS_NORMAL);
       };
 
-      if (h = ld->ld_Overhead - h)
+      if (h = overhead - h)
       {
          y = bc->bc_InnerBox.Top + bc->bc_InnerBox.Height - h;
 
@@ -1996,7 +2108,7 @@ METHOD(ListClassGoActive, struct gpInput *gpi)
                {
                   ld->ld_Flags |= LDF_DRAGGING_COLUMN;
                   ld->ld_DragColumn = col;
-                  ld->ld_DragXLine  = ld->ld_CD[col].cd_Offset;
+                  ld->ld_DragXLine  = ld->ld_CD[col+1].cd_Offset;
                   DrawDragLine(ld, gi);
 
                   return GMR_MEACTIVE;
@@ -2688,12 +2800,12 @@ STATIC ASM ULONG ListClassKeyActive( REG(a0) Class *cl, REG(a2) Object *obj, REG
             /*
              * Shifted selectes the previous entry.
              */
-            if ( nnum ) nnum--;
+            nnum=LISTV_Select_Previous;
          } else {
             /*
              * Normal the next entry.
              */
-            if ( nnum < ( ld->ld_Total - 1 )) nnum++;
+            nnum=LISTV_Select_Next;
          }
 
          /*
@@ -2983,7 +3095,7 @@ METHOD(ListClassClear, struct lvmCommand *lvc)
          /*
           * Call the hook.
           */
-         CallHookPkt(ld->ld_Resource, (VOID *)obj, (VOID *)&lvr);
+         BGUI_CallHookPkt(ld->ld_Resource, (VOID *)obj, (VOID *)&lvr);
       }
       else
       {
@@ -3305,7 +3417,7 @@ STATIC ASM ULONG ListClassRemEntry( REG(a0) Class *cl, REG(a2) Object *obj, REG(
          /*
           * Call the hook.
           */
-         rc = ( ULONG )CallHookPkt(( void * )ld->ld_Resource, ( void * )obj, ( void * )&lvr );
+         rc = ( ULONG )BGUI_CallHookPkt(( void * )ld->ld_Resource, ( void * )obj, ( void * )&lvr );
       } else {
          /*
           * Simple de-allocation
@@ -3805,13 +3917,13 @@ STATIC ASM ULONG ListClassReplace( REG(a0) Class *cl, REG(a2) Object *obj, REG(a
          /*
           * Call the hook.
           */
-         if ( newdata = ( APTR )CallHookPkt(( void * )ld->ld_Resource, ( void * )obj, ( void * )&lvr )) {
+         if ( newdata = ( APTR )BGUI_CallHookPkt(( void * )ld->ld_Resource, ( void * )obj, ( void * )&lvr )) {
             /*
              * Free the old entry and setup the new one.
              */
             lvr.lvr_Command = LVRC_KILL;
             lvr.lvr_Entry  = lvmr->lvmr_OldEntry;
-            CallHookPkt(( void * )ld->ld_Resource, ( void * )obj, ( void * )&lvr );
+            BGUI_CallHookPkt(( void * )ld->ld_Resource, ( void * )obj, ( void * )&lvr );
             lvo->lve_Entry = newdata;
             lvo->lve_Flags |= LVEF_REFRESH;
             rc = ( ULONG )newdata;
@@ -3903,7 +4015,7 @@ METHOD(ListClassDragActive, struct bmDragMsg *bmdm)
    LD                *ld = INST_DATA(cl, obj);
    struct BaseInfo   *bi;
 
-   ld->ld_DrawSpot = ~0;
+   ld->ld_DropSpot=ld->ld_DrawSpot = ~0;
    
    /*
     * Drop anywhere or do we have to mark the spot?
@@ -3913,7 +4025,11 @@ METHOD(ListClassDragActive, struct bmDragMsg *bmdm)
       /*
        * Anywhere or the list is empty. Simply place a dotted line around the view area.
        */
-      if (bi = AllocBaseInfo(BI_GadgetInfo, bmdm->bmdm_GInfo, TAG_DONE))
+#ifdef DEBUG_BGUI
+      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, bmdm->bmdm_GInfo, BI_RastPort, NULL, TAG_DONE))
+#else
+      if (bi = AllocBaseInfo(BI_GadgetInfo, bmdm->bmdm_GInfo, BI_RastPort, NULL, TAG_DONE))
+#endif
       {
          ld->ld_Flags |= LDF_MOVE_DROPBOX;
          /*
@@ -3968,7 +4084,11 @@ METHOD(ListClassDragUpdate, struct bmDragPoint *bmdp)
 
    if (ld->ld_Flags & LDF_MOVE_DROPBOX)
    {
-      if (bi = AllocBaseInfo(BI_GadgetInfo, gi, TAG_DONE))
+#ifdef DEBUG_BGUI
+      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+#else
+      if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+#endif
       {
          DottedBox(bi, &ld->ld_InnerBox);
          FreeBaseInfo(bi);
@@ -4043,7 +4163,11 @@ METHOD(ListClassDragUpdate, struct bmDragPoint *bmdp)
              */
             if ((ld->ld_DrawSpot != (UWORD)~0) && ld->ld_LineBuffer)
             {
-               if (bi = AllocBaseInfo(BI_GadgetInfo, gi, TAG_DONE))
+#ifdef DEBUG_BGUI
+               if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+#else
+               if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+#endif
                {
                   /*
                    * Fix line at the old position.
@@ -4073,7 +4197,11 @@ METHOD(ListClassDragUpdate, struct bmDragPoint *bmdp)
 
             ld->ld_DrawSpot = y;
 
-            if (bi = AllocBaseInfo(BI_GadgetInfo, gi, TAG_DONE))
+#ifdef DEBUG_BGUI
+            if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+#else
+            if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, NULL, TAG_DONE))
+#endif
             {
                if (!ld->ld_LineBuffer) ld->ld_LineBuffer = BGUI_CreateRPortBitMap(bi->bi_RPort, w, 1, 0);
 
@@ -4123,6 +4251,8 @@ STATIC ASM ULONG ListClassDropped( REG(a0) Class *cl, REG(a2) Object *obj, REG(a
    LVE         *lve, *tmp, *pred = NULL;
    ULONG        spot = ld->ld_DropSpot, pos = 0;
 
+   if(spot==~0)
+      return(1);
    /*
     * Initialize buffer list.
     */
@@ -4288,7 +4418,11 @@ METHOD(ListClassGetObject, struct bmGetDragObject *bmgo)
           */
          if (drag_rp = BGUI_CreateRPortBitMap(rp, lw, num * lh, depth))
          {
+#ifdef DEBUG_BGUI
+            if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, drag_rp, TAG_DONE))
+#else
             if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, drag_rp, TAG_DONE))
+#endif
             {
                BSetFont(bi, ld->ld_Font);
                ColumnSeparators(ld, bi, 0, 0, num * ld->ld_EntryHeight);
@@ -4322,7 +4456,7 @@ METHOD(ListClassGetObject, struct bmGetDragObject *bmgo)
                 */
                rc = (ULONG)drag_rp->BitMap;
 
-               FreeBaseInfo(bi);
+               if(bi) FreeBaseInfo(bi);
             };
          }
       }
@@ -4333,7 +4467,11 @@ METHOD(ListClassGetObject, struct bmGetDragObject *bmgo)
           */
          if (drag_rp = BGUI_CreateRPortBitMap(rp, lw, 3 * eh, depth))
          {
+#ifdef DEBUG_BGUI
+            if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, drag_rp, TAG_DONE))
+#else
             if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, drag_rp, TAG_DONE))
+#endif
             {
                BSetFont(bi, ld->ld_Font);
                ColumnSeparators(ld, bi, 0, 0, 3 * ld->ld_EntryHeight);
@@ -4363,7 +4501,7 @@ METHOD(ListClassGetObject, struct bmGetDragObject *bmgo)
                LastSelected(obj);
                RenderEntry(obj, ld, bi, ld->ld_ScanNode, REL_ZERO | 2);
 
-               FreeBaseInfo(bi);
+               FreeBaseInfo(bi); bi=NULL;
             };
 
             num = 3;

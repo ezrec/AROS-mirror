@@ -11,6 +11,28 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:55  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.5  2000/01/30 20:41:12  mlemos
+ * Fixed bug of not adding the arrows size to the minimum and nominal
+ * dimensions of the gadget.
+ *
+ * Revision 41.10.2.4  1998/12/06 21:40:53  mlemos
+ * Ensured that when the parent view and window are passed to the arrow
+ * gadgets on their creation.
+ *
+ * Revision 41.10.2.3  1998/11/13 18:21:53  mlemos
+ * Reverted the workaround patch that set the screen pointer in the BaseInfo
+ * structure as the real problem was fixed AllocBaseInfo function.
+ *
+ * Revision 41.10.2.2  1998/11/03 10:45:28  mlemos
+ * Added workaround to avoid enforcer hits cause by ROM propclass looking at
+ * the GadgetInfo Screen pointer inside GM_RENDER method.
+ *
+ * Revision 41.10.2.1  1998/10/01 04:38:52  mlemos
+ * Fixed bug of sending interim notifications after adjusting the knob.
+ *
  * Revision 41.10  1998/02/25 21:12:53  mlemos
  * Bumping to 41.10
  *
@@ -190,10 +212,14 @@ METHOD(PropClassNew, struct opSet *ops)
       {
          pd->pd_Arrow1 = BGUI_NewObject(BGUI_BUTTON_GADGET,
                                         VIT_BuiltIn, horiz ? BUILTIN_ARROW_LEFT : BUILTIN_ARROW_UP,
+                                        BT_ParentView,bc->bc_View,
+                                        BT_ParentWindow,bc->bc_Window,
                                         TAG_DONE);
 
          pd->pd_Arrow2 = BGUI_NewObject(BGUI_BUTTON_GADGET,
                                         VIT_BuiltIn, horiz ? BUILTIN_ARROW_RIGHT : BUILTIN_ARROW_DOWN,
+                                        BT_ParentView,bc->bc_View,
+                                        BT_ParentWindow,bc->bc_Window,
                                         TAG_DONE);
 
          if (!(pd->pd_Arrow1 && pd->pd_Arrow2)) goto failure;
@@ -717,7 +743,7 @@ STATIC ASM VOID AdjustKnob(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struc
    if ((top >= 0) && (top <= total))
    {
       DoSetMethod(pd->pd_Prop, gpi->gpi_GInfo, PGA_Top, top, TAG_DONE);
-      NotifyChange(cl, obj, gpi, OPUF_INTERIM);
+      NotifyChange(cl, obj, gpi, 0L);
    };
 }
 
@@ -981,7 +1007,7 @@ METHOD(PropClassDimensions, struct bmDimensions *bmd)
    /*
     * Add these to the superclass results.
     */
-   rc = CalcDimensions(cl, obj, bmd, 8, 8);
+   rc = CalcDimensions(cl, obj, bmd, 8+(horiz ? arrowsize*2 : 0), 8+(horiz ? 0 : arrowsize*2 ));
 
    if (vborder) bmd->bmd_Extent->be_Min.Width  = bmd->bmd_Extent->be_Nom.Width  = 18;
    if (hborder) bmd->bmd_Extent->be_Min.Height = bmd->bmd_Extent->be_Nom.Height = 10;

@@ -11,6 +11,36 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:29  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.7  1999/08/03 05:11:53  mlemos
+ * Ensured that the creation of the label rotation bitmaps are allocated as
+ * friends of the rastport's bitmap.
+ *
+ * Revision 41.10.2.6  1998/12/07 03:07:01  mlemos
+ * Replaced OpenFont and CloseFont calls by the respective BGUI debug macros.
+ *
+ * Revision 41.10.2.5  1998/10/16 02:58:47  mlemos
+ * Fixed a bug in the computation of label dimensions that was ignoring that
+ * labels may have padding space to left or above them.
+ *
+ * Revision 41.10.2.4  1998/10/15 04:59:44  mlemos
+ * Fixed a bug in the computation of label dimensions that was ignoring that
+ * labels have padding space arround them depending on their positions.
+ * Fixed a bug that was making label class maximum size to not update
+ * depending on nominal size.
+ *
+ * Revision 41.10.2.3  1998/05/22 03:50:04  mlemos
+ * Ensured that the extent fields are initialized even when the label text is
+ * set to NULL.
+ *
+ * Revision 41.10.2.2  1998/03/02 23:48:46  mlemos
+ * Switched vector allocation functions calls to BGUI allocation functions.
+ *
+ * Revision 41.10.2.1  1998/02/28 02:24:43  mlemos
+ * Made Dimensions method return size (0,0) when the label text is set to NULL
+ *
  * Revision 41.10  1998/02/25 21:12:21  mlemos
  * Bumping to 41.10
  *
@@ -207,7 +237,7 @@ METHOD(LabelClassSetCustom, struct rmAttr *ra)
 
    case IMAGE_TextFont:
       if (ld->ld_Font && (ld->ld_Flags & LABF_SELFOPEN))
-         CloseFont(ld->ld_Font);
+         BGUI_CloseFont(ld->ld_Font);
       ld->ld_Font   = (struct TextFont *)data;
       ld->ld_Flags &= ~LABF_SELFOPEN;
       break;
@@ -223,10 +253,10 @@ METHOD(LabelClassSetCustom, struct rmAttr *ra)
       break;
 
    case LAB_TextAttr:
-      if (data && (tf = OpenFont((struct TextAttr *)data)))
+      if (data && (tf = BGUI_OpenFont((struct TextAttr *)data)))
       {
          if (ld->ld_Font && (ld->ld_Flags & LABF_SELFOPEN))
-            CloseFont(ld->ld_Font);
+            BGUI_CloseFont(ld->ld_Font);
          ld->ld_Font     = tf;
          ld->ld_TextAttr = (struct TextAttr *)data;
          ld->ld_Flags   |= LABF_SELFOPEN;
@@ -328,7 +358,7 @@ METHOD(LabelClassDispose, Msg msg)
     * Close the font.
     */
    if (ld->ld_Font && (ld->ld_Flags & LABF_SELFOPEN))
-      CloseFont(ld->ld_Font);
+      BGUI_CloseFont(ld->ld_Font);
 
    /*
     * The rest goes to the superclass.
@@ -376,6 +406,11 @@ METHOD(LabelClassDrawErase, struct impDraw *dr)
    {
       l += dr->imp_Offset.X;
       t += dr->imp_Offset.Y;
+   }
+   else
+   {
+      bounds = ie->impe_Extent;
+      bounds->Left = bounds->Top = bounds->Width = bounds->Height = 0;
    }
 
    /*
@@ -662,7 +697,7 @@ METHOD(LabelClassDrawErase, struct impDraw *dr)
       {
          if (ld->ld_Flags & (LABF_FLIP_XY|LABF_FLIP_X|LABF_FLIP_Y))
          {
-            rrp.BitMap = BGUI_AllocBitMap(tw, th, FGetDepth(&rrp), BMF_STANDARD, NULL);
+            rrp.BitMap = BGUI_AllocBitMap(tw, th, FGetDepth(&rrp), BMF_STANDARD, dr->imp_RPort->BitMap);
             
             if (rrp.BitMap)
             {
@@ -691,10 +726,10 @@ METHOD(LabelClassDrawErase, struct impDraw *dr)
             {
                rw = ((tw + 15) >> 4) << 4;
                
-               if (chunky1 = AllocVec(rw * th, 0))
+               if (chunky1 = BGUI_AllocPoolMem(rw * th))
                {
                   trp = rrp;
-                  if (trp.BitMap = BGUI_AllocBitMap(rw, 1, FGetDepth(&rrp), BMF_STANDARD, NULL))
+                  if (trp.BitMap = BGUI_AllocBitMap(rw, 1, FGetDepth(&rrp), BMF_STANDARD, dr->imp_RPort->BitMap))
                   {
                      ReadPixelArray8(&rrp, 0, 0, tw - 1, th - 1, chunky1, &trp);
                      BGUI_FreeBitMap(rrp.BitMap);
@@ -739,7 +774,7 @@ METHOD(LabelClassDrawErase, struct impDraw *dr)
                         chunky2 = chunky1;
                         rh = ((th + 15) >> 4) << 4;
 
-                        if (chunky1 = AllocVec(tw * rh, 0))
+                        if (chunky1 = BGUI_AllocPoolMem(tw * rh))
                         {
                            for (i1 = 0; i1 < th; i1++)
                            {
@@ -748,13 +783,13 @@ METHOD(LabelClassDrawErase, struct impDraw *dr)
                                  chunky1[(j1 * rh) + i1] = chunky2[(i1 * rw) + j1];
                               };
                            };
-                           FreeVec(chunky2);
+                           BGUI_FreePoolMem(chunky2);
                         }
                         else chunky1 = chunky2;
                         i1 = tw; tw = th; th = i1;
 
                         BGUI_FreeBitMap(trp.BitMap);
-                        trp.BitMap = BGUI_AllocBitMap(rw, 1, FGetDepth(&rrp), BMF_STANDARD, NULL);
+                        trp.BitMap = BGUI_AllocBitMap(rw, 1, FGetDepth(&rrp), BMF_STANDARD, dr->imp_RPort->BitMap);
                      };
                      if (trp.BitMap)
                      {                    
@@ -763,7 +798,7 @@ METHOD(LabelClassDrawErase, struct impDraw *dr)
                         BGUI_FreeBitMap(trp.BitMap);
                      };
                   };                   
-                  FreeVec(chunky1);
+                  BGUI_FreePoolMem(chunky1);
                };          
                BGUI_FreeBitMap(rrp.BitMap);
             };
@@ -796,9 +831,20 @@ METHOD(LabelClassDimensions, struct bmDimensions *bmd)
    LD                *ld = INST_DATA(cl, obj);
    struct BaseInfo   *bi = bmd->bmd_BInfo;
    struct bguiExtent *be = bmd->bmd_Extent;
-   int                lh = TotalHeight(bi->bi_RPort, ld->ld_Text);
-   int                lw = TotalWidth (bi->bi_RPort, ld->ld_Text);
+   UWORD                lh;
+   UWORD                lw;
 
+   {
+      struct IBox extentions;
+
+      if(DoExtentMethod(obj, bi->bi_RPort, &extentions, &lw, &lh, EXTF_MAXIMUM))
+      {
+         lw=max(lw,max(-extentions.Left,extentions.Width));
+         lh=max(lh,max(-extentions.Top,extentions.Height));
+      }
+      else
+         lw=lh=0;
+   }
    switch (ld->ld_Place)
    {
    case PLACE_ABOVE:
@@ -828,6 +874,8 @@ METHOD(LabelClassDimensions, struct bmDimensions *bmd)
       be->be_Nom.Height += lh;
       break;
    };
+   be->be_Max.Width=max(be->be_Max.Width,be->be_Nom.Width);
+   be->be_Max.Height=max(be->be_Max.Height,be->be_Nom.Height);
    return 1;
 }
 ///

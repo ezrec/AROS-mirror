@@ -11,6 +11,12 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:55:17  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.1  1999/07/31 01:55:22  mlemos
+ * Fixed superclass call to dispose the objects.
+ *
  * Revision 41.10  1998/02/25 21:13:18  mlemos
  * Bumping to 41.10
  *
@@ -139,7 +145,7 @@ METHOD(SystemClassDispose, Msg msg)
 
    if (sd->sd_Image) DisposeObject(sd->sd_Image);
 
-   return AsmDoSuperMethod(cl, obj, msg);
+   return AsmDoSuperMethodA(cl, obj, msg);
 }
 ///
 /// IM_DRAW, IM_ERASE

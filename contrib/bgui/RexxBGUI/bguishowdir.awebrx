@@ -1,0 +1,87 @@
+/* REXX */
+
+'GET SCREEN VAR scr'
+'GET SELECTION VAR sel'
+IF rc>0 THEN sel=''
+sel=strip(sel)
+dir='Work:TEMP/'sel
+if right(dir,1)~='/' & right(dir,1)~=':' then dir=dir'/'; else nop
+address command 'list >t:list' dir 'LFORMAT "%N	%L	%D"'
+address command 'sort t:list t:list2'
+
+if ~show('l','rexxbgui.library') then do
+	if ~addlib('rexxbgui.library',0,-30) then do
+		exit(20)
+	end
+	else nop
+end
+else nop
+
+call bguiopen('AWebShowDir')
+
+call bguireadentries('t:list2','LST')
+
+address command 'delete >NIL: t:list t:list2'
+
+signal on syntax /* important: bguiclose() MUST be called */
+signal on halt
+signal on break_c
+
+esc='1B'x
+lf='0A'x
+cr='0D'x
+tab='09'x
+grspace.narrow=-1
+grspace.normal=-2
+grspace.wide=-3
+
+g=bguivgroup(,
+	bguilistview('listv',,'LST','S',3 90 20 20)||,
+	bguihgroup(,
+		bguibutton('del','_Delete')||,
+		bguivarspace(50)||,
+		bguibutton('quit','_Quit'),
+	)||bguilayout(LGO_FixMinHeight,1),
+,grspace.normal,grspace.normal)
+
+call bguiset(obj.del,,GA_Disabled,1)
+
+a=bguiwindow('Directory "'sel'" locally ('dir')',g,55,80,,scr)
+
+if bguiwinopen(a)=0 then bguierror(12) else nop
+
+id=0
+do while bguiwinwaitevent(a,'ID')~=id.winclose
+	select
+		when id=id.listv then call bguiset(obj.del,a,GA_Disabled,0)
+		when id=id.del then do
+			parse value bguiget(obj.listv,LISTV_LastClicked) with,
+				file (tab) /* bug fixed */
+			fname=dir||file
+			if bguireq('Delete' fname'?','*_Yes|_No',,a)=1 then do
+				address command 'delete >nil:' fname
+				if rc=0 then do
+					call bguilistvcommand(obj.listv,a,'remselected')
+				end; else do
+					call bguireq('Unable to delete!','*_OK',,a)
+				end
+			end; else nop
+		end
+		when id=id.quit then leave
+		when id=id.winclose then nop
+		otherwise nop
+	end
+end
+rc=0
+
+syntax:
+if rc~=0 then address aweb.1 'request Error "' '+++ ['rc']' errortext(rc) 'at line' sigl '" "_Abort"'
+call bguiclose()
+exit 10
+
+break_c:
+halt:
+rc=0
+address aweb.1 'request Error "' '+++ Break at line' sigl '" "_Abort"'
+call bguiclose()
+exit 10

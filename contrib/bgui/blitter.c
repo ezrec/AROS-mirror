@@ -11,6 +11,20 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:53:58  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.3  1999/08/03 05:11:03  mlemos
+ * Ensured that the creation of the drag and drop screen buffer bitmap is
+ * allocated and friend of the screen's bitmap.
+ *
+ * Revision 41.10.2.2  1999/07/26 16:36:58  mlemos
+ * Prevented that a drag session starts before the previous one ends
+ * completely.
+ *
+ * Revision 41.10.2.1  1998/03/02 23:46:18  mlemos
+ * Switched vector allocation functions calls to BGUI allocation functions.
+ *
  * Revision 41.10  1998/02/25 21:11:40  mlemos
  * Bumping to 41.10
  *
@@ -127,7 +141,7 @@ static void KillDragObject(BMO *bmo)
       /*
        * Nuke the structure.
        */
-      FreeVec(bmo);
+      BGUI_FreePoolMem(bmo);
    };
 }
 
@@ -155,6 +169,8 @@ static void killwin(BMO *bmo)
       bmo->bmo_BMWindow = NULL;
    };
 }
+
+static BMO *last_bmo=NULL;
 
 __saveds void Mover(void)
 {
@@ -302,6 +318,7 @@ __saveds void Mover(void)
     * created object bitmap.
     */
    KillDragObject(bmo);
+   last_bmo=NULL;
 }
 
 /*
@@ -318,7 +335,8 @@ makeproto ASM BMO *CreateBMO(REG(a0) Object *obj, REG(a1) struct GadgetInfo *gi)
    struct IBox        bounds;
    char               args[10];
 
-   if (bmo = AllocVec(sizeof(BMO), MEMF_CLEAR))
+   if (last_bmo==NULL
+   && (bmo=last_bmo= BGUI_AllocPoolMem(sizeof(BMO))))
    {
       if (bmo->bmo_ObjectBuffer = (struct BitMap *)AsmDoMethod(obj, BASE_GETDRAGOBJECT, gi, &bounds))
       {
@@ -346,7 +364,7 @@ makeproto ASM BMO *CreateBMO(REG(a0) Object *obj, REG(a1) struct GadgetInfo *gi)
          bmo->bmo_Window = win;
          bmo->bmo_Object = obj;
 
-         if (bmo->bmo_ScreenBuffer = BGUI_AllocBitMap(w, h, depth, 0, NULL))
+         if (bmo->bmo_ScreenBuffer = BGUI_AllocBitMap(w, h, depth, 0, scr->RastPort.BitMap))
          {
             InitSemaphore(&bmo->bmo_Lock);
             sprintf(args, "%08lx\n", bmo);
@@ -359,7 +377,8 @@ makeproto ASM BMO *CreateBMO(REG(a0) Object *obj, REG(a1) struct GadgetInfo *gi)
          };
       };
       KillDragObject(bmo);
-   };
+      last_bmo=NULL;
+   }
    return NULL;
 }
 

@@ -11,6 +11,22 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:31  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.4  1999/07/24 17:08:08  mlemos
+ * Removed the code that flushed the memory to remove the current catalog.
+ *
+ * Revision 41.10.2.3  1998/10/01 04:25:58  mlemos
+ * Made the library call the functions to allocate and free the memory for the
+ * pre-allocated stack memory space for use by the input.device task.
+ *
+ * Revision 41.10.2.2  1998/06/18 23:14:15  mlemos
+ * Added code to outdate a given library build.
+ *
+ * Revision 41.10.2.1  1998/03/01 02:21:57  mlemos
+ * Added new memory allocation debugging functions to the library
+ *
  * Revision 41.10  1998/02/25 21:12:24  mlemos
  * Bumping to 41.10
  *
@@ -19,6 +35,8 @@
  *
  *
  */
+
+#define NO_MEMORY_ALLOCATION_DEBUG_ALIASING
 
 #include "include/classdefs.h"
 
@@ -46,6 +64,9 @@ struct Library       *DataTypesBase = NULL;
 struct Library       *LocaleBase    = NULL;
 struct Library       *WorkbenchBase = NULL;
 struct Catalog       *Catalog       = NULL;
+
+struct Task          *InputDevice   = NULL;
+APTR                  InputStack    = NULL;
 
 /*
  * Library function table.
@@ -96,6 +117,8 @@ STATIC const LONG Vectors[] = {
    (LONG)BGUI_GetDefaultTags,
    (LONG)BGUI_DefaultPrefs,
    (LONG)BGUI_LoadPrefs,
+   (LONG)BGUI_AllocPoolMemDebug,
+   (LONG)BGUI_FreePoolMemDebug,
    /*
     * Table end marker.
     */
@@ -128,30 +151,16 @@ SAVEDS STATIC VOID CloseLibs(void)
 makeproto VOID InitLocale(void)
 {
    UWORD    num;
-   APTR     ptr;
 
    /*
     * locale.library opened?
     */
-   if ( LocaleBase ) {
+   if ( LocaleBase 
+   &&   Catalog==NULL) {
       /*
        * Obtain lock.
        */
       ObtainSemaphore( &TaskLock );
-
-      /*
-       * Close catalog when it was opened.
-       */
-      if ( Catalog ) {
-         CloseCatalog( Catalog );
-         Catalog = NULL;
-      }
-
-      /*
-       * Flush memory.
-       */
-      if ( ptr = AllocVec( 0xFFFFFFF0, MEMF_ANY ))
-         FreeVec( ptr );
 
       /*
        * Open up the catalog.
@@ -209,6 +218,25 @@ makeproto SAVEDS ASM struct Library *LibInit(REG(a0) BPTR segment, REG(a6) struc
    LocaleBase     = OpenLibrary("locale.library",        38);
    DataTypesBase  = OpenLibrary("datatypes.library",     39);
 
+   InitInputStack();
+
+#ifdef OUTDATE_BUILD
+      if(DOSBase)
+      {
+         static struct DateStamp expiry_date=
+         {
+            OUTDATE_BUILD,0,0
+         };
+         struct DateStamp today;
+
+         DateStamp(&today);
+         if(CompareDates(&today,&expiry_date)<0)
+         {
+            CloseLibs();
+            return(NULL);
+         }
+      }
+#endif
    /*
     * All libraries open?
     */
@@ -336,6 +364,8 @@ makeproto SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
     */
    if (Catalog)
       CloseCatalog(Catalog);
+
+   FreeInputStack();
 
    /*
     * Close system libraries.

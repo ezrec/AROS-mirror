@@ -1,0 +1,24 @@
+DirectoryIndex index.html
+<Files *>
+deny from all
+</Files>
+<Files ~ "(bgui|((index|bugs|bugs_statistics|bugs_configuration|cvsweb|screenshots|manifest)\.html)|((bgui|bgui_src|bgui_dev|bgui_e|bgui_rexx|bgui_html_documentation|bgui_guide_documentation)\.lha))$">
+SetHandler application/x-httpd-php3
+php3_include_path .:bugs
+php3_magic_quotes_gpc on
+allow from all
+</Files>
+<Files ~ "(bgui|bgui_src|bgui_dev|bgui_e|bgui_rexx|bgui_html_documentation|bgui_guide_documentation)\.lha">
+ForceType application/octet-stream
+</Files>
+<Files graphics/*.gif>
+allow from all
+</Files>
+<Files bgui_documentation/*.html>
+allow from all
+</Files>
+<Files ~ "\.gif$">
+allow from all
+</Files>
+ErrorDocument 403 /index.html
+ErrorDocument 404 /index.html

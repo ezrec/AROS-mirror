@@ -11,6 +11,14 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 20:01:55  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.1  1999/08/29 20:25:51  mlemos
+ * Moved the definitions for methods GRM_ADDMEMBER, GRM_REMMEMBER,
+ * GRM_DIMENSIONS, GRM_ADDSPACEMEMBER, GRM_INSERTMEMBER, GRM_REPLACEMEMBER to
+ * bgui.h.
+ *
  * Revision 41.10  1998/02/25 21:13:56  mlemos
  * Bumping to 41.10
  *
@@ -78,84 +86,6 @@ struct bmAddHook {
 
 /* Remove a hook from the hook-notification list. */
 #define BASE_REMHOOK                    (BGUI_MB+53)
-
-
-
-
-#define GRM_ADDMEMBER                   (BGUI_MB+81)
-
-/* Add a member to the group. */
-struct grmAddMember {
-        ULONG                   MethodID;       /* GRM_ADDMEMBER            */
-        Object                 *grma_Member;    /* Object to add.           */
-        ULONG                   grma_Attr;      /* First of LGO attributes. */
-};
-
-#define GRM_REMMEMBER                   (BGUI_MB+82)
-
-/* Remove a member from the group. */
-struct grmRemMember {
-        ULONG                   MethodID;       /* GRM_REMMEMBER            */
-        Object                 *grmr_Member;    /* Object to remove.        */
-};
-
-#define GRM_DIMENSIONS                  (BGUI_MB+83)
-
-/* Ask an object it's dimensions information. */
-struct grmDimensions {
-        ULONG                   MethodID;       /* GRM_DIMENSIONS           */
-        struct GadgetInfo      *grmd_GInfo;     /* Can be NULL!             */
-        struct RastPort        *grmd_RPort;     /* Ready for calculations.  */
-        struct {
-                UWORD          *Width;
-                UWORD          *Height;
-        }                       grmd_MinSize;   /* Storage for dimensions.  */
-        ULONG                   grmd_Flags;     /* See below.               */
-        struct {
-                UWORD          *Width;
-                UWORD          *Height;
-        }                       grmd_MaxSize;   /* Storage for dimensions.  */
-        struct {
-                UWORD          *Width;
-                UWORD          *Height;
-        }                       grmd_NomSize;   /* Storage for dimensions.  */
-};
-
-/* Flags */
-#define GDIMF_MAXIMUM           (1<<4)  /* The grmd_MaxSize is requested.       */
-#define GDIMF_NOMINAL           (1<<3)  /* The grmd_NomSize is requested.       */
-
-
-#define GRM_ADDSPACEMEMBER              (BGUI_MB+84)
-
-/* Add a weight controlled spacing member. */
-struct grmAddSpaceMember {
-        ULONG                   MethodID;       /* GRM_ADDSPACEMEMBER       */
-        ULONG                   grms_Weight;    /* Object weight.           */
-};
-
-#define GRM_INSERTMEMBER                (BGUI_MB+85)
-
-/* Insert a member in the group. */
-struct grmInsertMember {
-        ULONG                   MethodID;       /* GRM_INSERTMEMBER         */
-        Object                 *grmi_Member;    /* Member to insert.        */
-        Object                 *grmi_Pred;      /* Insert after this member */
-        ULONG                   grmi_Attr;      /* First of LGO attributes. */
-};
-
-#define GRM_REPLACEMEMBER               (BGUI_MB+86)    /* V40 */
-
-/* Replace a member in the group. */
-struct grmReplaceMember {
-        ULONG                   MethodID;       /* GRM_REPLACEMEMBER        */
-        Object                 *grrm_MemberA;   /* Object to replace.       */
-        Object                 *grrm_MemberB;   /* Object which replaces.   */
-        ULONG                   grrm_Attr;      /* First of LGO attributes. */
-};
-
-
-
 
 
 /*

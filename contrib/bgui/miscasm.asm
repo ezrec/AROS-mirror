@@ -12,6 +12,23 @@
 ; All Rights Reserved.
 ;
 ; $Log$
+; Revision 41.11  2000/05/09 19:54:47  mlemos
+; Merged with the branch Manuel_Lemos_fixes.
+;
+; Revision 41.10.2.4  1998/12/14 05:04:36  mlemos
+; Moved the method dispatcher to a C function in classes.c .
+;
+; Revision 41.10.2.3  1998/10/01 04:28:50  mlemos
+; Made the global class dispatcher function get BGUI global data pointer into
+; register a4 and class global data pointer to a5 exchanging registers before
+; calling the method function.
+;
+; Revision 41.10.2.2  1998/09/12 02:18:19  mlemos
+; Added Janne patch to call the stack extension code.
+;
+; Revision 41.10.2.1  1998/02/27 03:32:08  mlemos
+; Moved funcdef.i include to exec_lib.i
+;
 ; Revision 41.10  1998/02/25 21:12:42  mlemos
 ; Bumping to 41.10
 ;
@@ -21,12 +38,14 @@
 ;
 ;
 
-         XDEF  ___GCD
-
          XDEF  _DisplayAGuideInfo
          XDEF  _ScaleWeight
          
          XREF  _UtilityBase,_GfxBase,_IntuitionBase
+
+         XREF  _EnsureStack,_RevertStack
+
+BGUI_STACKEXT EQU 1
 
          SECTION text,CODE
 
@@ -34,7 +53,6 @@ call     MACRO
          jsr _LVO\1(a6)
          ENDM
 
-         include  "exec/funcdef.i"
          include  "exec/exec_lib.i"
          include  "include:utility/hooks.i"
          include  "include:utility/utility_lib.i"
@@ -43,29 +61,6 @@ call     MACRO
          include  "include:intuition/intuition_lib.i"
          include  "include:graphics/graphics_lib.i"
          include  "include:libraries/amigaguide_lib.i"
-
-
-;makeproto SAVEDS ASM ULONG __GCD( REG(a0) Class *, REG(a2) Object *, REG(a1) Msg );
-
-___GCD   movem.l  d2/a2-a4/a6,-(a7)
-         move.l   cl_UserData(a0),a6   ; class data
-         movem.l  -8(a6),a3/a4         ; df table in a3, __saveds in a4
-         move.l   (a1),d2              ; MethodID
-
-.next    movem.l  (a3)+,d0/a6
-         cmp.l    #-1,d0               ; df_MethodID == DF_END?
-         beq.s    .super               ; Done.  Try superclass
-         cmp.l    d2,d0                ; df_MethodID == MethodID?
-         bne.s    .next                ; Next
-
-.method  jsr      (a6)                 ; Call df_Func...
-         movem.l  (a7)+,d2/a2-a4/a6
-         rts
-
-.super   move.l   cl_Super(a0),a0      ; cl_Super to a0
-         move.l   h_Entry(a0),a6       ; h_Entry to a6
-         bra.s    .method
-
 
 ;makeproto __stdargs BOOL DisplayAGuideInfo(struct NewAmigaGuide *, Tag, ...);
 

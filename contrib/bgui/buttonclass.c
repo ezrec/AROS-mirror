@@ -11,6 +11,19 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:53:59  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.3  1999/07/31 01:54:49  mlemos
+ * Ensured that the base object frame is restored before the object is
+ * disposed if the frame object was overwritte by the button class.
+ *
+ * Revision 41.10.2.2  1998/12/06 23:01:41  mlemos
+ * Fixed bug of select only buttons being deselected by keyboard activation.
+ *
+ * Revision 41.10.2.1  1998/11/17 16:05:36  mlemos
+ * Fixed the return value of BASE_RENDER to always reflect image changes.
+ *
  * Revision 41.10  1998/02/25 21:11:42  mlemos
  * Bumping to 41.10
  *
@@ -40,6 +53,7 @@ typedef struct {
 #define BDF_NO_DESELECT    (1<<0)      /* Don't deselect when selected. */
 #define BDF_ENCLOSE        (1<<1)      /* Enclose image in frame.       */
 #define BDF_SYSIMAGE       (1<<2)      /* This is a system image.       */
+#define BDF_STORED_FRAME   (1<<3)      /* Stored base instance frame.   */
 ///
 /// ButtonSetAttrs
 /*
@@ -80,6 +94,7 @@ METHOD(ButtonSetAttrs, struct opSet *ops)
          };
          bd->bd_Image      = (struct Image *)BGUI_NewObject(BGUI_SYSTEM_IMAGE, SYSIA_Which, data, TAG_DONE);
          bd->bd_StoreFrame = bc->bc_Frame;
+         bd->bd_Flags     |= BDF_STORED_FRAME;
          bc->bc_Frame      = NULL;
          bd->bd_SelImage   = NULL;
          bd->bd_Flags     |= BDF_SYSIMAGE;
@@ -92,6 +107,7 @@ METHOD(ButtonSetAttrs, struct opSet *ops)
          {
             bc->bc_Frame      = bd->bd_StoreFrame;
             bd->bd_StoreFrame = NULL;
+            bd->bd_Flags &= ~BDF_STORED_FRAME;
             if (bd->bd_Image) DisposeObject(bd->bd_Image);
             bd->bd_Flags &= ~BDF_SYSIMAGE;
          };
@@ -222,7 +238,9 @@ METHOD(ButtonClassSetUpdate, struct opUpdate *opu)
     */
    if (((GADGET(obj)->Flags & GFLG_DISABLED) != dis) ||
        ((GADGET(obj)->Flags & GFLG_SELECTED) != sel) || vis)
+   {
       DoRenderMethod(obj, opu->opu_GInfo, GREDRAW_REDRAW);
+   }
 
    /*
     * Notify target when a toggle gadget's selected state changed.
@@ -257,13 +275,13 @@ METHOD(ButtonClassRender, struct bmRender *bmr)
    struct Image      *image = NULL;
    Object            *vector = NULL;
    int                x, y;
-   ULONG              rc = 0;
+   ULONG              rc;
    ULONG              state = GadgetState(bi, obj, FALSE);
 
    /*
     * Render the baseclass.
     */
-   AsmDoSuperMethodA(cl, obj, (Msg)bmr);
+   rc=AsmDoSuperMethodA(cl, obj, (Msg)bmr);
 
    /*
     * Pick up the image to render.
@@ -524,10 +542,14 @@ METHOD(ButtonClassGet, struct opGet *opg)
 METHOD(ButtonClassDispose, Msg msg)
 {
    BD    *bd = INST_DATA(cl, obj);
+   BC    *bc = BASE_DATA(obj);
 
    if ((bd->bd_Flags & BDF_SYSIMAGE) && bd->bd_Image)
       DisposeObject(bd->bd_Image);
 
+   if(bd->bd_Flags & BDF_STORED_FRAME)
+      bc->bc_Frame = bd->bd_StoreFrame;
+      
    if (bd->bd_Vector)
       DisposeObject(bd->bd_Vector);
 
@@ -545,6 +567,7 @@ METHOD(ButtonClassKeyActive, struct wmKeyInput *wmki)
 {
    ULONG              rc = WMKF_MEACTIVE;
    struct GadgetInfo *gi = wmki->wmki_GInfo;
+   BD                *bd = INST_DATA(cl, obj);
    /*
     * If we are toggle-select we do not
     * need to go active.
@@ -555,7 +578,9 @@ METHOD(ButtonClassKeyActive, struct wmKeyInput *wmki)
        * Toggle-select buttons do not
        * respond to repeated keys.
        */
-      if (!(wmki->wmki_IEvent->ie_Qualifier & IEQUALIFIER_REPEAT))
+      if (!(wmki->wmki_IEvent->ie_Qualifier & IEQUALIFIER_REPEAT)
+      && (!(bd->bd_Flags & BDF_NO_DESELECT))
+      || !(GADGET(obj)->Flags & GFLG_SELECTED))
       {
          /*
           * Flip selected bit.

@@ -11,6 +11,20 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:53  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.3  1999/07/23 19:44:34  mlemos
+ * Added missing setting of text pen to draw the progress done value.
+ * Ensured that text drawing is done in complement mode if the text pen is the
+ * the same as the fill pen or background pen.
+ *
+ * Revision 41.10.2.2  1998/11/16 20:00:23  mlemos
+ * Replaced a FreeVec call by BGUI_FreePoolMem.
+ *
+ * Revision 41.10.2.1  1998/06/21 21:14:32  mlemos
+ * Prevented the Render method to draw an invalid size bar.
+ *
  * Revision 41.10  1998/02/25 21:12:50  mlemos
  * Bumping to 41.10
  *
@@ -174,7 +188,7 @@ METHOD(ProgressClassDispose, Msg msg)
    /*
     * Deallocate the string buffer.
     */
-   if (pd->pd_Buffer) FreeVec(pd->pd_Buffer);
+   if (pd->pd_Buffer) BGUI_FreePoolMem(pd->pd_Buffer);
 
    /*
     * And let the superclass take
@@ -248,17 +262,22 @@ METHOD(ProgressClassRender, struct bmRender *bmr)
 
    /*
     * Convert to Rectangle structures.
-    */
-   box1.Width  += box1.Left - 1;
-   box1.Height += box1.Top  - 1;
-   box2.Width  += box2.Left - 1;
-   box2.Height += box2.Top  - 1;
-
-   /*
     * Render filled area and clear the rest.
     */
-   AsmDoMethod(bc->bc_Frame, FRAMEM_BACKFILL, bi, &box1, IDS_SELECTED);
-   AsmDoMethod(bc->bc_Frame, FRAMEM_BACKFILL, bi, &box2, IDS_NORMAL);
+   if(box1.Width>0
+   && box1.Height>0)
+   {
+      box1.Width  += box1.Left - 1;
+      box1.Height += box1.Top  - 1;
+      AsmDoMethod(bc->bc_Frame, FRAMEM_BACKFILL, bi, &box1, IDS_SELECTED);
+   }
+   if(box2.Width>0
+   && box2.Height>0)
+   {
+      box2.Width  += box2.Left - 1;
+      box2.Height += box2.Top  - 1;
+      AsmDoMethod(bc->bc_Frame, FRAMEM_BACKFILL, bi, &box2, IDS_NORMAL);
+   }
 
    /*
     * Render textual indicator when present.
@@ -275,12 +294,29 @@ METHOD(ProgressClassRender, struct bmRender *bmr)
        */
       if ((str = DoBuffer(pd->pd_Text, &pd->pd_Buffer, &pd->pd_BufSize, (ULONG *)&pd->pd_Done)) && strlen(str))
       {
+         ULONG apen;
+         STRPTR formatted=NULL;
+
          BGUI_InfoTextSize(rp, str, (UWORD *)&box1.Width, (UWORD *)&box1.Height);
 
          box1.Left = bc->bc_InnerBox.Left + ((bc->bc_InnerBox.Width  - box1.Width)  >> 1);
          box1.Top  = bc->bc_InnerBox.Top  + ((bc->bc_InnerBox.Height - box1.Height) >> 1);
 
-         RenderText(bi, str, &box1);
+         FSetAPen(rp,apen=bi->bi_DrInfo->dri_Pens[TEXTPEN]);
+         if((apen!=bi->bi_DrInfo->dri_Pens[FILLPEN]
+         && apen!=bi->bi_DrInfo->dri_Pens[BACKGROUNDPEN])
+         || (formatted=BGUI_AllocPoolMem(strlen(ISEQ_COMPLEMENT)+strlen(str)+1)))
+         {
+            if(formatted)
+            {
+               strcpy(formatted,ISEQ_COMPLEMENT);
+               strcpy(formatted+strlen(ISEQ_COMPLEMENT),str);
+               str=formatted;
+            }
+            RenderText(bi, str, &box1);
+            if(formatted)
+               BGUI_FreePoolMem(formatted);
+         }
       };
    };
    return 1;

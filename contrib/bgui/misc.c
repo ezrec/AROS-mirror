@@ -11,6 +11,22 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:46  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.4  1998/12/07 03:07:08  mlemos
+ * Replaced OpenFont and CloseFont calls by the respective BGUI debug macros.
+ *
+ * Revision 41.10.2.3  1998/11/23 14:59:16  mlemos
+ * Fixed mistaken initialization of allocated buffer.
+ *
+ * Revision 41.10.2.2  1998/11/16 20:11:04  mlemos
+ * Added missing brackets in the previous changes.
+ *
+ * Revision 41.10.2.1  1998/11/16 19:59:24  mlemos
+ * Replaced AllocVec and FreeVec calls by BGUI_AllocPoolMem and
+ * BGUI_FreePoolMem calls respectively.
+ *
  * Revision 41.10  1998/02/25 21:12:40  mlemos
  * Bumping to 41.10
  *
@@ -78,7 +94,7 @@ makeproto VOID Scale(struct RastPort *rp, UWORD *width, UWORD *height, UWORD dwi
     */
    if (font)
    {
-      if (tf = OpenFont(font))
+      if (tf = BGUI_OpenFont(font))
          open = TRUE;
    }
    else
@@ -102,7 +118,7 @@ makeproto VOID Scale(struct RastPort *rp, UWORD *width, UWORD *height, UWORD dwi
    /*
     * Close font.
     */
-   if (open) CloseFont(tf);
+   if (open) BGUI_CloseFont(tf);
 
    /*
     * Scale size;
@@ -168,15 +184,17 @@ makeproto ASM UBYTE *DoBuffer(REG(a0) UBYTE *text, REG(a1) UBYTE **buf_ptr, REG(
        * Deallocate old buffer.
        */
       if ( *buf_ptr )
-         FreeVec( *buf_ptr );
+         BGUI_FreePoolMem( *buf_ptr );
       /*
        * And allocate a new one.
        */
-      if ( *buf_ptr = ( UBYTE * )ALLOCPUB( len ))
+      if ( *buf_ptr = ( UBYTE * )BGUI_AllocPoolMem( len )) {
          /*
           * Setup new buffer length.
           */
+         **buf_ptr = '\0';
          *buf_len = len;
+      }
       else {
          /*
           * Screw up.

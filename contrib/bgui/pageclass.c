@@ -11,6 +11,29 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:51  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.4  1999/08/30 04:57:39  mlemos
+ * Made the methods that change group members on-fly setup the gadget
+ * attributes using the window WINDOW_SETUPGADGET method.
+ *
+ * Revision 41.10.2.3  1999/08/30 00:22:54  mlemos
+ * Made the BASE_INHIBIT method call the superclass to set the base object
+ * inhibit flag.
+ * Made an added, inserted or replaced page member object be inhibited if it
+ * is not active or the page object is inhibited.
+ * Adjusted  the  active  page  number  and  node pointer when removing a page
+ * member.
+ *
+ * Revision 41.10.2.2  1999/08/29 18:58:49  mlemos
+ * Added support to the LGO_Relayout attribute to be able to not relayout a
+ * when calling GRM_ADDMEMBER, GRM_INSERTMEMBER, GRM_REPLACEMEMBER.
+ *
+ * Revision 41.10.2.1  1999/08/29 17:08:39  mlemos
+ * Added the implementation of the methods GRM_ADDMEMBER, GRM_REMMEMBER,
+ * GRM_INSERTMEMBER, GRM_REPLACEMEMBER.
+ *
  * Revision 41.10  1998/02/25 21:12:47  mlemos
  * Bumping to 41.10
  *
@@ -472,6 +495,8 @@ METHOD(PageClassInhibit, struct bmInhibit *bmi)
    PM       *pm, *active = pd->pd_Active;
    BOOL      inhibit = bmi->bmi_Inhibit;
 
+   if(!AsmDoSuperMethodA(cl, obj, (Msg)bmi))
+      return(0);
    if (inhibit) pd->pd_Flags |= PDF_INHIBIT;
    else         pd->pd_Flags &= ~PDF_INHIBIT;
 
@@ -489,6 +514,190 @@ METHOD(PageClassIsMulti, Msg msg)
    return TRUE;
 }
 ///
+
+///
+/// GRM_ADDMEMBER
+/*
+ * Add a member to the group.
+ */
+METHOD(PageClassAddMember, struct grmAddMember *grma)
+{
+   PD *pd = INST_DATA(cl, obj);
+   PM *pm;
+
+   if(!(pm = (PM *)BGUI_AllocPoolMem(sizeof(PM))))
+      return(FALSE);
+   pm->pm_Object=grma->grma_Member;
+   Forbid();
+   AddTail((struct List *)&pd->pd_Members, (struct Node *)pm);
+   Permit();
+
+   if(BASE_DATA(obj)->bc_Window)
+   {
+      struct TagItem tags[2];
+
+      tags[0].ti_Tag=BT_Inhibit;
+      tags[0].ti_Data=TRUE;
+      tags[1].ti_Tag=TAG_END;
+      AsmDoMethod(BASE_DATA(obj)->bc_Window, WM_SETUPGADGET,pm->pm_Object,&tags);
+   }
+
+   /*
+    * Try to re-layout the group.
+    */
+
+   if(GetTagData(LGO_Relayout, TRUE, (struct TagItem *)&grma->grma_Attr)
+   && !RelayoutGroup(obj))
+   {
+      Forbid();
+      Remove((struct Node *)pm);
+      Permit();
+      BGUI_FreePoolMem(pm);
+      RelayoutGroup(obj);
+
+      return FALSE;
+   };
+   return TRUE;
+}
+
+///
+/// GRM_REMMEMBER
+/*
+ * Remove an object from the list.
+ */
+METHOD(PageClassRemMember, struct grmRemMember *grmr)
+{
+   PD *pd = INST_DATA(cl, obj);
+   PM *pm;
+
+   if(!grmr->grmr_Member)
+      return(NULL);
+   Forbid();
+   for (pm = pd->pd_Members.pl_First; pm->pm_Next; pm = pm->pm_Next)
+   {
+      if(pm->pm_Object==grmr->grmr_Member)
+      {
+         if(pm==pd->pd_Active)
+            pd->pd_Active=(pm->pm_Prev->pm_Prev ? pm->pm_Prev : pm->pm_Next);
+         Remove((struct Node *)pm);
+         BGUI_FreePoolMem(pm);
+         for(pd->pd_Num=0,pm=pd->pd_Members.pl_First;pm->pm_Next && pm!=pd->pd_Active;pd->pd_Num++,pm=pm->pm_Next);
+         Permit();
+         RelayoutGroup(obj);
+         return((ULONG)grmr->grmr_Member);
+      }
+   }
+   Permit();
+   return(NULL);
+}
+
+///
+/// GRM_INSERTMEMBER
+/*
+ * Insert a member in the group.
+ */
+METHOD(PageClassInsert, struct grmInsertMember *grmi)
+{
+   PD *pd = INST_DATA(cl, obj);
+   PM *pm,*new_pm;
+
+   if(!grmi->grmi_Member
+   || !(new_pm = (PM *)BGUI_AllocPoolMem(sizeof(PM))))
+      return(FALSE);
+   new_pm->pm_Object=grmi->grmi_Member;
+   Forbid();
+   for (pm = pd->pd_Members.pl_First; pm->pm_Next; pm = pm->pm_Next)
+   {
+      if(pm->pm_Object==grmi->grmi_Pred)
+      {
+         Insert((struct List *)&pd->pd_Members,(struct Node *)new_pm,(struct Node *)pm);
+         Permit();
+
+         if(BASE_DATA(obj)->bc_Window)
+         {
+            struct TagItem tags[2];
+
+            tags[0].ti_Tag=BT_Inhibit;
+            tags[0].ti_Data=TRUE;
+            tags[1].ti_Tag=TAG_END;
+            AsmDoMethod(BASE_DATA(obj)->bc_Window, WM_SETUPGADGET,pm->pm_Object,&tags);
+         }
+
+         /*
+          * Try to re-layout the group.
+          */
+         if(GetTagData(LGO_Relayout, TRUE, (struct TagItem *)&grmi->grmi_Attr)
+         && !RelayoutGroup(obj))
+         {
+            Forbid();
+            Remove((struct Node *)new_pm);
+            Permit();
+            BGUI_FreePoolMem(new_pm);
+            RelayoutGroup(obj);
+         
+            return FALSE;
+         };
+         return TRUE;
+      }
+   }
+   Permit();
+   BGUI_FreePoolMem(new_pm);
+   return(FALSE);
+}
+
+///
+/// GRM_REPLACEMEMBER
+/*
+ * Replace a member in the group.
+ */
+METHOD(PageClassReplace, struct grmReplaceMember *grrm)
+{
+   PD *pd = INST_DATA(cl, obj);
+   PM *pm;
+
+   /*
+    * No NULL-objects.
+    */
+   if(!grrm->grrm_MemberA
+   || !grrm->grrm_MemberB)
+      return(FALSE);
+   Forbid();
+   for (pm = pd->pd_Members.pl_First; pm->pm_Next; pm = pm->pm_Next)
+   {
+      if(pm->pm_Object==grrm->grrm_MemberA)
+      {
+         pm->pm_Object=grrm->grrm_MemberB;
+         Permit();
+
+         if(BASE_DATA(obj)->bc_Window)
+         {
+            struct TagItem tags[2];
+
+            tags[0].ti_Tag=BT_Inhibit;
+            tags[0].ti_Data=((pd->pd_Flags & PDF_INHIBIT)!=0 || (pm != pd->pd_Active));
+            tags[1].ti_Tag=TAG_END;
+            AsmDoMethod(BASE_DATA(obj)->bc_Window, WM_SETUPGADGET,pm->pm_Object,&tags);
+         }
+
+         /*
+          * Try to re-layout the group.
+          */
+         if(GetTagData(LGO_Relayout, TRUE, (struct TagItem *)&grrm->grrm_Attr)
+         && !RelayoutGroup(obj))
+         {
+            Forbid();
+            pm->pm_Object=grrm->grrm_MemberA;
+            Permit();
+            RelayoutGroup(obj);
+         
+            return FALSE;
+         };
+         return((ULONG)grrm->grrm_MemberA);
+      }
+   }
+   Permit();
+   return 0;
+}
 
 /// Class initialization.
 /*
@@ -514,6 +723,10 @@ STATIC DPFUNC ClassFunc[] = {
    BASE_FINDKEY,           (FUNCPTR)PageClassForward,
    BASE_SHOWHELP,          (FUNCPTR)PageClassForward,
    BASE_IS_MULTI,          (FUNCPTR)PageClassIsMulti,
+   GRM_ADDMEMBER,          (FUNCPTR)PageClassAddMember,
+   GRM_REMMEMBER,          (FUNCPTR)PageClassRemMember,
+   GRM_INSERTMEMBER,       (FUNCPTR)PageClassInsert,
+   GRM_REPLACEMEMBER,      (FUNCPTR)PageClassReplace,
    DF_END,                 NULL
 };
 

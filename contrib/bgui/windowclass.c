@@ -11,6 +11,58 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:55:30  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.14  2000/01/30 18:56:13  mlemos
+ * Fixed missing end tag when activating a gadget with the right or middle
+ * mouse buttons.
+ *
+ * Revision 41.10.2.13  1999/08/30 04:59:21  mlemos
+ * Added the WindowClassSetupGadget function to implement the
+ * WINDOW_SETUPGADGET method.
+ * Removed left out locale debugging statement.
+ *
+ * Revision 41.10.2.12  1999/07/28 21:04:17  mlemos
+ * Removed the RefreshWindowFrame call in WM_SECURE method because the it may
+ * cause deadlocks.
+ *
+ * Revision 41.10.2.11  1999/07/03 15:17:48  mlemos
+ * Replaced the calls to CallHookPkt to BGUI_CallHookPkt.
+ *
+ * Revision 41.10.2.10  1998/12/07 03:37:22  mlemos
+ * Fixed potential text font leak.
+ *
+ * Revision 41.10.2.9  1998/12/07 03:07:10  mlemos
+ * Replaced OpenFont and CloseFont calls by the respective BGUI debug macros.
+ *
+ * Revision 41.10.2.8  1998/11/16 20:02:28  mlemos
+ * Replaced FreeVec calls by BGUI_FreePoolMem calls.
+ *
+ * Revision 41.10.2.7  1998/09/20 22:26:31  mlemos
+ * Made a debugging statement using tprintfe use D(bug()) macro instead.
+ *
+ * Revision 41.10.2.6  1998/06/21 22:07:51  mlemos
+ * Ensured that the return code of OM_NEW is initialized just in case the
+ * master group object is NULL.
+ *
+ * Revision 41.10.2.5  1998/05/22 02:56:41  mlemos
+ * Ensured that any tooltips are closed with other relevant input events such
+ * as mouse and keyboard input.
+ *
+ * Revision 41.10.2.4  1998/04/28 14:03:07  mlemos
+ * Made WindowClass only consider IDCMP_INTUITICKS messages for tooltips.
+ *
+ * Revision 41.10.2.3  1998/04/28 02:29:34  mlemos
+ * Made HandleIDCMP method ignore IDCMP_IDCMPUPDATE messages when handling
+ * tooltips.
+ *
+ * Revision 41.10.2.2  1998/03/02 23:51:36  mlemos
+ * Switched vector allocation functions calls to BGUI allocation functions.
+ *
+ * Revision 41.10.2.1  1998/03/01 15:40:21  mlemos
+ * Added support to track BaseInfo memory leaks.
+ *
  * Revision 41.10  1998/02/25 21:13:34  mlemos
  * Bumping to 41.10
  *
@@ -258,7 +310,7 @@ STATIC ULONG GroupDimensions(Object *master, struct TextAttr *font, UWORD *minw,
     */
    if (font)
    {
-      if (tf = OpenFont(font)) FSetFont(&rp, tf);
+      if (tf = BGUI_OpenFont(font)) FSetFont(&rp, tf);
       else return 0;
 
       DoSetMethodNG(master, BT_TextAttr, font, TAG_END);
@@ -287,7 +339,7 @@ STATIC ULONG GroupDimensions(Object *master, struct TextAttr *font, UWORD *minw,
    /*
     * Close font when opened.
     */
-   if (tf) CloseFont(tf);
+   if (tf) BGUI_CloseFont(tf);
 
    return rc;
 }
@@ -320,7 +372,11 @@ STATIC SAVEDS ASM VOID BackFill_func(REG(a0) struct Hook *hook, REG(a2) struct R
       save_layer = rp->Layer;
       rp->Layer  = NULL;
 
+#ifdef DEBUG_BGUI
+      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_RastPort, rp, TAG_DONE))
+#else
       if (bi = AllocBaseInfo(BI_RastPort, rp, TAG_DONE))
+#endif
       {
          /*
           * Setup the rastport.
@@ -377,7 +433,7 @@ METHOD(WindowClassSetUpdate, struct opSet *ops)
          {
             CloseLocale(wd->wd_Locale->bl_Locale);
             CloseCatalog(wd->wd_Locale->bl_Catalog);
-            FreeVec(wd->wd_Locale);
+            BGUI_FreePoolMem(wd->wd_Locale);
          };
          wd->wd_Catalog = NULL;
          wd->wd_Locale  = (struct bguiLocale *)data;
@@ -393,7 +449,7 @@ METHOD(WindowClassSetUpdate, struct opSet *ops)
             CloseCatalog(wd->wd_Locale->bl_Catalog);
             if (data == NULL)
             {
-               FreeVec(wd->wd_Locale);
+               BGUI_FreePoolMem(wd->wd_Locale);
                wd->wd_Locale = NULL;
                wd->wd_Catalog = NULL;
                break;
@@ -401,7 +457,8 @@ METHOD(WindowClassSetUpdate, struct opSet *ops)
          }
          else
          {
-            wd->wd_Locale = AllocVec(sizeof(struct bguiLocale), MEMF_CLEAR);
+            if((wd->wd_Locale = BGUI_AllocPoolMem(sizeof(struct bguiLocale))))
+               memset(wd->wd_Locale,0,sizeof(struct bguiLocale));
             wd->wd_Flags |= WDF_FREELOCALE;
          };
          if (wd->wd_Locale)
@@ -409,7 +466,6 @@ METHOD(WindowClassSetUpdate, struct opSet *ops)
             wd->wd_Catalog = (UBYTE *)data;
             wd->wd_Locale->bl_Locale  = OpenLocale(NULL);
             wd->wd_Locale->bl_Catalog = OpenCatalogA(NULL, wd->wd_Catalog, NULL);
-            tprintf("%08lx %08lx\n", wd->wd_Locale->bl_Locale, wd->wd_Locale->bl_Catalog);
          };
          break;
 
@@ -587,7 +643,7 @@ METHOD(WindowClassNew, struct opSet *ops)
 {
    WD             *wd;
    struct TagItem *tstate, *tag, *tags;
-   ULONG           rc, data, idcmp;
+   ULONG           rc=0, data, idcmp;
    BOOL            fail = FALSE;
 
    Object *master, *lborder, *tborder, *rborder, *bborder;
@@ -765,7 +821,7 @@ METHOD(WindowClassDispose, Msg msg)
       CloseCatalog(wd->wd_Locale->bl_Catalog);
 
       if (wd->wd_Flags & WDF_FREELOCALE)
-         FreeVec(wd->wd_Locale);
+         BGUI_FreePoolMem(wd->wd_Locale);
    };
    
    if (wd->wd_DGMObject)
@@ -806,6 +862,11 @@ METHOD(WindowClassDispose, Msg msg)
    if (wd->wd_BBorder) AsmDoMethod(wd->wd_BBorder, OM_DISPOSE);
    if (wd->wd_TBorder) AsmDoMethod(wd->wd_TBorder, OM_DISPOSE);
 
+   if(wd->wd_UsedFont)
+   {
+      BGUI_CloseFont(wd->wd_UsedFont);
+      wd->wd_UsedFont=NULL;
+   }
    /*
     * The superclass takes care of the rest.
     */
@@ -1070,7 +1131,7 @@ BOOL WinSize(WD *wd, UWORD *win_w, UWORD *win_h)
 
    if (wd->wd_UsedFont)
    {
-      CloseFont(wd->wd_UsedFont);
+      BGUI_CloseFont(wd->wd_UsedFont);
       wd->wd_UsedFont = NULL;
    };
 
@@ -1294,7 +1355,7 @@ BOOL WinSize(WD *wd, UWORD *win_w, UWORD *win_h)
       goto reCalc;
    };
 
-   if (wd->wd_UsedFont = OpenFont(font))
+   if (wd->wd_UsedFont = BGUI_OpenFont(font))
    {
       *win_w = gmw;
       *win_h = gmh;
@@ -1845,7 +1906,7 @@ METHOD(WindowClassClose, Msg msg)
 
    if (wd->wd_UsedFont)
    {
-      CloseFont(wd->wd_UsedFont);
+      BGUI_CloseFont(wd->wd_UsedFont);
       wd->wd_UsedFont = NULL;
    };
 
@@ -2058,7 +2119,7 @@ STATIC ASM ULONG WindowClassGet(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) 
             STORE NULL;
          };
          break;
-         
+
       default:
          rc = AsmDoSuperMethodA(cl, obj, (Msg)opg);
          break;
@@ -2527,7 +2588,11 @@ STATIC ASM ULONG ToolTip_func(REG(a0) struct Hook *h, REG(a2) Object *obj, REG(a
          {
             rp = tw->RPort;
 
+#ifdef DEBUG_BGUI
+            if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_Screen, wd->wd_Screen, BI_RastPort, rp, TAG_DONE))
+#else
             if (bi = AllocBaseInfo(BI_Screen, wd->wd_Screen, BI_RastPort, rp, TAG_DONE))
+#endif
             {
                /*
                 * Set the font.
@@ -2593,7 +2658,7 @@ METHOD(WindowClassCloseTT, Msg msg)
       ttc.ttc_Object   = wd->wd_ToolTipObject;
       ttc.ttc_UserData = (APTR)wd->wd_ToolTip;
 
-      CallHookPkt(wd->wd_ToolTipHook ? wd->wd_ToolTipHook : &ToolTipHook, (void *)obj, (void *)&ttc);
+      BGUI_CallHookPkt(wd->wd_ToolTipHook ? wd->wd_ToolTipHook : &ToolTipHook, (void *)obj, (void *)&ttc);
 
       wd->wd_ToolX   = wd->wd_ToolY = -1;
       wd->wd_ToolTip = NULL;
@@ -2663,18 +2728,38 @@ METHOD(WindowClassIDCMP, Msg msg)
    while (imsg = GetIMsg(wd))
    {
       /*
-       * Do we have a tool-tip to close?
+       * Any movement?
        */
-      if (wd->wd_ToolTip)
       {
-         /*
-          * Any movement?
-          */
-         if ((imsg->Class != IDCMP_INTUITICKS) || (w->MouseX != wd->wd_ToolX) || (w->MouseY != wd->wd_ToolY))
-            AsmDoMethod(obj, WM_CLOSETOOLTIP);
+         BOOL close_tooltip;
+
+         if(!(close_tooltip=(w->MouseX != wd->wd_ToolX || w->MouseY != wd->wd_ToolY)))
+         {
+            switch(imsg->Class)
+            {
+               
+               case IDCMP_IDCMPUPDATE:
+               case IDCMP_DISKINSERTED:
+               case IDCMP_DISKREMOVED:
+               case IDCMP_WBENCHMESSAGE:
+               case IDCMP_INTUITICKS:
+                  break;
+               default:
+                  close_tooltip=TRUE;
+                  break;
+            }
+         }
+         if(close_tooltip)
+         {
+            /*
+             * Do we have a tool-tip to close?
+             */
+            if (wd->wd_ToolTip)
+               AsmDoMethod(obj, WM_CLOSETOOLTIP);
+            else
+               wd->wd_ToolTicks = 0;
+         }
       }
-      else if (imsg->Class != IDCMP_INTUITICKS)
-         wd->wd_ToolTicks = 0;
 
       /*
        * Are we locked out?
@@ -2696,7 +2781,7 @@ METHOD(WindowClassIDCMP, Msg msg)
       {
          if ((wd->wd_VerifyHookBits & imsg->Class) == imsg->Class)
          {
-            CallHookPkt(wd->wd_VerifyHook, (void *)obj, (void *)imsg);
+            BGUI_CallHookPkt(wd->wd_VerifyHook, (void *)obj, (void *)imsg);
             ReplyMsg((struct Message *)imsg);
             return rc;
          }
@@ -2708,7 +2793,7 @@ METHOD(WindowClassIDCMP, Msg msg)
        
       if (wd->wd_IDCMPHook && (wd->wd_IDCMPHookBits & imsg->Class))
       {
-         CallHookPkt(wd->wd_IDCMPHook, (VOID *)obj, (VOID *)imsg);
+         BGUI_CallHookPkt(wd->wd_IDCMPHook, (VOID *)obj, (VOID *)imsg);
       };
 
       code = imsg->Code;
@@ -2787,7 +2872,7 @@ METHOD(WindowClassIDCMP, Msg msg)
 
                   if (wd->wd_DGMObject)
                   {
-                     DoSetMethodNG(wd->wd_DGMObject, DGM_Object, obja, DGM_IntuiMsg, imsg);
+                     DoSetMethodNG(wd->wd_DGMObject, DGM_Object, obja, DGM_IntuiMsg, imsg,TAG_END);
                      ActivateGadget((struct Gadget *)wd->wd_DGMObject, w, NULL);
                   };
                };
@@ -3081,7 +3166,7 @@ METHOD(WindowClassIDCMP, Msg msg)
                   ttc.ttc_Object   = wd->wd_ToolTipObject;
                   ttc.ttc_UserData = (APTR)wd;
 
-                  wd->wd_ToolTip   = (APTR)CallHookPkt(wd->wd_ToolTipHook ? wd->wd_ToolTipHook : &ToolTipHook,
+                  wd->wd_ToolTip   = (APTR)BGUI_CallHookPkt(wd->wd_ToolTipHook ? wd->wd_ToolTipHook : &ToolTipHook,
                                                  (void *)obj, (void *)&ttc);
                };
 
@@ -3568,7 +3653,6 @@ METHOD(WindowClassRelease, Msg msg)
           */
          AddGadget(w, (struct Gadget *)wd->wd_Gadgets, -1);
          wd->wd_Flags &= ~WDF_REMOVED;
-         RefreshWindowFrame(w);
       };
       rc = 1;
    };
@@ -3839,6 +3923,45 @@ METHOD(WindowClassClip, struct wmClip *wmc)
    };
    return rc;
 }
+
+METHOD(WindowClassSetupGadget, struct wmSetupGadget *wmsg)
+{
+   WD *wd = INST_DATA(cl, obj);
+   struct TagItem  *tstate = wmsg->wmsg_Tags, *tag;
+
+   while (tag = NextTagItem(&tstate))
+   {
+      switch(tag->ti_Tag)
+      {
+         case BT_Inhibit:
+            AsmDoMethod(wmsg->wmsg_Object, BASE_INHIBIT, tag->ti_Tag);
+            break;
+      }
+   }
+
+   if(wd->wd_UsedFont
+   || ((wd->wd_Flags & WDF_AUTOASPECT)
+   && wd->wd_DrawInfo))
+   {
+      struct TextAttr current_font;
+
+      if(wd->wd_UsedFont)
+      {
+         struct RastPort rp;
+
+         InitRastPort(&rp);
+         SetFont(&rp,wd->wd_UsedFont);
+         AskFont(&rp,&current_font);
+      }
+
+      SetAttrs(wmsg->wmsg_Object,
+         wd->wd_UsedFont ? BT_TextAttr : TAG_IGNORE,&current_font,
+         ((wd->wd_Flags & WDF_AUTOASPECT) && wd->wd_DrawInfo) ? FRM_ThinFrame : TAG_IGNORE, ((wd->wd_DrawInfo->dri_Resolution.X / wd->wd_DrawInfo->dri_Resolution.Y) <= 1),
+         TAG_END);
+   }
+   return(1);
+}
+
 ///
 /// Class initialization.
 
@@ -3876,6 +3999,7 @@ STATIC DPFUNC ClassFunc[] = {
    WM_UNLOCK,              (FUNCPTR)WindowClassLock,
    WM_CLOSETOOLTIP,        (FUNCPTR)WindowClassCloseTT,
    WM_CLIP,                (FUNCPTR)WindowClassClip,
+   WM_SETUPGADGET,         (FUNCPTR)WindowClassSetupGadget,
 
    BASE_FINDKEY,           (FUNCPTR)WindowClassFindKey,
    BASE_KEYLABEL,          (FUNCPTR)WindowClassKeyLabel,

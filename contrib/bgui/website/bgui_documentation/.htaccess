@@ -1,0 +1,4 @@
+DirectoryIndex index.html                                                       
+<Files *>                                                                       
+allow from all
+</Files>

@@ -11,6 +11,13 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:49  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.1  1998/11/22 00:31:42  mlemos
+ * Made the radio buttons notifications map GA_Selected into TAG_IGNORE to not
+ * set the MX class group selected attribute.
+ *
  * Revision 41.10  1998/02/25 21:12:45  mlemos
  * Bumping to 41.10
  *
@@ -43,6 +50,7 @@ typedef struct {
  */
 STATIC ULONG id2act[] = {
    GA_UserData,      MX_Active,
+   GA_Selected,      TAG_IGNORE,
    TAG_END
 };
 

@@ -1,9 +1,9 @@
-#ifndef LIBRARIES_BGUI_H
-#define LIBRARIES_BGUI_H
+#ifndef BGUI_BGUI_H
+#define BGUI_BGUI_H
 /*
  * @(#) $Header$
  *
- * $VER: libraries/bgui.h 41.10 (26.4.96)
+ * $VER: bgui/bgui.h 41.10 (26.4.96)
  * bgui.library structures and constants.
  *
  * (C) Copyright 1998 Manuel Lemos.
@@ -13,6 +13,57 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 20:01:36  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.12  2000/05/04 04:41:58  mlemos
+ * Added the definition of the identifiers for the Bar and Layout group
+ * classes.
+ *
+ * Revision 41.10.2.11  1999/08/29 20:31:34  mlemos
+ * Added back the definitions for methods GRM_ADDMEMBER, GRM_REMMEMBER,
+ * GRM_DIMENSIONS, GRM_ADDSPACEMEMBER, GRM_INSERTMEMBER, GRM_REPLACEMEMBER.
+ * Added the definitions for the method BASE_RELAYOUT and the tag LGO_Relayout.
+ * Removed the definitions of the methods that were never implemented:
+ * GROUPM_ADDMEMBER, GROUPM_REMMEMBER, GROUPM_INSERTMEMBER
+ * GROUPM_REPLACEMEMBER, GROUPM_ADDSPACEMEMBER.
+ *
+ * Revision 41.10.2.10  1999/08/13 04:36:22  mlemos
+ * Changed the pre-processor define to denote that this file was included.
+ *
+ * Revision 41.10.2.9  1999/08/10 22:38:48  mlemos
+ * Remove the definition of the ISEQ_JUSTIFY sequence that was never
+ * implemented.
+ *
+ * Revision 41.10.2.8  1999/07/23 19:47:07  mlemos
+ * Added the definition of command sequences to set the draw mode to JAM1,
+ * JAM2 or COMPLEMENT.
+ *
+ * Revision 41.10.2.7  1999/07/17 23:01:47  mlemos
+ * Corrected the documentation of the applicability of the attribute
+ * PMB_MenuEntries.
+ *
+ * Revision 41.10.2.6  1999/05/31 00:49:20  mlemos
+ * Added the definition of the ID of the TreeView gadget.
+ *
+ * Revision 41.10.2.5  1998/12/17 04:16:31  mlemos
+ * Fixed badly formed comments.
+ *
+ * Revision 41.10.2.4  1998/12/09 17:34:17  mlemos
+ * Added missing log description of the previous revision.
+ * Added the definitions of the new text formatting sequences ISEQ_SHADOWED,
+ * ISEQ_U2, ISEQ_HU, ISEQ_JUSTIFY, ISEQ_KEEP, ISEQ_WRAP .
+ *
+ * Revision 41.10.2.3  1998/12/09 17:29:41  mlemos
+ *
+ * Revision 41.10.2.2  1998/10/12 01:39:09  mlemos
+ * Added the inclusion of the bgui_arexx.h include.
+ * Added the definition of the tags for BGUI_MakeClass to define class methods.
+ *
+ * Revision 41.10.2.1  1998/02/26 18:00:27  mlemos
+ * Changed C++ comments to standard C comments.
+ * Added LGO_Object as publically known group node object attribute.
+ *
  * Revision 41.10  1998/02/25 21:13:40  mlemos
  * Bumping to 41.10
  *
@@ -56,6 +107,7 @@
 
 #ifndef NO_OLD_BGUI
 #include <bgui/bgui_asl.h>
+#include <bgui/bgui_arexx.h>
 #include <bgui/bgui_cx.h>
 #include <bgui/bgui_obsolete.h>
 #endif /* NO_OLD_BGUI */
@@ -110,7 +162,10 @@
 #define BGUI_RADIOBUTTON_GADGET         (29L)
 #define BGUI_PALETTE_GADGET             (30L)
 #define BGUI_POPBUTTON_GADGET           (31L)
-/* 32 through 39 reserved. */
+#define BGUI_TREEVIEW_GADGET            (32L)
+#define BGUI_BAR_GADGET                 (33L)
+#define BGUI_LAYOUTGROUP_GADGET         (34L)
+/* 35 through 39 reserved. */
 #define BGUI_WINDOW_OBJECT              (40L)
 #define BGUI_FILEREQ_OBJECT             (41L)
 #define BGUI_COMMODITY_OBJECT           (42L)
@@ -327,6 +382,8 @@ typedef struct DispatcherFunction {
 #define CLASS_Flags                     (BGUI_TB+10007)
 #define CLASS_Dispatcher                (BGUI_TB+10008)
 #define CLASS_DFTable                   (BGUI_TB+10009)
+#define CLASS_ClassDispatcher           (BGUI_TB+10010)
+#define CLASS_ClassDFTable              (BGUI_TB+10011)
 
 struct BGUIClassBase
 {
@@ -416,12 +473,12 @@ struct rmRefresh {
                                      | RAF_BOOL | (P_BITNUM0(flag) << 27))
 
 
-#define RM_REMOVE                       (BGUI_MB+30030)   // OBSOLETE
+#define RM_REMOVE                       (BGUI_MB+30030)   /* OBSOLETE */
 
 /* Remove an object from a list. */
 
-#define RM_ADDHEAD                      (BGUI_MB+30031)   // OBSOLETE
-#define RM_ADDTAIL                      (BGUI_MB+30032)   // OBSOLETE
+#define RM_ADDHEAD                      (BGUI_MB+30031)   /* OBSOLETE */
+#define RM_ADDTAIL                      (BGUI_MB+30032)   /* OBSOLETE */
 
 /* Add an object to a list. */
 struct rmAdd {
@@ -429,7 +486,7 @@ struct rmAdd {
         struct List            *ra_List;
 };
 
-#define RM_INSERT                       (BGUI_MB+30033)   // OBSOLETE
+#define RM_INSERT                       (BGUI_MB+30033)   /* OBSOLETE */
 
 /* Insert an object into a list. */
 struct rmInsert {
@@ -438,11 +495,11 @@ struct rmInsert {
         Object                 *ri_Previous;
 };
 
-#define RM_PREV                         (BGUI_TB+30034)   // OBSOLETE
+#define RM_PREV                         (BGUI_TB+30034)   /* OBSOLETE */
 
 /* Get the previous object. */
 
-#define RM_NEXT                         (BGUI_TB+30035)   // OBSOLETE
+#define RM_NEXT                         (BGUI_TB+30035)   /* OBSOLETE */
 
 /* Get the next object. */
 
@@ -768,6 +825,15 @@ struct bmLayout {
         ULONG                   bml_Flags;      /* See below.               */
 };
 
+#define BASE_RELAYOUT                   (BGUI_MB+69)    /* V41.10 */
+
+struct bmRelayout {
+   ULONG              MethodID;      /* BASE_RELAYOUT */
+   struct GadgetInfo *bmr_GInfo;
+   struct RastPort   *bmr_RPort;
+};
+
+
 /* Flags */
 #define BLF_CUSTOM_GROUP        (1<<0)  /* Do not use groupclass layout.        */
 
@@ -836,6 +902,8 @@ struct bmLayout {
 #define LGO_Visible                     (BGUI_TB+389)   /* IS--- */  /* V41.9 */
 #define LGO_HAlign                      (BGUI_TB+390)   /* IS--- */
 #define LGO_VAlign                      (BGUI_TB+391)   /* IS--- */
+#define LGO_Object                      (BGUI_TB+392)   /* --G-- */  /* V41.10 */
+#define LGO_Relayout                    (BGUI_TB+393)   /* --G-- */  /* V41.10 */
 #define LGO_TAGDONE                     (BGUI_TB+400)
 
 /* Default object weight. */
@@ -871,7 +939,77 @@ struct bguiExtent {
 
 /* New methods. */
 
-/* Methods 81-86 are obsolete. */
+#define GRM_ADDMEMBER                   (BGUI_MB+81)
+
+/* Add a member to the group. */
+struct grmAddMember {
+        ULONG                   MethodID;       /* GRM_ADDMEMBER            */
+        Object                 *grma_Member;    /* Object to add.           */
+        ULONG                   grma_Attr;      /* First of LGO attributes. */
+};
+
+#define GRM_REMMEMBER                   (BGUI_MB+82)
+
+/* Remove a member from the group. */
+struct grmRemMember {
+        ULONG                   MethodID;       /* GRM_REMMEMBER            */
+        Object                 *grmr_Member;    /* Object to remove.        */
+};
+
+#define GRM_DIMENSIONS                  (BGUI_MB+83)
+
+/* Ask an object it's dimensions information. */
+struct grmDimensions {
+        ULONG                   MethodID;       /* GRM_DIMENSIONS           */
+        struct GadgetInfo      *grmd_GInfo;     /* Can be NULL!             */
+        struct RastPort        *grmd_RPort;     /* Ready for calculations.  */
+        struct {
+                UWORD          *Width;
+                UWORD          *Height;
+        }                       grmd_MinSize;   /* Storage for dimensions.  */
+        ULONG                   grmd_Flags;     /* See below.               */
+        struct {
+                UWORD          *Width;
+                UWORD          *Height;
+        }                       grmd_MaxSize;   /* Storage for dimensions.  */
+        struct {
+                UWORD          *Width;
+                UWORD          *Height;
+        }                       grmd_NomSize;   /* Storage for dimensions.  */
+};
+
+/* Flags */
+#define GDIMF_MAXIMUM           (1<<4)  /* The grmd_MaxSize is requested.       */
+#define GDIMF_NOMINAL           (1<<3)  /* The grmd_NomSize is requested.       */
+
+
+#define GRM_ADDSPACEMEMBER              (BGUI_MB+84)
+
+/* Add a weight controlled spacing member. */
+struct grmAddSpaceMember {
+        ULONG                   MethodID;       /* GRM_ADDSPACEMEMBER       */
+        ULONG                   grms_Weight;    /* Object weight.           */
+};
+
+#define GRM_INSERTMEMBER                (BGUI_MB+85)
+
+/* Insert a member in the group. */
+struct grmInsertMember {
+        ULONG                   MethodID;       /* GRM_INSERTMEMBER         */
+        Object                 *grmi_Member;    /* Member to insert.        */
+        Object                 *grmi_Pred;      /* Insert after this member */
+        ULONG                   grmi_Attr;      /* First of LGO attributes. */
+};
+
+#define GRM_REPLACEMEMBER               (BGUI_MB+86)    /* V40 */
+
+/* Replace a member in the group. */
+struct grmReplaceMember {
+        ULONG                   MethodID;       /* GRM_REPLACEMEMBER        */
+        Object                 *grrm_MemberA;   /* Object to replace.       */
+        Object                 *grrm_MemberB;   /* Object which replaces.   */
+        ULONG                   grrm_Attr;      /* First of LGO attributes. */
+};
 
 #define GRM_WHICHOBJECT                 (BGUI_MB+87)    /* V40 */
 
@@ -888,55 +1026,6 @@ struct grmWhichObject {
 
 /* Create a new member.  Uses opSet message. */
 
-#define GROUPM_ADDMEMBER                (BGUI_MB+91)    /* V41.9 */
-
-/* Add a member to the group. */
-struct gmAddMember {
-        ULONG                   MethodID;       /* GROUPM_ADDMEMBER         */
-        struct GadgetInfo      *gmam_GInfo;     /* GadgetInfo structure.    */
-        Object                 *gmam_Member;    /* Object to add.           */
-        ULONG                   gmam_Attr;      /* First of LGO attributes. */
-};
-
-#define GROUPM_REMMEMBER                (BGUI_MB+92)    /* V41.9 */
-
-/* Remove a member from the group. */
-struct gmRemMember {
-        ULONG                   MethodID;       /* GROUPM_REMMEMBER         */
-        struct GadgetInfo      *gmrm_GInfo;     /* GadgetInfo structure.    */
-        Object                 *gmrm_Member;    /* Object to remove.        */
-};
-
-#define GROUPM_INSERTMEMBER             (BGUI_MB+93)    /* V41.9 */
-
-/* Insert a member in the group. */
-struct gmInsertMember {
-        ULONG                   MethodID;       /* GROUPM_INSERTMEMBER      */
-        struct GadgetInfo      *gmim_GInfo;     /* GadgetInfo structure.    */
-        Object                 *gmim_Member;    /* Member to insert.        */
-        Object                 *gmim_Pred;      /* Insert after this member */
-        ULONG                   gmim_Attr;      /* First of LGO attributes. */
-};
-
-#define GROUPM_REPLACEMEMBER            (BGUI_MB+94)    /* V41.9 */
-
-/* Replace a member in the group. */
-struct gmReplaceMember {
-        ULONG                   MethodID;       /* GROUPM_REPLACEMEMBER     */
-        struct GadgetInfo      *gmrm_GInfo;     /* GadgetInfo structure.    */
-        Object                 *gmrm_MemberA;   /* Object to replace.       */
-        Object                 *gmrm_MemberB;   /* Object which replaces.   */
-        ULONG                   gmrm_Attr;      /* First of LGO attributes. */
-};
-
-#define GROUPM_ADDSPACEMEMBER           (BGUI_MB+95)    /* V41.9 */
-
-/* Add a weight controlled spacing member. */
-struct gmAddSpaceMember {
-        ULONG                   MethodID;       /* GROUPM_ADDSPACEMEMBER    */
-        struct GadgetInfo      *gmas_GInfo;     /* GadgetInfo structure.    */
-        ULONG                   gmas_Weight;    /* Object weight.           */
-};
 
 #define GROUPM_OBTAINMEMBERS            (BGUI_MB+90)    /* V41.9 */
 
@@ -1028,19 +1117,30 @@ struct gmReleaseMembers {
 #define INFO_FixTextHeight              (BGUI_TB+647)   /* IS--U */  /* V41.9 */
 
 /* Command sequences. */
-#define ISEQ_B                          "\33b"  /* Bold          */
-#define ISEQ_I                          "\33i"  /* Italics       */
-#define ISEQ_U                          "\33u"  /* Underlined    */
-#define ISEQ_N                          "\33n"  /* Normal        */
-#define ISEQ_C                          "\33c"  /* Centered      */
-#define ISEQ_R                          "\33r"  /* Right         */
-#define ISEQ_L                          "\33l"  /* Left          */
-#define ISEQ_TEXT                       "\33d2" /* TEXTPEN       */
-#define ISEQ_SHINE                      "\33d3" /* SHINEPEN      */
-#define ISEQ_SHADOW                     "\33d4" /* SHADOWPEN     */
-#define ISEQ_FILL                       "\33d5" /* FILLPEN       */
-#define ISEQ_FILLTEXT                   "\33d6" /* FILLTEXTPEN   */
-#define ISEQ_HIGHLIGHT                  "\33d8" /* HIGHLIGHTPEN  */
+#define ISEQ_B                          "\33b"  /* Bold                      */
+#define ISEQ_I                          "\33i"  /* Italics                   */
+#define ISEQ_U                          "\33u"  /* Underlined                */
+#define ISEQ_N                          "\33n"  /* Normal                    */
+#define ISEQ_SHADOWED                   "\33s"  /* Shadowed                  */
+#define ISEQ_U2                         "\33z"  /* Underlined offset 2       */
+#define ISEQ_HU                         "\33Z"  /* Highlight, underlined     */
+#define ISEQ_C                          "\33c"  /* Centered                  */
+#define ISEQ_R                          "\33r"  /* Right                     */
+#define ISEQ_L                          "\33l"  /* Left                      */
+#define ISEQ_KEEP                       "\33k"  /* This will keep the
+                                                   color/formatting changes
+                                                   from not terminating at
+                                                   the newline               */
+#define ISEQ_WRAP                       "\33w"  /* Wrap text                 */
+#define ISEQ_TEXT                       "\33d2" /* TEXTPEN                   */
+#define ISEQ_SHINE                      "\33d3" /* SHINEPEN                  */
+#define ISEQ_SHADOW                     "\33d4" /* SHADOWPEN                 */
+#define ISEQ_FILL                       "\33d5" /* FILLPEN                   */
+#define ISEQ_FILLTEXT                   "\33d6" /* FILLTEXTPEN               */
+#define ISEQ_HIGHLIGHT                  "\33d8" /* HIGHLIGHTPEN              */
+#define ISEQ_JAM1                       "\33""1"/* JAM1                      */
+#define ISEQ_JAM2                       "\33""2"/* JAM2                      */
+#define ISEQ_COMPLEMENT                 "\33C"  /* COMPLEMENT                */
 
 /*****************************************************************************
  *
@@ -1779,7 +1879,7 @@ struct ttCommand {
  *      Tags: 2181 - 2260               Methods: 821-860
  */
 #define PMB_Image                       (BGUI_TB+2181)  /* IS--- */  /* V41.7 */
-#define PMB_MenuEntries                 (BGUI_TB+2182)  /* IS--- */
+#define PMB_MenuEntries                 (BGUI_TB+2182)  /* I---- */
 #define PMB_MenuNumber                  (BGUI_TB+2183)  /* --GN- */
 #define PMB_PopPosition                 (BGUI_TB+2184)  /* I---- */
 /*
@@ -1821,4 +1921,4 @@ struct pmbmCommand {
    ULONG       pmbm_MenuNumber;  /* Menu to perform action on. */
 };
 
-#endif /* LIBRARIES_BGUI_H */
+#endif /* BGUI_BGUI_H */

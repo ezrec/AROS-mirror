@@ -11,6 +11,50 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:33  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.11  2000/05/04 04:39:06  mlemos
+ * Added the entries to the now built-in supported bar and layout group gadget
+ * classes.
+ *
+ * Revision 41.10.2.10  1999/08/17 19:11:24  mlemos
+ * Prevented base class from being replaced by an external library.
+ *
+ * Revision 41.10.2.9  1999/07/31 01:56:02  mlemos
+ * Added code to keep track of created objects.
+ *
+ * Revision 41.10.2.8  1999/07/29 00:43:47  mlemos
+ * Ensured that external library classes can only be freed if they get marked
+ * as such.
+ *
+ * Revision 41.10.2.7  1999/07/28 23:17:11  mlemos
+ * Allowed the library to be expunged if there no remainining classes with
+ * open subclasses but without any objects to be disposed.
+ *
+ * Revision 41.10.2.6  1999/07/28 16:38:05  mlemos
+ * Added code to detect class object leaks in FreeClasses.
+ * Made FreeClasses iterate until the number of classes subclasses that remain
+ * to be freed does not change.
+ *
+ * Revision 41.10.2.5  1999/07/18 02:58:03  mlemos
+ * Fixed problem of BGUI_CallHookPkt using the stack frame to store local
+ * variables that were pointing to the wrong address after EnsureStack was
+ * called.
+ *
+ * Revision 41.10.2.4  1999/07/03 15:16:54  mlemos
+ * Added the function BGUI_CallHookPkt.
+ * Replaced the calls to CallHookPkt to BGUI_CallHookPkt.
+ *
+ * Revision 41.10.2.3  1999/05/31 00:45:03  mlemos
+ * Added the TreeView gadget to the list of internally supported gadgets.
+ *
+ * Revision 41.10.2.2  1998/10/12 01:26:56  mlemos
+ * Made the ARexx be initialized internally whenever is needed.
+ *
+ * Revision 41.10.2.1  1998/03/02 23:51:17  mlemos
+ * Switched vector allocation functions calls to BGUI allocation functions.
+ *
  * Revision 41.10  1998/02/25 21:12:26  mlemos
  * Bumping to 41.10
  *
@@ -32,6 +76,72 @@ typedef struct {
    UWORD           wl_MaxWidth, wl_MaxHeight;   /*     "      "         */
 }  WINDOWLOCK;
 
+
+#ifdef DEBUG_BGUI
+
+static ULONG object_serial_number=1;
+
+struct ObjectTracking
+{
+   struct ObjectTracking *Next;
+   Object *Object;
+   ULONG SerialNumber;
+   STRPTR File;
+   ULONG Line;
+};
+
+static struct ObjectTracking *tracked_objects=NULL;
+
+makeproto ULONG TrackNewObject(Object *object,struct TagItem *tags)
+{
+   struct ObjectTracking *track;
+
+   if((track=BGUI_AllocPoolMem(sizeof(*track)))==NULL)
+      return(0);
+   track->Object=object;
+   Forbid();
+   track->SerialNumber=object_serial_number++;
+   track->Next=tracked_objects;
+   tracked_objects=track;
+   Permit();
+   return(track->SerialNumber);
+}
+
+makeproto BOOL TrackDisposedObject(Object *object)
+{
+   struct ObjectTracking **track,*found;
+
+   Forbid();
+   for(track= &tracked_objects;(found= *track) && (*track)->Object!=object;track= &(*track)->Next);
+   if(found)
+   {
+      *track= found->Next;
+      BGUI_FreePoolMem(found);
+   }
+   else
+      bug("*** Could not track disposed object %lX\n",object);
+   Permit();
+   return((BOOL)(found!=NULL));
+   
+}
+
+static void DumpTrackedObjects(void)
+{
+   Forbid();
+   while(tracked_objects)
+   {
+      struct ObjectTracking *track;
+
+      track= tracked_objects;
+      tracked_objects=track->Next;
+      bug("*** Object %lX leaked! Serial number %lu\n",track->Object,track->SerialNumber);
+      BGUI_FreePoolMem(track);
+   }
+   Permit();
+}
+
+#endif
+
 /*
  * Table for class init stuff.
  */
@@ -42,69 +152,74 @@ typedef struct {
    UBYTE                *cd_ClassFile;
    struct BGUIClassBase *cd_ClassBase;
    struct TagItem       *cd_DefTags;
+   BOOL                  cd_Leaking;
+   BOOL                  cd_LibraryClass;
 }  CLASSDEF;
 
 STATIC CLASSDEF Classes[] =
 {
-   { NULL, InitGroupNodeClass,   BGUI_GROUP_NODE,         NULL,                              NULL },
+   { NULL, InitGroupNodeClass,   BGUI_GROUP_NODE,         NULL,                              NULL, FALSE, FALSE },
 
-   { NULL, InitDGMClass,         BGUI_DGM_OBJECT,         NULL,                              NULL },
-   { NULL, InitRootClass,        BGUI_ROOT_OBJECT,        NULL,                              NULL },
+   { NULL, InitDGMClass,         BGUI_DGM_OBJECT,         NULL,                              NULL, FALSE, FALSE },
+   { NULL, InitRootClass,        BGUI_ROOT_OBJECT,        NULL,                              NULL, FALSE, FALSE },
 
    /*
     * Graphic classes.
     */
-   { NULL, InitTextClass,        BGUI_TEXT_GRAPHIC,       NULL,                              NULL },
+   { NULL, InitTextClass,        BGUI_TEXT_GRAPHIC,       NULL,                              NULL, FALSE, FALSE },
 
    /*
     * Image classes.
     */
-   { NULL, InitImageClass,       BGUI_IMAGE_OBJECT,       NULL,                              NULL },
-   { NULL, InitFrameClass,       BGUI_FRAME_IMAGE,        "images/bgui_frame.image",         NULL },
-   { NULL, InitLabelClass,       BGUI_LABEL_IMAGE,        "images/bgui_label.image",         NULL },
-   { NULL, InitVectorClass,      BGUI_VECTOR_IMAGE,       "images/bgui_vector.image",        NULL },
-   { NULL, InitSystemClass,      BGUI_SYSTEM_IMAGE,       "images/bgui_system.image",        NULL },
+   { NULL, InitImageClass,       BGUI_IMAGE_OBJECT,       NULL,                              NULL, FALSE, FALSE },
+   { NULL, InitFrameClass,       BGUI_FRAME_IMAGE,        "images/bgui_frame.image",         NULL, FALSE, FALSE },
+   { NULL, InitLabelClass,       BGUI_LABEL_IMAGE,        "images/bgui_label.image",         NULL, FALSE, FALSE },
+   { NULL, InitVectorClass,      BGUI_VECTOR_IMAGE,       "images/bgui_vector.image",        NULL, FALSE, FALSE },
+   { NULL, InitSystemClass,      BGUI_SYSTEM_IMAGE,       "images/bgui_system.image",        NULL, FALSE, FALSE },
 
    /*
     * Gadget classes.
     */
-   { NULL, InitGadgetClass,      BGUI_GADGET_OBJECT,      NULL,                              NULL },
-   { NULL, InitBaseClass,        BGUI_BASE_GADGET,        "gadgets/bgui_base.gadget",        NULL },
-   { NULL, InitButtonClass,      BGUI_BUTTON_GADGET,      "gadgets/bgui_button.gadget",      NULL },
-   { NULL, InitGroupClass,       BGUI_GROUP_GADGET,       "gadgets/bgui_group.gadget",       NULL },
-   { NULL, InitCycleClass,       BGUI_CYCLE_GADGET,       "gadgets/bgui_cycle.gadget",       NULL },
-   { NULL, InitCheckBoxClass,    BGUI_CHECKBOX_GADGET,    "gadgets/bgui_checkbox.gadget",    NULL },
-   { NULL, InitInfoClass,        BGUI_INFO_GADGET,        "gadgets/bgui_info.gadget",        NULL },
-   { NULL, InitStringClass,      BGUI_STRING_GADGET,      "gadgets/bgui_string.gadget",      NULL },
-   { NULL, InitPropClass,        BGUI_PROP_GADGET,        "gadgets/bgui_prop.gadget",        NULL },
-   { NULL, InitIndicatorClass,   BGUI_INDICATOR_GADGET,   "gadgets/bgui_indicator.gadget",   NULL },
-   { NULL, InitProgressClass,    BGUI_PROGRESS_GADGET,    "gadgets/bgui_progress.gadget",    NULL },
-   { NULL, InitSliderClass,      BGUI_SLIDER_GADGET,      "gadgets/bgui_slider.gadget",      NULL },
-   { NULL, InitPageClass,        BGUI_PAGE_GADGET,        "gadgets/bgui_page.gadget",        NULL },
-   { NULL, InitMxClass,          BGUI_MX_GADGET,          "gadgets/bgui_mx.gadget",          NULL },
-   { NULL, InitListClass,        BGUI_LISTVIEW_GADGET,    "gadgets/bgui_listview.gadget",    NULL },
-   { NULL, InitExtClass,         BGUI_EXTERNAL_GADGET,    "gadgets/bgui_external.gadget",    NULL },
-   { NULL, InitSepClass,         BGUI_SEPARATOR_GADGET,   "gadgets/bgui_separator.gadget",   NULL },
-   { NULL, InitRadioButtonClass, BGUI_RADIOBUTTON_GADGET, "gadgets/bgui_radiobutton.gadget", NULL },
-   { NULL, InitAreaClass,        BGUI_AREA_GADGET,        "gadgets/bgui_area.gadget",        NULL },
-   { NULL, InitViewClass,        BGUI_VIEW_GADGET,        "gadgets/bgui_view.gadget",        NULL },
+   { NULL, InitGadgetClass,      BGUI_GADGET_OBJECT,      NULL,                              NULL, FALSE, FALSE },
+   { NULL, InitBaseClass,        BGUI_BASE_GADGET,        NULL,                              NULL, FALSE, FALSE },
+   { NULL, InitButtonClass,      BGUI_BUTTON_GADGET,      "gadgets/bgui_button.gadget",      NULL, FALSE, FALSE },
+   { NULL, InitGroupClass,       BGUI_GROUP_GADGET,       "gadgets/bgui_group.gadget",       NULL, FALSE, FALSE },
+   { NULL, InitCycleClass,       BGUI_CYCLE_GADGET,       "gadgets/bgui_cycle.gadget",       NULL, FALSE, FALSE },
+   { NULL, InitCheckBoxClass,    BGUI_CHECKBOX_GADGET,    "gadgets/bgui_checkbox.gadget",    NULL, FALSE, FALSE },
+   { NULL, InitInfoClass,        BGUI_INFO_GADGET,        "gadgets/bgui_info.gadget",        NULL, FALSE, FALSE },
+   { NULL, InitStringClass,      BGUI_STRING_GADGET,      "gadgets/bgui_string.gadget",      NULL, FALSE, FALSE },
+   { NULL, InitPropClass,        BGUI_PROP_GADGET,        "gadgets/bgui_prop.gadget",        NULL, FALSE, FALSE },
+   { NULL, InitIndicatorClass,   BGUI_INDICATOR_GADGET,   "gadgets/bgui_indicator.gadget",   NULL, FALSE, FALSE },
+   { NULL, InitProgressClass,    BGUI_PROGRESS_GADGET,    "gadgets/bgui_progress.gadget",    NULL, FALSE, FALSE },
+   { NULL, InitSliderClass,      BGUI_SLIDER_GADGET,      "gadgets/bgui_slider.gadget",      NULL, FALSE, FALSE },
+   { NULL, InitPageClass,        BGUI_PAGE_GADGET,        "gadgets/bgui_page.gadget",        NULL, FALSE, FALSE },
+   { NULL, InitMxClass,          BGUI_MX_GADGET,          "gadgets/bgui_mx.gadget",          NULL, FALSE, FALSE },
+   { NULL, InitListClass,        BGUI_LISTVIEW_GADGET,    "gadgets/bgui_listview.gadget",    NULL, FALSE, FALSE },
+   { NULL, InitExtClass,         BGUI_EXTERNAL_GADGET,    "gadgets/bgui_external.gadget",    NULL, FALSE, FALSE },
+   { NULL, InitSepClass,         BGUI_SEPARATOR_GADGET,   "gadgets/bgui_separator.gadget",   NULL, FALSE, FALSE },
+   { NULL, InitRadioButtonClass, BGUI_RADIOBUTTON_GADGET, "gadgets/bgui_radiobutton.gadget", NULL, FALSE, FALSE },
+   { NULL, InitAreaClass,        BGUI_AREA_GADGET,        "gadgets/bgui_area.gadget",        NULL, FALSE, FALSE },
+   { NULL, InitViewClass,        BGUI_VIEW_GADGET,        "gadgets/bgui_view.gadget",        NULL, FALSE, FALSE },
 
-   { NULL, NULL,                 BGUI_PALETTE_GADGET,     "gadgets/bgui_palette.gadget",     NULL },
-   { NULL, NULL,                 BGUI_POPBUTTON_GADGET,   "gadgets/bgui_popbutton.gadget",   NULL },
+   { NULL, NULL,                 BGUI_PALETTE_GADGET,     "gadgets/bgui_palette.gadget",     NULL, FALSE, FALSE },
+   { NULL, NULL,                 BGUI_POPBUTTON_GADGET,   "gadgets/bgui_popbutton.gadget",   NULL, FALSE, FALSE },
+   { NULL, NULL,                 BGUI_TREEVIEW_GADGET,    "gadgets/bgui_treeview.gadget",    NULL, FALSE, FALSE },
+   { NULL, NULL,                 BGUI_BAR_GADGET,         "gadgets/bgui_bar.gadget",         NULL, FALSE, FALSE },
+   { NULL, NULL,                 BGUI_LAYOUTGROUP_GADGET, "gadgets/bgui_layoutgroup.gadget", NULL, FALSE, FALSE },
 
    /*
     * Misc. classes.
     */
-   { NULL, InitWindowClass,      BGUI_WINDOW_OBJECT,      "bgui_window.class",               NULL },
-   { NULL, InitCxClass,          BGUI_COMMODITY_OBJECT,   "bgui_commodity.class",            NULL },
-   { NULL, InitAslReqClass,      BGUI_ASLREQ_OBJECT,      "bgui_aslreq.class",               NULL },
-   { NULL, InitFileReqClass,     BGUI_FILEREQ_OBJECT,     "bgui_filereq.class",              NULL },
-   { NULL, InitFontReqClass,     BGUI_FONTREQ_OBJECT,     "bgui_fontreq.class",              NULL },
-   { NULL, InitScreenReqClass,   BGUI_SCREENREQ_OBJECT,   "bgui_screenreq.class",            NULL },
+   { NULL, InitWindowClass,      BGUI_WINDOW_OBJECT,      "bgui_window.class",               NULL, FALSE, FALSE },
+   { NULL, InitCxClass,          BGUI_COMMODITY_OBJECT,   "bgui_commodity.class",            NULL, FALSE, FALSE },
+   { NULL, InitAslReqClass,      BGUI_ASLREQ_OBJECT,      "bgui_aslreq.class",               NULL, FALSE, FALSE },
+   { NULL, InitFileReqClass,     BGUI_FILEREQ_OBJECT,     "bgui_filereq.class",              NULL, FALSE, FALSE },
+   { NULL, InitFontReqClass,     BGUI_FONTREQ_OBJECT,     "bgui_fontreq.class",              NULL, FALSE, FALSE },
+   { NULL, InitScreenReqClass,   BGUI_SCREENREQ_OBJECT,   "bgui_screenreq.class",            NULL, FALSE, FALSE },
 
-   { NULL, NULL,                 BGUI_AREXX_OBJECT,       "bgui_arexx.class",                NULL },
+   { NULL, InitArexxClass,       BGUI_AREXX_OBJECT,       "bgui_arexx.class",                NULL, FALSE, FALSE },
 
-   { NULL, InitSpacingClass,     BGUI_SPACING_OBJECT,     NULL,                              NULL },
+   { NULL, InitSpacingClass,     BGUI_SPACING_OBJECT,     NULL,                              NULL, FALSE, FALSE },
 
    { NULL, NULL,                 (UWORD)~0,               NULL }
 };
@@ -117,32 +232,99 @@ makeproto BOOL FreeClasses(void)
 {
    CLASSDEF       *cd;
    BOOL            rc = TRUE;
-   
-   for (cd = Classes; cd->cd_ClassID != (UWORD)~0; cd++)
+   ULONG subclasses,last_subclasses=0,opened_classes;
+
+   Forbid();
+   do   
    {
-      if (cd->cd_Storage)
+      opened_classes=subclasses=0;
+      for (cd = Classes; cd->cd_ClassID != (UWORD)~0; cd++)
       {
-         if (cd->cd_ClassBase)
+         if(last_subclasses==0)
+            cd->cd_Leaking=FALSE;
+         if (cd->cd_Storage)
          {
-            CloseLibrary((struct Library *)cd->cd_ClassBase);
-            cd->cd_ClassBase = NULL;
+            if (cd->cd_LibraryClass)
+            {
+               if(cd->cd_ClassBase)
+               {
+                  CloseLibrary((struct Library *)cd->cd_ClassBase);
+                  cd->cd_ClassBase = NULL;
+               }
+               opened_classes++;
+               rc=FALSE;
+            }
+            else
+            {
+               /*
+                * Return FALSE if one or more fail to free.
+                */
+               if (!BGUI_FreeClass(cd->cd_Storage))
+               {
+                  rc = FALSE;
+                  if(cd->cd_Storage->cl_SubclassCount)
+                  {
+                     subclasses+=cd->cd_Storage->cl_SubclassCount;
+                     if(cd->cd_Storage->cl_ObjectCount)
+                        opened_classes++;
+                  }
+                  else
+                  {
+                     if(!cd->cd_Leaking)
+                     {
+                        cd->cd_Leaking=TRUE;
+                        D(bug("*** Object leak of class %lu: Class %lX, Object count %lu\n",cd->cd_ClassID,cd->cd_Storage,cd->cd_Storage->cl_ObjectCount));
+                     }
+                  }
+               }
+               else
+                  cd->cd_Storage = NULL;
+            };
          }
          else
-         {
-            /*
-             * Return FALSE if one or more fail to free.
-             */
-            if (!BGUI_FreeClass(cd->cd_Storage))
-               rc = FALSE;
-         };
-         /*
-          * Clear storage fields.
-          */
-         cd->cd_Storage = NULL;
+            cd->cd_LibraryClass=FALSE;
       };
-   };
+      if(last_subclasses==subclasses)
+         break;
+      last_subclasses=subclasses;
+   }
+   while(subclasses);
+   if(!rc)
+   {
+      if(opened_classes==0)
+      {
+         for (cd = Classes; cd->cd_ClassID != (UWORD)~0; cd++)
+            cd->cd_Storage = NULL;
+#ifdef DEBUG_BGUI
+         DumpTrackedObjects();
+#endif
+         rc=TRUE;
+      }
+      else
+      {
+         D(bug("Opened classes %lu\n",opened_classes));
+      }
+   }
+   Permit();
    return rc;
 }
+
+makeproto void MarkFreedClass(Class *cl)
+{
+   CLASSDEF       *cd;
+
+   Forbid();
+   for (cd = Classes; cd->cd_ClassID != (UWORD)~0; cd++)
+   {
+      if(cl==cd->cd_Storage)
+      {
+         cd->cd_Storage = NULL;
+         break;
+      }
+   }
+   Permit();
+}
+
 
 /*
  * Obtain a class pointer. This routine will only fail if you pass it
@@ -168,6 +350,7 @@ makeproto SAVEDS ASM Class *BGUI_GetClassPtr(REG(d0) ULONG classID)
                    * Get the class pointer.
                    */
                   cl = cd->cd_ClassBase->bcb_Class;
+                  cd->cd_LibraryClass=TRUE;
                };
             };
             if (!cl && cd->cd_InitFunc)
@@ -231,7 +414,7 @@ makeproto SAVEDS ASM struct BitMap *BGUI_AllocBitMap(REG(d0) ULONG width, REG(d1
     * Not OS 3.0 or better?
     * Make the bitmap ourselves.
     */
-   if (b = (ULONG *)AllocVec(sizeof(struct BitMap) + sizeof(ULONG), MEMF_PUBLIC | MEMF_CLEAR))
+   if (b = (ULONG *)BGUI_AllocPoolMem(sizeof(struct BitMap) + sizeof(ULONG)))
    {
       *b = ID_BGUI;
       bm = (struct BitMap *)(b + 1);
@@ -292,7 +475,7 @@ makeproto SAVEDS ASM VOID BGUI_FreeBitMap(REG(a0) struct BitMap *bm)
          /*
           * Free the structure.
           */
-         FreeVec(b);
+         BGUI_FreePoolMem(b);
       }
       else
       {
@@ -314,7 +497,7 @@ makeproto SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap(REG(a0) struct Rast
    /*
     * Allocate a rastport structure.
     */
-   if (rp = (struct RastPort *)AllocVec(sizeof(struct RastPort), MEMF_PUBLIC | MEMF_CLEAR))
+   if (rp = (struct RastPort *)BGUI_AllocPoolMem(sizeof(struct RastPort)))
    {
       /*
        * If we have a source rastport we
@@ -360,7 +543,7 @@ makeproto SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap(REG(a0) struct Rast
       /*
        * No bitmap.
        */
-      FreeVec(rp);
+      BGUI_FreePoolMem(rp);
    }
    return NULL;
 }
@@ -392,7 +575,7 @@ makeproto SAVEDS ASM VOID BGUI_FreeRPortBitMap(REG(a0) struct RastPort *rp)
    /*
     * Free the rastport.
     */
-   FreeVec(rp);
+   BGUI_FreePoolMem(rp);
 }
 
 /*
@@ -540,7 +723,7 @@ makeproto SAVEDS ASM STRPTR BGUI_GetLocaleStr(REG(a0) struct bguiLocale *bl, REG
       if (bl->bl_LocaleStrHook)
       {
          bls.bls_ID = id;
-         str = (STRPTR)CallHookPkt(bl->bl_LocaleStrHook, (void *)bl, (void *)&bls);
+         str = (STRPTR)BGUI_CallHookPkt(bl->bl_LocaleStrHook, (void *)bl, (void *)&bls);
       }
       else
       {
@@ -560,7 +743,7 @@ makeproto SAVEDS ASM STRPTR BGUI_GetCatalogStr(REG(a0) struct bguiLocale *bl, RE
       {
          bcs.bcs_ID = id;
          bcs.bcs_DefaultString = str;
-         str = (STRPTR)CallHookPkt(bl->bl_CatalogStrHook, (void *)bl, (void *)&bcs);
+         str = (STRPTR)BGUI_CallHookPkt(bl->bl_CatalogStrHook, (void *)bl, (void *)&bcs);
       }
       else
       {
@@ -568,4 +751,32 @@ makeproto SAVEDS ASM STRPTR BGUI_GetCatalogStr(REG(a0) struct bguiLocale *bl, RE
       };
    };
    return str;
+}
+
+struct CallHookData
+{
+   struct Hook *Hook;
+   APTR Object;
+   APTR Message;
+};
+
+static ULONG CallHookWithStack(struct CallHookData *call_hook_data)
+{
+   register APTR stack;
+   register ULONG result;
+
+   stack=EnsureStack();
+   result=CallHookPkt(call_hook_data->Hook,call_hook_data->Object,call_hook_data->Message);
+   RevertStack(stack);
+   return(result);
+}
+
+makeproto SAVEDS ASM ULONG BGUI_CallHookPkt(REG(a0) struct Hook *hook,REG(a2) APTR object,REG(a1) APTR message)
+{
+   struct CallHookData call_hook_data;
+
+   call_hook_data.Hook=hook;
+   call_hook_data.Object=object;
+   call_hook_data.Message=message;
+   return(CallHookWithStack(&call_hook_data));
 }

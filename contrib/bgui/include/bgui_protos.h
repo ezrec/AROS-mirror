@@ -13,6 +13,15 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 20:02:02  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.2  1998/02/26 22:06:50  mlemos
+ * Corrected bgui.h include path
+ *
+ * Revision 41.10.2.1  1998/02/26 18:04:48  mlemos
+ * Restored the include of bgui.h to libraries/
+ *
  * Revision 41.10  1998/02/25 21:14:04  mlemos
  * Bumping to 41.10
  *

@@ -1,0 +1,43 @@
+;
+; @(#) $Header$
+;
+; bguiclass_libtag.a
+;
+; (C) Copyright 1999 BGUI Developement team.
+; (C) Copyright 1996 Ian J. Einman.
+; All Rights Reserved.
+;
+; $Log$
+; Revision 1.2  2000/05/09 20:01:16  mlemos
+; Merged with the branch Manuel_Lemos_fixes.
+;
+; Revision 1.1.2.1  1999/05/31 01:42:46  mlemos
+; Ian sources.
+;
+;
+;
+;
+
+         SECTION TEXT,CODE
+
+         xref  __LibID,__LibName,__LibInit
+
+;
+;  Do nothing when run as an executable.
+;
+         moveq #0,d0
+         rts
+
+ROMTag:  dc.w  $4AFC      ; RT_MATCHWORD
+         dc.l  ROMTag     ; RT_MATCHTAG
+         dc.l  EndCode    ; RT_ENDSKIP
+         dc.b  $80        ; RT_FLAGS = RTF_AUTOINIT
+         dc.b  41         ; RT_VERSION
+         dc.b  9          ; RT_TYPE = NT_LIBRARY
+         dc.b  0          ; RT_PRI
+         dc.l  __LibName  ; RT_NAME
+         dc.l  __LibID+6  ; RT_IDSTRING
+         dc.l  __LibInit  ; RT_INIT
+
+EndCode:
+         END

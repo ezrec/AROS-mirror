@@ -12,6 +12,15 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 20:01:57  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.2  1999/02/19 05:00:59  mlemos
+ * Added support for Storm C.
+ *
+ * Revision 41.10.2.1  1998/03/01 02:25:30  mlemos
+ * Added new memory allocation debugging functions to the library
+ *
  * Revision 41.10  1998/02/25 21:13:59  mlemos
  * Bumping to 41.10
  *
@@ -21,6 +30,11 @@
  *
  */
 
+#ifdef __STORM__
+#ifndef _INCLUDE_PRAGMA_BGUI_LIB_H
+#include <pragma/bgui_lib.h>
+#endif
+#else
 #pragma libcall BGUIBase BGUI_GetClassPtr 1e 001
 #pragma libcall BGUIBase BGUI_NewObjectA 24 8002
 #pragma libcall BGUIBase BGUI_RequestA 2a a9803
@@ -47,12 +61,16 @@
 /*pragma libcall BGUIBase BGUI_Private2 a8 0*/
 /*pragma libcall BGUIBase BGUI_Private3 ae 0*/
 /*pragma libcall BGUIBase BGUI_Private4 b4 0*/
+/*pragma libcall BGUIBase BGUI_Private5 ba 0*/
+/*pragma libcall BGUIBase BGUI_Private6 c0 0*/
 
 #ifdef __SASC
 #pragma tagcall BGUIBase BGUI_NewObject 24 8002
 #pragma tagcall BGUIBase BGUI_Request 2a a9803
 #pragma tagcall BGUIBase BGUI_DoGadgetMethod 42 ba9804
 #pragma tagcall BGUIBase BGUI_MakeClass 90 801
+#endif
+
 #endif
 
 #endif

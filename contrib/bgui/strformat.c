@@ -11,6 +11,15 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:55:13  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.1  1998/10/12 01:29:58  mlemos
+ * Made the tprintf function divert the debug output to the serial port via
+ * kprintf whenever the Tap program port is not available.
+ * Made the tprintf code only compile when bgui.library is compiled for
+ * debugging.
+ *
  * Revision 41.10  1998/02/25 21:13:13  mlemos
  * Bumping to 41.10
  *
@@ -83,18 +92,18 @@ makeproto void sprintf(char *buffer, char *format, ...)
    SPrintfA(buffer, format, (ULONG *)&format + 1);
 }
 
+extern __stdargs VOID KPutFmt( STRPTR format,  ULONG *values);
+
 makeproto void tprintf(char *format, ...)
 {
+#ifdef DEBUG_BGUI
    char *buffer;
    struct Message *msg;
    struct MsgPort *tap;
    int len;
    
    Forbid();
-   tap = FindPort("Tap");
-   Permit();
-   
-   if (tap)
+   if ((tap = FindPort("Tap")))
    {
       if (buffer = AllocVec(4096, 0))
       {
@@ -109,5 +118,9 @@ makeproto void tprintf(char *format, ...)
          };
          FreeVec(buffer);
       };
-   };
+   }
+   else
+      KPutFmt(format,(ULONG *)&format + 1);
+   Permit();
+#endif
 }

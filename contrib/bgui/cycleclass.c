@@ -11,6 +11,18 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:08  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.3  1998/12/07 03:06:57  mlemos
+ * Replaced OpenFont and CloseFont calls by the respective BGUI debug macros.
+ *
+ * Revision 41.10.2.2  1998/03/01 23:06:01  mlemos
+ * Corrected RastPort tag where GadgetInfo was being passed.
+ *
+ * Revision 41.10.2.1  1998/03/01 15:37:32  mlemos
+ * Added support to track BaseInfo memory leaks.
+ *
  * Revision 41.10  1998/02/25 21:11:52  mlemos
  * Bumping to 41.10
  *
@@ -413,7 +425,7 @@ METHOD(OpenPopupWindow, struct gpInput *gpi)
     * Open the font.
     */
    if (cd->cd_PopupFont)
-      cd->cd_Font = OpenFont(cd->cd_PopupFont);
+      cd->cd_Font = BGUI_OpenFont(cd->cd_PopupFont);
 
    /* BAD CODE! Does not check OpenFont result! */
 
@@ -461,7 +473,11 @@ METHOD(OpenPopupWindow, struct gpInput *gpi)
        */
       cd->cd_Previous = (UWORD)~0;
 
-      if (bi = AllocBaseInfo(BI_Screen, gi->gi_Screen, BI_GadgetInfo, rp = cd->cd_PopWindow->RPort))
+#ifdef DEBUG_BGUI
+      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_Screen, gi->gi_Screen, BI_RastPort, rp = cd->cd_PopWindow->RPort))
+#else
+      if (bi = AllocBaseInfo(BI_Screen, gi->gi_Screen, BI_RastPort, rp = cd->cd_PopWindow->RPort))
+#endif
       {
          /*
           * Setup the font.
@@ -612,7 +628,11 @@ METHOD(CycleClassHandleInput, struct gpInput *gpi)
       if (!(gi->gi_Window->Flags & WFLG_WINDOWACTIVE))
          return GMR_NOREUSE;
 
+#ifdef DEBUG_BGUI
+      if (bi = AllocBaseInfoDebug(__FILE__,__LINE__,BI_GadgetInfo, gi, BI_RastPort, cd->cd_PopWindow->RPort, TAG_DONE))
+#else
       if (bi = AllocBaseInfo(BI_GadgetInfo, gi, BI_RastPort, cd->cd_PopWindow->RPort, TAG_DONE))
+#endif
       {
          /*
           * Where is the mouse?
@@ -792,7 +812,7 @@ METHOD(CycleClassGoInactive, struct gpGoInactive *gpgi)
     * Close the font.
     */
    if ( cd->cd_Font ) {
-      CloseFont( cd->cd_Font );
+      BGUI_CloseFont( cd->cd_Font );
       cd->cd_Font = NULL;
    }
 

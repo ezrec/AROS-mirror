@@ -11,6 +11,14 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:55:23  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.1  1998/11/16 20:01:56  mlemos
+ * Replaced AllocVec and FreeVec calls by BGUI_AllocPoolMem and
+ * BGUI_FreePoolMem calls respectively.
+ * Restored prior RastPort AreaInfo and TmpRas after rendering.
+ *
  * Revision 41.10  1998/02/25 21:13:26  mlemos
  * Bumping to 41.10
  *
@@ -44,6 +52,8 @@ typedef struct {
    UWORD              vd_PlaneWidth;    /* Width of area-plane.       */
    UWORD              vd_PlaneHeight;   /* Height of area-plane.      */
    UWORD              vd_ErasePen;      /* Pen to erase with.         */
+   struct TmpRas     *vd_OldTmpRas;     /* TmpRas before rendering.   */
+   struct AreaInfo   *vd_OldAreaInfo;   /* AreaInfo before rendering. */
 }  VD;
 
 #define VDATF_AREA       (1<<0)         /* We are area filling.       */
@@ -436,6 +446,9 @@ STATIC ASM VOID CleanUpArea( REG(a0) struct RastPort *rp, REG(a1) VD *vd )
        */
       WaitBlit();
 
+      rp->TmpRas=vd->vd_OldTmpRas;
+      rp->AreaInfo=vd->vd_OldAreaInfo;
+
       /*
        * Deallocate the buffers.
        */
@@ -447,7 +460,7 @@ STATIC ASM VOID CleanUpArea( REG(a0) struct RastPort *rp, REG(a1) VD *vd )
 
       if (vd->vd_VertexBuffer)
       {
-         FreeVec( vd->vd_VertexBuffer );
+         BGUI_FreePoolMem( vd->vd_VertexBuffer );
          vd->vd_VertexBuffer = NULL;
       }
 
@@ -487,8 +500,9 @@ STATIC ULONG SetupArea( struct RastPort *rp, VD *vd, struct VectorItem *vi, UWOR
    /*
     * Allocate and setup the buffers etc.
     */
-   if (vd->vd_VertexBuffer = (UWORD *)ALLOCPUB(numelem * 5))
+   if (vd->vd_VertexBuffer = (UWORD *)BGUI_AllocPoolMem(numelem * 5))
    {
+      memset(vd->vd_VertexBuffer,'\0',numelem * 5);
       if (vd->vd_AreaPlane = AllocRaster(w, h)) {
          /*
           * Initialize structures.
@@ -498,8 +512,10 @@ STATIC ULONG SetupArea( struct RastPort *rp, VD *vd, struct VectorItem *vi, UWOR
          /*
           * Set them up.
           */
-         rp->TmpRas   = &vd->vd_TmpRas;
-         rp->AreaInfo = &vd->vd_AreaInfo;
+         vd->vd_OldTmpRas   = rp->TmpRas;
+         rp->TmpRas         = &vd->vd_TmpRas;
+         vd->vd_OldAreaInfo = rp->AreaInfo;
+         rp->AreaInfo       = &vd->vd_AreaInfo;
          /*
           * Mark raster size.
           */

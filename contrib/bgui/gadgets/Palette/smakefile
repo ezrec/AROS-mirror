@@ -1,0 +1,72 @@
+#
+# @(#) $Header$
+#
+# SAS/C Makefile for PaletteClass
+#
+# (C) Copyright 1999 Manuel Lemos.
+# All Rights Reserved.
+#
+# $Log$
+# Revision 1.2  2000/05/09 20:00:07  mlemos
+# Merged with the branch Manuel_Lemos_fixes.
+#
+# Revision 1.1.2.2  1999/05/31 02:49:12  mlemos
+# Stopped SAS\C from creating an executable from the shared library startup
+# assembly code.
+#
+# Revision 1.1.2.1  1999/05/31 01:42:31  mlemos
+# Ian sources.
+#
+#
+#
+
+DEMOPROGRAMNAME=        PaletteDemo
+DEMOPROGRAM=            //bin/$(DEMOPROGRAMNAME)
+OBJDIR=                 //o/
+CLASSLIBRARY=           /bgui_palette.gadget
+LIBRARY_OBJECT_OPTIONS= RESETOPTIONS ERRORREXX OPTIMIZE OPTIMIZETIME NOSTACKCHECK PARAMETERS=REGISTERS STRINGMERGE NOCHECKABORT COMMENTNEST VERBOSE NOVERSION UTILITYLIBRARY NOICONS MEMORYSIZE=HUGE NOSTARTUP DEFINE __USE_SYSBASE
+LIBRARY_COMMON_SOURCE=  /common/
+PROGRAM_OPTIONS=        RESETOPTIONS NOICONS SMALLCODE SMALLDATA OPTIMIZE OPTIMIZETIME OBJNAME=$(OBJDIR) ERRORREXX LINK NOSTACKCHECK NOCHECKABORT
+
+#
+# Project Macros
+#
+
+OBJS= $(OBJDIR)bguiclass_lib.lo $(OBJDIR)PaletteClass.lo
+
+#
+# Rules
+#
+
+.c.lo:
+  sc $(LIBRARY_OBJECT_OPTIONS) $< OBJNAME $@
+
+.h.h:
+   @echo Installing $@...
+   @copy >NIL: $*.h to $@
+
+#
+# Dependencies
+#
+
+all: $(CLASSLIBRARY) $(DEMOPROGRAM)
+
+$(OBJDIR)bguiclass_lib.lo: $(LIBRARY_COMMON_SOURCE)bguiclass_lib.c
+$(OBJDIR)PaletteClass.lo: PaletteClass.c
+
+$(OBJDIR)bguiclass_libtag.o: $(LIBRARY_COMMON_SOURCE)bguiclass_libtag.a
+   sc RESETOPTIONS ASSEMBLER $(LIBRARY_COMMON_SOURCE)bguiclass_libtag.a OBJECTNAME $(OBJDIR) TO bguiclass_libtag.o
+
+$(CLASSLIBRARY): $(OBJDIR)bguiclass_libtag.o $(OBJS)
+	-Delete $@
+	slink NODEBUG NOICONS FROM $(OBJDIR)bguiclass_libtag.o LIB lib:sc.lib lib:amiga.lib LIB:debug.lib FROM $(OBJS) TO $@
+
+$(DEMOPROGRAM):		$(DEMOPROGRAMNAME).c $(CLASSLIBRARY)
+	sc $(PROGRAM_OPTIONS) FROM $(DEMOPROGRAMNAME).c TO $(DEMOPROGRAM)
+	-Delete $(DEMOPROGRAM).lnk
+
+Clean:
+	-Delete $(OBJS)
+	-Delete $(DEMOOBJS)
+	-Delete $(DEMOPROGRAM)
+	-Delete $(CLASSLIBRARY) 

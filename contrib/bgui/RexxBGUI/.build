@@ -1,0 +1,33 @@
+all: rexxbgui.library RexxBGUI.doc Functions.doc MakeImage
+
+MakeImage: MakeImage.e
+	ec MakeImage
+	rename MakeImage MakeImage
+
+rexxbgui.library: rexxbguilib.e stricmp.m strchr.m
+	ec rexxbguilib.e
+	delete >NIL: rexxbgui.m
+	avail >NIL: flush
+
+RexxBGUI.doc: rexxbguilib.e makedoc
+	echo makedoc...
+	makedoc rexxbguilib.e RexxBGUI.doc
+
+Functions.doc: rexxbguilib.e makefunc
+	echo makefunc...
+	makefunc rexxbguilib.e Functions.doc
+
+makedoc: makedoc.e
+	ec makedoc.e
+
+makefunc: makefunc.e
+	ec makefunc.e
+
+stricmp.m: stricmp.e
+	ec stricmp.e
+
+strchr.m: strchr.e
+	ec strchr.e
+
+clean:
+	-@delete rexxbgui.library RexxBGUI.doc Functions.doc MakeImage stricmp.m strchr.m rexxbgui.m makedoc makefunc

@@ -1,0 +1,63 @@
+/* REXX */
+/* REXX script for rexxbgui.library: test bug 57 */
+
+if ~show('l','rexxbgui.library') then do
+  if ~addlib('rexxbgui.library',0,-30) then exit(20)
+end
+
+call bguiopen()
+
+signal on syntax
+
+call bguilist("mxopts_",'None','Option 1','Option 2','Option 3','Option 4','Option 5','Option 6')
+
+g=bguivgroup(,
+    bguihgroup(,
+      bguivgroup(,
+        bguimx('left','Left','mxopts_','R')bguilayout(LGO_FixMinWidth, 1,LGO_FixMinHeight, 1),
+      ,-3,'F')||,
+      bguivgroup(,
+        bguimx('center','Center','mxopts_','R')bguilayout(LGO_FixMinWidth, 1,LGO_FixMinHeight, 1),
+      ,-3,'F')||,
+      bguivgroup(,
+        bguimx('right','Right','mxopts_','R')bguilayout(LGO_FixMinWidth, 1,LGO_FixMinHeight, 1),
+      ,-3,'F'),
+    )||,
+    bguihgroup(,
+      bguivarspace(10)||,
+      bguibutton('quit','_Quit')bguilayout(LGO_FixMinWidth, 1,LGO_FixMinHeight, 1)||,
+      bguivarspace(10),
+    )||bguilayout(LGO_FixMinHeight,1),
+,-2,-2)
+
+grp.0 = 'left'
+grp.1 = 'center'
+grp.2 = 'right'
+
+do src = 0 to 2
+  do dst = 0 to 2
+    if src = dst then iterate
+    do Option = 1 to 6
+      interpret 'call bguiaddcondit(obj.'grp.src',obj.'grp.dst',MX_Active,'Option',MX_DisableButton,'Option',MX_EnableButton,'Option')'
+    end
+  end
+end
+
+a=bguiwindow('RexxBGUI',g,,,,arg(1))
+
+if bguiwinopen(a) == 0 then bguierror(12)
+
+id = 0
+do while 1
+  call bguiwinwaitevent(a,'ID')
+  select
+    when (id = id.quit) | (id = id.winclose) then leave
+    otherwise
+  end
+end
+rc = 0
+
+syntax:
+if rc ~= 0 then say '+++ ['rc']' errortext(rc) 'at line' sigl
+call bguiclose()
+exit 0

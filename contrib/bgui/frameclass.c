@@ -11,6 +11,31 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:17  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.7  1999/07/04 05:24:40  mlemos
+ * Fixed attempts to render areas witrh invalid dimensions.
+ *
+ * Revision 41.10.2.6  1999/07/03 15:17:37  mlemos
+ * Replaced the calls to CallHookPkt to BGUI_CallHookPkt.
+ *
+ * Revision 41.10.2.5  1999/07/03 15:12:26  mlemos
+ * Ensured that frame is only drawn if dimensions are bigger than 0.
+ * Removed debug code to warn when dimensions are too small.
+ *
+ * Revision 41.10.2.4  1999/07/03 14:29:56  mlemos
+ * Added assertion code to warn frame dimensions are too small.
+ *
+ * Revision 41.10.2.3  1999/07/03 14:13:08  mlemos
+ * Fixed off by one mistake on the computation of the minimum frame size
+ *
+ * Revision 41.10.2.2  1998/12/07 03:06:59  mlemos
+ * Replaced OpenFont and CloseFont calls by the respective BGUI debug macros.
+ *
+ * Revision 41.10.2.1  1998/02/28 02:22:54  mlemos
+ * Made setting the frame title to NULL to reset text title object.
+ *
  * Revision 41.10  1998/02/25 21:12:05  mlemos
  * Bumping to 41.10
  *
@@ -282,7 +307,7 @@ METHOD(FrameClassBackfill, struct fmBackfill *fmb)
     * Note that this can also be the default backfill hook
     * which is defined above.
     */
-   CallHookPkt(fd->fd_BackFillHook, (VOID *)obj, (VOID *)&fdraw);
+   BGUI_CallHookPkt(fd->fd_BackFillHook, (VOID *)obj, (VOID *)&fdraw);
 
    return 1;
 }
@@ -546,7 +571,7 @@ STATIC ASM VOID FrameThickness(REG(a0) Class *cl, REG(a2) Object *obj)
           * If this method is not understood
           * by the hook we use default values.
           */
-         if (CallHookPkt(fd->fd_FrameHook, (VOID *)obj, (VOID *)&tm) != FRC_OK)
+         if (BGUI_CallHookPkt(fd->fd_FrameHook, (VOID *)obj, (VOID *)&tm) != FRC_OK)
          {
             h = v = 1;
          };
@@ -615,7 +640,7 @@ STATIC ASM VOID SetFrameAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) st
 
       case IMAGE_TextFont:
          if (fd->fd_Font && (fd->fd_Flags & FRF_SELFOPEN))
-            CloseFont(fd->fd_Font);
+            BGUI_CloseFont(fd->fd_Font);
          fd->fd_Font   = (struct TextFont *)data;
          fd->fd_Flags &= ~FRF_SELFOPEN;
          break;
@@ -623,10 +648,10 @@ STATIC ASM VOID SetFrameAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) st
       case FRM_TextAttr:
          if (data)
          {
-            if (tf = OpenFont((struct TextAttr *)tag->ti_Data))
+            if (tf = BGUI_OpenFont((struct TextAttr *)tag->ti_Data))
             {
                if (fd->fd_Font && (fd->fd_Flags & FRF_SELFOPEN))
-                  CloseFont(fd->fd_Font);
+                  BGUI_CloseFont(fd->fd_Font);
                fd->fd_Font  = tf;
                fd->fd_TitleFont = (struct TextAttr *)tag->ti_Data;
                fd->fd_Flags   |= FRF_SELFOPEN;
@@ -677,8 +702,18 @@ STATIC ASM VOID SetFrameAttrs(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) st
          break;
 
       case FRM_Title:
-         if (!fd->fd_Title) fd->fd_Title = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_CopyText, TRUE, TAG_DONE);
-         if (fd->fd_Title) DoSetMethodNG(fd->fd_Title, TEXTA_Text, data, TAG_DONE);
+         if (!fd->fd_Title && data)
+            fd->fd_Title = BGUI_NewObject(BGUI_TEXT_GRAPHIC, TEXTA_CopyText, TRUE, TAG_DONE);
+         if (fd->fd_Title)
+         {
+            if(data)
+               DoSetMethodNG(fd->fd_Title, TEXTA_Text, data, TAG_DONE);
+            else
+            {
+               DisposeObject(fd->fd_Title);
+               fd->fd_Title=NULL;
+            }
+         }
          break;
 
       case FRM_TitleID:
@@ -862,7 +897,7 @@ METHOD(FrameClassDispose, Msg msg)
     * Close the font.
     */
    if (fd->fd_Font && (fd->fd_Flags & FRF_SELFOPEN))
-      CloseFont(fd->fd_Font);
+      BGUI_CloseFont(fd->fd_Font);
 
    /*
     * Dispose of the text graphic.
@@ -1035,8 +1070,8 @@ METHOD(FrameClassRender, struct bmRender *bmr)
    th = fd->fd_Horizontal;
    tv = fd->fd_Vertical;
    
-   if ((th << 1) > (r - l)) th = (r - l) >> 1;
-   if ((tv << 1) > (b - t)) tv = (b - t) >> 1;
+   if ((th << 1) > (r - l + 1)) th = (r - l + 1) >> 1;
+   if ((tv << 1) > (b - t + 1)) tv = (b - t + 1) >> 1;
    
    /*
     * Draw the frame (whatever type it is)
@@ -1071,187 +1106,199 @@ METHOD(FrameClassRender, struct bmRender *bmr)
       shine  = tmp;
    }
 
-   switch (fd->fd_Type)
+   if(th>0
+   && tv>0)
    {
-      case  FRTYPE_CUSTOM:
-         /*
-          * Fill in the data structures for the custom frame hook
-          */
-         fdraw.fdm_MethodID   = FRM_RENDER;
-         fdraw.fdm_RPort      = rp;
-         fdraw.fdm_DrawInfo   = bi->bi_DrInfo;
-         fdraw.fdm_Bounds     = &rect;
-         fdraw.fdm_State      = state;
-         fdraw.fdm_Horizontal = th;
-         fdraw.fdm_Vertical   = tv;
-         /*
-          * Call the hook routine.
-          */
-         rc = CallHookPkt(fd->fd_FrameHook, (VOID *)obj, (VOID *)&fdraw);
-         break;
+      switch (fd->fd_Type)
+      {
+         case  FRTYPE_CUSTOM:
+            /*
+             * Fill in the data structures for the custom frame hook
+             */
+            fdraw.fdm_MethodID   = FRM_RENDER;
+            fdraw.fdm_RPort      = rp;
+            fdraw.fdm_DrawInfo   = bi->bi_DrInfo;
+            fdraw.fdm_Bounds     = &rect;
+            fdraw.fdm_State      = state;
+            fdraw.fdm_Horizontal = th;
+            fdraw.fdm_Vertical   = tv;
+            /*
+             * Call the hook routine.
+             */
+            rc = BGUI_CallHookPkt(fd->fd_FrameHook, (VOID *)obj, (VOID *)&fdraw);
+            break;
 
-      case FRTYPE_RIDGE:
-      case FRTYPE_NEXT:
-      case FRTYPE_DROPBOX:
-      case FRTYPE_FUZZ_BUTTON:
-      case FRTYPE_FUZZ_RIDGE:
-      case FRTYPE_BUTTON:
-         i_fuzz   = -1;
-         i_blank  = -1;
-         i_swap   = -1;
-         i_mix    = -1;
-         
-         dv = (tv + th - 1) / th;   if (dv < 1) dv = 1;
-         dh = (th + tv - 1) / tv;   if (dh < 1) dh = 1;
-         
-         if (fd->fd_Type == FRTYPE_FUZZ_BUTTON)
-         {
-            /*
-             * 1/4 Normal, 3/4 Raster
-             */
-            i_fuzz = (tv / dv) / 4;
-         };
-         if (fd->fd_Type == FRTYPE_FUZZ_RIDGE)
-         {
-            /*
-             * 1/3 Normal, 1/3 Blank, 1/3 Recessed
-             */
-            tmp      = shine;
-            tmp2     = shadow;
-            i_mix    = (tv / dv) / 3 - 1;
-            i_swap   = (2 * tv / dv) / 3 - 1;
-         };
-         if (fd->fd_Type == FRTYPE_DROPBOX)
-         {
-            /*
-             * 1/3 Normal, 1/3 Blank, 1/3 Recessed
-             */
-            tmp      = shine;
-            tmp2     = shadow;
-            i_blank  = (tv / dv) / 3 - 1;
-            i_swap   = (2 * tv / dv) / 3 - 1;
-         };
-         if (fd->fd_Type == FRTYPE_NEXT)
-         {
-            /*
-             * 1/2 Recessed, 1/2 Normal
-             */
-            tmp2     = shine;
-            tmp      = shadow;
-            shine    = tmp;
-            shadow   = tmp2;
-            i_swap   = (tv / dv) / 2 - 1;
-         };
-         if (fd->fd_Type == FRTYPE_RIDGE)
-         {
-            /*
-             * 1/2 Normal, 1/2 Recessed
-             */
-            tmp      = shine;
-            tmp2     = shadow;
-            i_swap   = (tv / dv) / 2 - 1;
-         };
-         
-         /*
-          * Render the bevelbox.
-          */
-         while ((tv > 0) && (th > 0))
-         {
-            if (shine >= 0)  BSetDPenA(bi, shine);
-            BRectFill(bi, l, t, l + dh - 1, b);   l += dh;
-            if (shadow >= 0) BSetDPenA(bi, shadow);
-            BRectFill(bi, l, b - dv + 1, r, b);   b -= dv;
-            BRectFill(bi, r - dh + 1, t, r, b);   r -= dh;
-            if (shine >= 0)  BSetDPenA(bi, shine);
-            BRectFill(bi, l, t, r, t + dv - 1);   t += dv;
-            tv -= dv;
-            th -= dh;
+         case FRTYPE_RIDGE:
+         case FRTYPE_NEXT:
+         case FRTYPE_DROPBOX:
+         case FRTYPE_FUZZ_BUTTON:
+         case FRTYPE_FUZZ_RIDGE:
+         case FRTYPE_BUTTON:
+            i_fuzz   = -1;
+            i_blank  = -1;
+            i_swap   = -1;
+            i_mix    = -1;
             
-            if (i_fuzz-- == 0)
+            dv = (tv + th - 1) / th;   if (dv < 1) dv = 1;
+            dh = (th + tv - 1) / tv;   if (dh < 1) dh = 1;
+            
+            if (fd->fd_Type == FRTYPE_FUZZ_BUTTON)
             {
-               BSetAfPt(bi, pat, 1);
+               /*
+                * 1/4 Normal, 3/4 Raster
+                */
+               i_fuzz = (tv / dv) / 4;
             };
-            if (i_blank-- == 0)
+            if (fd->fd_Type == FRTYPE_FUZZ_RIDGE)
             {
-               shine    = BACKGROUNDPEN;
-               shadow   = BACKGROUNDPEN;
+               /*
+                * 1/3 Normal, 1/3 Blank, 1/3 Recessed
+                */
+               tmp      = shine;
+               tmp2     = shadow;
+               i_mix    = (tv / dv) / 3 - 1;
+               i_swap   = (2 * tv / dv) / 3 - 1;
             };
-            if (i_swap-- == 0)
+            if (fd->fd_Type == FRTYPE_DROPBOX)
             {
-               BClearAfPt(bi);
-               shine    = tmp2;
-               shadow   = tmp;
+               /*
+                * 1/3 Normal, 1/3 Blank, 1/3 Recessed
+                */
+               tmp      = shine;
+               tmp2     = shadow;
+               i_blank  = (tv / dv) / 3 - 1;
+               i_swap   = (2 * tv / dv) / 3 - 1;
             };
-            if (i_mix-- == 0)
+            if (fd->fd_Type == FRTYPE_NEXT)
             {
-               BSetAfPt(bi, pat, 1);
+               /*
+                * 1/2 Recessed, 1/2 Normal
+                */
+               tmp2     = shine;
+               tmp      = shadow;
+               shine    = tmp;
+               shadow   = tmp2;
+               i_swap   = (tv / dv) / 2 - 1;
+            };
+            if (fd->fd_Type == FRTYPE_RIDGE)
+            {
+               /*
+                * 1/2 Normal, 1/2 Recessed
+                */
+               tmp      = shine;
+               tmp2     = shadow;
+               i_swap   = (tv / dv) / 2 - 1;
+            };
+            
+            /*
+             * Render the bevelbox.
+             */
+            while ((tv > 0) && (th > 0))
+            {
+               if (shine >= 0)  BSetDPenA(bi, shine);
+               if(dh>0
+               && t<=b)
+                  BRectFill(bi, l, t, l + dh - 1, b);   l += dh;
+               if (shadow >= 0) BSetDPenA(bi, shadow);
+               if(dv>0
+               && l<=r)
+                  BRectFill(bi, l, b - dv + 1, r, b);   b -= dv;
+               if(dh>0
+               && t<=b)
+                  BRectFill(bi, r - dh + 1, t, r, b);   r -= dh;
+               if (shine >= 0)  BSetDPenA(bi, shine);
+               if(dv>0
+               && l<=r)
+                  BRectFill(bi, l, t, r, t + dv - 1);   t += dv;
+               tv -= dv;
+               th -= dh;
+               
+               if (i_fuzz-- == 0)
+               {
+                  BSetAfPt(bi, pat, 1);
+               };
+               if (i_blank-- == 0)
+               {
+                  shine    = BACKGROUNDPEN;
+                  shadow   = BACKGROUNDPEN;
+               };
+               if (i_swap-- == 0)
+               {
+                  BClearAfPt(bi);
+                  shine    = tmp2;
+                  shadow   = tmp;
+               };
+               if (i_mix-- == 0)
+               {
+                  BSetAfPt(bi, pat, 1);
+                  BSetDPenA(bi, shine);
+                  BSetDPenB(bi, shadow);
+                  shine = shadow = -1;
+               };
+            };
+            if (tv > 0)
+            {
                BSetDPenA(bi, shine);
-               BSetDPenB(bi, shadow);
-               shine = shadow = -1;
+               BRectFill(bi, l, t, r, t + tv - 1);
+               BSetDPenA(bi, shadow);
+               BRectFill(bi, l, b - tv + 1, r, b);
             };
-         };
-         if (tv > 0)
-         {
+            if (th > 0)
+            {
+               BSetDPenA(bi, shine);
+               BRectFill(bi, l, t, l + th - 1, b);
+               BSetDPenA(bi, shadow);
+               BRectFill(bi, r - th + 1, t, r, b);
+            };
+            break;
+
+         case FRTYPE_RADIOBUTTON:
+            RenderRadioFrame(bmr, l, t, r, b, fd);
+            break;
+
+         case FRTYPE_XEN_BUTTON:
+            RenderXenFrame(bmr, l, t, r, b, fd);
+            break;
+
+         case FRTYPE_TAB_TOP:
+         case FRTYPE_TAB_BOTTOM:
+         case FRTYPE_TAB_LEFT:
+         case FRTYPE_TAB_RIGHT:
+            RenderTabFrame(bmr, l, t, r, b, fd);
+            break;
+
+         case FRTYPE_TAB_ABOVE:
+            /*
+             * Render the frame.
+             */
             BSetDPenA(bi, shine);
-            BRectFill(bi, l, t, r, t + tv - 1);
+            BRectFill(bi, l, t, l + th - 1, b - tv);
             BSetDPenA(bi, shadow);
-            BRectFill(bi, l, b - tv + 1, r, b);
-         };
-         if (th > 0)
-         {
+            BRectFill(bi, l + 1, b - tv + 1, r, b);
+            BRectFill(bi, r - th + 1, t, r, b);
+            break;
+
+         case FRTYPE_TAB_BELOW:
+            /*
+             * Render the frame.
+             */
             BSetDPenA(bi, shine);
-            BRectFill(bi, l, t, l + th - 1, b);
+            BRectFill(bi, l, t, l + th - 1, b - tv + 1);
+            BRectFill(bi, l, t, r - th + 1, t + tv - 1);
             BSetDPenA(bi, shadow);
             BRectFill(bi, r - th + 1, t, r, b);
-         };
-         break;
+            break;
 
-      case FRTYPE_RADIOBUTTON:
-         RenderRadioFrame(bmr, l, t, r, b, fd);
-         break;
+         case FRTYPE_BORDER:
+            /*
+             * Render the borderbox.
+             */
+            RenderBevelBox(bi, l, t, r, b, state, fd->fd_Flags & FRF_RECESSED, TRUE);
+            break;
 
-      case FRTYPE_XEN_BUTTON:
-         RenderXenFrame(bmr, l, t, r, b, fd);
-         break;
-
-      case FRTYPE_TAB_TOP:
-      case FRTYPE_TAB_BOTTOM:
-      case FRTYPE_TAB_LEFT:
-      case FRTYPE_TAB_RIGHT:
-         RenderTabFrame(bmr, l, t, r, b, fd);
-         break;
-
-      case FRTYPE_TAB_ABOVE:
-         /*
-          * Render the frame.
-          */
-         BSetDPenA(bi, shine);
-         BRectFill(bi, l, t, l + th - 1, b - tv);
-         BSetDPenA(bi, shadow);
-         BRectFill(bi, l + 1, b - tv + 1, r, b);
-         BRectFill(bi, r - th + 1, t, r, b);
-         break;
-
-      case FRTYPE_TAB_BELOW:
-         /*
-          * Render the frame.
-          */
-         BSetDPenA(bi, shine);
-         BRectFill(bi, l, t, l + th - 1, b - tv + 1);
-         BRectFill(bi, l, t, r - th + 1, t + tv - 1);
-         BSetDPenA(bi, shadow);
-         BRectFill(bi, r - th + 1, t, r, b);
-         break;
-
-      case FRTYPE_BORDER:
-         /*
-          * Render the borderbox.
-          */
-         RenderBevelBox(bi, l, t, r, b, state, fd->fd_Flags & FRF_RECESSED, TRUE);
-         break;
-
-      case FRTYPE_NONE:
-         break;
+         case FRTYPE_NONE:
+            break;
+      }
    }
 
    /*

@@ -1,0 +1,22 @@
+<?
+/*
+ * bgui_dev.lha
+ *
+ * @(#) $Header$
+ *
+ */
+
+$configuring=0;
+$include_path=".:bugs";
+$bugs_configuration_path="./";
+require("bugs_globals.php");
+if(($archive=fopen("bin/bgui_dev.lha","r")))
+{
+	Header("Content-Type: application/octet-stream");
+	Header("Content-length: ".filesize("bin/bgui_dev.lha"));
+	Header("Date: ".gmdate("D d F Y H:i:s GMT",filectime("bin/bgui_dev.lha")));
+	fpassthru($archive);
+}
+else
+	Header("HTTP/1.0 404 File not found");
+?>

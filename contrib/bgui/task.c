@@ -11,6 +11,43 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:55:18  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.10  1998/12/07 14:47:28  mlemos
+ * Made font tracking code use a copy of the TextFont structure to allow the
+ * opened fonts be properly tracked.
+ *
+ * Revision 41.10.2.9  1998/12/07 04:30:04  mlemos
+ * Made the code that lists all unclosed fonts to list all probable source
+ * locations where the fonts were opened.
+ *
+ * Revision 41.10.2.8  1998/12/07 03:04:37  mlemos
+ * Added conditional debug code to track fonts opened by BGUI classes.
+ *
+ * Revision 41.10.2.7  1998/06/18 22:06:36  mlemos
+ * Made BGUI fetch the preferences from the appropriate file when running from
+ * CLI.
+ *
+ * Revision 41.10.2.6  1998/03/02 03:14:39  mlemos
+ * Corrected the display of the memory leak address.
+ *
+ * Revision 41.10.2.5  1998/03/01 23:09:19  mlemos
+ * Added code to trash memory allocations before being freed.
+ * Added code to warn when a NULL pointer is passed to memory release.
+ *
+ * Revision 41.10.2.4  1998/03/01 18:42:45  mlemos
+ * Corrected memory wall address verifications.
+ *
+ * Revision 41.10.2.3  1998/03/01 18:25:00  mlemos
+ * Added support to track memory overwriting outside the allocated space.
+ *
+ * Revision 41.10.2.2  1998/03/01 04:25:23  mlemos
+ * Added support to track memory freeing mismatches and memory leaks.
+ *
+ * Revision 41.10.2.1  1998/03/01 02:23:56  mlemos
+ * Added new memory allocation debugging functions to the library
+ *
  * Revision 41.10  1998/02/25 21:13:21  mlemos
  * Bumping to 41.10
  *
@@ -19,6 +56,8 @@
  *
  *
  */
+
+#define NO_MEMORY_ALLOCATION_DEBUG_ALIASING
 
 #include "include/classdefs.h"
 
@@ -32,6 +71,64 @@ static APTR MemPool = NULL;
 
 static void LoadPrefs(UBYTE *name);
 static void DefPrefs(void);
+
+#ifdef DEBUG_BGUI
+
+static struct BlockHeader
+{
+	struct BlockHeader *NextBlock;
+	ULONG BlockSize;
+	APTR Address;
+	ULONG Size;
+	APTR PoolHeader;
+	STRPTR File;
+	ULONG Line;
+}
+*MemoryBlocks=NULL;
+
+union TypesUnion
+{
+	long int LongInteger;
+	long double LongDouble;
+	void *DataPointer;
+	void (*FunctionPointer)(void);
+};
+
+#define AlignMemory(offset) (((offset)+sizeof(union TypesUnion)-1)/sizeof(union TypesUnion))*sizeof(union TypesUnion)
+
+#define MEMORY_WALL_SIZE 8
+
+#define MEMORY_WALL_TRASH 'W'
+#define MEMORY_FREE_TRASH 'Y'
+
+#define BLOCK_HEADER_OFFSET AlignMemory(sizeof(struct BlockHeader)+MEMORY_WALL_SIZE)
+
+#define TrashMemory(memory,size,character) memset(memory,character,size)
+
+static ASM VOID FreeVecMemDebug(REG(a0) APTR pool, REG(a1) APTR memptr, REG(a2) STRPTR file, REG(d0) ULONG line);
+static ASM APTR AllocVecMemDebug(REG(a0) APTR mempool, REG(d0) ULONG size,REG(a1) STRPTR file, REG(d1) ULONG line);
+#define AllocVecMem(mempool,size) AllocVecMemDebug(mempool,size,__FILE__,__LINE__)
+#define FreeVecMem(pool,memptr) FreeVecMemDebug(pool,memptr,__FILE__,__LINE__)
+
+static BOOL VerifyMemoryWall(char *memory)
+{
+	ULONG size;
+
+	for(size=MEMORY_WALL_SIZE;size;size--,memory++)
+	{
+		if(*memory!=MEMORY_WALL_TRASH)
+			return(FALSE);
+	}
+	return(TRUE);
+}
+
+#else
+static ASM APTR AllocVecMem(REG(a0) APTR mempool, REG(d0) ULONG size);
+static ASM VOID FreeVecMem(REG(a0) APTR pool, REG(a1) APTR memptr);
+#endif
+
+static SAVEDS ASM APTR BGUI_CreatePool(REG(d0) ULONG memFlags, REG(d1) ULONG puddleSize, REG(d2) ULONG threshSize);
+static SAVEDS ASM VOID BGUI_DeletePool(REG(a0) APTR poolHeader);
 
 /*
  * Initialize task list.
@@ -59,11 +156,101 @@ makeproto void InitTaskList(void)
    MemPool = BGUI_CreatePool(MEMF_PUBLIC | MEMF_CLEAR, 4096, 4096);
 }
 
+#ifdef DEBUG_BGUI
+
+static struct FontEntry
+{
+	struct FontEntry *NextFont;
+	struct TextFont *Font;
+	BOOL Closed;
+	STRPTR File;
+	ULONG Line;
+	struct TextFont Copy;
+}
+*FontEntries=NULL;
+
+static void BGUI_CloseAllFonts(void)
+{
+	struct FontEntry *font_entry;
+
+	for(font_entry=FontEntries;font_entry;font_entry=font_entry->NextFont)
+	{
+		if(font_entry->Closed==FALSE)
+		{
+	    D(bug("***Font leak (%lx) \"%s\" %s,%lu:\n",font_entry->Font,font_entry->Font->tf_Message.mn_Node.ln_Name ? font_entry->Font->tf_Message.mn_Node.ln_Name : "Unnamed font",font_entry->File ? font_entry->File : (STRPTR)"Unknown source",font_entry->Line));
+			CloseFont(font_entry->Font);
+			font_entry->Closed=TRUE;
+		}
+	}
+	while((font_entry=FontEntries))
+	{
+		FontEntries=font_entry->NextFont;
+		BGUI_FreePoolMemDebug(font_entry,__FILE__,__LINE__);
+	}
+}
+
+makeproto struct TextFont *BGUI_OpenFontDebug(struct TextAttr *textAttr,STRPTR file,ULONG line)
+{
+	struct TextFont *font;
+
+	if((font=OpenFont(textAttr)))
+	{
+		struct FontEntry *font_entry;
+
+		if((font_entry=BGUI_AllocPoolMemDebug(sizeof(*font_entry),__FILE__,__LINE__)))
+		{
+			font_entry->Font=font;
+			font_entry->Closed=FALSE;
+			font_entry->File=file;
+			font_entry->Line=line;
+			font_entry->Copy= *font;
+			ObtainSemaphore(&TaskLock);
+			font_entry->NextFont=FontEntries;
+			FontEntries=font_entry;
+			ReleaseSemaphore(&TaskLock);
+			font= &font_entry->Copy;
+		}
+		else
+		{
+			CloseFont(font);
+			font=NULL;
+		}
+	}
+	return(font);
+}
+
+makeproto void BGUI_CloseFontDebug(struct TextFont *font,STRPTR file,ULONG line)
+{
+	struct FontEntry **font_entry,*free_font_entry;
+
+	if(font==NULL)
+	{
+		D(bug("***Attempt to close an NULL font (%s,%lu)\n",file ? file : (STRPTR)"Unknown source",line));
+		return;
+	}
+	ObtainSemaphore(&TaskLock);
+	for(font_entry=&FontEntries;*font_entry && (&((*font_entry)->Copy)!=font || (*font_entry)->Closed);font_entry=&(*font_entry)->NextFont);
+	if((free_font_entry=*font_entry)
+	&& &free_font_entry->Copy==font)
+	{
+		CloseFont(free_font_entry->Font);
+		free_font_entry->Closed=TRUE;
+	}
+	else
+		D(bug("***Attempt to close an unknown font (%lx) \"%s\" (%s,%lu)\n",font,font->tf_Message.mn_Node.ln_Name ? font->tf_Message.mn_Node.ln_Name : "Unnamed font",file ? file : (STRPTR)"Unknown source",line));
+	ReleaseSemaphore(&TaskLock);
+}
+
+#else
+#define BGUI_CloseAllFonts() 
+#endif
+
 /*
  * Free task list.
  */
 makeproto void FreeTaskList(void)
 {
+   BGUI_CloseAllFonts();
    /*
     * Delete memory pool.
     */
@@ -159,7 +346,23 @@ makeproto UWORD AddTaskMember(void)
       DefPrefs();
       sprintf(buffer, "ENV:BGUI/%s.prefs", "Default");
       LoadPrefs(buffer);
-      sprintf(buffer, "ENV:BGUI/%s.prefs", FilePart(((struct Node *)(tm->tm_TaskAddr))->ln_Name));
+      if(Cli())
+      {
+         STRPTR command_name,insert;
+         size_t offset;
+
+         command_name=BADDR(Cli()->cli_CommandName);
+         strcpy(buffer,"ENV:BGUI/");
+         insert=buffer+sizeof("ENV:BGUI/")-1;
+         memcpy(insert,command_name+1,*command_name);
+         *(insert+ *command_name)='\0';
+         if((offset=FilePart(insert)-insert)!=0)
+           memcpy(insert,command_name+1+offset,*command_name-offset);
+         insert+= *command_name-offset;
+         strcpy(insert,".prefs");
+      }
+      else
+         sprintf(buffer, "ENV:BGUI/%s.prefs", FilePart(((struct Node *)(tm->tm_TaskAddr))->ln_Name));
       LoadPrefs(buffer);
 
       rc = TASK_ADDED;
@@ -371,7 +574,7 @@ extern ASM APTR AsmDeletePool  ( REG(a0) APTR,                                RE
 /*
  * Create a memory pool.
  */
-makeproto SAVEDS ASM APTR BGUI_CreatePool(REG(d0) ULONG memFlags, REG(d1) ULONG puddleSize, REG(d2) ULONG threshSize)
+static SAVEDS ASM APTR BGUI_CreatePool(REG(d0) ULONG memFlags, REG(d1) ULONG puddleSize, REG(d2) ULONG threshSize)
 {
    #ifdef ENHANCED
    /*
@@ -391,8 +594,22 @@ makeproto SAVEDS ASM APTR BGUI_CreatePool(REG(d0) ULONG memFlags, REG(d1) ULONG 
 /*
  * Delete a memory pool.
  */
-makeproto SAVEDS ASM VOID BGUI_DeletePool(REG(a0) APTR poolHeader)
+static SAVEDS ASM VOID BGUI_DeletePool(REG(a0) APTR poolHeader)
 {
+#ifdef DEBUG_BGUI
+   struct BlockHeader **header;
+
+   for(header= &MemoryBlocks;*header;)
+   {
+      if((*header)->PoolHeader==poolHeader)
+      {
+         D(bug("***Memory leak (%lx) (%s,%lu)\n",(*header)->Address,(*header)->File ? (*header)->File : (STRPTR)"Unknown file", (*header)->Line));
+         *header=(*header)->NextBlock;
+      }
+      else
+         header= &(*header)->NextBlock;
+   }
+#endif
    #ifdef ENHANCED
    /*
     * V39 Exec function.
@@ -411,28 +628,103 @@ makeproto SAVEDS ASM VOID BGUI_DeletePool(REG(a0) APTR poolHeader)
 /*
  * Allocate pooled memory.
  */
-makeproto SAVEDS ASM APTR BGUI_AllocPooled(REG(a0) APTR poolHeader, REG(d0) ULONG memSize)
+
+#ifdef DEBUG_BGUI
+static SAVEDS ASM APTR BGUI_AllocPooledDebug(REG(a0) APTR poolHeader, REG(d0) ULONG memSize,REG(a1) STRPTR file,REG(d1) ULONG line)
+#else
+static SAVEDS ASM APTR BGUI_AllocPooled(REG(a0) APTR poolHeader, REG(d0) ULONG memSize)
+#endif
 {
+   APTR memory;
+#ifdef DEBUG_BGUI
+   ULONG size;
+
+   size=memSize;
+   memSize=AlignMemory(memSize+BLOCK_HEADER_OFFSET+MEMORY_WALL_SIZE);
+#endif
    #ifdef ENHANCED
    /*
     * V39 Exec function.
     */
-   return AllocPooled(poolHeader, memSize);
+   memory=AllocPooled(poolHeader, memSize);
 
    #else
    /*
     * pools.lib function
     */
-   return AsmAllocPooled(poolHeader, memSize, SysBase);
+   memory=AsmAllocPooled(poolHeader, memSize, SysBase);
 
    #endif
+
+#ifdef DEBUG_BGUI
+   if(memory)
+   {
+   		struct BlockHeader *header=memory;
+
+   		memory=((char *)memory)+BLOCK_HEADER_OFFSET;
+   		header->NextBlock=MemoryBlocks;
+   		header->Address=memory;
+   		header->Size=size;
+   		header->PoolHeader=poolHeader;
+   		header->File=file;
+   		header->Line=line;
+   		MemoryBlocks=header;
+   		TrashMemory(((char *)memory)-MEMORY_WALL_SIZE,MEMORY_WALL_SIZE,MEMORY_WALL_TRASH);
+   		TrashMemory(((char *)memory)+size,MEMORY_WALL_SIZE,MEMORY_WALL_TRASH);
+   }
+#endif
+   return(memory);
 }
 
 /*
  * Free pooled memory.
  */
-makeproto SAVEDS ASM VOID BGUI_FreePooled(REG(a0) APTR poolHeader, REG(a1) APTR memory, REG(d1) ULONG memSize)
+#ifdef DEBUG_BGUI
+static SAVEDS ASM VOID BGUI_FreePooledDebug(REG(a0) APTR poolHeader, REG(a1) APTR memory, REG(d1) ULONG memSize,REG(a2) STRPTR file,REG(d2) ULONG line)
+#else
+static SAVEDS ASM VOID BGUI_FreePooled(REG(a0) APTR poolHeader, REG(a1) APTR memory, REG(d1) ULONG memSize)
+#endif
 {
+#ifdef DEBUG_BGUI
+   struct BlockHeader **header;
+
+   for(header= &MemoryBlocks;*header;header= &(*header)->NextBlock)
+   {
+      if((*header)->Address==memory)
+      	break;
+   }
+   if(*header==NULL)
+   {
+      D(bug("***Attempt to free an unknown memory block (%s,%lu)\n",file ? file : (STRPTR)"Unknown file", line));
+      return;
+   }
+   else
+   {
+   	  if((*header)->PoolHeader!=poolHeader)
+      {
+         D(bug("***Attempt to free a memory block from a wrong memory pool (%lx) (%s,%lu)\n",poolHeader,file ? file : (STRPTR)"Unknown file", line));
+         D(bug("***The original memory pool was (%lx) (%s,%lu)\n",(*header)->PoolHeader,(*header)->File ? (*header)->File : (STRPTR)"Unknown file", (*header)->Line));
+      }
+      if(!VerifyMemoryWall(((char *)(*header)->Address)-MEMORY_WALL_SIZE))
+      {
+         D(bug("***Lower memory wall violation (%s,%lu)\n",file ? file : (STRPTR)"Unknown file", line));
+         D(bug("***Memory originally allocated from (%s,%lu)\n",(*header)->File ? (*header)->File : (STRPTR)"Unknown file", (*header)->Line));
+      }
+      if(!VerifyMemoryWall(((char *)(*header)->Address)+(*header)->Size))
+      {
+         D(bug("***Upper memory wall violation (%s,%lu)\n",file ? file : (STRPTR)"Unknown file", line));
+         D(bug("***Memory originally allocated from (%s,%lu)\n",(*header)->File ? (*header)->File : (STRPTR)"Unknown file", (*header)->Line));
+      }
+      {
+         ULONG block_size;
+
+         block_size=(*header)->BlockSize;
+         memory= *header;
+         *header=(*header)->NextBlock;
+         TrashMemory(memory,block_size,MEMORY_FREE_TRASH);
+      }
+   }
+#endif
    #ifdef ENHANCED
    /*
     * V39 Exec function.
@@ -451,7 +743,11 @@ makeproto SAVEDS ASM VOID BGUI_FreePooled(REG(a0) APTR poolHeader, REG(a1) APTR 
 /*
  * Allocate memory.
  */
-makeproto ASM APTR AllocVecMem(REG(a0) APTR mempool, REG(d0) ULONG size)
+#ifdef DEBUG_BGUI
+static ASM APTR AllocVecMemDebug(REG(a0) APTR mempool, REG(d0) ULONG size,REG(a1) STRPTR file, REG(d1) ULONG line)
+#else
+static ASM APTR AllocVecMem(REG(a0) APTR mempool, REG(d0) ULONG size)
+#endif
 {
    ULONG    *mem;
 
@@ -464,7 +760,11 @@ makeproto ASM APTR AllocVecMem(REG(a0) APTR mempool, REG(d0) ULONG size)
       /*
        * Allocate memory from the pool.
        */
+#ifdef DEBUG_BGUI
+      if (mem = (ULONG *)BGUI_AllocPooledDebug(mempool, size,file,line))
+#else
       if (mem = (ULONG *)BGUI_AllocPooled(mempool, size))
+#endif
       {
          /*
           * Store size.
@@ -483,7 +783,11 @@ makeproto ASM APTR AllocVecMem(REG(a0) APTR mempool, REG(d0) ULONG size)
 /*
  * Free memory.
  */
-makeproto ASM VOID FreeVecMem(REG(a0) APTR pool, REG(a1) APTR memptr)
+#ifdef DEBUG_BGUI
+static ASM VOID FreeVecMemDebug(REG(a0) APTR pool, REG(a1) APTR memptr, REG(a2) STRPTR file, REG(d0) ULONG line)
+#else
+static ASM VOID FreeVecMem(REG(a0) APTR pool, REG(a1) APTR memptr)
+#endif
 {
    ULONG    *mem = (ULONG *)memptr;
 
@@ -496,7 +800,11 @@ makeproto ASM VOID FreeVecMem(REG(a0) APTR pool, REG(a1) APTR memptr)
        * Retrieve original allocation and size.
        */
       mem--;
+#ifdef DEBUG_BGUI
+      BGUI_FreePooledDebug(pool, (APTR)mem, *mem,file,line);
+#else
       BGUI_FreePooled(pool, (APTR)mem, *mem);
+#endif
    } else
       /*
        * Normal system de-allocation.
@@ -507,8 +815,25 @@ makeproto ASM VOID FreeVecMem(REG(a0) APTR pool, REG(a1) APTR memptr)
 /*
  * Allocate memory from the pool.
  */
+#ifdef DEBUG_BGUI
+SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG size)
+{
+  D(bug("BGUI_AllocPoolMem is being called from unknown location\n"));
+	return(BGUI_AllocPoolMemDebug(size,__FILE__,__LINE__));
+}
+
+makeproto SAVEDS ASM APTR BGUI_AllocPoolMemDebug(REG(d0) ULONG size, REG(a0) STRPTR file, REG(d1) ULONG line)
+{
+#else
+SAVEDS ASM APTR BGUI_AllocPoolMemDebug(REG(d0) ULONG size, REG(a0) STRPTR file, REG(d1) ULONG line)
+{
+  bug("BGUI_AllocPoolMemDebug is being called from (%s,%lu)\n",file ? file : (STRPTR)"unknown",line);
+	return(BGUI_AllocPoolMem(size));
+}
+
 makeproto SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG size)
 {
+#endif
    APTR        memPtr;
 
    /*
@@ -519,7 +844,11 @@ makeproto SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG size)
    /*
     * Allocate memory.
     */
+#ifdef DEBUG_BGUI
+   memPtr = AllocVecMemDebug(MemPool, size, file, line);
+#else
    memPtr = AllocVecMem(MemPool, size);
+#endif
 
    /*
     * Unlock the list.
@@ -532,8 +861,25 @@ makeproto SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG size)
 /*
  * Free memory from the pool.
  */
+#ifdef DEBUG_BGUI
+SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR memPtr)
+{
+  D(bug("BGUI_FreePoolMem is being called from unknown location\n"));
+	BGUI_FreePoolMemDebug(memPtr,__FILE__,__LINE__);
+}
+
+makeproto SAVEDS ASM VOID BGUI_FreePoolMemDebug(REG(a0) APTR memPtr, REG(a1) STRPTR file, REG(d0) ULONG line)
+{
+#else
+SAVEDS ASM VOID BGUI_FreePoolMemDebug(REG(a0) APTR memPtr, REG(a1) STRPTR file, REG(d0) ULONG line)
+{
+  bug("BGUI_FreePoolMemDebug is being called from (%s,%lu)\n",file ? file : (STRPTR)"unknown",line);
+	BGUI_FreePoolMem(memPtr);
+}
+
 makeproto SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR memPtr)
 {
+#endif
    if (memPtr)
    {
       /*
@@ -544,13 +890,21 @@ makeproto SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR memPtr)
       /*
        * Free the memory.
        */
+#ifdef DEBUG_BGUI
+      FreeVecMemDebug(MemPool, memPtr, file, line);
+#else
       FreeVecMem(MemPool, memPtr);
+#endif
 
       /*
        * Unlock the list.
        */
       ReleaseSemaphore(&TaskLock);
-   };
+   }
+#ifdef DEBUG_BGUI
+   else
+      D(bug("*** Attempt to free memory with a NULL pointer\n"));
+#endif
 }
 
 /*

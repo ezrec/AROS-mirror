@@ -11,6 +11,12 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:53:37  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.1  1998/10/01 23:04:17  mlemos
+ * Fixed problems with dangling pointers to missing command line arguments.
+ *
  * Revision 41.10  1998/02/25 21:11:24  mlemos
  * Bumping to 41.10
  *
@@ -254,18 +260,28 @@ int main(void)
    struct RDArgs *ra;
    BPTR   hf;
 
+   args.Header=NULL;
+   args.Source=NULL;
    if (ra = ReadArgs("HEADER/K,SOURCE/M", (LONG *)&args, NULL))
    {
-      if (hf = Open(args.Header, MODE_NEWFILE))
-      {
-         FPrintf(hf, "/*\n * %s\n *\n", args.Header);
-         rc = makeprotos(hf, args.Source);
-         Close(hf);
-      }
-      else if (hf = Output())
-      {
-         FPrintf(hf, "/*\n");
-         rc = makeprotos(hf, args.Source);
+   		if(args.Source)
+   		{
+         if (args.Header
+         && (hf = Open(args.Header, MODE_NEWFILE)))
+         {
+            FPrintf(hf, "/*\n * %s\n *\n", args.Header);
+            rc = makeprotos(hf, args.Source);
+            Close(hf);
+         }
+         else if ((hf = Output()))
+         {
+            FPrintf(hf, "/*\n");
+            rc = makeprotos(hf, args.Source);
+         }
+         else
+         {
+            rc = 20;
+         };
       }
       else
       {

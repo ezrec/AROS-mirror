@@ -11,6 +11,51 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 41.11  2000/05/09 19:54:03  mlemos
+ * Merged with the branch Manuel_Lemos_fixes.
+ *
+ * Revision 41.10.2.12  1999/08/09 23:01:25  mlemos
+ * Optimized method lookup by using a 256 positions hash table and a simple
+ * UBYTE conversion as hash function.
+ *
+ * Revision 41.10.2.11  1999/07/29 00:42:12  mlemos
+ * Added a call MarkFreedClass at the end of a successful call to
+ * BGUI_FreeClass.
+ *
+ * Revision 41.10.2.10  1999/01/06 19:18:18  mlemos
+ * Prevented division by 0 in the class statistics when no methods were
+ * called.
+ *
+ * Revision 41.10.2.9  1998/12/14 19:56:13  mlemos
+ * Replaced the binary search method lookup by hash table method lookup.
+ * Added debug code to produce statistics about method lookup on dispatching.
+ *
+ * Revision 41.10.2.8  1998/12/14 18:36:25  mlemos
+ * Added support for method inheritance to speed up method dispatching.
+ *
+ * Revision 41.10.2.7  1998/12/14 04:59:47  mlemos
+ * Replaced the assembly method dispatcher by a C dispatcher that uses binary
+ * search as method lookup.
+ *
+ * Revision 41.10.2.6  1998/11/13 18:08:10  mlemos
+ * Fixed mistaken default value for BaseInfo screen pointer in AllocBaseInfo.
+ *
+ * Revision 41.10.2.5  1998/10/18 18:22:59  mlemos
+ * Ensured that the allocated Baseinfo structure is cleared when it is not
+ * being copied from another BaseInfo structure.
+ *
+ * Revision 41.10.2.4  1998/10/12 01:21:54  mlemos
+ * Added the support for class constructor and destructor methods.
+ *
+ * Revision 41.10.2.3  1998/10/01 04:24:40  mlemos
+ * Made the class data store also BGUI global data pointer.
+ *
+ * Revision 41.10.2.2  1998/03/02 23:48:09  mlemos
+ * Switched vector allocation functions calls to BGUI allocation functions.
+ *
+ * Revision 41.10.2.1  1998/03/01 15:32:02  mlemos
+ * Added support to track BaseInfo memory leaks.
+ *
  * Revision 41.10  1998/02/25 21:11:47  mlemos
  * Bumping to 41.10
  *
@@ -23,6 +68,42 @@
 #include "include/classdefs.h"
 #include <dos.h>
 
+typedef ASM ULONG (*ClassMethodDispatcher)(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg, REG(a4) APTR global_data);
+
+typedef struct SortedMethod
+{
+   ULONG MethodID;
+   ClassMethodDispatcher DispatcherFunction;
+   Class *Class;
+   APTR GlobalData;
+   struct SortedMethod *NextHashedMethod;
+   APTR Padding[3];
+}
+SortedMethod;
+
+typedef struct
+{
+   DPFUNC *ClassMethodFunctions;
+   ClassMethodDispatcher ClassDispatcher;
+   APTR BGUIGlobalData;
+   APTR ClassGlobalData;
+   SortedMethod *MethodFunctions;
+   ULONG MethodCount;
+   SortedMethod **MethodHashTable;
+#ifdef DEBUG_BGUI
+   ULONG MethodLookups;
+   ULONG MethodComparisions;
+   ULONG MethodColisions;
+   APTR Padding[6];
+#else
+   APTR Padding;
+#endif
+}
+BGUIClassData;
+
+#define METHOD_HASH_TABLE_SIZE 256
+#define MethodHashValue(method) ((UBYTE)(method))
+
 makeproto UBYTE *RootClass   = "rootclass";
 makeproto UBYTE *ImageClass  = "imageclass";
 makeproto UBYTE *GadgetClass = "gadgetclass";
@@ -34,6 +115,122 @@ makeproto Class *BGUI_MakeClass(ULONG tag, ...)
    return BGUI_MakeClassA((struct TagItem *)&tag);
 }
 
+static ASM ULONG ClassCallDispatcher(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg, REG(a4) APTR global_data)
+{
+   BGUIClassData *class_data;
+   DPFUNC *class_methods;
+
+   if(cl
+   && (class_data=(BGUIClassData *)cl->cl_UserData)
+   && (class_methods=class_data[-1].ClassMethodFunctions))
+   {
+      for(;class_methods->df_MethodID!=DF_END;class_methods++)
+         if(class_methods->df_MethodID==msg->MethodID)
+           return(((ClassMethodDispatcher)class_methods->df_Func)(cl,obj,msg,global_data));
+   }
+   switch(msg->MethodID)
+   {
+      case OM_NEW:
+      case OM_DISPOSE:
+         return(1);
+   }
+   return(0);
+}
+
+struct CallData
+{
+   ClassMethodDispatcher dispatcher;
+   Class *cl;
+   Object *obj;
+   Msg msg;
+   APTR global_data;
+};
+
+static ULONG ASM CallMethod(REG(a3) struct CallData *call_data)
+{
+   register APTR stack;
+   register ULONG result;
+
+   stack=EnsureStack();
+   result=(*call_data->dispatcher)(call_data->cl,call_data->obj,call_data->msg,call_data->global_data);
+   RevertStack(stack);
+   return(result);
+}
+
+static int CompareMethods(const void *method_1, const void *method_2)
+{
+   return(((SortedMethod *)method_1)->MethodID==((SortedMethod *)method_2)->MethodID ? 0 : (((SortedMethod *)method_1)->MethodID>((SortedMethod *)method_2)->MethodID ? 1 : -1));
+}
+
+static SortedMethod *LookupMethod(BGUIClassData *class_data,ULONG method)
+{
+   SortedMethod *method_found;
+   size_t lower,upper,index;
+
+#ifdef DEBUG_BGUI
+   class_data->MethodLookups++;
+#endif
+   for(lower=0,upper=class_data->MethodCount;lower<upper;)
+   {
+#ifdef DEBUG_BGUI
+      class_data->MethodComparisions++;
+#endif
+      index=(lower+upper)/2;
+      method_found=class_data->MethodFunctions+index;
+      if(method==method_found->MethodID)
+         return(method_found);
+      if(method>method_found->MethodID)
+         lower=index+1;
+      else
+         upper=index;
+   }
+#ifdef DEBUG_BGUI
+   class_data->MethodComparisions++;
+#endif
+   return(NULL);
+}
+
+makeproto SAVEDS ASM ULONG __GCD( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg)
+{
+   struct CallData call_data;
+   BGUIClassData *class_data;
+   SortedMethod *method_found;
+
+   if(cl==NULL
+   || (class_data=((BGUIClassData *)cl->cl_UserData))==NULL
+   || ((--class_data)->MethodFunctions)==NULL)
+   {
+      D(bug("BGUI method dispatcher was called to handle an invalid class!!\n"));
+      return(0);
+   }
+#ifdef DEBUG_BGUI
+   class_data->MethodLookups++;
+#endif
+   for(method_found=class_data->MethodHashTable[MethodHashValue(msg->MethodID)];method_found && method_found->MethodID!=msg->MethodID;method_found=method_found->NextHashedMethod)
+   {
+#ifdef DEBUG_BGUI
+      class_data->MethodComparisions++;
+#endif
+   }
+#ifdef DEBUG_BGUI
+   class_data->MethodComparisions++;
+#endif
+   if(method_found)
+   {
+      call_data.cl=method_found->Class;
+      call_data.dispatcher=(ClassMethodDispatcher)method_found->DispatcherFunction;
+      call_data.global_data=method_found->GlobalData;
+   }
+   else
+   {
+      call_data.dispatcher=(ClassMethodDispatcher)(call_data.cl=cl->cl_Super)->cl_Dispatcher.h_Entry;
+      call_data.global_data=class_data->BGUIGlobalData;
+   }
+   call_data.obj=obj;
+   call_data.msg=msg;
+   return(CallMethod(&call_data));
+}
+
 /*
  * Setup a class.
  */
@@ -41,8 +238,8 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 {
    ULONG  old_a4 = (ULONG)getreg(REG_A4);
    ULONG  SuperClass, SuperClass_ID, Class_ID, Flags, ClassSize, ObjectSize;
-   ULONG *ClassData;
-   Class *cl;
+   BGUIClassData *ClassData;
+   Class *cl=NULL;
 
    geta4();
 
@@ -61,21 +258,135 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
    ClassSize  = GetTagData(CLASS_ClassSize,  0, tags);
    ObjectSize = GetTagData(CLASS_ObjectSize, 0, tags);
 
-   if (ClassData = AllocVec(ClassSize + sizeof(ULONG) * 2, MEMF_CLEAR))
+   if (ClassData = BGUI_AllocPoolMem(ClassSize + sizeof(BGUIClassData)))
    {
       if (cl = MakeClass((UBYTE *)Class_ID, (UBYTE *)SuperClass_ID, (Class *)SuperClass, ObjectSize, Flags))
       {
-         *ClassData++ = GetTagData(CLASS_DFTable, NULL, tags);
-         *ClassData++ = old_a4;
+         DPFUNC *method_functions;
 
-         cl->cl_UserData           = (LONG)ClassData;
-         cl->cl_Dispatcher.h_Entry = (HOOKFUNC)GetTagData(CLASS_Dispatcher, (ULONG)__GCD, tags);
+         cl->cl_UserData                 = (LONG)(ClassData+1);
+         cl->cl_Dispatcher.h_Entry       = (HOOKFUNC)GetTagData(CLASS_Dispatcher, (ULONG)__GCD, tags);
+         ClassData->ClassMethodFunctions = (DPFUNC *)GetTagData(CLASS_ClassDFTable, NULL, tags);
+         ClassData->ClassDispatcher      = (ClassMethodDispatcher)GetTagData(CLASS_ClassDispatcher, (ULONG)ClassCallDispatcher, tags);
+         ClassData->BGUIGlobalData       = (APTR)getreg(REG_A4);
+         ClassData->ClassGlobalData      = (APTR)old_a4;
+
+         if((method_functions=(DPFUNC *)GetTagData(CLASS_DFTable, NULL, tags)))
+         {
+            {
+               DPFUNC *methods;
+
+               for(ClassData->MethodCount=0,methods=method_functions;methods->df_MethodID!=DF_END;ClassData->MethodCount++,methods++);
+            }
+            if((ClassData->MethodFunctions=BGUI_AllocPoolMem(sizeof(*ClassData->MethodFunctions)*ClassData->MethodCount)))
+            {
+               ULONG method;
+
+               for(method=0;method<ClassData->MethodCount;method++)
+               {
+                  ClassData->MethodFunctions[method].MethodID=method_functions[method].df_MethodID;
+                  ClassData->MethodFunctions[method].DispatcherFunction=(ClassMethodDispatcher)method_functions[method].df_Func;
+                  ClassData->MethodFunctions[method].Class=cl;
+                  ClassData->MethodFunctions[method].GlobalData=ClassData->ClassGlobalData;
+               }
+               qsort(ClassData->MethodFunctions,ClassData->MethodCount,sizeof(*ClassData->MethodFunctions),CompareMethods);
+               if(cl->cl_Super->cl_Dispatcher.h_Entry==__GCD)
+               {
+                  BGUIClassData *super_class_data;
+                  ULONG new_methods;
+
+                  super_class_data=(((BGUIClassData *)cl->cl_Super->cl_UserData)-1);
+                  for(new_methods=ClassData->MethodCount,method=0;method<super_class_data->MethodCount;method++)
+                  {
+                     if(LookupMethod(ClassData,super_class_data->MethodFunctions[method].MethodID)==NULL)
+                     {
+                        SortedMethod *new_sorted_methods;
+
+                        if((new_sorted_methods=BGUI_AllocPoolMem(sizeof(*new_sorted_methods)*(new_methods+1)))==NULL)
+                        {
+                           cl->cl_UserData=NULL;
+                           FreeClass(cl);
+                           cl=NULL;
+                           break;
+                        }
+                        memcpy(new_sorted_methods,ClassData->MethodFunctions,sizeof(*new_sorted_methods)*new_methods);
+                        BGUI_FreePoolMem(ClassData->MethodFunctions);
+                        ClassData->MethodFunctions=new_sorted_methods;
+                        ClassData->MethodFunctions[new_methods]=super_class_data->MethodFunctions[method];
+                        new_methods++;
+                     }
+                  }
+                  ClassData->MethodCount=new_methods;
+                  qsort(ClassData->MethodFunctions,ClassData->MethodCount,sizeof(*ClassData->MethodFunctions),CompareMethods);
+               }
+               if(cl)
+               {
+                  if((ClassData->MethodHashTable=BGUI_AllocPoolMem(sizeof(*ClassData->MethodHashTable)*METHOD_HASH_TABLE_SIZE)))
+                  {
+                     ULONG method;
+
+                     memset(ClassData->MethodHashTable,'\0',sizeof(*ClassData->MethodHashTable)*METHOD_HASH_TABLE_SIZE);
+#ifdef DEBUG_BGUI
+                     ClassData->MethodColisions=0;
+#endif
+                     for(method=0;method<ClassData->MethodCount;method++)
+                     {
+                        SortedMethod **method_hash;
+
+                        method_hash= ClassData->MethodHashTable+MethodHashValue(ClassData->MethodFunctions[method].MethodID);
+#ifdef DEBUG_BGUI
+                        if(*method_hash)
+                           ClassData->MethodColisions++;
+#endif
+                        ClassData->MethodFunctions[method].NextHashedMethod= *method_hash;
+                        *method_hash= &ClassData->MethodFunctions[method];
+                     }
+#ifdef DEBUG_BGUI
+                     ClassData->MethodLookups=ClassData->MethodComparisions=0;
+#endif
+                  }
+                  else
+                  {
+                     cl->cl_UserData=NULL;
+                     FreeClass(cl);
+                     cl=NULL;
+                  }
+               }
+            }
+            else
+            {
+               cl->cl_UserData=NULL;
+               FreeClass(cl);
+               cl=NULL;
+            }
+         }
+         else
+         {
+            ClassData->MethodFunctions=NULL;
+            ClassData->MethodHashTable=NULL;
+         }
+         if(cl
+         && ClassData->ClassDispatcher)
+         {
+            struct opSet msg;
+
+            msg.MethodID=OM_NEW;
+            msg.ops_AttrList=NULL;
+            msg.ops_GInfo=NULL;
+            if(!ClassData->ClassDispatcher(cl,NULL,(Msg)&msg,ClassData->ClassGlobalData))
+            {
+               cl->cl_UserData=NULL;
+               FreeClass(cl);
+               cl=NULL;
+            }
+         }
       }
-      else
+      if(cl==NULL)
       {
-         FreeVec(ClassData);
-         cl = NULL;
-      };
+         if(ClassData->MethodFunctions)
+            BGUI_FreePoolMem(ClassData->MethodFunctions);
+         BGUI_FreePoolMem(ClassData);
+      }
    };
    putreg(REG_A4, (LONG)old_a4);
    return cl;
@@ -85,8 +396,32 @@ makeproto SAVEDS ASM BOOL BGUI_FreeClass(REG(a0) Class *cl)
 {
    if (cl)
    {
-      FreeVec(((ULONG *)cl->cl_UserData) - 2);
-      return FreeClass(cl);
+      if(cl->cl_UserData)
+      {
+         BGUIClassData *ClassData;
+
+         ClassData=((BGUIClassData *)cl->cl_UserData) - 1;
+         if(ClassData->ClassDispatcher)
+         {
+            ULONG msg=OM_DISPOSE;
+
+            if(!ClassData->ClassDispatcher(cl,NULL,(Msg)&msg,ClassData->ClassGlobalData))
+               return FALSE;
+         }
+         if(ClassData->MethodFunctions)
+         {
+            D(bug("Methods %lu, Lookups %lu, Comparisions %lu, Misses %lu (%lu%%), Colisions %lu (%lu%%)\n",ClassData->MethodCount,ClassData->MethodLookups,ClassData->MethodComparisions,ClassData->MethodComparisions-ClassData->MethodLookups,ClassData->MethodComparisions ? (ClassData->MethodComparisions-ClassData->MethodLookups)*100/ClassData->MethodComparisions : 0,ClassData->MethodColisions,ClassData->MethodCount ? ClassData->MethodColisions*100/ClassData->MethodCount : 0));
+            BGUI_FreePoolMem(ClassData->MethodFunctions);
+            BGUI_FreePoolMem(ClassData->MethodHashTable);
+         }
+         BGUI_FreePoolMem(ClassData);
+         cl->cl_UserData=NULL;
+      }
+      if(FreeClass(cl))
+      {
+         MarkFreedClass(cl);
+         return(TRUE);
+      }
    };
    return FALSE;
 }
@@ -540,25 +875,43 @@ makeproto ASM ULONG ForwardMsg(REG(a0) Object *s, REG(a1) Object *d, REG(a2) Msg
 #define BI_FREE_RP  1
 #define BI_FREE_DRI 2
 
+#ifdef DEBUG_BGUI
+makeproto struct BaseInfo *AllocBaseInfoDebug(STRPTR file, ULONG line,ULONG tag1, ...)
+{
+   return BGUI_AllocBaseInfoDebugA((struct TagItem *)&tag1,file,line);
+}
+#else
 makeproto struct BaseInfo *AllocBaseInfo(ULONG tag1, ...)
 {
    return BGUI_AllocBaseInfoA((struct TagItem *)&tag1);
 }
+#endif
 
+#ifdef DEBUG_BGUI
+makeproto SAVEDS ASM struct BaseInfo *BGUI_AllocBaseInfoDebugA(REG(a0) struct TagItem *tags,REG(a1) STRPTR file, REG(d0) ULONG line)
+{
+#else
 makeproto SAVEDS ASM struct BaseInfo *BGUI_AllocBaseInfoA(REG(a0) struct TagItem *tags)
 {
+#endif
    struct BaseInfo   *bi, *bi2;
    struct GadgetInfo *gi = NULL;
    ULONG             *flags;
 
+#ifdef DEBUG_BGUI
+   if (bi = BGUI_AllocPoolMemDebug(sizeof(struct BaseInfo) + sizeof(ULONG),file,line))
+#else
    if (bi = BGUI_AllocPoolMem(sizeof(struct BaseInfo) + sizeof(ULONG)))
+#endif
    {
       flags = (ULONG *)(bi + 1);
 
       if (bi2 = (struct BaseInfo *)GetTagData(BI_BaseInfo, NULL, tags))
       {
          *bi = *bi2;
-      };
+      }
+      else
+      	memset(bi,'\0',sizeof(*bi));
 
       if (gi = (struct GadgetInfo *)GetTagData(BI_GadgetInfo, (ULONG)gi, tags))
       {
@@ -567,7 +920,7 @@ makeproto SAVEDS ASM struct BaseInfo *BGUI_AllocBaseInfoA(REG(a0) struct TagItem
 
       bi->bi_DrInfo  = (struct DrawInfo *)GetTagData(BI_DrawInfo, (ULONG)bi->bi_DrInfo, tags);
       bi->bi_RPort   = (struct RastPort *)GetTagData(BI_RastPort, (ULONG)bi->bi_RPort,  tags);
-      bi->bi_IScreen = (struct Screen *)  GetTagData(BI_Screen,   (ULONG)bi->bi_Screen, tags);
+      bi->bi_IScreen = (struct Screen *)  GetTagData(BI_Screen,   (ULONG)bi->bi_IScreen, tags);
       bi->bi_Pens    = (UWORD *)          GetTagData(BI_Pens,     (ULONG)bi->bi_Pens,   tags);
 
       if (gi && !bi->bi_RPort)
@@ -595,13 +948,22 @@ makeproto SAVEDS ASM struct BaseInfo *BGUI_AllocBaseInfoA(REG(a0) struct TagItem
    return bi;
 }
 
+#ifdef DEBUG_BGUI
+makeproto void FreeBaseInfoDebug(struct BaseInfo *bi, STRPTR file, ULONG line)
+{
+#else
 makeproto void FreeBaseInfo(struct BaseInfo *bi)
 {
+#endif
    ULONG *flags = (ULONG *)(bi + 1);
 
    if (*flags & BI_FREE_RP)  ReleaseGIRPort(bi->bi_RPort);
    if (*flags & BI_FREE_DRI) FreeScreenDrawInfo(bi->bi_IScreen, bi->bi_DrInfo);
 
+#ifdef DEBUG_BGUI
+   BGUI_FreePoolMemDebug(bi,file,line);
+#else
    BGUI_FreePoolMem(bi);
+#endif
 }
 

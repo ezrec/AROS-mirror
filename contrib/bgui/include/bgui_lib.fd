@@ -11,6 +11,12 @@
 ** All Rights Reserved.
 **
 ** $Log$
+** Revision 41.11  2000/05/09 20:01:51  mlemos
+** Merged with the branch Manuel_Lemos_fixes.
+**
+** Revision 41.10.2.1  1998/03/01 02:25:06  mlemos
+** Added new memory allocation debugging functions to the library
+**
 ** Revision 41.10  1998/02/25 21:13:49  mlemos
 ** Bumping to 41.10
 **
@@ -46,4 +52,10 @@ BGUI_MakeClassA(tags)(A0)
 BGUI_FreeClass(cl)(A0)
 BGUI_PackStructureTags(pack,tab,tags)(A0/A1/A2)
 BGUI_UnpackStructureTags(pack,tab,tags)(A0/A1/A2)
+##private
+BGUI_GetDefaultTags(id)(d0)
+BGUI_DefaultPrefs()()
+BGUI_LoadPrefs(name)(A0)
+BGUI_AllocPoolMemDebug(size,file,line)(D0/A0/D1)
+BGUI_FreePoolMemDebug(mem,file,line)(A0/A1/D0)
 ##end

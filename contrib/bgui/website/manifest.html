@@ -1,0 +1,333 @@
+<?
+/*
+ * manifest.html
+ *
+ * @(#) $Header$
+ *
+ */
+
+$configuring=0;
+$include_path=".:bugs";
+$bugs_configuration_path="./";
+require("bugs_globals.php");
+require("bugs_locale.php");
+include(IncludeRelativePath($configuration->shared_include_file));
+commonHeader("BGUI Manifest - Past, Present and Future");
+?>
+<!--This document was exported from FinalWriter 5 word processor for the
+Amiga computers, Copyright (c) Softwood, Inc. 1995, 1996-->
+<!--HTML document export driver V1.0.-->
+<HR>
+<UL>
+<H2>Table of Contents</H2>
+<H3><A HREF="#what"><LI>What is BGUI?</LI></A></H3>
+<H3><A HREF="#history"><LI>BGUI history</LI></A></H3>
+<A HREF="#Jan">Jan van den Baard created BGUI</A><BR>
+<A HREF="#Ian">Ian Einman carried on</A><BR>
+<A HREF="#Manuel">Manuel Lemos takes over where Ian left it</A><BR>
+<A HREF="#group">A discrete group of developers was invited to join</A><BR>
+<A HREF="#bugs">Keeping track of reported bugs</A><BR>
+<A HREF="#debugging">Program torture debugging</A><BR>
+<A HREF="#cooperation">Cooperation of other developers</A><BR>
+<A HREF="#CVS">CVS blessing</A><BR>
+<A HREF="#fix">Other developers can find and fix bugs too if you let them</A><BR>
+<A HREF="#stack">The trick of extending stack space on demand</A><BR>
+<A HREF="#boopsi">BGUI made BOOPSI efficient</A><BR>
+<A HREF="#shortcut">A BOOPSI method call shortcut</A><BR>
+<A HREF="#status">Status quo</A><BR>
+<H3><A HREF="#developers"><LI>What does BGUI offer to Amiga developers?</LI></A></H3>
+<A HREF="#MUI">We already have MUI, so what do we need BGUI for?</A><BR>
+<A HREF="#free">After all, BGUI is free and open to anybody...</A><BR>
+<A HREF="#add">Developers added what they needed most</A><BR>
+<A HREF="#future">What about the future?</A><BR>
+<A HREF="#amigaos">And what about BGUI in the future Amiga OS?</A><BR>
+</UL>
+<HR>
+<H2 ALIGN=center>BGUI Manifest - Past, Present and Future</H2>
+<P ALIGN=center>Manuel Lemos (<TT>mlemos@acm.org</TT>)</P>
+<UL>
+<P><B>After being handed over several times, BGUI development is alive and
+kicking. BGUI is free to anybody. Development only depends on volunteer work.
+If you can program for AmigaOS, learn here how you can help.</B></P>
+<H2><A NAME="what"><LI>What is BGUI?</LI></A></H2>
+<P>BGUI stands for BOOPSI Graphical User Interface. BGUI is a toolkit for
+developing user interfaces for Amiga OS based on BOOPSI. BOOPSI stands for
+Basic Object Oriented Programming Support for Intuition. BOOPSI is a system
+that makes part of the Amiga OS user interface library -- Intuition.<BR>
+<BR>
+BOOPSI is meant to provide a layer to support user interface component programming.
+It is based on the Object Oriented Programming principles. BOOPSI was introduced
+back in 1990 with Amiga OS 2 but it only provided a small set of user interface
+components.</P>
+<H2><A NAME="history"><LI>BGUI history</LI></A></H2>
+<H3><A NAME="Jan">Jan van den Baard created BGUI</A></H3>
+<P>BGUI was started by Jan van den Baard after having developed GadToolsBox
+in 1993, a gadtools.library based user interface builder. BGUI was released
+when there were many promises of GUI toolkits that would be flexible and
+not as complex as MUI, another GUI toolkit although not based on Amiga OS
+gadget BOOPSI class.</P>
+<H3><A NAME="Ian">Ian Einman carried on</A></H3>
+<P>Later in 1996, when Jan could not carry on BGUI development due to the
+lack of time, Ian Einman took over adding many important features. Later
+in 1997 Ian also realized that he could no longer continue BGUI development.
+That was the time when I decided to take over to ensure that Amiga would
+still have a free BOOPSI based GUI toolkit.</P>
+<H3><A NAME="Manuel">Manuel Lemos takes over where Ian left it</A></H3>
+<P>Carrying on the development of a reasonably size GUI toolkit like BGUI
+was no &#171;day at the beach&#187;. You have to discover what was in the
+mind of the previous developers to fix known bugs, add new features and still
+not break whatever was already working OK. So, I decided to use the best
+of my software development knowledge to work on it.</P>
+<H3><A NAME="group">A discrete group of developers was invited to join</A></H3>
+<P>BGUI is well structured but there was little support to do the job of
+keeping track and fixing the large amount of bugs and incomplete features
+that I &#171;inherited&#187;. I had to take no less care than I would take
+for other projects that I started from scratch.</P>
+<P>Discretely, I called all the Amiga developers that I thought would still
+be interested in BGUI. I built a site for BGUI using my experience in my
+main activity as software developer that is Web programmer.</P>
+<P>I wanted the site to be private until I had something usable. Before then
+nothing would be announced to avoid making promises that I was not sure I
+could keep. I wanted to spare Amiga users that were already fed up of all
+the false promises that have been made since Commodore's demise.</P>
+<H3><A NAME="bugs">Keeping track of reported bugs</A></H3>
+<P>I installed a problem report tracking application on the site that is
+able to take bug reports and feature requests into an on-line database. Anybody
+can check up the report database right there to keep track of the progress
+that is made.</P>
+<P>That application also forwards all the reports to a private developers'
+mailing list. Whenever there is some progress, either a bug that was fixed
+or some developer requesting for more information, whoever made the report
+is notified by e-mail.</P>
+<P>So, with the reports of the other developers it became easier to concentrate
+on everything that needed to be fixed and improved. No bug report goes unnoticed
+or forgotten until it is fixed. Keeping a report database is a basic thing
+serious developers have to do, but not every developer is aware of its importance.</P>
+<H3><A NAME="debugging">Program torture debugging</A></H3>
+<P>Many bugs were fixed but many more remained as they were too hard to track
+or to reproduce. The BGUI library is mostly written in C language. The usual
+implication of using the C language are the programming bugs that lead to
+memory misuse, that is, misuse of address pointers to access an invalid memory
+range.</P>
+<P>I decided to add memory debugging support to BGUI to &#171;torture&#187;
+the library code. That would force the bugs to show up sooner when the library
+is being tested, rather than later when the users crash their machines when
+they try it.</P>
+<P>An impressive amount of bugs were squeezed this way. It seemed that there
+were bugs that remained since BGUI's early days. Progressively, all the bugs
+that caused memory leaks, memory over-runs, already freed memory blocks and
+attempts to free memory that was never allocated (corrupted pointers) were
+fixed.</P>
+<H3><A NAME="cooperation">Cooperation of other developers</A></H3>
+<P>Things were going very well and I was so confident that I thought that
+I could handle all the fixing by myself. I could not be more wrong! Soon
+I realized that there was a hard to fix amount of reported bugs that seemed
+hard to trace and could not be replicated all the time.</P>
+<P>By then, I decide to call for the cooperation of other developers so they
+could also look at the code and try to figure what was wrong. I have set
+a CVS server in the site so all developer could reach out for the most up-to-date
+version of the source tree.</P>
+<H3><A NAME="CVS">CVS blessing</A></H3>
+<P>CVS allows the source code or any other files to be stored in a repository
+hosted in a computer that is reachable from the Internet. After getting the
+source for first time, the developers only need to log on again to get only
+the files that were updated, saving much on-line time. The CVS client does
+this automatically for you.</P>
+<P>CVS also allows anybody to request any version of the files in the repository
+as they were in a given date. It keeps track of all the changes done in every
+little revision committed in the project since day 0 when I took over and
+made it all be stored in a CVS repository.</P>
+<P>Using CVS is yet another good practice that all developers should follow,
+even in single programmer projects. The good part is that CVS is freely available
+for many platforms including for the Amiga as ported by the Geek Gadgets
+project.</P>
+<H3><A NAME="fix">Other developers can find and fix bugs too if you let them</A></H3>
+<P>Sharing the source code with the other developers turned to be a good
+move because Janne Jalkanen finally found the cause of many of the bugs hinted
+by Simon Edwards. Those bugs were crashing the machine in odd ways because
+they were making the Intuition/input.device task crash randomly.</P>
+<P>One pattern that was noticed is that the bugs did not exist in the previous
+public release of BGUI. So it must have been something that was added after
+that, but I could not guess what it was. It must have been something that
+Ian Einman added.</P>
+<P>Simon suggested that these random crashes could have been caused by exhaustion
+of the current task stack space. Janne decided to add some debugging code
+to check the hypothesis of the stack space being overrun. Bingo!</P>
+<P>Ian Einman added an extra base class in BGUI hierarchy. That base class
+was important because it added great power to BGUI to do many things. Some
+things were claimed to be impossible to do with gadget class based BOOPSI
+objects, like having gadgets scrolling in clipped views, also known as virtual
+groups.</P>
+<P>The problem is that made the Intuition task finally exceed its meager
+4KB of stack space. The fix was obvious: adding automatic stack extension.
+Despite that, soon we realized that it would seriously degrade performance
+of user input handling when BGUI gadgets were active.</P>
+<H3><A NAME="stack">The trick of extending stack space on demand</A></H3>
+<P>Ian Einman simplified BGUI classes' method dispatching by adding support
+for using a method jump table to be defined at the class creation time. So,
+when the class was added, all that was needed to be done was to pass an array
+of pointers to functions that implemented each of the classes' methods. A
+built-in class dispatcher provided by BGUI as default would handle all the
+method requests from there.</P>
+<P>The BGUI default class dispatcher should be the place to add the automatic
+stack extension. That would help prevent the bgui class hierarchy overrunning
+the Intuition task's stack space when handling user input.</P>
+<P>However, we noticed that allocating and freeing the stack space in the
+dispatcher function turned out to be a performance hit. That was only affecting
+the Intuition task because it is the one that handles all the input events
+that are fed to gadget input handler methods.</P>
+<P>We had to solve that by using a pre-allocated memory block to do stack
+swapping just when the current task running out of stack is the Intuition
+task. It worked wonders because it is hardly noticeable that the stack space
+is being extended for the Intuition task on demand.</P>
+<H3><A NAME="boopsi">BGUI made BOOPSI efficient</A></H3>
+<P>This would not have come to the surface if BGUI did not increase the depth
+of its BOOPSI class hierarchy. Anyway, it would probably happen sooner rather
+than later when somebody used a custom subclass that would increase the hierarchy
+depth.</P>
+<P>This reminded me of a similar situation that I realized when I was working
+for Softwood. Terry Wright was adding a class to FinalWriter hierarchy that
+implemented a much requested feature: tables for that Amiga word processor.
+That class also made the input handler task run out of stack space.</P>
+<P>Janne's solution is much more efficient because it will prevent future
+stack space problems of future classes making BGUI more trustworthy as a
+stable GUI class library. If programs crash the system because of stack space
+overrun problems, that will no longer be when calling BGUI code.</P>
+<H3><A NAME="shortcut">A BOOPSI method call shortcut</A></H3>
+<P>Another interesting move was made when I decided to eliminate one of the
+problems that have been raised by BOOPSI detractors: the method execution
+overhead of traversing a deep class hierarchy. BOOPSI detractors claim that
+a reasonable amount of time is wasted by class dispatchers when the classes
+have to invoke the super class method to inherit its behavior.</P>
+<P>Since now most BGUI classes implicitly use the BGUI's default class dispatcher,
+it is possible to determine if a method is implemented by a class or is inherited
+from its super class. So, I realized that I could make the default to shortcut
+the calling path and go straight to the first super class that implements
+a requested method.</P>
+<P>This not only eliminates the overhead of calling methods on a class that
+inherits them instead implement them somehow, but also eliminates the extra
+stack space that is required by each class dispatcher function. Furthermore
+the dispatcher method lookup was made by using binary search on the method
+jump table that is previously sorted at the class creation time.</P>
+<P>Later, the method dispatching was further improved by using a hash table
+with all the class methods, including the methods that were inherited from
+the super class. In this case, a hash table is even more efficient because
+it requires less method lookup overhead. More efficient than this, I do not
+know.</P>
+<H3><A NAME="status">Status quo</A></H3>
+<P>All this took place on our spare time that we decided to dedicate to Amiga
+and BGUI in particular. Too bad that the Amiga community is today much smaller
+than in the past to enjoy the results of our efforts.</P>
+<P>Still there is a lot to do but we have not quit. We could use some more
+help from those that believe in Amiga OS as we still know and enjoy it. Read
+ahead to learn how you can help.</P>
+<H2><A NAME="developers"><LI>What does BGUI offer to Amiga developers?</LI></A></H2>
+<H3><A NAME="MUI">We already have MUI, so what do we need BGUI for?</A></H3>
+<P>The debate of <I>MUI versus the world</I> has always been intense since
+MUI's early days. In fact that debate is still revived here and there in
+many mailing lists and news groups. It is pointless to revive it if people
+are too biased to present reasonable arguments.</P>
+<P>BGUI also came up as a MUI alternative, not to be yet another one, but
+to be one that honors the Amiga way of doing it: simple and fast.</P>
+<P>It is undeniable the importance of MUI in the Amiga history. It made possible
+for many developers to become motivated enough to write Amiga applications.
+It is also true that MUI also has some features that are worthy to be widely
+adopted.</P>
+<P>In spite of that, MUI always suffered from public complaints of users
+that do not enjoy it, despite the fact that they are not aware of the technical
+details. Many developers are not pleased with some of the circumstances that
+MUI presents. One of those circumstances is that developers often are blamed
+for their being slow because they use MUI. </P>
+<P>For starters, MUI defeats one of the remaining advantages of Amiga OS:
+having a dedicated task to process the user input and immediately present
+visual changes in the user interface that reflect user actions.</P>
+<P>All this because most MUI input handling classes are not derived from
+Amiga OS BOOPSI gadget class. In practice this means that what is handling
+user input are the MUI applications instead of the Intuition task.</P>
+<P>There is always a processing delay due to Intuition to application messaging
+while passing input event information. This is why MUI applications look
+slow. MUI defenders will claim that MUI is not slow. MUI is not slow, to
+be technically accurate. It is just that it handles user input with delay.</P>
+<P>Still MUI defenders claim that people have to upgrade their hardware to
+make proper use of their Amiga. The fact is that BOOPSI gadget class based
+applications do not look slow on slower Amigas. Also in faster Amigas MUI
+applications still look slow.</P>
+<H3><A NAME="free">After all, BGUI is free and open to anybody...</A></H3>
+<P>One of the reasons why I decided to adopt BGUI as the base of my Amiga
+software is because it was freely available to everybody, whether I developed
+freely or paid software. The programmers that use BGUI and their application
+users do not have to pay fees to anybody.</P>
+<P>Now, that I am in charge of BGUI development, it is great to be able to
+fix all the bugs that I may find. Unlike some other user interface toolkits,
+BGUI is open to any other developer that would like to help. You can help
+to fix any bugs or adding new features if you would like to do so.</P>
+<P>The source code is not yet publicly available. Anyway, all the developers
+that came to me and asked to join the team to fix the bugs or add features
+were granted access to the source code. It is available either from the BGUI
+Web site or through CVS.</P>
+<H3><A NAME="add">Developers added what they needed most</A></H3>
+<P>BGUI needed many things and still needs many more. What matters is that
+most of the developers that are part of the team were able to add what they
+felt they needed most.</P>
+<P>For instance, the documentation needs to be improved. Jeff Grimmet and
+Anton Rolls have been spending some time in updating it. Furthermore, Anton
+added the ability to have our GUI based documentation editor program to save
+not only in Autodoc format, but also in AmigaGuide and HTML formats. This
+program can be freely used by other developers to produce their documentation.</P>
+<P>Jilles Tjoelker created a ARexx shared library that lets you create BGUI
+user interfaces from the ARexx scripts. BGUI ARexx library can be freely
+used by anybody.</P>
+<P>Peter Bornhall contributed with a program to edit preferences that let
+the users customize the look and feel of BGUI programs.</P>
+<P>Several developers contributed with the code for useful classes like Nick
+Christie's Tree List View.</P>
+<P>Several developers helped on adding support in BGUI for different C compilers
+(SAS/C, GNU C, Storm C, VBCC, DICE, etc.), C++, E, Assembly, etc..</P>
+<P>Nobody had to wait for the BGUI developers to support what they needed
+most. Anybody may come up and do it by yourself and shares for the benefit
+of everybody.</P>
+<H3><A NAME="future">What about the future?</A></H3>
+<P>There are plans to completely open BGUI source code once some important
+features are finished in BGUI 41.x. One is the BGUI preferences' editor that
+is functional but it is not complete. Another is the clipped view gadget,
+which, although it works fine, that despite it works fine, nesting still
+presents a few display offset computation bugs.</P>
+<P>Once these features are finished I plan to close BGUI library version
+41.x and move on to version 42. Future plans have been discussed but everything
+is up to the Amiga developers.</P>
+<P>We have already plans to implement some nice things, as time permits.
+We have been looking into a XML based format as replacement of the Amiga
+documentation format (AKA Autodoc).</P>
+<P>We are also considering XML as a base for a user interface definition
+format that you may edit by hand if you like and use without recompiling
+your applications.</P>
+<P>A XML based format is also being considered to define a language neutral
+format for include files. A processing tool would convert XML based includes
+to include files for different languages: C, E, Assembly, C++, etc..</P>
+<P>Other than that we are planning on having more and better gadgets, application
+creation classes, screen management classes, easier menu creation, etc..
+That depends on the time and the will of developers to work on it. If you
+feel capable and interested just join the team. Take a look at the BGUI page
+at: <TT><A HREF="http://www.bgui.e-na.net/">http://www.bgui.e-na.net/</A></TT> .</P>
+<H3><A NAME="amigaos">And what about BGUI in the future Amiga OS?</A></H3>
+<P>Amiga OS 3.5 is expected to come an improved GUI support all based on
+BOOPSI gadget class with even a GUI builder.  Some will ask if is there a
+future for BGUI once Amiga OS 3.5 is released.  Of course!  BGUI
+applications will also work under OS 2 and since not everybody will upgrade
+BGUI will remain a free attractive BOOPSI gadget class based option.</P>
+<P>As for Amiga OS 5, it will be QNX Unix disguised of Amiga OS. If there
+will be indeed an Amiga API emulation in the QNX based Amiga, BGUI will possibly
+run on it. If not, that will not be an Amiga anyway despite the name.</P>
+<P>Anyway, like the Amiga, BGUI changed hands many times, but now it has
+a larger team of technically qualified working on it. There are more than
+a dozen developers on the team today. You are welcome to join the development
+team and work together with us on this fine project. Long live the Amiga
+and BGUI!</P>
+<P><B>Manuel Lemos<BR>
+July of 1999</B></P>
+</UL>
+<HR>
+<P><A HREF="index.html">Back to the BGUI site main page</A></P>
+<?
+commonFooter();
+?>

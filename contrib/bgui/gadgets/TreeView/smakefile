@@ -1,0 +1,121 @@
+#
+# @(#) $Header$
+#
+# SAS/C Makefile for TreeViewClass
+#
+# Directories
+#
+# (C) Copyright 1999 Manuel Lemos.
+# (C) Copyright 1996-1999 Nick Christie.
+# All Rights Reserved.
+#
+# $Log$
+# Revision 1.2  2000/05/09 20:01:03  mlemos
+# Merged with the branch Manuel_Lemos_fixes.
+#
+# Revision 1.1.2.4  1999/05/31 02:49:19  mlemos
+# Stopped SAS\C from creating an executable from the shared library startup
+# assembly code.
+#
+# Revision 1.1.2.3  1999/05/31 01:28:16  mlemos
+# Made the programs be built with standard startup code.
+# Removed needless targets.
+# Added a clean target.
+# Made the class be built as gadget shared library.
+#
+# Revision 1.1.2.2  1999/05/25 00:09:55  mlemos
+# Made the executables be outputted to //bin directory.
+# Made object files be outputted to //o directory.
+# Made the SAS/C assembler be used instead of genam.
+# Added a target to clean outputted files.
+#
+# Revision 1.1.2.1  1999/02/21 04:08:27  mlemos
+# Nick Christie sources.
+#
+#
+#
+
+TESTPROGRAMNAME=        TestTreeView
+DEMOPROGRAMNAME=        TreeViewDemo
+TESTPROGRAM=            //bin/$(TESTPROGRAMNAME)
+DEMOPROGRAM=            //bin/$(DEMOPROGRAMNAME)
+INCDIR=                 include/
+OBJDIR=                 //o/
+CLASSLIBRARY=           /bgui_treeview.gadget
+CLASSINCLUDE=           include:bgui/bgui_treeview.h
+LIBRARY_OBJECT_OPTIONS= RESETOPTIONS ERRORREXX IDIR=$(INCDIR) NOSTACKCHECK PARAMETERS=REGISTERS STRINGMERGE NOCHECKABORT COMMENTNEST VERBOSE NOVERSION UTILITYLIBRARY NOICONS MEMORYSIZE=HUGE NOSTARTUP
+LIBRARY_COMMON_SOURCE=  /common/
+PROGRAM_OPTIONS=        IDIR=$(INCDIR) STRIPDEBUG SMALLCODE SMALLDATA OPTIMIZE OPTIMIZETIME OBJNAME=$(OBJDIR) DEFINE DEBUG=1 DEFINE MEMDBG=1 DEFINE TV_NODE_INLINE=1 DEFINE DUMPMETHOD=1 LINK
+
+#
+# Project Macros
+#
+
+TVOBJS= $(OBJDIR)bguiclass_lib.lo $(OBJDIR)TreeViewClass.lo \
+ $(OBJDIR)TVExpand.lo   $(OBJDIR)TVGetEntry.lo   $(OBJDIR)TVGetSet.lo   \
+ $(OBJDIR)TVInput.lo   $(OBJDIR)TVInsert.lo   $(OBJDIR)TVLVHandlers.lo  \
+ $(OBJDIR)TVMisc.lo   $(OBJDIR)TVMove.lo   $(OBJDIR)TVNewDispose.lo  \
+ $(OBJDIR)TVRemove.lo   $(OBJDIR)TVReplace.lo   $(OBJDIR)TVSelect.lo  \
+ $(OBJDIR)TVUtil.lo   $(OBJDIR)TVVisible.lo  
+
+TVINCS= $(INCDIR)TVUtil.h $(INCDIR)TreeViewPrivate.h $(INCDIR)TreeViewClass.h
+
+#
+# Rules
+#
+
+.c.lo:
+  sc $(LIBRARY_OBJECT_OPTIONS) $< OBJNAME $@
+
+.h.h:
+   @echo Installing $@...
+   @copy >NIL: $*.h to $@
+
+#
+# Dependencies
+#
+
+all: $(CLASSLIBRARY) $(TESTPROGRAM) $(DEMOPROGRAM)
+
+$(CLASSINCLUDE): include/TreeViewClass.h
+
+$(OBJDIR)bguiclass_lib.lo: $(LIBRARY_COMMON_SOURCE)bguiclass_lib.c
+$(OBJDIR)TreeViewClass.lo: TreeViewClass.c
+$(OBJDIR)TVExpand.lo: TVExpand.c
+$(OBJDIR)TVGetEntry.lo: TVGetEntry.c
+$(OBJDIR)TVGetSet.lo: TVGetSet.c
+$(OBJDIR)TVInput.lo: TVInput.c
+$(OBJDIR)TVInsert.lo: TVInsert.c
+$(OBJDIR)TVLVHandlers.lo: TVLVHandlers.c
+$(OBJDIR)TVMisc.lo: TVMisc.c
+$(OBJDIR)TVMove.lo: TVMove.c
+$(OBJDIR)TVNewDispose.lo: TVNewDispose.c
+$(OBJDIR)TVRemove.lo: TVRemove.c
+$(OBJDIR)TVReplace.lo: TVReplace.c
+$(OBJDIR)TVSelect.lo: TVSelect.c
+$(OBJDIR)TVUtil.lo: TVUtil.c
+$(OBJDIR)TVVisible.lo  : TVVisible.c
+
+$(OBJDIR)bguiclass_libtag.o: $(LIBRARY_COMMON_SOURCE)bguiclass_libtag.a
+   sc RESETOPTIONS ASSEMBLER $(LIBRARY_COMMON_SOURCE)bguiclass_libtag.a OBJECTNAME $(OBJDIR) TO bguiclass_libtag.o
+
+$(CLASSLIBRARY): $(OBJDIR)bguiclass_libtag.o $(TVOBJS)
+	-Delete $@
+	slink NODEBUG NOICONS FROM $(OBJDIR)bguiclass_libtag.o LIB lib:sc.lib lib:amiga.lib LIB:debug.lib FROM $(TVOBJS) TO $@
+
+$(TESTPROGRAM):		$(TESTPROGRAMNAME).c $(CLASSLIBRARY) $(CLASSINCLUDE)
+	sc $(PROGRAM_OPTIONS) FROM $(TESTPROGRAMNAME).c TO $(TESTPROGRAM)
+	-Delete $(TESTPROGRAM).lnk
+
+$(DEMOPROGRAM):		$(DEMOPROGRAMNAME).c $(CLASSLIBRARY) $(CLASSINCLUDE)
+	sc $(PROGRAM_OPTIONS) FROM $(DEMOPROGRAMNAME).c TO $(DEMOPROGRAM)
+	-Delete $(DEMOPROGRAM).lnk
+
+Clean:
+	-Delete $(TVOBJS)
+	-Delete $(TESTOBJS)
+	-Delete $(DEMOOBJS)
+	-Delete $(DEMOPROGRAM)
+	-Delete $(TESTPROGRAM)
+	-Delete $(CLASSLIBRARY) 
+	-Delete $(CLASSINCLUDE)
