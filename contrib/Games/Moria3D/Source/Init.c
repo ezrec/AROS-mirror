@@ -39,6 +39,7 @@ extern int32 HalfHeight;
 extern int32 QuaterWidth;
 extern int32 QuaterHeight;
        int32 MyDepth;
+extern int32 MouseX, MouseY;
 
 fix   ColLight = 1.0;
 int32 MaxCol   = 256;
@@ -181,6 +182,8 @@ int16 RequestScreen(void)
 	    HalfHeight=MyHeight/2;
 	    QuaterWidth=MyWidth/4;
 	    QuaterHeight=MyHeight/4;
+	    MouseX = HalfWidth;
+	    MouseY = HalfHeight;
 
 	    MyDepth=MyScreenRequester->sm_DisplayDepth;
 	    MaxCol=1<<MyDepth;

@@ -349,20 +349,13 @@ void MoveBots(void)
     }
 }
 
-/* #define _AROS_BUG */
-
 void MovePlayer(pBot MyPlayer)
 {
     struct IntuiMessage * MyMsg;
 
     ZMove = 0;
 
-#ifdef _AROS_BUG
-again:
-    if ((MyMsg=(struct IntuiMessage *)GetMsg(WindowPort)) != NULL)
-#else
     while ((MyMsg=(struct IntuiMessage *)GetMsg(WindowPort)) != NULL)
-#endif
     {
 	switch (MyMsg->Class)
 	{
@@ -477,13 +470,6 @@ again:
 
 	ReplyMsg((struct Message *)MyMsg);
     }
-#ifdef _AROS_BUG /* BUG */
-    else
-    {
-	Wait (1L << WindowPort->mp_SigBit);
-	goto again;
-    }
-#endif /* _AROS */
 
     if (MouseX<QuaterWidth)
     {
