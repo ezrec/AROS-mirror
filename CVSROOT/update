@@ -3,7 +3,7 @@
 gawk -f filter.awk passwd.txt
 cvs com passwd passwd.txt developers
 
-cp passwd passwd.txt developers ~aros/CVS/CVSROOT
+cp passwd passwd.txt developers ~cvs/aros/CVSROOT
 
 gawk -f cvspwtohtpw.gawk passwd.txt $HOME/.htpasswd ../AROS/docs/html/jobserver/.htaccess
 
