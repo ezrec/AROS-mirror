@@ -1,4 +1,5 @@
 #include	<stdio.h>
+#include 	<string.h>
 #define EPR                 fprintf(stderr,
 #define ERR(str, chr)       if(opterr){EPR "%s%c\n", str, chr);}
 int     opterr = 1;
@@ -15,8 +16,8 @@ getopt (int argc, char *const argv[], const char *opts)
 	char *cp;
 
 	if (sp == 1)
-		if (optind >= argc ||
-		   argv[optind][0] != '-' || argv[optind][1] == '\0')
+		if (optind >= argc || 
+		argv[optind][0] != '-' || argv[optind][1] == '\0')
 			return -1;
 		else if (strcmp(argv[optind], "--") == 0) {
 			optind++;
