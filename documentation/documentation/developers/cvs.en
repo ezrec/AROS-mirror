@@ -115,9 +115,9 @@ To get a copy of the AROS sources you use the "checkout" command, like this::
     > cvs checkout AROS
 
 This will create a directory called AROS and populate it with all the sources,
-which might take quite some time if you have a slow network connection. If you
-wish to compile the native i386-pc port, you also need to check out the 
-"necessary" module from "contrib"::
+which might take quite some time if you have a slow network connection.
+The "necessary" module from contrib is now mandatory to build all AROS flavours,
+while it was only needed to compile the native i386-pc port before::
 
     > cd AROS
     > cvs checkout necessary
