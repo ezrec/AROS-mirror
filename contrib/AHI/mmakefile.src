@@ -17,6 +17,7 @@ INCS := clib-ahi_protos.h clib-ahi_sub_protos.h         \
 #MM
 includes-copy : $(INCS)
 	mkdir -p $(GENINCDIR)/inline
+	mkdir -p $(AROS_INCLUDES)/inline
 	$(CP) Include/C/devices/ahi.h $(AROS_INCLUDES)/devices/
 	$(CP) Include/C/libraries/ahi_sub.h $(AROS_INCLUDES)/libraries/
 	$(CP) clib-ahi_protos.h $(AROS_INCLUDES)/clib/ahi_protos.h
