@@ -60,8 +60,10 @@ typedef unsigned int     UDWORD;
 
 #ifdef _UNIX
 
+#ifndef __AROS__
 typedef unsigned char    UBYTE;
 typedef unsigned short   UWORD;
+#endif
 typedef unsigned int     UDWORD;
 
 #include <unistd.h>
