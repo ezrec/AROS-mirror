@@ -3,7 +3,6 @@
 
 include $(TOP)/config/make.cfg
 
-#MM contrib-development-parsers-pcre : setup includes linklibs
 #MM- contrib-development : contrib-development-parsers-pcre
 #MM- linklibs : contrib-development-parsers-pcre
 
