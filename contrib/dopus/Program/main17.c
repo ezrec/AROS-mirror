@@ -62,7 +62,7 @@ char *command;
 	for (a=0;a<rexx_argcount;a++) {
 		for (b=0;b<256;b++) {
 			if ((ch=rexx_args[a][b])==0) break;
-			if (ch==160) rexx_args[a][b]=' ';
+			if ((unsigned char)ch==160) rexx_args[a][b]=' ';
 		}
 	}
 
