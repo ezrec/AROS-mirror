@@ -335,11 +335,11 @@
 #define HAVE_STRERROR         1
 #define HAVE_STRERROR_R       1
 #define HAVE_VSPRINTF         1
-/*#define HAVE_ALLOCA_H         1*/
+#define HAVE_ALLOCA_H         1
 #define HAVE_FCNTL_H          1
 /*#define HAVE_GRP_H*/
 #define HAVE_LIMITS_H         1
-#define HAVE_MALLOC_H         1
+/* #define HAVE_MALLOC_H         1 */
 #define HAVE_MATH_H           1
 #define HAVE_SETJMP_H         1
 #define HAVE_STDARG_H         1
