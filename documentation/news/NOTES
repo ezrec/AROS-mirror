@@ -26,10 +26,66 @@ brackets ("[]").
 
 ------------------------------------------------------------------------------
 
-200304??: STATUS UPDATE [???] ================================================
+200305??: STATUS UPDATE [???] ================================================
 
-200304??:
+200305??:
  <next day here>
+
+20030507:
+
++ Proposal of directory layout change [mschulz]
+
+20030506:
+
++ TeamAROS support site goes online (http://thenostromo.com/teamaros/)
+  [damocles]
++ Preliminary AROS PPC PReP sources available [mschulz]
++ bug fix in exec/AddTask() (caused problems with "term") [bergers]
++ bug fix in dos_init.c (caused problem on native soft reset with module debug
+  enabled) [stegerg]
++ semaphore protected malloc [stegerg]
++ Protect access to debug_seglist with Forbid()/Permit() in LoadSeg/UnLoadSeg.
+  [stegerg]
+
+20030503:
+
++ experimenting with pth instead of custom routines for hosted's multitasking
+  [falemagn]
++ Unfortunately Johan Grip no longer has the time to work on the Pegasos port.
+  The board will be sent to Michal Schulz.
++ graphics/WeighTAMatch() made more conform to the original [verhaegs]
+
+20030502:
+
++ Phoenix Developer Consortium is willing to give money and Pegasos boards to
+  further the AROS port on Pegasos [greenboy]
++ Documentations (sources and html) available for download [chodorowski]
+
+20030501:
+
++ Small fixes to the build system [falemagn, iaint]
+
+20030430:
+
++ desktop.library draws icons [psmith]
++ fixed a bug in clib/__open() [stegerg]
++ fd2inline 1.37 added to repository (needed for AHI) [chodorowski]
++ disable xshm if not running on local X display [stegerg]
+
+20030429:
+
++ AHI in contrib updated to 5.8, following the AHI port by Martin Blom
+  [chodorowski]
++ Wanderer backgrounds can be configured using "Wanderer/GUI Settings" menu item
+  [dlecorfec]
+
+20030428:
+
++ imported bugfree and optimal functions from FreeBSD clib : bcopy, memcpy,
+  memmove [falemagn]
++ no more boot shell open on Wanderer. Use Wanderer/Shell menu item or Amiga-W
+  shortcut to bring a Shell (Amiga key is right Win key on pc105 keyboard)
+  [chodorowski]
 
 20030426:
 
