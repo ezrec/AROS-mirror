@@ -134,7 +134,7 @@ def calculate_diff(filespec, contextlines):
 
 
 def blast_mail(mailcmd, filestodiff, contextlines):
-    # cannot wait for child process or that will cause parent to retain cvs
+    # can not wait for child process or that will cause parent to retain cvs
     # lock for too long.  Urg!
     #user = os.environ['CVSLOGINNAME']
     if not os.fork():
