@@ -1,25 +1,26 @@
-#   $Id$
+# $Id$
 #
-#   Makefile to make MadMatrix.
+# Makefile to make MadMatrix.
 
 include $(TOP)/config/make.cfg
 
 FILES := main alloctab libs madmatrix
 
-EXEDIR := $(AROSDIR)/MadMatrix
-EXE := $(EXEDIR)/madmatrix
+EXEDIR := $(CONTRIBDIR)/aminet
+EXE    := $(EXEDIR)/MadMatrix
 
-USE_AROSLIB := yes
+USE_AROSLIB     := yes
 USE_CLIB_SHARED := yes
-USE_AMIGALIB := yes
-USE_MUILIB := yes
+USE_AMIGALIB    := yes
+USE_MUILIB      := yes
 
 USER_INCLUDES := -I../libs/muimaster
-#MM mui-madmatrix : includes linklibs
 
-%make_prog_setup mmake=mui-madmatrix
+#MM contrib-aminet-games-think-madmatrix : includes linklibs
 
-mui-madmatrix : setup $(EXE)
+%make_prog_setup mmake=contrib-aminet-games-think-madmatrix
+
+contrib-aminet-games-think-madmatrix : setup $(EXE)
 
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
