@@ -10,7 +10,7 @@ include $(TOP)/config/make.cfg
 
 INCLUDE_FILES := expat.h
 
-%copy_includes_cwd path=.
+%copy_includes path=. dir=
 
 USER_CFLAGS   := -I.. -D'VERSION="1.95.2"'
 
