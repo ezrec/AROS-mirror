@@ -1,0 +1,1543 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+INSTDIR  := $(CONTRIBDIR)/Emu/Mame
+OBJDIR := $(GENDIR)/$(CURDIR)
+
+EXE := $(INSTDIR)/mame
+
+#MM- contrib-emu : Mame
+#MM
+Mame : setup $(EXE)
+
+#MM
+setup : make-dirs maketree
+	@$(NOP)
+	
+make-dirs :
+	%mkdirs_q $(INSTDIR) $(OBJDIR) $(INSTDIR)/roms
+
+#MM MameSourceFix
+MameSourceFix: $(TOOLDIR)/stripcr
+	@find . -name "*.c" -or -name "*.h" -or -name "*.txt" | xargs $(TOOLDIR)/stripcr
+	
+$(TOOLDIR)/stripcr: src/aros/stripcr/stripcr.c
+	@$(CC) -s $< -o $@ 
+
+#ASM = nasm
+ASM = nasmw
+ASMFLAGS = -f coff
+VPATH=src $(wildcard src/cpu/*)
+
+EMULATOR_EXE = $(EXE)
+
+# uncomment next line to include the debugger
+# DEBUG = 1
+
+# uncomment next line to do a smaller compile including only one driver
+# TINY_COMPILE = 1
+TINY_NAME = driver_labyrunr
+TINY_OBJS = $(OBJDIR)/drivers/labyrunr.o $(OBJDIR)/vidhrdw/labyrunr.o $(OBJDIR)/vidhrdw/konamiic.o
+
+# uncomment one of the two next lines to not compile the NeoGeo games or to
+# compile only the NeoGeo games
+# NEOFREE = 1
+# NEOMAME = 1
+
+# uncomment next line to include the symbols for symify
+# SYMBOLS = 1
+
+# uncomment next line to use Assembler 68k engine
+# X86_ASM_68K = 1
+
+ifdef NEOMAME
+CPUS+=Z80@
+CPUS+=M68000@
+SOUNDS+=YM2610@
+else
+# uncomment the following lines to include a CPU core
+CPUS+=Z80@
+#CPUS+=Z80GB@
+CPUS+=8080@
+CPUS+=8085A@
+CPUS+=M6502@
+CPUS+=M65C02@
+#CPUS+=M65SC02@
+#CPUS+=M65CE02@
+CPUS+=M6510@
+CPUS+=N2A03@
+CPUS+=H6280@
+CPUS+=I86@
+CPUS+=V20@
+CPUS+=V30@
+CPUS+=V33@
+CPUS+=I8035@
+CPUS+=I8039@
+CPUS+=I8048@
+CPUS+=N7751@
+CPUS+=M6800@
+CPUS+=M6801@
+CPUS+=M6802@
+CPUS+=M6803@
+CPUS+=M6808@
+CPUS+=HD63701@
+CPUS+=NSC8105@
+CPUS+=M6805@
+CPUS+=M68705@
+CPUS+=HD63705@
+CPUS+=HD6309@
+CPUS+=M6809@
+CPUS+=KONAMI@
+CPUS+=M68000@
+CPUS+=M68010@
+CPUS+=M68020@
+CPUS+=T11@
+CPUS+=S2650@
+CPUS+=TMS34010@
+#CPUS+=TMS9900@
+#CPUS+=TMS9940@
+CPUS+=TMS9980@
+#CPUS+=TMS9985@
+#CPUS+=TMS9989@
+#CPUS+=TMS9995@
+#CPUS+=TMS99105A@
+#CPUS+=TMS99110A@
+CPUS+=Z8000@
+CPUS+=TMS320C10@
+CPUS+=CCPU@
+CPUS+=ADSP2100@
+#CPUS+=PDP1@
+
+# uncomment the following lines to include a sound core
+SOUNDS+=CUSTOM@
+SOUNDS+=SAMPLES@
+SOUNDS+=DAC@
+SOUNDS+=AY8910@
+SOUNDS+=YM2203@
+# enable only one of the following two
+#SOUNDS+=YM2151@
+SOUNDS+=YM2151_ALT@
+SOUNDS+=YM2608@
+SOUNDS+=YM2610@
+SOUNDS+=YM2610B@
+SOUNDS+=YM2612@
+SOUNDS+=YM3438@
+SOUNDS+=YM2413@
+SOUNDS+=YM3812@
+SOUNDS+=YM3526@
+SOUNDS+=Y8950@
+SOUNDS+=SN76477@
+SOUNDS+=SN76496@
+SOUNDS+=POKEY@
+#SOUNDS+=TIA@
+SOUNDS+=NES@
+SOUNDS+=ASTROCADE@
+SOUNDS+=NAMCO@
+SOUNDS+=TMS5220@
+SOUNDS+=VLM5030@
+SOUNDS+=ADPCM@
+SOUNDS+=OKIM6295@
+SOUNDS+=MSM5205@
+SOUNDS+=UPD7759@
+SOUNDS+=HC55516@
+SOUNDS+=K005289@
+SOUNDS+=K007232@
+SOUNDS+=K051649@
+SOUNDS+=K053260@
+SOUNDS+=SEGAPCM@
+SOUNDS+=RF5C68@
+SOUNDS+=CEM3394@
+SOUNDS+=C140@
+SOUNDS+=QSOUND@
+#SOUNDS+=SPEAKER@
+#SOUNDS+=WAVE@
+endif
+
+# List of CPU core (and, for a debug build, disassembler) object files
+CPUDEFS =
+CPUOBJS =
+DBGOBJS =
+ASMDEFS =
+
+CPU=$(strip $(findstring Z80@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_Z80=1
+CPUOBJS += $(OBJDIR)/cpu/z80/z80.o
+DBGOBJS += $(OBJDIR)/cpu/z80/z80dasm.o
+endif
+
+CPU=$(strip $(findstring Z80GB@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_Z80GB=1
+CPUOBJS += $(OBJDIR)/cpu/z80gb/z80gb.o
+DBGOBJS += $(OBJDIR)/cpu/z80gb/z80gbd.o
+endif
+
+CPU=$(strip $(findstring 8080@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_8080=1
+CPUOBJS += $(OBJDIR)/cpu/i8085/i8085.o
+DBGOBJS += $(OBJDIR)/cpu/i8085/8085dasm.o
+endif
+
+CPU=$(strip $(findstring 8085A@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_8085A=1
+CPUOBJS += $(OBJDIR)/cpu/i8085/i8085.o
+DBGOBJS += $(OBJDIR)/cpu/i8085/8085dasm.o
+endif
+
+CPU=$(strip $(findstring M6502@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6502=1
+CPUOBJS += $(OBJDIR)/cpu/m6502/m6502.o
+DBGOBJS += $(OBJDIR)/cpu/m6502/6502dasm.o
+endif
+
+CPU=$(strip $(findstring M65C02@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M65C02=1
+CPUOBJS += $(OBJDIR)/cpu/m6502/m6502.o
+DBGOBJS += $(OBJDIR)/cpu/m6502/6502dasm.o
+endif
+
+CPU=$(strip $(findstring M65SC02@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M65SC02=1
+CPUOBJS += $(OBJDIR)/cpu/m6502/m6502.o
+DBGOBJS += $(OBJDIR)/cpu/m6502/6502dasm.o
+endif
+
+CPU=$(strip $(findstring M65CE02@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M65CE02=1
+CPUOBJS += $(OBJDIR)/cpu/m6502/m65ce02.o
+DBGOBJS += $(OBJDIR)/cpu/m6502/6502dasm.o
+endif
+
+CPU=$(strip $(findstring M6510@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6510=1
+CPUOBJS += $(OBJDIR)/cpu/m6502/m6502.o
+DBGOBJS += $(OBJDIR)/cpu/m6502/6502dasm.o
+endif
+
+CPU=$(strip $(findstring N2A03@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_N2A03=1
+CPUOBJS += $(OBJDIR)/cpu/m6502/m6502.o
+DBGOBJS += $(OBJDIR)/cpu/m6502/6502dasm.o
+endif
+
+CPU=$(strip $(findstring H6280@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_H6280=1
+CPUOBJS += $(OBJDIR)/cpu/h6280/h6280.o
+DBGOBJS += $(OBJDIR)/cpu/h6280/6280dasm.o
+endif
+
+CPU=$(strip $(findstring I86@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_I86=1
+CPUOBJS += $(OBJDIR)/cpu/i86/i86.o
+DBGOBJS += $(OBJDIR)/cpu/i86/i86dasm.o
+endif
+
+CPU=$(strip $(findstring V20@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_V20=1
+CPUOBJS += $(OBJDIR)/cpu/nec/nec.o
+DBGOBJS += $(OBJDIR)/cpu/nec/necdasm.o
+endif
+
+CPU=$(strip $(findstring V30@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_V30=1
+CPUOBJS += $(OBJDIR)/cpu/nec/nec.o
+DBGOBJS += $(OBJDIR)/cpu/nec/necdasm.o
+endif
+
+CPU=$(strip $(findstring V33@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_V33=1
+CPUOBJS += $(OBJDIR)/cpu/nec/nec.o
+DBGOBJS += $(OBJDIR)/cpu/nec/necdasm.o
+endif
+
+CPU=$(strip $(findstring I8035@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_I8035=1
+CPUOBJS += $(OBJDIR)/cpu/i8039/i8039.o
+DBGOBJS += $(OBJDIR)/cpu/i8039/8039dasm.o
+endif
+
+CPU=$(strip $(findstring I8039@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_I8039=1
+CPUOBJS += $(OBJDIR)/cpu/i8039/i8039.o
+DBGOBJS += $(OBJDIR)/cpu/i8039/8039dasm.o
+endif
+
+CPU=$(strip $(findstring I8048@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_I8048=1
+CPUOBJS += $(OBJDIR)/cpu/i8039/i8039.o
+DBGOBJS += $(OBJDIR)/cpu/i8039/8039dasm.o
+endif
+
+CPU=$(strip $(findstring N7751@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_N7751=1
+CPUOBJS += $(OBJDIR)/cpu/i8039/i8039.o
+DBGOBJS += $(OBJDIR)/cpu/i8039/8039dasm.o
+endif
+
+CPU=$(strip $(findstring M6800@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6800=1
+CPUOBJS += $(OBJDIR)/cpu/m6800/m6800.o
+DBGOBJS += $(OBJDIR)/cpu/m6800/6800dasm.o
+endif
+
+CPU=$(strip $(findstring M6801@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6801=1
+CPUOBJS += $(OBJDIR)/cpu/m6800/m6800.o
+DBGOBJS += $(OBJDIR)/cpu/m6800/6800dasm.o
+endif
+
+CPU=$(strip $(findstring M6802@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6802=1
+CPUOBJS += $(OBJDIR)/cpu/m6800/m6800.o
+DBGOBJS += $(OBJDIR)/cpu/m6800/6800dasm.o
+endif
+
+CPU=$(strip $(findstring M6803@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6803=1
+CPUOBJS += $(OBJDIR)/cpu/m6800/m6800.o
+DBGOBJS += $(OBJDIR)/cpu/m6800/6800dasm.o
+endif
+
+CPU=$(strip $(findstring M6808@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6808=1
+CPUOBJS += $(OBJDIR)/cpu/m6800/m6800.o
+DBGOBJS += $(OBJDIR)/cpu/m6800/6800dasm.o
+endif
+
+CPU=$(strip $(findstring HD63701@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_HD63701=1
+CPUOBJS += $(OBJDIR)/cpu/m6800/m6800.o
+DBGOBJS += $(OBJDIR)/cpu/m6800/6800dasm.o
+endif
+
+CPU=$(strip $(findstring NSC8105@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_NSC8105=1
+CPUOBJS += $(OBJDIR)/cpu/m6800/m6800.o
+DBGOBJS += $(OBJDIR)/cpu/m6800/6800dasm.o
+endif
+
+CPU=$(strip $(findstring M6805@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6805=1
+CPUOBJS += $(OBJDIR)/cpu/m6805/m6805.o
+DBGOBJS += $(OBJDIR)/cpu/m6805/6805dasm.o
+endif
+
+CPU=$(strip $(findstring M68705@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M68705=1
+CPUOBJS += $(OBJDIR)/cpu/m6805/m6805.o
+DBGOBJS += $(OBJDIR)/cpu/m6805/6805dasm.o
+endif
+
+CPU=$(strip $(findstring HD63705@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_HD63705=1
+CPUOBJS += $(OBJDIR)/cpu/m6805/m6805.o
+DBGOBJS += $(OBJDIR)/cpu/m6805/6805dasm.o
+endif
+
+CPU=$(strip $(findstring HD6309@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_HD6309=1
+CPUOBJS += $(OBJDIR)/cpu/m6809/m6809.o
+DBGOBJS += $(OBJDIR)/cpu/m6809/6809dasm.o
+endif
+
+CPU=$(strip $(findstring M6809@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M6809=1
+CPUOBJS += $(OBJDIR)/cpu/m6809/m6809.o
+DBGOBJS += $(OBJDIR)/cpu/m6809/6809dasm.o
+endif
+
+CPU=$(strip $(findstring KONAMI@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_KONAMI=1
+CPUOBJS += $(OBJDIR)/cpu/konami/konami.o
+DBGOBJS += $(OBJDIR)/cpu/konami/knmidasm.o
+endif
+
+CPU=$(strip $(findstring M68000@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M68000=1
+ifdef X86_ASM_68K
+CPUOBJS += $(OBJDIR)/cpu/m68000/asmintf.o $(OBJDIR)/cpu/m68000/68kem.oa
+ASMDEFS += -DA68KEM
+else
+CPUOBJS += $(OBJDIR)/cpu/m68000/m68kops.og $(OBJDIR)/cpu/m68000/m68kopac.og \
+           $(OBJDIR)/cpu/m68000/m68kopdm.og $(OBJDIR)/cpu/m68000/m68kopnz.og \
+           $(OBJDIR)/cpu/m68000/m68kcpu.o $(OBJDIR)/cpu/m68000/m68kmame.o
+endif
+DBGOBJS += $(OBJDIR)/cpu/m68000/d68k.o
+endif
+
+CPU=$(strip $(findstring M68010@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M68010=1
+ifdef X86_ASM_68K
+CPUOBJS += $(OBJDIR)/cpu/m68000/asmintf.o $(OBJDIR)/cpu/m68000/68kem.oa
+ASMDEFS += -DA68KEM
+else
+CPUOBJS += $(OBJDIR)/cpu/m68000/m68kops.og $(OBJDIR)/cpu/m68000/m68kopac.og \
+           $(OBJDIR)/cpu/m68000/m68kopdm.og $(OBJDIR)/cpu/m68000/m68kopnz.og \
+           $(OBJDIR)/cpu/m68000/m68kcpu.o $(OBJDIR)/cpu/m68000/m68kmame.o
+endif
+DBGOBJS += $(OBJDIR)/cpu/m68000/d68k.o
+endif
+
+CPU=$(strip $(findstring M68020@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_M68020=1
+ifdef X86_ASM_68K
+CPUOBJS += $(OBJDIR)/cpu/m68000/asmintf.o $(OBJDIR)/cpu/m68000/68kem.oa
+ASMDEFS += -DA68KEM
+else
+CPUOBJS += $(OBJDIR)/cpu/m68000/m68kops.og $(OBJDIR)/cpu/m68000/m68kopac.og \
+           $(OBJDIR)/cpu/m68000/m68kopdm.og $(OBJDIR)/cpu/m68000/m68kopnz.og \
+           $(OBJDIR)/cpu/m68000/m68kcpu.o $(OBJDIR)/cpu/m68000/m68kmame.o
+endif
+DBGOBJS += $(OBJDIR)/cpu/m68000/d68k.o
+endif
+
+CPU=$(strip $(findstring T11@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_T11=1
+CPUOBJS += $(OBJDIR)/cpu/t11/t11.o
+DBGOBJS += $(OBJDIR)/cpu/t11/t11dasm.o
+endif
+
+CPU=$(strip $(findstring S2650@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_S2650=1
+CPUOBJS += $(OBJDIR)/cpu/s2650/s2650.o
+DBGOBJS += $(OBJDIR)/cpu/s2650/2650dasm.o
+endif
+
+CPU=$(strip $(findstring TMS34010@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS34010=1
+CPUOBJS += $(OBJDIR)/cpu/tms34010/tms34010.o $(OBJDIR)/cpu/tms34010/34010fld.o
+DBGOBJS += $(OBJDIR)/cpu/tms34010/34010dsm.o
+endif
+
+CPU=$(strip $(findstring TMS9900@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS9900=1
+CPUOBJS += $(OBJDIR)/cpu/tms9900/tms9900.o
+DBGOBJS += $(OBJDIR)/cpu/tms9900/9900dasm.o
+endif
+
+CPU=$(strip $(findstring TMS9940@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS9940=1
+CPUOBJS += $(OBJDIR)/cpu/tms9900/tms9900.o
+DBGOBJS += $(OBJDIR)/cpu/tms9900/9900dasm.o
+endif
+
+CPU=$(strip $(findstring TMS9980@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS9980=1
+CPUOBJS += $(OBJDIR)/cpu/tms9900/tms9980a.o
+DBGOBJS += $(OBJDIR)/cpu/tms9900/9900dasm.o
+endif
+
+CPU=$(strip $(findstring TMS9985@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS9985=1
+CPUOBJS += $(OBJDIR)/cpu/tms9900/tms9980a.o
+DBGOBJS += $(OBJDIR)/cpu/tms9900/9900dasm.o
+endif
+
+CPU=$(strip $(findstring TMS9989@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS9989=1
+CPUOBJS += $(OBJDIR)/cpu/tms9900/tms9980a.o
+DBGOBJS += $(OBJDIR)/cpu/tms9900/9900dasm.o
+endif
+
+CPU=$(strip $(findstring TMS9995@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS9995=1
+CPUOBJS += $(OBJDIR)/cpu/tms9900/tms9995.o
+DBGOBJS += $(OBJDIR)/cpu/tms9900/9900dasm.o
+endif
+
+CPU=$(strip $(findstring TMS99105A@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS99105A=1
+CPUOBJS += $(OBJDIR)/cpu/tms9900/tms9995.o
+DBGOBJS += $(OBJDIR)/cpu/tms9900/9900dasm.o
+endif
+
+CPU=$(strip $(findstring TMS99105A@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS99105A=1
+CPUOBJS += $(OBJDIR)/cpu/tms9900/tms9995.o
+DBGOBJS += $(OBJDIR)/cpu/tms9900/9900dasm.o
+endif
+
+CPU=$(strip $(findstring Z8000@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_Z8000=1
+CPUOBJS += $(OBJDIR)/cpu/z8000/z8000.o
+DBGOBJS += $(OBJDIR)/cpu/z8000/8000dasm.o
+endif
+
+CPU=$(strip $(findstring TMS320C10@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_TMS320C10=1
+CPUOBJS += $(OBJDIR)/cpu/tms32010/tms32010.o
+DBGOBJS += $(OBJDIR)/cpu/tms32010/32010dsm.o
+endif
+
+CPU=$(strip $(findstring CCPU@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_CCPU=1
+CPUOBJS += $(OBJDIR)/cpu/ccpu/ccpu.o $(OBJDIR)/vidhrdw/cinemat.o
+DBGOBJS += $(OBJDIR)/cpu/ccpu/ccpudasm.o
+endif
+
+CPU=$(strip $(findstring ADSP2100@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_ADSP2100=1
+CPUOBJS += $(OBJDIR)/cpu/adsp2100/adsp2100.o
+DBGOBJS += $(OBJDIR)/cpu/adsp2100/2100dasm.o
+endif
+
+CPU=$(strip $(findstring PDP1@,$(CPUS)))
+ifneq ($(CPU),)
+CPUDEFS += -DHAS_PDP1=1
+CPUOBJS += $(OBJDIR)/cpu/pdp1/pdp1.o
+DBGOBJS += $(OBJDIR)/cpu/pdp1/pdp1dasm.o
+endif
+
+
+
+SOUND=$(strip $(findstring CUSTOM@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_CUSTOM=1
+endif
+
+SOUND=$(strip $(findstring SAMPLES@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_SAMPLES=1
+SOUNDOBJS += $(OBJDIR)/sound/samples.o
+endif
+
+SOUND=$(strip $(findstring DAC@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_DAC=1
+SOUNDOBJS += $(OBJDIR)/sound/dac.o
+endif
+
+SOUND=$(strip $(findstring AY8910@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_AY8910=1
+SOUNDOBJS += $(OBJDIR)/sound/ay8910.o
+endif
+
+SOUND=$(strip $(findstring YM2203@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_YM2203=1
+SOUNDOBJS += $(OBJDIR)/sound/2203intf.o $(OBJDIR)/sound/ay8910.o $(OBJDIR)/sound/fm.o
+endif
+
+SOUND=$(strip $(findstring YM2151@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_YM2151=1
+SOUNDOBJS += $(OBJDIR)/sound/2151intf.o $(OBJDIR)/sound/ym2151.o $(OBJDIR)/sound/fm.o
+endif
+
+SOUND=$(strip $(findstring YM2151_ALT@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_YM2151_ALT=1
+SOUNDOBJS += $(OBJDIR)/sound/2151intf.o $(OBJDIR)/sound/ym2151.o $(OBJDIR)/sound/fm.o
+endif
+
+SOUND=$(strip $(findstring YM2608@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_YM2608=1
+SOUNDOBJS += $(OBJDIR)/sound/2608intf.o $(OBJDIR)/sound/ay8910.o $(OBJDIR)/sound/fm.o $(OBJDIR)/sound/ymdeltat.o
+endif
+
+SOUND=$(strip $(findstring YM2610@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_YM2610=1
+SOUNDOBJS += $(OBJDIR)/sound/2610intf.o $(OBJDIR)/sound/ay8910.o $(OBJDIR)/sound/fm.o $(OBJDIR)/sound/ymdeltat.o
+endif
+
+SOUND=$(strip $(findstring YM2610B@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_YM2610B=1
+SOUNDOBJS += $(OBJDIR)/sound/2610intf.o $(OBJDIR)/sound/ay8910.o $(OBJDIR)/sound/fm.o $(OBJDIR)/sound/ymdeltat.o
+endif
+
+SOUND=$(strip $(findstring YM2612@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_YM2612=1
+SOUNDOBJS += $(OBJDIR)/sound/2612intf.o $(OBJDIR)/sound/ay8910.o $(OBJDIR)/sound/fm.o
+endif
+
+SOUND=$(strip $(findstring YM3438@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_YM3438=1
+SOUNDOBJS += $(OBJDIR)/sound/2612intf.o $(OBJDIR)/sound/ay8910.o $(OBJDIR)/sound/fm.o
+endif
+
+SOUND=$(strip $(findstring YM2413@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_YM2413=1
+SOUNDOBJS += $(OBJDIR)/sound/3812intf.o $(OBJDIR)/sound/ym2413.o $(OBJDIR)/sound/fmopl.o
+endif
+
+SOUND=$(strip $(findstring YM3812@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_YM3812=1
+SOUNDOBJS += $(OBJDIR)/sound/3812intf.o $(OBJDIR)/sound/fmopl.o
+endif
+
+SOUND=$(strip $(findstring YM3526@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_YM3526=1
+SOUNDOBJS += $(OBJDIR)/sound/3812intf.o $(OBJDIR)/sound/fmopl.o
+endif
+
+SOUND=$(strip $(findstring Y8950@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_Y8950=1
+SOUNDOBJS += $(OBJDIR)/sound/3812intf.o $(OBJDIR)/sound/fmopl.o $(OBJDIR)/sound/ymdeltat.o
+endif
+
+SOUND=$(strip $(findstring SN76477@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_SN76477=1
+SOUNDOBJS += $(OBJDIR)/sound/sn76477.o
+endif
+
+SOUND=$(strip $(findstring SN76496@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_SN76496=1
+SOUNDOBJS += $(OBJDIR)/sound/sn76496.o
+endif
+
+SOUND=$(strip $(findstring POKEY@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_POKEY=1
+SOUNDOBJS += $(OBJDIR)/sound/pokey.o
+endif
+
+SOUND=$(strip $(findstring TIA@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_TIA=1
+SOUNDOBJS += $(OBJDIR)/sound/tiasound.o $(OBJDIR)/sound/tiaintf.o
+endif
+
+SOUND=$(strip $(findstring NES@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_NES=1
+SOUNDOBJS += $(OBJDIR)/sound/nes_apu.o
+endif
+
+SOUND=$(strip $(findstring ASTROCADE@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_ASTROCADE=1
+SOUNDOBJS += $(OBJDIR)/sound/astrocde.o
+endif
+
+SOUND=$(strip $(findstring NAMCO@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_NAMCO=1
+SOUNDOBJS += $(OBJDIR)/sound/namco.o
+endif
+
+SOUND=$(strip $(findstring TMS5220@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_TMS5220=1
+SOUNDOBJS += $(OBJDIR)/sound/tms5220.o $(OBJDIR)/sound/5220intf.o
+endif
+
+SOUND=$(strip $(findstring VLM5030@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_VLM5030=1
+SOUNDOBJS += $(OBJDIR)/sound/vlm5030.o
+endif
+
+SOUND=$(strip $(findstring ADPCM@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_ADPCM=1
+SOUNDOBJS += $(OBJDIR)/sound/adpcm.o
+endif
+
+SOUND=$(strip $(findstring OKIM6295@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_OKIM6295=1
+SOUNDOBJS += $(OBJDIR)/sound/adpcm.o
+endif
+
+SOUND=$(strip $(findstring MSM5205@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_MSM5205=1
+SOUNDOBJS += $(OBJDIR)/sound/msm5205.o
+endif
+
+SOUND=$(strip $(findstring UPD7759@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_UPD7759=1
+SOUNDOBJS += $(OBJDIR)/sound/upd7759.o
+endif
+
+SOUND=$(strip $(findstring HC55516@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_HC55516=1
+SOUNDOBJS += $(OBJDIR)/sound/hc55516.o
+endif
+
+SOUND=$(strip $(findstring K005289@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_K005289=1
+SOUNDOBJS += $(OBJDIR)/sound/k005289.o
+endif
+
+SOUND=$(strip $(findstring K007232@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_K007232=1
+SOUNDOBJS += $(OBJDIR)/sound/k007232.o
+endif
+
+SOUND=$(strip $(findstring K051649@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_K051649=1
+SOUNDOBJS += $(OBJDIR)/sound/k051649.o
+endif
+
+SOUND=$(strip $(findstring K053260@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_K053260=1
+SOUNDOBJS += $(OBJDIR)/sound/k053260.o
+endif
+
+SOUND=$(strip $(findstring SEGAPCM@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_SEGAPCM=1
+SOUNDOBJS += $(OBJDIR)/sound/segapcm.o
+endif
+
+SOUND=$(strip $(findstring RF5C68@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_RF5C68=1
+SOUNDOBJS += $(OBJDIR)/sound/rf5c68.o
+endif
+
+SOUND=$(strip $(findstring CEM3394@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_CEM3394=1
+SOUNDOBJS += $(OBJDIR)/sound/cem3394.o
+endif
+
+SOUND=$(strip $(findstring C140@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_C140=1
+SOUNDOBJS += $(OBJDIR)/sound/c140.o
+endif
+
+SOUND=$(strip $(findstring QSOUND@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_QSOUND=1
+SOUNDOBJS += $(OBJDIR)/sound/qsound.o
+endif
+
+SOUND=$(strip $(findstring SPEAKER@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_SPEAKER=1
+SOUNDOBJS += $(OBJDIR)/sound/speaker.o
+endif
+
+SOUND=$(strip $(findstring WAVE@,$(SOUNDS)))
+ifneq ($(SOUND),)
+SOUNDDEFS += -DHAS_WAVE=1
+SOUNDOBJS += $(OBJDIR)/sound/wave.o
+endif
+
+
+
+ifdef DEBUG
+#DEBUGDEF = -DMAME_DEBUG
+else
+DEBUGDEF =
+DBGOBJS =
+endif
+
+DEFS = -DAROS -DLSB_FIRST -DINLINE="static __inline__" -Dasm=__asm__
+CDEFS = $(DEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DEBUGDEF)
+
+ifdef SYMBOLS
+# Sorry for the -Wno-unused, but I was tired ;)
+USER_CFLAGS = $(CDEFS) $(TINYFLAGS) -Isrc -Isrc/aros -I$(OBJDIR)/cpu/m68000 -Isrc/cpu/m68000 \
+	-O3 -Wall -Werror -Wno-unused -g
+else
+USER_CFLAGS = $(CDEFS) $(TINYFLAGS) -Isrc -Isrc/aros -I$(OBJDIR)/cpu/m68000 -Isrc/cpu/m68000 \
+	-O3 -fomit-frame-pointer -ffast-math -funroll-loops \
+	-fexpensive-optimizations \
+	-Wall -Wunused \
+	-Wpointer-arith -Wbad-function-cast -Wcast-align -Waggregate-return \
+	\
+	#-Wshadow \
+	-Wstrict-prototypes
+#   -W had to remove because of the "missing initializer" warning
+#	-Wredundant-decls \
+#	-Wlarger-than-27648 \
+#	-Wcast-qual \
+#	-Wwrite-strings \
+#	-Wconversion \
+#	-Wmissing-prototypes \
+#	-Wmissing-declarations
+endif
+
+ifdef SYMBOLS
+#LDFLAGS =
+else
+#LDFLAGS = -s -Wl,--warn-common
+#LDFLAGS = -s
+endif
+
+#LIBS   = -lalleg -laudio -lz \
+
+##########
+#
+#AROS: removed COREOBJS: $(OBJDIR)/unzip.o $(OBJDIR)/input.o 
+#
+##########
+
+COREOBJS = $(OBJDIR)/version.o $(OBJDIR)/driver.o $(OBJDIR)/mame.o \
+         $(OBJDIR)/drawgfx.o $(OBJDIR)/common.o $(OBJDIR)/usrintrf.o \
+         $(OBJDIR)/cpuintrf.o $(OBJDIR)/memory.o $(OBJDIR)/timer.o $(OBJDIR)/palette.o \
+         $(OBJDIR)/inptport.o $(OBJDIR)/cheat.o $(OBJDIR)/unzip.o \
+         $(OBJDIR)/audit.o $(OBJDIR)/info.o $(OBJDIR)/png.o $(OBJDIR)/artwork.o \
+         $(OBJDIR)/tilemap.o $(OBJDIR)/sprite.o $(OBJDIR)/gfxobj.o \
+         $(OBJDIR)/state.o $(OBJDIR)/datafile.o $(OBJDIR)/hiscore.o \
+         $(sort $(CPUOBJS)) \
+         $(OBJDIR)/sndintrf.o \
+         $(OBJDIR)/sound/streams.o $(OBJDIR)/sound/mixer.o \
+         $(sort $(SOUNDOBJS)) \
+         $(OBJDIR)/sound/votrax.o \
+         $(OBJDIR)/machine/z80fmly.o $(OBJDIR)/machine/6821pia.o \
+         $(OBJDIR)/machine/8255ppi.o \
+         $(OBJDIR)/vidhrdw/generic.o $(OBJDIR)/vidhrdw/vector.o \
+         $(OBJDIR)/vidhrdw/avgdvg.o $(OBJDIR)/machine/mathbox.o \
+         $(OBJDIR)/machine/ticket.o \
+         $(OBJDIR)/mamedbg.o $(OBJDIR)/window.o \
+         $(OBJDIR)/profiler.o \
+         $(sort $(DBGOBJS)) \
+
+DRVLIBS = $(OBJDIR)/pacman.a \
+         $(OBJDIR)/nichibut.a \
+         $(OBJDIR)/phoenix.a $(OBJDIR)/namco.a $(OBJDIR)/univers.a $(OBJDIR)/nintendo.a \
+         $(OBJDIR)/midw8080.a $(OBJDIR)/midwz80.a $(OBJDIR)/meadows.a $(OBJDIR)/midway.a \
+         $(OBJDIR)/irem.a $(OBJDIR)/gottlieb.a $(OBJDIR)/taito.a $(OBJDIR)/toaplan.a \
+         $(OBJDIR)/kyugo.a $(OBJDIR)/williams.a $(OBJDIR)/gremlin.a $(OBJDIR)/vicdual.a \
+         $(OBJDIR)/capcom.a $(OBJDIR)/capbowl.a $(OBJDIR)/leland.a \
+         $(OBJDIR)/sega.a $(OBJDIR)/dataeast.a $(OBJDIR)/tehkan.a $(OBJDIR)/konami.a \
+         $(OBJDIR)/exidy.a $(OBJDIR)/atari.a $(OBJDIR)/snk.a $(OBJDIR)/technos.a \
+         $(OBJDIR)/berzerk.a $(OBJDIR)/gameplan.a $(OBJDIR)/stratvox.a $(OBJDIR)/zaccaria.a \
+         $(OBJDIR)/upl.a $(OBJDIR)/tms.a $(OBJDIR)/cinemar.a $(OBJDIR)/cinemav.a $(OBJDIR)/thepit.a \
+         $(OBJDIR)/valadon.a $(OBJDIR)/seibu.a $(OBJDIR)/tad.a $(OBJDIR)/jaleco.a $(OBJDIR)/visco.a \
+         $(OBJDIR)/orca.a $(OBJDIR)/gaelco.a $(OBJDIR)/kaneko.a $(OBJDIR)/other.a \
+
+NEOLIBS = $(OBJDIR)/neogeo.a \
+
+AROSOBJS = $(OBJDIR)/aros/aros_arrgh.o \
+	   $(OBJDIR)/aros/aros_joy.o \
+	   $(OBJDIR)/aros/aros_video.o \
+	   $(OBJDIR)/aros/aros_sound.o \
+	   $(OBJDIR)/aros/aros_fileio.o \
+	   $(OBJDIR)/aros/aros_main.o \
+	   $(OBJDIR)/aros/aros_config.o \
+	   $(OBJDIR)/aros/aros_input.o \
+	   $(OBJDIR)/aros/aros_misc.o \
+	   $(OBJDIR)/aros/input.o
+
+ifdef TINY_COMPILE
+	OBJS = $(TINY_OBJS)
+	TINYFLAGS = -DTINY_COMPILE -DTINY_NAME=$(TINY_NAME)
+else
+	ifdef NEOFREE
+		OBJS = $(DRVLIBS)
+		TINYFLAGS = -DNEOFREE
+	else
+		ifdef NEOMAME
+			OBJS = $(NEOLIBS)
+			TINYFLAGS = -DNEOMAME
+		else
+			OBJS = $(DRVLIBS) $(NEOLIBS)
+			TINYFLAGS =
+		endif
+	endif
+endif
+
+GCCLIB := `$(CC) --print-libgcc-file`
+ALL_OBJS = $(COREOBJS) $(AROSOBJS) $(OBJS)
+
+all: $(EMULATOR_EXE)
+
+$(EMULATOR_EXE):  $(ALL_OBJS)
+	%link_q from="$(ALL_OBJS) $(GCCLIB)"
+
+
+$(OBJDIR)/%.o: src/%.c
+	%compile_q
+
+#$(OBJDIR)/%.d: src/%.c
+#	@echo "******* Make depend ** $< ** $@ **"
+#	%mkdepend_q
+
+# generate C source files for the 68000 emulator
+$(OBJDIR)/cpu/m68000/%.c $(OBJDIR)/cpu/m68000/%.h: src/cpu/m68000/m68kmake.c src/cpu/m68000/m68k_in.c
+	$(CC) $(CFLAGS) -DAROS -o $(OBJDIR)/cpu/m68000/m68kmake.exe $<
+	$(OBJDIR)/cpu/m68000/m68kmake.exe $(OBJDIR)/cpu/m68000 src/cpu/m68000/m68k_in.c
+
+# generated C files for the 68000 emulator
+$(OBJDIR)/%.og: $(OBJDIR)/%.c
+	%compile_q
+
+# generate asm source files for the 68000 emulator
+#$(OBJDIR)/cpu/m68000/68kem.asm:  src/cpu/m68000/make68k.c
+#	$(CC) $(CDEFS) $(CFLAGS) -O0 -DDOS -o $(OBJDIR)/cpu/m68000/make68k.exe $<
+#	$(OBJDIR)/cpu/m68000/make68k $@ $(OBJDIR)/cpu/m68000/comptab.asm
+#
+# generated asm files for the 68000 emulator
+#$(OBJDIR)/cpu/m68000/68kem.oa:  $(OBJDIR)/cpu/m68000/68kem.asm
+#	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
+#
+#$(OBJDIR)/cpu/z80/z80.asm:  src/cpu/z80/makez80.c
+#	$(CC) $(CDEFS) $(CFLAGS) -DDOS -o $(OBJDIR)/cpu/z80/makez80.exe $<
+#	$(OBJDIR)/cpu/z80/makez80 $(Z80DEF) $(CDEFS) $(CFLAGS) $@
+
+$(OBJDIR)/%.a:
+	$(AR) $@ $^
+
+$(OBJDIR)/pacman.a: \
+         $(OBJDIR)/machine/pacman.o $(OBJDIR)/drivers/pacman.o \
+         $(OBJDIR)/machine/pacplus.o \
+         $(OBJDIR)/machine/theglob.o \
+         $(OBJDIR)/machine/jrpacman.o $(OBJDIR)/drivers/jrpacman.o $(OBJDIR)/vidhrdw/jrpacman.o \
+         $(OBJDIR)/vidhrdw/pengo.o $(OBJDIR)/drivers/pengo.o \
+
+$(OBJDIR)/nichibut.a: \
+         $(OBJDIR)/vidhrdw/cclimber.o $(OBJDIR)/sndhrdw/cclimber.o $(OBJDIR)/drivers/cclimber.o \
+         $(OBJDIR)/drivers/yamato.o \
+         $(OBJDIR)/vidhrdw/seicross.o $(OBJDIR)/sndhrdw/wiping.o $(OBJDIR)/drivers/seicross.o \
+         $(OBJDIR)/vidhrdw/wiping.o $(OBJDIR)/drivers/wiping.o \
+         $(OBJDIR)/vidhrdw/cop01.o $(OBJDIR)/drivers/cop01.o \
+         $(OBJDIR)/vidhrdw/terracre.o $(OBJDIR)/drivers/terracre.o \
+         $(OBJDIR)/vidhrdw/galivan.o $(OBJDIR)/drivers/galivan.o \
+         $(OBJDIR)/vidhrdw/armedf.o $(OBJDIR)/drivers/armedf.o \
+
+$(OBJDIR)/phoenix.a: \
+         $(OBJDIR)/vidhrdw/phoenix.o $(OBJDIR)/sndhrdw/phoenix.o $(OBJDIR)/drivers/phoenix.o \
+         $(OBJDIR)/sndhrdw/pleiads.o \
+         $(OBJDIR)/vidhrdw/naughtyb.o $(OBJDIR)/drivers/naughtyb.o \
+
+$(OBJDIR)/namco.a: \
+         $(OBJDIR)/machine/geebee.o $(OBJDIR)/vidhrdw/geebee.o $(OBJDIR)/sndhrdw/geebee.o $(OBJDIR)/drivers/geebee.o \
+         $(OBJDIR)/vidhrdw/warpwarp.o $(OBJDIR)/sndhrdw/warpwarp.o $(OBJDIR)/drivers/warpwarp.o \
+         $(OBJDIR)/vidhrdw/tankbatt.o $(OBJDIR)/drivers/tankbatt.o \
+         $(OBJDIR)/vidhrdw/galaxian.o $(OBJDIR)/sndhrdw/galaxian.o $(OBJDIR)/drivers/galaxian.o \
+         $(OBJDIR)/vidhrdw/rallyx.o $(OBJDIR)/drivers/rallyx.o \
+         $(OBJDIR)/drivers/locomotn.o \
+         $(OBJDIR)/machine/bosco.o $(OBJDIR)/sndhrdw/bosco.o $(OBJDIR)/vidhrdw/bosco.o $(OBJDIR)/drivers/bosco.o \
+         $(OBJDIR)/machine/galaga.o $(OBJDIR)/vidhrdw/galaga.o $(OBJDIR)/drivers/galaga.o \
+         $(OBJDIR)/machine/digdug.o $(OBJDIR)/vidhrdw/digdug.o $(OBJDIR)/drivers/digdug.o \
+         $(OBJDIR)/vidhrdw/xevious.o $(OBJDIR)/machine/xevious.o $(OBJDIR)/drivers/xevious.o \
+         $(OBJDIR)/machine/superpac.o $(OBJDIR)/vidhrdw/superpac.o $(OBJDIR)/drivers/superpac.o \
+         $(OBJDIR)/machine/phozon.o $(OBJDIR)/vidhrdw/phozon.o $(OBJDIR)/drivers/phozon.o \
+         $(OBJDIR)/machine/mappy.o $(OBJDIR)/vidhrdw/mappy.o $(OBJDIR)/drivers/mappy.o \
+         $(OBJDIR)/machine/grobda.o $(OBJDIR)/vidhrdw/grobda.o $(OBJDIR)/drivers/grobda.o \
+         $(OBJDIR)/machine/gaplus.o $(OBJDIR)/vidhrdw/gaplus.o $(OBJDIR)/drivers/gaplus.o \
+         $(OBJDIR)/machine/polepos.o $(OBJDIR)/vidhrdw/polepos.o $(OBJDIR)/sndhrdw/polepos.o $(OBJDIR)/drivers/polepos.o \
+         $(OBJDIR)/vidhrdw/pacland.o $(OBJDIR)/drivers/pacland.o \
+         $(OBJDIR)/vidhrdw/skykid.o $(OBJDIR)/drivers/skykid.o \
+         $(OBJDIR)/vidhrdw/baraduke.o $(OBJDIR)/drivers/baraduke.o \
+         $(OBJDIR)/vidhrdw/namcos86.o $(OBJDIR)/drivers/namcos86.o \
+         $(OBJDIR)/machine/namcos1.o $(OBJDIR)/vidhrdw/namcos1.o $(OBJDIR)/drivers/namcos1.o \
+         $(OBJDIR)/machine/namcos2.o $(OBJDIR)/vidhrdw/namcos2.o $(OBJDIR)/drivers/namcos2.o \
+
+$(OBJDIR)/univers.a: \
+         $(OBJDIR)/vidhrdw/cosmic.o $(OBJDIR)/drivers/cosmic.o \
+         $(OBJDIR)/vidhrdw/cheekyms.o $(OBJDIR)/drivers/cheekyms.o \
+         $(OBJDIR)/vidhrdw/ladybug.o $(OBJDIR)/drivers/ladybug.o \
+         $(OBJDIR)/vidhrdw/mrdo.o $(OBJDIR)/drivers/mrdo.o \
+         $(OBJDIR)/machine/docastle.o $(OBJDIR)/vidhrdw/docastle.o $(OBJDIR)/drivers/docastle.o \
+
+$(OBJDIR)/nintendo.a: \
+         $(OBJDIR)/vidhrdw/dkong.o $(OBJDIR)/sndhrdw/dkong.o $(OBJDIR)/drivers/dkong.o \
+         $(OBJDIR)/vidhrdw/mario.o $(OBJDIR)/sndhrdw/mario.o $(OBJDIR)/drivers/mario.o \
+         $(OBJDIR)/vidhrdw/popeye.o $(OBJDIR)/drivers/popeye.o \
+         $(OBJDIR)/vidhrdw/punchout.o $(OBJDIR)/sndhrdw/punchout.o $(OBJDIR)/drivers/punchout.o \
+
+$(OBJDIR)/midw8080.a: \
+         $(OBJDIR)/machine/8080bw.o $(OBJDIR)/machine/74123.o \
+         $(OBJDIR)/vidhrdw/8080bw.o $(OBJDIR)/sndhrdw/8080bw.o $(OBJDIR)/drivers/8080bw.o \
+         $(OBJDIR)/vidhrdw/m79amb.o $(OBJDIR)/drivers/m79amb.o \
+
+$(OBJDIR)/midwz80.a: \
+         $(OBJDIR)/vidhrdw/z80bw.o $(OBJDIR)/sndhrdw/z80bw.o $(OBJDIR)/drivers/z80bw.o \
+
+$(OBJDIR)/meadows.a: \
+         $(OBJDIR)/drivers/lazercmd.o $(OBJDIR)/vidhrdw/lazercmd.o \
+         $(OBJDIR)/drivers/meadows.o $(OBJDIR)/sndhrdw/meadows.o $(OBJDIR)/vidhrdw/meadows.o \
+
+$(OBJDIR)/midway.a: \
+         $(OBJDIR)/machine/wow.o $(OBJDIR)/vidhrdw/wow.o $(OBJDIR)/sndhrdw/wow.o $(OBJDIR)/drivers/wow.o \
+         $(OBJDIR)/sndhrdw/gorf.o \
+         $(OBJDIR)/machine/mcr.o $(OBJDIR)/sndhrdw/mcr.o \
+         $(OBJDIR)/vidhrdw/mcr1.o $(OBJDIR)/vidhrdw/mcr2.o $(OBJDIR)/vidhrdw/mcr3.o \
+         $(OBJDIR)/drivers/mcr1.o $(OBJDIR)/drivers/mcr2.o $(OBJDIR)/drivers/mcr3.o \
+         $(OBJDIR)/vidhrdw/mcr68.o $(OBJDIR)/drivers/mcr68.o \
+         $(OBJDIR)/vidhrdw/balsente.o $(OBJDIR)/drivers/balsente.o \
+
+$(OBJDIR)/irem.a: \
+         $(OBJDIR)/vidhrdw/skychut.o $(OBJDIR)/drivers/skychut.o \
+         $(OBJDIR)/sndhrdw/irem.o \
+         $(OBJDIR)/vidhrdw/mpatrol.o $(OBJDIR)/drivers/mpatrol.o \
+         $(OBJDIR)/vidhrdw/troangel.o $(OBJDIR)/drivers/troangel.o \
+         $(OBJDIR)/vidhrdw/yard.o $(OBJDIR)/drivers/yard.o \
+         $(OBJDIR)/vidhrdw/travrusa.o $(OBJDIR)/drivers/travrusa.o \
+         $(OBJDIR)/vidhrdw/m62.o $(OBJDIR)/drivers/m62.o \
+         $(OBJDIR)/vidhrdw/vigilant.o $(OBJDIR)/drivers/vigilant.o \
+         $(OBJDIR)/vidhrdw/m72.o $(OBJDIR)/sndhrdw/m72.o $(OBJDIR)/drivers/m72.o \
+         $(OBJDIR)/vidhrdw/shisen.o $(OBJDIR)/drivers/shisen.o \
+         $(OBJDIR)/vidhrdw/m92.o $(OBJDIR)/drivers/m92.o \
+         $(OBJDIR)/drivers/m97.o \
+         $(OBJDIR)/vidhrdw/m107.o $(OBJDIR)/drivers/m107.o \
+
+$(OBJDIR)/gottlieb.a: \
+         $(OBJDIR)/vidhrdw/gottlieb.o $(OBJDIR)/sndhrdw/gottlieb.o $(OBJDIR)/drivers/gottlieb.o \
+
+$(OBJDIR)/taito.a: \
+         $(OBJDIR)/vidhrdw/crbaloon.o $(OBJDIR)/drivers/crbaloon.o \
+         $(OBJDIR)/machine/qix.o $(OBJDIR)/vidhrdw/qix.o $(OBJDIR)/drivers/qix.o \
+         $(OBJDIR)/machine/taitosj.o $(OBJDIR)/vidhrdw/taitosj.o $(OBJDIR)/drivers/taitosj.o \
+         $(OBJDIR)/vidhrdw/bking2.o $(OBJDIR)/drivers/bking2.o \
+         $(OBJDIR)/vidhrdw/gsword.o $(OBJDIR)/drivers/gsword.o $(OBJDIR)/machine/tait8741.o \
+         $(OBJDIR)/vidhrdw/retofinv.o $(OBJDIR)/drivers/retofinv.o \
+         $(OBJDIR)/vidhrdw/tsamurai.o $(OBJDIR)/drivers/tsamurai.o \
+         $(OBJDIR)/machine/flstory.o $(OBJDIR)/vidhrdw/flstory.o $(OBJDIR)/drivers/flstory.o \
+         $(OBJDIR)/vidhrdw/gladiatr.o $(OBJDIR)/drivers/gladiatr.o \
+         $(OBJDIR)/machine/bublbobl.o $(OBJDIR)/vidhrdw/bublbobl.o $(OBJDIR)/drivers/bublbobl.o \
+         $(OBJDIR)/machine/mexico86.o $(OBJDIR)/vidhrdw/mexico86.o $(OBJDIR)/drivers/mexico86.o \
+         $(OBJDIR)/vidhrdw/rastan.o $(OBJDIR)/sndhrdw/rastan.o $(OBJDIR)/drivers/rastan.o \
+         $(OBJDIR)/machine/rainbow.o $(OBJDIR)/drivers/rainbow.o \
+         $(OBJDIR)/machine/arkanoid.o $(OBJDIR)/vidhrdw/arkanoid.o $(OBJDIR)/drivers/arkanoid.o \
+         $(OBJDIR)/vidhrdw/superqix.o $(OBJDIR)/drivers/superqix.o \
+         $(OBJDIR)/vidhrdw/superman.o $(OBJDIR)/drivers/superman.o $(OBJDIR)/machine/cchip.o \
+         $(OBJDIR)/vidhrdw/footchmp.o $(OBJDIR)/drivers/footchmp.o \
+         $(OBJDIR)/vidhrdw/minivadr.o $(OBJDIR)/drivers/minivadr.o \
+         $(OBJDIR)/machine/tnzs.o $(OBJDIR)/vidhrdw/tnzs.o $(OBJDIR)/drivers/tnzs.o \
+         $(OBJDIR)/drivers/lkage.o $(OBJDIR)/vidhrdw/lkage.o \
+         $(OBJDIR)/vidhrdw/taitol.o $(OBJDIR)/drivers/taitol.o \
+         $(OBJDIR)/vidhrdw/taitof2.o $(OBJDIR)/drivers/taitof2.o \
+         $(OBJDIR)/vidhrdw/ssi.o $(OBJDIR)/drivers/ssi.o \
+
+$(OBJDIR)/toaplan.a: \
+         $(OBJDIR)/machine/slapfght.o $(OBJDIR)/vidhrdw/slapfght.o $(OBJDIR)/drivers/slapfght.o \
+         $(OBJDIR)/machine/twincobr.o $(OBJDIR)/vidhrdw/twincobr.o \
+         $(OBJDIR)/drivers/twincobr.o $(OBJDIR)/drivers/wardner.o \
+         $(OBJDIR)/machine/toaplan1.o $(OBJDIR)/vidhrdw/toaplan1.o $(OBJDIR)/drivers/toaplan1.o \
+         $(OBJDIR)/vidhrdw/snowbros.o $(OBJDIR)/drivers/snowbros.o \
+         $(OBJDIR)/vidhrdw/toaplan2.o $(OBJDIR)/drivers/toaplan2.o \
+
+$(OBJDIR)/kyugo.a: \
+         $(OBJDIR)/drivers/kyugo.o $(OBJDIR)/vidhrdw/kyugo.o \
+
+$(OBJDIR)/williams.a: \
+         $(OBJDIR)/machine/williams.o $(OBJDIR)/vidhrdw/williams.o $(OBJDIR)/sndhrdw/williams.o $(OBJDIR)/drivers/williams.o \
+
+$(OBJDIR)/capcom.a: \
+         $(OBJDIR)/vidhrdw/vulgus.o $(OBJDIR)/drivers/vulgus.o \
+         $(OBJDIR)/vidhrdw/sonson.o $(OBJDIR)/drivers/sonson.o \
+         $(OBJDIR)/vidhrdw/higemaru.o $(OBJDIR)/drivers/higemaru.o \
+         $(OBJDIR)/vidhrdw/1942.o $(OBJDIR)/drivers/1942.o \
+         $(OBJDIR)/vidhrdw/exedexes.o $(OBJDIR)/drivers/exedexes.o \
+         $(OBJDIR)/vidhrdw/commando.o $(OBJDIR)/drivers/commando.o \
+         $(OBJDIR)/vidhrdw/gng.o $(OBJDIR)/drivers/gng.o \
+         $(OBJDIR)/vidhrdw/gunsmoke.o $(OBJDIR)/drivers/gunsmoke.o \
+         $(OBJDIR)/vidhrdw/srumbler.o $(OBJDIR)/drivers/srumbler.o \
+         $(OBJDIR)/machine/lwings.o $(OBJDIR)/vidhrdw/lwings.o $(OBJDIR)/drivers/lwings.o \
+         $(OBJDIR)/vidhrdw/sidearms.o $(OBJDIR)/drivers/sidearms.o \
+         $(OBJDIR)/vidhrdw/bionicc.o $(OBJDIR)/drivers/bionicc.o \
+         $(OBJDIR)/vidhrdw/1943.o $(OBJDIR)/drivers/1943.o \
+         $(OBJDIR)/vidhrdw/blktiger.o $(OBJDIR)/drivers/blktiger.o \
+         $(OBJDIR)/vidhrdw/tigeroad.o $(OBJDIR)/drivers/tigeroad.o \
+         $(OBJDIR)/vidhrdw/lastduel.o $(OBJDIR)/drivers/lastduel.o \
+         $(OBJDIR)/vidhrdw/sf1.o $(OBJDIR)/drivers/sf1.o \
+         $(OBJDIR)/machine/kabuki.o $(OBJDIR)/machine/eeprom.o \
+         $(OBJDIR)/vidhrdw/mitchell.o $(OBJDIR)/drivers/mitchell.o \
+         $(OBJDIR)/vidhrdw/cbasebal.o $(OBJDIR)/drivers/cbasebal.o \
+         $(OBJDIR)/vidhrdw/cps1.o $(OBJDIR)/drivers/cps1.o \
+         $(OBJDIR)/drivers/zn.o \
+
+$(OBJDIR)/capbowl.a: \
+         $(OBJDIR)/machine/capbowl.o $(OBJDIR)/vidhrdw/capbowl.o $(OBJDIR)/vidhrdw/tms34061.o $(OBJDIR)/drivers/capbowl.o \
+
+$(OBJDIR)/gremlin.a: \
+         $(OBJDIR)/vidhrdw/blockade.o $(OBJDIR)/drivers/blockade.o \
+
+$(OBJDIR)/vicdual.a: \
+         $(OBJDIR)/vidhrdw/vicdual.o $(OBJDIR)/drivers/vicdual.o \
+         $(OBJDIR)/sndhrdw/carnival.o $(OBJDIR)/sndhrdw/depthch.o $(OBJDIR)/sndhrdw/invinco.o $(OBJDIR)/sndhrdw/pulsar.o \
+
+$(OBJDIR)/sega.a: \
+         $(OBJDIR)/machine/segacrpt.o \
+         $(OBJDIR)/vidhrdw/sega.o $(OBJDIR)/sndhrdw/sega.o $(OBJDIR)/machine/sega.o $(OBJDIR)/drivers/sega.o \
+         $(OBJDIR)/vidhrdw/segar.o $(OBJDIR)/sndhrdw/segar.o $(OBJDIR)/machine/segar.o $(OBJDIR)/drivers/segar.o \
+         $(OBJDIR)/sndhrdw/monsterb.o \
+         $(OBJDIR)/vidhrdw/zaxxon.o $(OBJDIR)/sndhrdw/zaxxon.o $(OBJDIR)/drivers/zaxxon.o \
+         $(OBJDIR)/sndhrdw/congo.o $(OBJDIR)/drivers/congo.o \
+         $(OBJDIR)/machine/turbo.o $(OBJDIR)/vidhrdw/turbo.o $(OBJDIR)/drivers/turbo.o \
+         $(OBJDIR)/drivers/kopunch.o \
+         $(OBJDIR)/vidhrdw/suprloco.o $(OBJDIR)/drivers/suprloco.o \
+         $(OBJDIR)/vidhrdw/champbas.o $(OBJDIR)/drivers/champbas.o \
+         $(OBJDIR)/vidhrdw/appoooh.o $(OBJDIR)/drivers/appoooh.o \
+         $(OBJDIR)/vidhrdw/bankp.o $(OBJDIR)/drivers/bankp.o \
+         $(OBJDIR)/vidhrdw/dotrikun.o $(OBJDIR)/drivers/dotrikun.o \
+         $(OBJDIR)/vidhrdw/system1.o $(OBJDIR)/drivers/system1.o \
+         $(OBJDIR)/machine/system16.o $(OBJDIR)/vidhrdw/system16.o $(OBJDIR)/sndhrdw/system16.o $(OBJDIR)/drivers/system16.o \
+
+$(OBJDIR)/dataeast.a: \
+         $(OBJDIR)/machine/btime.o $(OBJDIR)/vidhrdw/btime.o $(OBJDIR)/drivers/btime.o \
+         $(OBJDIR)/vidhrdw/astrof.o $(OBJDIR)/sndhrdw/astrof.o $(OBJDIR)/drivers/astrof.o \
+         $(OBJDIR)/vidhrdw/kchamp.o $(OBJDIR)/drivers/kchamp.o \
+         $(OBJDIR)/vidhrdw/firetrap.o $(OBJDIR)/drivers/firetrap.o \
+         $(OBJDIR)/vidhrdw/brkthru.o $(OBJDIR)/drivers/brkthru.o \
+         $(OBJDIR)/vidhrdw/shootout.o $(OBJDIR)/drivers/shootout.o \
+         $(OBJDIR)/vidhrdw/sidepckt.o $(OBJDIR)/drivers/sidepckt.o \
+         $(OBJDIR)/vidhrdw/exprraid.o $(OBJDIR)/drivers/exprraid.o \
+         $(OBJDIR)/vidhrdw/pcktgal.o $(OBJDIR)/drivers/pcktgal.o \
+         $(OBJDIR)/vidhrdw/actfancr.o $(OBJDIR)/drivers/actfancr.o \
+         $(OBJDIR)/vidhrdw/dec8.o $(OBJDIR)/drivers/dec8.o \
+         $(OBJDIR)/vidhrdw/karnov.o $(OBJDIR)/drivers/karnov.o \
+         $(OBJDIR)/machine/dec0.o $(OBJDIR)/vidhrdw/dec0.o $(OBJDIR)/drivers/dec0.o \
+         $(OBJDIR)/vidhrdw/stadhero.o $(OBJDIR)/drivers/stadhero.o \
+         $(OBJDIR)/vidhrdw/madmotor.o $(OBJDIR)/drivers/madmotor.o \
+         $(OBJDIR)/vidhrdw/vaportra.o $(OBJDIR)/drivers/vaportra.o \
+         $(OBJDIR)/vidhrdw/cbuster.o $(OBJDIR)/drivers/cbuster.o \
+         $(OBJDIR)/vidhrdw/darkseal.o $(OBJDIR)/drivers/darkseal.o \
+         $(OBJDIR)/vidhrdw/supbtime.o $(OBJDIR)/drivers/supbtime.o \
+         $(OBJDIR)/vidhrdw/cninja.o $(OBJDIR)/drivers/cninja.o \
+         $(OBJDIR)/vidhrdw/tumblep.o $(OBJDIR)/drivers/tumblep.o \
+         $(OBJDIR)/vidhrdw/funkyjet.o $(OBJDIR)/drivers/funkyjet.o \
+
+$(OBJDIR)/tehkan.a: \
+         $(OBJDIR)/sndhrdw/senjyo.o $(OBJDIR)/vidhrdw/senjyo.o $(OBJDIR)/drivers/senjyo.o \
+         $(OBJDIR)/vidhrdw/bombjack.o $(OBJDIR)/drivers/bombjack.o \
+         $(OBJDIR)/vidhrdw/pbaction.o $(OBJDIR)/drivers/pbaction.o \
+         $(OBJDIR)/vidhrdw/tehkanwc.o $(OBJDIR)/drivers/tehkanwc.o \
+         $(OBJDIR)/vidhrdw/solomon.o $(OBJDIR)/drivers/solomon.o \
+         $(OBJDIR)/vidhrdw/tecmo.o $(OBJDIR)/drivers/tecmo.o \
+         $(OBJDIR)/vidhrdw/gaiden.o $(OBJDIR)/drivers/gaiden.o \
+         $(OBJDIR)/vidhrdw/wc90.o $(OBJDIR)/drivers/wc90.o \
+         $(OBJDIR)/vidhrdw/wc90b.o $(OBJDIR)/drivers/wc90b.o \
+
+$(OBJDIR)/konami.a: \
+         $(OBJDIR)/machine/scramble.o $(OBJDIR)/sndhrdw/scramble.o $(OBJDIR)/drivers/scramble.o \
+         $(OBJDIR)/vidhrdw/frogger.o $(OBJDIR)/sndhrdw/frogger.o $(OBJDIR)/drivers/frogger.o \
+         $(OBJDIR)/drivers/scobra.o \
+         $(OBJDIR)/vidhrdw/amidar.o $(OBJDIR)/drivers/amidar.o \
+         $(OBJDIR)/vidhrdw/fastfred.o $(OBJDIR)/drivers/fastfred.o \
+         $(OBJDIR)/sndhrdw/timeplt.o \
+         $(OBJDIR)/vidhrdw/tutankhm.o $(OBJDIR)/drivers/tutankhm.o \
+         $(OBJDIR)/drivers/junofrst.o \
+         $(OBJDIR)/vidhrdw/pooyan.o $(OBJDIR)/drivers/pooyan.o \
+         $(OBJDIR)/vidhrdw/timeplt.o $(OBJDIR)/drivers/timeplt.o \
+         $(OBJDIR)/vidhrdw/megazone.o $(OBJDIR)/drivers/megazone.o \
+         $(OBJDIR)/vidhrdw/pandoras.o $(OBJDIR)/drivers/pandoras.o \
+         $(OBJDIR)/sndhrdw/gyruss.o $(OBJDIR)/vidhrdw/gyruss.o $(OBJDIR)/drivers/gyruss.o \
+         $(OBJDIR)/machine/konami.o $(OBJDIR)/vidhrdw/trackfld.o $(OBJDIR)/sndhrdw/trackfld.o $(OBJDIR)/drivers/trackfld.o \
+         $(OBJDIR)/vidhrdw/rocnrope.o $(OBJDIR)/drivers/rocnrope.o \
+         $(OBJDIR)/vidhrdw/circusc.o $(OBJDIR)/drivers/circusc.o \
+         $(OBJDIR)/machine/tp84.o $(OBJDIR)/vidhrdw/tp84.o $(OBJDIR)/drivers/tp84.o \
+         $(OBJDIR)/vidhrdw/hyperspt.o $(OBJDIR)/drivers/hyperspt.o \
+         $(OBJDIR)/vidhrdw/sbasketb.o $(OBJDIR)/drivers/sbasketb.o \
+         $(OBJDIR)/vidhrdw/mikie.o $(OBJDIR)/drivers/mikie.o \
+         $(OBJDIR)/vidhrdw/yiear.o $(OBJDIR)/drivers/yiear.o \
+         $(OBJDIR)/vidhrdw/shaolins.o $(OBJDIR)/drivers/shaolins.o \
+         $(OBJDIR)/vidhrdw/pingpong.o $(OBJDIR)/drivers/pingpong.o \
+         $(OBJDIR)/vidhrdw/gberet.o $(OBJDIR)/drivers/gberet.o \
+         $(OBJDIR)/vidhrdw/jailbrek.o $(OBJDIR)/drivers/jailbrek.o \
+         $(OBJDIR)/vidhrdw/finalizr.o $(OBJDIR)/drivers/finalizr.o \
+         $(OBJDIR)/vidhrdw/ironhors.o $(OBJDIR)/drivers/ironhors.o \
+         $(OBJDIR)/machine/jackal.o $(OBJDIR)/vidhrdw/jackal.o $(OBJDIR)/drivers/jackal.o \
+         $(OBJDIR)/machine/ddrible.o $(OBJDIR)/vidhrdw/ddrible.o $(OBJDIR)/drivers/ddrible.o \
+         $(OBJDIR)/vidhrdw/contra.o $(OBJDIR)/drivers/contra.o \
+         $(OBJDIR)/vidhrdw/combatsc.o $(OBJDIR)/drivers/combatsc.o \
+         $(OBJDIR)/vidhrdw/hcastle.o $(OBJDIR)/drivers/hcastle.o \
+         $(OBJDIR)/vidhrdw/nemesis.o $(OBJDIR)/drivers/nemesis.o \
+         $(OBJDIR)/vidhrdw/konamiic.o \
+         $(OBJDIR)/vidhrdw/rockrage.o $(OBJDIR)/drivers/rockrage.o \
+         $(OBJDIR)/vidhrdw/flkatck.o $(OBJDIR)/drivers/flkatck.o \
+         $(OBJDIR)/vidhrdw/fastlane.o $(OBJDIR)/drivers/fastlane.o \
+         $(OBJDIR)/vidhrdw/labyrunr.o $(OBJDIR)/drivers/labyrunr.o \
+         $(OBJDIR)/vidhrdw/battlnts.o $(OBJDIR)/drivers/battlnts.o \
+         $(OBJDIR)/vidhrdw/bladestl.o $(OBJDIR)/drivers/bladestl.o \
+         $(OBJDIR)/machine/ajax.o $(OBJDIR)/vidhrdw/ajax.o $(OBJDIR)/drivers/ajax.o \
+         $(OBJDIR)/vidhrdw/thunderx.o $(OBJDIR)/drivers/thunderx.o \
+         $(OBJDIR)/vidhrdw/mainevt.o $(OBJDIR)/drivers/mainevt.o \
+         $(OBJDIR)/vidhrdw/88games.o $(OBJDIR)/drivers/88games.o \
+         $(OBJDIR)/vidhrdw/gbusters.o $(OBJDIR)/drivers/gbusters.o \
+         $(OBJDIR)/vidhrdw/crimfght.o $(OBJDIR)/drivers/crimfght.o \
+         $(OBJDIR)/vidhrdw/spy.o $(OBJDIR)/drivers/spy.o \
+         $(OBJDIR)/vidhrdw/bottom9.o $(OBJDIR)/drivers/bottom9.o \
+         $(OBJDIR)/vidhrdw/blockhl.o $(OBJDIR)/drivers/blockhl.o \
+         $(OBJDIR)/vidhrdw/aliens.o $(OBJDIR)/drivers/aliens.o \
+         $(OBJDIR)/vidhrdw/surpratk.o $(OBJDIR)/drivers/surpratk.o \
+         $(OBJDIR)/vidhrdw/parodius.o $(OBJDIR)/drivers/parodius.o \
+         $(OBJDIR)/vidhrdw/rollerg.o $(OBJDIR)/drivers/rollerg.o \
+         $(OBJDIR)/vidhrdw/xexex.o $(OBJDIR)/drivers/xexex.o \
+         $(OBJDIR)/machine/simpsons.o $(OBJDIR)/vidhrdw/simpsons.o $(OBJDIR)/drivers/simpsons.o \
+         $(OBJDIR)/vidhrdw/vendetta.o $(OBJDIR)/drivers/vendetta.o \
+         $(OBJDIR)/vidhrdw/twin16.o $(OBJDIR)/drivers/twin16.o \
+         $(OBJDIR)/vidhrdw/gradius3.o $(OBJDIR)/drivers/gradius3.o \
+         $(OBJDIR)/vidhrdw/tmnt.o $(OBJDIR)/drivers/tmnt.o \
+         $(OBJDIR)/vidhrdw/xmen.o $(OBJDIR)/drivers/xmen.o \
+         $(OBJDIR)/vidhrdw/wecleman.o $(OBJDIR)/drivers/wecleman.o \
+         $(OBJDIR)/vidhrdw/ultraman.o $(OBJDIR)/drivers/ultraman.o \
+
+$(OBJDIR)/exidy.a: \
+         $(OBJDIR)/machine/exidy.o $(OBJDIR)/vidhrdw/exidy.o $(OBJDIR)/sndhrdw/exidy.o $(OBJDIR)/drivers/exidy.o \
+         $(OBJDIR)/sndhrdw/targ.o \
+         $(OBJDIR)/vidhrdw/circus.o $(OBJDIR)/drivers/circus.o \
+         $(OBJDIR)/machine/starfire.o $(OBJDIR)/vidhrdw/starfire.o $(OBJDIR)/drivers/starfire.o \
+         $(OBJDIR)/sndhrdw/exidy440.o $(OBJDIR)/vidhrdw/exidy440.o $(OBJDIR)/drivers/exidy440.o \
+
+$(OBJDIR)/atari.a: \
+         $(OBJDIR)/machine/atari_vg.o \
+         $(OBJDIR)/machine/asteroid.o $(OBJDIR)/sndhrdw/asteroid.o \
+         $(OBJDIR)/vidhrdw/llander.o $(OBJDIR)/sndhrdw/llander.o $(OBJDIR)/drivers/asteroid.o \
+         $(OBJDIR)/drivers/bwidow.o \
+         $(OBJDIR)/sndhrdw/bzone.o  $(OBJDIR)/drivers/bzone.o \
+         $(OBJDIR)/sndhrdw/redbaron.o \
+         $(OBJDIR)/drivers/tempest.o \
+         $(OBJDIR)/machine/starwars.o $(OBJDIR)/machine/swmathbx.o \
+         $(OBJDIR)/drivers/starwars.o $(OBJDIR)/sndhrdw/starwars.o \
+         $(OBJDIR)/machine/mhavoc.o $(OBJDIR)/drivers/mhavoc.o \
+         $(OBJDIR)/machine/quantum.o $(OBJDIR)/drivers/quantum.o \
+         $(OBJDIR)/machine/atarifb.o $(OBJDIR)/vidhrdw/atarifb.o $(OBJDIR)/drivers/atarifb.o \
+         $(OBJDIR)/machine/sprint2.o $(OBJDIR)/vidhrdw/sprint2.o $(OBJDIR)/drivers/sprint2.o \
+         $(OBJDIR)/machine/sbrkout.o $(OBJDIR)/vidhrdw/sbrkout.o $(OBJDIR)/drivers/sbrkout.o \
+         $(OBJDIR)/machine/dominos.o $(OBJDIR)/vidhrdw/dominos.o $(OBJDIR)/drivers/dominos.o \
+         $(OBJDIR)/vidhrdw/nitedrvr.o $(OBJDIR)/machine/nitedrvr.o $(OBJDIR)/drivers/nitedrvr.o \
+         $(OBJDIR)/vidhrdw/bsktball.o $(OBJDIR)/machine/bsktball.o $(OBJDIR)/drivers/bsktball.o \
+         $(OBJDIR)/vidhrdw/copsnrob.o $(OBJDIR)/machine/copsnrob.o $(OBJDIR)/drivers/copsnrob.o \
+         $(OBJDIR)/machine/avalnche.o $(OBJDIR)/vidhrdw/avalnche.o $(OBJDIR)/drivers/avalnche.o \
+         $(OBJDIR)/machine/subs.o $(OBJDIR)/vidhrdw/subs.o $(OBJDIR)/drivers/subs.o \
+         $(OBJDIR)/machine/atarifb.o $(OBJDIR)/vidhrdw/atarifb.o $(OBJDIR)/drivers/atarifb.o \
+         $(OBJDIR)/vidhrdw/canyon.o $(OBJDIR)/drivers/canyon.o \
+         $(OBJDIR)/vidhrdw/skydiver.o $(OBJDIR)/drivers/skydiver.o \
+         $(OBJDIR)/vidhrdw/warlord.o $(OBJDIR)/drivers/warlord.o \
+         $(OBJDIR)/machine/centiped.o $(OBJDIR)/vidhrdw/centiped.o $(OBJDIR)/drivers/centiped.o \
+         $(OBJDIR)/machine/milliped.o $(OBJDIR)/vidhrdw/milliped.o $(OBJDIR)/drivers/milliped.o \
+         $(OBJDIR)/vidhrdw/qwakprot.o $(OBJDIR)/drivers/qwakprot.o \
+         $(OBJDIR)/machine/kangaroo.o $(OBJDIR)/vidhrdw/kangaroo.o $(OBJDIR)/drivers/kangaroo.o \
+         $(OBJDIR)/machine/arabian.o $(OBJDIR)/vidhrdw/arabian.o $(OBJDIR)/drivers/arabian.o \
+         $(OBJDIR)/machine/missile.o $(OBJDIR)/vidhrdw/missile.o $(OBJDIR)/drivers/missile.o \
+         $(OBJDIR)/machine/foodf.o $(OBJDIR)/vidhrdw/foodf.o $(OBJDIR)/drivers/foodf.o \
+         $(OBJDIR)/vidhrdw/liberatr.o $(OBJDIR)/machine/liberatr.o $(OBJDIR)/drivers/liberatr.o \
+         $(OBJDIR)/vidhrdw/ccastles.o $(OBJDIR)/drivers/ccastles.o \
+         $(OBJDIR)/machine/cloak.o $(OBJDIR)/vidhrdw/cloak.o $(OBJDIR)/drivers/cloak.o \
+         $(OBJDIR)/vidhrdw/cloud9.o $(OBJDIR)/drivers/cloud9.o \
+         $(OBJDIR)/machine/jedi.o $(OBJDIR)/vidhrdw/jedi.o $(OBJDIR)/sndhrdw/jedi.o $(OBJDIR)/drivers/jedi.o \
+         $(OBJDIR)/machine/atarigen.o $(OBJDIR)/sndhrdw/atarijsa.o \
+         $(OBJDIR)/machine/slapstic.o \
+         $(OBJDIR)/vidhrdw/atarisy1.o $(OBJDIR)/drivers/atarisy1.o \
+         $(OBJDIR)/vidhrdw/atarisy2.o $(OBJDIR)/drivers/atarisy2.o \
+         $(OBJDIR)/vidhrdw/gauntlet.o $(OBJDIR)/drivers/gauntlet.o \
+         $(OBJDIR)/vidhrdw/atetris.o $(OBJDIR)/drivers/atetris.o \
+         $(OBJDIR)/vidhrdw/toobin.o $(OBJDIR)/drivers/toobin.o \
+         $(OBJDIR)/vidhrdw/vindictr.o $(OBJDIR)/drivers/vindictr.o \
+         $(OBJDIR)/vidhrdw/klax.o $(OBJDIR)/drivers/klax.o \
+         $(OBJDIR)/vidhrdw/blstroid.o $(OBJDIR)/drivers/blstroid.o \
+         $(OBJDIR)/vidhrdw/xybots.o $(OBJDIR)/drivers/xybots.o \
+         $(OBJDIR)/vidhrdw/eprom.o $(OBJDIR)/drivers/eprom.o \
+         $(OBJDIR)/vidhrdw/skullxbo.o $(OBJDIR)/drivers/skullxbo.o \
+         $(OBJDIR)/vidhrdw/badlands.o $(OBJDIR)/drivers/badlands.o \
+         $(OBJDIR)/vidhrdw/cyberbal.o $(OBJDIR)/drivers/cyberbal.o \
+         $(OBJDIR)/vidhrdw/rampart.o $(OBJDIR)/drivers/rampart.o \
+         $(OBJDIR)/vidhrdw/shuuz.o $(OBJDIR)/drivers/shuuz.o \
+         $(OBJDIR)/vidhrdw/hydra.o $(OBJDIR)/drivers/hydra.o \
+         $(OBJDIR)/vidhrdw/thunderj.o $(OBJDIR)/drivers/thunderj.o \
+         $(OBJDIR)/vidhrdw/batman.o $(OBJDIR)/drivers/batman.o \
+         $(OBJDIR)/vidhrdw/relief.o $(OBJDIR)/drivers/relief.o \
+         $(OBJDIR)/vidhrdw/offtwall.o $(OBJDIR)/drivers/offtwall.o \
+         $(OBJDIR)/vidhrdw/arcadecl.o $(OBJDIR)/drivers/arcadecl.o \
+
+$(OBJDIR)/snk.a: \
+         $(OBJDIR)/vidhrdw/rockola.o $(OBJDIR)/sndhrdw/rockola.o $(OBJDIR)/drivers/rockola.o \
+         $(OBJDIR)/drivers/munchmo.o \
+         $(OBJDIR)/vidhrdw/marvins.o $(OBJDIR)/drivers/marvins.o \
+		 $(OBJDIR)/drivers/hal21.o \
+         $(OBJDIR)/vidhrdw/snk.o $(OBJDIR)/drivers/snk.o \
+         $(OBJDIR)/vidhrdw/snk68.o $(OBJDIR)/drivers/snk68.o \
+         $(OBJDIR)/vidhrdw/prehisle.o $(OBJDIR)/drivers/prehisle.o \
+         $(OBJDIR)/vidhrdw/alpha68k.o $(OBJDIR)/drivers/alpha68k.o \
+
+$(OBJDIR)/technos.a: \
+         $(OBJDIR)/drivers/scregg.o \
+         $(OBJDIR)/vidhrdw/tagteam.o $(OBJDIR)/drivers/tagteam.o \
+         $(OBJDIR)/vidhrdw/ssozumo.o $(OBJDIR)/drivers/ssozumo.o \
+         $(OBJDIR)/vidhrdw/mystston.o $(OBJDIR)/drivers/mystston.o \
+         $(OBJDIR)/vidhrdw/bogeyman.o $(OBJDIR)/drivers/bogeyman.o \
+         $(OBJDIR)/vidhrdw/matmania.o $(OBJDIR)/drivers/matmania.o $(OBJDIR)/machine/maniach.o \
+         $(OBJDIR)/vidhrdw/renegade.o $(OBJDIR)/drivers/renegade.o \
+         $(OBJDIR)/vidhrdw/xain.o $(OBJDIR)/drivers/xain.o \
+         $(OBJDIR)/vidhrdw/battlane.o $(OBJDIR)/drivers/battlane.o \
+         $(OBJDIR)/vidhrdw/ddragon.o $(OBJDIR)/drivers/ddragon.o \
+         $(OBJDIR)/vidhrdw/ddragon3.o $(OBJDIR)/drivers/ddragon3.o \
+         $(OBJDIR)/vidhrdw/blockout.o $(OBJDIR)/drivers/blockout.o \
+
+$(OBJDIR)/berzerk.a: \
+         $(OBJDIR)/machine/berzerk.o $(OBJDIR)/vidhrdw/berzerk.o $(OBJDIR)/sndhrdw/berzerk.o $(OBJDIR)/drivers/berzerk.o \
+
+$(OBJDIR)/gameplan.a: \
+         $(OBJDIR)/vidhrdw/gameplan.o $(OBJDIR)/drivers/gameplan.o \
+
+$(OBJDIR)/stratvox.a: \
+         $(OBJDIR)/vidhrdw/route16.o $(OBJDIR)/drivers/route16.o \
+
+$(OBJDIR)/zaccaria.a: \
+         $(OBJDIR)/vidhrdw/zaccaria.o $(OBJDIR)/drivers/zaccaria.o \
+
+$(OBJDIR)/upl.a: \
+         $(OBJDIR)/vidhrdw/nova2001.o $(OBJDIR)/drivers/nova2001.o \
+         $(OBJDIR)/vidhrdw/pkunwar.o $(OBJDIR)/drivers/pkunwar.o \
+         $(OBJDIR)/vidhrdw/ninjakd2.o $(OBJDIR)/drivers/ninjakd2.o \
+         $(OBJDIR)/vidhrdw/mnight.o $(OBJDIR)/drivers/mnight.o \
+
+$(OBJDIR)/tms.a: \
+         $(OBJDIR)/machine/exterm.o $(OBJDIR)/vidhrdw/exterm.o $(OBJDIR)/drivers/exterm.o \
+         $(OBJDIR)/machine/smashtv.o $(OBJDIR)/vidhrdw/smashtv.o $(OBJDIR)/drivers/smashtv.o \
+
+$(OBJDIR)/cinemar.a: \
+         $(OBJDIR)/vidhrdw/jack.o $(OBJDIR)/drivers/jack.o \
+
+$(OBJDIR)/cinemav.a: \
+         $(OBJDIR)/sndhrdw/cinemat.o $(OBJDIR)/drivers/cinemat.o \
+         $(OBJDIR)/machine/cchasm.o $(OBJDIR)/vidhrdw/cchasm.o $(OBJDIR)/sndhrdw/cchasm.o $(OBJDIR)/drivers/cchasm.o \
+
+$(OBJDIR)/thepit.a: \
+         $(OBJDIR)/vidhrdw/thepit.o $(OBJDIR)/drivers/thepit.o \
+
+$(OBJDIR)/valadon.a: \
+         $(OBJDIR)/machine/bagman.o $(OBJDIR)/vidhrdw/bagman.o $(OBJDIR)/drivers/bagman.o \
+
+$(OBJDIR)/seibu.a: \
+         $(OBJDIR)/vidhrdw/wiz.o $(OBJDIR)/drivers/wiz.o \
+         $(OBJDIR)/machine/stfight.o $(OBJDIR)/vidhrdw/stfight.o $(OBJDIR)/drivers/stfight.o \
+         $(OBJDIR)/sndhrdw/seibu.o \
+         $(OBJDIR)/vidhrdw/dynduke.o $(OBJDIR)/drivers/dynduke.o \
+         $(OBJDIR)/vidhrdw/raiden.o $(OBJDIR)/drivers/raiden.o \
+         $(OBJDIR)/vidhrdw/dcon.o $(OBJDIR)/drivers/dcon.o \
+
+$(OBJDIR)/tad.a: \
+         $(OBJDIR)/vidhrdw/cabal.o $(OBJDIR)/drivers/cabal.o \
+         $(OBJDIR)/vidhrdw/toki.o $(OBJDIR)/drivers/toki.o \
+         $(OBJDIR)/vidhrdw/bloodbro.o $(OBJDIR)/drivers/bloodbro.o \
+
+$(OBJDIR)/jaleco.a: \
+         $(OBJDIR)/vidhrdw/exerion.o $(OBJDIR)/drivers/exerion.o \
+         $(OBJDIR)/vidhrdw/aeroboto.o $(OBJDIR)/drivers/aeroboto.o \
+         $(OBJDIR)/vidhrdw/citycon.o $(OBJDIR)/drivers/citycon.o \
+		 $(OBJDIR)/vidhrdw/pinbo.o $(OBJDIR)/drivers/pinbo.o \
+         $(OBJDIR)/vidhrdw/psychic5.o $(OBJDIR)/drivers/psychic5.o \
+         $(OBJDIR)/vidhrdw/ginganin.o $(OBJDIR)/drivers/ginganin.o \
+         $(OBJDIR)/vidhrdw/megasys1.o $(OBJDIR)/drivers/megasys1.o \
+         $(OBJDIR)/vidhrdw/cischeat.o $(OBJDIR)/drivers/cischeat.o \
+
+$(OBJDIR)/visco.a: \
+         $(OBJDIR)/vidhrdw/aerofgt.o $(OBJDIR)/drivers/aerofgt.o \
+
+$(OBJDIR)/leland.a: \
+         $(OBJDIR)/machine/8254pit.o $(OBJDIR)/vidhrdw/leland.o $(OBJDIR)/drivers/leland.o \
+         $(OBJDIR)/drivers/ataxx.o \
+
+$(OBJDIR)/orca.a: \
+         $(OBJDIR)/vidhrdw/marineb.o $(OBJDIR)/drivers/marineb.o \
+         $(OBJDIR)/vidhrdw/funkybee.o $(OBJDIR)/drivers/funkybee.o \
+         $(OBJDIR)/vidhrdw/zodiack.o $(OBJDIR)/drivers/zodiack.o \
+         $(OBJDIR)/machine/espial.o $(OBJDIR)/vidhrdw/espial.o $(OBJDIR)/drivers/espial.o \
+         $(OBJDIR)/machine/vastar.o $(OBJDIR)/vidhrdw/vastar.o $(OBJDIR)/drivers/vastar.o \
+
+$(OBJDIR)/gaelco.a: \
+         $(OBJDIR)/vidhrdw/gaelco.o $(OBJDIR)/drivers/gaelco.o \
+
+$(OBJDIR)/kaneko.a: \
+         $(OBJDIR)/vidhrdw/kaneko16.o $(OBJDIR)/drivers/kaneko16.o \
+         $(OBJDIR)/vidhrdw/galpanic.o $(OBJDIR)/drivers/galpanic.o \
+         $(OBJDIR)/vidhrdw/airbustr.o $(OBJDIR)/drivers/airbustr.o \
+
+$(OBJDIR)/neogeo.a: \
+         $(OBJDIR)/machine/neogeo.o $(OBJDIR)/machine/pd4990a.o $(OBJDIR)/vidhrdw/neogeo.o $(OBJDIR)/drivers/neogeo.o \
+
+$(OBJDIR)/other.a: \
+         $(OBJDIR)/vidhrdw/spacefb.o $(OBJDIR)/sndhrdw/spacefb.o $(OBJDIR)/drivers/spacefb.o \
+         $(OBJDIR)/vidhrdw/blueprnt.o $(OBJDIR)/drivers/blueprnt.o \
+         $(OBJDIR)/drivers/omegrace.o \
+         $(OBJDIR)/vidhrdw/dday.o $(OBJDIR)/sndhrdw/dday.o $(OBJDIR)/drivers/dday.o \
+         $(OBJDIR)/vidhrdw/gundealr.o $(OBJDIR)/drivers/gundealr.o \
+         $(OBJDIR)/machine/leprechn.o $(OBJDIR)/vidhrdw/leprechn.o $(OBJDIR)/drivers/leprechn.o \
+         $(OBJDIR)/vidhrdw/hexa.o $(OBJDIR)/drivers/hexa.o \
+         $(OBJDIR)/vidhrdw/redalert.o $(OBJDIR)/sndhrdw/redalert.o $(OBJDIR)/drivers/redalert.o \
+         $(OBJDIR)/machine/irobot.o $(OBJDIR)/vidhrdw/irobot.o $(OBJDIR)/drivers/irobot.o \
+         $(OBJDIR)/machine/spiders.o $(OBJDIR)/vidhrdw/crtc6845.o $(OBJDIR)/vidhrdw/spiders.o $(OBJDIR)/drivers/spiders.o \
+         $(OBJDIR)/machine/stactics.o $(OBJDIR)/vidhrdw/stactics.o $(OBJDIR)/drivers/stactics.o \
+         $(OBJDIR)/vidhrdw/sharkatt.o $(OBJDIR)/drivers/sharkatt.o \
+         $(OBJDIR)/vidhrdw/kingobox.o $(OBJDIR)/drivers/kingobox.o \
+         $(OBJDIR)/vidhrdw/zerozone.o $(OBJDIR)/drivers/zerozone.o \
+         $(OBJDIR)/machine/exctsccr.o $(OBJDIR)/vidhrdw/exctsccr.o $(OBJDIR)/drivers/exctsccr.o \
+         $(OBJDIR)/vidhrdw/speedbal.o $(OBJDIR)/drivers/speedbal.o \
+         $(OBJDIR)/vidhrdw/sauro.o $(OBJDIR)/drivers/sauro.o \
+         $(OBJDIR)/vidhrdw/ambush.o $(OBJDIR)/drivers/ambush.o \
+         $(OBJDIR)/vidhrdw/starcrus.o $(OBJDIR)/drivers/starcrus.o \
+         $(OBJDIR)/drivers/shanghai.o \
+         $(OBJDIR)/vidhrdw/goindol.o $(OBJDIR)/drivers/goindol.o \
+         $(OBJDIR)/drivers/dlair.o \
+         $(OBJDIR)/vidhrdw/meteor.o $(OBJDIR)/drivers/meteor.o \
+         $(OBJDIR)/vidhrdw/bjtwin.o $(OBJDIR)/drivers/bjtwin.o \
+         $(OBJDIR)/vidhrdw/aztarac.o $(OBJDIR)/sndhrdw/aztarac.o $(OBJDIR)/drivers/aztarac.o \
+         $(OBJDIR)/vidhrdw/mole.o $(OBJDIR)/drivers/mole.o \
+
+# dependencies
+$(OBJDIR)/cpu/z80/z80.o: z80.c z80.h z80daa.h
+$(OBJDIR)/cpu/z8000/z8000.o: z8000.c z8000.h z8000cpu.h z8000dab.h z8000ops.c z8000tbl.c
+$(OBJDIR)/cpu/s2650/s2650.o: s2650.c s2650.h s2650cpu.h
+$(OBJDIR)/cpu/h6280/h6280.o: h6280.c h6280.h h6280ops.h tblh6280.c
+$(OBJDIR)/cpu/i8039/i8039.o: i8039.c i8039.h
+$(OBJDIR)/cpu/i8085/i8085.o: i8085.c i8085.h i8085cpu.h i8085daa.h
+$(OBJDIR)/cpu/i86/i86.o: i86.c i86.h i86intrf.h ea.h host.h instr.h modrm.h
+$(OBJDIR)/cpu/nec/nec.o: nec.c nec.h necintrf.h necea.h nechost.h necinstr.h necmodrm.h
+$(OBJDIR)/cpu/m6502/m6502.o: m6502.c m6502.h ops02.h t6502.c t65c02.c t65sc02.c t6510.c tn2a03.c
+$(OBJDIR)/cpu/m65ce02/m65ce02.o: m65ce02.c m65ce02.h opsce02.h t6ce502.c
+$(OBJDIR)/cpu/m6800/m6800.o: m6800.c m6800.h 6800ops.c 6800tbl.c
+$(OBJDIR)/cpu/m6805/m6805.o: m6805.c m6805.h 6805ops.c
+$(OBJDIR)/cpu/m6809/m6809.o: m6809.c m6809.h 6809ops.c 6809tbl.c
+$(OBJDIR)/cpu/tms32010/tms32010.o: tms32010.c tms32010.h
+$(OBJDIR)/cpu/tms34010/tms34010.o: tms34010.c tms34010.h 34010ops.c 34010tbl.c
+$(OBJDIR)/cpu/tms9900/tms9900.o: tms9900.c tms9900.h 9900stat.h
+$(OBJDIR)/cpu/t11/t11.o: t11.c t11.h t11ops.c t11table.c
+$(OBJDIR)/cpu/m68000/m68kcpu.o: $(OBJDIR)/cpu/m68000/m68kops.c m68kmake.c m68k_in.c
+$(OBJDIR)/cpu/ccpu/ccpu.o: ccpu.c ccpu.h ccputabl.c
+$(OBJDIR)/cpu/konami/konami.o: konami.c konami.h konamops.c konamtbl.c
+
+makedir:
+	@echo make makedir is no longer necessary, just type make
+
+maketree:
+	%mkdir_q $(OBJDIR)
+	%mkdir_q $(OBJDIR)/cpu 
+	%mkdir_q $(OBJDIR)/cpu/z80 
+	%mkdir_q $(OBJDIR)/cpu/z80gb 
+	%mkdir_q $(OBJDIR)/cpu/m6502 
+	%mkdir_q $(OBJDIR)/cpu/h6280 
+	%mkdir_q $(OBJDIR)/cpu/i86 
+	%mkdir_q $(OBJDIR)/cpu/nec 
+	%mkdir_q $(OBJDIR)/cpu/i8039
+	%mkdir_q $(OBJDIR)/cpu/i8085 
+	%mkdir_q $(OBJDIR)/cpu/m6800 
+	%mkdir_q $(OBJDIR)/cpu/m6805 
+	%mkdir_q $(OBJDIR)/cpu/m6809 
+	%mkdir_q $(OBJDIR)/cpu/konami 
+	%mkdir_q $(OBJDIR)/cpu/m68000 
+	%mkdir_q $(OBJDIR)/cpu/s2650 
+	%mkdir_q $(OBJDIR)/cpu/t11 
+	%mkdir_q $(OBJDIR)/cpu/tms34010 
+	%mkdir_q $(OBJDIR)/cpu/tms9900 
+	%mkdir_q $(OBJDIR)/cpu/z8000 
+	%mkdir_q $(OBJDIR)/cpu/tms32010 
+	%mkdir_q $(OBJDIR)/cpu/ccpu 
+	%mkdir_q $(OBJDIR)/cpu/adsp2100 
+	%mkdir_q $(OBJDIR)/cpu/pdp1 
+	%mkdir_q $(OBJDIR)/sound 
+	%mkdir_q $(OBJDIR)/drivers 
+	%mkdir_q $(OBJDIR)/machine 
+	%mkdir_q $(OBJDIR)/vidhrdw 
+	%mkdir_q $(OBJDIR)/sndhrdw 
+	%mkdir_q $(OBJDIR)/aros
+
+mame-clean:
+	$(RM) -R $(OBJDIR)
+	$(RM) $(EMULATOR_EXE)
+
+cleandebug:
+	$(RM) $(OBJDIR)/*.o
+	$(RM) $(OBJDIR)/cpu/z80/*.o
+	$(RM) $(OBJDIR)/cpu/z80/*.oa
+	$(RM) $(OBJDIR)/cpu/z80/*.asm
+	$(RM) $(OBJDIR)/cpu/z80/*.exe
+	$(RM) $(OBJDIR)/cpu/z80gb/*.o
+	$(RM) $(OBJDIR)/cpu/m6502/*.o
+	$(RM) $(OBJDIR)/cpu/h6280/*.o
+	$(RM) $(OBJDIR)/cpu/i86/*.o
+	$(RM) $(OBJDIR)/cpu/nec/*.o
+	$(RM) $(OBJDIR)/cpu/i8039/*.o
+	$(RM) $(OBJDIR)/cpu/i8085/*.o
+	$(RM) $(OBJDIR)/cpu/m6800/*.o
+	$(RM) $(OBJDIR)/cpu/m6800/*.oa
+	$(RM) $(OBJDIR)/cpu/m6800/*.exe
+	$(RM) $(OBJDIR)/cpu/m6805/*.o
+	$(RM) $(OBJDIR)/cpu/m6809/*.o
+	$(RM) $(OBJDIR)/cpu/konami/*.o
+	$(RM) $(OBJDIR)/cpu/m68000/*.o
+	$(RM) $(OBJDIR)/cpu/m68000/*.c
+	$(RM) $(OBJDIR)/cpu/m68000/*.h
+	$(RM) $(OBJDIR)/cpu/m68000/*.oa
+	$(RM) $(OBJDIR)/cpu/m68000/*.og
+	$(RM) $(OBJDIR)/cpu/m68000/*.asm
+	$(RM) $(OBJDIR)/cpu/m68000/*.exe
+	$(RM) $(OBJDIR)/cpu/s2650/*.o
+	$(RM) $(OBJDIR)/cpu/t11/*.o
+	$(RM) $(OBJDIR)/cpu/tms34010/*.o
+	$(RM) $(OBJDIR)/cpu/tms9900/*.o
+	$(RM) $(OBJDIR)/cpu/z8000/*.o
+	$(RM) $(OBJDIR)/cpu/tms32010/*.o
+	$(RM) $(OBJDIR)/cpu/ccpu/*.o
+	$(RM) $(OBJDIR)/cpu/adsp2100/*.o
+	$(RM) $(OBJDIR)/cpu/pdp1/*.o
+	$(RM) $(EMULATOR_EXE)
+
+cleantiny:
+	$(RM) $(OBJDIR)/driver.o
+	$(RM) $(OBJDIR)/usrintrf.o
+	$(RM) $(OBJDIR)/cheat.o
+	$(RM) $(OBJDIR)/vidhrdw/konamiic.o
+
+
+%common
+
+#%include_deps $(patsubst %.o,%.d,$(filter-out *.og,$(ALL_OBJS)))
