@@ -21,3 +21,9 @@
 # character to interpose another module into the current module.  This
 # can be useful for creating a module that consists of many directories
 # spread out over the entire source repository.
+AROS AROS/Makefile AROS/_gdbinit AROS/aclocal.m4 AROS/apps AROS/compiler AROS/config AROS/configure.in \
+	AROS/contents AROS/doc AROS/license.html AROS/local AROS/make.defaults.in \
+	AROS/mmake.config.in AROS/mmakefile AROS/rom AROS/scripts AROS/test AROS/tools \
+	AROS/workbench
+contrib AROS/contrib
+AROS-all &AROS &contrib
