@@ -1,42 +1,35 @@
+#   $Id$
+#
+#   Makefile to make FileMaster.
+
 include $(TOP)/config/make.cfg
 
-%define_libs
+FILES := about commodity config copy dir diskinfo drives event execute \
+	 fileclick fm fmdos fmgui locale operate request showicon showpic showtext \
+	 parse taskwindow launch gadgets fmoutput edit clock \
+	 nodes screen aros
 
-CFLAGS	:= $(USER_DEFINES) -O2 -DAROS -DV39 $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/aminet
-
-%make_common_setup
-
-FILES := about commodity config copy dir diskinfo drives event execute\
-fileclick fm fmdos fmgui locale operate request showicon showpic showtext\
-parse taskwindow launch gadgets fmoutput edit clock\
-nodes screen aros
 # does not work: audio
 
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+EXEDIR := $(CONTRIBDIR)/aminet
+EXE := $(EXEDIR)/filemaster
 
-LIBS := -L$(LIBDIR) -larosc_shared -lamiga -larossupport -larosm -lreqtoolsstubs -lbgui -lautoinit
+USE_AROSLIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+USE_REQTOOLSLIB := yes
+USE_BGUILIB := yes
 
-EXE := $(DESTDIR)/filemaster
+USER_CFLAGS := -DAROS -DV39 
 
-.PHONY : all clean
+#MM aminet-util-dir-filemaster : includes linklibs contrib-bgui setup-filemaster-catalogs
 
-#MM aminet-util-dir-filemaster : contrib-bgui setup-aminet-util-dir-filemaster setup-filemaster-catalogs
-aminet-util-dir-filemaster 	: $(OBJS) $(EXE)
-	@$(NOP)
+%make_prog_setup mmake=aminet-util-dir-filemaster
 
-#MM
-setup-aminet-util-dir-filemaster :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
+aminet-util-dir-filemaster : setup $(EXE)
 
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	%link_q from=$(OBJS)
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
-#MM
-clean-aminet :
-	@$(RM) $(OBJDIR) $(DESTDIR)
-
-$(OBJDIR)/%.o : %.c
-	%compile_q
+%common
+%include_deps
