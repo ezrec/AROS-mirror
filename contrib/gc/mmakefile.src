@@ -21,7 +21,7 @@ USER_CFLAGS := -O2 -Wunused -Wall -Uunix -Ulinux -U__linux__ -DATOMIC_UNCOLLECTA
 
 #MM contrib-gc : includes linklibs setup-contrib-gc
 
-%make_prog_setup mmake=contrib-bc
+%make_prog_setup mmake=contrib-gc
 
 contrib-gc : setup $(EXE)
 
