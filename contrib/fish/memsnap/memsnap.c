@@ -115,7 +115,7 @@ struct GfxBase *GfxBase;	/* graphics pointer */
 struct IntuitionBase *IntuitionBase;	/* intuition pointer */
 struct Library *IconBase, *DiskfontBase, *GadToolsBase;
 WINTEXTINFO wtinfo;
-extern struct WBStartup *WBenchMsg;
+struct WBStartup *WBenchMsg = NULL;
 
 #define MEMSNAP_TIME	10L
 #define MEMONLY_TIME	25L
@@ -124,9 +124,7 @@ extern struct WBStartup *WBenchMsg;
 
 /* prototypes for general routines */
 
-#define _main main
-
-void _main(char *);
+int main (int, char **);
 BOOL OpenLibs(void);
 void CloseAll(void); //, main(int, char **);
 BOOL long2str(LONG, char *, UWORD);
@@ -274,8 +272,8 @@ EasyEasyRequest(char *str)
 /******************************************************************************/
 
 
-void 
-_main(char *args)		/* provide a memory 'meter' */
+int
+main (int argc, char **argv)		/* provide a memory 'meter' */
 {
     struct IntuiMessage *msg;		/* our window messages */
     ULONG cmem[3], smem[3], umem[3];	/* storage of memory information */
@@ -284,6 +282,9 @@ _main(char *args)		/* provide a memory 'meter' */
     WORD smallwidth, largewidth;	/* possible window sizes */
     BOOL small;				/* are we small? */
 
+
+    if (argc == 0)
+	WBenchMsg = (struct WBStartup *) argv;
 
     if (!OpenLibs())		/* failure => under 1.3 */
 	return;
@@ -422,5 +423,5 @@ makelarge:		    if (small)	/* to do: move if nec. */
     FreeOurIcon();
 
     CloseAll();
+    return 0;
 }
-
