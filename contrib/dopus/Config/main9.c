@@ -37,6 +37,8 @@ void readhelp()
 	char helpname[40],helpfilename[256];
 	char *pptemp;
 
+	(void)pptemp; /* AROS FIX */
+	
 	LFreeRemember(&helpkey);
 	helpbuffer=NULL;
 	helpsize=0;
