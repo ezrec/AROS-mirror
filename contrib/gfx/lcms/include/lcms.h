@@ -33,7 +33,7 @@
 #ifndef __cms_H
 
 #ifdef __AROS__
-#include <aros/machine.h>
+#include <aros/cpu.h>
 #endif
 
 // ********** Configuration toggles ****************************************

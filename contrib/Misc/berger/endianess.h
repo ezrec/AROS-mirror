@@ -1,6 +1,6 @@
 #ifndef M68KEMUL_ENDIANESS_H
 #define M68KEMUL_ENDIANESS_H
-#include <aros/machine.h>
+#include <aros/cpu.h>
 
 
 #if (AROS_BIG_ENDIAN == 0) 

@@ -2,7 +2,7 @@
 #define PATCH_H
 
 #ifdef __AROS__
-#include <aros/machine.h>
+#include <aros/cpu.h>
 #define LVONUM(x) (x * (LONG)LIB_VECTSIZE / 6)
 #else
 #define LVONUM(x) x
