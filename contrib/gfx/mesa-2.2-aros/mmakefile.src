@@ -219,21 +219,32 @@ MESABOOK :=  $(MESABOOKSRCDIR)/robot \
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -I$(MESAGLUSRCDIR) -I$(MESATKSRCDIR) -I$(MESAAUXSRCDIR) -Iamiga/misc
 USER_CFLAGS	:= -DNO_ERRNO_H
 
-%build_linklib mmake=linklibs-mesagl libname=MesaGL files=$(LIBMESAGL)
+%build_linklib mmake=linklibs-mesagl libname=MesaGL
+     files=$(LIBMESAGL) objdir=$(GENDIR)/$(CURDIR)/libMesaGL
 
-%build_linklib mmake=linklibs-mesaglu libname=MesaGLU files=$(LIBMESAGLU)
+%build_linklib mmake=linklibs-mesaglu libname=MesaGLU \
+    files=$(LIBMESAGLU) objdir=$(GENDIR)/$(CURDIR)/libMesaGLU
 
-%build_linklib mmake=linklibs-mesatk libname=Mesatk files=$(LIBMESATK)
+%build_linklib mmake=linklibs-mesatk libname=Mesatk \
+    files=$(LIBMESATK) objdir=$(GENDIR)/$(CURDIR)/libMesatk
 
-%build_linklib mmake=linklibs-mesaaux libname=Mesaaux files=$(LIBMESAAUX)
+%build_linklib mmake=linklibs-mesaaux libname=Mesaaux \
+    files=$(LIBMESAAUX) objdir=$(GENDIR)/$(CURDIR)/libMesaaux
 
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
 
-%build_progs mmake=contrib-mesa2-demos files=$(MESADEMOS) targetdir=$(CONTRIBDIR)/Gfx/Mesa2 uselibs="Mesatk Mesaaux MesaGLU MesaGL arossupport amiga arosc m"
-    
-%build_progs mmake=contrib-mesa2-samples files=$(MESASAMPLES) targetdir=$(CONTRIBDIR)/Gfx/Mesa2 uselibs="Mesatk Mesaaux MesaGLU MesaGL arossupport amiga arosc m"
 
-%build_progs mmake=contrib-mesa2-book files=$(MESABOOK) targetdir=$(CONTRIBDIR)/Gfx/Mesa2 uselibs="Mesatk Mesaaux MesaGLU MesaGL arossupport amiga arosc m"
+%build_progs mmake=contrib-mesa2-demos files=$(MESADEMOS) \
+    targetdir=$(CONTRIBDIR)/Gfx/Mesa2 \
+    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
+    
+%build_progs mmake=contrib-mesa2-samples files=$(MESASAMPLES) \
+    targetdir=$(CONTRIBDIR)/Gfx/Mesa2 \
+    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
+
+%build_progs mmake=contrib-mesa2-book files=$(MESABOOK) \
+    targetdir=$(CONTRIBDIR)/Gfx/Mesa2 \
+    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
 
 #MM
 setup-contrib-mesa2-directories :
