@@ -319,6 +319,29 @@ class Page (SeriesDocument):
 	self.imagesToFix.append (btn)
         self.navbar = s
 
+    def footer(self):
+        """Generate the standard footer markups.
+        """
+        # FOOTER SECTION - overload this if you don't like mine.
+        t = time.localtime(time.time())
+        #self.datetime = time.strftime("%c %Z", t)    #not available in JPython
+        self.datetime = time.asctime(t)
+        #self.date = time.strftime("%A %B %d, %Y", t)
+        x = string.split(self.datetime)
+        self.date = x[0] + ' ' + x[1] + ' ' + x[2] + ', ' + x[4]
+        s =  ['\n<P><HR>\n']
+        if self.place_nav_buttons:
+            s.append(self.nav_buttons())
+	img = Image(self.logo, align='bottom')
+	self.calc_rel_path (img, self.filename)
+        s.append('<BR>' + str(img))
+        s.append('\n<FONT SIZE="-1"><P>Copyright &#169 %s<BR>All Rights Reserved<BR>\n' \
+            % self.author)
+        s.append('\nComments to author: ' + str(MailTo(self.email)) )
+        s.append('<br>\nGenerated: %s <BR>' % self.date) # can use self.datetime here instead
+        s.append('<hr>\n</FONT>')
+        return string.join(s, '')
+
     def write (self, filename):
 	# For self.nav_buttons
 	self.filename = filename
@@ -356,22 +379,8 @@ class Page (SeriesDocument):
 	self.goprev = prev
 	self.gonext = next
 	self.gotop = top
-	#self.goprev = self.relurl (path, prev)
-	#self.gonext = self.relurl (path, next)
-	#self.gotop = self.relurl (path, top)
-	#print prev, self.goprev
-	#print next, self.gonext
 
-	# Link to the main page
-	#self.gohome = self.relurl (path, 'index.html')
-
-	#self.logoImg.calc_rel_path (filename)
-	#self.logoUrl.url = self.relurl (path, self.logoUrl.url)
 	self.background = self.relurl (path, self.background)
-	#print path
-	#print self.logoImg.filename
-	#print self.logoImg.absolute
-	#print self.logoImg
 
 	self.createNavBar ()
 
@@ -555,16 +564,30 @@ class AutoDocPage (Page):
 		string.lower (func.name),
 	    )
 	)
-	self.absname = os.path.abspath (autodocdir)
+	#self.absname = os.path.abspath (autodocdir)
 
-    def relurl (self, dest):
-	absdest = os.path.abspath (dest)
-	url = relpath (self.absname, absdest)
-	#print "AD::relurl(%s)->%s" % (dest, url)
-	return url
+#    def relurl (self, dest):
+#	absdest = os.path.abspath (dest)
+#	url = relpath (self.absname, absdest)
+#	#print "AD::relurl(%s)->%s" % (dest, url)
+#	return url
 
     def write (self):
-	self.gotop = self.relurl (os.path.join (autodocdir, 'index.html'))
+	self.gotop = self.relurl (htmldir,
+	    os.path.join (autodocdir, 'index.html'))
+	self.background = self.relurl (autodocdir, self.background)
+
+	self.createNavBar ()
+
+	for link in self.linksToFix:
+	    #print link
+	    link.url = self.relurl (autodocdir, link.url)
+	    #print link
+
+	for img in self.imagesToFix:
+	    #print img
+	    self.calc_rel_path (img, self.filename)
+	    print img
 
 	SeriesDocument.write (self, self.filename)
 
@@ -629,12 +652,12 @@ def genAutodocs ():
 		if match:
 		    include = match.group (1)
 		    list.append (Text ('#include <'))
-		    list.append (Href (
-			page.relurl (
-			    os.path.join (htmldir, 'include', include)),
-			    include,
-			)
+		    href = Href (
+			os.path.join (htmldir, 'include', include),
+			include
 		    )
+		    page.linksToFix.append (href)
+		    list.append (href)
 		    list.append (Text ('>'))
 		    list.append (BR ())
 		    hasIncludes = 1
@@ -673,11 +696,11 @@ def genAutodocs ():
 	    # Render SEE ALSO. The first item in the list is always
 	    # the library
 	    list = []
-	    list.append (Href (
-		page.relurl (os.path.join (autodocdir,
-		    'index.html#%s' % lib.longName)),
+	    href = Href (
+		os.path.join (autodocdir, 'index.html#%s' % lib.longName),
 		lib.longName
-	    ))
+	    )
+	    list.append (href)
 	    dl.append (('SEE ALSO', AutoDocItem (list)))
 	    
 	    dl.append (('INTERNALS', AutoDocItem (func.section['INTERNALS'])))
