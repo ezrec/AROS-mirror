@@ -48,6 +48,12 @@ ULONG Toolbar_Show(struct IClass *cl, Object *obj, Msg msg)
 
   memcpy(&data->RP, _rp(obj), sizeof(struct RastPort)); // To make MUIM_Draw faster the rastport is copied
   SetFont(&data->RP, data->ToolFont);
+
+#ifdef __AROS__
+#warning "Draw Code seems to assume JAM1 is set, which does not seem to be (always?) the case with Zune here!"
+  SetDrMd(&data->RP, JAM1);
+#endif
+
   left = _mleft(obj);
   top = _mtop(obj);  // Useful variables..
 
