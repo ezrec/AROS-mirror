@@ -11,12 +11,3 @@ include $(TOP)/config/make.cfg
 EXEDIR := $(CONTRIBDIR)/AHI
 
 %build_with_configure mmake=contrib-AHI prefix=$(EXEDIR)
-
-#MM contrib-AHI-quick : contrib-AHI-copy-stuff
-
-#MM
-contrib-AHI-copy-stuff : $(EXEDIR)/AHI-Startup
-
-$(EXEDIR)/AHI-Startup : AHI-Startup
-	%mkdirs_q $(EXEDIR)
-	cp $< $@
