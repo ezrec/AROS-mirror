@@ -3,7 +3,7 @@ TOP = ../..
 
 include $(TOP)/config/make.cfg
 
-prefix = $(BINDIR)/Moria3D
+prefix = $(BINDIR)/Games/Moria3D
 
 all :
 	cd Source ; make all TOP="$(TOP)/.."

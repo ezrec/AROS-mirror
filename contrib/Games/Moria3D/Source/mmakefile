@@ -6,7 +6,7 @@ LIBS	:= -L$(LIBDIR) -larosc -larosm -lamiga -larossupport
 DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a \
 	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
 
-INSTDIR := $(BINDIR)/Moria3D
+INSTDIR := $(BINDIR)/Games/Moria3D
 EXE	:= $(INSTDIR)/Moria3D
 
 OBJS := Moveing.o Moria3D.o Clean.o \
