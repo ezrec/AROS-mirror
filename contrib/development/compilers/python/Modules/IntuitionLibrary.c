@@ -1,14 +1,152 @@
 /*
+    Copyright © 2001, The AROS Development Team. All rights reserved. 
+    $Id$
+
     Low-level intuition.library module for AROS and AmigaOS.
+    Provides an object-oriented interface to Screens, Windows and
+    RastPorts (aka "Canvases").
 */
 
 #include <exec/types.h>
 #include <dos/dos.h>
 #include <intuition/intuition.h>
+#include <intuition/screens.h>
 #include <proto/intuition.h>
 #include <proto/exec.h>
 #include <proto/graphics.h>
 #include "Python.h"
+
+static PyObject *error;    // Exception
+
+/**** Forward declarations ***************************************************/
+
+extern PyTypeObject CanvasType;
+extern PyTypeObject WindowType;
+
+/**** CanvasObject definition ************************************************/
+
+typedef struct {
+    PyObject_HEAD;
+    struct RastPort *rastport;
+} CanvasObject;
+
+/**** CanvasObject support functions *****************************************/
+
+static CanvasObject *CanvasObject_FromRastPort( struct RastPort *rastport )
+{
+    CanvasObject *co = NULL;
+    
+    if( co = PyObject_NEW( CanvasObject, &CanvasType ) ) 
+    {
+    	co->rastport = rastport;	
+	return co;
+    }
+    
+    return NULL; 
+} 
+
+static BOOL CanvasObject_Check( CanvasObject *co )
+{
+    return co->rastport != NULL;
+}
+
+/**** CanvasObject methods ***************************************************/
+
+static PyObject *CanvasObject_setPen( CanvasObject *self, PyObject *args )
+{
+    int pen;
+    
+    if( !CanvasObject_Check( self ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "i", &pen ) ) return NULL;
+
+    SetAPen( self->rastport, pen );
+
+    Py_INCREF( Py_None );
+    return Py_None;
+}
+
+static PyObject *CanvasObject_writePixel( CanvasObject *self, PyObject *args )
+{
+    int x, y;
+
+    if( !CanvasObject_Check( self ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "ii", &x, &y ) ) return NULL;
+    
+    WritePixel( self->rastport, x, y );
+    
+    Py_INCREF( Py_None );
+    return Py_None;   
+}
+
+static PyObject *CanvasObject_drawLine( CanvasObject *self, PyObject *args ) 
+{
+    int x1, y1, x2, y2;
+    
+    if( !CanvasObject_Check( self ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "(ii)(ii)", &x1, &y1, &x2, &y2 ) ) return NULL;
+    
+    Move( self->rastport, x1, y1 );
+    Draw( self->rastport, x2, y2 );
+    
+    Py_INCREF( Py_None );
+    return Py_None; 
+}
+
+/**** CanvasObject method table **********************************************/
+
+static PyMethodDef CanvasObject_Methods[] =
+{
+    { "setPen",     (PyCFunction) CanvasObject_setPen,     METH_VARARGS },
+    { "writePixel", (PyCFunction) CanvasObject_writePixel, METH_VARARGS },
+    { "drawLine",   (PyCFunction) CanvasObject_drawLine,   METH_VARARGS },
+    
+    { NULL, NULL }
+}; 
+
+/**** CanvasType methods *****************************************************/
+
+static void CanvasType_dealloc( CanvasObject *self ) 
+{
+    PyMem_DEL( self );
+}
+
+static PyObject *CanvasType_getattr( CanvasObject *self, char *name )
+{
+    return Py_FindMethod( CanvasObject_Methods, (PyObject *) self, name );
+}
+
+static PyObject *CanvasType_repr( CanvasObject *self )
+{
+    char buffer[50];
+    
+    sprintf( buffer, "<Canvas at %lx>", (LONG) self );
+    return PyString_FromString( buffer );
+}
+
+/**** CanvasType initialization table ****************************************/
+
+static PyTypeObject CanvasType = 
+{
+    PyObject_HEAD_INIT( &PyType_Type )
+    0,                                /* ob_size     */
+    "Canvas",                         /* tp_name     */
+    sizeof( CanvasObject ),           /* tp_size     */
+    0,                                /* tp_itemsize */
+    (destructor)  CanvasType_dealloc, /* tp_dealloc  */
+                  NULL,               /* tp_print    */
+    (getattrfunc) CanvasType_getattr, /* tp_getattr  */
+    (setattrfunc) NULL,               /* tp_setattr  */
+                  NULL,               /* tp_compare  */
+    (reprfunc)    CanvasType_repr,    /* tp_repr     */
+};
+
+/**** ScreenObject definition ************************************************/
+
+typedef struct {
+    PyObject_HEAD;
+    struct Screen  *screen;
+    PyStringObject *title;
+} ScreenObject;
 
 /**** WindowObject definition ************************************************/
 
@@ -17,8 +155,6 @@ typedef struct {
     struct Window  *window;
     PyStringObject *title;
 } WindowObject;
-
-static PyObject *error;    // Exception
 
 /**** WindowObject support functions *****************************************/
 
@@ -44,7 +180,7 @@ static void FixGZZ(const WindowObject *w, long *x, long *y)
 static PyObject *WindowObject_close( WindowObject *self, PyObject *args ) 
 {
     if( !WindowObject_IsOpen( self ) ) return NULL;
-    if( !PyArg_NoArgs( args ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "" ) ) return NULL;
     
     CloseWindow( self->window ); self->window = NULL;
     Py_DECREF( self->title );    self->title  = NULL;
@@ -95,49 +231,128 @@ static PyObject *WindowObject_setTitle( WindowObject *self, PyObject *args )
 static PyObject *WindowObject_getTitle( WindowObject *self, PyObject *args ) 
 {
     if( !WindowObject_IsOpen( self ) ) return NULL;
-    if( !PyArg_NoArgs( args ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "" ) ) return NULL;
     
-    Py_INCREF( self->title );  // Do I need to do this, or is done automatically?
+    Py_INCREF( self->title );  
     return self->title;   
 }
 
-static PyObject *WindowObject_setPen( WindowObject *self, PyObject *args )
+static PyObject *WindowObject_setPosition( WindowObject *self, PyObject *args )
 {
-    int pen;
+    int x, y;
     
     if( !WindowObject_IsOpen( self ) ) return NULL;
-    if( !PyArg_ParseTuple( args, "i", &pen ) ) return NULL;
-
-    SetAPen( self->window->RPort, pen );
-
+    if( !PyArg_ParseTuple( args, "(ii)", &x, &y ) ) 
+    {
+    	PyErr_Clear();
+    	if( !PyArg_ParseTuple( args, "ii", &x, &y ) ) 
+	{
+	    return NULL; 
+	}
+    }
+    
+    ChangeWindowBox
+    ( 
+    	self->window, 
+	x, 
+	y,
+	self->window->Width,
+	self->window->Height 
+    );
+    
     Py_INCREF( Py_None );
     return Py_None;
 }
 
-static PyObject *WindowObject_writePixel( WindowObject *self, PyObject *args )
+static PyObject *WindowObject_getPosition( WindowObject *self, PyObject *args )
 {
-    int x, y;
+    if( !WindowObject_IsOpen( self ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "" ) ) return NULL;
+    
+    return Py_BuildValue( "(ii)", self->window->LeftEdge, self->window->TopEdge );
+}
+
+static PyObject *WindowObject_setSize( WindowObject *self, PyObject *args )
+{
+    int width, height;
 
     if( !WindowObject_IsOpen( self ) ) return NULL;
-    if( !PyArg_ParseTuple( args, "ii", &x, &y ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "(ii)", &width, &height ) )
+    {
+    	PyErr_Clear();
+	if( !PyArg_ParseTuple( args, "ii", &width, &height ) )
+	{
+	    return NULL;
+	}
+    }
     
-    WritePixel( self->window->RPort, x, y );
+    ChangeWindowBox
+    (
+    	self->window,
+	self->window->LeftEdge,
+	self->window->TopEdge,
+	width,
+	height
+    );
+        
+    Py_INCREF( Py_None );
+    return Py_None;
+}
+
+static PyObject *WindowObject_getSize( WindowObject *self, PyObject *args ) 
+{
+    if( !WindowObject_IsOpen( self ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "" ) ) return NULL;
+    
+    return Py_BuildValue( "(ii)", self->window->Width, self->window->Height );
+}
+
+static PyObject *WindowObject_sendToBack( WindowObject *self, PyObject *args )
+{
+    if( !WindowObject_IsOpen( self ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "" ) ) return NULL;
+    
+    WindowToBack( self->window );
     
     Py_INCREF( Py_None );
-    return Py_None;   
+    return Py_None;
+}
+
+static PyObject *WindowObject_sendToFront( WindowObject *self, PyObject *args )
+{
+    if( !WindowObject_IsOpen( self ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "" ) ) return NULL;
+    
+    WindowToFront( self->window );
+    
+    Py_INCREF( Py_None );
+    return Py_None;
+}
+
+static PyObject *WindowObject_getCanvas( WindowObject *self, PyObject *args ) 
+{
+    if( !WindowObject_IsOpen( self ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "" ) ) return NULL;
+    
+    return CanvasObject_FromRastPort( self->window->RPort );
 }
 
 /**** WindowObject method table **********************************************/
 
 static PyMethodDef WindowObject_Methods[] = 
 {
-    { "close",      (PyCFunction) WindowObject_close,      METH_VARARGS },
-    { "hide",       (PyCFunction) WindowObject_hide,       METH_VARARGS },
-    { "show",       (PyCFunction) WindowObject_show,       METH_VARARGS },
-    { "setTitle",   (PyCFunction) WindowObject_setTitle,   METH_VARARGS },
-    { "getTitle",   (PyCFunction) WindowObject_getTitle,   METH_VARARGS },
-    { "setPen",     (PyCFunction) WindowObject_setPen,     METH_VARARGS },
-    { "writePixel", (PyCFunction) WindowObject_writePixel, METH_VARARGS },
+    { "close",       (PyCFunction) WindowObject_close,       METH_VARARGS },
+    { "hide",        (PyCFunction) WindowObject_hide,        METH_VARARGS },
+    { "show",        (PyCFunction) WindowObject_show,        METH_VARARGS },
+    { "setTitle",    (PyCFunction) WindowObject_setTitle,    METH_VARARGS },
+    { "getTitle",    (PyCFunction) WindowObject_getTitle,    METH_VARARGS },
+    { "setPosition", (PyCFunction) WindowObject_setPosition, METH_VARARGS },
+    { "getPosition", (PyCFunction) WindowObject_getPosition, METH_VARARGS },
+    { "setSize",     (PyCFunction) WindowObject_setSize,     METH_VARARGS },
+    { "getSize",     (PyCFunction) WindowObject_getSize,     METH_VARARGS },
+    { "sendToBack",  (PyCFunction) WindowObject_sendToBack,  METH_VARARGS },
+    { "sendToFront", (PyCFunction) WindowObject_sendToFront, METH_VARARGS },
+    { "getCanvas",   (PyCFunction) WindowObject_getCanvas,   METH_VARARGS },
 
     {NULL,      NULL}
 };
