@@ -12,6 +12,7 @@
 #include "aros_video.h"
 #include "aros_input.h"
 #include "aros_main.h"
+#include "aros_misc.h"
 
 #include <stdlib.h>
 #include <memory.h>
@@ -22,7 +23,10 @@
 
 /************************************************************************************/
 
-int frameskip,autoframeskip;
+#define FRAMESKIP_LEVELS 12
+
+int frameskip, autoframeskip, frameskip_counter;
+
 int scanlines, use_tweaked, video_sync, wait_vsync, use_triplebuf;
 int stretch, use_mmx, use_dirty;
 int vgafreq, always_synced, skiplines, skipcolumns;
@@ -42,6 +46,7 @@ static UBYTE Palette[256][3];
 static ULONG cgfxcoltab[256];
 
 static int FrameCounter;
+static int vector_game;
 static const int NoFrameSkipCount = 10;
 
 static LONG video_left, video_top, video_width, video_height;
@@ -52,82 +57,78 @@ static LONG video_left, video_top, video_width, video_height;
 
 struct osd_bitmap *osd_new_bitmap(int width, int height, int depth)
 {
-  struct osd_bitmap *bitmap;
-  unsigned char   *line;
-  LONG        safety;
-  LONG        i, w;
+    struct osd_bitmap 	*bitmap;
+    unsigned char   	*line;
+    LONG        	safety;
+    LONG        	i, w;
 
-  if(Machine->orientation & ORIENTATION_SWAP_XY)
-  {
-    w   = width;
-    width = height;
-    height  = w;
-  }
-
-  if(width > 32)
-    safety = 8;
-  else
-    safety = 0;
-
-  if(depth != 16)
-  {
-    depth = 8;
-    w = ((width + 2 * safety + 3) >> 2) << 2;
-  }
-  else
-    w = ((2 * (width + 2 * safety) + 3) >> 2) << 2;
-
-  bitmap = (struct osd_bitmap *) calloc(  sizeof(struct osd_bitmap)
-                      + height*sizeof(unsigned char *)
-                      + w*(height+2*safety)*sizeof(unsigned char),1);
-
-  if(bitmap)
-  {
-    UBYTE fillc = 0;
-    
-    bitmap->width    = width;
-    bitmap->height   = height;
-    bitmap->depth    = depth;
-    bitmap->_private = (void *) w;
-    bitmap->line     = (unsigned char **) &bitmap[1]; 
-
-    line = ((unsigned char *) &bitmap->line[height]) + safety * w;
-
-    for(i = 0; i < height; i++)
+    if(Machine->orientation & ORIENTATION_SWAP_XY)
     {
-      int x;
-      
-      bitmap->line[i] = line;
-      line += w*sizeof(unsigned char);
+	w       = width;
+	width   = height;
+	height  = w;
     }
-  }
-	
-  return(bitmap);
+
+    if(width > 32)
+	safety = 8;
+    else
+	safety = 0;
+
+    if(depth != 16)
+    {
+	depth = 8;
+	w = ((width + 2 * safety + 3) >> 2) << 2;
+    }
+    else
+	w = ((2 * (width + 2 * safety) + 3) >> 2) << 2;
+
+    bitmap = (struct osd_bitmap *) calloc(  sizeof(struct osd_bitmap)
+                	+ height*sizeof(unsigned char *)
+                	+ w*(height+2*safety)*sizeof(unsigned char),1);
+
+    if(bitmap)
+    {    
+	bitmap->width    = width;
+	bitmap->height   = height;
+	bitmap->depth    = depth;
+	bitmap->_private = (void *) w;
+	bitmap->line     = (unsigned char **) &bitmap[1]; 
+
+	line = ((unsigned char *) &bitmap->line[height]) + safety * w;
+
+	for(i = 0; i < height; i++)
+	{
+	    bitmap->line[i] = line;
+	    line += w*sizeof(unsigned char);
+	}
+    }
+
+    return(bitmap);
 }
 
 /************************************************************************************/
 
 void osd_free_bitmap(struct osd_bitmap *bitmap)
 {
-  if(bitmap)
-    free(bitmap);
+    if(bitmap)
+        free(bitmap);
 }
 
 /************************************************************************************/
 
 void osd_clearbitmap(struct osd_bitmap *bitmap)
 {
-  int i;
+    int i;
 
-  for (i = 0;i < bitmap->height;i++)
-    memset(bitmap->line[i],0,bitmap->width);
+    for (i = 0;i < bitmap->height;i++)
+        memset(bitmap->line[i],0,bitmap->width);
 
 #if 0
-  if(bitmap == scrbitmap)
-  {
-    if(DirtyLines[0])
-      memset(DirtyLines[0], 1, scrbitmap->height);
-  }
+    if(bitmap == scrbitmap)
+    {
+        if(DirtyLines[0])
+	    memset(DirtyLines[0], 1, scrbitmap->height);
+    }
 #endif
 
 }
@@ -142,7 +143,7 @@ void osd_set_gamma(float gamma)
 
 float osd_get_gamma(void)
 {
-  return(1.0);
+    return(1.0);
 }
 
 /************************************************************************************/
@@ -155,31 +156,29 @@ void osd_set_brightness(int brightness)
 
 int osd_get_brightness(void)
 {
-  return(100);
+    return(100);
 }
 
 /************************************************************************************/
 
 void osd_modify_pen(int pen, unsigned char red, unsigned char green, unsigned char blue)
 {
-  cgfxcoltab[pen] = (((ULONG)red) << 16) +
-  		    (((ULONG)green) << 8) +
-		    (((ULONG)blue));
+    cgfxcoltab[pen] = (((ULONG)red) << 16) +
+  		      (((ULONG)green) << 8) +
+		      (((ULONG)blue));
 
-  Palette[pen][0] = red;
-  Palette[pen][1] = green;
-  Palette[pen][2] = blue;
-
-
+    Palette[pen][0] = red;
+    Palette[pen][1] = green;
+    Palette[pen][2] = blue;
 }
 
 /************************************************************************************/
 
 void osd_get_pen(int pen, unsigned char *r, unsigned char *g, unsigned char *b)
 {
-  *r  = Palette[pen][0];
-  *g  = Palette[pen][1];
-  *b  = Palette[pen][2];
+    *r  = Palette[pen][0];
+    *g  = Palette[pen][1];
+    *b  = Palette[pen][2];
 }
 
 /************************************************************************************/
@@ -234,7 +233,6 @@ static inline short makecol(int r, int g, int b)
 int osd_allocate_colors(unsigned int totalcolors,const unsigned char *palette,unsigned short *pens,int modifiable)
 {
     int i;
-    int startcolor = 0;
     
     if(scrbitmap->depth != 8)
     {
@@ -341,26 +339,42 @@ void osd_led_w(int led,int on)
 
 int osd_skip_this_frame(void)
 {
-    if(FrameCounter >= NoFrameSkipCount)
+    static const int skiptable[FRAMESKIP_LEVELS][FRAMESKIP_LEVELS] =
     {
-      if(FrameCounter < (NoFrameSkipCount + frameskip))
-	return(1);
-    }
+	{ 0,0,0,0,0,0,0,0,0,0,0,0 },
+	{ 0,0,0,0,0,0,0,0,0,0,0,1 },
+	{ 0,0,0,0,0,1,0,0,0,0,0,1 },
+	{ 0,0,0,1,0,0,0,1,0,0,0,1 },
+	{ 0,0,1,0,0,1,0,0,1,0,0,1 },
+	{ 0,1,0,0,1,0,1,0,0,1,0,1 },
+	{ 0,1,0,1,0,1,0,1,0,1,0,1 },
+	{ 0,1,0,1,1,0,1,0,1,1,0,1 },
+	{ 0,1,1,0,1,1,0,1,1,0,1,1 },
+	{ 0,1,1,1,0,1,1,1,0,1,1,1 },
+	{ 0,1,1,1,1,1,0,1,1,1,1,1 },
+	{ 0,1,1,1,1,1,1,1,1,1,1,1 }
+    };
 
-    return(0);
+    return skiptable[frameskip][frameskip_counter];
 }
 
 /************************************************************************************/
 
 struct osd_bitmap *osd_create_display(int width, int height,int depth, int attributes)
 {
-    unsigned char *line;
-
     LONG left, top, right, bottom;
-    LONG i, t;
+    LONG t;
 
     printf("*** AROS: osd_createdisplay %i x %i x %i. attr = %i ****\n", width, height, depth, attributes);
 
+    /* Look if this is a vector game */
+    if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
+    {
+        vector_game = 1;
+    } else {
+	vector_game = 0;
+    }
+    
     if(Machine->orientation & ORIENTATION_SWAP_XY)
     {
 	t      = width;
@@ -469,9 +483,7 @@ struct osd_bitmap *osd_create_display(int width, int height,int depth, int attri
 
 void osd_close_display(void)
 {
-    LONG i;
-
-    #if 0
+   #if 0
     if(DirtyLines[0])
     {
 	for(i = 1; i < (2 * (Config[CFG_BUFFERING] + 1)); i++)
@@ -503,19 +515,109 @@ void osd_mark_dirty(int xmin, int ymin, int xmax, int ymax, int ui)
 
 void osd_update_video_and_audio(void)
 {
-    WriteLUTPixelArray(scrbitmap->line[0],
-		       video_left,
-		       video_top,
-		       scrbitmap->_private,
-		       win->RPort,
-		       cgfxcoltab,
-		       win->BorderLeft,
-		       win->BorderTop,
-		       video_width,
-		       video_height,
-		       CTABFMT_XRGB8);
+    static BOOL 		showfps;
+    static BOOL 		firsttime = TRUE;
+    static TICKER 		prev_time;
+    static int			speed = 100;
+    TICKER			this_time;
+     
+    if (firsttime)
+    {
+	/* first time through, initialize timer */
+	prev_time = AROS_Ticker() - FRAMESKIP_LEVELS * TICKS_PER_SEC / Machine->drv->frames_per_second;
+	firsttime = FALSE;
+    }
+
+    this_time = AROS_Ticker();
+    if (frameskip_counter == 0)
+    {
+	int divdr;
+
+	divdr = Machine->drv->frames_per_second * (this_time - prev_time) / (100 * FRAMESKIP_LEVELS);
+	if (divdr > 0)
+	{
+	    speed = (TICKS_PER_SEC + divdr/2) / divdr;
+	} else {
+	    speed = 9999;
+	}
+	prev_time = this_time;
+    }
+    
+    if (osd_skip_this_frame() == 0)
+    {
+	if (input_ui_pressed(IPT_UI_SHOW_FPS))
+	{
+	    showfps = !showfps;
+	}
+
+	if (showfps)
+	{
+	    int fps;
+	    char buf[30];
+	    int divdr;
+	    
+	    divdr = 100 * FRAMESKIP_LEVELS;
+	    fps = (Machine->drv->frames_per_second * (FRAMESKIP_LEVELS - frameskip) * speed + (divdr / 2)) / divdr;
+	    sprintf(buf,"%s%2d%4d%%%4d/%d fps",autoframeskip?"auto":"fskp",frameskip,speed,fps,(int)(Machine->drv->frames_per_second+0.5));
+	    ui_text(buf,Machine->uiwidth-strlen(buf)*Machine->uifontwidth,0);
+	    /* if (vector_game)
+	    {
+		sprintf(buf," %d vector updates",vups);
+		ui_text(buf,Machine->uiwidth-strlen(buf)*Machine->uifontwidth,Machine->uifontheight);
+	    }*/
+	}
+
+	WriteLUTPixelArray(scrbitmap->line[0],
+			   video_left,
+			   video_top,
+			   scrbitmap->_private,
+			   win->RPort,
+			   cgfxcoltab,
+			   win->BorderLeft,
+			   win->BorderTop,
+			   video_width,
+			   video_height,
+			   CTABFMT_XRGB8);
+    } /* if (osd_skip_this_frame() == 0) */
+    
+    if (input_ui_pressed(IPT_UI_FRAMESKIP_INC))
+    {
+	if (autoframeskip)
+	{
+	    autoframeskip = 0;
+	    frameskip = 0;
+	}
+	else
+	{
+	    if (frameskip == FRAMESKIP_LEVELS - 1)
+	    {
+		frameskip = 0;
+		autoframeskip = 1;
+	    }
+	    else
+		frameskip++;
+	}
+    }
+
+    if (input_ui_pressed(IPT_UI_FRAMESKIP_DEC))
+    {
+	if (autoframeskip)
+	{
+	    autoframeskip = 0;
+	    frameskip = FRAMESKIP_LEVELS - 1;
+	}
+	else
+	{
+	    if (frameskip == 0)
+		autoframeskip = 1;
+	    else
+		frameskip--;
+	}
+    }
 
     AROS_Input_Update();
+ 
+    frameskip_counter = (frameskip_counter + 1) % FRAMESKIP_LEVELS;
     
     SetTaskPri(FindTask(NULL), -1);
     SetTaskPri(FindTask(NULL), 0);
