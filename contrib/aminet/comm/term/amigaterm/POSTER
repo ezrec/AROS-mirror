@@ -1,0 +1,24 @@
+Article 1188 of net.micro.amiga:
+Relay-Version: version B 2.10.3 4.3bsd-beta 6/6/85; site well.UUCP
+Posting-Version: version B 2.10.2 9/5/84; site osu-eddie.UUCP
+Path: well!ptsfa!qantel!lll-crg!ucdavis!ucbvax!decvax!bellcore!petrus!sabre!zeta!epsilon!gamma!ulysses!mhuxr!mhuxn!ihnp4!cbosgd!osu-eddie!george
+From: george@osu-eddie.UUCP (George Jones)
+Newsgroups: net.micro.amiga
+Subject: AmigaTerm (LONG SOURCE)
+Message-ID: <1019@osu-eddie.UUCP>
+Date: 16 Dec 85 05:57:02 GMT
+Date-Received: 18 Dec 85 13:11:12 GMT
+Distribution: net
+Organization: Ohio State Univ., CIS Dept., Cols, Oh.
+Lines: 1118
+
+Hi folks...I know there have been a large number of people working on
+terminal programs of one variety or another for the Amiga, but until
+now I have not seen any of them.  What follows is a terminal program
+in C that supports X-Modem and Capture protocols and works up to (I
+believe) 9600.  It works under AmigaDos 1.0 and provides examples of
+how to set up pull-down menus.  Michael Mounier posted it last night to
+CompuServe's Amiga Forum and I figured people here might be interested.
+He had no problem with me forwarding it on, so here it is...
+
+===================CUT SOMEWHERE, HERE LOOKS GOOD TO ME===================
