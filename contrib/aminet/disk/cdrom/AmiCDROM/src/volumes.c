@@ -52,12 +52,13 @@ void Register_Lock (LOCK *p_lock)
   t_lock_node *new;
   BUG(char pathname[300];)
 
-#ifndef NDEBUG
-  if (!Full_Path_Name ((CDROM_OBJ*) p_lock->fl_Link, pathname, sizeof (pathname))) {
-    dbprintf ("[Cannot install lock / cannot determine pathname]");
-    return;
-  }
-#endif
+  BUG
+  (
+    if (!Full_Path_Name ((CDROM_OBJ*) p_lock->fl_Link, pathname, sizeof (pathname))) {
+      dbprintf ("[Cannot install lock / cannot determine pathname]");
+      return;
+    }
+  );
 
   new = (t_lock_node*) AllocMem (sizeof (t_lock_node), MEMF_PUBLIC);
   if (!new) {
@@ -93,14 +94,15 @@ void Unregister_Lock (LOCK *p_lock)
 
   for (ptr=global->g_lock_list, old = NULL; ptr; old = ptr, ptr = ptr->next)
     if (ptr->lock == p_lock) {
-#ifndef NDEBUG
-      if (!Path_Name_From_Path_List (ptr->pathlist, pathname,
-                                     sizeof (pathname))) {
-        dbprintf ("[cannot determine pathname]");
-        return;
-      }
-      dbprintf ("[Removing lock from '%s']", pathname);
-#endif  
+      BUG
+      (
+        if (!Path_Name_From_Path_List (ptr->pathlist, pathname,
+                                       sizeof (pathname))) {
+          dbprintf ("[cannot determine pathname]");
+          return;
+        }
+        dbprintf ("[Removing lock from '%s']", pathname);
+      );
       if (old)
         old->next = ptr->next;
       else
