@@ -193,6 +193,7 @@ downloadLinks = (
     Link ('ftp://ftp.aros.org/pub/aros/DiskImages/',
 	'Disk images on our FTP server',
 	'These images are copies of the ones made by Sebastian Heutling'
+	' plus you can find the CD-ROM images here.'
     ),
     Link ('http://www.bloodline.freeserve.co.uk/aros/index.html',
 	'Disk Images by Matt Parsons',
