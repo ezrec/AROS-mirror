@@ -1,0 +1,39 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+INSTDIR  := $(CONTRIBDIR)/Games/XInvaders3D
+BUILDDIR := $(GENDIR)/$(CURDIR)
+
+EXE := $(INSTDIR)/xinv3d
+
+#MM- contrib-games : XInvaders3D
+#MM
+XInvaders3D : make-dirs $(EXE)
+
+make-dirs :
+	%mkdirs_q $(INSTDIR) $(BUILDDIR)
+
+SPECIAL_CFLAGS = -DGAME_AROS -O2 -ffast-math -funroll-loops \
+	-fomit-frame-pointer -fexpensive-optimizations
+
+FILES = game aliens player effects object camera vec4x1 mat4x4 main-aros
+
+OBJS = $(foreach f, $(FILES), $(BUILDDIR)/$(f).o)
+
+$(BUILDDIR)/%.o: %.c
+	%compile_q
+
+$(BUILDDIR)/%.d: %.c
+	%mkdepend_q
+	
+$(EXE) : $(OBJS) $(DEPLIBS)
+	%link_q from=$(OBJS)
+
+%common
+%include_deps $(foreach f,$(FILES),$(BUILDDIR)/$(f).d)
+
+#############################################################
+#
+#############################################################
