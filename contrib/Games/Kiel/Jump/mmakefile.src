@@ -31,5 +31,5 @@ clean-games :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
 $(OBJDIR)/%.o : %.c ../prec.c %.h %File.h
-	@$(ECHO) "Compiling %..."
+	@$(ECHO) "Compiling $(@F)..."
 	@$(CC) $(CFLAGS) $(INCL) -c $< -o $@
