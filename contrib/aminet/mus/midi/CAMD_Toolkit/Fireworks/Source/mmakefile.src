@@ -1,0 +1,31 @@
+#   $Id$
+#
+#   Makefile to make MultiView.
+
+include $(TOP)/config/make.cfg
+
+FILES := fireworks async message timer libopen stubs fwmodes linear parabolic
+
+EXEDIR := $(CONTRIBDIR)/aminet
+EXE := $(EXEDIR)/Fireworks
+
+USE_AROSLIB := yes
+USE_CLIB := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+
+USER_CFLAGS := -O2 -Wunused -Wall
+
+#MM workbench-utilities : includes linklibs setup-multiview-catalogs
+#MM aminet-mus-midi-CAMD_Toolkit-Fireworks : includes linklibs setup-aminet-mus-midi-CAMD_Toolkit-Fireworks
+
+%make_prog_setup mmake=aminet-mus-midi-CAMD_Toolkit-Fireworks
+
+aminet-mus-midi-CAMD_Toolkit-Fireworks : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps
+
+
