@@ -1,0 +1,12 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2000-09-27
+
+Georg Steger improved the console.device (TAB handling,
+stopping output with right mousebutton and keypress).
+Unlike on the original AmigaOS, clicking the right
+mousebutton in a console window will **not**
+block the whole display but just the output in this window.

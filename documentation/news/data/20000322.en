@@ -1,0 +1,14 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2000-03-22
+
+There is now a `summary of votes`__ on this
+server which I will update once per day. Please continue voting.
+Since there seems to be a confusion how the polling works: My
+script looks for the questions and then for a digit and counts
+that.
+
+__ votes.html

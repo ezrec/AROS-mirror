@@ -1,0 +1,16 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2001-04-07
+
+Lars Bischoff cleaned the code for DisplayBeep() so all screens beep at
+the same time, now :-)
+
+Aaron "Optimizer" Digulla committed some more stuff for the new web site.
+
+Georg Steger made additional changes to the build system for libraries
+with strange names and base types. He also fixed the problem with the
+race condition in IPrefs (with some help from Johan Alfredsson :-).
+

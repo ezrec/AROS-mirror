@@ -1,0 +1,8 @@
+source cfg/defaults
+if [ -e cfg/user ]; then
+    source cfg/user
+fi
+
+export PYTHONPATH=$DOCUTILS:$PYTHONPATH
+
+$PYTHON scripts/buildit.py $*

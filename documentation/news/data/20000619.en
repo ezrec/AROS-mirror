@@ -1,0 +1,30 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2000-06-19
+
+Some new software is ported to AROS: The freetype library (www.freetype.org__),
+BGUI and SnoopDOS. Also DOpus becomes more and more usable.
+Many bugs in the Gfx.HIDD were fixed and there is now a
+quite usable cybergrafx.library. Also the first version
+of an IDE driver for x86/Native was committed. Also
+a trackdisk.device is there, so we can start porting
+a filesystem to AROS.
+
+As for BGUI, we would like someone who will keep it alive on
+Amiga (that is, make sure that our changes don't make BGUI
+unusable on the Amiga). If you want to help, please contact
+`digulla@aros.org`__.
+
+Also please note that my PGP-key has changed (2048bit instead
+of only 1024bit for better security :-). You find my new version
+here__ (Shift-Click on the link to download).
+
+Lastly, my Amiga SDK has arrived. You can expect an AROS Amie/Native
+but probably not soon.
+
+__ http://www.freetype.org
+__ mailto:digulla@aros.org
+__ pubkey.asc

@@ -1,0 +1,9 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2000-02-15
+
+A longstanding bug with the dates in the ToC has been fixed (it's not
+perfect but better than before).

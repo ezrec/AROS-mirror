@@ -1,0 +1,73 @@
+=====
+Links
+=====
+
+:Authors:   Aaron Digulla, Adam Chodorowski 
+:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Done.
+
+
+Documentation
+-------------
+
++ `Amiga Portable Binaries`__
+
+  A research project about creating a system for portable binaries for the 
+  Amiga, allowing one to use a single executable binary for a multitude of 
+  CPU architectures. Unfortunately, the page hasn't been updated for a long
+  time; but it *does* contain some interesting ideas. Definately something
+  we would like to see in AROS.
+
++ `Protected Mode Basics`__
+
+  An in-depth article by Robert Collins about protected mode on the x86 
+  architecture. Probably contains more information about said architecture
+  than you want to know... ;-)
+
++ `Write your own operating system`__
+
+  Lots of useful information about the low-level bits of writing an operating
+  system for the x86 architecture. Mostly about controlling the hardware, but
+  also contains some useful tidbits about filesystems, networking, executable
+  formats and other things...
+
++ `Write your own operating system [FAQ]`__
+
+  Even more information about writing operating systems, although also geared
+  towards the x86 architecture. Much information about the hardware, but also
+  quite a lot of details on higher level things and some good references to
+  useful books, tools and sources.
+
+
+__ http://greywire.8m.com/greywire/amigasde.htm
+__ http://x86.ddj.com/articles/pmbasics/tspec_a1_doc.htm
+__ http://www.execpc.com/~geezer/osd/index.htm
+__ http://www.mega-tokyo.com/os/os-faq.html
+
+
+Tools
+-----
+
++ `Object Oriented Programming For All (OOP4A)`__
+  
+  Another language independant OOP framework for AmigaOS. In contrast to 
+  BOOPSI, it consists of both a shared library to handle the runtime and a 
+  precompiler to allow for an easier syntax.
+
++ `Geek Gadgets`__
+  
+  Ports of the most common GNU tools to Amiga, giving you a complete UNIX-like
+  environment on Amiga. Includes all common GNU development tools like 
+  binutils, GCC, grep, gawk, autoconf, automake, bison, cvs, flex, perl and
+  much more.
+
++ `Martin Blom's crosscompiler`__
+  
+  A crosscompiler suite by Martin Blom based on GCC for crosscompiling 
+  Amiga programs on Linux. 
+
+__ http://www.geocities.com/SiliconValley/Bridge/5737/Main/oop4a_e.html
+__ http://www.ninemoons.com/GG/
+__ http://www.lysator.liu.se/~lcs/files/gg-cross/

@@ -1,0 +1,52 @@
+[titles]
+
+mirrors:          Speglar
+contents:         Innehåll
+search:           Sökning
+visitors:         Besökare
+sponsors:         Sponsorer
+
+[navigation]
+
+news:             Nyheter
+archive:          Arkiv
+introduction:     Introduktion
+status:           Status
+screenshots:      Skärmdumpar
+ports:            Portningar
+download:         Download
+# FIXME: above
+documentation:    Dokumentation
+users:            Användare
+installation:     Installation
+using:            Användning
+faq:              Frågor och svar
+developers:       Utvecklare
+contribute:       Medverka
+working-with-cvs: Arbeta med CVS
+compiling:        Kompilering
+application-development-manual: Manual för applikationsutveckling
+system-development-manual:      Manual för systemutveckling
+reference:        Referens
+specifications:   Specifikationer
+ui-style-guide:   UI Style Guide    
+# FIXME: above
+documenting:      Dokumentering
+translating:      Översättning
+summaries:        Sammanfattningar
+ideas:            Diverse ideér
+links:            Länkar
+contact:          Kontakt
+mailing-lists:    Mailing listor
+forums:           Forum
+irc-channels:     IRC kanaler
+credits:          Medverkande
+sponsors:         Sponsorer
+
+[misc]
+
+go:               Gå
+search:           Sök
+copyright:        Copyright © 1995-2002, The AROS Development Team. Alla rättigheter förbehålles.
+trademarks:       Amiga®, AmigaOS®, Workbench och Intuition är varumärken som tillhör Amiga Inc. Alla andra varumärken tillhör sina respektive ägare.
+read-more:        Läs mer...

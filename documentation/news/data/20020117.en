@@ -1,0 +1,30 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2002-01-17
+
+The big news of the day? Look at this URL: `http://aros.sourceforge.net/`__.
+Yes, AROS is now one of the many, many, many (more than 32000 last time I 
+looked) projects on SourceForge__! That means we can probably solve many of our 
+bandwidth problems. :-) You can find the normal SourceForge project page 
+here__. We're now integrating most of the links and stuff from our own homepage 
+into the SF system.
+
+Georg Steger continued to port changes by Stephan Rupprecht back into AROS. 
+This time, it's the OS 3.9 gradientslider. Also, a bug in InstallClipRegion() 
+was fixed. He added a safety check in the ReqTools file requester to prevent a 
+possible recursive hook call and several other bugfixes in there. Our ReqTools 
+is now V39.4.
+
+Adam Chodorowski overworked the build of Python for AROS (only one big 
+MMakefile is used now which is more flexible and clean than what we had 
+before).
+
+Henning Kiel fixed a the build script for adflib to work on Cygwin and made the 
+build process less verbose.
+
+__ http://aros.sourceforge.net/
+__ http://sourceforge.net/
+__ http://sourceforge.net/projects/aros/

@@ -1,0 +1,3096 @@
+===================================
+AROS Application Development Manual
+===================================
+
+:Authors:   Sebastian Rittau, Stefan Rieken, Matt Parsons, Adam Chodorowski 
+:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Unfinished; integration started (looong way left to go).
+
+.. FIXME: Convert everything to reST. Integrate the two parts.
+          Update and revise. Integrate more documents (there are quite
+          a lot developer material spread around...). Complete... 
+
+.. Contents::
+
+
+----------------------------------
+Quick guide to developing for AROS
+----------------------------------
+
+Developing for the AROS platform
+================================
+
+This chapter tells you how to develop code (in the C language) that will run 
+on the AROS platform. It also tells you how to compile it on the different 
+machines that AROS runs on. I assume that you have been coding in C before, 
+and that you have a basic idea of the term "library".
+
+How AROS libraries work
+-----------------------
+
+Libraries are an important part of most modern OSes. But this topic can be 
+addressed in several ways. On AROS, there are two kinds of libraries: dynamic 
+libraries ("libraries", comparable to Linux' .so and Windows' .DLL) and 
+linker libraries ("libs"). Note: for the reader with a Linux background, it is 
+important to know that AROS dynamic libraries work slightly different than 
+Linux dynamic libraries.
+
+The linker libraries are the most simple to explain. They contain functions 
+that you can call from your program. Each function that you call is copied and 
+made part of your binary program by the linker.
+
+But AROS linker libraries are different. They are also different from e.g. 
+Linux linker libraries; AROS libraries do not (FIXME: or not necessarilly?) 
+contain symbols, and an AROS executable doesn't need to be linked with the 
+dynamic libraries on execution. But let me explain how it *does* work instead.
+
+For every function in an AROS library, there must also be a static lib function. 
+These lib functions are linked into your program. When you call a dynamic 
+library function from your program, you actually call this lib function first. 
+This function then calculates to which address it has got to jump to perform 
+the actual library call, and then it jumps to the calculated memory address. 
+The lib function also takes care of low-level things, such as translating 
+calling conventions so that the library can work with arguments and return 
+values. Such a special lib function is called a "stub". The stub calculates 
+the address of the library function it has got to call by adding a library 
+"offset" to the library "base". The "offset" is relative to the "base" and is 
+different for each function. It enables you to locate the place of a function 
+within a library. The "base" enables you to locate the place of the library 
+itself. You don't have to tell the stub what the offset is of the function that 
+it is supposed to call - the offset is a constant value, and the stub knows 
+what value. But the library base is not constant: it depends on the location of 
+the library within memory. To get the base address of a library, you must open 
+the library first. The AROS kernel provides functions to open and close a 
+library. The AROS kernel is treated as a library itself (the "exec" library), 
+but lucky for you, it is opened by default by the C startup code, so you can 
+use all of its functions directly. (Note: because you can't really "open" exec 
+- the first library -, the C startup code finds the ExecBase by a trick instead. 
+This trick usually involves a pointer to ExecBase stored on an absolute memory 
+address, but it might differ from platform to platform, and it is not important 
+for writing C code.)
+
+The AROS "Hello, World!" program
+--------------------------------
+
+Below is an AROS program that shows a "Hello, World!" message - a programmer's 
+tradition since ages. But to keep up the Amiga spirit, this message won't show 
+up on the command line, but as the title of a window instead.
+
+(LINK TO HELLOWORLD.C)
+
+The first thing you will have to do in an AROS program, is #include the 
+necessary header files. These header files contain specifications for the 
+library functions and variable types. Which header you have to include for what 
+function or type, is still a mystery to me (FIXME: Scooby Doo, solve this! 
+What's the diff between protos/library.h and library/library_protos.h?). After 
+some declarations comes the "main" function, as usual in standard C (Note: 
+wbenchmain(?) is an alternative but not important here).
+
+The first thing the program does, is opening a library - this finally proves 
+the difference with Linux libraries. The library is called "intuition.library". 
+Intuition is AROS' (Amiga's) Graphical User Interface (GUI). The function 
+OpenLibrary will look on a few standard places for this library, and load it in. 
+All Intuition functions are now available to the user, until the library is 
+closed again. Now we call OpenWindow - an Intuition function. OpenWindow has a 
+NewWindow structure as an argument. This structure is filled with all kind of 
+information that the system needs to build the window, including the title, 
+gadgets and events. You can see, for instance, that our window title will be 
+"Hello, World!". After an event has occured (the strange "Wait" line), we 
+close everything we opened and exit. If something goes wrong, we close 
+everything we opened (but not what we haven't opened yet!) and exit too, but 
+under protest this time.
+
+
+Compiling on Amiga
+------------------
+
+On Amiga, AROS can handle Amiga binaries. What you need is your favorite 
+compiler (DCC, GCC, SAS/C, VBCC - an Amiga is a box of choices!) and the 
+neccessary header files. The original AmigaOS header files may have legal 
+usage restrictions, therefore they are not easy to get online. But I have heard 
+that (link: www.schatzruhe.de) sells Amiga Developer CD's that contain these 
+headers and more nice info. But because of your interest in AROS, you might 
+also use the AROS headers instead (FIXME: is this possible?). You'll have to 
+read your compiler documentation if you don't know where to place your includes, 
+or how to compile a program. Once you compiled successfully, run your newly-born 
+executable as any other Amiga program.
+
+
+Compiling on Linux with GCC
+---------------------------
+
+(Note: this includes linux-m68k and BSD(?).) Once your executable is there, 
+place it somewhere where you can see it from within AROS. Start AROS, and 
+invoke your executable from the command line.
+
+
+Compiling for native-i386
+-------------------------
+
+This is quite a complex precedure and more details will be added later, for now
+just down load the binary from `AhSoDiT Productions` and enjoy the hard work 
+which has gone into making it happen.
+
+.. _`AhSoDiT Productions`: http://www.ahsodit.com/aros/
+
+
+Writing somewhat more useful programs
+-------------------------------------
+
+"Hello, World!" is not a Museum of Programmer's Talent, so you might wonder if 
+there is more to AROS than that. Why dear, of course there is. But this User's 
+Guide is not a Programmer's Guide nor a Programmer's Reference Guide. Such 
+guides might be written in the future, but for now, the best AROS Programmer's 
+Guides you can find are the books that have been written for the Amiga, and 
+the best reference for AROS are the AROS autodocs (autodocs are descriptions of 
+AROS library functions that are created by parsing the AROS sources). The 
+autodocs are available from the `home page`.
+But they are mainly useful to advanced Amiga programmers: they only provide a 
+very short explanation for each function. If you have to learn AROS programming 
+from the beginning, you really should try to find that old Amiga book, or else 
+mail-bomb me until I'll write some Guide.
+
+--------------------------------------------------
+Developing Software for AROS (aka "Quick Start II"
+--------------------------------------------------
+
+AROS extensions
+===============
+
+AROS makes a few extensions to the original AmigaOS. Some of them are
+transparent and compatible, others are only compatible and some or not.
+
+Macros
+------
+
+AROS defines a couple of macros in various header files. All macros
+cast their parameters to the correct type, so you must provide a
+valid input but can safe the casts (macros are meant to make life
+more simple).
+
+``NEWLIST(list)``
+    :Compatible: Yes
+    :Location:   exec/lists.h
+
+    Initializes a list. You must not use any list before you have 
+    initialized it.
+
+``GetHead(list)``
+    :Compatible: Yes
+    :Location:   exec/lists.h
+
+    Returns a pointer to the first node of a list or ``NULL`` if the list
+    is empty.
+
+``GetTail(list)``
+    :Compatible: Yes
+    :Location:   exec/lists.h
+
+    Returns a pointer to the last node of a list or ``NULL`` if the list
+    is empty.
+
+``GetSucc(node)``
+    :Compatible: Yes
+    :Location:   exec/lists.h
+
+    Returns a pointer to the next node of a list or ``NULL`` if there is none.
+
+``GetPred(list)``
+    :Compatible: Yes
+    :Location:   exec/lists.h
+
+    Returns a pointer to the previous node of a list or ``NULL`` if there is none.
+
+``ForeachNode(list,node)``
+    :Compatible: Yes
+    :Location:   exec/lists.h
+
+    Iterates through a list. A block of code must follow this macro. The
+    block doesn't get executed if the list is empty. When the list terminates
+    `node` doesn't contain ``NULL`` but ``node->ln_Succ`` will be ``NULL``. You
+    cannot use this macro if you want to delete the nodes in the list (ie.
+    you must not call `Remove()` inside the block of code following the
+    macro). Use `ForeachNodeSafe()` if you have to delete nodes.
+
+    Example::
+
+        /* Iterate through a list with complete nodes and print their names */
+        t = 1;
+        ForeachNode(list,node)
+        {
+            if (node->ln_Name)
+            {
+                printf ("Node %d: %s\n", t++, node->ln_Name);
+
+                if (!strcmp (node->ln_Name, "end"))
+                    break;
+            }
+        }
+
+        if (node->ln_Succ)
+            printf ("Not all nodes have been processed\n");
+        else
+            printf ("The list doesn't contain a node with the name \"end\"\n");
+
+``ForeachNodeSafe(list,node,tmpNode)``
+    :Compatible: Yes
+    :Location:   exec/lists.h
+
+    Iterates through a list. A block of code must follow this macro. The
+    block doesn't get executed if the list is empty. When the list terminates
+    `node` doesn't contain ``NULL`` but ``node->ln_Succ`` will be ``NULL``. You
+    can use this macro with code that deletes nodes in the list.
+
+``SetNodeName(node,name)``
+    :Compatible: Yes
+    :Location:   exec/lists.h
+
+    Sets a new name for a node. The name is not copied, the macro will just
+    make `ln_Name` point to ``name``.
+    The macro casts `node` to ``struct Node *``
+    so you better make sure that `node` is a full featured node.
+
+``GetNodeName(node)``
+    :Compatible: Yes
+    :Location:   exec/lists.h
+
+    Return the current name of a node.
+    The macro casts `node` to ``struct Node *``
+    so you better make sure that `node` is a full featured node.
+
+``ListLength(list,count)``
+    :Compatible: Yes
+    :Location:   exec/lists.h
+
+    This puts the number of nodes in `list` into `count`.
+
+``INTUITIONNAME``
+    :Compatible: Yes
+    :Location:   intuition/intuition.h
+
+    Contains the name of the Intuition library. You should use this in
+    `OpenLibrary()`, for example, to avoid typos.
+
+
+Resource Tracking (RT)
+----------------------
+
+Everyone talks about RT but what's it anyway? RT means three things:
+
+1. The OS takes notes about allocated resources (eg. memory, windows,
+   libraries, devices, screens, etc).
+
+2. The OS checks the usage of those resources (ie. Did you open
+   that window you want to render into? Is it still open? Is that a
+   window anyway?)
+
+3. The OS closes resources if they are no longer used (either because your
+   program crashed or because it exited without freeing them).
+
+The current implementation can do all three things but to enable it,
+you must make some modifications to your code. The only disadvantage of
+the current implementation is that the resources won't be freed if the
+program crashes.
+
+1. Add the following lines to your code. It should be the first thing 
+   seen by the compiler::
+   
+       #define ENABLE_RT  1
+
+   If you replace the 1 by 0, then RT will be silently disabled.
+
+2. Add ``#include <aros/rt.h>`` after the last include from ``proto/``
+
+3. Add ``RT_Init();`` as the first command in ``main()``.
+
+4. Call ``RT_Exit()`` before you terminate your program.
+
+5. Recompile.
+
+The advantages are that you will get errors if you try to access
+resources which you didn't allocate and that you will get a list
+of resources which you didn't free at the end of your program.
+All messages will contain the position in the code where the error
+happened (if available) and the position in the code where the
+resource was allocated (this is the reason why RT has to be compiled
+in. It could be built into the OS, too, but it would be hard
+to gather the information where an error occurred).
+
+A good example about how to use RT and what it can do can be
+found in ``AROS/workbench/demos/rtdemo.c``.
+
+The following resources are tracked:
+
++ Memory in AllocMem()``, ``FreeMem()``,``AllocVec()`` and ``FreeVec()``
+
++ MsgPorts in ``CreateMsgPort()``, ``DeleteMsgPort()``, ``CreatePort()``,
+  ``DeletePort()`` and ``PutMsg()``
+
++ Files in ``Open()``, ``Close()``, ``Read()`` and ``Write()``. ``Read()`` and
+  ``Write()`` also check their buffers.
+
++ Windows in ``OpenWindow()``, ``OpenWindowTags()``, ``OpenWindowTagList()``,
+  ``CloseWindow()``, ``WindowToFront()``, ``WindowToBack()``
+
++ Screens in ``OpenScreen()``, ``OpenScreenTags()``, ``OpenScreenTagList()``,
+  ``CloseScreen()``, ``ScreenToFront()``, ``ScreenToBack()``. ``CloseScreen()`` also
+  checks for open windows on the screen before closing.
+
+
+-----------------------
+The Multitasking Kernel
+-----------------------
+
+Background
+==========
+
+There are two kinds of multitasking: Preemptive and Non-preemptive (also known
+as cooperative). Preemptive means that you get a certain amount of CPU time
+and then another task gets the CPU. Non-preemptive means that a task has to
+call a function which allows another task to run. Preemptive multitasking
+(PMT) has these advantages:
+
++ It's simple to understand
++ There is no need to make sure that your task doesn't keep the CPU forever.
+
+and these disadvantages:
+
++ It's complicated to exchange data with other tasks
++ You never know how long you will stay awake
++ The OS must decide which task to run next in a clever way
+
+Cooperative Multitasking (CMT) has these advantages:
+
++ It's very simple to implement
++ It's easy to exchange data
++ You know exactly how long you will stay awake
++ You get most of the CPU
+
+and these disadvantages:
+
++ If a task behaves badly, there is no way to stop it (for example
+  if it keeps the CPU forever, all you can do is turn the computer off).
++ It's hard to make sure that every task gets the CPU now and then
+
+It seems obvious that CMT is better than PMT but that's not true. CMT is
+better when you have only a few tasks and a single user. Powerful OSes
+like Unix and AmigaOS have PMT because it's more simple to use.
+
+
+How does it work?
+=================
+
+The idea is pretty simple. Every computer has a clock and this clock can
+generate interrupts. An interrupt means that the CPU saves its current
+state on the stack of the current task and starts a special routine
+called the interrupt handler. Basically this handler now checks for
+other tasks which might want to run, selects one of them and switches
+the stack to the one of the newly chosen task. It then finishes and
+tells the CPU to continue where it was before the interrupt. Since the
+CPU is quite dumb, it will just load it's state from the new stack (ie.
+the one of the new task) and so the new task will run and
+the old one will be sleeping.
+
+Now let's have a look at the details. The life of a task looks like this:
+birth, waiting, running and dying. In computer terms, the task is
+created, then waits that it gets the CPU, does its work while it has
+the CPU (this might happen more than once) and at some stage, it
+terminates (or is terminated). It's more easy to understand how it
+all works when we begin with the time when one task loses the CPU
+and another one gets it.
+
+
+----------
+MAIN GUIDE
+----------
+
+Abstract
+========
+
+AROS - The Amiga Research Operating System tries to port the API of the 
+Amiga Operating System to different hardware platform. This document
+provides an introduction to programming AROS by describing how AROS works 
+and by describing its API.
+
+
+Concepts
+========
+
+Includes, definitions and general programming issues
+----------------------------------------------------
+
+Include files 
+"""""""""""""
+
+AROS comes with a variety of include files. As AROS is a pointer- and 
+structure-rich operating system, these files are mainly used for defining 
+these structures.
+
+Types
+"""""
+
+In `exec/types.h` the following short-cuts are typedef'd. They are used often 
+in AROS, so you should nearly always include `exec/types.h`.
+
+
+`APTR`
+    A generic pointer for multiple purposes.
+    
+`STRPTR`
+    A pointer to a null-terminated string.
+    
+`UQUAD`
+    Unsigned 64 bit integer variable.
+    
+`QUAD`
+    Signed 64 bit integer variable.
+    
+`DOUBLE`
+    64bit IEEE floating point variable.
+    
+`ULONG`
+    Unsigned 32 bit integer variable (longword).
+    
+`LONG`
+    Signed 32 bit integer variable (longword).
+    
+`FLOAT`
+    32 bit IEEE floating point variable.
+
+`UWORD`
+    Unsigned 16 bit integer variable (word).
+
+`WORD`
+    Signed 16 bit integer variable (word).
+
+`UBYTE`
+    Unsigned 8 bit integer variable (byte).
+
+`BYTE`
+    Signed 8 bit integer variable (byte).
+
+`BOOL`
+    Boolean variable, `TRUE` and `FALSE` are also defined in `exec/types.h`.
+
+`VOID`
+    Void.
+
+
+IPTR
+^^^^
+
+There is another important typedef, `IPTR`. It is really important in AROS, 
+as it the only way to declare a field that can contain both: an integer or 
+a pointer.
+
+.. Note:: AmigaOS does not know this typedef. If you are porting a program 
+          from AmigaOS to AROS, you have to search your source for occurences 
+          of `ULONG`s that can also contain pointers, and change them into 
+          `IPTR`s. If you don't do this, your program will not work on systems 
+          which have pointers with more than 32 bits (for example DEC Alphas
+          that have 64bit pointers).
+
+
+BPTR
+^^^^
+
+The so-called `BPTR`s were always a problem in AmigaOS and this problem was 
+inherited by AROS. In binary-compatible AROS versions a `BPTR` is in fact the 
+fourth of the real pointer. If, for example, a pointer points to address
+``$80000`` the `BPTR` pointing to the same address would contain ``$20000``.
+On systems without binary-compatibility, a `BPTR` is equal to an `APTR`.
+          
+To convert between a normal pointer and a `BPTR` use the macros
+
+***FIXME: How to handle this in reST??
+
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;dos/bptr.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>APTR <FUNCTION>MKBADDR</FUNCTION></FUNCDEF>
+              <PARAMDEF>BPTR <PARAMETER>bptr</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>BPTR <FUNCTION>BADDR</FUNCTION></FUNCDEF>
+              <PARAMDEF>APTR <PARAMETER>ptr</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          
+There also exists something called `BSTR` which is a special kind of string. 
+We will not dicuss this here, though, because it is used only very rarely.
+
+***FIXME: How to handle "sidebar" in reST?
+
+<SIDEBAR>
+
+History
+^^^^^^^
+
+When the development of the Amiga started, it was designed as a pure 
+module-based games-console. As such it didn't need any means of filesystem 
+handling. The OS was created without it in mind. But Commodore, who bought 
+the Amiga, wanted a full-fletched home-computer instead of another 
+games-platform. So, a short time before the Amiga's initial presentation, 
+a filesystem was needed. Instead of wasting time in developing a custom one, 
+the filesystem of an operating systm called TRIPOS was ported to the Amiga. 
+Unfortunately TRIPOS was written in BCPL, a programming language with a quite
+eccentric pointer handling. This pointer handling was inherited by the 
+AmigaDOS and later by AROS (even though later versions of AmigaOS and also 
+AROS are written in C).
+          
+
+Program execution
+"""""""""""""""""
+
+All AROS programs must return a program execution status. This status 
+expresses, if the program was executed successful, and if not, how serious 
+the case of failure was. In `dos/dos.h` the following constants are defined, 
+which represent the standard return states:
+
++ `RETURN_OK` is returned, if the program executed successfully.
+
++ `RETURN_WARN` means that the program executed successfully, but there was 
+  something not quite right. This could be returned, if for example a temporary 
+  file could not be deleted after use.
+  
+  `RETURN_WARN` is also returned to express a boolean state. In this case 
+  `RETURN_WARN` means true, while `RETURN_OK` means false.
+  
++ `RETURN_ERROR` is returned on errors that caused the execution of the program 
+   to fail partly.
+
++ `RETURN_FAIL` is returned if the execution of the program failed completely.
+
+
+Libraries and taglists
+----------------------
+
+Introduction to libraries
+"""""""""""""""""""""""""
+
+Shared libraries are the magic that make AROS work. Every library is
+a collection of functions that fulfill a certain purpose. Normally functions
+with a similar purpose are contained in one library. For example all the basic
+memory handling functions are contained in `exec.library`.
+
+Libraries are normally found in the `LIBS:` directory, but can also be stored at
+other places. Some important libraries are not stored as a separate file, but
+are contained in the kernel. Note that this the kernel libraries are different
+from installation to installation, so don't depend on a specific library being
+part of the kernel.
+
+Here is a list of some important libraries and their function.
+You don't have to remember all of these, as they will be discussed
+later in detail.
+
++ `exec.library` is the most important library. It is responsible for handling
+  the most basic things like managing `tasks` (ie programs), `memory`,
+  `libraries` and many other  things.
+
++ `utility.library` implements very important mechanisms for "talking" to
+  libraries: `taglists` that will be dicussed later in this chapter and `hooks`.
+  Apart from that, utility contains miscellaneous small utility functions.
+
++ `dos.library` is responsible for file-handling and some basic I/O functions.
+  Without dos, AROS would not be able to access files.
+
++ `intuition.library` handles `graphical user interfaces (GUIs)`. With intuition
+  you can create `windows` and `gadgets` and handle them accordingly. There are
+  other libraries, which work on top of intuition and provide more sophisticated
+  and more specialized GUI functions. Examples are `gadtools.library`, which
+  implements some more complicated gadgets and `asl.library`, which provides
+  file- and other `requesters`.
+
+
+Usage of libraries
+""""""""""""""""""
+
+To use the functions of a library, you have to open the library
+first. The only library that doesn't have to be opened first is
+`exec.library`. Exec is always open and your compiler
+knows how to access it. Your compiler may addtionally open some
+libraries for you, so you don't have to open them manually. Read your
+compiler's manual to learn about such features.
+
+To open a library you have to use a function of
+`exec.library`:
+<FUNCSYNOPSIS>
+<FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+<FUNCPROTOTYPE>
+<FUNCDEF>struct Library * <FUNCTION>OpenLibrary</FUNCTION></FUNCDEF>
+<PARAMDEF>STRPTR <PARAMETER>name</PARAMETER></PARAMDEF>
+<PARAMDEF>ULONG <PARAMETER>version</PARAMETER></PARAMDEF>
+</FUNCPROTOTYPE>
+</FUNCSYNOPSIS>
+
+`OpenLibrary()` takes two arguments:
+
+name 
+    points to the name of
+    the library. Normally this is just the plain name, but this can
+    also be a complete (absolute or relative) path to the library.
+    
+    .. Note:: Paths do not work with kernel-based libraries
+              (ie. libraries that are included in the kernel).
+              Use absolute path only, if you know exactly, what you 
+              are doing!
+
+version 
+    is the minimal
+    version of the library to open. If the named library is found, but
+    its version is lower than `version`, the
+    library will not be opened, but an error will be returned. Versions
+    are important, because libraries are supposed to be expandable. Some
+    functions are only available from a certain version of a library on.
+    For example the function `AllocVec()` of `exec.library` was introduced in version 36
+    of the library. If you try to call this function with lower versions
+    of `exec.library` installed, unexpected things
+    will happen (most likely the application will crash).
+
+The following procedure is used to load the library to open:
+
+1. First, the name of the library is searched for in the list of already loaded 
+   libraries. If this library was loaded into memory before (eg. by a different 
+   program) and still is there, everything is fine and `OpenLibrary()` returns 
+   now.
+
+   Libraries in the kernel are always on list of loaded libraries.
+
+   .. Note:: Comparisons in this list are case sensitive! Be sure to use the 
+             right case in `name`. Normally all characters in a library name 
+             are lower-case.
+
+2. If the library was not found in the resident list and a path was supplied 
+   with `name`, the given file is tried to be opened. If this fails, 
+   `OpenLibrary()` returns an error.
+
+3. If only the plain library-name was given, the library is searched for in the 
+   `current directory` first. If it's not found there, it is searched for in 
+   the directory `LIBS:`.
+
+
+`OpenLibrary()` returns either a pointer to
+a structure, describing the library (`struct Library *`
+defined in `exec/libraries.h`)
+or `NULL`, meaning that opening the library failed for
+some reason. The resulting pointer has to be stored for the compiler's
+use. Normally it is stored in a variable in the form:
+<libraryname>Base, eg. `IntuitionBase` for the pointer to
+`intuition.library`.
+
+After opening the library, you can use its functions by just
+calling them like any other function in your program. But to let your
+compiler know, what to do, you have to include the
+library-specific header-file. This is normally called
+proto/<libraryname>.h for
+C compilers.
+
+When you have finished using the library you have to close it
+again to free the resources used by it. This is performed with:
+<FUNCSYNOPSIS>
+  <FUNCSYNOPSISINFO>#include <proto/exec.h></FUNCSYNOPSISINFO>
+  <FUNCPROTOTYPE>
+    <FUNCDEF>void <FUNCTION>CloseLibrary</FUNCTION></FUNCDEF>
+    <PARAMDEF>struct Library * <PARAMETER>libbase</PARAMETER></PARAMDEF>
+  </FUNCPROTOTYPE>
+</FUNCSYNOPSIS>
+
+:function:`CloseLibrary()` closes the library pointed
+to by `libbase`. This may also be
+`NULL`, in which case `CloseLibrary()`
+does nothing.
+
+We will demonstrate the use of libraries by creating a small
+graphical hello-world program. Instead of printing ``Hello World!`` to
+the console, we will display it in a requester. A function to display
+a requester is :function:`EasyRequestArgs()`,
+being a function of `intuition.library`.
+We will not discuss its usage here. For more information, see the
+section about `Requesters`.
+
+Example: Usage of libraries
+
+::
+
+    #include <proto/exec.h>          /* OpenLibrary() and CloseLibrary() */
+    #include <exec/libraries.h>      /* struct Library */
+    #include <dos/dos.h>             /* RETURN_OK and RETURN_FAIL */
+    #include <proto/intuition.h>     /* EasyRequestArgs() */
+    #include <intuition/intuition.h> /* struct EasyStruct */
+
+    /* This variable will store the pointer to intuition.library */
+    struct Library *IntuitionBase;
+
+    int main(int argc, char *argv[])
+    {
+        /* Needed for EasyRequestArgs(). Just ignore. */
+        struct EasyStruct es = {
+          sizeof(struct EasyStruct), 0UL,
+          "Requester", "Hello World!", "Ok"
+        };
+
+        /* First, we open intuition.library. We need version 36 or better,
+           because EasyRequestArgs() was introduced in that version of
+           intuition.library.
+        */
+        IntuitionBase = OpenLibrary("intuition.library", 36);
+
+        /* We have to check, if intuition.library was successfully opened.
+           If it was not, we must not call a function from it, so we return
+           immediatly with an error.
+        */
+        if (!IntuitionBase)
+            return RETURN_FAIL;
+
+        /* After opening intuition.library, we can call EasyRequestArgs(). */
+        EasyRequestArgs(NULL, &es, NULL, NULL);
+
+        /* At last, we have to close intuition.library again. */
+        CloseLibrary(IntuitionBase);
+
+        return RETURN_OK;
+    }
+
+Try to compile and run this program. It should present you a
+handsome hello-world requester.
+
+
+Giving additional arguments with taglists
+"""""""""""""""""""""""""""""""""""""""""
+
+Every library function takes a fixed number of arguments. This
+poses quite a problem with complex functions that would need a lot of
+arguments. To avoid this problem, so-called taglists were introduced.
+In `utility/tagitem.h`
+we find a structure `TagItem`, which contains
+the members `ti_Tag` and
+`ti_Data`. A taglist contains of an array of
+this structure. The size of the list is not limited. The field
+`ti_Tag` is an identifier (often referred to
+as Tag) that declares what
+`ti_Data` contains.
+`ti_Data` is either an integer or a pointer.
+It is guaranteed to be at least of the size of a long-word or a
+pointer (whichever is bigger).
+
+In every description of a function that uses a tag-list, all
+possible tags are listed. Functions have to ignore unknown tags and
+use defaults for tags not provided, so taglists are a very flexible
+way of providing arguments to a function.
+
+There are some special tags that all functions understand
+(defined in `utility/tagitem.h`):
+
+
+`TAG_DONE` and `TAG_END`
+    Define the end of a taglist. Every taglist must be terminated with
+    one of it. `ti_Data` must be ignored by
+    the called function, so it doesn't have to exist in memory.
+
+`TAG_IGNORE` 
+    means that the contents
+    of `ti_Data` is to be ignored. This tag is
+  especially useful for conditional inclusion of tags.
+  
+`TAG_MORE`
+    By using this tag, you
+    can link taglists together. `ti_Data`
+    points to another taglist. Processing of the current taglist will
+    be stopped and instead the new one will be processed. This tag also
+    terminates the current taglist.
+
+`TAG_SKIP` 
+    forces the parser to
+    skip the next `ti_Data` tags. They will
+    not be processed.
+
+You may always provide `NULL` instead of a pointer to a taglist. All functions
+must be able to handle `NULL` pointers. They are equal to taglists with
+`TAG_DONE` as first tag.
+
+A function that requires a taglist is:
+
+<FUNCSYNOPSIS>
+  <FUNCSYNOPSISINFO>#include <proto/intuition.h></FUNCSYNOPSISINFO>
+  <FUNCPROTOTYPE>
+    <FUNCDEF>struct Window * <FUNCTION>OpenWindowTagList</FUNCTION></FUNCDEF>
+    <PARAMDEF>struct NewWindow * <PARAMETER>newwin</PARAMETER></PARAMDEF>
+    <PARAMDEF>struct TagList * <PARAMETER>taglist</PARAMETER></PARAMDEF>
+  </FUNCPROTOTYPE>
+</FUNCSYNOPSIS>
+This function will be discussed in detail in the
+<LINK linkend="chap-windows">chapter about windows</LINK>. For
+    now you only have to know that this function opens a new window.
+    We set the argument <PARAMETER>newwin</PARAMETER> to
+    <SYMBOL>NULL</SYMBOL>. The only tags looked at for now are:
+    <INFORMALTABLE colsep="0" rowsep="0" frame="none">
+      <TGROUP cols="3">
+        <COLSPEC align="left">
+        <COLSPEC align="left">
+        <COLSPEC align="left">
+        <THEAD><ROW><ENTRY>Tag</ENTRY><ENTRY>Description</ENTRY><ENTRY><STRUCTFIELD>ti_Data</STRUCTFIELD></ENTRY></ROW></THEAD>
+        <TBODY>
+          <ROW>
+            <ENTRY><SYMBOL>WA_Width</SYMBOL></ENTRY>
+            <ENTRY>width of window in pixel</ENTRY>
+            <ENTRY><SYMBOL>UWORD</SYMBOL>
+          </ROW>
+          <ROW>
+            <ENTRY><SYMBOL>WA_Height</SYMBOL></ENTRY>
+            <ENTRY>height of window in pixel</ENTRY>
+            <ENTRY><SYMBOL>UWORD</SYMBOL>
+          </ROW>
+          <ROW>
+            <ENTRY><SYMBOL>WA_Title</SYMBOL></ENTRY>
+            <ENTRY>string in window title</ENTRY>
+            <ENTRY><SYMBOL>STRPTR</SYMBOL></ENTRY>
+          </ROW>
+        </TBODY>
+      </TGROUP>
+    </INFORMALTABLE>
+    Another function we need for our small example is:
+    <FUNCSYNOPSIS>
+          <FUNCSYNOPSISINFO>#include &lt;proto/intuition.h></FUNCSYNOPSISINFO>
+          <FUNCPROTOTYPE>
+            <FUNCDEF>void <FUNCTION>CloseWindow</FUNCTION></FUNCDEF>
+            <PARAMDEF>struct Window * <PARAMETER>win</PARAMETER></PARAMDEF>
+          </FUNCPROTOTYPE>
+        </FUNCSYNOPSIS>
+        This function is used to close an opened window.
+
+        Now let's have a look at another small hello-world-program.
+        This opens window, which says "Hello World!" in the title-bar,
+        for two seconds.
+
+Example: Usage of taglists
+
+::
+
+    #include <proto/exec.h>
+    #include <exec/libraries.h>
+    #include <proto/dos.h>
+    #include <proto/intuition.h>
+    #include <intuition/intuition.h>
+
+    struct Library * DOSBase;
+    struct Library * IntuitionBase;
+
+    int main(int argc, char *argv[])
+    {
+        int error = RETURN_OK;
+
+        /* We need this for Delay() later on. */
+        DOSBase = OpenLibrary("dos.library", 36);
+        if (DOSBase)
+        {
+            IntuitionBase = OpenLibrary("intuition.library", 36);
+            if (IntuitionBase);
+            {
+                struct Window *win;
+                /* We set up our tags. */
+                struct TagItem tags[] = {
+                  { WA_Width, 100 },
+                  { WA_Height, 50 },
+                  { WA_Title, "Hello World!" },
+                  { TAG_DONE, 0UL }
+                }
+
+                win = OpenWindowTagList(NULL, tags);
+                if (win)
+                {
+                    /* Now wait for two seconds, so we can look at our nice
+                       window.
+                    */
+                    Delay(100);
+
+                    /* We close our window again. */
+                    CloseWindow(win);
+                }
+
+                CloseLibrary(IntuitionBase);
+            } else
+                error = RETURN_FAIL;
+            CloseLibrary(DOSBase);
+        } else
+            error = RETURN_FAIL;
+
+        return error;
+    }
+              
+Of course, this method of setting up the taglist is quite complicated. So for
+most functions that use taglists short-cuts are available. The link-library
+`amiga.lib` provides these short-cuts for all internal AROS functions. These
+varargs versions can be used like this:
+
+    <FUNCSYNOPSIS>
+          <FUNCSYNOPSISINFO>#include &lt;proto/alib.h></FUNCSYNOPSISINFO>
+          <FUNCPROTOTYPE>
+            <FUNCDEF><FUNCTION><REPLACEABLE>MyFunc</REPLACEABLE></FUNCTION></FUNCDEF>
+            <PARAMDEF><PARAMETER><REPLACEABLE>arg1</REPLACEABLE></PARAMETER></PARAMDEF>
+            <PARAMDEF>...</PARAMDEF>
+            <PARAMDEF><PARAMETER><REPLACEABLE>argn</REPLACEABLE></PARAMETER></PARAMDEF>
+            <PARAMDEF><PARAMETER><REPLACEABLE>TAG1</REPLACEABLE></PARAMETER></PARAMDEF>
+            <PARAMDEF><PARAMETER><REPLACEABLE>data1</REPLACEABLE></PARAMETER></PARAMDEF>
+            <PARAMDEF>...</PARAMDEF>
+            <PARAMDEF><PARAMETER>TAG_DONE</PARAMETER></PARAMDEF>
+          </FUNCPROTOTYPE>
+        </FUNCSYNOPSIS>
+
+Our example above would look like this, using the varargs
+version of `OpenWindowTagList()`, called
+`OpenWindowTags()`:
+
+Example: Usage of taglists, using varargs
+
+::
+
+    [...]
+    
+    if (IntuitionBase);
+    {
+        struct Window *win;
+
+        win = OpenWindowTags(NULL, WA_Width, 100,
+                                   WA_Height, 20,
+                                   WA_Title, "Hello World!",
+                                   TAG_DONE);
+        if (win)
+        {
+    
+    [...]
+          
+Much easier, isn't it?
+
+In the `section about BOOPSI`_, processing of taglists will be
+discussed.
+
+
+Exec lists and memory management
+--------------------------------
+
+Exec lists
+""""""""""
+
+AROS implements a system of linked lists, so-called exec lists.
+A linked-list consists of a number of nodes that point to each other. Two types of nodes are defined in
+`exec/nodes.h`:
+
+`struct MinNode` 
+    is the basic node. You don't need to know about its structure, since every
+    possible action on them is handled by some library function.
+    
+`struct Node` 
+    extends the simple struct `MinNode`. It provides some
+    additional fields:
+    
+    `ln_Name`
+        Each `Node` contains a pointer to a string, describing that node.
+    
+    `ln_Type`
+        A list of types is defined in `exec/nodes.h`.
+    
+    `ln_Pri`
+        A priority, used for sorting the list.
+
+Both structures can be embedded into other structures. For example `struct
+Library`_ (defined in `exec/libraries.h`_) contains a struct `Node` at the
+beginning. This way all libraries can be contained in a list. The field
+`ln_Name` points to the name of the library, `ln_Type` is set to `NT_LIBRARY` to
+show that this node is a library and `ln_Pri` reflects the *importance* of
+a library.
+
+Of course, we need a list containers. These are defined in `exec/lists.h`_. Like
+nodes, we have two different kind of lists:
+
+`struct MinList` 
+    is the minimal list. You do not need to know about its members; look at
+    it as a black-box.
+    
+`struct List` 
+    contains an additional field `lh_Type`, which
+    corresponds to `ln_Type` of
+    `struct Node`.
+
+`MinList`s take `MinNode`s as members, while `List`s use `Node`s. They are not
+interchangeable. While it's technically possible to use `Node`s in `MinList`s,
+you loose all their advantages.
+
+.. FIXME: Macros
+
+***FIXME: Everything beyong this point. ;-)
+
+List Manipulating Functions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+<FILENAME role="library">exec.library</FILENAME> and the link-library
+          <FILENAME role="library">amiga.lib</FILENAME> contain some functions for manipulating
+          exec lists. Before a list can be used, it <EMPHASIS>must</EMPHASIS> be
+          initialized, using
+          the <FILENAME role="library">amiga.lib</FILENAME> function
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/alib.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>void <FUNCTION>NewList</FUNCTION></FUNCDEF>
+              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+
+          Nodes can be added to lists with the <FILENAME role="library">exec.library</FILENAME>
+          functions
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>void <FUNCTION>AddHead</FUNCTION></FUNCDEF>
+              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
+              <PARAMDEF>struct Node * <PARAMETER>node</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>void <FUNCTION>AddTail</FUNCTION></FUNCDEF>
+              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
+              <PARAMDEF>struct Node * <PARAMETER>node</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>void <FUNCTION>Enqueue</FUNCTION></FUNCDEF>
+              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
+              <PARAMDEF>struct Node * <PARAMETER>node</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>void <FUNCTION>Insert</FUNCTION></FUNCDEF>
+              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
+              <PARAMDEF>struct Node * <PARAMETER>node</PARAMETER></PARAMDEF>
+              <PARAMDEF>struct Node * <PARAMETER>pred</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          With <FUNCTION>AddHead()</FUNCTION> and <FUNCTION>AddTail()</FUNCTION>
+          <PARAMETER>node</PARAMETER> is inserted at the beginning or the end
+          of <PARAMETER>list</PARAMETER> respectively. <FUNCTION>Enqueue()</FUNCTION>
+          inserts <PARAMETER>node</PARAMETER> according to its
+          <STRUCTFIELD>ln_Pri</STRUCTFIELD> field. A node can be inserted after
+          another by using <FUNCTION>Insert()</FUNCTION>. A pointer to the
+          node that is to predecess <PARAMETER>node</PARAMETER> must be provided
+          as <PARAMETER>pred</PARAMETER>.
+
+          Nodes can be removed using the <FILENAME role="library">exec.library</FILENAME>
+          functions
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>void <FUNCTION>Remove</FUNCTION></FUNCDEF>
+              <PARAMDEF>struct Node * <PARAMETER>node</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>struct Node * <FUNCTION>RemHead</FUNCTION></FUNCDEF>
+              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>struct Node * <FUNCTION>RemTail</FUNCTION></FUNCDEF>
+              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          While <FUNCTION>RemHead()</FUNCTION> and <FUNCTION>RemTail()</FUNCTION>
+          remove the first or last node of a <PARAMETER>list</PARAMETER>
+          respectively and return a pointer to it, <FUNCTION>Remove()</FUNCTION>
+          removes <PARAMETER>node</PARAMETER> from whatever list it is in.
+
+          Of course, all list functions (except <FUNCTION>Enqueue())</FUNCTION>
+          can process struct <STRUCTNAME>MinList</STRUCTNAME>s and
+          struct <STRUCTNAME>MinNode</STRUCTNAME>s, too.
+
+          A list can be searched for a named node, using
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>struct Node * <FUNCTION>FindName</FUNCTION></FUNCDEF>
+              <PARAMDEF>struct List * <PARAMETER>list</PARAMETER></PARAMDEF>
+              <PARAMDEF>STRPTR <PARAMETER>name</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          <PARAMETER>name</PARAMETER> is a pointer to a string that is to be
+          compared with the <STRUCTFIELD>ln_Name</STRUCTFIELD> of the nodes
+          in <PARAMETER>list</PARAMETER>. The comparison is case-sensitive!
+          If <PARAMETER>name</PARAMETER> matches any <STRUCTFIELD>ln_Name</STRUCTFIELD>
+          field, a pointer to the corresponding node is returned. If no field
+          matches, <SYMBOL>NULL</SYMBOL> is returned.
+
+          <NOTE>A list used with <FUNCTION>FindName()</FUNCTION> must not
+          contain any struct <STRUCTNAME>MinList</STRUCTNAME> entries. If it
+          does, memory could get corrupted!</NOTE>
+
+          In the following example, we create a list, add three nodes to
+          it, search a named node and then remove it.
+
+          <EXAMPLE><TITLE>List example</TITLE>
+
+::
+    #include <proto/alib.h>
+    #include <proto/exec.h>
+    #include <exec/types.h>
+    #include <exec/lists.h>
+    #include <exec/nodes.h>
+    #include <dos/dos.h>    /* For RETURN_OK */
+
+    struct List list;
+
+    /* Our nodes */
+    struct Node node1 =
+    {
+        NULL, NULL,    /* No predecessor and successor, yet */
+        NT_UNKNOWN, 0, /* Unknown type, priority ignored */
+        "First node"   /* Name of the node */
+    };
+
+    struct Node node2 =
+    {
+        NULL, NULL,
+        NT_UNKNOWN, 0,
+        "Second node"
+    };
+
+    struct Node node3 =
+    {
+        NULL, NULL,
+        NT_UNKNOWN, 0,
+        "Third node"
+    };
+
+
+    int main(int argc, char *argv[])
+    {
+        struct Node *node;
+
+        /* Prepare the list for use. */
+        NewList(&amp;list);
+
+        /* Add the first two nodes at the end of the list. */
+        AddTail(&amp;list, &amp;node1);
+        AddTail(&amp;list, &amp;node2);
+
+        /* Insert the third node after the first node. */
+        Insert(&amp;list, &amp;node3, &amp;node1);
+
+        /* Find the second node */
+        node = FindName(&amp;list, "Second node");
+
+        /* If the node was found (which is always the case in this example),
+           remove it.
+        */
+        if (node)
+            Remove(&amp;node);
+
+        return RETURN_OK;
+    }
+
+
+Memory Handling
+"""""""""""""""
+
+        You need memory for nearly everything in a program. Many things
+        can be done by using the stack. But often you need larger chunks of
+        memory or don't want to use the stack for some reason. In these cases
+        you have to allocate memory by yourself.
+        <FILENAME role="library">exec.library</FILENAME> provides different methods for
+        allocating memory. The two most important functions are
+        <FUNCSYNOPSIS>
+          <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+          <FUNCPROTOTYPE>
+            <FUNCDEF>APTR <FUNCTION>AllocMem</FUNCTION></FUNCDEF>
+            <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
+            <PARAMDEF>ULONG <PARAMETER>flags</PARAMETER></PARAMDEF>
+          </FUNCPROTOTYPE>
+          <FUNCPROTOTYPE>
+            <FUNCDEF>APTR <FUNCTION>AllocVec</FUNCTION></FUNCDEF>
+            <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
+            <PARAMDEF>ULONG <PARAMETER>flags</PARAMETER></PARAMDEF>
+          </FUNCPROTOTYPE>
+        </FUNCSYNOPSIS>
+        Both functions return a pointer to a memory area of the requested
+        <PARAMETER>size</PARAMETER> provided as argument. If not enough memory
+        was available, <SYMBOL>NULL</SYMBOL> is returned, instead. You must check
+        for this condition, before using the memory. If the memory was
+        successfully allocated, you can do with it whatever you want to.
+        You can provide additional <PARAMETER>flags</PARAMETER> to get a
+        special kind of memory. The following flags are defined in
+        <LINK linkend="exec-memory-h"><FILENAME class="headerfile">exec/memory.h</FILENAME></LINK>:
+        <VARIABLELIST id="expl-memf">
+          <VARLISTENTRY>
+            <TERM><SYMBOL>MEMF_CLEAR</SYMBOL></TERM>
+            <LISTITEM>The allocated memory area is initialized with zeros.</LISTITEM>
+          </VARLISTENTRY>
+          <VARLISTENTRY>
+            <TERM><SYMBOL>MEMF_LOCAL</SYMBOL></TERM>
+            <LISTITEM>Get memory that will not be flushed, if the computer
+            is reset.</LISTITEM>
+          </VARLISTENTRY>
+          <VARLISTENTRY>
+            <TERM><SYMBOL>MEMF_CHIP</SYMBOL></TERM>
+            <LISTITEM>Get memory that is accessible by graphics and
+            sound chips. This type of memory is required for some functions.
+            </LISTITEM>
+          </VARLISTENTRY>
+          <VARLISTENTRY>
+            <TERM><SYMBOL>MEMF_FAST</SYMBOL></TERM>
+            <LISTITEM>Get memory that is not accessible by graphics and
+            sound chips. <EMPHASIS>You should normally not set this
+            flag! It is needed only for some very esoteric functions. Many
+            systems don't have this kind of memory.</EMPHASIS></LISTITEM>
+          </VARLISTENTRY>
+          <VARLISTENTRY>
+            <TERM><SYMBOL>MEMF_PUBLIC</SYMBOL></TERM>
+            <LISTITEM>This flag must be set, if the memory you allocate
+            is to be accessible by other tasks. If you do not set it, the
+            allocated memory is <EMPHASIS>private</EMPHASIS> to your task. This
+            issue will be discussed in detail in the chapter about
+            <LINK linkend="sect-intercomm">inter-task communication</LINK>.</LISTITEM>
+          </VARLISTENTRY>
+          <VARLISTENTRY>
+            <TERM><SYMBOL>MEMF_REVERSE</SYMBOL></TERM>
+            <LISTITEM>If this flag is set, the order of the search for
+            empty memory blocks is reversed. Blocks that are at the end of the
+            list of empty memory will be found first.</LISTITEM>
+          </VARLISTENTRY>
+          <VARLISTENTRY>
+            <TERM><SYMBOL>MEMF_NO_EXPUNGE</SYMBOL></TERM>
+            <LISTITEM>Normally, if not enough free memory of the requested
+            size is found, <ACRONYM role="aros">AROS</ACRONYM> tries to free
+            unused memory, for example by flushing unused libraries out of the
+            memory. If this flag is set, this behaviour is turned off.</LISTITEM>
+          </VARLISTENTRY>
+        </VARIABLELIST>
+
+        Memory allocated with these functions <EMPHASIS>must be freed</EMPHASIS>
+        after use with one of the following functions. <EMPHASIS>Note well that
+        you must not use memory that was already freed.</EMPHASIS>
+
+        <FUNCSYNOPSIS>
+          <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+          <FUNCPROTOTYPE>
+            <FUNCDEF>void <FUNCTION>FreeMem</FUNCTION></FUNCDEF>
+            <PARAMDEF>APTR <PARAMETER>memory</PARAMETER></PARAMDEF>
+            <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
+          </FUNCPROTOTYPE>
+          <FUNCPROTOTYPE>
+            <FUNCDEF>void <FUNCTION>FreeVec</FUNCTION></FUNCDEF>
+            <PARAMDEF>APTR <PARAMETER>memory</PARAMETER></PARAMDEF>
+            <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
+          </FUNCPROTOTYPE>
+        </FUNCSYNOPSIS>
+
+        Of course, <FUNCTION>FreeMem()</FUNCTION> must be used for memory
+        allocated with <FUNCTION>AllocMem()</FUNCTION> and
+        <FUNCTION>FreeVec()</FUNCTION> for memory allocated with
+        <FUNCTION>AllocVec()</FUNCTION>. The synopsis for these two functions
+        shows the difference between <FUNCTION>AllocMem()</FUNCTION> and
+        <FUNCTION>AllocVec()</FUNCTION>: <FUNCTION>AllocVec()</FUNCTION>
+        remembers the size of the chunk of memory, it allocated. So, if you
+        use <FUNCTION>AllocVec()</FUNCTION>, you don't have to store the
+        requested size, while you have to, if you use
+        <FUNCTION>AllocMem()</FUNCTION>.
+
+Allocating Multiple Regions of Memory at once
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+          Sometimes you may want to make multiple memory allocations at
+          once. The usual way to do this is calling <FUNCTION>AllocVec()</FUNCTION>
+          with the size of all memory-blocks added and then making pointers
+          relative to the returned pointer. But what do you do, if you need
+          memory of different kinds, it with different <SYMBOL>MEMF_</SYMBOL>
+          flags set? You could make multiple allocations or simply use the
+          function
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>struct MemList * <FUNCTION>AllocEntry</FUNCTION></FUNCDEF>
+              <PARAMDEF>struct MemList * <PARAMETER>oldlist</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          As you will have noticed, <FUNCTION>AllocEntry</FUNCTION> uses
+          a pointer to a <LINK linkend="exec-memory-memlist">struct <STRUCTNAME>MemList</STRUCTNAME></LINK>
+          as only argument and as result. We find the definition of this
+          structure in <LINK linkend="exec-memory-h"><FILENAME class="headerfile">exec/memory.h</FILENAME></LINK>:
+          <PROGRAMLISTING>
+
+::
+    struct MemEntry
+    {
+        union
+        {
+            ULONG meu_Reqs;
+            APTR  meu_Addr;
+        } me_Un;
+        ULONG me_Length;
+    };
+     
+
+    struct MemList
+    {
+        struct Node     ml_Node;
+        UWORD           ml_NumEntries;
+        struct MemEntry ml_ME[1];
+    };
+
+          The array <STRUCTFIELD>ml_ME</STRUCTFIELD> of <STRUCTNAME>struct
+          MemList</STRUCTNAME> has a variable number of elements. The number
+          of its elements is set in <STRUCTFIELD>ml_NumEntries</STRUCTFIELD>.
+          The struct <STRUCTNAME>MemEntry</STRUCTNAME> describes one
+          memory-entry. Stored are its size (<STRUCTFIELD>me_Length</STRUCTFIELD>),
+          its requirements (ie the <LINK linkend="expl-memf"><SYMBOL>MEMF_</SYMBOL>
+          flags</LINK>, set in <STRUCTFIELD>me_Un.meu_Reqs</STRUCTFIELD>) and
+          possibly a pointer to the memory-block (<STRUCTFIELD>me_Un.meu_Addr</STRUCTFIELD>).
+          The struct <STRUCTNAME>MemList</STRUCTNAME>, you pass in as
+          <PARAMETER>oldlist</PARAMETER>, must have set the field
+          <STRUCTFIELD>ml_NumEntries</STRUCTFIELD> to the actual number of
+          struct <STRUCTNAME>MemEntry</STRUCTNAME>s contained in
+          <STRUCTFIELD>ml_ME</STRUCTFIELD>. The <STRUCTNAME>struct
+          MemEntry</STRUCTNAME>s must have set the fields
+          <STRUCTFIELD>me_Length</STRUCTFIELD> and
+          <STRUCTFIELD>me_Un.meu_Reqs</STRUCTFIELD>. The other fields are
+          ignored.
+          The function returns a pointer to a copy of the
+          struct <STRUCTNAME>MemEntry</STRUCTNAME>, passed in as
+          <PARAMETER>oldlist</PARAMETER>, with all the relevant fields set
+          (especially <STRUCTFIELD>me_Un.meu_Addr</STRUCTFIELD>). An error is
+          indicated by setting the most significant bit of the pointer
+          returned. So you always have to check it, before using the pointer
+          returned.
+          Memory allocated with <FUNCTION>AllocEntry()</FUNCTION> must
+          be freed using <FUNCTION>FreeMem()</FUNCTION>.
+
+
+Memory Pools
+^^^^^^^^^^^^
+
+<ACRONYM role="aros">AROS</ACRONYM> manages different
+          so-called memory-pools. Each memory-pool contains a list of
+          memory-areas. The most important memory-pool is the pool that
+          contains all free memory in the system. But you also can create
+          memory-pools yourself. This has some advantages:
+
+          <ITEMIZEDLIST>
+            <LISTITEM>Everytime, you allocate some memory, the memory
+            in the system becomes more fragmented. This fragmentation causes
+            the available memory chunks to become smaller. This way larger
+            allocations will fail. To prevent this problem, memory-pools were
+            introduced. Instead of allocating many small chunks of memory,
+            the pool-management routines allocate large chunks and then
+            return small chunks out of it, when memory-requests are made.</LISTITEM>
+
+            <LISTITEM>Private memory-pools have the ability to keep
+            track of all the allocations you made so that all memory in a
+            pool can be freed with one simple function-call (but you can also
+            free memory individually).</LISTITEM>
+          </ITEMIZEDLIST>
+
+          Before a memory-pool can be used, it must be created. This is
+          performed by the function
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>APTR <FUNCTION>CreatePool</FUNCTION></FUNCDEF>
+              <PARAMDEF>ULONG <PARAMETER>flags</PARAMETER></PARAMDEF>
+              <PARAMDEF>ULONG <PARAMETER>puddleSize</PARAMETER></PARAMDEF>
+              <PARAMDEF>ULONG <PARAMETER>threshSize</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          <PARAMETER>flags</PARAMETER> specifies the type of memory you want
+          to get from the <FUNCTION>AllocPooled()</FUNCTION> function
+          (<LINK linkend="expl-allocpooled">see below</LINK>). All
+          <SYMBOL>MEMF_</SYMBOL> definitions as <LINK linkend="expl-memf">described
+          above</LINK> are allowed here.
+
+          <PARAMETER>puddleSize</PARAMETER> is the size of the chunks
+          of memory that are allocated by the pool functions. Usually a size
+          about ten times bigger than the average memory-size, you need to
+          allocate, is a good guess. But on the other hand the
+          <PARAMETER>puddleSize</PARAMETER> should not be too large. Normally
+          you should limit it to about <LITERAL>50kb</LITERAL>. Note well,
+          though, that these are only suggestions and no real limitations.
+
+          Finally, the <PARAMETER>threshSize</PARAMETER> specifies,
+          how large the memory that is to be allocated is allowed to be so
+          that no new chunk is allocated automatically. If, for example,
+          the <PARAMETER>threshSize</PARAMETER> is set to 25kb and you want
+          to allocate a piece of memory with the size of 30kb, the internal
+          lists of chunks of that memory-pool is not searched, but the memory
+          is allocated directly, instead. If the memory to be allocated
+          was only 20kb, the chunk-list would have been searched for a piece
+          of free memory of that size, first. Of course, the
+          <PARAMETER>threshSize</PARAMETER> <EMPHASIS>must not</EMPHASIS> be
+          larger than the <PARAMETER>puddleSize</PARAMETER> and should not
+          be too small, either. Half the <PARAMETER>puddleSize</PARAMETER> is
+          a good guess here.
+
+          <FUNCTION>CreatePool()</FUNCTION> returns a private pointer to
+          a pool-structure that must be saved for further use.
+          <SYMBOL>NULL</SYMBOL> is returned, if no memory for the
+          pool-structure was available. You have to check for this condition.
+
+          After use, all memory-pools must be destroyed by calling
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>void <FUNCTION>DeletePool</FUNCTION></FUNCDEF>
+              <PARAMDEF>APTR <PARAMETER>pool</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          This function deletes the <PARAMETER>pool</PARAMETER> passed in.
+          Additionally all memory that was allocated in this pool is freed.
+          This way, you don't need to remember every single piece of memory,
+          you allocated in a pool. Just call <FUNCTION>DeletePool()</FUNCTION>
+          at the end. Note that you should be careful not to use pooled memory
+          after its pool was deleted!
+
+          <PARA id="expl-allocpooled">If you want to allocate memory out of a
+          pool, you need to call
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>void * <FUNCTION>AllocPooled</FUNCTION></FUNCDEF>
+              <PARAMDEF>APTR <PARAMETER>pool</PARAMETER></PARAMDEF>
+              <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          Besides the <PARAMETER>pool</PARAMETER> to allocate memory from,
+          the <PARAMETER>size</PARAMETER> of the memory to allocate must be
+          passed in. Returned is a pointer to a block of memory of the
+          requested size or <SYMBOL>NULL</SYMBOL> to indicate that not
+          enough memory was available.
+
+          Memory allocated with <FUNCTION>AllocPooled()</FUNCTION> can
+          be freed by either destroying the whole pool with
+          <FUNCTION>DeletePool()</FUNCTION> or individually by calling
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>void <FUNCTION>FreePooled</FUNCTION></FUNCDEF>
+              <PARAMDEF>APTR <PARAMETER>pool</PARAMETER></PARAMDEF>
+              <PARAMDEF>void * <PARAMETER>memory</PARAMETER></PARAMDEF>
+              <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          This function frees exactly one piece of memory that was previously
+          allocated with <FUNCTION>AllocPooled()</FUNCTION>. The pointer to
+          the <PARAMETER>memory</PARAMETER> pointer, returned by
+          <FUNCTION>AllocPooled()</FUNCTION>, its <PARAMETER>size</PARAMETER>
+          and the pool, it is in, have to be supplied as arguments.
+
+          <SIDEBAR><TITLE><FUNCTION>DeletePool()</FUNCTION> vs <FUNCTION>FreePooled()</FUNCTION></TITLE>
+            You may ask yourself: <QUOTE>If <FUNCTION>DeletePool()</FUNCTION>
+            deletes all the memory of a pool, why should I ever use
+            <FUNCTION>FreePooled()</FUNCTION>?</QUOTE> The answer is easy: to
+            save memory. Normally it's good style to free memory as soon as
+            you don't need it anymore. But sometimes it is easier just to
+            free a memory-pool after a bunch of allocations. Nevertheless
+            you should not use this feature, if you are not sure, when the
+            memory-pool will be deleted. Imagine a program like this (do not
+            try to compile it; it won't):
+
+            <PROGRAMLISTING>
+::
+
+#define <exec/types.h>
+#define <exec/memory.h>
+#define <dos/dos.h>
+
+int main(int argc, char *argv[])
+{
+    APTR pool;
+    APTR mem;
+
+    /* Create our memory pool and test, if it was successful. */
+    pool = CreatePool(MEMF_ANY, 50*1024, 25*1024);
+    if (pool)
+    {
+
+        /* Just a dummy function. Image that this function will open a window,
+           with two buttons "Do Action" and "Quit".
+        */
+        open_our_window();
+
+        for(;;)
+        {
+            /* Another dummy function that returns one of the definitions
+               below.
+            */
+            switch(get_action())
+            {
+            /* This is returned, if the button "Do Action" was released. */
+            case DOACTION:
+                mem = AllocPooled(pool, 10*1024);
+                if (mem)
+                {
+                    /* Another dummy function that uses our memory. */
+                    silly_function(mem);
+                }
+                break;
+            /* This is returned, if the button "Quit" was released. */
+            case QUIT:
+                return RETURN_OK;
+            }
+        }
+
+        /* Close the window, we have opened above. */
+        close_our_window();
+
+        /* Delete our pool. */
+        DeletePool(pool);
+    }
+}
+         
+            Each time the button <GUIBUTTON>Do Action</GUIBUTTON> is
+            released, some memory is allocated. This memory is freed at the
+            end of the program, when <FUNCTION>DeletePool()</FUNCTION> is
+            called. Of course, the longer the program is used, the more
+            memory will be in use. That is why it would be much better to
+            free the memory after use. This is done by replacing the
+            part between <LITERAL>case DOACTION:</LITERAL> and
+            <LITERAL>case QUIT:</LITERAL> by:
+            <PROGRAMLISTING>
+                mem = AllocPooled(pool, 10*1024);
+                if (mem)
+                {
+                    silly_function(mem);
+                    FreePooled(pool, mem, 10*1024);
+                }
+                break;
+            </PROGRAMLISTING>
+          </SIDEBAR>
+
+Obsolete Memory Pool Functions
+''''''''''''''''''''''''''''''
+
+            Memory-pools are managed with <LINK linkend="exec-memory-memheader">struct <STRUCTNAME>MemHeader</STRUCTNAME></LINK>s.
+            If you have a pointer to such a structure, you may try to
+            allocate some memory of its pool:
+            <FUNCSYNOPSIS>
+              <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+              <FUNCPROTOTYPE>
+                <FUNCDEF>void * <FUNCTION>Allocate</FUNCTION></FUNCDEF>
+                <PARAMDEF>struct MemHeader * <PARAMETER>mh</PARAMETER></PARAMDEF>
+                <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
+              </FUNCPROTOTYPE>
+            </FUNCSYNOPSIS>
+            Apart from the pointer to the struct <STRUCTNAME>MemHeader</STRUCTNAME>
+            passed in as <PARAMETER>mh</PARAMETER>, you have to supply the
+            <PARAMETER>size</PARAMETER> of the memory-block you want to
+            allocate. This function returns either a pointer to the first
+            memory-block found or <SYMBOL>NULL</SYMBOL> if no matching block
+            was found.
+
+            You must free every memory-block allocated with
+            <FUNCTION>Allocate()</FUNCTION> with
+            <FUNCSYNOPSIS>
+              <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+              <FUNCPROTOTYPE>
+                <FUNCDEF>void <FUNCTION>Deallocate</FUNCTION></FUNCDEF>
+                <PARAMDEF>struct MemHeader * <PARAMETER>mh</PARAMETER></PARAMDEF>
+                <PARAMDEF>APTR <PARAMETER>mem</PARAMETER></PARAMDEF>
+                <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
+              </FUNCPROTOTYPE>
+            </FUNCSYNOPSIS>
+            You have to pass the same <PARAMETER>mh</PARAMETER> and
+            <PARAMETER>size</PARAMETER> to <FUNCTION>Deallocate()</FUNCTION>
+            as you have passed to <FUNCTION>Allocate()</FUNCTION> and
+            additionally the pointer returned by it.
+
+            <FILENAME role="library">intuition.library</FILENAME>
+            provides another way to handle memory pools with the functions
+            <LINK linkend="intuition-allocremember"><FUNCTION>AllocRemember()</FUNCTION></LINK>
+            and <LINK linkend="intuition-freeremember"><FUNCTION>FreeRemember()</FUNCTION></LINK>.
+            Note, though, that these are obsolete. You should use the normal
+            pool-functions of <FILENAME role="library">exec.library</FILENAME>,
+            instead.
+
+Allocating a specific memory address
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Under very rare circumstances you may have to allocate
+          memory at a specific memory address. This performed by using
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>void * <FUNCTION>AllocAbs</FUNCTION></FUNCDEF>
+              <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
+              <PARAMDEF>APTR <PARAMETER>address</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          This function tries to allocate <PARAMETER>size</PARAMETER> bytes at
+          <PARAMETER>address</PARAMETER>. If this is successful, a pointer
+          to the requested address is returned. If some memory of the
+          requested block is already allocated or is not available in the
+          system, <SYMBOL>NULL</SYMBOL> is returned, instead.
+
+          <WARNING><SIMPARA>The beginning of the memory block requested will
+          be used by exec to store its node-data (the exact size is calculated
+          by (2*sizeof (void *)) ). Therefore, you <EMPHASIS>must not
+          write</EMPHASIS> to the beginning of the memory-block! Because of
+          these obstacles you should not use <FUNCTION>AllocAbs()</FUNCTION>,
+          except if you really need it.</SIMPARA></WARNING>
+
+          Memory allocated with <FUNCTION>AllocAbs()</FUNCTION> must
+          be freed, using <FUNCTION>FreeMem()</FUNCTION>.
+
+Querying memory size and available memory
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+          To get the size of available memory, use the function
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>ULONG <FUNCTION>AvailMem</FUNCTION></FUNCDEF>
+              <PARAMDEF>ULONG <PARAMETER>type</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+
+          <PARAMETER>type</PARAMETER> are some of the following flags (or'ed),
+          as defined in <LINK linkend="exec-memory-h"><FILENAME class="headerfile">exec/memory.h</FILENAME></LINK>:
+          <VARIABLELIST>
+            <VARLISTENTRY>
+              <TERM><SYMBOL>MEMF_ANY</SYMBOL></TERM>
+              <LISTITEM>Return the size of all free memory in the system.</LISTITEM>
+            </VARLISTENTRY>
+            <VARLISTENTRY>
+              <TERM><SYMBOL>MEMF_CHIP</SYMBOL></TERM>
+              <LISTITEM>Return the size of memory, which is accessible
+              by graphics and sound chips.</LISTITEM>
+            </VARLISTENTRY>
+            <VARLISTENTRY>
+              <TERM><SYMBOL>MEMF_FAST</SYMBOL></TERM>
+              <LISTITEM>Return the size of memory that is not accessible
+              by graphics and sound chips.</LISTITEM>
+            </VARLISTENTRY>
+            <VARLISTENTRY>
+              <TERM><SYMBOL>MEMF_LARGEST</SYMBOL></TERM>
+              <LISTITEM>Return only the largest block, instead of all
+              memory of the type specified.</LISTITEM>
+            </VARLISTENTRY>
+          </VARIABLELIST>
+          You may as well specify other <SYMBOL>MEMF_</SYMBOL> flags,
+          they will be simply ignored.
+
+          <NOTE>Note well that the queried memory-size does not have to
+          reflect the real size of memory available, as this may always
+          change in a multitasking-system, even while <FUNCTION>AvailMem()</FUNCTION>
+          is executed.</NOTE>
+
+Program to list memory available in the system::
+
+    #include <stdio.h>
+    #include <exec/memory.h>
+
+    int main(int argc, char *argv[])
+    {
+        printf("Total free memory: %h, largest block: %h\n",
+        AvailMem(MEMF_ANY), AvailMem(MEMF_ANY|MEMF_LARGEST));
+        
+        printf("Free chip memory:  %h, largest block: %h\n",
+        AvailMem(MEMF_CHIP), AvailMem(MEMF_CHIP|MEMF_LARGEST));
+        
+        printf("Free fast memory:  %h, largest block: %h\n",
+        AvailMem(MEMF_FAST), AvailMem(MEMF_FAST|MEMF_LARGEST));
+    }
+    
+    
+Adding memory to the system
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+          This chapter is only of concern to you, if you want to write a
+          hardware-driver for a piece of hardware, which adds memory to the
+          system.
+
+          
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>void <FUNCTION>AddMemList</FUNCTION></FUNCDEF>
+              <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
+              <PARAMDEF>ULONG <PARAMETER>type</PARAMETER></PARAMDEF>
+              <PARAMDEF>LONG <PARAMETER>priority</PARAMETER></PARAMDEF>
+              <PARAMDEF>APTR <PARAMETER>address</PARAMETER></PARAMDEF>
+              <PARAMDEF>STRPTR <PARAMETER>name</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          adds memory to the list of free memory in the system. You have
+          supply the <PARAMETER>address</PARAMETER> and the
+          <PARAMETER>size</PARAMETER> of the memory to add.
+          <PARAMETER>type</PARAMETER> has to be set to at least one of the
+          <LINK linkend="exec-memory-memf"><SYMBOL>MEMF_</SYMBOL></LINK> flags,
+          which are defined in <LINK linkend="exec-memory-h"><FILENAME class="headerfile">exec/memory.h</FILENAME></LINK>:
+          <VARIABLELIST>
+            <VARLISTENTRY>
+              <TERM><SYMBOL>MEMF_FAST</SYMBOL></TERM>
+              <LISTITEM>Your memory must not be accessed by graphics or
+              sound chips.</LISTITEM>
+            </VARLISTENTRY>
+            <VARLISTENTRY>
+              <TERM><SYMBOL>MEMF_CHIP</SYMBOL></TERM>
+              <LISTITEM>Your memory is reachable by graphics and sound
+              chips.</LISTITEM>
+            </VARLISTENTRY>
+          </VARIABLELIST>
+
+          You can provide a <PARAMETER>priority</PARAMETER>, with which
+          your memory will be added to the memory list. The general rule is:
+          The quicker your memory, the higher the priority should be. If you
+          don't know, what to supply here, supply <LITERAL>0</LITERAL>.
+          Finally, you can provide a <PARAMETER>name</PARAMETER>, with which
+          your memory can be identified by the system and its users. You may
+          provide <SYMBOL>NULL</SYMBOL> instead of a name, but giving your
+          memory a name is recommended.
+
+          Once your memory was added to the list of free memory, it
+          can't be removed anymore.
+        
+Low memory situations
+^^^^^^^^^^^^^^^^^^^^^
+
+FIXME: AddMemHandler()/RemMemHandler()
+
+
+Files and directories
+---------------------
+      
+Paths
+"""""
+     
+FIXME: relative and absolute paths
+     
+
+Files
+"""""
+
+FIXME
+
+Reading files
+^^^^^^^^^^^^^
+
+FIXME
+     
+
+Writing and creating files
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+FIXME
+
+      
+Directories
+""""""""""""
+
+FIXME
+
+
+Links
+"""""
+        
+Links are a method to apply multiple filenames to the same physical file or
+directory. This way the file can be stored in multiple directories with
+different filenames. There are two different types of links: hardlinks and
+softlinks. A softlink is just a reference to another file by its name. This name
+may be stated as relative or absolute path. If a softlink is accessed, AROS
+tries to resolve the name of the file the link points to and redirects all
+actions to that file. Of course, the file pointed to does not have to exist. It
+may have been deleted after the link was created. Hardlinks are another instance
+of the same file. They don't just reference the file by its name, they *are* the
+file. Normally, a hardlink can't be distinguished from the orginal filename;
+effectively the file has been given a second name. Due to this, hardlinks can
+not be created over different volumes; they must be at the same volume.
+
+.. Note:: Not all filesystems support both types of links or any
+          links at all.
+
+
+Creating Links
+^^^^^^^^^^^^^^
+
+FIXME     
+
+Low level file access (filehandlers)
+""""""""""""""""""""""""""""""""""""
+    
+FIXME
+
+
+Tasks, Processes and the Shell
+------------------------------
+
+Tasks 
+""""" 
+
+AROS is a multitasking operating system. This essentially means that multiple
+programs may be run at the same time. Every program running is called a task.
+But there are also tasks that are not user-programs. There are, for example,
+tasks handling the file-system and tasks watching the input devices. Every task
+gets a certain amount of time, in which it is running. After this time it's the
+next task's turn; the system reschedules the tasks.
+
+Plain tasks are very limited in their capabilities. Plain tasks must not call
+a function of ``dos.library`` or a function that could call a function of
+``dos.library`` (this includes ``OpenLibrary()`` for most cases!). Processes_
+don't have this limitation.
+
+
+The Task Structure
+^^^^^^^^^^^^^^^^^^
+
+A task is described by a struct <STRUCTNAME>Task</STRUCTNAME>
+as defined in <LINK linkend="exec-tasks-task"><FILENAME class="headerfile">exec/tasks.h</FILENAME></LINK>.
+This structure contains information about the task like the
+its <LINK linkend="sect-stack">stack</LINK>, its
+<LINK linkend="sect-signals">signals</LINK> and some management
+data. To get the address of a task strucure, use
+
+	<FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>struct Task * <FUNCTION>FindTask</FUNCTION></FUNCDEF>
+              <PARAMDEF>STRPTR <PARAMETER>name</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          <PARAMETER>name</PARAMETER> is a pointer to the name of the task to
+          find. <EMPHASIS>Note that this name is case-sensitive!</EMPHASIS>
+          If the named task is not found, <SYMBOL>NULL</SYMBOL> is returned,
+          otherwise a pointer to a struct <STRUCTNAME>Task</STRUCTNAME>.
+
+          To get a pointer to the current task, supply
+          <SYMBOL>NULL</SYMBOL> as <PARAMETER>name</PARAMETER>. This can never
+          fail.
+
+          The task structure contains a field called
+          <STRUCTFIELD>tc_UserData</STRUCTFIELD>. You can use it for your own
+          purposes. It is ignored by <ACRONYM role="aros">AROS</ACRONYM>.
+
+States
+^^^^^^
+
+A task must be in one of following states (as set in the field
+`tc_State` of the task structure):
+          
+TS_INVALID
+    This state should never be set!
+	
+TS_ADDED
+    FIXME
+            
+TS_RUN
+    The task is currently running. On single processor architectures only 
+    one task can be in that state.
+   
+TS_READY
+    The task waits for its execution.
+    
+TS_WAIT
+    The task waits for some signal_ to get activated. As long as this does not 
+    happen, the program doesn't become active; it is ignored on rescheduling. 
+    Most interactive programs are in this state most of the time, as they wait 
+    for user input.
+    
+TS_EXCEPT
+    The task is in an exception.
+
+TS_REMOVED
+    FIXME
+
+.. Note:: Do not set these states yourself, unless you know exactly what you are
+          doing!
+
+
+Priorities
+^^^^^^^^^^
+
+The field <STRUCTFIELD>tc_Node.ln_Pri</STRUCTFIELD> of the
+          struct <STRUCTNAME>Node</STRUCTNAME> embedded in the task structure
+          (see <LINK linkend="exec-nodes-node"><FILENAME class="headerfile">exec/nodes.h</FILENAME></LINK>
+          and the <LINK linkend="sect-lists">section about exec lists</LINK>)
+          specifies the priority of the task. Possible priorities reach from
+          <LITERAL>-128</LITERAL> to <LITERAL>127</LITERAL>. The higher the
+          priority the more processor time the task gets from the system. To
+          set a task's priority use the function
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>BYTE <FUNCTION>SetTaskPri</FUNCTION></FUNCDEF>
+              <PARAMDEF>struct Task * <PARAMETER>task</PARAMETER></PARAMDEF>
+              <PARAMDEF>BYTE <PARAMETER>newpri</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          The old priority is returned.
+        
+Stack
+^^^^^
+
+Every task has a stack. A stack is a piece of memory, in
+          which a tasks stores its temorary data. Compilers, for example,
+          use the stack to store variables, you use in your programs. On
+          many architectures, the stack is also used to supply library
+          functions with parameters.
+
+          The size of the stack is limited. Therefore only a certain
+          amount of data can be stored in the stack. The stack-size of a
+          task is chosen by its caller and must be at least 4096 bytes. Tasks
+          should generally not assume that their stack-size is bigger. So,
+          if a task needs more stack, the stack can be exchanged by using the
+          function
+          <FUNCSYNOPSIS>
+            <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+            <FUNCPROTOTYPE>
+              <FUNCDEF>void <FUNCTION>StackSwap</FUNCTION></FUNCDEF>
+              <PARAMDEF>struct StackSwapStruct * <PARAMETER>sss</PARAMETER></PARAMDEF>
+            </FUNCPROTOTYPE>
+          </FUNCSYNOPSIS>
+          The only argument, <PARAMETER>sss</PARAMETER>, is a pointer to a
+          struct <STRUCTNAME>StackSwapStruct</STRUCTNAME> as defined in
+          <LINK linkend="exec-tasks-stackswapstruct"><FILENAME class="headerfile">exec/tasks.h</FILENAME></LINK>.
+
+          struct <STRUCTNAME>StackSwapStack</STRUCTNAME> must contain a
+          pointer to the beginning of the new stack (<STRUCTFIELD>strk_Lower</STRUCTFIELD>),
+          to the end of the new stack (<STRUCTFIELD>stk_Upper</STRUCTFIELD>)
+          and a new stack-pointer (<STRUCTFIELD>stk_Pointer</STRUCTFIELD>).
+          This stack-pointer is normally set either to the same address as
+          <STRUCTFIELD>stk_Lower</STRUCTFIELD> or to the same address as
+          <STRUCTFIELD>stk_Upper</STRUCTFIELD>, depending on the kind of
+          <ACRONYM>CPU</ACRONYM> used.
+
+          When calling <FUNCTION>StackSwap()</FUNCTION>, the
+          <STRUCTNAME>StackSwapStruct</STRUCTNAME> structure supplied as
+          <PARAMETER>sss</PARAMETER> will be filled with information
+          about the current stack.
+
+          After finishing using the new stack, the old stack must be
+          restored by calling <FUNCTION>StackSwap()</FUNCTION> a second time
+          with the same <STRUCTNAME>StackSwapStruct</STRUCTNAME>.
+
+.. Note:: Normally, only compilers need this function. Handle it with great care
+          as different architectures use the stack in different ways!
+
+
+Processes
+"""""""""
+
+A process is an expanded task_. Opposed to a task, it can use functions of
+`dos.library`, because a process structure contains some special fields,
+concerning files and directories. But of course, all functions that can be used
+on tasks can also be used on processes.
+
+
+The Process Structure
+^^^^^^^^^^^^^^^^^^^^^
+
+A process is described by a struct `Process` as defined in `dos/dosextens.h`.
+The first field in struct `Process` is an embedded `struct Task`. The extra
+fields include information about the file-system, the console, the process is
+connected to, and miscellaneous other stuff.
+
+
+The Current Directory
+'''''''''''''''''''''
+
+FIXME
+
+
+Standard File Handles
+'''''''''''''''''''''
+
+FIXME
+
+
+Console Related Information
+'''''''''''''''''''''''''''
+
+FIXME
+
+
+Creating own Tasks and Processes
+""""""""""""""""""""""""""""""""
+
+There are mainly two methods of creating tasks and processes: you can either
+call an external program (ie open an executable file and run the program
+contained in it) or you can execute a piece of code, already in memory.
+
+
+Starting External Programs
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+External programs are always processes.
+FIXME
+
+
+Creating Tasks by Hand
+^^^^^^^^^^^^^^^^^^^^^^          
+
+FIXME
+
+
+Creating Processes by Hand
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+FIXME
+
+
+Local and Global Variables
+""""""""""""""""""""""""""
+
+FIXME
+
+
+Expanded Error Diagnostics
+""""""""""""""""""""""""""
+
+Most functions of `dos.library` set the secondary error-code of the process
+structure on error. This way the caller can determine, why a certain system-call
+failed. Imagine, the function `Open()`, which opens a named file, fails. There
+can be multiple reasons for this: maybe the file named doesn't exist, maybe it
+is read protected. To find this out, you can query the secondary error-code set
+by the last function by using::
+
+.. FIXME: How to handle this in ReST? [docbook: functionsynopsis]
+
+	#include <proto/dos.h>
+
+        LONG IoErr() 
+           
+        Dos-functions return one of the <SYMBOL>ERROR_</SYMBOL>
+        definitions from <LINK linkend="dos-dos-error"><FILENAME class="headerfile">dos/dos.h</FILENAME></LINK>.
+        Applications can, of course, process these error-codes by hand (which
+        is useful in many cases), but often we just want to inform the user
+        what went wrong. (Applications normally need not care, if a file
+        could not be opened, because it did not exist or because it was read
+        protected.) To output human-readable error messages,
+        <FILENAME role="library">dos.library</FILENAME> provides two
+        functions:
+        <FUNCSYNOPSIS>
+          <FUNCSYNOPSISINFO>#include &lt;proto/dos.h></FUNCSYNOPSISINFO>
+          <FUNCPROTOTYPE>
+            <FUNCDEF>LONG <FUNCTION>Fault</FUNCTION></FUNCDEF>
+            <PARAMDEF>LONG <PARAMETER>code</PARAMETER></PARAMDEF>
+            <PARAMDEF>STRPTR <PARAMETER>header</PARAMETER></PARAMDEF>
+            <PARAMDEF>STRPTR <PARAMETER>buffer</PARAMETER></PARAMDEF>
+            <PARAMDEF>LONG <PARAMETER>length</PARAMETER></PARAMDEF>
+          </FUNCPROTOTYPE>
+          <FUNCPROTOTYPE>
+            <FUNCDEF>BOOL <FUNCTION>PrintFault</FUNCTION></FUNCDEF>
+            <PARAMDEF>LONG <PARAMETER>code</PARAMETER></PARAMDEF>
+            <PARAMDEF>STRPTR <PARAMETER>header</PARAMETER></PARAMDEF>
+          </FUNCPROTOTYPE>
+        </FUNCSYNOPSIS>
+
+        While <FUNCTION>PrintFault()</FUNCTION> simply prints an error
+        message to the <GLOSSTERM linkend="glos-stdfh">standard output</GLOSSTERM>,
+        <FUNCTION>Fault()</FUNCTION> fills a supplied buffer
+        with the message. Both functions take a <PARAMETER>code</PARAMETER>
+        argument. This is the code to be converted into a string. You can also
+        supply a <PARAMETER>header</PARAMETER> string, which will prefix the
+        error message. <PARAMETER>header</PARAMETER> may be NULL, in which
+        case nothing is prefixed.
+
+        <FUNCTION>Fault()</FUNCTION> also required a pointer to a
+        <PARAMETER>buffer</PARAMETER>, which is to be filled with the converted
+        string. The <PARAMETER>length</PARAMETER> of this buffer (in bytes)
+        is to be passed in as last argument. The total number of characters
+        put into the buffer is returned. You are on the safe side, if your
+        buffer has a size for 83 character plus the size of the header.
+
+        Examples for the use of these functions can be found in later
+        chapters, especially in the chapter about <LINK linkend="chap-files">Files
+        and Directories</LINK>.
+
+        Secondary error-codes of a program are handed back to the
+        caller. If this is a shell, the secondary error-code will be put
+        into the field <STRUCTFIELD>cli_Result2</STRUCTFIELD> of the shell
+        structure (struct <STRUCTNAME>CommandLineInterface</STRUCTNAME> as
+        defined in <LINK linkend="dos-dosextens-commandlineinterface"><FILENAME class="headerfile">dos/dosextens.h</FILENAME></LINK>
+        and <LINK linkend="sect-shell">discussed later</LINK>).
+
+        You can also set the secondary error-code yourself. This way,
+        you can either to pass it back to another function in your program or
+        to your caller. To set the secondary error, use
+        <FUNCSYNOPSIS>
+          <FUNCSYNOPSISINFO>#include &lt;proto/dos.h></FUNCSYNOPSISINFO>
+          <FUNCPROTOTYPE>
+            <FUNCDEF>LONG <FUNCTION>SetIoErr</FUNCTION></FUNCDEF>
+            <PARAMDEF>LONG <PARAMETER>code</PARAMETER></PARAMDEF>
+          </FUNCPROTOTYPE>
+        </FUNCSYNOPSIS>
+        <PARAMETER>code</PARAMETER> is the new secondary error-code and
+        the old secondary error-code is returned.
+
+        <FUNCTION>SetIoErr()</FUNCTION> will be used in the
+        <LINK linkend="chap-boopsi">chapter about object orientation</LINK>.
+
+
+Parsing Arguments
+"""""""""""""""""        
+
+FIXME: ReadArgs()
+
+
+Interprocess communication
+""""""""""""""""""""""""""
+
+FIXME
+
+
+Signals
+^^^^^^^
+
+FIXME
+
+
+Ports
+^^^^^
+
+FIXME
+
+
+Multitasking Issues
+"""""""""""""""""""
+
+``Forbid()`` and ``Permit()``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+FIXME
+
+
+Semaphores
+^^^^^^^^^^
+
+FIXME
+
+
+Shell
+"""""
+
+FIXME
+
+
+AROS' Object Oriented System (BOOPSI), Hooks and Processing of Taglists
+-----------------------------------------------------------------------
+
+FIXME
+
+Processing Taglists
+"""""""""""""""""""
+
+The following chapter describes, how to implement functions that process
+taglists. It is written in reference to BOOPSI classes, but the usage is the
+same for other uses of taglists (eg in custom libraries).
+
+FIXME
+
+
+Hooks
+"""""
+
+FIXME
+
+
+Implementing Taglists
+"""""""""""""""""""""
+
+FIXME
+
+
+Datatypes
+---------
+
+FIXME
+
+
+Devices and Hardware Independent Device Drivers (HIDDs)
+-------------------------------------------------------
+
+FIXME
+
+
+Filesystem handlers
+-------------------
+
+FIXME
+
+
+Interrupts
+----------
+
+FIXME
+
+
+
+Graphical User Interfaces (GUIs)
+================================
+
+Windows
+-------
+
+FIXME
+
+
+Requesters
+----------
+
+      Requesters are a special kind of <LINK linkend="chap-windows">windows</LINK>.
+      They either confront the user with some information or request some
+      information. Requesters always interrupt the user's normal workflow,
+      so they should only be used either to inform him of some important
+      event or to request an information, without which the application
+      can't continue to work. This kind of requester is called
+      <FIRSTTERM>modal requester</FIRSTTERM>
+
+      Examples of informational requesters are requesters that report
+      errors (like failing to open a file) or about requesters, which show
+      information about the program, when requested by the user.
+
+      Like the name indicates, requesters can also request information
+      from the user, like a file name (using file-requesters), his name or a
+      simple yes/no decision ("Really quit application?").
+
+      Requesters should only pop-up, if an application can't go on
+      without knowing that the user learned about a certain fact or without
+      getting a certain kind of information. Therefore, most requesters will
+      block the application. That means that they will not listen to any
+      input, except that in the requester. An exception are requesters that
+      are explicitly requested by the user, like most file-requesters or
+      about-requesters. Normally, these should not block the application.
+
+
+Easy Requesters
+"""""""""""""""
+
+The so-called <FIRSTTERM>easy requesters</FIRSTTERM> are
+        simple requesters. They can be used to either provide an information
+        or to ask for a choice. The number of choices is limited to 256,
+        but it is generally a bad idea to have more than about five different
+        choices. You also have to take into account that the width of the
+        <GLOSSTERM>screen</GLOSSTERM> is limited.
+
+        FIXME: EasyRequestArgs(), BuildEasyRequest()
+
+
+Complex Requesters
+""""""""""""""""""
+
+FIXME
+
+
+Asl Requesters (Font-, File- and Screenmode-)
+"""""""""""""""""""""""""""""""""""""""""""""
+       
+FIXME
+
+
+Screens
+-------
+
+FIXME
+
+
+Gadgets
+-------
+
+FIXME
+
+
+Painting and Drawing
+--------------------
+
+FIXME
+
+
+Images
+------
+
+FIXME
+
+
+Direct Hardware Access
+-----------------------
+
+FIXME
+
+
+
+Programming of Libraries, Datatypes, HIDDs, etc
+===============================================
+
+FIXME: Some of this should go into the system development manual instead.
+       (HIDDs, atleast)
+
+
+Libraries
+---------
+
+FIXME
+
+    
+Datatypes
+---------
+
+FIXME
+
+
+HIDDs and Devices
+-----------------
+
+FIXME
+
+    
+Filesystem handlers
+-------------------
+
+FIXME
+
+
+
+*** this following appendix is on "PART" level.
+  <APPENDIX id="part-liblist"><TITLE>Library Overview</TITLE>
+
+    <REFENTRY id="asl-library">
+      <REFNAMEDIV>
+        <REFNAME>asl.library</REFNAME>
+        <REFPURPOSE>complex requester handling</REFPURPOSE>
+      </REFNAMEDIV>
+
+      <REFSECT1><TITLE>Description</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+    <REFENTRY id="boopsi-library">
+      <REFNAMEDIV>
+        <REFNAME>boopsi.library</REFNAME>
+        <REFPURPOSE>BOOPSI handling</REFPURPOSE>
+      </REFNAMEDIV>
+
+      <REFSECT1><TITLE>Description</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+    <REFENTRY id="dos-library">
+      <REFNAMEDIV>
+        <REFNAME>dos.library</REFNAME>
+        <REFPURPOSE>file, process, I/O handling</REFPURPOSE>
+      </REFNAMEDIV>
+
+      <REFSECT1><TITLE>Description</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+    <REFENTRY id="gadtools-library">
+      <REFNAMEDIV>
+        <REFNAME>gadtools.library</REFNAME>
+        <REFPURPOSE>provides some more complex gadgets</REFPURPOSE>
+      </REFNAMEDIV>
+
+      <REFSECT1><TITLE>Description</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+    <REFENTRY id="exec-library">
+      <REFNAMEDIV>
+        <REFNAME>exec.library</REFNAME>
+        <REFPURPOSE>basic task, memory and system handling</REFPURPOSE>
+      </REFNAMEDIV>
+
+      <REFSECT1><TITLE>Description</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+    <REFENTRY id="intuition-library">
+      <REFNAMEDIV>
+        <REFNAME>intuition.library</REFNAME>
+        <REFPURPOSE>basic graphical user interface stuff</REFPURPOSE>
+      </REFNAMEDIV>
+
+      <REFSECT1><TITLE>Description</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+    <REFENTRY id="utility-library">
+      <REFNAMEDIV>
+        <REFNAME>utility.library</REFNAME>
+        <REFPURPOSE>taglists, hooks and various utility functions</REFPURPOSE>
+      </REFNAMEDIV>
+
+      <REFSECT1><TITLE>Description</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+  </APPENDIX>
+
+
+  <APPENDIX id="part-functions"><TITLE>Function Overview</TITLE>
+
+
+    <REFENTRY id="intuition-allocremember">
+      <REFMETA>
+        <REFENTRYTITLE><FUNCTION>AllocRemember</FUNCTION></REFENTRYTITLE>
+        <REFMISCINFO>intuition.library</REFMISCINFO>
+      </REFMETA>
+      <REFNAMEDIV>
+        <REFNAME><FUNCTION>AllocRemember()</FUNCTION></REFNAME>
+        <REFPURPOSE>allocate memory and remember it</REFPURPOSE>
+      </REFNAMEDIV>
+
+      <REFSYNOPSISDIV>
+        <FUNCSYNOPSIS>
+          <FUNCSYNOPSISINFO>#include &lt;proto/intuition.h></FUNCSYNOPSISINFO>
+          <FUNCPROTOTYPE>
+            <FUNCDEF>APTR <FUNCTION>AllocRemember</FUNCTION></FUNCDEF>
+            <PARAMDEF>struct Remember ** <PARAMETER>key</PARAMETER></PARAMDEF>
+            <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
+            <PARAMDEF>ULONG <PARAMETER>flags</PARAMETER></PARAMDEF>
+          </FUNCPROTOTYPE>
+        </FUNCSYNOPSIS>
+      </REFSYNOPSISDIV>
+
+      <REFSECT1><TITLE>FIXME</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+
+    <REFENTRY id="exec-allocvec">
+      <REFMETA>
+        <REFENTRYTITLE><FUNCTION>AllocVec</FUNCTION></REFENTRYTITLE>
+        <REFMISCINFO>exec.library</REFMISCINFO>
+      </REFMETA>
+      <REFNAMEDIV>
+        <REFNAME><FUNCTION>AllocVec()</FUNCTION></REFNAME>
+        <REFPURPOSE>allocate memory and remember its size</REFPURPOSE>
+      </REFNAMEDIV>
+
+      <REFSYNOPSISDIV>
+        <FUNCSYNOPSIS>
+          <FUNCSYNOPSISINFO>#include &lt;proto/exec.h></FUNCSYNOPSISINFO>
+          <FUNCPROTOTYPE>
+            <FUNCDEF>APTR <FUNCTION>AllocVec</FUNCTION></FUNCDEF>
+            <PARAMDEF>ULONG <PARAMETER>size</PARAMETER></PARAMDEF>
+            <PARAMDEF>ULONG <PARAMETER>flags</PARAMETER></PARAMDEF>
+          </FUNCPROTOTYPE>
+        </FUNCSYNOPSIS>
+      </REFSYNOPSISDIV>
+
+      <REFSECT1><TITLE>FIXME</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+
+    <REFENTRY id="intuition-freeremember">
+      <REFMETA>
+        <REFENTRYTITLE><FUNCTION>FreeRemember</FUNCTION></REFENTRYTITLE>
+        <REFMISCINFO>intuition.library</REFMISCINFO>
+      </REFMETA>
+      <REFNAMEDIV>
+        <REFNAME><FUNCTION>FreeRemember()</FUNCTION></REFNAME>
+        <REFPURPOSE>free remembered memory</REFPURPOSE>
+      </REFNAMEDIV>
+
+      <REFSYNOPSISDIV>
+        <FUNCSYNOPSIS>
+          <FUNCSYNOPSISINFO>#include &lt;proto/intuition.h></FUNCSYNOPSISINFO>
+          <FUNCPROTOTYPE>
+            <FUNCDEF>void <FUNCTION>FreeRemember</FUNCTION></FUNCDEF>
+            <PARAMDEF>struct Remember ** <PARAMETER>key</PARAMETER></PARAMDEF>
+            <PARAMDEF>LONG <PARAMETER>reallyForget</PARAMETER></PARAMDEF>
+          </FUNCPROTOTYPE>
+        </FUNCSYNOPSIS>
+      </REFSYNOPSISDIV>
+
+      <REFSECT1><TITLE>FIXME</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+
+    <REFENTRY id="intuition-easyrequestargsa">
+      <REFMETA>
+        <REFENTRYTITLE><FUNCTION>EasyRequestArgsA</FUNCTION></REFENTRYTITLE>
+        <REFMISCINFO>intuition.library</REFMISCINFO>
+      </REFMETA>
+      <REFNAMEDIV>
+        <REFNAME><FUNCTION>EasyRequestArgsA()</FUNCTION></REFNAME>
+        <REFPURPOSE>open a simple requester</REFPURPOSE>
+      </REFNAMEDIV>
+
+      <REFSYNOPSISDIV>
+        <FUNCSYNOPSIS>
+          <FUNCSYNOPSISINFO>#include &lt;proto/intuition.h></FUNCSYNOPSISINFO>
+          <FUNCPROTOTYPE>
+            <FUNCDEF>LONG <FUNCTION>EasyRequestArgsA</FUNCTION></FUNCDEF>
+            <PARAMDEF>struct Window * <PARAMETER>window</PARAMETER></PARAMDEF>
+            <PARAMDEF>struct EasyStruct * <PARAMETER>easyStruct</PARAMETER></PARAMDEF>
+            <PARAMDEF>struct Window * <PARAMETER>IDCMP_ptr</PARAMETER></PARAMDEF>
+            <PARAMDEF>struct Window * <PARAMETER>argList</PARAMETER></PARAMDEF>
+          </FUNCPROTOTYPE>
+        </FUNCSYNOPSIS>
+      </REFSYNOPSISDIV>
+
+      <REFSECT1><TITLE>FIXME</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+  </APPENDIX>
+
+
+  <APPENDIX id="part-headers"><TITLE>Header File Overview</TITLE>
+
+    <REFENTRY id="dos-dos-h" role="header">
+      <REFNAMEDIV>
+        <REFNAME>dos/dos.h</REFNAME>
+        <REFPURPOSE>basic features of dos.library</REFPURPOSE>
+      </REFNAMEDIV>
+
+      <REFSECT1 id="dos-dos-error" role="defines"><TITLE><STRUCTNAME>DOS Error Codes</STRUCTNAME></TITLE>
+        FIXME
+      </REFSECT1>
+
+
+      <REFSECT1><TITLE>FIXME</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+
+    <REFENTRY id="dos-dosextens-h" role="header">
+      <REFNAMEDIV>
+        <REFNAME>dos/dosextens.h</REFNAME>
+        <REFPURPOSE>extended features of dos.library</REFPURPOSE>
+      </REFNAMEDIV>
+
+
+      <REFSECT1 id="dos-dosextens-commandlineinterface" role="struct"><TITLE>struct <STRUCTNAME>CommandLineInterface</STRUCTNAME></TITLE>
+        FIXME
+      </REFSECT1>
+
+
+      <REFSECT1 id="dos-dosextens-process" role="struct"><TITLE>struct <STRUCTNAME>Process</STRUCTNAME></TITLE>
+        FIXME
+      </REFSECT1>
+
+
+      <REFSECT1><TITLE>FIXME</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+
+    <REFENTRY id="exec-libraries-h" role="header">
+      <REFNAMEDIV>
+        <REFNAME>exec/libraries.h</REFNAME>
+        <REFPURPOSE>library handling</REFPURPOSE>
+      </REFNAMEDIV>
+
+
+      <REFSECT1 id="exec-libraries-library" role="struct"><TITLE>struct <STRUCTNAME>Library</STRUCTNAME></TITLE>
+        FIXME
+      </REFSECT1>
+
+
+      <REFSECT1><TITLE>FIXME</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+
+    <REFENTRY id="exec-lists-h" role="header">
+      <REFNAMEDIV>
+        <REFNAME>exec/lists.h</REFNAME>
+        <REFPURPOSE>exec list handling</REFPURPOSE>
+      </REFNAMEDIV>
+
+
+      <REFSECT1 role="includes"><TITLE>Includes</TITLE>
+        <ITEMIZEDLIST>
+          <LISTITEM><LINK linkend="exec-nodes-h"><FILENAME class="headerfile">exec/nodes.h</FILENAME></LINK></LISTITEM>
+        </ITEMIZEDLIST>
+      </REFSECT1>
+
+
+      <REFSECT1 id="exec-lists-list" role="struct"><TITLE>struct <STRUCTNAME>List</STRUCTNAME></TITLE>
+        A standard exec list structure. This is used for all kinds of
+        doubly linked lists. Members of this list are of type
+        <LINK linkend="exec-nodes-node">struct <STRUCTNAME>Node</STRUCTNAME></LINK>.
+
+        This structure can be embedded into other structures.
+
+        <VARIABLELIST role="fieldlist"><TITLE>Fields</TITLE>
+          <VARLISTENTRY>
+            <TERM>struct <STRUCTNAME>Node</STRUCTNAME> * <STRUCTFIELD>lh_Head</STRUCTFIELD></TERM>
+            <LISTITEM>Pointer to the first item in the list. If the list is
+            empty, this points to the <STRUCTFIELD>lh_Tail</STRUCTFIELD> field
+            of the list.</LISTITEM>
+          </VARLISTENTRY>
+          <VARLISTENTRY>
+            <TERM>struct <STRUCTNAME>Node</STRUCTNAME> * <STRUCTFIELD>lh_Tail</STRUCTFIELD></TERM>
+            <LISTITEM>Pointer to the last item in the list. If the list
+            is empty, this is <SYMBOL>NULL</SYMBOL>.</LISTITEM>
+          </VARLISTENTRY>
+          <VARLISTENTRY>
+            <TERM>struct <STRUCTNAME>Node</STRUCTNAME> * <STRUCTFIELD>lh_TailPred</STRUCTFIELD></TERM>
+            <LISTITEM>This is a fake entry that also points to the last
+            entry in the list. If the list is empty, it points to the list
+            itself, instead.</LISTITEM>
+          </VARLISTENTRY>
+          <VARLISTENTRY>
+            <TERM>UBYTE <STRUCTFIELD>lh_Type</STRUCTFIELD></TERM>
+            <LISTITEM>This field specifies the type the nodes in the
+            list. It corresponds to the <STRUCTFIELD>ln_Type</STRUCTFIELD>
+            field of the <LINK linkend="exec-nodes-node"><STRUCTNAME>Node</STRUCTNAME></LINK>
+            structure. See <FILENAME class="headerfile">exec/nodes.h</FILENAME>
+            for a <LINK linkend="exec-nodes-types">list of possible types</LINK>.</LISTITEM>
+          </VARLISTENTRY>
+          <VARLISTENTRY>
+            <TERM>UBYTE <STRUCTFIELD>l_Pad</STRUCTFIELD></TERM>
+            <LISTITEM>Unused field for word-padding.</LISTITEM>
+          </VARLISTENTRY>
+        </VARIABLELIST>
+      </REFSECT1>
+
+
+      <REFSECT1 id="exec-lists-minlist" role="struct"><TITLE>struct <STRUCTNAME>MinList</STRUCTNAME></TITLE>
+        A minimal exec list structure. This is exactly the same as a
+        <LINK linkend="exec-lists-list"><STRUCTNAME>List</STRUCTNAME></LINK>
+        structure, except that the <STRUCTFIELD>lh_Type</STRUCTFIELD> field
+        is missing. Members of a <STRUCTNAME>MinList</STRUCTNAME> are of type
+        <LINK linkend="exec-nodes-minnode">struct <STRUCTNAME>MinNode</STRUCTNAME></LINK>.
+        <STRUCTNAME>Node</STRUCTNAME>s may be used, but you loose all their
+        advantages.
+
+        This structure can be embedded into other structures.
+
+        <VARIABLELIST role="fieldlist"><TITLE>Fields</TITLE>
+          <VARLISTENTRY>
+            <TERM>struct <STRUCTNAME>MinNode</STRUCTNAME> * <STRUCTFIELD>mlh_Head</STRUCTFIELD></TERM>
+            <LISTITEM>Pointer to the first item in the list. If the list is
+            empty, this points to the <STRUCTFIELD>mlh_Tail</STRUCTFIELD> field
+            of the list.</LISTITEM>
+          </VARLISTENTRY>
+          <VARLISTENTRY>
+            <TERM>struct <STRUCTNAME>MinNode</STRUCTNAME> * <STRUCTFIELD>mlh_Tail</STRUCTFIELD></TERM>
+            <LISTITEM>Pointer to the last item in the list. If the list
+            is empty, this is <SYMBOL>NULL</SYMBOL>.</LISTITEM>
+          </VARLISTENTRY>
+          <VARLISTENTRY>
+            <TERM>struct <STRUCTNAME>MinNode</STRUCTNAME> * <STRUCTFIELD>mlh_TailPred</STRUCTFIELD></TERM>
+            <LISTITEM>This is a fake entry that also points to the last
+            entry in the list. If the list is empty, it points to the list
+            itself, instead.</LISTITEM>
+          </VARLISTENTRY>
+        </VARIABLELIST>
+      </REFSECT1>
+
+
+      <REFSECT1 id="exec-lists-macros"><TITLE>Macros</TITLE>
+        The following are included to ease the use of exec lists.
+
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+
+    <REFENTRY id="exec-memory-h" role="header">
+      <REFNAMEDIV>
+        <REFNAME>exec/memory.h</REFNAME>
+        <REFPURPOSE>memory management</REFPURPOSE>
+      </REFNAMEDIV>
+
+
+      <REFSECT1 id="exec-memory-memheader" role="struct"><TITLE>struct <STRUCTNAME>MemHeader</STRUCTNAME></TITLE>
+        FIXME
+      </REFSECT1>
+
+
+      <REFSECT1 id="exec-memory-memlist" role="header"><TITLE>struct <STRUCTNAME>MemList</STRUCTNAME></TITLE>
+        FIXME
+      </REFSECT1>
+
+
+      <REFSECT1 id="exec-memory-memf" role="defines"><TITLE>Memory Flags</TITLE>
+        FIXME
+      </REFSECT1>
+
+
+      <REFSECT1><TITLE>FIXME</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+
+    <REFENTRY id="exec-nodes-h" role="header">
+      <REFNAMEDIV>
+        <REFNAME>exec/nodes.h</REFNAME>
+        <REFPURPOSE>list-node handling</REFPURPOSE>
+      </REFNAMEDIV>
+
+
+      <REFSECT1 id="exec-nodes-node" role="struct"><TITLE>struct <STRUCTNAME>Node</STRUCTNAME></TITLE>
+        FIXME
+      </REFSECT1>
+
+
+      <REFSECT1 id="exec-nodes-minnode" role="struct"><TITLE>struct <STRUCTNAME>MinNode</STRUCTNAME></TITLE>
+        FIXME
+      </REFSECT1>
+
+
+      <REFSECT1 id="exec-nodes-types" role="defines"><TITLE>Node Types</TITLE>
+        FIXME
+      </REFSECT1>
+
+
+      <REFSECT1><TITLE>FIXME</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+
+    <REFENTRY id="exec-tasks-h" role="header">
+      <REFNAMEDIV>
+        <REFNAME>exec/tasks.h</REFNAME>
+        <REFPURPOSE>task handling</REFPURPOSE>
+      </REFNAMEDIV>
+
+
+      <REFSECT1 id="exec-tasks-stackswapstruct" role="struct"><TITLE>struct <STRUCTNAME>StackSwapStruct</STRUCTNAME></TITLE>
+        FIXME
+      </REFSECT1>
+
+
+      <REFSECT1 id="exec-tasks-task" role="struct"><TITLE>struct <STRUCTNAME>Task</STRUCTNAME></TITLE>
+        FIXME
+      </REFSECT1>
+
+
+      <REFSECT1><TITLE>FIXME</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+
+
+    <REFENTRY id="utility-tagitem-h" role="header">
+      <REFNAMEDIV>
+        <REFNAME>utility/tagitem.h</REFNAME>
+        <REFPURPOSE>taglist handling</REFPURPOSE>
+      </REFNAMEDIV>
+
+
+      <REFSECT1><TITLE>FIXME</TITLE>
+        FIXME
+      </REFSECT1>
+    </REFENTRY>
+  </APPENDIX>
+
+------------------
+Appendix: Glossary
+------------------
+
+Absolute Path
+=============
+
+.. FIXME: Write.
+
+See also:
+
++ `Relative Path`_
+
+
+Current Directory
+=================
+
+:Abbreviation: CD
+      
+The directory, which all file-system actions are relative to, as long as no
+`absolute path`s are used. Every `process` structure stores its current
+directory in the field `pr_CurrentDir`.
+	
+
+Process
+=======
+
+.. FIXME: Write.
+
+See also:
+
++ `Task`_
+
+
+Relative Path
+=============
+
+.. FIXME: Write.
+
+See also:
+
++ `Absolute Path`_
+
+
+Resident List
+=============
+
+.. FIXME: Write.
+
+
+Screen
+======
+
+.. FIXME: Write
+
+
+  
+
+Standard Filehandles
+====================
+
+.. FIXME: Write.
+
+
+Standard Input
+==============
+
+:Abbreviation: stdin
+
+See `Standard Filehandles`_
+  
+
+Standard Output
+===============      
+
+:Abbreviation: stdout
+
+See `Standard Filehandles`_
+
+
+Standard Error
+==============
+
+:Abbreviation: stderr
+
+See `Standard Filehandles`_
+    
+   
+Task
+====
+
+.. FIXME: Write.
+
+
+See also:
+
++ `Process`_
+  
+
+Window
+======
+
+.. FIXME: Write.
+
+See also:
+
++ `Screen`__
+
+
+Screen
+======
+
+FIXME: Write.
+
+
+
+-----------------------------------------
+Appendix: Differences compared to AmigaOS
+-----------------------------------------
+
+Pointer/Integer conversions
+===========================
+
+If you need a variable which can store a pointers as an integer, don't use
+`ULONG` but `IPTR`. AROS guarantees that `LONG` is 32bit on all systems, while
+`IPTR` is always large enough to contain a pointer. Most notable things
+which are affected by this: `TagItem`s (the `ti_Data` field is now an `IPTR`
+instead of `ULONG`), BOOPSI classes (eg. the return value of `DoMethod()`),
+`ReadArgs()`, `VPrintf()`, `VFPrintf()` and more.
+
+64 bit variables
+================
+
+The type of 64 bit variables is `QUAD` (unsigned: `UQUAD`). This is for example
+returned by the function `SMult64()` of utility.library. To access the
+high- and loworder 32bit values of the 64bit variable, use `LOW32OF64()`
+and `HIGH32OF64()` which are defined in `AROS/include/aros/64bit.h`.
+
+Cloning RastPorts
+=================
+
+AROS uses an external driver to access the graphics hardware. Since the
+nature of this driver is unknown to AROS, it is no longer valid to clone
+a RastPort by simply copying it. To be compatible, there are two new
+functions (in AROS) or macros (on Amiga): `CreateRastPort()`,
+`CloneRastPort()` and `FreeRastPort()`. You must call `CloneRastPort()` to
+create a copy or `CreateRastPort()` for an empty RastPort and
+`FreeRastPort()` after you´ve done your work with it.
+
+This approach produces equivalent code on the Amiga but on AROS it can slow
+things down a bit. If you must preserve the original state of the RastPort,
+it's more safe to create a clone, work on it and then dispose of it again. It
+can also be faster if you would have to make a lot of changes to the RastPort
+to create two clones and set them to the two states you need. But your code
+should not depend on certain gains or losses of speed due to cloned RastPorts
+since the behaviour of the underlying graphics system is undefined.
+
+Tag values
+==========
+
+The original AmigaOS doesn't use the tags below `USER_TAG` (have a look a at 
+`include:utility/tagitem.h` if you don't belive me) which means, you shouldn't use
+tags at or near `USER_TAG` because then they might interfere with the OS's
+own tags. To solve this, AROS *does* use the tags *below* `USER_TAG` and the
+various implementators need not fear that their tags may overlap with the
+ones from the system. The file `AROS/include/utility/tagitem.h` now contains the
+basic offsets for the various parts of the OS. In the future, it might be
+possible for users to allocate ranges of tags for specific uses.
+
+DoMethod() or the stack is all wrong
+====================================
+
+There are CPUs around which don't care that the rest of the world have
+stacks which grow from large to small adresses. HPPA is an example for
+this. While it might look neat to the engineers who did it, it breaks our
+code. Another thing which breaks the code are small data types (eg. `WORD`,
+`UBYTE`, etc), because most systems put only integers or longs and pointers
+on the stack. So if some Msg structure expects `WORD` (see
+`include:intuition/gadgetclass.h`), this fails on every system but
+the Amiga. Then there are rumours about CPUs which use 32bit numbers and
+64bit pointers or the other way round. On these CPUs, `SetAttrs()` and all
+other function which pass TagLists over the stack will fail. To overcome
+this, we introduce this rule:
+
+*If you want to pass a structure with `DoMethod()` and `DoMethodA()`
+or similar functions, you must prepend `STACK` to each type, like
+this: `WORD` becomes `STACKWORD`, `ULONG` becomes `STACKULONG`, etc.*
+
+To solve special problems on certain CPUs, we try to get a compiler which
+gets it right or, if that is impossible, we write a small preprocessor
+which replaces the dubious code by calls to the array versions.
+
+Include files
+=============
+
+Due to some weird reason the include files for workbench.library are called
+clib/wb_protos.h, defines/wb.h, inline/wb.h, wb_pragmas.h and proto/wb.h
+in AmigaOS. AROS decided to replace "wb" by the library's name "workbench".
+We provide wrapper includes for consitency to (old) AmigaOS programs, but
+recommend using the new names clib/workbench_protos.h, defines/workbench.h,
+inline/workbench.h, workbench_pragmas.h and proto/workbench.h instead.
+
+Registers and CPUs
+==================
+
+AROS has put some effort in defining a way to write code which is hardware
+independant. To achieve this, a couple of macros have been definied.
+
+AROS_ASMSYMNAME(n)
+    Use this macro to access the assembler symbol ``n`` from C.
+
+AROS_CSYMNAME(n)
+    Use this macro to access the C symbol ``n`` from assembler.
+
+AROS_CDEFNAME(n) 
+    Use this macro to define the assembler symbol ``n`` in such a 
+    way that it can be accessed from C.
+
+AROS_SLIB_ENTRY(n,l)
+    Use this macro to get the name of a function ``n`` which is part of 
+    the shared library ``l``.
+
+AROS_UFH#(...) 
+    Use this macro to declare a function which needs its arguments passed 
+    in registers. ``"#"`` is the number of arguments the function
+    expects. The parameters of the macro are the return type of the function,
+    its name and the parameters in `AROS_UFHA()` macros. If the function is an
+    assembler function, you must use the `AROS_ASMSYMNAME()` macro to get it's
+    name.
+
+AROS_UFHA(t,n,r)
+    Use this macro to declare a parameter for a
+    function which is declared with the AROS_UFH*() macro. It takes three
+    arguments: The type of the parameter, the name of the parameter and the
+    register the parameter is expected in.
+
+AROS_UFC#(...)
+    Call a function which needs its arguments in
+    registers. Works the same way as AROS_UFH*().
+
+AROS_LH#[I](...) 
+    Use this macro to declare a function which is part
+    of a shared library. "#" is the number of arguments the function expects.
+    If the function doesn't need the library base passed, you can speed up
+    things by appending "I" to the macros name. The parameters of the macro are
+    the return type of the function, its name, the parameters in AROS_LHA()
+    macros, the type of the library, the name of the variable the library base
+    is passed in, the offset in the function table (1 is the first offset and 5
+    is the first offset for a user function) and the name of the library.
+
+AROS_LHA(t,n,r) 
+    Use this macro to declare a parameter for a function
+    which is declared with the AROS_LH*() macro. It takes three arguments:
+    The type of the parameter, the name of the parameter and the register the
+    parameter is expected in.
+
+AROS_LC#[I](...)
+    Call a function which is part of a shared library.
+    Works the same way as AROS_LH*().
+
+AROS_STACK_GROWS_DOWNWARDS 
+    has the value 1 if it is true and 0 otherwise.
+
+AROS_BIG_ENDIAN 
+    has the value 1 if the machine is big endian (eg.
+    Amiga) or little endian (eg. PCs). Endianess means the way a number is
+    stored in memory. Amiga stores ``0x11223344`` as ``0x11 0x22 0x33 0x44`` in
+    memory while a PC does it as ``0x44 0x33 0x22 0x11``.
+
+AROS_SIZEOFULONG
+    The result of ``sizeof(ULONG)``.
+
+AROS_WORDALIGN
+    The minimal alignment of 16bit numbers in the memory of computer 
+    (`WORD` and `UWORD`).
+
+AROS_LONGALIGN 
+    The minimal alignment of 32bit numbers in the memory
+    of computer (LONG and ULONG).
+
+AROS_PTRALIGN 
+    The minimal alignment of pointers in the memory of
+    computer (eg. ``char *`` or APTR).
+
+AROS_DOUBLEALIGN 
+    The minimal alignment of 64bit IEEE floating point
+    numbers in the memory of computer (``double``).
+
+AROS_WORSTALIGN 
+    The worst possible alignment of any data type in the
+    memory of computer (mostly the same as `AROS_DOUBLEALIGN`).
+
+AROS_ALIGN(x) 
+    Get the next possible address where one can put any
+    data type. This macro will return ``x`` if any data type can be put at ``x``.
+    Most of the time, this macro is used like this: Get a buffer, put some data
+    in it and then use `AROS_ALIGN()` to find out where the next data can be
+    put.
+
+AROS_SLOWSTACKTAGS
+    is defined, if you must use `GetTagsFromStack()`
+    and `FreeTagsFromStack()` instead of just passing the address of the tag of
+    the first tagitem.
+
+AROS_SLOWSTACKMETHODS 
+    is defined, if you must use `GetMsgFromStack()` and `FreeMsgFromStack()` 
+    instead of just passing the
+    address of the method ID.
+

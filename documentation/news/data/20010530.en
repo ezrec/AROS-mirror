@@ -1,0 +1,11 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2001-05-30
+
+Stefan Berger commited some boot code for AROS Native/Palm.
+
+Henning Kiel fixed some compiler warnings and a real bug in c.lib,
+workbench and Font prefs.

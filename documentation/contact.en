@@ -1,0 +1,126 @@
+===================
+Contact information
+===================
+
+:Authors:   Adam Chodorowski 
+:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Done.
+
+.. Contents::
+
+
+Project coordinator
+===================
+
+The project coordinator is Aaron "Optimizer" Digulla and he's the main contact
+person for the AROS Development Team. If you want to address the team as
+a whole, `join the development team`__ to `contribute`__ to the project or
+propose a sponsoring deal, this is the guy to talk to. ;-) You can reach him by
+sending a mail to `digulla@aros.org`__.
+
+__ documentation/developers/contribute#joining-the-team
+__ documentation/developers/contribute
+__ mailto:digulla@aros.org
+
+
+Mailing lists
+=============
+
+There are a couple of AROS related mailing lists available, which are the main
+channels of information and discussion about AROS. The following mailings lists
+are available:
+
++ `AROS Announce`__
+  
+  This is a low-volume list for news and important announcements, which
+  basically mirrors the content of the news section of the website. Normal
+  posting is not allowed.
+
++ `AROS User`__
+    
+  General discussion and support list for users. Currently the volume on the
+  list is quite low, since AROS doesn't have many users yet.  
+
++ `AROS Developer`__
+
+  This is the developer mailing list, where discussions about the development of
+  AROS are held. Also, the CVS logs and nightly build status are posted daily to
+  this list. It is **highly** recommended for developers to join this list, as
+  it will otherwise be quite hard to keep up to date on current developments.
+  Since there aren't *that* many AROS developers, the volume on this list is
+  generally quite low, but it can become quite high if a heated discussion gets
+  going. 
+
+  .. Note:: Subscription requests to this list are not handled automatically, 
+            but every request is verified by the list administrator. So there 
+            might be some delay from the time you send a subscription request 
+            to when you actually have become a member.
+
++ `AROS Networking`__
+
+  This is a developer mailing list for discussing development of networking
+  software for AROS. 
+
++ `AROS Bugs`__
+
+  This is a read-only developer mailing list where additions and changes to the
+  `bug database`_ are automatically posted. It is *recommended* for developers
+  to join this list, so we can stay on top of bug reports that come in. The
+  volume on this list is low.
+
++ `AROS CVS`__
+
+  This is a read-only developer mailing list where CVS logs are automatically
+  posted whenever something is commited to the CVS server. In contrast to the
+  daily CVS logs posted to the AROS Developer list, where the mails contain
+  a digest of all activity that happened on the CVS server during the day,
+  individual mails are sent here *immediately* for every logged activity. So if
+  you want almost real-time feedback on the CVS server, this is the list for
+  you. The volume to this list can be quite high.
+  
++ `AROS Bootlogs`__
+    
+  This is a mailing list set up for receiving AROS bootlogs, which will help us
+  diagnose and improve the native ports. Normal discussion is **not** allowed
+  here. When posting a bootlog to this list, please include detailed description
+  of your hardware configuration.
+
+Follow the links to the administrative pages for information on how to
+subscribe, unsubscribe, accessing the archives and other useful functions.
+
+__ http://www.aros.org/mailman/listinfo/aros-announce/
+__ http://www.aros.org/mailman/listinfo/aros-user/
+__ http://www.aros.org/mailman/listinfo/aros-dev/
+__ http://lists.sourceforge.net/mailman/listinfo/aros-networking
+__ http://lists.sourceforge.net/mailman/listinfo/aros-bugs
+__ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
+__ http://lists.sourceforge.net/mailman/listinfo/aros-bootlogs
+
+.. _`bug database`: http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+
+
+Forums
+======
+
+For those of you who do not want to bother with the mailing lists, there is also
+some web-based forums_ available. Just follow the last link. ;-) To post in the
+forums_, registration is required but it is very low-hassle. And you don't have
+to do anything to read or search them.
+
+.. _forums: http://aros.sourceforge.net/forum/
+
+
+IRC channels
+============
+
+There is also an official IRC channel for AROS, which is situated on EFnet_ and
+is called #aros. It's administered by Ola "4pLaY" Jensen. There is also
+a developer-only channel, but you need to contact some other developer or 4pLaY
+to get access to it. Just send him a private message when you're online (his
+exact nick is "``_4pLaY_``" or sometimes "``|4|AWAY``" when he's not really in
+front of the computer).
+
+.. _EFnet: http://www.efnet.org/
+

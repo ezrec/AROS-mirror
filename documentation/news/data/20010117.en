@@ -1,0 +1,10 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2001-01-17
+
+Johan Alfredsson completed C:Run and Kjetil Svalastog Matheussen
+commited a first version of a camd.library (MIDI) and fixed
+a few bugs in realtime.library.

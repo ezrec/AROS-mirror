@@ -1,0 +1,26 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2001-09-30
+
+Kjetil Svalastog Matheussen improved the PolyDraw() routine a bit.
+And he fixed demowin which used this routine in a wrong way.
+Radium is now part of the default build. Doesn't work completely,
+yet, though.
+
+Peter Eriksson worked on Font prefs (fixed a typo in the Swedish
+translation) and the ReqTools pref (the Escape key, Ctrl-C and the
+close button now close the window).
+
+Nicholai Benalal began to merge MorphOS patches into asl.library.
+
+Adam Chodorowski began porting Python__, the first real programming 
+language for AROS. He can already run simple scripts. Good work! Now 
+we'll see if we can squeeze enough space out of the bootdisk to include 
+it :-) He also fixed a bug in strchr().
+
+Fabio Alemagna implemented umask().
+
+__ http://www.python.org/

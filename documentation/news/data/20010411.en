@@ -1,0 +1,9 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2001-04-11
+
+Georg Steger made duplicate font entries (for fonts which are in RAM and
+on disk) disappear in the ASL font requester.

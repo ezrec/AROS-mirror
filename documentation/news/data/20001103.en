@@ -1,0 +1,10 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2000-11-03
+
+Henning Kiel fixed a couple of bugs in the build process and
+Georg Steger improved the ASL file requester code. You can now
+delete, create and rename drawers.

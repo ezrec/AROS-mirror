@@ -1,0 +1,11 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2000-02-11
+
+We have begun to move contributed software (for example, examples from
+Fish disks and Aminet, the small and big games) outside of AROS.
+These things have now their own graph (that's why the size of AROS
+became smaller last week) and the code is in AROS/contrib.

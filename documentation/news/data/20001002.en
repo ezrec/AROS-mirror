@@ -1,0 +1,11 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2000-10-02
+
+There is now a simple binary.datatype plus the skeleton for the
+picture.datatype. The shell supports now color escape sequences
+and more language catalogs were added for MultiView and More.
+Done by Georg Steger (who else ;-)).

@@ -1,0 +1,27 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2001-09-10
+
+Fabio Alemagna is taking a break from the project because other things
+have become more important for him ([Aaron] Or my guess would be that he didn't
+give enough attention to those other things because he did work so much
+on AROS ;-). The whole AROS team thanks him for his effort and wishes
+him best luck with whatever he intends to do now.
+
+Sebastian Heutling optimized LoadSeg().
+
+Georg Steger fixed a bug in NewCliProc() and in the
+keyboard driver (trying to update the LEDs while the keyboard interrupts
+where active leads to a freeze). He also fixed a bug in putimage in
+the vga.hidd which corrupted the map in the Locale prefs when the
+window was moved outside of the screen. BlitColorExpansion
+in the vga.hidd is now faster and some small coordinate bugs have
+been squished.
+
+Henning Kiel fixed typos and added prototypes for DosDoIO()
+where necessary.
+
+Iain Templeton added some new macros to ``arossupport/system.h``.

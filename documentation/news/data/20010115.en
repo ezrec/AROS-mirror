@@ -1,0 +1,11 @@
+============
+Miscellanous
+============
+
+:Author: Aaron Digulla
+:Date:   2001-01-15
+
+Georg Steger fixed a bug (moving&sizing a window at the same time)
+in the new layers.library and improved font copying by the build
+process. Johan Alfredsson improved C:Run. Henning Kiel fixed a
+couple of bugs in his games. 
