@@ -50,7 +50,7 @@ FUNCS := \
 USER_CFLAGS := -I./ -I./include
 
 %build_module mmake=workbench-libs-libini modname=inifile \
-    modtype=library files="inifile_init $(INILBFILES) $(FUNCS)" \
+    modtype=library files="$(INILBFILES) $(FUNCS)" \
     uselibs="amiga arosc rom m"
 
 %copy_includes includes=include/ini.h path=inifile 
