@@ -6,6 +6,7 @@ TransferLog @BASEDIR@/log/access.log
 ScriptAlias /cgi-bin/ @BASEDIR@/cgi-bin/
 ScriptAlias /mailman/ @MAILMAN@/cgi-bin/
 ScriptAlias /lxr/ @BASEDIR@/lxr/http/
+Alias /pipermail/ /var/lib/mailman/archives/public/
 #AddType text/plain c h src
 </VirtualHost>
 
