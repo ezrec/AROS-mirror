@@ -121,14 +121,14 @@ extern UWORD AddTaskMember(void);
 extern BOOL FreeTaskMember( void);
 extern BOOL GetWindowBounds(ULONG, struct IBox *);
 extern VOID SetWindowBounds(ULONG, struct IBox *);
-//extern SAVEDS ASM APTR BGUI_AllocPoolMemDebug(REG(d0) ULONG, REG(a0) STRPTR, REG(d1) ULONG);
-extern SAVEDS ASM REGFUNC3( APTR , BGUI_AllocPoolMemDebug , REGPARAM(d0,ULONG,), REGPARAM(a0,STRPTR,), REGPARAM(d1,ULONG,));
-//extern SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG);
-extern SAVEDS ASM REGFUNC1( APTR , BGUI_AllocPoolMem , REGPARAM(d0,ULONG,));
-//extern SAVEDS ASM VOID BGUI_FreePoolMemDebug(REG(a0) APTR, REG(a1) STRPTR, REG(d0) ULONG);
-extern SAVEDS ASM REGFUNC3( VOID , BGUI_FreePoolMemDebug , REGPARAM(a0,APTR,), REGPARAM(a1,STRPTR,), REGPARAM(d0,ULONG,));
-//extern SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR);
+
+#ifndef _AROS
+extern SAVEDS ASM APTR BGUI_AllocPoolMemDebug(REG(d0) ULONG, REG(a0) STRPTR, REG(d1) ULONG);
+extern SAVEDS ASM APTR BGUI_AllocPoolMem(REG(d0) ULONG);
+extern SAVEDS ASM VOID BGUI_FreePoolMemDebug(REG(a0) APTR, REG(a1) STRPTR, REG(d0) ULONG);
+extern SAVEDS ASM VOID BGUI_FreePoolMem(REG(a0) APTR);
 extern SAVEDS ASM REGFUNC1( VOID , BGUI_FreePoolMem, REGPARAM(a0,APTR,));
+#endif
 
 //extern ASM BOOL AddIDReport(REG(a0) struct Window *, REG(d0) ULONG, REG(a1) struct Task *);
 extern ASM REGFUNC3(BOOL, AddIDReport, REGPARAM(A0, struct Window *,), REGPARAM(D0, ULONG,), REGPARAM(A1, struct Task *,));
