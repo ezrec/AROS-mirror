@@ -1,0 +1,43 @@
+#   $Id$
+#
+#   Makefile to make PUI.
+
+include $(TOP)/config/make.cfg
+
+FILES := \
+	 api \
+	 areaclass \
+	 buttonclass \
+	 coolimageclass \
+	 cycleclass \
+	 groupclass \
+	 labelclass \
+	 main \
+	 misc \
+    	 p2c \
+	 propclass \
+    	 remap \
+	 stringclass \
+	 sysimageclass \
+	 vars
+
+EXEDIR := $(AROSDIR)/PUI
+EXE := $(EXEDIR)/pui
+
+USE_AROSLIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+
+USER_INCLUDES := -I.
+
+#MM contrib-development-gui-pui : includes linklib
+
+%make_prog_setup mmake=contrib-development-gui-pui
+
+contrib-development-gui-pui : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps
