@@ -6,7 +6,7 @@ the prototype didn't use const char * for the format string. He also
 fixed some bugs with BSTR handling in the DOS.library. Plus C:Mount uses
 now the expansion.library to add dos entries for mounted volumes.
 
-Sebastian Heutlin enhanced the boot code. Now all known devices are checked
+Sebastian Heutling enhanced the boot code. Now all known devices are checked
 for bootable media. Also, our FFS can now mount more than once device.
 The trackdisk.device uses now trackbuffering.
 
