@@ -31,7 +31,7 @@
  * Author: Adam Dunkels <adam@sics.se>
  *         Sebastian Bauer <sebauer@t-online.de>
  *
- * $Id: sys_arch.c,v 1.6 2002/07/09 21:24:34 sebauer Exp $
+ * $Id: sys_arch.c,v 1.7 2002/07/09 22:26:02 sebauer Exp $
  */
 
 #include <time.h>
@@ -213,6 +213,28 @@ static void Thread_Cleanup(struct ThreadData *data)
     Timer_Cleanup(data);
 }
 
+/*-----------------------------------------------------------------------------------*/
+
+struct ThreadData *Thread_Alloc(void)
+{
+  struct ThreadData *data = AllocVec(sizeof(struct ThreadData),MEMF_CLEAR);
+  if (!data) return NULL;
+  if (!(Thread_Init(data)))
+  {
+  	FreeVec(data);
+  	return NULL;
+  }
+  return data;
+}
+
+/*-----------------------------------------------------------------------------------*/
+
+void Thread_Free(struct ThreadData *data)
+{
+	if (!data) return;
+	Thread_Cleanup(data);
+  FreeVec(data);
+}
 
 /*-----------------------------------------------------------------------------------*/
 static int Thread_Entry(void)
