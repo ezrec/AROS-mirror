@@ -30,8 +30,10 @@ brackets ("[]").
 200304??:
  <next day here>
 
+20030404:
+ * Very positive response from render.library/guigfx author. [dlc]
+
 20030403:
- * libjpeg and jpeg.datatype in contrib [gierich]
  * thinking about moving at least Regina, Freetype, jpeg.datatype
    and JanoEditor into the main tree [chodorowski]
  * thinking about porting render.library and guigfx.library to AROS and use it
