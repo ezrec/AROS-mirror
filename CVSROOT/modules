@@ -51,7 +51,7 @@ AHI -d contrib/AHI contrib/AHI
 
 # Aminet
 aminet -d contrib/aminet contrib/aminet
-aminet_util_arc -d contrib/aminet/util/arc
+aminet_util_arc -d contrib/aminet/util/arc contrib/aminet/util/arc
 
 # BGUI
 bgui -d contrib/bgui contrib/bgui
@@ -88,7 +88,7 @@ gfx -d contrib/gfx contrib/gfx
 
 # GNU
 gnu -d contrib/gnu contrib/gnu
-gzip -d contrib/gnu/gzip-1.2.4a
+gzip -d contrib/gnu/gzip-1.2.4a contrib/gnu/gzip-1.2.4a
 
 # GRUB 
 grub -d contrib/grub contrib/grub
