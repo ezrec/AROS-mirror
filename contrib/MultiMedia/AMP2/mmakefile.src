@@ -51,7 +51,7 @@ EXEDIR := $(CONTRIBDIR)/MultiMedia/AMP2
 
 USER_CFLAGS := -Iaros -Iamigaos -Iaudio -Icommon -Imain -Iparser -Iparser/dvd -Iparser/dvd/dvdnav -Iparser/dvd/dvdread  -Iparser/mpeg  -Iparser/vcd  -Iparser/qt -Iplugin -Irefresh
 
-#MM contrib-mmedia-amp2 : includes linklibs
+#MM contrib-mmedia-amp2 : includes linklibs workbench-libs-cgxvideo
 
 %build_prog mmake=contrib-mmedia-amp2 progname=AMP targetdir=$(EXEDIR) files=$(OBJS) uselibs="arossupport amiga arosc z m"
 
