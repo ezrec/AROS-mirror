@@ -369,8 +369,8 @@ badrange:
 
     /* 840 NEXT K                            */
     }
-
-ammo:
+/* This label is not used, silence gcc */
+/* ammo: */
     if (finished == NOT)
     {
     /* 845 PRINT "MISSED"                        */
@@ -525,7 +525,7 @@ goodmove:
     }
 }
 
-main(argc, argv)
+int main(argc, argv)
 int argc;
 char *argv[];
 {
