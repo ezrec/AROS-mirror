@@ -25,17 +25,21 @@
 
 #if defined(_AMIGA) || defined(__AROS__)
 #include "envir.h"
+#include <exec/lists.h>
 #include <exec/ports.h>
 #include <exec/memory.h>
+#include <exec/execbase.h>
 #include <rexx/rxslib.h>
 
 #include <proto/alib.h>
 #include <proto/exec.h>
+#include <proto/rexxsyslib.h>
 
 struct amiga_envir {
   struct envir envir;
   struct MsgPort *port;
 };
+
 #endif
 
 typedef struct _amiga_tsd_t {
@@ -71,6 +75,42 @@ int init_amigaf ( tsd_t *TSD )
   return 1;
 }
 
+
+/*
+ * Support function for exec lists
+ */
+static streng *getlistnames( tsd_t *TSD, struct List *list, const streng *sep )
+{
+  int first = 1;
+  struct Node *ln;
+  streng *retval, *tmpstr;
+
+  ForeachNode( list, ln )
+  {
+    if ( first )
+    {
+      retval = Str_cre_TSD( TSD, ln->ln_Name );
+      first = 0;
+    }
+    else
+    {
+      tmpstr = Str_cat_TSD( TSD, retval, sep );
+      if ( tmpstr != retval )
+      {
+	Free_string_TSD( TSD, retval );
+	retval = tmpstr;
+      }
+      tmpstr = Str_catstr_TSD( TSD, retval, ln->ln_Name );
+      if ( tmpstr != retval )
+      {
+	Free_string_TSD( TSD, retval );
+	retval = tmpstr;
+      }
+    }
+  }
+
+  return retval;
+}
 
 /*
  * Support functions for the ARexx IO functions
@@ -113,6 +153,57 @@ static FILE *getfile( tsd_t *TSD, const streng *name )
   return file;
 }
 
+
+/* getfilenames will return a list of all opened files */
+static streng *getfilenames( tsd_t *TSD, const streng *sep )
+{
+  proclevel oldlevel = setamilevel( TSD );
+  streng *retval, *tmpstr;
+  int first = 1;
+  variableptr var;
+  char *test;
+
+  get_next_variable( TSD, 1 );
+  for( var = get_next_variable( TSD, 0);
+       var != NULL;
+       var = get_next_variable( TSD, 0) )
+  {
+    while ( var != NULL && var->realbox != NULL )
+      var = var->realbox;
+
+    if ( var != NULL && ( (var->flag & (VFLAG_STR | VFLAG_NUM)) || var->stem ) )
+    {
+      if ( first )
+      {
+	retval = Str_dup_TSD( TSD, var->name );
+	first = 0;
+      }
+      else
+      {
+	tmpstr = Str_cat_TSD( TSD, retval, sep );
+	if ( tmpstr != retval )
+	{
+	  Free_string_TSD( TSD, retval );
+	  retval = tmpstr;
+	}
+	tmpstr = Str_cat_TSD( TSD, retval, var->name );
+	if ( tmpstr != retval )
+	{
+	  Free_string_TSD( TSD, retval );
+	  retval = tmpstr;
+	}
+      }
+    }
+  }
+
+  TSD->currlevel = oldlevel;
+
+  /* If no variable present return NULL string */
+  if (first)
+    retval = nullstringptr();
+  
+  return retval;
+}
 
 /* addfile: store the FILE pointer in a given name */
 static void addfile( tsd_t *TSD, const streng *name, FILE *file )
@@ -918,13 +1009,99 @@ streng *arexx_storage( tsd_t *TSD, cparamboxptr parm1 )
 
 
 
+/*
+ * SHOW a function the names available in different resource lists
+ */
+streng *arexx_show( tsd_t *TSD, cparamboxptr parm1 )
+{
+  cparamboxptr parm2 = NULL, parm3 = NULL;
+  streng *name = NULL, *sep, *retval;
+  
+  checkparam( parm1, 1, 3, "SHOW" );
+  parm2 = parm1->next;
+  if ( parm2 != NULL )
+    parm3 = parm2->next;
+
+  if ( parm2 != NULL && parm2->value != NULL && parm2->value->len != 0 )
+    name = parm2->value;
+  
+  if ( parm3 == NULL || parm3->value == NULL || parm3->value->len == 0 )
+    sep = Str_cre_TSD( TSD, " " );
+  else
+    sep = Str_dup_TSD( TSD, parm3->value );
+  
+#if defined(_AMIGA) || defined(__AROS__)
+  switch( getoptionchar( TSD, parm1->value, "SHOW", 1, "CFLP" ) )
+#else
+  switch( getoptionchar( TSD, parm1->value, "SHOW", 1, "F" ) )
+#endif
+  {
+  case 'F':
+    if ( name == NULL )
+      retval = getfilenames( TSD, sep );
+    else
+    {
+      FILE *f = getfile( TSD, name );
+      retval = int_to_streng( TSD, f != NULL );
+    }
+    break;
+    
+#if defined(_AMIGA) || defined(__AROS__)
+  case 'C':
+    LockRexxBase( 0 );
+    if ( name == NULL )
+      retval = getlistnames( TSD, &RexxSysBase->rl_ClipList, sep );
+    else
+    {
+      char *s = str_of( TSD, name );
+      struct Node *ln = FindName( &RexxSysBase->rl_ClipList, s );
+      retval = int_to_streng( TSD, ln != NULL );
+      Free_TSD( TSD, s );
+    }
+    UnlockRexxBase( 0 );
+    break;
+    
+  case 'L':
+    LockRexxBase( 0 );
+    if ( name == NULL )
+      retval = getlistnames( TSD, &RexxSysBase->rl_LibList, sep );
+    else
+    {
+      char *s = str_of( TSD, name );
+      struct Node *ln = FindName( &RexxSysBase->rl_LibList, s );
+      retval = int_to_streng( TSD, ln != NULL );
+      Free_TSD( TSD, s );
+    }
+    UnlockRexxBase( 0 );
+    break;
+    
+  case 'P':
+    Forbid();
+    if ( name == NULL )
+      retval = getlistnames( TSD, &SysBase->PortList, sep );
+    else
+    {
+      char *s = str_of( TSD, name );
+      struct Node *ln = FindName( &SysBase->PortList, s );
+      retval = int_to_streng( TSD, ln != NULL );
+      Free_TSD( TSD, s );
+    }
+    Enable();
+    break;
+#endif
+  }
+  Free_string_TSD( TSD, sep );
+  
+  return retval;
+}
+
+
 /* Now the function are given which are only valid in amiga or compatible
  * platforms (e.g. AROS, ... )
  */
 #if defined(_AMIGA) || defined(__AROS__)
 
 #include <proto/dos.h>
-#include <proto/rexxsyslib.h>
 #include <rexx/storage.h>
 
 #include "rxiface.h"

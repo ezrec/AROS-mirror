@@ -219,6 +219,7 @@ static const struct function_type functions[] = {
 #if defined(_AMIGA) || defined(__AROS__)
   { 0,              arexx_setclip, "SETCLIP" },
 #endif
+  { 0,              arexx_show, "SHOW" },
   { 0,              std_sign, "SIGN" },
   { 0,              cms_sleep, "SLEEP" },
   { 0,              std_sourceline, "SOURCELINE" },

@@ -7,7 +7,6 @@
 * Add ARexx specific functions
   To implement:
   - PRAGMA
-  - SHOW
   Implemented:
   - CLOSE
   - EOF
@@ -39,10 +38,14 @@
   - IMPORT
   - STORAGE
   - EXISTS
+  - SHOW
 * Fix the ARexx vs. ANSI REXX incompatibilies.
   These are: ^ is XOR in ARexx but is not in ANSI REXX.
   Multiple line strings in ARexx are not there in ASNI REXX and are said
   that they need to be avoided because the error handling is difficult
   to do with multiple line strings. Without them the interpreter knows
   when a close string character is forgotten at the end of a line.
+* At the moment in regina the name given to an open file is case insensitive.
+  In ARexx this is case sensitive e.g. 'Test' is a different name then 'test'.
+* STDOUT and STDIN file names are not handled at the moment.
 * and probably a lot more ...
