@@ -146,8 +146,12 @@ void blackout(screen,backupmap)
 struct Screen *screen;
 ULONG *backupmap;
 {
+	WORD numcols = 1<<screen->RastPort.BitMap->Depth;
+	
+	if (numcols > 256) numcols = 256; /* AROS FIX sg */
+	
 	get_palette(screen,backupmap);
-	LoadRGB4(&screen->ViewPort,nullpalette,1<<screen->RastPort.BitMap->Depth);
+	LoadRGB4(&screen->ViewPort,nullpalette,numcols);
 }
 
 int iconwrite(type,name)
