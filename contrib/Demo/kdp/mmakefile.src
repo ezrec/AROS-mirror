@@ -1,0 +1,99 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS		:= $(USER_DEFINES) -O2 -ffast-math -funroll-loops \
+		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
+	
+OBJDIR		:= $(GENDIR)/$(CURDIR)
+DESTDIR 	:= $(CONTRIBDIR)/Demos/kdp
+OBJECTDIR	:= $(DESTDIR)/objects
+RAWDIR		:= $(DESTDIR)/raw
+BMPDIR		:= $(DESTDIR)/bmp
+
+BMPNAMES	:= brush1.bmp cir.bmp env.bmp shade1.bmp shade2.bmp test.bmp tv.bmp
+RAWNAMES	:= tg-1.raw tg-2.raw tg.raw
+OBJECTNAMES	:= amiga2.3d cube.3d cube2.3d lwhead1.3d test.3d torus3.3d
+
+CFILES		:= bob bump grav grav2 kdp kdpgfx kdppoly motionblur poly scaletest tun tun2 tv wire 
+EXES		:= bob bump grav grav2 motionblur poly scaletest tun tun2 tv wire
+
+BMPFILES	:= $(foreach f, $(BMPNAMES), $(BMPDIR)/$(f))
+RAWFILES	:= $(foreach f, $(RAWNAMES), $(RAWDIR)/$(f))
+OBJECTFILES	:= $(foreach f, $(OBJECTNAMES), $(OBJECTDIR)/$(f))
+
+EXEFILES	:= $(foreach f, $(EXES), $(DESTDIR)/$(f))
+
+KDPOBJ		:= $(OBJDIR)/kdp.o
+KDPGFXOBJ	:= $(OBJDIR)/kdpgfx.o
+KDPPOLYOBJ	:= $(OBJDIR)/kdppoly.o
+
+.PHONY : all clean makedirs
+
+#MM demo-kdp : setup-demo-kdp
+demo-kdp : $(EXEFILES)
+	@$(NOP)
+
+#MM
+setup-demo-kdp : makedirs $(BMPFILES) $(RAWFILES) $(OBJECTFILES)
+	@$(NOP)
+
+makedirs :
+	%mkdirs_q $(DESTDIR) $(OBJDIR) $(OBJECTDIR) $(BMPDIR) $(RAWDIR)
+
+$(BMPDIR)/%.bmp : %.bmp
+	$(CP) $< $@
+
+$(RAWDIR)/%.raw : %.raw
+	$(CP) $< $@
+
+$(OBJECTDIR)/%.3d : objects/%.3d
+	$(CP) $< $@
+
+
+
+$(DESTDIR)/bob : $(KDPOBJ) $(KDPGFXOBJ) $(OBJDIR)/bob.o
+	%link_q from=$^
+
+$(DESTDIR)/bump : $(KDPOBJ) $(KDPGFXOBJ) $(OBJDIR)/bump.o
+	%link_q from=$^
+
+$(DESTDIR)/grav : $(KDPOBJ) $(KDPGFXOBJ) $(OBJDIR)/grav.o
+	%link_q from=$^
+
+$(DESTDIR)/grav2 : $(KDPOBJ) $(KDPGFXOBJ) $(OBJDIR)/grav2.o
+	%link_q from=$^
+
+$(DESTDIR)/motionblur : $(KDPOBJ) $(KDPGFXOBJ) $(OBJDIR)/motionblur.o
+	%link_q from=$^
+
+$(DESTDIR)/poly : $(KDPOBJ) $(KDPGFXOBJ) $(KDPPOLYOBJ) $(OBJDIR)/poly.o
+	%link_q from=$^
+
+$(DESTDIR)/scaletest : $(KDPOBJ) $(KDPGFXOBJ) $(OBJDIR)/scaletest.o
+	%link_q from=$^
+
+$(DESTDIR)/tun : $(KDPOBJ) $(KDPGFXOBJ) $(OBJDIR)/tun.o
+	%link_q from=$^
+
+$(DESTDIR)/tun2 : $(KDPOBJ) $(KDPGFXOBJ) $(OBJDIR)/tun2.o
+	%link_q from=$^
+
+$(DESTDIR)/tv : $(KDPOBJ) $(KDPGFXOBJ) $(OBJDIR)/tv.o
+	%link_q from=$^
+
+$(DESTDIR)/wire : $(KDPOBJ) $(KDPGFXOBJ) $(OBJDIR)/wire.o
+	%link_q from=$^
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
+
+$(OBJDIR)/%.d : %.c
+	%mkdepend_q
+	
+#MM
+clean-contrib-demos :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+%common
+%include_deps $(foreach f,$(CFILES),$(OBJDIR)/$(f).d)
