@@ -8,21 +8,66 @@ Links
 :Date:      $Date$
 :Status:    Done.
 
+.. Contents::
 
-Documentation
--------------
+Device drivers development
+--------------------------
++ `USB 2.0 specifications`__
+
+  The official source of USB information. Not really easy to grasp, but
+  mandatory if you want to know all about USB.
+
++ `USB in a Nutshell (making sense of the USB standard)`__
+
+  A quote from the site:
+
+  "Starting out new with USB can be quite daunting. With the USB 2.0 specification
+  at 650 pages one could easily be put off just by the sheer size of the standard.
+  [...] The good news is you don't even need to bother reading the entire USB standard
+  [...] Lets take a little journey through the various chapters of the USB 2.0 specification
+  and briefly introduce the key points."
+
+__ http://www.usb.org/developers/docs/usb_20.zip
+__ http://www.beyondlogic.org/usbnutshell/usb1.htm
+
+Executable file formats
+-----------------------
+
++ `ELF - Executable and Linking Format - Specification v1.2 - pdf version`__
+
+  The official source of information about the ELF format. Apart from the
+  specifications common to all platforms where the ELF standard is adopted,
+  it also contains parts specific to the Intel architecture.
+
++ `ELF - Executable and Linking Format - html version`__
+
+  An HTML version of the ELF specifications. It only contains the specifications
+  common to all platforms where the ELF standard is adopted.
 
 + `Amiga Portable Binaries`__
 
-  A research project about creating a system for portable binaries for the 
-  Amiga, allowing one to use a single executable binary for a multitude of 
+  A research project about creating a system for portable binaries for the
+  Amiga, allowing one to use a single executable binary for a multitude of
   CPU architectures. Unfortunately, the page hasn't been updated for a long
   time; but it *does* contain some interesting ideas. Definately something
   we would like to see in AROS.
 
+__ http://x86.ddj.com/ftp/manuals/tools/elf.pdf
+__ http://www.cs.ucdavis.edu/~haungs/paper/node10.html
+__ http://greywire.8m.com/greywire/amigasde.htm
+
+
+Miscellanous Operating System resources
+---------------------------------------
+
++ `The Operating System Resource Center`__
+
+  A comprehensive set of links to various resources related to Operating Systems
+  development, like file systems, device drivers, memory management, and so on.
+  
 + `Protected Mode Basics`__
 
-  An in-depth article by Robert Collins about protected mode on the x86 
+  An in-depth article by Robert Collins about protected mode on the x86
   architecture. Probably contains more information about said architecture
   than you want to know... ;-)
 
@@ -40,8 +85,7 @@ Documentation
   quite a lot of details on higher level things and some good references to
   useful books, tools and sources.
 
-
-__ http://greywire.8m.com/greywire/amigasde.htm
+__ http://www.nondot.org/sabre/os/articles/
 __ http://x86.ddj.com/articles/pmbasics/tspec_a1_doc.htm
 __ http://www.execpc.com/~geezer/osd/index.htm
 __ http://www.mega-tokyo.com/os/os-faq.html
@@ -51,8 +95,8 @@ Tools
 -----
 
 + `Object Oriented Programming For All (OOP4A)`__
-  
-  Another language independant OOP framework for AmigaOS. In contrast to 
+
+  Another language independant OOP framework for AmigaOS. In contrast to
   BOOPSI, it consists of both a shared library to handle the runtime and a 
   precompiler to allow for an easier syntax.
 
