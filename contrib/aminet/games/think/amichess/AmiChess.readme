@@ -1,0 +1,98 @@
+Short:    Chess based on GNUChess 5.05
+Uploader: achim.stegemann@onlinehome.de (Achim Stegemann)
+Author:   achim.stegemann@onlinehome.de (Achim Stegemann)
+Type:     game/think
+Version:  1.0
+
+Requires: OS 3.5
+          MUI 3.8
+          MUI NList classes (get it from dev/mui)
+
+AmiChess is a new chess program for the Amiga.
+The chess engine is based on the latest GNUChess version from
+1999. Due to the GNU license, the archive contains the full
+source code.
+
+What the program can do:
+* Read/Write of chess files in PGN and EPD-format.
+* You can play against the computer, let the computer play against
+  itself or use the program as supervisor.
+* Usage and creation of an opening book. Several levels available
+  for book usage.
+* Chess strength variable by settings of time (move per time) or
+  search depth.
+* Undo and remove function.
+* Let the computer show its best variation when thinking.
+* Change the board design "on the fly".
+* Choose between a dozens skins and boards.
+
+
+Things that are missing or restricted.
+* No localization, English only.
+* No pondering (thinking while human thinks).
+* Board not editable, only via PGN or EPD files.
+* No solve for mate in chess problems.
+* Fixed size of the chess board. Can be played on WBs of at least 800x600.
+
+
+How to install the opening book:
+The opening book is not included in this archive, because it is
+about 10 MB of size! If you like to install an opening book,
+simply follow these steps:
+* Download ftp://ftp.gnu.org/gnu/chess/book_1.00.pgn.gz
+* Unpack the file with gzip, UnArc or any other unpacker
+  that can handle gzip-packed files.
+* Start AmiChess 68k!. Select "Menu/Game/Book/Add ..." and select
+  the unpacked book file.
+  This currently does not work with PPC version!!
+* Wait for about 2 hrs for compilation to finish (on a 060).
+  Ignore any error messages while compiling the book.
+* After successful compilation you should find the file "book.dat"
+  in your program folder.
+
+
+Developer information:
+* Binary requires at least an 68020/68881 CPU.
+* 68k: Compiled with GNU 2.95.3 with "noixemul"
+  PPC/WOS: Compiled with StormC V3
+
+Some notes:
+* I am not able to include pondering in AmiChess, as I am not familar
+  with the chess engine. If you have any idea on how to improve the
+  program, simply let me know.
+* When saving a game (PGN) or a position (EPD), the program will add
+  the current game to your selected file, if the file already exists.
+  Unfortunately, the program will load only the first game in a file that
+  contains several games. If you like to continue a game, it is recommended
+  to save the game in a new file or delete the old game before!
+  I hope to change this behaviour in future releases.
+* Hint function is sometimes crashing the program. I don't know why.
+  Best you don't use it. Use "Show thinking" instead for computer variation.
+* Program requires a Workbench resolution of at least 800x600.
+* You MUST NOT use sound.datatype V41 from Stephan Rupprecht. This
+  datatype can cause lock-ups when playing sound samples!
+
+History:
+V1.0:
+      * ADDED: PPC-WarpOS version available!
+      * ADDED: Evaluation window to evaluate material score of a position.
+      * ADDED: Statistics window that shows you information about the calculation speed.
+      * ADDED: Many different sets for pieces and chess boards.
+               Old "Skin" folder has been renamed to "Pieces".
+		* ADDED: Chess sounds including voice support (can be disabled).
+      * ADDED: Piece selection when promoting pawn.
+      * FIXED: Changed source code to GNUChess 5.05 which contains some minor fixes.
+      * FIXED: Opening book couldn't be created, when file "book.dat" didn't exist before.
+
+V0.2:
+      * ADDED: Can be opened on any public screen with the PUBSCREEN option, either as a DOS argument
+               or as a tooltype in the program's icon.
+
+V0.1:
+      * FIXED: Game window didn't open on WBs smaller than 1024 pixels.
+      * FIXED: Color of "side to move" only changed in supervisor mode.
+      * ADDED: To solve above problem, smaller skins for screens of 800x600 pixels are available.
+
+V0.0:
+      * First public release
+

@@ -1,0 +1,63 @@
+#   $Id$
+#
+#   Makefile to make AmiChess.
+
+include $(TOP)/config/make.cfg
+
+FILES := atak \
+    	 book \
+	 epd \
+	 eval \
+	 genmove \
+	 hash \
+	 hung \
+	 init \
+	 iterate \
+	 modules \
+	 move \
+	 null \
+	 players \
+	 pgn \
+	 quiesce \
+	 random \
+	 repeat \
+	 search \
+	 solve \
+	 sort \
+	 swap \
+	 ttable \
+	 util \
+	 vars \
+	 main \
+	 mui_chess \
+    	 mui_field \
+	 mui_board
+	 
+#	 main \
+#	 mui_chess \
+#	 mui_board \
+#	 mui_field \
+
+USER_CFLAGS := -DHAVE64BIT
+
+EXEDIR := $(CONTRIBDIR)/aminet/AmiChess
+EXE := $(EXEDIR)/AmiChess
+
+USER_INCLUDES :=
+
+USE_AROSLIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+USE_MUILIB := yes
+
+#MM aminet-games-think-amichess-program : includes setup linklibs contrib-zune-classes-nlist contrib-zune-classes-nlistview
+
+%make_prog_setup mmake=aminet-games-think-amichess-program
+
+aminet-games-think-amichess-program : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+%common
+%include_deps

@@ -1,0 +1,47 @@
+include $(TOP)/config/make.cfg
+
+#MM- aminet-games-think-amichess : aminet-games-think-amichess-program aminet-games-think-amichess-datafiles
+
+AMICHESSDIR := $(CONTRIBDIR)/aminet/AmiChess
+
+BOARDS := Crystal Default Fire Ice MarbleBrown MarbleGrey \
+    	  Metal Plasma Redwood Water Wood1 Wood2
+BOARDDIR := $(AMICHESSDIR)/Boards
+BOARDSUB := Dark Light
+
+BOARDFILES := $(foreach d, $(BOARDSUB), $(foreach f, $(BOARDS), $(BOARDDIR)/$(f)/$(d)))
+
+PIECES := Alpha Arlley Chap Default Jumbo Original Rastapov Staunton Tashka
+PIECESDIR := $(AMICHESSDIR)/Pieces
+PIECESSUB := 1024 800
+
+PIECESFILES := $(foreach d, $(PIECESSUB), $(foreach f, $(PIECES), $(PIECESDIR)/$(d)/$(f)))
+
+PROMOS := Bishop Knight Queen Rook
+PROMODIR := $(AMICHESSDIR)/Promote
+
+PROMOFILES := $(foreach f, $(PROMOS), $(PROMODIR)/$(f))
+
+#MM
+aminet-games-think-amichess-datafiles : setup $(BOARDFILES) $(PIECESFILES) $(PROMOFILES)
+
+setup :
+	%mkdirs_q $(foreach f, $(BOARDS), $(BOARDDIR)/$(f))
+	%mkdirs_q $(foreach f, $(PIECESSUB), $(PIECESDIR)/$(f))
+	%mkdirs_q $(PROMODIR)
+
+$(BOARDDIR)/%/Dark : Boards/%/Dark
+	@$(CP) $< $@
+
+$(BOARDDIR)/Boards/%/Light : Boards/%/Light
+	@$(CP) $< $@
+
+$(PIECESDIR)/1024/% : Pieces/1024/%
+	@$(CP) $< $@
+	
+$(PIECESDIR)/800/% : Pieces/800/%
+	@$(CP) $< $@
+	
+$(PROMODIR)/% : Promote/%
+	@$(CP) $< $@
+

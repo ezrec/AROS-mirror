@@ -1,0 +1,174 @@
+AmiChess V1.0 Deutsche Dokumentation
+------------------------------------
+
+
+Was ist AmiChess?
+--------------------
+
+AmiChess ist ein Port des frei zugänglichen Schachprogrammes GNUChess V5.05
+mit grafischer Oberfläche unter MUI.
+
+
+
+Was kann AmiChess?
+------------------
+
+Mit AmiChess kann man Schach gegen den Rechner, den Rechner gegen sich selbst
+(Game/Autoplay) oder auch gegen einen menschlichen Gegner spielen (Game/Supervisor).
+In diesem Fall übernimmt der Rechner die Kontrolle über alle Züge.
+
+Das Programm bietet die Möglichkeit Spielstände abzuspeichern bzw. sie fortzusetzen.
+Dazu gibt es zwei Standard-Formate, in denen Spiele abgespeichert werden.
+-> Das PGN-Format: Damit werden ganze Spiele abgespeichert.
+   Sinnvoll zum späteren Fortsetzen eines Spiels bzw. zur Analyse eines Spiels.
+-> Das EPD-Format: Damit werden die Positionen auf einem Schachbrett abgespeichert
+   (sinnvoll für Schachprobleme).
+
+AmiChess kann eine Eröffnungsbibliothek verwenden. Diese ist im Archiv aufgrund
+der enormen Größe nicht vorhanden.
+Eine Bibliothek ist nichts anderes, als eine Sammlung von Partien verschiedener
+Großmeister, die Strategien verschiedener Eröffnungen enthalten. Die größte Sammlung
+finden Sie unter ftp://ftp.gnu.org/gnu/chess. Laden Sie die Datei book_1.00.pgn.gz
+herunter, entpacken Sie diese mit gzip oder UnArc, starten Sie AmiChess und wählen Sie
+"Menu/Game/Book/Add ..." aus. Wählen Sie die zuvor entpackte Datei aus und warten Sie
+zwei Stunden (auf einem 060!). Das ist kein Witz! Die Datei ist riesig und muss von
+AmiChess erst kompiliert werden.
+WICHTIG: Aufgrund eines Fehlers von StormC ist die PPC-Version nicht in der Lage,
+eine Eröffnungsbibliothek zu erzeugen. Dies geht im Moment nur mit der 68k-Version!
+Die Bibliothek kann auch von Hand erweitert werden, in dem Sie andere PGN-Dateien mittels
+".../Book/Add ..." hinzufügen.
+Im Internet gibt es auch kleiner Eröffnungsdateien. Am besten suchen Sie solche mit
+der Google-Suchmaschine mit Stichwörtern wie "Schach Eröffnungen PGN" usw. (auch in
+Englisch).
+
+AmiChess verfügt über eine Sammlung verschiedener Figurensets und Brettdesigns.
+Diese können Sie on-the-fly während eines Spiels verändern.
+
+Um die Spielstärke von AmiChess zu verändern, gibt es mehrere Einstellungen:
+1. Verwendung der Eröffnungsbibliothek.
+   - Off -> Keine Verwendung
+   - On  -> Schaltet sie ein und verwendet dabei die ersten Züge, die passen.
+   - Best  -> Verwendet nur solche Züge, die die beste Position ergeben
+   - Worst -> Verwendet Züge mit der schlechtesten Position.
+   - Random -> Verwendet zufällige Züge, die passen.
+2. Suchtiefe (Search depth):
+   Hier stellt man die Tiefe in Halbzügen ein, die der Rechner zur Suche eines passenden
+   Zuges verwenden soll. Auf einem 68060 ist eine Tiefe von 5 Halbzügen noch vertretbar,
+   unter PPC können es auch 6 sein. Mehr Züge macht keinen Sinn, da die Rechenzeit
+   exponentiell anwächst!
+   Möchten Sie eine gewisse Zeit zur Zugsuche einstellen, so schalten Sie den Menüpunkt
+   "Game/Search depth/User time settings" ein, und geben Sie die Zeit in "Game/Time settings"
+   ein. Sie können
+   a) dem Rechner mitteilen, in wieviel Sekunden er wieviele Züge machen soll.
+   oder
+   b) Wieviele Sekunden er pro Zug rechen darf.
+3. Mit dem Schalter "Game/Null moves" steht ihnen eine weitere Mögllichkeit zur Verfügung.
+   Der GNUChess-Algorithmus verwendet sogenannte "Null moves" zur Verbesserung seiner
+   Zugsuche. Schalten Sie diesen Modus aus, so spielt das Programm etwas schwächer.
+   Fragen Sie mich aber bitte nicht, was "Null moves" sind :)
+
+
+Sind Sie mal mit einem Zug nicht zufrieden, so können Sie mittels "Game/Undo" den letzten
+Halbzug oder mit "Game/Remove" sogar einen ganzen Zug zurücknehmen.
+
+Wenn Sie einmal die Farbe wechseln wollen, oder den Rechner zwingen wollen, sich für Sie
+einen Zug auszudenken, sie wählen sie "Game/Swap sides". Dann spielen Sie die Farbe des
+Rechners und umgekehrt.
+Mit dem ähnlichen Schalter "Game/Switch sides" tauschen sie lediglich die aktuelle Spielerfarbe,
+ohne dabei einen Zug zu machen.
+
+Mit dem Schalter "Show thinking" können Sie sehen, wie AmiChess denkt. Das Format der Zeile ist:
+"Tiefe  Zeit  Bewertung  Halbzüge"
+Die Notation erfolgt immer in der gekürzten Schreibweise.
+
+Der Schalter "Hint" (auf deutsch: "Tipp") funktioniert nicht immer. Wenn also mal der Computer
+einen Zugvorschlag für Sie machen soll, so können Sie diesen auch in der "Denkzeile" ablesen.
+Es ist nämlich der zweite Halbzug (in ihrer Farbe).
+
+Ein besonderes Bonbon ist die Sprachausgabe von AmiChess. Mit dem Schalter "Display/Voice" können
+Sie (auf Englisch) den Gerade gemachten Zug hören :)
+
+
+Was kann AmiChess nicht?
+------------------------
+
+Das Spielbrett lässt sich momentan so nicht editieren. Dies geschieht im Moment nur über EPD-
+oder PGN-Dateien. Dies wird sich in einer späteren Version aber ändern.
+
+Um Schachprobleme zu lösen, gibt es daher folgende Möglichkeit:
+* Laden Sie die Spielstellung mittels PGN- oder EPD-Datei.
+* Stellen Sie mittels "Switch sides" die Farbe der Seite ein, welche NICHT am Zug ist.
+* Wählen Sie in "Game/Search Depth" die Anzahl der Halbzüge, in denen das Matt stattfinden soll.
+  Es ist hierbei unwichtig (auch unmöglich), dem Rechner mitzuteilen, welche Seite Matt gesetzt
+  werden soll. Ein Matt wird AmiChess dann automatisch erkennen.
+* Starten Sie die Matt-Suche mittels "Swap Sides".
+Es gibt keine Garantie, dass AmiChess das Matt auch findet! Erwarten Sie also nicht zuviel vom
+Programm. AmiChess ist auf reines Spielen ausgelegt und mit solchen Problemen manchmal überfordert!
+Ach ja... benutzen Sie zum Laden von PGN-Dateien bitte die 68k-Version, da die PPC-Version hier
+Probleme hat. Für EPD-Dateien können Sie aber die PPC-Version auch benutzen!
+
+AmiChess ist nicht Internet-fähig. Das heißt, man kann sich mit dem Programm nicht in einen
+Schachserver einloggen, um mit anderen Spielern per Internet eine Partie zu spielen. Ich kenne
+die Protokolle nicht, die nötig sind, um das durchzuführen. Außerdem besitze ich im Bereich
+Socket-Programmierung nur rudimentäre Kenntnisse, die dazu aber nicht ausreichen.
+
+Die Zeitkontrolle ist in AmiChess ebenfalls nur rudimentär eingebaut. Das Programm versucht
+sich zwar an gewisse Zeitvorgaben in seiner Zugsuche zu halten, aber es hat keine Konsequenzen,
+wenn die Zeit mal abgelaufen ist (z.B. 60 Züge in 600 sec = 10 min).
+
+AmiChess ist nicht in der Lage, Züge im vorraus zu berechnen, während der menschliche Gegner am
+Zug ist (engl. to ponder). Pondering ist eine recht komplexe Angelegenheit, bei der große Teile
+des Programms umgeschrieben müssten. Dazu bin ich nicht in der Lage, da ich die Geheimnisse des
+GNUChess-Algorithmus nicht kenne.
+
+AmiChess ist momentan in Englisch gehalten. Es gibt keine Lokalisierung für andere Sprachen.
+Dies werde ich vielleicht in Zukunft ändern. Die Sprachausgabe lässt sich nicht ändern. Man müsste
+hier alle Samples neu aufnehmen.
+Die englischen Bezeichnungen sind:
+Pawn (P) = Bauer
+Knight (N) = Springer
+Bishop (B) = Läufer
+Rook (R) = Turm
+Queen (Q) = Dame
+King (K) = König
+Long castle (O-O-O) = Lange Rochade
+Short castle (O-O) = Kurze Rochade
+Mate = Matt
+Stalemate = Patt
+Draw = Remis
+Takes (x) = nimmt
+Check (+) = Schach (Königsangriff)
+Ein Damenangriff wird nicht gemeldet.
+
+
+Spielstärke von AmiChess
+------------------------
+
+Das ist ein schwieriger Punkt. Dazu müsste man AmiChess direkt in einigen duzend Partien mit anderen
+Amiga-Schachprogrammen vergleichen. Dazu habe ich aber keine Zeit.
+Vom Prinzip her lässt sich aber der ganze GNUChess-Algorithmus einschätzen. GNUChess wird seit vielen
+Jahren von verschiedenen Programmierern weiterentwickelt, auch wenn V5 schon gut fünf Jahre auf dem
+Buckel hat.
+Das derzeit spielstärkste Freeware-Programm ist Crafty. Von Crafty gibt es einen Amiga-Port von mir,
+den Sie im Aminet unter "game/think" finden. Crafty ist "leider" nur im Shell-Textmodus verfügbar.
+Seine Chessengine ist aber derart stark, dass AmiChess bei gleichen Zeitbedingungen kaum eine Chance hat.
+Die PPC-Version von AmiChess ist in der Lage, etwa dreimal soviele Züge in gleicher Zeit zu überprüfen,
+wie die 68k-Version (Vergleich 060/50 mit 604e/200).
+Ich schätze die Spielstärke von AmiChess etwa auf 1900-2000 ELO Punkten ein. Das ist etwa die Grenze,
+gegen die AmiChess entsprechende Spieler schon besiegt hat.
+
+
+Entwickler-Infos
+----------------
+
+Im Ordner "src" finden Sie den Quellcode zu AmiChess.
+Der Code ist so geschrieben, dass er sowohl von GNUChess 2.95.3 in reinem C, als auch von
+StormC V3 für C++ und PPC-Modus kompiliert werden kann.
+
+
+Kontakt:
+--------
+
+Email: achim.stegemann@onlinehome.de
+Homepage: http://mitglied.lycos.de/achimste
+
