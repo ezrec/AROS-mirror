@@ -1,10 +1,20 @@
-- What is this?
+INDEX
+=====
 
-  This directory contains patches against the gcc source tree. Patches follow 
-  the same naming convention as the gcc releases, plus a trailing 
+1. What is this?
+2. What is and how to build a cross compiler for AROS?
+3. What is and how to build a native compiler for AROS?
+4. Contact
+
+------------------------------------------------------------------------
+
+1. What is this?
+
+  This directory contains patches against the gcc source tree. Patches
+  follow the same naming convention as the gcc releases, plus a trailing 
   "-aros.diff" (without quotes).
 
-- What is and how to build a cross compiler for AROS?
+2. What is and how to build a cross compiler for AROS?
 
   A cross compiler is a compiler able to produce binaries usable by a 
   "target" system, which however runs on a different system than the 
@@ -49,3 +59,107 @@
 	      http://www.aros.org/download.php. Make sure that 
               collect-aros is in the PATH, so that the compiler can 
               access it.
+
+3. What is and how to build a native compiler for AROS?
+
+  As opposed to a crosscompiler, a native compiler runs on the same 
+  system the compiler is targetted for, that is the "host" and the 
+  "target" are the same.
+  
+  Currently there's no way to build a native compiler from inside AROS
+  itself, thus you need to use another operating system as the "build"
+  system, and for this purpose you need to build a crosscompiler and
+  the cross-binutils before trying to build the native compiler.
+  For this, refer to section 2.
+  
+  Assuming you've got the crosscompiler and related utilities built 
+  already, follow the below procedure in order to build a native 
+  compiler:
+  
+    1) CD into gcc's source directory and run the "config.guess"
+       script you find there. Note its output, you'll need it
+       in a few seconds. On an i686-linux system it should be
+       something like "i686-pc-linug-gnu".
+       
+    2) Now it comes a bit tricky part: you need to prefix the names
+       of all tools involved in the build process with the text that
+       you've noted in the previous step. This is so because the 
+       build process will not be looking for, say, "gcc", but rather,
+       in the example above, "i686-pc-linug-gnu-gcc".
+       
+       I don't suggest you to really rename the executables, because
+       then you would have to always invoke them with the new names, 
+       what I suggest you to is to make symlinks to the various 
+       executables. For example:
+       
+         $ ln -s /usr/bin/gcc /usr/bin/i686-pc-linux-gnu-gcc
+	 
+       If for any reasons you can't create the symlink in /usr/bin, 
+       create it wherever you want, as long as the place you chose
+       is in the PATH. 
+       
+       The names of the executables you need to create link for are, in 
+       sparse order: as, nm, objcopy, ld, gcc, ar, ranlib.
+       
+       I might have forgotten some, but you will notice because the 
+       build process will stop and tell you it can't find a given 
+       executable file: simply take note of that file, make
+       the needed symlink, and run "make" again.
+       
+    3) Now proceed with configuring gcc like at point 2.5 above, except
+       that you now also need to use the following options:
+       
+         --host=<cpu>-aros --build=<output of config.guess>
+	 --prefix=<prefix for the gcc installation, from the AROS point of view>
+	 
+       Again, <output of config.guess> refers to the output of 
+       the config.guess script you've taken note of at step 3.1.
+       
+       <prefix for...> refers to the prefix, from the AROS point of 
+       view, which will be put before the names of all the directories
+       the build system will install files and executables in. 
+       For instance, the gcc executable will be installed in 
+       <prefix>/bin, thus if you set the prefix to "GCC:" (or /GCC), for 
+       instance, then the gcc executable will be isntalled in GCC:/bin
+       (or /GCC/bin),
+       which actually is the same as GCC:bin (from gcc's point of 
+       view, which uses some unix path conversion routines built in the
+       AROS libc). Feel free to set that prefix to whatever you want.
+       
+    4) Type "make", without quotes.
+    
+    5) Type "make install prefix=<XXX> exec_prefix=<XXX>", without 
+       quotes.
+       
+       <XXX> refers to the prefix, from the BUILD SYSTEM
+       point of view, which will be put before the names of all 
+       directories the build system will install files and executables
+       in. This *must* be the same prefix that you specified at 
+       configuration time, except that this time it must be specified
+       as seen by the build system. However, If at configuration time
+       you used a volume name as prefix, then at thios stage you can
+       specify whatever prefix you want, as long as you take care
+       of mounting the previously specified volume in AROS, or 
+       assigning it to the directory where gcc's stuff really is.
+  
+  IMPORTANT: You still need the native binutils if you want to 
+             do anything with the native compiler. The steps you need
+	     to go trough to built the native binutils are pretty much
+	     the same as the ones for gcc, except you needn't apply
+	     any patches, as the AROS support for the binutils is 
+             already in the main archive. All that was said about the
+	     "prefix" stuff still applies for the binutils as well.
+
+  IMPORTANT2: You need to build also collect-aros, natively for AROS. 
+              In order to do this, you will have to use the 
+              crosscompiler and build it by yourself. It's not
+	      hard, really, but at the moment there are no instructions
+	      on how to do so. You basically need to use the "bfd" 
+              backend, and the "spawn" version of docommand, and then
+	      link with libiberty.a and libbfd.a.
+
+4. Contact
+
+If you need to blame someone for how crappy this gcc port is, then by 
+any means blame Fabio Alemagna <falemagn@studenti.unina.it>. Feel free 
+to also ask normal questions, though :-)	      
