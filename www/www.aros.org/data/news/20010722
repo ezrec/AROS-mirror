@@ -1,0 +1,11 @@
+Henning Kiel improved the mmakefile for C:Format and made memspeed use
+the shared c.lib. He also fixed some bogous lib.conf files, endtag
+generation and archtool doesn't modify case when auto-filling in
+libbasetype and libbasetypeptr anymore.
+
+Sebastian Heutling fixed two bugs in trackdisk.device and optimized
+createNewEntry() in the AFFS code.
+
+Fabio Alemagna moved all shell commands into a subdirectory if their
+own. The ide.device has now complete 64bit support (which means we can
+support *large* harddisks :-)
