@@ -22,7 +22,7 @@
 #endif /* EXEC_TYPES_H */
 
 #ifndef SCALOS_H
-#include "scalos.h"
+#include "Scalos.h"
 #endif /* SCALOS_H */
 
 

@@ -16,7 +16,7 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/alib_protos.h>
+#include <proto/alib.h>
 #include <proto/intuition.h>
 #include <proto/utility.h>
 #include <proto/exec.h>
@@ -28,7 +28,7 @@
 #include <intuition/gadgetclass.h>
 #include <intuition/intuition.h>
 #include <intuition/screens.h>
-#include "debug.h"
+#include "Debug.h"
 
 #include "Scalos.h"
 #include "WindowClass.h"
@@ -198,7 +198,7 @@ static BOOL Window_SetTags(struct TagItem *taglist,struct WindowInst *inst)
         inst->width = (WORD)                GetTagData(SCCA_Window_Width,(ULONG) inst->width,taglist);
         inst->height = (WORD)               GetTagData(SCCA_Window_Height,(ULONG) inst->height,taglist);
         inst->rinfo.screenobj = (Object *)  GetTagData(SCCA_Window_ScreenObj,(ULONG) inst->rinfo.screenobj,taglist);
-        if (tag = FindTagItem(SCCA_Window_Title,taglist))
+        if ((tag = FindTagItem(SCCA_Window_Title,taglist)))
         {
                 FreeString(inst->title);
                 if(!(inst->title = (char *)AllocCopyString((char *) tag->ti_Data)))
@@ -409,7 +409,7 @@ static ULONG Window_Open( struct SC_Class *cl, Object *obj, struct SCCP_Window_O
                                                                                         GA_RightBorder,TRUE,
                                                                                         GA_ID,ARROWGADID_DOWN,
                                                                                         GA_Immediate,TRUE,
-                                                                                        GA_NEXT,inst->arrowup,
+                                                                                        GA_Next,inst->arrowup,
                                                                                         TAG_DONE);
                                 offset = screen->WBorTop+screen->Font->ta_YSize+4;
                                 inst->sliderright = NewObject(NULL,"propgclass",
@@ -449,7 +449,7 @@ static ULONG Window_Open( struct SC_Class *cl, Object *obj, struct SCCP_Window_O
                                                                                          GA_BottomBorder,TRUE,
                                                                                          GA_ID,ARROWGADID_RIGHT,
                                                                                          GA_Immediate,TRUE,
-                                                                                         GA_NEXT,inst->arrowleft,
+                                                                                         GA_Next,inst->arrowleft,
                                                                                          TAG_DONE);
                                 inst->sliderbottom = NewObject(NULL,"propgclass",
                                                                                            GA_RelVerify,TRUE,
@@ -501,7 +501,7 @@ static ULONG Window_Open( struct SC_Class *cl, Object *obj, struct SCCP_Window_O
                         inst->height = inst->minmax.defheight + inst->borderbottom+inst->bordertop;
                 DEBUG4("WinBorder sizes: %ld,%ld,%ld,%ld\n",inst->borderleft,inst->bordertop,inst->borderright,inst->borderbottom);
 
-                if ( win = OpenWindowTags(NULL,
+                if (( win = OpenWindowTags(NULL,
                                                                   WA_Left,(ULONG) inst->left, 
                                                                   WA_Top,(ULONG) inst->top,
                                                                   WA_Width,(ULONG) inst->width, 
@@ -514,7 +514,7 @@ static ULONG Window_Open( struct SC_Class *cl, Object *obj, struct SCCP_Window_O
                                                                   WA_MinHeight,inst->minmax.minheight+inst->borderbottom+inst->bordertop,
                                                                   WA_MaxWidth,inst->minmax.maxwidth+inst->borderright+inst->borderleft,
                                                                   WA_MaxHeight,inst->minmax.maxheight+inst->borderbottom+inst->bordertop,
-                                                                  TAG_DONE))
+                                                                  TAG_DONE)))
                 {
                         struct  IBox newbounds;
                         struct  MinNode *node;
@@ -598,7 +598,7 @@ static ULONG Window_MessageReceived(struct SC_Class *cl, Object *obj, struct SCC
         ULONG   msgtype;
 
                 //DEBUG1("HandleIDCMPMessage: %lx\n",imsg->Class);
-        if (msgtype = SC_IsScalosMsg(msg->message))
+        if ((msgtype = SC_IsScalosMsg(msg->message)))
         {
                 ULONG   newidcmp = WinIDCMP;
                 struct  InputNode *inode = 0;
@@ -620,6 +620,7 @@ static ULONG Window_MessageReceived(struct SC_Class *cl, Object *obj, struct SCC
                                         inode = (struct InputNode *) AllocNode(&inst->inputlist,sizeof(struct InputNode));
 
                                 if (inode)
+                                {
                                         if (!((struct SCMSGP_SetIDCMP *) msg->message)->IDCMP)
                                                 FreeNode(inode);
                                         else
@@ -627,6 +628,7 @@ static ULONG Window_MessageReceived(struct SC_Class *cl, Object *obj, struct SCC
                                                 inode->IDCMP = ((struct SCMSGP_SetIDCMP *) msg->message)->IDCMP;
                                                 inode->obj = ((struct SCMSGP_SetIDCMP *) msg->message)->obj;
                                         }
+                                }
                                 for (node = inst->inputlist.mlh_Head; node->mln_Succ; node = node->mln_Succ)
                                         newidcmp |= ((struct InputNode *) node)->IDCMP;
 
@@ -722,7 +724,7 @@ static void Window_SetIDCMP(struct SC_Class *cl, Object *obj, struct SCCP_Window
 {
         struct SCMSGP_SetIDCMP *smsg;
 
-        if (smsg = (struct SCMSGP_SetIDCMP *) SC_AllocMsg(SCMSG_SETIDCMP,sizeof(struct SCMSGP_SetIDCMP)))
+        if ((smsg = (struct SCMSGP_SetIDCMP *) SC_AllocMsg(SCMSG_SETIDCMP,sizeof(struct SCMSGP_SetIDCMP))))
         {
                 smsg->IDCMP = msg->IDCMP;
                 smsg->obj = msg->obj;
@@ -770,12 +772,12 @@ static ULONG Window_SetClipRegion(struct SC_Class *cl, Object *obj, struct SCCP_
         else
                 oldregion = inst->rinfo.window->WLayer->ClipRegion;
 
-        if (regionnode = (struct RegionNode *) AllocNode(&inst->regionlist, sizeof(struct RegionNode)))
+        if ((regionnode = (struct RegionNode *) AllocNode(&inst->regionlist, sizeof(struct RegionNode))))
                 regionnode->region = oldregion;
         else
                 return(FALSE);
 
-        if (newregion = NewRegion())
+        if ((newregion = NewRegion()))
         {
                 OrRegionRegion(msg->clipregion, newregion);
                 if (oldregion)
@@ -949,7 +951,7 @@ static void Window_DelayedShowObject(struct SC_Class *cl, Object *obj, struct SC
                         return;
                 }
 
-        if (dnode = (struct DShowNode *) AllocNode(&inst->dshowlist,sizeof(struct DShowNode)))
+        if ((dnode = (struct DShowNode *) AllocNode(&inst->dshowlist,sizeof(struct DShowNode))))
                 dnode->obj = msg->object;
 
         ReleaseSemaphore(&inst->dshowsem);

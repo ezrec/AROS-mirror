@@ -16,10 +16,10 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/intuition_protos.h>
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
+#include <proto/intuition.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
 #include <intuition/classusr.h>
 #include <intuition/intuition.h>
 #include <intuition/screens.h>
@@ -46,7 +46,7 @@ static ULONG Screen_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *msg
 
         if (SC_DoSuperMethodA(cl,obj,(Msg )msg))
         {
-                if (name = (char *) GetTagData(SCCA_Screen_PubName,0,msg->ops_AttrList))
+                if ((name = (char *) GetTagData(SCCA_Screen_PubName,0,msg->ops_AttrList)))
                 {
                         if (!(inst->screen = LockPubScreen(name)))
                         {
@@ -71,7 +71,7 @@ static ULONG Screen_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *msg
                                 }
                         }
                         if (!(foundnode))
-                                if (foundnode = AllocNode(&ScreenList, sizeof(struct ScreenNode)))
+                                if ((foundnode = AllocNode(&ScreenList, sizeof(struct ScreenNode))))
                                 {
                                         foundnode->screen = inst->screen;
                                         foundnode->pensharemap = CreatePenShareMapA(NULL);

@@ -17,8 +17,8 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/alib_protos.h>
-#include <clib/graphics_protos.h>
+#include <proto/alib.h>
+#include <proto/graphics.h>
 #include <intuition/classusr.h>
 #include <intuition/screens.h>
 #include <guigfx/guigfx.h>

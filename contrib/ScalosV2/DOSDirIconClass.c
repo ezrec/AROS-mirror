@@ -16,10 +16,10 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/exec_protos.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/dos.h>
+#include <proto/exec.h>
 #include <dos/dos.h>
 #include <string.h>
 #include <exec/memory.h>
@@ -69,7 +69,7 @@ static ULONG DOSDirIcon_Entry(struct SC_Class *cl, Object *obj, struct SCCP_Icon
                 if (lock)
                         oldlock = CurrentDir(lock);
 
-                if (inst->lock = Lock((char *) get(obj,SCCA_Icon_Name),SHARED_LOCK))
+                if ((inst->lock = Lock((char *) get(obj,SCCA_Icon_Name),SHARED_LOCK)))
                 {
                         if (lock)
                         {
@@ -77,7 +77,7 @@ static ULONG DOSDirIcon_Entry(struct SC_Class *cl, Object *obj, struct SCCP_Icon
                                 UnLock(lock);
                         }
 
-                        if (inst->fib = AllocDosObject(DOS_FIB,NULL))
+                        if ((inst->fib = AllocDosObject(DOS_FIB,NULL)))
                         {
                                 if (Examine(inst->lock,inst->fib) && ExNext(inst->lock,inst->fib))
                                         return(TRUE);
@@ -152,7 +152,7 @@ static ULONG DOSDirIcon_Get( struct SC_Class *cl, Object *obj, struct opGet *msg
         {
                 Object *table;
 
-                if (table = SC_NewObject(NULL,SCC_TABLE_NAME,TAG_DONE))
+                if ((table = SC_NewObject(NULL,SCC_TABLE_NAME,TAG_DONE)))
                 {
                         SC_DoMethod(table,SCCM_Table_Add,SCCA_Icon_Name,"Name",SCCV_Table_Type_String,0);
                         SC_DoMethod(table,SCCM_Table_Add,SCCA_DOSIcon_Size,"Size",SCCV_Table_Type_Long,0);

@@ -16,9 +16,9 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/intuition_protos.h>
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
+#include <proto/intuition.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
 #include <intuition/classusr.h>
 #include <intuition/imageclass.h>
 #include <intuition/gadgetclass.h>

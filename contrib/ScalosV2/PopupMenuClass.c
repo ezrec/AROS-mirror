@@ -1,9 +1,9 @@
 // :ts=4 (Tabsize)
 
-#include <clib/utility_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/pm_protos.h>
+#include <proto/utility.h>
+#include <proto/exec.h>
+#include <proto/alib.h>
+#include <proto/pm.h>
 #include <string.h>
 #include <exec/memory.h>
 
@@ -64,13 +64,13 @@ static ULONG PopupMenu_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *
 
 		NewList((struct List *) &inst->itemlist);
 
-		while (tag = NextTagItem(taglist))
+		while ((tag = NextTagItem(taglist)))
 		{
 			switch (tag->ti_Tag)
 			{
 
 			  case SCCA_PopupMenu_Item:
-				if (node = (struct MenuItemNode *) AllocNode(&inst->itemlist,sizeof(struct MenuItemNode)))
+				if ((node = (struct MenuItemNode *) AllocNode(&inst->itemlist,sizeof(struct MenuItemNode))))
 				{
 					node->itemobj = (Object *) tag->ti_Data;
 				}
@@ -144,7 +144,7 @@ static ULONG PopupMenu_Open(struct SC_Class *cl, Object *obj, Msg msg, struct Po
 				entrycount++;
 			}
 
-			if (taglist = (struct TagItem *) AllocVec(entrycount*8,MEMF_ANY))
+			if ((taglist = (struct TagItem *) AllocVec(entrycount*8,MEMF_ANY)))
 			{
 				struct TagItem *tag = taglist;
 
@@ -168,8 +168,8 @@ static ULONG PopupMenu_Open(struct SC_Class *cl, Object *obj, Msg msg, struct Po
 		{
 			ULONG userdata;
 
-			if (userdata = PM_OpenPopupMenu((struct Window *) get(inst->windowobj,SCCA_Window_Window),
-											PM_Menu, inst->popupmenu, TAG_DONE))
+			if ((userdata = PM_OpenPopupMenu((struct Window *) get(inst->windowobj,SCCA_Window_Window),
+											PM_Menu, inst->popupmenu, TAG_DONE)))
 			{
 				SC_SetAttrs((Object *) userdata, SCCA_MenuItem_Activated,TRUE,TAG_DONE);
 			}

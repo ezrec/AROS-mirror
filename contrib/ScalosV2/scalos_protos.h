@@ -50,7 +50,7 @@ ULONG SC_FreeClassPPC(struct SC_Class *class);
 Object *SC_NewObjectAPPC(struct SC_Class *class, char *id, struct TagItem *taglist);
 Object *SC_NewObjectPPC(struct SC_Class *class, char *id, ULONG tag1, ...);
 void SC_DisposeObjectPPC(Object *obj);
-struct SC_Class *SC_MakeSimpleClass( char *id, char *superid, struct SC_Class *super, struct SC_MethodData *mdata, ULONG instsize, ULONG flags);
+struct SC_Class *SC_MakeSimpleClassPPC( char *id, char *superid, struct SC_Class *super, struct SC_MethodData *mdata, ULONG instsize, ULONG flags);
 void SC_SetAttrsAPPC( Object *obj , struct TagItem *taglist);
 void SC_SetAttrsPPC(Object *obj, ULONG tag1, ...);
 ULONG SC_GetAttrPPC( ULONG id, Object *obj , ULONG *attr);

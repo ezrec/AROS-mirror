@@ -16,19 +16,19 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/utility_protos.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/utility.h>
 #include <intuition/classusr.h>
 #include <exec/memory.h>
 #include <dos/dosextens.h>
 #include <dos/dostags.h>
 
-#include "scalos.h"
-#include "scalosintern.h"
+#include "Scalos.h"
+#include "ScalosIntern.h"
 #include "RootClass.h"
-#include "subroutines.h"
+#include "SubRoutines.h"
 #include "ThreadRootClass.h"
 #include "MethodSenderClass.h"
 
@@ -144,7 +144,7 @@ static void SAVEDS Thread_Task(void)
                 WaitPort(&owntask->pr_MsgPort);
 
         threadobj = startmsg->threadobj;
-        if (startmsg->scmsg.returnvalue = SC_DoMethod(threadobj, SCCM_Init, startmsg->taglist))
+        if ((startmsg->scmsg.returnvalue = SC_DoMethod(threadobj, SCCM_Init, startmsg->taglist)))
         {
                 if (!(msgport = (struct MsgPort *) get(threadobj, SCCA_MsgPort)))
                 {
@@ -198,14 +198,14 @@ static ULONG ThreadRoot_New(struct SC_Class *cl, Object *obj, struct opSet *msg,
         if (!(startmsg = (struct SCMSGP_Startup *) SC_AllocMsg(SCMSG_STARTUP,sizeof(struct SCMSGP_Startup))))
                 return(NULL);
 
-        if (replyport = CreateMsgPort()) // only for startup msg
+        if ((replyport = CreateMsgPort())) // only for startup msg
         {
                 startmsg->taglist = msg->ops_AttrList;
                 startmsg->scmsg.execmsg.mn_ReplyPort = replyport;
 
                 // make object
 
-                if (inst = AllocVec(((struct SC_Class *) obj)->InstOffset + ((struct SC_Class *) obj)->InstSize + sizeof(struct ThreadRootInst), MEMF_CLEAR | MEMF_ANY))
+                if ((inst = AllocVec(((struct SC_Class *) obj)->InstOffset + ((struct SC_Class *) obj)->InstSize + sizeof(struct ThreadRootInst), MEMF_CLEAR | MEMF_ANY)))
                 {
                         // set class pointer for the real object that we create
 
@@ -223,9 +223,9 @@ static ULONG ThreadRoot_New(struct SC_Class *cl, Object *obj, struct opSet *msg,
 
                         // tell sender obj where to send its methods
 
-                        if (senderobj = SC_NewObject(NULL, SCC_METHODSENDER_NAME,SCCA_MethodSender_DestObject,obj, TAG_DONE))
+                        if ((senderobj = SC_NewObject(NULL, SCC_METHODSENDER_NAME,SCCA_MethodSender_DestObject,obj, TAG_DONE)))
                         {
-                                if (proc = CreateNewProcTags(NP_Entry,Thread_Task, NP_Name,taskname, NP_StackSize,8192, TAG_DONE))
+                                if ((proc = CreateNewProcTags(NP_Entry,Thread_Task, NP_Name,taskname, NP_StackSize,8192, TAG_DONE)))
                                 {
                                         PutMsg(&proc->pr_MsgPort, (struct Message *) startmsg);     // send StartupMessage
                                         while (!GetMsg(replyport))
@@ -462,7 +462,7 @@ static ULONG ThreadRoot_Notify(struct SC_Class *cl, Object *obj, struct SCCP_Not
 
         inst = myThreadRootInst(obj);
         ObtainSemaphore(&inst->notilistsem);
-        if (buffer = (struct NotifyNode *) AllocNode(&inst->notilist,cpsize))
+        if ((buffer = (struct NotifyNode *) AllocNode(&inst->notilist,cpsize)))
                 CopyMem(&msg->TriggerAttr, &buffer->TriggerAttr, cpsize - sizeof(struct MinNode));
         ReleaseSemaphore(&inst->notilistsem);
         return TRUE;
@@ -482,7 +482,7 @@ void ThreadRoot_Set(struct SC_Class *cl, Object *obj, struct opSet *msg, struct 
 
         inst = myThreadRootInst(obj);
         ObtainSemaphoreShared(&inst->notilistsem);
-        while(tag = NextTagItem(taglist)) // search in taglist
+        while ((tag = NextTagItem(taglist))) // search in taglist
         {
                 // look for a attribute that we should trigger
                 for (node = (struct NotifyNode *) inst->notilist.mlh_Head; node->node.mln_Succ; node = (struct NotifyNode *) node->node.mln_Succ)
@@ -570,11 +570,11 @@ static ULONG ThreadRoot_Input(struct SC_Class *cl, Object *obj, Msg msg, struct 
         ULONG   msgtype;
 
         inst = myThreadRootInst(obj);
-        while (message = GetMsg(inst->msgport))
+        while ((message = GetMsg(inst->msgport)))
         {
                 if (message->mn_Node.ln_Type == NT_MESSAGE)
                 {
-                        if (msgtype = SC_IsScalosMsg(message))
+                        if ((msgtype = SC_IsScalosMsg(message)))
                         {
                                 if (msgtype == SCMSG_METHOD) // internal msg for a method
                                 {

@@ -1,9 +1,9 @@
 // tabsize ts=4
 
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/utility_protos.h>
-#include <clib/powerpc_protos.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/utility.h>
+#include <proto/powerpc.h>
 #include <intuition/classusr.h>
 #include <exec/memory.h>
 #include <proto/powerpc.h>
@@ -12,7 +12,7 @@
 
 #include "Scalos.h"
 #include "PPCRootClass.h"
-#include "subroutinesPPC.h"
+#include "SubRoutinesPPC.h"
 #include "Debug.h"
 
 #include "scalos_protos.h"
@@ -24,7 +24,7 @@
 
 static ULONG Root_New(struct SC_Class *cl, Object *obj, struct opSet *msg, struct RootInst *inst)
 {
-	if (inst = SC_AllocVecPPC(((struct SC_Class *) obj)->InstOffset + ((struct SC_Class *) obj)->InstSize + sizeof(struct RootInst), MEMF_CLEAR | MEMF_ANY))
+	if ((inst = SC_AllocVecPPC(((struct SC_Class *) obj)->InstOffset + ((struct SC_Class *) obj)->InstSize + sizeof(struct RootInst), MEMF_CLEAR | MEMF_ANY)))
 	{
 		inst->oclass = ((struct SC_Class *) obj);
 		obj = (Object *) (((struct RootInst *) inst) + 1);
@@ -106,7 +106,7 @@ static ULONG Root_Notify(struct SC_Class *cl, Object *obj, struct SCCP_Notify *m
 
 	inst = myRootInst(obj);
 	ObtainSemaphorePPC(&inst->notilistsem);
-	if (buffer = (struct NotifyNode *) AllocNodePPC(&inst->notilist,cpsize))
+	if ((buffer = (struct NotifyNode *) AllocNodePPC(&inst->notilist,cpsize)))
 		memcpy(&buffer->TriggerAttr, &msg->TriggerAttr, cpsize - sizeof(struct MinNode));
 	ReleaseSemaphorePPC(&inst->notilistsem);
 	return TRUE;
@@ -126,7 +126,7 @@ static void Root_Set(struct SC_Class *cl, Object *obj, struct opSet *msg, struct
 
 	inst = myRootInst(obj);
 	ObtainSemaphoreSharedPPC(&inst->notilistsem);
-	while(tag = NextTagItemPPC(taglist)) // search in taglist
+	while ((tag = NextTagItemPPC(taglist))) // search in taglist
 	{
 		// look for a attribute that we should trigger
 		for (node = (struct NotifyNode *) inst->notilist.mlh_Head; node->node.mln_Succ; node = (struct NotifyNode *) node->node.mln_Succ)

@@ -16,9 +16,9 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/dos_protos.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/dos.h>
 #include <dos/dos.h>
 
 #include "Scalos.h"

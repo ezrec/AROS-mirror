@@ -16,17 +16,17 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/intuition_protos.h>
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
+#include <proto/intuition.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
 #include <intuition/classusr.h>
 #include <intuition/imageclass.h>
 #include <intuition/gadgetclass.h>
 #include <intuition/intuition.h>
 #include <intuition/screens.h>
 #include <exec/lists.h>
-#include "debug.h"
+#include "Debug.h"
 
 #include "Scalos.h"
 #include "WindowTaskClass.h"
@@ -41,7 +41,7 @@ static void WinTask_settags(struct TagItem *taglist, struct WindowTaskInst *inst
         struct TagItem *tag;
 
         tags = &taglist;
-        while(tag = NextTagItem(tags))
+        while ((tag = NextTagItem(tags)))
         {
                 switch (tag->ti_Tag)
                 {
@@ -63,7 +63,7 @@ static ULONG WinTask_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *ms
 
         WinTask_settags(msg->ops_AttrList, inst, cl, obj);
 
-        if (objlist = (struct List *) SC_DoMethod(obj, SCCM_LockObjectList,SCCV_LockShared))
+        if ((objlist = (struct List *) SC_DoMethod(obj, SCCM_LockObjectList,SCCV_LockShared)))
         {
                 if (IsListEmpty(objlist))
                 {
@@ -73,7 +73,7 @@ static ULONG WinTask_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *ms
                 SC_DoMethod(obj, SCCM_UnlockObjectList);
         }
 
-        if (inst->msgport = CreateMsgPort())
+        if ((inst->msgport = CreateMsgPort()))
                 return(TRUE);
 
         // tell the objects that initialized before us to clean up
@@ -119,10 +119,10 @@ ULONG WinTask_Input(struct SC_Class *cl, Object *obj, struct SCCP_WindowTask_Inp
         ULONG msgid;
 
         *(msg->signal) = (1<<(inst->msgport->mp_SigBit));
-        while (message = GetMsg(inst->msgport))
+        while ((message = GetMsg(inst->msgport)))
         {
                 DEBUG("Message received\n");
-                if (msgid = SC_IsScalosMsg(message))
+                if ((msgid = SC_IsScalosMsg(message)))
                 {
                         DEBUG1("Internal Message, ID: %ld\n", msgid);
                         switch (msgid)
@@ -146,7 +146,7 @@ ULONG WinTask_Return(struct SC_Class *cl, Object *obj, Msg msg, struct WindowTas
 {
         struct SC_Message *smsg;
 
-        if (smsg = SC_AllocMsg(SCMSG_QUIT,sizeof(struct SC_Message)))
+        if ((smsg = SC_AllocMsg(SCMSG_QUIT,sizeof(struct SC_Message))))
         {
                 PutMsg(inst->msgport, (struct Message *) smsg);
                 DEBUG("Sending quit msg\n");

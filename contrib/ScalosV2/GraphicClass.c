@@ -16,9 +16,9 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/graphics_protos.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/graphics.h>
 
 #include "Scalos.h"
 #include "GraphicClass.h"
@@ -448,7 +448,7 @@ static Object *Graphic_Clone(struct SC_Class *cl, Object *obj, Msg msg, struct G
 {
         struct GraphicInst *newinst;
 
-        if (newinst = (struct GraphicInst *) SC_DoSuperMethodA(cl,obj, (Msg) msg))
+        if ((newinst = (struct GraphicInst *) SC_DoSuperMethodA(cl,obj, (Msg) msg)))
         {
                 newinst->bounds = inst->bounds;
                 return((Object *) newinst);

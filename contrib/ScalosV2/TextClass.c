@@ -16,10 +16,10 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/graphics_protos.h>
-#include <clib/exec_protos.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/graphics.h>
+#include <proto/exec.h>
 
 #include <string.h>
 
@@ -126,7 +126,7 @@ static ULONG Text_PreThinkWindow(struct SC_Class *cl, Object *obj, struct SCCP_G
 
         if (SC_DoSuperMethodA(cl,obj,(Msg) msg))
         {
-                if (dri = (struct DrawInfo *) get(((struct SC_GraphicObject *) obj)->screenobj,SCCA_Screen_DrawInfo))
+                if ((dri = (struct DrawInfo *) get(((struct SC_GraphicObject *) obj)->screenobj,SCCA_Screen_DrawInfo)))
                 {
                         width = TextLength(msg->rastport,inst->string,inst->numchars);
                         if (inst->type == SCCV_Text_Type_Outline)
@@ -230,13 +230,13 @@ static ULONG Text_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *msg, 
         {
                 struct TagItem *tag;
 
-                if (tag = FindTagItem(SCCA_Text_String,msg->ops_AttrList))
+                if ((tag = FindTagItem(SCCA_Text_String,msg->ops_AttrList)))
                 {
-                        if (inst->string = AllocCopyString((char *)tag->ti_Data))
+                        if ((inst->string = AllocCopyString((char *)tag->ti_Data)))
                                 inst->numchars = strlen(inst->string);
                 }
 
-                if (tag = FindTagItem(SCCA_Text_Font,msg->ops_AttrList))
+                if ((tag = FindTagItem(SCCA_Text_Font,msg->ops_AttrList)))
                 {
                         struct TextAttr *font = (struct TextAttr *) tag->ti_Data;
 
@@ -263,7 +263,7 @@ static void Text_Set( struct SC_Class *cl, Object *obj, struct opSet *msg, struc
 {
         struct TagItem *tag;
 
-        if (tag = FindTagItem(SCCA_Text_String,msg->ops_AttrList))
+        if ((tag = FindTagItem(SCCA_Text_String,msg->ops_AttrList)))
         {
                 if (inst->string)
                         FreeVec(inst->string);

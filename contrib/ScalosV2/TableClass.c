@@ -16,8 +16,8 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
 #include <string.h>
 
 #include "Scalos.h"
@@ -178,7 +178,7 @@ static ULONG Table_Add(struct SC_Class *cl, Object *obj, struct SCCP_Table_Add *
 {
         struct TableNode *tn;
 
-        if (tn = (struct TableNode *) AllocNode(&inst->list,sizeof(struct TableNode) + strlen(msg->Name)))
+        if ((tn = (struct TableNode *) AllocNode(&inst->list,sizeof(struct TableNode) + strlen(msg->Name))))
         {
                 tn->Attr = msg->Attr;
                 tn->Type = msg->Type;
@@ -243,7 +243,7 @@ static void Table_Rem(struct SC_Class *cl, Object *obj, struct SCCP_Table_Remove
 
         for (node = inst->list.mlh_Head; node->mln_Succ; node = node->mln_Succ)
         {
-                if (((struct TableNode *) node)->Attr = msg->Attr)
+                if ((((struct TableNode *) node)->Attr = msg->Attr))
                 {
                         if (((ULONG) inst->curnode) == ((ULONG) node))
                         {

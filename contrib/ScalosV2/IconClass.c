@@ -16,10 +16,10 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/graphics_protos.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/graphics.h>
 #include <string.h>
 #include <exec/memory.h>
 #include <workbench/workbench.h>
@@ -639,7 +639,7 @@ static ULONG Icon_GetIcon(struct SC_Class *cl, Object *obj, struct SCCP_Icon_Get
                 int memsize = 8*512;
                 int iconsize = 0;
 
-                if (handle = SC_DoMethod(obj,SCCM_Icon_OpenIcon,".info"))
+                if ((handle = SC_DoMethod(obj,SCCM_Icon_OpenIcon,".info")))
                 {
                         BOOL loading = TRUE;
                         APTR oldmem = NULL;
@@ -648,7 +648,7 @@ static ULONG Icon_GetIcon(struct SC_Class *cl, Object *obj, struct SCCP_Icon_Get
                                 // read the icon in 4kb pieces
                         for (memsize = 8*512; loading; memsize += 8*512)
                         {
-                                if (icon = AllocVec(memsize,MEMF_ANY))
+                                if ((icon = AllocVec(memsize,MEMF_ANY)))
                                 {
                                         if (oldmem)
                                         {
@@ -740,11 +740,11 @@ static ULONG Icon_GetIcon(struct SC_Class *cl, Object *obj, struct SCCP_Icon_Get
                                                 bm.Planes[i] = NULL;
                                 }
 
-                                if (bmobj = SC_NewObject(NULL,SCC_BITMAP_NAME,SCCA_Bitmap_Bitmap,&bm,
+                                if ((bmobj = SC_NewObject(NULL,SCC_BITMAP_NAME,SCCA_Bitmap_Bitmap,&bm,
                                                                                  SCCA_Graphic_Width,iconimg->Width,
                                                                                  SCCA_Graphic_Height,iconimg->Height,
                                                                                  SCCA_Bitmap_CopyOriginal,TRUE,
-                                                                                 TAG_DONE))
+                                                                                 TAG_DONE)))
                                 {
                                         SC_SetAttrs(obj,SCCA_Icon_GraphicNormal,bmobj,TAG_DONE);
                                 }
@@ -767,11 +767,11 @@ static ULONG Icon_GetIcon(struct SC_Class *cl, Object *obj, struct SCCP_Icon_Get
                                                         bm.Planes[i] = NULL;
                                         }
 
-                                        if (bmobj = SC_NewObject(NULL,SCC_BITMAP_NAME,SCCA_Bitmap_Bitmap,&bm,
+                                        if ((bmobj = SC_NewObject(NULL,SCC_BITMAP_NAME,SCCA_Bitmap_Bitmap,&bm,
                                                                                          SCCA_Graphic_Width,iconimg->Width,
                                                                                          SCCA_Graphic_Height,iconimg->Height,
                                                                                          SCCA_Bitmap_CopyOriginal,TRUE,
-                                                                                         TAG_DONE))
+                                                                                         TAG_DONE)))
                                         {
                                                 SC_SetAttrs(obj,SCCA_Icon_GraphicSelected,bmobj,TAG_DONE);
                                         }
@@ -783,11 +783,11 @@ static ULONG Icon_GetIcon(struct SC_Class *cl, Object *obj, struct SCCP_Icon_Get
 
                                         InitRastPort(&rp);
 
-                                        if (rp.BitMap = AllocBitMap(iconimg->Width,iconimg->Height,iconimg->Depth,0,NULL))
+                                        if ((rp.BitMap = AllocBitMap(iconimg->Width,iconimg->Height,iconimg->Depth,0,NULL)))
                                         {
                                                 BltBitMapRastPort(&bm,0,0,&rp,0,0,iconimg->Width,iconimg->Height, ABNC | ABC);
 
-                                                if (icondo->do_Gadget.Flags & GADGBACKFILL)
+                                                if (icondo->do_Gadget.Flags & GFLG_GADGBACKFILL)
                                                 {
                                                         struct BitMap maskbm;
                                                         struct BitMap *oldbm;
@@ -802,9 +802,9 @@ static ULONG Icon_GetIcon(struct SC_Class *cl, Object *obj, struct SCCP_Icon_Get
                                                         maskbm.pad = 0;
 
                                                                 // the mask has a clean area around to fill it
-                                                        if (maskbm.Planes[0] = AllocVec(maskbm.BytesPerRow * maskbm.Rows * 2, MEMF_ANY | MEMF_CHIP | MEMF_CLEAR))
+                                                        if ((maskbm.Planes[0] = AllocVec(maskbm.BytesPerRow * maskbm.Rows * 2, MEMF_ANY | MEMF_CHIP | MEMF_CLEAR)))
                                                         {
-                                                                if (tmpmem = AllocVec(maskbm.BytesPerRow * maskbm.Rows, MEMF_ANY | MEMF_CHIP | MEMF_CLEAR))
+                                                                if ((tmpmem = AllocVec(maskbm.BytesPerRow * maskbm.Rows, MEMF_ANY | MEMF_CHIP | MEMF_CLEAR)))
                                                                 {
                                                                         int i,j,k;
 
@@ -864,11 +864,11 @@ static ULONG Icon_GetIcon(struct SC_Class *cl, Object *obj, struct SCCP_Icon_Get
                                                         BltPattern(&rp,NULL,0,0,iconimg->Width - 1,iconimg->Height - 1,0);
                                                 }
 
-                                                if (bmobj = SC_NewObject(NULL,SCC_BITMAP_NAME,SCCA_Bitmap_Bitmap,rp.BitMap,
+                                                if ((bmobj = SC_NewObject(NULL,SCC_BITMAP_NAME,SCCA_Bitmap_Bitmap,rp.BitMap,
                                                                                                  SCCA_Graphic_Width,iconimg->Width,
                                                                                                  SCCA_Graphic_Height,iconimg->Height,
                                                                                                  SCCA_Bitmap_CopyOriginal,TRUE,
-                                                                                                 TAG_DONE))
+                                                                                                 TAG_DONE)))
                                                 {
                                                         SC_SetAttrs(obj,SCCA_Icon_GraphicSelected,bmobj,TAG_DONE);
                                                 }
@@ -1061,7 +1061,7 @@ static void SetTags(Object *obj, struct IconInst *inst, struct TagItem *taglist)
         struct TagItem **tags = &taglist;
         char *name;
 
-        while (tag = NextTagItem(tags))
+        while ((tag = NextTagItem(tags)))
         {
                 switch (tag->ti_Tag)
                 {
@@ -1118,7 +1118,7 @@ static void SetTags(Object *obj, struct IconInst *inst, struct TagItem *taglist)
                         break;
 
                   case SCCA_Icon_Name:
-                        if (name = AllocCopyString((char *) tag->ti_Data))
+                        if ((name = AllocCopyString((char *) tag->ti_Data)))
                         {
                                 if (inst->name)
                                         FreeVec(inst->name);
@@ -1127,7 +1127,7 @@ static void SetTags(Object *obj, struct IconInst *inst, struct TagItem *taglist)
                         break;
 
                   case SCCA_Icon_DefaultTool:
-                        if (name = AllocCopyString((char *) tag->ti_Data))
+                        if ((name = AllocCopyString((char *) tag->ti_Data)))
                         {
                                 if (inst->defaulttool)
                                         FreeVec(inst->defaulttool);

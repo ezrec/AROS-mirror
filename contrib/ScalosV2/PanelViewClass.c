@@ -14,10 +14,10 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/alib_protos.h>
-#include <clib/utility_protos.h>
-#include <clib/intuition_protos.h>
-#include <clib/graphics_protos.h>
+#include <proto/alib.h>
+#include <proto/utility.h>
+#include <proto/intuition.h>
+#include <proto/graphics.h>
 #include <intuition/classusr.h>
 #include <intuition/gadgetclass.h>
 #include <graphics/gfx.h>
@@ -28,7 +28,7 @@
 #include "WindowClass.h"
 
 #include "scalos_protos.h"
-#include "debug.h"
+#include "Debug.h"
 
 /****** PanelView.scalos/--background ***************************************
 *
@@ -130,7 +130,7 @@ static void PanelView_Set(struct SC_Class *cl, Object *obj, struct opSet *msg, s
         BOOL newx = FALSE;
         BOOL newy = FALSE;
 
-        while(tag = NextTagItem(tags))
+        while ((tag = NextTagItem(tags)))
         {
                 switch (tag->ti_Tag)
                 {

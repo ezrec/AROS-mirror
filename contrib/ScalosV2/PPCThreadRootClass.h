@@ -1,7 +1,7 @@
 // :ts=4 (Tabsize)
 
 #ifndef SCALOS_H
-#include "scalos.h"
+#include "Scalos.h"
 #endif /* SCALOS_H */
 
 #ifndef POWERPC_SEMAPHORESPPC_H

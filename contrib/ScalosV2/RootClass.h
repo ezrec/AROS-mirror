@@ -17,7 +17,7 @@
 **
 */
 #ifndef SCALOS_H
-#include "scalos.h"
+#include "Scalos.h"
 #endif /* SCALOS_H */
 
 // not real instance data. This struct is located before the object data.

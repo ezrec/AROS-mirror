@@ -16,11 +16,11 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/intuition_protos.h>
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/graphics_protos.h>
-#include <clib/exec_protos.h>
+#include <proto/intuition.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/graphics.h>
+#include <proto/exec.h>
 #include <exec/memory.h>
 #include <graphics/gfx.h>
 #include <intuition/classusr.h>
@@ -231,13 +231,13 @@ static ULONG Bitmap_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *msg
 
                 inst->copyorig = GetTagData(SCCA_Bitmap_CopyOriginal,0,msg->ops_AttrList);
 
-                if (inst->SrcBitmap = (struct BitMap *) GetTagData(SCCA_Bitmap_Bitmap,0,msg->ops_AttrList))
+                if ((inst->SrcBitmap = (struct BitMap *) GetTagData(SCCA_Bitmap_Bitmap,0,msg->ops_AttrList)))
                 {
                         struct BitMap *bm;
 
                         if (inst->copyorig)
                         {
-                                if (bm = AllocBitMap(inst->SrcBitmap->BytesPerRow * 8,inst->SrcBitmap->Rows,inst->SrcBitmap->Depth,0,NULL))
+                                if ((bm = AllocBitMap(inst->SrcBitmap->BytesPerRow * 8,inst->SrcBitmap->Rows,inst->SrcBitmap->Depth,0,NULL)))
                                 {
                                         BltBitMap(inst->SrcBitmap,0,0,bm,0,0,inst->SrcBitmap->BytesPerRow * 8,inst->SrcBitmap->Rows,ABNC | ABC, -1, NULL);
                                         inst->SrcBitmap = bm;
@@ -289,7 +289,7 @@ static ULONG Bitmap_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *msg
 
                 // if a special palette for the gfx data is passed we need to get the other tags that belong to it too
 
-                if(inst->Palette                = (APTR)       GetTagData(SCCA_Bitmap_Palette,0,msg->ops_AttrList))
+                if((inst->Palette                = (APTR)       GetTagData(SCCA_Bitmap_Palette,0,msg->ops_AttrList)))
                 {
                         if(!(inst->NumColors            = GetTagData(SCCA_Bitmap_NumColors,0,msg->ops_AttrList)))
                         {
@@ -570,13 +570,13 @@ static ULONG Bitmap_PreThinkWindow(struct SC_Class *cl, Object *obj, struct SCCP
                         return FALSE;
                 }
 
-                if(inst->FriendBitmap = CreatePictureBitMap(inst->Drawhandle,
+                if((inst->FriendBitmap = CreatePictureBitMap(inst->Drawhandle,
                                                                                                           inst->Picture,
                                                                                                           GGFX_SourceX, 0,                  // left edge inside the picture where to fetch the pixels
                                                                                                           GGFX_SourceY, 0,                  // top edge inside the picture where to fetch the pixels
                                                                                                           GGFX_DestWidth, inst->DestWidth,  // scale to this width
                                                                                                           GGFX_DestHeight, inst->DestHeight,// scale to this height
-                                                                                                          TAG_DONE))                        // more tags available !!
+                                                                                                          TAG_DONE)))                       // more tags available !!
                 {
                         // if we got a blit mask and scaling width/height values do:
                         // ignore scale stuff

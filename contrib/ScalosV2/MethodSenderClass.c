@@ -14,10 +14,10 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/powerpc_protos.h>
-#include <clib/utility_protos.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/powerpc.h>
+#include <proto/utility.h>
 #include <intuition/classusr.h>
 #include <exec/ports.h>
 
@@ -25,7 +25,7 @@
 #include "ScalosIntern.h"
 #include "MethodSenderClass.h"
 #include "SubRoutines.h"
-#include "Scalos_protos.h"
+#include "scalos_protos.h"
 #include "CompilerSupport.h"
 #include "ThreadRootClass.h"
 
@@ -48,7 +48,7 @@ ULONG PutMethod(struct MethodSenderInst *inst, Msg msg, struct MsgPort *replypor
 
                 do
                 {
-                        if (mdata = (struct SC_MethodData *) curcl->Methods)
+                        if ((mdata = (struct SC_MethodData *) curcl->Methods))
                         {
                                 while (mdata->MethodID != SCMETHOD_DONE)
                                 {
@@ -65,7 +65,7 @@ ULONG PutMethod(struct MethodSenderInst *inst, Msg msg, struct MsgPort *replypor
 
                 if (usemdata && !(usemdata->Flags & SCMDF_DIRECTMETHOD))
                 {
-                        if (smsg = (struct SCMSGP_Method *) SC_AllocMsg(SCMSG_METHOD,sizeof(struct SCMSGP_Method) + usemdata->Size))
+                        if ((smsg = (struct SCMSGP_Method *) SC_AllocMsg(SCMSG_METHOD,sizeof(struct SCMSGP_Method) + usemdata->Size)))
                         {
                                 smsg->scmsg.execmsg.mn_ReplyPort = replyport;
                                 smsg->methoddata = usemdata;
@@ -92,7 +92,7 @@ static ULONG SendMethod(struct MethodSenderInst *inst, Msg msg)
 
                 do
                 {
-                        if (mdata = (struct SC_MethodData *) curcl->Methods)
+                        if ((mdata = (struct SC_MethodData *) curcl->Methods))
                         {
                                 while (mdata->MethodID != SCMETHOD_DONE)
                                 {
@@ -112,7 +112,7 @@ static ULONG SendMethod(struct MethodSenderInst *inst, Msg msg)
 
                 if (usemdata && (replyport = CreateMsgPort()))
                 {
-                        if (smsg = (struct SCMSGP_Method *) SC_AllocMsg(SCMSG_METHOD,sizeof(struct SCMSGP_Method) + usemdata->Size))
+                        if ((smsg = (struct SCMSGP_Method *) SC_AllocMsg(SCMSG_METHOD,sizeof(struct SCMSGP_Method) + usemdata->Size)))
                         {
                                 smsg->scmsg.execmsg.mn_ReplyPort = replyport;
                                 smsg->methoddata = usemdata;
@@ -137,7 +137,7 @@ SAVEDS ASM ULONG MethodSenderDispatcher( REG(a0) struct SC_Class *cl, REG(a1) Ms
         switch (msg->MethodID)
         {
                 case OM_NEW :
-                        if (obj = (Object *) SC_DoSuperMethodA(cl,obj, msg))
+                        if ((obj = (Object *) SC_DoSuperMethodA(cl,obj, msg)))
                         {
                                 inst = SCINST_DATA(cl,obj);
                                 inst->senderid = SCALOS_SENDERID;

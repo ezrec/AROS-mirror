@@ -16,12 +16,12 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/icon_protos.h>
-#include <clib/locale_protos.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/dos.h>
+#include <proto/exec.h>
+#include <proto/icon.h>
+#include <proto/locale.h>
 #include <dos/dos.h>
 #include <exec/memory.h>
 #include <string.h>
@@ -220,7 +220,7 @@ static ULONG DOSIcon_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *ms
                 APTR pathend;
                 int  pathsize;
 
-                while (tag = NextTagItem(taglist))
+                while ((tag = NextTagItem(taglist)))
                 {
                         switch (tag->ti_Tag)
                         {
@@ -287,7 +287,7 @@ static void DOSIcon_Set( struct SC_Class *cl, Object *obj, struct opSet *msg, st
 {
         struct TagItem *tag;
 
-        if (tag = FindTagItem(SCCA_DOSIcon_Lock,msg->ops_AttrList))
+        if ((tag = FindTagItem(SCCA_DOSIcon_Lock,msg->ops_AttrList)))
         {
                 if (inst->currentdir)
                         UnLock(inst->currentdir);
@@ -308,13 +308,13 @@ static BOOL getfib(struct DOSIconInst *inst, Object *obj)
         struct FileInfoBlock *fib;
 
 
-        if (fib = AllocDosObject(DOS_FIB,NULL))
+        if ((fib = AllocDosObject(DOS_FIB,NULL)))
         {
 
                 if (lock)
                         oldlock = CurrentDir(lock);
 
-                if (mylock = Lock((char *) get(obj,SCCA_Icon_Name),SHARED_LOCK))
+                if ((mylock = Lock((char *) get(obj,SCCA_Icon_Name),SHARED_LOCK)))
                 {
 
                         if (Examine(mylock,fib))
@@ -465,7 +465,7 @@ static char *DOSIcon_GetString( struct SC_Class *cl, Object *obj, struct SCCP_Ic
                 if (!(inst->flags & DOSIF_SIZE) && !(getfib(inst,obj)))
                         return(NULL);
 
-                if (retstring = (char *) AllocVec(12,MEMF_ANY)) // 12 is the max for a number
+                if ((retstring = (char *) AllocVec(12,MEMF_ANY))) // 12 is the max for a number
                 {
 
                         sprintf(retstring,"%ld",inst->size);
@@ -479,7 +479,7 @@ static char *DOSIcon_GetString( struct SC_Class *cl, Object *obj, struct SCCP_Ic
                 if (!(inst->flags & DOSIF_PROT) && !(getfib(inst,obj)))
                                 return(NULL);
 
-                if (retstring = (char *) AllocVec(10,MEMF_ANY)) // 10 for "----rwed"
+                if ((retstring = (char *) AllocVec(10,MEMF_ANY))) // 10 for "----rwed"
                 {
                         retstring[0] = (inst->prot & (1<<7))        ? 'H' : '-';
                         retstring[1] = (inst->prot & FIBF_SCRIPT)   ? 'S' : '-';
@@ -502,10 +502,10 @@ static char *DOSIcon_GetString( struct SC_Class *cl, Object *obj, struct SCCP_Ic
                 if (!(inst->flags & DOSIF_DATE) && !(getfib(inst,obj)))
                                 return(NULL);
 
-                if (hook.h_Data = AllocVec(DATESIZE,MEMF_ANY | MEMF_CLEAR))
+                if ((hook.h_Data = AllocVec(DATESIZE,MEMF_ANY | MEMF_CLEAR)))
                 {
                         struct Locale *loc;
-                        if (loc = OpenLocale(NULL))
+                        if ((loc = OpenLocale(NULL)))
                         {
                                 FormatDate(NULL,loc->loc_ShortDateTimeFormat,&inst->date,&hook);
                                 CloseLocale(loc);

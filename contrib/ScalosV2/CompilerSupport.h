@@ -14,16 +14,18 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#define SAVEDS __saveds
-#define REG(x) register __##x
 
 #ifdef __SASC
 #define ASM __asm
+#define SAVEDS __saveds
+#define REG(x) register __##x
 #ifndef MAKE_ID
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
 #endif
 #else
 #define ASM
+#define SAVEDS
+#define REG(x)
 #ifndef MAKE_ID
 #define MAKE_ID(a,b,c,d) ((ULONG) 'abcd')
 #endif

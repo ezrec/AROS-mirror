@@ -16,10 +16,10 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/exec_protos.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/dos.h>
+#include <proto/exec.h>
 #include <dos/dos.h>
 #include <string.h>
 #include <exec/memory.h>
@@ -83,9 +83,9 @@ static ULONG DOSDeviceIcon_Init(struct SC_Class *cl, Object *obj, struct SCCP_In
                 inst->assigntype = GetTagData(SCCA_DOSDeviceIcon_AssignType,0,msg->ops_AttrList);
                 inst->handler = (struct MsgPort *) GetTagData(SCCA_DOSDeviceIcon_Handler,0,msg->ops_AttrList);
 
-                if (string = (char *) GetTagData(SCCA_Icon_Name,0,msg->ops_AttrList))
+                if ((string = (char *) GetTagData(SCCA_Icon_Name,0,msg->ops_AttrList)))
                 {
-                        if (inst->volname = AllocVec(strlen(string) + 2,MEMF_ANY))
+                        if ((inst->volname = AllocVec(strlen(string) + 2,MEMF_ANY)))
                         {
                                 strcpy(inst->volname,string);
                                 if (!inst->assigntype)
@@ -93,9 +93,9 @@ static ULONG DOSDeviceIcon_Init(struct SC_Class *cl, Object *obj, struct SCCP_In
                         }
                 }
 
-                if (string = (char *) GetTagData(SCCA_DOSDeviceIcon_DeviceName,0,msg->ops_AttrList))
+                if ((string = (char *) GetTagData(SCCA_DOSDeviceIcon_DeviceName,0,msg->ops_AttrList)))
                 {
-                        if (inst->devname = AllocVec(strlen(string) + 2,MEMF_ANY))
+                        if ((inst->devname = AllocVec(strlen(string) + 2,MEMF_ANY)))
                         {
                                 strcpy(inst->devname,string);
                                 strcat(inst->devname,":");

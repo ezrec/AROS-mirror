@@ -15,7 +15,7 @@
 **
 */
 #ifndef SCALOS_H
-#include "scalos.h"
+#include "Scalos.h"
 #endif /* SCALOS_H */
 
 #ifndef MAKE_ID

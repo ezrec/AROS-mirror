@@ -18,10 +18,10 @@
 **
 */
 
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/intuition_protos.h>
-#include <clib/dos_protos.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/intuition.h>
+#include <proto/dos.h>
 #include <intuition/classusr.h>
 #include <intuition/classes.h>
 #include <exec/semaphores.h>

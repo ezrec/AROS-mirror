@@ -14,20 +14,20 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/powerpc_protos.h>
-#include <clib/utility_protos.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/powerpc.h>
+#include <proto/utility.h>
 #include <exec/lists.h>
 #include <exec/memory.h>
 #include <exec/semaphores.h>
 #include <exec/nodes.h>
 
-#include "scalos.h"
-#include "scalosintern.h"
+#include "Scalos.h"
+#include "ScalosIntern.h"
 #include "MethodSenderClass.h"
 #include "CompilerSupport.h"
-#include "debug.h"
+#include "Debug.h"
 #include "scalos_protos.h"
 
 /****** scalosmaster.library/--background ***********************************
@@ -98,7 +98,7 @@ struct SC_Message *SC_AllocMsg(UWORD msgtype, ULONG size)
 
         if (size >= sizeof(struct SC_Message))
         {
-                if (smsg = AllocVec(size, MEMF_PUBLIC | MEMF_CLEAR))
+                if ((smsg = AllocVec(size, MEMF_PUBLIC | MEMF_CLEAR)))
                 {
                         smsg->scalosmid = SCALOS_MSGID;
                         smsg->execmsg.mn_Length = size;
@@ -424,7 +424,7 @@ struct SC_Class *SC_MakeClass(char *id, char *superid, struct SC_Class *supercla
                 ReleaseSemaphore(&ClassSem);
         }
 
-        if (newclass = (struct SC_Class *) AllocVec(sizeof(struct SC_Class), MEMF_PUBLIC | MEMF_CLEAR))
+        if ((newclass = (struct SC_Class *) AllocVec(sizeof(struct SC_Class), MEMF_PUBLIC | MEMF_CLEAR)))
         {
                 newclass->Dispatcher.h_Entry = disp;
                 newclass->Methods = mdata;

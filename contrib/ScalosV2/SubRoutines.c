@@ -16,10 +16,10 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/exec_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/graphics_protos.h>
-#include <clib/intuition_protos.h>
+#include <proto/exec.h>
+#include <proto/alib.h>
+#include <proto/graphics.h>
+#include <proto/intuition.h>
 #include <exec/memory.h>
 #include <intuition/classusr.h>
 #include <string.h>
@@ -36,7 +36,7 @@ APTR AllocCopyString( char *string )
         APTR mem;
 
         for (i=0;string[i] != 0;i++);
-        if (mem = AllocVec( ++i,1 ))
+        if ((mem = AllocVec( ++i,1 )))
         {
                 strcpy( mem,string );
         }
@@ -70,7 +70,7 @@ APTR AllocNode(struct MinList *list, ULONG size)
 {
         APTR ret;
 
-        if (ret = AllocVec(size, MEMF_CLEAR))
+        if ((ret = AllocVec(size, MEMF_CLEAR)))
         {
                 AddTail((struct List *) list, (struct Node *) ret);
                 return(ret);

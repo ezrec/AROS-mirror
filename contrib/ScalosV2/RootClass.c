@@ -16,22 +16,22 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/utility_protos.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/utility.h>
 #include <intuition/classusr.h>
 #include <exec/memory.h>
 
 #include "Scalos.h"
 #include "RootClass.h"
-#include "subroutines.h"
+#include "SubRoutines.h"
 #include "Debug.h"
 
 #include "scalos_protos.h"
 
 static ULONG Root_New(struct SC_Class *cl, Object *obj, struct opSet *msg, struct RootInst *inst)
 {
-        if (inst = AllocVec(((struct SC_Class *) obj)->InstOffset + ((struct SC_Class *) obj)->InstSize + sizeof(struct RootInst), MEMF_CLEAR | MEMF_ANY))
+        if ((inst = AllocVec(((struct SC_Class *) obj)->InstOffset + ((struct SC_Class *) obj)->InstSize + sizeof(struct RootInst), MEMF_CLEAR | MEMF_ANY)))
         {
                 inst->oclass = ((struct SC_Class *) obj);
                 obj = (Object *) (((struct RootInst *) inst) + 1);
@@ -113,7 +113,7 @@ static ULONG Root_Notify(struct SC_Class *cl, Object *obj, struct SCCP_Notify *m
 
         inst = myRootInst(obj);
         ObtainSemaphore(&inst->notilistsem);
-        if (buffer = (struct NotifyNode *) AllocNode(&inst->notilist,cpsize))
+        if ((buffer = (struct NotifyNode *) AllocNode(&inst->notilist,cpsize)))
                 CopyMem(&msg->TriggerAttr, &buffer->TriggerAttr, cpsize - sizeof(struct MinNode));
         ReleaseSemaphore(&inst->notilistsem);
         return TRUE;
@@ -133,7 +133,7 @@ static void Root_Set(struct SC_Class *cl, Object *obj, struct opSet *msg, struct
 
         inst = myRootInst(obj);
         ObtainSemaphoreShared(&inst->notilistsem);
-        while(tag = NextTagItem(taglist)) // search in taglist
+        while ((tag = NextTagItem(taglist))) // search in taglist
         {
                 // look for a attribute that we should trigger
                 for (node = (struct NotifyNode *) inst->notilist.mlh_Head; node->node.mln_Succ; node = (struct NotifyNode *) node->node.mln_Succ)
@@ -244,7 +244,7 @@ static Object *Root_Clone(struct SC_Class *cl, Object *obj, Msg msg, struct Root
         struct RootInst *newinst;
         inst = myRootInst(obj);
 
-        if (newinst = AllocVec(inst->oclass->InstOffset + inst->oclass->InstSize + sizeof(struct RootInst), MEMF_CLEAR | MEMF_ANY))
+        if ((newinst = AllocVec(inst->oclass->InstOffset + inst->oclass->InstSize + sizeof(struct RootInst), MEMF_CLEAR | MEMF_ANY)))
         {
                 newinst->oclass = inst->oclass;
                 newobj = (Object *) (newinst + 1);

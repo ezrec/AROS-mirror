@@ -15,11 +15,11 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/alib_protos.h>
-#include <clib/utility_protos.h>
-#include <clib/intuition_protos.h>
-#include <clib/graphics_protos.h>
-#include <clib/exec_protos.h>
+#include <proto/alib.h>
+#include <proto/utility.h>
+#include <proto/intuition.h>
+#include <proto/graphics.h>
+#include <proto/exec.h>
 #include <intuition/classusr.h>
 #include <intuition/intuition.h>
 #include <graphics/gfx.h>
@@ -29,7 +29,7 @@
 #include "SubRoutines.h"
 
 #include "scalos_protos.h"
-#include "debug.h"
+#include "Debug.h"
 
 /****** IconPanel.scalos/--background ***************************************
 *
@@ -328,10 +328,10 @@ static ULONG IconPanel_Add(struct SC_Class *cl, Object *obj, struct SCCP_IconPan
 
         ObtainSemaphore(&inst->iconsem);
 
-        if (node = AllocNode(&inst->iconlist, sizeof(struct IconNode)))
+        if ((node = AllocNode(&inst->iconlist, sizeof(struct IconNode))))
         {
                         // give the icon a unique id
-                if (node->itemid = ++inst->itemid)
+                if ((node->itemid = ++inst->itemid))
                         node->itemid =   inst->itemid;
 
                 node->icon = msg->iconobj;
@@ -417,7 +417,7 @@ static ULONG IconPanel_Remove(struct SC_Class *cl, Object *obj, struct SCCP_Icon
         struct IconNode *node;
 
         ObtainSemaphore(&inst->iconsem);
-        if (node = finditem(&inst->iconlist,msg->itemid))
+        if ((node = finditem(&inst->iconlist,msg->itemid)))
         {
                 Remove((struct Node *) node);
 
@@ -450,7 +450,7 @@ static ULONG IconPanel_Remove(struct SC_Class *cl, Object *obj, struct SCCP_Icon
         ReleaseSemaphore(&inst->iconsem);
 
         ObtainSemaphore(&inst->newiconsem);
-        if (node = finditem(&inst->newiconlist,msg->itemid))
+        if ((node = finditem(&inst->newiconlist,msg->itemid)))
         {
                 SC_DisposeObject(node->icon);
                 SC_DisposeObject(node->text);

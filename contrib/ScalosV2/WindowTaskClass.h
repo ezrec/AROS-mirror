@@ -16,7 +16,7 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include "scalos.h"
+#include "Scalos.h"
 
 struct WindowTaskInst
 {

@@ -1,10 +1,10 @@
 // tabsize ts=4
 
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/utility_protos.h>
-#include <clib/powerpc_protos.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
+#include <proto/utility.h>
+#include <proto/powerpc.h>
 #include <intuition/classusr.h>
 #include <exec/memory.h>
 #include <dos/dosextens.h>
@@ -13,10 +13,10 @@
 #include <powerpc/powerpc.h>
 #include <string.h>
 
-#include "scalos.h"
-#include "scalosintern.h"
+#include "Scalos.h"
+#include "ScalosIntern.h"
 #include "PPCRootClass.h"
-#include "subroutinesPPC.h"
+#include "SubRoutinesPPC.h"
 #include "PPCThreadRootClass.h"
 #include "MethodSenderClass.h"
 
@@ -55,7 +55,7 @@ static void SAVEDS Thread_Task(void)
 		WaitPortPPC(msgport);
 
 	threadobj = startmsg->threadobj;
-	if (startmsg->scmsg.returnvalue = SC_DoMethodPPC(threadobj, SCCM_Init, startmsg->taglist))
+	if ((startmsg->scmsg.returnvalue = SC_DoMethodPPC(threadobj, SCCM_Init, startmsg->taglist)))
 	{
 		if (!(msgport = (struct MsgPortPPC *) getPPC(threadobj, SCCA_MsgPort)))
 		{
@@ -102,7 +102,7 @@ static ULONG ThreadRoot_New(struct SC_Class *cl, Object *obj, struct opSet *msg,
 		return(NULL);
 
 	DEBUGPPC("2\n");
-	if (replyport = CreateMsgPortPPC()) // only for startup msg
+	if ((replyport = CreateMsgPortPPC())) // only for startup msg
 	{
 		startmsg->taglist = msg->ops_AttrList;
 		SetReplyPortPPC((struct Message *) startmsg, replyport);
@@ -110,7 +110,7 @@ static ULONG ThreadRoot_New(struct SC_Class *cl, Object *obj, struct opSet *msg,
 		// make object
 
 	DEBUGPPC("3\n");
-		if (inst = SC_AllocVecPPC(((struct SC_Class *) obj)->InstOffset + ((struct SC_Class *) obj)->InstSize + sizeof(struct ThreadRootInst), MEMF_CLEAR | MEMF_ANY))
+		if ((inst = SC_AllocVecPPC(((struct SC_Class *) obj)->InstOffset + ((struct SC_Class *) obj)->InstSize + sizeof(struct ThreadRootInst), MEMF_CLEAR | MEMF_ANY)))
 		{
 			// set class pointer for the real object that we create
 
@@ -129,10 +129,10 @@ static ULONG ThreadRoot_New(struct SC_Class *cl, Object *obj, struct opSet *msg,
 			// tell sender obj where to send its methods
 
 	DEBUGPPC("4\n");
-			if (senderobj = SC_NewObjectPPC(NULL, SCC_METHODSENDER_NAME,SCCA_MethodSender_DestObject, obj, TAG_DONE))
+			if ((senderobj = SC_NewObjectPPC(NULL, SCC_METHODSENDER_NAME,SCCA_MethodSender_DestObject, obj, TAG_DONE)))
 			{
 	DEBUGPPC("5\n");
-				if (proc = CreateTaskPPCTags(TASKATTR_CODE,Thread_Task, TASKATTR_NAME,taskname, TASKATTR_STACKSIZE,16384, TAG_DONE))
+				if ((proc = CreateTaskPPCTags(TASKATTR_CODE,Thread_Task, TASKATTR_NAME,taskname, TASKATTR_STACKSIZE,16384, TAG_DONE)))
 				{
 					struct MsgPortPPC *msgsendmsgport;
 					LockTaskList();
@@ -214,7 +214,7 @@ static ULONG ThreadRoot_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init 
 	{
 		if (InitSemaphorePPC(&inst->notilistsem))
 		{
-			if (inst->msgport = CreateMsgPortPPC())
+			if ((inst->msgport = CreateMsgPortPPC()))
 				return(TRUE);
 			else
 				RemSemaphorePPC(&inst->notilistsem);
@@ -385,7 +385,7 @@ static ULONG ThreadRoot_Notify(struct SC_Class *cl, Object *obj, struct SCCP_Not
 
 	inst = myThreadRootInst(obj);
 	ObtainSemaphorePPC(&inst->notilistsem);
-	if (buffer = (struct NotifyNode *) AllocNodePPC(&inst->notilist,cpsize))
+	if ((buffer = (struct NotifyNode *) AllocNodePPC(&inst->notilist,cpsize)))
 		memcpy(&buffer->TriggerAttr, &msg->TriggerAttr, cpsize - sizeof(struct MinNode));
 	ReleaseSemaphorePPC(&inst->notilistsem);
 	return(TRUE);
@@ -405,7 +405,7 @@ void ThreadRoot_Set(struct SC_Class *cl, Object *obj, struct opSet *msg, struct 
 
 	inst = myThreadRootInst(obj);
 	ObtainSemaphoreSharedPPC(&inst->notilistsem);
-	while(tag = NextTagItemPPC(taglist)) // search in taglist
+	while ((tag = NextTagItemPPC(taglist))) // search in taglist
 	{
 		// look for a attribute that we should trigger
 		for (node = (struct NotifyNode *) inst->notilist.mlh_Head; node->node.mln_Succ; node = (struct NotifyNode *) node->node.mln_Succ)
@@ -493,11 +493,11 @@ static ULONG ThreadRoot_Input(struct SC_Class *cl, Object *obj, Msg msg, struct 
 	ULONG	msgtype;
 
 	inst = myThreadRootInst(obj);
-	while (message = GetMsgPPC((struct MsgPortPPC *) inst->msgport))
+	while ((message = GetMsgPPC((struct MsgPortPPC *) inst->msgport)))
 	{
 		if (message->mn_Node.ln_Type == NT_MESSAGE)
 		{
-			if (msgtype = SC_IsScalosMsgPPC(message))
+			if ((msgtype = SC_IsScalosMsgPPC(message)))
 			{
 				if (msgtype == SCMSG_METHOD) // internal msg for a method
 				{

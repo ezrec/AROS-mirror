@@ -16,8 +16,8 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/alib_protos.h>
-#include <clib/graphics_protos.h>
+#include <proto/alib.h>
+#include <proto/graphics.h>
 #include <intuition/classusr.h>
 #include <intuition/screens.h>
 #include <intuition/intuition.h>
@@ -28,7 +28,7 @@
 #include "SubRoutines.h"
 #include "scalos_protos.h"
 
-#include "debug.h"
+#include "Debug.h"
 
 static ULONG GFXTest_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *msg, struct GFXTestInst *inst)
 {
@@ -38,7 +38,7 @@ static ULONG GFXTest_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *ms
 
         if (SC_DoSuperMethodA(cl,obj, (Msg) msg))
         {
-                if (inst->obj = SC_NewObject(NULL,SCC_TEXT_NAME,SCCA_Text_String,"Test 1 2 3 test",SCCA_Text_TextPen,2,SCCA_Text_Type,SCCV_Text_Type_Shadow,TAG_DONE))
+                if ((inst->obj = SC_NewObject(NULL,SCC_TEXT_NAME,SCCA_Text_String,"Test 1 2 3 test",SCCA_Text_TextPen,2,SCCA_Text_Type,SCCV_Text_Type_Shadow,TAG_DONE)))
                 {
                         ret = TRUE;
                 }

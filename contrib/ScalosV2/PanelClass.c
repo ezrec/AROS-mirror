@@ -16,10 +16,10 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/alib_protos.h>
-#include <clib/utility_protos.h>
-#include <clib/intuition_protos.h>
-#include <clib/graphics_protos.h>
+#include <proto/alib.h>
+#include <proto/utility.h>
+#include <proto/intuition.h>
+#include <proto/graphics.h>
 #include <intuition/classusr.h>
 #include <graphics/gfx.h>
 #include <stdlib.h>
@@ -29,7 +29,7 @@
 #include "SubRoutines.h"
 
 #include "scalos_protos.h"
-#include "debug.h"
+#include "Debug.h"
 
 LONG    oldright;
 
@@ -65,7 +65,7 @@ static ULONG Panel_Setup(struct SC_Class *cl, Object *obj, Msg msg, struct Panel
                 if (inst->backbitmap)
                         if (!(SC_DoMethod(inst->backbitmap, SCCM_Graphic_PreThinkScreen, scRenderInfo(obj)->screenobj)))
                                 return(FALSE);
-                if (inst->clipregion = NewRegion())
+                if ((inst->clipregion = NewRegion()))
                         return(TRUE);
 
                 inst->oldleftpos = 0x8000;
@@ -95,7 +95,7 @@ static void Panel_Show(struct SC_Class *cl, Object *obj, struct SCCP_Area_Show *
                 {
                                 // if ((_scright(obj) > inst->oldright) || (_scbottom(obj) > inst->oldbottom))
                         {
-                                if (inst->refreshregion = NewRegion())
+                                if ((inst->refreshregion = NewRegion()))
                                 {
                                         OrRectRegion(inst->refreshregion,&rect);
                                         rect.MaxX = inst->oldright;
@@ -280,7 +280,7 @@ void drawScroll(struct SC_Class *cl, Object *obj,struct PanelInst *inst)
                         }
                         else
                         {
-                                if (region = NewRegion())
+                                if ((region = NewRegion()))
                                 {
                                         rect.MinX = _scleft(obj);
                                         rect.MinY = _sctop(obj);
@@ -346,7 +346,7 @@ static void Panel_Set(struct SC_Class *cl, Object *obj, struct opSet *msg, struc
         struct TagItem *tag;
         BOOL redraw = FALSE;
 
-        while(tag = NextTagItem(tags))
+        while ((tag = NextTagItem(tags)))
         {
                 switch (tag->ti_Tag)
                 {

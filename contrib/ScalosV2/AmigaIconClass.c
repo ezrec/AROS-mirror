@@ -16,9 +16,9 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
 #include <string.h>
 
 #include "Scalos.h"
@@ -87,7 +87,7 @@ static ULONG AmigaIcon_Add(struct SC_Class *cl, Object *obj, struct SCCP_AmigaIc
                 SC_DoMethod(obj,SCCM_Icon_Entry,SCCV_Icon_Entry_None);
 
         ObtainSemaphore(&AmigaIconSem);
-        if (node = (struct AmigaIconNode *) AllocNode((struct MinList *) &AmigaIconList,sizeof(struct AmigaIconNode)))
+        if ((node = (struct AmigaIconNode *) AllocNode((struct MinList *) &AmigaIconList,sizeof(struct AmigaIconNode))))
         {
                  node->class = msg->class;
                  node->classname = msg->classname;
@@ -218,7 +218,7 @@ static Object *AmigaIcon_GetObject(struct SC_Class *cl, Object *obj, struct SCCP
 {
         char *name;
 
-        if (name = (char *) GetTagData(SCCA_Icon_Name,0,msg->taglist))
+        if ((name = (char *) GetTagData(SCCA_Icon_Name,0,msg->taglist)))
         {
                 struct AmigaIconNode *node;
                 for (node = (struct AmigaIconNode *) AmigaIconList.mlh_Head; ((struct MinNode *) node)->mln_Succ; node = (struct AmigaIconNode *) ((struct MinNode *) node)->mln_Succ)
@@ -244,7 +244,7 @@ static ULONG AmigaIcon_Get(struct SC_Class *cl, Object *obj, struct opGet *msg, 
         {
                 Object *table;
 
-                if (table = SC_NewObject(NULL,SCC_TABLE_NAME,TAG_DONE))
+                if ((table = SC_NewObject(NULL,SCC_TABLE_NAME,TAG_DONE)))
                 {
                         SC_DoMethod(table,SCCM_Table_Add,SCCA_Icon_Name,"Name",SCCV_Table_Type_String,0);
                         *(msg->opg_Storage) = (LONG) table;

@@ -16,8 +16,8 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/alib_protos.h>
-#include <clib/graphics_protos.h>
+#include <proto/alib.h>
+#include <proto/graphics.h>
 #include <intuition/classusr.h>
 #include <intuition/screens.h>
 #include <intuition/intuition.h>
@@ -28,7 +28,7 @@
 #include "SubRoutines.h"
 #include "scalos_protos.h"
 
-#include "debug.h"
+#include "Debug.h"
 
 static ULONG RectFill_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *msg, struct RectFillInst *inst)
 {

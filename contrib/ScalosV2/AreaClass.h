@@ -17,7 +17,7 @@
 **
 */
 #ifndef SCALOS_H
-#include "scalos.h"
+#include "Scalos.h"
 #endif /* SCALOS_H */
 
 #ifndef INTUITION_INTUITION_H

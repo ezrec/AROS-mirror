@@ -16,9 +16,9 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
 #include <string.h>
 #include <exec/memory.h>
 
@@ -127,7 +127,7 @@ static ULONG NodeList_Insert(struct SC_Class *cl, Object *obj, struct SCCP_NodeL
 
         if (inst->stringlist)
         {
-                if (node = (struct NodeListNode *) AllocVec(sizeof(struct MinNode) + strlen((char *) msg->arg) + 1,MEMF_ANY))
+                if ((node = (struct NodeListNode *) AllocVec(sizeof(struct MinNode) + strlen((char *) msg->arg) + 1,MEMF_ANY)))
                 {
                         strcpy((char *) &node->arg, (char *) msg->arg);
                 }
@@ -136,7 +136,7 @@ static ULONG NodeList_Insert(struct SC_Class *cl, Object *obj, struct SCCP_NodeL
         }
         else
         {
-                if (node = (struct NodeListNode *) AllocVec(sizeof(struct NodeListNode),MEMF_ANY))
+                if ((node = (struct NodeListNode *) AllocVec(sizeof(struct NodeListNode),MEMF_ANY)))
                 {
                         node->arg = msg->arg;
                 }

@@ -16,9 +16,9 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/dos_protos.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/dos.h>
 #include <dos/dos.h>
 
 #include "Scalos.h"
@@ -64,15 +64,15 @@ static void GenerateVolDevList(struct MinList *list,struct DosList *dolentry)
         BOOL found;
 
                 // generate a list of all volumes
-        while (curnode = NextDosEntry(curnode,LDF_VOLUMES))
+        while ((curnode = NextDosEntry(curnode,LDF_VOLUMES)))
         {
-                if (devnode = (struct DevListNode *) AllocNode((struct MinList *) list,sizeof(struct DevListNode)))
+                if ((devnode = (struct DevListNode *) AllocNode((struct MinList *) list,sizeof(struct DevListNode))))
                         devnode->volume = curnode;
         }
 
                 // now parse the doslist again to find devices which belongs to volumes
         curnode = dolentry;
-        while (curnode = NextDosEntry(curnode,LDF_DEVICES))
+        while ((curnode = NextDosEntry(curnode,LDF_DEVICES)))
         {
                 found = FALSE;
 
@@ -107,10 +107,12 @@ static ULONG DOSListIcon_Entry(struct SC_Class *cl, Object *obj, struct SCCP_Ico
                         inst->devnode = NULL;
 
                 if (!inst->devnode)
-                        if (inst->entry = NextDosEntry(inst->entry,LDF_ASSIGNS))
+                {
+                        if ((inst->entry = NextDosEntry(inst->entry,LDF_ASSIGNS)))
                                 return(TRUE);
                         else
                                 return(FALSE);
+                }
 
                 return(TRUE);
         }
@@ -126,10 +128,12 @@ static ULONG DOSListIcon_Entry(struct SC_Class *cl, Object *obj, struct SCCP_Ico
                 }
 
                 if (!inst->devnode)
-                        if (inst->entry = NextDosEntry(inst->entry,LDF_ASSIGNS))
+                {
+                        if ((inst->entry = NextDosEntry(inst->entry,LDF_ASSIGNS)))
                                 return(TRUE);
                         else
                                 return(FALSE);
+                }
 
                 return(TRUE);
         }
@@ -280,7 +284,7 @@ static Object *DOSListIcon_GetObject(struct SC_Class *cl, Object *obj, struct SC
                 }
                 else
                 {
-                        while(dlist = NextDosEntry(dlist,LDF_ASSIGNS))
+                        while ((dlist = NextDosEntry(dlist,LDF_ASSIGNS)))
                         {
                                 if (devstrcmp(dlist->dol_Name,volname))
                                 {
@@ -326,7 +330,7 @@ static ULONG DOSListIcon_Get( struct SC_Class *cl, Object *obj, struct opGet *ms
         {
                 Object *table;
 
-                if (table = SC_NewObject(NULL,SCC_TABLE_NAME,TAG_DONE))
+                if ((table = SC_NewObject(NULL,SCC_TABLE_NAME,TAG_DONE)))
                 {
                         SC_DoMethod(table,SCCM_Table_Add,SCCA_Icon_Name,"Name",SCCV_Table_Type_String,0);
                         SC_DoMethod(table,SCCM_Table_Add,SCCA_DOSDeviceIcon_DeviceName,"Device Name",SCCV_Table_Type_String,0);

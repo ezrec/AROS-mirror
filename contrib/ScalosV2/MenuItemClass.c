@@ -1,9 +1,9 @@
 // :ts=4 (Tabsize)
 
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
-#include <clib/pm_protos.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
+#include <proto/pm.h>
 #include <string.h>
 
 #include <libraries/pm.h>
@@ -82,7 +82,7 @@ static ULONG MenuItem_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *m
 	{
 		char *name;
 
-		if (name = (char *) GetTagData(SCCA_MenuItem_Name,0,msg->ops_AttrList))
+		if ((name = (char *) GetTagData(SCCA_MenuItem_Name,0,msg->ops_AttrList)))
 		{
 			inst->name = AllocCopyString(name);
 		}

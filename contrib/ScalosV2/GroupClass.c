@@ -16,11 +16,11 @@
 ** MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 **
 */
-#include <clib/intuition_protos.h>
-#include <clib/utility_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/graphics_protos.h>
-#include <clib/exec_protos.h>
+#include <proto/intuition.h>
+#include <proto/utility.h>
+#include <proto/alib.h>
+#include <proto/graphics.h>
+#include <proto/exec.h>
 #include <exec/memory.h>
 #include <graphics/gfx.h>
 #include <intuition/classusr.h>
@@ -31,7 +31,7 @@
 #include <proto/guigfx.h>
 #include <guigfx/guigfx.h>
 
-#include <clib/dos_protos.h>
+#include <proto/dos.h>
 
 #include "Scalos.h"
 #include "GroupClass.h"
@@ -252,7 +252,7 @@ static ULONG Group_Init(struct SC_Class *cl, Object *obj, struct SCCP_Init *msg,
                 inst->GroupType = GetTagData(SCCA_Group_Type,SCCV_Group_HGroup,msg->ops_AttrList);
 
                 taglist = msg->ops_AttrList;
-                while(tag = NextTagItem(tags))
+                while ((tag = NextTagItem(tags)))
                 {
                         switch (tag->ti_Tag)
                         {
@@ -727,7 +727,7 @@ static void Group_Show(struct SC_Class *cl, Object *obj, struct SCCP_Area_Show *
 
                                 child->bounds.Height = child->sizes.maxheight;
 
-                                if(HeightDiff = msg->bounds->Height - child->sizes.maxheight)
+                                if((HeightDiff = msg->bounds->Height - child->sizes.maxheight))
                                         child->bounds.Top = HeightDiff/2 + msg->bounds->Top;
                                         
                                         // upper and lower space have equal size
@@ -990,7 +990,7 @@ static void Group_Show(struct SC_Class *cl, Object *obj, struct SCCP_Area_Show *
 
                                 child->bounds.Width = child->sizes.maxwidth;
 
-                                if(WidthDiff = msg->bounds->Width - child->sizes.maxwidth)
+                                if((WidthDiff = msg->bounds->Width - child->sizes.maxwidth))
                                         child->bounds.Left = WidthDiff/2 + msg->bounds->Left;
                                         
                                         // upper and lower space have equal size
@@ -1354,7 +1354,7 @@ static ULONG Group_Setup(struct SC_Class *cl, Object *obj, struct SCCP_Area_Setu
 
                 DEBUG("Got Setup\n");
 
-                if (list = (struct MinList *) SC_DoMethod(obj,SCCM_LockObjectList,SCCV_LockShared))
+                if ((list = (struct MinList *) SC_DoMethod(obj,SCCM_LockObjectList,SCCV_LockShared)))
                 {
                         struct MinNode *node;
 
@@ -1508,7 +1508,7 @@ static void Group_Exit(struct SC_Class *cl, Object *obj, Msg msg, struct GroupIn
 
                 child=(struct ChildEntry *)(inst->childlist.mlh_Head);
 
-                while (next_child=(struct ChildEntry *)(child->node.mln_Succ))
+                while ((next_child=(struct ChildEntry *)(child->node.mln_Succ)))
                 {
                         FreeVec(child);
                         child=next_child;
