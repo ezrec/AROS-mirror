@@ -18,7 +18,7 @@ struct TagItem ScreenItem[] =
   {SA_Type,      CUSTOMSCREEN},
 /*  {SA_DisplayID, NTSC_MONITOR_ID|HIRESLACE_KEY}, */
   {SA_Pens,      (ULONG) Pens_3D},
-  {SA_Overscan,  OSCAN_MAX},
+/*  {SA_Overscan,  OSCAN_MAX}, */
   {TAG_DONE,0L}
 };
 
@@ -86,7 +86,8 @@ struct TagItem InfoWindowItem[] =
   {WA_Left,       5},
   {WA_Width,      255},
   {WA_Height,     110},
-  {WA_PubScreen,  NULL},
+  {WA_CustomScreen,  NULL},
+/*  {WA_PubScreen,  NULL}, */
   {WA_IDCMP,      IDCMP_CLOSEWINDOW|IDCMP_GADGETUP},
   {WA_Flags,      WFLG_ACTIVATE|WFLG_SMART_REFRESH|WFLG_CLOSEGADGET|WFLG_DEPTHGADGET|WFLG_DRAGBAR|WFLG_RMBTRAP},
   {WA_Title,      (ULONG)((ULONG *)"Preferences")},
@@ -104,7 +105,8 @@ struct TagItem ResultWindowItem[] =
   {WA_Left,       5},
   {WA_Width,      400},
   {WA_Height,     110},
-  {WA_PubScreen,  NULL},
+  {WA_CustomScreen,  NULL},
+/*  {WA_PubScreen,  NULL}, */
   {WA_IDCMP,      IDCMP_CLOSEWINDOW|IDCMP_GADGETUP},
   {WA_Flags,      WFLG_ACTIVATE|WFLG_SMART_REFRESH|WFLG_CLOSEGADGET|WFLG_DEPTHGADGET|WFLG_DRAGBAR|WFLG_RMBTRAP},
   {WA_Gadgets,    (ULONG)((struct Gadget *)&okgad)},
@@ -114,7 +116,10 @@ struct TagItem ResultWindowItem[] =
 
 struct TagItem WindowItem[] =
 { {WA_AutoAdjust, TRUE},
-  {WA_PubScreen,  NULL},
+  {WA_CustomScreen,  NULL},
+/*  {WA_PubScreen,  NULL}, */
+  {WA_Width,     724},
+  {WA_Height,    480},
   {WA_IDCMP,      IDCMP_CLOSEWINDOW|IDCMP_GADGETUP|IDCMP_MOUSEBUTTONS|IDCMP_MENUPICK},
   {WA_Flags,      WFLG_ACTIVATE|WFLG_SMART_REFRESH|WFLG_CLOSEGADGET|WFLG_DEPTHGADGET},
   {WA_Title,      (ULONG)((ULONG *)"Rotate!")},
