@@ -15,7 +15,7 @@ TraceBack (most recent call last):
    File "<stdin>", line 1, in ?
 >>>
 
-#0003 chodorowski 10/10/2001 CRITICAL OPEN
+#0003 chodorowski 10/10/2001 CRITICAL FIXED
 
 Importing modules written in Python doesn't work (you get an exception 
 right away), even after having hacked getpath.c and friends to be 
