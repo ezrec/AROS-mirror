@@ -839,7 +839,7 @@ int CGX_CreateWindow(_THIS, SDL_Surface *screen,
 
 	if(screen->flags & SDL_DOUBLEBUF)
 	{
-		if((SDL_RastPort=malloc(sizeof(struct RastPort)))
+		if((SDL_RastPort=malloc(sizeof(struct RastPort))))
 		{
 			InitRastPort(SDL_RastPort);
 			SDL_RastPort->BitMap=this->hidden->SB[1]->sb_BitMap;
