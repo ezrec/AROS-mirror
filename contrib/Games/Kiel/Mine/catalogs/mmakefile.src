@@ -4,5 +4,5 @@
 include $(TOP)/config/make.cfg
 
 %build_catalogs mmake=games-kiel-mine-catalogs \
-                name=Mine subdir=contrib/Games/Kiel \
+                name=Mine subdir= \
                 dir=$(CONTRIBDIR)/Games/Kiel/Catalogs
