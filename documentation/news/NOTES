@@ -30,6 +30,12 @@ brackets ("[]").
 200304??:
  <next day here>
 
+20030408:
+ * Heated discussion on the ML about which UI style to adopt, regarding prefs
+   buttons: Test/Revert/Save/Use/Cancel ?
+ * Some more work on m68k-pp-native [bergers]
+ * Test button works in Zune prefs [dlc]
+
 20030405:
  * Nice improvements on Zune flickering-on-resize issue [stegerg,sebauer]
  * XSHM was mistakenly always disabled in hosted [stegerg]
