@@ -1,0 +1,26 @@
+include $(TOP)/config/make.cfg
+
+TARGETDIR := $(CONTRIBDIR)/Regina/demo
+
+FILES := \
+    animal.rexx \
+    block.rexx \
+    dateconv.rexx \
+    dynfunc.rexx \
+    extqueue.rexx \
+    newstr.rexx \
+    rexxcps.rexx \
+    testeof.rexx \
+    timeconv.rexx
+
+TARGETS = $(foreach f,$(FILES),$(TARGETDIR)/$(f))
+
+#MM
+contrib-regina : contrib-regina-quick
+#MM
+contrib-regina-quick : $(TARGETS)
+
+$(TARGETDIR)/%.rexx : %.rexx
+	@if [ ! -d $(TARGETDIR) ]; then $(MKDIR) $(TARGETDIR) ; fi
+	@echo Copying $< ...
+	@$(CP) $< $@

@@ -1,0 +1,41 @@
+include $(TOP)/config/make.cfg
+
+TARGETDIR := $(CONTRIBDIR)/Regina/trip
+
+REXXFILES := \
+    arith.rexx \
+    builtin.rexx \
+    files.rexx \
+    funcs.rexx \
+    lexical.rexx \
+    limits.rexx \
+    signal.rexx \
+    stack.rexx \
+    stats.rexx \
+    time.rexx \
+    trip.rexx \
+    variable.rexx
+
+FILES := rc
+EXEDIR := $(TARGETDIR)
+EXES := $(foreach f,$(FILES),$(EXEDIR)/$(f))
+
+TARGETS = $(foreach f,$(REXXFILES),$(TARGETDIR)/$(f))
+
+#MM
+contrib-regina : contrib-regina-quick
+#MM
+contrib-regina-quick : $(TARGETS) $(EXES)
+
+$(TARGETDIR)/%.rexx : %.rexx
+	@if [ ! -d $(TARGETDIR) ]; then $(MKDIR) $(TARGETDIR) ; fi
+	@echo Copying $< ...
+	@$(CP) $< $@
+
+USE_CLIB_SHARED := YES
+
+%make_prog_setup mmake=contrib-regina-strip-rc
+%make_prog_single dir=$(EXEDIR)
+
+%common
+%include_deps
