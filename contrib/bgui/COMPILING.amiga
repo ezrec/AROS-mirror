@@ -1,0 +1,61 @@
+@(#) $Header:
+
+1. About this document
+
+This is just an overview on how to build BGUI on Amiga and what you need
+to have to do that.
+
+
+2. Requirements
+
+To compile BGUI on Amiga, you will need the following:
+
+* Version 6.58 of the SAS/C compiler. Other compilers could theoretically
+  compile the source-code, but it hasn't been tested. You would need to adapt
+  the makefile anyway, so just use SAS/C. OK? :-)
+
+* The lastest includes from the OS 3.5 NDK (ie. the Developer CD v2.1).
+  You need the assembler includes too, since parts of BGUI are written in
+  assembler. And copy the FD files over too, you'll need them later.
+
+  Using older includes /will/ break the build.
+
+* Some extra assembler includes not readaly available in the NDK:
+
+  - exec/exec_lib.i
+  - utility/utility_lib.i
+  - intuition/intuition_lib.i
+  - graphics_lib.i
+  - libraries/amigaguide_lib.i
+
+  These can be generated with the 'lvo' tool which can be found on the
+  Developer CD in NDK/NDK_3.1/SWToolkit3. Assign FD: to the place you
+  copied the FD files (typically include:fd) and type the following
+  to create exec/exec_lib.i:
+
+  lvo exec EQUATES >include:exec/exec_lib.i
+
+  Repeat for the other files...
+
+
+3. Building
+
+This is easy. :-) Just type 'smake' in the root of the BGUI sources. This will
+build the debug-version of bgui.library, the examples, test-programs and tools
+(ie. CAD and BGUIPrefs). The library will then be copied to libs:.
+
+Typing 'smake standard_build' will build the standard non-debug version,
+and typing 'smake enhanced_build' will build the enhanced version which uses
+OS 3.x functions and is optimized for 020+. You have to copy the library to
+libs: youself in this case though. Also make sure to run bin/KillBGUI to
+purge the old library from memory (this is done automagically for the debug
+version).
+
+To build the stand-alone gadgets (ie. bgui_bar.gadget, bgui_layoutgroup.gadget,
+bgui_palette.gadget, bgui_popbutton.gadget and bgui_treeview.gadget) just type
+'smake extra_gadgets'.
+
+It might also be nice to type 'smake all_docs' which will generate the BGUI docs
+in AutoDoc, HTML and AmigaGuide format. You can write 'smake doc' if you just want
+the AutoDoc versions, 'smake guide' for the AmigaGuide versions and 'smake html'
+to just get the HTML versions.
