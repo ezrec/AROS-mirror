@@ -109,11 +109,11 @@ AC_PROG_INSTALL
 #AC_PROG_CC
 AC_PROG_RANLIB
 AC_CHECK_PROG( RM, rm, rm )
-AC_CHECK_PROG( ROBODOC, robodoc, robodoc )
-AC_CHECK_PROG( FLEXCAT, flexcat, flexcat )
-AC_CHECK_PROG( FD2INLINE, fd2inline, fd2inline )
-AC_CHECK_PROG( FD2PRAGMA, fd2pragma, fd2pragma )
-AC_CHECK_PROG( LHA, lha, lha )
+AC_CHECK_PROGS( ROBODOC, RoboDoc robodoc )
+AC_CHECK_PROGS( FLEXCAT, FlexCat flexcat )
+AC_CHECK_PROGS( FD2INLINE, FD2Inline fd2inline )
+AC_CHECK_PROGS( FD2PRAGMA, FD2Pragma fd2pragma )
+AC_CHECK_PROGS( LHA, lha )
 
 if test -z "$FD2INLINE"; then
  AC_MSG_ERROR( fd2inline missing. )
