@@ -452,14 +452,16 @@ UBYTE   notdone = 1;
 		packet->dp_Res1 = DOSTRUE;
 		packet->dp_Res2 = 0;
 		error = 0;	
-		BUG(dbprintf(
+#ifndef NDEBUG
+		dbprintf(
 			"Packet: %3ld %08lx %08lx %08lx %10s ",
 			packet->dp_Type,
 			packet->dp_Arg1,
 			packet->dp_Arg2,
 			packet->dp_Arg3,
 			typetostr(packet->dp_Type)
-		);)
+		);
+#endif
 		if (!global->g_cd)
 		{
 			switch (packet->dp_Type)
