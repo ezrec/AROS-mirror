@@ -77,13 +77,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 #include "../mmd2loader/mmd2load_proc.h"
 #include "../common/blts_proc.h"
 
-#ifndef _AROS
-#ifndef __SASC
-struct Library *GadToolsBase=NULL;
-struct RealTimeBase *RealTimeBase=NULL;
-#endif
-#endif
-
 struct ReqToolsBase *ReqToolsBase=NULL;
 
 #ifndef USEMINICAMD
