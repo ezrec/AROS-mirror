@@ -56,7 +56,7 @@ extern "C" {
 
 /* The macros used to swap values */
 /* Try to use superfast macros on systems that support them */
-#if defined(linux) && !defined(AROS)
+#if defined(linux) && !defined(__AROS__)
 #include <asm/byteorder.h>
 #ifdef __arch__swab16
 #define SDL_Swap16  __arch__swab16

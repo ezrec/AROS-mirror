@@ -19,7 +19,7 @@
     Sam Lantinga
     slouken@libsdl.org
 */
-#ifdef AROS
+#ifdef __AROS__
 #  define _STRUCT_TIMEVAL	1
 #endif
 

@@ -28,7 +28,7 @@ static char rcsid =
 #include <exec/exec.h>
 #include <dos/dos.h>
 #include <dos/dostags.h>
-#if defined (__SASC) || defined(WARPOS) || defined(AROS)
+#if defined (__SASC) || defined(WARPOS) || defined(__AROS__)
 #include <proto/dos.h>
 #include <proto/exec.h>
 #else
@@ -37,7 +37,7 @@ static char rcsid =
 #endif
 
 #include <stdio.h>
-#ifndef AROS
+#ifndef __AROS__
 #include <stdlib.h>
 #endif
 #include <string.h>

@@ -45,7 +45,7 @@ static char rcsid =
 #if 1
 
 #ifdef USE_CGX_WRITELUTPIXEL
-#if defined(MORPHOS) || defined(__SASC) || defined(AROS) || defined(WARPOS)
+#if defined(MORPHOS) || defined(__SASC) || defined(__AROS__) || defined(WARPOS)
 	#define WLUT WriteLUTPixelArray
 #elif STORMC4_M68K
 

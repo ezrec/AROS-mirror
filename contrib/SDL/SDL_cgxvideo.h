@@ -30,7 +30,7 @@ static char rcsid =
 
 
 #include <stdio.h>
-#ifndef AROS
+#ifndef __AROS__
 #include <stdlib.h>
 #endif
 #include <string.h>
@@ -40,7 +40,7 @@ static char rcsid =
 #include <graphics/scale.h>
 #include <graphics/gfx.h>
 #include <intuition/intuition.h>
-#if defined(__SASC) || defined(WARPOS) || defined(AROS)
+#if defined(__SASC) || defined(WARPOS) || defined(__AROS__)
 #include <proto/exec.h>
 #include <proto/cybergraphics.h>
 #include <proto/graphics.h>

@@ -31,7 +31,7 @@ static char rcsid =
 #include <stdio.h>		/* For the definition of NULL */
 
 #include <libraries/lowlevel.h>
-#if defined(__SASC) || defined(WARPOS) || defined(AROS)
+#if defined(__SASC) || defined(WARPOS) || defined(__AROS__)
 #include <proto/exec.h>
 #include <proto/lowlevel.h>
 #include <proto/graphics.h>

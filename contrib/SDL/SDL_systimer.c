@@ -39,7 +39,7 @@ static char rcsid =
 #include <pragmas/graphics.h>
 #include <clib/exec_protos.h>
 #include <pragmas/exec.h>
-#elif defined(WARPOS) || defined(AROS)
+#elif defined(WARPOS) || defined(__AROS__)
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/graphics.h>

@@ -34,7 +34,7 @@ static char rcsid =
 #include "SDL_systhread.h"
 #include "mydebug.h"
 
-#ifdef AROS
+#ifdef __AROS__
 #include <stdlib.h>
 #endif
 
@@ -52,7 +52,7 @@ typedef struct {
 
 #if defined(__SASC) && !defined(__PPC__)
 __saveds __asm Uint32 RunThread(register __a0 char *args )
-#elif defined(__PPC__) || defined(AROS)
+#elif defined(__PPC__) || defined(__AROS__)
 Uint32 RunThread(char *args)
 #elif !defined(SHARED_LIB) 
 Uint32 __saveds RunThread(char *args __asm("a0") )

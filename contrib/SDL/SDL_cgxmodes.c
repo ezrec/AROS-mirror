@@ -40,7 +40,7 @@ static char rcsid =
 #include "SDL_cgxwm_c.h"
 #include "SDL_cgxmodes_c.h"
 
-#ifdef AROS
+#ifdef __AROS__
 #include "SDL_cgximage_c.h"
 #include <stdlib.h>
 #endif

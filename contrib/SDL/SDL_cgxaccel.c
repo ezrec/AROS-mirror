@@ -32,7 +32,7 @@ static char rcsid =
 #include "SDL_video.h"
 #include "SDL_cgxvideo.h"
 
-#ifdef AROS
+#ifdef __AROS__
 #include <stdlib.h>
 #endif
 

@@ -446,7 +446,7 @@ use_truecolor:
 static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat)
 {
 	int i;
-#ifndef AROS
+#ifndef __AROS__
     char *test;
     struct Library *RTGBase;
 #endif
@@ -475,7 +475,7 @@ static int CGX_VideoInit(_THIS, SDL_PixelFormat *vformat)
 	}
 
 // check if P96 is present and if we don't need the fix
-#ifndef AROS
+#ifndef __AROS__
     test = getenv("USE_P96_FIX");
        
     if(test && *test != '0') {
