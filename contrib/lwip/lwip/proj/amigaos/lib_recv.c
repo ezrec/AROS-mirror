@@ -2,12 +2,13 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id$
+    $Id: lib_recv.c,v 1.1 2002/07/11 17:59:24 sebauer Exp $
 */
 
 #include <exec/types.h>
 
 #include "socket_intern.h"
+#include "calling.h"
 
 /*****************************************************************************
 
@@ -51,7 +52,7 @@ __asm int LIB_recv(register __d0 long s, register __a0 unsigned char *buf, regis
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
-    return -1;
+    return CallStackFunction(SOCKB(SocketBase), LIBMSG_SOCKET, 4, s, buf, len, flags);
 
     AROS_LIBFUNC_EXIT
 

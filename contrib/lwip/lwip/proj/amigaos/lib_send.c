@@ -2,12 +2,13 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id$
+    $Id: lib_send.c,v 1.1 2002/07/11 17:59:24 sebauer Exp $
 */
 
 #include <exec/types.h>
 
 #include "socket_intern.h"
+#include "calling.h"
 
 /*****************************************************************************
 
@@ -15,9 +16,9 @@
 #ifndef __AROS
 
 
-__asm APTR LIB_send(register __d0 long s, register __a0 unsigned char *buf, register __d1 long len, register __d2 flags)
+__asm int LIB_send(register __d0 long s, register __a0 unsigned char *buf, register __d1 long len, register __d2 flags)
 #else
-	AROS_LH4(APTR, LIB_send,
+	AROS_LH4(int, LIB_send,
 
 /*  SYNOPSIS */
 	AROS_LHA(long, s, D0),
@@ -53,7 +54,7 @@ __asm APTR LIB_send(register __d0 long s, register __a0 unsigned char *buf, regi
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
-    return -1;
+    return CallStackFunction(SOCKB(SocketBase), LIBMSG_SEND, 4, s, buf, len, flags);
 
     AROS_LIBFUNC_EXIT
 

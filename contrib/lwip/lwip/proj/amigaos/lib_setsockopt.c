@@ -2,12 +2,13 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id$
+    $Id: lib_setsockopt.c,v 1.1 2002/07/11 17:59:24 sebauer Exp $
 */
 
 #include <exec/types.h>
 
 #include "socket_intern.h"
+#include "calling.h"
 
 /*****************************************************************************
 

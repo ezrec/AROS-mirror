@@ -130,9 +130,11 @@ void start(void)
 					switch (msg->type)
 					{
             case LIBMSG_ACCEPT:
+                 msg->retval = lwip_accept((long)msg->args[0], (struct sockaddr *)msg->args[1], (int *)msg->args[2]);
 								 break;
 
             case LIBMSG_BIND:
+                 msg->retval = lwip_bind((long)msg->args[0], (struct sockaddr*)msg->args[1],(long)msg->args[2]);
 								 break;
 
             case LIBMSG_CLOSESOCKET:
@@ -140,6 +142,7 @@ void start(void)
 								 break;
 
             case LIBMSG_CONNECT:
+                 msg->retval = lwip_connect((long)msg->args[0], (struct sockaddr*)msg->args[1],(long)msg->args[2]);
 								 break;
 
             case LIBMSG_GETPEERNAME:
@@ -155,24 +158,29 @@ void start(void)
 								 break;
 
             case LIBMSG_LISTEN:
+                 msg->retval = lwip_listen((long)msg->args[0],(long)msg->args[1]);
 								 break;
 
-            case LIBMSG_RECV :
+            case LIBMSG_RECV:
+                 msg->retval = lwip_recv((long)msg->args[0],(unsigned char*)msg->args[1],(long)msg->args[2],(long)msg->args[3]);
 								 break;
 
             case LIBMSG_RECVFROM :
+                 msg->retval = lwip_recvfrom((long)msg->args[0], (unsigned char *)msg->args[1], (long)msg->args[2], (long)msg->args[3], (struct sockaddr *)msg->args[4], (int *)msg->args[5]);
 								 break;
 
-            case LIBMSG_SEND :
+            case LIBMSG_SEND:
+                 msg->retval = lwip_send((long)msg->args[0],(unsigned char*)msg->args[1],(long)msg->args[2],(long)msg->args[3]);
 								 break;
 
-            case LIBMSG_SENDIO :
+            case LIBMSG_SENDTO:
+                 msg->retval = lwip_sendto((long)msg->args[0],(unsigned char *)msg->args[1], (long)msg->args[2], (long)msg->args[3], (struct sockaddr *)msg->args[4], (long)msg->args[5]); 
 								 break;
 
-            case LIBMSG_SETSOCKOPT :
+            case LIBMSG_SETSOCKOPT:
 								 break;
 
-            case LIBMSG_SHUTDOWN :
+            case LIBMSG_SHUTDOWN:
 								 break;
 
             case LIBMSG_SOCKET:

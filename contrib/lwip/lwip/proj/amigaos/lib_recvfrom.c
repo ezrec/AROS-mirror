@@ -2,12 +2,13 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id$
+    $Id: lib_recvfrom.c,v 1.1 2002/07/11 17:59:24 sebauer Exp $
 */
 
 #include <exec/types.h>
 
 #include "socket_intern.h"
+#include "calling.h"
 
 /*****************************************************************************
 
@@ -20,7 +21,7 @@ __asm int LIB_recvfrom(register __d0 long s, register __a0 unsigned char *buf, r
 
 /*  SYNOPSIS */
 	AROS_LHA(long, s, D0),
-	AROS_LHA(unsigned char, buf, A0),
+	AROS_LHA(unsigned char *, buf, A0),
 	AROS_LHA(long, len, D1),
 	AROS_LHA(long, flags, D2),
 	AROS_LHA(struct sockaddr *, addr, A1),
@@ -53,7 +54,7 @@ __asm int LIB_recvfrom(register __d0 long s, register __a0 unsigned char *buf, r
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
-    return -1;
+    return CallStackFunction(SOCKB(SocketBase), LIBMSG_SOCKET, 6, s, buf, len, flags, addr, addrlen);
 
     AROS_LIBFUNC_EXIT
 
