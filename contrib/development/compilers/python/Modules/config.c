@@ -15,6 +15,7 @@ redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 
 extern void initamiga(void);
 extern void initenvironment(void);
+extern void initDoslib(void);
 extern void init_codecs(void);
 extern void init_sre(void);
 extern void init_testcapi(void);
@@ -51,6 +52,7 @@ extern void initimp(void);
 struct _inittab _PyImport_Inittab[] = {
     	{"amiga",   	initamiga},
 	{"environment", initenvironment},
+	{"Doslib",  	initDoslib},
 	{"_codecs",     init_codecs},
 	{"_sre",        init_sre},
 	{"_testcapi",   init_testcapi},

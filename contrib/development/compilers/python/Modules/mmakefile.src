@@ -10,6 +10,7 @@ FILES := \
 	config \
 	environment \
 	amigamodule \
+	Doslibmodule \
 	_codecsmodule \
 	_sre \
 	_testcapimodule \
