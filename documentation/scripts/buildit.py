@@ -26,7 +26,7 @@ from docutils.io import NullOutput
 from build.utility import *
 from build.thumbnail import *
 
-from targets.www.template import makeTemplates
+from template.www import makeTemplates
 
 SRCROOT = os.path.abspath( SRCROOT )
 DSTROOT = os.path.abspath( DSTROOT )
