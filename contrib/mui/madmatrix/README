@@ -1,0 +1,12 @@
+This is MadMatrix sources, written by Olivier Croquette ( ocroquette@nordnet.fr ).
+
+Just type 'make' to compile them with gcc.
+
+Please make feedback if this package was useful to you !
+
+
+
+Note : sorry to mix english/french in sources, but as they are quite clean, it should be
+       no problem for you to understand.
+Note2: there's some dirty things in those sources, please do not blame me for that !
+       I'll fix them as soon as I've some time.

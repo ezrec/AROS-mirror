@@ -1,0 +1,21 @@
+CCFLAGS=data=far code=far noversion
+
+MadMatrix: alloctab.o libs.o madmatrix.o main.o
+  sc to $@ link alloctab.o libs.o madmatrix.o main.o /libs/muimaster/muimaster.lib lib:debug.lib
+
+alloctab.o: alloctab.c
+  sc $? $(CCFLAGS) nolink IDIR=/libs/muimaster
+
+libs.o: libs.c
+  sc $? $(CCFLAGS) nolink IDIR=/libs/muimaster
+
+madmatrix.o: madmatrix.c
+  sc $? $(CCFLAGS) nolink IDIR=/libs/muimaster
+ 
+main.o: main.c
+  sc $? $(CCFLAGS) nolink IDIR=/libs/muimaster
+
+clean:
+  -delete MadMatrix
+  -delete \#?.o
+

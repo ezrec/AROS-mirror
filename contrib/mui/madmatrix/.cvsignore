@@ -1,0 +1,6 @@
+SCOPTIONS
+*.o
+MadMatrix
+*.info
+*.bak
+*.lnk
