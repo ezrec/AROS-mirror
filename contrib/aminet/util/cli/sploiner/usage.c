@@ -1,0 +1,263 @@
+#include "common.h"
+
+void usage_example(void)
+{
+printf("An example of sploiner usage\n");
+printf("============================\n");
+printf("\n");
+printf("Let's say i have a 4000000 bytes file i want to take home on HD-disks. \n");
+printf("\n");
+printf("  # ls -l\n");
+printf("  total 3907\n");
+printf("  -rw-rw-rw-   1 ric      users     4000000 May 29 00:16 file.lha\n");
+printf("\n");
+printf("First i split it in disksized chunks:\n");
+printf("\n");
+printf("  # sploiner split file.lha -s 1440000 -o chunk\n");
+printf("\n");
+printf("  Filesize: 1440000 bytes\n");
+printf("  Done! Writing Shadowfile.\n");
+printf("  Output: 4 files\n");
+printf("\n");
+printf("Providing the computer has 1440000 bytes of contigous free \n");
+printf("memory, and 5.5MB free harddisk space, i now have 4 ekstra files.\n");
+printf("\n");
+printf("# ls -l\n");
+printf("total 9222\n");
+printf("-rw-rw-rw-   1 ric      users     1440000 May 29 00:20 chunk.000\n");
+printf("-rw-rw-rw-   1 ric      users     1440000 May 29 00:21 chunk.001\n");
+printf("-rw-rw-rw-   1 ric      users     1120000 May 29 00:21 chunk.002\n");
+printf("-rw-rw-rw-   1 ric      users     1440000 May 29 00:21 chunk.SHA\n");
+printf("-rw-rw-rw-   1 ric      users     4000000 May 29 00:16 file.lha\n");
+printf("\n");
+printf("chunk.000, chunk.001 and chunk.002 is the data from \n");
+printf("file.lha. chunk.SHA is the file containing data for \n");
+printf("error recovery.\n");
+printf("\n");
+printf("I now put chunk.000, chunk.001, chunk.002 and chunk.SHA onto four\n");
+printf("disks and carry them home. Let's say that the disk containing \n");
+printf("chunk.001 accidentially gets run over by a bus. I then have the \n");
+printf("following files.\n");
+printf("\n");
+printf("# ls -l\n");
+printf("total 3908\n");
+printf("-rw-rw-rw-   1 ric      users     1440000 May 29 00:20 chunk.000\n");
+printf("-rw-rw-rw-   1 ric      users     1120000 May 29 00:21 chunk.002\n");
+printf("-rw-rw-rw-   1 ric      users     1440000 May 29 00:21 chunk.SHA\n");
+printf("\n");
+printf("Which is enough to recreate chunk.001:\n");
+printf("\n");
+printf("# sploiner repair chunk.000 chunk.002 chunk.SHA as chunk.001\n");
+printf("# ls -l\n");
+printf("total 5315\n");
+printf("-rw-rw-rw-   1 ric      users     1440000 May 29 00:20 chunk.000\n");
+printf("-rw-rw-rw-   1 ric      users     1440000 May 29 00:22 chunk.001\n");
+printf("-rw-rw-rw-   1 ric      users     1120000 May 29 00:21 chunk.002\n");
+printf("-rw-rw-rw-   1 ric      users     1440000 May 29 00:21 chunk.SHA\n");
+printf("\n");
+printf("And i can now join chunk.000, chunk.001 and chunk.002 to \n");
+printf("recreate file.lha.\n");
+printf("\n");
+printf("# sploiner join chunk as file.lha\n");
+printf("\n");
+printf("# ls -l\n");
+printf("total 9222\n");
+printf("-rw-rw-rw-   1 ric      users     1440000 May 29 00:20 chunk.000\n");
+printf("-rw-rw-rw-   1 ric      users     1440000 May 29 00:22 chunk.001\n");
+printf("-rw-rw-rw-   1 ric      users     1120000 May 29 00:21 chunk.002\n");
+printf("-rw-rw-rw-   1 ric      users     1440000 May 29 00:21 chunk.SHA\n");
+printf("-rw-rw-rw-   1 ric      users     4000000 May 29 00:23 file.lha\n");
+printf("\n");
+printf("There are a few considerations about the program. \n");
+printf("\n");
+printf("- If you never have diskerrors, the shodowfile (chunk.SHA) is \n");
+printf("  useless, and it's only a waste of time and space to bring\n");
+printf("  it along. \n");
+printf("- If you lose more than one file, then it is impossible to \n");
+printf("  recreate any of the lost files.\n");
+printf("- The recreation of a lost file always generates a file with\n");
+printf("  the same size as the shadowfile, which in the above example\n");
+printf("  means that if i recreate chunk.002 it will become 1440000 bytes,\n");
+printf("  and file.lha will become 4320000 bytes. The excess space will\n");
+printf("  consist of zero's, and i not a problem for e.g. lha packed files.\n");
+printf("\n");
+
+exit(1);
+}
+
+void usage_repair(void)
+{
+printf("\n");
+printf("Sploiner                 USER COMMANDS                   Sploiner\n");
+printf("\n");
+printf("\n");
+printf("\n");
+printf("NAME\n");
+printf("     Sploiner - Repair. \n");
+printf("\n");
+printf("SYNOPSIS\n");
+printf("     Sploiner repair file_1 file_2 ... file_n as damaged_file\n");
+printf("\n");
+printf("DISCLAIMER\n");
+printf("     I take NO responsibilities for this program.\n");
+printf("     Any use is on your own risk.\n");
+printf("\n");
+printf("DESCRIPTION\n");
+printf("     Rebuilds a lost file by combining the rest of the files with\n");
+printf("     the shadowfile and adding a bit of black magic.\n");
+printf("     The order of files is unimportant.\n");
+printf("     ex. %s repair Part.000 Part.002 Part.003 Part.SHA as Part.001\n",prgname);
+printf("     After rebuilding, you can join the files as normal.\n");
+printf("     Only one file can be recovered.\n");
+printf("\n");
+printf("     About the magic: Well, actually it's only the principle from \n");
+printf("     parity bit. The shadowfile is made by XOR'ing all parts \n");
+printf("     together. A lost file is recovered by XOR'ing the rest of\n");
+printf("     the files and the shadowfile.\n");
+printf("\n");
+printf("BUGS\n");
+printf("     If you are repairing the last part, it will become the same size\n");
+printf("     as the other files. The extra space consists of zero's, and is\n");
+printf("     no problem to eg. lha.\n");
+printf("     I'm currently working on a fix for it. \n");
+printf("\n");
+printf("     Please reports other bugs to: ric@daimi.aau.dk (Internet).\n");
+printf("\n");
+
+exit(1);
+}
+
+void usage_join(void)
+{
+printf("\n");
+printf("Sploiner                 USER COMMANDS                   Sploiner\n");
+printf("\n");
+printf("\n");
+printf("NAME\n");
+printf("     Sploiner - Join \n");
+printf("\n");
+printf("SYNOPSIS\n");
+printf("     Sploiner join <basename> as <joined_file>\n");
+printf("\n");
+printf("DISCLAIMER\n");
+printf("     I take NO responsibilities for this program.\n");
+printf("     Any use is on your own risk.\n");
+printf("\n");
+printf("DESCRIPTION\n");
+printf("     Join <basename>.000 - <basename>.nnn as one file. \n");
+printf("     ex. if you have f.ex Part.000, Part.001 and Part.002 use:\n");
+printf("     Sploiner join Part as file.lha\n");
+printf("\n");
+printf("BUGS\n");
+printf("     Please reports bugs to: ric@daimi.aau.dk (Internet).\n");
+printf("\n");
+
+exit(1);
+}
+
+void usage_split(void)
+{
+printf("\n");
+printf("Sploiner                 USER COMMANDS                   Sploiner\n");
+printf("\n");
+printf("\n");
+printf("\n");
+printf("NAME\n");
+printf("     Sploiner - Split \n");
+printf("\n");
+printf("SYNOPSIS\n");
+printf("     Sploiner split  <InputFile> [-n] [-s Filesize] [-o Outputname] \n");
+printf("\n");
+printf("DISCLAIMER\n");
+printf("     I take NO responsibilities for this program.\n");
+printf("     Any use is on your own risk.\n");
+printf("\n");
+printf("DESCRIPTION\n");
+printf("     This program splits a large file up in smaller chunks, and\n");
+printf("     optionally produces a 'shadowfile', which in case of a lost\n");
+printf("     chunk, can rebuild the lost chunk when combined with the rest\n");
+printf("     of the chunks. \n");
+printf("\n");
+printf("OPTIONS\n");
+printf("     -n NoShadow.\n");
+printf("          Don't produce any shadowfile.\n");
+printf("     -s Filesize\n");
+printf("          The filesize in bytes. Default 730000 bytes.\n");
+printf("     -o Outputname\n");
+printf("          Name of the outputfiles. \".xxx\" will be appended.\n");
+printf("          Default is \"Part\".\n");
+printf("\n");
+exit(1);
+}
+
+void usage(void)
+{
+printf("\n");
+printf("Sploiner                 USER COMMANDS                   Sploiner\n");
+printf("\n");
+printf("\n");
+printf("NAME\n");
+printf("     %s - Split, Join & Repair.\n",&(Version[6]));
+printf("     Splits large files into smaller parts for transportation \n");
+printf("     on disk. Possibility for error recovery.\n");
+printf("\n");
+printf("SYNOPSIS\n");
+printf("     Sploiner split  <InputFile> [-n] [-s Disksize] [-o Outputname]\n");
+printf("\n");
+printf("     Sploiner join <basename> as <joined_file>\n");
+printf("\n");
+printf("     Sploiner repair file_1 file_2 ... file_n as damaged_file\n");
+printf("\n");
+printf("     Sploiner example\n");
+printf("\n");
+printf("DISCLAIMER\n");
+printf("     I take NO responsibilities for this program.\n");
+printf("     Any use is on your own risk.\n");
+printf("\n");
+printf("DESCRIPTION\n");
+printf("     Splits a program op in smaller sizes, recovers a lost file, \n");
+printf("     or join files.\n");
+printf("\n");
+printf("     Type \"Sploiner split\", \"Sploiner join\" or \"Sploiner repair\"\n");
+printf("     for detailed description and \"Sploiner example\" for an example.\n");
+printf("\n");
+printf("AVAILABILITY\n");
+printf("     This program is beerware. If you like it, send or give me a\n");
+printf("     beer (or beers %%-). You stand a good chance of finding me in:\n");
+printf("     TÅGEKAMMERET, Aarhus universitet, Matematisk institut,\n");
+printf("     Ny Munkegade 116, 8000 Aarhus C, Denmark.\n");
+printf("     This program is copyrighted to: Richard Jørgensen. \n");
+printf("     If you make any improvements to the program, please send them\n");
+printf("     to me. \n");
+printf("     My address: Internet: ric@daimi.aau.dk\n");
+printf("                 Fidonet: 2:238/28.1\n");
+printf("                 WWW: http://www.daimi.aau.dk/~ric\n");
+printf("                      (Check out the sploiner WWW-page)\n");
+printf("                 Real World(tm): Gudrunsvej 48 6th\n");
+printf("                                 8220 Brabrand\n");
+printf("                                 Denmark\n");
+printf("\n");
+printf("OPTIONS\n");
+printf("     split <file> [-n] [-s <size>] [-o <name>]\n");
+printf("          Split a file.\n");
+printf("\n");
+printf("     join <basename> as <file>\n");
+printf("          Join <basename>.nnn and save as <file>\n");
+printf("\n");
+printf("     repair <files> as <file>\n");
+printf("          Cast spell to summon a lost file.\n");
+printf("\n");
+printf("     example\n");
+printf("          Gives a detailed example of sploiner usage.\n");
+printf("\n");
+printf("SEE ALSO\n");
+printf("     split(1), cat(1)\n");
+printf("\n");
+printf("BUGS\n");
+printf("     Some functionality discovered.  :-)\n");
+printf("\n");
+printf("     Please reports bugs to: ric@daimi.aau.dk (Internet).\n");
+printf("\n");
+
+exit(1);
+}

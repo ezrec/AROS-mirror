@@ -1,0 +1,18 @@
+include $(TOP)/config/make.cfg
+
+FILES  := getbuff getopt join repair split sploiner usage
+EXEDIR := $(CONTRIBDIR)/aminet
+EXE    := $(EXEDIR)/sploiner
+
+USE_CLIB_SHARED := yes
+USE_AMIGALIB    := yes
+USE_MLIB        := yes
+
+USER_CFLAGS  := -Wall
+
+#MM contrib-aminet-util-cli-sploiner
+%make_prog_setup mmake=contrib-aminet-util-cli-sploiner
+contrib-aminet-util-cli-sploiner : setup $(EXE)
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+%common
+%include_deps
