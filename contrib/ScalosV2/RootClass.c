@@ -150,7 +150,7 @@ static void Root_Set(struct SC_Class *cl, Object *obj, struct opSet *msg, struct
                                                         if (node->arg_value == SCCV_TriggerValue)
                                                                 SC_SetAttrs(node->DestObject, node->arg_attr, tag->ti_Data, TAG_DONE);
                                                         else
-                                                                SC_SetAttrs(node->DestObject, node->arg_attr, node->arg_value);
+                                                                SC_SetAttrs(node->DestObject, node->arg_attr, node->arg_value, TAG_DONE); /* AROS AMIGAOS fix */
                                                 }
                                                 else
                                                 {
