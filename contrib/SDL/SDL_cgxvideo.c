@@ -280,6 +280,9 @@ VideoBootStrap CGX_bootstrap = {
 	"CGX", "AmigaOS CyberGraphics", CGX_Available, CGX_CreateDevice
 };
 
+#include <aros/macros.h>
+
+#warning FIXME: Endianess issues here. Temporarily used AROS_BE2WORD() to get around them
 Uint32 MakeBitMask(_THIS,int type,int format,int *bpp)
 {
     if (this->hidden->depth==*bpp)  {
@@ -294,106 +297,95 @@ Uint32 MakeBitMask(_THIS,int type,int format,int *bpp)
                 switch(type) {
                     case 0:
                         D(bug("RGB15PC/BGR15\n"));
-                        return 31;
+                        return AROS_BE2WORD(31);
                     case 1:
-                        return 992;
+                        return AROS_BE2WORD(992);
                     case 2:
-                        return 31744;
+                        return AROS_BE2WORD(31744);
                 }
             case PIXFMT_RGB15:
             case PIXFMT_BGR15PC:
                 switch(type) {
                     case 0:
                         D(bug("RGB15/BGR15PC\n"));
-                        return 31744;
+                        return AROS_BE2WORD(31744);
                     case 1:
-                        return 992;
+                        return AROS_BE2WORD(992);
                     case 2:
-                        return 31;
+                        return AROS_BE2WORD(31);
                 }
             case PIXFMT_BGR16PC:
             case PIXFMT_RGB16:
                 switch(type) {
                     case 0:
                         D(bug("RGB16PC\n"));
-                        return 63488;
+                        return AROS_BE2WORD(63488);
                     case 1:
-                        return 2016;
+                        return AROS_BE2WORD(2016);
                     case 2:
-                        return 31;
+                        return AROS_BE2WORD(31);
                 }
             case PIXFMT_BGR16:
             case PIXFMT_RGB16PC:
                 switch(type) {
                     case 0:
                         D(bug("RGB16PC/BGR16\n"));
-                        return 248;
+                        return AROS_BE2WORD(248);
                     case 1:
-                        return 57351;
+                        return AROS_BE2WORD(57351);
                     case 2:
-                        return 7936;
+                        return AROS_BE2WORD(7936);
                 }
 
             case PIXFMT_RGB24:
                 switch(type) {
                     case 0:
                         D(bug("RGB24/BGR24\n"));
-                        return 0xff0000;
+                        return AROS_BE2LONG(0x00ff0000);
                     case 1:
-                        return 0xff00;
+                        return AROS_BE2LONG(0x0000ff00);
                     case 2:
-                        return 0xff;
+                        return AROS_BE2LONG(0x000000ff);
                 }
             case PIXFMT_BGR24:
                 switch(type) {
                     case 0:
                         D(bug("BGR24\n"));
-                        return 0xff;
+                        return AROS_BE2LONG(0x000000ff);
                     case 1:
-                        return 0xff00;
+                        return AROS_BE2LONG(0x0000ff00);
                     case 2:
-                        return 0xff0000;
+                        return AROS_BE2LONG(0x00ff0000);
                 }
             case PIXFMT_ARGB32:
                 switch(type) {
                     case 0:
                         D(bug("ARGB32\n"));
-                        return 0xff0000;
+                        return AROS_BE2LONG(0x00ff0000);
                     case 1:
-                        return 0xff00;
+                        return AROS_BE2LONG(0x0000ff00);
                     case 2:
-                        return 0xff;
+                        return AROS_BE2LONG(0x000000ff);
                 }
             case PIXFMT_BGRA32:
                 switch(type) {
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
                     case 0:
                         D(bug("BGRA32\n"));
-                        return 0xff;
+                        return AROS_BE2LONG(0x0000ff00);
                     case 1:
-                        return 0xff00;
+                        return AROS_BE2LONG(0x00ff0000);
                     case 2:
-                        return 0xff0000;
-#else
-                    case 0:
-                        D(bug("BGRA32\n"));
-                        return 0xff00;
-                    case 1:
-                        return 0xff0000;
-                    case 2:
-                        return 0xff000000;
-
-#endif
+                        return AROS_BE2LONG(0xff000000);
                 }
             case PIXFMT_RGBA32:
                 switch(type) {
                     case 0:
                         D(bug("RGBA32\n"));
-                        return 0xff000000;
+                        return AROS_BE2LONG(0xff000000);
                     case 1:
-                        return 0xff0000;
+                        return AROS_BE2LONG(0x00ff0000);
                     case 2:
-                        return 0xff00;
+                        return AROS_BE2LONG(0x0000ff00);
                 }
             default:
                 D(bug("Unknown pixel format! Default to 24bit\n"));
@@ -1025,7 +1017,7 @@ buildnewscreen:
 		}
 
 		bpp=this->hidden->depth = 
-            GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH);
+                GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH);
         
 		D(bug("Setting screen depth to: %ld\n",this->hidden->depth));
 
