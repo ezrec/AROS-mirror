@@ -6,15 +6,25 @@
 #include <proto/muimaster.h>
 #include <libraries/mui.h>
 
-#define MUIA_UAEDisplay_Width        (MUIB_MUI | 1)
-#define MUIA_UAEDisplay_Height       (MUIB_MUI | 2)
-#define MUIA_UAEDisplay_Memory       (MUIB_MUI | 3)
-#define MUIA_UAEDisplay_BytesPerPix  (MUIB_MUI | 4)
-#define MUIA_UAEDisplay_BytesPerRow  (MUIB_MUI | 5)
-#define MUIA_UAEDisplay_BitDepth     (MUIB_MUI | 6)
-#define MUIA_UAEDisplay_EventHandler (MUIB_MUI | 7)
+enum
+{
+    MUIA_UAEDisplay_Width = MUIB_MUI, /* (ISG) */
+    MUIA_UAEDisplay_Height,           /* (ISG) */
+    MUIA_UAEDisplay_EventHandler,     /* (ISG) */
+    MUIA_UAEDisplay_Memory,           /* (..G) */
+    MUIA_UAEDisplay_BytesPerPix,      /* (..G) */
+    MUIA_UAEDisplay_BytesPerRow,      /* (..G) */
+    MUIA_UAEDisplay_BitDepth,         /* (..G) */
+    MUIA_UAEDisplay_MaxWidth,         /* (..G) */
+    MUIA_UAEDisplay_MaxHeight,        /* (..G) */
+};
 
-#define MUIM_UAEDisplay_Update (MUIB_MUI | 1)
+enum
+{
+    MUIM_UAEDisplay_Update = MUIB_MUI,
+    __MUIM_UAEDisplay_ReallocMemory /* Private */
+};
+
 struct MUIP_UAEDisplay_Update
 {
     IPTR MethodID;
@@ -22,8 +32,6 @@ struct MUIP_UAEDisplay_Update
     SIPTR bottom;
 };
 
-/* Private */
-#define __MUIM_UAEDisplay_ReallocMemory (MUIB_MUI | 2)
 
 extern struct MUI_CustomClass *UAEDisplay_CLASS;
 #define UAEDisplayObject BOOPSIOBJMACRO_START(UAEDisplay_CLASS->mcc_Class)

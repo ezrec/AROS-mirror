@@ -393,14 +393,21 @@ int DX_FillResolutions (uae_u16 *ppixel_format)
 	{ 1024, 768 }
     };
 
+    int bpx  = XGET(uaedisplay, MUIA_UAEDisplay_BytesPerPix);
+    int maxw = XGET(uaedisplay, MUIA_UAEDisplay_MaxWidth);
+    int maxh = XGET(uaedisplay, MUIA_UAEDisplay_MaxHeight);
+
+    D(bug("maxheight = %d\n", maxh));
+    D(bug("maxwidth  = %d\n", maxw));
+
     for (j = 0; (j < (sizeof(modes)/sizeof(modes[0]))) && (j < MAX_PICASSO_MODES); j++)
     {
-	if (modes[j].width > 640 || modes[j].height > 480)
+	if (modes[j].width > maxw || modes[j].height > maxh)
 	    continue;
 
 	DisplayModes[count].res.width  = modes[j].width;
         DisplayModes[count].res.height = modes[j].height;
-        DisplayModes[count].depth      = 4;
+        DisplayModes[count].depth      = bpx;
         DisplayModes[count].refresh    = 75;
 
         count++;

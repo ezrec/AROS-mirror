@@ -40,6 +40,8 @@ ZUNE_CUSTOMCLASS_INLINE_10
 	int   bytesperrow;
 	int   bytesperpix;
 	int   bitdepth;
+	int   maxwidth;
+	int   maxheight;
 
 	int   update_top;
 	int   update_bottom;
@@ -183,6 +185,14 @@ ZUNE_CUSTOMCLASS_INLINE_10
 	        *(message->opg_Storage) = (IPTR)data->height;
 		break;
 
+	    case MUIA_UAEDisplay_MaxWidth:
+	        *(message->opg_Storage) = (IPTR)data->maxwidth;
+		break;
+
+	    case MUIA_UAEDisplay_MaxHeight:
+	        *(message->opg_Storage) = (IPTR)data->maxheight;
+		break;
+
 	    case MUIA_UAEDisplay_EventHandler:
 	        *(message->opg_Storage) = (IPTR)data->eventhandler;
 		break;
@@ -196,6 +206,12 @@ ZUNE_CUSTOMCLASS_INLINE_10
          if (!DoSuperMethodA(CLASS, self, (Msg)message))
 	     return FALSE;
 
+	 if (!GetCyberMapAttr(_screen(self)->RastPort.BitMap, CYBRMATTR_ISCYBERGFX))
+	 {
+	     fprintf(stderr, "**error**: CyberGfx is required\n");
+	     return FALSE;
+	 }
+
          data->ehnode.ehn_Object = self;
          data->ehnode.ehn_Class  = CLASS;
          data->ehnode.ehn_Events = IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE | IDCMP_RAWKEY |
@@ -203,7 +219,7 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
 	 DoMethod(_win(self), MUIM_Window_AddEventHandler, (IPTR)&data->ehnode);
 
-	 data->bitdepth = GetBitMapAttr(_screen(self)->RastPort.BitMap, BMA_DEPTH);
+	 data->bitdepth = GetCyberMapAttr(_screen(self)->RastPort.BitMap, CYBRMATTR_DEPTH);
 
          if(data->bitdepth <= 8)
          {
@@ -211,7 +227,9 @@ ZUNE_CUSTOMCLASS_INLINE_10
 	     goto error;
          }
 
-         data->bytesperpix = (data->bitdepth >= 24) ? 4 : (data->bitdepth >= 12) ? 2 : 1;
+	 data->maxwidth    = _screen(self)->Width;
+	 data->maxheight   = _screen(self)->Height;
+         data->bytesperpix = GetCyberMapAttr(_screen(self)->RastPort.BitMap, CYBRMATTR_BPPIX);
 
 	 if (!DoMethod(self, __MUIM_UAEDisplay_ReallocMemory))
 	     goto error;
@@ -221,6 +239,7 @@ ZUNE_CUSTOMCLASS_INLINE_10
      error:
 
 	 CoerceMethod(CLASS, self, MUIM_Cleanup);
+
 	 return FALSE;
     }),
 
@@ -388,6 +407,7 @@ int gui_init (void)
         uae_quit();
     }
 
+    SetTaskPri(FindTask(NULL), -5);
     return 0;
 }
 
