@@ -1,6 +1,6 @@
 BEGIN {
 	# Who did it ?
-	User=ENVIRON["LOGNAME"];
+	User=ENVIRON["CVSLOGNAME"];
 	# Where is CVSROOT ?
 	CVSROOT=ENVIRON["CVSROOT"];
 	gsub(/:[a-z]+:.+@.+:/,"",CVSROOT);
