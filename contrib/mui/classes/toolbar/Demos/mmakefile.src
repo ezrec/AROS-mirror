@@ -1,0 +1,18 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+FILES := Toolbar-Demo
+
+EXEDIR := $(CONTRIBDIR)/MCC_Toolbar/Demos
+
+USER_CFLAGS := -DNO_INLINE_STDARG
+
+#MM contrib-zune-classes-toolbar-demo : includes linklibs \
+#MM 	    	    	    	      contrib-zune-classes-toolbar
+
+%build_prog mmake=contrib-zune-classes-toolbar-demo \
+    progname=NList-Demo targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="mui arossupport amiga arosc"
+
+%common
