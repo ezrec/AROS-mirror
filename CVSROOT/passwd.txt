@@ -96,5 +96,7 @@ dschauer:bdmIs4f31XEXY:Dwight Schauer:dschauer@vcsd.com:
 arnold:bbMdV4gkwd07A:Thomas Eriksson:brummelufs@hotmail.com:
 chodorowski:caRVaxe4DXu8M:Adam Chodorowski:adam.chodorowski@bigfoot.com:
 MCDan:dcMyQJARhlwTA:Daniel Schwill:d.schwill@horizon.ruhr.de:
+megabob:xx9.a9AF9wFuM:Magnani Christophe:magnani@dactyl-buro.fr:
+sebauer:ad3LrQ7MbYCkM:Sebastian Bauer:sebauer@t-online.de:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
