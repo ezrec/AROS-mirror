@@ -214,8 +214,8 @@ int __regina_close(int handle, void *async_info)
   AsyncInfo *ai = async_info;
   FileHandleInfo *fhi;
 
-  assert(handle<3);
-  
+  assert(handle<3 && handle>=0);
+
   fhi = &ai->files[handle];
 
   handle_msgs(fhi);
@@ -373,12 +373,9 @@ static AsyncInfo *childai;
 void StartCommand(void)
 {
   AsyncInfo *ai = childai;
-  environment *env = ai->parentenv;
   char *cmd;
   struct Library *UtilityBase;
   struct TagItem *tags;
-  ULONG tagcount = 0;
-  int i;
   struct DosLibrary *DOSBase;
 
   DOSBase = (struct DosLibrary *)OpenLibrary("dos.library", 0);
@@ -471,6 +468,9 @@ int fork_exec(tsd_t *TSD, environment *env, const char *cmdline, void *async_inf
     errno = ENOSYS;
     return -1;
   }
+    
+  errno = ENOSYS;
+  return -1;
 }
 
 int __regina_wait(int process)
