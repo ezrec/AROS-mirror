@@ -80,8 +80,7 @@ distclean:	clean
 maintainer-clean: distclean
 
 install: INCDIR := $(includedir)
-
-install: gcc-include.stamp
+install: gcc-include-inst.stamp
 
 bindist:	$(TARGETS)
 	for file in $(TARGETS); do \
@@ -98,9 +97,9 @@ bindist:	$(TARGETS)
 	done
 
 gcc-include: INCDIR := gcc
-gcc-include: gcc-include.stamp
+gcc-include: gcc-include-comp.stamp
 
-gcc-include.stamp:	SFD/ahi_lib.sfd SFD/ahi_sub_lib.sfd \
+gcc-include%.stamp:	SFD/ahi_lib.sfd SFD/ahi_sub_lib.sfd \
 			$(CTARGETS) $(GCCTARGETS)
 	 $(INSTALL) --directory $(INCDIR)/clib $(INCDIR)/devices $(INCDIR)/libraries \
 	                        $(INCDIR)/inline $(INCDIR)/proto
