@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 USER_INCLUDES := -I. -I$(TOP)/rom/exec
 OBJDIR := $(GENDIR)/$(CURDIR)/static
-USER_CFLAGS := -DNO_EXTERNAL_QUEUES
+USER_CFLAGS := -DNO_EXTERNAL_QUEUES -DAREXXIO
 
 #Libraries to use
 USE_AROSLIB := yes
@@ -22,7 +22,7 @@ OFILES := \
   shell rexxext stack tracing interp cmath convert \
   strings library strmath signals macros envir expr \
   instore extlib yaccsrc lexsrc wrappers options doscmd \
-  rexxbif aroscmd
+  rexxbif aroscmd amigafuncs
 
 # Compile the statically linked executable
 FILES := $(OFILES) rexx nosaa mt_notmt

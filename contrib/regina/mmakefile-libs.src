@@ -13,10 +13,10 @@ OFILES := \
   shell rexxext stack tracing interp cmath convert \
   strings library strmath signals macros envir expr \
   instore extlib yaccsrc lexsrc wrappers options doscmd \
-  rexxbif aroscmd
+  rexxbif aroscmd amigafuncs
 
 USER_CFLAGS := -DRXLIB -DINCL_REXXSAA -DAPIENTRY="" -D_CLIB_LIBRARY_ \
--DNO_EXTERNAL_QUEUES
+-DNO_EXTERNAL_QUEUES -DAREXXIO
 OBJDIR := $(GENDIR)/$(CURDIR)/shared
 
 #Libraries to use

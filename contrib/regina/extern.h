@@ -783,6 +783,18 @@
    int IsValidTin(const external_parser_type *ept, unsigned long eptlen);
 
 /*
+ * Routines in amiga_funcs.c
+ */
+   streng *arexx_open ( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_close( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_writech( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_writeln( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_seek( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_readch( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_readln( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_eof( tsd_t *TSD, cparamboxptr parm1 );
+
+/*
  ******************************************************************************
  ******************************************************************************
  ******************************************************************************

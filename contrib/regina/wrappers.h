@@ -85,6 +85,14 @@
 #endif
 #define add_envir                    __regina_add_envir
 #define addfunc                      __regina_addfunc
+#define arexx_close                  __regina_arexx_close
+#define arexx_eof                    __regina_arexx_eof
+#define arexx_open                   __regina_arexx_open
+#define arexx_readch                 __regina_arexx_readch
+#define arexx_readln                 __regina_arexx_readln
+#define arexx_seek                   __regina_arexx_seek
+#define arexx_writech                __regina_arexx_writech
+#define arexx_writeln                __regina_arexx_writeln
 #define atopos                       __regina_atopos
 #define atoposorzero                 __regina_atoposorzero
 #define atozpos                      __regina_atozpos

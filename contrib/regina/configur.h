@@ -572,7 +572,9 @@
 # endif
 #endif
 
+#ifndef AREXXIO
 #define OLD_REGINA_FEATURES
+#endif
 
 /*
  * DLOPEN   - dlopen()/dlsym() under SunOS and SysV4

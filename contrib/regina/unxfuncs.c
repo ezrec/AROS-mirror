@@ -192,14 +192,14 @@ streng *unx_gettid( tsd_t *TSD, cparamboxptr parms )
    return int_to_streng( TSD, TSD->thread_id ) ;
 }
 
-
+#ifdef OLD_REGINA_FEATURES
 streng *unx_eof( tsd_t *TSD, cparamboxptr parms )
 {
    checkparam(  parms,  0,  0 , "EOF" ) ;
 /*    sprintf(ptr=MallocTSD(SMALLSTR),"%d",eof_on_input()) ; */
    return( nullstringptr() ) ;
 }
-
+#endif
 
 streng *unx_uname( tsd_t *TSD, cparamboxptr parms )
 {

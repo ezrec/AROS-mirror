@@ -36,6 +36,10 @@ struct function_type
    const char *funcname ;
 } ;
 
+#if defined(OLD_REGINA_FEATURES) && defined(AREXXIO)
+#error OLD_REGINA_FEATURES and AREXXIO options are incompatible
+#endif
+
 static const struct function_type functions[] = {
   { 0,              std_abbrev, "ABBREV" },
   { 0,              std_abs, "ABS" },
@@ -63,6 +67,9 @@ static const struct function_type functions[] = {
 #ifdef OLD_REGINA_FEATURES
   { 0,              unx_close, "CLOSE" },
 #endif
+#ifdef AREXXIO
+  { 0,              arexx_close, "CLOSE" },
+#endif
   { 0,              std_compare, "COMPARE" },
   { 0,              std_condition, "CONDITION" },
   { 0,              std_copies, "COPIES" },
@@ -83,7 +90,12 @@ static const struct function_type functions[] = {
   { 0,              dbg_dumptree, "DUMPTREE" },
   { 0,              dbg_dumpvars, "DUMPVARS" },
 #endif
+#ifdef OLD_REGINA_FEATURES
   { 0,              unx_eof, "EOF" },
+#endif
+#ifdef AREXXIO
+  { 0,              arexx_eof, "EOF" },
+#endif
   { 0,              std_errortext, "ERRORTEXT" },
 #ifdef VMS
   { 0,              vms_f_cvsi, "F$CVSI" },
@@ -155,12 +167,19 @@ static const struct function_type functions[] = {
 #ifdef OLD_REGINA_FEATURES
   { EXT_OPEN_BIF,   unx_open, "OPEN" },
 #endif /* OLD_REGINA_FEATURES */
+#ifdef AREXXIO
+  { 0,              arexx_open, "OPEN" },
+#endif
   { 0,              std_overlay, "OVERLAY" },
   { 0,              unx_popen, "POPEN" },
   { 0,              std_pos, "POS" },
   { 0,              std_qualify, "QUALIFY" },
   { 0,              std_queued, "QUEUED" },
   { 0,              std_random, "RANDOM" },
+#ifdef AREXXIO
+  { 0,              arexx_readch, "READCH" },
+  { 0,              arexx_readln, "READLN" },
+#endif
   { 0,              std_reverse, "REVERSE" },
   { 0,              std_right, "RIGHT" },
 
@@ -170,6 +189,9 @@ static const struct function_type functions[] = {
   { 0,              rex_rxfuncquery, "RXFUNCQUERY" },
   { 0,              rex_rxqueue, "RXQUEUE" },
 
+#ifdef AREXXIO
+  { 0,              arexx_seek, "SEEK" },
+#endif
   { 0,              std_sign, "SIGN" },
   { 0,              cms_sleep, "SLEEP" },
   { 0,              std_sourceline, "SOURCELINE" },
@@ -197,6 +219,10 @@ static const struct function_type functions[] = {
   { 0,              std_wordlength, "WORDLENGTH" },
   { 0,              std_wordpos, "WORDPOS" },
   { 0,              std_words, "WORDS" },
+#ifdef AREXXIO
+  { 0,              arexx_writech, "WRITECH" },
+  { 0,              arexx_writeln, "WRITELN" },
+#endif
   { 0,              std_x2b, "X2B" },
   { 0,              std_x2c, "X2C" },
   { 0,              std_x2d, "X2D" },
