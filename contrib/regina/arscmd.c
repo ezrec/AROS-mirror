@@ -14,8 +14,6 @@
 #include <exec/lists.h>
 #include <exec/nodes.h>
 
-#include <aros/debug.h>
-
 #include <assert.h>
 #include <errno.h>
 
@@ -218,7 +216,6 @@ int __regina_close(int handle, void *async_info)
 
   assert(handle<3);
   
-    kprintf("__regina_close start\n");
   fhi = &ai->files[handle];
 
   handle_msgs(fhi);
@@ -238,7 +235,7 @@ int __regina_close(int handle, void *async_info)
     Close(fhi->fhin);
   fhi->fhin = NULL;
   DeletePort(fhi->port);
-    kprintf("__regina_close end\n");
+
   return 0;
 }
 
@@ -314,8 +311,6 @@ int __regina_write(int handle, const void *buf, unsigned size, void *async_info)
   
   assert(handle<3);
 
-  kprintf("__regina_write size: %d\n", (int)size);
-    
   fhi = &ai->files[handle];
 
   if (buf==NULL && size==NULL)
@@ -386,7 +381,6 @@ void StartCommand(void)
   int i;
   struct DosLibrary *DOSBase;
 
-    kprintf("StartCommand start\n");
   DOSBase = (struct DosLibrary *)OpenLibrary("dos.library", 0);
   
   ai->child = FindTask(NULL);
@@ -428,7 +422,6 @@ void StartCommand(void)
   Signal(ai->parent, 1<<ai->psigbit);
   
   CloseLibrary((struct Library *)DOSBase);
-    kprintf("StartCommand end\n");
 }
 
 int fork_exec(tsd_t *TSD, environment *env, const char *cmdline, void *async_info)
@@ -484,12 +477,10 @@ int __regina_wait(int process)
 {
   AsyncInfo *ai = (AsyncInfo *)process;
 
-  kprintf("__regina_wait start\n");
   Wait(1<<ai->psigbit);
   FreeSignal(ai->psigbit);
   ai->psigbit = -1;
     
-  kprintf("__regina_wait end\n");
   return ai->retval;
 }
 
