@@ -39,8 +39,13 @@ def copy( src, dst ):
     if not isinstance( src, list ): src = [ src ]
 
     for path in src:
-        if newer( path, dst ):
+        if newer \
+        ( 
+            path, 
+            os.path.join( os.path.dirname( dst ), os.path.basename( path ) )
+        ):
             shutil.copy( path, dst )
+
 
 def reportSkipping( message ):
     print '\033[1m\033[32m*\033[30m', message, '\033[0m'
