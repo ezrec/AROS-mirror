@@ -18,6 +18,8 @@ site goes public.
 
   - Status (jobs and size)
 
++ Fix silly amounts of system messages in picture galleries.
+
 + Better language selection system
 
   The current system uses the content negatotiation support using the
@@ -54,4 +56,3 @@ goes public, but are IMHO not *necessary*:
   introduction/index to a couple of languages.
 + Better build system (not the ad-hoc thing it is now)
 + Nicer looking graphical design.
-+ Eric's logotype / mascot. ;-)
