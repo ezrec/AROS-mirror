@@ -54,8 +54,8 @@ FILES := \
     uaelib \
     writelog \
     zfile \
-    od-aros
-#    nogui
+    od-aros \
+    td-thread
 
 EXEDIR := $(CONTRIBDIR)/Emu/UAE
 
@@ -79,11 +79,12 @@ uae-setup ::  $(OBJDIR)/.build_setup_check
 $(OBJDIR)/.build_setup_check:
 	rm -f machdep; ln -s md-i386-gcc/ machdep
 	rm -f osdep; ln -s od-amiga/ osdep
-	rm -f threaddep; ln -s td-none/ threaddep
+	rm -f threaddep; ln -s td-amigaos/ threaddep
 	rm -f sounddep; ln -s sd-generic/ sounddep
 	%mkdirs_q $(OBJDIR)/machdep $(EXEDIR)
 	echo '#include "sounddep/sound.c"' >sd-sound.c
 	echo '#include "sounddep/sound.h"' >sd-sound.h
+	echo '#include "threaddep/thread.c"' >td-thread.c
 	echo '#include "od-generic/joystick.c"' >od-joy.c
 	echo '#include "targets/t-aros.h"' >target.h
 	echo '#include "fpp-unknown.h"' >md-fpp.h

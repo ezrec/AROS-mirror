@@ -142,7 +142,7 @@ IPTR EmulatorWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     if (self != NULL)
     {
         data = INST_DATA(CLASS, self);
-        data->ewd_PageGroup     = pageGroup;
+//        data->ewd_PageGroup     = pageGroup;
         data->ewd_DisplayObject = uaedisplay;
 
 	DoMethod
@@ -206,12 +206,12 @@ IPTR EmulatorWindow__MUIM_EmulatorWindow_ChangePage
 
     if (message->State == MUIV_Emulator_State_Running)
     {
-        SET(data->ewd_PageGroup, MUIA_Group_ActivePage, 1);
+//        SET(data->ewd_PageGroup, MUIA_Group_ActivePage, 1);
         SET(self, MUIA_Window_Title, __(MSG_WINDOW_TITLE_DISPLAY));
     }
     else
     {
-        SET(data->ewd_PageGroup, MUIA_Group_ActivePage, 0);
+//        SET(data->ewd_PageGroup, MUIA_Group_ActivePage, 0);
         SET(self, MUIA_Window_Title, __(MSG_WINDOW_TITLE_CFG));
     }
     
