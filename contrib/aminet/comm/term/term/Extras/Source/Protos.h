@@ -729,9 +729,9 @@ VOID MoveMouseMarker(struct MarkerContext *Context);
 BOOL CheckMarkerHighlighting(struct MarkerContext *Context, LONG Line, LONG *Left, LONG *Right);
 VOID TransferMarker(struct MarkerContext *Context, ULONG Qualifier);
 BOOL SetWordMarker(struct MarkerContext *Context, LONG FirstVisibleLine, LONG NumVisibleLines, LONG NumLines, LONG FirstVisibleColumn, LONG NumVisibleColumns, LONG NumColumns);
-#ifndef __AROS__
+//#ifndef __AROS__
 VOID SetMarker(struct MarkerContext *Context, LONG FirstVisibleLine, LONG NumVisibleLines, LONG NumLines, LONG FirstVisibleColumn, LONG NumVisibleColumns, LONG NumColumns, LONG Line, LONG WordLeft, LONG WordRight);
-#endif
+//#endif
 VOID SelectAllMarker(struct MarkerContext *Context, LONG FirstVisibleLine, LONG NumVisibleLines, LONG NumLines, LONG FirstVisibleColumn, LONG NumVisibleColumns, LONG NumColumns, LONG FirstLeft, LONG FirstLine, LONG LastRight, LONG LastLine);
 BOOL CheckMarker(struct MarkerContext *Context);
 
