@@ -1,6 +1,8 @@
 # $Id$
 
 #MM- aminet-comm-term : aminet-comm-term-termlite \
-#MM	aminet-comm-term-amigaterm \
-#MM	aminet-comm-term-microterm \
 #MM	aminet-comm-term-term
+
+##not building:
+##MM	aminet-comm-term-amigaterm
+##MM	aminet-comm-term-microterm
