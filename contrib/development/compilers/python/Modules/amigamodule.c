@@ -1,40 +1,50 @@
-/**************************************************************\
-**                                                            **
-**  AMIGA module implementation, for SAS/C version 6.58       **
-**                                                            **
-**  Made by Irmen de Jong (irmen@bigfoot.com)                 **
-**                                                            **
-**  27-mar-96: Added a lot of AmiTCP functions!               **
-**   2-apr-96: Many small fixes & enhancements.               **
-**  11-apr-96: Totally rewritten the environment handling.    **
-**             Now creates 4 separate dictionaries.           **
-**             Fixed link(), added symlink() and readlink().  **
-**  29-may-96: Added filenote() and fullpath()                **
-**  11-jun-96: Moved filenote() to doslib/SetComment          **
-**  12-jun-96: Removed execv                                  **
-**  29-Aug-96: fixed getcwd(), some minor errno fixes         **
-**  26-Dec-96: upgraded to 1.4: added putenv(), remove()      **
-**             fixed mkdir: default protbits (0777)           **
-**   6-Apr-97: fixed bug in readlink (lock was incorrect)     **
-**   6-Nov-97: added uname()                                  **
-**  12-Jan-98: upgraded to 1.5: fixed includes, new names,    **
-**             uses new Amiga/.../unixemul.c                  **
-**  28-Mar-98: fixed buffer overflow bug in convertenviron()  **
-**  27-Sep-98: added crc32 function                           **
-**  24-Dec-98: moved bunch of #defines to config.h            **
-**  25-Dec-98: added I-Net 225 support                        **
-**                                                            **
-**  Adapted from posixmodule.c; implements as much of the     **
-**  functionality of this module as possible.                 **
-**                                                            **
-**                                                            **
-**  TO DO: Implement execv(e) and threads (if possible).      **
-**                                                            **
-**  NOTE: Don't forget __io2errno conversion!!!!!!!!!!!!!!!!  **
-**                                                            **
-\**************************************************************/
 /*
-** Adapted for AROS by Adam Chodorowski.
+    Copyright © 1996-2001, Irmen de Jong
+    Copyright © 2001, The AROS Development Team 
+
+    Operating system module implementation for AmigaOS and AROS, adapted 
+    from posixmodule.c; implements as much of the functionality of that
+    module as possible. Should compile with SAS/C version 6.58 and 
+    GCC 2.95.2+ (inside the AROS build environment).  
+    
+    Originally written by Irmen de Jong (irmen@bigfoot.com).
+    Updated and adapted for AROS by Adam Chodorowski (chodorowski@aros.org)
+    
+    HISTORY
+
+    27-Mar-96: Added a lot of AmiTCP functions!               
+     2-Apr-96: Many small fixes & enhancements.               
+    11-Apr-96: Totally rewritten the environment handling.    
+               Now creates 4 separate dictionaries.           
+               Fixed link(), added symlink() and readlink().  
+    29-May-96: Added filenote() and fullpath()                
+    11-Jun-96: Moved filenote() to doslib/SetComment          
+    12-Jun-96: Removed execv                                  
+    29-Aug-96: fixed getcwd(), some minor errno fixes         
+    26-Dec-96: upgraded to 1.4: added putenv(), remove()      
+               fixed mkdir: default protbits (0777)           
+     6-Apr-97: fixed bug in readlink (lock was incorrect)     
+     6-Nov-97: added uname()                                   
+    12-Jan-98: upgraded to 1.5: fixed includes, new names,    
+               uses new Amiga/.../unixemul.c                 
+    28-Mar-98: fixed buffer overflow bug in convertenviron()  
+    27-Sep-98: added crc32 function                           
+    24-Dec-98: moved bunch of #defines to config.h            
+    25-Dec-98: added I-Net 225 support                        
+    30-Sep-01: Updated and adapted for AROS by Adam Chodorowski.
+               A bunch of different fixes and updates to synchronize
+	       with posixmodule in Python 2.0+. See the CVS log for
+	       details and further history.
+	                                                      
+    TODO                                                        
+    
+    + Implement execv(e) and threads (if possible)
+    + Update to functionality in 2.0+ (new functions, changed semantics?)
+    + Implement LARGEFILE support (lseek(), ftruncate()) 
+    
+    NOTES
+                                                            
+    Don't forget about the __io2errno conversion!             
 */
 
 #include "Python.h"
@@ -203,12 +213,12 @@ static PyObject * amiga_error_with_filename(char *name)
 /* AMIGA generic methods */
 
 static PyObject *
-amiga_1str( PyObject *args, int (*func)(const char *) )
+amiga_1str( PyObject *args, char *format, int (*func)(const char *) )
 {
     char *path1;
     int res;
     
-    if( !PyArg_ParseTuple( args, "s", &path1 ) ) return NULL;
+    if( !PyArg_ParseTuple( args, format, &path1 ) ) return NULL;
     
     Py_BEGIN_ALLOW_THREADS
     res = (*func)(path1);
@@ -221,12 +231,12 @@ amiga_1str( PyObject *args, int (*func)(const char *) )
 }
 
 static PyObject *
-amiga_2str( PyObject *args, int (*func)(const char *, const char *) )
+amiga_2str( PyObject *args, char *format, int (*func)(const char *, const char *) )
 {
     char *path1, *path2;
     int res;
     
-    if( !PyArg_ParseTuple( args, "(ss)", &path1, &path2 ) ) return NULL;
+    if( !PyArg_ParseTuple( args, format, &path1, &path2 ) ) return NULL;
 
     Py_BEGIN_ALLOW_THREADS
     res = (*func)(path1, path2);
@@ -239,12 +249,12 @@ amiga_2str( PyObject *args, int (*func)(const char *, const char *) )
 }
 
 static PyObject *
-amiga_strint(PyObject *args, int (*func)(const char *, int))
+amiga_strint(PyObject *args, char *format, int (*func)(const char *, int))
 {
     char *path;
     int i;
     int res;
-    if( !PyArg_ParseTuple( args, "(si)", &path, &i ) ) return NULL;
+    if( !PyArg_ParseTuple( args, format, &path, &i ) ) return NULL;
 
     Py_BEGIN_ALLOW_THREADS
     res = (*func)(path, i);
@@ -257,12 +267,12 @@ amiga_strint(PyObject *args, int (*func)(const char *, int))
 }
 
 static PyObject *
-amiga_do_stat(PyObject *self, PyObject *args, int (*statfunc)(const char *, struct stat *))
+amiga_do_stat(PyObject *self, PyObject *args, char *format, int (*statfunc)(const char *, struct stat *))
 {
 	struct stat st;
 	char *path;
 	int res;
-	if (!PyArg_ParseTuple(args, "s", &path))
+	if (!PyArg_ParseTuple(args, format, &path))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	res = (*statfunc)(path, &st);
@@ -284,19 +294,32 @@ amiga_do_stat(PyObject *self, PyObject *args, int (*statfunc)(const char *, stru
 
 
 /* AMIGA methods */
+
+static char amiga_chdir__doc__[] =
+"chdir(path) -> None\n\
+Change the current working directory to the specified path.";
+
 static PyObject *
 amiga_chdir(PyObject *self, PyObject *args)
 {
-	return amiga_1str(args, chdir);
+    return amiga_1str(args, "s:chdir", chdir);
 }
+
+static char amiga_chmod__doc__[] =
+"chmod(path, mode) -> None\n\
+Change the access permissions of a file.";
 
 static PyObject *
 amiga_chmod(PyObject *self, PyObject *args)
 {
-	return amiga_strint(args, chmod);
+    return amiga_strint(args, "si:chmod", chmod);
 }
 
 #ifdef HAVE_CHOWN
+static char amiga_chown__doc__[] =
+"chown(path, uid, gid) -> None\n\
+Change the owner and group id of path to the numeric uid and gid.";
+
 static PyObject *
 amiga_chown(PyObject *self, PyObject *args)
 {
@@ -322,12 +345,16 @@ amiga_chown(PyObject *self, PyObject *args)
 #endif /* HAVE_CHOWN */
 
 #ifdef HAVE_GETCWD
+static char amiga_getcwd__doc__[] =
+"getcwd() -> path\n\
+Return a string representing the current working directory.";
+
 static PyObject *
 amiga_getcwd(PyObject *self, PyObject *args)
 {
 	char buf[MAXPATHLEN];
 	char *res;
-	if (!PyArg_ParseTuple(args,""))
+	if (!PyArg_ParseTuple(args,":getcwd"))
 			return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	res = getcwd(buf, sizeof buf);
@@ -339,97 +366,129 @@ amiga_getcwd(PyObject *self, PyObject *args)
 #endif
 
 #ifdef HAVE_LINK
+static char amiga_link__doc__[] =
+"link(src, dst) -> None\n\
+Create a hard link to a file.";
+
 static PyObject *
 amiga_link(PyObject *self, PyObject *args)
 {
-	return amiga_2str(args, link);
+	return amiga_2str(args, "ss:link", link);
 }
 #endif
+
+static char amiga_listdir__doc__[] =
+"listdir(path) -> list_of_strings\n\
+Return a list containing the names of the entries in the directory.\n\
+\n\
+	path: path of directory to list\n\
+\n\
+The list is in arbitrary order.";
 
 static PyObject *
 amiga_listdir(PyObject *self, PyObject *args)
 {
-	BPTR dlok;
-	char *name;
-	struct FileInfoBlock __aligned fib;
-	PyObject *d;
+    BPTR dlok;
+    char *name;
+    struct FileInfoBlock __aligned fib;
+    PyObject *d;
 
-	if (!PyArg_ParseTuple(args, "s", &name)) return NULL;
+    if (!PyArg_ParseTuple(args, "s:listdir", &name)) return NULL;
 
-	if ((d = PyList_New(0)) == NULL) return NULL;
+    if ((d = PyList_New(0)) == NULL) return NULL;
 
-	if(dlok=Lock(name,ACCESS_READ))
-	{
-		if(Examine(dlok,&fib))
-		{
-			while(ExNext(dlok,&fib))
-			{
-				PyObject *v = PyString_FromString(fib.fib_FileName);
-				if(v==NULL)
-				{
-					Py_DECREF(d); d=NULL; break;
-				}
+    if(dlok=Lock(name,ACCESS_READ))
+    {
+    	if(Examine(dlok,&fib))
+    	{
+    	    while(ExNext(dlok,&fib))
+    	    {
+    	    	PyObject *v = PyString_FromString(fib.fib_FileName);
+    	    	if(v==NULL)
+    	    	{
+    	    	    Py_DECREF(d); d=NULL; break;
+    	    	}
 
-				if(PyList_Append(d,v)!=0)
-				{
-					Py_DECREF(v); Py_DECREF(d); d=NULL; break;
-				}
-				Py_DECREF(v);
-			}
-		}
-		UnLock(dlok);
-	}
+    	    	if(PyList_Append(d,v)!=0)
+    	    	{
+    	    	    Py_DECREF(v); Py_DECREF(d); d=NULL; break;
+    	    	}
+    	    	Py_DECREF(v);
+    	    }
+    	}
+    	UnLock(dlok);
+    }
 
-	if(IoErr()==ERROR_NO_MORE_ENTRIES) return d;
+    if(IoErr()==ERROR_NO_MORE_ENTRIES) return d;
 
-	Py_DECREF(d);
-	errno=__io2errno(_OSERR=IoErr());
-	return amiga_error();
+    Py_DECREF(d);
+    errno=__io2errno(_OSERR=IoErr());
+    return amiga_error();
 }
+
+static char amiga_mkdir__doc__[] =
+"mkdir(path [, mode=0777]) -> None\n\
+Create a directory.";
 
 static PyObject *
 amiga_mkdir(PyObject *self, PyObject *args)
 {
-	int res;
-	char *path;
-	int mode = 0777;
-	if (!PyArg_ParseTuple(args, "s|i", &path, &mode)) return NULL;
-	Py_BEGIN_ALLOW_THREADS
+    int res;
+    char *path;
+    int mode = 0777;
+    if (!PyArg_ParseTuple(args, "s|i:mkdir", &path, &mode)) return NULL;
+    Py_BEGIN_ALLOW_THREADS
 #if defined INET225 || defined AROS
-	res = mkdir(path, mode);
+    res = mkdir(path, mode);
 #else
-	res = my_mkdir(path, mode);
+    res = my_mkdir(path, mode);
 #endif
-	Py_END_ALLOW_THREADS
-	if (res < 0) return amiga_error_with_filename(path);
-	Py_INCREF(Py_None); return Py_None;
+    Py_END_ALLOW_THREADS
+    if (res < 0) return amiga_error_with_filename(path);
+    Py_INCREF(Py_None); return Py_None;
 }
+
+static char amiga_rename__doc__[] =
+"rename(old, new) -> None\n\
+Rename a file or directory.";
 
 static PyObject *
 amiga_rename(PyObject *self, PyObject *args)
 {
-	return amiga_2str(args, rename);
+    return amiga_2str(args, "ss:rename", rename);
 }
+
+static char amiga_rmdir__doc__[] =
+"rmdir(path) -> None\n\
+Remove a directory.";
 
 static PyObject *
 amiga_rmdir(PyObject *self, PyObject *args)
 {
-	return amiga_1str(args, rmdir);
+    return amiga_1str(args, "s:rmdir", rmdir);
 }
+
+static char amiga_stat__doc__[] =
+"stat(path) -> (mode,ino,dev,nlink,uid,gid,size,atime,mtime,ctime)\n\
+Perform a stat system call on the given path.";
 
 static PyObject *
 amiga_stat(PyObject *self, PyObject *args)
 {
-	return amiga_do_stat(self, args, stat);
+	return amiga_do_stat(self, args, "s:stat", stat);
 }
 
 #ifdef HAVE_SYSTEM
+static char amiga_system__doc__[] =
+"system(command) -> exit_status\n\
+Execute the command (a string) in a subshell.";
+
 static PyObject *
 amiga_system(PyObject *self, PyObject *args)
 {
 	char *command;
 	long sts;
-	if (!PyArg_ParseTuple(args, "s", &command))
+	if (!PyArg_ParseTuple(args, "s:system", &command))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	sts = system(command);
@@ -439,6 +498,10 @@ amiga_system(PyObject *self, PyObject *args)
 #endif
 
 #if defined AMITCP || defined INET225 || defined AROS
+static char amiga_umask__doc__[] =
+"umask(new_mask) -> old_mask\n\
+Set the current numeric umask and return the previous umask.";
+
 static PyObject *
 amiga_umask(PyObject *self, PyObject *args)
 {
@@ -450,7 +513,7 @@ amiga_umask(PyObject *self, PyObject *args)
 	if (!checksocketlib()) return NULL;
 #  endif
 #endif
-	if (!PyArg_ParseTuple(args,"i",&i))
+	if (!PyArg_ParseTuple(args,"i:umask",&i))
 		return NULL;
 	i = umask(i);
 	if (i < 0)
@@ -460,12 +523,16 @@ amiga_umask(PyObject *self, PyObject *args)
 #endif
 
 #ifdef HAVE_UNAME
+static char amiga_uname__doc__[] =
+"uname() -> (sysname, nodename, release, version, machine)\n\
+Return a tuple identifying the current operating system.";
+
 static PyObject *
 amiga_uname(PyObject *self, PyObject *args)
 {
         struct utsname u;
         int res;
-        if (!PyArg_ParseTuple(args, ""))
+        if (!PyArg_ParseTuple(args, ":uname"))
                 return NULL;
         Py_BEGIN_ALLOW_THREADS
         res = uname(&u);
@@ -481,20 +548,36 @@ amiga_uname(PyObject *self, PyObject *args)
 }
 #endif
 
+static char amiga_unlink__doc__[] =
+"unlink(path) -> None\n\
+Remove a file (same as remove(path)).";
+
+static char amiga_remove__doc__[] =
+"remove(path) -> None\n\
+Remove a file (same as unlink(path)).";
+
 static PyObject *
 amiga_unlink(PyObject *self, PyObject *args)
 {
-	return amiga_1str(args, unlink);
+    return amiga_1str(args, "s:remove", unlink);
 }
 
 #if defined AMITCP  || defined INET225 || defined AROS
+static char amiga_utime__doc__[] =
+"utime(path, (atime, utime)) -> None\n\
+utime(path, None) -> None\n\
+Set the access and modified time of the file to the given values.  If the\n\
+second form is used, set the access and modified times to the current time.";
+
 static PyObject *
 amiga_utime(PyObject *self, PyObject *args)
 {
 	char *path;
 	long atime, mtime;
 	int res;
+	PyObject* arg;
 
+/* XXX should define struct utimbuf instead, above */
 #ifdef HAVE_UTIME_H
 	struct utimbuf buf;
 #define ATIME buf.actime
@@ -507,13 +590,27 @@ amiga_utime(PyObject *self, PyObject *args)
 #define UTIME_ARG buf
 #endif /* HAVE_UTIME_H */
 
-	if (!PyArg_ParseTuple(args, "(s(ll))", &path, &atime, &mtime))
+	if (!PyArg_ParseTuple(args, "sO:utime", &path, &arg))
 		return NULL;
-	ATIME = atime;
-	MTIME = mtime;
-	Py_BEGIN_ALLOW_THREADS
-	res = utime(path, UTIME_ARG);
-	Py_END_ALLOW_THREADS
+	if (arg == Py_None) {
+		/* optional time values not given */
+		Py_BEGIN_ALLOW_THREADS
+		res = utime(path, NULL);
+		Py_END_ALLOW_THREADS
+	}
+	else if (!PyArg_Parse(arg, "(ll)", &atime, &mtime)) {
+		PyErr_SetString(PyExc_TypeError,
+				"utime() arg 2 must be a tuple (atime, mtime)");
+		return NULL;
+	}
+	else {
+		ATIME = atime;
+		MTIME = mtime;
+		Py_BEGIN_ALLOW_THREADS
+		res = utime(path, UTIME_ARG);
+		Py_END_ALLOW_THREADS
+	}
+
 	if (res < 0)
 		return amiga_error_with_filename(path);
 	Py_INCREF(Py_None);
@@ -533,8 +630,11 @@ amiga_utime(PyObject *self, PyObject *args)
 /*     Maybe one day I'll implement a REAL execv ?? */
 
 
-
 #ifdef HAVE_GETEGID
+static char amiga_getegid__doc__[] =
+"getegid() -> egid\n\
+Return the current process's effective group id.";
+
 static PyObject *
 amiga_getegid(PyObject *self, PyObject *args)
 {
@@ -545,13 +645,17 @@ amiga_getegid(PyObject *self, PyObject *args)
 	if (!checksocketlib()) return NULL;
 #  endif
 #endif
-	if (!PyArg_Parse(args,""))
+	if (!PyArg_Parse(args,":getegid"))
 		return NULL;
 	return PyInt_FromLong((long)getegid());
 }
 #endif
 
 #ifdef HAVE_GETEUID
+static char amiga_geteuid__doc__[] =
+"geteuid() -> euid\n\
+Return the current process's effective user id.";
+
 static PyObject *
 amiga_geteuid(PyObject *self, PyObject *args)
 {
@@ -562,13 +666,17 @@ amiga_geteuid(PyObject *self, PyObject *args)
 	if (!checksocketlib()) return NULL;
 #  endif
 #endif
-	if (!PyArg_Parse(args,""))
+	if (!PyArg_Parse(args,":geteuid"))
 		return NULL;
 	return PyInt_FromLong((long)geteuid());
 }
 #endif
 
 #ifdef HAVE_GETGID
+static char amiga_getgid__doc__[] =
+"getgid() -> gid\n\
+Return the current process's group id.";
+
 static PyObject *
 amiga_getgid(PyObject *self, PyObject *args)
 {
@@ -579,21 +687,29 @@ amiga_getgid(PyObject *self, PyObject *args)
 	if (!checksocketlib()) return NULL;
 #  endif 
 #endif
-	if (!PyArg_Parse(args,""))
+	if (!PyArg_Parse(args,":getgid"))
 		return NULL;
 	return PyInt_FromLong((long)getgid());
 }
 #endif
 
+static char amiga_getpid__doc__[] =
+"getpid() -> pid\n\
+Return the current process id";
+
 static PyObject *
 amiga_getpid(PyObject *self, PyObject *args)
 {
-	if (!PyArg_ParseTuple(args,""))
+	if (!PyArg_ParseTuple(args,":getpid"))
 		return NULL;
 	return PyInt_FromLong((long)FindTask(0));
 }
 
 #ifdef HAVE_GETPGRP
+static char amiga_getpgrp__doc__[] =
+"getpgrp() -> pgrp\n\
+Return the current process group id.";
+
 static PyObject *
 amiga_getpgrp(PyObject *self, PyObject *args)
 {
@@ -604,7 +720,7 @@ amiga_getpgrp(PyObject *self, PyObject *args)
 	if (!checksocketlib()) return NULL;
 #  endif
 #endif
-	if (!PyArg_ParseTuple(args,""))
+	if (!PyArg_ParseTuple(args,":getpgrp"))
 		return NULL;
 #ifdef GETPGRP_HAVE_ARG
 	return PyInt_FromLong((long)getpgrp(0));
@@ -615,6 +731,10 @@ amiga_getpgrp(PyObject *self, PyObject *args)
 #endif /* HAVE_GETPGRP */
 
 #ifdef HAVE_SETPGRP
+static char amiga_setpgrp__doc__[] =
+"setpgrp() -> None\n\
+Make this process a session leader.";
+
 static PyObject *
 amiga_setpgrp(PyObject *self, PyObject *args)
 {
@@ -625,7 +745,7 @@ amiga_setpgrp(PyObject *self, PyObject *args)
 	if (!checksocketlib()) return NULL;
 #  endif
 #endif
-	if (!PyArg_ParseTuple(args,""))
+	if (!PyArg_ParseTuple(args,":setpgrp"))
 		return NULL;
 #ifdef SETPGRP_HAVE_ARG
 	if (setpgrp(0, 0) < 0)
@@ -640,16 +760,24 @@ amiga_setpgrp(PyObject *self, PyObject *args)
 #endif /* HAVE_SETPGRP */
 
 #ifdef HAVE_GETPPID
+static char amiga_getppid__doc__[] =
+"getppid() -> ppid\n\
+Return the parent's process id.";
+
 static PyObject *
 amiga_getppid(PyObject *self, PyObject *args)
 {
-	if (!PyArg_ParseTuple(args,""))
+	if (!PyArg_ParseTuple(args,":getppid"))
 		return NULL;
 	return PyInt_FromLong((long)getppid());
 }
 #endif
 
 #ifdef HAVE_GETUID
+static char amiga_getuid__doc__[] =
+"getuid() -> uid\n\
+Return the current process's user id.";
+
 static PyObject *
 amiga_getuid(PyObject *self, PyObject *args)
 {
@@ -660,13 +788,17 @@ amiga_getuid(PyObject *self, PyObject *args)
 	if (!checksocketlib()) return NULL;
 #  endif
 #endif
-	if (!PyArg_ParseTuple(args,""))
+	if (!PyArg_ParseTuple(args,":getuid"))
 		return NULL;
 	return PyInt_FromLong((long)getuid());
 }
 #endif
 
 #ifdef HAVE_POPEN
+static char amiga_popen__doc__[] =
+"popen(command [, mode='r' [, bufsize]]) -> pipe\n\
+Open a pipe to/from a command returning a file object.";
+
 static PyObject *
 amiga_popen(PyObject *self, PyObject *args)
 {
@@ -675,7 +807,7 @@ amiga_popen(PyObject *self, PyObject *args)
 	int bufsize = -1;
 	FILE *fp;
 	PyObject *f;
-	if (!PyArg_ParseTuple(args, "s|si", &name, &mode, &bufsize))
+	if (!PyArg_ParseTuple(args, "s|si:popen", &name, &mode, &bufsize))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	fp = popen(name, mode);
@@ -690,6 +822,10 @@ amiga_popen(PyObject *self, PyObject *args)
 #endif
 
 #ifdef HAVE_SETUID
+static char amiga_setuid__doc__[] =
+"setuid(uid) -> None\n\
+Set the current process's user id.";
+
 static PyObject *
 amiga_setuid(PyObject *self, PyObject *args)
 {
@@ -701,7 +837,7 @@ amiga_setuid(PyObject *self, PyObject *args)
 	if (!checksocketlib()) return NULL;
 #  endif
 #endif
-	if (!PyArg_ParseTuple(args, "i", &uid))
+	if (!PyArg_ParseTuple(args, "i:setuid", &uid))
 		return NULL;
 	if (setuid(uid) < 0)
 		return amiga_error();
@@ -711,6 +847,10 @@ amiga_setuid(PyObject *self, PyObject *args)
 #endif /* HAVE_SETUID */
 
 #ifdef HAVE_SETGID
+static char amiga_setgid__doc__[] =
+"setgid(gid) -> None\n\
+Set the current process's group id.";
+
 static PyObject *
 amiga_setgid(PyObject *self, PyObject *args)
 {
@@ -722,7 +862,7 @@ amiga_setgid(PyObject *self, PyObject *args)
 	if (!checksocketlib()) return NULL;
 #   endif
 #endif
-	if (!PyArg_ParseTuple(args, "i", &gid))
+	if (!PyArg_ParseTuple(args, "i:setgid", &gid))
 		return NULL;
 	if (setgid(gid) < 0)
 		return amiga_error();
@@ -731,24 +871,32 @@ amiga_setgid(PyObject *self, PyObject *args)
 }
 #endif /* HAVE_SETGID */
 
+static char amiga_lstat__doc__[] =
+"lstat(path) -> (mode,ino,dev,nlink,uid,gid,size,atime,mtime,ctime)\n\
+Like stat(path), but do not follow symbolic links.";
+
 static PyObject *
 amiga_lstat(PyObject *self, PyObject *args)
 {
 #ifdef HAVE_LSTAT
-	return amiga_do_stat(self, args, lstat);
+	return amiga_do_stat(self, args, "s:lstat", lstat);
 #else /* !HAVE_LSTAT */
-	return amiga_do_stat(self, args, stat);
+	return amiga_do_stat(self, args, "s:lstat", stat);
 #endif /* !HAVE_LSTAT */
 }
 
 #ifdef HAVE_READLINK
+static char amiga_readlink__doc__[] =
+"readlink(path) -> path\n\
+Return a string representing the path to which the symbolic link points.";
+
 static PyObject *
 amiga_readlink(PyObject *self, PyObject *args)
 {
 	char buf[MAXPATHLEN];
 	char *path;
 	int n;
-	if (!PyArg_ParseTuple(args, "s", &path))
+	if (!PyArg_ParseTuple(args, "s:readlink", &path))
 	        return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	n = readlink(path, buf, (int) sizeof buf);
@@ -760,14 +908,22 @@ amiga_readlink(PyObject *self, PyObject *args)
 #endif
 
 #ifdef HAVE_SYMLINK
+static char amiga_symlink__doc__[] =
+"symlink(src, dst) -> None\n\
+Create a symbolic link.";
+
 static PyObject *
 amiga_symlink(PyObject *self, PyObject *args)
 {
-	return amiga_2str(args, symlink);
+    return amiga_2str(args, "ss:symlink", symlink);
 }
 #endif
 
 #ifdef HAVE_SETSID
+static char amiga_setsid__doc__[] =
+"setsid() -> None\n\
+Call the system call setsid().";
+
 static PyObject *
 amiga_setsid(PyObject *self, PyObject *args)
 {
@@ -778,7 +934,7 @@ amiga_setsid(PyObject *self, PyObject *args)
 	if (!checksocketlib()) return NULL;
 #  endif
 #endif
-	if (!PyArg_ParseTuple(args,""))
+	if (!PyArg_ParseTuple(args,":setsid"))
 		return NULL;
 	if ((int)setsid() < 0)
 		return amiga_error();
@@ -788,11 +944,15 @@ amiga_setsid(PyObject *self, PyObject *args)
 #endif /* HAVE_SETSID */
 
 #ifdef HAVE_SETPGID
+static char amiga_setpgid__doc__[] =
+"setpgid(pid, pgrp) -> None\n\
+Call the system call setpgid().";
+
 static PyObject *
 amiga_setpgid(PyObject *self, PyObject *args)
 {
 	int pid, pgrp;
-	if (!PyArg_ParseTuple(args, "(ii)", &pid, &pgrp))
+	if (!PyArg_ParseTuple(args, "ii:setpgid", &pid, &pgrp))
 		return NULL;
 	if (setpgid(pid, pgrp) < 0)
 		return amiga_error();
@@ -803,31 +963,36 @@ amiga_setpgid(PyObject *self, PyObject *args)
 
 /* Functions acting on file descriptors */
 
+static char amiga_open__doc__[] =
+"open(filename, flag [, mode=0777]) -> fd\n\
+Open a file (for low level IO).";
+
 static PyObject *
 amiga_open(PyObject *self, PyObject *args)
 {
-	char *file;
-	int flag;
-	int mode = 0777;
-	int fd;
-	if (!PyArg_ParseTuple(args, "(si)", &file, &flag)) {
-		PyErr_Clear();
-		if (!PyArg_ParseTuple(args, "(sii)", &file, &flag, &mode))
-			return NULL;
-	}
-	Py_BEGIN_ALLOW_THREADS
-	fd = open(file, flag, mode);
-	Py_END_ALLOW_THREADS
-	if (fd < 0)
-		return amiga_error_with_filename(file);
-	return PyInt_FromLong((long)fd);
+    char *file;
+    int flag;
+    int mode = 0777;
+    int fd;
+    if (!PyArg_ParseTuple(args, "si|i:open", &file, &flag)) return NULL;
+
+    Py_BEGIN_ALLOW_THREADS
+    fd = open(file, flag, mode);
+    Py_END_ALLOW_THREADS
+    if (fd < 0)
+    	return amiga_error_with_filename(file);
+    return PyInt_FromLong((long)fd);
 }
+
+static char amiga_close__doc__[] =
+"close(fd) -> None\n\
+Close a file descriptor (for low level IO).";
 
 static PyObject *
 amiga_close(PyObject *self, PyObject *args)
 {
 	int fd, res;
-	if (!PyArg_ParseTuple(args, "i", &fd))
+	if (!PyArg_ParseTuple(args, "i:close", &fd))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	res = close(fd);
@@ -839,11 +1004,16 @@ amiga_close(PyObject *self, PyObject *args)
 }
 
 #ifdef HAVE_FTRUNCATE
+static char amiga_ftruncate__doc__[] =
+"ftruncate(fd, length) -> None\n\
+Truncate a file to a specified length.";
+
 static PyObject *amiga_ftruncate( PyObject *self, PyObject *args )
 {
-    int fd, length, result;
+    int   fd, result;
+    off_t length;
     
-    if( !PyArg_ParseTuple( args, "ii", &fd, &length ) ) return NULL;
+    if( !PyArg_ParseTuple( args, "il:ftruncate", &fd, &length ) ) return NULL;
     
     Py_BEGIN_ALLOW_THREADS
     result = ftruncate( fd, length );
@@ -862,6 +1032,10 @@ static PyObject *amiga_ftruncate( PyObject *self, PyObject *args )
 #endif
 
 #if defined AMITCP || defined INET225 || defined AROS
+static char amiga_dup__doc__[] =
+"dup(fd) -> fd2\n\
+Return a duplicate of a file descriptor.";
+
 static PyObject *
 amiga_dup(PyObject *self, PyObject *args)
 {
@@ -876,7 +1050,7 @@ amiga_dup(PyObject *self, PyObject *args)
     }
 #endif
 
-    if (!PyArg_ParseTuple(args, "i", &fd))
+    if (!PyArg_ParseTuple(args, "i:dup", &fd))
     	return NULL;
     Py_BEGIN_ALLOW_THREADS
     fd = dup(fd);
@@ -885,6 +1059,10 @@ amiga_dup(PyObject *self, PyObject *args)
     	return amiga_error();
     return PyInt_FromLong((long)fd);
 }
+
+static char amiga_dup2__doc__[] =
+"dup2(fd, fd2) -> None\n\
+Duplicate file descriptor.";
 
 static PyObject *
 amiga_dup2(PyObject *self, PyObject *args)
@@ -900,7 +1078,7 @@ amiga_dup2(PyObject *self, PyObject *args)
     }
 #endif
     
-    if (!PyArg_ParseTuple(args, "(ii)", &fd, &fd2))
+    if (!PyArg_ParseTuple(args, "ii:dup2", &fd, &fd2))
     	return NULL;
     Py_BEGIN_ALLOW_THREADS
     res = dup2(fd, fd2);
@@ -912,12 +1090,17 @@ amiga_dup2(PyObject *self, PyObject *args)
 }
 #endif
 
+static char amiga_lseek__doc__[] =
+"lseek(fd, pos, how) -> newpos\n\
+Set the current position of a file descriptor.";
+
 static PyObject *
 amiga_lseek(PyObject *self, PyObject *args)
 {
-	int fd, how;
-	long pos, res;
-	if (!PyArg_ParseTuple(args, "(ili)", &fd, &pos, &how))
+	int   fd, how, res;
+	off_t pos;
+	
+	if (!PyArg_ParseTuple(args, "ili:lseek", &fd, &pos, &how))
 		return NULL;
 #ifdef SEEK_SET
 	/* Turn 0, 1, 2 into SEEK_{SET,CUR,END} */
@@ -935,12 +1118,16 @@ amiga_lseek(PyObject *self, PyObject *args)
 	return PyInt_FromLong(res);
 }
 
+static char amiga_read__doc__[] =
+"read(fd, buffersize) -> string\n\
+Read a file descriptor.";
+
 static PyObject *
 amiga_read(PyObject *self, PyObject *args)
 {
 	int fd, size;
 	PyObject *buffer;
-	if (!PyArg_ParseTuple(args, "(ii)", &fd, &size))
+	if (!PyArg_ParseTuple(args, "ii:read", &fd, &size))
 		return NULL;
 	buffer = PyString_FromStringAndSize((char *)NULL, size);
 	if (buffer == NULL)
@@ -956,12 +1143,16 @@ amiga_read(PyObject *self, PyObject *args)
 	return buffer;
 }
 
+static char amiga_write__doc__[] =
+"write(fd, string) -> byteswritten\n\
+Write a string to a file descriptor.";
+
 static PyObject *
 amiga_write(PyObject *self, PyObject *args)
 {
 	int fd, size;
 	char *buffer;
-	if (!PyArg_ParseTuple(args, "(is#)", &fd, &buffer, &size))
+	if (!PyArg_ParseTuple(args, "is#:write", &fd, &buffer, &size))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	size = write(fd, buffer, size);
@@ -971,13 +1162,17 @@ amiga_write(PyObject *self, PyObject *args)
 	return PyInt_FromLong((long)size);
 }
 
+static char amiga_fstat__doc__[]=
+"fstat(fd) -> (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime)\n\
+Like stat(), but for an open file descriptor.";
+
 static PyObject *
 amiga_fstat(PyObject *self, PyObject *args)
 {
 	int fd;
 	struct stat st;
 	int res;
-	if (!PyArg_ParseTuple(args, "i", &fd))
+	if (!PyArg_ParseTuple(args, "i:fstat", &fd))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	res = fstat(fd, &st);
@@ -997,6 +1192,10 @@ amiga_fstat(PyObject *self, PyObject *args)
 			(long)st.st_ctime);
 }
 
+static char amiga_fdopen__doc__[] =
+"fdopen(fd, [, mode='r' [, bufsize]]) -> file_object\n\
+Return an open file object connected to a file descriptor.";
+
 static PyObject *
 amiga_fdopen(PyObject *self, PyObject *args)
 {
@@ -1005,7 +1204,7 @@ amiga_fdopen(PyObject *self, PyObject *args)
 	int bufsize = -1;
 	FILE *fp;
 	PyObject *f;
-	if (!PyArg_ParseTuple(args, "i|si", &fd, &mode, &bufsize))
+	if (!PyArg_ParseTuple(args, "i|si:fdopen", &fd, &mode, &bufsize))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	fp = fdopen(fd, mode);
@@ -1041,6 +1240,10 @@ static int pipe(int *fildes)
 	return -1;
 }
 
+static char amiga_pipe__doc__[] =
+"pipe() -> (read_end, write_end)\n\
+Create a pipe.";
+
 static PyObject *
 amiga_pipe(PyObject *self, PyObject *args)
 {
@@ -1066,7 +1269,7 @@ amiga_fullpath(PyObject *self, PyObject *args)
 	char *path;
 	char buf[MAXPATHLEN];
 
-	if (!PyArg_ParseTuple(args, "s", &path)) return NULL;
+	if (!PyArg_ParseTuple(args, "s:fullpath", &path)) return NULL;
 
 	Py_BEGIN_ALLOW_THREADS
 	if(lk=Lock(path,SHARED_LOCK))
@@ -1084,11 +1287,15 @@ amiga_fullpath(PyObject *self, PyObject *args)
 	else return PyString_FromString(buf);
 }
 
+static char amiga_putenv__doc__[] =
+"putenv(key, value) -> None\n\
+Change or add an environment variable.";
+
 static PyObject *amiga_putenv(PyObject *self, PyObject *args)
 {
 	char *s1, *s2;
 
-	if (!PyArg_ParseTuple(args, "ss", &s1, &s2)) return NULL;
+	if (!PyArg_ParseTuple(args, "ss:putenv", &s1, &s2)) return NULL;
 	if(setenv(s1,s2,1))
 	{
 		amiga_error(); return NULL;
@@ -1098,7 +1305,7 @@ static PyObject *amiga_putenv(PyObject *self, PyObject *args)
 }
 
 #ifdef HAVE_STRERROR
-static char posix_strerror__doc__[] =
+static char amiga_strerror__doc__[] =
 "strerror(code) -> string\n\
 Translate an error code to a message string.";
 
@@ -1107,7 +1314,7 @@ amiga_strerror(PyObject *self, PyObject *args)
 {
 	int code;
 	char *message;
-	if (!PyArg_ParseTuple(args, "i", &code))
+	if (!PyArg_ParseTuple(args, "i:strerror", &code))
 		return NULL;
 	message = strerror(code);
 	if (message == NULL) {
@@ -1134,123 +1341,107 @@ amiga_crc32(PyObject *self, PyObject *args)
 #endif
 
 static struct PyMethodDef amiga_methods[] = {
-    { "chdir",     amiga_chdir,     METH_VARARGS },
-    { "chmod",     amiga_chmod,     METH_VARARGS },
+    { "chdir",     amiga_chdir,     METH_VARARGS, amiga_chdir__doc__ 	 },
+    { "chmod",     amiga_chmod,     METH_VARARGS, amiga_chmod__doc__ 	 },
 #ifdef HAVE_CHOWN
-    { "chown",     amiga_chown,     METH_VARARGS },
+    { "chown",     amiga_chown,     METH_VARARGS, amiga_chown__doc__ 	 },
 #endif
 #ifdef HAVE_GETCWD
-    { "getcwd",    amiga_getcwd,    METH_VARARGS },
+    { "getcwd",    amiga_getcwd,    METH_VARARGS, amiga_getcwd__doc__ 	 },
 #endif
-    { "fullpath",  amiga_fullpath,  METH_VARARGS },
+    { "fullpath",  amiga_fullpath,  METH_VARARGS, NULL      	    	 },
 #ifdef HAVE_LINK
-    { "link",      amiga_link,      METH_VARARGS },
+    { "link",      amiga_link,      METH_VARARGS, amiga_link__doc__ 	 },
 #endif
-    { "listdir",   amiga_listdir,   METH_VARARGS },
-    { "lstat",     amiga_lstat,     METH_VARARGS },
-    { "mkdir",     amiga_mkdir ,    METH_VARARGS },
+    { "listdir",   amiga_listdir,   METH_VARARGS, amiga_listdir__doc__   },
+    { "lstat",     amiga_lstat,     METH_VARARGS, amiga_lstat__doc__ 	 },
+    { "mkdir",     amiga_mkdir ,    METH_VARARGS, amiga_mkdir__doc__ 	 },
 #ifdef HAVE_READLINK
-    { "readlink",  amiga_readlink,  METH_VARARGS },
+    { "readlink",  amiga_readlink,  METH_VARARGS, amiga_readlink__doc__  },
 #endif
-    { "rename",    amiga_rename,    METH_VARARGS },
-    { "rmdir",     amiga_rmdir,     METH_VARARGS },
-    { "stat",      amiga_stat,      METH_VARARGS },
+    { "rename",    amiga_rename,    METH_VARARGS, amiga_rename__doc__ 	 },
+    { "rmdir",     amiga_rmdir,     METH_VARARGS, amiga_rmdir__doc__ 	 },
+    { "stat",      amiga_stat,      METH_VARARGS, amiga_stat__doc__ 	 },
 #ifdef HAVE_SYMLINK
-    { "symlink",   amiga_symlink,   METH_VARARGS },
+    { "symlink",   amiga_symlink,   METH_VARARGS, amiga_symlink__doc__   },
 #endif
 #ifdef HAVE_SYSTEM
-    { "system",    amiga_system,    METH_VARARGS },
+    { "system",    amiga_system,    METH_VARARGS, amiga_system__doc__ 	 },
 #endif
 #if defined AMITCP || defined INET225 || defined AROS
-    { "umask",     amiga_umask,     METH_VARARGS },
+    { "umask",     amiga_umask,     METH_VARARGS, amiga_umask__doc__ 	 },
 #endif
 #ifdef HAVE_UNAME
-    { "uname",     amiga_uname,     METH_VARARGS },
+    { "uname",     amiga_uname,     METH_VARARGS, amiga_uname__doc__ 	 },
 #endif
-    { "unlink",    amiga_unlink,    METH_VARARGS },
-    { "remove",    amiga_unlink,    METH_VARARGS },
+    { "unlink",    amiga_unlink,    METH_VARARGS, amiga_unlink__doc__ 	 },
+    { "remove",    amiga_unlink,    METH_VARARGS, amiga_remove__doc__ 	 },
 #if defined AMITCP || defined INET225 || defined AROS 
-    { "utime",     amiga_utime,     METH_VARARGS },
+    { "utime",     amiga_utime,     METH_VARARGS, amiga_utime__doc__ 	 },
 #endif
-#ifdef HAVE_TIMES
-    { "times",     amiga_times,     METH_VARARGS },
-#endif
-#ifdef HAVE_EXECV
-    { "execv",	   amiga_execv,     METH_VARARGS },
-    { "execve",	   amiga_execve,    METH_VARARGS },
-#endif /* HAVE_EXECV */
 #ifdef HAVE_GETEGID
-    { "getegid",   amiga_getegid,   METH_VARARGS },
+    { "getegid",   amiga_getegid,   METH_VARARGS, amiga_getegid__doc__   },
 #endif
 #ifdef HAVE_GETEUID
-    { "geteuid",   amiga_geteuid,   METH_VARARGS },
+    { "geteuid",   amiga_geteuid,   METH_VARARGS, amiga_geteuid__doc__   },
 #endif
 #ifdef HAVE_GETGID
-    { "getgid",    amiga_getgid,    METH_VARARGS },
+    { "getgid",    amiga_getgid,    METH_VARARGS, amiga_getgid__doc__ 	 },
 #endif
-    { "getpid",    amiga_getpid,    METH_VARARGS },
+    { "getpid",    amiga_getpid,    METH_VARARGS, amiga_getpid__doc__ 	 },
 #ifdef HAVE_GETPGRP
-    { "getpgrp",   amiga_getpgrp,   METH_VARARGS },
+    { "getpgrp",   amiga_getpgrp,   METH_VARARGS, amiga_getpgrp__doc__   },
 #endif
 #ifdef HAVE_GETPPID
-    { "getppid",   amiga_getppid,   METH_VARARGS },
+    { "getppid",   amiga_getppid,   METH_VARARGS, amiga_getppid__doc__   },
 #endif
 #ifdef HAVE_GETUID
-    { "getuid",    amiga_getuid,    METH_VARARGS },
+    { "getuid",    amiga_getuid,    METH_VARARGS, amiga_getuid__doc__ 	 },
 #endif
 #ifdef HAVE_POPEN
-    { "popen",     amiga_popen,     METG_VARARGS},
+    { "popen",     amiga_popen,     METG_VARARGS, amiga_popen__doc__ 	 },
 #endif
 #ifdef HAVE_SETUID
-    { "setuid",    amiga_setuid,    METH_VARARGS },
+    { "setuid",    amiga_setuid,    METH_VARARGS, amiga_setuid__doc__ 	 },
 #endif
 #ifdef HAVE_SETGID
-    { "setgid",    amiga_setgid,    METH_VARARGS },
+    { "setgid",    amiga_setgid,    METH_VARARGS, amiga_setgid__doc__    },
 #endif
 #ifdef HAVE_SETPGRP
-    { "setpgrp",   amiga_setpgrp,   METH_VARARGS },
+    { "setpgrp",   amiga_setpgrp,   METH_VARARGS, amiga_setpgrp__doc__   },
 #endif
 #ifdef HAVE_SETSID
-    { "setsid",    amiga_setsid,    METH_VARARGS },
+    { "setsid",    amiga_setsid,    METH_VARARGS, amiga_setsid__doc__    },
 #endif
 #ifdef HAVE_SETPGID
-    { "setpgid",   amiga_setpgid,   METH_VARARGS },
+    { "setpgid",   amiga_setpgid,   METH_VARARGS, amiga_setpgid__doc__   },
 #endif
-#ifdef HAVE_TCGETPGRP
-    { "tcgetpgrp", amiga_tcgetpgrp, METH_VARARGS },
-#endif
-#ifdef HAVE_TCSETPGRP
-    { "tcsetpgrp", amiga_tcsetpgrp, METH_VARARGS },
-#endif
-    { "open",      amiga_open,      METH_VARARGS },
-    { "close",     amiga_close,     METH_VARARGS },
+    { "open",      amiga_open,      METH_VARARGS, amiga_open__doc__ 	 },
+    { "close",     amiga_close,     METH_VARARGS, amiga_close__doc__ 	 },
 #if defined AMITCP || defined INET225 || defined AROS
-    { "dup",       amiga_dup,       METH_VARARGS },
-    { "dup2",      amiga_dup2,      METH_VARARGS },
+    { "dup",       amiga_dup,       METH_VARARGS, amiga_dup__doc__  	 },
+    { "dup2",      amiga_dup2,      METH_VARARGS, amiga_dup2__doc__ 	 },
 #endif
-    { "lseek",     amiga_lseek,     METH_VARARGS },
-    { "read",      amiga_read,      METH_VARARGS },
-    { "write",     amiga_write,     METH_VARARGS },
-    { "fstat",     amiga_fstat,     METH_VARARGS },
-    { "fdopen",    amiga_fdopen,    METH_VARARGS },
-#ifdef HAVE_MKFIFO
-    { "mkfifo",	   amiga_mkfifo, ,  METH_VARARGS },
-#endif
+    { "lseek",     amiga_lseek,     METH_VARARGS, amiga_lseek__doc__ 	 },
+    { "read",      amiga_read,      METH_VARARGS, amiga_read__doc__ 	 },
+    { "write",     amiga_write,     METH_VARARGS, amiga_write__doc__ 	 },
+    { "fstat",     amiga_fstat,     METH_VARARGS, amiga_fstat__doc__ 	 },
+    { "fdopen",    amiga_fdopen,    METH_VARARGS, amiga_fdopen__doc__    },
 #ifdef HAVE_FTRUNCATE
-    { "ftruncate", amiga_ftruncate, METH_VARARGS },
+    { "ftruncate", amiga_ftruncate, METH_VARARGS, amiga_ftruncate__doc__ },
 #endif
 #ifdef HAVE_PUTENV
-    { "putenv",    amiga_putenv,    METH_VARARGS },
+    { "putenv",    amiga_putenv,    METH_VARARGS, amiga_putenv__doc__    },
 #endif
 #ifdef HAVE_STRERROR
-    { "strerror",  amiga_strerror,  METH_VARARGS },
+    { "strerror",  amiga_strerror,  METH_VARARGS, amiga_strerror__doc__  },
 #endif
 #if 0
     /* XXX TODO: implement threads. Otherwise pipe() is useless. */
-    {"pipe",       amiga_pipe,      METH_VARARGS },
+    {"pipe",       amiga_pipe,      METH_VARARGS, amiga_pipe__doc__      },
 #endif
 #ifndef AROS
-    {"crc32",      amiga_crc32,     METH_VARARGS },
+    {"crc32",      amiga_crc32,     METH_VARARGS, NULL                   },
 #endif
 
     {NULL,         NULL}
