@@ -211,7 +211,9 @@ FILE *infp;
 
 /* function prototypes */
 extern unsigned short updcrc(unsigned short, unsigned char *, int);
+#ifndef HAVE_GETOPT
 extern int getopt(int argc, char *argv[], char *optstring);
+#endif
 void usage();
 int extract(char *parent, int skip);
 int extractfile(struct fileHdr *fh, int skip);

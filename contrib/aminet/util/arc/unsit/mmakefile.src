@@ -4,11 +4,11 @@
 
 include $(TOP)/config/make.cfg
 
-FILES := getopt unsit updcrc
+FILES := unsit updcrc
 
 EXEDIR := $(CONTRIBDIR)/aminet
 
-USER_CFLAGS := -DAROS
+USER_CFLAGS := -DAROS -DHAVE_GETOPT=1
 
 #MM aminet-util-arc-unsit : includes linklibs
 
