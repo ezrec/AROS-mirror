@@ -8,12 +8,6 @@ FILES := \
 	Modules/main \
 	Modules/python
 
-LIBS  := \
-	-lpython-modules \
-	-lpython-objects \
-	-lpython-python \
-	-lpython-parser
-
 EXEDIR := $(CONTRIBDIR)/Python
 EXE := $(EXEDIR)/Python
 
@@ -23,14 +17,21 @@ USE_AMIGALIB := yes
 USE_MLIB := yes
 USE_ZLIB := yes
 
-USER_CFLAGS := -I$(TOP)/$(CURDIR)/Include
-LDFLAGS += $(LIBS)
+USER_CFLAGS  := -I$(TOP)/$(CURDIR)/Include -DAROS
 
 #MM contrib-python : setup-contrib-python 
 #MM contrib-python : linklibs-python-modules linklibs-python-objects
 #MM contrib-python : linklibs-python-python linklibs-python-parser
 
 %make_prog_setup mmake=contrib-python
+
+LIBS := \
+	-lpython-python \
+	-lpython-objects \
+	-lpython-modules \
+	-lpython-parser \
+	-lpython-python \
+	$(LIBS)
 
 contrib-python : setup $(EXE)
 
