@@ -1,7 +1,7 @@
 # Generated automatically from Makefile.in by configure.
 # Makefile source for abcm2ps
 
-VERSION = 3.1.4
+VERSION = 3.1.17
 
 CC = gcc
 INSTALL = /usr/bin/install -c
@@ -61,7 +61,6 @@ dist:
 		abcm2ps-$(VERSION)/Makefile \
 		abcm2ps-$(VERSION)/Makefile.w32 \
 		abcm2ps-$(VERSION)/Makefile.in \
-		abcm2ps-$(VERSION)/New.Features \
 		abcm2ps-$(VERSION)/README \
 		abcm2ps-$(VERSION)/abc-draft.txt \
 		abcm2ps-$(VERSION)/abc2ps.c \
@@ -79,6 +78,7 @@ dist:
 		abcm2ps-$(VERSION)/deco.abc \
 		abcm2ps-$(VERSION)/draw.c \
 		abcm2ps-$(VERSION)/fbook.fmt \
+		abcm2ps-$(VERSION)/features.txt \
 		abcm2ps-$(VERSION)/fonts.fmt \
 		abcm2ps-$(VERSION)/format.c \
 		abcm2ps-$(VERSION)/format.txt \

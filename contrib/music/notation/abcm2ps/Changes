@@ -1,3 +1,82 @@
+---- Version 3.1.17 - 02/12/08 ----
+
+Have decorations on spaces ('y').
+Better vertical offset of rests when multi-voices.
+
+---- Version 3.1.16 - 02/12/01 ----
+
+Bad crescendo/diminuendo when ends at start of line.
+Put the dynamic decorations above the staff for upper voices.
+Page numbering KO since 3.1.14.
+
+---- Version 3.1.15 - 02/11/24 ----
+
+Draw 'x' heads in drum voices when sharp notes.
+'clef=P' / 'perc' added for K: and V:.
+Draw the repeat number of multi repeat bars.
+Bad horizontal space in multi repeat bars.
+Have slurs to, from, or inside grace note sequences (not clean yet).
+May change the scale inside a tune.
+
+---- Version 3.1.14 - 02/11/17 ----
+
+Problems with %%scale and %%leftmargin.
+Overlap when annotations below the staff.
+
+---- Version 3.1.13 - 02/10/27 ----
+
+Bad postscript when tempo with unit note < crotchet.
+
+---- Version 3.1.12 - 02/10/20 ----
+
+Crash when %%staves with only one secundary voice.
+
+---- Version 3.1.11 - 02/10/13 ----
+
+Adjust horizontal offset of grace notes.
+Bad grace notes staff when multi-voices.
+
+---- Version 3.1.10 - 02/10/06 ----
+
+Bad postscript when accidentals in grace notes since 3.1.8.
+Center the separators (%%sep).
+%%partsbox added.
+New.Features moved to features.txt.
+
+---- Version 3.1.9 - 02/09/29 ----
+
+Handle different note lengths in grace notes.
+
+---- Version 3.1.8 - 02/09/22 ----
+
+Handle chords in grace notes.
+Bad dot position on some single quavers.
+Change some glyphs.
+More space between lyric words under staff.
+
+---- Version 3.1.7 - 02/09/15 ----
+
+Tempo and parts were not printed when %%staves changed.
+Handle different note lengths in chords (not clean yet).
+Problem when grace notes and multi-voices.
+Problems with voice overlay.
+Accept clef names alone in V:.
+
+---- Version 3.1.6 - 02/09/08 ----
+
+Have vertical offset from the note in guitar chord "@x,y".
+Bad page numbering since 3.1.5.
+Have vertical room for grace notes.
+
+---- Version 3.1.5 - 02/09/01 ----
+
+Lyric problem when starting on a grace note.
+Better staff bracket (from Guido Gonzatto).
+Change some glyphs.
+Adjust grace notes.
+Bad slurs at start and end of line.
+Have a new page number in %%newpage.
+
 ---- Version 3.1.4 - 02/08/18 ----
 
 May have slurs on spaces ('y').
