@@ -6,6 +6,7 @@
 #include <proto/exec.h>
 #include <proto/intuition.h>
 #include <proto/gadtools.h>
+#include <aros/debug.h>
 
 #define GD_Gadget0                             0
 #define GD_Gadget1                             1
@@ -42,41 +43,41 @@ struct TextAttr topaz8 = {
     ( STRPTR )"topaz.font", 8, 0x00, 0x01 };
 
 struct TagItem    WindowTags[] = {
-    WA_Left,          -10,
-    WA_Top,           -10,
-    WA_Width,         610,
-    WA_Height,        138,
-    WA_IDCMP,         IDCMP_GADGETUP|IDCMP_MENUPICK|IDCMP_VANILLAKEY|IDCMP_CLOSEWINDOW|IDCMP_REFRESHWINDOW|IDCMP_CHANGEWINDOW,
-    WA_Flags,         WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_CLOSEGADGET|WFLG_SMART_REFRESH|WFLG_ACTIVATE,
-    WA_Gadgets,       0l,
-    WA_Title,         (LONG)windowtitle,
-    WA_MinWidth,      200,
-    WA_MinHeight,     11,
-    WA_MaxWidth,      611,
-    WA_MaxHeight,     137,
-    WA_Zoom,          (Tag)Zoom,
-    TAG_DONE };
+    {WA_Left,          -10},
+    {WA_Top,           -10},
+    {WA_Width,         610},
+    {WA_Height,        138},
+    {WA_IDCMP,         IDCMP_GADGETUP|IDCMP_MENUPICK|IDCMP_VANILLAKEY|IDCMP_CLOSEWINDOW|IDCMP_REFRESHWINDOW|IDCMP_CHANGEWINDOW},
+    {WA_Flags,         WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_CLOSEGADGET|WFLG_SMART_REFRESH|WFLG_ACTIVATE},
+    {WA_Gadgets,       0l},
+    {WA_Title,         (LONG)windowtitle},
+    {WA_MinWidth,      200},
+    {WA_MinHeight,     11},
+    {WA_MaxWidth,      611},
+    {WA_MaxHeight,     137},
+    {WA_Zoom,          (Tag)Zoom},
+    {TAG_DONE }};
 
 struct IntuiText  IText[] = {
     2, 0, JAM1,45, 17, &topaz8, (UBYTE *)"Hotkeys:", NULL };
 
 struct NewMenu NewMenu[] = {
-    NM_TITLE, "Project", 0l, 0, 0, 0l,
-    NM_ITEM, "New", "N", 0, 0, 0l,
-    NM_ITEM, "Open...", "O", 0, 0, 0l,
-    NM_ITEM, "Open .Info", 0, 0, 0, 0l,
-    NM_ITEM, NM_BARLABEL, 0l, 0, 0l, 0l,
-    NM_ITEM, "Save", "S", 0, 0, 0l,
-    NM_ITEM, "Save As...", "A", 0, 0, 0l,
-    NM_ITEM, "Save As .info",0, 0, 0, 0l,
-    NM_ITEM, NM_BARLABEL, 0l, 0, 0l, 0l,
-    NM_ITEM, "About...", 0, 0, 0, 0l,
-    NM_ITEM, NM_BARLABEL, 0l, 0, 0l, 0l,
-    NM_ITEM, "Hide", "H", 0, 0, 0l,
-    NM_ITEM, "Cancel", "C", 0, 0, 0l,
-    NM_ITEM, NM_BARLABEL, 0l, 0, 0l, 0l,
-    NM_ITEM, "Quit...", "Q", 0, 0, 0l,
-    NM_END, 0l, 0l, 0, 0l, 0l };
+    {NM_TITLE, "Project", 0l, 0, 0, 0l},
+    {NM_ITEM, "New", "N", 0, 0, 0l},
+    {NM_ITEM, "Open...", "O", 0, 0, 0l},
+    {NM_ITEM, "Open .Info", 0, 0, 0, 0l},
+    {NM_ITEM, NM_BARLABEL, 0l, 0, 0l, 0l},
+    {NM_ITEM, "Save", "S", 0, 0, 0l},
+    {NM_ITEM, "Save As...", "A", 0, 0, 0l},
+    {NM_ITEM, "Save As .info",0, 0, 0, 0l},
+    {NM_ITEM, NM_BARLABEL, 0l, 0, 0l, 0l},
+    {NM_ITEM, "About...", 0, 0, 0, 0l},
+    {NM_ITEM, NM_BARLABEL, 0l, 0, 0l, 0l},
+    {NM_ITEM, "Hide", "H", 0, 0, 0l},
+    {NM_ITEM, "Cancel", "C", 0, 0, 0l},
+    {NM_ITEM, NM_BARLABEL, 0l, 0, 0l, 0l},
+    {NM_ITEM, "Quit...", "Q", 0, 0, 0l},
+    {NM_END, 0l, 0l, 0, 0l, 0l }};
 
 long InitStuff( void )
 {
@@ -284,6 +285,7 @@ void CleanStuff( void )
 	   	 WindowTags[2].ti_Data = (LONG)Wnd->Width;
 		    WindowTags[3].ti_Data = (LONG)Wnd->Height;
         CloseWindow( Wnd );
+	Wnd = NULL;
 		}
 
     if ( GList      )

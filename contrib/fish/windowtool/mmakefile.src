@@ -1,39 +1,31 @@
+#   $Id$
+#
+#   Makefile to make windowtool.
+
 include $(TOP)/config/make.cfg
-
-%define_libs
-
-CFLAGS	:= $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(CONTRIBDIR)/fish
 
 FILES := checkstartup functions gadgets windowtool
 
-SRCS := $(foreach f, $(FILES), $(f).c)
-OBJS := $(foreach f, $(FILES), $(OBJDIR)/$(f).o)
+EXEDIR := $(CONTRIBDIR)/fish
+EXE := $(EXEDIR)/windowtool
 
-EXE := $(DESTDIR)/windowtool
+USE_AROSLIB := yes
+USE_CLIB := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+USE_REQTOOLSLIB := yes
 
-.PHONY : all clean
+USER_CFLAGS := -O2 -Wunused -Wall
 
-#MM fish-windowtool : setup-fish-windowtool
-fish-windowtool 	: $(OBJS) $(EXE)
-	@$(NOP)
+#MM fish-windowtool : includes linklibs
 
-#MM
-setup-fish-windowtool :
-	%mkdirs_q $(DESTDIR) $(OBJDIR)
+%make_prog_setup mmake=fish-windowtool
 
-$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
+fish-windowtool : setup $(EXE)
 
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
-#MM
-clean-fish :
-	@$(RM) $(OBJDIR) $(DESTDIR)
+%common
+%include_deps
 
-$(OBJDIR)/%.o : %.c
-	%compile_q
 

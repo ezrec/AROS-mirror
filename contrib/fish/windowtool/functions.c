@@ -134,7 +134,7 @@ void cycle(void)
 	while(l->front)l=l->front;						/* Vordersten Layer suchen */
 	while((w->WLayer!=l) && w)w=w->NextWindow;	/* Window dazu suchen */
 	
-	if(nl=l->back)
+	if((nl=l->back))
 	{
 		while((nw->WLayer!=nl) && nw)nw=nw->NextWindow;
 	}
@@ -159,7 +159,7 @@ void activetofront(void)
 	struct Window *w;
 	
 	Forbid();
-	if(w=IntuitionBase->ActiveWindow)WindowToFront(w);
+	if((w=IntuitionBase->ActiveWindow))WindowToFront(w);
 	Permit();
 }
 
@@ -169,11 +169,11 @@ void closewindow(void)
 	struct MsgPort *InputMP;
 	struct InputEvent *FakeEvent;
 	
-	if(InputMP=CreateMsgPort())
+	if((InputMP=CreateMsgPort()))
 	{
-		if(FakeEvent=AllocMem(sizeof(struct InputEvent),MEMF_PUBLIC))
+		if((FakeEvent=AllocMem(sizeof(struct InputEvent),MEMF_PUBLIC)))
 		{
-			if(InputIO=CreateIORequest(InputMP,sizeof(struct IOStdReq)))
+			if((InputIO=CreateIORequest(InputMP,sizeof(struct IOStdReq))))
 			{
 				if(!OpenDevice("input.device",NULL,(struct IORequest *)InputIO,NULL))
 				{
@@ -186,7 +186,7 @@ void closewindow(void)
 					DoIO((struct IORequest *)InputIO);
 				}
 				else 	rtEZRequest("Unable to open input.device !", "Continue", NULL, NULL);
-				DeleteIORequest(InputIO);
+				DeleteIORequest((struct IORequest *)InputIO);
 			}
 			else 	rtEZRequest("CreateIORequest failed !", "Continue", NULL, NULL);
 			FreeMem(FakeEvent,sizeof(struct InputEvent));

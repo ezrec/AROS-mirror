@@ -8,6 +8,8 @@
 #include <libraries/reqtools.h>
 #include <dos/rdargs.h>
 //#include <pragmas/reqtools.h>
+#include <string.h>
+#include <stdio.h>
 
 extern struct TagItem reqtags[];
 
@@ -56,7 +58,7 @@ struct cliresults
 	char *settings;
 	char *keys[KEYNUMMER];
 };
-struct cliresults clir={0,0,0,0,0,0,0,0,0,0,0,0,0};
+struct cliresults clir={0,0,0,{0,0,0,0,0,0,0,0,0,0}};
 
 void checkstartup(int argc,char *argv[],struct WBStartup *msg)
 {
@@ -105,9 +107,9 @@ void checkstartup(int argc,char *argv[],struct WBStartup *msg)
 			
 			olddir=CurrentDir(msg->sm_ArgList->wa_Lock);
 			
-			if(infoobj=GetDiskObject(msg->sm_ArgList->wa_Name))
+			if((infoobj=GetDiskObject(msg->sm_ArgList->wa_Name)))
 			{
-				if(key=FindToolType(infoobj->do_ToolTypes,"SETTINGS"))
+				if((key=FindToolType(infoobj->do_ToolTypes,"SETTINGS")))
 					{
 						flags=flags|NEWSETTINGSFLAG;
 						strcpy(filename,FilePart(key));
@@ -115,15 +117,15 @@ void checkstartup(int argc,char *argv[],struct WBStartup *msg)
 						strcpy(dirname,key);
 					}
 				for(k=0;k<KEYNUMMER;k++)
-				if(key=FindToolType(infoobj->do_ToolTypes,tt[k]))
+				if((key=FindToolType(infoobj->do_ToolTypes,tt[k])))
 								strcpy(keys[k],key);
-				if(key=FindToolType(infoobj->do_ToolTypes,"CX_PRIORITY"))
+				if((key=FindToolType(infoobj->do_ToolTypes,"CX_PRIORITY")))
 						{
 							int dummy;
 							sscanf(key,"%ld",&dummy);
 							nb.nb_Pri=(BYTE)dummy;
 						}
-				if(key=FindToolType(infoobj->do_ToolTypes,"CX_POPUP"))
+				if((key=FindToolType(infoobj->do_ToolTypes,"CX_POPUP")))
 					if(stricmp(key,"YES")==0)flags=flags|POPUPFLAG;
 				FreeDiskObject(infoobj);
 			}

@@ -39,6 +39,7 @@
 #include <proto/reqtools.h>
 #include <workbench/startup.h>
 #include <workbench/workbench.h>
+#include <aros/debug.h>
 
 #define DEFAULTPRIORITY 21
 
@@ -156,7 +157,7 @@ char fullname[300];				/* Nur Zwischenspeicher */
 
 struct TagItem reqtags[]=
 {
-RT_ReqPos,REQPOS_CENTERSCR,TAG_END,0
+{RT_ReqPos,REQPOS_CENTERSCR},{TAG_END,0}
 };
 
 BOOL filereq(int typ)
@@ -165,7 +166,7 @@ BOOL filereq(int typ)
 	char *match="#?.config";
 	BOOL erg=FALSE;
 
-	if (filereq = rtAllocRequestA (RT_FILEREQ, NULL))
+	if ((filereq = rtAllocRequestA (RT_FILEREQ, NULL)))
 	{
 		rtChangeReqAttr(filereq,RTFI_Dir,dirname,RTFI_MatchPat,match,TAG_END);
 
@@ -192,7 +193,7 @@ void save()
 	BPTR fh;
 	strcpy(fullname,dirname);
 	AddPart((UBYTE *)fullname,(UBYTE *)filename,300);
-	if(fh=Open((UBYTE *)fullname,MODE_NEWFILE))
+	if((fh=Open((UBYTE *)fullname,MODE_NEWFILE)))
 	{
 		int k;
 		for(k=0;k<KEYNUMMER;k++)
@@ -268,7 +269,7 @@ void saveasinfo()
 	}
 	tooltypesadr[k]=0;
 	
-	if(diskobj=GetDiskObject(prgname))
+	if((diskobj=GetDiskObject(prgname)))
 	{
 		mydiskobj.do_Gadget.LeftEdge=diskobj->do_Gadget.LeftEdge;
 		mydiskobj.do_Gadget.TopEdge=diskobj->do_Gadget.TopEdge;
@@ -294,7 +295,7 @@ void open(void)
 	BPTR fh;
 	strcpy(fullname,dirname);
 	AddPart((UBYTE *)fullname,(UBYTE *)filename,300);
-	if(fh=Open((UBYTE *)fullname,MODE_OLDFILE))
+	if((fh=Open((UBYTE *)fullname,MODE_OLDFILE)))
 	{
 		char *mem;
 		long memlen;
@@ -302,12 +303,14 @@ void open(void)
 		memlen=Seek(fh,0,OFFSET_BEGINNING);
 		if(memlen==0)	rtEZRequest("Error:\nconfigurationfile\n%s\nis empty!","Continue",NULL, reqtags,fullname);
 		else
-		if(mem=AllocMem(memlen,0))
+		if((mem=AllocMem(memlen,0)))
 		{
 			int aktu,a,e,k;
 			
 			Read(fh,mem,memlen);
-			for(k=0,aktu=0;aktu<memlen,k<KEYNUMMER;aktu++,k++)
+#warning CHECKME whats this???? To checks separated by commas?
+/*			for(k=0,aktu=0;aktu<memlen,k<KEYNUMMER;aktu++,k++)*/
+			for(k=0,aktu=0;aktu<memlen && k<KEYNUMMER;aktu++,k++)
 			{
 				for(;mem[aktu]!='\"';aktu++);
 				if(aktu>memlen){	rtEZRequest("Error:\nError in\nconfigurationfile\n%s !","Continue",NULL, reqtags,fullname);break;}
@@ -339,9 +342,9 @@ void openinfo()
 	int k;
 	char *key;
 
-	if(infoobj=GetDiskObject(prgname))
+	if((infoobj=GetDiskObject(prgname)))
 	{
-		if(key=FindToolType(infoobj->do_ToolTypes,"SETTINGS"))
+		if((key=FindToolType(infoobj->do_ToolTypes,"SETTINGS")))
 			{
 				strcpy(filename,FilePart(key));
 				*((char *)PathPart(key))=0;
@@ -349,7 +352,7 @@ void openinfo()
 				open();
 			}
 		for(k=0;k<KEYNUMMER;k++)
-		if(key=FindToolType(infoobj->do_ToolTypes,tt[k]))
+		if((key=FindToolType(infoobj->do_ToolTypes,tt[k])))
 						strcpy(keys[k],key);
 		setkeys();
 		FreeDiskObject(infoobj);
@@ -429,9 +432,9 @@ char *argv[];
 
 	if(flags&POPUPFLAG)
 	{
+		popup();
 		waitsignals= (1L<<Wnd->UserPort->mp_SigBit) | 
 				(1<<mp->mp_SigBit) | SIGBREAKF_CTRL_C ;
-		popup();
 	}
 	else waitsignals = (1<<mp->mp_SigBit) | SIGBREAKF_CTRL_C ;
 
@@ -443,7 +446,7 @@ char *argv[];
 		else	while(0==(signals=CheckSignal( waitsignals )));
 
 		if(signals & SIGBREAKF_CTRL_C )	quit();
-		if(signals & 1L<<Wnd->UserPort->mp_SigBit)
+		if(Wnd && (signals & 1L<<Wnd->UserPort->mp_SigBit))
 	while(1)
 		{
 			if(windowopen==FALSE)break;
@@ -584,7 +587,8 @@ char *argv[];
 		}
 
 		if(signals & (1<<mp->mp_SigBit))
-		while(msg=(struct Message *)GetMsg(mp))
+		{
+			while((msg=(struct Message *)GetMsg(mp)))
 			{
 				id=CxMsgID((CxMsg *)msg);
 
@@ -639,6 +643,7 @@ char *argv[];
 							break;
 				}
 			}
+		}
 	}
 	return 0;
 }
@@ -668,8 +673,11 @@ void openrest(void)
 	nb.nb_Port=mp;
 
 	for(k=0;k<KEYNUMMER;k++)
+	{
 			filter[k]=HotKey(keys[k],mp,k);
-
+	}
+	
+	
 	if(!(broker=(CxObj *)CxBroker(&nb,0)))ende(0);/* WT läuft schon */
 
 	for(k=0;k<KEYNUMMER;k++)
