@@ -14,7 +14,7 @@ Documentation
 
 + `AmigaDOS Online Reference Manual`__
 
-  .. Image:: images/amigados-online-reference-manual.png
+  .. Image:: ../../images/amigados-online-reference-manual.png
 
   Lot of information for developers and users of AmigaOS. Guides and reference
   manuals about Workbench, ARexx, system utilites, shell commands and lots 
