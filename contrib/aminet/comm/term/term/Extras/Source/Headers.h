@@ -197,6 +197,11 @@
 #endif
 #endif	/* __GNUC__ */
 
+#ifdef __AROS__
+#undef AllocVecPooled
+#undef FreeVecPooled
+#endif
+
 	/* Standard "C" includes. */
 
 #include <string.h>
