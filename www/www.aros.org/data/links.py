@@ -37,10 +37,10 @@ moreRelated = (
 	'Sebastians site with Disk Images',
 	'The images here are mirrored on the AROS main site above.'
     ),
-    Link ('http://www.bloodline.freeserve.co.uk/aros/AROS-ibmpc-bin.zip',
-	"Matt 'Crazy' Parsons Disk Image",
-	'This image was usually tested on several different PCs, so chances'
-	' that it works for you are much higher',
+    Link ('http://www.bloodline.freeserve.co.uk/aros/index.html',
+	"Matt 'Crazy' Parsons Disk Images",
+	'The images on this page are usually tested on several different PCs,'
+	' so chances that they work for you are much higher',
     ),
     ( Link ('/mailman/listinfo/',
 	'Mailing lists',

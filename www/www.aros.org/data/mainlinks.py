@@ -42,7 +42,7 @@ mainLinks = (
     ( Href ('download.html', 'Download'),
 	Href ('ftp://ftp.aros.org/pub/aros/', 'FTP Server'),
 	Href ('ftp://ftp.aros.org/pub/aros/DiskImages/', 'Disk Images'),
-	Href ('http://www.bloodline.freeserve.co.uk/aros/AROS-ibmpc-bin.zip', 'Matts DI'),
+	Href ('http://www.bloodline.freeserve.co.uk/aros/index.html', 'Matts DI'),
 	Href ('http://wh2-315.st.uni-magdeburg.de/~sheutlin/aros/', 'Sebastians DIs'),
 	Href ('snapshots.html', 'Snapshots'),
     ),
