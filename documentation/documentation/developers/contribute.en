@@ -94,7 +94,6 @@ Programming
   - Printer
   - ScreenMode
   - Sound
-  - Time
   - WBPattern
   - Workbench 
  
@@ -113,7 +112,6 @@ Programming
 
   - picture.datatype
     
-    + ilbm.datatype
     + png.datatyoe
     + jpeg.datatype
   
