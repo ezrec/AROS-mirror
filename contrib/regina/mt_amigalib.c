@@ -15,6 +15,8 @@
 #include <exec/lists.h>
 #include <exec/nodes.h>
 
+#include <assert.h>
+
 APTR __regina_semaphorepool;
 struct MinList *__regina_tsdlist = NULL;
 

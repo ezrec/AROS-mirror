@@ -61,7 +61,7 @@ static char *RCSid = "$Id$";
 # endif
 #endif
 
-#if defined(MAC) || defined(__WATCOMC__) || defined(_MSC_VER) || defined(__SASC) || defined(__MINGW32__) || defined(__BORLANDC__)
+#if defined(MAC) || defined(__WATCOMC__) || defined(_MSC_VER) || defined(__SASC) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__AROS__)
 # include "utsname.h"                                   /* MH 10-06-96 */
 # define MAXPATHLEN  _MAX_PATH                          /* MH 10-06-96 */
 #else                                                   /* MH 10-06-96 */

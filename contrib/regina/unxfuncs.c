@@ -52,15 +52,7 @@ static char *RCSid = "$Id$";
 
 #if defined(VMS) || defined(MAC)
 # include <types.h>
-typedef struct utsname
-{
-   char *sysname ;
-   char *nodename ;
-   char *release ;
-   char *version ;
-   char *machine ;
-} _utsname ;
-int uname (struct utsname *name);
+#include "utsname.h"
 #else
 # include <sys/types.h>
 # ifdef HAVE_UNISTD_H
@@ -77,9 +69,9 @@ typedef struct utsname
    char *version ;
    char *machine ;
 } _utsname ;
-# elif defined(__WATCOMC__) || defined(_MSC_VER) || defined(__SASC) || defined(__MINGW32__) || defined(__BORLANDC__)
+# elif defined(__WATCOMC__) || defined(_MSC_VER) || defined(__SASC) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__AROS__)
 #  include "utsname.h"
-#  if !defined(__SASC) && !defined(__QNX__)
+#  if !defined(__SASC) && !defined(__QNX__) && !defined(__AROS__)
 #   include <process.h>
 #   include <direct.h>
 #  endif

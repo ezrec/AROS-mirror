@@ -314,7 +314,6 @@
 #define HAVE_LIMITS_H         1
 #define HAVE_MALLOC_H         1
 #define HAVE_MATH_H           1
-#define HAVE_PWD_H            1
 #define HAVE_SETJMP_H         1
 #define HAVE_STDARG_H         1
 #define HAVE_STDLIB_H         1
