@@ -124,7 +124,7 @@ AROS/i386-freebsd
 
 :Flavour:    Hosted
 :Status:     Working
-:Maintained: **No**
+:Maintained: Yes (5.x)
 
 AROS/i386-freebsd is the hosted port of AROS to the FreeBSD operating system
 running on the x86 family of processors. 
