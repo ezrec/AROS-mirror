@@ -45,9 +45,9 @@ static void RenderIntoBob(int type, char *ptr)
     struct RastPort *rp;
     int c, d, e;
 
+#if 0
 #warning In AROS rendering into handmade bitmaps does not yet work so for now a workaround is needed
 
-#ifdef _AROS
     struct BitMap *bm;
     
     rp = CreateRastPort();
@@ -93,7 +93,7 @@ static void RenderIntoBob(int type, char *ptr)
     }
     Text(rp,&ptr[e],c);
 
-#ifdef _AROS
+#if 0
     BltBitMap(bm, 0, 0, &drag_bob_bitmap, 0, 0, drag_sprite.Width * 16, drag_sprite.Height, 192, 255, 0);
     FreeBitMap(bm);
     FreeRastPort(rp);
