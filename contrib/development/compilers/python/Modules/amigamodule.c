@@ -256,29 +256,12 @@ amiga_strint(PyObject *args, int (*func)(const char *, int))
 }
 
 static PyObject *
-amiga_strintint(PyObject *args, int (*func)(const char *, int, int))
-{
-	char *path;
-	int i,i2;
-	int res;
-	if (!PyArg_Parse(args, "(sii)", &path, &i, &i2))
-		return NULL;
-	Py_BEGIN_ALLOW_THREADS
-	res = (*func)(path, i, i2);
-	Py_END_ALLOW_THREADS
-	if (res < 0)
-		return amiga_error_with_filename(path);
-	Py_INCREF(Py_None);
-	return Py_None;
-}
-
-static PyObject *
 amiga_do_stat(PyObject *self, PyObject *args, int (*statfunc)(const char *, struct stat *))
 {
 	struct stat st;
 	char *path;
 	int res;
-	if (!PyArg_Parse(args, "s", &path))
+	if (!PyArg_ParseTuple(args, "s", &path))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	res = (*statfunc)(path, &st);
@@ -316,7 +299,24 @@ amiga_chmod(PyObject *self, PyObject *args)
 static PyObject *
 amiga_chown(PyObject *self, PyObject *args)
 {
-	return amiga_strintint(args, chown);
+    char *path;
+    int   owner, group, result;
+    
+    if( !(PyArg_ParseTuple( args, "sii:chown", &path, &owner, &group ) ) ) return NULL;
+    
+    Py_BEGIN_ALLOW_THREADS
+    result = chown( path, owner, group );
+    Py_END_ALLOW_THREADS
+    
+    if( result < 0 ) 
+    {
+    	return amiga_error_with_filename( path );
+    } 
+    else 
+    {
+    	Py_INCREF( Py_None );
+	return Py_None;
+    }
 }
 #endif /* HAVE_CHOWN */
 
@@ -326,7 +326,7 @@ amiga_getcwd(PyObject *self, PyObject *args)
 {
 	char buf[MAXPATHLEN];
 	char *res;
-	if (!PyArg_Parse(args,""))
+	if (!PyArg_ParseTuple(args,""))
 			return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	res = getcwd(buf, sizeof buf);
@@ -353,7 +353,7 @@ amiga_listdir(PyObject *self, PyObject *args)
 	struct FileInfoBlock __aligned fib;
 	PyObject *d;
 
-	if (!PyArg_Parse(args, "s", &name)) return NULL;
+	if (!PyArg_ParseTuple(args, "s", &name)) return NULL;
 
 	if ((d = PyList_New(0)) == NULL) return NULL;
 
@@ -432,7 +432,7 @@ amiga_system(PyObject *self, PyObject *args)
 {
 	char *command;
 	long sts;
-	if (!PyArg_Parse(args, "s", &command))
+	if (!PyArg_ParseTuple(args, "s", &command))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	sts = system(command);
@@ -451,7 +451,7 @@ amiga_umask(PyObject *self, PyObject *args)
 #else
 	if (!checksocketlib()) return NULL;
 #endif
-	if (!PyArg_Parse(args,"i",&i))
+	if (!PyArg_ParseTuple(args,"i",&i))
 		return NULL;
 	i = umask(i);
 	if (i < 0)
@@ -466,7 +466,7 @@ amiga_uname(PyObject *self, PyObject *args)
 {
         struct utsname u;
         int res;
-        if (!PyArg_NoArgs(args))
+        if (!PyArg_ParseTuple(args, ""))
                 return NULL;
         Py_BEGIN_ALLOW_THREADS
         res = uname(&u);
@@ -508,7 +508,7 @@ amiga_utime(PyObject *self, PyObject *args)
 #define UTIME_ARG buf
 #endif /* HAVE_UTIME_H */
 
-	if (!PyArg_Parse(args, "(s(ll))", &path, &atime, &mtime))
+	if (!PyArg_ParseTuple(args, "(s(ll))", &path, &atime, &mtime))
 		return NULL;
 	ATIME = atime;
 	MTIME = mtime;
@@ -583,7 +583,7 @@ amiga_getgid(PyObject *self, PyObject *args)
 static PyObject *
 amiga_getpid(PyObject *self, PyObject *args)
 {
-	if (!PyArg_Parse(args,""))
+	if (!PyArg_ParseTuple(args,""))
 		return NULL;
 	return PyInt_FromLong((long)FindTask(0));
 }
@@ -597,7 +597,7 @@ amiga_getpgrp(PyObject *self, PyObject *args)
 #else
 	if (!checksocketlib()) return NULL;
 #endif
-	if (!PyArg_Parse(args,""))
+	if (!PyArg_ParseTuple(args,""))
 		return NULL;
 #ifdef GETPGRP_HAVE_ARG
 	return PyInt_FromLong((long)getpgrp(0));
@@ -616,7 +616,7 @@ amiga_setpgrp(PyObject *self, PyObject *args)
 #else
 	if (!checksocketlib()) return NULL;
 #endif
-	if (!PyArg_Parse(args,""))
+	if (!PyArg_ParseTuple(args,""))
 		return NULL;
 #ifdef SETPGRP_HAVE_ARG
 	if (setpgrp(0, 0) < 0)
@@ -634,7 +634,7 @@ amiga_setpgrp(PyObject *self, PyObject *args)
 static PyObject *
 amiga_getppid(PyObject *self, PyObject *args)
 {
-	if (!PyArg_Parse(args,""))
+	if (!PyArg_ParseTuple(args,""))
 		return NULL;
 	return PyInt_FromLong((long)getppid());
 }
@@ -649,7 +649,7 @@ amiga_getuid(PyObject *self, PyObject *args)
 #else
 	if (!checksocketlib()) return NULL;
 #endif
-	if (!PyArg_Parse(args,""))
+	if (!PyArg_ParseTuple(args,""))
 		return NULL;
 	return PyInt_FromLong((long)getuid());
 }
@@ -688,7 +688,7 @@ amiga_setuid(PyObject *self, PyObject *args)
 #else
 	if (!checksocketlib()) return NULL;
 #endif
-	if (!PyArg_Parse(args, "i", &uid))
+	if (!PyArg_ParseTuple(args, "i", &uid))
 		return NULL;
 	if (setuid(uid) < 0)
 		return amiga_error();
@@ -707,7 +707,7 @@ amiga_setgid(PyObject *self, PyObject *args)
 #else
 	if (!checksocketlib()) return NULL;
 #endif
-	if (!PyArg_Parse(args, "i", &gid))
+	if (!PyArg_ParseTuple(args, "i", &gid))
 		return NULL;
 	if (setgid(gid) < 0)
 		return amiga_error();
@@ -733,7 +733,7 @@ amiga_readlink(PyObject *self, PyObject *args)
 	char buf[MAXPATHLEN];
 	char *path;
 	int n;
-	if (!PyArg_Parse(args, "s", &path))
+	if (!PyArg_ParseTuple(args, "s", &path))
 	        return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	n = readlink(path, buf, (int) sizeof buf);
@@ -761,7 +761,7 @@ amiga_setsid(PyObject *self, PyObject *args)
 #else
 	if (!checksocketlib()) return NULL;
 #endif
-	if (!PyArg_Parse(args,""))
+	if (!PyArg_ParseTuple(args,""))
 		return NULL;
 	if ((int)setsid() < 0)
 		return amiga_error();
@@ -775,7 +775,7 @@ static PyObject *
 amiga_setpgid(PyObject *self, PyObject *args)
 {
 	int pid, pgrp;
-	if (!PyArg_Parse(args, "(ii)", &pid, &pgrp))
+	if (!PyArg_ParseTuple(args, "(ii)", &pid, &pgrp))
 		return NULL;
 	if (setpgid(pid, pgrp) < 0)
 		return amiga_error();
@@ -793,9 +793,9 @@ amiga_open(PyObject *self, PyObject *args)
 	int flag;
 	int mode = 0777;
 	int fd;
-	if (!PyArg_Parse(args, "(si)", &file, &flag)) {
+	if (!PyArg_ParseTuple(args, "(si)", &file, &flag)) {
 		PyErr_Clear();
-		if (!PyArg_Parse(args, "(sii)", &file, &flag, &mode))
+		if (!PyArg_ParseTuple(args, "(sii)", &file, &flag, &mode))
 			return NULL;
 	}
 	Py_BEGIN_ALLOW_THREADS
@@ -810,7 +810,7 @@ static PyObject *
 amiga_close(PyObject *self, PyObject *args)
 {
 	int fd, res;
-	if (!PyArg_Parse(args, "i", &fd))
+	if (!PyArg_ParseTuple(args, "i", &fd))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	res = close(fd);
@@ -850,7 +850,7 @@ amiga_dup(PyObject *self, PyObject *args)
 {
 	int fd;
 	if (!checksocketlib()) { PyErr_Clear(); errno=EIO; return amiga_error(); }
-	if (!PyArg_Parse(args, "i", &fd))
+	if (!PyArg_ParseTuple(args, "i", &fd))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	fd = dup(fd);
@@ -865,7 +865,7 @@ amiga_dup2(PyObject *self, PyObject *args)
 {
 	int fd, fd2, res;
 	if (!checksocketlib()) { PyErr_Clear(); errno=EIO; return amiga_error(); }
-	if (!PyArg_Parse(args, "(ii)", &fd, &fd2))
+	if (!PyArg_ParseTuple(args, "(ii)", &fd, &fd2))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	res = dup2(fd, fd2);
@@ -882,7 +882,7 @@ amiga_lseek(PyObject *self, PyObject *args)
 {
 	int fd, how;
 	long pos, res;
-	if (!PyArg_Parse(args, "(ili)", &fd, &pos, &how))
+	if (!PyArg_ParseTuple(args, "(ili)", &fd, &pos, &how))
 		return NULL;
 #ifdef SEEK_SET
 	/* Turn 0, 1, 2 into SEEK_{SET,CUR,END} */
@@ -905,7 +905,7 @@ amiga_read(PyObject *self, PyObject *args)
 {
 	int fd, size;
 	PyObject *buffer;
-	if (!PyArg_Parse(args, "(ii)", &fd, &size))
+	if (!PyArg_ParseTuple(args, "(ii)", &fd, &size))
 		return NULL;
 	buffer = PyString_FromStringAndSize((char *)NULL, size);
 	if (buffer == NULL)
@@ -926,7 +926,7 @@ amiga_write(PyObject *self, PyObject *args)
 {
 	int fd, size;
 	char *buffer;
-	if (!PyArg_Parse(args, "(is#)", &fd, &buffer, &size))
+	if (!PyArg_ParseTuple(args, "(is#)", &fd, &buffer, &size))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	size = write(fd, buffer, size);
@@ -942,7 +942,7 @@ amiga_fstat(PyObject *self, PyObject *args)
 	int fd;
 	struct stat st;
 	int res;
-	if (!PyArg_Parse(args, "i", &fd))
+	if (!PyArg_ParseTuple(args, "i", &fd))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	res = fstat(fd, &st);
@@ -1011,7 +1011,7 @@ amiga_pipe(PyObject *self, PyObject *args)
 {
 	int fds[2];
 	int res;
-	if (!PyArg_Parse(args, ""))
+	if (!PyArg_ParseTuple(args, ""))
 		return NULL;
 	Py_BEGIN_ALLOW_THREADS
 	res = pipe(fds);
@@ -1099,126 +1099,126 @@ amiga_crc32(PyObject *self, PyObject *args)
 #endif
 
 static struct PyMethodDef amiga_methods[] = {
-    { "chdir",   amiga_chdir, METH_VARARGS },
-    { "chmod",   amiga_chmod, METH_VARARGS },
+    { "chdir",     amiga_chdir,     METH_VARARGS },
+    { "chmod",     amiga_chmod,     METH_VARARGS },
 #ifdef HAVE_CHOWN
-    { "chown",   amiga_chown, METH_VARARGS },
+    { "chown",     amiga_chown,     METH_VARARGS },
 #endif
 #ifdef HAVE_GETCWD
-    { "getcwd",  amiga_getcwd},
+    { "getcwd",    amiga_getcwd,    METH_VARARGS },
 #endif
-    { "fullpath", amiga_fullpath, METH_VARARGS },
+    { "fullpath",  amiga_fullpath,  METH_VARARGS },
 #ifdef HAVE_LINK
-    { "link",    amiga_link, METH_VARARGS },
+    { "link",      amiga_link,      METH_VARARGS },
 #endif
-    { "listdir", amiga_listdir},
-    { "lstat",   amiga_lstat},
-    { "mkdir",   amiga_mkdir , METH_VARARGS },
+    { "listdir",   amiga_listdir,   METH_VARARGS },
+    { "lstat",     amiga_lstat,     METH_VARARGS },
+    { "mkdir",     amiga_mkdir ,    METH_VARARGS },
 #ifdef HAVE_READLINK
-    { "readlink",    amiga_readlink},
+    { "readlink",  amiga_readlink,  METH_VARARGS },
 #endif
-    { "rename",  amiga_rename, METH_VARARGS },
-    { "rmdir",   amiga_rmdir,  METH_VARARGS },
-    { "stat",    amiga_stat},
+    { "rename",    amiga_rename,    METH_VARARGS },
+    { "rmdir",     amiga_rmdir,     METH_VARARGS },
+    { "stat",      amiga_stat,      METH_VARARGS },
 #ifdef HAVE_SYMLINK
-    { "symlink", amiga_symlink, METH_VARARGS },
+    { "symlink",   amiga_symlink,   METH_VARARGS },
 #endif
 #ifdef HAVE_SYSTEM
-    { "system",  amiga_system},
+    { "system",    amiga_system,    METH_VARARGS },
 #endif
 #if defined(AMITCP) || defined(INET225)
-    { "umask",   amiga_umask},
+    { "umask",     amiga_umask,     METH_VARARGS },
 #endif
 #ifdef HAVE_UNAME
-    { "uname",   amiga_uname},
+    { "uname",     amiga_uname,     METH_VARARGS },
 #endif
-    { "unlink",  amiga_unlink, METH_VARARGS },
-    { "remove",  amiga_unlink, METH_VARARGS },
+    { "unlink",    amiga_unlink,    METH_VARARGS },
+    { "remove",    amiga_unlink,    METH_VARARGS },
 #if defined(AMITCP) || defined(INET225)
-    { "utime",   amiga_utime},
+    { "utime",     amiga_utime,     METH_VARARGS },
 #endif
 #ifdef HAVE_TIMES
-    { "times",   amiga_times},
+    { "times",     amiga_times,     METH_VARARGS },
 #endif
 #ifdef HAVE_EXECV
-    { "execv",	amiga_execv},
-    { "execve",	amiga_execve},
+    { "execv",	   amiga_execv,     METH_VARARGS },
+    { "execve",	   amiga_execve,    METH_VARARGS },
 #endif /* HAVE_EXECV */
 #ifdef HAVE_GETEGID
-    { "getegid", amiga_getegid},
+    { "getegid",   amiga_getegid,   METH_VARARGS },
 #endif
 #ifdef HAVE_GETEUID
-    { "geteuid", amiga_geteuid},
+    { "geteuid",   amiga_geteuid,   METH_VARARGS },
 #endif
 #ifdef HAVE_GETGID
-    { "getgid",  amiga_getgid},
+    { "getgid",    amiga_getgid,    METH_VARARGS },
 #endif
-    { "getpid",  amiga_getpid},
+    { "getpid",    amiga_getpid,    METH_VARARGS },
 #ifdef HAVE_GETPGRP
-    { "getpgrp", amiga_getpgrp},
+    { "getpgrp",   amiga_getpgrp,   METH_VARARGS },
 #endif
 #ifdef HAVE_GETPPID
-    { "getppid", amiga_getppid},
+    { "getppid",   amiga_getppid,   METH_VARARGS },
 #endif
 #ifdef HAVE_GETUID
-    { "getuid",  amiga_getuid},
+    { "getuid",    amiga_getuid,    METH_VARARGS },
 #endif
 #ifdef HAVE_POPEN
-    { "popen",   amiga_popen, METG_VARARGS},
+    { "popen",     amiga_popen,     METG_VARARGS},
 #endif
 #ifdef HAVE_SETUID
-    { "setuid",  amiga_setuid},
+    { "setuid",    amiga_setuid,    METH_VARARGS },
 #endif
 #ifdef HAVE_SETGID
-    { "setgid",  amiga_setgid},
+    { "setgid",    amiga_setgid,    METH_VARARGS },
 #endif
 #ifdef HAVE_SETPGRP
-    { "setpgrp", amiga_setpgrp},
+    { "setpgrp",   amiga_setpgrp,   METH_VARARGS },
 #endif
 #ifdef HAVE_SETSID
-    { "setsid",  amiga_setsid},
+    { "setsid",    amiga_setsid,    METH_VARARGS },
 #endif
 #ifdef HAVE_SETPGID
-    { "setpgid", amiga_setpgid},
+    { "setpgid",   amiga_setpgid,   METH_VARARGS },
 #endif
 #ifdef HAVE_TCGETPGRP
-    { "tcgetpgrp",   amiga_tcgetpgrp},
+    { "tcgetpgrp", amiga_tcgetpgrp, METH_VARARGS },
 #endif
 #ifdef HAVE_TCSETPGRP
-    { "tcsetpgrp",   amiga_tcsetpgrp},
+    { "tcsetpgrp", amiga_tcsetpgrp, METH_VARARGS },
 #endif
-    { "open",    amiga_open},
-    { "close",   amiga_close},
+    { "open",      amiga_open,      METH_VARARGS },
+    { "close",     amiga_close,     METH_VARARGS },
 #if defined(AMITCP) || defined(INET225)
-    { "dup",     amiga_dup},
-    { "dup2",    amiga_dup2},
+    { "dup",       amiga_dup,       METH_VARARGS },
+    { "dup2",      amiga_dup2,      METH_VARARGS },
 #endif
-    { "lseek",   amiga_lseek},
-    { "read",    amiga_read},
-    { "write",   amiga_write},
-    { "fstat",   amiga_fstat},
-    { "fdopen",  amiga_fdopen,   1},
+    { "lseek",     amiga_lseek,     METH_VARARGS },
+    { "read",      amiga_read,      METH_VARARGS },
+    { "write",     amiga_write,     METH_VARARGS },
+    { "fstat",     amiga_fstat,     METH_VARARGS },
+    { "fdopen",    amiga_fdopen,    METH_VARARGS },
 #ifdef HAVE_MKFIFO
-    { "mkfifo",	amiga_mkfifo, 1},
+    { "mkfifo",	   amiga_mkfifo, ,  METH_VARARGS },
 #endif
 #ifdef HAVE_FTRUNCATE
-    { "ftruncate",	amiga_ftruncate, METH_VARARGS },
+    { "ftruncate", amiga_ftruncate, METH_VARARGS },
 #endif
 #ifdef HAVE_PUTENV
-    { "putenv",         amiga_putenv,    METH_VARARGS },
+    { "putenv",    amiga_putenv,    METH_VARARGS },
 #endif
 #ifdef HAVE_STRERROR
-    { "strerror",	amiga_strerror,  METH_VARARGS },
+    { "strerror",  amiga_strerror,  METH_VARARGS },
 #endif
 #if 0
     /* XXX TODO: implement threads. Otherwise pipe() is useless. */
-    {"pipe",    amiga_pipe },
+    {"pipe",       amiga_pipe,      METH_VARARGS },
 #endif
 #ifndef AROS
-    {"crc32",	amiga_crc32, METH_VARARGS },
+    {"crc32",      amiga_crc32,     METH_VARARGS },
 #endif
 
-    {NULL,      NULL}
+    {NULL,         NULL}
 };
 
 
