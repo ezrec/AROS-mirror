@@ -1,0 +1,37 @@
+- What is this?
+
+  This directory contains patches against the gcc source tree. Patches follow 
+  the same naming convention as the gcc releases, plus a trailing 
+  "-aros.diff" (without quotes).
+
+- What is and how to build a cross compiler for AROS?
+
+  A cross compiler is a compiler able to produce binaries usable by a 
+  "target" system, which however runs on a different system than the 
+  target one. This is useful to speed up development, in case the 
+  "host" system is faster than the "target" one, or if the "host" 
+  system has any other advantages over the "target" one.
+  
+  In our case the target system is AROS, and to produce a crosscompiler 
+  for AROS you need to go trough the following steps:
+  
+  1) Decide which patch you want to apply
+
+  2) Download the archive to which the patch you chosed applies. You 
+     can find such archives at one of the sites listed at 
+     http://www.gnu.org/software/gcc/releases.html
+     
+  3) Apply the patch 
+
+  4) Prepare a build tree for gcc, so that you can then "configure" it
+  
+  5) Configure gcc like described in its documentation, but taking care
+     of specifying the following parameters:
+     
+     --target=<cpu>-aros --enable-sjlj-exceptions --enable-long-long
+     --with-headers=<path/to/AROS/headers> --with-libs=<path/to/AROS/libs>
+
+     replace the various <...> with the proper values.
+     
+  6) Type "make" and then "make install", 
+  
