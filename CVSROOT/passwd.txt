@@ -12,6 +12,7 @@ nlorentz:aaoEn/1St7MB7JtA8mAs:Nils Henrik Lorentzen:nlorentz@sn.no:diskfont,icon
 ruppert:bbtwjwdJnQGas:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
 vmc:abVary.zhDODw:Harald Frank:support@isdntown.east.de:Amiga port
 helios:acwZVMiQtI78o:Martin Steigerwald:steigerw@stud.uni-frankfurt.de:Beta tester
+srittau:aaRBXVNGOCKiY:Sebastian Rittau:jroger@sky.in-berlin.de:Includes, Misc
 
 stepan:dcIM.xvdbd/R.:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:KIHh6YtTnh0KY:Christopher D. Judd:juddc@rpi.edu:
@@ -22,9 +23,9 @@ daniel:b9bwcTjXjo3Gc:Daniel Verite:daniel@brainstorm.eu.org:
 mroth:da/M1jS3sNsHg:Michael Roth:mroth@inlet.lake.de:
 nico:bbHYNBwvWxgYE:Nico Heinz:nico@fh-konstanz.de:
 fasten:ccY.p7jBmFL4g:Bernhard Fastenrath:fasten@informatik.uni-bonn.de:
-srittau:aaRBXVNGOCKiY:Sebastian Rittau:jroger@sky.in-berlin.de:
 jaxom:dcZ/NTob1tC2I:Thomas Schwarz:Thomas.Schwarz@munich.netsurf.de:
 ykoehler:acabfgzf8gWEk:Yannick Koehler:yannick@generation.net:
 hansvi:bdbUGoMZXsB.o:Hans Van Ingelgom:hansvi@igwe1.vub.ac.be:
 rycohen:aaNueBFiMeKmI:Ross Cohen:rycohen@ACSU.Buffalo.EDU:
 laguest:baLtYMMsFjGms:Oldin McGroin:L.A.Guest@comp.brad.ac.uk:
+chexum:mV/zpVIfJW9yY:Janos Farkas:chexum@shadow.banki.hu:
