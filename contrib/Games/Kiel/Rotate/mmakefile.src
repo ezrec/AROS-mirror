@@ -11,15 +11,13 @@ EXES := $(DESTDIR)/Rotate
 
 .PHONY : all clean
 
-#MM- contrib-games : games-kiel-jump
+#MM- contrib-games : games-kiel-rotate
 #MM
-games-rotate : setup-games games
+games-kiel-rotate : setup-games games
 
-#MM games : setup-games
 games : $(EXES)
 	@$(NOP)
 
-#MM
 setup-games :
 	%mkdirs_q $(DESTDIR) $(OBJDIR)
 
@@ -30,7 +28,7 @@ $(EXES) : $(DESTDIR)/% : $(OBJDIR)/%.o $(DEPLIBS)
 	@$(CHECKUDS) $@
 
 #MM
-clean-games :
+clean-contrib-games :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
 $(OBJDIR)/%.o : %.c defines.h functions.h includes.h screen.h

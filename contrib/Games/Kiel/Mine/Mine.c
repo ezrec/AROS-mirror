@@ -36,7 +36,7 @@
 
 ******************************************************************************/
 
-static const char version[] = "$VER: Mine 0.5 (01.10.1999)\n";
+static const char version[] = "$VER: Mine 0.6 (14.02.2000)\n";
 
 #include "MineIncl.h"
 

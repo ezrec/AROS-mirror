@@ -10,15 +10,13 @@ EXES := $(DESTDIR)/Mine
 
 .PHONY : all clean
 
-#MM- contrib-games : games-kiel-jump
+#MM- contrib-games : games-kiel-mine
 #MM
-games-mine : setup-games games
+games-kiel-mine : setup-games games
 
-#MM games : setup-games
 games : $(EXES)
 	@$(NOP)
 
-#MM
 setup-games :
 	%mkdirs_q $(DESTDIR) $(OBJDIR)
 
@@ -29,7 +27,7 @@ $(EXES) : $(DESTDIR)/% : $(OBJDIR)/%.o $(DEPLIBS)
 	@$(CHECKUDS) $@
 
 #MM
-clean-games :
+clean-contrib-games :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
 $(OBJDIR)/%.o : %.c ../prec.c %File.h %Game.h %Incl.h

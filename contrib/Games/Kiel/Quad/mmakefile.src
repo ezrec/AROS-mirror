@@ -11,15 +11,13 @@ EXES := $(DESTDIR)/Quad
 
 .PHONY : all clean
 
-#MM- contrib-games : games-kiel-jump
+#MM- contrib-games : games-kiel-quad
 #MM
-games-quad : setup-games games
+games-kiel-quad : setup-games games
 
-#MM games : setup-games
 games : $(EXES)
 	@$(NOP)
 
-#MM
 setup-games :
 	%mkdirs_q $(DESTDIR) $(OBJDIR)
 
@@ -30,7 +28,7 @@ $(EXES) : $(DESTDIR)/% : $(OBJDIR)/%.o $(DEPLIBS)
 	@$(CHECKUDS) $@
 
 #MM
-clean-games :
+clean-contrib-games :
 	@$(RM) $(OBJDIR) $(DESTDIR)
 
 $(OBJDIR)/%.o : %.c ../prec.c %.h %Incl.h
