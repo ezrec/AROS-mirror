@@ -758,9 +758,9 @@ This is the definition header of the build_module macro::
       cflags=$(CFLAGS) dflags=%(cflags) objdir=$(OBJDIR)           \
       linklibname=%(modname) uselibs=
 
-In the definition no macro arguments may be used in the default value for
-arguments. Therefor in the real mmake.tmpl file these are replaced by make
-variables assign with the macro argument.
+(In the definition presented here genmf argument like %(modname) are used
+but in genmf doesn't allow it. In the macro though make statements are that
+have the same effect as giving the genmf arguments as default)
 
 Here is a list of the arguments for this macro:
 
@@ -901,6 +901,342 @@ statement is different for every section. The following sections are defined:
   line in in the list::
 
       foo(D0,A0)
+
+
+Building modules (the legacy way)
+"""""""""""""""""""""""""""""""""
+
+Before the %build_module macro was developed already a lot of code was
+written. There a mixture of macro's was usedin the mmakefile and they were
+quite complicated. To clean up these mmakefiles without needing to rewrite
+too much of the code itself a second genmf macro was created to build
+modules that were written using the older methodology. This macro is called
+build_module_macro. For writing new modules people should consider this
+macro as depricated and only use this macro when the %build_module doesn't
+support the module yet they want to create.
+
+The mmakefile.src macro
+^^^^^^^^^^^^^^^^^^^^^^^
+
+This is the definition header of the build_module_macro macro::
+
+    %define build_module_macro mmake=/A modname=/A modtype=/A \
+      conffile=%(modname).conf initfile=%(modname)_init \
+      funcs= files= linklibfiles= cflags=$(CFLAGS) dflags=%(cflags) \
+      objdir=$(OBJDIR) linklibname=%(modname) uselibs= usehostlibs= \
+      genfunctable= genincludes= compiler=target
+
+Here is a list of the arguments for this macro:
+
+    ``mmake=\A``
+        This is the name of the metatarget that will build the module. It will
+        define that metatarget but won't include any metaprerequisites. If you
+        need these you can add by yourself with an extra 
+        ``#MM metatargets : ...`` line. Also a ``%(mmake)-quick`` and 
+        ``%(mmake)-clean`` metatarget will be defined.
+        
+    ``modname=\A``
+        This is the name of the module without the suffix.
+        
+    ``modtype=\A``
+        This is the type of the module and corresponds with the suffix of the
+        module. It can be one of the following : library gadget datatype
+	handler device resource mui mcc hidd.
+        
+    ``conffile=%(modname).conf``
+        The name of the configuration file. Default is modname.conf.
+    
+    ``funcs=``
+        A list of all the source files with the .c suffix that contain the
+        code for the function of a module. Only one function per C file is
+	allowed and the function has to be defined using the AROS_LHA
+	macro's.
+        
+    ``files=``
+        A list of all the extra files with the .c suffix that contain the 
+        extra code for this module.
+
+    ``initfile=%(modname)_init``
+        The file with the init code of the module.
+	
+    ``cflags=$(CFLAGS)``
+        The flags to add when compiling the .c files. By default the standard
+        AROS cflags (the ``$(CFLAGS)`` make variables are taken. This also 
+        means that some flags can be added by assigning these to the 
+        USER_CFLAGS and USER_INCLUDES make variables before using this macro.
+    
+    ``dflags=%(cflags)``
+        The flags to add when doing the dependency check. Default is the same 
+        as the ``cflags``.
+    
+    ``objdir=$(OBJDIR)``
+        The directory where to generate all the intermediate files. The 
+        default value is ``$(OBJDIR)`` which in itself is by default equal to
+        ``$(GENDIR)/$(CURDIR)``.
+    
+    ``linklibname=%(modname)``
+        The name to be used for the static link library that contains the
+        library autoinit code and the stubs converting C stack calling
+        convention to a call off the function from the library functable with
+        the appropriate calling mechanism. These stubs are normally not needed
+        when the AROS defines for module function are not disabled.
+        
+        There will always be a file generated with the name
+        ``$(LIBDIR)/lib%(linklibname).a`` and by default linklibname will be 
+        the same as modname.
+        
+    ``uselibs=``
+        A list of static libraries to add when linking the module. This is the
+        name of the library without the lib prefix or the .a suffix not the -l
+        prefix for the use in the flags for the C compiler.
+        
+        By default no libraries are used when linking the module.
+
+    ``usehostlibs=``
+        A list of static libraries of the host to add when linking the module. This is the
+        name of the library without the lib prefix or the .a suffix not the -l
+        prefix for the use in the flags for the C compiler.
+        
+        By default no libraries are used when linking the module.
+
+    ``genfunctable=``
+        Bool that has to have a value of yes or no or left empty. This
+        indicates if the functable needs to be generated. If empty the
+        functable will only be generated when funcs is not empty.
+
+    ``genincludes=``
+        Bool that has to have a value of yes or no or left empty. This
+        indicates if the includes needs to be generated. If empty the
+        includes will only be generated for a library, a gadget or a device.
+
+    ``compiler=target``
+        Indicates which compiler to use during compilation. Can be either
+        target or host to use the target compiler or the host compiler.
+	By default the target compiler is used.
+
+
+The module configuration file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For the build_module_macro two files are used. First is the module
+configuration file (modname.conf or lib.conf) and second is the headers.tmpl
+file.
+
++ The modules config file is file with a number of lines with the following
+  syntax:
+
+    ``name <string>``
+        Init the various fields with reasonable defaults. If <string> is XXX, then
+    	this is the result::
+
+            libname         xxx
+            basename        Xxx
+            libbase         XxxBase
+            libbasetype     XxxBase
+            libbasetypeptr  XxxBase *
+
+        Variables will only be changed if they have not yet been specified.
+    
+    ``libname <string>``
+        Set libname to <string>. This is the name of the library (ie. you can
+        open it with <string>.library). It will show up in the version string, too.
+
+    ``basename <string>``
+        Set basename to <string>. The basename is used in the AROS-LHx macros in the
+    	location part (last parameter) and to specify defaults for libbase and
+    	libbasetype in case they have no value yet. If <string> is xXx, then
+    	libbase will become xXxBase and libbasetype will become	xXxBase.
+
+    ``libbase <string>``
+        Defines the name of the library base (ie. SysBase, DOSBase, IconBase, etc).
+    	If libbasetype is not set, then it is set to <string>, too.
+
+    ``libbasetype <string>``
+        The type of libbase (with struct), ie. struct ExecBase, struct DosLibrary,
+    	struct IconBase, etc).
+
+    ``libbasetypeptr <string>``
+        Type of a pointer to the libbase. (eg. ``struct ExecBase *``).
+
+    ``version <version>.<revision>``
+        Specifies the version and revision of the library. 41.0103 means version 41
+        and revision 103.
+
+    ``copyright <string>``
+        Copyright string.
+
+    ``define <string>``
+        The define to use to protect the resulting file	against double inclusion
+        (ie. #ifndef <string>...). The default is _LIBDEFS_H.
+
+    ``type <string>``
+        What kind of library is this ? Valid values for <string> are: device, library,
+    	resource and hidd.
+
+    ``option <string>...``
+        Specify an option. Valid values for <string> are:
+
+	+ ``noexpunge``
+
+	  Once the lib/dev is loaded, it can't be removed from memory.
+          Be careful with this option.
+
+    	+ ``rom``
+
+	  For ROM based libraries. Implies noexpunge and unique.
+
+	+ ``unique``
+
+	  Generate unique names for all external symbols.
+
+        + ``nolibheader``
+
+	  We don't want to use the LibHeader prefixed functions in the
+          function table.
+
+        + ``hasrt``
+
+	  This library has resource tracking.
+
+        You can specify more than one option in a config file and
+    	more than one option per option line. Separate options by
+    	space.
+
+The header.tmpl file
+^^^^^^^^^^^^^^^^^^^^
+
+Contrary to the %build_module macro for %build_module_macro the C header
+information is not included in the configuration file but an additional
+files is used with the name headers.tmpl. This file has different section
+where each of the sections will be copied in a certain include file that is
+generated when the module is build. A section has a structure as follows::
+
+    ##begin sectionname
+    ...
+    ##end sectionname
+    
+With sectionname one of the following choices:
+
++ defines
++ clib
++ proto
+
+
+Compiling arch and/or CPU specific files
+""""""""""""""""""""""""""""""""""""""""
+
+In the previous paragraph the method was explained how a module can be build
+with the AROS genmf macro's. Sometimes one wants to replace certain files in
+a module with an implementation only valid for a certain arch or a certain
+CPU.
+
+The macro definition
+^^^^^^^^^^^^^^^^^^^^
+
+Arch specific files are handled by the macro called %build_archspecific and it
+has the following header::
+
+    %define build_archspecific mainmmake=/A maindir=/A arch=/A files= asmfiles= \
+    cflags=$(CFLAGS) dflags=%(cflags) aflags=$(AFLAGS) compiler=target
+
+And the explanation of the argument to this macro:
+
+    ``mainmmake=\A``
+        The mmake of the module from which one wants to replace files or to
+	wich to add additional files.
+	
+    ``maindir=\A``
+        The directory where the object files of the main module are stored.
+	The is only the path relative to $(GENDIR). Most of the time this is the
+	directory where the source files of the module are stored.
+        
+    ``arch=\A``
+        The architecture for which these files needs to be build. It can
+	have three different forms ARCH-CPU, ARCH or CPU. For example when
+	linux-i386 is specified these files will only be build for the linux
+	port on i386. With ppc it will be build for all ppc processors and
+	with linux it will be build for all linux ports.
+	
+    ``files=``
+        The basenames of the C source files to replace add to the module.
+	
+    ``asmfiles=``
+        The basenames of the asm source files to replace or add to the module.
+        
+    ``cflags=$(CFLAGS)``
+        The flags to add when compiling the .c files. By default the standard
+        AROS cflags (the ``$(CFLAGS)`` make variables are taken. This also 
+        means that some flags can be added by assigning these to the 
+        USER_CFLAGS and USER_INCLUDES make variables before using this macro.
+    
+    ``dflags=%(cflags)``
+        The flags to add when doing the dependency check. Default is the same 
+        as the ``cflags``.
+    
+    ``aflags=$(AFLAGS)``
+        The flags to add when assembling the asm files. By default the standard
+        AROS cflags (the ``$(AFLAGS)`` make variable) are taken. This also 
+        means that some flags can be added by assigning these to the 
+        SPECIAL_AFLAGS make variable before using this macro.
+    
+    ``compiler=target``
+        Indicates which compiler to use during compiling C source files.
+	Can be either target or host to use the target compiler or the
+	host compiler. By default the target compiler is used.
+
+Code shared by different ports
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A second macro called %rule_archalias allows to create a virtual
+architecture. And code for that virtual architecture is shared between
+several architectures. Most likely this is used for code that uses an
+API that is shared between several architecture but not all of them.
+
+The macro has the following header::
+
+    %define rule_archalias mainmmake=\A arch=\A alias=\A
+
+With the following arguments
+
+    ``mainmmake=\A``
+        The mmake of the module from which one wants to replace files or to
+	wich to add additional files.
+
+    ``arch=\A``
+        The arch one wants to make alias from.
+	
+    ``alias=\A``
+        The arch one wants to alias to.
+	
+Examples
+^^^^^^^^
+
+1. This is an extract from the file config/linex/exec/mmakefile.src that
+   replaces the main init.c file from exec with a linux specialized one::
+
+       %build_archspecific \
+         mainmmake=kernel-exec maindir=rom/exec arch=linux \
+         files=init compiler=host
+
+2. For the dos.library some arch specific files are grouped together in the
+   unix arch. The following lines are present in the several mmakefiles to
+   make this possible
+  
+   In config/linux/mmakefile.src::
+  
+       %rule_archalias mainmmake=kernel-dos arch=linux alias=unix
+
+   In config/freebsd/mmakefile.src::
+  
+       %rule_archalias mainmmake=kernel-dos arch=freebsd alias=unix
+
+   And finally in config/unix/dos/mmakefile.src::
+  
+       %build_archspecific \
+         mainmmake=kernel-dos maindir=rom/dos \
+  	 arch=unix \
+  	 files=boot \
+  	 compiler=host
 
 
 Lower level mmakefile.src macro's
