@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/05/29 00:40:23  bergers
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ *
  * Revision 42.2  2000/05/15 19:27:01  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -161,8 +164,8 @@ makeproto ULONG myDoGadgetMethod(Object *obj, struct Window *win, struct Request
  * Emulate the intuition DoGadgetMethod() call.
  */
 #ifdef _AROS
-makearosproto
-AROS_LHA4(ULONG, BGUI_DoGadgetMethodA,
+//makearosproto
+AROS_LH4(ULONG, BGUI_DoGadgetMethodA,
     AROS_LHA(Object *, obj, A0),
     AROS_LHA(struct Window *, win, A1),
     AROS_LHA(struct Requester *, req, A2),

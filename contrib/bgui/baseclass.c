@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/05/29 00:40:23  bergers
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ *
  * Revision 42.2  2000/05/15 19:27:00  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -929,7 +932,11 @@ METHOD(BaseClassRender, struct bmRender *, bmr)
 METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
 {
    BD                   *bd = INST_DATA(cl, obj);
+#ifdef _AROS
+#warning Commented the following line
+#else
    struct NewAmigaGuide  nag = { NULL };
+#endif
    ULONG                 rc = BMHELP_NOT_ME;
    struct gpHitTest      gph;
 
@@ -939,6 +946,9 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
     */
    if (bd->bd_HelpFile || bd->bd_HelpText || bd->bd_HelpHook)
    {
+#ifdef _AROS
+#warning A comment within a comment makes gcc puke...
+#if 0
       /*
       WORD                  l, t, w, h, dw, dh;
       /*
@@ -976,6 +986,8 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
       if (bsh->bsh_Mouse.X >= l && bsh->bsh_Mouse.X < (l + w) &&
           bsh->bsh_Mouse.Y >= t && bsh->bsh_Mouse.Y < (t + h))
       */
+#endif
+#endif
 
       gph.MethodID   = GM_HELPTEST;
       gph.gpht_Mouse.X = bsh->bsh_Mouse.X - GADGET(obj)->LeftEdge;
@@ -1002,6 +1014,9 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
             /*
              * Initialize the NewAmigaGuide structure.
              */
+#ifdef _AROS
+#warning Commented the following lines...
+#else
             nag.nag_Name   = (STRPTR)bd->bd_HelpFile;
             nag.nag_Node   = (STRPTR)bd->bd_HelpNode;
             nag.nag_Line   = bd->bd_HelpLine;
@@ -1012,6 +1027,7 @@ METHOD(BaseClassHelp, struct bmShowHelp *, bsh)
              */
             if (!DisplayAGuideInfo(&nag, TAG_END)) rc = BMHELP_FAILURE;
             else                                   rc = BMHELP_OK;
+#endif
          };
       };
    };

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/05/29 00:40:23  bergers
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ *
  * Revision 42.2  2000/05/15 19:27:01  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -289,7 +292,7 @@ makeproto ASM REGFUNC5(VOID, BBoxFill,
 	REGPARAM(D0, LONG, l),
 	REGPARAM(D1, LONG, t),
 	REGPARAM(D2, LONG, w),
-	REGPARAM(D3, LONG, h)
+	REGPARAM(D3, LONG, h))
 {
    SRectFill(bi->bi_RPort, l, t, l + w - 1, t + h - 1);
 }
@@ -385,7 +388,7 @@ ASM REGFUNC4(VOID, RenderBackFillRaster,
 	REGPARAM(A0, struct RastPort *, rp),
 	REGPARAM(A1, struct IBox *, ib),
 	REGPARAM(D0, UWORD, apen),
-	REGPARAM(D1, UWORD, bpen)
+	REGPARAM(D1, UWORD, bpen))
 #endif
 {
    static UWORD pat[] = { 0x5555, 0xAAAA };

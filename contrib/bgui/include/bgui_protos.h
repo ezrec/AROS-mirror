@@ -13,11 +13,8 @@
  * All Rights Reserved.
  *
  * $Log$
- * Revision 42.0  2000/05/09 22:23:29  mlemos
- * Bumped to revision 42.0 before handing BGUI to AROS team
- *
- * Revision 41.11  2000/05/09 20:02:02  mlemos
- * Merged with the branch Manuel_Lemos_fixes.
+ * Revision 42.1  2000/05/29 00:40:25  bergers
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
  * Revision 41.10.2.2  1998/02/26 22:06:50  mlemos
  * Corrected bgui.h include path

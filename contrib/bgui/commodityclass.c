@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/05/29 00:40:23  bergers
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ *
  * Revision 42.2  2000/05/15 19:27:01  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -280,7 +283,7 @@ METHOD(CommClassDispose, Msg,  msg)
 
 //STATIC ASM ULONG CommClassGet( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opGet *opg )
 STATIC ASM REGFUNC3(ULONG, CommClassGet,
-	REGPARAM(A0, Class *, cl),#
+	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct opGet *, opg))
 {

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/05/29 00:40:24  bergers
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ *
  * Revision 42.2  2000/05/15 19:27:03  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -2063,7 +2066,7 @@ STATIC ASM REGFUNC3(ULONG, WindowClassChange,
 STATIC ASM REGFUNC3(ULONG, WindowClassGet,
 	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
-	REGPRAAM(A1, struct opGet *, opg))
+	REGPARAM(A1, struct opGet *, opg))
 {
    WD       *wd = (WD *)INST_DATA(cl, obj);
    ULONG     rc = 1, *store = opg->opg_Storage;
@@ -2178,7 +2181,11 @@ METHOD(WindowClassHelp, Msg, msg)
 {
    WD                   *wd = INST_DATA( cl, obj );
    struct bmShowHelp     bsh;
+#ifdef _AROS
+#warning Commented the following line
+#else
    struct NewAmigaGuide  nag = { NULL };
+#endif
    ULONG                 rc = BMHELP_FAILURE;
    struct Window        *w;
 
@@ -2225,6 +2232,9 @@ METHOD(WindowClassHelp, Msg, msg)
                }
                else
                {
+#ifdef _AROS
+#warning Commented the following lines
+#else
                   nag.nag_Name   = (STRPTR)wd->wd_HelpFile;
                   nag.nag_Node   = (STRPTR)wd->wd_HelpNode;
                   nag.nag_Line   = wd->wd_HelpLine;
@@ -2232,6 +2242,7 @@ METHOD(WindowClassHelp, Msg, msg)
 
                   if (DisplayAGuideInfo(&nag, NULL))
                      rc = BMHELP_OK;
+#endif
                };
             };
          };

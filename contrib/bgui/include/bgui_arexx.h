@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/29 00:40:25  bergers
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ *
  * Revision 42.1  2000/05/15 19:28:20  stegerg
  * REG() macro replacementes
  *
@@ -51,6 +54,10 @@
 #include <dos/rdargs.h>
 #endif
 
+#ifdef _AROS
+#warning Not including any rexx includes.
+#else
+
 #ifndef REXX_STORAGE_H
 #include <rexx/storage.h>
 #endif
@@ -62,6 +69,8 @@
 #ifndef REXX_ERRORS_H
 #include <rexx/errors.h>
 #endif
+
+#endif /* _AROS */
 
 #ifndef INTUITION_CLASSES_H
 #include <intuition/classes.h>
@@ -131,12 +140,14 @@ typedef struct {
 #define REG(x)    register __ ## x
 #endif
 #else
-#ifndef ASM
-#define ASM       __asm
-#endif
-#ifndef REG
-#define REG(x)    register __ ## x
-#endif
+#ifndef _AROS
+  #ifndef ASM
+  #define ASM       __asm
+  #endif
+  #ifndef REG
+  #define REG(x)    register __ ## x
+  #endif
+  #endif
 #endif
 
 #ifdef _AROS
@@ -155,6 +166,7 @@ typedef struct {
   #endif
   #define SAVEDS
 
+#if 0
   #ifndef REGPARAM
   #define REGPARAM(reg,type,name) AROS_UFHA(type, name, reg)
   
@@ -168,6 +180,21 @@ typedef struct {
   #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) AROS_UFH8(r,n,a1,a2,a3,a4,a5,a6,a7,a8)
   #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) AROS_UFH9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9)
   #endif
+#else
+  #ifndef REGPARAM
+  #define REGPARAM(reg,type,name) type name
+  
+  #define REGFUNC1(r,n,a1) r n(a1)
+  #define REGFUNC2(r,n,a1,a2) r n(a1,a2)
+  #define REGFUNC3(r,n,a1,a2,a3) r n(a1,a2,a3)
+  #define REGFUNC4(r,n,a1,a2,a3,a4) r n(a1,a2,a3,a4)
+  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) r n(a1,a2,a3,a4,a5)
+  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) r n(a1,a2,a3,a4,a5,a6)
+  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) r n(a1,a2,a3,a4,a5,a6,a7)
+  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) r n(a1,a2,a3,a4,a5,a6,a7,a8)
+  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) r n(a1,a2,a3,a4,a5,a6,a7,a8,a9)
+  #endif
+#endif
   
 #else
   #ifndef REGPARAM
@@ -188,6 +215,9 @@ typedef struct {
 /*
 **      An array of these structures must be passed at object-create time.
 **/
+#ifdef _AROS
+#warning Deactivated the following typedef
+#else
 typedef struct {
         UBYTE                   *rc_Name;         /* Command name. */
         UBYTE                   *rc_ArgTemplate;  /* DOS-style argument template. */
@@ -196,7 +226,7 @@ typedef struct {
 		REGPARAM(A0, REXXARGS *,),
 		REGPARAM(A1, struct RexxMsg *, ));
 }       REXXCOMMAND;
-
+#endif
 /*
 **      Possible errors.
 **/

@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/05/29 00:40:24  bergers
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ *
  * Revision 42.1  2000/05/14 23:32:48  stegerg
  * changed over 200 function headers which all use register
  * parameters (oh boy ...), because the simple REG() macro
@@ -50,6 +53,10 @@
  *
  */
 
+#ifdef _AROS
+#include "include/bgui_macros.h"
+#endif
+
 #include "include/classdefs.h"
 
 makeproto struct TextAttr Topaz80 =
@@ -72,10 +79,14 @@ makeproto ASM REGFUNC2(LONG, min,
 	REGPARAM(D1, LONG, b))
 { return (a < b) ? a : b; }
 
+#ifdef _AROS
+#warning No abs function here, since it is 'built in'.
+#else
 //makeproto ASM LONG abs(REG(d0) LONG a)
 makeproto ASM REGFUNC1(LONG, abs,
 	REGPARAM(D0, LONG, a))
 { return (a > 0) ? a :-a; }
+#endif
 
 //makeproto ASM LONG range(REG(d0) LONG c, REG(d1) LONG a, REG(d2) LONG b)
 makeproto ASM REGFUNC3(LONG, range,
@@ -273,7 +284,7 @@ makeproto VOID DoMultiSet(Tag tag, ULONG data, ULONG count, Object *obj1, ...)
  * Set a gadget's bounds.
  */
 //makeproto ASM VOID SetGadgetBounds(REG(a0) Object *obj, REG(a1) struct IBox *bounds)
-makeproto ASM REGFUNC2(VOID, SetGadgetBounds
+makeproto ASM REGFUNC2(VOID, SetGadgetBounds,
 	REGPARAM(A0, Object *, obj),
 	REGPARAM(A1, struct IBox *, bounds))
 {
@@ -324,7 +335,7 @@ makeproto ASM REGFUNC2(VOID, UnmapTags,
  * Create a vector image.
  */
 //makeproto ASM Object *CreateVector(REG(a0) struct TagItem *attr)
-makeproto ASM REGFUNC1(Object *, CreateVector
+makeproto ASM REGFUNC1(Object *, CreateVector,
 	REGPARAM(A0, struct TagItem *, attr))
 {
    struct TagItem    *tag, *tstate = attr;

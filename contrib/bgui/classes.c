@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/05/29 00:40:23  bergers
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ *
  * Revision 42.2  2000/05/15 19:27:00  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -83,13 +86,24 @@
  */
 
 #include "include/classdefs.h"
-#include <dos.h>
 
 #ifdef _AROS
-typedef ULONG (*ClassMethodDispatcher)(AROS_UFPA(Class *, cl, A0),
-				       AROS_UFPA(Object *, obj, A2),
-				       AROS_UFPA(Msg, msg, A1),
-				       AROS_UFPA(APTR, global_data, A4));
+#else
+#include <dos.h>
+#endif
+
+#ifdef _AROS
+#warning If something is wrong with the dispatcherfunction then look here!
+//#if 0
+typedef AROS_UFP4(ULONG,* ClassMethodDispatcher,
+		AROS_UFPA(Class *, cl, A0),
+		AROS_UFPA(Object *, obj, A2),
+		AROS_UFPA(Msg, msg, A1),
+		AROS_UFPA(APTR, global_data, A4));
+//#endif
+
+//typedef ClassMethodDispatcher (void *);
+
 #else
 typedef ASM ULONG (*ClassMethodDispatcher)(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg, REG(a4) APTR global_data);
 #endif
@@ -97,7 +111,11 @@ typedef ASM ULONG (*ClassMethodDispatcher)(REG(a0) Class *cl, REG(a2) Object *ob
 typedef struct SortedMethod
 {
    ULONG MethodID;
+#ifdef _AROS
+   ULONG (*DispatcherFunction)(Class *, Object *, Msg, APTR);
+#else
    ClassMethodDispatcher DispatcherFunction;
+#endif
    Class *Class;
    APTR GlobalData;
    struct SortedMethod *NextHashedMethod;
@@ -108,7 +126,11 @@ SortedMethod;
 typedef struct
 {
    DPFUNC *ClassMethodFunctions;
+#ifdef _AROS
+   ULONG (*ClassDispatcher)(Class *, Object *, Msg, APTR);
+#else
    ClassMethodDispatcher ClassDispatcher;
+#endif
    APTR BGUIGlobalData;
    APTR ClassGlobalData;
    SortedMethod *MethodFunctions;
@@ -155,7 +177,15 @@ static ASM REGFUNC4(ULONG, ClassCallDispatcher,
    {
       for(;class_methods->df_MethodID!=DF_END;class_methods++)
          if(class_methods->df_MethodID==msg->MethodID)
+#ifdef _AROS
+           return AROS_UFC4(ULONG, class_methods->df_Func,
+                     AROS_UFCA(Class *, cl, A0),
+                     AROS_UFCA(Object *, obj, A1),
+                     AROS_UFCA(Msg, msg, A2),
+                     AROS_UFCA(APTR, global_data, A4));
+#else
            return(((ClassMethodDispatcher)class_methods->df_Func)(cl,obj,msg,global_data));
+#endif
    }
    switch(msg->MethodID)
    {
@@ -168,7 +198,11 @@ static ASM REGFUNC4(ULONG, ClassCallDispatcher,
 
 struct CallData
 {
+#ifdef _AROS
+   ULONG (*dispatcher)(Class *, Object *, Msg, APTR);
+#else
    ClassMethodDispatcher dispatcher;
+#endif
    Class *cl;
    Object *obj;
    Msg msg;
@@ -253,12 +287,20 @@ makeproto SAVEDS ASM REGFUNC3(ULONG, __GCD,
    if(method_found)
    {
       call_data.cl=method_found->Class;
+#ifdef _AROS
+      call_data.dispatcher=method_found->DispatcherFunction;
+#else
       call_data.dispatcher=(ClassMethodDispatcher)method_found->DispatcherFunction;
+#endif
       call_data.global_data=method_found->GlobalData;
    }
    else
    {
+#ifdef _AROS
+      call_data.dispatcher=(call_data.cl=cl->cl_Super)->cl_Dispatcher.h_Entry;
+#else
       call_data.dispatcher=(ClassMethodDispatcher)(call_data.cl=cl->cl_Super)->cl_Dispatcher.h_Entry;
+#endif
       call_data.global_data=class_data->BGUIGlobalData;
    }
    call_data.obj=obj;
@@ -283,7 +325,10 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
    AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 #endif
 
+#ifdef _AROS
+#else
    ULONG  old_a4 = (ULONG)getreg(REG_A4);
+#endif
    ULONG  SuperClass, SuperClass_ID, Class_ID, Flags, ClassSize, ObjectSize;
    BGUIClassData *ClassData;
    Class *cl=NULL;
@@ -314,9 +359,18 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
          cl->cl_UserData                 = (LONG)(ClassData+1);
          cl->cl_Dispatcher.h_Entry       = (HOOKFUNC)GetTagData(CLASS_Dispatcher, (ULONG)__GCD, tags);
          ClassData->ClassMethodFunctions = (DPFUNC *)GetTagData(CLASS_ClassDFTable, NULL, tags);
+#ifdef _AROS
+         ClassData->ClassDispatcher      = GetTagData(CLASS_ClassDispatcher, (ULONG)ClassCallDispatcher, tags);
+#else
          ClassData->ClassDispatcher      = (ClassMethodDispatcher)GetTagData(CLASS_ClassDispatcher, (ULONG)ClassCallDispatcher, tags);
+#endif
+
+#ifdef _AROS
+#warning Missing code here!
+#else
          ClassData->BGUIGlobalData       = (APTR)getreg(REG_A4);
          ClassData->ClassGlobalData      = (APTR)old_a4;
+#endif
 
          if((method_functions=(DPFUNC *)GetTagData(CLASS_DFTable, NULL, tags)))
          {
@@ -332,7 +386,11 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
                for(method=0;method<ClassData->MethodCount;method++)
                {
                   ClassData->MethodFunctions[method].MethodID=method_functions[method].df_MethodID;
+#ifdef _AROS
+                  ClassData->MethodFunctions[method].DispatcherFunction=method_functions[method].df_Func;
+#else
                   ClassData->MethodFunctions[method].DispatcherFunction=(ClassMethodDispatcher)method_functions[method].df_Func;
+#endif
                   ClassData->MethodFunctions[method].Class=cl;
                   ClassData->MethodFunctions[method].GlobalData=ClassData->ClassGlobalData;
                }
@@ -435,7 +493,10 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
          BGUI_FreePoolMem(ClassData);
       }
    };
+#ifdef _AROS
+#else
    putreg(REG_A4, (LONG)old_a4);
+#endif
    return cl;
 
 #ifdef _AROS

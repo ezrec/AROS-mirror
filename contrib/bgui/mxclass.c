@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/05/29 00:40:24  bergers
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ *
  * Revision 42.2  2000/05/15 19:27:02  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -81,7 +84,7 @@ METHOD(MXClassSetUpdate,   struct opUpdate *, );
  * Add MX objects.
  */
 //STATIC ASM BOOL AddMXObjects(REG(a0) Object *target, REG(a1) MD *md)
-STATIC ASM REGFUNCS2(BOOL, AddMXObjects,
+STATIC ASM REGFUNC2(BOOL, AddMXObjects,
 	REGPARAM(A0, Object *, target),
 	REGPARAM(A1, MD *, md))
 {

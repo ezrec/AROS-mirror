@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/29 00:40:24  bergers
+ * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
+ *
  * Revision 42.0  2000/05/09 22:09:20  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -57,14 +60,22 @@ struct ExecBase      *SysBase       = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
 struct GfxBase       *GfxBase       = NULL;
 struct Library       *GadToolsBase  = NULL; /* Menu stuff. */
+#ifdef _AROS
+struct UtilityBase   *UtilityBase   = NULL;
+#else
 struct Library       *UtilityBase   = NULL;
+#endif
 struct Library       *LayersBase    = NULL;
 struct Library       *AslBase       = NULL;
 struct Library       *CxBase        = NULL;
 struct Library       *KeymapBase    = NULL;
 struct Library       *IFFParseBase  = NULL;
 struct Library       *DataTypesBase = NULL;
+#ifdef _AROS
+struct LocaleBase    *LocaleBase    = NULL;
+#else
 struct Library       *LocaleBase    = NULL;
+#endif
 struct Library       *WorkbenchBase = NULL;
 struct Catalog       *Catalog       = NULL;
 
