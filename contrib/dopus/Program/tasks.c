@@ -434,7 +434,7 @@ int translate;
 	if ((filter=CxFilter(string))) {
 		if (!string) {
 			hotkey_ix.ix_Class=IECLASS_RAWKEY;
-			if (code==~0) {
+			if (code==(USHORT)~0) {
 				hotkey_ix.ix_Code=0;
 				hotkey_ix.ix_CodeMask=0;
 			}
@@ -467,14 +467,14 @@ USHORT code,qual;
 {
 	if (filter) {
 		hotkey_ix.ix_Class=IECLASS_RAWKEY;
-		if (qual==0 && code==~0) {
+		if (qual==0 && code==(USHORT)~0) {
 			hotkey_ix.ix_Code=0xffff;
 			hotkey_ix.ix_CodeMask=0xffff;
 			hotkey_ix.ix_Qualifier=0;
 			hotkey_ix.ix_Qualifier=0xffff;
 		}
 		else {
-			if (code==~0) {
+			if (code==(USHORT)~0) {
 				hotkey_ix.ix_Code=0;
 				hotkey_ix.ix_CodeMask=0;
 			}
@@ -670,7 +670,7 @@ AROS_UFH2(struct InputEvent *, keyhandler,
 	struct dopushotkey *hotkey;
 
 	if (oldevent->ie_Class==IECLASS_RAWKEY) {
-		if ((config->hotkeycode==~0 || oldevent->ie_Code==config->hotkeycode) &&
+		if ((config->hotkeycode==(UWORD)~0 || oldevent->ie_Code==config->hotkeycode) &&
 			(!config->hotkeyqual || (oldevent->ie_Qualifier&VALID_QUALIFIERS)==config->hotkeyqual))
 			wakeup=1;
 		else {
