@@ -5,11 +5,11 @@ LOCALINCLUDES = -I. -I../Include
 LIBS := -L$(LIBDIR) -lamiga
 
 
-$(INCDIR)/defines/xem.h : aros/xem_defines.h
+$(AROS_INCLUDES)/defines/xem.h : aros/xem_defines.h
 	@$(ECHO) Copying $^ ...
 	@$(CP) $^ $@
 
-$(INCDIR)/proto/xem.h : aros/xem_proto.h
+$(AROS_INCLUDES)/proto/xem.h : aros/xem_proto.h
 	@$(ECHO) Copying $^ ...
 	@$(CP) $^ $@
 
@@ -41,7 +41,7 @@ DEPS := $(foreach f,$(FILES),$(OBJDIR)/$(f).d)
 #First all intermediate files MUST be created so there is a 'defines' file!
 linklibs-aminet-comm-term-xem: $(INTERMEDIATES) includes-copy
 
-includes-copy: $(INCDIR)/proto/xem.h $(INCDIR)/defines/xem.h
+includes-copy: $(AROS_INCLUDES)/proto/xem.h $(AROS_INCLUDES)/defines/xem.h
 
 #MM
 setup-xem :

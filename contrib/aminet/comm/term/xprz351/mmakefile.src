@@ -13,12 +13,12 @@ FILES = Send Receive Utils xprgetsystime xprtimeout xprzmodem_locale Zm xprsprin
 #MM linklibs-aminet-comm-term-xprz-includes: xprz-includes-copy
 
 #MM
-xprz-includes-copy: $(INCDIR)/proto/xpr.h
+xprz-includes-copy: $(AROS_INCLUDES)/proto/xpr.h
 
-$(INCDIR)/proto/xpr.h : aros/xpr_proto.h
+$(AROS_INCLUDES)/proto/xpr.h : aros/xpr_proto.h
 	@$(ECHO) Copying $^ ...
 	@$(CP) $^ $@
 
 clean ::
-	-$(RM) $(INCDIR)/proto/xpr.h
+	-$(RM) $(AROS_INCLUDES)/proto/xpr.h
 

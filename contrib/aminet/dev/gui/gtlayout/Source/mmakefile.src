@@ -127,9 +127,9 @@ LINKLIB_FILES = \
 
 #MM linklibs-aminet-dev-gui-gtlayout-includes : gtlayout-includes-copy
 #MM
-gtlayout-includes-copy: $(INCDIR)/gtlayout.h
+gtlayout-includes-copy: $(AROS_INCLUDES)/gtlayout.h
 
-$(INCDIR)/gtlayout.h : gtlayout.h
+$(AROS_INCLUDES)/gtlayout.h : gtlayout.h
 	@$(ECHO) Copying $^ ...
 	@$(CP) $^ $@
 
