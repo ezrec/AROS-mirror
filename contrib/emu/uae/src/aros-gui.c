@@ -46,6 +46,8 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
 	void (*eventhandler)(struct IntuiMessage *);
 
+	int   nomenu;
+
 	struct MUI_EventHandlerNode ehnode;
     },
 
@@ -196,7 +198,8 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
          data->ehnode.ehn_Object = self;
          data->ehnode.ehn_Class  = CLASS;
-         data->ehnode.ehn_Events = IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE | IDCMP_RAWKEY;
+         data->ehnode.ehn_Events = IDCMP_MOUSEBUTTONS | IDCMP_MOUSEMOVE | IDCMP_RAWKEY |
+	                           IDCMP_ACTIVEWINDOW;
 
 	 DoMethod(_win(self), MUIM_Window_AddEventHandler, (IPTR)&data->ehnode);
 
@@ -233,7 +236,6 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
     MUIM_HandleEvent, struct MUIP_HandleEvent *,
     ({
-//         printf("**** MUIM_HandleEvent ****\n");
          if (!message->imsg || !data->eventhandler)
 	     return 0;
 
@@ -242,12 +244,23 @@ ZUNE_CUSTOMCLASS_INLINE_10
 	     message->imsg->MouseX -= _mleft(self);
 	     message->imsg->MouseY -= _mtop(self);
 
-//	     printf("Received an event for ME: %d\n", message->muikey);
+	     if (!data->nomenu)
+	     {
+	         set(_win(self), MUIA_Window_NoMenus,  TRUE);
+		 data->nomenu = TRUE;
+	     }
 
 	     data->eventhandler(message->imsg);
 
 	     return MUI_EventHandlerRC_Eat;
 	 }
+
+         if (data->nomenu)
+	 {
+	     set(_win(self), MUIA_Window_NoMenus,  FALSE);
+	     data->nomenu = FALSE;
+	 }
+
 
 //	 printf("Received an event NOT for me: %d\n", message->muikey);
 
@@ -346,7 +359,6 @@ int gui_init (void)
         SubWindow, (IPTR)window = WindowObject,
             MUIA_Window_Title,    (IPTR)"UAE for AROS",
             MUIA_Window_Activate, TRUE,
-	    MUIA_Window_NoMenus,  TRUE,
 
             WindowContents, (IPTR)VGroup,
                 Child, (IPTR)uaedisplay = UAEDisplayObject,
