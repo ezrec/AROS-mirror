@@ -16,7 +16,7 @@ EXE := $(DESTDIR)/lazymines
 
 .PHONY : all clean
 
-#MM aminet-lazymines : setup-aminet-lazymines
+#MM aminet-lazymines : setup-aminet-lazymines setup-aminet-lazymines-catalogs
 aminet-lazymines 	: $(OBJS) $(EXE)
 	@$(NOP)
 

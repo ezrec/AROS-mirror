@@ -24,8 +24,8 @@ create_catalogs:
 
 create_include:
 	@$(ECHO) "Creating include file"
-	$(FLEXCAT) $(CATDESC).cd $(INCLUDE)=$(TOOLDIR)/C_orig_h.sd
-	$(FLEXCAT) $(CATDESC).cd $(CODEFILE)=$(TOOLDIR)/C_orig_c.sd
+	$(FLEXCAT) $(CATDESC).cd $(INCLUDE)=$(TOOLDIR)/C_h_orig.sd
+	$(FLEXCAT) $(CATDESC).cd $(CODEFILE)=$(TOOLDIR)/C_c_orig.sd
 
 create_dirs:
 	@$(FOR) dir in $(CATDIRS) ; do \
