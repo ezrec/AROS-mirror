@@ -5,18 +5,19 @@ MODNAME := cdrom
 MODTYPE := handler
 
 INIT_FILE := arosdevice
-FILES :=	cdrom \
-			clib_stuff \
-			generic \
-			hfs \
-			iso9660 \
-			intui \
-			path \
-			rock \
-			volumes
+FILES     := cdrom \
+             clib_stuff \
+             generic \
+             hfs \
+             iso9660 \
+             intui \
+             path \
+             rock \
+             volumes
 FUNCS := 
 
 USE_LIBDEFS := no
+USE_CLIB_STATIC := yes
 
 #MM aminet-disk-cdrom-amicdrom: setup includes linklibs aminet-disk-cdrom-amicdrom-module
 %make_module_setup mmake=aminet-disk-cdrom-amicdrom

@@ -1,5 +1,6 @@
 #include "clib_stuff.h"
 
+#if 0
 char *StrCpy(char *dst, char *src) {
 char *back;
 
@@ -103,4 +104,4 @@ char *b2;
 	}
 	return len;
 }
-
+#endif
