@@ -34,7 +34,7 @@ static  SHORT Weight[]={0,0,4,20,100,500,0};
     void setup_menu(),show_About();
 
 
-VOID _main()
+VOID main()
 {
 
     AttackFactor=4;
