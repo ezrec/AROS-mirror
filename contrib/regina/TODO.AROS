@@ -9,11 +9,9 @@
   - EXISTS
   - EXPORT
   - FREESPACE
-  - GETCLIP
   - GETSPACE
   - IMPORT
   - PRAGMA
-  - SETCLIP
   - SHOW
   - STORAGE
   Implemented:
@@ -39,6 +37,8 @@
   - RANDU
   - ADDLIB
   - REMLIB
+  - SETCLIP
+  - GETCLIP
 * Fix the ARexx vs. ANSI REXX incompatibilies.
   These are: ^ is XOR in ARexx but is not in ANSI REXX.
   Multiple line strings in ARexx are not there in ASNI REXX and are said

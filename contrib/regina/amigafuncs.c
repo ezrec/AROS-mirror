@@ -26,6 +26,7 @@
 #if defined(_AMIGA) || defined(__AROS__)
 #include "envir.h"
 #include <exec/ports.h>
+#include <rexx/rxslib.h>
 
 #include <proto/alib.h>
 #include <proto/exec.h>
@@ -40,7 +41,7 @@ typedef struct _amiga_tsd_t {
   proclevel amilevel;
 #if defined(_AMIGA) || defined(__AROS__)
   struct amiga_envir portenvir;
-  struct Library *rexxsysbase;
+  struct RxsLib *rexxsysbase;
 #endif
 } amiga_tsd_t;
 
@@ -60,7 +61,7 @@ int init_amigaf ( tsd_t *TSD )
 #if defined(_AMIGA) || defined(__AROS__)
   atsd->portenvir.envir.name = NULL;
   atsd->portenvir.envir.type = ENVIR_AMIGA;
-  atsd->rexxsysbase = OpenLibrary( "rexxsyslib.library", 44 );
+  atsd->rexxsysbase = (struct RxsLib *)OpenLibrary( "rexxsyslib.library", 44 );
   if ( atsd->rexxsysbase == NULL )
     return 0;
 #endif
@@ -743,13 +744,6 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
   struct RexxMsg *msg;
   struct MsgPort *port = ((struct amiga_envir *)envir)->port, *replyport;
   
-  RexxSysBase = OpenLibrary( "rexxsyslib.library", 44 );
-  if ( RexxSysBase == NULL )
-  {
-    *rc = RXFLAG_FAILURE;
-    return nullstringptr();
-  }
-
   replyport = CreatePort( NULL, 0 );
   msg = CreateRexxMsg( port, NULL, NULL );
   msg->rm_Action = RXCOMM;
@@ -761,7 +755,6 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
 
   *rc = RXFLAG_OK;
   DeleteRexxMsg( msg );
-  CloseLibrary( RexxSysBase );
   return Str_crestrTSD( "Message sent and replied" );
 }
 
@@ -777,10 +770,9 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
  */
 streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
 {
-
   cparamboxptr parm2 = NULL, parm3 = NULL, parm4 = NULL;
   struct MsgPort *replyport, *rexxport;
-  struct RexxMsg *msg, *retmsg;
+  struct RexxMsg *msg;
   int pri, offset, version, error, count;
   char *name;
   streng *retval;
@@ -817,57 +809,67 @@ streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
   name = str_of( TSD, parm1->value );
   replyport = CreatePort( NULL, 0 );
   if ( replyport == NULL )
-      exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+  {
+    Free_TSD( TSD, name );
+    exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+  }
   msg = CreateRexxMsg( replyport, NULL, NULL );
   if ( msg == NULL )
-      exiterror( ERR_STORAGE_EXHAUSTED, 0 );
-  
-  if (parm3 == NULL || parm3->value == NULL || parm3->value->len == 0)
   {
-    msg->rm_Action = RXADDFH | RXFF_RESULT;
+    Free_TSD( TSD, name );
+    DeletePort( replyport );
+    exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+  }
+    
+  if ( parm3 == NULL || parm3->value == NULL || parm3->value->len == 0 )
+  {
+    msg->rm_Action = RXADDFH;
     msg->rm_Args[0] = (IPTR)name;
     msg->rm_Args[1] = (IPTR)pri;
     count = 2;
     if ( !FillRexxMsg( msg, 2, 1<<1 ) )
+    {
+      Free_TSD( TSD, name );
+      DeletePort( replyport );
+      DeleteRexxMsg( msg );
       exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+    }
   }
   else
   {
-    msg->rm_Action = RXADDLIB | RXFF_RESULT;
+    msg->rm_Action = RXADDLIB;
     msg->rm_Args[0] = (IPTR)name;
     msg->rm_Args[1] = (IPTR)pri;
     msg->rm_Args[2] = (IPTR)offset;
     msg->rm_Args[3] = (IPTR)version;
     count = 4;
     if ( !FillRexxMsg( msg, 4, 1<<1 | 1<<2 | 1<<3 ) )
+    {
+      Free_TSD( TSD, name );
+      DeletePort( replyport );
+      DeleteRexxMsg( msg );
       exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+    }
   }
 
   rexxport = FindPort( "REXX" );
   if (rexxport == NULL)
+  {
+    Free_TSD( TSD, name );
+    DeletePort( replyport );
+    DeleteRexxMsg( msg );
     exiterror( ERR_EXTERNAL_QUEUE, 0 );
+  }
   PutMsg( rexxport, (struct Message *)msg );
     
-  do
-  {
-    retmsg = (struct RexxMsg *)WaitPort( replyport );
-  } while( retmsg != msg );
+  while( (struct RexxMsg *)WaitPort( replyport ) != msg ) /* Nothing */;
     
   Free_TSD( TSD, name );
   DeletePort( replyport );
   ClearRexxMsg( msg, count );
     
-  if ( msg->rm_Result1 != 0 )
-    exiterror( ERR_INCORRECT_CALL, 0 );
+  retval = ( msg->rm_Result1 == 0 ) ? Str_cre_TSD( TSD, "1" ) : Str_cre_TSD( TSD, "0" );
 
-  if ( msg->rm_Result2 != NULL )
-  {
-    retval = Str_ncre_TSD( TSD, (const char *)msg->rm_Result2, LengthArgstring( (UBYTE *)msg->rm_Result2 ) );
-    DeleteArgstring( (UBYTE *)msg->rm_Result2 );
-  }
-  else
-    retval = nullstringptr();
-  
   DeleteRexxMsg( msg );
   
   return retval;
@@ -876,7 +878,7 @@ streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
 streng *arexx_remlib( tsd_t *TSD, cparamboxptr parm1 )
 {
   struct MsgPort *replyport, *rexxport;
-  struct RexxMsg *msg, *retmsg;
+  struct RexxMsg *msg;
   streng *retval;
   
   checkparam( parm1, 1, 1, "REMLIB" );
@@ -888,7 +890,7 @@ streng *arexx_remlib( tsd_t *TSD, cparamboxptr parm1 )
   if ( msg == NULL )
     exiterror( ERR_STORAGE_EXHAUSTED, 0 );
 
-  msg->rm_Action = RXREMLIB | RXFF_RESULT;
+  msg->rm_Action = RXREMLIB;
   msg->rm_Args[0] = (IPTR)CreateArgstring( parm1->value->value, parm1->value->len );
   
   rexxport = FindPort( "REXX" );
@@ -900,26 +902,10 @@ streng *arexx_remlib( tsd_t *TSD, cparamboxptr parm1 )
   }
   PutMsg( rexxport, (struct Message *)msg );
 
-  do
-  {
-    retmsg = (struct RexxMsg *)WaitPort( replyport );
-  } while( retmsg != msg );
+  while( (struct RexxMsg *)WaitPort( replyport ) != msg ) /* Nothing */;
   DeletePort( replyport );
   
-  if ( msg->rm_Result1 != 0 )
-  {
-    DeleteArgstring( (UBYTE *)msg->rm_Args[0] );
-    DeleteRexxMsg( msg );
-    exiterror( ERR_INCORRECT_CALL, 0 );
-  }
-  
-  if ( msg->rm_Result2 != NULL )
-  {
-    retval = Str_ncre_TSD( TSD, (const char *)msg->rm_Result2, LengthArgstring( (UBYTE *)msg->rm_Result2 ) );
-    DeleteArgstring( (UBYTE *)msg->rm_Result2 );
-  }
-  else
-    retval = nullstringptr();
+  retval = ( msg->rm_Result1 == 0 ) ? Str_cre_TSD( TSD, "1" ) : Str_cre_TSD( TSD, "0" );
 
   DeleteArgstring( (UBYTE *)msg->rm_Args[0] );
   DeleteRexxMsg( msg );
@@ -930,7 +916,7 @@ streng *arexx_remlib( tsd_t *TSD, cparamboxptr parm1 )
 streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char called )
 {
   struct MsgPort *replyport, *rexxport;
-  struct RexxMsg *msg, *retmsg;
+  struct RexxMsg *msg;
   streng *retval;
   unsigned int parmcount;
   cparamboxptr parmit;
@@ -963,14 +949,16 @@ streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char
   }
   PutMsg( rexxport, (struct Message *)msg );
   
-  do
-  {
-    retmsg = (struct RexxMsg *)WaitPort( replyport );
-  } while( retmsg != msg );
+  while( (struct RexxMsg *)WaitPort( replyport ) != msg ) /* Nothing */;
   DeletePort( replyport );
   
   if ( msg->rm_Result1 != 0 )
-    retval = NULL;
+  {
+    if ( msg->rm_Result2 != 0 )
+      exiterror( ERR_EXTERNAL_QUEUE, 0 );
+    else
+      retval = NULL;
+  }
   else
   {
     if ( msg->rm_Result2 == NULL )
@@ -987,4 +975,81 @@ streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char
 
   return retval;
 };
+
+
+streng *arexx_setclip( tsd_t *TSD, cparamboxptr parm1 )
+{
+  cparamboxptr parm2;
+  struct MsgPort *replyport, *rexxport;
+  struct RexxMsg *msg;
+  streng *retval;
+  
+  checkparam( parm1, 1, 2, "SETCLIP" );
+  parm2 = parm1->next;
+
+  replyport = CreatePort(NULL, 0);
+  if ( replyport == NULL )
+    exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+  msg = CreateRexxMsg( replyport, NULL, NULL );
+  if ( msg == NULL )
+  {
+    DeletePort( replyport );
+    exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+  }
+  
+  if ( parm2 == NULL || parm2->value == NULL || parm2->value->len == 0 )
+  {
+    msg->rm_Action = RXREMCON;
+    msg->rm_Args[0] = (IPTR)str_of( TSD, parm1->value );
+  }
+  else
+  {
+    msg->rm_Action = RXADDCON;
+    msg->rm_Args[0] = (IPTR)str_of( TSD, parm1->value );
+    msg->rm_Args[1] = (IPTR)parm2->value->value;
+    msg->rm_Args[2] = (IPTR)parm2->value->len;
+  }
+  
+  rexxport = FindPort( "REXX" );
+  if ( rexxport == NULL )
+  {
+    Free_TSD( TSD, (void *)msg->rm_Args[0] );
+    DeleteRexxMsg( msg );
+    DeletePort( replyport );
+    exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+  }
+  PutMsg( rexxport, (struct Message *)msg );
+  
+  while( (struct RexxMsg *)WaitPort( replyport ) != msg ) /* Nothing */;
+
+  Free_TSD( TSD, (void *)msg->rm_Args[0] );
+  DeletePort( replyport );
+
+  retval = ( msg->rm_Result1 == 0 ) ? Str_cre_TSD( TSD, "1" ) : Str_cre_TSD( TSD, "0" );
+  DeleteRexxMsg( msg );
+  
+  return retval;
+}
+
+streng *arexx_getclip( tsd_t *TSD, cparamboxptr parm1 )
+{
+  struct RexxRsrc *rsrc;
+  char *name;
+  
+  checkparam( parm1, 1, 1, "GETCLIP" );
+  
+  name = str_of( TSD, parm1->value );
+  
+  LockRexxBase(0);
+  rsrc = (struct RexxRsrc *)FindName( &RexxSysBase->rl_ClipList, name );
+  UnlockRexxBase(0);
+  
+  Free_TSD( TSD, name );
+  
+  if ( rsrc == NULL )
+    return nullstringptr();
+  else
+    return Str_ncre_TSD( TSD, (const char *)rsrc->rr_Arg1, LengthArgstring( (UBYTE *)rsrc->rr_Arg1 ) );
+}
+
 #endif /* _AMIGA || __AROS__ */

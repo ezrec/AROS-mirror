@@ -816,6 +816,8 @@
    streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_remlib( tsd_t *TSD, cparamboxptr parm1 );
    streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char called );
+   streng *arexx_setclip( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_getclip( tsd_t *TSD, cparamboxptr parm1 );
 #endif
 
 /*

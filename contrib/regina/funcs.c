@@ -153,6 +153,9 @@ static const struct function_type functions[] = {
   { 0,              dbg_freelists, "FREELISTS" },
 #endif
   { 0,              std_fuzz, "FUZZ" },
+#if defined(_AMIGA) || defined(__AROS__)
+  { 0,              arexx_getclip, "GETCLIP" },
+#endif
   { 0,              unx_getenv, "GETENV" },
   { 0,              unx_getpath, "GETPATH" },
   { 0,              unx_getpid, "GETPID" },
@@ -207,6 +210,9 @@ static const struct function_type functions[] = {
 
 #ifdef AREXXIO
   { 0,              arexx_seek, "SEEK" },
+#endif
+#if defined(_AMIGA) || defined(__AROS__)
+  { 0,              arexx_setclip, "SETCLIP" },
 #endif
   { 0,              std_sign, "SIGN" },
   { 0,              cms_sleep, "SLEEP" },
