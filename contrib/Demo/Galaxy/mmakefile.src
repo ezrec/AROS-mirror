@@ -1,0 +1,47 @@
+include $(TOP)/config/make.cfg
+
+%define_libs
+
+CFLAGS		:= $(USER_DEFINES) -O3 -ffast-math -funroll-loops \
+		-fomit-frame-pointer -fexpensive-optimizations $(SPECIAL_CFLAGS) $(INCLUDES)
+	
+OBJDIR		:= $(GENDIR)/$(CURDIR)
+DESTDIR 	:= $(CONTRIBDIR)/Demos/Galaxy
+
+FILES 		:= galaxy schedul_fx
+ASMFILES 	:= memshd
+
+SRCS 		:= $(foreach f, $(FILES), $(f).c)
+ASMSRCS		:= $(foreach f, $(ASMFILES), $(f).S)
+
+OBJS 		:= $(foreach f, $(FILES) $(ASMFILES), $(OBJDIR)/$(f).o)
+
+EXE 		:= $(DESTDIR)/galaxy
+
+.PHONY : all clean
+
+#MM demo-galaxy : setup-demo-galaxy
+demo-galaxy : $(OBJS) $(EXE)
+	@$(NOP)
+
+#MM
+setup-demo-galaxy :
+	%mkdirs_q $(DESTDIR) $(OBJDIR)
+
+$(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
+	@$(ECHO) "Linking $@..."
+	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
+	@$(ECHO) "Checking $@..."
+	@$(CHECKUDS) $@
+
+#MM
+clean-contrib-demos :
+	@$(RM) $(OBJDIR) $(DESTDIR)
+
+$(OBJDIR)/%.o : %.c
+	%compile_q
+
+$(OBJDIR)/%.o : %.S
+	%compile_q
+
+
