@@ -592,19 +592,17 @@ int i, j, len;
 	return cnt;
 }
 
-inline void lba_to_msf (int lba, unsigned char *m, unsigned char *s, unsigned char *f)
+inline void block2msf (unsigned long blk, unsigned char *msf)
 {
-	lba += CD_MSF_OFFSET;
-	lba &= 0xffffff;  /* negative lbas use only 24 bits */
-	*m = lba / (CD_SECS * CD_FRAMES);
-	lba %= (CD_SECS * CD_FRAMES);
-	*s = lba / CD_FRAMES;
-	*f = lba % CD_FRAMES;
+	blk = (blk+150) & 0xffffff;
+	msf[0] = blk / 4500;        /* 4500 = 60 seconds * 75 frames */
+	blk %= 4500;
+	msf[1] = blk / 75;
+	msf[2] = blk % 75;
 }
 
 int Start_Play_Audio(CDROM *p_cd) {
-//static unsigned char cmd[10] = { 0x48, 0, 0, 0, 0, 1, 0, 99, 1, 0 };
-static unsigned char cmd[10] = { GPCMD_PLAY_AUDIO_MSF, 0, 0, 0, 0, 0, 1, 99, 1, 0 };
+static unsigned char cmd[10] = { 0x47, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
 unsigned long start,end;
@@ -638,10 +636,10 @@ FoundStart:
 		if (toc[i].track_number > 99 || (toc[i].flags & 4))
                         break;
 	}
-        end=toc[i-1].address;
+        end=toc[i].address;
 
-        lba_to_msf(start, &cmd[3], &cmd[4], &cmd[5]);
-	lba_to_msf(end-1, &cmd[6], &cmd[7], &cmd[8]);
+        block2msf(start, &cmd[3]);
+	block2msf(end-1, &cmd[6]);
 
 	return Do_SCSI_Command(p_cd,p_cd->buffers[dummy_buf],0,cmd,10,SCSIF_WRITE);
 }

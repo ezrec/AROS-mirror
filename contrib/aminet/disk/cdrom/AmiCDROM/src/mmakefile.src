@@ -18,7 +18,7 @@ FILES := \
 	rock \
 	volumes
 
-USER_CFLAGS := -DAROS_KERNEL -DNDEBUG
+USER_CFLAGS := -DAROS_KERNEL -DNDEBUG -DDEBUG=0
 
 %build_module_macro mmake=aminet-disk-cdrom-amicdrom \
   modname=cdrom modtype=handler \

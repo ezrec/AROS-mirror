@@ -8,7 +8,7 @@
 
 #And these ones are for normal operation
 DEBUGLIBS  =
-DEBUGFLAGS = -DNDEBUG
+DEBUGFLAGS = -DNDEBUG -DDEBUG=0
 
 # some shortcuts
 

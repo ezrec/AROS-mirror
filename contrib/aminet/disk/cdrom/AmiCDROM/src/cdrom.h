@@ -96,7 +96,7 @@ t_toc_data *Read_TOC
 	);
 int Has_Audio_Tracks(CDROM *p_cd);
 int Data_Tracks(CDROM *p_cd, unsigned long** p_buf);
-void lba_to_msf (int lba, unsigned char *m, unsigned char *s, unsigned char *f);
+void block2msf (unsigned long blk, unsigned char *msf);
 int Start_Play_Audio(CDROM *p_cd);
 int Stop_Play_Audio(CDROM *p_cd);
 int Block_Length(CDROM *p_cd);
@@ -114,13 +114,5 @@ enum {
   CDROMERR_DEVICE,	/* cannot open scsi device	*/
   CDROMERR_BLOCKSIZE	/* illegal blocksize		*/
 };
-
-/* Packet commands */
-#define GPCMD_PLAY_AUDIO_MSF		    0x47
-
-/* Some generally useful CD-ROM information */
-#define CD_SECS              60 /* seconds per minute */
-#define CD_FRAMES            75 /* frames per second */
-#define CD_MSF_OFFSET       150 /* MSF numbering offset of first frame */
 
 #endif /* _CDROM_H_ */
