@@ -7,8 +7,6 @@ include $(TOP)/config/make.cfg
 #MM- contrib-games-quick : contrib-games-lbreakout2-quick
 #MM- lbreakout2-quick : contrib-games-lbreakout2-quick
 
-#MM- linklibs : contrib-development-parsers-pcre
-
 SDL_CONFIG := $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)-sdl-config
 
 export SDL_CONFIG
