@@ -80,10 +80,10 @@ the existing commercial status of Directory Opus 5.
 	char ocbuf[20],cbuf[20],*foo;
 
 	if (buf) buf[0]=0; ocbuf[0]=cbuf[0]=0;
-	if (code!=~0 && code!=0xff) {
+	if (code!=(USHORT)~0 && code!=0xff) {
 		if (code&IECODE_UP_PREFIX) code-=0x80;
 		if (code>=0x50 && code<=0x59) LSprintf(cbuf,"F%ld",code-0x4f);
-		else if (code!=~0 && code!=0xff) {
+		else if (code!=(USHORT)~0 && code!=0xff) {
 			foo=NULL;
 			switch (code) {
 				case 0x45: foo="ESCAPE"; break;
@@ -133,7 +133,7 @@ the existing commercial status of Directory Opus 5.
 		if (qual&IEQUALIFIER_RSHIFT) StrConcat(buf,"RSHIFT + ",len);
 		if (qual&IEQUALIFIER_LALT) StrConcat(buf,"LALT + ",len);
 		if (qual&IEQUALIFIER_RALT) StrConcat(buf,"RALT + ",len);
-		if ((code==~0 || code==0xff || code==0) && buf[0]) buf[strlen(buf)-3]=0;
+		if ((code==(USHORT)~0 || code==0xff || code==0) && buf[0]) buf[strlen(buf)-3]=0;
 		else if (cbuf[0]) {
 			StrToUpper(cbuf,ocbuf);
 			StrConcat(buf,"'",len);
