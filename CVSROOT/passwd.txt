@@ -44,5 +44,6 @@ jamie:cbkVm2suquqVQ:Jim Cooper:jamie@interpath.com:
 claus:TovO1K/.ndeMk:Claus Herrmann:claus@frontgate.phase5.de:
 fanciulli:dbQukt.jPYnvs:Marco Fanciulli:master@fw.sacis.it:
 crayor:ac.6k9wsfXP6s:???:crayor@zedat.fu-berlin.de:
+gdprete:dcZM1RIri4/PY:Gabriele Del Prete:gdprete@tin.it:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
