@@ -1,53 +1,26 @@
 # Copyright © 2004, The AROS Development Team. All rights reserved.
 # $Id$
 
-include ../make.cfg
-DISTFILES=. /usr/portage/distfiles
-SAVEDIR=.
-ARCHSUFFIX = .tar.gz
+-include $(TOP)/config/make.cfg
 
-PROGNAME = gawk
-PROGVER = 3.1.3
-FTPSERVER=ftp.gnu.org
-FTPDIR=/pub/gnu/$(PROGNAME)
+##MM- contrib-gnu : contrib-gnu-gawk
+##MM- contrib-gnu-gawk : development-gawk
 
-PROGFULL = $(PROGNAME)-$(PROGVER)
-PROGDIFF = $(PROGFULL)-aros.diff
-PROGARCH = $(PROGFULL)$(ARCHSUFFIX)
+##MM- development : development-gawk
+#MM development-gawk-quick : development-gawk-fetch
 
-#MM-
-contrib-gnu-gawk-install :
-	@ ISINST="no" ; \
-	PROGFOUND="" ; \
-	if [ -d "$(PROGFULL)" ] ; then \
-	    echo "$(PROGFULL) already installed!" ; \
-	else \
-	    for i in $(DISTFILES) ; do \
-		if [ $$ISINST = "no" ] ; then \
-		    echo Looking in $$i ; \
-		    if [ -e $$i/$(PROGARCH) ] ; then \
-			PROGFOUND= $$i/$(PROGARCH) ; \
-			ISINST=yes ; \
-		    fi ; \
-		fi ; \
-	    done ; \
-	    if [ $$ISINST = "no" ] ; then \
-		echo Archive not found, trying to fetch from $(FTPSERVER)... ; \
-		olddir=`pwd` ; \
-		cd $(SAVEDIR) ; \
-		echo -e "user anonymous\nbin\ncd $(FTPDIR)\nhash 10240\nget $(PROGARCH)" \
-		| ftp -n $(FTPSERVER) && PROGFOUND=$(SAVEDIR)/$(PROGARCH) ; \
-		cd $$olddir ; \
-	    fi ; \
-	    if [ -e "$$PROGFOUND" ] ; then \
-		echo "Uncompressing $$i/$(PROGARCH)" ; \
-		tar xfz $$i/$(PROGARCH) ; \
-		cd $(PROGFULL) ; \
-		patch -p1 -s < ../$(PROGDIFF) ; \
-		cd .. ; \
-	    else \
-		echo "Could not install $(PROGFULL)!" ; \
-	    fi ; \
-	fi
+ORIGINS := http://ftp.gnu.org/pub/gnu/gawk
+
+ARCHBASE := gawk-3.1.3
+
+#MM
+development-gawk-fetch :
+	%fetch archive=$(ARCHBASE).tar.gz destination=$(PORTDIR)/gawk archive_origins="$(ORIGINS)" \
+	patches_specs=gawk-3.1.3-aros.diff:gawk-3.1.3:-p1
+	
+
+%build_with_configure mmake=development-gawk configure=$(PORTDIR)/gawk/$(ARCHBASE)/configure \
+     nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development \
+     extraoptions="--target=$(AROS_TARGET_CPU)-aros  --build=local --disable-nls"
 
 
