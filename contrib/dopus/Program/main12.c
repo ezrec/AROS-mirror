@@ -68,17 +68,14 @@ static short
 void dodiskinfo(path)
 char *path;
 {
-#warning  AppIcon stuff not implemented yet
-
-kprintf("dodiskifo() NOT IMPLEMENTED BECAUSE OF MISSING Info() FUNC\n");
-#if 0
 	struct RastPort *dirp;
 	int a,b,c,isd=-1,cx,cy,fail=0,xoffset,yoffset,titwidth;
 	static char disktxt[11][60],buf[256],formstr[80],diskname[40],dname[10],buf1[40];
 	float f;
 	struct DateStamp ds;
 	struct MsgPort *prt;
-	struct InfoData __aligned infodata;
+	/* AROS: No alignment needed */
+	struct InfoData /* __aligned */ infodata;
 	struct Gadget contgad;
 	char *gad_gads[2];
 	BPTR lock;
@@ -328,7 +325,6 @@ getnewdisk:
 	fontwindow=NULL;
 	LFreeRemember(&key);
 	if (a==2) goto getnewdisk;
-#endif
 }
 
 void get_device_task(lock,buffer,port)

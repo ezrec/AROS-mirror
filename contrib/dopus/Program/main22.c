@@ -56,10 +56,8 @@ int act,inact,rexx;
 	struct dopusfuncpar par;
 	struct DirectoryWindow *swindow,*dwindow;
 	
-#warning Know nothing about how to get an aligned struct InfoData
-#if 0	
-	struct InfoData __aligned infodata;
-#endif
+	/* AROS: Skip alignment restrictions */
+	struct InfoData /* __aligned */ infodata;
 	
 	/* AROS: Use AllocDosObject() instead
 	struct FileInfoBlock __aligned fileinfo;
@@ -69,7 +67,7 @@ int act,inact,rexx;
 	
 	struct DOpusArgsList arglist;
 	struct ViewData *viewdata=NULL;
-	/* BPTR filelock; */
+	BPTR filelock;
 	static int entry_depth;
 	char progress_copy=0,prog_indicator=0;
 	
@@ -365,9 +363,6 @@ int act,inact,rexx;
 			break;
 		case FUNC_BYTE:
 		
-#warning No FUNC_BYTE because of missing Info()
-kprintf("NO FUNC_BYTE AT LINE 366 BECAUSE OF MISSING Info()\n");
-#if 0		
 			candoicon=0;
 			special=2;
 			count=1;
@@ -381,7 +376,6 @@ kprintf("NO FUNC_BYTE AT LINE 366 BECAUSE OF MISSING Info()\n");
 			if (config->errorflags&ERROR_ENABLE_DOS) main_proc->pr_WindowPtr=(APTR)Window;
 			total=-1;
 			break;
-#endif
 	}
 
 	if (!(config->dynamicflags&UPDATE_PROGRESSIND_COPY)) progress_copy=0;
@@ -1649,11 +1643,7 @@ kprintf("SCRIPT\n");
 			}
 			break;
 
-		case FUNC_BYTE:
-#warning No FUNC_BYTE because of missing Info()
-kprintf("NO FUNC_BYTE AT LINE 1640 BECAUSE OF MISSING Info()\n");
-#if 0		
-		
+		case FUNC_BYTE:		
 			if (!status_justabort) {
 				main_proc->pr_WindowPtr=(APTR)-1;
 				if (!(filelock=Lock(destdir,ACCESS_READ))) value=0;
@@ -1689,7 +1679,6 @@ kprintf("NO FUNC_BYTE AT LINE 1640 BECAUSE OF MISSING Info()\n");
 				okayflag=0;
 			}
 			break;
-#endif
 	}
 
 	if (okayflag && !status_justabort) okay();
