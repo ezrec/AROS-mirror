@@ -1,0 +1,24 @@
+-- in toplevel/gcc --
+
+2003-11-12  Fabio Alemagna  <falemagn@aros.org>
+
+	* config.gcc: handle *-*-aros* and i[3456]86-*-aros*.
+	* cppinit.c (INO_T_EQ) [__AROS__]: return 0.
+	* config/aros.h: new file.
+	* config/t-aros: new file.
+	* config/i386/aros.h: new file.
+     
+-- in toplevel/libiberty --
+
+2003-11-12  Fabio Alemagna <falemagn@aros.org>
+
+	* pexecute.c [__AROS__] (pexecute): new function.
+	* pexecute.c [__AROS__] (pwait): new function.
+
+-- in toplevel --
+
+2003-11-12  Fabio Alemagna  <falemagn@aros.org>
+
+	* config.if <glibc minor version>: use CC_FOR_BUILD rather than CC.
+	Fixes PR gcc/12725.
+	* configure.in: handle *-*-aros*.
