@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:50  stegerg
+ * replacements for REG macro.
+ *
  * Revision 42.0  2000/05/09 22:20:05  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -51,7 +54,11 @@ UBYTE  *WinInfo = ISEQ_C "This demo shows you how to include a\n"
 **      String object edit hook. Copied from the
 **      RKM-Manual Libraries. Page 162-166.
 **/
-SAVEDS ASM ULONG HexHookFunc( REG(a0) struct Hook *hook, REG(a2) struct SGWork *sgw, REG(a1) ULONG *msg )
+//SAVEDS ASM ULONG HexHookFunc( REG(a0) struct Hook *hook, REG(a2) struct SGWork *sgw, REG(a1) ULONG *msg )
+SAVEDS ASM REGFUNC3(ULONG, HexHookFunc,
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, struct SGWork *, sgw),
+	REGPARAM(A1, ULONG *, msg))
 {
         ULONG           rc = ~0;
 

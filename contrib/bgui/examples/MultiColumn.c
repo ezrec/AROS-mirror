@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:50  stegerg
+ * replacements for REG macro.
+ *
  * Revision 42.0  2000/05/09 22:19:56  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -68,7 +71,11 @@ typedef struct {
 **      at create time. At delete time the FILEINFO
 **      structure is simply deallocated.
 **/
-SAVEDS ASM APTR ResourceHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct lvResource *lvr )
+//SAVEDS ASM APTR ResourceHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct lvResource *lvr )
+SAVEDS ASM REGFUNC3(APTR, ResourceHookFunc,
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct lvResource *, lvr))
 {
         struct ExAllData        *ead;
         FILEINFO                *fi;
@@ -275,7 +282,11 @@ UWORD   DefDriPens[] = {
 /*
 **      Listview rendering hook. Here's where the magic starts ;)
 **/
-SAVEDS ASM UBYTE *DisplayHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct lvRender *lvr )
+//SAVEDS ASM UBYTE *DisplayHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct lvRender *lvr )
+SAVEDS ASM REGFUNC3(UBYTE *, DisplayHookFunc,
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct lvRender *, lvr))
 {
         struct TextExtent               te;
         UBYTE                          *str;
@@ -458,7 +469,11 @@ SAVEDS ASM UBYTE *DisplayHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *ob
 **      The comparrison hook. We do a simple name, dir/file
 **      comparrison here.
 **/
-SAVEDS ASM LONG CompareHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct lvCompare *lvc )
+//SAVEDS ASM LONG CompareHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct lvCompare *lvc )
+SAVEDS ASM REGFUNC3(LONG, CompareHookFunc,
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct lvCompare *,lvc))
 {
         FILEINFO                *a = ( FILEINFO * )lvc->lvc_EntryA;
         FILEINFO                *b = ( FILEINFO * )lvc->lvc_EntryB;
@@ -481,7 +496,11 @@ SAVEDS ASM LONG CompareHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj,
 **      A IDCMP hook for the window which allows us
 **      to control the listview from the keyboard.
 **/
-SAVEDS ASM VOID ScrollHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct IntuiMessage *msg )
+//SAVEDS ASM VOID ScrollHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct IntuiMessage *msg )
+SAVEDS ASM REGFUNC3(VOID, ScrollHookFunc,
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct IntuiMessage *, msg))
 {
         struct Window                   *window;
         Object                          *lv_obj = ( Object * )hook->h_Data;

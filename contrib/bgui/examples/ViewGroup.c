@@ -11,6 +11,9 @@
  * Description: Test program for the clipped view groups.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:50  stegerg
+ * replacements for REG macro.
+ *
  * Revision 42.0  2000/05/09 22:20:13  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -77,7 +80,11 @@ ULONG Cyc2Page[] = { MX_Active, PAGE_Active, TAG_END };
 /*
 ** Tabs-key control of the tabs gadget.
 **/
-SAVEDS ASM VOID TabHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct IntuiMessage *msg )
+//SAVEDS ASM VOID TabHookFunc( REG(a0) struct Hook *hook, REG(a2) Object *obj, REG(a1) struct IntuiMessage *msg )
+SAVEDS ASM REGFUNC3(VOID, TabHookFunc,
+	REGPARAM(A0, struct Hook *, hook),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct IntuiMessage *, msg))
 {
    struct Window        *window;
    Object            *mx_obj = ( Object * )hook->h_Data;

@@ -11,6 +11,9 @@
  * Description: Simple demonstration of the arexx class.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:50  stegerg
+ * replacements for REG macro.
+ *
  * Revision 42.0  2000/05/09 22:19:14  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -40,10 +43,25 @@ quit
 /*
 **      Protos for the arexx command functions.
 **/
-ASM VOID rx_Name( REG(a0) REXXARGS *, REG(a1) struct RexxMsg * );
-ASM VOID rx_Version( REG(a0) REXXARGS *, REG(a1) struct RexxMsg * );
-ASM VOID rx_Author( REG(a0) REXXARGS *, REG(a1) struct RexxMsg * );
-ASM VOID rx_Date( REG(a0) REXXARGS *, REG(a1) struct RexxMsg * );
+//ASM VOID rx_Name( REG(a0) REXXARGS *, REG(a1) struct RexxMsg * );
+ASM REGFUNC2(VOID, rx_Name,
+	REGPARAM(A0, REXXARGS *, ra),
+	REGPARAM(A1, struct RexxMsg *, rm));
+
+//ASM VOID rx_Version( REG(a0) REXXARGS *, REG(a1) struct RexxMsg * );
+ASM REGFUNC2(VOID, rx_Version,
+	REGPARAM(A0, REXXARGS *, ra),
+	REGPARAM(A1, struct RexxMsg *, rm));
+
+//ASM VOID rx_Author( REG(a0) REXXARGS *, REG(a1) struct RexxMsg * );
+ASM REGFUNC2(VOID, rx_Author,
+	REGPARAM(A0, REXXARGS *, ra),
+	REGPARAM(A1, struct RexxMsg *, rm));
+
+//ASM VOID rx_Date( REG(a0) REXXARGS *, REG(a1) struct RexxMsg * );
+ASM REGFUNC2(VOID, rx_Date,
+	REGPARAM(A0, REXXARGS *, ra),
+	REGPARAM(A1, struct RexxMsg *, rm));
 
 struct Library *BGUIBase = NULL;
 
@@ -66,7 +84,10 @@ VOID SAVEDS ASM
 #else
 SAVEDS ASM VOID
 #endif
-rx_Name( REG(a0) REXXARGS *ra, REG(a1) struct RexxMsg *rxm )
+//rx_Name( REG(a0) REXXARGS *ra, REG(a1) struct RexxMsg *rxm )
+REGFUNC2(,rx_Name,
+	REGPARAM(A0, REXXARGS *, ra),
+	REGPARAM(A1, struct RexxMsg *, rxm))
 {
         /*
         **      Simply return the program name.
@@ -78,10 +99,14 @@ rx_Name( REG(a0) REXXARGS *ra, REG(a1) struct RexxMsg *rxm )
 **      VERSION
 **/
 #ifdef __STORM__
-VOID SAVEDS ASM rx_Version( REG(a0) REXXARGS *ra, REG(a1) struct RexxMsg *rxm )
+VOID SAVEDS ASM 
 #else
-SAVEDS ASM VOID rx_Version( REG(a0) REXXARGS *ra, REG(a1) struct RexxMsg *rxm )
+SAVEDS ASM VOID
 #endif
+//rx_Version( REG(a0) REXXARGS *ra, REG(a1) struct RexxMsg *rxm )
+REGFUNC2(,rx_Version,
+	REGPARAM(A0, REXXARGS *, ra),
+	REGPARAM(A1, struct RexxMsg *, rxm))
 {
         /*
         **      Simply return the program version.
@@ -93,10 +118,14 @@ SAVEDS ASM VOID rx_Version( REG(a0) REXXARGS *ra, REG(a1) struct RexxMsg *rxm )
 **      AUTHOR
 **/
 #ifdef __STORM__
-VOID SAVEDS ASM rx_Author( REG(a0) REXXARGS *ra, REG(a1) struct RexxMsg *rxm )
+VOID SAVEDS ASM
 #else
-SAVEDS ASM VOID rx_Author( REG(a0) REXXARGS *ra, REG(a1) struct RexxMsg *rxm )
+SAVEDS ASM VOID
 #endif
+//rx_Author( REG(a0) REXXARGS *ra, REG(a1) struct RexxMsg *rxm )
+REGFUNC2(,rx_Author,
+	REGPARAM(A0, REXXARGS *, ra),
+	REGPARAM(A1, struct RexxMsg *, rxm))
 {
         /*
         **      Simply return the authors name.
@@ -113,10 +142,14 @@ UBYTE                   systemDate[ 10 ];
 **      DATE
 **/
 #ifdef __STORM__
-VOID SAVEDS ASM rx_Date( REG(a0) REXXARGS *ra, REG(a1) struct RexxMsg *rxm )
+VOID SAVEDS ASM
 #else
-SAVEDS ASM VOID rx_Date( REG(a0) REXXARGS *ra, REG(a1) struct RexxMsg *rxm )
+SAVEDS ASM VOID
 #endif
+//rx_Date( REG(a0) REXXARGS *ra, REG(a1) struct RexxMsg *rxm )
+REGFUNC2(,rx_Date,
+	REGPARAM(A0, REXXARGS *, ra),
+	REGPARAM(A1, struct RexxMsg *, rxm))
 {
         struct DateTime                 dt;
 

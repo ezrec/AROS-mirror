@@ -20,6 +20,9 @@
  * the dropable and when you release it the screen will beep.
  *
  * $Log$
+ * Revision 42.1  2000/05/15 19:29:50  stegerg
+ * replacements for REG macro.
+ *
  * Revision 42.0  2000/05/09 22:20:11  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -51,7 +54,11 @@ quit
  *	We need a simple subclass of the BGUI button class to
  *	make it draggable.
  */
-SAVEDS ASM ULONG DispatchSB( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+//SAVEDS ASM ULONG DispatchSB( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+SAVEDS ASM REGFUNC3(ULONG, DispatchSB,
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg))
 {
 	struct RastPort         *rp;
 	struct gpInput		 copy;
