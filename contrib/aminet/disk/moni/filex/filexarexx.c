@@ -390,14 +390,6 @@ static void free_stemlist( struct rxs_stemnode *first )
 }
 
 
-char *StrDup( char *s )
-{
-	char *t = AllocVec( strlen(s)+1, MEMF_ANY );
-	if( t ) strcpy( t, s );
-	return t;
-}
-
-
 static struct rxs_stemnode *CreateSTEM( struct rxs_command *rxc, LONG *resarray, char *stembase )
 {
 	struct rxs_stemnode *first = NULL, *old = NULL, *new;

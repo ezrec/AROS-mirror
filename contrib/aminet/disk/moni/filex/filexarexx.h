@@ -58,7 +58,6 @@ void CloseDownARexxHost( struct RexxHost *host );
 struct RexxHost *SetupARexxHost( char *basename, struct MsgPort *usrport );
 struct rxs_command *FindRXCommand( char *com );
 char *ExpandRXCommand( struct RexxHost *host, char *command );
-char *StrDup( char *s );
 void ARexxDispatch( struct RexxHost *host );
 
 void DoShellCommand( struct RexxHost *host, char *comline, BPTR fhout );

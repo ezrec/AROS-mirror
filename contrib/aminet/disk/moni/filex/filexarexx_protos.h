@@ -20,8 +20,6 @@ struct RexxHost * SetupARexxHost(char * , struct MsgPort * );
 
 struct rxs_command * FindRXCommand(char * );
 
-char * StrDup(char * );
-
 void ARexxDispatch(struct RexxHost * );
 
 void DoShellCommand(struct RexxHost * , char * , BPTR );
