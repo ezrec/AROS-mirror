@@ -3,25 +3,5 @@
 # The apps target points back to config/$(ARCH)/mmakefile:
 #MM- contrib : contrib-$(ARCH)
 
-#FIXME move target to individual mmakefiles
-#MM- contrib-aminet : aminet-gadgedtest aminet-lazymines aminet-newmastermind \
-#MM	aminet-yahzee
-
-#FIXME move target to individual mmakefiles
-#MM- contrib-fish : fish-microemacs fish-lotto fish-henon fish-bcubic \
-#MM	fish-input fish-bezier1 fish-bezier2 fish-tree fish-grep fish-lines \
-#MM	fish-304_clines fish-304_lines fish-screenzap fish-watchman \
-#MM	fish-sunmaze fish-fiveinline fish-362_rubik fish-yachtc \
-#MM	fish-rubik fish-icalc fish-worldtime fish-mosaic fish-surf \
-#MM	fish-371_fractal fish-asimplex fish-layers fish-snowfall
-#These do not compile properly, yet!
-# MM fish-mandelbrotsrc 
-# MM fish-mandel
-# MM fish-cube
-
-#FIXME move target to individual mmakefiles
-#MM- contrib-misc : misc-ddemo7 misc-switch misc-linie12
-
-#FIXME move target to individual mmakefiles
 #MM- contrib-complete : contrib-aminet contrib-fish contrib-games \
 #MM	contrib-misc
