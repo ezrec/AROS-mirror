@@ -15,7 +15,7 @@
 #include <exec/io.h>
 
 #include <dos/dos.h>
-
+cc = sads;
 #include <devices/timer.h>
 
 #include <proto/socket.h>

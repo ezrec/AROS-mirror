@@ -35,8 +35,22 @@
 #ifndef __ARCH_CC_H__
 #define __ARCH_CC_H__
 
-void kprintf(...);
-void mykprintf(...);
+#ifndef BYTE_ORDER
+# ifndef __AROS__
+#  define BYTE_ORDER BIG_ENDIAN
+# else
+#  if AROS_BIG_ENDIAN
+#   define BYTE_ORDER BIG_ENDIAN
+#  else
+#   define BYTE_ORDER LITTLE_ENDIAN
+#  endif /* AROS_BIG_ENDIAN */
+# endif /* __AROS__ */
+#endif /* BYTE_ORDER */
+
+#ifndef __AROS__
+void kprintf(const char *fmt,...);
+#endif
+void mykprintf(const char *fmt, ...);
 
 typedef unsigned   char    u8_t;
 typedef signed     char    s8_t;
@@ -56,7 +70,9 @@ typedef u32_t mem_ptr_t;
 
 /* prototypes for printf() and abort() */
 #include <stdio.h>
+#ifndef __AROS__
 #include <stdlib.h>
+#endif
 /* Plaform specific diagnostic output */
 #define LWIP_PLATFORM_DIAG(x)	do {mykprintf x;} while(0)
 
