@@ -61,7 +61,7 @@
 	
 	Draw(rp, new_x, y + h);
 	
-	new_x = x + 1;
+	new_x = x - 1; /* AROSSG */
 	Move(rp, new_x, new_y);
 	
 	bot_y = y + h;
