@@ -94,7 +94,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 ( 
                     A
                     ( 
-                        Img( src = '%(ROOT)simages/trustec-small.png', border = 0 ), 
+                        Img( src = '%(ROOT)simages/trustec-small.png', border = 0 ),
                         href = 'http://www.trustsec.de/' 
                     )
                 )
@@ -102,7 +102,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
             TR
             ( 
                 TD
-                ( 
+                (
                     A
                     ( 
                         Img( src = '%(ROOT)simages/genesi-small.gif', border = 0 ), 
@@ -164,7 +164,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
     statsPHP = '''
 	    <?php
 		    //define("_BBC_PAGE_NAME", "my page title");
-		    define("_BBCLONE_DIR", "mybbclone/");
+		    define("_BBCLONE_DIR", "%(ROOT)smybbclone/");
 		    define("COUNTER", _BBCLONE_DIR."index.php");
 		    if (file_exists(COUNTER)) include_once(COUNTER);
 		?>
