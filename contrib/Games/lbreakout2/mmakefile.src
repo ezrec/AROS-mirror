@@ -32,5 +32,7 @@ $(GENDIR)/$(CURDIR)/.configured: mmakefile
 
 #MM lbreakout2-clean :
 lbreakout2-clean :
-	@$(MAKE) -C $(GENDIR)/$(CURDIR) uninstall
+	@if [ -e $(GENDIR)/$(CURDIR)/Makefile ]; then \
+	    $(MAKE) -C $(GENDIR)/$(CURDIR) uninstall; \
+         fi
 	@$(RM) $(GENDIR)/$(CURDIR)
