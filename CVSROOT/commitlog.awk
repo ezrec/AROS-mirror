@@ -84,20 +84,28 @@ function dump(t,flist)
     # First: Who did it when ?
     pout("* " User " " Date " " Dir "/\n\n");
 
-    # Now show the directory and all files
-    flist="";
-    for (t=0; t<nfiles; t++)
+    if (match (logmsg, /^Directory /) && 
+	match (logmsg, / added to the repository/))
     {
-	if (t!=nfiles-1)
-	    flist=flist file[t] ", ";
-	else
-	    flist=flist file[t] ":";
+	logmsg="Directory added to the repository";
     }
-    flist=wrap(flist,70);
-    gsub ("\n","\n    ",flist);
-    gsub (" +\n","\n",flist);
-    pout("    "flist);
-    pout("\n");
+    else
+    {
+	# Now show the directory and all files
+	flist="";
+	for (t=0; t<nfiles; t++)
+	{
+	    if (t!=nfiles-1)
+		flist=flist file[t] ", ";
+	    else
+		flist=flist file[t] ":";
+	}
+	flist=wrap(flist,70);
+	gsub ("\n","\n    ",flist);
+	gsub (" +\n","\n",flist);
+	pout("    "flist);
+	pout("\n");
+    }
 
     gsub (/\n*$/,"",logmsg);
     gsub (/^\n*/,"",logmsg);
