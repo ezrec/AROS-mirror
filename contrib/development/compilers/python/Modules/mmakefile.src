@@ -47,14 +47,14 @@ FILES := \
 	unicodedata \
 	xreadlinesmodule \
 	yuvconvert \
-	zlibmodule 
-
+	zlibmodule \
+	mathmodule \
+	cmathmodule \
+	pypcre \
+	pcremodule
+	
 # Modules that need more work to compile.
-#       cmathmodule 
 #	fcntlmodule
-#	mathmodule
-#	pcremodule
-#	pypcre
 
 # Modules that need a bit of work to be ported.
 #	pyexpat

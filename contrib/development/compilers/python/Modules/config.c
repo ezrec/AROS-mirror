@@ -29,10 +29,13 @@ extern void initcPickle(void);
 extern void initerrno(void);
 extern void initgc(void);
 extern void initimageop(void);
+extern void initmath(void);
+extern void initcmath(void);
 extern void initmd5(void);
 extern void initnew(void);
 extern void initoperator(void);
 extern void initparser(void);
+extern void initpcre(void);
 extern void initpure(void);
 extern void initregex(void);
 extern void initrgbimg(void);
@@ -67,10 +70,13 @@ struct _inittab _PyImport_Inittab[] = {
 	{"errno",            initerrno},
 	{"gc",               initgc},
 	{"imageop",          initimageop},
+	{"math",    	     initmath},
+	{"cmath",   	     initcmath},
 	{"md5",              initmd5},
 	{"new",              initnew},
 	{"operator",         initoperator},
 	{"parser",           initparser},
+	{"pcre",    	     initpcre},
 	{"pure",             initpure},
 	{"regex",            initregex},
 	{"rgbimg",           initrgbimg},
