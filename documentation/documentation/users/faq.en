@@ -188,19 +188,11 @@ that machine will boom again. And who knows, maybe you will get a CD along with
 the machine labeled "AROS". :-)
 
 
-What do I need to compile AROS?
--------------------------------
-
-Currently, you need to have some Linux distribution installed with the common
-development tools like GCC, binutils, autoconf, automake, make and gawk. AROS
-compiles with GCC 2.95.3 and 3.0+. 
-
-
 What do I do if AROS won't compile?
 -----------------------------------
 
-Please post a message with details (for example, the error messages you get) on
-the AROS User mailing list or become a developer and subscribe to the AROS
+Please post a message with details (for example, the error messages you get)
+on the AROS User mailing list or become a developer and subscribe to the AROS
 Developer list and post it there, and someone will try to help you.
 
 
