@@ -303,7 +303,7 @@ BOOL Pass1()
       }
     }
     UpdateLine(&count);
-//    pos = ftell(file[0]);
+    pos = ftell(file[0]);
     Cap(ptr[0],0,BUFFER);
   } while(!SearchExpr(ptr[0],&start[0],&stop[0]));
   length = GetExpr(buf[0],ptr[0],start[0],stop[0]);
@@ -354,7 +354,7 @@ BOOL Pass1()
       }
     }
     UpdateLine(&count);
-//    pos = ftell(file[0]);
+    pos = ftell(file[0]);
 
     Cap(ptr[0],0,BUFFER);
 
