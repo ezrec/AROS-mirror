@@ -1,0 +1,2 @@
+There is progress on the AROS i386/native front. A very basic VGA.HIDD
+has been written plus some additional stuff (timer, trackdisk, etc).

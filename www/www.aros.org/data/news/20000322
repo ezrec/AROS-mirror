@@ -1,0 +1,5 @@
+There is now a <A HREF="votes.html">summary of votes</A> on this
+server which I will update once per day. Please continue voting.
+Since there seems to be a confusion how the polling works: My
+script looks for the questions and then for a digit and counts
+that.

@@ -1,0 +1,6 @@
+Code for Menus has been comitted. Unlike on the Amiga, Menus are handled
+by a normal task which gets all input events as long as the user presses
+the right mousebutton. Therefore, menus don't block, they are very easily
+enhanced and the input handler is much more simple. And if blocking menus
+ever become an issue, this can added on a per-program basis by looking for
+RMB down/up.

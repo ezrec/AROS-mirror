@@ -1,0 +1,122 @@
+#!/usr/bin/env python
+
+''' Generate the AROS WWW site.'''
+
+import glob, os
+from HTMLcolors import *
+from HTMLgen import *
+
+htmldir = '../www'
+
+mainLinks = (
+    ( Href ('/index.html', 'NEWS'),
+	Href ('/oldnews.html', 'Old news'),
+    ),
+    ( Href ('/links.html', 'Links'),
+    ),
+)
+
+class Page (SeriesDocument):
+    def __init__ (self, rcFile='aros.rc', linkBoxItem='', **kw):
+	apply (SeriesDocument.__init__, (self, rcFile,), kw)
+
+	table = TableLite ()
+	self.banner = table
+	row = TR ()
+	table.append (row)
+	td = TD (valign='TOP')
+	logo = Href ('/', Image (('pics/logo.gif', 300, 123), alt='AROS'))
+	td = td + [logo]
+	row = row + [td, TD (Text ('Amiga Research OS'))]
+
+	# HTMLgen expects a tuple in self.logo
+	#self.logo = Href ('/', Image (('pics/minilogo.gif', 71, 28), alt='AROS'))
+
+	table = TableLite ()
+	self.append (table)
+	row = TR ()
+	table.append (row)
+	td = TD (valign='TOP')
+	row = row + [td,]
+	table2 = TableLite ()
+	td = td + [table2,]
+	row2 = TR ()
+	table2.append (row2)
+	td2 = TD (bgcolor='#40FF80', valign='TOP')
+	row2 = row2 + [td2]
+	self.linkbox = Font (size='-2')
+	td2 = td2 + [self.linkbox]
+
+	self.meat = TD (valign='TOP')
+	row = row + [self.meat]
+
+	self.gohome = '/'
+
+	if linkBoxItem:
+	    list = []
+	    for links in mainLinks:
+		if links[0].text == linkBoxItem:
+		    list.append (links)
+		else:
+		    list.append ((links[0],))
+
+	    
+	    for links in list:
+		self.linkbox = self.linkbox + [links[0], BR ()]
+		for link in links[1:]:
+		    self.linkbox = self.linkbox + [
+			RawText ('&nbsp;&nbsp;&nbsp;'),
+			link, BR ()]
+    
+def genNews ():
+    list = glob.glob ('news/*')
+    list.remove ('news/CVS')
+    list.sort ()
+    list.reverse ()
+    
+    def genPage (items, filename):
+	def prepareNewsItem (filename):
+	    row = TR ()
+	    td = TD (bgcolor='#80C0F0', valign='TOP')
+	    row = row + [td]
+	    str = os.path.basename (filename)
+	    date = '%d.%d.%d' % (
+		int (str[6:8]),
+		int (str[4:6]),
+		int (str[0:4]),
+	    )
+	    td = td + [Name (str), date]
+
+	    td = TD (valign='TOP')
+	    row = row + [td]
+
+	    fh = open (filename, 'r')
+	    body = fh.read ()
+	    fh.close ()
+
+	    body = string.replace (body, '\n\n', '<P>\n\n')
+	    td = td + [RawText (body)]
+	    
+	    return row
+	    
+	page = Page (linkBoxItem='NEWS')
+	table = TableLite ()
+	page.meat = page.meat + [table,]
+
+	for file in items:
+	    item = prepareNewsItem (file)
+	    table.append (item)
+
+	if filename == 'index.html':
+	    p = Paragraph ()
+	    p.append (Href ('oldnews.html', 'Older News'))
+	    page.meat = page.meat + [p]
+	else:
+	    page.gotop = '/'
+
+	page.write (os.path.join (htmldir, filename))
+
+    genPage (list[:5], 'index.html')
+    genPage (list[5:], 'oldnews.html')
+
+genNews ()

@@ -1,0 +1,20 @@
+Some new software is ported to AROS: The freetype library
+(<A HREF="http://www.freetype.org">www.freetype.org</A>),
+BGUI and SnoopDOS. Also DOpus becomes more and more usable.
+Many bugs in the Gfx.HIDD were fixed and there is now a
+quite usable cybergrafx.library. Also the first version
+of an IDE driver for x86/Native was committed. Also
+a trackdisk.device is there, so we can start porting
+a filesystem to AROS.
+
+As for BGUI, we would like someone who will keep it alive on
+Amiga (that is, make sure that our changes don't make BGUI
+unusable on the Amiga). If you want to help, please contact
+<A HREF="mailto:digulla@aros.org">digulla@aros.org</A>.
+
+Also please note that my PGP-key has changed (2048bit instead
+of only 1024bit for better security :-). You find my new version
+<A HREF="pubkey.asc">here</A> (Shift-Click on the link to download).
+
+Lastly, my Amiga SDK has arrived. You can expect an AROS Amie/Native
+but probably not soon.

@@ -1,0 +1,5 @@
+Recent speed tests show that we have reached about 80% of the native
+hardware speed (Quake at 320x200 runs at 60FPS with Linux/X11 and
+at 50FPS with AROS on Linux/x86). So our speed problems with graphics
+seem finally resolved. Also the links and the status section have been
+updated.

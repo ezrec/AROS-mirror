@@ -1,0 +1,6 @@
+There are still problems to build AROS Native/i386 with EGCS (GCC 2.95.2) which
+should be resolved, soon. Some more <A
+HREF="screenshots/index.html">screenshots</A> have been added. It's DOOM, this
+time. Unlike other Amiga ports of DOOM, DOOM can be run several times on AROS
+and you can even play multiplayer games on one machine (not very useful,
+though: The keyboard is just too small for four players :-).

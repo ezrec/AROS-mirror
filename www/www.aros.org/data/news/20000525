@@ -1,0 +1,49 @@
+<I>Note: This is an old announcement which I fogot to copy on the
+WWW site. Sorry for that :-(</I>
+
+There was no status update for more than 6 weeks (which is too much).
+I'll do better in the future :-) In the last few days, our WWW counter
+silently skipped 33.333 hits.
+
+The Sowatec AG has decided to give AROS a chance. Several people who
+applied for the job to work on AROS have been contacted to arrange for
+job interviews. That means for me that I will finally be able to meet
+some of the people I worked with for the last five years ;-) It doesn't
+mean that there will be an AROS development team in Switzerland, though.
+So don't hope for too much, yet :-)
+
+Unfortunately, the date for the World of Alternatives is very unlucky
+for me; I'll return from my holidays on Saturday and therefore, I'll
+not be able to attend :-( Since the World of Amiga in Cologne seems
+to be a dead event this year (Who's left to attend ? Who is willing
+to attend ??) I'll try to make it the London Amiga show or whatever
+is held this or early next year. Sorry if you did expect me to show
+up :-)
+
+On a more happy news, BGUI has been handed over to us and integrated
+into AROS (you can download the contrib sources for your copy). Manuel
+Lemus promised me that it compiles on Amiga but, unfortunately, it
+doesn't compile on AROS, yet (the old lack-of-manpower problem). There
+should be no major problems, though and porting has started. I just
+can't say when it will be finished. Anyone wanting to work on BGUI
+only (and not on AROS) should still apply for a CVS account to
+synchronise his work with ours.
+
+Also, Steve Crietzman of the Open Amiga Foundation seems to be pretty
+far with finding out which legal obstacles could hurt AROS/Lite. His
+effort is currently blocked by the effort of the Sowatec AG to found
+an AROS development team (we'll have to sort our legal obstacles first).
+As usual, the legal dept. drains all the energies ;-)
+
+On the AROS side, work is still progressing, maybe even at a faster
+pace than usual ;-) The AROS Native/i386 flavour is currently broken
+(the HIDD system has been greatly enhanced and Michael Schulz currently
+cannot take care of it) but AROS Linux/i386 works quite fine. Nils
+has committed a couple of patches which greatly enhance the speed of
+the graphics output (it's now *much* faster then on the WoA in Cologne
+last year in November). Right now, bugs in the build system and exec
+are hunted by various AROS developers and I hope to see lots of progress
+in that area when I return from my holidays.
+
+As for the survey which I started months ago, I hope I can summarize
+them after the holidays :-)
