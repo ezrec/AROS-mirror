@@ -513,12 +513,14 @@ printf("%s - %d\n",__FUNCTION__,__LINE__);
 
         if (!(GadToolsBase=(struct GTB *)OpenLibrary("gadtools.library",37L)))
         {
+	    PutStr ("Opening gadtools.library failed\n");
             CloseDownScreen();
             exit(20);
         }
 
         if (!(GFX=(struct GFX *)OpenLibrary("graphics.library",37L)))
         {
+	    PutStr ("Opening graphics.library failed\n");
             CloseDownScreen();
             exit(15);
         }
