@@ -116,81 +116,7 @@ FreePieces();
 if(lock=Lock(pieces_folder,SHARED_LOCK))
 	{
 	BPTR oldlock=CurrentDir(lock);
-#ifdef __AROS__
-#warning "Temp mask generation code until picture.datatype supports PDTA_MaskPlane"
- 
-    	if (pieces_mask)
-	{
-	    free(pieces_mask);
-	    pieces_mask = NULL;
-	}
-	
-	if(piecesgfx=NewDTObject((void *)name,DTA_GroupID,GID_PICTURE,PDTA_DestMode,PMODE_V43,PDTA_Remap,1,PDTA_Screen,wbscreen,PDTA_UseFriendBitMap,1,TAG_END))
-		{
-		if(DoDTMethod(piecesgfx,0,0,DTM_PROCLAYOUT,0,1))
-			{
-			GetDTAttrs(piecesgfx,PDTA_DestBitMap,&pieces_bm,PDTA_MaskPlane,&pieces_mask,TAG_END);
 
-			}
-		}
-
-	{
-	    struct BitMapHeader *bmhd = NULL;
-	    struct BitMap *bm = NULL;
-
-	    GetDTAttrs(piecesgfx,PDTA_BitMapHeader, &bmhd, PDTA_BitMap, &bm, TAG_END);
-
-	    if (!pieces_mask && (bmhd->bmh_Masking == mskHasTransparentColor) && bm)
-	    {
-    		WORD bmw = GetBitMapAttr(pieces_bm, BMA_WIDTH);
-		WORD bmh = GetBitMapAttr(pieces_bm, BMA_HEIGHT);
-		WORD bmw16 = (bmw + 15) & ~15;
-		WORD x, y;
-		UBYTE transp = bmhd->bmh_Transparent;
-
-		if ((pieces_mask = malloc(bmw16 * bmh / 8 + bmw16)))
-		{
-		    struct RastPort temprp;
-		    UBYTE *maskptr = pieces_mask;
-
-		    memset(pieces_mask, 0, bmw16 * bmh / 8);
-
-		    InitRastPort(&temprp);
-		    temprp.BitMap = bm;
-
-		    for(y = 0; y < bmh; y++)
-		    {
-	    		UBYTE *maskx = maskptr;
-			UBYTE mask = 0x80;
-			UBYTE *pixelbuffer = pieces_mask + bmw16 * bmh / 8;
-
-			ReadPixelLine8(&temprp, 0, y, bmw, pixelbuffer, 0);
-
-	    		for(x = 0; x < bmw; x++)
-	    		{		    
-	    		    if (*pixelbuffer++ != transp)
-			    {
-		    		*maskx |= mask;
-			    }
-
-			    mask >>= 1;
-			    if (!mask)
-			    {
-		    		mask = 0x80;
-				maskx++;
-			    }
-	    		}
-			maskptr += bmw16 / 8;
-		    }
-
-		    DeinitRastPort(&temprp);
-		}
-
-	    }
-
-	}
-
-#else
 	if(piecesgfx=NewDTObject((void *)name,DTA_GroupID,GID_PICTURE,PDTA_DestMode,PMODE_V43,PDTA_Remap,1,PDTA_Screen,wbscreen,PDTA_FreeSourceBitMap,1,PDTA_UseFriendBitMap,1,TAG_END))
 		{
 		if(DoDTMethod(piecesgfx,0,0,DTM_PROCLAYOUT,0,1))
@@ -199,7 +125,6 @@ if(lock=Lock(pieces_folder,SHARED_LOCK))
 
 			}
 		}
-#endif
 
 	CurrentDir(oldlock);
 	UnLock(lock);
