@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/07/07 17:15:54  stegerg
+ * stack??? stuff in method structs.
+ *
  * Revision 42.0  2000/05/09 22:23:09  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -52,12 +55,17 @@
 
 #define CM_ADDHOTKEY                    (BGUI_MB+661)
 
+#ifndef _AROS
+#undef STACKULONG
+#define STACKULONG ULONG
+#endif
+
 /* Add a hot-key to the broker. */
 struct cmAddHotkey {
-        ULONG           MethodID;               /* CM_ADDHOTKEY             */
+        STACKULONG           MethodID;               /* CM_ADDHOTKEY             */
         STRPTR          cah_InputDescription;   /* Key input description.   */
-        ULONG           cah_KeyID;              /* Key command ID.          */
-        ULONG           cah_Flags;              /* See below.               */
+        STACKULONG           cah_KeyID;              /* Key command ID.          */
+        STACKULONG           cah_Flags;              /* See below.               */
 };
 
 /* Flags. */
@@ -69,8 +77,8 @@ struct cmAddHotkey {
 
 /* Do a key command. */
 struct cmDoKeyCommand {
-        ULONG           MethodID;       /* See above.                       */
-        ULONG           cdkc_KeyID;     /* ID of the key.                   */
+        STACKULONG           MethodID;       /* See above.                       */
+        STACKULONG           cdkc_KeyID;     /* ID of the key.                   */
 };
 
 #define CM_ENABLEBROKER                 (BGUI_MB+665) /* Enable broker.     */
@@ -80,7 +88,7 @@ struct cmDoKeyCommand {
 
 /* Obtain info from a CxMsg. */
 struct cmMsgInfo {
-        ULONG           MethodID;       /* CM_MSGINFO                       */
+        STACKULONG           MethodID;       /* CM_MSGINFO                       */
         struct {
                 ULONG  *Type;           /* Storage for CxMsgType() result.  */
                 ULONG  *ID;             /* Storage for CxMsgID() result.    */

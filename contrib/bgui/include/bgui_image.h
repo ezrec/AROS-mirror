@@ -14,6 +14,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/07/07 17:15:54  stegerg
+ * stack??? stuff in method structs.
+ *
  * Revision 42.0  2000/05/09 22:23:11  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -130,12 +133,32 @@
 
 #define FRAMEM_BACKFILL                 (BGUI_MB+21)
 
+#ifndef _AROS
+
+#undef STACKULONG
+#define STACKULONG ULONG
+
+#undef STACKUWORD
+#define STACKUWORD UWORD
+
+#undef STACKUBYTE
+#define STACKUBYTE UBYTE
+
+#undef STACKBOOL
+#define STACKBOOL BOOL
+
+#else
+
+#define STACKBOOL STACKUWORD
+
+#endif
+
 /* Backfill a specific rectangle with the backfill hook. */
 struct fmBackfill {
-        ULONG             MethodID;             /* FRM_RENDER                     */
+        STACKULONG             MethodID;             /* FRM_RENDER                     */
         struct BaseInfo  *fmb_BInfo;            /* BaseInfo ready for rendering   */
         struct Rectangle *fmb_Bounds;           /* Rendering bounds.              */
-        ULONG             fmb_State;            /* See "intuition/imageclass.h"   */
+        STACKULONG             fmb_State;            /* See "intuition/imageclass.h"   */
 };
 
 /*
@@ -155,16 +178,16 @@ struct fmBackfill {
 
 struct FrameDrawMsg
 {
-        ULONG             fdm_MethodID;         /* FRM_RENDER                     */
+        STACKULONG             fdm_MethodID;         /* FRM_RENDER                     */
         struct RastPort  *fdm_RPort;            /* RastPort ready for rendering   */
         struct DrawInfo  *fdm_DrawInfo;         /* All you need to render         */
         struct Rectangle *fdm_Bounds;           /* Rendering bounds.              */
-        UWORD             fdm_State;            /* See "intuition/imageclass.h"   */
+        STACKUWORD             fdm_State;            /* See "intuition/imageclass.h"   */
         /*
          * The following fields are only defined under V41.
          */
-        UBYTE             fdm_Horizontal;       /* Horizontal thickness           */
-        UBYTE             fdm_Vertical;         /* Vertical thickness             */
+        STACKUBYTE             fdm_Horizontal;       /* Horizontal thickness           */
+        STACKUBYTE             fdm_Vertical;         /* Vertical thickness             */
 };
 
 /*
@@ -181,12 +204,12 @@ struct FrameDrawMsg
 #define FRM_THICKNESS           (2L) /* Give the default frame thickness. */
 
 struct ThicknessMsg {
-        ULONG            tm_MethodID;           /* FRM_THICKNESS                  */
+        STACKULONG            tm_MethodID;           /* FRM_THICKNESS                  */
         struct {
                 UBYTE   *Horizontal;            /* Storage for horizontal         */
                 UBYTE   *Vertical;              /* Storage for vertical   */
         }                tm_Thickness;
-        BOOL             tm_Thin;               /* Added in V38!                  */
+        STACKBOOL             tm_Thin;               /* Added in V38!                  */
 };
 
 /* Possible hook return codes. */
@@ -253,14 +276,14 @@ struct ThicknessMsg {
 #define IM_EXTENT                       (BGUI_MB+1)
 
 struct impExtent {
-        ULONG                   MethodID;       /* IM_EXTENT                */
+        STACKULONG                   MethodID;       /* IM_EXTENT                */
         struct RastPort        *impe_RPort;     /* RastPort                 */
         struct IBox            *impe_Extent;    /* Storage for extentions.  */
         struct {
                 UWORD          *Width;          /* Storage width in pixels  */
                 UWORD          *Height;         /* Storage height in pixels */
         }                       impe_LabelSize;
-        UWORD                   impe_Flags;     /* See below.               */
+        STACKUWORD                   impe_Flags;     /* See below.               */
 };
 
 #define EXTF_MAXIMUM            (1<<0)          /* Request maximum extensions. */

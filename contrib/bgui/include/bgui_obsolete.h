@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/07/07 17:15:54  stegerg
+ * stack??? stuff in method structs.
+ *
  * Revision 42.0  2000/05/09 22:23:21  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -37,9 +40,14 @@
 /* New methods */
 #define BASE_ADDMAP                     (BGUI_MB+41)
 
+#ifndef _AROS
+#undef STACKULONG
+#define STACKULONG ULONG
+#endif
+
 /* Add an object to the maplist notification list. */
 struct bmAddMap {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         Object                 *bam_Object;
         struct TagItem         *bam_MapList;
 };
@@ -48,7 +56,7 @@ struct bmAddMap {
 
 /* Add an object to the conditional notification list. */
 struct bmAddConditional {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         Object                 *bac_Object;
         struct TagItem          bac_Condition;
         struct TagItem          bac_TRUE;
@@ -59,11 +67,11 @@ struct bmAddConditional {
 
 /* Add an object to the method notification list. */
 struct bmAddMethod {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         Object                 *bam_Object;
-        ULONG                   bam_Flags;
-        ULONG                   bam_Size;
-        ULONG                   bam_MethodID;
+        STACKULONG                   bam_Flags;
+        STACKULONG                   bam_Size;
+        STACKULONG                   bam_MethodID;
 };
 
 #define BAMF_NO_GINFO           (1<<0)  /* Do not send GadgetInfo. */
@@ -75,7 +83,7 @@ struct bmAddMethod {
 
 /* Remove an object from a notification list. */
 struct bmRemove {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         Object                 *bar_Object;
 };
 
@@ -83,7 +91,7 @@ struct bmRemove {
 
 /* Add a hook to the hook-notification list. */
 struct bmAddHook {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         struct Hook            *bah_Hook;
 };
 

@@ -13,6 +13,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/07/07 17:15:54  stegerg
+ * stack??? stuff in method structs.
+ *
  * Revision 42.4  2000/07/03 20:58:42  bergers
  * Automatically installs library and test program in AROS work directory.
  *
@@ -104,8 +107,13 @@
 /* Execute a host command. */
 #define AREXXM_EXECUTE                  (AREXX_MB+2)
 
+#ifndef _AROS
+#undef STACKULONG
+#define STACKULONG ULONG
+#endif
+
 struct acmExecute {
-        ULONG                   MethodID;
+        STACKULONG                   MethodID;
         UBYTE                  *acme_CommandString;
         LONG                   *acme_RC;
         LONG                   *acme_RC2;
