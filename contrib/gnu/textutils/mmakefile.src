@@ -6,18 +6,6 @@
 ##MM- contrib-gnu : contrib-gnu-textutils
 ##MM- contrib-gnu-textutils : development-textutils
 
-##MM- development : development-textutils
-#MM development-textutils-quick : development-textutils-fetch
-
-ORIGINS := http://ftp.gnu.org/pub/gnu/textutils/
-
-#MM
-development-textutils-fetch :
-	%fetch archive=textutils-2.1.tar.gz destination=$(PORTSDIR)/textutils archive_origins=$(ORIGINS) \
-	patches_specs=textutils-2.1-aros.diff:textutils-2.1:-p1
-
-%build_with_configure mmake=development-textutils srcdir=$(PORTSDIR)/textutils/textutils-2.1 nix=yes \
-    prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development extraoptions="--target=$(AROS_TARGET_CPU)-aros \
-    --build=local --disable-nls"
+%fetch_and_build_gnu_development package=textutils version=2.1 patch=yes
 
 
