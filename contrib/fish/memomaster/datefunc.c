@@ -1,5 +1,6 @@
 #include <exec/types.h>
 #include <string.h>
+#include <ctype.h>
 
 /* Date functions for MM2 */
 

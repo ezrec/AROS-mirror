@@ -110,7 +110,7 @@ main(int argc, char *argv[])
  *  for today.
  */
   MFound=TRUE;
-  if (strcmp(argv[1],"check")==0) Check = TRUE;
+  if (argc > 1) if (strcmp(argv[1],"check")==0) Check = TRUE;
   if (((argc > 1) && (Check)) || (WBStart))
     MFound=MemoChk(FALSE);
 
@@ -170,6 +170,7 @@ void Action()
 	  break;
 	case GADGETUP:
 	  ID=((struct Gadget *)address)->GadgetID;
+kprintf("GADGETUP: ID = %d\n", ID);
 	  switch (ID)
 	    {
 	    case 0:

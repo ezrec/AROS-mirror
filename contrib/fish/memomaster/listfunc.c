@@ -1,4 +1,5 @@
 #include <proto/exec.h>
+#include <proto/dos.h>
 #include <proto/intuition.h>
 
 /*  Functions for creating and manipulating the list of memos
@@ -40,6 +41,11 @@
 
 #include "mm2.h"
 #include <stdio.h>
+
+#ifdef _AROS
+#define remove DeleteFile
+#define rename Rename
+#endif
 
 extern struct MinNode *DisplayFirst;
 extern struct Remember *RK;
@@ -240,7 +246,7 @@ void Toggle(int t_gadget)
     n=n->mln_Succ;
     if (!n) break;
     }
-  if (n)
+  if (n) if (n->mln_Succ)
     {
     if ( ((struct MI_Mem *)n)->mim_Select == 0) /* ie if not currently selected */
       ((struct MI_Mem *)n)->mim_Select=1;
