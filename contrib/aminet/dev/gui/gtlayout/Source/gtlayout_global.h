@@ -10,13 +10,16 @@
 
 /****************************************************************************/
 
+#ifndef _AROS
 #define SAVE_DS
 #define ASM	__asm
 #define REG(x)	register __ ## x
 #define LIBENT	SAVE_DS ASM
+#endif
 
 /****************************************************************************/
 
+#ifndef _AROS
 #ifdef LINK_LIB
 #undef SAVE_DS
 #undef REG
@@ -25,8 +28,13 @@
 #define REG(x)
 #define LIBENT
 #endif	// LINK_LIB
+#endif
 
 /****************************************************************************/
+
+#ifdef _AROS
+#include <intuition/sghooks.h>
+#endif
 
 #ifndef _GTLAYOUT_INCLUDES_H
 #include "gtlayout_includes.h"
@@ -49,7 +57,12 @@
 #endif	// _GTLAYOUT_DATA_H
 
 #ifndef _GTLAYOUT_LIBPROTOS_H
+#ifndef _AROS
 #include "gtlayout_libprotos.h"
+#else
+#include "aros/gtlayout_defines_aros.h"
+#include "aros/gtlayout_libprotos_aros.h"
+#endif
 #endif	// _GTLAYOUT_LIBPROTOS_H
 
 /****************************************************************************/
