@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 EXEDIR := $(CONTRIBDIR)/Games/lbreakout2
 
-##MM- contrib-games : lbreakout2
+#MM- contrib-games : lbreakout2
 #MM lbreakout2 : setup linklibs-SDL
 lbreakout2 : lb2_real
 
