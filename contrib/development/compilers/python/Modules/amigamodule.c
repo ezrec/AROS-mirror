@@ -817,6 +817,29 @@ amiga_close(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+#ifdef HAVE_FTRUNCATE
+static PyObject *amiga_ftruncate( PyObject *self, PyObject *args )
+{
+    int fd, length, result;
+    
+    if( !PyArg_ParseTuple( args, "ii", &fd, &length ) ) return NULL;
+    
+    Py_BEGIN_ALLOW_THREADS
+    result = ftruncate( fd, length );
+    Py_END_ALLOW_THREADS
+    
+    if( fd != 0 )
+    {
+    	return amiga_error();
+    }
+    else
+    {	
+    	Py_INCREF( Py_None );
+	return Py_None;
+    }
+}
+#endif
+
 #if defined(AMITCP) || defined(INET225)
 static PyObject *
 amiga_dup(PyObject *self, PyObject *args)
@@ -1176,10 +1199,8 @@ static struct PyMethodDef amiga_methods[] = {
 #ifdef HAVE_MKFIFO
 	{"mkfifo",	amiga_mkfifo, 1},
 #endif
-#if 0 // FIXME: Not implemented
 #ifdef HAVE_FTRUNCATE
-	{"ftruncate",	amiga_ftruncate, 1},
-#endif
+	{"ftruncate",	amiga_ftruncate, METH_VARARGS},
 #endif
 #ifdef HAVE_PUTENV
 	{"putenv", amiga_putenv, 1},
