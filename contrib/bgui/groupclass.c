@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/08/10 17:52:47  stegerg
+ * temp fix for relayout refresh bug which only happens in AROS. temp. solved
+ * by doing a RefreshGList in windowclass.c/WindowClassRelease method.
+ *
  * Revision 42.2  2000/05/15 19:27:01  stegerg
  * another hundreds of REG() macro replacements in func headers/protos.
  *
@@ -79,6 +83,8 @@
  *
  *
  */
+
+#define WW(x)
 
 #include "include/classdefs.h"
 
@@ -1219,6 +1225,8 @@ METHOD(GroupClassRender, struct bmRender *, bmr)
       };
    };
 
+WW(kprintf("***GroupClassRender*** obj = %x\n", obj));
+
    /*
     * Render the baseclass.
     */
@@ -1446,20 +1454,28 @@ METHOD(GroupClassAddMember, struct grmAddMember *, grma)
        */
       AsmDoMethod(m, RM_ADDTAIL, &gd->gd_Members);
 
+WW(kprintf("** GroupClassAddMember\n"));
+WW(if(BASE_DATA(obj)->bc_Window) kprintf("** GroupClassAddMember: sending WM_SETUPGADGET to window\n"));
+
       if(BASE_DATA(obj)->bc_Window)
          AsmDoMethod(BASE_DATA(obj)->bc_Window, WM_SETUPGADGET, grma->grma_Member, NULL);
 
       /*
        * Try to re-layout the group.
        */
+WW(kprintf("** GroupClassAddMember: calling relayoutgroup: LGO_Relayout = %d\n",GetTagData(LGO_Relayout, TRUE, (struct TagItem *)&grma->grma_Attr)));
+
       if(GetTagData(LGO_Relayout, TRUE, (struct TagItem *)&grma->grma_Attr)
       && !RelayoutGroup(obj))
       {
+WW(kprintf("** GroupClassAddMember: relayoutgroup failed. returning FALSE\n"));
          DisposeObject(m);
          RelayoutGroup(obj);
 
          return FALSE;
       };
+WW(kprintf("** GroupClassAddMember: everything done. returning TRUE\n"));
+
       return TRUE;
    };
    return FALSE;
@@ -1688,8 +1704,11 @@ makeproto ASM REGFUNC1(ULONG, RelayoutGroup,
    struct bmRelayout  bmr;
    ULONG               rc = 1;
 
+WW(kprintf("** GroupClass_RelayoutGrop\n"));
+
    if (bc->bc_Window)
    {
+WW(kprintf("** GroupClass_RelayoutGrop: has bc->bc_Window\n"));
       Get_Attr(bc->bc_Window, WINDOW_Window, (ULONG *)&w);
 
       if (w)
@@ -1697,6 +1716,7 @@ makeproto ASM REGFUNC1(ULONG, RelayoutGroup,
          bmr.MethodID   = BASE_RELAYOUT;
          bmr.bmr_GInfo = NULL;
          bmr.bmr_RPort = w->RPort;
+WW(kprintf("** GroupClass_RelayoutGrop: has WINDOW_Window --> sending BASE_RELAYOUT to obj\n"));
 
          rc = BGUI_DoGadgetMethodA(obj, w, NULL, (Msg)&bmr);
       };

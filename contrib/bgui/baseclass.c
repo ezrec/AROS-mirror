@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2000/08/10 17:52:47  stegerg
+ * temp fix for relayout refresh bug which only happens in AROS. temp. solved
+ * by doing a RefreshGList in windowclass.c/WindowClassRelease method.
+ *
  * Revision 42.5  2000/08/09 11:45:57  chodorowski
  * Removed a lot of #ifdefs that disabled the AROS_LIB* macros when not building on AROS. This is now handled in contrib/bgui/include/bgui_compilerspecific.h.
  *
@@ -101,6 +105,8 @@
  *
  *
  */
+
+#define WW(x)
 
 /// Class definitions.
 
@@ -1118,34 +1124,44 @@ METHOD(BaseClassRelayout, struct bmRelayout *, bmr)
    struct RastPort   *rp = bmr->bmr_RPort;
    Object            *wo = bd->bd_Window;
 
+WW(kprintf("** BaseClassRelayout\n"));
    if (!wo) return 0;
+WW(kprintf("** BaseClassRelayout. wo != 0. calling GRM_DIMENSIONS\n"));
 
    AsmDoMethod(obj, GRM_DIMENSIONS, gi, rp, &minw, &minh, GDIMF_MAXIMUM, &maxw, &maxh);
+WW(kprintf("** BaseClassRelayout. GRM_DIMENSIONS returned minw = %d  minh = %d\n",minw,minh));
 
    if ((minw <= bd->bd_OuterBox.Width) && (minh <= bd->bd_OuterBox.Height))
    {
+WW(kprintf("** BaseClassRelayout: minw and minh are <= outerbox.width/height\n"));
       if(!(bd->bd_Flags & BDF_INHIBITED))
       {
-	 if((rp=BGUI_ObtainGIRPort(gi)))
-	 {
-	    rc=AsmDoMethod(obj,GM_RENDER,gi,rp,GREDRAW_REDRAW);
-	    ReleaseGIRPort(rp);
-	 }
-	 else
-	    rc=0;
+kprintf("** BaseClassRelayout: not inhibited. trying GM_RENDER\n");
+
+         if((rp=BGUI_ObtainGIRPort(gi)))
+         {
+WW(kprintf("** BaseClassRelayout: doing GM_RENDER\n"));
+            rc=AsmDoMethod(obj,GM_RENDER,gi,rp,GREDRAW_REDRAW);
+            ReleaseGIRPort(rp);
+         }
+         else
+            rc=0;
       }
       else
 	 rc=1;
    }
    else
    {
+WW(kprintf("** BaseClassRelayout: minw and minh are > outerbox.width/height\n"));
       if (bd->bd_Group)
       {
-	 rc = AsmDoMethodA(bd->bd_Group, (Msg)bmr);
+WW(kprintf("** BaseClassRelayout: has bd->bd_Group -> sending BASE_RELAYOUT to group"));
+         rc = AsmDoMethodA(bd->bd_Group, (Msg)bmr);
       }
       else
       {
-	 rc = AsmDoMethod(wo, WM_RELAYOUT);
+WW(kprintf("** BaseClassRelayout: does not have bd->bd_Group sending WM_RELAYOUT\n"));
+         rc = AsmDoMethod(wo, WM_RELAYOUT);
       };
    };
    return rc;

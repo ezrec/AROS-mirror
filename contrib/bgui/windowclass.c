@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.7  2000/08/10 17:52:47  stegerg
+ * temp fix for relayout refresh bug which only happens in AROS. temp. solved
+ * by doing a RefreshGList in windowclass.c/WindowClassRelease method.
+ *
  * Revision 42.6  2000/07/10 16:35:49  stegerg
  * bugfix: if a screen's size was smaller than it's OSCAN_TEXT overscan size
  * then windows sometimes could not be created because of badly
@@ -104,6 +108,8 @@
  *
  *
  */
+
+#define WW(x)
 
 #include "include/classdefs.h"
 
@@ -2919,6 +2925,7 @@ METHOD(WindowClassIDCMP, Msg, msg)
          break;
 
       case IDCMP_NEWSIZE:
+WW(kprintf("WindowClassIDCMP: received IDCMP_NEWSIZE\n"));
          /*
           * If we have manually removed the
           * master object we adjust the size
@@ -3032,13 +3039,18 @@ METHOD(WindowClassIDCMP, Msg, msg)
          break;
 
       case  IDCMP_CHANGEWINDOW:
+WW(kprintf("WindowClassIDCMP: received IDCMP_CHANGEWINDOW\n"));
          if (wd->wd_Flags & WDF_CONSTRAINTS)
          {
+WW(kprintf("WindowClassIDCMP: WDF_CONSTRAINTS is set\n"));
+WW(kprintf("WindowClassIDCMP: calling WindowLimits(%d,%d,%d,%d)\n",wd->wd_MinW,wd->wd_MinH,wd->wd_MaxW,wd->wd_MaxH));
             WindowLimits(w, wd->wd_MinW, wd->wd_MinH, wd->wd_MaxW, wd->wd_MaxH);
             wd->wd_Flags &= ~WDF_CONSTRAINTS;
 
+WW(kprintf("WindowClassIDCMP: calling WM_RELEASE\n"));
             AsmDoMethod(obj, WM_RELEASE);
          };
+WW(kprintf("WindowClassIDCMP: calling WindowClassChange\n"));
          WindowClassChange(cl, obj, (Msg)NULL);
          break;
 
@@ -3767,22 +3779,36 @@ METHOD(WindowClassRelease, Msg, msg)
    ULONG          rc = 0;
    struct Window *w;
 
+WW(kprintf("WindowClassRelease:\n"));
+
    /*
     * Window Open?
     */
    if (w = wd->wd_WindowPtr)
    {
+WW(kprintf("WindowClassRelease: window is open\n"));
       /*
        * Yes. Master gadget removed?
        */
       if (wd->wd_Flags & WDF_REMOVED)
       {
+WW(kprintf("WindowClassRelease: WDF_REMOVED set = master gadget was removed. Calling AddGadget\n"));
          /*
           * Put the master back on-line.
           */
          AddGadget(w, (struct Gadget *)wd->wd_Gadgets, -1);
+WW(kprintf("WindowClassRelease: clearing WDF_REMOVED flag\n"));
+
          wd->wd_Flags &= ~WDF_REMOVED;
+
       };
+WW(kprintf("WindowClassRelease: calling RefreshGList: gad = %x\n", (struct Gadget *)wd->wd_Gadgets));
+
+#warning temp AROS fix to fix refresh problem after an automatic window-resize done by BGUI
+#ifdef _AROS
+RefreshGList((struct Gadget *)wd->wd_Gadgets, w, 0, 1);
+#endif
+
       rc = 1;
    };
    return rc;
@@ -3802,18 +3828,22 @@ METHOD(WindowClassRelayout, Msg, msg)
    struct Window  *w;
    struct Screen  *s = wd->wd_Screen;
 
+WW(kprintf("** WindowClassRelayout\n"));
    /*
     * Window open?
     */
    if (w = wd->wd_WindowPtr)
    {
+WW(kprintf("** WindowClassRelayout: window is open. calling WM_SECURE\n"));
       AsmDoMethod(obj, WM_SECURE);
+WW(kprintf("** WindowClassRelayout: calling WinSize\n"));
 
       if (!WinSize(wd, &min_x, &min_y))
       {
          AsmDoMethod(obj, WM_RELEASE);
          return 0;
       };
+WW(kprintf("** WindowClassRelayout: WinSize call ok min_x = %d, min_y = %d\n", min_x, min_y));
 
       /*
        * Pick up old minimum width and height.
@@ -3853,12 +3883,20 @@ METHOD(WindowClassRelayout, Msg, msg)
           */
 
          WindowLimits(w, 1, 1, -1, -1);
+
+WW(kprintf("** WindowClassRelayout: Calling ChangeWindowBox(%d,%d,%d,%d)\n",newl,newt,neww,newh));
+
          ChangeWindowBox(w, newl, newt, neww, newh);
 
          wd->wd_MinW = lock_w ? neww : min_x;
          wd->wd_MinH = lock_h ? newh : min_y;
          wd->wd_MaxW = lock_w ? neww : max_x;
          wd->wd_MaxH = lock_h ? newh : max_y;
+WW(kprintf("** WindowClassRelayout: setting wd->wd_MinW/H to %d,%d  wd->wd_MaxW/H to %d,%d\n",
+wd->wd_MinW,
+wd->wd_MinH,
+wd->wd_MaxW,
+wd->wd_MaxH));
 
          wd->wd_Flags |= WDF_CONSTRAINTS;
       }
