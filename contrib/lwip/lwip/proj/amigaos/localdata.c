@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: localdata.c,v 1.1 2002/07/28 11:13:55 sebauer Exp $
+    $Id: localdata.c,v 1.2 2002/07/28 14:13:07 sebauer Exp $
 */
 
 #include <string.h>
@@ -52,7 +52,7 @@ void *ld_mem_allocate(struct Library *SocketBase, int size)
 }
 
 /**************************************************************************
- Free the memory allocated by mem_allocate
+ Free the memory allocated by ld_mem_allocate
 **************************************************************************/
 void ld_mem_free(struct Library *SocketBase, void *mem)
 {
