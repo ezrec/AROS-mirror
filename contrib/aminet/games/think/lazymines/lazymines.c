@@ -153,7 +153,7 @@ main (
    pubscr_name[0] = '\0';
    
    handle_startup_msg (argv, argc == 0);
-   if (auto_opening < 0)
+   if ((BYTE)auto_opening < 0)
       auto_opening = 0;
    else if (auto_opening > 10)
       auto_opening = 10;
