@@ -68,16 +68,17 @@ PySys_SetObject(char *name, PyObject *v)
 }
 
 static PyObject *
-sys_displayhook(PyObject *self, PyObject *args)
+sys_displayhook(PyObject *self, PyObject *o)
 {
-	PyObject *o, *outf;
+	PyObject *outf;
 	PyInterpreterState *interp = PyThreadState_Get()->interp;
 	PyObject *modules = interp->modules;
 	PyObject *builtins = PyDict_GetItemString(modules, "__builtin__");
 
-	/* parse arguments */
-	if (!PyArg_ParseTuple(args, "O:displayhook", &o))
+	if (builtins == NULL) {
+		PyErr_SetString(PyExc_RuntimeError, "lost __builtin__");
 		return NULL;
+	}
 
 	/* Print value except if None */
 	/* After printing, also assign to '_' */
@@ -115,7 +116,7 @@ static PyObject *
 sys_excepthook(PyObject* self, PyObject* args)
 {
 	PyObject *exc, *value, *tb;
-	if (!PyArg_ParseTuple(args, "OOO:excepthook", &exc, &value, &tb))
+	if (!PyArg_UnpackTuple(args, "excepthook", 3, 3, &exc, &value, &tb))
 		return NULL;
 	PyErr_Display(exc, value, tb);
 	Py_INCREF(Py_None);
@@ -128,11 +129,9 @@ static char excepthook_doc[] =
 "Handle an exception by displaying it with a traceback on sys.stderr.\n";
 
 static PyObject *
-sys_exc_info(PyObject *self, PyObject *args)
+sys_exc_info(PyObject *self)
 {
 	PyThreadState *tstate;
-	if (!PyArg_ParseTuple(args, ":exc_info"))
-		return NULL;
 	tstate = PyThreadState_Get();
 	return Py_BuildValue(
 		"(OOO)",
@@ -165,11 +164,11 @@ If the status numeric, it will be used as the system exit status.\n\
 If it is another kind of object, it will be printed and the system\n\
 exit status will be one (i.e., failure).";
 
+#ifdef Py_USING_UNICODE
+
 static PyObject *
-sys_getdefaultencoding(PyObject *self, PyObject *args)
+sys_getdefaultencoding(PyObject *self)
 {
-	if (!PyArg_ParseTuple(args, ":getdefaultencoding"))
-		return NULL;
 	return PyString_FromString(PyUnicode_GetDefaultEncoding());
 }
 
@@ -196,16 +195,124 @@ static char setdefaultencoding_doc[] =
 \n\
 Set the current default string encoding used by the Unicode implementation.";
 
+#endif
+
+/*
+ * Cached interned string objects used for calling the profile and
+ * trace functions.  Initialized by trace_init().
+ */
+static PyObject *whatstrings[4] = {NULL, NULL, NULL, NULL};
+
+static int
+trace_init(void)
+{
+	static char *whatnames[4] = {"call", "exception", "line", "return"};
+	PyObject *name;
+	int i;
+	for (i = 0; i < 4; ++i) {
+		if (whatstrings[i] == NULL) {
+			name = PyString_InternFromString(whatnames[i]);
+			if (name == NULL)
+				return -1;
+			whatstrings[i] = name;
+                }
+	}
+	return 0;
+}
+
+
+static PyObject *
+call_trampoline(PyThreadState *tstate, PyObject* callback,
+		PyFrameObject *frame, int what, PyObject *arg)
+{
+	PyObject *args = PyTuple_New(3);
+	PyObject *whatstr;
+	PyObject *result;
+
+	if (args == NULL)
+		return NULL;
+	Py_INCREF(frame);
+	whatstr = whatstrings[what];
+	Py_INCREF(whatstr);
+	if (arg == NULL)
+		arg = Py_None;
+	Py_INCREF(arg);
+	PyTuple_SET_ITEM(args, 0, (PyObject *)frame);
+	PyTuple_SET_ITEM(args, 1, whatstr);
+	PyTuple_SET_ITEM(args, 2, arg);
+
+	/* call the Python-level function */
+	PyFrame_FastToLocals(frame);
+	result = PyEval_CallObject(callback, args);
+	PyFrame_LocalsToFast(frame, 1);
+	if (result == NULL)
+		PyTraceBack_Here(frame);
+
+	/* cleanup */
+	Py_DECREF(args);
+	return result;
+}
+
+static int
+profile_trampoline(PyObject *self, PyFrameObject *frame,
+		   int what, PyObject *arg)
+{
+	PyThreadState *tstate = frame->f_tstate;
+	PyObject *result;
+
+	if (arg == NULL)
+		arg = Py_None;
+	result = call_trampoline(tstate, self, frame, what, arg);
+	if (result == NULL) {
+		PyEval_SetProfile(NULL, NULL);
+		return -1;
+	}
+	Py_DECREF(result);
+	return 0;
+}
+
+static int
+trace_trampoline(PyObject *self, PyFrameObject *frame,
+		 int what, PyObject *arg)
+{
+	PyThreadState *tstate = frame->f_tstate;
+	PyObject *callback;
+	PyObject *result;
+
+	if (what == PyTrace_CALL)
+		callback = self;
+	else
+		callback = frame->f_trace;
+	if (callback == NULL)
+		return 0;
+	result = call_trampoline(tstate, callback, frame, what, arg);
+	if (result == NULL) {
+		PyEval_SetTrace(NULL, NULL);
+		Py_XDECREF(frame->f_trace);
+		frame->f_trace = NULL;
+		return -1;
+	}
+	if (result != Py_None) {
+		PyObject *temp = frame->f_trace;
+		frame->f_trace = NULL;
+		Py_XDECREF(temp);
+		frame->f_trace = result;
+	}
+	else {
+		Py_DECREF(result);
+	}
+	return 0;
+}
+
 static PyObject *
 sys_settrace(PyObject *self, PyObject *args)
 {
-	PyThreadState *tstate = PyThreadState_Get();
+	if (trace_init() == -1)
+		return NULL;
 	if (args == Py_None)
-		args = NULL;
+		PyEval_SetTrace(NULL, NULL);
 	else
-		Py_XINCREF(args);
-	Py_XDECREF(tstate->sys_tracefunc);
-	tstate->sys_tracefunc = args;
+		PyEval_SetTrace(trace_trampoline, args);
 	Py_INCREF(Py_None);
 	return Py_None;
 }
@@ -219,13 +326,12 @@ function call.  See the debugger chapter in the library manual.";
 static PyObject *
 sys_setprofile(PyObject *self, PyObject *args)
 {
-	PyThreadState *tstate = PyThreadState_Get();
+	if (trace_init() == -1)
+		return NULL;
 	if (args == Py_None)
-		args = NULL;
+		PyEval_SetProfile(NULL, NULL);
 	else
-		Py_XINCREF(args);
-	Py_XDECREF(tstate->sys_profilefunc);
-	tstate->sys_profilefunc = args;
+		PyEval_SetProfile(profile_trampoline, args);
 	Py_INCREF(Py_None);
 	return Py_None;
 }
@@ -277,10 +383,8 @@ stack and crashing Python.  The highest possible limit is platform-\n\
 dependent.";
 
 static PyObject *
-sys_getrecursionlimit(PyObject *self, PyObject *args)
+sys_getrecursionlimit(PyObject *self)
 {
-	if (!PyArg_ParseTuple(args, ":getrecursionlimit"))
-		return NULL;
 	return PyInt_FromLong(Py_GetRecursionLimit());
 }
 
@@ -290,6 +394,46 @@ static char getrecursionlimit_doc[] =
 Return the current value of the recursion limit, the maximum depth\n\
 of the Python interpreter stack.  This limit prevents infinite\n\
 recursion from causing an overflow of the C stack and crashing Python.";
+
+#ifdef HAVE_DLOPEN
+static PyObject *
+sys_setdlopenflags(PyObject *self, PyObject *args)
+{
+	int new_val;
+        PyThreadState *tstate = PyThreadState_Get();
+	if (!PyArg_ParseTuple(args, "i:setdlopenflags", &new_val))
+		return NULL;
+        if (!tstate)
+		return NULL;
+        tstate->interp->dlopenflags = new_val;
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
+static char setdlopenflags_doc[] =
+"setdlopenflags(n) -> None\n\
+\n\
+Set the flags that will be used for dlopen() calls. Among other\n\
+things, this will enable a lazy resolving of symbols when imporing\n\
+a module, if called as sys.setdlopenflags(0)\n\
+To share symols across extension modules, call as\n\
+sys.setdlopenflags(dl.RTLD_NOW|dl.RTLD_GLOBAL)";
+
+static PyObject *
+sys_getdlopenflags(PyObject *self, PyObject *args)
+{
+        PyThreadState *tstate = PyThreadState_Get();
+        if (!tstate)
+		return NULL;
+        return PyInt_FromLong(tstate->interp->dlopenflags);
+}
+
+static char getdlopenflags_doc[] =
+"getdlopenflags() -> int\n\
+\n\
+Return the current value of the flags that are used for dlopen()\n\
+calls. The flag constants are defined in the dl module.";
+#endif
 
 #ifdef USE_MALLOPT
 /* Link with -lmalloc (or -lmpc) on an SGI */
@@ -308,21 +452,16 @@ sys_mdebug(PyObject *self, PyObject *args)
 #endif /* USE_MALLOPT */
 
 static PyObject *
-sys_getrefcount(PyObject *self, PyObject *args)
+sys_getrefcount(PyObject *self, PyObject *arg)
 {
-	PyObject *arg;
-	if (!PyArg_ParseTuple(args, "O:getrefcount", &arg))
-		return NULL;
 	return PyInt_FromLong(arg->ob_refcnt);
 }
 
 #ifdef Py_TRACE_REFS
 static PyObject *
-sys_gettotalrefcount(PyObject *self, PyObject *args)
+sys_gettotalrefcount(PyObject *self)
 {
 	extern long _Py_RefTotal;
-	if (!PyArg_ParseTuple(args, ":gettotalrefcount"))
-		return NULL;
 	return PyInt_FromLong(_Py_RefTotal);
 }
 
@@ -336,12 +475,10 @@ temporary reference in the argument list, so it is at least 2.";
 
 #ifdef COUNT_ALLOCS
 static PyObject *
-sys_getcounts(PyObject *self, PyObject *args)
+sys_getcounts(PyObject *self)
 {
 	extern PyObject *get_counts(void);
 
-	if (!PyArg_ParseTuple(args, ":getcounts"))
-		return NULL;
 	return get_counts();
 }
 #endif
@@ -392,37 +529,49 @@ extern PyObject *_Py_GetDXProfile(PyObject *,  PyObject *);
 
 static PyMethodDef sys_methods[] = {
 	/* Might as well keep this in alphabetic order */
-	{"displayhook",	sys_displayhook, 1, displayhook_doc},
-	{"exc_info",	sys_exc_info, 1, exc_info_doc},
-	{"excepthook",	sys_excepthook, 1, excepthook_doc},
-	{"exit",	sys_exit, 0, exit_doc},
-	{"getdefaultencoding", sys_getdefaultencoding, 1,
+	{"displayhook",	sys_displayhook, METH_O, displayhook_doc},
+	{"exc_info",	(PyCFunction)sys_exc_info, METH_NOARGS, exc_info_doc},
+	{"excepthook",	sys_excepthook, METH_VARARGS, excepthook_doc},
+	{"exit",	sys_exit, METH_OLDARGS, exit_doc},
+#ifdef Py_USING_UNICODE
+	{"getdefaultencoding", (PyCFunction)sys_getdefaultencoding, METH_NOARGS,
 	 getdefaultencoding_doc}, 
+#endif
+#ifdef HAVE_DLOPEN
+	{"getdlopenflags", (PyCFunction)sys_getdlopenflags, METH_NOARGS, 
+	 getdlopenflags_doc},
+#endif
 #ifdef COUNT_ALLOCS
-	{"getcounts",	sys_getcounts, 1},
+	{"getcounts",	(PyCFunction)sys_getcounts, METH_NOARGS},
 #endif
 #ifdef DYNAMIC_EXECUTION_PROFILE
-	{"getdxp",	_Py_GetDXProfile, 1},
+	{"getdxp",	_Py_GetDXProfile, METH_VARARGS},
 #endif
 #ifdef Py_TRACE_REFS
-	{"getobjects",	_Py_GetObjects, 1},
-	{"gettotalrefcount", sys_gettotalrefcount, 1},
+	{"getobjects",	_Py_GetObjects, METH_VARARGS},
+	{"gettotalrefcount", (PyCFunction)sys_gettotalrefcount, METH_NOARGS},
 #endif
-	{"getrefcount",	sys_getrefcount, 1, getrefcount_doc},
-	{"getrecursionlimit", sys_getrecursionlimit, 1,
+	{"getrefcount",	(PyCFunction)sys_getrefcount, METH_O, getrefcount_doc},
+	{"getrecursionlimit", (PyCFunction)sys_getrecursionlimit, METH_NOARGS,
 	 getrecursionlimit_doc},
-	{"_getframe", sys_getframe, 1, getframe_doc},
+	{"_getframe", sys_getframe, METH_VARARGS, getframe_doc},
 #ifdef USE_MALLOPT
-	{"mdebug",	sys_mdebug, 1},
+	{"mdebug",	sys_mdebug, METH_VARARGS},
 #endif
-	{"setdefaultencoding", sys_setdefaultencoding, 1,
+#ifdef Py_USING_UNICODE
+	{"setdefaultencoding", sys_setdefaultencoding, METH_VARARGS,
 	 setdefaultencoding_doc}, 
-	{"setcheckinterval",	sys_setcheckinterval, 1,
+#endif
+	{"setcheckinterval",	sys_setcheckinterval, METH_VARARGS,
 	 setcheckinterval_doc}, 
-	{"setprofile",	sys_setprofile, 0, setprofile_doc},
-	{"setrecursionlimit", sys_setrecursionlimit, 1,
+#ifdef HAVE_DLOPEN
+	{"setdlopenflags", sys_setdlopenflags, METH_VARARGS, 
+	 setdlopenflags_doc},
+#endif
+	{"setprofile",	sys_setprofile, METH_OLDARGS, setprofile_doc},
+	{"setrecursionlimit", sys_setrecursionlimit, METH_VARARGS,
 	 setrecursionlimit_doc},
-	{"settrace",	sys_settrace, 0, settrace_doc},
+	{"settrace",	sys_settrace, METH_OLDARGS, settrace_doc},
 	{NULL,		NULL}		/* sentinel */
 };
 
@@ -527,6 +676,7 @@ exc_traceback -- traceback of exception currently being handled\n\
 Static objects:\n\
 \n\
 maxint -- the largest supported integer (the smallest is -maxint-1)\n\
+maxunicode -- the largest supported character\n\
 builtin_module_names -- tuple of module names built into this intepreter\n\
 version -- the version of this interpreter as a string\n\
 version_info -- version information as a tuple\n\
@@ -555,9 +705,11 @@ displayhook() -- print an object to the screen, and save it in __builtin__._\n\
 excepthook() -- print an exception and its traceback to sys.stderr\n\
 exc_info() -- return thread-safe information about the current exception\n\
 exit() -- exit the interpreter by raising SystemExit\n\
+getdlopenflags() -- returns flags to be used for dlopen() calls\n\
 getrefcount() -- return the reference count for an object (plus one :-)\n\
 getrecursionlimit() -- return the max recursion depth for the interpreter\n\
 setcheckinterval() -- control how often the interpreter checks for events\n\
+setdlopenflags() -- set the flags to be used for dlopen() calls\n\
 setprofile() -- set the global profiling function\n\
 setrecursionlimit() -- set the max recursion depth for the interpreter\n\
 settrace() -- set the global debug tracing function\n\
@@ -637,6 +789,11 @@ _PySys_Init(void)
 	PyDict_SetItemString(sysdict, "maxint",
 			     v = PyInt_FromLong(PyInt_GetMax()));
 	Py_XDECREF(v);
+#ifdef Py_USING_UNICODE
+	PyDict_SetItemString(sysdict, "maxunicode",
+			     v = PyInt_FromLong(PyUnicode_GetMax()));
+	Py_XDECREF(v);
+#endif
 	PyDict_SetItemString(sysdict, "builtin_module_names",
 		   v = list_builtin_module_names());
 	Py_XDECREF(v);
@@ -876,11 +1033,18 @@ mywrite(char *name, FILE *fp, const char *format, va_list va)
 		vfprintf(fp, format, va);
 	else {
 		char buffer[1001];
-		if (vsprintf(buffer, format, va) >= sizeof(buffer))
-		    Py_FatalError("PySys_WriteStdout/err: buffer overrun");
+		const int written = PyOS_vsnprintf(buffer, sizeof(buffer),
+						   format, va);
 		if (PyFile_WriteString(buffer, file) != 0) {
 			PyErr_Clear();
 			fputs(buffer, fp);
+		}
+		if (written < 0 || written >= sizeof(buffer)) {
+			const char *truncated = "... truncated";
+			if (PyFile_WriteString(truncated, file) != 0) {
+				PyErr_Clear();
+				fputs(truncated, fp);
+			}
 		}
 	}
 	PyErr_Restore(error_type, error_value, error_traceback);
