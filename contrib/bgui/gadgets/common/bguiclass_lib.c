@@ -184,6 +184,7 @@ AROS_LH1(struct Library *, LibOpen,
 SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *lib, REG(d0) ULONG libver)
 #endif
 {
+   AROS_LIBFUNC_INIT
    /*
     * Increase open counter when necessary.
     */
@@ -198,6 +199,8 @@ SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *lib, REG(d0) ULONG li
     * Return library base or NULL upon failure.
     */
    return lib;
+   
+   AROS_LIBFUNC_EXIT
 }
 
 /*
@@ -210,6 +213,7 @@ AROS_LH0(BPTR, LibClose,
 SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
 #endif
 {
+   AROS_LIBFUNC_INIT
    /*
     * Of course we do not expunge
     * when we still have accessors.
@@ -233,6 +237,8 @@ SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
     * Otherwise we remain in memory.
     */
    return NULL;
+   
+   AROS_LIBFUNC_EXIT
 }
 
 /*
@@ -246,6 +252,7 @@ AROS_LH1(BPTR, LibExpunge,
 SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
 #endif
 {
+   AROS_LIBFUNC_INIT
    /*
     * No expunge when we still
     * have accessors.
@@ -284,6 +291,8 @@ SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
     * system can unload us.
     */
    return SegList;
+    
+   AROS_LIBFUNC_EXIT
 }
 
 /*
@@ -296,5 +305,7 @@ AROS_LH0(LONG, LibVoid,
 SAVEDS LONG LibVoid(void)
 #endif
 {
+   AROS_LIBFUNC_INIT
    return 0;
+   AROS_LIBFUNC_EXIT
 }
