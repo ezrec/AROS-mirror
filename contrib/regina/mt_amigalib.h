@@ -61,5 +61,6 @@ tsd_t *__regina_get_tsd(void);
 #error TRACK_TSD_USAGE not implemented in amiga thread support
 #endif
 
+extern APTR __regina_semaphorepool;
 void AmigaLockSemaphore(struct SignalSemaphore **);
 void AmigaUnlockSemaphore(struct SignalSemaphore *);

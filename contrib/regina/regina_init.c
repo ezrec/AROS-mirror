@@ -50,6 +50,8 @@ ULONG SAVEDS STDARGS LC_BUILDNAME(L_InitLib) (LC_LIBHEADERTYPEPTR ReginaBase)
         CloseLibrary(DOSBase);
         return FALSE;
     }
+
+    __regina_semaphorepool = CreatePool(MEMF_PUBLIC, 1024, 256);
   
     return TRUE;
 }
@@ -78,7 +80,9 @@ void  SAVEDS STDARGS LC_BUILDNAME(L_ExpungeLib) (LC_LIBHEADERTYPEPTR ReginaBase)
 {
     D(bug("Inside Expunge func of regina.library\n"));
 
-    /* CloseLibrary() checks for NULL-pointers */
+    CloseLibrary(DOSBase);
+    CloseLibrary(aroscbase);
+    DeletePool(__regina_semaphorepool);
 }
 
 /****************************************************************************************/

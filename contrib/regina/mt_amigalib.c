@@ -19,9 +19,13 @@ typedef struct _mt_tsd_t {
 static void *MTMalloc(const tsd_t *TSD,size_t size)
 {
    mt_tsd_t *mt = (mt_tsd_t *)TSD->mt_tsd;
-   void *mem = AllocPooled( mt->mempool, size+sizeof(size_t));
+   void *mem;
+
+   size += sizeof(size_t);
+   mem = AllocPooled( mt->mempool, size);
    *((size_t*)mem)=size;
-   return (void *)(((char *)mem)+sizeof(size_t));
+
+  return (void *)(((char *)mem)+sizeof(size_t));
 }
 
 /* Lowest level memory deallocation function for normal circumstances. */
@@ -95,25 +99,31 @@ tsd_t *ReginaInitializeThread(void)
    return(__regina_tsd);
 }
 
+
+APTR __regina_semaphorepool;
+
 void AmigaLockSemaphore(struct SignalSemaphore **semaphoreptr)
 {
   if (*semaphoreptr == NULL)
   {
     Forbid();
+
     if (*semaphoreptr == NULL)
     {
       tsd_t *TSD = __regina_get_tsd(); 
-      *semaphoreptr = Malloc_TSD(TSD, sizeof(struct SignalSemaphore));
+      *semaphoreptr = AllocPooled (__regina_semaphorepool, sizeof(struct SignalSemaphore));
       InitSemaphore(*semaphoreptr);
     }
+
     Permit();
   }
-  
+
   ObtainSemaphore(*semaphoreptr);
 }
 
 void AmigaUnlockSemaphore(struct SignalSemaphore *semaphore)
 {
+  assert(semaphore!=NULL);
   ReleaseSemaphore(semaphore);
 }
 
