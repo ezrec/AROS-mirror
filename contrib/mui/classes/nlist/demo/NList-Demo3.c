@@ -54,8 +54,20 @@ extern struct Library *SysBase,*IntuitionBase,*UtilityBase,*GfxBase,*DOSBase,*Ic
 
 extern struct Library *MUIMasterBase;
 
+#ifdef _AROS
+#include <proto/intuition.h>
+#include <proto/graphics.h>
+#include <proto/utility.h>
+#include <proto/muimaster.h>
+#include <aros/asmcall.h>
+#include <MUI/NList_mcc.h>
+#endif
+
 #include <MUI/NListview_mcc.h>
+
+#ifndef _AROS
 #include <MUI/NFloattext_mcc.h>
+#endif
 
 #include "NList-Demo3.h"
 
@@ -232,11 +244,21 @@ SAVEDS ASM ULONG NLI_Dispatcher(REG(a0) struct IClass *cl, REG(a2) Object *obj, 
 {
 #endif
 #ifdef __GNUC__
+#ifdef _AROS
+AROS_UFH3(ULONG, NLI_Dispatcher,
+    AROS_UFHA(struct IClass *, cl, A0),
+    AROS_UFHA(Object *, obj, A2),
+    AROS_UFHA(Msg, msg, A1))
+{
+  AROS_USERFUNC_INIT
+#else
 ULONG NLI_Dispatcher(void)
 { register struct IClass *a0 __asm("a0"); struct IClass *cl = a0;
   register Object *a2 __asm("a2");        Object *obj = a2;
   register Msg a1 __asm("a1");            Msg msg = a1;
 #endif
+#endif
+
   switch (msg->MethodID)
   {
     case OM_NEW         : return (      mNLI_New(cl,obj,(APTR)msg));
@@ -245,6 +267,10 @@ ULONG NLI_Dispatcher(void)
     case MUIM_Draw      : return (     mNLI_Draw(cl,obj,(APTR)msg));
   }
   return(DoSuperMethodA(cl,obj,msg));
+
+#ifdef _AROS
+  AROS_USERFUNC_EXIT
+#endif
 }
 
 
