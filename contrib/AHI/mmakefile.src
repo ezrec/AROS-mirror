@@ -11,4 +11,4 @@ include $(TOP)/config/make.cfg
 EXEDIR := $(CONTRIBDIR)/AHI
 
 %build_with_configure mmake=contrib-AHI prefix=$(EXEDIR) \
-    extraoptions="--with-os-includedir=$(AROS_INCLUDES)"
+    includedir=$(AROS_INCLUDES) extraoptions="--with-os-includedir=$(AROS_INCLUDES)"
