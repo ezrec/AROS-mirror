@@ -151,9 +151,7 @@ USHORT			total_games = 0;
 static signed char
 	BoardPos [StackSize][26],/* stack of the previous positions	*/
 	DicePos [StackSize][4],  /* stack of the dice rolls		*/
-	StackPos,		 /* how many moves back are we at?	*/
-	MoveList [4],		 /* stack of this turn's moves		*/
-	CurMove = 0;		 /* place in the list			*/
+	StackPos;		 /* how many moves back are we at?	*/
 signed char	Turn,		 /* whose turn is it?			*/
 		board [26],	 /* describes the board position	*/
 				 /* 0 and 25 are the bar		*/
@@ -269,7 +267,7 @@ int 	UserMove ( BYTE 	board [26],
 {
   BYTE			Pick = 0, Valid = 0;  /* flags */
   int			i, x, y,
-			from_point, to_point;
+			from_point = 0, to_point;
   struct IntuiMessage	*message;
   unsigned long		Class, msg_flag = 1L << w->UserPort->mp_SigBit;
   unsigned short	Code;
@@ -604,7 +602,7 @@ int 	valid ( BYTE 	board [26],
     if (to_point > 24) {		/* if in home board			*/
       if ((All_In > 18) &&		/*   if all men in home board		*/
           ((from_point == temp) ||
-	   (temp < All_In) && (from_point == All_In)))
+	   ((temp < All_In) && (from_point == All_In))))
         return (1);
       else
         return (0);
