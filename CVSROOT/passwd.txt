@@ -9,6 +9,7 @@ quango:cbSYvfdxV/owQ:aros:Chris Lawrence:quango@socomm.net:Linux/m68k
 geert:cbGlFwvZi5iZY:aros:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m68k
 turrican:bcRFEzJmi8r7Y:aros:Kars de Jong:jongk@prac.cs.utwente.nl:misc
 nlorentz:abyWOzyxgCj4KAkKJNxz:aros:Nils Henrik Lorentzen:nlorentz@sn.no:diskfont,icons
+ruppert:bbtwjwdJnQGas:aros:Stefan Ruppert:ruppert@informatik.fh-wiesbaden.de:Datatypes
 
 stepan:dcIM.xvdbd/R.:aros:Stefan Reinauer:stepan@home.culture.mipt.ru:
 judd:ddVIpcsgleKFM:aros:Christopher D. Judd:cdj@gmk02.chem.rpi.edu:
