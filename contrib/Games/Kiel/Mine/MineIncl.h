@@ -9,7 +9,7 @@ struct IntuiMessage *msg;
 
 ULONG iflags;
 
-#define StopMsg() ModifyIDCMP(Window,IDCMP_NEWSIZE)
+#define StopMsg() ModifyIDCMP(Window,IDCMP_CHANGEWINDOW)
 #define ContMsg() ModifyIDCMP(Window,iflags)
 #define clearwin() EraseRect(rp,0,0,Window->Width-5,Window->Height-11)
 
@@ -23,7 +23,6 @@ void open_lib()
 
 void open_window(struct NewWindow *newwindow)
 {
-printf("a\n");
   Window = (struct Window *) OpenWindow(newwindow);
   if(Window==NULL)
   {
@@ -62,21 +61,16 @@ void copypic(x1,y1,dx,dy,x2,y2)
 
 void WinSize(struct Window *Win, LONG x, LONG y)
 {
-LONG altx,alty;
 ULONG class;
 
-  altx=Win->Width;
-  alty=Win->Height;
-  Win->LeftEdge=10;
-  Win->TopEdge=10;
-  SizeWindow(Win,x-altx,y-alty);
+  ChangeWindowBox(Win, 10, 10, x, y);
   while(1)
   {
     Wait(1L<<Win->UserPort->mp_SigBit);
     msg=(struct IntuiMessage *)GetMsg(Win->UserPort);
     class=msg->Class;
     ReplyMsg((struct Message *)msg);
-    if(msg->Class==IDCMP_NEWSIZE)
+    if(msg->Class==IDCMP_CHANGEWINDOW)
       break;
   }
 }

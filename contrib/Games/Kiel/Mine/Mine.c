@@ -31,10 +31,11 @@
 	24-Aug-1997	hkiel	  Initial inclusion into the AROS tree
 	16-Sep-1997	hkiel	  Fixed all casts
 	03-Oct-1998	hkiel	  Added Counter task and fixed random()
+	04-Jun-1999	hkiel	  Wait() for IDCMP_CHANGEWINDOW after WinSize()
 
 ******************************************************************************/
 
-static const char version[] = "$VER: Mine 0.3 (03.10.1998)\n";
+static const char version[] = "$VER: Mine 0.4 (04.06.1999)\n";
 
 #include "MineIncl.h"
 
@@ -92,8 +93,8 @@ struct NewWindow NeuesWindow =
 {
   10,10,350,200,
   -1,-1,
-  IDCMP_CLOSEWINDOW|IDCMP_MOUSEBUTTONS|IDCMP_GADGETUP|IDCMP_RAWKEY|IDCMP_NEWSIZE,
-  WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_GIMMEZEROZERO,
+  IDCMP_CLOSEWINDOW|IDCMP_MOUSEBUTTONS|IDCMP_GADGETUP|IDCMP_RAWKEY|IDCMP_CHANGEWINDOW,
+  WFLG_CLOSEGADGET|WFLG_DRAGBAR|WFLG_DEPTHGADGET/*|WFLG_GIMMEZEROZERO*/,
   NULL,
   NULL,
   (UBYTE *)"MineSweeper by Henning Kiel",
@@ -155,7 +156,7 @@ char outtext[4];
         write_text(left+box_width*width/2-55,25,outtext,1);
         sprintf(outtext,"%3d",(int)(tend-tstart));
         write_text(left+box_width*width/2+35,25,outtext,1);
-        Delay(50);
+        Delay(40);
       }
       Signal(parent,1<<sigbit1); /* We stopped counting */
     }
@@ -216,6 +217,9 @@ BYTE i;
 BOOL Frage()
 {
 BOOL weiter=FALSE,ret=FALSE;
+
+StopMsg();
+
   MaleSpielfeld();
   write_text(left+box_width*width/2-19,25,"Start",2);
 
@@ -224,6 +228,8 @@ BOOL weiter=FALSE,ret=FALSE;
   drawfield(left+box_width*width/2-29,oben+box_width*height/2-29,left+box_width*width/2+29,oben+box_width*height/2+29);
   drawfield(left+box_width*width/2-28,oben+box_width*height/2-28,left+box_width*width/2+28,oben+box_width*height/2+28);
   write_text(left+box_width*width/2-20,oben+box_width*height/2+5,"Menue",2);
+
+ContMsg();
 
   while(!weiter)
   {

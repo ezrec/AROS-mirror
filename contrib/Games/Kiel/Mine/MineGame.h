@@ -239,7 +239,7 @@ BYTE x,y;
   for(x=0;x<width;x++)
     drawfield(x*box_width+left+1,oben+1,(x+1)*box_width+left-1,box_width+oben-1);
   for(y=1;y<height;y++)
-    copypic(left,oben,width*box_width,box_width,left,oben+y*box_width);
+    copypic(left,oben+1,width*box_width,box_width-1,left,oben+y*box_width+1);
 
   drawfield(left-6,oben-6,width*box_width+5+left,height*box_width+5+oben);
   drawfield(width*box_width+6+left,height*box_width+6+oben,left-7,oben-7);
@@ -530,7 +530,9 @@ if(mausx<5&&mausy<5)Fehler=loesen();
 
   /* stop timer */
   finish = TRUE;
+StopMsg();
   Wait(1<<sigbit1); /* Wait for timer to stop */
+ContMsg();
 }
 
 void Auswertung()
@@ -575,13 +577,14 @@ StopMsg();
       {
         clearwin();
 
-ContMsg();
-
         Name_Gad.LeftEdge=(width*box_width+left+right)/2-100;
         AddGadget(Window,&Name_Gad,0);
         RefreshGadgets(&Name_Gad,Window,NULL);
         sprintf(Zeit,"Fertig! %4d Sek.",(int)(tend-tstart));
         write_text(left+width*box_width/2-65,oben+height*box_width+20,Zeit,1);
+
+ContMsg();
+
         while(!weiter)
         {
           Wait(1L<<Window->UserPort->mp_SigBit);
@@ -593,12 +596,11 @@ ContMsg();
             weiter=TRUE;
         }
 
+StopMsg();
+
         Zeiten[Spielart]=tend-tstart;
         strcpy(names[Spielart],Name_Gad_buf);
         RemoveGadget(Window,&Name_Gad);
-
-StopMsg();
-
         clearwin();
         drawfield(left+box_width*width/2-25,5,left+box_width*width/2+25,35);
       }
