@@ -12,9 +12,11 @@ Short term / relatively easy
   right now.
 
 + Clean up and finish amigamodule.
-  - Change all functions to use METH_VARARGS.
-  - See if other functions could work on AROS but are disabled by
-    #ifdefs regarding AMITCP/INET225 (eg. dup2()?).
+  - Check the arguments of the functions compared to the posixmodule;
+    they seem to have changed slightly (since in Python 2.0+ tuples
+    are no longer 'expanded' automatically (before it worked like
+    "chown( (path, owner) )" == "chown( path, owner )")).
+  - Add docstrings (grab them from posixmodule).    
 
 Medium term / more work
 -----------------------
@@ -46,7 +48,7 @@ Long term / hard
 
 + Reduce size of executable and make more modular
   - Transform parts of Python to shared libraries, especially the 
-    builtin modules (one library per module, preferable). Should
+    builtin modules (one library per module, preferably). Should
     detect which libraries (-> modules) are available automatically.
   - Make executable resident? (Can you do that in AROS? Is it possible
     with Python (because of global variables)?). 
