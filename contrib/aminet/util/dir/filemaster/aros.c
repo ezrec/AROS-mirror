@@ -1,140 +1,106 @@
 #include <aros/debug.h>
 
-void
-hearconfigdefault ()
+void hearconfigdefault()
 {
-  D (bug ("function not implemented:  hearconfigdefault "));
-return;
+D(bug("function not implemented:  hearconfigdefault "));
 }
 
-void
-hexconvert ()
+void hexconvert()
 {
-  D (bug ("function not implemented:  hexconvert "));
-return; 
+D(bug("function not implemented:  hexconvert "));   
 }
 
-void
-modplay ()
+void modplay()
 {
-  D (bug ("function not implemented:  modplay "));
-return; 
+D(bug("function not implemented:  modplay "));   
 }
 
-void
-playmod ()
+void playmod()
 {
-  D (bug ("function not implemented:  playmod "));
-return; 
+D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-void
-modinfo ()
+void modinfo()
 {
-  D (bug ("function not implemented:  modinfo "));
-return; 
+D(bug("function not implemented:  modinfo "));   
 }
 
-void
-hearconfig ()
+void hearconfig()
 {
-  D (bug ("function not implemented:  hearconfig "));
-return; 
+D(bug("function not implemented:  hearconfig "));   
 }
 
-void
-fmname ()
+void fmname()
 {
-  D (bug ("function not implemented:  fmname "));
-return; 
+D(bug("function not implemented:  fmname "));   
 }
 
-void
-fmexee ()
+void fmexee()  
 {
-  D (bug ("function not implemented:  fmexee "));
-return; 
+D(bug("function not implemented:  fmexee "));   
 }
 
-void
-fmexe ()
+void fmexe()
 {
-  D (bug ("function not implemented:  fmexe "));
-return; 
+D(bug("function not implemented:  fmexe "));   
 }
 
-void
-bootsum ()
+void bootsum()
 {
-  D (bug ("function not implemented:  bootsum "));
-return; 
+D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-void
-RealTimeScroll ()
+void RealTimeScroll()
 {
-  D (bug ("function not implemented:  RealTimeScroll "));
-return; 
+D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-void
-playsample ()
+void playsample()
 {
-  D (bug ("function not implemented:  playsample "));
-return; 
+D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-void
-playsamplefile ()
+void playsamplefile()
 {
-  D (bug ("function not implemented:  playsamplefile "));
-return; 
+D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-void
-playdatatypesample ()
+void playdatatypesample()
 {
-  D (bug ("function not implemented:  playdatatypesample "));
-return; 
+D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-void
-rawdo ()
+void rawdo() 
 {
-  D (bug ("function not implemented:  rawdo "));
+D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-void
-rleunpack ()
+void rleunpack()
 {
-  D (bug ("function not implemented:  rleunpack "));
+D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-void
-rlepack ()
+void rlepack()
 {
-  D (bug ("function not implemented:  rlepack "));
+D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-stopoldmod ()
+stopoldmod()
 {
-  D (bug ("function not implemented:  stopoldmod "));
+D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-void
-stpcpy ()
+void stpcpy()
 {
-  D (bug ("function not implemented:  stpcpy "));
+D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-void
-unpack ()
+void unpack()
 {
-  D (bug ("function not implemented:  unpack "));
+D(bug("function not implemented:  hearconfigdefault "));   
 }
 
-void
-unpacknp ()
+void unpacknp()
 {
-  D (bug ("function not implemented:  unpacknp "));
+D(bug("function not implemented:  hearconfigdefault "));   
 }

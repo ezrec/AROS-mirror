@@ -19,11 +19,11 @@
 
 #define MODPLAY 1
 
-struct ModPlayInfo
-{
-  LONG songposition;
-  LONG patternposition;
-  WORD pattpos;
-  WORD speed;
-  WORD realtempo;
+struct ModPlayInfo {
+	LONG	songposition;
+	LONG	patternposition;
+	WORD	pattpos;
+	WORD	speed;
+	WORD	realtempo;
 };
+

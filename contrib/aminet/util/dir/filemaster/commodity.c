@@ -21,170 +21,135 @@
 #include <exec/types.h>
 #include <libraries/commodities.h>
 #include <defines/commodities.h>
-#ifndef AROS
-#include <proto/all.h>
-#endif
 
 #include <stdio.h>
 #include "fmnode.h"
-#include "fmdos.h"
-extern struct Library *CxBase;
-extern struct ExecBase *SysBase;
+extern struct Library *CxBase; 
+extern struct ExecBase *SysBase; 
 
 extern struct FMMain fmmain;
 extern struct FMConfig *fmconfig;
 static struct NewBroker fmbroker = {
-  NB_VERSION,
-  "FileMaster", "FileMaster 3.1 © 1992-1997 by Toni Wilen",
-    "Directory utility",
-  0, COF_SHOW_HIDE, 0, 0, 0
+	NB_VERSION,
+	"FileMaster","FileMaster 3.1 © 1992-1997 by Toni Wilen","Directory utility",
+	0,COF_SHOW_HIDE,0,0,0
 };
 
 
-static CxObj *
-CustomHotKey (UBYTE * Code, struct MsgPort *Port, LONG ID)
+static CxObj *CustomHotKey(UBYTE *Code,struct MsgPort *Port,LONG ID)
 {
-  CxObj *Filter;
-  CxObj *Sender;
+CxObj *Filter;
+CxObj *Sender;
 
-  if (Filter = CxFilter (Code))
-    {
-      if (Sender = CxSender (Port, ID))
-	{
-	  AttachCxObj (Filter, Sender);
-	  if (!CxObjError (Filter))
-	    return (Filter);
+if((Filter = CxFilter(Code))) {
+	if((Sender = CxSender(Port,ID))) {
+		AttachCxObj(Filter,Sender);
+		if(!CxObjError(Filter)) return(Filter);
 	}
-      DeleteCxObjAll (Filter);
-    }
-  return (0);
+	DeleteCxObjAll(Filter);
+}
+return(0);
 }
 
 
-WORD
-checkhotkeys (struct IntuiMessage * im)
+WORD checkhotkeys(struct IntuiMessage *im)
 {
-  struct InputEvent ie;
-  WORD cnt1;
-  D (bug ("commodity.c 63 \n"));
-  if (!CxBase)
-    return (-1);
-  D (bug ("commodity.c 65 \n"));
-  ie.ie_Class = IECLASS_RAWKEY;
-  D (bug ("commodity.c 67 \n"));
-  ie.ie_SubClass = 0;
-  D (bug ("commodity.c 69 \n"));
-  ie.ie_Code = im->Code;
-  D (bug ("commodity.c 71 \n"));
-  ie.ie_Qualifier = im->Qualifier;
-  D (bug ("commodity.c 72 \n"));
+struct InputEvent ie;
+WORD cnt1;
+D(bug("commodity.c 63 \n"));  
+if(!CxBase) return(-1);
+D(bug("commodity.c 65 \n"));  
+ie.ie_Class=IECLASS_RAWKEY;
+D(bug("commodity.c 67 \n")); 
+ie.ie_SubClass=0;
+D(bug("commodity.c 69 \n")); 
+ie.ie_Code=im->Code;
+D(bug("commodity.c 71 \n")); 
+ie.ie_Qualifier=im->Qualifier;
+D(bug("commodity.c 72 \n")); 
 //ie.ie_EventAddress=(APTR*)*((ULONG*)im->IAddress);
-  D (bug ("commodity.c 75 \n"));
-  for (cnt1 = 0; cnt1 < TOTALCOMMANDS + LISTGADGETS * WINDOWLISTS; cnt1++)
-    {
-      D (bug ("commodity.c 77 \n"));
-      if (fmmain.ix[cnt1])
-	{
-	  D (bug ("commodity.c 79 \n"));
-	  if (MatchIX (&ie, fmmain.ix[cnt1]))
-	    return (cnt1);
-	  D (bug ("commodity.c 81 \n"));
+D(bug("commodity.c 75 \n")); 
+for(cnt1=0;cnt1<TOTALCOMMANDS+LISTGADGETS*WINDOWLISTS;cnt1++) {
+D(bug("commodity.c 77 \n")); 
+	if(fmmain.ix[cnt1]) {
+D(bug("commodity.c 79 \n")); 
+		if(MatchIX(&ie,fmmain.ix[cnt1])) return(cnt1);
+D(bug("commodity.c 81 \n")); 
 	}
-    }
-  return (-1);
+}
+return(-1);
 }
 
-static void
-clearhotkeys (void)
+static void clearhotkeys(void)
 {
-  WORD cnt1;
-  for (cnt1 = 0; cnt1 < TOTALCOMMANDS + LISTGADGETS * WINDOWLISTS; cnt1++)
-    {
-      freemem (fmmain.ix[cnt1]);
-      fmmain.ix[cnt1] = 0;
-    }
+WORD cnt1;
+for(cnt1=0;cnt1<TOTALCOMMANDS+LISTGADGETS*WINDOWLISTS;cnt1++) {
+	freemem(fmmain.ix[cnt1]);
+	fmmain.ix[cnt1]=0;
+}
 }
 
-static void
-sethotkeys (void)
+static void sethotkeys(void)
 {
-  struct GadKeyTab *gkt;
-  UBYTE *ptr;
-  WORD cnt1, apu1;
-  D (bug ("commodity.c 101 \n"));
-  clearhotkeys ();
-  D (bug ("commodity.c 103 \n"));
-  if (!CxBase)
-    return;
+struct GadKeyTab *gkt;
+UBYTE *ptr;
+WORD cnt1,apu1;
+D(bug("commodity.c 101 \n")); 
+clearhotkeys();
+D(bug("commodity.c 103 \n")); 
+if(!CxBase) return;
 
-  for (cnt1 = 0; cnt1 < TOTALCOMMANDS + LISTGADGETS * WINDOWLISTS; cnt1++)
-    {
-      gkt = &fmmain.gadkeytab[cnt1];
-      if (gkt->cmc)
-	ptr = gkt->cmc->shortcut;
-      else
-	ptr = gkt->key;
-      if (ptr && *ptr)
-	{
-	  fmmain.ix[cnt1] = allocmem (sizeof (struct InputXpression));
-	  if (fmmain.ix[cnt1])
-	    {
-	      apu1 = ParseIX (ptr, fmmain.ix[cnt1]);
-	      if (apu1)
-		{
-		  freemem (fmmain.ix[cnt1]);
-		  fmmain.ix[cnt1] = 0;
+for(cnt1=0;cnt1<TOTALCOMMANDS+LISTGADGETS*WINDOWLISTS;cnt1++) {
+	gkt=&fmmain.gadkeytab[cnt1];
+	if(gkt->cmc) ptr=gkt->cmc->shortcut; else ptr=gkt->key;
+	if(ptr&&*ptr) {
+		fmmain.ix[cnt1]=allocmem(sizeof(struct InputXpression));
+		if(fmmain.ix[cnt1]) {
+			apu1=ParseIX(ptr,fmmain.ix[cnt1]);
+			if(apu1) {
+				freemem(fmmain.ix[cnt1]);
+				fmmain.ix[cnt1]=0;
+			}
 		}
-	    }
 	}
-      AttachCxObj (fmmain.broker,
-		   CustomHotKey (ptr, fmmain.cxport, cnt1 + 1));
-    }
+AttachCxObj(fmmain.broker,CustomHotKey(ptr,fmmain.cxport,cnt1+1));
+}
 }
 
-void
-removebroker (void)
+void removebroker(void)
 {
-  CxMsg *cxmsg;
+CxMsg *cxmsg;
 
-  clearhotkeys ();
-  if (fmmain.broker)
-    DeleteCxObjAll (fmmain.broker);
-  if (fmmain.cxport)
-    {
-      RemPort (fmmain.cxport);
-      while (cxmsg = (CxMsg *) GetMsg (fmmain.cxport))
-	ReplyMsg ((struct Message *) cxmsg);
-      DeleteMsgPort (fmmain.cxport);
-    }
-  fmmain.broker = 0;
-  fmmain.cxport = 0;
+clearhotkeys();
+if(fmmain.broker) DeleteCxObjAll(fmmain.broker);
+if(fmmain.cxport) {
+	RemPort(fmmain.cxport);
+	while((cxmsg=(CxMsg*)GetMsg(fmmain.cxport))) ReplyMsg((struct Message*)cxmsg);
+	DeleteMsgPort(fmmain.cxport);
+}
+fmmain.broker=0;
+fmmain.cxport=0;
 }
 
-WORD
-createbroker (void)
+WORD createbroker(void)
 {
-  if (fmmain.broker = CxBroker (&fmbroker, 0))
-    {
-      sethotkeys ();
-      ActivateCxObj (fmmain.broker, TRUE);
-      return (TRUE);
-    }
-  return (0);
+if((fmmain.broker=CxBroker(&fmbroker,0))) {
+	sethotkeys();
+	ActivateCxObj(fmmain.broker,TRUE);
+	return(TRUE);
+}
+return(0);
 }
 
-WORD
-createbrokerall (void)
+WORD createbrokerall(void)
 {
-  if (!(fmmain.cxport = CreateMsgPort ()))
-    return (0);
-  fmmain.cxport->mp_Node.ln_Name = fmbroker.nb_Name;
-  AddPort (fmmain.cxport);
-  fmbroker.nb_Port = fmmain.cxport;
-  fmbroker.nb_Pri = 0;
-  if (createbroker ())
-    return (TRUE);
-  DeleteMsgPort (fmmain.cxport);
-  fmmain.cxport = 0;
-  return (0);
+if(!(fmmain.cxport=CreateMsgPort())) return(0);
+fmmain.cxport->mp_Node.ln_Name=fmbroker.nb_Name;
+AddPort(fmmain.cxport);
+fmbroker.nb_Port=fmmain.cxport;
+fmbroker.nb_Pri=0;
+if(createbroker()) return(TRUE);
+DeleteMsgPort(fmmain.cxport);
+fmmain.cxport=0;
+return(0);
 }

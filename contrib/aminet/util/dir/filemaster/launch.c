@@ -52,13 +52,13 @@
 #include <intuition/intuition.h>
 #include <intuition/iobsolete.h>
 #include <stdio.h>
+
 #ifndef AROS
 #include <proto/xfdmaster.h>
 #endif
+
 #include "fmnode.h"
 #include "fmlocale.h"
-#include "child.h"
-#include "fmdos.h"
 
 extern struct UtilityBase *UtilityBase;
 extern struct ExecBase *SysBase;
@@ -129,7 +129,7 @@ launch (void (*address) (void), struct CMenuConfig *cmc, WORD flag,
 fail:
   if (fmmain.ikkuna)
     {
-      while (imsg = (struct IntuiMessage *) GetMsg (fmmain.ikkuna->UserPort))
+      while ((imsg = (struct IntuiMessage *) GetMsg (fmmain.ikkuna->UserPort)))
 	ReplyMsg ((struct Message *) imsg);
     }
 return (ret);
@@ -180,13 +180,17 @@ D(bug("launch.c 142...........\n"));
 void
 deinitproc (struct ProcMsg *pm)
 {
+/*
   if (xfdMasterBase)
     CloseLibrary ((struct Library *) xfdMasterBase);
+
 #ifdef V39
   CloseLibrary (CxBase);
   CloseLibrary (DataTypesBase);
 #endif
+*/
 D(bug("launch.c 187...........\n"));      
+/*
   CloseLibrary ((struct Library *) DOSBase);
   CloseLibrary ((struct Library *) GfxBase);
   CloseLibrary ((struct Library *) IntuitionBase);
@@ -198,6 +202,7 @@ D(bug("launch.c 187...........\n"));
   CloseLibrary (IconBase);
   CloseLibrary (BGUIBase);
   freemem (pm);
+*/
 }
 
 extern UBYTE gfxlib[];

@@ -17,19 +17,18 @@
      Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#define DEBUG 0
-#define CATCOMP_ARRAY
-#include <aros/machine.h>
+#define CATCOMP_ARRAY 
+#include <aros/machine.h> 
 #include <libraries/reqtools.h>
 #include <aros/debug.h>
 #include <aros/bigendianio.h>
 #include <graphics/gfxbase.h>
 #include <workbench/icon.h>
 #include <devices/inputevent.h>
-#include <devices/timer.h>
+#include <devices/timer.h>   
 #include <libraries/commodities.h>
-#include <dos/rdargs.h>
-#include <string.h>
+#include <dos/rdargs.h>  
+#include <string.h> 
 #include <proto/timer.h>
 #include <aros/libcall.h>
 #include <proto/icon.h>
@@ -55,13 +54,12 @@
 
 #include <datatypes/datatypes.h>
 #include "fmnode.h"
-#include "child.h"
 #include "fmlocale.h"
-#include "fmdos.h"
+
 #include "filemaster_strings.h"
 #define OK        (0)
-struct timerequest *timeRequest = NULL;
-struct MsgPort *timePort;
+struct timerequest * timeRequest = NULL;
+struct MsgPort * timePort;
 void gquit (void);
 void gsleep (void);
 void gstod (void);
@@ -116,7 +114,7 @@ UBYTE topaz[] = { "topaz.font" };
 void *launchtable[BUILDCOMMANDS + 1];
 
 void readconfig (void);
-void main (void);
+int main (void);
 void fmclock (void);
 static WORD init (void);
 
@@ -150,8 +148,9 @@ UBYTE defcolors[8 * 3] = {
 
 extern UBYTE fmname[];
 extern UBYTE clockformatstring[];
-UBYTE space[] = {
-  "                                                                                                                                                                                                   "
+UBYTE space[] =
+  {
+"                                                                                                                                                                                                   "
 };
 UBYTE nformatstring[20];
 UBYTE nformatstring2[20];
@@ -176,7 +175,7 @@ struct Library *DiskfontBase;
 struct Library *KeymapBase;
 struct Library *WorkbenchBase;
 struct Library *IconBase;
-struct Device *TimerBase;
+struct Device * TimerBase;
 struct Library *DataTypesBase;
 struct Library *CxBase;
 struct Locale *locale;
@@ -185,7 +184,7 @@ struct xfdMasterBase *xfdMasterBase;
 struct Library *BGUIBase;
 
 
-void __saveds
+int
 main (void)
 {
   WORD aa;
@@ -247,30 +246,25 @@ main (void)
     goto error2;
   memseti (&tr, 0, sizeof (struct timerequest));
 
-  D (bug ("timer...........\n"));
+D(bug("timer...........\n"));  
 
-  /* Set up the timer.device interface. */
-
-  timePort = CreateMsgPort ();
-  if (timePort != NULL)
-    {
-      timeRequest =
-	(struct timerequest *) CreateIORequest (timePort,
-						sizeof (*timeRequest));
-      if (timeRequest != NULL)
-	{
-	  if (OpenDevice
-	      (TIMERNAME, UNIT_VBLANK, (struct IORequest *) timeRequest,
-	       0) == OK)
-	    TimerBase = timeRequest->tr_node.io_Device;
-	  else
-	    goto error2;
-	}
-      else
-	goto error2;
-    }
-  else
-    goto error2;
+                /* Set up the timer.device interface. */
+  timePort = CreateMsgPort();
+                if(timePort != NULL)
+                {
+                    timeRequest = (struct timerequest *)CreateIORequest(timePort,sizeof(*timeRequest));
+                    if(timeRequest != NULL)
+                    {
+                        if(OpenDevice(TIMERNAME,UNIT_VBLANK,(struct IORequest *)timeRequest,0) == OK)
+                            TimerBase = timeRequest->tr_node.io_Device;
+			else 
+				goto error2;
+                    }
+		   	 else
+			goto error2;
+		}
+		else
+		goto error2;	
 
 
 //if(OpenDevice("timer.device",UNIT_MICROHZ,(struct IORequest*)&tr,0L)) 
@@ -278,7 +272,7 @@ main (void)
 //goto error2;
 //TimerBase=(struct Library*)tr.tr_node.io_Device;
 
-  D (bug ("fungerar..........\n"));
+D(bug("fungerar..........\n"));
   if (!GfxBase || !IntuitionBase || !UtilityBase || !GadToolsBase
       || !KeymapBase || !WorkbenchBase)
     goto error2;
@@ -303,9 +297,9 @@ main (void)
       strcpy (prgname2 + 8, FilePart (prgname));
 
 #ifndef AROS
-      fmmain.dobj = GetDiskObjectNew (prgname2);
+   fmmain.dobj = GetDiskObjectNew (prgname2);
 #else
-      fmmain.dobj = GetDiskObject (prgname2);
+    fmmain.dobj = GetDiskObject (prgname2);    
 #endif
     }
 #ifndef AROS
@@ -329,34 +323,34 @@ main (void)
   AddPort (&fmmain.fmport->msgport);
   if (!sleep)
     {
-      D (bug ("fm.c 283\n"));
-      if (!avaanaytto (3))
-	goto error5;
-      if (!fmmain.regname[0])
+D(bug("fm.c 283\n")); 
+     if (!avaanaytto (3))
+	 goto error5;
+       if (!fmmain.regname[0])
 	{
-	  D (bug ("launch about? \n"));
-	  launch ((APTR) & about, getconfignumber (ABOUTCONFIG), 0, MSUBPROC);
-	  D (bug ("back from launch? \n"));
+D(bug("launch about? \n"));
+	launch ((APTR) & about, getconfignumber (ABOUTCONFIG), 0, MSUBPROC);
+D(bug("back from launch? \n"));  
 	}
     }
   fmconfig->flags |= MSUBPROC | MHSCROLL | MVSCROLL;
   fmmain.clock = 1;
-  D (bug ("launch fmclock? \n"));
+D(bug("launch fmclock? \n"));  
   if (!launch ((APTR) & fmclock, 0, 1, MSUBPROC))
-    goto error5;
-  D (bug ("back from launch? \n"));
+  goto error5;
+D(bug("back from launch? \n"));  
   fmmain.clock = -1;
 
   for (;;)
     {
-      D (bug ("fm.c 325 \n"));
+D(bug("fm.c 325 \n"));  
       event (sleep);
-      D (bug ("fm.c 327 \n"));
-      sleep = 0;
+D(bug("fm.c 327 \n"));  
+     sleep = 0;
       if (suljenaytto (3))
 	break;
     }
-  D (bug ("back from suljenaytto ? fm.c 332\n"));
+D(bug("back from suljenaytto ? fm.c 332\n"));  
 
 error5:
   fmmain.kill = 1;
@@ -364,10 +358,10 @@ error5:
   if (fmmain.clock < 0)
     {
       fmmain.clock = 0;
-      D (bug ("fm.c 344 \n"));
+D(bug("fm.c 344 \n"));
       while (!fmmain.clock)
 	WaitTOF ();
-      D (bug ("fm.c 347 \n"));
+D(bug("fm.c 347 \n")); 
     }
 
   stopoldmod ();
@@ -375,12 +369,12 @@ error5:
 error4:
   if (fmmain.oldcur != 1)
     {
-      D (bug ("fm.c 352 \n"));
+D(bug("fm.c 352 \n")); 
       prevlock = CurrentDir (fmmain.oldcur);
       if (prevlock)
 	UnLock (prevlock);
     }
-  D (bug ("fm.c 357 \n"));
+D(bug("fm.c 357 \n")); 
 
 //#ifndef AROS
   deloldexe (1);
@@ -394,7 +388,7 @@ error4:
 
   if (fmmain.pool)
     DeletePool (fmmain.pool);
-  D (bug ("fm.c 371 \n"));
+D(bug("fm.c 371 \n")); 
 
   if (fmmain.fmport)
     {
@@ -451,7 +445,7 @@ error3:
 #ifdef DETACH
   CloseLibrary ((struct Library *) DOSBase);
 #endif
-  D (bug ("fm.c main end...... \n"));
+D(bug("fm.c main end...... \n")); 
 } /** main ends ****/
 
 
@@ -480,7 +474,7 @@ init (void)
 #else
   LONG apu3;
 #endif
-  D (bug ("Init...........\n"));
+D(bug("Init...........\n"));    
   memseti (launchtable, 0, sizeof (launchtable));
   launchtable[QUITCONFIG] = (void *) gquit;
   launchtable[SLEEPCONFIG] = (void *) gsleep;
@@ -525,8 +519,8 @@ init (void)
   InitSemaphore (&fmmain.gfxsema);
   InitSemaphore (&fmmain.msgsema);
   InitSemaphore (&fmmain.poolsema);
-  D (bug ("InitSemaphore ...........\n"));
-
+D(bug("InitSemaphore ...........\n"));
+  
   fmmain.version = fmname[4];
   fmmain.revision = fmname[5];
   fmmain.betaversion = fmname[6];
@@ -534,7 +528,7 @@ init (void)
   fmmain.sourcedir = &fmlist[0];
   fmmain.destdir = &fmlist[1];
   fmmain.oldcur = 1;
-  D (bug ("fmmain init ...........\n"));
+D(bug("fmmain init ...........\n"));  
   CopyMem (defcolors, fmconfig->colors, 8 * 3);
   fmconfig->mainscreen.depth = 2;
   fmconfig->mainscreen.overscan = 1;
@@ -579,7 +573,7 @@ init (void)
 	  screenmode = HIRES_KEY | NTSC_MONITOR_ID;
 	}
     }
-  D (bug ("fmconfig ...........\n"));
+D(bug("fmconfig ...........\n"));  
   fmconfig->mainscreen.height = height;
   fmconfig->mainscreen.width = width;
   fmconfig->mainscreen.screenmode = screenmode;
@@ -644,12 +638,12 @@ init (void)
   fmconfig->cmenucolumns = 1;
 
 
-  D (bug ("MSG_MAIN_CMENUTXT= %d\n", MSG_MAIN_CMENUTXT));
-  ptr1 = fmmain.cmenuptr = getstring (MSG_MAIN_CMENUTXT);
+  D(bug("MSG_MAIN_CMENUTXT= %d\n", MSG_MAIN_CMENUTXT));
+   ptr1 = fmmain.cmenuptr = getstring (MSG_MAIN_CMENUTXT);
 
-  D (bug ("MSG_MAIN_CMENUKEYS= %d\n", MSG_MAIN_CMENUKEYS));
+  D(bug("MSG_MAIN_CMENUKEYS= %d\n", MSG_MAIN_CMENUKEYS));
 
-  ptr3 = getstring (MSG_MAIN_CMENUKEYS);
+   ptr3 = getstring (MSG_MAIN_CMENUKEYS);
 
   for (apu2 = 0; apu2 < TOTALCOMMANDS; apu2++)
     {
@@ -667,29 +661,28 @@ init (void)
       else
 	cmc->position = 1;
       cmc->cmenucount = apu2 + 1;
-      D (bug ("fm.c 621...........\n"));
+D(bug("fm.c 621...........\n")); 
       strcpy (cmc->label, ptr1);
       strcpy (cmc->shortcut, ptr3);
-      D (bug ("fm.c 624...........\n"));
+D(bug("fm.c 624...........\n")); 
       ptr3 += strlen (ptr3) + 1;
-      D (bug ("fm.c 648...........\n"));
+D(bug("fm.c 648...........\n")); 
       cmc++;
       ptr1 += strlen (ptr1) + 1;
     }
-  D (bug ("fm.c 652...........\n"));
+D(bug("fm.c 652...........\n")); 
   initexes (BUILDCOMMANDS);
 
   winptr = fmmain.myproc->pr_WindowPtr;
   fmmain.myproc->pr_WindowPtr = (APTR) - 1;
 
-  D (bug ("fm.c 658...........\n"));
+D(bug("fm.c 658...........\n"));
   if (LocaleBase)
-    catalog =
-      OpenCatalog (0, "FileMaster.catalog", OC_BuiltInLanguage, "english",
-		   TAG_DONE);
+    catalog = OpenCatalog (0, "FileMaster.catalog", OC_BuiltInLanguage, "english",
+  		   TAG_DONE);
 
   readconfig ();
-  D (bug ("fm.c 641...........\n"));
+  D(bug("fm.c 641...........\n")); 
 
   fmmain.myproc->pr_WindowPtr = winptr;
   fmconfig->txtfontattr.ta_Name = fmconfig->txtfontname;
@@ -697,21 +690,21 @@ init (void)
   fmconfig->reqfontattr.ta_Name = fmconfig->reqfontname;
   fmconfig->txtshowfontattr.ta_Name = fmconfig->txtshowfontname;
   fmconfig->smallfontattr.ta_Name = fmconfig->smallfontname;
-  D (bug ("fm.c 672...........\n"));
+   D(bug("fm.c 672...........\n"));  
   SetTaskPri ((struct Task *) fmmain.myproc, fmconfig->mainpriority);
-  D (bug ("fm.c 674...........\n"));
+  D(bug("fm.c 674...........\n"));  
   fmmain.datelen = 32;
   longtodatestring (teststring1,
 		    (6523L * 24L * 60L + 11 * 60 + 11L) * 60L + 11);
-  D (bug ("fm.c 678...........\n"));
+  D(bug("fm.c 678...........\n"));  
   fmmain.datelen = strlen (teststring1);
   if (fmmain.kick >= 39)
     fmmain.pool =
       CreatePool (MEMF_PUBLIC | MEMF_CLEAR, sizeof (struct FMNode) * 64,
 		  sizeof (struct FMNode) * 64);
-  D (bug ("fm.c 684...........\n"));
+D(bug("fm.c 684...........\n"));  
   recalc ();
-  D (bug ("fm.c 685...........\n"));
+D(bug("fm.c 685...........\n"));  
   if (!fmconfig->dl[0].width)
     {
       fmconfig->dl[0].width = fmmain.filelen;
@@ -733,38 +726,34 @@ init (void)
 
 #ifdef V39
   if (fmmain.betaversion)
-    {
-      D (bug ("fm.c 707...........\n"));
-      sformat (fmmain.fmtitle, "FileMaster %ld.%ld BETA '020", fmmain.version,
-	       fmmain.revision);
+{
+D(bug("fm.c 707...........\n"));  
+    sformat (fmmain.fmtitle, "FileMaster %ld.%ld BETA '020", fmmain.version,
+             fmmain.revision);
 
-    }
+}
   else
-    D (bug ("fm.c 713...........\n"));
-  sformat (fmmain.fmtitle, "FileMaster %ld.%ld '020", fmmain.version,
-	   fmmain.revision);
+D(bug("fm.c 713...........\n"));  
+    sformat (fmmain.fmtitle, "FileMaster %ld.%ld '020", fmmain.version,
+	     fmmain.revision);
 #else
-  D (bug (" fm.c 718.......\n"));
+D(bug(" fm.c 718.......\n")); 
 
 
   if (fmmain.betaversion)
-    {
-      sformat (fmmain.fmtitle, "FileMaster %ld.%ld %ld", fmmain.version,
-	       fmmain.revision, fmmain.betaversion);
-      else
-      sformat (fmmain.fmtitle, "FileMaster %ld.%ld", fmmain.version,
-	       fmmain.revision);
-    }
+{
+  sformat (fmmain.fmtitle, "FileMaster %ld.%ld %ld", fmmain.version, fmmain.revision, fmmain.betaversion);
+  else
+  sformat (fmmain.fmtitle, "FileMaster %ld.%ld", fmmain.version, fmmain.revision);
+}
 #endif
 
   if (fmmain.regname[0])
-    sformat (fmmain.fmtitlename, "%s %s %s", fmmain.fmtitle,
-	     getstring (MSG_MAIN_REGISTERED), fmmain.regname);
+    sformat (fmmain.fmtitlename, "%s %s %s", fmmain.fmtitle, getstring (MSG_MAIN_REGISTERED), fmmain.regname);
   else
-    D (bug (" fm.c 732.......\n"));
+D(bug(" fm.c 732.......\n"));  
 
-  sformat (fmmain.fmtitlename, "%s %s", fmmain.fmtitle,
-	   getstring (MSG_MAIN_UNREGISTERED));
+    sformat (fmmain.fmtitlename, "%s %s", fmmain.fmtitle, getstring (MSG_MAIN_UNREGISTERED));
 
   longtodatestring (fmmain.fmdate, *((ULONG *) & fmname[8]));
 
@@ -777,16 +766,16 @@ recalc (void)
   WORD aa;
   UBYTE *ptr1;
   UBYTE teststring1[34];
-  D (bug ("fm.c 748...........\n"));
+D(bug("fm.c 748...........\n"));  
   for (aa = 0; aa < LISTS; aa++)
     clearlist (&fmlist[aa]);
-  D (bug ("fm.c 751...........\n"));
+D(bug("fm.c 751...........\n"));  
   freepathlist ();
-  D (bug ("fm.c 753...........\n"));
+D(bug("fm.c 753...........\n"));  
   Forbid ();
-  D (bug ("fm.c 755...........\n"));
+D(bug("fm.c 755...........\n"));  
   sformat (teststring1, "%lU", 100000000);
-  D (bug ("fm.c 757...........\n"));
+D(bug("fm.c 757...........\n"));  
   fmmain.lenlen = strlen (teststring1);
   fmmain.memmeterlen = fmmain.lenlen - 1;
   ptr1 = nformatstring;
@@ -812,30 +801,27 @@ recalc (void)
   fmmain.dateoffset = fmmain.protoffset + fmmain.protlen + 1;
   fmmain.commoffset = fmmain.dateoffset + fmmain.datelen + 1;
   fmmain.totnodelen = (fmmain.commoffset + fmmain.commlen + 1 + 3) & (~0x03);
-  D (bug ("fm.c 783...........\n"));
+D(bug("fm.c 783...........\n"));  
   Permit ();
-  D (bug ("fm.c 785...........\n"));
+D(bug("fm.c 785...........\n"));  
   initpathlist ();
-  D (bug ("fm.c 790...........\n"));
+D(bug("fm.c 790...........\n"));  
 }
 
-STRPTR
-GetString (struct LocaleInfo *li, ULONG id)
+STRPTR GetString(struct LocaleInfo *li, ULONG id)
 {
-  STRPTR retval;
-  D (bug ("fm.c 796...........\n"));
-  if (catalog)
-    {
-      D (bug ("fm.c 799...........\n"));
-      retval = GetCatalogStr (catalog, id, CatCompArray[id].cca_Str);
-      D (bug ("fm.c 801...........\n"));
-    }
-  else
-    {
-      D (bug ("fm.c 803...........\n"));
-      retval = CatCompArray[id].cca_Str;
-      D (bug ("fm.c 805...........\n"));
-    }
-
-  return retval;
+    STRPTR retval;
+ D(bug("fm.c 796...........\n"));
+    if (catalog)
+      {
+	D(bug("fm.c 799...........\n")); 
+        retval = GetCatalogStr(catalog, id, CatCompArray[id].cca_Str);
+	D(bug("fm.c 801...........\n")); 
+      } else {
+	D(bug("fm.c 803...........\n"));
+        retval = CatCompArray[id].cca_Str;
+	D(bug("fm.c 805...........\n")); 
+      }
+ 
+    return retval;
 }

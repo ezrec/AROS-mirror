@@ -17,14 +17,14 @@
      Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#include <aros/machine.h>
-#include <aros/debug.h>
+#include <aros/machine.h> 
+#include <aros/debug.h>  
 #include <aros/bigendianio.h>
 #include <graphics/gfxbase.h>
 #include <workbench/workbench.h>
 #include <workbench/icon.h>
 #include <devices/inputevent.h>
-
+ 
 #include <proto/icon.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -39,15 +39,14 @@
 #include <intuition/iobsolete.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "fmnode.h"
 #include "fmlocale.h"
-#include "child.h"
-#include "fmdos.h"
 
 extern struct GadToolsBase *GadToolsBase;
 extern struct ExecBase *SysBase;
 extern struct IntuitionBase *IntuitionBase;
-extern struct GfxBase *GfxBase;
+extern struct GfxBase  *GfxBase;
 extern struct CxBase *CxBase;
 extern struct WorkbenchBase *WorkbenchBase;
 extern struct Library *UtilityBase;
@@ -131,7 +130,7 @@ avaanayttoa (UBYTE * emsg, WORD flag)
   WORD ret = 1;
 #define WFLAGS WFLG_ACTIVATE|WFLG_RMBTRAP|WFLG_SMART_REFRESH
 
-  struct NewWindow uusiikkuna = {
+struct NewWindow uusiikkuna = {
     0, 0, 0, 0, 0, 2,
     IDCMP_MOUSEMOVE | IDCMP_RAWKEY | IDCMP_MOUSEBUTTONS | IDCMP_GADGETUP |
       IDCMP_GADGETDOWN | IDCMP_MOUSEMOVE | IDCMP_REFRESHWINDOW |
@@ -140,7 +139,7 @@ avaanayttoa (UBYTE * emsg, WORD flag)
     0,
     0, 0, 0, 0, 0, 0, 0, 0xffff, 0xffff, 0
   };
-  D (bug ("screen.c 138 entering.........\n"));
+D(bug("screen.c 138 entering.........\n"));    
   if (flag == 3)
     {
       penlist[0] = -1;
@@ -179,52 +178,22 @@ scrretry:
     {
       if (fmconfig->screentype <= 1)
 	{
-	  if (!(fmmain.naytto = (struct Screen *) OpenScreenTags (0,
-								  SA_Width,
-								  fmconfig->
-								  mainscreen.
-								  width,
-								  SA_Height,
-								  fmconfig->
-								  mainscreen.
-								  height,
-								  SA_Type,
-								  CUSTOMSCREEN,
-								  SA_Title,
-								  fmmain.
-								  fmtitlename,
-								  SA_Font,
-								  &fmconfig->
-								  txtfontattr,
-								  SA_Pens,
-								  penlist,
-								  SA_DisplayID,
-								  fmconfig->
-								  mainscreen.
-								  screenmode,
-								  SA_Overscan,
-								  fmconfig->
-								  mainscreen.
-								  overscan,
-								  SA_AutoScroll,
-								  fmconfig->
-								  mainscreen.
-								  autoscroll,
-								  SA_Depth,
-								  fmconfig->
-								  mainscreen.
-								  depth,
-								  SA_Interleaved,
-								  TRUE,
-								  SA_PubName,
-								  fmconfig->
-								  screentype
-								  ==
-								  1 ? "FM" :
-								  0,
-								  TAG_DONE)))
-	    {
-	      D (bug ("screeen.c: 202...\n"));
+	     if (!(fmmain.naytto = (struct Screen *)OpenScreenTags(0,
+                SA_Width,fmconfig->mainscreen.width,
+                SA_Height,fmconfig->mainscreen.height,
+                SA_Type,CUSTOMSCREEN,
+                SA_Title,fmmain.fmtitlename,
+                SA_Font,&fmconfig->txtfontattr,
+                SA_Pens,penlist,
+                SA_DisplayID,fmconfig->mainscreen.screenmode,
+                SA_Overscan,fmconfig->mainscreen.overscan,
+                SA_AutoScroll,fmconfig->mainscreen.autoscroll,
+                SA_Depth,fmconfig->mainscreen.depth,
+                SA_Interleaved,TRUE,
+                SA_PubName,fmconfig->screentype==1?"FM":0,
+                TAG_DONE))) 
+		{
+D(bug("screeen.c: 202...\n"));  
 	      strcpymsg (emsg, MSG_MAIN_SCRERR1);
 	      fmconfig->mainscreen.width = 640;
 	      fmconfig->mainscreen.height = 256;
@@ -286,7 +255,7 @@ scrretry:
       else
 	{
 	  fmmain.naytto = LockPubScreen (fmconfig->pubscreen);
-	  printf ("hello");
+          printf("hello");
 	  if (!fmmain.naytto)
 	    {
 	      strcpy (fmconfig->pubscreen, workbench);
@@ -379,26 +348,26 @@ scrretry:
       strcpymsg (emsg, MSG_SCR_MEMERR);
       ret = 0;
       goto anaytto1;
-    }
+   }
 
-  D (bug ("screen.c: 362...\n"));
+D(bug("screen.c: 362...\n")); 
 
   vscr = LockPubScreen (workbench);
   if (vscr == fmmain.naytto)
     {
-      D (bug ("screen.c: 365...\n"));
+     D(bug("screen.c: 365...\n"));  
       fmmain.appwinport = CreateMsgPort ();
       if (fmmain.appwinport)
 	fmmain.appwin =
 	  AddAppWindow (0, 0, fmmain.ikkuna, fmmain.appwinport, 0);
 
     }
-  D (bug ("screen.c: 372...\n"));
+  D(bug("screen.c: 372...\n"));  
   if (vscr)
     UnlockPubScreen (0, vscr);
 
 anaytto1:
-  D (bug ("screen.c anaytto1: entering\n"));
+D(bug("screen.c anaytto1: entering\n"));        
   if (!fmmain.naytto || !fmmain.ikkuna || !fmmain.txtfont || !fmmain.listfont
       || !ret)
     {
@@ -414,8 +383,8 @@ WORD
 suljenaytto (WORD flag)
 {
   struct AppMessage *appmsg;
-  D (bug ("screen.c suljenaytto entering........\n"));
-  if (flag == 3)
+D(bug("screen.c suljenaytto entering........\n"));   
+ if (flag == 3)
     {
       for (;;)
 	{
@@ -450,8 +419,8 @@ suljenaytto (WORD flag)
 		}
 	    }
 	}
-      D (bug ("screen.c: 425...\n"));
-      ObtainSemaphore (&fmmain.gfxsema);
+D(bug("screen.c: 425...\n"));  
+       ObtainSemaphore (&fmmain.gfxsema);
 
       if (fmmain.txtfont)
 	{
@@ -501,14 +470,14 @@ suljenaytto (WORD flag)
     }
   ObtainSemaphore (&fmmain.gfxsema);
   if (fmmain.ikkuna)
-    {
-      fmconfig->windowtop = fmmain.ikkuna->TopEdge;
-      fmconfig->windowleft = fmmain.ikkuna->LeftEdge;
-      fmconfig->windowheight = fmmain.ikkuna->Height;
-      fmconfig->windowwidth = fmmain.ikkuna->Width;
-      fmmain.myproc->pr_WindowPtr = fmmain.oldwinptr;
-      CloseWindow (fmmain.ikkuna);
-      fmmain.ikkuna = 0;
+     {
+        fmconfig->windowtop = fmmain.ikkuna->TopEdge;
+        fmconfig->windowleft = fmmain.ikkuna->LeftEdge;
+        fmconfig->windowheight = fmmain.ikkuna->Height;
+        fmconfig->windowwidth = fmmain.ikkuna->Width;
+        fmmain.myproc->pr_WindowPtr = fmmain.oldwinptr;
+        CloseWindow (fmmain.ikkuna);
+     	fmmain.ikkuna = 0;
     }
   ReleaseSemaphore (&fmmain.gfxsema);
   if (flag == 3)
@@ -541,7 +510,7 @@ windownewsize (void)
   WORD height, width, apu1;
   struct FMList *list;
 
-  D (bug ("screen.c windownewsize entering 530.........\n"));
+D(bug("screen.c windownewsize entering 530.........\n"));  
 
   ObtainSemaphore (&fmmain.gfxsema);
 
@@ -566,7 +535,7 @@ windownewsize (void)
   ReleaseSemaphore (&fmmain.gfxsema);
 
   setcmenu ();
-  D (bug ("screen.c 555.........\n"));
+ D(bug("screen.c 555.........\n"));  
   for (apu1 = 0; apu1 < WINDOWLISTS; apu1++)
     {
       if (fmmain.li[apu1])
@@ -579,10 +548,10 @@ windownewsize (void)
 	  if (list->flags & LALLOCATED)
 	    offgadget (&fmmain.li[apu1]->slider1, LISTGADGETS);
 	}
-      D (bug ("screen.c current.........\n"));
+D(bug("screen.c current.........\n"));  
       fmmain.uselist[apu1] = 0;
     }
-  D (bug ("screen.c 569 .........\n"));
+D(bug("screen.c 569 .........\n"));  
   dirmeters ();
   fmmessage (fmmain.sourcedir);
   RefreshGList (fmmain.ikkuna->FirstGadget, fmmain.ikkuna, 0, -1);
@@ -1165,6 +1134,7 @@ alloclistgads (WORD x, WORD y, WORD width, WORD height, WORD mirror,
 }
 
 struct TextFont *
+
 openfont (struct TextAttr *ta)
 {
   struct TextFont *tf;
@@ -1526,3 +1496,4 @@ draw3dbox (struct RastPort *rp, WORD x, WORD y, WORD w, WORD h, WORD type)
       Draw (rp, x + w - 1, y + h);
     }
 }
+

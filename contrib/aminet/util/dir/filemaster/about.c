@@ -25,9 +25,7 @@
 #include <libraries/reqtools.h>
 #include <strings.h>
 #include <stdio.h>
-#include "fmdos.h"
 #include "fmnode.h"
-#include "child.h"
 #include "fmlocale.h"
 #include "fmgui.h"
 
@@ -150,23 +148,23 @@ void __saveds
 about (void)
 {
   struct ProcMsg *pm;
-  D (bug ("about.c 155...........\n"));
+D(bug("about.c 155...........\n"));    
   pm = sinitproc ();
-  D (bug ("about.c 157...........\n"));
+D(bug("about.c 157...........\n")); 
   //priority (pm->cmc);
   fmmain.wincnt++;
   initproc (0, 0);
-  D (bug ("about 161...........\n"));
+D(bug("about 161...........\n")); 
   aboutti (0);
   fmmain.wincnt--;
   deinitproc (pm);
-  D (bug ("about.c 165...........\n"));
+  D(bug("about.c 165...........\n"));
 }
 
 UBYTE aboutstring[] = {
   ISEQ_C "%s %s\n\nAuthor:\n\nToni Wilen\nSudentie 4\n13600 HML\n"
     "Finland\n\nemail: twilen@sci.fi\nwww: www.sci.fi/~twilen\n\n"
-    "AROS version by Henrik Berglund"
+    "AROS version by Henrik Berglund" 
 };
 
 void
@@ -176,12 +174,11 @@ aboutti (WORD reg)
   if (reg && fmmain.regname[0])
     return;
 
-  D (bug ("about.c 179...........\n"));
+  D(bug("about.c 179...........\n"));
+ 
+  sformat (abostring, aboutstring, fmmain.fmtitle, fmmain.fmdate, getstring (MSG_MAIN_PROGRAMMEDBY));
 
-  sformat (abostring, aboutstring, fmmain.fmtitle, fmmain.fmdate,
-	   getstring (MSG_MAIN_PROGRAMMEDBY));
-
-  D (bug ("about.c 182...........\n"));
+ D(bug("about.c 182...........\n"));         
   reqinfowindow (getstring (MSG_MAIN_ABOUT), abostring, guiCENTER, MSG_OK, 1,
 		 0);
 }

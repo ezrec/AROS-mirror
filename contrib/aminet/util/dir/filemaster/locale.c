@@ -24,15 +24,14 @@
 
 //STRPTR __asm GetString(register __a0 struct LocaleInfo *li,register __d0 ULONG id);
 
-UBYTE *
-getstring (WORD sn)
+UBYTE *getstring(WORD sn)
 {
-  struct LocaleInfo li;
-  extern struct Catalog *catalog;
-  extern struct Library *LocaleBase;
+struct LocaleInfo li;
+extern struct Catalog *catalog;
+extern struct Library *LocaleBase;
 
-  li.li_LocaleBase = LocaleBase;
-  li.li_Catalog = catalog;
+li.li_LocaleBase=LocaleBase;
+li.li_Catalog=catalog;
 
-  return (GetString (&li, sn));
+return(GetString(&li,sn));
 }

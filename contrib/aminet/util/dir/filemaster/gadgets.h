@@ -18,11 +18,10 @@
 */
 
 
-struct IntString
-{
-  LONG value;
-  LONG max;
-  LONG min;
+struct IntString {
+	LONG value;
+	LONG max;
+	LONG min;
 };
 
 #define TOGGLE_KIND 10
@@ -48,26 +47,27 @@ struct IntString
 #define SCHANGE 0x40000000
 #define SENABLE 0
 
-WORD reqwindow (ULONG *);
-void reqwindowtext (UBYTE *);
-void dobutton (WORD *, ULONG *, WORD, ULONG);
-void donumbutton (WORD *, ULONG *, WORD, WORD, ULONG);
-void donumbuttonstring (WORD *, ULONG *, UBYTE *, WORD, ULONG);
-void doletterbutton (WORD *, ULONG *, WORD, WORD, ULONG);
-void doletterbuttonstring (WORD *, ULONG *, UBYTE *, WORD, ULONG);
-void dotext (WORD *, ULONG *, WORD, ULONG);
-void dostring (WORD *, ULONG *, UBYTE *, ULONG);
-void dobuttonstring (WORD *, ULONG *, UBYTE *, ULONG);
-ULONG *doswitch (WORD *, ULONG *, WORD, WORD, ULONG);
-ULONG *doswitchstring (WORD *, ULONG *, UBYTE *, WORD, ULONG);
-ULONG *dotoggle (WORD *, ULONG *, WORD, WORD, ULONG);
-ULONG *dotogglestring (WORD *, ULONG *, UBYTE *, WORD, ULONG);
-ULONG *dointegergad (WORD *, ULONG *, struct IntString *, ULONG);
-void dostringgad (WORD *, ULONG *, UBYTE *, WORD, ULONG);
-ULONG *docyclenumber (WORD *, ULONG *, ULONG, WORD, WORD, WORD);
-ULONG *docyclestring (WORD *, ULONG *, WORD, ULONG, WORD, UBYTE *, ...);
-ULONG *docycle (WORD *, ULONG *, WORD, ULONG, WORD, WORD, ...);
-WORD pressgadget (struct Window *, struct Gadget *);
-void unpressgadget (struct Window *, struct Gadget *);
+WORD reqwindow(ULONG*);
+void reqwindowtext(UBYTE*);
+void dobutton(WORD*,ULONG*,WORD,ULONG);
+void donumbutton(WORD*,ULONG*,WORD,WORD,ULONG);
+void donumbuttonstring(WORD*,ULONG*,UBYTE*,WORD,ULONG);
+void doletterbutton(WORD*,ULONG*,WORD,WORD,ULONG);
+void doletterbuttonstring(WORD*,ULONG*,UBYTE*,WORD,ULONG);
+void dotext(WORD*,ULONG*,WORD,ULONG);
+void dostring(WORD*,ULONG*,UBYTE*,ULONG);
+void dobuttonstring(WORD*,ULONG*,UBYTE*,ULONG);
+ULONG *doswitch(WORD*,ULONG*,WORD,WORD,ULONG);
+ULONG *doswitchstring(WORD*,ULONG*,UBYTE*,WORD,ULONG);
+ULONG *dotoggle(WORD*,ULONG*,WORD,WORD,ULONG);
+ULONG *dotogglestring(WORD*,ULONG*,UBYTE*,WORD,ULONG);
+ULONG *dointegergad(WORD*,ULONG*,struct IntString*,ULONG);
+void dostringgad(WORD*,ULONG*,UBYTE*,WORD,ULONG);
+ULONG *docyclenumber(WORD*,ULONG*,ULONG,WORD,WORD,WORD);
+ULONG *docyclestring(WORD*,ULONG*,WORD,ULONG,WORD,UBYTE*,...);
+ULONG *docycle(WORD*,ULONG*,WORD,ULONG,WORD,WORD,...);
+WORD pressgadget(struct Window*,struct Gadget*);
+void unpressgadget(struct Window*,struct Gadget*);
 
-ULONG bguirequest (UBYTE *, UBYTE *, WORD, UBYTE **, void *, ...);
+ULONG bguirequest(UBYTE*,UBYTE*,WORD,UBYTE**,void*,...);
+

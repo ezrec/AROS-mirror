@@ -50,8 +50,8 @@
 
 #define sizeofColorRegister  3
 
-typedef WORD Color4;		/* Amiga RAM version of a color-register,
-				   * with 4 bits each RGB in low 12 bits. */
+typedef WORD Color4;   /* Amiga RAM version of a color-register,
+          * with 4 bits each RGB in low 12 bits.*/
 
 #define MAXAMDEPTH 8
 
@@ -74,89 +74,74 @@ typedef WORD Color4;		/* Amiga RAM version of a color-register,
 
 #define RowBytes(w)	((((w) + 15) >> 4) << 1)
 
-struct FMBitMapHeader
-{
-  UWORD w, h;			/* Width, height in pixels */
-  WORD x, y;			/* x, y position for this bitmap  */
-  UBYTE nPlanes;		/* # of planes (not including mask) */
-  UBYTE masking;		/* a masking technique listed above */
-  UBYTE compression;		/* cmpNone or cmpByteRun1 */
-  UBYTE Flags;			/* must be zero for now */
-  UWORD transparentColor;
-  UBYTE xAspect, yAspect;
-  WORD pageWidth, pageHeight;
+struct FMBitMapHeader {
+	UWORD	w, h;		/* Width, height in pixels */
+	WORD	x, y;		/* x, y position for this bitmap  */
+	UBYTE	nPlanes;	/* # of planes (not including mask) */
+	UBYTE	masking;	/* a masking technique listed above */
+	UBYTE	compression;	/* cmpNone or cmpByteRun1 */
+	UBYTE	Flags;		/* must be zero for now */
+	UWORD	transparentColor;
+	UBYTE	xAspect, yAspect;
+	WORD	pageWidth, pageHeight;
 };
 
 #define BMHDB_CMAPOK    7
 #define BMHDF_CMAPOK    (1 << BMHDB_CMAPOK)
 
-typedef struct
-{
-  UBYTE red, green, blue;	/* MUST be UBYTEs so ">> 4" won't sign extend. */
-}
-ColorRegister;
+typedef struct {
+    UBYTE red, green, blue;   /* MUST be UBYTEs so ">> 4" won't sign extend.*/
+    } ColorRegister;
 
-typedef struct
-{
-  WORD x, y;			/* coordinates (pixels) */
-}
-Point2D;
+typedef struct {
+    WORD x, y;      /* coordinates (pixels) */
+    } Point2D;
 
-typedef struct
-{
-  UBYTE depth;			/* # bitplanes in the original source */
-  UBYTE pad1;			/* UNUSED; for consistency store 0 here */
-  UWORD planePick;		/* how to scatter source bitplanes into destination */
-  UWORD planeOnOff;		/* default bitplane data for planePick */
-  UWORD planeMask;		/* selects which bitplanes to store into */
-}
-DestMerge;
+typedef struct {
+    UBYTE depth;   /* # bitplanes in the original source */
+    UBYTE pad1;      /* UNUSED; for consistency store 0 here */
+    UWORD planePick;   /* how to scatter source bitplanes into destination */
+    UWORD planeOnOff;   /* default bitplane data for planePick */
+    UWORD planeMask;   /* selects which bitplanes to store into */
+    } DestMerge;
 
 typedef UWORD SpritePrecedence;
-typedef struct
-{
-  ULONG ViewModes;
-}
-CamgChunk;
+typedef struct {
+   ULONG ViewModes;
+   } CamgChunk;
 
-#define RNG_NORATE  36		/* Dpaint uses this rate to mean non-active */
-typedef struct
-{
-  WORD pad1;			/* reserved for future use; store 0 here */
-  WORD rate;			/* 60/sec=16384, 30/sec=8192, 1/sec=16384/60=273 */
-  WORD active;			/* bit0 set = active, bit 1 set = reverse */
-  UBYTE low, high;		/* lower and upper color registers selected */
-}
-CRange;
+#define RNG_NORATE  36   /* Dpaint uses this rate to mean non-active */
+typedef struct {
+    WORD  pad1;              /* reserved for future use; store 0 here */
+    WORD  rate;      /* 60/sec=16384, 30/sec=8192, 1/sec=16384/60=273 */
+    WORD  active;     /* bit0 set = active, bit 1 set = reverse */
+    UBYTE low, high;   /* lower and upper color registers selected */
+    } CRange;
 
-typedef struct
-{
-  WORD direction;		/* 0=don't cycle, 1=forward, -1=backwards */
-  UBYTE start;			/* range lower */
-  UBYTE end;			/* range upper */
-  LONG seconds;			/* seconds between cycling */
-  LONG microseconds;		/* msecs between cycling */
-  WORD pad;			/* future exp - store 0 here */
-}
-CcrtChunk;
+typedef struct {
+   WORD  direction;  /* 0=don't cycle, 1=forward, -1=backwards */
+   UBYTE start;      /* range lower */
+   UBYTE end;        /* range upper */
+   LONG  seconds;    /* seconds between cycling */
+   LONG  microseconds; /* msecs between cycling */
+   WORD  pad;        /* future exp - store 0 here */
+   } CcrtChunk;
 
 #endif /* IFFP_ILBM_H */
 
-struct ShowScreen
-{
-  WORD system;			//00
-  struct Screen *screen;	//02
-  struct Window *window;	//06
-  struct BitMap *bitmap;	//10
-  UWORD *mouse;			//14
-  struct Task *keytask;		//18
-  struct GfxBase *gfxbase;	//22
-  struct BitMap *tempbm;	//26
-  struct RastPort temprp;
+struct ShowScreen {
+	WORD system;			//00
+	struct Screen *screen;		//02
+	struct Window *window;		//06
+	struct BitMap *bitmap;		//10
+	UWORD *mouse;			//14
+	struct Task *keytask;		//18
+	struct GfxBase *gfxbase;	//22
+	struct BitMap *tempbm;		//26
+	struct RastPort temprp;
 };
 
-WORD openshowscreen (struct FMList *, WORD, WORD, WORD, ULONG, WORD, WORD,
-		     WORD, struct ShowScreen *);
-void closeshowscreen (struct ShowScreen *);
-WORD testbutton (struct Window *);
-WORD waitbutton (struct Window *);
+WORD openshowscreen(struct FMList*,WORD,WORD,WORD,ULONG,WORD,WORD,WORD,struct ShowScreen*);
+void closeshowscreen(struct ShowScreen*);
+WORD testbutton(struct Window*);
+WORD waitbutton(struct Window*);

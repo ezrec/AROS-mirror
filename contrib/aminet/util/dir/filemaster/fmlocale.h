@@ -19,9 +19,9 @@
 
 #include <exec/types.h>
 
-UBYTE scanus (UBYTE *);
-UBYTE *getstring (WORD);
-UBYTE scanusmsg (WORD);
+UBYTE scanus(UBYTE*);
+UBYTE *getstring(WORD);
+UBYTE scanusmsg(WORD);
 
 #ifndef CATCOMP_NUMBERS
 #define CATCOMP_NUMBERS

@@ -63,12 +63,12 @@
 #ifndef TEXTTABLE_H
 struct AppString
 {
-  LONG as_ID;
-  STRPTR as_Str;
+    LONG   as_ID;
+    STRPTR as_Str;
 };
 #endif
 
-extern struct AppString AppStrings[];
+extern struct  AppString AppStrings[];
 #define SI(i)  GetString(i)
 
 
@@ -94,32 +94,30 @@ extern struct AppString AppStrings[];
 #define ID_BODY		MAKE_ID('B','O','D','Y')
 
 
-struct ParseInfo
-{
-  /* general parse.c related */
-  struct IFFHandle *iff;	/* to be alloc'd with AllocIFF */
-  UBYTE *filename;		/* current filename of this ui */
-  LONG *propchks;		/* properties to get */
-  LONG *collectchks;		/* properties to collect */
-  LONG *stopchks;		/* stop on these (like BODY) */
-  BOOL opened;			/* this iff has been opened */
-  BOOL clipboard;		/* file is clipboard */
-  BOOL hunt;			/* we are parsing a complex file */
-  BOOL Reserved1;		/* must be zero for now */
-  struct Chunk *copiedchunks;
-  struct Chunk *newchunks;
+struct ParseInfo {
+	/* general parse.c related */
+	struct  IFFHandle *iff;		/* to be alloc'd with AllocIFF */
+	UBYTE	*filename;		/* current filename of this ui */
+	LONG	*propchks;		/* properties to get */
+	LONG	*collectchks;		/* properties to collect */
+	LONG	*stopchks;		/* stop on these (like BODY) */
+	BOOL    opened;			/* this iff has been opened */
+	BOOL	clipboard;		/* file is clipboard */
+	BOOL	hunt;			/* we are parsing a complex file */
+	BOOL	Reserved1;		/* must be zero for now */		
+	struct Chunk *copiedchunks;
+	struct Chunk *newchunks;
 
-  ULONG Reserved[8];
-};
+	ULONG	Reserved[8];
+	};
 
 
-struct Chunk
-{
-  struct Chunk *ch_Next;
-  long ch_Type;
-  long ch_ID;
-  long ch_Size;
-  void *ch_Data;
+struct Chunk {
+	struct  Chunk *ch_Next;
+	long	ch_Type;
+	long	ch_ID;
+        long    ch_Size;
+        void    *ch_Data;
 };
 
 #endif /* IFFP_IFF_H */

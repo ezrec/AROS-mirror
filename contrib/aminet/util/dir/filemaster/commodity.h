@@ -18,7 +18,7 @@
 */
 
 
-WORD createbrokerall (void);
-WORD createbroker (void);
-void removebroker (void);
-WORD checkhotkeys (struct IntuiMessage *);
+WORD createbrokerall(void);
+WORD createbroker(void);
+void removebroker(void);
+WORD checkhotkeys(struct IntuiMessage*);
