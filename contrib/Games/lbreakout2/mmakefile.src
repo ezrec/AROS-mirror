@@ -10,5 +10,5 @@ include $(TOP)/config/make.cfg
 %build_with_configure mmake=contrib-games-lbreakout2 nix=yes \
     extraoptions="--with-highscore-path='$$(PROGDIR)data' --with-inst-path='$$(PROGDIR)data' \
     --disable-audio --disable-sdltest --disable-network --with-doc-path='$$(PROGDIR)docs'" \
-    bindir=$(CONTRIBDIR)/Games/lbreakout2
+    prefix=$(CONTRIBDIR)/Games/lbreakout2 nix_dir_layout=no
     

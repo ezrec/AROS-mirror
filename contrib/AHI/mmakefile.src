@@ -12,4 +12,4 @@ EXEDIR := $(AROSDIR)
 
 
 %build_with_configure mmake=contrib-AHI prefix=$(EXEDIR) \
-    includedir=$(AROS_INCLUDES) extraoptions="--with-os-includedir=$(AROS_INCLUDES)"
+    extraoptions="--with-os-includedir=$(AROS_INCLUDES)"
