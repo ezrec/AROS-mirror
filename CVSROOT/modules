@@ -31,7 +31,7 @@
 contrib contrib
 
 # Stuff necessary to compile AROS
-necessary -a Format64 AmiCDROM aminet-util-arc-untgz
+necessary -a Format64 AmiCDROM
 
 zune -a zune-libs-muimaster zune-prefs  zune-tests zune-demos zune-wanderer
 
@@ -60,7 +60,6 @@ AHI -d contrib/AHI contrib/AHI
 # Aminet
 aminet -d contrib/aminet contrib/aminet
 aminet-util-arc -d contrib/aminet/util/arc contrib/aminet/util/arc
-aminet-util-arc-untgz -d contrib/aminet/util/arc/untgz contrib/aminet/util/arc/untgz
 
 # GUIs
 
