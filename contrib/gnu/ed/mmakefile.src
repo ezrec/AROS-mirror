@@ -1,8 +1,8 @@
 # Copyright © 2004, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(TOP)/config/make.cfg
+include ../make.cfg
 
 #MM- contrib-gnu : contrib-gnu-ed
 	
-%build_with_configure mmake=contrib-gnu-ed nix=yes prefix=$(CONTRIBDIR)/GNU/ed
+%build_with_configure mmake=contrib-gnu-ed nix=yes prefix=$(GNUDIR)/ed
