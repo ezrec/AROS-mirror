@@ -17,4 +17,4 @@
 # name and listing the modified file names.
 #
 # For example:
-DEFAULT		(/bin/echo ""; /bin/echo "$USER"; /bin/date; /bin/cat) | /usr/bin/tee -a $CVSROOT/CVSROOT/commitlog | /usr/bin/elm -s "cvs commit by $USER of %s" aros-dev
+DEFAULT		(/bin/echo ""; /bin/echo "$USER"; /bin/date; /bin/cat) >> $CVSROOT/CVSROOT/commitlog #| /usr/bin/elm -s "cvs commit by $USER of %s" aros-dev
