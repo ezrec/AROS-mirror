@@ -15,8 +15,10 @@ DEVPICS := $(subst $(BINDIR)/developers/,$(HTMLDIR)/pics/developers/,$(wildcard 
 SCREENSHOTS := $(subst $(BINDIR)/screenshots/,$(SCREENSHOTDIR)/,$(wildcard $(BINDIR)/screenshots/*.* $(BINDIR)/screenshots/[0-9]*/*.* $(BINDIR)/screenshots/[0-9]*/README))
 SCREENSHOTDIRS := $(subst $(BINDIR)/screenshots/,$(SCREENSHOTDIR)/,$(wildcard $(BINDIR)/screenshots/[0-9]*))
 
-all : pics makedirs gen-html apache.conf
+all : setup makedirs pics gen-html apache.conf
 	@$(NOP)
+
+setup : config.py
 
 # Run gensite if .stamp is missing or if one of the source files
 # is newer.
@@ -38,7 +40,7 @@ site.conf : site.conf.in
 	@exit 1
 
 ifdef GNUPLOT
-pics : $(HTMLDIR)/aros_size.png $(HTMLDIR)/contrib_size.png
+pics : config.py $(HTMLDIR)/aros_size.png $(HTMLDIR)/contrib_size.png
 
 $(HTMLDIR)/%_size.png : %.size size2plot.py
 	python size2plot.py $(subst _size.png,,$@) $<

@@ -49,8 +49,6 @@ linkBoxColor = lighterBlue
 thumbnailBGColor = lightGray
 thumbnailBorderColor = darkestBlue
 
-from mainlinks import mainLinks
-
 def commonPath (path1, path2):
     list1 = string.split (path1, os.sep)
     list2 = string.split (path2, os.sep)
@@ -543,20 +541,22 @@ class Page (SeriesDocument):
 
 	self.linkBoxItem = linkBoxItem
 	if linkBoxItem:
-	    for links in mainLinks:
-		text = links[0].text
+	    for link in mainLinks2.root.order:
+		print link.__dict__
+		text = link.name
 		text = RawText (string.replace (text, ' ', '&nbsp;'))
 		if text == linkBoxItem:
 		    text = Strong (text)
-		nl = Href (links[0].url, text)
+		nl = Href (link.data.url, text)
 		self.linksToFix.append (nl)
 		self.linkbox = self.linkbox + [nl, BR (), RawText ('\n')]
-		for link in links[1:]:
-		    text = link.text
+		for childLink in link.order:
+		    print childLink.__dict__
+		    text = childLink.name
 		    text = RawText (string.replace (text, ' ', '&nbsp;'))
-		    if string.find (link.url,'#') == -1 and text == linkBoxItem:
+		    if string.find (childLink.data.url,'#') == -1 and text == linkBoxItem:
 			text = Strong (text)
-		    nl = Href (link.url, text)
+		    nl = Href (childLink.data.url, text)
 		    self.linksToFix.append (nl)
 		    self.linkbox = self.linkbox + [
 			RawText ('&nbsp;&nbsp;&nbsp;'),
