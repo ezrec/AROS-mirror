@@ -24,6 +24,16 @@ site goes public.
   - Screenshots (pictures with thumbnails)
   - Developers  (pictures with thumbnails)
 
++ Better language selection system
+
+  The current system uses the content negatotiation support using the
+  "Multiviews" option available in Apache, which does however have some annoying
+  problems with browsers that do not default to english (for example Internet
+  Explorer). Perhaps it is possible to make this work better with typemap files
+  (generated at build-time), or an explicit language selection by the user could
+  be used (which however requires some sort of session handling to remember the
+  language chosen by the user).
+
 + Generated HTML that does not require CSS support to be displayed correctly.
   
   Currently, the default docutils HTML writer is used which requires HTML
@@ -41,7 +51,6 @@ site goes public.
 
 + Write an announcement about the updated site, pointing out new features like 
   the forums and such. Post everywhere. ;-)
-
 
 The following are some random bits that would be *nice* to have when the site
 goes public, but are IMHO not *necessary*:
