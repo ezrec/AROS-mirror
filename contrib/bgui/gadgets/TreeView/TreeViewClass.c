@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/07/09 03:05:09  bergers
+ * Makes the gadgets compilable.
+ *
  * Revision 42.1  2000/05/15 19:29:08  stegerg
  * replacements for REG macro
  *
@@ -110,7 +113,7 @@ extern ASM REGFUNC3(ULONG, TV_Remove,
 
 //extern ASM ULONG TV_Replace(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvReplace *tvr);
 extern ASM REGFUNC3(ULONG, TV_Replace,
-	REGPRAAM(A0, Class *, cl),
+	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvReplace *, tvr));
 
@@ -163,7 +166,7 @@ extern ASM REGFUNC3(ULONG, TV_Unlock,
 	REGPARAM(A1, struct tvCommand *, tvc));
 
 //extern ASM ULONG TV_Sort(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvCommand *tvc);
-externASM REGFUNC3(ULONG, TV_Sort,
+extern ASM REGFUNC3(ULONG, TV_Sort,
 	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvCommand *, tvc));
@@ -222,10 +225,17 @@ STATIC DPFUNC ClassFunc[] = {
    DF_END,           NULL,
 };
 
+#ifdef _AROS
+UBYTE _LibName[]   = "bgui_treeview.gadget";
+UBYTE _LibID[]     = "\0$VER: bgui_treeview.gadget 41.10 (29.5.99) ©1996 Nick Christie ©1999 BGUI Developers Team";
+UWORD _LibVersion  = 41;
+UWORD _LibRevision = 10;
+#else
 extern UBYTE _LibName[]   = "bgui_treeview.gadget";
 extern UBYTE _LibID[]     = "\0$VER: bgui_treeview.gadget 41.10 (29.5.99) ©1996 Nick Christie ©1999 BGUI Developers Team";
 extern UWORD _LibVersion  = 41;
 extern UWORD _LibRevision = 10;
+#endif
 
 /*--------------------------------LIBARY CODE FOLLOWS-----------------------------------*/
 
@@ -243,6 +253,7 @@ SAVEDS ASM Class *BGUI_ClassInit(void)
                             CLASS_ObjectSize,     sizeof(TVData),
                             CLASS_DFTable,        ClassFunc,
                             TAG_DONE);
+printf("Class init!\n");
    return ClassBase;
 }
 

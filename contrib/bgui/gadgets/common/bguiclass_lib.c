@@ -19,6 +19,8 @@
 /*
  * Compiler specific stuff.
  */
+#ifdef _AROS
+#else
 #ifdef _DCC
 #define SAVEDS    __geta4
 #define ASM
@@ -28,7 +30,7 @@
 #define ASM       __asm
 #define REG(x)    register __ ## x
 #endif
-
+#endif
 /*
  * Global data (written to once at initalization time).
  */
@@ -53,11 +55,31 @@ extern UBYTE _LibName[];       /* Name string            */
 extern UWORD _LibVersion;      /* Version of library     */
 extern UWORD _LibRevision;     /* Revision of library    */
 
+
+
+#ifdef _AROS
+
+struct Library * LibInit();
+AROS_LD1(struct Library *, LibOpen,
+    AROS_LHA(ULONG, version, D0),
+    struct Library *, lib, 1, BGUIGadget);
+
+AROS_LD0(BPTR, LibClose,
+         struct Library *, lib, 2, BGUIGadget);
+
+AROS_LD1(BPTR, LibExpunge,
+    AROS_LHA(struct Library *, lib, D0),
+    struct ExecBase *, sysBase, 3, BGUIGadget);
+
+AROS_LD0(LONG, LibVoid,
+     struct Library *, lib, 4, BGUIGadget);
+#else
 SAVEDS ASM struct Library *LibInit(REG(d0) struct Library *lib, REG(a0) BPTR segment, REG(a6) struct ExecBase *syslib);
 SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *lib, REG(d0) ULONG libver);
 SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib);
 SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib);
 SAVEDS LONG LibVoid(void);
+#endif
 
 /*
  * Library function table.
@@ -66,10 +88,17 @@ static const LONG Vectors[] = {
    /*
     * System interface.
     */
+#ifdef _AROS
+   (LONG)BGUIGadget_LibOpen,
+   (LONG)BGUIGadget_LibClose,
+   (LONG)BGUIGadget_LibExpunge,
+   (LONG)BGUIGadget_LibVoid,
+#else
    (LONG)LibOpen,
    (LONG)LibClose,
    (LONG)LibExpunge,
    (LONG)LibVoid,
+#endif
    /*
     * Table end marker.
     */
@@ -101,7 +130,14 @@ ULONG _LibInit[4] =
 /*
  * Library initialization.
  */
+#ifdef _AROS
+AROS_UFH3(struct Library *, LibInit,
+	AROS_LHA(struct Library *, lib, D0),
+	AROS_LHA(BPTR, segment, A0),
+	AROS_LHA(struct ExecBase *, syslib, A6))
+#else
 SAVEDS ASM struct Library *LibInit(REG(d0) struct Library *lib, REG(a0) BPTR segment, REG(a6) struct ExecBase *syslib)
+#endif
 {
    /*
     * Globally assign SysBase and SegList.
@@ -148,7 +184,13 @@ SAVEDS ASM struct Library *LibInit(REG(d0) struct Library *lib, REG(a0) BPTR seg
 /*
  * Open library.
  */
+#ifdef _AROS
+AROS_LH1(struct Library *, LibOpen,
+    AROS_LHA(ULONG, version, D0),
+    struct Library *, lib, 1, BGUIGadget)
+#else
 SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *lib, REG(d0) ULONG libver)
+#endif
 {
    /*
     * Increase open counter when necessary.
@@ -169,7 +211,12 @@ SAVEDS ASM struct Library *LibOpen(REG(a6) struct Library *lib, REG(d0) ULONG li
 /*
  * Close library.
  */
+#ifdef _AROS
+AROS_LH0(BPTR, LibClose,
+         struct Library *, lib, 2, BGUIGadget)
+#else
 SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
+#endif
 {
    /*
     * Of course we do not expunge
@@ -182,7 +229,13 @@ SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
     * Delayed expunge pending?
     */
    if (lib->lib_Flags & LIBF_DELEXP)
+#ifdef _AROS
+      return AROS_UFC2(BPTR, BGUIGadget_LibExpunge,
+      		AROS_UFCA(struct Library *, lib, D0),
+      		AROS_UFCA(struct ExecBase *, SysBase, A6));
+#else
       return LibExpunge(lib);
+#endif
 
    /*
     * Otherwise we remain in memory.
@@ -193,7 +246,13 @@ SAVEDS ASM BPTR LibClose(REG(a6) struct Library *lib)
 /*
  * Expunge library.
  */
+#ifdef _AROS
+AROS_LH1(BPTR, LibExpunge,
+    AROS_LHA(struct Library *, lib, D0),
+    struct ExecBase *, sysBase, 3, BGUIGadget)
+#else
 SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
+#endif
 {
    /*
     * No expunge when we still
@@ -238,7 +297,12 @@ SAVEDS ASM BPTR LibExpunge(REG(a6) struct Library *lib)
 /*
  * Reserved routine.
  */
+#ifdef _AROS
+AROS_LH0(LONG, LibVoid,
+     struct Library *, lib, 4, BGUIGadget)
+#else
 SAVEDS LONG LibVoid(void)
+#endif
 {
    return 0;
 }

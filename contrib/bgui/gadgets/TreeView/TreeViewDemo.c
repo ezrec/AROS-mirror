@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/07/09 03:05:09  bergers
+ * Makes the gadgets compilable.
+ *
  * Revision 42.1  2000/05/15 19:29:08  stegerg
  * replacements for REG macro
  *
@@ -105,7 +108,10 @@ ASM SAVEDS REGFUNC3(ULONG, WindowHandler,
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct IntuiMessage *, imsg));
 
+#ifdef _AROS
+#else
 extern void __stdargs KPrintF(char *fmt,...);
+#endif
 
 /************************************************************************
 *****************************  LOCAL DATA  ******************************
@@ -117,13 +123,17 @@ extern void __stdargs KPrintF(char *fmt,...);
 
 struct Library	*BGUIBase = NULL;
 
+struct IntuitionBase * IntuitionBase = NULL;
 /************************************************************************
 *******************************  MAIN()  ********************************
 ************************************************************************/
 
 int main(int argc,char **argv)
 {
-if (BGUIBase = OpenLibrary("bgui.library",40))
+
+IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
+
+if (BGUIBase = OpenLibrary("bgui.library",40) && IntuitionBase)
 	{
 		struct Hook	idcmphook;
 		Object		*WI_Main,*TV_Test,*BT_Add,*BT_Remove,*BT_Quit;
@@ -304,6 +314,8 @@ if (BGUIBase = OpenLibrary("bgui.library",40))
 		}
 	CloseLibrary(BGUIBase);
 	}
+
+	if (IntuitionBase) CloseLibrary((struct Library *)IntuitionBase);
 return(0);
 }
 

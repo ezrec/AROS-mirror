@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/07/09 03:05:09  bergers
+ * Makes the gadgets compilable.
+ *
  * Revision 42.1  2000/05/15 19:29:08  stegerg
  * replacements for REG macro
  *
@@ -60,7 +63,7 @@
 
 //ASM ULONG TV_Replace(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvReplace *tvr);
 ASM REGFUNC3(ULONG, TV_Replace,
-	REGPRAAM(A0, Class *, cl),
+	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvReplace *, tvr));
 
@@ -75,7 +78,7 @@ ASM REGFUNC3(ULONG, TV_Replace,
 
 //ASM ULONG TV_Replace(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvReplace *tvr)
 ASM REGFUNC3(ULONG, TV_Replace,
-	REGPRAAM(A0, Class *, cl),
+	REGPARAM(A0, Class *, cl),
 	REGPARAM(A2, Object *, obj),
 	REGPARAM(A1, struct tvReplace *, tvr))
 {

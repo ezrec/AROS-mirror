@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/07/09 03:05:08  bergers
+ * Makes the gadgets compilable.
+ *
  * Revision 42.1  2000/05/15 19:29:07  stegerg
  * replacements for REG macro
  *
@@ -26,10 +29,17 @@
  *
  */
 
+#ifdef _AROS
+extern struct BGUIBase * BGUIBase;
+#endif
+
 /*
  * Compiler stuff.
  */
 
+#ifdef _AROS
+
+#else
 #ifdef _DCC
 #define SAVEDS	__geta4
 #define ASM
@@ -39,6 +49,7 @@
 #define SAVEDS	__saveds
 #define ASM		__asm
 #define REG(x)	register __ ## x
+#endif
 #endif
 #endif
 

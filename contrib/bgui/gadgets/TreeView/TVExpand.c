@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/07/09 03:05:09  bergers
+ * Makes the gadgets compilable.
+ *
  * Revision 42.1  2000/05/15 19:29:08  stegerg
  * replacements for REG macro
  *
@@ -124,11 +127,14 @@ ASM REGFUNC3(ULONG, TV_Expand,
 *
 *************************************************************************/
 
-//ASM ULONG TV_Expand(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve)
-ASM REGFUNC3(ULONG, TV_Expand,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, struct tvEntry *, tve))
+#ifdef _AROS
+AROS_UFH3(ULONG, TV_Expand,
+	AROS_LHA(Class *, cl, A0),
+	AROS_LHA(Object *, obj, A2),
+	AROS_LHA(struct tvEntry *, tve, A1))
+#else
+ASM ULONG TV_Expand(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) struct tvEntry *tve)
+#endif
 {
 struct tvExpand	tvexp;
 struct tvAnchor	tva;

@@ -9,6 +9,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/07/09 03:05:09  bergers
+ * Makes the gadgets compilable.
+ *
  * Revision 42.1  2000/05/15 19:29:07  stegerg
  * replacements for REG macro
  *
@@ -41,6 +44,9 @@
 /*
  *	Compiler stuff.
  */
+#ifdef _AROS
+
+#else
 #ifdef _DCC
 #define SAVEDS __geta4
 #define ASM
@@ -49,6 +55,7 @@
 #define SAVEDS __saveds
 #define ASM __asm
 #define REG(x) register __ ## x
+#endif
 #endif
 
 /*
@@ -72,6 +79,8 @@ ULONG p2ls[] = { PALETTE_CurrentColor, LAB_SelectedPen,     TAG_END };
  *	Library base and class base.
  */
 struct Library *BGUIBase;
+
+struct IntuitionBase * IntuitionBase;
 Class	       *myButtonClass;
 
 /*
@@ -104,11 +113,14 @@ UBYTE	       *InfoTxt = ISEQ_C "As you can see the colors of the below button\n"
  *	dispatchers, hook routines or anything else which may get
  *	called by a task other than your own.
  */
-//SAVEDS ASM ULONG myButtonDispatch( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
-SAVEDS ASM REGFUNC3(ULONG, myButtonDispatch,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, msg))
+#ifdef _AROS
+AROS_UFH3(ULONG, myButtonDispatch,
+	AROS_LHA(Class *, cl, A0),
+	AROS_LHA(Object *, obj, A2),
+	AROS_LHA(Msg, msg, A1))
+#else
+SAVEDS ASM ULONG myButtonDispatch( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
+#endif
 {
 	ULONG			rc, pen, tag;
 
@@ -211,10 +223,13 @@ int main( int argc, char **argv )
 	UWORD			 defpens[ 4 ] = { 0, 3, 1, 1 };
 	BOOL			 running = TRUE;
 
+        IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
+
 	/*
 	 *	Open BGUI.
 	 */
-	if ( BGUIBase = OpenLibrary( BGUINAME, BGUIVERSION )) {
+	if ( (NULL != IntuitionBase) && 
+	     NULL != (BGUIBase = OpenLibrary( BGUINAME, BGUIVERSION ))) {
 			/*
 			 *	And our drop-button class.
 			 */
@@ -318,8 +333,8 @@ int main( int argc, char **argv )
 			}
 		CloseLibrary( BGUIBase );
 	}
+        if (IntuitionBase) CloseLibrary((struct Library *)IntuitionBase);
 }
-
 #ifdef _DCC
 int wbmain( struct WBStartup *wbs )
 {

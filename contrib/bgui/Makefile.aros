@@ -50,7 +50,13 @@ INCLUDE_FILES = \
 	$(INCLUDES_DIR)/bgui/bgui_lib.fd \
 	$(INCLUDES_DIR)/clib/bgui_protos.h \
 	$(INCLUDES_DIR)/defines/bgui.h \
-	$(INCLUDES_DIR)/proto/bgui.h
+	$(INCLUDES_DIR)/proto/bgui.h \
+	$(INCLUDES_DIR)/bgui/bgui_bar.h \
+	$(INCLUDES_DIR)/libraries/bgui_bar.h \
+	$(INCLUDES_DIR)/bgui/bgui_treeview.h \
+	$(INCLUDES_DIR)/libraries/bgui_treeview.h \
+	$(INCLUDES_DIR)/bgui/bgui_layoutgroup.h \
+	$(INCLUDES_DIR)/libraries/bgui_layoutgroup.h
 
 
 standard_build :
@@ -223,6 +229,29 @@ bin/TextField \
 
 examples: $(INCLUDE_FILES) $(examples)
 
+gadget_directories = \
+gadgets/PopButton \
+gadgets/Palette \
+gadgets/TreeView \
+gadgets/Bar \
+gadgets/LayoutGroup
+
+gadgets: $(INCLUDE_FILES) $(gadget_directories)
+
+gadgets/PopButton :
+	$(MAKE) -f Makefile.aros -C $@
+
+gadgets/Palette :
+	$(MAKE) -f Makefile.aros -C $@
+
+gadgets/TreeView :
+	$(MAKE) -f Makefile.aros -C $@
+
+gadgets/Bar :
+	$(MAKE) -f Makefile.aros -C $@
+
+gadgets/LayoutGroup :
+	$(MAKE) -f Makefile.aros -C $@
 
 
 
@@ -245,7 +274,13 @@ all: makedirs \
 
 clean:
 	$(RM) $(INCLUDE_FILES) o/*.o
-	
+	$(MAKE) -C test -f Makefile.aros clean
+	$(MAKE) -C examples -f Makefile.aros clean	
+	$(MAKE) -C gadgets/PopButton -f Makefile.aros clean
+	$(MAKE) -C gadgets/Palette -f Makefile.aros clean
+	$(MAKE) -C gadgets/TreeView -f Makefile.aros clean
+	$(MAKE) -C gadgets/Bar -f Makefile.aros clean
+	$(MAKE) -C gadgets/LayoutGroup -f Makefile.aros clean
 
 makedirs : 
 	mkdir -p $(INCLUDES_DIR)
@@ -305,6 +340,26 @@ $(INCLUDES_DIR)/defines/bgui.h : include/aros/bgui_defines.h
 	$(CP) include/aros/bgui_defines.h $@
 
 $(INCLUDES_DIR)/proto/bgui.h : include/bgui_proto_aros.h
+	$(CP) $^ $@
+
+#Gadgets includes
+
+$(INCLUDES_DIR)/bgui/bgui_bar.h : gadgets/Bar/include/BarClass.h
+	$(CP) $^ $@
+
+$(INCLUDES_DIR)/libraries/bgui_bar.h : include/libraries_bgui_bar.h
+	$(CP) $^ $@
+
+$(INCLUDES_DIR)/bgui/bgui_treeview.h : gadgets/TreeView/include/TreeViewClass.h
+	$(CP) $^ $@
+
+$(INCLUDES_DIR)/libraries/bgui_treeview.h : include/libraries_bgui_treeview.h
+	$(CP) $^ $@
+
+$(INCLUDES_DIR)/bgui/bgui_layoutgroup.h : gadgets/LayoutGroup/include/LayoutGroupClass.h
+	$(CP) $^ $@
+
+$(INCLUDES_DIR)/libraries/bgui_layoutgroup.h : include/libraries_bgui_layoutgroup.h
 	$(CP) $^ $@
 
 bin/bgui.library.$(BUILD_TYPE) : o/libtag.o \

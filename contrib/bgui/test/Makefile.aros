@@ -5,6 +5,7 @@ CC = gcc
 CP = cp
 ECHO = echo
 DEFINES = -D_AROS
+RM = rm
 
 FLAGS = -nostartfiles -nostdlib -Wl,-i
 
@@ -87,3 +88,6 @@ test13	: test13.o
 	@$(ECHO) Installing BGUI testprogram $@ to root dir
 	@$(CP) $@ $(AROSDIR)/
 
+
+clean:
+	@$(RM) -rf *.o

@@ -5,6 +5,7 @@ CC = gcc
 CP = cp
 ECHO = echo
 DEFINES = -D_AROS
+RM = rm
 
 FLAGS = -nostartfiles -nostdlib -Wl,-i
 
@@ -33,3 +34,5 @@ STARTUP = $(LIBDIR)/startup.o
 	@$(ECHO) Installing BGUI program $@ to root dir
 	@$(CP) $@ $(AROSDIR)/
 
+clean :
+	@$(RM) -rf *.o

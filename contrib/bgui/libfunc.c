@@ -11,6 +11,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/07/09 03:05:07  bergers
+ * Makes the gadgets compilable.
+ *
  * Revision 42.4  2000/06/01 01:41:37  bergers
  * Only 2 linker problems left: stch_l & stcu_d. Somebody might want to replace them (embraced by #ifdef _AROS), please.
  *
@@ -224,12 +227,17 @@ STATIC CLASSDEF Classes[] =
    { NULL, InitAreaClass,        BGUI_AREA_GADGET,        "gadgets/bgui_area.gadget",        NULL, FALSE, FALSE },
    { NULL, InitViewClass,        BGUI_VIEW_GADGET,        "gadgets/bgui_view.gadget",        NULL, FALSE, FALSE },
 
+
+#ifdef _AROS
+   { NULL, NULL,                 BGUI_PALETTE_GADGET,     "Gadgets/bgui_palette.gadget",     NULL, FALSE, FALSE },
+   { NULL, NULL,                 BGUI_POPBUTTON_GADGET,   "Gadgets/bgui_popbutton.gadget",   NULL, FALSE, FALSE },
+   { NULL, NULL,                 BGUI_TREEVIEW_GADGET,    "Gadgets/bgui_treeview.gadget",    NULL, FALSE, FALSE },
+   { NULL, NULL,                 BGUI_BAR_GADGET,         "Gadgets/bgui_bar.gadget",         NULL, FALSE, FALSE },
+   { NULL, NULL,                 BGUI_LAYOUTGROUP_GADGET, "Gadgets/bgui_layoutgroup.gadget", NULL, FALSE, FALSE },
+#else
    { NULL, NULL,                 BGUI_PALETTE_GADGET,     "gadgets/bgui_palette.gadget",     NULL, FALSE, FALSE },
    { NULL, NULL,                 BGUI_POPBUTTON_GADGET,   "gadgets/bgui_popbutton.gadget",   NULL, FALSE, FALSE },
    { NULL, NULL,                 BGUI_TREEVIEW_GADGET,    "gadgets/bgui_treeview.gadget",    NULL, FALSE, FALSE },
-#ifdef _AROS
-#warning Activate the following two lines!
-#else
    { NULL, NULL,                 BGUI_BAR_GADGET,         "gadgets/bgui_bar.gadget",         NULL, FALSE, FALSE },
    { NULL, NULL,                 BGUI_LAYOUTGROUP_GADGET, "gadgets/bgui_layoutgroup.gadget", NULL, FALSE, FALSE },
 #endif
@@ -244,11 +252,10 @@ STATIC CLASSDEF Classes[] =
    { NULL, InitScreenReqClass,   BGUI_SCREENREQ_OBJECT,   "bgui_screenreq.class",            NULL, FALSE, FALSE },
 
 #ifdef _AROS
-#warning InitArexxClass commented
-#else
-   { NULL, InitArexxClass,       BGUI_AREXX_OBJECT,       "bgui_arexx.class",                NULL, FALSE, FALSE },
+#define InitArexxClass NULL
+#warning InitArexxClass defined as NULL
 #endif
-
+   { NULL, InitArexxClass,       BGUI_AREXX_OBJECT,       "bgui_arexx.class",                NULL, FALSE, FALSE },
    { NULL, InitSpacingClass,     BGUI_SPACING_OBJECT,     NULL,                              NULL, FALSE, FALSE },
 
    { NULL, NULL,                 (UWORD)~0,               NULL }

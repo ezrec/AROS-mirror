@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/07/09 03:05:08  bergers
+ * Makes the gadgets compilable.
+ *
  * Revision 42.1  2000/05/15 19:29:07  stegerg
  * replacements for REG macro
  *
@@ -26,6 +29,14 @@
  *
  */
 
+
+#ifdef _AROS
+extern struct BGUIBase * BGUIBase;
+#endif
+
+#ifdef _AROS
+
+#else
 #ifdef _DCC
 #define SAVEDS	__geta4
 #define ASM
@@ -35,6 +46,7 @@
 #define SAVEDS	__saveds
 #define ASM		__asm
 #define REG(x)	register __ ## x
+#endif
 #endif
 #endif
 
@@ -946,11 +958,17 @@ void __exit(int errcode)
 {
 }
 
+#ifdef _AROS
+UBYTE _LibName[]   = "bgui_bar.gadget";
+UBYTE _LibID[]     = "\0$VER: bgui_bar.gadget 41.10 (3.5.00) ©1996 Manuel Lemos ©2000 BGUI Developers Team";
+UWORD _LibVersion  = 41;
+UWORD _LibRevision = 10;
+#else
 extern UBYTE _LibName[]   = "bgui_bar.gadget";
 extern UBYTE _LibID[]     = "\0$VER: bgui_bar.gadget 41.10 (3.5.00) ©1996 Manuel Lemos ©2000 BGUI Developers Team";
 extern UWORD _LibVersion  = 41;
 extern UWORD _LibRevision = 10;
-
+#endif
 /*--------------------------------LIBARY CODE FOLLOWS-----------------------------------*/
 
 /*

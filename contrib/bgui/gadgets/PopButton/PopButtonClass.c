@@ -18,6 +18,9 @@
  * enable/disable status of an item.
 
  * $Log$
+ * Revision 42.2  2000/07/09 03:05:09  bergers
+ * Makes the gadgets compilable.
+ *
  * Revision 42.1  2000/05/15 19:29:07  stegerg
  * replacements for REG macro
  *
@@ -61,6 +64,9 @@
 /*
  * Compiler stuff.
  */
+#ifdef _AROS
+
+#else
 #ifdef _DCC
 #define SAVEDS __geta4
 #define ASM
@@ -69,6 +75,7 @@
 #define SAVEDS __saveds
 #define ASM __asm
 #define REG(x) register __ ## x
+#endif
 #endif
 
 /*
@@ -171,7 +178,7 @@ STATIC ULONG VectorAttrs[] = {   VIT_VectorArray,
 ** See if we should create a vector image.
 **/
 //STATIC ASM Object *CreateVectorImage( REG(a1) struct TagItem *attrs )
-STATIC ASM REGFUNC1(Object *, CreateVectorImage
+STATIC ASM REGFUNC1(Object *, CreateVectorImage,
 	REGPARAM(A1, struct TagItem *, attrs))
 {
    Class       *class;

@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.2  2000/07/09 03:05:10  bergers
+ * Makes the gadgets compilable.
+ *
  * Revision 42.1  2000/05/15 19:28:19  stegerg
  * REG() macro replacementes
  *
@@ -66,14 +69,21 @@
 
 extern struct IntuitionBase	*IntuitionBase;		/* V37+ */
 extern struct GfxBase	*GfxBase;				/* V37+ */
+#ifdef _AROS
+extern struct UtilityBase	*UtilityBase;			/* V37+ */
+#else
 extern struct Library	*UtilityBase;			/* V37+ */
+#endif
 extern struct Library	*BGUIBase;				/* V40+ */
 
 /*
  * Only referenced while debugging:
  */
 
+#ifdef _AROS
+#else
 extern void __stdargs KPrintF(char *fmt,...);
+#endif
 
 /************************************************************************
 *************************  GLOBAL DEFINITIONS  **************************
@@ -112,6 +122,8 @@ extern void __stdargs KPrintF(char *fmt,...);
   #undef SAVEDS
   #define SAVEDS
 
+#if 0
+  #ifndef REGPARAM
   #define REGPARAM(reg,type,name) AROS_UFHA(type, name, reg)
   
   #define REGFUNC1(r,n,a1) AROS_UFH1(r,n,a1)
@@ -123,6 +135,22 @@ extern void __stdargs KPrintF(char *fmt,...);
   #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) AROS_UFH7(r,n,a1,a2,a3,a4,a5,a6,a7)
   #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) AROS_UFH8(r,n,a1,a2,a3,a4,a5,a6,a7,a8)
   #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) AROS_UFH9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9)
+  #endif
+#else
+  #ifndef REGPARAM
+  #define REGPARAM(reg,type,name) type name
+  
+  #define REGFUNC1(r,n,a1) r n(a1)
+  #define REGFUNC2(r,n,a1,a2) r n(a1,a2)
+  #define REGFUNC3(r,n,a1,a2,a3) r n(a1,a2,a3)
+  #define REGFUNC4(r,n,a1,a2,a3,a4) r n(a1,a2,a3,a4)
+  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) r n(a1,a2,a3,a4,a5)
+  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) r n(a1,a2,a3,a4,a5,a6)
+  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) r n(a1,a2,a3,a4,a5,a6,a7)
+  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) r n(a1,a2,a3,a4,a5,a6,a7,a8)
+  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) r n(a1,a2,a3,a4,a5,a6,a7,a8,a9)
+  #endif
+#endif
   
 #else
   #define REGPARAM(reg,type,name) REG(reg) type name

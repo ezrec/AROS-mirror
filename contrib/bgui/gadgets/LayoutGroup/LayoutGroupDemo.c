@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.1  2000/07/09 03:05:08  bergers
+ * Makes the gadgets compilable.
+ *
  * Revision 42.0  2000/05/09 22:20:56  mlemos
  * Bumped to revision 42.0 before handing BGUI to AROS team
  *
@@ -44,6 +47,8 @@
  */
 BPTR     StdOut;
 struct Library *BGUIBase;
+
+struct IntuitionBase * IntuitionBase;
 
 VOID Tell( UBYTE *fstr, ... )
 {
@@ -287,6 +292,9 @@ int main( int argc, char **argv )
    struct Process       *this_task = ( struct Process * )FindTask( NULL );
    BOOL            is_wb = FALSE;
 
+   if (NULL == (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0)))
+     return -1;
+
    if ( this_task->pr_CLI )
       /*
        * Started from the CLI. Simply pickup
@@ -321,6 +329,8 @@ int main( int argc, char **argv )
    if ( is_wb ) {
       if ( StdOut ) Close( StdOut );
    }
+
+   CloseLibrary((struct Library *)IntuitionBase);
 
    return( 0 );
 }

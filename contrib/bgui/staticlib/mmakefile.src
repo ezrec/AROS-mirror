@@ -10,7 +10,7 @@ LIB		:= $(LIBDIR)/libbgui.a
 
 %define_libs
 
-FILES		:= bgui_newobject bgui_dogadgetmethod
+FILES		:= bgui_newobject bgui_dogadgetmethod bgui_makeclass
 
 %prepare_replace compiler/alib
 
