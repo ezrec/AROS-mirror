@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.4  2000/07/07 17:07:49  stegerg
+ * fixed PACKW #define, which must be different on AROS, because
+ * I changed all methods to use STACKULONG/STACKUWORD/??? types.
+ *
  * Revision 42.3  2000/05/29 00:40:23  bergers
  * Update to compile with AROS now. Should also still compile with SASC etc since I only made changes that test the define _AROS. The compilation is still very noisy but it does the trick for the main directory. Maybe members of the BGUI team should also have a look at the compiler warnings because some could also cause problems on other systems... (Comparison always TRUE due to datatype (or something like that)). And please compile it on an Amiga to see whether it still works... Thanks.
  *
@@ -1200,7 +1204,12 @@ METHOD(BaseClassKeyActive, struct wmKeyInput *, wmki)
  * Pack two words in a long.
  */
 //#define PACKW(w1,w2) (((w1<<16)&0xFFFF0000)|(w2&0xFFFF))
+
+#ifdef _AROS
+#define PACKW(w1,w2) w1,w2
+#else
 #define PACKW(w1,w2) ( (((UWORD)w1) << 16) | ((UWORD)w2) )
+#endif
 
 #define bd_ActRec bd_BMO->bmo_ActRec
 #define bd_ActWin bd_BMO->bmo_ActWin
