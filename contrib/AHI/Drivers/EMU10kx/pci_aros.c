@@ -44,13 +44,13 @@ KPrintF("== ahi_pci_init 3\n");
 	    if(pciobj && irqobj)
 	    {
 KPrintF("== ahi_pci_init 4\n");
-	    	mid_RB = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_ReadConfigByte);
-	    	mid_RW = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_ReadConfigWord);
-	        mid_RL = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_ReadConfigLong);
+	    	mid_RB = OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigByte);
+	    	mid_RW = OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigWord);
+	        mid_RL = OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigLong);
 	
-	        mid_WB = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_WriteConfigByte);
-	        mid_WW = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_WriteConfigWord);
-	        mid_WL = OOP_GetMethodID(IID_Hidd_PCIDriver, moHidd_PCIDriver_WriteConfigLong);
+	        mid_WB = OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_WriteConfigByte);
+	        mid_WW = OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_WriteConfigWord);
+	        mid_WL = OOP_GetMethodID(IID_Hidd_PCIDevice, moHidd_PCIDevice_WriteConfigLong);
 
     	    	return TRUE;
 	    }
@@ -168,125 +168,65 @@ void ahi_pci_outb(UBYTE value, ULONG addr, APTR dev)
 
 ULONG ahi_pci_read_config_long(UBYTE reg, APTR dev)
 {
-    struct pHidd_PCIDriver_ReadConfigLong  msg;
-    IPTR      	    	    	    	   driverobj;
-    IPTR    	    	    	    	   _bus, _dev, _sub;
-    
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Driver, &driverobj);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Bus, &_bus);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Dev, &_dev);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Bus, &_sub);
+    struct pHidd_PCIDevice_ReadConfigLong  msg;
     
     msg.mID = mid_RL;
-    msg.bus = _bus;
-    msg.dev = _dev;
-    msg.sub = _sub;
     msg.reg = reg;
     
-    return OOP_DoMethod((OOP_Object *)driverobj, (OOP_Msg)&msg);
+    return OOP_DoMethod((OOP_Object *)dev, (OOP_Msg)&msg);
 }
 
 UWORD ahi_pci_read_config_word(UBYTE reg, APTR dev)
 {
-    struct pHidd_PCIDriver_ReadConfigWord  msg;
-    IPTR      	    	    	    	   driverobj;
-    IPTR    	    	    	    	   _bus, _dev, _sub;
-    
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Driver, &driverobj);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Bus, &_bus);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Dev, &_dev);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Bus, &_sub);
-    
+    struct pHidd_PCIDevice_ReadConfigWord  msg;
+
     msg.mID = mid_RW;
-    msg.bus = _bus;
-    msg.dev = _dev;
-    msg.sub = _sub;
     msg.reg = reg;
     
-    return OOP_DoMethod((OOP_Object *)driverobj, (OOP_Msg)&msg);
+    return OOP_DoMethod((OOP_Object *)dev, (OOP_Msg)&msg);
 }
 
 UBYTE ahi_pci_read_config_byte(UBYTE reg, APTR dev)
 {
-    struct pHidd_PCIDriver_ReadConfigByte  msg;
-    IPTR      	    	    	    	   driverobj;
-    IPTR    	    	    	    	   _bus, _dev, _sub;
-    
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Driver, &driverobj);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Bus, &_bus);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Dev, &_dev);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Bus, &_sub);
+    struct pHidd_PCIDevice_ReadConfigByte  msg;
     
     msg.mID = mid_RB;
-    msg.bus = _bus;
-    msg.dev = _dev;
-    msg.sub = _sub;
     msg.reg = reg;
     
-    return OOP_DoMethod((OOP_Object *)driverobj, (OOP_Msg)&msg);
+    return OOP_DoMethod(dev, (OOP_Msg)&msg);
 }
 
 void ahi_pci_write_config_long(UBYTE reg, ULONG val, APTR dev)
 {
-    struct pHidd_PCIDriver_WriteConfigLong msg;
-    IPTR      	    	    	    	   driverobj;
-    IPTR    	    	    	    	   _bus, _dev, _sub;
-    
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Driver, &driverobj);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Bus, &_bus);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Dev, &_dev);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Bus, &_sub);
-    
+    struct pHidd_PCIDevice_WriteConfigLong msg;
+
     msg.mID = mid_WL;
-    msg.bus = _bus;
-    msg.dev = _dev;
-    msg.sub = _sub;
     msg.reg = reg;
     msg.val = val;
     
-    OOP_DoMethod((OOP_Object *)driverobj, (OOP_Msg)&msg);
+    OOP_DoMethod((OOP_Object *)dev, (OOP_Msg)&msg);
 }
 
 void ahi_pci_write_config_word(UBYTE reg, UWORD val, APTR dev)
 {
-    struct pHidd_PCIDriver_WriteConfigWord msg;
-    IPTR    	      	    	    	   driverobj;
-    IPTR    	    	    	    	   _bus, _dev, _sub;
-    
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Driver, &driverobj);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Bus, &_bus);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Dev, &_dev);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Bus, &_sub);
-    
+    struct pHidd_PCIDevice_WriteConfigWord msg;
+
     msg.mID = mid_WW;
-    msg.bus = _bus;
-    msg.dev = _dev;
-    msg.sub = _sub;
     msg.reg = reg;
     msg.val = val;
     
-    OOP_DoMethod((OOP_Object *)driverobj, (OOP_Msg)&msg);
+    OOP_DoMethod((OOP_Object *)dev, (OOP_Msg)&msg);
 }
 
 void ahi_pci_write_config_byte(UBYTE reg, UBYTE val, APTR dev)
 {
-    struct pHidd_PCIDriver_WriteConfigByte msg;
-    IPTR      	    	    	    	   driverobj;
-    IPTR    	    	    	    	   _bus, _dev, _sub;
-    
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Driver, &driverobj);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Bus, &_bus);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Dev, &_dev);
-    OOP_GetAttr((OOP_Object *)dev, aHidd_PCIDevice_Bus, &_sub);
+    struct pHidd_PCIDevice_WriteConfigByte msg;
     
     msg.mID = mid_WB;
-    msg.bus = _bus;
-    msg.dev = _dev;
-    msg.sub = _sub;
     msg.reg = reg;
     msg.val = val;
     
-    OOP_DoMethod((OOP_Object *)driverobj, (OOP_Msg)&msg);
+    OOP_DoMethod((OOP_Object *)dev, (OOP_Msg)&msg);
 }
 
 ULONG ahi_pci_get_irq(APTR dev)
@@ -367,11 +307,11 @@ APTR ahi_pci_logic_to_physic_addr(APTR addr, APTR dev)
 
 KPrintF("ahi_pci_logic_to_physic_addr(%lx)\n", msg->address);
     
-    retval =  (APTR)OOP_DoMethod((OOP_Object *)driverobj, (OOP_Msg)msg);
+    retval = OOP_DoMethod((OOP_Object *)driverobj, (OOP_Msg)msg);
 
 KPrintF("ahi_pci_logic_to_physic_addr(%lx) = %lx\n", msg->address, retval);
 
-    return retval;
+    return (APTR)retval;
 }
 
 APTR ahi_pci_get_base_address(WORD which, APTR dev)
