@@ -34,17 +34,10 @@ int bytes(name,total,block)
 char *name;
 int *total,*block;
 {
-
-#warning Unimplemented function Info()
-kprintf("AROS: bytes() NOT IMPLEMENTED BECAUSE OF MISSING Info() CALL\n");
-*total = 0;
-*block = 0;
-return 0;
-
-#if 0	
 	int free=-1;
 	BPTR mylock,testlock;
-	struct InfoData __aligned infodata;
+	/* AROS: No alignment required */
+	struct InfoData /* __aligned */ infodata;
 
 	if (!(mylock=Lock(name,ACCESS_READ))) {
 		*total=0; *block=0;
@@ -68,7 +61,6 @@ return 0;
 	*block=infodata.id_NumBlocks-infodata.id_NumBlocksUsed;
 	UnLock(mylock);
 	return(free);
-#endif
 }
 
 struct TagItem obtain_tags[]={
@@ -88,10 +80,6 @@ void get_colour_table()
 		screen_pens[a].alloc=0;
 	}
 
-#warning Unimplemented function FindColor()
-
-kprintf("get_colour_table(): Unimplemented function FindColor()\n");
-#if 0
 	if (system_version2>=OSVER_39) {
 		int num;
 		struct ColorMap *cm;
@@ -115,7 +103,6 @@ kprintf("get_colour_table(): Unimplemented function FindColor()\n");
 				else screen_pens[a].alloc=1;
 		}
 	}
-#endif
 }
 
 void free_colour_table()
