@@ -18,7 +18,7 @@
 #include "localize.h"
 
 
-struct Library   *LocaleBase = NULL;
+struct LocaleBase *LocaleBase = NULL;
 
 static struct LocaleInfo   li;
 
@@ -37,7 +37,7 @@ init_locale (
    ULONG   version)
 {
    li.li_LocaleBase = NULL;
-   if (NULL != (LocaleBase = OpenLibrary ("locale.library", 38L)))
+   if (NULL != (LocaleBase = (struct LocaleBase *)OpenLibrary ("locale.library", 38L)))
    {
       li.li_LocaleBase = LocaleBase;
       li.li_Catalog = OpenCatalog (NULL, catalog,
@@ -51,7 +51,7 @@ finalize_locale (void)
    if (LocaleBase)
    {
       CloseCatalog (li.li_Catalog);
-      CloseLibrary (LocaleBase);
+      CloseLibrary ((struct Library *)LocaleBase);
    }
 }
 
