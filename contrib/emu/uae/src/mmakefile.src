@@ -1,0 +1,157 @@
+#   $Id$
+#
+#   Makefile to make uae.
+
+include $(TOP)/config/make.cfg
+
+
+SRCDIR := $(TOP)/$(CURDIR)
+
+FILES := \
+    aros-win2 \
+    audio \
+    autoconf \
+    blitfunc \
+    blittable \
+    blitter \
+    bsdsocket \
+    cfgfile \
+    cia \
+    compiler \
+    cpudefs \
+    cpuemu \
+    cpustbl \
+    custom \
+    debug \
+    disk \
+    drawing \
+    ersatz \
+    expansion \
+    filesys \
+    fpp \
+    fsdb \
+    fsdb_unix \
+    fsusage \
+    gfxlib \
+    gfxutil \
+    hardfile \
+    identify \
+    keybuf \
+    machdep/X86 \
+    main \
+    md-support \
+    memory \
+    missing \
+    native2amiga \
+    newcpu \
+    nogui \
+    od-joy \
+    picasso96 \
+    readcpu \
+    savestate \
+    scsi-none \
+    sd-sound \
+    serial \
+    uaeexe \
+    uaelib \
+    writelog \
+    zfile
+
+EXEDIR := $(CONTRIBDIR)/uae
+EXE    := $(EXEDIR)/uae
+
+USE_CLIB_SHARED := yes
+USE_MLIB := yes
+USE_AMIGALIB := yes
+
+USER_CFLAGS := -O2 -fomit-frame-pointer -Wall -Wno-unused\
+               -Wno-format -W -Wmissing-prototypes\
+               -Wstrict-prototypes   -DGCCCONSTFUNC='__attribute__((const))'\
+               -D_REENTRANT -mpreferred-stack-boundary=2\
+	       -fno-exceptions -DUNALIGNED_PROFITABLE\
+	       -fno-strength-reduce -DREGPARAM='__attribute__((regparm(3)))'\
+	       -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline\
+	       -I$(SRCDIR) -I$(SRCDIR)/include
+
+#MM- contrib: uae
+#MM uae : setup uae-setup
+uae : $(EXE)
+
+#MM
+uae-setup :  $(OBJDIR)/.build_setup_check
+
+$(OBJDIR)/.build_setup_check:
+	rm -f machdep; ln -s md-i386-gcc/ machdep
+	rm -f osdep; ln -s od-amiga/ osdep
+	rm -f threaddep; ln -s td-none/ threaddep
+	rm -f sounddep; ln -s sd-generic/ sounddep
+	%mkdirs_q $(OBJDIR)/machdep $(EXEDIR)
+	echo '#include "sounddep/sound.c"' >sd-sound.c
+	echo '#include "sounddep/sound.h"' >sd-sound.h
+	echo '#include "od-generic/joystick.c"' >od-joy.c
+	echo '#include "targets/t-aros.h"' >target.h
+	echo '#include "fpp-unknown.h"' >md-fpp.h
+	echo '#include "md-i386-gcc/support.c"' >md-support.c
+	touch $(OBJDIR)/.build_setup_check
+
+clean::
+	   rm -f cpudefs.* cpustbl.* cputbl.h blitfunc.* blittable.* blit.h \
+	         cpufast.s cpuemu.c cpuopti genblitter build68k gencpu\
+			 sd-sound.c sd-sound.h od-joy.c target.h md-fpp.h md-support.c\
+			 machdep osdep threaddep sounddep
+
+
+$(OBJDIR)/%.o: %.s
+	%assemble_q
+
+$(OBJDIR)/%.o: %.S
+	%compile_q
+
+blittable.c: blit.h
+
+blit.h: genblitter
+	./$< i >$@
+blitfunc.c: genblitter blitfunc.h
+	./$< f >$@
+blitfunc.h: genblitter
+	./$< h >$@
+blittable.c: genblitter blitfunc.h
+	./$< t >$@
+
+# Temporarily disabled for gcc-3.x compatibility reasons
+
+#cpufast.s: cpuemu.c cpuopti
+#	$(CC) -S $(subst -g3, , $(CFLAGS)) $< -o cputmp.s
+#	./cpuopti <cputmp.s >$@
+#	rm cputmp.s
+
+genblitter: genblitter.c blitops.c $(OBJDIR)/writelog.o
+	$(HOST_CC) $(USER_CFLAGS) $^ -o $@
+build68k: build68k.c $(OBJDIR)/writelog.o
+	$(HOST_CC) $(USER_CFLAGS) $^ -o $@
+gencpu: gencpu.c readcpu.c cpudefs.c missing.c $(OBJDIR)/writelog.o
+	$(HOST_CC) $(USER_CFLAGS) $^ -o $@
+
+cpuemu.c: gencpu
+	./gencpu
+
+# gencpu also creates cpustbl.c and cputbl.h
+cpustbl.c: cpuemu.c
+cputbl.h: cpuemu.c
+
+cpudefs.c: table68k  build68k
+	./build68k < $< >$@
+
+readcpu.o: readcpu.c
+cpudefs.o: cpudefs.c
+
+
+%make_prog_setup mmake=uae
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+LIBS += -lgcc
+
+%common
+%include_deps
+
+.DELETE_ON_ERROR:
