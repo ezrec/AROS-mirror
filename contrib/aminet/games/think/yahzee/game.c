@@ -254,7 +254,7 @@ choose_score (
          GT_SetGadgetAttrs (roll_gad, main_win, NULL,
                             GA_Disabled, FALSE, TAG_DONE);
          GT_SetGadgetAttrs (disp_gad, main_win, NULL,
-                            GTNM_Number, rolls_left);
+                            GTNM_Number, rolls_left, TAG_DONE);
       }
    }
    
