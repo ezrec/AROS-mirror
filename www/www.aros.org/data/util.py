@@ -512,13 +512,18 @@ class Page (SeriesDocument):
 	img = Image (
 	    'pics/logo.gif',
 	    alt='AROS',
-	    border = 0,
+	    border = 0
 	)
 	self.imagesToFix.append (img)
 	logo = Href ('index.html', img)
 	self.linksToFix.append (logo)
 	td = td + [logo]
-	row = row + [td, TD (Text ('Amiga Research OS'))]
+	row = row + [td]
+        
+        row = TR()
+        table.append( row )
+        td = TD( Text( 'Amiga Research OS'), align = 'CENTER' )
+        row = row + [td]
 
 	# Create another table for the page content. 
 	table = TableLite ()
