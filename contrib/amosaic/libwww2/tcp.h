@@ -253,7 +253,9 @@ Regular BSD unix versions
 #include <dirent.h>
 #define direct dirent
 #else
+#ifndef _AROS
 #include <sys/dir.h>
+#endif
 #endif
 #if defined(sun) && defined(__svr4__)
 #include <sys/fcntl.h>
