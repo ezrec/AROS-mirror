@@ -156,6 +156,4 @@ cpudefs.o: cpudefs.c
 
 .DELETE_ON_ERROR:
 
-#MM
-uae-docs-copy :
-	cd $(TOP)/$(CURDIR)/../docs; tar cf - . | tar xf - -C $(EXEDIR)/Docs
+%copy_dir_recursive mmake=uae-docs-copy src=$(TOP)/$(CURDIR)/../docs dst=$(EXEDIR)/Docs
