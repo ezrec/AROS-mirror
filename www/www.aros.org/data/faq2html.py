@@ -8,7 +8,8 @@ def gen (rcfile, linkBoxItem, *dirs):
     xml = faqobj.toXml ()
 
     page = Page (arosRC, linkBoxItem)
-    page.mtime = faqobj.mtime
     xml2html.elementToHtml (xml, page)
+
+    page.mtime = faqobj.mtime
     return page
 
