@@ -37,7 +37,7 @@ static void cleanup(char *msg);
 
 /***********************************************************************************/
 
-#define balls 5
+#define balls 20
 
 static WORD x, y, i;
 
@@ -48,8 +48,14 @@ static struct
     BYTE rand;
 } ball[balls];
 
-#define W 320
-#define H 200
+#define W  320   // Full width
+#define hW 160   // Half width
+#define qW 80    // Quarter width
+#define eW 40    // 1/8 width
+#define H  200   // Full height
+#define hH 100   // Half height
+#define qH  50   // Quarter height
+#define eH  25   // 1/8 height
 
 static UBYTE chunkybuffer[W * H];
 static UBYTE chunkybuffer_remapped[W * H];
@@ -107,6 +113,7 @@ static void refresh(void)
 
 #define SQR(x) ((x) * (x))
 #define pi 3.14159265
+#define deg 0.017453
 
 static void Calc_Ball(WORD hohe, WORD breite, APTR po)
 {
@@ -162,19 +169,31 @@ static void initpalette(void)
 {
     WORD palindex = 0;
     
-    for(palindex = 0; palindex < 128; palindex++)
+    for(palindex = 0; palindex < 64; palindex++)
     {
     	ULONG red   = 0;
-	ULONG green = palindex * 2;
-	ULONG blue  = 0;
+	ULONG green = 0;
+	ULONG blue = palindex * 4;
 
 	cgfx_coltab[palindex] = (red << 16) + (green << 8) + blue;
 
-    	red = palindex * 2;
-	green = 255;
-	blue = palindex * 2;
+    	red = palindex * 4;
+	green = palindex * 4;
+	blue = 0xFF;
+
+	cgfx_coltab[palindex + 64] = (red << 16) + (green << 8) + blue;	
+
+    	red = 0xFF - palindex * 4;
+	green = 0xFF - palindex * 4;
+	blue = 0xFF - palindex * 4;
 
 	cgfx_coltab[palindex + 128] = (red << 16) + (green << 8) + blue;	
+
+    	red = palindex * 4;
+	green = palindex * 4;
+	blue = palindex * 4;
+
+	cgfx_coltab[palindex + 192] = (red << 16) + (green << 8) + blue;	
     }
     
     cgfx_coltab[255] = 0xFFFFFF;    
@@ -221,9 +240,16 @@ static void initpalette(void)
 
 static void initstuff(void)
 {    
+    int j=1;
+
     for(i = 1; i <= balls; i++)
     {
-    	ball[i - 1].dia = 20 + abs(70 - 10 * (i-1));
+        if(i&0x1)
+         j=i;
+        else
+         j=balls-i;
+
+    	ball[i - 1].dia = 30 + abs(5 * (j-1));
 	ball[i - 1].rand = (BYTE)(20.0+20.0*sin(i*pi/balls*13));
 	ball[i - 1].p = malloc(SQR(ball[i - 1].dia));
 	if (ball[i].p) cleanup("out of memory!");
@@ -235,17 +261,75 @@ static void initstuff(void)
 
 static void ticker(void)
 {
+    // Movement parameters
+    // The chain consists of four sin/cos waves per axis
+    // *dis* represents distance between blobs in the chain
+    // *add* represents the movement speed of the chain/waves
+    //
+    // Implemented by using local floats to make it easier
+    // to later implement CLI parameter values.
+
+    float xdis1 = -45.0;
+    float xdis2 =  65.0;
+    float xdis3 =  12.0;
+    float xdis4 = -25.0;
+
+    float ydis1 =  35.0;
+    float ydis2 = -55.0;
+    float ydis3 = -15.0;
+    float ydis4 = -05.0;
+
+    float xadd1 =  2.0;
+    float xadd2 =  1.25;
+    float xadd3 = -0.55;
+    float xadd4 =  0.93;
+
+    float yadd1 =  1.55;
+    float yadd2 =  0.63;
+    float yadd3 =  0.23;
+    float yadd4 = -0.94;
+
+    float xpos1, ypos1;
+    float xpos2, ypos2;
+    float xpos3, ypos3;
+    float xpos4, ypos4;
+
+    float xnew = 0, ynew = 0;
+
     memset(chunkybuffer, 0, sizeof(chunkybuffer));
+
+    // Precalculating position of each wave
+    xpos1 = x * xadd1;
+    xpos2 = x * xadd2;
+    xpos3 = x * xadd3;
+    xpos4 = x * xadd4;
+
+    ypos1 = x * yadd1;
+    ypos2 = x * yadd2;
+    ypos3 = x * yadd3;
+    ypos4 = x * yadd4;
     
     for(i = 0; i < balls; i++)
     {
-    	Do_Ball((WORD)((160 - ball[i].dia / 2) +
-	    	sin(x*pi/400+i*6)*(90-8*i)*sin((x+ball[i].rand)*pi/150.0) +
-		(20+6*i)*cos((x-ball[i].rand+940.0)*pi/150.0)),
-		(WORD)((100 - ball[i].dia / 2) +
-		cos(x*pi/400+i*6)*(20+6*i)*cos((x+ball[i].rand)*pi/120.0) +
-		(20+4*i)*sin((x-ball[i].rand+1000.0)*pi/120.0)),
-		ball[i].dia, ball[i].dia, ball[i].p);    
+
+        xnew = hW - ball[i].dia/2 +
+               qW * sin ((xdis1 * i + xpos1) * deg)+
+               qW * sin ((xdis2 * i + xpos2) * deg)+
+               qW * sin ((xdis3 * i + xpos3) * deg)+
+               qW * sin ((xdis4 * i + xpos4) * deg);
+
+        ynew = hW - ball[i].dia/2 +
+               qH * cos ((ydis1 * i + ypos1) * deg)+
+               qH * cos ((ydis2 * i + ypos2) * deg)+
+               qH * cos ((ydis3 * i + ypos3) * deg)+
+               qH * cos ((ydis4 * i + ypos4) * deg);
+
+        // replace qW/qH with eW/eH if you wish to keep
+        // the blobs from moving entirely over the edges.
+
+        Do_Ball((WORD)xnew,(WORD)ynew,
+	 ball[i].dia, ball[i].dia, ball[i].p);    
+
     }
     x++;
 }
