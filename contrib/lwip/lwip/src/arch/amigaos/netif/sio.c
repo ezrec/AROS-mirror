@@ -37,7 +37,7 @@
 
 #include "lwip/debug.h"
 #include "lwip/def.h"
-#include "netif/sioslipif.h"
+#include "netif/sio.h" 
 #include "lwip/pbuf.h"
 #include "lwip/sys.h"
 #include "lwip/stats.h"
@@ -48,6 +48,77 @@
 #include <devices/serial.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
+
+/* Resources */
+static struct MsgPort *Serial_ReadPort;
+static struct IOExtSer *Serial_ReadIO;
+static struct MsgPort *Serial_WritePort;
+static struct IOExtSer *Serial_WriteIO;
+
+/** array of ((siostruct*)netif->state)->sio structs */
+static sio_status_t statusar[2];
+
+/* --public-functions----------------------------------------------------------------------------- */
+void sio_send( u8_t c, sio_status_t * siostat )
+{
+    char tosend = c;
+    Serial_WriteIO->IOSer.io_Command  = CMD_WRITE;
+    Serial_WriteIO->IOSer.io_Length   = 1;
+    Serial_WriteIO->IOSer.io_Data     = &tosend;
+    DoIO((struct IORequest*)Serial_WriteIO);
+}
+
+u8_t sio_recv( sio_status_t * siostat )
+{
+	u8_t toget;
+
+  if (!(Serial_ReadPort = CreateMsgPort())) return 0;
+  if (!(Serial_ReadIO = (struct IOExtSer*)CreateIORequest(Serial_ReadPort,sizeof(struct IOExtSer))))
+  {
+    DeleteMsgPort(Serial_ReadPort);
+    return 0;
+  }
+  *Serial_ReadIO = *Serial_WriteIO;
+  Serial_ReadIO->IOSer.io_Message.mn_ReplyPort = Serial_ReadPort;
+	Serial_ReadIO->IOSer.io_Command  = CMD_READ;
+	Serial_ReadIO->IOSer.io_Length   = 1;
+	Serial_ReadIO->IOSer.io_Data     = &toget;
+	DoIO((struct IORequest*)Serial_ReadIO);
+
+	return toget;
+}
+
+sio_status_t * sio_open( int devnum )
+{
+  if (!(Serial_WritePort = CreateMsgPort())) return NULL;
+  if (!(Serial_WriteIO = (struct IOExtSer*)CreateIORequest(Serial_WritePort,sizeof(struct IOExtSer))))
+  {
+    DeleteMsgPort(Serial_WritePort);
+    return NULL;
+  }
+
+  if (OpenDevice(SERIALNAME,0,(struct IORequest *)Serial_WriteIO,0L))
+  {
+    D(bug("Opening of " SERIALNAME " failed\n"));
+    DeleteIORequest(Serial_WriteIO);
+    DeleteMsgPort(Serial_WritePort);
+    return NULL;
+  }
+
+  D(bug("Opening of " SERIALNAME " succeded being in Task at 0x%lx\n",FindTask(NULL)));
+
+  Serial_WriteIO->IOSer.io_Command  = SDCMD_SETPARAMS;
+  Serial_WriteIO->io_SerFlags      &= ~SERF_PARTY_ON;
+  Serial_WriteIO->io_SerFlags      |= SERF_XDISABLED;
+  Serial_WriteIO->io_Baud           = 57600;
+
+  if (DoIO((struct IORequest*)Serial_WriteIO))
+    D(bug("Error setting parameters!\n"));
+
+	return &statusar[0];
+}
+
+#if 0
 
 /* Resources */
 
@@ -268,3 +339,5 @@ void sioslipif_init(struct netif *netif)
   Delay(5);
 }
 /*-----------------------------------------------------------------------------------*/
+
+#endif

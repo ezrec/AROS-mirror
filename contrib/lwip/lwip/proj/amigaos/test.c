@@ -29,7 +29,7 @@
 
 /* ----------------------------------------------- */
 
-#include "netif/sioslipif.h"
+#include "netif/slipif.h"
 
 /* ----------------------------------------------- */
 
@@ -125,7 +125,7 @@ static void tcpip_init_done(void *arg)
   IP4_ADDR(&ipaddr, 192,168,6,1);
   IP4_ADDR(&netmask, 255,255,255,0);
   
-  netif_set_default(netif_add(&ipaddr, &netmask, &gw, sioslipif_init,
+  netif_set_default(netif_add(&ipaddr, &netmask, &gw, slipif_init,
 			      tcpip_input));
 
   sys_sem_signal(*sem);
