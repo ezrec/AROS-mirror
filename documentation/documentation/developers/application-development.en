@@ -1895,30 +1895,31 @@ which says "Hello World!" in the title-bar, for two seconds::
     #include <proto/dos.h>
     #include <proto/intuition.h>
     #include <intuition/intuition.h>
-
-    struct Library * DOSBase;
-    struct Library * IntuitionBase;
-
+    
+    struct DosLibrary    *DOSBase;
+    struct IntuitionBase *IntuitionBase;
+    
     int main(int argc, char *argv[])
     {
         int error = RETURN_OK;
 
         /* We need this for Delay() later on. */
-        DOSBase = OpenLibrary("dos.library", 36);
+        DOSBase = (struct DosLibrary *)OpenLibrary("dos.library", 36);
         if (DOSBase)
         {
-            IntuitionBase = OpenLibrary("intuition.library", 36);
-            if (IntuitionBase);
+            IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 36);
+            if (IntuitionBase)
             {
                 struct Window *win;
                 /* We set up our tags. */
-                struct TagItem tags[] = {
-                  { WA_Width, 100 },
-                  { WA_Height, 50 },
-                  { WA_Title, "Hello World!" },
-                  { TAG_DONE, 0UL }
-                }
-
+                struct TagItem tags[] =
+                {
+                    { WA_Width, 100                  },
+                    { WA_Height, 50                  },
+                    { WA_Title, (IPTR)"Hello World!" },
+                    { TAG_DONE, 0UL                  }
+                };
+    
                 win = OpenWindowTagList(NULL, tags);
                 if (win)
                 {
@@ -1926,26 +1927,28 @@ which says "Hello World!" in the title-bar, for two seconds::
                        window.
                     */
                     Delay(100);
-
+    
                     /* We close our window again. */
                     CloseWindow(win);
                 }
-
-                CloseLibrary(IntuitionBase);
-            } else
+    
+                CloseLibrary((struct Library *)IntuitionBase);
+            }
+            else
                 error = RETURN_FAIL;
-            CloseLibrary(DOSBase);
+    
+            CloseLibrary((struct Library *)DOSBase);
         } else
             error = RETURN_FAIL;
-
+    
         return error;
-    }
-              
+    }  
+                  
 Of course, this method of setting up the taglist is quite complicated. So for
 most functions that use taglists short-cuts are available. The link-library
 `amiga.lib` provides these short-cuts for all internal AROS functions. These
 varargs versions can be used like this:
-
+    
     #include <proto/alib.h>
 
     Function( arg1, ..., argn, TAG1, data1, ..., TAG_DONE );
