@@ -32,15 +32,6 @@ def genDocumentation ():
     #print "n.parent.parent=",n.parent.parent
     return page
 
-def my_html_head(self):
-    """Generate the HEAD, TITLE and BODY tags.
-    """
-    return '<HEAD>\n  <META http-equiv="refresh" content="3; \
-            url=http://aros.sourceforge.net/" >\n\
-            <TITLE>%s</TITLE> </HEAD>\n' % self.title
-
-
-#print 'root=',mainLinks2.root
 
 pm = PageMeat ('Index', 'index.html')
 pm.append (Text ('You are now being redirected to'),\
@@ -50,6 +41,7 @@ pm.append (Text ('You are now being redirected to'),\
 
 pm.write ()
 
+#print 'root=',mainLinks2.root
 #pm = PageMeat ('Test2', 'test1.html')
 #pm.append (Text ('Test2'))
 #pm.write ()
