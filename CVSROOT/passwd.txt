@@ -83,5 +83,6 @@ aldredmr:bddQ44oj139YU:Michael Aldred:bluey@amitar.com.au:
 jogr0326:bdkUx2LfjVuIc:Johan Grip:johan.grip@sveg.se.sykes.com:
 silver:aayV7yFX/Lvzw:Ujvary, Bela Istvan:silver@alton.hu:
 aard:bcTmC3mCTp1uM:Aard Keimpema:trantor@bart.nl:
+phf:dabL/K9gGAAnU:Peter H. Froehlich:phf@acm.org:
 
 #anon:bbrG5BSjRBYPU:Anonymous Access::
