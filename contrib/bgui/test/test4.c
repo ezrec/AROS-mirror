@@ -18,11 +18,7 @@
 
 #include <proto/intuition.h>
 #include <proto/exec.h>
-#ifdef _AROS
-#warning No Gradientslider
-#else
 #include <gadgets/gradientslider.h>
-#endif
 
 struct Library *BGUIBase=NULL;
 struct IntuitionBase * IntuitionBase;
@@ -41,7 +37,10 @@ Object *Test_4Objs[WIN4_NUMGADS];
 **/
 #define GRADCOLORS 4
 
-static WORD penns[ GRADCOLORS + 1 ];
+static WORD penns[ GRADCOLORS + 1 ] =
+{
+     1,2,3,~0
+};
 
 Object *InitTest_4( void )
 {
@@ -54,20 +53,16 @@ Object *InitTest_4( void )
 		WINDOW_MasterGroup, ar[WIN4_MASTER] = VGroupObject,
 			FRM_Type,FRTYPE_NEXT,
 			FRM_Title,NULL,
-#ifdef _AROS
-#warning No Gradientslider
-#else
-      StartMember, ar[WIN4_GRSLIDER1]= ExternalObject,
-        EXT_MinWidth,           10,
-        EXT_MinHeight,          10,
-        EXT_ClassID,            "gradientslider.gadget",
-        EXT_NoRebuild,          TRUE,
-        GRAD_PenArray,          penns,
-        PGA_Freedom,            LORIENT_VERT,
-        GA_ID,                  WIN4_GRSLIDER1,
-        EndObject,
-      EndMember,
-#endif
+			StartMember, ar[WIN4_GRSLIDER1]= ExternalObject,
+        		  EXT_MinWidth,           10,
+        		  EXT_MinHeight,          10,
+        		  EXT_ClassID,            "gradientslider.gadget",
+        		  EXT_NoRebuild,          TRUE,
+        		  GRAD_PenArray,          penns,
+        		  PGA_Freedom,            LORIENT_VERT,
+        		  GA_ID,                  WIN4_GRSLIDER1,
+        		  EndObject,
+			EndMember,
 		EndObject,
 	EndObject;
 
@@ -87,8 +82,10 @@ int main(argc,argv)
 
 	if(BGUIBase=OpenLibrary(BGUINAME,BGUIVERSION))
 	{
-    if(GradientSliderBase=OpenLibrary("gadgets/gradientslider.gadget",39L))
+printf("trying to open gradientslider.gadget\n");
+    if(GradientSliderBase=OpenLibrary("Gadgets/gradientslider.gadget",39L))
     {
+printf("opened gradientslider.gadget\n");
 			if((window=InitTest_4())!=NULL
 			&& WindowOpen(window)!=NULL)
 			{
