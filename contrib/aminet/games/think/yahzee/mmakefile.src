@@ -1,11 +1,10 @@
 include $(TOP)/config/make.cfg
 
 %define_libs
-ILDFLAGS    := -nostartfiles -Xlinker -i -g
 
 CFLAGS	:= $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
 OBJDIR	:= $(GENDIR)/$(CURDIR)
-DESTDIR := $(BINDIR)/aminet
+DESTDIR := $(CONTRIBDIR)/aminet
 
 FILES := dice draw game highscores layout localize requesters rules tooltypes \
 	yahzee yahzee_strings
@@ -28,11 +27,7 @@ setup-aminet-yahzee :
 	%mkdirs_q $(DESTDIR) $(OBJDIR)
 
 $(EXE) : $(DESTDIR)/% : $(OBJS) $(DEPLIBS)
-	@$(ECHO) "Linking $@..."
-	@$(CC) $(ILDFLAGS) $(STARTUP) $(OBJS) -o $@ $(LIBS)
-	@$(ECHO) "Checking $@..."
-	@$(CHECKUDS) $@
-
+	%link_q from=$(OBJS)
 
 #MM
 clean-aminet :
