@@ -20,7 +20,7 @@ USE_BGUILIB := yes
 %make_prog_multi dir=$(EXEDIR) target=$(EXE)
 
 #MM 
-setup-xdme-parser : make-dirs Parser
+setup-xdme-parser : make-dirs $(EXE)
 
 make-dirs :
 	$(MKDIR) $(OBJDIR)
