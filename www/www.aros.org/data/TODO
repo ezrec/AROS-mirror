@@ -1,15 +1,25 @@
-- If a news item is very long, include only part of it in the news page
-and create a sub-page with the rest of the text.
+TODO
 
 - Split the code which generates the pages into separate scripts and
 use a "config database" (probably a python object which is accessed
 via cPickle) to create the inter-links.
 
-- Move the graph generation out of gensite into the makefile and make
-it optional. This probably includes creating a way to make every
-aspect of the site optional (screenshots, etc).
-
 - Convert the C source files into hyperlinked HTML docs
 
 - Add support for AutoDocs.
 
+- Think about a way to update the news section remotely (CGI ? Form ?
+EMail ?)
+
+DONE
+
+* If a news item is very long, include only part of it in the news page
+and create a sub-page with the rest of the text.
+-> Solution: Write smaller news items :-) This should be simple by
+updating the news section more regularily.
+
+* Move the graph generation out of gensite into the makefile and make
+it optional. This probably includes creating a way to make every
+aspect of the site optional (screenshots, etc).
+-> Just define GNUPLOT to empty or don't define it at all and the graphs
+will not be generated.
