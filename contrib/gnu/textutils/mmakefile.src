@@ -6,7 +6,7 @@
 ##MM- contrib-gnu : contrib-gnu-textutils
 ##MM- contrib-gnu-textutils : development-textutils
 
-#MM- development : development-textutils
+##MM- development : development-textutils
 #MM development-textutils-build-quick : development-textutils-fetch
 
 ORIGINS := http://ftp.gnu.org/pub/gnu/textutils/

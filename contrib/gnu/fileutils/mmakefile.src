@@ -6,7 +6,7 @@
 ##MM- contrib-gnu : contrib-gnu-fileutils
 ##MM- contrib-gnu-fileutils : development-fileutils
 
-#MM- development : development-fileutils
+##MM- development : development-fileutils
 #MM development-fileutils-build-quick : development-fileutils-fetch
 
 ORIGINS := http://ftp.gnu.org/pub/gnu/fileutils/
