@@ -15,9 +15,9 @@ h2
 }
 
 /* FIXME: Don't forget to remove these when the site goes public... */
-a.done   { background: green; }
-a.almost { background: yellow; }
-a.nope   { background: red; }
+/* a.done   { background: green; } */
+/* a.almost { background: yellow; } */
+/* a.nope   { background: red; } */
 
 a.target {
   color: blue }
