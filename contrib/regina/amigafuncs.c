@@ -25,13 +25,16 @@
 
 #if defined(_AMIGA) || defined(__AROS__)
 #include "envir.h"
+#include <dos/dos.h>
 #include <exec/lists.h>
 #include <exec/ports.h>
 #include <exec/memory.h>
 #include <exec/execbase.h>
 #include <rexx/rxslib.h>
+#include <rexx/storage.h>
 
 #include <proto/alib.h>
+#include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/rexxsyslib.h>
 
@@ -47,17 +50,35 @@ typedef struct _amiga_tsd_t {
 #if defined(_AMIGA) || defined(__AROS__)
   struct amiga_envir portenvir;
   struct RxsLib *rexxsysbase;
+  BPTR startlock;
 #endif
 } amiga_tsd_t;
 
 #define RexxSysBase (((amiga_tsd_t *)TSD->ami_tsd)->rexxsysbase)
+
+#if defined(_AMIGA) || defined(__AROS__)
+/* On AROS delete the allocated resources that are not recycled by the
+ * normal C exit handling
+ */
+static void exit_amigaf( int dummy, void *ptr )
+{
+  amiga_tsd_t *atsd = (amiga_tsd_t *)ptr;
+
+  if ( atsd->rexxsysbase != NULL )
+    CloseLibrary( (struct Library *)atsd->rexxsysbase );
+  UnLock( CurrentDir( atsd->startlock ) );
+  
+  free(ptr);
+}
+#endif
 
 /* Init amiga specific thread data, this function is called during initialisation
  * of the thread specific data
  */
 int init_amigaf ( tsd_t *TSD )
 {
-  amiga_tsd_t *atsd = MallocTSD( sizeof(amiga_tsd_t) );
+  amiga_tsd_t *atsd = (amiga_tsd_t *)malloc( sizeof(amiga_tsd_t) );
+  BPTR old;
   
   if (atsd==NULL) return 0;
 
@@ -68,6 +89,11 @@ int init_amigaf ( tsd_t *TSD )
   atsd->portenvir.envir.type = ENVIR_AMIGA;
   atsd->rexxsysbase = (struct RxsLib *)OpenLibrary( "rexxsyslib.library", 44 );
   if ( atsd->rexxsysbase == NULL )
+    return 0;
+  old = CurrentDir(NULL);
+  atsd->startlock = DupLock( old );
+  CurrentDir(old);
+  if (on_exit( exit_amigaf, atsd ) == -1)
     return 0;
 #endif
   TSD->ami_tsd = (void *)atsd;
@@ -161,10 +187,9 @@ static streng *getfilenames( tsd_t *TSD, const streng *sep )
   streng *retval, *tmpstr;
   int first = 1;
   variableptr var;
-  char *test;
 
   get_next_variable( TSD, 1 );
-  for( var = get_next_variable( TSD, 0);
+  for ( var = get_next_variable( TSD, 0);
        var != NULL;
        var = get_next_variable( TSD, 0) )
   {
@@ -646,7 +671,7 @@ static int firstbit(char c)
   int i;
   assert(c!=0);
   
-  for( i=0; i<8; i++)
+  for ( i=0; i<8; i++)
   {
     if (c & 1)
       return i;
@@ -672,7 +697,7 @@ streng *arexx_bitcomp( tsd_t *TSD, cparamboxptr parm1 )
   parm2 = parm1->next;
   
   /* Make s2 always shorter or equal to s1 */
-  if( parm1->value->len < parm2->value->len )
+  if ( parm1->value->len < parm2->value->len )
   {
     s1 = parm2->value;
     s2 = parm1->value;
@@ -681,7 +706,7 @@ streng *arexx_bitcomp( tsd_t *TSD, cparamboxptr parm1 )
     s2 = parm2->value;
   }
   
-  for( cp1=s1->value+s1->len-1, cp2=s2->value+s2->len-1, i=0;
+  for ( cp1=s1->value+s1->len-1, cp2=s2->value+s2->len-1, i=0;
        cp2 >= s2->value;
        cp1--, cp2--, i++ )
   {
@@ -719,7 +744,7 @@ streng *arexx_hash( tsd_t *TSD, cparamboxptr parm1 )
   checkparam( parm1, 1, 1, "HASH" );
 
   uc = (unsigned char *)parm1->value->value;
-  for( i=0; i<parm1->value->len; i++)
+  for ( i=0; i<parm1->value->len; i++)
   {
     sum = (sum + uc[i]) & 255;
   }
@@ -739,7 +764,7 @@ streng *arexx_compress( tsd_t *TSD, cparamboxptr parm1 )
   match = ( parm1->next!=NULL ) ? str_of( TSD, parm1->next->value ) : " ";
 
   ret = Str_dup_TSD( TSD, parm1->value );
-  for( i=start=0; i<ret->len; i++ )
+  for ( i=start=0; i<ret->len; i++ )
   {
     /* Copy char if not found */
     if ( strchr( match, ret->value[i] )==NULL )
@@ -1101,9 +1126,6 @@ streng *arexx_show( tsd_t *TSD, cparamboxptr parm1 )
  */
 #if defined(_AMIGA) || defined(__AROS__)
 
-#include <proto/dos.h>
-#include <rexx/storage.h>
-
 #include "rxiface.h"
 
 struct envir *amiga_find_envir( const tsd_t *TSD, const streng *name )
@@ -1411,7 +1433,7 @@ streng *arexx_setclip( tsd_t *TSD, cparamboxptr parm1 )
     Free_TSD( TSD, (void *)msg->rm_Args[0] );
     DeleteRexxMsg( msg );
     DeletePort( replyport );
-    exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+    exiterror( ERR_EXTERNAL_QUEUE, 0 );
   }
   PutMsg( rexxport, (struct Message *)msg );
   
@@ -1447,4 +1469,96 @@ streng *arexx_getclip( tsd_t *TSD, cparamboxptr parm1 )
     return Str_ncre_TSD( TSD, (const char *)rsrc->rr_Arg1, LengthArgstring( (UBYTE *)rsrc->rr_Arg1 ) );
 }
 
+streng *arexx_pragma( tsd_t *TSD, cparamboxptr parm1 )
+{
+  cparamboxptr parm2;
+  streng *retval;
+  static char buf[1024];
+  
+  checkparam( parm1, 1, 2, "PRAGMA" );
+  parm2 = parm1->next;
+  
+  switch( getoptionchar( TSD, parm1->value, "PRAGMA", 1, "DPIS" ) )
+  {
+  case 'D':
+    {
+      BPTR lock = CurrentDir( NULL );
+      
+      NameFromLock( lock, buf, 1023 );
+      CurrentDir( lock );
+      retval = Str_cre_TSD( TSD, buf );
+      if ( parm2 != NULL && parm2->value != NULL && parm2->value->len != 0 )
+      {
+	struct FileInfoBlock *fib;
+	char *name = str_of( TSD, parm2->value );
+
+	lock = Lock( name, ACCESS_READ );
+      
+	Free_TSD( TSD, name );
+	
+	fib = AllocDosObject( DOS_FIB, NULL );
+	if ( fib == NULL )
+	{
+	  if ( lock != NULL )
+	    UnLock( (BPTR)lock );
+	  exiterror( ERR_STORAGE_EXHAUSTED, 0 );
+	}
+
+	if ( lock != NULL )
+	  Examine( lock, fib );
+      
+	if ( lock == NULL || fib->fib_DirEntryType <= 0 )
+	{
+	  FreeDosObject( DOS_FIB, fib );
+	  Free_string_TSD( TSD, retval );
+	  retval = nullstringptr();
+	}
+	else
+	{
+	  UnLock( CurrentDir( lock ) );
+	  FreeDosObject( DOS_FIB, fib );
+	}
+      }
+    }
+    break;
+
+  case 'P':
+    {
+      struct Task *task = FindTask( NULL );
+      retval = int_to_streng( TSD, (int)task->tc_Node.ln_Pri );
+      if ( parm2 != NULL && parm2->value != NULL && parm2->value->len != 0 )
+      {
+	int pri, error;
+	pri = streng_to_int( TSD, parm2->value, &error );
+	if ( error )
+	  exiterror( ERR_INCORRECT_CALL, 11, "PRAGMA", 2, tmpstr_of( TSD, parm2->value ) );
+	if ( abs(pri) > 127 )
+	  exiterror( ERR_INCORRECT_CALL, 0 );
+	SetTaskPri( task, pri );
+      }
+    }
+    break;
+      
+  case 'I':
+    {
+      char s[10];
+      sprintf(s, "%8X", (int)FindTask( NULL ) );
+      if ( parm2 != NULL && parm2->value != NULL )
+	exiterror( ERR_INCORRECT_CALL, 4, "PRAGMA", 1 );
+      retval = Str_cre_TSD( TSD, s );
+    }
+    break;
+      
+  case 'S':
+    {
+      struct Process *process = (struct Process *)FindTask( NULL );
+      ULONG size = (ULONG)((char *)process->pr_Task.tc_SPUpper - (char *)process->pr_Task.tc_SPLower);
+      retval = int_to_streng( TSD, size );
+#warning second argument ignored because stack size increase is not implemented
+    }
+    break;
+  }
+  
+  return retval;
+}
 #endif /* _AMIGA || __AROS__ */

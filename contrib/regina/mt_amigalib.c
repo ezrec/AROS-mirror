@@ -59,24 +59,15 @@ static void MTExit(int code)
    exit(code);
 }
 
-static void cleanup(void)
+static void cleanup(int dummy, void *ptr)
 {
   struct Task *thistask = FindTask(NULL);
-  tsd_node_t *node;
-  mt_tsd_t *mt;
+  tsd_node_t *node = (tsd_node_t *)ptr;
+  mt_tsd_t *mt = (mt_tsd_t *)node->TSD->mt_tsd;
 
-  node = (tsd_node_t *)GetHead(__regina_tsdlist);
-  while (node!=NULL && node->task!=thistask)
-    node = (tsd_node_t *)GetSucc(node);
-  if (node==NULL)
-  {
-    fputs("!!!NODE==NULL!!!", stderr);
-  }
-
-  mt = (mt_tsd_t *)node->TSD->mt_tsd;
   DeletePool( mt->mempool );
 
-  node->TSD = NULL; /* Node is not removed to avoid the need of Forbid/Permit during searching of the list */
+  node->TSD = NULL; /* Node is cleared */
 }
 
 tsd_t *ReginaInitializeThread(void)
@@ -186,12 +177,12 @@ tsd_t *__regina_get_tsd(void)
     node->task = thistask;
     node->TSD = ReginaInitializeThread();
     AddTail(__regina_tsdlist, node);
-    atexit(cleanup);
+    on_exit(cleanup, node);
   }
   else if (node->TSD==NULL) /* Was MTExit called on this task ? */
   {
     node->TSD = ReginaInitializeThread();
-    atexit(cleanup);
+    on_exit(cleanup, node);
   }
 
   return node->TSD;

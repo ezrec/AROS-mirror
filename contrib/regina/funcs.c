@@ -193,6 +193,9 @@ static const struct function_type functions[] = {
   { 0,              std_overlay, "OVERLAY" },
   { 0,              unx_popen, "POPEN" },
   { 0,              std_pos, "POS" },
+#if defined(_AMIGA) || defined(__AROS__)
+  { 0,              arexx_pragma, "PRAGMA" },
+#endif
   { 0,              std_qualify, "QUALIFY" },
   { 0,              std_queued, "QUEUED" },
   { 0,              std_random, "RANDOM" },

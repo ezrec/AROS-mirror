@@ -4,41 +4,6 @@
   PS: Probably don't want to remove the wrapper functions so regina can be
       backported to Classic Amiga OS.
 * Implement the external queue function (compile without NO_EXTERNAL_QUEUES).
-* Add ARexx specific functions
-  To implement:
-  - PRAGMA
-  Implemented:
-  - CLOSE
-  - EOF
-  - OPEN
-  - READCH
-  - READLN
-  - SEEK
-  - WRITECH
-  - WRITECH
-  - B2C
-  - C2B
-  - BITCHG
-  - BITCLR
-  - BITSET
-  - BITTST
-  - COMPRESS
-  - HASH
-  - TRIM
-  - UPPER
-  - BITCOMP
-  - RANDU
-  - ADDLIB
-  - REMLIB
-  - SETCLIP
-  - GETCLIP
-  - FREESPACE
-  - GETSPACE
-  - EXPORT
-  - IMPORT
-  - STORAGE
-  - EXISTS
-  - SHOW
 * Fix the ARexx vs. ANSI REXX incompatibilies.
   These are: ^ is XOR in ARexx but is not in ANSI REXX.
   Multiple line strings in ARexx are not there in ASNI REXX and are said
@@ -48,4 +13,10 @@
 * At the moment in regina the name given to an open file is case insensitive.
   In ARexx this is case sensitive e.g. 'Test' is a different name then 'test'.
 * STDOUT and STDIN file names are not handled at the moment.
+* In ARexx the pragma function can be used to increase the stack size of the
+  running script. At the moment this is not implemented in regina. I think
+  this will need some hacking with setjmp/longjmp because in normal
+  execution the code for pragma is executed in a function so calling
+  StackSwap in this function and then returning from the function will cause
+  havoc.
 * and probably a lot more ...
