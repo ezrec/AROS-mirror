@@ -176,6 +176,7 @@ blair:abcez7uKpJ.1c:Ryan Blair:blairrya@msu.edu:
 cehbab:bcEDh55PmBUGM:Craig Huggins:craigh@onyaphone.com:
 laire:acO68haqN3H.M:Ralph Schmidt:laire@t-online.de:
 dlc:bbIheNodwoeSQ:David Le Corfec:dlc@freesurf.fr:
+dlecorfec:bbIheNodwoeSQ:David Le Corfec:dlc@freesurf.fr:
 tadran:cbSYZJ1KbZ8bQ:Thomas Ernst:Tadran@gmx.net:
 damato:abZixydNe5tc6:Jens Langner:Jens.Langner@htw-dresden.de:
 morgoth6:ac4YoYB6Qm26o:Marcin Kurek:morgoth6@box43.pl:
