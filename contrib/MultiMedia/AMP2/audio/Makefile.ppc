@@ -1,0 +1,40 @@
+#
+# Makefile
+#
+
+CC=pgcc -V 2.95.3 -warpup
+AR=ppc-amigaos-ar
+RANLIB=ppc-amigaos-ranlib
+OPT=-O3 -fomit-frame-pointer -ffast-math -mcpu=604e
+CFLAGS=-Wall $(OPT)
+LDFLAGS=$(CFLAGS) -Wl,--warn-common
+
+LIB=objppc/libamiaudio.a
+
+# objects
+OBJS=objppc/ahi.o objppc/paula.o objppc/main.o objppc/paula_68k.o
+
+# make rules
+all: int default
+default: $(LIB)
+
+clean:
+	rm -f objppc/*.o objppc/*.a
+	make -f Makefile.int clean
+
+$(LIB): $(OBJS)
+	rm -f $(LIB)
+	$(AR) cr $(LIB) $(OBJS)
+	$(RANLIB) $(LIB)
+	copy $(LIB) ADE:ppc-amigaos/lib/
+
+int:
+	make -f Makefile.int
+
+# rules
+objppc/%.o : %.c
+	$(CC) $(CFLAGS) -o $@ -c $*.c
+
+# dependencies
+objppc/ahi.o objppc/paula.o objppc/main.o : ahi.h paula.h
+

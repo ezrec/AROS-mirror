@@ -1,0 +1,40 @@
+#
+# Makefile
+#
+
+CC=gcc -V 2.95.3
+AR=ar
+RANLIB=ranlib
+OPT=-O3 -fomit-frame-pointer -ffast-math -m68040
+CFLAGS=-Wall $(OPT)
+LDFLAGS=$(CFLAGS) -Wl,--warn-common
+
+LIB=obj68k/libamiaudio.a
+
+# objects
+OBJS=obj68k/ahi.o obj68k/paula.o obj68k/main.o obj68k/paula_68k.o
+
+# make rules
+all: int default
+default: $(LIB)
+
+clean:
+	rm -f obj68k/*.o obj68k/*.a
+	make -f Makefile.int clean
+
+$(LIB): $(OBJS)
+	rm -f $(LIB)
+	$(AR) cr $(LIB) $(OBJS)
+	$(RANLIB) $(LIB)
+	copy $(LIB) ADE:m68k-amigaos/lib/
+
+int:
+	make -f Makefile.int
+
+# rules
+obj68k/%.o : %.c
+	$(CC) $(CFLAGS) -o $@ -c $*.c
+
+# dependencies
+obj68k/ahi.o obj68k/paula.o obj68k/main.o : ahi.h paula.h
+

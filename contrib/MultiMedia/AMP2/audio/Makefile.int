@@ -1,0 +1,32 @@
+#
+# Makefile
+#
+
+CC=gcc -V 2.95.3
+
+OPT=-O3 -fomit-frame-pointer -ffast-math -m68040
+CFLAGS=-Wall $(OPT)
+LDFLAGS=$(CFLAGS) -Wl,--warn-common
+
+EXE=make_int.exe
+
+# objects
+OBJ1=make_int.o
+OBJ2=paula_int.o
+OBJS=$(OBJ1) $(OBJ2)
+
+# make rules
+all: default
+default: $(EXE)
+
+clean:
+	rm -f *.o *.exe paula_68k.c
+
+$(EXE): $(OBJS)
+	$(CC) -o $(EXE) $(OBJ1) $(LDFLAGS)
+	$(EXE)
+
+# rules
+$(OBJS) : %.o : %.c
+	$(CC) $(CFLAGS) -o $@ -c $*.c
+
