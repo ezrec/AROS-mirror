@@ -1,9 +1,0 @@
-* "ahi_sub.library"
-##base _AHIsubBase
-##bias 0
-##public
-LibInit(library,seglist,SysBase)(d0,a0,a6)
-LibOpen(version)(d0)
-LibClose()()
-LibExpunge()()
-LibNull()()
