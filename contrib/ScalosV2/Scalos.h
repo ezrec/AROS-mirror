@@ -28,7 +28,7 @@
 #include <intuition/intuition.h>
 #endif /* INTUITION_INTUITION_H */
 
-#ifndef INTUITION_INTUITION_H
+#ifndef INTUITION_CLASSUSR_H
 #include <intuition/classusr.h>
 #endif /* INTUITION_INTUITION_H */
 
