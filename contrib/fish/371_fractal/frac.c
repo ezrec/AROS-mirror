@@ -97,7 +97,7 @@ do
 SetMenuStrip(wdw,menptr);
 Wait(1L << wdw->UserPort->mp_SigBit);
 ClearMenuStrip(wdw);
-   while(imsg=(struct IntuiMessage *)GetMsg(wdw->UserPort))
+   while((imsg=(struct IntuiMessage *)GetMsg(wdw->UserPort)))
       {
        class=imsg->Class;
        code=imsg->Code;
