@@ -33,9 +33,8 @@
 #define P_INVLAMBDA 4
 #define P_TRANLAMBDA 5
 #define P_MEREBERG 6
-extern void 
-recalculate (int plane, number_t *, number_t *) 
-REGISTERS (3) CONSTF;
-     extern char *planename[];
+// extern void recalculate (int plane, number_t *, number_t *) REGISTERS (3) CONSTF;
+extern void recalculate (int plane, number_t *, number_t *);
+extern char *planename[];
 
 #endif /* PLANE_H */

@@ -25,7 +25,7 @@ char *xtextposnames[] =
 {"left", "center", "right", NULL};
 char *ytextposnames[] =
 {"top", "middle", "bottom", NULL};
-static void outputerror (struct uih_context *uih) REGISTERS (3);
+// static void outputerror (struct uih_context *uih) REGISTERS (3);
 static void outputerror (struct uih_context *uih)
 {
   static char error[245];
@@ -35,10 +35,8 @@ static void outputerror (struct uih_context *uih)
   uih->errstring = error;
   uih->savec->writefailed = 1;
 }
-static void
-start_save (struct uih_context *uih, char *name) 
-REGISTERS (3);
-     static void start_save (struct uih_context *uih, char *name)
+// static void start_save (struct uih_context *uih, char *name) REGISTERS (3);
+static void start_save (struct uih_context *uih, char *name)
 {
   if (!changed && !uih->savec->firsttime)
     {
@@ -50,19 +48,15 @@ REGISTERS (3);
   myputs (name);
   first = 0;
 }
-static void
-stop_save (struct uih_context *uih) 
-REGISTERS (3);
-     static void stop_save (struct uih_context *uih)
+// static void stop_save (struct uih_context *uih) REGISTERS (3);
+static void stop_save (struct uih_context *uih)
 {
   myputc (')');
   myputc ('\n');
 }
 #ifdef SAVEKEYWORDUSED
-static void
-save_keyword (struct uih_context *uih, char *name) 
-REGISTERS (3);
-     static void save_keyword (struct uih_context *uih, char *name)
+// static void save_keyword (struct uih_context *uih, char *name) REGISTERS (3);
+static void save_keyword (struct uih_context *uih, char *name)
 {
   if (!first)
     myputc (' ');
@@ -71,10 +65,8 @@ REGISTERS (3);
   myputs (name);
 }
 #endif
-static void
-save_keystring (struct uih_context *uih, char *name) 
-REGISTERS (3);
-     static void save_keystring (struct uih_context *uih, char *name)
+// static void save_keystring (struct uih_context *uih, char *name) REGISTERS (3);
+static void save_keystring (struct uih_context *uih, char *name)
 {
   if (!first)
     myputc (' ');
@@ -83,10 +75,8 @@ REGISTERS (3);
   myputc ('\'');
   myputs (name);
 }
-static void
-save_float (struct uih_context *uih, number_t number) 
-REGISTERS (3);
-     static void save_float (struct uih_context *uih, number_t number)
+// static void save_float (struct uih_context *uih, number_t number) REGISTERS (3);
+static void save_float (struct uih_context *uih, number_t number)
 {
   if (!first)
     myputc (' ');
@@ -99,10 +89,8 @@ REGISTERS (3);
   myprintf ("%.20G", (double) number);
 #endif
 }
-static void
-save_float2 (struct uih_context *uih, number_t number, int places) 
-REGISTERS (3);
-     static void save_float2 (struct uih_context *uih, number_t number, int places)
+// static void save_float2 (struct uih_context *uih, number_t number, int places) REGISTERS (3);
+static void save_float2 (struct uih_context *uih, number_t number, int places)
 {
   char fs[10];
   if (!first)
@@ -121,10 +109,8 @@ REGISTERS (3);
   myprintf (fs, (double) number);
 #endif
 }
-static void
-save_int (struct uih_context *uih, int number) 
-REGISTERS (3);
-     static void save_int (struct uih_context *uih, int number)
+// static void save_int (struct uih_context *uih, int number) REGISTERS (3);
+static void save_int (struct uih_context *uih, int number)
 {
   if (!first)
     myputc (' ');
@@ -132,10 +118,8 @@ REGISTERS (3);
     first = 0;
   myprintf ("%i", number);
 }
-static void
-save_onoff (struct uih_context *uih, int number) 
-REGISTERS (3);
-     static void save_onoff (struct uih_context *uih, int number)
+// static void save_onoff (struct uih_context *uih, int number) REGISTERS (3);
+static void save_onoff (struct uih_context *uih, int number)
 {
   if (!first)
     myputc (' ');
@@ -143,10 +127,8 @@ REGISTERS (3);
     first = 0;
   myputs (number ? "#t" : "#f");
 }
-static void
-save_string (struct uih_context *uih, char *text) 
-REGISTERS (3);
-     static void save_string (struct uih_context *uih, char *text)
+// static void save_string (struct uih_context *uih, char *text) REGISTERS (3);
+static void save_string (struct uih_context *uih, char *text)
 {
   int i = 0;
   if (!first)
@@ -163,89 +145,69 @@ REGISTERS (3);
     }
   myputc ('"');
 }
-static void
-save_intc (struct uih_context *uih, char *name, int number) 
-REGISTERS (3);
-     static void save_intc (struct uih_context *uih, char *name, int number)
+// static void save_intc (struct uih_context *uih, char *name, int number) REGISTERS (3);
+static void save_intc (struct uih_context *uih, char *name, int number)
 {
   start_save (uih, name);
   save_int (uih, number);
   stop_save (uih);
 }
-static void
-save_onoffc (struct uih_context *uih, char *name, int number) 
-REGISTERS (3);
-     static void save_onoffc (struct uih_context *uih, char *name, int number)
+// static void save_onoffc (struct uih_context *uih, char *name, int number) REGISTERS (3);
+static void save_onoffc (struct uih_context *uih, char *name, int number)
 {
   start_save (uih, name);
   save_onoff (uih, number);
   stop_save (uih);
 }
-static void
-save_floatc (struct uih_context *uih, char *name, number_t number) 
-REGISTERS (3);
-     static void save_floatc (struct uih_context *uih, char *name, number_t number)
+// static void save_floatc (struct uih_context *uih, char *name, number_t number) REGISTERS (3);
+static void save_floatc (struct uih_context *uih, char *name, number_t number)
 {
   start_save (uih, name);
   save_float (uih, number);
   stop_save (uih);
 }
-static void
-save_float2c (struct uih_context *uih, char *name, number_t number, int places) 
-REGISTERS (3);
-     static void save_float2c (struct uih_context *uih, char *name, number_t number, int places)
+// static void save_float2c (struct uih_context *uih, char *name, number_t number, int places) REGISTERS (3);
+static void save_float2c (struct uih_context *uih, char *name, number_t number, int places)
 {
   start_save (uih, name);
   save_float2 (uih, number, places);
   stop_save (uih);
 }
-static void
-save_coordc (struct uih_context *uih, char *name, number_t number, number_t number2) 
-REGISTERS (3);
-     static void save_coordc (struct uih_context *uih, char *name, number_t number, number_t number2)
+// static void save_coordc (struct uih_context *uih, char *name, number_t number, number_t number2) REGISTERS (3);
+static void save_coordc (struct uih_context *uih, char *name, number_t number, number_t number2)
 {
   start_save (uih, name);
   save_float (uih, number);
   save_float (uih, number2);
   stop_save (uih);
 }
-static void
-save_keystringc (struct uih_context *uih, char *name, char *param) 
-REGISTERS (3);
-     static void save_keystringc (struct uih_context *uih, char *name, char *param)
+// static void save_keystringc (struct uih_context *uih, char *name, char *param) REGISTERS (3);
+static void save_keystringc (struct uih_context *uih, char *name, char *param)
 {
   start_save (uih, name);
   save_keystring (uih, param);
   stop_save (uih);
 }
-static void
-save_stringc (struct uih_context *uih, char *name, char *param) 
-REGISTERS (3);
-     static void save_stringc (struct uih_context *uih, char *name, char *param)
+// static void save_stringc (struct uih_context *uih, char *name, char *param) REGISTERS (3);
+static void save_stringc (struct uih_context *uih, char *name, char *param)
 {
   start_save (uih, name);
   save_string (uih, param);
   stop_save (uih);
 }
-static void
-save_noparam (struct uih_context *uih, char *name) 
-REGISTERS (3);
-     static void save_noparam (struct uih_context *uih, char *name)
+// static void save_noparam (struct uih_context *uih, char *name) REGISTERS (3);
+static void save_noparam (struct uih_context *uih, char *name)
 {
   start_save (uih, name);
   stop_save (uih);
 }
-static void
-save_nstring (struct uih_context *uih, int number, char **texts) 
-REGISTERS (3);
-     static void save_nstring (struct uih_context *uih, int number, char **texts)
+// static void save_nstring (struct uih_context *uih, int number, char **texts) REGISTERS (3);
+static void save_nstring (struct uih_context *uih, int number, char **texts)
 {
   save_keystring (uih, texts[number]);
 }
-static void
-save_nstringc (struct uih_context *uih, char *name, int number, char **texts) 
-REGISTERS (3);
-     static void save_nstringc (struct uih_context *uih, char *name, int number, char **texts)
+// static void save_nstringc (struct uih_context *uih, char *name, int number, char **texts) REGISTERS (3);
+static void save_nstringc (struct uih_context *uih, char *name, int number, char **texts)
 {
   save_keystringc (uih, name, texts[number]);
 }
@@ -262,10 +224,8 @@ ndecimals (struct uih_context *uih)
   for (i = 0; i < 20 && m < n; i++, n /= 10);
   return (i);
 }
-static void
-savepos (struct uih_context *uih) 
-REGISTERS (3);
-     static void savepos (struct uih_context *uih)
+// static void savepos (struct uih_context *uih) REGISTERS (3);
+static void savepos (struct uih_context *uih)
 {
   int n = ndecimals (uih);
   start_save (uih, "view");
@@ -276,10 +236,8 @@ REGISTERS (3);
   stop_save (uih);
   uih->savec->fcontext->s = uih->fcontext->s;
 }
-static void
-savepos2 (struct uih_context *uih) 
-REGISTERS (3);
-     static void savepos2 (struct uih_context *uih)
+// static void savepos2 (struct uih_context *uih) REGISTERS (3);
+static void savepos2 (struct uih_context *uih)
 {
   int n = ndecimals (uih);
   start_save (uih, "animateview");
@@ -290,10 +248,8 @@ REGISTERS (3);
   stop_save (uih);
   uih->savec->fcontext->s = uih->fcontext->s;
 }
-static void
-savepos3 (struct uih_context *uih) 
-REGISTERS (3);
-     static void savepos3 (struct uih_context *uih)
+// static void savepos3 (struct uih_context *uih) REGISTERS (3);
+static void savepos3 (struct uih_context *uih)
 {
   int n = ndecimals (uih);
   start_save (uih, "morphview");

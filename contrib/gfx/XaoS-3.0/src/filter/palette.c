@@ -440,10 +440,8 @@ static CONST unsigned char colors1[DEFNSEGMENTS][3] =
 static struct palette *context;
 static int maxentries;
 static int needupdate;
-static int 
-allocate (int r, int g, int b, int init) REGISTERS (3);
-     static int
-       allocate (int r, int g, int b, int init)
+// static int allocate (int r, int g, int b, int init) REGISTERS (3);
+static int allocate (int r, int g, int b, int init)
 {
   unsigned int n = context->pixels[(init ? 0 : context->size) /*+ context->start */ ];
   if (!init && context->size == maxentries)

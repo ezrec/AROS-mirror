@@ -114,7 +114,8 @@ struct ui_driver
     int palettestart, paletteend, maxentries;
   };
 
-void ui_menu (char **text, char *label, int n, void (*callback) (int)) REGISTERS (3);
+// void ui_menu (char **text, char *label, int n, void (*callback) (int)) REGISTERS (3);
+void ui_menu (char **text, char *label, int n, void (*callback) (int));
 #ifndef RANDOM_PALETTE_SIZE
 #define RANDOM_PALETTE_SIZE 1	/*FIXME currently ignored */
 #define FULLSCREEN 2

@@ -240,10 +240,8 @@ char *calculated;
 
 number_t *xcoord, *ycoord;
 #ifndef inline
-static int
-calculatepixel (int x, int y, int peri)
-REGISTERS (3) CONSTF;
-     static int calculatepixel (int x, int y, int peri)
+// static int calculatepixel (int x, int y, int peri) REGISTERS (3) CONSTF;
+static int calculatepixel (int x, int y, int peri)
 {
   return (calculate (xcoord[x], ycoord[y], peri));
 }
@@ -252,34 +250,42 @@ REGISTERS (3) CONSTF;
 #endif
 #define putpixel(x,y,c) p_setp((cpixel_t *)cimage.currlines[y],x,c)
 #define getpixel(x,y) p_getp((cpixel_t *)cimage.currlines[y],x)
-#include <c256.h>
-#define tracecolor tracecolor8
-#define tracepoint tracepoint8
-#define dosymetries dosymetries8
-#define queue queue8
-#define bfill bfill8
-#include "btraced.c"
-#include <hicolor.h>
-#define tracecolor tracecolor16
-#define tracepoint tracepoint16
-#define dosymetries dosymetries16
-#define queue queue16
-#define bfill bfill16
-#include "btraced.c"
-#include <true24.h>
-#define tracecolor tracecolor24
-#define tracepoint tracepoint24
-#define dosymetries dosymetries24
-#define queue queue24
-#define bfill bfill24
-#include "btraced.c"
-#include <truecolor.h>
-#define tracecolor tracecolor32
-#define tracepoint tracepoint32
-#define dosymetries dosymetries32
-#define queue queue32
-#define bfill bfill32
-#include "btraced.c"
+#define tracecolor8(x...)	// FIXME dummy
+#define tracecolor16(x...)	// FIXME dummy
+#define tracecolor24(x...)	// FIXME dummy
+#define tracecolor32(x...)	// FIXME dummy
+#define dosymetries8(x...)	// FIXME dummy
+#define dosymetries16(x...)	// FIXME dummy
+#define dosymetries24(x...)	// FIXME dummy
+#define dosymetries32(x...)	// FIXME dummy
+// #include <c256.h>
+// #define tracecolor tracecolor8
+// #define tracepoint tracepoint8
+// #define dosymetries dosymetries8
+// #define queue queue8
+// #define bfill bfill8
+// #include "btraced.c"
+// #include <hicolor.h>
+// #define tracecolor tracecolor16
+// #define tracepoint tracepoint16
+// #define dosymetries dosymetries16
+// #define queue queue16
+// #define bfill bfill16
+// #include "btraced.c"
+// #include <true24.h>
+// #define tracecolor tracecolor24
+// #define tracepoint tracepoint24
+// #define dosymetries dosymetries24
+// #define queue queue24
+// #define bfill bfill24
+// #include "btraced.c"
+// #include <truecolor.h>
+// #define tracecolor tracecolor32
+// #define tracepoint tracepoint32
+// #define dosymetries dosymetries32
+// #define queue queue32
+// #define bfill bfill32
+// #include "btraced.c"
 #ifndef SLOWCACHESYNC
 #ifndef nthreads
 static int

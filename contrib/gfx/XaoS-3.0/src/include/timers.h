@@ -99,6 +99,8 @@ int tl_process_group (tl_group * group, int *activated);
 extern tl_group *syncgroup, *asyncgroup;
 void tl_sleep (int);
 void tl_allegromode (int mode);	/*Just for djgpp */
-int tl_lookup_timer (tl_timer * t) REGISTERS (3);
-void tl_reset_timer (tl_timer * t) REGISTERS (3);
+// int tl_lookup_timer (tl_timer * t) REGISTERS (3);
+// void tl_reset_timer (tl_timer * t) REGISTERS (3);
+int tl_lookup_timer (tl_timer * t);
+void tl_reset_timer (tl_timer * t);
 #endif /* TIMER_H */
