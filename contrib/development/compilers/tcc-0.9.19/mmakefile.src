@@ -1,0 +1,23 @@
+include $(TOP)/config/make.cfg
+
+FILES  := tcc
+
+EXEDIR := $(CONTRIBDIR)/Development/TCC-0.9.19
+EXE    := $(EXEDIR)/tcc
+
+USE_CLIB_SHARED := yes
+USE_AMIGALIB    := yes
+USE_MLIB        := yes
+
+USER_CFLAGS  := -O2 -g -Wall -DCONFIG_TCC_STATIC
+USER_LDFLAGS := -ltcc1
+
+#MM contrib-development-compilers-tcc-0.9.19 : linklibs-tcc1
+
+contrib-development-compilers-tcc-0.9.19 : setup $(EXE)
+%make_prog_setup mmake=contrib-development-compilers-tcc-0.9.19
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+setup ::
+	cp ./stdarg.h $(EXEDIR)
+%common
+%include_deps

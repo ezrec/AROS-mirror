@@ -1,0 +1,45 @@
+#
+# Tiny C Compiler Makefile for linking to uClibc
+#
+# Get the latest uClibc, compile it and install it; then
+# use this makefile to build tcc
+#
+# NOTE: you must enable floating point (HAS_FLOATING_POINT = true) and
+# C99 math (DO_C99_MATH = true) in the uClibc config file.
+#
+# If you use the old uClibc 0.9.9 you also need to disable its
+# one-call optimization for syscalls (UNIFIED_SYSCALL = false)
+#
+
+UCLIBC=/usr/i386-linux-uclibc
+
+CC=$(UCLIBC)/bin/gcc
+LDD=$(UCLIBC)/bin/ldd
+STRIP=$(UCLIBC)/bin/strip
+
+CFLAGS=-O2 -Wall -m386 -malign-functions=0 -fomit-frame-pointer -DTCC_UCLIBC
+
+LFLAGS=-Wl,-warn-common -ldl -lm
+
+
+# rules
+
+all: tcc
+
+tcc.o: tcc.c
+	$(CC) -c $(CFLAGS) $< -o $@
+	
+tcc_g: tcc.o
+	$(CC) $(CFLAGS) $(LFLAGS) $< -o $@
+	
+tcc: tcc_g
+	$(STRIP) -s -R .comment -R .note -o $@ $<
+	@echo ""
+	@ls -l $@
+	@echo ""
+	@size $@
+	@echo ""
+	@$(LDD) $@
+
+# --- the end ---
+

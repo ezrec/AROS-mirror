@@ -1,0 +1,408 @@
+.rn '' }`
+''' $RCSfile$$Revision$$Date$
+'''
+''' $Log$
+''' Revision 1.1  2003/07/08 16:08:18  henrik
+''' Initial revision
+'''
+'''
+.de Sh
+.br
+.if t .Sp
+.ne 5
+.PP
+\fB\\$1\fR
+.PP
+..
+.de Sp
+.if t .sp .5v
+.if n .sp
+..
+.de Ip
+.br
+.ie \\n(.$>=3 .ne \\$3
+.el .ne 3
+.IP "\\$1" \\$2
+..
+.de Vb
+.ft CW
+.nf
+.ne \\$1
+..
+.de Ve
+.ft R
+
+.fi
+..
+'''
+'''
+'''     Set up \*(-- to give an unbreakable dash;
+'''     string Tr holds user defined translation string.
+'''     Bell System Logo is used as a dummy character.
+'''
+.tr \(*W-|\(bv\*(Tr
+.ie n \{\
+.ds -- \(*W-
+.ds PI pi
+.if (\n(.H=4u)&(1m=24u) .ds -- \(*W\h'-12u'\(*W\h'-12u'-\" diablo 10 pitch
+.if (\n(.H=4u)&(1m=20u) .ds -- \(*W\h'-12u'\(*W\h'-8u'-\" diablo 12 pitch
+.ds L" ""
+.ds R" ""
+'''   \*(M", \*(S", \*(N" and \*(T" are the equivalent of
+'''   \*(L" and \*(R", except that they are used on ".xx" lines,
+'''   such as .IP and .SH, which do another additional levels of
+'''   double-quote interpretation
+.ds M" """
+.ds S" """
+.ds N" """""
+.ds T" """""
+.ds L' '
+.ds R' '
+.ds M' '
+.ds S' '
+.ds N' '
+.ds T' '
+'br\}
+.el\{\
+.ds -- \(em\|
+.tr \*(Tr
+.ds L" ``
+.ds R" ''
+.ds M" ``
+.ds S" ''
+.ds N" ``
+.ds T" ''
+.ds L' `
+.ds R' '
+.ds M' `
+.ds S' '
+.ds N' `
+.ds T' '
+.ds PI \(*p
+'br\}
+.\"	If the F register is turned on, we'll generate
+.\"	index entries out stderr for the following things:
+.\"		TH	Title 
+.\"		SH	Header
+.\"		Sh	Subsection 
+.\"		Ip	Item
+.\"		X<>	Xref  (embedded
+.\"	Of course, you have to process the output yourself
+.\"	in some meaninful fashion.
+.if \nF \{
+.de IX
+.tm Index:\\$1\t\\n%\t"\\$2"
+..
+.nr % 0
+.rr F
+.\}
+.TH TCC 1 " " "24/May/2003" " "
+.UC
+.if n .hy 0
+.if n .na
+.ds C+ C\v'-.1v'\h'-1p'\s-2+\h'-1p'+\s0\v'.1v'\h'-1p'
+.de CQ          \" put $1 in typewriter font
+.ft CW
+'if n "\c
+'if t \\&\\$1\c
+'if n \\&\\$1\c
+'if n \&"
+\\&\\$2 \\$3 \\$4 \\$5 \\$6 \\$7
+'.ft R
+..
+.\" @(#)ms.acc 1.5 88/02/08 SMI; from UCB 4.2
+.	\" AM - accent mark definitions
+.bd B 3
+.	\" fudge factors for nroff and troff
+.if n \{\
+.	ds #H 0
+.	ds #V .8m
+.	ds #F .3m
+.	ds #[ \f1
+.	ds #] \fP
+.\}
+.if t \{\
+.	ds #H ((1u-(\\\\n(.fu%2u))*.13m)
+.	ds #V .6m
+.	ds #F 0
+.	ds #[ \&
+.	ds #] \&
+.\}
+.	\" simple accents for nroff and troff
+.if n \{\
+.	ds ' \&
+.	ds ` \&
+.	ds ^ \&
+.	ds , \&
+.	ds ~ ~
+.	ds ? ?
+.	ds ! !
+.	ds /
+.	ds q
+.\}
+.if t \{\
+.	ds ' \\k:\h'-(\\n(.wu*8/10-\*(#H)'\'\h"|\\n:u"
+.	ds ` \\k:\h'-(\\n(.wu*8/10-\*(#H)'\`\h'|\\n:u'
+.	ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'^\h'|\\n:u'
+.	ds , \\k:\h'-(\\n(.wu*8/10)',\h'|\\n:u'
+.	ds ~ \\k:\h'-(\\n(.wu-\*(#H-.1m)'~\h'|\\n:u'
+.	ds ? \s-2c\h'-\w'c'u*7/10'\u\h'\*(#H'\zi\d\s+2\h'\w'c'u*8/10'
+.	ds ! \s-2\(or\s+2\h'-\w'\(or'u'\v'-.8m'.\v'.8m'
+.	ds / \\k:\h'-(\\n(.wu*8/10-\*(#H)'\z\(sl\h'|\\n:u'
+.	ds q o\h'-\w'o'u*8/10'\s-4\v'.4m'\z\(*i\v'-.4m'\s+4\h'\w'o'u*8/10'
+.\}
+.	\" troff and (daisy-wheel) nroff accents
+.ds : \\k:\h'-(\\n(.wu*8/10-\*(#H+.1m+\*(#F)'\v'-\*(#V'\z.\h'.2m+\*(#F'.\h'|\\n:u'\v'\*(#V'
+.ds 8 \h'\*(#H'\(*b\h'-\*(#H'
+.ds v \\k:\h'-(\\n(.wu*9/10-\*(#H)'\v'-\*(#V'\*(#[\s-4v\s0\v'\*(#V'\h'|\\n:u'\*(#]
+.ds _ \\k:\h'-(\\n(.wu*9/10-\*(#H+(\*(#F*2/3))'\v'-.4m'\z\(hy\v'.4m'\h'|\\n:u'
+.ds . \\k:\h'-(\\n(.wu*8/10)'\v'\*(#V*4/10'\z.\v'-\*(#V*4/10'\h'|\\n:u'
+.ds 3 \*(#[\v'.2m'\s-2\&3\s0\v'-.2m'\*(#]
+.ds o \\k:\h'-(\\n(.wu+\w'\(de'u-\*(#H)/2u'\v'-.3n'\*(#[\z\(de\v'.3n'\h'|\\n:u'\*(#]
+.ds d- \h'\*(#H'\(pd\h'-\w'~'u'\v'-.25m'\f2\(hy\fP\v'.25m'\h'-\*(#H'
+.ds D- D\\k:\h'-\w'D'u'\v'-.11m'\z\(hy\v'.11m'\h'|\\n:u'
+.ds th \*(#[\v'.3m'\s+1I\s-1\v'-.3m'\h'-(\w'I'u*2/3)'\s-1o\s+1\*(#]
+.ds Th \*(#[\s+2I\s-2\h'-\w'I'u*3/5'\v'-.3m'o\v'.3m'\*(#]
+.ds ae a\h'-(\w'a'u*4/10)'e
+.ds Ae A\h'-(\w'A'u*4/10)'E
+.ds oe o\h'-(\w'o'u*4/10)'e
+.ds Oe O\h'-(\w'O'u*4/10)'E
+.	\" corrections for vroff
+.if v .ds ~ \\k:\h'-(\\n(.wu*9/10-\*(#H)'\s-2\u~\d\s+2\h'|\\n:u'
+.if v .ds ^ \\k:\h'-(\\n(.wu*10/11-\*(#H)'\v'-.4m'^\v'.4m'\h'|\\n:u'
+.	\" for low resolution devices (crt and lpr)
+.if \n(.H>23 .if \n(.V>19 \
+\{\
+.	ds : e
+.	ds 8 ss
+.	ds v \h'-1'\o'\(aa\(ga'
+.	ds _ \h'-1'^
+.	ds . \h'-1'.
+.	ds 3 3
+.	ds o a
+.	ds d- d\h'-1'\(ga
+.	ds D- D\h'-1'\(hy
+.	ds th \o'bp'
+.	ds Th \o'LP'
+.	ds ae ae
+.	ds Ae AE
+.	ds oe oe
+.	ds Oe OE
+.\}
+.rm #[ #] #H #V #F C
+.SH "NAME"
+tcc \- Tiny C Compiler
+.SH "SYNOPSIS"
+usage: tcc [options] [\fIinfile1\fR \fIinfile2\fR...] [\fB\-run\fR \fIinfile\fR \fIargs\fR...]
+.SH "DESCRIPTION"
+TCC options are a very much like gcc options. The main difference is that TCC
+can also execute directly the resulting program and give it runtime
+arguments.
+.PP
+Here are some examples to understand the logic:
+.Ip "\f(CW\fBtcc -run a.c\fR\fR" 4
+Compile \fIa.c\fR and execute it directly
+.Ip "\f(CW\fBtcc -run a.c arg1\fR\fR" 4
+Compile a.c and execute it directly. arg1 is given as first argument to
+the \f(CWmain()\fR of a.c.
+.Ip "\f(CW\fBtcc a.c -run b.c arg1\fR\fR" 4
+Compile \fIa.c\fR and \fIb.c\fR, link them together and execute them. arg1 is given
+as first argument to the \f(CWmain()\fR of the resulting program. Because
+multiple C files are specified, \fB--\fR are necessary to clearly separate the
+program arguments from the \s-1TCC\s0 options.
+.Ip "\f(CW\fBtcc -o myprog a.c b.c\fR\fR" 4
+Compile \fIa.c\fR and \fIb.c\fR, link them and generate the executable \fImyprog\fR.
+.Ip "\f(CW\fBtcc -o myprog a.o b.o\fR\fR" 4
+link \fIa.o\fR and \fIb.o\fR together and generate the executable \fImyprog\fR.
+.Ip "\f(CW\fBtcc -c a.c\fR\fR" 4
+Compile \fIa.c\fR and generate object file \fIa.o\fR.
+.Ip "\f(CW\fBtcc -c asmfile.S\fR\fR" 4
+Preprocess with C preprocess and assemble \fIasmfile.S\fR and generate
+object file \fIasmfile.o\fR.
+.Ip "\f(CW\fBtcc -c asmfile.s\fR\fR" 4
+Assemble (but not preprocess) \fIasmfile.s\fR and generate object file
+\fIasmfile.o\fR.
+.Ip "\f(CW\fBtcc -r -o ab.o a.c b.c\fR\fR" 4
+Compile \fIa.c\fR and \fIb.c\fR, link them together and generate the object file \fIab.o\fR.
+.PP
+Scripting:
+.PP
+\s-1TCC\s0 can be invoked from \fIscripts\fR, just as shell scripts. You just
+need to add \f(CW#!/usr/local/bin/tcc -run\fR at the start of your C source:
+.PP
+.Vb 9
+\&        
+\&        #!/usr/local/bin/tcc -run
+\&        #include <stdio.h>
+\&        
+\&        int main() 
+\&        {
+\&            printf("Hello World\en");
+\&            return 0;
+\&        }
+.Ve
+.SH "OPTIONS"
+.Ip "\fB\-v\fR" 4
+Display current \s-1TCC\s0 version.
+.Ip "\fB\-c\fR" 4
+Generate an object file (\fB\-o\fR option must also be given).
+.Ip "\fB\-o outfile\fR" 4
+Put object file, executable, or dll into output file \fIoutfile\fR.
+.Ip "\fB\-Bdir\fR" 4
+Set the path where the tcc internal libraries can be found (default is
+\fI\s-1PREFIX/\s0lib/tcc\fR).
+.Ip "\fB\-bench\fR" 4
+Output compilation statistics.
+.Ip "\fB\-run\fR" 4
+Run compiled source.
+.PP
+Preprocessor options:
+.Ip "\fB\-Idir\fR" 4
+Specify an additional include path. Include paths are searched in the
+order they are specified.
+.Sp
+System include paths are always searched after. The default system
+include paths are: \fI/usr/local/include\fR, \fI/usr/include\fR
+and \fI\s-1PREFIX/\s0lib/tcc/include\fR. (\fI\s-1PREFIX\s0\fR is usually
+\fI/usr\fR or \fI/usr/local\fR).
+.Ip "\fB\-Dsym[=val]\fR" 4
+Define preprocessor symbol \fBsym\fR to
+val. If val is not present, its value is \fB1\fR. Function-like macros can
+also be defined: \fB\-\s-1DF\s0(a)=a+1\fR
+.Ip "\fB\-Usym\fR" 4
+Undefine preprocessor symbol \fBsym\fR.
+.PP
+Warning options:
+.PP
+Note: each warning option has a negative form beginning with \fB\-Wno-\fR.
+.Ip "\fB\-Wunsupported\fR" 4
+Warn about unsupported \s-1GCC\s0 features that are ignored by \s-1TCC\s0.
+.Ip "\fB\-Wwrite-strings\fR" 4
+Make string constants being of type \f(CWconst char *\fR intead of \f(CWchar
+*\fR.
+.Ip "\fB\-Werror\fR" 4
+Abort compilation if warnings are issued.
+.Ip "\fB\-Wall\fR " 4
+Activate all warnings, except \fB\-Werror\fR, \fB\-Wunusupported\fR and
+\fB\-Wwrite-strings\fR (currently not useful).
+.PP
+Linker options:
+.Ip "\fB\-Ldir\fR" 4
+Specify an additional static library path for the \fB\-l\fR option. The
+default library paths are \fI/usr/local/lib\fR, \fI/usr/lib\fR and \fI/lib\fR.
+.Ip "\fB\-lxxx\fR" 4
+Link your program with dynamic library libxxx.so or static library
+libxxx.a. The library is searched in the paths specified by the
+\fB\-L\fR option.
+.Ip "\fB\-shared\fR" 4
+Generate a shared library instead of an executable (\fB\-o\fR option
+must also be given).
+.Ip "\fB\-static\fR" 4
+Generate a statically linked executable (default is a shared linked
+executable) (\fB\-o\fR option must also be given).
+.Ip "\fB\-rdynamic\fR" 4
+Export global symbols to the dynamic linker. It is useful when a library
+opened with \f(CWdlopen()\fR needs to access executable symbols.
+.Ip "\fB\-r\fR" 4
+Generate an object file combining all input files (\fB\-o\fR option must
+also be given).
+.PP
+Debugger options:
+.Ip "\fB\-g\fR" 4
+Generate run time debug information so that you get clear run time
+error messages: \f(CW test.c:68: in function 'test5()': dereferencing
+invalid pointer\fR instead of the laconic \f(CWSegmentation
+fault\fR.
+.Ip "\fB\-b\fR" 4
+Generate additional support code to check
+memory allocations and array/pointer bounds. \fB\-g\fR is implied. Note
+that the generated code is slower and bigger in this case.
+.Ip "\fB\-bt N\fR" 4
+Display N callers in stack traces. This is useful with \fB\-g\fR or
+\fB\-b\fR.
+.PP
+Note: \s-1GCC\s0 options \fB\-Ox\fR, \fB\-fx\fR and \fB\-mx\fR are
+ignored.
+.SH "SEE ALSO"
+\fIgcc\fR\|(1)
+.SH "AUTHOR"
+Fabrice Bellard
+
+.rn }` ''
+.IX Title "TCC 1"
+.IX Name "tcc - Tiny C Compiler"
+
+.IX Header "NAME"
+
+.IX Header "SYNOPSIS"
+
+.IX Header "DESCRIPTION"
+
+.IX Item "\f(CW\fBtcc -run a.c\fR\fR"
+
+.IX Item "\f(CW\fBtcc -run a.c arg1\fR\fR"
+
+.IX Item "\f(CW\fBtcc a.c -run b.c arg1\fR\fR"
+
+.IX Item "\f(CW\fBtcc -o myprog a.c b.c\fR\fR"
+
+.IX Item "\f(CW\fBtcc -o myprog a.o b.o\fR\fR"
+
+.IX Item "\f(CW\fBtcc -c a.c\fR\fR"
+
+.IX Item "\f(CW\fBtcc -c asmfile.S\fR\fR"
+
+.IX Item "\f(CW\fBtcc -c asmfile.s\fR\fR"
+
+.IX Item "\f(CW\fBtcc -r -o ab.o a.c b.c\fR\fR"
+
+.IX Header "OPTIONS"
+
+.IX Item "\fB\-v\fR"
+
+.IX Item "\fB\-c\fR"
+
+.IX Item "\fB\-o outfile\fR"
+
+.IX Item "\fB\-Bdir\fR"
+
+.IX Item "\fB\-bench\fR"
+
+.IX Item "\fB\-run\fR"
+
+.IX Item "\fB\-Idir\fR"
+
+.IX Item "\fB\-Dsym[=val]\fR"
+
+.IX Item "\fB\-Usym\fR"
+
+.IX Item "\fB\-Wunsupported\fR"
+
+.IX Item "\fB\-Wwrite-strings\fR"
+
+.IX Item "\fB\-Werror\fR"
+
+.IX Item "\fB\-Wall\fR "
+
+.IX Item "\fB\-Ldir\fR"
+
+.IX Item "\fB\-lxxx\fR"
+
+.IX Item "\fB\-shared\fR"
+
+.IX Item "\fB\-static\fR"
+
+.IX Item "\fB\-rdynamic\fR"
+
+.IX Item "\fB\-r\fR"
+
+.IX Item "\fB\-g\fR"
+
+.IX Item "\fB\-b\fR"
+
+.IX Item "\fB\-bt N\fR"
+
+.IX Header "SEE ALSO"
+
+.IX Header "AUTHOR"
+

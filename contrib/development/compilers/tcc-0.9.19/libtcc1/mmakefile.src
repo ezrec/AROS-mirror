@@ -1,0 +1,5 @@
+include $(TOP)/config/make.cfg
+
+%build_linklib mmake=linklibs-tcc1 libname=tcc1 files=libtcc1
+
+%common
