@@ -1,5 +1,8 @@
 /*
  * $Log$
+ * Revision 1.3  2004/01/09 19:06:06  stegerg
+ * If compiled for AROS, don't printf() in entry().
+ *
  * Revision 1.2  2002/04/28 11:35:44  verhaegs
  * include stdio.h for printf
  *
@@ -25,7 +28,9 @@ extern int BGUIGadget_end;
 
 int entry(void)
 {
+#ifndef __AROS__
   printf("entry called. Doing nothing!\n");
+#endif
   return -1;
 }
 
