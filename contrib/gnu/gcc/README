@@ -37,8 +37,8 @@
   
 - IMPORTANT: to be able to build the compiler you need to have built the 
              linker and related utilities first. Such tools are part of the 
-             "binutils" package, which is compilable on and for AROS out of 
-             the box (no need for patches). Get the latest version from
+             "binutils" package, which is compilable for AROS out of the box
+	     (no need for patches). Get the latest version from
 	     http://www.gnu.org/software/binutils/
 	     
 - IMPORTANT2: to be able to produce working AROS executables, you also
