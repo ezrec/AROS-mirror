@@ -15,7 +15,7 @@
 
 Object *DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...);
 
-#define NotifyWinCloseSelf(x)
+#define NotifyWinCloseSelf(o) DoMethod(o, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, o, 3, MUIM_Set, MUIA_Window_Open, FALSE)
 
 #else
 
