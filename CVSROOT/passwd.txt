@@ -24,6 +24,7 @@ adieb:*:Adrian Brown:adieb@carmen.murdoch.edu.au:Win95 port
 hkiel:ccL6.C5LgMNSM:Henning Kiel:kiel@student.physik.uni-dortmund.de:Games, Misc
 przemek:aaHMm4JFKQqLI:Przemys³aw Szczygielski:przemek.szczygielski@polkomtel.com.pl:Alpha port
 schulz:cdA83T3EV9pyw:Michael Schulz:schulz@kki.net.pl:x86 standalone
+rodo:baHylpMeidW3c:Adrian Brown:adieb@carmen.murdoch.edu.au:Wintel port
 
 stepan:dcIM.xvdbd/R.:Stefan Reinauer:stepan@home.culture.mipt.ru:
 juddc:KIHh6YtTnh0KY:Christopher D. Judd:juddc@rpi.edu:
