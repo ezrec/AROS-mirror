@@ -793,6 +793,8 @@
    streng *arexx_readch( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_readln( tsd_t *TSD, cparamboxptr parm1 );
    streng *arexx_eof( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_b2c( tsd_t *TSD, cparamboxptr parm1 );
+   streng *arexx_c2b( tsd_t *TSD, cparamboxptr parm1 );
 
 /*
  ******************************************************************************

@@ -85,6 +85,8 @@
 #endif
 #define add_envir                    __regina_add_envir
 #define addfunc                      __regina_addfunc
+#define arexx_b2c                    __regina_arexx_b2c
+#define arexx_c2b                    __regina_arexx_c2b
 #define arexx_close                  __regina_arexx_close
 #define arexx_eof                    __regina_arexx_eof
 #define arexx_open                   __regina_arexx_open

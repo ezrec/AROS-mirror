@@ -312,3 +312,37 @@ streng *arexx_eof( tsd_t *TSD, cparamboxptr parm )
   
   return int_to_streng( TSD, feof( file )!=0 );
 }
+
+
+streng *arexx_b2c( tsd_t *TSD, cparamboxptr parm )
+{
+  parambox parm2;
+  streng *ret;
+  
+  checkparam( parm, 1, 1, "B2C" );
+
+  parm2.next = NULL;
+  parm2.value = std_b2x( TSD, parm );
+  
+  ret = std_x2c( TSD, &parm2 );
+  Free_string_TSD( TSD, parm2.value );
+  
+  return ret;
+}
+
+streng *arexx_c2b( tsd_t *TSD, cparamboxptr parm )
+{
+  parambox parm2;
+  streng *ret;
+  
+  checkparam( parm, 1, 1, "B2C" );
+
+  parm2.next = NULL;
+  parm2.value = std_c2x( TSD, parm );
+  
+  ret = std_x2b( TSD, &parm2 );
+  Free_string_TSD( TSD, parm2.value );
+  
+  return ret;
+}
+
