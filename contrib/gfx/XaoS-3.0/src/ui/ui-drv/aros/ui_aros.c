@@ -22,6 +22,11 @@
 #define BORDERTOP   	win->BorderTop
 #endif
 
+struct TextAttr     	topaz8 =
+{
+    "topaz.font" , 8
+};
+
 struct IntuitionBase 	*IntuitionBase;
 struct GfxBase      	*GfxBase;
 struct Library      	*CyberGfxBase;
@@ -33,6 +38,7 @@ struct Screen	    	*scr;
 struct DrawInfo     	*dri;
 struct Window	    	*win;
 struct RastPort     	*rp;
+struct TextFont     	*topazfont;
 LONG	    	    	width = 320, height = 200;
 ULONG	    	    	coltab[256];
 char	    	    	*buffer[2];
@@ -290,6 +296,8 @@ aros_init ()
     	return 0;
     }
     
+    topazfont = OpenFont(&topaz8);
+    
     scr = LockPubScreen(NULL);
     if (!scr)
     {
@@ -339,7 +347,8 @@ aros_init ()
     }	
     
     rp = win->RPort;
-          	    	    
+    if (topazfont) SetFont(rp, topazfont);
+        	    
     return 1;
 }
 
@@ -349,6 +358,8 @@ aros_uninitialise ()
     if (win) CloseWindow(win); win = NULL;
     if (dri) FreeScreenDrawInfo(scr, dri); dri = NULL;
     if (scr) UnlockPubScreen(0, scr); scr = NULL;
+    
+    if (topazfont) CloseFont(topazfont);
     
     if (KeymapBase) CloseLibrary(KeymapBase); KeymapBase = NULL;
     if (CyberGfxBase) CloseLibrary((struct Library *)CyberGfxBase); CyberGfxBase = NULL;

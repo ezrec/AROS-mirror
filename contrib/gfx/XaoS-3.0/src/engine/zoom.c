@@ -174,7 +174,12 @@ struct dyn_data
 #endif
 
 #ifdef USE_MULTABLE
-#define PRICE(i,i1) (assert(abs((i)-(i1))<RANGE*FPMUL),mulmid[(i)-(i1)])
+ #ifdef AROS
+ #warning FIXME: AROS: the assert macro seems to cause trouble here
+ #define PRICE(i,i1) (mulmid[(i)-(i1)])
+ #else
+ #define PRICE(i,i1) (assert(abs((i)-(i1))<RANGE*FPMUL),mulmid[(i)-(i1)])
+ #endif
 #else
 #define PRICE(i,i1) (((i)-(i1)) * ((i)-(i1)))
 #endif
