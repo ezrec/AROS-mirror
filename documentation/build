@@ -4,6 +4,4 @@ if [ -e scripts/config/user ]; then
     source scripts/config/user
 fi
 
-export PYTHONPATH=$DOCUTILS:$PYTHONPATH
-
 $PYTHON scripts/buildit.py $*
