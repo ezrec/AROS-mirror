@@ -1,10 +1,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-/* The following implements freopen() with a fclose/fopen() pair */
-#define freopen(path, mode, stream) __fdreopen(path, mode, &stream)
-
-
 #include <float.h> /* for DBL_MAX definition */
 
 /*

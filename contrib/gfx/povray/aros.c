@@ -383,9 +383,3 @@ void UNIX_Process_Povray_Ini(void)
   return;
 }
 
-FILE *__fdreopen(const char *path, const char *mode, FILE **stream_ptr)
-{
-    fclose(*stream_ptr);
-    return *stream_ptr = fopen(path, mode);
-}
-
