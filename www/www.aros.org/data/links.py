@@ -193,7 +193,7 @@ lessRelated = (
 	'from Gunther Nikl.',
     ),
     Link ('http://www.amiga.org/', 'Amiga.org', '"Your Gateway to the Amiga"'),
-    Link ('http://www.intercom.it/~fsoft/afc.html',
+    Link ('http://afc.sourceforge.net/',
 	'AFC - Amiga Foundation Classes',
 	'A FreeWare and Public Domain library of Object Classes devoted to the'
 	' software development on the Amiga and on future Amiga compatible'
