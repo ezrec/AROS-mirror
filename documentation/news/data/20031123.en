@@ -1,0 +1,78 @@
+=============
+Status Update
+=============
+
+:Author: David Le Corfec <dlc AT aros DOT org>
+:Date:   2003-11-23
+
+As we just got a working native port of the GCC compiler, it's time
+to browse 3 months of posts and commitlogs, and to make an attempt at
+a digest :)
+
+Hardware
+--------
+
+Michal Schulz has advanced the Pegasos/PPC native port: working bootup.resource,
+partially written openfirmware.resource, full exec.library, full oop.library
+(though some conflicts remain with kernel.resource), partial kernel.resource
+(external interrupts are not handled at the moment, and thus the scheduler
+doesn't have a timer which could feed it). Unfortunately he won't be able
+to work much on AROS during the next few months.
+
+Sebastian Heutling has worked on the Linux/PPC hosted port, up to the point
+where AROS can be nearly built out of the box, except for a couple of
+math libraries.
+
+Native C/C++ compiler
+---------------------
+
+Fabio Alemagna `did it`__! After a month of hard work to improve our C library
+(POSIX semantics handling) and to port the huge beast known as GCC, we
+now have a working port of GCC 3.3.1. Thanks to TeamAROS and to the
+donors, Fabio won a deserved bounty.
+No more excuses to not port your Amiga programs to AROS, be them coded
+in C or C++ :) Help with ports of various *nix utilities is also welcome.
+
+The next goal? Probably to have a POSIX environment complete enough to be able
+to recompile GCC within AROS itself.
+
+__ http://www.thenostromo.com/archives/teamaros/2003-11/msg00009.html
+
+User Interface
+--------------
+
+Adam Chodorowski and Georg Steger integrated back a recent version of MorphOS
+intuition library.
+
+Georg Steger implemented a lot of missing Zune (our GUI toolkit) classes:
+Dirlist, Volumelist, Poplist, Popscreen, Levelmeter, Crawling, Knob.
+He also implemented help bubbles.
+
+The Installer utility now has a Zune GUI and supports localization, thanks
+to the work of Henning Kiel.
+
+Fabio Alemagna and Adam Chodorowski have worked on a GUI for UAE
+(Amiga emulator), which is still work in progress but coming along well :)
+
+Miscellaneous
+-------------
+
++ Sebastian Heutling fixed the AFS filesystem, which solved many problems under
+i386-native, eg. during the AROS installation.
+
++ Staf Verhaegen continued his streamlining of the build system, and also fixed
+some issues with the diskfont library.
+
++ Iain Templeton is working on BSD based TCP/IP stack. As a side effect,
+ he improved the compatibility of our C library with existing standards.
+
++ Sebastian Bauer is working on an Amiga and AROS port of lwIP, a lightweight
+TCP/IP stack primarily designed for embedded systems.
+
++ As usual, lots of bugs and other leaks have been corrected here and there.
+ Special mention to Georg Steger for his awesome bug fixing abilities!
+
++ This is only a digest, lots of changes and additions have been silently
+ ignored in this report. Full story is available through our CVS commitlogs
+ mail archive.
+
