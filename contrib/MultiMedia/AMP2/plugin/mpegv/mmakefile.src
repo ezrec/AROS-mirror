@@ -1,0 +1,25 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#
+# Makefile for AMP2 MPEGVX Plugin (020111)
+#
+
+# Objects
+
+COMMON = ../../common/plugin
+
+MAIN = slice idct motion_comp decode header mpeg2dec
+
+OBJS = $(MAIN) $(COMMON)
+
+EXEDIR := $(CONTRIBDIR)/MultiMedia/AMP2/Plugin
+
+USER_CFLAGS := -I../../common -I../../aros
+
+#MM contrib-mmedia-amp2-plug-MPEGVX : contrib-mmedia-amp2
+
+%build_prog mmake=contrib-mmedia-amp2-plug-MPEGVX progname=MPEGVX.AMP targetdir=$(EXEDIR) files=$(OBJS) uselibs="arossupport amiga arosc z m"
+
+%common

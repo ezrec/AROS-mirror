@@ -1,0 +1,25 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#
+# Makefile for AMP2 PCM Plugin (020111)
+#
+
+# Objects
+
+COMMON = ../../common/plugin
+
+MAIN = main
+
+OBJS = $(MAIN) $(COMMON)
+
+EXEDIR := $(CONTRIBDIR)/MultiMedia/AMP2/Plugin
+
+USER_CFLAGS := -I../../common -I../../aros
+
+#MM contrib-mmedia-amp2-plug-PCM : contrib-mmedia-amp2
+
+%build_prog mmake=contrib-mmedia-amp2-plug-PCM progname=PCM.AMP targetdir=$(EXEDIR) files=$(OBJS) uselibs="arossupport amiga arosc z m"
+
+%common

@@ -1,0 +1,26 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#
+# Makefile for AMP2 H263 Plugin (020111)
+#
+
+# Objects
+
+COMMON = ../../common/plugin
+
+MAIN = common utils mpegvideo h263 jrevdct \
+mjpeg dsputil msmpeg4 h263dec rv10 main
+
+OBJS = $(MAIN) $(COMMON)
+
+EXEDIR := $(CONTRIBDIR)/MultiMedia/AMP2/Plugin
+
+USER_CFLAGS := -I../../common -I../../aros
+
+#MM contrib-mmedia-amp2-plug-H263 : contrib-mmedia-amp2
+
+%build_prog mmake=contrib-mmedia-amp2-plug-H263 progname=H263.AMP targetdir=$(EXEDIR) files=$(OBJS) uselibs="arossupport amiga arosc z m"
+
+%common
