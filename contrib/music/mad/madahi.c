@@ -45,7 +45,7 @@
 
 static struct MsgPort *AHImp;
 static struct AHIRequest *AHIios[2];
-static struct AHIRequest *AHIio, *link;
+static struct AHIRequest *AHIio, *iolink;
 static APTR               AHIiocopy = NULL;
 static BYTE               AHIDevice = -1;
 static short *destbuffer;
@@ -284,6 +284,8 @@ static enum mad_flow output(void *data, struct mad_header const *header, struct 
 	    *ptr++ = sample;
 	}
     }
+
+//kprintf("madlength: %d\n", length);
     
     step++;
     offset += length / 2;
@@ -308,7 +310,7 @@ static enum mad_flow output(void *data, struct mad_header const *header, struct 
     AHIios[0]->ahir_Type            = AHIST_S16S;
     AHIios[0]->ahir_Volume          = 0x10000;          // Full volume
     AHIios[0]->ahir_Position        = 0x8000;           // Centered
-    AHIios[0]->ahir_Link            = link;
+    AHIios[0]->ahir_Link            = iolink;
     SendIO((struct IORequest *)AHIios[0]);
 
     DateStamp(&date);
@@ -326,7 +328,7 @@ static enum mad_flow output(void *data, struct mad_header const *header, struct 
     	//length, date.ds_Tick / 50, date.ds_Tick % 50,
     	// sec, sec ? totbytes / sec : 0);
     }
-    if (link)
+    if (iolink)
     {
     #if 0
     	ULONG signals = Wait(SIGBREAKF_CTRL_C | (1L << AHImp->mp_SigBit));
@@ -340,13 +342,13 @@ static enum mad_flow output(void *data, struct mad_header const *header, struct 
 
     #if 0
     #else
-        if (CheckIO((struct IORequest *)link))
+        if (CheckIO((struct IORequest *)iolink))
 	{
             kprintf("Buffer underflow!\n");
         }
     #endif
     
-	if (WaitIO((struct IORequest *)link))
+	if (WaitIO((struct IORequest *)iolink))
 	{
 	    kprintf("WaitIO!?\n");
 	}
@@ -355,7 +357,7 @@ static enum mad_flow output(void *data, struct mad_header const *header, struct 
 
     	//kprintf("madahi: WAITIO returned. time %d.%02d\n", date.ds_Tick / 50, date.ds_Tick % 50);	
     }
-    link = AHIios[0];
+    iolink = AHIios[0];
     
     /* swap destbuffer1, destbuffer2 */
     {
