@@ -29,12 +29,10 @@
 #include "fmlocale.h"
 #include "fmgui.h"
 
-extern struct UtilityBase *UtilityBase;
 extern struct ExecBase *SysBase;
 extern struct DosLibrary *DOSBase;
 extern struct IntuitionBase *IntuitionBase;
 extern struct GfxBase *GfxBase;
-extern struct KeymapBase *KeymapBase;
 
 struct ShowTxt {
 	unsigned showinfo:2;

@@ -170,7 +170,7 @@ struct DosLibrary *DOSBase;
 extern struct ExecBase *SysBase;
 extern struct DosLibrary *DOSBase;
 #endif
-struct Library *UtilityBase;
+struct UtilityBase *UtilityBase;
 struct Library *GadToolsBase;
 struct Library *DiskfontBase;
 struct Library *KeymapBase;

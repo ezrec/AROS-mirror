@@ -44,14 +44,6 @@
 #include "fmnode.h"
 #include "fmlocale.h"
 
-extern struct Library *GadToolsBase;
-extern struct ExecBase *SysBase;
-extern struct IntuitionBase *IntuitionBase;
-extern struct GfxBase  *GfxBase;
-extern struct CxBase *CxBase;
-extern struct WorkbenchBase *WorkbenchBase;
-extern struct Library *UtilityBase;
-
 
 WORD avaanaytto (WORD);
 WORD suljenaytto (WORD);

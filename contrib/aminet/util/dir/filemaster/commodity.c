@@ -20,7 +20,7 @@
 #include <aros/debug.h>
 #include <exec/types.h>
 #include <libraries/commodities.h>
-#include <defines/commodities.h>
+#include <proto/commodities.h>
 
 #include <stdio.h>
 #include "fmnode.h"

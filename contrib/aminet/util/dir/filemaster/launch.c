@@ -65,12 +65,8 @@ extern struct ExecBase *SysBase;
 extern struct DosLibrary *DOSBase;
 extern struct IntuitionBase *IntuitionBase;
 extern struct GfxBase *GfxBase;
-extern struct GadToolsBase *GadToolsBase;
-extern struct KeymapBase *KeymapBase;
-extern struct WorkbenchBase *WorkbenchBase;
 extern struct LocaleBase *LocaleBase;
 extern struct xfdMasterBase *xfdMasterBase;
-extern struct CxBase *CxBase;
 
 void executeownnum (void);
 WORD setalloc (struct FMList *, WORD);

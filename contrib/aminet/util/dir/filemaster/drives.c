@@ -40,7 +40,6 @@ extern struct Gadget string1;
 extern struct Gadget string2;
 extern UBYTE buffer1[];
 extern UBYTE buffer2[];
-extern struct Library *UtilityBase;
 extern struct FMMain fmmain;
 extern struct FMList fmlist[];
 

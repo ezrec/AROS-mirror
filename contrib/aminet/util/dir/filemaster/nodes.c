@@ -21,24 +21,17 @@
 
 #include <time.h>
 #include <dos/datetime.h>
-#include <defines/locale.h>
+#include <proto/locale.h>
 #include <exec/types.h>
 #include <exec/memory.h>
 #include <strings.h>
 #include <stdarg.h>
 #include <dos/dos.h>
-#include <defines/locale.h>
+#include <proto/locale.h>
 #include <clib/locale_protos.h>
 #include "fmnode.h"
 #include "fmlocale.h"
 
-extern struct GadToolsBase *GadToolsBase;
-extern struct ExecBase *SysBase;
-extern struct IntuitionBase *IntuitionBase;
-extern struct GfxBase *GfxBase;
-extern struct CxBase *CxBase;
-extern struct WorkbenchBase *WorkbenchBase;
-extern struct Library *UtilityBase;
 
 //int formathook;
 
@@ -144,7 +137,6 @@ void csortlist(struct FMList *list)
 struct FMList list2;
 struct FMNode *node,*node2;
 struct Match *match;
-extern struct Library *UtilityBase;
 UWORD ftest;
 
 if((list->flags&LDEVLIST)||(!list->li)) return;

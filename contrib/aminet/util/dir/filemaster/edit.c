@@ -31,11 +31,9 @@
 #include "fmgui.h"
 
 extern struct UtilityBase *UtilityBase;
-extern struct GadToolsBase *GadToolsBase;
 extern struct ExecBase *SysBase;
 extern struct IntuitionBase *IntuitionBase;
 extern struct GfxBase *GfxBase;
-extern struct KeymapBase *KeymapBase;
 
 int RELVERIFY, BOOLGADGET, GADGHIMAGE, LONGINT, STRGADGET;
 extern struct FMConfig *fmconfig;

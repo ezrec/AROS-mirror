@@ -29,7 +29,7 @@
 #include <proto/dos.h>
 #include <proto/intuition.h>
 
-#include <defines/commodities.h>
+#include <proto/commodities.h>
 #include <exec/types.h>
 #include <exec/memory.h>
 #include <exec/tasks.h>
@@ -42,12 +42,9 @@
 #include "commodity.h"
 
 extern struct UtilityBase *UtilityBase;
-extern struct GadToolsBase *GadToolsBase;
 extern struct ExecBase *SysBase;
 extern struct IntuitionBase *IntuitionBase;
 extern struct GfxBase *GfxBase;
-extern struct CxBase *CxBase;
-extern struct WorkbenchBase *WorkbenchBase;
 
 #define STARTSLEEP 1
 #define SLEEPING 2

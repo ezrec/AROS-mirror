@@ -28,7 +28,7 @@
 #include <proto/graphics.h>
 #include <proto/layers.h>
 #include <stdio.h>  
-#include <defines/dos.h>
+#include <proto/dos.h>
 #include <proto/exec.h>
 #include <exec/memory.h>
 #include <exec/lists.h>
@@ -73,8 +73,6 @@ extern struct UtilityBase *UtilityBase;
 extern struct ExecBase *SysBase;
 extern struct DosLibrary *DOSBase;
 extern struct IntuitionBase *IntuitionBase;
-extern struct Library *TimerBase;
-extern struct KeymapBase * KeymapBase;
 
 struct QuitConfig {
 	unsigned areyousure:2;

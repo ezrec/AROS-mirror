@@ -25,7 +25,7 @@
 #include <libraries/gadtools.h>
 
 #include <proto/reqtools.h>
-#include <defines/reqtools.h>
+#include <proto/reqtools.h>
 #include <strings.h>
 #include <stdio.h>
 #include <string.h>

@@ -25,7 +25,6 @@
 #include "fmlocale.h"
 
 extern struct UtilityBase *UtilityBase;
-extern struct GadToolsBase *GadToolsBase;
 extern struct ExecBase *SysBase;
 extern struct IntuitionBase *IntuitionBase;
 extern struct GfxBase *GfxBase;
