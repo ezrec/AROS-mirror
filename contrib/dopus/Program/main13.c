@@ -302,46 +302,41 @@ struct DateStamp *ds;
 {
 
 #if 1
-#warning Implement this properly
+#warning Implement this properly /* stegerg: I think this should be the case now */
 
-	BPTR lock;
 	struct DosList *dl;
+	BPTR 	       lock;
+	BOOL	       success;	
+	char 	       buf[MAXFILENAMELENGTH];
 	
-	char buf[MAXFILENAMELENGTH];
-	
-kprintf("!!!! getroot(%s)\n", name);
+    	//kprintf("!!!! getroot(%s)\n", name);
 
 	lock = Lock(name, ACCESS_READ);
-	if (NULL == lock) {
-		kprintf("Could not get lock in getroot()\n");
-		return 0;
+	if (NULL == lock)
+	{
+	    //kprintf("Could not get lock in getroot()\n");
+	    return 0;
 	}
 	
 	/* Get the volume name */
 	
 	/* Get lock on root device */
-	
-#warning AROS ParentDir function is very buggy and causes an infinite loop here
-	
-/*	SetIoErr(0);
-	while ((lock =  ParentDir(lock))) {
-		kprintf("ParentDir() called, lock=%p\n", lock);
-		if (0 != IoErr()) {
-			kprintf("Got error from ParentDir() in getroot()\n");
-			return 0;
-	
-		}
-	
-	}
-*/		
+		
+	SetIoErr(0);
+	lock = getrootlock(lock);
 	
 	/* Get the name from lock */
-	if (0 == NameFromLock(lock, buf, MAXFILENAMELENGTH)) {
-		kprintf("Could not get lock for name\n");
-		return 0;
-	}
+	success = NameFromLock(lock, buf, MAXFILENAMELENGTH);
+
+	UnLock(lock);
 	
-kprintf("Name from lock %s\n", buf);
+	if (!success)
+	{
+	    //kprintf("Could not get lock for name\n");
+	    return 0;
+	}
+		
+    	//kprintf("Name from lock %s\n", buf);
 	
 	
 	dl = LockDosList(LDF_DEVICES | LDF_VOLUMES | LDF_READ);
@@ -349,25 +344,28 @@ kprintf("Name from lock %s\n", buf);
 	
 	if (NULL == dl) {
 	
-		UnLockDosList(LDF_DEVICES | LDF_VOLUMES | LDF_READ);
-		kprintf("Could not get device list\n");
-		return 0;
+	    UnLockDosList(LDF_DEVICES | LDF_VOLUMES | LDF_READ);
+	    kprintf("Could not get device list\n");
+	    return 0;
 	}
 	
 	/* Get the device name */
 	
-	if (dl->dol_DevName) {
-kprintf("Testing whether %s is a filesystem\n", dl->dol_DevName);
-		if (!IsFileSystem(dl->dol_DevName)) {
-			kprintf("!!!! NO FILESYSTEM IN getroot()\n");
-			Alert(AT_DeadEnd);
-		}
-		strcpy(name, dl->dol_DevName);
+	if (dl->dol_DevName)
+	{
+    	    //kprintf("Testing whether %s is a filesystem\n", dl->dol_DevName);
+	    if (!IsFileSystem(dl->dol_DevName))
+	    {
+		kprintf("!!!! NO FILESYSTEM IN getroot()\n");
+		Alert(AT_DeadEnd);
+	    }
+	    strcpy(name, dl->dol_DevName);
 	}
 	
 	/* Get the volume date */
-	if (ds) {
-		CopyMem(&dl->dol_misc.dol_volume.dol_VolumeDate, ds, sizeof (*ds));
+	if (ds)
+	{
+	    CopyMem(&dl->dol_misc.dol_volume.dol_VolumeDate, ds, sizeof (*ds));
 	}
 
 	UnLockDosList(LDF_DEVICES | LDF_VOLUMES | LDF_READ);
@@ -375,7 +373,7 @@ kprintf("Testing whether %s is a filesystem\n", dl->dol_DevName);
 	
 #warning ID_VALIDATED is not allways the case
 
-kprintf("getroot(): Name returned: %s\n", name);
+    	//kprintf("getroot(): Name returned: %s\n", name);
 	return ID_VALIDATED;
 
 #else
