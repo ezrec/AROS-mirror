@@ -979,7 +979,7 @@ void LSprintf(char *str, char *fmt, ...)
 	
 	while (len-- >= 0)
 	{
-	    char *c = *from++;
+	    char c = *from++;
 	    
 	    *to++ = c;
 	    
