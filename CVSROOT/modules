@@ -31,7 +31,7 @@
 contrib contrib
 
 # Stuff necessary to compile AROS
-necessary -a grub bgui Format64
+necessary -a grub bgui Format64 AmiCDROM
 
 ## This doesn't work :-/ How can I make sure when contrib/ is checked out,
 ## that the README gets created ?
@@ -39,6 +39,9 @@ necessary -a grub bgui Format64
 ## cvs server: ignoring module contrib_README
 #necessary -a contrib_README grub bgui
 #contrib_README -d contrib contrib README
+
+# AmiCDROM
+AmiCDROM -d contrib/aminet/disk/cdrom/AmiCDROM contrib/aminet/disk/cdrom/AmiCDROM
 
 # Amiga C Manual
 ACM -d contrib/ACM contrib/ACM
