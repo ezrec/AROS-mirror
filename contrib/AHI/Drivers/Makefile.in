@@ -32,7 +32,12 @@ HAVE_OSS	= @HAVE_OSS@
 
 .PHONY:		all clean distclean maintainer-clean bindist
 
-SUBDIRS		= Device Filesave ac97
+SUBDIRS		= Device Filesave
+
+
+ifneq ($(strip $(HAVE_ASMIO)),)
+SUBDIRS		+= ac97
+endif
 
 ifneq ($(strip $(HAVE_OSS)),)
 SUBDIRS		+= AROS

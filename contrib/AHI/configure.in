@@ -158,6 +158,7 @@ esac
 dnl Checks for header files.
 
 AC_CHECK_HEADERS( proto/oss.h, HAVE_OSS=1, AC_MSG_WARN( "proto/oss.h is missing." ))
+AC_CHECK_HEADERS( asm/io.h, HAVE_ASMIO=1, AC_MSG_WARN( "asm/io.h is missing." ))
 AC_CHECK_HEADERS( libraries/openpci.h, HAVE_OPENPCI=1, AC_MSG_WARN( "libraries/openpci.h is missing." ))
 
 AC_SUBST(HAVE_OSS)
