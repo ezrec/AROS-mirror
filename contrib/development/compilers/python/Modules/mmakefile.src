@@ -18,13 +18,10 @@ FILES := \
 	cPickle \
 	cStringIO \
 	cgensupport \
-	cryptmodule \
-	dlmodule \
 	errnomodule \
 	gcmodule \
 	getbuildinfo \
 	getpath \
-	grpmodule \
 	imageop \
 	md5c \
 	md5module \
@@ -32,7 +29,6 @@ FILES := \
 	operator \
 	parsermodule \
 	puremodule \
-	pwdmodule \
 	regexmodule \
 	regexpr \
 	rgbimgmodule \
@@ -61,6 +57,7 @@ FILES := \
 #	pyexpat
 #	socketmodule
 #	threadmodule
+#	cryptmodule
 
 # Modules that might be portable to AROS (with a lot of work).
 #	bsddbmodule 
@@ -96,6 +93,9 @@ FILES := \
 #	readline
 #	signalmodule
 #	svmodule
+#	dlmodule
+#	grpmodule
+#	pwdmodule
 
 USER_CFLAGS := -I$(TOP)/$(CURDIR)/../Include -I$(TOP)/$(CURDIR) -DAROS
 
