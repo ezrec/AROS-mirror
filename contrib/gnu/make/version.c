@@ -6,7 +6,9 @@
 #ifndef MAKE_HOST
 # define MAKE_HOST "unknown"
 #endif
-
+#ifndef VERSION
+#define VERSION 380
+#endif
 char *version_string = VERSION;
 char *make_host = MAKE_HOST;
 
