@@ -1,0 +1,306 @@
+@database Moria3D
+@node main
+                     @{fg highlight}@{b}Mori3D@{ub}
+                  18. 03. 1997
+         Copyright © 1997 Goswin Brederlow
+                All Rights Reserved@{fg text}
+
+            Moria3D comes under the GNU Public licence.
+
+ @{" README                        " link "README/main"} Read this
+ @{" The Story                     " link Story} What is Moria 3D about?
+ @{" Requirements                  " link Requirements} What you need to run Moria 3D
+ @{" Installing Moria 3D           " link Installing} How to install Moria 3D
+ @{" Running Moria 3D              " link Running} How to start Moria 3D
+ @{" How do I move?                " link Moveing} How to use Moria 3D
+ @{" Credits                       " link Credits} People I have to thank
+ @{" How to reach me               " link ReachMe} Questions, Suggestions, Bugs?
+ @{" History                       " link History} What has been done when?
+ @{" Contents                      " link Contents} Whats on the CD
+@endnode
+
+@node Story "What is Moria 3D about"
+
+              Moria 3D
+
+You, the hero, are bored by youre unintresting life, so you set out
+to conquer Moria to find the lost rings of old. Before you can descent
+a level deeper into Moria you will have to find a number of rings or
+other items.
+
+ @{"<< README                 " link "README/main"}
+ @{">> Requirements           " link Requirements}
+
+@endnode
+
+@node Requirements "What you need to run Moria 3D"
+
+@{b}Required:@{ub}
+
+  · MC68030 or better
+  · AGA or some graphics card
+  · It will run on a MC68000 if you recompile but who likes Slideshows?
+
+@{b}Recomended:@{ub}
+
+  · MC68040+ CPU
+  · Some sort of graphics card
+
+@{b}Compatibility:@{ub}
+
+To insure maximum compatibility Moria3D has been tested on many systems
+including but not limited to:
+
+  · Eagle 4000TE / Cyberstorm 060      / CGFX V3 / 48 MB Fast (my system)
+  · A4000T       / Apollo 060          / P96     / 32 MB Fast
+  · Draco 060                          / CGFX V3 / 16 MB
+  · A4000        / 040                 / AGA     /  8 MB Fast
+  · A1200        / Blizzard 030-50+FPU / AGA     /  4 MB Fast
+  · AROS         / Linux P120                    / 32 MB
+  · PowerUp -at work-
+
+So far no compatibility problems have been reported
+     and no crashes or hangs appeared.
+
+ @{"<< The Story              " link Story}
+ @{">> Installing Moria 3D    " link Installing}
+
+@endnode
+
+
+@node Installing "How to install Moria 3D"
+
+Installing Moria 3D is fairly simmple.
+
+Just Pickup the Moria3D drawer and drag it anywhere you like.
+
+There is nothing more to be done.
+
+ @{"<< Requirements           " link Requirements}
+ @{">> How to run Moria 3D    " link Running}
+
+@endnode
+
+@node Running "How to run Moria 3D"
+
+Just look for the icon appropriate to youre system in the Moria3D drawer.
+
+On a 68020 and 68030 you start Moria.020.exe
+On a 68040 and 68060 you start Moria.040.exe
+
+@{b}DON´T TRY TO START Moria.040.exe ON 68020 and 68030 IT WILL JUST CRASH. @{ub}
+
+On a 68040 and 68060 Moria.020.exe will still work but the 68040 is faster on
+those systems.
+
+ @{"<< Installing Moria 3D    " link Installing}
+ @{">> How do I move?         " link Moveing}
+
+@endnode
+
+@node Moveing "How do I move?"
+
+Most movements are done using the mouse.
+
+The left mouse button moves forward and the right button moves backward.
+The position of the mousepointer turns the player. Mousepointer at top
+turns upwards and so on.
+
+Further movemnts are done by using 7 to turn anticlockwise and 9 to turn clockwise.
+
+By pressing <ESC> you can quit the Game.
+
+Aditional Keys:
+
+´l´ and ´L´ change Light levels. ´+´ and ´-´ change the position of the viepoint.
+Play around with these to see how they work. If you thing you made a mess quit the
+game and everything will be back to normal again.
+
+ @{"<< How to run Moria 3D    " link Running}
+ @{">> Credits                " link Credits}
+
+@endnode
+
+@node Credits "Credits"
+
+Credits go to:
+
+  · Comodore for selling me a Amiga first time
+  · Amiga Technologies for the Developer CD
+  · Eagle for selling me a A4000 TE
+  · Phase5 for the cyberstorm and the CyberVision64/3D
+  · Everybody involved with GNU C for the gcc
+  · All the Amiga users on #AmigaGer and #Amiga on irc who testet Moria3D
+
+ @{"<< How do I move?         " link Moveing}
+ @{">> How to reach me        " link ReachMe}
+
+@endnode
+
+@node ReachMe "How to reach me"
+
+Reach me for any reason at: goswin.brederlow@student.uni-tuebingen.de
+
+For updates of Moria3D have a look at one of the following places:
+
+HTTP://amiga.base.org
+HTTP://home.pages.de/~mrvn/amiga
+
+You can also try to catch me on IRC under the name Mrvn on #AmigaGer or #Amiga.
+
+You can also snail-mail me:
+
+ Goswin Brederlow
+ Eberstr. 62
+ 71071 Tübingen
+ Germany
+
+ @{"<< Credits                " link Credits}
+ @{">> History                " link History}
+
+@endnode
+
+@node History "What has been done when?"
+
+26.02.97                  - I read about the contens an started searching for
+                            a project to hand in.
+
+04.03.97 Moria V0.1 Alpha - Basic engine in Greyscale
+
+06.03.97 Moria V0.2 Alpha - Bug fixes aditional Levels
+                          - Movements now by Mouse
+
+09.03.97 Moria V0.3 Alpha - Colours added
+                          - Monsters added
+                          - Rewritten the clipping for real 3D clipping
+
+11.03.97 Moria V0.4 Alpha - Basic AI added for Monsters
+                          - Major speedup in the texturemapping
+
+14.03.97 Moria V0.5       - Releas Version
+                          - All known bugs fixed
+                          - Code tested on many systems
+                          - Guidefile added
+
+ @{"<< Reach me for any reason" link ReachMe}
+ @{">> Contents               " link Contents}
+
+@endnode
+
+@node Contents "Contents"
+
+You should have recived the following files:
+
+Directory "Moria3D:" on Friday 14-Mar-97
+
+Contents                    5817 ----rwed Today     17:59:43
+Moria3D                      Dir ----rwed Today     18:00:54
+Moria3D.guide              12928 ----rw-d Today     18:00:37
+Moria3D.guide.info           503 ----rw-d Today     18:00:53
+Moria3D.info                1233 ----rw-d Today     17:56:03
+Screenshots                  Dir ----rwed Today     17:49:04
+Screenshots.info            1233 ----rw-d Today     17:48:46
+Source                       Dir ----rwed Today     17:55:09
+Source.info                 1233 ----rw-d Today     17:49:15
+
+6 files - 3 directories - 49 blocks used
+
+Directory "Moria3D:Moria3D" on Friday 14-Mar-97
+
+Colors                      2778 ----rw-d Yesterday 21:24:30
+Colors.info                 1611 ----rw-d Today     17:56:03
+Floor256.ppm              737395 ----rw-d Yesterday 22:39:18
+Floor256.ppm.info            658 ----rw-d Today     17:56:03
+Level.00                    5357 -s--rwed Today     02:32:19
+Level.00.info               1611 ----rw-d Today     17:56:03
+Level.01                    7866 -s--rwed Today     02:34:15
+Level.01.info               1611 ----rw-d Today     17:56:03
+Level.02                   10464 ----rw-d Today     02:35:17
+Level.02.info               1611 ----rw-d Today     17:56:03
+Level.03                    8092 -s--rwed Today     01:46:10
+Level.03.info               1611 ----rw-d Today     17:56:03
+Makefile                    1930 ----rwed Today     17:53:49
+Mission1Story                489 ----rw-d 28-Feb-97 10:25:56
+Mission1Story.info          1611 ----rw-d Today     17:56:03
+Missions                    1013 ----rw-d Sunday    20:19:34
+Missions.info               1611 ----rw-d Today     17:56:03
+Moria256.ppm              132926 ----rw-d Yesterday 23:34:56
+Moria256.ppm.info            657 ----rw-d Today     17:56:03
+Moria3D.020               214856 ----rwed Today     16:06:54
+Moria3D.020.exe              102 -s--rw-d Today     17:50:02
+Moria3D.020.exe.info        1605 ----rw-d Today     17:56:03
+Moria3D.040               215428 ----rwed Today     17:52:20
+Moria3D.040.exe               93 -s--rw-d Today     02:44:44
+Moria3D.040.exe.info        1605 ----rw-d Today     17:56:03
+Moria3D.guide              12928 ----rw-d Today     18:00:37
+Moria3D.guide.info           503 ----rw-d Today     18:00:54
+Ring256.ppm               503331 ----rw-d Yesterday 23:19:01
+Ring256.ppm.info             658 ----rw-d Today     17:56:03
+smile256.ppm              436480 ----rw-d Yesterday 22:48:10
+smile256.ppm.info            668 ----rw-d Today     17:56:03
+stone256.ppm              725123 ----rw-d Yesterday 22:35:27
+stone256.ppm.info            668 ----rw-d Today     17:56:03
+Story                        434 ----rw-d Sunday    20:20:11
+Story.info                  1611 ----rw-d Today     17:56:03
+torch256.ppm              394547 ----rw-d Yesterday 22:41:46
+torch256.ppm.info            658 ----rw-d Today     17:56:03
+
+37 files - 6763 blocks used
+
+Directory "Moria3D:Screenshots" on Friday 14-Mar-97
+
+Colour0.png               257791 ----rw-d Tuesday   20:06:48
+Colour0.png.info             957 ----rw-d Today     17:48:54
+Colour1.png               263497 ----rw-d Tuesday   20:26:51
+Colour1.png.info             957 ----rw-d Today     17:48:58
+Colour2.png               217863 ----rw-d Tuesday   20:28:16
+Colour2.png.info             957 ----rw-d Today     17:49:00
+Colour3.png               267216 ----rw-d Tuesday   20:30:24
+Colour3.png.info             957 ----rw-d Today     17:49:04
+
+8 files - 1983 blocks used
+
+Directory "Moria3D:Source" on Friday 14-Mar-97
+
+Clean.c                     3652 ----rw-d Today     15:35:50
+Clean.c.info                1611 ----rw-d Today     17:54:47
+Clean.h                     1412 ----rw-d Today     15:36:08
+Clean.h.info                1611 ----rw-d Today     17:54:45
+Gfx.c                      61150 ----rw-d Today     15:38:29
+Gfx.c.info                  1611 ----rw-d Today     17:55:03
+Gfx.h                       2055 ----rw-d Today     02:23:35
+Gfx.h.info                  1611 ----rw-d Today     17:55:01
+Init.c                      9984 ----rw-d Today     16:09:41
+Init.c.info                 1611 ----rw-d Today     17:54:52
+Init.h                      1034 ----rw-d Wednesday 23:00:58
+Init.h.info                 1611 ----rw-d Today     17:54:48
+Level.c                    34963 ----rw-d Today     15:44:56
+Level.c.info                1611 ----rw-d Today     17:54:41
+Level.h                     5539 ----rw-d Wednesday 23:00:35
+Level.h.info                1611 ----rw-d Today     17:54:43
+MakeProject                   33 ----rwed 06-Mar-97 15:53:12
+MakeProject.info             648 ----rw-d Today     17:54:14
+Moria3D.c                   1952 ----rw-d Today     15:31:24
+Moria3D.c.info              1611 ----rw-d Today     17:54:39
+Moveing.c                  13898 ----rw-d Today     15:31:11
+Moveing.c.info              1611 ----rw-d Today     17:55:07
+Moveing.h                    821 ----rw-d Sunday    20:57:43
+Moveing.h.info              1611 ----rw-d Today     17:55:05
+MyMath.c                    3935 ----rw-d Today     15:22:33
+MyMath.c.info               1611 ----rw-d Today     17:54:56
+MyMath.h                    1361 ----rw-d Today     15:13:57
+MyMath.h.info               1611 ----rw-d Today     17:54:54
+MyTypes.h                    802 ----rw-d Today     15:51:28
+MyTypes.h.info              1611 ----rw-d Today     17:54:59
+Options.info                 597 ----rw-d Today     17:54:16
+Version.c                    594 ----rw-d Today     15:31:16
+Version.c.info              1611 ----rw-d Today     17:55:09
+
+33 files - 386 blocks used
+
+TOTAL: 84 files - 3 directories - 9181 blocks used
+
+ @{"<< History                " link History}
+ @{">> Main                   " link Main}
+
+@endnode

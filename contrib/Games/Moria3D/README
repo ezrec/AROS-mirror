@@ -1,0 +1,113 @@
+/****************************************************************************
+*                                                                           *
+* Moria3D README                                                     970319 *
+*                                                                           *
+* Well, you know what the Readme if for                                     *
+*                                                                           *
+****************************************************************************/
+
+Name      : Moria3D
+
+Copyright : 1997 Goswin Brderlow
+
+E-Mail    : goswin.brederlow@student.uni-tuebingen.de
+
+HTTP      : //home.pages.de/~mrvn/amiga or //amiga.base.org
+
+IRC       : #amigager : Mrvn
+
+$VER: Moria 3D V0.6 970314
+
+Short     : A Virtual 3D Game with free 3D truning and moving.
+
+Licence   : This software comes under the GNU Public Licence.
+
+Needed    : MC68030/AGA
+          : MC68000/AGA if you recompile, but who likes slideshows?
+
+Recomended: 040/40 CGFX
+
+BUGS      : No compatibility problems, crashes or hangs have been reported
+
+            - The clipping sometimes has bugs not drawing everything and
+              slowing it down awfully.
+              (Try Level.03)
+            - Monsters are not drawn correctly, They are just hacked in.
+            - Monsters are not light mapped.
+
+------------------------------------------------------------------------------
+                                Tested systems
+
+- Eagle 4000TE / Cyberstorm 060  / CGFX V3 / 48 MB Fast (my system)
+- A4000T       / Apollo 060      / P96     / 32 MB Fast
+- Draco 060                      / CGFX V3 / 16 MB
+- A4000        / 040             / AGA     /  8 MB Fast
+- A1200        / Blizzard 030-50 / AGA     /  4 MB Fast
+- AROS         / Linux P120                / 32 MB
+- PowerUp -at work-
+
+------------------------------------------------------------------------------
+                                 MORIA 3D
+
+Moria3D is a Virtual reality Game with full free 3 dimension movement. You
+can float in the midle of the room an look any way you want.
+
+You, the hero, have set out to conquer Moria and find the lost Rings of old.
+If you found all the Rings needed in a Level you can move onto the next Level.
+
+------------------------------------------------------------------------------
+
+CONTROS:
+
+For the moment you move my using the mouse. Just move it around the window
+and see how it work. Mousebuttons move you forward and backward.<ESC> quits.
+l and L decrease and increase light, + and - change the camera position.
+7 and 9 turn anticlockwise and clowise.
+
+------------------------------------------------------------------------------
+
+TODO:
+
+- Code cleanup and comenting, separating system specific stuff
+
+- Rewriting the clipping
+
+- Improving the rendering of Monsters and Things.
+
+- Implementing a complete AI for Monsters.
+
+- Improving the Error handling
+
+- Movements by keyboard
+
+- A CGFX only version taking advantage of the CGFX.
+
+- Light effects and animations
+
+- Dataype loaders for textures
+
+- A converter for Descent levels.
+
+-------------------------------------------------------------------------------
+
+HISTORY:
+
+V0.1    97.03.05    Basic engine in grayscale
+
+V0.2    97.03.09    Added movements by mouse
+                    Clipping rewritten
+                    Monsters added
+
+V0.3    97.03.11    Colors added
+                    Different Bots possible.
+                    Textures as ppm.
+                    Rings and Level Fade added.
+
+V0.5    97.03.14    Bugs fixed.
+                    Textures made 256x256 fixed.
+                    Int for texturemapping giving more speed.
+
+V0.6    97.03.19    Code cleanup
+                    Major speedup in the loader
+                    Changed pallet
+

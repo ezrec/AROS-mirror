@@ -1,0 +1,270 @@
+/******************************************************************************
+*                                                                             *
+* Level.01 - Demo Level für Moria3d                                    970319 *
+*                                                                             *
+* Descent comes under the GNU Public Licence and is                           *
+* Copyright 1997 Goswin Brederlow                                             *
+*                                                                             *
+* goswin.brederlow@student.uni-tuebinmgen.de                                  *
+* HTTP://milliway.base.org   HTTP://home.pages.de/~mrvn                       *
+*                                                                             *
+******************************************************************************/
+
+/* Syntax of the Levelfile */
+
+/* Coments are overread */
+/* @ at the start tells the loader that a file should be fetched */
+/* 0 stands for none in most cases                               */
+
+/* Firstly comes a Header */
+
+Header
+
+LevelName: DemoLevel
+Version:   V0.6
+Creator:   Mrvn
+Storry:    @Story_01.txt
+Colors:    @Textures/colors.256
+Fadeing:   @Textures/fadeing.256
+Rings:     1
+
+HeaderEnd
+
+/* Points are the coordinates of all edges for the level */
+/* Points are given as theire x,y,z coordinates          */
+
+Points
+
+NumPoints: 20
+Point: -10000 -10000 -10000
+Point: +10000 -10000 -10000
+Point: -10000 +10000 -10000
+Point: +10000 +10000 -10000
+Point: -10000 -10000 +10000
+Point: +10000 -10000 +10000
+Point: -10000 +10000 +10000
+Point: +10000 +10000 +10000
+Point: -10000 -10000 +30000
+Point: +10000 -10000 +30000
+Point: -10000 +10000 +30000
+Point: +10000 +10000 +30000
+Point: -10000 -10000 +50000
+Point: +10000 -10000 +50000
+Point: -10000 +10000 +50000
+Point: +10000 +10000 +50000
+Point: +30000 -10000 +30000
+Point: +30000 +10000 +30000
+Point: +30000 -10000 +50000
+Point: +30000 +10000 +50000
+
+PointsEnd
+
+/* Textures are the textures itself */
+/* Each texture consists of width, height and an array with colours */
+
+Textures
+
+NumTextures: 6
+
+Texture: @Textures/Moria.256
+Texture: @Textures/stone.256 /* Gray wall */
+Texture: @Textures/Floor.256 /* The floor */
+Texture: @Textures/torch.256 /* Torch */
+Texture: @Textures/smile.256 /* Smile */
+Texture: @Textures/Ring.256  /* Ring */
+
+TexturesEnd
+
+/* Sides are the Textures and properties of the Walls, floors and ceilings  */
+/* Each side consists of 2 textures, for each texture 4 tripples are given
+   in the order Bottom-left, Bottom-Right, Top-Right, Top-Left. Each tripple
+   consist of u,v coords for the texture and a light value.                 */
+
+Sides
+
+NumSides: 3
+
+Side:
+1  0000 0000 1000   1000 0000 1000   1000 1000 1000   0000 1000 1000
+ 0                                                                   /* Top Side - Plain */
+
+Side:
+2  0000 0000 1000   1000 0000 1000   1000 1000 1000   0000 1000 1000
+ 0                                                                   /* Bottom Side - Dark */
+
+Side:
+1  0000 0000 0500   1000 0000 0500   1000 1000 1000   0000 1000 1000
+ 3 1000 1000 1000   0000 1000 1000   0000 0000 1000   1000 0000 1000 /* Sides - Plain with light fading */
+
+SidesEnd
+
+/* Cubes are the actual rooms of the level                                  */
+/* Each cube consists of 6 Points, the interior light level and 6 tripples
+   The Points are in the order FrontBottomLeft, FrontBottomRight, FrontTopLeft,
+   FrontTopRight, BackBottomLeft, BackBottomRight, BackTopLeft, BackTopRight.
+   Each tripple is the side, the light value of the Side and the connected
+   Cube. The tripples are ordered Front, Back, Right, Left, Top, Bottom     */
+
+Cubes
+
+NumCubes: 4
+
+Cube:  1  2  3  4  5  6  7  8   1000   3 0750 0   0      2   3 0750 0   3 0750 0   1 1000 0   2 0250 0
+Cube:  5  6  7  8  9 10 11 12   0500   0      1   0      3   3 0750 0   3 0750 0   1 1000 0   2 0250 0
+Cube:  9 10 11 12 13 14 15 16   0500   0      2   3 0750 0   3 0750 0   0      4   1 1000 0   2 0250 0
+Cube: 10 17 12 18 14 19 16 20   1000   3 0750 0   3 0750 0   0      3   3 0750 0   1 1000 0   2 0250 0
+
+CubesEnd
+
+/* Polygons are the surfaces for Bots                                       */
+/* Each Polygon consists of the Number of Points, the Points, a Normal, the
+   background Texture with 4 uvl tripples and the front texture with 4 uvl
+   tripples                                                                 */
+
+Polygons
+
+NumPolygons: 8
+
+/* Front */
+
+Polygon: 4  -1000 -1000 -1000   1000 -1000 -1000    1000  1000 -1000   -1000  1000 -1000
+             0000  0000 -1000
+          1  0000  0000  0250   1000  0000  0250    1000  1000  0500    0000  1000  0500
+          4  0000  1000  1000   1000  1000  1000    1000  0000  1000    0000  0000  1000
+
+/* Back */
+
+Polygon: 4  -1000 -1000  1000   1000 -1000  1000    1000  1000  1000   -1000  1000  1000
+             0000  0000  1000
+          1  0000  0000  0250   1000  0000  0250    1000  1000  0500    0000  1000  0500
+          0
+
+/* Bottom */
+
+Polygon: 4  -1000 -1000 -1000   1000 -1000 -1000    1000 -1000  1000   -1000 -1000  1000
+             0000 -1000  0000
+          2  0000  0000  0500   4000  0000  0500    4000  4000  0500    0000  4000  0500
+          0
+
+/* Top */
+
+Polygon: 4  -1000  1000 -1000   1000  1000 -1000    1000  1000  1000   -1000  1000  1000
+             0000  1000  0000
+          1  0000  0000  1000   1000  0000  1000    1000  1000  1000    0000  1000  1000
+          0
+
+/* Left */
+
+Polygon: 4  -1000 -1000 -1000  -1000  1000 -1000   -1000  1000  1000   -1000 -1000  1000
+            -1000  0000  0000
+          1  0000  0000  0250   1000  0000  0250    1000  1000  0500    0000  1000  0500
+          0
+
+/* Right */
+
+Polygon: 4   1000 -1000 -1000   1000  1000 -1000    1000  1000  1000    1000 -1000  1000
+             1000  0000  0000
+          1  0000  0000  0250   1000  0000  0250    1000  1000  0500    0000  1000  0500
+          0
+
+/* Ring */
+
+Polygon: 4  -1000 -1000  0000   1000 -1000  0000    1000  1000  0000   -1000  1000  0000
+             0000  0000 -1000
+          0
+          5  0000  0000  1000   1000  0000  1000    1000  1000  1000    0000  1000  1000
+
+Polygon: 4  -1000 -1000  0000   1000 -1000  0000    1000  1000  0000   -1000  1000  0000
+             0000  0000  1000
+          0
+          5  0000  0000  1000   1000  0000  1000    1000  1000  1000    0000  1000  1000
+
+PolygonsEnd
+
+
+/* Meshes group the Polygons to form a Body                                 */
+/* Each Mesh consists of the number of polygons, for each polygon the
+   polygon and the base point, last a light value                           */
+
+Meshes
+
+NumMeshes: 2
+
+Mesh: 6 1 0000 0000 0000
+        2 0000 0000 0000
+        3 0000 0000 0000
+        4 0000 0000 0000
+        5 0000 0000 0000
+        6 0000 0000 0000
+      1000
+
+Mesh: 2 7 0000 0000 0000
+        8 0000 0000 0000
+      1000
+
+MeshesEnd
+
+
+
+/* Bots are the tings in the level                                          */
+/* Each Bot consists of Position, Direction, Speed, Size, the cube its in,
+   the type, the light, the Mesh it consist of.
+   First Bot is the Player                                                  */
+
+Bots
+
+NumBots: 3
+
+Bot:  0000  0000  0000   /* Position */
+      1000  0000  0000   /* Direction */
+      0000  1000  0000
+      0000  0000  1000
+
+      0000 0000  0000    /* Speed */
+
+     2000                /* Size */
+
+     1                   /* Cube */
+
+     1                   /* Type 1 = Player */
+
+     1000                /* Light */
+
+     0                   /* Mesh 0 = None */
+
+Bot: 20000  0000 40000
+      1000  0000  0000
+      0000  1000  0000
+      0000  0000  1000
+
+      0000 0000 0000
+
+     1000
+
+     4
+
+     26
+
+     0500
+
+     1
+
+Bot:  0000  0000 20000
+      1000  0000  0000
+      0000  1000  0000
+      0000  0000  1000
+
+      5000  0000  0000
+
+      1000
+
+      2
+
+      38
+
+      1000
+
+      2
+
+BotsEnd
+

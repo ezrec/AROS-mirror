@@ -1,0 +1,41 @@
+/****************************************************************************
+*                                                                           *
+* Levels                                                             970319 *
+*                                                                           *
+* List of all Missions and Levels                                           *
+*                                                                           *
+****************************************************************************/
+
+/* What to do when a file is meet - Not yet supported */
+
+OnFile
+
+.lha "lha x %f t:"
+
+OnFileEnd
+
+/* Missions */
+
+Missions
+
+NumMissions:    1
+MissionsName:   "The Demo Missions"
+MissionsStorry: "To Demonstrate Missions"
+
+MissionsEnd
+
+/* First Mission and its levels */
+
+Mission
+
+MissionName:   DemoMission
+MissionStorry: @Levels/Mission1Story
+NumLevels:     5
+Level:         @Levels/Level.00
+Level:         @Levels/Level.01
+Level:         @Levels/Level.02
+Level:         @Levels/Level.03
+Level:         @Levels/Level.04
+
+MissionEnd
+
