@@ -1,0 +1,41 @@
+NAME
+       mdir - display an MSDOS directory
+
+SYNOPSIS
+       mdir [ -w ] msdosdirectory
+
+       mdir [ -w ] msdosfile [ msdosfiles...  ]
+
+DESCRIPTION
+       Mdir displays the contents of an MSDOS directory.
+
+       Mdir will allow the following command line option:
+
+       w      Wide  output.  This option will print the filenames
+              across the page without displaying the file size or
+              creation date.
+
+       An error occurs if a component of the path is not a direc-
+       tory.
+
+       MSDOS subdirectory names are supported with either the '/'
+       or  '\'  separator.  The use of the '\' separator or wild-
+       cards will require the names to be enclosed in  quotes  to
+       protect them from the shell.
+
+       The  mcd  command  may be used to establish the device and
+       the current working directory (relative to MSDOS),  other-
+       wise the default is A:/.
+
+       Mdir  returns  0  on  success, 1 on utter failure, or 2 on
+       partial failure.
+
+SEE ALSO
+       mcd(1)
+
+BUGS
+       Allows multiple arguments, which does not follow the MSDOS
+       convention.
+
+       There is no /P (pause) option.
+

@@ -1,0 +1,37 @@
+
+NAME
+       mtype - display contents of an MSDOS file
+
+SYNOPSIS
+       mtype [ -ts ] msdosfile [ msdosfiles... ]
+
+DESCRIPTION
+       Mtype displays the specified MSDOS file on the screen.
+
+       Mtype will allow the following command line options:
+
+       t      Text  file  viewing.  Mtype will translate incoming
+              carriage return/line feeds to line feeds.
+
+       s      Strip high bit.  Mtype will strip the high bit from
+              the data.
+
+       MSDOS subdirectory names are supported with either the '/'
+       or '\' separator.  The use of the '\' separator  or  wild-
+       cards  will  require the names to be enclosed in quotes to
+       protect them from the shell.
+
+       The mcd command may be used to establish  the  device  and
+       the  current working directory (relative to MSDOS), other-
+       wise the default is A:/.
+
+       Mtype returns 0 on success, 1 on utter failure,  or  2  on
+       partial failure.
+
+SEE ALSO
+       mcd(1), mread(1)
+
+BUGS
+       Allows multiple arguments, which does not follow the MSDOS
+       convention.
+

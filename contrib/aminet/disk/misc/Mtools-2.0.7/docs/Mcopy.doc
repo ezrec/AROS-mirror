@@ -1,0 +1,61 @@
+
+NAME
+       mcopy - copy MSDOS files to/from Unix
+
+SYNOPSIS
+       mcopy [ -tnvm ] sourcefile targetfile
+
+       mcopy [ -tnvm ] sourcefile [ sourcefiles... ] targetdirec-
+       tory
+
+DESCRIPTION
+       Mcopy copies the specified file  to  the  named  file,  or
+       copies  multiple files to the named directory.  The source
+       and target can be either MSDOS or Unix files.
+
+       The use of a drive letter designation on the MSDOS  files,
+       'a:'  for  example, determines the direction of the trans-
+       fer.  A missing drive  designation  implies  a  Unix  file
+       whose path starts in the current directory
+
+       Mcopy will allow the following command line options:
+
+       t      Text  file transfer.  Mcopy will translate incoming
+              carriage return/line feeds to line feeds.
+
+       n      No warning.  Mcopy will  not  warn  the  user  when
+              overwriting an existing file.
+
+       v      Verbose mode.
+
+       m      Preserve the file modification time.
+
+       If  the  target  file already exists, and the -n option is
+       not in effect, mcopy asks whether or not to overwrite  the
+       file.
+
+       MSDOS subdirectory names are supported with either the '/'
+       or '\' separator.  The use of the '\' separator  or  wild-
+       cards  will  require the names to be enclosed in quotes to
+       protect them from the shell.
+
+       The mcd command may be used to establish  the  device  and
+       the  current working directory (relative to MSDOS), other-
+       wise the default is A:/.
+
+       Mcopy returns 0 on success, 1 on utter failure,  or  2  on
+       partial failure.
+
+SEE ALSO
+       mcd(1), mread(1), mwrite(1)
+
+BUGS
+       Unlike  MSDOS,  the destination directory may not be omit-
+       ted.
+
+       The '+' operator (append) from MSDOS is not supported.
+
+       No other Mtools command requires the use of a drive letter
+       designation on MSDOS files.
+
+

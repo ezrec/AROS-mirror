@@ -1,0 +1,250 @@
+include $(TOP)/config/make.cfg
+
+DESTDIR	:= $(CONTRIBDIR)/aminet/disk/misc/Mtools-2.0.7
+
+SRCDIR := src/
+
+MATTRIB	:= $(SRCDIR)mattrib \
+            $(SRCDIR)buf_read \
+            $(SRCDIR)buf_write \
+            $(SRCDIR)devices \
+            $(SRCDIR)dir_read \
+            $(SRCDIR)dir_write \
+            $(SRCDIR)expand \
+            $(SRCDIR)fat_read \
+            $(SRCDIR)init \
+            $(SRCDIR)match \
+            $(SRCDIR)parse \
+            $(SRCDIR)subdir \
+            $(SRCDIR)amiga_devices
+	
+MCD	:= $(SRCDIR)mcd \
+            $(SRCDIR)buf_read \
+            $(SRCDIR)devices \
+            $(SRCDIR)dir_read \
+            $(SRCDIR)expand \
+            $(SRCDIR)fat_read \
+            $(SRCDIR)init \
+            $(SRCDIR)is_dir \
+            $(SRCDIR)match \
+            $(SRCDIR)parse \
+            $(SRCDIR)subdir \
+            $(SRCDIR)amiga_devices
+            	
+MCOPY	= $(SRCDIR)mcopy \
+            $(SRCDIR)getopt
+
+MDEL	= $(SRCDIR)mdel \
+            $(SRCDIR)buf_read \
+            $(SRCDIR)buf_write \
+            $(SRCDIR)devices \
+            $(SRCDIR)dir_read \
+            $(SRCDIR)dir_write \
+	    $(SRCDIR)expand \
+	    $(SRCDIR)fat_free \
+	    $(SRCDIR)fat_read \
+	    $(SRCDIR)fat_write \
+	    $(SRCDIR)init \
+	    $(SRCDIR)match \
+	    $(SRCDIR)parse \
+	    $(SRCDIR)subdir \
+	    $(SRCDIR)amiga_devices \
+	    	
+MDIR	= $(SRCDIR)mdir \
+            $(SRCDIR)buf_read \
+            $(SRCDIR)devices \
+            $(SRCDIR)dir_read \
+            $(SRCDIR)expand \
+            $(SRCDIR)fat_read \
+	    $(SRCDIR)init \
+	    $(SRCDIR)is_dir \
+	    $(SRCDIR)match \
+	    $(SRCDIR)parse \
+	    $(SRCDIR)subdir \
+	    $(SRCDIR)amiga_devices
+	
+MFORMAT	= $(SRCDIR)mformat \
+            $(SRCDIR)fat_read \
+            $(SRCDIR)fat_write \
+            $(SRCDIR)fat_free \
+            $(SRCDIR)buf_read \
+            $(SRCDIR)buf_write \
+            $(SRCDIR)devices \
+	    $(SRCDIR)init \
+            $(SRCDIR)dir_read \
+            $(SRCDIR)dir_write \
+            $(SRCDIR)expand \
+            $(SRCDIR)getopt \
+	    $(SRCDIR)amiga_devices
+
+MLABEL	= $(SRCDIR)mlabel \
+            $(SRCDIR)buf_read \
+            $(SRCDIR)buf_write \
+            $(SRCDIR)devices \
+            $(SRCDIR)dir_read \
+	    $(SRCDIR)dir_write \
+	    $(SRCDIR)expand \
+	    $(SRCDIR)fat_read \
+	    $(SRCDIR)init \
+	    $(SRCDIR)amiga_devices
+	
+MMD	= $(SRCDIR)mmd \
+            $(SRCDIR)buf_read \
+            $(SRCDIR)buf_write \
+            $(SRCDIR)devices \
+            $(SRCDIR)dir_make \
+            $(SRCDIR)dir_read \
+	    $(SRCDIR)dir_write \
+            $(SRCDIR)expand \
+            $(SRCDIR)fat_read \
+            $(SRCDIR)fat_write \
+            $(SRCDIR)init \
+            $(SRCDIR)match \
+            $(SRCDIR)parse \
+	    $(SRCDIR)subdir \
+            $(SRCDIR)amiga_devices
+	
+MRD	= $(SRCDIR)mrd \
+            $(SRCDIR)buf_read \
+            $(SRCDIR)buf_write \
+            $(SRCDIR)devices \
+            $(SRCDIR)dir_read \
+            $(SRCDIR)dir_write \
+	    $(SRCDIR)expand \
+            $(SRCDIR)fat_free \
+            $(SRCDIR)fat_read \
+            $(SRCDIR)fat_write \
+            $(SRCDIR)init \
+            $(SRCDIR)match \
+            $(SRCDIR)parse \
+	    $(SRCDIR)subdir \
+            $(SRCDIR)amiga_devices
+	
+MREAD	= $(SRCDIR)mread \
+            $(SRCDIR)buf_read \
+            $(SRCDIR)devices \
+            $(SRCDIR)dir_read \
+            $(SRCDIR)expand \
+            $(SRCDIR)fat_read \
+	    $(SRCDIR)file_read \
+            $(SRCDIR)init \
+            $(SRCDIR)match \
+            $(SRCDIR)parse \
+            $(SRCDIR)subdir \
+            $(SRCDIR)amiga_devices \
+            $(SRCDIR)getopt
+	
+MREN	= $(SRCDIR)mren \
+            $(SRCDIR)buf_read \
+            $(SRCDIR)buf_write \
+            $(SRCDIR)devices \
+            $(SRCDIR)dir_read \
+            $(SRCDIR)dir_write \
+	    $(SRCDIR)expand \
+            $(SRCDIR)fat_read \
+            $(SRCDIR)init \
+            $(SRCDIR)match \
+            $(SRCDIR)parse \
+            $(SRCDIR)subdir \
+            $(SRCDIR)amiga_devices
+	
+MTYPE	= $(SRCDIR)mtype \
+            $(SRCDIR)buf_read \
+            $(SRCDIR)devices \
+            $(SRCDIR)dir_read \
+            $(SRCDIR)expand \
+            $(SRCDIR)fat_read \
+	    $(SRCDIR)file_read \
+            $(SRCDIR)init \
+            $(SRCDIR)match \
+            $(SRCDIR)parse \
+            $(SRCDIR)subdir \
+            $(SRCDIR)amiga_devices \
+            $(SRCDIR)getopt
+	
+MWRITE	= $(SRCDIR)mwrite \
+            $(SRCDIR)buf_read \
+            $(SRCDIR)buf_write \
+            $(SRCDIR)devices \
+            $(SRCDIR)dir_make \
+	    $(SRCDIR)dir_read \
+            $(SRCDIR)dir_write \
+            $(SRCDIR)expand \
+            $(SRCDIR)fat_free \
+            $(SRCDIR)fat_read \
+            $(SRCDIR)fat_write \
+	    $(SRCDIR)file_write \
+            $(SRCDIR)init \
+            $(SRCDIR)is_dir \
+            $(SRCDIR)match \
+            $(SRCDIR)parse \
+            $(SRCDIR)subdir \
+            $(SRCDIR)amiga_devices \
+            $(SRCDIR)getopt
+	
+MKMANIFEST = $(SRCDIR)mkmanifest
+
+%build_prog mmake=mtools-mattrib \
+    progname=mattrib targetdir=$(DESTDIR) \
+    files="$(MATTRIB)" uselibs="mui arossupport amiga arosc m"
+
+%build_prog mmake=mtools-mcd \
+    progname=mcd targetdir=$(DESTDIR) \
+    files="$(MCD)" uselibs="mui arossupport amiga arosc m"
+
+%build_prog mmake=mtools-mcopy \
+    progname=mcopy targetdir=$(DESTDIR) \
+    files="$(MCOPY)" uselibs="mui arossupport amiga arosc m"
+
+%build_prog mmake=mtools-mdel \
+    progname=mdel targetdir=$(DESTDIR) \
+    files="$(MDEL)" uselibs="mui arossupport amiga arosc m"
+
+%build_prog mmake=mtools-mdir \
+    progname=mdir targetdir=$(DESTDIR) \
+    files="$(MDIR)" uselibs="mui arossupport amiga arosc m"
+
+%build_prog mmake=mtools-mformat \
+    progname=mformat targetdir=$(DESTDIR) \
+    files="$(MFORMAT)" uselibs="mui arossupport amiga arosc m"    
+    
+%build_prog mmake=mtools-mlabel \
+    progname=mlabel targetdir=$(DESTDIR) \
+    files="$(MLABEL)" uselibs="mui arossupport amiga arosc m"
+
+%build_prog mmake=mtools-mmd \
+    progname=mmd targetdir=$(DESTDIR) \
+    files="$(MMD)" uselibs="mui arossupport amiga arosc m"
+
+%build_prog mmake=mtools-mrd \
+    progname=mrd targetdir=$(DESTDIR) \
+    files="$(MRD)" uselibs="mui arossupport amiga arosc m"
+
+%build_prog mmake=mtools-mread \
+    progname=mread targetdir=$(DESTDIR) \
+    files="$(MREAD)" uselibs="mui arossupport amiga arosc m"
+
+%build_prog mmake=mtools-mren \
+    progname=mren targetdir=$(DESTDIR) \
+    files="$(MREN)" uselibs="mui arossupport amiga arosc m"        
+    
+%build_prog mmake=mtools-mtype \
+    progname=mtype targetdir=$(DESTDIR) \
+    files="$(MTYPE)" uselibs="mui arossupport amiga arosc m"
+
+%build_prog mmake=mtools-mwrite \
+    progname=mwrite targetdir=$(DESTDIR) \
+    files="$(MWRITE)" uselibs="mui arossupport amiga arosc m"
+
+%build_prog mmake=mtools-mkmanifest \
+    progname=mkmanifest targetdir=$(DESTDIR) \
+    files="$(MKMANIFEST)" uselibs="mui arossupport amiga arosc m"
+   
+#MM- contrib-mtools : mtools-mattrib mtools-mcd mtools-mdel mtools-mdir mtools-mlabel mtools-mmd mtools-mren mtools-mtype mtools-mwrite mtools-mkmanifest mtools-mread mtools-mrd mtools-mformat mtools-mcopy
+
+#MM
+contrib-mtools-docs :
+
+$(DESTDIR)/Docs/% : docs/%
+	%mkdirs_q $(DESTDIR)/Docs
+	cp $< $@

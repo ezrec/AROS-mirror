@@ -1,0 +1,119 @@
+Short: Mtools V2.0.7 for AROS
+Type: util/disk
+
+Mtools 2.0.7 for AROS
+-------------------------
+
+What do you need to use Mtools on AROS?
+---------------------------------------
+
+- an "mfm.device"
+
+- If the media you'd like to access via Mtools differs from
+  the ones I have available (and preconfigured), you'll
+  need to edit the first structure in devices.c a little,
+  then compile the programs by saying "make" again, you'll
+  need gcc and the C=-includes to do this.
+  (see also the config-notes below)
+
+Are there any problems with Mtools (in comparison to the unix-version)?
+-----------------------------------------------------------------------
+
+Yes, there are. But nothing really serious: The command "mcopy"
+determines the direction of the copy (from/to MS-DOS) by looking
+at the destination name. Since MS-DOS also uses the colon to separate
+a device-name, mcopy will think you want to copy from AROS to
+MS-DOS if you give for example the command
+
+mcopy a:foo.bar t:
+
+... so avoid the colon in the destination path, and use the unix-syntax:
+
+mcopy a:foo.bar /t/
+
+... which will do what you wanted it to do.
+
+You may also use (AROS-)wildcards in the source-name(s), if you
+want to copy from AROS to MS-DOS, e.g.:
+
+mcopy #?.bar a:
+
+*BUT* if you want to copy in the opposite direction, from MS-DOS to
+AROS, you need to use a different syntax:
+
+mcopy "a:*.bar" /t/
+
+Conclusion: 
+
+ADOS->MSDOS:  AROS-wildcards, no double-quotes needed
+MSDOS->AROS: MSDOS-wildcards, double-quotes around the source-name(s) needed
+
+IMPORTANT: Due to the limitations of the CLI-parameter length you
+shouldn't use the wildcard expansion on the AROS-side with very
+large numbers of matching files - an error may occur.
+
+Are Mtools able to format MS-DOS media?
+---------------------------------------
+
+LOW-LEVEL:  NO!
+HIGH-LEVEL: SOMETIMES... you may use mformat to write the
+            FAT etc. to a low-level-formatted (floppy-)disk,
+            but mformat is unable to write the FAT on great
+            partitions.
+
+I've included an archive with the compressed initial data
+for an 128MB MO-medium, you may "format" such an medium
+by writing the data directly to appropriate device.
+
+If you've got a copy of "dcp" for example, you may say
+
+lha e MSDOS_128MB_FAT.lha
+dcp MSDOS_MO_BLOCKS <your device:>
+
+You can create archives with appropriate FATs for your media
+by formatting them with an PeeeCeee, then read the FAT-blocks
+from the device (for example with dcp, too).
+
+
+How can I customize Mtools to work with my special hardware?
+------------------------------------------------------------
+
+Read the file src/Configure, then you'll be able to change the
+src/devices.c file as you need it. But you'll also need to know
+a few additional things:
+
+- In the unix-version, all the I/O is done via (special-)files.
+  You may do this, too, by using the "flat:"-device (was
+  published on fish-disks), and the appropriate filename
+  in devices.c.
+  But there's a better I/O method, which is only available
+  in this AROS-version of the Mtools: You may also specify the
+  name and the unit of a device, then this device will be used
+  directly.
+
+  device->name  then holds the name of the device,
+  device->mode  holds the unit-number,
+  device->heads must be set to -1 for a device (rather than a file)
+
+- The device->tracks, heads and sectors are optional parameters,
+  you may set them to 0 if you don't know them. If you know them for sure,
+  set them, this will make the read & write caching more efficient.
+  If you're using a device (thus device->heads == -1), you may set
+  the sector-number to the number of blocks you wish to fit into the caches.
+  If you don't, a default-value of 128 blocks is the size of the caches.
+
+
+Credits:
+--------
+
+The AROS-specific changes to Mtools were applied by
+  Nic Andrews <nicja@yahoo.com>
+
+The Amiga-specific changes to Mtools were applied by
+  Lutz Vieweg <lkv@mania.robin.de>
+
+The device-access code was taken from the "device-streams.tar.gz"
+  archive by Christian E. Hopps
+
+THANKS TO THE AUTHORS OF THE ORIGINAL MTOOLS, OF COURSE!
+

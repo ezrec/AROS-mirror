@@ -1,0 +1,74 @@
+
+NAME
+       Mtools  -  a  collection  of  tools for manipulating MSDOS
+       files
+
+SYNOPSIS
+       mattrib - change MSDOS file attribute flags
+       mcd - change MSDOS directory
+       mcopy - copy MSDOS files to/from Unix
+       mdel - delete an MSDOS file
+       mdir - display an MSDOS directory
+       mformat - add an MSDOS filesystem to a low-level formatted diskette
+       mlabel - make an MSDOS volume label
+       mmd - make an MSDOS subdirectory
+       mrd - remove an MSDOS subdirectory
+       mread - low level read (copy) an MSDOS file to Unix
+       mren - rename an existing MSDOS file
+       mtype - display contents of an MSDOS file
+       mwrite - low level write (copy) a Unix file to MSDOS
+
+DESCRIPTION
+       Mtools is a public domain collection of programs to  allow
+       Unix  systems  to  read, write, and manipulate files on an
+       MSDOS filesystem (typically  a  diskette).   Each  program
+       attempts  to  emulate  the  MSDOS  equivalent  command  as
+       closely as practical.
+
+       MSDOS filenames are optionally composed of a drive  letter
+       followed by a colon, a subdirectory, and a filename.  Sub-
+       directory names can use either the '/' or  '\'  separator.
+       The use of the '\' separator or wildcards will require the
+       names to be enclosed in quotes to protect  them  from  the
+       shell.
+
+       The  regular expression "pattern matching" routines follow
+       the Unix-style rules.  For example, '*' matches all  MSDOS
+       files  in  lieu  of '*.*'.  The archive, hidden, read-only
+       and system  attribute  bits  are  ignored  during  pattern
+       matching.
+
+       Not all Unix filenames are appropriate in the MSDOS world.
+       The Mtools commands may have to alter Unix  names  to  fit
+       the  MSDOS filename restrictions.  Most commands have a -v
+       (verbose) option that will display the new names  if  they
+       have  been  changed.  The following table shows some exam-
+       ples of filename conversions:
+
+            l l  l.   Unix  name MSDOS  name     Reason  for  the
+            change  _    _    _ thisisatest    THISISAT  filename
+            too long emmet.gray     EMMET.GRA extension too  long
+            prn.txt   XRN.TXT   PRN     is    a    device    name
+            hot+cold  HOTXCOLD  illegal character
+
+       All options use the '-' (minus) flag,  not  '/'  as  you'd
+       expect in MSDOS.
+
+       The  mcd  command  is used to establish the device and the
+       current working directory (relative to the MSDOS  filesys-
+       tem), otherwise the default is assumed to be A:/.
+
+       All  the  Mtools  commands return 0 on success, 1 on utter
+       failure, or 2 on partial failure.
+
+SEE ALSO
+       mattrib(1), mcd(1), mdel(1), mformat(1), mrd(1),  mren(1),
+       mtype(1),  mcopy(1), mdir(1), mlabel(1), mmd(1), mread(1),
+       mwrite(1)
+
+BUGS
+       An unfortunate side effect  of  not  guessing  the  proper
+       device (when multiple disk capacities are supported) is an
+       occasional error message from the  device  driver.   These
+       can be safely ignored.
+

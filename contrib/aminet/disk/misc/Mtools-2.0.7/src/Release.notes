@@ -1,0 +1,107 @@
+Patch #7, 6 Sep 92
+
+This patch will change the method of determining if the FAT encoding
+scheme in the devices.c file is correct.  The method introduced by patch
+#6 was naive and easily fooled.
+
+A pre-processor variable called CHK_FAT has been added to the fat_read.c
+file just in case this new method isn't appropriate for all disks.
+
+-----------------------------------------------------------------------------
+Patch #6, 21 Aug 92
+
+This patch will add the following features:
+
+	1) Mtools commands now use advisory locks to preclude two
+	processes from writing to the same DOS filesystem.  You must
+	edit the Makefile to choose one of the 3 lock methods:
+		-DLOCKF, -DFLOCK, or -DFCNTL.
+	See the Configure file for more details.
+
+	2) An error detection routine has been added to determine if the
+	FAT encoding scheme in the devices.c file is correct.
+
+	3) Mtools commands now return exit codes with the following
+	meaning:
+		0 = success
+		1 = utter failure
+		2 = partial sucess/failure.  (at least one successful
+		    operation, but at least one failure)
+
+It also corrects a bug when Mtools is used on machines that have 16 bit
+integers.  However, machines with 16 bit integers are limited to FAT
+tables that are less than 64k in length.
+-------------------------------------------------------------------------------
+Patch #5, 25 Aug 91
+
+This patch will add a few new features:
+
+	1) Mtools will now work properly on MSDOS partitions that are
+	greater than 32M.
+
+	2) If the "current working directory" information (contained in
+	the $HOME/.mcwd file) is more than 6 hours old, Mtools will
+	issue a warning and ignore the old information.
+
+	3) The mcopy command will now copy files between 2 MSDOS file
+	systems (such as mcopy "a:*" b:).
+
+-------------------------------------------------------------------------------
+Patch #4, 11 Apr 91
+
+	This patch will fix a bug in the mmd command where directories
+	inherited the file name extension of the parent directory.  It
+	also adds a feature that will allow the copying of zero length
+	files.
+
+-------------------------------------------------------------------------------
+Patch #3, 28 Nov 90
+
+	This patch will fix a bug where Mtools sometimes bypasses the
+	disk "cache" and reads/writes to the disk directly.
+
+-------------------------------------------------------------------------------
+Patch #2, 21 Nov 90
+
+	This patch will fix a bug in the folding of MSDOS filenames to
+	lower case, and will fix a bug that could prevent the detection
+	of a full disk.
+
+-------------------------------------------------------------------------------
+Patch #1, 12 Oct 90
+
+	This patch will fix a few problems on Berkekely flavors of Unix,
+	and will fix the floating point exception bug when Mtools is
+	used with diskettes that have been formatted under very old DOS
+	(or formatted by some other non-DOS system).
+
+-------------------------------------------------------------------------------
+New in the v2.0 release....
+
+	1) Support for multiple devices.  Mtools now supports:
+		multiple floppy disks (A:, B:, etc)
+		DOS partitions on a hard disk
+		DOS "images" such as those VP/ix uses.
+
+	2) Wildcards are supported anywhere in a pathname (not just
+	in the "filename" part as before)
+
+	3) Reads and writes to slow devices are now "cylinder buffered"
+	when appropriate.
+
+	4) Versions of CD, FORMAT, LABEL, and ATTRIB have been added.
+
+	5) A Mtools.1 manual page has beed added for an overview of Mtools.
+
+	6) The mkmanifest command has been added.  Although not an 'mtool'
+	command, it makes life easier when fixing up Unix filenames that
+	get clobbered by MSDOS file name restrictions.
+
+	7) The mkdfs program of the "fast-mtools" release for the Sun
+	SparcStation can be replaced with mformat.
+
+	8) The Configure file has been included to help those who must add
+	devices to the devices.c file.
+
+	Many thanks to Viktor Dukhovni (viktor@math.princeton.edu) for
+	many of the ideas in the new release.

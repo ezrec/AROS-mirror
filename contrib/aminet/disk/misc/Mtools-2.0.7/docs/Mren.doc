@@ -1,0 +1,44 @@
+
+NAME
+       mren - rename an existing MSDOS file
+
+SYNOPSIS
+       mren [ -v ] sourcefile targetfile
+
+DESCRIPTION
+       Mren renames an existing file on an MSDOS filesystem.
+
+       Mren will allow the following command line option:
+
+       v      Verbose mode.  Display the new filename if the name
+              supplied is invalid.
+
+       Reasonable care is taken to create a valid MSDOS filename.
+       If  an  invalid  MSDOS target name is specified, mren will
+       change the name (and prompt the user to accept  or  reject
+       the new name if the verbose mode is set).
+
+       The path component of the target filename (if supplied) is
+       ignored.  In other words, you may not use mren to  move  a
+       file from one subdirectory to another.
+
+       Mren may be used to rename directories.
+
+       MSDOS subdirectory names are supported with either the '/'
+       or '\' separator.  The use of the '\' separator  or  wild-
+       cards  will  require the names to be enclosed in quotes to
+       protect them from the shell.
+
+       The mcd command may be used to establish  the  device  and
+       the  current working directory (relative to MSDOS), other-
+       wise the default is A:/.
+
+       Mread returns 0 on success or 1 on failure.
+
+SEE ALSO
+       mcd(1)
+
+BUGS
+       Unlike the MSDOS version of  REN,  mren  can  be  used  to
+       rename directories.
+

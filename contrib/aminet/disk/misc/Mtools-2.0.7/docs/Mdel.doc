@@ -1,0 +1,36 @@
+NAME
+       mdel - delete an MSDOS file
+
+SYNOPSIS
+       mdel [ -v ] msdosfile [ msdosfiles...  ]
+
+DESCRIPTION
+       Mdel deletes a file on an MSDOS filesystem.
+
+       Mdel will allow the following command line option:
+
+       v      Verbose  mode.  Echo the filenames as they are pro-
+              cessed.
+
+       Mdel  will  ask  for  verification  prior  to  removing  a
+       read-only file.
+
+       MSDOS subdirectory names are supported with either the '/'
+       or '\' separator.  The use of the '\' separator  or  wild-
+       cards  will  require the names to be enclosed in quotes to
+       protect them from the shell.
+
+       The mcd command may be used to establish  the  device  and
+       the  current working directory (relative to MSDOS), other-
+       wise the default is A:/.
+
+       Mdel returns 0 on success, 1 on utter  failure,  or  2  on
+       partial failure.
+
+SEE ALSO
+       mcd(1)
+
+BUGS
+       Allows multiple arguments, which does not follow the MSDOS
+       convention.
+
