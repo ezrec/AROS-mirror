@@ -1265,7 +1265,7 @@ static void ShowBestTimes(Object * obj, struct LevelDataList * lList, int hiRank
         MUIA_Window_TopEdge, MUIV_Window_TopEdge_Centered,
         MUIA_BTWindow_LevelList, lList,
         MUIA_BTWindow_HighlightRank, hiRank,
-        End;
+        TAG_DONE);
 
     /*
         check if window was successfully created
