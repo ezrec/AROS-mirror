@@ -7,16 +7,23 @@ BASEDIR=$(cd $(dirname "$0")/.. ; pwd)
 
 . site.conf
 
+if [ -r apache.conf ]; then
+    rm -f apache.conf.bak
+    mv apache.conf apache.conf.bak
+fi
+
+cat > apache.conf <<EOF
+# To use this file, please append the following line in httpd.conf
+# or access.conf:
+#
+#    Include $BASEDIR/data/apache.conf
+#
+#and restart Apache.
+EOF
+
 sed \
     -e "s:\@HOSTNAME\@:$HOSTNAME:" \
     -e "s:\@BASEDIR\@:$BASEDIR:" \
     -e "s:\@MAILMAN\@:$MAILMAN:" \
-    apache.conf.in > apache.conf
+    apache.conf.in >> apache.conf
 
-cat 1>&2 <<EOF
-apache.conf generated. Please include it in your Apache config with
-
-    Include $BASEDIR/data/apache.conf
-
-and restart Apache.
-EOF
