@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 %define_libs
 
-CFLAGS	:= $(USER_DEFINES) -O2 -Wall -DAROS $(SPECIAL_CFLAGS) $(INCLUDES)
+CFLAGS	:= $(USER_DEFINES) -O2 -Wall -DDEBUG -DAROS -DV39 $(SPECIAL_CFLAGS) $(INCLUDES)
 OBJDIR	:= $(GENDIR)/$(CURDIR)
 DESTDIR := $(CONTRIBDIR)/aminet
 
@@ -23,7 +23,7 @@ EXE := $(DESTDIR)/filemaster
 
 .PHONY : all clean
 
-#MM aminet-util-dir-filemaster : setup-aminet-util-dir-filemaster
+#MM aminet-util-dir-filemaster : setup-aminet-util-dir-filemaster setup-filemaster-catalogs
 aminet-util-dir-filemaster 	: $(OBJS) $(EXE)
 	@$(NOP)
 
