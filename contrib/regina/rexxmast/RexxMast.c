@@ -183,7 +183,6 @@ static void StartFileSlave(struct RexxMsg *msg)
     USHORT rc;
     BPTR lock, oldlock;
     unsigned int len=0, extlen, argcount=0;
-    LONG type;
     BOOL iscommand = ((msg->rm_Action & RXCODEMASK) == RXCOMM);
     struct FileHandle *input = NULL, *output = NULL, *error = NULL;
     struct Process *process = (struct Process *)msg->rm_Node.mn_ReplyPort->mp_SigTask;
@@ -227,7 +226,6 @@ static void StartFileSlave(struct RexxMsg *msg)
 
     if (iscommand)
     {
-	type = RXCOMMAND;
 	while (isspace(*s))
 	    s++;
 	
