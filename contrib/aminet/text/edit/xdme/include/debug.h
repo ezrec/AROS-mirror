@@ -63,6 +63,9 @@
 /*
  * Debugging function automaticaly set to printf, kprintf, or dprintf
  */
+#ifdef __AROS__
+#   define __stdargs /* eps */
+#endif
 
 #if KDEBUG
 extern __stdargs void kprintf(UBYTE *fmt,...);

@@ -42,16 +42,9 @@
 #include <workbench/icon.h>
 #include <workbench/startup.h>
 #include <workbench/workbench.h>
-//#include <clib/_protos.h>
-#include <clib/icon_protos.h>
-#include <clib/wb_protos.h>
 
-extern struct Library *WorkbenchBase;
-extern struct Library *IconBase;
-
-//#include <pragmas/_pragmas.h>
-#include <pragmas/icon_pragmas.h>
-#include <pragmas/wb_pragmas.h>
+#include <proto/icon.h>
+#include <proto/workbench.h>
 
 
 /**************************************

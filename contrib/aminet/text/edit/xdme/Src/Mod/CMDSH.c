@@ -45,7 +45,8 @@
 /**************************************
 	      Includes
 **************************************/
-
+#include <proto/exec.h>
+#include <proto/dos.h>
 /*
 #include <exec/ports.h>
 #include <exec/memory.h>
@@ -164,6 +165,8 @@ int CMDSH_Send (void) {
     SendPkt(CMDSH_Packet, CMDSH_FilePort, CMDSH_Port);
 
     CMDSH_Pending = 1;
+
+    return 0;
 } /* CMDSH_Send */
 
 int CMDSH_CloseShell (void) {
@@ -255,7 +258,11 @@ int CMDSH_OpenShell (const UBYTE *filename) {
     /* ---- [re]init all file data */
     CMDSH_Active     = 1;
     CMDSH_FileHandle = BADDR(CMDSH_File);
+#ifndef __AROS__
     CMDSH_FilePort   = CMDSH_FileHandle->fh_Type;
+#else
+    CMDSH_FilePort   = NULL;
+#endif
 
     /* ---- prompt for input */
     CMDSH_Send();

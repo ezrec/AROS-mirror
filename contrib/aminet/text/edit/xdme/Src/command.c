@@ -3,32 +3,16 @@
     MODUL
 	$Id$
 
-    HISTORY
-	06. Dec 1992	ada created
-	$Log$
-	Revision 1.1  2001/10/06 20:11:32  digulla
-	Initial revision
-
- * Revision 1.4  1994/12/22  09:19:18  digulla
- * Makros und DEFCMD eingeführt
- *
- * Revision 1.3  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- *
- * Revision 1.2  1994/08/19  14:08:50  digulla
- * added new commands by B. Noll
- *
- * Revision 1.1  1994/08/13  16:35:34  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************
 		Includes
 **************************************/
 #include "defs.h"
-
+#include <proto/dos.h>
+#include <proto/intuition.h>
+#include <proto/exec.h>
+#include <string.h>
 
 /**************************************
 	    Globale Variable
@@ -68,7 +52,7 @@ typedef struct
 static CONST COMM Comm[] =
 {
 #undef DEFUSERCMD
-#define DEFUSERCMD(str,nargs,flags,ret,func,param,ext)  str, nargs, flags, (FPTR) func,
+#define DEFUSERCMD(str,nargs,flags,ret,func,param,ext)  { str, nargs, flags, (FPTR) func, },
 #include "commands.h"
 #undef DEFUSERCMD
 #define DEFUSERCMD(str,nargs,flags,ret,func,param,ext)  ret func param ext
@@ -178,7 +162,7 @@ if (GETF_DEBUG(Ep)) printf("-- viewmode");
 	    {
 if (GETF_DEBUG(Ep)) printf("loop[%2d|%d] comm %s\n",level, GETF_ABORTCOMMAND(Ep), arg);
 
-		comm = &Comm[j];
+		comm = (COMM *)&Comm[j];
 
 		foundcmd = 1;
 
@@ -273,7 +257,7 @@ if (GETF_DEBUG(Ep)) printf("-- repeat");
 	    }
 
 	    av[3] = 0;
-	    comm = &repcmd;
+	    comm = (COMM *)&repcmd;
 
 	    goto process;
 	} /* Repeat */
@@ -288,7 +272,7 @@ if (GETF_DEBUG(Ep)) printf("-- repeat");
 	    void * macro;
 	    int    ret;
 
-	    if (macro = (void*)getmacro(arg))
+	    if ( (macro = (void*)getmacro(arg)) )
 	    {
 		int narg = nummacroargs (macro);
 
@@ -484,7 +468,7 @@ DEFUSERCMD("source", 1, CF_VWM|CF_COK|CF_ICO, void, do_source, (long do_err),)
     char * str;
     BPTR   oldlock = CurrentDir(DupLock(Ep->dirlock));
 
-    if (fi = fopen(av[1], "r"))
+    if ( (fi = fopen(av[1], "r")) )
     {
 	while (fgets(buf, MAXLINELEN, fi))
 	{
@@ -562,7 +546,12 @@ DEFUSERCMD("execute", 1, CF_VWM|CF_ICO, void, do_execute, (void),)
     {
 	void *oldConsoleTask = proc->pr_ConsoleTask;
 
+#ifndef __AROS__
 	proc->pr_ConsoleTask = (APTR)BTOCP(NilFH, struct FileHandle *)->fh_Port;
+#else
+#warning proc->pr_ConsoleTask = fileHandle->fh_Port
+	proc->pr_ConsoleTask = NULL;
+#endif
 
 	Execute (av[1], NilFH, NilFH);
 
@@ -780,7 +769,8 @@ char * breakout (char ** ptr, char * quoted, char ** paux)
 		isaux = 1;
 		if (di + i < sizeof(buf)-1)
 		{
-		    movmem(Ep->name, buf + di, i);
+		    /*movmem(Ep->name, buf + di, i);*/
+		    memmove (buf + di, Ep->name, i);
 		    di += i;
 		    buf[di] = 0;
 		}
@@ -843,7 +833,7 @@ char * breakout (char ** ptr, char * quoted, char ** paux)
 		if (ce)
 		    ++str;
 		continue;
-	    } else if (tmpptr = getvar(str))
+	    } else if ( (tmpptr = getvar(str)) )
 	    {
 		ptr2 = tmpptr;
 		str[len] = c;

@@ -18,63 +18,63 @@ STR default = %{
 
 // the pens ...
 
-int fgpen = %{ reference =  TEXT_FPEN(Ep); %};
-int bgpen = %{ reference =  TEXT_BPEN(Ep); %};
-int hgpen = %{ reference = BLOCK_FPEN(Ep); %};
-int bbpen = %{ reference = BLOCK_BPEN(Ep); %};
-int tfpen = %{ reference = TITLE_FPEN(Ep); %};
-int tbpen = %{ reference = TITLE_BPEN(Ep); %};
+INT fgpen = %{ reference =  TEXT_FPEN(Ep); %};
+INT bgpen = %{ reference =  TEXT_BPEN(Ep); %};
+INT hgpen = %{ reference = BLOCK_FPEN(Ep); %};
+INT bbpen = %{ reference = BLOCK_BPEN(Ep); %};
+INT tfpen = %{ reference = TITLE_FPEN(Ep); %};
+INT tbpen = %{ reference = TITLE_BPEN(Ep); %};
 
 // the flags ...
 
-bit activetofront   = %{ reference =ACTIVATETOFRONT; %};
-bit autoindent	    = %{ reference =AUTOINDENT; %};
-bit autosplit	    = %{ reference =AUTOSPLIT; %};
-bit autounblock     = %{ reference =AUTOUNBLOCK; %};
-bit debug	    = %{ reference =DEBUG; %};
-bit dobackup	    = %{ reference =DOBACK; %};
-bit globalsearch    = %{ reference =GLOBALSEARCH; %};
-bit ignorecase	    = %{ reference =IGNORECASE; %};
+BIT activetofront   = %{ reference =ACTIVATETOFRONT; %};
+BIT autoindent	    = %{ reference =AUTOINDENT; %};
+BIT autosplit	    = %{ reference =AUTOSPLIT; %};
+BIT autounblock     = %{ reference =AUTOUNBLOCK; %};
+BIT debug	    = %{ reference =DEBUG; %};
+BIT dobackup	    = %{ reference =DOBACK; %};
+BIT globalsearch    = %{ reference =GLOBALSEARCH; %};
+BIT ignorecase	    = %{ reference =IGNORECASE; %};
 //bit infixmode       = %{ reference = MathInfix; %};
-bit insertmode	    = %{ reference =INSERTMODE; %};
-bit modified	    = %{ reference =MODIFIED; %};
-bit saveicons	    = %{ reference =SAVEICONS; %};
-bit savetabs	    = %{ reference =SAVETABS; %};
-bit shortlines	    = %{ reference =SLINE; %};
-bit simpletabs	    = %{ reference =SIMPLETABS; %};
-bit sourcebreaks    = %{ reference =SOURCEBREAKS; %};
-bit viewmode	    = %{ reference =VIEWMODE; %};
-bit windowcycling   = %{ reference =WINDOWCYCLING; %};
-bit windowtitles    = %{ reference =WINDOWTITLES; %};
-bit wordwrap	    = %{ reference =WORDWRAP; %};
+BIT insertmode	    = %{ reference =INSERTMODE; %};
+BIT modified	    = %{ reference =MODIFIED; %};
+BIT saveicons	    = %{ reference =SAVEICONS; %};
+BIT savetabs	    = %{ reference =SAVETABS; %};
+BIT shortlines	    = %{ reference =SLINE; %};
+BIT simpletabs	    = %{ reference =SIMPLETABS; %};
+BIT sourcebreaks    = %{ reference =SOURCEBREAKS; %};
+BIT viewmode	    = %{ reference =VIEWMODE; %};
+BIT windowcycling   = %{ reference =WINDOWCYCLING; %};
+BIT windowtitles    = %{ reference =WINDOWTITLES; %};
+BIT wordwrap	    = %{ reference =WORDWRAP; %};
 //bit intuitiontitles = windowtitles;
 
 // normal integers
 
-const int ascii     = %{ reference = Current[Ep->column]; %};
-const int colno     = %{ reference = Ep->column + 1;	  %};
-const int lineno    = %{ reference = Ep->line + 1;	  %};
-int margin	    = %{ reference = Ep->config.margin;   %};
-int parcol	    = %{ reference = Ep->config.wwcol;	  %};
-int tabstop	    = %{ reference = Ep->config.tabstop;  %};
+CONST INT ascii     = %{ reference = Current[Ep->column]; %};
+CONST INT colno     = %{ reference = Ep->column + 1;	  %};
+CONST INT lineno    = %{ reference = Ep->line + 1;	  %};
+INT margin	    = %{ reference = Ep->config.margin;   %};
+INT parcol	    = %{ reference = Ep->config.wwcol;	  %};
+INT tabstop	    = %{ reference = Ep->config.tabstop;  %};
 
-str currentline 	= %{ reference = Current; set = %{ strcpy (Current, value); Clen = strlen(Current); while (Clen < Ep->column) Current[Clen++] = ' '; Current[Clen] = '\0'; %}; %};
-const str restofline	= %{ reference = Current + Ep->column; %};
-const str version	= %{ reference = version;	       %};
-const str rexxport	= %{ reference = RexxPortName;	       %};
+STR currentline 	= %{ reference = Current; set = %{ strcpy (Current, value); Clen = strlen(Current); while (Clen < Ep->column) Current[Clen++] = ' '; Current[Clen] = '\0'; %}; %};
+CONST STR restofline	= %{ reference = Current + Ep->column; %};
+CONST STR version	= %{ reference = version;	       %};
+CONST STR rexxport	= %{ reference = RexxPortName;	       %};
 
-str findstr	    = %{ reference = Fstr;     %};
-str fname	    = %{ reference = Ep->name; %};
-str repstr	    = %{ reference = Rstr;     %};
-str scanf	    =
+STR findstr	    = %{ reference = Fstr;     %};
+STR fname	    = %{ reference = Ep->name; %};
+STR repstr	    = %{ reference = Rstr;     %};
+STR scanf	    =
 %{  reference = String;
     set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %};
 %};
 
-const fnc currentword	 = %{
+CONST FNC currentword	 = %{
     get = %{ value = current_word(); %};
 %};
-const project fnc keytable	 = %{
+CONST PROJECT FNC keytable	 = %{
     get = %{
 	if ((value = (void*)currenthash()))
 	    value = ((struct Node *)value)->ln_Name;
@@ -85,7 +85,7 @@ const project fnc keytable	 = %{
 	av[1] = av1_bak;
     %};
 %};
-const project fnc menustrip	 = %{
+CONST PROJECT FNC menustrip	 = %{
     get = %{
 	if ((value = (void *)currentmenu()))
 	    value = ((struct Node *)value)->ln_Name;
@@ -96,7 +96,7 @@ const project fnc menustrip	 = %{
 	av[1] = av1_bak;
     %};
 %};
-fnc rxresult	   = %{
+FNC rxresult	   = %{
     get = %{ value = get_rexx_result(); %};
     set = %{{
 	av[1] = value;
@@ -104,7 +104,7 @@ fnc rxresult	   = %{
 	av[1] = av1_bak;
     }%};
 %};
-const fnc filename	 = %{
+CONST FNC filename	 = %{
     get = %{ if (getpathto(Ep->dirlock, Ep->name, tmp_buffer))
 	    value = tmp_buffer; %};
 
@@ -114,7 +114,7 @@ const fnc filename	 = %{
 	av[1] = av1_bak;
     %};
 %};
-const fnc currentdir	 = %{
+CONST FNC currentdir	 = %{
     get = %{ if (NameFromLock(Ep->dirlock, tmp_buffer, sizeof(tmp_buffer)))
 	    value = tmp_buffer; %};
     set = %{
@@ -124,7 +124,7 @@ const fnc currentdir	 = %{
     %};
 %};
 
-const BIT itemcheck = %{
+CONST BIT itemcheck = %{
     get = %{
       if (active_menu)
 	  value = (((struct MenuItem *)active_menu)->Flags & CHECKED) ? "1": "0";
@@ -140,38 +140,38 @@ const BIT itemcheck = %{
     %};
 %};
 
-const str reqresult = %{ reference = ReqString; %};
+CONST STR reqresult = %{ reference = ReqString; %};
 
 
-str cmdshellname = %{
+STR cmdshellname = %{
     reference = CMDSH_FileName;
     get       = %{ value = $(REFERENCE); %};
     set       = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %};
     help      = %{ The filename used for the CommandShell in the next opening; the used file must be interactive, and it must not be a "AUTO" Console window %};
 %};
 
-bit cmdshell  = %{
+BIT cmdshell  = %{
     reference = CMDSH_Active;
     GET = %{ value = $(REFERENCE) ?"1":"0"; %};
     set       = %{ { char inter; inter = test_arg(value, $(REFERENCE)); if (inter != $(REFERENCE)) if (inter) do_opencmdshell(); else do_closecmdshell(); } %};
     help      = %{ the IsOpen status of the CommandShell; %};
 %};
 
-str cmdshellprompt = %{
+STR cmdshellprompt = %{
     reference = CMDSH_Prompt;
     get       = %{ value = $(REFERENCE); %};
     set       = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %};
     help      = %{ the prompt string of the Command Shell %};
 %};
 
-bit errorsoncmdshell  = %{
+BIT errorsoncmdshell  = %{
     reference = CMDSH_ErrorsOut;
     GET = %{ value = $(REFERENCE) ?"1":"0"; %};
     set       = %{ $(REFERENCE) = test_arg (value, $(REFERENCE)); %};
     help      = %{ Decide if errors shall be displayed on the commandshell; %};
 %};
 
-bit warningsoncmdshell	      = %{
+BIT warningsoncmdshell	      = %{
     reference = CMDSH_WarningsOut;
     GET = %{ value = $(REFERENCE) ?"1":"0"; %};
     set       = %{ $(REFERENCE) = test_arg (value, $(REFERENCE)); %};
@@ -180,12 +180,12 @@ bit warningsoncmdshell	      = %{
 
 
 
-str appicontitle      = %{ reference = APIC_IconTitle;	    set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %}; %};
-str appiconname       = %{ reference = APIC_IconFile;	    set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %}; %};
-str appicondropaction = %{ reference = APIC_ActionDrop;     set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %}; %};
-str appiconclickaction	      = %{ reference = APIC_ActionDblClick; set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %}; %};
+STR appicontitle      = %{ reference = APIC_IconTitle;	    set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %}; %};
+STR appiconname       = %{ reference = APIC_IconFile;	    set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %}; %};
+STR appicondropaction = %{ reference = APIC_ActionDrop;     set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %}; %};
+STR appiconclickaction	      = %{ reference = APIC_ActionDblClick; set = %{ $(REFERENCE) = strrep ($(REFERENCE), value); %}; %};
 
-bit appicon	      = %{
+BIT appicon	      = %{
     reference = APIC_Active;
     get       = %{ value = $(REFERENCE) ?"1":"0"; %};
     set       = %{ { char inter; inter = test_arg(value, $(REFERENCE)); if (inter != $(REFERENCE)) if (inter) do_apicshow(); else do_apichide(); } %};
@@ -198,15 +198,15 @@ bit appicon	      = %{
 // at least the following flags/variables are MISSING:
 
 
-//fnc qualifiers      = %{ %};
-//const fnc refpaths  = %{ %};
-//const fnc textnames = %{ set = %{  %}; %};
+//FNC qualifiers      = %{ %};
+//const FNC refpaths  = %{ %};
+//const FNC textnames = %{ set = %{  %}; %};
 
 // const int win-x/y/width/height
 // const int iwin-x/y
 // int asl-left/top/width/height
-// fnc font
-// fnc windowsize
+// FNC font
+// FNC windowsize
 // int taskpri
 // str asl-pattern
 // str icontitle-pattern
@@ -403,7 +403,7 @@ FNC global  pos = %{
 	value = tmp_buffer;
     %};
 %};
-fnc ed = %{
+FNC ed = %{
     set = %{
 	if (VSTK_Internal)
 	    sscanf (value, "%08lx", &array[0]);

@@ -211,7 +211,7 @@ int isinlist (char * elem, char * list)
     /* is inside a list, if it is the first word or the last one or
        delimited by ',' */
     return (pos && (pos == list || pos[-1] == ',') && !isalpha(pos[len]));
-} /* isinlist */
+} /* isinlist */
 
 char fmt_buf[100];
 #define MAXWIDTH 78
@@ -500,4 +500,5 @@ int main (int argc, char ** argv)
 
     fprintf (stdout, "@ENDNODE \"index\"\n\n");
 
+    return 0;
 } /* main */

@@ -1,21 +1,23 @@
 #ifndef CONFIG_H
 #define CONFIG_H 1
 
+#include <exec/types.h>
+
 struct Config0001
 {
     Column wwcol;	    /*	word wrap column		    */
 
-    USHORT winx;	    /*	save state of non-icon window	    */
-    USHORT winy;
-    USHORT winwidth;
-    USHORT winheight;
+    UWORD winx;	    /*	save state of non-icon window	    */
+    UWORD winy;
+    UWORD winwidth;
+    UWORD winheight;
 
-    USHORT iwinx, iwiny;    /*	save state of icon window	    */
+    UWORD iwinx, iwiny;    /*	save state of icon window	    */
 
-    USHORT aslleft;	    /* pos of FileReq */
-    USHORT asltop;
-    USHORT aslwidth;
-    USHORT aslheight;
+    UWORD aslleft;	    /* pos of FileReq */
+    UWORD asltop;
+    UWORD aslwidth;
+    UWORD aslheight;
 
     Column tabstop;	    /* size of tabs */
     Column margin;

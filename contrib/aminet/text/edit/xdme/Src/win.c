@@ -6,41 +6,6 @@
     DESCRIPTION
 	Everything for windows and GUI
 
-    HISTORY
-	14. Nov 1992	ada created
-	$Log$
-	Revision 1.1  2001/10/06 20:11:30  digulla
-	Initial revision
-
- * Revision 1.7  1994/12/22  09:14:48  digulla
- * Makros und DEFCMD eingeführt
- *
- * Revision 1.6  1994/09/14  20:43:56  digulla
- * added flag for insertmode to format_string()
- *
- * Revision 1.5  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- * added function format_string()
- * made window_title() and iconify() use format_string()
- * added commands to set the pattern for the title and the icon
- *
- * Revision 1.4  1994/08/30  11:03:38  digulla
- * adjusted position of Zoom gadget again (and checked it this time)
- *
- * Revision 1.3  1994/08/19  14:03:35  digulla
- * XDME now listens to IDCMP_INACTIVEWINDOW, too
- * Fixed flicker in window_title
- * removed dead assignments
- * adjusted position of Zoom gadget
- * fixed show_log
- *
- * Revision 1.2  1994/08/13  16:36:50  digulla
- * added lines++ to showlog
- *
- * Revision 1.1  1994/08/09  23:35:26  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************
@@ -52,6 +17,10 @@
 #include <intuition/imageclass.h>
 #include <intuition/classes.h>
 #include <intuition/icclass.h>
+#include <proto/intuition.h>
+#include <proto/exec.h>
+#include <proto/graphics.h>
+#include <string.h>
 #define MYDEBUG 1
 #include "debug.h"
 
@@ -187,7 +156,7 @@ static UWORD	WIN_MINWIDTH,		/* min. sizes for a window */
 
 #define MAX_LOG     10
 static char * log_messages[MAX_LOG];
-static USHORT numlogs = 0;
+static UWORD numlogs = 0;
 
 
 /**************************************

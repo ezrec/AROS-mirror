@@ -1237,7 +1237,7 @@ int DeadKeyConvert (struct IntuiMessage * msg, UBYTE * buf, int bufsize, struct 
 	NULL, IECLASS_RAWKEY
     };
 
-    if (msg->Class != RAWKEY)
+    if (msg->Class != IDCMP_RAWKEY)
 	return(-2);
 
     ievent.ie_Code	       = msg->Code;

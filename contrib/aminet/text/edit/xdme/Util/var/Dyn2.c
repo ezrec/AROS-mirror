@@ -43,14 +43,14 @@
 #include <assert.h>
 
 #ifndef   DYN_H
-#include "DYN.h"
+#include "Dyn.h"
 #endif /* DYN_H */
 
 /**************************************
 	    Global Variables
 **************************************/
 
-char *DynValue	(DSTR *pstr);
+/*char *DynValue	(DSTR *pstr);
 void  DynInit	(DSTR *pstr);
 int   DynLength (DSTR *pstr);
 void  DynClear	(DSTR *pstr);
@@ -58,12 +58,13 @@ void  DynClear	(DSTR *pstr);
 BOOL  DynCpy	(DSTR *pstr, const char *src);
 BOOL  DynCat	(DSTR *pstr, const char *src);
 BOOL  DynIns	(DSTR *pstr, const char *src, int pos);
-BOOL  DynDel	(DSTR *pstr, int pos, int chars);
+BOOL  DynDel	(DSTR *pstr, int pos, int chars);*/
 
 /**************************************
       Internal Defines & Structures
 **************************************/
 
+#if 0
 #if REF_VERS
 
 struct _DSTR {
@@ -82,14 +83,14 @@ struct _DSTR {
     char  str[1];
 }; /* struct _DSTR */
 
-#define DSTR struct _DSTR *
+//#define DSTR struct _DSTR *
 
 #endif
 
 #if REF_VERS
 #else
 #endif
-
+#endif
 
 #define STRLEN	    256     /* each dynamic string is sized (1+strlen()/STRLEN)*STRLEN ... */
 
@@ -141,16 +142,6 @@ int DynLen (DSTR *pstr) {
     return pstr->use;
 } /* DynLen */
 
-BOOL  DynCpy	(DSTR *pstr, const char *src) {
-    DynClear(pstr);
-    DynCat  (pstr, src);
-} /* DynCpy */
-
-BOOL  DynCat	(DSTR *pstr, const char *src) {
-    assert(pstr != NULL);
-    return DynIns (pstr, src, pstr->use);
-} /* DynCat */
-
 BOOL  DynDel	(DSTR *pstr, int pos, int chars) {
     assert(pstr != NULL);
 
@@ -190,7 +181,7 @@ BOOL  DynIns	(DSTR *pstr, const char *src, int pos) {
     /* ---- Fits into old String? */
     if (slen + pstr->use < pstr->len) {
 	strins (pstr->str + pos, src); /* DIFF1_2_Cat */
-	pstr->use += len;
+	pstr->use += slen;
 	return TRUE;
     } /* if */
 
@@ -208,8 +199,19 @@ BOOL  DynIns	(DSTR *pstr, const char *src, int pos) {
     return TRUE;
 } /* DynIns */
 
+BOOL  DynCat	(DSTR *pstr, const char *src) {
+    assert(pstr != NULL);
+    return DynIns (pstr, src, pstr->use);
+} /* DynCat */
+
+BOOL  DynCpy	(DSTR *pstr, const char *src) {
+    DynClear(pstr);
+    return DynCat  (pstr, src);
+} /* DynCpy */
+
 /* Bonus1 ... */
-BOOL vDynAppend (DSTR *pstr, int num, va_list adds) {
+#if 0
+void vDynAppend (DSTR *pstr, int num, va_list adds) {
     assert(pstr != NULL);
 
     /* ---- make sure we have consistent data */
@@ -232,7 +234,7 @@ BOOL vDynAppend (DSTR *pstr, int num, va_list adds) {
 	    int   len;
 	    char *inter;
 	    len   = ((pstr->use + il + STRLEN) / STRLEN) * STRLEN;
-	    if (!(inter = malloc(len))
+	    if (!(inter = malloc(len)) )
 		return FALSE;
 	    if (pstr->str) {
 		strcpy(inter, pstr->str);
@@ -249,6 +251,7 @@ BOOL vDynAppend (DSTR *pstr, int num, va_list adds) {
     } /* while */
     return TRUE;
 } /* vDynAppend */
+#endif
 
 /* Bonus 2... */
 BOOL DynStrip (DSTR *pstr) {
@@ -280,41 +283,36 @@ BOOL DynStrip (DSTR *pstr) {
 #else
 
 
-void DynInit (DSTR *pstr) {
+#ifndef DynInit
+void DynInit (struct _DSTR *pstr)
+{
     assert(pstr != NULL);
-    *pstr = _EmptyDyn;
+    pstr->len = 0;
+    pstr->use = 0;
+    pstr->str = NULL;
 } /* DynInit */
+#endif
 
 void DynClear (DSTR *pstr) {
     assert(pstr != NULL);
-    if (*pstr)
-	free (*pstr);
+    if (pstr->str)
+	free (pstr->str);
     DynInit(pstr);
 } /* DynClear */
 
 char *DynValue (DSTR *pstr) {
     assert(pstr != NULL);
-    if (*pstr)
-	return (*pstr)->str;
+    if (pstr->str)
+	return (pstr)->str;
     return "";
 } /* DynValue */
 
 int DynLen (DSTR *pstr) {
     assert(pstr != NULL);
-    if (*pstr)
-	return (*pstr)->use;
+    if (pstr->str)
+	return (pstr)->use;
     return 0;
 } /* DynLen */
-
-BOOL  DynCpy	(DSTR *pstr, const char *src) {
-    DynClear(pstr);
-    DynCat  (pstr, src);
-} /* DynCpy */
-
-BOOL  DynCat	(DSTR *pstr, const char *src) {
-    assert(pstr != NULL);
-    return DynIns (pstr, src, (*pstr)? (*pstr)->use: 0);
-} /* DynCat */
 
 BOOL  DynDel	(DSTR *pstr, int pos, int chars) {
     struct _DSTR *str;
@@ -322,7 +320,7 @@ BOOL  DynDel	(DSTR *pstr, int pos, int chars) {
     assert(pstr != NULL);
     *str = *pstr;
     /* ---- Empty? or nothing to Delete */
-    if (!dstr || (dstr->use < pos) || !chars)
+    if (!pstr || (pstr->use < pos) || !chars)
 	return TRUE;
 
     /* ---- End Truncated? */
@@ -378,6 +376,16 @@ BOOL  DynIns	(DSTR *pstr, const char *src, int pos) {
     dstr->len	 = tlen;
     return TRUE;
 } /* DynIns */
+
+BOOL  DynCat	(DSTR *pstr, const char *src) {
+    assert(pstr != NULL);
+    return DynIns (pstr, src, (*pstr)? (*pstr)->use: 0);
+} /* DynCat */
+
+BOOL  DynCpy	(DSTR *pstr, const char *src) {
+    DynClear(pstr);
+    return DynCat  (pstr, src);
+} /* DynCpy */
 
 
 #endif

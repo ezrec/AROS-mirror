@@ -51,14 +51,12 @@ const DSTR _EmptyDyn = { 0,0,NULL };
 #define       EmptyDyn	 { 0,0,NULL }
 
 
-#if 0
 void DynInit (DSTR *pstr) {
 
     assert(pstr != NULL);
 
     *pstr = _EmptyDyn;
 } /* DynInit */
-#endif
 
 
 void vDynAppend (DSTR *pstr, int num, va_list adds) {
@@ -112,7 +110,7 @@ void DynClear (DSTR *pstr) {
 } /* DynClear */
 
 
-int DynStrip (DSTR *pstr) {
+BOOL DynStrip (DSTR *pstr) {
     int   i;
     char *str;
 

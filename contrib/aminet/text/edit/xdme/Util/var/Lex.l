@@ -1,3 +1,4 @@
+%option noyywrap
 
 %{
 /*
@@ -9,7 +10,7 @@
 */
 
 #include "Dyn.h"
-#include "y.tab.h"
+#include "Yacc.tab.h"
 
 #define VALUE ebody
 
@@ -30,8 +31,11 @@ DSTR structname=EmptyDyn;
 DSTR value    = EmptyDyn;
 DSTR nodename = EmptyDyn;
 
-/* #define SHOW printf ("<%s>\n", yytext); */
+#if 1
+#define SHOW printf ("<%s>\n", yytext);
+#else
 #define SHOW ;
+#endif
 
 char lline[256];
 char *getlineno(void) {
@@ -69,7 +73,7 @@ LABEL [A-Za-z_][A-Za-z_0-9]*
 %%
 
 <OUTER>PROJECT	    {		   SHOW; return PROJECT; }
-<OUTER>GLOBAL	    {		   SHOW; return GLOBAL; }
+<OUTER>GLOBAL	    {		   SHOW; return GLOBAL_TOKEN; }
 
 <OUTER>CONST	    {		   SHOW; return CONST; }
 

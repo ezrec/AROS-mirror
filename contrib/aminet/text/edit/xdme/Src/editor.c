@@ -23,9 +23,12 @@
 
     HISTORY
 	$Log$
-	Revision 1.1  2001/10/06 20:11:19  digulla
-	Initial revision
+	Revision 1.2  2001/10/06 23:06:14  digulla
+	Compiles for me
 
+	Revision 1.1.1.1  2001/10/06 20:11:19  digulla
+	Initial import of XDME
+	
  * Revision 1.1  1994/12/22  09:05:17  digulla
  * Initial revision
  *
@@ -186,7 +189,7 @@ DEFCMD (void, UpdateEd, (ED * ep))
 	}
 
 	ep->df_topline = 0;
-    } 
+    }
 
     if (ep->df_line)
     {

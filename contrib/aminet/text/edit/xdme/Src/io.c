@@ -2,8 +2,11 @@
  * $Id$
  *
  * $Log$
- * Revision 1.1  2001/10/06 20:11:18  digulla
- * Initial revision
+ * Revision 1.2  2001/10/06 23:06:14  digulla
+ * Compiles for me
+ *
+ * Revision 1.1.1.1  2001/10/06 20:11:18  digulla
+ * Initial import of XDME
  *
  * Revision 1.4  1994/12/22  09:19:18  digulla
  * Makros und DEFCMD eingeführt
@@ -20,8 +23,10 @@
  *
  */
 
-#include "defs.h"
 #include "rexx.h"
+#include "defs.h"
+#include <proto/dos.h>
+#include <proto/icon.h>
 
 typedef struct WBStartup    WBS;
 typedef struct DiskObject   DISKOBJ;
@@ -64,7 +69,7 @@ DEFUSERCMD("insfile", 1,      0, int, do_edit, (void),)
     lines = ep->lines;
     oldlock = CurrentDir (ep->dirlock);
 
-    if (fi = fopen (av[1], "r"))
+    if ( (fi = fopen (av[1], "r")) )
     {
 	int  len;
 	char oktitle  = 1;
@@ -72,7 +77,7 @@ DEFUSERCMD("insfile", 1,      0, int, do_edit, (void),)
 	/* Get lock for file */
 	if (newfile)
 	{
-	    if (new_lock = Lock (av[1], SHARED_LOCK))
+	    if ( (new_lock = Lock (av[1], SHARED_LOCK)) )
 	    {
 		BOOL success;
 
@@ -409,7 +414,7 @@ int saveit (const char * om)
 	}
     }
 
-    if (fi = fopen (av[1], om))
+    if ( (fi = fopen (av[1], om)) )
     {
 	title ("Saving ...");
 
@@ -535,11 +540,12 @@ DEFUSERCMD("cd", 1, CF_VWM|CF_ICO, void, do_cd, (void),)
 
     oldlock = CurrentDir (Ep->dirlock);
 
-    if (lock = Lock (av[1], SHARED_LOCK))
+    if ( (lock = Lock (av[1], SHARED_LOCK)) )
     {
 	UnLock (CurrentDir (oldlock));
 	Ep->dirlock = (long)lock;
-    } else
+    }
+    else
     {
 	CurrentDir (oldlock);
 

@@ -1,10 +1,9 @@
 
 
 #include <stdarg.h>
+#include <exec/types.h>
 
-#if 1
-#   define BOOL int
-#endif
+#define REF_VERS 1
 
 struct _DSTR {
     int   len;
@@ -18,23 +17,22 @@ struct _DSTR {
 
 
 
-char*DynValue  (DSTR *pstr);
-void DynInit   (DSTR *pstr);
-int  DynLength (DSTR *pstr);
-void DynClear  (DSTR *pstr);
-void vDynAppend(DSTR *pstr, int num, va_list adds);
-void DynSet    (DSTR *pstr, int num, ...);
-void DynAppend (DSTR *pstr, int num, ...);
-BOOL DynApp1   (DSTR *dest, char* str);
+extern char*DynValue  (DSTR *pstr);
+extern void DynInit   (DSTR *pstr);
+extern int  DynLength (DSTR *pstr);
+extern void DynClear  (DSTR *pstr);
+extern void vDynAppend(DSTR *pstr, int num, va_list adds);
+extern void DynSet    (DSTR *pstr, int num, ...);
+extern void DynAppend (DSTR *pstr, int num, ...);
+extern BOOL DynApp1   (DSTR *dest, char* str);
 
-int  DynStrip	 (DSTR *pstr);
-int  DynDecomment(DSTR *pstr);
+extern BOOL  DynStrip	 (DSTR *pstr);
+extern int  DynDecomment(DSTR *pstr);
 
 
 extern const DSTR _EmptyDyn;
 #define      EmptyDyn	{ 0,0,NULL }
 
-#define DynInit(pstr)   *(pstr) = _EmptyDyn
+/* #define DynInit(pstr)   *(pstr) = _EmptyDyn */
 #define DynValue(pstr)  ((pstr)->str)
 #define DynLength(pstr) ((pstr)->use)
-

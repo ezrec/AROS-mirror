@@ -19,9 +19,12 @@
  *		   fehlende Protos korrigiert ...
  *		   Function Pointersalat endgültig ok (Hoffentlich)
  *	$Log$
- *	Revision 1.1  2001/10/06 20:11:54  digulla
- *	Initial revision
+ *	Revision 1.2  2001/10/06 23:06:14  digulla
+ *	Compiles for me
  *
+ *	Revision 1.1.1.1  2001/10/06 20:11:54  digulla
+ *	Initial import of XDME
+ *	
  * Revision 1.1  1994/08/14  12:30:15  digulla
  * Initial revision
  *
@@ -51,15 +54,15 @@
 #include <string.h>
 #include <ctype.h>
 #include <exec/ports.h>
-#include <clib/exec_protos.h>
-#include <clib/alib_protos.h>
-#include <clib/dos_protos.h>
-#include <clib/rexxsyslib_protos.h>
-#include <pragmas/exec_pragmas.h>
-#include <pragmas/rexxsyslib_pragmas.h>
-#include <pragmas/dos_pragmas.h>
+#include <proto/exec.h>
+#include <proto/alib.h>
+#include <proto/dos.h>
+#ifndef __AROS__
+#warning Need ARexx !
+#include <proto/rexxsyslib.h>
 
 #include <rexx/rexxio.h>
+#endif
 #include <rexx/errors.h>
 #include <rexx/storage.h>
 #include "rexx.h"
@@ -383,8 +386,9 @@ struct RexxMsg *BuildRexxMsg
    ...
 )
 {
+#ifndef __AROS__
    struct	RexxMsg *rmsg;
-   register	i;
+   int		i;
    char 	**args;
 
    /*	Rexx geöffnet ? */
@@ -446,6 +450,9 @@ struct RexxMsg *BuildRexxMsg
    rmsg->rm_Action=action;
 
    return(rmsg);
+#else
+   return NULL;
+#endif
 }
 
 
@@ -465,6 +472,7 @@ BOOL RemoveRexxMsg
    struct	RexxMsg *rmsg
 )
 {
+#ifndef __AROS__
    /* Rexx geöffnet ? */
    if (RexxSysBase==0)
    {
@@ -494,6 +502,9 @@ BOOL RemoveRexxMsg
    /* zum Abschluß noch die eigentliche Message freigeben */
    DeleteRexxMsg(rmsg);
    return(TRUE);
+#else
+   return FALSE;
+#endif
 }
 
 
@@ -518,6 +529,7 @@ BOOL PutRexxMsg
    struct	RexxMsg *rmsg
 )
 {
+#ifndef __AROS__
    struct	MsgPort 	*msg_port;
 
    /*	Rexx opened ? */
@@ -559,6 +571,9 @@ BOOL PutRexxMsg
    }
 
    return (TRUE);
+#else
+   return FALSE;
+#endif
 }
 
 
@@ -575,6 +590,7 @@ struct RexxMsg *GetRexxMsg(void)
  *	wartet.
  */
 {
+#ifndef __AROS__
    struct	RexxMsg *rmsg;
 
    /* Rexx geöffnet ? */
@@ -598,6 +614,9 @@ struct RexxMsg *GetRexxMsg(void)
       outstanding_replies--;
 
    return(rmsg);
+#else
+   return NULL;
+#endif
 }
 
 
@@ -611,6 +630,7 @@ struct RexxMsg *FetchRexxMsg(void)
  *	Port geholte Message zurück.
  */
 {
+#ifndef __AROS__
    struct	RexxMsg *rmsg;
 
    /* Rexx geöffnet ? */
@@ -624,6 +644,9 @@ struct RexxMsg *FetchRexxMsg(void)
       WaitPort(rexx_port);
 
    return(rmsg);
+#else
+   return NULL;
+#endif
 }
 
 
@@ -660,6 +683,7 @@ BOOL ReplyRexxMsg
    char    *return_string
 )
 {
+#ifndef __AROS__
    STRPTR      rx_string;
 
    /*	Rexx geöffnet ? */
@@ -722,6 +746,10 @@ BOOL ReplyRexxMsg
    /* unsere hübsche Message zurück an den Chef */
    ReplyMsg((struct Message *) rmsg);
    return(TRUE);
+#else
+   return FALSE;
+#endif
+
 }
 
 
@@ -777,6 +805,7 @@ long SyncRexxCommand
     ...
 )
 {
+#ifndef __AROS__
    char **args;
    struct	RexxMsg *rmsg;
    struct	RexxMsg *our_msg;
@@ -874,6 +903,9 @@ long SyncRexxCommand
    }
    RemoveRexxMsg(our_msg);
    return(flag);
+#else
+   return -1;
+#endif
 }
 
 /****************************************************************/
@@ -890,6 +922,7 @@ __stkargs void RexxMessageHandler (struct RexxMsg *rmsg)
  * --> rmsg	Zeiger auf die RexxMessage, die bearbeitet werden soll
  */
 {
+#ifndef __AROS__
    register	i;
    register	act_com;
    char 	*s;
@@ -937,6 +970,7 @@ __stkargs void RexxMessageHandler (struct RexxMsg *rmsg)
    ReplyRexxMsg(rmsg,ERR10_030,0);
 
    done:;
+#endif
 }
 
 
@@ -953,6 +987,7 @@ void * ChangeProcessMessage(__stkargs void (*new_function)(struct RexxMsg * rmsg
  * <-- RESULT	Pointer auf alten hndler
  */
 {
+#ifndef __AROS__
    void   (*old_function)(struct RexxMsg * rmsg);
 
    /* alte Funktion zurückgeben */
@@ -968,6 +1003,9 @@ void * ChangeProcessMessage(__stkargs void (*new_function)(struct RexxMsg * rmsg
       old_function=(void (*)(struct RexxMsg *))-1;
 
    return (old_function);
+#else
+   return NULL;
+#endif
 }
 
 /****************************************************************/

@@ -1,0 +1,83 @@
+#   $Id$
+#
+#   Makefile to make XDME
+
+VERSION := 1.84
+VERDATE := $(shell date +"%d.%m.%Y")
+INCDIR := ./include
+USER_CFLAGS := -DVERSION="\"$(VERSION)\"" -DVERDATE="\"$(VERDATE)\"" -I$(INCDIR)
+EXTRACT := Util/extract/extract
+MAKEGUIDE:= Util/cag/cag
+PARSER	:= Util/var/Parser
+DOCDIR := Docs
+
+include $(TOP)/config/make.cfg
+
+FILES := $(filter-out %_SPC_,$(subst .c,,$(wildcard Src/*.c Src/*/*.c)))
+
+## 
+##         XDME
+
+EXEDIR := $(AROSDIR)/contrib/XDME
+EXE := $(EXEDIR)/XDME
+
+USE_AROSLIB := yes
+USE_CLIB := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+USE_BGUILIB := yes
+
+#MM aminet-text-edit-xdme : includes linklibs setup-xdme
+
+%make_prog_setup mmake=aminet-text-edit-xdme
+
+aminet-text-edit-xdme : setup $(EXE)
+
+%make_prog_multi dir=$(EXEDIR) target=$(EXE)
+
+#MM setup-xdme : setup-xdme-parser
+setup-xdme : make-dirs protos docs sources
+
+make-dirs :
+	$(MKDIR) $(EXEDIR) $(OBJDIR)/Src $(OBJDIR)/Src/Key \
+		$(OBJDIR)/Src/Menu $(OBJDIR)/Src/Mod \
+		$(OBJDIR)/Src/Var
+
+SRCS := $(foreach f,$(FILES),$(f).c)
+
+protos : $(INCDIR)/prog-protos.h $(INCDIR)/commands.h
+
+sources : Src/Var/_SPC_.c
+
+Src/Var/_SPC_.c: Src/Var/SPC.pre $(PARSER)
+	    $(PARSER) < Src/Var/SPC.pre Src/Var/_SPC_.c
+
+$(INCDIR)/prog-protos.h : $(SRCS) $(EXTRACT)
+	$(EXTRACT) Prototype $(SRCS) > $(INCDIR)/prog-protos.h
+	$(EXTRACT) DEFCMD $(SRCS) >> $(INCDIR)/prog-protos.h
+	$(EXTRACT) DEFUSERCMD $(SRCS) >> $(INCDIR)/prog-protos.h
+
+$(INCDIR)/commands.h : $(SRCS) $(EXTRACT)
+	$(EXTRACT) "DEFUSERCMD" $(SRCS) | sort > $@
+
+docs : $(DOCDIR)/xdme_cmds.guide
+
+$(DOCDIR)/xdme_cmds.guide : $(MAKEGUIDE) $(DOCDIR)/xdme_cmds_guide_src.head \
+			$(DOCDIR)/xdme_cmds_guide_src.tail $(SRCS)
+	$(EXTRACT) "/**DEFHELP" $(SRCS) > $(DOCDIR)/xdme_cmds_guide_src.body
+	cat $(DOCDIR)/xdme_cmds_guide_src.head $(DOCDIR)/xdme_cmds_guide_src.body \
+		$(DOCDIR)/xdme_cmds_guide_src.tail > $(DOCDIR)/xdme_cmds_guide.src
+	$(EXTRACT) "/**DEFLONG" $(SRCS) >> $(DOCDIR)/xdme_cmds_guide.src
+	$(MAKEGUIDE) $(DOCDIR)/xdme_cmds_guide.src > $(DOCDIR)/xdme_cmds.guide
+
+$(INCDIR)/commands: $(SRCS)
+	$(EXTRACT) "DEFUSERCMD" $(SRCS) | sort > $@
+
+$(EXTRACT) : $(EXTRACT).c
+	$(HOST_CC) -o $@ $<
+
+$(MAKEGUIDE) : $(MAKEGUIDE).c
+	$(HOST_CC) -o $@ $<
+
+%common
+%include_deps

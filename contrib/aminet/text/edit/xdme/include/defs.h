@@ -54,6 +54,15 @@
 #   define NOT_BLOCK_C_CONST
 #endif
 
+// cursor.c needs this
+struct pos
+{
+    UBYTE * ptr;
+    ULONG   len;
+    Line    lin;
+    Column  col;
+};
+
 /* do this after all types have been defined */
 #define DEFUSERCMD(str,nargs,flags,ret,func,param,ext)  extern ret func param;
 #define DEFCMD(ret,func,param)                          extern ret func param;
@@ -70,7 +79,8 @@ BOOL WildCmp (const char *, const char *);
 #define alloclptr(lines)    AllocMem ((lines)*sizeof(LINE), 0)
 #define allocb(bytes)       AllocMem ((bytes), 0)
 #define allocl(lwords)      AllocMem ((lwords)<<2, 0)
-#define bmovl(s,d,n)        movmem ((s), (d), (n) << 2)
+#define bmovl(s,d,n)        memmove ((d), (s), (n) << 2)
+#define movmem(s,d,n)       memmove ((d), (s), (n) << 2)
 
 #define GETLINE(ed,nr)      ((ed)->list[(nr)])
 #define SETLINE(ed,nr,ptr)  (ed)->list[(nr)] = (ptr)
@@ -79,6 +89,7 @@ BOOL WildCmp (const char *, const char *);
 #define GETTEXT(ed,nr)      (CONTENTS(GETLINE((ed),(nr))))
 
 
+#undef assert
 #define assert(exp)         if (!(exp)) printf ("%s %d\n", __FILE__, __LINE__), exiterr ("assert failed")
 
 #define  PATHSIZE	256	/* HD added for Requesters */

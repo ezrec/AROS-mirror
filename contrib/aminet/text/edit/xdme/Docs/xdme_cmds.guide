@@ -29,42 +29,16 @@ alphabetically and by topic.
 @NODE "arexx" "AREXX"
 @TOC "MAIN"
 
-@{B}PORT name cmd@{UB}       Send @{B}cmd@{UB} to ARexx-Port @{B}name@{UB} 
-@{" PROJECTINFO " LINK "desc14"}      Gives some information about the current project. 
-@{B}RX@{UB}                  ARexx macro, no args (@{B}RX@{UB} macname) 
-@{B}RX1@{UB}                 ARexx macro, one arg (@{B}RX1@{UB} macname arg1) 
-@{B}RX2@{UB}                 ARexx macro, two args (@{B}RX2@{UB} macname arg1 arg2) 
-@{B}RXRESULT any@{UB}        Copy @{B}any@{UB} into RESULT in an AREXX-script. 
-@{" SELECT " LINK "desc15"} @{B}what@{UB}      make a window the current one. 
 @ENDNODE "arexx"
 
 @NODE "block" "Blockoperations"
 @TOC "MAIN"
 
-@{B}AUTOUNBLOCK what@{UB}    clear old selection when a new block is defined (on) or
-                    give an error 
-@{B}BAPPENDSAVE file@{UB}    Append currently marked text to @{B}file@{UB} 
-@{B}BARPSAVE@{UB}            save the block to a file with filerequester 
-@{B}BDELETE@{UB}             delete currently marked text 
-@{B}BEND@{UB}                Set end of block 
-@{B}BLOCK@{UB}               Set start or end (if start is already set) of block 
-@{B}BLOCKTYPE type@{UB}      @{B}type@{UB} is LINE (old), CHARACTER (like everywhere else) or
-                    VERTICAL (rectangular block). 
-@{B}BMOVE@{UB}               delete currently marked text and insert it before cursor
-                    line 
-@{B}BSAVE file@{UB}          save the block to @{B}file@{UB} 
-@{B}BSOURCE@{UB}             execute currently marked text block as if it were a script
-                    file 
-@{B}BSTART@{UB}              Set start of block 
-@{B}CLIPINS@{UB}             Insert current contents of clipboard in the text 
-@{B}COPY@{UB}                copy currently marked text into clipboard 
-@{B}LINEBLOCK@{UB}           mark the current line 
 @{B}POPMARK@{UB}             pop the block stack and highlight the popped block
 @{B}PURGEMARK@{UB}           clear the mark stack
 @{B}PUSHMARK@{UB}            push the currently marked block onto a stack and
                     unhighlight the block
 @{B}SWAPMARK@{UB}            PUSHMARK, swap top two marks on stack, POPMARK
-@{B}UNBLOCK@{UB}             clear the block markers for the current window 
 @ENDNODE "block"
 
 @NODE "program" "Control structures"
@@ -74,19 +48,8 @@ alphabetically and by topic.
 @{B}BREAK@{UB}               leave current loop (WHILE, REPEAT)
 @{B}CONTINUE@{UB}            start loop over (WHILE, REPEAT)
 @{B}EVAL com@{UB}            split long commandsequences to keep MAXIA small
-@{B}EXECUTE comm@{UB}        Execute a CLI command. 
 @{" FORCE " LINK "desc2"} @{B}flag command@{UB} set special conditions for executing @{B}command@{UB}
-@{" IF " LINK "desc8"} @{B}cnd act@{UB}       if (@{B}cnd@{UB}) @{B}act@{UB} 
-@{" IFELSE " LINK "desc8"} @{B}cnd ifact elseact@{UB} if (@{B}cnd@{UB}) @{B}ifact@{UB} else @{B}elseact@{UB} 
-@{B}PROJECTLOAD@{UB}         Recall session 
-@{B}PROJECTSAVE@{UB}         Save all window-dimensions, filenames and position of
-                    iconified windows. 
-@{" REPEAT " LINK "desc7"} @{B}cnt comm@{UB}  repeat @{B}comm@{UB} @{B}cnt@{UB} times. 
-@{" SCANF " LINK "desc6"} @{B}ctlstr@{UB}     scan the string at the current text position (C scanf)
-                    example: @{B}scanf %s@{UB} 
-@{B}SOURCE file@{UB}         source a script file. '#' in first column for comment 
 @{B}UNABORT@{UB}             clear abort flag (only in an AREXX script)
-@{" WHILE " LINK "desc8"} @{B}cnd act@{UB}    while (@{B}cnd@{UB}) @{B}act@{UB} 
 @ENDNODE "program"
 
 @NODE "general" "General"
@@ -104,36 +67,12 @@ alphabetically and by topic.
     XDME will always save the text at the place where it came from, expect
     you have used the @{B}CD@{UB} command to change the current directory.
 
-@{B}APPENDSAVE file@{UB}     Append current text to @{B}file@{UB} 
-@{B}ARPINSFILE@{UB}          INSFILE with filerequester 
-@{B}ARPLOAD@{UB}             NEWFILE with filerequester 
-@{B}ARPSAVE@{UB}             SAVEAS with filerequester 
-@{B}BAPPENDSAVE file@{UB}    Append currently marked text to @{B}file@{UB} 
-@{B}BARPSAVE@{UB}            save the block to a file with filerequester 
-@{B}BSAVE file@{UB}          save the block to @{B}file@{UB} 
-@{B}CD dir@{UB}              set directory of current window to @{B}dir@{UB} 
-@{B}CHFILENAME name@{UB}     change the name of the working file 
-@{B}EXECUTE comm@{UB}        Execute a CLI command. 
-@{B}INSFILE name@{UB}        insert a file into the current text. 
 @{B}KEYLOAD filename@{UB}    replace the current keymap with the contents of @{B}filename@{UB}
 @{B}KEYSAVE filename@{UB}    save the current keymap into @{B}filename@{UB}
 @{B}MACROLOAD filename@{UB}  load macros from a file
 @{B}MACROSAVE filename@{UB}  save the current macros into a file with a special format
 @{B}MENULOAD filename@{UB}   replace the current menustrip with the one from the file
 @{B}MENUSAVE filename@{UB}   write the current menustrip in a file
-@{B}NEWFILE name@{UB}        replace current text with new file 
-@{B}PATTERN pat@{UB}         sets the pattern for the filerequesters. 
-@{B}PRINT text@{UB}          Print @{B}text@{UB} to the shell XDME was started in 
-@{B}PROJECTLOAD@{UB}         Recall session 
-@{B}PROJECTSAVE@{UB}         Save all window-dimensions, filenames and position of
-                    iconified windows. 
-@{B}SAVEAS file@{UB}         save current text under a different name (title line name
-                    does change) 
-@{B}SAVECONFIG@{UB}          save current editor configuration to @{I}s:XDME.prefs@{UI} 
-@{B}SAVEOLD@{UB}             save current text under current name 
-@{B}SOURCE file@{UB}         source a script file. '#' in first column for comment 
-@{B}WRITETO file@{UB}        write text to this file. The current name of the text is
-                    not changed. 
 @ENDNODE "io"
 
 @NODE "keys" "Keyboard"
@@ -152,79 +91,11 @@ alphabetically and by topic.
 @NODE "misc" "Misc"
 @TOC "MAIN"
 
-@{B}ABORT@{UB}               abort the current command execution 
-@{B}ABOUT@{UB}               display information about XDME 
-@{B}BREAK@{UB}               break the current command loop 
-@{B}CONTINUE@{UB}            break the current turn of the current command loop 
-@{B}ESC@{UB}                 toggle manual command entry mode 
-@{B}ESCIMM arg@{UB}          go into command entry mode prompting with @{B}arg@{UB} 
-@{B}EVAL command@{UB}        reinvoke the command interpreter;that command can b used
-                    to prevent "too many arguments" errors, which occurs, if
-                    the user has specified too many variable arguments at the
-                    same execution level 
-@{B}EXECUTE comm@{UB}        Execute a CLI command. 
-@{" FORCE " LINK "desc2"} @{B}flags command@{UB} similar to EVAL, but according to flags it can ignore
-                    errorvalues (F), disable screenupdates (S) or
-                    errorrequesters (R) or title updates (T) or activate Debug
-                    Mode (D) 
-@{B}NOP@{UB}                 no operation 
-@{B}NULL@{UB}                no operation 
-@{B}PRINT text@{UB}          Print @{B}text@{UB} to the shell XDME was started in 
-@{B}QUIET command@{UB}       short for "FORCE S command" 
-@{B}QUITALL@{UB}             leave XDME. If any text was modified, a safety check is
-                    performed for that text 
-@{B}RECALL@{UB}              recall most recently entered command. Must be used from a
-                    keymap (c-esc). 
-@{B}REDISPLAY@{UB}           force XDME to redraw the text 
-@{B}REM com@{UB}             add commend 
-@{B}UNABORT@{UB}             make a previous ABORT or error unseen; that command can
-                    only be used in ARexx scripts 
-@{B}UNDELINE@{UB}            insert most recently deleted line (only last line saved) 
-@{B}UNDO@{UB}                undo current line (must be mapped to a key to work) 
 @ENDNODE "misc"
 
 @NODE "movement" "Move in the text"
 @TOC "MAIN"
 
-@{B}BACKTAB@{UB}             backward tab 
-@{B}BOTTOM@{UB}              Move to Bottom of File 
-@{B}COL n@{UB}               Move cursor to column @{B}n@{UB} or @{B}n@{UB} characters left (@{B}-n@{UB}) or
-                    right (@{B}+n@{UB}) 
-@{B}DOWN@{UB}                cursor down. If in commandline move to next line of
-                    commandline-history 
-@{B}DOWNADD@{UB}             cursor down. If at bottom of text, add a line. 
-@{B}FIRST@{UB}               move to column 1 
-@{B}FIRSTNB@{UB}             Move to first non-blank in line. 
-@{" GOTO " LINK "desc12"} @{B}dest@{UB}        Goto to a position in the text. 
-@{B}LAST@{UB}                move one beyond the last non-space in a line. 
-@{B}LEFT@{UB}                cursor left 
-@{B}MAKECURSORVISIBLE@{UB}   Scrolls an oversized screen so the cursor will become
-                    visible. 
-@{B}MATCH@{UB}               find matching paren. Works with (), [], {}, `' and
-                    C-comments 
-@{B}PAGEDOWN@{UB}            pagedown a partial page (see PAGESET) 
-@{B}PAGELEFT@{UB}            page to the left as requested by StyleGuide. 
-@{B}PAGERIGHT@{UB}           dito to the right 
-@{B}PAGEUP@{UB}              pageup a partial page (see PAGESET) 
-@{B}PING n@{UB}              set a text marker (@{B}n@{UB} = 0-9). 
-@{B}PONG n@{UB}              move to a previously set text marker (@{B}n@{UB} = 0-9) 
-@{B}RETURN@{UB}              if AUTOINDENT is off: (FIRST DOWNADD) else insert line,
-                    split current line and indent like last line above. 
-@{B}RIGHT@{UB}               cursor right 
-@{B}SCREENBOTTOM@{UB}        Move cursor to the bottom of the screen. 
-@{B}SCREENTOP@{UB}           Move cursor to the top of the screen 
-@{B}SCROLLDOWN@{UB}          Scroll down without moving cursor 
-@{B}SCROLLLEFT@{UB}          Scroll left without moving cursor 
-@{B}SCROLLRIGHT@{UB}         Scroll right without moving cursor 
-@{B}SCROLLUP@{UB}            Scroll up without moving cursor 
-@{B}TAB@{UB}                 forward tab 
-@{B}TOMOUSE@{UB}             moves cursor to mouse position 
-@{B}TOP@{UB}                 Move to Top of File 
-@{B}UP@{UB}                  cursor up. If in commandline, move to previous line of
-                    commandline-history 
-@{B}WLEFT@{UB}               move to beginning of previous word. If in the middle of a
-                    word, move to beginning of current word. 
-@{B}WRIGHT@{UB}              move to beginning of next word 
 @ENDNODE "movement"
 
 @NODE "prefs" "Preferences and Settings"
@@ -233,129 +104,34 @@ alphabetically and by topic.
     @{B}what@{UB} is one of on, off or toggle to switch the option on,
     off or to change its state.
 
-@{B}ADDPATH path@{UB}        Add the specified symbolic directory to XDME's special
-                    search path (see REF and CTAGS). 
-@{B}AUTOINDENT what@{UB}     (De)Activate autoindent with RETURN 
-@{B}AUTOSPLIT what@{UB}      (De)Activate autosplit. This is an alternative to
-                    WORDWRAP. AUTOSPLIT only breaks the line if it gets too
-                    long and doesn't touch the rest of the text. 
-@{B}AUTOUNBLOCK what@{UB}    clear old selection when a new block is defined (on) or
-                    give an error 
-@{B}BBPEN pen@{UB}           selects @{B}pen@{UB} as the block-background-pen 
-@{B}BGPEN pen@{UB}           set background pen for text 
-@{B}BLOCKENDSFLOAT what@{UB} Should @{B}BSTART@{UB} always appear above @{B}BEND@{UB} (@{B}on@{UB}) or
-                    remain static 
-@{B}BLOCKTYPE type@{UB}      @{B}type@{UB} is LINE (old), CHARACTER (like everywhere else) or
-                    VERTICAL (rectangular block). 
-@{B}CHFILENAME name@{UB}     change the name of the working file 
-@{B}DEBUG what@{UB}          @{U}For programmers only@{UB} Allows to set a flag for testing
-                    code 
-@{B}DOBACKUP what@{UB}       specifies if XDME creates a .bak file before actually
-                    saving the text 
-@{B}FGPEN pen@{UB}           Set pen for text 
-@{B}FOLLOWCURSOR what@{UB}   XDME will make sure the cursor is visible if you switch it
-                    on with this command. Usefull on screens that extend over
-                    the visual area. 
-@{B}GLOBAL what@{UB}         turn global search on/off. If XDME cannot find a string in
-                    one window, it will continue with the next one. 
-@{B}HGPEN pen@{UB}           set highlight (block) pen 
-@{B}ICONACTIVE what@{UB}     Should XDME activate the iconified window 
-@{B}IGNORECASE what@{UB}     set case ignore for seaches. 
-@{B}INSERTMODE what@{UB}     set INSERTMODE. 
 @{" MAP " LINK "desc0"} @{B}key map@{UB}      map a key to a keymap
-@{B}MARGIN n@{UB}            set WordWrap and paragraph formatting margin (related to
-                    WORDWRAP and REFORMAT) 
-@{B}MODIFIED what@{UB}       set modified flag manually (what={on,off,toggle}) 
-@{B}NICEPAGING what@{UB}     Should @{B}PAGEUP@{UB} and @{B}PAGEDOWN@{UB} scroll the page immediately
-                    (@{B}on@{UB}) or jump to the border first 
-@{B}PAGESET n@{UB}           @{B}n@{UB} PERCENT (0 to 100). page step size relative to the
-                    current number of rows in the window. 
-@{B}PATTERN pat@{UB}         sets the pattern for the filerequesters. 
-@{B}PUBSCREEN name@{UB}      open next window on screen @{B}name@{UB}. Use an empty string to
-                    turn it off (ie. "pubscreen `'") 
-@{B}REMPATH wild@{UB}        Remove a directorys from XDME's special path. 
-@{B}RESIZE cols rows@{UB}    Resize current window. E.G: (@{B}resize 70 23@{UB}) 
-@{B}SAVECONFIG@{UB}          save current editor configuration to @{I}s:XDME.prefs@{UI} 
-@{B}SAVETABS what@{UB}       Optimize file saves by crunching spaces to tabs. The
-                    default is OFF. 
-@{" SETDEFICONTITLE " LINK "desc19"} @{B}string@{UB} Sets the pattern for the window-title when iconifed 
-@{" SETDEFTITLE " LINK "desc19"} @{B}string@{UB} Sets the pattern for the window-title. 
-@{B}SETFONT font sz@{UB}     Set the window's font. @{B}setfont topaz 11@{UB} 
-@{B}SETPARCOL col@{UB}       Set the LEFT margin for word wrap mode paragraphing &
-                    reformat. MUST be less than MARGIN. 
-@{B}SIZEWINDOW geo@{UB}      change size and position of the current window to @{B}geo@{UB} 
-@{B}SLINE what@{UB}          Should XDME not allow to go beyond the end of line and
-                    preserve the length of lines (default: no) 
-@{B}SPACING n@{UB}           Insert a gap of @{B}n@{UB} pixels between lines 
-@{B}TABSTOP n@{UB}           Set tab stops every @{B}n@{UB}. does not effect text load. 
-@{B}TASKPRI n@{UB}           Set the priority of XDME to @{B}n@{UB} (-5..5) 
-@{B}TBPEN pen@{UB}           set pen for title bar background 
-@{B}TFPEN pen@{UB}           set pen for title bar text 
-@{B}TITLE title@{UB}         set window title manually 
 @{" UNMAP " LINK "desc0"} @{B}key@{UB}        unmap a key
-@{B}WORDWRAP what@{UB}       set word wrap mode (related to MARGIN) 
 @ENDNODE "prefs"
 
 @NODE "requester" "Requester"
 @TOC "MAIN"
 
-@{B}ARPFONT@{UB}             SETFONT with fontrequester 
-@{B}ARPINSFILE@{UB}          INSFILE with filerequester 
-@{B}ARPLOAD@{UB}             NEWFILE with filerequester 
-@{B}ARPSAVE@{UB}             SAVEAS with filerequester 
-@{B}BARPSAVE@{UB}            save the block to a file with filerequester 
-@{B}PATTERN pat@{UB}         sets the pattern for the filerequesters. 
-@{B}REQFILE title flags defvalue@{UB} display a synch ReqTools FileRequest; the result
-                    is put in $REQRESULT. 
-@{B}REQNUMBER title format gadgets defvalue min max@{UB} display a synchron ReqTools
-                    NumberRequest; the result is put in $REQRESULT. 
-@{B}REQPALETTE title defvalue@{UB} display a synch ReqTools PaletteRequest; the result
-                    is put in $REQRESULT. 
-@{B}REQSTRING title format gadgets defvalue@{UB} display a synchron ReqTools
-                    StringRequest; the result is put in $REQRESULT. 
-@{B}REQUEST title body gadgets@{UB} display a synch ReqTools EZRequest; the result is
-                    put in $REQRESULT. 
 @ENDNODE "requester"
 
 @NODE "searchreplace" "Search and Replace"
 @TOC "MAIN"
 
-@{B}FIND string@{UB}         Set the search pattern to @{B}string@{UB} and do a NEXT 
-@{B}FINDR s1 s2@{UB}         Set find and replace patterns and do one find&replace. 
-@{B}FINDSTR string@{UB}      Set the search string pattern 
-@{B}GLOBAL what@{UB}         turn global search on/off. If XDME cannot find a string in
-                    one window, it will continue with the next one. 
-@{B}NEXT@{UB}                find next occurance of search pattern 
-@{B}NEXTR@{UB}               find next occurance and replace 
-@{B}PREV@{UB}                find previous occurance of search pattern 
-@{B}PREVR@{UB}               find previous occurance and replace 
-@{" REPLACE " LINK "desc13"}          replaces the next strlen(findstr) chars with repstr 
-@{B}REPSTR string@{UB}       SET the replace string pattern 
 @ENDNODE "searchreplace"
 
 @NODE "stack" "Stack"
 @TOC "MAIN"
 
-@{B}PEEK item@{UB}           like POP, but doesn't remove the topmost element from
-                    stack ! 
-@{" PICK " LINK "desc16"} @{B}item@{UB}        like POP, but doesn't remove the topmost element from
-                    stack ! 
 @{B}PICKVAR varname@{UB}     get the latest to variable-stack pushed contents of the
                     variable varname back without freeing the stack-entry
-@{" POP " LINK "desc16"} @{B}item@{UB}         Pop something from the stack and store it in item. The
-                    special item AUTO stores the thing back where it was taken
-                    from. 
 @{B}POPMARK@{UB}             pop the block stack and highlight the popped block
 @{B}POPVAR varname@{UB}      get the latest to variable-stack pushed contents of the
                     variable varname back and free the stack-entry
 @{B}PURGEMARK@{UB}           clear the mark stack
 @{B}PURGEVAR varname@{UB}    remove all entries with the name varname from varstack
-@{" PUSH " LINK "desc16"} @{B}item@{UB}        Push an item on the stack. 
 @{B}PUSHMARK@{UB}            push the currently marked block onto a stack and
                     unhighlight the block
 @{B}PUSHVAR varname@{UB}     push the contents of the variable varname onto
                     variable-stack
-@{B}SWAP item@{UB}           exchange the topmost item on stack with the actual item 
 @{B}SWAPMARK@{UB}            PUSHMARK, swap top two marks on stack, POPMARK
 @{B}SWAPVAR varname@{UB}     swap the contents of the variable varname and of its first
                     occurancy in variable-stack
@@ -364,40 +140,18 @@ alphabetically and by topic.
 @NODE "textedit" "Text Editing"
 @TOC "MAIN"
 
-@{B}BACK@{UB}                backspace, (delete char to left of cursor) 
-@{B}BS@{UB}                  backspace, (delete char to left of cursor) 
-@{B}DEL@{UB}                 delete, (deletes char under cursor) 
-@{B}DELINE@{UB}              delete line 
-@{B}DELINES n@{UB}           delete @{B}n@{UB} lines 
-@{B}DOWNADD@{UB}             cursor down. If at bottom of text, add a line. 
-@{" INDENT " LINK "desc9"} @{B}what how@{UB}  indent text. @{B}what@{UB} specifies what to indent and @{B}how@{UB} how
-                    to indent it. 
 @{B}INSERT text@{UB}         insert some text at the current position
-@{B}INSFILE name@{UB}        insert a file into the current text. 
-@{B}INSLINE@{UB}             insert line 
-@{B}INSLINES n@{UB}          insert @{B}n@{UB} lines at once 
-@{B}JOIN@{UB}                join next line to line at cursor 
-@{" JUSTIFY " LINK "desc18"} @{B}how@{UB}      simple text justification. 
 @{B}OVERWRITE text@{UB}      overwrite the text at the current position with @{B}text@{UB}
 @{B}PRINTF format parameters@{UB} create a string with @{B}format@{UB} and its (up to 8)
                     @{B}parameters@{UB} and write it into the current text
-@{" READTEMPLATE " LINK "desc22"} @{B}file@{UB} insert @{B}file@{UB} and replace variables
-@{B}REFORMAT@{UB}            reformat paragraph using the margin. 
-@{B}REMEOL@{UB}              Remove text under and beyond the cursor. 
-@{B}RETURN@{UB}              if AUTOINDENT is off: (FIRST DOWNADD) else insert line,
-                    split current line and indent like last line above. 
-@{B}SPLIT@{UB}               Split line at cursor 
-@{" TLATE " LINK "desc10"} @{B}how@{UB}        Modify character under cursor. 
-@{" UNJUSTIFY " LINK "desc18"}        removes extra spaces in a line 
+@{B}READTEMPLATE file@{UB}   insert @{B}file@{UB} and replace variables
 @ENDNODE "textedit"
 
 @NODE "format" "Text formatting"
 @TOC "MAIN"
 
-@{" JUSTIFY " LINK "desc18"} @{B}how@{UB}      simple text justification. 
 @{B}PRINTF format parameters@{UB} create a string with @{B}format@{UB} and its (up to 8)
                     @{B}parameters@{UB} and write it into the current text
-@{B}REFORMAT@{UB}            reformat paragraph using the margin. 
 @ENDNODE "format"
 
 @NODE "var" "Variable"
@@ -430,25 +184,6 @@ alphabetically and by topic.
 @NODE "win" "Windows"
 @TOC "MAIN"
 
-@{B}ICONIFY@{UB}             iconify the window 
-@{B}NEWWINDOW@{UB}           open new window using default window parameters 
-@{" OPENWINDOW " LINK "desc17"} @{B}geo@{UB}   open new window using specified geometry. 
-@{B}QUIT@{UB}                close current window. If text was modified, a safety check
-                    is performed 
-@{B}REDISPLAY@{UB}           force XDME to redraw the text 
-@{B}RESIZE cols rows@{UB}    Resize current window. E.G: (@{B}resize 70 23@{UB}) 
-@{" SELECT " LINK "desc15"} @{B}what@{UB}      make a window the current one. 
-@{" SETDEFICONTITLE " LINK "desc19"} @{B}string@{UB} Sets the pattern for the window-title when iconifed 
-@{" SETDEFTITLE " LINK "desc19"} @{B}string@{UB} Sets the pattern for the window-title. 
-@{" SETGEOMETRY " LINK "desc11"} @{B}x y width height@{UB} Set x/y position and width/height of XDME's
-                    window. 
-@{B}SHOWLOG@{UB}             XDME collects all warnings internally. These can now be
-                    showed again with this command. 
-@{B}SIZEWINDOW geo@{UB}      change size and position of the current window to @{B}geo@{UB} 
-@{B}TITLE title@{UB}         set window title manually 
-@{B}TOBACK@{UB}              Move active window to back 
-@{B}TOFRONT@{UB}             Move active window to front 
-@{B}UNICONIFY@{UB}           uniconify the window 
 @ENDNODE "win"
 
 @NODE "desc0" "MAP,UNMAP"
@@ -567,7 +302,6 @@ EXAMPLES:
 @NODE "desc2" "FORCE"
 @TOC "MAIN"
 
-@{B}FORCE flags command@{UB}
 @{B}FORCE flag command@{UB}
 
 To execute a command under special conditions. @{B}flag@{UB} is
@@ -599,7 +333,6 @@ will take two MENUON@ commands to restore menus. The reverse is not true.
 @NODE "desc4" "CTAGS"
 @TOC "MAIN"
 
-@{B}CTAGS @{UB}
 
 (1.30B and beyond) Compatible with Aztec's CTAGS program. This command
 searches for the subroutine name under the cursor in the associated tags
@@ -636,7 +369,6 @@ need not be a full path.
 @NODE "desc5" "REF"
 @TOC "MAIN"
 
-@{B}REF @{UB}
 
 (1.28d and beyond).  This is a very powerful new command that allows you to
 bring up a reference to a keyword with a single keystroke.  This is useful
@@ -688,7 +420,6 @@ differences in include file and autodoc format.
 @NODE "desc6" "SCANF"
 @TOC "MAIN"
 
-@{B}SCANF ctlstr@{UB}
 
 This is equivalent to the C scanf() function with the restriction that only
 one conversion is allowed, that conversion being a string.  Thus:
@@ -740,7 +471,6 @@ to prevent it from being evaluated at macro-creation time.
 @NODE "desc7" "REPEAT"
 @TOC "MAIN"
 
-@{B}REPEAT cnt comm@{UB}
 
 Repeat @{B}arg@{UB} @{B}n@{UB} times.  Apart from being a number, @{B}n@{UB} can also be one of:
 
@@ -771,9 +501,6 @@ specify a number as repeat-count.
 @NODE "desc8" "IF,WHILE,IFELSE"
 @TOC "MAIN"
 
-@{B}IF cnd act@{UB}
-@{B}IFELSE cnd ifact elseact@{UB}
-@{B}WHILE cnd act@{UB}
 
 If the specified condition is true, execute the argument.  For WHILE, the
 argument is executed until the condition is false (be careful!), but you
@@ -831,7 +558,6 @@ the optional '!' inverts the logic.
 @NODE "desc9" "INDENT"
 @TOC "MAIN"
 
-@{B}INDENT what how@{UB}
 
 The INDENT-command allows to indent and outdent text. It is intelligent in
 a way that you will NEVER lose any text with it. If the in/outdent would
@@ -872,7 +598,6 @@ continues with the next line.
 @NODE "desc10" "TLATE"
 @TOC "MAIN"
 
-@{B}TLATE how@{UB}
 
 translate character under cursor. @{B}how@{UB} can be one of the following:
 
@@ -894,7 +619,6 @@ translate character under cursor. @{B}how@{UB} can be one of the following:
 @NODE "desc11" "SETGEOMETRY"
 @TOC "MAIN"
 
-@{B}SETGEOMETRY x y width height@{UB}
 
 Set @{B}x/y@{UB} position and @{B}width/height@{UB} of XDME's window. The width and height
 are ignored in iconified state. If you use negative values, the
@@ -907,7 +631,6 @@ only).
 @NODE "desc12" "GOTO"
 @TOC "MAIN"
 
-@{B}GOTO dest@{UB}
 
 Goto to a position in the text. dest is one of
 
@@ -922,7 +645,6 @@ Goto to a position in the text. dest is one of
 @NODE "desc13" "REPLACE"
 @TOC "MAIN"
 
-@{B}REPLACE @{UB}
 
 replaces the next @{B}strlen(findstr)@{UB} chars with @{B}repstr@{UB} (ie. if deletes as many
 chars as are in @{B}findstr@{UB} and replaces them by the replace-string). Useful in
@@ -938,7 +660,6 @@ a mapping to find the text and another to actually replace the text:
 @NODE "desc14" "PROJECTINFO"
 @TOC "MAIN"
 
-@{B}PROJECTINFO @{UB}
 
 Gives some information about the current project.
 
@@ -953,7 +674,6 @@ i.e. Name of current window, it's dimensions and position when iconified
 @NODE "desc15" "SELECT"
 @TOC "MAIN"
 
-@{B}SELECT what@{UB}
 
 make a window the current one. @{B}what@{UB}:
 
@@ -971,9 +691,6 @@ STRONGLY recommended.
 @NODE "desc16" "PICK,PUSH,POP"
 @TOC "MAIN"
 
-@{B}PICK item@{UB}
-@{B}POP item@{UB}
-@{B}PUSH item@{UB}
 
 Push/pop an item on/from the stack. @{B}Items@{UB} are
 
@@ -1001,7 +718,6 @@ Push/pop an item on/from the stack. @{B}Items@{UB} are
 @NODE "desc17" "OPENWINDOW"
 @TOC "MAIN"
 
-@{B}OPENWINDOW geo@{UB}
 
 open new window using specified geometry.  Geometry is specified as:
 @{B}+/-leftedge+/-topedge+/-width+/-height@{UB}, where negative numbers denote
@@ -1023,8 +739,6 @@ and height 100.
 @NODE "desc18" "JUSTIFY,UNJUSTIFY"
 @TOC "MAIN"
 
-@{B}JUSTIFY how@{UB}
-@{B}UNJUSTIFY @{UB}
 
 These commands format a single line of text. @{B}UNJUSTIFY@{UB} removes all
 formatting (ie. all obsolete spaces). @{B}JUSTIFY@{UB} inserts spaces. The following
@@ -1050,283 +764,27 @@ use
 	@{B}WHILE CB (@{UB}         while in block
 	    @{B}JUSTIFY @{I}how@{UI}@{UB}	 justify the line
 	    @{B}DOWN )@{UB}		next line
-
 @ENDNODE "desc18"
-
-@NODE "desc19" "SETDEFTITLE,SETDEFICONTITLE"
-@TOC "MAIN"
-
-@{B}SETDEFICONTITLE string@{UB}
-@{B}SETDEFTITLE string@{UB}
-
-This command allows to specify a pattern from which XDME will built a
-string and display it at the appropriate position. The string can contain
-any characters (like in @{B}printf()@{UB}). The following characters are replaced by
-a special string, however:
-
-	Sequence    Replacement
-
-	   @{B}%%@{UB}	     A single @{B}%@{UB} in the resulting string
-	   @{B}%l@{UB}	     the current line
-	   @{B}%L@{UB}	     the number of lines
-	   @{B}%c@{UB}	     the current column
-	   @{B}%C@{UB}	     the code of the character under the cursor in hex
-	   @{B}%m@{UB}	     modified flag (either @{B}@{UB}- or @{B}*@{UB})
-	   @{B}%f@{UB}	     the current filename
-	   @{B}%p@{UB}	     the last 20 characters of the current path
-	   @{B}%b@{UB}	     the actual blocktype (@{B}L@{UB} for line, @{B}N@{UB} for character oriented
-		    and @{B}V@{UB} for vertical
-
-The defaults for XDME's title are: @{B}%l/%L %C %c %m %f %i@{UB}
-The defaults for XDME's icon are: @{B}%f@{UB}
-
-@ENDNODE "desc19"
-
-@NODE "desc20" "APPICON"
-@TOC "MAIN"
-
-
-That Package allows use of a Workbench AppIcon.
-Currently the whole package is conrolled via some special
-variables, not via commands;
-the following five variables are used:
-
-    $appicon - (BOOL) the status of the appicon:
-	 setting it to "1" makes the AppIcon appear,
-	 setting it to "0" makes the AppIcon disappear.
-
-    $appiconname - (FILE) the icon to be used for the AppIcon Image;
-	plase note, that modification of that variable currently
-	only has effect after the NEXT appearance of the AppIcon,
-	the visible Image is not changed.
-	Defaults to "XDME".
-
-    $appicontitle - (STRING) the titlestring to be used in connection
-	with the AppIcon (the same limit as for $appiconname)
-	Defaults to "XDME".
-
-    $appicondropaction - (COMMAND) the command to be executed,
-	whenever another icon is dropped onto the AppIcon; any
-	"%s" in that variable are expanded to the full name of
-	the dropped icon (w/ sprintf).
-	Defaults to "newwindow newfile `%s'".
-
-    $appiconclickaction - (COMMAND) the command to be executed,
-	whenever user doubleclicks on the AppIcon.
-	Defaults to "newwindow arpload".
-
-
-@ENDNODE "desc20"
-
-@NODE "desc21" "OPENCMDSHELL,CLOSECMDSHELL,CMDSHELLOUT"
-@TOC "MAIN"
-
-
-That Package allows use of an ansynchroneous Commandshell,
-a simple Console window to type commands into.
-
-Most aspects of that package can be controlled via variables,
-but there are also 3 commands:
-
-    OPENCMDSHELL - makes the commandshell appear;
-
-    CLOSECMDSHELL - makes the commandshell dissappear;
-
-    CMDSHELLOUT text - write some to the commandshell
-	please note, that there is a "bug" - we are using
-	a printf function to diplay the string, but there
-	is no possibility to define any argument for the
-	printf template; so all "%" should be duplicated
-	or omitted.
-
-the following special variables complete the package:
-
-    $cmdshell - (BOOL) the status of the commandshell;
-	 setting it to "1" makes the Commandshell open,
-	 setting it to "0" makes the Commandshell close.
-
-    $cmdshellfile - (FILE) the file to be used for the commandshell;
-	that file _must_ be interactive.
-	plase note, that modification of that variable currently
-	only has effect after the NEXT open of the commandshell,
-	the active commandshell is not changed.
-	Defaults to "CON:0/11/640/60/XDME Command Shell/Close".
-
-    $cmdshellprompt - (STRING) the string to displayed to signal
-	the user, that he can enter a command;
-	plase note, that modification of that variable currently
-	only has effect after the NEXT update of the prompt,
-	i.e. after the next time, something was written to the
-	commandshell, or the user pressed return in the cmdshell;
-	the active prompt is not changed.
-	The prompt is expanded (via variable-expansion) each time,
-	it is displayed
-	Defaults to "`XDME> "
-
-    $errorsoncmdshell - (BOOL) as long as that flag is set, and
-	the commandshell is open, all errors are dispayed on the
-	commandshell.
-
-    $warningsoncmdshell - (BOOL) as long as that flag is set, and
-	the commandshell is open, all warnings are dispayed on the
-	commandshell.
-
-
-@ENDNODE "desc21"
-
-@NODE "desc22" "READTEMPLATE"
-@TOC "MAIN"
-
-@{B}READTEMPLATE file@{UB}
-
-This command inserts @{B}file@{UB}.
-passing all lines starting with "$$" to EVAL
-(lines starting with "$$#" are ignored) and
-replacing all "$(...)" and "$`...'" by their
-values if matching variables do exist.
-
-That function might be very useful for
-handling very formalistic structs, which
-do need only little work by user.
-
-Since the parse is line-oriented, usage of
-linefeeds in "$(...)" and "$`...' is forbidden
-
-@ENDNODE "desc22"
 
 @NODE "index" "Index"
 @TOC "MAIN"
 
 @{B}ABORT@{UB}               stop macro execution
-@{B}ABORT@{UB}               abort the current command execution 
-@{B}ABOUT@{UB}               display information about XDME 
 @{B}ADD var val@{UB}         add @{B}val@{UB} to @{B}var@{UB}
-@{B}ADD varname value@{UB}   increase the named variable by the given value 
-@{B}ADDPATH path@{UB}        Add the specified symbolic directory to XDME's special
-                    search path (see REF and CTAGS). 
-@{B}APPENDSAVE file@{UB}     Append current text to @{B}file@{UB} 
-@{B}ARPFONT@{UB}             SETFONT with fontrequester 
-@{B}ARPINSFILE@{UB}          INSFILE with filerequester 
-@{B}ARPLOAD@{UB}             NEWFILE with filerequester 
-@{B}ARPSAVE@{UB}             SAVEAS with filerequester 
-@{B}AUTOINDENT what@{UB}     (De)Activate autoindent with RETURN 
-@{B}AUTOSPLIT what@{UB}      (De)Activate autosplit. This is an alternative to
-                    WORDWRAP. AUTOSPLIT only breaks the line if it gets too
-                    long and doesn't touch the rest of the text. 
-@{B}AUTOUNBLOCK what@{UB}    clear old selection when a new block is defined (on) or
-                    give an error 
-@{B}BACK@{UB}                backspace, (delete char to left of cursor) 
-@{B}BACKTAB@{UB}             backward tab 
-@{B}BAPPENDSAVE file@{UB}    Append currently marked text to @{B}file@{UB} 
-@{B}BARPSAVE@{UB}            save the block to a file with filerequester 
-@{B}BBPEN pen@{UB}           selects @{B}pen@{UB} as the block-background-pen 
-@{B}BDELETE@{UB}             delete currently marked text 
-@{B}BEND@{UB}                Set end of block 
-@{B}BGPEN pen@{UB}           set background pen for text 
-@{B}BLOCK@{UB}               Set start or end (if start is already set) of block 
-@{B}BLOCKENDSFLOAT what@{UB} Should @{B}BSTART@{UB} always appear above @{B}BEND@{UB} (@{B}on@{UB}) or
-                    remain static 
-@{B}BLOCKTYPE type@{UB}      @{B}type@{UB} is LINE (old), CHARACTER (like everywhere else) or
-                    VERTICAL (rectangular block). 
-@{B}BMOVE@{UB}               delete currently marked text and insert it before cursor
-                    line 
-@{B}BOTTOM@{UB}              Move to Bottom of File 
-@{B}BREAK@{UB}               break the current command loop 
 @{B}BREAK@{UB}               leave current loop (WHILE, REPEAT)
-@{B}BS@{UB}                  backspace, (delete char to left of cursor) 
-@{B}BSAVE file@{UB}          save the block to @{B}file@{UB} 
-@{B}BSOURCE@{UB}             execute currently marked text block as if it were a script
-                    file 
-@{B}BSTART@{UB}              Set start of block 
-@{B}CD dir@{UB}              set directory of current window to @{B}dir@{UB} 
-@{B}CHFILENAME name@{UB}     change the name of the working file 
-@{B}CLIPINS@{UB}             Insert current contents of clipboard in the text 
-@{B}COL n@{UB}               Move cursor to column @{B}n@{UB} or @{B}n@{UB} characters left (@{B}-n@{UB}) or
-                    right (@{B}+n@{UB}) 
 @{B}CONTINUE@{UB}            start loop over (WHILE, REPEAT)
-@{B}CONTINUE@{UB}            break the current turn of the current command loop 
-@{B}COPY@{UB}                copy currently marked text into clipboard 
-@{" CTAGS " LINK "desc4"}            search for the tag under the cursor (see below) 
-@{B}DEBUG what@{UB}          @{U}For programmers only@{UB} Allows to set a flag for testing
-                    code 
 @{B}DEC var@{UB}             sub 1 from @{B}var@{UB}
-@{B}DEC varname@{UB}         decrement the named variable 
-@{B}DEL@{UB}                 delete, (deletes char under cursor) 
-@{B}DELINE@{UB}              delete line 
-@{B}DELINES n@{UB}           delete @{B}n@{UB} lines 
-@{B}DIV varname value@{UB}   divide the named variable by the given value 
 @{B}DIV var val@{UB}         divide @{B}var@{UB} by @{B}val@{UB}
-@{B}DOBACKUP what@{UB}       specifies if XDME creates a .bak file before actually
-                    saving the text 
-@{B}DOWN@{UB}                cursor down. If in commandline move to next line of
-                    commandline-history 
-@{B}DOWNADD@{UB}             cursor down. If at bottom of text, add a line. 
-@{B}DROPVAR varname@{UB}     drop the first entry of a variable from the variable stack
-                    
-@{B}ESC@{UB}                 toggle manual command entry mode 
-@{B}ESCIMM arg@{UB}          go into command entry mode prompting with @{B}arg@{UB} 
 @{B}EVAL com@{UB}            split long commandsequences to keep MAXIA small
-@{B}EVAL command@{UB}        reinvoke the command interpreter;that command can b used
-                    to prevent "too many arguments" errors, which occurs, if
-                    the user has specified too many variable arguments at the
-                    same execution level 
-@{B}EXECUTE comm@{UB}        Execute a CLI command. 
-@{B}FGPEN pen@{UB}           Set pen for text 
-@{B}FIND string@{UB}         Set the search pattern to @{B}string@{UB} and do a NEXT 
-@{B}FINDR s1 s2@{UB}         Set find and replace patterns and do one find&replace. 
-@{B}FINDSTR string@{UB}      Set the search string pattern 
-@{B}FIRST@{UB}               move to column 1 
-@{B}FIRSTNB@{UB}             Move to first non-blank in line. 
 @{B}FLAG name what@{UB}      change flag @{B}name@{UB} by @{B}what@{UB}
-@{B}FOLLOWCURSOR what@{UB}   XDME will make sure the cursor is visible if you switch it
-                    on with this command. Usefull on screens that extend over
-                    the visual area. 
-@{" FORCE " LINK "desc2"} @{B}flags command@{UB} similar to EVAL, but according to flags it can ignore
-                    errorvalues (F), disable screenupdates (S) or
-                    errorrequesters (R) or title updates (T) or activate Debug
-                    Mode (D) 
 @{" FORCE " LINK "desc2"} @{B}flag command@{UB} set special conditions for executing @{B}command@{UB}
-@{B}GLOBAL what@{UB}         turn global search on/off. If XDME cannot find a string in
-                    one window, it will continue with the next one. 
-@{" GOTO " LINK "desc12"} @{B}dest@{UB}        Goto to a position in the text. 
-@{B}HGPEN pen@{UB}           set highlight (block) pen 
-@{B}ICONACTIVE what@{UB}     Should XDME activate the iconified window 
-@{B}ICONIFY@{UB}             iconify the window 
-@{" IF " LINK "desc8"} @{B}cnd act@{UB}       if (@{B}cnd@{UB}) @{B}act@{UB} 
-@{" IFELSE " LINK "desc8"} @{B}cnd ifact elseact@{UB} if (@{B}cnd@{UB}) @{B}ifact@{UB} else @{B}elseact@{UB} 
-@{B}IGNORECASE what@{UB}     set case ignore for seaches. 
-@{B}INC varname@{UB}         increment the named variable 
 @{B}INC var@{UB}             add 1 to @{B}var@{UB}
-@{" INDENT " LINK "desc9"} @{B}what how@{UB}  indent text. @{B}what@{UB} specifies what to indent and @{B}how@{UB} how
-                    to indent it. 
 @{B}INSERT text@{UB}         insert some text at the current position
-@{B}INSERTMODE what@{UB}     set INSERTMODE. 
-@{B}INSFILE name@{UB}        insert a file into the current text. 
-@{B}INSLINE@{UB}             insert line 
-@{B}INSLINES n@{UB}          insert @{B}n@{UB} lines at once 
-@{B}JOIN@{UB}                join next line to line at cursor 
-@{" JUSTIFY " LINK "desc18"} @{B}how@{UB}      simple text justification. 
 @{B}KEYLOAD filename@{UB}    replace the current keymap with the contents of @{B}filename@{UB}
 @{B}KEYSAVE filename@{UB}    save the current keymap into @{B}filename@{UB}
-@{B}LAST@{UB}                move one beyond the last non-space in a line. 
-@{B}LEFT@{UB}                cursor left 
-@{B}LINEBLOCK@{UB}           mark the current line 
-@{B}MACROLOAD name@{UB}      load commandmacros from a file 
 @{B}MACROLOAD filename@{UB}  load macros from a file
-@{B}MACROSAVE filename@{UB}  save all commandmacros into a file 
 @{B}MACROSAVE filename@{UB}  save the current macros into a file with a special format
-@{B}MAKECURSORVISIBLE@{UB}   Scrolls an oversized screen so the cursor will become
-                    visible. 
 @{" MAP " LINK "desc0"} @{B}key map@{UB}      map a key to a keymap
-@{B}MARGIN n@{UB}            set WordWrap and paragraph formatting margin (related to
-                    WORDWRAP and REFORMAT) 
-@{B}MATCH@{UB}               find matching paren. Works with (), [], {}, `' and
-                    C-comments 
-@{B}MATH1 arg1 arg2@{UB}     long version for NOT INC NEG DEC; $INFIXMODE decides if
-                    arg1 or arg2 is operator, the other arg is variablename 
-@{B}MATH2 arg1 arg2 arg3@{UB} long version for MUL MOD DIV SUB ADD; $INFIXMODE decides
-                    if arg1 or arg2 is operator, the other arg is variablename
-                    
 @{" MENUADD " LINK "desc1"} @{B}hdr item cmd@{UB} add menu item
 @{B}MENUCHKITEM menuname itemname variablename@{UB} write the current status (0 or 1)
                     of an checkmarks in a variable
@@ -1340,218 +798,56 @@ linefeeds in "$(...)" and "$`...' is forbidden
 @{B}MENUSETITEM menuname itemname status@{UB} set the status of a menu-item with
                     checkmarks
 @{B}MOD var val@{UB}         module of @{B}var@{UB} by @{B}val@{UB}
-@{B}MOD varname value@{UB}   modulo divide the named variable by the given value 
-@{B}MODIFIED what@{UB}       set modified flag manually (what={on,off,toggle}) 
-@{B}MUL varname value@{UB}   multiply the named variable with the given value 
 @{B}MUL var val@{UB}         multiply @{B}var@{UB} by @{B}val@{UB}
 @{B}NEG var@{UB}             negate the value of @{B}var@{UB}
-@{B}NEG varname@{UB}         make the named variable negative 
-@{B}NEWFILE name@{UB}        replace current text with new file 
 @{B}NEWKEYTABLE name@{UB}    use a keytable or create a new one
 @{B}NEWMENUSTRIP name@{UB}   use a menustrip or create a new one
-@{B}NEWWINDOW@{UB}           open new window using default window parameters 
-@{B}NEXT@{UB}                find next occurance of search pattern 
-@{B}NEXTR@{UB}               find next occurance and replace 
-@{B}NICEPAGING what@{UB}     Should @{B}PAGEUP@{UB} and @{B}PAGEDOWN@{UB} scroll the page immediately
-                    (@{B}on@{UB}) or jump to the border first 
-@{B}NOP@{UB}                 no operation 
-@{B}NOT varname@{UB}         invert the named variable 
 @{B}NOT var@{UB}             logical not for @{B}var@{UB}
-@{B}NULL@{UB}                no operation 
-@{" OPENWINDOW " LINK "desc17"} @{B}geo@{UB}   open new window using specified geometry. 
 @{B}OVERWRITE text@{UB}      overwrite the text at the current position with @{B}text@{UB}
-@{B}PAGEDOWN@{UB}            pagedown a partial page (see PAGESET) 
-@{B}PAGELEFT@{UB}            page to the left as requested by StyleGuide. 
-@{B}PAGERIGHT@{UB}           dito to the right 
-@{B}PAGESET n@{UB}           @{B}n@{UB} PERCENT (0 to 100). page step size relative to the
-                    current number of rows in the window. 
-@{B}PAGEUP@{UB}              pageup a partial page (see PAGESET) 
-@{B}PATTERN pat@{UB}         sets the pattern for the filerequesters. 
-@{B}PEEK item@{UB}           like POP, but doesn't remove the topmost element from
-                    stack ! 
-@{" PICK " LINK "desc16"} @{B}item@{UB}        like POP, but doesn't remove the topmost element from
-                    stack ! 
-@{B}PICKVAR varname@{UB}     get a variable from the variable stack without modifying
-                    the stack 
 @{B}PICKVAR varname@{UB}     get the latest to variable-stack pushed contents of the
                     variable varname back without freeing the stack-entry
-@{B}PING n@{UB}              set a text marker (@{B}n@{UB} = 0-9). 
-@{B}PONG n@{UB}              move to a previously set text marker (@{B}n@{UB} = 0-9) 
-@{" POP " LINK "desc16"} @{B}item@{UB}         Pop something from the stack and store it in item. The
-                    special item AUTO stores the thing back where it was taken
-                    from. 
 @{B}POPMARK@{UB}             pop the block stack and highlight the popped block
 @{B}POPVAR varname@{UB}      get the latest to variable-stack pushed contents of the
                     variable varname back and free the stack-entry
-@{B}POPVAR varname@{UB}      get a variable from the variable stack and remove it 
-@{B}PORT name cmd@{UB}       Send @{B}cmd@{UB} to ARexx-Port @{B}name@{UB} 
-@{B}PREV@{UB}                find previous occurance of search pattern 
-@{B}PREVR@{UB}               find previous occurance and replace 
-@{B}PRINT text@{UB}          Print @{B}text@{UB} to the shell XDME was started in 
 @{B}PRINTF format parameters@{UB} create a string with @{B}format@{UB} and its (up to 8)
                     @{B}parameters@{UB} and write it into the current text
-@{" PROJECTINFO " LINK "desc14"}      Gives some information about the current project. 
-@{B}PROJECTLOAD@{UB}         Recall session 
-@{B}PROJECTSAVE@{UB}         Save all window-dimensions, filenames and position of
-                    iconified windows. 
-@{B}PUBSCREEN name@{UB}      open next window on screen @{B}name@{UB}. Use an empty string to
-                    turn it off (ie. "pubscreen `'") 
 @{B}PURGEMARK@{UB}           clear the mark stack
-@{B}PURGEVAR varname@{UB}    remove all occurencies of a variable from the variable
-                    stack 
 @{B}PURGEVAR varname@{UB}    remove all entries with the name varname from varstack
-@{" PUSH " LINK "desc16"} @{B}item@{UB}        Push an item on the stack. 
 @{B}PUSHMARK@{UB}            push the currently marked block onto a stack and
                     unhighlight the block
 @{B}PUSHVAR varname@{UB}     push the contents of the variable varname onto
                     variable-stack
-@{B}PUSHVAR varname@{UB}     put a variable onto the variable stack 
-@{B}QUIET command@{UB}       short for "FORCE S command" 
-@{B}QUIT@{UB}                close current window. If text was modified, a safety check
-                    is performed 
-@{B}QUITALL@{UB}             leave XDME. If any text was modified, a safety check is
-                    performed for that text 
-@{" READTEMPLATE " LINK "desc22"} @{B}file@{UB} insert @{B}file@{UB} and replace variables
-@{B}RECALL@{UB}              recall most recently entered command. Must be used from a
-                    keymap (c-esc). 
+@{B}READTEMPLATE file@{UB}   insert @{B}file@{UB} and replace variables
 @{B}RECEND@{UB}              end macro recording
-@{B}RECEND@{UB}              terminate the macro recorder, if it is running 
-@{B}RECPLAY@{UB}             replay the previously recorded macro 
 @{B}RECPLAY@{UB}             use previously recorded macro
 @{B}RECSAVE file@{UB}        save recorded macro to a file. Execute with @{B}SOURCE@{UB}
-@{B}RECSAVE filename@{UB}    save the previously recorded macro as a XDME script 
-@{B}RECSTART@{UB}            start the macro recorder 
 @{B}RECSTART@{UB}            start macro recording
-@{B}REDISPLAY@{UB}           force XDME to redraw the text 
-@{" REF " LINK "desc5"}              reference string under cursor (see below) 
-@{B}REFCTAGS@{UB}            The utimate command for hopping through source. First, we
-                    try CTAGS and if we don't find anything, we check REF. 
-@{B}REFORMAT@{UB}            reformat paragraph using the margin. 
-@{B}REM com@{UB}             add commend 
-@{B}REMEOL@{UB}              Remove text under and beyond the cursor. 
 @{B}REMKEYTABLE@{UB}         delete the current keytable, if it is not the only one
 @{B}REMMENUSTRIP@{UB}        delete the current menustrip, if it is not the only one
-@{B}REMPATH wild@{UB}        Remove a directorys from XDME's special path. 
-@{" REPEAT " LINK "desc7"} @{B}cnt comm@{UB}  repeat @{B}comm@{UB} @{B}cnt@{UB} times. 
-@{" REPLACE " LINK "desc13"}          replaces the next strlen(findstr) chars with repstr 
-@{B}REPSTR string@{UB}       SET the replace string pattern 
-@{B}REQFILE title flags defvalue@{UB} display a synch ReqTools FileRequest; the result
-                    is put in $REQRESULT. 
-@{B}REQNUMBER title format gadgets defvalue min max@{UB} display a synchron ReqTools
-                    NumberRequest; the result is put in $REQRESULT. 
-@{B}REQPALETTE title defvalue@{UB} display a synch ReqTools PaletteRequest; the result
-                    is put in $REQRESULT. 
-@{B}REQSTRING title format gadgets defvalue@{UB} display a synchron ReqTools
-                    StringRequest; the result is put in $REQRESULT. 
-@{B}REQUEST title body gadgets@{UB} display a synch ReqTools EZRequest; the result is
-                    put in $REQRESULT. 
 @{B}RESETTOGGLE n@{UB}       clear toggle array entry @{B}n@{UB} = 0..255
-@{B}RESIZE cols rows@{UB}    Resize current window. E.G: (@{B}resize 70 23@{UB}) 
 @{B}RET@{UB}                 terminate macro
-@{B}RET@{UB}                 return from a macro (before reaching its end) 
-@{B}RETURN@{UB}              if AUTOINDENT is off: (FIRST DOWNADD) else insert line,
-                    split current line and indent like last line above. 
-@{B}RIGHT@{UB}               cursor right 
-@{B}RX@{UB}                  ARexx macro, no args (@{B}RX@{UB} macname) 
-@{B}RX1@{UB}                 ARexx macro, one arg (@{B}RX1@{UB} macname arg1) 
-@{B}RX2@{UB}                 ARexx macro, two args (@{B}RX2@{UB} macname arg1 arg2) 
-@{B}RXRESULT any@{UB}        Copy @{B}any@{UB} into RESULT in an AREXX-script. 
-@{B}SAVEAS file@{UB}         save current text under a different name (title line name
-                    does change) 
-@{B}SAVECONFIG@{UB}          save current editor configuration to @{I}s:XDME.prefs@{UI} 
-@{B}SAVEOLD@{UB}             save current text under current name 
-@{B}SAVETABS what@{UB}       Optimize file saves by crunching spaces to tabs. The
-                    default is OFF. 
-@{" SCANF " LINK "desc6"} @{B}ctlstr@{UB}     scan the string at the current text position (C scanf)
-                    example: @{B}scanf %s@{UB} 
-@{B}SCREENBOTTOM@{UB}        Move cursor to the bottom of the screen. 
-@{B}SCREENTOP@{UB}           Move cursor to the top of the screen 
-@{B}SCROLLDOWN@{UB}          Scroll down without moving cursor 
-@{B}SCROLLLEFT@{UB}          Scroll left without moving cursor 
-@{B}SCROLLRIGHT@{UB}         Scroll right without moving cursor 
-@{B}SCROLLUP@{UB}            Scroll up without moving cursor 
-@{" SELECT " LINK "desc15"} @{B}what@{UB}      make a window the current one. 
 @{B}SET var str@{UB}         create/modify an internal variable (access without $)
-@{" SETDEFICONTITLE " LINK "desc19"} @{B}string@{UB} Sets the pattern for the window-title when iconifed 
-@{" SETDEFTITLE " LINK "desc19"} @{B}string@{UB} Sets the pattern for the window-title. 
 @{B}SETENV var str@{UB}      create/modify an enviroment variable (1.3 ENV:)
-@{B}SETFONT font sz@{UB}     Set the window's font. @{B}setfont topaz 11@{UB} 
-@{" SETGEOMETRY " LINK "desc11"} @{B}x y width height@{UB} Set x/y position and width/height of XDME's
-                    window. 
-@{B}SETMACRO name nargs body@{UB} create or redefine a commandmacro 
 @{B}SETMACRO name numargs body@{UB} define the macro @{B}name@{UB} with @{B}numargs@{UB} arguments.
 @{B}SETMACROVAR name val@{UB} definition of a macro's local variable inside a macro
-@{B}SETMACROVAR name value@{UB} create or redefine a macrolocal variable (same as SMV) 
-@{B}SETPARCOL col@{UB}       Set the LEFT margin for word wrap mode paragraphing &
-                    reformat. MUST be less than MARGIN. 
 @{B}SETTOGGLE n@{UB}         set toggle array entry @{B}n@{UB} = 0..255
 @{B}SETTVAR var str@{UB}     create/modify text-local variable (access without $)
-@{B}SHOWLOG@{UB}             XDME collects all warnings internally. These can now be
-                    showed again with this command. 
-@{B}SIMPTR x y@{UB}          simulate the mouse being at windowpos x/y; that command is
-                    needed to replay saved macros, it is not helpful in any
-                    other situation 
 @{B}SIMPTR x y@{UB}          simulate a mouse-movement. @{B}x@{UB} and @{B}y@{UB} are in pixels.
-@{B}SIZEWINDOW geo@{UB}      change size and position of the current window to @{B}geo@{UB} 
-@{B}SLINE what@{UB}          Should XDME not allow to go beyond the end of line and
-                    preserve the length of lines (default: no) 
 @{B}SMV name val@{UB}        short for @{B}SETMACROVAR name val@{UB}
-@{B}SMV name value@{UB}      create or redefine a macrolocal variable (same as
-                    SETMACROVAR) 
-@{B}SOURCE file@{UB}         source a script file. '#' in first column for comment 
-@{B}SPACING n@{UB}           Insert a gap of @{B}n@{UB} pixels between lines 
-@{B}SPLIT@{UB}               Split line at cursor 
-@{B}SUB varname value@{UB}   decrease the named variable by the given value 
 @{B}SUB var val@{UB}         sub @{B}val@{UB} from @{B}var@{UB}
-@{B}SWAP item@{UB}           exchange the topmost item on stack with the actual item 
 @{B}SWAPMARK@{UB}            PUSHMARK, swap top two marks on stack, POPMARK
-@{B}SWAPV varname1 varname2@{UB} try to swap the contents of 2 variables 
 @{B}SWAPVAR varname@{UB}     swap the contents of the variable varname and of its first
                     occurancy in variable-stack
-@{B}SWAPVAR varname@{UB}     swap te contents of a variable with that of its 1st entry
-                    in the variable stack 
-@{B}TAB@{UB}                 forward tab 
-@{B}TABSTOP n@{UB}           Set tab stops every @{B}n@{UB}. does not effect text load. 
-@{B}TASKPRI n@{UB}           Set the priority of XDME to @{B}n@{UB} (-5..5) 
-@{B}TBPEN pen@{UB}           set pen for title bar background 
-@{B}TFPEN pen@{UB}           set pen for title bar text 
-@{B}TITLE title@{UB}         set window title manually 
-@{" TLATE " LINK "desc10"} @{B}how@{UB}        Modify character under cursor. 
-@{B}TOBACK@{UB}              Move active window to back 
-@{B}TOFRONT@{UB}             Move active window to front 
 @{B}TOGGLE n@{UB}            flip toggle array entry @{B}n@{UB} = 0..255
-@{B}TOMOUSE@{UB}             moves cursor to mouse position 
-@{B}TOP@{UB}                 Move to Top of File 
 @{B}UNABORT@{UB}             clear abort flag (only in an AREXX script)
-@{B}UNABORT@{UB}             make a previous ABORT or error unseen; that command can
-                    only be used in ARexx scripts 
-@{B}UNBLOCK@{UB}             clear the block markers for the current window 
-@{B}UNDELINE@{UB}            insert most recently deleted line (only last line saved) 
-@{B}UNDO@{UB}                undo current line (must be mapped to a key to work) 
-@{B}UNICONIFY@{UB}           uniconify the window 
-@{" UNJUSTIFY " LINK "desc18"}        removes extra spaces in a line 
 @{" UNMAP " LINK "desc0"} @{B}key@{UB}        unmap a key
 @{B}UNSET var@{UB}           delete an internal variable
 @{B}UNSETENV var@{UB}        delete an enviroment variable
-@{B}UNSETMACRO name@{UB}     delete a commandmacro 
 @{B}UNSETMACRO name@{UB}     delete macro @{B}name@{UB}
-@{B}UNSETMACROVAR name@{UB}  delete a macrolocal variable 
 @{B}UNSETMACROVAR name@{UB}  deletion of a macro's local variable
 @{B}UNSETTVAR var@{UB}       delete a text-local variable
-@{B}UP@{UB}                  cursor up. If in commandline, move to previous line of
-                    commandline-history 
 @{B}USEKEYTABLE name@{UB}    search for a certain keytable and use it as the current
                     one
 @{B}USEMENUSTRIP name@{UB}   switch to menustrip @{B}name@{UB}
-@{B}VCTAGS name@{UB}         search for tag @{B}name@{UB} 
-@{B}VREF name@{UB}           reference @{B}name@{UB} 
-@{B}VREFCTAGS name@{UB}      like REFCTAGS, but looks for @{B}name@{UB} 
-@{" WHILE " LINK "desc8"} @{B}cnd act@{UB}    while (@{B}cnd@{UB}) @{B}act@{UB} 
-@{B}WLEFT@{UB}               move to beginning of previous word. If in the middle of a
-                    word, move to beginning of current word. 
-@{B}WORDWRAP what@{UB}       set word wrap mode (related to MARGIN) 
-@{B}WRIGHT@{UB}              move to beginning of next word 
-@{B}WRITETO file@{UB}        write text to this file. The current name of the text is
-                    not changed. 
 @ENDNODE "index"
 

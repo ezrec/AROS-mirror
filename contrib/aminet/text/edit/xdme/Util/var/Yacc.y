@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include "Dyn.h"
 /* #include <alloca.h> */
-#include <lists.h>
+/*#include <lists.h>*/
 #include "main.h"
 
 #define alloca	malloc
@@ -65,14 +65,14 @@ extern struct carrier  defaults[];
 %token OUTER_LABEL
 %token PSEUDO
 %token PROJECT
-%token GLOBAL
+%token GLOBAL_TOKEN
 %token BIT
 %token STRING
 %token HELP
 %token SET
 %token GET
 %token CONST
-%token VALUE	    /* addes since 21-08-94 */
+/* %token VALUE	    / * addes since 21-08-94 */
 %token REFERENCE
 %token DEFAULT
 %token LOCK
@@ -114,7 +114,7 @@ prefix : /* -/- */
        | INT	 prefix     {IFOK{ carrier_type (current, CT_INT);  }}
        | BIT	 prefix     {IFOK{ carrier_type (current, CT_BIT);  }}
        | TREE	 prefix     {IFOK{ carrier_type (current, CT_TREE); }}
-       | GLOBAL  prefix
+       | GLOBAL_TOKEN  prefix
        | PROJECT prefix
        ;
 

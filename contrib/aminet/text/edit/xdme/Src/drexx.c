@@ -22,9 +22,12 @@
     HISTORY
 	dirk	26. Dec 1991	created
 	$Log$
-	Revision 1.1  2001/10/06 20:11:34  digulla
-	Initial revision
+	Revision 1.2  2001/10/06 23:06:14  digulla
+	Compiles for me
 
+	Revision 1.1.1.1  2001/10/06 20:11:34  digulla
+	Initial import of XDME
+	
  * Revision 1.3  1994/12/22  09:03:38  digulla
  * Makros und DEFCMD eingeführt
  *
@@ -44,7 +47,9 @@
 #include "hrexx.h"
 #include "rexx/storage.h"
 #include "rexx/rxslib.h"
+#ifndef __AROS__
 #include "rexx/rexxio.h"
+#endif
 #include "rexx/errors.h"
 #define  MYDEBUG      0
 #include "debug.h"

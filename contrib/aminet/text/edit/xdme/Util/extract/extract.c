@@ -1,12 +1,12 @@
 
-#include <dos/dosasl.h>
+/*#include <dos/dosasl.h>*/
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
-
+/*
 #include <clib/dos_protos.h>
 #include <clib/exec_protos.h>
-
+*/
 #ifdef __SAS
 extern void __regargs __chkabort (void);
 /* disable ^C checking */
@@ -14,7 +14,7 @@ void __regargs __chkabort (void) { /* empty */ }
 #endif
 
 
-__aligned struct AnchorPath ap;
+/*__aligned struct AnchorPath ap;*/
 char search[64] = "";
 int searchlen;
 int ccomment;
@@ -22,16 +22,16 @@ char line[256];
 
 int stop;
 
-void ProcessFile (void)
+void ProcessFile (const char * filename)
 {
     int do_put;
     FILE * fh;
     char * ptr, * ptr2;
 
-    if (!(fh = fopen (ap.ap_Info.fib_FileName, "r")) )
+    if (!(fh = fopen (filename, "r")) )
     {
 	printf ("Cannot open %s for reading: %s\n",
-		ap.ap_Info.fib_FileName, strerror (errno));
+		filename, strerror (errno));
 	return;
     }
 
@@ -40,6 +40,7 @@ void ProcessFile (void)
 
     while (fgets (line, sizeof (line), fh))
     {
+#if 0 // Not necessary on Unix
 	if (SetSignal (0,0) & SIGBREAKF_CTRL_C)
 	{
 	    SetSignal (0, SIGBREAKF_CTRL_C);
@@ -47,6 +48,7 @@ void ProcessFile (void)
 	    stop = 1;
 	    break;
 	}
+#endif
 
 	ptr = line;
 
@@ -97,7 +99,7 @@ int main (int argc, char ** argv)
 {
     int error;
 
-    ap.ap_BreakBits  = SIGBREAKF_CTRL_C;
+//    ap.ap_BreakBits  = SIGBREAKF_CTRL_C;
 
     NEXT;
 
@@ -113,6 +115,7 @@ int main (int argc, char ** argv)
 
     while (argc)
     {
+#if 0
 	BPTR fl;
 
 	for (error = MatchFirst (*argv, &ap); !error; error = MatchNext (&ap))
@@ -129,6 +132,8 @@ int main (int argc, char ** argv)
 
 	if (stop)
 	    break;
+#endif
+	ProcessFile (*argv);
 
 	NEXT;
     }

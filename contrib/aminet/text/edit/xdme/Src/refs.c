@@ -16,37 +16,13 @@
 	If found, the file specified is shown in a window, and the line
 	specified is visited.
 
-    HISTORY
-	25. Nov 1992	ada created
-	 3. Mar   93	null added Berkeley-Fix
-	 1. Jan   94	null added autoinits
-	 $Log$
-	 Revision 1.1  2001/10/06 20:11:46  digulla
-	 Initial revision
-
- * Revision 1.4  1994/12/22  09:16:33  digulla
- * Makros und DEFCMD eingeführt
- *
- * Revision 1.3  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- *
- * Revision 1.2  1994/08/19  14:06:41  digulla
- * removed dead assignments
- *
- * Revision 1.1  1994/08/09  13:52:48  digulla
- * Initial revision
- *
- * Revision 1.1  1994/08/09  13:49:24  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************
 		Includes
 **************************************/
 #include "defs.h"
-
+#include <proto/exec.h>
 
 /**************************************
 	    Globale Variable
@@ -125,7 +101,7 @@ static int strnspacecmp (const char * str1, const char * str2, int max)
     }
 
     return (max ? *str1 - *str2 : 0);
-} /* strnspacecmp */
+}/* strnspacecmp */
 
 
 /*

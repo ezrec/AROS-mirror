@@ -3,42 +3,6 @@
     MODUL
 	$Id$
 
-    HISTORY
-	28. Nov 1992	ada created
-	$Log$
-	Revision 1.1  2001/10/06 20:11:44  digulla
-	Initial revision
-
- * Revision 1.7  1994/12/22  09:15:41  digulla
- * Diverse Änderungen um die einzelnen Teile besser zu trennen
- * Makros und DEFCMD eingeführt
- *
- * Revision 1.6  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- *
- * Revision 1.5  1994/08/30  11:07:40  digulla
- * DoubleClick-Code now checks is the mouse has been moved
- * Default for "Saveicons" is now 1 on WBStartup
- * Use GetDiskObjectNew
- * clear NumClicks if some other event happens
- *
- * Revision 1.4  1994/08/19  14:05:00  digulla
- * added INACTIVEWINDOW support
- * removed dead code in Zoom-Code
- * Fixed wrong colors and modes in DoOptimizedRefresh
- *
- * Revision 1.3  1994/08/13  16:33:46  digulla
- * made mouse coords available
- * added set_window_params() in DoOptimizedRefresh
- * swapped lines and columns in tomouse
- *
- * Revision 1.2  1994/08/09  15:55:50  digulla
- * removed debug printf
- *
- * Revision 1.1  1994/08/09  13:53:34  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************
@@ -46,8 +10,15 @@
 **************************************/
 #include "defs.h"
 #include <dos/dostags.h>
-#include <clib/layers_protos.h>
-#include <pragmas/layers_pragmas.h>
+#include <proto/layers.h>
+#include <proto/dos.h>
+#include <proto/exec.h>
+#include <proto/graphics.h>
+#include <proto/intuition.h>
+#include <proto/reqtools.h>
+#include <proto/asl.h>
+#include <proto/icon.h>
+
 #define MYDEBUG     1
 #include "debug.h"
 //#define DEBUG
@@ -75,7 +46,9 @@ extern struct Library	    * AslBase; */
 
 extern struct Library	    * LayersBase;
 
+#ifndef __AROS__
 extern long __stack = 16000;
+#endif
 
 WORD	  Mx, My;	     /* Mouse-Coords */
 
@@ -155,7 +128,12 @@ static const struct Config startup_config =
 /**************************************
 	   Interne Prototypes
 **************************************/
+#ifndef __AROS__
 extern void __regargs __chkabort (void);
+
+/* disable ^C checking */
+void __regargs __chkabort (void) { /* empty */ }
+#endif
 
 
 #ifdef UNUSED
@@ -180,9 +158,6 @@ int wbmain (WBS * wbs)
     return (main (0, (char **)wbs));
 } /* wbmain */
 
-
-/* disable ^C checking */
-void __regargs __chkabort (void) { /* empty */ }
 
 
 Prototype int main (int mac, char ** mav);
@@ -726,7 +701,7 @@ loop:
 			    text_cursor (0);
 			    show_cursor ++;
 #if 1 /* PATCH_NULL 03-07-94 */
-    /* /* WARNING - THESE VALUES MIGHT INTERFERE WITH OTHER KEYS */
+    /* WARNING - THESE VALUES MIGHT INTERFERE WITH OTHER KEYS */
 			    /* COMMENT: 							 */
 			    /* Wir sollten noch eine Ueberpruefung der Mausposition einbauen und */
 			    /* (unter Beruecksichtigung eines Schwellwertes) bei Mausbewegungen  */
@@ -746,7 +721,7 @@ loop:
 				case SELECTDOWN: Code = (2 - NumClicks) + 0x67; break;
 				case MIDDLEDOWN: Code = (2 - NumClicks) + 0x64; break;
 				case MENUDOWN:	 Code = (2 - NumClicks) + 0x61; break;
-	/* /* WARNING - THESE VALUES MIGHT INTERFERE WITH OTHER KEYS */
+	/* WARNING - THESE VALUES MIGHT INTERFERE WITH OTHER KEYS */
 				default: ;
 				} /* switch */
 			    }
@@ -1335,7 +1310,7 @@ int breakcheck (void)
 	for ( ; im != (IMESS *)&list->lh_Tail;
 		im = (IMESS *)im->ExecMessage.mn_Node.ln_Succ)
 		{
-	    if (im->Class == RAWKEY && (im->Qualifier & 0xFB) == 0x08 &&
+	    if (im->Class == IDCMP_RAWKEY && (im->Qualifier & 0xFB) == 0x08 &&
 		im->Code == CtlC)
 		{
 

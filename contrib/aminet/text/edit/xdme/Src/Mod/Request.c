@@ -44,9 +44,7 @@
 #include <string.h>
 
 #include <libraries/reqtools.h>
-#include <clib/reqtools_protos.h>
-extern struct ReqToolsBase *ReqToolsBase;
-#include <pragmas/reqtools_pragmas.h>
+#include <proto/reqtools.h>
 
 #include "defs.h"
 
@@ -71,12 +69,13 @@ long ReqResult;
 /**************************************
 	   Internal Prototypes
 **************************************/
-
+#ifndef __AROS__
 #pragma tagcall ReqToolsBase rtFileRequest	36 8BA904
 #pragma tagcall ReqToolsBase rtEZRequestTags	42 8CBA905
 #pragma tagcall ReqToolsBase rtGetString	48 8BA0905
 #pragma tagcall ReqToolsBase rtGetLong		4E 8BA904
 #pragma tagcall ReqToolsBase rtPaletteRequest	66 8BA03
+#endif
 
 /**************************************
 		 Macros

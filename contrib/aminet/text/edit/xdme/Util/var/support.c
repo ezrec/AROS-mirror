@@ -2,23 +2,25 @@
 
 
 #include <exec/types.h>
+#define AROS_ALMOST_COMPATIBLE
+#include <exec/lists.h>
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "Dyn.h"
 /* #include <alloca.h> */
-#include <lists.h>
+/* #include <lists.h> */
 
 #include "main.h"
 
-#include <clib/alib_protos.h>
-#include <clib/exec_protos.h>
+#include <proto/alib.h>
+#include <proto/exec.h>
 
 BOOL flexprintf (void* outstream, int (*writestring)(void*, char *), char * tmplt, void* instream, char * (*getstring)(void*, char *));
 
 
-#define RemoveNode(l,n)   Remove(n)
+#define RemoveNode(l,n)   REMOVE(n)
 
 
 
@@ -54,7 +56,7 @@ void node_add (struct carrier *c, char *name, char *data) {
 	bzero(n, sizeof (*n));
 	DynSet(&n->data, 1, data);
 	n->node.ln_Name = name;
-	AddHead(&c->nodes, &n->node);
+	ADDHEAD(&c->nodes, &n->node);
     } /* if */
     assert(n != NULL);
 } /* node_add */
@@ -81,9 +83,9 @@ struct carrier * carrier_new (void) {
     if ((c = malloc (sizeof(*c)))) {
 	bzero(c, sizeof (*c));
 
-	AddHead(&carriers, &c->node);
+	ADDHEAD(&carriers, &c->node);
 	current = c;
-	NewList(&c->nodes);
+	NEWLIST(&c->nodes);
     } /* if */
     assert (c);
     return c;
@@ -152,7 +154,7 @@ void prepare (void) {
     struct carrier *c, *m;
     struct List inter;
 
-    NewList (&inter);
+    NEWLIST (&inter);
 
 fprintf (stderr, "sorting\n");
 
@@ -165,14 +167,15 @@ fprintf (stderr, "sorting\n");
 	    if (strcmp(m->node.ln_Name, c->node.ln_Name) < 0)
 		m = c;
 	RemoveNode (&carriers, &m->node);
-	AddHead(&inter, &m->node);
+	ADDHEAD(&inter, &m->node);
     }
 
-    while (c = RemHead(&inter)) {
+    while (c = GetHead(&inter)) {
+	REMOVE (&c->node);
 	if (c->type != CT_TREE)
-	    AddHead(&carriers, &c->node);
+	    ADDHEAD(&carriers, &c->node);
 	else
-	    AddHead(&Carriers[CT_TREE], &c->node);
+	    ADDHEAD(&Carriers[CT_TREE], &c->node);
     }
 } /* prepare */
 
@@ -320,18 +323,18 @@ int main (int ac, char **av) {
     extern int yydebug;
 
     yy_flex_debug = 0;
-    yydebug	  = 0;
+    yydebug	  = 1;
     if (ac >= 2 && av[1][0] == '-' && av[1][1] == 'd') {
 	yydebug       = 1;
 	yy_flex_debug = 1;
     }
 
-    NewList(&carriers);
+    NEWLIST(&carriers);
     {
 	int i;
 	for (i = 0; i <= CT__MAX; ++i) {
-	    NewList(&defaults[i].nodes);
-	    NewList(&Carriers[i]);
+	    NEWLIST(&defaults[i].nodes);
+	    NEWLIST(&Carriers[i]);
 
 	}
     }

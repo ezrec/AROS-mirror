@@ -58,7 +58,6 @@
 /**************************************
 	    Includes
 **************************************/
-
 #include "defs.h"
 /* #include "COM.h" */
 /* #include "libs/AUTO.h" */
@@ -89,8 +88,8 @@ static const char * mod_name = "Templater";
 **************************************/
 
 BOOL	     flexprintf (STREAM*, BOOL (*)(STREAM*, STRPTR), STRPTR, STREAM*, STRPTR (*)(STREAM*, STRPTR));
-char*	     mygetv	(APTR*  , char* );
-BOOL	     myfputs	(FILE** , char* );
+char*	     mygetv	(APTR  , char* );
+BOOL	     myfputs	(APTR , char* );
 
 /**************************************
 	    Macros

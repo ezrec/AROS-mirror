@@ -6,29 +6,6 @@
     DESCRIPTION
 	General subroutines.
 
-    HISTORY
-	16. Jan 1993	ada created
-	$Log$
-	Revision 1.1  2001/10/06 20:11:51  digulla
-	Initial revision
-
- * Revision 1.5  1994/12/22  09:14:03  digulla
- * Makros und DEFCMD eingeführt
- * ScrollAndUpdate geschrieben
- *
- * Revision 1.4  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- *
- * Revision 1.3  1994/08/30  11:09:04  digulla
- * use BLOCK_MASK for scrolling (faster than ALL_MASK)
- *
- * Revision 1.2  1994/08/19  14:08:06  digulla
- * fixed SetWrMsk()
- *
- * Revision 1.1  1994/08/13  16:38:21  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************
@@ -36,7 +13,9 @@
 **************************************/
 #include "defs.h"
 #include <clib/macros.h>
-#include <graphics/display.h>
+#include <proto/graphics.h>
+#include <proto/dos.h>
+#include <proto/exec.h>
 #define MYDEBUG     0
 #include "debug.h"
 
@@ -121,7 +100,7 @@ void makemygadget (struct Gadget *gad)
     gad->Width	      = 21;
     gad->Height       = 18;
     gad->Flags	      = GFLG_GADGIMAGE | GFLG_GADGHIMAGE;
-    gad->GadgetType   = BOOLGADGET;
+    gad->GadgetType   = GTYP_BOOLGADGET;
     gad->Activation   = GACT_RELVERIFY | GACT_IMMEDIATE;
     gad->GadgetRender = (APTR)&IconI1;
     gad->SelectRender = (APTR)&IconI2;

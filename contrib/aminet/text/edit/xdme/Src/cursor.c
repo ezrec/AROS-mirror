@@ -6,26 +6,6 @@
     DESCRIPTION
 	All routines that only move the cursor.
 
-    HISTORY
-	04. Oct 1992	ada created
-	$Log$
-	Revision 1.1  2001/10/06 20:11:36  digulla
-	Initial revision
-
- * Revision 1.4  1994/12/22  09:19:18  digulla
- * Makros und DEFCMD eingeführt
- *
- * Revision 1.3  1994/09/09  12:31:30  digulla
- * added new style Prototypes, DEFCMD and DEFHELP
- *
- * Revision 1.2  1994/08/19  14:08:28  digulla
- * fixed SetWrMsk()
- * removed dead assignments
- *
- * Revision 1.1  1994/08/09  15:55:36  digulla
- * Initial revision
- *
-
 ******************************************************************************/
 
 /**************************************
@@ -33,6 +13,8 @@
 **************************************/
 #include <defs.h>
 #include <editor.h>
+#include <proto/intuition.h>
+#include <proto/graphics.h>
 
 
 /**************************************
@@ -828,10 +810,12 @@ DEFUSERCMD("scrollright", 0, CF_VWM, void, do_scroll, (int dir),)
 	return;
 
     if (dir == -1)
+    {
 	if (av[0][6] == 'l')
 	    dir = SCROLL_LEFT;
 	else
 	    dir = SCROLL_RIGHT;
+    }
 
     if (dir == SCROLL_LEFT)
     {
@@ -881,14 +865,6 @@ DEFUSERCMD("scrollright", 0, CF_VWM, void, do_scroll, (int dir),)
 	    GetTopcolumn(ep) + Columns, GetTopline(ep) + Lines); */
 } /* do_scroll */
 
-
-struct pos
-{
-    UBYTE * ptr;
-    ULONG   len;
-    Line    lin;
-    Column  col;
-};
 
 
 Prototype int get_char (ED * ep, struct pos * curr, int dir);
@@ -1383,7 +1359,9 @@ void escapecomlinemode (void)
 		/* Free oldest line and shift buffer */
 		free (HistoBuff[0]);
 
-		movmem (HistoBuff + 1, HistoBuff,
+		/*movmem (HistoBuff + 1, HistoBuff,
+			sizeof (char *) * (MaxHistoLines - 1));*/
+		memmove (HistoBuff, HistoBuff + 1,
 			sizeof (char *) * (MaxHistoLines - 1));
 
 		/* We have now space for one line */
