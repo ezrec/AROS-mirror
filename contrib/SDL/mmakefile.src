@@ -89,7 +89,7 @@ FILES :=    SDL_error 	    	\
     	    SDL_cgxgl_wrapper	\
     	    SDL_gamma
  
-USER_CFLAGS := -DENABLE_CYBERGRAPHICS -DNO_SIGNAL_H -DAROS -D_AROS
+USER_CFLAGS := -DENABLE_CYBERGRAPHICS -DNO_SIGNAL_H
 
 %build_linklib mmake=linklibs-SDL libname=SDL files=$(FILES)
 
