@@ -69,6 +69,10 @@ BEGIN {
 	logmsg=logmsg $0 "\n";
     }
 }
+END {
+    if (logmsg)
+	dump();
+}
 
 function dump(t,flist,area)
 {
