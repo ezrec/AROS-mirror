@@ -2,7 +2,7 @@
 include $(TOP)/config/make.cfg
 
 CFLAGS	        := $(USER_DEFINES) -O2 $(SPECIAL_CFLAGS) $(INCLUDES)
-OBJDIR		:= $(GENDIR)/aminet/chunkyiclass
+OBJDIR		:= $(GENDIR)/$(CURDIR)
 EXEDIR		:= $(BINDIR)/test
 LIB		:= $(LIBDIR)/libchunkyiclass.a
 
