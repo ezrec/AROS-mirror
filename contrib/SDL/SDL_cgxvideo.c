@@ -147,8 +147,10 @@ static void DestroyScreen(_THIS)
 				DeleteMsgPort(dispport);
 			}
 
-			this->hidden->SB[0]->sb_DBufInfo->dbi_SafeMessage.mn_ReplyPort=this->hidden->SB[0]->sb_DBufInfo->dbi_DispMessage.mn_ReplyPort=NULL;
-			this->hidden->SB[1]->sb_DBufInfo->dbi_SafeMessage.mn_ReplyPort=this->hidden->SB[1]->sb_DBufInfo->dbi_DispMessage.mn_ReplyPort=NULL;
+			this->hidden->SB[0]->sb_DBufInfo->dbi_SafeMessage.mn_ReplyPort =
+                this->hidden->SB[0]->sb_DBufInfo->dbi_DispMessage.mn_ReplyPort=NULL;
+			this->hidden->SB[1]->sb_DBufInfo->dbi_SafeMessage.mn_ReplyPort =
+                this->hidden->SB[1]->sb_DBufInfo->dbi_DispMessage.mn_ReplyPort=NULL;
 
 			if(this->hidden->SB[1])
 				FreeScreenBuffer(SDL_Display,this->hidden->SB[1]);
@@ -407,21 +409,21 @@ Uint32 MakeBitMask(_THIS,int type,int format,int *bpp)
                 switch(type) {
                     case 0:
                         D(bug("BGRA32\n"));
-                        return AROS_BE2LONG(0x0000ff00);
+                        return AROS_BE2LONG(0xff000000);
                     case 1:
                         return AROS_BE2LONG(0x00ff0000);
                     case 2:
-                        return AROS_BE2LONG(0xff000000);
+                        return AROS_BE2LONG(0x0000ff00);
                 }
             case PIXFMT_RGBA32:
                 switch(type) {
                     case 0:
                         D(bug("RGBA32\n"));
-                        return AROS_BE2LONG(0xff000000);
+                        return AROS_BE2LONG(0x0000ff00);
                     case 1:
                         return AROS_BE2LONG(0x00ff0000);
                     case 2:
-                        return AROS_BE2LONG(0x0000ff00);
+                        return AROS_BE2LONG(0xff000000);
                 }
             default:
                 D(bug("Unknown pixel format! Default to 24bit\n"));
@@ -446,6 +448,7 @@ Uint32 MakeBitMask(_THIS,int type,int format,int *bpp)
                 break;
             case 24:
 use_truecolor:
+
                 switch(type)
                 {
                     case 0:
@@ -732,9 +735,9 @@ int CGX_CreateWindow(_THIS, SDL_Surface *screen,
         D(bug("Accel forces bpp to be equal (%ld)\n",bpp));
     }
 
-#if 0 
     D(bug("BEFORE screen allocation: bpp:%ld (real:%ld)\n",bpp,this->hidden->depth));
 
+#ifdef notdef
     /*
      * With this call if needed I'll revert the wanted bpp to a bpp best 
      * suited for the display, actually occurs
@@ -744,12 +747,14 @@ int CGX_CreateWindow(_THIS, SDL_Surface *screen,
     gb = MakeBitMask(this,1,form,&bpp);
     bb = MakeBitMask(this,2,form,&bpp);
 
-    if ( ! SDL_ReallocFormat(screen, bpp, rb, gb, bb, 0))
+    if ( ! SDL_ReallocFormat(screen, 8 * GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_BPPIX) 
+                , rb, gb, bb, 0))
         return -1;
-#endif
+    
     D(bug("AFTER screen allocation: bpp:%ld (real:%ld)\n",
                 bpp,
                 this->hidden->depth));
+#endif
 
     /* Create the appropriate colormap */
     if ( GetCyberMapAttr(SDL_Display->RastPort.BitMap, CYBRMATTR_PIXFMT)
@@ -1046,7 +1051,12 @@ buildnewscreen:
 				}
 			}
 
-			if (GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH)==bpp) {
+            D(bug("Screen bitmap: %ld (%ld), bpp %ld\n",
+                        GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_BPPIX),
+                        GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_DEPTH),                        
+                        bpp));
+            
+			if (bpp == GetCyberMapAttr(SDL_Display->RastPort.BitMap,CYBRMATTR_BPPIX) * 8) {
 				this->hidden->same_format = 1; // XXX check also pixfmt?
                 D(bug("SAME FORMAT bitmap -> Using RAW blits!\n"));
             }

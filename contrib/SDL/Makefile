@@ -52,7 +52,6 @@ install: libSDL.a examples
 		cp tests/$$subdir $(BASEDIR)/AROS/Tests/ ; \
 	done;
 	cp tests/*.bmp $(BASEDIR)/AROS/Tests/
-	cp libSDL.a $(BASEDIR)/AROS/Development/Lib/
 	mkdir -p $(BASEDIR)/AROS/Development/Include/SDL
 	cp $(PUBLIC_HEADERS) $(BASEDIR)/AROS/Development/Include/SDL
 	
@@ -60,6 +59,7 @@ libSDL.a: $(OBJS)
 	-rm -f libSDL.a
 	ar cru libSDL.a $(OBJS)
 	ranlib libSDL.a
+	cp libSDL.a $(BASEDIR)/AROS/Development/Lib/
 
 clean:
 	rm -f *.o

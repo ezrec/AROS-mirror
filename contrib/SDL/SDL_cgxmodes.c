@@ -221,7 +221,8 @@ int CGX_SupportedVisual(_THIS, SDL_PixelFormat *format)
     int i;
     for(i = 0; i < this->hidden->nvisuals; i++)
 	{
-		if(this->hidden->visuals[i].depth == format->BitsPerPixel) // Era bpp
+		if(this->hidden->visuals[i].depth == format->BitsPerPixel ||
+           this->hidden->visuals[i].bpp == format->BitsPerPixel) // it was only depth
 		    return 1;
 	}
     return 0;
