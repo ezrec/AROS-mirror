@@ -4,8 +4,8 @@ include $(TOP)/config/make.cfg
 INSTDIR  := $(CONTRIBDIR)/DOpus
 OBJDIR := $(GENDIR)/$(CURDIR)
 STARTUP := $(LIBDIR)/startup.o
-LIBS	:= -L$(LIBDIR) -larosc -larosm -lamiga -larossupport
-DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a	\
+LIBS	:= -L$(LIBDIR) -larosc_shared -larosm -lamiga -larossupport -lautoinit
+DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc_shared.a $(LIBDIR)/libarosm.a	\
 		$(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
 
 EXE := $(INSTDIR)/DirectoryOpus
