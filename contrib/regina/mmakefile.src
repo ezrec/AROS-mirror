@@ -36,7 +36,7 @@ EXES := $(REXXEXE) $(REGINAEXE)
 #MM contrib-regina : setup linklibs includes contrib-regina-libs
 #MM contrib-regina-quick : contrib-regina-libs-quick
 
-contrib-regina-quick: contrib-regina
+contrib-regina-quick: setup contrib-regina
 
 %make_prog_setup mmake=contrib-regina
 
