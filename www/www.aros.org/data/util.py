@@ -512,6 +512,7 @@ class Page (SeriesDocument):
 	img = Image (
 	    'pics/logo.gif',
 	    alt='AROS',
+	    border = 0,
 	)
 	self.imagesToFix.append (img)
 	logo = Href ('index.html', img)
