@@ -21,7 +21,6 @@
  * $Id$
  */
 
-#include <setjmp.h>
 
 typedef struct varbox *variableptr ;
 typedef const struct varbox *cvariableptr ;
