@@ -1,11 +1,11 @@
 include $(TOP)/config/make.cfg
 
-LIB   := libtcc1
+LIB   := tcc1
 FILES := libtcc1
 
-#MM linklibs-libtcc1
+#MM linklibs-tcc1
 
-%make_linklib_setup mmake=linklibs-libtcc1
+%make_linklib_setup mmake=linklibs-tcc1
 %make_linklib
 
 %common
