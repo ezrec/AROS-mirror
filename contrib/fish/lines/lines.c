@@ -79,14 +79,16 @@ struct   RastPort  *RP;
 
 int main()
 {
-
-	struct   NewWindow NewWindow;
-	struct   ViewPort  *VP;
+	IPTR	args[1] = { (IPTR)0 };
+	struct RDArgs *rda;
+	struct NewWindow NewWindow;
+	struct ViewPort *VP;
 	int	notdone = 1;
-	struct	IntuiMessage *msg;
+	struct IntuiMessage *msg;
 	int	my_rgbi,my_rgb[3];
 	int	inc,colorok;
 	int	lc = -1;
+	int	dodelay = 1;
 
 	/* open intuition library */
 	IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
@@ -96,9 +98,20 @@ int main()
 	if (GfxBase == NULL)
 		exit (FALSE);
 
+	rda = ReadArgs("FAST/S", args, NULL);
+	if (rda != NULL)
+	{
+		dodelay = 1-args[0];
+		FreeArgs(rda);
+	}
+	else
+	{
+		PrintFault(IoErr(), "lines");
+	}
+
 	if ((Screen = (struct Screen *)OpenScreen(&NewScreen)) == NULL)
 		exit(FALSE);
-	
+
 	/* set up new window structure */
 	NewWindow.LeftEdge = 0;
 	NewWindow.TopEdge = 0;
@@ -219,7 +232,8 @@ int main()
 				ReplyMsg((struct Message *)msg);
 			}
 		}
-		Delay(1);
+		if( dodelay == 1)
+			Delay(1);
 	}
 	
 
