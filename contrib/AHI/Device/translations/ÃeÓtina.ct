@@ -1,0 +1,133 @@
+## version $VER: ahi.catalog 4.2 (25.4.97) © Ondrej Zima at ATO <cnzp@login.cz>
+## language „eÛtina
+## codeset 0
+;
+## chunk AUTH Translated by Ondrej Zima <cnzp@login.cz>
+;
+; $Id$
+;
+;    AHI - Hardware independent audio subsystem
+;    Copyright (C) 1996-1999 Martin Blom <martin@blom.org>
+;     
+;    This library is free software; you can redistribute it and/or
+;    modify it under the terms of the GNU Library General Public
+;    License as published by the Free Software Foundation; either
+;    version 2 of the License, or (at your option) any later version.
+;     
+;    This library is distributed in the hope that it will be useful,
+;    but WITHOUT ANY WARRANTY; without even the implied warranty of
+;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;    Library General Public License for more details.
+;     
+;    You should have received a copy of the GNU Library General Public
+;    License along with this library; if not, write to the
+;    Free Software Foundation, Inc., 59 Temple Place - Suite 330, Cambridge,
+;    MA 02139, USA.
+;
+;
+; Input and Output connector name
+;
+msgDefault
+Z¡kladn…
+;Default
+;
+; The requesters menu
+msgMenuControl
+\000\000Ú…zen…
+;\000\000Control
+;
+msgMenuLastMode
+L\000Posledn… mœd
+;L\000Last Mode
+;
+msgMenuNextMode
+N\000N¡sleduj…c… mœd
+;N\000Next Mode
+;
+msgMenuPropertyList
+?\000Seznam vlastnost…...
+;?\000Property List...
+;
+msgMenuRestore
+R\000Obnovit
+;R\000Restore
+;
+msgMenuOK
+O\000OK
+;O\000OK
+;
+msgMenuCancel
+C\000Zru”it
+;C\000Cancel
+;
+; Mode name in requester whose driver cannot be opened
+;
+msgUnknown
+NEZN·M˘:Audio ID 0x%08lx
+;UNKNOWN:Audio ID 0x%08lx
+;
+; The requester gadgets
+;
+msgReqOK
+OK
+;OK
+;
+msgReqCancel
+Zru”it
+;Cancel
+;
+msgReqFrequency
+Frekvence
+;Frequency
+;
+; Name of default mode in requester
+;
+msgDefaultMode
+Z¡kladn… audio mœd
+;Default audio mode
+;
+; The requester's info-winodow
+;
+msgReqInfoTitle
+Vlastnosti mœdu
+;Mode Properties
+;
+msgReqInfoAudioID
+Audio mœd ID: 0x%08lx
+;Audio mode ID: 0x%08lx
+;
+msgReqInfoResolution
+Rozli”en…: %ld bit  %s
+;Resolution: %ld bit %s
+;
+msgReqInfoMono
+mono
+;mono
+;
+msgReqInfoStereo
+stereo
+;stereo
+;
+msgReqInfoStereoPan
+stereo s ”…“kou
+;stereo with panning
+;
+msgReqInfoChannels
+Kan¡l : %ld
+;Channels: %ld
+;
+msgReqInfoMixrate
+Mixovac… frekvence: %ld-%ld Hz
+;Mixing rates: %ld-%ld Hz
+;
+msgReqInfoHiFi
+HiFi mixov¡n…
+;HiFi mixing
+;
+msgReqInfoRecordHalf
+Z¡pis polovi√n…m duplexem
+;Record in half duplex
+;
+msgReqInfoRecordFull
+Z¡pis plnŸm duplexem
+;Record in full duplex

@@ -1,0 +1,151 @@
+#  $Id$
+#
+#  Makefile.in for the AHI preferences program
+#
+
+FLEXCAT		= @FLEXCAT@
+
+ifeq ($(strip $(FLEXCAT)),)
+FLEXCAT		= @echo 'FlexCat not found; cannot make $@!'; false \#
+endif
+
+
+#
+# Autoconfig stuff
+########################################
+
+@SET_MAKE@
+
+top_srcdir	= @top_srcdir@
+srcdir		= @srcdir@
+DISTDIR		= @DISTDIR@
+PREFSDIR	= ${DISTDIR}/User/Prefs
+CATDIR		= ${DISTDIR}/User/Catalogs
+
+build_os	= @build_os@
+
+CC		= @CC@
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+INSTALL_DATA	= @INSTALL_DATA@
+
+CPPFLAGS	= @CPPFLAGS@ -I.. -I${srcdir} -I${top_srcdir}
+CFLAGS		= @CFLAGS@
+LDFLAGS		= @LDFLAGS@
+LIBS		= @LIBS@
+
+VPATH		= @srcdir@
+
+
+#
+# Files
+########################################
+
+OBJECTS		= ahi.o support.o ahiprefs_Cat.o
+OBJECTS_BGUI	= gui_bgui.o
+OBJECTS_CA	= gui_ca.o
+OBJECTS_MUI	= gui_mui.o
+
+TARGETS		= AHI_MUI # AHI_BGUI AHI_CA
+
+LANGUAGES	= $(notdir $(basename $(wildcard ${srcdir}/translations/*.ct)))
+CATALOGS	= $(addsuffix .catalog, $(LANGUAGES))
+
+
+#
+# Targets
+########################################
+
+.PHONY:		all clean distclean maintainer-clean bindist revup
+
+all:		$(TARGETS) ahiprefs.ct $(CATALOGS)
+
+clean:
+	$(RM) $(TARGETS) $(LANGTARGETS) version.h \
+	      *.catalog *.o *.bak *~ \#*\# core Makefile.dep
+
+distclean:	clean
+	$(RM) Makefile
+
+maintainer-clean: distclean
+
+bindist:	all
+	$(INSTALL) --directory $(PREFSDIR)
+	for i in $(TARGETS); do \
+	  $(INSTALL_PROGRAM) --strip $$i $(PREFSDIR)/$$i; \
+	done
+	$(INSTALL_DATA) ${srcdir}/AHI.info $(PREFSDIR)
+	$(INSTALL_DATA) ${srcdir}/AHI.MWB.info $(PREFSDIR)
+	for i in $(LANGUAGES); do \
+	  $(INSTALL) --directory $(CATDIR)/$$i; \
+	  $(INSTALL_DATA) $$i.catalog $(CATDIR)/$$i/ahiprefs.catalog; \
+	done
+	$(INSTALL_DATA) ${srcdir}/ahiprefs.cd $(CATDIR)
+	$(INSTALL_DATA) ${srcdir}/ahiprefs.ct $(CATDIR)
+
+version.h:	version.rev version.date
+	@echo Creating $@
+	@ver=`cat $(top_srcdir)/version.ver` \
+	 rev=`cat version.rev` \
+	 date=`cat version.date` && \
+	 echo "#define VERS \"$$ver.$$rev ($$date)\"" > $@
+
+revup:
+	@rev=`cat version.rev` && echo `expr $$rev + 1` > version.rev
+	@date +%d.%m.%y > version.date
+	@echo -n "New revision: "
+	@cat version.rev
+
+#
+# Auto-remake autoconf stuff
+########################################
+
+Makefile: Makefile.in ../config.status
+	(cd .. && ./config.status)
+
+
+#
+# Rules
+########################################
+
+AHI_BGUI:	$(OBJECTS) $(OBJECTS_BGUI)
+	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
+
+AHI_CA:		$(OBJECTS) $(OBJECTS_CA)
+	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
+
+AHI_MUI:	$(OBJECTS) $(OBJECTS_MUI)
+	$(CC) $(LDFLAGS) $^ $(LIBS) -o $@
+
+
+$(srcdir)/ahiprefs_Cat.c:	$(srcdir)/ahiprefs.cd $(srcdir)/C_c_noauto.sd $(srcdir)/ahiprefs_Cat.h
+	$(FLEXCAT) $(srcdir)/ahiprefs.cd $(srcdir)/ahiprefs_Cat.c=$(srcdir)/C_c_noauto.sd
+
+$(srcdir)/ahiprefs_Cat.h:	$(srcdir)/ahiprefs.cd $(srcdir)/C_h_noauto.sd
+	$(FLEXCAT) $(srcdir)/ahiprefs.cd $(srcdir)/ahiprefs_Cat.h=$(srcdir)/C_h_noauto.sd
+
+%.catalog:	translations/%.ct
+	$(FLEXCAT) $(srcdir)/ahiprefs.cd $< CATALOG $@
+
+%.ct:
+	$(FLEXCAT) $(srcdir)/ahiprefs.cd $@ NEWCTFILE $@
+
+#
+# Dependencies
+########################################
+
+SOURCES		= $(notdir $(wildcard $(srcdir)/*.c))
+HEADERS		= $(notdir $(wildcard $(srcdir)/*.h))
+
+Makefile.dep:	$(SOURCES) $(HEADERS) version.h
+	@echo Making $@
+ifneq ($(build_os),amigaos)
+	-@$(CC) $(CPPFLAGS) $(CFLAGS) -MM $(SOURCES) > $@
+else
+	-@touch $@
+	-@makedepend -f $@ -I $(srcdir) $(SOURCES)
+endif
+
+include Makefile.dep
+
+$(wildcard $(srcdir)/translations/*.ct) $(srcdir)/ahiprefs.ct:	ahiprefs.cd

@@ -1,0 +1,156 @@
+#  $Id$
+#
+#  Makefile.in for the user and developer documentation
+#
+
+#
+# Autoconfig stuff
+########################################
+
+@SET_MAKE@
+
+top_srcdir	= @top_srcdir@
+srcdir		= @srcdir@
+DISTDIR		= @DISTDIR@
+
+DEVDIR		= ${DISTDIR}/Developer
+USRDIR		= ${DISTDIR}/User
+
+DEVDOCDIR	= ${DEVDIR}/Docs
+USRDOCDIR	= ${USRDIR}/Docs
+
+build_os	= @build_os@
+
+INSTALL		= @INSTALL@
+INSTALL_DATA	= @INSTALL_DATA@
+
+VPATH		= @srcdir@
+
+
+#
+# Files
+########################################
+
+TARGETS		= ahidev.readme ahiusr.readme \
+		  ahidev.guide ahiusr.guide \
+		  ahidev.dvi ahiusr.dvi \
+		  ahidev.ps ahiusr.ps \
+		  ahidev.html ahiusr.html
+
+
+#
+# Targets
+########################################
+
+.PHONY:		all clean distclean maintainer-clean bindist changes
+
+all:		$(TARGETS)
+
+clean:
+	$(RM) $(TARGETS) ahidev.ver ahiusr.ver \
+	      ahidev.texinfo-exp ahiusr.texinfo-exp tmp-iso.sty\
+	      *.cps *.fns *.tps *.vrs *.ky *.pg *.log *.aux *.cp *.fn *.vr *.tp *.toc \
+	      *.bak *~ \#*\# core
+
+distclean:	clean
+	$(RM) Makefile
+
+maintainer-clean: distclean
+
+bindist:	$(TARGETS)
+	$(INSTALL) --directory $(USRDOCDIR) $(DEVDOCDIR)
+	$(INSTALL_DATA) ahidev.readme $(DISTDIR)
+	$(INSTALL_DATA) $(srcdir)/ahidev.readme.info $(DISTDIR)
+	$(INSTALL_DATA) ahiusr.readme $(DISTDIR)
+	$(INSTALL_DATA) $(srcdir)/ahiusr.readme.info $(DISTDIR)
+	for i in ahidev.guide ahidev.dvi ahidev.ps ahidev.html; do \
+	  $(INSTALL_DATA) $$i $(DEVDOCDIR); \
+	done
+	for i in ahiusr.guide ahiusr.dvi ahiusr.ps ahiusr.html; do \
+	  $(INSTALL_DATA) $$i $(USRDOCDIR); \
+	done
+
+changes:
+	$(EDITOR) $(srcdir)/readme.changes
+
+#
+# Auto-remake autoconf stuff
+########################################
+
+Makefile: Makefile.in ../config.status
+	(cd .. && ./config.status)
+
+
+#
+# Rules
+########################################
+
+tmp-iso.sty:	iso.sty
+	cp $< $@
+
+# readme files
+
+ahidev.readme:	readme.dev readme.changes readme.main \
+		$(top_srcdir)/version.ver $(top_srcdir)/version.rev
+	ver="`cat $(top_srcdir)/version.ver`.`cat $(top_srcdir)/version.rev`" &&\
+	cat $(srcdir)/readme.dev $(srcdir)/readme.changes $(srcdir)/readme.main | sed -e "s/AHIVERSION/$$ver/" > $@
+
+ahiusr.readme:	readme.usr readme.changes readme.main $(top_srcdir)/version.rev
+	ver="`cat $(top_srcdir)/version.ver`.`cat $(top_srcdir)/version.rev`" &&\
+	cat $(srcdir)/readme.usr $(srcdir)/readme.changes $(srcdir)/readme.main | sed -e "s/AHIVERSION/$$ver/" > $@
+
+
+# AmigaGuide® files
+
+ahidev.guide:	ahidev.texinfo ahidev.ver
+	makeinfo --amiga --output ahidev.guide $<
+
+ahiusr.guide:	ahiusr.texinfo ahiusr.ver
+	makeinfo --amiga --output ahiusr.guide $<
+
+
+# DVI files
+
+ahidev.dvi:	ahidev.texinfo-exp tmp-iso.sty
+	texi2dvi $<
+
+ahiusr.dvi:	ahiusr.texinfo-exp tmp-iso.sty
+	texi2dvi $<
+
+
+# PS files
+
+ahidev.ps:	ahidev.dvi
+	dvips -o $@ $<
+
+ahiusr.ps:	ahiusr.dvi
+	dvips -o $@ $<
+
+
+# HTML files
+
+ahidev.html:	ahidev.texinfo ahidev.ver
+	texi2html -glossary -monolithic -verbose $<
+
+ahiusr.html:	ahiusr.texinfo ahiusr.ver
+	texi2html -glossary -monolithic -verbose $<
+
+
+# Macro-expanded files
+
+ahidev.texinfo-exp:	ahidev.texinfo ahidev.ver
+	makeinfo -E $@ --output /dev/null $<
+
+ahiusr.texinfo-exp:	ahiusr.texinfo ahiusr.ver
+	makeinfo -E $@ --output /dev/null $<
+
+
+# Auto-generated version files
+
+ahidev.ver:	ahidev.texinfo $(top_srcdir)/version.ver $(top_srcdir)/version.rev
+	echo "@set ahiver `cat $(top_srcdir)/version.ver`.`cat $(top_srcdir)/version.rev`" > $@
+	grep '$$Id' $< | sed -e 's/^.*Id: .* \(.*\)\.\(.*\) \(....\)\/\(..\)\/\(..\).*/@set docver \1.\2 (\3-\4-\5)/' >> $@
+
+ahiusr.ver:	ahiusr.texinfo $(top_srcdir)/version.ver $(top_srcdir)/version.rev
+	echo "@set ahiver `cat $(top_srcdir)/version.ver`.`cat $(top_srcdir)/version.rev`" > $@
+	grep '$$Id' $< | sed -e 's/^.*Id: .* \(.*\)\.\(.*\) \(....\)\/\(..\)\/\(..\).*/@set docver \1.\2 (\3-\4-\5)/' >> $@

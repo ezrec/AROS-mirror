@@ -1,0 +1,128 @@
+#  $Id$
+#
+#  Makefile.in for the user and developer documentation
+#
+
+#
+# Autoconfig stuff
+########################################
+
+@SET_MAKE@
+
+top_srcdir	= @top_srcdir@
+srcdir		= @srcdir@
+DISTDIR		= @DISTDIR@
+
+DEVDIR		= ${DISTDIR}/Developer
+
+DEVINCDIR	= ${DEVDIR}/Include
+
+build_os	= @build_os@
+
+INSTALL		= @INSTALL@
+INSTALL_DATA	= @INSTALL_DATA@
+
+VPATH		= @srcdir@
+
+
+#
+# Files
+########################################
+
+TARGETS		= Asm-lvo-ahi_lib.i Asm-lvo-ahi_sub_lib.i \
+		  Storm-pragma-ahi_lib.h Storm-pragma-ahi_sub_lib.h \
+		  Storm-proto-ahi.h Storm-proto-ahi_sub.h \
+		  SAS-pragmas-ahi_pragmas.h SAS-pragmas-ahi_sub_pragmas.h \
+		  SAS-proto-ahi.h SAS-proto-ahi_sub.h \
+		  GG-inline-ahi.h GG-inline-ahi_sub.h \
+		  GG-proto-ahi.h GG-proto-ahi_sub.h
+
+#
+# Targets
+########################################
+
+.PHONY:		all clean distclean maintainer-clean bindist changes
+
+all:		$(TARGETS)
+
+clean:
+	$(RM) $(TARGETS) *.bak *~ \#*\# core
+
+distclean:	clean
+	$(RM) Makefile
+
+maintainer-clean: distclean
+
+bindist:	$(TARGETS)
+	$(INSTALL) --directory $(DEVINCDIR) $(DEVINCDIR)/GG \
+	           $(DEVINCDIR)/SAS $(DEVINCDIR)/Storm
+
+	cd $(srcdir) && for dir in `find Asm C FD -type d -not -name CVS`; do \
+	 $(INSTALL) --directory $(DEVINCDIR)/$$dir; \
+	done
+	cd $(srcdir) && for file in `find Asm C FD -type f -not -path "*CVS/*"`; do \
+	 $(INSTALL_DATA) $$file $(DEVINCDIR)/$$file; \
+	done
+
+	for file in $(TARGETS); do \
+	 $(INSTALL) --directory $(DEVINCDIR)/`echo $$file | sed -e 's,\(.*\)-.*,\1,' | sed -e 's,-,/,g'`; \
+	 $(INSTALL_DATA) $$file $(DEVINCDIR)/`echo $$file | sed -e 's,-,/,g'`; \
+	done
+
+#
+# Auto-remake autoconf stuff
+########################################
+
+Makefile: Makefile.in ../config.status
+	(cd .. && ./config.status)
+
+
+#
+# Rules
+########################################
+
+Asm-lvo-ahi_lib.i:	FD/ahi_lib.fd
+	fd2pragma $< 22 TO $@
+
+Asm-lvo-ahi_sub_lib.i:	FD/ahi_sub_lib.fd
+	fd2pragma $< 22 TO $@
+
+Storm-pragma-ahi_lib.h:	FD/ahi_lib.fd
+	fd2pragma $< 5 TO $@ COMMENT
+
+Storm-pragma-ahi_sub_lib.h:	FD/ahi_sub_lib.fd
+	fd2pragma $< 5 TO $@ COMMENT
+
+Storm-proto-ahi.h:	FD/ahi_lib.fd
+	fd2pragma $< 30 TO $@
+
+Storm-proto-ahi_sub.h:	FD/ahi_sub_lib.fd
+	fd2pragma $< 30 TO $@
+
+SAS-pragmas-ahi_pragmas.h:	FD/ahi_lib.fd
+	fd2pragma $< 3 TO $@ COMMENT
+
+SAS-pragmas-ahi_sub_pragmas.h:	FD/ahi_sub_lib.fd
+	fd2pragma $< 3 TO $@ COMMENT
+
+SAS-proto-ahi.h:	FD/ahi_lib.fd
+	fd2pragma $< 33 TO $@
+
+SAS-proto-ahi_sub.h:	FD/ahi_sub_lib.fd
+	fd2pragma $< 33 TO $@
+
+GG-inline-ahi.h:	FD/ahi_lib.fd C/clib/ahi_protos.h
+#	fd2pragma $< 40 CLIB $(srcdir)/C/clib/ahi_protos.h TO $@
+	fd2inline --new $< $(srcdir)/C/clib/ahi_protos.h -o $@
+
+GG-inline-ahi_sub.h:	FD/ahi_sub_lib.fd C/clib/ahi_sub_protos.h
+#	fd2pragma $< 40 CLIB $(srcdir)/C/clib/ahi_sub_protos.h TO $@
+	fd2inline --new $< $(srcdir)/C/clib/ahi_sub_protos.h -o $@
+
+GG-proto-ahi.h:		FD/ahi_lib.fd
+#	fd2pragma $< 36 TO $@
+	fd2inline --proto $< -o $@
+
+GG-proto-ahi_sub.h:	FD/ahi_sub_lib.fd
+#	fd2pragma $< 36 TO $@
+	fd2inline --proto $< -o $@

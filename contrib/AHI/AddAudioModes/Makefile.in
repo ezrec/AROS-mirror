@@ -1,0 +1,88 @@
+#  $Id$
+#
+#  Makefile.in for the AddAudioModes program
+#
+
+
+#
+# Autoconfig stuff
+########################################
+
+@SET_MAKE@
+
+top_srcdir	= @top_srcdir@
+srcdir		= @srcdir@
+DISTDIR		= @DISTDIR@
+CDIR		= ${DISTDIR}/User/C
+
+build_os	= @build_os@
+
+CC		= @CC@
+INSTALL		= @INSTALL@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+
+CPPFLAGS	= @CPPFLAGS@ -I.. -I${srcdir} -I${top_srcdir}
+CFLAGS		= @CFLAGS@
+LDFLAGS		= @LDFLAGS@
+
+VPATH		= @srcdir@
+
+
+#
+# Files
+########################################
+
+OBJECTS		= AddAudioModes.o
+TARGET		= AddAudioModes
+
+
+#
+# Targets
+########################################
+
+.PHONY:		all clean distclean maintainer-clean bindist
+
+all:		$(TARGET)
+
+clean:
+	$(RM) $(TARGET) version.h *.o *.bak *~ \#*\# core Makefile.dep
+
+distclean:	clean
+	$(RM) Makefile
+
+maintainer-clean: distclean
+
+bindist:	$(TARGET)
+	$(INSTALL) --directory $(CDIR)
+	$(INSTALL_PROGRAM) --strip $(TARGET) $(CDIR)/$(TARGET)
+
+version.h:	AddAudioModes.c
+	@echo Creating $@
+	@grep '$$Id' $< | sed -e 's/^.*Id: .* \(.*\)\.\(.*\) ..\(..\)\/\(..\)\/\(..\).*/#define VERS "\1.\2 (\5.\4.\3)"/' > version.h
+
+
+#
+# Auto-remake autoconf stuff
+########################################
+
+Makefile: Makefile.in ../config.status
+	(cd .. && ./config.status)
+
+
+#
+# Dependencies
+########################################
+
+SOURCES		= $(notdir $(wildcard $(srcdir)/*.c))
+HEADERS		= $(notdir $(wildcard $(srcdir)/*.h))
+
+Makefile.dep:	$(SOURCES) $(HEADERS) version.h
+	@echo Making $@
+ifneq ($(build_os),amigaos)
+	-@$(CC) $(CPPFLAGS) $(CFLAGS) -MM $(SOURCES) > $@
+else
+	-@touch $@
+	-@makedepend -f $@ -I $(srcdir) $(SOURCES)
+endif
+
+include Makefile.dep
