@@ -38,7 +38,7 @@ int x1,y1,x2,y2;
   {
     SetAPen(rp, 0);
     RectFill(rp,x1,y2,x2,y1);
-    if(currlevel.t==NORMAL&&y==currlevel.e)
+    if(currlevel.t==MODE_NORMAL&&y==currlevel.e)
     {
       SetAPen(rp, 1);
       Move(rp,x1,y1-(fheight/2));
@@ -138,7 +138,7 @@ BOOL back=FALSE;
 
   switch(currlevel.t)
   {
-    case NORMAL:
+    case MODE_NORMAL:
       while(c!=0&&y<currlevel.h)
       {
         c=0;
@@ -150,11 +150,11 @@ BOOL back=FALSE;
       back=(y<(currlevel.e+2)&&c==0);
       break;
 
-    case REMOVE:
+    case MODE_REMOVE:
       back=remcount>(currlevel.e2-1);
       break;
 
-    case ROTATE:
+    case MODE_ROTATE:
       back=rotcount>(currlevel.e2-1);
       break;
 
@@ -206,15 +206,15 @@ BOOL result;
 
     switch(currlevel.t)
     {
-      case NORMAL:
+      case MODE_NORMAL:
        sprintf(restxt,"Sie brauchten %4d Clicks und entfernten %3d Steine!",rotcount,remcount);
        break;
 
-      case REMOVE:
+      case MODE_REMOVE:
         sprintf(restxt,"Für %3d Steine brauchten Sie %4d Clicks!",currlevel.e2,rotcount);
         break;
 
-      case ROTATE:
+      case MODE_ROTATE:
         sprintf(restxt,"Mit %3d Clicks entfernten Sie %4d Steine!",currlevel.e2,remcount);
         break;
 
@@ -252,7 +252,7 @@ int i,j;
     MenuOff();
     clearwin();
     currlevel=newlevel;
-    if(currlevel.t==NORMAL)
+    if(currlevel.t==MODE_NORMAL)
     {
       j=Window->Height-currlevel.e*fheight-(fheight/2)-bbottom;
       replace=FALSE;
@@ -371,7 +371,7 @@ struct Gadget *gad;
 
           case 4:
             newlevel.t=SUBNUM(code);
-            if(SUBNUM(code)==NORMAL)
+            if(SUBNUM(code)==MODE_NORMAL)
               menue12.Flags=MENUFLAGSE;
             else
             {

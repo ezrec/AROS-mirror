@@ -132,7 +132,7 @@ struct IntuiText txtX[MAXX-MINX+1],txtY[MAXY-MINY+1],txtE[MAXY],txtC[MAXCOLORS-1
 char tt[MAXX+1][3];
 
 struct IntuiText itemxye =
-{ 1,0,JAM1,18,3,NULL,NULL,NULL
+{ 1,0,JAM1,18,-1,NULL,NULL,NULL
 };
 
 struct MenuItem menuxye =
@@ -149,7 +149,7 @@ struct MenuItem menuxye =
 };
 
 struct IntuiText txtM2 =
-{ 1,0,JAM1,18,3,NULL,"Rotate",NULL
+{ 1,0,JAM1,15,-1,NULL,"Rotate",NULL
 };
 
 struct MenuItem menuM2 =
@@ -166,7 +166,7 @@ struct MenuItem menuM2 =
 };
 
 struct IntuiText txtM1 =
-{ 1,0,JAM1,18,3,NULL,"Remove",NULL
+{ 1,0,JAM1,15,-1,NULL,"Remove",NULL
 };
 
 struct MenuItem menuM1 =
@@ -183,7 +183,7 @@ struct MenuItem menuM1 =
 };
 
 struct IntuiText txtM0 =
-{ 1,0,JAM1,18,3,NULL,"Normal",NULL
+{ 1,0,JAM1,15,-1,NULL,"Normal",NULL
 };
 
 struct MenuItem menuM0 =
@@ -200,14 +200,14 @@ struct MenuItem menuM0 =
 };
 
 struct IntuiText item14 =
-{ 1,0,JAM1,3,3,NULL,"Mode",NULL
+{ 1,0,JAM1,0,-1,NULL,"Mode",NULL
 };
 
 struct MenuItem menue14 =
 { NULL,
   0,MENHI*3,
   60,MENHI,
-  ITEMTEXT|ITEMENABLED|HIGHBOX,
+  ITEMTEXT|ITEMENABLED|HIGHCOMP,
   0,
   (APTR)&item14,
   NULL,
@@ -217,14 +217,14 @@ struct MenuItem menue14 =
 };
 
 struct IntuiText item13 =
-{ 1,0,JAM1,3,3,NULL,"Colors",NULL
+{ 1,0,JAM1,0,-1,NULL,"Colors",NULL
 };
 
 struct MenuItem menue13 =
 { &menue14,
   0,MENHI*4,
   60,MENHI,
-  ITEMTEXT|ITEMENABLED|HIGHBOX,
+  ITEMTEXT|ITEMENABLED|HIGHCOMP,
   0,
   (APTR)&item13,
   NULL,
@@ -234,14 +234,14 @@ struct MenuItem menue13 =
 };
 
 struct IntuiText item12 =
-{ 1,0,JAM1,3,3,NULL,"<-E->",NULL
+{ 1,0,JAM1,0,-1,NULL,"<-E->",NULL
 };
 
 struct MenuItem menue12 =
 { &menue13,
   0,MENHI*2,
   60,MENHI,
-  ITEMTEXT|ITEMENABLED|HIGHBOX,
+  ITEMTEXT|ITEMENABLED|HIGHCOMP,
   0,
   (APTR)&item12,
   NULL,
@@ -251,14 +251,14 @@ struct MenuItem menue12 =
 };
 
 struct IntuiText item11 =
-{ 1,0,JAM1,3,3,NULL,"<-Y->",NULL
+{ 1,0,JAM1,0,-1,NULL,"<-Y->",NULL
 };
 
 struct MenuItem menue11 =
 { &menue12,
   0,MENHI,
   60,MENHI,
-  ITEMTEXT|ITEMENABLED|HIGHBOX,
+  ITEMTEXT|ITEMENABLED|HIGHCOMP,
   0,
   (APTR)&item11,
   NULL,
@@ -268,14 +268,14 @@ struct MenuItem menue11 =
 };
 
 struct IntuiText item10 =
-{ 1,0,JAM1,3,3,NULL,"<-X->",NULL
+{ 1,0,JAM1,0,-1,NULL,"<-X->",NULL
 };
 
 struct MenuItem menue10 =
 { &menue11,
   0,0,
   60,MENHI,
-  ITEMTEXT|ITEMENABLED|HIGHBOX,
+  ITEMTEXT|ITEMENABLED|HIGHCOMP,
   0,
   (APTR)&item10,
   NULL,
@@ -294,14 +294,14 @@ struct Menu menu1 =
 };
 
 struct IntuiText item04 =
-{ 1,0,JAM1,3,3,NULL,"Stop!",NULL
+{ 1,0,JAM1,0,-1,NULL,"Stop!",NULL
 };
 
 struct MenuItem menue04 =
 { NULL,
   0,MENHI*2,
   100,MENHI,
-  ITEMTEXT|HIGHBOX,
+  ITEMTEXT|HIGHCOMP,
   0,
   (APTR)&item04,
   NULL,
@@ -311,14 +311,14 @@ struct MenuItem menue04 =
 };
 
 struct IntuiText item03 =
-{ 1,0,JAM1,3,3,NULL,"Backdrop",NULL
+{ 1,0,JAM1,0,-1,NULL,"Backdrop",NULL
 };
 
 struct MenuItem menue03 =
 { &menue04,
   0,MENHI*5,
   100,MENHI,
-  ITEMTEXT|ITEMENABLED|HIGHBOX,
+  ITEMTEXT|ITEMENABLED|HIGHCOMP,
   0,
   (APTR)&item03,
   NULL,
@@ -328,14 +328,14 @@ struct MenuItem menue03 =
 };
 
 struct IntuiText item02 =
-{ 1,0,JAM1,3,3,NULL,"Start",NULL
+{ 1,0,JAM1,0,-1,NULL,"Start",NULL
 };
 
 struct MenuItem menue02 =
 { &menue03,
   0,MENHI,
   100,MENHI,
-  ITEMTEXT|ITEMENABLED|HIGHBOX,
+  ITEMTEXT|ITEMENABLED|HIGHCOMP,
   0,
   (APTR)&item02,
   NULL,
@@ -345,14 +345,14 @@ struct MenuItem menue02 =
 };
 
 struct IntuiText item01 =
-{ 1,0,JAM1,3,3,NULL,"Quit...",NULL
+{ 1,0,JAM1,0,-1,NULL,"Quit...",NULL
 };
 
 struct MenuItem menue01 =
 { &menue02,
   0,MENHI*3,
   100,MENHI,
-  ITEMTEXT|ITEMENABLED|HIGHBOX|ITEMTEXT|COMMSEQ,
+  ITEMTEXT|ITEMENABLED|HIGHCOMP|ITEMTEXT|COMMSEQ,
   0,
   (APTR)&item01,
   NULL,
@@ -362,14 +362,14 @@ struct MenuItem menue01 =
 };
 
 struct IntuiText item00 =
-{ 1,0,JAM1,3,3,NULL,"Info!",NULL
+{ 1,0,JAM1,0,-1,NULL,"Info!",NULL
 };
 
 struct MenuItem menue00 =
 { &menue01,
   0,0,
   100,MENHI,
-  ITEMTEXT|ITEMENABLED|HIGHBOX,
+  ITEMTEXT|ITEMENABLED|HIGHCOMP,
   0,
   (APTR)&item00,
   NULL,

@@ -19,9 +19,9 @@
 
 /* Constants */
 #define EMPTY -1
-#define NORMAL 0
-#define REMOVE 1
-#define ROTATE 2
+#define MODE_NORMAL 0
+#define MODE_REMOVE 1
+#define MODE_ROTATE 2
 
 /* Functions */
 #define random(max) (rand()%((int)(max)))
