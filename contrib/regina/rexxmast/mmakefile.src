@@ -15,8 +15,6 @@ EXES := $(AROS_C)/RexxMast \
         $(EXEDIR)/sendrexxmsg \
 	$(EXEDIR)/listen4msg
 
-#USE_DETACH := yes
-#USE_AROSLIB := yes
 USE_CLIB_SHARED := yes
 USE_AMIGALIB := yes
 
@@ -28,17 +26,7 @@ contrib-regina-rexxmast-quick : contrib-regina-rexxmast
 
 %make_prog_setup mmake=contrib-regina-rexxmast
 
-contrib-regina-rexxmast : includes-copy setup $(EXES)
-
-includes-copy : $(INCDIR)/aros/rexxcall.h
-
-ifeq ($(TARGET_CPU),m68k)
-$(INCDIR)/aros/rexxcall.h : rexxcall-m68k.h
-	@$(CP) $< $@
-else
-$(INCDIR)/aros/rexxcall.h : rexxcall.h
-	@$(CP) $< $@
-endif
+contrib-regina-rexxmast : setup $(EXES)
 
 %make_prog_single dir=$(EXEDIR)
 %make_prog_single dir=$(AROS_C)
