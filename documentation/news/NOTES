@@ -30,6 +30,13 @@ brackets ("[]").
 200304??:
  <next day here>
 
+20030405:
+ * Nice improvements on Zune flickering-on-resize issue [stegerg,sebauer]
+ * XSHM was mistakenly always disabled in hosted [stegerg]
+ * render.library was already ported, though endianess not worked out [stegerg]
+ * Diskfont MorphOS sync [verhaegs]
+ * Preliminary, unworking, usb/uhci driver [sheutlin]
+
 20030404:
  * Very positive response from render.library/guigfx author. [dlc]
  * Positive response from FlexCat author: license is GNU GPL. [chodorowski]
