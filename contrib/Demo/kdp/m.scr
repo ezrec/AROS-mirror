@@ -1,0 +1,22 @@
+#compile everything 
+
+#compile objects
+
+vpcc kdp.c -c
+vpcc kdpgfx.c -c
+vpcc kdppoly.c -c
+
+#compile demos
+
+vpcc bob.c kdp.o kdpgfx.o -O3 -obob
+vpcc bump.c kdp.o kdpgfx.o -O3 -obump
+vpcc grav.c kdp.o kdpgfx.o -O3 -ograv
+vpcc grav2.c kdp.o kdpgfx.o  -ograv2
+vpcc motionblur.c kdp.o kdpgfx.o -O3 -omotionblur
+vpcc poly.c kdp.o kdpgfx.o kdppoly.o -O3 -opoly
+vpcc scaletest.c kdp.o kdpgfx.o -O3 -oscaletest
+vpcc tun.c kdp.o kdpgfx.o -O3 -otun
+vpcc tun2.c kdp.o kdpgfx.o -O3 -otun2
+vpcc tv.c kdp.o kdpgfx.o -O3 -otv
+vpcc wire.c kdp.o kdpgfx.o -O3 -owire
+
