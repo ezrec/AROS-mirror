@@ -4,6 +4,7 @@ TOP = ../../..
 CC = gcc
 DEFINES = -D_AROS
 
+FLAGS = -nostartfiles -nostdlib -Wl,-i
 
 BINDIR = $(TOP)/bin/linux-i386/gen
 LIBDIR = $(TOP)/bin/linux-i386/AROS/lib
@@ -13,9 +14,12 @@ USER_INCLUDES_DIR = $(TOP)/bin/linux-i386/AROS/Include
 
 OS_INCLUDES = -I$(OS_INCLUDES_DIR)
 USER_INCLUDES = -I. -I$(USER_INCLUDES_DIR)
+
+LIBS = -L$(LIBDIR) -larosc -lamiga -lbgui -larosm
+
  
 %.o : %.c 
-	$(CC) $(OS_INCLUDES) $(USER_INCLUDES) $(DEFINES) $^ -o $@ -L$(LIBDIR) -larosc -lamiga -lbgui -lm
+	$(CC) $(OS_INCLUDES) $(USER_INCLUDES) $(DEFINES) $^ -o $@ $(LIBS) $(FLAGS)
 
 test1	: test1.o
 test2	: test2.o

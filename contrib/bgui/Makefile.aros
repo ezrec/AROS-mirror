@@ -65,55 +65,57 @@ build: bin/bgui.library.$(BUILD_TYPE) test
 
 bin/test1: test/test1.c
 	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test1
+	@$(MAKE) -Ctest -fMakefile.aros test1 -R
 
 bin/test2: test/test2.c
 	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test2
+	@$(MAKE) -Ctest -fMakefile.aros test2 -R
 
 bin/test3: test/test3.c
 	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test3
+	@$(MAKE) -Ctest -fMakefile.aros test3 -R
 
 bin/test4: test/test4.c
 	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test4
+	@$(MAKE) -Ctest -fMakefile.aros test4 -R
 
 bin/test5: test/test5.c
 	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test5
+	@$(MAKE) -Ctest -fMakefile.aros test5 -R
 
 bin/test6: test/test6.c
 	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test6
+	@$(MAKE) -Ctest -fMakefile.aros test6 -R
 
 bin/test7: test/test7.c
 	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test7
+	@$(MAKE) -Ctest -fMakefile.aros test7 -R
 
 bin/test8: test/test8.c
 	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test8
+	@$(MAKE) -Ctest -fMakefile.aros test8 -R
 
 bin/test9: test/test9.c
 	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test9
+	@$(MAKE) -Ctest -fMakefile.aros test9 -R
 
 bin/test10: test/test10.c
 	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test10
+	@$(MAKE) -Ctest -fMakefile.aros test10 -R
 
 bin/test11: test/test11.c
 	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test11
+	@$(MAKE) -Ctest -fMakefile.aros test11 -R
 
 bin/test13: test/test13.c
 	@$(ECHO) Making $@...
-	@$(MAKE) -Ctest -fMakefile.aros test13
+	@$(MAKE) -Ctest -fMakefile.aros test13 -R
 
 
 test = \
-bin/test1 \
+bin/test1
+
+test_later = \
 bin/test2 \
 bin/test3 \
 bin/test4 \
