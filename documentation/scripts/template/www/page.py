@@ -49,7 +49,6 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                     A( _N['documenting'], hclass='nope', href='%(ROOT)sdocumentation/developers/documenting' ),
                     A( _N['translating'], hclass='nope', href='%(ROOT)sdocumentation/developers/translating' ),
                     A( _N['summaries'], hclass='nope', href='%(ROOT)sdocumentation/developers/summaries' ),
-                    A( _N['ideas'], hclass='almost', href='%(ROOT)sdocumentation/developers/ideas'),
                     A( _N['links'], hclass='done', href='%(ROOT)sdocumentation/developers/links' )
                 ] )
             ] ),
