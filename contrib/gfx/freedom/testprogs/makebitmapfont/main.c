@@ -24,6 +24,51 @@
 
 /****************************************************************************************/
 
+/*
+
+Notes:
+
+- A font gets FSF_BOLD if OT_StemWeight >= 0x90 (tested under AmigaOS)
+
+- A font gets FSF_ITALIC if OT_SlantStyle != OTS_Upright (tested under AmigaOS)
+
+- A font gets FSF_EXTENDED if OT_HorizStyle >= 0xA0 (tested under AmigaOS)
+
+- If no GlyphMap can be obtained for SPACE (#32), charkern + 
+  blackwidth are both set to 0. charspace is set to:
+  
+  OT_SpaceWidth     pointsize 
+  -------------- *  --------- * xdpi
+      2540            250
+      
+  (tested under AmigaOS)
+  
+- For fixed width fonts (OT_IsFixed == TRUE) , the font's width is
+  calculated using the OT_SpaceWidth formula above (even if there's
+  a GlyphMap returned for SPACE #32)
+  
+  Default OT_SpaceWidth if this tag is missing in .otag
+  seems to be around 3000.
+  
+  -->  OT_SpaceWidth = (pixelsize * 2540 * 250) / (xdpi * pointsize)
+    
+  In a fixed font (charkern + charspace) must always equal
+  calculated fontwidth.
+  
+   x = propspace - propkern
+   fixedkern = (fontwidth - x + 1) / 2
+   fixedspace = fontwidth - fixedkern
+   
+  blackwidth is not modified
+  
+- if a rendered glyph happens to be vertically bigger than expected
+  (expected == fontheight in pixels), then the centered portion of it
+  is blitted into the font's chardata.
+  
+*/
+
+/****************************************************************************************/
+
 #define ARG_TEMPLATE "FONTNAME/A,FONTSIZE/N/A"
 #define ARG_FONTNAME 0
 #define ARG_FONTSIZE 1
