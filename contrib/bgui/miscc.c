@@ -55,14 +55,15 @@ ASM ULONG StrLenfA(REG(a0) UBYTE * FormatString, REG(a1) ULONG * DataStream)
 
 
 
-void MyPutChProc_SPrintfA(REG(d0) char c, REG(a3) char * PutChData)
+void MyPutChProc_SPrintfA(REG(d0) char c, REG(a3) char **PutChData)
 {
-  *PutChData++ = c;
+  **PutChData = c;
+  *PutChData++;
 }
 
 ASM VOID SPrintfA(REG(a3) UBYTE * buffer, REG(a0) UBYTE * format, REG(a1) ULONG * args)
 {
-  RawDoFmt(format, args, ((APTR)MyPutChProc_SPrintfA), buffer);
+  RawDoFmt(format, args, ((APTR)MyPutChProc_SPrintfA), &buffer);
 }
 
 
