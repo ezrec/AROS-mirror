@@ -32,7 +32,7 @@ USER_INCLUDES := -I. -Iarch/amigaos -I$(AROS_INCLUDES)/freetype1
 %build_linklib mmake=contrib-freetype1-linklib libname=freetype1 files=$(FILESDIR)
 
 %build_module mmake=contrib-freetype1-module modname=freetype1 modtype=library \
-    files="$(FILESDIR) freetype1_init" linklibname=freetype1_shared \
+    files="$(FILESDIR)" linklibname=freetype1_shared \
     uselibs="arosc amiga"
 
 INCLUDE_FILES = freetype.h fterrid.h ftnameid.h
