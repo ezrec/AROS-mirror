@@ -19,7 +19,7 @@ lb2_real: .files-touched $(GENDIR)/$(CURDIR)/.configured
 
 .files-touched:
 	@$(TOUCH) config.h.in
-        @$(TOUCH) configure
+	@$(TOUCH) configure
 	@$(ECHO) YES > $@
 
 $(GENDIR)/$(CURDIR)/.configured: mmakefile
