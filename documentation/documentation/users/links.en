@@ -6,20 +6,5 @@ Links
 :Copyright: Copyright © 1995-2002, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
-:Status:    Done.
-
-
-Documentation
-=============
-
-+ `AmigaDOS Online Reference Manual`__
-
-  .. Image:: ../../images/amigados-online-reference-manual.png
-
-  Lot of information for developers and users of AmigaOS. Guides and reference
-  manuals about Workbench, ARexx, system utilites, shell commands and lots 
-  more. However, the site doesn't seem to have been update for a *long* time
-  now... :-/
-
-__ http://www.nethkin.com/bmori/amiga/dos1.html
+:Status:    Empty.
 
