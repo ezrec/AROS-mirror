@@ -30,6 +30,9 @@ brackets ("[]").
 200304??:
  <next day here>
 
+20030412:
+ * PNG datatype in contrib [stegerg]
+
 20030411:
  * LBreakout2 ported, a nice breakout-style game [falemagn]
  * French catalog translations for many programs [olivieradam]
