@@ -142,8 +142,8 @@ const struct Resident ACDR_resident=
 	(ULONG *)inittab
 };
 
-static const char name[]="AmiCDRom.handler";
-static const char version[]="$VER: AmiCDRom-handler 1.15 (2001-07-21)\n";
+static const char name[]="cdrom.handler";
+static const char version[]="$VER: cdrom.handler 1.15 (2001-07-21)\n";
 
 static const APTR inittab[4]=
 {
@@ -1727,6 +1727,4 @@ struct MsgPort *InputPort;
 	}
 }
 
-const char acdrhandlerend;
-
-
+static const char acdrhandlerend = 0;
