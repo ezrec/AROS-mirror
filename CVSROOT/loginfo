@@ -17,4 +17,4 @@
 # name and listing the modified file names.
 #
 # For example:
-DEFAULT		tee /tmp/AROS.log | gawk -f $CVSROOT/CVSROOT/commitlog.awk --assign File="%s" --assign Out="$CVSROOT/CVSROOT/commitlog"
+DEFAULT		tee -a /tmp/AROS.log | gawk -f $CVSROOT/CVSROOT/commitlog.awk --assign File="%s" --assign Out="$CVSROOT/CVSROOT/commitlog"
