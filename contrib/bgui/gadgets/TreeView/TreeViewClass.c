@@ -8,6 +8,9 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/08/09 11:48:33  chodorowski
+ * Fixed missing prototypes.
+ *
  * Revision 42.2  2000/07/09 03:05:09  bergers
  * Makes the gadgets compilable.
  *
@@ -43,6 +46,8 @@
 
 #include "TreeViewPrivate.h"
 #include "TVUtil.h"
+
+#include <stdio.h>
 
 /************************************************************************
 **************************  LOCAL DEFINITIONS  **************************
@@ -250,9 +255,9 @@ static Class *ClassBase = NULL;
 SAVEDS ASM Class *BGUI_ClassInit(void)
 {
    ClassBase = BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_GROUP_GADGET,
-                            CLASS_ObjectSize,     sizeof(TVData),
-                            CLASS_DFTable,        ClassFunc,
-                            TAG_DONE);
+			    CLASS_ObjectSize,     sizeof(TVData),
+			    CLASS_DFTable,        ClassFunc,
+			    TAG_DONE);
 printf("Class init!\n");
    return ClassBase;
 }
