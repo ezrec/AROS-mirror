@@ -9,6 +9,11 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2000/08/08 20:36:51  stegerg
+ * UtilityBase on AROS is not of type struct Library *, but
+ * struct UtilityBase *. BTW: Why????????? I think we should
+ * fix this. Also locale.library seems to have this "problem".
+ *
  * Revision 42.5  2000/08/08 19:29:54  chodorowski
  * Minor changes.
  *
@@ -90,7 +95,7 @@ struct Library        *BGUIBase;
 #ifdef _AROS
 struct IntuitionBase  *IntuitionBase;
 struct GfxBase        *GfxBase;
-struct Library        *UtilityBase;
+struct UtilityBase    *UtilityBase;
 #endif
 
 /*
