@@ -15,7 +15,7 @@ void open_lib()
 void open_window()
 {
     Window = OpenWindowTags (NULL
-	, WA_Title,	    "Quad"
+	, WA_Title,	    (IPTR)"Quad"
 	, WA_Left,	    0
 	, WA_Top,	    0
 	, WA_Width,	    536
@@ -32,7 +32,7 @@ void open_window()
 			    | WFLG_ACTIVATE
 			    | WFLG_RMBTRAP
 	, WA_SimpleRefresh, TRUE
-	, WA_Gadgets,	    FIRSTGADGET
+	, WA_Gadgets,	    (IPTR)FIRSTGADGET
 	, TAG_END
     );
   ActivateWindow(Window);
