@@ -7,6 +7,7 @@ include $(TOP)/config/make.cfg
 LIB   := python-modules
 
 FILES := \
+	config \
 	_codecsmodule \
 	_sre \
 	_testcapimodule \
@@ -41,12 +42,10 @@ FILES := \
 	stropmodule \
 	structmodule \
 	symtablemodule \
-	threadmodule \
 	timemodule \
 	timingmodule \
 	unicodedata \
 	xreadlinesmodule \
-	xxmodule \
 	yuvconvert \
 	zlibmodule 
 
@@ -61,6 +60,7 @@ FILES := \
 # Modules that need a bit of work to be ported.
 #	pyexpat
 #	socketmodule
+#	threadmodule
 
 # Modules that might be portable to AROS (with a lot of work).
 #	bsddbmodule 
