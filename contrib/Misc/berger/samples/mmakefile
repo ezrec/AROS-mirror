@@ -1,0 +1,9 @@
+include $(TOP)/config/make.cfg
+
+DESTDIR := $(CONTRIBDIR)/Misc/Berger
+
+SAMPLES = registertest branchtest loops addressing benchmark
+
+#MM contrib-misc-m68kemul-copysamples
+contrib-misc-m68kemul-copysamples :
+	@$(CP) $(SAMPLES) $(DESTDIR)
