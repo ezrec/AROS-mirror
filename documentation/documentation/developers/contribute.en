@@ -29,13 +29,13 @@ Programming
 
 + Implementing or improving hardware device drivers:
   
-  - AROS/palm-native:
+  - AROS/m68k-pp:
     
     + Graphics
     + Input (touchscreen, buttons)
     + Sound
  
-  - AROS/i386-native:
+  - AROS/i386-pc:
     
     + Specific graphic card drivers (we only have general, not very well
       accelerated ones). A short wishlist:
@@ -46,17 +46,13 @@ Programming
     
     + USB
     + SCSI
-    + Specific IDE chipsets (eg. Promise UltraATA)
+    + Specific IDE chipsets
+    + Sound
     + ...anything else you can think of.
 
   - Generic printer support.
  
-  - Generic sound support 
-
-    This would most likely involve porting a recent version of AHI to AROS,
-    and implementing audio.device in terms of AHI. Just getting a filewriter
-    driver to work would be a nice improvement, after which you can concentrate
-    on writing drivers for specific hardware.
+  - Generic sound support.
 
 + Porting to other architectures. Some examples of hardware for which no 
   maintained AROS port exists or has been started:
@@ -93,11 +89,6 @@ Programming
   datatypes that need improvement to become usable or need implementing from 
   scratch:
 
-  - picture.datatype
-    
-    + png.datatyoe
-    + jpeg.datatype
-  
   - amigaguide.datatype
   - sound.datatype
     
