@@ -1868,110 +1868,110 @@ void amiga_load_prefs(void)
 check_env:
   /* Now check the individual environment variables for overrides. */
 
-  if (s = getenv ("Mosaic/TempDir"))
+  if ((s = getenv ("Mosaic/TempDir")))
     Rdata.tmp_directory = s;
   if (strcmp (Rdata.tmp_directory, "T:") == 0)
-    if (s = getenv ("HOME"))
+    if ((s = getenv ("HOME")))
       Rdata.tmp_directory = s;
 
-  if (s = getenv ("Mosaic/Sendmail"))
+  if ((s = getenv ("Mosaic/Sendmail")))
     amiga_sendmail = s;
   if (!amiga_sendmail)
     amiga_sendmail = getenv ("Sendmail");
 
-  if (s = getenv ("Mosaic/Editor"))
+  if ((s = getenv ("Mosaic/Editor")))
     amiga_editor = s;
   if (!amiga_editor)
     amiga_editor = getenv ("Editor");
 
-  if (s = getenv ("Mosaic/Telnet"))
+  if ((s = getenv ("Mosaic/Telnet")))
     amiga_telnet = s;
   if (!amiga_telnet)
     amiga_telnet = getenv ("Telnet");
 
-  if (s = getenv ("Mosaic/Rlogin"))
+  if ((s = getenv ("Mosaic/Rlogin")))
     amiga_rlogin = s;
   if (!amiga_telnet)
     amiga_telnet = getenv ("Rlogin");
 
-  if (s = getenv("Mosaic/ImageCacheSize"))
+  if ((s = getenv("Mosaic/ImageCacheSize")))
     Rdata.image_cache_size = atoi(s);
-  if (s = getenv("Mosaic/DelayImageLoads"))
+  if ((s = getenv("Mosaic/DelayImageLoads")))
     Rdata.delay_image_loads = (stricmp(s, "true"))?0:1;
-  if (s = getenv("Mosaic/TitleToWindow"))
+  if ((s = getenv("Mosaic/TitleToWindow")))
     Rdata.title_to_window = (stricmp(s, "true"))?0:1;
 
-	if (s = getenv("Mosaic/IsindexToForm"))
+	if ((s = getenv("Mosaic/IsindexToForm")))
 		Rdata.isindex_to_form = (stricmp(s, "true"))?0:1;
-	if (s = getenv("Mosaic/Buttons")){
+	if ((s = getenv("Mosaic/Buttons"))){
 	if(!strnicmp(s, "text",5)) Rdata.image_buttons = 0;
 		else if(!strnicmp(s, "images",7)) Rdata.image_buttons = 1;
 		else if(!strnicmp(s, "images&text",11)) Rdata.image_buttons = 2;
 		}
 
 
-	if (s = getenv("Mosaic/Anchor"))
+	if ((s = getenv("Mosaic/Anchor")))
 		Rdata.u_anchor = atorgb(s);
-	if (s = getenv("Mosaic/FollowedAnchor"))
+	if ((s = getenv("Mosaic/FollowedAnchor")))
 		Rdata.f_anchor = atorgb(s);
-	if (s = getenv("Mosaic/ActiveAnchor"))
+	if ((s = getenv("Mosaic/ActiveAnchor")))
 		Rdata.a_anchor = atorgb(s);
 
-  if (s = getenv("Mosaic/HomeDocument"))
+  if ((s = getenv("Mosaic/HomeDocument")))
     Rdata.home_document = s;
-  if (s = getenv("Mosaic/DownloadDir"))
+  if ((s = getenv("Mosaic/DownloadDir")))
     Rdata.download_dir = s;
-  if (s = getenv("Mosaic/AddToHotList"))
+  if ((s = getenv("Mosaic/AddToHotList")))
     RexxMenu(mo_add_hot_list, s) ;
-  if (s = getenv("Mosaic/JumpToHotList"))
+  if ((s = getenv("Mosaic/JumpToHotList")))
     RexxMenu(mo_jump_hot_list, s) ;
-  if (s = getenv("Mosaic/PrintCommand"))
+  if ((s = getenv("Mosaic/PrintCommand")))
     RexxMenu(mo_print_document, s) ;
 
-  if (s = getenv("Mosaic/Font"))
+  if ((s = getenv("Mosaic/Font")))
       Rdata.font = s;
-  if (s = getenv("Mosaic/italicFont"))
+  if ((s = getenv("Mosaic/italicFont")))
       Rdata.italicfont = s;
-  if (s = getenv("Mosaic/boldFont"))
+  if ((s = getenv("Mosaic/boldFont")))
       Rdata.boldfont = s;
-  if (s = getenv("Mosaic/h1Font"))
+  if ((s = getenv("Mosaic/h1Font")))
       Rdata.h1font = s;
-  if (s = getenv("Mosaic/h2Font"))
+  if ((s = getenv("Mosaic/h2Font")))
       Rdata.h2font = s;
-  if (s = getenv("Mosaic/h3Font"))
+  if ((s = getenv("Mosaic/h3Font")))
       Rdata.h3font = s;
-  if (s = getenv("Mosaic/h4Font"))
+  if ((s = getenv("Mosaic/h4Font")))
       Rdata.h4font = s;
-  if (s = getenv("Mosaic/h5Font"))
+  if ((s = getenv("Mosaic/h5Font")))
       Rdata.h5font = s;
-  if (s = getenv("Mosaic/h6Font"))
+  if ((s = getenv("Mosaic/h6Font")))
       Rdata.h6font = s;
-  if (s = getenv("Mosaic/fixedFont"))
+  if ((s = getenv("Mosaic/fixedFont")))
       Rdata.fixedfont = s;
-  if (s = getenv("Mosaic/addressFont"))
+  if ((s = getenv("Mosaic/addressFont")))
       Rdata.addressfont = s;
-  if (s = getenv("Mosaic/listingFont"))
+  if ((s = getenv("Mosaic/listingFont")))
       Rdata.listingfont = s;
-  if (s = getenv("Mosaic/plainFont"))
+  if ((s = getenv("Mosaic/plainFont")))
       Rdata.plainfont = s;
-  if (s = getenv("Mosaic/rexxmacro1"))
+  if ((s = getenv("Mosaic/rexxmacro1")))
       RexxMenu(mo_macro_1, s) ;
-  if (s = getenv("Mosaic/rexxmacro2"))
+  if ((s = getenv("Mosaic/rexxmacro2")))
       RexxMenu(mo_macro_2, s) ;
-  if (s = getenv("Mosaic/rexxmacro3"))
+  if ((s = getenv("Mosaic/rexxmacro3")))
       RexxMenu(mo_macro_3, s) ;
-  if (s = getenv("Mosaic/rexxmacro4"))
+  if ((s = getenv("Mosaic/rexxmacro4")))
       RexxMenu(mo_macro_4, s) ;
-  if (s = getenv("Mosaic/rexxmacro5"))
+  if ((s = getenv("Mosaic/rexxmacro5")))
       RexxMenu(mo_macro_5, s) ;
-  if (s = getenv("Mosaic/rexxmacro6"))
+  if ((s = getenv("Mosaic/rexxmacro6")))
       RexxMenu(mo_macro_6, s) ;
-  if (s = getenv("Mosaic/rexxmacro7"))
+  if ((s = getenv("Mosaic/rexxmacro7")))
       RexxMenu(mo_macro_7, s) ;
-  if (s = getenv("Mosaic/rexxmacro8"))
+  if ((s = getenv("Mosaic/rexxmacro8")))
       RexxMenu(mo_macro_8, s) ;
-  if (s = getenv("Mosaic/rexxmacro9"))
+  if ((s = getenv("Mosaic/rexxmacro9")))
       RexxMenu(mo_macro_9, s) ;
-  if (s = getenv("Mosaic/rexxmacro10"))
+  if ((s = getenv("Mosaic/rexxmacro10")))
       RexxMenu(mo_macro_10, s) ;
 }
