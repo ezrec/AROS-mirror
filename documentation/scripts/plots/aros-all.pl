@@ -1,4 +1,3 @@
-#set data = ../../db/aros.size
-#set title = "Size of AROS sources"
+#set filename = aros-all.png
 
-#include sizes.pl
+#include aros.pl

@@ -16,7 +16,8 @@
 #proc page
     backgroundcolor: grey(0.8)
     tightcrop: yes
-
+    outfilename: @filename
+    
 #proc areadef
     rectangle: 1 1 5 3
     xscaletype: date

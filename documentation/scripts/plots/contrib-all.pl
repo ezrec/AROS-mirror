@@ -1,5 +1,3 @@
-#set data = ../../db/contrib.size
-#set title = "Size of contributed sources"
-#set yinc = 20
+#set filename = contrib-all.png
 
-#include sizes.pl
+#include contrib.pl
