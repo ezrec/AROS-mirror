@@ -1,0 +1,125 @@
+# Makefile for UnZip 5.30 using Manx Aztec C 5.2, last revised 18 Apr 97.
+# Define EXTRA=xxx on the Make command line for e.g. -dUSE_UNSHRINK.
+
+CC = cc
+VERNUMS = -d __VERSION__=5 -d __REVISION__=2
+CFLAGS = -ps -sabfmnpu -wcpr0u -d AMIGA $(EXTRA)
+# -ps means short ints, -sabfmnpu is optimizations, -wcpr0u is type checking
+# option flags MORE and ASM_* are now set in the Aztec section of amiga/amiga.h;
+# it's cleaner, and that way any changes forces a recompile.
+
+LD = ln
+LDFLAGS = +q -m
+LDLIBS = -lc16
+# linker arg -m suppresses warnings about overriding c.lib functions
+
+OBJS = unzip.o process.o crypt.o ttyio.o envargs.o explode.o \
+         unshrink.o extract.o zipinfo.o inflate.o match.o unreduce.o \
+         fileio.o list.o globals.o crctab.o amiga/amiga.o amiga/crc_68.o \
+         amiga/flate.o
+
+XOBJS = unzip.xo process.xo crypt.o ttyio.o extract.xo fileio.o \
+         inflate.o match.o globals.o crctab.o amiga/flate.o amiga/amiga.xo \
+         amiga/crc_68.o
+
+FOBJS = funzip.o crypt.fo ttyio.fo inflate.fo globals.fo \
+         amiga/flate.fo amiga/crc_68.o amiga/filedate.fo
+
+
+.c.o :
+	$(CC) -o $@ $(CFLAGS) $*.c
+
+.c.xo:
+	$(CC) -o $@ -d SFX $(CFLAGS) $*.c
+
+.c.fo:
+	$(CC) -o $@ -d FUNZIP $(CFLAGS) $*.c
+
+all : UnZip UnZipSFX fUnZip MakeSFX
+
+u : UnZip
+
+f : fUnZip
+
+x : UnZipSFX
+
+m : MakeSFX
+
+UnZip :     $(OBJS)
+	$(LD) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
+
+UnZipSFX :  $(XOBJS) MakeSFX
+	$(LD) $(LDFLAGS) -o $@ $(XOBJS) $(LDLIBS)
+
+fUnZip :    $(FOBJS)
+	$(LD) $(LDFLAGS) -o $@ $(FOBJS) $(LDLIBS)
+
+MakeSFX :   amiga/makesfx.c
+	$(CC) $(CFLAGS) -o t:makesfx.o amiga/makesfx.c
+	$(LD) $(LDFLAGS) -o MakeSFX t:makesfx.o $(LDLIBS)
+	-@delete t:makesfx.o
+
+clean :
+	-delete $(OBJS)
+	-delete $(XOBJS)
+	-delete $(FOBJS)
+	-delete amiga/G_offs.a amiga/G_offs.fa amiga/mkGoff amiga/FmkGoff
+
+cleaner : clean
+	-delete UnZip fUnZip UnZipSFX MakeSFX
+
+
+$(OBJS) $(XOBJS) $(FOBJS) : unzip.h unzpriv.h globals.h \
+                             amiga/amiga.h amiga/z-stat.h
+
+crypt.o crypt.fo ttyio.o ttyio.fo : zip.h
+
+inflate.o inflate.fo : inflate.h
+
+fileio.o : ebcdic.h
+funzip.o : tables.h
+
+crypt.o crypt.fo ttyio.o ttyio.fo unzip.o unzip.xo funzip.o : crypt.h
+fileio.o extract.o extract.xo inflate.o inflate.fo amiga/filedate.fo : crypt.h
+
+crypt.o crypt.fo ttyio.o ttyio.fo funzip.o fileio.o : ttyio.h
+
+unzip.o unzip.xo : version.h consts.h
+
+
+# Special case object files:
+
+amiga/amiga.o : amiga/filedate.c amiga/stat.c amiga/amiga.c
+	rx > env:VersionDate "say '""'translate(date('E'), '.', '/')'""'"
+	$(CC) -o amiga/amiga.o $(CFLAGS) $(VERNUMS) amiga/amiga.c
+
+amiga/amiga.xo : amiga/filedate.c amiga/stat.c amiga/amiga.c
+	$(CC) -o amiga/amiga.xo $(CFLAGS) $(VERNUMS) -d SFX amiga/amiga.c
+
+amiga/crc_68.o : amiga/crc_68.a
+	as -n -o amiga/crc_68.o amiga/crc_68.a
+
+amiga/flate.o : amiga/flate.a amiga/G_offs.a
+	as -n -o amiga/flate.o -eINT16 amiga/flate.a
+
+amiga/flate.fo : amiga/flate.a amiga/G_offs.fa
+	as -n -o amiga/flate.fo -eINT16 -eFUNZIP -eAZTEC amiga/flate.a
+
+# These special files are generated on the fly by a program we compile and
+# then run, and then included into amiga/flate.a to provide definitions for it:
+
+amiga/G_offs.a : amiga/mkGoff
+	amiga/mkGoff > amiga/G_offs.a
+
+amiga/G_offs.fa : amiga/FmkGoff
+	amiga/FmkGoff > amiga/G_offs.fa
+
+amiga/mkGoff : amiga/mkGoff.c globals.h crypt.h
+	$(CC) -o t:mkgoff.o $(CFLAGS) amiga/mkGoff.c
+	$(LD) $(LDFLAGS) -o amiga/mkGoff t:mkgoff.o $(LDLIBS)
+	-@delete t:mkgoff.o
+
+amiga/FmkGoff : amiga/mkGoff.c globals.h crypt.h
+	$(CC) -o t:mkgoff.o $(CFLAGS) -d FUNZIP amiga/mkGoff.c
+	$(LD) $(LDFLAGS) -o amiga/FmkGoff t:mkgoff.o $(LDLIBS)
+	-@delete t:mkgoff.o
