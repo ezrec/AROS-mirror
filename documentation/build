@@ -1,7 +1,7 @@
 #!/bin/sh
-source scripts/config/defaults
+. scripts/config/defaults
 if [ -e scripts/config/user ]; then
-    source scripts/config/user
+    . scripts/config/user
 fi
 
 $PYTHON scripts/buildit.py $*
