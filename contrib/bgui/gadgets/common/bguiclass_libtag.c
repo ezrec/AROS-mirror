@@ -1,5 +1,8 @@
 /*
  * $Log$
+ * Revision 1.2  2002/04/28 11:35:44  verhaegs
+ * include stdio.h for printf
+ *
  * Revision 1.1  2000/07/09 03:06:50  bergers
  * Added some files.
  *
@@ -11,6 +14,8 @@
 #include <exec/libraries.h>
 #include <exec/resident.h>
 #include <exec/types.h>
+
+#include <stdio.h>
 
 extern UBYTE _LibName[];
 extern UBYTE _LibID[];;
