@@ -31,7 +31,7 @@
 contrib contrib
 
 # Stuff necessary to compile AROS
-necessary -a grub Format64 AmiCDROM aminet-util-arc-untgz
+necessary -a Format64 AmiCDROM aminet-util-arc-untgz
 
 zune -a zune-libs-muimaster zune-prefs  zune-tests zune-demos zune-wanderer
 
@@ -100,9 +100,6 @@ gfx -d contrib/gfx contrib/gfx
 # GNU
 gnu -d contrib/gnu contrib/gnu
 gzip -d contrib/gnu/gzip-1.2.4a contrib/gnu/gzip-1.2.4a
-
-# GRUB 
-grub -d contrib/grub contrib/grub
 
 # Network includes
 network -d contrib/network contrib/network
