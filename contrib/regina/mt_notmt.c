@@ -67,6 +67,9 @@ tsd_t *ReginaInitializeProcess(void)
    OK |= init_vmf(&__regina_tsd);       /* Initialize the vmsfuncs module    */
 #endif
    OK |= init_arexxf(&__regina_tsd);    /* Initialize the arexxfuncs modules */
+#if defined(_AMIGA) || defined(__AROS__)
+   OK |= init_amigaf(&__regina_tsd);
+#endif
    __regina_tsd.loopcnt = 1;            /* stupid r2perl-module              */
    __regina_tsd.traceparse = -1;
    __regina_tsd.thread_id = 1;
