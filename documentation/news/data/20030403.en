@@ -87,7 +87,7 @@ have seen great improvements during the last months.
     - Staf Verhaegen has managed to port Regina_, a free and portable REXX interpreter, to AROS,
       making it fully compatible with AREXX.
 
-    - The AROS port of python_, manteined by Adam Chodorowski, has a site__ of its own now,
+    - The AROS port of python_, maintained by Adam Chodorowski, has a site__ of its own now,
       and got the name of *PyAROS*.
 
 
