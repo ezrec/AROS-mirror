@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 USER_INCLUDES = -I../commonaros
 
 %build_module_macro mmake=contrib-zune-classes-nlisttree \
-  modname=NListtree modtype=mcc dir=$(CONTRIBDIR)/NList/Classes/Zune \
+  modname=NListtree modtype=mcc dir=$(CONTRIBDIR)/MCC_NList/Classes/Zune \
   initfile=library files="NListtree QuickSort" \
   uselibs="amiga mui rom m"
 

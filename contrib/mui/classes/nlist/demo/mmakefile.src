@@ -6,7 +6,7 @@ FILES := NList-Demo \
     	 NList-Demo2 \
 	 NList-Demo3
 
-EXEDIR := $(CONTRIBDIR)/NList/Demos
+EXEDIR := $(CONTRIBDIR)/MCC_NList/Demos
 
 USER_CFLAGS := -DNO_INLINE_STDARG
 
