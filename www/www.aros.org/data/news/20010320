@@ -4,6 +4,7 @@ Peter Eriksson began work on Font prefs.
 
 Johan Grip added a MultiBoot compliant header for GRUB and
 fixed the problem with the intialization of the ide.device.
+AROS can now boot from a HD partition !
 
 Georg Steger improved the oop.library which is the base of our
 HIDD system and two mmakefiles for BGUI. Next, he fixed a bug
