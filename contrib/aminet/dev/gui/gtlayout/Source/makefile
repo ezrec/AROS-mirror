@@ -20,10 +20,10 @@ OPTIMIZE = -O2 -g3
 
 PRELIBS := -lautoinit -lgtlayout -lamiga -larosc_shared -lamiga -larosm -lautoinit
 
-LIBS := -L$(LIBDIR) -L./ $(PRELIBS)
+LIBS := -L$(LIBDIR) $(PRELIBS)
 
 #First all intermediate files MUST be created so there is a 'defines' file!
-all: $(AROS_LIBS)/gtlayout.library $(AROS_LIB)/libgtlayout.a $(TESTDIR)/gtlayout_test
+all: $(AROS_LIBS)/gtlayout.library  $(TESTDIR)/gtlayout_test
 
 
 aros/%_aros.c : %.c
@@ -162,17 +162,19 @@ FILES = \
 	min_max \
 	asmpoolfunctions
 
+LINKLIB_FILES = \
+	varargfuncs
 
 TESTFILES = test/gui test/Tools
 
 OBJS         = $(foreach f,$(API_SOURCE) $(API_SOURCE_EXTRA) $(UFC_SOURCE) $(FILES) $(OTHERS),$(f).o)
-LINKLIB_OBJS = $(foreach f,$(API_SOURCE)                     $(UFC_SOURCE) $(FILES)          ,$(f).ol)
+LINKLIB_OBJS = $(foreach f,$(LINKLIB_FILES)                                                  ,$(f).ol)
 TESTOBJS = test/gui.o test/Tools.o
 
 
-$(AROS_LIBS)/gtlayout.library : $(INTERMEDIATES) $(OBJS) gtlayout_data.o
+$(AROS_LIBS)/gtlayout.library : $(INTERMEDIATES) $(OBJS) gtlayout_data.o $(AROS_LIB)/libgtlayout.a 
 	@$(ECHO) Compiling $@...
-	@$(CC) gtlayout_data.o $(OBJS) -static -lamiga -o $@ -nostartfiles
+	@$(CC) gtlayout_data.o $(OBJS) -static -lamiga -lgtlayout -o $@ -nostartfiles
 
 $(AROS_LIB)/libgtlayout.a : $(LINKLIB_OBJS) gtlayout_data.ol
 	@$(ECHO) Generating $@...
@@ -180,7 +182,7 @@ $(AROS_LIB)/libgtlayout.a : $(LINKLIB_OBJS) gtlayout_data.ol
 
 $(TESTDIR)/gtlayout_test: $(TESTOBJS)
 	@$(ECHO) Linking $^ to $@
-	@$(STATIC_LD) $(LDFLAGS) $(STARTUP) $^ -o $@ $(LIBS) $(COMPILER_LIBS)
+	$(STATIC_LD) $(LDFLAGS) $(STARTUP) $^ -o $@ $(LIBS) $(COMPILER_LIBS)
  
 clean:
 	@$(RM) $(INTERMEDIATES) $(OBJS) $(LINKLIB_OBJS) $(TESTOBJS) $(AROS_LIBS)/gtlayout.library aros/gtlayout_defines_aros.h gtlayout_data.o gtlayout_data.ol $(AROS_LIB)/libgtlayout.a

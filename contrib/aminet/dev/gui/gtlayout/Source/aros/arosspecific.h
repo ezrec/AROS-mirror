@@ -55,7 +55,7 @@ struct LayerMsg;
  struct LayoutHandle *GTLayout_LT_CreateHandle( struct Screen *screen, struct TextAttr *font );
  struct LayoutHandle *GTLayout_LT_CreateHandleTagList( struct Screen *screen, struct TagItem *tagList );
 #endif
- struct LayoutHandle *LT_CreateHandleTags( struct Screen *screen, ... );
+ struct LayoutHandle *LT_CreateHandleTags( struct Screen *screen, unsigned long tag1, ... );
 #if 0
  BOOL GTLayout_LT_Rebuild( struct LayoutHandle *handle, struct IBox *bounds, LONG extraWidth, LONG extraHeight, LONG clear );
  VOID GTLayout_LT_HandleInput( struct LayoutHandle *handle, ULONG msgQualifier, ULONG *msgClass, UWORD *msgCode, struct Gadget **msgGadget );
@@ -63,11 +63,11 @@ struct LayerMsg;
  VOID GTLayout_LT_EndRefresh( struct LayoutHandle *handle, LONG complete );
  LONG GTLayout_LT_GetAttributesA( struct LayoutHandle *handle, LONG id, struct TagItem *tagList );
 #endif
- LONG LT_GetAttributes( struct LayoutHandle *handle, LONG id, ... );
+ LONG LT_GetAttributes( struct LayoutHandle *handle, LONG id, unsigned long tag1, ... );
 #if 0
  VOID GTLayout_LT_SetAttributesA( struct LayoutHandle *handle, LONG id, struct TagItem *tagList );
 #endif
- VOID LT_SetAttributes( struct LayoutHandle *handle, LONG id, ... );
+ VOID LT_SetAttributes( struct LayoutHandle *handle, LONG id, unsigned long tag1, ... );
 #if 0
  VOID GTLayout_LT_AddA( struct LayoutHandle *handle, LONG type, STRPTR label, LONG id, struct TagItem *tagList );
 #endif
@@ -75,12 +75,12 @@ struct LayerMsg;
 #if 0
  VOID GTLayout_LT_NewA( struct LayoutHandle *handle, struct TagItem *tagList );
 #endif
- VOID LT_New( struct LayoutHandle *handle, ... );
+ VOID LT_New( struct LayoutHandle *handle, unsigned long tag1,... );
 #if 0
  VOID GTLayout_LT_EndGroup( struct LayoutHandle *handle );
  struct Window *GTLayout_LT_LayoutA( struct LayoutHandle *handle, STRPTR title, struct IBox *bounds, LONG extraWidth, LONG extraHeight, ULONG idcmp, LONG align, struct TagItem *tagParams );
 #endif
- struct Window *LT_Layout( struct LayoutHandle *handle, STRPTR title, struct IBox *bounds, LONG extraWidth, LONG extraHeight, ULONG idcmp, LONG align, ... );
+ struct Window *LT_Layout( struct LayoutHandle *handle, STRPTR title, struct IBox *bounds, LONG extraWidth, LONG extraHeight, ULONG idcmp, LONG align, unsigned long tag1,... );
 #if 0
  struct Menu *GTLayout_LT_LayoutMenusA( struct LayoutHandle *handle, struct NewMenu *menuTemplate, struct TagItem *tagParams );
 #endif
@@ -101,7 +101,7 @@ struct LayerMsg;
 /*--- Added in v3.0 ---------------------------------------------------*/
  struct Window *GTLayout_LT_BuildA( struct LayoutHandle *handle, struct TagItem *tagParams );
 #endif
- struct Window *LT_Build( struct LayoutHandle *handle, ... );
+ struct Window *LT_Build( struct LayoutHandle *handle, unsigned long tag1, ... );
 #if 0
  BOOL GTLayout_LT_RebuildTagList( struct LayoutHandle *handle, LONG clear, struct TagItem *tags );
 #endif

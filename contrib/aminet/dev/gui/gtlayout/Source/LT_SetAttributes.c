@@ -21,6 +21,7 @@
 
 /*****************************************************************************/
 
+#ifndef __AROS__
 VOID
 LT_SetAttributes(LayoutHandle *handle,LONG id,...)
 {
@@ -30,7 +31,7 @@ LT_SetAttributes(LayoutHandle *handle,LONG id,...)
 	LT_SetAttributesA(handle,id,(struct TagItem *)VarArgs);
 	va_end(VarArgs);
 }
-
+#endif
 
 /*****************************************************************************/
 

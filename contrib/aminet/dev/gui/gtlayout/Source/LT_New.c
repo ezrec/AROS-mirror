@@ -113,7 +113,7 @@ LT_AddL(LayoutHandle *handle,LONG type,ULONG labelID,LONG id,...)	/* link librar
 
 /*****************************************************************************/
 
-
+#ifndef __AROS__
 VOID
 LT_New(LayoutHandle *handle,...)	/* link library only */
 {
@@ -123,6 +123,7 @@ LT_New(LayoutHandle *handle,...)	/* link library only */
 	LT_NewA(handle,(struct TagItem *)VarArgs);
 	va_end(VarArgs);
 }
+#endif
 
 
 /*****************************************************************************/

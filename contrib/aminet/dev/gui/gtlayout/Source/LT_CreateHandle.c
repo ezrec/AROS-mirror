@@ -1,3 +1,4 @@
+#include <stdio.h>
 /*
 **	GadTools layout toolkit
 **
@@ -35,7 +36,7 @@ LT_CreateHandle(REG(a0) struct Screen *Screen,REG(a1) struct TextAttr *Font)
 
 /*****************************************************************************/
 
-
+#ifndef __AROS__
 LayoutHandle *
 LT_CreateHandleTags(struct Screen *Screen,...)
 {
@@ -45,10 +46,9 @@ LT_CreateHandleTags(struct Screen *Screen,...)
 	va_start(VarArgs,Screen);
 	Handle = LT_CreateHandleTagList(Screen,(struct TagItem *)VarArgs);
 	va_end(VarArgs);
-
 	return(Handle);
 }
-
+#endif
 
 /*****************************************************************************/
 
@@ -229,7 +229,7 @@ LT_CreateHandleTagList(REG(a0) struct Screen *Screen,REG(a1) struct TagItem *Tag
 	ULONG			WA_ScreenTag;
 	BOOL			UnlockThePubScreen;
 	LONG			TopGroupType = -1; 
-
+*(ULONG *)0x1 = 0x0badc0de;
 	#ifdef DO_PICKSHORTCUTS
 	{
 		ObtainSemaphore(&LTP_KeySemaphore);

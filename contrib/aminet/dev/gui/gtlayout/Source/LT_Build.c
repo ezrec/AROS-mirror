@@ -1055,7 +1055,7 @@ LTP_SelectInitialActiveGadget(LayoutHandle *Handle)
 
 /*****************************************************************************/
 
-
+#ifndef __AROS__
 struct Window *
 LT_Layout(LayoutHandle *handle,STRPTR title,struct IBox *bounds,LONG extraWidth,LONG extraHeight,ULONG IDCMP,LONG align,...)
 {
@@ -1077,7 +1077,7 @@ LT_Layout(LayoutHandle *handle,STRPTR title,struct IBox *bounds,LONG extraWidth,
 
 	return(Result);
 }
-
+#endif
 
 /*****************************************************************************/
 
@@ -1103,6 +1103,7 @@ LT_LayoutA(REG(a0) LayoutHandle *handle,REG(a1) STRPTR title,REG(a2) struct IBox
 /*****************************************************************************/
 
 
+#ifndef __AROS__
 struct Window *
 LT_Build(LayoutHandle *Handle,...)
 {
@@ -1115,6 +1116,7 @@ LT_Build(LayoutHandle *Handle,...)
 
 	return(Result);
 }
+#endif
 
 
 /*****************************************************************************/

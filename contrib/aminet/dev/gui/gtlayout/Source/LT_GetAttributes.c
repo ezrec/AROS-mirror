@@ -21,6 +21,7 @@
 
 /*****************************************************************************/
 
+#ifndef __AROS__
 LONG
 LT_GetAttributes(LayoutHandle *Handle,LONG ID,...)
 {
@@ -33,6 +34,7 @@ LT_GetAttributes(LayoutHandle *Handle,LONG ID,...)
 
 	return(Result);
 }
+#endif
 
 
 /*****************************************************************************/
