@@ -5,7 +5,7 @@ exec_prefix=${prefix}
 exec_prefix_set=no
 
 usage="\
-Usage: sdl-config [--prefix[=DIR]] [--exec-prefix[=DIR]] [--version] [--libs] [--cflags]"
+Usage: freetype-config [--prefix[=DIR]] [--exec-prefix[=DIR]] [--version] [--libs] [--cflags]"
 
 if test $# -eq 0; then
       echo "${usage}" 1>&2
@@ -45,14 +45,14 @@ while test $# -gt 0; do
 
           includes=-I${prefix}/include
       fi
-      echo -I@AROS_INCLUDE@/SDL  -D_REENTRANT
+      echo -I@AROS_INCLUDE@/freetype1/freetype  -D_REENTRANT
       ;;
     --libs)
-      echo -L@AROS_LIB@ $libdirs -lSDL
+      echo -L@AROS_LIB@ $libdirs -lFreetype1
       ;;
     --static-libs)
 #    --libs|--static-libs)
-      echo -L@AROS_LIB@ -lSDL
+      echo -L@AROS_LIB@ -lFreetype1
       ;;
     *)
       echo "${usage}" 1>&2
