@@ -1,9 +1,9 @@
-# Copyright © 2003-2004, The AROS Development Team. All rights reserved.
+# Copyright © 2004, The AROS Development Team. All rights reserved.
 # $Id$
 
-include ../make.cfg
+-include $(TOP)/config/make.cfg
 
-#MM- contrib-gnu : contrib-gnu-grep
-#MM contrib-gnu-grep : contrib-development-parsers-pcre
-	
-%build_with_configure mmake=contrib-gnu-grep nix=yes prefix=$(GNUDIR)/grep
+##MM- contrib-gnu : contrib-gnu-grep
+##MM- contrib-gnu-grep : development-grep
+
+%fetch_and_build_gnu_development package=grep version=2.5.1 patch=yes
