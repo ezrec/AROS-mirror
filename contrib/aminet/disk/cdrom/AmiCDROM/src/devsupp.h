@@ -11,6 +11,9 @@ extern int g_file_buffers;
 extern CDROM *g_cd;
 
 #if !defined(NDEBUG) || defined(DEBUG_SECTORS)
+
+typedef struct MsgPort PORT;
+
 extern PORT *Dbport;
 extern PORT *Dback;
 extern short DBDisable;
