@@ -11,6 +11,9 @@
  * Description: Test program for the clipped view groups.
  *
  * $Log$
+ * Revision 42.3  2000/07/06 22:42:59  bergers
+ * Bugfix.
+ *
  * Revision 42.2  2000/07/04 05:02:22  bergers
  * Made examples compilable.
  *
@@ -118,7 +121,7 @@ int main(void)
 {
    Object            *c, *p, *m, *v, *s1, *s2, *s3;
 
-   IntuitionBase = OpenLibrary("intuition.library",0);
+   IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",0);
 
    BGUIBase = OpenLibrary("bgui.library",37);
 
