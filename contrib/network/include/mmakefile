@@ -18,21 +18,21 @@ FILES := \
     utmp.h
 
 INCLUDES      := $(foreach d,$(INCSUBDIRS),$(wildcard $(d)/*.h)) $(FILES)
-DEST_INCLUDES := $(foreach f,$(INCLUDES),$(INCDIR)/$(f))
+DEST_INCLUDES := $(foreach f,$(INCLUDES),$(AROS_INCLUDES)/$(f))
 
 #MM network-includes : includes setup-network-includes
 network-includes : $(DEST_INCLUDES)
 	@$(NOP)
 
-$(INCDIR)/%.h : %.h
+$(AROS_INCLUDES)/%.h : %.h
 	$(CP) $< $@
 
 #MM
 setup-network-includes :
-	@$(FOR) dir in $(INCDIR) $(foreach f,$(INCSUBDIRS),$(INCDIR)/$(f)) ; do \
+	@$(FOR) dir in $(AROS_INCLUDES) $(foreach f,$(INCSUBDIRS),$(AROS_INCLUDES)/$(f)) ; do \
 	   $(IF) $(TEST) ! -d "$$dir" ; then $(MKDIR) "$$dir" ; else true ; fi ;\
 	done
 
 #MM
 clean :
-	-$(RM) $(INCDIR)
+	-$(RM) $(AROS_INCLUDES)

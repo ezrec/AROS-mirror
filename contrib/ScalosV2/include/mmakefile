@@ -11,19 +11,19 @@ INCSUBDIRS := \
 	scalos
 
 INCLUDES      := $(foreach d,$(INCSUBDIRS),$(wildcard $(d)/*.h))
-DEST_INCLUDES := $(foreach f,$(INCLUDES),$(INCDIR)/$(f))
+DEST_INCLUDES := $(foreach f,$(INCLUDES),$(AROS_INCLUDES)/$(f))
 
 #MM includes-scalos : setup-includes-scalos
 includes-scalos : $(DEST_INCLUDES)
 	@$(NOP)
 
-$(INCDIR)/%.h : %.h
+$(AROS_INCLUDES)/%.h : %.h
 	$(CP) $< $@
 
 #MM
 setup-includes-scalos :
-	@$(FOR) dir in $(INCDIR)         \
-		$(foreach f,$(INCSUBDIRS),$(INCDIR)/$(f)) \
+	@$(FOR) dir in $(AROS_INCLUDES)         \
+		$(foreach f,$(INCSUBDIRS),$(AROS_INCLUDES)/$(f)) \
 		$(GENINCDIR) \
 		$(foreach f,$(INCSUBDIRS),$(GENINCDIR)/$(f)) \
 	; do \
