@@ -140,9 +140,7 @@ def makePictures():
             'CONTENT' : output
         }
         
-        file \
-        ( 
-            #os.path.join( DSTROOT, root, 'index.html.en' ), 'w'
+        file( 
             os.path.join( DSTROOT, root, 'index.php' ), 'w'
         ).write( TEMPLATE_DATA % strings )
 
@@ -233,16 +231,12 @@ def processWWW( src, depth ):
     suffix = os.path.splitext( src )[1][1:]
     if suffix not in LANGUAGES: return
 
-    dst     = prefix + '.php' # .' + suffix
+    dst     = prefix + '.php'
     dst_abs = os.path.normpath( os.path.join( DSTROOT, dst ) )
     src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
     dst_dir = os.path.dirname( dst_abs )
 
     makedir( dst_dir )
-
-    #_tmp_src = os.path.join( SRCROOT, 'targets/www/htaccess' )
-    #_tmp_dst = os.path.join( dst_dir, '.htaccess' )
-    #copy( _tmp_src, _tmp_dst )
 
     if newer( [ TEMPLATE, src_abs ], dst_abs ):
         reportBuilding( src )
@@ -373,8 +367,6 @@ def buildWWW():
     )
     
     os.system( 'chmod -R go+r %s' % DSTROOT )
-    #os.system( 'chmod +x %s' % os.path.join( DSTROOT, 'download/index.html.en' ) )
-    #os.system( 'chmod +x %s' % os.path.join( DSTROOT, 'download/index.html' ) )
 
 def buildHTML():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'html' )
