@@ -1,0 +1,812 @@
+TABLE OF CONTENTS
+
+Toolbar.mcc/Toolbar.mcc
+Toolbar.mcc/MUIA_Toolbar_Description
+Toolbar.mcc/MUIA_Toolbar_HelpString
+Toolbar.mcc/MUIA_Toolbar_Horizontal
+Toolbar.mcc/MUIA_Toolbar_ImageGhost
+Toolbar.mcc/MUIA_Toolbar_ImageNormal
+Toolbar.mcc/MUIA_Toolbar_ImageSelect
+Toolbar.mcc/MUIA_Toolbar_ImageType
+Toolbar.mcc/MUIA_Toolbar_ParseUnderscore
+Toolbar.mcc/MUIA_Toolbar_Path
+Toolbar.mcc/MUIA_Toolbar_Permutation
+Toolbar.mcc/MUIA_Toolbar_Qualifier
+Toolbar.mcc/MUIA_Toolbar_Reusable
+Toolbar.mcc/MUIM_Toolbar_BottomEdge
+Toolbar.mcc/MUIM_Toolbar_KillNotify
+Toolbar.mcc/MUIM_Toolbar_KillNotifyObj
+Toolbar.mcc/MUIM_Toolbar_LeftEdge
+Toolbar.mcc/MUIM_Toolbar_MultiSet
+Toolbar.mcc/MUIM_Toolbar_Notify
+Toolbar.mcc/MUIM_Toolbar_Redraw
+Toolbar.mcc/MUIM_Toolbar_ReloadImages
+Toolbar.mcc/MUIM_Toolbar_RightEdge
+Toolbar.mcc/MUIM_Toolbar_Set
+Toolbar.mcc/MUIM_Toolbar_TopEdge
+Toolbar.mcc/Toolbar.mcc
+
+	The toolbar custom class supplies an easy way of implementing a
+	toolbar in your programs.  It features a multitude of different
+	settings and the majority of these are configurable for the user via
+	the MUI preferences system.
+
+	The class is distributed as Polymorph-ware. Please read the docs
+	for more information about this concept.
+
+	If you have any questions you can contact me at Floyd@Amiga.DK. The
+	latest version of Toolbar.mcc can be found at the following URL:
+
+	http://www.DIKU.DK/students/benny/
+Toolbar.mcc/MUIA_Toolbar_Description
+
+    NAME
+	MUIA_Toolbar_Description -- [I..], struct MUIP_Toolbar_Description *
+
+    FUNCTION
+	This attribute is used to describe the initial contents and the
+	initial state of the toolbar.
+
+    INPUTS
+	The argument is a pointer to a list of structures. The structure
+	is defined in 'mui/Toolbar_mcc.h'
+
+	Type = The type of field. It can be one of the following types:
+
+	    TDT_BUTTON
+	    TDT_SPACE  // Also possible to use MUIA_Toolbar_Permuatation
+	    TDT_IGNORE // Obsolete - use MUIA_Toolbar_Permutation instead
+	    TDT_END    // Only at the end of the list.
+
+	    The size of a space can be set by the user in the preferences
+	    program. The default is 20.
+	    The last entry in a descriptionlist must be TDT_END.
+
+	Key = This is the hotkey corresponding to a press on the button. If
+	    the hotkey is a letter which is present in the tooltext then
+	    this letter will be underlined. Always write this letter in
+	    lowercase.
+
+	Flags = The flags reflect the state of the button. The following
+	    special values are available:
+
+	    TDF_TOGGLE    Set this if you want the button to support an
+	                  on/off kind of nature.
+	    TDF_RADIO     Should it behave like a radio button. Only set
+	                  this if you have also set TDF_TOGGLE.
+	    TDF_GHOSTED   Guess!
+	    TDF_GONE      This flag makes the button disappear - useful for
+	                  a button like the 'Stop' button in Internet
+	                  browsers.
+	    TDF_SELECTED  If TDF_TOGGLE is set you can set this flag to make
+	                  the button selected/pressed/active or whatever you
+	                  like to call it :-).
+
+	ToolText = This is a pointer to the text beneath the icon. The width
+	    of the icons will be adjusted to make room for the widest text.
+	    It is not neccesary to specify tooltexts.
+
+	HelpString = You do not have to specify help strings either, but if
+	    you do, they will be used for help-bubbles. It will also be used
+	    in connection with MUIA_Toolbar_HelpString.
+
+	MutualExclude = This is a bit-field representing the toggle-buttons
+	    which should be deactivated/unselected when this button is
+	    pressed. Bit 0 (LSB) is the first field (spaces and 'ignores'
+	    are also counted although it doesn't make sence to deactivate
+	    these), bit 1 is the second field, ... . These values are
+	    independent of MUIA_Toolbar_Permuatation.
+
+    EXAMPLE
+	See "Toolbar-Demo.c".
+
+    NOTES
+	The toolbar has a limit of 32 fields. This should probably not be
+	a serious limitation, but you are welcome to dispute this claim if
+	you like - then I might consider an alternative solution.
+
+	You MUST remember the following two points:
+
+	· Do NOT free the memory occupied by this structure unless you have
+	  disposed the toolbar and do not need it any more. You can change
+	  the contents though - see MUIM_Toolbar_Redraw.
+
+	· Do not reuse the structure for other toolbars unless you have
+	  set the MUIA_Toolbar_Reusable attribute.
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+	MUIA_Toolbar_HelpString, MUIA_Toolbar_Permuatation
+	MUIA_Toolbar_Reusable, MUIM_Toolbar_Redraw
+Toolbar.mcc/MUIA_Toolbar_HelpString
+
+    NAME
+	MUIA_Toolbar_HelpString -- [..G], STRPTR
+
+    FUNCTION
+	The main purpose of this attribute is to use a notification event to
+	connect it with some kind of textobject (or anything that accepts
+	a string-pointer as argument).
+
+	Please notice that you still have to set the attribute
+	MUIA_ShortHelp if you want to enable bubble-help. You can e.g. set
+	it to TRUE.
+
+    EXAMPLE
+	/* A typical notification event could look like the following  */
+
+	DoMethod(toolbarobj, MUIM_Notify, MUIA_Toolbar_HelpString,
+            MUIV_EveryTime,
+	    textobj, 3, MUIM_Set, MUIA_Text_Contents, MUIV_TriggerValue);
+
+    RESULT
+	First of all the result depends on the position of the mouse. If
+	the mouse is over a button then the HelpString of this button will
+	be used as the result. If the mouse is not over a button the
+	result will simply be an empty string.
+
+	Furthermore the result depends on whether or not there is a
+	HelpString available. If not then the ToolText will be returned
+	instead.
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+
+Toolbar.mcc/MUIA_Toolbar_Horizontal
+
+    NAME
+	MUIA_Toolbar_Horizontal -- [I..], BOOL
+
+    FUNCTION
+	This attribute simply tells the toolbarobject whether it should
+	render itself horizontally or vertically. Its default value is
+	TRUE.
+
+    BUGS
+	No known bugs.
+
+    NOTES
+
+    SEE ALSO
+
+Toolbar.mcc/MUIA_Toolbar_ImageGhost
+
+    NAME
+	MUIA_Toolbar_ImageGhost -- [IS.]
+
+    FUNCTION
+	This is an optional attribute to specify a special image for the
+	ghosted buttons. If it is not specified then the normal image and
+	a ghosting effect will be used instead.
+
+    INPUTS
+	The argument depends on the choice of imagetype specified by
+	MUIA_Toolbar_ImageType.
+
+    NOTES
+	If MUIA_Toolbar_ImageType is set to MUIV_Toolbar_ImageType_File then
+	I strongly suggest that you always specify this attribute too. If
+	the file is not found then the toolbar will just use the normal
+	image instead. This gives the user the possibility of making these
+	special images even if you did not include any with your program
+	originally. Remember to write the filenames in your documentation.
+
+	The toolbar class uses the 'transparency colour' as the background
+	colour of the images. Make sure that this colour is saved correctly
+	with the brush. See the guide (Docs/Toolbar.guide) for more
+	information.
+
+    SEE ALSO
+	MUIA_Toolbar_ImageType, MUIM_Toolbar_ImageNormal,
+	MUIA_Toolbar_ImageSelect
+
+Toolbar.mcc/MUIA_Toolbar_ImageNormal
+
+    NAME
+	MUIA_Toolbar_ImageNormal -- [IS.]
+
+    FUNCTION
+	This image should be specified. It is mainly used for the normal
+	un-selected look of the tool-buttons, but it might also be used for
+	the ghosted look or the selected look if these images are not
+	specified or not found. If the normal image cannot be found then
+	the toolbar automatically changes to text mode.
+
+	The image should be saved in the correct size. This size naturally
+	depends on the size of the icons. If you have six icons of width x
+	then the image should be 6*x+5. The extra five pixels are used for
+	vertical lines between the icons that should help you organizing
+	the icons. Please see the example images if this seems a little
+	hazy.
+
+    INPUTS
+	The argument depends on the choice of imagetype specified by
+	MUIA_Toolbar_ImageType. If you use MUIV_Toolbar_ImageType_File then
+	the format of the picture can be anything supported by datatypes.
+
+    NOTES
+	The toolbar class uses the 'transparency colour' as the background
+	colour of the images. Make sure that this colour is saved correctly
+	with the brush. See the guide (Docs/Toolbar.guide) for more
+	information.
+
+    SEE ALSO
+	MUIA_Toolbar_ImageGhost, MUIM_Toolbar_ImageType,
+	MUIA_Toolbar_ImageSelect
+
+Toolbar.mcc/MUIA_Toolbar_ImageSelect
+
+    NAME
+	MUIA_Toolbar_ImageSelect -- [IS.]
+
+    FUNCTION
+	This is an optional attribute to specify a special image for the
+	selected buttons. If it is not specified then the normal image will
+	be used instead (which in most cases look fine).
+
+    INPUTS
+	The argument depends on the choice of imagetype specified by
+	MUIA_Toolbar_ImageType.
+
+    NOTES
+	If MUIA_Toolbar_ImageType is set to MUIV_Toolbar_ImageType_File then
+	I strongly suggest that you always specify this attribute too. If
+	the file is not found then the toolbar will just use the normal
+	image instead. This gives the user the possibility of making these
+	special images even if you did not include any with your program
+	originally. Remember to write the filenames in your documentation.
+
+	The toolbar class uses the 'transparency colour' as the background
+	colour of the images. Make sure that this colour is saved correctly
+	with the brush. See the guide (Docs/Toolbar.guide) for more
+	information.
+
+    SEE ALSO
+	MUIA_Toolbar_ImageGhost, MUIM_Toolbar_ImageNormal,
+	MUIA_Toolbar_ImageType
+
+Toolbar.mcc/MUIA_Toolbar_ImageType
+
+    NAME
+	MUIA_Toolbar_ImageType -- [I..], ULONG
+
+    SPECIAL INPUTS
+	MUIV_Toolbar_ImageType_File
+	MUIV_Toolbar_ImageType_Memory (not implemented)
+	MUIV_Toolbar_ImageType_Object
+
+    FUNCTION
+	This determines the image type used for MUIA_Toolbar_ImageGhost,
+	MUIA_Toolbar_ImageNormal and MUIA_Toolbar_ImageSelect.
+
+	MUIV_Toolbar_ImageType_File indicates that you will supply the
+	attributes with filenames (STRPTR) and MUIV_Toolbar_ImageType_Object
+	that you will supply them with datatypes objects (Object *).
+
+    NOTES
+
+    SEE ALSO
+	MUIA_Toolbar_ImageGhost, MUIM_Toolbar_ImageNormal,
+	MUIA_Toolbar_ImageSelect
+
+Toolbar.mcc/MUIA_Toolbar_ParseUnderscore
+
+    NAME
+	MUIA_Toolbar_ParseUnderscore -- [I..], BOOL
+
+    FUNCTION
+	If your tooltexts contain underscores then you can use this
+	attribute to make the toolbar class parse these underscores and
+	initialize the correct hotkeys.
+
+	The default value is FALSE.
+
+    EXAMPLES
+	The text "Co_py" would be changed to "Copy" and 'p' would be used
+	as hotkey.
+
+    SEE ALSO
+Toolbar.mcc/MUIA_Toolbar_Path
+
+    NAME
+	MUIA_Toolbar_Path -- [ISG], STRPTR
+
+    FUNCTION
+	This attribute should make it easier to provide configurable
+	toolbar images. Instead of changing three filenames you can now just
+	change the path.
+
+	I strongly recommend the use of this attribute and that you make the
+	path user configurable.
+
+    EXAMPLE
+	/* Let us assume that you have the directories 'Small' and 'Large'
+	   containing two different sets of images.
+
+	   To create the toolbar with the images in 'Small' you could write */
+	Object *tb = ToolbarObject,
+		MUIA_Toolbar_Path,        "ProgDir:Small",
+		MUIA_Toolbar_ImageNormal, "Normal.iff",
+		MUIA_Toolbar_ImageSelect, "Selected.iff",
+		MUIA_Toolbar_ImageGhost,  "Ghosted.iff",
+		...,
+	End;
+
+	/* To change to the images in 'Large' simply write */
+	set(tb, MUIA_Toolbar_Path, "ProgDir:Large");
+
+    NOTES
+	Remember that if you use this attribute then you should no longer
+	include the path in the filenames of the images.
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+	MUIA_Toolbar_ImageGhost, MUIA_Toolbar_ImageNormal
+	MUIA_Toolbar_ImageSelect
+Toolbar.mcc/MUIA_Toolbar_Permutation
+
+    NAME
+	MUIA_Toolbar_Permutation -- [ISG], BYTE *
+
+    FUNCTION
+	This attribute actually shows a fundamental change in the toolbar
+	construction. Since version 15.6 of the toolbar it has internally
+	worked with a dynamic list of tool buttons. This means that it
+	has become more flexible. The argument for the attribute is simply
+	a permutation of tool/space numbers represented as a byte array.
+	As an additional feature you can provide extra spaces with the
+	special value TP_SPACE. In other words you do not need any spaces
+	in your toolbar description structure. The array should be
+	terminated with the special value TP_END.
+
+	The name of this attribute is not 100% correct since it provides
+	more than a permutation of the tool buttons.
+
+	Currently this attribute will mainly be useful in the development
+	phase, because you do not have to change the image files quite as
+	often to change the toolbar. An obvious further development would
+	be to make an editor class that would make this permutation
+	accessible to the user.
+
+    EXAMPLE
+	/* If we assume that the toolbar structure contains buttons 0 to 5
+	   then a permutation with some extra spaces could be made
+	   in the following way */
+
+	BYTE permutation[] = { 2, 3, TP_SPACE, 0, 1, TP_SPACE, 4, 5, TP_END};
+	set(toolbarobj, MUIA_Toolbar_Permutation, permutation);
+
+    NOTES
+	THIS ATTRIBUTE IS SUBJECT FOR CHANGE.
+
+	I have not yet decided whether this attribute is the most flexible
+	solution, and I am still considering alternatives. Please do not use
+	the attribute in any releases without contacting me first.
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+Toolbar.mcc/MUIA_Toolbar_Qualifier
+
+    NAME
+	MUIA_Toolbar_Qualifier -- [.SG], UWORD
+
+    FUNCTION
+	The purpose of this attribute is to provide an easy way to obtain
+	the key qualifier used with an activated button. The value is a
+	copy of the Qualifier field in the IntuiMessage structure.
+
+	In toolbar notifications there is a special value available
+	(MUIV_Toolbar_Qualifier) which can be used in the notify statement.
+	See MUIM_Toolbar_Notify.
+
+    EXAMPLE
+	UWORD qualifier;
+	get(toolbarobj, MUIA_Toolbar_Qualifier, &qualifier);
+	
+	if(qualifier & IEQUALIFIER_CONTROL)
+	    printf("Ctrl pressed with qualifier.\n");
+
+    NOTES
+	Notice that the value will be overwritten when the next input
+	event is handled.
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+	MUIM_Toolbar_Notify, devices/inputevent.h
+Toolbar.mcc/MUIA_Toolbar_Reusable
+
+    NAME
+	MUIA_Toolbar_Reusable -- [I..], BOOL
+
+    FUNCTION
+	This attribute is only for initialization. It reflects whether
+	or not the toolbar description structure should be copied.
+	The default is FALSE.
+
+	It is especially useful if you have multiple windows with
+	identical toolbars.
+
+    NOTES
+	Be aware that it is only the structure and the information
+	it contains that will be copied. The strings which the structure
+	points to are not copied. E.g. the helptext for a button is not
+	copied since only the pointer to the helptext is part of the
+	structure.
+
+	Please notice that you cannot use MUIM_Toolbar_Redraw if you have
+	set this attribute on TRUE.
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+	MUIM_Toolbar_Redraw
+
+Toolbar.mcc/MUIM_Toolbar_BottomEdge
+
+    NAME
+	DoMethod(obj, MUIM_Toolbar_BottomEdge, ULONG Button);
+
+    FUNCTION
+	With this method you can get the position of the bottom edge of
+	any button in the toolbar. This value could e.g. be used to place
+	a popup-window below a toolbar button.
+
+	This value is also available as a notification event.
+
+    INPUTS
+	Button - the number of the button
+
+    EXAMPLE
+
+    RESULT
+	The result is naturally the position of the bottom edge measured in
+	pixels.
+
+    NOTES
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+	MUIM_Toolbar_LeftEdge, MUIM_Toolbar_RightEdge, MUIM_Toolbar_TopEdge
+Toolbar.mcc/MUIM_Toolbar_KillNotify
+
+    NAME
+	DoMethod(obj, MUIM_Toolbar_KillNotify, ULONG TrigButton, ULONG TrigAttr);
+
+    FUNCTION
+	This method kills a previously defined notification event. It will
+	only kill the first event that satisfies the arguments.
+
+    INPUTS
+	TrigButton       The button number.
+	TrigAttr         The notificationattribute.
+
+    EXAMPLE
+    	/* This kills the notification event specified in the example above */
+
+	DoMethod(toolbarobj, MUIM_Toolbar_KillNotify, 3,
+	                     MUIV_Toolbar_Pressed);
+
+    RESULT
+	Returns TRUE if successful.
+
+    NOTES
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+Toolbar.mcc/MUIM_Toolbar_KillNotifyObj
+
+    NAME
+	DoMethod(obj, MUIM_Toolbar_KillNotifyObj);
+
+    FUNCTION
+	This method kills all previously defined notification events
+	associated with the object.
+
+    RESULT
+	Always returns TRUE.
+
+    NOTES
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+
+Toolbar.mcc/MUIM_Toolbar_LeftEdge
+
+    NAME
+	DoMethod(obj, MUIM_Toolbar_LeftEdge, ULONG Button);
+
+    FUNCTION
+	See MUIM_Toolbar_BottomEdge.
+
+    INPUTS
+	Button - the number of the button
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+	MUIM_Toolbar_BottomEdge, MUIM_Toolbar_RightEdge,
+	MUIM_Toolbar_TopEdge
+Toolbar.mcc/MUIM_Toolbar_MultiSet
+
+    NAME
+	DoMethod(obj, MUIM_Toolbar_MultiSet, ULONG Flag, ULONG Value,
+	         ULONG Button1, ULONG Button2, /* ... */);
+
+    FUNCTION
+	This method can be used to set the state of several buttons
+	simultaneously. It is especially useful in notification events.
+
+    INPUTS
+	Flag         You can set/unset one of the following flags:
+	             MUIV_Toolbar_Set_Ghosted
+	             MUIV_Toolbar_Set_Gone
+	             MUIV_Toolbar_Set_Selected (only toggle-buttons)
+
+	Value        TRUE or FALSE
+
+	ButtonX, ... A list of buttons terminated by -1 and NOT by NULL.
+
+
+    EXAMPLE
+	/* Ghost button number 2, 4 and 7 */
+	DoMethod(toolbarobj, MUIM_Toolbar_MultiSet,
+	         MUIV_Toolbar_Set_Ghosted, TRUE, 2, 4, 7, -1);
+
+    NOTES
+	Please take a look at the notes of MUIM_Toolbar_Set.
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+
+Toolbar.mcc/MUIM_Toolbar_Notify
+
+    NAME
+	DoMethod(obj, MUIM_Toolbar_Notify, ULONG TrigButton, ULONG TrigAttr,
+	    ULONG TrigValue, APTR DestObj, ULONG FollowParams, /* ... */);
+
+    FUNCTION
+	This is a method that works with the internal notificationsystem
+	for the toolbar class. It works just like the normal system of
+	notifications, but handles an extra argument - ULONG TrigButton.
+	This is neccesary if you want to be able to give each button its
+	own set of notification events.
+
+    INPUTS
+	TrigButton     The button number
+	TrigAttr       Attribute that triggers the notification. It can be one
+	               of the following:
+
+	    MUIV_Toolbar_Notify_Pressed
+	    MUIV_Toolbar_Notify_Active  (not yet implemented)
+	    MUIV_Toolbar_Notify_Ghosted
+	    MUIV_Toolbar_Notify_Gone
+	    MUIV_Toolbar_Notify_LeftEdge
+	    MUIV_Toolbar_Notify_RightEdge
+	    MUIV_Toolbar_Notify_TopEdge
+	    MUIV_Toolbar_Notify_BottomEdge
+
+	TrigValue      The value that triggers the notification. Normally
+	               TRUE/FALSE except MUIV_Toolbar_Notify_Active.  When
+	               using MUIV_Toolbar_Notify_Pressed you should be
+	               aware that it reacts differently when the TDF_TOGGLE
+	               flag is set.  Normally it is TRUE when the user
+	               presses the button and FALSE when he releases the
+	               button.  If it is a toggle-button it will be TRUE
+	               when the user presses the button and the button goes
+	               down and it will be FALSE when the user presses the
+	               button and the button goes up.  This means that a
+	               toggle button never cause a notification when the
+	               mousebutton is released.
+
+	               The special values MUIV_EveryTime, MUIV_TriggerValue
+	               and MUIV_NotTriggerValue are supported.
+
+	DestObj        Object to be notified.
+	               The special values MUIV_Notify_Self, MUIV_Notify_Window
+	               and MUIV_Notify_Application are supported.
+
+	FollowParams   The number of following parameters.
+
+	...            The following parameters. Here you can also use the
+	               special value MUIV_Toolbar_Qualifier if you need to
+                       provide the qualifier used with the event.
+
+    EXAMPLE
+	/* Quit if button number 3 is pressed (and released) */
+	DoMethod(toolbarobj, MUIM_Toolbar_Notify,
+	    3,                            /* Button number */
+	    MUIV_Toolbar_Notify_Pressed,  /* Attribute */
+	    FALSE,                        /* Value that triggers the notify */
+	    app,                          /* Destination object */
+	    2,                            /* Number of following param. */
+	    MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+
+	See "Toolbar-Demo.c" for more examples.
+
+    RESULT
+	In most cases this method will return TRUE. It is only the lack of
+	memory that might cause a negative result.
+
+    NOTES
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+	MUIM_Toolbar_KillNotify, MUIM_Toolbar_KillNotifyObj
+
+Toolbar.mcc/MUIM_Toolbar_Redraw
+
+    NAME
+	DoMethod(obj, MUIM_Toolbar_Redraw, ULONG Changes);
+
+    FUNCTION
+	This method is very useful if you are going to make some major
+	changes to the toolbar. It simply tells the toolbar object to
+	redraw itself.
+
+	Before you call this method you can make a lot of changes in your
+	description list. You are allowed to change the following fields:
+
+	Key, Flags, HelpString and MutualExclude.
+
+	You can also change the ToolText, but if the new text is wider than
+	the widest of the existing tooltexts you will probably get some
+	graphical errors.
+
+	If you change anything else, you will have to 're-create' the
+	object (dispose and create).
+
+    INPUTS
+	Changes   This value should have its bits set corresponding to the
+	          changed buttons. If you have changed buttons number 2, 4
+		  and 8 you would set this inputvalue to:
+	          %10001010 = $8A
+	          If you simply want to redraw the entire toolbar you can
+	          use $FFFFFFFF (or -1) as argument (this is actually good
+	          enough in most cases even if you haven't changed all
+	          entries in the toolbar).
+	          
+	          IMPORTANT:
+	          Remember that spaces and 'ignores' also count when you
+	          specify the button numbers. E.g. if your toolbar is
+	          specified as [Button1, Space, Button2, Ignore, Button3,
+	          End] then Button1 is bit number 0, Button2 is bit number
+	          2 and Button3 is bit number 4 - corresponding to the bit
+		  pattern %00010101 = $13.
+
+    EXAMPLE
+
+    RESULT
+	This method always return TRUE.
+
+    NOTES
+	You cannot use this method if you have set the MUIA_Toolbar_Reusable
+	attribute to TRUE.
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+	MUIA_Toolbar_Reusable
+Toolbar.mcc/MUIM_Toolbar_ReloadImages
+
+    NAME
+	DoMethod(obj, MUIM_Toolbar_ReloadImages,
+	         STRPTR Normal, STRPTR Select, STRPTR Ghost);
+
+    FUNCTION
+	This method makes it possible to change the images used by the
+	toolbar without closing the window which contains the toolbar.
+	The purpose of this is to make it easy to give the user the
+	option of changing the image files.
+
+    INPUTS
+	Simply supply three filenames as the filenames supplied to the
+	MUIA_Toolbar_Image* attributes. Use NULL for any non-existent
+	image-files.
+
+	In most cases it will be easier to make use of MUIA_Toolbar_Path.
+
+    EXAMPLE
+	DoMethod(toolbarobj, MUIM_Toolbar_ReloadImages,
+	         "Image_N", "Image_S", "Image_G");
+
+    RESULT
+	The method returns TRUE if the change is successful (not
+	neccesarily meaning that the files exist).
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+	MUIA_Toolbar_Path
+Toolbar.mcc/MUIM_Toolbar_RightEdge
+
+    NAME
+	DoMethod(obj, MUIM_Toolbar_RightEdge, ULONG Button);
+
+    FUNCTION
+	See MUIM_Toolbar_BottomEdge.
+
+    INPUTS
+	Button - the number of the button.
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+	MUIM_Toolbar_BottomEdge, MUIM_Toolbar_LeftEdge,
+	MUIM_Toolbar_TopEdge
+Toolbar.mcc/MUIM_Toolbar_Set
+
+    NAME
+	DoMethod(obj, MUIM_Toolbar_Set, ULONG Button, ULONG Flag, ULONG Value);
+
+    FUNCTION
+	This method can be used to set the state of a button. It is
+	especially useful in notification events.
+
+    INPUTS
+	Button    The button that is going to change.
+
+	Flag      You can set/unset one of the following flags:
+	          MUIV_Toolbar_Set_Ghosted
+	          MUIV_Toolbar_Set_Gone
+	          MUIV_Toolbar_Set_Selected (only toggle-buttons)
+
+	Value     TRUE or FALSE
+
+    EXAMPLE
+	/* Ghost button number 3 */
+	DoMethod(toolbarobj, MUIM_Toolbar_Set, 3, MUIV_Toolbar_Set_Ghosted, TRUE);
+
+    NOTES
+	Button numbers should not be taken too literally. Button number 3
+	would actually be the forth in a toolbar since button number 0
+	also counts. If there are any TDT_SPACE or TDT_IGNORE these will
+	count as well. This is done to make the number conform to the offset
+	in the descriptionlist.
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+Toolbar.mcc/MUIM_Toolbar_TopEdge
+
+    NAME
+	DoMethod(obj, MUIM_Toolbar_TopEdge, ULONG Button);
+
+    FUNCTION
+	See MUIM_Toolbar_BottomEdge.
+
+    INPUTS
+	Button - the number of the button
+
+    BUGS
+	No known bugs.
+
+    SEE ALSO
+	MUIM_Toolbar_BottomEdge, MUIM_Toolbar_LeftEdge,
+	MUIM_Toolbar_RightEdge
+

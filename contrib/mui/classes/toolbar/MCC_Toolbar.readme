@@ -1,0 +1,53 @@
+Short:    Toolbar custom class for MUI (v15.11) [OS3/OS4/MOS]
+Author:   Benny Kjær Nielsen <Floyd@Amiga.DK>, Darius Brewka <d.brewka@freenet.de>, Jens Langner <Jens.Langner@light-speed.de>
+Uploader: Jens Langner <Jens.Langner@light-speed.de>
+Version:  15.11 (27-Jul-04)
+Type:     dev/mui
+Requires: AmigaOS 3.0+ or MorphOS, MUI 3.8+, 68020+/PPC604e+
+
+The name almost says it all. It is a MUI custom class that allows easy (very
+easy) implementation of toolbars in all kinds of MUI programs. It features a
+multitude of different settings and the majority of these are configurable for
+the user via the MUI preferences system.
+
+Version 15.7+ updated by Darius Brewka <d.brewka@freenet.de>
+                         and Jens Langner <Jens.Langner@light-speed.de>
+
+Special native binary versions for AmigaOS4 and MorphOS are included and can be
+copied over older versions without any problem:
+
+Short History:
+
+Version 15.11 (27-Jul-04) <Jens.Langner@light-speed.de>
+- reenabled the mccprefs gadget registering which allows to set presets to
+  any gadget available in the .mcp preferences pane.
+- fixed some gcc v3 dependent compiler warnings. (The AmigaOS4 build is now
+  compiled with gcc 3.4.1)
+- integrated some minor code changes to the mccheader.c code, thankfully provided by
+  Gunther Nikl.
+
+Version 15.10 (08-Jul-04) <Jens.Langner@light-speed.de>
+- fixed a bug where Toolbar.mcc crashed on some systems because of an uninitialized
+  Utility library base pointer.
+
+Version 15.9 (03-Jul-04) <Jens.Langner@light-speed.de>
+- fixed a minor bug where a user wasn't able to use LALT+LCOMMAND to click on a
+  button.
+- added AmigaOS4 native PPC support.
+- reorganized source code a bit and generated new makefiles for all target
+  platforms (AmigaOS3/AmigaOS4/MorphOS).
+
+Version 15.8 (22-Feb-03) <Jens.Langner@light-speed.de>
+- added MUIA_Version/Revision get attributes to both, the .mcc and .mcp so
+  that third party programs can query the correct version and revision numbers
+  out of the subclass.
+- totally removed the imagepool.library usage as this library is way to buggy
+  to still use it. Sorry, but imagepool.library support is obsolete now.
+- fixed several tiny bugs within the Toolbar Notify method where it could have
+  happend that a MUIV_TriggerValue wasn`t correctly substituted.
+- replaced library startup code with a more .mcc compliant one, which fixes also
+  the VER: string within Toolbar.mcc/mcp
+- removed all mixed c++ constructs in the source code and made the mcc fully
+  C conform. Now also SAS/C is used for the 68k version and in addition to
+  that we also have a MorphOS version now.
+

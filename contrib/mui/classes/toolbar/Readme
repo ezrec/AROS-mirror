@@ -1,0 +1,43 @@
+This archive contains two classes to be used with MUI (Magic User Interface).
+
+----
+
+Toolbar.mcc is released under the concept of Polymorphware. This means that
+whatever you demand of your users I will demand from you. A couple of examples
+might make it clearer. If your software uses my class and you have released
+it as postcard-ware then you have to mail me a postcard. If you have released
+it as shareware then you have to pay me the shareware-fee.
+
+There is one exception though. Commercial software-developers will have to
+contact me to get an explicit permission to use my class.
+
+This concept was first used by Allan Odgaard :)
+
+----
+
+InfoText.mcc is freeware. You can use it in whatever you like even
+commercial programs.
+
+----
+
+If you want to see what is new or changed then please look in the
+AmigaGuide file: Docs/Toolbar.guide.
+
+I take no responsibility in any damage caused by these classes. If you find
+any bugs or have any new ideas you are welcome to write me an email.
+
+(Author suspends the development)
+
+Benny Kjær Nielsen
+
+Email: Floyd@Amiga.DK
+URL:   http://www.diku.dk/students/benny/
+
+
+Since 15.7 you could contact d.brewka@freenet.de or jens.langner@light-speed.de
+for ideas and more.
+
+Additional since 15.7:
+ Benny has stopped the development of Toolbar.mcc, my Part of Toolbar.mcc/mcp is public and
+ usable for Free.
+ I'm also not liable for any damages on your Hard and or Software.
