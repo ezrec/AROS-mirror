@@ -10,10 +10,6 @@
 #include <proto/dos.h>
 #endif
 
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif /* HAVE_UNISTD_H */
-
 #ifdef WITH_NEXT_FRAMEWORK
 #include <mach-o/dyld.h>
 #endif

@@ -20,10 +20,6 @@ Data members:
 
 #include "osdefs.h"
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
 #ifdef MS_COREDLL
 extern void *PyWin_DLLhModule;
 /* A string loaded from the DLL at startup: */
@@ -160,7 +156,7 @@ static char exit_doc[] =
 \n\
 Exit the interpreter by raising SystemExit(status).\n\
 If the status is omitted or None, it defaults to zero (i.e., success).\n\
-If the status numeric, it will be used as the system exit status.\n\
+If the status is numeric, it will be used as the system exit status.\n\
 If it is another kind of object, it will be printed and the system\n\
 exit status will be one (i.e., failure).";
 
@@ -414,9 +410,9 @@ static char setdlopenflags_doc[] =
 "setdlopenflags(n) -> None\n\
 \n\
 Set the flags that will be used for dlopen() calls. Among other\n\
-things, this will enable a lazy resolving of symbols when imporing\n\
+things, this will enable a lazy resolving of symbols when importing\n\
 a module, if called as sys.setdlopenflags(0)\n\
-To share symols across extension modules, call as\n\
+To share symbols across extension modules, call as\n\
 sys.setdlopenflags(dl.RTLD_NOW|dl.RTLD_GLOBAL)";
 
 static PyObject *
@@ -568,10 +564,10 @@ static PyMethodDef sys_methods[] = {
 	{"setdlopenflags", sys_setdlopenflags, METH_VARARGS, 
 	 setdlopenflags_doc},
 #endif
-	{"setprofile",	sys_setprofile, METH_OLDARGS, setprofile_doc},
+	{"setprofile",  sys_setprofile, METH_O, setprofile_doc},
 	{"setrecursionlimit", sys_setrecursionlimit, METH_VARARGS,
 	 setrecursionlimit_doc},
-	{"settrace",	sys_settrace, METH_OLDARGS, settrace_doc},
+	{"settrace",    sys_settrace, METH_O, settrace_doc}
 	{NULL,		NULL}		/* sentinel */
 };
 
@@ -677,7 +673,7 @@ Static objects:\n\
 \n\
 maxint -- the largest supported integer (the smallest is -maxint-1)\n\
 maxunicode -- the largest supported character\n\
-builtin_module_names -- tuple of module names built into this intepreter\n\
+builtin_module_names -- tuple of module names built into this interpreter\n\
 version -- the version of this interpreter as a string\n\
 version_info -- version information as a tuple\n\
 hexversion -- version information encoded as a single integer\n\

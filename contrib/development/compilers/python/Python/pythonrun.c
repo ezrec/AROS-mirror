@@ -13,10 +13,6 @@
 #include "eval.h"
 #include "marshal.h"
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
 #ifdef HAVE_SIGNAL_H
 #include <signal.h>
 #endif
@@ -223,11 +219,6 @@ Py_Finalize(void)
 	/* Disable signal handling */
 	PyOS_FiniInterrupts();
 
-#ifdef Py_USING_UNICODE
-	/* Cleanup Unicode implementation */
-	_PyUnicode_Fini();
-#endif
-
 	/* Cleanup Codec registry */
 	_PyCodecRegistry_Fini();
 
@@ -271,6 +262,11 @@ Py_Finalize(void)
 	PyString_Fini();
 	PyInt_Fini();
 	PyFloat_Fini();
+
+#ifdef Py_USING_UNICODE
+	/* Cleanup Unicode implementation */
+	_PyUnicode_Fini();
+#endif
 
 	/* XXX Still allocated:
 	   - various static ad-hoc pointers to interned strings
@@ -929,7 +925,7 @@ void PyErr_Display(PyObject *exception, PyObject *value, PyObject *tb)
 		if (tb && tb != Py_None)
 			err = PyTraceBack_Print(tb, f);
 		if (err == 0 &&
-		    PyErr_GivenExceptionMatches(exception, PyExc_SyntaxError))
+		    PyObject_HasAttrString(v, "print_file_and_line"))
 		{
 			PyObject *message;
 			char *filename, *text;
