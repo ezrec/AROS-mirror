@@ -302,7 +302,7 @@ All Rights Reserved<BR>''')
 
     def write (self, filename):
 	mtime = self.__dict__.get ('mtime', time.time ())
-	if mtime < os.path.getmtime (filename):
+	if os.path.exists (filename) and mtime < os.path.getmtime (filename):
 	    sys.stdout.write ('Skipping %s: page is older\n' % filename)
 	    return
 
