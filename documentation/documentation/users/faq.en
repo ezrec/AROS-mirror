@@ -149,11 +149,13 @@ for development though, since good development tools haven't been ported to AROS
 yet.
 
 
-Autorepeat is not working in X11 after running AROS
----------------------------------------------------
+Why does autorepeat stop working in X11 after running AROS?
+-----------------------------------------------------------
 
-Run the following command:
->xset r on
+This is a long-standing bug in AROS. Run the following command after having 
+quit AROS to enable autorepeat again::
+
+    > xset r on
 
 
 How do you intend to make AROS portable?
