@@ -14,7 +14,7 @@ USER_CFLAGS := -O2
 #MM- contrib-gnu-cpuid : cpuid
 #MM- contrib-gnu      : cpuid
 #MM
-gzip : setup $(EXE)
+cpuid : setup $(EXE)
 
 $(OBJDIR)/%.o: %.S
 	%compile_q opt=$(USER_CFLAGS)
