@@ -8,6 +8,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.6  2000/08/09 10:17:25  chodorowski
+ * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
+ * macros. Some of these files didn't need them at all...
+ *
  * Revision 42.5  2000/08/08 20:23:21  stegerg
  * added "#define LOCAL static"
  *
@@ -66,8 +70,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-
-#include "compilerspecific.h"
 
 #include "TreeViewClass.h"
 

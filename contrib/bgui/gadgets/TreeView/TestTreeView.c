@@ -8,6 +8,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.3  2000/08/09 10:17:25  chodorowski
+ * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
+ * macros. Some of these files didn't need them at all...
+ *
  * Revision 42.2  2000/08/08 14:02:07  chodorowski
  * Removed all REGFUNC, REGPARAM and REG macros. Now includes
  * contrib/bgui/compilerspecific.h where they are defined.
@@ -55,7 +59,9 @@
 
 #include <bgui/bgui_treeview.h>
 
-#include "compilerspecific.h"
+#ifndef BGUI_COMPILERSPECIFIC_H
+#include <bgui/bgui_compilerspecific.h>
+#endif
 
 /************************************************************************
 *****************************  DEFINITIONS  *****************************

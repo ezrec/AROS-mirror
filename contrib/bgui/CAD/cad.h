@@ -13,6 +13,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/08/09 10:17:24  chodorowski
+ * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
+ * macros. Some of these files didn't need them at all...
+ *
  * Revision 42.4  2000/08/08 19:29:08  chodorowski
  * Added #include <proto/alib.h> to fix some warning.
  *
@@ -79,7 +83,9 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "compilerspecific.h"
+#ifndef BGUI_COMPILERSPECIFIC_H
+#include <bgui/bgui_compilerspecific.h>
+#endif
 
 #define NAME      "CAD"
 

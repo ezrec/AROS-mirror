@@ -18,6 +18,10 @@
  * enable/disable status of an item.
 
  * $Log$
+ * Revision 42.5  2000/08/09 10:17:25  chodorowski
+ * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
+ * macros. Some of these files didn't need them at all...
+ *
  * Revision 42.4  2000/08/08 13:51:35  chodorowski
  * Removed all REGFUNC, REGPARAM and REG macros. Now includes
  * contrib/bgui/compilerspecific.h where they are defined.
@@ -70,7 +74,9 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "compilerspecific.h"
+#ifndef BGUI_COMPILERSPECIFIC_H
+#include <bgui/bgui_compilerspecific.h>
+#endif
 
 #ifdef _AROS
 extern struct Library * BGUIBase;

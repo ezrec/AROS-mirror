@@ -1,5 +1,3 @@
-#include "compilerspecific.h"
-
 #include "include/classdefs.h"
 #include <utility/hooks.h>
 #include <intuition/classes.h>
@@ -10,6 +8,10 @@
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <libraries/locale.h>
+
+#ifndef BGUI_COMPILERSPECIFIC_H
+#include <bgui/bgui_compilerspecific.h>
+#endif
 
 #ifndef _AROS
 BOOL DisplayAGuideInfo(struct NewAmigaGuide *nag, struct TagItem * tags)
@@ -35,9 +37,9 @@ BOOL DisplayAGuideInfo(struct NewAmigaGuide *nag, struct TagItem * tags)
 
 //ASM ULONG ScaleWeight(REG(d2) ULONG e, REG(d3) ULONG f, REG(d4) ULONG a)
 ASM REGFUNC3(ULONG, ScaleWeight,
-	REGPARAM(D2, ULONG, e),
-	REGPARAM(D3, ULONG, f),
-	REGPARAM(D4, ULONG, a))
+        REGPARAM(D2, ULONG, e),
+        REGPARAM(D3, ULONG, f),
+        REGPARAM(D4, ULONG, a))
 {
   ULONG r = UMult32(a,e);
   return UDivMod32((f >> 1) + r, f);
@@ -47,16 +49,16 @@ ASM REGFUNC3(ULONG, ScaleWeight,
 
 //void MyPutChProc_StrLenfA(REG(d0) BYTE c, REG(a3) ULONG * putChData)
 REGFUNC2(void, MyPutChProc_StrLenfA,
-	REGPARAM(D0, BYTE, c),
-	REGPARAM(A3, ULONG *, putChData))
+        REGPARAM(D0, BYTE, c),
+        REGPARAM(A3, ULONG *, putChData))
 {
   (*putChData)++;
 }
 
 //ASM ULONG StrLenfA(REG(a0) UBYTE * FormatString, REG(a1) ULONG * DataStream)
 ASM REGFUNC2(ULONG, StrLenfA, 
-	REGPARAM(A0, UBYTE *, FormatString),
-	REGPARAM(A1, ULONG *, DataStream))
+        REGPARAM(A0, UBYTE *, FormatString),
+        REGPARAM(A1, ULONG *, DataStream))
 {
   ULONG c = 0;
   RawDoFmt(FormatString, DataStream, ((APTR)MyPutChProc_StrLenfA), &c);
@@ -67,8 +69,8 @@ ASM REGFUNC2(ULONG, StrLenfA,
 
 //void MyPutChProc_SPrintfA(REG(d0) char c, REG(a3) char **PutChData)
 REGFUNC2(void, MyPutChProc_SPrintfA,
-	REGPARAM(D0, char, c),
-	REGPARAM(A3, char **, PutChData))
+        REGPARAM(D0, char, c),
+        REGPARAM(A3, char **, PutChData))
 {
   **PutChData = c;
   *PutChData++;
@@ -76,9 +78,9 @@ REGFUNC2(void, MyPutChProc_SPrintfA,
 
 //ASM VOID SPrintfA(REG(a3) UBYTE * buffer, REG(a0) UBYTE * format, REG(a1) ULONG * args)
 ASM REGFUNC3(VOID, SPrintfA,
-	REGPARAM(A3, UBYTE *, buffer),
-	REGPARAM(A0, UBYTE *, format),
-	REGPARAM(A1, ULONG *, args))
+        REGPARAM(A3, UBYTE *, buffer),
+        REGPARAM(A0, UBYTE *, format),
+        REGPARAM(A1, ULONG *, args))
 {
   RawDoFmt(format, args, ((APTR)MyPutChProc_SPrintfA), &buffer);
 }
@@ -86,9 +88,9 @@ ASM REGFUNC3(VOID, SPrintfA,
 
 //ASM VOID LHook_Count(REG(a0) struct Hook * hook, REG(a1) ULONG chr, REG(a2) struct Locale * loc)
 ASM REGFUNC3(VOID, LHook_Count,
-	REGPARAM(A0, struct Hook *, hook),
-	REGPARAM(A1, ULONG, chr),
-	REGPARAM(A2, struct Locale *, loc))
+        REGPARAM(A0, struct Hook *, hook),
+        REGPARAM(A1, ULONG, chr),
+        REGPARAM(A2, struct Locale *, loc))
 {
   hook->h_Data++;
 }
@@ -96,9 +98,9 @@ ASM REGFUNC3(VOID, LHook_Count,
 
 //ASM VOID LHook_Format(REG(a0) struct Hook * hook, REG(a1) ULONG chr, REG(a2) struct Locale *loc)
 ASM REGFUNC3(VOID, LHook_Format,
-	REGPARAM(A0, struct Hook *, hook),
-	REGPARAM(A1, ULONG, chr),
-	REGPARAM(A2, struct Locale *, loc))
+        REGPARAM(A0, struct Hook *, hook),
+        REGPARAM(A1, ULONG, chr),
+        REGPARAM(A2, struct Locale *, loc))
 {
   char * cptr = (char *)hook->h_Data;
   *cptr++ = (char)chr;
@@ -108,7 +110,7 @@ ASM REGFUNC3(VOID, LHook_Format,
 
 //ASM struct RastPort *BGUI_ObtainGIRPort(REG(a0) struct GadgetInfo * gi)
 ASM REGFUNC1(struct RastPort *, BGUI_ObtainGIRPort,
-	REGPARAM(A0, struct GadgetInfo *, gi))
+        REGPARAM(A0, struct GadgetInfo *, gi))
 {
   struct RastPort * rp;
   BYTE * userdata = NULL;
@@ -152,8 +154,8 @@ ULONG AsmDoMethod(Object * obj, ULONG MethodID, ...)
 
 //ULONG AsmDoMethodA(REG(a2) Object * obj, REG(a1) Msg message)
 REGFUNC2(ULONG, AsmDoMethodA,
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, message))
+        REGPARAM(A2, Object *, obj),
+        REGPARAM(A1, Msg, message))
 {
   DoMethodA(obj, message);
 }
@@ -167,15 +169,15 @@ ULONG AsmDoSuperMethod( Class * cl, Object * obj, ULONG MethodID, ...)
        retval = CallHookPkt ((struct Hook *)cl->cl_Super
                        , obj
                        , AROS_SLOWSTACKMETHODS_ARG(MethodID)
-		);
+                );
    AROS_SLOWSTACKMETHODS_POST
 }
 
 //ULONG AsmDoSuperMethodA( REG(a0) Class * cl, REG(a2) Object * obj, REG(a1) Msg message)
 REGFUNC3(ULONG, AsmDoSuperMethodA,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, message))
+        REGPARAM(A0, Class *, cl),
+        REGPARAM(A2, Object *, obj),
+        REGPARAM(A1, Msg, message))
 {
   DoSuperMethodA(cl,obj,message);
 }
@@ -195,9 +197,9 @@ ULONG AsmCoerceMethod( Class * cl, Object * obj, ULONG MethodID, ...)
 
 //ULONG AsmCoerceMethodA( REG(a0) Class * cl, REG(a2) Object * obj, REG(a1) Msg message)
 REGFUNC3(ULONG, AsmCoerceMethodA,
-	REGPARAM(A0, Class *, cl),
-	REGPARAM(A2, Object *, obj),
-	REGPARAM(A1, Msg, message))
+        REGPARAM(A0, Class *, cl),
+        REGPARAM(A2, Object *, obj),
+        REGPARAM(A1, Msg, message))
 {
   CoerceMethodA(cl, obj, message);
 }

@@ -13,6 +13,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.9  2000/08/09 10:17:25  chodorowski
+ * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
+ * macros. Some of these files didn't need them at all...
+ *
  * Revision 42.8  2000/08/08 20:24:51  stegerg
  * had to remove the "compilerspecific.h" #include and instead insert
  * the REGPARAM/etc. macros also in this file. This is because compilerspecific.h
@@ -102,96 +106,9 @@
 #include <intuition/classusr.h>
 #endif
 
-/* Compiler-specific macros */
-
-#ifndef REGPARAM
-
-#ifdef _DCC
-
-  #ifndef SAVEDS
-  #define SAVEDS    __geta4
-  #endif
-
-  #ifndef ASM
-  #define ASM
-  #endif
-
-  #ifndef REG
-  #define REG(x)    __ ## x
-  #endif
-
-#elif __STORM__
-
-  #ifndef SAVEDS
-  #define SAVEDS    __saveds
-  #endif
-
-  #ifndef ASM
-  #define ASM
-  #endif
-
-  #ifndef REG
-  #define REG(x)    register __ ## x
-  #endif
-
-#else
-
-  #ifndef ASM
-  #define ASM       __asm
-  #endif
-
-  #ifndef SAVEDS
-  #define SAVEDS    __saveds
-  #endif
-  
-  #ifndef REG
-  #define REG(x)    register __ ## x
-  #endif
-
+#ifndef BGUI_COMPILERSPECIFIC_H
+#include <bgui/bgui_compilerspecific.h>
 #endif
-
-#ifdef _AROS
-
-  #ifndef AROS_ASMCALL_H
-  #include <aros/asmcall.h>
-  #endif
-
-  #undef ASM
-  #define ASM
-  
-  #undef SAVEDS
-  #define SAVEDS
-  
-  #undef REG
-  #define REG
-    
-  #define REGPARAM(reg,type,name) type,name,reg
-
-  #define REGFUNC1(r,n,a1) AROS_UFH1(r,n,AROS_UFHA(a1))
-  #define REGFUNC2(r,n,a1,a2) AROS_UFH2(r,n,AROS_UFHA(a1),AROS_UFHA(a2))
-  #define REGFUNC3(r,n,a1,a2,a3) AROS_UFH3(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3))
-  #define REGFUNC4(r,n,a1,a2,a3,a4) AROS_UFH4(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4))
-  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) AROS_UFH5(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5))
-  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) AROS_UFH6(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6))
-  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) AROS_UFH7(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7))
-  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) AROS_UFH8(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8))
-  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) AROS_UFH9(r,n,AROS_UFHA(a1),AROS_UFHA(a2),AROS_UFHA(a3),AROS_UFHA(a4),AROS_UFHA(a5),AROS_UFHA(a6),AROS_UFHA(a7),AROS_UFHA(a8),AROS_UFHA(a9))
-
-#else
-  #define REGPARAM(reg,type,name) REG(reg) type name
-
-  #define REGFUNC1(r,n,a1) r n(a1)
-  #define REGFUNC2(r,n,a1,a2) r n(a1,a2)
-  #define REGFUNC3(r,n,a1,a2,a3) r n(a1,a2,a3)
-  #define REGFUNC4(r,n,a1,a2,a3,a4) r n(a1,a2,a3,a4)
-  #define REGFUNC5(r,n,a1,a2,a3,a4,a5) r n(a1,a2,a3,a4,a5)
-  #define REGFUNC6(r,n,a1,a2,a3,a4,a5,a6) r n(a1,a2,a3,a4,a5,a6)
-  #define REGFUNC7(r,n,a1,a2,a3,a4,a5,a6,a7) r n(a1,a2,a3,a4,a5,a6,a7)
-  #define REGFUNC8(r,n,a1,a2,a3,a4,a5,a6,a7,a8) r n(a1,a2,a3,a4,a5,a6,a7,a8)
-  #define REGFUNC9(r,n,a1,a2,a3,a4,a5,a6,a7,a8,a9) r n(a1,a2,a3,a4,a5,a6,a7,a8,a9)
-#endif /* _AROS */
-
-#endif /* REGPARAM */
 
 /* Tags */
 #define AREXX_TB                        (TAG_USER+0x30000)

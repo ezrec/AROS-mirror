@@ -16,7 +16,9 @@
 
 #include <libraries/bgui.h>
 
-#include "compilerspecific.h"
+#ifndef BGUI_COMPILERSPECIFIC_H
+#include <bgui/bgui_compilerspecific.h>
+#endif
 
 /*
  * Global data (written to once at initalization time).

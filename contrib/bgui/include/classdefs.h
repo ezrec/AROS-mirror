@@ -13,6 +13,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.9  2000/08/09 10:17:26  chodorowski
+ * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
+ * macros. Some of these files didn't need them at all...
+ *
  * Revision 42.8  2000/08/08 20:57:28  chodorowski
  * Minor fixes to build on Amiga.
  *
@@ -112,7 +116,9 @@ extern struct Library * BGUIBase;
 
 #endif
 
-#include "compilerspecific.h"
+#ifndef BGUI_COMPILERSPECIFIC_H
+#include <bgui/bgui_compilerspecific.h>
+#endif
 
 /*
  * Include a lot of system stuff.

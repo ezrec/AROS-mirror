@@ -8,6 +8,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2000/08/09 10:17:24  chodorowski
+ * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
+ * macros. Some of these files didn't need them at all...
+ *
  * Revision 42.4  2000/08/08 13:51:34  chodorowski
  * Removed all REGFUNC, REGPARAM and REG macros. Now includes
  * contrib/bgui/compilerspecific.h where they are defined.
@@ -65,7 +69,9 @@ void kprintf(char *format,...);
 #include <bgui/bgui_bar.h>
 #include "include/lGraphic.h"
 
-#include "compilerspecific.h"
+#ifndef BGUI_COMPILERSPECIFIC_H
+#include <bgui/bgui_compilerspecific.h>
+#endif
 
 #define PointInBox(box,x,y) ((x)>=(box).Left && (x)<(box).Left+(box).Width && (y)>=(box).Top && (y)<(box).Top+(box).Height)
 
