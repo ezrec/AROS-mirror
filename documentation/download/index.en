@@ -10,94 +10,23 @@ Snapshots
 
 Snapshots are manual builds that are done more often than full releases, but
 less often than nightly builds. They a done manually and are tested a bit more
-on a wide variety of machines, so they should be more stable. On the other hand,
-they don't contain the latest code.
+on a wide variety of machines, so they should be more stable. On the other 
+hand, they don't contain the latest code.
 
+The latest snapshot can be found on the SourceForge `download page`__.
 
-2002-07-03
-----------
-  
-- Release notes
-- Changelog
-
-===========================================  ========  ==========================
-Filename                                     Size      Description
-===========================================  ========  ==========================
-`AROS-20020703-i386-all-contrib.tar.gz`__     6963198  This archive contains all 
-                                                       the contrib binaries 
-                                                       compiled for the i386 
-                                                       architecture. They will 
-                                                       work in both the 
-                                                       apropriate hosted (eg. 
-                                                       i386-linux) and native 
-                                                       (i386-pc) version.
-`AROS-20020703-i386-linux-system.tar.gz`__    3348967  The hosted version for 
-                                                       Linux/i386. This is the 
-                                                       most complete and mature 
-                                                       port, which means that you 
-                                                       can run almost all 
-                                                       included programs and 
-                                                       demos with it. This 
-                                                       archive contains all AROS 
-                                                       system binaries compiled 
-                                                       from the CVS tree.
-`AROS-20020703-i386-pc-boot.iso.gz`__        11095702  The native version for 
-                                                       i386-based PC AT computers 
-                                                       and compatibles. This is 
-                                                       the bootable CDROM ISO 
-                                                       image, which contains all 
-                                                       AROS system and contrib 
-                                                       binaries. The image is a 
-                                                       bit experimental, which 
-                                                       means that eg. the 
-                                                       Startup-Sequence hasn't 
-                                                       been adapted properly yet
-                                                       (although you can boot 
-                                                       into AROS). Also, this 
-                                                       version may have problems 
-                                                       on with computers that 
-                                                       have more than one CDROM 
-                                                       drive.
-`AROS-20020703-i386-pc-floppies.tar.gz`__     2112722  The native version for 
-                                                       i386-based PC AT computers 
-                                                       and compatibles. This 
-                                                       archive contains the boot 
-                                                       and contrib disk floppy 
-                                                       images which you can 
-                                                       quickly write to a disk 
-                                                       and boot AROS with. 
-`AROS-20020705-i386-pc-boot-debug.img.gz`__   1240882  The native version for 
-                                                       i386-bases PC AT computers 
-                                                       and compatibles. This is a 
-                                                       special floppy image with 
-                                                       serial debugging enabled 
-                                                       on COM1. If you have 
-                                                       another computer and a 
-                                                       nullmodem cable, you are 
-                                                       encouraged to use this 
-                                                       image and send the boot 
-`AROS-20020703-source.tar.gz`__               4893160  The main AROS sources. 
-`AROS-20020703-contrib-source.tar.gz`__      34695101  The contrib sources.
-===========================================  ========  ==========================
-
-
-__ http://prdownloads.sourceforge.net/aros/AROS-20020703-i386-all-contrib.tar.gz?download
-__ http://prdownloads.sourceforge.net/aros/AROS-20020703-i386-linux-system.tar.gz?download
-__ http://prdownloads.sourceforge.net/aros/AROS-20020703-i386-pc-boot.iso.gz?download
-__ http://prdownloads.sourceforge.net/aros/AROS-20020703-i386-pc-floppies.tar.gz?download
-__ http://prdownloads.sourceforge.net/aros/AROS-20020705-i386-pc-boot-debug.img.gz?download
-__ http://prdownloads.sourceforge.net/aros/AROS-20020703-source.tar.gz?download
-__ http://prdownloads.sourceforge.net/aros/AROS-20020703-contrib-source.tar.gz?download
-
-
-.. FIXME: Hmmmmm.... Some better (automatic) way to do this?
+__ http://sourceforge.net/project/showfiles.php?group_id=43586
 
 
 Nightly builds
 ==============
 
-Nightly builds are done, as the name implies, automatically every night directly
-from the CVS tree and contain the latest code. However, they have not been
-tested in any way and can be horribly broken and extremely buggy if your are
-unlucky. Most of the time though, they work fine.
+.. Nightly builds are done, as the name implies, automatically every night 
+   directly from the CVS tree and contain the latest code. However, they have not
+   been tested in any way and can be horribly broken and extremely buggy if your
+   are unlucky. Most of the time though, they work fine.
 
+.. raw:: html
+   
+   <!--#exec cmd="wget --quiet http://aros.sourceforge.net/cgi-bin/nightly -O -" -->
+   
