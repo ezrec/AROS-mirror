@@ -225,6 +225,9 @@ void __inline __regargs GetXYPos(double Offset,long x,long y,double Radius,long 
 void __inline DrawBoingBall(struct RastPort *RP,double Radius,struct BoingTransferClData *data,Object *obj,long WinkelOffset,long RedPen,long WhitePen)
 {
   long x,y,xw,ResX,ResY;
+
+return;
+
   for(x=0;x<16;x++)
   {
     xw=x*2+WinkelOffset;
