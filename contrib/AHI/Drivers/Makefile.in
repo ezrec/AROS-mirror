@@ -38,6 +38,7 @@ SUBDIRS		= Device Filesave
 
 ifneq ($(strip $(HAVE_ASMIO)),)
 SUBDIRS		+= ac97
+SUBDIRS		+= EMU10kx
 endif
 
 ifneq ($(strip $(HAVE_OSS)),)
