@@ -21,6 +21,7 @@
  * $Id$
  */
 
+#include <setjmp.h>
 
 typedef struct varbox *variableptr ;
 typedef const struct varbox *cvariableptr ;
@@ -332,8 +333,9 @@ struct library {
    struct library *next, *prev ;
 } ;
 
-#ifndef DONT_TYPEDEF_PFN
+#if !defined(DONT_TYPEDEF_PFN) && !defined(PFN_DEFINED)
 typedef unsigned long (*PFN)() ;
+#define PFN_DEFINED
 #endif
 
 struct library_func {

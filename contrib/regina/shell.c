@@ -70,7 +70,7 @@ static char *RCSid = "$Id$";
 # define posix_do_command __regina_vms_do_command
 #endif
 
-#if defined(DOS) || defined(MAC) || (defined(__WATCOMC__) && !defined(__QNX__)) || defined(_MSC_VER) || defined(__MINGW32__) || defined(__BORLANDC__) /* MH 10-06-96 */
+#if defined(DOS) || defined(MAC) || (defined(__WATCOMC__) && !defined(__QNX__)) || defined(_MSC_VER) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(_AMIGA) || defined(__AROS__) /* MH 10-06-96 */
 # ifdef  posix_do_command
 #  undef posix_do_command
 # endif
@@ -162,7 +162,7 @@ static void destroyargs( const tsd_t *TSD, char **args )
    FreeTSD( args ) ;
 }
 
-#if defined(__QNX__) || (!defined(MAC) && !defined(VMS) && !defined(DOS) && !defined(WIN32) && !defined(__WATCOMC__) && !defined(_MSC_VER) && !defined(_AMIGA))
+#if defined(__QNX__) || (!defined(MAC) && !defined(VMS) && !defined(DOS) && !defined(WIN32) && !defined(__WATCOMC__) && !defined(_MSC_VER) && !defined(_AMIGA) && !defined(__AROS__))
 int posix_do_command( tsd_t *TSD, const streng *command, int io_flags, int envir )
 {
    char **args ;
@@ -657,7 +657,7 @@ streng *run_popen( const tsd_t *TSD, const streng *command, const streng *envir 
 
    return( result ) ;
 }
-#elif defined(DOS) || defined(OS2) || defined(_AMIGA) || defined(MAC)
+#elif defined(DOS) || defined(OS2) || defined(_AMIGA) || defined(MAC) || defined(__AROS__)
 /* FIXME, FGC:
  * 1) OS/2 can handle real pipes! OS/2 should get an own section.
  * 2) At least DOS has an execv-statement. We may try to load the first

@@ -1430,7 +1430,7 @@ static void reopen_file( tsd_t *TSD, fileboxptr ptr )
     * different anyway, so it will probably not create any problems.
     * Besides, we don't do exec() and system() on VMS.
     */
-#if !defined(VMS) && !defined(MAC) && !defined(OS2) && !defined(DOS) && !defined(__WATCOMC__) && !defined(_MSC_VER) && !(defined(WIN32) && defined(__IBMC__)) && !defined(_AMIGA) && !defined(__MINGW32__) && !defined(__BORLANDC__)
+#if !defined(VMS) && !defined(MAC) && !defined(OS2) && !defined(DOS) && !defined(__WATCOMC__) && !defined(_MSC_VER) && !(defined(WIN32) && defined(__IBMC__)) && !defined(_AMIGA) && !defined(__MINGW32__) && !defined(__BORLANDC__) && !defined(__AROS__)
    if (ptr && ptr->fileptr)
    {
       int flags, fno ;
@@ -3223,7 +3223,7 @@ static streng *getstatus( tsd_t *TSD, const streng *filename , int subcommand)
                   "%ld %ld %03o %d %s %s %ld",
                   (long)(buffer.st_dev), (long)(buffer.st_ino),
                   buffer.st_mode & 0x7f, buffer.st_nlink,
-#if defined(VMS) || defined(MAC) || defined(OS2) || defined(DOS) || defined (__WATCOMC__) || defined(_MSC_VER) || (defined(WIN32) && defined(__IBMC__)) || defined(_AMIGA) || defined(__MINGW32__) || defined(__BORLANDC__)
+#if defined(VMS) || defined(MAC) || defined(OS2) || defined(DOS) || defined (__WATCOMC__) || defined(_MSC_VER) || (defined(WIN32) && defined(__IBMC__)) || defined(_AMIGA) || defined(__MINGW32__) || defined(__BORLANDC__) || defined(__AROS__)
                   "USER", "GROUP",
 #else
                   getpwuid( buffer.st_uid )->pw_name,

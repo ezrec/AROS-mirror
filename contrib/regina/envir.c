@@ -36,7 +36,7 @@ static char *RCSid = "$Id$";
 # define posix_do_command __regina_vms_do_command
 #endif
 
-#if defined(DOS) || defined(WIN32) || defined(OS2) || defined(_AMIGA) || defined(MAC)
+#if defined(DOS) || defined(WIN32) || defined(OS2) || defined(_AMIGA) || defined(__AROS__) || defined(MAC)
 # ifdef posix_do_command
 #  undef posix_do_command
 # endif

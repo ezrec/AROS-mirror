@@ -58,7 +58,11 @@
 /*
  * Routines in files.c
  */
+#ifdef FGC
    streng *readkbdline( tsd_t *TSD ) ;
+#else
+   streng *readkbdline( const tsd_t *TSD);
+#endif
    void mark_filetable( const tsd_t *TSD) ;
    void purge_filetable( tsd_t *TSD ) ;
    int init_filetable( tsd_t *TSD ) ;
@@ -618,7 +622,11 @@
    streng *unx_eof( tsd_t *TSD, cparamboxptr parms ) ;
    streng *unx_uname( tsd_t *TSD, cparamboxptr parms ) ;
    streng *unx_fork( tsd_t *TSD, cparamboxptr parms ) ;
+#ifndef FGC
+   char *unx_unixerror( tsd_t *TSD, cparamboxptr parms ) ;
+#else
    streng *unx_unixerror( tsd_t *TSD, cparamboxptr parms ) ;
+#endif
    streng *unx_chdir( tsd_t *TSD, cparamboxptr parms ) ;
    streng *unx_getenv( tsd_t *TSD, cparamboxptr parms ) ;
    streng *unx_crypt( tsd_t *TSD, cparamboxptr parms ) ;

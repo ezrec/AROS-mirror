@@ -227,6 +227,11 @@ signal_handler regina_signal(int signum,__sighandler_t action)
       return(SIG_ERR);
    return(osig.sa_handler);
 }
+#elif defined(__AROS__)
+signal_handler regina_signal(int signum,signal_handler action)
+{
+  return SIG_ERR;
+}
 #else
 signal_handler regina_signal(int signum,signal_handler action)
 {
@@ -280,6 +285,8 @@ void signal_setup( const tsd_t *TSD )
 {
    TSD = TSD; /* keep compiler happy */
 
+#ifndef __AROS__
+   
 #if defined(SIGTERM)
    if (regina_signal( SIGTERM, halt_handler ) == SIG_ERR)
        exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
@@ -293,6 +300,7 @@ void signal_setup( const tsd_t *TSD )
        exiterror( ERR_SYSTEM_FAILURE, 0 )  ;
 #endif
 
+#endif //AROS
 }
 
 void set_rexx_halt( void )

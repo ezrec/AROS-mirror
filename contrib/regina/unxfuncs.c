@@ -252,7 +252,7 @@ streng *unx_fork( tsd_t *TSD, cparamboxptr parms )
    int i=0 ;
 
    checkparam(  parms,  0,  0 , "FORK" ) ;
-#if !defined(MAC) && !defined(__WATCOMC__) && !defined(_MSC_VER)  && !(defined(__IBMC__) && defined(WIN32)) && !defined(__SASC) && !defined(__MINGW32__) && !defined(__BORLANDC__)
+#if !defined(MAC) && !defined(__WATCOMC__) && !defined(_MSC_VER)  && !(defined(__IBMC__) && defined(WIN32)) && !defined(__SASC) && !defined(__MINGW32__) && !defined(__BORLANDC__) && !defined(__AROS__)
    i = fork() ;
 #endif                                                  /* MH 10-06-96 */
    return int_to_streng( TSD, i ) ;

@@ -21,7 +21,7 @@ static char *RCSid = "$Id$";
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#if defined(MAC) || defined(DOS) || defined(WIN32) || defined(OS2) || defined(_AMIGA) /* MH 10-06-96 */
+#if defined(MAC) || defined(DOS) || defined(WIN32) || defined(OS2) || defined(_AMIGA) || defined(__AROS__) /* MH 10-06-96 */
 
 #include "rexx.h"
 #include <stdio.h>
@@ -75,10 +75,10 @@ static char *RCSid = "$Id$";
 # endif
 #endif
 
-#if defined(MAC) || defined (__EMX__) || defined(__WATCOMC__) || defined(_MSC_VER) || defined(DJGPP) || defined(__CYGWIN32__) || defined(__BORLANDC__) || defined(__MINGW32__)
+#if defined(MAC) || defined (__EMX__) || defined(__WATCOMC__) || defined(_MSC_VER) || defined(DJGPP) || defined(__CYGWIN32__) || defined(__BORLANDC__) || defined(__MINGW32__) || defined(__AROS__)
 # define HAVE_BROKEN_TMPNAM
 # define PATH_DELIMS ":\\/"
-# if defined(__EMX__) || defined(__CYGWIN32__)
+# if defined(__EMX__) || defined(__CYGWIN32__) || defined(__AROS__)
 #  define ISTR_SLASH "/"  /* This is not a must, \\ works, too */
 #  define I_SLASH '/'  /* This is not a must, \\ works, too */
 # elif defined(MAC)
@@ -89,7 +89,7 @@ static char *RCSid = "$Id$";
 #  define I_SLASH '\\'    /* This is not a must, / works at least for MSC, too */
                           /* FGC: system depending: DOS, OS/2, Win32 work! */
 # endif
-#if !defined(MAC)
+#if !defined(MAC) && !defined(__AROS__)
 #  ifndef HAVE_UNISTD_H
 #   include <io.h> /* access() */
 #  endif
@@ -486,7 +486,7 @@ int dos_do_command( tsd_t *TSD, const streng *command, int io_flags, int dummy )
 /*---------------------------------------------------------------------*/
   return rc ;
 }
-# if defined(__WATCOMC__) || defined(_MSC_VER) || defined(__SASC) || defined(__MINGW32__) || defined(__IBMC__) || defined(__BORLANDC__) || defined(MAC)
+# if defined(__WATCOMC__) || defined(_MSC_VER) || defined(__SASC) || defined(__MINGW32__) || defined(__IBMC__) || defined(__BORLANDC__) || defined(MAC) || defined(__AROS__)
 /********************************************************* MH 10-06-96 */
 int uname(struct utsname *name)                         /* MH 10-06-96 */
 /********************************************************* MH 10-06-96 */
@@ -507,7 +507,7 @@ int uname(struct utsname *name)                         /* MH 10-06-96 */
  sprintf(name->release,"%d",_osminor);                  /* MH 10-06-96 */
  strcpy(name->nodename,"standalone");
  strcpy(name->machine,"i386");
-#  elif defined(_AMIGA)
+#  elif defined(_AMIGA) || defined(__AROS__)
  strcpy(name->sysname,"AMIGA");
  sprintf(name->version,"%d",0);
  sprintf(name->release,"%d",0);

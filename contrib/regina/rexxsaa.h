@@ -67,7 +67,7 @@ typedef CONST char *PCSZ ;
 #define EXTNAME(n)
 #endif
 
-#if !defined(_OS2EMX_H) && !defined(__RSXNT__) && !defined(__MINGW32__)
+#if !defined(_OS2EMX_H) && !defined(__RSXNT__) && !defined(__MINGW32__) && !defined(__AROS__) && !defined(_AMIGA)
 typedef char CHAR ;
 typedef short SHORT ;
 typedef long LONG ;
@@ -99,6 +99,39 @@ typedef USHORT *PUSHORT ;
 typedef CHAR *PCH ;
 typedef UCHAR *PUCHAR ;
 
+#elif defined(__AROS__) || defined(_AMIGA)
+/* For AROS make SAA functions also internal
+ */
+
+# include <exec/types.h>
+typedef BYTE CHAR ;
+typedef WORD SHORT ;
+typedef char *PSZ ;
+typedef CONST char *PCSZ ;
+# ifndef VOID
+typedef void VOID ;
+# endif
+typedef APTR PVOID;
+
+typedef CHAR *PCHAR ;
+typedef SHORT *PSHORT ;
+typedef LONG *PLONG ;
+
+# ifndef UCHAR_TYPEDEFED
+typedef UBYTE UCHAR ;
+#  define UCHAR_TYPEDEFED
+# endif
+# ifndef USHORT_TYPEDEFED
+typedef UWORD USHORT ;
+#  define USHORT_TYPEDEFED
+# endif
+# ifndef ULONG_TYPEDEFED
+#  define ULONG_TYPEDEFED
+# endif
+
+typedef USHORT *PUSHORT ;
+typedef CHAR *PCH ;
+typedef UCHAR *PUCHAR ;
 #endif
 
 #ifdef INCL_REXXSAA
@@ -120,8 +153,9 @@ typedef UCHAR *PUCHAR ;
 # define APIRET ULONG
 #endif
 
-#if !defined(_OS2EMX_H)
+#if !defined(_OS2EMX_H) && !defined(PFN_DEFINED)
 typedef APIRET (APIENTRY *PFN)();
+#define PFN_DEFINED
 #endif
 
 

@@ -191,6 +191,12 @@ int main(int argc,char *argv[])
    internal_parser_type parsing;
    tsd_t *TSD;
 
+#if defined(RXLIB) && (defined(__AROS__) || defined(_AMIGA))
+   if (setjmp(__startup_jmp_buf)) {
+     return __startup_error;
+   }
+#endif
+  
 #ifdef MAC
    InitCursorCtl(nil);
 #endif

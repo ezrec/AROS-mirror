@@ -1,0 +1,77 @@
+#   $Id$
+#
+#   Makefile to make Rexx.
+
+include $(TOP)/config/make.cfg
+
+USER_INCLUDES := -I. -Iaros_funcs -I$(TOP)/rom/exec
+
+# Files shared by executables and shared library
+OFILES := \
+  funcs builtin error variable interprt debug dbgfuncs \
+  memory parsing files misc unxfuncs cmsfuncs os2funcs \
+  shell rexxext stack tracing interp cmath convert \
+  strings library strmath signals macros envir expr \
+  instore extlib yaccsrc lexsrc wrappers options doscmd \
+  rexxbif aroscmd
+
+USER_CFLAGS := -DRXLIB -DINCL_REXXSAA -DAPIENTRY="" -D_CLIB_LIBRARY_ \
+-DNO_EXTERNAL_QUEUES
+OBJDIR := $(GENDIR)/$(CURDIR)/shared
+
+#Libraries to use
+USE_CLIB_SHARED := YES
+USE_MLIB := YES
+
+MODNAME := regina
+MODTYPE := library
+
+FILES := $(OFILES) \
+         rexxsaa \
+	 rexx \
+	 client \
+	 mt_amigalib
+
+FUNCS := aros_funcs/rexxstart \
+      	 aros_funcs/rexxregistersubcomexe \
+      	 aros_funcs/rexxregistersubcomdll \
+      	 aros_funcs/rexxquerysubcom \
+      	 aros_funcs/rexxderegistersubcom \
+      	 aros_funcs/rexxvariablepool \
+      	 aros_funcs/rexxregisterexitexe \
+      	 aros_funcs/rexxregisterexitdll \
+      	 aros_funcs/rexxderegisterexit \
+      	 aros_funcs/rexxqueryexit \
+      	 aros_funcs/rexxregisterfunctionexe \
+      	 aros_funcs/rexxregisterfunctiondll \
+      	 aros_funcs/rexxqueryfunction \
+      	 aros_funcs/rexxderegisterfunction \
+      	 aros_funcs/rexxsethalt \
+      	 aros_funcs/rexxcreatequeue \
+      	 aros_funcs/rexxdeletequeue \
+      	 aros_funcs/rexxqueryqueue \
+      	 aros_funcs/rexxaddqueue \
+      	 aros_funcs/rexxpullqueue \
+      	 aros_funcs/rexxaddmacro \
+      	 aros_funcs/rexxclearmacrospace \
+      	 aros_funcs/rexxdropmacro \
+      	 aros_funcs/rexxloadmacrospace \
+      	 aros_funcs/rexxquerymacro \
+      	 aros_funcs/rexxreordermacro \
+      	 aros_funcs/rexxsavemacrospace \
+      	 aros_funcs/rexxfreememory \
+      	 aros_funcs/rexxallocatememory \
+      	 aros_funcs/reginaversion \
+      	 aros_funcs/__regina_faked_main
+
+#MM- contrib-regina-libs : setup linklibs includes contrib-regina-libs-module
+#MM
+contrib-regina-libs-quick : contrib-regina-libs-module
+
+%make_module_setup mmake=contrib-regina-libs
+%make_module_cpak
+%make_module mmake=contrib-regina-libs
+%make_lib_includes
+
+%common
+%include_deps

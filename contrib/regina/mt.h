@@ -1,6 +1,8 @@
 #ifndef MT_H_INCLUDED
 #define MT_H_INCLUDED
 
+#include <setjmp.h>
+
 struct extlib_funcbox; /* private type in extlib.c */
 
 /* tsd_t holds all global vars which may change between threads as expected.*/
@@ -74,6 +76,8 @@ typedef struct _tsd_t {
 #  include "mt_win32.h"
 #elif defined(OS2) && defined(__EMX__) && defined(__MT__) && defined(REGINA_MULTI)
 #  include "mt_os2.h"
+#elif (defined(__AROS__) || defined(_AMIGA)) && defined(RXLIB)
+#  include "mt_amigalib.h"
 #else
 #  include "mt_notmt.h"
 #  if !defined(SINGLE_THREADED) && !defined(MULTI_THREADED)

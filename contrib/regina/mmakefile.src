@@ -1,0 +1,58 @@
+#   $Id$
+#
+#   Makefile to make Rexx.
+
+include $(TOP)/config/make.cfg
+
+USER_INCLUDES := -I. -I$(TOP)/rom/exec
+OBJDIR := $(GENDIR)/$(CURDIR)/static
+USER_CFLAGS := -DNO_EXTERNAL_QUEUES
+
+#Libraries to use
+USE_AROSLIB := yes
+USE_CLIB_SHARED := yes
+USE_AMIGALIB := yes
+USE_MLIB := yes
+
+# At the moment don't support threads.
+# Files shared by executables and shared library
+OFILES := \
+  funcs builtin error variable interprt debug dbgfuncs \
+  memory parsing files misc unxfuncs cmsfuncs os2funcs \
+  shell rexxext stack tracing interp cmath convert \
+  strings library strmath signals macros envir expr \
+  instore extlib yaccsrc lexsrc wrappers options doscmd \
+  rexxbif aroscmd
+
+# Compile the statically linked executable
+FILES := $(OFILES) rexx nosaa mt_notmt
+
+EXEDIR := $(CONTRIBDIR)/Regina
+
+REXXEXE := $(EXEDIR)/rexx
+REGINAEXE := $(EXEDIR)/regina
+EXES := $(REXXEXE) $(REGINAEXE)
+
+#MM contrib-regina : setup linklibs includes contrib-regina-libs
+#MM contrib-regina-quick : contrib-regina-libs-quick
+
+contrib-regina-quick: contrib-regina
+
+%make_prog_setup mmake=contrib-regina
+
+#MM
+contrib-regina : setup $(EXES)
+
+%make_prog_common dir=$(EXEDIR)
+
+REXXFILES := $(OFILES) rexx nosaa mt_notmt
+REXXOBJS := $(foreach f,$(REXXFILES),$(OBJDIR)/$(f).o)
+$(REXXEXE) : $(EXEDIR)/% : $(REXXOBJS)
+    %link_q from=$(REXXOBJS)
+
+REGINAOBJS := $(OBJDIR)/regina.o
+$(REGINAEXE) : $(EXEDIR)/% : $(REGINAOBJS)
+    %link_q from=$(REGINAOBJS)
+
+%common
+%include_deps
