@@ -12,6 +12,11 @@
 # All Rights Reserved.
 #
 # $Log$
+# Revision 42.3  2000/08/08 21:47:46  chodorowski
+# Added contrib/bgui/include/bgui_compilerspecific.h to be copied to
+# include:bgui/bgui_compilerspecific.h at build-time (like the other
+# includes). Could someone please fix this for the AROS build to?
+#
 # Revision 42.2  2000/08/08 19:24:11  chodorowski
 # Disabled compiling examples/TextField.c because of missing includes.
 # Couldn't find proto/textfield.h or gadgets/textfield.h in the NDK,
@@ -261,6 +266,7 @@ include:bgui/bgui_arexx.h \
 include:bgui/bgui_cx.h \
 include:bgui/bgui_obsolete.h \
 include:bgui/bgui_prefs.h \
+include:bgui/bgui_compilerspecific.h \
 include:libraries/bgui_macros.h \
 include:bgui/bgui_macros.h \
 include:libraries/bgui_treeview.h \
