@@ -2,3 +2,6 @@
 
 #MM- aminet-util-arc : aminet-util-arc-undms aminet-util-arc-unlzx
 #MM- aminet-util-arc : aminet-util-arc-testdms aminet-util-arc-lha
+#MM- aminet-util-arc : aminet-util-arc-unshar aminet-util-arc-untar
+#MM- aminet-util-arc : aminet-util-arc-untgz aminet-util-arc-unsit
+#MM- aminet-util-arc : aminet-util-arc-zoo aminet-util-arc-unarj
