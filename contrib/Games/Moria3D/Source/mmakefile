@@ -2,9 +2,9 @@
 include $(TOP)/config/make.cfg
 
 STARTUP := $(LIBDIR)/startup.o
-LIBS	:= -L$(LIBDIR) -larosc -lamiga -laros
+LIBS	:= -L$(LIBDIR) -larosc -lamiga -larossupport
 DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a \
-	    $(LIBDIR)/libamiga.a $(LIBDIR)/libaros.a
+	    $(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
 
 INSTDIR := $(BINDIR)/Moria3D
 EXE	:= $(INSTDIR)/Moria3D
