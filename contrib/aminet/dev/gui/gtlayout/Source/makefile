@@ -1,8 +1,10 @@
 TOP = ../../../../../..
-HOST_CPU    ?= i386
-HOST_ARCH   ?= linux
-TARGET_CPU  ?= i386
-TARGET_ARCH ?= linux
+
+AROS_HOST_CPU    ?= i386
+AROS_HOST_ARCH   ?= linux
+AROS_TARGET_CPU  ?= i386
+AROS_TARGET_ARCH ?= linux
+
 include $(TOP)/config/make.cfg
 
 LOCALINCLUDES = -I. -I../Include
