@@ -1,0 +1,23 @@
+diff -C 3 -w SrcOld/io.c Src/io.c
+*** SrcOld/io.c	Mon Jan 01 22:01:10 1996
+--- Src/io.c	Mon Dec 25 01:19:18 1995
+***************
+*** 270,276 ****
+  	      if (e_lab[-1] == EOL)
+  		e_lab--;
+  	      do
+! 		putc (*s++, output);
+  	      while (s < e_lab && 'a' <= *s && *s <= 'z');
+  	      while ((*s == ' ' || *s == TAB) && s < e_lab)
+  		s++;
+--- 270,279 ----
+  	      if (e_lab[-1] == EOL)
+  		e_lab--;
+  	      do
+! 		{
+! 		  putc (*s, output);
+! 		  s++;
+! 		}
+  	      while (s < e_lab && 'a' <= *s && *s <= 'z');
+  	      while ((*s == ' ' || *s == TAB) && s < e_lab)
+  		s++;
