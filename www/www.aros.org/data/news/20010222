@@ -15,7 +15,7 @@ supported.
 Sebastian Heutling improved his filesystem (removed a lot of global
 variables).
 
-Stefan Berger began to work on an packet IO system emualtor. As you
+Stefan Berger began to work on a packet IO system emulator. As you
 might know, DOS uses DosPackets to talk to filesystems while any
 other system on the AmigaOS uses Exec IORequests. Therefore, AROS
 uses IORequests for filesystems, too (because they are much more
