@@ -19,7 +19,7 @@ include $(TOP)/config/make.cfg
 #MM		demo-kitty \
 #MM		demo-powerzoom
 
-SCRIPTFILES := startsomedemos
+SCRIPTFILES := startsomedemos startsomedemos2
 DESTSCRIPTFILES := $(foreach f, $(SCRIPTFILES), $(CONTRIBDIR)/Demos/$(f))
 
 #MM demo-startscripts :

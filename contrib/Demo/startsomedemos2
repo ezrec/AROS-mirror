@@ -1,0 +1,20 @@
+cd RubberStrings
+run Rubberstrings x 0 y 20
+
+cd /Metaballs
+run Metaballs x 500 y 20
+
+cd /kdp
+run tun x 240 y 20
+
+cd /kdp
+run bump x 500 y 400
+
+cd /kdp
+run poly objects/torus3.3d x 0 y 400 m 3 xr 10 yr 8 nmr
+
+cd /kdp
+run poly objects/lwhead1.3d x 270 y 250 m 6 xa 180 ya 180 yr 10 xr 2 nmr
+
+cd /
+
