@@ -1,0 +1,75 @@
+#   $Id$
+#
+#   Makefile to make Rexx.
+
+include $(TOP)/config/make.cfg
+
+EXEDIR := $(CONTRIBDIR)/freetype1
+
+EXES := ftdump \
+     	fterror \
+	ftlint \
+	ftmetric \
+	ftsbit \
+	ftstring \
+	ftstrpnm \
+	ftstrtto \
+	fttimer \
+	ftview \
+	ftzoom
+
+EXES := $(addprefix $(EXEDIR)/,$(EXES))
+
+#MM
+contrib-freetype1-test : setup $(EXES)
+
+USER_INCLUDES := -I. -I../lib -I../lib/extend -I../lib/arch/amigaos #-Iarch/amigaos
+
+#Libraries to use
+USE_CLIB_SHARED := yes
+USE_AMIGALIB    := yes
+USE_MLIB        := yes
+
+%make_prog_setup mmake=contrib-freetype1-test
+
+LIBS := -lfreetype1 $(LIBS)
+
+vpath %.c arch/amigaos
+
+GFILES := gmain display blitter gw_amiga
+
+FILES := $(GFILES) ftzoom common
+%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftzoom
+
+FILES := $(GFILES) ftview common
+%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftview
+
+FILES := ftlint common
+%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftlint
+
+FILES := ftdump common
+%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftdump
+
+FILES := $(GFILES) ftstring common
+%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftstring
+
+FILES := $(GFILES) fttimer common
+%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/fttimer
+
+FILES := ftsbit common
+%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftsbit
+
+FILES := ftstrpnm common
+%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftstrpnm
+
+FILES := ftmetric common
+%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftmetric
+
+FILES := $(GFILES) ftstrtto common arabic
+%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/ftstrtto
+
+FILES := fterror
+%make_prog_multi dir=$(EXEDIR) target=$(EXEDIR)/fterror
+
+%common
+%include_deps

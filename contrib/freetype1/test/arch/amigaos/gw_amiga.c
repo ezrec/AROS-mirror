@@ -36,7 +36,13 @@
 #include <intuition/screens.h>
 #include <libraries/gadtools.h>
 
-#ifdef __GNUC__
+#ifdef __AROS__
+#include <proto/exec.h>
+#include <proto/intuition.h>
+#include <proto/graphics.h>
+#include <proto/dos.h>
+#include <proto/gadtools.h>
+#elif defined(__GNUC__)
 #include <inline/exec.h>
 #include <inline/intuition.h>
 #include <inline/graphics.h>
@@ -59,26 +65,37 @@
 
 /* some screen definitions */
 
+/*
 #define MONO_WINDOW_WIDTH   0xFFFF
 #define MONO_WINDOW_HEIGHT  0xFFFF
 
 #define GRAY_WINDOW_WIDTH   0xFFFF
 #define GRAY_WINDOW_HEIGHT  0xFFFF
+*/
+
+/* AROS at the moment opens a zero size window when size it too big */
+#define MONO_WINDOW_WIDTH  600
+#define MONO_WINDOW_HEIGHT 400
+
+#define GRAY_WINDOW_WIDTH  600
+#define GRAY_WINDOW_HEIGHT 400
 
 #define DISPLAY_MEM         ( 1024 * 64 )
 
 
   /* external variables */
+#ifndef __AROS__
   extern struct Library*  SysBase;
   extern struct Library*  DOSBase;
+#endif
 
   extern int    vio_ScanLineWidth;
   extern char*  Vio;
 /*  extern char   gray_palette[5]; */
 
   /* global variables */
-  struct Library*  IntuitionBase = NULL;
-  struct Library*  GfxBase = NULL;
+  struct IntuitionBase*  IntuitionBase = NULL;
+  struct GfxBase*  GfxBase = NULL;
   struct Library *GadToolsBase = NULL;
 
   typedef struct  _Translator
@@ -197,13 +214,13 @@
     FreeVisualInfo( VisualInfo );
 
     if ( GfxBase )
-      CloseLibrary( GfxBase );
+      CloseLibrary( (struct Library *)GfxBase );
 
     if ( GadToolsBase )
       CloseLibrary( GadToolsBase );
 
     if ( IntuitionBase )
-      CloseLibrary( IntuitionBase );
+      CloseLibrary( (struct Library *)IntuitionBase );
 
   }
 
@@ -219,7 +236,7 @@
     }
 
     /* open intuition library */
-    IntuitionBase = (struct Library*)OpenLibrary( "intuition.library", 39L );
+    IntuitionBase = (struct IntuitionBase*)OpenLibrary( "intuition.library", 39L );
     if ( IntuitionBase == NULL )
     {
       PutStr( "Could not open intuition library\n" );
@@ -235,7 +252,7 @@
     }
   
     /* open graphics library */
-    GfxBase = OpenLibrary( "graphics.library", 39L );
+    GfxBase = (struct GfxBase*)OpenLibrary( "graphics.library", 39L );
     if ( GfxBase == NULL )
     {
       PutStr( "Could not open graphics library\n" );
@@ -349,7 +366,7 @@
   {
     struct IntuiMessage*  msg;
     ULONG                 class;
-    USHORT                code;
+    UWORD                 code;
     int rc;
     struct MenuItem *n;
 
