@@ -1,3 +1,8 @@
+/*
+   2004/09/10 - Joseph Fenton, changed to use calculated
+      samples per frame and to decode audio-only streams.
+*/
+
 #include "externs.h"
 
 static unsigned long samples_per_frame;
@@ -122,21 +127,19 @@ int play_decode_stream(AVFormatContext *is)
     }
     
     if(use_audio) {
-        samples_per_frame = (unsigned long) ((double)audio_sample_rate / frame_rate);
+        samples_per_frame = (unsigned long) ((double)audio_sample_rate / frame_rate + 0.5);
         audiobytes_per_frame = samples_per_frame * audio_channels * 2;
 
         printf("Opened Audio %d/%d/16bit (%ffps, %lu samples per frame).\n",
                 audio_sample_rate, audio_channels,
                 frame_rate, samples_per_frame);
-    }
-    else if(!benchmark_mode) {
+    } else if(!benchmark_mode) {
        samples_per_frame = (int) (1000.0f / frame_rate);
        audio_sample_rate = frame_rate * samples_per_frame;
        audiobytes_per_frame = -1;
        
        fprintf(stderr, "Playing a frame every %lu msec\n", samples_per_frame);
-    }
-    else {
+    } else {
        fprintf(stderr, "*** BENCHMARK MODE *** (press Q to end)\n");
     }
 
@@ -205,7 +208,7 @@ redo:
         index = pkt.stream_index;
 
         if(!benchmark_mode) {
-            while(pictures_in_buffer > 1 &&
+            while(((pictures_in_buffer > 1) || no_video) &&
                     bytes_in_buffer > (audiobytes_per_frame * 2)) {
 
                 if(!audio_started) {
@@ -221,7 +224,7 @@ redo:
                 sample_frame += samples_per_frame;
 
                 if(get_elapsed_samples() > samples_per_frame && 
-                        sample_frame < (get_elapsed_samples() - samples_per_frame)) {
+                   sample_frame < (get_elapsed_samples() - samples_per_frame) && !no_video) {
                     skips++;
                     do_frame_skip();
                 } else {
@@ -230,7 +233,8 @@ redo:
                         os_delay(1);
                     }
 
-                    display_picture_new();
+                    if (!no_video)
+                        display_picture_new();
                 }
 
                 frames++;
@@ -272,7 +276,6 @@ redo:
                         continue;
                     }
 
-                
                     write_audio((unsigned char *)samples, data_size);
                            
                     break;
