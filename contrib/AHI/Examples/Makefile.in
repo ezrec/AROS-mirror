@@ -53,7 +53,7 @@ maintainer-clean: distclean
 install:
 
 bindist:	$(TARGETS)
-	$(INSTALL) --directory $(DEVEXDIR) #$(USREXDIR)
+	$(INSTALL) -d $(DEVEXDIR) #$(USREXDIR)
 	for d in Device Extras Low-level; do \
 	  cd $(srcdir) && find $${d} -type f -and -not -path '*CVS*' \
 	    -exec $(INSTALL_DATA) -D {} $(DEVEXDIR)/{} \; ; \

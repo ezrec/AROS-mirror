@@ -84,12 +84,12 @@ install: gcc-include-inst.stamp
 
 bindist:	$(TARGETS)
 	for file in $(TARGETS); do \
-	 $(INSTALL) --directory $(DEVINCDIR)/`echo $$file | sed -e 's,\(.*\)-.*.,\1,' | sed -e 's,-,/,g'`; \
+	 $(INSTALL) -d $(DEVINCDIR)/`echo $$file | sed -e 's,\(.*\)-.*.,\1,' | sed -e 's,-,/,g'`; \
 	 $(INSTALL_DATA) $$file $(DEVINCDIR)/`echo $$file | sed -e 's,-,/,g'`; \
 	done
 
 	for dir in $(dir $(FILES)); do \
-	 $(INSTALL) --directory $(DEVINCDIR)/$$dir; \
+	 $(INSTALL) -d $(DEVINCDIR)/$$dir; \
 	done
 
 	for file in $(FILES); do \
@@ -101,7 +101,7 @@ gcc-include: gcc-include-comp.stamp
 
 gcc-include%.stamp:	SFD/ahi_lib.sfd SFD/ahi_sub_lib.sfd \
 			$(CTARGETS) $(GCCTARGETS)
-	 $(INSTALL) --directory $(INCDIR)/clib $(INCDIR)/devices $(INCDIR)/libraries \
+	 $(INSTALL) -d $(INCDIR)/clib $(INCDIR)/devices $(INCDIR)/libraries \
 	                        $(INCDIR)/inline $(INCDIR)/proto
 
 	for file in `cd $(srcdir)/C && find . -type f -not -path "*CVS/*"`; do \

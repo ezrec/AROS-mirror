@@ -104,10 +104,10 @@ distclean:	clean
 maintainer-clean: distclean
 
 install:	all
-	$(INSTALL) --directory $(PREFIX)/Devs
+	$(INSTALL) -d $(PREFIX)/Devs
 	$(INSTALL_PROGRAM) $(EXECUTABLE) $(PREFIX)/Devs/$(EXECUTABLE)
 	for i in $(LANGUAGES); do \
-	  $(INSTALL) --directory $(PREFIX)/Catalogs/$$i; \
+	  $(INSTALL) -d $(PREFIX)/Catalogs/$$i; \
 	  $(INSTALL_DATA) $$i.catalog $(PREFIX)/Catalogs/$$i/ahi.catalog; \
 	done
 
@@ -118,15 +118,15 @@ revup:
 	@cat $(srcdir)/version.rev
 
 bindist:	all
-	$(INSTALL) --directory $(CATDIR)
+	$(INSTALL) -d $(CATDIR)
 	$(INSTALL_DATA) ${srcdir}/ahi.cd $(CATDIR)
 	$(INSTALL_DATA) ${srcdir}/ahi.ct $(CATDIR)
 	for i in $(LANGUAGES); do \
-	  $(INSTALL) --directory $(CATDIR)/$$i; \
+	  $(INSTALL) -d $(CATDIR)/$$i; \
 	  $(INSTALL_DATA) $$i.catalog $(CATDIR)/$$i/ahi.catalog; \
 	done
 
-	$(INSTALL) --directory $(DEVSDIR)
+	$(INSTALL) -d $(DEVSDIR)
 
 	$(INSTALL_PROGRAM) $(EXECUTABLE) $(DEVSDIR)/$(EXECUTABLE)
 	$(STRIP) $(DEVSDIR)/$(EXECUTABLE)

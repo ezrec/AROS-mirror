@@ -75,13 +75,13 @@ maintainer-clean:
 
 bindist:
 	$(RM) -r $(DISTDIR)
-	$(INSTALL) --directory $(DISTDIR)
+	$(INSTALL) -d $(DISTDIR)
 	$(INSTALL_DATA) ${srcdir}/COPYING $(DISTDIR)
 	$(INSTALL_DATA) ${srcdir}/COPYING.LIB $(DISTDIR)
 	$(INSTALL_DATA) ${srcdir}/COPYING.DRIVERS $(DISTDIR)
 	$(INSTALL_DATA) ${srcdir}/ChangeLog $(DISTDIR)
 
-	$(INSTALL) --directory $(CATDIR)
+	$(INSTALL) -d $(CATDIR)
 	$(INSTALL_DATA) ${srcdir}/README.ATO $(CATDIR)
 	$(INSTALL_DATA) ${srcdir}/README.TRANSLATIONS $(CATDIR)
 

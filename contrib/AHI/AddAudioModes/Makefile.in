@@ -57,7 +57,7 @@ distclean:	clean
 maintainer-clean: distclean
 
 install:	all
-	$(INSTALL) --directory $(PREFIX)/C
+	$(INSTALL) -d $(PREFIX)/C
 	$(INSTALL_PROGRAM) $(EXECUTABLE) $(PREFIX)/C/$(EXECUTABLE)
 
 revup:
@@ -67,7 +67,7 @@ revup:
 	@cat $(srcdir)/version.rev
 
 bindist:	all
-	$(INSTALL) --directory $(CDIR)
+	$(INSTALL) -d $(CDIR)
 	$(INSTALL_PROGRAM) $(EXECUTABLE) $(CDIR)/$(EXECUTABLE)
 	$(STRIP) $(CDIR)/$(EXECUTABLE)
 

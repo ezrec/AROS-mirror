@@ -67,7 +67,7 @@ maintainer-clean: distclean
 
 bindist:
 	@for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@) || exit; done
-	$(INSTALL) --directory $(DRIVERDIR) 
+	$(INSTALL) -d $(DRIVERDIR) 
 	for d in $(SUBDIRS) Paula Toccata Void Wavetools; do \
 	  cd $(srcdir) && find $${d} -type f -and -not -path '*CVS*' \
 	    -exec $(INSTALL_DATA) -D {} $(DRIVERDIR)/{} \; ; \

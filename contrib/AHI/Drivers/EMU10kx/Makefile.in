@@ -34,7 +34,7 @@ camd-clean:
 	$(RM) camdstubs.c camdstubs.h CAMD/emu10kx CAMD/emu10kx.o CAMD.stamp
 
 camd-bindist:	all
-	$(INSTALL) --directory $(CAMDDIR)
+	$(INSTALL) -d $(CAMDDIR)
 	$(INSTALL_PROGRAM) CAMD/emu10kx $(CAMDDIR)
 	$(STRIP) $(CAMDDIR)/emu10kx
 
