@@ -70,6 +70,7 @@ abbreviations = {
     'realtime' : 'RealTime.library',
     'reqtools' : 'ReqTools.library',
     'rexxsyslib' : 'RexxSys.library',
+    'rexxsupport' : 'RexxSupport.library',
     'rexxmast' : 'RexxMast Program',
     'timer' : 'Timer.device',
     'translator' : 'Translator.library',
