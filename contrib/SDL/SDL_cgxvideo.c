@@ -984,7 +984,7 @@ buildnewscreen:
 
             GFX_Display=NULL;
 
-			D(bug("Opening screen...\n"));
+			D(bug("Opening screen %dx%d/%d...\n", width, height, bpp));
 
 			if(okid!=INVALID_ID)
 				GFX_Display=OpenScreenTags(NULL,
@@ -1004,7 +1004,7 @@ buildnewscreen:
 				UnlockPubScreen(NULL,SDL_Display);
 				SDL_Display=GFX_Display;
 	
-				D(bug("Screen opened.\n"));
+				D(bug("Screen opened: %d x %d.\n", GFX_Display->Width, GFX_Display->Height));
 
 				if(flags&SDL_DOUBLEBUF) {
 					int ok=0;
