@@ -6,8 +6,5 @@
 ##MM- contrib-gnu : contrib-gnu-fileutils
 ##MM- contrib-gnu-fileutils : development-fileutils
 
-REPOSITORIES := http://ftp.gnu.org/pub/gnu/fileutils
-
 %fetch_and_build_gnu_development package=fileutils version=4.1 \
-    package_repo=$(REPOSITORIES) \
-    extraoptions="--target=$(AROS_TARGET_CPU)-aros --build=local --disable-nls"
+    patch=yes
