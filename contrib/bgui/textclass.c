@@ -11,6 +11,10 @@
  * All Rights Reserved.
  *
  * $Log$
+ * Revision 42.5  2001/02/02 21:06:50  stegerg
+ * used TextFit() with strDirection param = 0, but it must be -1 or 1
+ * (autodocs)
+ *
  * Revision 42.4  2001/01/28 04:53:21  bergers
  * Fixed some compiler complaints (some casts were missing.).
  *
@@ -909,7 +913,7 @@ makeproto void RenderText(struct BaseInfo *bi, UBYTE *text, struct IBox *domain)
 	    /*
 	     * Render them.
 	     */
-	    if (numc = TextFit(rp, text, i, &extent, NULL, 0, max((LONG)(domain->Width - (xpos - domain->Left)), 0), rp->TxHeight))
+	    if (numc = TextFit(rp, text, i, &extent, NULL, 1, max((LONG)(domain->Width - (xpos - domain->Left)), 0), rp->TxHeight))
 	    {
 	       if (flags & TF_SHADOW)
 	       {
