@@ -79,6 +79,31 @@ struct   GfxBase       *GfxBase;
 struct   IntuitionBase *IntuitionBase;
 
 
+#ifndef LATTICE
+/*---------------------------*/
+/* Some Lattice(?) functions */
+/* Added by hkiel@aros.org   */
+/* Correct them if YOU know  */
+/* what they do...           */
+
+#warning FIXME: Original used Lattice which has stpblk()
+char *stpblk(char *string) /* Return pointer to next word in string */
+{
+char *ptr=string;
+  while( *ptr && !isblank(*ptr))
+    ptr++;
+  while( *ptr && isblank(*ptr))
+    ptr++;
+return ptr;
+}
+
+#warning FIXME: Original used Lattice which has Chk_Abort()
+int Chk_Abort() /* Disabled by now */
+{
+return 0;
+}
+#endif /* LATTICE */
+
 /*----------------------------------*/
 /* Miscellaneous Global Definitions */
 
