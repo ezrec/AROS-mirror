@@ -18,7 +18,7 @@
 #include <intuition/intuition.h>
 #include "input.h"
 
-extern ConsoleDevice;
+extern struct Device *ConsoleDevice;
 
 /*************
 *  INPUT KEY
