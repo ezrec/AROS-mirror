@@ -23,6 +23,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+static const streng _fname = {1, 1, "F"}, _fstem = {4, 4, "FI.F"};
+
 #if defined(_AMIGA) || defined(__AROS__)
 #include "envir.h"
 #include <dos/dos.h>
@@ -32,19 +34,28 @@
 #include <exec/execbase.h>
 #include <rexx/rxslib.h>
 #include <rexx/storage.h>
+#include <rexx/errors.h>
+#include <rexx/rexxcall.h>
+
+#include <aros/debug.h>
 
 #include <proto/alib.h>
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/rexxsyslib.h>
 
-static const streng _fname = {1, 1, "F"}, _fstem = {4, 4, "FI.F"};
+#define CallRsrcFunc(libbase, offset, rsrc) \
+  ({ \
+    int _offset=abs(offset)/6; \
+    AROS_LC1(VOID, CallLibFunc, \
+	     AROS_LCA(struct RexxRsrc *, rsrc, A0), \
+	     struct Library *, libbase, _offset, rexxcall); \
+  })
 
 struct amiga_envir {
   struct envir envir;
   struct MsgPort *port;
 };
-
 #endif
 
 typedef struct _amiga_tsd_t {
@@ -53,24 +64,95 @@ typedef struct _amiga_tsd_t {
   struct amiga_envir portenvir;
   struct RxsLib *rexxsysbase;
   BPTR startlock;
+  struct List resources; /* List to store resources to clean up at the end */
+  struct MsgPort *listenport, *replyport;
+  BYTE maintasksignal, subtasksignal;
+  struct Task *parent, *child;
 #endif
 } amiga_tsd_t;
 
-#define RexxSysBase (((amiga_tsd_t *)TSD->ami_tsd)->rexxsysbase)
 
 #if defined(_AMIGA) || defined(__AROS__)
+GLOBAL_PROTECTION_VAR(createtask)
+tsd_t *subtask_tsd;
+ 
+#define RexxSysBase (((amiga_tsd_t *)TSD->ami_tsd)->rexxsysbase)
+
 /* On AROS delete the allocated resources that are not recycled by the
  * normal C exit handling
  */
 static void exit_amigaf( int dummy, void *ptr )
 {
   amiga_tsd_t *atsd = (amiga_tsd_t *)ptr;
-
+  struct RexxRsrc *rsrc;
+  
+  ForeachNode( &atsd->resources, rsrc )
+    CallRsrcFunc( rsrc->rr_Base, rsrc->rr_Func, rsrc );
+  
+  DeletePort( atsd->replyport );
+  Signal( atsd->child, 1<<atsd->subtasksignal );
   if ( atsd->rexxsysbase != NULL )
     CloseLibrary( (struct Library *)atsd->rexxsysbase );
   UnLock( CurrentDir( atsd->startlock ) );
   
   free(ptr);
+}
+
+
+/* ReginaHandleMessages will be executed in a subtask and will be
+ * able to handle messages send to it asynchronously
+ */
+void ReginaHandleMessages(void)
+{
+  tsd_t *TSD = subtask_tsd;
+  amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
+  BOOL done;
+  ULONG mask, signals;
+  struct RexxMsg *msg;
+  struct MsgPort *listenport;
+  
+  listenport = CreatePort( NULL, 0 );
+  atsd->listenport = listenport;
+  if ( listenport == NULL )
+    atsd->child = NULL;
+  else
+    atsd->subtasksignal = AllocSignal( -1 );
+  Signal( atsd->parent, 1<<atsd->maintasksignal );
+  
+  mask = 1<<atsd->subtasksignal | 1<<atsd->listenport->mp_SigBit;
+  done = listenport == NULL;
+  while ( !done )
+  {
+    signals = Wait( mask );
+    
+    done = (signals & 1<<atsd->subtasksignal) != 0;
+
+    while ( (msg = (struct RexxMsg *)GetMsg( atsd->listenport )) != NULL )
+    {
+      if ( IsRexxMsg( msg ) )
+	switch ( msg->rm_Action & RXCODEMASK )
+	{
+	case RXADDRSRC:
+	  AddTail( &atsd->resources, (struct Node *)ARG0( msg ) );
+	  msg->rm_Result1 = RC_OK;
+	  break;
+	  
+	case RXREMRSRC:
+	  Remove( (struct Node *)ARG0( msg ) );
+	  msg->rm_Result1 = RC_OK;
+	  break;
+	  
+	default:
+	  msg->rm_Result1 = RC_ERROR;
+	  msg->rm_Result2 = ERR10_010;
+	  break;
+	}
+      ReplyMsg( (struct Message *)msg );
+    }
+  }
+
+  if ( listenport != NULL )
+    DeletePort( listenport );
 }
 #endif
 
@@ -86,6 +168,8 @@ int init_amigaf ( tsd_t *TSD )
 
   if (atsd==NULL) return 0;
 
+  TSD->ami_tsd = (void *)atsd;
+
   /* Allocate later because systeminfo is not initialized at the moment */
   atsd->amilevel = NULL;
 #if defined(_AMIGA) || defined(__AROS__)
@@ -99,10 +183,22 @@ int init_amigaf ( tsd_t *TSD )
   CurrentDir(old);
   if (on_exit( exit_amigaf, atsd ) == -1)
     return 0;
+  NewList( &atsd->resources );
+  atsd->replyport = CreatePort( NULL, 0 );
+  atsd->maintasksignal = AllocSignal( -1 );
+  atsd->parent = FindTask( NULL );
+  
+  THREAD_PROTECT(createtask)
+  subtask_tsd = TSD;
+  atsd->child = CreateTask( "Regina Helper", 0, (APTR)ReginaHandleMessages, 8192 );
+  if ( atsd->child != NULL )
+    Wait(1<<atsd->maintasksignal);
+  THREAD_UNPROTECT(createtask)
+      
+  if ( atsd->child == NULL )
+    return 0;
 #endif
   
-  TSD->ami_tsd = (void *)atsd;
-
   return 1;
 }
 
@@ -1176,19 +1272,57 @@ struct envir *amiga_find_envir( const tsd_t *TSD, const streng *name )
   return (struct envir *)&(atsd->portenvir);
 }
 
+/* createreginamessage will create a RexxMsg filled with the necessary fields
+ * for regina specific things
+ */
+struct RexxMsg *createreginamessage( const tsd_t *TSD )
+{
+  amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
+  struct RexxMsg *msg;
+
+  msg = CreateRexxMsg( atsd->replyport, NULL, NULL );
+  if ( msg != NULL )
+    msg->rm_Private1 = (IPTR)atsd->listenport;
+  
+  return msg;
+}
+
+/* The function sendandwait will send a rexx message to a certain
+ * port and wait till it returns. It the mean time also other
+ * message (like variable can be handled
+ * The replyport of the msg has to be atsd->listenport
+ */
+void sendandwait( const tsd_t *TSD, struct MsgPort *port, struct RexxMsg *msg )
+{
+  amiga_tsd_t *atsd = (amiga_tsd_t *)TSD->ami_tsd;
+  struct RexxMsg *msg2;
+
+  PutMsg( port, (struct Message *)msg );
+  
+  msg2 = NULL;
+  while ( msg2 != msg )
+  {
+    WaitPort( atsd->replyport );
+    msg2 = (struct RexxMsg *)GetMsg( atsd->replyport );
+    if ( msg2 != msg )
+      ReplyMsg( (struct Message *)msg2 );
+  }
+}
+
+
+
 streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envir, int *rc )
 {
   struct RexxMsg *msg;
-  struct MsgPort *port = ((struct amiga_envir *)envir)->port, *replyport;
+  struct MsgPort *port = ((struct amiga_envir *)envir)->port;
   
-  replyport = CreatePort( NULL, 0 );
-  msg = CreateRexxMsg( port, NULL, NULL );
+  msg = createreginamessage( TSD );
   msg->rm_Action = RXCOMM;
   msg->rm_Args[0] = (IPTR)CreateArgstring( (STRPTR)command->value, command->len );
   fflush(stdout);
   msg->rm_Stdin = Input();
   msg->rm_Stdout = Output();
-  PutMsg(port, (struct Message *)msg);
+  sendandwait( TSD, port, msg );
 
   *rc = RXFLAG_OK;
   DeleteRexxMsg( msg );
@@ -1209,7 +1343,7 @@ streng *AmigaSubCom( const tsd_t *TSD, const streng *command, struct envir *envi
 streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
 {
   cparamboxptr parm2 = NULL, parm3 = NULL, parm4 = NULL;
-  struct MsgPort *replyport, *rexxport;
+  struct MsgPort *rexxport;
   struct RexxMsg *msg;
   int pri, offset, version, error, count;
   char *name;
@@ -1247,20 +1381,12 @@ streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
   }
 
   name = str_of( TSD, parm1->value );
-  replyport = CreatePort( NULL, 0 );
-  if ( replyport == NULL )
-  {
-    Free_TSD( TSD, name );
-    exiterror( ERR_STORAGE_EXHAUSTED, 0 );
-  }
-  msg = CreateRexxMsg( replyport, NULL, NULL );
+  msg = createreginamessage( TSD );
   if ( msg == NULL )
   {
     Free_TSD( TSD, name );
-    DeletePort( replyport );
     exiterror( ERR_STORAGE_EXHAUSTED, 0 );
   }
-    
   if ( parm3 == NULL || parm3->value == NULL || parm3->value->len == 0 )
   {
     msg->rm_Action = RXADDFH;
@@ -1270,7 +1396,6 @@ streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
     if ( !FillRexxMsg( msg, 2, 1<<1 ) )
     {
       Free_TSD( TSD, name );
-      DeletePort( replyport );
       DeleteRexxMsg( msg );
       exiterror( ERR_STORAGE_EXHAUSTED, 0 );
     }
@@ -1286,7 +1411,6 @@ streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
     if ( !FillRexxMsg( msg, 4, 1<<1 | 1<<2 | 1<<3 ) )
     {
       Free_TSD( TSD, name );
-      DeletePort( replyport );
       DeleteRexxMsg( msg );
       exiterror( ERR_STORAGE_EXHAUSTED, 0 );
     }
@@ -1296,16 +1420,12 @@ streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
   if (rexxport == NULL)
   {
     Free_TSD( TSD, name );
-    DeletePort( replyport );
     DeleteRexxMsg( msg );
     exiterror( ERR_EXTERNAL_QUEUE, 0 );
   }
-  PutMsg( rexxport, (struct Message *)msg );
-    
-  while( (struct RexxMsg *)WaitPort( replyport ) != msg ) /* Nothing */;
+  sendandwait( TSD, rexxport, msg );
     
   Free_TSD( TSD, name );
-  DeletePort( replyport );
   ClearRexxMsg( msg, count );
     
   retval = ( msg->rm_Result1 == 0 ) ? Str_cre_TSD( TSD, "1" ) : Str_cre_TSD( TSD, "0" );
@@ -1317,16 +1437,13 @@ streng *arexx_addlib( tsd_t *TSD, cparamboxptr parm1 )
 
 streng *arexx_remlib( tsd_t *TSD, cparamboxptr parm1 )
 {
-  struct MsgPort *replyport, *rexxport;
+  struct MsgPort *rexxport;
   struct RexxMsg *msg;
   streng *retval;
   
   checkparam( parm1, 1, 1, "REMLIB" );
   
-  replyport = CreatePort( NULL, 0 );
-  if ( replyport == NULL )
-    exiterror( ERR_STORAGE_EXHAUSTED, 0 );
-  msg = CreateRexxMsg( replyport, NULL, NULL );
+  msg = createreginamessage( TSD );
   if ( msg == NULL )
     exiterror( ERR_STORAGE_EXHAUSTED, 0 );
 
@@ -1340,11 +1457,8 @@ streng *arexx_remlib( tsd_t *TSD, cparamboxptr parm1 )
     DeleteRexxMsg( msg );
     exiterror( ERR_EXTERNAL_QUEUE, 0 );
   }
-  PutMsg( rexxport, (struct Message *)msg );
+  sendandwait( TSD, rexxport, msg );
 
-  while( (struct RexxMsg *)WaitPort( replyport ) != msg ) /* Nothing */;
-  DeletePort( replyport );
-  
   retval = ( msg->rm_Result1 == 0 ) ? Str_cre_TSD( TSD, "1" ) : Str_cre_TSD( TSD, "0" );
 
   DeleteArgstring( (UBYTE *)msg->rm_Args[0] );
@@ -1355,20 +1469,22 @@ streng *arexx_remlib( tsd_t *TSD, cparamboxptr parm1 )
 
 streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char called )
 {
-  struct MsgPort *replyport, *rexxport;
+  struct MsgPort *port;
   struct RexxMsg *msg;
-  streng *retval;
+  struct RexxRsrc *rsrc;
+  struct Library *lib;
+  ULONG result1;
+  IPTR result2;
+  UBYTE *retstring;
   unsigned int parmcount;
   cparamboxptr parmit;
-  
-  replyport = CreatePort( NULL, 0 );
-  if (replyport == NULL )
-    exiterror( ERR_STORAGE_EXHAUSTED, 0 );
-  msg = CreateRexxMsg( replyport, NULL, NULL );
+  streng *retval;
+
+  msg = createreginamessage( TSD );
   if ( msg == NULL )
     exiterror( ERR_STORAGE_EXHAUSTED, 0 );
   
-  msg->rm_Action = RXFUNC | RXFF_RESULT | RXFF_FUNCLIST;
+  msg->rm_Action = RXFUNC | RXFF_RESULT;
   msg->rm_Args[0] = (IPTR)CreateArgstring( (char *)name->value, name->len );
   for (parmit = parms, parmcount = 0; parmit != NULL; parmit = parmit->next, parmcount++)
   {
@@ -1379,39 +1495,68 @@ streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char
   msg->rm_Stdin = Input( );
   msg->rm_Stdout = Output( );
   
-  rexxport = FindPort( "REXX" );
-  if (rexxport == NULL )
+  LockRexxBase(0);
+
+  for (rsrc = (struct RexxRsrc *)GetHead(&RexxSysBase->rl_LibList), result1 = 1;
+       rsrc != NULL && result1 == 1;
+       rsrc = (struct RexxRsrc *)GetSucc(rsrc))
   {
-    ClearRexxMsg( msg, parmcount + 1 );
-    DeleteRexxMsg( msg );
-    DeletePort( replyport);
-    exiterror( ERR_EXTERNAL_QUEUE, 0 );
+    switch (rsrc->rr_Node.ln_Type)
+    {
+    case RRT_LIB:
+      lib = OpenLibrary(rsrc->rr_Node.ln_Name, rsrc->rr_Arg2);
+      if (lib == NULL)
+      {
+	UnlockRexxBase(0);
+	ClearRexxMsg( msg, parmcount + 1 );
+	DeleteRexxMsg( msg );
+	exiterror( ERR_EXTERNAL_QUEUE, 0 );
+      }
+      /* Can not pass &result2 directly because on systems where
+       * sizeof(IPTR)>sizeof(UBYTE *) this goes wrong
+       */
+      result1 = RexxCallQueryLibFunc(msg, lib, rsrc->rr_Arg1, &retstring);
+      CloseLibrary(lib);
+      result2 = (IPTR)retstring;
+      break;
+      
+    case RRT_HOST:
+      port = FindPort(rsrc->rr_Node.ln_Name);
+      if (port == NULL)
+      {
+	UnlockRexxBase(0);
+	ClearRexxMsg( msg, parmcount + 1 );
+	DeleteRexxMsg( msg );
+	exiterror( ERR_EXTERNAL_QUEUE, 0 );
+      }
+      sendandwait( TSD, port, msg);
+      
+      result1 = (ULONG)msg->rm_Result1;
+      result2 = msg->rm_Result2;
+
+    default:
+      assert(FALSE);
+    }
   }
-  PutMsg( rexxport, (struct Message *)msg );
+   
+  UnlockRexxBase(0);
+  ClearRexxMsg( msg, parmcount + 1 );
+  DeleteRexxMsg( msg );
   
-  while( (struct RexxMsg *)WaitPort( replyport ) != msg ) /* Nothing */;
-  DeletePort( replyport );
-  
-  if ( msg->rm_Result1 != 0 )
+  if ( result1 == 0 )
   {
-    if ( msg->rm_Result2 != 0 )
-      exiterror( ERR_EXTERNAL_QUEUE, 0 );
-    else
-      retval = NULL;
-  }
-  else
-  {
-    if ( msg->rm_Result2 == NULL )
+    if ( (UBYTE *)result2 == NULL )
       retval = nullstringptr();
     else
     {
-      retval = Str_ncre_TSD( TSD, (const char *)msg->rm_Result2, LengthArgstring( (UBYTE *)msg->rm_Result2 ) );
-      DeleteArgstring( (UBYTE *)msg->rm_Result2 );
+      retval = Str_ncre_TSD( TSD, (const char *)result2, LengthArgstring( (UBYTE *)result2 ) );
+      DeleteArgstring( (UBYTE *)result2 );
     }
   }
-  
-  ClearRexxMsg( msg, parmcount + 1 );
-  DeleteRexxMsg( msg );
+  else if ( result1 == 1 )
+    retval = NULL;
+  else
+    exiterror( ERR_EXTERNAL_QUEUE, 0 );
 
   return retval;
 };
@@ -1423,22 +1568,16 @@ streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char
 streng *arexx_setclip( tsd_t *TSD, cparamboxptr parm1 )
 {
   cparamboxptr parm2;
-  struct MsgPort *replyport, *rexxport;
+  struct MsgPort *rexxport;
   struct RexxMsg *msg;
   streng *retval;
   
   checkparam( parm1, 1, 2, "SETCLIP" );
   parm2 = parm1->next;
 
-  replyport = CreatePort(NULL, 0);
-  if ( replyport == NULL )
-    exiterror( ERR_STORAGE_EXHAUSTED, 0 );
-  msg = CreateRexxMsg( replyport, NULL, NULL );
+  msg = createreginamessage( TSD );
   if ( msg == NULL )
-  {
-    DeletePort( replyport );
     exiterror( ERR_STORAGE_EXHAUSTED, 0 );
-  }
   
   if ( parm2 == NULL || parm2->value == NULL || parm2->value->len == 0 )
   {
@@ -1458,15 +1597,11 @@ streng *arexx_setclip( tsd_t *TSD, cparamboxptr parm1 )
   {
     Free_TSD( TSD, (void *)msg->rm_Args[0] );
     DeleteRexxMsg( msg );
-    DeletePort( replyport );
     exiterror( ERR_EXTERNAL_QUEUE, 0 );
   }
-  PutMsg( rexxport, (struct Message *)msg );
+  sendandwait( TSD, rexxport, msg );
   
-  while( (struct RexxMsg *)WaitPort( replyport ) != msg ) /* Nothing */;
-
   Free_TSD( TSD, (void *)msg->rm_Args[0] );
-  DeletePort( replyport );
 
   retval = ( msg->rm_Result1 == 0 ) ? Str_cre_TSD( TSD, "1" ) : Str_cre_TSD( TSD, "0" );
   DeleteRexxMsg( msg );

@@ -33,7 +33,6 @@ static void AddLib(struct RexxMsg *);
 static void RemLib(struct RexxMsg *);
 static void AddCon(struct RexxMsg *);
 static void RemCon(struct RexxMsg *);
-static void QueryFunclist(struct RexxMsg *);
 
 int main(int argc, char **argv)
 {
@@ -112,17 +111,8 @@ int main(int argc, char **argv)
 		    switch (action)
 		    {
 		    case RXFUNC:
-		        if (msg->rm_Action & RXFF_FUNCLIST)
-			    QueryFunclist(msg);
-		        else
-		        {
-			    StartFile(msg);
-			    reply = FALSE;
-			}
-		        break;
-
 		    case RXCOMM:
-			StartFile(msg);
+		        StartFile(msg);
 		        reply = FALSE;
 			break;
 
@@ -142,7 +132,14 @@ int main(int argc, char **argv)
 		    case RXREMLIB:
 		        RemLib(msg);
 		        break;
-		      
+
+		    case RXADDRSRC:
+		    case RXREMRSRC:
+		        /* Forward to the appropriate port */
+		        PutMsg( (struct MsgPort *)msg->rm_Private1, msg );
+		        reply = FALSE;
+		        break;
+		    
 		    case RXCLOSE:
 			done = TRUE;
 		    default:
@@ -447,106 +444,6 @@ static void RemLib(struct RexxMsg *msg)
     msg->rm_Result2 = 0;
   }
   UnlockRexxBase(0);
-}
-
-static void QueryFunclist(struct RexxMsg *msg)
-{
-    struct MsgPort *port, *replyport, *oldport;
-    struct RexxMsg *retmsg;
-    struct RexxRsrc *rsrc;
-    struct Library *lib;
-    ULONG result1;
-    UBYTE *result2;
-    
-    oldport = msg->rm_Node.mn_ReplyPort;
-    replyport = CreatePort(NULL, 0);
-    if (replyport == NULL)
-    {
-        msg->rm_Result1 = 20;
-        msg->rm_Result2 = 0;
-        return;
-    }
-    msg->rm_Node.mn_ReplyPort = replyport;
-    msg->rm_Action &= ~RXFF_FUNCLIST;
-    LockRexxBase(0);
-    ForeachNode(&RexxSysBase->rl_LibList, rsrc)
-    {
-        switch (rsrc->rr_Node.ln_Type)
-        {
-	case RRT_LIB:
-	    if ((lib = OpenLibrary(rsrc->rr_Node.ln_Name, rsrc->rr_Arg2))==NULL)
-	    {
-	        msg->rm_Node.mn_ReplyPort = oldport;
-	        msg->rm_Action |= RXFF_FUNCLIST;
-	        msg->rm_Result1 = 10;
-	        msg->rm_Result2 = 14;
-	        UnlockRexxBase(0);
-	        DeletePort(replyport);
-	        return;
-	    }
-	  
-	    result1 = RexxCallQueryLibFunc(msg, lib, rsrc->rr_Arg1, &result2);
-	    if (result1 != 1)
-	    {
-	        msg->rm_Node.mn_ReplyPort = oldport;
-	        msg->rm_Action |= RXFF_FUNCLIST;
-	        if (result1 == 0)
-	        {
-		    msg->rm_Result1 = 0;
-		    msg->rm_Result2 = (IPTR)result2;
-		}
-	        else
-	        {
-		    msg->rm_Result1 = 10;
-		    msg->rm_Result2 = (IPTR)result1;
-		}
-	        UnlockRexxBase(0);
-	        DeletePort(replyport);
-	        CloseLibrary(lib);
-	        return;
-	    }
-	    break;
-	  
-	case RRT_HOST:
-	    port = FindPort(rsrc->rr_Node.ln_Name);
-	    if (port == NULL)
-	    {
-	        msg->rm_Node.mn_ReplyPort = oldport;
-	        msg->rm_Action |= RXFF_FUNCLIST;
-	        msg->rm_Result1 = 10;
-	        msg->rm_Result2 = 13;
-	        UnlockRexxBase(0);
-	        DeletePort(replyport);
-	        return;
-	    }
-	  
-	    PutMsg(port, (struct Message *)msg);
-	    do
-	    {
-	        retmsg = (struct RexxMsg *)WaitPort(replyport);
-	    } while(retmsg != msg);
-	  
-	    if (msg->rm_Result1 == 0)
-	    {
-	        msg->rm_Node.mn_ReplyPort = oldport;
-	        msg->rm_Action |= RXFF_FUNCLIST;
-	        UnlockRexxBase(0);
-	        DeletePort(replyport);
-	        return;
-	    }
-
-	default:
-	    assert(FALSE);
-	}
-    }
-  
-    /* Function not found */
-    msg->rm_Result1 = 5;
-    msg->rm_Result2 = 0;
-    msg->rm_Node.mn_ReplyPort = oldport;
-    msg->rm_Action |= RXFF_FUNCLIST;
-    UnlockRexxBase(0);
-    DeletePort(replyport);
 }
 
 static void AddCon(struct RexxMsg *msg)
