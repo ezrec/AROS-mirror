@@ -10,6 +10,7 @@
 #include <proto/asl.h>
 #include <proto/gadtools.h>
 #include <proto/datatypes.h>
+#include <proto/iffparse.h>
 #include <datatypes/pictureclass.h>
 #include <graphics/gfxmacros.h>
 
@@ -20,6 +21,7 @@
 #include <intuition/gadgetclass.h>
 #include <datatypes/datatypesclass.h>
 #include <datatypes/pictureclass.h>
+#include <libraries/iffparse.h>
 #include <libraries/gadtools.h>
 #include <libraries/asl.h>
 
@@ -27,7 +29,6 @@
 #include "rable_gadgets.h"
 #include "rable.h"
 #include "rable_fills.h"
-#include "iffp/ilbm.h"
 
 #ifdef LATTICE
 int CXBRK(void)    { return(0); }  /* Disable SAS CTRL/C handling */
@@ -817,6 +818,7 @@ else EasyRequest(window1, &warning1, NULL); /* warn: wrong type of file */
 
 /****************************************************************/
 
+#define MAXSAVEDEPTH 24
 void SavePic(char *filename)
 {
    struct IFFHandle *iff;
