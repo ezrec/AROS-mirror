@@ -5,7 +5,7 @@ SUBDIRS = Jump Mine Quad Wumpus
 
 all:	setup
 	@$(MAKE) $(MFLAGS) subdirs TARGET=all
-	
+
 setup :
 	@$(MAKE) $(MFLAGS) subdirs TARGET=setup
 
@@ -16,7 +16,7 @@ subdirs:
 	@for dir in $(SUBDIRS) ; do \
 	    echo "Making $(TARGET) in $$dir..." ; \
 	    if ( cd $$dir && \
-		$(MAKE) $(MFLAGS) \
+		$(MAKE) $(MFLAGS) TOP="$(TOP)/.." \
 		TARGET=$(TARGET) $(TARGET) ) ; \
 	    then true ; else exit 1 ; fi ; \
 	done
