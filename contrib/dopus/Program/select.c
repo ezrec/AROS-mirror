@@ -31,13 +31,75 @@ the existing commercial status of Directory Opus 5.
 #include "dopus.h"
 
 #include <graphics/gels.h>
-
+#ifdef _AROS
+#include <cybergraphx/cybergraphics.h>
+#endif
 
 /* AROS: Need some obsolete defines */
 #include <intuition/iobsolete.h>
 
 struct Directory *selectedentry;
 
+static void RenderIntoBob(int type, char *ptr)
+{
+    struct RastPort *rp;
+    int c, d, e;
+
+#warning In AROS rendering into handmade bitmaps does not yet work so for now a workaround is needed
+
+#ifdef _AROS
+    struct BitMap *bm;
+    
+    rp = CreateRastPort();
+    if (!rp) return;
+    
+    bm = AllocBitMap(drag_sprite.Width * 16,
+    	    	     drag_sprite.Height,
+		     drag_sprite.Depth,
+		     BMF_CLEAR | BMF_SPECIALFMT | SHIFT_PIXFMT(PIXFMT_LUT8),
+		     NULL);
+    if (!bm) return;
+        
+    rp->BitMap = bm;
+    
+    SetABPenDrMd(rp, GetAPen(&drag_bob_rastport),
+    	    	     GetBPen(&drag_bob_rastport),
+		     GetDrMd(&drag_bob_rastport));
+    SetFont(rp, drag_bob_rastport.Font);
+#else
+    rp = &drag_bob_rastport;
+#endif
+
+    
+    SetAPen(rp,
+	    (type<=ENTRY_FILE ||
+		    (type==ENTRY_DEVICE &&
+		    (selectedentry->size==DLT_DEVICE || selectedentry->size==DLT_VOLUME)))?
+	    screen_pens[(int)config->filesselfg].pen:
+		    screen_pens[(int)config->dirsselfg].pen);
+    SetRast(rp,
+	    (type<=ENTRY_FILE ||
+		    (type==ENTRY_DEVICE &&
+		    (selectedentry->size==DLT_DEVICE || selectedentry->size==DLT_VOLUME)))?
+	    screen_pens[(int)config->filesselbg].pen:
+		    screen_pens[(int)config->dirsselbg].pen);
+    Move(rp,0,scr_font[FONT_DIRS]->tf_Baseline);
+    c=(drag_sprite.Width*16)/scrdata_font_xsize;
+    d=strlen(ptr);
+    if (d>c) e=d-c;
+    else {
+	    e=0;
+	    c=d;
+    }
+    Text(rp,&ptr[e],c);
+
+#ifdef _AROS
+    BltBitMap(bm, 0, 0, &drag_bob_bitmap, 0, 0, drag_sprite.Width * 16, drag_sprite.Height, 192, 255, 0);
+    FreeBitMap(bm);
+    FreeRastPort(rp);
+#endif
+}
+  
 void doselection(win,state)
 int win,state;
 {
@@ -146,27 +208,9 @@ startdragging:
 								}
 								if (ptr) {
 									dotaskmsg(clockmsg_port,CLOCK_ACTIVE,0,0,NULL,0);
-									SetAPen(&drag_bob_rastport,
-										(type<=ENTRY_FILE ||
-											(type==ENTRY_DEVICE &&
-											(selectedentry->size==DLT_DEVICE || selectedentry->size==DLT_VOLUME)))?
-										screen_pens[(int)config->filesselfg].pen:
-											screen_pens[(int)config->dirsselfg].pen);
-									SetRast(&drag_bob_rastport,
-										(type<=ENTRY_FILE ||
-											(type==ENTRY_DEVICE &&
-											(selectedentry->size==DLT_DEVICE || selectedentry->size==DLT_VOLUME)))?
-										screen_pens[(int)config->filesselbg].pen:
-											screen_pens[(int)config->dirsselbg].pen);
-									Move(&drag_bob_rastport,0,scr_font[FONT_DIRS]->tf_Baseline);
-									c=(drag_sprite.Width*16)/scrdata_font_xsize;
-									d=strlen(ptr);
-									if (d>c) e=d-c;
-									else {
-										e=0;
-										c=d;
-									}
-									Text(&drag_bob_rastport,&ptr[e],c);
+									
+									RenderIntoBob(type, ptr);
+									
 									drag_sprite.X=x-offx; drag_sprite.Y=y-offy;
 									AddBob(&drag_bob,main_rp);
 									SortGList(main_rp);
