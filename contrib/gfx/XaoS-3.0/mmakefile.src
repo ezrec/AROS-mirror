@@ -8,9 +8,9 @@ EXAMPLEDIR	:= $(DATADIR)/examples
 TUTORIALDIR	:= $(DATADIR)/tutorial
 
 INCLUDES	:= src/include/config.h src/include/aconfig.h
-CATALOGS	:= $(wildcard catalogs/*)
-EXAMPLES	:= $(wildcard examples/*)
-TUTORIALS	:= $(wildcard tutorial/*)
+CATALOGS	:= $(filter-out catalogs/CVS, $(wildcard catalogs/*))
+EXAMPLES	:= $(filter-out examples/CVS, $(wildcard examples/*))
+TUTORIALS	:= $(filter-out tutorial/CVS, $(wildcard tutorial/*))
 
 CATALOGFILES	:= $(foreach f, $(CATALOGS), $(CATALOGDIR)/$(notdir $(f)))
 EXAMPLEFILES	:= $(foreach f, $(EXAMPLES), $(EXAMPLEDIR)/$(notdir $(f)))
