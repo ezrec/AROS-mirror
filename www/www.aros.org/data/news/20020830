@@ -12,7 +12,7 @@ to rexxsupport.library
 
 Henrik Berglund ported the VBCC compiler to AROS.
 
-Sebastian Heutlin continued working on our HDToolBox. It now has a Zune user
+Sebastian Heutling continued working on our HDToolBox. It now has a Zune user
 interface - and it works (if you know what you are doing that is).
 
 Fabio Alemagna did some fixing in the filesystems and handlers. He also did 
