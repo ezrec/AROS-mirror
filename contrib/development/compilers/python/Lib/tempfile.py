@@ -21,7 +21,7 @@ def gettempdir():
         pwd = os.getcwd()
     except (AttributeError, os.error):
         pwd = os.curdir
-    attempdirs = ['/tmp', '/var/tmp', '/usr/tmp', pwd]
+    attempdirs = [ pwd ]
     if os.name == 'nt':
         attempdirs.insert(0, 'C:\\TEMP')
         attempdirs.insert(0, '\\TEMP')
@@ -38,6 +38,11 @@ def gettempdir():
             attempdirs.insert(0, dirname)
         except macfs.error:
             pass
+    else:
+        attempdirs.insert( 0, '/usr/tmp' )
+        attempdirs.insert( 0, '/var/tmp' )
+        attempdirs.insert( 0, '/tmp' )
+         
     for envname in 'TMPDIR', 'TEMP', 'TMP':
         if os.environ.has_key(envname):
             attempdirs.insert(0, os.environ[envname])
