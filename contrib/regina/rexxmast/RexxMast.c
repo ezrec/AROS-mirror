@@ -9,6 +9,7 @@
 
 #include <exec/ports.h>
 #include <intuition/intuition.h>
+#include <dos/dosextens.h>
 #include <rexx/storage.h>
 #include <ctype.h>
 #include <string.h>
@@ -120,7 +121,8 @@ static void StartFile(struct RexxMsg *msg)
     unsigned int len=0, extlen, argcount=0;
     LONG type;
     BOOL iscommand = ((msg->rm_Action & RXCODEMASK) == RXCOMM);
-
+    struct FileHandle *input = NULL, *output = NULL;
+    
     if (iscommand)
     {
 	/* For a command the characters up to the first space is the filename */
@@ -198,9 +200,37 @@ static void StartFile(struct RexxMsg *msg)
 	    MAKERXSTRING(rxargs[argcount], argstr, LengthArgstring(argstr));
 	}
     }
+    
+    /* Set input/output to the task that sent the message */
+    if (!(msg->rm_Action & RXFF_NOIO))
+    {
+	struct Process *process = (struct Process *)msg->rm_Node.mn_ReplyPort->mp_SigTask;
+	
+	if (process->pr_Task.tc_Node.ln_Type == NT_PROCESS)
+	{
+	    input = process->pr_CIS;
+	    output = process->pr_COS;
+	}
+	if (msg->rm_Stdin != NULL)
+	    input = msg->rm_Stdin;
+	if (msg->rm_Stdout != NULL)
+	    output = msg->rm_Stdout;
+	
+	input = SelectInput(input);
+	output = SelectOutput(output);
+	updatestdio();
+    }
+
     MAKERXSTRING(rxresult, NULL, 0);
     RexxStart(argcount, rxargs, filename, NULL, msg->rm_CommAddr, RXFUNCTION, NULL, &rc, &rxresult);
-	    
+
+    /* Return to the old input/output if it was changed */
+    if (input != NULL)
+	SelectInput(input);
+    if (output != NULL)
+	SelectOutput(output);
+    updatestdio();
+    
     fflush(stdout);
     msg->rm_Result1 = rc;
     if (rc==0 && (msg->rm_Action & RXFF_RESULT) && RXVALIDSTRING(rxresult))
