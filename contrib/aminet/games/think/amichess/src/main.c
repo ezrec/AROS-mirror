@@ -526,7 +526,7 @@ for(;;)
 	if(flags&AUTOPLAY)
 	{
 	    DoMethod(mui_app,MUIM_Chess_SwapSides);
-	    signals = 0;
+	    signals = CheckSignal(signals);
 	}
 	else if(signals) signals=Wait(signals);
 }
