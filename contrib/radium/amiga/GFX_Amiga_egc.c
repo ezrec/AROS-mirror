@@ -493,11 +493,12 @@ void GFX_C_DrawCursor(
 	SetDrMd(window->os_visual->CRPort,COMPLEMENT);
 	SetWrMsk(window->os_visual->CRPort,3);
 
+#ifdef _AMIGA
 	SetColor(window->os_visual->CRPort,2);
 	RectFill(window->os_visual->CRPort,(LONG)x1,0L,(LONG)x2,(LONG)height-1);
 	SetColor(window->os_visual->CRPort,2);
 	RectFill(window->os_visual->CRPort,(LONG)x3,0L,(LONG)x4,(LONG)height-1);
-
+#endif
 
 	SetDrMd(window->os_visual->CRPort,JAM2);
 
