@@ -6,11 +6,15 @@
 ##MM- contrib-gnu : contrib-gnu-gcc
 ##MM- contrib-gnu-gcc : development-gcc
 
-%fetch_and_build_gnu_development package=gcc subpackage=core version=3.3.1 patch=yes \
-    extraoptions="--enable-longlong --enable-sjlj-exceptions" postinstall=development-gcc-delete-specs
+VERSION    := 3.3.1
+REPOSITORY  = $(GNU_REPOSITORY)/gcc/gcc-$(VERSION)
+
+%fetch_and_build_gnu_development package=gcc subpackage=core version=$(VERSION) patch=yes \
+    package_repo=$(REPOSITORY) extraoptions="--enable-longlong --enable-sjlj-exceptions"  \
+    postinstall=development-gcc-delete-specs
 
 #MM
 development-gcc-delete-specs :
-	$(RM) $(AROS_DEVELOPMENT)/lib/gcc-lib/$(AROS_TARGET_CPU)-aros/3.3.1/specs
+	$(RM) $(AROS_DEVELOPMENT)/lib/gcc-lib/$(AROS_TARGET_CPU)-aros/$(VERSION)/specs
 
 
