@@ -7,7 +7,7 @@
 #include <proto/regina.h>
 #include <proto/rexxsyslib.h>
 
-#include <aros/rexxcall.h>
+#include <rexx/rexxcall.h>
 #include <exec/ports.h>
 #include <exec/memory.h>
 #include <intuition/intuition.h>
