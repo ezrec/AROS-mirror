@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-FILES := $(wildcrad Levels/Level* Levels/Mission* Levels/Story*) \
+FILES := $(wildcard Levels/Level* Levels/Mission* Levels/Story*) \
 	 $(wildcard Textures/*.256) \
 	 Missions
 INSTDIR := $(BINDIR)/Moria3D
