@@ -187,6 +187,10 @@ class Img( Standard ):
     def __init__( self, contents=None, **attributes ):
         Standard.__init__( self, 'img', attributes, contents )
 
+class P( Standard ):
+    def __init__( self, contents=None, **attributes ):
+        Standard.__init__( self, 'p', attributes, contents )
+
 class BR( Node ):
     def __str__( self ):
         return '<br>'
