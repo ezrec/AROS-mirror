@@ -18,7 +18,6 @@ from template.www import makeTemplates
 from template.www.gallery import *
 
 # Setup
-
 SRCROOT    = os.path.abspath( '.' )
 DSTROOT    = os.path.abspath( '../bin/documentation' )
 
@@ -102,13 +101,15 @@ def makePictures():
         'pictures/screenshots' 
     ]
     
+    options = [ '--report=none' ]
+    
     # First, copy the pictures and generate thumbnails
     for root in DIRECTORIES:
         recurse( processPicture, root )
 
     # Second, create the galleries
     for root in DIRECTORIES:
-        output = convertWWW( os.path.join( root, 'index.en' ), 'en' )
+        output = convertWWW( os.path.join( root, 'index.en' ), 'en', options )
         
         names = os.listdir( root )
         names.sort()
@@ -119,7 +120,7 @@ def makePictures():
             path = os.path.join( root, name )
             if name == 'CVS' or not os.path.isdir( path ): continue 
 
-            output += convertWWW( os.path.join( path, 'overview.en' ), 'en' )
+            output += convertWWW( os.path.join( path, 'overview.en' ), 'en', options )
 
             for pictureName in os.listdir( path ):
                 picturePath = os.path.join( path, pictureName )
@@ -130,7 +131,7 @@ def makePictures():
                 output += makePicture \
                 ( 
                     picturePath, 
-                    convertWWW( os.path.splitext( picturePath )[0] + '.en', 'en' )
+                    convertWWW( os.path.splitext( picturePath )[0] + '.en', 'en', options )
                 )
         
         strings = {
@@ -200,12 +201,17 @@ def makeNews():
                 output.write( '\n\n' )
             output.close()
 
-def convertWWW( src, language ):
+def convertWWW( src, language, options=None ):
     arguments = [
         '--no-generator',   '--language=' + language,
         '--no-source-link', '--no-datestamp', 
         '--output-encoding=iso-8859-1',
         src, '' ]
+        
+    if options:
+        for option in options:
+            arguments.insert( 0, option )
+            
     publisher = Publisher( destination_class = NullOutput )
     publisher.set_reader( 'standalone', None, 'restructuredtext' )
     publisher.set_writer( 'html' )
@@ -348,7 +354,7 @@ def buildWWW():
     )
     
     os.system( 'chmod -R go+r %s' % DSTROOT )
-
+    os.system( 'chmod +x %s' % os.path.join( DSTROOT, 'download/index.html.en' ) )
 
 def buildHTML():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'html' )
