@@ -11,5 +11,5 @@ zino:bdYh/q95S4cmU:aros:Peter Bortas:zino@lysator.liu.se
 daniel:b9bwcTjXjo3Gc:aros:Daniel Verite:daniel@brainstorm.eu.org
 mroth:da/M1jS3sNsHg:aros:Michael Roth:mroth@inlet.lake.de
 mreckt:cbWLerEivCr6I:aros:Martin Recktenwald:klaus21@t-online.de
-lpd:6u5hVWs926luc:aros:Lennard voor den Dag:ldp@worldonline.nl
+ldp:6u5hVWs926luc:aros:Lennard voor den Dag:ldp@worldonline.nl
 nico:bbHYNBwvWxgYE:aros:Nico Heinz:nico@fh-konstanz.de
