@@ -18,6 +18,9 @@
  * enable/disable status of an item.
 
  * $Log$
+ * Revision 42.6  2000/08/11 08:09:39  chodorowski
+ * Removed METHOD #define, already defined in bgui_compilerspecific.h.
+ *
  * Revision 42.5  2000/08/09 10:17:25  chodorowski
  * #include <bgui/bgui_compilerspecific.h> for the REGFUNC and REGPARAM
  * macros. Some of these files didn't need them at all...
@@ -92,19 +95,6 @@ extern struct Library * BGUIBase;
  */
 #define GADGET(x) ((struct Gadget *)x)
 
-//#define METHOD(f,m) STATIC ASM ULONG f(REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) m)
-#ifdef _AROS
-  #define METHOD(f,mtype,m) AROS_UFH3(STATIC ULONG, f, \
-                          AROS_UFHA(Class *, cl, A0), \
-                          AROS_UFHA(Object *, obj, A2), \
-                          AROS_UFHA(mtype, m, A1))
-#else
-  #define METHOD(f,mtype,m) static ASM ULONG f( \
-                          REG(A0) Class *cl, \
-                          REG(A2) Object *obj, \
-                          REG(A1) mtype m)
-#endif
-
 /*
 ** OS macros.
 **/
@@ -173,17 +163,17 @@ STATIC UWORD DefDriPens[12] = { 0, 1, 1, 2, 1, 3, 1, 0, 2, 1, 2, 1 };
 ** vectorclass.
 **/
 STATIC ULONG VectorAttrs[] = {   VIT_VectorArray,
-            VIT_BuiltIn,
-            VIT_Pen,
-            VIT_DriPen,
-            TAG_END };
+	    VIT_BuiltIn,
+	    VIT_Pen,
+	    VIT_DriPen,
+	    TAG_END };
 
 /*
 ** See if we should create a vector image.
 **/
 //STATIC ASM Object *CreateVectorImage( REG(a1) struct TagItem *attrs )
 STATIC ASM REGFUNC1(Object *, CreateVectorImage,
-        REGPARAM(A1, struct TagItem *, attrs))
+	REGPARAM(A1, struct TagItem *, attrs))
 {
    Class       *class;
    struct TagItem    *clones;
@@ -199,19 +189,19 @@ STATIC ASM REGFUNC1(Object *, CreateVectorImage,
       ** attributes.
       **/
       if ( clones = CloneTagItems( attrs )) {
-         /*
-         ** Filter out any non-vectorclass
-         ** attributes.
-         **/
-         if ( FilterTagItems( clones, VectorAttrs, TAGFILTER_AND ))
-            /*
-            ** Create the vector image.
-            **/
-            vector = NewObjectA( class, NULL, clones );
-         /*
-         ** Free the clones.
-         **/
-         FreeTagItems( clones );
+	 /*
+	 ** Filter out any non-vectorclass
+	 ** attributes.
+	 **/
+	 if ( FilterTagItems( clones, VectorAttrs, TAGFILTER_AND ))
+	    /*
+	    ** Create the vector image.
+	    **/
+	    vector = NewObjectA( class, NULL, clones );
+	 /*
+	 ** Free the clones.
+	 **/
+	 FreeTagItems( clones );
       }
    }
    return( vector );
@@ -230,8 +220,8 @@ STATIC ULONG NotifyAttrChange( Object *obj, struct GadgetInfo *gi, ULONG flags, 
 **/
 //STATIC ASM BOOL CopyArray( REG(a0) PMD *pmd, REG(a1) struct PopMenu *pm )
 STATIC ASM REGFUNC2(BOOL, CopyArray,
-        REGPARAM(A0, PMD *, pmd),
-        REGPARAM(A1, struct PopMenu *, pm))
+	REGPARAM(A0, PMD *, pmd),
+	REGPARAM(A1, struct PopMenu *, pm))
 {
    struct PopMenu *tmp = pm;
    ULONG     size;
@@ -267,10 +257,10 @@ STATIC ASM REGFUNC2(BOOL, CopyArray,
       ** Check if the position is correct.
       **/
       if ( pmd->pmd_PopPos != ~0 )     /* NMC:Added */
-         {
-         if ( pmd->pmd_PopPos >= pmd->pmd_NumMenuLabels )
-            pmd->pmd_PopPos = pmd->pmd_NumMenuLabels - 1;
-         }
+	 {
+	 if ( pmd->pmd_PopPos >= pmd->pmd_NumMenuLabels )
+	    pmd->pmd_PopPos = pmd->pmd_NumMenuLabels - 1;
+	 }
       /*
       ** Success :)
       **/
@@ -284,8 +274,8 @@ STATIC ASM REGFUNC2(BOOL, CopyArray,
 **/
 //STATIC ASM VOID ScaleCheckMark( REG(a0) PMD *pmd, REG(a1) struct RastPort *rp )
 STATIC ASM REGFUNC2(VOID, ScaleCheckMark,
-        REGPARAM(A0, PMD *, pmd),
-        REGPARAM(A1, struct RastPort *, rp))
+	REGPARAM(A0, PMD *, pmd),
+	REGPARAM(A1, struct RastPort *, rp))
 {
    UBYTE        *refstr = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,_:";
 
@@ -305,8 +295,8 @@ STATIC ASM REGFUNC2(VOID, ScaleCheckMark,
 **/
 //STATIC ASM VOID ComputePopWindowSize( REG(a0) PMD *pmd, REG(a1) struct TextFont *tf )
 STATIC ASM REGFUNC2(VOID, ComputePopWindowSize,
-        REGPARAM(A0, PMD *, pmd),
-        REGPARAM(A1, struct TextFont *, tf))
+	REGPARAM(A0, PMD *, pmd),
+	REGPARAM(A1, struct TextFont *, tf))
 {
    struct RastPort         rp;
    UWORD       width = 0, height = 0, tlen;
@@ -331,13 +321,13 @@ STATIC ASM REGFUNC2(VOID, ComputePopWindowSize,
       ** menu label.
       **/
       if ( labels->pm_Label != PMB_BARLABEL ) {
-         if ( labels->pm_Flags & PMF_CHECKIT ) tlen = pmd->pmd_CheckWidth + 2;
-         else                 tlen = 0;
-         if (( tlen += TextLength( &rp, labels->pm_Label, strlen( labels->pm_Label ))) > width )
-            width = tlen;
-         height += tf->tf_YSize + 1;
+	 if ( labels->pm_Flags & PMF_CHECKIT ) tlen = pmd->pmd_CheckWidth + 2;
+	 else                 tlen = 0;
+	 if (( tlen += TextLength( &rp, labels->pm_Label, strlen( labels->pm_Label ))) > width )
+	    width = tlen;
+	 height += tf->tf_YSize + 1;
       } else
-         height += 6;
+	 height += 6;
       /*
       ** Next...
       **/
@@ -357,9 +347,9 @@ STATIC ASM REGFUNC2(VOID, ComputePopWindowSize,
 **/
 //STATIC ASM VOID RenderBarLabel( REG(a0) struct RastPort *rp, REG(d0) UWORD top, REG(d1) UWORD width )
 STATIC ASM REGFUNC3(VOID, RenderBarLabel,
-        REGPARAM(A0, struct RastPort *, rp),
-        REGPARAM(D0, UWORD, top),
-        REGPARAM(D1, UWORD, width))
+	REGPARAM(A0, struct RastPort *, rp),
+	REGPARAM(D0, UWORD, top),
+	REGPARAM(D1, UWORD, width))
 {
    /*
    ** Render first line.
@@ -384,9 +374,9 @@ STATIC ASM REGFUNC3(VOID, RenderBarLabel,
 **/
 //STATIC ASM UWORD GetYPos( REG(a0) struct RastPort *rp, REG(a1) struct PopMenu *labels, REG(d0) ULONG entry )
 STATIC ASM REGFUNC3(UWORD, GetYPos,
-        REGPARAM(A0, struct RastPort *, rp),
-        REGPARAM(A1, struct PopMenu *, labels),
-        REGPARAM(D0, ULONG, entry))
+	REGPARAM(A0, struct RastPort *, rp),
+	REGPARAM(A1, struct PopMenu *, labels),
+	REGPARAM(D0, ULONG, entry))
 {
    UWORD       num = 0, ypos = 2;
 
@@ -477,27 +467,27 @@ STATIC VOID RenderMenuEntry( struct RastPort *rp, PMD *pmd, UWORD *pens, ULONG n
       ** Checkable?
       **/
       if ( label->pm_Flags & PMF_CHECKIT ) {
-         /*
-         ** Checked?
-         **/
-         if ( label->pm_Flags & PMF_CHECKED ) {
-            SetAttrs( pmd->pmd_CheckMark, VIT_Pen, sel ? penb : pena, TAG_END );
-            DrawImageState( rp, ( struct Image * )pmd->pmd_CheckMark, 6, ypos, IDS_NORMAL, dr );
-         }
-         Move( rp, 8 + pmd->pmd_CheckWidth, ypos + rp->TxBaseline + 1 );
+	 /*
+	 ** Checked?
+	 **/
+	 if ( label->pm_Flags & PMF_CHECKED ) {
+	    SetAttrs( pmd->pmd_CheckMark, VIT_Pen, sel ? penb : pena, TAG_END );
+	    DrawImageState( rp, ( struct Image * )pmd->pmd_CheckMark, 6, ypos, IDS_NORMAL, dr );
+	 }
+	 Move( rp, 8 + pmd->pmd_CheckWidth, ypos + rp->TxBaseline + 1 );
       } else
-         Move( rp, 6, ypos + rp->TxBaseline + 1 );
+	 Move( rp, 6, ypos + rp->TxBaseline + 1 );
       Text( rp, label->pm_Label, strlen( label->pm_Label ));
 
       /*
       ** Disabled? (NMC:Added)
       **/
       if ( label->pm_Flags & PMF_DISABLED ) {
-         SetAPen( rp, penb );
-         SetDrMd( rp, JAM1 );
-         SetAfPt( rp, ghostpat, 1 );
-         RectFill( rp, 4, ypos, pmd->pmd_PopWindowWidth - 5, ypos + rp->TxHeight );
-         SetAfPt( rp, NULL, 0 );
+	 SetAPen( rp, penb );
+	 SetDrMd( rp, JAM1 );
+	 SetAfPt( rp, ghostpat, 1 );
+	 RectFill( rp, 4, ypos, pmd->pmd_PopWindowWidth - 5, ypos + rp->TxHeight );
+	 SetAfPt( rp, NULL, 0 );
       }
 
       /*
@@ -505,8 +495,8 @@ STATIC VOID RenderMenuEntry( struct RastPort *rp, PMD *pmd, UWORD *pens, ULONG n
       ** on OS 2.04 and it's selected. (NMC:moved & edited)
       **/
       if ( OS20 && sel ) {
-         SetDrMd( rp, JAM2|COMPLEMENT );
-         RectFill( rp, 4, ypos, pmd->pmd_PopWindowWidth - 5, ypos + rp->TxHeight );
+	 SetDrMd( rp, JAM2|COMPLEMENT );
+	 RectFill( rp, 4, ypos, pmd->pmd_PopWindowWidth - 5, ypos + rp->TxHeight );
       }
    } else
       RenderBarLabel( rp, ypos + 2, pmd->pmd_PopWindowWidth - 6 );
@@ -521,10 +511,10 @@ STATIC VOID RenderMenuEntry( struct RastPort *rp, PMD *pmd, UWORD *pens, ULONG n
 **/
 //STATIC ASM ULONG OpenPopupWindow( REG(a0) PMD *pmd, REG(a1) Object *obj, REG(a2) struct gpInput *gpi, REG(d0) BOOL mouse )
 STATIC ASM REGFUNC4(ULONG, OpenPopupWindow,
-        REGPARAM(A0, PMD *, pmd),
-        REGPARAM(A1, Object *, obj),
-        REGPARAM(A2, struct gpInput *, gpi),
-        REGPARAM(D0, BOOL, mouse))
+	REGPARAM(A0, PMD *, pmd),
+	REGPARAM(A1, Object *, obj),
+	REGPARAM(A2, struct gpInput *, gpi),
+	REGPARAM(D0, BOOL, mouse))
 {
    struct Screen     *screen = gpi->gpi_GInfo->gi_Screen;
    struct RastPort          rpt;
@@ -558,121 +548,121 @@ STATIC ASM REGFUNC4(ULONG, OpenPopupWindow,
    **/
    if ( tattr ) {
       if ( tf = pmd->pmd_PopFont = OpenFont( tattr )) {
-         /*
-         ** Compute popwindow size.
-         **/
-         ComputePopWindowSize( pmd, tf );
+	 /*
+	 ** Compute popwindow size.
+	 **/
+	 ComputePopWindowSize( pmd, tf );
 
-         /*
-         ** Setup dummy rastport.
-         **/
-         InitRastPort( &rpt );
-         SetFont( &rpt, tf );
+	 /*
+	 ** Setup dummy rastport.
+	 **/
+	 InitRastPort( &rpt );
+	 SetFont( &rpt, tf );
 
-         /*
-         ** Copy dimensions.
-         **/
-         wwi = pmd->pmd_PopWindowWidth;
-         wwh = pmd->pmd_PopWindowHeight;
+	 /*
+	 ** Copy dimensions.
+	 **/
+	 wwi = pmd->pmd_PopWindowWidth;
+	 wwh = pmd->pmd_PopWindowHeight;
 
-         /*
-         ** Compute the popwindow
-         ** position.
-         **/
-         if ( mouse && ( pmd->pmd_PopPos != ~0 ) ) {  /* NMC:Added */
-            /*
-            ** Mouse activation means that the window
-            ** is opened with the first label centered
-            ** under the mouse.
-            **/
-            wleft = screen->MouseX - ( wwi >> 1 );
-            wtop  = screen->MouseY - ( 2 + GetYPos( &rpt, pmd->pmd_MenuLabels, pmd->pmd_PopPos ) + ( tf->tf_YSize >> 1 ));
-         } else {
-            /*
-            ** Key actiation will open the window
-            ** under the object.
-            **/
-            wleft  = ibox->Left + (( ibox->Width >> 1 ) - ( wwi >> 1 )) + gpi->gpi_GInfo->gi_Window->LeftEdge;
-            wtop   = ibox->Top + ibox->Height + gpi->gpi_GInfo->gi_Window->TopEdge;
-         }
+	 /*
+	 ** Compute the popwindow
+	 ** position.
+	 **/
+	 if ( mouse && ( pmd->pmd_PopPos != ~0 ) ) {  /* NMC:Added */
+	    /*
+	    ** Mouse activation means that the window
+	    ** is opened with the first label centered
+	    ** under the mouse.
+	    **/
+	    wleft = screen->MouseX - ( wwi >> 1 );
+	    wtop  = screen->MouseY - ( 2 + GetYPos( &rpt, pmd->pmd_MenuLabels, pmd->pmd_PopPos ) + ( tf->tf_YSize >> 1 ));
+	 } else {
+	    /*
+	    ** Key actiation will open the window
+	    ** under the object.
+	    **/
+	    wleft  = ibox->Left + (( ibox->Width >> 1 ) - ( wwi >> 1 )) + gpi->gpi_GInfo->gi_Window->LeftEdge;
+	    wtop   = ibox->Top + ibox->Height + gpi->gpi_GInfo->gi_Window->TopEdge;
+	 }
 
 
-         /*
-         ** Open the pop window.
-         **/
-         pmd->pmd_PopWindow = OpenWindowTags( NULL, WA_Left,      wleft,
-                           WA_Top,     wtop,
-                           WA_Width,      wwi,
-                           WA_Height,     wwh,
-                           WA_Flags,      0L,
-                           WA_IDCMP,      0L,
-                           WA_Borderless, TRUE,
-                           WA_AutoAdjust, TRUE,
-                           WA_SimpleRefresh, TRUE,
-                           WA_NoCareRefresh, TRUE,
-                           WA_RMBTrap,    TRUE,
-                           WA_CustomScreen,  screen,
-                           TAG_END );
+	 /*
+	 ** Open the pop window.
+	 **/
+	 pmd->pmd_PopWindow = OpenWindowTags( NULL, WA_Left,      wleft,
+			   WA_Top,     wtop,
+			   WA_Width,      wwi,
+			   WA_Height,     wwh,
+			   WA_Flags,      0L,
+			   WA_IDCMP,      0L,
+			   WA_Borderless, TRUE,
+			   WA_AutoAdjust, TRUE,
+			   WA_SimpleRefresh, TRUE,
+			   WA_NoCareRefresh, TRUE,
+			   WA_RMBTrap,    TRUE,
+			   WA_CustomScreen,  screen,
+			   TAG_END );
 
-         /*
-         ** Success?
-         **/
-         if ( pmd->pmd_PopWindow ) {
-            /*
-            ** Pick up the rastport.
-            **/
-            rp = pmd->pmd_PopWindow->RPort;
+	 /*
+	 ** Success?
+	 **/
+	 if ( pmd->pmd_PopWindow ) {
+	    /*
+	    ** Pick up the rastport.
+	    **/
+	    rp = pmd->pmd_PopWindow->RPort;
 
-            /*
-            ** Set the font.
-            **/
-            SetFont( rp, tf );
+	    /*
+	    ** Set the font.
+	    **/
+	    SetFont( rp, tf );
 
-            /*
-            ** Background pen.
-            **/
-            if ( OS20 ) sw = pens[ BLOCKPEN    ];
-            else      sw = pens[ BARBLOCKPEN ];
+	    /*
+	    ** Background pen.
+	    **/
+	    if ( OS20 ) sw = pens[ BLOCKPEN    ];
+	    else      sw = pens[ BARBLOCKPEN ];
 
-            /*
-            ** Backfill the menu.
-            **/
-            SetAPen( rp, sw );
-            SetDrMd( rp, JAM1 );
-            RectFill( rp, 0, 0, wwi, wwh );
+	    /*
+	    ** Backfill the menu.
+	    **/
+	    SetAPen( rp, sw );
+	    SetDrMd( rp, JAM1 );
+	    RectFill( rp, 0, 0, wwi, wwh );
 
-            /*
-            ** Detail pen.
-            **/
-            if ( OS20 ) sw = pens[ DETAILPEN    ];
-            else      sw = pens[ BARDETAILPEN ];
+	    /*
+	    ** Detail pen.
+	    **/
+	    if ( OS20 ) sw = pens[ DETAILPEN    ];
+	    else      sw = pens[ BARDETAILPEN ];
 
-            /*
-            ** Render frame.
-            **/
-            SetAPen( rp, sw );
+	    /*
+	    ** Render frame.
+	    **/
+	    SetAPen( rp, sw );
 
-            Move( rp, 0, 0 );
-            Draw( rp, wwi - 1, 0);
-            Draw( rp, wwi - 1, wwh - 1 );
-            Draw( rp, 0, wwh - 1 );
-            Draw( rp, 0, 0 );
-            Move( rp, 1, 0 );
-            Draw( rp, 1, wwh - 1 );
-            Move( rp, wwi - 2, 0 );
-            Draw( rp, wwi - 2, wwh - 1 );
+	    Move( rp, 0, 0 );
+	    Draw( rp, wwi - 1, 0);
+	    Draw( rp, wwi - 1, wwh - 1 );
+	    Draw( rp, 0, wwh - 1 );
+	    Draw( rp, 0, 0 );
+	    Move( rp, 1, 0 );
+	    Draw( rp, 1, wwh - 1 );
+	    Move( rp, wwi - 2, 0 );
+	    Draw( rp, wwi - 2, wwh - 1 );
 
-            /*
-            ** Render the menus...
-            **/
-            for ( sw = 0; sw < pmd->pmd_NumMenuLabels; sw++ )
-               RenderMenuEntry( rp, pmd, pens, sw, FALSE, gpi->gpi_GInfo->gi_DrInfo );
+	    /*
+	    ** Render the menus...
+	    **/
+	    for ( sw = 0; sw < pmd->pmd_NumMenuLabels; sw++ )
+	       RenderMenuEntry( rp, pmd, pens, sw, FALSE, gpi->gpi_GInfo->gi_DrInfo );
 
-            rc = GMR_MEACTIVE;
-         } else {
-            CloseFont( tf );
-            pmd->pmd_PopFont = NULL;
-         }
+	    rc = GMR_MEACTIVE;
+	 } else {
+	    CloseFont( tf );
+	    pmd->pmd_PopFont = NULL;
+	 }
       }
    }
    return( rc );
@@ -684,8 +674,8 @@ STATIC ASM REGFUNC4(ULONG, OpenPopupWindow,
 **/
 //STATIC ASM LONG Selected( REG(a0) PMD *pmd, REG(a1) struct RastPort *rp )
 STATIC ASM REGFUNC2(LONG, Selected,
-        REGPARAM(A0, PMD *, pmd),
-        REGPARAM(A1, struct RastPort *, rp))
+	REGPARAM(A0, PMD *, pmd),
+	REGPARAM(A1, struct RastPort *, rp))
 {
    WORD        mx = pmd->pmd_PopWindow->MouseX, my = pmd->pmd_PopWindow->MouseY, ypos = 2;
    struct PopMenu        *labels = pmd->pmd_MenuLabels;
@@ -707,39 +697,39 @@ STATIC ASM REGFUNC2(LONG, Selected,
       ** the offset.
       **/
       while ( labels->pm_Label ) {
-         if ( labels->pm_Label == PMB_BARLABEL ) {
-            /*
-            ** Is it on this barlabel?
-            **/
-            if ( my >= ypos && my < ( ypos + 6 ))
-               /*
-               ** Not selectable!
-               **/
-               return( ~0 );
-            ypos += 6;
-         } else {
-            /*
-            ** Is it on this item?
-            **/
-            if ( my >= ypos && my < ( ypos + rp->TxHeight + 1 )) {
-               /*
-               ** Is item disabled? (NMC:Added)
-               **/
-               if ( labels->pm_Flags & PMF_DISABLED )
-                  /*
-                  ** Yes. Not selectable!
-                  **/
-                  return( ~0 );
-               else
-                  /*
-                  ** No. Return it's number.
-                  **/
-                  return( item );
-               }
-            ypos += rp->TxHeight + 1;
-         }
-         labels++;
-         item++;
+	 if ( labels->pm_Label == PMB_BARLABEL ) {
+	    /*
+	    ** Is it on this barlabel?
+	    **/
+	    if ( my >= ypos && my < ( ypos + 6 ))
+	       /*
+	       ** Not selectable!
+	       **/
+	       return( ~0 );
+	    ypos += 6;
+	 } else {
+	    /*
+	    ** Is it on this item?
+	    **/
+	    if ( my >= ypos && my < ( ypos + rp->TxHeight + 1 )) {
+	       /*
+	       ** Is item disabled? (NMC:Added)
+	       **/
+	       if ( labels->pm_Flags & PMF_DISABLED )
+		  /*
+		  ** Yes. Not selectable!
+		  **/
+		  return( ~0 );
+	       else
+		  /*
+		  ** No. Return it's number.
+		  **/
+		  return( item );
+	       }
+	    ypos += rp->TxHeight + 1;
+	 }
+	 labels++;
+	 item++;
       }
    }
    return( ~0 );
@@ -752,8 +742,8 @@ STATIC ASM REGFUNC2(LONG, Selected,
 
 //STATIC ASM BOOL ItemSelectable( REG(a0) PMD *pmd, REG(d0) ULONG num )
 STATIC ASM REGFUNC2(BOOL, ItemSelectable,
-        REGPARAM(A0, PMD *, pmd),
-        REGPARAM(D0, ULONG, num))
+	REGPARAM(A0, PMD *, pmd),
+	REGPARAM(D0, ULONG, num))
 {
    if ( ( pmd->pmd_MenuLabels[ num ].pm_Label == PMB_BARLABEL ) ||
       ( pmd->pmd_MenuLabels[ num ].pm_Flags & PMF_DISABLED ) )
@@ -768,7 +758,7 @@ STATIC ASM REGFUNC2(BOOL, ItemSelectable,
 **/
 //STATIC ASM ULONG PrevItem( REG(a0) PMD *pmd )
 STATIC ASM REGFUNC1(ULONG, PrevItem,
-        REGPARAM(A0, PMD *, pmd))
+	REGPARAM(A0, PMD *, pmd))
 {
    ULONG    prev = pmd->pmd_Selected - 1;
 
@@ -784,7 +774,7 @@ STATIC ASM REGFUNC1(ULONG, PrevItem,
    **/
    while ( ! ItemSelectable( pmd, prev ) ) {
       if ( ! prev )
-         return( pmd->pmd_Selected );
+	 return( pmd->pmd_Selected );
       prev--;
    }
 
@@ -797,7 +787,7 @@ STATIC ASM REGFUNC1(ULONG, PrevItem,
 **/
 //STATIC ASM ULONG NextItem( REG(a0) PMD *pmd )
 STATIC ASM REGFUNC1(ULONG, NextItem,
-        REGPARAM(A0, PMD *, pmd))
+	REGPARAM(A0, PMD *, pmd))
 {
    ULONG    next = pmd->pmd_Selected + 1;
 
@@ -814,7 +804,7 @@ STATIC ASM REGFUNC1(ULONG, NextItem,
    **/
    while ( ! ItemSelectable( pmd, next ) ) {
       if ( next == pmd->pmd_NumMenuLabels - 1 )
-         return( pmd->pmd_Selected );
+	 return( pmd->pmd_Selected );
       next++;
    }
 
@@ -826,7 +816,7 @@ STATIC ASM REGFUNC1(ULONG, NextItem,
 **/
 //STATIC ASM VOID MutEx( REG(a0) PMD *pmd )
 STATIC ASM REGFUNC1(VOID, MutEx,
-        REGPARAM(A0, PMD *, pmd))
+	REGPARAM(A0, PMD *, pmd))
 {
    struct PopMenu        *labels = pmd->pmd_MenuLabels, *the_one = &pmd->pmd_MenuLabels[ pmd->pmd_Selected ];
    UWORD       i;
@@ -840,30 +830,30 @@ STATIC ASM REGFUNC1(VOID, MutEx,
       ** excluded is 32 items.
       **/
       for ( i = 0; i < 32; i++, labels++ ) {
-         /*
-         ** End of menu?
-         **/
-         if ( ! labels->pm_Label )
-            break;
-         /*
-         ** Skip the currently selected
-         ** item.
-         **/
-         if ( labels != the_one ) {
-            /*
-            ** Checkable item?
-            **/
-            if ( labels->pm_Flags & PMF_CHECKIT ) {
-               /*
-               ** Exclude bit set?
-               **/
-               if ( the_one->pm_MutualExclude & ( 1 << i ))
-                  /*
-                  ** Yes. Un-check it.
-                  **/
-                  labels->pm_Flags &= ~PMF_CHECKED;
-            }
-         }
+	 /*
+	 ** End of menu?
+	 **/
+	 if ( ! labels->pm_Label )
+	    break;
+	 /*
+	 ** Skip the currently selected
+	 ** item.
+	 **/
+	 if ( labels != the_one ) {
+	    /*
+	    ** Checkable item?
+	    **/
+	    if ( labels->pm_Flags & PMF_CHECKIT ) {
+	       /*
+	       ** Exclude bit set?
+	       **/
+	       if ( the_one->pm_MutualExclude & ( 1 << i ))
+		  /*
+		  ** Yes. Un-check it.
+		  **/
+		  labels->pm_Flags &= ~PMF_CHECKED;
+	    }
+	 }
       }
    }
 }
@@ -873,10 +863,10 @@ STATIC ASM REGFUNC1(VOID, MutEx,
 **/
 //STATIC ASM VOID SetDimensions( REG(a0) Object *obj, REG(a1) struct grmDimensions *dim, REG(d0) UWORD mx, REG(d1) UWORD my )
 STATIC ASM REGFUNC4(VOID, SetDimensions,
-        REGPARAM(A0, Object *, obj),
-        REGPARAM(A1, struct grmDimensions *, dim),
-        REGPARAM(D0, UWORD, mx),
-        REGPARAM(D1, UWORD, my))
+	REGPARAM(A0, Object *, obj),
+	REGPARAM(A1, struct grmDimensions *, dim),
+	REGPARAM(D0, UWORD, mx),
+	REGPARAM(D1, UWORD, my))
 {
    Object            *label = NULL, *frame = NULL;
    ULONG           place, fh = 0, fv = 0;
@@ -896,12 +886,12 @@ STATIC ASM REGFUNC4(VOID, SetDimensions,
        * to handle case of no frame object.
        */
       if ( frame ) {
-         GetAttr( FRM_FrameWidth,  frame, &fh );
-         GetAttr( FRM_FrameHeight, frame, &fv );
-         fh <<= 1;
-         fh  += 4;
-         fv <<= 1;
-         fv  += 2;
+	 GetAttr( FRM_FrameWidth,  frame, &fh );
+	 GetAttr( FRM_FrameHeight, frame, &fv );
+	 fh <<= 1;
+	 fh  += 4;
+	 fv <<= 1;
+	 fv  += 2;
       }
    }
 
@@ -916,29 +906,29 @@ STATIC ASM REGFUNC4(VOID, SetDimensions,
       DoMethod( label, OM_GET, LAB_Place, &place );
 
       switch ( place ) {
-         case  PLACE_LEFT:
-         case  PLACE_IN:
-         case  PLACE_RIGHT:
-            if ( my < *( dim->grmd_MinSize.Height )) my  = *( dim->grmd_MinSize.Height );
-            else               my += fv;
-            break;
-         case  PLACE_ABOVE:
-         case  PLACE_BELOW:
-            my += *( dim->grmd_MinSize.Height );
-            break;
+	 case  PLACE_LEFT:
+	 case  PLACE_IN:
+	 case  PLACE_RIGHT:
+	    if ( my < *( dim->grmd_MinSize.Height )) my  = *( dim->grmd_MinSize.Height );
+	    else               my += fv;
+	    break;
+	 case  PLACE_ABOVE:
+	 case  PLACE_BELOW:
+	    my += *( dim->grmd_MinSize.Height );
+	    break;
       }
 
       switch ( place ) {
-         case  PLACE_ABOVE:
-         case  PLACE_IN:
-         case  PLACE_BELOW:
-            if ( mx < *( dim->grmd_MinSize.Width )) mx  = *( dim->grmd_MinSize.Width );
-            else              mx += fh;
-            break;
-         case  PLACE_LEFT:
-         case  PLACE_RIGHT:
-            mx += *( dim->grmd_MinSize.Width );
-            break;
+	 case  PLACE_ABOVE:
+	 case  PLACE_IN:
+	 case  PLACE_BELOW:
+	    if ( mx < *( dim->grmd_MinSize.Width )) mx  = *( dim->grmd_MinSize.Width );
+	    else              mx += fh;
+	    break;
+	 case  PLACE_LEFT:
+	 case  PLACE_RIGHT:
+	    mx += *( dim->grmd_MinSize.Width );
+	    break;
       }
    } else {
       mx += fh;
@@ -954,9 +944,9 @@ STATIC ASM REGFUNC4(VOID, SetDimensions,
 **/
 //STATIC ASM ULONG PMBClassNew( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opSet *ops )
 STATIC ASM REGFUNC3(ULONG, PMBClassNew,
-        REGPARAM(A0, Class *, cl),
-        REGPARAM(A2, Object *, obj),
-        REGPARAM(A1, struct opSet *, ops))
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct opSet *, ops))
 {
    PMD         *pmd;
    struct TagItem    *tstate = ops->ops_AttrList, *tag;
@@ -989,20 +979,20 @@ STATIC ASM REGFUNC3(ULONG, PMBClassNew,
       ** Get attributes.
       **/
       while ( tag = NextTagItem( &tstate )) {
-         switch ( tag->ti_Tag ) {
+	 switch ( tag->ti_Tag ) {
 
-            case  PMB_Image:
-               pmd->pmd_Image = ( struct Image * )tag->ti_Data;
-               break;
+	    case  PMB_Image:
+	       pmd->pmd_Image = ( struct Image * )tag->ti_Data;
+	       break;
 
-            case  PMB_MenuEntries:
-               pm = ( struct PopMenu * )tag->ti_Data;
-               break;
+	    case  PMB_MenuEntries:
+	       pm = ( struct PopMenu * )tag->ti_Data;
+	       break;
 
-            case  PMB_PopPosition:
-               pmd->pmd_PopPos = tag->ti_Data;
-               break;
-         }
+	    case  PMB_PopPosition:
+	       pmd->pmd_PopPos = tag->ti_Data;
+	       break;
+	 }
       }
 
       /*
@@ -1010,18 +1000,18 @@ STATIC ASM REGFUNC3(ULONG, PMBClassNew,
       ** we go for a vectorclass image.
       **/
       if ( ! pmd->pmd_Image )
-         pmd->pmd_VectorImage = CreateVectorImage( ops->ops_AttrList );
+	 pmd->pmd_VectorImage = CreateVectorImage( ops->ops_AttrList );
 
       /*
       ** We _must_ have menu entries.
       **/
       if ( pm && CopyArray( pmd, pm )) {
-         /*
-         ** Force the correct activation flags.
-         **/
-         SetAttrs(( Object * )rc, GA_Immediate, FALSE, GA_RelVerify, TRUE, TAG_END );
-         if ( pmd->pmd_CheckMark = BGUI_NewObject( BGUI_VECTOR_IMAGE, VIT_VectorArray, myCheckMark, IA_Left, 0, IA_Top, 0, TAG_END ))
-            return( rc );
+	 /*
+	 ** Force the correct activation flags.
+	 **/
+	 SetAttrs(( Object * )rc, GA_Immediate, FALSE, GA_RelVerify, TRUE, TAG_END );
+	 if ( pmd->pmd_CheckMark = BGUI_NewObject( BGUI_VECTOR_IMAGE, VIT_VectorArray, myCheckMark, IA_Left, 0, IA_Top, 0, TAG_END ))
+	    return( rc );
       }
 
       /*
@@ -1043,9 +1033,9 @@ STATIC ASM REGFUNC3(ULONG, PMBClassNew,
 **/
 //STATIC ASM ULONG PMBClassSet( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opSet *ops )
 STATIC ASM REGFUNC3(ULONG, PMBClassSet,
-        REGPARAM(A0, Class *, cl),
-        REGPARAM(A2, Object *, obj),
-        REGPARAM(A1, struct opSet *, ops))
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct opSet *, ops))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    struct TagItem    *tstate = ops->ops_AttrList, *tag;
@@ -1066,34 +1056,34 @@ STATIC ASM REGFUNC3(ULONG, PMBClassSet,
    while ( tag = NextTagItem( &tstate )) {
       switch ( tag->ti_Tag ) {
 
-         case  VIT_VectorArray:
-         case  VIT_BuiltIn:
-         case  VIT_Pen:
-         case  VIT_DriPen:
-            /*
-            ** Only set when a vector image
-            ** exists!
-            **/
-            if ( pmd->pmd_VectorImage ) {
-               SetAttrs( pmd->pmd_VectorImage, tag->ti_Tag, tag->ti_Data, TAG_END );
-               update = TRUE;
-            }
-            break;
+	 case  VIT_VectorArray:
+	 case  VIT_BuiltIn:
+	 case  VIT_Pen:
+	 case  VIT_DriPen:
+	    /*
+	    ** Only set when a vector image
+	    ** exists!
+	    **/
+	    if ( pmd->pmd_VectorImage ) {
+	       SetAttrs( pmd->pmd_VectorImage, tag->ti_Tag, tag->ti_Data, TAG_END );
+	       update = TRUE;
+	    }
+	    break;
 
-         case  PMB_Image:
-            /*
-            ** Only changeable when a previous image
-            ** exists!
-            **
-            ** Note that you are responsible of making
-            ** sure the image fit's inside the dimensions
-            ** of the one you're replacing!
-            **/
-            if ( pmd->pmd_Image ) {
-               pmd->pmd_Image = ( struct Image * )tag->ti_Data;
-               update = TRUE;
-            }
-            break;
+	 case  PMB_Image:
+	    /*
+	    ** Only changeable when a previous image
+	    ** exists!
+	    **
+	    ** Note that you are responsible of making
+	    ** sure the image fit's inside the dimensions
+	    ** of the one you're replacing!
+	    **/
+	    if ( pmd->pmd_Image ) {
+	       pmd->pmd_Image = ( struct Image * )tag->ti_Data;
+	       update = TRUE;
+	    }
+	    break;
       }
    }
 
@@ -1105,10 +1095,10 @@ STATIC ASM REGFUNC3(ULONG, PMBClassSet,
       ** Re-render the object.
       **/
       if ( ops->ops_GInfo ) {
-         if ( rp = ObtainGIRPort( ops->ops_GInfo )) {
-            DoMethod( obj, GM_RENDER, ops->ops_GInfo, rp, GREDRAW_REDRAW );
-            ReleaseGIRPort( rp );
-         }
+	 if ( rp = ObtainGIRPort( ops->ops_GInfo )) {
+	    DoMethod( obj, GM_RENDER, ops->ops_GInfo, rp, GREDRAW_REDRAW );
+	    ReleaseGIRPort( rp );
+	 }
       }
    }
    return( rc );
@@ -1119,9 +1109,9 @@ STATIC ASM REGFUNC3(ULONG, PMBClassSet,
 **/
 //STATIC ASM ULONG PMBClassRender( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpRender *gpr )
 STATIC ASM REGFUNC3(ULONG, PMBClassRender,
-        REGPARAM(A0, Class *, cl),
-        REGPARAM(A2, Object *, obj),
-        REGPARAM(A1, struct gpRender *, gpr))
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpRender *, gpr))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    struct RastPort         *rp = gpr->gpr_RPort;
@@ -1144,48 +1134,48 @@ STATIC ASM REGFUNC3(ULONG, PMBClassRender,
       ** Image to render?
       **/
       if ( pmd->pmd_Image ) {
-         /*
-         ** Set the left and top edge.
-         **/
-         xoff = ( ibox->Width  >> 1 ) - ( pmd->pmd_Image->Width   >> 1 ) + ibox->Left;
-         yoff = ( ibox->Height >> 1 ) - ( pmd->pmd_Image->Height >> 1 ) + ibox->Top;
-         /*
-         ** Render it.
-         **/
-         DrawImageState( rp, pmd->pmd_Image, xoff, yoff, IDS_NORMAL, gpr->gpr_GInfo->gi_DrInfo );
+	 /*
+	 ** Set the left and top edge.
+	 **/
+	 xoff = ( ibox->Width  >> 1 ) - ( pmd->pmd_Image->Width   >> 1 ) + ibox->Left;
+	 yoff = ( ibox->Height >> 1 ) - ( pmd->pmd_Image->Height >> 1 ) + ibox->Top;
+	 /*
+	 ** Render it.
+	 **/
+	 DrawImageState( rp, pmd->pmd_Image, xoff, yoff, IDS_NORMAL, gpr->gpr_GInfo->gi_DrInfo );
       } else if ( pmd->pmd_VectorImage ) {
-         /*
-         ** Set bounds.
-         **/
-         SetAttrs( pmd->pmd_VectorImage, IA_Left,   ibox->Left,
-                     IA_Top,    ibox->Top,
-                     IA_Width,  ibox->Width,
-                     IA_Height, ibox->Height,
-                     TAG_END );
-         /*
-         ** Render it.
-         **/
-         DrawImageState( rp, ( struct Image * )pmd->pmd_VectorImage, 0, 0, IDS_NORMAL, gpr->gpr_GInfo->gi_DrInfo );
+	 /*
+	 ** Set bounds.
+	 **/
+	 SetAttrs( pmd->pmd_VectorImage, IA_Left,   ibox->Left,
+		     IA_Top,    ibox->Top,
+		     IA_Width,  ibox->Width,
+		     IA_Height, ibox->Height,
+		     TAG_END );
+	 /*
+	 ** Render it.
+	 **/
+	 DrawImageState( rp, ( struct Image * )pmd->pmd_VectorImage, 0, 0, IDS_NORMAL, gpr->gpr_GInfo->gi_DrInfo );
       }
       /*
       ** Object disabled?
       **/
       if ( GADGET( obj )->Flags & GFLG_DISABLED ) {
-         /*
-         ** Get the hitbox dimensions.
-         **/
-         DoMethod( obj, OM_GET, BT_HitBox, &ibox );
-         /*
-         ** Pick up pen array.
-         **/
-         pens = gpr->gpr_GInfo->gi_DrInfo ? gpr->gpr_GInfo->gi_DrInfo->dri_Pens : DefDriPens;
-         /*
-         ** Ghost it.
-         **/
-         SetAfPt( gpr->gpr_RPort, ghostpat, 1 );
-         SetAPen( gpr->gpr_RPort, pens[ SHADOWPEN ] );
-         SetDrMd( gpr->gpr_RPort, JAM1 );
-         RectFill( gpr->gpr_RPort, ibox->Left, ibox->Top, ibox->Left + ibox->Width - 1, ibox->Top + ibox->Height - 1 );
+	 /*
+	 ** Get the hitbox dimensions.
+	 **/
+	 DoMethod( obj, OM_GET, BT_HitBox, &ibox );
+	 /*
+	 ** Pick up pen array.
+	 **/
+	 pens = gpr->gpr_GInfo->gi_DrInfo ? gpr->gpr_GInfo->gi_DrInfo->dri_Pens : DefDriPens;
+	 /*
+	 ** Ghost it.
+	 **/
+	 SetAfPt( gpr->gpr_RPort, ghostpat, 1 );
+	 SetAPen( gpr->gpr_RPort, pens[ SHADOWPEN ] );
+	 SetDrMd( gpr->gpr_RPort, JAM1 );
+	 RectFill( gpr->gpr_RPort, ibox->Left, ibox->Top, ibox->Left + ibox->Width - 1, ibox->Top + ibox->Height - 1 );
       }
    }
    BGUI_PostRender(cl, obj, gpr);
@@ -1198,9 +1188,9 @@ STATIC ASM REGFUNC3(ULONG, PMBClassRender,
 **/
 //STATIC ASM ULONG PMBClassGoActive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi )
 STATIC ASM REGFUNC3(ULONG, PMBClassGoActive,
-        REGPARAM(A0, Class *, cl),
-        REGPARAM(A2, Object *, obj),
-        REGPARAM(A1, struct gpInput *, gpi))
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpInput *, gpi))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    UWORD       *pens;
@@ -1225,50 +1215,50 @@ STATIC ASM REGFUNC3(ULONG, PMBClassGoActive,
       ** Activated by ActivateGadget()?
       **/
       if ( ! gpi->gpi_IEvent ) {
-         /*
-         ** Mark us as key-activated.
-         **/
-         pmd->pmd_Flags |= PMDF_NOEVENT;
-         /*
-         ** Pick up pen array.
-         **/
-         pens = gpi->gpi_GInfo->gi_DrInfo ? gpi->gpi_GInfo->gi_DrInfo->dri_Pens : DefDriPens;
-         /*
-         ** Pre-select the first menu.
-         **/
-         pmd->pmd_Selected = pmd->pmd_PopPos;
+	 /*
+	 ** Mark us as key-activated.
+	 **/
+	 pmd->pmd_Flags |= PMDF_NOEVENT;
+	 /*
+	 ** Pick up pen array.
+	 **/
+	 pens = gpi->gpi_GInfo->gi_DrInfo ? gpi->gpi_GInfo->gi_DrInfo->dri_Pens : DefDriPens;
+	 /*
+	 ** Pre-select the first menu.
+	 **/
+	 pmd->pmd_Selected = pmd->pmd_PopPos;
 
-         if ( pmd->pmd_Selected == ~0 )   /* NMC:Added */
-            pmd->pmd_Selected = 0;
-         /*
-         ** Try to get a selectable item.
-         ** (NMC:Edited)
-         **/
+	 if ( pmd->pmd_Selected == ~0 )   /* NMC:Added */
+	    pmd->pmd_Selected = 0;
+	 /*
+	 ** Try to get a selectable item.
+	 ** (NMC:Edited)
+	 **/
 
-         if ( ! ItemSelectable( pmd, pmd->pmd_Selected ) ) {
-            /*
-            ** Scan down for a selectable item
-            **/
-            pmd->pmd_Selected = NextItem( pmd );
+	 if ( ! ItemSelectable( pmd, pmd->pmd_Selected ) ) {
+	    /*
+	    ** Scan down for a selectable item
+	    **/
+	    pmd->pmd_Selected = NextItem( pmd );
 
-            if ( ! ItemSelectable( pmd, pmd->pmd_Selected ) ) {
-               /*
-               ** Nope? Try scanning up, then
-               **/
-               pmd->pmd_Selected = PrevItem( pmd );
-            }
-         }
+	    if ( ! ItemSelectable( pmd, pmd->pmd_Selected ) ) {
+	       /*
+	       ** Nope? Try scanning up, then
+	       **/
+	       pmd->pmd_Selected = PrevItem( pmd );
+	    }
+	 }
 
-         if ( ItemSelectable( pmd, pmd->pmd_Selected ) )
-            /*
-            ** Select the item.
-            **/
-            RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, pmd->pmd_Selected, TRUE, gpi->gpi_GInfo->gi_DrInfo );
-         else
-            /*
-            ** Nothing selectable at all
-            **/
-            pmd->pmd_Selected = ~0;
+	 if ( ItemSelectable( pmd, pmd->pmd_Selected ) )
+	    /*
+	    ** Select the item.
+	    **/
+	    RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, pmd->pmd_Selected, TRUE, gpi->gpi_GInfo->gi_DrInfo );
+	 else
+	    /*
+	    ** Nothing selectable at all
+	    **/
+	    pmd->pmd_Selected = ~0;
       }
    }
    return( rc );
@@ -1279,9 +1269,9 @@ STATIC ASM REGFUNC3(ULONG, PMBClassGoActive,
 **/
 //STATIC ASM ULONG PMBClassHandleInput( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpInput *gpi )
 STATIC ASM REGFUNC3(ULONG, PMBClassHandleInput,
-        REGPARAM(A0, Class *, cl),
-        REGPARAM(A2, Object *, obj),
-        REGPARAM(A1, struct gpInput *, gpi))
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpInput *, gpi))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    ULONG        item, rc = GMR_MEACTIVE;
@@ -1318,132 +1308,132 @@ STATIC ASM REGFUNC3(ULONG, PMBClassHandleInput,
       ** Did it change?
       **/
       if ( item != pmd->pmd_Selected ) {
-         /*
-         ** Unselect current entry and
-         ** select the new one.
-         **/
-         if ( pmd->pmd_Selected != ~0 ) RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, pmd->pmd_Selected, FALSE, gpi->gpi_GInfo->gi_DrInfo );
-         if ( item != ~0 )        RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, item, TRUE, gpi->gpi_GInfo->gi_DrInfo );
-         /*
-         ** Set it up.
-         **/
-         pmd->pmd_Selected = item;
+	 /*
+	 ** Unselect current entry and
+	 ** select the new one.
+	 **/
+	 if ( pmd->pmd_Selected != ~0 ) RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, pmd->pmd_Selected, FALSE, gpi->gpi_GInfo->gi_DrInfo );
+	 if ( item != ~0 )        RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, item, TRUE, gpi->gpi_GInfo->gi_DrInfo );
+	 /*
+	 ** Set it up.
+	 **/
+	 pmd->pmd_Selected = item;
       }
       /*
       ** Let's see the mouse stuff...
       **/
       if ( gpi->gpi_IEvent->ie_Class == IECLASS_RAWMOUSE ) {
-         switch ( gpi->gpi_IEvent->ie_Code ) {
+	 switch ( gpi->gpi_IEvent->ie_Code ) {
 
-            case  SELECTUP:
-               /*
-               ** Report a change to the application.
-               **/
-               if ( pmd->pmd_Selected != ~0 ) {
-                  /*
-                  ** Notify the selection.
-                  **/
-                  NotifyAttrChange( obj, gpi->gpi_GInfo, 0L, GA_ID, GADGET( obj )->GadgetID, PMB_MenuNumber, pmd->pmd_Selected, TAG_END );
-                  /*
-                  ** PMF_CHECKIT item?
-                  **/
-                  if ( pmd->pmd_MenuLabels[ pmd->pmd_Selected ].pm_Flags & PMF_CHECKIT ) {
-                     /*
-                     ** Toggle PMF_CHECKED bit.
-                     **/
-                     pmd->pmd_MenuLabels[ pmd->pmd_Selected ].pm_Flags ^= PMF_CHECKED;
-                     /*
-                     ** Do mutual exclusion.
-                     **/
-                     MutEx( pmd );
-                  }
-                  /*
-                  ** Return GMR_VERIFY. Tell intuition to
-                  ** discard the input event.
-                  **/
-                  rc = GMR_NOREUSE | GMR_VERIFY;
-               } else
-                  rc = GMR_NOREUSE;
-               break;
+	    case  SELECTUP:
+	       /*
+	       ** Report a change to the application.
+	       **/
+	       if ( pmd->pmd_Selected != ~0 ) {
+		  /*
+		  ** Notify the selection.
+		  **/
+		  NotifyAttrChange( obj, gpi->gpi_GInfo, 0L, GA_ID, GADGET( obj )->GadgetID, PMB_MenuNumber, pmd->pmd_Selected, TAG_END );
+		  /*
+		  ** PMF_CHECKIT item?
+		  **/
+		  if ( pmd->pmd_MenuLabels[ pmd->pmd_Selected ].pm_Flags & PMF_CHECKIT ) {
+		     /*
+		     ** Toggle PMF_CHECKED bit.
+		     **/
+		     pmd->pmd_MenuLabels[ pmd->pmd_Selected ].pm_Flags ^= PMF_CHECKED;
+		     /*
+		     ** Do mutual exclusion.
+		     **/
+		     MutEx( pmd );
+		  }
+		  /*
+		  ** Return GMR_VERIFY. Tell intuition to
+		  ** discard the input event.
+		  **/
+		  rc = GMR_NOREUSE | GMR_VERIFY;
+	       } else
+		  rc = GMR_NOREUSE;
+	       break;
 
-            case  MENUDOWN:
-               /*
-               ** Abort the mission and let
-               ** intuition snap down the
-               ** menus.
-               **/
-               rc = GMR_REUSE;
-               break;
-         }
+	    case  MENUDOWN:
+	       /*
+	       ** Abort the mission and let
+	       ** intuition snap down the
+	       ** menus.
+	       **/
+	       rc = GMR_REUSE;
+	       break;
+	 }
       }
    } else {
       if ( gpi->gpi_IEvent->ie_Class == IECLASS_RAWKEY ) {
-         switch ( gpi->gpi_IEvent->ie_Code ) {
+	 switch ( gpi->gpi_IEvent->ie_Code ) {
 
-            case  0x4C:
-               /*
-               ** CURSOR UP
-               **/
-               if (( item =  PrevItem( pmd )) != pmd->pmd_Selected ) {
-                  RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, pmd->pmd_Selected, FALSE, gpi->gpi_GInfo->gi_DrInfo );
-                  pmd->pmd_Selected = item;
-                  RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, pmd->pmd_Selected, TRUE, gpi->gpi_GInfo->gi_DrInfo );
-               }
-               break;
+	    case  0x4C:
+	       /*
+	       ** CURSOR UP
+	       **/
+	       if (( item =  PrevItem( pmd )) != pmd->pmd_Selected ) {
+		  RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, pmd->pmd_Selected, FALSE, gpi->gpi_GInfo->gi_DrInfo );
+		  pmd->pmd_Selected = item;
+		  RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, pmd->pmd_Selected, TRUE, gpi->gpi_GInfo->gi_DrInfo );
+	       }
+	       break;
 
-            case  0x4D:
-               /*
-               ** CURSOR DOWN
-               **/
-               if (( item = NextItem( pmd )) != pmd->pmd_Selected ) {
-                  RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, pmd->pmd_Selected, FALSE, gpi->gpi_GInfo->gi_DrInfo );
-                  pmd->pmd_Selected = item;
-                  RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, pmd->pmd_Selected, TRUE, gpi->gpi_GInfo->gi_DrInfo );
-               }
-               break;
+	    case  0x4D:
+	       /*
+	       ** CURSOR DOWN
+	       **/
+	       if (( item = NextItem( pmd )) != pmd->pmd_Selected ) {
+		  RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, pmd->pmd_Selected, FALSE, gpi->gpi_GInfo->gi_DrInfo );
+		  pmd->pmd_Selected = item;
+		  RenderMenuEntry( pmd->pmd_PopWindow->RPort, pmd, pens, pmd->pmd_Selected, TRUE, gpi->gpi_GInfo->gi_DrInfo );
+	       }
+	       break;
 
-            case  0x44:
-               /*
-               ** RETURN
-               **/
-            case  0x43:
-               /*
-               ** ENTER
-               **/
-               /*
-               ** Ignore if nothing selected (NMC:Added)
-               **/
-               if ( pmd->pmd_Selected != ~0 ) {
+	    case  0x44:
+	       /*
+	       ** RETURN
+	       **/
+	    case  0x43:
+	       /*
+	       ** ENTER
+	       **/
+	       /*
+	       ** Ignore if nothing selected (NMC:Added)
+	       **/
+	       if ( pmd->pmd_Selected != ~0 ) {
 
-                  NotifyAttrChange( obj, gpi->gpi_GInfo, 0L, GA_ID, GADGET( obj )->GadgetID, PMB_MenuNumber, pmd->pmd_Selected, TAG_END );
-                  /*
-                  ** PMF_CHECKIT item?
-                  **/
-                  if ( pmd->pmd_MenuLabels[ pmd->pmd_Selected ].pm_Flags & PMF_CHECKIT ) {
-                     /*
-                     ** Toggle PMF_CHECKED bit.
-                     **/
-                     pmd->pmd_MenuLabels[ pmd->pmd_Selected ].pm_Flags ^= PMF_CHECKED;
-                     /*
-                     ** Do mutual exclusion.
-                     **/
-                     MutEx( pmd );
-                  }
-                  /*
-                  ** Return GMR_VERIFY. Tell intuition to
-                  ** discard the input event.
-                  **/
-                  rc = GMR_NOREUSE | GMR_VERIFY;
-               }
-               break;
+		  NotifyAttrChange( obj, gpi->gpi_GInfo, 0L, GA_ID, GADGET( obj )->GadgetID, PMB_MenuNumber, pmd->pmd_Selected, TAG_END );
+		  /*
+		  ** PMF_CHECKIT item?
+		  **/
+		  if ( pmd->pmd_MenuLabels[ pmd->pmd_Selected ].pm_Flags & PMF_CHECKIT ) {
+		     /*
+		     ** Toggle PMF_CHECKED bit.
+		     **/
+		     pmd->pmd_MenuLabels[ pmd->pmd_Selected ].pm_Flags ^= PMF_CHECKED;
+		     /*
+		     ** Do mutual exclusion.
+		     **/
+		     MutEx( pmd );
+		  }
+		  /*
+		  ** Return GMR_VERIFY. Tell intuition to
+		  ** discard the input event.
+		  **/
+		  rc = GMR_NOREUSE | GMR_VERIFY;
+	       }
+	       break;
 
-            case  0x45:
-               /*
-               ** ESC
-               **/
-               rc = GMR_NOREUSE;
-               break;
-         }
+	    case  0x45:
+	       /*
+	       ** ESC
+	       **/
+	       rc = GMR_NOREUSE;
+	       break;
+	 }
       }
    }
    return( rc );
@@ -1454,9 +1444,9 @@ STATIC ASM REGFUNC3(ULONG, PMBClassHandleInput,
 **/
 //STATIC ASM ULONG PMBClassGoInActive( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct gpGoInactive *gpgi )
 STATIC ASM REGFUNC3(ULONG, PMBClassGoInActive,
-        REGPARAM(A0, Class *, cl),
-        REGPARAM(A2, Object *, obj),
-        REGPARAM(A1, struct gpGoInactive *, gpgi))
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct gpGoInactive *, gpgi))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
 
@@ -1486,9 +1476,9 @@ STATIC ASM REGFUNC3(ULONG, PMBClassGoInActive,
 **/
 //STATIC ASM ULONG PMBClassGet( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct opGet *opg )
 STATIC ASM REGFUNC3(ULONG, PMBClassGet,
-        REGPARAM(A0, Class *, cl),
-        REGPARAM(A2, Object *, obj),
-        REGPARAM(A1, struct opGet *, opg))
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct opGet *, opg))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    ULONG        rc = 1;
@@ -1513,9 +1503,9 @@ STATIC ASM REGFUNC3(ULONG, PMBClassGet,
 **/
 //STATIC ASM ULONG PMBClassDispose( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) Msg msg )
 STATIC ASM REGFUNC3(ULONG, PMBClassDispose,
-        REGPARAM(A0, Class *, cl),
-        REGPARAM(A2, Object *, obj),
-        REGPARAM(A1, Msg, msg))
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, Msg, msg))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    ULONG rc;
@@ -1550,9 +1540,9 @@ STATIC ASM REGFUNC3(ULONG, PMBClassDispose,
  */
 //STATIC ASM ULONG PMBClassDimensions( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct grmDimensions *dim )
 STATIC ASM REGFUNC3(ULONG, PMBClassDimensions,
-        REGPARAM(A0, Class *, cl),
-        REGPARAM(A2, Object *, obj),
-        REGPARAM(A1, struct grmDimensions *, dim))
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct grmDimensions *, dim))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    UWORD        mx, my;
@@ -1585,10 +1575,10 @@ STATIC ASM REGFUNC3(ULONG, PMBClassDimensions,
       **/
       DoMethod( obj, OM_GET, BT_FrameObject, &frame );
       if ( frame ) {
-         DoMethod(( Object * )frame, OM_GET, FRM_FrameWidth,  &fw );
-         DoMethod(( Object * )frame, OM_GET, FRM_FrameHeight, &fh );
-         mx += fw << 1;
-         my += fh << 1;
+	 DoMethod(( Object * )frame, OM_GET, FRM_FrameWidth,  &fw );
+	 DoMethod(( Object * )frame, OM_GET, FRM_FrameHeight, &fh );
+	 mx += fw << 1;
+	 my += fh << 1;
       }
 
       /*
@@ -1606,26 +1596,26 @@ STATIC ASM REGFUNC3(ULONG, PMBClassDimensions,
       ** Scan for the sizes.
       **/
       while( 1 ) {
-         /*
-         ** The scaling size is considered
-         ** to be the minimum object size.
-         **/
-         if ( vit->vi_Flags & VIF_SCALE ) {
-            mx = vit->vi_x;
-            my = vit->vi_y;
-            break;
-         }
+	 /*
+	 ** The scaling size is considered
+	 ** to be the minimum object size.
+	 **/
+	 if ( vit->vi_Flags & VIF_SCALE ) {
+	    mx = vit->vi_x;
+	    my = vit->vi_y;
+	    break;
+	 }
 
-         /*
-         ** Last one?
-         **/
-         if ( vit->vi_Flags & VIF_LASTITEM )
-            goto doSuper;
+	 /*
+	 ** Last one?
+	 **/
+	 if ( vit->vi_Flags & VIF_LASTITEM )
+	    goto doSuper;
 
-         /*
-         ** Next please...
-         **/
-         vit++;
+	 /*
+	 ** Next please...
+	 **/
+	 vit++;
       }
 
       /*
@@ -1653,9 +1643,9 @@ STATIC ASM REGFUNC3(ULONG, PMBClassDimensions,
 **/
 //STATIC ASM ULONG PMBClassCommand( REG(a0) Class *cl, REG(a2) Object *obj, REG(a1) struct pmbmCommand *pc )
 STATIC ASM REGFUNC3(ULONG, PMBClassCommand,
-        REGPARAM(A0, Class *, cl),
-        REGPARAM(A2, Object *, obj),
-        REGPARAM(A1, struct pmbmCommand *, pc))
+	REGPARAM(A0, Class *, cl),
+	REGPARAM(A2, Object *, obj),
+	REGPARAM(A1, struct pmbmCommand *, pc))
 {
    PMD         *pmd = ( PMD * )INST_DATA( cl, obj );
    struct PopMenu    *label = &pmd->pmd_MenuLabels[ pc->pmbm_MenuNumber ];
@@ -1667,50 +1657,50 @@ STATIC ASM REGFUNC3(ULONG, PMBClassCommand,
    switch ( pc->MethodID ) {
 
       case  PMBM_CHECK_STATUS:
-         /*
-         ** TRUE means checked and FALSE means
-         ** not checked.
-         **/
-         rc = label->pm_Flags & PMF_CHECKED ? TRUE : FALSE;
-         break;
+	 /*
+	 ** TRUE means checked and FALSE means
+	 ** not checked.
+	 **/
+	 rc = label->pm_Flags & PMF_CHECKED ? TRUE : FALSE;
+	 break;
 
       case  PMBM_CHECK_MENU:
-         /*
-         ** Check the menu and do
-         ** mutual-exclusion.
-         **/
-         label->pm_Flags |= PMF_CHECKED;
-         MutEx( pmd );
-         break;
+	 /*
+	 ** Check the menu and do
+	 ** mutual-exclusion.
+	 **/
+	 label->pm_Flags |= PMF_CHECKED;
+	 MutEx( pmd );
+	 break;
 
       case  PMBM_UNCHECK_MENU:
-         /*
-         ** Uncheck the menu.
-         **/
-         label->pm_Flags &= ~PMF_CHECKED;
-         break;
+	 /*
+	 ** Uncheck the menu.
+	 **/
+	 label->pm_Flags &= ~PMF_CHECKED;
+	 break;
 
       case  PMBM_ENABLE_ITEM: /* NMC:Added */
-         /*
-         ** Enable the menuitem.
-         **/
-         label->pm_Flags &= ~PMF_DISABLED;
-         break;
+	 /*
+	 ** Enable the menuitem.
+	 **/
+	 label->pm_Flags &= ~PMF_DISABLED;
+	 break;
 
       case  PMBM_DISABLE_ITEM:   /* NMC:Added */
-         /*
-         ** Disable the menuitem.
-         **/
-         label->pm_Flags |= PMF_DISABLED;
-         break;
+	 /*
+	 ** Disable the menuitem.
+	 **/
+	 label->pm_Flags |= PMF_DISABLED;
+	 break;
 
       case  PMBM_ENABLE_STATUS:  /* NMC:Added */
-         /*
-         ** TRUE means enabled and FALSE means
-         ** disabled.
-         **/
-         rc = label->pm_Flags & PMF_DISABLED ? FALSE : TRUE;
-         break;
+	 /*
+	 ** TRUE means enabled and FALSE means
+	 ** disabled.
+	 **/
+	 rc = label->pm_Flags & PMF_DISABLED ? FALSE : TRUE;
+	 break;
    }
 
    return( rc );
@@ -1758,9 +1748,9 @@ STATIC DPFUNC ClassFunc[] = {
 SAVEDS ASM Class *BGUI_ClassInit(void)
 {
    ClassBase = BGUI_MakeClass(CLASS_SuperClassBGUI, BGUI_BASE_GADGET,
-                              CLASS_DFTable,        ClassFunc,
-                              CLASS_ObjectSize,     sizeof(PMD),
-                              TAG_DONE);
+			      CLASS_DFTable,        ClassFunc,
+			      CLASS_ObjectSize,     sizeof(PMD),
+			      TAG_DONE);
    return ClassBase;
 }
 
