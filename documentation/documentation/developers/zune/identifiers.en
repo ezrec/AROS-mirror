@@ -75,6 +75,8 @@ Base                      Name                       Class
 (MUIB_AROS | 0x00000200)  MUIB_PrefsWindow           PrefsWindow.mcc
 (MUIB_AROS | 0x00000300)  MUIB_IconImage             IconImage.mcc
 (MUIB_AROS | 0x00000400)  MUIB_AboutWindow           AboutWindow.mcc
+(MUIB_AROS | 0x00000500)  MUIB_PrefsEditor           PrefsEditor.mcc
+(MUIB_AROS | 0x00000600)  MUIB_SystemPrefsWindow     SystemPrefsWindow.mcc
 ========================  =========================  ========================
 
 
@@ -181,6 +183,18 @@ Identifier                       Name                             I  S  G  P  Ty
 (MUIB_AboutWindow | 0x00000007)  MUIA_AboutWindow_Authors         X           struct TagItem *
 (MUIB_AboutWindow | 0x00000008   MUIA_AboutWindow_Sponsors        X           struct TagItem *
 ===============================  ===============================  =  =  =  =  ====================
+
+
+Class: PrefsEditor.mcc
+----------------------
+
+FIXME
+
+
+Class: SystemPrefsWindow.mcc
+----------------------------
+
+FIXME
 
 
 Zune core classes
