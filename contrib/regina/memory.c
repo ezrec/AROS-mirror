@@ -938,7 +938,7 @@ void purge_flists( const tsd_t *TSD )
    while( ptr )
    {
       next = ptr->next;
-      free( ptr );
+      TSD->MTFree( TSD, ptr );
       ptr = next;
    }
    mt->first_entry = mt->curr_entry = NULL;
