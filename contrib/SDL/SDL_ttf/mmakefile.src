@@ -7,6 +7,6 @@
 
 ##MM- development-SDL_ttf : linklibs-SDL
 
-%fetch_and_build_gnu_development package=SDL_ttf version=2.0.6 patch=yes \
-    package_repo=http://www.libsdl.org/projects/SDL_ttf/release/
+#%fetch_and_build_gnu_development package=SDL_ttf version=2.0.6 patch=yes \
+#    package_repo=http://www.libsdl.org/projects/SDL_ttf/release/
 
