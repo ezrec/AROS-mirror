@@ -140,7 +140,6 @@ static int              XOffset,YOffset;
 static int usepub;      /* use public screen */
 static int usecyb;      /* use cybergraphics.library */
 
-static int   get_color_failed;
 static int   maxpen;
 static UBYTE pen[256];
 
@@ -169,7 +168,8 @@ extern UBYTE cidx[4][8*4096];
 
 __inline__ void flush_line(int y)
 {
-    //abort();
+    printf("Shouldn't have arrived here\n");
+    abort();
 }
 
 /****************************************************************************/
@@ -209,131 +209,36 @@ static int RPDepth(struct RastPort *RP)
 
 /****************************************************************************/
 
-static int get_color(int r, int g, int b, xcolnr *cnp)
-{
-    int col;
-
-    r *= 0x11;g *= 0x11;b *= 0x11;
-
-    r *= 0x01010101;
-    g *= 0x01010101;
-    b *= 0x01010101;
-    col = ObtainColor(r, g, b);
-
-    if(col == -1) {
-        get_color_failed = 1;
-        return 0;
-    }
-
-    *cnp = col;
-    return 1;
-}
-
-/****************************************************************************/
-/*
- * FIXME: find a better way to determine closeness of colors (closer to
- * human perception).
- */
-static __inline__ void rgb2xyz(int r, int g, int b,
-                               int *x, int *y, int *z)
-{
-	*x = r*1024 - (g+b)*512;
-	*y = 886*(g-b);
-	*z = (r+g+b)*341;
-}
-static __inline__ int calc_err(int r1, int g1, int b1,
-                               int r2, int g2, int b2)
-{
-    int x1,y1,z1,x2,y2,z2;
-
-    rgb2xyz(r1,g1,b1,&x1,&y1,&z1);
-    rgb2xyz(r2,g2,b2,&x2,&y2,&z2);
-    x1 -= x2; y1 -= y2; z1 -= z2;
-    return x1*x1 + y1*y1 + z1*z1;
-}
-
-/****************************************************************************/
-
-static int get_nearest_color(int r, int g, int b)
-{
-    int i, best, err, besterr;
-    int colors;
-    int br=0,bg=0,bb=0;
-
-    best    = 0;
-    besterr = calc_err(0,0,0, 15,15,15);
-    colors  = 1<<RPDepth(RP);
-  
-
-    for(i=0; i<colors; i++ ) {
-        long rgb;
-        int cr, cg, cb;
-
-        rgb = GetRGB4(CM, i);
-        cr = (rgb >> 8) & 15;
-        cg = (rgb >> 4) & 15;
-        cb = (rgb >> 0) & 15;
-
-        err = calc_err(r,g,b, cr,cg,cb);
-
-        if(err < besterr) {
-            best = i;
-            besterr = err;
-            br=cr; bg=cg; bb=cb;
-        }
-    }
-    return best;
-}
-
-/****************************************************************************/
-
 static int init_colors(void)
 {
     gfxvidinfo.can_double = 0;
-    /* No dither */
+
+    ULONG depth = RPDepth(RP);
+
     switch(RPDepth(RP)) {
-      case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: {
-        int maxcol = 1<<RPDepth(RP);
-
-        if(maxcol>=8) do {
-            get_color_failed = 0;
-            setup_maxcol(maxcol);
-            alloc_colors256(get_color);
-            if(get_color_failed) ReleaseColors();
-        } while(get_color_failed && --maxcol>=8);
-        else {
-            int i;
-            for(i=0;i<maxcol;++i) {
-                get_color((i*15)/(maxcol-1), (i*15)/(maxcol-1),
-                          (i*15)/(maxcol-1), xcolors);
-            }
-        }
-        printf("Using %d colors.\n",maxcol);
-        for(maxcol=0; maxcol<4096; ++maxcol)
-            xcolors[maxcol] = get_nearest_color(maxcol>>8, (maxcol>>4)&15,
-                                                maxcol&15);
-        } break;
-
       case 15:
-        printf("Using %d bits truecolor.\n",15);
         alloc_colors64k(5,5,5,10,5,0);
         break;
 
       case 16:
-        printf("Using %d bits truecolor.\n",16);
         alloc_colors64k(5,6,5,11,5,0);
         break;
 
       case 24:
-        printf("Using %d bits truecolor.\n",24);
         alloc_colors64k(8,8,8,16,8,0);
         break;
 
       case 32:
-        printf("Using %d bits truecolor.\n",32);
         alloc_colors64k(8,8,8,16,8,0);
         break;
+
+      default:
+        printf("Unsupported bit depth: %d\n", depth);
+	return 0;
     }
+
+    printf("Using %d bits truecolor.\n", depth);
+
     return 1;
 }
 
