@@ -11,6 +11,8 @@
 
 #define min(a,b) ( (a) < (b) ? (a) : (b) )
 
+#define USE_VERTB100 1
+
 /******************************************************************************
 ** The slave process **********************************************************
 ******************************************************************************/
@@ -41,6 +43,43 @@ void SlaveEntry(void)
   struct ExecBase* SysBase = *((struct ExecBase**) 4);
 
   Slave( SysBase );
+}
+
+#endif
+
+
+#if USE_VERTB100
+
+#include <hardware/intbits.h>
+
+AROS_UFH4(ULONG, AHIVBlank100,
+    AROS_UFHA(ULONG, dummy, A0),
+    AROS_UFHA(void *, data, A1),
+    AROS_UFHA(ULONG, dummy2, A5),
+    AROS_UFHA(struct ExecBase *, SysBase, A6))
+{
+    AROS_USERFUNC_INIT
+
+    Signal((struct Task *)data, SIGBREAKF_CTRL_F);
+    return 0;
+
+    AROS_USERFUNC_EXIT
+}
+
+static void Delay100(struct ExecBase *SysBase)
+{
+    struct Interrupt i;
+    
+    i.is_Code 	      = (APTR)AHIVBlank100;
+    i.is_Data 	      = FindTask(0);
+    i.is_Node.ln_Name = "AROS AHI Driver 100 Hz VBlank server";
+    i.is_Node.ln_Pri  = 0;
+    i.is_Node.ln_Type = NT_INTERRUPT;
+    
+    SetSignal(0, SIGBREAKF_CTRL_F);
+    AddIntServer(INTB_VERTB100, &i);
+    Wait(SIGBREAKF_CTRL_F);
+    RemIntServer(INTB_VERTB100, &i);
 }
 
 #endif
@@ -105,7 +144,11 @@ Slave( struct ExecBase* SysBase )
 	    // comparison, the SB Live/Audigy driver uses 1/1000 s
 	    // polling ...
 //	    KPrintF("Delay\n");
+    	  #if USE_VERTB100
+	    Delay100(SysBase);
+	  #else
 	    Delay( 1 );
+	  #endif
 	  }
 	  else
 	  {
@@ -190,10 +233,24 @@ Slave( struct ExecBase* SysBase )
 		 bytes_avail > 0 )
 	  {
 	    int written;
-
-	    written = OSS_Write( dd->mixbuffer + offset_in_buffer,
-				 min( bytes_in_buffer, bytes_avail ) );
-
+    	    int counter = 0;
+    	    do
+	    {
+	    	written = OSS_Write( dd->mixbuffer + offset_in_buffer,
+				    min( bytes_in_buffer, bytes_avail ) );
+	    	if (counter > 10)
+		{
+		    if (written < 0) written = 0;
+		    break;
+		}
+		
+		if (written < 0) KPrintF("OSS_Write returned %ld. counter %ld  bytes_in_buffer %ld  bytes_avail %ld\n",
+		    	    	written, counter, bytes_in_buffer, bytes_avail);
+		
+		counter++;
+		
+    	    } while (written < 0);
+	    
 	    bytes_in_buffer  -= written;
 	    offset_in_buffer += written;
 	    bytes_avail      -= written;
