@@ -57,7 +57,7 @@ FILES := \
     writelog \
     zfile
 
-EXEDIR := $(CONTRIBDIR)/uae
+EXEDIR := $(CONTRIBDIR)/Emu/UAE
 EXE    := $(EXEDIR)/uae
 
 USE_CLIB_SHARED := yes
@@ -95,10 +95,10 @@ $(OBJDIR)/.build_setup_check:
 	touch $(OBJDIR)/.build_setup_check
 
 clean::
-	   rm -f cpudefs.* cpustbl.* cputbl.h blitfunc.* blittable.* blit.h \
-	         cpufast.s cpuemu.c cpuopti genblitter build68k gencpu\
-			 sd-sound.c sd-sound.h od-joy.c target.h md-fpp.h md-support.c\
-			 machdep osdep threaddep sounddep
+	rm -f cpudefs.* cpustbl.* cputbl.h blitfunc.* blittable.* blit.h \
+	      cpufast.s cpuemu.c cpuopti genblitter build68k gencpu\
+              sd-sound.c sd-sound.h od-joy.c target.h md-fpp.h md-support.c\
+	      machdep osdep threaddep sounddep
 
 
 $(OBJDIR)/%.o: %.s
