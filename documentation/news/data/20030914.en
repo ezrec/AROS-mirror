@@ -1,0 +1,17 @@
+===================
+German AROS article
+===================
+
+:Author: David Le Corfec
+:Date:   2003-09-14
+
+Martin Steigerwald wrote an article__ about AROS for the German publication
+Amiga-Magazin. Thanks Martin !
+
+While I'm there, AROS automated builds were often missing during
+the past month, due to a bug (not AROS-related) in binutils which prevented
+the native version to link properly, and then due to changes in our libc.
+However these particular issues are now solved !
+
+__ http://www.amiga-magazin.de/magazin/a09-03/aros/index.html
+
