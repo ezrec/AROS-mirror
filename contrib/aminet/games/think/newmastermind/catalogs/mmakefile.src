@@ -1,0 +1,41 @@
+include $(TOP)/config/make.cfg
+
+DESTDIR := $(BINDIR)/Locale/Catalogs
+
+CATALOGS := dansk svenska
+CATDESC := newmastermind
+CATNAME := NewMasterMind
+INCLUDE1 := ../newmastermind_strings
+INCLUDE2 := ../strings
+CODEFILE := ../newmastermind_strings
+
+SRCS    := $(foreach f, $(CATALOGS), $(f).ct)
+OBJS    := $(foreach f, $(CATALOGS), $(DESTDIR)/$(f)/$(CATDESC).catalog)
+CATDIRS := $(foreach f, $(CATALOGS), $(DESTDIR)/$(f))
+
+.PHONY : all clean
+
+#MM
+setup-aminet-newmastermind-catalogs : create_dirs create_catalogs create_include
+
+create_catalogs:
+	@$(FOR) dir in $(CATALOGS) ; do \
+	  $(IF) $(FLEXCAT) $(CATDESC).cd $$dir.ct CATALOG=$(DESTDIR)/$$dir/$(CATNAME).catalog ; then $(NOP) ; else $(NOP) ; fi ; \
+	done
+
+create_include:
+	@$(ECHO) "Creating include file"
+	@$(FLEXCAT) $(CATDESC).cd $(INCLUDE1).h=$(TOOLDIR)/C_h_orig.sd
+	@$(FLEXCAT) $(CATDESC).cd $(INCLUDE2).h=$(TOOLDIR)/C_h_orig.sd
+	@$(FLEXCAT) $(CATDESC).cd $(CODEFILE).c=$(TOOLDIR)/C_c_orig.sd
+
+create_dirs:
+	@$(FOR) dir in $(CATDIRS) ; do \
+	    $(IF) $(TEST) ! -d $$dir ; then $(MKDIR) $$dir ; else $(NOP) ; fi ; \
+	done
+
+
+# Delete generated makefiles
+clean ::
+	$(RM) mmakefile mmakefile.bak $(OBJS)
+

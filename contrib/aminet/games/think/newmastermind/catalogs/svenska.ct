@@ -1,0 +1,88 @@
+## version $VER: newmastermind.catalog 1.0 (24.12.94)
+## codeset 0
+## language svenska
+;
+MSG_GAME_MENU
+ \0Spel
+;  \0Game
+;
+MSG_GAME_NEW
+N\0Nytt
+; N\0New
+;
+MSG_GAME_ABOUT
+?\0Om...
+; ?\0About...
+;
+MSG_GAME_QUIT
+Q\0Avsluta NewMasterMind
+; Q\0Quit NewMasterMind
+;
+MSG_SETTINGS_MENU
+ \0Inställningar
+;  \0Settings
+;
+MSG_SETTINGS_OPPONENT
+ \0Motståndare
+;  \0Opponent
+;
+MSG_SETTINGS_HUMAN
+ \0Människa
+;  \0Human
+;
+MSG_SETTINGS_COMPUTER
+ \0Dator
+;  \0Computer
+;
+MSG_SETTINGS_CORRECTION
+ \0Rättningsmetod
+;  \0Correction Method
+;
+MSG_SETTINGS_CHILDREN
+ \0för barn
+;  \0for Children
+;
+MSG_SETTINGS_ADULTS
+ \0för vuxna
+;  \0for Adults
+;
+MSG_SETTINGS_NUMCOLORS
+ \0Antal färger
+;  \0Number of Colors
+;
+MSG_SETTINGS_NUMCOLORS_4
+ \0004 färger
+;  \0004 Colors
+;
+MSG_SETTINGS_NUMCOLORS_6
+ \0006 färger
+;  \0006 Colors
+;
+MSG_SETTINGS_NUMCOLORS_8
+ \0008 färger
+;  \0008 Colors
+;
+MSG_SETTINGS_COLORDISPLAY
+ \0Inga färger
+;  \0No Colors
+;
+MSG_SETTINGS_SAVE
+ \0Spara inställningar
+;  \0Save Settings
+;
+MSG_ABOUT_REQTITLE
+Om %s
+; About %s
+;
+MSG_ABOUT_REQMSG
+%s v%s\nAv %s %s\nCopyright © %s %s
+; %s v%s\nBy %s %s\nCopyright © %s %s
+;
+MSG_CONTINUE_GAD
+Fortsätt
+; Continue
+;
+MSG_OK_GAD
+OK
+; OK
+;

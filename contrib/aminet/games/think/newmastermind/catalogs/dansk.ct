@@ -1,0 +1,88 @@
+## version $VER: newmastermind.catalog 1.0 (07.01.95)
+## codeset 0
+## language dansk
+;
+MSG_GAME_MENU
+ \0Spil
+;  \0Game
+;
+MSG_GAME_NEW
+N\0Nyt
+; N\0New
+;
+MSG_GAME_ABOUT
+?\0Om...
+; ?\0About...
+;
+MSG_GAME_QUIT
+A\0Afslut NewMasterMind
+; Q\0Quit NewMasterMind
+;
+MSG_SETTINGS_MENU
+ \0Indstillinger
+;  \0Settings
+;
+MSG_SETTINGS_OPPONENT
+ \0Modstander
+;  \0Opponent
+;
+MSG_SETTINGS_HUMAN
+ \0Menneske
+;  \0Human
+;
+MSG_SETTINGS_COMPUTER
+ \0Amiga
+;  \0Computer
+;
+MSG_SETTINGS_CORRECTION
+ \0Rettelses metode
+;  \0Correction Method
+;
+MSG_SETTINGS_CHILDREN
+ \0for Børn
+;  \0for Children
+;
+MSG_SETTINGS_ADULTS
+ \0for Voksne
+;  \0for Adults
+;
+MSG_SETTINGS_NUMCOLORS
+ \0Antal farver
+;  \0Number of Colors
+;
+MSG_SETTINGS_NUMCOLORS_4
+ \0004 Farver
+;  \0004 Colors
+;
+MSG_SETTINGS_NUMCOLORS_6
+ \0006 Farver
+;  \0006 Colors
+;
+MSG_SETTINGS_NUMCOLORS_8
+ \0008 Farver
+;  \0008 Colors
+;
+MSG_SETTINGS_COLORDISPLAY
+ \0Ingen Farver
+;  \0No Colors
+;
+MSG_SETTINGS_SAVE
+ \0Gem indstillinger
+;  \0Save Settings
+;
+MSG_ABOUT_REQTITLE
+Om %s
+; About %s
+;
+MSG_ABOUT_REQMSG
+%s v%s\nAf %s %s\nCopyright © %s %s\nOversat til dansk af Kenneth Fribert
+; %s v%s\nBy %s %s\nCopyright © %s %s
+;
+MSG_CONTINUE_GAD
+Fortsæt
+; Continue
+;
+MSG_OK_GAD
+Ok
+; OK
+;
