@@ -52,6 +52,7 @@
 #include <limits.h>
 
 #include "baseredef.h"
+#include "clib_stuff.h"
 
 int g_cdrom_errno;
 int g_ignore_blocklength = FALSE;
