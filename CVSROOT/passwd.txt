@@ -4,7 +4,7 @@ pgpeter:ggX6o8c4l:Peter Boeckmann:pgpeter@informatik.uni-siegen.de:Sparc, Alpha
 iaint:adwVPoZf6iJ6U:Iain Templeton:iaint@cu-seeme.educ.utas.edu.au:HIDDs, Docs
 zino:bdYh/q95S4cmU:Peter Bortas:zino@lysator.liu.se:WWW site
 mreckt:cbWLerEivCr6I:Martin Recktenwald:mreckt@cscip.uni-sb.de:WWW, layers
-ldp:6u5hVWs926luc:Lennard voor den Dag:ldp@worldonline.nl:Amiga port, layers
+ldp:6u5hVWs926luc:Lennard voor den Dag:ldp@xs4all.nl:Amiga port, layers
 quango:cbSYvfdxV/owQ:Chris Lawrence:quango@socomm.net:Linux/m68k
 geert:cbGlFwvZi5iZY:Geert Uytterhoeven:geert@mercator.cs.kuleuven.ac.be:Linux/m68k
 turrican:bcRFEzJmi8r7Y:Kars de Jong:jongk@prac.cs.utwente.nl:misc
