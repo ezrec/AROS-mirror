@@ -340,6 +340,7 @@ def buildWWW():
       imagepath 
     )
     
+    copy( 'targets/www/docutils.css', DSTROOT )
     copy( 'targets/www/aros.css', DSTROOT )
     
     toolpath = os.path.join( DSTROOT, 'tools' )
