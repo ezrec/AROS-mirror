@@ -29,7 +29,7 @@ LocaleSupport.o:	LocaleSupport.c LocaleSupport.h shutdown.h
 	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) -c LocaleSupport.c -o $@
 
 LibMain_aros.c:		LibMain.c
-	$(ARCHTOOL) -R shutdown_pragmas_aros.h $^ $@
+	$(ARCHTOOL) -R shutdown_pragmas_aros.h $^ $@ shutdown_defines.h
 
 LibMain.o:		LibMain_aros.c shutdown.library.h shutdown.h 
 	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) -c LibMain_aros.c -o $@ -include PreInclude.c -include arosspecific.h
@@ -51,7 +51,7 @@ DevWatch.o:		DevWatch.c LocaleSupport.h shutdown.h
 #Shutdown.gst
 
 LibCode_aros.c:		LibCode.c
-	$(ARCHTOOL) -R shutdown_pragmas_aros.h $^ $@
+	$(ARCHTOOL) -R shutdown_pragmas_aros.h $^ $@ shutdown_defines.h
 
 LibCode.o:		LibCode_aros.c LocaleSupport.h ShutdownGlobal.h shutdown.h 
 	$(CC) $(CFLAGS) $(OPTIMIZE) $(DEFINES) -c LibCode_aros.c -o $@ -include PreInclude.c -include arosspecific.h
