@@ -370,3 +370,102 @@ Modified Files:
 	index.html 
 Log Message:
 Added link to voxel demo
+Update of /home/cvs/aros/CVSROOT
+In directory sebigbos:/var/tmp/cvs-serv32484
+
+Added Files:
+	commitlog.demo 
+Log Message:
+Pass this through commitlog.awk to test it
+Update of /home/cvs/aros/AROS/docs/src
+In directory sebigbos:/var/tmp/cvs-serv32593/docs/src
+
+Modified Files:
+	doc_header.html oldnews.html 
+Log Message:
+New news
+Update of /home/cvs/aros/AROS/docs/src
+In directory sebigbos:/var/tmp/cvs-serv1916
+
+Modified Files:
+	jobs.dat 
+Log Message:
+Status was written by Bernie.
+
+Update of /home/cvs/aros/contrib/ACM
+In directory sebigbos:/var/tmp/cvs-serv2761/ACM
+
+Log Message:
+Directory /home/cvs/aros/contrib/ACM added to the repository
+
+Update of /home/cvs/aros/CVSROOT
+In directory sebigbos:/var/tmp/cvs-serv2808
+
+Modified Files:
+	modules 
+Log Message:
+Added directory ACM (Amiga C Manual) to contrib
+Update of /home/cvs/aros/AROS/docs/src
+In directory sebigbos:/var/tmp/cvs-serv3584/docs/src
+
+Modified Files:
+	cvs.src 
+Log Message:
+Added tips&tricks. How to use the modules. Require CVS 1.10, now
+Update of /home/cvs/aros/AROS/compiler/include/inline
+In directory sebigbos:/var/tmp/cvs-serv3914
+
+Removed Files:
+	workbench.h 
+Log Message:
+File is generated.
+
+This file contains a prototype for WBInfo(lock,name,screen).
+If somebody knows what it is for, please implement it, or at least
+write an empty function
+
+Update of /home/cvs/aros/AROS/compiler/include/proto
+In directory sebigbos:/var/tmp/cvs-serv3926
+
+Removed Files:
+	workbench.h 
+Log Message:
+File is generated.
+
+Update of /home/cvs/aros/contrib/Games/Quake
+In directory sebigbos:/var/tmp/cvs-serv6545
+
+Modified Files:
+	README.AROS 
+Log Message:
+Added url from where you can download the Quake shareware version,
+without which you cannot play Quake, unless you already have the
+full version of Quake.
+
+
+Update of /home/cvs/aros/AROS/tools/genmf
+In directory sebigbos:/var/tmp/cvs-serv6972/tools/genmf
+
+Modified Files:
+	genmf.c 
+Log Message:
+Exit on errors.
+Update of /home/cvs/aros/AROS/config
+In directory sebigbos:/var/tmp/cvs-serv11679/config
+
+Modified Files:
+	make.tmpl 
+Log Message:
+%(path) is no parameter for %link_q; removed
+Update of /home/cvs/aros/AROS/config/linux/exec
+In directory sebigbos:/var/tmp/cvs-serv12571
+
+Modified Files:
+	init.c 
+Log Message:
+./aros understands two parameters now: --memsize allows you to specify the 
+size of memory aros allocates (--memsize 64 gives you 64MB) and --mapsysbase
+allows native (emulated) applications to access address $4 to get the ExecBase.
+The latter is only needed if you run (or play with) the emulator, of course.
+
+
