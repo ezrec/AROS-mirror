@@ -251,7 +251,16 @@ struct PathList {
 	AROS_LIBFUNC_INIT
 	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
-
+    	if (NameFromLock(lock, buf, len))
+	{
+	    return strlen(buf);
+	}
+	else
+	{
+	    return 0;
+	}
+	
+#if 0
 	struct PathList *list=NULL,*temp,*first=NULL;
 	
 	/* AROS: We have no __aligned keyword, so we have to allocate it 
@@ -295,6 +304,7 @@ struct PathList {
 	FreeDosObject(DOS_FIB, finfo);
 	
 	return((int)strlen(buf));
+#endif
 	
 	AROS_LIBFUNC_EXIT
 }
