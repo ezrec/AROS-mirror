@@ -4,3 +4,5 @@
 #MM apps : apps-$(ARCH)
 apps :
 	@$(NOP)
+
+#MM fish : fish-microemacs fish-lotto fish-henon
