@@ -43,7 +43,7 @@ rycohen:aaNueBFiMeKmI:Ross Cohen:rycohen@ACSU.Buffalo.EDU:
 chexum:mV/zpVIfJW9yY:Janos Farkas:chexum@shadow.banki.hu:
 morten-h:9KDC6O.tUkOCg:Morten Holm:morten-h@post3.tele.dk:
 rlumley:D0TvThpFULPfQ:Robert Lumley:rlumley@telmaron.com:
-indy:acJyggTBJDfL6:Sven Drieling:indy@welcome.north.de:
+indy:acJyggTBJDfL6:Sven Drieling:sd@sven-drieling.de:
 jamesm:abeTm2pJKypwA:James McArthur:jamesm@it.ntu.edu.au:
 glauschwuffel:aaZMtNc7J4Yuk:Gregor Goldbach:glauschwuffel@amt.comlink.de:
 jamie:cbkVm2suquqVQ:Jim Cooper:jamie@interpath.com:
