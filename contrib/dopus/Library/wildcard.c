@@ -541,4 +541,5 @@ int a;
 		}
 		++mdata->pat;
 	}
+	return 0;
 }
