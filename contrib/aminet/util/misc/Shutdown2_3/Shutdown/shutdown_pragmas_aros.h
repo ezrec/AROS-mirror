@@ -1,0 +1,10 @@
+#pragma amicall(ShutdownBase,0x00,LibInit(D0,A0))
+##Had to cheat on LibOpen because otherwise the result does not compile!!
+#pragma amicall(ShutdownBase,0x06,LibOpen())
+#pragma amicall(ShutdownBase,0x0c,LibClose())
+#pragma amicall(ShutdownBase,0x12,LibExpunge())
+#pragma amicall(ShutdownBase,0x18,LibNull())
+#pragma amicall(ShutdownBase,0x1e,RexxDispatch(a0))
+#pragma amicall(ShutdownBase,0x24,AddShutdownInfoTagList(a0,a1,a2))
+#pragma amicall(ShutdownBase,0x2a,RemShutdownInfo(a0))
+#pragma amicall(ShutdownBase,0x30,Shutdown(d0))
