@@ -1,0 +1,15 @@
+gcc-gcc-3.4.3-ppc-aros.diff
+  This patch adds additional attributes for gcc on powerpc.
+    NAME
+      stackparm
+    TYPE
+      function attribute
+    DESCRIPTION
+      all arguments of a function are put on the stack
+
+    NAME
+      regarg
+    TYPE
+      variable attribute
+    DESCRIPTION
+      in a function call pass argument in the specified register

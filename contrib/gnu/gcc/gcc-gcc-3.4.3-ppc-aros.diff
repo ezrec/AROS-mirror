@@ -1,0 +1,236 @@
+diff -Naur gcc-3.4.3-org/gcc/config/rs6000/rs6000.c gcc-3.4.3/gcc/config/rs6000/rs6000.c
+--- gcc-3.4.3-org/gcc/config/rs6000/rs6000.c	2004-10-22 21:19:35.000000000 +0200
++++ gcc-3.4.3/gcc/config/rs6000/rs6000.c	2005-03-18 15:41:25.524629120 +0100
+@@ -304,6 +304,7 @@
+ #endif
+ static int rs6000_ra_ever_killed (void);
+ static tree rs6000_handle_longcall_attribute (tree *, tree, tree, int, bool *);
++static tree rs6000_handle_register_attribute (tree *, tree, tree, int, bool *);
+ static tree rs6000_handle_altivec_attribute (tree *, tree, tree, int, bool *);
+ static const char *rs6000_mangle_fundamental_type (tree);
+ extern const struct attribute_spec rs6000_attribute_table[];
+@@ -3976,6 +3977,13 @@
+       && !lookup_attribute ("shortcall", TYPE_ATTRIBUTES (fntype)))
+     cum->call_cookie = CALL_LONG;
+ 
++  cum->int_regmask = 0x00003fff;       /* r14 - r31 are free for use */
++  cum->fp_regmask =  0x00003fff;       /* f14 - f31 are free for use */
++  cum->altivec_regmask = 0;            /* all altivec regs free */
++
++  cum->stackparm = fntype && lookup_attribute("stackparm",
++                                             TYPE_ATTRIBUTES(fntype));
++
+   if (TARGET_DEBUG_ARG)
+     {
+       fprintf (stderr, "\ninit_cumulative_args:");
+@@ -4111,8 +4119,53 @@
+ function_arg_advance (CUMULATIVE_ARGS *cum, enum machine_mode mode, 
+ 		      tree type, int named)
+ {
++  tree regarg;
++  if (type != NULL)
++    regarg = lookup_attribute("regarg", TYPE_ATTRIBUTES(type));
++  else
++    regarg = NULL;
++
+   cum->nargs_prototype--;
+ 
++  /*
++    If regarg attribute is defined and we are within function prototype,
++    allocate space for given reg.
++  */
++  if (regarg && cum->prototype)
++  {
++    int reg = decode_reg_name(TREE_STRING_POINTER(TREE_VALUE(TREE_VALUE(regarg))));
++    int *mask = NULL;
++    int size = 0;
++
++    if (INT_REGNO_P(reg))
++    {
++      mask = &cum->int_regmask;
++      size = rs6000_arg_size(mode, type);
++    }
++    else if (FP_REGNO_P(reg))
++    {
++      mask = &cum->fp_regmask;
++      reg -= 32;
++    }
++    else if (ALTIVEC_REGNO_P(reg))
++    {
++      mask = &cum->altivec_regmask;
++      reg -= FIRST_ALTIVEC_REGNO;
++    }
++
++    if ((*mask & (1 << reg)) || ((size == 2) && (*mask & (3 << (reg)))))
++    {
++      error("Register %s used twice in function call",
++        TREE_STRING_POINTER(TREE_VALUE(TREE_VALUE(regarg))));
++    }
++
++    if (size == 2)
++      *mask |= (3 << (reg));
++    else
++      *mask |= (1 << reg);
++  } 
++  else
++
+   if (TARGET_ALTIVEC_ABI && ALTIVEC_VECTOR_MODE (mode))
+     {
+       bool stack = false;
+@@ -4365,6 +4418,9 @@
+ {
+   enum rs6000_abi abi = DEFAULT_ABI;
+ 
++  tree regarg;
++
++
+   /* Return a marker to indicate whether CR1 needs to set or clear the
+      bit that V.4 uses to say fp args were passed in registers.
+      Assume that we don't need the marker for software floating point,
+@@ -4389,6 +4445,38 @@
+       return GEN_INT (cum->call_cookie);
+     }
+ 
++  /*
++    Test whether there is "regarg" attribute defined for this parameter.
++    if we are called as prototype, rework it to register format, ignore it
++    otherwise.
++  */
++  if (type != NULL)
++    regarg = lookup_attribute("regarg", TYPE_ATTRIBUTES(type));
++  else
++    regarg = NULL;
++  if (regarg) // && cum->prototype)
++  {
++    int reg = decode_reg_name(TREE_STRING_POINTER(TREE_VALUE(TREE_VALUE(regarg))));
++ 
++    if (reg < 0)
++    {
++      error("Invalid register name '%s'", 
++     	    TREE_STRING_POINTER(TREE_VALUE(TREE_VALUE(regarg))));
++      return NULL_RTX;
++    }
++    else if (!HARD_REGNO_MODE_OK(reg, mode))
++    {
++      error("Invalid register '%s' for argument", 
++     	    TREE_STRING_POINTER(TREE_VALUE(TREE_VALUE(regarg))));
++      return NULL_RTX;
++    }
++
++    return gen_rtx_REG(mode, reg);
++  }
++ 
++  if (cum->stackparm)
++    return NULL_RTX;
++
+   if (USE_ALTIVEC_FOR_ARG_P (cum, mode, type, named))
+     if (TARGET_64BIT && ! cum->prototype)
+       {
+@@ -4720,6 +4808,10 @@
+   rtx save_area = NULL_RTX, mem;
+   int first_reg_offset, set;
+ 
++
++  if (cum->stackparm)
++    return;
++
+   /* Skip the last named argument.  */
+   next_cum = *cum;
+   function_arg_advance (&next_cum, mode, type, 1);
+@@ -14946,6 +15038,8 @@
+   { "altivec",   1, 1, false, true,  false, rs6000_handle_altivec_attribute },
+   { "longcall",  0, 0, false, true,  true,  rs6000_handle_longcall_attribute },
+   { "shortcall", 0, 0, false, true,  true,  rs6000_handle_longcall_attribute },
++  { "stackparm",0, 0, false, true,  true,  rs6000_handle_longcall_attribute },
++  { "regarg",   1, 1, false, false, false, rs6000_handle_register_attribute },
+   { NULL,        0, 0, false, false, false, NULL }
+ };
+ 
+@@ -15075,6 +15169,73 @@
+   return NULL_TREE;
+ }
+ 
++static tree
++rs6000_handle_register_attribute (tree *node, tree name, tree args ATTRIBUTE_UNUSED, int flags ATTRIBUTE_UNUSED, bool *no_add_attrs)
++{
++  if (TREE_CODE (*node) != PARM_DECL)
++  {
++    warning ("`%s' attribute only applies to function parameters",
++                IDENTIFIER_POINTER (name));
++    *no_add_attrs = true;
++  }
++  else
++  {
++    tree cst;
++ 
++    cst = TREE_VALUE (args);
++    if (TREE_CODE (cst) != STRING_CST)
++    {
++      error ("`%s' attribute requires a string constant argument specifying a register name",
++                IDENTIFIER_POINTER (name));
++ 
++      *no_add_attrs = true;
++     }
++     else
++     {
++       /* Ok, this is a PARM_DECL which has a register attribute
++          with the proper argument. However, we need to set the attribute
++          to the DECL's TYPE, rather than to the DECL itself, because
++          the TYPE is what we deal with in function_arg(). The framework
++          doesn't seem to allow for this or, rather, it allows to transfer
++          a DECL's attribute to its TYPE, but the way it does it doesn't let
++          this function know to which DECL that TYPE belongs, and since we
++          only allow "regarg" to be specified for PARM_DECL's, that's not
++          good.
++ 
++          So here we do the same work that decl_attributes() in attribs.c
++          does, only we do it the right way.  */
++
++       tree old_attrs;
++       tree a;
++
++       old_attrs = TYPE_ATTRIBUTES (TREE_TYPE(*node));
++
++       for (a = lookup_attribute ("regarg", old_attrs);
++            a != NULL_TREE;
++            a = lookup_attribute ("regarg", TREE_CHAIN (a)))
++       {
++         if (simple_cst_equal (TREE_VALUE (a), args) == 1)
++           break;
++       }
++
++       if (a == NULL_TREE)
++       {
++         /* This attribute isn't already in the list.  */
++         TREE_TYPE(*node) = build_type_attribute_variant (TREE_TYPE(*node),
++                                                     tree_cons (name, args,
++                                                               old_attrs));
++       }
++
++       /* Now that the attribute has been added to the DECL's TYPE, don't
++          add it to the DECL itself.  */
++
++       *no_add_attrs = true;
++     }
++  }
++
++  return NULL_TREE;
++}
++
+ /* Set longcall attributes on all functions declared when
+    rs6000_default_long_calls is true.  */
+ static void
+diff -Naur gcc-3.4.3-org/gcc/config/rs6000/rs6000.h gcc-3.4.3/gcc/config/rs6000/rs6000.h
+--- gcc-3.4.3-org/gcc/config/rs6000/rs6000.h	2004-08-23 20:02:58.000000000 +0200
++++ gcc-3.4.3/gcc/config/rs6000/rs6000.h	2005-03-17 23:25:26.000000000 +0100
+@@ -1772,6 +1772,10 @@
+   int nargs_prototype;		/* # args left in the current prototype */
+   int prototype;		/* Whether a prototype was defined */
+   int stdarg;			/* Whether function is a stdarg function.  */
++  int stackparm;
++  int int_regmask;
++  int fp_regmask;
++  int altivec_regmask;
+   int call_cookie;		/* Do special things for this call */
+   int sysv_gregno;		/* next available GP register */
+ } CUMULATIVE_ARGS;
