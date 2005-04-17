@@ -139,6 +139,9 @@
 
 #define MakeHook(hookname, funcname) struct Hook hookname = {{NULL, NULL}, \
     (HOOKFUNC)funcname, NULL, NULL}
+
+#define MakeHookWithData(hookname, funcname, data) struct Hook hookname =  \
+    {{NULL, NULL}, (HOOKFUNC)funcname, NULL, (APTR)data}
     
 #define MakeStaticHook(hookname, funcname) static struct Hook hookname =   \
     {{NULL, NULL}, (HOOKFUNC)funcname, NULL, NULL}
