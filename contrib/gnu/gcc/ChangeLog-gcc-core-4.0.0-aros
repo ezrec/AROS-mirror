@@ -1,0 +1,40 @@
+-- in toplevel/gcc --
+
+2005-24-04  Fabio Alemagna  <falemagn@aros.org>
+
+	* config.host: handle *-*-aros*.
+	* config.gcc: handle *-*-aros* and i[3456]86-*-aros*.
+	* c-incpath.c: (INO_T_EQ) [__AROS__]: return 0.
+	* config/aros.h: new file.
+	* config/i386/aros.h: new file.
+     
+-- in toplevel/libiberty --
+
+2005-24-04  Fabio Alemagna <falemagn@aros.org>
+
+	* pex-aros.c: new file.
+	* Makefile.in: handle pex-aros.c.
+	* configure.ac: handle *-*-aros*.
+	* configure: likewise
+
+-- in toplevel/fixincludes --
+
+2005-24-04  Fabio Alemagna  <falemagn@aros.org>
+
+	* configure.ac: handle *-*-aros*.
+	* configure: likewise
+	
+	
+-- in toplevel/include --
+
+2005-24-04  Fabio Alemagna  <falemagn@aros.org>
+
+	* filenames.h : (IS_DIR_SEPARATOR) [__AROS__]: define.
+	(IS_ABSOLUTE_PATH) [__AROS__]: define.
+	(FILENAME_CMP) [__AROS__]: define.
+
+-- in toplevel --
+
+2005-24-04  Fabio Alemagna  <falemagn@aros.org>
+
+	* configure.in: handle *-*-aros*.

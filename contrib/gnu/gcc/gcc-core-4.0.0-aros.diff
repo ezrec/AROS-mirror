@@ -1,0 +1,905 @@
+diff -rNu gcc-4.0.0/configure.in gcc-4.0.0-aros/configure.in
+--- gcc-4.0.0/configure.in	2005-04-21 04:45:11.000000000 +0200
++++ gcc-4.0.0-aros/configure.in	2005-04-23 15:11:44.000000000 +0200
+@@ -305,6 +305,9 @@
+   ppc*-*-pe)
+     noconfigdirs="$noconfigdirs patch diff make tk tcl expect dejagnu autoconf automake texinfo bison send-pr gprof rcs guile perl itcl gnuserv"
+     ;;
++  *-*-aros*)
++    noconfigdirs="patch diff make tk tcl expect dejagnu autoconf automake texinfo bison send-pr gprof rcs guile perl itcl tix gnuserv gdb"
++    ;;
+   powerpc-*-beos*)
+     noconfigdirs="$noconfigdirs tk itcl libgui gdb dejagnu readline"
+     ;;
+@@ -953,6 +956,8 @@
+     # Build the stage2 and stage3 compilers with -fomit-frame-pointer.
+     host_makefile_frag="config/mh-x86omitfp"
+     ;;
++  *-*-aros*)
++    ;;
+ esac
+ fi
+ 
+diff -rNu gcc-4.0.0/fixincludes/configure gcc-4.0.0-aros/fixincludes/configure
+--- gcc-4.0.0/fixincludes/configure	2004-12-02 12:03:21.000000000 +0100
++++ gcc-4.0.0-aros/fixincludes/configure	2005-04-23 16:13:28.000000000 +0200
+@@ -2404,6 +2404,7 @@
+ fi
+ else
+   case $host in
++        *-*-aros* | \
+ 	i?86-*-msdosdjgpp* | \
+ 	i?86-*-mingw32* | \
+ 	*-*-beos* )
+diff -rNu gcc-4.0.0/fixincludes/configure.ac gcc-4.0.0-aros/fixincludes/configure.ac
+--- gcc-4.0.0/fixincludes/configure.ac	2004-12-02 12:03:21.000000000 +0100
++++ gcc-4.0.0-aros/fixincludes/configure.ac	2005-04-23 16:12:11.000000000 +0200
+@@ -35,6 +35,7 @@
+ 	TARGET=oneprocess
+ fi],
+ [case $host in
++        *-*-aros* | \
+ 	i?86-*-msdosdjgpp* | \
+ 	i?86-*-mingw32* | \
+ 	*-*-beos* )
+diff -rNu gcc-4.0.0/gcc/c-incpath.c gcc-4.0.0-aros/gcc/c-incpath.c
+--- gcc-4.0.0/gcc/c-incpath.c	2005-01-23 16:05:27.000000000 +0100
++++ gcc-4.0.0-aros/gcc/c-incpath.c	2005-04-23 15:25:13.000000000 +0200
+@@ -37,7 +37,7 @@
+ # define INO_T_EQ(A, B) (!memcmp (&(A), &(B), sizeof (A)))
+ # define INO_T_COPY(DEST, SRC) memcpy(&(DEST), &(SRC), sizeof (SRC))
+ #else
+-# if (defined _WIN32 && !defined (_UWIN)) || defined __MSDOS__
++# if (defined _WIN32 && !defined (_UWIN)) || defined __MSDOS__ || defined __AROS__
+ #  define INO_T_EQ(A, B) 0
+ # else
+ #  define INO_T_EQ(A, B) ((A) == (B))
+diff -rNu gcc-4.0.0/gcc/config/aros.h gcc-4.0.0-aros/gcc/config/aros.h
+--- gcc-4.0.0/gcc/config/aros.h	1970-01-01 01:00:00.000000000 +0100
++++ gcc-4.0.0-aros/gcc/config/aros.h	2005-04-23 15:11:44.000000000 +0200
+@@ -0,0 +1,96 @@
++/* Definitions for AROS
++   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
++   Contributed by Fabio Alemagna
++   Based upon linux.h, contributed by Eric Youngdale.
++
++This file is part of GNU CC.
++
++GNU CC is free software; you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation; either version 2, or (at your option)
++any later version.
++
++GNU CC is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++GNU General Public License for more details.
++
++You should have received a copy of the GNU General Public License
++along with GNU CC; see the file COPYING.  If not, write to
++the Free Software Foundation, 59 Temple Place - Suite 330,
++Boston, MA 02111-1307, USA.  */
++
++/* Don't assume anything about the header files.  */
++#define NO_IMPLICIT_EXTERN_C
++
++/* AROS uses ctype from libc.a. I am not sure how complete it is.
++   For now, we play safe. It may change later.  */
++
++#if 0
++#undef MULTIBYTE_CHARS
++#define MULTIBYTE_CHARS 1
++#endif
++
++#define TARGET_OS_CPP_BUILTINS()		\
++  do						\
++    {						\
++	builtin_define_std ("unix");		\
++	builtin_define_std ("AROS");            \
++	builtin_define ("__ELF__");		\
++	builtin_assert ("system=posix");	\
++	if (flag_pic)				\
++	  {					\
++	    builtin_define ("__PIC__");		\
++	    builtin_define ("__pic__");		\
++	  }					\
++    }						\
++  while (0)
++
++#undef ASM_APP_ON
++#define ASM_APP_ON "#APP\n"
++
++#undef ASM_APP_OFF
++#define ASM_APP_OFF "#NO_APP\n"
++
++#undef MD_EXEC_PREFIX
++#undef MD_STARTFILE_PREFIX
++
++/* Provide a STARTFILE_SPEC appropriate for AROS. AROS has its own
++   set of startup files which also take care of handling C++
++   constructors/destructors.  */
++
++#undef	STARTFILE_SPEC
++#define STARTFILE_SPEC \
++  "%{detach:detach.o%s} startup.o%s %{nix:nixmain.o%s}"
++
++/* Provide a ENDFILE_SPEC appropriate for AROS. */
++
++#undef	ENDFILE_SPEC
++#define ENDFILE_SPEC \
++  "-lautoinit"
++
++/* This is for -profile to use -lc_p instead of -lc.  */
++#ifndef CC1_SPEC
++#define CC1_SPEC "%{profile:-p}"
++#endif
++
++/* The GNU C++ standard library requires that these macros be defined.  */
++#undef CPLUSPLUS_CPP_SPEC
++#define CPLUSPLUS_CPP_SPEC "-D_GNU_SOURCE %(cpp)"
++
++#undef	LIB_SPEC
++#define LIB_SPEC \
++  "-lamiga -larossupport -larosc -lm"
++
++#if !defined(USE_GNULIBC_1) && defined(HAVE_LD_EH_FRAME_HDR)
++#define LINK_EH_SPEC "%{!static:--eh-frame-hdr} "
++#endif
++
++/* AROS uses its own collect-like program for the moment.  */
++#undef LINKER_NAME
++#define LINKER_NAME "collect-aros"
++
++/* Define this so we can compile MS code for use with WINE.  */
++#define HANDLE_PRAGMA_PACK_PUSH_POP
++
++#define TARGET_HAS_F_SETLKW
+diff -rNu gcc-4.0.0/gcc/config/i386/aros.h gcc-4.0.0-aros/gcc/config/i386/aros.h
+--- gcc-4.0.0/gcc/config/i386/aros.h	1970-01-01 01:00:00.000000000 +0100
++++ gcc-4.0.0-aros/gcc/config/i386/aros.h	2005-04-23 15:11:44.000000000 +0200
+@@ -0,0 +1,120 @@
++/* Definitions for Intel 386 running AROS systems with ELF format.
++   Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002
++   Free Software Foundation, Inc.
++   Contributed by Fabio Alemagna.
++   Based upon i386/linux.h by Eric Youngdale.
++
++This file is part of GNU CC.
++
++GNU CC is free software; you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation; either version 2, or (at your option)
++any later version.
++
++GNU CC is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++GNU General Public License for more details.
++
++You should have received a copy of the GNU General Public License
++along with GNU CC; see the file COPYING.  If not, write to
++the Free Software Foundation, 59 Temple Place - Suite 330,
++Boston, MA 02111-1307, USA.  */
++
++/* Output at beginning of assembler file.  */
++/* The .file command should always begin the output.  */
++#undef TARGET_ASM_FILE_START_FILE_DIRECTIVE
++#define TARGET_ASM_FILE_START_FILE_DIRECTIVE true
++
++#define TARGET_VERSION fprintf (stderr, " (i386 AROS/ELF)");
++
++/* The svr4 ABI for the i386 says that records and unions are returned
++   in memory.  */
++#undef DEFAULT_PCC_STRUCT_RETURN
++#define DEFAULT_PCC_STRUCT_RETURN 1
++
++#undef ASM_COMMENT_START
++#define ASM_COMMENT_START "#"
++
++#undef DBX_REGISTER_NUMBER
++#define DBX_REGISTER_NUMBER(n) \
++  (TARGET_64BIT ? dbx64_register_map[n] : svr4_dbx_register_map[n])
++
++/* Output assembler code to FILE to call the profiler.
++   To the best of my knowledge, no Linux libc has required the label
++   argument to mcount.  */
++
++#define NO_PROFILE_COUNTERS 1
++
++#undef MCOUNT_NAME
++#define MCOUNT_NAME "mcount"
++
++/* The GLIBC version of mcount for the x86 assumes that there is a
++   frame, so we cannot allow profiling without a frame pointer.  */
++
++#undef SUBTARGET_FRAME_POINTER_REQUIRED
++#define SUBTARGET_FRAME_POINTER_REQUIRED current_function_profile
++
++#undef SIZE_TYPE
++#define SIZE_TYPE "unsigned int"
++
++#undef PTRDIFF_TYPE
++#define PTRDIFF_TYPE "int"
++
++#undef WCHAR_TYPE
++#define WCHAR_TYPE "long int"
++
++#undef WCHAR_TYPE_SIZE
++#define WCHAR_TYPE_SIZE BITS_PER_WORD
++
++#undef CPP_SPEC
++#define CPP_SPEC "%{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
++
++#undef CC1_SPEC
++#define CC1_SPEC "%(cc1_cpu) %{profile:-p}"
++
++/* Provide a LINK_SPEC appropriate for AROS.  */
++
++#undef	LINK_SPEC
++#define LINK_SPEC "-m elf_i386"
++
++/* A C statement (sans semicolon) to output to the stdio stream
++   FILE the assembler definition of uninitialized global DECL named
++   NAME whose size is SIZE bytes and alignment is ALIGN bytes.
++   Try to use asm_output_aligned_bss to implement this macro.  */
++
++#define ASM_OUTPUT_ALIGNED_BSS(FILE, DECL, NAME, SIZE, ALIGN) \
++  asm_output_aligned_bss (FILE, DECL, NAME, SIZE, ALIGN)
++
++/* A C statement to output to the stdio stream FILE an assembler
++   command to advance the location counter to a multiple of 1<<LOG
++   bytes if it is within MAX_SKIP bytes.
++
++   This is used to align code labels according to Intel recommendations.  */
++
++#ifdef HAVE_GAS_MAX_SKIP_P2ALIGN
++#define ASM_OUTPUT_MAX_SKIP_ALIGN(FILE,LOG,MAX_SKIP)			\
++  do {									\
++    if ((LOG) != 0) {							\
++      if ((MAX_SKIP) == 0) fprintf ((FILE), "\t.p2align %d\n", (LOG));	\
++      else fprintf ((FILE), "\t.p2align %d,,%d\n", (LOG), (MAX_SKIP));	\
++    }									\
++  } while (0)
++#endif
++
++/* Handle special EH pointer encodings.  Absolute, pc-relative, and
++   indirect are handled automatically.  */
++#define ASM_MAYBE_OUTPUT_ENCODED_ADDR_RTX(FILE, ENCODING, SIZE, ADDR, DONE) \
++  do {									\
++    if ((SIZE) == 4 && ((ENCODING) & 0x70) == DW_EH_PE_datarel)		\
++      {									\
++        fputs (ASM_LONG, FILE);			\
++        assemble_name (FILE, XSTR (ADDR, 0));				\
++	fputs (((ENCODING) & DW_EH_PE_indirect ? "@GOT" : "@GOTOFF"), FILE); \
++        goto DONE;							\
++      }									\
++  } while (0)
++
++
++/* FIXME: AROS doesn't support dw2 unwinding yet.  */
++#undef MD_FALLBACK_FRAME_STATE_FOR
+diff -rNu gcc-4.0.0/gcc/config.gcc gcc-4.0.0-aros/gcc/config.gcc
+--- gcc-4.0.0/gcc/config.gcc	2005-03-31 05:17:08.000000000 +0200
++++ gcc-4.0.0-aros/gcc/config.gcc	2005-04-23 23:22:25.000000000 +0200
+@@ -501,6 +501,26 @@
+       ;;
+   esac
+   ;;
++*-*-aros*)
++  # On AROS, the setup is just about the same on
++  # each different CPU.  The specific machines that we
++  # support are matched above and just set $cpu_type.
++  ##xm_defines=POSIX
++  ##tm_file="${cpu_type}/gnu.h"
++  ##extra_parts="crtbegin.o crtend.o crtbeginS.o crtendS.o crtbeginT.o"
++  # AROS always uses ELF.
++  elf=yes
++  # GNU tools are the only tools.
++  gnu_ld=yes
++  gas=yes
++  thread_file=single
++  use_collect2=no
++  xm_defines='STDC_HEADERS=1'
++  # These details are the same as for Linux.
++  # But here we need a little extra magic.
++  ##tmake_file="t-slibgcc-elf-ver t-linux t-gnu"
++  ;;
++
+ *-*-openbsd*)
+   tmake_file="t-libc-ok t-openbsd t-libgcc-pic"
+   case ${enable_threads} in
+@@ -986,6 +1006,9 @@
+ 	esac
+ 	tmake_file="${tmake_file} i386/t-linux64"
+ 	;;
++i[34567]86-*-aros*)
++	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h svr4.h aros.h i386/aros.h"
++	;;	
+ i[34567]86-*-gnu*)
+ 	;;
+ i[34567]86-pc-msdosdjgpp*)
+diff -rNu gcc-4.0.0/gcc/config.host gcc-4.0.0-aros/gcc/config.host
+--- gcc-4.0.0/gcc/config.host	2005-03-07 23:46:12.000000000 +0100
++++ gcc-4.0.0-aros/gcc/config.host	2005-04-23 23:44:52.000000000 +0200
+@@ -187,4 +187,7 @@
+   ia64-*-hpux*)
+     use_long_long_for_widest_fast_int=yes
+     ;;
++  *-*-aros*)
++    host_can_use_collect2=no
++    ;;
+ esac
+diff -rNu gcc-4.0.0/include/filenames.h gcc-4.0.0-aros/include/filenames.h
+--- gcc-4.0.0/include/filenames.h	2003-07-01 22:29:16.000000000 +0200
++++ gcc-4.0.0-aros/include/filenames.h	2005-04-23 23:39:03.000000000 +0200
+@@ -40,6 +40,12 @@
+ #define IS_ABSOLUTE_PATH(f)	(IS_DIR_SEPARATOR((f)[0]) || (((f)[0]) && ((f)[1] == ':')))
+ #define FILENAME_CMP(s1, s2)	strcasecmp(s1, s2)
+ 
++#elif defined __AROS__
++
++#define IS_DIR_SEPARATOR(c)	((c) == '/' || (c) == ':')
++#define IS_ABSOLUTE_PATH(f)	(IS_DIR_SEPARATOR((f)[0]) || (strchr((f), ':') != NULL))
++#define FILENAME_CMP(s1, s2)	strcasecmp(s1, s2)
++
+ #else  /* not DOSish */
+ 
+ #define IS_DIR_SEPARATOR(c)	((c) == '/')
+diff -rNu gcc-4.0.0/libiberty/configure gcc-4.0.0-aros/libiberty/configure
+--- gcc-4.0.0/libiberty/configure	2004-12-27 22:00:11.000000000 +0100
++++ gcc-4.0.0-aros/libiberty/configure	2005-04-23 15:33:11.000000000 +0200
+@@ -957,7 +957,7 @@
+     else
+       echo "$as_me: WARNING: no configuration information is in $ac_dir" >&2
+     fi
+-    cd "$ac_popdir"
++    cd $ac_popdir
+   done
+ fi
+ 
+@@ -2330,7 +2330,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -2388,7 +2389,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -2504,7 +2506,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -2558,7 +2561,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -2603,7 +2607,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -2647,7 +2652,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -3103,7 +3109,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -3163,7 +3170,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -3239,7 +3247,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -3280,7 +3289,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -3622,7 +3632,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -3686,7 +3697,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -3747,7 +3759,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -3828,7 +3841,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -4057,7 +4071,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -4119,7 +4134,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -4159,7 +4175,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -4215,7 +4232,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -4255,7 +4273,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -4319,7 +4338,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -4350,8 +4370,10 @@
+ esac
+ else
+   if test "$cross_compiling" = yes; then
+-  { { echo "$as_me:$LINENO: error: internal error: not reached in cross-compile" >&5
+-echo "$as_me: error: internal error: not reached in cross-compile" >&2;}
++  { { echo "$as_me:$LINENO: error: cannot run test program while cross compiling
++See \`config.log' for more details." >&5
++echo "$as_me: error: cannot run test program while cross compiling
++See \`config.log' for more details." >&2;}
+    { (exit 1); exit 1; }; }
+ else
+   cat >conftest.$ac_ext <<_ACEOF
+@@ -4464,7 +4486,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -4530,7 +4553,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -4576,7 +4600,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -4622,7 +4647,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -4699,7 +4725,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -4932,7 +4959,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -5346,7 +5374,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -5405,7 +5434,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -5505,7 +5535,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -5643,7 +5674,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -5864,7 +5896,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -6209,7 +6242,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -6320,7 +6354,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -6389,7 +6424,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -6454,7 +6490,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -6550,7 +6587,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -6626,7 +6664,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -6666,6 +6705,7 @@
+      *-*-msdosdjgpp*)		pexecute=./pex-djgpp.o  ;;
+      *-*-msdos*)		pexecute=./pex-msdos.o  ;;
+      *-*-os2-emx*)		pexecute=./pex-os2.o    ;;
++     *-*-aros*)			pexecute=./pex-aros.o   ;;
+      *)				pexecute=./pex-unix.o   ;;
+ esac
+ 
+@@ -6799,7 +6839,8 @@
+   cat conftest.err >&5
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); } &&
+-	 { ac_try='test -z "$ac_c_werror_flag"			 || test ! -s conftest.err'
++	 { ac_try='test -z "$ac_c_werror_flag"
++			 || test ! -s conftest.err'
+   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+   (eval $ac_try) 2>&5
+   ac_status=$?
+@@ -7987,6 +8028,11 @@
+   *) ac_INSTALL=$ac_top_builddir$INSTALL ;;
+   esac
+ 
++  if test x"$ac_file" != x-; then
++    { echo "$as_me:$LINENO: creating $ac_file" >&5
++echo "$as_me: creating $ac_file" >&6;}
++    rm -f "$ac_file"
++  fi
+   # Let's still pretend it is `configure' which instantiates (i.e., don't
+   # use $as_me), people would be surprised to read:
+   #    /* config.h.  Generated by config.status.  */
+@@ -8025,12 +8071,6 @@
+ 	 fi;;
+       esac
+     done` || { (exit 1); exit 1; }
+-
+-  if test x"$ac_file" != x-; then
+-    { echo "$as_me:$LINENO: creating $ac_file" >&5
+-echo "$as_me: creating $ac_file" >&6;}
+-    rm -f "$ac_file"
+-  fi
+ _ACEOF
+ cat >>$CONFIG_STATUS <<_ACEOF
+   sed "$ac_vpsub
+diff -rNu gcc-4.0.0/libiberty/configure.ac gcc-4.0.0-aros/libiberty/configure.ac
+--- gcc-4.0.0/libiberty/configure.ac	2004-12-27 22:00:12.000000000 +0100
++++ gcc-4.0.0-aros/libiberty/configure.ac	2005-04-23 15:28:10.000000000 +0200
+@@ -519,6 +519,7 @@
+      *-*-msdosdjgpp*)		pexecute=./pex-djgpp.o  ;;
+      *-*-msdos*)		pexecute=./pex-msdos.o  ;;
+      *-*-os2-emx*)		pexecute=./pex-os2.o    ;;
++     *-*-aros*)			pexecute=./pex-aros.o   ;;
+      *)				pexecute=./pex-unix.o   ;;
+ esac
+ AC_SUBST(pexecute)
+diff -rNu gcc-4.0.0/libiberty/Makefile.in gcc-4.0.0-aros/libiberty/Makefile.in
+--- gcc-4.0.0/libiberty/Makefile.in	2004-12-27 22:00:11.000000000 +0100
++++ gcc-4.0.0-aros/libiberty/Makefile.in	2005-04-23 15:32:55.000000000 +0200
+@@ -143,7 +143,7 @@
+ 	objalloc.c obstack.c						\
+ 	partition.c							\
+ 	 pex-djgpp.c pex-mpw.c pex-msdos.c pex-os2.c			\
+-	 pex-unix.c pex-win32.c						\
++	 pex-unix.c pex-win32.c pex-aros.c				\
+          physmem.c putenv.c						\
+ 	random.c regex.c rename.c rindex.c				\
+ 	safe-ctype.c setenv.c sigsetmask.c snprintf.c sort.c spaces.c	\
+@@ -187,7 +187,7 @@
+ 	./memchr.o ./memcmp.o ./memcpy.o ./memmove.o ./mempcpy.o	\
+ 	 ./memset.o ./mkstemps.o					\
+ 	./pex-djgpp.o ./pex-mpw.o ./pex-msdos.o ./pex-os2.o		\
+-	 ./pex-unix.o ./pex-win32.o					\
++	 ./pex-unix.o ./pex-win32.o ./pex-aros.o			\
+ 	 ./putenv.o							\
+ 	./random.o ./rename.o ./rindex.o				\
+ 	./setenv.o ./sigsetmask.o ./snprintf.o ./stpcpy.o ./stpncpy.o	\
+@@ -790,6 +790,13 @@
+ 	else true; fi
+ 	$(COMPILE.c) $(srcdir)/pex-win32.c $(OUTPUT_OPTION)
+ 
++./pex-aros.o: $(srcdir)/pex-aros.c config.h $(INCDIR)/ansidecl.h \
++	$(INCDIR)/libiberty.h $(srcdir)/pex-common.h
++	if [ x"$(PICFLAG)" != x ]; then \
++	  $(COMPILE.c) $(PICFLAG) $(srcdir)/pex-aros.c -o pic/$@; \
++	else true; fi
++	$(COMPILE.c) $(srcdir)/pex-aros.c $(OUTPUT_OPTION)
++
+ ./physmem.o: $(srcdir)/physmem.c config.h $(INCDIR)/ansidecl.h \
+ 	$(INCDIR)/libiberty.h
+ 	if [ x"$(PICFLAG)" != x ]; then \
+diff -rNu gcc-4.0.0/libiberty/pex-aros.c gcc-4.0.0-aros/libiberty/pex-aros.c
+--- gcc-4.0.0/libiberty/pex-aros.c	1970-01-01 01:00:00.000000000 +0100
++++ gcc-4.0.0-aros/libiberty/pex-aros.c	2005-04-23 15:11:45.000000000 +0200
+@@ -0,0 +1,70 @@
++/* Utilities to execute a program in a subprocess (possibly linked by pipes
++   with other subprocesses), and wait for it.  OS/2 specialization.
++   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003
++   Free Software Foundation, Inc.
++
++This file is part of the libiberty library.
++Libiberty is free software; you can redistribute it and/or
++modify it under the terms of the GNU Library General Public
++License as published by the Free Software Foundation; either
++version 2 of the License, or (at your option) any later version.
++
++Libiberty is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++Library General Public License for more details.
++
++You should have received a copy of the GNU Library General Public
++License along with libiberty; see the file COPYING.LIB.  If not,
++write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
++Boston, MA 02111-1307, USA.  */
++
++#include "pex-common.h"
++
++#include <process.h>
++#include <errno.h>
++
++static int __pid, __rc;
++
++int
++pexecute (program, argv, this_pname, temp_base, errmsg_fmt, errmsg_arg, flags)
++     const char *program;
++     char * const *argv;
++     const char *this_pname;
++     const char *temp_base;
++     char **errmsg_fmt, **errmsg_arg;
++     int flags;
++{
++  if ((flags & PEXECUTE_ONE) != PEXECUTE_ONE)
++    {
++      *errmsg_fmt = "-pipe not supported yet.";
++      *errmsg_arg = NULL;
++      return -1;
++    }
++
++  __rc = ((flags & PEXECUTE_SEARCH) ? spawnvp : spawnv) (P_WAIT, program, argv);
++  if (__rc == -1)
++    {
++      *errmsg_fmt = install_error_msg;
++      *errmsg_arg = program;
++      return -1;
++    }
++
++  return (__pid <= 0) ? __pid = 100 : ++__pid;
++}
++
++int
++pwait (pid, status, flags)
++     int pid;
++     int *status;
++     int flags;
++{
++  if (pid != __pid)
++    {
++      errno = EINVAL;
++      return -1;
++    }
++
++  *status = (__rc & 0xFF) << 8;
++  return __pid;
++}
