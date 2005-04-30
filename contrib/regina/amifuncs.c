@@ -398,7 +398,7 @@ streng *amiga_show( tsd_t *TSD, cparamboxptr parm1 )
       retval = int_to_streng( TSD, ln != NULL );
       Free_TSD( TSD, s );
     }
-    Enable();
+    Permit();
     break;
   }
   Free_string_TSD( TSD, sep );
