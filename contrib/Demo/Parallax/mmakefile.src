@@ -12,8 +12,10 @@ DESTDIR := $(CONTRIBDIR)/Demos/Parallax
 ICONS := Parallax
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-#MM demo-parallax-icons : demo-parallax-setup
+#MM
 demo-parallax-icons : $(ICONFILES)
 	
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
 	%makeicon2
+
+%rule_makedirs dirs=$(DESTDIR)

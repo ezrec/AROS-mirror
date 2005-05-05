@@ -14,8 +14,10 @@ ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 demo-rubberstrings : $(OBJS) $(EXE)
 	@$(NOP)
 
-#MM demo-rubberstrings-icons : demo-rubberstrings-setup
+#MM
 demo-rubberstrings-icons : $(ICONFILES)
 	
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
 	%makeicon2
+
+%rule_makedirs dirs=$(DESTDIR)

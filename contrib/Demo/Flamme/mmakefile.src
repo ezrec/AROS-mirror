@@ -12,8 +12,10 @@ DESTDIR := $(CONTRIBDIR)/Demos/Flamme
 ICONS := Flamme
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-#MM demo-flamme-icons : demo-flamme-setup
+#MM
 demo-flamme-icons : $(ICONFILES)
 	
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
 	%makeicon2
+
+%rule_makedirs dirs=$(DESTDIR)

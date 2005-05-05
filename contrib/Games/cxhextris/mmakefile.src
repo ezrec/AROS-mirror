@@ -14,11 +14,12 @@ USER_CFLAGS = -DHIGHSCOREFILE=\""S:chextris-scores"\"
     progname=CXHextris targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="arossupport amiga arosc m"
 
-#MM contrib-games-cxhextris-docs : contrib-games-cxhextris-setup
+#MM
 contrib-games-cxhextris-docs : $(EXEDIR)/README
 	@$(NOP)
 	
-$(EXEDIR)/README : README
+$(EXEDIR)/README : README | $(EXEDIR)
 	@$(CP) $< $@
 
-%common
+%rule_makedirs dirs=$(EXEDIR)
+

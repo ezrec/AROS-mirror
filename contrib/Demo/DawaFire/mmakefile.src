@@ -12,10 +12,10 @@ DESTDIR := $(CONTRIBDIR)/Demos/DawaFire
 ICONS := DawaFire
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-#MM demo-dawafire-icons : demo-dawafire-setup
+#MM
 demo-dawafire-icons : $(ICONFILES)
 
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
 	%makeicon2
 
-
+%rule_makedirs dirs=$(DESTDIR)

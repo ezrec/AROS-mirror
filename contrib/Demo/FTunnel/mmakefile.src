@@ -11,8 +11,10 @@ DESTDIR := $(CONTRIBDIR)/Demos/FTunnel
 
 DATAFILES	:= pattern.data pattern.pal
 
-#MM demo-ftunnel-data : demo-ftunnel-setup
+#MM
 demo-ftunnel-data : $(addprefix $(DESTDIR)/,$(DATAFILES))
 
-$(addprefix $(DESTDIR)/,$(DATAFILES)) : $(DESTDIR)/% : %
+$(addprefix $(DESTDIR)/,$(DATAFILES)) : $(DESTDIR)/% : % | $(DESTDIR)
 	@$(CP) $< $@
+
+%rule_makedirs dirs=$(DESTDIR)

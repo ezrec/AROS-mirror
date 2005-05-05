@@ -12,8 +12,10 @@ DESTDIR := $(CONTRIBDIR)/Demos/NewVox
 ICONS := NewVox
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-#MM demo-newvox-icons : demo-newvox-setup
+#MM
 demo-newvox-icons : $(ICONFILES)
 	
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
 	%makeicon2
+
+%rule_makedirs dirs=$(DESTDIR)

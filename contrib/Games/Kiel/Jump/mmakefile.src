@@ -12,10 +12,10 @@ DESTDIR := $(CONTRIBDIR)/Games/Kiel
 
 INFO := $(foreach f,$(FILES), $(DESTDIR)/$(f).info)
 
-#MM games-kiel-jump-info : games-kiel-jump-setup
+#MM
 games-kiel-jump-info : $(INFO)
 
-$(DESTDIR)/%.info : %.info
+$(DESTDIR)/%.info : %.info | $(DESTDIR)
 	$(CP) $? $(DESTDIR)
 
-%common
+%rule_makedirs dirs=$(DESTDIR)

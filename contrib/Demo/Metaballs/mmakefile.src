@@ -12,10 +12,11 @@ DESTDIR := $(CONTRIBDIR)/Demos/Metaballs
 ICONS := Metaballs
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-#MM demo-metaballs-icons : demo-metaballs-setup
+#MM
 demo-metaballs-icons : $(ICONFILES)
 	
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
 	%makeicon2
 
+%rule_makedirs dirs=$(DESTDIR)
 

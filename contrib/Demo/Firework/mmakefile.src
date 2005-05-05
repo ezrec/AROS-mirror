@@ -12,10 +12,10 @@ DESTDIR	:= $(CONTRIBDIR)/Demos/Firework
 ICONS := Firework
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-#MM demo-firework-icons : demo-firework-setup
+#MM
 demo-firework-icons : $(ICONFILES)
 	
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
 	%makeicon2
 
-
+%rule_makedirs dirs=$(DESTDIR)

@@ -16,13 +16,13 @@ EXEDIR := $(CONTRIBDIR)/Games/Bomber
 DATAFILES := BombSnds.ssf Bomber.mid Bomber0.ssf Bomber1.ssf
 DESTDATAFILES  := $(foreach f, $(DATAFILES), $(EXEDIR)/$(f)) 
 
-#MM Bomber-datafiles : Bomber-setup
+#MM
 Bomber-datafiles : $(DESTDATAFILES)
 
-$(EXEDIR)/%.ssf : %.ssf
+$(EXEDIR)/%.ssf : %.ssf | $(EXEDIR)
 	@$(CP) $< $@
 	
-$(EXEDIR)/%.mid : %.mid
+$(EXEDIR)/%.mid : %.mid | $(EXEDIR)
 	@$(CP) $< $@
 
-%common
+%rule_makedirs dirs=$(EXEDIR)

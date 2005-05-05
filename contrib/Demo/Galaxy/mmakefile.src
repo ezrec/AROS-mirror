@@ -12,9 +12,10 @@ DESTDIR := $(CONTRIBDIR)/Demos/Galaxy
 ICONS := Galaxy
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-#MM demo-galaxy-icons : demo-galaxy-setup
+#MM
 demo-galaxy-icons : $(ICONFILES)
 	
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
 	%makeicon2
 
+%rule_makedirs dirs=$(DESTDIR)

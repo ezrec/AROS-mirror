@@ -12,16 +12,19 @@ DESTDIR 	:= $(CONTRIBDIR)/Demos/InfPlane
 
 DATAFILES	:= pattern.data pattern.pal
 
-#MM demo-infplane-data : demo-infplane-setup
+#MM demo-infplane-data
 %copy_files_q files=$(DATAFILES) dst=$(DESTDIR) \
     maketarget=demo-infplane-data
 
+$(addprefix $(DESTDIR)/,$(DATAFILES)) : | $(DESTDIR)
 
 ICONS := InfPlane
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-#MM demo-infplane-icons : demo-infplane-setup
+#MM
 demo-infplane-icons : $(ICONFILES)
 	
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
 	%makeicon2
+
+%rule_makedirs dirs=$(DESTDIR)
