@@ -5,7 +5,11 @@ include $(TOP)/config/make.cfg
 %build_prog mmake=fish-worldtime \
     progname=worldtime targetdir=$(CONTRIBDIR)/fish \
     files=main uselibs="arossupport amiga arosc m"
-	
-#MM fish-worldtime-files : fish-worldtime-setup
-%copy_files_q files="worldtime.cfg worldtime.dat" \
-    dst=$(CONTRIBDIR)/fish maketarget=fish-worldtime-files
+
+FILES := worldtime.cfg worldtime.dat
+
+#MM fish-worldtime-files
+%copy_files_q files=$(FILES) dst=$(CONTRIBDIR)/fish maketarget=fish-worldtime-files
+
+$(addprefix $(CONTRIBDIR)/fish/,$(FILES)) : | $(CONTRIBDIR)/fish
+rule_makedirs dirs=$(CONTRIBDIR)/fish

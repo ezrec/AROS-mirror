@@ -19,18 +19,16 @@ EXEDIR := $(CONTRIBDIR)/Development/nasm
     progname=Nasm targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="arossupport amiga z arosc m"
 
-#MM
-contrib-development-nasm-setup ::
-	%mkdirs_q $(EXEDIR) $(EXEDIR)/include
+%rule_makedirs dirs="$(EXEDIR) $(EXEDIR)/include $(EXEDIR)/test"
 
-$(EXEDIR)/test/arostest.s : test/arostest.s
+$(EXEDIR)/test/arostest.s : test/arostest.s | $(EXEDIR)
 	@$(CP) test/arostest.s $(EXEDIR)
 
-$(EXEDIR)/test/arostest.README : test/arostest.README
+$(EXEDIR)/test/arostest.README : test/arostest.README | $(EXEDIR)
 	@$(CP) test/arostest.README $(EXEDIR)
 
 #MM
-contrib-development-nasm-asm-includes:
+contrib-development-nasm-asm-includes: | $(EXEDIR)/include
 	$(foreach f, \
 		$(wildcard $(AROS_INCLUDES)/defines/*.h), \
 		$(AWK) -f genasminc.awk $(f) \

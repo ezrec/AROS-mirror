@@ -37,16 +37,13 @@ INCL_DIRS     := $(foreach dir,$(INCSUBDIRS),$(AROS_INCLUDES)/$(dir)) \
                  $(foreach dir,$(INCSUBDIRS),$(GENINCDIR)/$(dir))
 
 ##MM-
-includes-copy : aros-network-includes-setup $(DEST_INCLUDES) $(GEN_INCLUDES)
+includes-copy : $(DEST_INCLUDES) $(GEN_INCLUDES)
 
-$(AROS_INCLUDES)/%.h : %.h
+$(AROS_INCLUDES)/%.h : %.h | $(INCL_DIRS)
 	@$(CP) $< $@
 
-$(GENINCDIR)/%.h : %.h
+$(GENINCDIR)/%.h : %.h | $(INCL_DIRS)
 	@$(CP) $< $@
 
-aros-network-includes-setup : $(INCL_DIRS)
-
-$(INCL_DIRS) :
-	@$(MKDIR) $@
+rule_makedirs dirs=$(INCL_DIRS)
 

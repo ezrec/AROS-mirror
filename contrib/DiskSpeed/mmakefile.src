@@ -22,20 +22,20 @@ ICONS := DiskSpeed ScsiSpeed DiskSpeed.doc
 
 ICONFILES := $(foreach f, $(ICONS), $(DESTDIR)/$(f).info)
 
-#MM contrib-diskspeed-icons : contrib-diskspeed-setup
+#MM
 contrib-diskspeed-icons : $(ICONFILES)
 
-#MM contrib-scsispeed-icons : contrib-scsispeed-setup
+#MM
 contrib-scsispeed-icons : $(ICONFILES)
 
-$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png
+$(DESTDIR)/%.info : icons/%.info.src icons/%_N.png icons/%_S.png | $(DESTDIR)
 	%makeicon2
 
 #MM
 contrib-diskspeed-docs : $(DESTDIR)/DiskSpeed.doc
 
-$(DESTDIR)/DiskSpeed.doc : DiskSpeed.doc
+$(DESTDIR)/DiskSpeed.doc : DiskSpeed.doc | $(DESTDIR)
 	%mkdirs_q $(DESTDIR)
 	cp $< $@
 
-%common
+%rule_makedirs dirs=$(DESTDIR)
