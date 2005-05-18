@@ -1,0 +1,35 @@
+Some additional notes for AmigaOS (and clones)
+==============================================
+
+E-UAE 0.8.27 supports two graphics drivers on Amiga-like platforms - a
+native AmigaOS driver and an SDL-based driver. The former is
+better-integrated with AmigaOS, but the SDL driver offers more features. For
+example, the SDL driver supports E-UAE's Picasso96 emulation and can switch
+between windowed-mode and full-screen mode; the AmigaOS driver doesn't.
+
+Thus two versions of E-UAE are currently available each for AmigaOS4 and
+MorphOS: one built  with the AmigaOS driver and one with the SDL driver. The
+SDL ports for 68k AmigaOS and AROS are not currently capable enough to
+support running E-UAE - thus no SDL build is available for either.
+
+The AROS/x86 build is experimental and not well-tested. It does feature the
+x86 JIT compiler (albeit without direct-memory), but does not support
+rendering in high- or true-colour. It will run on deep screens, but E-UAE's
+output will always be in 8-bit colour (and, by default, dithered).
+
+The native AmigaOS graphics driver is currently being re-written to address
+these and other issues.
+
+E-UAE on AmigaOS and similar hosts also does not currently support SCSI
+emulation or network (bsdsocket.library) emulation.
+
+The old MUI-Rexx GUI for UAE has been modified to work better with E-UAE. It
+should work on 68k AmigaOS and MorphOS, but not currently on OS4.0 (I
+believe all that is required to get MUI-Rexx working on OS4 would be PPC
+stubs for Icon.mmc, but I have not had time to investigate). A new AmigaOS
+GUI for E-UAE is currently being developed.
+
+For more information see the README and the documentation in docs/.
+
+Richard Drummond
+evilrich@rcdrummond.net

@@ -1,0 +1,30 @@
+Files
+------
+
+.uaerc			Basic uae configuration file to start extending from,
+			expecting the folder "Emulation/shared" Amiga Forever
+			to be copied to PROGDIR: (System:Extras/Emu/E-UAE).
+e-uae-0.8.27-aros.diff	Very small diff to patch "configure".
+mmakefile.src		Metamake file to fetch (from Richard Drummonds size)
+			and build e-uae from the current source tarball.
+			Additional files are copied to PROGDIR: to have
+			almost the same tree as in the aros bin distribution
+			available on Richards site.
+Readme			This file.
+README.AmigaOS		Richard Drummonds comments about the current state
+			of e-uae on various flavours of AmigaOS. That one
+			is included with the aros binary distribution but
+			is not in the current source tarball, also copied
+			to PROGDIR:.
+			
+Building
+--------
+
+As usual just type "make contrib-euae" in the top level of your aros
+source tree having an open internet connection or let the automatic
+contrib build do its work in case you have all or parts of it. The
+build was tested on linux hosted for x86 and ppc both without a cross
+compiler. The x86  version seems to work fine. ppc does not yet probably
+because of some missing math functions (actually they are linked in
+from native libgcc, but the ppc elf loader cannot handle those weird
+*PLT* relocations). Probably a cross compiler will help here.

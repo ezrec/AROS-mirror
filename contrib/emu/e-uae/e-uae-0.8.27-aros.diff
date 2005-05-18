@@ -1,0 +1,10 @@
+diff -Nur e-uae-0.8.27/configure e-uae-0.8.27-aros/configure
+--- e-uae-0.8.27/configure	2005-01-07 05:11:05.000000000 +0100
++++ e-uae-0.8.27-aros/configure	2005-05-11 21:45:26.599354464 +0200
+@@ -19204,5 +19204,5 @@
+   export CC=$CC_FOR_BUILD
+   export CFLAGS=$CFLAGS_FOR_BUILD
+   mkdir -p src/tools
+-  cd  src/tools && ../../"$srcdir"/src/tools/configure --cache-file=/dev/null --host=$build --target=$host
++  cd  src/tools && "$srcdir"/src/tools/configure --cache-file=/dev/null --host=$build --target=$host
+ fi

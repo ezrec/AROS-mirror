@@ -1,0 +1,41 @@
+# Makefile to fetch and build e-uae.
+# $Id: $
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-complete : contrib-euae
+
+PROGDIR := $(CONTRIBDIR)/Emu/E-UAE
+PACKAGE := e-uae
+VERSION := 0.8.27
+PKG_VER := $(PACKAGE)-$(VERSION)
+
+%fetch_and_build mmake=contrib-euae \
+	prefix=$(PROGDIR) \
+	package=$(PACKAGE) version=$(VERSION) patch=yes \
+	package_repo=http://www.rcdrummond.net/uae/$(PKG_VER) \
+	extraoptions="--includedir=$(AROS_INCLUDES) --with-zlib=$(AROS_DEVELOPMENT)" \
+	postinstall=euae-copy-files
+
+CP_SRC := $(PORTSDIR)/$(PACKAGE)/$(PKG_VER)
+
+#MM euae-copy-files : euae-docs-copy euae-amiga-copy
+euae-copy-files : files-copy
+	$(CP) $(CP_SRC)/ChangeLog $(PROGDIR)
+	$(CP) $(CP_SRC)/COPYING   $(PROGDIR)
+	$(CP) $(CP_SRC)/README    $(PROGDIR)
+
+%copy_dir_recursive mmake=euae-docs-copy  src=$(CP_SRC)/docs  dst=$(PROGDIR)/docs
+%copy_dir_recursive mmake=euae-amiga-copy src=$(CP_SRC)/amiga dst=$(PROGDIR)/amiga
+
+%copy_files_q files=".uaerc README.AmigaOS" dst=$(PROGDIR)
+
+#MM- euae-rebuild : euae-clean contrib-euae
+
+#MM
+euae-clean :
+	$(RM) $(PROGDIR) $(OBJDIR) $(PACKAGES_DIR)/$(PKG_VER)*
+
+clean:: euae-clean
+
+%common
