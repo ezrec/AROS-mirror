@@ -14,6 +14,10 @@ SDL_Rect layerRect;
 
 unsigned char *vBuffer = NULL;
 
+void pceAppInit (void);
+void pceAppExit (void);
+void pceAppProc (int cnt);
+
 void
 pceLCDDispStop ()
 {
