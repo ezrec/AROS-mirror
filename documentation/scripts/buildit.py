@@ -101,7 +101,7 @@ def makePictures():
         
         for name in names:
             path = os.path.join( root, name )
-            if name == 'CVS' or not os.path.isdir( path ): continue 
+            if name == '.svn' or not os.path.isdir( path ): continue 
 
 	    output += '<a name=%s>\n' % name
             output += convertWWW( os.path.join( path, 'overview.en' ), 'en', options )
@@ -109,7 +109,7 @@ def makePictures():
             for pictureName in os.listdir( path ):
                 picturePath = os.path.join( path, pictureName )
                 pictureFormat = os.path.splitext( pictureName )[1][1:]
-                if pictureName == 'CVS' or os.path.isdir( picturePath ): continue 
+                if pictureName == '.svn' or os.path.isdir( picturePath ): continue 
                 if pictureFormat not in [ 'jpg', 'jpeg', 'png' ]: continue
                 
                 output += makePicture( 
