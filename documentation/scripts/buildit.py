@@ -317,7 +317,15 @@ def copyImages():
             
 
 def buildClean():
-    shutil.rmtree( DSTROOT )
+    shutil.rmtree( DSTROOT, True )
+    remove( 'credits.en' )
+    remove( 'news/index.en' )
+    remove( 'news/archive/2000.en' )
+    remove( 'news/archive/2001.en' )
+    remove( 'news/archive/2002.en' )
+    remove( 'news/archive/2003.en' )
+    remove( 'news/archive/2004.en' )
+    remove( 'news/archive/2005.en' )
 
 def buildWWW():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'www' )
@@ -389,6 +397,7 @@ def buildWWW():
 def buildHTML():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'html' )
 
+    os.mknod( 'news/index.en' )
     recurse( processHTML )
 
     copyImages()

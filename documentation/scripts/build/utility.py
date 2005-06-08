@@ -51,6 +51,9 @@ def copy( src, dst ):
         if newer( path, rdst ):
             shutil.copy( path, rdst )
 
+def remove( path ):
+    if os.path.exists( path ):
+        os.remove( path )
 
 def reportSkipping( message ):
     print '\033[1m\033[32m*\033[30m', message, '\033[0m'
