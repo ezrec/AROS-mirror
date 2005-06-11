@@ -18,5 +18,4 @@ FUNCS := mysticview_funcs
 %build_module mmake=contrib-gfx-libs-mysticview \
   modname=mysticview modtype=library \
   files="$(FUNCS) $(FILES)" \
-  conffile=lib.conf \
   uselibs="guigfx amiga mui arosc m"

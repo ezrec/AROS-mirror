@@ -24,6 +24,5 @@ FUNCS := guigfx_funcs
 %build_module mmake=contrib-gfx-libs-guigfx \
     modname=guigfx modtype=library \
     files="$(FUNCS) $(FILES)" \
-    conffile=lib.conf \
     uselibs="render amiga mui rom m"
 
