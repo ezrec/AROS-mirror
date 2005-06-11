@@ -397,7 +397,8 @@ def buildWWW():
 def buildHTML():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'html' )
 
-    os.mknod( 'news/index.en' )
+    if not os.path.exists( 'news/index.en' ):
+        os.mknod( 'news/index.en' )
     recurse( processHTML )
 
     copyImages()

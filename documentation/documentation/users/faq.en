@@ -129,8 +129,9 @@ completeness to SUN SPARC (hosted under Solaris) and Palm compatible handhelds
 Will there be a port of AROS to PPC? 
 ------------------------------------
 
-We are regularly asked if there will be a port of AROS to PPC. The answer has
-always been the same: many people ask for it, no one has applied to do the work. 
+We are regularly asked if there will be a port of AROS to PPC. The
+answer has always been the same: many people ask for it, no one has
+applied to do the work. 
 
 
 Why are you using Linux and X11?
@@ -191,9 +192,12 @@ the machine labeled "AROS". :-)
 What do I do if AROS won't compile?
 -----------------------------------
 
-Please post a message with details (for example, the error messages you get)
-on the AROS User mailing list or become a developer and subscribe to the AROS
-Developer list and post it there, and someone will try to help you.
+Please post a message with details (for example, the error messages you
+get) on the Help forum at `AROS-Exec`__ or become a developer and
+subscribe to the AROS Developer list and post it there, and someone will
+try to help you.
+
+__ http://aros-exec.org/
 
 
 Will AROS have memory protection, SVM, RT, ...?
