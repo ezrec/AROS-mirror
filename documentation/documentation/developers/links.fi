@@ -1,0 +1,121 @@
+========
+Linkkejä
+========
+
+:Authors:   Aaron Digulla, Adam Chodorowski 
+:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Version:   $Revision: 20211 $
+:Date:      $Date: 2003-11-29 18:02:13 +0200 (la, 29 marras 2003) $
+:Status:    Done.
+
+.. Contents::
+
+Laiteajureiden kehitys
+----------------------
++ `USB 2.0 specifications`__
+
+  Virallinen USB tiedon lähde. Ei kovinkaan helppotajuinen mutta tarpeellinen
+  jos tahdot tietää kaiken USB:sta.
+
++ `USB in a Nutshell (making sense of the USB standard)`__
+
+  Sitaatti sivustolta:
+
+  "Starting out new with USB can be quite daunting. With the USB 2.0
+  specification at 650 pages one could easily be put off just by the sheer size
+  of the standard.
+  [...] The good news is you don't even need to bother reading the entire USB standard
+  [...] Lets take a little journey through the various chapters of the USB 2.0 specification and briefly introduce the key points."
+
+__ http://www.usb.org/developers/docs/usb_20.zip
+__ http://www.beyondlogic.org/usbnutshell/usb1.htm
+
+
+Ajettavat tiedostoformaatit
+---------------------------
+
++ `ELF - Executable and Linking Format - Specification v1.2 - pdf version`__
+
+  Virallinen tiedonlähde ELF formaatista. Kaikille alustoille yhteisen tiedon
+  lisäksi joille ELF on adoptoitu, sisältää se osia jotka ovat nimenomaisia
+  x86 arkkitehtuurille.
+
++ `ELF - Executable and Linking Format - html version`__
+
+  HTML-versio ELF spesifikaatiosta. Sisältää tietoa ainoastaan kaikille
+  alustoille yhteisistä ominaisuuksista.
+
++ `Amiga Portable Binaries`__
+
+  Tutkimusprojekti siirrettävän binäärimuotojärjestelmän luomisesta Amigalle
+  joka sallii yhden formaatin binäärin toimivan useilla eri CPU
+  arkkitehtuureilla. Ikävä kyllä sivustoa ei ole päivitetty pitkään aikaan,
+  mutta se sisältää muutamia erittäin mielenkiintoisia ideoita. Varmasti
+  jotain sellaista jonka tahdomme nähdä AROS:issa.
+
+__ http://x86.ddj.com/ftp/manuals/tools/elf.pdf
+__ http://www.cs.ucdavis.edu/~haungs/paper/node10.html
+__ http://greywire.8m.com/greywire/amigasde.htm
+
+
+Sekalaisia käyttöjärjestelmäresursseja
+--------------------------------------
+
++ `The Operating System Resource Center`__
+
+  Kattava valikoima linkkejä erinäisiin käyttöjärjestelmien kehitys
+  resursseihin, kuten tiedostojärjestelmiin, laiteajureihin, muistin
+  käsittelyyn, jne.
+  
++ `Protected Mode Basics`__
+
+  Syvälle uppoava artikkeli Robert Collinsilta x86 arkkitehtuurin suojatusta
+  tilasta (nk. "protected mode"). Sisältää todennäköisesti enemmän tietoa
+  kyseisestä arkkitehtuurista kuin tahdot edes tietää ... ;-)
+
++ `Write your own operating system`__
+
+  Paljon käyttökelpoista tietoa matalan tason nippeleistä ja nappeleista joita
+  tarvitaan käyttöjärjestelmän luomiseen x86 arkkitehtuurille. Pääasiassa
+  koskee raudan hallintaa, mutta sisältää myös käyttökelpoista tietoa
+  tiedostojärjestelmistä, verkkoliikenteestä, ajettavista
+  tiedostoformaateista, jne.
+
++ `Write your own operating system [FAQ]`__
+
+  Vielä enemmän tietoa käyttöjärjestelmien kirjoittamisesta, tosin kuten
+  edellä mainittu, on tämäkin pääsääntöisesti x86 arkkitehtuurille
+  tarkoitettu. Paljon tietoa raudasta, mutta myös yksityiskohtaista tietoa
+  korkeamman tason jutuista ja muutamia hyviä viitteitä käyttökelpoisiin
+  kirjoihin, työkaluihin ja muihin tietolähteisin.
+
+__ http://www.nondot.org/sabre/os/articles/
+__ http://x86.ddj.com/articles/pmbasics/tspec_a1_doc.htm
+__ http://www.execpc.com/~geezer/osd/index.htm
+__ http://www.mega-tokyo.com/os/os-faq.html
+
+
+Työkalut
+--------
+
++ `Object Oriented Programming For All (OOP4A)`__
+
+  Toinen kielestä riippumaton OOP kehys AmigaOS:ille. Toisin kuin BOOPSI,
+  koostuu se jaetusta kirjastosta ajettavan ohjelman käsittelyyn sekä
+  esikääntäjän joka sallii helpomman syntaksin.
+
++ `Geek Gadgets`__
+
+  Portteja yleisimmistä GNU työkaluista Amigalle, luoden täydellisen UNIX
+  tyylisen ympäristön sille. Sisältää kaikki yleiset GNU kehitystyökalut
+  kuten binutils, GCC, grep, gawk, autoconf, automake, bison, cvs, flex, perl
+  ja paljon muita.
+
++ `Martin Blom's crosscompiler`__
+  
+  Martin Blomin kirjoittama ristiin kääntäjä joka pohjautuu GCC:llä
+  tapahtuvaan kääntämiseen Amigalle Linux:illa.
+
+__ http://www.geocities.com/SiliconValley/Bridge/5737/Main/oop4a_e.html
+__ http://www.ninemoons.com/GG/
+__ http://www.lysator.liu.se/~lcs/files/gg-cross/

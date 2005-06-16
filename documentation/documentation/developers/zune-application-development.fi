@@ -1,0 +1,470 @@
+===============================
+Zune Ohjelmistokehitys Manuaali
+===============================
+
+:Authors:   David Le Corfec
+:Copyright: Copyright © 2004, The AROS Development Team
+:Version:   $Revision: 20749 $
+:Date:      $Date: 2004-01-29 15:31:04 +0200 (to, 29 tammi¬† 2004) $
+:Status:    Unfinished;
+:ToDo:      All
+
+
+.. Contents::
+
+
+--------
+Esittely
+--------
+
+Mik‰ Zune on?
+=============
+
+Zune on olio-orientoitu GUI ("GUI"; graafinen k‰yttˆymp‰ristˆ) tyˆkalupakki.
+Se on l‰hes klooni (API- ja "Look&Feel"-tasolla) MUI:sta, hyvin tunnetusta
+Stefan Stuntz:in luomasta Amigan shareware tuotteesta. T‰ten MUI-kehitt‰j‰t
+tuntevat olonsa kotoisaksi Zunen kanssa; muut tulevat lˆyt‰m‰‰n konseptit ja
+ominaisuudet jotka ovat yhteisi‰ Zunelle ja MUI:lle.
+
++ Ohjelmoijan on paljon helpompi suunnitella ohjelmalleen GUI: ei ole tarvetta
+  k‰ytt‰‰ vakioituja arvoja, Zune on kirjasinherkk‰ ja mukautuu mihin tahansa
+  ikkunakokoon sommitteluj‰rjestelm‰ns‰ vuoksi. Ohjelmoijan tarvitsee antaa
+  Zunelle vain h‰nen GUI:nsa peruspiirteet ja Zune huolehtii automaattisesti
+  matalan tason yksityiskohdista.
+
++ Sivupiirteen‰ on k‰ytt‰j‰ll‰ enemm‰n vaikutusvaltaa GUI:n ulkon‰kˆˆn ja
+  tuntumaan: k‰ytt‰j‰ itse m‰‰r‰‰ asetukset joita Zune k‰ytt‰‰ esitt‰m‰‰n
+  ohjelmoijan suunnitteleman GUI:n.
+
+Zune perustuu BOOPSI-j‰rjestelm‰‰n, AmigaOS:ista perittyihin C-kielen
+olio-orientoituneisiin puitteisiin. Zune luokat eiv‰t periydy olemassa
+olevista BOOPSI laiteluokista vaan Notify -luokasta (Zune hierarkian
+perusluokka) joka polveutuu BOOPSI perusluokasta.
+
+
+Perusedellytykset
+=================
+
+Jonkinlainen tietous OO (olio-orientoidusta) ohjelmoinnista on enemm‰n kuin
+tervetullutta. Jos se ei ole tuttua, voi Google auttaa lˆyt‰m‰‰n hyvi‰
+esittelysivuja liittyen t‰h‰n klassiseen aiheeseen.
+
+AROS:in (tai AmigaOS:in) API:en ja k‰sitteiden kuten tag-listojen ja BOOPSI:n
+tunteminen on oleellista. Amiga Reference Manual:eihin (lyhyesti "RKM")
+k‰siksi p‰‰sy on avuksi.
+
+Koska Zune on MUI-klooni, kaikki MUI:ta koskeva dokumentaatio sopii Zuneen.
+Viimeisin MUI kehityssarja on saatavana t‰‰lt‰__. T‰st‰ LHA-paketista n‰it‰
+kahta dokumenttia suositellaan erityisesti:
+
++ `MUIdev.guide`, MUI ohjelmoijan dokumentaatio.
++ `PSI.c`, moderneja MUI tapoja kuten OO suunnittelua ja dynaamista objektien
+  luomista esittelev‰n ohjelman l‰hdekoodi.
+
+__ http://aminet.net/dev/mui/mui38dev.lha
+
+Lis‰ksi t‰m‰ paketti sis‰lt‰‰ MUI autodoc:it jotka ovat l‰hdemateriaalia
+kaikille Zune luokille.
+
+
+--------------
+BOOPSI Aapinen
+--------------
+
+K‰sitteit‰
+==========
+
+Luokka (Class)
+--------------
+
+Luokka m‰‰ritet‰‰n sen nimen, perusluokan ja dispatcher:in mukaan.
+
++ nimi: joko merkkijono julkiselle luokalle siten ett‰ sit‰ voi mik‰ tahansa
+  j‰rjestelm‰n ohjelma k‰ytt‰‰ tai ei mit‰‰n jos luokka on tarkoitettu
+  yksityiseksi, elik‰ k‰ytett‰v‰ksi vain yhdess‰ ohjelmassa.
+
++ perusluokka: kaikki BOOPSI luokat muodostavat hierarkian jonka kaikki osat
+  lopulta perustuvat "rootclass":iksi nimettyyn luokkaan. Se antaa jokaisen
+  alaluokan toteuttaa oman versionsa jostain m‰‰r‰tyst‰ perusluokan
+  toiminnosta, tai sitten k‰ytt‰‰ perusluokan m‰‰ritt‰m‰‰ toimintaa.
+
++ dispatcher: antaa kaikki luokan toiminnot (metodit) k‰yttˆˆn siten ett‰
+  jokainen toiminto tulee asiaankuuluvan koodin tai perusluokan
+  k‰sittelem‰ksi.
+
+BOOPSI tyyppi luokalle on ``Class *`` joka tunnetaan myˆs ``IClass``:ina.
+
+Objekti
+-------
+
+Objekti on luokan instanssi: jokaisella objektilla on omat tietonsa, mutta
+jokainen saman luokan objekti k‰ytt‰ytyy samalla tavoin. Objektilla on monta
+luokkaa jos laskemme mukaan sen perusluokat rootclass:iin saakka.
+
+BOOPSI tyyppi objektille on ``Object *``. Sill‰ ei ole kentti‰ joita voit
+suoraan k‰sitell‰.
+
+Ominaisuus (Attribute)
+----------------------
+
+Ominaisuudet liittyv‰t objektien instanssien tietoon: et voi k‰sitell‰ t‰t‰
+dataa suoraan vaan sinun t‰ytyy k‰ytt‰‰ objektin k‰yttˆˆn antamia metodeja
+ominaisuuksien hakuun ja muuttamiseen. Ominaisuus toteutetaan nk. Tag:ina
+(``ULONG`` arvo OR'attuna ``TAG_USER``:in kanssa).
+
+``GetAttr()`` ja ``SetAttrs()`` metodeja k‰ytet‰‰n hakemaan ja muokkaamaan
+objektin ominaisuuksia.
+
+Ominaisuudet voivat olla jonkin tai usean tyyppisi‰ seuraavista:
+
++ Alustusvaiheessa asetettava (``I``) :
+  ominaisuus annetaan parametrina objektia luotaessa.
++ Asetettava (``S``) :
+  voit asettaa ominaisuuden arvon milloin tahansa (tai ainakin muulloin kuin
+  vain luomisvaiheessa).
++ Haettavissa (``G``) :
+  voit hakea ominaisuuden arvon.
+
+Methodi
+-------
+
+BOOPSI metodi on funktio joka saa parametreina objektin, luokan ja viestin:
+
++ objekti: objekti jonka parissa tyˆskennell‰‰n.
++ luokka: objektin luokka (tai perusluokka).
++ viesti: t‰m‰ sis‰lt‰‰ metodin ID:n joka m‰‰rit‰‰ funktion jota
+  kutsutaan dispatcher:issa ja jota seuraa kyseisen funktion parametrit.
+
+L‰hett‰‰ksesi viestin objektille, k‰yt‰ ``DoMethod()`` funktiota. Se k‰ytt‰‰
+ensisijaisesti annettua luokkaa. Jos luokka m‰‰rittelee annetun metodin,
+k‰sittelee dispatcher sen. Muussa tapauksessa tarkistetaan seuraavan
+perusluokan m‰‰rittelyt kunnes metodi lˆytyy taikka saavutamme rootclass:in
+(miss‰ tapauksessa tuntematon viesti heitet‰‰n kaikessa hiljaisuudessa
+roskiin).
+
+Esimerkkej‰
+===========
+
+Vilkaistaanpa perusesimerkki‰ t‰st‰ OOP kehyksest‰:
+
+Ominaisuuden haku
+-----------------
+
+Kysymme MUI String objektilta sen sis‰ltˆ‰::
+
+    void f(Object *string)
+    {
+        IPTR result;
+        
+        GetAttr(string, MUIA_String_Contents, &result);
+        printf("String content is: %s\n", (STRPTR)result);
+    }
+
++ ``Object *`` on BOOPSI objektien tyyppi.
++ ``IPTR`` tyyppi‰ on k‰ytett‰v‰ haetun vastauksen tyyppin‰ koska se voi olla
+  joko kokonaisluku tai osoitin. IPTR kirjoitetaan aina muistiin joten
+  pienemm‰n tyypin k‰yttˆ johtaisi muistivirheisiin!
++ Sitten kysymme MUI String objektilta sen sis‰ltˆ‰: ``MUIA_String_Contents``
+  ominaisuutta, joka on ``ULONG`` (Tag:i).
+
+Zune ohjelmat k‰ytt‰v‰t useimmiten mieluummin ``get()`` ja ``XGET()`` makroja::
+
+    get(string, MUIA_String_Contents, &result);
+    
+    result = XGET(string, MUIA_String_Contents);
+
+
+Ominaisuuden asetus
+-------------------
+
+Vaihdetaanpa merkkijonomme sis‰ltˆ‰::
+
+    SetAttrs(string, MUIA_String_Contents, (IPTR)"hello", TAG_DONE);
+
++ Osoitinparametrit pit‰‰ m‰‰r‰t‰ n‰ytt‰m‰‰n `IPTR` tyypilt‰ v‰ltty‰ksemme
+  varoituksilta.
++ Objektiparametrin j‰lkeen seuraa vaihteleva m‰‰r‰ Tag:eja taglist:in‰, jonka
+  viimeinen arvo t‰ytyy olla `TAG_DONE`.
+
+Huomaat ett‰ ``set()`` makro on hyˆdyllinen::
+
+    set(string, MUIA_String_Contents, (IPTR)"hello");
+
+Mutta ainoastaan SetAttrs():illa voit asettaa useita ominaisuuksia yht‰aikaa::
+
+    SetAttrs(string,
+             MUIA_Disabled, TRUE,
+             MUIA_String_Contents, (IPTR)"hmmm...",
+             TAG_DONE);
+
+
+Metodin kutsuminen
+------------------
+
+Katsotaanpa miten eniten k‰ytetty‰ Zune ohjelmien metodia,
+tapahtumak‰sittelij‰‰, kutsutaan p‰‰ohjelmasta::
+
+    result = DoMethod(obj, MUIM_Application_NewInput, (IPTR)&sigs);
+
++ Parametreina ei anneta taglist:ia, ja siten ne eiv‰t lopu ``TAG_DONE``:en.
++ Osoittimet t‰ytyy m‰‰r‰t‰ ``IPTR`` tyypiksi v‰ltty‰ksemme varoituksilta.
+
+---------------
+Terve, maailma!
+---------------
+
+.. Figure:: zune/images/hello.png
+
+    Ensimm‰iset asiat ensimm‰isin‰! Tiesinh‰n ett‰ innostuisit.
+
+
+L‰hdekoodi
+==========
+
+Tutkitaanpa ensimm‰ist‰ toimivaa esimerkki‰mme::
+
+    // gcc hello.c -lmui
+    #include <exec/types.h>
+    #include <libraries/mui.h>
+    
+    #include <proto/exec.h>
+    #include <proto/intuition.h>
+    #include <proto/muimaster.h>
+    #include <clib/alib_protos.h>
+    
+    int main(void)
+    {
+        Object *wnd, *app, *but;
+    
+        // GUI:n luonti
+    	app = ApplicationObject,
+    	    SubWindow, wnd = WindowObject,
+    		MUIA_Window_Title, "Terve, maailma!",
+    		WindowContents, VGroup,
+    		    Child, TextObject,
+    			MUIA_Text_Contents, "\33cTerve, maailma!\nKuinka voit?",
+    			End,
+    		    Child, but = SimpleButton("_Ok"),
+    		    End,
+    		End,
+    	    End;
+    
+    	if (app != NULL)
+    	{
+    	    ULONG sigs = 0;
+    
+            // napauta "Close" nappia tai paina Esc poistuaksesi
+    	    DoMethod(wnd, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
+                     (IPTR)app, 2,
+                     MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+    
+            // klikkaa nappia poistuaksesi
+    	    DoMethod(but, MUIM_Notify, MUIA_Pressed, FALSE,
+                     (IPTR)app, 2,
+                     MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+    
+            // avaa ikkuna
+    	    set(wnd, MUIA_Window_Open, TRUE);
+
+            // tarkistetaan ett‰ ikkuna on auki
+    	    if (XGET(wnd, MUIA_Window_Open))
+    	    {
+                // p‰‰silmukka
+    		while((LONG)DoMethod(app, MUIM_Application_NewInput, (IPTR)&sigs)
+    		      != MUIV_Application_ReturnID_Quit)
+    		{
+    		    if (sigs)
+    		    {
+    			sigs = Wait(sigs | SIGBREAKF_CTRL_C);
+    			if (sigs & SIGBREAKF_CTRL_C)
+    			    break;
+    		    }
+    		}
+    	    }
+	    // tuhotaan ohjelma ja sen objektit
+    	    MUI_DisposeObject(app);
+    	}
+    	
+    	return 0;
+    }
+
+
+Huomioitavaa
+============
+
+Yleist‰
+-------
+
+Emme avaa kirjastoja k‰sin vaan annamme niiden avautua automaattisesti.
+
+GUI:n luonti
+------------
+
+K‰yt‰mme makroihin perustuvaa kielt‰ rakentaaksemme GUI:n mahdollisimman
+helposti. Zune ohjelmassa on aina yksi ja vain yksi Application objekti::
+
+    :	app = ApplicationObject,
+
+Application voi omistaa 0, 1 tai useampia Window objekteja. Useimmiten yhden::
+
+    :	    SubWindow, wnd = WindowObject,
+
+Annetaan ikkunalle otsikko::
+
+    :		MUIA_Window_Title, "Terve, maailma!",
+
+Window:illa t‰ytyy olla yksi ja vain yksi nk. lapsi (Child), useimmiten ryhm‰
+(Group). T‰m‰ on pystysuora (VGroup; vertical group), joka tarkoittaa ett‰ sen
+lapsoset asemoidaan ylh‰‰lt‰ alas::
+
+    :		WindowContents, VGroup,
+
+Ryhm‰ll‰ t‰ytyy olla ainakin yksi lapsi, t‰ss‰ tapauksessa pelkk‰‰ teksti‰::
+
+    :		    Child, TextObject,
+
+Zune hyv‰ksyy erin‰isen m‰‰r‰n nk. escape koodeja (t‰ss‰ tapauksessa
+keskitt‰m‰‰n tekstin; \33c) ja rivinvaihdot::
+
+    :			MUIA_Text_Contents, "\33cTerve, maailma!\nKuinka voit?",
+
+Jokaista ``xxxObject``:ia t‰ytyy seurata ``End``-makro (t‰ss‰ TextObject:ille)::
+
+    :			End,
+
+Lis‰t‰‰n toinen lapsi ryhm‰‰n, nappi! Ja varustetaan se n‰pp‰inlyhenteell‰
+``o``, joka merkit‰‰n alaviivalla::
+
+    :		    Child, but = SimpleButton("_Ok"),
+
+P‰‰tet‰‰n ryhm‰::
+
+    :		    End,
+
+Ensimm‰inen ikkuna::
+
+    :		End,
+
+Ohjelma::
+
+    :	    End;
+
+Eli, kuka viel‰ tarvitsee GUI:n rakennukseen tyˆkaluja?! :-)
+
+
+Virheiden k‰sittely
+-------------------
+
+Jos jotain objektia ohjelmapuussa ei saada luotua, Zune tuhoaa t‰h‰n menness‰
+luodut objektit ja ohjelman luonti ep‰onnistuu. Jos n‰in ei k‰y, on sinulla
+t‰ysin toimiva ohjelma::
+
+    :	if (app != NULL)
+    :	{
+    :	    ...
+
+Kun ohjelman k‰yttˆ loppuu, kutsutaan ``MUI_DisposeObject()`` joka huolehtii kaikkien luotujen objektien ja ohjelman sek‰ niiden resurssien vapauttamisesta::
+
+    :       ...
+    :	    MUI_DisposeObject(app);
+    :	}
+
+
+Tiedotukset
+-----------
+
+Tiedotukset ovat yksinkertaisin tapa reagoida tapahtumiin. Periaate? Tahdomme
+saada ilmoitukset kun m‰‰r‰tyn objektin m‰‰r‰tty ominaisuus asetetaan johonkin
+m‰‰r‰ttyyn arvoon::
+
+    :        DoMethod(wnd, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
+
+T‰ss‰ kuuntelemme Window objektimme ``MUIA_Window_CloseRequest``:ia varten ja
+meille ilmoitetaan kun ominaisuus asetetaan ``TRUE``:ksi. Mit‰ tapahtuu kun
+tiedotus tulee? Viesti l‰hetet‰‰n objektille; t‰ss‰ kerromme
+Application:illemme palauttaa ``MUIV_Application_ReturnID_Quit`` seuraavalla tapahtumakierroksella::
+
+    :                 (IPTR)app, 2,
+    :                 MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+
+Koska voimme antaa MUIM_Notify:lle mink‰ tahansa m‰‰r‰n parametreja, t‰ytyy
+meid‰n kertoa sille montako parametria olemme antamassa; t‰ss‰ tapauksessa 2.
+
+Nappulaa varten tarkkailemme sen ``MUIA_Pressed`` ominaisuutta: se asetetaan ``FALSE``:ksi aina kun siit‰ *p‰‰stet‰‰n irti* (reagoiminen painettaessa on huono tapa, sill‰ saatat haluta vapauttaa hiiren napin ulkopuolella peruaksesi toiminnon - ja me tahdomme tottakai n‰hd‰ milt‰ nappi painettuna n‰ytt‰‰). Toiminta on t‰ss‰ tapauksessa sama kuin yll‰; Application:ille l‰hetet‰‰n viesti::
+
+    :        DoMethod(but, MUIM_Notify, MUIA_Pressed, FALSE,
+    :                 (IPTR)app, 2,
+    :                 MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+
+
+Ikkunan avaaminen
+-----------------
+
+Ikkunoita ei avata ennen kuin erikseen sit‰ pyyd‰mme::
+
+    :        set(wnd, MUIA_Window_Open, TRUE);
+
+Jos mik‰‰n ei mene pielee, tulisi ikkunan n‰ky‰ t‰ss‰ vaiheessa. Mutta ikkunan
+avaaminen voi ep‰onnistua! Joten ‰l‰ unohda tarkistaa tilannetta kysym‰ll‰
+tilan ominaisuutta, jonka tulisi olla TRUE::
+
+    :        if (XGET(wnd, MUIA_Window_Open))
+
+
+P‰‰silmukka
+-----------
+
+Annahan kun esittelen pienen yst‰v‰ni, ihanteellisen Zune tapahtumasilmukan::
+
+    :        ULONG sigs = 0;
+
+Muista alustaa signaalit nollaksi ... Testisilmukka on
+MUIM_Application_NewInput metodi::
+
+    :        ...
+    :        while((LONG) DoMethod(app, MUIM_Application_NewInput, (IPTR)&sigs)
+    :              != MUIV_Application_ReturnID_Quit)
+
+Se ottaa syˆtteen‰ tutkittavien tapahtumien signaalit (``Wait()``:in tulos
+taikka 0 (nolla)) ja muuntaa t‰m‰n arvon Zunen odottamien signaalien paikaksi
+(seuraavalle ``Wait()`` kutsulle) ja palauttaa arvon. T‰m‰ arvon palauttamis
+mekanismi oli historiallisesti ainoa tapa reagoida tapahtumiin, mutta se oli
+ruma ja sit‰ kehotetaan v‰ltt‰m‰‰n k‰ytett‰ess‰ luokkia ja OO mallia.
+
+Silmukan runko on melko tyhj‰ sill‰ me vain odotamme signaaleja ja
+k‰sittelemme CTRL-C:n katkaisemaan silmukan::
+
+    :        {
+    :            if (sigs)
+    :            {
+    :                sigs = Wait(sigs | SIGBREAKF_CTRL_C);
+    :                if (sigs & SIGBREAKF_CTRL_C)
+    :                    break;
+    :            }
+    :        }
+
+
+Johtop‰‰tˆs
+-----------
+
+T‰m‰ ohjelma auttaa sinut alkuun Zunen kanssas ja antaa pelailla GUI muotoilun
+kanssa, muttei muuta.
+
+
+-----------------
+Tiedotustoiminnot
+-----------------
+
+Kuten n‰emme hello.c:st‰, k‰ytet‰‰n MUIM_Notify:‰ kutsumaan jotain metodia jos
+jokin ehto toteutuu. Jos tahdot ohjelman reagoivan jollain m‰‰r‰tyll‰ tavalla
+tapahtumiin, voit k‰ytt‰‰ jotain seuraavista kaavoista:
+
++ MUIM_Application_ReturnID: voit pyyt‰‰ ohjelmaasi palauttamaan jonkin ID:n
+  seuraavalla silmukan kierroksella ja tarkistaa arvon silmukassa. T‰m‰ on
+  vanhoollinen ja ep‰siisti tapa asioiden hoitoon.
++ MUIM_CallHook, kutsuaksesi standardia Amiga callback "koukkua": t‰m‰ on
+  keskiverto vaihtoehto, ei olio-orientoitunut muttei kovin kamalan
+  n‰kˆinenk‰‰n.
++ custom method: metodi kuuluu luomallesi luokalle. T‰m‰ on paras ratkaisu
+  koska se tukee OO mallia ohjelmissa. T‰m‰ kaava vaatii ett‰ luot tapahtuman
+  k‰sittelyyn luokan, eik‰ siten ole helpoin aloittelijoille tai kiireisille.

@@ -1,0 +1,119 @@
+================
+AROS 1.0 roadmap
+================
+
+:Authors:   Adam Chodorowski
+:Copyright: Copyright © 2003, The AROS Development Team
+:Version:   $Revision: 22461 $
+:Date:      $Date: 2004-10-18 01:05:43 +0300 (ma, 18 loka  2004) $
+
+:Abstract:
+    Tämä "tiekartta" (nk. roadmap) on tarkoitettu hamottamaan vaatimukset
+	joiden tulee täyttyä ennen kuin AROS 1.0 voidaan julkaista. Tarkoituksena
+	*ei ole* pakottaa kehittäjiä työskentelemään määrättyjen asioiden parissa
+	(eikä se ole mahdollistakaan Open Source projektissa) vaan tämä tulisi
+	nähdä suosituksena mihin kaikkeen tulisi pyrkimykset kohdistaa.
+	Toivottavasti tämä auttaa organisoimaan kehitystyötä ja saa meidät kaikki
+	toimimaan paremmin saman suuntaisesti.
+
+
+Porttaukset
+-----------
+
+Jotta AROS 1.0 voidaan julkaista tulee näiden vaatimusten täyttyä i386-pc:llä
+ja i386-linux:illa (joihin viitataan alla nk. "pakollisina porttauksina").
+Muille alustoille tulevien versioiden ei katsota olevan oleellisia 1.0:lle
+jotta työmäärä saadaan pidettyä kurissa.
+
+
+Vaatimukset
+-----------
+
+1. AmigaOS 3.1 API yhteensopivuus, lukuunottamatta osia joita ei pidetä
+   siirrettävissä olevina tai jotka ovat vanhentuneita ja turhaa vaivan näköä.
+
+   Jotta jokin merkittäisiin vanhentuneeksi vaikka sen toteutus olisi
+   mahdollista siirrettävällä tavalla tulisi syiden olla hyvät; esimerkiksi
+   jos ominaisuutta käytetään erittäin harvoin missään ja sen toteutukseen
+   vaaditaan paljon työtä.
+
+   Yksityiskohdista lisää myöhemmin ...
+
+2. Osittainen AmigaOS 3.5 ja 3.9 yhteensopivuus. Valitsemme osat joiden koemme
+   olevan käyttökelpoisia ja joiden olemassaolo on kannattavaa. Loput
+   hylätään.
+
+   Esimerkiksi: näyttää *erittäin* epätodennäköiseltä että tahdomme ReAction
+   yhteensopivuutta sillä olemme jo päätyneet standardisoimaan Zunen GUI
+   työkalupakkina (eikä ReAction API:n toteutus olisi mikään helppo
+   operaatio). Tottakai tämä tullaan käymään keskustelemalla läpi ennen kuin
+   yksityiskohtaisesta listasta päätetään.
+
+   Yksityiskohdista lisää myöhemmin ...
+
+3. Täydellinen GUI työkalusarja. Tämä tarkoittaa sitä että Zunella on oltava
+   täydellinen MUI API yhteensopivuus ja viimeistelty preferences ohjelma.
+
+   Yksityiskohdista lisää myöhemmin ...
+
+4. Vastaavat standardit ohjelmat jotka tulevat AmigaOS 3.1:n mukana.
+
+   Tämä *ei* tarkoita sitä että meillä tulisi olla juuri samat ohjelmat jotka
+   toimivat täsmälleen samoin kuin AmigaOS:issa, mutta saatavilla olevan
+   toiminnallisuuden tulisi olla saman veroisen.
+
+   Yksityiskohdista lisää myöhemmin ...
+
+5. Äänituki, tarkoittaen sekä API yhteensopivuutta että perusohjelmistoa.
+   Jokaiselle pakolliselle porttaukselle tulisi olla ainakin yksi ajuri.
+
+   Yksityiskohdista lisää myöhemmin ...
+
+6. Verkkotuki. Tämä sisältää niin TCP/IP-stackin kuin sellaiset perusohjelmat
+   kuten email ja SSH, sekä *yksinkertaisen* web-selaimen. Jokaiselle
+   pakolliselle porttaukselle tulisi olla ainakin yksi NIC ajuri.
+
+   Web-selaimen vaatimusten ei tulisi olla korkeat, mutta sillä pitäisi päästä
+   surffaamaan netissä jollain tavoin (vaikka se olisi puhtaasti
+   tekstipohjainen).
+
+   Yksityiskohdista lisää myöhemmin ...
+
+7. Itsenäinen kehitysympäristö ja SDK kehittäjille. Tarkemmin sanoen tämä
+   sisältää kaiken softan mitä tarvitaan AROS:in kääntämiseen, kuten GCC, GNU
+   binutils, GNU make ja sen sellaiset. AROS täytyy kyetä kääntämään AROS:in
+   alaisuudessa.
+
+   ABI:n tuetuille arkkitehtuureille (vain i386 tällä hetkellä) tulee olla
+   viimeistellyn ennen 1.0:aa. Sitten kun 1.0 julkaistaan, ABI:n tulisi olla
+   vakaa huomattavan pitkään.
+
+   Yksityiskohdista lisää myöhemmin ...
+
+8. Kattava dokumentaatio kehittäjille. Tämä sisältää täydelliset
+   referenssimanuaalit kirjastoille, laitteille, luokille ja kehitys
+   työkalulle, sekä oppaat ja opetusmateriaalin esittelemään järjestelmän
+   sisukset ja antamaan yleiskatsauksen. Siirtymä/porttaus oppaan tulisi olla
+   myöskin saatavilla.
+
+   Yksityiskohdista lisää myöhemmin ...
+
+9. Kattava dokumentaatio käyttäjille. Tämä sisältää täydellisen
+   komentoreferenssin, käytön opetus materiaalin, sekä asennus-, asetus- ja
+   muut sellaiset oppaat.
+
+   Yksityiskohdista lisää myöhemmin ...
+    
+10.	Olennainen osa testauksesta ja vikojen metsästyksestä valmiina. 1.0
+	julkaisun tulisi olla pääasiallisesti vikavapaan ja *erittäin* vakaan.
+	Meidän ei tulisi päätyä sellaiseen fiaskoon kuin mitä osa Open Source
+	projekteista on kärsinyt ".0" julkaisuissaan.
+	
+	Tämä luultavasti tarkoittaa laajaa ominaisuuksien jäädyttämistä, jota
+	seuraa koodin jäädyttäminen ja lukuisia välillä olevia virstanpylväitä
+	käyttäjä palautteelle ja testaukselle. Ominaisuuksien toteutus pyyntöjä ei
+	lueta vioiksi ellei se ole jotain joka välttämättä tarvitaan (mutta jota ei
+	vielä ole). Esimerkiksi "tarvitsemme elokuvien näyttäjän" ei kelpaa, mutta
+	"tekstieditorissa tulisi olla 'save' valikossa" kylläkin.
+	
+	Yksityiskohdista lisää myöhemmin ...

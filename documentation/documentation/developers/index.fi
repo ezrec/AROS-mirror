@@ -1,0 +1,30 @@
+=====================
+Kehittäjien Resurssit
+=====================
+
++ `Kuinka avustaa`__
++ `Subversion käyttöoikeus ja käyttö`__
++ `Kuinka kääntää (compile)`__
++ `Ohjelmien kehitysmanuaali`__
++ `Zune ohjelmien kehitysmanuaali`__
++ `Järjestelmän kehitysmanuaali`__
++ `PCI alijärjestelmän manuaali`__
++ `Debuggaus manuaali`__
++ `Spesifikaatiot`__
++ `Dokumentointi`__
++ `Yhteenvedot`__
++ `Hyödyllisiä linkkejä`__
+
+__ contribute
+__ cvs
+__ compiling
+__ application-development
+__ zune-application-development
+__ system-development
+__ hardware/pci
+__ debugging
+__ specifications/index
+__ documenting
+__ summaries/index
+__ links
+

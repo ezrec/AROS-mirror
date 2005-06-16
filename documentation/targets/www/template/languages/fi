@@ -1,0 +1,56 @@
+[titles]
+
+mirrors:          Mirrors
+contents:         Sisältö
+search:           Etsi
+visitors:         Vierailijat
+sponsors:         Tukijat
+
+[navigation]
+
+news:             Uutiset
+archive:          Arkisto
+introduction:     Esittely
+status:           Tilanne
+screenshots:      Ruutukaappauksia
+ports:            Porttaukset
+license:          Lisenssi
+download:         Imuroi
+documentation:    Dokumentaatio
+users:            Käyttäjät
+installation:     Asennus
+using:            Käyttö
+faq:              FAQ
+developers:       Kehittäjät
+contribute:       Osanotto
+bug-tracker:      Bugien seuranta
+working-with-cvs: CVS:n kanssa työskentely
+compiling:        Kääntö
+application-development-manual: Ohjelmiston kehitysmanuaali
+zune-application-development-manual: Zune-ohjelmiston kehitysmanuaali
+system-development-manual:      Järjestelmän kehitysmanuaali
+debugging-manual: Debuggaus opas
+reference:        Referenssit
+specifications:   Tuoteseloste
+ui-style-guide:   UI tyyliopas
+documenting:      Dokumentointi
+translating:      Tulkitseminen
+summaries:        Yhteenvetoja
+links:            Linkkejä
+contact:          Yhteyden otto
+mailing-lists:    Postituslistat
+forums:           Keskusteluryhmät
+irc-channels:     IRC kanavat
+credits:          Ansiot
+pictures:         Kuvia
+developers-together: Kehittäjät yhdessä
+sponsors:         Tukijat
+linking:          Linkit toisaalta
+
+[misc]
+
+go:               Siirry
+search:           Etsi
+copyright:        Copyright © 1995-2005, The AROS Development Team. All rights reserved.
+trademarks:       Amiga®, AmigaOS®, Workbench and Intuition are trademarks of Amiga Inc. All other trademarks belong to their respective owners.
+read-more:        Lue lisää ...

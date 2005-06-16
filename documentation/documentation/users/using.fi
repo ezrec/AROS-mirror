@@ -1,0 +1,190 @@
+===================
+AROS Käyttäjän Opas
+===================
+
+:Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski 
+:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Version:   $Revision: 21026 $
+:Date:      $Date: 2004-02-21 21:52:09 +0100 (Sat, 21 Feb 2004) $
+:Status:    Unfinished; only converted to reST. Needs heavy updating.
+
+.. Warning::
+
+   Tämä dokumentti ei ole valmis! On todennäköistä että monet osat ovat
+   vanhentuneita, sisältävät väärää tietoa, tai puuttuvat kokonaan. Jos tahdot
+   auttaa tilanteen korjaamisessa, ota yhteyttä.
+
+.. Contents::
+
+
+Esittely
+========
+
+Tämä on Amiga Research Operating System:in Käyttäjän Opas. Tarkoituksena on
+tutustuttaa käyttäjät AROS:iin. Opas on *kaikille* jotka ovat kiinnostuneet
+AROS:ista, sillä se koettaa kattaa tietoa AROS:ista useilla edistymistasoilla.
+Koetan käydä kaiken perusteellisesti lävitse, mutta sillä tavoin ettei sinun
+tarvitse oppia sitä mitä et *tahdo* oppia.
+
+
+Kenen tulisi tämä opas lukea
+----------------------------
+
+Tämä opas auttaa sinua tottumaan AROS:iin. Opas on kirjoitettu kaikille
+AROS:ista kiinnostuneilla. AROS on tällä hetkellä noin 76.95% valmis, joten
+pidä mielessä että olet käyttämässä ohjelmistoa joka on tutkimus- ja
+BETA-testaus vaiheessa. Tällä hetkellä AROS on hauska leikkikalu ja
+ohjelmointiympäristö. Oletankin täten että kiinnostuksesi AROS:ia kohtaan
+johtuu jommasta kummasta syystä. Jos tulit tänne saakka olettaen että AROS on
+multimedia internet-valmis jne. käyttöjärjestelmä, olet ehkä oikeassa, mutta
+se *ei ole valmis*, joten ole kärsivällinen. Jos kuvittelit AROS:in olevan
+yksikätisen rosvon taikka "Free Money" projektin, olet täysin väärässä
+paikassa.
+
+
+Kuinka tätä opasta tulisi lukea
+-------------------------------
+
+Opas on järjestetty "yksinkertaisesta" "edistyneeseen". Voit aloittaa mistä
+tahansa kappaleesta joka sisältää sinulle uutta tietoa. Mutta mikä ehkä
+tärkeämpää, voit lopettaa lukemiset missä tahansa kappaleessa jonka tieto
+menee kiinnostuksesi ohitse. Tällä tavoin voit oppia edistyneet aiheet
+aloittaen nollapisteestä, tai voit lopettaa aiemmin jos aiot vain käyttää
+AROS:ia etkä ohjelmoida sille. Amiga-taustaiset voivat hypätä esittelyn ylitse
+ja aloittaa "AROS alustalle kehityksestä" jos eivät ole ennen ohjelmoineet
+Amigalle, tai menemällä suoraan "AROS:issa kehittämiseen". Aloitus- ja
+lopetuskohtia on täten kaikille.
+
+On tärkeää huomioida se että opas on tarkoitettu AROS:ille eikä Amigalle.
+Joten vaikka olisit omistanut Amigan vuosikausia, voi olla että sinun
+kannattaa lukea "AROS:in käytöstä". Tätä ei ole tarkoitettu nolaamaan: tulet
+huomaamaan että AROS:in käyttö poikkeaa hieman AmigaOS:ista. (Tämä siksi, ettei Workbench ole vielä valmis :-). Tällä hetkellä koko järjestelmä toimii AmigaDos shell:in (toiselta nimeltään CLI:n) kautta, vaikka meillä onkin Workbench, et voi sillä vielä navigoida levyjä kovin menestyksekkäästi. Vanhojen Amiga-koodareiden kannattaa lukea "Erot Amigalla ohjelmointiin" kappaleesta 4 erojen yleiskuvausta varten.
+
+AROS:in käyttäminen
+===================
+
+Käyttöjärjestelmä käyttöjärjestemän sisällä?
+--------------------------------------------
+
+AROS on alunperin kehitetty Intel-pohjaisessa Linux_:issa, mutta pyörii
+useissa muissa ympäristöissä ja käyttöjärjestelmillä. Tämä saattaa tuntua
+oudolta: käyttöjärjestelmä käyttöjärjestelmässä, mikä on emulointia, eikö?
+
+Näppärä termi kuvaamaan mitä AROS tekee on "API emulaatio". API on
+kolmikirjaiminen akronyymi sanoista Application Programmer's Interface.
+Selväkielisesti sanottuna API tarjoaa (C-kielisiä) funktioita joita ohjelmoija
+voi käyttää. AmigaOS API koostuu lukuisista kirjastokutsuista joita
+Amiga-ohjelmoija voi käyttää luomaan Amiga ohjelman. AROS emuloi AmigaOS
+API:a, yrittäen tarjota samat kirjastokutsut kuin AmigaOS. Amiga-emulaattori,
+kuten UAE_; emuloi Amiga *tietokonetta*: prosessoria, liitettyä rautaa,
+kaikkea. Sillä on etunsa, kyeten esim. pyörittämään Amigan pelejä eri
+raudalla, ja haittansa, kuten kyvyttömyys käyttää emulaattoria "aitona"
+käyttöjärjestelmänä "aidolla" prosessorilla. AROS pyörii "aidolla"
+prosessorilla. Mutta se ei ole "aito" käyttöjärjestelmä ellei sitä ajeta siten
+ettei se tarvitse Linux:ia. Tästä käytetään nimitystä "native" AROS.
+
+AROS voi toimia nk. natiivina Intel:in ja Amiga järjestelmissä, mutta ei aivan
+yhtä hyvin kuin Linux:in päällä toimiessaan. AROS:in kirjastofunktiot ovat
+tehdyt ensinnä toimimaan Linux:issa, käyttäen sisäisesti Linux:in kerneliä ja
+kirjastokutsuja. Tällä tavoin ohjelmoija voi keskittyä ensin kokonaisuuden
+toteutukseen ja vaivata päätään teknisillä yksityiskohdilla myöhemmin. Väki
+työskentelee tällä hetkellä saadakseen natiivin AROS:in vaikuttavammaksi.
+Tulokset ovat erittäin vaikuttavia ja on varsin mahdollista käyttää AROS:ia
+aitona (ja ainoana) käyttöjärjestelmänä IBM PC yhteensopivassa koneessa.
+
+AROS, tottakai, ei ole *vain* API emulaattori. Se koettaa tarjota kaiken
+AmigaOS3.1 ohjelmiston ja huomaat muutamia demoja ja pelejä toimitettavan
+AROS:in mukana, lähinnä vain näyttämään että ne toimivat - saatamme olla vain
+77% valmiita, mutta Quake toimii jo!
+
+
+Natiivin AROS:in käyttö i386:lla m68k:lla
+-----------------------------------------
+
+Natiivi AROS on tällä hetkellä rankan kehitystyön alla. Jos haluat nähdä
+hienoja trikkejä, koeta ajaa AROS Linux:in alaisuudessa. Mutta jos olet
+kiinnostunut kuinka mahtavaa työtä ohjelmoijat ovat tehneet, voit koettaa
+natiivia myöskin.
+
+AROS:in asennusohjeet vaihtelevat käyttöympäristön mukaan. Koska "natiivi" on
+rankan kehitystyön alla, *tulokset* AROS:in asennuksesta vaihtelevat
+käyttämäsi koodin iän mukaan.
+
+Amigassa voit asentaa natiivin koodin jonnekin kovalevyllesi ja tuplaklikata
+"boot"-ikonia, resetoida ja nauttia täydestä Amiga ympäristöstä. Tämä siksi,
+koska se ei ole *oikeasti* natiivi. Boot-ohjelma vain väliaikaisesti korvaa
+muutamia AmigaOS:in kirjastoja AROS:in kirjastoilla. Testitarkoituksiin tämä
+on tottakai hyvä, mutta loppujen lopuksi olet käyttämässä vanhaa tuttua
+AmigaOS:ia etkä puhdasta natiivia AROS:ia. Tämä tulee muuttumaan kun
+rakennamme täydellisemmän 68k AROS järjestelmän.
+
+i386:ssa sinun tulisi tallentaa nk. "boot image" levykkeelle ja nk. "contrib
+imaget" ("avustuslevyt", sisältäen pelejä, demoja ja ohjelmia) parille muulle
+levykkeelle. Jos latasit binäärikoodin, paketissa tulisi olla mukana
+toimintaohjeet. Kun olet kirjoittanut levykkeet, voit käynnistää järjestelmän
+uudelleen "boot" levykkeeltä. Kun järjestelmä käynnistyy, löydät itsesi
+AROS:ista (joka näyttää hyvin pitkälti AmigaOS:ilta). Voit leikkiä "AmigaDOS
+Shell:illä"; tai pelata pelejä/demoja "contrib"-levyiltä (mukana paketissa)
+kunnes kyllästyt. AROS tunnistaa levykkeiden vaihdon, joten voit tutkia
+vapaasti "contrib"-levyjen sisältöä, ajellen pelejä ja demoja. Tällä hetkellä
+tässä kaikki, mutta pysy yhteydessä sillä raskasta työtä ollaan tekemässä
+tällä saralla. Kohta meillä on Workbench jonka avulla voit graafisesti
+navigoida kovalevy(j)äsi ja levykkeitäsi.
+
+
+AROS:in käyttö Linux:issa ja FreeBSD:ssä
+----------------------------------------
+
+Kun olet saanut binäärit järjestelmällesi, joko kääntäen lähdekoodista tai
+ladaten valmiiksi käännetyt binäärit, mene hakemistoon "bin/$TARGET/AROS",
+jossa $TARGET on järjestelmäsi tyyppi (esim. linux-i386). Mitä sitten tulisi
+tehdä riippuu koodin iästä. Jos sinulla on tiedosto "arosshell" hakemistossa,
+aja se ("./arosshell"). Eteesi avautuu ikkuna jossa ei ole mitään
+mielenkiintoista ja terminaalissasi on outo uusi prompti. Jos sinulla on
+arosshell:in sijasta "aros", aja se ("./aros"). Eteesi avautuu ikkuna/ruutu
+jossa näet Amigamaisen työpöydän.
+
+Arosshell:in tapauksessa edessäsi on entuudestaan tuttu terminaaliprompti.
+Voit kirjoittaa komentoja, joista ehkä yksi tärkeimmistä on "dir"; se näyttää
+sinulle hakemiston sisällön. Hakemisto nimeltä "C" sisältää kaikki komennot,
+joten voi olla käytännöllistä katsoa sen sisällys komennolla "dir C". (Huom.:
+vanhat Amigistit - tämä shell on tarkka kirjainten koosta!)  Shell käyttäytyy
+kuten AmigaDOS shell, ja komennot "C":ssä käyttäytyvät kuten niiden
+AmigaDOS:in vastaavat. Joten jos sinulle tulee ongelmia vastaan, sinun
+kannattaisi lukea `AmigaDOS Online Reference Manual`_. (UNIX käyttäjät:
+edellistä hakemistoa kuvaa "/" tutun "..":n sijaan. Tämä näyttää rumalta koska
+AROS ajattelee että Linux:in ".." on tavallinen hakemisto. Sinun ei tule
+myöskään käyttää "./":tä ajaessasi tämänhetkisessä hakemistossa olevia
+ohjelmia, vaan voit jättää sen huoletta pois). Kun olet sinut
+hakemistosyntaksin kanssa, koeta ajaa muutamia ohjelmia (eritoten demoja ja
+pelejä) saadaksesi käsityksen AROS:in kyvyistä.
+
+Aros:in tapauksessa edessäsi on AROS:in graafinen käyttöympäristö, "Wanderer",
+joka vastaa likimain AmigaOS:in Workbench:iä. Tuplaklikkaamalla kuvakkeita
+voit liikkua hakemistoissa ja ajella ohjelmia, demoja ja pelejä...
+
+
+Tässäkö kaikki oppaassa oleva käyttäjän tieto?
+----------------------------------------------
+
+Kappaleen tulisi olla kertonut kuinka saat, asennat ja käytät AROS:ia.
+Testattuasi kaikki ohjelmat, demot, työkalut, pelit ja muut, saatat miettiä
+josko tässä oli kaikki. Kyllä, tällä hetkellä siinä on kaikki mitä "käyttäjä"
+voi AROS:illa tehdä! Mutta sitä mukaa kun uutta tärkeää käyttäjäkoodia
+valmistuu, se lisätään tähän oppaaseen, tottakai.
+
+Jos ajattelet että en ole antanut tarpeeksi tietoa kääntämisestä,
+asentamisesta, CVS:stä, shell:istä, jne., on hyvä tietää että minulla on
+siihen syyni. Ensinnäkin, kyseistä tietoa on jo paljon saatavilla ja olisi
+tarpeetonta (ja epäreilua) vain kopioida kyseinen tieto tähän dokumenttiin.
+Toiseksi, olemme puhumassa nimenomaisesta tiedosta josta jotkut lukijat
+olisivat kiinnostuneita lähdekoodia kääntäessään, kun taas jotkut tahtoisivat
+tietää kaiken Amigan shell:istä. Pitääkseni tämän oppaan kutakuinkin
+luettavana, viittaan vain paikkoihin joista kyseistä tietoa saa. Sinä lukijana
+voit sitten päättää mikä itseäsi kiinnostaa. Ja jos olet uusi AROS:in ja
+Amigan käyttäjä, olisi sinun todellakin tullut seurata linkkiä `AmigaDOS
+Online Reference Manual`_:iin. Usko minua, se on hyvä :-)
+
+.. _Linux: http://www.linux.org/
+.. _UAE:   http://www.freiburg.linux.de/~uae/
+.. _`AmigaDOS Online Reference Manual`: http://www.mentasm.com/~mramiga/dos1.shtml

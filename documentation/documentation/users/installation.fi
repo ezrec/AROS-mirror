@@ -1,0 +1,205 @@
+=================
+AROS Asennus Opas
+=================
+
+:Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski 
+:Copyright: Copyright © 1995-2004, The AROS Development Team
+:Version:   $Revision: 21028 $
+:Date:      $Date: 2004-02-21 22:27:14 +0100 (Sat, 21 Feb 2004) $
+:Status:    Done. 
+:Abstract:
+    Tämä manuaali opastaa sinut tarpeellisten asennusaskeleiden läpi.
+
+    .. Warning:: 
+        
+        AROS on alpha-laatuinen ohjelmisto. Tämä tarkoittaa sitä että sillä on
+        mukava leikkiä ja ohjelmoida sille. Jos saavuit tänne koska ajattelit
+        että AROS on valmis, täydellinen ja täysin käytettävä
+        käyttöjärjestelmä, tulet todennäköisesti pettymään. AROS ei ole täällä
+        vielä, mutta olemme hitaasti etenemässä oikeaan suuntaan.
+
+
+.. Contents::
+
+
+Lataaminen verkosta
+===================
+
+AROS on rankan kehitystyön alla. Tulos tästä on se että sinun on valittava
+vakauden ja ominaisuuksien väliltä. Tällä hetkellä jaossa on kahden laisia
+binääripaketteja:: nk. snapshotit ja öiset käännökset.
+
+Snapshotteja tehdään manuaalisesti ajoittain, pääasiassa silloin kun AROS:iin
+on tehty suuri määrä käyttökelpoisia muutoksia edelliseen snapshottiin
+verrattuna ja joku tuntee olevansa tarpeeksi motivoitunut tehdäkseen uuden
+snapshotin. Lyhyesti sanottuna meillä ei ole tällä hetkellä vakioitua julkaisu
+aikataulua. Vaikka snapshotit tehdään ajoittain ja koetamme osua ajankohtaan
+kun AROS on erityisen vakaa, ei ole takuita siitä että snapshot olisi
+bugi-vapaa tai toimisi laitteistossasi. Koetamme testata snapshotit monilla
+eri alustoilla, joten periaatteessa niiden tulisi toimia melko hyvin.
+
+Öiset käännökset tehdään, kuten nimi jo sanoo, automaattisesti joka yö
+Subversion-puusta ja ne sisältävät uusimman koodin. Näitä käännöksiä ei ole
+kuitenkaan testattu, joten ne voivat olla pahasti rikki, erittäin bugisia ja
+voivat pahimmassa tapauksessa vaikka tuhota järjestelmäsi huonolla tuurilla.
+Suurimman osan ajasta ne kuitenkin toimivat hyvin.
+
+Katso `lataussivulta`_ lisätietoja mitä snapshotteja ja öisiä käännöksiä on
+saatavilla ja kuinka saat ne koneellesi.
+
+
+Asennus
+=======
+
+AROS/i386-linux ja AROS/i386-freebsd
+-------------------------------------
+
+Vaatimukset
+"""""""""""
+
+Käyttääksesi AROS/i386-linux:ia tai AROS/i386-freebsd:tä tarvitset:
+
++ Toimivan Linux tai FreeBSD ympäriston (sillä ei ole merkitystä mikä distro
+  sinulla on, kunhan se on suhteellisen uusi).
++ Asennettu ja asetettu X-palvelin (esim. XFree86 tai Xorg).
+
+Siinä se. 
+
+
+Purku
+"""""
+
+Koska AROS/i386-linux ja AROS/i386-freebsd ovat nk. "hosted" -tyyppisiä
+versioita AROS:ista, on niiden asennus helppoa. Sinun täytyy ainoastaan hakea
+alustallesi sopivat paketit `lataussivulta`_ ja purkaa ne mihin sitten
+tahdotkin::
+
+    > tar -vxjf AROS-<version>-i386-<platform>-system.tar.bz2
+
+Jos latasit myös "contrib"-paketin, tahdot varmaankin purkaa myös sen::
+
+    > tar -vxjf AROS-<version>-i386-all-contrib.tar.bz2
+
+
+Ajaminen
+""""""""
+
+Kun olet purkanut kaikki tiedostot, voit ajaa AROS:in näin::
+
+    > cd AROS
+    > ./aros
+
+
+.. Note:: 
+    
+    Jos käytät XFree86 4.0:aa tai uudempaa (esim. Xorg), saatat huomata että
+    AROS:in näytöt sisältävä ikkuna ei päivity oikein (esim. kun toinen ikkuna
+    siirretään sen ylitse). Tämä johtuu siitä että AROS käyttää X:n
+    "backingstore" ominaisuutta hyväkseen, mutta joka on perusasetuksissa
+    poissa käytöstä XFree86 4.0:ssa ja uudemmissa. Jos käynnistä X:n
+    ``startx`` komennolla, saat sen käyttöön ``+bs`` optiolla::
+
+        > startx -- +bs
+
+    Jos käynnistät X:n jollain muulla keinoin (esim. XDM), voit sen sijaan
+    lisätä seuraavan rivin näyttökortin "device"-osioon X:n asetustiedostossa
+    (yleensä joko ``/etc/X11/XF86Config``, ``/etc/X11/XF86Config-4``, tai
+    ``/etc/X11/xorg.conf``)::
+
+        Option "backingstore"
+
+    Täydellinen "device"-osio voisi näyttää siten vaikka tältä::
+
+        Section "Device"
+            Identifier      "Matrox G450"
+            Driver          "mga"
+            BusID           "PCI:1:0:0"
+            Option          "backingstore"
+        EndSection
+
+
+AROS/i386-pc
+------------
+
+.. Note:: 
+
+    Tällä hetkellä emme tue AROS/i386-pc:n asennusta kovalevylle [#]_, joten
+    tämä kappale kertoo vain kuinka luot asennusmedian ja käynnistät siltä.
+
+
+Asennusmedia
+""""""""""""
+
+Suositeltava asennusmedia AROS/i386-pc:lle on CD-ROM, sillä siten saamme koko
+järjestelmän yhdelle levylle (sekä kaiken lisämateriaalin/-ohjelmiston). Tämä
+myöskin tekee asentamisesta helpomman koska sinun ei tarvitse menettää
+järkeäsi siirtäessäsi ohjelmistoa diskettipinon avulla.
+
+Koska kukaan ei tällä hetkellä myy AROS:ia CD-ROM:illa (tai millään muullakaan
+medialla) täytyy sinulla olla CD-poltin luodaksesi asennuslevyn itse. Jos
+sinulla ei ole CD-poltinta niin siinä tapauksessa joudut ikävä kyllä
+turvautumaan disketteihin.
+
+
+CD-ROM
+^^^^^^
+
+Poltto
+''''''
+
+Lataa sopiva ISO-tiedosto `lataussivulta`_ ja polta se CD:lle suosimallasi CD
+poltto-ohjelmalla.
+
+
+Käynnistys
+''''''''''
+
+Helpointa käynnistää AROS asennus-CD:ltä on jos tietokoneesi tukee CD-ROM:ilta
+käynnistystä. Saattaa olla että joudut asettamaan kyseisen asetuksen päälle
+koneesi BIOS:issa, sillä se on usein poissa käytöstä. Aseta sen jälkeen
+asennus-CD CD-ROM asemaan ja käynnistä kone uudelleen. Käynnistys on täysin
+automaattinen ja jos kaikki toimii niin kuin pitää, näet hetken kuluttua
+AROS:in näytön.
+
+Jos tietokoneesi ei tue suoraan CD:ltä käynnistämistä, voit luoda
+käynnistysdisketin ja käyttää sitä CD:n kanssa. Aseta molemmat levyt
+asemiinsa ja käynnistä kone uudelleen. AROS aloittaa käynnistymisen
+disketiltä, mutta jatkaa tarpeelliset jutut ladattuaan (kuten CD-ROM
+tiedostojärjestelmäkäsittelijän) se jatkaa käynnistymistä CD:ltä.
+
+
+Disketti
+^^^^^^^^
+
+Kirjoitus
+'''''''''
+
+Luodaksesi käynnistysdisketin pitää sinun ladata ``i386-pc-boot-floppy`` bzip2
+paketti `lataussivulta`_, purkaa se ja kirjoittaa paketista löytyvä
+``aros-boot.img`` disketille. Jos olet käyttämässä UNIX-tyyppistä käyttöjärjestelmää (kuten Linux tai FreeBSD) voit tehdä tämän seuraavilla komennoilla::
+
+    > cd AROS-i386-pc
+    > dd if=aros-boot.img of=/dev/fd0
+
+Jos käytät Windows:ia, täytyy sinun hankkia itsellesi rawrite_ kirjoittaaksesi kyseisen imagen disketille. Lue rawrite_:n dokumentaatio käyttöohjeita varten.
+
+
+Käynnistys
+''''''''''
+
+Aseta käynnistysdisketti asemaan ja käynnistä kone uudelleen. Käynnistys on täysin automaattinen ja jos kaikki toimii niin kuin pitää, on kohta edessäsi AROS:in näyttö.
+
+
+Alaviitteet
+===========
+
+.. [#] *On* mahdollista asentaa AROS/i386-pc kovalevylle, mutta tämä proseduuri
+       on kaukana automaattisesta ja käyttäjäystävällisestä, ja tarpeelliset
+       työkalut ovat työn alla ja melkoisen bugisia. Tästä syystä emme vielä
+       virallisesti tue kovalevylle asentamista.
+
+
+.. _`lataussivulta`: ../../download
+
+.. _rawrite: http://uranus.it.swin.edu.au/~jn/linux/rawwrite.htm
+

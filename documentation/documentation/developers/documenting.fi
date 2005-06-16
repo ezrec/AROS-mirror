@@ -1,0 +1,200 @@
+======================
+AROS Dokumentointiopas
+======================
+
+:Authors:   Adam Chodorowski 
+:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Version:   $Revision: 21208 $
+:Date:      $Date: 2004-03-10 02:47:15 +0200 (ke, 10 maalis 2004) $
+:Status:    Work in progress.
+
+.. Warning::
+
+   This document is not finished! It is highly likely that many parts are
+   out-of-date, contain incorrect information or are simply missing 
+   altogether. If you want to help rectify this, please contact us.
+
+This manual describes the AROS documentation system. It is intended to be read
+by documentation writers as well as developers wishing to extend or tinker with
+the system itself. To this end, the manual is split into three parts: a common
+introduction to the system, how to use it for writing documentation and lastly
+technical notes and specifications. Apart from information about using the
+system itself, the second chapter also contains some general guidelines to
+follow when writing documentation for AROS.
+
+
+.. Contents::
+
+
+------------
+Introduction
+------------
+
+FIXME: Write.
+
+
+---------------------
+Writing documentation
+---------------------
+
+The documentation format we use is reStructuredText (or ReST for short) as
+specified by the `Docutils Project`__. ReST is an easy to read and write,
+what-you-see-is-what-you-get, extensible, plaintext markup syntax.
+
+You can describe it as a hybrid between a implicit markup syntax and a explicit
+markup syntax, which makes it easy to learn and highly readable while still
+being powerful and extensible. The `Introduction to reStructuredText`__ contains
+some good points about the goals of the syntax.
+
+Since the format is basically plaintext it is very easy to learn by simply
+inspecting existing documentation and using some common sense, but nevertheless
+it is recommended to at least quickly read through the `ReStructuredText
+Primer`__ before starting to work on AROS documentation. 
+
+For more information about the format, the following documents are recommended
+reading:
+
++ `Quick reStructuredText Reference`__
+
+__ http://docutils.sourceforge.net/
+__ http://docutils.sourceforge.net/spec/rst/introduction.html
+__ http://docutils.sourceforge.net/docs/rst/quickstart.html
+__ http://docutils.sourceforge.net/docs/rst/quickref.html
+
+---------------
+Technical notes
+---------------
+
+Databases
+=========
+
+There are several small databases, which you can find in the ``db`` directory,
+all of which are plain text files but using a couple of slightly different
+formats. This is mostly a historical artifact and should perhaps be rectified in
+the future, but for now it's easiest to keep them as-is. 
+
+
+Sizes
+-----
+
+The files ``aros.size`` and ``contrib.size`` contain size measurements of the
+main AROS and contrib sources in CVS, respectively. The sizes are sampled
+periodically and added to these databases, which are then used to generate some
+nice graphs.
+
+Each line into three whitespace separated fields: date, size in kB and directory
+(in that order). The directory part is basically redundant information and can be
+ignored.
+
+.. Note::
+
+    The sizes are sampled using the UNIX "du" program. This means that they
+    can be slightly misleading since "du" measures "disk usage" and not "total
+    file size", which means that it counts the number of blocks used on the
+    filesystem for any particular file and not the amount of data it contains.
+    So if there is a file that is 66 bytes long and the block size of the file
+    system is 4096 bytes, "du" will report 4096 bytes.
+    
+
+Credits
+-------
+
+FIXME: Write
+
+
+Mirrors
+-------
+
+FIXME: Write
+
+
+Tasks
+-----
+
+FIXME: Write
+
+
+Building
+========
+
+Requirements
+------------
+
+You will need the following to build the AROS documentation from scratch:
+
++ Python__ 2.2.1
+
+To build the website you will additionally need:
+
++ The `Python Imaging Library`__ 1.1.3
+
+__ http://www.python.org/
+__ http://www.pythonware.com/products/pil/
+
+
+Setting up
+----------
+
+Before you can start building the documentation, there might be some setup
+required if the needed version of the Python interpreter is not named "python"
+on your system. If it is, you can simply skip this section.
+
+First, copy the default settings::
+
+    % cd AROS/documentation/scripts/config
+    % cp defaults user
+
+Next, edit the ``user`` file and make sure that the variables are correct for 
+your system. An example configuration file might look like this::
+
+    PYTHON=python
+
+``PYTHON`` indicates the name of the Python interpreter; it may also be an
+absolute path if you don't have it in the search path. You might need to set 
+it to ``python2`` or ``python2.2`` on some systems. 
+
+
+Targets
+-------
+
+There are currently two targets supported: 
+
++ ``www`` 
+  
+  This target generates the AROS website which includes all documentation, the
+  news, picture galleries with thumbnails and status information. The
+  documentation will integrate nicely with the rest of the site.
+
++ ``html``
+  
+  This target generates standalone HTML from the documentation, suitable for
+  offline viewing and inclusion into documentation packages. 
+
+
+Procedure
+---------
+
+To build a specific target, simply invoke the build script with the target name
+as the first argument. The current directory needs to be the root of the
+documentation tree. For example, to build the website do::
+
+    > cd AROS/documentation
+    > ./build www
+
+If you want to build the standalone HTML documentation::
+
+    > cd AROS/documentation
+    > ./build html
+
+The generated files will be put in ``../bin/documentation/<target-name>``, eg.
+``../bin/documentation/www`` for the ``www`` target. Additionally, there is also
+a ``clean`` target, which will delete the entire ``../bin/documentation``
+directory.
+
+.. Note::
+    
+    There are currently quite many intermediate files generated in the source
+    directories, so you cannot put it on a read-only filesystem. If you have
+    checked out the sources from CVS there's no need to worry: the generated
+    files are ignored as appropriate.
+

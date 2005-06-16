@@ -1,0 +1,509 @@
+=================================
+AROS j‰rjestelm‰n kehitysmanuaali
+=================================
+
+:Authors:   Aaron Digulla, Bernardo Innocenti
+:Copyright: Copyright © 2001, The AROS Development Team
+:Version:   $Revision: 21277 $
+:Date:      $Date: 2004-03-18 09:48:09 +0200 (to, 18 maalis 2004) $
+
+.. Warning::
+
+   T‰m‰ dokumentti ei ole valmis! On eritt‰in todenn‰kˆist‰ ett‰ monet osat
+   ovat ajastaan j‰ljess‰, sis‰lt‰v‰t ep‰kuranttia tietoa tai puuttuvat
+   kokonaan. Jos tahdot auttaa tilanteen korjaamisessa, ota meihin yhteytt‰.
+
+.. Contents::
+
+--------------------
+Lisensointimenettely
+--------------------
+
+L‰hes kaikki AROS Development Team:in kirjoittama koodi on lisensoitu AROS
+Public License:n (APL) alla, ja t‰m‰ on suositeltu vaihtoehto kaikelle uudelle
+koodille joka projektille kirjoitetaan.
+
+Ymm‰rr‰mme kyll‰ ettei t‰m‰ ole aina mahdollista; esimerkiksi usein me
+tahdomme k‰ytt‰‰ ulkopuolisten kirjoittamia kirjastoja ja ohjelmia ilman ett‰
+meid‰n tarvitsee keksi‰ pyˆr‰‰ uudelleen. T‰st‰ syyst‰ on sallittua tuoda
+Subversion varastoon koodia jota ei ole lisensoitu APL:n alaisuudessa niin
+kauan kuin koodin lisenssi t‰ytt‰‰ alla mainitut ehdot.
+
+
+"contrib"-polun l‰hdekoodin vaatimukset
+=======================================
+
+Sis‰llytt‰‰ksesi l‰hdekoodia "contrib"-polkuum t‰ytyy seuraavien ehtojen
+toteutua:
+
+1. Lisenssin t‰ytyy antaa meid‰n:
+
+   a. Levitt‰‰ l‰hdekoodia.
+   b. Levitt‰‰ bin‰‰ri‰.
+
+   Jos muutokset l‰hdekoodiin ovat tarpeellisia jotta se saadaan k‰‰ntym‰‰n ja
+   toimimaan AROS:issa, t‰ytyy lisenssin sallia meid‰n muokata ja levitt‰‰
+   muokattua koodia sek‰ l‰hdekoodina ett‰ bin‰‰rin‰.
+
+2. Lisenssin t‰ytyy olla selv‰sti ilmaistu tiedostossa ``LEGAL`` jonka tulee
+   sijaita kyseisen l‰hdekoodin juurihakemistossa.
+
+
+AROS:in juuripolun l‰hdekoodin vaatimukset
+==========================================
+
+Jotta voit sis‰llytt‰‰ sellaista l‰hdekoodia jota ei ole lisensoitu APL:n
+alaisuudessa AROS:in juuripolkuun, t‰ytyy seuraavien ehtojen toteutua:
+
+1. L‰hdekoodin t‰ytyy rakentaa jokin komponentti tai olla riippuvaisen jostain
+   toisesta komponentista (joka voi olla tai olla olematta APL:‰‰) jonka
+   tahdomme sis‰llytt‰‰ AROS:in bin‰‰rijakeluun.
+
+2. Lisenssin t‰ytyy olla Open Source:a kuten on m‰‰ritetty Open Source
+   Initiative:ssa (OSI), tarkoittaen sit‰ ett‰ meill‰ tulee olla oikeus:
+
+   a. Tehd‰ muutoksia.
+   b. Levitt‰‰ l‰hdekoodia (muutoksineen).
+   c. Levitt‰‰ bin‰‰ri‰ (mahdollisesti muutettuun l‰hdekoodiin pohjautuvaa).
+
+3. Lisenssi ei saa olla ristiriidassa APL:n kanssa:
+
+   a. Jos koodista valmistuu itsen‰inen ohjelma, l‰hes mik‰ tahansa lisenssi
+      joka t‰ytt‰‰ kohdan 2. ehdot on sallittu.
+   b. Jos koodista valmistuu kirjasto, lisenssin t‰ytyy sallia sen
+      linkitt‰misen ilman ongelmia ohjelmiin ja kirjastoihin jotka k‰ytt‰v‰t
+	  eri lisenssi‰. T‰m‰ tarkoittaa sit‰ ett‰ GPL:n alaisuudessa julkaistut
+	  kirjastot eiv‰t ole sallittuja (toisin kuin LGPL:n alaiset).
+
+4. Lisenssi tulee ilmet‰ selv‰ sanaisesti tiedostossa ``LEGAL`` jonka tulee
+   sijaita kyseess‰ olevan l‰hdekoodin juurihakemistossa.
+
+
+---------------------
+Sovitut koodaustyylit
+---------------------
+
+Yleinen tyyli
+=============
+
+T‰t‰ koodia yll‰pit‰v‰t monet ja siksi sinun tulee pit‰‰ mieless‰si muutamia
+seikkoja kun l‰het‰t l‰hdekoodia:
+
++ Pid‰ asiat yksinkertaisina
++ Pid‰ l‰hdekoodi siistin‰
++ Tied‰ mit‰ olet tekem‰ss‰
++ Kerro mit‰ olet tekem‰ss‰
++ Muista ett‰ kirjoitat koodin kerran mutta se luetaan usein useiden toimesta
+
+
+Kommentit
+=========
+
+AROS k‰ytt‰‰ osaa l‰hdekoodin kommenteista luomaan sille dokumentaation. T‰st‰
+syyst‰ t‰ytyy pit‰yty‰ tietyss‰ formaatissa jotta tyˆkalut lˆyt‰v‰t hakemansa
+tiedon. Kaikki muut kommentit ohitetaan, mutta niiden tulisi selvitt‰‰ mit‰
+ajattelit koodia kirjoittaessasi. Jos et saa selvityst‰ mieleesi, ‰l‰ kirjoita
+koodia kahdesti t‰ll‰ tavoin::
+
+    /* T‰m‰ lis‰‰ 1 t:hen */
+    t++;
+    
+Mit‰ tulisi kirjoittaa on::
+
+    /* Jatka seuraavalla elementill‰ */
+    t++;
+
+
+Funktioiden prototyypit ja otsikot
+==================================
+
+Jokaisella AROS:in funktiolla t‰ytyy olla t‰ydellinen ANSI C prototyyppi.
+Prototyypit tulisi koota yhteen otsikkotiedostoon per l‰hdetiedosto jos niit‰
+tarvitaan vain muutamissa tiedostoissa (ei tarvetta k‰‰nt‰‰ koko projektia
+uudelleen jos muutat funktiota jota k‰ytet‰‰n vain yhdess‰ paikassa), tai
+yhteen otsikkotiedostoon per hakemisto jos funktiota k‰ytet‰‰n yleisesti
+kyseisess‰ hakemistossa, taikka yhteen otsikkotiedostoon per looginen ryhm‰
+(esim. yksi yhteinen otsikkotiedosto kaikille kirjaston funktioille).
+
+Funktion otsikon (eli kommentin ennen funktiota) tulee olla erityisess‰
+muodossa koska AutoDoc:it muodostetaan siit‰. T‰ss‰ siit‰ esimerkki
+(tiedostosta ``AROS/exec/addhead.c``)::
+
+    /*****************************************************************************
+
+        NAME */
+    #include <exec/lists.h>
+    #include <clib/exec_protos.h>
+
+	    AROS_LH2I(void, AddHead,
+
+    /*  SYNOPSIS */
+            AROS_LHA(struct List *, list, A0),
+            AROS_LHA(struct Node *, node, A1),
+
+    /*  LOCATION */
+            struct ExecBase *, SysBase, 40, Exec)
+
+    /*  FUNCTION
+            Insert Node node as the first node of the list.
+
+        INPUTS
+            list - The list to insert the node into
+            node - This node is to be inserted
+
+        RESULT
+            None.
+
+        NOTES
+
+        EXAMPLE
+            struct List * list;
+            struct Node * pred;
+
+            // Insert Node at top
+            AddHead (list, node);
+
+        BUGS
+
+        SEE ALSO
+            NewList(), AddTail(), Insert(), Remove(), RemHead(), RemTail(),
+            Enqueue()
+
+        INTERNALS
+
+    ******************************************************************************/
+    {
+
+As you can see, comments are used to merge the function prototype and the
+header into one.
+
+NAME 
+    This field contains all necessary prototypes to use the function
+    from the user point of view and the name of the function in a `AROS_LH#?()`
+    macro (Library Header). These macros are used to make the same code work on
+    different kind of hardware. The name of the macro depends on the amount of
+    parameters and whether the function needs the library base. `AddHead()`
+    does not and therefore an "I" is appended to the macros name. If it need
+    the library base (like `AddTask()`), then the "I" is omitted.
+
+    If the function is not part of a shared library and it's arguments must be
+    passed in certain registers (eg. callback hooks), you must use
+    `AROS_UFH#?()` macros (User Function Header) instead of `AROS_LH#?()`. Append
+    the number of arguments to this macro. Since it has never a base, the field
+    LOCATION must be omitted and it's not necessary to append the "I" to the
+    macros name. An example for a callback hook `foo()` would be::
+
+        AROS_UFH3(ULONG, foo,
+            AROS_UFHA(struct Hook, hook,  A0),
+            AROS_UFHA(APTR,        obj,   A2),
+            AROS_UFHA(APTR,        param, A1)
+        )
+
+    (Note that the registers need not have a particular order).
+
+    If the function is not part of a shared library and it's arguments need not
+    be in specific registers, you need no `AROS_#?H#?()` macros::
+
+        /*****************************************************************************
+
+            NAME */
+        #include <header.h>
+
+	        int foo (
+
+        /*  SYNOPSIS */
+	        int a,
+	        int b)
+
+        /*  FUNCTION
+	        blahblahblah.
+	        ...
+
+        *****************************************************************************/
+        
+SYNOPSIS 
+    This field contains all arguments of the function one by
+    one in `AROS_LHA()` macros (Library Header Argument). This macro makes sure
+    the respective argument is put in the right CPU register when the function
+    is called (if possible and necessary). The first argument for the macro is
+    the type of the parameter followed by the name of the parameter and the
+    register the parameter is expected in. Valid names for registers are D0,
+    D1, D2 up to D7 and A0 up to A6.
+
+    If the function is not part of a library but the arguments must be passed
+    to it in registers, then use `AROS_UFHA()` macros (User Function Header
+    Argument) which take the same parameters as the `AROS_LHA()` macros. Don't
+    forget the closing parenthesis for the `AROS_UFC`.
+
+    If the function is not part of a library and the arguments need not be
+    passed in registers, no macros are necessary.
+
+LOCATION
+    This field is necessary for shared libraries only. It
+    contains the last four parameters for the `AROS_LH#?()` macro which are the
+    type of the library, the name of the variable, in which the function
+    expects the library base, the offset of the function in the jumptable (the
+    first vector has 1 and the first vector which may be used by a function is
+    5) and the name of the library.
+
+FUNCTION
+    This field contains a description of the function.
+
+INPUTS
+    This field contains a list of all parameters of the form
+    "name - description" or "name, name, name - description". The description
+    should tell what the parameter is and what values can be passed to it.
+    There is no point in explaining the parameter twice in FUNCTION and here.
+    If the function has no parameters, say "None." here.
+
+RESULT
+    What the function passes back. This includes return values
+    and values passed in arguments of the function. If the function may fail,
+    you should explain what it returns on failure and why it might fail.
+
+NOTES
+    Important things the user must know or take into account.
+
+EXAMPLE
+    This field should contain a small or fully featured
+    example.  A good way to present an example is to write some code which tests
+    the function, put it into `#ifdef TEST` somewhere in the file and
+    put a "See below." here. If you need comments in the code, you have two ways
+    for this. If you need only short one-line comments, use C++ style (``//``) 
+    comments. Everything from the ``//`` to the end of the line is
+    the comment.  If you need more comment, then you can end the comment after the
+    `EXAMPLE` and use `#ifdef EXAMPLE` to mask the example out::
+
+            EXAMPLE */
+        #ifdef EXAMPLE
+	        struct List * list;
+	        struct Node * pred;
+
+	        /* Insert Node at top of the list */
+	        AddHead (list, node);
+        #endif
+
+    Don't use `#ifdef EXAMPLE` if you have a fully featured example (ie. one
+    which can be compiled without errors).
+
+
+BUGS
+    This field contains a list of known bugs.
+
+SEE ALSO
+    This field contains a list of other functions and documents
+    which might be of interest. This includes function which you need to
+    initialize, create or destroy an object necessary for this function,
+    functions which do similar and opposite things on the main object.
+
+    For example, `SetAttrs()` should contain functions here which can create,
+    destroy and manipulate BOOPSI objects but not taglists.
+
+INTERNALS
+    This field should contain information for other developers
+    which are irrelevant to the user, for example an explanation of the
+    algorithm of the function or dependencies.
+
+
+Muotoilu
+========
+
+T‰ss‰ esimerkki kuinka muotoilla AROS koodia::
+
+    {
+        /* a */
+        struct RastPort * rp;
+        int               a;
+
+        /* b */
+        rp = NULL;
+        a  = 1;
+
+        /* c */
+        if (a == 1)
+            printf ("Init worked\n");
+
+        /* d */
+        if
+        (
+            !(rp = Get_a_pointer_to_the_RastPort
+                (
+                    some
+                    , long
+                    , arguments
+                )
+            )
+        ||
+            a <= 0
+        )
+        {
+            printf ("Something failed\n");
+            return FAIL;
+        }
+
+        /* e */
+        a = printf ("My RastPort is %p, a=%d\n"
+            , rp
+            , a
+        );
+
+        return OK;
+    }
+
+
+N‰ytt‰‰ rumalta, vai kuinka? :-) Ok, t‰ss‰ s‰‰nnˆt:
+
++ Jos useilla riveill‰ on samankaltaista koodia, asemoi ne toistensa alle (ks.
+  a ja b);
+
++ Sijoita v‰li operandien ja operaattoreiden v‰liin
+
++ Sijoita aaltosulut ``{}``, hakasulut ``[]`` ja sulut ``()`` toistensa alle
+  (d) jos niiden v‰lill‰ on paljon koodia. Hakasulut ja sulut voivat olla
+  yhdell‰ rivill‰ jos koodia ei ole paljon (c)
+
++ Sisenn‰ 4:ll‰ v‰lilyˆnnill‰. Kaksi sisennystasoa voidaan merkit‰ yhdell‰
+  tabulaattorilla.
+  
+  Syyt t‰h‰n ovat:
+  
+  1. Vaikka jotkut editorit voivat k‰ytt‰‰ mielivaltaisia tabulaattorikokoja,
+     on hieman vaikeaa kertoa toisenlaiselle editorille mit‰ kokoa on k‰ytetty
+     koodia kirjoitettaessa.
+  2. Suurin osa AROS:in koodista on kirjoitettu n‰in ja omasi tulisi n‰ytt‰‰
+     samalta kuin kaikki muukin.
+  3. Voit tulostaa koodin mill‰ tahansa printterill‰ ilman erikoisia tyˆkaluja
+     korjaamaan tabulaattorikokoja.
+  4. Suurin osa editoreista omaa nk. "smart tab" ominaisuuden joka tekee juuri
+     t‰m‰n. Jos omasi ei sit‰ tue, kirjoita vikaraportti...
+
++ Jos sinulla on funktio joka ottaa useita argumentteja (d, e) tulisi sinun
+  sijoittaa sulut omille riveilleen ja jokainen argumentti omalleen (d) tai
+  asemoida ensimm‰inen argumentti avautuvan sulun per‰‰n (e) ja seuraavat
+  argumentit omille riveilleen siten ett‰ pilkku on niiden edell‰. Sulkeva
+  sulku sijaitsee omalla rivill‰‰n, asemoituna samalle kohdalle kuin alkava
+  lauseke (esim. a ilman avautuvia sulkuja tai `printf()`).
+
++ K‰yt‰ yht‰ tyhj‰‰ rivi‰ erottamaan loogisia lohkoja. Pitkien kommenttien
+  edell‰ ja j‰lkeen tulisi olla tyhj‰ rivi. Lyhyiden kommenttien tulisi
+  sijaita juuri ennen koodia jota ne kuvailevat ja ainoastaan yksi tyhj‰ rivi
+  yl‰puolellaan.
+
+
+ROM:iin kirjoitettavissa olevan koodin kirjoittaminen
+=====================================================
+
+AROS moduuleissa oleva koodi tulisi kirjoitta sill‰ tavoin ett‰ se voidaan
+valaa ROM:iin, FlashRAM:iin tai jonkin muun tyyppiseen vain lukua varten
+olevaan muistiin. Seuraavana esitelty ohjelmointityyli on tarkoitettu tekem‰‰n
+siit‰ mahdollista. Tottakai se p‰tee kaikkiin Kickstart moduuleihin ja
+koodiin joka saatetaan sijoittaa RAM:iin, on jaettua ja/tai linkitet‰‰n
+toisiin moduuleihin.
+
++ ROM moduuleilla ei tule olla .data tai .bss lohkoja. K‰yt‰nnˆss‰ t‰m‰
+  tarkoittaa sit‰ ett‰ meid‰n tulee p‰‰st‰ eroon kaikesta ei-pysyv‰st‰
+  globaalista datasta. Amigan Kickstart todistaa ett‰ se on sek‰ mahdollista
+  ett‰ myˆs helppoa.
+
+  Jos tˆrm‰‰t ulkoiseen muuttujaan (staattinen taikka ei) jota koodi muokkaa,
+  koeta p‰‰st‰ siit‰ eroon tai siirr‰ se kirjaston/laitteen ytimeen (tai
+  laitek‰sittelij‰si noodiin tai luokkasi nk. "userdata":an).
+
++ Yll‰ mainittu p‰tee myˆs kirjastoihin. Jos olet kirjoittamassa kirjastoa,
+  j‰rjest‰ kaikkien muiden kirjastojen perustukset oman kirjastosi ytimeen.
+  BOOPSI luokat voivat varastoida kirjastojen perustat (osoittimia) luokkansa
+  yksityisen datan alueella.
+
++ Koeta asettaa kaikki globaali data `static` ja `const` tyyppiseksi. Voit
+  k‰ytt‰‰ myˆs `CONST_STRPTR` ja `CONST_APTR` tyyppej‰ jotka on m‰‰ritelty
+  tiedostossa ``<exec/types.h>``. `static const`:in k‰ytt‰minen sallii
+  k‰‰nt‰j‰n siirt‰‰ tieto ".text" alueelle (elik‰ koodin sekaan). Jos sinun
+  t‰ytyy antaa jokin n‰ist‰ globaaleista toiselle funktiolle, koeta m‰‰ritt‰‰
+  sen prototyyppi k‰ytt‰m‰‰n myˆskin `const`:ia. Huomioi ett‰ OS 3.5:st‰
+  l‰htien Olaf Barthel on vihdoin k‰ytt‰m‰‰n `const`:ia <clib/#?_protos.h>
+  otsikkotiedostoissa.
+
++ **ƒLƒ KOSKAAN** koeta muokata puskureita jotka k‰ytt‰j‰ l‰hett‰‰ syˆtteen‰.
+  Syˆte parametrin konsepti sis‰ltyy usein funktion kuvaukseen. Esimerkiksi
+  tiedostonimi joka `Open()`:ille annetaan on selv‰sti syˆtemuuttuja eik‰
+  `Open()`:in tule sit‰ muokata vaikka se palauttaisikin syˆtteen ennalleen
+  myˆhemmin. Pid‰ mieless‰ se ett‰ puskuri voi sijaita vain luettavaksi
+  tarkoitetussa muistissa tai olla jaettuna useiden monis‰ikeisen ohjelman
+  instanssien v‰lill‰.
+
++ Koeta v‰ltt‰‰ sellaisia is‰nt‰j‰rjestelm‰n kutsuja kuten `malloc()` ja
+  `free()` jos voit niiden sijaan k‰ytt‰‰ `AllocMem()` ja `FreeMem()` kutsuja.
+  T‰m‰ siksi koska osoittimet tarkastavat makrot olettavat lˆyt‰v‰ns‰
+  osoittimen Exec:in muistilokeroista `TypeOfMem()` funktion avulla.
+
+  
+--------
+Porttaus
+--------
+
+T‰m‰ osa kuvaa kuinka portata AROS uudenlaiselle raudalle.
+
+1. Valitse kuvaava nimi CPU:lle (kuten i386, m68k, hppa, sparc) ja lis‰‰
+   "-emul" (kuten i386-emul) jos porttauksesti tulee ajettavaksi toisen
+   j‰rjestelm‰n alaisuudessa tai "-native" (kuten m68k-native) jos porttaus
+   tulee toimimaan itsen‰isen‰ k‰yttˆj‰rjestelm‰n‰.
+
+2. Valitse tunnistenimi j‰rjestelm‰llesi (kuten sgi, linux, amiga, jne.).
+
+3. Muokkaa "configure" skripti‰ tunnistamaan rautasi tyyppi ja s‰‰d‰ muuttujat
+   siten miten j‰rjestelm‰si vaatii.
+
+   KERNEL
+    K‰ytt‰m‰si CPU:n tyyppi (ks. 1.)
+
+   ARCH
+    J‰rjestelm‰si tunnistenimi (ks. 2.)
+
+   SYS_CC
+    C-k‰‰nt‰j‰si nimi
+
+   COMMON_CFLAGS
+    valinnat jotka annetaan jokaiselle C-k‰‰nt‰j‰n kutsulle (kuten -g -Wall
+	-O0 jne.)
+
+   ILDFLAGS
+    Liput ja valinnat jotka annetaan k‰‰nt‰j‰lle linkitys vaiheessa jottei se
+	k‰yt‰ standardi kirjastoja tai startup moduuleja (GCC:lle valinnat ovat
+	-nostartfiles -nostdlib -Xlinker -i). T‰t‰ k‰ytet‰‰n luomaan ajettavia AROS
+	ohjelmia. N‰iss‰ ei tule olla yht‰‰n selvitt‰m‰tˆnt‰ symbolia ja kaikkien
+	viittausten tulee olla t‰ytetty.
+
+   RANLIB
+    Sis‰lt‰‰ ranlib -ohjelmasi nimen. Jos sellaista ei ole, k‰yt‰ siin‰
+	tapauksessa "true":a (tai jonkin muun komennon nime‰ joka ei v‰lit‰
+	annetuista parametreista eik‰ palauta virhekoodia).
+
+4. Aja "make". Sen ajo keskeytyy koska $(KERNEL):i‰ ei viel‰ ole, mutta
+   sit‰ ennen asettaa muutamia t‰rkeit‰ tiedostoja ja hakemistopuita.
+
+5. Tee kopio i386-emul:ista $(KERNEL):ksi ja muunna kaikki assembler
+   l‰hdekoodit x86:sta CPU:llesi.
+
+6. Asuta $(KERNEL)/. On suositeltavaa ett‰ teet kopion i386-emul:ista koska se
+   on ajanmukaisin versio kernelist‰.
+
+7. Aja "make machine". T‰m‰ k‰‰nt‰‰ ohjelman ja ajaa sen. Tulosta voidaan
+   k‰ytt‰‰ $(KERNEL)/machine.h -tiedoston muokkaamiseen.
+
+8. Aja "make machine.i" $(KERNEL):in alla. Se luo "machine.i" tiedoston jota
+   tarvitaan k‰‰nt‰m‰‰n assembler tiedostot. "machine.i" sis‰lt‰‰ suuren
+   m‰‰r‰n j‰rjestelm‰vakioiden arvoja (funktioiden vektoreiden offsetteja,
+   rakenteiden kenttien offsettej‰ ja j‰rjestelm‰lippuja).
+
+9. Muokkaa kaikkia #?.s tiedostoja $(KERNEL):iss‰ ja kehit‰ CPU:llesi sopivat
+   konekielikoodit. K‰‰nt‰‰ksesi tiedostot, aja "make".
+
+10. Siirry p‰‰hakemistoon ja aja "make". Jos virheit‰ esiintyy, korjaa ne ja
+    ja toista kunnes virheit‰ ei en‰‰ esiinny.
+
+11. Siirry bin/$(ARCH)/AROS hakemistoon ja k‰ynnist‰ "aros". Jos kaikki toimii
+    niin kuin pit‰‰, tulisi eteesi avautua AROS:in n‰yttˆ. Koska ei ole tapaa
+	jolla k‰yttˆj‰rjestelm‰ voidaan sammuttaa "siististi", t‰ytyy sinun
+	k‰ytt‰‰ CTRL-C:t‰ terminaalissa josta AROS:in k‰ynnistit sen toiminnan
+	keskeytt‰‰ksesi (tai klikata p‰‰n‰ytˆn sulkumerkki‰ jos sill‰ sellainen
+	on).
