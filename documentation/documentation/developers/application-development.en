@@ -617,8 +617,9 @@ This file can contain the following things:
         
     ``ignoredir <path>``
         Will tell mmake to ignore directories
-        with this name. Try ``ignore CVS`` if you use CVS to
-        manage your projects' sources.
+        with this name. Try ``ignoredir CVS`` if you use CVS to
+        manage your projects' sources or ``ignoredir .svn`` if you
+	use SVN to manage your projects.
 
 Any option which is not recognised will be added to the list of known 
 variables (ie. ``foo bar`` will create a variable ``$(foo)`` which is 

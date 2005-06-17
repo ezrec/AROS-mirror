@@ -48,14 +48,14 @@ Sources
 =======
 
 You can download the AROS sources either from the `download page`__ or by 
-using CVS (which requires that you `apply for access`__ though). In the former
+using SVN (which requires that you `apply for access`__ though). In the former
 case, getting the ``source`` package is enough (unless you also want to 
 compile the contrib programs). In the latter case, you need to checkout the 
 ``AROS`` module, and also the ``necessary`` module if you want to compile the
 i386-pc port.
 
 __ ../../download
-__ ../../documentation/developers/contribute#the-cvs-repository
+__ ../../documentation/developers/contribute#the-svn-repository
 
 
 Building

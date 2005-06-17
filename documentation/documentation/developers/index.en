@@ -3,7 +3,7 @@ Developers Resources
 ====================
 
 + `How to contribute`__
-+ `CVS access and usage`__
++ `SVN access and usage`__
 + `How to compile`__
 + `Applications development manual`__
 + `Zune Applications development manual`__
@@ -16,7 +16,7 @@ Developers Resources
 + `Useful links`__
 
 __ contribute
-__ cvs
+__ svn
 __ compiling
 __ application-development
 __ zune-application-development

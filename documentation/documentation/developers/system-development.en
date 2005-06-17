@@ -26,7 +26,7 @@ written for the project.
 However, we understand that this is not always possible; for example we often 
 want to use good third party libraries and applications instead of reinventing
 the wheel ourselves. Therefore it is allowed to import foreign code into the 
-CVS repository that is not licensed under the APL, as long as the license
+SVN repository that is not licensed under the APL, as long as the license
 of that code satisfies the requirements below.
 
 

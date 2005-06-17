@@ -149,7 +149,8 @@ Joining the Team
 
 Want to join the development effort? Great! Then join the `development mailing
 lists`__ you are interested in (at least joining the main development list is
-*highly* recommended) and request access to the CVS repository. That's it. :)
+*highly* recommended) and request access to the Subversion repository.
+That's it. :)
 
 Writing a short mail to the development list containing an introduction about
 yourself and what you want to help out with is encouraged. If you have any
@@ -163,10 +164,10 @@ __ ../../contact#mailing-lists
 __ ../../contact#irc-channels
 
 
-The CVS repository
-------------------
+The Subversion repository
+-------------------------
 
-The AROS repository is running with password protected CVS server, which means
+The AROS repository is running with password protected Subversion server, which means
 that you need to request access to it to be able to collaborate in the
 development. The passwords are in encrypted form, which you can generate with
 our `online password encryption tool`__. At the request of Amiga Inc., anonymous
@@ -174,19 +175,19 @@ read-only access to the repository has been disabled.
 
 Please mail the encrypted password together with your preferred username and
 your real name to `Aaron Digulla`__ and wait for a reply. To facilitate a quick
-response, please set the subject to "Access to the AROS CVS server" and the body
+response, please set the subject to "Access to the AROS SVN server" and the body
 to "Please add <username> <password>", eg.::
 
     Please add digulla xx1LtbDbOY4/E
 
 It might take a couple of days as Aaron is quite busy, so please be patient. 
 
-For information on how to use the AROS CVS server, please read "`Working with
-CVS`__". Even if you already know how to use CVS it is useful to look it through,
+For information on how to use the AROS SVN server, please read "`Working with
+SVN`__". Even if you already know how to use SVN it is useful to look it through,
 as it contains information and tips specific to the AROS repository (such as how
 to log into it).
 
 __ http://aros.sourceforge.net/tools/password.html 
-__ mailto:digulla@aros.org?subject=[AROS]
-__ cvs
+__ mailto:digulla@aros.org?subject=[Access%20to%20the%20AROS%20SVN%20server]
+__ svn
  

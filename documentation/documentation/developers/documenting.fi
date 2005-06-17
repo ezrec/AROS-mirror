@@ -78,7 +78,7 @@ Sizes
 -----
 
 The files ``aros.size`` and ``contrib.size`` contain size measurements of the
-main AROS and contrib sources in CVS, respectively. The sizes are sampled
+main AROS and contrib sources in SVN, respectively. The sizes are sampled
 periodically and added to these databases, which are then used to generate some
 nice graphs.
 
@@ -195,6 +195,6 @@ directory.
     
     There are currently quite many intermediate files generated in the source
     directories, so you cannot put it on a read-only filesystem. If you have
-    checked out the sources from CVS there's no need to worry: the generated
+    checked out the sources from SVN there's no need to worry: the generated
     files are ignored as appropriate.
 

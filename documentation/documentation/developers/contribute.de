@@ -167,7 +167,7 @@ Mitmachen im Team
 
 Du hast Lust bekommen mitzumachen? Großartig! Melde Dich einfach bei
 einer der `Mailinglisten`__ an (zumindest bei der Hauptliste "aros-dev"
-ist *sehr* zu empfehlen) und fordere einen Zugang zum CVS Repositoryi an.
+ist *sehr* zu empfehlen) und fordere einen Zugang zum Subversion Repository an.
 Das war's schon. :)
 
 Schreib eine kurze Mail an aros-dev mit einer kleinen Einführung über Dich
@@ -183,10 +183,10 @@ __ ../../contact#mailing-lists
 __ ../../contact#irc-channels
 
 
-Das CVS Repository
-------------------
+Das Subversion Repository
+-------------------------
 
-Das AROS Repository liegt auf einem passwortgeschützen CVS Server, das
+Das AROS Repository liegt auf einem passwortgeschützen Subversion Server, das
 bedeutet, dass Du einen persönlichen Zugang benötigst um Dich an der
 Entwicklung zu beteiligen. Die Passworte sind verschlüsselt und können
 mit unserem `online password encryption tool`__ generiert werden.
@@ -196,7 +196,7 @@ Read-Only Zugang zu unserem Repository zu sperren.
 Bitte maile Dein verschlüsseltes Passwort zusammen mit Deinem
 gewünschten Usernamen und deinem realen Namen an `Aaron Digulla`__ und
 warte auf Antwort. Um eine schnelle Antwort zu ermöglichen, benutze
-bitte das Subject "Access to the AROS CVS server" und im Text
+bitte das Subject "Access to the AROS SVN server" und im Text
 "Please add <username> <password>", z.B.:
 
     Please add digulla xx1LtbDbOY4/E
@@ -204,12 +204,12 @@ bitte das Subject "Access to the AROS CVS server" und im Text
 Es kann einige Tage in Anspruch nehmen, weil Aaron ziemlich beschäftigt
 ist, also sei geduldig ;-)
 
-Zu Informationen über die Benutzung des AROS CVS Servers, lies bitte
-"`Working with CVS`__". Auch wenn Du schon weisst wie man CVS nutzt ist
+Zu Informationen über die Benutzung des AROS SVN Servers, lies bitte
+"`Working with SVN`__". Auch wenn Du schon weisst wie man SVN nutzt ist
 es dennoch nützlich dort rein zu schauen, da es Informationen und Tips
 speziell für das AROS Repository (z.B. zum Login) enthält.
 
 __ http://aros.sourceforge.net/tools/password.html 
-__ mailto:digulla@aros.org?subject=[AROS]
-__ cvs
+__ mailto:digulla@aros.org?subject=[Access%20to%20the%20AROS%20SVN%20server]
+__ svn
  
