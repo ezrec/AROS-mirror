@@ -205,6 +205,11 @@ in the SVN manual is quite poorly written, so an example is in order:
    you've specified. Actually, not *all* files will be added: SVN will ignore
    filenames that are common for backup and hidden files, like ``#?.bak``,
    ``.#?`` and ``#?~``.
+
+   Nontheless, you should remove all files which you don't want to end up
+   in the repository before you start the import. Don't try to interrupt
+   SVN during the import when you see a file being added that you don't want,
+   though. Just make a note and then delete the file afterwards.
    
    For example, say that you wanted to import the SVN 1.1.3 sources into 
    the "contrib/development/versioning/svn" directory::
