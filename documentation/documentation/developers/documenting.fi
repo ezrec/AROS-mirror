@@ -10,49 +10,50 @@ AROS Dokumentointiopas
 
 .. Warning::
 
-   This document is not finished! It is highly likely that many parts are
-   out-of-date, contain incorrect information or are simply missing 
-   altogether. If you want to help rectify this, please contact us.
+   Tämä dokumentti ei ole valmis! On erittäin todennäköistä että monet osat
+   ovat vanhentuneita, sisältävät epäkuranttia tietoa taikka puuttuvat
+   kokonaan. Jos tahdot korjata tilanteen, ota meihin yhteyttä.
 
-This manual describes the AROS documentation system. It is intended to be read
-by documentation writers as well as developers wishing to extend or tinker with
-the system itself. To this end, the manual is split into three parts: a common
-introduction to the system, how to use it for writing documentation and lastly
-technical notes and specifications. Apart from information about using the
-system itself, the second chapter also contains some general guidelines to
-follow when writing documentation for AROS.
+Tämä manuaali kuvailee AROS:in dokumentointijärjestelmän. Tämä on tarkoitettu
+kaikkien dokumentaation kirjoittajien luettavaksi kuten myös niiden
+kehittäjien jotka tahtovat laajentaa taikka värkkäillä järjestelmän kanssa.
+Tähän tarkoitukseen on manuaali jaettu kolmeen osaan: järjestelmän yleinen
+esittely, kuinka sitä käytetään dokumentaation kirjoittamiseen ja lopuksi
+teknisiä huomautuksia ja spesifikaatioita. Järjestelmän käyttötietojen lisäksi toinen kappale sisältää myös joitain yleisohjeita joita tulisi seurata dokumentaatiota kirjoittaessa.
 
 
 .. Contents::
 
 
-------------
-Introduction
-------------
+--------
+Esittely
+--------
 
-FIXME: Write.
+FIXME: Kirjoita ...
 
 
----------------------
-Writing documentation
----------------------
+------------------------
+Dokumentaation kirjoitus
+------------------------
 
-The documentation format we use is reStructuredText (or ReST for short) as
-specified by the `Docutils Project`__. ReST is an easy to read and write,
-what-you-see-is-what-you-get, extensible, plaintext markup syntax.
+Dokumentaatio formaatti jota käytämme on nk. reStructuredText (lyhyesti ReST)
+kuten `Docutils Project`__ sen määrittelee. ReST on helposti luettavissa ja
+kirjoitettavissa, WYSIWYG, laajennettava, sekä selväkielinen
+merkintäsyntaksiltaan.
 
-You can describe it as a hybrid between a implicit markup syntax and a explicit
-markup syntax, which makes it easy to learn and highly readable while still
-being powerful and extensible. The `Introduction to reStructuredText`__ contains
-some good points about the goals of the syntax.
+Voit kuvailla sen olevan hybridin merkintäsyntaksin ehdottoman ja täsmällisen
+välimaastosta, joka tekee siitä helpon oppia sekä helposti luettavissa olevan
+ja silti olevan tehokkaan ja helpon laajentaa. `Introduction to
+reStructuredText`__ sisältää syntaksille muutamia hyviä näkökohtia ja
+päämääriä.
 
-Since the format is basically plaintext it is very easy to learn by simply
-inspecting existing documentation and using some common sense, but nevertheless
-it is recommended to at least quickly read through the `ReStructuredText
-Primer`__ before starting to work on AROS documentation. 
+Koska formaatti on pääasiassa selväkielistä tekstiä, on se helppo oppia
+yksinkertaisesti tutkimalla olemassa olevaa dokumentaatiota ja käyttäen
+hitusen maalaisjärkeä. Mutta siitä huolimatta on suositeltavaa käydä ainakin
+pikaisesti `ReStructuredText Primer`__ lävitse ennen kuin alat työskennellä
+AROS dokumentaation parissa.
 
-For more information about the format, the following documents are recommended
-reading:
+Formaatin lisätietoa varten ovat seuraavat dokumentit suositeltavaa luettavaa:
 
 + `Quick reStructuredText Reference`__
 
@@ -61,70 +62,79 @@ __ http://docutils.sourceforge.net/spec/rst/introduction.html
 __ http://docutils.sourceforge.net/docs/rst/quickstart.html
 __ http://docutils.sourceforge.net/docs/rst/quickref.html
 
----------------
-Technical notes
----------------
+------------------
+Teknisiä huomioita
+------------------
 
-Databases
-=========
+Tietokannat
+===========
 
-There are several small databases, which you can find in the ``db`` directory,
-all of which are plain text files but using a couple of slightly different
-formats. This is mostly a historical artifact and should perhaps be rectified in
-the future, but for now it's easiest to keep them as-is. 
+Olemassa on useita pieniä tietokantoja, jotka kaikki löytyvät ``db``
+hakemistosta, ja jotka kaikki ovat puhtaasti tekstimuotoisia tiedostoja mutta
+jotka käyttävät paria hieman toisistaan poikkeavaa formaattia. Tämä on
+pääasiassa historiallinen artefakti joka ehkä tulisi oikaista tulevaisuudessa,
+mutta tällä hetkellä niiden on parasta antaa olla sellaisenaan.
 
 
-Sizes
------
+Koot
+----
 
+<<<<<<< .mine
+Tiedostot ``aros.size`` ja ``contrib.size`` sisältävät AROS:in pääasiallisen
+ja "contrib" lähdekoodin koot Subversion varastossa. Koot otetaan ajoittain ja
+lisätään näihin tietokantoihin, joita käytetään luomaan joitain graafeja.
+=======
 The files ``aros.size`` and ``contrib.size`` contain size measurements of the
 main AROS and contrib sources in SVN, respectively. The sizes are sampled
 periodically and added to these databases, which are then used to generate some
 nice graphs.
+>>>>>>> .r23376
 
-Each line into three whitespace separated fields: date, size in kB and directory
-(in that order). The directory part is basically redundant information and can be
-ignored.
+Jokainen rivi jakautuu kolmeen tyhjällä merkillä/merkeillä rajoitettuun
+kenttään: päiväys, koko kilotavuina ja hakemisto (tässä järjestyksessä).
+Hakemistotieto on periaattessa liiallista tietoa ja se voidaan jättää
+huomiotta.
 
 .. Note::
 
-    The sizes are sampled using the UNIX "du" program. This means that they
-    can be slightly misleading since "du" measures "disk usage" and not "total
-    file size", which means that it counts the number of blocks used on the
-    filesystem for any particular file and not the amount of data it contains.
-    So if there is a file that is 66 bytes long and the block size of the file
-    system is 4096 bytes, "du" will report 4096 bytes.
-    
-
-Credits
--------
-
-FIXME: Write
+   Koot on laskettu käyttäen UNIX:in "du" komentoa. Tämä tarkoittaa sitä että
+   ne ovat jonkin verran harhaanjohtavia koska "du" mittaa levynkäytön eikä
+   tiedostojen tarkkaa kokoa, joka taas tarkoittaa että se laskee
+   tiedostojärjestelmässä käytettyjen lohkojen määrän per tiedosto eikä
+   suinkaan sen sisältämän datan määrää. Joten jos on olemassa tiedosto joka
+   on kooltaan 66 tavua ja tiedostojärjestelmän lohkokoko on 4096 tavua,
+   ilmoittaa "du" tiedoston kooksi 4096 tavua.
 
 
-Mirrors
--------
+Ansiot
+------
 
-FIXME: Write
-
-
-Tasks
------
-
-FIXME: Write
+FIXME: Kirjoita ...
 
 
-Building
-========
+Mirror
+------
 
-Requirements
-------------
+FIXME: Kirjoita ...
 
-You will need the following to build the AROS documentation from scratch:
+
+Tehtävät
+--------
+
+FIXME: Kirjoita ...
+
+
+Koostaminen
+===========
+
+Vaatimukset
+-----------
+
+Tarvitset seuraavat koostaaksesi AROS dokumentaation alusta lähtien:
 
 + Python__ 2.2.1
 
-To build the website you will additionally need:
+Koostaaksesi myös web sivuston, tarvitset yllä mainitun lisäksi:
 
 + The `Python Imaging Library`__ 1.1.3
 
@@ -132,69 +142,73 @@ __ http://www.python.org/
 __ http://www.pythonware.com/products/pil/
 
 
-Setting up
-----------
+Asetusten teko
+--------------
 
-Before you can start building the documentation, there might be some setup
-required if the needed version of the Python interpreter is not named "python"
-on your system. If it is, you can simply skip this section.
+Ennen kuin voit aloittaa dokumentaation koostamisen, voi olla tarpeen tehdä
+joitain asetuksia jos tarvittavan Python tulkin nimi ei ole järjestelmässäsi
+nimetty "python":iksi. Jos se on siten nimetty, voit huoletta hypätä tämän
+osuuden ylitse.
 
-First, copy the default settings::
+Ensinnä tee kopio perusasetuksista::
 
     % cd AROS/documentation/scripts/config
     % cp defaults user
 
-Next, edit the ``user`` file and make sure that the variables are correct for 
-your system. An example configuration file might look like this::
+Sitten muokkaa ``user`` tiedostoa ja varmista että muuttujat ovat oikein
+asetetut. Esimerkkinä annettu konfiguraatio voisi näyttää tältä::
 
     PYTHON=python
 
-``PYTHON`` indicates the name of the Python interpreter; it may also be an
-absolute path if you don't have it in the search path. You might need to set 
-it to ``python2`` or ``python2.2`` on some systems. 
+``PYTHON`` kertoo Python tulkin nimen; se voi olla myöskin absoluuttinen polku
+jos sitä ei ole hakupolulla. Voi olla että joudut asettamaan sen esim.
+``python2`` tai ``python2.2`` joissain järjestelmissä.
 
 
-Targets
+Kohteet
 -------
 
-There are currently two targets supported: 
+Tällä hetkellä on kaksi kohdetta tuettu:
 
 + ``www`` 
-  
-  This target generates the AROS website which includes all documentation, the
-  news, picture galleries with thumbnails and status information. The
-  documentation will integrate nicely with the rest of the site.
+
+  Tämä kohde generoi AROS:in web sivuston joka sisältää kaiken dokumentaation,
+  uutiset, kuvagalleriat pienoiskuvineen sekä tilannetietoa. Dokumentaatio
+  integroituu näppärästi sivustoon.
 
 + ``html``
-  
-  This target generates standalone HTML from the documentation, suitable for
-  offline viewing and inclusion into documentation packages. 
+
+  Tämä kohde generoi itsenäisen HTML-version dokumentaatiosta, sopivan
+  näytettäväksi poissa verkosta ja sisällytettäväksi dokumentaatiopaketteihin.
 
 
-Procedure
+Menettely
 ---------
 
-To build a specific target, simply invoke the build script with the target name
-as the first argument. The current directory needs to be the root of the
-documentation tree. For example, to build the website do::
+Koostaaksesi määrätyn kohteen, kutsu build skriptiä kohteen nimellä (ja
+vaihtoehtoisesti kohteen kielellä jos et ole koostamassa englanninkielistä
+versiota). Työhakemiston täytyy olla build:ia kutsuttaessa dokumentaation
+juuripolun. Esimerkiksi koostaaksesi web sivuston, tee näin::
 
     > cd AROS/documentation
     > ./build www
 
-If you want to build the standalone HTML documentation::
+Jos tahdot koostaa itsenäisen HTML dokumentaation::
 
     > cd AROS/documentation
     > ./build html
 
-The generated files will be put in ``../bin/documentation/<target-name>``, eg.
-``../bin/documentation/www`` for the ``www`` target. Additionally, there is also
-a ``clean`` target, which will delete the entire ``../bin/documentation``
-directory.
+Generoidut tiedostot kirjoitetaan hakemistoon
+``../bin/documentation/<target-name>``, esim.
+``../bin/documentation/www`` kohteelle ``www``. Tämän lisäksi on olemassa
+"kohde" nimeltä ``clean`` joka poistaa koko ``../bin/documentation``
+hakemiston.
 
 .. Note::
-    
-    There are currently quite many intermediate files generated in the source
-    directories, so you cannot put it on a read-only filesystem. If you have
-    checked out the sources from SVN there's no need to worry: the generated
-    files are ignored as appropriate.
+
+   Koostaminen tuottaa melkoisen määrän väliaikaisia tiedostoja
+   lähdehakemistoissa, joten et voi pitää niitä vain luettavissa olevalla
+   medialla. Jos olet hakenut lähdetiedostot SVN varastosta, ei sinun tarvitse
+   huolehtia väliaikaisista tiedostoista tai valmiista koosteista: ne ohitetaan
+   tarvittaessa.
 

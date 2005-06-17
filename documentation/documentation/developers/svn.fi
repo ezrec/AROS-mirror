@@ -1,0 +1,234 @@
+================================
+Subversion:in kanssa tyˆskentely
+================================
+
+:Authors:   Aaron Digulla, Adam Chodorowski 
+:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Version:   $Revision: 22659 $
+:Date:      $Date: 2005-01-06 23:28:35 +0100 (Do, 06 Jan 2005) $
+:Status:    Done.
+:Abstract:
+    Subversion (lyhyesti SVN) on versionhallinta tyˆkalu joka yll‰pit‰‰
+    tietokantaa projektin tiedostoista. SVN:n kanssa on mahdollista tutkia ja
+    kontrolloida tiedostoihin tapahtuneita muutoksia: mit‰ muutoksia tehtiin
+    ja milloin, kuka muutokset teki, mik‰ oli muutoksen syy (jos kirjoitettu
+    kuvaus lˆytyy), mahdollisesti palauttaen aiemman tilanteen huonon
+    muutoksen j‰lkeen, yhdist‰‰ useiden henkilˆiden tekem‰t muutokset ja
+    paljon enemm‰n.
+    
+    Olennaistan on ett‰ se tekee ryhm‰tyˆskentelyn *paljon* helpommaksi
+    yhteisen projektin piiriss‰, antaen kaikkien tiet‰‰ mit‰ tiedostoille on
+    tapahtumassa ja varmistaen ett‰ kukaan ei vahingossa tuhoa jonkun toisen
+    tekemi‰ muutoksia, sek‰ huolehtii siit‰ ett‰ t‰m‰ voidaan tehd‰
+    Internetiss‰. Luonnollisestikkin k‰yt‰mme sit‰ yhteistyˆss‰mme AROS:ille.
+
+
+.. Contents::
+
+
+Esittely
+========
+
+Palvelin yll‰pit‰‰ nk. "keskusvarastoa", p‰‰tietokantaa joka sis‰lt‰‰ projektin
+yleisen julkaistun koodipohjan. Yksitt‰isill‰ kehitt‰jill‰ on omat
+"tyˆkopionsa", jotka ovat tietokannan paikallisia kopioita joltain hetkelt‰ ja
+sis‰lt‰v‰t paikalliset muutokset joita kehitt‰j‰ ei ole viel‰ siirt‰nyt
+palvelimelle. Kun kehitt‰j‰ haluaa jakaa tekem‰ns‰ muutokset muiden tiimin
+j‰senten kanssa, h‰n tekee muutokset ("commit") palvelimelle k‰ytt‰en
+asiakasohjelmaa joka huolehtii tiedon siirt‰misest‰ ja liitt‰misest‰ yhteen
+muiden tekemien muutosten kanssa.
+
+
+Ohjelmisto
+==========
+
+UNIX
+----
+
+Jos k‰yt‰t Linux:ia, FreeBSD:t‰ tai jotain muuta modernia UNIX kloonia niin
+sinun ei tarvitse tehd‰ muuta kuin asentaa j‰rjestelm‰‰si virallinen SVN
+ohjelmisto, versio 1.0 tai uudempi. Kaikki yleiset Linux jakelut sis‰lt‰v‰t
+SVN paketin.
+
+.. Note:: Palvelin pyˆritt‰‰ Subversion 1.1:t‰ jota voi k‰ytt‰‰
+          asiakasohjelman versioilla 1.0, 1.1 ja 1.2.
+
+
+AmigaOS
+-------
+
+Jos k‰yt‰t AmigaOS:ia, tarvitset TCP/IP stack:in ja asentaa jonkin SVN
+k‰‰nnˆksen. Yksi vaihtoehto on Olaf Barthel:in tekem‰ porttaus SVN:st‰
+Amigalle joka lˆytyy AmiNET__ (etsi "subversion").
+
+__ http://main.aminet.net/
+
+Palvelimelle kirjautuminen
+==========================
+
+Toisin kuin CVS:ll‰ ei sinun tarvitse erikseen kirjautua palvelimelle vaan SVN
+kysyy tarvittaessa k‰ytt‰j‰nime‰ ja salasanaa.
+
+.. Note:: 
+
+    AROS varasto toimii salasanalla suojatussa SVN palvelimessa, joka
+    tarkoittaa sit‰ ett‰ sinun t‰ytyy `hakea k‰yttˆoikeutta`__ sille
+    voidaksesi ottaa osaa kehitystyˆhˆn. Amiga Inc.:in vaatimuksesta on
+    anonyymi lukuoikeus ev‰tty.
+
+__ contribute#joining-the-team
+
+
+AROS:in l‰hdekoodin hankkiminen
+===============================
+
+K‰yt‰ "checkout" komentoa hakeaksesi AROS:in l‰hdekoodit::
+
+    > svn checkout https://sbb.hepe.com:8080/svn/aros/trunk/AROS
+
+T‰m‰ luo hakemiston nimelt‰ AROS ja asuttaa sen kaikella AROS:in alaisuuteen
+kuuluvalla l‰hdekoodilla, miss‰ voikin vier‰ht‰‰ jokunen tovi jos
+verkkoyhteytesi on hidas. "necessary" moduuli contrib:ista on nyt pakollinen
+kaikille AROS versioille kun se aiemmin tarvittiin vain i386-pc portille::
+
+    > cd AROS
+    > svn checkout https://sbb.hepe.com:8080/svn/aros/trunk/necessary
+
+.. Tip:: 
+
+    "checkout":in j‰lkeen SVN muistaa mist‰ l‰hdekoodi on per‰isin.
+
+Lis‰koodin hankinta
+===================
+
+AROS:in p‰‰koodin lis‰ksi, jonka aiemmin haimme, SVN palvelimella on muutakin
+tavaraa joka ei suoraan liity k‰yttˆj‰rjestelm‰n ytimeen. T‰m‰ tarkoittaa
+esimerkiksi "contrib" moduulia joka sis‰lt‰‰ kolmannen osapuolen ohjelmia
+jotka on portattu AROS:ille, "binaries" moduulia joka sis‰lt‰‰
+ruutukaappauksia, taustakuvia ja muuta sellaista, sek‰ "docs" moduulia joka
+sis‰lt‰‰ web sivuston l‰hdemateriaalin. Contrib moduuli on jaettu pienempiin
+osiin jotta sinun ei tarvitse hakea kaikkea mahdollista tahtoessasi vain yhden
+ohjelman.
+
+Saatavilla olevat moduulit voit listata n‰in::
+
+    > svn ls https://sbb.hepe.com:8080/svn/aros/trunk/
+
+L‰hdekoodin p‰ivitys
+====================
+
+Haettuasi l‰hdekoodin saatat haluta p‰ivitt‰‰ ne ajoittain viimeisimmill‰
+muutoksilla joita muut ovat tehneet. K‰yt‰ t‰h‰n "update" komentoa::
+
+    > cd AROS
+    > svn update
+
+T‰m‰ liitt‰‰ muiden tekem‰t muutokset omiisi ja hakee lis‰tyt uudet hakemistot
+ja tiedostot. Jos joku on muuttanut tiedostoa jota olet itsekin muokannut,
+yritt‰‰ SVN yhdist‰‰ muutokset automaattisesti. Jos te molemmat olette
+muokanneet samoja rivej‰, SVN saattaa ep‰onnistua teht‰v‰ss‰‰n. Kun n‰in
+tapahtuu, SVN varoittaa siit‰ ja liitt‰‰ **molemmat** versiot tiedostoon
+erotimenaan ``<<<<``. Sinun t‰ytyy ongelman korjaamiseksi muokata tiedostoa
+k‰sin.
+
+.. Warning:: 
+
+    Vaikka SVN onnistuisikin liitt‰m‰‰n muiden muutokset omiisi, ei se
+    v‰ltt‰m‰tt‰ tarkoita ett‰ kaikki olisi hyvin. SVN v‰litt‰‰ ainoastaa
+    *tekstist‰*; *loogisia* ristiriitoja voi silti esiinty‰ liitoksen j‰lkeen
+    (esim. joku on muuttanut jonkin k‰ytt‰m‰si funktion semantiikkaa). Sinun
+    tulisi aina tarkistaa yhdistetyt tiedostot ongelmia v‰ltt‰‰ksesi.
+
+
+Muutosten teko
+==============
+
+Jos olet tehnyt joitain muutoksia ja tunnet ett‰ tahdot jakaa tyˆsi muille,
+k‰yt‰ "commit" komentoa::
+
+    > svn commit
+
+Voit antaa listan tiedostoja; muussa tapauksessa SVN kulkee t‰m‰nhetkisen
+hakemiston ja sen alihakemistojen l‰pi lˆyt‰‰kseen muuttuneet tiedostot ja
+l‰hett‰‰ ne. Ennen palvelimelle l‰hett‰mist‰ SVN pyyt‰‰ sinulta lokimerkint‰‰.
+T‰m‰n tulisi sis‰lt‰‰ lyhyen kuvauksen siit‰ mit‰ olet muuttanut ja joissain
+tapauksissa muutosten perusteen. Hyvin kirjoitetut merkinn‰t ovat oleellisen
+t‰rkeit‰ sill‰ ne helpottavat huomattavasti muiden huomata mit‰ olet tehnyt ja
+ehk‰ myˆs miksi. Lokimerkinn‰t kootaan ja l‰hetet‰‰n p‰ivitt‰in postituslistan
+v‰lityksell‰ jotta kaikki pysyv‰t muutosten kyydiss‰.
+
+Ennen l‰hett‰mist‰ tulisi sinun tehd‰ "update" varmistaaksesi ettei viime
+hetken muutoksia ole tapahtunut niiss‰ tiedostoissa joita olet l‰hett‰m‰ss‰.
+Jos n‰in kuitenkin k‰y, t‰ytyy sinun ratkoa mahdolliset ongelmat ennen omien
+muutostesi l‰hett‰mist‰. Varmista myˆs ett‰ olet testannut muutoksesi ennen
+kuin l‰het‰t ne; ainakin niin etteiv‰t ne riko k‰‰nnˆsvaihetta.
+
+
+Uusien tiedostojen ja hakemistojen lis‰‰minen
+=============================================
+
+Lis‰t‰ksesi tiedostoja ja hakemistoja varastoon, k‰yt‰ "add" komentoa::
+
+    > svn add file.c
+    > svn add dir
+
+SVN ei matkaa automaattisesti uusien hakemistojen l‰vitse ja lis‰‰ niiden
+sis‰ltˆ‰; sinun t‰ytyy tehd‰ t‰m‰ itse. Kun olet lis‰nnyt tiedostosi ja
+hakemistosi, t‰ytyy ne liitt‰‰ kokonaisuuteen "commit" komennolla.
+
+
+Tuonti
+======
+
+Kun tahdot lis‰t‰ suuremman m‰‰r‰n tiedostoja, esim. jonkin olemassaolevan
+ohjelmiston l‰hdekoodin, "svn add" osoittautuu nopeasti rasittavaksi tavaksi
+lis‰t‰ tiedostoja varastoon. T‰h‰n sinun tulisi k‰ytt‰‰ "svn import" komentoa.
+Ik‰v‰ kyll‰ osio jossa kyseisen komennon toiminta on kuvattu SVN:n manuaalissa
+on surkeasti kirjoitettu, joten esimerkki taitaa olla paikallaan:
+
+1. Sijoita tiedostot ja hakemistot jotka tahdot importata sinne minne
+   tahdotkin, kunhan ne **eiv‰t** sijaitse tyˆkopiosi polulla. "import"
+   komennon k‰ytt‰minen olemassaolevan SVN tyˆkopion sis‰ll‰ voi johtaa mit‰
+   kummallisempiin tuloksiin, jotenka t‰t‰ tulee v‰ltt‰‰.
+
+2. Siirry siihen hakemistoon joka sis‰lt‰‰ tiedostot ja hakemistot jotka
+   tahdot importoida, esim.::
+
+       > cd name-1.2.3
+
+3. Importoi tiedostot "svn import" komennolla::
+
+       > svn import -m <logMessage> <destinationPath>
+
+   T‰m‰ importoi rekursiivisesti kaikki tiedostot ja hakemistot jotka lˆytyv‰t
+   t‰m‰n hetkisest‰ hakemistosta kohde polkuun varustettuna annetulla
+   lokimerkinn‰ll‰. Tosiasiassa aivan kaikkia tiedostoja *ei* lis‰t‰: SVN
+   ohittaa tiedostot jotka ovat yleisesti tunnettuja varmuuskopio tyyppej‰
+   sek‰ kaikki piilotiedostot, kuten ``#?.bak``, ``.#?`` ja ``#?~``.
+   
+   T‰st‰ huolimatta tulisi sinun etuk‰teen poistaa kaikki sellaiset tiedostot
+   joiden et tahdo p‰‰tyv‰n varastoon. On turha koettaa keskeytt‰‰ SVN
+   toimintaa jos n‰et jonkin turhanp‰iv‰isen tiedoston joutuvan pakettiin
+   mukaan. Pist‰ vain nimi merkille ja poista se j‰lkeenp‰in.
+   
+   Jos esimerkiksi tahdot lis‰t‰ SVN 1.1.3 l‰hdekoodin
+   "contrib/development/versioning/svn" hakemistoon::
+
+      > cd subversion-1.1.3
+      > svn import -m "Initial import of SVN 1.11.12" 
+      \ https://sbb.hepe.com:8080/contrib/development/versioning/svn
+
+Lis‰lukemista
+=============
+
+Tarkempaa tietoa SVN:st‰ lˆytyy tottakai sen manuaalisivuilta ja
+info-tiedostoista jotka seuraavat SVN:n mukana. Monilla sivustoilla on
+hyˆdyllisi‰ oppaita jotka voivat olla helppotajuisempia kuin manuaalisivut.
+Seuraavat sivut ovat erityisen suositeltavia:
+
++ `Version Control with Subversion`_
++ `Subversion Home`_
+
+.. _`Version Control with Subversion`: http://svnbook.red-bean.com/
+.. _`Subversion Home`:		       http://subversion.tigris.org/
+
