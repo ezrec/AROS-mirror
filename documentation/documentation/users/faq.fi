@@ -129,12 +129,11 @@ Mille raudalle AROS on saatavilla?
 ----------------------------------
 
 Tällä hetkellä AROS on saatavilla melko käyttökelpoisessa muodossa sekä
-natiivina että "hostattuna" (ajettuna Linux:issa, FreeBSD:ssä taikka
-NetBSD:ssä) i386-arkkitehtuurissa (esim. IBM PC AT yhteensopivat kloonit) ja
-"hostattuna" (Linux:illa ja NetBSD:llä) m68k arkkitehtuurissa (esim. Amiga,
-Atari ja Macintosh). SUN SPARC:ille ("hostattu" Solaris:illa) ja Palm
-yhteensopiville (natiivina) on järjestelmä portattu vaihtelevalla
-menestyksellä.
+natiivina että isännöitynä (ajettuna Linux:issa, FreeBSD:ssä taikka NetBSD:ssä)
+i386-arkkitehtuurissa (esim. IBM PC AT yhteensopivat kloonit) ja isännöitynä
+(Linux:illa ja NetBSD:llä) m68k arkkitehtuurissa (esim. Amiga, Atari ja
+Macintosh). SUN SPARC:ille (isännöity Solaris:illa) ja Palm-yhteensopiville
+(natiivina) on järjestelmä siirretty vaihtelevalla menestyksellä.
 
 
 Tuleeko AROS PPC:lle?
@@ -371,8 +370,8 @@ Hardfile:n geometria on seuraavanlainen::
     Block Size = 90
 
 
-Kuinka käytän AROS:in levykuvia "hosted" AROS:eissa?
-----------------------------------------------------
+Kuinka käytän AROS:in levykuvia isännöidyissä AROS:eissa?
+---------------------------------------------------------
 
 Kopioi levykuva AROS:in DiskImages hakemistoon (SYS:DiskImages, esim.
 bin/linux-i386/AROS/DiskImages) ja nimeä se uudelleen "Unit0":ksi. AROS:in

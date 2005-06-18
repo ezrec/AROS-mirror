@@ -69,10 +69,9 @@ Siinä se.
 Purku
 """""
 
-Koska AROS/i386-linux ja AROS/i386-freebsd ovat nk. "hosted" -tyyppisiä
-versioita AROS:ista, on niiden asennus helppoa. Sinun täytyy ainoastaan hakea
-alustallesi sopivat paketit `lataussivulta`_ ja purkaa ne mihin sitten
-tahdotkin::
+Koska AROS/i386-linux ja AROS/i386-freebsd ovat nk. isännöityjä versioita
+AROS:ista, on niiden asennus helppoa. Sinun täytyy ainoastaan hakea alustallesi
+sopivat paketit `lataussivulta`_ ja purkaa ne minne sitten tahdotkin::
 
     > tar -vxjf AROS-<version>-i386-<platform>-system.tar.bz2
 

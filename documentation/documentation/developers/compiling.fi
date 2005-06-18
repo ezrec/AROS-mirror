@@ -39,8 +39,8 @@ Tarvitset seuraavan litanian ohjelmia AROS:in kääntöön:
 + Automake
 + Yleiset komennot kuten cp, mv, sort, uniq, head, ...
 
-Jos tahdot kääntää nk. hosted version i386-linux tai i386-freebsd, tarvitset
-vielä seuraavat:
+Jos tahdot kääntää isännöidyn version i386-linux tai i386-freebsd:stä,
+tarvitset vielä seuraavat:
 
 + X11 development otsikot ja kirjastot
 
@@ -98,11 +98,11 @@ kaikkien kohteiden käytettävissä:
      Kytkee moduulien debuggauksen käyttöön.
 
 
-Hosted AROS/i386-linux taikka AROS/i386-freebsd
-"""""""""""""""""""""""""""""""""""""""""""""""
+Isännöity AROS/i386-linux taikka AROS/i386-freebsd
+""""""""""""""""""""""""""""""""""""""""""""""""""
 
 Sinun ei tarvitse määrittää ``--target`` optiota näille kohteille. Seuraavat
-optiot ovat käytettävissä hosted käännöksille:
+optiot ovat käytettävissä isännöidyille käännöksille:
 
 ``--with-resolution=WIDTHxHEIGHTxDEPTH [default: 800x600x8]``
     Asettaa oletus resoluution ja värisyvyyden jota AROS käyttää.
@@ -143,10 +143,10 @@ Make ja ajaa komento::
     > gmake
 
 
-Hosted AROS/i386-linux tai AROS/i386-freebsd
-""""""""""""""""""""""""""""""""""""""""""""
+Isännöity AROS/i386-linux tai AROS/i386-freebsd
+"""""""""""""""""""""""""""""""""""""""""""""""
 
-Jos olet rakentamassa hosted i386-linux tai i386-freebsd käännöstä, tulisi
+Jos olet rakentamassa isännöityä i386-linux tai i386-freebsd käännöstä, tulisi
 sinun ajaa seuraava jotta saat asianmukaisen näppäimistötuen käyttöön::
 
     > make default-x11keymaptable

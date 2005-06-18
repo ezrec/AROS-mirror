@@ -46,12 +46,12 @@ Debug tulosteet
 ``D()`` makro laajeneen ei-miksikään jos ``DEBUG`` on 0 tai jätetty
 määrittämättä. Käytä ``bug()`` makroa/funktiota jos sinun tarvitsee pakottaa
 jotain tulostetta näkyviin riippumatta ``DEBUG``:in arvosta. Käyttö on
-samanlainen kuin ``printf()`` funktiolla. Hosted versiossa tuloste näkyy siinä
-konsolissa josta AROS käynnistettiin.
+samanlainen kuin ``printf()`` funktiolla. Isännöidyssä versiossa tuloste näkyy
+siinä konsolissa josta AROS käynnistettiin.
 
--------------------------
-AROS hosted: GDB:n käyttö
--------------------------
+----------------------------
+Isännöity AROS: GDB:n käyttö
+----------------------------
 
 Voit ajaa AROS:in joko GDB:n alaisuudessa taikka käyttää GDB:tä AROS:in
 kaatumisen jättämälle core dump:ille. Älä unohda kääntää AROS:ia debug
@@ -350,8 +350,8 @@ muistin varaus ja vapautus rutiineissa, tai kutsuttaessa
 ``AvailMem(MEMF_CLEAR)``.
 
 ``CheckMem`` komentorivityökalu kutsuu tätä funktiota ja raportoi debug
-tulosteeseen (sarjaporttiin natiivissa ja konsoliin hosted versiossa). Jos
-rajan rikkomis virheitä ei ole havaittu se raportoi tämän hetkisen varausten
+tulosteeseen (sarjaporttiin natiivissa ja konsoliin isännöidyssä versiossa).
+Jos rajanrikkomis virheitä ei ole havaittu se raportoi tämän hetkisen varausten
 lukumäärän ja niiden yhteiskoon.
 
     === MUNGWALL MEMORY CHECK ============
