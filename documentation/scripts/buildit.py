@@ -39,6 +39,15 @@ if (not os.path.exists( 'credits.en' ) ) \
     )
     file( 'credits.en', 'w' ).write( CREDITS_DATA )
 
+def lang_alt( file, path='.' ):
+    ext = os.path.splitext( file )[1][1:]
+    if ext not in LANGUAGES: return file
+    fname = os.path.splitext( file )[0]
+    for lang in LANGUAGES:
+        if os.path.exists( os.path.join( path, fname + '.' + lang ) ):
+            return fname+'.'+lang
+    return file
+
 def recurse( function, path='.', depth=0 ):
     for name in os.listdir( path ):
         name = os.path.join( path, name )
@@ -92,7 +101,7 @@ def makePictures():
 
     # Second, create the galleries
     for root in DIRECTORIES:
-        output = convertWWW( os.path.join( root, 'index.en' ), 'en', options )
+        output = convertWWW( os.path.join( root, lang_alt( 'index.en', root )), 'en', options )
         
         names = os.listdir( root )
         names.sort()
@@ -104,7 +113,7 @@ def makePictures():
             if name == '.svn' or not os.path.isdir( path ): continue 
 
 	    output += '<a name=%s>\n' % name
-            output += convertWWW( os.path.join( path, 'overview.en' ), 'en', options )
+            output += convertWWW( os.path.join( path, lang_alt( 'overview.en', path )), 'en', options )
 
             for pictureName in os.listdir( path ):
                 picturePath = os.path.join( path, pictureName )
@@ -114,7 +123,8 @@ def makePictures():
                 
                 output += makePicture( 
                     picturePath, 
-                    convertWWW( os.path.splitext( picturePath )[0] + '.en', 'en', options )
+                    convertWWW( lang_alt(os.path.splitext( picturePath )[0] + '.en'), 'en', options ),
+                    LANGUAGES
                 )
 
 	    output += '</a>'
@@ -162,7 +172,7 @@ def makeNews():
     news.sort()
     news.reverse()
     current = news[:5]
-    _dst = os.path.join( SRCROOT, 'news/index.en' )
+    _dst = os.path.join( SRCROOT, lang_alt('news/index.en') )
 
     if newer( current, _dst ):
         output  = file( _dst, 'w' )
@@ -176,7 +186,7 @@ def makeNews():
     for year in archives.keys():
         archives[year].sort()
         archives[year].reverse()
-        _dst = os.path.join( SRCROOT, 'news/archive/' + year + '.en' )
+        _dst = os.path.join( SRCROOT, lang_alt('news/archive/' + year + '.en'))
 
         if newer( archives[year], _dst ):
             output = file( _dst, 'w' )
@@ -191,7 +201,7 @@ def convertWWW( src, language, options=None ):
     arguments = [
         '--no-generator',   '--language=' + language,
         '--no-source-link', '--no-datestamp',
-        '--output-encoding=iso-8859-1',
+        '--output-encoding=iso-8859-15',
         '--target-suffix=php',
         src, '' ]
 
@@ -256,7 +266,7 @@ def processHTML( src, depth ):
         arguments = [
             '--no-generator',   '--language=' + suffix,
             '--no-source-link', '--no-datestamp',
-            '--output-encoding=iso-8859-1',
+            '--output-encoding=iso-8859-15',
             '--target-suffix=html',
             '--stylesheet=' + '../' * depth + 'aros.css',
             src_abs, dst_abs

@@ -1,0 +1,7 @@
+2000-05-08
+----------
+
+`Freetype 2`__, kirjasinmoottori pehmennyksen (anti-aliasing) tuella
+rajatuille (outlined) fonttityypeille kuten TrueType ja Type1.
+
+__ http://www.freetype.org/

@@ -1,0 +1,1 @@
+largeImage = 'Large version...'
