@@ -15,6 +15,7 @@ def makePicture( path, description, languages ):
             got_it = True
             break
     if not got_it:
+        print 'Error - no gallery language file found?!'
         raise KeyError()
 
     filename  = os.path.basename( path )

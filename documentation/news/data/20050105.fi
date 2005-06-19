@@ -1,0 +1,137 @@
+==============
+Statuspäivitys
+==============
+
+:Author:   Daniel Holmen
+:Date:     2005-01-05
+
+Aloitetaan tämä statuspäivitys ilotulituksella ja isosti ONNELLISTA UUTTA
+VUOTTA kaikille AROS faneille siellä ruudun takana! Teitä on selvästikin
+enemmän kuin oletimme, 241 jäsentä rekisteröityneenä `AROS-Exec`__:iin.
+
+Tämä päivitys olisi pitänyt kirjoittaa kauan sitten - mutta kuten tavallista,
+ohjelmoijat ovat liian kiireisiä koodin kirjoittamisen kanssa tehdäkseen
+statuspäivityksiä :).
+
+No niin, sitten takaisin aiheeseen. *Paljon* on tapahtunut edellisen
+päivityksen jälkeen, joten pelkäänpä että tämä pieni päivitys vain raapaisee
+pintaa.
+
+__ http://www.aros-exec.org/
+
+
+AROS-Max
+--------
+
+AROS on saanut ensimmäisen julkaisunsa - `AROS-Max`__! Tämä on mukavasti
+konfiguroitu boottaava CD-image jonka mukana tulee enemmän tavaraa kuin
+tavanomaisiin snapshotteihin ja käännöksiin kuuluu.
+
+__ http://www.aros-max.co.uk/
+
+
+FreeBSD-isännöity AROS
+----------------------
+
+Jack Patton sai AROS:in kääntymään ja toimimaan siististi FreeBSD:ssä. Hän
+asetti myös öisen käännöksen FreeBSD-isännöidylle versiolle. Nyt meillä on
+sellainen sekä Linux:ille että FreeBSD:lle, sekä useita korjauksia
+muodostusjärjestelmään.
+
+
+Itsenäisen käännöksen tila
+--------------------------
+
+Jack Patton asetti webbisivun seuraamaan `itsenäisen käännöksen nykytilaa`__.
+Suurin osa työkaluista on portattu mutta vaativat vielä testausta ja
+korjailua.
+
+__ http://www.downbeach.net/aros/aros-compile-status.html
+
+
+Äänituki
+--------
+
+AROS:illa on viimeinkin äänituki! Martin Blom porttasi AHI järjestelmänsä
+AROS:ille. Yhdessä Georg Stegerin porttaaman Sound Blaster Live! (emu10k)
+ajurin (GPL) ja Michal Schulzin Intelin piirisarjoille porttaaman AC97 -ajurin
+kanssa (toimii myös nForce:lla) ei AROS ole enää mykkä!
+
+Jack Patton porttasi myös SDL_mixer:in AROS:ille, joten LBreakout 2 muiden
+muassa saa hiukkasen ääntä.
+
+
+Muisti
+------
+
+Michal on ollut kiireinen myös paljon tarvitun uuden DMA-tuellisen ATA.device:n
+kirjoittamisen kanssa, kun taas Johan Grip on yhä työstämässä
+trackdisk.device:n uutta versiota. Adam Chodorowski on ollut värkkäilemässä
+kasaan innolla odotettua FAT32 toteutusta.
+
+
+Verkko
+------
+
+Nic Andrews, Jack Patton, Olivier Adam ja Adam Chodorowski ovat olleet
+työskentelemässä lwIP__:in saamiseksi integroitua AROS:iin, saaden jonkin
+verran apua Staf Verhaegenilta.
+
+Sen rinnalla on Neil Cafferkey työskennellyt AmiTCP:n porttauksen kanssa.
+Joten työn alla ei ole vain yksi vaan kaksi pinoa.
+
+Nic Andrews on tekemässä myös email ohjelmaa ja auttamassa Daniel Holmenia
+IRC-clientin teossa. Ahkera poika kun Nic on, hän on portannut myös kevyen
+Cheetah__ web palvelimen Jack Pattonin kanssa.
+
+__ http://www.sics.se/~adam/lwip/
+__ http://cheetah.sourceforge.net/
+
+
+Preferences
+-----------
+
+Fabio Alemagna toteutti Screenmode Prefs:in, joten voit nyt viimeinkin vaihtaa
+näytön resoluutiota AROS:ista itsestään! Tämä tarkoitti myös melkoista määrää
+muutoksia ja korjauksia grafiikkajärjestelmään.
+
+
+Portattuja ohjelmia ja työkaluja
+--------------------------------
+
+- `ScummVM`__ (Jack Patton)
+- `XRick`__ (Jack Patton)
+- `libogg/libvorbis`__ (Adam Chodorowski)
+- `SDL_mixer`__ ja `SDL_ttf`__ (Jack Patton)
+- `D-BUS`__ (Martin Blom)
+- ... plus läjä muitakin ohjelmia.
+
+__ http://scummvm.sourceforge.net/
+__ http://www.bigorno.net/xrick/
+__ http://www.vorbis.com/
+__ http://www.libsdl.org/projects/SDL_mixer/
+__ http://www.libsdl.org/projects/SDL_ttf/
+__ http://www.freedesktop.org/Software/dbus
+
+
+Käännösjärjestelmä
+------------------
+
+Vikojen korjaamisen ja tarpeellisten muutosten teon lisäksi BSD-käännökseen,
+teki Fabio Alemagna myös lähdekoodin haku-, paikkaus- ja kääntömekanismin -
+samankaltaisen kuin BSD:llä - AROS:in käännösjärjestelmään. Pohjimmiltaan tämä
+tarkoittaa sitä että voit tehdä yhden rivin makefile:n hakemaan
+lähdekoodipaketin, patch:äämään tiedostoja, kääntämään paketin ja
+valmistelemaan binäärijakelun asennetuista tiedostoista.
+
+
+Muuta
+-----
+
+Georg Steger, Fabio Alemagna ja Staf Verhaegen ovat tehneet mahtavaa työtä
+siivotessaan ja korjaillessaan huikean määrän koodia (kuten tavallista).
+
+Niin paljon on tapahtunut sekä AROS:in koodissa että ulkoisissa ohjelmissa
+että en voi toivoakaan kattaa kaikkea tässä päivityksessä. Tarpeetonta
+sanoakaan, päivityksiä, parannuksia ja korjauksia AROS:iin on ollut paljon
+enemmän kuin mitä nyt on kuvattu. Imuroi käännös itsellesi ja kokeile!

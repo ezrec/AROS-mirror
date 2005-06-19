@@ -2,18 +2,18 @@
 AROS Application Development Manual
 ===================================
 
-:Authors:   Staf Verhaegen. Sebastian Rittau, Stefan Rieken, Matt Parsons, Adam Chodorowski,
-            Fabio Alemagna
+:Authors:   Staf Verhaegen. Sebastian Rittau, Stefan Rieken, Matt Parsons,
+            Adam Chodorowski, Fabio Alemagna
 :Copyright: Copyright © 1995-2002, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; integration started (looong way left to go).
-:ToDo:      Integrate the various parts. Update and revise. Complete... 
+:ToDo:      Integrate the various parts. Update and revise. Complete...
 
 .. Warning::
 
    This document is not finished! It is highly likely that many parts are
-   out-of-date, contain incorrect information or are simply missing 
+   out-of-date, contain incorrect information or are simply missing
    altogether. If you want to help rectify this, please contact us.
 
 .. Contents::
@@ -26,9 +26,10 @@ Quick guide to developing for AROS
 Developing for the AROS platform
 ================================
 
-This chapter explains how to develop programs that will run on the AROS platform.
-It also tells you how to compile them on the different machines that AROS runs on.
-It assumes that you have an average knowledge of the C language and basic concepts like `linking`.
+This chapter explains how to develop programs that will run on the AROS
+platform.  It also tells you how to compile them on the different machines that
+AROS runs on.  It assumes that you have an average knowledge of the C language
+and basic concepts like `linking`.
 
 How AROS libraries work
 -----------------------
@@ -54,7 +55,7 @@ run-time libraries are quite different than unix-style run-time libraries, and
 both are different than Windows (TM) run-time libraries. Since run-time
 libraries implementation and use differs among the various OS's, such libraries
 also get a more `specialized` name depending on which OS they are meant to run
-on and on which specific feature such name wants to enphatize. In fact,
+on and on which specific feature such name wants to emphatize. In fact,
 unix-style run-time libraries are also named `shared objects`, because such
 libraries preserve the semantics of link-time objects, although they're used at
 run-time and shared among many programs. Windows (TM) run-time libraries are
@@ -101,7 +102,7 @@ doesn't replicate all functionalities of the shared objects, but it's
 sufficient in many cases.
 
 .. [#] In reality, on certain flavours, this table may hold more than just
-       function pointers. On AROS for 68k, in fact, where binary compatibility 
+       function pointers. On AROS for 68k, in fact, where binary compatibility
        with AmigaOS (TM) is an issue, every entry in the table contains a JMP
        instruction followed by the function address (which is thus part of the
        JMP opcode), and the user programs don't jump to the address in the
@@ -112,62 +113,62 @@ sufficient in many cases.
        chosen for a particular AROS flavour.
 
 .. [#] If you know C++, you might think of the vectors table as the `VTable`
-       used for virtual methods, and the library base pointer as the `this` 
+       used for virtual methods, and the library base pointer as the `this`
        pointer.
 
 
 The AROS "Hello, World!" program
 --------------------------------
 
-Below is an AROS program that shows a "Hello, World!" message - a programmer's 
-tradition since ages. But to keep up the Amiga spirit, this message won't show 
+Below is an AROS program that shows a "Hello, World!" message - a programmer's
+tradition since ages. But to keep up the Amiga spirit, this message won't show
 up on the command line, but as the title of a window instead.
 
 (LINK TO HELLOWORLD.C)
 
-The first thing you will have to do in an AROS program, is #include the 
-necessary header files. These header files contain specifications for the 
-library functions and variable types. Which header you have to include for what 
-function or type, is still a mystery to me (FIXME: Scooby Doo, solve this! 
-What's the diff between protos/library.h and library/library_protos.h?). After 
-some declarations comes the "main" function, as usual in standard C (Note: 
+The first thing you will have to do in an AROS program, is #include the
+necessary header files. These header files contain specifications for the
+library functions and variable types. Which header you have to include for what
+function or type, is still a mystery to me (FIXME: Scooby Doo, solve this!
+What's the diff between protos/library.h and library/library_protos.h?). After
+some declarations comes the "main" function, as usual in standard C (Note:
 wbenchmain(?) is an alternative but not important here).
 
-The first thing the program does, is opening a library - this finally proves 
-the difference with Linux libraries. The library is called "intuition.library". 
-Intuition is AROS' (Amiga's) Graphical User Interface (GUI). The function 
-OpenLibrary will look on a few standard places for this library, and load it in. 
-All Intuition functions are now available to the user, until the library is 
-closed again. Now we call OpenWindow - an Intuition function. OpenWindow has a 
-NewWindow structure as an argument. This structure is filled with all kind of 
-information that the system needs to build the window, including the title, 
-gadgets and events. You can see, for instance, that our window title will be 
-"Hello, World!". After an event has occured (the strange "Wait" line), we 
-close everything we opened and exit. If something goes wrong, we close 
-everything we opened (but not what we haven't opened yet!) and exit too, but 
+The first thing the program does, is opening a library - this finally proves
+the difference with Linux libraries. The library is called "intuition.library".
+Intuition is AROS' (Amiga's) Graphical User Interface (GUI). The function
+OpenLibrary will look on a few standard places for this library, and load it in.
+All Intuition functions are now available to the user, until the library is
+closed again. Now we call OpenWindow - an Intuition function. OpenWindow has a
+NewWindow structure as an argument. This structure is filled with all kind of
+information that the system needs to build the window, including the title,
+gadgets and events. You can see, for instance, that our window title will be
+"Hello, World!". After an event has occured (the strange "Wait" line), we
+close everything we opened and exit. If something goes wrong, we close
+everything we opened (but not what we haven't opened yet!) and exit too, but
 under protest this time.
 
 
 Compiling on Amiga
 ------------------
 
-On Amiga, AROS can handle Amiga binaries. What you need is your favorite 
-compiler (DCC, GCC, SAS/C, VBCC - an Amiga is a box of choices!) and the 
-neccessary header files. The original AmigaOS header files may have legal 
-usage restrictions, therefore they are not easy to get online. But I have heard 
-that (link: www.schatzruhe.de) sells Amiga Developer CD's that contain these 
-headers and more nice info. But because of your interest in AROS, you might 
-also use the AROS headers instead (FIXME: is this possible?). You'll have to 
-read your compiler documentation if you don't know where to place your includes, 
-or how to compile a program. Once you compiled successfully, run your newly-born 
-executable as any other Amiga program.
+On Amiga, AROS can handle Amiga binaries. What you need is your favorite
+compiler (DCC, GCC, SAS/C, VBCC - an Amiga is a box of choices!) and the
+neccessary header files. The original AmigaOS header files may have legal
+usage restrictions, therefore they are not easy to get online. But I have heard
+that (link: www.schatzruhe.de) sells Amiga Developer CD's that contain these
+headers and more nice info. But because of your interest in AROS, you might
+also use the AROS headers instead (FIXME: is this possible?). You'll have to
+read your compiler documentation if you don't know where to place your
+includes, or how to compile a program. Once you compiled successfully, run your
+newly-born executable as any other Amiga program.
 
 
 Compiling on Linux with GCC
 ---------------------------
 
-(Note: this includes linux-m68k and BSD(?).) Once your executable is there, 
-place it somewhere where you can see it from within AROS. Start AROS, and 
+(Note: this includes linux-m68k and BSD(?).) Once your executable is there,
+place it somewhere where you can see it from within AROS. Start AROS, and
 invoke your executable from the command line.
 
 
@@ -175,7 +176,7 @@ Compiling for native-i386
 -------------------------
 
 This is quite a complex precedure and more details will be added later, for now
-just down load the binary from `AhSoDiT Productions` and enjoy the hard work 
+just down load the binary from `AhSoDiT Productions`_ and enjoy the hard work
 which has gone into making it happen.
 
 .. _`AhSoDiT Productions`: http://www.ahsodit.com/aros/
@@ -184,17 +185,17 @@ which has gone into making it happen.
 Writing somewhat more useful programs
 -------------------------------------
 
-"Hello, World!" is not a Museum of Programmer's Talent, so you might wonder if 
-there is more to AROS than that. Why dear, of course there is. But this User's 
-Guide is not a Programmer's Guide nor a Programmer's Reference Guide. Such 
-guides might be written in the future, but for now, the best AROS Programmer's 
-Guides you can find are the books that have been written for the Amiga, and 
-the best reference for AROS are the AROS autodocs (autodocs are descriptions of 
-AROS library functions that are created by parsing the AROS sources). The 
+"Hello, World!" is not a Museum of Programmer's Talent, so you might wonder if
+there is more to AROS than that. Why dear, of course there is. But this User's
+Guide is not a Programmer's Guide nor a Programmer's Reference Guide. Such
+guides might be written in the future, but for now, the best AROS Programmer's
+Guides you can find are the books that have been written for the Amiga, and
+the best reference for AROS are the AROS autodocs (autodocs are descriptions of
+AROS library functions that are created by parsing the AROS sources). The
 autodocs are available from the `home page`.
-But they are mainly useful to advanced Amiga programmers: they only provide a 
-very short explanation for each function. If you have to learn AROS programming 
-from the beginning, you really should try to find that old Amiga book, or else 
+But they are mainly useful to advanced Amiga programmers: they only provide a
+very short explanation for each function. If you have to learn AROS programming
+from the beginning, you really should try to find that old Amiga book, or else
 mail-bomb me until I'll write some Guide.
 
 --------------------------------------------------
@@ -219,7 +220,7 @@ more simple).
     :Compatible: Yes
     :Location:   exec/lists.h
 
-    Initializes a list. You must not use any list before you have 
+    Initializes a list. You must not use any list before you have
     initialized it.
 
 ``GetHead(list)``
@@ -246,7 +247,8 @@ more simple).
     :Compatible: Yes
     :Location:   exec/lists.h
 
-    Returns a pointer to the previous node of a list or ``NULL`` if there is none.
+    Returns a pointer to the previous node of a list or ``NULL`` if there is
+    none.
 
 ``ForeachNode(list,node)``
     :Compatible: Yes
@@ -339,9 +341,9 @@ you must make some modifications to your code. The only disadvantage of
 the current implementation is that the resources won't be freed if the
 program crashes.
 
-1. Add the following lines to your code. It should be the first thing 
+1. Add the following lines to your code. It should be the first thing
    seen by the compiler::
-   
+
        #define ENABLE_RT  1
 
    If you replace the 1 by 0, then RT will be silently disabled.
@@ -354,17 +356,16 @@ program crashes.
 
 5. Recompile.
 
-The advantages are that you will get errors if you try to access
-resources which you didn't allocate and that you will get a list
-of resources which you didn't free at the end of your program.
-All messages will contain the position in the code where the error
-happened (if available) and the position in the code where the
-resource was allocated (this is the reason why RT has to be compiled
-in. It could be built into the OS, too, but it would be hard
-to gather the information where an error occurred).
+The advantages are that you will get errors if you try to access resources
+which you didn't allocate and that you will get a list of resources which you
+didn't free at the end of your program. All messages will contain the position
+in the code where the error happened (if available) and the position in the
+code where the resource was allocated (this is the reason why RT has to be
+compiled in. It could be built into the OS, too, but it would be hard to gather
+the information where an error occurred).
 
-A good example about how to use RT and what it can do can be
-found in ``AROS/workbench/demos/rtdemo.c``.
+A good example about how to use RT and what it can do can be found in
+``AROS/workbench/demos/rtdemo.c``.
 
 The following resources are tracked:
 
@@ -380,8 +381,8 @@ The following resources are tracked:
   ``CloseWindow()``, ``WindowToFront()``, ``WindowToBack()``
 
 + Screens in ``OpenScreen()``, ``OpenScreenTags()``, ``OpenScreenTagList()``,
-  ``CloseScreen()``, ``ScreenToFront()``, ``ScreenToBack()``. ``CloseScreen()`` also
-  checks for open windows on the screen before closing.
+  ``CloseScreen()``, ``ScreenToFront()``, ``ScreenToBack()``. ``CloseScreen()``
+  also checks for open windows on the screen before closing.
 
 
 ---------------------
@@ -401,9 +402,9 @@ the most important ones is:
 + MetaMake: A make supervisor program. It can keep track of targets
   available in makefiles available in subdirectories a certain root directory.
   A more in depth explanation is given below.
-+ genmf: (generate makefile) A macro language for makefiles. It allows to 
++ genmf: (generate makefile) A macro language for makefiles. It allows to
   combine several make rules into one macro which can simplify writing
-  makefiles
+  makefiles.
 + Several AROS specific tools that will be explained more when appropriate
   during the rest of this documentation.
 
@@ -434,26 +435,26 @@ There exist three ways of defining a metatarget in a makefile:
 
       #MM metatarget : metaprerequisites
 
-  When a user asks to build this metatarget first the metaprerequisites will 
+  When a user asks to build this metatarget first the metaprerequisites will
   be build as metatargets and afterwards the given metatarget.
-  
+
   This form also indicates that in this makefile also a makefile target is
   present with the same.
-  
+
 + This is the same definition as in the previous paragraph only now no
   normal make target is present in the makefile with the same name as the
   metatarget::
-  
+
       #MM- metatarget : metaprerequisites
-  
+
 + This form indicates the the make target on the next line is also a
   metatarget but the prerequisites are no metaprerequisites::
-  
+
       #MM
       metatarget : prerequisites
 
 The line for the definition of a metatarget can be spread over several lines
-if one end every line with the \ character and start the next line with 
+if one end every line with the \ character and start the next line with
 ``#MM.``
 
 How MetaMake works
@@ -549,8 +550,8 @@ Usage and configuration files
 
 To build mmake, just compile ``mmake.c``. It doesn't need any other files.
 
-mmake looks for a config file ``mmake.config`` or ``.mmake.config`` in the 
-current directory for a file in the environment variable ``$MMAKE_CONFIG`` 
+mmake looks for a config file ``mmake.config`` or ``.mmake.config`` in the
+current directory for a file in the environment variable ``$MMAKE_CONFIG``
 or a file ``.mmake.config`` in the directory ``$HOME``.
 
 This file can contain the following things:
@@ -558,33 +559,33 @@ This file can contain the following things:
     ``#``
         This must be the first character in a line and begins a comment.
         Comments are completely ignored my mmake (as are empty lines).
-    
+
     ``text="[<name>]"``
         This begins a config section for the project ``name``.
         You can build targets for this project by saying ``name.target``.
-    
+
     ``maketool <tool options...>``
         Specifies the name of the tool to build a target. The
         default is ``make "TOP=$(TOP)" "CURDIR=$(CURDIR)"``.
-    
-    ``top <dir>`` 
+
+    ``top <dir>``
         Specifies the root directory for a project. You
         will later find this config option in the variable ``$(TOP)``.
         The default is the current directory.
-    
+
     ``defaultmakefilename <filename>``
         Specifies the basename for
         makefiles in your project. Basename means that mmake will consider
         other files which have this stem and an extension, too. See the
         items to generate makefiles for details. The default
         is ``Makefile``.
-    
-    ``defaulttarget <target>`` 
+
+    ``defaulttarget <target>``
         The name of the default target which
         mmake will try to make if you call it with the name of the
         project alone. The default is ``all``.
-    
-    ``genmakefilescript <cmdline...>`` 
+
+    ``genmakefilescript <cmdline...>``
         mmake will check for files
         with the basename as specified in ``defaultmakefilename``
         with the extension ``.src``. If such a file is found, the
@@ -595,12 +596,12 @@ This file can contain the following things:
         the the name of the source file as an extra option and the
         stdout of this script will be redirected to ``defaultmakefilename``.
         If this is missing, mmake will not try to regenerate makefiles.
-    
+
     ``genmakefiledeps <path>``
         This is the name of a file which is
         considered when mmake tries to decide whether a makefile must
         be regenerated. Currently, only one such file can be specified.
-    
+
     ``globalvarfile <path>``
         This is a file which contains more
         variables in the normal make(1) syntax. mmake doesn't
@@ -608,21 +609,21 @@ This file can contain the following things:
         be careful not to use such variables later (but they
         don't do any harm if they exist in the file. You should
         just not use them anywhere in mmake).
-        
-    ``add <path>`` 
+
+    ``add <path>``
         Adds a nonstandard makefile to the list of
         makefiles for this project. mmake will apply the standard
         rules to it as if the ``defaultmakefilename`` was
         like this filename.
-        
+
     ``ignoredir <path>``
         Will tell mmake to ignore directories
         with this name. Try ``ignoredir CVS`` if you use CVS to
         manage your projects' sources or ``ignoredir .svn`` if you
 	use SVN to manage your projects.
 
-Any option which is not recognised will be added to the list of known 
-variables (ie. ``foo bar`` will create a variable ``$(foo)`` which is 
+Any option which is not recognised will be added to the list of known
+variables (ie. ``foo bar`` will create a variable ``$(foo)`` which is
 expanded to ``bar``).
 
 
@@ -635,37 +636,37 @@ Here is an example::
     # Options before the first [name] are defaults. Use them for global
     # defaults
     defaultoption value
-    
+
     # Special options for the project name. You can build targets for this
     # project with "mmake name.target"
     [AROS]
-    
+
     # The root dir of the project. This can be accessed as $(TOP) in every
     # makefile or when you have to specify a path in mmake. The default is
     # the current directory
     top /home/digulla/AROS
-    
+
     # This is the default name for Makefiles. The default is "Makefile"
     defaultmakefilename makefile
-    
+
     # If you just say "mmake AROS", then mmake will go for this target
     defaulttarget AROS
-    
+
     # mmake allows to generate makefiles with a script. The makefile
     # will be regenerated if it doesn't exist, if the source file is
     # newer or if the file specified with genmakefiledeps is newer.
     # The name of the source file is generated by concatenating
     # defaultmakefilename and ".src"
     genmakefilescript gawk -f $(TOP)/scripts/genmf.gawk --assign "TOP=$(TOP)"
-    
+
     # If this file is newer than the makefile, the script
     # genmakefilescript will be executed.
     genmakefiledeps $(TOP)/scripts/genmf.gawk
-    
+
     # mmake will read this file and every variable in this file will
     # be available everywhere where you can use a variable.
     globalvarfile $(TOP)/config/host.cfg
-    
+
     # Some makefiles must have a different name than
     # defaultmakefilename. You can add them manually here.
     #add compiler/include/makefile
@@ -683,9 +684,8 @@ Genmf
 Introduction
 """"""""""""
 
-Genmf uses two files for generating a makefile. First is the macro
-definition file and finally the source makefile where these macro's can be
-used.
+Genmf uses two files for generating a makefile. First is the macro definition
+file and finally the source makefile where these macro's can be used.
 
 Syntax
 """"""
@@ -713,18 +713,18 @@ default value of an argument. If this is needed this can be done by
 surrounding the value with double quotes (``"``).
 
 Also two switches can be given:
-    
+
     ``\A``
         Is the switch to always need a value for this. When the macro is
         instantiated always a value need to be assigned to this argument.
-    
+
     ``\M``
         Is the switch to turn on multi words. This means that all the words
         following this argument will be assigned to this argument. This also
         means that after the use of such an argument no other argument can be
         present because it will become part of this argument.
 
-  
+
 Macro instantiation
 ^^^^^^^^^^^^^^^^^^^
 
@@ -735,13 +735,13 @@ by the name of the macro to instantiate (without a round brackets around it)::
 
 Two ways are possible to specify value for arguments to a macro:
 
-    ``value`` 
-        This will assign the value to the argument defined as the first 
-        argument to this macro. The time this format is used it will be 
+    ``value``
+        This will assign the value to the argument defined as the first
+        argument to this macro. The time this format is used it will be
         assigned to the second argument and so on.
-    
+
     ``option1=value``
-        This will assign the given value to the option with the specified 
+        This will assign the given value to the option with the specified
         name.
 
 When giving values to arguments also double quotes need to be used if one
@@ -802,52 +802,52 @@ With the following arguments:
 
     ``mmake=/A``
         This is the name of the metatarget that will build the programs.
-    
+
     ``files=/A``
         The basenames of the C source files that will be compiled and linked
 	to executables. For every name present in this list an executable
 	with the same name will be generated.
-    
+
     ``objdir=$(GENDIR)/$(CURDIR)``
         The directory where the compiled object files will be put.
-    
+
     ``targetdir=$(AROSDIR)/$(CURDIR)``
         The directory where the executables will be placed.
-    
+
     ``cflags=$(CFLAGS)``
         The flags to add when compiling the .c files. By default the standard
-        AROS cflags (the ``$(CFLAGS)`` make variables are taken. This also 
-        means that some flags can be added by assigning these to the 
+        AROS cflags (the ``$(CFLAGS)`` make variables are taken. This also
+        means that some flags can be added by assigning these to the
         USER_CFLAGS and USER_INCLUDES make variables before using this macro.
-    
+
     ``dflags=%(cflags)``
-        The flags to add when doing the dependency check. Default is the same 
+        The flags to add when doing the dependency check. Default is the same
         as the ``cflags``.
-    
+
     ``ldflags=$(LDFLAGS)``
         The flags to use when linking the executables. By default the
 	standard AROS link flags will be used.
-    
+
     ``uselibs=``
-        A list of static libraries to add when linking the executables. This is the
-        name of the library without the lib prefix or the .a suffix and
+        A list of static libraries to add when linking the executables. This is
+	the name of the library without the lib prefix or the .a suffix and
 	without the -l prefix for the use in the flags for the C compiler.
-        
+
         By default no libraries are used when linking the executables.
 
     ``usehostlibs=``
         A list of static libraries of the host to add when linking the
-	executables. This is the name of the library without the lib prefix or the
-	.a suffix and without the -l prefix for the use in the flags for the C
-	compiler.
-        
+	executables. This is the name of the library without the lib prefix or
+	the .a suffix and without the -l prefix for the use in the flags for
+	the C compiler.
+
         By default no libraries are used when linking the executables.
 
     ``usestartup=yes``
         Use the standard startup code for the executables. By default this
 	is yes and this is also what one wants most of the time. Only disable
 	this if you know what you are doing.
-	
+
     ``detach=no``
         Wether the executables will run detached. Defaults to no.
 
@@ -866,63 +866,65 @@ With the following arguments:
 
     ``mmake=/A``
         This is the name of the metatarget that will build the program.
-    
+
     ``progname=/A``
         The name of the executable.
-    
+
     ``files=``
         The basenames of the C source files that will be compiled and linked
-	into the executable. By default just the name of the executable is taken.
-    
+	into the executable. By default just the name of the executable is
+	taken.
+
     ``asmfiles=``
         The assembler files to assemble and include in the executable. By
 	default no asm files are included in the executable.
-    
+
     ``objdir=$(GENDIR)/$(CURDIR)``
         The directory where the compiled object files will be put.
-    
+
     ``targetdir=$(AROSDIR)/$(CURDIR)``
         The directory where the executables will be placed.
-    
+
     ``cflags=$(CFLAGS)``
         The flags to add when compiling the .c files. By default the standard
-        AROS cflags (the ``$(CFLAGS)`` make variable) are taken. This also 
-        means that some flags can be added by assigning these to the 
+        AROS cflags (the ``$(CFLAGS)`` make variable) are taken. This also
+        means that some flags can be added by assigning these to the
         USER_CFLAGS and USER_INCLUDES make variables before using this macro.
-    
+
     ``dflags=%(cflags)``
-        The flags to add when doing the dependency check. Default is the same 
+        The flags to add when doing the dependency check. Default is the same
         as the ``cflags``.
-    
+
     ``aflags=$(AFLAGS)``
         The flags to add when compiling the asm files. By default the standard
-        AROS aflags (e.g. ``$(AFLAGS)``) are taken. This also 
-        means that some flags can be added by assigning these to the 
+        AROS aflags (e.g. ``$(AFLAGS)``) are taken. This also
+        means that some flags can be added by assigning these to the
         SPECIAL_AFLAGS make variable before using this macro.
-    
+
     ``ldflags=$(LDFLAGS)``
         The flags to use when linking the executable. By default the
 	standard AROS link flags will be used.
-    
+
     ``uselibs=``
-        A list of static libraries to add when linking the executable. This is the
-        name of the library without the lib prefix or the .a suffix and
+        A list of static libraries to add when linking the executable. This is
+	the name of the library without the lib prefix or the .a suffix and
 	without the -l prefix for the use in the flags for the C compiler.
-        
+
         By default no libraries are used when linking the executable.
 
     ``usehostlibs=``
         A list of static libraries of the host to add when linking the
-	executable. This is the name of the library without the lib prefix or the
-	.a suffix and without the -l prefix for the use in the flags for the C compiler.
-        
+	executable. This is the name of the library without the lib prefix or
+	the .a suffix and without the -l prefix for the use in the flags for
+	the C compiler.
+
         By default no libraries are used when linking the executable.
 
     ``usestartup=yes``
         Use the standard startup code for the executables. By default this
 	is yes and this is also what one wants most of the time. Only disable
 	this if you know what you are doing.
-	
+
     ``detach=no``
         Wether the executable will run detached. Defaults to no.
 
@@ -930,7 +932,7 @@ Building static linklibraries
 """""""""""""""""""""""""""""
 
 Building link libraries is straight forward. A list of files will be
-compiled or assembled and collected in a link library into a specified 
+compiled or assembled and collected in a link library into a specified
 target directory.
 
 The definition of the macro is as follows::
@@ -943,40 +945,40 @@ With the meaning of the arguments as follows:
 
     ``mmake=/A``
         This is the name of the metatarget that will build the linklib.
-    
+
     ``libname=/A``
         The base name of the library to generate. The file that will be
 	generated will be called lib%(libname).a
-    
+
     ``files=$(basename $(wildcard *.c))``
     	The C files to compile and include in the library. By default all
 	the files ending in .c in the source directory will be used.
-    
+
     ``asmfiles=``
         The assembler files to assemble and include in the library. By
 	default no asm files are included in the library.
-    
+
     ``cflags=$(CFLAGS)``
         The flags to use when compiling the .c files. By default the standard
-        AROS cflags (e.g. ``$(CFLAGS)``) are taken. This also 
-        means that some flags can be added by assigning these to the 
+        AROS cflags (e.g. ``$(CFLAGS)``) are taken. This also
+        means that some flags can be added by assigning these to the
         USER_CFLAGS and USER_INCLUDES make variables before using this macro.
-    
+
     ``dflags=%(cflags)``
-        The flags to add when doing the dependency check. Default is the same 
+        The flags to add when doing the dependency check. Default is the same
         as the ``cflags``.
 
     ``aflags=$(AFLAGS)``
         The flags to add when compiling the asm files. By default the standard
-        AROS aflags (e.g. ``$(AFLAGS)``) are taken. This also 
-        means that some flags can be added by assigning these to the 
+        AROS aflags (e.g. ``$(AFLAGS)``) are taken. This also
+        means that some flags can be added by assigning these to the
         SPECIAL_AFLAGS make variable before using this macro.
-    
+
     ``objdir=$(OBJDIR)``
-        The directory where to generate all the intermediate files. The 
+        The directory where to generate all the intermediate files. The
         default value is ``$(OBJDIR)`` which in itself is by default equal to
         ``$(GENDIR)/$(CURDIR)``.
-    
+
     ``libdir=$(LIBDIR)``
         The directory to put the library in. By default the standard lib
 	directory ``$(LIBDIR)`` will be used.
@@ -1003,54 +1005,54 @@ Here is a list of the arguments for this macro:
     ``mmake=/A``
         This is the name of the metatarget that will build the module. Also a
 	``%(mmake)-quick`` and ``%(mmake)-clean`` metatarget will be defined.
-        
+
     ``modname=/A``
         This is the name of the module without the suffix.
-        
+
     ``modtype=/A``
         This is the type of the module and corresponds with the suffix of the
         module. At the moment only library, mcc, mui and mcp are supported.
 	Support for other modules is planned in the future.
-        
+
     ``conffile=%(modname).conf``
         The name of the configuration file. Default is modname.conf.
-    
+
     ``files="$(basename $(wildcard *.c))"``
-        A list of all the C source files without the .c suffix that contain the 
-        code for this module. By default all the .c files in the current 
+        A list of all the C source files without the .c suffix that contain the
+        code for this module. By default all the .c files in the current
         directory will be taken.
-        
+
     ``cflags=$(CFLAGS)``
         The flags to use when compiling the .c files. By default the standard
-        AROS cflags (e.g. ``$(CFLAGS)``) are taken. This also 
-        means that some flags can be added by assigning these to the 
+        AROS cflags (e.g. ``$(CFLAGS)``) are taken. This also
+        means that some flags can be added by assigning these to the
         USER_CFLAGS and USER_INCLUDES make variables before using this macro.
-    
+
     ``dflags=%(cflags)``
-        The flags to add when doing the dependency check. Default is the same 
+        The flags to add when doing the dependency check. Default is the same
         as the ``cflags``.
-    
+
     ``objdir=$(OBJDIR)``
-        The directory where to generate all the intermediate files. The 
+        The directory where to generate all the intermediate files. The
         default value is ``$(OBJDIR)`` which in itself is by default equal to
         ``$(GENDIR)/$(CURDIR)``.
-    
+
     ``linklibname=%(modname)``
         The name to be used for the static link library that contains the
         library autoinit code and the stubs converting C stack calling
         convention to a call off the function from the library functable with
         the appropriate calling mechanism. These stubs are normally not needed
         when the AROS defines for module functions are not disabled.
-        
+
         There will always be a file generated with the name
-        ``$(LIBDIR)/lib%(linklibname).a`` and by default linklibname will be 
+        ``$(LIBDIR)/lib%(linklibname).a`` and by default linklibname will be
         the same as modname.
-        
+
     ``uselibs=``
         A list of static libraries to add when linking the module. This is the
         name of the library without the lib prefix or the .a suffix and
 	without the -l prefix for the use in the flags for the C compiler.
-        
+
         By default no libraries are used when linking the module.
 
 
@@ -1063,52 +1065,52 @@ defined with the following lines::
     ## begin sectionname
     ...
     ## end sectionname
-    
-The interpretation of the lines between the ``##begin`` and ``##end`` 
+
+The interpretation of the lines between the ``##begin`` and ``##end``
 statement is different for every section. The following sections are defined:
 
 + ``config``
 
   The lines in this section have all the same format::
-  
+
       optionname string
-  
+
   with the string starting from the first non white space after optionname
   to the last non white space character on that line.
-  
+
   A list of all the options available:
-  
+
   ``basename``
       Followed by the base name for this module. This will be used as a
       prefix for a lot of symbols. By default the modname specified in the
       makefile is taken with the first letter capitalized.
-      
+
   ``libbase``
       The name of the variable to the library base in. By default the
       basename will be taken with Base added to the end.
-  
+
   ``libbasetype``
       The type to use for the libbase for use internally for the library code.
       E.g. the sizeof operator applied to this type has to yield the real
       size of the object. Be aware that it may not be specified as a pointer.
       By default 'struct LibHeader' is taken.
-  
+
   ``libbasetypeextern``
       The type to use for the libbase for code using the library externally.
       By default 'struct Library' is taken.
-      
+
   ``version``
       The version to compile into the module. This has to be specified as
       major.minor. By default 0.0 will be used.
-  
+
   ``date``
       The date that this library was made. This has to have the format of
       DD.MM.YYYY. As a default 00.00.0000 is taken.
-  
+
   ``libcall``
       The argument passing mechanism used for the functions in this module.
       It can be either 'stack' or 'register'. By default 'stack' will be used.
-  
+
   ``forcebase``
       This will force the use of a certain base variable in the static
       link library for auto opening the module. Thus it is only valid for
@@ -1122,11 +1124,11 @@ statement is different for every section. The following sections are defined:
   In this section all the C code has to be written that will declare all the
   type of the arguments of the function listed in the function. All valid C
   code is possible including the use of #include.
-  
+
 + ``functionlist``
 
   In this section all the functions externally accessible by programs.
-  
+
   For stack based argument passing only a list of the functions has to be
   given. For register based argument passing the names of the register have
   to be given between rounded brackets. If you have function foo with the
@@ -1164,72 +1166,72 @@ Here is a list of the arguments for this macro:
     ``mmake=/A``
         This is the name of the metatarget that will build the module. It will
         define that metatarget but won't include any metaprerequisites. If you
-        need these you can add by yourself with an extra 
-        ``#MM metatargets : ...`` line. Also a ``%(mmake)-quick`` and 
+        need these you can add by yourself with an extra
+        ``#MM metatargets : ...`` line. Also a ``%(mmake)-quick`` and
         ``%(mmake)-clean`` metatarget will be defined.
-        
+
     ``modname=/A``
         This is the name of the module without the suffix.
-        
+
     ``modtype=/A``
         This is the type of the module and corresponds with the suffix of the
         module. It can be one of the following : library gadget datatype
 	handler device resource mui mcc hidd.
-        
+
     ``conffile=%(modname).conf``
         The name of the configuration file. Default is modname.conf.
-    
+
     ``funcs=``
         A list of all the source files with the .c suffix that contain the
         code for the function of a module. Only one function per C file is
 	allowed and the function has to be defined using the AROS_LHA
 	macro's.
-        
+
     ``files=``
-        A list of all the extra files with the .c suffix that contain the 
+        A list of all the extra files with the .c suffix that contain the
         extra code for this module.
 
     ``initfile=%(modname)_init``
         The file with the init code of the module.
-	
+
     ``cflags=$(CFLAGS)``
         The flags to add when compiling the .c files. By default the standard
-        AROS cflags (the ``$(CFLAGS)`` make variables are taken. This also 
-        means that some flags can be added by assigning these to the 
+        AROS cflags (the ``$(CFLAGS)`` make variables are taken. This also
+        means that some flags can be added by assigning these to the
         USER_CFLAGS and USER_INCLUDES make variables before using this macro.
-    
+
     ``dflags=%(cflags)``
-        The flags to add when doing the dependency check. Default is the same 
+        The flags to add when doing the dependency check. Default is the same
         as the ``cflags``.
-    
+
     ``objdir=$(OBJDIR)``
-        The directory where to generate all the intermediate files. The 
+        The directory where to generate all the intermediate files. The
         default value is ``$(OBJDIR)`` which in itself is by default equal to
         ``$(GENDIR)/$(CURDIR)``.
-    
+
     ``linklibname=%(modname)``
         The name to be used for the static link library that contains the
         library autoinit code and the stubs converting C stack calling
         convention to a call off the function from the library functable with
         the appropriate calling mechanism. These stubs are normally not needed
         when the AROS defines for module function are not disabled.
-        
+
         There will always be a file generated with the name
-        ``$(LIBDIR)/lib%(linklibname).a`` and by default linklibname will be 
+        ``$(LIBDIR)/lib%(linklibname).a`` and by default linklibname will be
         the same as modname.
-        
+
     ``uselibs=``
         A list of static libraries to add when linking the module. This is the
         name of the library without the lib prefix or the .a suffix and
 	without the -l prefix for the use in the flags for the C compiler.
-        
+
         By default no libraries are used when linking the module.
 
     ``usehostlibs=``
         A list of static libraries of the host to add when linking the module. This
 	is the name of the library without the lib prefix or the .a suffix
 	and without the -l  prefix for the use in the flags for the C compiler.
-        
+
         By default no libraries are used when linking the module.
 
     ``genfunctable=``
@@ -1269,7 +1271,7 @@ file.
             libbasetypeptr  XxxBase *
 
         Variables will only be changed if they have not yet been specified.
-    
+
     ``libname <string>``
         Set libname to <string>. This is the name of the library (ie. you can
         open it with <string>.library). It will show up in the version string, too.
@@ -1347,7 +1349,7 @@ generated when the module is build. A section has a structure as follows::
     ##begin sectionname
     ...
     ##end sectionname
-    
+
 With sectionname one of the following choices:
 
 + defines
@@ -1377,41 +1379,41 @@ And the explanation of the argument to this macro:
     ``mainmmake=/A``
         The mmake of the module from which one wants to replace files or to
 	wich to add additional files.
-	
+
     ``maindir=/A``
         The directory where the object files of the main module are stored.
 	The is only the path relative to $(GENDIR). Most of the time this is the
 	directory where the source files of the module are stored.
-        
+
     ``arch=/A``
         The architecture for which these files needs to be build. It can
 	have three different forms ARCH-CPU, ARCH or CPU. For example when
 	linux-i386 is specified these files will only be build for the linux
 	port on i386. With ppc it will be build for all ppc processors and
 	with linux it will be build for all linux ports.
-	
+
     ``files=``
         The basenames of the C source files to replace add to the module.
-	
+
     ``asmfiles=``
         The basenames of the asm source files to replace or add to the module.
-        
+
     ``cflags=$(CFLAGS)``
         The flags to add when compiling the .c files. By default the standard
-        AROS cflags (the ``$(CFLAGS)`` make variables are taken. This also 
-        means that some flags can be added by assigning these to the 
+        AROS cflags (the ``$(CFLAGS)`` make variables are taken. This also
+        means that some flags can be added by assigning these to the
         USER_CFLAGS and USER_INCLUDES make variables before using this macro.
-    
+
     ``dflags=%(cflags)``
-        The flags to add when doing the dependency check. Default is the same 
+        The flags to add when doing the dependency check. Default is the same
         as the ``cflags``.
-    
+
     ``aflags=$(AFLAGS)``
         The flags to add when assembling the asm files. By default the standard
-        AROS cflags (the ``$(AFLAGS)`` make variable) are taken. This also 
-        means that some flags can be added by assigning these to the 
+        AROS cflags (the ``$(AFLAGS)`` make variable) are taken. This also
+        means that some flags can be added by assigning these to the
         SPECIAL_AFLAGS make variable before using this macro.
-    
+
     ``compiler=target``
         Indicates which compiler to use during compiling C source files.
 	Can be either target or host to use the target compiler or the
@@ -1437,10 +1439,10 @@ With the following arguments
 
     ``arch=/A``
         The arch one wants to make alias from.
-	
+
     ``alias=/A``
         The arch one wants to alias to.
-	
+
 Examples
 ^^^^^^^^
 
@@ -1454,17 +1456,17 @@ Examples
 2. For the dos.library some arch specific files are grouped together in the
    unix arch. The following lines are present in the several mmakefiles to
    make this possible
-  
+
    In config/linux/mmakefile.src::
-  
+
        %rule_archalias mainmmake=kernel-dos arch=linux alias=unix
 
    In config/freebsd/mmakefile.src::
-  
+
        %rule_archalias mainmmake=kernel-dos arch=freebsd alias=unix
 
    And finally in config/unix/dos/mmakefile.src::
-  
+
        %build_archspecific \
          mainmmake=kernel-dos maindir=rom/dos \
   	 arch=unix \
@@ -1553,9 +1555,9 @@ MAIN GUIDE
 Abstract
 ========
 
-AROS - The Amiga Research Operating System tries to port the API of the 
+AROS - The Amiga Research Operating System tries to port the API of the
 Amiga Operating System to different hardware platform. This document
-provides an introduction to programming AROS by describing how AROS works 
+provides an introduction to programming AROS by describing how AROS works
 and by describing its API.
 
 
@@ -1565,41 +1567,41 @@ Concepts
 Includes, definitions and general programming issues
 ----------------------------------------------------
 
-Include files 
+Include files
 """""""""""""
 
-AROS comes with a variety of include files. As AROS is a pointer- and 
-structure-rich operating system, these files are mainly used for defining 
+AROS comes with a variety of include files. As AROS is a pointer- and
+structure-rich operating system, these files are mainly used for defining
 these structures.
 
 Types
 """""
 
-In `exec/types.h` the following short-cuts are typedef'd. They are used often 
-in AROS, so you should nearly always include `exec/types.h`.
+In ``exec/types.h`` the following short-cuts are typedef'd. They are used often
+in AROS, so you should nearly always include ``exec/types.h``.
 
 
 `APTR`
     A generic pointer for multiple purposes.
-    
+
 `STRPTR`
     A pointer to a null-terminated string.
-    
+
 `UQUAD`
     Unsigned 64 bit integer variable.
-    
+
 `QUAD`
     Signed 64 bit integer variable.
-    
+
 `DOUBLE`
     64bit IEEE floating point variable.
-    
+
 `ULONG`
     Unsigned 32 bit integer variable (longword).
-    
+
 `LONG`
     Signed 32 bit integer variable (longword).
-    
+
 `FLOAT`
     32 bit IEEE floating point variable.
 
@@ -1625,14 +1627,14 @@ in AROS, so you should nearly always include `exec/types.h`.
 IPTR
 ^^^^
 
-There is another important typedef, `IPTR`. It is really important in AROS, 
-as it the only way to declare a field that can contain both: an integer or 
+There is another important typedef, `IPTR`. It is really important in AROS,
+as it the only way to declare a field that can contain both: an integer or
 a pointer.
 
-.. Note:: AmigaOS does not know this typedef. If you are porting a program 
-          from AmigaOS to AROS, you have to search your source for occurences 
-          of `ULONG`s that can also contain pointers, and change them into 
-          `IPTR`s. If you don't do this, your program will not work on systems 
+.. Note:: AmigaOS does not know this typedef. If you are porting a program
+          from AmigaOS to AROS, you have to search your source for occurences
+          of `ULONG` that can also contain pointers, and change them into
+          `IPTR`. If you don't do this, your program will not work on systems
           which have pointers with more than 32 bits (for example DEC Alphas
           that have 64bit pointers).
 
@@ -1640,57 +1642,57 @@ a pointer.
 BPTR
 ^^^^
 
-The so-called `BPTR`s were always a problem in AmigaOS and this problem was 
-inherited by AROS. In binary-compatible AROS versions a `BPTR` is in fact the 
+The so-called `BPTR`s were always a problem in AmigaOS and this problem was
+inherited by AROS. In binary-compatible AROS versions a `BPTR` is in fact the
 fourth of the real pointer. If, for example, a pointer points to address
 ``$80000`` the `BPTR` pointing to the same address would contain ``$20000``.
 On systems without binary-compatibility, a `BPTR` is equal to an `APTR`.
-          
+
 To convert between a normal pointer and a `BPTR` use the macros::
 
     #include <dos/bptr.h>
 
     APTR MKBADDR( BPTR bptr );
     BPTR BADDR( APTR ptr );
-          
-There also exists something called `BSTR` which is a special kind of string. 
+
+There also exists something called `BSTR` which is a special kind of string.
 We will not dicuss this here, though, because it is used only very rarely.
 
 
 History
 ^^^^^^^
 
-When the development of the Amiga started, it was designed as a pure 
-module-based games-console. As such it didn't need any means of filesystem 
-handling. The OS was created without it in mind. But Commodore, who bought 
-the Amiga, wanted a full-fletched home-computer instead of another 
-games-platform. So, a short time before the Amiga's initial presentation, 
-a filesystem was needed. Instead of wasting time in developing a custom one, 
-the filesystem of an operating systm called TRIPOS was ported to the Amiga. 
+When the development of the Amiga started, it was designed as a pure
+module-based games-console. As such it didn't need any means of filesystem
+handling. The OS was created without it in mind. But Commodore, who bought
+the Amiga, wanted a full-fletched home-computer instead of another
+games-platform. So, a short time before the Amiga's initial presentation,
+a filesystem was needed. Instead of wasting time in developing a custom one,
+the filesystem of an operating systm called TRIPOS was ported to the Amiga.
 Unfortunately TRIPOS was written in BCPL, a programming language with a quite
-eccentric pointer handling. This pointer handling was inherited by the 
-AmigaDOS and later by AROS (even though later versions of AmigaOS and also 
+eccentric pointer handling. This pointer handling was inherited by the
+AmigaDOS and later by AROS (even though later versions of AmigaOS and also
 AROS are written in C).
-          
+
 
 Program execution
 """""""""""""""""
 
-All AROS programs must return a program execution status. This status 
-expresses, if the program was executed successful, and if not, how serious 
-the case of failure was. In `dos/dos.h` the following constants are defined, 
+All AROS programs must return a program execution status. This status
+expresses, if the program was executed successful, and if not, how serious
+the case of failure was. In `dos/dos.h` the following constants are defined,
 which represent the standard return states:
 
 + `RETURN_OK` is returned, if the program executed successfully.
 
-+ `RETURN_WARN` means that the program executed successfully, but there was 
-  something not quite right. This could be returned, if for example a temporary 
++ `RETURN_WARN` means that the program executed successfully, but there was
+  something not quite right. This could be returned, if for example a temporary
   file could not be deleted after use.
-  
-  `RETURN_WARN` is also returned to express a boolean state. In this case 
+
+  `RETURN_WARN` is also returned to express a boolean state. In this case
   `RETURN_WARN` means true, while `RETURN_OK` means false.
-  
-+ `RETURN_ERROR` is returned on errors that caused the execution of the program 
+
++ `RETURN_ERROR` is returned on errors that caused the execution of the program
    to fail partly.
 
 + `RETURN_FAIL` is returned if the execution of the program failed completely.
@@ -1752,15 +1754,15 @@ To open a library you have to use a function of `exec.library`::
 
     struct Library *OpenLibrary( STRPTR name, ULONG version );
 
-`OpenLibrary()` takes two arguments:
+**OpenLibrary()** takes two arguments:
 
-name 
+name
     points to the name of the library. Normally this is just the plain name, but
     this can also be a complete (absolute or relative) path to the library.
-    
+
     .. Note:: Paths do not work with kernel-based libraries
               (ie. libraries that are included in the kernel).
-              Use absolute path only, if you know exactly, what you 
+              Use absolute path only, if you know exactly, what you
               are doing!
 
 version
@@ -1776,39 +1778,37 @@ version
 
 The following procedure is used to load the library to open:
 
-1. First, the name of the library is searched for in the list of already loaded 
-   libraries. If this library was loaded into memory before (eg. by a different 
-   program) and still is there, everything is fine and `OpenLibrary()` returns 
+1. First, the name of the library is searched for in the list of already loaded
+   libraries. If this library was loaded into memory before (eg. by a different
+   program) and still is there, everything is fine and `OpenLibrary()` returns
    now.
 
    Libraries in the kernel are always on list of loaded libraries.
 
-   .. Note:: Comparisons in this list are case sensitive! Be sure to use the 
-             right case in `name`. Normally all characters in a library name 
+   .. Note:: Comparisons in this list are case sensitive! Be sure to use the
+             right case in `name`. Normally all characters in a library name
              are lower-case.
 
-2. If the library was not found in the resident list and a path was supplied 
-   with `name`, the given file is tried to be opened. If this fails, 
+2. If the library was not found in the resident list and a path was supplied
+   with `name`, the given file is tried to be opened. If this fails,
    `OpenLibrary()` returns an error.
 
-3. If only the plain library-name was given, the library is searched for in the 
-   `current directory` first. If it's not found there, it is searched for in 
+3. If only the plain library-name was given, the library is searched for in the
+   `current directory` first. If it's not found there, it is searched for in
    the directory `LIBS:`.
 
 
-`OpenLibrary()` returns either a pointer to
-a structure, describing the library (`struct Library *`
-defined in `exec/libraries.h`)
-or `NULL`, meaning that opening the library failed for
-some reason. The resulting pointer has to be stored for the compiler's
-use. Normally it is stored in a variable in the form:
-<libraryname>Base, eg. `IntuitionBase` for the pointer to
-`intuition.library`.
+`OpenLibrary()` returns either a pointer to a structure, describing the
+library (`struct Library *` defined in ``exec/libraries.h``) or `NULL`,
+meaning that opening the library failed for some reason. The resulting pointer
+has to be stored for the compiler's use. Normally it is stored in a variable in
+the form: `<libraryname>Base`, eg. `IntuitionBase` for the pointer to
+*intuition.library*.
 
 After opening the library, you can use its functions by just calling them like
 any other function in your program. But to let your compiler know, what to do,
 you have to include the library-specific header-file. This is normally called
-proto/<libraryname>.h for C compilers.
+*proto/<libraryname>.h* for C compilers.
 
 When you have finished using the library you have to close it again to free the
 resources used by it. This is performed with::
@@ -1817,13 +1817,14 @@ resources used by it. This is performed with::
 
     void CloseLibrary( struct Library *base );
 
-:function:`CloseLibrary()` closes the library pointed to by `base`. This may
+
+**CloseLibrary()** closes the library pointed to by `base`. This may
 also be `NULL`, in which case `CloseLibrary()` does nothing.
 
 We will demonstrate the use of libraries by creating a small graphical
 hello-world program. Instead of printing ``Hello World!`` to the console, we
 will display it in a requester. A function to display a requester is
-:function:`EasyRequestArgs()`, being a function of `intuition.library`. We will
+`EasyRequestArgs()`, being a function of *intuition.library*. We will
 not discuss its usage here. For more information, see the section about
 `Requesters`.
 
@@ -1877,8 +1878,8 @@ Giving additional arguments with taglists
 
 Every library function takes a fixed number of arguments. This poses quite
 a problem with complex functions that would need a lot of arguments. To avoid
-this problem, so-called taglists were introduced. In `utility/tagitem.h` we find
-a structure `TagItem`, which contains the members `ti_Tag` and `ti_Data`.
+this problem, so-called taglists were introduced. In ``utility/tagitem.h`` we
+find a structure `TagItem`, which contains the members `ti_Tag` and `ti_Data`.
 A taglist contains of an array of this structure. The size of the list is not
 limited. The field `ti_Tag` is an identifier (often referred to as Tag) that
 declares what `ti_Data` contains. `ti_Data` is either an integer or a pointer.
@@ -1891,30 +1892,27 @@ provided, so taglists are a very flexible way of providing arguments to
 a function.
 
 There are some special tags that all functions understand
-(defined in `utility/tagitem.h`):
+(defined in ``utility/tagitem.h``):
 
 
 `TAG_DONE` and `TAG_END`
     Define the end of a taglist. Every taglist must be terminated with
-    one of it. `ti_Data` must be ignored by
-    the called function, so it doesn't have to exist in memory.
+    one of it. `ti_Data` must be ignored by the called function, so it doesn't
+    have to exist in memory.
 
-`TAG_IGNORE` 
-    means that the contents
-    of `ti_Data` is to be ignored. This tag is
+`TAG_IGNORE`
+    means that the contents of `ti_Data` is to be ignored. This tag is
     especially useful for conditional inclusion of tags.
-  
-`TAG_MORE`
-    By using this tag, you
-    can link taglists together. `ti_Data`
-    points to another taglist. Processing of the current taglist will
-    be stopped and instead the new one will be processed. This tag also
-    terminates the current taglist.
 
-`TAG_SKIP` 
-    forces the parser to
-    skip the next `ti_Data` tags. They will
-    not be processed.
+`TAG_MORE`
+    By using this tag, you can link taglists together. `ti_Data` points to
+    another taglist. Processing of the current taglist will be stopped and
+    instead the new one will be processed. This tag also terminates the current
+    taglist.
+
+`TAG_SKIP`
+    forces the parser to skip the next `ti_Data` tags. They will not be
+    processed.
 
 You may always provide `NULL` instead of a pointer to a taglist. All functions
 must be able to handle `NULL` pointers. They are equal to taglists with
@@ -1925,14 +1923,16 @@ A function that requires a taglist is::
     #include <proto/intuition.h>
 
     struct Window *OpenWindowTagList
-    ( 
-        struct NewWindow *newwin, struct TagList *taglist 
+    (
+        struct NewWindow *newwin, struct TagList *taglist
     );
 
-This function will be discussed in detail in the `chapter about windows`_. For
+This function will be discussed in detail in the
+.. FIXME:: *chapter about windows*.
+For
 now you only have to know that this function opens a new window. We set the
-argument `newwin` to ``NULL``. The only tags looked at for now are: 
-       
+argument `newwin` to ``NULL``. The only tags looked at for now are:
+
 ==========  ===============================  ========
 Tag         Description                      Type
 ==========  ===============================  ========
@@ -1957,10 +1957,10 @@ which says "Hello World!" in the title-bar, for two seconds::
     #include <proto/dos.h>
     #include <proto/intuition.h>
     #include <intuition/intuition.h>
-    
+
     struct DosLibrary    *DOSBase;
     struct IntuitionBase *IntuitionBase;
-    
+
     int main(int argc, char *argv[])
     {
         int error = RETURN_OK;
@@ -1981,7 +1981,7 @@ which says "Hello World!" in the title-bar, for two seconds::
                     { WA_Title, (IPTR)"Hello World!" },
                     { TAG_DONE, 0UL                  }
                 };
-    
+
                 win = OpenWindowTagList(NULL, tags);
                 if (win)
                 {
@@ -1989,28 +1989,28 @@ which says "Hello World!" in the title-bar, for two seconds::
                        window.
                     */
                     Delay(100);
-    
+
                     /* We close our window again. */
                     CloseWindow(win);
                 }
-    
+
                 CloseLibrary((struct Library *)IntuitionBase);
             }
             else
                 error = RETURN_FAIL;
-    
+
             CloseLibrary((struct Library *)DOSBase);
         } else
             error = RETURN_FAIL;
-    
+
         return error;
-    }  
-                  
+    }
+
 Of course, this method of setting up the taglist is quite complicated. So for
 most functions that use taglists short-cuts are available. The link-library
 `amiga.lib` provides these short-cuts for all internal AROS functions. These
 varargs versions can be used like this:
-    
+
     #include <proto/alib.h>
 
     Function( arg1, ..., argn, TAG1, data1, ..., TAG_DONE );
@@ -2019,7 +2019,7 @@ Our example above would look like this, using the varargs version of
 `OpenWindowTagList()`, called `OpenWindowTags()`::
 
     [...]
-    
+
     if( IntuitionBase )
     {
         struct Window *win;
@@ -2032,10 +2032,12 @@ Our example above would look like this, using the varargs version of
         )
         if( win )
         {
-    
+
     [...]
-          
-Much easier, isn't it? In the `section about BOOPSI`_, processing of taglists
+
+Much easier, isn't it? In the
+.. FIXME:: *section about BOOPSI*,
+processing of taglists
 will be discussed.
 
 
@@ -2049,45 +2051,45 @@ AROS implements a system of linked lists, so-called exec lists.
 A linked-list consists of a number of nodes that point to each other. Two types of nodes are defined in
 `exec/nodes.h`:
 
-`struct MinNode` 
+`struct MinNode`
     is the basic node. You don't need to know about its structure, since every
     possible action on them is handled by some library function.
-    
-`struct Node` 
+
+`struct Node`
     extends the simple struct `MinNode`. It provides some
     additional fields:
-    
+
     `ln_Name`
         Each `Node` contains a pointer to a string, describing that node.
-    
+
     `ln_Type`
         A list of types is defined in `exec/nodes.h`.
-    
+
     `ln_Pri`
         A priority, used for sorting the list.
 
 Both structures can be embedded into other structures. For example `struct
-Library`_ (defined in `exec/libraries.h`_) contains a struct `Node` at the
+Library` (defined in `exec/libraries.h`) contains a struct `Node` at the
 beginning. This way all libraries can be contained in a list. The field
-`ln_Name` points to the name of the library, `ln_Type` is set to `NT_LIBRARY` to
-show that this node is a library and `ln_Pri` reflects the *importance* of
+`ln_Name` points to the name of the library, `ln_Type` is set to `NT_LIBRARY`
+to show that this node is a library and `ln_Pri` reflects the *importance* of
 a library.
 
-Of course, we need a list containers. These are defined in `exec/lists.h`_. Like
-nodes, we have two different kind of lists:
+Of course, we need a list containers. These are defined in ``exec/lists.h``.
+Like nodes, we have two different kind of lists:
 
-`struct MinList` 
+`struct MinList`
     is the minimal list. You do not need to know about its members; look at
     it as a black-box.
-    
-`struct List` 
+
+`struct List`
     contains an additional field `lh_Type`, which
     corresponds to `ln_Type` of
     `struct Node`.
 
-`MinList`s take `MinNode`s as members, while `List`s use `Node`s. They are not
-interchangeable. While it's technically possible to use `Node`s in `MinList`s,
-you loose all their advantages.
+`MinList`:s take `MinNode`:s as members, while `List`:s use `Node`:s. They are
+not interchangeable. While it's technically possible to use `Node`:s in
+`MinList`:s, you loose all their advantages.
 
 FIXME: Macros
 
@@ -2131,18 +2133,18 @@ respectively and return a pointer to it, `Remove()` removes ``node`` from
 whatever list it is in.
 
 Of course, all list functions (except `Enqueue()`) can process ``struct
-MinList`` and ``struct MinNode``s, too.
+MinList`` and ``struct MinNode``:s, too.
 
 A list can be searched for a named node, using::
 
-#include <proto/exec.h>
+    #include <proto/exec.h>
 
-struct Node *FindName( struct List *list, STRPTR name );
+    struct Node *FindName( struct List *list, STRPTR name );
 
-``name`` is a pointer to a string that is to be compared with the ``ln_Name`` of
-the nodes in ``list``. The comparison is case-sensitive! If ``name`` matches any
-``ln_Name`` field, a pointer to the corresponding node is returned. If no field
-matches, ``NULL`` is returned.
+``name`` is a pointer to a string that is to be compared with the ``ln_Name``
+of the nodes in ``list``. The comparison is case-sensitive! If ``name`` matches
+any ``ln_Name`` field, a pointer to the corresponding node is returned. If no
+field matches, ``NULL`` is returned.
 
 .. Note::
 
@@ -2201,7 +2203,7 @@ a named node and then remove it::
         /* Find the second node */
         node = FindName(&list, "Second node");
 
-        /* 
+        /*
             If the node was found (which is always the case in this example),
             remove it.
         */
@@ -2221,7 +2223,7 @@ using the stack. But often you need larger chunks of memory or don't want to use
 the stack for some reason. In these cases you have to allocate memory by
 yourself. exec.library provides different methods for allocating memory. The two
 most important functions are::
-        
+
     #include <proto/exec.h>
 
     APTR AllocMem( ULONG size, ULONG flags );
@@ -2232,14 +2234,14 @@ provided as argument. If not enough memory was available, ``NULL`` is returned,
 instead. You must check for this condition, before using the memory. If the
 memory was successfully allocated, you can do with it whatever you want to. You
 can provide additional ``flags`` to get a special kind of memory. The following
-flags are defined in :include:`exec/memory.h`:
+flags are defined in ``exec/memory.h``:
 
 MEMF_CLEAR
     The allocated memory area is initialized with zeros.
-    
+
 MEMF_LOCAL
     Get memory that will not be flushed, if the computer is reset.
-    
+
 MEMF_CHIP
     Get memory that is accessible by graphics and sound chips. This type of
     memory is required for some functions.
@@ -2253,9 +2255,9 @@ MEMF_PUBLIC
     This flag must be set, if the memory you allocate is to be accessible by
     other tasks. If you do not set it, the allocated memory is *private* to your
     task. This issue will be discussed in detail in the chapter about
-    `inter-task communication`_.
+    .. FIXME:: *inter-task communication*.
 
-MEMF_REVERSE    
+MEMF_REVERSE
     If this flag is set, the order of the search for empty memory blocks is
     reversed. Blocks that are at the end of the list of empty memory will be
     found first.
@@ -2297,7 +2299,7 @@ You could make multiple allocations or simply use the function::
 
 As you will have noticed, `AllocEntry()` uses a pointer to a ``struct MemList``
 as only argument and as result. We find the definition of this structure in
-:include:`exec/memory.h`::
+``exec/memory.h``::
 
     struct MemEntry
     {
@@ -2308,7 +2310,7 @@ as only argument and as result. We find the definition of this structure in
         } me_Un;
         ULONG me_Length;
     };
-     
+
 
     struct MemList
     {
@@ -2347,7 +2349,7 @@ has some advantages:
   memory-pools were introduced. Instead of allocating many small chunks of
   memory, the pool-management routines allocate large chunks and then return
   small chunks out of it, when memory-requests are made.
-  
+
 + Private memory-pools have the ability to keep track of all the allocations you
   made so that all memory in a pool can be freed with one simple function-call
   (but you can also free memory individually).
@@ -2356,9 +2358,9 @@ Before a memory-pool can be used, it must be created. This is performed by the
 function::
 
     #include <proto/exec.h>
-    
+
     APTR CreatePool( ULONG flags, ULONG puddleSize, ULONG threshSize );
-          
+
 The `flags` specifies the type of memory you want to get from the
 `AllocPooled()` function . All ``MEMF_`` definitions as described above are
 allowed here.
@@ -2386,7 +2388,7 @@ available. You have to check for this condition.
 After use, all memory-pools must be destroyed by calling::
 
     #include <proto/exec.h>
-    
+
     void DeletePool( APTR pool );
 
 This function deletes the `pool` passed in. Additionally all memory that was
@@ -2398,7 +2400,7 @@ deleted!
 If you want to allocate memory out of a pool, you need to call::
 
     #include <proto/exec.h>
-    
+
     void *AllocPooled( APTR pool, ULONG size );
 
 Besides the `pool` to allocate memory from, the `size` of the memory to allocate
@@ -2409,7 +2411,7 @@ Memory allocated with `AllocPooled()` can be freed by either destroying the
 whole pool with `DeletePool()` or individually by calling::
 
     #include <proto/exec.h>
-    
+
     void FreePooled( APTR pool, void *memory, ULONG size );
 
 This function frees exactly one piece of memory that was previously allocated
@@ -2475,7 +2477,7 @@ arguments.
                 DeletePool(pool);
             }
         }
-         
+
     Each time the button ``Do Action`` is released, some memory is allocated.
     This memory is freed at the end of the program, when `DeletePool()` is
     called. Of course, the longer the program is used, the more memory will be
@@ -2495,7 +2497,7 @@ arguments.
 Obsolete Memory Pool Functions
 ''''''''''''''''''''''''''''''
 
-Memory-pools are managed with ``struct MemHeader``s. If you have a pointer to
+Memory-pools are managed with ``struct MemHeader``:s. If you have a pointer to
 such a structure, you may try to allocate some memory of its pool::
 
     #include <proto/exec.h>
@@ -2537,7 +2539,7 @@ the requested block is already allocated or is not available in the system,
 ``NULL`` is returned, instead.
 
 .. Warning::
-    
+
     The beginning of the memory block requested will be used by exec to store
     its node-data (the exact size is calculated by ``(2*sizeof (void *)) )``.
     Therefore, you *must not write* to the beginning of the memory-block!
@@ -2554,25 +2556,25 @@ Querying memory size and available memory
 To get the size of available memory, use the function::
 
     #include <proto/exec.h>
-    
+
     ULONG AvailMem( ULONG type );
 
 The `type` parameter is some of the following flags (or'ed),
 as defined in `exec/memory.h`:
 
-``MEMF_ANY``              
+``MEMF_ANY``
     Return the size of all free memory in the system.
-    
+
 ``MEMF_CHIP``
     Return the size of memory, which is accessible by graphics and sound chips.
 
 ``MEMF_FAST``
     Return the size of memory that is not accessible by graphics and sound
     chips.
-              
+
 ``MEMF_LARGEST``
     Return only the largest block, instead of all memory of the type specified.
-              
+
 You may as well specify other ``MEMF_`` flags, they will be simply ignored.
 
 .. Note::
@@ -2590,15 +2592,15 @@ Program to list memory available in the system::
     {
         printf("Total free memory: %h, largest block: %h\n",
         AvailMem(MEMF_ANY), AvailMem(MEMF_ANY|MEMF_LARGEST));
-        
+
         printf("Free chip memory:  %h, largest block: %h\n",
         AvailMem(MEMF_CHIP), AvailMem(MEMF_CHIP|MEMF_LARGEST));
-        
+
         printf("Free fast memory:  %h, largest block: %h\n",
         AvailMem(MEMF_FAST), AvailMem(MEMF_FAST|MEMF_LARGEST));
     }
-    
-    
+
+
 Adding memory to the system
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -2606,20 +2608,20 @@ This chapter is only of concern to you, if you want to write a hardware-driver
 for a piece of hardware, which adds memory to the system::
 
     #include <proto/exec.h>
-    
+
     void AddMemList
-    ( 
+    (
         ULONG size, ULONG type, LONG priority,
         APTR address, STRPTR name
     );
-          
+
 adds memory to the list of free memory in the system. You have supply the
 `address` and the `size` of the memory to add. `type` has to be set to at least
 one of the ``MEMF_`` flags, which are defined in `exec/memory.h`:
 
 ``MEMF_FAST``
     Your memory must not be accessed by graphics or sound chips.
-    
+
 ``MEMF_CHIP``
     Your memory is reachable by graphics and sound chips.
 
@@ -2642,12 +2644,12 @@ FIXME: AddMemHandler()/RemMemHandler()
 
 Files and directories
 ---------------------
-      
+
 Paths
 """""
-     
+
 FIXME: relative and absolute paths
-     
+
 
 Files
 """""
@@ -2658,14 +2660,14 @@ Reading files
 ^^^^^^^^^^^^^
 
 FIXME
-     
+
 
 Writing and creating files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 FIXME
 
-      
+
 Directories
 """"""""""""
 
@@ -2674,7 +2676,7 @@ FIXME
 
 Links
 """""
-        
+
 Links are a method to apply multiple filenames to the same physical file or
 directory. This way the file can be stored in multiple directories with
 different filenames. There are two different types of links: hardlinks and
@@ -2688,7 +2690,7 @@ file. Normally, a hardlink can't be distinguished from the orginal filename;
 effectively the file has been given a second name. Due to this, hardlinks can
 not be created over different volumes; they must be at the same volume.
 
-.. Note:: 
+.. Note::
 
     Not all filesystems support both types of links or any links at all.
 
@@ -2696,19 +2698,19 @@ not be created over different volumes; they must be at the same volume.
 Creating Links
 ^^^^^^^^^^^^^^
 
-FIXME     
+FIXME
 
 Low level file access (filehandlers)
 """"""""""""""""""""""""""""""""""""
-    
+
 FIXME
 
 
 Tasks, Processes and the Shell
 ------------------------------
 
-Tasks 
-""""" 
+Tasks
+"""""
 
 AROS is a multitasking operating system. This essentially means that multiple
 programs may be run at the same time. Every program running is called a task.
@@ -2726,9 +2728,9 @@ don't have this limitation.
 The Task Structure
 ^^^^^^^^^^^^^^^^^^
 
-A task is described by a struct ``Task`` as defined in :include:`exec/tasks.h`.
+A task is described by a struct ``Task`` as defined in ``exec/tasks.h``.
 This structure contains information about the task like the its stack, its
-signals and some management data. To get the address of a task strucure, use
+signls and some management data. To get the address of a task strucure, use::
 
     #include <proto/exec.h>
 
@@ -2750,33 +2752,35 @@ States
 
 A task must be in one of following states (as set in the field
 `tc_State` of the task structure):
-          
+
 TS_INVALID
     This state should never be set!
-	
+
 TS_ADDED
     FIXME
-            
+
 TS_RUN
-    The task is currently running. On single processor architectures only 
+    The task is currently running. On single processor architectures only
     one task can be in that state.
-   
+
 TS_READY
     The task waits for its execution.
-    
+
 TS_WAIT
-    The task waits for some signal_ to get activated. As long as this does not 
-    happen, the program doesn't become active; it is ignored on rescheduling. 
-    Most interactive programs are in this state most of the time, as they wait 
+    The task waits for some
+    .. FIXME: *signal*
+    to get activated. As long as this does not
+    happen, the program doesn't become active; it is ignored on rescheduling.
+    Most interactive programs are in this state most of the time, as they wait
     for user input.
-    
+
 TS_EXCEPT
     The task is in an exception.
 
 TS_REMOVED
     FIXME
 
-.. Note:: 
+.. Note::
 
     Do not set these states yourself, unless you know exactly what you are
     doing!
@@ -2786,7 +2790,9 @@ Priorities
 ^^^^^^^^^^
 
 The field ``tc_Node.ln_Pri`` of the ``struct Node`` embedded in the task
-structure (see :include:`exec/nodes.h` and the  `section about exec lists`_)
+structure (see ``exec/nodes.h`` and the
+.. FIXME:: *section about exec lists*
+)
 specifies the priority of the task. Possible priorities reach from ``-128`` to
 ``127``. The higher the priority the more processor time the task gets from the
 system. To set a task's priority use the function::
@@ -2817,7 +2823,7 @@ the function::
     void StackSwap( struct StackSwapStruct *sss );
 
 The only argument, ``sss``, is a pointer to a ``struct StackSwapStruct`` as
-defined in :include:`exec/tasks.h`.
+defined in ``exec/tasks.h``.
 
 ``struct StackSwapStack`` must contain a pointer to the beginning of the new
 stack (``strk_Lower``), to the end of the new stack (``stk_Upper``) and a new
@@ -2831,7 +2837,7 @@ When calling `StackSwap()`, the ``StackSwapStruct`` structure supplied as
 After finishing using the new stack, the old stack must be restored by calling
 `StackSwap()` a second time with the same ``StackSwapStruct``.
 
-.. Note:: 
+.. Note::
 
     Normally, only compilers need this function. Handle it with great care as
     different architectures use the stack in different ways!
@@ -2850,7 +2856,7 @@ The Process Structure
 ^^^^^^^^^^^^^^^^^^^^^
 
 A process is described by a ``struct Process`` as defined in
-:include:`dos/dosextens.h`. The first field in ``struct Process`` is an embedded
+``dos/dosextens.h``. The first field in ``struct Process`` is an embedded
 ``struct Task``. The extra fields include information about the file-system, the
 console, the process is connected to, and miscellaneous other stuff.
 
@@ -2889,7 +2895,7 @@ FIXME
 
 
 Creating Tasks by Hand
-^^^^^^^^^^^^^^^^^^^^^^          
+^^^^^^^^^^^^^^^^^^^^^^
 
 FIXME
 
@@ -2918,10 +2924,10 @@ by the last function by using::
 
 	#include <proto/dos.h>
 
-    LONG IoErr() 
-           
+    LONG IoErr()
+
 DOS-functions return one of the ``ERROR_`` definitions from
-:include:`dos/dos.h`. Applications can, of course, process these error-codes by
+``dos/dos.h``. Applications can, of course, process these error-codes by
 hand (which is useful in many cases), but often we just want to inform the user
 what went wrong. (Applications normally need not care, if a file could not be
 opened, because it did not exist or because it was read protected.) To output
@@ -2945,12 +2951,14 @@ returned. You are on the safe side, if your buffer has a size for 83 character
 plus the size of the header.
 
 Examples for the use of these functions can be found in later chapters,
-especially in the chapter about `Files and Directoriess`_.
+especially in the chapter about
+.. FIXME:: *Files and Directories*.
 
 Secondary error-codes of a program are handed back to the caller. If this is
 a shell, the secondary error-code will be put into the field ``cli_Result2`` of
 the shell structure (struct ``CommandLineInterface`` as defined in
-:include:`dos/dosextens.h` and `discussed later`_.
+``dos/dosextens.h`` and
+.. FIXME:: *discussed later*.
 
 You can also set the secondary error-code yourself. This way, you can either to
 pass it back to another function in your program or to your caller. To set the
@@ -2963,11 +2971,12 @@ secondary error, use::
 ``code`` is the new secondary error-code and the old secondary error-code is
 returned.
 
-`SetIoErr()` will be used in the `chapter about object orientation`_.
+`SetIoErr()` will be used in the
+.. FIXME:: *chapter about object orientation*.
 
 
 Parsing Arguments
-"""""""""""""""""        
+"""""""""""""""""
 
 FIXME: ReadArgs()
 
@@ -3118,7 +3127,7 @@ FIXME
 
 Asl Requesters (Font-, File- and Screenmode-)
 """""""""""""""""""""""""""""""""""""""""""""
-       
+
 FIXME
 
 
@@ -3165,7 +3174,7 @@ Libraries
 
 FIXME
 
-    
+
 Datatypes
 ---------
 
@@ -3177,7 +3186,7 @@ HIDDs and Devices
 
 FIXME
 
-    
+
 Filesystem handlers
 -------------------
 
@@ -3209,11 +3218,11 @@ Current Directory
 =================
 
 :Abbreviation: CD
-      
+
 The directory, which all file-system actions are relative to, as long as no
 `absolute path`s are used. Every `process` structure stores its current
 directory in the field `pr_CurrentDir`.
-	
+
 
 Process
 =======
@@ -3247,7 +3256,7 @@ Screen
 .. FIXME: Write
 
 
-  
+
 
 Standard Filehandles
 ====================
@@ -3261,10 +3270,10 @@ Standard Input
 :Abbreviation: stdin
 
 See `Standard Filehandles`_
-  
+
 
 Standard Output
-===============      
+===============
 
 :Abbreviation: stdout
 
@@ -3277,8 +3286,8 @@ Standard Error
 :Abbreviation: stderr
 
 See `Standard Filehandles`_
-    
-   
+
+
 Task
 ====
 
@@ -3288,7 +3297,7 @@ Task
 See also:
 
 + `Process`_
-  
+
 
 Window
 ======
@@ -3297,13 +3306,13 @@ Window
 
 See also:
 
-+ `Screen`__
++ `Screen`
 
 
 Screen
 ======
 
-FIXME: Write.
+.. FIXME: Write.
 
 
 -----------------------------------------
@@ -3339,7 +3348,7 @@ a RastPort by simply copying it. To be compatible, there are two new
 functions (in AROS) or macros (on Amiga): `CreateRastPort()`,
 `CloneRastPort()` and `FreeRastPort()`. You must call `CloneRastPort()` to
 create a copy or `CreateRastPort()` for an empty RastPort and
-`FreeRastPort()` after you´ve done your work with it.
+`FreeRastPort()` after you've done your work with it.
 
 This approach produces equivalent code on the Amiga but on AROS it can slow
 things down a bit. If you must preserve the original state of the RastPort,
@@ -3353,13 +3362,13 @@ since the behaviour of the underlying graphics system is undefined.
 Tag values
 ==========
 
-The original AmigaOS doesn't use the tags below `USER_TAG` (have a look a at 
-`include:utility/tagitem.h` if you don't belive me) which means, you shouldn't use
+The original AmigaOS doesn't use the tags below `USER_TAG` (have a look a at
+``utility/tagitem.h`` if you don't belive me) which means, you shouldn't use
 tags at or near `USER_TAG` because then they might interfere with the OS's
 own tags. To solve this, AROS *does* use the tags *below* `USER_TAG` and the
 various implementators need not fear that their tags may overlap with the
-ones from the system. The file `AROS/include/utility/tagitem.h` now contains the
-basic offsets for the various parts of the OS. In the future, it might be
+ones from the system. The file ``AROS/include/utility/tagitem.h`` now contains
+the basic offsets for the various parts of the OS. In the future, it might be
 possible for users to allocate ranges of tags for specific uses.
 
 
@@ -3372,7 +3381,7 @@ this. While it might look neat to the engineers who did it, it breaks our
 code. Another thing which breaks the code are small data types (eg. `WORD`,
 `UBYTE`, etc), because most systems put only integers or longs and pointers
 on the stack. So if some Msg structure expects `WORD` (see
-`include:intuition/gadgetclass.h`), this fails on every system but
+``intuition/gadgetclass.h``), this fails on every system but
 the Amiga. Then there are rumours about CPUs which use 32bit numbers and
 64bit pointers or the other way round. On these CPUs, `SetAttrs()` and all
 other function which pass TagLists over the stack will fail. To overcome
@@ -3410,16 +3419,16 @@ AROS_ASMSYMNAME(n)
 AROS_CSYMNAME(n)
     Use this macro to access the C symbol ``n`` from assembler.
 
-AROS_CDEFNAME(n) 
-    Use this macro to define the assembler symbol ``n`` in such a 
+AROS_CDEFNAME(n)
+    Use this macro to define the assembler symbol ``n`` in such a
     way that it can be accessed from C.
 
 AROS_SLIB_ENTRY(n,l)
-    Use this macro to get the name of a function ``n`` which is part of 
+    Use this macro to get the name of a function ``n`` which is part of
     the shared library ``l``.
 
-AROS_UFH#(...) 
-    Use this macro to declare a function which needs its arguments passed 
+AROS_UFH#(...)
+    Use this macro to declare a function which needs its arguments passed
     in registers. ``"#"`` is the number of arguments the function
     expects. The parameters of the macro are the return type of the function,
     its name and the parameters in `AROS_UFHA()` macros. If the function is an
@@ -3436,7 +3445,7 @@ AROS_UFC#(...)
     Call a function which needs its arguments in
     registers. Works the same way as AROS_UFH*().
 
-AROS_LH#[I](...) 
+AROS_LH#[I](...)
     Use this macro to declare a function which is part
     of a shared library. "#" is the number of arguments the function expects.
     If the function doesn't need the library base passed, you can speed up
@@ -3446,7 +3455,7 @@ AROS_LH#[I](...)
     is passed in, the offset in the function table (1 is the first offset and 5
     is the first offset for a user function) and the name of the library.
 
-AROS_LHA(t,n,r) 
+AROS_LHA(t,n,r)
     Use this macro to declare a parameter for a function
     which is declared with the AROS_LH*() macro. It takes three arguments:
     The type of the parameter, the name of the parameter and the register the
@@ -3456,10 +3465,10 @@ AROS_LC#[I](...)
     Call a function which is part of a shared library.
     Works the same way as AROS_LH*().
 
-AROS_STACK_GROWS_DOWNWARDS 
+AROS_STACK_GROWS_DOWNWARDS
     has the value 1 if it is true and 0 otherwise.
 
-AROS_BIG_ENDIAN 
+AROS_BIG_ENDIAN
     has the value 1 if the machine is big endian (eg.
     Amiga) or little endian (eg. PCs). Endianess means the way a number is
     stored in memory. Amiga stores ``0x11223344`` as ``0x11 0x22 0x33 0x44`` in
@@ -3469,39 +3478,35 @@ AROS_SIZEOFULONG
     The result of ``sizeof(ULONG)``.
 
 AROS_WORDALIGN
-    The minimal alignment of 16bit numbers in the memory of computer 
+    The minimal alignment of 16bit numbers in the memory of computer
     (`WORD` and `UWORD`).
 
-AROS_LONGALIGN 
+AROS_LONGALIGN
     The minimal alignment of 32bit numbers in the memory
     of computer (LONG and ULONG).
 
-AROS_PTRALIGN 
+AROS_PTRALIGN
     The minimal alignment of pointers in the memory of
     computer (eg. ``char *`` or APTR).
 
-AROS_DOUBLEALIGN 
+AROS_DOUBLEALIGN
     The minimal alignment of 64bit IEEE floating point
     numbers in the memory of computer (``double``).
 
-AROS_WORSTALIGN 
+AROS_WORSTALIGN
     The worst possible alignment of any data type in the
     memory of computer (mostly the same as `AROS_DOUBLEALIGN`).
 
-AROS_ALIGN(x) 
-    Get the next possible address where one can put any
-    data type. This macro will return ``x`` if any data type can be put at ``x``.
-    Most of the time, this macro is used like this: Get a buffer, put some data
-    in it and then use `AROS_ALIGN()` to find out where the next data can be
-    put.
+AROS_ALIGN(x)
+    Get the next possible address where one can put any data type. This macro
+    will return ``x`` if any data type can be put at ``x``.  Most of the time,
+    this macro is used like this: Get a buffer, put some data in it and then
+    use `AROS_ALIGN()` to find out where the next data can be put.
 
 AROS_SLOWSTACKTAGS
-    is defined, if you must use `GetTagsFromStack()`
-    and `FreeTagsFromStack()` instead of just passing the address of the tag of
-    the first tagitem.
+    is defined, if you must use `GetTagsFromStack()` and `FreeTagsFromStack()`
+    instead of just passing the address of the tag of the first tagitem.
 
-AROS_SLOWSTACKMETHODS 
-    is defined, if you must use `GetMsgFromStack()` and `FreeMsgFromStack()` 
-    instead of just passing the
-    address of the method ID.
-
+AROS_SLOWSTACKMETHODS
+    is defined, if you must use `GetMsgFromStack()` and `FreeMsgFromStack()`
+    instead of just passing the address of the method ID.
