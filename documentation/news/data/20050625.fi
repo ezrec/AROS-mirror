@@ -1,0 +1,64 @@
+==============
+Tilannekatsaus
+==============
+
+:Author:   Paolo Besser
+:Date:     2005-06-25
+
+Kesä on hyvää aikaa koodaamiselle, mutta myös kevät toi meille paljon uutta
+tavaraa. Olemme niin kiireisiä porttaamaan ohjelmistoa ja lisäämään uusia
+ominaisuuksia käyttöjärjestelmään että lähes aina unohdamme päivittää tätä
+sivustoa. No, toivomme ettei niin käy enää tulevaisuudess...
+
+On niin monia asioita joista puhua että on vaikea aloittaa yhtään mistään.
+Kaikkein ensimmäisenä mainittakoon että `Hollyvood`__:in tulevat versiot
+saadaan myös AROS:ille. Hollywood on Multimedia Application Layer Amigalle ja
+yhteensopiville järjestelmille. Se tarjoaa skriptikielen ja edistyneitä
+funktioita multimediaohjelmien luomiseen aina yksinkertaisesta
+kuvannäyttäjästä monimutkaisiin peleihin.
+
+Airsoft Software ei ole ainoa kaupallinen taho joka uskoo AROS:iin: `AHT
+Europe`__ on julistanut tukevansa AROS:ia tulevissa PPC Ariana
+laitteistoissaan. Pätkä heidän lehdistötiedotteestaan: "AHT Europe Ltd. tahtoo
+antaa asiakkailleen lisänä näppärän käyttöjärjestelmän intuitiivisella
+käyttöympäristöllä joka on suunniteltu kotikoneissa käytettäväksi".
+
+__ http://www.airsoftsoftwair.com/
+__ http://www.ahteurope.com/
+
+
+AROS-Max
+--------
+
+Uusi parannettu versio `AROS-Max`__:ista on tulossa! Tämä on kätevästi
+konfiguroitu boottaava CD-image jonka mukana tulee paljon enemmän materiaalia
+kuin tavallisissa snapshoteissa ja käännöksissä. Pysy kuulolla...
+
+__ http://www.aros-max.co.uk/
+
+
+Parannettu äänituki
+-------------------
+
+Martin Blom julkaisi uuden version AHI:sta ja se löytyy hänen
+`kotisivultaan`__.
+
+__ http://www.lysator.liu.se/~lcs/files/ahi/beta/
+
+
+Verkko
+------
+
+Nic Andrews, Jack Patton, Olivier Adam ja Adam Chodorowski ovat yhä
+työskentelemässä lwIP__:n saamiseksi integroitua AROS:iin, tukenaan Staf
+Verhaegen.
+
+Mutta suuri uutinen on että Neil Cafferkey on portannut AmiTCP:n. Tämä
+viimeinkin antaa AROS:ille TCP/IP-pinon ja voiman verkkoontua! Saatavilla on
+jo yksinkertainen FTP ohjelma ja vanhan tutun `Mosaic`__:in porttaus on
+käynnissä. No, se ei ole ehkä Mozilla, mutta ainakin saamme ainaan HTTP
+sivuston Cheetah__:illa ja surffata siellä aidolla selaimella! 
+
+__ http://www.sics.se/~adam/lwip/
+__ http://reziztanzia.free.fr/aros/contrib/aminet/comm/net/Mosaic/
+__ http://cheetah.sourceforge.net/
