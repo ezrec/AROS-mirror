@@ -1,0 +1,64 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2005-06-25
+
+Summer is a great time for coding, but also spring has brought to us lots of new
+stuff. We are so busy porting software and adding new features to the OS, that
+we always forget to update this site. Well, we hope it won't never happen again
+in the future..
+
+There are so many things to talk about, that's even difficult to begin. First of
+all, we have to announce that future versions of `Hollywood`__ will be available
+also for AROS. Hollywood is a Multimedia Application Layer for Amiga(tm) and
+compatible operating systems. It offers you a script language and advanced
+functions that allow the creation of multimedia applications, ranging from a
+simple slideshow to a complex game.
+
+Airsoft Softwair is not the only commercial believer in AROS: `AHT Europe`__ has
+announced support for AROS in their upcoming PPC Ariana set-top boxes. According
+to their press release, "AHT Europe Ltd. want to provide their customers an
+additional slim operating system with an intuitive user-interface design for
+simple home-computer functionality".
+
+__ http://www.airsoftsoftwair.com/
+__ http://www.ahteurope.com/
+
+
+AROS-Max
+--------
+
+A new improved version of `AROS-Max`__ is on the way! This is a nicely configured
+bootable CD image with a lot more snacks than the regular snapshots and builds.
+Stay tuned...
+
+__ http://www.aros-max.co.uk/
+
+
+Improved sound support
+----------------------
+
+Martin Blom has released a new version of AHI. You can find it at his `homepage`__.
+
+__ http://www.lysator.liu.se/~lcs/files/ahi/beta/
+
+
+Networking
+----------
+
+Nic Andrews, Jack Patton, Olivier Adam and Adam Chodorowski are still working 
+on integrating lwIP__ into AROS with some assistance from Staf Verhaegen.
+
+But the big news is that Neil Cafferkey has ported AmiTCP. This finally gives
+AROS a TCP/IP stack and the power of networking! There is already a simple FTP
+client available, and a porting of nice old `Mosaic`__ is on the road. Well,
+maybe it's not Mozilla, but at least we can setup an http page with Cheetah__ 
+and browse it with a real browser!
+
+__ http://www.sics.se/~adam/lwip/
+__ http://reziztanzia.free.fr/aros/contrib/aminet/comm/net/Mosaic/
+__ http://cheetah.sourceforge.net/
+
+
