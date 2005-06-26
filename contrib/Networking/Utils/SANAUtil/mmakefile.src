@@ -3,12 +3,12 @@ include $(TOP)/config/make.cfg
 
 USER_CFLAGS := -Wno-uninitialized -Wno-parentheses
 
-%build_prog mmake=contrib-Networking-Apps-SANAUtil \
+%build_prog mmake=contrib-networking-utils-sanautil \
     progname="SANAUtil" \
     files="SANAUtil" \
-    targetdir="$(CONTRIBDIR)/Networking/Apps/SANAUtil"
+    targetdir="$(CONTRIBDIR)/Networking/Utils/SANAUtil"
 
-contrib-Networking-Apps-SANAUtil : files-copy
+contrib-networking-utils-sanautil : files-copy
 %copy_files_q files="SANAUtil.doc" \
     dst="$(CONTRIBDIR)/Networking/Apps/SANAUtil"
 

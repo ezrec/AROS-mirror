@@ -1,0 +1,6 @@
+# $Id: $
+
+#MM- contrib-networking-drivers : \
+#MM     contrib-networking-drivers-etherlink3 \
+#MM     contrib-networking-drivers-prism2 \
+#MM     contrib-networking-drivers-rtl8029

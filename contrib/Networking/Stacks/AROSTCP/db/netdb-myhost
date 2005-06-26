@@ -1,0 +1,6 @@
+; This host
+HOST 192.168.0.188 arosbox
+; Domain names
+;DOMAIN localdomain
+; Name servers
+NAMESERVER 192.168.0.1

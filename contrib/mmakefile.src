@@ -17,8 +17,9 @@ include $(TOP)/config/make.cfg
 #DISABLE MM- contrib-complete : contrib-gc
 #MM- contrib-complete : contrib-development
 #MM- contrib-complete : contrib-gnu
+#MM- contrib-complete : contrib-networking
 
-CONTRIB_SRC_DIR := $(AROSDIR)/Contrib
+CONTRIB_SRC_DIR := $(AROSDIR)/contrib
 
 CONTRIB_DISK1_FILES := aminet
 CONTRIB_DISK2_FILES := DOpus

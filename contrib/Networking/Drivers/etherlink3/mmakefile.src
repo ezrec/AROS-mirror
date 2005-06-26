@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 USER_CFLAGS := -Wno-uninitialized -Wno-parentheses
 
-%build_prog mmake=contrib-Networking-Drivers-etherlink3 \
+%build_prog mmake=contrib-networking-drivers-etherlink3 \
     progname="etherlink3.device" \
     files="startup device request unit pci" \
     targetdir=$(AROSDIR)/Devs/Networks
