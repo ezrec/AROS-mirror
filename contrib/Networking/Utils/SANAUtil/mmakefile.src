@@ -10,6 +10,6 @@ USER_CFLAGS := -Wno-uninitialized -Wno-parentheses
 
 contrib-networking-utils-sanautil : files-copy
 %copy_files_q files="SANAUtil.doc" \
-    dst="$(CONTRIBDIR)/Networking/Apps/SANAUtil"
+    dst="$(CONTRIBDIR)/Networking/Utils/SANAUtil"
 
 %common
