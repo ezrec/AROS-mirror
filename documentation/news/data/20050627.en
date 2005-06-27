@@ -1,0 +1,13 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2005-06-27
+
+There is a new network card supported by AROS: Prism2 wireless adapters
+driver had been added yesterday by Neil Cafferkey. Now you can add your
+AROS laptop or desktop computer to any 802.11 wireless network and enjoy
+Wanderer unwired. 
+
+
