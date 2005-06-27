@@ -1,5 +1,23 @@
-News
-====
+Uutiset
+=======
+
+.. raw:: html
+
+   <a name="20050625">
+.. include:: /home/daikane/projects/AROS/documentation/news/data/20050625.fi
+.. raw:: html
+
+   </a>
+
+
+.. raw:: html
+
+   <a name="20050625">
+.. include:: /home/daikane/projects/AROS/documentation/news/data/20050625.en
+.. raw:: html
+
+   </a>
+
 
 .. raw:: html
 
@@ -23,24 +41,6 @@ News
 
    <a name="20040401">
 .. include:: /home/daikane/projects/AROS/documentation/news/data/20040401.en
-.. raw:: html
-
-   </a>
-
-
-.. raw:: html
-
-   <a name="20040317">
-.. include:: /home/daikane/projects/AROS/documentation/news/data/20040317.en
-.. raw:: html
-
-   </a>
-
-
-.. raw:: html
-
-   <a name="20040308">
-.. include:: /home/daikane/projects/AROS/documentation/news/data/20040308.en
 .. raw:: html
 
    </a>
