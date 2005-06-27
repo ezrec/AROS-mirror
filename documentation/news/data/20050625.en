@@ -55,7 +55,7 @@ But the big news is that Neil Cafferkey has ported AmiTCP. This finally gives
 AROS a TCP/IP stack and the power of networking! There is already a simple FTP
 client available, and a porting of nice old `Mosaic`__ is on the road. Well,
 maybe it's not Mozilla, but at least we can setup an http page with Cheetah__ 
-and browse it with a real browser!
+and browse html pages (offline) with a real browser!
 
 __ http://www.sics.se/~adam/lwip/
 __ http://reziztanzia.free.fr/aros/contrib/aminet/comm/net/Mosaic/
