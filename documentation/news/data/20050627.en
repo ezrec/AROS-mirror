@@ -6,8 +6,8 @@ Status update
 :Date:     2005-06-27
 
 There is a new network card supported by AROS: Prism2 wireless adapters
-driver had been added yesterday by Neil Cafferkey. Now you can add your
-AROS laptop or desktop computer to any 802.11 wireless network and enjoy
-Wanderer unwired. 
+driver had been added yesterday by Neil Cafferkey. So now you can use 
+also cards based on this chipset in order to connect an AROS computer
+to a network. AROS is already compatible with 3com and NE2000 cards.
 
 
