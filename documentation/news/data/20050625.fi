@@ -5,23 +5,23 @@ Tilannekatsaus
 :Author:   Paolo Besser
 :Date:     2005-06-25
 
-Kes√§ on hyv√§√§ aikaa koodaamiselle, mutta my√∂s kev√§t toi meille paljon uutta
-tavaraa. Olemme niin kiireisi√§ porttaamaan ohjelmistoa ja lis√§√§m√§√§n uusia
-ominaisuuksia k√§ytt√∂j√§rjestelm√§√§n ett√§ l√§hes aina unohdamme p√§ivitt√§√§ t√§t√§
-sivustoa. No, toivomme ettei niin k√§y en√§√§ tulevaisuudess...
+Kes‰ on hyv‰‰ aikaa koodaamiselle, mutta myˆs kev‰t toi meille paljon uutta
+tavaraa. Olemme niin kiireisi‰ porttaamaan ohjelmistoa ja lis‰‰m‰‰n uusia
+ominaisuuksia k‰yttˆj‰rjestelm‰‰n ett‰ l‰hes aina unohdamme p‰ivitt‰‰ t‰t‰
+sivustoa. No, toivomme ettei niin k‰y en‰‰ tulevaisuudessa...
 
-On niin monia asioita joista puhua ett√§ on vaikea aloittaa yht√§√§n mist√§√§n.
-Kaikkein ensimm√§isen√§ mainittakoon ett√§ `Hollyvood`__:in tulevat versiot
-saadaan my√∂s AROS:ille. Hollywood on Multimedia Application Layer Amigalle ja
-yhteensopiville j√§rjestelmille. Se tarjoaa skriptikielen ja edistyneit√§
+On niin monia asioita joista puhua ett‰ on vaikea aloittaa yht‰‰n mist‰‰n.
+Kaikkein ensimm‰isen‰ mainittakoon ett‰ `Hollyvood`__:in tulevat versiot
+saadaan myˆs AROS:ille. Hollywood on Multimedia Application Layer Amigalle ja
+yhteensopiville j‰rjestelmille. Se tarjoaa skriptikielen ja edistyneit‰
 funktioita multimediaohjelmien luomiseen aina yksinkertaisesta
-kuvann√§ytt√§j√§st√§ monimutkaisiin peleihin.
+kuvann‰ytt‰j‰st‰ monimutkaisiin peleihin.
 
 Airsoft Software ei ole ainoa kaupallinen taho joka uskoo AROS:iin: `AHT
 Europe`__ on julistanut tukevansa AROS:ia tulevissa PPC Ariana
-laitteistoissaan. P√§tk√§ heid√§n lehdist√∂tiedotteestaan: "AHT Europe Ltd. tahtoo
-antaa asiakkailleen lis√§n√§ n√§pp√§r√§n k√§ytt√∂j√§rjestelm√§n intuitiivisella
-k√§ytt√∂ymp√§rist√∂ll√§ joka on suunniteltu kotikoneissa k√§ytett√§v√§ksi".
+laitteistoissaan. P‰tk‰ heid‰n lehdistˆtiedotteestaan: "AHT Europe Ltd. tahtoo
+antaa asiakkailleen lis‰n‰ n‰pp‰r‰n k‰ytt‰j‰rjestelm‰n intuitiivisella
+k‰yttˆymp‰ristˆll‰ joka on suunniteltu kotikoneissa k‰ytett‰v‰ksi".
 
 __ http://www.airsoftsoftwair.com/
 __ http://www.ahteurope.com/
@@ -30,9 +30,9 @@ __ http://www.ahteurope.com/
 AROS-Max
 --------
 
-Uusi parannettu versio `AROS-Max`__:ista on tulossa! T√§m√§ on k√§tev√§sti
-konfiguroitu boottaava CD-image jonka mukana tulee paljon enemm√§n materiaalia
-kuin tavallisissa snapshoteissa ja k√§√§nn√∂ksiss√§. Pysy kuulolla...
+Uusi parannettu versio `AROS-Max`__:ista on tulossa! T‰m‰ on k‰tev‰sti
+konfiguroitu boottaava CD-image jonka mukana tulee paljon enemm‰n materiaalia
+kuin tavallisissa snapshoteissa ja k‰‰nnˆksiss‰. Pysy kuulolla...
 
 __ http://www.aros-max.co.uk/
 
@@ -40,7 +40,7 @@ __ http://www.aros-max.co.uk/
 Parannettu √§√§nituki
 -------------------
 
-Martin Blom julkaisi uuden version AHI:sta ja se l√∂ytyy h√§nen
+Martin Blom julkaisi uuden version AHI:sta ja se lˆytyy h‰nen
 `kotisivultaan`__.
 
 __ http://www.lysator.liu.se/~lcs/files/ahi/beta/
@@ -49,15 +49,15 @@ __ http://www.lysator.liu.se/~lcs/files/ahi/beta/
 Verkko
 ------
 
-Nic Andrews, Jack Patton, Olivier Adam ja Adam Chodorowski ovat yh√§
-ty√∂skentelem√§ss√§ lwIP__:n saamiseksi integroitua AROS:iin, tukenaan Staf
+Nic Andrews, Jack Patton, Olivier Adam ja Adam Chodorowski ovat yh‰
+tyˆskentelem‰ss‰ lwIP__:n saamiseksi integroitua AROS:iin, tukenaan Staf
 Verhaegen.
 
-Mutta suuri uutinen on ett√§ Neil Cafferkey on portannut AmiTCP:n. T√§m√§
-viimeinkin antaa AROS:ille TCP/IP-pinon ja voiman verkkoontua! Saatavilla on
+Mutta suuri uutinen on ett‰ Neil Cafferkey on portannut AmiTCP:n. T‰m‰ antaa
+AROS:ille viimeinkin TCP/IP-pinon ja voiman verkkoontua! Saatavilla on
 jo yksinkertainen FTP ohjelma ja vanhan tutun `Mosaic`__:in porttaus on
-k√§ynniss√§. No, se ei ole ehk√§ Mozilla, mutta ainakin saamme ainaan HTTP
-sivuston Cheetah__:illa ja surffata siell√§ aidolla selaimella! 
+k‰ynniss‰. No, se ei ole ehk‰ Mozilla, mutta ainakin saamme aikaan HTTP
+sivuston Cheetah__:illa ja surffata HTML sivuja (offline) aidolla selaimella!
 
 __ http://www.sics.se/~adam/lwip/
 __ http://reziztanzia.free.fr/aros/contrib/aminet/comm/net/Mosaic/
