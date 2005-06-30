@@ -436,6 +436,8 @@ if __name__ == '__main__':
             TEMPLATE = TEMPLATE + sys.argv[2]
         else:
             TEMPLATE = TEMPLATE + 'en'
+    else:
+        TEMPLATE = TEMPLATE + 'en'
     if targets.has_key( target ):
         targets[target]()
     else:
