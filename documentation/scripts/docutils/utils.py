@@ -170,7 +170,7 @@ class Reporter:
                 # note: >>stream doesn't handle UTF-8 containing error
                 #       messages properly--therefore the print below should
                 #       be commented out when/if needed
-                #print msg.astext()
+                print msg.astext()
                 print >>stream, msg.astext()
         if level >= halt_level:
             raise SystemMessage(msg)

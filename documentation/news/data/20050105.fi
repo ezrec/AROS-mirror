@@ -1,20 +1,21 @@
 ==============
-Statusp√§ivitys
+Statusp‰ivitys
 ==============
 
 :Author:   Daniel Holmen
 :Date:     2005-01-05
 
-Aloitetaan t√§m√§ statusp√§ivitys ilotulituksella ja isosti ONNELLISTA UUTTA
-VUOTTA kaikille AROS faneille siell√§ ruudun takana! Teit√§ on selv√§stikin
-enemm√§n kuin oletimme, 241 j√§sent√§ rekister√∂ityneen√§ `AROS-Exec`__:iin.
+Aloitetaan t‰m‰ statusp‰ivitys ilotulituksella ja isosti ONNELLISTA UUTTA
+VUOTTA toivotuksella kaikille AROS faneille siell‰ ruudun takana! Teit‰ on
+selv‰stikin enemm‰n kuin oletimme, 241 j‰sent‰ rekisterˆityneen‰
+`AROS-Exec`__:iin.
 
-T√§m√§ p√§ivitys olisi pit√§nyt kirjoittaa kauan sitten - mutta kuten tavallista,
-ohjelmoijat ovat liian kiireisi√§ koodin kirjoittamisen kanssa tehd√§kseen
-statusp√§ivityksi√§ :).
+T‰m‰ p‰ivitys olisi pit‰nyt kirjoittaa kauan sitten - mutta kuten tavallista,
+ohjelmoijat ovat liian kiireisi‰ koodin kirjoittamisen kanssa tehd‰kseen
+statusp‰ivityksi‰ :).
 
 No niin, sitten takaisin aiheeseen. *Paljon* on tapahtunut edellisen
-p√§ivityksen j√§lkeen, joten pelk√§√§np√§ ett√§ t√§m√§ pieni p√§ivitys vain raapaisee
+p‰ivityksen j‰lkeen, joten pelk‰‰np‰ ett‰ t‰m‰ pieni p‰ivitys vain raapaisee
 pintaa.
 
 __ http://www.aros-exec.org/
@@ -23,50 +24,50 @@ __ http://www.aros-exec.org/
 AROS-Max
 --------
 
-AROS on saanut ensimm√§isen julkaisunsa - `AROS-Max`__! T√§m√§ on mukavasti
-konfiguroitu boottaava CD-image jonka mukana tulee enemm√§n tavaraa kuin
-tavanomaisiin snapshotteihin ja k√§√§nn√∂ksiin kuuluu.
+AROS on saanut ensimm‰isen julkaisunsa - `AROS-Max`__! T‰m‰ on mukavasti
+konfiguroitu boottaava CD-image jonka mukana tulee enemm‰n tavaraa kuin
+tavanomaisiin snapshotteihin ja k‰‰nnˆksiin kuuluu.
 
 __ http://www.aros-max.co.uk/
 
 
-FreeBSD-is√§nn√∂ity AROS
+FreeBSD-is‰nnˆity AROS
 ----------------------
 
-Jack Patton sai AROS:in k√§√§ntym√§√§n ja toimimaan siististi FreeBSD:ss√§. H√§n
-asetti my√∂s √∂isen k√§√§nn√∂ksen FreeBSD-is√§nn√∂idylle versiolle. Nyt meill√§ on
-sellainen sek√§ Linux:ille ett√§ FreeBSD:lle, sek√§ useita korjauksia
-muodostusj√§rjestelm√§√§n.
+Jack Patton sai AROS:in k‰‰ntym‰‰n ja toimimaan siististi FreeBSD:ss‰. H‰n
+asetti myˆs ˆisen k‰‰nnˆksen FreeBSD-is‰nnˆidylle versiolle. Nyt meill‰ on
+sellainen sek‰ Linux:ille ett‰ FreeBSD:lle, sek‰ useita korjauksia
+muodostusj‰rjestelm‰‰n.
 
 
-Itsen√§isen k√§√§nn√∂ksen tila
+Itsen‰isen k‰‰nnˆksen tila
 --------------------------
 
-Jack Patton asetti webbisivun seuraamaan `itsen√§isen k√§√§nn√∂ksen nykytilaa`__.
-Suurin osa ty√∂kaluista on portattu mutta vaativat viel√§ testausta ja
+Jack Patton asetti webbisivun seuraamaan `itsen‰isen k‰‰nnˆksen nykytilaa`__.
+Suurin osa tyˆkaluista on portattu mutta ne vaativat viel‰ testausta ja
 korjailua.
 
 __ http://www.downbeach.net/aros/aros-compile-status.html
 
 
-√Ñ√§nituki
+ƒ‰nituki
 --------
 
-AROS:illa on viimeinkin √§√§nituki! Martin Blom porttasi AHI j√§rjestelm√§ns√§
-AROS:ille. Yhdess√§ Georg Stegerin porttaaman Sound Blaster Live! (emu10k)
+AROS:illa on viimeinkin ƒ‰nituki! Martin Blom porttasi AHI j‰rjestelm‰ns‰
+AROS:ille. Yhdess‰ Georg Stegerin porttaaman Sound Blaster Live! (emu10k)
 ajurin (GPL) ja Michal Schulzin Intelin piirisarjoille porttaaman AC97 -ajurin
-kanssa (toimii my√∂s nForce:lla) ei AROS ole en√§√§ mykk√§!
+kanssa (toimii myˆs nForce:lla) ei AROS ole en‰‰ mykk‰!
 
-Jack Patton porttasi my√∂s SDL_mixer:in AROS:ille, joten LBreakout 2 muiden
-muassa saa hiukkasen √§√§nt√§.
+Jack Patton porttasi myˆs SDL_mixer:in AROS:ille, joten LBreakout 2 muiden
+muassa saa hiukkasen ‰‰nt‰
 
 
 Muisti
 ------
 
-Michal on ollut kiireinen my√∂s paljon tarvitun uuden DMA-tuellisen ATA.device:n
-kirjoittamisen kanssa, kun taas Johan Grip on yh√§ ty√∂st√§m√§ss√§
-trackdisk.device:n uutta versiota. Adam Chodorowski on ollut v√§rkk√§ilem√§ss√§
+Michal on ollut kiireinen myˆs paljon tarvitun uuden DMA-tuellisen ATA.device:n
+kirjoittamisen kanssa, kun taas Johan Grip on yh‰ tyˆst‰m‰ss‰
+trackdisk.device:n uutta versiota. Adam Chodorowski on ollut v‰rkk‰ilem‰ss‰
 kasaan innolla odotettua FAT32 toteutusta.
 
 
@@ -74,14 +75,14 @@ Verkko
 ------
 
 Nic Andrews, Jack Patton, Olivier Adam ja Adam Chodorowski ovat olleet
-ty√∂skentelem√§ss√§ lwIP__:in saamiseksi integroitua AROS:iin, saaden jonkin
+tyˆskentelem‰ss‰ lwIP__:in saamiseksi integroitua AROS:iin, saaden jonkin
 verran apua Staf Verhaegenilta.
 
-Sen rinnalla on Neil Cafferkey ty√∂skennellyt AmiTCP:n porttauksen kanssa.
-Joten ty√∂n alla ei ole vain yksi vaan kaksi pinoa.
+Sen rinnalla on Neil Cafferkey tyˆskennellyt AmiTCP:n porttauksen kanssa.
+Joten tyˆn alla ei ole vain yksi vaan kaksi pinoa.
 
-Nic Andrews on tekem√§ss√§ my√∂s email ohjelmaa ja auttamassa Daniel Holmenia
-IRC-clientin teossa. Ahkera poika kun Nic on, h√§n on portannut my√∂s kevyen
+Nic Andrews on tekem‰ss‰ myˆs email ohjelmaa ja auttamassa Daniel Holmenia
+IRC-clientin teossa. Ahkera poika kun Nic on, h‰n on portannut myˆs kevyen
 Cheetah__ web palvelimen Jack Pattonin kanssa.
 
 __ http://www.sics.se/~adam/lwip/
@@ -92,11 +93,11 @@ Preferences
 -----------
 
 Fabio Alemagna toteutti Screenmode Prefs:in, joten voit nyt viimeinkin vaihtaa
-n√§yt√∂n resoluutiota AROS:ista itsest√§√§n! T√§m√§ tarkoitti my√∂s melkoista m√§√§r√§√§
-muutoksia ja korjauksia grafiikkaj√§rjestelm√§√§n.
+n‰ytˆn resoluutiota AROS:ista itsest‰‰n! T‰m‰ tarkoitti myˆs melkoista m‰‰r‰‰
+muutoksia ja korjauksia grafiikkaj‰rjestelm‰‰n.
 
 
-Portattuja ohjelmia ja ty√∂kaluja
+Portattuja ohjelmia ja tyˆkaluja
 --------------------------------
 
 - `ScummVM`__ (Jack Patton)
@@ -114,24 +115,24 @@ __ http://www.libsdl.org/projects/SDL_ttf/
 __ http://www.freedesktop.org/Software/dbus
 
 
-K√§√§nn√∂sj√§rjestelm√§
+K‰‰nnˆsj‰rjestelm‰
 ------------------
 
-Vikojen korjaamisen ja tarpeellisten muutosten teon lis√§ksi BSD-k√§√§nn√∂kseen,
-teki Fabio Alemagna my√∂s l√§hdekoodin haku-, paikkaus- ja k√§√§nt√∂mekanismin -
-samankaltaisen kuin BSD:ll√§ - AROS:in k√§√§nn√∂sj√§rjestelm√§√§n. Pohjimmiltaan t√§m√§
-tarkoittaa sit√§ ett√§ voit tehd√§ yhden rivin makefile:n hakemaan
-l√§hdekoodipaketin, patch:√§√§m√§√§n tiedostoja, k√§√§nt√§m√§√§n paketin ja
-valmistelemaan bin√§√§rijakelun asennetuista tiedostoista.
+Vikojen korjaamisen ja tarpeellisten muutosten teon lis‰ksi BSD-k‰‰nnˆkseen,
+teki Fabio Alemagna myˆs l‰hdekoodin haku-, paikkaus- ja k‰‰ntˆmekanismin -
+samankaltaisen kuin BSD:ll‰ - AROS:in k‰‰nnˆsj‰rjestelm‰‰n. Pohjimmiltaan t‰m‰
+tarkoittaa sit‰ ett‰ voit tehd‰ yhden rivin makefile:n hakemaan
+l‰hdekoodipaketin, patch:‰‰m‰‰n tiedostoja, k‰‰nt‰m‰‰n paketin ja
+valmistelemaan bin‰‰rijakelun asennetuista tiedostoista.
 
 
 Muuta
 -----
 
-Georg Steger, Fabio Alemagna ja Staf Verhaegen ovat tehneet mahtavaa ty√∂t√§
-siivotessaan ja korjaillessaan huikean m√§√§r√§n koodia (kuten tavallista).
+Georg Steger, Fabio Alemagna ja Staf Verhaegen ovat tehneet mahtavaa tyˆt‰
+siivotessaan ja korjaillessaan huikean m‰‰r‰n koodia (kuten tavallista).
 
-Niin paljon on tapahtunut sek√§ AROS:in koodissa ett√§ ulkoisissa ohjelmissa
-ett√§ en voi toivoakaan kattaa kaikkea t√§ss√§ p√§ivityksess√§. Tarpeetonta
-sanoakaan, p√§ivityksi√§, parannuksia ja korjauksia AROS:iin on ollut paljon
-enemm√§n kuin mit√§ nyt on kuvattu. Imuroi k√§√§nn√∂s itsellesi ja kokeile!
+Niin paljon on tapahtunut sek√§ AROS:in koodissa ett‰ ulkoisissa ohjelmissa
+ett‰ en voi toivoakaan kattaa kaikkea t‰ss‰ p‰ivityksess‰. Tarpeetonta
+sanoakaan, p‰ivityksi‰, parannuksia ja korjauksia AROS:iin on ollut paljon
+enemm‰n kuin mit‰ nyt on kuvattu. Imuroi k‰‰nnˆs itsellesi ja kokeile!

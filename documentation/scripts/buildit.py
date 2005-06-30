@@ -22,7 +22,7 @@ from template.www.gallery import *
 SRCROOT    = os.path.abspath( '.' )
 DSTROOT    = os.path.abspath( '../bin/documentation' )
 
-TEMPLATE   = 'targets/www/template.html.fi'
+TEMPLATE   = 'targets/www/template.html.'
 
 TEMPLATE_DATA = None
 
@@ -433,7 +433,9 @@ if __name__ == '__main__':
         target = sys.argv[1]
         if len( sys.argv ) > 2:
             LANGUAGES = [ sys.argv[2], 'en' ]
-
+            TEMPLATE = TEMPLATE + sys.argv[2]
+        else:
+            TEMPLATE = TEMPLATE + 'en'
     if targets.has_key( target ):
         targets[target]()
     else:
