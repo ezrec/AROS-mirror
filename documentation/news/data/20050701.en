@@ -1,0 +1,16 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2005-07-01
+
+It's web day! The month of july couldn't begin better: thanks to Olivier Adam,
+AROS has moved its first steps on the world wide web. He has adapted his
+porting of `Mosaic`__ to use ArosTCP, so now we have a basic but working browser
+on our platform. You can download binaries `here`__
+
+__ http://reziztanzia.free.fr/aros/Images/aros-mosaic9.png
+__ http://reziztanzia.free.fr/aros/contrib/aminet/comm/net/Mosaic/
+
+
