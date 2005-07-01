@@ -1,0 +1,14 @@
+==============
+Tilannekatsaus
+==============
+
+:Author:   Paolo Besser
+:Date:     2005-07-01
+
+T‰n‰‰n on verkkop‰iv‰! Hein‰kuu ei voisi alkaa paremmin: kiitos Olivier
+Adam:in, AROS on ottanut ensimm‰iset askeleet webiss‰. H‰n muokkasi `Mosaic`__
+porttinsa k‰ytt‰m‰‰n ArosTCP:t‰, joten nyt meill‰ on karu mutta toimiva selain
+alustallemme. Voit ladata bin‰‰rit `t‰‰lt‰`__.
+
+__ http://reziztanzia.free.fr/aros/Images/aros-mosaic9.png
+__ http://reziztanzia.free.fr/aros/contrib/aminet/comm/net/Mosaic/
