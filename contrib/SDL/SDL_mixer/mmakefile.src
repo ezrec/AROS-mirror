@@ -8,5 +8,6 @@
 #MM- development-SDL_mixer : linklibs-SDL
 
 %fetch_and_build_gnu_development package=SDL_mixer version=1.2.5 patch=yes \
-    package_repo=http://www.libsdl.org/projects/SDL_mixer/release/
+    package_repo=http://www.libsdl.org/projects/SDL_mixer/release/ \
+    extraoptions="--disable-music-mp3"
 
