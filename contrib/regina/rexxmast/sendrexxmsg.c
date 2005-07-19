@@ -7,7 +7,7 @@
 #include <exec/ports.h>
 #include <rexx/storage.h>
 
-struct Library *RexxSysBase;
+struct RxsLib *RexxSysBase;
 
 int main(void)
 {
@@ -16,7 +16,7 @@ int main(void)
 //    const char *command = "rexxdir een test  ";
     const char *command = "'say hello everybody'";
     
-    RexxSysBase = OpenLibrary("rexxsyslib.library", 44);
+    RexxSysBase = (struct RxsLib *)OpenLibrary("rexxsyslib.library", 44);
     if (RexxSysBase == NULL)
     {
 	puts("Error opening rexxsyslib.library");
@@ -27,7 +27,7 @@ int main(void)
     if (port == NULL)
     {
 	puts("REXX port not found");
-	CloseLibrary(RexxSysBase);
+	CloseLibrary((struct Library *)RexxSysBase);
 	return 20;
     }
 
@@ -35,7 +35,7 @@ int main(void)
     if (replyport == NULL)
     {
 	puts("Could not create replyport");
-	CloseLibrary(RexxSysBase);
+	CloseLibrary((struct Library *)RexxSysBase);
 	return 20;
     }
     
@@ -44,23 +44,23 @@ int main(void)
     {
 	puts("Error creating RexxMsg");
 	DeletePort(replyport);
-	CloseLibrary(RexxSysBase);
+	CloseLibrary((struct Library *)RexxSysBase);
 	return 20;
     }
     msg->rm_Action = RXCOMM | RXFF_RESULT;
-    msg->rm_Args[0] = CreateArgstring(command, strlen(command));
+    msg->rm_Args[0] = (IPTR)CreateArgstring((STRPTR)command, strlen(command));
     PutMsg(port, (struct Message *)msg);
     reply = (struct RexxMsg *)WaitPort(replyport);
-    printf("Result1: %d\n", reply->rm_Result1);
-    if (reply->rm_Result1==0 && reply->rm_Result2!=NULL)
+    printf("Result1: %ld\n", reply->rm_Result1);
+    if ((reply->rm_Result1==0) && (reply->rm_Result2!=0))
     {
-	printf("Result2: %s\n", reply->rm_Result2);
-	DeleteArgstring(reply->rm_Result2);
+	printf("Result2: %s\n", (STRPTR)reply->rm_Result2);
+	DeleteArgstring((STRPTR)reply->rm_Result2);
     }
-    DeleteArgstring(msg->rm_Args[0]);
+    DeleteArgstring((STRPTR)msg->rm_Args[0]);
     DeleteRexxMsg(msg);
     DeletePort(replyport);
-    CloseLibrary(RexxSysBase);
+    CloseLibrary((struct Library *)RexxSysBase);
 
     if (reply != msg)
     {

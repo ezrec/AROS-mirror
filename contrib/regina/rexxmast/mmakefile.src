@@ -4,6 +4,8 @@
 
 include $(TOP)/config/make.cfg
 
+DEMODIR := $(AROS_TESTS)/rexx
+
 #MM- contrib-regina : \
 #MM      contrib-regina-rexxmast-arosc contrib-regina-rexxmast-reginac
 #MM contrib-regina-rexxmast-arosc : includes linklibs
@@ -18,7 +20,7 @@ USER_CFLAGS = -I..
     files=RexxMast uselibs="amiga arosc"
 
 %build_progs mmake=contrib-regina-rexxmast-reginac \
-    files="sendrexxmsg listen4msg" targetdir=$(AROS_C) \
-    files=RexxMast uselibs="amiga arosc"
+    files="sendrexxmsg listen4msg" targetdir=$(DEMODIR) \
+    uselibs="amiga arosc"
     
 %common

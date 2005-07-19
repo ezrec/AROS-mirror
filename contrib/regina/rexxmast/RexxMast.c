@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     {
 	es.es_TextFormat = "Error opening rexxsyslib.library V44";
 	EasyRequest(NULL, &es, NULL);
-	CloseLibrary(RexxSysBase);
+	CloseLibrary((struct Library *)RexxSysBase);
 	return 20;
     }
     ReginaBase = OpenLibrary("regina.library", 2);
@@ -371,7 +371,7 @@ static void StartFileSlave(struct RexxMsg *msg)
     if (rc==0 && (msg->rm_Action & RXFF_RESULT) && RXVALIDSTRING(rxresult))
 	msg->rm_Result2 = (IPTR)CreateArgstring(RXSTRPTR(rxresult), RXSTRLEN(rxresult));
     else
-        msg->rm_Result2 = NULL;
+        msg->rm_Result2 = 0;
 
     if (RXSTRPTR(rxresult) != NULL)
 	free(RXSTRPTR(rxresult));
@@ -388,7 +388,7 @@ static void AddLib(struct RexxMsg *msg)
 {
   struct RexxRsrc *rsrc;
   
-  if (msg->rm_Args[0] == NULL || msg->rm_Args[1] == NULL)
+  if (msg->rm_Args[0] == 0 || msg->rm_Args[1] == 0)
   {
     msg->rm_Result1 = 20;
     msg->rm_Result2 = 0;
@@ -403,7 +403,7 @@ static void AddLib(struct RexxMsg *msg)
   if ((msg->rm_Action & RXCODEMASK) == RXADDLIB)
   {
     rsrc->rr_Node.ln_Type = RRT_LIB;
-    if (msg->rm_Args[2] == NULL)
+    if (msg->rm_Args[2] == 0)
     {
       msg->rm_Result1 = 20;
       msg->rm_Result2 = 0;
@@ -411,7 +411,7 @@ static void AddLib(struct RexxMsg *msg)
       return;
     }
     rsrc->rr_Arg1 = (LONG)atoi((char *)msg->rm_Args[2]);
-    rsrc->rr_Arg2 = (msg->rm_Args[3] == NULL) ? (LONG)0 : (LONG)atoi((char *)msg->rm_Args[3]);
+    rsrc->rr_Arg2 = (msg->rm_Args[3] == 0) ? (LONG)0 : (LONG)atoi((char *)msg->rm_Args[3]);
   }
   else
     rsrc->rr_Node.ln_Type = RRT_HOST;
@@ -437,7 +437,7 @@ static void RemLib(struct RexxMsg *msg)
 {
   struct RexxRsrc *rsrc;
   
-  if (msg->rm_Args[0] == NULL)
+  if (msg->rm_Args[0] == 0)
   {
     msg->rm_Result1 = 20;
     msg->rm_Result2 = 0;
