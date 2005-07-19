@@ -3,6 +3,24 @@ News
 
 .. raw:: html
 
+   <a name="20050721">
+.. include:: /home/daikane/projects/AROS/documentation/news/data/20050721.fi
+.. raw:: html
+
+   </a>
+
+
+.. raw:: html
+
+   <a name="20050721">
+.. include:: /home/daikane/projects/AROS/documentation/news/data/20050721.en
+.. raw:: html
+
+   </a>
+
+
+.. raw:: html
+
    <a name="20050701">
 .. include:: /home/daikane/projects/AROS/documentation/news/data/20050701.fi
 .. raw:: html
@@ -23,24 +41,6 @@ News
 
    <a name="20050627">
 .. include:: /home/daikane/projects/AROS/documentation/news/data/20050627.fi
-.. raw:: html
-
-   </a>
-
-
-.. raw:: html
-
-   <a name="20050627">
-.. include:: /home/daikane/projects/AROS/documentation/news/data/20050627.en
-.. raw:: html
-
-   </a>
-
-
-.. raw:: html
-
-   <a name="20050625">
-.. include:: /home/daikane/projects/AROS/documentation/news/data/20050625.fi
 .. raw:: html
 
    </a>

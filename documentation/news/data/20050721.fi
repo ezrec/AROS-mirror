@@ -1,0 +1,38 @@
+==============
+Tilannekatsaus
+==============
+
+:Author:   Paolo Besser
+:Date:     2005-07-21
+
+Samalla kun AROS-kehittäjät ovat korjaamassa bugeja ja lisäämässä
+ominaisuuksia (no, ei suuresti päälle päin näkyviä ominaisuuksia, mutta
+mielenkiintoisia koodareille), olemme huomanneet yhteisön kasvavan koko ajan!
+Uusia ohjelmia on tulossa ja innoissamme ilahdutamme silmiänne
+`tällä kuvalla.`__ Aivan, `Darius Brewka`__ on porttaamassa AmiStart:ia
+AROS:ille, joka antaa mahdollisuuden nopeampaan ohjelmien käyttöön (ja
+kauniisti).
+
+Viime aikoina on syntynyt kaksi AROS:iin liittyvää blogia. Paul J. Beel
+verkotti `The AROS Show`__:n, joka keskittyy ohjema julkaisuihin ja
+dokumentaatioon: "Aikeena on tehdä tästä paikka jossa voit lukea tietoa Amiga
+Research Operating System:istä (...). The AROS Show koettaa vastata AROS:ista
+mahdollisesti herääviin kysymyksiin, sekä antamaan tietoa yhteisöstä,
+tapahtumista ja kehittäjistä. Se tekee parhaansa pitääkseen teidät ajan
+tasalla tämänhetkisten ja tulevien AROS-ohjemien tiimoilta." Onnea, Paul!
+
+Jos olet kiinnostunut AROS-kehittämisestä ja tuoreista uutisista, vieraile
+kyvykkään kehittäjämme, Kalamatee:n, `blogissa`__. Eräs mielenkiintoinen
+linkki jos tahdot tietää tällä hetkellä olemassa olevien porttausten tilasta
+ja mitkä porttaukset tarvitsisivat apua löytyy täältä:
+`The definitve AROS platform capability list`__, joka todennäköisesti sisältää
+suurimman osan tarvitsemistasi tiedoista.
+
+Jatka vierailua `aros-exec`__:issä; käyttäjiä yli 400 ja ulkonäkökin uusittu!
+
+__ http://www.tgmonline.it/tgmfiles/bovas/aros/amistart_aros_1.jpg
+__ http://people.freenet.de/dariusb/
+__ http://arosshow.blogspot.com/
+__ http://kalamatee.blogspot.com/
+__ http://mama.indstate.edu/users/nova/list.html
+__ http://aros-exec.org
