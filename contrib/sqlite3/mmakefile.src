@@ -1,0 +1,246 @@
+include $(TOP)/config/make.cfg
+
+ENCODING := ISO8859
+
+FILES := alter attach auth btree build callback date \
+	delete expr func hash insert main \
+	os_aros pager pragma prepare printf \
+	random select table tokenize trigger \
+	update util vacuum \
+	vdbe vdbeapi vdbeaux vdbemem \
+	where utf legacy \
+	opcodes parse
+
+%build_prog mmake=contrib-sqlite3 \
+	progname=sqlite targetdir=$(CONTRIBDIR)/daikane \
+	files="$(FILES) shell" \
+	cflags="-Wall -DOS_AROS -DSQLITE_DEBUG" \
+	uselibs="arossupport amiga arosc m"
+
+%build_prog mmake=contrib-sqlite3-test \
+	progname=test targetdir=$(CONTRIBDIR)/daikane \
+	files="test" cflags="-Wall" \
+	uselibs="arossupport amiga arosc"
+
+#MM- contrib-sqlite3: \
+#MM contrib-sqlite3-lemon \
+#MM contrib-sqlite3-parse-h \
+#MM contrib-sqlite3-sqlite3-h \
+#MM contrib-sqlite3-keywordhash-h \
+#MM contrib-sqlite3-opcodes-h \
+#MM contrib-sqlite3-opcodes-c
+
+#MM
+contrib-sqlite3-test: test-copy
+
+#MM
+contrib-sqlite3-lemon: lemon
+#MM
+contrib-sqlite3-parse-h: parse.h
+#MM
+contrib-sqlite3-sqlite3-h: sqlite3.h
+#MM
+contrib-sqlite3-keywordhash-h: keywordhash.h
+#MM
+contrib-sqlite3-opcodes-h: opcodes.h
+#MM
+contrib-sqlite3-opcodes-c: opcodes.h opcodes.c
+#MM
+contrib-sqlite3-doc:	doc
+
+test-copy:
+	cp -f test.c $(CONTRIBDIR)/daikane/
+
+# Files to be published on the website.
+#
+DOC = \
+  arch.html \
+  arch.png \
+  autoinc.html \
+  c_interface.html \
+  capi3.html \
+  capi3ref.html \
+  changes.html \
+  compile.html \
+  copyright.html \
+  copyright-release.html \
+  copyright-release.pdf \
+  conflict.html \
+  datatypes.html \
+  datatype3.html \
+  different.html \
+  docs.html \
+  download.html \
+  faq.html \
+  fileformat.html \
+  formatchng.html \
+  index.html \
+  lang.html \
+  lockingv3.html \
+  mingw.html \
+  nulls.html \
+  oldnews.html \
+  omitted.html \
+  opcode.html \
+  pragma.html \
+  quickstart.html \
+  speed.html \
+  sqlite.gif \
+  sqlite.html \
+  support.html \
+  tclsqlite.html \
+  vdbe.html \
+  version3.html \
+  whentouse.html
+
+doc: common.tcl $(DOC)
+	@mkdir -p $(CONTRIBDIR)/daikane/doc 2>/dev/null
+	@mv $(DOC) $(CONTRIBDIR)/daikane/doc/
+
+lemon: tool/lemon.c tool/lempar.c
+	gcc -o lemon tool/lemon.c
+	cp tool/lempar.c .
+
+parse.h: parse.y
+	./lemon $(OPTS) parse.y
+	mv -f parse.h parse.h
+
+sqlite3.h: sqlite.h.in
+	sed -e s/--VERS--/`cat VERSION`/ \
+	    -e s/--VERSION-NUMBER--/`cat VERSION | sed 's/[^0-9]/ /g' | awk '{printf "%d%03d%03d",$$1,$$2,$$3}'`/ \
+                 sqlite.h.in >sqlite3.h
+
+keywordhash.h: tool/mkkeywordhash.c
+	gcc -o mkkeywordhash $(OPTS) tool/mkkeywordhash.c
+	./mkkeywordhash >keywordhash.h
+
+opcodes.c: opcodes.h mkopcodec.awk
+	sort -n -b +2 opcodes.h | awk -f mkopcodec.awk >opcodes.c
+
+opcodes.h:	parse.h vdbe.c mkopcodeh.awk
+	cat parse.h vdbe.c | awk -f mkopcodeh.awk >opcodes.h
+
+# Rules used to build documentation
+#
+arch.html:	www/arch.tcl
+	tclsh www/arch.tcl >arch.html
+
+arch.png:	www/arch.png
+	cp www/arch.png .
+
+autoinc.html:	www/autoinc.tcl
+	tclsh www/autoinc.tcl >autoinc.html
+
+c_interface.html:	www/c_interface.tcl
+	tclsh www/c_interface.tcl >c_interface.html
+
+capi3.html:	www/capi3.tcl
+	tclsh www/capi3.tcl >capi3.html
+
+capi3ref.html:	www/capi3ref.tcl
+	tclsh www/capi3ref.tcl >capi3ref.html
+
+changes.html:	www/changes.tcl
+	tclsh www/changes.tcl >changes.html
+
+compile.html:	www/compile.tcl
+	tclsh www/compile.tcl >compile.html
+
+copyright.html:	www/copyright.tcl
+	tclsh www/copyright.tcl >copyright.html
+
+copyright-release.html:	www/copyright-release.html
+	cp www/copyright-release.html .
+
+copyright-release.pdf:	www/copyright-release.pdf
+	cp www/copyright-release.pdf .
+
+common.tcl:	www/common.tcl
+	cp www/common.tcl .
+
+conflict.html:	www/conflict.tcl
+	tclsh www/conflict.tcl >conflict.html
+
+datatypes.html:	www/datatypes.tcl
+	tclsh www/datatypes.tcl >datatypes.html
+
+datatype3.html:	www/datatype3.tcl
+	tclsh www/datatype3.tcl >datatype3.html
+
+different.html:	www/different.tcl
+	tclsh www/different.tcl >different.html
+
+docs.html:	www/docs.tcl
+	tclsh www/docs.tcl >docs.html
+
+download.html:	www/download.tcl
+	@mkdir -p $(CONTRIBDIR)/daikane/doc 2>/dev/null
+	tclsh www/download.tcl >download.html
+
+faq.html:	www/faq.tcl
+	tclsh www/faq.tcl >faq.html
+
+fileformat.html:	www/fileformat.tcl
+	tclsh www/fileformat.tcl >fileformat.html
+
+formatchng.html:	www/formatchng.tcl
+	tclsh www/formatchng.tcl >formatchng.html
+
+index.html:	www/index.tcl last_change
+	tclsh www/index.tcl >index.html
+
+lang.html:	www/lang.tcl
+	tclsh www/lang.tcl doc >lang.html
+
+pragma.html:	www/pragma.tcl
+	tclsh www/pragma.tcl >pragma.html
+
+lockingv3.html:	www/lockingv3.tcl
+	tclsh www/lockingv3.tcl >lockingv3.html
+
+oldnews.html:	www/oldnews.tcl
+	tclsh www/oldnews.tcl >oldnews.html
+
+omitted.html:	www/omitted.tcl
+	tclsh www/omitted.tcl >omitted.html
+
+opcode.html:	www/opcode.tcl vdbe.c
+	tclsh www/opcode.tcl vdbe.c >opcode.html
+
+mingw.html:	www/mingw.tcl
+	tclsh www/mingw.tcl >mingw.html
+
+nulls.html:	www/nulls.tcl
+	tclsh www/nulls.tcl >nulls.html
+
+quickstart.html:	www/quickstart.tcl
+	tclsh www/quickstart.tcl >quickstart.html
+
+speed.html:	www/speed.tcl
+	tclsh www/speed.tcl >speed.html
+
+sqlite.gif:	art/SQLite.gif
+	cp art/SQLite.gif sqlite.gif
+
+sqlite.html:	www/sqlite.tcl
+	tclsh www/sqlite.tcl >sqlite.html
+
+support.html:	www/support.tcl
+	tclsh www/support.tcl >support.html
+
+tclsqlite.html:	www/tclsqlite.tcl
+	tclsh www/tclsqlite.tcl >tclsqlite.html
+
+vdbe.html:	www/vdbe.tcl
+	tclsh www/vdbe.tcl >vdbe.html
+
+version3.html:	www/version3.tcl
+	tclsh www/version3.tcl >version3.html
+
+whentouse.html:	www/whentouse.tcl
+	tclsh www/whentouse.tcl >whentouse.html
+
+last_change:
+	cat `for x in "$(FILES)"; do echo "$x".c; done` | grep '$$Id: ' | sort +4 | tail -1 \
+          | awk '{print $$5,$$6}' >last_change
+
