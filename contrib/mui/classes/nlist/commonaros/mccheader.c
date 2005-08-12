@@ -262,6 +262,7 @@ AROS_LH0(LONG, LibNull,
     struct LibraryHeader *, base, 4, MCC)
 {
     AROS_LIBFUNC_INIT
+    AROS_LIBBASE_EXT_DECL(struct LibraryHeader *, base)
     
     return NULL;
     
@@ -343,6 +344,7 @@ AROS_LH0(BPTR, LibExpunge,
     struct LibraryHeader *, base, 3, MCC)
 {
     AROS_LIBFUNC_INIT
+    AROS_LIBBASE_EXT_DECL(struct LibraryHeader *, base)
     
     BPTR rc;
 
@@ -372,6 +374,7 @@ AROS_LH1(struct LibraryHeader *, LibOpen,
     struct LibraryHeader *, base, 1, MCC)
 {
     AROS_LIBFUNC_INIT
+    AROS_LIBBASE_EXT_DECL(struct LibraryHeader *, base)
     
     struct LibraryHeader *rc;
 
@@ -411,6 +414,7 @@ AROS_LH0(BPTR, LibClose,
     struct LibraryHeader *, base, 2, MCC)
 {
     AROS_LIBFUNC_INIT
+    AROS_LIBBASE_EXT_DECL(struct LibraryHeader *, base)
     
     BPTR rc = NULL;
 
@@ -582,6 +586,7 @@ AROS_LH1(IPTR, MCC_Query,
     struct LibraryHeader *, base, 5, MCC)
 {
     AROS_LIBFUNC_INIT
+    AROS_LIBBASE_EXT_DECL(struct LibraryHeader *, base)
     
     switch (which)
     {
