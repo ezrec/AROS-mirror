@@ -6,5 +6,6 @@ include $(TOP)/config/make.cfg
 #MM contrib-networking-stacks-arostcp-db : setup
 
 contrib-networking-stacks-arostcp-db : files-copy
-%copy_files_q files="$(wildcard [^Cm]*)" dst=$(AROSDIR)/AROSTCP/db
+%copy_files_q files="$(wildcard [^Cm]*)" \
+    dst=$(CONTRIBDIR)/Networking/Stacks/AROSTCP/db
 
