@@ -1,0 +1,11 @@
+#   $Id: mmakefile.src,v 1.4 2005/08/14 14:23:47 misc Exp $
+include $(TOP)/config/make.cfg
+
+FILES := nforce handler unit
+
+%build_module mmake=contrib-networking-drivers-nforce \
+    modname=nforce modtype=device \
+    files="nforce_init $(FILES)" \
+    moduledir=Devs/Networks uselibs="rom amiga hiddstubs"
+
+%common
