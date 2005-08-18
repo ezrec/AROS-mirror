@@ -26,15 +26,15 @@
 #include "nforce.h"
 #include LC_LIBDEFS_FILE
 
-struct NFUnit *CreateUnit(LIBBASETYPEPTR LIBBASE, OOP_Object *device);
-void DeleteUnit(struct NFBase *NforceBase, struct NFUnit *unit);
-void FlushUnit(LIBBASETYPEPTR LIBBASE, struct NFUnit *unit, UBYTE last_queue, BYTE error);
-BOOL AddressFilter(struct NFBase *NforceBase, struct NFUnit *unit, UBYTE *address);
-VOID CopyPacket(struct NFBase *NforceBase, struct NFUnit *unit, 
-	struct IOSana2Req *request, UWORD packet_size, UWORD packet_type,
-	struct eth_frame *buffer);
-VOID ReportEvents(struct NFBase *NforceBase, struct NFUnit *unit, ULONG events);
-struct TypeStats *FindTypeStats(struct NFBase *NforceBase, struct NFUnit *unit, struct MinList *list,
-   ULONG packet_type);
-   
+struct NFUnit *CreateUnit(LIBBASETYPEPTR, OOP_Object *);
+void DeleteUnit(struct NFBase *, struct NFUnit *);
+void FlushUnit(LIBBASETYPEPTR, struct NFUnit *, UBYTE, BYTE);
+BOOL AddressFilter(struct NFBase *, struct NFUnit *, UBYTE *);
+VOID CopyPacket(struct NFBase *, struct NFUnit *, struct IOSana2Req *, UWORD, UWORD, struct eth_frame *);
+VOID ReportEvents(struct NFBase *, struct NFUnit *, ULONG);
+struct TypeStats *FindTypeStats(struct NFBase *, struct NFUnit *, struct MinList *, ULONG);
+
+BOOL AddMulticastRange(LIBBASETYPEPTR, struct NFUnit *, const UBYTE *, const UBYTE *);
+BOOL RemMulticastRange(LIBBASETYPEPTR, struct NFUnit *, const UBYTE *, const UBYTE *);
+
 #endif //_UNIT_H_

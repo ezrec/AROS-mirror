@@ -34,92 +34,93 @@
 #include "unit.h"
 #include LC_LIBDEFS_FILE
 
+/*
+ * Report incoming events to all hyphotetical event receivers
+ */
 VOID ReportEvents(struct NFBase *NforceBase, struct NFUnit *unit, ULONG events)
 {
-   struct IOSana2Req *request, *tail, *next_request;
-   struct List *list;
-   
-   list = &unit->request_ports[EVENT_QUEUE]->mp_MsgList;
-   next_request = (APTR)list->lh_Head;
-   tail = (APTR)&list->lh_Tail;
+    struct IOSana2Req *request, *tail, *next_request;
+    struct List *list;
+  
+    list = &unit->request_ports[EVENT_QUEUE]->mp_MsgList;
+    next_request = (APTR)list->lh_Head;
+    tail = (APTR)&list->lh_Tail;
 
-   Disable();
-   while(next_request != tail)
-   {
-      request = next_request;
-      next_request = (APTR)request->ios2_Req.io_Message.mn_Node.ln_Succ;
+    /* Go through list of event listeners. If send messages to receivers if event found */
+    Disable();
+    while(next_request != tail)
+    {
+        request = next_request;
+        next_request = (APTR)request->ios2_Req.io_Message.mn_Node.ln_Succ;
 
-      if((request->ios2_WireError&events) != 0)
-      {
-         request->ios2_WireError = events;
-        Disable();
-         Remove((APTR)request);
-        Enable();
-         ReplyMsg((APTR)request);
-      }
-   }
-   Enable();
+        if((request->ios2_WireError&events) != 0)
+        {
+            request->ios2_WireError = events;
+            Remove((APTR)request);
+            ReplyMsg((APTR)request);
+        }
+    }
+    Enable();
 
-   return;
+    return;
 }
 
-struct TypeStats *FindTypeStats(struct NFBase *NforceBase, struct NFUnit *unit, struct MinList *list,
-   ULONG packet_type)
+struct TypeStats *FindTypeStats(struct NFBase *NforceBase, struct NFUnit *unit, 
+                    struct MinList *list, ULONG packet_type)
 {
-   struct TypeStats *stats, *tail;
-   BOOL found = FALSE;
+    struct TypeStats *stats, *tail;
+    BOOL found = FALSE;
 
-   stats = (APTR)list->mlh_Head;
-   tail = (APTR)&list->mlh_Tail;
+    stats = (APTR)list->mlh_Head;
+    tail = (APTR)&list->mlh_Tail;
 
-   while(stats != tail && !found)
-   {
-      if(stats->packet_type == packet_type)
-         found = TRUE;
-      else
-         stats = (APTR)stats->node.mln_Succ;
-   }
+    while(stats != tail && !found)
+    {
+        if(stats->packet_type == packet_type)
+            found = TRUE;
+        else
+            stats = (APTR)stats->node.mln_Succ;
+    }
 
-   if(!found)
-      stats = NULL;
+    if(!found)
+        stats = NULL;
 
-   return stats;
+    return stats;
 }
-
 
 void FlushUnit(LIBBASETYPEPTR LIBBASE, struct NFUnit *unit, UBYTE last_queue, BYTE error)
 {
-	struct IORequest *request;
-	UBYTE i;
-	struct Opener *opener, *tail;
+    struct IORequest *request;
+    UBYTE i;
+    struct Opener *opener, *tail;
 	
-	D(bug("[nforce] FlushUnit\n"));
+    D(bug("[nforce] FlushUnit\n"));
 	
-	/* Abort queued operations */
+    /* Abort queued operations */
 	
-	for (i=0; i <= last_queue; i++)
-	{
-		while ((request = (APTR)GetMsg(unit->request_ports[i])) != NULL)
-		{
-			request->io_Error = IOERR_ABORTED;
-			ReplyMsg((struct Message *)request);
-		}
-	}
+    for (i=0; i <= last_queue; i++)
+    {
+        while ((request = (APTR)GetMsg(unit->request_ports[i])) != NULL)
+        {
+            request->io_Error = IOERR_ABORTED;
+            ReplyMsg((struct Message *)request);
+        }
+    }
 	
-	opener = (APTR)unit->nu_Openers.mlh_Head;
-	tail = (APTR)unit->nu_Openers.mlh_Tail;
+    opener = (APTR)unit->nu_Openers.mlh_Head;
+    tail = (APTR)unit->nu_Openers.mlh_Tail;
 	
-	/* Flush every opener's read queue */
+    /* Flush every opener's read queue */
 	
-	while(opener != tail)
-	{
-		while ((request = (APTR)GetMsg(&opener->read_port)) != NULL)
-		{
-			request->io_Error = error;
-			ReplyMsg((struct Message *)request);
-		}
-		opener = (struct Opener *)opener->node.mln_Succ;
-	}
+    while(opener != tail)
+    {
+        while ((request = (APTR)GetMsg(&opener->read_port)) != NULL)
+        {
+            request->io_Error = error;
+            ReplyMsg((struct Message *)request);
+        }
+        opener = (struct Opener *)opener->node.mln_Succ;
+    }
 }
 
 static inline volatile ULONG readl(APTR base)
@@ -138,10 +139,19 @@ static inline void pci_push(UBYTE *base)
     readl(base);
 }
 
+/*
+ * Interrupt handler called whenever nForce NIC interface generates interrupt.
+ * It's duty is to iterate throgh RX queue searching for new packets.
+ * 
+ * Please note, that allthough multicast support could be done on interface 
+ * basis, it is done in this function as result of quick integration of both
+ * the forcedeth driver (IFF_ALLMULTI flag) and etherling3 driver (AddressMatch
+ * filter function).
+ */
 AROS_UFH3(void, RX_Int,
-	AROS_UFHA(struct NFUnit *, 	unit, A1),
-	AROS_UFHA(APTR,				dummy, A5),
-	AROS_UFHA(struct ExecBase *,SysBase, A6))
+    AROS_UFHA(struct NFUnit *, 	unit, A1),
+    AROS_UFHA(APTR,				dummy, A5),
+    AROS_UFHA(struct ExecBase *,SysBase, A6))
 {
     AROS_USERFUNC_INIT
     
@@ -154,6 +164,7 @@ AROS_UFH3(void, RX_Int,
     struct IOSana2Req *request, *request_tail;
     BOOL accepted, is_orphan;
 	
+    /* Endless loop, with break from inside */
     for(;;)
     {
         int i,len;
@@ -162,6 +173,7 @@ AROS_UFH3(void, RX_Int,
         if (np->cur_rx - np->refill_rx >= RX_RING)
             break;	/* we scanned the whole ring - do not continue */
 
+        /* Get the in-queue number */
         i = np->cur_rx % RX_RING;
         Flags = AROS_LE2LONG(np->rx_ring[i].FlagLen);
         len = unit->descr_getlength(&np->rx_ring[i], np->desc_ver);
@@ -169,6 +181,7 @@ AROS_UFH3(void, RX_Int,
         D(bug("%s: nv_rx_process: looking at packet %d, Flags 0x%x, len=%d\n",
                 unit->name, np->cur_rx, Flags, len));
 		
+        /* Free frame? Do nothing - we've empty queue now */
         if (Flags & NV_RX_AVAIL)
             break;	/* still owned by hardware, */
 
@@ -255,11 +268,10 @@ AROS_UFH3(void, RX_Int,
         }
 		
         /* got a valid packet - forward it to the network core */
-        
         frame = &np->rx_buffer[i];
         is_orphan = TRUE;
 
-//bug("%s: got frame %4d:%08x, with type=%04x\n", unit->name, i, frame, AROS_BE2WORD(frame->eth_packet_type));
+        /* Dump contents of frame if DEBUG enabled */
 #ifdef DEBUG
                 {
                 int j;
@@ -272,38 +284,31 @@ AROS_UFH3(void, RX_Int,
                 }
 #endif
 
+        /* Check for address validity */
         if(AddressFilter(LIBBASE, unit, frame->eth_packet_dest))
         {
-//bug("%s: address match\n", unit->name);
-
+            /* Packet is addressed to this driver */
             packet_type = AROS_BE2WORD(frame->eth_packet_type);
             
             opener = (APTR)unit->nu_Openers.mlh_Head;
             opener_tail = (APTR)&unit->nu_Openers.mlh_Tail;
-            /* Offer packet to every opener */
-            
+
+            /* Offer packet to every opener */           
             while(opener != opener_tail)
             {
-//bug("%s: opener %08x\n", unit->name, opener);
-
                request = (APTR)opener->read_port.mp_MsgList.lh_Head;
                request_tail = (APTR)&opener->read_port.mp_MsgList.lh_Tail;
                accepted = FALSE;
             
                /* Offer packet to each request until it's accepted */
-            
                while((request != request_tail) && !accepted)
                {
-//bug("%s: req %08x, ios2_PacketType=%04x, against %04x\n", unit->name, request, request->ios2_PacketType, packet_type);
-
                   if((request->ios2_PacketType == packet_type)
                      || ((request->ios2_PacketType <= ETH_MTU)
                      	 && (packet_type <= ETH_MTU)))
                   {
                      CopyPacket(LIBBASE, unit, request, len, packet_type, frame);
                      accepted = TRUE;
-
-//bug("%s: accepted\n", unit->name);
                   }
                   request =
                      (struct IOSana2Req *)request->ios2_Req.io_Message.mn_Node.ln_Succ;
@@ -316,7 +321,6 @@ AROS_UFH3(void, RX_Int,
             }
             
             /* If packet was unwanted, give it to S2_READORPHAN request */
-            
             if(is_orphan)
             {
                 unit->stats.UnknownTypesReceived++;
@@ -341,7 +345,7 @@ AROS_UFH3(void, RX_Int,
         }
 
         unit->stats.PacketsReceived++;
-		
+        		
 next_pkt:
         np->cur_rx++;
     }
@@ -349,6 +353,10 @@ next_pkt:
     AROS_USERFUNC_EXIT
 }
 
+/*
+ * Check status of packets which we've already sent to the NIC. Update
+ * statistics, and reenable TX queue if only there is some free space.
+ */
 static void nv_tx_done(struct NFUnit *unit)
 {
     struct fe_priv *np = unit->nu_fe_priv;
@@ -395,6 +403,10 @@ static void nv_tx_done(struct NFUnit *unit)
         np->nic_tx++;
     }
     
+    /*
+     * Do we have some spare space in TX queue and the queue self is blocked?
+     * Reenable it then!
+     */
     if (np->next_tx - np->nic_tx < TX_LIMIT_START) {
         if (netif_queue_stopped(unit)) {
             bug("%s: output queue restart\n", unit->name);
@@ -404,6 +416,9 @@ static void nv_tx_done(struct NFUnit *unit)
     }
 }
 
+/*
+ * Interrupt generated by Cause() to push new packets into the NIC interface
+ */
 AROS_UFH3(void, TX_Int,
 	AROS_UFHA(struct NFUnit *, 	unit, A1),
 	AROS_UFHA(APTR,				dummy, A5),
@@ -414,11 +429,9 @@ AROS_UFH3(void, TX_Int,
     struct fe_priv *np = unit->nu_fe_priv;
     struct NFBase *NforceBase = unit->nu_device;
     int nr;
-    ULONG Flags;
-    int i;
-    BOOL proceed = FALSE;
+    BOOL proceed = FALSE; /* Fails by default */
 
-    /* send packet only if there is free space on tx queue. Otherwise try to cleanup */
+    /* send packet only if there is free space on tx queue. Otherwise do nothing */
     if (!netif_queue_stopped(unit))
     {
         UWORD packet_size, data_size;
@@ -431,10 +444,11 @@ AROS_UFH3(void, TX_Int,
         struct MsgPort *port;
         struct TypeStats *tracker;
     		
-        proceed = TRUE;
+        proceed = TRUE; /* Success by default */
         base = unit->nu_device;
         port = unit->request_ports[WRITE_QUEUE];
     
+        /* Still no error and there are packets to be sent? */
         while(proceed && (!IsMsgPortEmpty(port)))
         {
             nr = np->next_tx % TX_RING;
@@ -444,7 +458,7 @@ AROS_UFH3(void, TX_Int,
             data_size = packet_size = request->ios2_DataLength;
             
             opener = (APTR)request->ios2_BufferManagement;
-    			
+    		
             if((request->ios2_Req.io_Flags & SANA2IOF_RAW) == 0)
             {
             	packet_size += ETH_PACKET_DATA;
@@ -466,12 +480,15 @@ AROS_UFH3(void, TX_Int,
                   | S2EVENT_TX);
             }
     			
+            /* Now the packet is already in TX buffer, update flags for NIC */
             if (error == 0)
             {
                 Disable();			
                 np->tx_ring[nr].FlagLen = AROS_LONG2LE((packet_size-1) | np->tx_flags );
                 D(bug("%s: nv_start_xmit: packet packet %d queued for transmission.",
                         unit->name, np->next_tx));
+
+                /* DEBUG? Dump frame if so */
 #ifdef DEBUG
                 {
                 int j;
@@ -485,19 +502,28 @@ AROS_UFH3(void, TX_Int,
 #endif
                 np->next_tx++;
                 
+                /* 
+                 * If we've just run out of free space on the TX queue, stop
+                 * it and give up pushing further frames
+                 */
                 if (np->next_tx - np->nic_tx >= TX_LIMIT_STOP)
                 {
-bug("%s: output queue full. Stopping\n", unit->name);
+                    bug("%s: output queue full. Stopping\n", unit->name);
                 	netif_stop_queue(unit);
                 	proceed = FALSE;
                 }
                 Enable();
-//                writel(NVREG_TXRXCTL_KICK|np->desc_ver, (UBYTE*)unit->nu_BaseMem + NvRegTxRxControl);
-//                pci_push((UBYTE*)unit->nu_BaseMem);
+                /* 
+                 * At this place linux driver used to trigger NIC to output
+                 * the queued packets through wire. We will not do it as we
+                 * may already see if there are new outcomming packets.
+                 * 
+                 * Yes, this driver might be a bit faster than linux one.
+                 */
             }
 
             /* Reply packet */
-            
+
             request->ios2_Req.io_Error = error;
             request->ios2_WireError = wire_error;
             Disable();
@@ -518,20 +544,28 @@ bug("%s: output queue full. Stopping\n", unit->name);
                 }
             }	
         }
-writel(NVREG_TXRXCTL_KICK|np->desc_ver, (UBYTE*)unit->nu_BaseMem + NvRegTxRxControl);
-pci_push((UBYTE*)unit->nu_BaseMem);
+        
+        /* 
+         * Here either we've filled the queue with packets to be transmitted,
+         * or just run out of spare space in TX queue. In both cases tell the
+         * NIC to start transmitting them all through wire.
+         */
+        writel(NVREG_TXRXCTL_KICK|np->desc_ver, (UBYTE*)unit->nu_BaseMem + NvRegTxRxControl);
+        pci_push((UBYTE*)unit->nu_BaseMem);
     }
-    
+
+    /* Was there success? Enable incomming of new packets */    
     if(proceed)
         unit->request_ports[WRITE_QUEUE]->mp_Flags = PA_SOFTINT;
     else
         unit->request_ports[WRITE_QUEUE]->mp_Flags = PA_IGNORE;
-
-//    nv_tx_done(unit);    
     
     AROS_USERFUNC_EXIT
 }
 
+/*
+ * Interrupt used to restart the real one
+ */
 AROS_UFH3(void, TX_End_Int,
 	AROS_UFHA(struct NFUnit *, 	unit, A1),
 	AROS_UFHA(APTR,				dummy, A5),
@@ -559,27 +593,21 @@ AROS_UFH3(void, TX_End_Int,
  */
 static const int max_interrupt_work = 5;
 
+/*
+ * Handle timeouts and other strange cases
+ */
 static void NF_TimeoutHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
 {
     struct NFUnit *dev = (struct NFUnit *) irq->h_Data;
     struct timeval time;
     struct Device *TimerBase = dev->nu_TimerSlowReq->tr_node.io_Device;
-    struct fe_priv *np = dev->nu_fe_priv;
     
     GetSysTime(&time);
 
-#if 0
-    if (CmpTime(&time, &dev->nu_delay) < 0)
-    {
-        dev->nu_delay.tv_secs = 0;
-        dev->nu_delay.tv_micro= 250000;
-        AddTime(&dev->nu_delay, &time);
-        
-bug("%s: TX fill=%3d (%5d:%5d), RX fill=%3d (%5d:%5d)\n", dev->name, np->next_tx - np->nic_tx, np->next_tx, np->nic_tx,
-            np->cur_rx - np->refill_rx, np->cur_rx, np->refill_rx);
-    }
-#endif
-
+    /*
+     * If timeout timer is expected, and time elapsed - regenerate the 
+     * interrupt handler 
+     */
     if (dev->nu_toutNEED && (CmpTime(&time, &dev->nu_toutPOLL ) < 0))
     {
         dev->nu_toutNEED = FALSE;
@@ -587,6 +615,18 @@ bug("%s: TX fill=%3d (%5d:%5d), RX fill=%3d (%5d:%5d)\n", dev->name, np->next_tx
     }
 }
 
+/*
+ * The interrupt handler - schedules code execution to proper handlers depending
+ * on the message from nForce.
+ * 
+ * NOTE.
+ * 
+ * Don't be surprised - this driver used to restart itself several times, in
+ * order to handle events which occur when the driver was handling previous
+ * events. It reduces the latency and amount of dropped packets. Additionally, 
+ * this interrupt may put itself into deep sleep (or just quit) and restarts 
+ * after certain amount of time (POLL_WAIT).
+ */
 static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
 {
     struct NFUnit *dev = (struct NFUnit *) irq->h_Data;
@@ -599,6 +639,7 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     
     GetSysTime(&time);
     
+    /* Restart automagically :) */
     for (i=0; ; i++)
     {
         events = readl(base + NvRegIrqStatus) & NVREG_IRQSTAT_MASK;
@@ -607,23 +648,22 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
         
         if (!(events & np->irqmask))
             break;
-        
-//        if (i>0) bug("%s: IntHandler restarted (count=%d)\n", dev->name, i);
         		
+        /* 
+         * Some packets have been sent? Just update statistics and empty the
+         * TX queue
+         */
         if (events & (NVREG_IRQ_TX1|NVREG_IRQ_TX2|NVREG_IRQ_TX_ERR)) {
             nv_tx_done(dev);
-
-//            AROS_UFC3(void, dev->tx_int.is_Code,
-//                AROS_UFCA(APTR, dev->tx_int.is_Data, A1),
-//                AROS_UFCA(APTR, dev->tx_int.is_Code, A5),
-//                AROS_UFCA(struct ExecBase *, SysBase, A6));
         }
     	
+        /* Something received? Handle it! */
         if (events & (NVREG_IRQ_RX_ERROR|NVREG_IRQ_RX|NVREG_IRQ_RX_NOBUF)) {
             AROS_UFC3(void, dev->rx_int.is_Code,
                 AROS_UFCA(APTR, dev->rx_int.is_Data, A1),
                 AROS_UFCA(APTR, dev->rx_int.is_Code, A5),
                 AROS_UFCA(struct ExecBase *, SysBase, A6));
+            /* Mark received frames as free for hardware */
             dev->alloc_rx(dev);
         }
     
@@ -633,6 +673,7 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
             Enable();
         }
     	
+        /* If linktimer interrupt required, handle it here */
         if (np->need_linktimer && (CmpTime(&time, &np->link_timeout) < 0)) {
             Disable();
             dev->linkchange(dev);
@@ -642,6 +683,7 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
             AddTime(&np->link_timeout, &time);
         }
     
+        /* Erm? */
         if (events & (NVREG_IRQ_TX_ERR)) {
             bug("%s: received irq with events 0x%x. Probably TX fail.\n",
                     dev->name, events);
@@ -652,12 +694,19 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
                     dev->name, events);
         }
     	
+        /* 
+         * Straaaaaaaange, the interrupt was restarted more than 
+         * max_interrupt_work times. Normally it should not happen, even on
+         * gigabit ethernet. In any case setup poll handler which restart this
+         * handler after specified amount of time.
+         */
         if (i > max_interrupt_work)
         {
             bug("%s: too many iterations (%d) in nv_nic_irq.\n", dev->name, i);
             writel(0, base + NvRegIrqMask);
             pci_push(base);
   
+            /* When to wake up? */
             Disable();
             dev->nu_toutPOLL.tv_micro = POLL_WAIT % 1000000;
             dev->nu_toutPOLL.tv_secs  = POLL_WAIT / 1000000;
@@ -669,6 +718,9 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
         }
     }
     
+    /*
+     * If TX queue was stopped, try to reenable it *ALWAYS*
+     */
     if (netif_queue_stopped(dev)) {
         nv_tx_done(dev);
     }
@@ -760,11 +812,11 @@ BOOL AddressFilter(struct NFBase *NforceBase, struct NFUnit *unit, UBYTE *addres
         while((range != tail) && !accept)
         {
             if((address_left > range->lower_bound_left ||
-                address_left == range->lower_bound_left &&
-                address_right >= range->lower_bound_right) &&
+                (address_left == range->lower_bound_left &&
+                address_right >= range->lower_bound_right)) &&
                 (address_left < range->upper_bound_left ||
-                address_left == range->upper_bound_left &&
-                address_right <= range->upper_bound_right))
+                (address_left == range->upper_bound_left &&
+                address_right <= range->upper_bound_right)))
                 accept = TRUE;
             range = (APTR)range->node.mln_Succ;
         }
@@ -798,6 +850,7 @@ AROS_UFH3(void, NF_Scheduler,
     	
     dev->nu_input_port = input; 
     
+    /* Randomize the generator with current time */
     BattClockBase =  OpenResource("battclock.resource");
     srandom(ReadBattClock());
     
@@ -1089,3 +1142,106 @@ void DeleteUnit(struct NFBase *NforceBase, struct NFUnit *Unit)
         FreeMem(Unit, sizeof(struct NFUnit));
     }
 }
+
+static struct AddressRange *FindMulticastRange(LIBBASETYPEPTR LIBBASE, struct NFUnit *unit,
+   ULONG lower_bound_left, UWORD lower_bound_right, ULONG upper_bound_left, UWORD upper_bound_right)
+{
+    struct AddressRange *range, *tail;
+    BOOL found = FALSE;
+
+    range = (APTR)unit->multicast_ranges.mlh_Head;
+    tail = (APTR)&unit->multicast_ranges.mlh_Tail;
+
+    while((range != tail) && !found)
+    {
+        if((lower_bound_left == range->lower_bound_left) &&
+            (lower_bound_right == range->lower_bound_right) &&
+            (upper_bound_left == range->upper_bound_left) &&
+            (upper_bound_right == range->upper_bound_right))
+            found = TRUE;
+        else
+            range = (APTR)range->node.mln_Succ;
+    }
+
+    if(!found)
+        range = NULL;
+
+    return range;
+}
+
+BOOL AddMulticastRange(LIBBASETYPEPTR LIBBASE, struct NFUnit *unit, const UBYTE *lower_bound,
+   const UBYTE *upper_bound)
+{
+    struct AddressRange *range;
+    ULONG lower_bound_left, upper_bound_left;
+    UWORD lower_bound_right, upper_bound_right;
+
+    lower_bound_left = AROS_BE2LONG(*((ULONG *)lower_bound));
+    lower_bound_right = AROS_BE2WORD(*((UWORD *)(lower_bound + 4)));
+    upper_bound_left = AROS_BE2LONG(*((ULONG *)upper_bound));
+    upper_bound_right = AROS_BE2WORD(*((UWORD *)(upper_bound + 4)));
+
+    range = FindMulticastRange(LIBBASE, unit, lower_bound_left, lower_bound_right,
+        upper_bound_left, upper_bound_right);
+
+    if(range != NULL)
+        range->add_count++;
+    else
+    {
+        range = AllocMem(sizeof(struct AddressRange), MEMF_PUBLIC);
+        if(range != NULL)
+        {
+            range->lower_bound_left = lower_bound_left;
+            range->lower_bound_right = lower_bound_right;
+            range->upper_bound_left = upper_bound_left;
+            range->upper_bound_right = upper_bound_right;
+            range->add_count = 1;
+            
+            Disable();
+            AddTail((APTR)&unit->multicast_ranges, (APTR)range);
+            Enable();
+
+            if (unit->range_count++ == 0)
+            {
+                unit->flags |= IFF_ALLMULTI;
+                unit->set_multicast(unit);
+            }
+        }
+    }
+
+    return range != NULL;
+}
+
+BOOL RemMulticastRange(LIBBASETYPEPTR LIBBASE, struct NFUnit *unit, const UBYTE *lower_bound, const UBYTE *upper_bound)
+{
+    struct AddressRange *range;
+    ULONG lower_bound_left, upper_bound_left;
+    UWORD lower_bound_right, upper_bound_right;
+
+    lower_bound_left = AROS_BE2LONG(*((ULONG *)lower_bound));
+    lower_bound_right = AROS_BE2WORD(*((UWORD *)(lower_bound + 4)));
+    upper_bound_left = AROS_BE2LONG(*((ULONG *)upper_bound));
+    upper_bound_right = AROS_BE2WORD(*((UWORD *)(upper_bound + 4)));
+
+    range = FindMulticastRange(LIBBASE, unit, lower_bound_left, lower_bound_right,
+        upper_bound_left, upper_bound_right);
+
+    if(range != NULL)
+    {
+        if(--range->add_count == 0)
+        {
+            Disable();
+            Remove((APTR)range);
+            Enable();
+            FreeMem(range, sizeof(struct AddressRange));
+
+            if (--unit->range_count == 0)
+            {
+                unit->flags &= ~IFF_ALLMULTI;
+                unit->set_multicast(unit);
+            }
+        }
+    }
+    return range != NULL;
+}
+

@@ -1012,4 +1012,5 @@ void nv_get_functions(struct net_device *Unit)
 	Unit->linkirq = nv_link_irq;
 	Unit->descr_getlength = nv_descr_getlength;
     Unit->alloc_rx = nv_alloc_rx;
+    Unit->set_multicast = nv_set_multicast;
 }

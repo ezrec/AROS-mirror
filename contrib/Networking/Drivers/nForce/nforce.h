@@ -113,11 +113,11 @@ struct NFUnit {
 	struct MinList			multicast_ranges;
     struct MinList          type_trackers;
 	ULONG					nu_UnitNum;
-	
+	LONG                    range_count;
+    
 	OOP_Object				*nu_PCIDevice;
 	OOP_Object				*nu_PCIDriver;
     
-    struct timeval          nu_delay;
     struct timeval          nu_toutPOLL;
     BOOL                    nu_toutNEED;
 
@@ -139,6 +139,7 @@ struct NFUnit {
 	void					(*linkchange)(struct NFUnit *);
 	void					(*linkirq)(struct NFUnit *);
 	ULONG					(*descr_getlength)(struct ring_desc *prd, ULONG v);
+    void                    (*set_multicast)(struct NFUnit *);
 	
 	int						open_count;
 	struct SignalSemaphore	unit_lock;

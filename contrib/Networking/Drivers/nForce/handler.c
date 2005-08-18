@@ -42,12 +42,17 @@ static BOOL CmdS2DeviceQuery(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 static BOOL CmdGetStationAddress(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request);
 static BOOL CmdConfigInterface(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request);
 static BOOL CmdBroadcast(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request);
+static BOOL CmdTrackType(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request);
+static BOOL CmdUntrackType(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request);
+static BOOL CmdGetTypeStats(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request);
 static BOOL CmdGetGlobalStats(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request);
 static BOOL CmdDeviceQuery(LIBBASETYPEPTR LIBBASE, struct IOStdReq *request);
 static BOOL CmdOnEvent(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request);
 static BOOL CmdReadOrphan(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request);
 static BOOL CmdOnline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request);
 static BOOL CmdOffline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request);
+static BOOL CmdAddMulticastAddresses(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request);
+static BOOL CmdDelMulticastAddresses(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request);
 
 static const UWORD supported_commands[] =
 {
@@ -57,13 +62,13 @@ static const UWORD supported_commands[] =
     S2_DEVICEQUERY,
     S2_GETSTATIONADDRESS,
     S2_CONFIGINTERFACE,
-//    S2_ADDMULTICASTADDRESS,
-//    S2_DELMULTICASTADDRESS,
+    S2_ADDMULTICASTADDRESS,
+    S2_DELMULTICASTADDRESS,
     S2_MULTICAST,
     S2_BROADCAST,
-//    S2_TRACKTYPE,
-//    S2_UNTRACKTYPE,
-//    S2_GETTYPESTATS,
+    S2_TRACKTYPE,
+    S2_UNTRACKTYPE,
+    S2_GETTYPESTATS,
 //    S2_GETSPECIALSTATS,
     S2_GETGLOBALSTATS,
     S2_ONEVENT,
@@ -71,8 +76,8 @@ static const UWORD supported_commands[] =
     S2_ONLINE,
     S2_OFFLINE,
     NSCMD_DEVICEQUERY,
-//    S2_ADDMULTICASTADDRESSES,
-//    S2_DELMULTICASTADDRESSES,
+    S2_ADDMULTICASTADDRESSES,
+    S2_DELMULTICASTADDRESSES,
     0
 };
 
@@ -110,6 +115,18 @@ void handle_request(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
         case S2_BROADCAST:
             complete = CmdBroadcast(LIBBASE, request);
             break;
+
+        case S2_TRACKTYPE:
+            complete = CmdTrackType(LIBBASE, request);
+            break;
+
+        case S2_UNTRACKTYPE:
+            complete = CmdUntrackType(LIBBASE, request);
+            break;
+
+        case S2_GETTYPESTATS:
+            complete = CmdGetTypeStats(LIBBASE, request);
+            break;
     
         case S2_GETGLOBALSTATS:
             complete = CmdGetGlobalStats(LIBBASE, request);
@@ -130,7 +147,17 @@ void handle_request(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
         case S2_OFFLINE:
             complete = CmdOffline(LIBBASE, request);
             break;
-    
+
+        case S2_ADDMULTICASTADDRESS:
+        case S2_ADDMULTICASTADDRESSES:
+            complete = CmdAddMulticastAddresses(LIBBASE, request);
+            break;
+
+        case S2_DELMULTICASTADDRESS:
+        case S2_DELMULTICASTADDRESSES:
+            complete = CmdDelMulticastAddresses(LIBBASE, request);
+            break;
+            
         case NSCMD_DEVICEQUERY:
             complete = CmdDeviceQuery(LIBBASE, (struct IOStdReq *)request);
             break;
@@ -307,6 +334,157 @@ static BOOL CmdBroadcast(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     return CmdWrite(LIBBASE, request);
 }
 
+static BOOL CmdTrackType(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
+{
+    struct NFUnit *unit;
+    struct Opener *opener;
+    ULONG packet_type, wire_error=0;
+    struct TypeTracker *tracker;
+    struct TypeStats *initial_stats;
+    BYTE error = 0;
+
+    unit = (APTR)request->ios2_Req.io_Unit;
+    packet_type = request->ios2_PacketType;
+
+    /* Get global tracker */
+
+    tracker = (struct TypeTracker *)
+        FindTypeStats(LIBBASE, unit, &unit->type_trackers, packet_type);
+
+    if(tracker != NULL)
+        tracker->user_count++;
+    else
+    {
+        tracker =
+            AllocMem(sizeof(struct TypeTracker), MEMF_PUBLIC|MEMF_CLEAR);
+        if(tracker != NULL)
+        {
+            tracker->packet_type = packet_type;
+            tracker->user_count = 1;
+            
+            Disable();
+            AddTail((APTR)&unit->type_trackers, (APTR)tracker);
+            Enable();
+        }
+   }
+
+    /* Store initial figures for this opener */
+    
+    opener = request->ios2_BufferManagement;
+    initial_stats = FindTypeStats(LIBBASE, unit, &opener->initial_stats, packet_type);
+    
+    if(initial_stats != NULL)
+    {
+        error = S2ERR_BAD_STATE;
+        wire_error = S2WERR_ALREADY_TRACKED;
+    }
+    
+    if(error == 0)
+    {
+        initial_stats = AllocMem(sizeof(struct TypeStats), MEMF_PUBLIC);
+        if(initial_stats == NULL)
+        {
+            error = S2ERR_NO_RESOURCES;
+            wire_error = S2WERR_GENERIC_ERROR;
+        }
+    }
+
+    if(error == 0)
+    {
+        CopyMem(tracker, initial_stats, sizeof(struct TypeStats));
+        AddTail((APTR)&opener->initial_stats, (APTR)initial_stats);
+    }
+    
+    /* Return */
+    
+    request->ios2_Req.io_Error = error;
+    request->ios2_WireError = wire_error;
+    return TRUE;
+}
+
+static BOOL CmdUntrackType(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
+{
+    struct NFUnit *unit;
+    struct Opener *opener;
+    ULONG packet_type;
+    struct TypeTracker *tracker;
+    struct TypeStats *initial_stats;
+    
+    unit = (APTR)request->ios2_Req.io_Unit;
+    packet_type = request->ios2_PacketType;
+
+    /* Get global tracker and initial figures */
+
+    tracker = (struct TypeTracker *)
+        FindTypeStats(LIBBASE, unit, &unit->type_trackers, packet_type);
+    opener = request->ios2_BufferManagement;
+    initial_stats = FindTypeStats(LIBBASE, unit, &opener->initial_stats, packet_type);
+
+    /* Decrement tracker usage and free unused structures */
+
+    if(initial_stats != NULL)
+    {
+        if((--tracker->user_count) == 0)
+        {
+            Disable();
+            Remove((APTR)tracker);
+            Enable();
+            FreeMem(tracker, sizeof(struct TypeTracker));
+        }
+
+        Remove((APTR)initial_stats);
+        FreeMem(initial_stats, sizeof(struct TypeStats));
+    }
+    else
+    {
+        request->ios2_Req.io_Error = S2ERR_BAD_STATE;
+        request->ios2_WireError = S2WERR_NOT_TRACKED;
+    }
+
+    /* Return */
+
+    return TRUE;
+}
+
+static BOOL CmdGetTypeStats(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
+{
+    struct NFUnit *unit;
+    struct Opener *opener;
+    ULONG packet_type;
+    struct TypeStats *initial_stats, *tracker;
+    struct Sana2PacketTypeStats *stats;
+
+    unit = (APTR)request->ios2_Req.io_Unit;
+    packet_type = request->ios2_PacketType;
+
+    /* Get global tracker and initial figures */
+
+    tracker = FindTypeStats(LIBBASE, unit, &unit->type_trackers, packet_type);
+    opener = request->ios2_BufferManagement;
+    initial_stats = FindTypeStats(LIBBASE, unit, &opener->initial_stats, packet_type);
+
+    /* Copy and adjust figures */
+    if(initial_stats != NULL)
+    {
+        stats = request->ios2_StatData;
+        CopyMem(&tracker->stats, stats, sizeof(struct Sana2PacketTypeStats));
+        stats->PacketsSent -= initial_stats->stats.PacketsSent;
+        stats->PacketsReceived -= initial_stats->stats.PacketsReceived;
+        stats->BytesSent -= initial_stats->stats.BytesSent;
+        stats->BytesReceived -= initial_stats->stats.BytesReceived;
+        stats->PacketsDropped -= initial_stats->stats.PacketsDropped;
+    }
+    else
+    {
+        request->ios2_Req.io_Error = S2ERR_BAD_STATE;
+        request->ios2_WireError = S2WERR_NOT_TRACKED;
+    }
+
+    /* Return */
+
+    return TRUE;
+}
+
 static BOOL CmdGetGlobalStats(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 {
     struct NFUnit *unit;
@@ -430,12 +608,13 @@ static BOOL CmdOnline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     ULONG wire_error = 0;
     UWORD i;
 
-    /* Return */
+  #if 0  /* Return */
 
     request->ios2_Req.io_Error = error;
     request->ios2_WireError = wire_error;
     return TRUE;
-    
+  #endif
+  
     /* Check request is valid */
     if((unit->flags & IFF_CONFIGURED) == 0)
     {
@@ -474,7 +653,7 @@ static BOOL CmdOffline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 {
     struct NFUnit *unit;
 
-return TRUE;
+//return TRUE;
     /* Put adapter offline */
 
     unit = (APTR)request->ios2_Req.io_Unit;
@@ -482,5 +661,53 @@ return TRUE;
         unit->stop(unit);
 
     /* Return */
+    return TRUE;
+}
+
+static BOOL CmdAddMulticastAddresses(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
+{
+    struct NFUnit *unit;
+    UBYTE *lower_bound, *upper_bound;
+
+    unit = (APTR)request->ios2_Req.io_Unit;
+
+    lower_bound = request->ios2_SrcAddr;
+    if(request->ios2_Req.io_Command == S2_ADDMULTICASTADDRESS)
+        upper_bound = lower_bound;
+    else
+        upper_bound = request->ios2_DstAddr;
+
+    if(!AddMulticastRange(LIBBASE, unit, lower_bound, upper_bound))
+    {
+        request->ios2_Req.io_Error = S2ERR_NO_RESOURCES;
+        request->ios2_WireError = S2WERR_GENERIC_ERROR;
+    }
+
+    /* Return */
+
+    return TRUE;
+}
+
+static BOOL CmdDelMulticastAddresses(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
+{
+    struct NFUnit *unit;
+    UBYTE *lower_bound, *upper_bound;
+
+    unit = (APTR)request->ios2_Req.io_Unit;
+
+    lower_bound = request->ios2_SrcAddr;
+    if(request->ios2_Req.io_Command == S2_DELMULTICASTADDRESS)
+        upper_bound = lower_bound;
+    else
+        upper_bound = request->ios2_DstAddr;
+
+    if(!RemMulticastRange(LIBBASE, unit, lower_bound, upper_bound))
+    {
+        request->ios2_Req.io_Error = S2ERR_BAD_STATE;
+        request->ios2_WireError = S2WERR_BAD_MULTICAST;
+    }
+
+    /* Return */
+
     return TRUE;
 }
