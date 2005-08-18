@@ -20,7 +20,6 @@
 #include <dos/rdargs.h>
 #include <clib/dos_protos.h>
 #include <defines/dos.h>
-#include "aros.h"
 #include <bsdsocket.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
