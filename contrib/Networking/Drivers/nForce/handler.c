@@ -429,6 +429,12 @@ static BOOL CmdOnline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     BYTE error = 0;
     ULONG wire_error = 0;
     UWORD i;
+
+    /* Return */
+
+    request->ios2_Req.io_Error = error;
+    request->ios2_WireError = wire_error;
+    return TRUE;
     
     /* Check request is valid */
     if((unit->flags & IFF_CONFIGURED) == 0)
@@ -468,6 +474,7 @@ static BOOL CmdOffline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 {
     struct NFUnit *unit;
 
+return TRUE;
     /* Put adapter offline */
 
     unit = (APTR)request->ios2_Req.io_Unit;

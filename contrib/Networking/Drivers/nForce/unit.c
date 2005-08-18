@@ -38,7 +38,7 @@ VOID ReportEvents(struct NFBase *NforceBase, struct NFUnit *unit, ULONG events)
 {
    struct IOSana2Req *request, *tail, *next_request;
    struct List *list;
-
+   
    list = &unit->request_ports[EVENT_QUEUE]->mp_MsgList;
    next_request = (APTR)list->lh_Head;
    tail = (APTR)&list->lh_Tail;
@@ -52,7 +52,9 @@ VOID ReportEvents(struct NFBase *NforceBase, struct NFUnit *unit, ULONG events)
       if((request->ios2_WireError&events) != 0)
       {
          request->ios2_WireError = events;
+        Disable();
          Remove((APTR)request);
+        Enable();
          ReplyMsg((APTR)request);
       }
    }
@@ -163,7 +165,6 @@ AROS_UFH3(void, RX_Int,
         i = np->cur_rx % RX_RING;
         Flags = AROS_LE2LONG(np->rx_ring[i].FlagLen);
         len = unit->descr_getlength(&np->rx_ring[i], np->desc_ver);
-        packet_type = AROS_BE2WORD(np->rx_buffer[i].eth_packet_type);
         
         D(bug("%s: nv_rx_process: looking at packet %d, Flags 0x%x, len=%d\n",
                 unit->name, np->cur_rx, Flags, len));
@@ -258,8 +259,23 @@ AROS_UFH3(void, RX_Int,
         frame = &np->rx_buffer[i];
         is_orphan = TRUE;
 
+//bug("%s: got frame %4d:%08x, with type=%04x\n", unit->name, i, frame, AROS_BE2WORD(frame->eth_packet_type));
+#ifdef DEBUG
+                {
+                int j;
+                    for (j=0; j<64; j++) {
+                        if ((j%16) == 0)
+                            D(bug("\n%03x:", j));
+                        D(bug(" %02x", ((unsigned char*)frame)[j]));
+                    }
+                    D(bug("\n"));
+                }
+#endif
+
         if(AddressFilter(LIBBASE, unit, frame->eth_packet_dest))
         {
+//bug("%s: address match\n", unit->name);
+
             packet_type = AROS_BE2WORD(frame->eth_packet_type);
             
             opener = (APTR)unit->nu_Openers.mlh_Head;
@@ -268,6 +284,8 @@ AROS_UFH3(void, RX_Int,
             
             while(opener != opener_tail)
             {
+//bug("%s: opener %08x\n", unit->name, opener);
+
                request = (APTR)opener->read_port.mp_MsgList.lh_Head;
                request_tail = (APTR)&opener->read_port.mp_MsgList.lh_Tail;
                accepted = FALSE;
@@ -276,12 +294,16 @@ AROS_UFH3(void, RX_Int,
             
                while((request != request_tail) && !accepted)
                {
+//bug("%s: req %08x, ios2_PacketType=%04x, against %04x\n", unit->name, request, request->ios2_PacketType, packet_type);
+
                   if((request->ios2_PacketType == packet_type)
                      || ((request->ios2_PacketType <= ETH_MTU)
                      	 && (packet_type <= ETH_MTU)))
                   {
                      CopyPacket(LIBBASE, unit, request, len, packet_type, frame);
                      accepted = TRUE;
+
+//bug("%s: accepted\n", unit->name);
                   }
                   request =
                      (struct IOSana2Req *)request->ios2_Req.io_Message.mn_Node.ln_Succ;
@@ -325,6 +347,61 @@ next_pkt:
     }
 
     AROS_USERFUNC_EXIT
+}
+
+static void nv_tx_done(struct NFUnit *unit)
+{
+    struct fe_priv *np = unit->nu_fe_priv;
+    struct NFBase *NforceBase = unit->nu_device;
+    ULONG Flags;
+    int i;
+
+    /* Go through tx chain and mark all send packets as free */	
+    while (np->nic_tx != np->next_tx)
+    {
+        i = np->nic_tx % TX_RING;
+        
+        Flags = AROS_LE2LONG(np->tx_ring[i].FlagLen);
+        
+        D(bug("%s: nv_tx_done: looking at packet %d, Flags 0x%x.\n",
+                unit->name, np->nic_tx, Flags));
+        
+        if (Flags & NV_TX_VALID)
+            break;
+        	
+        if (np->desc_ver == DESC_VER_1) {
+            if (Flags & (NV_TX_RETRYERROR|NV_TX_CARRIERLOST|NV_TX_LATECOLLISION|
+                         NV_TX_UNDERFLOW|NV_TX_ERROR))
+            {
+                ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_TX);
+            }
+            else
+            {
+                unit->stats.PacketsSent++;
+            }
+        }
+        else
+        {
+            if (Flags & (NV_TX2_RETRYERROR|NV_TX2_CARRIERLOST|NV_TX2_LATECOLLISION|
+            				NV_TX2_UNDERFLOW|NV_TX2_ERROR))
+            {
+                ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_TX);
+            }
+            else
+            {
+                unit->stats.PacketsSent++;
+            }
+        }
+        np->nic_tx++;
+    }
+    
+    if (np->next_tx - np->nic_tx < TX_LIMIT_START) {
+        if (netif_queue_stopped(unit)) {
+            bug("%s: output queue restart\n", unit->name);
+            unit->request_ports[WRITE_QUEUE]->mp_Flags = PA_SOFTINT;
+            netif_wake_queue(unit);
+        }
+    }
 }
 
 AROS_UFH3(void, TX_Int,
@@ -392,7 +469,7 @@ AROS_UFH3(void, TX_Int,
             if (error == 0)
             {
                 Disable();			
-                np->tx_ring[nr].FlagLen = AROS_LONG2LE(packet_size | np->tx_flags );
+                np->tx_ring[nr].FlagLen = AROS_LONG2LE((packet_size-1) | np->tx_flags );
                 D(bug("%s: nv_start_xmit: packet packet %d queued for transmission.",
                         unit->name, np->next_tx));
 #ifdef DEBUG
@@ -410,19 +487,22 @@ AROS_UFH3(void, TX_Int,
                 
                 if (np->next_tx - np->nic_tx >= TX_LIMIT_STOP)
                 {
+bug("%s: output queue full. Stopping\n", unit->name);
                 	netif_stop_queue(unit);
                 	proceed = FALSE;
                 }
                 Enable();
-                writel(NVREG_TXRXCTL_KICK|np->desc_ver, (UBYTE*)unit->nu_BaseMem + NvRegTxRxControl);
-                pci_push((UBYTE*)unit->nu_BaseMem);
+//                writel(NVREG_TXRXCTL_KICK|np->desc_ver, (UBYTE*)unit->nu_BaseMem + NvRegTxRxControl);
+//                pci_push((UBYTE*)unit->nu_BaseMem);
             }
 
             /* Reply packet */
             
             request->ios2_Req.io_Error = error;
             request->ios2_WireError = wire_error;
+            Disable();
             Remove((APTR)request);
+            Enable();
             ReplyMsg((APTR)request);
             
             /* Update statistics */
@@ -438,65 +518,16 @@ AROS_UFH3(void, TX_Int,
                 }
             }	
         }
+writel(NVREG_TXRXCTL_KICK|np->desc_ver, (UBYTE*)unit->nu_BaseMem + NvRegTxRxControl);
+pci_push((UBYTE*)unit->nu_BaseMem);
     }
     
     if(proceed)
         unit->request_ports[WRITE_QUEUE]->mp_Flags = PA_SOFTINT;
     else
         unit->request_ports[WRITE_QUEUE]->mp_Flags = PA_IGNORE;
-    
-    /* Go through tx chain and mark all send packets as free */	
-    while (np->nic_tx != np->next_tx)
-    {
-        i = np->nic_tx % TX_RING;
-        
-        Flags = AROS_LE2LONG(np->tx_ring[i].FlagLen);
-        
-        D(bug("%s: nv_tx_done: looking at packet %d, Flags 0x%x.\n",
-                unit->name, np->nic_tx, Flags));
-        
-        if (Flags & NV_TX_VALID)
-            break;
-        	
-        if (np->desc_ver == DESC_VER_1) {
-            if (Flags & (NV_TX_RETRYERROR|NV_TX_CARRIERLOST|NV_TX_LATECOLLISION|
-                         NV_TX_UNDERFLOW|NV_TX_ERROR))
-            {
-                if (Flags & NV_TX_UNDERFLOW)
-                    np->stats.tx_fifo_errors++;
-                if (Flags & NV_TX_CARRIERLOST)
-                    np->stats.tx_carrier_errors++;
-                np->stats.tx_errors++;
-            }
-            else
-            {
-                np->stats.tx_packets++;
-                np->stats.tx_bytes += np->tx_buffer[i].eth_len;
-                unit->stats.PacketsSent++;
-            }
-        }
-        else
-        {
-            if (Flags & (NV_TX2_RETRYERROR|NV_TX2_CARRIERLOST|NV_TX2_LATECOLLISION|
-            				NV_TX2_UNDERFLOW|NV_TX2_ERROR))
-            {
-                if (Flags & NV_TX2_UNDERFLOW)
-                    np->stats.tx_fifo_errors++;
-                if (Flags & NV_TX2_CARRIERLOST)
-                    np->stats.tx_carrier_errors++;
-                np->stats.tx_errors++;
-            }
-            else
-            {
-                np->stats.tx_packets++;
-                np->stats.tx_bytes += np->tx_buffer[i].eth_len;
-            }
-        }
-        np->nic_tx++;
-    }
-    
-    if (np->next_tx - np->nic_tx < TX_LIMIT_START)
-        netif_wake_queue(unit);
+
+//    nv_tx_done(unit);    
     
     AROS_USERFUNC_EXIT
 }
@@ -533,8 +564,21 @@ static void NF_TimeoutHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     struct NFUnit *dev = (struct NFUnit *) irq->h_Data;
     struct timeval time;
     struct Device *TimerBase = dev->nu_TimerSlowReq->tr_node.io_Device;
+    struct fe_priv *np = dev->nu_fe_priv;
     
     GetSysTime(&time);
+
+#if 0
+    if (CmpTime(&time, &dev->nu_delay) < 0)
+    {
+        dev->nu_delay.tv_secs = 0;
+        dev->nu_delay.tv_micro= 250000;
+        AddTime(&dev->nu_delay, &time);
+        
+bug("%s: TX fill=%3d (%5d:%5d), RX fill=%3d (%5d:%5d)\n", dev->name, np->next_tx - np->nic_tx, np->next_tx, np->nic_tx,
+            np->cur_rx - np->refill_rx, np->cur_rx, np->refill_rx);
+    }
+#endif
 
     if (dev->nu_toutNEED && (CmpTime(&time, &dev->nu_toutPOLL ) < 0))
     {
@@ -564,13 +608,15 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
         if (!(events & np->irqmask))
             break;
         
-        if (i>0) bug("%s: IntHandler restarted (count=%d)\n", dev->name, i);
+//        if (i>0) bug("%s: IntHandler restarted (count=%d)\n", dev->name, i);
         		
         if (events & (NVREG_IRQ_TX1|NVREG_IRQ_TX2|NVREG_IRQ_TX_ERR)) {
-            AROS_UFC3(void, dev->tx_int.is_Code,
-                AROS_UFCA(APTR, dev->tx_int.is_Data, A1),
-                AROS_UFCA(APTR, dev->tx_int.is_Code, A5),
-                AROS_UFCA(struct ExecBase *, SysBase, A6));
+            nv_tx_done(dev);
+
+//            AROS_UFC3(void, dev->tx_int.is_Code,
+//                AROS_UFCA(APTR, dev->tx_int.is_Data, A1),
+//                AROS_UFCA(APTR, dev->tx_int.is_Code, A5),
+//                AROS_UFCA(struct ExecBase *, SysBase, A6));
         }
     	
         if (events & (NVREG_IRQ_RX_ERROR|NVREG_IRQ_RX|NVREG_IRQ_RX_NOBUF)) {
@@ -612,13 +658,19 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
             writel(0, base + NvRegIrqMask);
             pci_push(base);
   
+            Disable();
             dev->nu_toutPOLL.tv_micro = POLL_WAIT % 1000000;
             dev->nu_toutPOLL.tv_secs  = POLL_WAIT / 1000000;
             AddTime(&dev->nu_toutPOLL, &time);
             dev->nu_toutNEED = TRUE;
+            Enable();
             
             break; /* break the for() loop */
         }
+    }
+    
+    if (netif_queue_stopped(dev)) {
+        nv_tx_done(dev);
     }
 }
 
@@ -653,7 +705,9 @@ VOID CopyPacket(struct NFBase *NforceBase, struct NFUnit *unit,
         ptr = buffer->eth_packet_data;
     }
     else
+    {
         ptr = (UBYTE*)buffer;
+    }
     
     request->ios2_DataLength = packet_size;
     
@@ -662,7 +716,7 @@ VOID CopyPacket(struct NFBase *NforceBase, struct NFUnit *unit,
     opener = request->ios2_BufferManagement;
     if((request->ios2_Req.io_Command == CMD_READ) &&
         (opener->filter_hook != NULL))
-        if(!CallHookPkt(opener->filter_hook, request, buffer))
+        if(!CallHookPkt(opener->filter_hook, request, ptr))
             filtered = TRUE;
     
     if(!filtered)
@@ -675,7 +729,9 @@ VOID CopyPacket(struct NFBase *NforceBase, struct NFUnit *unit,
             request->ios2_WireError = S2WERR_BUFF_ERROR;
             ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_SOFTWARE | S2EVENT_BUFF | S2EVENT_RX);
         }
+        Disable();
         Remove((APTR)request);
+        Enable();
         ReplyMsg((APTR)request);
     }
 }
@@ -786,12 +842,11 @@ AROS_UFH3(void, NF_Scheduler,
                          1 << dev->nu_signal_0	|
                          1 << dev->nu_signal_1	|
                          1 << dev->nu_signal_2	|
-                         1 << dev->nu_signal_3 |
-                         SIGBREAKF_CTRL_C ;
+                         1 << dev->nu_signal_3;
                 for(;;)
                 {	
                     ULONG recvd = Wait(sigset);
-                    if (recvd & SIGBREAKF_CTRL_C)
+                    if (recvd & dev->nu_signal_0)
                     {
                         /*
                          * Shutdown process. Driver should close everything 
@@ -963,9 +1018,9 @@ struct NFUnit *CreateUnit(struct NFBase *NforceBase, OOP_Object *pciDevice)
                         unit->nu_Process = CreateNewProcTags(
                                                 NP_Entry, (IPTR)NF_Scheduler,
                                                 NP_Name, NFORCE_TASK_NAME,
-                                                NP_Priority, -1,
+                                                NP_Priority, 0,
                                                 NP_UserData, (IPTR)unit,
-                                                NP_StackSize, 40960,
+                                                NP_StackSize, 140960,
                                                 TAG_DONE);
 	
                         WaitPort(LIBBASE->nf_syncport);
@@ -1001,7 +1056,7 @@ void DeleteUnit(struct NFBase *NforceBase, struct NFUnit *Unit)
     {
         if (Unit->nu_Process)
         {
-            Signal(&Unit->nu_Process->pr_Task, SIGBREAKF_CTRL_C);
+            Signal(&Unit->nu_Process->pr_Task, Unit->nu_signal_0);
         }
 		
         for (i=0; i < REQUEST_QUEUE_COUNT; i++)

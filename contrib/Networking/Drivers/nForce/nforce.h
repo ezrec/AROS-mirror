@@ -117,6 +117,7 @@ struct NFUnit {
 	OOP_Object				*nu_PCIDevice;
 	OOP_Object				*nu_PCIDriver;
     
+    struct timeval          nu_delay;
     struct timeval          nu_toutPOLL;
     BOOL                    nu_toutNEED;
 
@@ -255,8 +256,9 @@ static inline void __netif_schedule(struct NFUnit *dev)
 
 static inline void netif_schedule(struct NFUnit *dev)
 {
-	if (!test_bit(__LINK_STATE_XOFF, &dev->state))
+	if (!test_bit(__LINK_STATE_XOFF, &dev->state)) {
     	Cause(&dev->tx_int);
+        }
 }
 
 
@@ -267,8 +269,9 @@ static inline void netif_start_queue(struct NFUnit *dev)
 
 static inline void netif_wake_queue(struct NFUnit *dev)
 {
-	if (test_and_clear_bit(__LINK_STATE_XOFF, &dev->state))
+	if (test_and_clear_bit(__LINK_STATE_XOFF, &dev->state)) {
     	Cause(&dev->tx_int);
+        }
 }
 
 static inline void netif_stop_queue(struct NFUnit *dev)
