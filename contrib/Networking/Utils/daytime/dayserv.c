@@ -25,7 +25,6 @@
 #include <dos/dos.h>
 #include <clib/dos_protos.h>
 #include <defines/dos.h>
-#include "aros.h"
 #include <arpa/inet.h> 
 #include <sys/types.h>
 #include <defines/intuition.h>
