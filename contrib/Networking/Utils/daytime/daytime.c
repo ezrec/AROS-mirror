@@ -43,7 +43,7 @@ struct Library *SocketBase = NULL;
 /* let's design our resource handling "re-usable" */
 struct Library *openSockLib(void)
 {
-	return(OpenLibrary(SOCKETNAME, 4U));
+	return(OpenLibrary(SOCKETNAME, 0));
 }
 
 void closeSockLib(struct Library **base)

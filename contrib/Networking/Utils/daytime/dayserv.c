@@ -63,7 +63,7 @@ BOOL openLib(void)
 {
 	BOOL rw = FALSE;
 	
-	SocketBase = OpenLibrary(SOCKETNAME, 4U);
+	SocketBase = OpenLibrary(SOCKETNAME, 0);
 	IntuitionBase = OpenLibrary("intuition.library", 37U);
 	
 	if(SocketBase && IntuitionBase)
