@@ -1,0 +1,11 @@
+#   $Id: mmakefile.src 23396 2005-06-26 17:18:59Z neil $
+include $(TOP)/config/make.cfg
+
+USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -I $(TOP)/contrib/Networking/Developer/includes
+
+%build_progs mmake=contrib-networking-utils-daytime \
+    files="daytime dayserv" \
+    targetdir="$(CONTRIBDIR)/Networking/Utils/daytime"
+
+
+%common
