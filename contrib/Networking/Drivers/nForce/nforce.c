@@ -2,6 +2,23 @@
  * $Id: nforce.c,v 1.15 2005/08/15 23:56:19 misc Exp $
  */
 
+/*
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+    MA 02111-1307, USA.
+*/
+
 #define DEBUG 0
 
 #include <exec/types.h>
@@ -576,18 +593,18 @@ static void nv_deinitialize(struct net_device *dev)
 
 static void nv_initialize(struct net_device *dev)
 {
-	struct fe_priv *np = dev->nu_fe_priv;
-	UBYTE *base = get_hwbase(dev);
-	int i;
+    struct fe_priv *np = dev->nu_fe_priv;
+    UBYTE *base = get_hwbase(dev);
+    int i;
 
-	np->rx_ring = HIDD_PCIDriver_AllocPCIMem(
-					dev->nu_PCIDriver, 
-					sizeof(struct ring_desc) * (RX_RING + TX_RING));
-	
-	np->ring_addr = (IPTR)np->rx_ring;
-	np->tx_ring = &np->rx_ring[RX_RING];
+    np->rx_ring = HIDD_PCIDriver_AllocPCIMem(
+                    dev->nu_PCIDriver,
+                    sizeof(struct ring_desc) * (RX_RING + TX_RING));
 
-	np->orig_mac[0] = readl(base + NvRegMacAddrA);
+    np->ring_addr = (IPTR)np->rx_ring;
+    np->tx_ring = &np->rx_ring[RX_RING];
+
+    np->orig_mac[0] = readl(base + NvRegMacAddrA);
     np->orig_mac[1] = readl(base + NvRegMacAddrB);
 
     dev->dev_addr[0] = dev->org_addr[0] = (np->orig_mac[1] >>  8) & 0xff;
@@ -596,7 +613,7 @@ static void nv_initialize(struct net_device *dev)
     dev->dev_addr[3] = dev->org_addr[3] = (np->orig_mac[0] >> 16) & 0xff;
     dev->dev_addr[4] = dev->org_addr[4] = (np->orig_mac[0] >>  8) & 0xff;
     dev->dev_addr[5] = dev->org_addr[5] = (np->orig_mac[0] >>  0) & 0xff;
-	
+
     D(bug("%s: MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n", dev->name,
             dev->dev_addr[0], dev->dev_addr[1], dev->dev_addr[2],
             dev->dev_addr[3], dev->dev_addr[4], dev->dev_addr[5]));
@@ -604,7 +621,7 @@ static void nv_initialize(struct net_device *dev)
     /* disable WOL */
     writel(0, base + NvRegWakeUpFlags);
     np->wolenabled = 0;
-	
+
     if (np->desc_ver == DESC_VER_1) {
         np->tx_flags = NV_TX_LASTPACKET|NV_TX_VALID;
         if (dev->nu_DriverFlags & DEV_NEED_LASTPACKET1)
@@ -675,44 +692,44 @@ static void nv_initialize(struct net_device *dev)
 
 static void nv_drain_tx(struct net_device *dev)
 {
-	struct fe_priv *np = get_nvpriv(dev);
-	int i;
-	for (i = 0; i < TX_RING; i++) {
-		np->tx_ring[i].FlagLen = 0;
-	}
+    struct fe_priv *np = get_nvpriv(dev);
+    int i;
+    for (i = 0; i < TX_RING; i++) {
+        np->tx_ring[i].FlagLen = 0;
+    }
 }
 
 static void nv_drain_rx(struct net_device *dev)
 {
-	struct fe_priv *np = get_nvpriv(dev);
-	int i;
-	for (i = 0; i < RX_RING; i++) {
-		np->rx_ring[i].FlagLen = 0;
-	}
+    struct fe_priv *np = get_nvpriv(dev);
+    int i;
+    for (i = 0; i < RX_RING; i++) {
+        np->rx_ring[i].FlagLen = 0;
+    }
 }
 
 
 static void drain_ring(struct net_device *dev)
 {
-	nv_drain_tx(dev);
-	nv_drain_rx(dev);
+    nv_drain_tx(dev);
+    nv_drain_rx(dev);
 }
 
 static int request_irq(struct net_device *dev)
 {
-	OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
-	BOOL ret;
-	
-	if (irq)
+    OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
+    BOOL ret;
+
+    if (irq)
     {
         ret = HIDD_IRQ_AddHandler(irq, dev->nu_irqhandler, dev->nu_IRQ);
         HIDD_IRQ_AddHandler(irq, dev->nu_touthandler, vHidd_IRQ_Timer);
-        
-      	OOP_DisposeObject(irq);
-        
+
+        OOP_DisposeObject(irq);
+
         if (ret)
         {
-        	return 0;
+            return 0;
         }
     }
     return 1;
@@ -720,12 +737,12 @@ static int request_irq(struct net_device *dev)
 
 static void free_irq(struct net_device *dev)
 {
-	OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
-	if (irq)
+    OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
+    if (irq)
     {
-	    HIDD_IRQ_RemHandler(irq, dev->nu_irqhandler);
+        HIDD_IRQ_RemHandler(irq, dev->nu_irqhandler);
         HIDD_IRQ_RemHandler(irq, dev->nu_touthandler);
-      	OOP_DisposeObject(irq);
+        OOP_DisposeObject(irq);
     }
 }
 
@@ -734,9 +751,9 @@ static void nv_set_mac(struct net_device *dev)
     UBYTE *base = get_hwbase(dev);
     ULONG mac[2];
 
-    mac[0] = (dev->dev_addr[0] << 0) + (dev->dev_addr[1] << 8) +
-                (dev->dev_addr[2] << 16) + (dev->dev_addr[3] << 24);
-    mac[1] = (dev->dev_addr[4] << 0) + (dev->dev_addr[5] << 8);
+    mac[0] = (dev->dev_addr[0] << 0)  + (dev->dev_addr[1] << 8) +
+             (dev->dev_addr[2] << 16) + (dev->dev_addr[3] << 24);
+    mac[1] = (dev->dev_addr[4] << 0)  + (dev->dev_addr[5] << 8);
 
     writel(mac[0], base + NvRegMacAddrA);
     writel(mac[1], base + NvRegMacAddrB);
@@ -749,40 +766,38 @@ static void nv_set_mac(struct net_device *dev)
  */
 static int nv_alloc_rx(struct net_device *dev)
 {
-	struct fe_priv *np = get_nvpriv(dev);
-	unsigned int refill_rx = np->refill_rx;
-	int nr;
+    struct fe_priv *np = get_nvpriv(dev);
+    unsigned int refill_rx = np->refill_rx;
+    int nr;
 
-	while (np->cur_rx != refill_rx) {
+    while (np->cur_rx != refill_rx) {
+        nr = refill_rx % RX_RING;
 
-		nr = refill_rx % RX_RING;
-
-		np->rx_ring[nr].FlagLen = AROS_LONG2LE(RX_NIC_BUFSIZE | NV_RX_AVAIL);
-		D(bug("%s: nv_alloc_rx: Packet %d marked as Available\n",
-					dev->name, refill_rx));
-		refill_rx++;
-	}
-	np->refill_rx = refill_rx;
-	if (np->cur_rx - refill_rx == RX_RING)
-		return 1;
-	return 0;
+        np->rx_ring[nr].FlagLen = AROS_LONG2LE(RX_NIC_BUFSIZE | NV_RX_AVAIL);
+        D(bug("%s: nv_alloc_rx: Packet %d marked as Available\n", dev->name, refill_rx));
+        refill_rx++;
+    }
+    np->refill_rx = refill_rx;
+    if (np->cur_rx - refill_rx == RX_RING)
+        return 1;
+    return 0;
 }
 
 
 static int nv_init_ring(struct net_device *dev)
 {
-	struct fe_priv *np = get_nvpriv(dev);
-	int i;
+    struct fe_priv *np = get_nvpriv(dev);
+    int i;
 
-	np->next_tx = np->nic_tx = 0;
-	for (i = 0; i < TX_RING; i++)
-		np->tx_ring[i].FlagLen = 0;
+    np->next_tx = np->nic_tx = 0;
+    for (i = 0; i < TX_RING; i++)
+        np->tx_ring[i].FlagLen = 0;
 
-	np->cur_rx = RX_RING;
-	np->refill_rx = 0;
-	for (i = 0; i < RX_RING; i++)
-		np->rx_ring[i].FlagLen = 0;
-	return nv_alloc_rx(dev);
+    np->cur_rx = RX_RING;
+    np->refill_rx = 0;
+    for (i = 0; i < RX_RING; i++)
+        np->rx_ring[i].FlagLen = 0;
+    return nv_alloc_rx(dev);
 }
 
 static int nv_open(struct net_device *dev)
@@ -791,30 +806,30 @@ static int nv_open(struct net_device *dev)
     UBYTE *base = get_hwbase(dev);
     int ret, oom, i;
 
-	oom = 0;
-	
-	np->rx_buffer = HIDD_PCIDriver_AllocPCIMem(
-						dev->nu_PCIDriver, 
-						RX_RING * sizeof(struct eth_frame));
-	
-	if (np->rx_buffer == NULL)
-		oom = 1;
-	
-	np->tx_buffer = HIDD_PCIDriver_AllocPCIMem(
-						dev->nu_PCIDriver,
-						TX_RING * sizeof(struct eth_frame));
+    oom = 0;
 
-	if (np->tx_buffer == NULL)
-		oom = 1;
-	
-	for (i=0; i < TX_RING; i++)
-		np->tx_ring[i].PacketBuffer = (IPTR)&np->tx_buffer[i];
+    np->rx_buffer = HIDD_PCIDriver_AllocPCIMem(
+                        dev->nu_PCIDriver,
+                        RX_RING * sizeof(struct eth_frame));
 
-	for (i=0; i < RX_RING; i++)
-		np->rx_ring[i].PacketBuffer = (IPTR)&np->rx_buffer[i];
+    if (np->rx_buffer == NULL)
+        oom = 1;
+
+    np->tx_buffer = HIDD_PCIDriver_AllocPCIMem(
+                        dev->nu_PCIDriver,
+                        TX_RING * sizeof(struct eth_frame));
+
+    if (np->tx_buffer == NULL)
+        oom = 1;
+
+    for (i=0; i < TX_RING; i++)
+        np->tx_ring[i].PacketBuffer = (IPTR)&np->tx_buffer[i];
+
+    for (i=0; i < RX_RING; i++)
+        np->rx_ring[i].PacketBuffer = (IPTR)&np->rx_buffer[i];
 
     D(bug("nv_open: begin\n"));
-    
+
     /* 1) erase previous misconfiguration */
     /* 4.1-1: stop adapter: ignored, 4.3 seems to be overkill */
     writel(NVREG_MCASTADDRA_FORCE, base + NvRegMulticastAddrA);
@@ -829,7 +844,7 @@ static int nv_open(struct net_device *dev)
     writel(0, base + NvRegAdapterControl);
 
     /* 2) initialize descriptor rings */
-	oom = nv_init_ring(dev);
+    oom = nv_init_ring(dev);
 
     writel(0, base + NvRegLinkSpeed);
     writel(0, base + NvRegUnknownTransmitterReg);
@@ -839,8 +854,8 @@ static int nv_open(struct net_device *dev)
     np->in_shutdown = 0;
 
     /* 3) set mac address */
-	nv_set_mac(dev);
-	
+    nv_set_mac(dev);
+
     /* 4) give hw rings */
     writel((ULONG) np->ring_addr, base + NvRegRxRingPhysAddr);
     writel((ULONG) (np->ring_addr + RX_RING*sizeof(struct ring_desc)), base + NvRegTxRingPhysAddr);
@@ -927,13 +942,13 @@ static int nv_open(struct net_device *dev)
         netif_carrier_off(dev);
     }
     if (oom) {
-    	bug("%s: Out Of Memory. PANIC!\n", dev->name);
-        	ret = 1;
-        	goto out_drain;
+        bug("%s: Out Of Memory. PANIC!\n", dev->name);
+        ret = 1;
+        goto out_drain;
     }
-        
+
     ReleaseSemaphore(&np->lock);
-	dev->flags |= IFF_UP;
+    dev->flags |= IFF_UP;
     ReportEvents(LIBBASE, dev, S2EVENT_ONLINE);
 
     return 0;
@@ -948,7 +963,7 @@ static int nv_close(struct net_device *dev)
     struct fe_priv *np = get_nvpriv(dev);
     UBYTE *base;
 
-	dev->flags &= ~IFF_UP;
+    dev->flags &= ~IFF_UP;
 
     ObtainSemaphore(&np->lock);
     np->in_shutdown = 1;
@@ -974,9 +989,9 @@ static int nv_close(struct net_device *dev)
 
     drain_ring(dev);
 
-	HIDD_PCIDriver_FreePCIMem(dev->nu_PCIDriver, np->rx_buffer);
-	HIDD_PCIDriver_FreePCIMem(dev->nu_PCIDriver, np->tx_buffer);
-	
+    HIDD_PCIDriver_FreePCIMem(dev->nu_PCIDriver, np->rx_buffer);
+    HIDD_PCIDriver_FreePCIMem(dev->nu_PCIDriver, np->tx_buffer);
+
     if (np->wolenabled)
         nv_start_rx(dev);
 
@@ -989,28 +1004,28 @@ static int nv_close(struct net_device *dev)
 
 static void nv_link_irq(struct net_device *dev)
 {
-	UBYTE *base = get_hwbase(dev);
-	ULONG miistat;
+    UBYTE *base = get_hwbase(dev);
+    ULONG miistat;
 
-	miistat = readl(base + NvRegMIIStatus);
-	writel(NVREG_MIISTAT_MASK, base + NvRegMIIStatus);
-	D(bug("%s: link change irq, status 0x%x.\n", dev->name, miistat));
+    miistat = readl(base + NvRegMIIStatus);
+    writel(NVREG_MIISTAT_MASK, base + NvRegMIIStatus);
+    D(bug("%s: link change irq, status 0x%x.\n", dev->name, miistat));
 
-	if (miistat & (NVREG_MIISTAT_LINKCHANGE))
-		dev->linkchange(dev);
-	D(bug("%s: link change notification done.\n", dev->name));
+    if (miistat & (NVREG_MIISTAT_LINKCHANGE))
+        dev->linkchange(dev);
+    D(bug("%s: link change notification done.\n", dev->name));
 }
 
 void nv_get_functions(struct net_device *Unit)
 {
-	Unit->initialize = nv_initialize;
-	Unit->deinitialize = nv_deinitialize;
-	Unit->start = nv_open;
-	Unit->stop = nv_close;
-	Unit->set_mac_address = nv_set_mac;
-	Unit->linkchange = nv_linkchange;
-	Unit->linkirq = nv_link_irq;
-	Unit->descr_getlength = nv_descr_getlength;
+    Unit->initialize = nv_initialize;
+    Unit->deinitialize = nv_deinitialize;
+    Unit->start = nv_open;
+    Unit->stop = nv_close;
+    Unit->set_mac_address = nv_set_mac;
+    Unit->linkchange = nv_linkchange;
+    Unit->linkirq = nv_link_irq;
+    Unit->descr_getlength = nv_descr_getlength;
     Unit->alloc_rx = nv_alloc_rx;
     Unit->set_multicast = nv_set_multicast;
 }

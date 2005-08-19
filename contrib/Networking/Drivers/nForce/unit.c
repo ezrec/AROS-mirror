@@ -2,6 +2,23 @@
  * $Id: unit.c,v 1.5 2005/08/15 23:56:19 misc Exp $
  */
 
+/*
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+    MA 02111-1307, USA.
+*/
+
 #define DEBUG 0
 
 #include <exec/types.h>
@@ -41,7 +58,7 @@ VOID ReportEvents(struct NFBase *NforceBase, struct NFUnit *unit, ULONG events)
 {
     struct IOSana2Req *request, *tail, *next_request;
     struct List *list;
-  
+
     list = &unit->request_ports[EVENT_QUEUE]->mp_MsgList;
     next_request = (APTR)list->lh_Head;
     tail = (APTR)&list->lh_Tail;
@@ -93,11 +110,11 @@ void FlushUnit(LIBBASETYPEPTR LIBBASE, struct NFUnit *unit, UBYTE last_queue, BY
     struct IORequest *request;
     UBYTE i;
     struct Opener *opener, *tail;
-	
+
     D(bug("[nforce] FlushUnit\n"));
-	
+
     /* Abort queued operations */
-	
+
     for (i=0; i <= last_queue; i++)
     {
         while ((request = (APTR)GetMsg(unit->request_ports[i])) != NULL)
@@ -106,12 +123,12 @@ void FlushUnit(LIBBASETYPEPTR LIBBASE, struct NFUnit *unit, UBYTE last_queue, BY
             ReplyMsg((struct Message *)request);
         }
     }
-	
+
     opener = (APTR)unit->nu_Openers.mlh_Head;
     tail = (APTR)unit->nu_Openers.mlh_Tail;
-	
+
     /* Flush every opener's read queue */
-	
+
     while(opener != tail)
     {
         while ((request = (APTR)GetMsg(&opener->read_port)) != NULL)
@@ -149,12 +166,12 @@ static inline void pci_push(UBYTE *base)
  * filter function).
  */
 AROS_UFH3(void, RX_Int,
-    AROS_UFHA(struct NFUnit *, 	unit, A1),
-    AROS_UFHA(APTR,				dummy, A5),
+    AROS_UFHA(struct NFUnit *,  unit, A1),
+    AROS_UFHA(APTR,             dummy, A5),
     AROS_UFHA(struct ExecBase *,SysBase, A6))
 {
     AROS_USERFUNC_INIT
-    
+
     struct NFBase *NforceBase = unit->nu_device;
     struct fe_priv *np = unit->nu_fe_priv;
     ULONG Flags;
@@ -163,13 +180,13 @@ AROS_UFH3(void, RX_Int,
     struct Opener *opener, *opener_tail;
     struct IOSana2Req *request, *request_tail;
     BOOL accepted, is_orphan;
-	
+
     /* Endless loop, with break from inside */
     for(;;)
     {
         int i,len;
         struct eth_frame *frame;
-        
+
         if (np->cur_rx - np->refill_rx >= RX_RING)
             break;	/* we scanned the whole ring - do not continue */
 
@@ -177,10 +194,10 @@ AROS_UFH3(void, RX_Int,
         i = np->cur_rx % RX_RING;
         Flags = AROS_LE2LONG(np->rx_ring[i].FlagLen);
         len = unit->descr_getlength(&np->rx_ring[i], np->desc_ver);
-        
+
         D(bug("%s: nv_rx_process: looking at packet %d, Flags 0x%x, len=%d\n",
                 unit->name, np->cur_rx, Flags, len));
-		
+
         /* Free frame? Do nothing - we've empty queue now */
         if (Flags & NV_RX_AVAIL)
             break;	/* still owned by hardware, */
@@ -188,12 +205,12 @@ AROS_UFH3(void, RX_Int,
         /*
          * the packet is for us - get it :)
          */
-		 
+
         /* look at what we actually got: */
         if (np->desc_ver == DESC_VER_1) {
             if (!(Flags & NV_RX_DESCRIPTORVALID))
                 goto next_pkt;
-            
+
             if (Flags & NV_RX_MISSEDFRAME) {
                 ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
                 unit->stats.BadData++;
@@ -229,7 +246,7 @@ AROS_UFH3(void, RX_Int,
         } else {
             if (!(Flags & NV_RX2_DESCRIPTORVALID))
                 goto next_pkt;
-            
+
             if (Flags & (NV_RX2_ERROR1|NV_RX2_ERROR2|NV_RX2_ERROR3|NV_RX2_ERROR4)) {
                 ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
                 unit->stats.BadData++;
@@ -248,13 +265,13 @@ AROS_UFH3(void, RX_Int,
             if (Flags & NV_RX2_ERROR) {
                 /* framing errors are soft errors, the rest is fatal. */
                 if (Flags & NV_RX2_FRAMINGERR) {
-                	if (Flags & NV_RX2_SUBSTRACT1) {
-                		len--;
-                	}
+                    if (Flags & NV_RX2_SUBSTRACT1) {
+                        len--;
+                    }
                 } else {
                     ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
-                	unit->stats.BadData++;
-                	goto next_pkt;
+                    unit->stats.BadData++;
+                    goto next_pkt;
                 }
             }
             Flags &= NV_RX2_CHECKSUMMASK;
@@ -266,7 +283,7 @@ AROS_UFH3(void, RX_Int,
                 D(bug("%s: hwchecksum miss!.\n", unit->name));
             }
         }
-		
+
         /* got a valid packet - forward it to the network core */
         frame = &np->rx_buffer[i];
         is_orphan = TRUE;
@@ -289,23 +306,23 @@ AROS_UFH3(void, RX_Int,
         {
             /* Packet is addressed to this driver */
             packet_type = AROS_BE2WORD(frame->eth_packet_type);
-            
+
             opener = (APTR)unit->nu_Openers.mlh_Head;
             opener_tail = (APTR)&unit->nu_Openers.mlh_Tail;
 
-            /* Offer packet to every opener */           
+            /* Offer packet to every opener */
             while(opener != opener_tail)
             {
                request = (APTR)opener->read_port.mp_MsgList.lh_Head;
                request_tail = (APTR)&opener->read_port.mp_MsgList.lh_Tail;
                accepted = FALSE;
-            
+
                /* Offer packet to each request until it's accepted */
                while((request != request_tail) && !accepted)
                {
                   if((request->ios2_PacketType == packet_type)
                      || ((request->ios2_PacketType <= ETH_MTU)
-                     	 && (packet_type <= ETH_MTU)))
+                          && (packet_type <= ETH_MTU)))
                   {
                      CopyPacket(LIBBASE, unit, request, len, packet_type, frame);
                      accepted = TRUE;
@@ -313,18 +330,18 @@ AROS_UFH3(void, RX_Int,
                   request =
                      (struct IOSana2Req *)request->ios2_Req.io_Message.mn_Node.ln_Succ;
                }
-            
+
                if(accepted)
                   is_orphan = FALSE;
-            
+
                opener = (APTR)opener->node.mln_Succ;
             }
-            
+
             /* If packet was unwanted, give it to S2_READORPHAN request */
             if(is_orphan)
             {
                 unit->stats.UnknownTypesReceived++;
-                
+
                 if(!IsMsgPortEmpty(unit->request_ports[ADOPT_QUEUE]))
                 {
                     CopyPacket(LIBBASE, unit,
@@ -332,9 +349,9 @@ AROS_UFH3(void, RX_Int,
                         mp_MsgList.lh_Head, len, packet_type, frame);
                 }
             }
-            
+
             /* Update remaining statistics */
-            
+
             tracker =
                 FindTypeStats(LIBBASE, unit, &unit->type_trackers, packet_type);
             if(tracker != NULL)
@@ -345,7 +362,7 @@ AROS_UFH3(void, RX_Int,
         }
 
         unit->stats.PacketsReceived++;
-        		
+
 next_pkt:
         np->cur_rx++;
     }
@@ -368,15 +385,15 @@ static void nv_tx_done(struct NFUnit *unit)
     while (np->nic_tx != np->next_tx)
     {
         i = np->nic_tx % TX_RING;
-        
+
         Flags = AROS_LE2LONG(np->tx_ring[i].FlagLen);
-        
+
         D(bug("%s: nv_tx_done: looking at packet %d, Flags 0x%x.\n",
                 unit->name, np->nic_tx, Flags));
-        
+
         if (Flags & NV_TX_VALID)
             break;
-        	
+
         if (np->desc_ver == DESC_VER_1) {
             if (Flags & (NV_TX_RETRYERROR|NV_TX_CARRIERLOST|NV_TX_LATECOLLISION|
                          NV_TX_UNDERFLOW|NV_TX_ERROR))
@@ -391,7 +408,7 @@ static void nv_tx_done(struct NFUnit *unit)
         else
         {
             if (Flags & (NV_TX2_RETRYERROR|NV_TX2_CARRIERLOST|NV_TX2_LATECOLLISION|
-            				NV_TX2_UNDERFLOW|NV_TX2_ERROR))
+                         NV_TX2_UNDERFLOW|NV_TX2_ERROR))
             {
                 ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_TX);
             }
@@ -402,7 +419,7 @@ static void nv_tx_done(struct NFUnit *unit)
         }
         np->nic_tx++;
     }
-    
+
     /*
      * Do we have some spare space in TX queue and the queue self is blocked?
      * Reenable it then!
@@ -420,12 +437,12 @@ static void nv_tx_done(struct NFUnit *unit)
  * Interrupt generated by Cause() to push new packets into the NIC interface
  */
 AROS_UFH3(void, TX_Int,
-	AROS_UFHA(struct NFUnit *, 	unit, A1),
-	AROS_UFHA(APTR,				dummy, A5),
-	AROS_UFHA(struct ExecBase *,SysBase, A6))
+    AROS_UFHA(struct NFUnit *,  unit, A1),
+    AROS_UFHA(APTR,             dummy, A5),
+    AROS_UFHA(struct ExecBase *,SysBase, A6))
 {
     AROS_USERFUNC_INIT
-    
+
     struct fe_priv *np = unit->nu_fe_priv;
     struct NFBase *NforceBase = unit->nu_device;
     int nr;
@@ -443,47 +460,47 @@ AROS_UFH3(void, TX_Int,
         BYTE error;
         struct MsgPort *port;
         struct TypeStats *tracker;
-    		
+
         proceed = TRUE; /* Success by default */
         base = unit->nu_device;
         port = unit->request_ports[WRITE_QUEUE];
-    
+
         /* Still no error and there are packets to be sent? */
         while(proceed && (!IsMsgPortEmpty(port)))
         {
             nr = np->next_tx % TX_RING;
             error = 0;
-            
+
             request = (APTR)port->mp_MsgList.lh_Head;
             data_size = packet_size = request->ios2_DataLength;
-            
+
             opener = (APTR)request->ios2_BufferManagement;
-    		
+
             if((request->ios2_Req.io_Flags & SANA2IOF_RAW) == 0)
             {
-            	packet_size += ETH_PACKET_DATA;
-            	CopyMem(request->ios2_DstAddr, np->tx_buffer[nr].eth_packet_dest, ETH_ADDRESSSIZE);
-            	CopyMem(unit->dev_addr, np->tx_buffer[nr].eth_packet_source, ETH_ADDRESSSIZE);
-            	np->tx_buffer[nr].eth_packet_type = AROS_WORD2BE(request->ios2_PacketType);
-            	
-            	buffer = np->tx_buffer[nr].eth_packet_data;
+                packet_size += ETH_PACKET_DATA;
+                CopyMem(request->ios2_DstAddr, np->tx_buffer[nr].eth_packet_dest, ETH_ADDRESSSIZE);
+                CopyMem(unit->dev_addr, np->tx_buffer[nr].eth_packet_source, ETH_ADDRESSSIZE);
+                np->tx_buffer[nr].eth_packet_type = AROS_WORD2BE(request->ios2_PacketType);
+
+                buffer = np->tx_buffer[nr].eth_packet_data;
             }
             else
-            	buffer = (UBYTE*)&np->tx_buffer[nr];
-    			
+                buffer = (UBYTE*)&np->tx_buffer[nr];
+
             if (!opener->tx_function(buffer, request->ios2_Data, data_size))
             {
-            	error = S2ERR_NO_RESOURCES;
-            	wire_error = S2WERR_BUFF_ERROR;
-            	ReportEvents(LIBBASE, unit,
+                error = S2ERR_NO_RESOURCES;
+                wire_error = S2WERR_BUFF_ERROR;
+                ReportEvents(LIBBASE, unit,
                   S2EVENT_ERROR | S2EVENT_SOFTWARE | S2EVENT_BUFF
                   | S2EVENT_TX);
             }
-    			
+
             /* Now the packet is already in TX buffer, update flags for NIC */
             if (error == 0)
             {
-                Disable();			
+                Disable();
                 np->tx_ring[nr].FlagLen = AROS_LONG2LE((packet_size-1) | np->tx_flags );
                 D(bug("%s: nv_start_xmit: packet packet %d queued for transmission.",
                         unit->name, np->next_tx));
@@ -501,7 +518,7 @@ AROS_UFH3(void, TX_Int,
                 }
 #endif
                 np->next_tx++;
-                
+
                 /* 
                  * If we've just run out of free space on the TX queue, stop
                  * it and give up pushing further frames
@@ -509,8 +526,8 @@ AROS_UFH3(void, TX_Int,
                 if (np->next_tx - np->nic_tx >= TX_LIMIT_STOP)
                 {
                     bug("%s: output queue full. Stopping\n", unit->name);
-                	netif_stop_queue(unit);
-                	proceed = FALSE;
+                    netif_stop_queue(unit);
+                    proceed = FALSE;
                 }
                 Enable();
                 /* 
@@ -530,9 +547,9 @@ AROS_UFH3(void, TX_Int,
             Remove((APTR)request);
             Enable();
             ReplyMsg((APTR)request);
-            
+
             /* Update statistics */
-    
+
             if(error == 0)
             {
                 tracker = FindTypeStats(LIBBASE, unit, &unit->type_trackers,
@@ -544,7 +561,7 @@ AROS_UFH3(void, TX_Int,
                 }
             }	
         }
-        
+
         /* 
          * Here either we've filled the queue with packets to be transmitted,
          * or just run out of spare space in TX queue. In both cases tell the
@@ -559,7 +576,7 @@ AROS_UFH3(void, TX_Int,
         unit->request_ports[WRITE_QUEUE]->mp_Flags = PA_SOFTINT;
     else
         unit->request_ports[WRITE_QUEUE]->mp_Flags = PA_IGNORE;
-    
+
     AROS_USERFUNC_EXIT
 }
 
@@ -567,24 +584,24 @@ AROS_UFH3(void, TX_Int,
  * Interrupt used to restart the real one
  */
 AROS_UFH3(void, TX_End_Int,
-	AROS_UFHA(struct NFUnit *, 	unit, A1),
-	AROS_UFHA(APTR,				dummy, A5),
-	AROS_UFHA(struct ExecBase *,SysBase, A6))
+    AROS_UFHA(struct NFUnit *,  unit, A1),
+    AROS_UFHA(APTR,             dummy, A5),
+    AROS_UFHA(struct ExecBase *,SysBase, A6))
 {
-	AROS_USERFUNC_INIT
-	
+    AROS_USERFUNC_INIT
+
     struct NFUnit *dev = unit;
     struct fe_priv *np = dev->nu_fe_priv;
     UBYTE *base = (UBYTE*) dev->nu_BaseMem;
 
     Disable();
-    
+
     writel(np->irqmask, base + NvRegIrqMask);
     pci_push(base);
-    dev->nu_irqhandler->h_Code(dev->nu_irqhandler, NULL);   
-    Enable();    
-    
-	AROS_USERFUNC_EXIT
+    dev->nu_irqhandler->h_Code(dev->nu_irqhandler, NULL);
+    Enable();
+
+    AROS_USERFUNC_EXIT
 }
 
 /*
@@ -601,7 +618,7 @@ static void NF_TimeoutHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     struct NFUnit *dev = (struct NFUnit *) irq->h_Data;
     struct timeval time;
     struct Device *TimerBase = dev->nu_TimerSlowReq->tr_node.io_Device;
-    
+
     GetSysTime(&time);
 
     /*
@@ -636,19 +653,19 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     int i;
     struct Device *TimerBase = dev->nu_TimerSlowReq->tr_node.io_Device;
     struct timeval time;
-    
+
     GetSysTime(&time);
-    
+
     /* Restart automagically :) */
     for (i=0; ; i++)
     {
         events = readl(base + NvRegIrqStatus) & NVREG_IRQSTAT_MASK;
         writel(NVREG_IRQSTAT_MASK, base + NvRegIrqStatus);
         pci_push(base);
-        
+
         if (!(events & np->irqmask))
             break;
-        		
+
         /* 
          * Some packets have been sent? Just update statistics and empty the
          * TX queue
@@ -656,7 +673,7 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
         if (events & (NVREG_IRQ_TX1|NVREG_IRQ_TX2|NVREG_IRQ_TX_ERR)) {
             nv_tx_done(dev);
         }
-    	
+
         /* Something received? Handle it! */
         if (events & (NVREG_IRQ_RX_ERROR|NVREG_IRQ_RX|NVREG_IRQ_RX_NOBUF)) {
             AROS_UFC3(void, dev->rx_int.is_Code,
@@ -666,13 +683,13 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
             /* Mark received frames as free for hardware */
             dev->alloc_rx(dev);
         }
-    
+
         if (events & (NVREG_IRQ_LINK)) {
             Disable();
             dev->linkirq(dev);
             Enable();
         }
-    	
+
         /* If linktimer interrupt required, handle it here */
         if (np->need_linktimer && (CmpTime(&time, &np->link_timeout) < 0)) {
             Disable();
@@ -682,18 +699,18 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
             np->link_timeout.tv_secs = LINK_TIMEOUT / 1000000;
             AddTime(&np->link_timeout, &time);
         }
-    
+
         /* Erm? */
         if (events & (NVREG_IRQ_TX_ERR)) {
             bug("%s: received irq with events 0x%x. Probably TX fail.\n",
                     dev->name, events);
         }
-    	
+
         if (events & (NVREG_IRQ_UNKNOWN)) {
             bug("%s: received irq with unknown events 0x%x. Please report\n",
                     dev->name, events);
         }
-    	
+
         /* 
          * Straaaaaaaange, the interrupt was restarted more than 
          * max_interrupt_work times. Normally it should not happen, even on
@@ -705,7 +722,7 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
             bug("%s: too many iterations (%d) in nv_nic_irq.\n", dev->name, i);
             writel(0, base + NvRegIrqMask);
             pci_push(base);
-  
+
             /* When to wake up? */
             Disable();
             dev->nu_toutPOLL.tv_micro = POLL_WAIT % 1000000;
@@ -713,11 +730,11 @@ static void NF_IntHandler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
             AddTime(&dev->nu_toutPOLL, &time);
             dev->nu_toutNEED = TRUE;
             Enable();
-            
+
             break; /* break the for() loop */
         }
     }
-    
+
     /*
      * If TX queue was stopped, try to reenable it *ALWAYS*
      */
@@ -733,24 +750,24 @@ VOID CopyPacket(struct NFBase *NforceBase, struct NFUnit *unit,
     struct Opener *opener;
     BOOL filtered = FALSE;
     UBYTE *ptr;
-    
+
     /* Set multicast and broadcast flags */
-    
+
     request->ios2_Req.io_Flags &= ~(SANA2IOF_BCAST | SANA2IOF_MCAST);
     if((*((ULONG *)(buffer->eth_packet_dest)) == 0xffffffff) &&
        (*((UWORD *)(buffer->eth_packet_dest + 4)) == 0xffff))
         request->ios2_Req.io_Flags |= SANA2IOF_BCAST;
-    
+
     else if((buffer->eth_packet_dest[0] & 0x1) != 0)
         request->ios2_Req.io_Flags |= SANA2IOF_MCAST;
-    
+
     /* Set source and destination addresses and packet type */
     CopyMem(buffer->eth_packet_source, request->ios2_SrcAddr, ETH_ADDRESSSIZE);
     CopyMem(buffer->eth_packet_dest, request->ios2_DstAddr, ETH_ADDRESSSIZE);
     request->ios2_PacketType = packet_type;
-    
+
     /* Adjust for cooked packet request */
-    
+
     if((request->ios2_Req.io_Flags & SANA2IOF_RAW) == 0)
     {
         packet_size -= ETH_PACKET_DATA;
@@ -760,21 +777,21 @@ VOID CopyPacket(struct NFBase *NforceBase, struct NFUnit *unit,
     {
         ptr = (UBYTE*)buffer;
     }
-    
+
     request->ios2_DataLength = packet_size;
-    
+
     /* Filter packet */
-    
+
     opener = request->ios2_BufferManagement;
     if((request->ios2_Req.io_Command == CMD_READ) &&
         (opener->filter_hook != NULL))
         if(!CallHookPkt(opener->filter_hook, request, ptr))
             filtered = TRUE;
-    
+
     if(!filtered)
     {
         /* Copy packet into opener's buffer and reply packet */
-        	
+
         if(!opener->rx_function(request->ios2_Data, ptr, packet_size))
         {
             request->ios2_Req.io_Error = S2ERR_NO_RESOURCES;
@@ -836,65 +853,64 @@ AROS_UFH3(void, NF_Scheduler,
     AROS_UFHA(struct ExecBase *,   SysBase, A6))
 {
     AROS_USERFUNC_INIT
-    
+
     struct NFUnit *dev = FindTask(NULL)->tc_UserData;
     LIBBASETYPEPTR LIBBASE = dev->nu_device;
     APTR BattClockBase;
     struct MsgPort *reply_port, *input;
-    
+
     D(bug("[NFORCE] In nforce process\n"));
     D(bug("[NFORCE] Setting device up\n"));
-    
+
     reply_port = CreateMsgPort();
     input = CreateMsgPort();
-    	
+
     dev->nu_input_port = input; 
-    
+
     /* Randomize the generator with current time */
     BattClockBase =  OpenResource("battclock.resource");
     srandom(ReadBattClock());
-    
+
     dev->nu_TimerSlowPort = CreateMsgPort();
-	
+
     if (dev->nu_TimerSlowPort)
     {
         dev->nu_TimerSlowReq = (struct timerequest *)
-        	CreateIORequest((struct MsgPort *)dev->nu_TimerSlowPort, sizeof(struct timerequest));
-        
+            CreateIORequest((struct MsgPort *)dev->nu_TimerSlowPort, sizeof(struct timerequest));
+
         if (dev->nu_TimerSlowReq)
         {
             if (!OpenDevice("timer.device", UNIT_VBLANK,
                 (struct IORequest *)dev->nu_TimerSlowReq, 0))
             {
-                struct Message *msg = AllocVec(sizeof(struct Message), 
-                						MEMF_PUBLIC|MEMF_CLEAR);
+                struct Message *msg = AllocVec(sizeof(struct Message), MEMF_PUBLIC|MEMF_CLEAR);
                 ULONG sigset;
-                
+
                 D(bug("[NFORCE] Got VBLANK unit of timer.device\n"));
-                
+
                 dev->initialize(dev);
-                
+
                 msg->mn_ReplyPort = reply_port;
                 msg->mn_Length = sizeof(struct Message);
-                
+
                 D(bug("[NFORCE] Setup complete. Sending handshake\n"));
                 PutMsg(LIBBASE->nf_syncport, msg);
                 WaitPort(reply_port);
                 GetMsg(reply_port);
-            	
+
                 FreeVec(msg);
-                
+
                 D(bug("[NFORCE] Forever loop\n"));
-                
+
                 dev->nu_signal_0 = AllocSignal(-1);
                 dev->nu_signal_1 = AllocSignal(-1);
                 dev->nu_signal_2 = AllocSignal(-1);
                 dev->nu_signal_3 = AllocSignal(-1);
-                				
-                sigset = 1 << input->mp_SigBit				|
-                         1 << dev->nu_signal_0	|
-                         1 << dev->nu_signal_1	|
-                         1 << dev->nu_signal_2	|
+
+                sigset = 1 << input->mp_SigBit  |
+                         1 << dev->nu_signal_0  |
+                         1 << dev->nu_signal_1  |
+                         1 << dev->nu_signal_2  |
                          1 << dev->nu_signal_3;
                 for(;;)
                 {	
@@ -912,14 +928,14 @@ AROS_UFH3(void, NF_Scheduler,
                         DeleteMsgPort(dev->nu_TimerSlowPort);
                         DeleteMsgPort(input);
                         DeleteMsgPort(reply_port);
-                        
+
                         D(bug("[NFORCE] Process shutdown.\n"));
                         return;
                     }
                     else if (recvd & (1 << input->mp_SigBit))
                     {
                         struct IOSana2Req *io;
-                        
+
                         /* Handle incoming transactions */
                         while ((io = (struct IOSana2Req *)GetMsg(input))!= NULL);
                         {
@@ -935,7 +951,7 @@ AROS_UFH3(void, NF_Scheduler,
             }
         }
     }
-    
+
     AROS_USERFUNC_EXIT
 }
 
@@ -959,12 +975,12 @@ struct NFUnit *CreateUnit(struct NFBase *NforceBase, OOP_Object *pciDevice)
     struct NFUnit *unit = AllocMem(sizeof(struct NFUnit), MEMF_PUBLIC | MEMF_CLEAR);
     BOOL success = TRUE;
     int i;
-    
+
     if (unit != NULL)
     {
         IPTR        DeviceID, base, len;
         OOP_Object  *driver;
-        
+
         OOP_GetAttr(pciDevice, aHidd_PCIDevice_ProductID, &DeviceID);
         OOP_GetAttr(pciDevice, aHidd_PCIDevice_Driver, (APTR)&driver);
 
@@ -983,12 +999,12 @@ struct NFUnit *CreateUnit(struct NFBase *NforceBase, OOP_Object *pciDevice)
         unit->mtu           = 1500;
         unit->nu_PCIDevice  = pciDevice;
         unit->nu_PCIDriver  = driver;
-        
+
         InitSemaphore(&unit->unit_lock);
         NEWLIST(&unit->nu_Openers);
         NEWLIST(&unit->multicast_ranges);
         NEWLIST(&unit->type_trackers);
-        
+
         OOP_GetAttr(pciDevice, aHidd_PCIDevice_INTLine, &unit->nu_IRQ);
         OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base1,   &unit->nu_BaseIO);
         OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base0,   &base);
@@ -1000,31 +1016,31 @@ struct NFUnit *CreateUnit(struct NFBase *NforceBase, OOP_Object *pciDevice)
         if (unit->nu_BaseMem)
         {
             struct TagItem attrs[] = {
-                { aHidd_PCIDevice_isIO,		TRUE },
-                { aHidd_PCIDevice_isMEM,	TRUE },
-                { aHidd_PCIDevice_isMaster,	TRUE },
-                { TAG_DONE,					0    },
+                { aHidd_PCIDevice_isIO,     TRUE },
+                { aHidd_PCIDevice_isMEM,    TRUE },
+                { aHidd_PCIDevice_isMaster, TRUE },
+                { TAG_DONE,                 0    },
             };
             OOP_SetAttrs(pciDevice, (struct TagItem *)&attrs);
 
             unit->name = "[nforce0]";
             unit->nu_fe_priv = AllocMem(sizeof(struct fe_priv), MEMF_PUBLIC|MEMF_CLEAR);
             unit->nu_UnitNum = 0;
-            
+
             nv_get_functions(unit);
-        	
+
             if (unit->nu_fe_priv)
             {
                 unit->nu_fe_priv->pci_dev = unit;
                 InitSemaphore(&unit->nu_fe_priv->lock);
-                
+
                 unit->nu_irqhandler = AllocMem(sizeof(HIDDT_IRQ_Handler), MEMF_PUBLIC|MEMF_CLEAR);
                 unit->nu_touthandler = AllocMem(sizeof(HIDDT_IRQ_Handler), MEMF_PUBLIC|MEMF_CLEAR);
-                
+
                 if (unit->nu_irqhandler && unit->nu_touthandler)
                 {
                     struct Message *msg;
-                    
+
                     unit->nu_irqhandler->h_Node.ln_Pri = 100;
                     unit->nu_irqhandler->h_Node.ln_Name = LIBBASE->nf_Device.dd_Library.lib_Node.ln_Name;
                     unit->nu_irqhandler->h_Code = NF_IntHandler;
@@ -1034,15 +1050,15 @@ struct NFUnit *CreateUnit(struct NFBase *NforceBase, OOP_Object *pciDevice)
                     unit->nu_touthandler->h_Node.ln_Name = LIBBASE->nf_Device.dd_Library.lib_Node.ln_Name;
                     unit->nu_touthandler->h_Code = NF_TimeoutHandler;
                     unit->nu_touthandler->h_Data = unit;
-                    
+
                     unit->rx_int.is_Node.ln_Name = unit->name;
                     unit->rx_int.is_Code = RX_Int;
                     unit->rx_int.is_Data = unit;
-                    
+
                     unit->tx_int.is_Node.ln_Name = unit->name;
                     unit->tx_int.is_Code = TX_Int;
                     unit->tx_int.is_Data = unit;
-                    
+
                     unit->tx_end_int.is_Node.ln_Name = unit->name;
                     unit->tx_end_int.is_Code = TX_End_Int;
                     unit->tx_end_int.is_Data = unit;
@@ -1051,9 +1067,9 @@ struct NFUnit *CreateUnit(struct NFBase *NforceBase, OOP_Object *pciDevice)
                     {
                         struct MsgPort *port = AllocMem(sizeof(struct MsgPort), MEMF_PUBLIC | MEMF_CLEAR);
                         unit->request_ports[i] = port;
-                        
+
                         if (port == NULL) success = FALSE;
-                        
+
                         if (success)
                         {
                             NEWLIST(&port->mp_MsgList);
@@ -1063,11 +1079,11 @@ struct NFUnit *CreateUnit(struct NFBase *NforceBase, OOP_Object *pciDevice)
                     }
 
                     unit->request_ports[WRITE_QUEUE]->mp_Flags = PA_SOFTINT;
-                    
+
                     if (success)
                     {
                         LIBBASE->nf_syncport = CreateMsgPort();
-                        
+
                         unit->nu_Process = CreateNewProcTags(
                                                 NP_Entry, (IPTR)NF_Scheduler,
                                                 NP_Name, NFORCE_TASK_NAME,
@@ -1075,14 +1091,14 @@ struct NFUnit *CreateUnit(struct NFBase *NforceBase, OOP_Object *pciDevice)
                                                 NP_UserData, (IPTR)unit,
                                                 NP_StackSize, 140960,
                                                 TAG_DONE);
-	
+
                         WaitPort(LIBBASE->nf_syncport);
                         msg = GetMsg(LIBBASE->nf_syncport);
                         ReplyMsg(msg);
                         DeleteMsgPort(LIBBASE->nf_syncport);
-                        
+
                         D(bug("[nforce] Unit up and running\n"));
-                        
+
                         return unit;
                     }
                 }
@@ -1111,34 +1127,34 @@ void DeleteUnit(struct NFBase *NforceBase, struct NFUnit *Unit)
         {
             Signal(&Unit->nu_Process->pr_Task, Unit->nu_signal_0);
         }
-		
+
         for (i=0; i < REQUEST_QUEUE_COUNT; i++)
         {
             if (Unit->request_ports[i] != NULL) 
                 FreeMem(Unit->request_ports[i],	sizeof(struct MsgPort));
-            
+
             Unit->request_ports[i] = NULL;
         }
-	
+
         if (Unit->nu_irqhandler)
         {
             FreeMem(Unit->nu_irqhandler, sizeof(HIDDT_IRQ_Handler));
             LIBBASE->nf_irq = NULL;
         }
-	
+
         if (Unit->nu_fe_priv)
         {
             FreeMem(Unit->nu_fe_priv, sizeof(struct fe_priv));
             Unit->nu_fe_priv = NULL;
         }
-	    
+
         if (Unit->nu_BaseMem)
         {
             HIDD_PCIDriver_UnmapPCI(Unit->nu_PCIDriver, 
                                     (APTR)Unit->nu_BaseMem,
                                     Unit->nu_SizeMem);
         }
-		
+
         FreeMem(Unit, sizeof(struct NFUnit));
     }
 }
@@ -1196,7 +1212,7 @@ BOOL AddMulticastRange(LIBBASETYPEPTR LIBBASE, struct NFUnit *unit, const UBYTE 
             range->upper_bound_left = upper_bound_left;
             range->upper_bound_right = upper_bound_right;
             range->add_count = 1;
-            
+
             Disable();
             AddTail((APTR)&unit->multicast_ranges, (APTR)range);
             Enable();

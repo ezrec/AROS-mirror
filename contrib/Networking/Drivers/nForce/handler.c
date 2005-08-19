@@ -1,7 +1,24 @@
 /*
  * $Id: handler.c,v 1.4 2005/08/15 23:56:19 misc Exp $
  */
- 
+
+/*
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+    MA 02111-1307, USA.
+*/
+
 #define DEBUG 0
 
 #include <exec/types.h>
@@ -84,34 +101,34 @@ static const UWORD supported_commands[] =
 void handle_request(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 {
     BOOL complete;
-    
+
     switch(request->ios2_Req.io_Command)
     {
         case CMD_READ:
             complete = CmdRead(LIBBASE, request);
             break;
-    
+
         case CMD_WRITE:
         case S2_MULTICAST:
             complete = CmdWrite(LIBBASE, request);
             break;
-    
+
         case CMD_FLUSH:
             complete = CmdFlush(LIBBASE, (struct IORequest *)request);
             break;
-    
+
         case S2_DEVICEQUERY:
             complete = CmdS2DeviceQuery(LIBBASE, request);
             break;
-    
+
         case S2_GETSTATIONADDRESS:
             complete = CmdGetStationAddress(LIBBASE, request);
             break;
-    
+
         case S2_CONFIGINTERFACE:
             complete = CmdConfigInterface(LIBBASE, request);
             break;
-    
+
         case S2_BROADCAST:
             complete = CmdBroadcast(LIBBASE, request);
             break;
@@ -127,23 +144,23 @@ void handle_request(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
         case S2_GETTYPESTATS:
             complete = CmdGetTypeStats(LIBBASE, request);
             break;
-    
+
         case S2_GETGLOBALSTATS:
             complete = CmdGetGlobalStats(LIBBASE, request);
             break;
-    
+
         case S2_ONEVENT:
             complete = CmdOnEvent(LIBBASE, request);
             break;
-    
+
         case S2_READORPHAN:
             complete = CmdReadOrphan(LIBBASE, request);
             break;
-    
+
         case S2_ONLINE:
             complete = CmdOnline(LIBBASE, request);
             break;
-    
+
         case S2_OFFLINE:
             complete = CmdOffline(LIBBASE, request);
             break;
@@ -157,18 +174,18 @@ void handle_request(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
         case S2_DELMULTICASTADDRESSES:
             complete = CmdDelMulticastAddresses(LIBBASE, request);
             break;
-            
+
         case NSCMD_DEVICEQUERY:
             complete = CmdDeviceQuery(LIBBASE, (struct IOStdReq *)request);
             break;
-    		
+
         default:
             complete = CmdInvalid(LIBBASE, request);
     }
 
     if(complete && (request->ios2_Req.io_Flags & IOF_QUICK) == 0)
         ReplyMsg((APTR)request);
-    
+
     ReleaseSemaphore(&((struct NFUnit *)request->ios2_Req.io_Unit)->unit_lock);
 }
 
@@ -176,7 +193,7 @@ static BOOL CmdInvalid(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 {
     request->ios2_Req.io_Error = IOERR_NOCMD;
     request->ios2_WireError = S2WERR_GENERIC_ERROR;
-    
+
     return TRUE;
 }
 
@@ -214,7 +231,7 @@ static BOOL CmdWrite(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     BOOL complete = FALSE;
 
     /* Check request is valid */
-    
+
     unit = (APTR)request->ios2_Req.io_Unit;
     if((unit->flags & IFF_UP) == 0)
     {
@@ -229,7 +246,7 @@ static BOOL CmdWrite(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     }
 
     /* Queue request for sending */
-    
+
     if(error == 0) {
         request->ios2_Req.io_Flags &= ~IOF_QUICK;
         PutMsg(unit->request_ports[WRITE_QUEUE], (APTR)request);
@@ -242,7 +259,7 @@ static BOOL CmdWrite(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     }
 
     /* Return */
-    
+
     return complete;
 }
 
@@ -260,50 +277,50 @@ static BOOL CmdS2DeviceQuery(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     ULONG size_available, size;
 
     /* Copy device info */
-    
+
     info = request->ios2_StatData;
     size = size_available = info->SizeAvailable;
     if(size > sizeof(struct Sana2DeviceQuery))
         size = sizeof(struct Sana2DeviceQuery);
-    
+
     CopyMem(&LIBBASE->nf_Sana2Info, info, size);
-    
+
     if ((np->linkspeed & NVREG_LINKSPEED_MASK) == NVREG_LINKSPEED_100)
         info->BPS = 100000000;
     else if ((np->linkspeed & NVREG_LINKSPEED_MASK) == NVREG_LINKSPEED_1000)
         info->BPS = 1000000000;
     else
         info->BPS = 10000000;
-    
+
     info->SizeAvailable = size_available;
     info->SizeSupplied = size;
-    
+
     /* Return */
-    
+
     return TRUE;
 }
 
 static BOOL CmdGetStationAddress(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 {
     struct NFUnit *unit;
-    
+
     /* Copy addresses */
-    
+
     unit = (APTR)request->ios2_Req.io_Unit;
     CopyMem(unit->dev_addr, request->ios2_SrcAddr, ETH_ADDRESSSIZE);
     CopyMem(unit->org_addr, request->ios2_DstAddr, ETH_ADDRESSSIZE);
-    
+
     /* Return */
-    
+
     return TRUE;
 }
 
 static BOOL CmdConfigInterface(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 {
     struct NFUnit *unit;
-    
+
     /* Configure adapter */
-    
+
     unit = (APTR)request->ios2_Req.io_Unit;
     if((unit->flags & IFF_CONFIGURED) == 0)
     {
@@ -316,21 +333,21 @@ static BOOL CmdConfigInterface(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *reques
         request->ios2_Req.io_Error = S2ERR_BAD_STATE;
         request->ios2_WireError = S2WERR_IS_CONFIGURED;
     }
-    
+
     /* Return */
-    
+
     return TRUE;
 }
 
 static BOOL CmdBroadcast(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 {
     /* Fill in the broadcast address as destination */
-    
+
     *((ULONG *)request->ios2_DstAddr) = 0xffffffff;
     *((UWORD *)(request->ios2_DstAddr + 4)) = 0xffff;
-    
+
     /* Queue the write as normal */
-    
+
     return CmdWrite(LIBBASE, request);
 }
 
@@ -361,7 +378,7 @@ static BOOL CmdTrackType(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
         {
             tracker->packet_type = packet_type;
             tracker->user_count = 1;
-            
+
             Disable();
             AddTail((APTR)&unit->type_trackers, (APTR)tracker);
             Enable();
@@ -369,16 +386,16 @@ static BOOL CmdTrackType(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
    }
 
     /* Store initial figures for this opener */
-    
+
     opener = request->ios2_BufferManagement;
     initial_stats = FindTypeStats(LIBBASE, unit, &opener->initial_stats, packet_type);
-    
+
     if(initial_stats != NULL)
     {
         error = S2ERR_BAD_STATE;
         wire_error = S2WERR_ALREADY_TRACKED;
     }
-    
+
     if(error == 0)
     {
         initial_stats = AllocMem(sizeof(struct TypeStats), MEMF_PUBLIC);
@@ -394,9 +411,9 @@ static BOOL CmdTrackType(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
         CopyMem(tracker, initial_stats, sizeof(struct TypeStats));
         AddTail((APTR)&opener->initial_stats, (APTR)initial_stats);
     }
-    
+
     /* Return */
-    
+
     request->ios2_Req.io_Error = error;
     request->ios2_WireError = wire_error;
     return TRUE;
@@ -409,7 +426,7 @@ static BOOL CmdUntrackType(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     ULONG packet_type;
     struct TypeTracker *tracker;
     struct TypeStats *initial_stats;
-    
+
     unit = (APTR)request->ios2_Req.io_Unit;
     packet_type = request->ios2_PacketType;
 
@@ -488,15 +505,15 @@ static BOOL CmdGetTypeStats(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 static BOOL CmdGetGlobalStats(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 {
     struct NFUnit *unit;
-    
+
     /* Update and copy stats */
-    
+
     unit = (APTR)request->ios2_Req.io_Unit;
     CopyMem(&unit->stats, request->ios2_StatData,
         sizeof(struct Sana2DeviceStats));
-    
+
     /* Return */
-    
+
     return TRUE;
 }
 
@@ -505,20 +522,20 @@ static BOOL CmdDeviceQuery(LIBBASETYPEPTR LIBBASE, struct IOStdReq *request)
     struct NSDeviceQueryResult *info;
 
     /* Set structure size twice */
-    
+
     info = request->io_Data;
     request->io_Actual = info->SizeAvailable =
         offsetof(struct NSDeviceQueryResult, SupportedCommands) + sizeof(APTR);
-    
+
     /* Report device details */
-    
+
     info->DeviceType = NSDEVTYPE_SANA2;
     info->DeviceSubType = 0;
-    
+
     info->SupportedCommands = (APTR)supported_commands;
-    
+
     /* Return */
-    
+
     return TRUE;
 }
 
@@ -529,7 +546,7 @@ static BOOL CmdOnEvent(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     BOOL complete = FALSE;
 
     /* Check if we understand the event types */
-    
+
     unit = (APTR)request->ios2_Req.io_Unit;
     wanted_events = request->ios2_WireError;
     if((wanted_events & ~KNOWN_EVENTS) != 0)
@@ -543,12 +560,12 @@ static BOOL CmdOnEvent(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
             events = S2EVENT_ONLINE;
         else
             events = S2EVENT_OFFLINE;
-        
+
         events &= wanted_events;
     }
 
     /* Reply request if a wanted event has already occurred */
-    
+
     if(events != 0)
     {
         request->ios2_WireError = events;
@@ -559,9 +576,9 @@ static BOOL CmdOnEvent(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
         request->ios2_Req.io_Flags &= ~IOF_QUICK;
         PutMsg(unit->request_ports[EVENT_QUEUE], (APTR)request);
     }
-    
+
     /* Return */
-    
+
     return complete;
 }
 
@@ -571,9 +588,9 @@ static BOOL CmdReadOrphan(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     BYTE error = 0;
     ULONG wire_error;
     BOOL complete = FALSE;
-    
+
     /* Check request is valid */
-    
+
     unit = (APTR)request->ios2_Req.io_Unit;
     if((unit->flags & IFF_UP) == 0)
     {
@@ -582,7 +599,7 @@ static BOOL CmdReadOrphan(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     }
 
     /* Queue request */
-    
+
     if(error == 0)
     {
         request->ios2_Req.io_Flags &= ~IOF_QUICK;
@@ -594,12 +611,11 @@ static BOOL CmdReadOrphan(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
         request->ios2_WireError = wire_error;
         complete = TRUE;
     }
-    
+
     /* Return */
-    
+
     return complete;
 }
-
 
 static BOOL CmdOnline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 {
@@ -608,22 +624,15 @@ static BOOL CmdOnline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
     ULONG wire_error = 0;
     UWORD i;
 
-  #if 0  /* Return */
-
-    request->ios2_Req.io_Error = error;
-    request->ios2_WireError = wire_error;
-    return TRUE;
-  #endif
-  
     /* Check request is valid */
     if((unit->flags & IFF_CONFIGURED) == 0)
     {
         error = S2ERR_BAD_STATE;
         wire_error = S2WERR_NOT_CONFIGURED;
     }
-    
+
     /* Clear global and special stats and put adapter back online */
-    
+
     if((error == 0) && ((unit->flags & IFF_UP) == 0))
     {
         unit->stats.PacketsReceived = 0;
@@ -632,10 +641,10 @@ static BOOL CmdOnline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
         unit->stats.Overruns = 0;
         unit->stats.UnknownTypesReceived = 0;
         unit->stats.Reconfigurations = 0;
-        
+
         for(i = 0; i < STAT_COUNT; i++)
             unit->special_stats[i] = 0;
-        
+
         if (unit->start(unit)) {
             error = S2ERR_OUTOFSERVICE;
             wire_error = S2WERR_GENERIC_ERROR;
@@ -653,7 +662,6 @@ static BOOL CmdOffline(LIBBASETYPEPTR LIBBASE, struct IOSana2Req *request)
 {
     struct NFUnit *unit;
 
-//return TRUE;
     /* Put adapter offline */
 
     unit = (APTR)request->ios2_Req.io_Unit;

@@ -5,6 +5,23 @@
  * $Id: nforce.h,v 1.11 2005/08/15 23:56:19 misc Exp $
  */
 
+/*
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+    MA 02111-1307, USA.
+*/
+
 #include <exec/types.h>
 #include <exec/libraries.h>
 #include <exec/semaphores.h>
@@ -31,18 +48,17 @@
 extern struct Library *OOPBase;
 
 struct NFBase {
-    struct Device		nf_Device;
-    struct ExecBase		*nf_SysBase;
-    BPTR				nf_SegList;
+    struct Device       nf_Device;
+    struct ExecBase     *nf_SysBase;
+    BPTR                nf_SegList;
     struct Library      *nf_UtilityBase;
-    struct MsgPort		*nf_syncport;
+    struct MsgPort      *nf_syncport;
 
     OOP_Object          *nf_pci;
     OOP_Object          *nf_irq;
     OOP_AttrBase        nf_pciDeviceAttrBase;
-    
-    struct Sana2DeviceQuery nf_Sana2Info;
 
+    struct Sana2DeviceQuery nf_Sana2Info;
     struct NFUnit       *nf_unit;
 };
 
@@ -51,132 +67,130 @@ struct NFBase {
 #undef HiddPCIDeviceAttrBase
 #define HiddPCIDeviceAttrBase   (LIBBASE->nf_pciDeviceAttrBase)
 
-
-
 enum {
-	WRITE_QUEUE,
-	ADOPT_QUEUE,
-	EVENT_QUEUE,
-	GENERAL_QUEUE,
-	REQUEST_QUEUE_COUNT
+    WRITE_QUEUE,
+    ADOPT_QUEUE,
+    EVENT_QUEUE,
+    GENERAL_QUEUE,
+    REQUEST_QUEUE_COUNT
 };
 
 struct Opener
 {
-	struct MinNode		node;
-	struct MsgPort		read_port;
-	BOOL				(*rx_function)(APTR, APTR, ULONG);
-	BOOL				(*tx_function)(APTR, APTR, ULONG);
-	struct Hook			*filter_hook;
-	struct MinList		initial_stats;
+    struct MinNode  node;
+    struct MsgPort  read_port;
+    BOOL            (*rx_function)(APTR, APTR, ULONG);
+    BOOL            (*tx_function)(APTR, APTR, ULONG);
+    struct Hook     *filter_hook;
+    struct MinList  initial_stats;
 };
 
 struct TypeStats
 {
-   struct MinNode node;
-   ULONG packet_type;
-   struct Sana2PacketTypeStats stats;
+    struct MinNode node;
+    ULONG packet_type;
+    struct Sana2PacketTypeStats stats;
 };
 
 
 struct TypeTracker
 {
-   struct MinNode node;
-   ULONG packet_type;
-   struct Sana2PacketTypeStats stats;
-   ULONG user_count;
+    struct MinNode node;
+    ULONG packet_type;
+    struct Sana2PacketTypeStats stats;
+    ULONG user_count;
 };
 
 
 struct AddressRange
 {
-   struct MinNode node;
-   ULONG add_count;
-   ULONG lower_bound_left;
-   ULONG upper_bound_left;
-   UWORD lower_bound_right;
-   UWORD upper_bound_right;
+    struct MinNode node;
+    ULONG add_count;
+    ULONG lower_bound_left;
+    ULONG upper_bound_left;
+    UWORD lower_bound_right;
+    UWORD upper_bound_right;
 };
 
 /* Big endian: should work, but is untested */
 struct ring_desc {
-        IPTR PacketBuffer;
-        IPTR FlagLen;
+    IPTR PacketBuffer;
+    IPTR FlagLen;
 };
 
 
 #define STAT_COUNT 3
 
 struct NFUnit {
-	struct MinNode			*nu_Node;
-	struct MinList			nu_Openers;
-	struct MinList			multicast_ranges;
+    struct MinNode          *nu_Node;
+    struct MinList          nu_Openers;
+    struct MinList          multicast_ranges;
     struct MinList          type_trackers;
-	ULONG					nu_UnitNum;
-	LONG                    range_count;
-    
-	OOP_Object				*nu_PCIDevice;
-	OOP_Object				*nu_PCIDriver;
-    
+    ULONG                   nu_UnitNum;
+    LONG                    range_count;
+
+    OOP_Object              *nu_PCIDevice;
+    OOP_Object              *nu_PCIDriver;
+
     struct timeval          nu_toutPOLL;
     BOOL                    nu_toutNEED;
 
-    struct MsgPort			*nu_TimerSlowPort;
-    struct timerequest		*nu_TimerSlowReq;
+    struct MsgPort          *nu_TimerSlowPort;
+    struct timerequest      *nu_TimerSlowReq;
 
-    struct MsgPort			*nu_TimerFastPort;
-    struct timerequest		*nu_TimerFastReq;
-	
-	struct Sana2DeviceStats	stats;
-	ULONG 					special_stats[STAT_COUNT];
-	
-	void					(*initialize)(struct NFUnit *);
-	void					(*deinitialize)(struct NFUnit *);
-	int						(*start)(struct NFUnit *);
-	int						(*stop)(struct NFUnit *);
+    struct MsgPort          *nu_TimerFastPort;
+    struct timerequest      *nu_TimerFastReq;
+
+    struct Sana2DeviceStats stats;
+    ULONG                   special_stats[STAT_COUNT];
+
+    void                    (*initialize)(struct NFUnit *);
+    void                    (*deinitialize)(struct NFUnit *);
+    int                     (*start)(struct NFUnit *);
+    int                     (*stop)(struct NFUnit *);
     int                     (*alloc_rx)(struct NFUnit *);
-	void					(*set_mac_address)(struct NFUnit *);
-	void					(*linkchange)(struct NFUnit *);
-	void					(*linkirq)(struct NFUnit *);
-	ULONG					(*descr_getlength)(struct ring_desc *prd, ULONG v);
+    void                    (*set_mac_address)(struct NFUnit *);
+    void                    (*linkchange)(struct NFUnit *);
+    void                    (*linkirq)(struct NFUnit *);
+    ULONG                   (*descr_getlength)(struct ring_desc *prd, ULONG v);
     void                    (*set_multicast)(struct NFUnit *);
-	
-	int						open_count;
-	struct SignalSemaphore	unit_lock;
 
-    struct Process			*nu_Process;
-    		
-    struct NFBase      		*nu_device;
-    HIDDT_IRQ_Handler   	*nu_irqhandler;
+    int                     open_count;
+    struct SignalSemaphore  unit_lock;
+
+    struct Process          *nu_Process;
+
+    struct NFBase           *nu_device;
+    HIDDT_IRQ_Handler       *nu_irqhandler;
     HIDDT_IRQ_Handler       *nu_touthandler;
     IPTR	                nu_DeviceID;
-    IPTR    	            nu_DriverFlags;
-    IPTR        	        nu_IRQ;
-    IPTR            	    nu_BaseMem;
-    IPTR                	nu_SizeMem;
+    IPTR                    nu_DriverFlags;
+    IPTR                    nu_IRQ;
+    IPTR                    nu_BaseMem;
+    IPTR                    nu_SizeMem;
     IPTR	                nu_BaseIO;
-    
-    BYTE					nu_signal_0;
-    BYTE					nu_signal_1;
-    BYTE					nu_signal_2;
-    BYTE					nu_signal_3;
-    
-    struct MsgPort			*nu_input_port;
-    
-    struct MsgPort			*request_ports[REQUEST_QUEUE_COUNT];
 
-	struct Interrupt		rx_int;
-	struct Interrupt		tx_int;
-	struct Interrupt		tx_end_int;
-            
-    STRPTR		            name;
-    ULONG       	        mtu;
-    ULONG           	    flags;
-    ULONG               	state;
-    APTR                	mc_list;
-    UBYTE			dev_addr[6];
-    UBYTE                       org_addr[6];
-    struct fe_priv      	*nu_fe_priv;
+    BYTE                    nu_signal_0;
+    BYTE                    nu_signal_1;
+    BYTE                    nu_signal_2;
+    BYTE                    nu_signal_3;
+
+    struct MsgPort          *nu_input_port;
+
+    struct MsgPort          *request_ports[REQUEST_QUEUE_COUNT];
+
+    struct Interrupt        rx_int;
+    struct Interrupt        tx_int;
+    struct Interrupt        tx_end_int;
+
+    STRPTR                  name;
+    ULONG                   mtu;
+    ULONG                   flags;
+    ULONG                   state;
+    APTR                    mc_list;
+    UBYTE                   dev_addr[6];
+    UBYTE                   org_addr[6];
+    struct fe_priv          *nu_fe_priv;
 };
 
 void handle_request(LIBBASETYPEPTR, struct IOSana2Req *);
@@ -210,7 +224,7 @@ enum netdev_state_t
 
 static inline int test_bit(int nr, const volatile unsigned long *addr)
 {
-        return ((1UL << (nr & 31)) & (addr[nr >> 5])) != 0;
+    return ((1UL << (nr & 31)) & (addr[nr >> 5])) != 0;
 }
 
 static inline void set_bit(int nr, volatile unsigned long *addr)
@@ -237,81 +251,63 @@ static inline int test_and_clear_bit(int nr, volatile unsigned long *addr)
     return oldbit;
 }
 
-
-static inline void __netif_schedule(struct NFUnit *dev)
-{
-        if (!test_and_set_bit(__LINK_STATE_SCHED, &dev->state)) {
-#if 0
-                unsigned long flags;
-                struct softnet_data *sd;
-
-                local_irq_save(flags);
-                sd = &__get_cpu_var(softnet_data);
-                dev->next_sched = sd->output_queue;
-                sd->output_queue = dev;
-                raise_softirq_irqoff(NET_TX_SOFTIRQ);
-                local_irq_restore(flags);
-#endif
-        }
-}
-
 static inline void netif_schedule(struct NFUnit *dev)
 {
-	if (!test_bit(__LINK_STATE_XOFF, &dev->state)) {
-    	Cause(&dev->tx_int);
-        }
+    if (!test_bit(__LINK_STATE_XOFF, &dev->state)) {
+        Cause(&dev->tx_int);
+    }
 }
 
 
 static inline void netif_start_queue(struct NFUnit *dev)
 {
-	clear_bit(__LINK_STATE_XOFF, &dev->state);
+    clear_bit(__LINK_STATE_XOFF, &dev->state);
 }
 
 static inline void netif_wake_queue(struct NFUnit *dev)
 {
-	if (test_and_clear_bit(__LINK_STATE_XOFF, &dev->state)) {
-    	Cause(&dev->tx_int);
-        }
+    if (test_and_clear_bit(__LINK_STATE_XOFF, &dev->state)) {
+        Cause(&dev->tx_int);
+    }
 }
 
 static inline void netif_stop_queue(struct NFUnit *dev)
 {
-	set_bit(__LINK_STATE_XOFF, &dev->state);
+    set_bit(__LINK_STATE_XOFF, &dev->state);
 }
 
 static inline int netif_queue_stopped(const struct NFUnit *dev)
 {
-	return test_bit(__LINK_STATE_XOFF, &dev->state);
+    return test_bit(__LINK_STATE_XOFF, &dev->state);
 }
 
 static inline int netif_running(const struct NFUnit *dev)
 {
-	return test_bit(__LINK_STATE_START, &dev->state);
+    return test_bit(__LINK_STATE_START, &dev->state);
 }
 
 static inline int netif_carrier_ok(const struct NFUnit *dev)
 {
-	return !test_bit(__LINK_STATE_NOCARRIER, &dev->state);
+    return !test_bit(__LINK_STATE_NOCARRIER, &dev->state);
 }
 
 extern void __netdev_watchdog_up(struct NFUnit *dev);
 
 static inline void netif_carrier_on(struct NFUnit *dev)
 {
-        if (test_and_clear_bit(__LINK_STATE_NOCARRIER, &dev->state)) {
+    if (test_and_clear_bit(__LINK_STATE_NOCARRIER, &dev->state)) {
 //                linkwatch_fire_event(dev);
-        }
-        if (netif_running(dev)) {
+    }
+    if (netif_running(dev)) {
 //                __netdev_watchdog_up(dev);
-        }
+    }
 }
 
 static inline void netif_carrier_off(struct NFUnit *dev)
 {
-        if (!test_and_set_bit(__LINK_STATE_NOCARRIER, &dev->state)) {
+    if (!test_and_set_bit(__LINK_STATE_NOCARRIER, &dev->state)) {
 //                linkwatch_fire_event(dev);
-        }
+    }
 }
 
 /* Standard interface flags (netdevice->flags). */
@@ -336,41 +332,8 @@ static inline void netif_carrier_off(struct NFUnit *dev)
 #define IFF_PORTSEL     0x2000          /* can set media type           */
 #define IFF_AUTOMEDIA   0x4000          /* auto media select active     */
 #define IFF_DYNAMIC     0x8000          /* dialup device with changing addresses*/
-#define IFF_SHARED		0x10000			/* interface may be shared */	
-#define IFF_CONFIGURED	0x20000			/* interface already configured */	
-
-struct net_device_stats
-{
-        unsigned long   rx_packets;             /* total packets received       */
-        unsigned long   tx_packets;             /* total packets transmitted    */
-        unsigned long   rx_bytes;               /* total bytes received         */
-        unsigned long   tx_bytes;               /* total bytes transmitted      */
-        unsigned long   rx_errors;              /* bad packets received         */
-        unsigned long   tx_errors;              /* packet transmit problems     */
-        unsigned long   rx_dropped;             /* no space in linux buffers    */
-        unsigned long   tx_dropped;             /* no space available in linux  */
-        unsigned long   multicast;              /* multicast packets received   */
-        unsigned long   collisions;
-
-        /* detailed rx_errors: */
-        unsigned long   rx_length_errors;
-        unsigned long   rx_over_errors;         /* receiver ring buff overflow  */
-        unsigned long   rx_crc_errors;          /* recved pkt with crc error    */
-        unsigned long   rx_frame_errors;        /* recv'd frame alignment error */
-        unsigned long   rx_fifo_errors;         /* recv'r fifo overrun          */
-        unsigned long   rx_missed_errors;       /* receiver missed packet       */
-
-        /* detailed tx_errors */
-        unsigned long   tx_aborted_errors;
-        unsigned long   tx_carrier_errors;
-        unsigned long   tx_fifo_errors;
-        unsigned long   tx_heartbeat_errors;
-        unsigned long   tx_window_errors;
-
-        /* for cslip etc */
-        unsigned long   rx_compressed;
-        unsigned long   tx_compressed;
-};
+#define IFF_SHARED      0x10000         /* interface may be shared */
+#define IFF_CONFIGURED  0x20000         /* interface already configured */
 
 /*
  *      We tag multicasts with these structures.
@@ -380,16 +343,15 @@ struct net_device_stats
 
 struct dev_mc_list
 {
-        struct dev_mc_list      *next;
-        UBYTE                   dmi_addr[MAX_ADDR_LEN];
-        unsigned char           dmi_addrlen;
-        int                     dmi_users;
-        int                     dmi_gusers;
+    struct dev_mc_list      *next;
+    UBYTE                   dmi_addr[MAX_ADDR_LEN];
+    unsigned char           dmi_addrlen;
+    int                     dmi_users;
+    int                     dmi_gusers;
 };
 
 struct fe_priv {
     struct NFUnit   *pci_dev;
-    struct net_device_stats stats;
     int in_shutdown;
     ULONG linkspeed;
     int duplex;
@@ -401,18 +363,18 @@ struct fe_priv {
     UWORD gigabit;
     ULONG desc_ver;
     struct SignalSemaphore  lock;
-    
+
     IPTR ring_addr;
-	struct eth_frame *rx_buffer;
-	struct eth_frame *tx_buffer;
-	
-	struct ring_desc *rx_ring;
-	ULONG cur_rx, refill_rx;
-	
-	struct ring_desc *tx_ring;
+    struct eth_frame *rx_buffer;
+    struct eth_frame *tx_buffer;
+
+    struct ring_desc *rx_ring;
+    ULONG cur_rx, refill_rx;
+
+    struct ring_desc *tx_ring;
     ULONG next_tx, nic_tx;
     ULONG tx_flags;
-    
+
     ULONG irqmask;
     ULONG need_linktimer;
     struct timeval link_timeout;
@@ -694,8 +656,8 @@ enum {
 //#define RX_ALLOC_BUFSIZE        (ETH_DATA_LEN + 128)
 #define RX_ALLOC_BUFSIZE        (ETH_DATA_LEN + 164)
 
-#define OOM_REFILL      (1+HZ/20)
-#define POLL_WAIT       (1+HZ/100)
+#define OOM_REFILL      (HZ/20)
+#define POLL_WAIT       (HZ/100)
 #define LINK_TIMEOUT    (3*HZ)
 
 /*
@@ -835,15 +797,11 @@ enum {
 #define NWAYTEST_RESV2          0xfe00  /* Unused...                   */
 
 struct eth_frame {
-	UBYTE eth_packet_dest[6];
-	UBYTE eth_packet_source[6];
-	UWORD eth_packet_type;
-	UBYTE eth_packet_data[ETH_MTU];
-	union
-	{
-		ULONG eth_len;
-		UBYTE eth_pad[RX_ALLOC_BUFSIZE - ETH_MAXPACKETSIZE];
-	} __attribute__((packed));
+    UBYTE eth_packet_dest[6];
+    UBYTE eth_packet_source[6];
+    UWORD eth_packet_type;
+    UBYTE eth_packet_data[ETH_MTU];
+    UBYTE eth_pad[RX_ALLOC_BUFSIZE - ETH_MAXPACKETSIZE];
 } __attribute__((packed));
 #define eth_packet_ieeelen eth_packet_type
 
