@@ -13,18 +13,6 @@ UWORD E_Freq_1000;
 
 
 
-/* Aros doesn't have ReadEClock. */
-LONG ReadEClock(struct EClockVal *myeclock){
-  struct timeval timeval;
-
-  GetSysTime(&timeval);
-
-  myeclock->ev_lo = timeval.tv_micro;
-
-  return 1000000;
-}
-
-
 /* Interrupt stuff */
 
 struct hoh{
