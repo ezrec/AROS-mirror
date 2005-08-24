@@ -3,10 +3,10 @@
 
 -include $(TOP)/config/make.cfg
 
-##MM- contrib-fribidi : development-fribidi
+#MM- contrib-fribidi : development-fribidi
 
 VERSION    := 0.10.4
-REPOSITORY  = http://freedesktop.org/~fribidi/download/
+REPOSITORY  = http://fribidi.org/download/
 
 %fetch_and_build_gnu_development package=fribidi version=$(VERSION) patch=no \
     package_repo=$(REPOSITORY) extraoptions="--enable-longlong --enable-sjlj-exceptions --disable-shared --without-pic"
