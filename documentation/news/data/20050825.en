@@ -1,0 +1,32 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2005-08-25
+
+There is a great news about AROS networking: `Michal Shulz`__ has added nForce chipsets network support to AROS, allowing lots of motherboards to be connected directly to a network under our operating system. And in order to simplify our lives, Neil Cafferkey has made ArosTCP compile in every nightly build. From now on, setting up an AROS network will be simplier. You can see nForce driver running `here`__.
+
+Michal has also provided a new timer.device supporting UNIT_MICROHZ, a feature some developer has asked for long time, allowing some applications require to be ported. 
+
+Georg Steger has made some little changes to Intuition, and now it can change window decorations instantly - this also applies to screen decorations (the title bar). Another step towards GUI customization. Georg has also modified X11 hidd, so linux hosted version of AROS can now run fullscreen.
+
+AROS on the Internet
+--------------------
+
+Polish AROS users and enthusiasts may have a look at this `polish AROS portal`__. It features news, galleries, forum sessions and more. Italian readers may also have a look at TGM Online forums: the `Amiga`__ one has just been renamed to "Amiga/AmigaOne/AROS".
+
+Ben Armstrong, Program manager on the Virtual machine team at Microsoft, has tested AROS under VirtualPC and Virtual Server, and you can read the results in his `Weblog`__. 
+
+AROS Laptop
+-----------
+
+If you are looking for a good laptop computer and you want AROS to run preinstalled on it, you may have a look to the `LADBS200`__. 
+
+
+__ http://msaros.blogspot.com/
+__ http://home.tu-clausthal.de/~misc/ftp2.jpg
+__ http://www.aros.gaa.pl/news.php
+__ http://www.tgmonline.it/forum/index.php?t=thread&frm_id=181&rid=22
+__ http://blogs.msdn.com/virtual_pc_guy/archive/category/8226.aspx
+__ http://www.thenostromo.com/blacktroll/lappy.html
