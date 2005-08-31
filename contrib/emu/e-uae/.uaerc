@@ -1,8 +1,10 @@
 amiga.rom_path     = System:Extras/Emu/E-UAE/shared/rom
-kickstart_rom_file = $(FILE_PATH)/amiga-os-310.rom
-kickstart_key_file = $(FILE_PATH)/rom.key
-filesystem2        = rw,DH0:System:System:Extras/Emu/E-UAE/shared/dir/System,1
-filesystem2        = rw,DH0:Work:System:Extras/Emu/E-UAE/shared/dir/Work,1
-sound_output       = none
+amiga.use_dither   = false
 cachesize          = 4096
 fastmem_size       = 8
+filesystem2        = rw,DH0:System:System:Extras/Emu/E-UAE/shared/dir/System,1
+filesystem2        = rw,DH0:Work:System:Extras/Emu/E-UAE/shared/dir/Work,1
+gfx_linemode       = double
+kickstart_rom_file = $(FILE_PATH)/amiga-os-310.rom
+kickstart_key_file = $(FILE_PATH)/rom.key
+sound_output       = none
