@@ -1,10 +1,11 @@
 include $(TOP)/config/make.cfg
 
-#MM demo-galaxy : demo-galaxy-icons
+#MM- demo-galaxy : demo-galaxy-$(AROS_TARGET_CPU)
+#MM demo-galaxy-i386 : demo-galaxy-icons
 
 DESTDIR := $(CONTRIBDIR)/Demos/Galaxy
 
-%build_prog mmake=demo-galaxy \
+%build_prog mmake=demo-galaxy-i386 \
     progname=Galaxy targetdir=$(DESTDIR) \
     files="galaxy schedul_fx" asmfiles=memshd \
     uselibs="arossupport amiga arosc m"

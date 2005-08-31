@@ -10,9 +10,9 @@ DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a	\
 
 EXE := $(INSTDIR)/quake
 
-#MM- contrib-games : Quake
-#MM Quake : linklibs includes
-Quake : make-dirs $(EXE)
+#MM- contrib-games : Quake-$(AROS_TARGET_CPU)
+#MM Quake-i386 : linklibs includes
+Quake-i386 : make-dirs $(EXE)
 
 make-dirs :
 	%mkdirs_q $(INSTDIR) $(BUILDDIR)

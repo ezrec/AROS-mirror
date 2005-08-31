@@ -70,7 +70,8 @@ USER_CFLAGS := -O2 -fomit-frame-pointer -Wall -Wno-unused\
 	       -UAMIGA -U_AMIGA
 
 #MM- contrib-complete: uae
-#MM uae : setup includes uae-setup uae-od-aros uae-docs-copy
+#MM- uae : uae-$(AROS_TARGET_CPU)
+#MM uae-i386 : setup includes uae-setup uae-od-aros uae-docs-copy
 #MM- uae-quick : uae-setup uae-od-aros-quick uae-docs-copy
 
 #MM
@@ -148,7 +149,7 @@ cpudefs.c: table68k  build68k
 readcpu.o: readcpu.c
 cpudefs.o: cpudefs.c
 
-%build_prog mmake=uae \
+%build_prog mmake=uae-i386 \
     progname=uae targetdir=$(EXEDIR) \
     files=$(FILES)  uselibs="SDL arossupport amiga arosc m" usehostlibs=gcc nix=yes
 

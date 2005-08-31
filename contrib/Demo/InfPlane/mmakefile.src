@@ -1,10 +1,11 @@
 include $(TOP)/config/make.cfg
 
-#MM demo-infplane : demo-infplane-icons demo-infplane-data
+#MM- demo-infplane : demo-infplane-$(AROS_TARGET_CPU)
+#MM demo-infplane-i386 : demo-infplane-icons demo-infplane-data
 
 DESTDIR 	:= $(CONTRIBDIR)/Demos/InfPlane
 
-%build_prog mmake=demo-infplane \
+%build_prog mmake=demo-infplane-i386 \
     progname=InfPlane targetdir=$(DESTDIR) \
     files=infplane asmfiles=refresh \
     uselibs="arossupport amiga arosc m"

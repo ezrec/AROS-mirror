@@ -83,10 +83,10 @@ FILES :=             \
 #	amiga_sega       \
 #	amiga_main	
 
-#MM- contrib-games : Doom
-#MM Doom : Doom-extra
+#MM- contrib-games : Doom-$(AROS_TARGET_CPU)
+#MM Doom-i386 : Doom-extra
 
-%build_prog mmake=Doom \
+%build_prog mmake=Doom-i386 \
     progname=Doom targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="amiga arosc m"
 

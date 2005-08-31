@@ -3,13 +3,13 @@ include ../make.cfg
 EXEDIR := $(GNUDIR)/cpuid/bin
 FILES  := cpuid
 
-#MM- contrib-gnu-cpuid : cpuid
-#MM- contrib-gnu      : cpuid
+#MM- contrib-gnu-cpuid : cpuid-$(AROS_TARGET_CPU)
+#MM- contrib-gnu      : cpuid-$(AROS_TARGET_CPU)
 
 $(OBJDIR)/%.o: %.S
 	%compile_q opt=$(USER_CFLAGS)
 
-%build_prog mmake=cpuid \
+%build_prog mmake=cpuid-i386 \
     progname=cpuid targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="arosc m"
 
