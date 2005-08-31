@@ -566,7 +566,7 @@ for(;;)
 	HashSize>>=1;
 	TTHashMask>>=1;
 	if(!HashSize)
-#ifdef __PPC__
+#if defined(__PPC__) && !defined(__AROS__)
 	FromPPCexit(RETURN_FAIL);
 #else
 	exit(RETURN_FAIL);
@@ -582,7 +582,7 @@ PawnTab[0]=realloc(PawnTab[0],PAWNSLOTS*sizeof(PawnSlot));
 PawnTab[1]=realloc(PawnTab[1],PAWNSLOTS*sizeof(PawnSlot));
 #endif
 if(!PawnTab[0]||!PawnTab[1])
-#ifdef __PPC__
+#if defined(__PPC__) && !defined(__AROS__)
 	FromPPCexit(RETURN_FAIL);
 #else
 	exit(RETURN_FAIL);

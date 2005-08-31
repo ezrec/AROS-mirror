@@ -19,7 +19,7 @@ if(!fp)
 	if(!(fp=fopen(file,"r")))
 		{
 		sprintf(line,"Error opening file %s",file);
-#ifdef __PPC__
+#if defined(__PPC__) && !defined(__AROS__)
 		FromPPCDoMethod(MUIM_Chess_ShowThinking,line);
 #else
 		DoMethod(mui_app,MUIM_Chess_ShowThinking,line);
@@ -211,7 +211,7 @@ else
 		{
 		if(ReadEPDFile(file,2)==false)
 			{
-#ifdef __PPC__
+#if defined(__PPC__) && !defined(__AROS__)
 			FromPPCDoMethod(MUIM_Chess_ShowThinking,"File position exceeded.");
 #else
 			DoMethod(mui_app,MUIM_Chess_ShowThinking,"File position exceeded.");
@@ -221,7 +221,7 @@ else
 		}
 	ReadEPDFile(file,0);
 	}
-#ifdef __PPC__
+#if defined(__PPC__) && !defined(__AROS__)
 FromPPCDoMethod(MUIM_Chess_ShowBoard);
 #else
 DoMethod(mui_app,MUIM_Chess_ShowBoard);
@@ -267,7 +267,7 @@ if(fp=fopen(file,"a"))
 	fclose(fp);
 	}
 else
-#ifdef __PPC__
+#if defined(__PPC__) && !defined(__AROS__)
 FromPPCDoMethod(MUIM_Chess_ShowThinking,"Can't save file.");
 #else
 DoMethod(mui_app,MUIM_Chess_ShowThinking,"Can't save file.");
