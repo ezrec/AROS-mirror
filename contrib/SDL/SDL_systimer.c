@@ -64,7 +64,7 @@ static struct GfxBase *GfxBase;
 
 /* The first ticks value of the application */
 
-#if !defined(__PPC__) || defined(MORPHOS)
+#if defined (__AROS__) || !defined(__PPC__) || defined(MORPHOS)
 static clock_t start;
 
 #define USE_SYSTIME
