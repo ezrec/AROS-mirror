@@ -79,6 +79,7 @@ void dprintf(UBYTE *fmt,...);
 #  define MakeID(a,b,c,d)  ( (LONG)(a)<<24L | (LONG)(b)<<16L | (c)<<8 | (d) )
 #  define LGET(a) a
 #  define WGET(a) a
+#  define UWGET(a) a
 #else
 #  define MakeID(a,b,c,d)  ( (LONG)(d)<<24L | (LONG)(c)<<16L | (b)<<8 | (a) )
 LONG LGET(LONG a){
