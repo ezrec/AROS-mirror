@@ -11,7 +11,7 @@
 
 #define min(a,b) ( (a) < (b) ? (a) : (b) )
 
-#define USE_VERTB100 1
+#define USE_TIMERTICK 1
 
 /******************************************************************************
 ** The slave process **********************************************************
@@ -48,11 +48,11 @@ void SlaveEntry(void)
 #endif
 
 
-#if USE_VERTB100
+#if USE_TIMERTICK
 
 #include <hardware/intbits.h>
 
-AROS_UFH4(ULONG, AHIVBlank100,
+AROS_UFH4(ULONG, AHITimerTickCode,
     AROS_UFHA(ULONG, dummy, A0),
     AROS_UFHA(void *, data, A1),
     AROS_UFHA(ULONG, dummy2, A5),
@@ -66,20 +66,20 @@ AROS_UFH4(ULONG, AHIVBlank100,
     AROS_USERFUNC_EXIT
 }
 
-static void Delay100(struct ExecBase *SysBase)
+static void SmallDelay(struct ExecBase *SysBase)
 {
     struct Interrupt i;
     
-    i.is_Code 	      = (APTR)AHIVBlank100;
+    i.is_Code 	      = (APTR)AHITimerTickCode;
     i.is_Data 	      = FindTask(0);
-    i.is_Node.ln_Name = "AROS AHI Driver 100 Hz VBlank server";
+    i.is_Node.ln_Name = "AROS AHI Driver Timer Tick Server";
     i.is_Node.ln_Pri  = 0;
     i.is_Node.ln_Type = NT_INTERRUPT;
     
     SetSignal(0, SIGBREAKF_CTRL_F);
-    AddIntServer(INTB_VERTB100, &i);
+    AddIntServer(INTB_TIMERTICK, &i);
     Wait(SIGBREAKF_CTRL_F);
-    RemIntServer(INTB_VERTB100, &i);
+    RemIntServer(INTB_TIMERTICK, &i);
 }
 
 #endif
@@ -144,8 +144,8 @@ Slave( struct ExecBase* SysBase )
 	    // comparison, the SB Live/Audigy driver uses 1/1000 s
 	    // polling ...
 //	    KPrintF("Delay\n");
-    	  #if USE_VERTB100
-	    Delay100(SysBase);
+    	  #if USE_TIMERTICK
+	    SmallDelay(SysBase);
 	  #else
 	    Delay( 1 );
 	  #endif
