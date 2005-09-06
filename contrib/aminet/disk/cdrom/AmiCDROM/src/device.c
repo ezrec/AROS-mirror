@@ -209,6 +209,7 @@ ULONG signals;
     global->DosProc = (PROC *) FindTask(NULL);
     global->DOSBase = (struct DOSBase *)OpenLibrary("dos.library",37);
     global->UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library",37);
+
 #if !defined(NDEBUG) || defined(DEBUG_SECTORS)
     global->DBDisable = 0;				  /*  Init. globals	  */
     global->Dbport = global->Dback = NULL;
@@ -217,36 +218,36 @@ ULONG signals;
      *	Initialize debugging code
      */
 
-    if (global->DOSBase)
+    if (DOSBase)
         dbinit();
 #endif
     global->DevList = NULL;
-    {
-        WaitPort(&global->DosProc->pr_MsgPort);         /*  Get Startup Packet  */
-        msg = GetMsg(&global->DosProc->pr_MsgPort);
-	packet = (PACKET *)msg->mn_Node.ln_Name;
 
-	/*
-	 *  Loading DosNode->dn_Task causes DOS *NOT* to startup a new
-	 *  instance of the device driver for every reference.	E.G. if
-	 *  you were writing a CON device you would want this field to
-	 *  be NULL.
-	 */
+    WaitPort(&global->DosProc->pr_MsgPort);         /*  Get Startup Packet  */
+    msg = GetMsg(&global->DosProc->pr_MsgPort);
+    packet = (PACKET *)msg->mn_Node.ln_Name;
 
-        global->DosNode = (DEVNODE *)BADDR(packet->dp_Arg3);
+    /*
+     *  Loading DosNode->dn_Task causes DOS *NOT* to startup a new
+     *  instance of the device driver for every reference.  E.G. if
+     *  you were writing a CON device you would want this field to
+     *  be NULL.
+     */
 
-	/*
-	 *  Set dn_Task field which tells DOS not to startup a new
-	 *  process on every reference.
-	 */
+    global->DosNode = (DEVNODE *)BADDR(packet->dp_Arg3);
+
+    /*
+     *  Set dn_Task field which tells DOS not to startup a new
+     *  process on every reference.
+     */
 #ifndef __AROS__
-        global->DosNode->dn_Task = &global->DosProc->pr_MsgPort;
-	global->DosTask = global->DosNode->dn_Task;
+    global->DosNode->dn_Task = &global->DosProc->pr_MsgPort;
+    global->DosTask = global->DosNode->dn_Task;
 #endif
 
-	Init_Intui ();
+    Init_Intui ();
 
-	if (
+    if (
 			global->UtilityBase && global->DOSBase &&
 #ifdef __AROS__
 			Get_Startup ((struct FileSysStartupMsg *)(BADDR(packet->dp_Arg3)))
@@ -254,35 +255,34 @@ ULONG signals;
 			Get_Startup (packet->dp_Arg2)
 #endif
 		)
-	{
-	    packet->dp_Res1 = DOSTRUE;
- 	    packet->dp_Res2 = 0;
+    {
+	packet->dp_Res1 = DOSTRUE;
+ 	packet->dp_Res2 = 0;
 
-	  /*
-	   *  Load dn_Startup field with a BPTR to a FileSysStartupMsg.
-	   *  (According to the official documentation, this is not
-	   *  required. Some debugging tools, however, depend on it.)
-	   */
+	/*
+	 *  Load dn_Startup field with a BPTR to a FileSysStartupMsg.
+	 *  (According to the official documentation, this is not
+	 *  required. Some debugging tools, however, depend on it.)
+	 */
 	    
-	    global->DosNode->dn_Startup = Make_FSSM ();
+        global->DosNode->dn_Startup = Make_FSSM ();
 
-	} else {			    /*	couldn't open dos.library   */
-	    packet->dp_Res1 = DOSFALSE;
-	    packet->dp_Res2 = 333; /* any error code */
-	    returnpacket(packet);
-	    Forbid ();
+    } else {		                /*  couldn't open dos.library   */
+	packet->dp_Res1 = DOSFALSE;
+	packet->dp_Res2 = 333; /* any error code */
+	returnpacket(packet);
+	Forbid ();
 #ifndef __AROS__
-	    Remove_Seglist ();
+	Remove_Seglist ();
 #endif
-	    if (global->DOSBase) {
-              BUG2(dbuninit();)
-	      Close_Intui ();
-              if (global->UtilityBase)
+	if (global->DOSBase) {
+            BUG2(dbuninit();)
+	    Close_Intui ();
+            if (global->UtilityBase)
                 CloseLibrary((struct Library *)global->UtilityBase);
-	      CloseLibrary ((struct Library *)global->DOSBase);
-	    }
-	    return 0;			    /*	exit process		    */
+	    CloseLibrary ((struct Library *)global->DOSBase);
 	}
+	return 0;		        /*  exit process	        */
     }
 
     global->g_inhibited = 0;

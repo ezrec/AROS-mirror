@@ -8,7 +8,7 @@ AmiCDROM - a CDROM filesystem for the Commodore Amiga
 Version 1.15   03-Nov-94   (C) 1993,1994 by Frank Munkert
                            (ln_fmu@pki-nbg.philips.de)
 
-MorphOS port   17-Dec-04   Pavel Fedin
+MorphOS port   06-Sep-05   Pavel Fedin
                            (sonic_amiga@rambler.ru)
 
 * IMPORTANT NOTICE FOR USERS OF VERSIONS 1.0, 1.1 and 1.2:
@@ -152,19 +152,40 @@ Table of Contents:
      or 'Startup' field.
 
   IMPORTANT FOR MORPHOS:
-     If you wish to completely replace MorphOS internal CD-ROM handler
-     with AmiCDROM you need to place included "KillDevice" utility into
-     your MOSSYS:S/Startup-Sequence file before the line:
+     1. If you wish to completely replace MorphOS internal CD-ROM handler
+        with AmiCDROM you need to use "KillDevice" utility to remove built-in
+        handler before installing this one. For example you could write in your
+        S:User-Startup file:
+
+        KillDevice CD0:
+        Mount >NIL: CD0:
+
+        This assumes that "CD0" DOSDriver is placed into SYS:Storage/DOSDrivers
+        directory.
+        If you don't wish to remove MorphOS builtin handler you'll need to
+        choose another name for AmiCDROM, for example ACD0.
+     2. "Mount" utility in MorphOS v1.4.5 and earlier has a bug which leads to
+        system crash if you put AmiCDROM's DOSDriver into DEVS:DOSDrivers
+        directory (actually this happens when any DOSDriver uses "Startup"
+        keyword). This means that you'll be unable to boot up your system if you
+        place AmiCDROM's DOSDriver into DEVS:DOSDrivers. You can work around
+        this bug if you use approach mentioned in the previous note (mounting
+        AmiCDROM separately from within S:User-Startup file). Alternatively, you
+        can get unofficial fixed version of Mount command from Unmorphos project
+        (http://sourceforge.net/projects/unmorphos) or Aminet. At the moment of
+        writing this document the information about the bug is transferred to
+        MorphOS development team and hopefully it will be fixed in the next
+        official update.
+        For fixed systems the best approach is to place a DOSDriver into
+        DEVS:DOSDrivers directory and insert "KillDevice" command (if desired)
+        into MOSSYS:S/Startup-Sequence file before the line:
 
 	Mount >NIL: MOSSYS:Devs/DOSDrivers/~(#?.info) DEVS:DOSDrivers/~(#?.info)
 
-     So that this would look like:
+        So that this would look like:
 
 	KillDevice CD0:
 	Mount >NIL: MOSSYS:Devs/DOSDrivers/~(#?.info) DEVS:DOSDrivers/~(#?.info)
-
-     Otherwise you'll need to use another name for AmiCDROM device, for example
-     ACD0:
 
 @endnode
 

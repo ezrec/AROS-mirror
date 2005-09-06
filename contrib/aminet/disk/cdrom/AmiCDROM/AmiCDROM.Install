@@ -1,24 +1,30 @@
-;$VER: AmiCDROM Install 1.0 (03.11.94)
-;© 1994 Thomas Kessler
+;$VER: AmiCDROM Install 1.1 (06.09.05)
+;(C) 1994 Thomas Kessler
+;(C) 2005 Pavel Fedin
 
 (set #amicdrom-version "1.15")
-(set #amicdrom-date "(03-Nov-94)")
+(set #amicdrom-date "(06-Sep-05)")
 (set #install-version "1.0")
 
 (set old-level @user-level)
 (set @default-dest "SYS:")
 
-(set #wbversion (getversion "libs:version.library"))
+(set #wbversion (getversion))
 (set #wbversion (/ #wbversion 65536) )
+(set #morphos (exists "SYS:MorphOS"))
+(set #mountvernum (getversion "C:Mount"))
+(set #mountversion (/ #mountvernum 65536))
 (set #na "N/A")
 
 (set ldir "SYS:L")
 (set ldir2 "SYS:L/")
+(set cdir "SYS:C")
+(set cdir2 "SYS:C/")
 
 (complete 0)
 
 (set #space " ")
-(if (<= (/ (getversion "C:Mount") 65536) 37) (set #space "-"))
+(if (<= #mountversion 37) (set #space "-"))
 
 (if (NOT (exists "C/GetNames")) (abort "Can't find file: 'C/GetNames'"))
 
@@ -63,7 +69,8 @@
 (user 2)
 (message	"\n\nAmiCDROM "#amicdrom-version"\n\n"
 	"a CDROM filesystem for the Commodore Amiga\n\n"
-	"Version "#amicdrom-version" "#amicdrom-date" © 1993,1994 Frank Munkert\nAll rights reserved.\n\n"
+	"Version "#amicdrom-version" "#amicdrom-date" © 1993,1994 Frank Munkert\nAll rights reserved.\n"
+        "MorphOS port © 2005 Pavel Fedin.\n\n"
 	"Install-Script "#install-version" © 1994 Thomas Kessler\nAll rights reserved.")
 
 (user old-level)
@@ -341,13 +348,13 @@
 			"argument to the PC option. Don't forget to set the "
 			"\"S\" protection bit of the script file."
 		)
-		(default "Work:")
+		(default "")
 	)
 )
 (user old-level)
 (complete 50)
 
-(if (NOT (= "Work:" cdda-file)) (set startstr (cat startstr #space "PLAYCDDA=" cdda-file)))
+(if (NOT (= "" cdda-file)) (set startstr (cat startstr #space "PLAYCDDA=" cdda-file)))
 
 (user 2)
 (set icon-pos
@@ -502,8 +509,17 @@
 (user 2)
 (set auto-mount
 	(askbool
-		(prompt "\n\n\n"
-			"Do you want to auto-mount "device" during every system-start?"
+		(prompt "Do you want to auto-mount "device" during every system-start?\n"
+                        "\n"
+                        "WARNING!!!\n"
+                        "If you run MorphOS 1.4.5 or earlier without fixed Mount command\n"
+                        "(availible from Aminet or http://sourceforge.net/projects/unmorphos)\n"
+                        "this can prevent your system from booting up due to a bug in the\n"
+                        "Mount command! Do not use this option and add \"Mount CD0:\"\n"
+                        "command manually to your User-startup as a workaround.\n"
+                        "\n"
+                        "KillDevice tool will not be installed into Startup-Sequence\n"
+                        "automatically, you will need to do it manually"
 		)
 		(help "\n"
 			"Workbench 2.0:\n\n"
@@ -511,7 +527,7 @@
 			"in your user-startup\n\n"
 			"No: Nothing will be added anywhere. If you want to access your "
 			"CDs, you will have to type \"Mount "device"\" in your shell first.\n\n"
-			"Workbench 2.1+:\n\n"
+			"Workbench 2.1+ or MorphOS:\n\n"
 			"Auto-Mount: The file "dev-name" will be placed in your "
 			"directory \"SYS:Devs/DOSDrivers\"\n\n"
 			"No: The file "dev-name" will be placed in your "
@@ -597,7 +613,14 @@
 	(source "l/cdrom-handler")		; ***TODO***
 	(dest	ldir)
 )
-
+(if #morphos
+	(copyfiles
+		(prompt "\nInstalling "cdir2"KillDevice")
+	        (help #na)
+        	(source "C/KillDevice")
+	        (dest	cdir)
+        )
+)
 (complete 100)
 
 (exit "")

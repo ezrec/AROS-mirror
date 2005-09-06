@@ -55,6 +55,8 @@ The following hardware setups have been reported to work:
      [ but: audio support does not work + READ TOC command has funny results ]
    * Amiga ???? + Oktagon 2008 + Teac CD-50 / Pioneer DRM600 / DRM602 +
         AmiCDROM 1.10
+   * Pegasos-II + Samsung SM-352N CDRW+DVD-R combo drive + MorphOS 1.4.5
+   	(+ Mount v50.10 unofficial) + AmiCDROM 1.15
  
 The following hardware setups have been reported not to work:
 
