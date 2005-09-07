@@ -2,6 +2,7 @@ Short: CDROM disk filesystem, MorphOS version (ISO-9660+RR+HFS)
 Type: disk/cdrom
 Uploader: sonic_amiga@rambler.ru
 Author: sonic_amiga@rambler.ru
+Architecture: ppc-morphos
 
 * IMPORTANT NOTICE FOR USERS OF VERSIONS 1.0, 1.1 and 1.2:
 *

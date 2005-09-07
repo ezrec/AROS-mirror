@@ -4,7 +4,7 @@
 
 (set #amicdrom-version "1.15")
 (set #amicdrom-date "(06-Sep-05)")
-(set #install-version "1.0")
+(set #install-version "1.1")
 
 (set old-level @user-level)
 (set @default-dest "SYS:")
@@ -71,7 +71,7 @@
 	"a CDROM filesystem for the Commodore Amiga\n\n"
 	"Version "#amicdrom-version" "#amicdrom-date" © 1993,1994 Frank Munkert\nAll rights reserved.\n"
         "MorphOS port © 2005 Pavel Fedin.\n\n"
-	"Install-Script "#install-version" © 1994 Thomas Kessler\nAll rights reserved.")
+	"Install-Script "#install-version" © 1994 Thomas Kessler, 2005 Pavel Fedin\nAll rights reserved.")
 
 (user old-level)
 (complete 5)
