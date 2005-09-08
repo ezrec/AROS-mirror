@@ -1,0 +1,14 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2005-09-08
+
+AROS has got its first software repository on the web, `The AROS Archives`__. Its mission is providing a central place where AROS developers can upload their software, and users can find AROS "fresh meat". We strongly encourage coders to upload their creations and portings. 
+
+For everybody stuck with AROS installation, there are two new intersting HOW-TOs. Mark Carter wrote guides to `install AROS on hard disk`__ and to `install AROS on a linux-hosted system`__. Simply click on the links to read!
+
+__ http://archives.aros-exec.org/
+__ http://www.markcarter.me.uk/computing/aros/hdinstall.htm
+__ http://www.markcarter.me.uk/computing/aros/slackware.htm
