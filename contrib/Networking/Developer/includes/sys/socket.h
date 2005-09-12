@@ -12,8 +12,10 @@
 #ifndef SYS_TYPES_H
 #include <sys/types.h>
 #endif
-
+#ifndef SA_FAMILY_T
+#define SA_FAMILY_T
 typedef unsigned char   sa_family_t;
+#endif
 typedef int socklen_t;
 
 /* AmiTCP asynchronous event definitions */
