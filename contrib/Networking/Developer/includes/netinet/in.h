@@ -151,8 +151,10 @@
  */
 typedef uint16_t in_port_t;
 typedef uint32_t in_addr_t;
+#ifndef SA_FAMILY_T
+#define SA_FAMILY_T 1
 typedef u_char sa_family_t;
-
+#endif
 struct in_addr {
         in_addr_t s_addr;        /* 32-bit IPv4 address, network byte ordered */
 };
