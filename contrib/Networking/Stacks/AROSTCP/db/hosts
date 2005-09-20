@@ -7,7 +7,7 @@
 ;
 ; Comments are from ';' or '#' to end of line
 ;
-; This file shouls be included from netdb-file with following line:
+; This file should be included from netdb-file using the following line:
 ; WITH protocols PREFIX=H
 ;
 ; You can append to or replace this file with "/etc/hosts" from your
@@ -29,4 +29,7 @@
 ; + protects you from changes in address of computers.
 ; - if nameserver is down, you can access computers only with its IP
 ;  number if it is not in your hosts file.
+
+192.168.0.1   gateway
+
 ; EOF

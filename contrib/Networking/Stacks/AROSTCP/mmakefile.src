@@ -1,0 +1,11 @@
+#   $Id: $
+include $(TOP)/config/make.cfg
+
+#MM contrib-networking-stacks-arostcp
+
+contrib-networking-stacks-arostcp : files-copy
+%copy_files_q files="README" \
+    dst=$(CONTRIBDIR)/Networking/Stacks/AROSTCP
+
+#%common
+

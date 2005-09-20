@@ -1,0 +1,44 @@
+Below are brief instructions on how to configure and run AROSTCP under
+native AROS. It is assumed that AROS has already been installed onto
+hard disk.
+
+
+Configuration
+=============
+
+There are a number of files in AROSTCP's 'db' subdirectory that need to
+be changed using a text editor (eg. 'Editor', found in AROS's Tools
+directory):
+
+db/hosts: At the end of the file, there is an entry for a computer/device
+called "gateway". Change the IP address at the start of this line to
+that of your actual gateway, eg. your router.
+
+db/netdb-myhost: In the 'HOST' line, change the IP address to the real
+IP address of your computer. You also need to change the address in the
+NAMESERVER line to that of your real DNS server.
+
+db/interfaces: At the end of the file, there are configuration entries
+for different network cards. Enable the entry for your network card by
+removing the '#' from the start of one of the lines that begin with
+"#eth0".
+
+If you're using a home network, and you don't know what values to use in
+the 'hosts' and 'netdb-myhost' files, try running AROSTCP without
+changing them. The default values might work in a lot of cases.
+
+
+Usage
+=====
+
+To start AROSTCP, open a shell and type the following two commands:
+
+ CD SYS:Extras/Networking/Stacks/AROSTCP/C
+ Execute startnet
+
+To stop AROSTCP, run the Status command in a shell to get its process
+number, and then enter
+
+ Break N
+
+where N is the process number.
