@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 
 PROGDIR := $(CONTRIBDIR)/Emu/E-UAE
 PACKAGE := e-uae
-VERSION := 0.8.27
+VERSION := 0.8.28
 PKG_VER := $(PACKAGE)-$(VERSION)
 
 %fetch_and_build mmake=contrib-euae \
