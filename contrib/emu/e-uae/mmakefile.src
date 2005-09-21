@@ -1,6 +1,3 @@
-# Makefile to fetch and build e-uae.
-# $Id: $
-
 include $(TOP)/config/make.cfg
 
 #MM- contrib-complete : contrib-euae
@@ -30,12 +27,10 @@ euae-copy-files : files-copy
 
 %copy_files_q files=".uaerc README.AmigaOS" dst=$(PROGDIR)
 
-#MM- euae-rebuild : euae-clean contrib-euae
+#MM- contrib-euae-rebuild : contrib-euae-clean contrib-euae
 
 #MM
-euae-clean :
+contrib-euae-clean :
 	$(RM) $(PROGDIR) $(OBJDIR) $(PACKAGES_DIR)/$(PKG_VER)*
-
-clean:: euae-clean
 
 %common
