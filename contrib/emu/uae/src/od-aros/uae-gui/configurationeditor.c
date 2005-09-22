@@ -192,24 +192,24 @@ IPTR ConfigurationEditor__OM_NEW
                 Child, (IPTR) HVSpace,
                 Child, (IPTR) ColGroup(2),
                     Child, (IPTR) Label(_(MSG_CFG_CPU_TYPE)),
-                    Child, (IPTR) cpu_Type  = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) CPU_Type),
+                    Child, (IPTR) (cpu_Type  = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) CPU_Type)),
                     Child, (IPTR) Label(_(MSG_CFG_CPU_SPEED)),
-                    Child, (IPTR) cpu_Speed = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) CPU_Speed),
+                    Child, (IPTR) (cpu_Speed = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) CPU_Speed)),
                     Child, (IPTR) Label(_(MSG_CFG_CPU_RATIO)),
-                    Child, (IPTR) cpu_Ratio = SliderObject,
+                    Child, (IPTR) (cpu_Ratio = SliderObject,
                         MUIA_Weight,         0,
                         MUIA_Numeric_Min,    1,
                         MUIA_Numeric_Max,    5119,
                         MUIA_Numeric_Format, __(MSG_CFG_CPU_RATIO_FORMAT),
-                    End,
+                    End),
                     Child, (IPTR) RectangleObject,
                         MUIA_Weight, 0,
                     End,
                     Child, (IPTR) ColGroup(3),
-                        Child, (IPTR) cpu_24bit = MUI_MakeObject(MUIO_Checkmark, NULL),
+                        Child, (IPTR) (cpu_24bit = MUI_MakeObject(MUIO_Checkmark, NULL)),
                         Child, (IPTR) LLabel2(_(MSG_CFG_CPU_24BIT)),
                         Child, (IPTR) HVSpace,
-                        Child, (IPTR) cpu_Compatible = MUI_MakeObject(MUIO_Checkmark, NULL),
+                        Child, (IPTR) (cpu_Compatible = MUI_MakeObject(MUIO_Checkmark, NULL)),
                         Child, (IPTR) LLabel2(_(MSG_CFG_CPU_SLOW_COMPATIBLE)),
                         Child, (IPTR) HVSpace,
                     End,
@@ -224,16 +224,16 @@ IPTR ConfigurationEditor__OM_NEW
                     
                     Child, (IPTR) Label2(_(MSG_CFG_MEM_ROM_KICKSTART)),
                     Child, (IPTR) PopaslObject,
-                        MUIA_Popstring_String, (IPTR) mem_Kickstart = StringObject,
+                        MUIA_Popstring_String, (IPTR) (mem_Kickstart = StringObject,
                             StringFrame,
-                        End,
+                        End),
                         MUIA_Popstring_Button, (IPTR) PopButton(MUII_PopFile),
                     End,
                     Child, (IPTR) Label2(_(MSG_CFG_MEM_ROM_KEY)),
                     Child, (IPTR) PopaslObject,
-                        MUIA_Popstring_String, (IPTR) mem_KickstartKey = StringObject,
+                        MUIA_Popstring_String, (IPTR) (mem_KickstartKey = StringObject,
                             StringFrame,
-                        End,
+                        End),
                         MUIA_Popstring_Button, (IPTR) PopButton(MUII_PopFile),
                     End,
                 End,
@@ -241,13 +241,13 @@ IPTR ConfigurationEditor__OM_NEW
                     GroupFrameT(_(MSG_CFG_MEM_RAM)),
                     
                     Child, (IPTR) Label(_(MSG_CFG_MEM_RAM_CHIP)),
-                    Child, (IPTR) mem_Chip = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) MEM_Chip),
+                    Child, (IPTR) (mem_Chip = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) MEM_Chip)),
                     Child, (IPTR) Label(_(MSG_CFG_MEM_RAM_SLOW)),
-                    Child, (IPTR) mem_Slow = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) MEM_Slow),
+                    Child, (IPTR) (mem_Slow = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) MEM_Slow)),
                     Child, (IPTR) Label(_(MSG_CFG_MEM_RAM_FAST)),
-                    Child, (IPTR) mem_Fast = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) MEM_Fast),
+                    Child, (IPTR) (mem_Fast = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) MEM_Fast)),
                     Child, (IPTR) Label(_(MSG_CFG_MEM_RAM_Z3)),
-                    Child, (IPTR) mem_Z3 = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) MEM_Z3),
+                    Child, (IPTR) (mem_Z3 = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) MEM_Z3)),
                 End,
                 Child, (IPTR) HVSpace,
             End,
@@ -256,29 +256,29 @@ IPTR ConfigurationEditor__OM_NEW
                 Child, (IPTR) HVSpace,
                 Child, (IPTR) ColGroup(2),
                     Child, (IPTR) Label(_(MSG_CFG_GFX_CHIPSET)),
-                    Child, (IPTR) gfx_Chipset = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) GFX_Chipset),
+                    Child, (IPTR) (gfx_Chipset = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) GFX_Chipset)),
                     Child, (IPTR) Label(_(MSG_CFG_GFX_SPRITECOLLISIONS)),
-                    Child, (IPTR) gfx_SpriteCollisions = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) GFX_SpriteCollisions),
+                    Child, (IPTR) (gfx_SpriteCollisions = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) GFX_SpriteCollisions)),
                     Child, (IPTR) RectangleObject,
                         MUIA_Weight, 0,
                     End,
                     Child, (IPTR) ColGroup(3),
-                        Child, (IPTR) gfx_CopperSpeedup = MUI_MakeObject(MUIO_Checkmark, NULL),
+                        Child, (IPTR) (gfx_CopperSpeedup = MUI_MakeObject(MUIO_Checkmark, NULL)),
                         Child, (IPTR) LLabel(_(MSG_CFG_GFX_COPPER_SPEEDUP)),
                         Child, (IPTR) HVSpace,
-                        Child, (IPTR) gfx_ImmediateBlits = MUI_MakeObject(MUIO_Checkmark, NULL),
+                        Child, (IPTR) (gfx_ImmediateBlits = MUI_MakeObject(MUIO_Checkmark, NULL)),
                         Child, (IPTR) LLabel(_(MSG_CFG_GFX_IMMEDIATE_BLITS)),
                         Child, (IPTR) HVSpace,
                     End,
                     Child, (IPTR) Label(_(MSG_CFG_GFX_FRAMERATE)),
-                    Child, (IPTR) gfx_Framerate = SliderObject,
+                    Child, (IPTR) (gfx_Framerate = SliderObject,
                         MUIA_Weight,                0,
                         MUIA_Numeric_Min,           1,
                         MUIA_Numeric_Max,           20,
                         MUIA_Numeric_Format, (IPTR) "1/%ld",
-                    End,
+                    End),
                     Child, (IPTR) Label(_(MSG_CFG_GFX_P96RAM)),
-                    Child, (IPTR) gfx_Memory = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) GFX_Memory),
+                    Child, (IPTR) (gfx_Memory = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) GFX_Memory)),
                 End,
                 Child, (IPTR) HVSpace,
             End,
@@ -287,11 +287,11 @@ IPTR ConfigurationEditor__OM_NEW
                 Child, (IPTR) HVSpace,
                 Child, (IPTR) ColGroup(2),
                     Child, (IPTR) Label(_(MSG_CFG_SND_MODE)),
-                    Child, (IPTR) snd_Mode = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) SND_Mode),
+                    Child, (IPTR) (snd_Mode = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) SND_Mode)),
                     Child, (IPTR) Label(_(MSG_CFG_SND_CHANNELS)),
-                    Child, (IPTR) snd_Channels = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) SND_Channels),
+                    Child, (IPTR) (snd_Channels = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) SND_Channels)),
                     Child, (IPTR) Label(_(MSG_CFG_SND_RESOLUTION)),
-                    Child, (IPTR) snd_Resolution = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) SND_Resolution),
+                    Child, (IPTR) (snd_Resolution = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) SND_Resolution)),
                 End,
                 Child, (IPTR) HVSpace,
             End,
@@ -300,40 +300,40 @@ IPTR ConfigurationEditor__OM_NEW
                 Child, (IPTR) HGroup,
                     GroupFrameT(_(MSG_CFG_DRV_FLOPPY)),
                     
-                    Child, (IPTR) drv_FloppyRootGroup = ColGroup(2),
-                        Child, (IPTR) drv_FloppyLabels[0] = Label("DF0:"),
-                        Child, (IPTR) drv_FloppyPopasls[0] = PopaslObject,
-                            MUIA_Popstring_String, (IPTR) drv_Floppies[0] = StringObject,
+                    Child, (IPTR) (drv_FloppyRootGroup = ColGroup(2),
+                        Child, (IPTR) (drv_FloppyLabels[0] = Label("DF0:")),
+                        Child, (IPTR) (drv_FloppyPopasls[0] = PopaslObject,
+                            MUIA_Popstring_String, (IPTR) (drv_Floppies[0] = StringObject,
                                 StringFrame,
-                            End,
+                            End),
                             MUIA_Popstring_Button, (IPTR) PopButton(MUII_PopFile),
-                        End,
-                        Child, (IPTR) drv_FloppyLabels[1] = Label("DF1:"),
-                        Child, (IPTR) drv_FloppyPopasls[1] = PopaslObject,
-                            MUIA_Popstring_String, (IPTR) drv_Floppies[1] = StringObject,
+                        End),
+                        Child, (IPTR) (drv_FloppyLabels[1] = Label("DF1:")),
+                        Child, (IPTR) (drv_FloppyPopasls[1] = PopaslObject,
+                            MUIA_Popstring_String, (IPTR) (drv_Floppies[1] = StringObject,
                                 StringFrame,
-                            End,
+                            End),
                             MUIA_Popstring_Button, (IPTR) PopButton(MUII_PopFile),
-                        End,
-                        Child, (IPTR) drv_FloppyLabels[2] = Label("DF2:"),
-                        Child, (IPTR) drv_FloppyPopasls[2] = PopaslObject,
-                            MUIA_Popstring_String, (IPTR) drv_Floppies[2] = StringObject,
+                        End),
+                        Child, (IPTR) (drv_FloppyLabels[2] = Label("DF2:")),
+                        Child, (IPTR) (drv_FloppyPopasls[2] = PopaslObject,
+                            MUIA_Popstring_String, (IPTR) (drv_Floppies[2] = StringObject,
                                 StringFrame,
-                            End,
+                            End),
                             MUIA_Popstring_Button, (IPTR) PopButton(MUII_PopFile),
-                        End,
-                        Child, (IPTR) drv_FloppyLabels[3] = Label("DF3:"),
-                        Child, (IPTR) drv_FloppyPopasls[3] = PopaslObject,
-                            MUIA_Popstring_String, (IPTR) drv_Floppies[3] = StringObject,
+                        End),
+                        Child, (IPTR) (drv_FloppyLabels[3] = Label("DF3:")),
+                        Child, (IPTR) (drv_FloppyPopasls[3] = PopaslObject,
+                            MUIA_Popstring_String, (IPTR) (drv_Floppies[3] = StringObject,
                                 StringFrame,
-                            End,
+                            End),
                             MUIA_Popstring_Button, (IPTR) PopButton(MUII_PopFile),
-                        End,
-                    End,
+                        End),
+                    End),
                     Child, (IPTR) VGroup,
 		        MUIA_Weight, 0,
-                        Child, (IPTR) drv_FloppyMore = SimpleButton(_(MSG_CFG_DRV_FLOPPY_MORE)),
-                        Child, (IPTR) drv_FloppyLess = SimpleButton(_(MSG_CFG_DRV_FLOPPY_LESS)),
+                        Child, (IPTR) (drv_FloppyMore = SimpleButton(_(MSG_CFG_DRV_FLOPPY_MORE))),
+                        Child, (IPTR) (drv_FloppyLess = SimpleButton(_(MSG_CFG_DRV_FLOPPY_LESS))),
 			Child, (IPTR) VSpace(),
                     End,
                 End,
@@ -341,8 +341,8 @@ IPTR ConfigurationEditor__OM_NEW
                 Child, (IPTR) VGroup,
                     GroupFrameT(_(MSG_CFG_DRV_HARD)),
                     
-                    Child, (IPTR) drv_ListEditor = DriveListEditorObject,
-                    End,
+                    Child, (IPTR) (drv_ListEditor = DriveListEditorObject,
+                    End),
                 End,
             End,
             Child, (IPTR) VGroup,
@@ -350,9 +350,9 @@ IPTR ConfigurationEditor__OM_NEW
                 Child, (IPTR) HVSpace,
                 Child, (IPTR) ColGroup(2),
                     Child, (IPTR) Label(_(MSG_CFG_PRT_GAMEPORT1)),
-                    Child, (IPTR) prt_Gameport0 = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) PRT_Gameport),
+                    Child, (IPTR) (prt_Gameport0 = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) PRT_Gameport)),
                     Child, (IPTR) Label(_(MSG_CFG_PRT_GAMEPORT2)),
-                    Child, (IPTR) prt_Gameport1 = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) PRT_Gameport),
+                    Child, (IPTR) (prt_Gameport1 = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) PRT_Gameport)),
                 End,
                 Child, (IPTR) HVSpace,
             End,
@@ -491,7 +491,7 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_AddFloppyDrive
         SET(data->ced_DRV_FloppyLess, MUIA_Disabled, FALSE);
     }
     
-    return NULL;
+    return TRUE;
 }
 
 IPTR ConfigurationEditor__MUIM_ConfigurationEditor_RemFloppyDrive
@@ -526,7 +526,7 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_RemFloppyDrive
         SET(data->ced_DRV_FloppyMore, MUIA_Disabled, FALSE);
     }
     
-    return NULL;
+    return TRUE;
 }
 
 IPTR ConfigurationEditor__MUIM_ConfigurationEditor_UpdateCPU
@@ -555,7 +555,7 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_UpdateCPU
         XGET(data->ced_CPU_Speed, MUIA_Cycle_Active) != 2 ? TRUE : FALSE
     );
     
-    return NULL;
+    return TRUE;
 }
 
 IPTR ConfigurationEditor__MUIM_ConfigurationEditor_UpdateMemory
@@ -571,7 +571,7 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_UpdateMemory
         XGET(data->ced_MEM_Chip, MUIA_Cycle_Active) >= 4 ? TRUE : FALSE
     );
     
-    return NULL;
+    return TRUE;
 }
 
 IPTR ConfigurationEditor__MUIM_ConfigurationEditor_UpdateSound
@@ -592,7 +592,7 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_UpdateSound
         SET(data->ced_SND_Resolution, MUIA_Disabled, FALSE);
     }
     
-    return NULL;
+    return TRUE;
 }
 
 /*** Setup ******************************************************************/

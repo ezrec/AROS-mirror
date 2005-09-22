@@ -75,7 +75,11 @@ Object *makeMenuitem(CONST_STRPTR text)
 IPTR EmulatorWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 {
     struct EmulatorWindow_DATA *data = NULL;
-    Object *pageGroup, *aboutMI, *quitMI, *uaedisplay;
+#if 0
+    Object *pageGroup;
+#endif 
+    Object *aboutMI, *quitMI;
+    Object *uaedisplay;
 
     self = (Object *) DoSuperNewTags
     (
@@ -93,9 +97,9 @@ IPTR EmulatorWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         WindowContents, (IPTR) VGroup,
             InnerSpacing(0, 0),
             GroupSpacing(0),
-#if 0           
+#if 0
             Child, (IPTR) ToolbarObject, End,
-            Child, (IPTR) pageGroup = PageGroup,
+            Child, (IPTR) (pageGroup = PageGroup,
                 InnerSpacing(0, 0),
                 GroupSpacing(0),
 
@@ -103,11 +107,11 @@ IPTR EmulatorWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                 Child, (IPTR) VGroup,
                     InnerSpacing(0, 0),
                     GroupSpacing(0),
-#endif		    
-                    Child, (IPTR) uaedisplay = UAEDisplayObject,
+#endif
+                    Child, (IPTR) (uaedisplay = UAEDisplayObject,
 		        MUIA_UAEDisplay_Width, 1, 
-		    End,
-#if 0		    
+		    End),
+#if 0
                     Child, (IPTR) HGroup,
                         ButtonFrame,
                         MUIA_Background, MUII_GroupBack,
@@ -131,9 +135,9 @@ IPTR EmulatorWindow__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                         End,
                     End,
                 End,
-            End,
-#endif	    
-            MUIA_Window_DefaultObject, (IPTR)uaedisplay,
+            End),
+#endif 
+            MUIA_Window_DefaultObject, (IPTR) uaedisplay,
         End,
 
 	TAG_MORE, (IPTR)message->ops_AttrList
@@ -202,7 +206,7 @@ IPTR EmulatorWindow__MUIM_EmulatorWindow_ChangePage
     Class *CLASS, Object *self, struct MUIP_EmulatorWindow_ChangePage *message
 )
 {
-    struct EmulatorWindow_DATA *data = INST_DATA(CLASS, self);
+//    struct EmulatorWindow_DATA *data = INST_DATA(CLASS, self);
 
     if (message->State == MUIV_Emulator_State_Running)
     {
@@ -215,7 +219,7 @@ IPTR EmulatorWindow__MUIM_EmulatorWindow_ChangePage
         SET(self, MUIA_Window_Title, __(MSG_WINDOW_TITLE_CFG));
     }
     
-    return NULL;
+    return TRUE;
 }
 
 IPTR EmulatorWindow__MUIM_EmulatorWindow_ShowAbout
@@ -287,7 +291,7 @@ IPTR EmulatorWindow__MUIM_EmulatorWindow_ShowAbout
         }
     }
     
-    return NULL;
+    return TRUE;
 }
 
 IPTR EmulatorWindow__MUIM_EmulatorWindow_HideAbout
@@ -303,7 +307,7 @@ IPTR EmulatorWindow__MUIM_EmulatorWindow_HideAbout
     DoMethod(_app(self), OM_REMMEMBER, (IPTR) window);
     MUI_DisposeObject(window);
     
-    return NULL;
+    return TRUE;
 }
 
 /*** Setup ******************************************************************/

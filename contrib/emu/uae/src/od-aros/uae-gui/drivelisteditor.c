@@ -57,9 +57,9 @@ IPTR DriveListEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                         
         Child, (IPTR) ListviewObject,
             MUIA_Weight,               50,
-            MUIA_Listview_List, (IPTR) list = DriveListObject,
+            MUIA_Listview_List, (IPTR) (list = DriveListObject,
                 InputListFrame,
-            End,
+            End),
         End,
         Child, (IPTR) VGroup,
             MUIA_Weight, 0,

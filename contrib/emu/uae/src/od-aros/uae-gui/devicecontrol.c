@@ -50,8 +50,8 @@ IPTR DeviceControl__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         TextFrame,
         InnerSpacing(0, 0),
         Child, (IPTR) (image = ImageObject,
-            MUIA_Background, NULL,
-            MUIA_Image_Spec, NULL,
+            MUIA_Background, (IPTR) NULL,
+            MUIA_Image_Spec, (IPTR) NULL,
         End),
         
         TAG_DONE
@@ -86,8 +86,8 @@ IPTR DeviceControl__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 IPTR DeviceControl__OM_SET(Class *CLASS, Object *self, struct opSet *message)
 {
     struct DeviceControl_DATA *data   = INST_DATA(CLASS, self);
-    struct TagItem            *tstate = message->ops_AttrList,
-                              *tag;
+    const struct TagItem      *tstate = message->ops_AttrList;
+    struct TagItem            *tag;
 
     while ((tag = NextTagItem(&tstate)) != NULL)
     {
@@ -165,7 +165,7 @@ IPTR DeviceControl__OM_SET(Class *CLASS, Object *self, struct opSet *message)
                 break;
 
             case MUIA_DeviceControl_Path:
-                if (tag->ti_Data != NULL)
+                if (((CONST_STRPTR) tag->ti_Data) != NULL)
                 {
                     if (data->dcd_Path != NULL) FreeVec(data->dcd_Path);
                     data->dcd_Path = StrDup((CONST_STRPTR) tag->ti_Data);
@@ -179,7 +179,7 @@ IPTR DeviceControl__OM_SET(Class *CLASS, Object *self, struct opSet *message)
                 break;
                 
             case MUIA_DeviceControl_Name:
-                if (tag->ti_Data != NULL)
+                if (((CONST_STRPTR) tag->ti_Data) != NULL)
                 {
                     if (data->dcd_Name != NULL) FreeVec(data->dcd_Name);
                     data->dcd_Name = StrDup((CONST_STRPTR) tag->ti_Data);
@@ -248,7 +248,7 @@ IPTR DeviceControl__MUIM_DeviceControl_HandleMenu
     // FIXME: implement... however, context menus don't seem to be fully implemented in Zune
     bug("*** context menu!\n");
     
-    return NULL;
+    return TRUE;
 }
 
 /*** Setup ******************************************************************/

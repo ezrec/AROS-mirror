@@ -81,38 +81,38 @@ IPTR DriveEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         MUIA_Window_NoMenus,     TRUE,
         
         WindowContents, (IPTR) VGroup,
-            Child, (IPTR) group = ColGroup(2),
+            Child, (IPTR) (group = ColGroup(2),
                 Child, (IPTR) Label2(_(MSG_CFG_DRV_DE_TYPE)),
-                Child, (IPTR) typeCycle = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) DRV_Type),
+                Child, (IPTR) (typeCycle = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) DRV_Type)),
                 Child, (IPTR) Label2(_(MSG_CFG_DRV_DE_MODE)),
-                Child, (IPTR) modeCycle = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) DRV_Mode),
+                Child, (IPTR) (modeCycle = MUI_MakeObject(MUIO_Cycle, NULL, (IPTR) DRV_Mode)),
                 Child, (IPTR) Label2(_(MSG_CFG_DRV_DE_PATH)),
                 Child, (IPTR) PopaslObject,
-                    MUIA_Popstring_String, (IPTR) pathString = StringObject,
+                    MUIA_Popstring_String, (IPTR) (pathString = StringObject,
                         StringFrame,
-                    End,
+                    End),
                     MUIA_Popstring_Button, (IPTR) PopButton(MUII_PopFile),
                 End,
-                Child, (IPTR) volumeLabel = Label2(_(MSG_CFG_DRV_DE_VOLUME)),
-                Child, (IPTR) volumeString = StringObject,
+                Child, (IPTR) (volumeLabel = Label2(_(MSG_CFG_DRV_DE_VOLUME))),
+                Child, (IPTR) (volumeString = StringObject,
                     StringFrame,
-                End,
-                Child, (IPTR) sectorsLabel = Label2(_(MSG_CFG_DRV_DE_SECTORS)),
-                Child, (IPTR) sectorsString = StringObject,
-                    StringFrame,
-                    MUIA_String_Accept, (IPTR) DIGITS,
-                End,
-                Child, (IPTR) headsLabel = Label2(_(MSG_CFG_DRV_DE_HEADS)),
-                Child, (IPTR) headsString = StringObject,
+                End),
+                Child, (IPTR) (sectorsLabel = Label2(_(MSG_CFG_DRV_DE_SECTORS))),
+                Child, (IPTR) (sectorsString = StringObject,
                     StringFrame,
                     MUIA_String_Accept, (IPTR) DIGITS,
-                End,
-                Child, (IPTR) reservedLabel = Label2(_(MSG_CFG_DRV_DE_RESERVED)),
-                Child, (IPTR) reservedString = StringObject,
+                End),
+                Child, (IPTR) (headsLabel = Label2(_(MSG_CFG_DRV_DE_HEADS))),
+                Child, (IPTR) (headsString = StringObject,
                     StringFrame,
                     MUIA_String_Accept, (IPTR) DIGITS,
-                End,
-            End,
+                End),
+                Child, (IPTR) (reservedLabel = Label2(_(MSG_CFG_DRV_DE_RESERVED))),
+                Child, (IPTR) (reservedString = StringObject,
+                    StringFrame,
+                    MUIA_String_Accept, (IPTR) DIGITS,
+                End),
+            End),
             Child, (IPTR) HVSpace,
             Child, (IPTR) RectangleObject, 
                 MUIA_Rectangle_HBar, TRUE, 
@@ -124,8 +124,8 @@ IPTR DriveEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                     MUIA_Weight,         0,
                     MUIA_Group_SameSize, TRUE,
                     
-                    Child, (IPTR) okButton     = SimpleButton(_(MSG_OK)),
-                    Child, (IPTR) cancelButton = SimpleButton(_(MSG_CANCEL)),
+                    Child, (IPTR) (okButton     = SimpleButton(_(MSG_OK))),
+                    Child, (IPTR) (cancelButton = SimpleButton(_(MSG_CANCEL))),
                 End,
             End,
         End,
@@ -200,7 +200,7 @@ IPTR DriveEditor__OM_DISPOSE(Class *CLASS, Object *self, Msg message)
 
     while (objs[i] != NULL)
     {
-        if (XGET(objs[i], MUIA_Parent) == NULL)
+        if (((Object *) XGET(objs[i], MUIA_Parent)) == NULL)
         {
             MUI_DisposeObject(objs[i]);
         }
@@ -212,8 +212,8 @@ IPTR DriveEditor__OM_DISPOSE(Class *CLASS, Object *self, Msg message)
 IPTR DriveEditor__OM_SET(Class *CLASS, Object *self, struct opSet *message)
 {
     struct DriveEditor_DATA *data   = INST_DATA(CLASS, self);
-    struct TagItem          *tstate = message->ops_AttrList,
-                            *tag;
+    const struct TagItem    *tstate = message->ops_AttrList;
+    struct TagItem          *tag;
 
     while ((tag = NextTagItem(&tstate)) != NULL)
     {

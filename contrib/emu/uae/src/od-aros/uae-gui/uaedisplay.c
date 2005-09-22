@@ -69,6 +69,9 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
     OM_NEW, struct opSet *,
     ({
+         const struct TagItem *tstate = message->ops_AttrList;
+         struct TagItem       *tag;
+
 	 self = (Object *)DoSuperNewTags
 	 (
 	     CLASS, self, NULL,
@@ -78,9 +81,7 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
          data = INST_DATA(CLASS, self);
 
-	 struct TagItem *tags, *tag;
-
-         for (tags = message->ops_AttrList; (tag = NextTagItem(&tags)); )
+         while ((tag = NextTagItem(&tstate)) != NULL)
          {
              switch (tag->ti_Tag)
              {
@@ -103,11 +104,12 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
     OM_SET, struct opSet *,
     ({
-	 struct TagItem *tags, *tag;
+	 const struct TagItem *tstate = message->ops_AttrList;
+         struct TagItem       *tag;
 
 	 BOOL sizechanged = FALSE;
 
-	 for (tags = message->ops_AttrList; (tag = NextTagItem(&tags)); )
+	 while ((tag = NextTagItem(&tstate)) != NULL)
          {
              switch (tag->ti_Tag)
              {

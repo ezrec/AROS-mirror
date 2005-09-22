@@ -219,7 +219,7 @@ IPTR Toolbar__MUIM_Toolbar_ChangeMode
         NULL
     );
     
-    return NULL;
+    return TRUE;
 }
 
 IPTR Toolbar__MUIM_Toolbar_LoadState(Class *CLASS, Object *self, Msg message)
@@ -231,7 +231,7 @@ IPTR Toolbar__MUIM_Toolbar_LoadState(Class *CLASS, Object *self, Msg message)
         FreeVec(filename);
     }
     
-    return NULL;
+    return TRUE;
 }
 
 IPTR Toolbar__MUIM_Toolbar_SaveState(Class *CLASS, Object *self, Msg message)
@@ -243,7 +243,7 @@ IPTR Toolbar__MUIM_Toolbar_SaveState(Class *CLASS, Object *self, Msg message)
         FreeVec(filename);
     }
     
-    return NULL;
+    return TRUE;
 }
 
 /*** Setup ******************************************************************/

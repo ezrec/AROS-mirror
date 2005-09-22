@@ -44,8 +44,8 @@ IPTR Emulator__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         MUIA_Application_Copyright,      (IPTR) "Copyright © 1995-2003, various authors (see below).",
         MUIA_Application_Description,    (IPTR) "Amiga emulator.",
 
-        SubWindow, (IPTR) window = EmulatorWindowObject,
-        End,
+        SubWindow, (IPTR) (window = EmulatorWindowObject,
+        End),
         
         TAG_DONE
     );
@@ -68,8 +68,8 @@ IPTR Emulator__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
 IPTR Emulator__OM_SET(Class *CLASS, Object *self, struct opSet *message)
 {
     struct Emulator_DATA *data   = INST_DATA(CLASS, self);
-    struct TagItem       *tstate = message->ops_AttrList,
-                         *tag;
+    const struct TagItem *tstate = message->ops_AttrList;
+    struct TagItem       *tag;
 
     while ((tag = NextTagItem(&tstate)) != NULL)
     {
@@ -118,7 +118,7 @@ IPTR Emulator__MUIM_Emulator_Restart(Class *CLASS, Object *self, Msg message)
 {
     // FIXME: Implement
     
-    return NULL;
+    return FALSE;
 }
 
 IPTR Emulator__MUIM_Emulator_LoadState
@@ -128,7 +128,7 @@ IPTR Emulator__MUIM_Emulator_LoadState
 {
     // FIXME: Implement
     
-    return NULL;
+    return FALSE;
 }
 
 IPTR Emulator__MUIM_Emulator_SaveState
@@ -138,7 +138,7 @@ IPTR Emulator__MUIM_Emulator_SaveState
 {
     // FIXME: Implement
     
-    return NULL;
+    return FALSE;
 }
 
 /*** Setup ******************************************************************/
