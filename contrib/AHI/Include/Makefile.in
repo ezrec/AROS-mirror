@@ -58,8 +58,8 @@ CFILES		= C/libraries/ahi_sub.h C/devices/ahi.h
 SFDFILES	= SFD/ahi_lib.sfd  SFD/ahi_sub_lib.sfd
 
 
-TARGETS		= $(CTARGETS) $(FDTARGETS) $(GCCTARGETS) $(AROSTARGETS) \
-		  $(OS4TARGETS)
+TARGETS		= $(CTARGETS) $(FDTARGETS) $(GCCTARGETS) $(AROSTARGETS) 
+#		  $(OS4TARGETS)
 FILES		= $(CFILES) $(SFDFILES)
 
 ifeq ($(host_cpu),m68k)
@@ -104,12 +104,12 @@ gcc-include: INCDIR := gcc
 gcc-include: gcc-include-comp.stamp
 
 gcc-include%.stamp:	SFD/ahi_lib.sfd SFD/ahi_sub_lib.sfd \
-			$(CTARGETS) $(GCCTARGETS) $(AROSTARGETS) \
-			$(OS4TARGETS)
+			$(CTARGETS) $(GCCTARGETS) $(AROSTARGETS) 
+#			$(OS4TARGETS)
 	$(INSTALL) -d $(INCDIR)/clib $(INCDIR)/devices $(INCDIR)/libraries \
 		      $(INCDIR)/defines $(INCDIR)/interfaces $(INCDIR)/inline $(INCDIR)/proto
 
-	for file in `cd $(srcdir)/C && find . -type f -not -path "*CVS/*"`; do \
+	for file in `cd $(srcdir)/C && find . -type f -not -path "*.svn/*"`; do \
 	 $(INSTALL_DATA) $(srcdir)/C/$$file $(INCDIR)/$$file; \
 	done
 
@@ -119,8 +119,8 @@ gcc-include%.stamp:	SFD/ahi_lib.sfd SFD/ahi_sub_lib.sfd \
 	$(INSTALL_DATA) C-inline-ahi_sub.h	$(INCDIR)/inline/ahi_sub.h
 	$(INSTALL_DATA) C-defines-ahi.h		$(INCDIR)/defines/ahi.h
 	$(INSTALL_DATA) C-defines-ahi_sub.h	$(INCDIR)/defines/ahi_sub.h
-	$(INSTALL_DATA) C-interfaces-ahi.h	$(INCDIR)/interfaces/ahi.h
-	$(INSTALL_DATA) C-interfaces-ahi_sub.h	$(INCDIR)/interfaces/ahi_sub.h
+#	$(INSTALL_DATA) C-interfaces-ahi.h	$(INCDIR)/interfaces/ahi.h
+#	$(INSTALL_DATA) C-interfaces-ahi_sub.h	$(INCDIR)/interfaces/ahi_sub.h
 	$(INSTALL_DATA) C-proto-ahi.h		$(INCDIR)/proto/ahi.h
 	$(INSTALL_DATA) C-proto-ahi_sub.h	$(INCDIR)/proto/ahi_sub.h
 	touch $@

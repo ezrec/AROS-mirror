@@ -182,7 +182,7 @@ $(srcdir)/localize.h:	ahi.cd C_c_AHI.sd
 	$(FLEXCAT) $(srcdir)/ahi.cd $(srcdir)/localize.h=$(srcdir)/C_h_AHI.sd
 
 %.catalog:		translations/%.ct
-	$(FLEXCAT) WARNCTGAPS NOOPTIM FILL NOAUTODATE \
+	$(FLEXCAT) \
 		   $(srcdir)/ahi.cd $< CATALOG=$@
 
 %.ct:
