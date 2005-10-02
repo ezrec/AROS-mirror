@@ -8,9 +8,6 @@
 
 @SET_MAKE@
 
-# Make sure we use iso8859-1 encoding
-LANG=en_US.iso8859-1
-
 top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
 DISTDIR		= @DISTDIR@
@@ -46,7 +43,7 @@ DEVREADME	= $(host_alias)-ahidev-$(VERSION).$(REVISION).readme
 
 .PHONY:		all clean distclean maintainer-clean bindist revup
 
-SUBDIRS		= AHI AddAudioModes Device Docs Drivers Examples Include
+SUBDIRS		= AHI AddAudioModes Device Drivers Examples Include
 
 ifneq (@CFLAG_RESIDENT@,)
 SUBDIRS 	+= AHI-Handler
