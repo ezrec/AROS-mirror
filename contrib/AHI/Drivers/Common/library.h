@@ -76,8 +76,7 @@ MyKPrintFArgs( UBYTE*           fmt,
 	  AROS_UFHA(struct ExecBase *, sysbase, A6)) {			\
       AROS_USERFUNC_INIT return f(d); AROS_USERFUNC_EXIT }
 # define PROCGW(q,t,n,f)						\
-	__asm(#n "=" #f );						\
-	q t n(void);
+	q t n(void) { return f(); }
 # define INTERRUPT_NODE_TYPE NT_INTERRUPT
 
 #elif defined(__AMIGAOS4__)
