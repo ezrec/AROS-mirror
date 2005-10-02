@@ -13,7 +13,7 @@ DriverInit( struct DriverBase* AHIsubBase )
 {
   struct DeviceBase* DeviceBase = (struct DeviceBase*) AHIsubBase;
 
-  DOSBase = OpenLibrary( "dos.library", 37 );
+  DOSBase = (struct DosLibrary*) OpenLibrary( "dos.library", 37 );
 
   if( DOSBase == NULL )
   {
@@ -21,6 +21,14 @@ DriverInit( struct DriverBase* AHIsubBase )
     return FALSE;
   }
 
+#ifdef __AMIGAOS4__
+  if ((IDOS = (struct DOSIFace *) GetInterface((struct Library *) DOSBase, "main", 1, NULL)) == NULL)
+  {
+    Req("Couldn't open IDOS interface!\n");
+    return FALSE;
+  }
+#endif
+  
   return TRUE;
 }
 
@@ -33,6 +41,10 @@ VOID
 DriverCleanup( struct DriverBase* AHIsubBase )
 {
   struct DeviceBase* DeviceBase = (struct DeviceBase*) AHIsubBase;
+
+#ifdef __AMIGAOS4__
+  DropInterface( (struct Interface *) IDOS);
+#endif
 
   CloseLibrary( (struct Library*) DOSBase );
 }

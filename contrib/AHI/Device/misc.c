@@ -1,6 +1,6 @@
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -482,20 +482,20 @@ PreTimer( struct AHIPrivAudioCtrl* audioctrl )
     return FALSE;
   }
 
+  mixer_time = (audioctrl->ahiac_Timer.ExitTime.ev_lo -
+		audioctrl->ahiac_Timer.EntryTime.ev_lo);
+
   pretimer_period = audioctrl->ahiac_Timer.EntryTime.ev_lo;
 
   ReadEClock( &audioctrl->ahiac_Timer.EntryTime );
 
   pretimer_period = audioctrl->ahiac_Timer.EntryTime.ev_lo - pretimer_period;
 
-  mixer_time = pretimer_period - ( audioctrl->ahiac_Timer.ExitTime.ev_lo
-                                   - audioctrl->ahiac_Timer.EntryTime.ev_lo );
-
   if( pretimer_period != 0 )
   {
     audioctrl->ahiac_UsedCPU = ( mixer_time << 8 ) / pretimer_period;
 
-    return ( audioctrl->ahiac_UsedCPU <= audioctrl->ahiac_MaxCPU );
+    return ( audioctrl->ahiac_UsedCPU > audioctrl->ahiac_MaxCPU );
   }
   else
   {

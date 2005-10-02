@@ -1,6 +1,6 @@
 /*
      emu10kx.audio - AHI driver for SoundBlaster Live! series
-     Copyright (C) 2002-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 2002-2005 Martin Blom <martin@blom.org>
 
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -111,11 +111,6 @@ AllocDriverData( APTR               dev,
   dd->card.model   = ahi_pci_read_config_word( PCI_SUBSYSTEM_ID, dev );
   dd->card.is_audigy = ( ahi_pci_read_config_word(PCI_DEVICE_ID, dev) == PCI_DEVICE_ID_CREATIVE_AUDIGY );
   dd->card.is_aps   = ( ahi_pci_read_config_long( PCI_SUBSYSTEM_VENDOR_ID, dev) == EMU_APS_SUBID );
-
-#ifdef __AMIGAOS4__
-  ahi_pci_outl(0xffffffff, dd->card.iobase + IPR, dev);
-  ahi_pci_outl(0, dd->card.iobase + INTE, dev);
-#endif
 
   ahi_pci_add_intserver( &dd->interrupt, dev);
 

@@ -1,6 +1,6 @@
 /*
      AHI - The AHI preferences program
-     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -19,20 +19,24 @@
 
 
 #define NO_INLINE_STDARG
+#define ALL_REACTION_CLASSES
 
 #include <config.h>
 
 #include <intuition/icclass.h>
 #include <libraries/asl.h>
 #include <libraries/gadtools.h>
-#include <gadgets/slider.h>
-#include <gadgets/layout.h>
-#include <classact_macros.h>
-#include <proto/exec.h>
+#include <reaction/reaction.h>
+#include <reaction/reaction_macros.h>
+
+#include <clib/alib_protos.h>
+#include <clib/reaction_lib_protos.h>
 #include <proto/dos.h>
+#include <proto/exec.h>
 #include <proto/gadtools.h>
 #include <proto/intuition.h>
 #include <proto/slider.h>
+
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -42,6 +46,13 @@
 #include "support.h"
 #include "gui.h"
 
+#ifdef __AMIGAOS4__
+ULONG
+HookEntry(struct Hook *hookPtr, Object *obj, APTR message) {
+  return ((ULONG (*)(struct Hook*, Object*, APTR)) hookPtr->h_SubEntry)
+    (hookPtr, obj, message);
+}
+#endif
 
 static void GUINewSettings(void);
 static void GUINewUnit(void);
@@ -144,7 +155,7 @@ static struct NewMenu NewMenus[] = {
 
 struct TagItem MapTab2Page[] = {
   { CLICKTAB_Current, PAGE_Current },
-  { TAG_DONE, NULL }
+  { TAG_DONE, 0 }
 };
 
 
@@ -491,10 +502,10 @@ static void GUINewMode(void) {
 
 /***** Gadget hook ***********************************************************/
 
-static ULONG HOOKCALL 
-GadgetHookFunc( REG( a0, struct Hook *hook ),
-			          REG( a2, Object *obj ),
-			          REG( a1, struct opUpdate *opu ) ) {
+static ULONG 
+GadgetHookFunc( struct Hook *hook,
+		Object *obj,
+		struct opUpdate *opu) {
 
   if(obj == Window_Objs[ ACTID_FREQ] ) {
     UpdateSliderLevel(ACTID_FREQ, SHOWID_FREQ,
@@ -538,15 +549,14 @@ GadgetHookFunc( REG( a0, struct Hook *hook ),
 static struct Hook GadgetHook = 
 {
   { NULL, NULL },
+  HookEntry,
   (HOOKFUNC) GadgetHookFunc,
-  NULL,
   NULL
 };
 
-static void HOOKCALL IDCMPhookFunc(
-  REG( a0, struct Hook *hook ),
-  REG( a2, Object *obj ),
-  REG( a1, struct IntuiMessage *msg ) )
+static void IDCMPhookFunc(struct Hook *hook,
+			  Object *obj,
+			  struct IntuiMessage *msg)
 {
   switch(msg->Code) {
   
@@ -559,7 +569,7 @@ static void HOOKCALL IDCMPhookFunc(
       ULONG          pos = 0;
       struct TagItem tags[] = {
         {CLICKTAB_Current, 0}, 
-        {TAG_END, NULL}
+        {TAG_DONE, 0}
       };
 
       GetAttr( CLICKTAB_Current,  Window_Objs[ACTID_TABS], &pos );
@@ -574,9 +584,9 @@ static void HOOKCALL IDCMPhookFunc(
       tags[0].ti_Data = pos;
 
       MySetGadgetAttrs(Window_Objs[ACTID_TABS],
-          CLICKTAB_Current, pos, TAG_END );
+          CLICKTAB_Current, pos, TAG_DONE );
       MySetGadgetAttrs(Window_Objs[ACTID_PAGE],
-          PAGE_Current, pos, TAG_END );
+          PAGE_Current, pos, TAG_DONE );
 
       RethinkLayout((struct Gadget *) Window_Objs[LAYOUT_PAGE], Window, NULL, TRUE);
 
@@ -594,13 +604,13 @@ static void HOOKCALL IDCMPhookFunc(
 
       if(msg->Qualifier & ( IEQUALIFIER_LSHIFT | IEQUALIFIER_RSHIFT ))
         MySetGadgetAttrs(Window_Objs[ACTID_MODE],
-            LISTBROWSER_Position, LBP_PAGEUP, TAG_END );
+            LISTBROWSER_Position, LBP_PAGEUP, TAG_DONE );
       else if(msg->Qualifier & IEQUALIFIER_CONTROL )
         MySetGadgetAttrs(Window_Objs[ACTID_MODE],
-            LISTBROWSER_Position, LBP_TOP, TAG_END );
+            LISTBROWSER_Position, LBP_TOP, TAG_DONE );
       else
         MySetGadgetAttrs(Window_Objs[ACTID_MODE],
-            LISTBROWSER_Position, LBP_LINEUP, TAG_END );
+            LISTBROWSER_Position, LBP_LINEUP, TAG_DONE );
 
       GetAttr( LISTBROWSER_Selected, Window_Objs[ACTID_MODE], &mode);
       FillUnit();
@@ -620,13 +630,13 @@ static void HOOKCALL IDCMPhookFunc(
 
       if(msg->Qualifier & ( IEQUALIFIER_LSHIFT | IEQUALIFIER_RSHIFT ))
         MySetGadgetAttrs(Window_Objs[ACTID_MODE],
-            LISTBROWSER_Position, LBP_PAGEDOWN, TAG_END );
+            LISTBROWSER_Position, LBP_PAGEDOWN, TAG_DONE );
       else if(msg->Qualifier & IEQUALIFIER_CONTROL )
         MySetGadgetAttrs(Window_Objs[ACTID_MODE],
-            LISTBROWSER_Position, LBP_BOTTOM, TAG_END );
+            LISTBROWSER_Position, LBP_BOTTOM, TAG_DONE );
       else
         MySetGadgetAttrs(Window_Objs[ACTID_MODE],
-            LISTBROWSER_Position, LBP_LINEDOWN, TAG_END );
+            LISTBROWSER_Position, LBP_LINEDOWN, TAG_DONE );
 
       GetAttr( LISTBROWSER_Selected, Window_Objs[ACTID_MODE], &mode);
       FillUnit();
@@ -652,7 +662,7 @@ static void HOOKCALL IDCMPhookFunc(
       if(pos < 0) pos += i;
 
       MySetGadgetAttrs(Window_Objs[ACTID_UNIT],
-          CHOOSER_Active, pos, TAG_END );
+          CHOOSER_Active, pos, TAG_DONE );
 
       GetAttr( CHOOSER_Active, Window_Objs[ACTID_UNIT], (ULONG *) &pos);
       FillUnit();
@@ -677,7 +687,7 @@ static void HOOKCALL IDCMPhookFunc(
       pos = (pos + 1) % i;;
 
       MySetGadgetAttrs(Window_Objs[ACTID_UNIT],
-          CHOOSER_Active, pos, TAG_END );
+          CHOOSER_Active, pos, TAG_DONE );
 
       GetAttr( CHOOSER_Active, Window_Objs[ACTID_UNIT], (ULONG *) &pos);
 
@@ -706,6 +716,9 @@ static struct Hook IDCMPhook =
 static ULONG Req( UBYTE *gadgets, UBYTE *body, ... ) {
   struct EasyStruct req = {
     sizeof (struct EasyStruct), 0, NULL, NULL, NULL
+#ifdef __AMIGAOS4__
+    , NULL, NULL
+#endif
   };
   ULONG rc;
 
@@ -737,7 +750,7 @@ BOOL BuildGUI(char *screenname) {
   UpdateStrings();
 
   if (ButtonBase == NULL) { /* force it open */
-    Printf((char *) msgTextNoOpen, "button.gadget", __classactversion);
+    Printf((char *) msgTextNoOpen, (ULONG) "button.gadget", __classactversion);
     Printf("\n");
     return FALSE;
   }
@@ -1130,10 +1143,10 @@ BOOL BuildGUI(char *screenname) {
       if(Window_Objs[i] != NULL) {
         SetAttrs(Window_Objs[i], GA_ID,        i,
                                  GA_RelVerify, TRUE, 
-                                 TAG_END);
+                                 TAG_DONE);
       }
     }
-    Window = (struct Window *) CA_OpenWindow(WO_Window);
+    Window = (struct Window *) RA_OpenWindow(WO_Window);
   }
 
   if(screen) {
@@ -1241,7 +1254,7 @@ void CloseGUI(void) {
 ******************************************************************************/
 
 void EventLoop(void) {
-  ULONG signal  = NULL, rc;
+  ULONG signal  = 0, rc;
   WORD  code;
   BOOL  running = TRUE;
 
@@ -1252,7 +1265,7 @@ void EventLoop(void) {
         running=FALSE;
       }
 
-      while (( rc = CA_HandleInput( WO_Window, &code)) != WMHI_LASTMSG) {
+      while (( rc = RA_HandleInput( WO_Window, &code)) != WMHI_LASTMSG) {
 
         switch(rc & WMHI_CLASSMASK) {
 
@@ -1311,7 +1324,7 @@ void EventLoop(void) {
                 Req( (char *) msgButtonOK,
                     (char *) msgTextCopyright,
                     "",(char *) msgTextProgramName,
-                    "1996-2004 Martin Blom" );
+                    "1996-2005 Martin Blom" );
                 break;
 
               case ACTID_SAVE:

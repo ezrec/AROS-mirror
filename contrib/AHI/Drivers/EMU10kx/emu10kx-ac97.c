@@ -1,6 +1,6 @@
 /*
      emu10kx.audio - AHI driver for SoundBlaster Live! series
-     Copyright (C) 2002-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 2002-2005 Martin Blom <martin@blom.org>
 
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -26,6 +26,54 @@
 #include "8010.h"
 #include "hwaccess.h"
 
+static ULONG dsp_register[] = {
+  /* Input volume GPR */
+  VOL_AHI_FRONT_L,
+  VOL_AHI_FRONT_R,
+  VOL_AHI_REAR_L,
+  VOL_AHI_REAR_R,
+  VOL_AHI_SURROUND_L,
+  VOL_AHI_SURROUND_R,
+  VOL_AHI_CENTER,
+  VOL_AHI_LFE,
+
+  VOL_SPDIF_CD_L,
+  VOL_SPDIF_CD_R,
+  VOL_SPDIF_IN_L,
+  VOL_SPDIF_IN_R,
+
+  /* Output volume GPR */
+  VOL_SPDIF_FRONT_L,
+  VOL_SPDIF_FRONT_R,
+  VOL_SPDIF_REAR_L,
+  VOL_SPDIF_REAR_R,
+  VOL_SPDIF_SURROUND_L,
+  VOL_SPDIF_SURROUND_R,
+  VOL_SPDIF_CENTER,
+  VOL_SPDIF_LFE,
+
+  VOL_ANALOG_FRONT_L,
+  VOL_ANALOG_FRONT_R,
+  VOL_ANALOG_REAR_L,
+  VOL_ANALOG_REAR_R,
+  VOL_ANALOG_SURROUND_L,
+  VOL_ANALOG_SURROUND_R,
+  VOL_ANALOG_CENTER,
+  VOL_ANALOG_LFE,
+
+  /* AHI_FRONT-to-rear GPR */
+  VOL_FRONT_REAR_L,
+  VOL_FRONT_REAR_R,
+
+  /* AHI_SURROUND-to-rear GPR */
+  VOL_SURROUND_REAR_L,
+  VOL_SURROUND_REAR_R,
+
+  /* AHI_FRONT-to-center and AHI_FRONT-to-LFE GPRs */
+  VOL_FRONT_CENTER,
+  VOL_FRONT_LFE
+};
+
 /******************************************************************************
 ** Read from AC97 register ****************************************************
 ******************************************************************************/
@@ -47,7 +95,16 @@ AC97GetFunc( struct Hook*           hook,
 
   dd = EMU10kxBase->driverdatas[ msg->CardNum ];
 
-  return emu10k1_readac97( &dd->card, msg->Register );
+  if (msg->Register >= emu10kx_dsp_first &&
+      msg->Register < emu10kx_dsp_last) {
+    ULONG reg = dsp_register[msg->Register - emu10kx_dsp_first];
+
+    // Reading is not supported yet ...
+    return ~0UL;
+  }
+  else {
+    return emu10k1_readac97( &dd->card, msg->Register );
+  }
 }
 
 
@@ -72,5 +129,13 @@ AC97SetFunc( struct Hook*           hook,
 
   dd = EMU10kxBase->driverdatas[ msg->CardNum ];
 
-  emu10k1_writeac97( &dd->card, msg->Register, msg->Value );
+  if (msg->Register >= emu10kx_dsp_first &&
+      msg->Register < emu10kx_dsp_last) {
+    ULONG reg = dsp_register[msg->Register - emu10kx_dsp_first];
+    
+    emu10k1_set_volume_gpr( &dd->card, reg, 100, VOL_5BIT);
+  }
+  else {
+    emu10k1_writeac97( &dd->card, msg->Register, msg->Value );
+  }
 }

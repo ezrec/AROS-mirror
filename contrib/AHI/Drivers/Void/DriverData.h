@@ -11,12 +11,18 @@ struct VoidBase
 {
     struct DriverBase driverbase;
     struct Library*   dosbase;
+#ifdef __AMIGAOS4__
+    struct DOSIFace*  idos;
+#endif
 };
 
 #define DRIVERBASE_SIZEOF (sizeof (struct VoidBase))
 
+#define DOSBase (*(struct DosLibrary**) &VoidBase->dosbase)
 
-#define DOSBase           ((struct DosLibrary*)    VoidBase->dosbase)
+#ifdef __AMIGAOS4__
+# define IDOS (VoidBase->idos)
+#endif
 
 struct VoidData
 {

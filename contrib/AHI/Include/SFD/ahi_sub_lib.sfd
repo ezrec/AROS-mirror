@@ -1,4 +1,4 @@
-==copyright Copyright © 1994-2004 Martin Blom
+==copyright Copyright © 1994-2005 Martin Blom
 ==id $Id$
 ==base _AHIsubBase
 ==basetype struct Library *

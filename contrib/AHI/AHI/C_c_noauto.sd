@@ -10,6 +10,8 @@
 /*
     Include files and compiler specific stuff
 */
+#include <config.h>
+
 #include <exec/memory.h>
 #include <libraries/locale.h>
 #include <libraries/iffparse.h>
@@ -60,10 +62,14 @@ VOID Open%bCatalog(VOID)
 
 {
     if (LocaleBase) {
-	if ((%bCatalog = OpenCatalog(NULL, (STRPTR) "%b.catalog",
-				     OC_BuiltInLanguage, %l,
-				     OC_Version, %v,
-				     TAG_DONE))) {
+	static const struct TagItem %b_tags[] = {
+	  { OC_BuiltInLanguage, (ULONG)%l },
+	  { OC_Version,         %v },
+	  { TAG_DONE,           0  }
+	};
+
+	%bCatalog = OpenCatalogA(NULL, (STRPTR)"%b.catalog", (struct TagItem *)&%b_tags[0]);
+	if (%bCatalog) {
 	    struct FC_String *fc;
 	    int i;
 

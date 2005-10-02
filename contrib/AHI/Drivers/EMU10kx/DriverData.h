@@ -1,6 +1,6 @@
 /*
      emu10kx.audio - AHI driver for SoundBlaster Live! series
-     Copyright (C) 2002-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 2002-2005 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -32,7 +32,7 @@
 /** Make the common library code initialize a global SysBase for us.
     It's required for hwaccess.c */
 
-#define DRIVER_NEED_GLOBAL_EXECBASE
+#define DRIVER_NEEDS_GLOBAL_EXECBASE
 #include "DriverBase.h"
 
 struct EMU10kxData;
@@ -70,7 +70,11 @@ struct EMU10kxBase
 
 #define RECORD_BUFFER_SAMPLES     4096
 #define RECORD_BUFFER_SIZE_VALUE  ADCBS_BUFSIZE_16384
+#ifndef __AMIGAOS4__
 #define TIMER_INTERRUPT_FREQUENCY 1000
+#else
+#define TIMER_INTERRUPT_FREQUENCY 80
+#endif
 
 
 struct EMU10kxData

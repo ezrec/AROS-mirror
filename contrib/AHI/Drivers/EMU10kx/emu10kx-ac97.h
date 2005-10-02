@@ -1,6 +1,6 @@
 /*
      emu10kx.audio - AHI driver for SoundBlaster Live! series
-     Copyright (C) 2002-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 2002-2005 Martin Blom <martin@blom.org>
 
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -67,5 +67,61 @@ VOID
 AC97SetFunc( struct Hook*           hook,
 	     struct EMU10kxBase*    EMU10kxBase,
 	     struct AC97SetMessage* msg );
+
+
+/* Special digital volume registers. Range is 0 (mute) to 100 (full). */
+
+enum EMU10kxDSPVol {
+  emu10kx_dsp_first = 0x80000000,
+
+/* Input volume GPR */
+  emu10kx_dsp_ahi_front_l = 0x80000000,
+  emu10kx_dsp_ahi_front_r,
+  emu10kx_dsp_ahi_rear_l,
+  emu10kx_dsp_ahi_rear_r,
+  emu10kx_dsp_ahi_surround_l,
+  emu10kx_dsp_ahi_surround_r,
+  emu10kx_dsp_ahi_center,
+  emu10kx_dsp_ahi_lfe,
+
+  emu10kx_dsp_spdif_cd_l,
+  emu10kx_dsp_spdif_cd_r,
+  emu10kx_dsp_spdif_in_l,
+  emu10kx_dsp_spdif_in_r,
+
+  /* Output volume GPR */
+  emu10kx_dsp_spdif_front_l,
+  emu10kx_dsp_spdif_front_r,
+  emu10kx_dsp_spdif_rear_l,
+  emu10kx_dsp_spdif_rear_r,
+  emu10kx_dsp_spdif_surround_l,
+  emu10kx_dsp_spdif_surround_r,
+  emu10kx_dsp_spdif_center,
+  emu10kx_dsp_spdif_lfe,
+
+  emu10kx_dsp_analog_front_l,
+  emu10kx_dsp_analog_front_r,
+  emu10kx_dsp_analog_rear_l,
+  emu10kx_dsp_analog_rear_r,
+  emu10kx_dsp_analog_surround_l,
+  emu10kx_dsp_analog_surround_r,
+  emu10kx_dsp_analog_center,
+  emu10kx_dsp_analog_lfe,
+
+  /* AHI_FRONT-to-rear GPR */
+  emu10kx_dsp_front_rear_l,
+  emu10kx_dsp_front_rear_r,
+
+  /* AHI_SURROUND-to-rear GPR */
+  emu10kx_dsp_surround_rear_l,
+  emu10kx_dsp_surround_rear_r,
+
+  /* AHI_FRONT-to-center and AHI_FRONT-to-LFE GPRs */
+  emu10kx_dsp_front_center,
+  emu10kx_dsp_front_lfe,
+
+  emu10kx_dsp_last
+};
+
 
 #endif /* AHI_Drivers_EMU10kx_emu10kx_ac97_h */

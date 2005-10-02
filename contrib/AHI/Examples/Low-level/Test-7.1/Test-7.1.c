@@ -35,7 +35,7 @@ main( int argc, char* argv[] ) {
 
       if( io != NULL ) {
 	// We use 32 bit, 8 channel samples, so we need version 6.
-	io->ahir_Version = 5; // FIXME: Change to 6.
+	io->ahir_Version = 6;
 
 	if( OpenDevice( AHINAME, AHI_NO_UNIT, (struct IORequest *) io, 0 )
 	    == 0 ) {

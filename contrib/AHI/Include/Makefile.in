@@ -12,9 +12,6 @@ VPATH		= @srcdir@
 
 top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
-prefix          = @prefix@
-includedir      = @includedir@
-
 DISTDIR		= @DISTDIR@
 
 DEVDIR		= ${DISTDIR}/Developer
@@ -46,6 +43,8 @@ GCCTARGETS	= C-inline-ahi.h C-inline-ahi_sub.h
 
 AROSTARGETS	= C-defines-ahi.h C-defines-ahi_sub.h
 
+OS4TARGETS	= C-interfaces-ahi.h C-interfaces-ahi_sub.h
+
 PRAGMATARGETS	= C-pragmas-ahi_pragmas.h C-pragmas-ahi_sub_pragmas.h
 
 
@@ -56,7 +55,8 @@ CFILES		= C/libraries/ahi_sub.h C/devices/ahi.h
 SFDFILES	= SFD/ahi_lib.sfd  SFD/ahi_sub_lib.sfd
 
 
-TARGETS		= $(CTARGETS) $(FDTARGETS) $(GCCTARGETS) $(AROSTARGETS)
+TARGETS		= $(CTARGETS) $(FDTARGETS) $(GCCTARGETS) $(AROSTARGETS) \
+		  $(OS4TARGETS)
 FILES		= $(CFILES) $(SFDFILES)
 
 ifeq ($(host_cpu),m68k)
@@ -80,8 +80,7 @@ distclean:	clean
 
 maintainer-clean: distclean
 
-install: INCDIR := $(includedir)
-install: gcc-include-inst.stamp
+install:
 
 bindist:	$(TARGETS)
 	for file in $(TARGETS); do \
@@ -97,26 +96,28 @@ bindist:	$(TARGETS)
 	 $(INSTALL_DATA) $(srcdir)/$$file $(DEVINCDIR)/$$file; \
 	done
 
-gcc-include: INCDIR := gcc
-gcc-include: gcc-include-comp.stamp
+gcc-include: gcc-include.stamp
 
-gcc-include%.stamp:	SFD/ahi_lib.sfd SFD/ahi_sub_lib.sfd \
-			$(CTARGETS) $(GCCTARGETS) $(AROSTARGETS)
-	 $(INSTALL) -d $(INCDIR)/clib $(INCDIR)/devices $(INCDIR)/libraries \
-	                        $(INCDIR)/defines $(INCDIR)/inline $(INCDIR)/proto
+gcc-include.stamp:	SFD/ahi_lib.sfd SFD/ahi_sub_lib.sfd \
+			$(CTARGETS) $(GCCTARGETS) $(AROSTARGETS) \
+			$(OS4TARGETS)
+	 $(INSTALL) -d gcc/clib gcc/devices gcc/libraries \
+	               gcc/defines gcc/interfaces gcc/inline gcc/proto
 
 	for file in `cd $(srcdir)/C && find . -type f -not -path "*CVS/*"`; do \
-	 $(INSTALL_DATA) $(srcdir)/C/$$file $(INCDIR)/$$file; \
+	 $(INSTALL_DATA) $(srcdir)/C/$$file gcc/$$file; \
 	done
 
-	$(INSTALL_DATA) C-clib-ahi_protos.h	$(INCDIR)/clib/ahi_protos.h
-	$(INSTALL_DATA) C-clib-ahi_sub_protos.h	$(INCDIR)/clib/ahi_sub_protos.h
-	$(INSTALL_DATA) C-inline-ahi.h		$(INCDIR)/inline/ahi.h
-	$(INSTALL_DATA) C-inline-ahi_sub.h	$(INCDIR)/inline/ahi_sub.h
-	$(INSTALL_DATA) C-defines-ahi.h		$(INCDIR)/defines/ahi.h
-	$(INSTALL_DATA) C-defines-ahi_sub.h	$(INCDIR)/defines/ahi_sub.h
-	$(INSTALL_DATA) C-proto-ahi.h		$(INCDIR)/proto/ahi.h
-	$(INSTALL_DATA) C-proto-ahi_sub.h	$(INCDIR)/proto/ahi_sub.h
+	$(INSTALL_DATA) C-clib-ahi_protos.h	gcc/clib/ahi_protos.h
+	$(INSTALL_DATA) C-clib-ahi_sub_protos.h	gcc/clib/ahi_sub_protos.h
+	$(INSTALL_DATA) C-inline-ahi.h		gcc/inline/ahi.h
+	$(INSTALL_DATA) C-inline-ahi_sub.h	gcc/inline/ahi_sub.h
+	$(INSTALL_DATA) C-defines-ahi.h		gcc/defines/ahi.h
+	$(INSTALL_DATA) C-defines-ahi_sub.h	gcc/defines/ahi_sub.h
+	$(INSTALL_DATA) C-interfaces-ahi.h	gcc/interfaces/ahi.h
+	$(INSTALL_DATA) C-interfaces-ahi_sub.h	gcc/interfaces/ahi_sub.h
+	$(INSTALL_DATA) C-proto-ahi.h		gcc/proto/ahi.h
+	$(INSTALL_DATA) C-proto-ahi_sub.h	gcc/proto/ahi_sub.h
 	touch $@
 
 
@@ -155,6 +156,12 @@ C-defines-ahi.h:	SFD/ahi_lib.sfd
 
 C-defines-ahi_sub.h:	SFD/ahi_sub_lib.sfd
 	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=macros
+
+C-interfaces-ahi.h:	SFD/ahi_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=interface
+
+C-interfaces-ahi_sub.h:	SFD/ahi_sub_lib.sfd
+	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=interface
 
 C-pragmas-ahi_pragmas.h:	SFD/ahi_lib.sfd
 	$(SFDC) $(SFDC_TARGET) $^ --output=$@ --mode=pragmas

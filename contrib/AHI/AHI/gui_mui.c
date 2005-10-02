@@ -1,6 +1,6 @@
 /*
      AHI - The AHI preferences program
-     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -76,6 +76,12 @@ struct EmulLibEntry _HookEntry =
 __asm( ".globl HookEntry;HookEntry=_HookEntry" );
 
 
+#elif defined(__AMIGAOS4__)
+
+ULONG HookEntry(struct Hook* h, void* o, void* msg) {
+  return ( ( (ULONG(*)(struct Hook*, void*, void*)) *h->h_SubEntry)( h, o, msg ) );
+}
+
 #endif
 
 
@@ -127,6 +133,10 @@ enum actionIDs {
 #define ItCk(t,s,i,f)   { NM_ITEM, t, s, f, 0, (APTR)i }
 
 struct Library       *MUIMasterBase  = NULL;
+
+#ifdef __AMIGAOS4__
+struct MUIMasterIFace *IMUIMaster = NULL;
+#endif
 
 static struct NewMenu Menus[] = {
   Title( NULL /* Project */ ),
@@ -271,6 +281,7 @@ LONG xget(Object * obj, ULONG attribute)
 
 static void GUINewSettings(void)
 {
+  set(MUIUnit,MUIA_Cycle_Entries,Units);
   set(MUIUnit,MUIA_Cycle_Active,state.UnitSelected);
   set(MUIDebug, MUIA_Cycle_Active, globalprefs.ahigp_DebugLevel);
   set(MUIEcho, MUIA_Cycle_Active, (globalprefs.ahigp_DisableEcho ? 2 : 0)|(globalprefs.ahigp_FastEcho    ? 1 : 0));
@@ -540,6 +551,18 @@ BOOL BuildGUI(char *screenname)
     return FALSE;
   }
 
+#ifdef __AMIGAOS4__
+  IMUIMaster = (struct MUIMasterIFace *) GetInterface(MUIMasterBase, "main", 1, NULL);
+  if(IMUIMaster == NULL)
+  {
+    Printf((char *) msgTextNoOpen, (ULONG) "MUIMaster main interface", 1);
+    Printf("\n");
+    CloseLibrary((struct Library*) MUIMasterBase);
+    return FALSE;
+  }
+#endif
+  
+  
   page1 = HGroup,
     Child, VGroup,
       Child, MUIUnit = CycleObject,
@@ -640,7 +663,7 @@ BOOL BuildGUI(char *screenname)
           MUIA_Numeric_Min, 0,
           MUIA_Numeric_Max, 100,
           MUIA_Numeric_Value,(globalprefs.ahigp_MaxCPU * 100 + 32768) / 65536,
-          MUIA_Numeric_Format,"%ld%%",
+          MUIA_Numeric_Format,msgPercentFmt,
         End,
         Child, MUITACTime = SpecialButton((STRPTR)msgGlobOptACTime),
         Child, MUIACTime = SliderObject,
@@ -649,7 +672,7 @@ BOOL BuildGUI(char *screenname)
           MUIA_Numeric_Min, 0,
           MUIA_Numeric_Max, 100,
           MUIA_Numeric_Value,(globalprefs.ahigp_AntiClickTime * 1000 + 32768) >> 16,
-          MUIA_Numeric_Format,"%ld ms",
+          MUIA_Numeric_Format,msgACTimeFmt,
           MUIA_Disabled, AHIBase->lib_Version <= 4,
         End,
         Child, MUITScalemode = SpecialButton((STRPTR)msgOptScalemode),
@@ -668,7 +691,7 @@ BOOL BuildGUI(char *screenname)
   MUIApp = ApplicationObject,
     MUIA_Application_Title, (char *) msgTextProgramName,
     MUIA_Application_Version, Version,
-    MUIA_Application_Copyright, "©1996-2004 Martin Blom",
+    MUIA_Application_Copyright, "©1996-2005 Martin Blom",
     MUIA_Application_Author, "Stéphane Barbaray/Martin Blom",
     MUIA_Application_Base, "AHI",
     MUIA_Application_HelpFile, HELPFILE,
@@ -756,6 +779,9 @@ void CloseGUI(void)
     MUI_DisposeObject(MUIApp);
   if (MUIMasterBase)
     CloseLibrary(MUIMasterBase);
+#ifdef __AMIGAOS4__
+  DropInterface((struct Interface*) IMUIMaster);
+#endif
 }
 
 
@@ -864,7 +890,7 @@ void EventLoop(void)
       {
         char* args[] = { "\033c", 
                          (char*)msgTextProgramName,
-                         "1996-2004 Stéphane Barbaray/Martin Blom"
+                         "1996-2005 Stéphane Barbaray/Martin Blom"
                        };
 
         MUI_RequestA(MUIApp, MUIWindow, 0, (char *) msgTextProgramName,

@@ -23,7 +23,7 @@
 #include "FileFormats.h"
 #include "library.h"
 
-#define dd ((struct FilesaveData*) AudioCtrl->ahiac_DriverData)
+#define dd (*((struct FilesaveData**) &AudioCtrl->ahiac_DriverData))
 
 void PlaySlaveEntry(void);
 void RecSlaveEntry(void);

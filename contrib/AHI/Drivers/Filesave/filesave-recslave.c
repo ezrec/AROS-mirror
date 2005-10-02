@@ -2,6 +2,7 @@
 #include <config.h>
 
 #include <exec/memory.h>
+#include <exec/execbase.h>
 #include <datatypes/soundclass.h>
 #include <devices/ahi.h>
 #include <libraries/ahi_sub.h>
@@ -56,10 +57,10 @@ static void RecSlave( struct ExecBase* SysBase )
   struct FilesaveBase*    FilesaveBase;
 
   ULONG   signals;
-  BPTR    lock = NULL,cd=0,file = NULL;
+  BPTR    lock = 0,cd=0,file = 0;
   Object *o = NULL;
   BYTE   *samples = NULL;
-  ULONG   length = NULL;
+  ULONG   length = 0;
   ULONG   count = 0,offs = 0,i;
 
   struct AHIRecordMessage RecordMessage = 
@@ -69,7 +70,9 @@ static void RecSlave( struct ExecBase* SysBase )
     RECBUFFERSIZE
   };
 
-  AudioCtrl    = (struct AHIAudioCtrlDrv*) FindTask( NULL )->tc_UserData;
+  /* Note that in OS4, we cannot call FindTask(NULL) here, since IExec
+   * is inside AHIsubBase! */
+  AudioCtrl    = (struct AHIAudioCtrlDrv*) SysBase->ThisTask->tc_UserData;
   AHIsubBase   = (struct DriverBase*) dd->fs_AHIsubBase;
   FilesaveBase = (struct FilesaveBase*) AHIsubBase;
 
@@ -134,8 +137,9 @@ static void RecSlave( struct ExecBase* SysBase )
           for(i = RECBUFFERSIZE-offs;i>0;i--)
           {
             dd->fs_RecBuffer[(offs)<<1] = 
-            dd->fs_RecBuffer[((offs++)<<1)+1] = 
+            dd->fs_RecBuffer[((offs)<<1)+1] = 
             samples[count++]<<8;
+	    offs++;
           }
           offs = 0;
           break;
@@ -146,8 +150,9 @@ static void RecSlave( struct ExecBase* SysBase )
           for(i = length-count;i>0;i--)
           {
             dd->fs_RecBuffer[(offs)<<1] = 
-            dd->fs_RecBuffer[((offs++)<<1)+1] = 
+            dd->fs_RecBuffer[((offs)<<1)+1] = 
             samples[count++]<<8;
+	    offs++;
           }
           count = 0;
         }

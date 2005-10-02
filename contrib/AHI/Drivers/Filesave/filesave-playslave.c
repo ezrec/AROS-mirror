@@ -1,6 +1,7 @@
 
 #include <config.h>
 
+#include <exec/execbase.h>
 #include <libraries/ahi_sub.h>
 #include <libraries/asl.h>
 #include <proto/exec.h>
@@ -234,7 +235,9 @@ static void PlaySlave( struct ExecBase* SysBase )
   ULONG signals, i, samplesAdd =0, samples = 0, length = 0;
   ULONG offset = 0, bytesInBuffer = 0, samplesWritten = 0, bytesWritten = 0;
 
-  AudioCtrl    = (struct AHIAudioCtrlDrv*) FindTask( NULL )->tc_UserData;
+  /* Note that in OS4, we cannot call FindTask(NULL) here, since IExec
+   * is inside AHIsubBase! */
+  AudioCtrl    = (struct AHIAudioCtrlDrv*) SysBase->ThisTask->tc_UserData;
   AHIsubBase   = (struct DriverBase*) dd->fs_AHIsubBase;
   FilesaveBase = (struct FilesaveBase*) AHIsubBase;
 

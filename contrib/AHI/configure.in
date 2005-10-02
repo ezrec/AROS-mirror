@@ -38,16 +38,18 @@ AC_MSG_RESULT(${enable_warpup})
 case $host in
  i?86be-pc-amithlon)
   : ${CPU="i686"}
-  linkerflags="-noixemul -mcpu=${CPU} -r"
+  cflags="-noixemul"
   optflags="-mcpu=${CPU} -O2"
+  linkerflags="-noixemul -mcpu=${CPU} -r"
   asflags="--defsym CPU=${CPU} --defsym LITTLE_ENDIAN=1"
-  resident=""   dnl *** Not supported (yet?)
+  resident=""                                      dnl *** Not supported (yet?)
   stripflag=""
  ;;
  m68k-unknown-amigaos)
   : ${CPU="68020-60"}
+  cflags="-noixemul"
+  optflags="-m${CPU} -O2 -fomit-frame-pointer -ffast-math -msoft-float"
   linkerflags="-noixemul -m${CPU}"
-  optflags="-m${CPU} -O2 -fomit-frame-pointer -ffast-math"
   asCPU=`echo ${CPU} | sed 's/-.*//'`
   asflags="-m${asCPU} --register-prefix-optional --bitwise-or --defsym CPU=${asCPU}"
   resident="-resident"
@@ -55,27 +57,32 @@ case $host in
  ;;
  powerpc-unknown-amigaos)
   : ${CPU="603"}
-  AC_DEFINE(__USE_INLINE__)
-  linkerflags="-noixemul -mcpu=${CPU}"
+  AC_DEFINE([__USE_INLINE__], 1, [Use inlines])
+  AC_DEFINE([__USE_BASETYPE__], 1, [Use traditional library base type])
+  cflags=""
   optflags="-mcpu=${CPU} -O2"
+  linkerflags="-mcpu=${CPU}"
   asflags="-m${CPU} -mregnames --defsym CPU=${CPU}"
-  resident="-mresident32"
+  resident=""                                      dnl *** Not supported (yet?)
   stripflag=""
  ;;
  powerpc-unknown-morphos)
   : ${CPU="603"}
-  AC_DEFINE(USE_INLINE_STDARG)
-  linkerflags="-noixemul -mcpu=${CPU}"
+  AC_DEFINE([USE_INLINE_STDARG], 1, [Use inlines for stdarg functions])
+  cflags="-noixemul"
   optflags="-mcpu=${CPU} -O2"
+  linkerflags="-noixemul -mcpu=${CPU}"
   asflags="-m${CPU} -mregnames --defsym CPU=${CPU}"
-    resident="-mresident32"
+  resident="-mresident32"
   stripflag=""
  ;;
  i?86-*-aros)
  : ${CPU="i386"}
+  cflags=""
   optflags="-mcpu=${CPU} -O2 -fomit-frame-pointer"
+  linkerflags=""
   asflags="--defsym CPU=${CPU} --defsym LITTLE_ENDIAN=1"
-  resident=""   dnl *** Not supported (yet?)
+  resident=""                                      dnl *** Not supported (yet?)
   stripflag="--strip-unneeded"
  ;;
  *)
@@ -85,7 +92,7 @@ esac
 
 top_builddir=$(pwd)
 
-: ${CFLAGS="-g -W -Wall -Wstrict-prototypes -Wno-unused ${optflags}"}
+: ${CFLAGS="-g -W -Wall -Wstrict-prototypes -Wno-unused ${cflags} ${optflags}"}
 : ${CPPFLAGS="-DCPU=\"\\\"${CPU}\\\"\" -I. -I${srcdir} -I${top_builddir} -I${top_builddir}/Include/gcc -I${os_includedir}"}
 : ${LDFLAGS="${linkerflags}"}
 : ${ASFLAGS="${asflags}"}
@@ -145,8 +152,10 @@ fi
 dnl Checks for libraries.
 
 AC_SEARCH_LIBS( NewList, amiga,,    AC_MSG_WARN( "libamiga is missing." ) )
-AC_CHECK_LIB( mui,   MUI_NewObject,,AC_MSG_WARN(  "Who cares?" ) )
 AC_SEARCH_LIBS( floor, m,,	    AC_MSG_ERROR( "libm is missing." ) )
+AC_CHECK_LIB( auto,  DOSBase,,      AC_MSG_WARN(  "Who cares?" ) )
+AC_CHECK_LIB( raauto,LayoutBase,,   AC_MSG_WARN(  "Who cares?" ) )
+AC_CHECK_LIB( mui,   MUI_NewObject,,AC_MSG_WARN(  "Who cares?" ) )
 
 case $host in
  i?86be-pc-amithlon)
@@ -181,13 +190,13 @@ AC_OUTPUT(Makefile
           Device/Makefile
           Docs/Makefile
           Drivers/Makefile
+          Drivers/ac97/Makefile
           Drivers/AROS/Makefile
           Drivers/Common/Makefile.common
           Drivers/Device/Makefile
           Drivers/EMU10kx/Makefile
           Drivers/Filesave/Makefile
           Drivers/Void/Makefile
-	  Drivers/ac97/Makefile
 	  Examples/Makefile
 	  Examples/Device/PlayTest/Makefile
 	  Examples/Extras/CloneAudioModes/Makefile

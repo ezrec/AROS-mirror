@@ -1,10 +1,8 @@
 
-AHI version 5
+AHI version 6
 ¯¯¯¯¯¯¯¯¯¯¯¯¯
-This is AHI version 5.  Yeah, really.  It's nowhere near what I wanted for
-version 5, but I figured a release was better than no release, no matter
-what.  The deadline of AmigaOS 3.9 requires some slight change of plans as
-well.
+This is AHI version 6.  Yeah, really.  It's been a long road but it's
+finally here. No more excuses. :-)
 
 If you have installed earlier beta versions of the AHI preference program,
 MUST install the new one, go to the "advanced" page, reset the default
@@ -26,21 +24,12 @@ I'd estimate that exactly one program is affected by these changes (the AHI
 preferences program), but maybe there are a few more.  Sorry about that.
 
 
-Things I'd still like to do
-¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
- · Write assembler echo and master volume (m68k and ppc).
- · Add non-mixing modes for so-called "serious" music software and fast
-   streaming.
- · Finish the packaging.  This includes installer script, updated
-   documentation, proper source archive that includes the drivers and a
-   proper developer archive with header files et cetera.
- · I need to update the BGUI and ClassAct preferences programs to support
-   the global anti-click settings.  Or even better, ditch them all for a OS
-   3.5 version.  We'll see.
+Things I'd like to do now
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
  · Fix all the bugs you find.
+ · Rethink everything while still maintaining full backward
+   compatibility. See you in V7!
 
-Take your pick!  Any help is wecome, and the more help I get, the sooner
-the "real" release will come.
 
 How to make your very own version of AHI
 ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
@@ -56,8 +45,10 @@ sh configure --host=ppc-morphos
 
 To configure on a PC running Linux (for building the AmigaOS version):
 
-./configure --host=m68k-amigaos --build=i686-pc-linux-gnu
+./configure --host=m68k-amigaos
 
+
+Yeah, it's that easy.
 
 You can build in separate directories, which is very useful when building
 several versions from the same source tree (note:  this requires
@@ -72,7 +63,6 @@ There are also a few configure options to set:
 
   --with-os-includedir    Path to AmigaOS include directory [/gg/os-include]
   --with-cpu              The CPU to optimize for
-  --enable-warpup         Enable WarpUp support
 
 --with-os-includedir specifies where the AmigaOS include files are located.
 If unspecified, /gg/os-include is assumed.
@@ -80,8 +70,6 @@ If unspecified, /gg/os-include is assumed.
 --with-cpu lets you specify what CPU to generate code and optimize for. Some
 legal values include 68020, 68030, 68040 or 68060 for m68k and 603 or 604
 for PPC. The default is either 68020 or 603, depending on the host.
-
---enable-warpup adds code (that doesn't work, by the way) to support WarpUp.
 
 
 The following make targets are available:
@@ -134,39 +122,5 @@ FD2Pragma	dev/misc/fd2pragma.lha
 FlexCat		dev/misc/FlexCat.lha
 PhxAss		dev/asm/PhxAss.lha
 RoboDoc		dev/misc/robodoc.lha
+SFDC		dev/gcc/sfdc.lha
 UnixDirs3	util/boot/UnixDirs3.lha	(when using separate build directories)
-
-
-Building a libgcc.a for ppctools-bin
-¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-In order to build an ahi.device.elf that works with WarpUp, you'll need to
-build libgcc.a.  Here is how I did that on a Linux box.  I suppose it works
-under AmigaOS as well.
-
-1) Get binutils-2.7.tar.gz and gcc-2.7.2.1.tar.gz from your local GNU
-   mirror.
-
-2) mkdir source; mkdir build; mkdir build/ppc-gcc; mkdir build/ppc-binutils
-
-3) Unpack the sources into the "source" directory.
-
-4) Go to build/ppc-binutils and write (change prefix and host to fit your
-   system):
-
-   $ ../../source/binutils-2.7/configure --target=ppc-unknown-elf \
-   > --host=i386-unknown-linux --prefix=/home/lcs/gg
-   $ make
-   $ make install
-
-   If you get errors from bad prototypes, just uncomment them and retry
-   (I had problems with strdup and a few more).
-
-5) Go to build/ppc-gcc and write (change prefix and host to fit your
-   system):
-
-   $ ../../source/gcc-2.7.2.1/configure --target=ppc-unknown-elf \
-   > --host=i386-unknown-linux --prefix=/home/lcs/gg
-   $ make LIBGCC2_INCLUDES=-Dinhibit_libc libgcc.a
-
-6) Copy the file libgcc.a to ade:ppc-amigaos/lib/libgcc.a or
-   gg:ppc-amigaos/lib/libgcc.a.

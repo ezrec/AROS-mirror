@@ -24,8 +24,8 @@ extern void KPrintF(char *fmt,...);
 
 #define dd ((struct toccata *) AudioCtrl->ahiac_DriverData)
 
-#define PLAYBUFFERSIZE 512        // Size in bytes
-#define RECBUFFERSIZE  512*32     // in bytes
+//#define PLAYBUFFERSIZE 512        // Size in bytes
+//#define RECBUFFERSIZE  512*32     // in bytes
 
 extern char __far _LibID[];
 extern char __far _LibName[];
@@ -48,6 +48,9 @@ LONG INPUTS  = 5;
 BOOL In_Use  = FALSE;
 BOOL NoTask  = FALSE;
 LONG IrqSize = 512;
+LONG PLAYBUFFERSIZE = 512;
+LONG RECBUFFERSIZE  = 512*32;
+
 
 LONG fixed2negdbvalue( LONG volume);
 LONG fixed2posdbvalue( LONG volume);
@@ -176,6 +179,26 @@ int  __saveds __asm __UserLibInit (register __a6 struct Library *libbase)
           IrqSize = 512;
           break;
       }
+    }
+  }
+
+  if(GetVar("ENV:AHItoccataPlayBufferSize", prefs, sizeof prefs, NULL ) != -1)
+  {
+    if(StrToLong(prefs, &PLAYBUFFERSIZE) != -1)
+    {
+      PLAYBUFFERSIZE = max(PLAYBUFFERSIZE, 512);
+      PLAYBUFFERSIZE = min(PLAYBUFFERSIZE, 512*32);
+      PLAYBUFFERSIZE = PLAYBUFFERSIZE & 0xfffffe00;
+    }
+  }
+
+  if(GetVar("ENV:AHItoccataRecordBufferSize", prefs, sizeof prefs, NULL ) != -1)
+  {
+    if(StrToLong(prefs, &RECBUFFERSIZE) != -1)
+    {
+      RECBUFFERSIZE = max(RECBUFFERSIZE, 512);
+      RECBUFFERSIZE = min(RECBUFFERSIZE, 512*32);
+      RECBUFFERSIZE = RECBUFFERSIZE & 0xfffffe00;
     }
   }
 

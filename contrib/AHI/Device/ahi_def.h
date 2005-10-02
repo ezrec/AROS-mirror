@@ -1,6 +1,6 @@
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -41,6 +41,7 @@ struct AHIDevUnit;
 
 extern struct AHIBase           *AHIBase;
 
+
 /*** Definitions ***/
 
 typedef long long int   Fixed64;
@@ -77,7 +78,15 @@ struct AHIBase
   Fixed                    ahib_MaxCPU;
   Fixed                    ahib_AntiClickTime;
   UWORD                    ahib_ScaleMode;
+
+#ifdef __AMIGAOS4__
+  struct AHIIFace*         ahib_IAHI;
+#endif
 };
+
+#ifdef __AMIGAOS4__
+#define IAHI (AHIBase->ahib_IAHI)
+#endif
 
 
 struct Timer
@@ -232,116 +241,5 @@ struct AHIPrivAudioCtrl
   struct AHIsubIFace*        ahiac_IAHIsub;
   #endif
 };
-
-#ifdef __AMIGAOS4__
-
-#include <stdarg.h>
-#include "database.h"
-#include "audioctrl.h"
-#include "modeinfo.h"
-#include "requester.h"
-#include "sound.h"
-
-struct AHIAudioCtrl * VARARGS68K _AHI_AllocAudio(
-
-	struct AHIBase *AHIBase, ...
-);
-
-
-
-
-
-ULONG VARARGS68K _AHI_ControlAudio(
-
-	struct AHIAudioCtrl * AudioCtrl,
-	struct AHIBase *AHIBase, ...
-);
-
-
-
-BOOL VARARGS68K _AHI_GetAudioAttrs(
-
-	ULONG ID,
-	struct AHIAudioCtrl * Audioctrl,
-	struct AHIBase *AHIBase,
-    ...
-);
-
-
-
-ULONG VARARGS68K _AHI_BestAudioID(
-
-	struct AHIBase *AHIBase, ...
-);
-
-
-
-struct AHIAudioModeRequester * VARARGS68K _AHI_AllocAudioRequest(
-
-	struct AHIBase *AHIBase, ...
-);
-
-
-
-BOOL VARARGS68K _AHI_AudioRequest(
-
-	struct AHIAudioModeRequester * Requester,
-	struct AHIBase *AHIBase, ...
-);
-
-
-
-void VARARGS68K _AHI_Play(
-
-	struct AHIAudioCtrl * Audioctrl,
-	struct AHIBase *AHIBase, ...
-);
-
-
-
-#define AHI_AllocAudioA(tagList) _AHI_AllocAudioA(tagList, AHIBase) 
-#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
-#define AHI_AllocAudio(...) _AHI_AllocAudio(AHIBase, __VA_ARGS__) 
-#endif
-#define AHI_FreeAudio(AudioCtrl) _AHI_FreeAudio(AudioCtrl, AHIBase) 
-#define AHI_KillAudio() _AHI_KillAudio(AHIBase) 
-#define AHI_ControlAudioA(AudioCtrl, tagList) _AHI_ControlAudioA(AudioCtrl, tagList, AHIBase) 
-#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
-#define AHI_ControlAudio(AudioCtrl, ...) _AHI_ControlAudio(AudioCtrl, AHIBase, __VA_ARGS__) 
-#endif
-#define AHI_SetVol(Channel, Volume, Pan, AudioCtrl, Flags) _AHI_SetVol(Channel, Volume, Pan, AudioCtrl, Flags, AHIBase) 
-#define AHI_SetFreq(Channel, Freq, AudioCtrl, Flags) _AHI_SetFreq(Channel, Freq, AudioCtrl, Flags, AHIBase) 
-#define AHI_SetSound(Channel, Sound, Offset, Length, AudioCtrl, Flags) _AHI_SetSound(Channel, Sound, Offset, Length, AudioCtrl, Flags, AHIBase) 
-#define AHI_SetEffect(Effect, AudioCtrl) _AHI_SetEffect(Effect, AudioCtrl, AHIBase) 
-#define AHI_LoadSound(Sound, Type, Info, AudioCtrl) _AHI_LoadSound(Sound, Type, Info, AudioCtrl, AHIBase) 
-#define AHI_UnloadSound(Sound, Audioctrl) _AHI_UnloadSound(Sound, Audioctrl, AHIBase) 
-#define AHI_NextAudioID(Last_ID) _AHI_NextAudioID(Last_ID, AHIBase) 
-#define AHI_GetAudioAttrsA(ID, Audioctrl, tagList) _AHI_GetAudioAttrsA(ID, Audioctrl, tagList, AHIBase) 
-#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
-#define AHI_GetAudioAttrs(ID, Audioctrl, ...) _AHI_GetAudioAttrs(ID, Audioctrl, AHIBase, __VA_ARGS__) 
-#endif
-#define AHI_BestAudioIDA(tagList) _AHI_BestAudioIDA(tagList, AHIBase) 
-#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
-#define AHI_BestAudioID(...) _AHI_BestAudioID(AHIBase, __VA_ARGS__) 
-#endif
-#define AHI_AllocAudioRequestA(tagList) _AHI_AllocAudioRequestA(tagList, AHIBase) 
-#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
-#define AHI_AllocAudioRequest(...) _AHI_AllocAudioRequest(AHIBase, __VA_ARGS__) 
-#endif
-#define AHI_AudioRequestA(Requester, tagList) _AHI_AudioRequestA(Requester, tagList, AHIBase) 
-#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
-#define AHI_AudioRequest(...) _AHI_AudioRequest(AHIBase, __VA_ARGS__) 
-#endif
-#define AHI_FreeAudioRequest(Requester) _AHI_FreeAudioRequest(Requester, AHIBase) 
-#define AHI_PlayA(Audioctrl, tagList) _AHI_PlayA(Audioctrl, tagList, AHIBase) 
-#if !defined(__cplusplus) && (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
-#define AHI_Play(Audioctrl, ...) _AHI_Play(Audioctrl, AHIBase, __VA_ARGS__) 
-#endif
-#define AHI_SampleFrameSize(SampleType) _AHI_SampleFrameSize(SampleType, AHIBase) 
-#define AHI_AddAudioMode(priv) _AHI_AddAudioMode(priv, AHIBase) 
-#define AHI_RemoveAudioMode(priv) _AHI_RemoveAudioMode(priv, AHIBase) 
-#define AHI_LoadModeFile(priv) _AHI_LoadModeFile(priv, AHIBase) 
-
-#endif
 
 #endif /* ahi_ahi_def_h */

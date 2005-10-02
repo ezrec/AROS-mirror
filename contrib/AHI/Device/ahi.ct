@@ -3,9 +3,11 @@
 ## codeset 0
 ;
 ## chunk AUTH Translated by Your Name <you@tellus.universe>
+;#language english
+;#version 4
 ;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -132,3 +134,8 @@ msgReqInfoRecordFull
 msgReqInfoMultiChannel
 
 ; 7.1 multichannel
+;
+msgFreqFmt
+
+; %lu Hz
+;

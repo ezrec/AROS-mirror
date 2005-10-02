@@ -1,6 +1,6 @@
 /*
      emu10kx.audio - AHI driver for SoundBlaster Live! series
-     Copyright (C) 2002-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 2002-2005 Martin Blom <martin@blom.org>
 
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -502,7 +502,10 @@ _AHIsub_Start( ULONG                   flags,
 	return AHIE_UNKNOWN;
     }
 
-    adcctl |= ADCCR_LCHANENABLE | ADCCR_RCHANENABLE;
+    if( dd->card.is_audigy )
+      adcctl |= A_ADCCR_LCHANENABLE | A_ADCCR_RCHANENABLE;
+    else
+      adcctl |= ADCCR_LCHANENABLE | ADCCR_RCHANENABLE;
 
     /* Allocate a new recording buffer (page aligned!) */
     dd->record_buffer = pci_alloc_consistent( dd->card.pci_dev,

@@ -1,6 +1,10 @@
 
 #include <devices/ahi.h>
 
+#if !defined (__mc68000__) && defined (__GNUC__)
+# pragma pack(2)
+#endif
+
 struct HandlerData {
   BOOL               initialized;    // TRUE if structure initialized, else FALSE
   BOOL               writing;        // TRUE if writing, FALSE otherwise
@@ -136,3 +140,6 @@ struct AIFFHeader {
   SampledSoundHeader    SSNDchunk;
 };
 
+#if !defined (__mc68000__) && defined (__GNUC__)
+# pragma pack()
+#endif

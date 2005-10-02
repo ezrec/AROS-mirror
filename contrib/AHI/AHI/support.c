@@ -1,6 +1,6 @@
 /*
      AHI - The AHI preferences program
-     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -29,6 +29,7 @@
 #include <proto/ahi.h>
 #include <proto/dos.h>
 #include <proto/exec.h>
+#include <proto/gadtools.h>
 #include <proto/icon.h>
 #include <proto/iffparse.h>
 #include <proto/utility.h>
@@ -47,6 +48,13 @@ static BOOL AddUnit(struct List *, int);
 static void FillUnitName(struct UnitNode *);
 
 struct AHIGlobalPrefs     globalprefs;
+
+#ifdef __AMIGAOS4__
+struct Library           *GadToolsBase= NULL;
+struct GadToolsIFace     *IGadTools   = NULL;
+struct LocaleIFace       *ILocale     = NULL;
+struct AHIIFace          *IAHI        = NULL;
+#endif
 
 struct Library           *LocaleBase= NULL;
 struct Library           *AHIBase   = NULL;
@@ -199,6 +207,20 @@ EndianSwap( size_t size, void* data) {
 BOOL Initialize(void) {
   LocaleBase = OpenLibrary("locale.library", 38);
 
+#ifdef __AMIGAOS4__
+  ILocale = (struct LocaleIFace *) GetInterface(LocaleBase, "main", 1, NULL);
+
+  GadToolsBase = OpenLibrary("gadtools.library", 37);
+
+  if( GadToolsBase == NULL) {
+    Printf((char *) msgTextNoOpen, (ULONG) "gadtools.library", 37);
+    Printf("\n");
+    return FALSE;
+  }
+  
+  IGadTools = (struct GadToolsIFace *) GetInterface(GadToolsBase, "main", 1, NULL);
+#endif
+  
   OpenahiprefsCatalog();
 
   AHImp=CreateMsgPort();
@@ -212,6 +234,9 @@ BOOL Initialize(void) {
       AHIDevice = OpenDevice(AHINAME,AHI_NO_UNIT,(struct IORequest *)AHIio,0);
       if(AHIDevice == 0) {
         AHIBase   = (struct Library *)AHIio->ahir_Std.io_Device;
+#ifdef __AMIGAOS4__
+	IAHI = (struct AHIIFace *) GetInterface(AHIBase, "main", 1, NULL);
+#endif
         return TRUE;
       }
     }
@@ -227,6 +252,12 @@ BOOL Initialize(void) {
 ******************************************************************************/
 
 void CleanUp(void) {
+#ifdef __AMIGAOS4__
+  DropInterface((struct Interface*) IAHI);
+  DropInterface((struct Interface*) IGadTools);
+  CloseLibrary(GadToolsBase);
+#endif
+
   if(!AHIDevice)
     CloseDevice((struct IORequest *)AHIio);
   DeleteIORequest((struct IORequest *)AHIio);

@@ -1,6 +1,6 @@
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -343,7 +343,70 @@ UWORD PostTimerPreserveAllRegs[] = {
     0x4E75
 };
 
-struct VARARGS68K AHIAudioCtrl * _AHI_AllocAudio(
+
+__asm__("								\n\
+/* -------------------- HookEntry ---------------------------*/		\n\
+									\n\
+	.globl	hookEntry						\n\
+	.type	hookEntry, @function					\n\
+	.globl	HookEntry						\n\
+	.type	HookEntry, @function					\n\
+	.globl	HookEntryPreserveAllRegs				\n\
+	.type	HookEntryPreserveAllRegs, @function			\n\
+	.section .data							\n\
+									\n\
+HookEntry:								\n\
+HookEntryPreserveAllRegs:						\n\
+hookEntry:								\n\
+	.short	   0x4ef8		 /* JMP.w */			\n\
+	.short	   0			 /* Indicate switch */		\n\
+	.short	   1			 /* Trap type */		\n\
+	.long	   HookEntryPPC						\n\
+	/* Register mapping */						\n\
+	.byte	   5							\n\
+	.byte	   1,60							\n\
+	.byte	   3,32							\n\
+	.byte	4,40							\n\
+	.byte	   5,36							\n\
+	.byte	6,56							\n\
+	.align	   2							\n\
+									\n\
+	.section .text							\n\
+HookEntryPPC:								\n\
+	addi	12, 1, -16		/* Calculate stackframe size */	\n\
+	rlwinm	12, 12, 0, 0, 27	/* Align it */			\n\
+	stw	1, 0(12)		/* Store backchain pointer */	\n\
+	mr	1, 12			/* Set real stack pointer */	\n\
+									\n\
+	stw	11,12(1)		/* Store Enter68kQuick vector */\n\
+									\n\
+	lwz	12,12(3)		/* Get the sub entry */		\n\
+	mtlr	12							\n\
+	blrl								\n\
+									\n\
+	lwz	11,12(1)						\n\
+	mtlr	11							\n\
+									\n\
+	lwz	1, 0(1)			/* Cleanup stack frame */	\n\
+									\n\
+	blrl				/* Return to emulation */	\n\
+	.long	HookExit						\n\
+	.byte	0			/* Flags */			\n\
+	.byte	2			/* Two registers (a7 and d0) */	\n\
+	.byte	1			/* Map r1 */			\n\
+	.byte	60			/* to A7 */			\n\
+	.byte	3			/* Map r3 */			\n\
+	.byte	0			/* to D0 */			\n\
+	.align	4							\n\
+									\n\
+	.section .data							\n\
+HookExit:								\n\
+	.short	0x4e75			 /* RTS */			\n\
+");
+
+#include <stdarg.h>
+
+struct AHIAudioCtrl * __attribute__((linearvarargs)) _AHI_AllocAudio(
 
 	struct AHIBase *AHIBase, ...
 )
@@ -359,7 +422,7 @@ struct VARARGS68K AHIAudioCtrl * _AHI_AllocAudio(
 
 
 
-ULONG VARARGS68K _AHI_ControlAudio(
+ULONG __attribute__((linearvarargs)) _AHI_ControlAudio(
 
 	struct AHIAudioCtrl * AudioCtrl,
 	struct AHIBase *AHIBase, ...
@@ -375,7 +438,7 @@ ULONG VARARGS68K _AHI_ControlAudio(
 }
 
 
-BOOL VARARGS68K _AHI_GetAudioAttrs(
+BOOL __attribute__((linearvarargs)) _AHI_GetAudioAttrs(
 
 	ULONG ID,
 	struct AHIAudioCtrl * Audioctrl,
@@ -395,7 +458,7 @@ BOOL VARARGS68K _AHI_GetAudioAttrs(
 }
 
 
-ULONG VARARGS68K _AHI_BestAudioID(
+ULONG __attribute__((linearvarargs)) _AHI_BestAudioID(
 
 	struct AHIBase *AHIBase, ...
 )
@@ -409,7 +472,7 @@ ULONG VARARGS68K _AHI_BestAudioID(
 }
 
 
-struct VARARGS68K AHIAudioModeRequester * _AHI_AllocAudioRequest(
+struct AHIAudioModeRequester * __attribute__((linearvarargs)) _AHI_AllocAudioRequest(
 
 	struct AHIBase *AHIBase, ...
 )
@@ -423,7 +486,7 @@ struct VARARGS68K AHIAudioModeRequester * _AHI_AllocAudioRequest(
 }
 
 
-BOOL VARARGS68K _AHI_AudioRequest(
+BOOL __attribute__((linearvarargs)) _AHI_AudioRequest(
 
 	struct AHIAudioModeRequester * Requester,
 	struct AHIBase *AHIBase, ...
@@ -439,7 +502,7 @@ BOOL VARARGS68K _AHI_AudioRequest(
 }
 
 
-void VARARGS68K _AHI_Play(
+void __attribute__((linearvarargs)) _AHI_Play(
 
 	struct AHIAudioCtrl * Audioctrl,
 	struct AHIBase *AHIBase, ...
@@ -510,9 +573,12 @@ m68k_PostTimer( struct AHIPrivAudioCtrl* audioctrl __asm("a2") )
 
 #else
 
+#ifndef __mc68000__
+# pragma pack(2) // Make sure the compiler does not insert pads
+#endif
+
 const struct
 {
-    UWORD nop;                    // Just make sure the addr is 32-bit aligned
     UWORD pushm_d0_d1_a0_a1[2];
     UWORD jsr;
     ULONG addr;
@@ -520,7 +586,6 @@ const struct
     UWORD rts;
 } HookEntryPreserveAllRegs __attribute__ ((aligned (4))) =
 {
-  0x4DD6,
   {0x48E7, 0xC0C0},
   0x4EB9, (ULONG) HookEntry,
   {0x4CDF, 0x0303},
@@ -530,16 +595,14 @@ const struct
 
 const struct
 {
-    UWORD nop;
     UWORD pushm_d1_a0_a1[2];
     UWORD jsr;
     ULONG addr;
     UWORD popm_d1_a0_a1[2];
     UWORD extl_d0;
     UWORD rts;
-} PreTimerPreserveAllRegs =
+} PreTimerPreserveAllRegs __attribute__ ((aligned (4))) =
 {
-  0x4DD6,
   {0x48E7, 0x40C0},
   0x4EB9, (ULONG) &m68k_PreTimer,
   {0x4CDF, 0x0302},
@@ -550,7 +613,6 @@ const struct
 
 const struct
 {
-    UWORD nop;                    // Just make sure the addr is 32-bit aligned
     UWORD pushm_d0_d1_a0_a1[2];
     UWORD jsr;
     ULONG addr;
@@ -558,7 +620,6 @@ const struct
     UWORD rts;
 } PostTimerPreserveAllRegs __attribute__ ((aligned (4))) =
 {
-  0x4DD6,
   {0x48E7, 0xC0C0},
   0x4EB9, (ULONG) &m68k_PostTimer,
   {0x4CDF, 0x0303},

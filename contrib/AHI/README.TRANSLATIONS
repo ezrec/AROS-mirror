@@ -17,6 +17,9 @@ attention to:
 	   if your language is Swedish, you should call the files
 	   "svenska.ct".
 
+The source files for the translations are in the ahidev archive. DON'T
+send binary .catalog files -- I need the text files.
+
 Oh, by the way.. Thanks for translating! ;-)
 
 /Martin

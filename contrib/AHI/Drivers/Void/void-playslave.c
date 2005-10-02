@@ -2,6 +2,7 @@
 #include <config.h>
 
 #include <devices/ahi.h>
+#include <exec/execbase.h>
 #include <libraries/ahi_sub.h>
 
 #include "DriverData.h"
@@ -50,7 +51,9 @@ Slave( struct ExecBase* SysBase )
   BOOL                    running;
   ULONG                   signals;
 
-  AudioCtrl  = (struct AHIAudioCtrlDrv*) FindTask( NULL )->tc_UserData;
+  /* Note that in OS4, we cannot call FindTask(NULL) here, since IExec
+   * is inside AHIsubBase! */
+  AudioCtrl  = (struct AHIAudioCtrlDrv*) SysBase->ThisTask->tc_UserData;
   AHIsubBase = (struct DriverBase*) dd->ahisubbase;
   VoidBase   = (struct VoidBase*) AHIsubBase;
 

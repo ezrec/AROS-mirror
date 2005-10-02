@@ -17,6 +17,7 @@ PREFIX		= @prefix@
 DISTDIR		= @DISTDIR@
 DEVSDIR		= ${DISTDIR}/User/Devs
 CATDIR		= ${DISTDIR}/User/Catalogs
+CATSRCDIR	= ${DISTDIR}/Developer/Translations
 
 build_os	= @build_os@
 host		= @host@
@@ -103,12 +104,7 @@ distclean:	clean
 maintainer-clean: distclean
 
 install:	all
-	$(INSTALL) -d $(PREFIX)/Devs
 	$(INSTALL_PROGRAM) $(EXECUTABLE) $(PREFIX)/Devs/$(EXECUTABLE)
-	for i in $(LANGUAGES); do \
-	  $(INSTALL) -d $(PREFIX)/Locale/Catalogs/$$i; \
-	  $(INSTALL_DATA) $$i.catalog $(PREFIX)/Locale/Catalogs/$$i/ahi.catalog; \
-	done
 
 revup:
 	@rev=`cat $(srcdir)/version.rev` && echo `expr $$rev + 1` > $(srcdir)/version.rev
@@ -117,12 +113,14 @@ revup:
 	@cat $(srcdir)/version.rev
 
 bindist:	all
-	$(INSTALL) -d $(CATDIR)
-	$(INSTALL_DATA) ${srcdir}/ahi.cd $(CATDIR)
-	$(INSTALL_DATA) ${srcdir}/ahi.ct $(CATDIR)
+	$(INSTALL) -d $(CATDIR) $(CATSRCDIR) $(CATSRCDIR)/ahi
+	$(INSTALL_DATA) ${srcdir}/ahi.cd $(CATSRCDIR)
+	$(INSTALL_DATA) ${srcdir}/ahi.ct $(CATSRCDIR)
 	for i in $(LANGUAGES); do \
 	  $(INSTALL) -d $(CATDIR)/$$i; \
 	  $(INSTALL_DATA) $$i.catalog $(CATDIR)/$$i/ahi.catalog; \
+	  $(INSTALL_DATA) ${srcdir}/translations/$$i.ct \
+			  $(CATSRCDIR)/ahi/$$i.ct; \
 	done
 
 	$(INSTALL) -d $(DEVSDIR)
@@ -178,7 +176,8 @@ $(srcdir)/localize.h:	ahi.cd C_c_AHI.sd
 	$(FLEXCAT) $(srcdir)/ahi.cd $(srcdir)/localize.h=$(srcdir)/C_h_AHI.sd
 
 %.catalog:		translations/%.ct
-	$(FLEXCAT) $(srcdir)/ahi.cd $< CATALOG=$@
+	$(FLEXCAT) WARNCTGAPS NOOPTIM FILL NOAUTODATE \
+		   $(srcdir)/ahi.cd $< CATALOG=$@
 
 %.ct:
 	$(FLEXCAT) $(srcdir)/ahi.cd $@ NEWCTFILE=$@

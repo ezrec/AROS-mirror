@@ -1,6 +1,6 @@
 /*
      AHI - The AHI preferences program
-     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -1106,7 +1106,7 @@ void EventLoop(void) {
             Req( (char *) msgButtonOK,
                 (char *) msgTextCopyright,
                 ISEQ_C,  msgTextProgramName,
-                "1996-2004 Martin Blom" );
+                "1996-2005 Martin Blom" );
             break;
 
           case ACTID_SAVE:

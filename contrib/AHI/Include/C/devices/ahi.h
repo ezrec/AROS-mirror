@@ -2,11 +2,11 @@
 #define DEVICES_AHI_H
 
 /*
-**	$VER: ahi.h 5.5 (5.1.2005)
+**	$VER: ahi.h 6.0 (02.02.2005)
 **
 **	ahi.device definitions
 **
-**	(C) Copyright 1994-2004 Martin Blom
+**	(C) Copyright 1994-2005 Martin Blom
 **	All Rights Reserved.
 **
 ** (TAB SIZE: 8)

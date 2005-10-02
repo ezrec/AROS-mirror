@@ -1,20 +1,20 @@
 
-     Changes since last release
-     ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
-     This version of AHI adds "anti-click" mixing routines, playback of
-     32 bit samples, multi-channel audio and and support for the
-     PowerPC microprocessor (MorphOS and AmigaOS 4.x only).
+Changes since last release
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+This version of AHI adds "anti-click" mixing routines, playback of
+32 bit samples, multi-channel audio and and support for the
+PowerPC microprocessor (MorphOS and AmigaOS 4.x only).
 
-     The 68000 processor is no longer supported; a 68020 or better is
-     required.
+The 68000 processor is no longer supported; a 68020 or better is
+required.
 
-     The "fast" audio modes are no longer used. They will not be shown
-     in the audio mode requester.
+The "fast" audio modes are no longer used. They will not be shown
+in the audio mode requester.
 
-     The non-HiFi modes are not any faster than the HiFi modes. They are
-     just present because some music sound "better" when no interpolation
-     is used.
+The non-HiFi modes are not any faster than the HiFi modes. They are
+just present because some music sound "better" when no interpolation
+is used.
 
 
-     For a full log of everything that has been updated, see the
-     ChangeLog file.
+For a full log of everything that has been updated, see the
+ChangeLog file.

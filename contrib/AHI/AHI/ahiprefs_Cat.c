@@ -1,5 +1,5 @@
 /****************************************************************
-   This file was created automatically by `FlexCat 2.4'
+   This file was created automatically by `FlexCat 2.6.6'
    from "../../ahisrc/AHI/ahiprefs.cd".
 
    Do NOT edit by hand!
@@ -8,6 +8,8 @@
 /*
     Include files and compiler specific stuff
 */
+#include <config.h>
+
 #include <exec/memory.h>
 #include <libraries/locale.h>
 #include <libraries/iffparse.h>
@@ -29,7 +31,7 @@
 /*
     Variables
 */
-struct FC_String ahiprefs_Strings[70] = {
+struct FC_String ahiprefs_Strings[75] = {
     { (STRPTR) "\000Project", 0 },
     { (STRPTR) "O\000Open...", 1 },
     { (STRPTR) "A\000Save As...", 2 },
@@ -99,7 +101,12 @@ struct FC_String ahiprefs_Strings[70] = {
     { (STRPTR) "Safe, dynamic", 66 },
     { (STRPTR) "Full volume", 67 },
     { (STRPTR) "-3 dB", 68 },
-    { (STRPTR) "-6 dB", 69 }
+    { (STRPTR) "-6 dB", 69 },
+    { (STRPTR) "%ld Hz", 70 },
+    { (STRPTR) "%ld", 71 },
+    { (STRPTR) "%+4.1f dB", 72 },
+    { (STRPTR) "%ld ms", 73 },
+    { (STRPTR) "%ld%%", 74 }
 };
 
 STATIC struct Catalog *ahiprefsCatalog = NULL;
@@ -127,14 +134,18 @@ VOID OpenahiprefsCatalog(VOID)
 
 {
     if (LocaleBase) {
-	if ((ahiprefsCatalog = OpenCatalog(NULL, (STRPTR) "ahiprefs.catalog",
-				     OC_BuiltInLanguage, "english",
-				     OC_Version, 4,
-				     TAG_DONE))) {
+	static const struct TagItem ahiprefs_tags[] = {
+	  { OC_BuiltInLanguage, (ULONG)"english" },
+	  { OC_Version,         4 },
+	  { TAG_DONE,           0  }
+	};
+
+	ahiprefsCatalog = OpenCatalogA(NULL, (STRPTR)"ahiprefs.catalog", (struct TagItem *)&ahiprefs_tags[0]);
+	if (ahiprefsCatalog) {
 	    struct FC_String *fc;
 	    int i;
 
-	    for (i = 0, fc = ahiprefs_Strings;  i < 70;  i++, fc++) {
+	    for (i = 0, fc = ahiprefs_Strings;  i < 75;  i++, fc++) {
 		 fc->msg = GetCatalogStr(ahiprefsCatalog, fc->id, (STRPTR) fc->msg);
 	    }
 	}
@@ -235,7 +246,7 @@ VOID InitahiprefsCatalog(STRPTR language)
 				    bytesRemaining -= 8 + (skipSize << 2);
 				    ptr += skipSize;
 
-				    for (i = 0, fc = ahiprefs_Strings;  i < 70;  i++, fc++) {
+				    for (i = 0, fc = ahiprefs_Strings;  i < 75;  i++, fc++) {
 					if (fc->id == id) {
 					    fc->msg = sptr;
 					}

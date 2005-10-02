@@ -1,6 +1,6 @@
 
 /****************************************************************
-   This file was created automatically by `FlexCat 2.4'
+   This file was created automatically by `FlexCat 2.6.6'
    from "../../ahisrc/Device/ahi.cd".
 
    Do NOT edit by hand!
@@ -79,5 +79,7 @@ extern const APTR _msgReqInfoRecordFull;
 #define msgReqInfoRecordFull ((APTR) &_msgReqInfoRecordFull)
 extern const APTR _msgReqInfoMultiChannel;
 #define msgReqInfoMultiChannel ((APTR) &_msgReqInfoMultiChannel)
+extern const APTR _msgFreqFmt;
+#define msgFreqFmt ((APTR) &_msgFreqFmt)
 
 #endif /*   !ahi_CAT_H  */

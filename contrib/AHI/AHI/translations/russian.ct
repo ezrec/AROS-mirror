@@ -1,11 +1,13 @@
-## version $VER: AHIprefs.catalog 4.5.5 (30.07.2004) (Amiga-1251)
+## version $VER: AHIprefs.catalog 4.5.7 (14.01.2005) (Amiga-1251)
 ## language russian
 ## codeset 2104
 ;
 ## chunk AUTH Translated by Michael_Malyshev@mail.ru
+;#language english
+;#version 4
 ;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -335,4 +337,24 @@ msgSM3dB
 msgSM6dB
 -6 äÁ
 ; -6 dB
+;
+msgFreqFmt
+%ld Ãö
+; %ld Hz
+;
+msgChanFmt
+%ld
+; %ld
+;
+msgVolFmt
+%+4.1f äÁ
+; %+4.1f dB
+;
+msgACTimeFmt
+%ld ìñ
+; %ld ms
+;
+msgPercentFmt
+%ld%%
+; %ld%%
 ;

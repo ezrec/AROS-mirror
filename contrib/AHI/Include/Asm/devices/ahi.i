@@ -2,12 +2,12 @@
 DEVICES_AHI_I		SET	1
 
 **
-**	$VER: ahi.i 5.5 (5.1.2005)
+**	$VER: ahi.i 6.0 (02.02.2005)
 **	:ts=8 (TAB SIZE: 8)
 **
 **	ahi.device definitions
 **
-**	(C) Copyright 1994-2004 Martin Blom
+**	(C) Copyright 1994-2005 Martin Blom
 **	All Rights Reserved.
 **
 **

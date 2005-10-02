@@ -20,7 +20,7 @@
 #include "library.h"
 #include "DriverData.h"
 
-#define dd ((struct VoidData*) AudioCtrl->ahiac_DriverData)
+#define dd (*(struct VoidData**) &AudioCtrl->ahiac_DriverData)
 
 void
 SlaveEntry( void );

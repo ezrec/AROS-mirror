@@ -16,12 +16,8 @@ ReqA( const char*        text,
       APTR               args,
       struct DriverBase* AHIsubBase );
 
-#if !defined(__AMIGAOS4__)
 #define Req(a0, args...) \
         ({ULONG _args[] = { args }; ReqA((a0), (APTR)_args, AHIsubBase);})
-#else
-#define Req(a0, args...)
-#endif
 
 void
 MyKPrintFArgs( UBYTE*           fmt, 
@@ -98,8 +94,8 @@ MyKPrintFArgs( UBYTE*           fmt,
 # define INTGW(q,t,n,f)                                                 \
        q t n(APTR d __asm("a1")) { return f(d); }
 # define PROCGW(q,t,n,f)						\
-	__asm("_" #n "= _" #f);						\
-	q t n(void);
+	asm(".stabs \"_" #n "\",11,0,0,0;.stabs \"_" #f "\",1,0,0,0");	\
+	/*q*/ t n(void);
 # define INTERRUPT_NODE_TYPE NT_INTERRUPT
 
 #else

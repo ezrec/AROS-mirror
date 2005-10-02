@@ -1,11 +1,13 @@
-## version $VER: ahiprefs.catalog 4.6 (28.07.04)
+## version $VER: ahiprefs.catalog 4.6 (08.04.05)
 ## language deutsch
 ## codeset 0
 ;
 ## chunk AUTH Translated by Uwe Bojartschuk
+;#language english
+;#version 4
 ;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -25,63 +27,63 @@
 ; *** Menus ***
 ;
 msgMenuProject
-\0Projekt
+\000Projekt
 ; \000Project
 ;
 msgItemOpen
-O\0Öffnen
+O\000Öffnen
 ; O\000Open...
 ;
 msgItemSaveAs
-A\0Speichern als...
+A\000Speichern als...
 ; A\000Save As...
 ;
 msgItemAbout
-?\0Über...
+?\000Über...
 ; ?\000About...
 ;
 msgItemQuit
-Q\0Beenden
+Q\000Beenden
 ; Q\000Quit
 ;
 msgMenuEdit
-\0Vorgaben
+\000Vorgaben
 ; \000Edit
 ;
 msgItemDefaults
-D\0auf Vorgaben zurücksertzen
+D\000auf Vorgaben zurücksetzen
 ; D\000Reset To Defaults
 ;
 msgItemLastSaved
-L\0auf zuletzt gespeichertes
+L\000auf zuletzt gespeichertes
 ; L\000Last Saved
 ;
 msgItemRestore
-R\0auf vorherigen Stand
+R\000auf vorherigen Stand
 ; R\000Restore
 ;
 msgMenuSettings
-\0Einstellungen
+\000Einstellungen
 ; \000Settings
 ;
 msgItemCreateIcons
-I\0Piktogramme erzeugen?
+I\000Piktogramme erzeugen?
 ; I\000Create Icons?
 ;
 msgMenuHelp
-\0Hilfe
+\000Hilfe
 ; \000Help
 ;
 msgItemHelp
-Help\0Hilfe
+Help\000Hilfe
 ; Help\000Help...
 ;
 msgItemUsersGuide
-H\0AHI Anleitung
+H\000AHI Anleitung
 ; H\000AHI User's guide...
 ;
 msgItemConceptIndex
-\0Begriffe Index
+\000Begriffe Index
 ; \000Concept Index...
 ;
 ; *** The pages ***
@@ -138,7 +140,7 @@ _Kanäle
 ;
 msgOptNoChannels
 Selbsttätig
-; 
+;Automatic 
 ;
 msgOptVolume
 _Lautstärke
@@ -279,8 +281,8 @@ Kann `%s' nicht finden!
 ; Unable to find `%s'!
 ;
 msgTextNoOpen
-Kann `%s' Version %Id nicht öffnen.
-; Unable to open `%s´ version %ld.
+Kann `%s' Version %ld nicht öffnen.
+; Unable to open `%s' version %ld.
 ;
 ; *** Additions
 ;
@@ -327,4 +329,24 @@ msgSM3dB
 msgSM6dB
 -6 dB
 ; -6 dB
+;
+msgFreqFmt
+%ld Hz
+; %ld Hz
+;
+msgChanFmt
+%ld
+; %ld
+;
+msgVolFmt
+%+4.1f dB
+; %+4.1f dB
+;
+msgACTimeFmt
+%ld ms
+; %ld ms
+;
+msgPercentFmt
+%ld%%
+; %ld%%
 ;

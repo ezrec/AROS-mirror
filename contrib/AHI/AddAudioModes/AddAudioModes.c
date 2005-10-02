@@ -1,6 +1,6 @@
 /*
      AddAudioModes - Manipulates AHI's audio mode database 
-     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
      
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -40,6 +40,10 @@ struct MsgPort       *AHImp         = NULL;
 struct AHIRequest    *AHIio         = NULL;
 BYTE                  AHIDevice     = -1;
 
+#ifdef __AMIGAOS4__
+struct AHIIFace      *IAHI          = NULL;
+#endif
+
 static const char version[] = "$VER: AddAudioModes " VERS "\n\r";
 
 #define AHIVERSION 4
@@ -63,6 +67,10 @@ struct {
 void
 cleanup( void )
 {
+#ifdef __AMIGAOS4__
+  DropInterface((struct Interface*) IAHI);
+#endif
+
   if( AHIDevice == 0 )
   {
     CloseDevice( (struct IORequest *) AHIio );
@@ -107,6 +115,10 @@ OpenAHI( void )
     }
 
     AHIBase = (struct Library *) AHIio->ahir_Std.io_Device;
+
+#ifdef __AMIGAOS4__
+    IAHI = (struct AHIIFace *) GetInterface(AHIBase, "main", 1, NULL);
+#endif
   }
 }
 

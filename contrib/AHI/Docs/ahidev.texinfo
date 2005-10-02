@@ -23,7 +23,7 @@ This file documents AHI release @value{ahiver}, a hardware independent
 audio subsystem for Amiga. The version number of this document is
 @value{docver}.
 
-Copyright @copyright{} 1994-2004 Martin Blom.
+Copyright @copyright{} 1994-2005 Martin Blom.
 
 Permission is granted to make and distribute verbatim copies of this manual
 provided the copyright notice and this permission notice are preserved on
@@ -62,9 +62,14 @@ publication, even if advised of the possibility of such damage.}
 @example
 
 $Id$
-$Log$
-Revision 1.6  2005/01/11 22:01:47  lcs
-Merged 5.15.
+$Log: ahidev.texinfo,v $
+Revision 5.3.2.3  2005/02/02 21:49:52  martin
+* Updated all copyright years to 2005.
+
+* Bumped all version numbers to 6.0.
+
+* Docs/ahidev.texinfo (The Author): Updated the authors address (5
+years later).
 
 Revision 5.3.2.2  2004/11/02 13:18:53  martin
 Updated copyright year and removed almost all CVS/RCS tags from the
@@ -147,7 +152,7 @@ Initial revision.
 
 @vskip 0pt plus 1filll
 
-Copyright @copyright{} 1994-2004 Martin Blom. 
+Copyright @copyright{} 1994-2005 Martin Blom. 
 
 Permission is granted to make and distribute verbatim copies of this manual
 provided the copyright notice and this permission notice are preserved on
@@ -190,7 +195,7 @@ publication, even if advised of the possibility of such damage.}
 
 For @sc{Ahi} release @value{ahiver}. Document version @value{docver}.
 
-Copyright @copyright{} 1994-2004 Martin Blom
+Copyright @copyright{} 1994-2005 Martin Blom
 
 The latest release of @sc{Ahi} can always be found at
 @url{http://www.lysator.liu.se/~lcs/ahi.html}. 
@@ -288,7 +293,7 @@ Not everything about @sc{Ahi} is documented here; for more information, see
 @cindex Software license
 @cindex Copyright
 
-Copyright @copyright{} 1994-2004 Martin Blom
+Copyright @copyright{} 1994-2005 Martin Blom
 
 @sc{Ahi} is available under a dual license. The device itself is under
 the ``GNU Library General Public License'' (@pxref{LGPL}), while the
@@ -323,9 +328,9 @@ The author can be reached at the following addresses:
 
 @item Standard mail
   Martin Blom
-@*Alsättersgatan 15A:24
-@*SE-584 35 Linköping
-@*SWEDEN
+@*Luftvärnsgatan 42
+@*SE-587 34 Linköping
+@*Sweden
 
 @item World-Wide Web
 @url{http://martin.blom.org}

@@ -10,10 +10,18 @@ struct DeviceBase
 {
     struct DriverBase driverbase;
     struct Library*   dosbase;
+#ifdef __AMIGAOS4__
+    struct DOSIFace*  idos;
+#endif
 };
 
 #define DRIVERBASE_SIZEOF (sizeof (struct DeviceBase))
-#define DOSBase  ((struct DosLibrary*) DeviceBase->dosbase)
+
+#define DOSBase  *((struct DosLibrary**) &DeviceBase->dosbase)
+
+#ifdef __AMIGAOS4__
+# define IDOS (DeviceBase->idos)
+#endif
 
 struct DeviceData
 {

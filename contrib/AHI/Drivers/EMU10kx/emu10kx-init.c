@@ -1,6 +1,6 @@
 /*
      emu10kx.audio - AHI driver for SoundBlaster Live! series
-     Copyright (C) 2002-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 2002-2005 Martin Blom <martin@blom.org>
 
      This program is free software; you can redistribute it and/or
      modify it under the terms of the GNU General Public License
@@ -32,16 +32,14 @@
 /* We use global library bases instead of storing them in DriverBase, since
    I don't want to modify the original sources more than necessary. */
 
-struct ExecBase*   SysBase;
-struct DosLibrary* DOSBase;
-struct DriverBase* AHIsubBase;
+struct DriverBase* AHIsubBase = NULL;
+struct ExecBase*   SysBase    = NULL;
+struct DosLibrary* DOSBase    = NULL;
 
 #ifdef __AMIGAOS4__
-struct DOSIFace*            IDOS          = NULL;
-struct AHIsubIFace*         IAHIsub       = NULL;
-struct ExecIFace*           IExec         = NULL;
-struct MMUIFace*            IMMU          = NULL;
-struct UtilityIFace*        IUtility      = NULL;
+struct DOSIFace*   IDOS       = NULL;
+struct ExecIFace*  IExec      = NULL;
+struct MMUIFace*   IMMU       = NULL;
 #endif
 
 
@@ -80,11 +78,11 @@ DriverInit( struct DriverBase* ahisubbase )
        return FALSE;
   }
 
-  if ((IAHIsub = (struct AHIsubIFace *) GetInterface((struct Library *) AHIsubBase, "main", 1, NULL)) == NULL)
-  {
-       Req("Couldn't open IAHIsub interface!\n");
-       return FALSE;
-  }
+/*   if ((IAHIsub = (struct AHIsubIFace *) GetInterface((struct Library *) AHIsubBase, "main", 1, NULL)) == NULL) */
+/*   { */
+/*        Req("Couldn't open IAHIsub interface!\n"); */
+/*        return FALSE; */
+/*   } */
   
   if ((IMMU = (struct MMUIFace *) GetInterface((struct Library *) SysBase, "mmu", 1, NULL)) == NULL)
   {
@@ -92,11 +90,11 @@ DriverInit( struct DriverBase* ahisubbase )
        return FALSE;
   }
 
-  if ((IUtility = (struct UtilityIFace *) GetInterface((struct Library *) UtilityBase, "main", 1, NULL)) == NULL)
-  {
-       Req("Couldn't open IUtility interface!\n");
-       return FALSE;
-  }
+/*   if ((IUtility = (struct UtilityIFace *) GetInterface((struct Library *) UtilityBase, "main", 1, NULL)) == NULL) */
+/*   { */
+/*        Req("Couldn't open IUtility interface!\n"); */
+/*        return FALSE; */
+/*   } */
 #endif
 
   if (!ahi_pci_init(ahisubbase))
@@ -187,11 +185,11 @@ DriverInit( struct DriverBase* ahisubbase )
   EMU10kxBase->ac97.Revision = REVISION;
 
 #ifdef __AMIGAOS4__
-  EMU10kxBase->ac97.GetFunc.h_Entry    = AC97GetFunc; //HookEntry;
+  EMU10kxBase->ac97.GetFunc.h_Entry    = AC97GetFunc;
   EMU10kxBase->ac97.GetFunc.h_SubEntry = NULL;
   EMU10kxBase->ac97.GetFunc.h_Data     = NULL;
 
-  EMU10kxBase->ac97.SetFunc.h_Entry    = AC97SetFunc; //HookEntry;
+  EMU10kxBase->ac97.SetFunc.h_Entry    = (HOOKFUNC) AC97SetFunc;
   EMU10kxBase->ac97.SetFunc.h_SubEntry = NULL;
   EMU10kxBase->ac97.SetFunc.h_Data     = NULL;
 
@@ -282,8 +280,8 @@ DriverCleanup( struct DriverBase* AHIsubBase )
   FreeVec( EMU10kxBase->driverdatas ); 
     
 #ifdef __AMIGAOS4__
-  DebugPrintF("CLEANING UP!\n");
-  DropInterface( (struct Interface *) IAHIsub);
+  DropInterface((struct Interface *) IDOS);
+  DropInterface((struct Interface *) IMMU);
 #endif
 
   ahi_pci_exit();

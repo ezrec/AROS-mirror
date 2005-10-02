@@ -1,6 +1,6 @@
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -38,11 +38,11 @@ struct VSPrite;
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <proto/utility.h>
-#ifndef __AMIGAOS4__
 #define __NOLIBBASE__
+#define __NOGLOBALIFACE__
 #include <proto/ahi.h>
 #undef  __NOLIBBASE__
-#endif
+#undef  __NOGLOBALIFACE__
 #include <proto/ahi_sub.h>
 
 #include <math.h>
@@ -160,7 +160,7 @@ static const struct TextAttr Topaz80 = { "topaz.font", 8, 0, 0, };
 #define FREQSLIDER    3
 #define LISTVIEW      4
 
-#define FREQTEXT2     "%lu Hz"
+#define FREQTEXT2     GetString(msgFreqFmt, req->Catalog) //"%lu Hz"
 #define FREQLEN2      (5+3) // 5 digits + space + "Hz"
 
 LONG IndexToFrequency( struct Gadget *gad, WORD level )
@@ -1600,9 +1600,7 @@ _AHI_AudioRequestA( struct AHIAudioModeRequester* req_in,
         {
           InitRequester(&lockreq);
           locksuxs=Request(&lockreq,req->SrcWindow);
-#ifndef __AMIGAOS4__
           if(IntuitionBase->LibNode.lib_Version >= 39)
-#endif
             SetWindowPointer(req->SrcWindow,
                 WA_BusyPointer,TRUE,
                 TAG_DONE);
@@ -1638,9 +1636,7 @@ _AHI_AudioRequestA( struct AHIAudioModeRequester* req_in,
         {
           if(locksuxs)
             EndRequest(&lockreq,req->SrcWindow);
-#ifndef __AMIGAOS4__
           if(IntuitionBase->LibNode.lib_Version >= 39)
-#endif
             SetWindowPointer(req->SrcWindow,
                 WA_BusyPointer,FALSE,
                 TAG_DONE);

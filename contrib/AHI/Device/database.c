@@ -1,6 +1,6 @@
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -31,11 +31,11 @@
 #include <proto/dos.h>
 #include <proto/iffparse.h>
 #include <proto/utility.h>
-#ifndef __AMIGAOS4__
-# define __NOLIBBASE__
-# include <proto/ahi.h>
-# undef  __NOLIBBASE__
-#endif
+#define __NOLIBBASE__
+#define __NOGLOBALIFACE__
+#include <proto/ahi.h>
+#undef  __NOLIBBASE__
+#undef  __NOGLOBALIFACE__
 #include <proto/ahi_sub.h>
 
 #include <string.h>

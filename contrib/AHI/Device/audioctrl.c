@@ -1,6 +1,6 @@
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -28,11 +28,11 @@
 #include <proto/exec.h>
 #include <proto/utility.h>
 #include <proto/dos.h>
-#ifndef __AMIGAOS4__
 #define __NOLIBBASE__
+#define __NOGLOBALIFACE__
 #include <proto/ahi.h>
 #undef  __NOLIBBASE__
-#endif
+#undef  __NOGLOBALIFACE__
 #include <proto/ahi_sub.h>
 #include <clib/alib_protos.h>
 
@@ -510,7 +510,7 @@ _AHI_AllocAudioA( struct TagItem* tags,
 #endif
 
   // Never allow drivers that are newer than ahi.device.
-  if(AHIsubBase->lib_Version > Version)
+  if(AHIsubBase->lib_Version > AHIBase->ahib_Library.lib_Version)
     goto error;
 
   audiodb=LockDatabase();

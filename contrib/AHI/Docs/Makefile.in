@@ -32,10 +32,10 @@ VPATH		= @srcdir@
 # Files
 ########################################
 
-TARGET_DEVDOCS	= ahidev.guide ahidev.dvi ahidev.ps ahidev.html \
+TARGET_DEVDOCS	= ahidev.guide ahidev.dvi ahidev.ps ahidev.pdf ahidev.html \
 		  ahi.doc ahi.guide ahi.html \
 		  ahi_sub.doc ahi_sub.guide ahi_sub.html
-TARGET_USRDOCS	= ahiusr.guide ahiusr.dvi ahiusr.ps ahiusr.html
+TARGET_USRDOCS	= ahiusr.guide ahiusr.dvi ahiusr.ps ahiusr.pdf ahiusr.html
 
 TARGETS		= ahidev.readme ahiusr.readme \
 		  $(TARGET_DEVDOCS) $(TARGET_USRDOCS)
@@ -132,13 +132,22 @@ ahiusr.ps:	ahiusr.dvi
 	dvips -o $@ $<
 
 
+# PDF files
+
+ahidev.pdf:	ahidev.texinfo-exp tmp-iso.sty
+	texi2pdf $<
+
+ahiusr.pdf:	ahiusr.texinfo-exp tmp-iso.sty
+	texi2pdf $<
+
+
 # HTML files
 
 ahidev.html:	ahidev.texinfo ahidev.ver
-	texi2html -glossary -monolithic -verbose $<
+	texi2html -monolithic -verbose $<
 
 ahiusr.html:	ahiusr.texinfo ahiusr.ver
-	texi2html -glossary -monolithic -verbose $<
+	texi2html -monolithic -verbose $<
 
 
 # Macro-expanded files

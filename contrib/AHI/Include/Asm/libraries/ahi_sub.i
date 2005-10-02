@@ -2,12 +2,12 @@
 LIBRARIES_AHISUB_I	SET	1
 
 **
-**	$VER: ahi_sub.i 5.3 (29.4.03)
+**	$VER: ahi_sub.i 6.0 (02.02.2005)
 **	:ts=8 (TAB SIZE: 8)
 **
 **	ahi/[driver].audio definitions
 **
-**	(C) Copyright 1994-2004 Martin Blom
+**	(C) Copyright 1994-2005 Martin Blom
 **	All Rights Reserved.
 **
 **

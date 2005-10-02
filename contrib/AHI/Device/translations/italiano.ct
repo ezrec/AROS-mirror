@@ -1,11 +1,13 @@
-## version $VER: ahi.catalog 4.2 (20.4.97)
+## version $VER: ahi.catalog 4.2 (2.2.2005)
 ## language italiano
 ## codeset 0
 ;
-## chunk AUTH Translated by Bernardo Innocenti <bernie@shock.cosmos.it>
+## chunk AUTH Translated by Bernardo Innocenti, revisione Paolo Besser
+;#language english
+;#version 4
 ;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -130,5 +132,10 @@ Campionamento full duplex
 ; Record in full duplex
 ;
 msgReqInfoMultiChannel
-
+multicanale 7.1
 ; 7.1 multichannel
+;
+msgFreqFmt
+%lu Hz
+; %lu Hz
+;

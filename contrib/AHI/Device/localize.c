@@ -1,6 +1,6 @@
 
 /****************************************************************
-   This file was created automatically by `FlexCat 2.4'
+   This file was created automatically by `FlexCat 2.6.6'
    from "../../ahisrc/Device/ahi.cd".
 
    Do NOT edit by hand!
@@ -41,6 +41,7 @@ const struct FC_Type _msgReqInfoHiFi = { 21, "HiFi mixing" };
 const struct FC_Type _msgReqInfoRecordHalf = { 22, "Record in half duplex" };
 const struct FC_Type _msgReqInfoRecordFull = { 23, "Record in full duplex" };
 const struct FC_Type _msgReqInfoMultiChannel = { 24, "7.1 multichannel" };
+const struct FC_Type _msgFreqFmt = { 25, "%lu Hz" };
 
 static struct Catalog *ahi_Catalog = NULL;
 
@@ -92,7 +93,7 @@ STRPTR GetahiString(APTR fcstr)
 {
   STRPTR defaultstr = ((struct FC_Type *)fcstr)->Str;
   if (ahi_Catalog)
-    return GetCatalogStr(ahi_Catalog, ((struct FC_Type *)fcstr)->ID, defaultstr);
+    return (STRPTR) GetCatalogStr(ahi_Catalog, ((struct FC_Type *)fcstr)->ID, defaultstr);
   return defaultstr;
 }
 
@@ -100,6 +101,6 @@ STRPTR GetString(APTR fcstr, struct Catalog *catalog)
 {
   STRPTR defaultstr = ((struct FC_Type *)fcstr)->Str;
   if (catalog)
-    return GetCatalogStr(catalog, ((struct FC_Type *)fcstr)->ID, defaultstr);
+    return (STRPTR) GetCatalogStr(catalog, ((struct FC_Type *)fcstr)->ID, defaultstr);
   return defaultstr;
 }

@@ -1,6 +1,6 @@
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -35,11 +35,11 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/iffparse.h>
-#ifndef __AMIGAOS4__
 #define __NOLIBBASE__
+#define __NOGLOBALIFACE__
 #include <proto/ahi.h>
 #undef  __NOLIBBASE__
-#endif
+#undef  __NOGLOBALIFACE__
 #include <proto/ahi_sub.h>
 
 #include <stddef.h>
@@ -302,7 +302,7 @@ _DevOpen ( struct AHIRequest* ioreq,
     }
   }
 
-  if( ioreq->ahir_Version > Version)
+  if( ioreq->ahir_Version > AHIBase->ahib_Library.lib_Version)
     error=TRUE;
   else
   {
@@ -537,14 +537,29 @@ ExpungeUnit ( struct AHIDevUnit *iounit,
               struct AHIBase *AHIBase )
 {
   struct Task *unittask;
+  BYTE signal;
+
+  signal = AllocSignal(-1);
+  if(signal == -1)
+  {
+    /* Fallback */
+    signal = SIGB_SINGLE;
+    SetSignal(0, SIGF_SINGLE);
+  }
 
   unittask = (struct Task *) iounit->Process;
   iounit->Process = (struct Process *) FindTask(NULL);
+  iounit->SyncSignal = signal;
   Signal(unittask,SIGBREAKF_CTRL_F);
-  Wait(SIGBREAKF_CTRL_F);
+  Wait(1UL << signal);
   AHIBase->ahib_DevUnits[iounit->UnitNum]=NULL;
   FreeVec(iounit->Voices);
   FreeVec(iounit);
+
+  if(signal != SIGB_SINGLE)
+  {
+    FreeSignal(signal);
+  }
 }
 
 
@@ -982,7 +997,7 @@ DevProc( void )
   if(iounit->Process)
   {
     Forbid();
-    Signal((struct Task *) iounit->Process, SIGBREAKF_CTRL_F);
+    Signal((struct Task *) iounit->Process, 1UL << iounit->SyncSignal);
   }
   FreeSignal(signalbit);
 }

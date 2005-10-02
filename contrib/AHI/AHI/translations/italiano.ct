@@ -1,11 +1,13 @@
-## version $VER: ahiprefs.catalog 4.6 (4.8.2004)
+## version $VER: ahiprefs.catalog 4.6 (2.2.2005)
 ## language italiano
 ## codeset 0
 ;
-## chunk AUTH Translated by Bernardo Innocenti <bernie@shock.cosmos.it> and Piergiorgio Ghezzo
+## chunk AUTH Translated by Bernardo Innocenti <bernie@shock.cosmos.it> and Piergiorgio Ghezzo, revisione Paolo Besser
+;#language english
+;#version 4
 ;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -49,11 +51,11 @@ msgMenuEdit
 ; \000Edit
 ;
 msgItemDefaults
-P\000Ripristina valori preimpostati
+P\000Ripristina valori predefiniti
 ; D\000Reset To Defaults
 ;
 msgItemLastSaved
-U\000Ripristina ultimi valori memorizzati
+U\000Ripristina ultime impostazioni
 ; L\000Last Saved
 ;
 msgItemRestore
@@ -153,7 +155,7 @@ _Guadagno
 ; _Gain
 ;
 msgOptMuted
-Muto
+Silenzio
 ; Muted
 ;
 msgOptInput
@@ -263,7 +265,7 @@ Configurazione AHI
 ;
 ;You can use something like "%s%s\nCopyright ©%s\nEnglish translation by Your Name" here...
 msgTextCopyright
-%s%s\nCopyright ©%s\nTraduzione italiana di Bernardo Innocenti\nRevisione di Piergiorgio Ghezzo
+%s%s\nCopyright ©%s\nTraduzione italiana di Bernardo Innocenti\nRevisione di Paolo Besser
 ; %s%s\nCopyright ©%s
 ;
 msgTextNoWindow
@@ -297,34 +299,54 @@ Con tagli
 ; With clipping
 ;
 msgGlobOptACTime
-
+Intervallo anti-click predefinito
 ; Default anti-click time
 ;
 msgButtonPlay
-
+_Prova il suono
 ; _Play a test sound
 ;
 msgOptScalemode
-
+Incremento Volume
 ; Volume sc_aling
 ;
 msgSMFixedSafe
-
+Sicuro
 ; Safe
 ;
 msgSMDynSafe
-
+Sicuro, dinamico
 ; Safe, dynamic
 ;
 msgSM0dB
-
+Al massimo
 ; Full volume
 ;
 msgSM3dB
-
+-3 dB
 ; -3 dB
 ;
 msgSM6dB
-
+-6 dB
 ; -6 dB
+;
+msgFreqFmt
+%ld Hz
+; %ld Hz
+;
+msgChanFmt
+%ld
+; %ld
+;
+msgVolFmt
+%+4.1f dB
+; %+4.1f dB
+;
+msgACTimeFmt
+%ld ms
+; %ld ms
+;
+msgPercentFmt
+%ld%%
+; %ld%%
 ;

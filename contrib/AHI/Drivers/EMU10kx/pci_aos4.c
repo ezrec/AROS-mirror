@@ -11,6 +11,7 @@
 
 #include "DriverData.h"
 #include "pci_wrapper.h"
+#include "library.h"
 
 struct ExpansionBase*       ExpansionBase = NULL;
 struct ExpansionIFace*      IExpansion    = NULL;
@@ -144,7 +145,7 @@ APTR ahi_pci_logic_to_physic_addr(APTR addr, APTR dev)
 
 APTR ahi_pci_get_base_address(WORD which, APTR dev)
 {
-  return ((struct PCIDevice * )dev)->GetResourceRange(which)->BaseAddress;
+  return (APTR) ((struct PCIDevice * )dev)->GetResourceRange(which)->BaseAddress;
 }
 
 ULONG ahi_pci_get_base_size(WORD which, APTR dev)

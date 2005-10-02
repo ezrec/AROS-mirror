@@ -31,7 +31,7 @@ DESCRIPTION
      Version AHIVERSION supports 68020, 68030, 68040 and 68060 from
      the m68k family and 603 and 604 from the PowerPC family.
 
-     Staring with version 5, the 68000 processor is no longer supported.
+     Staring with version 6, the 68000 processor is no longer supported.
      68000 owners should use version 4 instead.
 
      Quick overview
@@ -67,7 +67,7 @@ DESCRIPTION
      mono and stereo, located in Fast-RAM and outputs 32-bit mono or stereo
      (with stereo panning if desired) data, using any number of channels
      (as long as 'any' means less than 128...).  Tables are no longer
-     used, which might affect performace slightly. Instead, version 5
+     used, which might affect performace slightly. Instead, version 6
      forcuses slightly more on the quality of the sound.
      
      * Support for non-realtime mixing
@@ -120,11 +120,12 @@ AVAILABILITY
 
 PRICE
 
-     Free.
+     Free. As in speech. And beer too! However, should you want to
+     make a donation, my PayPal account is martin@blom.org.
 
 DISTRIBUTABILITY
 
-     Copyright ©1994-2004 Martin Blom.
+     Copyright ©1994-2005 Martin Blom.
 
-     AHI version 5+ is (L)GPL:ed. See COPYING and COPYING.LIB inside the
+     AHI version 6 is (L)GPL:ed. See COPYING and COPYING.LIB inside the
      archive for more information.

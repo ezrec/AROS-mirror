@@ -8,10 +8,14 @@
 
 @SET_MAKE@
 
+# Make sure we use iso8859-1 encoding
+LANG=en_US.iso8859-1
+
 top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
 DISTDIR		= @DISTDIR@
 CATDIR		= ${DISTDIR}/User/Catalogs
+CATSRCDIR	= ${DISTDIR}/Developer/Translations
 
 host_cpu	= @host_cpu@
 host_alias	= @host_alias@
@@ -42,7 +46,7 @@ DEVREADME	= $(host_alias)-ahidev-$(VERSION).$(REVISION).readme
 
 .PHONY:		all clean distclean maintainer-clean bindist revup
 
-SUBDIRS		= AHI AddAudioModes Device Drivers Examples Include
+SUBDIRS		= AHI AddAudioModes Device Docs Drivers Examples Include
 
 ifneq (@CFLAG_RESIDENT@,)
 SUBDIRS 	+= AHI-Handler
@@ -80,9 +84,11 @@ bindist:
 	$(INSTALL_DATA) ${srcdir}/COPYING.DRIVERS $(DISTDIR)
 	$(INSTALL_DATA) ${srcdir}/ChangeLog $(DISTDIR)
 
-	$(INSTALL) -d $(CATDIR)
+	$(INSTALL) -d $(CATDIR) $(CATSRCDIR)
 	$(INSTALL_DATA) ${srcdir}/README.ATO $(CATDIR)
+	$(INSTALL_DATA) ${srcdir}/README.ATO $(CATSRCDIR)
 	$(INSTALL_DATA) ${srcdir}/README.TRANSLATIONS $(CATDIR)
+	$(INSTALL_DATA) ${srcdir}/README.TRANSLATIONS $(CATSRCDIR)
 
 	cd Include && $(MAKE) gcc-include
 	for i in $(SUBDIRS); do (cd $$i && $(MAKE) $(MFLAGS) $@) || exit; done
@@ -103,7 +109,7 @@ bindist:
 
 revup:
 	@rev=`cat $(srcdir)/version.rev` && echo `expr $$rev + 1` > $(srcdir)/version.rev
-	@date +%y.%m.%d > $(srcdir)/version.date
+	@date +%d.%m.%y > $(srcdir)/version.date
 	@echo -n "New revision: "
 	@cat $(srcdir)/version.rev
 

@@ -1,11 +1,13 @@
-## version $VER: AHI.catalog 4.5.3 (30.07.2004) (Amiga-1251)
+## version $VER: AHI.catalog 4.5.5 (12.01.2005) (Amiga-1251)
 ## language russian
 ## codeset 2104
 ;
 ## chunk AUTH Translated by Michael_Malyshev@mail.ru
+;#language english
+;#version 4
 ;
 ;    AHI - Hardware independent audio subsystem
-;    Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+;    Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
 ;     
 ;    This library is free software; you can redistribute it and/or
 ;    modify it under the terms of the GNU Library General Public
@@ -94,7 +96,7 @@ msgReqInfoAudioID
 ; Audio mode ID: 0x%08lx
 ;
 msgReqInfoResolution
-Резрешение: %ld бит %s
+Разрешение: %ld бит %s
 ; Resolution: %ld bit %s
 ;
 msgReqInfoMono
@@ -132,3 +134,8 @@ msgReqInfoRecordFull
 msgReqInfoMultiChannel
 Многоканальный 7.1
 ; 7.1 multichannel
+;
+msgFreqFmt
+%lu Гц
+; %lu Hz
+;

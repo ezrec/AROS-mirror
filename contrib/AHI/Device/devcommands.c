@@ -1,6 +1,6 @@
 /*
      AHI - Hardware independent audio subsystem
-     Copyright (C) 1996-2004 Martin Blom <martin@blom.org>
+     Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
      
      This library is free software; you can redistribute it and/or
      modify it under the terms of the GNU Library General Public
@@ -30,11 +30,11 @@
 #include <clib/alib_protos.h>
 #include <proto/exec.h>
 #include <proto/dos.h>
-#ifndef __AMIGAOS4__
 #define __NOLIBBASE__
+#define __NOGLOBALIFACE__
 #include <proto/ahi.h>
 #undef  __NOLIBBASE__
-#endif
+#undef  __NOGLOBALIFACE__
 #include <proto/ahi_sub.h>
 
 #include <math.h>
@@ -161,11 +161,45 @@ _DevAbortIO( struct AHIRequest* ioreq,
         || FindNode((struct List *) &iounit->WaitingList, (struct Node *) ioreq))
         {
           struct AHIRequest *nextreq;
+          struct AHIRequest *io;
 
           while(ioreq)
           {
             Remove((struct Node *) ioreq);
 
+	    // Now check if any other request ahir_Link to us. If so,
+	    // we need to clear that field, since this request is no
+	    // longer valid.
+
+	    
+	    for (io = (struct AHIRequest*) iounit->PlayingList.mlh_Head;
+		 io->ahir_Std.io_Message.mn_Node.ln_Succ != NULL;
+		 io = (struct AHIRequest*) io->ahir_Std.io_Message.mn_Node.ln_Succ) {
+	      if (io->ahir_Link == ioreq) {
+		io->ahir_Link = NULL;
+		goto cleared;
+	      }
+	    }
+
+	    for (io = (struct AHIRequest*) iounit->SilentList.mlh_Head;
+		 io->ahir_Std.io_Message.mn_Node.ln_Succ != NULL;
+		 io = (struct AHIRequest*) io->ahir_Std.io_Message.mn_Node.ln_Succ) {
+	      if (io->ahir_Link == ioreq) {
+		io->ahir_Link = NULL;
+		goto cleared;
+	      }
+	    }
+
+	    for (io = (struct AHIRequest*) iounit->WaitingList.mlh_Head;
+		 io->ahir_Std.io_Message.mn_Node.ln_Succ != NULL;
+		 io = (struct AHIRequest*) io->ahir_Std.io_Message.mn_Node.ln_Succ) {
+	      if (io->ahir_Link == ioreq) {
+		io->ahir_Link = NULL;
+		goto cleared;
+	      }
+	    }
+cleared:
+	    
             if(ioreq->ahir_Extras && (GetExtras(ioreq)->Channel != NOCHANNEL))
             {
               struct Library *AHIsubBase = NULL;
@@ -1530,6 +1564,12 @@ RemPlayers ( struct List *list,
 	// GetExtras(ioreq->ahir_Link) returns NULL here. How did that
 	// happen??
 	
+	// FIXED: 2005-09-26: The app AbortIO()'ed a request that was
+	// attached to another request using ahir_Link. When we then
+	// arrived here, ioreq->ahir_Link would point to a terminated
+	// request and possibly even deallocated memory. Now AbortIO()
+	// clears ahir_Link.
+
         GetExtras(ioreq->ahir_Link)->Channel = GetExtras(ioreq)->Channel;
         Enqueue(list, (struct Node *) ioreq->ahir_Link);
         // We have to go through the whole procedure again, in case
