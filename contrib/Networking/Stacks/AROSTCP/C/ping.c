@@ -600,11 +600,11 @@ main(argc, argv)
   }
 
 #ifdef __AROS__
-  if (notopen = OpenDevice("timer.device", UNIT_VBLANK,
+  if (notopen = OpenDevice("timer.device", UNIT_VBLANK,(struct IORequest *)timermsg, 0))
 #else
-  if (notopen = OpenDevice("timer.device", UNIT_MICROHZ,
+  if (notopen = OpenDevice("timer.device", UNIT_MICROHZ,(struct IORequest *)timermsg, 0))
 #endif
-		 (struct IORequest *)timermsg, 0)) {
+  {
     (void)fprintf(stderr, "ping: could not open timer device.\n");
     CleanUpExit(1);
   }
