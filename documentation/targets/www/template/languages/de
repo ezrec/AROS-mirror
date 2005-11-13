@@ -23,7 +23,7 @@ using:            Benutzung
 faq:              FAQ
 developers:       Entwickler
 contribute:       Mitwirken
-working-with-cvs: Arbeiten mit CVS
+working-with-subversion: Arbeiten mit Subversion
 bug-tracker:      Bug Tracker
 # FIXME: above
 compiling:        Übersetzen

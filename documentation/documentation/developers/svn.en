@@ -90,7 +90,7 @@ The "necessary" module from contrib is now mandatory to build all AROS flavours,
 while it was only needed to compile the native i386-pc port before::
 
     > cd AROS
-    > svn checkout necessary
+    > svn checkout https://svn.aros.org:8080/svn/aros/trunk/contrib
 
 .. Tip:: 
 
@@ -104,10 +104,10 @@ Apart from the AROS main sources which we checked out in the previous section,
 there is also other things on the SVN server not directly related to the core
 of the operating system. For example, this includes the "contrib" module with
 third party programs that have been ported to AROS, the "binaries" module which
-contains images like screenshots, backdrops and similar, and the "docs" module
-which contains the sources to the website. The contrib module is further 
-divided up into smaller modules, so you don't have to check it all out if you
-only want a specific program.
+contains images like screenshots, backdrops and similar, and the
+"documentation" module which contains the sources to the website. The contrib
+module is further divided up into smaller modules, so you don't have to check
+it all out if you only want a specific program.
 
 You can get a list of the available modules with::
 

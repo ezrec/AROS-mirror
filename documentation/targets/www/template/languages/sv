@@ -26,7 +26,7 @@ developers:       Utvecklare
 contribute:       Medverka
 bug-tracker:      Bug Tracker
 # FIXME: above
-working-with-cvs: Arbeta med CVS
+working-with-subversion: Arbeta med Subversion
 compiling:        Kompilering
 application-development-manual: Manual för applikationsutveckling
 zune-application-development-manual: Manual för Zune applikationsutveckling

@@ -42,7 +42,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 A( _N['contribute'], href='%(BASE)sdocumentation/developers/contribute.php' ),
                 A( 'Roadmap', href='%(BASE)sdocumentation/developers/roadmap.php' ),
                 A( _N['bug-tracker'], href='http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse' ),
-                A( _N['working-with-cvs'], href='%(BASE)sdocumentation/developers/svn.php' ),
+                A( _N['working-with-subversion'], href='%(BASE)sdocumentation/developers/svn.php' ),
                 A( _N['compiling'],  href='%(BASE)sdocumentation/developers/compiling.php' ),
                 A( _N['application-development-manual'], href='%(BASE)sdocumentation/developers/application-development.php' ),
                 A( _N['zune-application-development-manual'], href='%(BASE)sdocumentation/developers/zune-application-development.php' ),

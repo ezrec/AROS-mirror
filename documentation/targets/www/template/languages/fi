@@ -24,7 +24,7 @@ faq:              FAQ
 developers:       Kehittäjät
 contribute:       Osanotto
 bug-tracker:      Bugien seuranta
-working-with-cvs: SVN:n kanssa työskentely
+working-with-subversion: Subversion:n kanssa työskentely
 compiling:        Kääntö
 application-development-manual: Ohjelmiston kehitysmanuaali
 zune-application-development-manual: Zune-ohjelmiston kehitysmanuaali
