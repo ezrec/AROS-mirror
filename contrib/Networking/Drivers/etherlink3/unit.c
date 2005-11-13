@@ -326,7 +326,7 @@ struct DevUnit *CreateUnit(ULONG index, APTR card,
 
       /* Initialise status, transmit and receive interrupts */
 
-      unit->status_int.is_Node.ln_Name=(TEXT *)device_name;
+      unit->status_int.is_Node.ln_Name = (TEXT *)device_name;
       unit->status_int.is_Code = (APTR)StatusInt;
       unit->status_int.is_Data = unit;
 
@@ -775,7 +775,7 @@ BOOL InitialiseAdapter(struct DevUnit *unit, BOOL reinsertion,
 *
 */
 
-VOID ConfigureAdapter(struct DevUnit *unit,struct DevBase *base)
+VOID ConfigureAdapter(struct DevUnit *unit, struct DevBase *base)
 {
    UBYTE i;
 
@@ -1200,7 +1200,7 @@ static struct AddressRange *FindMulticastRange(struct DevUnit *unit,
 */
 
 struct TypeStats *FindTypeStats(struct DevUnit *unit, struct MinList *list,
-   ULONG packet_type,struct DevBase *base)
+   ULONG packet_type, struct DevBase *base)
 {
    struct TypeStats *stats, *tail;
    BOOL found = FALSE;
@@ -1333,7 +1333,7 @@ BOOL StatusInt(REG(a1, struct DevUnit *unit), REG(a5, APTR int_code))
          UpdateStats(unit, base);
       if((ints & EL3INTF_RXCOMPLETE) != 0)
       {
-#ifndef __amigaos4__
+#ifndef __MORPHOS__
          unit->LEWordOut(unit->card, EL3REG_COMMAND,
             EL3CMD_SETINTMASK | (unit->int_mask & ~EL3INTF_RXCOMPLETE));
 #endif
@@ -1653,7 +1653,7 @@ static VOID TXInt(REG(a1, struct DevUnit *unit), REG(a5, APTR int_code))
    BOOL proceed = TRUE;
    struct Opener *opener;
    ULONG *buffer, wire_error;
-   ULONG *(*dma_tx_function)(REG(a0, APTR));
+   UBYTE *(*dma_tx_function)(REG(a0, APTR));
    BYTE error;
    struct MsgPort *port;
    struct TypeStats *tracker;
@@ -1815,7 +1815,7 @@ static VOID TxError(struct DevUnit *unit, struct DevBase *base)
 
    /* Report the error(s) */
 
-   ReportEvents(unit,S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_TX, base);
+   ReportEvents(unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_TX, base);
 
    return;
 }
@@ -2035,14 +2035,15 @@ static VOID DMARXInt(REG(a1, struct DevUnit *unit),
 static VOID DMATXInt(REG(a1, struct DevUnit *unit),
    REG(a5, APTR int_code))
 {
-   UWORD packet_size, data_size, slot, new_slot;
+   UWORD packet_size, data_size, slot, new_slot, *p, *q, i;
    struct DevBase *base;
    struct IOSana2Req *request;
    BOOL proceed = TRUE;
    struct Opener *opener;
    ULONG wire_error, *dpd, *last_dpd, *next_dpd, *fragment, dma_size;
-   ULONG *(*dma_tx_function)(REG(a0, APTR));
-   BYTE error, *buffer;
+   UBYTE *(*dma_tx_function)(REG(a0, APTR));
+   BYTE error;
+   UBYTE *buffer;
    struct MsgPort *port;
 
    base = unit->device;
@@ -2061,7 +2062,7 @@ static VOID DMATXInt(REG(a1, struct DevUnit *unit),
          request = (APTR)port->mp_MsgList.lh_Head;
          data_size = packet_size = request->ios2_DataLength;
 
-         if((request->ios2_Req.io_Flags&SANA2IOF_RAW) == 0)
+         if((request->ios2_Req.io_Flags & SANA2IOF_RAW) == 0)
             packet_size += ETH_HEADERSIZE;
          dpd = unit->dpds + ((DPD_SIZE / sizeof(ULONG)) * slot);
 
@@ -2082,11 +2083,16 @@ static VOID DMATXInt(REG(a1, struct DevUnit *unit),
             fragment[EL3FRAG_ADDR] = MakeLELong((ULONG)buffer);
             fragment[EL3FRAG_LEN] = MakeLELong(ETH_HEADERSIZE);
 
-            *((ULONG *)buffer)++ = *((ULONG *)request->ios2_DstAddr);
-            *((UWORD *)buffer)++ = *((UWORD *)(request->ios2_DstAddr + 4));
-            *((UWORD *)buffer)++ = *((UWORD *)unit->address);
-            *((ULONG *)buffer)++ = *((ULONG *)(unit->address + 2));
-            *((UWORD *)buffer)++ = MakeBEWord(request->ios2_PacketType);
+            p = (UWORD *)buffer;
+            for(i = 0, q = (UWORD *)request->ios2_DstAddr;
+               i < ETH_ADDRESSSIZE / 2; i++)
+               *p++ = *q++;
+            for(i = 0, q = (UWORD *)unit->address;
+               i < ETH_ADDRESSSIZE / 2; i++)
+               *p++ = *q++;
+            *p++ = MakeBEWord(request->ios2_PacketType);
+            buffer = (UBYTE *)p;
+
             dma_size = ETH_HEADERSIZE;
             CachePreDMA(buffer, &dma_size, DMA_ReadFromRAM);
             fragment += EL3_FRAGLEN;
@@ -2221,12 +2227,12 @@ static VOID DMATXEndInt(REG(a1, struct DevUnit *unit),
       /* Mark end of DMA */
 
       request = unit->tx_requests[i];
-      data_size = packet_size=request->ios2_DataLength;
-      if((request->ios2_Req.io_Flags&SANA2IOF_RAW) == 0)
+      data_size = packet_size = request->ios2_DataLength;
+      if((request->ios2_Req.io_Flags & SANA2IOF_RAW) == 0)
          packet_size += ETH_HEADERSIZE;
 
       dpd = unit->dpds + ((DPD_SIZE / sizeof(ULONG)) * i);
-      fragment = dpd+EL3DPD_FIRSTFRAG;
+      fragment = dpd + EL3DPD_FIRSTFRAG;
       dma_size = DPD_SIZE * TX_SLOT_COUNT;
       CachePostDMA(unit->dpds, &dma_size, 0);
 
@@ -2312,7 +2318,7 @@ static VOID ReportEvents(struct DevUnit *unit, ULONG events,
       request = next_request;
       next_request = (APTR)request->ios2_Req.io_Message.mn_Node.ln_Succ;
 
-      if((request->ios2_WireError&events) != 0)
+      if((request->ios2_WireError & events) != 0)
       {
          request->ios2_WireError = events;
          Remove((APTR)request);
@@ -2381,7 +2387,7 @@ static VOID UnitTask()
    /* Allocate a signal for notification of card removal */
 
    card_removed_signal = unit->card_removed_signal = 1 << AllocSignal(-1);
-   card_inserted_signal=unit->card_inserted_signal = 1 << AllocSignal(-1);
+   card_inserted_signal = unit->card_inserted_signal = 1 << AllocSignal(-1);
    wait_signals = (1 << general_port->mp_SigBit) | card_removed_signal
       | card_inserted_signal;
 

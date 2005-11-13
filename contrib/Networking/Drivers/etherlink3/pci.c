@@ -527,11 +527,7 @@ static struct BusContext *AllocPrometheusCard(ULONG index,
 
    if(success)
    {
-#ifdef __AROS__
       context->unit_tags = unit_tags;
-#else
-#error Prometheus hardware untested
-#endif
 
       while(i <= index)
       {
@@ -1165,7 +1161,7 @@ static UWORD LEWordInHook(struct BusContext *context, ULONG offset)
 
 
 
-/****i* etherlink3.device/LELongInHook ***************************************
+/****i* etherlink3.device/LELongInHook *************************************
 *
 *   NAME
 *	LELongInHook

@@ -83,13 +83,13 @@ LONG Main()
 #define DEVICE_NAME "etherlink3.device"
 
 const TEXT device_name[] = DEVICE_NAME;
-static const TEXT version_string[] = DEVICE_NAME " 0.6 (31.1.2005)\n";
+static const TEXT version_string[] = DEVICE_NAME " 0.7 (13.11.2005)\n";
 static const TEXT utility_name[] = UTILITYNAME;
 static const TEXT prometheus_name[] = PROMETHEUSNAME;
 #ifndef __AROS__
 static const TEXT powerpci_name[] = "powerpci.library";
 static const TEXT pccard_name[] = PCCARDNAME;
-static const TEXT card_name[]=CARDRESNAME;
+static const TEXT card_name[] = CARDRESNAME;
 #endif
 static const TEXT timer_name[] = TIMERNAME;
 
@@ -266,7 +266,7 @@ static BYTE DevOpen(REG(a1, struct IOSana2Req *request),
 
    if(error == 0)
    {
-      request->ios2_Req.io_Unit = (APTR)unit = GetUnit(unit_num, base);
+      request->ios2_Req.io_Unit = (APTR)(unit = GetUnit(unit_num, base));
       if(unit == NULL)
          error = IOERR_OPENFAIL;
    }

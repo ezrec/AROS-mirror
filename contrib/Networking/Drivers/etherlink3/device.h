@@ -26,6 +26,7 @@ MA 02111-1307, USA.
 #include <exec/types.h>
 #include <exec/devices.h>
 #include <exec/interrupts.h>
+#include <exec/semaphores.h>
 #include <devices/sana2.h>
 #include <devices/sana2specialstats.h>
 #include <devices/timer.h>
@@ -315,7 +316,7 @@ IMPORT const TEXT device_name[];
 #define UtilityBase (base->utility_base)
 #define ExpansionBase (base->expansion_base)
 #define PrometheusBase (base->prometheus_base)
-#define powerpcilibbase (base->powerpci_base)
+#define PowerPCIBase (base->powerpci_base)
 #define PCCardBase (base->pccard_base)
 #define TimerBase (base->timer_request.tr_node.io_Device)
 

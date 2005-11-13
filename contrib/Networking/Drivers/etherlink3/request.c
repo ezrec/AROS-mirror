@@ -24,7 +24,7 @@ MA 02111-1307, USA.
 
 #include <exec/types.h>
 #include <exec/errors.h>
-#include "initializers.h"
+#include <exec/initializers.h>
 #include <devices/newstyle.h>
 
 #include <proto/exec.h>
@@ -1258,7 +1258,7 @@ static BOOL CmdOffline(struct IOSana2Req *request, struct DevBase *base)
    /* Put adapter offline */
 
    unit = (APTR)request->ios2_Req.io_Unit;
-   if((unit->flags&UNITF_ONLINE) != 0)
+   if((unit->flags & UNITF_ONLINE) != 0)
       GoOffline(unit, base);
 
    /* Return */
@@ -1277,7 +1277,7 @@ static BOOL CmdOffline(struct IOSana2Req *request, struct DevBase *base)
 *
 *   INPUTS
 *	io_Length - ???.
-*	io_Data - Pointer to NSDeviceQueryResult structure.
+*	io_Data - pointer to NSDeviceQueryResult structure.
 *
 *   RESULTS
 *	io_Error
@@ -1306,7 +1306,7 @@ static BOOL CmdDeviceQuery(struct IOStdReq *request,
 
    info = request->io_Data;
    request->io_Actual = info->SizeAvailable =
-      OFFSET(NSDeviceQueryResult, SupportedCommands) + sizeof(APTR);
+      (ULONG)OFFSET(NSDeviceQueryResult, SupportedCommands) + sizeof(APTR);
 
    /* Report device details */
 
