@@ -1,0 +1,24 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2005-11-19
+
+AROS developers has been quite busy in last two months, discovering and fixing bugs, adding new features and so on. Maybe, from a user point of view they are not so noticeable, but you can be sure they are really important as well. There are, indeed, some really BIG news about PPC and 68k portings of AROS.
+
+Joe Fenton has been able to run AROS PPC on his iMac using Fedora Core 4. There are still some issues that should be fixed, but Joe and Markuss Weiss are working hard on them, in order to give us a full-rockin' PPC version of AROS. 
+
+Bernd Roesch has compiled an AmigaOS-68k hosted version of AROS called AFA (AROS for AmigaOS): "AfA OS is a way to use AROS source without changes and compile them on every AmigaOS based operating system. 
+It can run and be build hosted on every AmigaOS compatible system and provides a compatible API to all systems. With AFA, the host Amiga OS is degraded to do things that MS-DOS was doing for Windows
+3.11-WinMe. It is easy to check for bugs/errors using testprograms, but the rest of the system is using the old stable functions. You can easily boot with or without the new libraries". More informations and pre-compiled binaries are `here`__.
+
+Pavel Fedin has modified the mount command in order to support DEVS:DOSDrivers and SYS:Storage/DOSDrivers foldersa, as like as in AmigaOS 2.1 and later revisions. Many c: commands has been back-ported from MorphOS as well.
+
+Michal Schulz has re-vitalized VMware graphic hidd, so running AROS on this famous emulator will be easier. He's also working on a 2D accelerated graphic hidd for Ati cards. 
+
+Finally, you can download x86 FreeBSD hosted version, and lots of funny interesting software on `Back2Roots FTP`__.
+
+__ http://amidevcpp.kilu.de/afaupload.php3
+__ http://ftp.back2roots.org/aros
+
