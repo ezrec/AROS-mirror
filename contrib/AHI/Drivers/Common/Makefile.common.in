@@ -46,7 +46,7 @@ INSTALL_DATA	= @INSTALL_DATA@
 # Files
 ########################################
 
-OBJECTS		+= library.o gatestubs.o
+DRIVER_OBJECTS	= library.o gatestubs.o $(OBJECTS)
 
 
 #
@@ -104,7 +104,7 @@ Makefile: Makefile.in Makefile.common.in ../../config.status
 %.o:	%.s
 	$(AS) $(ASFLAGS) $^ -o $@
 
-$(DRIVER):		$(OBJECTS)
+$(DRIVER):		$(DRIVER_OBJECTS)
 	$(CC) $(LDFLAGS) $^ -o $@
 
 $(MODEFILE):	$(MODEFILE).o

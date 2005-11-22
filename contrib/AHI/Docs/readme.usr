@@ -7,6 +7,20 @@ This archive contains the binary distribution of AHI,
 everything you need to use programs that require AHI,
 and documentation in AmigaGuide® format.
 
+Missing files
+¯¯¯¯¯¯¯¯¯¯¯¯¯
+At present, not all binaries can be build for all architectures:
+
+    * DEVS:MIDI/emu10kx, the CAMD driver for EMU10kx-based sound cards
+    is currently only available in the m68k-amigaos build.
+
+    * L:AHI-Handler is a "resident" or "pure" binary that implements
+    an AmigaOS-style filesystem. As such, it is currently not included
+    in the ppc-amigaos, i686be-amithlon and i386-aros builds.
+
+For architectures that also provides m68k emulation, simply grab these
+missing files from the m68k-amigaos archive instead.
+
 Installation
 ¯¯¯¯¯¯¯¯¯¯¯¯
 AHI version 4 used to have a nice installer script. If you would like

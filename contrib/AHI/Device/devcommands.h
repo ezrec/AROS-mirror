@@ -35,10 +35,6 @@ void
 PerformIO ( struct AHIRequest *ioreq,
             struct AHIBase *AHIBase );
 
-struct Node *
-FindNode ( struct List *list,
-           struct Node *node );
-
 void
 FeedReaders ( struct AHIDevUnit *iounit,
               struct AHIBase *AHIBase );

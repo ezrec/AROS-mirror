@@ -87,9 +87,11 @@ void UnInitialize (void);
  *  My debug stuff....
  */
 
+#ifdef DEBUG
+
 #define HIT(x) {char *a=NULL; *a=x;}
 
-static UWORD rawputchar_m68k[] = 
+static const UWORD rawputchar_m68k[] = 
 {
   0x2C4B,             // MOVEA.L A3,A6
   0x4EAE, 0xFDFC,     // JSR     -$0204(A6)
@@ -108,6 +110,8 @@ KPrintFArgs( UBYTE* fmt,
   ULONG _args[] = { __VA_ARGS__ }; \
   KPrintFArgs( (fmt), _args );     \
 })
+
+#endif /* DEBUG */
 
 
 /*
@@ -159,7 +163,7 @@ struct AIFFHeader AIFFHeader = {
 ******************************************************************************/
 
 // Disable command line processing
-long __nocommandline=1;
+const long __nocommandline=1;
 
 // We (mis)use this one directly instead
 extern struct Message *_WBenchMsg;
@@ -199,7 +203,7 @@ int main(void)
     packet = (struct DosPacket *) msg->mn_Node.ln_Name;
 
 #ifdef DEBUG
-	kprintf ("Got packet: %ld\n", packet->dp_Type);
+    kprintf ("Got packet: %ld\n", packet->dp_Type);
 #endif
     /*
      *  default return value
@@ -1158,3 +1162,7 @@ void UnInitialize (void) {
 
   dn->dn_Task = NULL;
 }
+
+#if defined(__mc68000__) && defined(__libnix__)
+void __main(void) {}
+#endif

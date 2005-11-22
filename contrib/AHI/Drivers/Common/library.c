@@ -346,7 +346,7 @@ AROS_UFH2( void,
 
 #else
 
-static UWORD rawputchar_m68k[] = 
+static const UWORD rawputchar_m68k[] = 
 {
   0x2C4B,             // MOVEA.L A3,A6
   0x4EAE, 0xFDFC,     // JSR     -$0204(A6)

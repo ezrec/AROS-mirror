@@ -122,6 +122,8 @@ OpenAHI( void )
   }
 }
 
+// Disable command line processing
+const long __nocommandline=1;
 
 int
 main( void )
@@ -345,3 +347,7 @@ main( void )
   cleanup();
   return rc;
 }
+
+#if defined(__mc68000__) && defined(__libnix__)
+void __main(void) {}
+#endif

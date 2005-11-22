@@ -1,3 +1,55 @@
+2005-11-20  Martin Blom  <martin@blom.org>
+
+	* Released AHI 6.0. w00t!
+
+2005-11-06  Martin Blom  <martin@blom.org>
+
+	* Docs/readme.changes: Added note about device.audio's 20 ms
+	limit. [Ian Greenway]
+
+2005-10-09  Martin Blom  <martin@blom.org>
+
+	* Drivers/Common/library.h: Avoid using assembly symbol
+	redirection in AROS.
+
+2005-10-05  Martin Blom  <martin@blom.org>
+
+	* Docs/readme.changes, Docs/readme.usr: Updated.
+
+2005-10-01  Martin Blom  <martin@blom.org>
+
+	* COPYING.DRIVERS: Fixed a typo and added a small plea for open
+	source drivers.
+
+2005-09-28  Martin Blom  <martin@blom.org>
+
+	* Bumped just about every single revision counter ...
+
+	* Drivers/Common/Makefile.common.in: Arranged to that the
+	"library.o" object comes first when linking, so that the _start()
+	function is at the very beginning of the driver. [Gunther Nikl]
+
+	* Drivers/Common/library.c: Made rawputchar_m68k const. [Gunther
+	Nikl]
+
+	* AHI-Handler: Don't compile debug support code if not debug
+	build. Made rawputchar_m68k const. [Gunther Nikl]
+
+	* AHI Preferences, AddAudioModes, AHI-Handler: Define __main() for
+	libnix to make the binaries smaller. [Gunther Nikl]
+
+2005-09-2  Martin Blom  <martin@blom.org>
+
+	* configure.in: Use AC_SEARCH_LIBS so that -lauto, -lraauto and
+	-lmui only gets added if required. That fixes a potential
+	ixemul/libnix conflict for m68k-amigaos. [Gunther Nikl]
+
+	* configure.in: Don't add include path /gg/os-include per
+	default. [Gunther Nikl]
+
+	* devcommands.h: Removed duped prototype for FindNode(). [Gunther
+	Nikl]
+
 2005-09-27  Martin Blom  <martin@blom.org>
 
 	* Released AHI 6.0rc4.

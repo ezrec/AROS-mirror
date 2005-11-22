@@ -641,3 +641,7 @@ char *getVersion(void) {
 char *getAnnotation(void) {
   return annotationBuffer;
 }
+
+#if defined(__mc68000__) && defined(__libnix__)
+void __main(void) {}
+#endif
