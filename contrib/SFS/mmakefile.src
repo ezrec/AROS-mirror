@@ -1,0 +1,28 @@
+# $Id:$
+
+include $(TOP)/config/make.cfg
+
+FILES := 	adminspaces \
+			bitmap \
+			btreenodes \
+			cachebuffers \
+			debug \
+			nodes \
+			support \
+			transactions \
+			asmsupport \
+			objects \
+			locks \
+			deviceio \
+			cachedio \
+			filesystemmain \
+			arosmain
+
+USER_CFLAGS := -DAROS_KERNEL
+
+%build_module_macro mmake=contrib-sfs \
+	modname=sfs modtype=handler \
+	initfile=arosdevice files=$(FILES) \
+	uselibs="arossupport rom m"
+
+%common
