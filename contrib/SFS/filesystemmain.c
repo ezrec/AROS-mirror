@@ -395,8 +395,11 @@ LONG __saveds mainprogram() {
                           dreq("(3) Timer.device opened");
                         #endif
 
+#ifdef __AROS__
+                        if(initcachedio(((UBYTE *)BADDR(globals->startupmsg->fssm_Device)), globals->startupmsg->fssm_Unit, globals->startupmsg->fssm_Flags, globals->dosenvec)==0) {
+#else
                         if(initcachedio(((UBYTE *)BADDR(globals->startupmsg->fssm_Device)+1), globals->startupmsg->fssm_Unit, globals->startupmsg->fssm_Flags, globals->dosenvec)==0) {
-
+#endif
                           #ifdef STARTDEBUG
                             dreq("(4) Cached IO layer started");
                           #endif
@@ -831,11 +834,7 @@ void mainloop(void) {
               }
             }
             else {
-#ifdef __AROS__
-              copystr(globals->packet->dp_Arg1, globals->string, 30);
-#else
               copybstrasstr((BSTR)globals->packet->dp_Arg1, globals->string, 30);
-#endif
               name=globals->string;
             }
 
@@ -1413,11 +1412,7 @@ void mainloop(void) {
                   lock=(struct ExtFileLock *)BADDR(globals->packet->dp_Arg2);
 
                   if(globals->packet->dp_Type!=ACTION_FH_FROM_LOCK) {
-#ifdef __AROS__
-                    copystr(globals->packet->dp_Arg3,globals->string,258);
-#else
                     copybstrasstr(globals->packet->dp_Arg3,globals->string,258);
-#endif
                     _DEBUG(("OPEN FILE: %s (mode = %ld)\n", globals->string, globals->packet->dp_Type));
                     errorcode=findcreate(&lock,globals->string,globals->packet->dp_Type,0);
                   }
@@ -1560,9 +1555,13 @@ void mainloop(void) {
                       newtransaction();
 
                       preparecachebuffer(cb);
+                      
 
                       s=BADDR(globals->packet->dp_Arg1);
                       d=oc->object[0].name;
+                      
+                      d[copybstrasstr(s, d, 30)] = 0;
+#if 0
                       len=*s++;
 
                       if(len>30) {
@@ -1574,14 +1573,14 @@ void mainloop(void) {
                       }
                       *d++=0;
                       *d=0;    /* Zero for comment */
-
+#endif
                       if((errorcode=storecachebuffer(cb))==0 && globals->volumenode!=0) {
                         s=BADDR(globals->packet->dp_Arg1);
 #ifdef __AROS__
                         d=BADDR(globals->volumenode->dl_OldName);
+                        copystr(s, d, 30);
 #else
                         d=BADDR(globals->volumenode->dl_Name);
-#endif
                         len=*s++;
 
                         if(len>30) {
@@ -1593,6 +1592,7 @@ void mainloop(void) {
                           *d++=*s++;
                         }
                         *d=0;
+#endif
                       }
 
                       UnLockDosList(LDF_WRITE|LDF_VOLUMES);
@@ -3114,8 +3114,13 @@ void dreq(UBYTE *fmt, ... ) {
   UBYTE *fmt2;
 
   if(debugreqs!=FALSE) {
+#ifdef __AROS__
+    args[0]=((UBYTE *)BADDR(globals->devnode->dn_Name));
+    args[1]=((UBYTE *)BADDR(globals->startupmsg->fssm_Device));
+#else
     args[0]=((UBYTE *)BADDR(globals->devnode->dn_Name)+1);
     args[1]=((UBYTE *)BADDR(globals->startupmsg->fssm_Device)+1);
+#endif
     args[2]=(APTR)globals->startupmsg->fssm_Unit;
     args[3]=fmt;
 
@@ -3167,14 +3172,19 @@ LONG req(UBYTE *fmt, UBYTE *gads, ... ) {
 
   if(globals->volumenode!=0) {
 #ifdef __AROS__
-    *arg++=((UBYTE *)BADDR(globals->volumenode->dl_OldName)+1);
+    *arg++=((UBYTE *)BADDR(globals->volumenode->dl_OldName));
 #else
     *arg++=((UBYTE *)BADDR(globals->volumenode->dl_Name)+1);
 #endif
   }
 
+#ifdef __AROS__
+  *arg++=((UBYTE *)BADDR(globals->devnode->dn_Name));
+  *arg++=((UBYTE *)BADDR(globals->startupmsg->fssm_Device));
+#else
   *arg++=((UBYTE *)BADDR(globals->devnode->dn_Name)+1);
   *arg++=((UBYTE *)BADDR(globals->startupmsg->fssm_Device)+1);
+#endif
   *arg++=(APTR)globals->startupmsg->fssm_Unit;
   *arg=fmt;
 
@@ -3216,9 +3226,13 @@ LONG req_unusual(UBYTE *fmt, ... ) {
   LONG gadget=0;
 
   /* Simple requester function. */
-
+#ifdef __AROS__
+  args[0]=((UBYTE *)BADDR(globals->devnode->dn_Name));
+  args[1]=((UBYTE *)BADDR(globals->startupmsg->fssm_Device));
+#else
   args[0]=((UBYTE *)BADDR(globals->devnode->dn_Name)+1);
   args[1]=((UBYTE *)BADDR(globals->startupmsg->fssm_Device)+1);
+#endif
   args[2]=(APTR)globals->startupmsg->fssm_Unit;
   args[3]=fmt;
   args[4]="This is a safety check requester, which should\n"\
@@ -3648,9 +3662,9 @@ LONG initdisk() {
             struct SFSMessage *sfsm;
 #ifdef __AROS__
             UBYTE *d2=(UBYTE *)BADDR(vn->dl_OldName);
+            copystr(oc->object[0].name, d2, 30);
 #else
             UBYTE *d2=(UBYTE *)BADDR(vn->dl_Name);
-#endif
             UBYTE *d=d2+1;
             UBYTE *s=oc->object[0].name;
             UBYTE len=0;
@@ -3662,6 +3676,7 @@ LONG initdisk() {
 
             *d=0;
             *d2=len;
+#endif
 
             datetodatestamp(ri->datecreated, &vn->dl_VolumeDate);
 

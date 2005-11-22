@@ -700,7 +700,15 @@ void copystr(UBYTE *src,UBYTE *dest,WORD maxlen) {
 
 #ifdef __AROS__
 
-UWORD copybstrasstr(BSTR bstr,UBYTE *str,UWORD maxlen) {
+UWORD copybstrasstr(BSTR bstr, UBYTE *str, UWORD maxlen) {
+    UWORD srclen = strlen((STRPTR)bstr);
+    
+    copystr((STRPTR)bstr, str, maxlen);
+    
+    return (srclen);
+}
+
+UWORD _copybstrasstr(BSTR bstr,UBYTE *str,UWORD maxlen) {
   UBYTE *srcstr=AROS_BSTR_ADDR(bstr);
   UBYTE *orgstr = str;
   UWORD srclen;

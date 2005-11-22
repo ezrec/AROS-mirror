@@ -532,7 +532,5 @@ ULONG CALCCHECKSUM(ULONG blocksize, ULONG *block)
         sum += (ULONG)AROS_BE2LONG(*block++);
     }
     
-    _DEBUG(("CALCCHECKSUM=%08x\n",sum));
-    
     return sum;
 }
