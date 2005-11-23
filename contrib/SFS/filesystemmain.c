@@ -170,6 +170,8 @@ void initGlobals()
     globals->templockedobjectnode = 0;
     globals->internalrename = FALSE;
     globals->defrag_maxfilestoscan = 512;
+
+    globals->mask_debug = 0xffff;
 }
 
 /* Prototypes */
@@ -395,11 +397,7 @@ LONG __saveds mainprogram() {
                           dreq("(3) Timer.device opened");
                         #endif
 
-#ifdef __AROS__
-                        if(initcachedio(((UBYTE *)BADDR(globals->startupmsg->fssm_Device)), globals->startupmsg->fssm_Unit, globals->startupmsg->fssm_Flags, globals->dosenvec)==0) {
-#else
-                        if(initcachedio(((UBYTE *)BADDR(globals->startupmsg->fssm_Device)+1), globals->startupmsg->fssm_Unit, globals->startupmsg->fssm_Flags, globals->dosenvec)==0) {
-#endif
+                        if(initcachedio(AROS_BSTR_ADDR(globals->startupmsg->fssm_Device), globals->startupmsg->fssm_Unit, globals->startupmsg->fssm_Flags, globals->dosenvec)==0) {
                           #ifdef STARTDEBUG
                             dreq("(4) Cached IO layer started");
                           #endif
@@ -630,7 +628,7 @@ void mainloop(void) {
         request(PROGRAMNAME " request","%s\n"\
                                        "mainloop: There was a locked CacheBuffer (lockcount = %ld, block = %ld, type = 0x%08lx)!\n"\
                                        "Nothing bad will happen, but let the author know.\n",
-                                       "Ok",((UBYTE *)BADDR(devnode->dn_Name))+1, cb->locked, cb->blckno, *((ULONG *)cb->data));
+                                       "Ok",AROS_BSTR_ADDR(devnode->dn_Name), cb->locked, cb->blckno, *((ULONG *)cb->data));
 
 
         cb->locked=0; /* Nothing remains locked */
@@ -1559,8 +1557,7 @@ void mainloop(void) {
 
                       s=BADDR(globals->packet->dp_Arg1);
                       d=oc->object[0].name;
-                      
-                      d[copybstrasstr(s, d, 30)] = 0;
+                      d[copybstrasstr(s, d, 30)+1] = 0;
 #if 0
                       len=*s++;
 
@@ -2937,25 +2934,25 @@ void fillfib(struct FileInfoBlock *fib,struct fsObject *o) {
   datetodatestamp(o->datemodified,&fib->fib_Date);
 
   src=o->name;
-  dest=&fib->fib_FileName[1];
+  dest=AROS_BSTR_ADDR(fib->fib_FileName);
   length=0;
 
   while(*src!=0) {
     *dest++=*src++;
     length++;
   }
-  fib->fib_FileName[0]=length;
+  AROS_BSTR_setstrlen(fib->fib_FileName,length);
 
   src++;  /* comment follows name, so just skip the null-byte seperating them */
 
-  dest=&fib->fib_Comment[1];
+  dest=AROS_BSTR_ADDR(fib->fib_Comment);
   length=0;
 
   while(*src!=0) {
     *dest++=*src++;
     length++;
   }
-  fib->fib_Comment[0]=length;
+  AROS_BSTR_setstrlen(fib->fib_Comment,length);
 }
 
 
@@ -3114,13 +3111,8 @@ void dreq(UBYTE *fmt, ... ) {
   UBYTE *fmt2;
 
   if(debugreqs!=FALSE) {
-#ifdef __AROS__
-    args[0]=((UBYTE *)BADDR(globals->devnode->dn_Name));
-    args[1]=((UBYTE *)BADDR(globals->startupmsg->fssm_Device));
-#else
-    args[0]=((UBYTE *)BADDR(globals->devnode->dn_Name)+1);
-    args[1]=((UBYTE *)BADDR(globals->startupmsg->fssm_Device)+1);
-#endif
+    args[0]=AROS_BSTR_ADDR(globals->devnode->dn_Name);
+    args[1]=AROS_BSTR_ADDR(globals->startupmsg->fssm_Device);
     args[2]=(APTR)globals->startupmsg->fssm_Unit;
     args[3]=fmt;
 
@@ -3171,20 +3163,11 @@ LONG req(UBYTE *fmt, UBYTE *gads, ... ) {
      VolumeNode. */
 
   if(globals->volumenode!=0) {
-#ifdef __AROS__
-    *arg++=((UBYTE *)BADDR(globals->volumenode->dl_OldName));
-#else
-    *arg++=((UBYTE *)BADDR(globals->volumenode->dl_Name)+1);
-#endif
+    *arg++=AROS_BSTR_ADDR(globals->volumenode->dl_OldName);
   }
 
-#ifdef __AROS__
-  *arg++=((UBYTE *)BADDR(globals->devnode->dn_Name));
-  *arg++=((UBYTE *)BADDR(globals->startupmsg->fssm_Device));
-#else
-  *arg++=((UBYTE *)BADDR(globals->devnode->dn_Name)+1);
-  *arg++=((UBYTE *)BADDR(globals->startupmsg->fssm_Device)+1);
-#endif
+  *arg++=AROS_BSTR_ADDR(globals->devnode->dn_Name);
+  *arg++=AROS_BSTR_ADDR(globals->startupmsg->fssm_Device);
   *arg++=(APTR)globals->startupmsg->fssm_Unit;
   *arg=fmt;
 
@@ -3226,13 +3209,8 @@ LONG req_unusual(UBYTE *fmt, ... ) {
   LONG gadget=0;
 
   /* Simple requester function. */
-#ifdef __AROS__
-  args[0]=((UBYTE *)BADDR(globals->devnode->dn_Name));
-  args[1]=((UBYTE *)BADDR(globals->startupmsg->fssm_Device));
-#else
-  args[0]=((UBYTE *)BADDR(globals->devnode->dn_Name)+1);
-  args[1]=((UBYTE *)BADDR(globals->startupmsg->fssm_Device)+1);
-#endif
+  args[0]=AROS_BSTR_ADDR(globals->devnode->dn_Name);
+  args[1]=AROS_BSTR_ADDR(globals->startupmsg->fssm_Device);
   args[2]=(APTR)globals->startupmsg->fssm_Unit;
   args[3]=fmt;
   args[4]="This is a safety check requester, which should\n"\
@@ -3369,7 +3347,7 @@ LONG readroots(void) {
                                      "is in a format unsupported by this version\n"\
                                      "of the filesystem.  Please reformat the disk or\n"\
                                      "install the correct version of this filesystem.",
-                                     "Ok",((UBYTE *)BADDR(globals->devnode->dn_Name))+1);
+                                     "Ok",AROS_BSTR_ADDR(globals->devnode->dn_Name));
 
       return(ERROR_NOT_A_DOS_DISK);
     }
@@ -3663,6 +3641,11 @@ LONG initdisk() {
 #ifdef __AROS__
             UBYTE *d2=(UBYTE *)BADDR(vn->dl_OldName);
             copystr(oc->object[0].name, d2, 30);
+            vn->dl_Device = &globals->asfsbase->device;
+            vn->dl_Unit = (struct Unit *)&globals->device->rootfh;
+
+_DEBUG(("AddDosEntry: dl_Device=%x dl_Unit=%x\n",vn->dl_Device,vn->dl_Unit));
+            
 #else
             UBYTE *d2=(UBYTE *)BADDR(vn->dl_Name);
             UBYTE *d=d2+1;
@@ -4076,14 +4059,14 @@ LONG readcachebuffercheck(struct CacheBuffer **returnedcb,ULONG blckno,ULONG typ
                                           "has a blockid error in block %ld.\n"\
                                           "Expected was blockid 0x%08lx,\n"\
                                           "but the block says it is blockid 0x%08lx.",
-                                          "Reread|Cancel",((UBYTE *)BADDR(globals->devnode->dn_Name))+1,blckno,type,bh->id)<=0) {
+                                          "Reread|Cancel",AROS_BSTR_ADDR(globals->devnode->dn_Name),blckno,type,bh->id)<=0) {
           return(INTERR_BLOCK_WRONG_TYPE);
         }
       }
       else {
 /*        if(request(PROGRAMNAME " request","%s\n"\
                                           "is not a DOS disk.",
-                                          "Retry|Cancel",((UBYTE *)BADDR(devnode->dn_Name))+1,blckno,type,bh->id)<=0) {
+                                          "Retry|Cancel",AROS_BSTR_ADDR(devnode->dn_Name),blckno,type,bh->id)<=0) {
           return(INTERR_BLOCK_WRONG_TYPE);
         } */
 
@@ -4098,7 +4081,7 @@ LONG readcachebuffercheck(struct CacheBuffer **returnedcb,ULONG blckno,ULONG typ
 
       if(request(PROGRAMNAME " request","%s\n"\
                                         "has a checksum error in block %ld.",
-                                        "Reread|Cancel",((UBYTE *)BADDR(globals->devnode->dn_Name))+1,blckno)<=0) {
+                                        "Reread|Cancel",AROS_BSTR_ADDR(globals->devnode->dn_Name),blckno)<=0) {
         return(INTERR_CHECKSUM_FAILURE);
       }
       continue;
@@ -4112,7 +4095,7 @@ LONG readcachebuffercheck(struct CacheBuffer **returnedcb,ULONG blckno,ULONG typ
                                         "has a block error in block %ld.\n"\
                                         "Expected was block %ld,\n"\
                                         "but the block says it is block %ld.",
-                                        "Reread|Cancel",((UBYTE *)BADDR(globals->devnode->dn_Name))+1,blckno,blckno,AROS_BE2LONG(bh->ownblock))<=0) {
+                                        "Reread|Cancel",AROS_BSTR_ADDR(globals->devnode->dn_Name),blckno,blckno,AROS_BE2LONG(bh->ownblock))<=0) {
         return(INTERR_OWNBLOCK_WRONG);
       }
       continue;
@@ -6806,7 +6789,6 @@ void sdlhtask(void) {
 
           while((sfsm=(struct SFSMessage *)GetMsg(port))!=0) {
             if(sfsm->command==SFSM_ADD_VOLUMENODE) {
-
               /* AddDosEntry rejects volumes based on their name and date. */
 
               if(AddDosEntry((struct DosList *)sfsm->data)==DOSFALSE) {

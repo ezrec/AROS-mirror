@@ -277,6 +277,8 @@ D(bug("[asfs] open: %s\n", iofs->io_Union.io_OPEN_FILE.io_Filename));
                             EXCLUSIVE_LOCK :
                             SHARED_LOCK;
 
+D(bug("[asfs] open: ACTION_LOCATE_OBJECT %x %x %x\n", packet.dp_Arg1, packet.dp_Arg2, packet.dp_Arg3));
+
                         sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                         error = packet.dp_Res2;
                         if (error == 0)
@@ -465,6 +467,8 @@ D(bug("[asfs] examine: lock=%p\n", asfshandle->handle));
                     packet.dp_Arg2 = (IPTR)MKBADDR(&fib);
                     sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                     error = packet.dp_Res2;
+
+D(bug("[asfs] examine: error=%d, packet.dp_Res1=%p\n", error, packet.dp_Res1));
 		    
                     if (packet.dp_Res1)
                     {
@@ -480,11 +484,15 @@ D(bug("[asfs] examine: lock=%p\n", asfshandle->handle));
                         {
                             iofs->io_DirPos = fib.fib_DiskKey;
 //kprintf("****************acdr examine: pos = %lx\n", iofs->io_DirPos);
+D(bug("[asfs] examine: pos=%d, mode=%d\n", iofs->io_DirPos, mode));
+
                             switch (mode)
                             {
                             case ED_OWNER:
                                 ead->ed_OwnerUID = fib.fib_OwnerUID;
                                 ead->ed_OwnerGID = fib.fib_OwnerGID;
+D(bug("[asfs] examine: UID=%d, GID=%d\n", ead->ed_OwnerUID, ead->ed_OwnerGID));
+
 
                             case ED_COMMENT:
                                 len = AROS_BSTR_strlen(fib.fib_Comment)+1;
@@ -496,17 +504,21 @@ D(bug("[asfs] examine: lock=%p\n", asfshandle->handle));
                                 ead->ed_Comment = next;
                                 CopyMem(AROS_BSTR_ADDR(fib.fib_Comment), ead->ed_Comment, len);
                                 next += len;
+D(bug("[asfs] examine: comment=%s\n", ead->ed_Comment));
 
                             case ED_DATE:
                                 ead->ed_Days = fib.fib_Date.ds_Days;
                                 ead->ed_Mins = fib.fib_Date.ds_Minute;
                                 ead->ed_Ticks = fib.fib_Date.ds_Tick;
+D(bug("[asfs] examine: date=%d %d %d\n", ead->ed_Days, ead->ed_Mins, ead->ed_Ticks));
 
                             case ED_PROTECTION:
                                 ead->ed_Prot = fib.fib_Protection;
+D(bug("[asfs] examine: protection=%08x\n", ead->ed_Prot));
 
                             case ED_SIZE:
                                 ead->ed_Size = fib.fib_Size;
+D(bug("[asfs] examine: size=%d\n", ead->ed_Size));
 
                             case ED_TYPE:
                                 ead->ed_Type = fib.fib_EntryType;
@@ -520,19 +532,22 @@ D(bug("[asfs] examine: lock=%p\n", asfshandle->handle));
                                 }
                                 ead->ed_Name = next;
                                 CopyMem(AROS_BSTR_ADDR(fib.fib_FileName), ead->ed_Name, len);
+                                ead->ed_Name[len]=0;
                                 next += len;
 D(bug("[asfs] examine: name=%s ([0]=%x)\n", ead->ed_Name, ead->ed_Name[0]));
 
                             case 0:
                                 ead->ed_Next = 0;
                                 error = 0;
+D(bug("[asfs] examine: no error\n"));
                                 break;
 				
                             default:
                                 error = ERROR_BAD_NUMBER;
+D(bug("[asfs] examine: ERROR_BAD_NUMBER\n"));
 				break;
                             }
-			    
+D(bug("[asfs] the next one\n"));
                         } /* if (next<=end) */
                         else
                         {
