@@ -481,7 +481,7 @@ LONG copybackiocache(struct IOCache *ioc) {
 
   while(ioc!=0 && ioc->blocks!=0 && (ioc->bits & IOC_DIRTY)!=0) {
     
-    _DEBUG(("copybackiocache: ioc->dirty=%p (@=%08x) ioc->blocks-1=%d\n", ioc->dirty, AROS_BE2LONG(*(ULONG*)ioc->dirty), ioc->blocks-1));
+    _DEBUG(("copybackiocache: ioc->dirty=%p (@=%08x) ioc->blocks-1=%d\n", ioc->dirty, *(ULONG*)ioc->dirty, ioc->blocks-1));
 
     if((dirtyhigh=bmflo(ioc->dirty, ioc->blocks-1))<0) {
       _DEBUG(("copybackiocache: Say what?\n"));

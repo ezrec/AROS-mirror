@@ -20,7 +20,7 @@ struct BTreeContainer {
   struct BNode bnode[0];
 };
 
-#define BNODECONTAINER_ID        MAKE_ID('B','N','D','C')
+#define BNODECONTAINER_ID        AROS_LONG2BE(MAKE_ID('B','N','D','C'))
 
 struct fsBNodeContainer {
   struct fsBlockHeader bheader;

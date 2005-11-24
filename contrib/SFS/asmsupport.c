@@ -9,8 +9,8 @@
 #include <aros/macros.h>
 #include <aros/asmcall.h>
 #else
-//#define AROS_BE2LONG(x) x
-//#define AROS_LONG2BE(x) x
+#define AROS_BE2LONG(x) x
+#define AROS_LONG2BE(x) x
 #endif
 #include <stdio.h>
 
@@ -150,9 +150,10 @@ LONG bmflo(ULONG *bitmap, LONG bitoffset)
         longs--;
     }
 
-    while (longs-- > 0) {
+    while (longs-- >= 0) {
         if (*scan-- != 0) {
-            return (bfflo(AROS_BE2LONG(*++scan),31) + ((scan - bitmap) << 5));
+            scan++;
+            return (bfflo(AROS_BE2LONG(*scan),31) + ((scan - bitmap) << 5));
         }
     }
 
@@ -179,9 +180,10 @@ LONG bmflz(ULONG *bitmap, LONG bitoffset)
         longs--;
     }
 
-    while (longs-- > 0) {
+    while (longs-- >= 0) {
         if (*scan-- != 0xFFFFFFFF) {
-            return (bfflz(AROS_BE2LONG(*++scan),31) + ((scan - bitmap) << 5));
+            scan++;
+            return (bfflz(AROS_BE2LONG(*scan),31) + ((scan - bitmap) << 5));
         }
     }
 
@@ -195,6 +197,7 @@ LONG bmflz(ULONG *bitmap, LONG bitoffset)
 LONG bmffo(ULONG *bitmap, LONG longs, LONG bitoffset)
 {
     ULONG *scan = bitmap;
+    ULONG err = 32*longs;
     int longoffset, bit;
 
     longoffset = bitoffset >> 5;
@@ -217,7 +220,7 @@ LONG bmffo(ULONG *bitmap, LONG longs, LONG bitoffset)
         }
     }
 
-    return (-1);
+    return (err);
 }
 
 /* This function finds the first unset bit in a region of memory starting
@@ -227,6 +230,7 @@ LONG bmffo(ULONG *bitmap, LONG longs, LONG bitoffset)
 LONG bmffz(ULONG *bitmap, LONG longs, LONG bitoffset)
 {
     ULONG *scan = bitmap;
+    ULONG err = 32*longs;
     int longoffset, bit;
 
     longoffset = bitoffset >> 5;
@@ -249,7 +253,7 @@ LONG bmffz(ULONG *bitmap, LONG longs, LONG bitoffset)
         }
     }
 
-    return (-1);
+    return (err);
 }
 
 /* This function clears /bits/ bits in a region of memory starting
@@ -526,10 +530,16 @@ ULONG CALCCHECKSUM(ULONG blocksize, ULONG *block)
     
     while(blocksize--)
     {
+        sum += (*block++);
+        sum += (*block++);
+        sum += (*block++);
+        sum += (*block++);
+#if 0
         sum += (ULONG)AROS_BE2LONG(*block++);
         sum += (ULONG)AROS_BE2LONG(*block++);
         sum += (ULONG)AROS_BE2LONG(*block++);
         sum += (ULONG)AROS_BE2LONG(*block++);
+#endif
     }
     
     return sum;

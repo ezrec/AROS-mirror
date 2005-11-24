@@ -182,7 +182,7 @@ LONG splitbtreecontainer(BLCK rootblock,struct CacheBuffer *cb) {
         struct BTreeContainer *btcparent=&bncparent->btc;
 
         CopyMemQuick(cbparent->data,cb->data,globals->bytes_block);
-        bnc->bheader.ownblock=AROS_LONG2BE(cb->blckno);
+        bnc->bheader.ownblock=cb->blckno;
 
         _XDEBUG((DEBUG_NODES,"splitbtreecontainer: allocated admin space for root\n"));
 
@@ -194,8 +194,8 @@ LONG splitbtreecontainer(BLCK rootblock,struct CacheBuffer *cb) {
           preparecachebuffer(cbparent);
           clearcachebuffer(cbparent);        /* Not strictly needed, but makes things more clear. */
 
-          bncparent->bheader.id=AROS_LONG2BE(BNODECONTAINER_ID);
-          bncparent->bheader.ownblock=AROS_LONG2BE(cbparent->blckno);
+          bncparent->bheader.id=BNODECONTAINER_ID;
+          bncparent->bheader.ownblock=cbparent->blckno;
 
           btcparent->isleaf=FALSE;
           btcparent->nodesize=sizeof(struct BNode);
@@ -248,8 +248,8 @@ LONG splitbtreecontainer(BLCK rootblock,struct CacheBuffer *cb) {
           ULONG newkey;
           ULONG newblckno=cbnew->blckno;
 
-          bncnew->bheader.id=AROS_LONG2BE(BNODECONTAINER_ID);
-          bncnew->bheader.ownblock=AROS_LONG2BE(cbnew->blckno);
+          bncnew->bheader.id=BNODECONTAINER_ID;
+          bncnew->bheader.ownblock=cbnew->blckno;
 
           btcnew->isleaf=btc->isleaf;
           btcnew->nodesize=btc->nodesize;
@@ -574,7 +574,7 @@ LONG deleteinternalnode(BLCK rootblock,struct CacheBuffer *cb,ULONG key) {
             if((errorcode=readcachebuffercheck(&cb2,btc->bnode[0].data,BNODECONTAINER_ID))==0) {
 
               CopyMemQuick(cb2->data,cb->data,globals->bytes_block);
-              bnc->bheader.ownblock=AROS_LONG2BE(cb->blckno);
+              bnc->bheader.ownblock=cb->blckno;
 
               if((errorcode=storecachebuffer(cb))==0) {
                 errorcode=freeadminspace(cb2->blckno);

@@ -12,7 +12,7 @@ struct fsAdminSpace {
 };
 
 
-#define ADMINSPACECONTAINER_ID     MAKE_ID('A','D','M','C')
+#define ADMINSPACECONTAINER_ID     AROS_LONG2BE(MAKE_ID('A','D','M','C'))
 
 struct fsAdminSpaceContainer {
   struct fsBlockHeader bheader;

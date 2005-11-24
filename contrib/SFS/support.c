@@ -5,6 +5,8 @@
 #include <proto/dos.h>
 #include <proto/exec.h>
 
+#include <strings.h>
+
 #include "blockstructure.h"
 #include "fs.h"
 
@@ -1513,7 +1515,7 @@ void checksum_writelong(struct fsBlockHeader *bh, void *dest, ULONG data) {
 
   original=*((ULONG *)dest);
   *((ULONG *)dest)=data;
-
+#ifndef __AROS__
   if(( ((UBYTE *)bh - (UBYTE *)dest) & 0x03)!=0) {
 
     /* Word aligned address. */
@@ -1521,6 +1523,6 @@ void checksum_writelong(struct fsBlockHeader *bh, void *dest, ULONG data) {
     original=(original<<16)|(original>>16);
     data=(data<<16)|(data>>16);
   }
-
+#endif
   bh->checksum=~(~bh->checksum - original + data);
 }

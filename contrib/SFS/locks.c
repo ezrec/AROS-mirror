@@ -64,7 +64,7 @@ LONG freelock(struct ExtFileLock *lock) {
      temporarily allocated internally. */
 
   if(lock!=0) {
-    if(AROS_BE2LONG(lock->id)==DOSTYPE_ID) {
+    if(lock->id==DOSTYPE_ID) {
       lock->task=0;
 
       if(lock->next!=0) {
@@ -191,7 +191,7 @@ LONG lockobject2(struct fsObject *o, LONG accessmode, struct ExtFileLock **retur
       }
       globals->locklist=lock;
 
-      lock->id=AROS_LONG2BE(DOSTYPE_ID);
+      lock->id=DOSTYPE_ID;
 
       lock->curextent=o->object.file.data;
 
@@ -227,7 +227,7 @@ LONG lockobject(struct ExtFileLock *efl, UBYTE *path, LONG accessmode, struct Ex
      ERROR_INVALID_LOCK is returned if the lock is not a lock created by this
      filesystem. */
 
-  if(efl==0 || AROS_BE2LONG(efl->id)==DOSTYPE_ID) {
+  if(efl==0 || efl->id==DOSTYPE_ID) {
     if((errorcode=locateobjectfromlock(efl, path, &cb, &o))==0) {
       return(lockobject2(o, accessmode, returned_efl));
     }

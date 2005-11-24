@@ -423,7 +423,7 @@ LONG removeobjectcontainer(struct CacheBuffer *cb) {
 
   lockcachebuffer(cb);
 
-  if(oc->next!=0 && oc->next!=AROS_BE2LONG(oc->bheader.ownblock)) {
+  if(oc->next!=0 && oc->next!=oc->bheader.ownblock) {
     struct CacheBuffer *next_cb;
     struct fsObjectContainer *next_oc;
 
@@ -441,7 +441,7 @@ LONG removeobjectcontainer(struct CacheBuffer *cb) {
     }
   }
 
-  if(oc->previous!=0 && oc->previous!=AROS_BE2LONG(oc->bheader.ownblock)) {
+  if(oc->previous!=0 && oc->previous!=oc->bheader.ownblock) {
     struct CacheBuffer *previous_cb;
     struct fsObjectContainer *previous_oc;
 
@@ -840,8 +840,8 @@ LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o, UBYTE 
 
                 o->object.dir.hashtable=hashcb->blckno;
 
-                ht->bheader.id=AROS_LONG2BE(HASHTABLE_ID);
-                ht->bheader.ownblock=AROS_LONG2BE(hashcb->blckno);
+                ht->bheader.id=HASHTABLE_ID;
+                ht->bheader.ownblock=hashcb->blckno;
                 ht->parent=o->objectnode;
 
                 errorcode=storecachebuffer(hashcb);
@@ -861,8 +861,8 @@ LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o, UBYTE 
 
                   o->object.file.data=cb->blckno;
 
-                  sl->bheader.id=AROS_LONG2BE(SOFTLINK_ID);
-                  sl->bheader.ownblock=AROS_LONG2BE(cb->blckno);
+                  sl->bheader.id=SOFTLINK_ID;
+                  sl->bheader.ownblock=cb->blckno;
                   sl->parent=o->objectnode;
                   sl->next=0;
                   sl->previous=0;
@@ -1338,8 +1338,8 @@ LONG findobjectspace(struct CacheBuffer **io_cb, struct fsObject **io_o, ULONG b
       /* Allocated new block.  We will now link it to the START of the directory chain
          so the new free space can be found quickly when more entries need to be added. */
 
-      oc->bheader.id=AROS_LONG2BE(OBJECTCONTAINER_ID);
-      oc->bheader.ownblock=AROS_LONG2BE(cb->blckno);
+      oc->bheader.id=OBJECTCONTAINER_ID;
+      oc->bheader.ownblock=cb->blckno;
       oc->parent=oparent->objectnode;
       oc->next=oparent->object.dir.firstdirblock;
       oc->previous=0;

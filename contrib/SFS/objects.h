@@ -7,9 +7,9 @@
 #include "blockstructure.h"
 #include "nodes.h"
 
-#define OBJECTCONTAINER_ID         MAKE_ID('O','B','J','C')
-#define HASHTABLE_ID               MAKE_ID('H','T','A','B')
-#define SOFTLINK_ID                MAKE_ID('S','L','N','K')
+#define OBJECTCONTAINER_ID         AROS_LONG2BE(MAKE_ID('O','B','J','C'))
+#define HASHTABLE_ID               AROS_LONG2BE(MAKE_ID('H','T','A','B'))
+#define SOFTLINK_ID                AROS_LONG2BE(MAKE_ID('S','L','N','K'))
 
 /* Below is the structure describing an Object.  Objects can be files or
    directories.  Multiple Objects can be stored in an ObjectContainer

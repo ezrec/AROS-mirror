@@ -24,7 +24,7 @@ struct Space {
    there is a single bit in a bitmap block which tells you whether it is
    in use or not. */
 
-#define BITMAP_ID               MAKE_ID('B','T','M','P')
+#define BITMAP_ID               AROS_LONG2BE(MAKE_ID('B','T','M','P'))
 
 struct fsBitmap {
   struct fsBlockHeader bheader;

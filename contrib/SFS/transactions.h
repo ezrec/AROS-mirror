@@ -40,9 +40,9 @@ struct Operation {
 };
 
 
-#define TRANSACTIONSTORAGE_ID   MAKE_ID('T','R','S','T')
-#define TRANSACTIONFAILURE_ID   MAKE_ID('T','R','F','A')
-#define TRANSACTIONOK_ID        MAKE_ID('T','R','O','K')
+#define TRANSACTIONSTORAGE_ID   AROS_LONG2BE(MAKE_ID('T','R','S','T'))
+#define TRANSACTIONFAILURE_ID   AROS_LONG2BE(MAKE_ID('T','R','F','A'))
+#define TRANSACTIONOK_ID        AROS_LONG2BE(MAKE_ID('T','R','O','K'))
 
 /* The blocks used for storing the Transaction buffer are linked in a
    singly linked list.  The data they hold is a direct copy of all

@@ -113,8 +113,8 @@ LONG allocadminspace(struct CacheBuffer **returned_cb) {
 
             asc=cb->data;
 
-            asc->bheader.id=AROS_LONG2BE(ADMINSPACECONTAINER_ID);
-            asc->bheader.ownblock=AROS_LONG2BE(startblock);
+            asc->bheader.id=ADMINSPACECONTAINER_ID;
+            asc->bheader.ownblock=startblock;
             asc->previous=adminspaceblock;
 
             asc->adminspace[0].space=startblock;

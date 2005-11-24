@@ -76,7 +76,7 @@ LONG step(void);
 #define TIMEOUT         (1)   /* Timeout in seconds */
 #define FLUSHTIMEOUT    (20)  /* Flush timeout in seconds */
 
-#define ID_BUSY         MAKE_ID('B','U','S','Y')
+#define ID_BUSY         AROS_LONG2BE(MAKE_ID('B','U','S','Y'))
 
 
 /* structs */
@@ -864,8 +864,8 @@ void mainloop(void) {
               cb->blckno=globals->block_adminspace;
               clearcachebuffer(cb);
 
-              ac->bheader.id=AROS_LONG2BE(ADMINSPACECONTAINER_ID);
-              ac->bheader.ownblock=AROS_LONG2BE(globals->block_adminspace);
+              ac->bheader.id=ADMINSPACECONTAINER_ID;
+              ac->bheader.ownblock=globals->block_adminspace;
               ac->bits=globals->blocks_admin;
               ac->adminspace[0].space=globals->block_adminspace;
 
@@ -894,8 +894,8 @@ void mainloop(void) {
               cb->blckno=globals->block_root;
               clearcachebuffer(cb);
 
-              oc->bheader.id=AROS_LONG2BE(OBJECTCONTAINER_ID);
-              oc->bheader.ownblock=AROS_LONG2BE(globals->block_root);
+              oc->bheader.id=OBJECTCONTAINER_ID;
+              oc->bheader.ownblock=globals->block_root;
               oc->object[0].protection=FIBF_READ|FIBF_WRITE|FIBF_EXECUTE|FIBF_DELETE;
               oc->object[0].datemodified=currentdate;
               oc->object[0].bits=OTYPE_DIR;
@@ -926,8 +926,8 @@ void mainloop(void) {
               cb->blckno=globals->block_root+1;
               clearcachebuffer(cb);
 
-              ht->bheader.id=AROS_LONG2BE(HASHTABLE_ID);
-              ht->bheader.ownblock=AROS_LONG2BE(globals->block_root+1);
+              ht->bheader.id=HASHTABLE_ID;
+              ht->bheader.ownblock=globals->block_root+1;
               ht->parent=ROOTNODE;
 
               if(norecycled==FALSE) {
@@ -948,8 +948,8 @@ void mainloop(void) {
               cb->blckno=globals->block_root+2;
               clearcachebuffer(cb);
 
-              bh->id=AROS_LONG2BE(TRANSACTIONOK_ID);
-              bh->ownblock=AROS_LONG2BE(globals->block_root+2);
+              bh->id=TRANSACTIONOK_ID;
+              bh->ownblock=globals->block_root+2;
 
               setchecksum(cb);
               errorcode=writecachebuffer(cb);
@@ -966,8 +966,8 @@ void mainloop(void) {
               cb->blckno=globals->block_extentbnoderoot;
               clearcachebuffer(cb);
 
-              bnc->bheader.id=AROS_LONG2BE(BNODECONTAINER_ID);
-              bnc->bheader.ownblock=AROS_LONG2BE(globals->block_extentbnoderoot);
+              bnc->bheader.id=BNODECONTAINER_ID;
+              bnc->bheader.ownblock=globals->block_extentbnoderoot;
 
               btc->isleaf=TRUE;
               btc->nodecount=0;
@@ -988,8 +988,8 @@ void mainloop(void) {
               cb->blckno=globals->block_objectnoderoot;
               clearcachebuffer(cb);
 
-              nc->bheader.id=AROS_LONG2BE(NODECONTAINER_ID);
-              nc->bheader.ownblock=AROS_LONG2BE(globals->block_objectnoderoot);
+              nc->bheader.id=NODECONTAINER_ID;
+              nc->bheader.ownblock=globals->block_objectnoderoot;
 
               nc->nodenumber=1;  /* objectnode 0 is reserved :-) */
               nc->nodes=1;
@@ -1030,8 +1030,8 @@ void mainloop(void) {
               cb->blckno=block_recycled;
               clearcachebuffer(cb);
 
-              oc->bheader.id=AROS_LONG2BE(OBJECTCONTAINER_ID);
-              oc->bheader.ownblock=AROS_LONG2BE(block_recycled);
+              oc->bheader.id=OBJECTCONTAINER_ID;
+              oc->bheader.ownblock=block_recycled;
               oc->parent=ROOTNODE;
               oc->object[0].protection=FIBF_READ|FIBF_WRITE;
               oc->object[0].datemodified=currentdate;
@@ -1062,8 +1062,8 @@ void mainloop(void) {
               cb->blckno=block_recycled+1;
               clearcachebuffer(cb);
 
-              ht->bheader.id=AROS_LONG2BE(HASHTABLE_ID);
-              ht->bheader.ownblock=AROS_LONG2BE(block_recycled+1);
+              ht->bheader.id=HASHTABLE_ID;
+              ht->bheader.ownblock=block_recycled+1;
               ht->parent=RECYCLEDNODE;
 
               setchecksum(cb);
@@ -1089,21 +1089,21 @@ void mainloop(void) {
                 clearcachebuffer(cb);
 
                 bm=cb->data;
-                bm->bheader.id=AROS_LONG2BE(BITMAP_ID);
-                bm->bheader.ownblock=AROS_LONG2BE(block);
+                bm->bheader.id=BITMAP_ID;
+                bm->bheader.ownblock=block;
 
                 for(cnt2=0; cnt2<(globals->blocks_inbitmap>>5); cnt2++) {
                   if(startfree>0) {
                     startfree-=32;
                     if(startfree<0) {
-                      bm->bitmap[cnt2]=(1<<(-startfree))-1;
+                      bm->bitmap[cnt2]=AROS_LONG2BE((1<<(-startfree))-1);
                       sizefree+=startfree;
                     }
                   }
                   else if(sizefree>0) {
                     sizefree-=32;
                     if(sizefree<0) {
-                      bm->bitmap[cnt2]=~((1<<(-sizefree))-1);
+                      bm->bitmap[cnt2]=AROS_LONG2BE(~((1<<(-sizefree))-1));
                     }
                     else {
                       bm->bitmap[cnt2]=BITMAPFILL;
@@ -1132,7 +1132,7 @@ void mainloop(void) {
               clearcachebuffer(cb);
 
               rb=cb->data;
-              rb->bheader.id=AROS_LONG2BE(DOSTYPE_ID);
+              rb->bheader.id=DOSTYPE_ID;
               rb->bheader.ownblock=0;
 
               rb->version=STRUCTURE_VERSION;
@@ -1146,7 +1146,7 @@ void mainloop(void) {
               rb->lastbyteh=globals->byte_highh;
               rb->lastbyte=globals->byte_high;
 
-              rb->totalblocks=AROS_LONG2BE(globals->blocks_total);
+              rb->totalblocks=globals->blocks_total;
               rb->blocksize=globals->bytes_block;
 
               rb->bitmapbase=globals->block_bitmapbase;
@@ -1168,7 +1168,7 @@ void mainloop(void) {
 
                 _DEBUG(("ACTION_FORMAT: Creating the 2nd Root block\n"));
 
-                rb->bheader.ownblock=AROS_LONG2BE(globals->blocks_total-1);
+                rb->bheader.ownblock=globals->blocks_total-1;
 
                 setchecksum(cb);
                 errorcode=writecachebuffer(cb);
@@ -3307,7 +3307,7 @@ LONG readroots(void) {
   rb1=cb1->data;
   rb2=cb2->data;
 
-  if(checkchecksum(cb1)==DOSFALSE || AROS_BE2LONG(rb1->bheader.id)!=DOSTYPE_ID || AROS_BE2LONG(rb1->bheader.ownblock)!=0) {
+  if(checkchecksum(cb1)==DOSFALSE || rb1->bheader.id!=DOSTYPE_ID || rb1->bheader.ownblock!=0) {
     rb1okay=FALSE;
   }
   
@@ -3315,7 +3315,7 @@ LONG readroots(void) {
     checkchecksum(cb1),rb1->bheader.id, rb1->bheader.ownblock
     ));
 
-  if(checkchecksum(cb2)==DOSFALSE || AROS_BE2LONG(rb2->bheader.id)!=DOSTYPE_ID || AROS_BE2LONG(rb2->bheader.ownblock)!=AROS_BE2LONG(rb2->totalblocks)-1) {
+  if(checkchecksum(cb2)==DOSFALSE || rb2->bheader.id!=DOSTYPE_ID || rb2->bheader.ownblock!=rb2->totalblocks-1) {
     rb2okay=FALSE;
   }
 
@@ -3336,7 +3336,7 @@ LONG readroots(void) {
       return(ERROR_NOT_A_DOS_DISK);
     }
 
-    if(rb1->firstbyteh!=globals->byte_lowh || rb1->firstbyte!=globals->byte_low || rb1->lastbyteh!=globals->byte_highh || rb1->lastbyte!=globals->byte_high || AROS_BE2LONG(rb1->totalblocks)!=globals->blocks_total) {
+    if(rb1->firstbyteh!=globals->byte_lowh || rb1->firstbyte!=globals->byte_low || rb1->lastbyteh!=globals->byte_highh || rb1->lastbyte!=globals->byte_high || rb1->totalblocks!=globals->blocks_total) {
       return(ERROR_NOT_A_DOS_DISK);
     }
 
@@ -4038,7 +4038,7 @@ void setchecksum(struct CacheBuffer *cb) {
   struct fsBlockHeader *bh=cb->data;
 
   bh->checksum=0;    /* Important! */
-  bh->checksum=AROS_LONG2BE(-CALCCHECKSUM(globals->bytes_block,cb->data));
+  bh->checksum=-CALCCHECKSUM(globals->bytes_block,cb->data);
 }
 
 
@@ -4049,7 +4049,7 @@ LONG readcachebuffercheck(struct CacheBuffer **returnedcb,ULONG blckno,ULONG typ
 
   while((errorcode=readcachebuffer(returnedcb,blckno))==0) {
     bh=(*returnedcb)->data;
-    if(type!=0 && AROS_BE2LONG(bh->id)!=type) {
+    if(type!=0 && bh->id!=type) {
       dumpcachebuffers();
       outputcachebuffer(*returnedcb);
       emptycachebuffer(*returnedcb);
@@ -4086,7 +4086,7 @@ LONG readcachebuffercheck(struct CacheBuffer **returnedcb,ULONG blckno,ULONG typ
       }
       continue;
     }
-    if(AROS_BE2LONG(bh->ownblock)!=blckno) {
+    if(bh->ownblock!=blckno) {
       dumpcachebuffers();
       outputcachebuffer(*returnedcb);
       emptycachebuffer(*returnedcb);
@@ -4095,7 +4095,7 @@ LONG readcachebuffercheck(struct CacheBuffer **returnedcb,ULONG blckno,ULONG typ
                                         "has a block error in block %ld.\n"\
                                         "Expected was block %ld,\n"\
                                         "but the block says it is block %ld.",
-                                        "Reread|Cancel",AROS_BSTR_ADDR(globals->devnode->dn_Name),blckno,blckno,AROS_BE2LONG(bh->ownblock))<=0) {
+                                        "Reread|Cancel",AROS_BSTR_ADDR(globals->devnode->dn_Name),blckno,blckno,bh->ownblock)<=0) {
         return(INTERR_OWNBLOCK_WRONG);
       }
       continue;

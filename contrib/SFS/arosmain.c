@@ -277,10 +277,11 @@ D(bug("[asfs] open: %s\n", iofs->io_Union.io_OPEN_FILE.io_Filename));
                             EXCLUSIVE_LOCK :
                             SHARED_LOCK;
 
-D(bug("[asfs] open: ACTION_LOCATE_OBJECT %x %x %x\n", packet.dp_Arg1, packet.dp_Arg2, packet.dp_Arg3));
+D(bug("[asfs] open: ACTION_LOCATE_OBJECT %x %x %x result in ", packet.dp_Arg1, packet.dp_Arg2, packet.dp_Arg3));
 
                         sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                         error = packet.dp_Res2;
+D(bug(" %d\n", error));
                         if (error == 0)
                         {
                             new->handle = (void *)packet.dp_Res1;

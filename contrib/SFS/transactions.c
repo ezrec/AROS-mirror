@@ -216,8 +216,8 @@ LONG savetransaction(BLCK *firsttransactionblock) {
         }
         cb->blckno=blckno;
 
-        ts->bheader.id=AROS_LONG2BE(TRANSACTIONSTORAGE_ID);
-        ts->bheader.ownblock=AROS_LONG2BE(blckno);
+        ts->bheader.id=TRANSACTIONSTORAGE_ID;
+        ts->bheader.ownblock=blckno;
 
         done=fillwithoperations(ts,&o,&src,&length);
 
@@ -329,8 +329,8 @@ LONG checkfortransaction(void) {
   if((errorcode=readcachebuffer(&cb,globals->block_root+2))==0) {
     struct fsBlockHeader *bh=cb->data;
 
-    if(checkchecksum(cb)==DOSTRUE && AROS_BE2LONG(bh->ownblock)==globals->block_root+2) {
-      if(AROS_BE2LONG(bh->id)==TRANSACTIONFAILURE_ID) {
+    if(checkchecksum(cb)==DOSTRUE && bh->ownblock==globals->block_root+2) {
+      if(bh->id==TRANSACTIONFAILURE_ID) {
         struct fsTransactionFailure *tf=cb->data;
 
         /* A transaction failed to complete.. we'll need to re-do it. */
@@ -826,8 +826,8 @@ LONG removetransactionfailure(void) {
 
       clearcachebuffer(cb);
 
-      bh->id=AROS_LONG2BE(TRANSACTIONOK_ID);
-      bh->ownblock=AROS_LONG2BE(globals->block_root+2);
+      bh->id=TRANSACTIONOK_ID;
+      bh->ownblock=globals->block_root+2;
 
       cb->blckno=globals->block_root+2;
 
@@ -897,8 +897,8 @@ LONG flushtransaction(void) {
 
           clearcachebuffer(cb);
 
-          tf->bheader.id=AROS_LONG2BE(TRANSACTIONFAILURE_ID);
-          tf->bheader.ownblock=AROS_LONG2BE(globals->block_root+2);
+          tf->bheader.id=TRANSACTIONFAILURE_ID;
+          tf->bheader.ownblock=globals->block_root+2;
 
           tf->firsttransaction=firsttransactionblock;
 

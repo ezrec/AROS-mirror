@@ -18,7 +18,7 @@ struct fsNode {
   ULONG data;
 };
 
-#define NODECONTAINER_ID         MAKE_ID('N','D','C',' ')
+#define NODECONTAINER_ID         AROS_LONG2BE(MAKE_ID('N','D','C',' '))
 
 struct fsNodeContainer {
   struct fsBlockHeader bheader;

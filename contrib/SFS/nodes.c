@@ -187,8 +187,8 @@ LONG addnewnodelevel(BLCK noderoot, UWORD nodesize) {
 
       /* The newly allocated block will become a copy of the current root. */
 
-      newnc->bheader.id=AROS_LONG2BE(NODECONTAINER_ID);
-      newnc->bheader.ownblock=AROS_LONG2BE(newcb->blckno);
+      newnc->bheader.id=NODECONTAINER_ID;
+      newnc->bheader.ownblock=newcb->blckno;
       newnc->nodenumber=nc->nodenumber;
       newnc->nodes=nc->nodes;
       CopyMemQuick(nc->node, newnc->node, globals->bytes_block-sizeof(struct fsNodeContainer));
@@ -267,8 +267,8 @@ LONG createnodecontainer(ULONG nodenumber, ULONG nodes, BLCK *returned_block) {
   if((errorcode=allocadminspace(&cb))==0) {
     struct fsNodeContainer *nc=cb->data;
 
-    nc->bheader.id=AROS_LONG2BE(NODECONTAINER_ID);
-    nc->bheader.ownblock=AROS_LONG2BE(cb->blckno);
+    nc->bheader.id=NODECONTAINER_ID;
+    nc->bheader.ownblock=cb->blckno;
 
     nc->nodenumber=nodenumber;
     nc->nodes=nodes;

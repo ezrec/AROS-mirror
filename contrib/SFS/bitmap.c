@@ -250,7 +250,7 @@ LONG availablespace(BLCK block,ULONG maxneeded) {
   while(nextblock<maxbitmapblock && (errorcode=readcachebuffercheck(&cb,nextblock++,BITMAP_ID))==0) {
     b=cb->data;
 
-    if((bitend=bmffz(b->bitmap,longs,bitstart))>=0) {
+    if((bitend=bmffz(b->bitmap,longs,bitstart))<(32*longs)) {
       blocksfound+=bitend-bitstart;
       return(blocksfound);
     }
@@ -294,7 +294,7 @@ LONG allocatedspace(BLCK block,ULONG maxneeded) {
   while(nextblock<maxbitmapblock && (errorcode=readcachebuffercheck(&cb,nextblock++,BITMAP_ID))==0) {
     b=cb->data;
 
-    if((bitend=bmffo(b->bitmap,longs,bitstart))>=0) {
+    if((bitend=bmffo(b->bitmap,longs,bitstart))<(32*longs)) {
       blocksfound+=bitend-bitstart;
       return(blocksfound);
     }
