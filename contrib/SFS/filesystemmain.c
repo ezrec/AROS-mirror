@@ -2135,12 +2135,16 @@ void mainloop(void) {
                         ead->ed_Size=0;
                       }
                     case ED_TYPE:
+_DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, o->objectnode));
                       if((o->bits & OTYPE_LINK)!=0) {
                         ead->ed_Type=ST_SOFTLINK;
                       }
                       if((o->bits & OTYPE_DIR)==0) {
                         ead->ed_Type=ST_FILE;
                       }
+                      else if (o->objectnode == ROOTNODE) {
+                        ead->ed_Type = ST_ROOT;
+                        }
                       else {
                         ead->ed_Type=ST_USERDIR;
                       }
@@ -2910,7 +2914,11 @@ void fillfib(struct FileInfoBlock *fib,struct fsObject *o) {
   UBYTE *dest;
   UBYTE length;
 
-  if((o->bits & OTYPE_LINK)!=0) {
+  if (o->objectnode==ROOTNODE) {
+    fib->fib_DirEntryType=ST_ROOT;
+    fib->fib_Size=o->object.file.size;
+    fib->fib_NumBlocks=(o->object.file.size+globals->bytes_block-1) >> globals->shifts_block;
+  } else if((o->bits & OTYPE_LINK)!=0) {
     fib->fib_DirEntryType=ST_SOFTLINK;
 //    fib->fib_DirEntryType=ST_USERDIR;   // For compatibility with Diavolo 3.4 -> screw it, DOpus fails...
     fib->fib_Size=o->object.file.size;

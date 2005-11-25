@@ -668,7 +668,7 @@ UBYTE *validatepath(UBYTE *string) {
   }
 
   *d=0;
-
+  
   return(r);
 }
 

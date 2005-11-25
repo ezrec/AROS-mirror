@@ -14,7 +14,7 @@
 #ifdef DEBUG
 #undef DEBUG
 #endif
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 
 #include "asfsbase.h"
@@ -484,6 +484,9 @@ D(bug("[asfs] examine: error=%d, packet.dp_Res1=%p\n", error, packet.dp_Res1));
                         if (next<=end)
                         {
                             iofs->io_DirPos = fib.fib_DiskKey;
+                            
+//                            if (iofs->io_DirPos == 1) iofs->io_DirPos = 0;
+                            
 //kprintf("****************acdr examine: pos = %lx\n", iofs->io_DirPos);
 D(bug("[asfs] examine: pos=%d, mode=%d\n", iofs->io_DirPos, mode));
 
