@@ -72,7 +72,7 @@ inline WORD bfffo(ULONG data, WORD bitoffset)
 {
     ULONG mask = 0xffffffff >> bitoffset;
     data &= mask;
-    return data == 0 ? -1 : 32-fls(data);
+    return data == 0 ? 32 : 32-fls(data);
 }
 
 /* Finds last set bit in /data/ starting at /bitoffset/.  This function
@@ -143,7 +143,7 @@ LONG bmflo(ULONG *bitmap, LONG bitoffset)
     bitoffset = bitoffset & 0x1F;
 
     if (bitoffset != 0) {
-        if ((bit = bfflo(AROS_BE2LONG(*scan), bitoffset)) > 0) {
+        if ((bit = bfflo(AROS_BE2LONG(*scan), bitoffset)) >= 0) {
             return (bit + ((scan - bitmap) << 5));
         }
         scan--;
@@ -173,7 +173,7 @@ LONG bmflz(ULONG *bitmap, LONG bitoffset)
     bitoffset = bitoffset & 0x1F;
 
     if (bitoffset != 0) {
-        if ((bit = bfflz(AROS_BE2LONG(*scan), bitoffset)) > 0) {
+        if ((bit = bfflz(AROS_BE2LONG(*scan), bitoffset)) >= 0) {
             return (bit + ((scan - bitmap) << 5));
         }
         scan--;
@@ -207,7 +207,7 @@ LONG bmffo(ULONG *bitmap, LONG longs, LONG bitoffset)
     bitoffset = bitoffset & 0x1F;
 
     if (bitoffset != 0) {
-        if ((bit = bfffo(AROS_BE2LONG(*scan), bitoffset)) > 0) {
+        if ((bit = bfffo(AROS_BE2LONG(*scan), bitoffset)) < 32) {
             return (bit + ((scan - bitmap) << 5));
         }
         scan++;
@@ -240,7 +240,7 @@ LONG bmffz(ULONG *bitmap, LONG longs, LONG bitoffset)
     bitoffset = bitoffset & 0x1F;
 
     if (bitoffset != 0) {
-        if ((bit = bfffz(AROS_BE2LONG(*scan), bitoffset)) > 0) {
+        if ((bit = bfffz(AROS_BE2LONG(*scan), bitoffset)) < 32) {
             return (bit + ((scan - bitmap) << 5));
         }
         scan++;

@@ -4030,7 +4030,7 @@ void fillinfodata(struct InfoData *id) {
 
 BOOL checkchecksum(struct CacheBuffer *cb) {
 #ifdef CHECKCHECKSUMSALWAYS
-  if(CALCCHECKSUM(bytes_block,cb->data)==0) {
+  if(CALCCHECKSUM(globals->bytes_block,cb->data)==0) {
 #else
   if((cb->bits & CB_CHECKSUM)!=0 || CALCCHECKSUM(globals->bytes_block,cb->data)==0) {   //    -> copycachebuffer screws this up!
 #endif

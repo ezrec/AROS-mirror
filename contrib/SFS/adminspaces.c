@@ -33,7 +33,7 @@ LONG allocadminspace(struct CacheBuffer **returned_cb) {
     while(adminspaces-->0) {
       WORD bitoffset;
 
-      if(as->space!=0 && (bitoffset=bfffz(as->bits,0))>=0) {
+      if(as->space!=0 && (bitoffset=bfffz(as->bits,0)) < 32) {
         BLCK emptyadminblock=as->space+bitoffset;
 
         preparecachebuffer(cb);
