@@ -18,7 +18,7 @@
 
 extern void dreq(UBYTE *fmt, ... );
 
-LONG copybackiocache(struct IOCache *ioc);
+static LONG copybackiocache(struct IOCache *ioc);
 
 /* Internal structures */
 
@@ -97,7 +97,7 @@ void hashit(struct IOCache *ioc) {
 
 
 
-void dehash(struct IOCache *ioc) {
+static void dehash(struct IOCache *ioc) {
   if(ioc->blocks!=0) {
     if(ioc->nexthash!=0) {
       ioc->nexthash->prevhash=ioc->prevhash;
@@ -467,7 +467,7 @@ LONG validateiocache(struct IOCache *ioc, ULONG blockoffset, ULONG blocks) {
 
 
 
-LONG copybackiocache(struct IOCache *ioc) {
+static LONG copybackiocache(struct IOCache *ioc) {
   LONG errorcode=0;
   LONG dirtylow, dirtyhigh;
 
@@ -668,7 +668,7 @@ LONG readonwriteintocache(BLCK block, struct IOCache **returned_ioc) {
 
 
 
-LONG copybackoverlappingiocaches(BLCK block, ULONG blocks) {
+static LONG copybackoverlappingiocaches(BLCK block, ULONG blocks) {
   struct IOCache *ioc;
   BLCK lastblock;
   LONG errorcode=0;

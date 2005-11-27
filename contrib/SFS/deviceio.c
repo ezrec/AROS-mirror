@@ -54,7 +54,7 @@ void motoroff(void)
     DoIO((struct IORequest *)globals->ioreq);
 }
 
-UBYTE *errordescription(LONG errorcode)
+static UBYTE *errordescription(LONG errorcode)
 {
     if(errorcode==TDERR_NotSpecified || errorcode==TDERR_SeekError) {
         return("General device failure.\nThe disk is in an unreadable format.\n\n");
@@ -132,6 +132,7 @@ UBYTE isdiskpresent(void)
 }
 
 #ifdef __AROS__
+static
 AROS_UFH4(LONG, changeintserver,
     AROS_UFHA(ULONG, dummy, A0),
     AROS_UFHA(struct IntData *, intdata, A1),
@@ -147,7 +148,7 @@ AROS_UFH4(LONG, changeintserver,
     AROS_USERFUNC_EXIT
 }
 #else
-LONG __interrupt __saveds __asm changeintserver(register __a1 struct IntData *intdata)
+static LONG __interrupt __saveds __asm changeintserver(register __a1 struct IntData *intdata)
 {
     *intdata->diskchanged=1;
     Signal(intdata->task, intdata->signal);
@@ -321,7 +322,7 @@ void changegeometry(struct DosEnvec *de)
     #endif
 }
 
-struct fsIORequest *createiorequest(void)
+static struct fsIORequest *createiorequest(void)
 {
     struct fsIORequest *fsi;
 
@@ -694,7 +695,7 @@ LONG waittransfers(void)
     return(firsterrorcode);
 }
 
-LONG asynctransfer(UWORD action, UBYTE *buffer, ULONG blockoffset, ULONG blocklength)
+static LONG asynctransfer(UWORD action, UBYTE *buffer, ULONG blockoffset, ULONG blocklength)
 {
     /* Does asynchronous transfers, and returns before the transfer is completed.
        Use waittransfers() to wait for all transfers done with this function to

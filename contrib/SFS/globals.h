@@ -200,6 +200,7 @@ struct Globals {
     #define OPTBUFSIZE (131072)
 
     ULONG defrag_maxfilestoscan;
+    LONG debugreqs;
 };
 
 extern struct Globals *globals;

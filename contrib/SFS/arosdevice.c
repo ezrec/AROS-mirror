@@ -13,17 +13,15 @@
 extern const char name[];
 extern const char version[];
 extern const APTR inittab[4];
-extern void *const asfsfunctable[];
-extern const UBYTE asfsdatatable;
-extern struct ASFSBase *AROS_SLIB_ENTRY(init,asfsdev)();
-extern void AROS_SLIB_ENTRY(open,asfsdev)();
-extern BPTR AROS_SLIB_ENTRY(close,asfsdev)();
-extern BPTR AROS_SLIB_ENTRY(expunge,asfsdev)();
-extern int AROS_SLIB_ENTRY(null,asfsdev)();
-extern void AROS_SLIB_ENTRY(beginio,asfsdev)();
-extern LONG AROS_SLIB_ENTRY(abortio,asfsdev)();
+static struct ASFSBase *AROS_SLIB_ENTRY(init,asfsdev)();
+static void AROS_SLIB_ENTRY(open,asfsdev)();
+static BPTR AROS_SLIB_ENTRY(close,asfsdev)();
+static BPTR AROS_SLIB_ENTRY(expunge,asfsdev)();
+static int AROS_SLIB_ENTRY(null,asfsdev)();
+static void AROS_SLIB_ENTRY(beginio,asfsdev)();
+static LONG AROS_SLIB_ENTRY(abortio,asfsdev)();
 extern const char asfshandlerend;
-AROS_LP2(struct ASFSBase *, init,
+static AROS_LP2(struct ASFSBase *, init,
         AROS_LPA(struct ASFSBase *, asfsbase, D0),
         AROS_LPA(BPTR,             segList, A0),
         struct ExecBase *, SysBase, 0, asfsdev);
@@ -53,15 +51,9 @@ const struct Resident ASFS_resident=
 static const char name[]="sfs.handler";
 static const char version[]="$VER: sfs 1.84 (30.11.2005)\r\n";
 
-static const APTR inittab[4]=
-{
-        (APTR)sizeof(struct ASFSBase),
-        (APTR)asfsfunctable,
-        (APTR)&asfsdatatable,
-        &AROS_SLIB_ENTRY(init,asfsdev)
-};
+static const UBYTE asfsdatatable = 0;
 
-void *const asfsfunctable[]=
+static void *const asfsfunctable[]=
 {
         &AROS_SLIB_ENTRY(open,asfsdev),
         &AROS_SLIB_ENTRY(close,asfsdev),
@@ -72,8 +64,15 @@ void *const asfsfunctable[]=
         (void *)-1
 };
 
-const UBYTE asfsdatatable = 0;
+static const APTR inittab[4]=
+{
+        (APTR)sizeof(struct ASFSBase),
+        (APTR)asfsfunctable,
+        (APTR)&asfsdatatable,
+        &AROS_SLIB_ENTRY(init,asfsdev)
+};
 
+static
 AROS_LH2(struct ASFSBase *, init,
  AROS_LHA(struct ASFSBase *, asfsbase, D0),
  AROS_LHA(BPTR,             segList, A0),
@@ -145,6 +144,7 @@ AROS_LH2(struct ASFSBase *, init,
 #endif
 #define SysBase asfsbase->SysBase
 
+static
 AROS_LH3(void, open,
  AROS_LHA(struct IOFileSys *, iofs, A1),
  AROS_LHA(ULONG,              unitnum, D0),
@@ -178,6 +178,7 @@ AROS_LH3(void, open,
 #endif
 #define DOSBase asfsbase->DOSBase
 
+static
 AROS_LH0(BPTR, expunge, struct ASFSBase *, asfsbase, 3, asfsdev)
 {
         AROS_LIBFUNC_INIT
@@ -205,6 +206,7 @@ AROS_LH0(BPTR, expunge, struct ASFSBase *, asfsbase, 3, asfsdev)
         AROS_LIBFUNC_EXIT
 }
 
+static
 AROS_LH1(BPTR, close,
  AROS_LHA(struct IOFileSys *, iofs, A1),
       struct ASFSBase *, asfsbase, 2, asfsdev)
@@ -232,6 +234,7 @@ AROS_LH1(BPTR, close,
         AROS_LIBFUNC_EXIT
 }
 
+static
 AROS_LH0I(int, null, struct asfsbase *, asfsbase, 4, asfsdev)
 {
         AROS_LIBFUNC_INIT
@@ -239,6 +242,7 @@ AROS_LH0I(int, null, struct asfsbase *, asfsbase, 4, asfsdev)
         AROS_LIBFUNC_EXIT
 }
 
+static
 AROS_LH1(void, beginio,
  AROS_LHA(struct IOFileSys *, iofs, A1),
            struct ASFSBase *, asfsbase, 5, asfsdev)
@@ -253,6 +257,7 @@ AROS_LH1(void, beginio,
         AROS_LIBFUNC_EXIT
 }
 
+static
 AROS_LH1(LONG, abortio,
  AROS_LHA(struct IOFileSys *, iofs, A1),
            struct ASFSBase *, asfsbase, 6, asfsdev)

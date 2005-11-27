@@ -34,9 +34,9 @@ struct RBTreeNode {
 /* prototypes */
 
 void InsertNode(RBNODE *X);
-void DeleteNode(RBNODE *X);
+static void DeleteNode(RBNODE *X);
 void InsertFixup(RBNODE *X);
-void DeleteFixup(RBNODE *X);
+static void DeleteFixup(RBNODE *X);
 void RotateLeft(RBNODE *X);
 void RotateRight(RBNODE *X);
 RBNODE *FindNode(unsigned long data);
@@ -234,7 +234,7 @@ void RotateRight(RBNODE *X) {
   }
 }
 
-void DeleteNode(RBNODE *Z) {
+static void DeleteNode(RBNODE *Z) {
   RBNODE *X, *Y;
   NodeColor c;
 
@@ -371,7 +371,7 @@ void DeleteFixup(RBNODE *X) {
   X->color = BLACK;
 }
 
-RBNODE *FindClosestNode(unsigned long data) {
+static RBNODE *FindClosestNode(unsigned long data) {
   RBNODE *closest=0;
   RBNODE *current = ROOT;
 
@@ -435,7 +435,7 @@ RBNODE *FindNodeFrom(RBNODE *current,unsigned long data) {
 
 /* Call with FindAllNodes(ROOT,...); */
 
-void FindAllNodes(RBNODE *current,unsigned long data) {
+static void FindAllNodes(RBNODE *current,unsigned long data) {
 
  /************************************
   *  find all nodes containing Data  *

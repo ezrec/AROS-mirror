@@ -167,7 +167,7 @@ LONG freecontainer(BLCK noderoot, struct CacheBuffer *cb) {
 
 
 
-LONG addnewnodelevel(BLCK noderoot, UWORD nodesize) {
+static LONG addnewnodelevel(BLCK noderoot, UWORD nodesize) {
   struct CacheBuffer *cb;
   LONG errorcode;
 
@@ -258,7 +258,7 @@ LONG deletenode(BLCK noderoot, struct CacheBuffer *cb, struct fsNode *n, UWORD n
 
 
 
-LONG createnodecontainer(ULONG nodenumber, ULONG nodes, BLCK *returned_block) {
+static LONG createnodecontainer(ULONG nodenumber, ULONG nodes, BLCK *returned_block) {
   struct CacheBuffer *cb;
   LONG errorcode;
 

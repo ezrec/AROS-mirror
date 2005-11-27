@@ -65,7 +65,7 @@ LONG setfreeblocks(ULONG freeblocks) {
 
 
 
-BOOL enoughspace(ULONG blocks) {
+static BOOL enoughspace(ULONG blocks) {
   ULONG blocksfree;
 
   if(getfreeblocks(&blocksfree)!=0 || blocksfree-transactionspace() < blocks+ALWAYSFREE) {

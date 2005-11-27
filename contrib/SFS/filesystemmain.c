@@ -58,7 +58,7 @@
 #include "cachedio_protos.h"
 #include "deviceio_protos.h"
 
-LONG fillgap(BLCK key);
+static LONG fillgap(BLCK key);
 LONG step(void);
 
 #ifdef __AROS__
@@ -170,16 +170,17 @@ void initGlobals()
     globals->templockedobjectnode = 0;
     globals->internalrename = FALSE;
     globals->defrag_maxfilestoscan = 512;
+    globals->debugreqs=TRUE;
 
     globals->mask_debug = 0xffff;
 }
 
 /* Prototypes */
 
-struct DosPacket *getpacket(struct Process *);
-struct DosPacket *waitpacket(struct Process *);
-void returnpacket(LONG,LONG);
-void sdlhtask(void);
+static struct DosPacket *getpacket(struct Process *);
+static struct DosPacket *waitpacket(struct Process *);
+static void returnpacket(LONG,LONG);
+static void sdlhtask(void);
 
 LONG request(UBYTE *,UBYTE *,UBYTE *,APTR, ... );
 
@@ -191,8 +192,8 @@ void outputcachebuffer(struct CacheBuffer *cb);
 /* Prototypes of node related functions */
 
 LONG deleteextents(ULONG key);
-LONG findextentbnode(ULONG key,struct CacheBuffer **returned_cb,struct fsExtentBNode **returned_bnode);
-LONG createextentbnode(ULONG key,struct CacheBuffer **returned_cb,struct fsExtentBNode **returned_bnode);
+static LONG findextentbnode(ULONG key,struct CacheBuffer **returned_cb,struct fsExtentBNode **returned_bnode);
+static LONG createextentbnode(ULONG key,struct CacheBuffer **returned_cb,struct fsExtentBNode **returned_bnode);
 
 /* Prototypes of debug functions */
 
@@ -216,29 +217,29 @@ void notify(struct fsNotifyRequest *nr);
 UBYTE *fullpath(struct CacheBuffer *cbstart,struct fsObject *o);
 
 LONG initdisk(void);
-void deinitdisk(void);
+static void deinitdisk(void);
 
 LONG handlesimplepackets(struct DosPacket *packet);
-LONG dumppackets(struct DosPacket *packet,LONG);
-void dumppacket(void);
+static LONG dumppackets(struct DosPacket *packet,LONG);
+static void dumppacket(void);
 static void actioncurrentvolume(struct DosPacket *);
-void actionsamelock(struct DosPacket *);
+static void actionsamelock(struct DosPacket *);
 static void actiondiskinfo(struct DosPacket *);
-void fillinfodata(struct InfoData *);
-void fillfib(struct FileInfoBlock *,struct fsObject *);
-void diskchangenotify(ULONG class);
+static void fillinfodata(struct InfoData *);
+static void fillfib(struct FileInfoBlock *,struct fsObject *);
+static void diskchangenotify(ULONG class);
 
 /* Prototypes of high-level filesystem functions */
 
 LONG setfilesize(struct ExtFileLock *lock,ULONG bytes);
-LONG seek(struct ExtFileLock *lock,ULONG offset);
+static LONG seek(struct ExtFileLock *lock,ULONG offset);
 LONG seektocurrent(struct ExtFileLock *lock);
 LONG seekextent(struct ExtFileLock *lock,ULONG offset,struct CacheBuffer **returned_cb,struct fsExtentBNode **returned_ebn,ULONG *returned_extentoffset);
 void seekforward(struct ExtFileLock *lock, UWORD ebn_blocks, BLCK ebn_next, ULONG bytestoseek);
 LONG writetofile(struct ExtFileLock *lock, UBYTE *buffer, ULONG bytestowrite);
 
-LONG extendblocksinfile(struct ExtFileLock *lock,ULONG blocks);
-LONG addblocks(UWORD blocks, BLCK newspace, NODE objectnode, BLCK *io_lastextentbnode);
+static LONG extendblocksinfile(struct ExtFileLock *lock,ULONG blocks);
+static LONG addblocks(UWORD blocks, BLCK newspace, NODE objectnode, BLCK *io_lastextentbnode);
 LONG deletefileslowly(struct CacheBuffer *cbobject, struct fsObject *o);
                                                    
 void mainloop(void);
@@ -298,7 +299,7 @@ void dreq(UBYTE *fmt, ... );
 // #define STARTDEBUG
 
 // #ifdef STARTDEBUG
-  LONG debugreqs=TRUE;
+
 // #endif
 
 #ifdef __AROS__
@@ -2909,7 +2910,7 @@ _DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, o->objectnod
 
 
 
-void fillfib(struct FileInfoBlock *fib,struct fsObject *o) {
+static void fillfib(struct FileInfoBlock *fib,struct fsObject *o) {
   UBYTE *src;
   UBYTE *dest;
   UBYTE length;
@@ -2965,7 +2966,7 @@ void fillfib(struct FileInfoBlock *fib,struct fsObject *o) {
 
 
 
-struct DosPacket *getpacket(struct Process *p) {
+static struct DosPacket *getpacket(struct Process *p) {
   struct MsgPort *port=&p->pr_MsgPort;   /* get port of our process */
   struct Message *msg;
 
@@ -2979,7 +2980,7 @@ struct DosPacket *getpacket(struct Process *p) {
 
 
 
-struct DosPacket *waitpacket(struct Process *p) {
+static struct DosPacket *waitpacket(struct Process *p) {
   struct MsgPort *port=&p->pr_MsgPort;   /* get port of our process */
   struct Message *msg;
 
@@ -2992,7 +2993,7 @@ struct DosPacket *waitpacket(struct Process *p) {
 
 
 
-void returnpacket(LONG res1,LONG res2) {
+static void returnpacket(LONG res1,LONG res2) {
   struct Message *msg;
   struct MsgPort *replyport;
 
@@ -3014,7 +3015,7 @@ void returnpacket(LONG res1,LONG res2) {
 
 
 
-void returnpacket2(struct DosPacket *packet, LONG res1, LONG res2) {
+static void returnpacket2(struct DosPacket *packet, LONG res1, LONG res2) {
   struct Message *msg;
   struct MsgPort *replyport;
 
@@ -3118,7 +3119,7 @@ void dreq(UBYTE *fmt, ... ) {
   APTR args[4];
   UBYTE *fmt2;
 
-  if(debugreqs!=FALSE) {
+  if(globals->debugreqs!=FALSE) {
     args[0]=AROS_BSTR_ADDR(globals->devnode->dn_Name);
     args[1]=AROS_BSTR_ADDR(globals->startupmsg->fssm_Device);
     args[2]=(APTR)globals->startupmsg->fssm_Unit;
@@ -3141,7 +3142,7 @@ void dreq(UBYTE *fmt, ... ) {
         es.es_GadgetFormat="Continue|No more requesters";
 
         if(EasyRequestArgs(0,&es,0,args)==0) {
-          debugreqs=FALSE;
+          globals->debugreqs=FALSE;
         }
       }
 
@@ -3720,7 +3721,7 @@ _DEBUG(("AddDosEntry: dl_Device=%x dl_Unit=%x\n",vn->dl_Device,vn->dl_Unit));
 
 
 
-struct DosList *attemptlockdoslist(LONG tries, LONG delay) {
+static struct DosList *attemptlockdoslist(LONG tries, LONG delay) {
   struct DosList *dol;
   struct DosPacket *dp;
 
@@ -3757,7 +3758,7 @@ void removevolumenode(struct DosList *dol, struct DosList *vn) {
 }
 
 
-void deinitdisk() {
+static void deinitdisk() {
 
   /* This function flushes all caches, and then invalidates them.
      If succesful, this function then proceeds to either remove
@@ -3866,7 +3867,7 @@ LONG handlesimplepackets(struct DosPacket *packet) {
 
 
 
-LONG dumppackets(struct DosPacket *packet,LONG returncode) {
+static LONG dumppackets(struct DosPacket *packet,LONG returncode) {
   LONG type=packet->dp_Type;  /* After returnpacket, packet->dp_Type is invalid! */
 
   /* Routine which returns ERROR_NOT_A_DOS_DISK for all known
@@ -3928,7 +3929,7 @@ LONG dumppackets(struct DosPacket *packet,LONG returncode) {
 }
 
 
-void dumppacket() {
+static void dumppacket() {
   struct DosPacket *packet;
 
   /* routine which gets a packet and returns ERROR_NOT_A_DOS_DISK for all
@@ -3961,7 +3962,7 @@ static void actioncurrentvolume(struct DosPacket *packet) {
 
 
 
-void actionsamelock(struct DosPacket *packet) {
+static void actionsamelock(struct DosPacket *packet) {
   struct ExtFileLock *lock;
   struct ExtFileLock *lock2;
 
@@ -3989,7 +3990,7 @@ static void actiondiskinfo(struct DosPacket *packet) {
 
 
 
-void fillinfodata(struct InfoData *id) {
+static void fillinfodata(struct InfoData *id) {
   ULONG usedblocks;
 
   id->id_NumSoftErrors=globals->numsofterrors;
@@ -4221,7 +4222,7 @@ void fixlocks(struct GlobalHandle *gh,ULONG lastextentkey,ULONG lastextentoffset
 
 
 
-LONG extendblocksinfile(struct ExtFileLock *lock, ULONG blocks) {
+static LONG extendblocksinfile(struct ExtFileLock *lock, ULONG blocks) {
   BLCK lastextentbnode;
   LONG errorcode;
 
@@ -4582,7 +4583,7 @@ LONG seektocurrent(struct ExtFileLock *lock) {
 }
   
   
-LONG seek(struct ExtFileLock *lock,ULONG offset) {
+static LONG seek(struct ExtFileLock *lock,ULONG offset) {
   struct CacheBuffer *cb;
   struct fsExtentBNode *ebn;
   ULONG extentoffset;
@@ -4657,7 +4658,7 @@ LONG deleteextents(ULONG key) {
   
   
   
-LONG findextentbnode(ULONG key,struct CacheBuffer **returned_cb,struct fsExtentBNode **returned_bnode) {
+static LONG findextentbnode(ULONG key,struct CacheBuffer **returned_cb,struct fsExtentBNode **returned_bnode) {
   LONG errorcode;
   
   errorcode=findbnode(globals->block_extentbnoderoot,key,returned_cb,(struct BNode **)returned_bnode);
@@ -4681,7 +4682,7 @@ LONG findobjectnode(NODE nodeno,struct CacheBuffer **returned_cb,struct fsObject
 */
 
   
-LONG createextentbnode(ULONG key,struct CacheBuffer **returned_cb,struct fsExtentBNode **returned_bnode) {
+static inline LONG createextentbnode(ULONG key,struct CacheBuffer **returned_cb,struct fsExtentBNode **returned_bnode) {
   return(createbnode(globals->block_extentbnoderoot,key,returned_cb,(struct BNode **)returned_bnode));
 }
 
@@ -4939,7 +4940,7 @@ LONG writedata(ULONG newbytes, ULONG extentblocks, BLCK newspace, UBYTE *data) {
 
 
 
-LONG addblocks(UWORD blocks, BLCK newspace, NODE objectnode, BLCK *io_lastextentbnode) {
+static LONG addblocks(UWORD blocks, BLCK newspace, NODE objectnode, BLCK *io_lastextentbnode) {
   struct CacheBuffer *cb;
   struct fsExtentBNode *ebn;
   LONG errorcode;
@@ -5043,7 +5044,7 @@ LONG addblocks(UWORD blocks, BLCK newspace, NODE objectnode, BLCK *io_lastextent
 
 
 
-void diskchangenotify(ULONG class) {
+static void diskchangenotify(ULONG class) {
   struct IOStdReq *inputreq;
   struct MsgPort *inputport;
   struct InputEvent ie;
@@ -5711,7 +5712,7 @@ LONG truncateextent(BLCK key, LONG blocks) {
 
 
 
-LONG copy(BLCK source, BLCK dest, ULONG totblocks, UBYTE *optimizebuffer) {
+static LONG copy(BLCK source, BLCK dest, ULONG totblocks, UBYTE *optimizebuffer) {
   ULONG blocks;
   LONG errorcode=0;
 
@@ -5764,7 +5765,7 @@ LONG deleteextent(struct CacheBuffer *cb, struct fsExtentBNode *ebn) {
 
 
 
-WORD enough_for_add_moved(void) {
+static WORD enough_for_add_moved(void) {
   if(globals->defragmentlongs>5) {
     return TRUE;
   }
@@ -5857,7 +5858,7 @@ LONG moveextent(struct fsExtentBNode *ebn, BLCK dest, UWORD blocks) {
 
 
 
-LONG fillgap(BLCK key) {
+static LONG fillgap(BLCK key) {
   struct CacheBuffer *cb;
   struct fsExtentBNode *ebn;
   LONG errorcode;
@@ -6767,7 +6768,7 @@ LONG step(void) {
 #undef SysBase
 #undef DOSBase
 
-void sdlhtask(void) {
+static void sdlhtask(void) {
 #ifdef __AROS__
   struct ExecBase *SysBase=globals->sysBase;
 #else

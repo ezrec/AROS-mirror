@@ -32,16 +32,16 @@ extern void checknotifyforpath(UBYTE *path,UBYTE notifyparent);
 
 extern LONG deletefileslowly(struct CacheBuffer *cbobject, struct fsObject *o);
 
-LONG dehashobjectquick(NODE objectnode, UBYTE *name, NODE parentobjectnode);
+static LONG dehashobjectquick(NODE objectnode, UBYTE *name, NODE parentobjectnode);
 LONG simpleremoveobject(struct CacheBuffer *cb,struct fsObject *o);
 LONG locatelockableparent(struct ExtFileLock *lock,UBYTE *path,struct CacheBuffer **returned_cb,struct fsObject **returned_o);
-void copyobject(struct fsObject *o2,struct fsObject *o);
+static void copyobject(struct fsObject *o2,struct fsObject *o);
 LONG findobjectspace(struct CacheBuffer **io_cb,struct fsObject **io_o,ULONG bytesneeded);
-UBYTE *emptyspaceinobjectcontainer(struct fsObjectContainer *oc);
+static UBYTE *emptyspaceinobjectcontainer(struct fsObjectContainer *oc);
 WORD objectsize(struct fsObject *o);
 UBYTE *getcomment(struct fsObject *o);
-WORD changeobjectsize(struct CacheBuffer *cb, struct fsObject *o, WORD bytes);
-LONG deleteobjectnode(NODE objectnode);
+static WORD changeobjectsize(struct CacheBuffer *cb, struct fsObject *o, WORD bytes);
+static LONG deleteobjectnode(NODE objectnode);
 
 
 
@@ -145,7 +145,7 @@ LONG getrecycledinfo(ULONG *returned_deletedfiles, ULONG *returned_deletedblocks
 
 
 
-LONG safedeleteobjectquick(struct CacheBuffer *cb, struct fsObject *o, WORD sendnotify) {
+static LONG safedeleteobjectquick(struct CacheBuffer *cb, struct fsObject *o, WORD sendnotify) {
   struct CacheBuffer *cbdd;
   struct fsObject *odd;
   UBYTE *s=globals->string2;
@@ -296,7 +296,7 @@ BOOL cleanupdeletedfiles(void) {
 
 
 
-LONG deleteobjectquick(struct CacheBuffer *cb, struct fsObject *o, WORD sendnotify) {
+static LONG deleteobjectquick(struct CacheBuffer *cb, struct fsObject *o, WORD sendnotify) {
   UWORD bits=o->bits;
   BLCK hashblckno=o->object.dir.hashtable;
   BLCK extentbnode=o->object.file.data;
@@ -577,7 +577,7 @@ LONG simpleremoveobject(struct CacheBuffer *cb, struct fsObject *o) {
 
 
 
-LONG dehashobjectquick(NODE objectnode, UBYTE *name, NODE parentobjectnode) {
+static LONG dehashobjectquick(NODE objectnode, UBYTE *name, NODE parentobjectnode) {
   struct CacheBuffer *cb;
   struct fsObject *o;
   LONG errorcode;
@@ -673,7 +673,7 @@ LONG dehashobjectquick(NODE objectnode, UBYTE *name, NODE parentobjectnode) {
 
 
 
-LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o, UBYTE *objectname, ULONG tags, ... ) {
+static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o, UBYTE *objectname, ULONG tags, ... ) {
   struct CacheBuffer *cb=*io_cb;
   struct fsObject *o=*io_o;
   LONG errorcode;
@@ -899,7 +899,7 @@ LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o, UBYTE 
 
 
 
-void copyobject(struct fsObject *o2,struct fsObject *o) {
+static void copyobject(struct fsObject *o2,struct fsObject *o) {
   o->objectnode=o2->objectnode;
   o->owneruid=o2->owneruid;
   o->ownergid=o2->ownergid;
@@ -1398,7 +1398,7 @@ LONG findobjectspace(struct CacheBuffer **io_cb, struct fsObject **io_o, ULONG b
 
 
 
-LONG deleteobjectnode(NODE objectnode) {
+static LONG deleteobjectnode(NODE objectnode) {
   struct CacheBuffer *cb;
   struct fsObjectNode *on;
   LONG errorcode;
@@ -1727,7 +1727,7 @@ WORD isobject(struct fsObject *o, struct fsObjectContainer *oc) {
 
 
 
-UBYTE *emptyspaceinobjectcontainer(struct fsObjectContainer *oc) {
+static UBYTE *emptyspaceinobjectcontainer(struct fsObjectContainer *oc) {
   struct fsObject *o=oc->object;
   UBYTE *endadr;
 
@@ -1932,7 +1932,7 @@ LONG renameobject2(struct CacheBuffer *cb, struct fsObject *o, struct CacheBuffe
 
 
 
-WORD changeobjectsize(struct CacheBuffer *cb, struct fsObject *o, WORD bytes) {
+static WORD changeobjectsize(struct CacheBuffer *cb, struct fsObject *o, WORD bytes) {
   struct fsObjectContainer *oc=cb->data;
   WORD currentobjectsize;
   WORD newobjectsize;

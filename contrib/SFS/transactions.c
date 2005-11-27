@@ -134,7 +134,7 @@ void cleanuptransactions() {
 
 
 
-LONG fillwithoperations(struct fsTransactionStorage *ts,struct Operation **o,UBYTE **src,LONG *length) {
+static LONG fillwithoperations(struct fsTransactionStorage *ts,struct Operation **o,UBYTE **src,LONG *length) {
   LONG bytesleft=globals->bytes_block-sizeof(struct fsTransactionStorage);
   LONG copylength;
   UBYTE *dest=ts->data;
@@ -377,7 +377,7 @@ LONG checkfortransaction(void) {
 
 
 
-void combineoperations(void) {
+static void combineoperations(void) {
   struct Operation *o;
 
   /* Combine operations will combine the operations of the current

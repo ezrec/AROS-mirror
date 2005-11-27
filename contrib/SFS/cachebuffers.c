@@ -40,7 +40,7 @@ LONG initcachebuffers(void) {
 
 
 
-void checkcb(struct CacheBuffer *cb,UBYTE *string) {
+static void checkcb(struct CacheBuffer *cb,UBYTE *string) {
 //  if(cb->id!=0x4A48 || cb->data!=&cb->attached_data[0] || (cb->bits & (CB_ORIGINAL|CB_EMPTY))==(CB_ORIGINAL|CB_EMPTY) || (cb->bits & (CB_ORIGINAL|CB_LATEST))==(CB_ORIGINAL|CB_LATEST) || (cb->bits & (CB_ORIGINAL|CB_LATEST|CB_EMPTY))==CB_EMPTY) {
   if(cb->id!=0x4A48 || cb->data!=&cb->attached_data[0] || (cb->bits & (CB_ORIGINAL|CB_EMPTY))==(CB_ORIGINAL|CB_EMPTY) || (cb->bits & (CB_ORIGINAL|CB_LATEST|CB_EMPTY))==CB_EMPTY) {
 
@@ -415,7 +415,7 @@ struct CacheBuffer *saveoriginalcachebuffer(struct CacheBuffer *cb) {
 
 
 
-LONG compresscachebuffer(struct CacheBuffer *cb_org,struct CacheBuffer *cb_new) {
+static LONG compresscachebuffer(struct CacheBuffer *cb_org,struct CacheBuffer *cb_new) {
   UWORD length;
   UBYTE bits=0;
 
@@ -600,7 +600,7 @@ void dumpcachebuffer(struct CacheBuffer *cb) {
 
 
 
-void dumpcachebuffers3(void) {
+static void dumpcachebuffers3(void) {
   struct CacheBuffer *cb;
 
   cb=(struct CacheBuffer *)globals->cblrulist.mlh_Head;
@@ -735,7 +735,7 @@ void dumpcachebuffers(void) {
 
 
 
-void dumpcachebuffers2(void) {
+static void dumpcachebuffers2(void) {
   struct CacheBuffer *cb;
   ULONG cnt=0;
 

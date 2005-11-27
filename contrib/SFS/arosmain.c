@@ -39,6 +39,7 @@ static const ULONG sizes[]=
 
 #undef SysBase
 /* entry point for the packet style process */
+static
 AROS_UFH3(void, ASFSOldEntry,
     AROS_UFHA(STRPTR, argstr, A0),
     AROS_UFHA(ULONG, arglen, D0),
@@ -47,12 +48,8 @@ AROS_UFH3(void, ASFSOldEntry,
 {
     AROS_USERFUNC_INIT
 
-D(bug("ASFSOldEntry\n"));
-
     /* Wait until global for this process is setup */
     Wait(SIGBREAKF_CTRL_F);
-
-D(bug("ASFSOldEntry calling main program with SysBase=%p Globals=%p\n",SysBase,globals));
 
     mainprogram(SysBase);
     AROS_USERFUNC_EXIT
@@ -63,6 +60,7 @@ D(bug("ASFSOldEntry calling main program with SysBase=%p Globals=%p\n",SysBase,g
 	we may loose it on every task switch so set it up here
 	before switching the task
 */
+static
 AROS_UFH1(void, ASFS_Launch,
     AROS_UFHA(struct ExecBase *, SysBase, A6)
 )
@@ -84,7 +82,7 @@ AROS_UFH1(void, ASFS_Launch,
 #endif
 #define DOSBase asfsbase->DOSBase
 
-void sendPacket(struct ASFSBase *asfsbase, struct DosPacket *packet, struct MsgPort *mp)
+static void sendPacket(struct ASFSBase *asfsbase, struct DosPacket *packet, struct MsgPort *mp)
 {
     packet->dp_Link->mn_Node.ln_Name = (STRPTR)packet;
     packet->dp_Port = &asfsbase->prport;
@@ -93,7 +91,7 @@ void sendPacket(struct ASFSBase *asfsbase, struct DosPacket *packet, struct MsgP
     GetMsg(&asfsbase->prport);
 }
 
-void AddFileSystemTask(struct ASFSBase *asfsbase, struct IOFileSys *iofs)
+static void AddFileSystemTask(struct ASFSBase *asfsbase, struct IOFileSys *iofs)
 {
     struct ASFSDeviceInfo   *device;
     struct Process 	    *proc;
