@@ -1,4 +1,0 @@
-FROM LIB:c.o "BOOT:Work/SFSdefragmentGUI/SFSdefragmentGUI.o"
-TO "BOOT:Work/SFSdefragmentGUI/SFSdefragmentGUI"
-LIB LIB:sc.lib LIB:amiga.lib
-
