@@ -1,6 +1,0 @@
-# SMakeFile for FileSystemMain.c
-#
-# OptimizerGlobal
-
-SFSfindobjects: SFSfindobjects.c asmsupport.o
-  SC:C/SC SFSfindobjects.c asmsupport.o

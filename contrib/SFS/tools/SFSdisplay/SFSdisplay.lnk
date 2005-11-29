@@ -1,4 +1,0 @@
-FROM LIB:c.o "SFSdisplay.o"+"asmsupport.o"
-TO "SFSdisplay"
-LIB LIB:sc.lib LIB:amiga.lib
-
