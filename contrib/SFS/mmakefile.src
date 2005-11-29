@@ -20,6 +20,8 @@ FILES := 	adminspaces \
 
 USER_CFLAGS := -DAROS_KERNEL
 
+#MM contrib-sfs: contrib-sfs-c
+
 %build_module_macro mmake=contrib-sfs \
 	modname=sfs modtype=handler \
 	initfile=arosdevice files=$(FILES) \

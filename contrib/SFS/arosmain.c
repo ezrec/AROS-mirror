@@ -18,6 +18,7 @@
 #include <aros/debug.h>
 
 #include "asfsbase.h"
+#include "packets.h"
 #include "globals.h"
 #include "aros_stuff.h"
 #include "locks.h"
@@ -136,7 +137,8 @@ D(bug("AddFileSystemTask\n"));
 		    node->proc = proc;
 		    device->taskmp = &proc->pr_MsgPort;
 		    packet.dp_Link = &msg;
-		    packet.dp_Arg2 = (IPTR)NULL;
+		    packet.dp_Arg2 = (IPTR)MKBADDR(iofs->io_Union.io_OpenDevice.io_DosName);
+//            packet.dp_Arg2 = (IPTR)NULL;
 //		    packet.dp_Arg3 = &device->pseudoDevNode;
 		    device->fssm.fssm_Unit = iofs->io_Union.io_OpenDevice.io_Unit;
 		    device->fssm.fssm_Device = MKBADDR(iofs->io_Union.io_OpenDevice.io_DeviceName);
@@ -800,6 +802,13 @@ D(bug("[asfs] the next one\n"));
                 break;
 #endif
 
+            case (UWORD)SFS_SPECIFIC_MESSAGE:
+                iofs->io_PacketEmulation->dp_Link = &msg;
+                sendPacket(asfsbase, iofs->io_PacketEmulation, asfshandle->device->taskmp);
+                retval = iofs->io_PacketEmulation->dp_Res1;
+                error = iofs->io_PacketEmulation->dp_Res2;
+                break;
+                
             default:
                 D(bug("[acdr] unkown fsa %d\n", iofs->IOFS.io_Command));
                 retval = DOSFALSE;

@@ -1,0 +1,4 @@
+FROM LIB:c.o "SFSchecksum.o"+"asmsupport.o"
+TO "SFSchecksum"
+LIB LIB:sc.lib LIB:amiga.lib
+

@@ -1,0 +1,8 @@
+# Copyright © 2003, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 23655 2005-10-04 18:45:31Z stegerg $
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-sfs-c: contrib-sfs-c-setcache
+
+%common

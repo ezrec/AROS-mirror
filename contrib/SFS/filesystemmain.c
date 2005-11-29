@@ -296,22 +296,20 @@ LONG req(UBYTE *fmt, UBYTE *gads, ... );
 LONG req_unusual(UBYTE *fmt, ... );
 void dreq(UBYTE *fmt, ... );
 
-// #define STARTDEBUG
-
-// #ifdef STARTDEBUG
-
-// #endif
+#define STARTDEBUG
 
 #ifdef __AROS__
 #undef SysBase
 LONG mainprogram(struct ExecBase *SysBase) {
+    {
 #else
 LONG __saveds mainprogram() {
-#endif
-  {
+      {
     ULONG reslen;
     APTR old_a4;
     APTR newdata;
+    
+#endif
 
   D(bug("Filesystem main\n"));
   
@@ -356,7 +354,7 @@ LONG __saveds mainprogram() {
     globals->startupmsg=BADDR(globals->devnode->dn_Startup);
 #else
     globals->startupmsg=BADDR(globals->packet->dp_Arg3);
-    globals->devnode->dn_Name = "??name??";
+    globals->devnode->dn_Name = BADDR(globals->packet->dp_Arg2);
 #endif
   D(bug("devnode = %p\n", globals->devnode));
   D(bug("startupmsg = %p\n", globals->startupmsg));

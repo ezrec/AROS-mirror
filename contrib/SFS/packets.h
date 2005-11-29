@@ -1,6 +1,10 @@
 #ifndef _PACKETS_H
 #define _PACKETS_H
 
+#ifdef __AROS__
+#define SFS_SPECIFIC_MESSAGE    0xff00
+#endif
+
 #define SFS_PACKET_BASE         (0xf00000)
 
 #define SFS_INQUIRY             (SFS_PACKET_BASE + 0x11000)

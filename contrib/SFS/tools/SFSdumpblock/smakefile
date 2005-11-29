@@ -1,0 +1,6 @@
+# SMakeFile for SFSdumpblock.c
+#
+# OptimizerGlobal
+
+sfsdumpblock: sfsdumpblock.c /fs/deviceio.o /fs/cachedio.o /fs/asmsupport.o
+  SC:C/SC sfsdumpblock.c /fs/deviceio.o /fs/cachedio.o /fs/asmsupport.o

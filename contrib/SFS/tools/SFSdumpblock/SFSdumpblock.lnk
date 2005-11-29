@@ -1,0 +1,4 @@
+FROM LIB:c.o "SFSdumpblock.o"+"/fs/deviceio.o"+"/fs/cachedio.o"+"/fs/asmsupport.o"
+TO "SFSdumpblock"
+LIB LIB:sc.lib LIB:amiga.lib
+

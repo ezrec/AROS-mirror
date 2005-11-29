@@ -1,0 +1,6 @@
+# SMakeFile for FileSystemMain.c
+#
+# OptimizerGlobal
+
+SFSdisplay: SFSdisplay.c asmsupport.o
+  SC:C/SC SFSdisplay.c asmsupport.o

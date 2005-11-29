@@ -1,0 +1,4 @@
+FROM LIB:c.o "BOOT:Work/SFSformat/sfsformat.o"
+TO "BOOT:Work/SFSformat/sfsformat"
+LIB LIB:sc.lib LIB:amiga.lib
+

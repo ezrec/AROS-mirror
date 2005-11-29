@@ -1,0 +1,6 @@
+# SMakeFile for SFSchecksum.c
+#
+# OptimizerGlobal
+
+sfschecksum: sfschecksum.c asmsupport.o
+  SC:C/SC sfschecksum.c asmsupport.o

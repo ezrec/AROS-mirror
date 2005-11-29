@@ -1,0 +1,6 @@
+# SMakeFile for SFScheck.c
+#
+# OptimizerGlobal
+
+sfscheck: sfscheck.c /fs/deviceio.o /fs/cachedio.o asmsupport.o
+  SC:C/SC sfscheck.c /fs/deviceio.o /fs/cachedio.o asmsupport.o
