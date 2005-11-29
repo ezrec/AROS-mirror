@@ -1,4 +1,0 @@
-FROM LIB:c.o "SFScheck.o"+"/fs/deviceio.o"+"/fs/cachedio.o"+"asmsupport.o"
-TO "SFScheck"
-LIB LIB:sc.lib LIB:amiga.lib
-
