@@ -7,9 +7,40 @@
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <utility/tagitem.h>
-#include "/fs/packets.h"
-#include "/fs/query.h"
+#include "../../packets.h"
+#include "../../query.h"
 #include <stdio.h>
+
+#ifdef __AROS__
+#include <dos/filesystem.h>
+#endif
+
+#include "../../asmsupport.c"
+#undef SysBase
+#undef IntuitionBase
+#undef DOSBase
+
+#ifdef __AROS__
+#define __AMIGADATE__   "(29.11.2005)"
+
+#include "../dosdoio.c"
+
+BYTE AROS_DoPkt(struct IOFileSys *iofs, LONG action, LONG Arg1, LONG Arg2, LONG Arg3, LONG Arg4, LONG Arg5)
+{
+    iofs->IOFS.io_Command = SFS_SPECIFIC_MESSAGE;
+    iofs->io_PacketEmulation->dp_Type = action;
+    iofs->io_PacketEmulation->dp_Arg1 = Arg1;
+    iofs->io_PacketEmulation->dp_Arg2 = Arg2;
+    iofs->io_PacketEmulation->dp_Arg3 = Arg3;
+    iofs->io_PacketEmulation->dp_Arg4 = Arg4;
+    iofs->io_PacketEmulation->dp_Arg5 = Arg5;
+    
+    DosDoIO((struct IORequest *)iofs, SysBase);
+    
+    return iofs->io_PacketEmulation->dp_Res1;
+}
+#else
+#endif 
 
 /* Note to people who wish to use this source:
    -------------------------------------------
@@ -50,16 +81,12 @@ ULONG lastread[200/5];
 ULONG lastwritten[200/5];
 ULONG lastblocks[200/5];
 
-LONG bmffo(ULONG *bitmap,LONG longs,LONG bitoffset);
-LONG bmffz(ULONG *bitmap,LONG longs,LONG bitoffset);
-LONG bmset(ULONG *bitmap,LONG longs,LONG bitoffset,LONG bits);
-LONG bmclr(ULONG *bitmap,LONG longs,LONG bitoffset,LONG bits);
 void render(ULONG block, ULONG blocks, WORD pen);
 void recalc(ULONG blocks_total, WORD w, WORD h);
 void drawrect(UWORD x, UWORD y, UWORD w, UWORD h, WORD pen);
 void initfield(ULONG blocks_total);
 
-void main() {
+int main() {
   struct RDArgs *readarg;
   UBYTE template[]="DEVICE/A,DEBUG/S\n";
   WORD exit=FALSE;
@@ -75,6 +102,9 @@ void main() {
     struct MsgPort *msgport;
     struct DosList *dl;
     UBYTE *devname=arglist.name;
+#ifdef __AROS__
+    struct IOFileSys *IOFS;
+#endif
 
     while(*devname!=0) {
       if(*devname==':') {
@@ -88,7 +118,15 @@ void main() {
     if((dl=FindDosEntry(dl, arglist.name, LDF_DEVICES))!=0) {
       LONG errorcode;
 
-      msgport=dl->dol_Task;
+#ifdef __AROS__
+        msgport=CreateMsgPort();
+        IOFS = (struct IOFileSys *)CreateIORequest(msgport, sizeof(struct IOFileSys));
+        IOFS->io_PacketEmulation = AllocVec(sizeof(struct DosPacket), MEMF_PUBLIC|MEMF_CLEAR);
+        IOFS->IOFS.io_Device = dl->dol_Device;
+        IOFS->IOFS.io_Unit   = dl->dol_Unit;
+#else
+        msgport=dl->dol_Task;
+#endif
       UnLockDosList(LDF_DEVICES|LDF_READ);
 
       {
@@ -96,14 +134,26 @@ void main() {
                                ASQ_VERSION, 0,
                                TAG_END, 0};
 
+#ifdef __AROS__
+        if((errorcode=AROS_DoPkt(IOFS, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0))!=DOSFALSE) {
+#else
         if((errorcode=DoPkt(msgport, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0))!=DOSFALSE) {
+#endif
           ULONG blocks_total=tags[0].ti_Data;
 
           if(tags[1].ti_Data >= (1<<16) + 83) {
 
+#ifdef __AROS__
+            if((errorcode=AROS_DoPkt(IOFS, ACTION_SFS_DEFRAGMENT_INIT, 0, 0, 0, 0, 0))!=DOSFALSE) {
+#else
             if((errorcode=DoPkt(msgport, ACTION_SFS_DEFRAGMENT_INIT, 0, 0, 0, 0, 0))!=DOSFALSE) {
+#endif
               if((bitmap=AllocVec(blocks_total / 8 + 32, MEMF_CLEAR))!=0) {
+#ifdef __AROS__
+                if((errorcode=AROS_DoPkt(IOFS, ACTION_SFS_READ_BITMAP, (LONG)bitmap, 0, blocks_total, 0, 0))!=DOSFALSE) {
+#else
                 if((errorcode=DoPkt(msgport, ACTION_SFS_READ_BITMAP, (LONG)bitmap, 0, blocks_total, 0, 0))!=DOSFALSE) {
+#endif
                   if((mywindow=OpenWindowTags(0, WA_Width, dw+16,
                                                  WA_Height, dh+16,
                                                  WA_MinWidth, 100,
@@ -134,7 +184,11 @@ void main() {
                       UWORD class,code,qualifier;
 
                       if(defragmented==FALSE) {
+#ifdef __AROS__
+                        if((errorcode=AROS_DoPkt(IOFS, ACTION_SFS_DEFRAGMENT_STEP, (LONG)steps, 190, 0, 0, 0))!=DOSFALSE) {
+#else
                         if((errorcode=DoPkt(msgport, ACTION_SFS_DEFRAGMENT_STEP, (LONG)steps, 190, 0, 0, 0))!=DOSFALSE) {
+#endif
                           struct DefragmentStep *ds=(struct DefragmentStep *)steps;
                           WORD e;
 
@@ -149,7 +203,7 @@ void main() {
                           e=0;
 
                           while(ds->id!=0) {
-                            if(ds->id==MAKE_ID('M','O','V','E') && ds->length==3) {
+                            if(ds->id==AROS_BE2LONG(MAKE_ID('M','O','V','E')) && ds->length==3) {
                               render(ds->data[1], ds->data[0], 2);
                               render(ds->data[2], ds->data[0], 3);
                               bmclr(bitmap, (blocks_total+31)/32, ds->data[2], ds->data[0]);
@@ -164,7 +218,7 @@ void main() {
                               lastblocks[e]=ds->data[0];
                               e++;
                             }
-                            else if(ds->id==MAKE_ID('D','O','N','E')) {
+                            else if(ds->id==AROS_BE2LONG(MAKE_ID('D','O','N','E'))) {
                               defragmented=TRUE;
                               break;
                             }
@@ -215,6 +269,11 @@ void main() {
           }
         }
       }
+#ifdef __AROS__
+                FreeVec(IOFS->io_PacketEmulation);
+                DeleteIORequest((struct IORequest *)IOFS);
+                DeleteMsgPort(msgport);
+#endif  
     }
     else {
       VPrintf("Couldn't find device '%s:'.\n",&arglist.name);
@@ -300,238 +359,16 @@ void render(ULONG block, ULONG blocks, WORD pen) {
 
 
 
-WORD bfffo(ULONG data,WORD bitoffset) {
-  ULONG bitmask=1<<(31-bitoffset);
-
-  /** Finds first set bit in /data/ starting at /bitoffset/.  This function
-      considers the MSB to be the first bit. */
-
-  do {
-    if((data & bitmask)!=0) {
-      return(bitoffset);
-    }
-    bitoffset++;
-    bitmask>>=1;
-  } while(bitmask!=0);
-
-  return(-1);
-}
 
 
 
-WORD bfffz(ULONG data,WORD bitoffset) {
-  ULONG bitmask=1<<(31-bitoffset);
-
-  /** Finds first zero bit in /data/ starting at /bitoffset/.  This function
-      considers the MSB to be the first bit. */
-
-  do {
-    if((data & bitmask)==0) {
-      return(bitoffset);
-    }
-    bitoffset++;
-    bitmask>>=1;
-  } while(bitmask!=0);
-
-  return(-1);
-}
 
 
 
-LONG bmffo(ULONG *bitmap,LONG longs,LONG bitoffset) {
-  ULONG *scan=bitmap;
-  ULONG longoffset;
-  WORD bit;
-
-  /* This function finds the first set bit in a region of memory starting
-     with /bitoffset/.  The region of memory is /longs/ longs long.  It
-     returns the bitoffset of the first set bit it finds. */
-
-  longoffset=bitoffset>>5;
-  longs-=longoffset;
-  scan+=longoffset;
-
-  bitoffset=bitoffset & 0x1F;
-
-  if(bitoffset!=0) {
-    if((bit=bfffo(*scan,bitoffset))>=0) {
-      return(bit+((scan-bitmap)<<5));
-    }
-
-    scan++;
-    longs--;
-  }
-
-  while(longs-->0) {
-    if(*scan++!=0) {
-      return(bfffo(*--scan,0)+((scan-bitmap)<<5));
-    }
-  }
-
-  return(-1);
-}
 
 
 
-LONG bmffz(ULONG *bitmap,LONG longs,LONG bitoffset) {
-  ULONG *scan=bitmap;
-  ULONG longoffset;
-  WORD bit;
 
-  /* This function finds the first unset bit in a region of memory starting
-     with /bitoffset/.  The region of memory is /longs/ longs long.  It
-     returns the bitoffset of the first unset bit it finds. */
-
-  longoffset=bitoffset>>5;
-  longs-=longoffset;
-  scan+=longoffset;
-
-  bitoffset=bitoffset & 0x1F;
-
-  if(bitoffset!=0) {
-    if((bit=bfffz(*scan,bitoffset))>=0) {
-      return(bit+((scan-bitmap)<<5));
-    }
-
-    scan++;
-    longs--;
-  }
-
-  while(longs-->0) {
-    if(*scan++!=0xFFFFFFFF) {
-      return(bfffz(*--scan,0)+((scan-bitmap)<<5));
-    }
-  }
-
-  return(-1);
-}
-
-
-
-ULONG bfset(ULONG data,WORD bitoffset,WORD bits) {
-  ULONG mask;
-
-  /** Sets /bits/ bits starting from /bitoffset/ in /data/.
-      /bits/ must be between 1 and 32. */
-
-  /* we want a mask which sets /bits/ bits starting from bit 31 */
-
-  mask=~((1<<(32-bits))-1);
-  mask>>=bitoffset;
-
-  return(data | mask);
-}
-
-
-
-ULONG bfclr(ULONG data,WORD bitoffset,WORD bits) {
-  ULONG mask;
-
-  /* we want a mask which sets /bits/ bits starting from bit 31 */
-
-  mask=~((1<<(32-bits))-1);
-  mask>>=bitoffset;
-
-  return(data & ~mask);
-}
-
-
-
-LONG bmclr(ULONG *bitmap,LONG longs,LONG bitoffset,LONG bits) {
-  ULONG *scan=bitmap;
-  ULONG longoffset;
-  LONG orgbits=bits;
-
-  /* This function clears /bits/ bits in a region of memory starting
-     with /bitoffset/.  The region of memory is /longs/ longs long.  If
-     the region of memory is too small to clear /bits/ bits then this
-     function exits after having cleared all bits till the end of the
-     memory region.  In any case it returns the number of bits which
-     were actually cleared. */
-
-  longoffset=bitoffset>>5;
-  longs-=longoffset;
-  scan+=longoffset;
-
-  bitoffset=bitoffset & 0x1F;
-
-  if(bitoffset!=0) {
-    if(bits<32) {
-      *scan=bfclr(*scan,bitoffset,bits);
-    }
-    else {
-      *scan=bfclr(*scan,bitoffset,32);
-    }
-
-    scan++;
-    longs--;
-    bits-=32-bitoffset;
-  }
-
-  while(bits>0 && longs-->0) {
-    if(bits>31) {
-      *scan++=0;
-    }
-    else {
-      *scan=bfclr(*scan,0,bits);
-    }
-    bits-=32;
-  }
-
-  if(bits<=0) {
-    return(orgbits);
-  }
-  return(orgbits-bits);
-}
-
-
-
-LONG bmset(ULONG *bitmap,LONG longs,LONG bitoffset,LONG bits) {
-  ULONG *scan=bitmap;
-  ULONG longoffset;
-  LONG orgbits=bits;
-
-  /* This function sets /bits/ bits in a region of memory starting
-     with /bitoffset/.  The region of memory is /longs/ longs long.  If
-     the region of memory is too small to set /bits/ bits then this
-     function exits after having set all bits till the end of the
-     memory region.  In any case it returns the number of bits which
-     were actually set. */
-
-  longoffset=bitoffset>>5;
-  longs-=longoffset;
-  scan+=longoffset;
-
-  bitoffset=bitoffset & 0x1F;
-
-  if(bitoffset!=0) {
-    if(bits<32) {
-      *scan=bfset(*scan,bitoffset,bits);
-    }
-    else {
-      *scan=bfset(*scan,bitoffset,32);
-    }
-
-    scan++;
-    longs--;
-    bits-=32-bitoffset;
-  }
-
-  while(bits>0 && longs-->0) {
-    if(bits>31) {
-      *scan++=0xFFFFFFFF;
-    }
-    else {
-      *scan=bfset(*scan,0,bits);
-    }
-    bits-=32;
-  }
-
-  if(bits<=0) {
-    return(orgbits);
-  }
-  return(orgbits-bits);
-}
 
 
 void drawrect(UWORD x, UWORD y, UWORD w, UWORD h, WORD pen) {
