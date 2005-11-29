@@ -4,7 +4,33 @@
 #include <proto/exec.h>
 #include <utility/tagitem.h>
 
-#include "/fs/packets.h"
+#ifdef __AROS__
+#include <dos/filesystem.h>
+#endif
+
+#include "../../packets.h"
+
+#ifdef __AROS__
+#define __AMIGADATE__   "(29.11.2005)"
+
+#include "../dosdoio.c"
+
+BYTE AROS_DoPkt(struct IOFileSys *iofs, LONG action, LONG Arg1, LONG Arg2, LONG Arg3, LONG Arg4, LONG Arg5)
+{
+    iofs->IOFS.io_Command = SFS_SPECIFIC_MESSAGE;
+    iofs->io_PacketEmulation->dp_Type = action;
+    iofs->io_PacketEmulation->dp_Arg1 = Arg1;
+    iofs->io_PacketEmulation->dp_Arg2 = Arg2;
+    iofs->io_PacketEmulation->dp_Arg3 = Arg3;
+    iofs->io_PacketEmulation->dp_Arg4 = Arg4;
+    iofs->io_PacketEmulation->dp_Arg5 = Arg5;
+    
+    DosDoIO((struct IORequest *)iofs, SysBase);
+    
+    return iofs->io_PacketEmulation->dp_Res1;
+}
+#else
+#endif 
 
 static const char version[]={"\0$VER: SFSformat 1.1 " __AMIGADATE__ "\r\n"};
 
@@ -22,6 +48,9 @@ LONG main() {
     if((readarg=ReadArgs(template,(LONG *)&arglist,0))!=0) {
       struct MsgPort *msgport;
       struct DosList *dl;
+#ifdef __AROS__
+      struct IOFileSys *IOFS;
+#endif      
       UBYTE *devname=arglist.device;
 
       while(*devname!=0) {
@@ -38,7 +67,15 @@ LONG main() {
         LONG errorcode=0;
 
         input=Input();
+#ifdef __AROS__
+        msgport=CreateMsgPort();
+        IOFS = (struct IOFileSys *)CreateIORequest(msgport, sizeof(struct IOFileSys));
+        IOFS->io_PacketEmulation = AllocVec(sizeof(struct DosPacket), MEMF_PUBLIC|MEMF_CLEAR);
+        IOFS->IOFS.io_Device = dl->dol_Device;
+        IOFS->IOFS.io_Unit   = dl->dol_Unit;
+#else
         msgport=dl->dol_Task;
+#endif
         UnLockDosList(LDF_DEVICES|LDF_READ);
 
         PutStr("Press RETURN to begin formatting or CTRL-C to abort: ");
@@ -47,8 +84,7 @@ LONG main() {
         if(IsInteractive(input)!=DOSFALSE) {
           for(;;) {
             if((WaitForChar(input,100)==DOSTRUE)) {
-              if(errorcode==0 && (errorcode=DoPkt(msgport,ACTION_INHIBIT,DOSTRUE,0,0,0,0))!=DOSFALSE) {
-
+              if(errorcode==0 && (errorcode=Inhibit(arglist.device,DOSTRUE))!=DOSFALSE) {
                 {
                   struct TagItem tags[5];
                   struct TagItem *tag=tags;
@@ -78,12 +114,16 @@ LONG main() {
                   tag->ti_Tag=TAG_END;
                   tag->ti_Data=0;
 
+#ifdef __AROS__
+                  if((errorcode=AROS_DoPkt(IOFS, ACTION_SFS_FORMAT, (LONG)&tags, 0, 0, 0, 0))==DOSFALSE) {
+#else
                   if((errorcode=DoPkt(msgport, ACTION_SFS_FORMAT, (LONG)&tags, 0, 0, 0, 0))==DOSFALSE) {
+#endif
                     PrintFault(IoErr(),"error while initializing the drive");
                   }
                 }
 
-                DoPkt(msgport,ACTION_INHIBIT,DOSFALSE,0,0,0,0);
+                Inhibit(arglist.device,DOSFALSE);
               }
               else {
                 PrintFault(IoErr(),"error while locking the drive");
@@ -100,6 +140,11 @@ LONG main() {
             FGetC(input);
           }
         }
+#ifdef __AROS__
+                FreeVec(IOFS->io_PacketEmulation);
+                DeleteIORequest((struct IORequest *)IOFS);
+                DeleteMsgPort(msgport);
+#endif  
       }
       else {
         VPrintf("Unknown device %s\n",&arglist.device);

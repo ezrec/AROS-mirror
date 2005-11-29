@@ -3,6 +3,8 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-sfs-c: contrib-sfs-c-setcache
+#MM- contrib-sfs-c: contrib-sfs-c-setcache 		\
+#MM					contrib-sfs-c-sfsquery		\
+#MM					contrib-sfs-c-sfsformat
 
 %common

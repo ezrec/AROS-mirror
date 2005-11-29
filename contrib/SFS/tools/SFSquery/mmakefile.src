@@ -5,8 +5,8 @@ include $(TOP)/config/make.cfg
     
 USER_CFLAGS     := -I$(TOP)/rom/dos
 
-%build_prog mmake=contrib-sfs-c-setcache \
-    files=SetCache progname=SetCache targetdir=$(AROS_C) \
+%build_prog mmake=contrib-sfs-c-sfsquery \
+    files=SFSquery progname=SFSquery targetdir=$(AROS_C) \
     uselibs="arossupport amiga arosc m"
 
 %common
