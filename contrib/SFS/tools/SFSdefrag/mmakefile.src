@@ -1,0 +1,17 @@
+# $Id: mmakefile.src 20839 2004-02-08 01:45:21Z dlecorfec $
+
+include $(TOP)/config/make.cfg
+
+FILES = main support
+
+EXEDIR = $(AROSDIR)/Tools
+
+#MM contrib-sfs-c-sfsdefrag : includes symlinks 
+
+# //#MM workbench-tools-pcitool-catalogs
+
+%build_prog mmake=contrib-sfs-c-sfsdefrag \
+    progname=SFSdefrag targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="mui amiga arosc m"
+
+%common
