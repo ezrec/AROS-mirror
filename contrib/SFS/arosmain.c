@@ -792,6 +792,13 @@ D(bug("[asfs] the next one\n"));
                 error = packet.dp_Res2;
                 break;
 
+            case FSA_MORE_CACHE:
+                packet.dp_Type = ACTION_MORE_CACHE;
+                packet.dp_Arg1 = (IPTR)iofs->io_Union.io_MORE_CACHE.io_NumBuffers;
+                sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
+                iofs->io_Union.io_MORE_CACHE.io_NumBuffers = packet.dp_Res1;
+                error = packet.dp_Res2;
+                break;
 #if 0
             case FSA_ALL_OTHER_MESSAGES:
                 prepare packet;
