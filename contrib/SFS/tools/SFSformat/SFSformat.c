@@ -34,130 +34,141 @@ BYTE AROS_DoPkt(struct IOFileSys *iofs, LONG action, LONG Arg1, LONG Arg2, LONG 
 
 static const char version[]={"\0$VER: SFSformat 1.1 " __AMIGADATE__ "\r\n"};
 
-LONG main() {
-  struct RDArgs *readarg;
-  UBYTE template[]="DEVICE=DRIVE/A/K,NAME/A/K,CASESENSITIVE/S,NORECYCLED/S,SHOWRECYCLED/S";
+LONG main()
+{
+    struct RDArgs *readarg;
+    UBYTE template[]="DEVICE=DRIVE/A/K,NAME/A/K,CASESENSITIVE/S,NORECYCLED/S,SHOWRECYCLED/S";
+    UBYTE choice='N';
 
-  struct {char *device;
-          char *name;
-          ULONG casesensitive;
-          ULONG norecycled;
-          ULONG showrecycled;} arglist={NULL};
+    struct {
+        char *device;
+        char *name;
+        ULONG casesensitive;
+        ULONG norecycled;
+        ULONG showrecycled;
+    } arglist={NULL};
 
-  if((DOSBase=(struct DosLibrary *)OpenLibrary("dos.library",37))!=0) {
-    if((readarg=ReadArgs(template,(LONG *)&arglist,0))!=0) {
-      struct MsgPort *msgport;
-      struct DosList *dl;
+    if((DOSBase=(struct DosLibrary *)OpenLibrary("dos.library",37))!=0)
+    {
+        if((readarg=ReadArgs(template,(LONG *)&arglist,0))!=0)
+        {
+            struct MsgPort *msgport;
+            struct DosList *dl;
 #ifdef __AROS__
-      struct IOFileSys *IOFS;
+            struct IOFileSys *IOFS;
 #endif      
-      UBYTE *devname=arglist.device;
+            UBYTE *devname=arglist.device;
 
-      while(*devname!=0) {
-        if(*devname==':') {
-          *devname=0;
-          break;
-        }
-        devname++;
-      }
-
-      dl=LockDosList(LDF_DEVICES|LDF_READ);
-      if((dl=FindDosEntry(dl,arglist.device,LDF_DEVICES))!=0) {
-        BPTR input;
-        LONG errorcode=0;
-
-        input=Input();
-#ifdef __AROS__
-        msgport=CreateMsgPort();
-        IOFS = (struct IOFileSys *)CreateIORequest(msgport, sizeof(struct IOFileSys));
-        IOFS->io_PacketEmulation = AllocVec(sizeof(struct DosPacket), MEMF_PUBLIC|MEMF_CLEAR);
-        IOFS->IOFS.io_Device = dl->dol_Device;
-        IOFS->IOFS.io_Unit   = dl->dol_Unit;
-#else
-        msgport=dl->dol_Task;
-#endif
-        UnLockDosList(LDF_DEVICES|LDF_READ);
-
-        PutStr("Press RETURN to begin formatting or CTRL-C to abort: ");
-        Flush(Output());
-
-        if(IsInteractive(input)!=DOSFALSE) {
-          for(;;) {
-            if((WaitForChar(input,100)==DOSTRUE)) {
-              if(errorcode==0 && (errorcode=Inhibit(arglist.device,DOSTRUE))!=DOSFALSE) {
+            while(*devname!=0)
+            {
+                if(*devname==':')
                 {
-                  struct TagItem tags[5];
-                  struct TagItem *tag=tags;
+//                    *devname=0;
+                    break;
+                }
+                devname++;
+            }
 
-                  tag->ti_Tag=ASF_NAME;
-                  tag->ti_Data=(ULONG)arglist.name;
-                  tag++;
+            dl=LockDosList(LDF_DEVICES|LDF_READ);
+            if((dl=FindDosEntry(dl,arglist.device,LDF_DEVICES))!=0)
+            {
+                BPTR input;
+                LONG errorcode=0;
 
-                  if(arglist.casesensitive!=0) {
-                    tag->ti_Tag=ASF_CASESENSITIVE;
-                    tag->ti_Data=TRUE;
-                    tag++;
-                  }
+                input=Input();
+#ifdef __AROS__
+                msgport=CreateMsgPort();
+                IOFS = (struct IOFileSys *)CreateIORequest(msgport, sizeof(struct IOFileSys));
+                IOFS->io_PacketEmulation = AllocVec(sizeof(struct DosPacket), MEMF_PUBLIC|MEMF_CLEAR);
+                IOFS->IOFS.io_Device = dl->dol_Device;
+                IOFS->IOFS.io_Unit   = dl->dol_Unit;
+#else
+                msgport=dl->dol_Task;
+#endif
+                UnLockDosList(LDF_DEVICES|LDF_READ);
+                        
+                Printf("About to format drive %s. ", arglist.device);
+                Printf("This will destroy all data on the drive!\n");
+                Printf("Are you sure? (y/N)"); Flush(Output());
+        
+                Read(Input(), &choice, 1);
+                
+                if(choice == 'y' || choice == 'Y')
+                {
+                    Printf("a");
+                    if(Inhibit(arglist.device,DOSTRUE))
+                    {
+                    Printf("b");
+                        {
+                            struct TagItem tags[5];
+                            struct TagItem *tag=tags;
 
-                  if(arglist.norecycled!=0) {
-                    tag->ti_Tag=ASF_NORECYCLED;
-                    tag->ti_Data=TRUE;
-                    tag++;
-                  }
+                            tag->ti_Tag=ASF_NAME;
+                            tag->ti_Data=(ULONG)arglist.name;
+                            tag++;
 
-                  if(arglist.showrecycled!=0) {
-                    tag->ti_Tag=ASF_SHOWRECYCLED;
-                    tag->ti_Data=TRUE;
-                    tag++;
-                  }
+                            if(arglist.casesensitive!=0)
+                            {
+                                tag->ti_Tag=ASF_CASESENSITIVE;
+                                tag->ti_Data=TRUE;
+                                tag++;
+                            }
 
-                  tag->ti_Tag=TAG_END;
-                  tag->ti_Data=0;
+                            if(arglist.norecycled!=0)
+                            {
+                                tag->ti_Tag=ASF_NORECYCLED;
+                                tag->ti_Data=TRUE;
+                                tag++;
+                            }
+
+                            if(arglist.showrecycled!=0)
+                            {
+                                tag->ti_Tag=ASF_SHOWRECYCLED;
+                                tag->ti_Data=TRUE;
+                                tag++;
+                            }
+
+                            tag->ti_Tag=TAG_END;
+                            tag->ti_Data=0;
 
 #ifdef __AROS__
-                  if((errorcode=AROS_DoPkt(IOFS, ACTION_SFS_FORMAT, (LONG)&tags, 0, 0, 0, 0))==DOSFALSE) {
+                            if((errorcode=AROS_DoPkt(IOFS, ACTION_SFS_FORMAT, (LONG)&tags, 0, 0, 0, 0))==DOSFALSE)
+                            {
 #else
-                  if((errorcode=DoPkt(msgport, ACTION_SFS_FORMAT, (LONG)&tags, 0, 0, 0, 0))==DOSFALSE) {
+                            if((errorcode=DoPkt(msgport, ACTION_SFS_FORMAT, (LONG)&tags, 0, 0, 0, 0))==DOSFALSE)
+                            {
 #endif
-                    PrintFault(IoErr(),"error while initializing the drive");
-                  }
+                                PrintFault(IoErr(),"error while initializing the drive");
+                            }
+                        }
+
+                        Inhibit(arglist.device,DOSFALSE);
+                    }
+                    else {
+                        PrintFault(IoErr(),"error while locking the drive");
+                    }
                 }
-
-                Inhibit(arglist.device,DOSFALSE);
-              }
-              else {
-                PrintFault(IoErr(),"error while locking the drive");
-              }
-              break;
-            }
-            else if(SetSignal(0L,SIGBREAKF_CTRL_C) & SIGBREAKF_CTRL_C) {
-              PutStr("\n***Break\n");
-              break;
-            }
-          }
-
-          while(WaitForChar(input,0)==DOSTRUE) {
-            FGetC(input);
-          }
-        }
+                else if(SetSignal(0L,SIGBREAKF_CTRL_C) & SIGBREAKF_CTRL_C)
+                {
+                    PutStr("\n***Break\n");
+                }
 #ifdef __AROS__
                 FreeVec(IOFS->io_PacketEmulation);
                 DeleteIORequest((struct IORequest *)IOFS);
                 DeleteMsgPort(msgport);
 #endif  
-      }
-      else {
-        VPrintf("Unknown device %s\n",&arglist.device);
-        UnLockDosList(LDF_DEVICES|LDF_READ);
-      }
+            }
+            else {
+                VPrintf("Unknown device %s\n",&arglist.device);
+                UnLockDosList(LDF_DEVICES|LDF_READ);
+            }
+            FreeArgs(readarg);
+        }
+        else {
+            PutStr("wrong args!\n");
+        }
 
-      FreeArgs(readarg);
+        CloseLibrary((struct Library *)DOSBase);
     }
-    else {
-      PutStr("wrong args!\n");
-    }
-
-    CloseLibrary((struct Library *)DOSBase);
-  }
-  return(0);
+    return(0);
 }
