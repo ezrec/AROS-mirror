@@ -154,6 +154,7 @@ BYTE AROS_DoPkt(struct IOFileSys *iofs, LONG action, LONG Arg1, LONG Arg2, LONG 
 struct Hook select_hook;
 struct Hook start_hook;
 struct Hook stop_hook;
+struct Hook refresh_hook;
 
 BOOL stop_me;
 
@@ -167,7 +168,7 @@ Object *app;
 Object *MainWindow;
 
 Object *DevList;
-Object *StartButton, *StopButton;
+Object *StartButton, *StopButton, *RefreshButton;
 Object *Bmp;
 
 void updateBitmap(ULONG first, ULONG last)
@@ -242,6 +243,7 @@ AROS_UFH3(void, start_function,
     BOOL defragmented = FALSE;
     
     set(StartButton, MUIA_Disabled, TRUE);
+    set(RefreshButton, MUIA_Disabled, TRUE);
     set(StopButton, MUIA_Disabled, FALSE);
     set(DevList, MUIA_Disabled, TRUE);
 
@@ -287,6 +289,7 @@ AROS_UFH3(void, start_function,
 
     set(StartButton, MUIA_Disabled, FALSE);
     set(StopButton, MUIA_Disabled, TRUE);
+    set(RefreshButton, MUIA_Disabled, FALSE);
     set(DevList, MUIA_Disabled, FALSE);
         
     AROS_USERFUNC_EXIT
@@ -300,6 +303,26 @@ AROS_UFH3(void, stop_function,
     AROS_USERFUNC_INIT
     
     stop_me=TRUE;
+    
+    AROS_USERFUNC_EXIT
+}
+
+AROS_UFH3(void, refresh_function,
+    AROS_UFHA(struct Hook *, h,      A0),
+    AROS_UFHA(Object *,      object, A2),
+    AROS_UFHA(APTR,          msg,    A1))
+{
+    AROS_USERFUNC_INIT
+    
+    ULONG active = xget(DevList, MUIA_List_Active);
+    
+    if (active != MUIV_List_Active_Off)
+    {
+        if(AROS_DoPkt(iofs, ACTION_SFS_READ_BITMAP, (LONG)bitmap, 0, blocks_total, 0, 0)!=DOSFALSE)
+        {
+            updateBitmap(0, blocks_total);
+        }
+    }
     
     AROS_USERFUNC_EXIT
 }
@@ -323,11 +346,13 @@ AROS_UFH3(void, select_function,
             bug("Selected: %s\n", name);
             getDeviceData(name);
             set(StartButton, MUIA_Disabled, FALSE);
+            set(RefreshButton, MUIA_Disabled, FALSE);
         }
     }
     else
     {
         set(StartButton, MUIA_Disabled, TRUE);
+        set(RefreshButton, MUIA_Disabled, TRUE);
         oldname = NULL;
     }
     
@@ -368,6 +393,7 @@ BOOL GUIinit()
                             End, // ListObject
                         End, // VGroup
 //                        Child, HVSpace,
+                        Child, RefreshButton = MUI_MakeObject(MUIO_Button, "Refresh bitmap"),
                         Child, StartButton = MUI_MakeObject(MUIO_Button, "Start!"),
                         Child, StopButton = MUI_MakeObject(MUIO_Button, "Cancel"),
                     End, // HGroup
@@ -405,6 +431,9 @@ BOOL GUIinit()
         DoMethod(StopButton, MUIM_Notify, MUIA_Pressed, FALSE,
             (IPTR)app, 3, MUIM_CallHook, (IPTR)&stop_hook);
 
+        DoMethod(RefreshButton, MUIM_Notify, MUIA_Pressed, FALSE,
+            (IPTR)app, 3, MUIM_CallHook, (IPTR)&refresh_hook);
+
         DoMethod(DevList, MUIM_Notify, MUIA_List_Active, MUIV_EveryTime, 
             (IPTR)DevList, 2, MUIM_CallHook, (IPTR)&select_hook);
 
@@ -414,6 +443,7 @@ BOOL GUIinit()
 
         set(StartButton, MUIA_Disabled, TRUE);
         set(StopButton, MUIA_Disabled, TRUE);
+        set(RefreshButton, MUIA_Disabled, TRUE);
         retval=TRUE;
     }
 
@@ -438,6 +468,7 @@ int main(int argc, char *argv[])
     select_hook.h_Entry = (APTR)select_function;
     start_hook.h_Entry = (APTR)start_function;
     stop_hook.h_Entry = (APTR)stop_function;
+    refresh_hook.h_Entry = (APTR)refresh_function;
     
     if(openLibs())
     {
