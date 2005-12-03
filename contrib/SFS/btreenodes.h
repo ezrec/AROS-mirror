@@ -8,12 +8,12 @@
 /* Structures used by BNode trees */
 
 struct BNode {
-  ULONG key;
-  ULONG data;
+  ULONG be_key;
+  ULONG be_data;
 };
 
 struct BTreeContainer {
-  UWORD nodecount;
+  UWORD be_nodecount;
   UBYTE isleaf;
   UBYTE nodesize;   /* Must be a multiple of 2 */
 

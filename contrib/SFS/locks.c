@@ -1,3 +1,5 @@
+#include "asmsupport.h"
+
 #include <dos/dosextens.h>
 #include <exec/memory.h>
 #include <exec/types.h>
@@ -148,7 +150,7 @@ LONG lockobject2(struct fsObject *o, LONG accessmode, struct ExtFileLock **retur
   /* This function locks the passed object and returns an
      ExtFileLock structure if succesful. */
 
-  if(o->objectnode==ROOTNODE && accessmode==EXCLUSIVE_LOCK) {
+  if(BE2L(o->be_objectnode)==ROOTNODE && accessmode==EXCLUSIVE_LOCK) {
     /* Exclusive locks on the ROOT directory are not allowed */
     _DEBUG(("lockobject: someone tried to lock the ROOT directory exclusively -- denied\n"));
 
@@ -160,7 +162,7 @@ LONG lockobject2(struct fsObject *o, LONG accessmode, struct ExtFileLock **retur
      rejected.  If we are requesting an exclusive lock while another
      lock already exists then the locking attempt is rejected as well. */
 
-  if(lockable(o->objectnode, accessmode)!=DOSFALSE) {
+  if(lockable(BE2L(o->be_objectnode), accessmode)!=DOSFALSE) {
 
     _XDEBUG((DEBUG_LOCK,"lockobject: lockable returned TRUE\n"));
 
@@ -168,7 +170,7 @@ LONG lockobject2(struct fsObject *o, LONG accessmode, struct ExtFileLock **retur
        add it to the locklist. */
 
     if((lock=AllocMem(sizeof(struct ExtFileLock), MEMF_PUBLIC|MEMF_CLEAR))!=0) {
-      lock->objectnode=o->objectnode;
+      lock->objectnode=BE2L(o->be_objectnode);
 
       /* accessmode is not simply copied because some apps think anything which isn't
          an exclusive lock is a shared lock. */
@@ -193,7 +195,7 @@ LONG lockobject2(struct fsObject *o, LONG accessmode, struct ExtFileLock **retur
 
       lock->id=DOSTYPE_ID;
 
-      lock->curextent=o->object.file.data;
+      lock->curextent=BE2L(o->object.file.be_data);
 
       if((o->bits & (OTYPE_LINK|OTYPE_DIR))==0) {
         lock->bits=EFL_FILE;
@@ -277,7 +279,7 @@ LONG locatelockableobject(struct ExtFileLock *lock, UBYTE *path, struct CacheBuf
 
   if((errorcode=readobject(objectnode, returned_cb, returned_o))==0) {
     if((errorcode=locateobject2(&path, returned_cb, returned_o))==0) {
-      if(objectnode!=(*returned_o)->objectnode && lockable((*returned_o)->objectnode, SHARED_LOCK)==DOSFALSE) {
+      if(objectnode!=BE2L((*returned_o)->be_objectnode) && lockable(BE2L((*returned_o)->be_objectnode), SHARED_LOCK)==DOSFALSE) {
         errorcode=ERROR_OBJECT_IN_USE;
       }
     }
@@ -315,7 +317,7 @@ LONG locateobject2(UBYTE **io_path, struct CacheBuffer **io_cb, struct fsObject 
 
   path=stripcolon(path);
 
-  _XDEBUG((DEBUG_LOCK,"locateobject: Locating object with path '%s' from ObjectNode %ld\n",path,(*io_o)->objectnode));
+  _XDEBUG((DEBUG_LOCK,"locateobject: Locating object with path '%s' from ObjectNode %ld\n",path,BE2L((*io_o)->be_objectnode)));
 
   while(*path!=0) {
 
@@ -329,7 +331,7 @@ LONG locateobject2(UBYTE **io_path, struct CacheBuffer **io_cb, struct fsObject 
     if(*path=='/') {
       struct fsObjectContainer *oc=(*io_cb)->data;
 
-      if(oc->parent==0) {
+      if(BE2L(oc->be_parent)==0) {
         /* We can't get the parent of the root! */
 
         _XDEBUG((DEBUG_LOCK,"locateobject: Can't get parent of the root\n"));
@@ -338,7 +340,7 @@ LONG locateobject2(UBYTE **io_path, struct CacheBuffer **io_cb, struct fsObject 
         break;
       }
 
-      if((errorcode=readobject(oc->parent,io_cb,io_o))!=0) {
+      if((errorcode=readobject(BE2L(oc->be_parent),io_cb,io_o))!=0) {
         break;
       }
 
@@ -414,9 +416,9 @@ LONG createglobalhandle(struct ExtFileLock *efl) {
       gh->count=1;
 
       gh->objectnode=efl->objectnode;
-      gh->size=o->object.file.size;
-      gh->protection=o->protection;
-      gh->data=o->object.file.data;
+      gh->size=BE2L(o->object.file.be_size);
+      gh->protection=BE2L(o->be_protection);
+      gh->data=BE2L(o->object.file.be_data);
 
       addtailm(&globals->globalhandles,&gh->node);
 

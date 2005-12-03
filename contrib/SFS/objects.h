@@ -56,24 +56,24 @@
    comment). */
 
 struct fsObject {
-  UWORD owneruid;
-  UWORD ownergid;
-  NODE  objectnode;
-  ULONG protection;
+  UWORD be_owneruid;
+  UWORD be_ownergid;
+  NODE  be_objectnode;
+  ULONG be_protection;
 
   union {
     struct {
-      BLCK  data;
-      ULONG size;
+      BLCK  be_data;
+      ULONG be_size;
     } file;
 
     struct {
-      BLCK  hashtable;   /* for directories & root, 0 means no hashblock */
-      BLCK  firstdirblock;
+      BLCK  be_hashtable;   /* for directories & root, 0 means no hashblock */
+      BLCK  be_firstdirblock;
     } dir;
   } object;
 
-  ULONG datemodified;
+  ULONG be_datemodified;
   UBYTE bits;
 
   UBYTE name[0];
@@ -143,9 +143,9 @@ struct fsObject {
 struct fsObjectContainer {
   struct fsBlockHeader bheader;
 
-  NODE parent;
-  BLCK next;
-  BLCK previous;   /* 0 for the first block in the directory chain */
+  NODE be_parent;
+  BLCK be_next;
+  BLCK be_previous;   /* 0 for the first block in the directory chain */
 
   struct fsObject object[0];
 };
@@ -167,9 +167,9 @@ struct fsObjectContainer {
 struct fsHashTable {
   struct fsBlockHeader bheader;
 
-  NODE parent;
+  NODE be_parent;
 
-  NODE hashentry[0];
+  NODE be_hashentry[0];
 };
 
 
@@ -177,9 +177,9 @@ struct fsHashTable {
 struct fsSoftLink {
   struct fsBlockHeader bheader;
 
-  NODE parent;
-  BLCK next;
-  BLCK previous;
+  NODE be_parent;
+  BLCK be_next;
+  BLCK be_previous;
 
   UBYTE string[0];
 };
@@ -188,8 +188,8 @@ struct fsSoftLink {
 
 struct fsObjectNode {
   struct fsNode node;
-  NODE  next;
-  UWORD hash16;
+  NODE  be_next;
+  UWORD be_hash16;
 };
 
 

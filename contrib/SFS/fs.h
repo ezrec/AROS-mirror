@@ -9,6 +9,8 @@
 #include <dos/dos.h>
 #endif
 
+// #define SFS_BE
+
 #define CHECKCODE
 // #define CHECKCODE_SLOW
 #define CHECKCODE_BNODES
@@ -16,7 +18,7 @@
 
 // #define CHECKCHECKSUMSALWAYS
 
-#define DEBUGCODE
+ #define DEBUGCODE
 // #define DEBUGKPRINTF  /* If defined and DEBUGCODE is defined then uses kprintf as output */
 // #define DEBUG115200
 
@@ -65,7 +67,11 @@
 #define addtailm(l,n) (n)->mln_Succ=(l)->mlh_TailPred->mln_Succ; (l)->mlh_TailPred->mln_Succ=(n); (n)->mln_Pred=(l)->mlh_TailPred; (l)->mlh_TailPred=(n)
 #define addheadm(l,n) (n)->mln_Succ=(l)->mlh_Head; (n)->mln_Pred=(struct MinNode *)(l); (l)->mlh_Head->mln_Pred=(n); (l)->mlh_Head=(n);
 
-#define DOSTYPE_ID      AROS_LONG2BE(MAKE_ID('S','F','S',1))
+#ifdef SFS_BE
+#define DOSTYPE_ID      AROS_LONG2BE(MAKE_ID('S','F','S',0))
+#else
+#define DOSTYPE_ID      AROS_LONG2BE(MAKE_ID('s','f','s',0))
+#endif
 
 /* HASHENTRY(x) is used to determine which hashchain to use for
    a specific hash value. */

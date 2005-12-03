@@ -1,10 +1,11 @@
+#include "asmsupport.h"
+
 #include <clib/macros.h>
 #include <dos/dos.h>
 #include <exec/types.h>
 #include <proto/exec.h>
 
 #include "bitmap.h"
-#include "asmsupport.h"
 #include "cachebuffers_protos.h"
 #include "debug.h"
 #include "objects.h"
@@ -25,7 +26,7 @@ LONG getfreeblocks(ULONG *returned_freeblocks) {
   if((errorcode=readcachebuffercheck(&cb,globals->block_root,OBJECTCONTAINER_ID))==0) {
     struct fsRootInfo *ri=(struct fsRootInfo *)((UBYTE *)cb->data+globals->bytes_block-sizeof(struct fsRootInfo));
 
-    *returned_freeblocks=ri->freeblocks;
+    *returned_freeblocks=BE2L(ri->be_freeblocks);
   }
 
   return(errorcode);
@@ -55,7 +56,7 @@ LONG setfreeblocks(ULONG freeblocks) {
 
     preparecachebuffer(cb);
 
-    ri->freeblocks=freeblocks;
+    ri->be_freeblocks=L2BE(freeblocks);
 
     errorcode=storecachebuffer(cb);
   }

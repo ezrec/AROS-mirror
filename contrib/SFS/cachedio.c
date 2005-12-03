@@ -1,3 +1,5 @@
+#include "asmsupport.h"
+
 #include <dos/dos.h>
 #include <exec/lists.h>
 #include <exec/types.h>
@@ -11,7 +13,6 @@
 #define addtailm(l,n) (n)->mln_Succ=(l)->mlh_TailPred->mln_Succ; (l)->mlh_TailPred->mln_Succ=(n); (n)->mln_Pred=(l)->mlh_TailPred; (l)->mlh_TailPred=(n)
 #define addheadm(l,n) (n)->mln_Succ=(l)->mlh_Head; (n)->mln_Pred=(struct MinNode *)(l); (l)->mlh_Head->mln_Pred=(n); (l)->mlh_Head=(n);
 
-#include "asmsupport.h"
 #include "debug.h"
 
 #include "globals.h"

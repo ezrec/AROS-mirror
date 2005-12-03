@@ -22,6 +22,7 @@ BYTE isvalidcomponentname(UBYTE *name);
 void ClearMemQuick(void *mem, LONG bytes);
 
 void checksum_writelong(struct fsBlockHeader *bh, void *dest, ULONG data);
+void checksum_writelong_be(struct fsBlockHeader *bh, void *dest, ULONG data);
 
 UWORD mergediffs(UBYTE *olddiff, UBYTE *newdiff, UWORD length, ULONG *new, ULONG *org, UBYTE *modifiedblocks);
 

@@ -1,3 +1,5 @@
+#include "asmsupport.h"
+
 #include <exec/memory.h>
 #include <exec/types.h>
 #include <proto/exec.h>

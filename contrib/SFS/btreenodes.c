@@ -1,3 +1,5 @@
+#include "asmsupport.h"
+
 #include <exec/types.h>
 #include <proto/exec.h>
 
@@ -71,7 +73,7 @@ static void __inline copywordsbackward(UWORD *src,UWORD *dst,UWORD len) {
 
 
 LONG getparentbtreecontainer(BLCK rootblock,struct CacheBuffer **io_cb) {
-  ULONG childkey=((struct fsBNodeContainer *)((*io_cb)->data))->btc.bnode[0].key;
+  ULONG childkey=BE2L(((struct fsBNodeContainer *)((*io_cb)->data))->btc.bnode[0].be_key);
   BLCK childblock=(*io_cb)->blckno;
   LONG errorcode=0;
 
@@ -85,7 +87,7 @@ LONG getparentbtreecontainer(BLCK rootblock,struct CacheBuffer **io_cb) {
       struct fsBNodeContainer *bnc=(*io_cb)->data;
       struct BTreeContainer *btc=&bnc->btc;
       struct BNode *bn;
-      WORD n=btc->nodecount;
+      WORD n=BE2W(btc->be_nodecount);
 
       if(btc->isleaf==TRUE) {
         #ifdef CHECKCODE_BNODES
@@ -98,13 +100,13 @@ LONG getparentbtreecontainer(BLCK rootblock,struct CacheBuffer **io_cb) {
       }
 
       while(n-->0) {
-        if(btc->bnode[n].data==childblock) {
+        if(BE2L(btc->bnode[n].be_data)==childblock) {
           return(0);    /* Found parent!! */
         }
       }
 
       bn=searchforbnode(childkey,btc);    /* This searchforbnode() doesn't have to get EXACT key matches. */
-      rootblock=bn->data;
+      rootblock=BE2L(bn->be_data);
     }
   }
 
@@ -126,7 +128,7 @@ LONG createbnode(BLCK rootblock,ULONG key,struct CacheBuffer **returned_cb,struc
     LONG extbranches=(globals->bytes_block-sizeof(struct fsBNodeContainer))/btc->nodesize;
 
     #ifdef CHECKCODE_BNODES
-      if(*returned_bnode!=0 && (*returned_bnode)->key==key) {
+      if(*returned_bnode!=0 && BE2L((*returned_bnode)->be_key)==key) {
         dreq("createbnode: findbnode() says key %ld already exists!",key);
         outputcachebuffer(*returned_cb);
       }
@@ -134,7 +136,7 @@ LONG createbnode(BLCK rootblock,ULONG key,struct CacheBuffer **returned_cb,struc
 
     _XDEBUG((DEBUG_NODES,"createbnode: findbnode found block %ld\n",(*returned_cb)->blckno));
 
-    if(btc->nodecount<extbranches) {
+    if(BE2W(btc->be_nodecount)<extbranches) {
       /* Simply insert new node in this BTreeContainer */
 
       _XDEBUG((DEBUG_NODES,"createbnode: Simple insert\n"));
@@ -182,7 +184,7 @@ LONG splitbtreecontainer(BLCK rootblock,struct CacheBuffer *cb) {
         struct BTreeContainer *btcparent=&bncparent->btc;
 
         CopyMemQuick(cbparent->data,cb->data,globals->bytes_block);
-        bnc->bheader.ownblock=cb->blckno;
+        bnc->bheader.be_ownblock=L2BE(cb->blckno);
 
         _XDEBUG((DEBUG_NODES,"splitbtreecontainer: allocated admin space for root\n"));
 
@@ -195,14 +197,14 @@ LONG splitbtreecontainer(BLCK rootblock,struct CacheBuffer *cb) {
           clearcachebuffer(cbparent);        /* Not strictly needed, but makes things more clear. */
 
           bncparent->bheader.id=BNODECONTAINER_ID;
-          bncparent->bheader.ownblock=cbparent->blckno;
+          bncparent->bheader.be_ownblock=L2BE(cbparent->blckno);
 
           btcparent->isleaf=FALSE;
           btcparent->nodesize=sizeof(struct BNode);
-          btcparent->nodecount=0;
+          btcparent->be_nodecount=0;
 
           bn=insertbnode(0,btcparent);
-          bn->data=cb->blckno;
+          bn->be_data=L2BE(cb->blckno);
 
           errorcode=storecachebuffer(cbparent);
         }
@@ -216,7 +218,7 @@ LONG splitbtreecontainer(BLCK rootblock,struct CacheBuffer *cb) {
       struct BTreeContainer *btcparent=&bncparent->btc;
       LONG branches=(globals->bytes_block-sizeof(struct fsBNodeContainer))/btcparent->nodesize;
 
-      if(btcparent->nodecount==branches) {
+      if(BE2W(btcparent->be_nodecount)==branches) {
         /* We need to split the parent tree-container first! */
 
         errorcode=splitbtreecontainer(rootblock,cbparent);
@@ -249,28 +251,28 @@ LONG splitbtreecontainer(BLCK rootblock,struct CacheBuffer *cb) {
           ULONG newblckno=cbnew->blckno;
 
           bncnew->bheader.id=BNODECONTAINER_ID;
-          bncnew->bheader.ownblock=cbnew->blckno;
+          bncnew->bheader.be_ownblock=L2BE(cbnew->blckno);
 
           btcnew->isleaf=btc->isleaf;
           btcnew->nodesize=btc->nodesize;
 
-          btcnew->nodecount=branches-branches/2;
+          btcnew->be_nodecount=W2BE(branches-branches/2);
 
           copywordsforward((UWORD *)((UBYTE *)btc->bnode+branches/2*btc->nodesize),(UWORD *)btcnew->bnode,(branches-branches/2)*btc->nodesize/2);
 
-          newkey=btcnew->bnode[0].key;
+          newkey=BE2L(btcnew->bnode[0].be_key);
 
           if((errorcode=storecachebuffer(cbnew))==0) {
 
             preparecachebuffer(cb);
 
-            btc->nodecount=branches/2;
+            btc->be_nodecount=W2BE(branches/2);
 
             if((errorcode=storecachebuffer(cb))==0) {
               preparecachebuffer(cbparent);
 
               bn=insertbnode(newkey,btcparent);
-              bn->data=newblckno;
+              bn->be_data=L2BE(newblckno);
 
               errorcode=storecachebuffer(cbparent);
             }
@@ -308,7 +310,7 @@ LONG findbnode(BLCK rootblock, ULONG key, struct CacheBuffer **returned_cb, stru
     struct fsBNodeContainer *bnc=(*returned_cb)->data;
     struct BTreeContainer *btc=&bnc->btc;
 
-    if(btc->nodecount==0) {
+    if(BE2W(btc->be_nodecount)==0) {
       *returned_bnode=0;
       break;
     }
@@ -317,7 +319,7 @@ LONG findbnode(BLCK rootblock, ULONG key, struct CacheBuffer **returned_cb, stru
     if(btc->isleaf==TRUE) {
       break;
     }
-    rootblock=(*returned_bnode)->data;
+    rootblock=BE2L((*returned_bnode)->be_data);
   }
 
   _XDEBUG((DEBUG_NODES,"findbnode: *returned_cb->blckno = %ld, Exiting with errorcode %ld\n",(*returned_cb)->blckno,errorcode));
@@ -329,7 +331,7 @@ LONG findbnode(BLCK rootblock, ULONG key, struct CacheBuffer **returned_cb, stru
 
 struct BNode *searchforbnode(ULONG key, struct BTreeContainer *tc) {
   struct BNode *tn;
-  WORD n=tc->nodecount-1;
+  WORD n=BE2W(tc->be_nodecount)-1;
 
   /* This function looks for the BNode equal to the key.  If no
      exact match is available then the BNode which is slightly
@@ -344,7 +346,7 @@ struct BNode *searchforbnode(ULONG key, struct BTreeContainer *tc) {
   tn=(struct BNode *)((UBYTE *)tc->bnode+n*tc->nodesize);
 
   for(;;) {
-    if(n<=0 || key >= tn->key) {
+    if(n<=0 || key >= BE2L(tn->be_key)) {
       return(tn);
     }
     tn=(struct BNode *)((UBYTE *)tn-tc->nodesize);
@@ -359,7 +361,7 @@ struct BNode *insertbnode(ULONG key,struct BTreeContainer *btc) {
   UWORD *src;
   UWORD *dst;
 
-  bn=(struct BNode *)((UBYTE *)bn+btc->nodesize*(btc->nodecount-1));
+  bn=(struct BNode *)((UBYTE *)bn+btc->nodesize*(BE2W(btc->be_nodecount)-1));
 
   src=(UWORD *)((UBYTE *)bn+btc->nodesize);
   dst=src+btc->nodesize/2;
@@ -371,10 +373,10 @@ struct BNode *insertbnode(ULONG key,struct BTreeContainer *btc) {
      BTreeContainers! */
 
   for(;;) {
-    if(bn<btc->bnode || key > bn->key) {
+    if(bn<btc->bnode || key > BE2L(bn->be_key)) {
       bn=(struct BNode *)((UBYTE *)bn+btc->nodesize);
-      bn->key=key;
-      btc->nodecount++;
+      bn->be_key=L2BE(key);
+      btc->be_nodecount = W2BE(BE2W(btc->be_nodecount)+1);
       break;
     }
     else {
@@ -410,9 +412,9 @@ LONG deleteinternalnode(BLCK rootblock,struct CacheBuffer *cb,ULONG key) {
     /* Now checks if the container still contains enough nodes,
        and takes action accordingly. */
 
-    _XDEBUG((DEBUG_NODES,"deleteinternalnode: branches = %ld, btc->nodecount = %ld\n",branches,btc->nodecount));
+    _XDEBUG((DEBUG_NODES,"deleteinternalnode: branches = %ld, btc->nodecount = %ld\n",branches,BE2W(btc->be_nodecount)));
 
-    if(btc->nodecount<(branches+1)/2) {
+    if(BE2W(btc->be_nodecount)<(branches+1)/2) {
       struct CacheBuffer *cbparent=cb;
 
       /* nodecount has become to low.  We need to merge this Container
@@ -432,8 +434,8 @@ LONG deleteinternalnode(BLCK rootblock,struct CacheBuffer *cb,ULONG key) {
 
           _XDEBUG((DEBUG_NODES,"deleteinternalnode: get parent returned block %ld.\n",cbparent->blckno));
 
-          for(n=0; n<btcparent->nodecount; n++) {
-            if(btcparent->bnode[n].data==cb->blckno) {
+          for(n=0; n<BE2W(btcparent->be_nodecount); n++) {
+            if(BE2L(btcparent->bnode[n].be_data)==cb->blckno) {
               break;
             }
           }
@@ -442,37 +444,37 @@ LONG deleteinternalnode(BLCK rootblock,struct CacheBuffer *cb,ULONG key) {
 
           lockcachebuffer(cbparent);
 
-          if(n<btcparent->nodecount-1) {      // Check if we have a next neighbour.
+          if(n<BE2W(btcparent->be_nodecount)-1) {      // Check if we have a next neighbour.
             struct CacheBuffer *cb_next;
 
             _XDEBUG((DEBUG_NODES,"deleteinternalnode: using next container.\n"));
 
-            if((errorcode=readcachebuffercheck(&cb_next,btcparent->bnode[n+1].data,BNODECONTAINER_ID))==0) {
+            if((errorcode=readcachebuffercheck(&cb_next,BE2L(btcparent->bnode[n+1].be_data),BNODECONTAINER_ID))==0) {
               struct fsBNodeContainer *bnc_next=cb_next->data;
               struct BTreeContainer *btc_next=&bnc_next->btc;
 
               lockcachebuffer(cb_next);
 
-              if(btc_next->nodecount+btc->nodecount>branches) {    // Check if we need to steal nodes.
-                WORD nodestosteal=(btc_next->nodecount+btc->nodecount)/2-btc->nodecount;
+              if(BE2W(btc_next->be_nodecount)+BE2W(btc->be_nodecount)>branches) {    // Check if we need to steal nodes.
+                WORD nodestosteal=(BE2W(btc_next->be_nodecount)+BE2W(btc->be_nodecount))/2-BE2W(btc->be_nodecount);
 
                 /* Merging them is not possible.  Steal a few nodes then. */
 
                 preparecachebuffer(cb);
 
-                copywordsforward((UWORD *)btc_next->bnode,(UWORD *)((UBYTE *)btc->bnode+btc->nodecount*btc->nodesize),nodestosteal*btc->nodesize/2);
-                btc->nodecount+=nodestosteal;
+                copywordsforward((UWORD *)btc_next->bnode,(UWORD *)((UBYTE *)btc->bnode+BE2W(btc->be_nodecount)*btc->nodesize),nodestosteal*btc->nodesize/2);
+                btc->be_nodecount=W2BE(BE2W(btc->be_nodecount)+nodestosteal);
 
                 if((errorcode=storecachebuffer(cb))==0) {
                   preparecachebuffer(cb_next);
 
-                  copywordsforward((UWORD *)((UBYTE *)btc_next->bnode+btc_next->nodesize*nodestosteal),(UWORD *)btc_next->bnode,(btc->nodesize/2)*(btc_next->nodecount - nodestosteal));
-                  btc_next->nodecount-=nodestosteal;
+                  copywordsforward((UWORD *)((UBYTE *)btc_next->bnode+btc_next->nodesize*nodestosteal),(UWORD *)btc_next->bnode,(btc->nodesize/2)*(BE2W(btc_next->be_nodecount) - nodestosteal));
+                  btc_next->be_nodecount=W2BE(BE2W(btc_next->be_nodecount)-nodestosteal);
 
                   if((errorcode=storecachebuffer(cb_next))==0) {
                     preparecachebuffer(cbparent);
 
-                    btcparent->bnode[n+1].key=btc_next->bnode[0].key;
+                    btcparent->bnode[n+1].be_key=btc_next->bnode[0].be_key; // BE->BE Copy!
 
                     errorcode=storecachebuffer(cbparent);
                   }
@@ -481,12 +483,12 @@ LONG deleteinternalnode(BLCK rootblock,struct CacheBuffer *cb,ULONG key) {
               else {   // Merging is possible.
                 preparecachebuffer(cb);
 
-                copywordsforward((UWORD *)btc_next->bnode,(UWORD *)((UBYTE *)btc->bnode+btc->nodesize*btc->nodecount),btc->nodesize*btc_next->nodecount/2);
-                btc->nodecount+=btc_next->nodecount;
+                copywordsforward((UWORD *)btc_next->bnode,(UWORD *)((UBYTE *)btc->bnode+btc->nodesize*BE2W(btc->be_nodecount)),btc->nodesize*BE2W(btc_next->be_nodecount)/2);
+                btc->be_nodecount=W2BE(BE2W(btc->be_nodecount)+BE2W(btc_next->be_nodecount));
 
                 if((errorcode=storecachebuffer(cb))==0) {
                   if((errorcode=freeadminspace(cb_next->blckno))==0) {
-                    errorcode=deleteinternalnode(rootblock,cbparent,btcparent->bnode[n+1].key);
+                    errorcode=deleteinternalnode(rootblock,cbparent,BE2L(btcparent->bnode[n+1].be_key));
                   }
                 }
               }
@@ -499,33 +501,33 @@ LONG deleteinternalnode(BLCK rootblock,struct CacheBuffer *cb,ULONG key) {
 
             _XDEBUG((DEBUG_NODES,"deleteinternalnode: using prev container.\n"));
 
-            if((errorcode=readcachebuffercheck(&cb2,btcparent->bnode[n-1].data,BNODECONTAINER_ID))==0) {
+            if((errorcode=readcachebuffercheck(&cb2,BE2L(btcparent->bnode[n-1].be_data),BNODECONTAINER_ID))==0) {
               struct fsBNodeContainer *bnc2=cb2->data;
               struct BTreeContainer *btc2=&bnc2->btc;
 
               lockcachebuffer(cb2);
 
-              if(btc2->nodecount+btc->nodecount>branches) {
-                WORD nodestosteal=(btc2->nodecount+btc->nodecount)/2-btc->nodecount;
+              if(BE2W(btc2->be_nodecount)+BE2W(btc->be_nodecount)>branches) {
+                WORD nodestosteal=(BE2W(btc2->be_nodecount)+BE2W(btc->be_nodecount))/2-BE2W(btc->be_nodecount);
 
                 /* Merging them is not possible.  Steal a few nodes then. */
 
                 preparecachebuffer(cb);
 
-                copywordsbackward((UWORD *)((UBYTE *)btc->bnode+btc->nodecount*btc->nodesize),(UWORD *)((UBYTE *)btc->bnode+(btc->nodecount+nodestosteal)*btc->nodesize),btc->nodecount*btc->nodesize/2);
-                btc->nodecount+=nodestosteal;
-                copywordsforward((UWORD *)((UBYTE *)btc2->bnode+(btc2->nodecount-nodestosteal)*btc2->nodesize),(UWORD *)btc->bnode,nodestosteal*btc->nodesize/2);
+                copywordsbackward((UWORD *)((UBYTE *)btc->bnode+BE2W(btc->be_nodecount)*btc->nodesize),(UWORD *)((UBYTE *)btc->bnode+(BE2W(btc->be_nodecount)+nodestosteal)*btc->nodesize),BE2W(btc->be_nodecount)*btc->nodesize/2);
+                btc->be_nodecount=W2BE(BE2W(btc->be_nodecount)+nodestosteal);
+                copywordsforward((UWORD *)((UBYTE *)btc2->bnode+(BE2W(btc2->be_nodecount)-nodestosteal)*btc2->nodesize),(UWORD *)btc->bnode,nodestosteal*btc->nodesize/2);
 
                 if((errorcode=storecachebuffer(cb))==0) {
 
                   preparecachebuffer(cb2);
 
-                  btc2->nodecount-=nodestosteal;
+                  btc2->be_nodecount=W2BE(BE2W(btc2->be_nodecount)-nodestosteal);
 
                   if((errorcode=storecachebuffer(cb2))==0) {
                     preparecachebuffer(cbparent);
 
-                    btcparent->bnode[n].key=btc->bnode[0].key;
+                    btcparent->bnode[n].be_key=btc->bnode[0].be_key; // BE->BE copy!
 
                     errorcode=storecachebuffer(cbparent);
                   }
@@ -534,12 +536,12 @@ LONG deleteinternalnode(BLCK rootblock,struct CacheBuffer *cb,ULONG key) {
               else {
                 preparecachebuffer(cb2);
 
-                copywordsforward((UWORD *)btc->bnode,(UWORD *)((UBYTE *)btc2->bnode+btc2->nodecount*btc2->nodesize),btc->nodecount*btc->nodesize/2);
-                btc2->nodecount+=btc->nodecount;
+                copywordsforward((UWORD *)btc->bnode,(UWORD *)((UBYTE *)btc2->bnode+BE2W(btc2->be_nodecount)*btc2->nodesize),BE2W(btc->be_nodecount)*btc->nodesize/2);
+                btc2->be_nodecount=W2BE(BE2W(btc2->be_nodecount)+BE2W(btc->be_nodecount));
 
                 if((errorcode=storecachebuffer(cb2))==0) {
                   if((errorcode=freeadminspace(cb->blckno))==0) {
-                    errorcode=deleteinternalnode(rootblock,cbparent,btcparent->bnode[n].key);
+                    errorcode=deleteinternalnode(rootblock,cbparent,BE2L(btcparent->bnode[n].be_key));
                   }
                 }
               }
@@ -556,7 +558,7 @@ LONG deleteinternalnode(BLCK rootblock,struct CacheBuffer *cb,ULONG key) {
           unlockcachebuffer(cbparent);
 
         }
-        else if(btc->nodecount==1) {
+        else if(BE2W(btc->be_nodecount)==1) {
           /* No parent, so must be root. */
 
           _XDEBUG((DEBUG_NODES,"deleteinternalnode: no parent so must be root\n"));
@@ -571,10 +573,10 @@ LONG deleteinternalnode(BLCK rootblock,struct CacheBuffer *cb,ULONG key) {
 
             preparecachebuffer(cb);
 
-            if((errorcode=readcachebuffercheck(&cb2,btc->bnode[0].data,BNODECONTAINER_ID))==0) {
+            if((errorcode=readcachebuffercheck(&cb2,BE2L(btc->bnode[0].be_data),BNODECONTAINER_ID))==0) {
 
               CopyMemQuick(cb2->data,cb->data,globals->bytes_block);
-              bnc->bheader.ownblock=cb->blckno;
+              bnc->bheader.be_ownblock=L2BE(cb->blckno);
 
               if((errorcode=storecachebuffer(cb))==0) {
                 errorcode=freeadminspace(cb2->blckno);
@@ -610,7 +612,7 @@ LONG deletebnode(BLCK rootblock,ULONG key) {
 
   if((errorcode=findbnode(rootblock,key,&cb,&bn))==0) {
     #ifdef CHECKCODE_BNODES
-      if(bn==0 || bn->key!=key) {
+      if(bn==0 || BE2L(bn->be_key)!=key) {
         dreq("deletebnode: key %ld doesn't exist!",key);
         outputcachebuffer(cb);
         return(INTERR_BTREE);
@@ -637,11 +639,11 @@ void removebnode(ULONG key,struct BTreeContainer *btc) {
      by its key.  If no such key exists this routine does nothing.
      It correctly handles empty BTreeContainers. */
 
-  while(n<btc->nodecount) {
-    if(bn->key == key) {
-      btc->nodecount--;
+  while(n<BE2W(btc->be_nodecount)) {
+    if(BE2L(bn->be_key) == key) {
+      btc->be_nodecount = W2BE(BE2W(btc->be_nodecount)-1);
 
-      copywordsforward((UWORD *)((UBYTE *)bn+btc->nodesize),(UWORD *)bn,(btc->nodecount-n)*btc->nodesize/2);
+      copywordsforward((UWORD *)((UBYTE *)bn+btc->nodesize),(UWORD *)bn,(BE2W(btc->be_nodecount)-n)*btc->nodesize/2);
       break;
     }
     bn=(struct BNode *)((UBYTE *)bn+btc->nodesize);
@@ -652,7 +654,7 @@ void removebnode(ULONG key,struct BTreeContainer *btc) {
 
 
 struct BNode *next(struct BTreeContainer *tc, struct BNode *tn) {
-  if((UBYTE *)tn == (UBYTE *)tc->bnode + (tc->nodecount-1)*tc->nodesize) {
+  if((UBYTE *)tn == (UBYTE *)tc->bnode + (BE2W(tc->be_nodecount)-1)*tc->nodesize) {
     return(0);
   }
   else {
@@ -675,7 +677,7 @@ struct BNode *previous(struct BTreeContainer *tc, struct BNode *tn) {
 
 LONG nextbnode(BLCK rootblock, struct CacheBuffer **io_cb, struct BNode **io_bnode) {
   struct BNode *bn;
-  ULONG key=(*io_bnode)->key;
+  ULONG key=BE2L((*io_bnode)->be_key);
   BLCK blockwithnext=0;
   LONG errorcode;
 
@@ -689,7 +691,7 @@ LONG nextbnode(BLCK rootblock, struct CacheBuffer **io_cb, struct BNode **io_bno
     bn=searchforbnode(key, btc);
 
     if((*io_bnode=next(btc, bn))!=0) {
-      blockwithnext=(*io_bnode)->data;
+      blockwithnext=BE2L((*io_bnode)->be_data);
     }
 
     if(btc->isleaf==TRUE) {
@@ -703,7 +705,7 @@ LONG nextbnode(BLCK rootblock, struct CacheBuffer **io_cb, struct BNode **io_bno
       break;
     }
 
-    rootblock=bn->data;
+    rootblock=BE2L(bn->be_data);
   }
 
   return(errorcode);
@@ -725,7 +727,7 @@ LONG previousbnode(BLCK rootblock, struct CacheBuffer **io_cb, struct BNode **io
     return(0);
   }
   else {
-    ULONG key=(*io_bnode)->key;
+    ULONG key=BE2L((*io_bnode)->be_key);
     BLCK blockwithprevious=0;
     LONG errorcode;
 
@@ -738,7 +740,7 @@ LONG previousbnode(BLCK rootblock, struct CacheBuffer **io_cb, struct BNode **io
       bn=searchforbnode(key, btc);
 
       if((*io_bnode=previous(btc, bn))!=0) {
-        blockwithprevious=(*io_bnode)->data;
+        blockwithprevious=BE2L((*io_bnode)->be_data);
       }
 
       if(btc->isleaf==TRUE) {
@@ -752,7 +754,7 @@ LONG previousbnode(BLCK rootblock, struct CacheBuffer **io_cb, struct BNode **io
         break;
       }
 
-      rootblock=bn->data;
+      rootblock=BE2L(bn->be_data);
     }
 
     return(errorcode);

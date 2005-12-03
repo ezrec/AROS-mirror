@@ -1,3 +1,5 @@
+#include "asmsupport.h"
+
 #include <dos/dos.h>
 #include <exec/types.h>
 
@@ -33,12 +35,12 @@ LONG allocadminspace(struct CacheBuffer **returned_cb) {
     while(adminspaces-->0) {
       WORD bitoffset;
 
-      if(as->space!=0 && (bitoffset=bfffz(as->bits,0)) < 32) {
-        BLCK emptyadminblock=as->space+bitoffset;
+      if(as->be_space!=0 && (bitoffset=bfffz(BE2L(as->be_bits),0)) < 32) {
+        BLCK emptyadminblock=BE2L(as->be_space)+bitoffset;
 
         preparecachebuffer(cb);
 
-        as->bits|=1<<(31-bitoffset);
+        as->be_bits|=L2BE(1<<(31-bitoffset));
 
         if((errorcode=storecachebuffer(cb))!=0) {
           return(errorcode);
@@ -55,7 +57,7 @@ LONG allocadminspace(struct CacheBuffer **returned_cb) {
       as++;
     }
 
-    if((adminspaceblock=asc->next)==0) {
+    if((adminspaceblock=BE2L(asc->be_next))==0) {
       ULONG startblock;
 
       /* If we get here it means current adminspace areas are all filled.
@@ -73,7 +75,7 @@ LONG allocadminspace(struct CacheBuffer **returned_cb) {
           struct fsAdminSpace *as=asc->adminspace;
           LONG adminspaces=(globals->bytes_block-sizeof(struct fsAdminSpaceContainer))/sizeof(struct fsAdminSpace);
 
-          while(adminspaces-->0 && as->space!=0) {
+          while(adminspaces-->0 && as->be_space!=0) {
             as++;
           }
 
@@ -82,14 +84,14 @@ LONG allocadminspace(struct CacheBuffer **returned_cb) {
 
             preparecachebuffer(cb);
 
-            as->space=startblock;
-            as->bits=0;
+            as->be_space=L2BE(startblock);
+            as->be_bits=0;
 
             errorcode=storecachebuffer(cb);
             break;
           }
 
-          if(asc->next==0) {
+          if(BE2L(asc->be_next)==0) {
 
             /* Oh-oh... we marked our new adminspace area in use, but we couldn't
                find space to store a fsAdminSpace structure in the existing
@@ -99,7 +101,7 @@ LONG allocadminspace(struct CacheBuffer **returned_cb) {
 
             preparecachebuffer(cb);
 
-            asc->next=startblock;
+            asc->be_next=L2BE(startblock);
 
             if((errorcode=storecachebuffer(cb))!=0) {
               return(errorcode);
@@ -114,11 +116,11 @@ LONG allocadminspace(struct CacheBuffer **returned_cb) {
             asc=cb->data;
 
             asc->bheader.id=ADMINSPACECONTAINER_ID;
-            asc->bheader.ownblock=startblock;
-            asc->previous=adminspaceblock;
+            asc->bheader.be_ownblock=L2BE(startblock);
+            asc->be_previous=L2BE(adminspaceblock);
 
-            asc->adminspace[0].space=startblock;
-            asc->adminspace[0].bits=0x80000000;
+            asc->adminspace[0].be_space=L2BE(startblock);
+            asc->adminspace[0].be_bits=L2BE(0x80000000);
             asc->bits=32;
 
             if((errorcode=storecachebuffer(cb))!=0) {
@@ -129,7 +131,7 @@ LONG allocadminspace(struct CacheBuffer **returned_cb) {
             break;   /* Breaks through to outer loop! */
           }
 
-          adminspaceblock=asc->next;
+          adminspaceblock=BE2L(asc->be_next);
         }
       }
 
@@ -157,8 +159,8 @@ LONG freeadminspace(BLCK block) {
     LONG adminspaces=(globals->bytes_block-sizeof(struct fsAdminSpaceContainer))/sizeof(struct fsAdminSpace);
 
     while(adminspaces-->0) {
-      if(block>=as->space && block<as->space+32) {
-        WORD bitoffset=block-as->space;
+      if(block>=BE2L(as->be_space) && block<BE2L(as->be_space)+32) {
+        WORD bitoffset=block-BE2L(as->be_space);
 
         /* block to be freed has been located */
 
@@ -166,7 +168,7 @@ LONG freeadminspace(BLCK block) {
 
         preparecachebuffer(cb);
 
-        as->bits&=~(1<<(31-bitoffset));
+        as->be_bits&=~(L2BE(1<<(31-bitoffset)));
 
         if((errorcode=storecachebuffer(cb))==0) {
           errorcode=addfreeoperation(block);
@@ -182,7 +184,7 @@ LONG freeadminspace(BLCK block) {
       as++;
     }
 
-    if((adminspaceblock=asc->next)==0) {
+    if((adminspaceblock=BE2L(asc->be_next))==0) {
       break;
     }
   }

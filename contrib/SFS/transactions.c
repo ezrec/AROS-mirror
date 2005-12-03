@@ -1,3 +1,5 @@
+#include "asmsupport.h"
+
 //#include <clib/alib_protos.h>
 #include <devices/trackdisk.h>
 #include <exec/types.h>
@@ -217,7 +219,7 @@ LONG savetransaction(BLCK *firsttransactionblock) {
         cb->blckno=blckno;
 
         ts->bheader.id=TRANSACTIONSTORAGE_ID;
-        ts->bheader.ownblock=blckno;
+        ts->bheader.be_ownblock=L2BE(blckno);
 
         done=fillwithoperations(ts,&o,&src,&length);
 
@@ -231,7 +233,7 @@ LONG savetransaction(BLCK *firsttransactionblock) {
             break;
           }
 
-          ts->next=blckno;
+          ts->be_next=L2BE(blckno);
         }
 
         setchecksum(cb);
@@ -269,7 +271,7 @@ LONG loadtransaction(BLCK block) {
   while(block!=0 && (errorcode=readcachebuffercheck(&cb,block,TRANSACTIONSTORAGE_ID))==0) {
     struct fsTransactionStorage *ts=cb->data;
 
-    block=ts->next;
+    block=BE2L(ts->be_next);
 
     bytesleft=globals->bytes_block-sizeof(struct fsTransactionStorage);
     src=ts->data;
@@ -329,7 +331,7 @@ LONG checkfortransaction(void) {
   if((errorcode=readcachebuffer(&cb,globals->block_root+2))==0) {
     struct fsBlockHeader *bh=cb->data;
 
-    if(checkchecksum(cb)==DOSTRUE && bh->ownblock==globals->block_root+2) {
+    if(checkchecksum(cb)==DOSTRUE && bh->be_ownblock==L2BE(globals->block_root+2)) {
       if(bh->id==TRANSACTIONFAILURE_ID) {
         struct fsTransactionFailure *tf=cb->data;
 
@@ -337,7 +339,7 @@ LONG checkfortransaction(void) {
 
         req("Has an unfinished transaction which\nwill be loaded now.", "Ok");
 
-        if((errorcode=loadtransaction(tf->firsttransaction))==0) {
+        if((errorcode=loadtransaction(BE2L(tf->be_firsttransaction)))==0) {
 
           /* Succesfully loaded the Transaction buffer of the Transaction which
              failed to complete before. */
@@ -827,7 +829,7 @@ LONG removetransactionfailure(void) {
       clearcachebuffer(cb);
 
       bh->id=TRANSACTIONOK_ID;
-      bh->ownblock=globals->block_root+2;
+      bh->be_ownblock=L2BE(globals->block_root+2);
 
       cb->blckno=globals->block_root+2;
 
@@ -898,9 +900,9 @@ LONG flushtransaction(void) {
           clearcachebuffer(cb);
 
           tf->bheader.id=TRANSACTIONFAILURE_ID;
-          tf->bheader.ownblock=globals->block_root+2;
+          tf->bheader.be_ownblock=L2BE(globals->block_root+2);
 
-          tf->firsttransaction=firsttransactionblock;
+          tf->be_firsttransaction=L2BE(firsttransactionblock);
 
           cb->blckno=globals->block_root+2;
 

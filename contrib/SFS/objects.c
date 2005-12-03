@@ -1,3 +1,5 @@
+#include "asmsupport.h"
+
 #include <exec/types.h>
 #include <proto/dos.h>
 #include <proto/exec.h>
@@ -64,17 +66,17 @@ LONG hashobject(BLCK hashblock, struct fsObjectNode *on, NODE nodeno, UBYTE *obj
 
     hashvalue=hash(objectname, globals->is_casesensitive);
     hashchain=HASHCHAIN(hashvalue);
-    nexthash=ht->hashentry[hashchain];
+    nexthash=BE2L(ht->be_hashentry[hashchain]);
 
     preparecachebuffer(cbhash);
 
-    checksum_writelong(cbhash->data, &ht->hashentry[hashchain], nodeno);
+    checksum_writelong_be(cbhash->data, &ht->be_hashentry[hashchain], nodeno);
 
     // ht->hashentry[hashchain]=nodeno;
 
     if((errorcode=storecachebuffer_nochecksum(cbhash))==0) {
-      on->next=nexthash;
-      on->hash16=hashvalue;
+      on->be_next=L2BE(nexthash);
+      on->be_hash16=W2BE(hashvalue);
     }
   }
 
@@ -92,8 +94,8 @@ LONG setrecycledinfo(ULONG deletedfiles, ULONG deletedblocks) {
 
     preparecachebuffer(cb);
 
-    checksum_writelong(cb->data, &ri->deletedfiles, deletedfiles);
-    checksum_writelong(cb->data, &ri->deletedblocks, deletedblocks);
+    checksum_writelong_be(cb->data, &ri->be_deletedfiles, deletedfiles);
+    checksum_writelong_be(cb->data, &ri->be_deletedblocks, deletedblocks);
 
     // ri->deletedfiles=deletedfiles;
     // ri->deletedblocks=deletedblocks;
@@ -115,8 +117,8 @@ LONG setrecycledinfodiff(LONG deletedfiles, LONG deletedblocks) {
 
     preparecachebuffer(cb);
 
-    checksum_writelong(cb->data, &ri->deletedfiles, ri->deletedfiles + deletedfiles);
-    checksum_writelong(cb->data, &ri->deletedblocks, ri->deletedblocks + deletedblocks);
+    checksum_writelong_be(cb->data, &ri->be_deletedfiles, BE2L(ri->be_deletedfiles) + deletedfiles);
+    checksum_writelong_be(cb->data, &ri->be_deletedblocks, BE2L(ri->be_deletedblocks) + deletedblocks);
 
     // ri->deletedfiles+=deletedfiles;
     // ri->deletedblocks+=deletedblocks;
@@ -136,8 +138,8 @@ LONG getrecycledinfo(ULONG *returned_deletedfiles, ULONG *returned_deletedblocks
   if((errorcode=readcachebuffercheck(&cb,globals->block_root,OBJECTCONTAINER_ID))==0) {
     struct fsRootInfo *ri=(struct fsRootInfo *)((UBYTE *)cb->data+globals->bytes_block-sizeof(struct fsRootInfo));
 
-    *returned_deletedfiles=ri->deletedfiles;
-    *returned_deletedblocks=ri->deletedblocks;
+    *returned_deletedfiles=BE2L(ri->be_deletedfiles);
+    *returned_deletedblocks=BE2L(ri->be_deletedblocks);
   }
 
   return(errorcode);
@@ -177,7 +179,7 @@ static LONG safedeleteobjectquick(struct CacheBuffer *cb, struct fsObject *o, WO
       o2=odd;
 
       if((errorcode=locateobject(globals->string2, &cb2, &o2))==ERROR_OBJECT_NOT_FOUND) {
-        ULONG blocks=(o->object.file.size+globals->bytes_block-1)>>globals->shifts_block;
+        ULONG blocks=(BE2L(o->object.file.be_size)+globals->bytes_block-1)>>globals->shifts_block;
 
         globals->internalrename=TRUE;
 
@@ -232,7 +234,7 @@ BOOL cleanupdeletedfiles(void) {
     ULONG filesdeleted=0;
     UBYTE filedeleted;
 
-    if(readobject(RECYCLEDNODE, &cbdd, &odd)==0 && odd->object.dir.firstdirblock!=0) {
+    if(readobject(RECYCLEDNODE, &cbdd, &odd)==0 && odd->object.dir.be_firstdirblock!=0) {
 
       lockcachebuffer(cbdd);
 
@@ -240,13 +242,13 @@ BOOL cleanupdeletedfiles(void) {
         struct CacheBuffer *cb=0;
         struct fsObjectContainer *oc;
         struct fsObject *o;
-        BLCK nextblock=odd->object.dir.firstdirblock;
+        BLCK nextblock=BE2L(odd->object.dir.be_firstdirblock);
 
         filedeleted=FALSE;
 
         while(nextblock!=0 && readcachebuffercheck(&cb, nextblock, OBJECTCONTAINER_ID)==0) {
           oc=cb->data;
-          nextblock=oc->next;
+          nextblock=BE2L(oc->be_next);
         }
 
         if(nextblock!=0) {
@@ -258,10 +260,10 @@ BOOL cleanupdeletedfiles(void) {
           o=oc->object;
 
           do {
-            if(lockable(o->objectnode,EXCLUSIVE_LOCK)!=DOSFALSE) {
-              ULONG size=o->object.file.size>>10;
+            if(lockable(BE2L(o->be_objectnode),EXCLUSIVE_LOCK)!=DOSFALSE) {
+              ULONG size=BE2L(o->object.file.be_size)>>10;
 
-              _DEBUG(("cleanupdeletedfiles: deleting %s, objectnode = %ld\n",o->name,o->objectnode));
+              _DEBUG(("cleanupdeletedfiles: deleting %s, objectnode = %ld\n",o->name,BE2L(o->be_objectnode)));
 
               if(deletefileslowly(cb, o)==0) {
                 kbdeleted+=size;
@@ -274,9 +276,9 @@ BOOL cleanupdeletedfiles(void) {
             o=nextobject(o);
           } while(isobject(o,oc)!=FALSE);
 
-        } while(filedeleted==FALSE && oc->previous!=0 && readcachebuffercheck(&cb, oc->previous, OBJECTCONTAINER_ID)==0);
+        } while(filedeleted==FALSE && oc->be_previous!=0 && readcachebuffercheck(&cb, BE2L(oc->be_previous), OBJECTCONTAINER_ID)==0);
 
-        if(oc->previous==0) {
+        if(oc->be_previous==0) {
           break;
         }
       }
@@ -298,8 +300,8 @@ BOOL cleanupdeletedfiles(void) {
 
 static LONG deleteobjectquick(struct CacheBuffer *cb, struct fsObject *o, WORD sendnotify) {
   UWORD bits=o->bits;
-  BLCK hashblckno=o->object.dir.hashtable;
-  BLCK extentbnode=o->object.file.data;
+  BLCK hashblckno=BE2L(o->object.dir.be_hashtable);
+  BLCK extentbnode=BE2L(o->object.file.be_data);
   UBYTE *notifypath=0;
   LONG errorcode;
 
@@ -374,17 +376,17 @@ LONG deleteobject(struct ExtFileLock *lock, UBYTE *path, WORD sendnotify) {
     }
 
     if(errorcode==0 || (errorcode==ERROR_IS_SOFT_LINK && *path==0)) {
-      if((o->protection & FIBF_DELETE)!=0) {
-        if(lockable(o->objectnode,EXCLUSIVE_LOCK)!=DOSFALSE && (o->bits & OTYPE_UNDELETABLE)==0) {
+      if((o->be_protection & L2BE(FIBF_DELETE))!=0) {
+        if(lockable(BE2L(o->be_objectnode),EXCLUSIVE_LOCK)!=DOSFALSE && (o->bits & OTYPE_UNDELETABLE)==0) {
           /* Object to be deleted was read correctly by the above locateobject call */
 
-          if((o->bits & OTYPE_DIR)==0 || o->object.dir.firstdirblock==0) {
+          if((o->bits & OTYPE_DIR)==0 || o->object.dir.be_firstdirblock==0) {
             struct fsObjectContainer *oc=cb->data;
 
             /* At this point we can be sure that the object is allowed
                to be deleted. */
 
-            if((o->bits & OTYPE_DIR)!=0 || (o->bits & OTYPE_LINK)!=0 || globals->has_recycled==FALSE || oc->parent==RECYCLEDNODE) {
+            if((o->bits & OTYPE_DIR)!=0 || (o->bits & OTYPE_LINK)!=0 || globals->has_recycled==FALSE || oc->be_parent==L2BE(RECYCLEDNODE)) {
               errorcode=deleteobjectquick(cb, o, sendnotify);
             }
             else {
@@ -423,11 +425,11 @@ LONG removeobjectcontainer(struct CacheBuffer *cb) {
 
   lockcachebuffer(cb);
 
-  if(oc->next!=0 && oc->next!=oc->bheader.ownblock) {
+  if(oc->be_next!=0 && oc->be_next!=oc->bheader.be_ownblock) {  // BE-BE compare!
     struct CacheBuffer *next_cb;
     struct fsObjectContainer *next_oc;
 
-    if((errorcode=readcachebuffercheck(&next_cb,oc->next,OBJECTCONTAINER_ID))!=0) {
+    if((errorcode=readcachebuffercheck(&next_cb,BE2L(oc->be_next),OBJECTCONTAINER_ID))!=0) {
       return(errorcode);
     }
 
@@ -435,17 +437,17 @@ LONG removeobjectcontainer(struct CacheBuffer *cb) {
 
     next_oc=next_cb->data;
 
-    next_oc->previous=oc->previous;
+    next_oc->be_previous=oc->be_previous;   // BE-BE copy!
     if((errorcode=storecachebuffer(next_cb))!=0) {
       return(errorcode);
     }
   }
 
-  if(oc->previous!=0 && oc->previous!=oc->bheader.ownblock) {
+  if(oc->be_previous!=0 && oc->be_previous!=oc->bheader.be_ownblock) { // BE-BE compare!
     struct CacheBuffer *previous_cb;
     struct fsObjectContainer *previous_oc;
 
-    if((errorcode=readcachebuffercheck(&previous_cb,oc->previous,OBJECTCONTAINER_ID))!=0) {
+    if((errorcode=readcachebuffercheck(&previous_cb,BE2L(oc->be_previous),OBJECTCONTAINER_ID))!=0) {
       return(errorcode);
     }
 
@@ -453,7 +455,7 @@ LONG removeobjectcontainer(struct CacheBuffer *cb) {
 
     previous_oc=previous_cb->data;
 
-    previous_oc->next=oc->next;
+    previous_oc->be_next=oc->be_next;   // BE-BE copy
     if((errorcode=storecachebuffer(previous_cb))!=0) {
       return(errorcode);
     }
@@ -462,17 +464,17 @@ LONG removeobjectcontainer(struct CacheBuffer *cb) {
     struct CacheBuffer *parent_cb;
     struct fsObject *parent_o;
 
-    if((errorcode=readobject(oc->parent,&parent_cb,&parent_o))!=0) {
+    if((errorcode=readobject(BE2L(oc->be_parent),&parent_cb,&parent_o))!=0) {
       return(errorcode);
     }
 
     preparecachebuffer(parent_cb);
 
     if((parent_o->bits & OTYPE_RINGLIST)!=0) {
-      parent_o->object.dir.firstdirblock=0;
+      parent_o->object.dir.be_firstdirblock=0;
     }
     else {
-      parent_o->object.dir.firstdirblock=oc->next;
+      parent_o->object.dir.be_firstdirblock=oc->be_next;   // BE-BE copy
     }
 
     if((errorcode=storecachebuffer(parent_cb))!=0) {
@@ -495,15 +497,15 @@ LONG removeobjectcontainer(struct CacheBuffer *cb) {
 
 LONG bumpobject(struct CacheBuffer *cb, struct fsObject *o) {
   ULONG newdate=getdate();
-  ULONG newprotection=o->protection & ~FIBF_ARCHIVE;
+  ULONG newprotection=BE2L(o->be_protection) & ~FIBF_ARCHIVE;
 
   /* Updates the date of the object and clears the archived bit. */
 
-  if(newdate!=o->datemodified || o->protection!=newprotection) {
+  if(newdate!=BE2L(o->be_datemodified) || BE2L(o->be_protection)!=newprotection) {
     preparecachebuffer(cb);
 
-    checksum_writelong(cb->data, &o->datemodified, newdate);
-    checksum_writelong(cb->data, &o->protection, newprotection);
+    checksum_writelong_be(cb->data, &o->be_datemodified, newdate);
+    checksum_writelong_be(cb->data, &o->be_protection, newprotection);
 
     // o->datemodified=newdate;
     // o->protection=newprotection;
@@ -517,7 +519,7 @@ LONG bumpobject(struct CacheBuffer *cb, struct fsObject *o) {
 
 LONG simpleremoveobject(struct CacheBuffer *cb, struct fsObject *o) {
   struct fsObjectContainer *oc=cb->data;
-  BLCK parent=oc->parent;
+  BLCK parent=BE2L(oc->be_parent);
   LONG errorcode;
 
   /* This function removes the fsObject structure passed in from the passed
@@ -530,11 +532,11 @@ LONG simpleremoveobject(struct CacheBuffer *cb, struct fsObject *o) {
 
   _XDEBUG((DEBUG_OBJECTS,"simpleremoveobject: Entry\n"));
 
-  if(oc->parent==RECYCLEDNODE) {
+  if(BE2L(oc->be_parent)==RECYCLEDNODE) {
 
     /* This object is removed from the Recycled directory. */
 
-    if((errorcode=setrecycledinfodiff(-1, -((o->object.file.size+globals->bytes_block-1)>>globals->shifts_block)))!=0) {
+    if((errorcode=setrecycledinfodiff(-1, -((BE2L(o->object.file.be_size)+globals->bytes_block-1)>>globals->shifts_block)))!=0) {
       return(errorcode);
     }
   }
@@ -588,8 +590,8 @@ static LONG dehashobjectquick(NODE objectnode, UBYTE *name, NODE parentobjectnod
      the object, or when renaming/moving it.  newtransaction() must have been called before
      calling this function. */
 
-  if((errorcode=readobject(parentobjectnode,&cb,&o))==0 && o->object.dir.hashtable!=0) {
-    if((errorcode=readcachebuffercheck(&cb,o->object.dir.hashtable,HASHTABLE_ID))==0) {
+  if((errorcode=readobject(parentobjectnode,&cb,&o))==0 && o->object.dir.be_hashtable!=0) {
+    if((errorcode=readcachebuffercheck(&cb,BE2L(o->object.dir.be_hashtable),HASHTABLE_ID))==0) {
       struct CacheBuffer *cbnode;
       struct fsObjectNode *on;
       struct fsHashTable *ht=cb->data;
@@ -605,7 +607,7 @@ static LONG dehashobjectquick(NODE objectnode, UBYTE *name, NODE parentobjectnod
         lockcachebuffer(cbnode);
 
         hashchain=HASHCHAIN(hash(name, globals->is_casesensitive));
-        nexthash=ht->hashentry[hashchain];
+        nexthash=BE2L(ht->be_hashentry[hashchain]);
 
         if(nexthash==objectnode) {
           /* The hashtable directly points to the fsObject to be delinked.  We simply
@@ -615,7 +617,7 @@ static LONG dehashobjectquick(NODE objectnode, UBYTE *name, NODE parentobjectnod
 
           preparecachebuffer(cb);
 
-          checksum_writelong(cb->data, &ht->hashentry[hashchain], on->next);
+          checksum_writelong_be(cb->data, &ht->be_hashentry[hashchain], BE2L(on->be_next));
 
           // ht->hashentry[hashchain]=on->next;
 
@@ -632,7 +634,7 @@ static LONG dehashobjectquick(NODE objectnode, UBYTE *name, NODE parentobjectnod
               break;
             }
 
-            nexthash=onsearch->next;
+            nexthash=BE2L(onsearch->be_next);
           }
 
           if(errorcode==0) {
@@ -642,7 +644,7 @@ static LONG dehashobjectquick(NODE objectnode, UBYTE *name, NODE parentobjectnod
 
               preparecachebuffer(cb);
 
-              checksum_writelong(cb->data, &onsearch->next, on->next);
+              checksum_writelong_be(cb->data, &onsearch->be_next, BE2L(on->be_next));
 
               // onsearch->next=on->next;
 
@@ -693,7 +695,7 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
 
   _XDEBUG((DEBUG_OBJECTS,"createobjecttags: Creating object '%s' in dir '%s'.\n",objectname,(*io_o)->name));
 
-  if((*io_o)->objectnode!=RECYCLEDNODE || globals->internalrename!=FALSE) {
+  if(BE2L((*io_o)->be_objectnode)!=RECYCLEDNODE || globals->internalrename!=FALSE) {
     struct TagItem *tag;
 
     lockcachebuffer(*io_cb);
@@ -714,7 +716,7 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
 
       if(errorcode==0) {
         ULONG objectsize;
-        ULONG hashblock=(*io_o)->object.dir.hashtable;
+        ULONG hashblock=BE2L((*io_o)->object.dir.be_hashtable);
 
         objectsize=sizeof(struct fsObject)+strlen(objectname)+2;
 
@@ -736,10 +738,10 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
 
           /* Setting defaults in case tags aren't specified: */
 
-          o->owneruid=0;
-          o->ownergid=0;
-          o->protection=FIBF_READ|FIBF_WRITE|FIBF_EXECUTE|FIBF_DELETE;
-          o->datemodified=getdate();
+          o->be_owneruid=0;
+          o->be_ownergid=0;
+          o->be_protection=L2BE(FIBF_READ|FIBF_WRITE|FIBF_EXECUTE|FIBF_DELETE);
+          o->be_datemodified=L2BE(getdate());
 
           /* Copying name */
 
@@ -752,14 +754,14 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
           while((tag=NextTagItem(&tstate))!=0) {
             switch(tag->ti_Tag) {
             case CO_OWNER:
-              o->owneruid=tag->ti_Data>>16;
-              o->ownergid=tag->ti_Data & 0xFFFF;
+              o->be_owneruid=W2BE(tag->ti_Data>>16);
+              o->be_ownergid=W2BE(tag->ti_Data & 0xFFFF);
               break;
             case CO_DATEMODIFIED:
-              o->datemodified=tag->ti_Data;
+              o->be_datemodified=L2BE(tag->ti_Data);
               break;
             case CO_PROTECTION:
-              o->protection=tag->ti_Data;
+              o->be_protection=L2BE(tag->ti_Data);
               break;
             case CO_COMMENT:
               {
@@ -773,17 +775,17 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
               break;
             case CO_SIZE:
               if((o->bits & OTYPE_DIR)==0) {
-                o->object.file.size=tag->ti_Data;
+                o->object.file.be_size=L2BE(tag->ti_Data);
               }
               break;
             case CO_DATA:
               if((o->bits & OTYPE_DIR)==0) {
-                o->object.file.data=tag->ti_Data;
+                o->object.file.be_data=L2BE(tag->ti_Data);
               }
               break;
             case CO_FIRSTDIRBLOCK:
               if((o->bits & OTYPE_DIR)!=0) {
-                o->object.dir.firstdirblock=tag->ti_Data;
+                o->object.dir.be_firstdirblock=L2BE(tag->ti_Data);
               }
               break;
             }
@@ -795,9 +797,9 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
 
             if((tag=FindTagItem(CO_OBJECTNODE, (struct TagItem *)&tags))!=0) {
 
-              o->objectnode=tag->ti_Data;
+              o->be_objectnode=L2BE(tag->ti_Data);
 
-              if((errorcode=findnode(globals->block_objectnoderoot, sizeof(struct fsObjectNode), o->objectnode, &cbnode, (struct fsNode **)&on))==0) {
+              if((errorcode=findnode(globals->block_objectnoderoot, sizeof(struct fsObjectNode), BE2L(o->be_objectnode), &cbnode, (struct fsNode **)&on))==0) {
                 preparecachebuffer(cbnode);
               }
             }
@@ -805,18 +807,18 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
               NODE nodeno;
 
               if((errorcode=createnode(globals->block_objectnoderoot, sizeof(struct fsObjectNode), &cbnode, (struct fsNode **)&on, &nodeno))==0) {
-                on->hash16=hash(o->name, globals->is_casesensitive);
-                o->objectnode=nodeno;
+                on->be_hash16=W2BE(hash(o->name, globals->is_casesensitive));
+                o->be_objectnode=L2BE(nodeno);
               }
             }
 
             if(errorcode==0) {
               /* CacheBuffer cbnode is prepared. */
 
-              on->node.data=(*io_cb)->blckno;
+              on->node.be_data=L2BE((*io_cb)->blckno);
 
               if((tag=FindTagItem(CO_HASHOBJECT, (struct TagItem *)&tags))!=0 && tag->ti_Data!=FALSE) {
-                errorcode=hashobject(hashblock, on, o->objectnode, objectname);
+                errorcode=hashobject(hashblock, on, BE2L(o->be_objectnode), objectname);
               }
 
               if(errorcode==0) {
@@ -833,16 +835,16 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
               struct CacheBuffer *hashcb;
 
               if((tag=FindTagItem(CO_HASHBLOCK, (struct TagItem *)&tags))!=0) {
-                o->object.dir.hashtable=tag->ti_Data;
+                o->object.dir.be_hashtable=L2BE(tag->ti_Data);
               }
               else if((errorcode=allocadminspace(&hashcb))==0) {  // Create a new HashTable block.
                 struct fsHashTable *ht=hashcb->data;
 
-                o->object.dir.hashtable=hashcb->blckno;
+                o->object.dir.be_hashtable=L2BE(hashcb->blckno);
 
                 ht->bheader.id=HASHTABLE_ID;
-                ht->bheader.ownblock=hashcb->blckno;
-                ht->parent=o->objectnode;
+                ht->bheader.be_ownblock=L2BE(hashcb->blckno);
+                ht->be_parent=o->be_objectnode; // BE-BE copy!
 
                 errorcode=storecachebuffer(hashcb);
               }
@@ -859,13 +861,13 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
                   UBYTE *dest=sl->string;
                   UBYTE *softlink=(UBYTE *)tag->ti_Data;
 
-                  o->object.file.data=cb->blckno;
+                  o->object.file.be_data=L2BE(cb->blckno);
 
                   sl->bheader.id=SOFTLINK_ID;
-                  sl->bheader.ownblock=cb->blckno;
-                  sl->parent=o->objectnode;
-                  sl->next=0;
-                  sl->previous=0;
+                  sl->bheader.be_ownblock=L2BE(cb->blckno);
+                  sl->be_parent=o->be_objectnode;   // BE-BE copy
+                  sl->be_next=0;
+                  sl->be_previous=0;
 
                   while((*dest++=*softlink++)!=0) {
                   }
@@ -900,20 +902,20 @@ static LONG createobjecttags(struct CacheBuffer **io_cb, struct fsObject **io_o,
 
 
 static void copyobject(struct fsObject *o2,struct fsObject *o) {
-  o->objectnode=o2->objectnode;
-  o->owneruid=o2->owneruid;
-  o->ownergid=o2->ownergid;
-  o->protection=o2->protection;
-  o->datemodified=o2->datemodified;
+  o->be_objectnode=o2->be_objectnode;   // BE-BE copy
+  o->be_owneruid=o2->be_owneruid;   // BE-BE copy
+  o->be_ownergid=o2->be_ownergid;   // BE-BE copy
+  o->be_protection=o2->be_protection;   // BE-BE copy
+  o->be_datemodified=o2->be_datemodified;   // BE-BE copy
   o->bits=o2->bits;
 
   if((o->bits & OTYPE_DIR)!=0) {
-    o->object.dir.firstdirblock=o2->object.dir.firstdirblock;
-    o->object.dir.hashtable=o2->object.dir.hashtable;
+    o->object.dir.be_firstdirblock=o2->object.dir.be_firstdirblock;   // BE-BE copy
+    o->object.dir.be_hashtable=o2->object.dir.be_hashtable;   // BE-BE copy
   }
   else {
-    o->object.file.data=o2->object.file.data;
-    o->object.file.size=o2->object.file.size;
+    o->object.file.be_data=o2->object.file.be_data;   // BE-BE copy
+    o->object.file.be_size=o2->object.file.be_size;   // BE-BE copy
   }
 }
 
@@ -939,7 +941,7 @@ LONG setcomment2(struct CacheBuffer *cb, struct fsObject *o, UBYTE *comment) {
       else {
         struct fsObject *oldo;
         UBYTE object[sizeof(struct fsObject)+110+80];
-        NODE parent=((struct fsObjectContainer *)cb->data)->parent;
+        NODE parent=BE2L(((struct fsObjectContainer *)cb->data)->be_parent);
 
         oldo=(struct fsObject *)object;
 
@@ -954,15 +956,15 @@ LONG setcomment2(struct CacheBuffer *cb, struct fsObject *o, UBYTE *comment) {
               tag1=CO_HASHBLOCK;
               tag2=CO_FIRSTDIRBLOCK;
 
-              val1=oldo->object.dir.hashtable;
-              val2=oldo->object.dir.firstdirblock;
+              val1=BE2L(oldo->object.dir.be_hashtable);
+              val2=BE2L(oldo->object.dir.be_firstdirblock);
             }
             else {
               tag1=CO_DATA;
               tag2=CO_SIZE;
 
-              val1=oldo->object.file.data;
-              val2=oldo->object.file.size;
+              val1=BE2L(oldo->object.file.be_data);
+              val2=BE2L(oldo->object.file.be_size);
             }
 
             /* We've removed the object, but didn't remove it from the hashchain.
@@ -974,10 +976,10 @@ LONG setcomment2(struct CacheBuffer *cb, struct fsObject *o, UBYTE *comment) {
 
             if((errorcode=createobjecttags(&cb, &o, oldo->name, CO_ALLOWDUPLICATES, TRUE,
                                                                 CO_COMMENT, comment,
-                                                                CO_OBJECTNODE, oldo->objectnode,
-                                                                CO_PROTECTION, oldo->protection,
-                                                                CO_DATEMODIFIED, oldo->datemodified,
-                                                                CO_OWNER, (oldo->owneruid<<16) + oldo->ownergid,
+                                                                CO_OBJECTNODE, BE2L(oldo->be_objectnode),
+                                                                CO_PROTECTION, BE2L(oldo->be_protection),
+                                                                CO_DATEMODIFIED, BE2L(oldo->be_datemodified),
+                                                                CO_OWNER, (BE2W(oldo->be_owneruid)<<16) + BE2W(oldo->be_ownergid),
                                                                 CO_BITS, oldo->bits,
                                                                 tag1, val1,
                                                                 tag2, val2,
@@ -1275,10 +1277,10 @@ LONG findobjectspace(struct CacheBuffer **io_cb, struct fsObject **io_o, ULONG b
   struct CacheBuffer *cbparent=*io_cb;
   struct fsObject *oparent=*io_o;
   struct CacheBuffer *cb;
-  ULONG nextblock=oparent->object.dir.firstdirblock;
+  ULONG nextblock=BE2L(oparent->object.dir.be_firstdirblock);
   LONG errorcode=0;
 
-  _XDEBUG((DEBUG_OBJECTS,"findobjectspace: Looking for %ld bytes in directory with ObjectNode number %ld (in block %ld)\n",bytesneeded,(*io_o)->objectnode,(*io_cb)->blckno));
+  _XDEBUG((DEBUG_OBJECTS,"findobjectspace: Looking for %ld bytes in directory with ObjectNode number %ld (in block %ld)\n",bytesneeded,BE2L((*io_o)->be_objectnode),(*io_cb)->blckno));
 
   /* This function will look in the directory indicated by io_o
      for an ObjectContainer block which contains bytesneeded free
@@ -1314,11 +1316,11 @@ LONG findobjectspace(struct CacheBuffer **io_cb, struct fsObject **io_o, ULONG b
       break;
     }
 
-    if((oparent->bits & OTYPE_QUICKDIR)!=0 || ((oparent->bits & OTYPE_RINGLIST)!=0 && oc->next==oparent->object.dir.firstdirblock)) {
+    if((oparent->bits & OTYPE_QUICKDIR)!=0 || ((oparent->bits & OTYPE_RINGLIST)!=0 && oc->be_next==oparent->object.dir.be_firstdirblock)) {    // BE-BE compare
       nextblock=0;
     }
     else {
-      nextblock=oc->next;
+      nextblock=BE2L(oc->be_next);
     }
   }
 
@@ -1339,36 +1341,36 @@ LONG findobjectspace(struct CacheBuffer **io_cb, struct fsObject **io_o, ULONG b
          so the new free space can be found quickly when more entries need to be added. */
 
       oc->bheader.id=OBJECTCONTAINER_ID;
-      oc->bheader.ownblock=cb->blckno;
-      oc->parent=oparent->objectnode;
-      oc->next=oparent->object.dir.firstdirblock;
-      oc->previous=0;
+      oc->bheader.be_ownblock=L2BE(cb->blckno);
+      oc->be_parent=oparent->be_objectnode;    // BE-BE copy
+      oc->be_next=oparent->object.dir.be_firstdirblock;   // BE-BE copy
+      oc->be_previous=0;
 
       preparecachebuffer(cbparent);
 
-      oparent->object.dir.firstdirblock=cb->blckno;
+      oparent->object.dir.be_firstdirblock=L2BE(cb->blckno);
 
       if((errorcode=storecachebuffer(cbparent))==0) {
         struct CacheBuffer *cbnext;
 
-        if(oc->next!=0 && (errorcode=readcachebuffercheck(&cbnext,oc->next,OBJECTCONTAINER_ID))==0) {
+        if(oc->be_next!=0 && (errorcode=readcachebuffercheck(&cbnext,BE2L(oc->be_next),OBJECTCONTAINER_ID))==0) {
           struct fsObjectContainer *ocnext=cbnext->data;
-          BLCK lastblock=ocnext->previous;
+          BLCK lastblock=BE2L(ocnext->be_previous);
 
           preparecachebuffer(cbnext);
 
-          ocnext->previous=cb->blckno;
+          ocnext->be_previous=L2BE(cb->blckno);
 
           if((errorcode=storecachebuffer(cbnext))==0 && ringlist!=0) {
 
-            oc->previous=lastblock;
+            oc->be_previous=L2BE(lastblock);
 
             if((errorcode=readcachebuffercheck(&cbnext,lastblock,OBJECTCONTAINER_ID))==0) {
               ocnext=cbnext->data;
 
               preparecachebuffer(cbnext);
 
-              checksum_writelong(cbnext->data, &ocnext->next, cb->blckno);
+              checksum_writelong_be(cbnext->data, &ocnext->be_next, cb->blckno);
 
               // ocnext->next=cb->blckno;
 
@@ -1377,8 +1379,8 @@ LONG findobjectspace(struct CacheBuffer **io_cb, struct fsObject **io_o, ULONG b
           }
         }
         else if(ringlist!=0) {
-          oc->previous=cb->blckno;
-          oc->next=cb->blckno;
+          oc->be_previous=L2BE(cb->blckno);
+          oc->be_next=L2BE(cb->blckno);
         }
 
         *io_cb=cb;
@@ -1454,7 +1456,7 @@ struct fsObject *findobjectbyname(struct fsObjectContainer *oc, UBYTE *name) {
 
 LONG scandir(struct CacheBuffer **io_cb, struct fsObject **io_o, UBYTE *name) {
   struct CacheBuffer *cb;
-  BLCK hashblock=(*io_o)->object.dir.hashtable;
+  BLCK hashblock=BE2L((*io_o)->object.dir.be_hashtable);
   LONG errorcode=0;
 
   /* Scans a directory for the object with the name /name/.  The directory
@@ -1475,17 +1477,17 @@ LONG scandir(struct CacheBuffer **io_cb, struct fsObject **io_o, UBYTE *name) {
          the hash chain ends, or the name is located. */
 
       hash16=hash(name, globals->is_casesensitive);
-      objectnode=ht->hashentry[HASHCHAIN(hash16)];
+      objectnode=BE2L(ht->be_hashentry[HASHCHAIN(hash16)]);
 
       while(objectnode!=0) {
         if((errorcode=findnode(globals->block_objectnoderoot, sizeof(struct fsObjectNode), objectnode, &cb, (struct fsNode **)&on))!=0) {
           return(errorcode);
         }
 
-        nextobjectnode=on->next;
+        nextobjectnode=BE2L(on->be_next);
 
-        if(on->hash16==hash16) {
-          if((errorcode=readcachebuffercheck(&cb, on->node.data, OBJECTCONTAINER_ID))==0) {
+        if(BE2W(on->be_hash16)==hash16) {
+          if((errorcode=readcachebuffercheck(&cb, BE2L(on->node.be_data), OBJECTCONTAINER_ID))==0) {
             struct fsObject *o;
 
             if((o=findobjectbyname((struct fsObjectContainer *)cb->data, name))!=0) {
@@ -1533,7 +1535,7 @@ LONG scandir(struct CacheBuffer **io_cb, struct fsObject **io_o, UBYTE *name) {
   else {
     struct fsObjectContainer *oc;
     struct fsObject *o;
-    BLCK nextdirblock=(*io_o)->object.dir.firstdirblock;
+    BLCK nextdirblock=BE2L((*io_o)->object.dir.be_firstdirblock);
 
     while(nextdirblock!=0 && (errorcode=readcachebuffercheck(&cb, nextdirblock, OBJECTCONTAINER_ID))==0) {
       oc=cb->data;
@@ -1549,7 +1551,7 @@ LONG scandir(struct CacheBuffer **io_cb, struct fsObject **io_o, UBYTE *name) {
         return(0);
       }
 
-      nextdirblock=oc->next;
+      nextdirblock=BE2L(oc->be_next);
     }
 
     if(nextdirblock==0) {
@@ -1568,7 +1570,7 @@ LONG readobject(NODE objectnode,struct CacheBuffer **returned_cb,struct fsObject
   LONG errorcode;
 
   if((errorcode=findnode(globals->block_objectnoderoot, sizeof(struct fsObjectNode), objectnode, &cb, (struct fsNode **)&on))==0) {
-    errorcode=readobjectquick(on->node.data,objectnode,returned_cb,returned_object);
+    errorcode=readobjectquick(BE2L(on->node.be_data),objectnode,returned_cb,returned_object);
   }
 
   return(errorcode);
@@ -1607,7 +1609,7 @@ struct fsObject *findobject(struct fsObjectContainer *oc,NODE objectnode) {
   endadr=(UBYTE *)oc+globals->bytes_block-sizeof(struct fsObject)-2;
 
   while((UBYTE *)o<endadr && o->name[0]!=0) {
-    if(o->objectnode==objectnode) {
+    if(BE2L(o->be_objectnode)==objectnode) {
       /* a match, which means the correct object was located. */
       return(o);
     }
@@ -1757,8 +1759,8 @@ LONG removeobject(struct CacheBuffer *cb, struct fsObject *o) {
 
   lockcachebuffer(cb);
 
-  if((errorcode=dehashobjectquick(o->objectnode, o->name, oc->parent))==0) {
-    NODE objectnode=o->objectnode;
+  if((errorcode=dehashobjectquick(BE2L(o->be_objectnode), o->name, BE2L(oc->be_parent)))==0) {
+    NODE objectnode=BE2L(o->be_objectnode);
 
     if((errorcode=simpleremoveobject(cb, o))==0) {
       errorcode=deleteobjectnode(objectnode);
@@ -1803,8 +1805,8 @@ LONG renameobject2(struct CacheBuffer *cb, struct fsObject *o, struct CacheBuffe
   UBYTE object[sizeof(struct fsObject)+110+80];
   UBYTE *comment;
   UBYTE *notifypath=0;
-  NODE objectnode=o->objectnode;
-  NODE sourceparentobjectnode=oc->parent;
+  NODE objectnode=BE2L(o->be_objectnode);
+  NODE sourceparentobjectnode=BE2L(oc->be_parent);
   LONG errorcode=0;
 
   /* The Object indicated by cb & o, gets renamed to newname and placed
@@ -1817,8 +1819,8 @@ LONG renameobject2(struct CacheBuffer *cb, struct fsObject *o, struct CacheBuffe
   lockcachebuffer(cb);
   lockcachebuffer(cbparent);
 
-  if((o->bits & OTYPE_DIR)!=0 && oc->parent!=oparent->objectnode) {
-    NODE objectnode=o->objectnode;
+  if((o->bits & OTYPE_DIR)!=0 && oc->be_parent!=oparent->be_objectnode) {
+    NODE objectnode=BE2L(o->be_objectnode);
 
     {
       struct CacheBuffer *cb=cbparent;
@@ -1832,12 +1834,12 @@ LONG renameobject2(struct CacheBuffer *cb, struct fsObject *o, struct CacheBuffe
       do {
         oc=cb->data;
 
-        if(objectnode==o->objectnode) {
+        if(objectnode==BE2L(o->be_objectnode)) {
           errorcode=ERROR_OBJECT_IN_USE;
           break;
         }
 
-      } while(oc->parent!=0 && (errorcode=readobject(oc->parent, &cb, &o))==0);
+      } while(oc->be_parent!=0 && (errorcode=readobject(BE2L(oc->be_parent), &cb, &o))==0);
     }
   }
 
@@ -1854,8 +1856,8 @@ LONG renameobject2(struct CacheBuffer *cb, struct fsObject *o, struct CacheBuffe
     while(*comment++!=0) {
     }
 
-    if((errorcode=dehashobjectquick(objectnode, o->name ,oc->parent))==0) {
-      ULONG parentobjectnode=oparent->objectnode;
+    if((errorcode=dehashobjectquick(objectnode, o->name ,BE2L(oc->be_parent)))==0) {
+      ULONG parentobjectnode=BE2L(oparent->be_objectnode);
 
       unlockcachebuffer(cb);
 
@@ -1875,24 +1877,24 @@ LONG renameobject2(struct CacheBuffer *cb, struct fsObject *o, struct CacheBuffe
           tag1=CO_HASHBLOCK;
           tag2=CO_FIRSTDIRBLOCK;
 
-          val1=oldo->object.dir.hashtable;
-          val2=oldo->object.dir.firstdirblock;
+          val1=BE2L(oldo->object.dir.be_hashtable);
+          val2=BE2L(oldo->object.dir.be_firstdirblock);
         }
         else {
           tag1=CO_DATA;
           tag2=CO_SIZE;
 
-          val1=oldo->object.file.data;
-          val2=oldo->object.file.size;
+          val1=BE2L(oldo->object.file.be_data);
+          val2=BE2L(oldo->object.file.be_size);
         }
 
         /* In goes the Parent cb & o, out comes the New object's cb & o :-) */
 
         if((errorcode=createobjecttags(&cb, &o, newname, CO_COMMENT, comment,
-                                                         CO_OBJECTNODE, oldo->objectnode,
-                                                         CO_PROTECTION, oldo->protection,
-                                                         CO_DATEMODIFIED, oldo->datemodified,
-                                                         CO_OWNER, (oldo->owneruid<<16) + oldo->ownergid,
+                                                         CO_OBJECTNODE, BE2L(oldo->be_objectnode),
+                                                         CO_PROTECTION, BE2L(oldo->be_protection),
+                                                         CO_DATEMODIFIED, BE2L(oldo->be_datemodified),
+                                                         CO_OWNER, (BE2W(oldo->be_owneruid)<<16) + BE2W(oldo->be_ownergid),
                                                          CO_BITS, oldo->bits,
                                                          CO_HASHOBJECT, TRUE,
                                                          CO_UPDATEPARENT, TRUE,

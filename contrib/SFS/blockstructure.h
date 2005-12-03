@@ -29,8 +29,8 @@ typedef BLCK BLCKn;
 
 struct fsBlockHeader {
   ULONG id;         /* 4 character id string of this block */
-  ULONG checksum;   /* The checksum */
-  BLCK  ownblock;   /* The blocknumber of the block this block is stored at */
+  ULONG be_checksum;   /* The checksum */
+  BLCK  be_ownblock;   /* The blocknumber of the block this block is stored at */
 };
 
 
@@ -55,18 +55,18 @@ struct fsBootBlock {
    of the disk. */
 
 struct fsRootInfo {
-  ULONG deletedblocks;             /* Amount in blocks which deleted files consume. */
-  ULONG deletedfiles;              /* Number of deleted files in recycled. */
-  ULONG freeblocks;                /* Cached number of free blocks on disk. */
+  ULONG be_deletedblocks;             /* Amount in blocks which deleted files consume. */
+  ULONG be_deletedfiles;              /* Number of deleted files in recycled. */
+  ULONG be_freeblocks;                /* Cached number of free blocks on disk. */
 
-  ULONG datecreated;
+  ULONG be_datecreated;
 
-  BLCK  lastallocatedblock;        /* Block which was most recently allocated */
-  BLCK  lastallocatedadminspace;   /* AdminSpaceContainer which most recently was used to allocate a block */
-  ULONG lastallocatedextentnode;   /* ExtentNode which was most recently created */
-  ULONG lastallocatedobjectnode;   /* ObjectNode which was most recently created */
+  BLCK  be_lastallocatedblock;        /* Block which was most recently allocated */
+  BLCK  be_lastallocatedadminspace;   /* AdminSpaceContainer which most recently was used to allocate a block */
+  ULONG be_lastallocatedextentnode;   /* ExtentNode which was most recently created */
+  ULONG be_lastallocatedobjectnode;   /* ObjectNode which was most recently created */
 
-  BLCK  rovingpointer;
+  BLCK  be_rovingpointer;
 };
 
 
@@ -93,35 +93,35 @@ struct fsRootInfo {
 struct fsRootBlock {
   struct fsBlockHeader bheader;
 
-  UWORD version;              /* Version number of the filesystem block structure */
-  UWORD sequencenumber;       /* The Root with the highest sequencenumber is valid */
+  UWORD be_version;              /* Version number of the filesystem block structure */
+  UWORD be_sequencenumber;       /* The Root with the highest sequencenumber is valid */
 
-  ULONG datecreated;          /* Creation date (when first formatted).  Cannot be changed. */
+  ULONG be_datecreated;          /* Creation date (when first formatted).  Cannot be changed. */
   UBYTE bits;                 /* various settings, see defines below. */
   UBYTE pad1;
-  UWORD pad2;
+  UWORD be_pad2;
 
-  ULONG reserved1[2];
+  ULONG be_reserved1[2];
 
-  ULONG firstbyteh;           /* The first byte of our partition from the start of the */
-  ULONG firstbyte;            /* disk.  firstbyteh = upper 32 bits, firstbyte = lower 32 bits. */
+  ULONG be_firstbyteh;           /* The first byte of our partition from the start of the */
+  ULONG be_firstbyte;            /* disk.  firstbyteh = upper 32 bits, firstbyte = lower 32 bits. */
 
-  ULONG lastbyteh;            /* The last byte of our partition, excluding this one. */
-  ULONG lastbyte;
+  ULONG be_lastbyteh;            /* The last byte of our partition, excluding this one. */
+  ULONG be_lastbyte;
 
-  BLCK  totalblocks;          /* size of this partition in blocks */
-  ULONG blocksize;            /* blocksize used */
+  BLCK  be_totalblocks;          /* size of this partition in blocks */
+  ULONG be_blocksize;            /* blocksize used */
 
-  ULONG reserved2[2];
-  ULONG reserved3[8];
+  ULONG be_reserved2[2];
+  ULONG be_reserved3[8];
 
-  BLCK  bitmapbase;           /* location of the bitmap */
-  BLCK  adminspacecontainer;  /* location of first adminspace container */
-  BLCK  rootobjectcontainer;  /* location of the root objectcontainer */
-  BLCK  extentbnoderoot;      /* location of the root of the extentbnode B-tree */
-  BLCK  objectnoderoot;       /* location of the root of the objectnode tree */
+  BLCK  be_bitmapbase;           /* location of the bitmap */
+  BLCK  be_adminspacecontainer;  /* location of first adminspace container */
+  BLCK  be_rootobjectcontainer;  /* location of the root objectcontainer */
+  BLCK  be_extentbnoderoot;      /* location of the root of the extentbnode B-tree */
+  BLCK  be_objectnoderoot;       /* location of the root of the objectnode tree */
 
-  ULONG reserved4[3];
+  ULONG be_reserved4[3];
 };
 
 #define ROOTBITS_CASESENSITIVE (128)   /* When set, filesystem names are treated case
@@ -130,10 +130,10 @@ struct fsRootBlock {
                                           moved to the Recycled directory. */
 
 struct fsExtentBNode {
-  ULONG key;     /* data! */
-  ULONG next;
-  ULONG prev;
-  UWORD blocks;  /* The size in blocks of the region this Extent controls */
+  ULONG be_key;     /* data! */
+  ULONG be_next;
+  ULONG be_prev;
+  UWORD be_blocks;  /* The size in blocks of the region this Extent controls */
 };
 
 #endif // _BLOCKSTRUCTURE_H

@@ -51,7 +51,7 @@ struct Operation {
 struct fsTransactionStorage {
   struct fsBlockHeader bheader;
 
-  BLCK next;
+  BLCK be_next;
 
   UBYTE data[0];
 };
@@ -60,7 +60,7 @@ struct fsTransactionStorage {
 struct fsTransactionFailure {
   struct fsBlockHeader bheader;
 
-  BLCK firsttransaction;
+  BLCK be_firsttransaction;
 };
 
 #endif // _TRANSACTIONS_H

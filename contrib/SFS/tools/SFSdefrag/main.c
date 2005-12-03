@@ -343,7 +343,8 @@ AROS_UFH3(void, select_function,
         if (name != oldname)
         {
             oldname = name;
-            bug("Selected: %s\n", name);
+            SetAPen(rp, pen1);
+            RectFill(rp, 0, 0, 497, 347);
             getDeviceData(name);
             set(StartButton, MUIA_Disabled, FALSE);
             set(RefreshButton, MUIA_Disabled, FALSE);

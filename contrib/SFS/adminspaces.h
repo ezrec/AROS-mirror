@@ -6,8 +6,8 @@
 #include "blockstructure.h"
 
 struct fsAdminSpace {
-  BLCK  space;
-  ULONG bits;      /* Set bits are used blocks, bit 31 is
+  BLCK  be_space;
+  ULONG be_bits;      /* Set bits are used blocks, bit 31 is
                       the first block in the AdminSpace. */
 };
 
@@ -17,8 +17,8 @@ struct fsAdminSpace {
 struct fsAdminSpaceContainer {
   struct fsBlockHeader bheader;
 
-  BLCK next;
-  BLCK previous;
+  BLCK be_next;
+  BLCK be_previous;
 
   UBYTE bits;    /* Bits 0-2: %000 = 2^0 = bitmap size 1 byte.
                               %001 = 2^1 = bitmap size 2 bytes.
@@ -28,8 +28,8 @@ struct fsAdminSpaceContainer {
                               %101 = 2^5 = bitmap size 32 bytes.
                               %110 = 2^6 = bitmap size 64 bytes.
                               %111 = 2^7 = bitmap size 128 bytes. */
-  UBYTE pad1;
-  UWORD pad2;
+  UBYTE be_pad1;
+  UWORD be_pad2;
 
   struct fsAdminSpace adminspace[0];
 };

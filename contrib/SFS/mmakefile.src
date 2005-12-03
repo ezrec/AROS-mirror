@@ -18,6 +18,7 @@ FILES := 	adminspaces \
 			filesystemmain \
 			arosmain
 
+
 USER_CFLAGS := -DAROS_KERNEL
 
 #MM contrib-sfs: contrib-sfs-c

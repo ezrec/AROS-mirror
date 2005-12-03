@@ -1,3 +1,5 @@
+#include "asmsupport.h"
+
 #include <dos/dos.h>
 #include <dos/bptr.h>
 #include <exec/types.h>
@@ -1508,7 +1510,28 @@ UWORD compressfromzero(ULONG *new, UBYTE *diff) {
 
 
 
+
+void checksum_writelong_be(struct fsBlockHeader *bh, void *dest, ULONG data) {
+  ULONG original;
+
+  /* Only handles longs written to even addresses! */
+
+  original=BE2L(*((ULONG *)dest));
+  *((ULONG *)dest)=L2BE(data);
+
+  if(( ((UBYTE *)bh - (UBYTE *)dest) & 0x03)!=0) {
+
+    /* Word aligned address. */
+
+    original=(original<<16)|(original>>16);
+    data=(data<<16)|(data>>16);
+  }
+
+  bh->be_checksum=~L2BE((~BE2L(bh->be_checksum) - original + data));
+}
+
 void checksum_writelong(struct fsBlockHeader *bh, void *dest, ULONG data) {
+#if 0
   ULONG original;
 
   /* Only handles longs written to even addresses! */
@@ -1524,5 +1547,8 @@ void checksum_writelong(struct fsBlockHeader *bh, void *dest, ULONG data) {
     data=(data<<16)|(data>>16);
   }
 
-  bh->checksum=~(~bh->checksum - original + data);
+  bh->be_checksum=~(~bh->be_checksum - original + data);
+#else
+    checksum_writelong_be(bh, dest, data);
+#endif
 }

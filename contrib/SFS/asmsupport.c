@@ -530,15 +530,16 @@ ULONG CALCCHECKSUM(ULONG blocksize, ULONG *block)
     
     while(blocksize--)
     {
+#if 0        
         sum += (*block++);
         sum += (*block++);
         sum += (*block++);
         sum += (*block++);
-#if 0
-        sum += (ULONG)AROS_BE2LONG(*block++);
-        sum += (ULONG)AROS_BE2LONG(*block++);
-        sum += (ULONG)AROS_BE2LONG(*block++);
-        sum += (ULONG)AROS_BE2LONG(*block++);
+#else
+        sum += (ULONG)BE2L(*block++);
+        sum += (ULONG)BE2L(*block++);
+        sum += (ULONG)BE2L(*block++);
+        sum += (ULONG)BE2L(*block++);
 #endif
     }
     

@@ -30,4 +30,25 @@ ULONG CALCCHECKSUM(ULONG, ULONG *);
 #define putChProc   (void (*)())"\x16\xC0\x4E\x75"
 #endif
 
+#ifdef SFS_BE
+#define BE2L AROS_BE2LONG
+#define L2BE AROS_LONG2BE
+#define BE2W AROS_BE2WORD
+#define W2BE AROS_WORD2BE
+#else
+#define BE2L AROS_LE2LONG
+#define L2BE AROS_LONG2LE
+#define BE2W AROS_LE2WORD
+#define W2BE AROS_WORD2LE
+#endif
+
+
+#ifdef __i386__
+#define AROS_SWAP_BYTES_LONG_CPU(l)     \
+    ({ ULONG v; __asm__ __volatile__("bswap %0":"=r"(v):"0"(l)); v;})
+#define AROS_SWAP_BYTES_WORD_CPU(l)     \
+    ({ UWORD w; __asm__ __volatile__("xchgb %b0,%h0":"=q"(w):"0"(l)); w;})
+#endif
+
+
 #endif /*ASMSUPPORT_H_*/

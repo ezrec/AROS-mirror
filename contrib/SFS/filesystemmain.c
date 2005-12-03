@@ -1,3 +1,5 @@
+#include "asmsupport.h"
+
 #include <exec/types.h>
 #include <clib/macros.h>          // MAX, MIN & ABS :-)
 #include <devices/input.h>
@@ -51,7 +53,6 @@
 #include "support_protos.h"
 #include "transactions_protos.h"
 
-#include "asmsupport.h"
 
 #include <string.h>
 
@@ -296,7 +297,7 @@ LONG req(UBYTE *fmt, UBYTE *gads, ... );
 LONG req_unusual(UBYTE *fmt, ... );
 void dreq(UBYTE *fmt, ... );
 
-#define STARTDEBUG
+// #define STARTDEBUG
 
 #ifdef __AROS__
 #undef SysBase
@@ -864,18 +865,18 @@ void mainloop(void) {
               clearcachebuffer(cb);
 
               ac->bheader.id=ADMINSPACECONTAINER_ID;
-              ac->bheader.ownblock=globals->block_adminspace;
+              ac->bheader.be_ownblock=L2BE(globals->block_adminspace);
               ac->bits=globals->blocks_admin;
-              ac->adminspace[0].space=globals->block_adminspace;
+              ac->adminspace[0].be_space=L2BE(globals->block_adminspace);
 
               if(norecycled==FALSE) {
                 /* NOT HASHED RECYCLED
-                ac->adminspace[0].bits=0xFF000000;       // admin + root + hashtable + restore + 2 * nodecontainers + recycled + hash 
+                ac->adminspace[0].be_bits=L2BE(0xFF000000);       // admin + root + hashtable + restore + 2 * nodecontainers + recycled + hash 
                 */
-                ac->adminspace[0].bits=0xFE000000;       /* admin + root + hashtable + restore + 2 * nodecontainers + recycled */
+                ac->adminspace[0].be_bits=L2BE(0xFE000000);       /* admin + root + hashtable + restore + 2 * nodecontainers + recycled */
               }
               else {
-                ac->adminspace[0].bits=0xFC000000;       /* admin + root + hashtable + restore + 2 * nodecontainers */
+                ac->adminspace[0].be_bits=L2BE(0xFC000000);       /* admin + root + hashtable + restore + 2 * nodecontainers */
               }
 
               setchecksum(cb);
@@ -894,22 +895,22 @@ void mainloop(void) {
               clearcachebuffer(cb);
 
               oc->bheader.id=OBJECTCONTAINER_ID;
-              oc->bheader.ownblock=globals->block_root;
-              oc->object[0].protection=FIBF_READ|FIBF_WRITE|FIBF_EXECUTE|FIBF_DELETE;
-              oc->object[0].datemodified=currentdate;
+              oc->bheader.be_ownblock=L2BE(globals->block_root);
+              oc->object[0].be_protection=L2BE(FIBF_READ|FIBF_WRITE|FIBF_EXECUTE|FIBF_DELETE);
+              oc->object[0].be_datemodified=L2BE(currentdate);
               oc->object[0].bits=OTYPE_DIR;
-              oc->object[0].objectnode=ROOTNODE;
+              oc->object[0].be_objectnode=L2BE(ROOTNODE);
 
-              oc->object[0].object.dir.hashtable=globals->block_root+1;
+              oc->object[0].object.dir.be_hashtable=L2BE(globals->block_root+1);
 
               if(norecycled==FALSE) {
-                oc->object[0].object.dir.firstdirblock=block_recycled;
+                oc->object[0].object.dir.be_firstdirblock=L2BE(block_recycled);
               }
 
               copystr(name, oc->object[0].name, 30);
 
-              ri->freeblocks=globals->blocks_total-globals->blocks_admin-globals->blocks_reserved_start-globals->blocks_reserved_end-globals->blocks_bitmap;
-              ri->datecreated=oc->object[0].datemodified;
+              ri->be_freeblocks=L2BE(globals->blocks_total-globals->blocks_admin-globals->blocks_reserved_start-globals->blocks_reserved_end-globals->blocks_bitmap);
+              ri->be_datecreated=oc->object[0].be_datemodified;   // BE-BE copy
 
               setchecksum(cb);
               errorcode=writecachebuffer(cb);
@@ -926,11 +927,11 @@ void mainloop(void) {
               clearcachebuffer(cb);
 
               ht->bheader.id=HASHTABLE_ID;
-              ht->bheader.ownblock=globals->block_root+1;
-              ht->parent=ROOTNODE;
+              ht->bheader.be_ownblock=L2BE(globals->block_root+1);
+              ht->be_parent=L2BE(ROOTNODE);
 
               if(norecycled==FALSE) {
-                ht->hashentry[HASHCHAIN(hash(".recycled", casesensitive))]=RECYCLEDNODE;
+                ht->be_hashentry[HASHCHAIN(hash(".recycled", casesensitive))]=L2BE(RECYCLEDNODE);
               }
 
               setchecksum(cb);
@@ -948,7 +949,7 @@ void mainloop(void) {
               clearcachebuffer(cb);
 
               bh->id=TRANSACTIONOK_ID;
-              bh->ownblock=globals->block_root+2;
+              bh->be_ownblock=L2BE(globals->block_root+2);
 
               setchecksum(cb);
               errorcode=writecachebuffer(cb);
@@ -966,10 +967,10 @@ void mainloop(void) {
               clearcachebuffer(cb);
 
               bnc->bheader.id=BNODECONTAINER_ID;
-              bnc->bheader.ownblock=globals->block_extentbnoderoot;
+              bnc->bheader.be_ownblock=L2BE(globals->block_extentbnoderoot);
 
               btc->isleaf=TRUE;
-              btc->nodecount=0;
+              btc->be_nodecount=0;
               btc->nodesize=sizeof(struct fsExtentBNode);
 
               setchecksum(cb);
@@ -988,34 +989,34 @@ void mainloop(void) {
               clearcachebuffer(cb);
 
               nc->bheader.id=NODECONTAINER_ID;
-              nc->bheader.ownblock=globals->block_objectnoderoot;
+              nc->bheader.be_ownblock=L2BE(globals->block_objectnoderoot);
 
-              nc->nodenumber=1;  /* objectnode 0 is reserved :-) */
-              nc->nodes=1;
+              nc->be_nodenumber=L2BE(1);  /* objectnode 0 is reserved :-) */
+              nc->be_nodes=L2BE(1);
 
-              on=(struct fsObjectNode *)nc->node;
-              on->node.data=globals->block_root;
+              on=(struct fsObjectNode *)nc->be_node;
+              on->node.be_data=L2BE(globals->block_root);
 
               on++;
               if(norecycled==FALSE) {
-                on->node.data=block_recycled;
-                on->hash16=hash(".recycled", casesensitive);
+                on->node.be_data=L2BE(block_recycled);
+                on->be_hash16=W2BE(hash(".recycled", casesensitive));
               }
               else {
-                on->node.data=-1;         // reserved 2
+                on->node.be_data=-1;         // reserved 2
               }
 
               on++;
-              on->node.data=-1;         // reserved 3
+              on->node.be_data=-1;         // reserved 3
 
               on++;
-              on->node.data=-1;         // reserved 4
+              on->node.be_data=-1;         // reserved 4
 
               on++;
-              on->node.data=-1;         // reserved 5
+              on->node.be_data=-1;         // reserved 5
 
               on++;
-              on->node.data=-1;         // reserved 6
+              on->node.be_data=-1;         // reserved 6
 
               setchecksum(cb);
               errorcode=writecachebuffer(cb);
@@ -1030,21 +1031,21 @@ void mainloop(void) {
               clearcachebuffer(cb);
 
               oc->bheader.id=OBJECTCONTAINER_ID;
-              oc->bheader.ownblock=block_recycled;
-              oc->parent=ROOTNODE;
-              oc->object[0].protection=FIBF_READ|FIBF_WRITE;
-              oc->object[0].datemodified=currentdate;
+              oc->bheader.be_ownblock=L2BE(block_recycled);
+              oc->be_parent=L2BE(ROOTNODE);
+              oc->object[0].be_protection=L2BE(FIBF_READ|FIBF_WRITE);
+              oc->object[0].be_datemodified=L2BE(currentdate);
               oc->object[0].bits=OTYPE_DIR|OTYPE_UNDELETABLE|OTYPE_QUICKDIR;
               if(showrecycled==FALSE) {
                 oc->object[0].bits|=OTYPE_HIDDEN;
               }
 
-              oc->object[0].objectnode=RECYCLEDNODE;
+              oc->object[0].be_objectnode=L2BE(RECYCLEDNODE);
 
               /* NOT HASHED RECYCLED
               oc->object[0].object.dir.hashtable=block_recycled+1;
               */
-              oc->object[0].object.dir.hashtable=0;
+              oc->object[0].object.dir.be_hashtable=0;
 
               copystr(".recycled",oc->object[0].name,30);
 
@@ -1089,7 +1090,7 @@ void mainloop(void) {
 
                 bm=cb->data;
                 bm->bheader.id=BITMAP_ID;
-                bm->bheader.ownblock=block;
+                bm->bheader.be_ownblock=L2BE(block);
 
                 for(cnt2=0; cnt2<(globals->blocks_inbitmap>>5); cnt2++) {
                   if(startfree>0) {
@@ -1132,27 +1133,27 @@ void mainloop(void) {
 
               rb=cb->data;
               rb->bheader.id=DOSTYPE_ID;
-              rb->bheader.ownblock=0;
+              rb->bheader.be_ownblock=0;
 
-              rb->version=STRUCTURE_VERSION;
-              rb->sequencenumber=0;
+              rb->be_version=W2BE(STRUCTURE_VERSION);
+              rb->be_sequencenumber=0;
 
-              rb->datecreated=currentdate;
+              rb->be_datecreated=L2BE(currentdate);
 
-              rb->firstbyteh=globals->byte_lowh;
-              rb->firstbyte=globals->byte_low;
+              rb->be_firstbyteh=L2BE(globals->byte_lowh);
+              rb->be_firstbyte=L2BE(globals->byte_low);
 
-              rb->lastbyteh=globals->byte_highh;
-              rb->lastbyte=globals->byte_high;
+              rb->be_lastbyteh=L2BE(globals->byte_highh);
+              rb->be_lastbyte=L2BE(globals->byte_high);
 
-              rb->totalblocks=globals->blocks_total;
-              rb->blocksize=globals->bytes_block;
+              rb->be_totalblocks=L2BE(globals->blocks_total);
+              rb->be_blocksize=L2BE(globals->bytes_block);
 
-              rb->bitmapbase=globals->block_bitmapbase;
-              rb->adminspacecontainer=globals->block_adminspace;
-              rb->rootobjectcontainer=globals->block_root;
-              rb->extentbnoderoot=globals->block_extentbnoderoot;
-              rb->objectnoderoot=globals->block_objectnoderoot;
+              rb->be_bitmapbase=L2BE(globals->block_bitmapbase);
+              rb->be_adminspacecontainer=L2BE(globals->block_adminspace);
+              rb->be_rootobjectcontainer=L2BE(globals->block_root);
+              rb->be_extentbnoderoot=L2BE(globals->block_extentbnoderoot);
+              rb->be_objectnoderoot=L2BE(globals->block_objectnoderoot);
 
               if(casesensitive!=FALSE) {
                 rb->bits|=ROOTBITS_CASESENSITIVE;
@@ -1167,7 +1168,7 @@ void mainloop(void) {
 
                 _DEBUG(("ACTION_FORMAT: Creating the 2nd Root block\n"));
 
-                rb->bheader.ownblock=globals->blocks_total-1;
+                rb->bheader.be_ownblock=L2BE(globals->blocks_total-1);
 
                 setchecksum(cb);
                 errorcode=writecachebuffer(cb);
@@ -1241,8 +1242,8 @@ void mainloop(void) {
               struct fsObjectContainer *oc=cb->data;
               struct fsRootInfo *ri=(struct fsRootInfo *)((UBYTE *)cb->data+globals->bytes_block-sizeof(struct fsRootInfo));
 
-              oc->object[0].datemodified=getdate();
-              ri->datecreated=oc->object[0].datemodified;
+              oc->object[0].be_datemodified=L2BE(getdate());
+              ri->be_datecreated=oc->object[0].be_datemodified;   // BE-BE copy
 
               setchecksum(cb);
               errorcode=writecachebuffer(cb);
@@ -1334,7 +1335,7 @@ void mainloop(void) {
 
                       _DEBUG(("ACTION_READ_LINK: path = '%s'\n",path));
 
-                      if((errorcode=readcachebuffercheck(&cb2, o->object.file.data, SOFTLINK_ID))==0) {
+                      if((errorcode=readcachebuffercheck(&cb2, BE2L(o->object.file.be_data), SOFTLINK_ID))==0) {
                         struct fsSoftLink *sl=cb2->data;
                         LONG length=globals->packet->dp_Arg4;
                         UBYTE *src=sl->string;
@@ -1636,7 +1637,7 @@ void mainloop(void) {
                     if((errorcode=locateobjectfromlock(lock,validatepath(globals->string),&cb,&o))==0) {
                       copybstrasstr(globals->packet->dp_Arg4,globals->string,258);
 
-                      settemporarylock(o->objectnode);
+                      settemporarylock(BE2L(o->be_objectnode));
 
                       newname=validatepath(globals->string);
                       s=FilePart(newname);
@@ -1710,7 +1711,7 @@ void mainloop(void) {
                     copybstrasstr(globals->packet->dp_Arg3,globals->string,258);
 
                     if((errorcode=locatelockableobject(lock,validatepath(globals->string),&cb,&o))==0) {
-                      NODE objectnode=o->objectnode;
+                      NODE objectnode=BE2L(o->be_objectnode);
 
                       if(objectnode!=ROOTNODE) {
 
@@ -1720,19 +1721,19 @@ void mainloop(void) {
                         preparecachebuffer(cb);
 
                         if(globals->packet->dp_Type==ACTION_SET_DATE) {
-                          checksum_writelong(cb->data, &o->datemodified, datestamptodate((struct DateStamp *)globals->packet->dp_Arg4));
+                          checksum_writelong_be(cb->data, &o->be_datemodified, datestamptodate((struct DateStamp *)globals->packet->dp_Arg4));
 
                           // o->datemodified=datestamptodate((struct DateStamp *)packet->dp_Arg4);
                         }
                         else if(globals->packet->dp_Type==ACTION_SET_PROTECT) {
-                          checksum_writelong(cb->data, &o->protection, globals->packet->dp_Arg4^(FIBF_READ|FIBF_WRITE|FIBF_EXECUTE|FIBF_DELETE));
+                          checksum_writelong_be(cb->data, &o->be_protection, globals->packet->dp_Arg4^(FIBF_READ|FIBF_WRITE|FIBF_EXECUTE|FIBF_DELETE));
 
                           // o->protection=packet->dp_Arg4^(FIBF_READ|FIBF_WRITE|FIBF_EXECUTE|FIBF_DELETE);
                         }
                         else if(globals->packet->dp_Type==ACTION_SET_OWNER) {
                           // ULONG *owner=(ULONG *)&o->owneruid;
 
-                          checksum_writelong(cb->data, (ULONG *)&o->owneruid, globals->packet->dp_Arg4);
+                          checksum_writelong_be(cb->data, (ULONG *)&o->be_owneruid, globals->packet->dp_Arg4);
 
                           // *owner=packet->dp_Arg4;
                         }
@@ -1888,10 +1889,10 @@ void mainloop(void) {
                       while(bytesleft>0 && (errorcode=findextentbnode(lock->curextent, &extent_cb, &ebn))==0) {
                         ULONG bytestoread;
                         ULONG offsetinblock=lock->extentoffset & globals->mask_block;
-                        BLCK ebn_next=ebn->next;
-                        UWORD ebn_blocks=ebn->blocks;
+                        BLCK ebn_next=BE2L(ebn->be_next);
+                        UWORD ebn_blocks=BE2W(ebn->be_blocks);
 
-                        _XDEBUG((DEBUG_IO,"ACTION_READ: bytesleft = %ld, offsetinblock = %ld, ExtentBNode = %ld, ebn->data = %ld, ebn->blocks = %ld\n",bytesleft,offsetinblock,lock->curextent,ebn->key,ebn->blocks));
+                        _XDEBUG((DEBUG_IO,"ACTION_READ: bytesleft = %ld, offsetinblock = %ld, ExtentBNode = %ld, ebn->data = %ld, ebn->blocks = %ld\n",bytesleft,offsetinblock,lock->curextent,BE2L(ebn->be_key),BE2W(ebn->be_blocks)));
 
                         if(offsetinblock!=0 || bytesleft<globals->bytes_block) {
 
@@ -1904,7 +1905,7 @@ void mainloop(void) {
                             bytestoread=bytesleft;
                           }
 
-                          if((errorcode=readbytes(ebn->key+(lock->extentoffset>>globals->shifts_block), buffer, offsetinblock, bytestoread))!=0) {
+                          if((errorcode=readbytes(BE2L(ebn->be_key)+(lock->extentoffset>>globals->shifts_block), buffer, offsetinblock, bytestoread))!=0) {
                             break;
                           }
                         }
@@ -1917,7 +1918,7 @@ void mainloop(void) {
                             bytestoread=bytesleft & ~globals->mask_block;
                           }
 
-                          if((errorcode=read(ebn->key+(lock->extentoffset>>globals->shifts_block), buffer, bytestoread>>globals->shifts_block))!=0) {
+                          if((errorcode=read(BE2L(ebn->be_key)+(lock->extentoffset>>globals->shifts_block), buffer, bytestoread>>globals->shifts_block))!=0) {
                             break;
                           }
                         }
@@ -2045,12 +2046,12 @@ void mainloop(void) {
                   if(eac->eac_LastKey==0) {
                     if((errorcode=readobject(lock->objectnode,&cb,&o))==0) {
                       if((o->bits & OTYPE_DIR)!=0) {
-                        if(o->object.dir.firstdirblock!=0) {
-                          if((errorcode=readcachebuffercheck(&cb,o->object.dir.firstdirblock,OBJECTCONTAINER_ID))==0) {
+                        if(o->object.dir.be_firstdirblock!=0) {
+                          if((errorcode=readcachebuffercheck(&cb,BE2L(o->object.dir.be_firstdirblock),OBJECTCONTAINER_ID))==0) {
                             struct fsObjectContainer *oc=cb->data;
   
                             o=oc->object;
-                            eac->eac_LastKey=o->objectnode;
+                            eac->eac_LastKey=BE2L(o->be_objectnode);
                           }
                         }
                         else {
@@ -2105,8 +2106,8 @@ void mainloop(void) {
                     switch(globals->packet->dp_Arg4) {
                     default:
                     case ED_OWNER:
-                      ead->ed_OwnerUID=o->owneruid;
-                      ead->ed_OwnerGID=o->ownergid;
+                      ead->ed_OwnerUID=BE2W(o->be_owneruid);
+                      ead->ed_OwnerGID=BE2W(o->be_ownergid);
                     case ED_COMMENT:
                       {
                         UBYTE *src=o->name+namelength+1;
@@ -2123,25 +2124,25 @@ void mainloop(void) {
                         eadsize++;
                       }
                     case ED_DATE:
-                      datetodatestamp(o->datemodified,(struct DateStamp *)&ead->ed_Days);
+                      datetodatestamp(BE2L(o->be_datemodified),(struct DateStamp *)&ead->ed_Days);
                     case ED_PROTECTION:
-                      ead->ed_Prot=o->protection^(FIBF_READ|FIBF_WRITE|FIBF_EXECUTE|FIBF_DELETE);
+                      ead->ed_Prot=BE2L(o->be_protection)^(FIBF_READ|FIBF_WRITE|FIBF_EXECUTE|FIBF_DELETE);
                     case ED_SIZE:
                       if((o->bits & OTYPE_DIR)==0) {
-                        ead->ed_Size=o->object.file.size;
+                        ead->ed_Size=BE2L(o->object.file.be_size);
                       }
                       else {
                         ead->ed_Size=0;
                       }
                     case ED_TYPE:
-_DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, o->objectnode));
+_DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, BE2L(o->be_objectnode)));
                       if((o->bits & OTYPE_LINK)!=0) {
                         ead->ed_Type=ST_SOFTLINK;
                       }
                       if((o->bits & OTYPE_DIR)==0) {
                         ead->ed_Type=ST_FILE;
                       }
-                      else if (o->objectnode == ROOTNODE) {
+                      else if (o->be_objectnode == L2BE(ROOTNODE)) {
                         ead->ed_Type = ST_ROOT;
                         }
                       else {
@@ -2204,12 +2205,12 @@ _DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, o->objectnod
                       endadr=(UBYTE *)oc+globals->bytes_block-sizeof(struct fsObject)-2;
   
                       if((UBYTE *)o>=endadr || o->name[0]==0) {
-                        if(oc->next!=0) {
-                          if((errorcode=readcachebuffercheck(&cb,oc->next,OBJECTCONTAINER_ID))==0) {
+                        if(oc->be_next!=0) {
+                          if((errorcode=readcachebuffercheck(&cb,BE2L(oc->be_next),OBJECTCONTAINER_ID))==0) {
                             struct fsObjectContainer *oc=cb->data;
   
                             o=oc->object;
-                            eac->eac_LastKey=o->objectnode;
+                            eac->eac_LastKey=BE2L(o->be_objectnode);
                           }
                         }
                         else {
@@ -2217,7 +2218,7 @@ _DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, o->objectnod
                         }
                       }
                       else {
-                        eac->eac_LastKey=o->objectnode;
+                        eac->eac_LastKey=BE2L(o->be_objectnode);
                       }
                     }
                   }
@@ -2306,10 +2307,10 @@ _DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, o->objectnod
 
                       if((o=prevobject(o, oc))!=0) {
                         lock->nextnodeblock=cb->blckno;
-                        lock->nextnode=o->objectnode;
+                        lock->nextnode=BE2L(o->be_objectnode);
                       }
                       else {
-                        lock->nextnodeblock=oc->next;
+                        lock->nextnodeblock=BE2L(oc->be_next);
                         lock->nextnode=0xFFFFFFFF;
                       }
                     }
@@ -2339,7 +2340,7 @@ _DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, o->objectnod
 
                     bits=o->bits;
                     fillfib(fib, o);
-                    lock->currentnode=o->objectnode;
+                    lock->currentnode=BE2L(o->be_objectnode);
 
                     /* prepare for another EXAMINE_NEXT */
 
@@ -2350,10 +2351,10 @@ _DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, o->objectnod
 
                     if((o=prevobject(o, oc))!=0) {
                       /* There IS another object */
-                      lock->nextnode=o->objectnode;
+                      lock->nextnode=BE2L(o->be_objectnode);
                     }
                     else {
-                      lock->nextnodeblock=oc->next;
+                      lock->nextnodeblock=BE2L(oc->be_next);
                       lock->nextnode=0xFFFFFFFF;
                     }
 
@@ -2558,7 +2559,7 @@ _DEBUG(("examine ED_TYPE, o->bits=%x, o->objectnode=%d\n", o->bits, o->objectnod
                     if(lock!=0 && (o->bits & OTYPE_DIR)!=0) {
                       lock->currentnode=0xFFFFFFFF;
                       lock->nextnode=0xFFFFFFFF;
-                      lock->nextnodeblock=o->object.dir.firstdirblock;
+                      lock->nextnodeblock=BE2L(o->object.dir.be_firstdirblock);
                     }
 
                     returnpacket(DOSTRUE,0);
@@ -2913,32 +2914,32 @@ static void fillfib(struct FileInfoBlock *fib,struct fsObject *o) {
   UBYTE *dest;
   UBYTE length;
 
-  if (o->objectnode==ROOTNODE) {
+  if (o->be_objectnode==L2BE(ROOTNODE)) {
     fib->fib_DirEntryType=ST_ROOT;
-    fib->fib_Size=o->object.file.size;
-    fib->fib_NumBlocks=(o->object.file.size+globals->bytes_block-1) >> globals->shifts_block;
+    fib->fib_Size=BE2L(o->object.file.be_size);
+    fib->fib_NumBlocks=(BE2L(o->object.file.be_size)+globals->bytes_block-1) >> globals->shifts_block;
   } else if((o->bits & OTYPE_LINK)!=0) {
     fib->fib_DirEntryType=ST_SOFTLINK;
 //    fib->fib_DirEntryType=ST_USERDIR;   // For compatibility with Diavolo 3.4 -> screw it, DOpus fails...
-    fib->fib_Size=o->object.file.size;
+    fib->fib_Size=BE2L(o->object.file.be_size);
     fib->fib_NumBlocks=0;
   }
   else if((o->bits & OTYPE_DIR)==0) {
     fib->fib_DirEntryType=ST_FILE;
-    fib->fib_Size=o->object.file.size;
-    fib->fib_NumBlocks=(o->object.file.size+globals->bytes_block-1) >> globals->shifts_block;
+    fib->fib_Size=BE2L(o->object.file.be_size);
+    fib->fib_NumBlocks=(BE2L(o->object.file.be_size)+globals->bytes_block-1) >> globals->shifts_block;
   }
   else {
     fib->fib_DirEntryType=ST_USERDIR;
     fib->fib_Size=0;
     fib->fib_NumBlocks=1;
   }
-  fib->fib_Protection=o->protection^(FIBF_READ|FIBF_WRITE|FIBF_EXECUTE|FIBF_DELETE);
+  fib->fib_Protection=BE2L(o->be_protection)^(FIBF_READ|FIBF_WRITE|FIBF_EXECUTE|FIBF_DELETE);
   fib->fib_EntryType=fib->fib_DirEntryType;
-  fib->fib_DiskKey=o->objectnode;
-  fib->fib_OwnerUID=o->owneruid;
-  fib->fib_OwnerGID=o->ownergid;
-  datetodatestamp(o->datemodified,&fib->fib_Date);
+  fib->fib_DiskKey=BE2L(o->be_objectnode);
+  fib->fib_OwnerUID=BE2W(o->be_owneruid);
+  fib->fib_OwnerGID=BE2W(o->be_ownergid);
+  datetodatestamp(BE2L(o->be_datemodified),&fib->fib_Date);
 
   src=o->name;
   dest=AROS_BSTR_ADDR(fib->fib_FileName);
@@ -3314,20 +3315,20 @@ LONG readroots(void) {
   rb1=cb1->data;
   rb2=cb2->data;
 
-  if(checkchecksum(cb1)==DOSFALSE || rb1->bheader.id!=DOSTYPE_ID || rb1->bheader.ownblock!=0) {
+  if(checkchecksum(cb1)==DOSFALSE || rb1->bheader.id!=DOSTYPE_ID || rb1->bheader.be_ownblock!=0) {
     rb1okay=FALSE;
   }
   
   _DEBUG(("checkchecksum(cb1)=%d, rb1->bheader.id=%08x, rb1->bheader.ownblock=%d, %d\n",
-    checkchecksum(cb1),rb1->bheader.id, rb1->bheader.ownblock
+    checkchecksum(cb1),rb1->bheader.id, BE2L(rb1->bheader.be_ownblock)
     ));
 
-  if(checkchecksum(cb2)==DOSFALSE || rb2->bheader.id!=DOSTYPE_ID || rb2->bheader.ownblock!=rb2->totalblocks-1) {
+  if(checkchecksum(cb2)==DOSFALSE || rb2->bheader.id!=DOSTYPE_ID || BE2L(rb2->bheader.be_ownblock)!=BE2L(rb2->be_totalblocks)-1) {
     rb2okay=FALSE;
   }
 
   _DEBUG(("checkchecksum(cb2)=%d, rb2->bheader.id=%08x, rb2->bheader.ownblock=%d, %d\n",
-    checkchecksum(cb2),rb2->bheader.id, rb2->bheader.ownblock
+    checkchecksum(cb2),rb2->bheader.id, BE2L(rb2->bheader.be_ownblock)
     ));
 
   if(rb1okay!=FALSE && rb2okay!=FALSE) {
@@ -3339,15 +3340,15 @@ LONG readroots(void) {
     }
     */
 
-    if(rb1->blocksize!=globals->bytes_block) {
+    if(rb1->be_blocksize!=L2BE(globals->bytes_block)) {
       return(ERROR_NOT_A_DOS_DISK);
     }
 
-    if(rb1->firstbyteh!=globals->byte_lowh || rb1->firstbyte!=globals->byte_low || rb1->lastbyteh!=globals->byte_highh || rb1->lastbyte!=globals->byte_high || rb1->totalblocks!=globals->blocks_total) {
+    if(rb1->be_firstbyteh!=L2BE(globals->byte_lowh) || rb1->be_firstbyte!=L2BE(globals->byte_low) || rb1->be_lastbyteh!=L2BE(globals->byte_highh) || rb1->be_lastbyte!=L2BE(globals->byte_high) || rb1->be_totalblocks!=L2BE(globals->blocks_total)) {
       return(ERROR_NOT_A_DOS_DISK);
     }
 
-    if(rb1->version!=STRUCTURE_VERSION) {
+    if(rb1->be_version!=BE2W(STRUCTURE_VERSION)) {
       /* Different version! */
 
       request(PROGRAMNAME " request","%s\n"\
@@ -3359,11 +3360,11 @@ LONG readroots(void) {
       return(ERROR_NOT_A_DOS_DISK);
     }
 
-    globals->block_bitmapbase=rb1->bitmapbase;
-    globals->block_adminspace=rb1->adminspacecontainer;
-    globals->block_root=rb1->rootobjectcontainer;
-    globals->block_extentbnoderoot=rb1->extentbnoderoot;
-    globals->block_objectnoderoot=rb1->objectnoderoot;
+    globals->block_bitmapbase=BE2L(rb1->be_bitmapbase);
+    globals->block_adminspace=BE2L(rb1->be_adminspacecontainer);
+    globals->block_root=BE2L(rb1->be_rootobjectcontainer);
+    globals->block_extentbnoderoot=BE2L(rb1->be_extentbnoderoot);
+    globals->block_objectnoderoot=BE2L(rb1->be_objectnoderoot);
 
     if((rb1->bits & ROOTBITS_CASESENSITIVE)!=0) {
       globals->is_casesensitive=TRUE;
@@ -3538,18 +3539,18 @@ LONG initdisk() {
 
           _DEBUG(("Initdisk: Traversed bitmap, found %ld free blocks\n",blocksfree));
 
-          if(errorcode==0 && ri->freeblocks!=blocksfree) {
-            if(ri->freeblocks!=0) {
+          if(errorcode==0 && BE2L(ri->be_freeblocks)!=blocksfree) {
+            if(ri->be_freeblocks!=0) {
               dreq("The number of free blocks (%ld) is incorrect.\n"\
                    "According to the bitmap it should be %ld.\n"\
-                   "The number of free blocks will now be updated.", ri->freeblocks, blocksfree);
+                   "The number of free blocks will now be updated.", BE2L(ri->be_freeblocks), blocksfree);
             }
 
             newtransaction();
 
             preparecachebuffer(cb);
 
-            ri->freeblocks=blocksfree;
+            ri->be_freeblocks=L2BE(blocksfree);
 
             if((errorcode=storecachebuffer(cb))==0) {
               endtransaction();
@@ -3637,7 +3638,7 @@ LONG initdisk() {
 
       _DEBUG(("initdisk: Checking for an existing volume-node\n"));
 
-      if((vn=usevolumenode(oc->object[0].name, ri->datecreated))!=(struct DeviceList *)-1) {
+      if((vn=usevolumenode(oc->object[0].name, BE2L(ri->be_datecreated)))!=(struct DeviceList *)-1) {
         if(vn==0) {
           /* VolumeNode was not found, so we need to create a new one. */
 
@@ -3668,7 +3669,7 @@ _DEBUG(("AddDosEntry: dl_Device=%x dl_Unit=%x\n",vn->dl_Device,vn->dl_Unit));
             *d2=len;
 #endif
 
-            datetodatestamp(ri->datecreated, &vn->dl_VolumeDate);
+            datetodatestamp(BE2L(ri->be_datecreated), &vn->dl_VolumeDate);
 
             _DEBUG(("initdisk: Sending msg.\n"));
 
@@ -4044,8 +4045,8 @@ BOOL checkchecksum(struct CacheBuffer *cb) {
 void setchecksum(struct CacheBuffer *cb) {
   struct fsBlockHeader *bh=cb->data;
 
-  bh->checksum=0;    /* Important! */
-  bh->checksum=-CALCCHECKSUM(globals->bytes_block,cb->data);
+  bh->be_checksum=0;    /* Important! */
+  bh->be_checksum=L2BE(-CALCCHECKSUM(globals->bytes_block,cb->data));
 }
 
 
@@ -4093,7 +4094,7 @@ LONG readcachebuffercheck(struct CacheBuffer **returnedcb,ULONG blckno,ULONG typ
       }
       continue;
     }
-    if(bh->ownblock!=blckno) {
+    if(BE2L(bh->be_ownblock)!=blckno) {
       dumpcachebuffers();
       outputcachebuffer(*returnedcb);
       emptycachebuffer(*returnedcb);
@@ -4102,7 +4103,7 @@ LONG readcachebuffercheck(struct CacheBuffer **returnedcb,ULONG blckno,ULONG typ
                                         "has a block error in block %ld.\n"\
                                         "Expected was block %ld,\n"\
                                         "but the block says it is block %ld.",
-                                        "Reread|Cancel",AROS_BSTR_ADDR(globals->devnode->dn_Name),blckno,blckno,bh->ownblock)<=0) {
+                                        "Reread|Cancel",AROS_BSTR_ADDR(globals->devnode->dn_Name),blckno,blckno,BE2L(bh->be_ownblock))<=0) {
         return(INTERR_OWNBLOCK_WRONG);
       }
       continue;
@@ -4241,8 +4242,8 @@ static LONG extendblocksinfile(struct ExtFileLock *lock, ULONG blocks) {
       struct CacheBuffer *cb;
       struct fsExtentBNode *ebn;
 
-      while((errorcode=findextentbnode(lastextentbnode,&cb,&ebn))==0 && ebn->next!=0) {
-        lastextentbnode=ebn->next;
+      while((errorcode=findextentbnode(lastextentbnode,&cb,&ebn))==0 && BE2L(ebn->be_next)!=0) {
+        lastextentbnode=BE2L(ebn->be_next);
       }
     }
 
@@ -4263,7 +4264,7 @@ static LONG extendblocksinfile(struct ExtFileLock *lock, ULONG blocks) {
           if((errorcode=findextentbnode(lastextentbnode,&cb,&ebn))!=0) {
             break;
           }
-          searchstart=ebn->key+ebn->blocks;
+          searchstart=BE2L(ebn->be_key)+BE2W(ebn->be_blocks);
         }
         else {
           searchstart=globals->block_rovingblockptr;
@@ -4340,25 +4341,25 @@ LONG truncateblocksinfile(struct ExtFileLock *lock,ULONG blocks,ULONG *lastexten
     _DEBUG(("truncateblocksinfile: offset = %ld, extentoffset = %ld\n",offset,extentoffset));
 
     if(offset-extentoffset==0) {
-      ULONG prevkey=ebn->prev;
+      ULONG prevkey=BE2L(ebn->be_prev);
 
       _DEBUG(("truncateblocksinfile: prevkey = %ld\n",prevkey));
 
       /* Darn.  This Extent needs to be killed completely, meaning that we
          have to set the Next pointer of the previous Extent to zero. */
 
-      deleteextents(ebn->key);
+      deleteextents(BE2L(ebn->be_key));
 
       if((prevkey & 0x80000000)==0) {
         if((errorcode=findextentbnode(prevkey,&cb,&ebn))==0) {
           preparecachebuffer(cb);
 
-          ebn->next=0;
+          ebn->be_next=0;
 
           errorcode=storecachebuffer(cb);
 
           *lastextentkey=prevkey;
-          *lastextentoffset=extentoffset-(ebn->blocks<<globals->shifts_block);
+          *lastextentoffset=extentoffset-(BE2W(ebn->be_blocks)<<globals->shifts_block);
         }
       }
       else {
@@ -4369,7 +4370,7 @@ LONG truncateblocksinfile(struct ExtFileLock *lock,ULONG blocks,ULONG *lastexten
 
           _DEBUG(("truncateblocksinfile: cb->blckno = %ld\n",cb->blckno));
 
-          o->object.file.data=0;
+          o->object.file.be_data=0;
           lock->gh->data=0;
 
           errorcode=storecachebuffer(cb);
@@ -4382,25 +4383,25 @@ LONG truncateblocksinfile(struct ExtFileLock *lock,ULONG blocks,ULONG *lastexten
     else {
       ULONG newblocks=blocks-(extentoffset>>globals->shifts_block);
 
-      *lastextentkey=ebn->key;
+      *lastextentkey=BE2L(ebn->be_key);
       *lastextentoffset=extentoffset;
 
-      _DEBUG(("truncateblocksinfile: newblocks = %ld, ebn->blocks = %ld\n",newblocks,ebn->blocks));
+      _DEBUG(("truncateblocksinfile: newblocks = %ld, ebn->blocks = %ld\n",newblocks,BE2W(ebn->be_blocks)));
 
-      if(newblocks!=ebn->blocks) {
+      if(newblocks!=BE2W(ebn->be_blocks)) {
         /* There is only one case where newblocks could equal en->blocks here,
            and that is if we tried to truncate the file to the same number of
            blocks the file already had! */
 
         lockcachebuffer(cb);
 
-        if((errorcode=freespace(ebn->key+newblocks,ebn->blocks-newblocks))==0) {
-          BLCK next=ebn->next;
+        if((errorcode=freespace(BE2L(ebn->be_key)+newblocks,BE2W(ebn->be_blocks)-newblocks))==0) {
+          BLCK next=BE2L(ebn->be_next);
 
           preparecachebuffer(cb);
 
-          ebn->blocks=newblocks;
-          ebn->next=0;
+          ebn->be_blocks=W2BE(newblocks);
+          ebn->be_next=0;
 
           if((errorcode=storecachebuffer(cb))==0) {
             errorcode=deleteextents(next);   // Careful, deleting BNode's may change the location of other BNode's as well!
@@ -4455,9 +4456,9 @@ LONG setfilesize(struct ExtFileLock *lock, ULONG bytes) {
         if((errorcode=readobject(gh->objectnode, &cb, &o))==0) {
           preparecachebuffer(cb);
 
-          o->object.file.size=bytes;
-          if(o->object.file.data==0) {
-            o->object.file.data=lock->curextent;
+          o->object.file.be_size=L2BE(bytes);
+          if(o->object.file.be_data==0) {
+            o->object.file.be_data=L2BE(lock->curextent);
           }
 
           errorcode=storecachebuffer(cb);
@@ -4502,7 +4503,7 @@ LONG setfilesize(struct ExtFileLock *lock, ULONG bytes) {
 
           _DEBUG(("setfilesize: gh->objectnode = %ld, cb->blcno = %ld\n",gh->objectnode,cb->blckno));
 
-          o->object.file.size=bytes;
+          o->object.file.be_size=L2BE(bytes);
 
           errorcode=storecachebuffer(cb);
         }
@@ -4571,7 +4572,7 @@ LONG seektocurrent(struct ExtFileLock *lock) {
       ULONG extentoffset;
 
       if((errorcode=seekextent(lock, lock->offset, &cb, &ebn, &extentoffset))==0) {
-        lock->curextent=ebn->key;
+        lock->curextent=BE2L(ebn->be_key);
         lock->extentoffset=lock->offset - extentoffset;
       }
     }
@@ -4594,7 +4595,7 @@ static LONG seek(struct ExtFileLock *lock,ULONG offset) {
   _XDEBUG((DEBUG_SEEK,"seek: Attempting to seek to %ld\n",offset));
   
   if((errorcode=seekextent(lock,offset,&cb,&ebn,&extentoffset))==0) {
-    lock->curextent=ebn->key;
+    lock->curextent=BE2L(ebn->be_key);
     lock->extentoffset=offset-extentoffset;
     lock->offset=offset;
   
@@ -4630,16 +4631,16 @@ LONG deleteextents(ULONG key) {
   
     // _XDEBUG((DDEBUG_NODES,"deleteextents: Now deleting key %ld.  Next key is %ld\n",key,ebn->next));
   
-    key=ebn->next;
+    key=BE2L(ebn->be_next);
   
     lockcachebuffer(cb);     /* Makes sure freespace() doesn't reuse this cachebuffer */
 
-    if((errorcode=freespace(ebn->key,ebn->blocks))==0) {
+    if((errorcode=freespace(BE2L(ebn->be_key), BE2W(ebn->be_blocks)))==0) {
       unlockcachebuffer(cb);
 
       // _XDEBUG((DDEBUG_NODES,"deleteextents: deletebnode from root %ld, with key %ld\n",block_extentbnoderoot,ebn->key));
   
-      if((errorcode=deletebnode(globals->block_extentbnoderoot,ebn->key))!=0) {   /*** Maybe use deleteinternalnode here??? */
+      if((errorcode=deletebnode(globals->block_extentbnoderoot,BE2L(ebn->be_key)))!=0) {   /*** Maybe use deleteinternalnode here??? */
         break;
       }
     }
@@ -4662,7 +4663,7 @@ static LONG findextentbnode(ULONG key,struct CacheBuffer **returned_cb,struct fs
   errorcode=findbnode(globals->block_extentbnoderoot,key,returned_cb,(struct BNode **)returned_bnode);
   
   #ifdef CHECKCODE_BNODES
-    if(*returned_bnode==0 || (*returned_bnode)->key!=key) {
+    if(*returned_bnode==0 || BE2L((*returned_bnode)->be_key)!=key) {
       dreq("findextentbnode: findbnode() can't find key %ld!",key);
       outputcachebuffer(*returned_cb);
       return(INTERR_BTREE);
@@ -4717,14 +4718,14 @@ LONG seekextent(struct ExtFileLock *lock, ULONG offset, struct CacheBuffer **ret
 
   if(extentbnode!=0) {
     while((errorcode=findextentbnode(extentbnode,returned_cb,returned_ebn))==0) {
-      ULONG endbyte=*returned_extentoffset+((*returned_ebn)->blocks<<globals->shifts_block);
+      ULONG endbyte=*returned_extentoffset+(BE2W((*returned_ebn)->be_blocks)<<globals->shifts_block);
 
       if(offset>=*returned_extentoffset && offset<endbyte) {
         /* Hooray!  We found the correct extent. */
         break;
       }
 
-      if((*returned_ebn)->next==0) {
+      if(BE2L((*returned_ebn)->be_next)==0) {
         /* This break is here in case we run into the end of the file.
            This prevents *returned_extentoffset and extentbnode
            from being destroyed in the lines below, since it is still
@@ -4737,8 +4738,8 @@ LONG seekextent(struct ExtFileLock *lock, ULONG offset, struct CacheBuffer **ret
         break;
       }
 
-      *returned_extentoffset+=(*returned_ebn)->blocks<<globals->shifts_block;
-      extentbnode=(*returned_ebn)->next;
+      *returned_extentoffset+=BE2W((*returned_ebn)->be_blocks)<<globals->shifts_block;
+      extentbnode=BE2L((*returned_ebn)->be_next);
     }
   }
 
@@ -4761,7 +4762,7 @@ UBYTE *fullpath(struct CacheBuffer *cbstart,struct fsObject *o) {
 
   *path=0;
 
-  while(oc->parent!=0) {     /* Checking parent here means name in ROOT will be ignored. */
+  while(oc->be_parent!=0) {     /* Checking parent here means name in ROOT will be ignored. */
     name=o->name;
     while(*++name!=0) {
     }
@@ -4770,14 +4771,14 @@ UBYTE *fullpath(struct CacheBuffer *cbstart,struct fsObject *o) {
       *--path=upperchar(*--name);
     }
 
-    if(readobject(oc->parent,&cb,&o)!=0) {
+    if(readobject(BE2L(oc->be_parent),&cb,&o)!=0) {
       path=0;
       break;
     }
 
     oc=cb->data;
 
-    if(oc->parent!=0) {
+    if(oc->be_parent!=0) {
       *--path='/';
     }
   }
@@ -4970,12 +4971,12 @@ static LONG addblocks(UWORD blocks, BLCK newspace, NODE objectnode, BLCK *io_las
 
       preparecachebuffer(cb);
 
-      if(ebn->key+ebn->blocks==newspace && ebn->blocks+blocks<65536) {
+      if(BE2L(ebn->be_key)+BE2W(ebn->be_blocks)==newspace && BE2W(ebn->be_blocks)+blocks<65536) {
         /* It is possible to extent the last ExtentBNode! */
 
         _XDEBUG((DEBUG_IO,"  addblocks: Extending last ExtentBNode.\n"));
 
-        ebn->blocks+=blocks;
+        ebn->be_blocks=W2BE(BE2W(ebn->be_blocks)+blocks);
 
         errorcode=storecachebuffer(cb);
       }
@@ -4983,16 +4984,16 @@ static LONG addblocks(UWORD blocks, BLCK newspace, NODE objectnode, BLCK *io_las
         /* It isn't possible to extent the last ExtentBNode so we create
            a new one and link it to the last ExtentBNode. */
 
-        ebn->next=newspace;
+        ebn->be_next=L2BE(newspace);
 
         if((errorcode=storecachebuffer(cb))==0 && (errorcode=createextentbnode(newspace,&cb,&ebn))==0) {
 
           _XDEBUG((DEBUG_IO,"  addblocks: Created new ExtentBNode.\n"));
 
-          ebn->key=newspace;
-          ebn->prev=*io_lastextentbnode;
-          ebn->next=0;
-          ebn->blocks=blocks;
+          ebn->be_key=L2BE(newspace);
+          ebn->be_prev=L2BE(*io_lastextentbnode);
+          ebn->be_next=0;
+          ebn->be_blocks=W2BE(blocks);
 
           *io_lastextentbnode=newspace;
 
@@ -5017,10 +5018,10 @@ static LONG addblocks(UWORD blocks, BLCK newspace, NODE objectnode, BLCK *io_las
 
       _XDEBUG((DEBUG_IO,"  addblocks: Created new ExtentBNode chain.\n"));
 
-      ebn->key=newspace;
-      ebn->prev=objectnode+0x80000000;
-      ebn->next=0;
-      ebn->blocks=blocks;
+      ebn->be_key=L2BE(newspace);
+      ebn->be_prev=L2BE(objectnode+0x80000000);
+      ebn->be_next=0;
+      ebn->be_blocks=W2BE(blocks);
 
       *io_lastextentbnode=newspace;
 
@@ -5171,11 +5172,11 @@ LONG writetofile(struct ExtFileLock *lock, UBYTE *buffer, ULONG bytestowrite) {
         if((errorcode=readobject(lock->objectnode,&cb,&o))==0) {
           preparecachebuffer(cb);
 
-          checksum_writelong(cb->data, &o->object.file.size, newfilesize);
+          checksum_writelong_be(cb->data, &o->object.file.be_size, newfilesize);
           gh->size=newfilesize;
 
-          if(o->object.file.data==0) {
-            checksum_writelong(cb->data, &o->object.file.data, lock->curextent);
+          if(o->object.file.be_data==0) {
+            checksum_writelong_be(cb->data, &o->object.file.be_data, lock->curextent);
             gh->data=lock->curextent;
           }
 
@@ -5187,13 +5188,13 @@ LONG writetofile(struct ExtFileLock *lock, UBYTE *buffer, ULONG bytestowrite) {
         while(bytestowrite!=0 && (errorcode=findextentbnode(lock->curextent, &extent_cb, &ebn))==0) {
           ULONG bytes;
           ULONG offsetinblock=lock->extentoffset & globals->mask_block;
-          BLCK ebn_next=ebn->next;
-          UWORD ebn_blocks=ebn->blocks;
+          BLCK ebn_next=BE2L(ebn->be_next);
+          UWORD ebn_blocks=BE2W(ebn->be_blocks);
 
-          if(ebn->blocks==lock->extentoffset>>globals->shifts_block) {
+          if(BE2W(ebn->be_blocks)==lock->extentoffset>>globals->shifts_block) {
             /* We are at the end +1 of this extent.  Skip to next one. */
 
-            lock->curextent=ebn->next;
+            lock->curextent=BE2L(ebn->be_next);
             lock->extentoffset=0;
             continue;
           }
@@ -5209,7 +5210,7 @@ LONG writetofile(struct ExtFileLock *lock, UBYTE *buffer, ULONG bytestowrite) {
                start of the block but not at the end of the file.  To add data
                to it we'll first need to read this block. */
 
-            _XDEBUG((DEBUG_IO,"writetofile: Partially overwriting a single block of a file.  ebn->key = %ld, lock->extentoffset = %ld\n",ebn->key,lock->extentoffset));
+            _XDEBUG((DEBUG_IO,"writetofile: Partially overwriting a single block of a file.  ebn->key = %ld, lock->extentoffset = %ld\n",BE2L(ebn->be_key),lock->extentoffset));
 
             bytes=globals->bytes_block-offsetinblock;
 
@@ -5229,7 +5230,7 @@ LONG writetofile(struct ExtFileLock *lock, UBYTE *buffer, ULONG bytestowrite) {
 //              }
 //            }
 //            else {
-            if((errorcode=writebytes(ebn->key+(lock->extentoffset>>globals->shifts_block), buffer, offsetinblock, bytes))!=0) {
+            if((errorcode=writebytes(BE2L(ebn->be_key)+(lock->extentoffset>>globals->shifts_block), buffer, offsetinblock, bytes))!=0) {
               break;
             }
 //            }
@@ -5256,7 +5257,7 @@ LONG writetofile(struct ExtFileLock *lock, UBYTE *buffer, ULONG bytestowrite) {
 
             // _XDEBUG((DEBUG_IO,"writetofile: Writing multiple blocks: blockstowrite = %ld, ebn->key = %ld, lock->extentoffset = %ld, lock->offset = %ld\n",blockstowrite, ebn->key, lock->extentoffset, lock->offset));
 
-            if((errorcode=write(ebn->key+(lock->extentoffset>>globals->shifts_block), buffer, (bytes+globals->bytes_block-1)>>globals->shifts_block))!=0) {
+            if((errorcode=write(BE2L(ebn->be_key)+(lock->extentoffset>>globals->shifts_block), buffer, (bytes+globals->bytes_block-1)>>globals->shifts_block))!=0) {
               break;
             }
           }
@@ -5279,8 +5280,8 @@ LONG writetofile(struct ExtFileLock *lock, UBYTE *buffer, ULONG bytestowrite) {
 
 
 LONG deletefileslowly(struct CacheBuffer *cbobject, struct fsObject *o) {
-  ULONG size=o->object.file.size;
-  ULONG key=o->object.file.data;
+  ULONG size=BE2L(o->object.file.be_size);
+  ULONG key=BE2L(o->object.file.be_data);
   LONG errorcode=0;
 
   /* cbobject & o refer to the file to be deleted (don't use this for objects
@@ -5303,13 +5304,13 @@ LONG deletefileslowly(struct CacheBuffer *cbobject, struct fsObject *o) {
     lockcachebuffer(cbobject);
 
     while((errorcode=findbnode(globals->block_extentbnoderoot,key,&cb,(struct BNode **)&ebn))==0) {
-      if(ebn->next==0) {
-        currentkey=ebn->key;
-        prevkey=ebn->prev;
-        blocks=ebn->blocks;
+      if(BE2L(ebn->be_next)==0) {
+        currentkey=BE2L(ebn->be_key);
+        prevkey=BE2L(ebn->be_prev);
+        blocks=BE2W(ebn->be_blocks);
         break;
       }
-      key=ebn->next;
+      key=BE2L(ebn->be_next);
     }
 
     /* Key could be zero (in theory) or contains the last ExtentBNode for this file. */
@@ -5330,10 +5331,10 @@ LONG deletefileslowly(struct CacheBuffer *cbobject, struct fsObject *o) {
               if((errorcode=findbnode(globals->block_extentbnoderoot, key, &cb, (struct BNode **)&ebn))==0) {
                 preparecachebuffer(cb);
 
-                ebn->next=0;
-                currentkey=ebn->key;
-                prevkey=ebn->prev;
-                blocks=ebn->blocks;
+                ebn->be_next=0;
+                currentkey=BE2L(ebn->be_key);
+                prevkey=BE2L(ebn->be_prev);
+                blocks=BE2W(ebn->be_blocks);
 
                 errorcode=storecachebuffer(cb);
               }
@@ -5341,8 +5342,8 @@ LONG deletefileslowly(struct CacheBuffer *cbobject, struct fsObject *o) {
             else {
               preparecachebuffer(cbobject);
 
-              checksum_writelong(cbobject->data, &o->object.file.size, 0);
-              checksum_writelong(cbobject->data, &o->object.file.data, 0);
+              checksum_writelong_be(cbobject->data, &o->object.file.be_size, 0);
+              checksum_writelong_be(cbobject->data, &o->object.file.be_data, 0);
 
               // o->object.file.data=0;
               // o->object.file.size=0;
@@ -5490,7 +5491,7 @@ LONG setnextextent(BLCK next, BLCK key) {
   if(next!=0 && (errorcode=findextentbnode(next, &cb, &ebn))==0) {
     preparecachebuffer(cb);
 
-    ebn->prev=key;
+    ebn->be_prev=L2BE(key);
 
     errorcode=storecachebuffer(cb);
   }
@@ -5511,7 +5512,7 @@ LONG setprevextent(BLCK prev, BLCK key) {
   if((prev & 0x80000000)==0 && (errorcode=findextentbnode(prev, &cb, &ebn))==0) {
     preparecachebuffer(cb);
 
-    ebn->next=key;
+    ebn->be_next=L2BE(key);
 
     errorcode=storecachebuffer(cb);
   }
@@ -5521,7 +5522,7 @@ LONG setprevextent(BLCK prev, BLCK key) {
     if((errorcode=readobject((prev & 0x7fffffff), &cb, &o))==0) {
       preparecachebuffer(cb);
 
-      o->object.file.data=key;
+      o->object.file.be_data=L2BE(key);
 
       errorcode=storecachebuffer(cb);
     }
@@ -5547,23 +5548,23 @@ LONG mergeextent(BLCK key) {
     /* We check if we found the right key, if there is a next Extent and
        if the two Extents touch each other: */
 
-    if(ebn->key==key && ebn->next!=0 && ebn->key+ebn->blocks == ebn->next) {
+    if(BE2L(ebn->be_key)==key && BE2L(ebn->be_next)!=0 && BE2L(ebn->be_key)+BE2W(ebn->be_blocks) == BE2L(ebn->be_next)) {
       struct CacheBuffer *cb2;
       struct fsExtentBNode *ebn2;
 
-      if((errorcode=findextentbnode(ebn->next, &cb2, &ebn2))==0 && ebn2->blocks+ebn->blocks < 65536) {
-        BLCK next=ebn2->next;
+      if((errorcode=findextentbnode(BE2L(ebn->be_next), &cb2, &ebn2))==0 && BE2W(ebn2->be_blocks)+BE2W(ebn->be_blocks) < 65536) {
+        BLCK next=BE2L(ebn2->be_next);
 
         /* Merge next extent with our extent */
 
         preparecachebuffer(cb);
 
-        ebn->blocks+=ebn2->blocks;
-        ebn->next=next;
+        ebn->be_blocks=W2BE(BE2W(ebn->be_blocks)+BE2W(ebn2->be_blocks));
+        ebn->be_next=L2BE(next);
 
         if((errorcode=storecachebuffer(cb))==0) {   // call storecachebuffer() here, because deletebnode() may move our BNode.
 
-          if((errorcode=deletebnode(globals->block_extentbnoderoot, ebn2->key))==0) {    /*** Maybe use deleteinternalnode here??? */
+          if((errorcode=deletebnode(globals->block_extentbnoderoot, BE2L(ebn2->be_key)))==0) {    /*** Maybe use deleteinternalnode here??? */
             errorcode=setnextextent(next, key);
           }
         }
@@ -5595,16 +5596,16 @@ LONG insertextent(BLCK key, BLCK next, BLCK prev, ULONG blocks) {
 
   if((prev & 0x80000000)!=0 || (errorcode=findextentbnode(prev, &cb, &ebn))==0) {
 
-    if((prev & 0x80000000)==0 && prev+ebn->blocks == key && ebn->blocks+blocks < 65536) {
+    if((prev & 0x80000000)==0 && prev+BE2W(ebn->be_blocks) == key && BE2W(ebn->be_blocks)+blocks < 65536) {
 
       /* Extent we are inserting is mergeable with its previous extent. */
 
       preparecachebuffer(cb);
 
-      ebn->blocks+=blocks;   /* This merges the previous and the new extent */
+      ebn->be_blocks=W2BE(BE2W(ebn->be_blocks)+blocks);   /* This merges the previous and the new extent */
 
       if((errorcode=storecachebuffer(cb))==0) {
-        errorcode=mergeextent(ebn->key);
+        errorcode=mergeextent(BE2L(ebn->be_key));
       }
     }
     else {
@@ -5615,10 +5616,10 @@ LONG insertextent(BLCK key, BLCK next, BLCK prev, ULONG blocks) {
 
         /* Succesfully updated previous extent, or the object.  Also created new BNode */
 
-        ebn->key=key;
-        ebn->prev=prev;
-        ebn->next=next;
-        ebn->blocks=blocks;
+        ebn->be_key=L2BE(key);
+        ebn->be_prev=L2BE(prev);
+        ebn->be_next=L2BE(next);
+        ebn->be_blocks=BE2W(blocks);
 
         if((errorcode=storecachebuffer(cb))==0) {
           if((errorcode=setnextextent(next, key))==0) {
@@ -5658,11 +5659,11 @@ LONG truncateextent(BLCK key, LONG blocks) {
 
       b=blocks<0 ? -blocks : blocks;
 
-      if(b<ebn->blocks && ebn->key==key) {
+      if(b<BE2W(ebn->be_blocks) && BE2L(ebn->be_key)==key) {
         if(blocks<0) {
-          ULONG next=ebn->next;
-          ULONG prev=ebn->prev;
-          UWORD blocks=ebn->blocks-b;
+          ULONG next=BE2L(ebn->be_next);
+          ULONG prev=BE2L(ebn->be_prev);
+          UWORD blocks=BE2W(ebn->be_blocks)-b;
 
           /* Truncating at the start. */
 
@@ -5671,10 +5672,10 @@ LONG truncateextent(BLCK key, LONG blocks) {
             key+=b;
 
             if((errorcode=createbnode(globals->block_extentbnoderoot, key, &cb, (struct BNode **)&ebn))==0) {
-              ebn->key=key;
-              ebn->next=next;
-              ebn->prev=prev;
-              ebn->blocks=blocks;
+              ebn->be_key=L2BE(key);
+              ebn->be_next=L2BE(next);
+              ebn->be_prev=L2BE(prev);
+              ebn->be_blocks=W2BE(blocks);
 
               if((errorcode=storecachebuffer(cb))==0) {
                 /* Truncating at start means changing the key value.  This
@@ -5694,7 +5695,7 @@ LONG truncateextent(BLCK key, LONG blocks) {
 
           preparecachebuffer(cb);
 
-          ebn->blocks-=b;
+          ebn->be_blocks=W2BE(BE2W(ebn->be_blocks)-b);
 
           errorcode=storecachebuffer(cb);
         }
@@ -5749,10 +5750,10 @@ LONG deleteextent(struct CacheBuffer *cb, struct fsExtentBNode *ebn) {
 
      newtransaction() should have been called prior to calling this function. */
 
-  next=ebn->next;
-  prev=ebn->prev;
+  next=BE2L(ebn->be_next);
+  prev=BE2L(ebn->be_prev);
 
-  if((errorcode=deletebnode(globals->block_extentbnoderoot,ebn->key))==0) {        /*** Maybe use deleteinternalnode here??? */
+  if((errorcode=deletebnode(globals->block_extentbnoderoot,BE2L(ebn->be_key)))==0) {        /*** Maybe use deleteinternalnode here??? */
     if((errorcode=setnextextent(next, prev))==0) {
       errorcode=setprevextent(prev, next);
     }
@@ -5806,10 +5807,10 @@ LONG moveextent(struct fsExtentBNode *ebn, BLCK dest, UWORD blocks) {
      truncated. */
 
   if((buf=AllocVec(OPTBUFSIZE, globals->bufmemtype))!=0) {
-    BLCK key=ebn->key;
-    BLCK next=ebn->next;
-    BLCK prev=ebn->prev;
-    UWORD blocksinextent=ebn->blocks;
+    BLCK key=BE2L(ebn->be_key);
+    BLCK next=BE2L(ebn->be_next);
+    BLCK prev=BE2L(ebn->be_prev);
+    UWORD blocksinextent=BE2W(ebn->be_blocks);
 
     if((errorcode=copy(key, dest, blocks, buf))==0) {       // This functions knows that OPTBUFSIZE is the size of the buffer!
 
@@ -5866,12 +5867,12 @@ static LONG fillgap(BLCK key) {
      the next extent (partially). */
 
   if((errorcode=findextentbnode(key, &cb, &ebn))==0) {
-    ULONG next=ebn->next;
+    ULONG next=BE2L(ebn->be_next);
 
-    key+=ebn->blocks;
+    key+=BE2W(ebn->be_blocks);
 
     while(next!=0 && (errorcode=findextentbnode(next, &cb, &ebn))==0) {          //      !! failed !!
-      UWORD blocks=ebn->blocks;
+      UWORD blocks=BE2W(ebn->be_blocks);
       LONG free;
 
       lockcachebuffer(cb);
@@ -5885,7 +5886,7 @@ static LONG fillgap(BLCK key) {
         /* The gap consists of /free/ blocks. */
 
         if(free > blocks && enough_for_add_moved()!=FALSE) {
-          next=ebn->next;
+          next=BE2L(ebn->be_next);
         }
         else {
           next=0;
@@ -5919,12 +5920,12 @@ LONG getbnode(BLCK block, struct CacheBuffer **returned_cb, struct fsExtentBNode
 
   if((errorcode=findbnode(globals->block_extentbnoderoot, block, returned_cb, (struct BNode **)returned_ebn))==0) {
 
-    _DEBUG(("getbnode: ebn->key = %ld, ebn->prev = %ld, ebn->blocks = %ld\n",(*returned_ebn)->key, (*returned_ebn)->prev, (*returned_ebn)->blocks));
+    _DEBUG(("getbnode: ebn->key = %ld, ebn->prev = %ld, ebn->blocks = %ld\n",BE2L((*returned_ebn)->be_key), BE2L((*returned_ebn)->be_prev), BE2W((*returned_ebn)->be_blocks)));
 
-    if(*returned_ebn!=0 && (*returned_ebn)->key<block) {
+    if(*returned_ebn!=0 && BE2L((*returned_ebn)->be_key)<block) {
       errorcode=nextbnode(globals->block_extentbnoderoot, returned_cb, (struct BNode **)returned_ebn);
 
-      _DEBUG(("getbnode: 2: ebn->key = %ld, ebn->prev = %ld, ebn->blocks = %ld\n",(*returned_ebn)->key, (*returned_ebn)->prev, (*returned_ebn)->blocks));
+      _DEBUG(("getbnode: 2: ebn->key = %ld, ebn->prev = %ld, ebn->blocks = %ld\n",BE2L((*returned_ebn)->be_key), BE2L((*returned_ebn)->be_prev), BE2W((*returned_ebn)->be_blocks)));
     }
   }
 
@@ -5991,9 +5992,9 @@ LONG makefreespace(BLCK block) {
 
       lockcachebuffer(cb);
 
-      blocks=MIN(OPTBUFSIZE>>globals->shifts_block, ebn->blocks);
+      blocks=MIN(OPTBUFSIZE>>globals->shifts_block, BE2W(ebn->be_blocks));
 
-      if((errorcode=findspace2_backwards(blocks, ebn->key, globals->blocks_total, &startblock, &newblocks))==0) {      // ebn->key should not be changed to block.
+      if((errorcode=findspace2_backwards(blocks, BE2L(ebn->be_key), globals->blocks_total, &startblock, &newblocks))==0) {      // ebn->key should not be changed to block.
         unlockcachebuffer(cb);
 
         if(newblocks!=0) {
@@ -6024,7 +6025,7 @@ LONG makefreespace(BLCK block) {
         break;
       }
 
-    } while((ebn->prev & 0x80000000)==0);
+    } while((BE2L(ebn->be_prev) & 0x80000000)==0);
   }
 
   return(errorcode);
@@ -6042,12 +6043,12 @@ LONG skipunmoveable(BLCK block) {
      moveable blocks, then blocks_total is returned. */
 
   if((findbnode(globals->block_extentbnoderoot, block, &cb, (struct BNode **)&ebn))==0) {
-    if(ebn!=0 && ebn->key==block) {
+    if(ebn!=0 && ebn->be_key==L2BE(block)) {
       return((LONG)block);
     }
-    else if(ebn==0 || ebn->key>=block || nextbnode(globals->block_extentbnoderoot, &cb, (struct BNode **)&ebn)==0) {
+    else if(ebn==0 || BE2L(ebn->be_key)>=block || nextbnode(globals->block_extentbnoderoot, &cb, (struct BNode **)&ebn)==0) {
       if(ebn!=0) {
-        BLCK key=ebn->key;
+        BLCK key=BE2L(ebn->be_key);
         LONG used;
 
         /* Found something moveable, but maybe there was some free space before the
@@ -6083,7 +6084,7 @@ struct fsExtentBNode *startofextentbnodechain(struct fsExtentBNode *ebn) {
   struct CacheBuffer *cb;
   LONG errorcode=0;
 
-  while((ebn->prev & 0x80000000)==0 && (errorcode=findextentbnode(ebn->prev, &cb, &ebn))==0) {
+  while((BE2L(ebn->be_prev) & 0x80000000)==0 && (errorcode=findextentbnode(BE2L(ebn->be_prev), &cb, &ebn))==0) {
   }
 
   if(errorcode==0) {
@@ -6442,35 +6443,35 @@ LONG findmatch_fromend(BLCK startblock, ULONG blocks, ULONG *bestkey) {
     newfragmentinit_small(blocks);
   }
 
-  if((errorcode=lastbnode(globals->block_extentbnoderoot, &cb, (struct BNode **)&ebn))==0 && ebn!=0 && ebn->key>=startblock) {
+  if((errorcode=lastbnode(globals->block_extentbnoderoot, &cb, (struct BNode **)&ebn))==0 && ebn!=0 && BE2L(ebn->be_key)>=startblock) {
 
-    _DEBUG(("findmatch_fromend: ebn->key = %ld, ebn->blocks = %ld\n", ebn->key, ebn->blocks));
+    _DEBUG(("findmatch_fromend: ebn->key = %ld, ebn->blocks = %ld\n", BE2L(ebn->be_key), BE2W(ebn->be_blocks)));
 
     do {
-      if((ebn->prev & 0x80000000)!=0) {   // Is this a 'first fragment' of something?
+      if((BE2L(ebn->be_prev) & 0x80000000)!=0) {   // Is this a 'first fragment' of something?
         struct CacheBuffer *cb2;
         struct fsObject *o;
         ULONG newblocks;
 
-        _DEBUG(("findmatch_fromend!: ebn->key = %ld, ebn->blocks = %ld\n", ebn->key, ebn->blocks));
+        _DEBUG(("findmatch_fromend!: ebn->key = %ld, ebn->blocks = %ld\n", BE2L(ebn->be_key), BE2W(ebn->be_blocks)));
 
         /* Found the start of a candidate chain. */
 
         lockcachebuffer(cb);
-        errorcode=readobject(ebn->prev & 0x7FFFFFFF, &cb2, &o);
+        errorcode=readobject(BE2L(ebn->be_prev) & 0x7FFFFFFF, &cb2, &o);
         unlockcachebuffer(cb);
 
         if(errorcode!=0) {
           break;
         }
 
-        newblocks=(o->object.file.size+globals->bytes_block-1)>>globals->shifts_block;
+        newblocks=(BE2L(o->object.file.be_size)+globals->bytes_block-1)>>globals->shifts_block;
 
         if(blocks>FRAGMENTS-1) {
-          *bestkey=newfragment_large(ebn->key, newblocks);
+          *bestkey=newfragment_large(BE2L(ebn->be_key), newblocks);
         }
         else {
-          *bestkey=newfragment_small(ebn->key, newblocks);
+          *bestkey=newfragment_small(BE2L(ebn->be_key), newblocks);
         }
 
         if(*bestkey!=0) {
@@ -6481,7 +6482,7 @@ LONG findmatch_fromend(BLCK startblock, ULONG blocks, ULONG *bestkey) {
           break;
         }
       }
-    } while((errorcode=previousbnode(globals->block_extentbnoderoot, &cb, (struct BNode **)&ebn))==0 && ebn!=0 && ebn->key>=startblock);
+    } while((errorcode=previousbnode(globals->block_extentbnoderoot, &cb, (struct BNode **)&ebn))==0 && ebn!=0 && BE2L(ebn->be_key)>=startblock);
 
     if(errorcode==0) {
       if(blocks>FRAGMENTS-1) {
@@ -6516,7 +6517,7 @@ LONG step(void) {
       /* Determine in which extent block_defragptr is located. */
 
       if((errorcode=findbnode(globals->block_extentbnoderoot, globals->block_defragptr, &cb, (struct BNode **)&ebn))==0) {
-        if(ebn==0 || ebn->key!=globals->block_defragptr) {
+        if(ebn==0 || BE2L(ebn->be_key)!=globals->block_defragptr) {
           LONG block;
 
           _DEBUG(("Defragmenter: Found unmoveable data at block %ld.\n", globals->block_defragptr));
@@ -6530,23 +6531,23 @@ LONG step(void) {
             errorcode=INTERR_DEFRAGMENTER;
           }
         }
-        else if((ebn->prev & 0x80000000)!=0 || ebn->prev<globals->block_defragptr) {
+        else if((BE2L(ebn->be_prev) & 0x80000000)!=0 || BE2L(ebn->be_prev)<globals->block_defragptr) {
 
           _DEBUG(("Defragmenter: Found a (partially) defragmented extent at block %ld.\n", globals->block_defragptr));
 
-          if(ebn->next==0 || ebn->next == ebn->key+ebn->blocks) {
+          if(BE2L(ebn->be_next)==0 || BE2L(ebn->be_next) == BE2L(ebn->be_key)+BE2W(ebn->be_blocks)) {
             /* If there is no next Extent, or if the next Extent is touching
                this one, then skip the current one. */
 
             _DEBUG(("Defragmenter: Extent has no next or next is touching this one.\n"));
 
-            globals->block_defragptr+=ebn->blocks;
+            globals->block_defragptr+=BE2W(ebn->be_blocks);
           }
           else {
             LONG freeafter;
-            BLCK key=ebn->key;
-            BLCK next=ebn->next;
-            UWORD blocks=ebn->blocks;
+            BLCK key=BE2L(ebn->be_key);
+            BLCK next=BE2L(ebn->be_next);
+            UWORD blocks=BE2W(ebn->be_blocks);
 
             _DEBUG(("Defragmenter: Extent has a next extent.\n"));
 
@@ -6613,7 +6614,7 @@ LONG step(void) {
 
                             _DEBUG(("Defragmenter: Moved next extent of our extent directly after the unmoveable space (block = %ld).\n", block));
 
-                            if((errorcode=moveextent(ebn, block, MIN(freeafter, ebn->blocks)))==0) {
+                            if((errorcode=moveextent(ebn, block, MIN(freeafter, BE2W(ebn->be_blocks))))==0) {
                               globals->block_defragptr=block;
                             }
                           }
@@ -6661,7 +6662,7 @@ LONG step(void) {
 
             _DEBUG(("Defragmenter: Moving a new first Extent to %ld\n", globals->block_defragptr));
 
-            errorcode=moveextent(ebn, globals->block_defragptr, MIN(free, ebn->blocks));
+            errorcode=moveextent(ebn, globals->block_defragptr, MIN(free, BE2W(ebn->be_blocks)));
           }
         }
         else {

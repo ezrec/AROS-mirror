@@ -15,19 +15,19 @@ typedef unsigned long NODE;
 /* Structures used by Node trees */
 
 struct fsNode {
-  ULONG data;
+  ULONG be_data;
 };
 
 #define NODECONTAINER_ID         AROS_LONG2BE(MAKE_ID('N','D','C',' '))
 
 struct fsNodeContainer {
   struct fsBlockHeader bheader;
-  NODE  nodenumber;        /* The Node number of the first Node in this block */
-  ULONG nodes;             /* The total number of Nodes per NodeIndexContainer
+  NODE  be_nodenumber;        /* The Node number of the first Node in this block */
+  ULONG be_nodes;             /* The total number of Nodes per NodeIndexContainer
                               or NodeIndexContainer from this point in the
                               Node-tree.  If this is 1 it is a leaf container. */
 
-  BLCKn node[0];           /* An array of NodeIndexContainers or NodeContainers
+  BLCKn be_node[0];           /* An array of NodeIndexContainers or NodeContainers
                               depending on where this NodeIndexContainer is
                               within the Node-tree. */
 };
