@@ -134,6 +134,6 @@ struct fsExtentBNode {
   ULONG be_next;
   ULONG be_prev;
   UWORD be_blocks;  /* The size in blocks of the region this Extent controls */
-};
+} __attribute__((packed));
 
 #endif // _BLOCKSTRUCTURE_H

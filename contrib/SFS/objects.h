@@ -190,7 +190,7 @@ struct fsObjectNode {
   struct fsNode node;
   NODE  be_next;
   UWORD be_hash16;
-};
+} __attribute__((packed));
 
 
 
