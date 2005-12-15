@@ -64,10 +64,17 @@ AROS_UFH3(void, Enumerator,
     IPTR DeviceID;
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_ProductID, &DeviceID);
 
-    if ((DeviceID == NFORCE_MCPNET1_ID)    ||  // nForce1
-        (DeviceID == NFORCE_MCPNET2_ID)    ||  // nForce2
-        (DeviceID == NFORCE_MCPNET3_ID)    ||  // nForce3
-        (DeviceID == NFORCE_MCPNET4_ID))       // nForce4
+    if ((DeviceID == NFORCE_MCPNET1_ID)    ||
+        (DeviceID == NFORCE_MCPNET2_ID)    ||
+        (DeviceID == NFORCE_MCPNET3_ID)    ||
+        (DeviceID == NFORCE_MCPNET4_ID)    ||
+        (DeviceID == NFORCE_MCPNET5_ID)    ||
+        (DeviceID == NFORCE_MCPNET6_ID)    ||
+        (DeviceID == NFORCE_MCPNET7_ID)    ||
+        (DeviceID == NFORCE_MCPNET8_ID)    ||
+        (DeviceID == NFORCE_MCPNET9_ID)    ||
+        (DeviceID == NFORCE_MCPNET10_ID)   ||
+        (DeviceID == NFORCE_MCPNET11_ID))
     {
         struct NFUnit   *unit = CreateUnit(LIBBASE, pciDevice);
         LIBBASE->nf_unit = unit;

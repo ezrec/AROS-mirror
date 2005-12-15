@@ -405,6 +405,12 @@ struct fe_priv {
 #define NFORCE_MCPNET3_ID       0x00d6
 #define NFORCE_MCPNET4_ID       0x0086
 #define NFORCE_MCPNET5_ID       0x008c
+#define NFORCE_MCPNET6_ID       0x00e6
+#define NFORCE_MCPNET7_ID       0x00df
+#define NFORCE_MCPNET8_ID       0x0056
+#define NFORCE_MCPNET9_ID       0x0057
+#define NFORCE_MCPNET10_ID      0x0037
+#define NFORCE_MCPNET11_ID      0x0038
 
 /*
  * Hardware access:

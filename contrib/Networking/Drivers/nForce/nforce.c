@@ -61,43 +61,34 @@
 
 #define net_device NFUnit
 
-/*
-    Busy loop using PC speaker. This is really tricky and shouldn't exist
-    here. But unfortunatelly UNIT_MICROHZ in timer.device is still unusable
+#define TIMER_RPROK 3599597124UL
 
-    This function uses 1193180Hz timer and is quite precise.
-*/
-
-static VOID __usleep(ULONG usec)
+static ULONG usec2tick(ULONG usec)
 {
-    UWORD div;
-
-    /* Don't allow timer overfill, otherwise loop will be wrong */
-    if (usec > 50000) usec = 50000;
-
-    div = (ULONG)(usec * 59659) / 50000;
-
-    outb((inb(0x61) & 0xfd) | 1, 0x61);
-    outb(0xb0, 0x43);
-
-    outb(div & 0xff, 0x42);
-    outb(div >> 8, 0x42);
-
-    while ((inb(0x61) & 0x20) == 0);
+    ULONG ret;
+    asm volatile("movl $0,%%eax; divl %2":"=a"(ret):"d"(usec),"m"(TIMER_RPROK));
+    return ret;
 }
 
-/*
-    As the upper function is a little bit limited with it's maximal delays,
-    here is a little bit extended version
-*/
-static VOID udelay(ULONG usec)
+void udelay(LONG usec)
 {
-    while(usec > 50000)
+    int oldtick, tick;
+    usec = usec2tick(usec);
+
+    outb(0x80, 0x43);
+    oldtick = inb(0x42);
+    oldtick += inb(0x42) << 8;
+
+    while (usec > 0)
     {
-        __usleep(50000);
-        usec-=50000;
+        outb(0x80, 0x43);
+        tick = inb(0x42);
+        tick += inb(0x42) << 8;
+
+        usec -= (oldtick - tick);
+        if (tick > oldtick) usec -= 0x10000;
+        oldtick = tick;
     }
-    __usleep(usec);
 }
 
 static volatile ULONG readl(APTR base)
