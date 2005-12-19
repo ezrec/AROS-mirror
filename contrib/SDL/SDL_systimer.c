@@ -25,6 +25,9 @@ static char rcsid =
  "@(#) $Id$";
 #endif
 
+#define __TIMER_NOLIBBASE__
+#define __GRAPHICS_NOLIBBASE__
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
