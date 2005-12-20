@@ -19,8 +19,6 @@
 #include "library.h"
 #include "DriverData.h"
 
-#define dd ((struct AROSData*) AudioCtrl->ahiac_DriverData)
-
 void
 SlaveEntry( void );
 
@@ -55,8 +53,10 @@ _AHIsub_AllocAudio( struct TagItem*         taglist,
   struct AROSBase* AROSBase = (struct AROSBase*) AHIsubBase;
   int freq = AudioCtrl->ahiac_MixFreq;
   
-  dd = AllocVec( sizeof( struct AROSData ),
+  AudioCtrl->ahiac_DriverData = AllocVec( sizeof( struct AROSData ),
 		 MEMF_CLEAR | MEMF_PUBLIC );
+
+#define dd ((struct AROSData*) AudioCtrl->ahiac_DriverData)
 
   if( dd != NULL )
   {
