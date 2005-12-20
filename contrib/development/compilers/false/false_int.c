@@ -52,7 +52,14 @@
 #define pu(x) push(x,NUM)
 #define po(x) pop(x,NUM)
 #define op(o) {po(b)po(d);pu((X)((int)d o (int)b));}
+
+#if defined(__GNUC__) && (__GNUC__ >= 4)
+#warning "GCC 4 Fix. CHECKME. Not tested!"
+#define cm(o,tt) {pa(b,(tt))pop(d,(X)tt);pu((X)(-(int)((int)d o (int)b)));}
+#else
 #define cm(o,tt) {pa(b,((X)tt))pop(d,(X)tt);pu((X)(-(int)((int)d o (int)b)));}
+#endif
+
 #define un(o) {po(b)pu((X)(o (int)b));}
 #define ne (p<ent)
 #define W while
