@@ -24,7 +24,7 @@
 
 #include "config.h"
 #include "fconfig.h"
-#include "formulas.h"
+
 #define INCOLORING 11
 #define OUTCOLORING 11
 #define TCOLOR 11
@@ -56,29 +56,30 @@ vinfo;
 typedef int (*iterationfunc) (number_t, number_t, number_t, number_t) 
 CONSTF REGISTERS (3);
 
+struct formula
+ {
+   int magic;
+#ifndef SLOWFUNCPTR
+   iterationfunc calculate, calculate_periodicity, smooth_calculate,
+     smooth_calculate_periodicity;
+#endif
+   void (*calculate_julia) (struct image * img, register number_t pre, register number_t pim, int maxiter);
+   char *name[2];
+   char *shortname;
+   vinfo v;
+   int hasperiodicity;
+   int mandelbrot;
+   number_t pre, pim;
+   struct symetryinfo out[OUTCOLORING + 1];
+   struct symetryinfo in[INCOLORING + 1];
+   int flags;
+ };
+
 struct fractal_context
 {
  number_t pre, pim;
  number_t bre, bim;
- struct formula
-   {
-     int magic;
-#ifndef SLOWFUNCPTR
-     iterationfunc calculate, calculate_periodicity, smooth_calculate,
-       smooth_calculate_periodicity;
-#endif
-     void (*calculate_julia) (struct image * img, register number_t pre, register number_t pim, int maxiter);
-     char *name[2];
-     char *shortname;
-     vinfo v;
-     int hasperiodicity;
-     int mandelbrot;
-     number_t pre, pim;
-     struct symetryinfo out[OUTCOLORING + 1];
-     struct symetryinfo in[INCOLORING + 1];
-     int flags;
-   }
-  *currentformula;
+ struct formula *currentformula;
  number_t angle;
  int periodicity;
  unsigned int maxiter;
@@ -155,4 +156,8 @@ void free_fractalc (fractal_context *);
 fractal_context *make_fractalc (CONST int, float, float);
 void speed_test (fractal_context *, struct image *img);
 unsigned int calculateswitch(register number_t x1,register number_t y1,register number_t x2,register number_t y2, int periodicity) REGISTERS(3);
+
+#include "formulas.h"
+
 #endif /* FRACTAL_H */
+
