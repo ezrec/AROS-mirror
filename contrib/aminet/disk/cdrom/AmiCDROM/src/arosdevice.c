@@ -46,10 +46,10 @@ const struct Resident ACDR_resident=
 	(ULONG *)inittab
 };
 
-static const char name[]="cdrom.handler";
-static const char version[]="$VER: " HANDLER_VERSION;
+const char name[]="cdrom.handler";
+const char version[]="$VER: " HANDLER_VERSION;
 
-static const APTR inittab[4]=
+const APTR inittab[4]=
 {
 	(APTR)sizeof(struct ACDRBase),
 	(APTR)acdrfunctable,
@@ -258,4 +258,4 @@ AROS_LH1(LONG, abortio,
 	AROS_LIBFUNC_EXIT
 }
 
-static const char acdrhandlerend = 0;
+const char acdrhandlerend = 0;
