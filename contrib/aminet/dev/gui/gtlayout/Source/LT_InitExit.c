@@ -7,6 +7,8 @@
 **	:ts=4
 */
 
+#define __LOCALE_NOLIBBASE__
+
 #ifndef _GTLAYOUT_GLOBAL_H
 #include "gtlayout_global.h"
 #endif
