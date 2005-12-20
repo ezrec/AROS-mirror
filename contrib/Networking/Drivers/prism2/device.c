@@ -57,7 +57,7 @@ static VOID DevAbortIO(REG(a1, struct IOSana2Req *request),
 static VOID DeleteDevice(struct DevBase *base);
 static struct DevUnit *GetUnit(ULONG unit_num, struct DevBase *base);
 
-extern const APTR vectors[];
+/* extern const APTR vectors[]; */
 extern const APTR init_table[];
 
 
@@ -135,7 +135,7 @@ init_data =
 #endif
 
 
-static const APTR init_table[] =
+const APTR init_table[] =
 {
    (APTR)sizeof(struct DevBase),
    (APTR)vectors,

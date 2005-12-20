@@ -79,7 +79,12 @@ struct sana_softc *ssq = NULL;
 /* These are wire type dependant parameters of 
  * Sana-II Network Interface
  */
+ 
+#if __GNUC__ >= 4
+#warning "CHECKME. Struct not defined anywhere. Incomplete type compile error!"
+#else
 extern struct wiretype_parameters wiretype_table[];
+#endif
 
 /* 
  * Local prototypes
