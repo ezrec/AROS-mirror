@@ -1,7 +1,7 @@
 #include <proto/alib.h>
 
-#define StackX (short) *(stack+(stackptr<<1))
-#define StackY (short) *(stack+(stackptr<<1)+1)
+#define StackX *(stack+(stackptr<<1))
+#define StackY *(stack+(stackptr<<1)+1)
 
 /* MAZETEST (xpos,ypos,mazewidth,pointer to buffer) */
 #ifdef BITMAP
