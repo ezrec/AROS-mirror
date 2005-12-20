@@ -32,7 +32,7 @@ The server maintains a central "repository", which is the main database
 containing the published common codebase of the project. Individual developers 
 have their own "working copies", which are local copies of the database from
 a specific time together with local changes that the developer hasn't uploaded
-to the server. When an developer wants to share his changes with the rest of 
+to the server. When a developer wants to share his changes with the rest of 
 the team he simply "commits" his changes to the server using the client 
 program, which takes care of uploading them and merging them with changes done
 by other developers.
@@ -51,6 +51,8 @@ your OS. All common Linux distributions come with SVN packaged.
 .. Note:: The server runs Subversion 1.1 which can be accessed by a
           client with the version 1.0, 1.1 or 1.2.
 
+SVN doesn't work with UTF-8 localisation. You have to switch the locale to ISO8859
+before any SVN action.
 
 AmigaOS
 -------
@@ -64,7 +66,7 @@ __ http://main.aminet.net/
 Logging into the server
 =======================
 
-Unlike SVN, you don't need to login into the server. Instead, SVN will
+Unlike CVS, you don't need to login into the server. Instead, SVN will
 ask when it needs to know your login and password.
 
 .. Note:: 
@@ -86,8 +88,8 @@ To get a copy of the AROS sources you use the "checkout" command, like this::
 
 This will create a directory called AROS and populate it with all the sources,
 which might take quite some time if you have a slow network connection.
-The "necessary" module from contrib is now mandatory to build all AROS flavours,
-while it was only needed to compile the native i386-pc port before::
+The "contrib" module contains third party programs that have been ported to AROS.
+You have to checkout it in order to build all AROS flavours::
 
     > cd AROS
     > svn checkout https://svn.aros.org:8080/svn/aros/trunk/contrib
@@ -102,12 +104,9 @@ Getting the extra sources
 
 Apart from the AROS main sources which we checked out in the previous section,
 there is also other things on the SVN server not directly related to the core
-of the operating system. For example, this includes the "contrib" module with
-third party programs that have been ported to AROS, the "binaries" module which
+of the operating system. For example, the "binaries" module which
 contains images like screenshots, backdrops and similar, and the
-"documentation" module which contains the sources to the website. The contrib
-module is further divided up into smaller modules, so you don't have to check
-it all out if you only want a specific program.
+"documentation" module which contains the sources to the website.
 
 You can get a list of the available modules with::
 
