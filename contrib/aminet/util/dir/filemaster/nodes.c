@@ -349,7 +349,7 @@ AROS_UFCA(char , c, A1))
 
     char * xyz = putCharFunc->h_Data;
     *xyz = c;
-    ((ULONG)putCharFunc->h_Data)++;
+    putCharFunc->h_Data = (ULONG)putCharFunc->h_Data + 1;
 
     AROS_USERFUNC_EXIT
 }
