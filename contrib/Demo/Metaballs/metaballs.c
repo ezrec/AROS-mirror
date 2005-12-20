@@ -146,8 +146,7 @@ static void Do_Ball(WORD x, WORD y, WORD h, WORD b, APTR po)
     WORD loopy, loopx;
     UWORD destoffset = (y * W) + x;
     UWORD col;
-    
-#define src ((UBYTE *)po)
+    UBYTE *src = (UBYTE *)po;
     
     for(loopy = 0; loopy < h; loopy++)
     {
