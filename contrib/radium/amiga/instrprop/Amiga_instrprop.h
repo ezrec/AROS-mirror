@@ -5,6 +5,10 @@
  *  GUI Designed by : -- Unnamed --
  */
 
+#ifndef LIBRARIES_GADTOOLS_H
+#include <libraries/gadtools.h>
+#endif
+
 #define GetString( g )      ((( struct StringInfo * )g->SpecialInfo )->Buffer  )
 #define GetNumber( g )      ((( struct StringInfo * )g->SpecialInfo )->LongInt )
 
