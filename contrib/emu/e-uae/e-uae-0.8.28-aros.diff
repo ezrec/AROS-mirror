@@ -8,3 +8,17 @@ diff -Nur e-uae-0.8.27/configure e-uae-0.8.27-aros/configure
 -  cd  src/tools && ../../"$srcdir"/src/tools/configure --cache-file=/dev/null --host=$build --target=$host
 +  cd  src/tools && "$srcdir"/src/tools/configure --cache-file=/dev/null --host=$build --target=$host
  fi
+diff -Nur e-uae-0.8.28/src/sd-amigaos/sound.c e-uae-0.8.28-aros/src/sd-amigaos/sound.c
+--- e-uae-0.8.28/src/sd-amigaos/sound.c	2004-12-03 02:50:44.000000000 +0100
++++ e-uae-0.8.28-aros/src/sd-amigaos/sound.c	2005-12-20 18:43:13.000000000 +0100
+@@ -128,8 +128,8 @@
+ int sndbufsize;
+ int bufidx, devopen, ahiopen;
+ 
+-static int have_sound;
+-static int clockval;
++int have_sound;
++int clockval;
+ int period;
+ static int obtainedfreq;
+ 
