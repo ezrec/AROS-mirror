@@ -19,7 +19,7 @@
 
 struct Library *OOPBase;
 
-static OOP_AttrBase __IHidd_PCIDev;
+OOP_AttrBase __IHidd_PCIDev;
 static OOP_Object *pciobj, *irqobj;
 
 static OOP_MethodID mid_RB;

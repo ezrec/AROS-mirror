@@ -27,8 +27,6 @@
 #include "library.h"
 #include "DriverData.h"
 
-#define dd ((struct VoidData*) AudioCtrl->ahiac_DriverData)
-
 void
 SlaveEntry( void );
 
@@ -116,8 +114,10 @@ _AHIsub_AllocAudio( struct TagItem*         taglist,
   OOP_Object *irq = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
   
  
-  dd = AllocVec( sizeof( struct VoidData ),
+  AudioCtrl->ahiac_DriverData = AllocVec( sizeof( struct VoidData ),
 		 MEMF_CLEAR | MEMF_PUBLIC );
+
+#define dd ((struct VoidData*) AudioCtrl->ahiac_DriverData)
 
 D(bug("AHI: AllocAudio: dd=%08x\n", dd));
 
