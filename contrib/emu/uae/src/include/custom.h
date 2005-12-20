@@ -39,7 +39,7 @@ extern uae_u16 dmacon;
 extern uae_u16 intena,intreq;
 
 extern int current_hpos (void);
-extern int vpos;
+/* extern int vpos; */
 
 extern int find_copper_record (uaecptr, int *, int *);
 

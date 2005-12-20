@@ -31,7 +31,7 @@
 
 #define max_diwlastword (PIXEL_XPOS(maxhpos) + 16)
 
-extern int lores_factor, lores_shift, sprite_width;
+extern int lores_factor, lores_shift; /* , sprite_width; */
 
 STATIC_INLINE int coord_hw_to_window_x (int x)
 {
@@ -197,7 +197,7 @@ struct draw_info {
     int nr_color_changes, nr_sprites;
 };
 
-extern int next_sprite_entry;
+/* extern int next_sprite_entry; */
 
 extern struct decision line_decisions[2 * (MAXVPOS+1) + 1];
 extern struct draw_info line_drawinfo[2][2 * (MAXVPOS+1) + 1];
