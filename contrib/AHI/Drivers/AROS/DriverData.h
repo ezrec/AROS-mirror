@@ -17,7 +17,7 @@ struct AROSBase
 
 #define DRIVERBASE_SIZEOF (sizeof (struct AROSBase))
 
-#define DOSBase  ((struct DosLibrary*)    AROSBase->dosbase)
+#define DOSBase  (AROSBase->dosbase)
 #define OSSBase	 (AROSBase->ossbase)
 
 struct AROSData
