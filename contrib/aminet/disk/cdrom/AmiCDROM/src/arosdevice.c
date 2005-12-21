@@ -9,9 +9,9 @@
 #include "cdrom.h"
 #include "devsupp.h"
 
-extern const char name[];
-extern const char version[];
-extern const APTR inittab[4];
+extern const char amicdrom_name[];
+extern const char amicdrom_version[];
+extern const APTR amicdrom_inittab[4];
 extern void *const acdrfunctable[];
 extern const UBYTE acdrdatatable;
 extern struct ACDRBase *AROS_SLIB_ENTRY(init,acdrdev)();
@@ -41,15 +41,15 @@ const struct Resident ACDR_resident=
 	41,
 	NT_DEVICE,
 	-122,
-	(char *)name,
-	(char *)&version[6],
-	(ULONG *)inittab
+	(char *)amicdrom_name,
+	(char *)&amicdrom_version[6],
+	(ULONG *)amicdrom_inittab
 };
 
-const char name[]="cdrom.handler";
-const char version[]="$VER: " HANDLER_VERSION;
+const char amicdrom_name[]="cdrom.handler";
+const char amicdrom_version[]="$VER: " HANDLER_VERSION;
 
-const APTR inittab[4]=
+const APTR amicdrom_inittab[4]=
 {
 	(APTR)sizeof(struct ACDRBase),
 	(APTR)acdrfunctable,
