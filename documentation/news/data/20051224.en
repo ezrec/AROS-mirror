@@ -11,7 +11,7 @@ First of all, AROS has finally got a new, faster and smarter file system: Michal
 
 Neil Cafferkey has written a Intel Pro/100 NIC driver, allowing support for i8255x family of network adapters. If you're wondering what to do once you enter the net, you may chat with Nick Andrew's `AiRcOS`__, the first IRC client for our operating system. It's still in alpha stage, but `it works`__!
 
-Marcel 'Frostwork' Unbehaun has created an AROS/PPC Live-CD for Pegasos computers. The file is provided as a torrent by Pegasos.org, so a Torrent client is needed for downloading. Last but not least, there is a new Aros-Max distribution for x86 on the works. In the meanwhile, you may download this nice `v0.4.8`__ and report problems `here`__.
+Marcel 'Frostwork' Unbehaun has created an `AROS/PPC Live-CD for Pegasos`__ computers. The file is provided as a torrent by Pegasos.org, so a Torrent client is needed for downloading. Last but not least, there is a new Aros-Max distribution for x86 on the works. In the meanwhile, you may download this nice `v0.4.8`__ and report problems `here`__.
 
 Well, that's over. Merry Christmas and Happy New Year to everyone from us all. 
 
