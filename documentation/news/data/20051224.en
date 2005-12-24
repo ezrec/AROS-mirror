@@ -1,0 +1,24 @@
+===========
+Xmas update
+===========
+
+:Author:   Paolo Besser
+:Date:     2005-12-24
+
+Jingle bells, jingle bells, jingle all the way... ehm! It's Christmas again (enjoy!), and there are some happy news for AROS, too. We're costantly developing new code and fixing the existing one, and there are some new brilliant features to show here. 
+
+First of all, AROS has finally got a new, faster and smarter file system: Michal Schulz has ported SFS to the Amiga Research Operating System, so opening and saving lots of files won't take ages anymore, but just few seconds. In order to use SFS on your hard disks, however, you still have to follow a tricky procedure. We're going to fix this. `Here`__ you can see some benchmarks, and look at a defrag application `screenshot`__ too.
+
+Neil Cafferkey has written a Intel Pro/100 NIC driver, allowing support for i8255x family of network adapters. If you're wondering what to do once you enter the net, you may chat with Nick Andrew's `AiRcOS`__, the first IRC client for our operating system. It's still in alpha stage, but `it works`__!
+
+Marcel 'Frostwork' Unbehaun has created an AROS/PPC Live-CD for Pegasos computers. The file is provided as a torrent by Pegasos.org, so a Torrent client is needed for downloading. Last but not least, there is a new Aros-Max distribution for x86 on the works. In the meanwhile, you may download this nice `v0.4.8`__ and report problems `here`__.
+
+Well, that's over. Merry Christmas and Happy New Year to everyone from us all. 
+
+__ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=1179&viewmode=flat&order=ASC&start=11
+__ http://home.tu-clausthal.de/~misc/sfsdefrag.jpg
+__ http://archives.aros-exec.org/index.php?function=browse&cat=network/chat
+__ http://aros-exec.org/modules/xcgal/albums/userpics/10003/aircos-servinf.jpg
+__ http://www.pegasos.org/downloads/torrents/aros-live.torrent
+__ http://www.aros-max.co.uk/stable/arosmax048.rar
+__ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=1220&forum=6
