@@ -50,12 +50,11 @@ Sources
 You can download the AROS sources either from the `download page`__ or by 
 using SVN (which requires that you `apply for access`__ though). In the former
 case, getting the ``source`` package is enough (unless you also want to 
-compile the contrib programs). In the latter case, you need to checkout the 
-``AROS`` module, and also the ``necessary`` module if you want to compile the
-i386-pc port.
+compile the contrib programs). In the latter case, see `subversion documentation`__.
 
 __ ../../download
 __ ../../documentation/developers/contribute#the-svn-repository
+__ ../../documentation/developers/svn
 
 
 Building
@@ -128,6 +127,13 @@ Compiling
 
 To start the compilation, simply run::
 
+    > make
+
+IF this doesn't work after a SVN update, you can try::
+
+    > make clean
+    > rm -rf bin/
+    > ./configure {options}
     > make
 
 If you use FreeBSD or some other system that does not use GNU Make as the
