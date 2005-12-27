@@ -1,6 +1,5 @@
 Run <NIL: >NIL: AROSTCP
-;WaitForPort AROSTCP
-Wait 1 ; AROS doesn't have WaitForPort
+WaitForPort AROSTCP
 ; configure loop-back device
 ifconfig lo0 localhost
 ; Configure first Ethernet device
