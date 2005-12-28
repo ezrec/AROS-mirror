@@ -1,0 +1,380 @@
+========================
+    GTK-MUI Library
+========================
+
+$Id: README,v 1.1 2005/12/03 09:14:25 o1i Exp $
+
+This library is the result of bounty #30 of the Team Aros:
+"GTK+ 2.x wrapper to Zune/MUI (initial version)"
+
+Objectives:
+
+1. Create a wrapper for GTK+ 2.x to Zune/MUI.
+2. A minimum documentation is required on which calls port to which, 
+   and any appropriate comments on how the two systems interact.
+3. When writing the source code, the future possibility should be 
+   kept in mind to use it with the appropriate #Defines for all 
+   of the Amiga operating systems.
+4. Since a wrapper allows to emulate GTK step by step, no complete 
+   wrapper is required yet. For this bounty, a basic version containing 
+   the functions mentioned below will be sufficient. 
+   To fulfill this initial bounty, the following GTK functions need 
+   to be wrapped to Zune/MUI: 
+     gtk_adjustment_changed
+     gtk_adjustment_new
+     gtk_arrow_new
+     gtk_box_pack_start
+     gtk_button_new
+     gtk_button_new_with_label
+     gtk_check_button_new_with_label
+     gtk_container_add
+     gtk_container_set_border_width
+     gtk_entry_get_text
+     gtk_entry_new
+     gtk_entry_set_text
+     gtk_file_selection_get_filename
+     gtk_file_selection_new
+     gtk_file_selection_set_filename
+     gtk_fixed_new
+     gtk_frame_new
+     gtk_handle_box_new
+     gtk_hbox_new
+     gtk_hscrollbar_new
+     gtk_hseparator_new
+     gtk_label_new
+     gtk_main
+     gtk_main_quit
+     gtk_menu_bar_new
+     gtk_menu_item_new
+     gtk_menu_item_new_with_label
+     gtk_menu_item_set_submenu
+     gtk_menu_new
+     gtk_menu_shell_append
+     gtk_notebook_new
+     gtk_object_unref
+     gtk_paint_arrow
+     gtk_paint_box
+     gtk_paint_check
+     gtk_paint_extension
+     gtk_paint_flat_box
+     gtk_paint_focus
+     gtk_paint_option
+     gtk_paint_shadow
+     gtk_paint_slider
+     gtk_progress_bar_new
+     gtk_radio_button_group
+     gtk_radio_button_new_with_label
+     gtk_range_get_adjustment
+     gtk_rc_get_style_by_paths
+     gtk_signal_connect
+     gtk_signal_connect_object
+     gtk_spin_button_get_value_as_float
+     gtk_spin_button_new
+     gtk_spin_button_set_wrap
+     gtk_style_apply_default_background
+     gtk_style_attach
+     gtk_table_attach
+     gtk_table_new
+     gtk_table_set_col_spacings
+     gtk_table_set_row_spacings
+     gtk_toggle_button_set_active
+     gtk_toolbar_new
+     gtk_tooltips_force_window
+     gtk_tooltips_new
+     gtk_vbox_new
+     gtk_vscrollbar_new
+     gtk_widget_destroy
+     gtk_widget_grab_default
+     gtk_widget_realize
+     gtk_widget_set_rc_style
+     gtk_widget_set_sensitive
+     gtk_widget_set_state
+     gtk_widget_set_usize
+     gtk_widget_show
+     gtk_widget_show_all
+     gtk_widget_style_get
+     gtk_window_new
+     gtk_window_set_modal
+     gtk_window_set_title
+     gtk_window_set_transient_for
+
+Well, 1,3 and 4 are done, so I try to write some documentation within 
+this file ;).
+
+====================================================
+License
+====================================================
+
+GTK-MUI is published under the LGPL 
+(http://www.gnu.org/licenses/lgpl.txt).
+
+====================================================
+How to use this library as a normal user (non-coder)
+====================================================
+
+You can use list library to port GTK programs to your preferred 
+AmigaOS flavour. There is *no* use for this library, if you are 
+not writing a program, sorry ;).
+
+====================================================
+Operating System Requirements
+====================================================
+
+This library is developed for AROS, Makefiles for MorphOS (itix) 
+and AmigaOS4 (Andrea Palmatè) are provided AS THEY ARE and 
+not supported by the author, as I own neither MorphOS nor AmigaOS4.
+
+ATM the AROS library is a static link library for use with C programs.
+
+====================================================
+How to use this library as a programmer
+====================================================
+
+====================
+Installation
+====================
+Copy library:
+
+libgtk-mui.a       -> .../aros/sdk/i386-aros/lib/libgtk-mui.a
+
+Copy headers:
+
+gtk/*.h            -> .../aros/sdk/i386-aros/include/gtk/
+gdk/*.h            -> .../aros/sdk/i386-aros/include/gdk/
+pango/*            -> .../aros/sdk/i386-aros/include/pango/
+glib/*.h           -> .../aros/sdk/i386-aros/include/glib/
+glib/gobject/*.h   -> .../aros/sdk/i386-aros/include/glib/gobject/
+
+If you think, the includes are a mess, well, you are right ATM.
+gtk.h contains too much, I hope to find some time to clean it up (soon?).
+
+====================
+Linking
+====================
+
+Most GTK C sources come with a Makefile, which contains something 
+like this:
+
+arrow: arrow.c
+  $(CC) arrow.c -o arrow $(DEPRECTATED) `pkg-config gtk+-2.0 --cflags --libs`
+
+On my Linux machine, pkg-config output looks like this:
+
+ksh-aros > pkg-config gtk+-2.0 --cflags --libs
+-DXTHREADS -D_REENTRANT -DXUSE_MTSAFE_API -I/opt/gnome/include/gtk-2.0 -I/opt/gnome/lib/gtk-2.0/include -I/usr/X11R6/include -I/opt/gnome/include/atk-1.0 -I/opt/gnome/include/pango-1.0 -I/usr/include/freetype2 -I/usr/include/freetype2/config -I/opt/gnome/include/glib-2.0 -I/opt/gnome/lib/glib-2.0/include  -L/opt/gnome/lib -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0  
+
+As pkg-config knwos nothing about gtk-mui, you should convert the 
+Makefile in that way:
+
+arrow: arrow.c
+  $(CC) arrow.c -o arrow -lgtk-mui -lmui -larossupport -lamiga -larosc -larosm
+
+If you get no errors, GOOD ;), but unlikely. GTK-MUI contains only 
+a (small) subset of all possible GTK, GDK, GLIB, PANGO, GNOME or 
+whatever functions.  So if the linker reports some missing functions, 
+read the next chapter ;).
+
+====================================================
+How to implement a new (missing) widget
+====================================================
+
+Best way to start is, to search for an already existing widget, 
+which has similiar functions as the missing one. Look how it 
+is implemented and try to implement the missing one ;).
+
+Ok, some basic rules:
+
+- add a type IS_NEWWIDGET to mgtkWidgetType in gtk.h
+- start with the gtk_new_widget_new function. Following simple example:
+
+  GtkWidget *gtk_hseparator_new(void) {
+    GtkWidget *ret;
+
+    ret=mgtk_widget_new(IS_SEPARATOR);
+    ret->MuiObject=RectangleObject, MUIA_Rectangle_HBar, TRUE, MUIA_FixHeight, 8, End;
+
+    return ret;
+  }
+
+  widget->MuiObject is the MuiObject, which can display the widget.
+
+- if the new widget can cause events (a button, which can be pressed, 
+  etc) you most likely need a MUI custom class for this widget. 
+  Then the new function should look like this:
+
+  GtkWidget *gtk_toggle_button_new(void) {
+
+    GtkWidget *button;
+
+    button=mgtk_widget_new(IS_TOGGLEBUTTON);
+    button->MuiObject=(APTR) NewObject(CL_ToggleButton->mcc_Class, NULL,MA_Widget,button,TAG_DONE);
+
+    return button;
+  }
+
+  Every custom MUI class must accept MA_Widget, so if the class 
+  wants to cause a GTK-event, the object can find its widget.
+
+  - classes/togglebutton.c is a quite complete example to look at
+  - don't forget to call the create_new_class and delete_new_class 
+    functions in gtk_init.c
+
+====================================================
+GTK-MUI internals
+====================================================
+
+The most important struct is the GtkWidget struct, I
+will give a short (and not complete) overview, which
+magic is hidden there:
+
+Every widget contains a GObject:
+
+struct _GObject {
+  int badmagic;
+  struct internalGObject *gobjs;
+  guint ref_count;
+};
+
+badmagic is a fixed value, which can be used, to
+test if this is a GObject (or not).
+
+gobjs are used, to store user data in the object,
+with g_object_set_data for example.
+
+ref_count ist the normal ref_count of GLib, although
+increased and decreased in most functions, not really
+used up to now.
+
+GTK-MUI internal values of a GtkWidget:
+
+struct _GtkWidget {
+  GObject object;
+     /* The above described GObject */
+  int type;
+     /* GTK-MUI type, IS_SEPERATOR etc. */
+  GtkWidget *parent;
+     /* parent GtkWidget or NULL, if not set */
+  APTR MuiWin;     
+     /* if !IS_WINDOW, this points to the MUI root Window 
+      * (do not rely on this, might be NULL) 
+      */
+  APTR MuiWinMenustrip;
+     /* MuiWindow Menustrip, if type==IS_WINDOW */
+  APTR MuiGroup; 
+     /* MuiGroup, if type==IS_WINDOW */
+  Object *MuiObject; 
+     /* MUI Object to display this widget */
+  mgtk_signal_connect_data *mgtk_signal_connect_data; 
+     /* all signal handlers are stored here */
+  mgtkMUIClass mainclass; 
+     /* main class tree (area, window, application), defines what 
+      * kind of tags and methods are available 
+      */
+  GtkWidget *nextObject;
+     /* A second MUI Object or widget, if stored. Not clearly defined, 
+      * should not be necessary to use 
+      */
+};
+
+And then, we have the global structure mgtk:
+
+struct _mgtk {
+  APTR MuiApp;
+    /* MUI application pointer */
+  APTR MuiRoot;      
+    /* MUI Root Window Object */
+  APTR MuiRootStrip; 
+    /* MUI Root Window Object Menu Strip*/
+  APTR Group;        
+    /* MUI Root Window Group Object */
+  GSList *windows;   
+    /* all GTK windows in a linked list */
+  GtkWidget *grab;   
+    /* the widget getting all keystrokes.. TODO */
+  guint mgtk_signal_count;
+    /* the next free number for a (custom) signal type */
+  mgtk_SignalType *mgtk_signal;       
+    /* All GTK (custom) signals  */
+  GType mgtk_fundamental_count;
+    /* the next free number for a (custom) widget type */
+  mgtk_Fundamental *mgtk_fundamental; 
+    /* All custom widget types  */
+  GtkStyle *default_style;
+    /* default GTK style for all widgets */
+  guint white_black_optained;
+  LONG white_pen;
+  LONG black_pen;
+  guint other_pens_optained;
+  struct Screen   *screen;
+  struct DrawInfo *dri;
+  APTR             visualinfo;
+    /* some pen/screen magic */
+};
+
+
+====================================================
+Debugging the library
+====================================================
+
+The library can be built with debug output enabled or disabled. If you 
+build it without -DDEBUG, then on AROS
+
+DebOut  : won't print any output
+WarnOut : print to STDOUT
+ErrOut  : print to STDOUT
+
+with -DDEBUG
+
+DebOut  : print to D(bug 
+WarnOut : print to DebOut and STDOUT
+ErrOut  : print to DebOut and STDOUT
+
+All debug output is printed through DebOut at the moment, errors and 
+warnings are most times printed through printf, next version will 
+remove the printfs ;).
+
+DebOut might give wrong values, when you print floating point values.
+
+====================================================
+Useful links
+====================================================
+Home of GTK:
+http://www.gtk.org/ 
+
+Home of GTK-MUI:
+http://sourceforge.net/projects/gtk-mui/ 
+
+GTK function overview:
+http://www.gtk.org/api/2.6/gtk/ix01.html
+
+GTK+ 2.0 Tutorial:
+http://www.gtk.org/tutorial/index.html
+
+GLIB signals:
+http://developer.gnome.org/doc/API/2.0/gobject/gobject-Signals.html
+
+
+====================================================
+Thanks to
+====================================================
+
+- Senex and all other donators of this bounty, this shows a 
+  programmer, that his work is appreciated
+- Ilkka Lehtoranta (itix) for:
+    working on the library a few days
+    showing me how to write custom classes
+    the table and root class
+    MorphOS port (although not current at the moment)
+  The hours you helped this project have been very important, the 
+  current quality would have been impossible without you.
+- Andrea Palmatè for:
+    Amiga OS4 port
+    telling me how bad my inlcudes are ;)
+- Adam Olivier for:
+    initial AROS port help
+- Stefan Haubenthal for:
+    sending me some smaller patches
+    trying to build this mess on his machine
+
+Oliver Brunner (o1i), gtk-mui "at" oliver-brunner.de
+

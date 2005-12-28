@@ -1,0 +1,9 @@
+include $(TOP)/config/make.cfg
+
+#MM contrib-gtk-mui-examples-eurocalc : includes linklibs contrib-gtk-mui
+
+%build_prog mmake=contrib-gtk-mui-examples-eurocalc \
+    progname=eurocalc targetdir=$(CONTRIBDIR)/mui/gtk-mui/examples \
+    files="callbacks interface main support" uselibs="gtk-mui mui arossupport amiga arosc m"
+
+%common

@@ -1,0 +1,68 @@
+# $Id: Makefile.68k,v 1.2 2005/12/12 16:23:43 itix Exp $
+# for aos3.1 crosscompiling adapted morphos makefile
+
+CC     = m68k-amigaos-gcc -noixemul
+RANLIB = m68k-amigaos-ranlib
+AR     = m68k-amigaos-ar
+
+CDEFS =
+CFLAGS = $(CDEFS) -O3 -Wall -I. -Iinclude -Iclasses
+
+TARGET = entry
+
+OBJS   = g_lib.o \
+ 	 glib/gslist.o \
+    gdk/gdkmui.o \
+ 	 gtk_init.o \
+ 	 gtk_globals.o \
+	 gtk_menu.o \
+	 gtk_window.o \
+	 gtk_hooks.o \
+	 gtk_button.o \
+	 gtk_checkbutton.o \
+	 gtk_table.o \
+	 gtk_entry.o \
+	 gtk_image.o \
+	 gtk_label.o \
+	 gtk_radio.o \
+	 gtk_separator.o \
+	 gtk_arrow.o \
+	 gtk_scrollbar.o \
+	 gtk_tooltips.o \
+	 gtk_filesel.o \
+	 gtk_frame.o \
+	 gtk-mui.o \
+	 classes/rootgroup.o \
+	 classes/table.o \
+	 classes/classext.o
+
+ECHO = echo
+ECHE = echo -e
+BOLD = 
+NRML = 
+
+COMPILING = @$(ECHE) "compiling $(BOLD)$@$(NRML)..."
+LINKING = @$(ECHE) "linking $(BOLD)$@$(NRML)..."
+STRIPPING = @$(ECHE) "stripping $(BOLD)$@$(NRML)..."
+ARCHIVING = @$(ECHE) "archiving $(BOLD)$@$(NRML)..."
+
+%.o: %.c
+	$(COMPILING)
+	@$(CC) $(CFLAGS) -o $@ -c $*.c
+
+all: $(TARGET)
+
+classes/rootgroup.o: classes/classes.h
+classes/table.o: classes/classes.h
+
+$(TARGET): $(TARGET).o libgtk-mui.a
+	$(LINKING)
+	@$(CC) $(OBJS) $(TARGET).o -o $(TARGET) -L. -lgtk-mui
+
+libgtk-mui.a: $(OBJS)
+	$(ARCHIVING)
+	@$(AR) rc libgtk-mui.a $(OBJS)
+	@$(RANLIB) libgtk-mui.a
+
+clean: 
+	rm -f *.o $(TARGET) *.a

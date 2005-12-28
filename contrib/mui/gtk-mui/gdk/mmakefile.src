@@ -1,0 +1,21 @@
+#   $Id: mmakefile.src 22261 2004-09-01 14:51:38Z falemagn $
+#
+include $(TOP)/config/make.cfg
+
+#MM- contrib-gdk-includes : includes
+
+INCLUDE_FILES	:= gdk.h \
+	gdkcolor.h \
+	gdkconfig.h \
+	gdkdrawable.h \
+	gdkevents.h \
+	gdkgc.h \
+	gdkmui.h \
+	gdktypes.h \
+	gdkvisual.h \
+	gdkwindow.h \
+		   
+%copy_includes path=gdk dir= includes=$(INCLUDE_FILES)
+
+%common
+

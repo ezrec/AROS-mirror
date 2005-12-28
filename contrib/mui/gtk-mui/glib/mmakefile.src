@@ -1,0 +1,21 @@
+#   $Id: mmakefile.src 22261 2004-09-01 14:51:38Z falemagn $
+#
+include $(TOP)/config/make.cfg
+
+#MM- contrib-glib-includes : includes
+
+INCLUDE_FILES	:= config.h \
+	garray.h \
+	gfileutils.h \
+	gmacros.h \
+	gmem.h \
+	gslist.h \
+	gstrfuncs.h \
+	gtypes.h \
+	mem.h \
+
+
+%copy_includes path=glib dir= includes=$(INCLUDE_FILES)
+
+%common
+

@@ -1,0 +1,11 @@
+include $(TOP)/config/make.cfg
+
+#MM contrib-gtk-mui-examples-gpassutil : includes linklibs contrib-gtk-mui
+
+USER_CFLAGS := -I../ -I./
+
+%build_prog mmake=contrib-gtk-mui-examples-gpassutil \
+    progname=gpassutil targetdir=$(CONTRIBDIR)/mui/gtk-mui/examples \
+    files="callbacks interface main support" uselibs="gtk-mui mui arossupport amiga arosc m"
+
+%common

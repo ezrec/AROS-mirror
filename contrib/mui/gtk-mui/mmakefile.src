@@ -1,0 +1,86 @@
+#   $Id: mmakefile.src 22261 2004-09-01 14:51:38Z falemagn $
+#
+include $(TOP)/config/make.cfg
+
+#MM- contrib-gtk-mui : linklibs-gtk-mui \
+#MM	contrib-gtk-includes \
+#MM	contrib-gdk-includes \
+#MM	contrib-glib-includes \
+#MM	contrib-gobject-includes \
+#MM	contrib-pango-includes
+
+#MM- linklibs : linklibs-gtk-mui
+
+##MM linklibs-gtk-mui : linklibs-gtk-mui-config includes
+
+
+USER_CFLAGS := -I./ -Iinclude -Iclasses
+
+
+FILES := debug \
+	g_lib \
+	glib/gslist \
+	glib/g_object \
+	glib/gsignal \
+	glib/gstrfuncs2 \
+	gdk/gdk_window \
+	gdk/gdk_draw \
+	gdk/gdkcolor \
+	gdk/gdkgc \
+	gdk/gdkmui \
+	gtk_init \
+	gtk_globals \
+	gtk_window \
+	gtk_style \
+	gtk_grab \
+	gtk_hooks \
+	gtk_menu \
+	gtk_button \
+	gtk_checkbutton \
+	gtk_table \
+	gtk_entry \
+	gtk_image \
+	gtk_label \
+	gtk_radio \
+	gtk_separator \
+	gtk_scrollbar \
+	gtk_arrow \
+	gtk_tooltips \
+	gtk_filesel \
+	gtk_frame \
+	gtk_spinbutton \
+	gtk_notebook \
+	gtk_progressbar \
+	gtk_timer \
+	gtk_fixed \
+	gtk_paint \
+	gtk_handle_box \
+	gtk_toolbar \
+	gtk_object \
+	gtk_custom \
+	gtk-mui \
+	classes/rootgroup \
+	classes/custom \
+	classes/table \
+	classes/notebook \
+	classes/progressbar \
+	classes/timer \
+	classes/fixed \
+	classes/button \
+	classes/spinbutton \
+	classes/checkbutton \
+	classes/togglebutton \
+	classes/radiobutton \
+	classes/menu \
+	classes/entry \
+	classes/toolbar \
+	classes/classext 
+
+
+
+%copy_includes path=gtk dir=$(TOP)/$(CURDIR)/gtk includes=*.h
+
+%build_linklib mmake=linklibs-gtk-mui libname=gtk-mui files=$(FILES)
+
+%common
+

@@ -1,0 +1,168 @@
+#===================================================================
+# AmigaOS4 Makefile by Andrea Palmate
+# 
+# Please compare to the AROS Makefile, if you have
+# problems, as this Makefile is maybe not up to date.
+# 
+# $Id: Makefile.OS4,v 1.4 2005/12/12 16:23:43 itix Exp $
+#===================================================================
+#
+CC     = gcc
+RANLIB = ranlib
+AR     = ar
+
+#CDEFS = 
+CDEFS = -DDEBUG
+CLIB  = clib2
+
+CFLAGS = -mcrt=$(CLIB) $(CDEFS) -D__USE_INLINE__ -O3 -g -Wall -I.. -I. -Iinclude -Iclasses -Igtk -Igdk
+STATICLIBS = -lamiga -lauto -lm
+   
+OBJS   = debug.o \
+	 g_lib.o \
+	 glib/gslist.o \
+	 glib/g_object.o \
+	 glib/gsignal.o \
+	 glib/gstrfuncs2.o \
+	 gdk/gdk_window.o \
+	 gdk/gdk_draw.o \
+	 gdk/gdkcolor.o \
+	 gdk/gdkgc.o \
+    gdk/gdkmui.o \
+	 gtk_init.o \
+	 gtk_globals.o \
+	 gtk_window.o \
+	 gtk_style.o \
+	 gtk_grab.o \
+	 gtk_hooks.o \
+	 gtk_menu.o \
+	 gtk_button.o \
+	 gtk_checkbutton.o \
+	 gtk_table.o \
+	 gtk_entry.o \
+	 gtk_image.o \
+	 gtk_label.o \
+	 gtk_radio.o \
+	 gtk_separator.o \
+	 gtk_scrollbar.o \
+	 gtk_arrow.o \
+	 gtk_tooltips.o \
+	 gtk_filesel.o \
+	 gtk_frame.o \
+	 gtk_spinbutton.o \
+	 gtk_notebook.o \
+	 gtk_progressbar.o \
+	 gtk_timer.o \
+	 gtk_fixed.o \
+	 gtk_paint.o \
+	 gtk_handle_box.o \
+	 gtk_toolbar.o \
+	 gtk_object.o \
+	 gtk_custom.o \
+	 gtk-mui.o \
+	 classes/rootgroup.o \
+	 classes/custom.o \
+	 classes/table.o \
+	 classes/notebook.o \
+	 classes/progressbar.o \
+	 classes/timer.o \
+	 classes/fixed.o \
+	 classes/button.o \
+	 classes/spinbutton.o \
+	 classes/checkbutton.o \
+	 classes/togglebutton.o \
+	 classes/radiobutton.o \
+	 classes/menu.o \
+	 classes/entry.o \
+	 classes/toolbar.o \
+	 classes/classext.o
+
+ECHO = echo
+ECHE = echo
+BOLD = 
+NRML = 
+
+COMPILING = @$(ECHE) "compiling $(BOLD)$@$(NRML)..."
+LINKING = @$(ECHE) "linking $(BOLD)$@$(NRML)..."
+STRIPPING = @$(ECHE) "stripping $(BOLD)$@$(NRML)..."
+ARCHIVING = @$(ECHE) "archiving $(BOLD)$@$(NRML)..."
+
+%.o: %.c
+	$(COMPILING)
+	$(CC) $(CFLAGS) -o $@ -c $*.c
+
+all: libgtk-mui.a
+
+classes/rootgroup.o: classes/classes.h
+classes/table.o: classes/classes.h
+
+libgtk-mui.a: $(OBJS)
+	$(ARCHIVING)
+	$(AR) rc libgtk-mui.a $(OBJS)
+
+clean: 
+	rm -f $(OBJS) *.a
+
+ex-clean:
+	rm -f examples/*.o examples/arrow examples/entry examples/filesel examples/frame examples/menu examples/radiobuttons examples/rangewidgets examples/table examples/tooltips examples/spinbutton examples/notebook examples/progressbar examples/fixed examples/buttons examples/ttt_test
+
+test: examples
+	cp examples/arrow examples/entry examples/filesel examples/frame examples/menu examples/radiobuttons examples/rangewidgets examples/table examples/tooltips examples/spinbutton examples/notebook examples/progressbar examples/fixed examples/ttt_test examples/buttons aros/
+
+examples: libgtk-mui.a arrow entry filesel frame menu radiobuttons rangewidgets table tooltips spinbutton notebook progressbar fixed tictactoe buttons
+
+dial: libgtk-mui.a dialex
+	cp examples/dial_test aros/
+
+arrow: examples/arrow.c
+	$(CC) $(CFLAGS) examples/arrow.c -o examples/arrow -L. -lgtk-mui $(STATICLIBS)
+
+entry: examples/entry.c
+	$(CC) $(CFLAGS) examples/entry.c -o examples/entry -L. -lgtk-mui $(STATICLIBS)
+
+filesel: examples/filesel.c
+	$(CC) $(CFLAGS) examples/filesel.c -o examples/filesel -L. -lgtk-mui $(STATICLIBS)
+
+frame: examples/frame.c
+	$(CC) $(CFLAGS) examples/frame.c -o examples/frame -L. -lgtk-mui $(STATICLIBS)
+
+menu: examples/menu.c
+	$(CC) $(CFLAGS) examples/menu.c -o examples/menu -L. -lgtk-mui $(STATICLIBS)
+
+radiobuttons: examples/radiobuttons.c
+	$(CC) $(CFLAGS) examples/radiobuttons.c -o examples/radiobuttons -L. -lgtk-mui $(STATICLIBS)
+
+rangewidgets: examples/rangewidgets.c
+	$(CC) $(CFLAGS) examples/rangewidgets.c -o examples/rangewidgets -L. -lgtk-mui $(STATICLIBS)
+
+table: examples/table.c
+	$(CC) $(CFLAGS) examples/table.c -o examples/table -L. -lgtk-mui $(STATICLIBS)
+
+tooltips: examples/tooltips.c
+	$(CC) $(CFLAGS) examples/tooltips.c -o examples/tooltips -L. -lgtk-mui $(STATICLIBS)
+
+spinbutton: examples/spinbutton.c
+	$(CC) $(CFLAGS) examples/spinbutton.c -o examples/spinbutton -L. -lgtk-mui $(STATICLIBS)
+
+notebook: examples/notebook.c
+	$(CC) $(CFLAGS) examples/notebook.c -o examples/notebook -L. -lgtk-mui $(STATICLIBS)
+
+progressbar: examples/progressbar.c
+	$(CC) $(CFLAGS) examples/progressbar.c -o examples/progressbar -L. -lgtk-mui $(STATICLIBS)
+
+fixed: examples/fixed.c
+	$(CC) $(CFLAGS) examples/fixed.c -o examples/fixed -L. -lgtk-mui $(STATICLIBS)
+
+buttons: examples/buttons.c
+	$(CC) $(CFLAGS) examples/buttons.c -o examples/buttons -L. -lgtk-mui $(STATICLIBS)
+
+tictactoe: examples/tictactoe.c examples/tictactoe.h examples/ttt_test.c
+	$(CC) examples/tictactoe.c $(CFLAGS)  -c -o examples/tictactoe.o 
+	$(CC) examples/ttt_test.c $(CFLAGS) -c -o examples/ttt_test.o
+	$(CC) examples/ttt_test.o examples/tictactoe.o -o examples/ttt_test -L. -lgtk-mui $(STATICLIBS)
+
+dialex: libgtk-mui.a examples/dial_test.c examples/gtkdial.c examples/gtkdial.h
+	$(CC) examples/dial_test.c $(CFLAGS)  -c -o examples/dial_test.o 
+	$(CC) examples/gtkdial.c $(CFLAGS)  -c -o examples/gtkdial.o 
+	$(CC) examples/dial_test.o examples/gtkdial.o -o examples/dial_test -L. -lgtk-mui $(STATICLIBS)
+

@@ -1,0 +1,12 @@
+#   $Id: mmakefile.src 22261 2004-09-01 14:51:38Z falemagn $
+#
+include $(TOP)/config/make.cfg
+
+#MM- contrib-pango-includes : includes
+
+INCLUDE_FILES	:= pango.h 
+		   
+%copy_includes path=pango dir= includes=$(INCLUDE_FILES)
+
+%common
+

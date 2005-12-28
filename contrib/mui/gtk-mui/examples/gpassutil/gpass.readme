@@ -1,0 +1,29 @@
+
+"About GPassUtil
+A quick-yet-neat password generator for GNOME.
+  
+GPassUtil is a quick-yet-neat GNOME password generator. 
+It's simple, but it integrates smoothly into GNOME, 
+and provides standard and custom charsets that will 
+help you build strong yet easy-to-remember passwords."
+   
+Published by Staff TeamQ
+License: GPL
+
+To get more info/sources, go to:
+http://www.gnomefiles.org/app.php?soft_id=968
+
+AROS Version:
+
+I had to comment out some functions from
+the original sources, as gtk-mui does
+not handle those (gnome etc.). So
+according to the GPL, if you want to
+get the modified sources, please write
+me an e-Mail at:
+
+gtk-mui <at> oliver-brunner.de
+
+gtk-mui is available from:
+http://sourceforge.net/projects/gtk-mui/
+

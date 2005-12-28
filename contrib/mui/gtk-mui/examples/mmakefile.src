@@ -1,0 +1,31 @@
+
+#   $Id: mmakefile.src 22692 2005-12-22 18:56:14Z jpatton $
+#
+#   gtk-mui example progs
+#
+include $(TOP)/config/make.cfg
+
+#MM contrib-gtk-mui-examples: includes linklibs contrib-gtk-mui
+
+GTKMUIEXAMPLES := 	arrow \
+	buttons \
+	entry \
+	filesel \
+	fixed \
+	frame \
+	menu \
+	notebook \
+	progressbar \
+	radiobuttons \
+	spinbutton \
+	table \
+	toolbar \
+	tooltips \
+
+USER_CFLAGS= -I../
+
+%build_progs mmake=contrib-gtk-mui-examples files=$(GTKMUIEXAMPLES) \
+    targetdir=$(CONTRIBDIR)/mui/gtk-mui/examples \
+    uselibs="gtk-mui mui arossupport amiga arosc m"
+
+%common

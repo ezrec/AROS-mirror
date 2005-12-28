@@ -1,0 +1,31 @@
+#   $Id: mmakefile.src 22261 2004-09-01 14:51:38Z falemagn $
+#
+include $(TOP)/config/make.cfg
+
+#MM- contrib-gtk-includes : includes
+
+INCLUDE_FILES	:= gtk.h \
+	gtkadjustment.h \
+	gtkbox.h \
+	gtkcontainer.h \
+	gtkenums.h \
+	gtkmain.h \
+	gtkobject.h \
+	gtkprogressbar.h \
+	gtkrange.h \
+	gtkrequisition.h \
+	gtksettings.h \
+	gtksignal.h \
+	gtkstock.h \
+	gtkstyle.h \
+	gtktable.h \
+	gtktogglebutton.h \
+	gtktoolbar.h \
+	gtktoolitem.h \
+	gtkvbox.h \
+	gtkwidget.h 
+		   
+%copy_includes path=gtk dir= includes=$(INCLUDE_FILES)
+
+%common
+
