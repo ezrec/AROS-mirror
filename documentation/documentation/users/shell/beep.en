@@ -1,0 +1,32 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <avail>`_ `Next <break>`_ 
+
+---------------
+
+
+====
+Beep
+====
+
+Format
+~~~~~~
+::
+
+     Beep
+
+
+Location
+~~~~~~~~
+::
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+     BEEP produces a beep via Intuition DisplayBeep(NULL).
+
+

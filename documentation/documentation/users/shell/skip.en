@@ -1,0 +1,55 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <shell>`_ `Next <sort>`_ 
+
+---------------
+
+
+====
+Skip
+====
+
+Synopsis
+~~~~~~~~
+::
+
+
+     LABEL, BACK/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Skip commands in a script file until a certain label (declared with
+     Lab) or an EndSkip command is reached.
+
+
+Inputs
+~~~~~~
+::
+
+
+     LABEL  --  The label to skip to.  
+
+     BACK   --  Specify this if the label appears before the Skip statement
+                in the script file.
+
+
+See also
+~~~~~~~~
+::
+
+
+    Lab, EndSkip
+
+

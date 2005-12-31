@@ -1,0 +1,55 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <requestfile>`_ `Next <search>`_ 
+
+---------------
+
+
+===
+Run
+===
+
+Synopsis
+~~~~~~~~
+::
+
+
+     COMMAND/F
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Run a program, that is start a program as a background process.
+     That means it doesn't take over the parent shell.
+
+
+Inputs
+~~~~~~
+::
+
+
+     COMMAND  --  the program to run together with its arguments
+
+
+Notes
+~~~~~
+::
+
+
+     To make it possible to close the current shell, redirect the output
+     using
+
+          Run >NIL: program arguments
+
+

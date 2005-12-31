@@ -1,0 +1,73 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <setkeyboard>`_ `Next <skip>`_ 
+
+---------------
+
+
+=====
+Shell
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+
+     COMMAND/K/F,FROM
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Start a shell (interactive or background).
+
+
+Inputs
+~~~~~~
+::
+
+
+     COMMAND  --  command line to execute
+
+     FROM     --  script to invoke before user interaction
+
+
+
+Example
+~~~~~~~
+::
+
+
+     shell FROM S:Startup-Sequence
+
+     Starts a shell and executes the startup script.
+
+
+Notes
+~~~~~
+::
+
+
+ The script file is not a script in execute sense (as you may not use any
+ .key, .bra or .ket and similar things).
+
+
+See also
+~~~~~~~~
+::
+
+
+ Execute, NewShell
+
+

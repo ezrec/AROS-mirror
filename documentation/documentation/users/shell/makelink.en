@@ -1,0 +1,47 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <makedir>`_ `Next <newshell>`_ 
+
+---------------
+
+
+========
+MakeLink
+========
+
+Synopsis
+~~~~~~~~
+::
+
+
+     FROM/A, TO/A, HARD/S, FORCE/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Create a link to a file
+
+
+Inputs
+~~~~~~
+::
+
+
+     FROM   --  The name of the link
+     TO     --  The name of the file or directory to link to
+     HARD   --  If specified, the link will be a hard-link; default is
+                to create a soft-link
+     FORCE  --  Allow a hard-link to point to a directory
+
+

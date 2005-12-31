@@ -1,0 +1,31 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <skip>`_ `Next <stack>`_ 
+
+---------------
+
+
+====
+Sort
+====
+
+Format
+~~~~~~
+::
+
+
+     Sort
+             
+ TEMPLATE
+
+     FROM/A,TO/A,COLSTART/K,CASE/S,NUMERIC/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C/
+        
+

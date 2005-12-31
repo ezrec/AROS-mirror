@@ -1,0 +1,100 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <fault>`_ `Next <get>`_ 
+
+---------------
+
+
+========
+Filenote
+========
+
+Synopsis
+~~~~~~~~
+::
+
+
+     FILE/A,COMMENT,ALL/S,QUIET/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:c
+
+
+Function
+~~~~~~~~
+::
+
+
+     Add a comment to a file or directory.
+
+     Filenote allows a recursive scan of all directories adding comments
+     to each file/directory it finds that matches the file pattern
+     specified.
+
+
+Inputs
+~~~~~~
+::
+
+
+     FILE    - Always has to be specified. Can be either a filename with
+               a full path or a file pattern that is to be matched.
+
+     COMMENT - The ASCII string that is to be added as a comment to the
+               file(s)/dir(s) specified.
+
+               To provide a comment that has embedded quotation marks,
+               precede each quote with an asterisk.
+
+                 i.e. Filenote FILE=RAM:test.txt COMMENT=*"hello*"
+
+     ALL     - Boolean switch. If specified, Filenote scans the directories
+               that match the pattern specified, recursively.
+
+     QUIET   - Boolean switch. If specified, no diagnostic text will be
+               displayed to stdout.
+
+
+Result
+~~~~~~
+::
+
+
+     Standard DOS return codes.
+
+
+Example
+~~~~~~~
+::
+
+
+     Filenote ram: hello all
+
+         Recurses through each directory in RAM: adding "hello" as a
+         filenote to each file/directory.
+
+
+Notes
+~~~~~
+::
+
+
+     Output from AROS' Filenote is more neat and structured than the
+     standard Filenote command.
+
+     Does not yet support multi-assigns.
+
+
+See also
+~~~~~~~~
+::
+
+
+     SetComment()
+
+

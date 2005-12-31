@@ -1,0 +1,44 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <quit>`_ `Next <rename>`_ 
+
+---------------
+
+
+=======
+Relabel
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+
+     DRIVE/A, NAME/A
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Rename a volume
+
+
+Inputs
+~~~~~~
+::
+
+
+     DRIVE   --  The volume to rename
+     NAME    --  The new name
+
+

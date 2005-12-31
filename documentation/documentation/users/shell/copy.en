@@ -1,0 +1,199 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <changetaskpri>`_ `Next <delete>`_ 
+
+---------------
+
+
+====
+Copy
+====
+
+Synopsis
+~~~~~~~~
+::
+
+
+     FROM/M, TO, ALL/S, QUIET/S, BUF=BUFFER/K/N, CLONE/S, DATES/S, NOPRO/S,
+     COM=COMMENT/S, NOREQ/S,
+
+     PAT=PATTERN/K, DIRECT/S,SILENT/S, ERRWARN/S, MAKEDIR/S, MOVE/S,
+     DELETE/S, HARD=HARDLINK/S, SOFT=SOFTLINK/S, FOLNK=FORCELINK/S,
+     FODEL=FORCEDELETE/S, FOOVR=FORCEOVERWRITE/S, DONTOVR=DONTOVERWRITE/S,
+     FORCE/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Creates identical copies of one or more files.
+
+
+Inputs
+~~~~~~
+::
+
+
+     FROM      --  multiple input files
+     TO        --  destination file or directory
+     ALL       --  deep scan into sub directories
+     QUIET     --  suppress all output and requesters
+     BUFFER    --  buffer size for copy buffer in 512 byte blocks
+                   (default 1024 (= 512K))
+     CLONE     --  copy comment, protection bits and date as well
+     DATES     --  copy dates
+     NOPRO     --  do not copy protection bits
+     COMMENT   --  copy filecomment
+     NOREQ     --  suppress requesters
+
+     PATTERN   --  a pattern the filenames must match
+     DIRECT    --  copy mode only: copy file without any tests or options
+     VERBOSE   --  gives more output
+     ERRWARN   --  do not proceed, when one file failed
+     MAKEDIR   --  produce directories
+     MOVE      --  delete source files after copying successful
+     DELETE    --  do not copy, but delete the source files
+     HARDLINK  --  make a hardlink to source instead of copying
+     SOFTLINK  --  make a softlink to source instead of copying
+     FOLNK     --  also makes links to directories
+     FODEL     --  delete protected files also
+     FOOVR     --  also overwrite protected files
+     DONTOVR   --  do never overwrite destination
+     FORCE     --  DO NOT USE. Call compatibility only.
+
+
+ More detailed descriptions:
+
+ FROM:
+ Source file(s). For directories, all contained files are source files. May
+ have standard patterns.
+
+ TO:
+ Destination file or for multiple sources destination directory. Destination
+ directories are created (including all needed parent directories).
+
+ ALL:
+ Scan directories recursively
+
+ QUIET:
+ Copy is completely silent here. Really no output is given, also no requests
+ for missing disks or other problems!
+
+ BUF=BUFFER:
+ Specify the number of 512 byte buffers for copying. Default are 200 buffers
+ [100KB memory]. One buffer is minimum size, but should never be used.
+
+ PAT=PATTERN:
+ PATTERN allows to specify a standard dos pattern, all file have to match.
+ This is useful with ALL option.
+
+ Example:
+ When you want to delete all .info files in a directory tree, you need
+ this option: Copy DELETE #? ALL PAT #?.info
+
+ CLONE:
+ The filecomment, date and protection bits of the source files are copied to
+ destination file or directory.
+
+ DATES:
+ The date information of source is copied to destination.
+
+ NOPRO:
+ The protection bits of sources are NOT copied. So the destination gets
+ default bits [rwed].
+
+ COM=COMMENT:
+ The filecomment is copied to destination.
+
+ NOREQ:
+ No standard DOS requests are displayed, when an error occurs.
+
+
+ DIRECT:
+ Certain devices do not allow some of the used DOS packet request types.
+ This option is a really easy copy command, which only opens source and
+ destination directly without any tests and checks.
+ Options ALL, PAT, CLONE, DATES, NOPRO, COM, MAKEDIR, MOVE, DELETE, HARD,
+ SOFT, FOLNK, FODEL, FOOVR, DONTOVR and multiple input files cannot be
+ specified together with DIRECT. This options needs one input and one output
+ file.
+ When you want to delete a softlink, which does no longer point to a valid
+ file, you need this option as well.
+ Example use: 'Copy DIRECT text PRT:' to print a file called text.
+ - Copy manages a lot of such cases automatically, but maybe this option is
+ needed sometimes.
+
+ VERBOSE:
+ Copy gives additional output.
+
+ ERRWARN:
+ Copy knows and returns the 3 types of dos.library errors:
+ 5   WARN    The processing of one file failed, Copy skips this file
+             and proceeds the next.
+ 10  ERROR   The creation of a directory or any other bad error happend.
+             Copy quits after that.
+ 20  FAIL    A really hard error happend (No memory, Examine failed, ...)
+             Copy quits after that.
+ When option ERRWARN is used, the result 5 (WARN) gets result 10 (ERROR). So
+ Copy aborts everytime an error occured.
+
+ MAKEDIR:
+ All names specified in FROM field are taken as directories, which must be
+ created.
+
+ MOVE:
+ The files are not copied, but moved (or renamed). This means that after
+ move operation the source does no longer exist.
+
+ DELETE:
+ This does not copy anything, but delete the source files!
+
+ HARD=HARDLINK:
+ Instead of copying the files, a hard link is created. This only works,
+ when destination is on same device as source.
+ When ALL option is specified, the directories are scanned recursively, else
+ Copy produces links to the directories.
+
+ SOFT=SOFTLINK:
+ Instead of copying directories, a soft link is created. These links are
+ useable between different devices also. Soft links are only created for
+ directories. Files are skipped here. Option FORCELINK is therefor always
+ set to true.
+ NOTE: Softlinks are not official supported by OS and may be dangerous.
+ I suggest not to use this option! See description below.
+
+ FOLNK=FORCELINK:
+ When linking of directories should be possible, this option is needed. See
+ section "About links" for possible problems.
+
+ FODEL=FORCEDELETE:
+ When this option is enabled, files are deleted also, when they are delete
+ protected.
+
+ FOOVR=FORCEOVERWRITE:
+ When this option is enabled, files are overwritten also, when they are
+ protected.
+
+ DONTOVR=DONTOVERWRITE:
+ This option prevents overwriting of destination files.
+
+
+
+See also
+~~~~~~~~
+::
+
+
+     Delete, Rename, MakeDir, MakeLink
+
+

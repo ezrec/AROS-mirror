@@ -1,0 +1,86 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <prompt>`_ `Next <quit>`_ 
+
+---------------
+
+
+=======
+Protect
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+
+     FILE/A,FLAGS,ADD/S,SUB/S,ALL/S,QUIET/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:c
+
+
+Function
+~~~~~~~~
+::
+
+
+     Add or remove protection bits from a file or directory.
+     
+     Protect allows the use of pattern matching and recursive directory
+     scans to protect many files/directories at any one time.
+
+
+Inputs
+~~~~~~
+::
+
+
+     FILE   --  Either a file, a directory or a pattern to match.
+     FLAGS  --  One or more of the following flags:
+
+                 S - Script
+                 P - Pure
+                 A - Archive
+                 R - Read
+                 W - Write
+                 E - Execute
+                 D - Delete
+
+     ADD    --  Allows the bits to be set and hence allowable.
+     SUB    --  Allows the bits to be cleared and hence not allowable.
+     ALL    --  Allows a recursive scan of the volume/directory.
+     QUIET  --  Suppresses any output to the shell.
+
+
+Result
+~~~~~~
+::
+
+
+     Standard DOS return codes.
+
+
+Example
+~~~~~~~
+::
+
+
+     Protect ram: e add all
+
+         Recurses the ram: volume and attaches the executable bit.
+
+
+See also
+~~~~~~~~
+::
+
+
+     SetProtection()
+
+

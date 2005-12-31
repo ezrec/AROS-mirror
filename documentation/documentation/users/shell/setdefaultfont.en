@@ -1,0 +1,61 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <setclock>`_ `Next <setenv>`_ 
+
+---------------
+
+
+==============
+SetDefaultFont
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+
+     FONTNAME/A,FONTSIZE/N/A,SCREEN/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Set the default system/screen Font
+     
+
+Inputs
+~~~~~~
+::
+
+
+     FONTNAME  --  the name of the font
+     FONTSIZE  --  the size of the font
+     SCREEN    --  if specified set the default screen font otherwise
+                   set the default system font.
+
+
+Example
+~~~~~~~
+::
+
+
+     SetDefaultFont ttcourier 12
+
+
+Notes
+~~~~~
+::
+
+     The default system font must be mono spaced (non-proportional)
+
+

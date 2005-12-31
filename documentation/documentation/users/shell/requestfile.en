@@ -1,0 +1,37 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <requestchoice>`_ `Next <run>`_ 
+
+---------------
+
+
+===========
+RequestFile
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+
+     DRAWER,FILE/K,PATTERN/K,TITLE/K,POSITIVE/K,NEGATIVE/K,
+     ACCEPTPATTERN/K,REJECTPATTERN/K,SAVEMODE/S,MULTISELECT/S,
+     DRAWERSONLY/S,NOICONS/S,PUBSCREEN/K,INITIALVOLUMES/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:c
+
+
+Result
+~~~~~~
+::
+
+
+     Standard DOS error codes.
+
+

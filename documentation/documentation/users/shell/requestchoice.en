@@ -1,0 +1,100 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <rename>`_ `Next <requestfile>`_ 
+
+---------------
+
+
+=============
+RequestChoice
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+
+     TITLE/A,BODY/A,GADGETS/A/M,PUBSCREEN/K
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:c
+
+
+Function
+~~~~~~~~
+::
+
+
+     Allows AmigaDOS scripts to have access to the EasyRequest() function
+     for input.
+
+
+Inputs
+~~~~~~
+::
+
+
+     TITLE       - The text to display in the title bar of the requester.
+
+     BODY        - The text to display in the body of the requester.
+
+     GADGETS     - The text for each of the buttons.
+
+     PUBSCREEN   - The name of the public screen to open the requester
+                   upon.
+
+
+Result
+~~~~~~
+::
+
+
+     Standard DOS return codes.
+
+
+Example
+~~~~~~~
+::
+
+
+     RequestChoice "This is a title" "This is*Na body" Okay|Cancel
+
+         This is self-explanitory, except for the "*N". This is the
+         equivalent of using a '\n' in C to get a newline in the body
+         of the requester. This requester will open on the Workbench
+         screen.
+
+     RequestChoice Title="This is a title" Body="This is*Na body"
+                   Gadgets=Okay|Cancel PubScreen=DOPUS.1
+
+         This will do exactly the same as before except that it will
+         open on the Directory Opus public screen.
+
+
+Notes
+~~~~~
+::
+
+
+     To place a newline into the body of the requester use *n or *N.
+
+     To place a quotation mark in the body of the requester use *".
+
+     The CLI template gives the GADGETS option as ALWAYS given; this
+     is different from the original program. This way, we do not have
+     to check to see if the gadgets have been given.
+
+
+See also
+~~~~~~~~
+::
+
+
+     EasyRequest(), EasyRequestArgs()
+
+

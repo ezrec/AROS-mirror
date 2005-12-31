@@ -1,0 +1,96 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <getenv>`_ `Next <info>`_ 
+
+---------------
+
+
+==
+If
+==
+
+Synopsis
+~~~~~~~~
+::
+
+
+     NOT/S,WARN/S,ERROR/S,FAIL/S,,EQ/K,GT/K,GE/K,VAL/S,EXISTS/K
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Carry out all the commands in a block if a given conditional is true.
+     (A block is a run of command lines ended with an Else or EndIf
+     command.) For every If command there must be a corresponding EndIf.
+     If the condition is false, command execution will skip to the
+     corresponding Else of EndIf command.
+
+
+Inputs
+~~~~~~
+::
+
+
+     NOT               --  Negates the value of the condition
+
+     WARN              --  True if the previous return code was greater
+                           than or equal to 5.
+     ERROR             --  True if the previous return code was greater
+                           than or equal to 10.
+     FAIL              --  True if the previous return code was greater
+                           than or equal to 20.
+
+     EQ, GE, GT        --  True if the first value is equal, greater than
+                           or equal respectively greater than the second.
+
+     VAL               --  Indicate that the comparison should treat the
+                           strings as numerical values.
+
+     EXISTS  <string>  --  True if the file or directory <string> exists.
+
+
+
+Example
+~~~~~~~
+::
+
+
+     If 500 GT 200 VAL
+         echo "500 is greater than 200"
+     Else
+         If EXISTS S:User-Startup
+             echo "User-Startup script found in S:"
+             Execute S:User-Startup
+         EndIf
+     EndIf
+
+
+Notes
+~~~~~
+::
+
+
+     ERROR and FAIL will only be appropriate if the fail level of the
+     script is set via FailAt (the standard fail level is 10 and if any
+     return code exceeds or equals this value, the script will be aborted).
+
+
+See also
+~~~~~~~~
+::
+
+
+     Else, EndIf, FailAt
+
+

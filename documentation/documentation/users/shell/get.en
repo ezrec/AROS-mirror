@@ -1,0 +1,70 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <filenote>`_ `Next <getenv>`_ 
+
+---------------
+
+
+===
+Get
+===
+
+Synopsis
+~~~~~~~~
+::
+
+
+     NAME/A
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:c
+
+
+Function
+~~~~~~~~
+::
+
+
+     Retrieves the information stored in the given local variable.
+
+
+Inputs
+~~~~~~
+::
+
+
+     NAME - The name of the local variable.
+
+
+Result
+~~~~~~
+::
+
+
+     Standard DOS error codes.
+
+
+Example
+~~~~~~~
+::
+
+
+     Get Result2
+
+         This will retrieve the secondary return code of the last command
+         that was executed.
+
+
+See also
+~~~~~~~~
+::
+
+
+     Set, Unset
+
+

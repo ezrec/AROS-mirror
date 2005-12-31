@@ -1,0 +1,49 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <dir>`_ `Next <endcli>`_ 
+
+---------------
+
+
+====
+Else
+====
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Separate the 'true' and 'false' blocks of an If statement. The block
+     following an Else command is executed if the condition in the previous
+     If statement was false.
+
+
+Example
+~~~~~~~
+::
+
+
+     If EXISTS Sys:Devs
+         Copy random.device Sys:Devs/
+     Else
+         Echo "Cannot find Sys:Devs"
+     EndIf
+
+
+See also
+~~~~~~~~
+::
+
+
+     If, EndIf
+
+

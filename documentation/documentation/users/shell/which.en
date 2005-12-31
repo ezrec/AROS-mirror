@@ -1,0 +1,56 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <wait>`_ `Next <why>`_ 
+
+---------------
+
+
+=====
+Which
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+
+     FILE/A, NORES/S, RES/S, ALL/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Find and print the location of a specific program or directory.
+     Resident programs are marked as RESIDENT if they are not
+     interal resident in which case they are marked as INTERNAL.
+
+     Which searches the resident list, the current directory,
+     the command paths and the C: assign. If the item was not
+     found the condition flag is set to WARN but no error is
+     printed.
+
+
+Inputs
+~~~~~~
+::
+
+
+     FILE   --  the command/directory to search for
+     NORES  --  don't include resident programs in the search
+     RES    --  consider resident programs only
+     ALL    --  find all locations of the FILE. This may cause the
+                printing of the same location several times, for
+                instance if the current directory is C: and the
+                FILE was found in C:
+
+

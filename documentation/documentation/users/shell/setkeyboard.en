@@ -1,0 +1,62 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <setenv>`_ `Next <shell>`_ 
+
+---------------
+
+
+===========
+SetKeyboard
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+
+     KEYMAP/A
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Set the keymap for the current shell.
+
+
+Inputs
+~~~~~~
+::
+
+
+     KEYMAP  --  the keymap to use with the current shell
+
+
+Example
+~~~~~~~
+::
+
+
+     SetKeyboard s
+
+     Makes the current shell use the Swedish keymap.
+
+
+Notes
+~~~~~
+::
+
+
+     To make a certain keymap be the default for all shells, use the
+     preferences input program so specify your default choice.
+
+

@@ -1,0 +1,51 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Next <alias>`_ 
+
+---------------
+
+
+==========
+AddBuffers
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+
+     DRIVE/A, BUFFERS/N
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Add buffers to the list of available buffers for a specific
+     drive. Adding buffers speeds disk access but has the drawback
+     of using up system memory (512 bytes per buffer). Specifying
+     a negative number subtracts buffers from the drive.
+         If only the DRIVE argument is specified, the number of 
+     buffers for that drive are displayed without changing the buffer
+     allocation.
+
+
+Inputs
+~~~~~~
+::
+
+
+     DRIVE    --  the drive to alter the buffer allocation of
+     BUFFERS  --  the number of buffers to add (or subtract in case of
+                  a negative number) to a drive.
+
+

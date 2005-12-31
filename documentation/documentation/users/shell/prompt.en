@@ -1,0 +1,76 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <newshell>`_ `Next <protect>`_ 
+
+---------------
+
+
+======
+Prompt
+======
+
+Synopsis
+~~~~~~~~
+::
+
+
+     PROMPT
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:c
+
+
+Function
+~~~~~~~~
+::
+
+
+     Specify the prompt for the current shell.
+
+
+Inputs
+~~~~~~
+::
+
+
+     PROMPT  --  The prompt to set as a string. The following commands
+                 may be used in a printf kind of style.
+
+                 N  --  cli number
+                 S  --  name of the current directory
+                 R  --  return code of the last operation
+
+                 If no prompt is specified "%N.%S> " is used as default.
+
+
+Result
+~~~~~~
+::
+
+
+     Standard DOS return codes.
+
+
+Example
+~~~~~~~
+::
+
+
+     Prompt "Oepir Risti.%N> " gives:
+
+     Oepir Risti.10>      (if the CLI number was 10)
+
+
+See also
+~~~~~~~~
+::
+
+
+     SetPrompt()
+
+

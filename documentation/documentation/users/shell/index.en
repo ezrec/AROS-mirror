@@ -1,0 +1,117 @@
+.. This document is automatically generated. Don't edit it!
+
+==============
+Shell commands
+==============
+
+`Introduction <introduction>`_
+
+`AddBuffers`__
+`Alias`__
+`Assign`__
+`Avail`__
+`Beep`__
+`Break`__
+`ChangeTaskPri`__
+`Copy`__
+`Delete`__
+`Dir`__
+`Else`__
+`EndCli`__
+`EndIf`__
+`EndSkip`__
+`Eval`__
+`FailAt`__
+`Fault`__
+`Filenote`__
+`Get`__
+`Getenv`__
+`If`__
+`Info`__
+`Join`__
+`Lab`__
+`List`__
+`Lock`__
+`MakeDir`__
+`MakeLink`__
+`NewShell`__
+`Prompt`__
+`Protect`__
+`Quit`__
+`Relabel`__
+`Rename`__
+`RequestChoice`__
+`RequestFile`__
+`Run`__
+`Search`__
+`Set`__
+`SetClock`__
+`SetDefaultFont`__
+`Setenv`__
+`SetKeyboard`__
+`Shell`__
+`Skip`__
+`Sort`__
+`Stack`__
+`Status`__
+`Unalias`__
+`Unset`__
+`Unsetenv`__
+`Wait`__
+`Which`__
+`Why`__
+
+__ addbuffers
+__ alias
+__ assign
+__ avail
+__ beep
+__ break
+__ changetaskpri
+__ copy
+__ delete
+__ dir
+__ else
+__ endcli
+__ endif
+__ endskip
+__ eval
+__ failat
+__ fault
+__ filenote
+__ get
+__ getenv
+__ if
+__ info
+__ join
+__ lab
+__ list
+__ lock
+__ makedir
+__ makelink
+__ newshell
+__ prompt
+__ protect
+__ quit
+__ relabel
+__ rename
+__ requestchoice
+__ requestfile
+__ run
+__ search
+__ set
+__ setclock
+__ setdefaultfont
+__ setenv
+__ setkeyboard
+__ shell
+__ skip
+__ sort
+__ stack
+__ status
+__ unalias
+__ unset
+__ unsetenv
+__ wait
+__ which
+__ why

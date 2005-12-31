@@ -1,0 +1,82 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <addbuffers>`_ `Next <assign>`_ 
+
+---------------
+
+
+=====
+Alias
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+
+     NAME,STRING/F
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:c
+
+
+Function
+~~~~~~~~
+::
+
+
+     Alias allows you to create an alternate name for other DOS commands.
+     If Alias is used with no parameters, it will display the current
+     list of Aliases defined within the current shell.
+
+     Using a pair of square brackets within an alias allows you to
+     provide the 'new' dos command with parameters.
+
+     If no parameters are specified, the current list of aliases are
+     displayed.
+
+
+Inputs
+~~~~~~
+::
+
+
+     NAME    - The name of the alias to set.
+
+     STRING  - The value of the alias NAME.
+
+
+Result
+~~~~~~
+::
+
+
+     Standard DOS error codes.
+
+
+Example
+~~~~~~~
+::
+
+
+     Alias DF "Type [] number"
+
+         By typing "DF S:Shell-Startup" in the shell, you are actually
+         executing the command "Type S:Shell-Startup number". This will
+         display the contents of the S:Shell-Startup file in the shell
+         with line numbers on the left hand side.
+
+
+See also
+~~~~~~~~
+::
+
+
+     Unalias
+
+

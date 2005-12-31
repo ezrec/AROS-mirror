@@ -1,0 +1,62 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <if>`_ `Next <join>`_ 
+
+---------------
+
+
+====
+Info
+====
+
+Synopsis
+~~~~~~~~
+::
+
+
+     DISKS/S, VOLS=VOLUMES/S, GOODONLY/S, BLOCKS/S, DEVICES/M
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+ Show information on file system devices and volumes. When given no
+ arguments, information on all devices and volumes found in the system
+ is displayed. If information is wanted only for some specific devices,
+ these names may be given as arguments.
+
+
+Inputs
+~~~~~~
+::
+
+
+ DISKS     --  show information on file system devices
+ VOLS      --  show information on volumes
+ GOODONLY  --  don't show any information on bad devices or volumes
+ BLOCKS    --  show additional block size and usage information
+ DEVICES   --  device names to show information about
+
+
+Example
+~~~~~~~
+::
+
+
+ fo
+
+ it                 Size    Used    Free Full Errs   State    Type Name
+ reign harddisk:  964.1M  776.7M  187.4M  81%    0 read/write  OFS Workbench
+ M:                 8.0M    7.1M    7.1M  12%    0 read/write  OFS Ram Disk
+
+

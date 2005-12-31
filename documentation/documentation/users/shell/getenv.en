@@ -1,0 +1,69 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <get>`_ `Next <if>`_ 
+
+---------------
+
+
+======
+Getenv
+======
+
+Synopsis
+~~~~~~~~
+::
+
+
+     NAME/A
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:c
+
+
+Function
+~~~~~~~~
+::
+
+
+     Retrieves the information stored in the given global variable.
+
+
+Inputs
+~~~~~~
+::
+
+
+     NAME - The name of the global variable.
+
+
+Result
+~~~~~~
+::
+
+
+     Standard DOS error codes.
+
+
+Example
+~~~~~~~
+::
+
+
+     Getenv Kickstart
+
+         This will retrieve the version of the Kickstart ROM.
+
+
+See also
+~~~~~~~~
+::
+
+
+     Setenv, Unsetenv
+
+

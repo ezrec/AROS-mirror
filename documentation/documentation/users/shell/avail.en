@@ -1,0 +1,60 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <assign>`_ `Next <beep>`_ 
+
+---------------
+
+
+=====
+Avail
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+
+     CHIP/S, FAST/S, TOTAL/S, FLUSH/S, H=HUMAN/S        
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Give a summary of the memory usage and availability in the system.
+     To free up unused memory that still may be allocated (libraries,
+     devices, fonts and such present in memory but whcih are currently
+     not in use), use the FLUSH option.
+
+
+Inputs
+~~~~~~
+::
+
+
+     CHIP   --  show only "chip" memory
+     FAST   --  show only "fast" memory
+     TOTAL  --  show information on memory regardless of type
+     FLUSH  --  remove unnecessary things residing in memory
+     HUMAN  --  display more human-readable values (gigabytes as "G",
+                megabytes as "M", kilobytes as "K")
+
+
+Notes
+~~~~~
+::
+
+
+     "Chip" and "fast" memory are associated with the Amiga computer
+     and may not be applicable on your hardware platform.
+
+

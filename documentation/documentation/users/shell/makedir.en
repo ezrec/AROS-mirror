@@ -1,0 +1,51 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <lock>`_ `Next <makelink>`_ 
+
+---------------
+
+
+=======
+MakeDir
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+
+     NAME/M,ALL/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Create new empty directories with specified names.
+
+
+Inputs
+~~~~~~
+::
+
+
+     NAME  --  names of the directories that should be created
+
+
+Notes
+~~~~~
+::
+
+
+     MakeDir does not create an icon for a new directory.
+
+

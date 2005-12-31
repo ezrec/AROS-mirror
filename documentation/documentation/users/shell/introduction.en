@@ -1,0 +1,136 @@
+`Index <index>`_
+
+-------------
+
+==========================
+Introduction to AROS Shell
+==========================
+
+:Authors:   Matthias Rustler 
+:Copyright: Copyright © 2006, The AROS Development Team
+:Version:   $Revision: $
+:Date:      $Date: $
+:Status:    First attempt
+:Abstract:
+    This manual shows the usage of AROS with the Shell.
+
+AROS has a command line interface, the 'Shell'. 
+You can start it with menu Wanderer>Shell. A window
+with the path of the current AROS window will be opened. The prompt
+normally shows the the number of the Shell and the current path.
+
+The Shell has a history. You can access it with cursor up
+and down keys.
+
+AROS commands and file names are case insensitiv. You can even use
+mixed case.
+
+AROS searches commands in the current directory and in the search path.
+You can view and change the search path with the 'path' command.
+
+Some important commands
+-----------------------
++ CD -- change directory
++ DIR -- shows content of directory
++ COPY -- copy files
++ DELETE -- delete files and directories
++ INFO -- shows available drives
++ MAKEDIR -- create directory
++ RENAME -- rename files
++ TYPE -- show content of text file
+
+Path
+----
+Absolute paths start with the drive name and a colon (:),
+directories are separated with a slash (/). 
+The drive name can be a device name or a logical drive (see 'assign' command)
+
+::
+  
+  Example: dh0:dir1/dir2/file.dat
+
+If you need the current path as argument of a command, you can just write "".
+
+::
+
+  Example: copy from ram:x to ""
+  
+A colon alone means base directory of the current path.
+When the path starts with a colon then it is relative to the base
+directory of the given path.
+
+A slash at the beginning of a path means: go one level up. Two slashes mean go two
+levels up and so on.
+
+When a path contains spaces it must be written within quote chars.
+
+::
+
+  Example: type "name with spaces"
+
+Command template
+----------------
+A question mark after the command shows the parameter template of the command
+
+::
+
+  Example: copy ?
+  FROM/M,TO/A,ALL/S,QUIET/S,BUF=BUFFER/K/N,CLONE/S,DATES/S,NOPRO/S,COM/S,NOREQ/S
+
+The keywords can have options::
+
+  /A -- argument must be given
+  /K -- keyword must be written when using this argument
+  /S -- switch; just write the keyword to access the switch
+  /N -- numerical argument
+  /M -- more than one argument is possible
+  /F -- rest of command line
+  =  -- abbreviation; you can optionally use the abbreviation
+
+When calling a command '=' can be used for distinct assignment between keyword and value::
+
+  Example: copy from=a.dat to=b.dat
+  
+Patterns
+--------
+Some commands allow patterns for file name parameters::
+
+  ?  -- one arbitrary character
+  #? -- zero or more arbitrary characters
+  #x -- zero or more x
+  ~  -- negation
+  |  -- or
+  () -- group
+  [] -- range
+
+Examples::
+
+  dir #?.info
+  dir #?~(.info)
+  dir a(b|c)d
+  dir [a-c]e
+
+Redirection
+-----------
+
+::
+
+  > redirects output to file or device
+  >> redirects output and appends to file
+  < redirects input from file or device
+  Example: dir >ram:a 
+
+Running in background
+---------------------
+Normally, a command blocks the Shell until it is finished. You can run
+commands in the background with the 'run' command.
+
+::
+
+  Example: run delete #?
+
+Info files
+----------
+Files with the suffix '.info' play an important role in Wanderer. They contain
+the icon picture and some additional information. When you work with shell commands
+you have to take the Info files into account.

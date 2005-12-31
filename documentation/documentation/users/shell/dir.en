@@ -1,0 +1,63 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <delete>`_ `Next <else>`_ 
+
+---------------
+
+
+===
+Dir
+===
+
+Synopsis
+~~~~~~~~
+::
+
+
+ DIR,OPT/K,ALL/S,DIRS/S,FILES/S,INTER/S
+
+
+Location
+~~~~~~~~
+::
+
+
+ Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+ DIR displays the file or directory contained in the current or 
+ specified directory. Directories get listed first, then in alphabetical
+ order, the files are listed in two columns. Pressing CTRL-C aborts the
+ directory listing.
+
+
+
+Inputs
+~~~~~~
+::
+
+
+ ALL    --  Display all subdirectories and their files recursively.
+ DIRS   --  Display only directories.
+ FILES  --  Display only files.
+ INTER  --  Enter interactive mode.
+
+            Interactive listing mode stops after each name to display
+            a question mark at which you can enter commands. These
+            commands are:
+
+            Return      --  Goto the next file or directory.
+            E/ENTER     --  Enters a directory.
+            DEL/DELETE  --  Delete a file or an empty directory.
+            C/COM       --  Let the file or directory be the input of
+                            a DOS command (which specified after the C or
+                            COM or specified separately later).
+            Q/QUIT      --  Quit interactive mode.
+            B/BACK      --  Go back one directory level.
+
+
