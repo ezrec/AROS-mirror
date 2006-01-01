@@ -16,7 +16,11 @@ Format
 
      Sort
              
- TEMPLATE
+
+Template
+~~~~~~~~
+::
+
 
      FROM/A,TO/A,COLSTART/K,CASE/S,NUMERIC/S
 

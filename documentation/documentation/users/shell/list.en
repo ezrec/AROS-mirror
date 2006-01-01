@@ -18,7 +18,11 @@ Format
           [NODATES] [TO (name)] [SUB (string)] [SINCE (date)] [UPTO (date)]
           [QUICK] [BLOCK] [NOHEAD] [FILES] [DIRS] [LFORMAT (string)] [ALL]
              
- TEMPLATE
+
+Template
+~~~~~~~~
+::
+
 
      DIR/M,P=PAT/K,DATES/S,NODATES/S,TO/K,SUB/K,SINCE/K,UPTO/K,QUICK/S,BLOCK/S,NOHEAD/S,FILES/S,DIRS/S,LFORMAT/K,ALL/S
 
