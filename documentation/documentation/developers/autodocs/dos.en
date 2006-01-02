@@ -93,7 +93,6 @@ dos
 `MakeLink`_
 `MatchEnd`_
 `MatchFirst`_
-`MatchFirst`_
 `MatchNext`_
 `MatchPattern`_
 `MatchPatternNoCase`_
@@ -1183,62 +1182,56 @@ Synopsis
          struct DateTime * datetime
  );
 
-Format
-~~~~~~
-::
-
-                         is the default if you specify something other
-                         than any entry in this list.
-
-
-
-
-
-                 \end{description}
-
-             \item{dat_Flags} Modifies dat_Format. The only flag
-                 used by this function is DTF_SUBST. If set, then
-                 a string like "Today" or "Monday" is generated
-                 instead of the normal format if possible.
-
-             \item{dat_StrDay} Pointer to a buffer to receive the day of
-                     the week string. (Monday, Tuesday, etc.). If null,
-                     this string will not be generated.
-
-             \item{dat_StrDate} Pointer to a buffer to receive the date
-                     string, in the format requested by dat_Format,
-                     subject to possible modifications by DTF_SUBST. If
-                     null, this string will not be generated.
-
-             \item{dat_StrTime} Pointer to a buffer to receive the time
-                     of day string. If NULL, this will not be generated.
-
-             \end{description}
-
-
 Function
 ~~~~~~~~
 ::
 
-     DateToStr converts an AmigaDOS DateStamp to a human
-     readable ASCII string as requested by your settings in the
-     DateTime structure.
-
+ DateToStr converts an AmigaDOS DateStamp to a human
+ readable ASCII string as requested by your settings in the
+ DateTime structure.
 
 Inputs
 ~~~~~~
 ::
 
-     DateTime - a pointer to an initialized DateTime structure. The
-             DateTime structure should be initialized as follows:
+ DateTime - a pointer to an initialized DateTime structure. The
+ DateTime structure should be initialized as follows:
 
-             \begin{description}
-             \item{dat_Stamp} The datestamp to convert to ascii
+ dat_Stamp:  The datestamp to convert to ascii
 
-             \item{dat_Format} How to convert the datestamp into
-                 dat_StrDate. Can be any of the following:
+ dat_Format:    How to convert the datestamp into
+                dat_StrDate. Can be any of the following:
 
-                 \begin{description}
+        FORMAT_DOS: AmigaDOS format (dd-mmm-yy). This
+                    is the default if you specify something other
+                    than any entry in this list.
+
+        FORMAT_INT: International format (yy-mmm-dd).
+
+        FORMAT_USA: American format (mm-dd-yy).
+
+        FORMAT_CDN: Canadian format (dd-mm-yy).
+
+        FORMAT_DEF: default format for locale.
+
+ dat_Flags: Modifies dat_Format. The only flag
+            used by this function is DTF_SUBST. If set, then
+            a string like "Today" or "Monday" is generated
+            instead of the normal format if possible.
+
+ dat_StrDay:    Pointer to a buffer to receive the day of
+                the week string. (Monday, Tuesday, etc.). If null,
+                this string will not be generated.
+
+ dat_StrDate:   Pointer to a buffer to receive the date
+                string, in the format requested by dat_Format,
+                subject to possible modifications by DTF_SUBST. If
+                null, this string will not be generated.
+
+ dat_StrTime:   Pointer to a buffer to receive the time
+                of day string. If NULL, this will not be generated.
+
+
 
 Result
 ~~~~~~
@@ -4010,60 +4003,6 @@ Bugs
 ::
 
      Copying of the relative path to ap_Buf is not implemented yet
-
-
-See also
-~~~~~~~~
-::
-
-     MatchNext(), MatchEnd(), ParsePattern(), Examine(), CurrentDir()
-     <dos/dosasl.h>
-
-
-
-MatchFirst
-==========
-
-Synopsis
-~~~~~~~~
-::
-
- LONG MatchFirst(
-         STRPTR pat,
-         struct AnchorPath * AP
- );
-
-Function
-~~~~~~~~
-::
-
-
-     Searches for the first file or directory that matches a given pattern.
-     MatchFirst() initializes the AnchorPath structure for you but you
-     must initilize the following fields: ap_Flags, ap_Strlen, ap_BreakBits
-     and ap_FoundBreak. The first call to MatchFirst() also passes you
-     the first matching file which you can examine in ap_Info and the directory
-     the files is in in ap_Current->an_Lock. After the first call to
-     MatchFirst() call MatchNext().
-     The search begins whereever the current directory is set to. See
-     CurrentDir();
-     For more info on patterns see ParsePattern().
-
-
-Inputs
-~~~~~~
-::
-
-     pat  - pattern to search for
-     AP   - pointer to (initilized) AnchorPath structure
-     
-
-Result
-~~~~~~
-::
-
-     0     = success
-     other = DOS error code
 
 
 See also

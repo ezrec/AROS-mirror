@@ -20,8 +20,6 @@ intuition
 `AutoRequest`_
 `BeginRefresh`_
 `BuildEasyRequestArgs`_
-`BuildEasyRequestArgs`_
-`BuildSysRequest`_
 `BuildSysRequest`_
 `ChangeDecorationA`_
 `ChangeScreenBuffer`_
@@ -100,7 +98,6 @@ intuition
 `RefreshGList`_
 `RefreshGadgets`_
 `RefreshWindowFrame`_
-`RefreshWindowFrame`_
 `ReleaseGIRPort`_
 `RemakeDisplay`_
 `RemoveClass`_
@@ -123,7 +120,6 @@ intuition
 `SetEditHook`_
 `SetGadgetAttrsA`_
 `SetIPrefs`_
-`SetIPrefs`_
 `SetMenuStrip`_
 `SetMouseQueue`_
 `SetPointer`_
@@ -134,7 +130,6 @@ intuition
 `ShowTitle`_
 `ShowWindow`_
 `SizeWindow`_
-`SysReqHandler`_
 `SysReqHandler`_
 `TimedDisplayAlert`_
 `UnlockIBase`_
@@ -698,62 +693,6 @@ See also
  EasyRequestArgs(), SysReqHandler(), FreeSysRequest()
 
 
-
-BuildEasyRequestArgs
-====================
-
-Synopsis
-~~~~~~~~
-::
-
- struct Window * BuildEasyRequestArgs(
-         struct Window     * RefWindow,
-         struct EasyStruct * easyStruct,
-         ULONG IDCMP,
-         APTR Args
- );
-
-Function
-~~~~~~~~
-::
-
-     Opens a requester, which provides one or more choices. The control is
-     returned to the application after the requester was opened. It is
-     handled by subsequent calls to SysReqHandler() and closed by calling
-     FreeSysRequest().
-
-
-Inputs
-~~~~~~
-::
-
-     RefWindow - A reference window. If NULL, the requester opens on
-                 the default public screen.
-     easyStruct - The EasyStruct structure (<intuition/intuition.h>),
-                  which describes the requester.
-     IDCMP - IDCMP flags, which should satisfy the requester, too. This is
-             useful for requesters, which want to listen to disk changes,
-             etc. Note that this is not a pointer to the flags as in
-             EasyRequestArgs().
-     Args - The arguments for easyStruct->es_TextFormat.
-
-
-Result
-~~~~~~
-::
-
-     Returns a pointer to the requester. Use this pointer only for calls
-     to SysReqHandler() and FreeSysRequest().
-
-
-See also
-~~~~~~~~
-::
-
-     EasyRequestArgs(), SysReqHandler(), FreeSysRequest()
-
-
-
 BuildSysRequest
 ===============
 
@@ -789,44 +728,6 @@ See also
 
  FreeSysRequest(), DisplayAlert(), ModifyIDCMP(), exec-library/Wait(),
  Request(), AutoRequest(), EasyRequest(), BuildEasyRequestArgs()
-
-
-
-BuildSysRequest
-===============
-
-Synopsis
-~~~~~~~~
-::
-
- struct Window * BuildSysRequest(
-         struct Window * window,
-         struct IntuiText * bodytext,
-         struct IntuiText * postext,
-         struct IntuiText * negtext,
-         ULONG IDCMPFlags,
-         WORD width,
-         WORD height
- );
-
-Inputs
-~~~~~~
-::
-
-     window - The window in which the requester will appear
-     bodytext - The Text to be shown in the body of the requester
-     postext - The Text to be shown in the positive choice gadget
-     negtext - The Text to be shown in the negative choice gadget
-     IDCMPFlags - The IDCMP Flags for this requester
-     width, height - The dimensions of the requester
-
-
-See also
-~~~~~~~~
-::
-
-     FreeSysRequest(), DisplayAlert(), ModifyIDCMP(), exec-library/Wait(),
-     Request(), AutoRequest(), EasyRequest(), BuildEasyRequestArgs()
 
 
 
@@ -4163,17 +4064,6 @@ Synopsis
  );
 
 
-RefreshWindowFrame
-==================
-
-Synopsis
-~~~~~~~~
-::
-
- void RefreshWindowFrame(
-         struct Window * window
- );
-
 
 ReleaseGIRPort
 ==============
@@ -5145,27 +5035,6 @@ Result
 
 
 
-SetIPrefs
-=========
-
-Synopsis
-~~~~~~~~
-::
-
- ULONG SetIPrefs(
-         APTR data,
-         ULONG length,
-         ULONG type
- );
-
-Result
-~~~~~~
-::
-
- Depending on the operation
-
-
-
 SetMenuStrip
 ============
 
@@ -5654,77 +5523,6 @@ See also
 ::
 
      BuildSysRequest(), BuildEasyRequestArgs()
-
-
-
-SysReqHandler
-=============
-
-Synopsis
-~~~~~~~~
-::
-
- LONG SysReqHandler(
-         struct Window  * window,
-         ULONG   * IDCMPFlagsPtr,
-         BOOL WaitInput
- );
-
-Function
-~~~~~~~~
-::
-
- Handles a requester, which was opened with BuildSysRequest() or
- BuildEasyRequestArgs(). When this function is called all outstanding
- IDCMP requests are processed. If an IDCMP request that would close
- a normal EasyRequestArgs() is encountered, SysReqHandler() returns
- with a return code equally to the return code EasyRequestArgs()
- would have returned. You may call this function in synchronous or
- asynchronous mode, by setting the WaitInput parameter.
-
-
-Inputs
-~~~~~~
-::
-
- Window - The window pointer returned by either BuildSysRequest() or
-      BuildEasyRequestArgs().
- IDCMPFlagsPtr - Pointer to a ULONG to store the IDCMP flag that was
-         received by the window. This will be set if you
-         provided additional IDCMP flags to BuildSysRequest() or
-         BuildEasyRequest(). You may set this to NULL. You must
-         initialize the pointed to ULONG every time you call
-         SysReqHandler().
- WaitInput - Set this to TRUE, if you want this function to wait for
-         the next IDCMP request, if there is none at the moment
-         the function is called.
-
-
-Result
-~~~~~~
-::
-
- -2, if the requester was not satisfied. Normally you want to call
-     this function at least until this function returns something
-     different than -2.
- -1, if one of the IDCMP flags of idcmpPTR was set.
-  0, if the rightmost button was clicked or an error occured.
-  n, if the n-th button from the left was clicked.
-
-
-Bugs
-~~~~
-::
-
- Gadget placing is still untidy.
- Does not support BuildSysRequest() requesters, yet.
-
-
-See also
-~~~~~~~~
-::
-
- BuildSysRequest(), BuildEasyRequestArgs()
 
 
 
