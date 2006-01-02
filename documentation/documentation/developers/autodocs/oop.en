@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ===
 oop
 ===
@@ -55,18 +59,6 @@ Result
      None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -113,24 +105,6 @@ Result
 ::
 
      None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -184,24 +158,6 @@ Result
      Undefined.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -251,30 +207,6 @@ Result
      There are NO error conditions.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 OOP_GetMethod
@@ -312,12 +244,6 @@ Result
 
      The method asked for, or NULL if the method does not exist in
      the object's class.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -383,30 +309,6 @@ Result
      Numeric method identifier that is unique for this machine.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 OOP_NewObject
@@ -451,24 +353,12 @@ Result
      Pointer to the new object, or NULL if object creation failed.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      You should supply one of classPtr and classID, never
      both. Use NULL for the unspecified one.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -539,18 +429,6 @@ Notes
      Obtained attrbases should be released with ReleasAttrBase().
 
 
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 OOP_ObtainAttrBases
@@ -563,48 +441,6 @@ Synopsis
  BOOL OOP_ObtainAttrBases(
          struct OOP_ABDescr * abd
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -667,30 +503,6 @@ Result
              ooperr_ParseAttrs_TooManyAttrs.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 OOP_ReleaseAttrBase
@@ -728,29 +540,11 @@ Result
      None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      The call must be paired wit OOP_ObtainAttrBase().
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -765,48 +559,6 @@ Synopsis
  VOID OOP_ReleaseAttrBases(
          struct OOP_ABDescr * abd
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -841,24 +593,6 @@ Result
 ::
 
      None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -906,24 +640,6 @@ Result
 ::
 
      Undefined.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ===========
 commodities
 ===========
@@ -82,24 +86,6 @@ Result
  also returned if 'co' was NULL.)
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -136,36 +122,6 @@ Inputs
 
 
  events  --  a NULL-terminated linked list of InputEvents (may be NULL).
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -211,24 +167,6 @@ Result
  'headObj'.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -266,18 +204,6 @@ Inputs
  co  --  the object in question
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -288,12 +214,6 @@ Notes
  what you want. Set a correct filter (via SetFilter() or SetFilterIX())
  or don't change the error value.
  
-
-Bugs
-~~~~
-::
-
-
 
 See also
 ~~~~~~~~
@@ -351,12 +271,6 @@ Result
  commodities.h>
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -366,12 +280,6 @@ Notes
  is the reference to your commodity object. It shall be used whenever
  dealing with your commodity objects (functions operating on commodity
  objects and so on).
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -439,24 +347,6 @@ Result
                     library
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -503,24 +393,6 @@ Result
 
  A pointer to the message's data or NULL if message was NULL. The type
  of the data depends on the type of the message.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -570,24 +442,6 @@ Result
  is 0.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -635,30 +489,6 @@ Result
  in <libraries/commodities.h>.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 CxNotify
@@ -701,30 +531,6 @@ Result
  -3    --   No memory for operation
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 CxObjError
@@ -765,24 +571,6 @@ Result
  is says "error - the accumulated error, or 0 if 'co' is NULL". As the
  commodities.library I have (39.6 I believe) returns 0, I do the same
  below.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -831,24 +619,6 @@ Result
  possible types. If 'co' is NULL, CX_INVALID is returned.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -888,18 +658,6 @@ Inputs
  co  --  the object to be deleted (may be NULL)
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -909,12 +667,6 @@ Notes
  Deleteing an object that has other objects attached to it is (that
  should be deleted too) is easiest accomplished by using the
  DeleteCxObjAll() function.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -956,30 +708,12 @@ Inputs
  co  --  the object in question (may be NULL)
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
 
  The handle 'co' is invalid after the operation.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1021,18 +755,6 @@ Inputs
  cxm  -  the commodity message to delete (may NOT be NULL) 
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1042,20 +764,6 @@ Notes
  and not from within a commodities' context; that is if you for instance
  get a CXM_IEVENT CxMsg from a commodity sender object, you must
  ReplyMsg() it instead of Disposing it.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
- 
 
 
 --------------
@@ -1095,12 +803,6 @@ Inputs
               travelling through 'headObj' and friends.
 
 
-Result
-~~~~~~
-::
-
-
-
 Example
 ~~~~~~~
 ::
@@ -1110,18 +812,6 @@ Example
  sends the message down its list using:
 
      DivertCxMsg(msg, filter, filter);
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1176,12 +866,6 @@ Result
  COERR_NULLATTACH.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1189,12 +873,6 @@ Notes
 
  For nodes with equal priority, this function inserts object like within
  a FIFO queue.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1234,30 +912,6 @@ Inputs
 
  brokerList  --  List of commodity brokers (a list of struct BrokerCopy
                  nodes).
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1306,30 +960,6 @@ Result
  be deallocated.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 InsertCxObj
@@ -1374,24 +1004,6 @@ Result
  latter's accumulated error will be adjusted to incorporate
  COERR_NULLATTACH. If 'pred' is NULL, the object will be inserted first
  in the list.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1445,18 +1057,6 @@ Result
 
 
  TRUE if the translation was successful, otherwise FALSE.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -1515,12 +1115,6 @@ Result
  TRUE if the input event matches the input expression, FALSE otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1529,12 +1123,6 @@ Notes
  Applications don't normally need this function as filter objects take
  care of the event filtering. However, this function is in some cases
  nice to have.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1595,24 +1183,6 @@ Result
  -2  --  'desc' was NULL
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1649,30 +1219,6 @@ Inputs
 
 
  co  --  the commodity object to remove (may be NULL)
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1714,30 +1260,6 @@ Inputs
 
  cxm  -  the commodity message to route (may NOT be NULL)
  co   -  the commodity object to route the message to (may NOT be NULL)
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1788,18 +1310,6 @@ Result
 
  The old priority, that is the priority of the object prior to this
  operation.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -1861,24 +1371,6 @@ Result
  the success or failure of the operation.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1928,12 +1420,6 @@ Result
  whether the function succeeded or failed.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1942,12 +1428,6 @@ Notes
  The first field in the IX structure must be set to IX_VERSION as
  defined in <libraries/commodities.h>, to indicate which version of
  the IX structure is used.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1991,18 +1471,6 @@ Inputs
  events      --  the new input event list
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2013,12 +1481,6 @@ Notes
  user will change your list of InputEvents; however, it will be used
  asynchronously to the application program which means you shouldn't
  in any way corrupt the chain.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

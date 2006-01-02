@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ==========
 amigaguide
 ==========
@@ -38,48 +42,6 @@ Synopsis
          struct TagItem * attrs
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 AmigaGuideSignal
@@ -92,48 +54,6 @@ Synopsis
  ULONG AmigaGuideSignal(
          AMIGAGUIDECONTEXT handle
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -148,48 +68,6 @@ Synopsis
          AMIGAGUIDECONTEXT handle
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ExpungeXRef
@@ -201,48 +79,6 @@ Synopsis
 
  void ExpungeXRef(
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -259,48 +95,6 @@ Synopsis
          ULONG * storage
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 GetAmigaGuideMsg
@@ -314,48 +108,6 @@ Synopsis
          AMIGAGUIDECONTEXT handle
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 GetAmigaGuideString
@@ -368,48 +120,6 @@ Synopsis
  STRPTR GetAmigaGuideString(
          ULONG id
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -425,48 +135,6 @@ Synopsis
          STRPTR name
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 LockAmigaGuideBase
@@ -479,48 +147,6 @@ Synopsis
  LONG LockAmigaGuideBase(
          AMIGAGUIDECONTEXT handle
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -536,48 +162,6 @@ Synopsis
          struct TagItem * attrs
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 OpenAmigaGuideAsyncA
@@ -591,48 +175,6 @@ Synopsis
          struct NewAmigaGuide * nag,
          struct TagItem * attrs
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -648,48 +190,6 @@ Synopsis
          struct TagItem * attrs
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ReplyAmigaGuideMsg
@@ -702,48 +202,6 @@ Synopsis
  void ReplyAmigaGuideMsg(
          struct AmigaGuideMsg * msg
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -760,48 +218,6 @@ Synopsis
          struct TagItem * attrs
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SendAmigaGuideContextA
@@ -816,48 +232,6 @@ Synopsis
          struct TagItem * attrs
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SetAmigaGuideAttrsA
@@ -871,48 +245,6 @@ Synopsis
          AMIGAGUIDECONTEXT handle,
          struct TagItem * attrs
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -929,48 +261,6 @@ Synopsis
          struct TagItem * attrs
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 UnlockAmigaGuideBase
@@ -983,48 +273,6 @@ Synopsis
  void UnlockAmigaGuideBase(
          LONG key
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 

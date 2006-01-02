@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ====
 exec
 ====
@@ -165,24 +169,6 @@ Result
      well. io_Error will then be set to IOERR_ABORTED.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -218,30 +204,6 @@ Inputs
 ::
 
      device - Pointer to a ready for use device structure.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -298,18 +260,6 @@ Example
      AddHead (list, node);
 
 
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -332,48 +282,12 @@ Synopsis
          struct Interrupt * interrupt
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function also enables the corresponding chipset interrupt if
      run on a native Amiga.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -406,18 +320,6 @@ Inputs
      library - Pointer to a ready for use library structure.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -425,12 +327,6 @@ Notes
      Some old Amiga software expects that AddLibrary returns the
      library which was just added. When in binary compatibility mode
      AROS does this too.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -468,36 +364,6 @@ Inputs
                   handler list.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 AddMemList
@@ -533,35 +399,11 @@ Inputs
      name       - A name associated with the memory
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      No argument checking done.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -594,36 +436,6 @@ Inputs
      port - Pointer to messageport structure.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 AddResource
@@ -649,30 +461,6 @@ Inputs
 ::
 
      resource - Pointer to a ready for use resource.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -711,36 +499,12 @@ Inputs
      sigSem - Pointer to semaphore structure
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      Semaphores are shared between the tasks that use them and must
      therefore lie in public (or at least shared) memory.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -772,12 +536,6 @@ Inputs
      node - This node is to be inserted
 
 
-Result
-~~~~~~
-::
-
-
-
 Example
 ~~~~~~~
 ::
@@ -787,24 +545,6 @@ Example
 
      // Insert Node at end of the list
      AddTail (list, node);
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -861,24 +601,6 @@ Result
 ::
 
      The address of the new task or NULL if the operation failed.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -939,18 +661,6 @@ Notes
      displays the message and then may reboot it.
 
 
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 AllocAbs
@@ -986,24 +696,6 @@ Result
 
      A pointer to some memory including the requested bytes or NULL if
      the memory couldn't be allocated
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1049,24 +741,6 @@ Result
      the MemList structure with the me_Addr fields filled.
      If the most significant bit is set the result contains the type of
      memory that couldn't be allocated.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1129,12 +803,6 @@ Notes
      are rounded up to a multiple of that size.
 
 
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1177,24 +845,6 @@ Result
 
      A pointer to the number of bytes you wanted or NULL if the memory
      couldn't be allocated
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1246,24 +896,6 @@ Result
      Number of the signal or -1 if the signal couldn't be allocated.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1283,48 +915,6 @@ Synopsis
  LONG AllocTrap(
          long trapNum
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -1363,24 +953,6 @@ Result
 
      A pointer to the number of bytes you wanted or NULL if the memory
      couldn't be allocated
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1463,12 +1035,6 @@ Notes
      are rounded up to a multiple of that size.
 
 
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1512,23 +1078,11 @@ Result
      TRUE if the semaphore could be obtained, FALSE otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      The lock must be freed with ReleaseSemaphore().
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1573,24 +1127,6 @@ Result
 ::
 
      True if the semaphore could be obtained, false otherwise.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1658,18 +1194,6 @@ Notes
      be obsolete if this function returns.
 
 
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 CacheClearE
@@ -1726,24 +1250,12 @@ Result
      The caches will be flushed.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      It is possible that on some systems the entire cache will be
      even if this was not the specific request.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1782,23 +1294,11 @@ Function
          Loading code from disk
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      The caches will be flushed.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -1807,12 +1307,6 @@ Notes
 
      It is possible that on some systems the entire cache will be
      even if this was not the specific request.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1872,24 +1366,12 @@ Result
      this function will also cause the caches to be cleared.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      On CPU's without a separate instruction and data cache, these will
      be considered as equal.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1934,30 +1416,12 @@ Inputs
                                  both calls.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      DMA must follow a call to CachePreDMA() and must be followed
      by a call to CachePostDMA().
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2016,24 +1480,12 @@ Result
      memory.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      DMA must follow a call to CachePreDMA() and must be followed
      by a call to CachePostDMA().
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2106,12 +1558,6 @@ Result
      delivery.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2129,12 +1575,6 @@ Bugs
 
      Software interrupts which are added from a software interrupt of
      lower priority may not be called immediately.
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2170,24 +1610,6 @@ Result
 
      Pointer to the iorequest structure or NULL if the device is still
      at work.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2232,30 +1654,12 @@ Result
      The child will be freed.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      Calling ChildFree() on a running child is likely to crash your
      system badly.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2302,30 +1706,6 @@ Result
      actions.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ChildStatus
@@ -2360,30 +1740,6 @@ Result
 ::
 
      One of the CHILD_* values.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2438,12 +1794,6 @@ Result
      This allows you to work out which of the children has exited.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2457,12 +1807,6 @@ Bugs
 ::
 
      Be careful with the return result of this function.
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2492,30 +1836,6 @@ Inputs
 ::
 
      iORequest - Pointer to iorequest structure.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2551,30 +1871,6 @@ Inputs
 ::
 
      library - Pointer to library structure or NULL.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2617,12 +1913,6 @@ Result
      This function does not return.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2630,18 +1920,6 @@ Notes
      It can be quite harmful to call this function. It may be possible that
      you will lose data from other tasks not having saved, or disk buffers
      not being flushed. Plus you could annoy the (other) users.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2676,29 +1954,11 @@ Inputs
      size   - number of bytes to copy
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      The source and destination area are not allowed to overlap.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2740,29 +2000,11 @@ Inputs
      size   - number of bytes to copy (must be a multiple of sizeof(ULONG))
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      The source and destination area are not allowed to overlap.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2815,30 +2057,6 @@ Result
      failed.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 CreateMsgPort
@@ -2859,41 +2077,11 @@ Function
      port set to signal you task
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      Pointer to messageport structure
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2957,18 +2145,6 @@ Example
      }
 
 
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -3007,30 +2183,12 @@ Inputs
      byteSize    - Size of the block
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      The start and end borders of the block are aligned to
      a multiple of sizeof(struct MemChunk) and to include the block.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3052,48 +2210,6 @@ Synopsis
  void Debug(
          unsigned long flags
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -3120,36 +2236,6 @@ Inputs
 ::
 
      iorequest - Pointer to I/O request structure or NULL.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -3182,36 +2268,6 @@ Inputs
      port - Pointer to messageport structure.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 DeletePool
@@ -3237,30 +2293,6 @@ Inputs
 ::
 
      poolHeader - The pool allocated with CreatePool() or NULL.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3303,12 +2335,6 @@ Function
      Note: As taskswitching is driven by the interrupts subsystem,
            this function has the side effect of disabling
            multitasking.
-
-
-Inputs
-~~~~~~
-::
-
 
 
 Result
@@ -3376,30 +2402,6 @@ Inputs
 ::
 
      iORequest - Pointer to iorequest structure.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3553,18 +2555,6 @@ Notes
      ln_Pri of all nodes.
 
 
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 FindName
@@ -3594,12 +2584,6 @@ Inputs
      name - This is the name to look for.
 
 
-Result
-~~~~~~
-::
-
-
-
 Example
 ~~~~~~~
 ::
@@ -3619,18 +2603,6 @@ Notes
      named "hello".
 
      The list must contain complete Nodes and no MinNodes.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -3669,30 +2641,6 @@ Result
      Pointer to struct MsgPort or NULL if there is no port of that name.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 FindResident
@@ -3726,30 +2674,6 @@ Result
 
      pointer to the Resident module (struct Resident *), or null if
      not found.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -3788,30 +2712,6 @@ Result
      Address of semaphore structure found or NULL.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 FindTask
@@ -3848,30 +2748,6 @@ Result
 ::
 
      Address of task structure found.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -3977,30 +2853,6 @@ Inputs
      entry - The MemList you got from AllocEntry().
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -4035,30 +2887,6 @@ Inputs
 
      memoryBlock - Pointer to the memory to be freed
      byteSize    - Size of the block
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4099,30 +2927,6 @@ Inputs
      memSize    - Size of the memory chunk
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -4157,30 +2961,6 @@ Inputs
      signalNum - Number of the signal to free or -1 to do nothing.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -4200,48 +2980,6 @@ Synopsis
  void FreeTrap(
          long trapNum
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -4269,30 +3007,6 @@ Inputs
 
      memoryBlock - The memory to be freed. It is safe to try to free a NULL
                    pointer.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4336,18 +3050,6 @@ Result
 
      The CPU condition codes or ~0ul if this function has not been
      implemented.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -4401,24 +3103,6 @@ Result
      Pointer to message removed from the port.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -4455,36 +3139,6 @@ Inputs
 
      startClass - which type of module to start
      version - a version number
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -4531,30 +3185,12 @@ Result
      base of the library/device/resource. NULL for failure.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      AUTOINIT modules are automatically added to the correct exec list.
      Non AUTOINIT modules have to do all the work themselves.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -4586,36 +3222,12 @@ Inputs
      sigSem - Pointer to semaphore structure
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      Semaphores are shared between the tasks that use them and must
      therefore lie in public (or at least shared) memory.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -4671,36 +3283,6 @@ Inputs
                  for no filling.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 Insert
@@ -4733,12 +3315,6 @@ Inputs
              as the first node (same as AddHead()).
 
 
-Result
-~~~~~~
-::
-
-
-
 Example
 ~~~~~~~
 ::
@@ -4749,18 +3325,6 @@ Example
      // Insert Node node as second node in list
      pred = GetHead (list);
      Insert (list, node, pred);
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4813,30 +3377,6 @@ Result
 ::
 
      Size of the jumptable.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -4892,24 +3432,12 @@ Result
      The library base address or NULL.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      The library base is always aligned to the maximum of sizeof(LONG)
      and double alignment restrictions.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4976,24 +3504,6 @@ Result
      The address of the new task or NULL if the operation failed.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5048,24 +3558,6 @@ Result
      couldn't be allocated.
      
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5085,48 +3577,6 @@ Synopsis
  ULONG ObtainQuickVector(
          APTR interruptCode
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -5157,29 +3607,11 @@ Inputs
      sigSem - Pointer to semaphore structure
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function preserves all registers.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5231,30 +3663,6 @@ Result
      The entire semaphore list will be locked.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ObtainSemaphoreShared
@@ -5286,29 +3694,11 @@ Inputs
      sigSem - Pointer to semaphore structure
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function preserves all registers.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5337,36 +3727,6 @@ Function
 
      This is the same function as OpenLibrary(), only that it uses 0 as
      version number. This function is obsolete. Don't use it.
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5424,24 +3784,6 @@ Result
      in the io_Error field.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5488,24 +3830,6 @@ Result
      Pointer to library structure or NULL.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5546,24 +3870,6 @@ Result
 ::
 
      Pointer to resource or NULL.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5680,23 +3986,11 @@ Result
      Principly none. Don't know. Just ignore it.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      Locks obtained with Procure() must be released with Vacate().
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5738,18 +4032,6 @@ Inputs
      message - Pointer to message.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -5758,12 +4040,6 @@ Notes
 
      Messages may either trigger a signal at the owner of the messageport
      or raise a software interrupt, depending on port->mp_Flags&PF_ACTION.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5926,12 +4202,6 @@ Bugs
      systems.
 
 
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ReleaseSemaphore
@@ -5962,35 +4232,11 @@ Inputs
      sigSem - pointer to semaphore structure
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function preserves all registers.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -6020,36 +4266,6 @@ Inputs
      sigSem - pointer to list full of semaphores
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 RemDevice
@@ -6076,30 +4292,6 @@ Inputs
 ::
 
      device - Pointer to the device structure.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6154,24 +4346,6 @@ Example
      head = RemHead (list);
 
 
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 RemIntServer
@@ -6185,48 +4359,6 @@ Synopsis
          ULONG intNumber,
          struct Interrupt * interrupt
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -6254,30 +4386,6 @@ Inputs
 ::
 
      library - Pointer to the library structure.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6314,36 +4422,6 @@ Inputs
      memHandler - The same Interrupt structure you gave to AddMemHandler().
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 RemPort
@@ -6373,36 +4451,6 @@ Inputs
      port - Pointer to messageport structure.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 RemResource
@@ -6428,30 +4476,6 @@ Inputs
 ::
 
      resource - Pointer to the resource.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6488,36 +4512,12 @@ Inputs
      sigSem - Pointer to semaphore structure
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      Semaphores are shared between the tasks that use them and must
      therefore lie in public (or at least shared) memory.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -6565,24 +4565,6 @@ Example
      tail = RemTail (list);
 
 
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 RemTask
@@ -6612,30 +4594,6 @@ Inputs
 ::
 
      task - Task to be removed. NULL means current task.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6672,12 +4630,6 @@ Inputs
      node - This node to be removed.
 
 
-Result
-~~~~~~
-::
-
-
-
 Example
 ~~~~~~~
 ::
@@ -6694,18 +4646,6 @@ Notes
 
      There is no need to specify the list but the node must be in
      a list !
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -6734,30 +4674,6 @@ Inputs
 ::
 
      message - a message got with GetMsg().
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6794,30 +4710,6 @@ Inputs
 ::
 
      iORequest - Pointer to iorequest structure.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6861,24 +4753,6 @@ Result
 ::
 
      Old mask of signals causing a task exception.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6930,12 +4804,6 @@ Result
      Old jumptable entry (pointer to the old function).
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -6976,48 +4844,6 @@ Synopsis
          ULONG intNumber,
          struct Interrupt * interrupt
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -7081,12 +4907,6 @@ Bugs
      This function may do nothing on non-mc680x0 systems.
 
 
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SetSignal
@@ -7121,24 +4941,6 @@ Result
 ::
 
      Old signal set.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7186,30 +4988,6 @@ Result
      Old task priority.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 Signal
@@ -7241,29 +5019,11 @@ Inputs
      signalSet - The set of signals to send to the task.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function may be used from interrupts.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7321,24 +5081,12 @@ Result
      nothing.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      Returning from the function that you call StackSwap() in can have
      unexpected results.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7359,48 +5107,6 @@ Synopsis
 
  ULONG SumKickData(
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -7429,30 +5135,6 @@ Inputs
 ::
 
      library - Pointer to library structure.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7497,12 +5179,6 @@ Result
      The old supervisor stack. This must be passed to UserState(). If the
      processor was already in supervisor mode, then this function will
      return NULL. In that case do NOT call UserState().
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -7571,12 +5247,6 @@ Result
      The code will be called.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -7633,35 +5303,11 @@ Function
      TS_RUN.
 
 
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function will preserve all its registers.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7706,30 +5352,6 @@ Result
      The memory flags you would give to AllocMem().
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 UserState
@@ -7762,24 +5384,6 @@ Result
 ::
 
      The system will be back to normal.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7819,30 +5423,6 @@ Inputs
 
      sigSem - Pointer to semaphore structure.
      bidMsg - Pointer to struct SemaphoreMessage.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7890,12 +5470,6 @@ Result
      The set of active signals.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -7903,12 +5477,6 @@ Notes
      Naturally it's not allowed to wait in supervisor mode.
 
      Calling Wait() breaks an active Disable() or Forbid().
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7954,24 +5522,6 @@ Result
      Error state of I/O request.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -8013,24 +5563,6 @@ Result
 
      Pointer to the first message that arrived at the port. The message
      is _not_ removed from the port. GetMsg() does this for you.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

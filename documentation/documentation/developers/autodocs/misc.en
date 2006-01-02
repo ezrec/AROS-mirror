@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ====
 misc
 ====
@@ -47,24 +51,6 @@ Result
  allocated, the name of the holder of the resource is returned.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -101,30 +87,12 @@ Inputs
  unitNum  --  The resource to free.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
 
  You must have allocated the resource to free it!
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

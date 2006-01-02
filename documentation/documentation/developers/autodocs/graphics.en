@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ========
 graphics
 ========
@@ -236,30 +240,6 @@ Inputs
              structure
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -296,30 +276,6 @@ Inputs
      Bob = pointer to Bob to be added to gel list
      rp  = pointer to RastPort that has an initilized GelsInfo linked
            to it (see InitGels()).
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -364,24 +320,6 @@ Result
      None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -418,30 +356,6 @@ Inputs
      vs = pointer to VSprite to be linked into gel list
      rp = pointer to RastPort that has an initilized GelsInfo linked
           to it (see InitGels()).
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -527,12 +441,6 @@ Result
      A pointer to the new bitmap.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -563,12 +471,6 @@ Notes
      Intuition Custom BitMaps or as RasInfo->BitMaps.  They may be
      blitted to a BMF_DISPLAYABLE BitMap, using one of the BltBitMap()
      family of functions.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -616,30 +518,6 @@ Result
  support double buffering).
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 AllocRaster
@@ -676,24 +554,12 @@ Result
      A pointer to the single bitplane.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      You should not use this function to create BitMaps. Call
      AllocBitMap() instead.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -737,29 +603,11 @@ Result
      bitmap - pointer to the newly created bitmap.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is private and AROS specific.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -775,12 +623,6 @@ Synopsis
          struct BitMap * bitmap,
          struct TagItem * tagList
  );
-
-Function
-~~~~~~~~
-::
-
-
 
 Inputs
 ~~~~~~
@@ -799,30 +641,6 @@ Result
                  or NULL if there is a failure.
                  You should pass this pointer to FreeSpriteData()
                  when this sprite is not needed anymore.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -869,23 +687,11 @@ Result
      then be left unchanged.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function does not exist in AmigaOS.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -931,12 +737,6 @@ Notes
      This is the only *RectRegion function that cannot fail
 
 
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -979,18 +779,6 @@ Result
 ::
 
      The resulting region or NULL in case there's no enough free memory
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1039,24 +827,6 @@ Result
      (out of memory)
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1100,24 +870,6 @@ Result
      The resulting region or NULL in case there's no enough free memory
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1156,30 +908,6 @@ Function
      anKey = address of a pointer to the firts AnimOb in the list
              (same address that was passed to AddAnimOb!)
      rp    = pointer to a valid RastPort structure
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1223,24 +951,6 @@ Result
 ::
 
      TRUE if the regions are equal, FALSE otherwise.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1288,24 +998,6 @@ Result
 
      error -  0 for success
              -1 if the vector collection matrix is full
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1360,24 +1052,6 @@ Result
              -1 if the vector collection matrix is full
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1424,18 +1098,6 @@ Result
 
      error -  0 for success
              -1 a error occurred
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -1506,24 +1168,6 @@ Result
              -1 if the vector collection matrix is full
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1566,30 +1210,6 @@ Result
      textAttr will contain a description of the font.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 AskSoftStyle
@@ -1626,24 +1246,6 @@ Result
 
 
  Algorithmically generated style bits (bits not defined are also set).
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1693,30 +1295,6 @@ Result
      1 - out of memory
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 AttemptLockLayerRom
@@ -1757,24 +1335,6 @@ Result
      FALSE - layer could not be locked, it's locked by another task.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1795,12 +1355,6 @@ Synopsis
          struct TagItem * TagItems
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -1814,24 +1368,6 @@ Result
 
      ID - ID of the best mode to use, or INVALID_ID if a match
           could not be found
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1896,12 +1432,6 @@ Result
        bsa_DestWidth and bsa_DestHeight will be set by this function
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1912,12 +1442,6 @@ Notes
      - In the destination bitmap only the area where the scaled
        source bitmap is put into is changed. A frame of the old
        bitmap is left.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2009,12 +1533,6 @@ Result
      The number of planes actually involved in the blit.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2024,12 +1542,6 @@ Notes
      As a special case, plane pointers of destBitMap can contain NULL
      or -1, which will act as if the plane was filled with 0's or 1's,
      respectively.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2059,48 +1571,6 @@ Synopsis
          LONG ySize,
          ULONG minterm
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -2148,18 +1618,6 @@ Result
      A cleared block of Chip-Ram.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -2189,48 +1647,6 @@ Synopsis
          PLANEPTR bltMask
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 BltPattern
@@ -2249,48 +1665,6 @@ Synopsis
          LONG yMax,
          ULONG byteCnt
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -2321,42 +1695,6 @@ Function
      Copies the content of the rast port into the bitmap.
      Takes cliprects into consideration.
 
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 BltTemplate
@@ -2376,48 +1714,6 @@ Synopsis
          LONG xSize,
          LONG ySize
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -2447,29 +1743,11 @@ Inputs
      ucl - pointer to a UCopList structure
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      CWAIT() and CMOVE() automatically call this function!
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2511,30 +1789,6 @@ Inputs
      ucl   - pointer to a UCopList structure
      reg   - hardware register
      value - 16 bit value to be moved to the hardware register
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2579,24 +1833,6 @@ Inputs
      h   - horizontal beam position
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -2625,12 +1861,6 @@ Synopsis
          struct ViewPort * ViewPort
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -2648,30 +1878,6 @@ Result
              or 0 if any error
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ChangeExtSpriteA
@@ -2687,12 +1893,6 @@ Synopsis
          struct ExtSprite * newsprite,
          struct TagItem * tags
  );
-
-Function
-~~~~~~~~
-::
-
-
 
 Inputs
 ~~~~~~
@@ -2712,30 +1912,6 @@ Result
      success - 0 if there was an error
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ChangeSprite
@@ -2750,48 +1926,6 @@ Synopsis
          struct SimpleSprite * s,
          void * newdata
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -2808,12 +1942,6 @@ Synopsis
          struct DBufInfo * db
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -2823,36 +1951,6 @@ Inputs
           the same layout as the one attached to the viewport
           (same depth, alignment and BytesPerRow)
      db - pointer to a DBufInfo
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2883,30 +1981,6 @@ Inputs
 
 
  pr   --  pointer to rastport
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2953,24 +2027,6 @@ Result
      FALSE if not enough memory was available, else TRUE
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -3014,18 +2070,6 @@ Result
      The resulting region or NULL in case there's no enough free memory
 
 
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -3066,24 +2110,6 @@ Result
 ::
 
      None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3130,23 +2156,11 @@ Result
      FALSE if not enough memory was available, else TRUE
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function does not exist in AmigaOS.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3192,24 +2206,6 @@ Result
      The resulting region or NULL in case there's no enough free memory
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -3246,30 +2242,6 @@ Inputs
 
 
  rp   --  pointer to rastport
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3355,24 +2327,6 @@ Result
      None
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -3416,24 +2370,12 @@ Result
      the operation.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is AROS specific. For compatibility, there is a
      function in aros.lib which does the same on Amiga.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3456,48 +2398,6 @@ Synopsis
          struct TextFont * textFont
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 CloseMonitor
@@ -3510,12 +2410,6 @@ Synopsis
  LONG CloseMonitor(
          struct MonitorSpec * monitor_spec
  );
-
-Function
-~~~~~~~~
-::
-
-
 
 Inputs
 ~~~~~~
@@ -3531,24 +2425,6 @@ Result
 
      error - FALSE if MonitorSpec closed uneventfully
              TRUE if MonitorSpec could not be closed
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3573,12 +2449,6 @@ Synopsis
          ULONG Flags
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -3596,30 +2466,6 @@ Result
 ::
 
      ID - ID of best mode to coerce to, or INVALID_ID if could not coerce
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -3656,23 +2502,11 @@ Result
      the copy of the Region, or NULL if not enough memory.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function does not exist in AmigaOS.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3720,24 +2554,6 @@ Result
      attatched to it
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -3779,30 +2595,12 @@ Result
      to perform the operation.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is AROS specific. For compatibility, there is a
      function in aros.lib which does the same on Amiga.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -3840,12 +2638,6 @@ Result
      None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -3853,12 +2645,6 @@ Notes
      You can initialize the RastPort again via InitRastPort() but
      you must not use any other graphics function with it before
      that.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3885,36 +2671,6 @@ Function
 ::
 
      The blitter is returned to usage by other tasks.
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3959,24 +2715,6 @@ Result
      None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -3997,47 +2735,11 @@ Synopsis
          struct RastPort * rp
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
 
      rp - pointer to RastPort
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -4055,30 +2757,6 @@ Synopsis
          LONG y
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -4091,18 +2769,6 @@ Notes
          or to don't draw first pixel of line. Important
          for COMPLEMENT drawmode.
      
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -4121,48 +2787,6 @@ Synopsis
          LONG b
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 DrawGList
@@ -4176,48 +2800,6 @@ Synopsis
          struct RastPort * rp,
          struct ViewPort * vp
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -4235,48 +2817,6 @@ Synopsis
          LONG xMax,
          LONG yMax
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -4315,24 +2855,6 @@ Result
 
      success         - FALSE if the font has no TextFontExtension and an extension
                        can't be built. TRUE otherwise.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4386,30 +2908,6 @@ Result
      should not be released via ReleasePen().
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 FindDisplayInfo
@@ -4422,12 +2920,6 @@ Synopsis
  DisplayInfoHandle FindDisplayInfo(
          ULONG ID
  );
-
-Function
-~~~~~~~~
-::
-
-
 
 Inputs
 ~~~~~~
@@ -4442,24 +2934,6 @@ Result
 
      handle - handle to a displayinfo record with that key
               or NULL if no match
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4484,48 +2958,6 @@ Synopsis
          LONG x,
          LONG y
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -4567,12 +2999,6 @@ Result
  The extent is stored in 'fontExtent'.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -4583,12 +3009,6 @@ Notes
  only will be negative when FPF_REVPATH is specified for the font; left
  moving characters are ignored considering the font width (right moving
  character when FPF_REVPATH is set), but affects the bounding box size.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4631,24 +3051,6 @@ Result
 ::
 
      None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4694,24 +3096,6 @@ Result
      Memory returned to pool of free memory.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -4744,30 +3128,6 @@ Inputs
 ::
 
      coplist - pointer to a CopList structure
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4804,30 +3164,6 @@ Inputs
      cprlist - pointer to a cprlist structure
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -4856,12 +3192,6 @@ Function
  Frees structure allocated with AllocDBufInfo().
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
@@ -4869,24 +3199,6 @@ Result
 
  Frees memory occupied by 'db'; ('db' may be NULL, in that case nothing
  is done).
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4938,18 +3250,6 @@ Inputs
      db   = TRUE when double-buffering is wanted
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -4957,12 +3257,6 @@ Notes
      A call to GetGBuffers() that resulted in a partially allocation
      of the required buffers will result in a deallocation of these
      buffers. (Possible incompatibility with the real thing, though)
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5007,24 +3301,12 @@ Result
      None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is AROS specific. For compatibility, there is a function
      with the same name in aros.lib on Amiga.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5071,24 +3353,6 @@ Result
      The memory occupied by the bitplane will be returned to the system.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5132,24 +3396,6 @@ Result
      Machine.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5170,48 +3416,12 @@ Synopsis
          struct ExtSprite * extsp
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
 
      extsp - The extended sprite structure to be freed.
              Passing NULL is a NO-OP.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -5243,30 +3453,6 @@ Inputs
      vp - pointer to a ViewPort structure
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5287,48 +3473,6 @@ Synopsis
          struct RastPort * rp
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 GetBPen
@@ -5341,48 +3485,6 @@ Synopsis
  ULONG GetBPen(
          struct RastPort * rp
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -5421,24 +3523,6 @@ Result
 
      The information you requested. If you asked for an unknown attribute,
      0 or NULL is returned.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5489,24 +3573,6 @@ Result
              stored into the ViewPort.ColorMap pointer.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5527,48 +3593,6 @@ Synopsis
          struct RastPort * rp
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 GetExtSpriteA
@@ -5583,12 +3607,6 @@ Synopsis
          struct TagItem * tags
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -5602,30 +3620,6 @@ Result
 ::
 
      Sprite_number - a sprite number or -1 for an error
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -5677,12 +3671,6 @@ Result
      FALSE
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -5690,12 +3678,6 @@ Notes
      If an AnimOb is passed to GetGBuffers twice new buffers will
      be allocated and therefore old pointers to buffers will be
      lost in space.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5717,48 +3699,6 @@ Synopsis
  ULONG GetOutlinePen(
          struct RastPort * rp
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -5803,23 +3743,11 @@ Result
      fractional RGB values from the colormap
      
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      table should point to an array of at least 3*ncolors longwords.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5866,24 +3794,6 @@ Result
 
      -1      : if no valid entry. (index to high)
      other   : UWORD RGB value, 4 bits per electron gun, right justified
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5958,18 +3868,6 @@ Inputs
             the addresses to store the results
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -6042,18 +3940,6 @@ Result
           also be foung in the SimpleSprite structure.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -6104,24 +3990,6 @@ Result
               with this ViewPort, or INVALID_ID
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -6170,24 +4038,12 @@ Result
    that given the pointer the node can be retrieved via GfxLookUp().
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
    Never associate one special graphics extended data structure to
    several pointers. Only one pointer is allowed!
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6235,24 +4091,6 @@ Result
    structure, if necessary, before freeing it (see GfxAssociate())
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -6298,24 +4136,6 @@ Result
             associated with the pointer
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -6358,24 +4178,6 @@ Result
 
    A pointer to the allocated graphics node or NULL if the allocation
    failed
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6426,24 +4228,6 @@ Result
      created by AreaMove, AreaDraw and AreaEllipse (AreaCircle).
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -6487,30 +4271,12 @@ Inputs
  height --  height in pixels of this bitmap
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
 
  The Planes[] is not affected and must be set up the caller.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6547,30 +4313,6 @@ Inputs
 ::
 
      anOb = pointer to the AnimOb
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6612,30 +4354,6 @@ Inputs
      head  - pointer to the VSprite structure to be used as head of the gel list
      tail  - pointer to the VSprite structure to be used as tail of the gel list
      GInfo - pointer to the GelsInfo structure to be initilized
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6680,29 +4398,11 @@ Result
      success - If TRUE initialization went OK.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is private and AROS specific.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -6731,30 +4431,6 @@ Inputs
 ::
 
      vs = pointer to VSprite structure
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6799,12 +4475,6 @@ Result
      otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -6813,18 +4483,6 @@ Notes
 
      AROS defines this function with a return value which you should
      check.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -6869,18 +4527,6 @@ Result
      for use with functions like Flood(), Text() and AreaEnd().
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -6888,12 +4534,6 @@ Bugs
      The function itself is a bug.
      Why does this function exist at all? The necessary memory should 
      be allocated in InitRastPort() or the functions that need it.
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -6932,30 +4572,6 @@ Result
      All values except for SpritePriorities are set to 0's.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 InitView
@@ -6990,30 +4606,6 @@ Result
      View is initialized to it`s default values - doesn't care about
      previous contents of this structure.
      All values except for DxOffset,DyOffset are set to 0's.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7052,24 +4644,6 @@ Result
 ::
 
      TRUE if the point is contained, FALSE otherwise
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7118,29 +4692,11 @@ Result
      success - If TRUE initialization went OK.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is private and AROS specific.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7157,48 +4713,6 @@ Synopsis
          const ULONG     * table
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 LoadRGB4
@@ -7214,48 +4728,6 @@ Synopsis
          LONG count
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 LoadView
@@ -7269,48 +4741,12 @@ Synopsis
          struct View * view
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
 
      view - pointer to the View structure which contains the pointer to the
             constructed coprocessor instructions list, or NULL
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7348,24 +4784,6 @@ Inputs
      l - pointer to layer that is to be locked
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -7394,12 +4812,6 @@ Synopsis
          struct ViewPort * viewport
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -7414,30 +4826,6 @@ Result
 ::
 
      error -
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7476,24 +4864,6 @@ Result
              or 0 if there is no reason why it should not be available
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -7521,23 +4891,11 @@ Function
      relative or absolut.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      relative - TRUE if relative, FALSE if absolute.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -7557,12 +4915,6 @@ Bugs
      with HIDDs base on window systems and
      we use one window per screen.
 
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 Move
@@ -7577,48 +4929,6 @@ Synopsis
          WORD x,
          WORD y
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -7636,48 +4946,6 @@ Synopsis
          WORD y
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 MrgCop
@@ -7691,12 +4959,6 @@ Synopsis
          struct View * view
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -7709,30 +4971,6 @@ Result
 ::
 
      error -
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7772,12 +5010,6 @@ Result
      Pointer to the newly created Region. NULL on failure.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -7795,12 +5027,6 @@ Notes
 
          region = NewRegion();
          OrRectRegion(region, &rect);
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7830,36 +5056,12 @@ Function
      to an empty Region.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      region - pointer to a newly created Region structure that
               should be freed by a call to DisposeRegion()
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7882,12 +5084,6 @@ Synopsis
          ULONG last_ID
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -7902,24 +5098,6 @@ Result
 
      next_ID - subsequent displayinfo identifier
                or INVALID_ID if no more records
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7945,48 +5123,6 @@ Synopsis
          ULONG b,
          struct TagItem * tags
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -8039,12 +5175,6 @@ Result
      n  = allocted pen number, -1 for failure
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -8053,18 +5183,6 @@ Notes
      since other aapplications might use the same color.
      A PaletteExtra structure must have been attached to the 
      ColorMap prior to calling this function (AttachPalExtra()). 
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -8080,48 +5198,6 @@ Synopsis
          struct TextAttr * textAttr
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 OpenMonitor
@@ -8135,12 +5211,6 @@ Synopsis
          STRPTR monitor_name,
          ULONG display_id
  );
-
-Function
-~~~~~~~~
-::
-
-
 
 Inputs
 ~~~~~~
@@ -8156,24 +5226,6 @@ Result
 
      mspc - pointer to an open MonitorSpec structure
             NULL if MonitorSpec could not be opened
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8221,24 +5273,12 @@ Result
      (out of memory)
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      All relevant data is copied, you may throw away the
      given rectangle after calling this function
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8283,18 +5323,6 @@ Result
 ::
 
      The resulting region or NULL in case there's no enough free memory
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8343,24 +5371,6 @@ Result
      (out of memory)
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-     
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -8404,24 +5414,6 @@ Result
      The resulting region or NULL in case there's no enough free memory
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -8455,36 +5447,6 @@ Function
      use the blitter. 
 
 
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -8506,48 +5468,6 @@ Synopsis
          LONG count,
          WORD            * polyTable
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -8589,12 +5509,6 @@ Result
      actually access the blitter.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -8604,12 +5518,6 @@ Notes
      be executed in the function that is called must not contain
      code that is hacking the blitter's register but should contain
      calls to graphics functions instead.      
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8660,12 +5568,6 @@ Result
      actually access the blitter.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -8675,12 +5577,6 @@ Notes
      be executed in the function that is called must not contain
      code that is hacking the blitter's register but should contain
      calls to graphics functions instead.      
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8705,48 +5601,6 @@ Synopsis
          LONG y
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ReadPixelArray8
@@ -8766,48 +5620,6 @@ Synopsis
          struct RastPort * temprp
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ReadPixelLine8
@@ -8826,48 +5638,6 @@ Synopsis
          struct RastPort * tempRP
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 RectFill
@@ -8884,48 +5654,6 @@ Synopsis
          LONG xMax,
          LONG yMax
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -8969,30 +5697,6 @@ Result
      application is using it anymore.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 RemFont
@@ -9028,24 +5732,6 @@ Result
      None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -9067,48 +5753,6 @@ Synopsis
          struct RastPort * rp,
          struct ViewPort * vp
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -9135,30 +5779,6 @@ Inputs
 ::
 
      vs = pointer to VSprite to be removed from the gel list
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -9201,30 +5821,6 @@ Inputs
      factor      - a number in the range of 0..16383
      numerator   - a number in the range of 1..16383
      denominator - a number in the range of 1..16383
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -9280,36 +5876,6 @@ Inputs
    xMax,yMax - lower right hand corner of the affected rectangle
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ScrollRasterBF
@@ -9356,36 +5922,6 @@ Inputs
    xMax,yMax - lower right hand corner of the affected rectangle
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ScrollRegion
@@ -9427,23 +5963,11 @@ Result
      TRUE if the operation succeeded, FALSE otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
     This function doesn't exist in AmigaOS
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -9465,48 +5989,6 @@ Synopsis
  void ScrollVPort(
          struct ViewPort * vp
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -9549,30 +6031,12 @@ Result
      None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is faster than the sequence SetAPen(), SetBPen(),
      SetDrMd().
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -9589,48 +6053,6 @@ Synopsis
          ULONG pen
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SetBPen
@@ -9645,48 +6067,6 @@ Synopsis
          ULONG pen
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SetChipRev
@@ -9700,12 +6080,6 @@ Synopsis
          ULONG ChipRev
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -9718,30 +6092,6 @@ Result
 ::
 
      chiprevbits - Actual bits set in GfxBase->ChipRevBits0
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -9777,30 +6127,6 @@ Inputs
      GInfo   = pointer to a GelsInfo structure
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -9821,48 +6147,6 @@ Synopsis
          struct RastPort * rp,
          ULONG drawMode
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -9898,30 +6182,6 @@ Result
 ::
 
      None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -9963,29 +6223,11 @@ Result
      success - TRUE if successfull, FALSE otherwize.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is private and AROS specific.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -10024,30 +6266,6 @@ Inputs
      maxpen = longword pen value
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -10068,48 +6286,6 @@ Synopsis
          struct RastPort * rp,
          ULONG pen
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -10132,41 +6308,11 @@ Function
      Set the current mouse pointer's position.
 
 
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is private and AROS specific.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -10193,41 +6339,11 @@ Function
      Set the current mouse pointer's shape.
 
 
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is private and AROS specific.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -10276,12 +6392,6 @@ Result
      If the color value is unused then nothing will happen.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -10291,18 +6401,6 @@ Notes
      device. Use 0xffffffff for the full value, 0x7fffffff for 50%,
      etc. You can find out the palette range for your screen by
      querying the graphics data base.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -10348,24 +6446,6 @@ Result
      The chnages will not be immediately displayed. Use this function
      before linking the ColorMap to a ViewPort. Do not access the entries
      in the ColorTable yourself, as the ColorTable is subject to change.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -10421,12 +6501,6 @@ Result
      If the color value is unused then nothing will happen.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -10436,18 +6510,6 @@ Notes
      device. Use 0xf for the full value, 0x7 for 50%,
      etc. You can find out the palette range for your screen by
      querying the graphics data base.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -10494,24 +6556,6 @@ Result
      before linking the ColorMap to a ViewPort.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -10532,48 +6576,6 @@ Synopsis
          struct RastPort * rp,
          struct TagItem  * tags
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -10615,24 +6617,6 @@ Result
  number.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -10669,36 +6653,12 @@ Function
      .
      
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      TRUE if everything went alright, FALSE otherwise
      (out of memory).
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -10754,24 +6714,6 @@ Result
  bits set.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -10794,48 +6736,6 @@ Synopsis
          ULONG mask
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ShowImminentReset
@@ -10855,42 +6755,6 @@ Function
      Indicates that a reset is imminent by (usually)
      blanking the screen.
      
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -10920,30 +6784,6 @@ Inputs
 ::
 
      rp  = pointer to RastPort that has an GelsInfo linked to it
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -10980,30 +6820,6 @@ Inputs
      font    - font to remove extension from.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -11038,29 +6854,11 @@ Inputs
      region1, region2 - pointers to the two regions to swap the contents of
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
     This function doesn't exist in AmigaOS
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -11109,24 +6907,6 @@ Result
      really in the layer.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -11149,48 +6929,6 @@ Synopsis
          ULONG count
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 TextExtent
@@ -11206,48 +6944,6 @@ Synopsis
          ULONG count,
          struct TextExtent * textExtent
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -11306,24 +7002,6 @@ Result
      tell how large the minimal bounding box for the string is.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -11345,48 +7023,6 @@ Synopsis
          CONST_STRPTR string,
          ULONG count
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -11428,24 +7064,6 @@ Result
      NOTE: this is a pointer to UCopList->FirstCopList!
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -11484,24 +7102,6 @@ Inputs
      l - pointer to layer structure
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -11528,12 +7128,6 @@ Synopsis
  LONG VBeamPos(
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -11546,30 +7140,6 @@ Result
 ::
 
      None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -11586,12 +7156,6 @@ Synopsis
          struct TagItem * tags
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -11607,30 +7171,6 @@ Result
      error - 0 if no error ocurred in the control operation
              non-0 if bad colormap pointer, no tagitems or bad tag
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 WaitBOVP
@@ -11644,12 +7184,6 @@ Synopsis
          struct ViewPort * vp
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -11662,30 +7196,6 @@ Result
 ::
 
      None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -11722,30 +7232,6 @@ Result
      None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 WaitTOF
@@ -11766,12 +7252,6 @@ Function
  Wait for vertical blank.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
@@ -11779,30 +7259,6 @@ Result
 
  Adds the task to the TOF queue; it will be signalled when the vertical
  blank interrupt occurs.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -11845,29 +7301,11 @@ Result
      MAXFONTMATCHWEIGHT (perfect match).
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      Does not yet take tags into account.
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -11889,48 +7327,6 @@ Synopsis
          LONG bytesperrow
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 WritePixel
@@ -11945,48 +7341,6 @@ Synopsis
          LONG x,
          LONG y
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -12007,48 +7361,6 @@ Synopsis
          struct RastPort * temprp
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 WritePixelLine8
@@ -12066,48 +7378,6 @@ Synopsis
          UBYTE * array,
          struct RastPort * tempRP
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -12147,24 +7417,12 @@ Result
      (out of memory)
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      All relevant data is copied, you may throw away the
      given rectangle after calling this function
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -12211,24 +7469,12 @@ Result
      The resulting region or NULL in case there's no enough free memory
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      All relevant data is copied, you may throw away the
      given rectangle after calling this function
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -12276,25 +7522,6 @@ Result
      FALSE otherwise (out of memory)
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -12338,23 +7565,11 @@ Result
      The resulting region or NULL in case there's no enough free memory
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is not present in AmigaOS
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

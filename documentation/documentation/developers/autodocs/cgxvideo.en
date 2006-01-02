@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ========
 cgxvideo
 ========
@@ -55,12 +59,6 @@ Result
      result - 0 if videolayer could be attached to the window
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -74,12 +72,6 @@ Notes
              VOA_TopIndent (ULONG) - additional offset from the top window border
 
              VOA_BottomIndent (ULONG) - additional offset from the bottom window border
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -126,12 +118,6 @@ Result
      VLayerHandle - pointer to the created videolayer handle or 0
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -168,18 +154,6 @@ Notes
                      enabled.
 
 
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 DeleteVLayerHandle
@@ -212,30 +186,6 @@ Result
 ::
 
      none
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -272,24 +222,6 @@ Result
 ::
 
      result - 0 if videolayer could be detached from the window
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -337,12 +269,6 @@ Result
      value - the value for the given attribute
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -357,12 +283,6 @@ Notes
 
      VOA_ColorKey -  returns the 24 bit color value used for color keying.
                              If color keying is not enabled, -1 is returned.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -406,24 +326,6 @@ Result
 ::
 
      result - TRUE if video layer could be locked, FALSE otherwise
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -471,12 +373,6 @@ Result
      none
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -493,12 +389,6 @@ Notes
 
              VOA_BottomIndent (ULONG) - additional offset from the bottom window
                                              border
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -540,24 +430,6 @@ Result
 ::
 
      none
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

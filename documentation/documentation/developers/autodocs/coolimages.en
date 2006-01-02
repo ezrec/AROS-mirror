@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ==========
 coolimages
 ==========
@@ -19,48 +23,6 @@ Synopsis
          ULONG imageid,
          struct TagItem * tags
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 

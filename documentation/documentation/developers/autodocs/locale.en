@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ======
 locale
 ======
@@ -66,24 +70,6 @@ Result
      application.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -124,24 +110,6 @@ Result
 ::
 
      The locale is released back to the system.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -189,30 +157,12 @@ Result
      The possibly converted character.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function requires a full 32-bit character in order to
      support future multi-byte character sets.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -253,24 +203,12 @@ Result
      The possibly converted character.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function requires a full 32-bit character in order to support
      future multi-byte character sets.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -361,30 +299,6 @@ Inputs
                    * pointer to locale
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -408,48 +322,6 @@ Synopsis
          APTR dataStream,
          struct Hook   * putCharFunc
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -494,24 +366,6 @@ Result
 
      A pointer to a READ ONLY NULL terminated string. This string
      pointer is valid as long as the catalog remains open.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -560,30 +414,6 @@ Result
      A pointer to a NULL-terminated string, or NULL if the string
      requested was unknown. The returned string is READ-ONLY and
      is valid only as long as the Locale remains open.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -640,12 +470,6 @@ Result
          FALSE - otherwise
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -654,18 +478,6 @@ Notes
 
      These functions require a 32-bit character to support future
      multi-byte character sets.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -695,18 +507,6 @@ Inputs
      See dos.library/DateToStr
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -717,12 +517,6 @@ Notes
      no entry for this function is generated in the Locale functable by the
      corresponding script!
      
-
-Bugs
-~~~~
-::
-
-
 
 See also
 ~~~~~~~~
@@ -758,18 +552,6 @@ Inputs
      See dos.library/DosGetLocalizedString
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -780,12 +562,6 @@ Notes
      the global LocaleBase variable. This function is marked as private,
      thus the headers generator won't mind the different basename in the header.
      
-
-Bugs
-~~~~
-::
-
-
 
 See also
 ~~~~~~~~
@@ -824,18 +600,6 @@ Inputs
      See exec.library/RawDoFmt
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -845,12 +609,6 @@ Notes
      LocaleBase parameter above actually points to SysBase, so we make use of 
      the global LocaleBase variable. This function is marked as private,
      thus the headers generator won't mind the different basename in the header.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -887,18 +645,6 @@ Inputs
      See dos.library/StrToDate
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -909,12 +655,6 @@ Notes
      the global LocaleBase variable. This function is marked as private,
      thus the headers generator won't mind the different basename in the header.
      
-
-Bugs
-~~~~
-::
-
-
 
 See also
 ~~~~~~~~
@@ -951,18 +691,6 @@ Inputs
      See utility.library/Stricmp
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -973,12 +701,6 @@ Notes
      the global LocaleBase variable. This function is marked as private,
      thus the headers generator won't mind the different basename in the header.
      
-
-Bugs
-~~~~
-::
-
-
 
 See also
 ~~~~~~~~
@@ -1016,18 +738,6 @@ Inputs
      See utility.library/Strnicmp
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1038,12 +748,6 @@ Notes
      the global LocaleBase variable. This function is marked as private,
      thus the headers generator won't mind the different basename in the header.
      
-
-Bugs
-~~~~
-::
-
-
 
 See also
 ~~~~~~~~
@@ -1079,18 +783,6 @@ Inputs
      See utility.library/ToLower
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1101,12 +793,6 @@ Notes
      the global LocaleBase variable. This function is marked as private,
      thus the headers generator won't mind the different basename in the header.
      
-
-Bugs
-~~~~
-::
-
-
 
 See also
 ~~~~~~~~
@@ -1142,18 +828,6 @@ Inputs
      See utility.library/ToUpper
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1164,12 +838,6 @@ Notes
      the global LocaleBase variable. This function is marked as private,
      thus the headers generator won't mind the different basename in the header.
      
-
-Bugs
-~~~~
-::
-
-
 
 See also
 ~~~~~~~~
@@ -1192,48 +860,6 @@ Synopsis
          STRPTR name,
          struct TagItem * tags
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -1282,24 +908,6 @@ Result
      to find out what caused this error.
 
      If you pass NULL, you will always succeed.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1372,12 +980,6 @@ Result
      TRUE    -   If the parse could be performed.
      FALSE   -   If the format of the data did not match the formatting
                  string.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -1479,24 +1081,6 @@ Result
      the transformation process minus 1 (for NULL termination).
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1576,24 +1160,6 @@ Result
          < 0 means   string1 < string2
          = 0 means   string1 == string2
          > 0 means   string1 > string2
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

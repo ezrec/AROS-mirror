@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ===========
 nonvolatile
 ===========
@@ -56,12 +60,6 @@ Result
  Success / failure indicator.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -69,18 +67,6 @@ Notes
 
  The 'appName' and 'itemName' strings may NOT include the characters
  '/' or ':'.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -112,30 +98,6 @@ Inputs
 
  data  --  data got from a nonvolatile.library function; may be NULL in
            which case this function does nothing
-
-
-Result
-~~~~~~
-::
-
- 
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -189,24 +151,6 @@ Result
  Pointer to the data assocated with 'itemName' as allocated by 'appName'.
  
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -253,24 +197,6 @@ Result
  Pointer to an NVInfo structure containing the information on the nonvolatile
  storage device currently in use. Returns NULL in case of a failure.
  
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
 
 See also
 ~~~~~~~~
@@ -322,12 +248,6 @@ Result
  lack of memory will be indicated by returning NULL.
  
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -336,12 +256,6 @@ Notes
  The protection field should be examined using the field masks NVIF_DELETE
  or by the bit definition NVIB_DELETE as the other bits are reserved for
  system use.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -398,24 +312,12 @@ Result
  Success / failure indicator.
  
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
 
  The only bit that should currently be used in the 'mask' is the DELETE bit.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -475,12 +377,6 @@ Result
  
      0                --  no error
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -490,12 +386,6 @@ Notes
  size of the nonvolatile storage may be very limited. The strings may not
  contatin the characters ':' or '/'. The maximum length for each of these
  strings is 31.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

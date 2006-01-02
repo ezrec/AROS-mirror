@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 =======
 desktop
 =======
@@ -21,48 +25,6 @@ Synopsis
  struct NewMenu * BuildDesktopMenus(
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 CreateDesktopObjectA
@@ -76,48 +38,6 @@ Synopsis
          ULONG kind,
          struct TagItem * tags
  );
-
-Function
-~~~~~~~~
-::
-
- 
-
-Inputs
-~~~~~~
-::
-
- 
-
-Result
-~~~~~~
-::
-
- 
-
-Example
-~~~~~~~
-::
-
- 
-
-Notes
-~~~~~
-::
-
- 
-
-Bugs
-~~~~
-::
-
- 
-
-See also
-~~~~~~~~
-::
-
- 
 
 --------------
 
@@ -133,48 +53,6 @@ Synopsis
          struct TagItem * tags
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 GetMenuItemList
@@ -187,48 +65,6 @@ Synopsis
  struct DesktopOperationItem * GetMenuItemList(
          ULONG operationType
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 

@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 =========
 intuition
 =========
@@ -179,36 +183,6 @@ Inputs
      NULL if it is not a requester gadget
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ActivateWindow
@@ -245,12 +219,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -261,12 +229,6 @@ Notes
  prevent this by waiting for IDCMP_INACTIVEWINDOW and activating
  the window again since that will produce an anoying flicker and
  it will slow down the computer a lot.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -309,12 +271,6 @@ Result
 ::
 
  None.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -387,24 +343,12 @@ Result
  The actual position where the gadgets were inserted.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  The gadgets will just be added. To make them visible, you must
  refresh the window or the gadgets.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -455,30 +399,12 @@ Result
  The position where the gadget was really inserted.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  This just adds the gadget to the list. It will not be visible
  until you refresh the window.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -514,30 +440,6 @@ Result
 ::
 
  an allocated IntuiMessage structure. Must be freed with FreeIntuiMessage
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -576,30 +478,6 @@ Result
 ::
 
  Pointer to the allocated memory or NULL.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -663,12 +541,6 @@ Result
  Pointer to the allocated ScreenBuffer or NULL if function failed.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -678,12 +550,6 @@ Notes
  buffering features to e.g check if it is safe to reuse the previous
  BitMap. Otherwise you risk to write into the on-screen BitMap and
  damage menu or gadget rendering.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -738,12 +604,6 @@ Result
      None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -751,12 +611,6 @@ Notes
      This function is obsolete and should not be used directly by the
      Workbench Application. Use workbench.library/RegisterWorkbench()
      instead!
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -786,48 +640,6 @@ Synopsis
          ULONG height
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 BeginRefresh
@@ -840,48 +652,6 @@ Synopsis
  void BeginRefresh(
          struct Window * window
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -930,24 +700,6 @@ Result
 
  Returns a pointer to the requester. Use this pointer only for calls
  to SysReqHandler() and FreeSysRequest().
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1006,24 +758,6 @@ Result
      to SysReqHandler() and FreeSysRequest().
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1050,12 +784,6 @@ Synopsis
          WORD height
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -1066,30 +794,6 @@ Inputs
  negtext - The Text to be shown in the negative choice gadget
  IDCMPFlags - The IDCMP Flags for this requester
  width, height - The dimensions of the requester
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1119,12 +823,6 @@ Synopsis
          WORD height
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -1135,30 +833,6 @@ Inputs
      negtext - The Text to be shown in the negative choice gadget
      IDCMPFlags - The IDCMP Flags for this requester
      width, height - The dimensions of the requester
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1184,48 +858,6 @@ Synopsis
          struct DrawInfo * dri,
          struct TagItem * tagList
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -1271,24 +903,12 @@ Result
  performed, eg. if user selects menus or gadgets.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  You need not re-install the original ScreenBuffer before closing
  a screen. Just FreeScreenBuffer() all buffers used for that screen.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1332,36 +952,12 @@ Inputs
  width, height - New size
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  This call is deferred. Wait() for IDCMP_CHANGEWINDOW if your
  program depends on the new size.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1393,36 +989,6 @@ Inputs
  window - The window to affect.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ClearDMRequest
@@ -1436,41 +1002,11 @@ Synopsis
          struct Window * window
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
 
  window - The window from which the DMRequest is to be cleared
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1492,48 +1028,6 @@ Synopsis
  void ClearMenuStrip(
          struct Window * window
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -1563,30 +1057,6 @@ Inputs
 ::
 
  window - The window of which the mousepointer will be cleared
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1634,30 +1104,6 @@ Result
  windows left on the screen (which means the screen is not closed).
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 CloseWindow
@@ -1694,23 +1140,11 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  The window might not have been disappeared when this function returns.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1743,36 +1177,6 @@ Function
  - Make the Workbench program mostly inactive
    (disk activity will still be monitored)
  - Return TRUE
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1821,23 +1225,11 @@ Result
  Return value is not set.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  Makes use of timer.library/timer.device
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1896,30 +1288,6 @@ Result
  mouse button or if the alert could not be posted.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 DisplayBeep
@@ -1948,36 +1316,6 @@ Inputs
 
  screen - The Screen that will be flashed.
      If NULL all screens will flash.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2020,23 +1358,11 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  This functions sends OM_DISPOSE to the oejct.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2092,30 +1418,6 @@ Result
  gadget.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 DoubleClick
@@ -2153,30 +1455,6 @@ Result
 
  TRUE if the times are within the doubleclick intervall, FALSE
  otherwise.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2252,24 +1530,6 @@ Example
  DrawBorder (rp, &demo, 50, -50);
 
 
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 DrawImage
@@ -2307,30 +1567,6 @@ Result
 ::
 
  None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2378,29 +1614,11 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  DrawImageState(), handles both boopsi and conventional images.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2422,41 +1640,11 @@ Function
  Private: dump the internal state of intuition.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      none
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2509,24 +1697,6 @@ Result
   n, if the n-th button from the left was clicked.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -2547,48 +1717,6 @@ Synopsis
          struct Window * window,
          BOOL complete
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -2625,24 +1753,6 @@ Result
 ::
 
  None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2692,24 +1802,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -2729,48 +1821,6 @@ Synopsis
  struct IClass * FindClass(
          ClassID classID
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -2854,18 +1904,6 @@ Notes
  *Always* calls RemoveClass().
 
 
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 FreeIntuiMessage
@@ -2901,30 +1939,6 @@ Result
  none
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 FreeRemember
@@ -2938,48 +1952,6 @@ Synopsis
          struct Remember ** rememberKey,
          LONG reallyForget
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -3020,12 +1992,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -3036,12 +2002,6 @@ Notes
  Intuition will recognize when FreeScreenBuffer() is called for the
  currently installed ScreenBuffer that it must not free the BitMap.
  This is left to the CloseScreen() function.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3088,24 +2048,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -3139,24 +2081,6 @@ Inputs
 ::
 
  Window - The requester to be freed. May be NULL or 1.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -3213,12 +2137,6 @@ Result
  None. Fills in the two WORDs pointed to by mousepoint.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -3226,18 +2144,6 @@ Notes
  This function is useless, because programs which need this information
  can get it in a cleaner way.
  It is recommended not to call this function!
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -3286,23 +2192,11 @@ Result
  See the classes documentation for details.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  This function sends OM_GET to the object.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3352,24 +2246,6 @@ Result
  Returns your parameter buffer.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -3405,12 +2281,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -3418,12 +2288,6 @@ Notes
  Only Public Screen Manager utilities want to use this function
  since it is easy to open a window on the default public screen
  without specifying a name.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3468,24 +2332,6 @@ Result
 ::
 
  Returns your parameter buffer.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3546,30 +2392,6 @@ Result
  TRUE if successful, FALSE if the screen could not be opened.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 GetScreenDrawInfo
@@ -3607,24 +2429,12 @@ Result
  Returns pointer to struct DrawInfo defined in intuition/screens.h
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  Call FreeScreenDrawInfo() after finishing using the pointer.
  This function does not prevent the screen from being closed.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3673,24 +2483,6 @@ Result
  None. Toggles gadget-help of one or more windows to on or off.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -3723,36 +2515,6 @@ Inputs
 ::
 
  window - The window to affect.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -3790,23 +2552,11 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is obsolete.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3854,30 +2604,6 @@ Result
  The width of the text in pixels.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 IsWindowVisible
@@ -3913,30 +2639,6 @@ Result
 ::
 
      TRUE if window is currently visible, FALSE otherwise.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -3988,30 +2690,6 @@ Result
  menuitem described by menunumber.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 LIBBASETYPE
@@ -4061,29 +2739,11 @@ Result
  success - TRUE if initialization went, FALSE otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  This function is private and AROS specific.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -4129,24 +2789,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -4190,24 +2832,12 @@ Result
  The result of this function must be passed to UnlockIBase().
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  You *must not* call this function if you have any locks on other
  system resources like layers and LayerInfo locks.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4293,12 +2923,6 @@ Notes
  on it.
 
 
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -4329,24 +2953,6 @@ Function
  as possible.
 
 
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -4354,12 +2960,6 @@ Notes
 
  The list's nodes are PubScreenNodes as defined in <intuition/screens.h>.
  Act very quickly when holding this lock!
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4436,30 +3036,12 @@ Result
  - There already is a class with the same name/ID.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  No copy is made of classID. So make sure the lifetime of the contents
  of classID is at least the same as the lifetime of the class itself.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -4475,12 +3057,6 @@ Synopsis
          struct Screen * screen
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -4493,24 +3069,6 @@ Result
 ::
 
  Zero for success, non-zero for failure.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4571,12 +3129,6 @@ Result
  TRUE if the change could be made and FALSE otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -4613,12 +3165,6 @@ Notes
  need to store it and dispose yourself! Also calling
  ModifyIDCMP(win,someidcmp) on a window with NULL win->UserPort will
  NOT create a new port!
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4678,12 +3224,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -4691,12 +3231,6 @@ Notes
  This function causes all gadgets from this gadget to the end of
  the gadget list to be refreshed. If you want a better behaviour,
  use NewModifProp().
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4746,12 +3280,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -4759,12 +3287,6 @@ Notes
  Depending on other restrictions, the screen may not move as far
  as specified. It will move as far as possible and you can check
  LeftEdge and TopEdge of the screen to see how far it got.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4811,24 +3333,6 @@ Result
  The window will move when the next input event will be received.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -4870,24 +3374,6 @@ Result
 ::
 
  None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4952,24 +3438,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5024,23 +3492,11 @@ Result
  which must be disposed with DisposeObject() later.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  This functions send OM_NEW to the dispatcher of the class.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5091,24 +3547,6 @@ Result
  A BOOPSI object, which can be manipulated.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5157,12 +3595,6 @@ Result
  Returns 'namebuff' or NULL if there are no public screens.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -5175,12 +3607,6 @@ Notes
      This function may return the name of a public screen which is in
  private mode.
      The cycle order is undefined, so draw no conclusions based on it!
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5230,24 +3656,12 @@ Result
  allowed to render into this gadget.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  If a routine passes a RastPort, eg. GM_RENDER, ObtainGIRPort()
  needn't be called.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5296,24 +3710,12 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  This function will update the gadget (unlike the original function
  which would update all gadgets in the window).
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5358,24 +3760,6 @@ Result
 ::
 
  None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5424,30 +3808,12 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  This function will update the gadget (unlike the original function
  which would update all gadgets in the window).
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -5487,24 +3853,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5525,48 +3873,6 @@ Synopsis
          struct NewScreen * newScreen,
          struct TagItem   * tagList
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -5605,24 +3911,6 @@ Result
  attributes.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5643,48 +3931,6 @@ Synopsis
          struct NewWindow * newWindow,
          struct TagItem   * tagList
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -5721,24 +3967,6 @@ Result
  because other programs may close the WorkBench and make the
  pointer invalid.
  If this function fails the return value is NULL.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5786,30 +4014,6 @@ Result
  TRUE is the point is inside the image, FALSE otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 PrintIText
@@ -5849,30 +4053,6 @@ Result
 ::
 
  None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -5917,24 +4097,6 @@ Result
  The other bits in the return value are reserved for future use.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5957,48 +4119,6 @@ Synopsis
          struct Rectangle * rect,
          WORD oscantype
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -6065,18 +4185,6 @@ Notes
  BeginRefresh()/EndRefresh() pair.
 
 
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 RefreshGadgets
@@ -6125,18 +4233,6 @@ Example
  RefreshGadgets (win->FirstGadget, win, NULL);
 
 
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -6157,48 +4253,6 @@ Synopsis
          struct Window * window
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 RefreshWindowFrame
@@ -6211,48 +4265,6 @@ Synopsis
  void RefreshWindowFrame(
          struct Window * window
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -6288,30 +4300,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 RemakeDisplay
@@ -6323,12 +4311,6 @@ Synopsis
 
  LONG RemakeDisplay(
  );
-
-Function
-~~~~~~~~
-::
-
-
 
 Inputs
 ~~~~~~
@@ -6342,24 +4324,6 @@ Result
 ::
 
  Zero for success, non-zero for failure.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6406,24 +4370,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -6447,48 +4393,6 @@ Synopsis
          struct Gadget * gadget,
          LONG numGad
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -6525,30 +4429,6 @@ Result
 
  The position of the gadget or 0xFFFF if the gadget doesn't
  exist or the gadget is the 65535th of the list.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -6589,29 +4469,11 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  As you might have noticed, the arguments are twisted.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -6648,24 +4510,6 @@ Result
 ::
 
  TRUE if requester was opened successfully, FALSE else.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6715,12 +4559,6 @@ Result
  Always TRUE.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -6729,12 +4567,6 @@ Notes
  Use this function only if the Menu has been added before by
  SetMenuStrip() and you changed nothing in the struct except
  CHECKED and ITEMENABLED flags.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6775,24 +4607,6 @@ Result
 ::
 
  Zero for success, non-zero for failure.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6848,12 +4662,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -6861,12 +4669,6 @@ Notes
  Only the owner of the screen should use SDEPTH_INFAMILY.
  Intentionally commodities should not change the internal arrangement
  of screen families.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6934,23 +4736,11 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  SPOS_FORCEDRAG should only be used by the owner of the screen.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7000,24 +4790,6 @@ Result
  of the display, the screen will appear behind the screens.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -7060,24 +4832,6 @@ Result
 ::
 
  You will see the screen move in front of all other screens.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7134,36 +4888,6 @@ Inputs
                  affected by the scroll
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SendIntuiMessage
@@ -7201,12 +4925,6 @@ Result
      none
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -7231,18 +4949,6 @@ Notes
  the IntuiMessage is supposed to be sent, really wants to
  get the IDCMP in question, that is, whether the corresponding
  flag in window->IDCMPFLags is set.
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
 
 
 
@@ -7285,23 +4991,11 @@ Result
  will define other return values.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  This function sends OM_SET to the object.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7357,12 +5051,6 @@ Result
  not be set to the new one.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -7370,12 +5058,6 @@ Notes
  If the DMRequest has the POINTREL flag set, the DMR will show up
  as close to the pointer as possible. The RelLeft/Top fields are
  used to fine-tune the positioning.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7418,30 +5100,6 @@ Inputs
            or NULL to specify the Workbench screen.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -7477,36 +5135,12 @@ Inputs
  textfont - The Font to be used.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      PRIVATE(!!!!) Do not use
  
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -7541,30 +5175,6 @@ Result
 ::
 
      The old edit hook.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7610,23 +5220,11 @@ Result
  will define other return values.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  This function sends OM_SET to the gadget object.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7653,47 +5251,11 @@ Synopsis
          ULONG type
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
  Depending on the operation
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7711,47 +5273,11 @@ Synopsis
          ULONG type
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
  Depending on the operation
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7792,12 +5318,6 @@ Result
  TRUE if all menus have at least one menuitem.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -7806,12 +5326,6 @@ Notes
  official way to add a new MenuStrip to Window.
  Always do a ClearMenuStrip() before closing the Window or adding
  another MenuStrip to the Window.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7860,23 +5374,11 @@ Result
  queuelength is returned.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  There should be a function for changing the repeat key queue limit, too.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7921,30 +5423,6 @@ Inputs
  width - Width of the pointer (must be <= 16)
  xOffset, yOffset - The offset of the "hot spot" relative to the
      left, top edge of the bitmap.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7992,24 +5470,6 @@ Result
 ::
 
  Returns your parameter buffer.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8060,24 +5520,6 @@ Result
  The flags set before the change was made.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -8099,48 +5541,6 @@ Synopsis
          struct Window * window,
          struct TagItem * taglist
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -8187,30 +5587,12 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  You should be careful with specifying a screen title because that
  may irritate the user.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -8238,12 +5620,6 @@ Function
  behind all windows.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
@@ -8251,29 +5627,11 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  The default of the SHOWTITLE flag for new screens is TRUE.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -8304,36 +5662,6 @@ Inputs
 ::
 
  window - The window to affect.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -8374,30 +5702,12 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  The resize of the window may be delayed. If you depend on the
  information that is has changed size, wait for IDCMP_NEWSIZE.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -8455,18 +5765,6 @@ Result
      -1, if one of the IDCMP flags of idcmpPTR was set.
       0, if the rightmost button was clicked or an error occured.
       n, if the n-th button from the left was clicked.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -8541,18 +5839,6 @@ Result
   n, if the n-th button from the left was clicked.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -8583,48 +5869,6 @@ Synopsis
          UWORD height,
          ULONG time
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -8659,24 +5903,6 @@ Result
 ::
 
  None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8719,29 +5945,11 @@ Inputs
  screen - Pointer to the screen to unlock
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  The screen parameter will be ignored if name is non-NULL
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8769,36 +5977,6 @@ Function
 
 
  Release lock made by LockPubScreenList().
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8842,24 +6020,6 @@ Result
 ::
 
  Address of the Intuition View structure
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8906,24 +6066,6 @@ Result
  window is displayed on.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -8950,23 +6092,11 @@ Function
  Bring the WorkBench behind all other screens.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
  TRUE if the Workbench screen is open, FALSE else.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -8975,12 +6105,6 @@ Notes
 
  This function does not influence the position of the screen,
  it just changes the depth-arrangement of the screens.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -9009,23 +6133,11 @@ Function
  Make the WorkBench screen the frontmost.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
  TRUE if the Workbench screen is open, FALSE else.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -9034,12 +6146,6 @@ Notes
 
  This function does not influence the position of the screen,
  it just changes the depth-arrangement of the screens.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -9092,24 +6198,6 @@ Result
  all sizes could be set.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -9151,30 +6239,6 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 WindowToFront
@@ -9207,30 +6271,6 @@ Result
 ::
 
  None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -9269,24 +6309,12 @@ Result
  None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
  This call is deferred. Wait() for IDCMP_CHANGEWINDOW if your
  program depends on the new size.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -9316,36 +6344,6 @@ Function
  Locks the public classes list.
 
 
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -9372,36 +6370,6 @@ Function
 
 
  Unlocks the public classes list.
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

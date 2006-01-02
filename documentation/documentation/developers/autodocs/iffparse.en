@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ========
 iffparse
 ========
@@ -64,24 +68,11 @@ Function
    Allocates an IFFHandle struct.
 
 
-Inputs
-~~~~~~
-::
-
-
-
-
 Result
 ~~~~~~
 ::
 
      An unitialized IFFHandle structure.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -90,12 +81,6 @@ Notes
 
      The default context-node is created in AllocIFF() and persists until
      FreeIFF().
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -147,12 +132,6 @@ Result
 ::
 
      item      - A initialized LocalContextItem structure.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -212,24 +191,6 @@ Result
      None.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -267,30 +228,12 @@ Inputs
      iff - Pointer to an IFFhandle struct previously opened with OpenIFF()
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function tells the custom stream handler to clean up
      by sending it a IFFCMD_CLEANUP IFFStreamCmd.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -343,24 +286,6 @@ Result
      error - 0 if successfulle. IFFERR_#? elsewise.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -407,24 +332,6 @@ Result
      error      - 0 if successfull, IFFERR_#? otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -469,24 +376,6 @@ Result
 
      since the default context node exists as long as the iffhandle
      itself. However, the user is never given a pointer to this node.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -543,24 +432,6 @@ Result
 ::
 
      error - 0 If successfull, IFFERR_#? elsewise.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -621,24 +492,6 @@ Result
      error - 0 If successfull, IFFERR_#? elsewise.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -685,24 +538,6 @@ Result
 
      ci - pointer to the last collection chunk encountered
           with pointers to previous ones.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -755,24 +590,6 @@ Result
              none is found.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -819,25 +636,6 @@ Result
 ::
 
      sp    - pointer to a storedproperty if found, NULL if none are found.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
 
 
 See also
@@ -887,23 +685,11 @@ Result
            NULL if no such context exists.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is most for internal use.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -939,30 +725,6 @@ Inputs
 
      iff - pointer to an IFFHandle struct.
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -996,30 +758,6 @@ Inputs
 ::
 
      localItem    -  pointer to LocalContextItem struct.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1064,29 +802,11 @@ Result
      FALSE otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      Assumes input to be in local byte order.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1124,23 +844,11 @@ Result
      FALSE  -  otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      Assumes the input type to be in local byte order.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1163,12 +871,6 @@ Synopsis
          LONG id,
          STRPTR buf
  );
-
-Function
-~~~~~~~~
-::
-
-
 
 Inputs
 ~~~~~~
@@ -1210,18 +912,6 @@ Notes
      Assumes that the supplied ID is stored in local byte order.
 
 
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 InitIFF
@@ -1253,30 +943,6 @@ Inputs
      flags        -  stream I/O flags for the IFFHandle.
      streamHook  - pointer to a Hook structure initialized with the streamhandler
                    to be called.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1315,30 +981,6 @@ Inputs
 ::
 
      iff  - pointer to an IFFHandle struct.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1384,36 +1026,6 @@ Inputs
      iff  - pointer to an IFFHandle struct.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 LocalItemData
@@ -1447,24 +1059,6 @@ Result
 ::
 
      data      - pointer to user data or NULL.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1510,24 +1104,6 @@ Result
 ::
 
      ch          -  pointer to ClipboarHandle struct or NULL if unsuccessfull.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1576,24 +1152,12 @@ Result
      error -  0 if successfull, IFFERR_#? elsewise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
       This function tells the custom stream handler to initialize
      by sending it a IFFCMD_INIT IFFStreamCmd.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1639,24 +1203,6 @@ Result
 ::
 
      parent      -  pointer to the parent context node or NULL if none.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1722,25 +1268,6 @@ Result
      0 if successfull or IFFERR_#?
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1784,24 +1311,6 @@ Result
 ::
 
      error  -  0 if successfull, IFFERR_#? otherwise.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1853,24 +1362,6 @@ Result
      error  - 0 if successfull, IFFERR_#? otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1920,30 +1411,6 @@ Result
 
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 PushChunk
@@ -1988,24 +1455,6 @@ Result
 ::
 
      error  -  0 if successfull, IFFERR_#? otherwize.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2053,24 +1502,6 @@ Result
 
      actual -   (positive) the actual number of bytes read.
                (negative) IFFERR_#? error code if not succesfull.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2123,24 +1554,6 @@ Result
 
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -2179,30 +1592,12 @@ Inputs
      purgeHook  -  pointer to a hook sructure initialized with the purge function.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      The purgehook must call FreeLocalItem() on the local context item after
      doing its own resource freeing.
-
-
-
-Bugs
-~~~~
-::
 
 
 
@@ -2252,24 +1647,6 @@ Result
      error  -  0 if successfull, IFFERR_#? otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -2313,24 +1690,6 @@ Result
 ::
 
      error      - 0 if successfull, IFFERR_#? otherwise.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2379,24 +1738,6 @@ Result
      error  -  0 if successfull, IFFERR_#? otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -2436,30 +1777,6 @@ Inputs
      iff         - pointer to IFFHandle struct.
      localItem    -  pointer to LCI to install.
      contextNode  -  pointer to the context node in which the LCI will be stored.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2513,24 +1830,6 @@ Result
      error     -  0 if succesfull, IFFERR_#? otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -2577,24 +1876,6 @@ Result
 
      actual    -  (positive) number of bytes actually written.
                  (negative) IFFERR_#? indicating unsuccesfull write.
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
 
 See also
 ~~~~~~~~
@@ -2643,24 +1924,6 @@ Result
 
      actual -   (positive) the actual number of whole records written.
                (negative) IFFERR_#? error code if not succesfull.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

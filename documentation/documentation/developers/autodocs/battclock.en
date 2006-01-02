@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 =========
 battclock
 =========
@@ -32,35 +36,11 @@ Function
      be reset.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      The number of seconds since 1.1.1978 00:00:00
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -104,24 +84,12 @@ Result
      The clock will be reset.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function may do nothing when the battery backed up clock either
      doesn't exist, or may not be writable by the operating system.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -166,24 +134,12 @@ Result
      The clock will be set.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This may not do anything on some systems where the battery backed
      up clock either doesn't exist, or may not be writable.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

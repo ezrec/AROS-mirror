@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 =========
 partition
 =========
@@ -63,30 +67,6 @@ Result
  PartitionHandle of the new partition; 0 for an error
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ClosePartitionTable
@@ -115,36 +95,6 @@ Inputs
  root - partition table to close
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 CloseRootPartition
@@ -170,36 +120,6 @@ Inputs
 ::
 
  ph - root handle created by OpenRootPartition()
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -238,12 +158,6 @@ Result
  0 on success; an error code otherwise
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -251,18 +165,6 @@ Notes
  After calling this function the state of the PartitionHandle will be the
  same as when calling OpenPartitionTable(). Therefore before closing the
  PartitionHandle you should call ClosePartitionTable().
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -289,36 +191,6 @@ Inputs
 ::
 
  ph - PartitionHandle to delete
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -355,12 +227,6 @@ Result
  0 on success; an error code otherwise
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -368,18 +234,6 @@ Notes
  After calling this function the state of the PartitionHandle will be the
  same as before calling OpenPartitionTable(). Therefore do not reference
  any children PartitionHandles anymore.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -414,36 +268,6 @@ Inputs
      PT_POSITION - LONG *           ; position of partition (MBR-PC)
      PT_ACTIVE   - LONG *           ; is partition active
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 GetPartitionTableAttrs
@@ -474,36 +298,6 @@ Inputs
      PTT_DOSENVEC - struct DosEnvec *; get DosEnvec values
      PTT_TYPE     - LONG *           ; get partition table type
      PTT_RESERVED - LONG *           ; get number of reserved blocks
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -543,30 +337,6 @@ Result
      0 for success; an error code otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 OpenRootPartition
@@ -603,30 +373,6 @@ Result
  handle to the device
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 QueryPartitionAttrs
@@ -659,30 +405,6 @@ Result
 ::
 
  list of NULL-terminated ULONGs with attributes
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -719,30 +441,6 @@ Result
  list of NULL-terminated ULONGs with attributes
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SetPartitionAttrs
@@ -775,36 +473,6 @@ Inputs
      PT_POSITION - move partition to another position (MBR-PC)
      PT_ACTIVE   - set partition active
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SetPartitionTableAttrs
@@ -832,36 +500,6 @@ Inputs
 
  ph      - PartitionHandle of the partition table
  taglist - list of attributes; unknown tags are ignored
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -897,30 +535,6 @@ Result
 ::
 
  0 for success; an error code otherwise
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------

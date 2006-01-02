@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ========
 gadtools
 ========
@@ -62,30 +66,6 @@ Result
      A point to the first gadget or NULL, if there was an error.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 CreateGadgetA
@@ -128,24 +108,6 @@ Result
 ::
 
      A pointer to a gadget or NULL to indicate an error.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -191,12 +153,6 @@ Result
      A pointer to a menu structure.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -206,12 +162,6 @@ Notes
      The strings supplied for the menu are not copied into a private
      buffer. Therefore they must be preserved, until FreeMenus() was
      called.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -258,18 +208,6 @@ Inputs
      taglist - additional tags
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -277,18 +215,6 @@ Notes
      Boxes drawn with DrawBevelBox() aren't refreshed automatically.
      You have to refresh them yourself.
      DrawBevelBoxA() might modify the rastport to guarantee fast drawing.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -316,30 +242,6 @@ Inputs
 ::
 
      glist - pointer to the first gadget to be freed, may be NULL.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -376,30 +278,6 @@ Inputs
      menu - pointer to the menu (or first MenuItem) to be freed, may be NULL.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -433,30 +311,6 @@ Inputs
 ::
 
      vi - the visual info structure to free, may be NULL.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -495,12 +349,6 @@ Inputs
      win - window to refresh
 
 
-Result
-~~~~~~
-::
-
-
-
 Example
 ~~~~~~~
 ::
@@ -519,12 +367,6 @@ Notes
      gadgets.
      You should simple rendering functions between GT_BeginRefresh() and
      GT_EndRefresh() only. Do not render or change any gadgets.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -562,30 +404,6 @@ Inputs
 
      win      - the refreshed window
      complete - TRUE, if refreshing is finished
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -633,24 +451,6 @@ Result
 
      Either a pointer to a processed intuition message or NULL, in which
      case the message had only meaning to gadtools.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -702,24 +502,6 @@ Result
      The number of attributes, which were filled correctly.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -764,24 +546,6 @@ Result
      had only a meaning to gadtools.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -823,24 +587,6 @@ Result
      The original intuition message or NULL, if NULL was passed in.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -879,36 +625,6 @@ Inputs
      req - Not used. Provide NULL for now.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 GT_ReplyIMsg
@@ -934,30 +650,6 @@ Inputs
 ::
 
      imsg - The message to reply.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1009,24 +701,6 @@ Result
      The gadget may be set to the specified attributes.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1073,24 +747,6 @@ Result
      A (private) visual info structure. NULL indicates an error.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1113,12 +769,6 @@ Synopsis
          struct TagItem * tagList
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -1133,24 +783,6 @@ Result
 ::
 
      FALSE, if an error occured.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1175,12 +807,6 @@ Synopsis
          struct TagItem * tagList
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -1195,24 +821,6 @@ Result
 ::
 
      FALSE, if an error occured.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

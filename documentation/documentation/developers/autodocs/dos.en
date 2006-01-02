@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ===
 dos
 ===
@@ -173,48 +177,6 @@ Synopsis
          struct DosPacket * pkt
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 AddBuffers
@@ -250,30 +212,6 @@ Result
 
      != 0 on success (IoErr() gives the actual number of buffers),
      0 else (IoErr() gives the error code).
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -313,12 +251,6 @@ Result
      != 0 if all went well, 0 otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -328,18 +260,6 @@ Notes
      the dos list locked. So if you want to add a dos list entry
      out of a filesystem don't just wait on the lock but serve all
      incoming requests until the dos list is free instead.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -411,18 +331,6 @@ Example
      --> Work:Programming/Include/graphics/gfxmacros.h
 
 
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -479,18 +387,6 @@ Result
      == 0    failure
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -543,30 +439,6 @@ Result
      Pointer to new object or NULL, to indicate an error.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 AssignAdd
@@ -606,24 +478,12 @@ Result
      in that case. The lock is not freed on failure.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This will only work with an assign created with AssignLock() or
      a resolved AssignLate() assign.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -675,24 +535,6 @@ Result
      in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -740,30 +582,6 @@ Result
      in that case. The lock is not freed on failure.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 AssignPath
@@ -804,24 +622,6 @@ Result
 
      != 0 in case of success, 0 on failure. IoErr() gives additional
      information in that case.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -869,30 +669,6 @@ Result
      to the first list element but to a pseudo element instead.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ChangeMode
@@ -932,30 +708,12 @@ Result
      information in the latter case.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      Since filehandles and locks are identical under AROS the type
      argument is ignored.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -994,30 +752,6 @@ Result
      The mask of all signals which were set.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 Cli
@@ -1037,23 +771,11 @@ Function
      Returns a pointer to the CLI structure of the current process.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      Pointer to CLI structure.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -1062,18 +784,6 @@ Notes
 
      Do not use this function to test if the process was started from
      the shell. Check pr_CLI instead.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1105,18 +815,6 @@ Inputs
  packet  --  startup arguments passed as a packet
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1126,12 +824,6 @@ Notes
  for this function as functionality is added in other places to deal
  with things taken care of by this function. Furthermore, the Amiga
  startup packet interface was a pile of crap.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1171,18 +863,6 @@ Inputs
  dp  --  startup arguments specified as a packet
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1190,12 +870,6 @@ Notes
 
  This function is obsolete for the same reasons as CliInitNewCli()
  and should not be used.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1242,29 +916,11 @@ Result
      0 if there was an error. != 0 on success.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is identical to UnLock().
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1303,29 +959,11 @@ Result
      if date2 is later than date1.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This is NOT the same ordering as strcmp() !
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1364,30 +1002,6 @@ Result
      IoErr() gives additional information in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 CreateNewProc
@@ -1420,30 +1034,6 @@ Result
 ::
 
      Pointer to the new process or NULL on error.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1495,12 +1085,6 @@ Result
      return NULL on failure.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1518,12 +1102,6 @@ Notes
      pr = (struct Process *)((struct Task *)mp - 1);
 
      // Shouldn't use mp after this point
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1568,30 +1146,6 @@ Result
      Old current directory.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 DateStamp
@@ -1632,29 +1186,11 @@ Result
      the date is unset.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      The original function could only return even multiples of 50 ticks.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1742,18 +1278,6 @@ Example
      See below.
 
 
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1786,36 +1310,6 @@ Inputs
 ::
 
      timeout - the minimum time to wait in ticks (1/50 seconds)
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1852,30 +1346,6 @@ Result
 
      != 0 if the file is gone, 0 if is still there.
      IoErr() gives additional information in that case.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1930,12 +1400,6 @@ Result
      DOSFALSE otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1943,18 +1407,6 @@ Notes
      When the GVF_SAVE_VAR flag is set, and only one of the global
      variable pair could be deleted (either the in memory or on disk
      variable), DOSFALSE will be returned.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1997,12 +1449,6 @@ Result
 ::
 
      Either a pointer to the Device structure, or NULL.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -2066,29 +1512,11 @@ Result
      Nothing
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This is a PRIVATE dos function.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2118,24 +1546,6 @@ Function
  Send a dos packet to a filesystem and wait for the action to complete.
 
 
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2144,18 +1554,6 @@ Notes
  Callable from a task.
 
  This function should NOT be used; it's only here for AmigaOS compatibility.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2194,29 +1592,11 @@ Result
      information in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is identical to DupLockFromFH().
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2249,30 +1629,6 @@ Inputs
  notify  --  NotifyRequest used with StartNotify()
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -2301,12 +1657,6 @@ Function
      input stream.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
@@ -2314,29 +1664,11 @@ Result
      Error stream handle.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is AROS specific
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2355,12 +1687,6 @@ Synopsis
          struct MsgPort * device
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -2378,18 +1704,6 @@ Inputs
  device  --  Optional handler task address (obsolete!)
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2398,18 +1712,6 @@ Notes
  Locks and filehandles are the same in AROS so there is redundancy in
  the parameters. Furthermore, the 'device' argument is not cared about
  as AROS don't build filesystems via handlers.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2457,12 +1759,6 @@ Result
  again until it returns FALSE.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2476,12 +1772,6 @@ Notes
  structure:
 
  ead_type :
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2532,30 +1822,12 @@ Inputs
  control  --  control data structure
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
 
  The control data structure must have been allocated with AllocDosObject().
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2690,12 +1962,6 @@ Result
  A boolean telling whether the operation was successful or not.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2704,12 +1970,6 @@ Notes
  FileInfoBlocks should be allocated with AllocDosObject(). You may make
  a copy of the FileInfoBlock but, however, this copy may NOT be passed
  to ExNext()!
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2771,24 +2031,6 @@ Result
  command(s). (This is NOT the return code of the command(s).)
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -2818,24 +2060,6 @@ Function
  Obsolete function, the purpose of which was to exit from a BCPL program.
 
 
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2843,18 +2067,6 @@ Notes
 
  This function is obsolete and doens't do anything. Therefore, do not
  call it!
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2893,24 +2105,6 @@ Result
 
      The character read or EOF if the file ended or an error happened.
      IoErr() gives additional information in that case.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2961,30 +2155,6 @@ Result
      buf or NULL if the first thing read is EOF.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 FPutC
@@ -2998,12 +2168,6 @@ Synopsis
          BPTR file,
          LONG character
  );
-
-Function
-~~~~~~~~
-::
-
-
 
 Inputs
 ~~~~~~
@@ -3019,24 +2183,6 @@ Result
 
      The character written or EOF in case of an error.
      IoErr() gives additional information in that case.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3131,24 +2277,6 @@ Result
      The number of blocks read from the file or 0 on EOF.
      This function may return less than the requested number of blocks
      IoErr() gives additional information in case of an error.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3256,30 +2384,6 @@ Result
      Number of characters placed in the buffer, may be 0.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 FilePart
@@ -3325,12 +2429,6 @@ Example
      FilePart("yyy")             returns a pointer to the first 'y'.
 
 
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -3358,48 +2456,6 @@ Synopsis
          CONST_STRPTR template,
          CONST_STRPTR keyword
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -3436,24 +2492,12 @@ Result
      Pointer to the process if found, NULL otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
 
  The process calling this function doesn't need to do any locking.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3506,30 +2550,6 @@ Result
      Pointer to dos list entry found or NULL if the are no more entries.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 FindSegment
@@ -3573,12 +2593,6 @@ Result
      will return NULL.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -3588,12 +2602,6 @@ Notes
      of the seg_UC field. If the value of seg_UC > 0, you MUST 
      perform user counting in order to prevent the segment from being
      unloaded.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3645,24 +2653,6 @@ Result
      NULL will be returned.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -3707,30 +2697,6 @@ Result
      in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 Format
@@ -3773,30 +2739,6 @@ Result
      != 0 if the format was successful, 0 otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 FreeArgs
@@ -3834,24 +2776,6 @@ Result
 ::
 
      Some memory will have been returned to the system.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -3895,24 +2819,6 @@ Result
      Some memory and other resources returned to the system.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -3947,36 +2853,6 @@ Inputs
      dlist  --  pointer to dos list entry. May be NULL.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 FreeDosObject
@@ -4006,36 +2882,6 @@ Inputs
      ptr  - Pointer to object.
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 GetArgStr
@@ -4056,41 +2902,11 @@ Function
      process at startup.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      Pointer to argument string.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -4127,24 +2943,12 @@ Result
      The address of the console handler, or NULL if none is set.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      You will only get NULL from this call if you call it on a Task,
      or when the Process is not attached to a console.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4193,24 +2997,6 @@ Result
 
      !=0 on success, 0 on failure. IoErr() gives additional information
      in that case.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4264,18 +3050,6 @@ Result
      required to send a command to a filesystem.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -4326,24 +3100,6 @@ Result
      The default filesystem handler for this process.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -4377,41 +3133,11 @@ Function
      You should NOT under any circumstance UnLock() this lock.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      A shared lock on the directory the program was started from.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -4453,24 +3179,6 @@ Result
 
      !=0 on success, 0 on failure. IoErr() gives additional information
      in that case.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4518,24 +3226,6 @@ Result
 
      !=0 on success, 0 on failure. IoErr() gives additional information
      in that case.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -4618,18 +3308,6 @@ Result
 
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -4685,24 +3363,6 @@ Result
  'parameterBlock' is filled with information on the volume.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -4751,12 +3411,6 @@ Result
  A boolean telling whether the action was carried out.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -4764,18 +3418,6 @@ Notes
 
  After uninhibiting a device anything might have happened like the disk
  in the drive was removed.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -4798,41 +3440,11 @@ Function
      input stream.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      Input stream handle.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -4886,18 +3498,6 @@ Result
      seglist  - pointer to loaded Seglist or NULL in case of failure.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -4926,48 +3526,6 @@ Synopsis
          VOID_FUNC freefunc
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 IoErr
@@ -4987,41 +3545,11 @@ Function
      Get the dos error code for the current process.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      Error code.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -5058,12 +3586,6 @@ Result
      TRUE if the device is a filesystem, FALSE otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -5075,18 +3597,6 @@ Notes
      is always TRUE. Also volume and assign names return
      TRUE.
      
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -5121,30 +3631,6 @@ Result
 ::
 
      != 0 if the file is interactive, 0 if it is not.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -5184,23 +3670,11 @@ Result
      IoErr() gives additional information in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is built on top of InternalLoadSeg()
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5298,30 +3772,6 @@ Result
      to the first list element but to a pseudo element instead.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 LockRecord
@@ -5368,12 +3818,6 @@ Result
  Success/failure indicator.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -5381,12 +3825,6 @@ Notes
 
  Record locks are cooperative, meaning that they only affect other calls
  to LockRecord().
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5439,12 +3877,6 @@ Result
  are locked. In case of failure, no record locks are locked.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -5452,12 +3884,6 @@ Notes
 
  A set of records should always be locked in the same order so as to
  reduce possiblities of deadlock.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5504,24 +3930,6 @@ Result
 
 
      The new device entry or NULL in case it couldn't be created.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5583,18 +3991,6 @@ Result
      information.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -5646,30 +4042,6 @@ Result
      Allocated memory is returned and filelocks are freed.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 MatchFirst
@@ -5715,18 +4087,6 @@ Result
 
      0     = success
      other = DOS error code
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -5791,24 +4151,6 @@ Result
      other = DOS error code
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5845,30 +4187,6 @@ Inputs
 
      AP  - pointer to Anchor Path structure which had been passed to
            MatchFirst() before.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -5919,24 +4237,6 @@ Result
  Boolean telling whether the string matched the pattern.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -5985,24 +4285,6 @@ Result
  Boolean telling whether the match was successful or not.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -6032,41 +4314,11 @@ Function
      be wrong.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      Maximum Cli number (_not_ the number of Clis).
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -6148,18 +4400,6 @@ Result
      IoErr() gives additional information in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -6214,30 +4454,6 @@ Result
      Pointer to dos list entry found or NULL if the are no more entries.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 Open
@@ -6278,30 +4494,6 @@ Result
      IoErr() gives additional information in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 OpenFromLock
@@ -6338,12 +4530,6 @@ Result
      additional information in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -6351,18 +4537,6 @@ Notes
      Since locks and filehandles in AROS are identical this function
      is just the (useless) identity operator and thus can never fail.
      It's there for compatibility to Amiga OS.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -6385,41 +4559,11 @@ Function
      output stream.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      Output stream handle.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -6459,30 +4603,12 @@ Result
      and a different value on error.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      Locks get via ParentDir() are currently never unlocked! Use this 
      function with care.
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -6519,24 +4645,6 @@ Result
      lock - Lock on the parent directory of the filehandle or
             NULL for failure.
             
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6603,30 +4711,6 @@ Result
           that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ParsePatternNoCase
@@ -6648,36 +4732,6 @@ Function
 
      Similar to ParsePattern(), only case insensitive (see there
      for more information). For use with MatchPatternNoCase().
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6730,24 +4784,6 @@ Example
      PathPart("xxx:yyy") would return a pointer to the first 'y').
 
 
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 PrintFault
@@ -6785,24 +4821,6 @@ Result
 ::
 
      != 0 if all went well. 0 on failure.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -6898,30 +4916,6 @@ Result
      The number of bytes actually read, 0 if the end of the
      file was reached, -1 if an error happened. IoErr() will
      give additional information in that case.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7021,29 +5015,11 @@ Result
                             information in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function handles conversion of '**', '*"', etc inside quotes.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7092,24 +5068,6 @@ Result
      == 0    failure, see IoErr() for more information.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -7156,30 +5114,6 @@ Result
  A boolean telling whether the name change was successful or not.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 RemAssignList
@@ -7222,30 +5156,12 @@ Result
      success -   Have we actually succeeded
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      If this is the first lock in a list, this will not set
      dol_Device/dol_Unit correctly. This will be fixed shortly.
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7283,12 +5199,6 @@ Result
      !=0 if all went well, 0 otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -7298,18 +5208,6 @@ Notes
      the dos list locked. So if you want to add a dos list entry
      out of a filesystem don't just wait on the lock but serve all
      incoming requests until the dos list is free instead.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7349,24 +5247,6 @@ Result
 
      != 0    Segment was removed
      == 0    Segment was not removed (not in list, or not free).
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7414,30 +5294,6 @@ Result
      on DOSFALSE.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ReplyPkt
@@ -7453,30 +5309,6 @@ Synopsis
          LONG res2
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -7485,18 +5317,6 @@ Notes
    use IORequests to perform operations the driver will most
    probably not ever use or look at a packet. Also there might 
    not even be a packet at all except for if SendPkt was used.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7548,24 +5368,12 @@ Result
      The return code from the program. See also IoErr().
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      Programs expect the arugment string to end with a newline ('\n')
      character (ReadArgs() requires it to work properly).
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -7589,48 +5397,6 @@ Synopsis
          BPTR lock2
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SameLock
@@ -7644,48 +5410,6 @@ Synopsis
          BPTR lock1,
          BPTR lock2
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -7732,30 +5456,6 @@ Result
      happened. IoErr() will give additional information in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SelectError
@@ -7791,30 +5491,12 @@ Result
      Old error stream handle.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is AROS specific
      
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -7851,30 +5533,6 @@ Result
      Old input stream handle.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SelectOutput
@@ -7908,30 +5566,6 @@ Result
 ::
 
      Old output stream handle.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -7976,24 +5610,6 @@ Result
  This function is callable from a task.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -8035,24 +5651,6 @@ Result
 ::
 
      The address of the previous argument string. May be NULL.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8101,30 +5699,6 @@ Result
      information in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SetConsoleTask
@@ -8160,24 +5734,12 @@ Result
      The address of the old handler.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      The use of Task in the name is because historically filesystem
      handlers were tasks (instead of Devices).
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8222,18 +5784,6 @@ Result
 ::
 
      !=0 on success, 0 on failure.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -8287,30 +5837,6 @@ Result
      information in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SetFileSize
@@ -8350,30 +5876,6 @@ Result
      IoErr() gives additional information in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SetFileSysTask
@@ -8407,24 +5909,6 @@ Result
 ::
 
      The old filesystem handler.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8466,30 +5950,6 @@ Result
 ::
 
      Old error code.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -8534,30 +5994,6 @@ Result
      != DOSTRUE  console mode change failed.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 SetOwner
@@ -8571,12 +6007,6 @@ Synopsis
          STRPTR name,
          ULONG owner_info
  );
-
-Function
-~~~~~~~~
-::
-
-
 
 Inputs
 ~~~~~~
@@ -8592,30 +6022,6 @@ Result
 
      != 0 if all went well, 0 else. IoErr() gives additional
      information in that case.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -8656,24 +6062,12 @@ Result
      This function will return the old program directory lock.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function will not duplicate the lock, so you should not
      free the lock.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -8718,18 +6112,6 @@ Result
 ::
 
      != 0 on success, 0 on failure.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -8782,18 +6164,6 @@ Result
      !=0 on success, 0 on failure.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -8822,12 +6192,6 @@ Synopsis
          ULONG protect
  );
 
-Function
-~~~~~~~~
-::
-
-
-
 Inputs
 ~~~~~~
 ::
@@ -8842,30 +6206,6 @@ Result
 
      != 0 if all went well, 0 else. IoErr() gives additional
      information in that case.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -8986,12 +6326,6 @@ Result
      Zero if this function failed, non-zero otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -9071,24 +6405,6 @@ Example
      See below.
 
 
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 StartNotify
@@ -9127,12 +6443,6 @@ Result
  Success/failure indicator.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -9142,12 +6452,6 @@ Notes
  to exist at the time of calling StartNotify().
  The NotifyRequest used with this function should not be altered while
  active.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -9240,24 +6544,6 @@ Result
      contains the converted values.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -9314,18 +6600,6 @@ Notes
 ::
 
      The routine doesn't check if the number if too large.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -9392,12 +6666,6 @@ Result
  found, the shell will return an error code, usually RETURN_ERROR.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -9413,12 +6681,6 @@ Notes
      If you specified SYS_Asynch, both the input and the output filehandles
  will be closed when the command is finished (even if this was your Input()
  and Output().
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -9469,24 +6731,6 @@ Result
      IoErr() gives additional information in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -9528,24 +6772,6 @@ Result
      success = returns whether everything went ok. Returns FALSE if
                seglist was NULL.
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -9578,36 +6804,6 @@ Inputs
 ::
 
      flags - the same value as given to LockDosList().
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -9643,18 +6839,6 @@ Inputs
  length  --  length of the record in bytes
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -9662,12 +6846,6 @@ Notes
 
  The length and offset must match the corresponding LockRecord()
  call.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -9707,30 +6885,12 @@ Inputs
  recArray  --  array of record locks (previously locked with LockRecords())
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
 
  A array of records may not be modified when records are locked.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -9755,48 +6915,6 @@ Synopsis
          CONST_STRPTR format,
          IPTR * argarray
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -9854,24 +6972,6 @@ Result
  The number of bytes written or -1 if there was an error.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -9893,48 +6993,6 @@ Synopsis
          CONST_STRPTR format,
          IPTR * argarray
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -9977,29 +7035,11 @@ Result
      == 0    if no character arrived
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      Many filesystems do not implement this function.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -10023,24 +7063,12 @@ Function
  pr_PktWait if such a function is installed.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
 
  The packet we received.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -10052,18 +7080,6 @@ Notes
 
  This function should NOT be used. It's there only for AmigaOS
  compatibility.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -10110,30 +7126,6 @@ Result
      IoErr() will give additional information in that case.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 WriteChars
@@ -10170,24 +7162,6 @@ Result
 
      The number of bytes written or EOF on failure. IoErr() gives
      additional information in that case.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 =====
 timer
 =====
@@ -50,23 +54,11 @@ Result
      dest will contain (src + dest).
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function can be called from Interrupts.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -107,23 +99,11 @@ Result
      The requested message will be processed.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is safe to call from interrupts.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -170,12 +150,6 @@ Result
      < 0 if dest has more time than src (ie dest > src)
      = 0 if dest and src are the same (ie dest == src)
      > 0 if dest has less time than src (ie dest < src)
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -234,23 +208,11 @@ Result
      The timeval "dest" will be filled with the current system time.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is safe to call from interrupts.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -298,29 +260,11 @@ Result
      The EClock frequency (tics/s)
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is safe to call from interrupts.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -358,12 +302,6 @@ Result
 ::
 
      The timeval dest will contain the sum (dest - src).
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes

@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 =========
 workbench
 =========
@@ -205,12 +209,6 @@ Result
  not possible to add the AppIcon.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -218,12 +216,6 @@ Notes
 
  Contrary to AmigaOS, AppIcons may be added when there is no workbench
  application running.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -294,12 +286,6 @@ Result
  item, NULL will be returned.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -307,12 +293,6 @@ Notes
 
  Contrary to AmigaOS, this function will report success even when there
  is no running workbench application.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -376,12 +356,6 @@ Result
  if it was not possible to add the 'window' to the AppWindow list.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -391,12 +365,6 @@ Notes
  GetDiskObject() -- to get disk objects for icons dropped in the window.
      Contrary to AmigaOS, this function will succeed even when there
  is no running workbench application.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -501,12 +469,6 @@ Result
  A drop zone identifier or NULL if the drop zone could not be created.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -521,18 +483,6 @@ Notes
      When an icon is dropped on a drop zone, the AppMessage am_MouseX and
  am_MouseY members will be relative to the window top left corner and NOT
  relative to the drop zone coordinates.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -550,48 +500,6 @@ Synopsis
          struct TagItem * tags
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 CloseWorkbenchObjectA
@@ -605,48 +513,6 @@ Synopsis
          STRPTR name,
          struct TagItem * tags
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -662,48 +528,6 @@ Synopsis
          struct TagItem * tags
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 OpenWorkbenchObjectA
@@ -717,48 +541,6 @@ Synopsis
          STRPTR name,
          struct TagItem * tags
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -823,12 +605,6 @@ Result
      registered earlier or if a NULL pointer was passed in.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -837,12 +613,6 @@ Notes
      at a time. This is intentional. Note that "workbench application" in
      this context means the program that is the file manager and handles
      the GUI, not a program that is started using OpenWorkbenchObjectA()!
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -889,12 +659,6 @@ Result
  TRUE if the icon could be removed, FALSE otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -903,12 +667,6 @@ Notes
  You must do a final check for messages on your AppMessage port as messages
  may have been sent between the last time you checked and the call to
  this function.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -956,12 +714,6 @@ Result
  TRUE if the menu item could be removed, FALSE otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -970,12 +722,6 @@ Notes
  You have to do a final check for messages on your AppMenuItem message
  port as messages may have arrived between the last time you checked this
  and the call to this function.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1023,12 +769,6 @@ Result
  TRUE if the window could be removed, FALSE otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1040,12 +780,6 @@ Notes
  you checked and the call of this function.
      Before the AppWindow is removed, all its drop zones will be removed.
  Thus there is no need to call RemoveAppWindowDropZone() explicitly.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1102,12 +836,6 @@ Result
  the supplied AppWindow.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1116,18 +844,6 @@ Notes
  You must check for drop zone messages for zones that you just removed as
  there might have been messages sent between the last time you checked and
  the call to this function.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1169,12 +885,6 @@ Result
      in pointer is NULL.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1182,12 +892,6 @@ Notes
      Note that "Workbench Application" in this context means the program that
      is the file manager and handles the GUI of Workbench, not a program that
      is started from Workbench!
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1232,12 +936,6 @@ Inputs
      No tags are defined at this time.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1252,12 +950,6 @@ Bugs
 
      The existance of this function is a bug itself. It should be removed
      once there is a adequate notification API in dos.library that works.
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1275,48 +967,6 @@ Synopsis
          struct Screen * screen
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 WorkbenchControlA
@@ -1330,48 +980,6 @@ Synopsis
          STRPTR name,
          struct TagItem * tags
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 

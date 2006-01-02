@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 =========
 muimaster
 =========
@@ -44,47 +48,11 @@ Synopsis
          struct Region * r
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -104,47 +72,11 @@ Synopsis
          WORD height
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -161,47 +93,11 @@ Synopsis
          struct TagItem * tagList
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -218,47 +114,11 @@ Synopsis
          struct TagItem * tagList
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -275,47 +135,11 @@ Synopsis
          ULONG flags
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -335,47 +159,11 @@ Synopsis
          APTR dispatcher
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -391,47 +179,11 @@ Synopsis
          struct MUI_CustomClass * mcc
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -447,47 +199,11 @@ Synopsis
          Object * obj
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -504,47 +220,11 @@ Synopsis
          ULONG flags
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -559,47 +239,11 @@ Synopsis
  LONG MUI_Error(
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -615,47 +259,11 @@ Synopsis
          APTR requester
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -692,23 +300,11 @@ Result
      VOID - The function always succeed: if the class can't be
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is obsolete, DO NOT use it.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -759,12 +355,6 @@ Result
      about its content.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -772,12 +362,6 @@ Notes
      Once the pointer is not needed anymore, do not forget to call MUI_FreeClass().
 
      This function is OBSOLETE, don't use it, use MUI_CreateCustomClass instead.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -806,47 +390,11 @@ Synopsis
          ULONG flags
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -863,47 +411,11 @@ Synopsis
          IPTR * params
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -920,47 +432,11 @@ Synopsis
          struct TagItem * tags
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -978,47 +454,11 @@ Synopsis
          ULONG flags
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1035,47 +475,11 @@ Synopsis
          ULONG flags
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1092,47 +496,11 @@ Synopsis
          ULONG flags
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1149,47 +517,11 @@ Synopsis
          LONG pen
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1205,30 +537,6 @@ Synopsis
          struct MUI_RenderInfo * mri,
          APTR handle
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
 
 Notes
 ~~~~~
@@ -1246,12 +554,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 MUI_RemoveClipping
@@ -1266,47 +568,11 @@ Synopsis
          APTR handle
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1327,48 +593,6 @@ Synopsis
          CONST_STRPTR format,
          APTR params
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -1403,18 +627,6 @@ Inputs
  flags -- IDCMP flags
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1422,18 +634,6 @@ Notes
 
  Deprecated in favor of MUIM_Window_AddEventHandler and MUIM_HandleEvent
  event handling model (introduced in MUI V16).
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1449,47 +649,11 @@ Synopsis
          LONG num
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
 
      The function itself is a bug ;-) Remove it!
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------

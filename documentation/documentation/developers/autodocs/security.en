@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ========
 security
 ========
@@ -67,52 +71,6 @@ Synopsis
          ULONG prot
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secAddMonitor
@@ -126,52 +84,6 @@ Synopsis
          struct secMonitor * monitor
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secAllocGroupInfo
@@ -183,52 +95,6 @@ Synopsis
 
  struct muGroupInfo * secAllocGroupInfo(
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -242,52 +108,6 @@ Synopsis
  struct muUserInfo * secAllocUserInfo(
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secCheckPasswd
@@ -300,52 +120,6 @@ Synopsis
  BOOL secCheckPasswd(
          struct TagItem * taglist
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -363,52 +137,6 @@ Synopsis
          ULONG size
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secEnumChildren
@@ -424,52 +152,6 @@ Synopsis
          LONG size
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secFreeExtOwner
@@ -482,52 +164,6 @@ Synopsis
  void secFreeExtOwner(
          struct secExtOwner * info
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -542,52 +178,6 @@ Synopsis
          struct secGroupInfo * info
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secFreeUserInfo
@@ -600,52 +190,6 @@ Synopsis
  void secFreeUserInfo(
          struct secUserInfo * info
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -660,52 +204,6 @@ Synopsis
          struct Task * task
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secGetConfigDirLock
@@ -717,52 +215,6 @@ Synopsis
 
  BPTR secGetConfigDirLock(
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -776,52 +228,6 @@ Synopsis
  ULONG secGetDefProtection(
          struct Task * task
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -837,52 +243,6 @@ Synopsis
          ULONG keytype
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secGetPasswdDirLock
@@ -894,52 +254,6 @@ Synopsis
 
  BPTR secGetPasswdDirLock(
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -954,52 +268,6 @@ Synopsis
          struct DosPacket * pkt
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secGetPktOwner
@@ -1012,52 +280,6 @@ Synopsis
  struct muExtOwner * secGetPktOwner(
          struct DosPacket * pkt
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -1074,52 +296,6 @@ Synopsis
          struct TagItem * taglist
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secGetTaskExtOwner
@@ -1133,52 +309,6 @@ Synopsis
          struct Task * task
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secGetTaskOwner
@@ -1191,52 +321,6 @@ Synopsis
  ULONG secGetTaskOwner(
          struct Task * task
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -1252,52 +336,6 @@ Synopsis
          ULONG keytype
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secKill
@@ -1310,52 +348,6 @@ Synopsis
  BOOL secKill(
          struct Task * task
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -1370,52 +362,6 @@ Synopsis
          BOOL flag
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secLoadPlugin
@@ -1429,52 +375,6 @@ Synopsis
          STRPTR name
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secLocksecBase
@@ -1486,52 +386,6 @@ Synopsis
 
  struct muPointers * secLocksecBase(
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -1546,52 +400,6 @@ Synopsis
          struct TagItem * taglist
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secLogout
@@ -1603,52 +411,6 @@ Synopsis
 
  ULONG secLogout(
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -1664,52 +426,6 @@ Synopsis
          STRPTR newpwd
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secPluginOperationComplete
@@ -1724,52 +440,6 @@ Synopsis
          ULONG result
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secRegisterHandler
@@ -1782,52 +452,6 @@ Synopsis
  ULONG secRegisterHandler(
          struct plugin_ops * ops
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -1842,52 +466,6 @@ Synopsis
          struct secMonitor * monitor
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secSetDefProtectionA
@@ -1900,52 +478,6 @@ Synopsis
  BOOL secSetDefProtectionA(
          struct TagItem * taglist
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -1961,52 +493,6 @@ Synopsis
          LONG mask
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secUnRegisterHandler
@@ -2019,52 +505,6 @@ Synopsis
  void secUnRegisterHandler(
          struct plugin_ops * ops
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -2079,52 +519,6 @@ Synopsis
          struct Task * task
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secUnloadPlugin
@@ -2137,52 +531,6 @@ Synopsis
  BOOL secUnloadPlugin(
          STRPTR name
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -2197,52 +545,6 @@ Synopsis
          struct secPointers * muP
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secUserInfo2ExtOwner
@@ -2256,52 +558,6 @@ Synopsis
          struct secUserInfo * info
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secgetgid
@@ -2313,52 +569,6 @@ Synopsis
 
  UWORD secgetgid(
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -2373,52 +583,6 @@ Synopsis
          int pid
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secgetuid
@@ -2430,52 +594,6 @@ Synopsis
 
  UWORD secgetuid(
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -2490,52 +608,6 @@ Synopsis
          UWORD gid
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secseteuid
@@ -2549,52 +621,6 @@ Synopsis
          UWORD uid
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secsetgid
@@ -2607,52 +633,6 @@ Synopsis
  int secsetgid(
          UWORD gid
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 
@@ -2668,52 +648,6 @@ Synopsis
          int euid
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
-
 --------------
 
 secsetuid
@@ -2726,52 +660,6 @@ Synopsis
  int secsetuid(
          UWORD uid
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-
-Result
-~~~~~~
-::
-
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 
 --------------
 

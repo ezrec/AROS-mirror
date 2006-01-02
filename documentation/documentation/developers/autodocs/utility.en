@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 =======
 utility
 =======
@@ -89,12 +93,6 @@ Result
      Otherwise it will return FALSE. This will generally happen when
      the NSF_NODUPS flag is set and this NamedObject has the same name
      as a second object, or when the object is already in a NameSpace.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Bugs
@@ -187,24 +185,6 @@ Result
      due to no free memory.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -274,12 +254,6 @@ Notes
      If the number of tags to allocate is zero, then none will be.
 
 
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -328,30 +302,6 @@ Result
      The ClockData structure will contain the converted time values.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 ApplyTagChanges
@@ -365,48 +315,6 @@ Synopsis
          struct TagItem * list,
          struct TagItem * changelist
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -450,24 +358,6 @@ Result
 
      If the NamedObject has a removal message associated with it that
      message will be returned to the owner of the NamedObject.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -524,18 +414,6 @@ Result
 ::
 
      Depends upon the Hook itself.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -596,12 +474,6 @@ Result
 
      If the date is valid, the number of seconds from midnight
      1-Jan-1978 AD to the date, or 0 if the date is invalud.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -682,18 +554,6 @@ Example
      FreeTagItems( tagListClone );
 
 
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -734,24 +594,6 @@ Result
 ::
 
      The number of seconds since 1.1.1978
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -807,24 +649,6 @@ Result
 
      The changeList will be modified to show altered items, and if
      requested, the originalList will be updated.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -885,24 +709,6 @@ Result
      The number of valid items left in the resulting filtered list.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -960,12 +766,6 @@ Result
      ReleaseNamedObject( NamedObject ).
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -974,12 +774,6 @@ Notes
      point for another search you must call ReleaseNamedObject() AFTER
      searching, as the ReleaseNamedObject() call can cause the NamedObject
      to be freed, leaving you with an invalid pointer.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1002,48 +796,6 @@ Synopsis
          Tag tagValue,
          const struct TagItem * tagList
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -1078,24 +830,6 @@ Result
 
      The memory used by the NamedObject will be returned to the
      systems free memory pool.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1162,12 +896,6 @@ Notes
 ::
 
      The memory will only be freed if the input is non-NULL.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1241,12 +969,6 @@ Notes
      tried to do anything special at least).
 
 
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1274,41 +996,11 @@ Function
      obtained from this function call.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      an unsigned long id
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1347,30 +1039,6 @@ Result
 ::
 
      None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1417,18 +1085,6 @@ Example
      \* Some other code here *\
 
      name = NamedObjectName( no );
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1487,30 +1143,12 @@ Result
      Next tag item or NULL if you reached the end of the list.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      - TAG_MORE works like "go on with new list" instead of "read new
        list and go on with the current one".
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1565,24 +1203,12 @@ Result
                      of the boolean tags defined in boolMap.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      If there is more than one Tag in tagList of a single type. The
      last of these tags will determine the value of that bit-flag.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1633,24 +1259,6 @@ Result
 ::
 
      The number of TagItems packed.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1804,12 +1412,6 @@ Notes
          use problems.
 
 
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1870,24 +1472,12 @@ Result
      at the next best moment.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      Since this function effectively does a ReleaseNamedObject(), you
      must have found this object first.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1938,12 +1528,6 @@ Result
      Others:
          The quotient is returned in the high 32 bits of the result.
          The remainder in the low 32 bits.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -2087,12 +1671,6 @@ Result
      arg1 * arg2
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2107,12 +1685,6 @@ Notes
 
      This function is mainly to support assembly programers, and is
      probably of limited use to higher-level language programmers.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2160,30 +1732,6 @@ Result
      >0  if string1 >  string2
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 Strnicmp
@@ -2222,30 +1770,6 @@ Result
      <0  if string1 <  string2
      ==0 if string1 == string2
      >0  if string1 >  string2
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2290,24 +1814,6 @@ Result
      FALSE   otherwise
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -2347,30 +1853,6 @@ Result
 ::
 
      Equivalent lower case character.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2433,12 +1915,6 @@ Notes
      languages.
 
 
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -2487,12 +1963,6 @@ Result
 
      For HLL programmers,
          the quotient
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -2588,12 +2058,6 @@ Notes
      probably of limited use to higher-level language programmers.
 
 
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -2636,12 +2100,6 @@ Result
      arg1 * arg2
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2652,12 +2110,6 @@ Notes
      This function is really only for people programming in
      assembly on real Amigas. Most compilers will be able to do this
      math for you inline.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2712,23 +2164,11 @@ Result
      The number of Tags unpacked.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      PSTF_EXISTS has no effect on this function.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

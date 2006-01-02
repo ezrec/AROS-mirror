@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ========
 lowlevel
 ========
@@ -32,30 +36,6 @@ Synopsis
          APTR intData
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 --------------
 
 AddTimerInt
@@ -69,30 +49,6 @@ Synopsis
          APTR intRoutine,
          APTR intData
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
 
 --------------
 
@@ -138,12 +94,6 @@ Result
  A handle used to manipulate the interrupt or NULL if the call failed.
 
 
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -165,30 +115,6 @@ Synopsis
          struct EClockVal * context
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 --------------
 
 GetKey
@@ -201,30 +127,6 @@ Synopsis
  ULONG GetKey(
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 --------------
 
 GetLanguageSelection
@@ -236,30 +138,6 @@ Synopsis
 
  ULONG GetLanguageSelection(
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
 
 --------------
 
@@ -275,30 +153,6 @@ Synopsis
          UBYTE arraySize
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 --------------
 
 ReadJoyPort
@@ -311,30 +165,6 @@ Synopsis
  ULONG ReadJoyPort(
          ULONG port
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
 
 --------------
 
@@ -349,30 +179,6 @@ Synopsis
          APTR intHandle
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 --------------
 
 RemTimerInt
@@ -385,30 +191,6 @@ Synopsis
  VOID RemTimerInt(
          APTR intHandle
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
 
 --------------
 
@@ -441,18 +223,6 @@ Inputs
                 this function is a no-op.
 
 
-Result
-~~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -476,30 +246,6 @@ Synopsis
          BOOL continuous
  );
 
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 --------------
 
 StopTimerInt
@@ -512,30 +258,6 @@ Synopsis
  VOID StopTimerInt(
          APTR intHandle
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
 
 --------------
 

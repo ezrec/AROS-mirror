@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ======
 boopsi
 ======
@@ -48,12 +52,6 @@ Result
 ::
 
      None.
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -120,12 +118,6 @@ Result
      None.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -135,12 +127,6 @@ Notes
      Be careful not to use this function inside of OM_NEW to dispose
      the current object. This can cause massive problems. Use
      CoerceMethod() on the current class and object instead.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -164,48 +150,6 @@ Synopsis
  struct IClass * FindClass(
          ClassID classID
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -289,18 +233,6 @@ Notes
      *Always* calls RemoveClass().
 
 
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 GetAttr
@@ -347,23 +279,11 @@ Result
      See the classes documentation for details.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function sends OM_GET to the object.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -442,30 +362,12 @@ Result
      - There already is a class with the same name/ID.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      No copy is made of classID. So make sure the lifetime of the contents
      of classID is at least the same as the lifetime of the class itself.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -515,23 +417,11 @@ Result
      which must be disposed with DisposeObject() later.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This functions send OM_NEW to the dispatcher of the class.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -582,24 +472,6 @@ Result
      A BOOPSI object, which can be manipulated.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -643,24 +515,6 @@ Result
 ::
 
      None.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -711,23 +565,11 @@ Result
      will define other return values.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function sends OM_SET to the object.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

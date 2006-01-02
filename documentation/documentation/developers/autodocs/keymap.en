@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ======
 keymap
 ======
@@ -28,35 +32,11 @@ Function
      Gives you a pointer to the current system default keymap.
 
 
-Inputs
-~~~~~~
-::
-
-
-
 Result
 ~~~~~~
 ::
 
      Pointer to the system defaul keymap.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -116,30 +96,6 @@ Result
               generated in buffer. Or an negative value to indicate
               an error.
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 MapRawKey
@@ -188,24 +144,6 @@ Result
      -1 means buffer owerflow.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -238,18 +176,6 @@ Inputs
 ::
 
      keyMap - pointer to KeyMap to set as system default.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes

@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ====
 aros
 ====
@@ -45,24 +49,6 @@ Result
      assigned to the location a tag's ti_Data pointed to.
 
      This function will (for now) always return 0.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

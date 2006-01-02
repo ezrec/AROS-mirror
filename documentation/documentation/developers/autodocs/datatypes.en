@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 =========
 datatypes
 =========
@@ -82,12 +86,6 @@ Result
  you asked for).
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -95,12 +93,6 @@ Notes
 
  The object will receice a GM_LAYOUT message with the gpl_Initial field
  set to 1 when the object is added.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -152,24 +144,6 @@ Result
 
  The new array of methods or NULL if something went wrong (like out of
  memory).
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -225,12 +199,6 @@ Result
  memory).
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -240,12 +208,6 @@ Notes
  they are not copied.
      A subclass that implment DTM_TRIGGER must send unknown trigger
  methods to its superclass.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -283,30 +245,6 @@ Inputs
 
 
  o   --  The data type object to dispose of; may be NULL.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -349,36 +287,6 @@ Inputs
 
  object  --  pointer to data type object
  gpl     --  gpLayout message pointer
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -431,12 +339,6 @@ Result
  IBox will be filled with the requested values as a side effect.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -445,12 +347,6 @@ Notes
  This function requires an object to perform the GM_DOMAIN method. To
  achieve similar results without an object, you must use CoerceMethodA()
  manually.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -503,24 +399,6 @@ Result
 
  The value returned by the specified method.
  
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
 
 See also
 ~~~~~~~~
@@ -590,12 +468,6 @@ Result
  TRUE if rendering went OK, FALSE if failure.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -604,12 +476,6 @@ Notes
  The RastPort in question must support clipping, i.e. have a valid
  layer structure attached to it; if not, some datatypes can't draw
  and FALSE will be returned.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -657,24 +523,6 @@ Result
 
 
  Pointer to method table entry or NULL if the method wasn't found.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -735,12 +583,6 @@ Result
  A pointer to a ToolNode describing the search result (NULL for failure).
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -748,12 +590,6 @@ Notes
 
  The entries in dt->dtn_ToolList are valid as long as a lock is kept on
  the data type 'dt' (ObtainDataTypeA() or LockDataType()).
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -809,24 +645,6 @@ Result
  method wasn't found.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -862,30 +680,6 @@ Inputs
 
 
  methods  --  array of methods; may be NULL
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -937,24 +731,6 @@ Result
  The number of attributes obtained.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1001,24 +777,6 @@ Result
  valid until the object is disposed of.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1062,30 +820,6 @@ Result
 
 
  Pointer to a NULL terminated string.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1135,24 +869,6 @@ Result
 
 
  One of the STMD_ identifiers defined in <datatypes/datatypesclass.h>
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1221,12 +937,6 @@ Notes
  type of the requested argument.
 
 
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1287,24 +997,6 @@ Result
  Zero for failure, non-zero otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1343,18 +1035,6 @@ Inputs
  dt  --  DataType structure; may be NULL
 
 
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1362,12 +1042,6 @@ Notes
 
  Calls to LockDataType() and ObtainDataTypeA() must have a corresponding
  ReleaseDataType() call or else problems will arise.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1458,12 +1132,6 @@ Result
  ERROR_OBJECT_WRONG_TYPE     --  Object data type doesn't match DTA_GroupID.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1473,12 +1141,6 @@ Notes
 
  The object should (eventually) be freed by DisposeDTObject() when no
  longer needed.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1538,24 +1200,6 @@ Result
  ADTA_Screen     --  for animationclass objects
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1612,24 +1256,6 @@ Result
  ERROR_NOT_IMPLEMENTED   --  Unknown handle type
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1680,12 +1306,6 @@ Result
  TRUE on success, FALSE otherwise.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1696,18 +1316,6 @@ Notes
  contains the DTA_PrinterStatus tag.
      To abort a print, send the DTM_ABORTPRINT method to the object.
  This will signal the print process with a SIGBREAK_CTRL_C.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1743,30 +1351,6 @@ Inputs
  window   --  pointer to the window; may be NULL
  req      --  must be NULL
  attrs    --  additional attributes (currently none defined)
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1824,24 +1408,6 @@ Result
  ADTA_Screen     --  for animationclass objects
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -1878,30 +1444,6 @@ Inputs
 
  dt  --  DataType structure as returned by ObtainDataTypeA(); NULL is
          a valid input.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -1952,24 +1494,6 @@ Result
 
  The position of the object in the list before it was removed; if the
  object wasn't found -1 is returned.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2029,30 +1553,12 @@ Result
  The return value of DTM_WRITE.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
 
  If DTM_WRITE returns 0, the file will be deleted.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2088,30 +1594,6 @@ Inputs
  win    --  window that the object has been added to
  attrs  --  attributes to set (terminated with TAG_DONE)
             tags are specified in <datatypes/datatypesclass.h>
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -2164,30 +1646,6 @@ Result
 
  ERROR_ACTION_NOT_KNOWN   --  the object doesn't support DTM_SELECT
  ERROR_OBJECT_IN_USE      --  the object is currently occupied
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------

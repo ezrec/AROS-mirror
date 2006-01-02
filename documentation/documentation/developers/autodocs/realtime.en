@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ========
 realtime
 ========
@@ -121,24 +125,6 @@ Result
  to by PLAYER_ErrorCode if you have specified that tag.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -176,30 +162,6 @@ Inputs
 
  player  --  Player to delete; may be NULL in which case this function
              does nothing.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -255,30 +217,6 @@ Result
  the player.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 FindConductor
@@ -317,12 +255,6 @@ Result
  A pointer to the conductor you wanted or NULL if it didn't exist.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -330,12 +262,6 @@ Notes
 
  You have to lock the conductors with LockRealTime(RT_CONDUCTORS)
  before calling this function.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -393,24 +319,6 @@ Result
  The number of items successfully filled in.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -456,24 +364,6 @@ Result
 
  A handle to pass to UnlockRealTime() to unlock the semaphore. If 'lockType'
  is invalid, NULL is returned.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -525,12 +415,6 @@ Result
  A pointer to the next conductor or NULL if there are no more conductors.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -538,12 +422,6 @@ Notes
 
  You have to lock the conductors with LockRealTime(RT_CONDUCTORS)
  before calling this function.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -610,12 +488,6 @@ Result
  RTE_NOCONDUCTOR.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -623,18 +495,6 @@ Notes
 
  Going from CONDSTATE_PAUSED to CONDSTATE_RUNNING does not reset the
  cdt_ClockTime of the conductor.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -683,24 +543,6 @@ Result
  is provided, more information can be obtained via that pointer.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -736,30 +578,6 @@ Inputs
 
 
  lockHandle  --  Handle returned by LockRealTime(); may be NULL.
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also

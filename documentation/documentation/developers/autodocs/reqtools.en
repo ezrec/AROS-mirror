@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ========
 reqtools
 ========
@@ -74,18 +78,6 @@ Result
 ::
 
      req - pointer to the requester allocated or NULL if no memory.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -222,18 +214,6 @@ Result
      none (except when RTFI_AddEntry tag is used, see above)
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -292,18 +272,6 @@ Inputs
 
 
      window  --  pointer to the window to be closed
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -615,12 +583,6 @@ Result
          idcmp flag.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -888,12 +850,6 @@ Result
          (if FREQF_MULTISELECT was used).
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -915,12 +871,6 @@ Bugs
 ::
 
      none known
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1062,12 +1012,6 @@ Result
          font), FALSE if the requester was canceled.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1089,12 +1033,6 @@ Bugs
 ::
 
      none known
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1134,18 +1072,6 @@ Result
 ::
 
      none
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -1203,18 +1129,6 @@ Result
      none
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
 Bugs
 ~~~~
 ::
@@ -1263,18 +1177,6 @@ Result
 ::
 
      none
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -1427,12 +1329,6 @@ Result
          the value of the response as with rtEZRequestA().
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1458,12 +1354,6 @@ Bugs
 ::
 
      none known
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1602,12 +1492,6 @@ Result
          the value of the response as with rtEZRequestA().
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1637,12 +1521,6 @@ Bugs
 ::
 
      none known
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1693,29 +1571,11 @@ Result
      spacing - vertical spacing for the screen.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      This function is for the advanced ReqTools user.
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -1849,12 +1709,6 @@ Result
          the value of the response as with rtEZRequestA().
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -1888,12 +1742,6 @@ Bugs
 ::
 
      This documentation is intentionally incomplete.
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2030,12 +1878,6 @@ Result
          the value of the response as with rtEZRequestA().
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2072,12 +1914,6 @@ Bugs
      This documentation is intentionally incomplete.
 
 
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 rtLockPrefs
@@ -2089,42 +1925,6 @@ Synopsis
 
  struct ReqToolsPrefs * rtLockPrefs(
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
 
 See also
 ~~~~~~~~
@@ -2186,12 +1986,6 @@ Result
      window lock to rtUnlockWindow().
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2206,12 +2000,6 @@ Bugs
 ::
 
      none known
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2309,12 +2097,6 @@ Result
          canceled the requester.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2335,12 +2117,6 @@ Bugs
 ::
 
      none known
-
-
-See also
-~~~~~~~~
-::
-
 
 
 --------------
@@ -2467,18 +2243,6 @@ Result
 
      ret - CALL_HANDLER if you have to call rtReqHandlerA() again, or
          the normal return value from the requester.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
 
 
 Bugs
@@ -2681,12 +2445,6 @@ Result
          'smreq->DisplayDepth' for the screen's depth).
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2753,12 +2511,6 @@ Result
 ::
 
      none
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -2851,12 +2603,6 @@ Result
      none
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
@@ -2917,12 +2663,6 @@ Result
 ::
 
      none
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes
@@ -3030,12 +2770,6 @@ Bugs
      none known
 
 
-See also
-~~~~~~~~
-::
-
-
-
 --------------
 
 rtUnlockPrefs
@@ -3047,42 +2781,6 @@ Synopsis
 
  VOID rtUnlockPrefs(
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
 
 See also
 ~~~~~~~~
@@ -3133,12 +2831,6 @@ Result
 ::
 
      none
-
-
-Example
-~~~~~~~
-::
-
 
 
 Notes

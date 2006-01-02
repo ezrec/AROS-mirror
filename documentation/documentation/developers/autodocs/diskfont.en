@@ -1,5 +1,9 @@
 .. This document is automatically generated. Don't edit it!
 
+`Index <index>`_
+
+----------
+
 ========
 diskfont
 ========
@@ -60,24 +64,12 @@ Result
                  how much additional place is needed.
 
 
-Example
-~~~~~~~
-::
-
-
-
 Notes
 ~~~~~
 ::
 
      If the routine failes, then the afh_Numentries field
      in the AvailFontsHeader will be 0.
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -115,30 +107,6 @@ Inputs
 
  fontContentsHeader  --  Pointer to a struct FontContentsHeader got from
                          NewFontContents().
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
@@ -193,24 +161,6 @@ Result
  if something went wrong.
 
 
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
 See also
 ~~~~~~~~
 ::
@@ -232,48 +182,6 @@ Synopsis
          struct TextFont * sourceFont,
          struct TextAttr * destTextAttr
  );
-
-Function
-~~~~~~~~
-::
-
-
-
-Inputs
-~~~~~~
-::
-
-
-
-Result
-~~~~~~
-::
-
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
-
-
-See also
-~~~~~~~~
-::
-
-
 
 --------------
 
@@ -311,24 +219,6 @@ Result
 ::
 
      Pointer to a struct TextFont on success, 0 on failure.
-
-
-Example
-~~~~~~~
-::
-
-
-
-Notes
-~~~~~
-::
-
-
-
-Bugs
-~~~~
-::
-
 
 
 See also
