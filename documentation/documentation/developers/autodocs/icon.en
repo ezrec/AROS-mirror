@@ -1,12 +1,12 @@
+====
+icon
+====
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-====
-icon
-====
 
 `AddFreeList`_
 `BumpRevision`_
@@ -79,7 +79,6 @@ See also
      FreeFreeList()
 
 
---------------
 
 BumpRevision
 ============
@@ -115,7 +114,6 @@ Result
      pointer to the supplied buffer.o
 
 
---------------
 
 ChangeToSelectedIconColor
 =========================
@@ -128,7 +126,6 @@ Synopsis
          struct ColorRegister * cr
  );
 
---------------
 
 DeleteDiskObject
 ================
@@ -162,7 +159,6 @@ Bugs
      Does not yet notify workbench about the deletion.
 
 
---------------
 
 DrawIconStateA
 ==============
@@ -188,7 +184,6 @@ See also
      AddFreeList()
 
 
---------------
 
 DupDiskObjectA
 ==============
@@ -202,7 +197,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 FindToolType
 ============
@@ -246,7 +240,6 @@ See also
      MatchToolValue()
 
 
---------------
 
 FreeDiskObject
 ==============
@@ -259,7 +252,6 @@ Synopsis
          struct DiskObject * diskobj
  );
 
---------------
 
 FreeFreeList
 ============
@@ -294,7 +286,6 @@ See also
      AddFreeList()
 
 
---------------
 
 GetDefDiskObject
 ================
@@ -337,7 +328,6 @@ See also
      PutDefDiskObject(), GetDiskObjectNew()
 
 
---------------
 
 GetDiskObject
 =============
@@ -350,7 +340,6 @@ Synopsis
          CONST_STRPTR name
  );
 
---------------
 
 GetDiskObjectNew
 ================
@@ -393,7 +382,6 @@ See also
      GetDiskObject(), GetDefDiskObject()
 
 
---------------
 
 GetIconRectangleA
 =================
@@ -410,7 +398,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 GetIconTagList
 ==============
@@ -424,7 +411,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 IconControlA
 ============
@@ -438,7 +424,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 LIBBASETYPE
 ===========
@@ -450,7 +435,6 @@ Synopsis
  Expunge LIBBASETYPE(
  );
 
---------------
 
 LayoutIconA
 ===========
@@ -465,7 +449,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 MatchToolValue
 ==============
@@ -501,7 +484,6 @@ Result
      TRUE if match, else FALSE.
 
 
---------------
 
 NewDiskObject
 =============
@@ -514,7 +496,6 @@ Synopsis
          ULONG type
  );
 
---------------
 
 PutDefDiskObject
 ================
@@ -556,7 +537,6 @@ See also
      GetDefDiskObject(), PutDiskObject()
 
 
---------------
 
 PutDiskObject
 =============
@@ -570,7 +550,6 @@ Synopsis
          struct DiskObject * icon
  );
 
---------------
 
 PutIconTagList
 ==============
@@ -585,5 +564,4 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 

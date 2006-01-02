@@ -1,12 +1,12 @@
+========
+iffparse
+========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-========
-iffparse
-========
 
 `AllocIFF`_
 `AllocLocalItem`_
@@ -90,7 +90,6 @@ See also
      FreeIFF()
 
 
---------------
 
 AllocLocalItem
 ==============
@@ -157,7 +156,6 @@ See also
      SetLocalItemPurge()
 
 
---------------
 
 CloseClipboard
 ==============
@@ -198,7 +196,6 @@ See also
      OpenClipboard(), InitIFFAsClip()
 
 
---------------
 
 CloseIFF
 ========
@@ -243,7 +240,6 @@ See also
      OpenIFF(), InitIFF()
 
 
---------------
 
 CollectionChunk
 ===============
@@ -293,7 +289,6 @@ See also
      CollectionChunks(), FindCollection, PropChunk
 
 
---------------
 
 CollectionChunks
 ================
@@ -339,7 +334,6 @@ See also
      CollectionChunk()
 
 
---------------
 
 CurrentChunk
 ============
@@ -385,7 +379,6 @@ See also
      PushChunk(), PopChunk(), ParseIFF(), ParentChunk()
 
 
---------------
 
 EntryHandler
 ============
@@ -443,7 +436,6 @@ See also
 
 
 
---------------
 
 ExitHandler
 ===========
@@ -499,7 +491,6 @@ See also
       EntryHandler(), StoreLocalItem(), StoreItemInContext()
 
 
---------------
 
 FindCollection
 ==============
@@ -547,7 +538,6 @@ See also
      CollectionChunk(), CollectionChunks()
 
 
---------------
 
 FindLocalItem
 =============
@@ -597,7 +587,6 @@ See also
      StoreLocalItem()
 
 
---------------
 
 FindProp
 ========
@@ -645,7 +634,6 @@ See also
      PropChunk(), PropChunks()
 
 
---------------
 
 FindPropContext
 ===============
@@ -699,7 +687,6 @@ See also
      ParentChunk(), CurrentChunk(), StoreItemInContext(), PropChunk()
 
 
---------------
 
 FreeIFF
 =======
@@ -732,7 +719,6 @@ See also
      AllocIFF(), CloseIFF()
 
 
---------------
 
 FreeLocalItem
 =============
@@ -767,7 +753,6 @@ See also
      AllocLocalItem()
 
 
---------------
 
 GoodID
 ======
@@ -809,7 +794,6 @@ Notes
      Assumes input to be in local byte order.
 
 
---------------
 
 GoodType
 ========
@@ -858,7 +842,6 @@ See also
      GoodID()
 
 
---------------
 
 IDtoStr
 =======
@@ -912,7 +895,6 @@ Notes
      Assumes that the supplied ID is stored in local byte order.
 
 
---------------
 
 InitIFF
 =======
@@ -952,7 +934,6 @@ See also
      utility/hooks.h
 
 
---------------
 
 InitIFFasClip
 =============
@@ -990,7 +971,6 @@ See also
      OpenClipboard()
 
 
---------------
 
 InitIFFasDOS
 ============
@@ -1026,7 +1006,6 @@ Inputs
      iff  - pointer to an IFFHandle struct.
 
 
---------------
 
 LocalItemData
 =============
@@ -1068,7 +1047,6 @@ See also
      AllocLocalItem(), FreeLocalItem()
 
 
---------------
 
 OpenClipboard
 =============
@@ -1113,7 +1091,6 @@ See also
      InitIFFasClip(), CloseClipboard()
 
 
---------------
 
 OpenIFF
 =======
@@ -1167,7 +1144,6 @@ See also
      CloseIFF(), InitIFF()
 
 
---------------
 
 ParentChunk
 ===========
@@ -1212,7 +1188,6 @@ See also
      CurrentChunk()
 
 
---------------
 
 ParseIFF
 ========
@@ -1277,7 +1252,6 @@ See also
 
 
 
---------------
 
 PopChunk
 ========
@@ -1320,7 +1294,6 @@ See also
      PushChunk()
 
 
---------------
 
 PropChunk
 =========
@@ -1369,7 +1342,6 @@ See also
      PropChunks(), FindProp(), CollectionChunk()
 
 
---------------
 
 PropChunks
 ==========
@@ -1411,7 +1383,6 @@ Result
 
 
 
---------------
 
 PushChunk
 =========
@@ -1464,7 +1435,6 @@ See also
      PopChunk()
 
 
---------------
 
 ReadChunkBytes
 ==============
@@ -1511,7 +1481,6 @@ See also
      ReadChunkRecords(), ParseIFF(), WriteChunkBytes()
 
 
---------------
 
 ReadChunkRecords
 ================
@@ -1561,7 +1530,6 @@ See also
      ReadChunkBytes(), ParseIFF(), WriteChunkRecords()
 
 
---------------
 
 SetLocalItemPurge
 =================
@@ -1608,7 +1576,6 @@ See also
      AllocLocalItem(), FreeLocalItem()
 
 
---------------
 
 StopChunk
 =========
@@ -1654,7 +1621,6 @@ See also
      StopChunks(), ParseIFF()
 
 
---------------
 
 StopChunks
 ==========
@@ -1699,7 +1665,6 @@ See also
      StopChunk()
 
 
---------------
 
 StopOnExit
 ==========
@@ -1745,7 +1710,6 @@ See also
      ParseIFF()
 
 
---------------
 
 StoreItemInContext
 ==================
@@ -1786,7 +1750,6 @@ See also
      StoreLocalItem()
 
 
---------------
 
 StoreLocalItem
 ==============
@@ -1837,7 +1800,6 @@ See also
      StoreItemInContext(), FindLocalItem(), EntryHandler(), ExitHandler()
 
 
---------------
 
 WriteChunkBytes
 ===============
@@ -1884,7 +1846,6 @@ See also
      PushChunk(), PopChunk(), WriteChunkRecords()
 
 
---------------
 
 WriteChunkRecords
 =================
@@ -1933,5 +1894,4 @@ See also
      WriteChunkBytes()
 
 
---------------
 

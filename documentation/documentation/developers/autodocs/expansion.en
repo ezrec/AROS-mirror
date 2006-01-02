@@ -1,12 +1,12 @@
+=========
+expansion
+=========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-=========
-expansion
-=========
 
 `AddBootNode`_
 `AddConfigDev`_
@@ -135,7 +135,6 @@ See also
      AddDosNode()
 
 
---------------
 
 AddConfigDev
 ============
@@ -178,7 +177,6 @@ See also
      RemConfigDev
 
 
---------------
 
 AddDosNode
 ==========
@@ -248,7 +246,6 @@ See also
      AddBootNode(), MakeDosNode()
 
 
---------------
 
 AllocBoardMem
 =============
@@ -261,7 +258,6 @@ Synopsis
          ULONG slotSpec
  );
 
---------------
 
 AllocConfigDev
 ==============
@@ -304,7 +300,6 @@ See also
      FreeConfigDev()
 
 
---------------
 
 AllocExpansionMem
 =================
@@ -318,7 +313,6 @@ Synopsis
          ULONG slotAlign
  );
 
---------------
 
 ConfigBoard
 ===========
@@ -332,7 +326,6 @@ Synopsis
          struct ConfigDev * configDev
  );
 
---------------
 
 ConfigChain
 ===========
@@ -345,7 +338,6 @@ Synopsis
          APTR baseAddr
  );
 
---------------
 
 FindConfigDev
 =============
@@ -410,7 +402,6 @@ Example
      }
 
 
---------------
 
 FreeBoardMem
 ============
@@ -424,7 +415,6 @@ Synopsis
          ULONG slotSpec
  );
 
---------------
 
 FreeConfigDev
 =============
@@ -466,7 +456,6 @@ See also
      AllocConfigDev()
 
 
---------------
 
 FreeExpansionMem
 ================
@@ -480,7 +469,6 @@ Synopsis
          ULONG numSlots
  );
 
---------------
 
 GetCurrentBinding
 =================
@@ -537,7 +525,6 @@ See also
      SetCurrentBinding()
 
 
---------------
 
 MakeDosNode
 ===========
@@ -633,7 +620,6 @@ See also
      AddBootNode(), AddDosNode(), dos/MakeDosEntry()
 
 
---------------
 
 ObtainConfigBinding
 ===================
@@ -684,7 +670,6 @@ See also
      ReleaseConfigBinding()
 
 
---------------
 
 ReadExpansionByte
 =================
@@ -698,7 +683,6 @@ Synopsis
          ULONG offset
  );
 
---------------
 
 ReadExpansionRom
 ================
@@ -712,7 +696,6 @@ Synopsis
          struct ConfigDev * configDev
  );
 
---------------
 
 ReleaseConfigBinding
 ====================
@@ -754,7 +737,6 @@ See also
      ObtainCurrentBinding()
 
 
---------------
 
 RemConfigDev
 ============
@@ -796,7 +778,6 @@ See also
      AddConfigDev()
 
 
---------------
 
 SetCurrentBinding
 =================
@@ -853,7 +834,6 @@ See also
      GetCurrentBinding()
 
 
---------------
 
 WriteExpansionByte
 ==================
@@ -868,5 +848,4 @@ Synopsis
          ULONG byte
  );
 
---------------
 

@@ -1,12 +1,12 @@
+=========
+partition
+=========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-=========
-partition
-=========
 
 `AddPartition`_
 `ClosePartitionTable`_
@@ -67,7 +67,6 @@ Result
  PartitionHandle of the new partition; 0 for an error
 
 
---------------
 
 ClosePartitionTable
 ===================
@@ -95,7 +94,6 @@ Inputs
  root - partition table to close
 
 
---------------
 
 CloseRootPartition
 ==================
@@ -122,7 +120,6 @@ Inputs
  ph - root handle created by OpenRootPartition()
 
 
---------------
 
 CreatePartitionTable
 ====================
@@ -166,7 +163,6 @@ Notes
  same as when calling OpenPartitionTable(). Therefore before closing the
  PartitionHandle you should call ClosePartitionTable().
 
---------------
 
 DeletePartition
 ===============
@@ -193,7 +189,6 @@ Inputs
  ph - PartitionHandle to delete
 
 
---------------
 
 DestroyPartitionTable
 =====================
@@ -236,7 +231,6 @@ Notes
  any children PartitionHandles anymore.
 
 
---------------
 
 GetPartitionAttrs
 =================
@@ -268,7 +262,6 @@ Inputs
      PT_POSITION - LONG *           ; position of partition (MBR-PC)
      PT_ACTIVE   - LONG *           ; is partition active
 
---------------
 
 GetPartitionTableAttrs
 ======================
@@ -300,7 +293,6 @@ Inputs
      PTT_RESERVED - LONG *           ; get number of reserved blocks
 
 
---------------
 
 OpenPartitionTable
 ==================
@@ -337,7 +329,6 @@ Result
      0 for success; an error code otherwise.
 
 
---------------
 
 OpenRootPartition
 =================
@@ -373,7 +364,6 @@ Result
  handle to the device
 
 
---------------
 
 QueryPartitionAttrs
 ===================
@@ -407,7 +397,6 @@ Result
  list of NULL-terminated ULONGs with attributes
 
 
---------------
 
 QueryPartitionTableAttrs
 ========================
@@ -441,7 +430,6 @@ Result
  list of NULL-terminated ULONGs with attributes
 
 
---------------
 
 SetPartitionAttrs
 =================
@@ -473,7 +461,6 @@ Inputs
      PT_POSITION - move partition to another position (MBR-PC)
      PT_ACTIVE   - set partition active
 
---------------
 
 SetPartitionTableAttrs
 ======================
@@ -502,7 +489,6 @@ Inputs
  taglist - list of attributes; unknown tags are ignored
 
 
---------------
 
 WritePartitionTable
 ===================
@@ -537,5 +523,4 @@ Result
  0 for success; an error code otherwise
 
 
---------------
 

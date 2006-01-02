@@ -1,12 +1,12 @@
+========
+reqtools
+========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-========
-reqtools
-========
 
 `rtAllocRequestA`_
 `rtChangeReqAttrA`_
@@ -94,7 +94,6 @@ See also
      rtFreeRequest()
 
 
---------------
 
 rtChangeReqAttrA
 ================
@@ -228,7 +227,6 @@ See also
      dos.library/Lock()
 
 
---------------
 
 rtCloseWindowSafely
 ===================
@@ -296,7 +294,6 @@ See also
      intuition.library/CloseWindow()
 
 
---------------
 
 rtEZRequestA
 ============
@@ -607,7 +604,6 @@ See also
      exec.library/RawDoFmt(), rtReqHandlerA()
 
 
---------------
 
 rtFileRequestA
 ==============
@@ -873,7 +869,6 @@ Bugs
      none known
 
 
---------------
 
 rtFontRequestA
 ==============
@@ -1035,7 +1030,6 @@ Bugs
      none known
 
 
---------------
 
 rtFreeFileList
 ==============
@@ -1089,7 +1083,6 @@ See also
      rtFileRequest()
 
 
---------------
 
 rtFreeReqBuffer
 ===============
@@ -1143,7 +1136,6 @@ See also
      rtFileRequest(), rtFontRequest()
 
 
---------------
 
 rtFreeRequest
 =============
@@ -1193,7 +1185,6 @@ See also
      rtAllocRequestA()
 
 
---------------
 
 rtGetLongA
 ==========
@@ -1356,7 +1347,6 @@ Bugs
      none known
 
 
---------------
 
 rtGetStringA
 ============
@@ -1523,7 +1513,6 @@ Bugs
      none known
 
 
---------------
 
 rtGetVScreenSize
 ================
@@ -1578,7 +1567,6 @@ Notes
      This function is for the advanced ReqTools user.
 
 
---------------
 
 rtInternalEnterPasswordA
 ========================
@@ -1744,7 +1732,6 @@ Bugs
      This documentation is intentionally incomplete.
 
 
---------------
 
 rtInternalGetPasswordA
 ======================
@@ -1914,7 +1901,6 @@ Bugs
      This documentation is intentionally incomplete.
 
 
---------------
 
 rtLockPrefs
 ===========
@@ -1934,7 +1920,6 @@ See also
  rtUnlockPrefs()
 
 
---------------
 
 rtLockWindow
 ============
@@ -2002,7 +1987,6 @@ Bugs
      none known
 
 
---------------
 
 rtPaletteRequestA
 =================
@@ -2119,7 +2103,6 @@ Bugs
      none known
 
 
---------------
 
 rtReqHandlerA
 =============
@@ -2259,7 +2242,6 @@ See also
      rtEZRequest() (RT_ReqHandler explanation)
 
 
---------------
 
 rtScreenModeRequestA
 ====================
@@ -2473,7 +2455,6 @@ See also
      exec.library/SetSignal(), Intuition/SA_DisplayID screen tag
 
 
---------------
 
 rtScreenToFrontSafely
 =====================
@@ -2535,7 +2516,6 @@ See also
      intuition.library/ScreenToFront()
 
 
---------------
 
 rtSetReqPosition
 ================
@@ -2624,7 +2604,6 @@ See also
      RT_ReqPos tag
 
 
---------------
 
 rtSetWaitPointer
 ================
@@ -2688,7 +2667,6 @@ See also
      rtEZRequest (RT_WaitPointer and RT_LockWindow tags), rtLockWindow()
 
 
---------------
 
 rtSpread
 ========
@@ -2770,7 +2748,6 @@ Bugs
      none known
 
 
---------------
 
 rtUnlockPrefs
 =============
@@ -2790,7 +2767,6 @@ See also
  rtLockPrefs()
 
 
---------------
 
 rtUnlockWindow
 ==============
@@ -2854,5 +2830,4 @@ See also
      rtLockWindow()
 
 
---------------
 

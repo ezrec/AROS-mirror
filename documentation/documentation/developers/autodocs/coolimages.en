@@ -1,12 +1,12 @@
+==========
+coolimages
+==========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-==========
-coolimages
-==========
 
 `COOL_ObtainImageA`_
 
@@ -24,5 +24,4 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 

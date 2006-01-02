@@ -1,12 +1,12 @@
+======
+locale
+======
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-======
-locale
-======
 
 `CloseCatalog`_
 `CloseLocale`_
@@ -77,7 +77,6 @@ See also
      GetCatalogStr(), OpenCatalog() 
 
 
---------------
 
 CloseLocale
 ===========
@@ -119,7 +118,6 @@ See also
      OpenLocale()
 
 
---------------
 
 ConvToLower
 ===========
@@ -165,7 +163,6 @@ Notes
      support future multi-byte character sets.
 
 
---------------
 
 ConvToUpper
 ===========
@@ -218,7 +215,6 @@ See also
      ConvToLower
 
 
---------------
 
 FormatDate
 ==========
@@ -307,7 +303,6 @@ See also
  ParseDate(), <libraries/locale.h>
 
 
---------------
 
 FormatString
 ============
@@ -323,7 +318,6 @@ Synopsis
          struct Hook   * putCharFunc
  );
 
---------------
 
 GetCatalogStr
 =============
@@ -375,7 +369,6 @@ See also
      OpenCatalog(), CloseCatalog()
 
 
---------------
 
 GetLocaleStr
 ============
@@ -416,7 +409,6 @@ Result
      is valid only as long as the Locale remains open.
 
 
---------------
 
 IsXXXX
 ======
@@ -480,7 +472,6 @@ Notes
      multi-byte character sets.
 
 
---------------
 
 LocDateToStr
 ============
@@ -525,7 +516,6 @@ See also
      dos.library/DateToStr, locale.library/FormatDate.
 
 
---------------
 
 LocDosGetLocalizedString
 ========================
@@ -570,7 +560,6 @@ See also
      dos.library/DosGetString(), dos.library/DosGetLocalizedString()
 
 
---------------
 
 LocRawDoFmt
 ===========
@@ -618,7 +607,6 @@ See also
      RawDoFmt(), FormatString().
 
 
---------------
 
 LocStrToDate
 ============
@@ -663,7 +651,6 @@ See also
      dos.library/StrToDate, locale.library/ParseDate.
 
 
---------------
 
 LocStricmp
 ==========
@@ -709,7 +696,6 @@ See also
      utility.library/Stricmp(), locale.library/StrnCmp().
 
 
---------------
 
 LocStrnicmp
 ===========
@@ -756,7 +742,6 @@ See also
      utility.library/Strnicmp(), locale.library/StrnCmp().
 
 
---------------
 
 LocToLower
 ==========
@@ -801,7 +786,6 @@ See also
      utility.library/ToLower(), locale.library/ConvToLower().
 
 
---------------
 
 LocToUpper
 ==========
@@ -846,7 +830,6 @@ See also
      utility.library/ToUpper(), locale.library/ConvToUpper().
 
 
---------------
 
 OpenCatalogA
 ============
@@ -861,7 +844,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 OpenLocale
 ==========
@@ -917,7 +899,6 @@ See also
      CloseLocale()
 
 
---------------
 
 ParseDate
 =========
@@ -1007,7 +988,6 @@ See also
      FormatDate()
 
 
---------------
 
 RexxHost
 ========
@@ -1027,7 +1007,6 @@ Function
      locale.library rexxhost interface
 
 
---------------
 
 StrConvert
 ==========
@@ -1088,7 +1067,6 @@ See also
      StrnCmp()
 
 
---------------
 
 StrnCmp
 =======
@@ -1169,5 +1147,4 @@ See also
      OpenLocale(), CloseLocale(), StrConvert().
 
 
---------------
 

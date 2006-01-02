@@ -1,12 +1,12 @@
+========
+realtime
+========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-========
-realtime
-========
 
 `CreatePlayerA`_
 `DeletePlayer`_
@@ -133,7 +133,6 @@ See also
  DeletePlayer(), GetPlayerAttrs(), SetPlayerAttrs()
 
 
---------------
 
 DeletePlayer
 ============
@@ -172,7 +171,6 @@ See also
  CreatePlayerA()
 
 
---------------
 
 ExternalSync
 ============
@@ -217,7 +215,6 @@ Result
  the player.
 
 
---------------
 
 FindConductor
 =============
@@ -272,7 +269,6 @@ See also
  NextConductor(), LockRealTime(), UnlockRealTime()
 
 
---------------
 
 GetPlayerAttrsA
 ===============
@@ -327,7 +323,6 @@ See also
  CreatePlayer(), SetPlayerAttrs()
 
 
---------------
 
 LockRealTime
 ============
@@ -374,7 +369,6 @@ See also
  UnlockRealTime()
 
 
---------------
 
 NextConductor
 =============
@@ -432,7 +426,6 @@ See also
  FindConductor(), LockRealTime(), UnlockRealTime()
 
 
---------------
 
 SetConductorState
 =================
@@ -497,7 +490,6 @@ Notes
  cdt_ClockTime of the conductor.
 
 
---------------
 
 SetPlayerAttrsA
 ===============
@@ -551,7 +543,6 @@ See also
  DeletePlayer(), GetPlayerAttrs(), SetPlayerAttrs()
 
 
---------------
 
 UnlockRealTime
 ==============
@@ -588,5 +579,4 @@ See also
  LockRealTime()
 
 
---------------
 

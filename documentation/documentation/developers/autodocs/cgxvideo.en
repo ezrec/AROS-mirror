@@ -1,12 +1,12 @@
+========
+cgxvideo
+========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-========
-cgxvideo
-========
 
 `AttachVLayerTagList`_
 `CreateVLayerHandleTagList`_
@@ -81,7 +81,6 @@ See also
      DetachVLayer()
 
 
---------------
 
 CreateVLayerHandleTagList
 =========================
@@ -154,7 +153,6 @@ Notes
                      enabled.
 
 
---------------
 
 DeleteVLayerHandle
 ==================
@@ -188,7 +186,6 @@ Result
      none
 
 
---------------
 
 DetachVLayer
 ============
@@ -231,7 +228,6 @@ See also
      AttachVLayerTagList()
 
 
---------------
 
 GetVLayerAttr
 =============
@@ -292,7 +288,6 @@ See also
      SetVLayerAttr()
 
 
---------------
 
 LockVLayer
 ==========
@@ -335,7 +330,6 @@ See also
      UnlockVLayer()
 
 
---------------
 
 SetVLayerAttrTagList
 ====================
@@ -398,7 +392,6 @@ See also
      GetVLayerAttr()
 
 
---------------
 
 UnlockVLayer
 ============
@@ -439,5 +432,4 @@ See also
      LockVLayer()
 
 
---------------
 

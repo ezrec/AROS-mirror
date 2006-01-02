@@ -1,12 +1,12 @@
+========
+security
+========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-========
-security
-========
 
 `secAccess_Control`_
 `secAddMonitor`_
@@ -71,7 +71,6 @@ Synopsis
          ULONG prot
  );
 
---------------
 
 secAddMonitor
 =============
@@ -84,7 +83,6 @@ Synopsis
          struct secMonitor * monitor
  );
 
---------------
 
 secAllocGroupInfo
 =================
@@ -96,7 +94,6 @@ Synopsis
  struct muGroupInfo * secAllocGroupInfo(
  );
 
---------------
 
 secAllocUserInfo
 ================
@@ -108,7 +105,6 @@ Synopsis
  struct muUserInfo * secAllocUserInfo(
  );
 
---------------
 
 secCheckPasswd
 ==============
@@ -121,7 +117,6 @@ Synopsis
          struct TagItem * taglist
  );
 
---------------
 
 secContextLocate
 ================
@@ -137,7 +132,6 @@ Synopsis
          ULONG size
  );
 
---------------
 
 secEnumChildren
 ===============
@@ -152,7 +146,6 @@ Synopsis
          LONG size
  );
 
---------------
 
 secFreeExtOwner
 ===============
@@ -165,7 +158,6 @@ Synopsis
          struct secExtOwner * info
  );
 
---------------
 
 secFreeGroupInfo
 ================
@@ -178,7 +170,6 @@ Synopsis
          struct secGroupInfo * info
  );
 
---------------
 
 secFreeUserInfo
 ===============
@@ -191,7 +182,6 @@ Synopsis
          struct secUserInfo * info
  );
 
---------------
 
 secFreeze
 =========
@@ -204,7 +194,6 @@ Synopsis
          struct Task * task
  );
 
---------------
 
 secGetConfigDirLock
 ===================
@@ -216,7 +205,6 @@ Synopsis
  BPTR secGetConfigDirLock(
  );
 
---------------
 
 secGetDefProtection
 ===================
@@ -229,7 +217,6 @@ Synopsis
          struct Task * task
  );
 
---------------
 
 secGetGroupInfo
 ===============
@@ -243,7 +230,6 @@ Synopsis
          ULONG keytype
  );
 
---------------
 
 secGetPasswdDirLock
 ===================
@@ -255,7 +241,6 @@ Synopsis
  BPTR secGetPasswdDirLock(
  );
 
---------------
 
 secGetPktDefProtection
 ======================
@@ -268,7 +253,6 @@ Synopsis
          struct DosPacket * pkt
  );
 
---------------
 
 secGetPktOwner
 ==============
@@ -281,7 +265,6 @@ Synopsis
          struct DosPacket * pkt
  );
 
---------------
 
 secGetRelationshipA
 ===================
@@ -296,7 +279,6 @@ Synopsis
          struct TagItem * taglist
  );
 
---------------
 
 secGetTaskExtOwner
 ==================
@@ -309,7 +291,6 @@ Synopsis
          struct Task * task
  );
 
---------------
 
 secGetTaskOwner
 ===============
@@ -322,7 +303,6 @@ Synopsis
          struct Task * task
  );
 
---------------
 
 secGetUserInfo
 ==============
@@ -336,7 +316,6 @@ Synopsis
          ULONG keytype
  );
 
---------------
 
 secKill
 =======
@@ -349,7 +328,6 @@ Synopsis
          struct Task * task
  );
 
---------------
 
 secLimitDOSSetProtection
 ========================
@@ -362,7 +340,6 @@ Synopsis
          BOOL flag
  );
 
---------------
 
 secLoadPlugin
 =============
@@ -375,7 +352,6 @@ Synopsis
          STRPTR name
  );
 
---------------
 
 secLocksecBase
 ==============
@@ -387,7 +363,6 @@ Synopsis
  struct muPointers * secLocksecBase(
  );
 
---------------
 
 secLoginA
 =========
@@ -400,7 +375,6 @@ Synopsis
          struct TagItem * taglist
  );
 
---------------
 
 secLogout
 =========
@@ -412,7 +386,6 @@ Synopsis
  ULONG secLogout(
  );
 
---------------
 
 secPasswd
 =========
@@ -426,7 +399,6 @@ Synopsis
          STRPTR newpwd
  );
 
---------------
 
 secPluginOperationComplete
 ==========================
@@ -440,7 +412,6 @@ Synopsis
          ULONG result
  );
 
---------------
 
 secRegisterHandler
 ==================
@@ -453,7 +424,6 @@ Synopsis
          struct plugin_ops * ops
  );
 
---------------
 
 secRemMonitor
 =============
@@ -466,7 +436,6 @@ Synopsis
          struct secMonitor * monitor
  );
 
---------------
 
 secSetDefProtectionA
 ====================
@@ -479,7 +448,6 @@ Synopsis
          struct TagItem * taglist
  );
 
---------------
 
 secSetProtection
 ================
@@ -493,7 +461,6 @@ Synopsis
          LONG mask
  );
 
---------------
 
 secUnRegisterHandler
 ====================
@@ -506,7 +473,6 @@ Synopsis
          struct plugin_ops * ops
  );
 
---------------
 
 secUnfreeze
 ===========
@@ -519,7 +485,6 @@ Synopsis
          struct Task * task
  );
 
---------------
 
 secUnloadPlugin
 ===============
@@ -532,7 +497,6 @@ Synopsis
          STRPTR name
  );
 
---------------
 
 secUnlocksecBase
 ================
@@ -545,7 +509,6 @@ Synopsis
          struct secPointers * muP
  );
 
---------------
 
 secUserInfo2ExtOwner
 ====================
@@ -558,7 +521,6 @@ Synopsis
          struct secUserInfo * info
  );
 
---------------
 
 secgetgid
 =========
@@ -570,7 +532,6 @@ Synopsis
  UWORD secgetgid(
  );
 
---------------
 
 secgetpgid
 ==========
@@ -583,7 +544,6 @@ Synopsis
          int pid
  );
 
---------------
 
 secgetuid
 =========
@@ -595,7 +555,6 @@ Synopsis
  UWORD secgetuid(
  );
 
---------------
 
 secsetegid
 ==========
@@ -608,7 +567,6 @@ Synopsis
          UWORD gid
  );
 
---------------
 
 secseteuid
 ==========
@@ -621,7 +579,6 @@ Synopsis
          UWORD uid
  );
 
---------------
 
 secsetgid
 =========
@@ -634,7 +591,6 @@ Synopsis
          UWORD gid
  );
 
---------------
 
 secsetreuid
 ===========
@@ -648,7 +604,6 @@ Synopsis
          int euid
  );
 
---------------
 
 secsetuid
 =========
@@ -661,5 +616,4 @@ Synopsis
          UWORD uid
  );
 
---------------
 

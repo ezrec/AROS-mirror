@@ -1,12 +1,12 @@
+=======
+utility
+=======
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-=======
-utility
-=======
 
 `AddNamedObject`_
 `AllocNamedObjectA`_
@@ -113,7 +113,6 @@ See also
      utility/name.h, RemNamedObject()
 
 
---------------
 
 AllocNamedObjectA
 =================
@@ -192,7 +191,6 @@ See also
      FreeNamedObject()
 
 
---------------
 
 AllocateTagItems
 ================
@@ -261,7 +259,6 @@ See also
      FreeTagsItems()
 
 
---------------
 
 Amiga2Date
 ==========
@@ -302,7 +299,6 @@ Result
      The ClockData structure will contain the converted time values.
 
 
---------------
 
 ApplyTagChanges
 ===============
@@ -316,7 +312,6 @@ Synopsis
          struct TagItem * changelist
  );
 
---------------
 
 AttemptRemNamedObject
 =====================
@@ -367,7 +362,6 @@ See also
      utility/name.h RemNamedObject(), AddNamedObject()
 
 
---------------
 
 CallHookPkt
 ===========
@@ -434,7 +428,6 @@ See also
      amiga.lib/CallHook()
 
 
---------------
 
 CheckDate
 =========
@@ -501,7 +494,6 @@ See also
      Amiga2Date(), Date2Amiga()
 
 
---------------
 
 CloneTagItems
 =============
@@ -561,7 +553,6 @@ See also
      AllocateTagItems(), FreeTagItems(), RefreshTagItemClones()
 
 
---------------
 
 Date2Amiga
 ==========
@@ -603,7 +594,6 @@ See also
      Amiga2Date(), CheckData()
 
 
---------------
 
 FilterTagChanges
 ================
@@ -658,7 +648,6 @@ See also
      ApplyTagChanges()
 
 
---------------
 
 FilterTagItems
 ==============
@@ -716,7 +705,6 @@ See also
      TagInArray()
 
 
---------------
 
 FindNamedObject
 ===============
@@ -783,7 +771,6 @@ See also
      ReleaseNamedObject()
 
 
---------------
 
 FindTagItem
 ===========
@@ -797,7 +784,6 @@ Synopsis
          const struct TagItem * tagList
  );
 
---------------
 
 FreeNamedObject
 ===============
@@ -839,7 +825,6 @@ See also
      utility/name.h, utility/AllocNamedObject()
 
 
---------------
 
 FreeTagItems
 ============
@@ -905,7 +890,6 @@ See also
      utility/tagitem.h, utility/AllocateTagItems()
 
 
---------------
 
 GetTagData
 ==========
@@ -976,7 +960,6 @@ See also
      utility/tagitem.h
 
 
---------------
 
 GetUniqueID
 ===========
@@ -1003,7 +986,6 @@ Result
      an unsigned long id
 
 
---------------
 
 MapTags
 =======
@@ -1041,7 +1023,6 @@ Result
      None.
 
 
---------------
 
 NamedObjectName
 ===============
@@ -1094,7 +1075,6 @@ See also
      utility/name.h
 
 
---------------
 
 NextTagItem
 ===========
@@ -1151,7 +1131,6 @@ Notes
        list and go on with the current one".
 
 
---------------
 
 PackBoolTags
 ============
@@ -1218,7 +1197,6 @@ See also
      GetTagData(), FindTagItem(), NextTagItem()
 
 
---------------
 
 PackStructureTags
 =================
@@ -1268,7 +1246,6 @@ See also
      UnpackStructureTags()
 
 
---------------
 
 RefreshTagItemClones
 ====================
@@ -1349,7 +1326,6 @@ See also
      CloneTagItems()
 
 
---------------
 
 ReleaseNamedObject
 ==================
@@ -1419,7 +1395,6 @@ See also
      utility/name.h, utility/FindNamedObject()
 
 
---------------
 
 RemNamedObject
 ==============
@@ -1487,7 +1462,6 @@ See also
      AttemptRemNamedObject(), AddNamedObject()
 
 
---------------
 
 SDivMod32
 =========
@@ -1558,7 +1532,6 @@ See also
      SMult32(), SMult64(), UDivMod32(), UMult32(), UMult64()
 
 
---------------
 
 SMult32
 =======
@@ -1636,7 +1609,6 @@ See also
      UMult32(), UMult64(), SMult64()
 
 
---------------
 
 SMult64
 =======
@@ -1694,7 +1666,6 @@ See also
      utility/SMult32(), utility/UMult32(), utility/UMult64()
 
 
---------------
 
 Stricmp
 =======
@@ -1732,7 +1703,6 @@ Result
      >0  if string1 >  string2
 
 
---------------
 
 Strnicmp
 ========
@@ -1772,7 +1742,6 @@ Result
      >0  if string1 >  string2
 
 
---------------
 
 TagInArray
 ==========
@@ -1821,7 +1790,6 @@ See also
      <utility/tagitem.h>, FilterTagItems()
 
 
---------------
 
 ToLower
 =======
@@ -1855,7 +1823,6 @@ Result
      Equivalent lower case character.
 
 
---------------
 
 ToUpper
 =======
@@ -1922,7 +1889,6 @@ See also
      utility/ToLower()
 
 
---------------
 
 UDivMod32
 =========
@@ -1993,7 +1959,6 @@ See also
      SDivMod32(), SMult32(), SMult64(), UMult32(), UMult64()
 
 
---------------
 
 UMult32
 =======
@@ -2065,7 +2030,6 @@ See also
      utility/SMult32(), utility/UMult64(), utility/SMult64()
 
 
---------------
 
 UMult64
 =======
@@ -2119,7 +2083,6 @@ See also
      SMult32(), UMult32(), SMult64()
 
 
---------------
 
 UnpackStructureTags
 ===================
@@ -2178,5 +2141,4 @@ See also
      PackStructureTags(), FindTagItem()
 
 
---------------
 

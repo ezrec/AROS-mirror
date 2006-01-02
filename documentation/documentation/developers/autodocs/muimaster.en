@@ -1,12 +1,12 @@
+=========
+muimaster
+=========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-=========
-muimaster
-=========
 
 `MUI_AddClipRegion`_
 `MUI_AddClipping`_
@@ -55,7 +55,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_AddClipping
 ===============
@@ -79,7 +78,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_AllocAslRequest
 ===================
@@ -100,7 +98,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_AslRequest
 ==============
@@ -121,7 +118,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_BeginRefresh
 ================
@@ -142,7 +138,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_CreateCustomClass
 =====================
@@ -166,7 +161,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_DeleteCustomClass
 =====================
@@ -186,7 +180,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_DisposeObject
 =================
@@ -206,7 +199,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_EndRefresh
 ==============
@@ -227,7 +219,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_Error
 =========
@@ -246,7 +237,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_FreeAslRequest
 ==================
@@ -266,7 +256,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_FreeClass
 =============
@@ -314,7 +303,6 @@ See also
      MUI_GetClass(), MUI_CreateCustomClass(), MUI_DeleteCustomClass()
 
 
---------------
 
 MUI_GetClass
 ============
@@ -372,7 +360,6 @@ See also
 
 
 
---------------
 
 MUI_Layout
 ==========
@@ -397,7 +384,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_MakeObjectA
 ===============
@@ -418,7 +404,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_NewObjectA
 ==============
@@ -439,7 +424,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_ObtainPen
 =============
@@ -461,7 +445,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_Redraw
 ==========
@@ -482,7 +465,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_RejectIDCMP
 ===============
@@ -503,7 +485,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_ReleasePen
 ==============
@@ -524,7 +505,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_RemoveClipRegion
 ====================
@@ -554,7 +534,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_RemoveClipping
 ==================
@@ -575,7 +554,6 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 
 MUI_RequestA
 ============
@@ -594,7 +572,6 @@ Synopsis
          APTR params
  );
 
---------------
 
 MUI_RequestIDCMP
 ================
@@ -636,7 +613,6 @@ Notes
  event handling model (introduced in MUI V16).
 
 
---------------
 
 MUI_SetError
 ============
@@ -656,5 +632,4 @@ Bugs
      The function itself is a bug ;-) Remove it!
 
 
---------------
 

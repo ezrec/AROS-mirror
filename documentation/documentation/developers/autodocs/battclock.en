@@ -1,12 +1,12 @@
+=========
+battclock
+=========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-=========
-battclock
-=========
 
 `ReadBattClock`_
 `ResetBattClock`_
@@ -50,7 +50,6 @@ See also
      WriteBattClock, ResetBattClock
 
 
---------------
 
 ResetBattClock
 ==============
@@ -99,7 +98,6 @@ See also
      ReadBattClock, WriteBattClock
 
 
---------------
 
 WriteBattClock
 ==============
@@ -149,5 +147,4 @@ See also
      ReadBattClock, ResetBattClock
 
 
---------------
 

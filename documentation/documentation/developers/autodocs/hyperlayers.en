@@ -1,12 +1,12 @@
+===========
+hyperlayers
+===========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-===========
-hyperlayers
-===========
 
 `BeginUpdate`_
 `BehindLayer`_
@@ -97,7 +97,6 @@ See also
    EndUpdate()
 
 
---------------
 
 BehindLayer
 ===========
@@ -139,7 +138,6 @@ Result
     FALSE - layer could not be moved (probably out of memory)
 
 
---------------
 
 ChangeLayerShape
 ================
@@ -189,7 +187,6 @@ Result
     Pointer to the previously installed region.
 
 
---------------
 
 ChangeLayerVisibility
 =====================
@@ -228,7 +225,6 @@ Result
     FALSE - layer could not be changed to new state
 
 
---------------
 
 CollectPixelsLayer
 ==================
@@ -267,7 +263,6 @@ Inputs
     
 
 
---------------
 
 CreateBehindHookLayer
 =====================
@@ -341,7 +336,6 @@ Notes
      the given bitmap (, yet).
 
 
---------------
 
 CreateBehindLayer
 =================
@@ -361,7 +355,6 @@ Synopsis
          struct BitMap     * bm2
  );
 
---------------
 
 CreateLayerTagList
 ==================
@@ -437,7 +430,6 @@ Result
      The shape is automatically freed when the layer is deleted.
      
 
---------------
 
 CreateUpfrontHookLayer
 ======================
@@ -510,7 +502,6 @@ Notes
      the given bitmap (, yet).
 
 
---------------
 
 CreateUpfrontLayer
 ==================
@@ -530,7 +521,6 @@ Synopsis
          struct BitMap     * bm2
  );
 
---------------
 
 DeleteLayer
 ===========
@@ -570,7 +560,6 @@ Result
      FALSE - layer could not be delete (out of memory) 
 
 
---------------
 
 DisposeLayerInfo
 ================
@@ -583,7 +572,6 @@ Synopsis
          struct Layer_Info * li
  );
 
---------------
 
 DoHookClipRects
 ===============
@@ -613,7 +601,6 @@ Inputs
              common area are allowed.
 
 
---------------
 
 EndUpdate
 =========
@@ -659,7 +646,6 @@ See also
       BeginUpdate()
 
 
---------------
 
 FattenLayerInfo
 ===============
@@ -672,7 +658,6 @@ Synopsis
          struct Layer_Info * li
  );
 
---------------
 
 GetFirstFamilyMember
 ====================
@@ -712,7 +697,6 @@ Result
      has no children.
      
 
---------------
 
 InitLayers
 ==========
@@ -754,7 +738,6 @@ See also
      NewLayerInfo
 
 
---------------
 
 InstallClipRegion
 =================
@@ -788,7 +771,6 @@ Inputs
     region - pointer to region to be clipped against.
 
 
---------------
 
 InstallLayerHook
 ================
@@ -818,7 +800,6 @@ Inputs
      hook  - pointer to backfill hook to be installed
 
 
---------------
 
 InstallLayerInfoHook
 ====================
@@ -867,7 +848,6 @@ Notes
      from those areas.
 
 
---------------
 
 IsFrontmostLayer
 ================
@@ -911,7 +891,6 @@ Result
     FALSE - layer is not frontmost layer within its priority
 
 
---------------
 
 IsLayerHiddenBySibling
 ======================
@@ -952,7 +931,6 @@ Result
     FALSE - layer is fully visible
 
 
---------------
 
 IsLayerVisible
 ==============
@@ -987,7 +965,6 @@ Result
     FALSE - layer is invisible
 
 
---------------
 
 LockLayer
 =========
@@ -1018,7 +995,6 @@ Inputs
      layer - pointer to layer to be locked
 
 
---------------
 
 LockLayerInfo
 =============
@@ -1031,7 +1007,6 @@ Synopsis
          struct Layer_Info * li
  );
 
---------------
 
 LockLayers
 ==========
@@ -1060,7 +1035,6 @@ Inputs
      li - pointer to a Layer_Info structure
 
 
---------------
 
 MoveLayer
 =========
@@ -1103,7 +1077,6 @@ Result
               FALSE an error occurred (out of memory)
 
 
---------------
 
 MoveLayerInFrontOf
 ==================
@@ -1149,7 +1122,6 @@ Result
      FALSE - layer could not be moved. (probably out of memory)
 
 
---------------
 
 MoveSizeLayer
 =============
@@ -1196,7 +1168,6 @@ Result
               FALSE an error occurred (out of memory)
 
 
---------------
 
 NewLayerInfo
 ============
@@ -1208,7 +1179,6 @@ Synopsis
  struct Layer_Info * NewLayerInfo(
  );
 
---------------
 
 ScaleLayer
 ==========
@@ -1247,7 +1217,6 @@ Result
     TRUE if everything went alright, FALSE otherwise
 
 
---------------
 
 ScrollLayer
 ===========
@@ -1293,7 +1262,6 @@ Bugs
    not tested
 
 
---------------
 
 SizeLayer
 =========
@@ -1340,7 +1308,6 @@ Result
      FALSE - error occurred (out of memory)
 
 
---------------
 
 SortLayerCR
 ===========
@@ -1379,7 +1346,6 @@ Result
      The layer->ClipRect pointer now points to a sorted list of ClipRects.
 
 
---------------
 
 SwapBitsRastPortClipRect
 ========================
@@ -1393,7 +1359,6 @@ Synopsis
          struct ClipRect * cr
  );
 
---------------
 
 ThinLayerInfo
 =============
@@ -1406,7 +1371,6 @@ Synopsis
          struct Layer_Info * li
  );
 
---------------
 
 UnlockLayer
 ===========
@@ -1435,7 +1399,6 @@ Inputs
      layer - pointer to layer to be unlocked
 
 
---------------
 
 UnlockLayerInfo
 ===============
@@ -1448,7 +1411,6 @@ Synopsis
          struct Layer_Info * li
  );
 
---------------
 
 UnlockLayers
 ============
@@ -1476,7 +1438,6 @@ Inputs
      li - pointer to a Layer_Info structure
 
 
---------------
 
 UpfrontLayer
 ============
@@ -1526,7 +1487,6 @@ See also
      CreateBehindLayer() CreateBehindHookLayer()
 
 
---------------
 
 WhichLayer
 ==========
@@ -1558,5 +1518,4 @@ Inputs
      y  - y-coordinate
 
 
---------------
 

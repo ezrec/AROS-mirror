@@ -1,12 +1,12 @@
+========
+gadtools
+========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-========
-gadtools
-========
 
 `CreateContext`_
 `CreateGadgetA`_
@@ -66,7 +66,6 @@ Result
      A point to the first gadget or NULL, if there was an error.
 
 
---------------
 
 CreateGadgetA
 =============
@@ -117,7 +116,6 @@ See also
      CreateContext(), FreeGadgets(), <libraries/gadtools.h>
 
 
---------------
 
 CreateMenusA
 ============
@@ -171,7 +169,6 @@ See also
      FreeMenus(), LayoutMenusA()
 
 
---------------
 
 DrawBevelBoxA
 =============
@@ -217,7 +214,6 @@ Notes
      DrawBevelBoxA() might modify the rastport to guarantee fast drawing.
 
 
---------------
 
 FreeGadgets
 ===========
@@ -251,7 +247,6 @@ See also
      CreateGadgetA()
 
 
---------------
 
 FreeMenus
 =========
@@ -285,7 +280,6 @@ See also
      CreateMenusA()
 
 
---------------
 
 FreeVisualInfo
 ==============
@@ -320,7 +314,6 @@ See also
      GetVisualInfo()
 
 
---------------
 
 GT_BeginRefresh
 ===============
@@ -376,7 +369,6 @@ See also
      GT_EndRefresh(), intuition.library/BeginRefresh()
 
 
---------------
 
 GT_EndRefresh
 =============
@@ -413,7 +405,6 @@ See also
      GT_BeginRefresh(), intuition.library/EndRefresh()
 
 
---------------
 
 GT_FilterIMsg
 =============
@@ -460,7 +451,6 @@ See also
      GT_PostFilterIMsg(), GT_GetIMsg(), intuition.library/ReplyMsg()
 
 
---------------
 
 GT_GetGadgetAttrsA
 ==================
@@ -509,7 +499,6 @@ See also
      GT_SetGadgetAttrsA(), intuition.library/GetAttr()
 
 
---------------
 
 GT_GetIMsg
 ==========
@@ -553,7 +542,6 @@ See also
      GT_ReplyIMsg(), exec.library/GetMsg()
 
 
---------------
 
 GT_PostFilterIMsg
 =================
@@ -594,7 +582,6 @@ See also
      GT_FilterIMsg()
 
 
---------------
 
 GT_RefreshWindow
 ================
@@ -625,7 +612,6 @@ Inputs
      req - Not used. Provide NULL for now.
 
 
---------------
 
 GT_ReplyIMsg
 ============
@@ -659,7 +645,6 @@ See also
      GT_GetIMsg(), exec.library/ReplyMsg()
 
 
---------------
 
 GT_SetGadgetAttrsA
 ==================
@@ -708,7 +693,6 @@ See also
      GT_GetGadgetAttrsA(), intuition.library/SetGadgetAttrsA()
 
 
---------------
 
 GetVisualInfoA
 ==============
@@ -754,7 +738,6 @@ See also
      FreeVisualInfo()
 
 
---------------
 
 LayoutMenuItemsA
 ================
@@ -792,7 +775,6 @@ See also
      LayoutMenusA(), GetVisualInfoA()
 
 
---------------
 
 LayoutMenusA
 ============
@@ -830,5 +812,4 @@ See also
    CreateMenusA() LayoutMenuItemsA() GetVisualInfoA()
 
 
---------------
 

@@ -1,12 +1,12 @@
+========
+lowlevel
+========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-========
-lowlevel
-========
 
 `AddKBInt`_
 `AddTimerInt`_
@@ -36,7 +36,6 @@ Synopsis
          APTR intData
  );
 
---------------
 
 AddTimerInt
 ===========
@@ -50,7 +49,6 @@ Synopsis
          APTR intData
  );
 
---------------
 
 AddVBlankInt
 ============
@@ -102,7 +100,6 @@ See also
  RemVBlankInt()
 
 
---------------
 
 ElapsedTime
 ===========
@@ -115,7 +112,6 @@ Synopsis
          struct EClockVal * context
  );
 
---------------
 
 GetKey
 ======
@@ -127,7 +123,6 @@ Synopsis
  ULONG GetKey(
  );
 
---------------
 
 GetLanguageSelection
 ====================
@@ -139,7 +134,6 @@ Synopsis
  ULONG GetLanguageSelection(
  );
 
---------------
 
 QueryKeys
 =========
@@ -153,7 +147,6 @@ Synopsis
          UBYTE arraySize
  );
 
---------------
 
 ReadJoyPort
 ===========
@@ -166,7 +159,6 @@ Synopsis
          ULONG port
  );
 
---------------
 
 RemKBInt
 ========
@@ -179,7 +171,6 @@ Synopsis
          APTR intHandle
  );
 
---------------
 
 RemTimerInt
 ===========
@@ -192,7 +183,6 @@ Synopsis
          APTR intHandle
  );
 
---------------
 
 RemVBlankInt
 ============
@@ -231,7 +221,6 @@ See also
  AddVBlankInt()
 
 
---------------
 
 StartTimerInt
 =============
@@ -246,7 +235,6 @@ Synopsis
          BOOL continuous
  );
 
---------------
 
 StopTimerInt
 ============
@@ -259,5 +247,4 @@ Synopsis
          APTR intHandle
  );
 
---------------
 

@@ -1,12 +1,12 @@
+====
+misc
+====
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-====
-misc
-====
 
 `AllocMiscResource`_
 `FreeMiscResource`_
@@ -59,7 +59,6 @@ See also
  FreeMiscResource()
 
 
---------------
 
 FreeMiscResource
 ================
@@ -103,5 +102,4 @@ See also
  AllocMiscResource()
 
 
---------------
 

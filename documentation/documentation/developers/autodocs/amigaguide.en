@@ -1,12 +1,12 @@
+==========
+amigaguide
+==========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-==========
-amigaguide
-==========
 
 `AddAmigaGuideHostA`_
 `AmigaGuideSignal`_
@@ -42,7 +42,6 @@ Synopsis
          struct TagItem * attrs
  );
 
---------------
 
 AmigaGuideSignal
 ================
@@ -55,7 +54,6 @@ Synopsis
          AMIGAGUIDECONTEXT handle
  );
 
---------------
 
 CloseAmigaGuide
 ===============
@@ -68,7 +66,6 @@ Synopsis
          AMIGAGUIDECONTEXT handle
  );
 
---------------
 
 ExpungeXRef
 ===========
@@ -80,7 +77,6 @@ Synopsis
  void ExpungeXRef(
  );
 
---------------
 
 GetAmigaGuideAttr
 =================
@@ -95,7 +91,6 @@ Synopsis
          ULONG * storage
  );
 
---------------
 
 GetAmigaGuideMsg
 ================
@@ -108,7 +103,6 @@ Synopsis
          AMIGAGUIDECONTEXT handle
  );
 
---------------
 
 GetAmigaGuideString
 ===================
@@ -121,7 +115,6 @@ Synopsis
          ULONG id
  );
 
---------------
 
 LoadXRef
 ========
@@ -135,7 +128,6 @@ Synopsis
          STRPTR name
  );
 
---------------
 
 LockAmigaGuideBase
 ==================
@@ -148,7 +140,6 @@ Synopsis
          AMIGAGUIDECONTEXT handle
  );
 
---------------
 
 OpenAmigaGuideA
 ===============
@@ -162,7 +153,6 @@ Synopsis
          struct TagItem * attrs
  );
 
---------------
 
 OpenAmigaGuideAsyncA
 ====================
@@ -176,7 +166,6 @@ Synopsis
          struct TagItem * attrs
  );
 
---------------
 
 RemoveAmigaGuideHostA
 =====================
@@ -190,7 +179,6 @@ Synopsis
          struct TagItem * attrs
  );
 
---------------
 
 ReplyAmigaGuideMsg
 ==================
@@ -203,7 +191,6 @@ Synopsis
          struct AmigaGuideMsg * msg
  );
 
---------------
 
 SendAmigaGuideCmdA
 ==================
@@ -218,7 +205,6 @@ Synopsis
          struct TagItem * attrs
  );
 
---------------
 
 SendAmigaGuideContextA
 ======================
@@ -232,7 +218,6 @@ Synopsis
          struct TagItem * attrs
  );
 
---------------
 
 SetAmigaGuideAttrsA
 ===================
@@ -246,7 +231,6 @@ Synopsis
          struct TagItem * attrs
  );
 
---------------
 
 SetAmigaGuideContextA
 =====================
@@ -261,7 +245,6 @@ Synopsis
          struct TagItem * attrs
  );
 
---------------
 
 UnlockAmigaGuideBase
 ====================
@@ -274,5 +257,4 @@ Synopsis
          LONG key
  );
 
---------------
 

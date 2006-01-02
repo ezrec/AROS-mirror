@@ -1,12 +1,12 @@
+=====
+timer
+=====
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-=====
-timer
-=====
 
 `AddTime`_
 `BeginIO`_
@@ -68,7 +68,6 @@ See also
      SubTime(), CmpTime()
 
 
---------------
 
 BeginIO
 =======
@@ -113,7 +112,6 @@ See also
      exec/Abort(), exec/SendIO(), exec/DoIO()
 
 
---------------
 
 CmpTime
 =======
@@ -173,7 +171,6 @@ See also
      AddTime(), SubTime()
 
 
---------------
 
 GetSysTime
 ==========
@@ -222,7 +219,6 @@ See also
      TR_GETSYSTIME, TR_SETSYSTIME
 
 
---------------
 
 ReadEClock
 ==========
@@ -267,7 +263,6 @@ Notes
      This function is safe to call from interrupts.
 
 
---------------
 
 SubTime
 =======
@@ -325,5 +320,4 @@ See also
      AddTime(), CmpTime()
 
 
---------------
 

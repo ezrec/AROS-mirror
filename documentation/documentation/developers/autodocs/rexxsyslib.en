@@ -1,12 +1,12 @@
+==========
+rexxsyslib
+==========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-==========
-rexxsyslib
-==========
 
 `ClearRexxMsg`_
 `CreateArgstring`_
@@ -63,7 +63,6 @@ See also
       FillRexxMsg(), DeleteArgstring()
 
 
---------------
 
 CreateArgstring
 ===============
@@ -116,7 +115,6 @@ See also
      DeleteArgstring(), LengthArgstring()
 
 
---------------
 
 CreateRexxMsg
 =============
@@ -164,7 +162,6 @@ See also
      DeleteRexxMsg(), IsRexxMsg(), FillRexxMsg(), ClearRexxMsg()
 
 
---------------
 
 DeleteArgstring
 ===============
@@ -206,7 +203,6 @@ See also
      CreateArgstring()
 
 
---------------
 
 DeleteRexxMsg
 =============
@@ -247,7 +243,6 @@ See also
       CreateRexxMsg()
 
 
---------------
 
 FillRexxMsg
 ===========
@@ -315,7 +310,6 @@ See also
      ClearRexxMsg(), CreateRexxMsg(), CreateArgstring()
 
 
---------------
 
 IsRexxMsg
 =========
@@ -356,7 +350,6 @@ See also
      CreateRexxMsg
 
 
---------------
 
 LengthArgstring
 ===============
@@ -398,7 +391,6 @@ See also
      CreateArgstring()
 
 
---------------
 
 LockRexxBase
 ============
@@ -411,7 +403,6 @@ Synopsis
          ULONG resource
  );
 
---------------
 
 UnlockRexxBase
 ==============
@@ -424,5 +415,4 @@ Synopsis
          ULONG resource
  );
 
---------------
 

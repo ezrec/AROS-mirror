@@ -1,12 +1,12 @@
+======
+boopsi
+======
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-======
-boopsi
-======
 
 `AddClass`_
 `DisposeObject`_
@@ -78,7 +78,6 @@ See also
      Programming System for Intuition" and "boopsi Class Reference"
 
 
---------------
 
 DisposeObject
 =============
@@ -138,7 +137,6 @@ See also
      "boopsi Class Reference" Dokument.
 
 
---------------
 
 FindClass
 =========
@@ -151,7 +149,6 @@ Synopsis
          ClassID classID
  );
 
---------------
 
 FreeClass
 =========
@@ -233,7 +230,6 @@ Notes
      *Always* calls RemoveClass().
 
 
---------------
 
 GetAttr
 =======
@@ -296,7 +292,6 @@ See also
 
 
 
---------------
 
 MakeClass
 =========
@@ -370,7 +365,6 @@ Notes
      of classID is at least the same as the lifetime of the class itself.
 
 
---------------
 
 NewObjectA
 ==========
@@ -433,7 +427,6 @@ See also
      "boopsi Class Reference" Dokument.
 
 
---------------
 
 NextObject
 ==========
@@ -481,7 +474,6 @@ See also
      "boopsi Class Reference" Dokument.
 
 
---------------
 
 RemoveClass
 ===========
@@ -526,7 +518,6 @@ See also
      Dokument.
 
 
---------------
 
 SetAttrsA
 =========
@@ -581,5 +572,4 @@ See also
      "boopsi Class Reference" Dokument.
 
 
---------------
 

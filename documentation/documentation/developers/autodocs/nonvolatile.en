@@ -1,12 +1,12 @@
+===========
+nonvolatile
+===========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-===========
-nonvolatile
-===========
 
 `DeleteNV`_
 `FreeNVData`_
@@ -69,7 +69,6 @@ Notes
  '/' or ':'.
 
 
---------------
 
 FreeNVData
 ==========
@@ -108,7 +107,6 @@ See also
  GetCopyNV(), GetNVInfo(), GetNVList()
 
 
---------------
 
 GetCopyNV
 =========
@@ -159,7 +157,6 @@ See also
  FreeNVData(), <libraries/nonvolatile.h>
 
 
---------------
 
 GetNVInfo
 =========
@@ -206,7 +203,6 @@ See also
  FreeNVData(), StoreNV(), <libraries/nonvolatile.h>
 
 
---------------
 
 GetNVList
 =========
@@ -266,7 +262,6 @@ See also
  FreeNVData(), SetNVProtection(), <libraries/nonvolatile.h>
 
 
---------------
 
 SetNVProtection
 ===============
@@ -328,7 +323,6 @@ See also
  GetNVList(), <libraries/nonvolatile.h>
 
 
---------------
 
 StoreNV
 =======
@@ -396,5 +390,4 @@ See also
  GetCopyNV(), GetNVInfo()
 
 
---------------
 

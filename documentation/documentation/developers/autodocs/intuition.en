@@ -1,12 +1,12 @@
+=========
+intuition
+=========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-=========
-intuition
-=========
 
 `ActivateGadget`_
 `ActivateWindow`_
@@ -183,7 +183,6 @@ Inputs
      NULL if it is not a requester gadget
 
 
---------------
 
 ActivateWindow
 ==============
@@ -238,7 +237,6 @@ See also
  ModiyIDCMP(), OpenWindow(), CloseWindow()
 
 
---------------
 
 AddClass
 ========
@@ -297,7 +295,6 @@ See also
  Programming System for Intuition" and "boopsi Class Reference"
 
 
---------------
 
 AddGList
 ========
@@ -358,7 +355,6 @@ See also
  RefreshGadgets(), RefresgGList()
 
 
---------------
 
 AddGadget
 =========
@@ -407,7 +403,6 @@ Notes
  until you refresh the window.
 
 
---------------
 
 AllocIntuiMessage
 =================
@@ -442,7 +437,6 @@ Result
  an allocated IntuiMessage structure. Must be freed with FreeIntuiMessage
 
 
---------------
 
 AllocRemember
 =============
@@ -480,7 +474,6 @@ Result
  Pointer to the allocated memory or NULL.
 
 
---------------
 
 AllocScreenBuffer
 =================
@@ -559,7 +552,6 @@ See also
  FreeScreenBuffer(), ChangeScreenBuffer()
 
 
---------------
 
 AlohaWorkbench
 ==============
@@ -620,7 +612,6 @@ See also
      workbench.library/RegisterWorkbench()
 
 
---------------
 
 AutoRequest
 ===========
@@ -640,7 +631,6 @@ Synopsis
          ULONG height
  );
 
---------------
 
 BeginRefresh
 ============
@@ -653,7 +643,6 @@ Synopsis
          struct Window * window
  );
 
---------------
 
 BuildEasyRequestArgs
 ====================
@@ -709,7 +698,6 @@ See also
  EasyRequestArgs(), SysReqHandler(), FreeSysRequest()
 
 
---------------
 
 BuildEasyRequestArgs
 ====================
@@ -765,7 +753,6 @@ See also
      EasyRequestArgs(), SysReqHandler(), FreeSysRequest()
 
 
---------------
 
 BuildSysRequest
 ===============
@@ -804,7 +791,6 @@ See also
  Request(), AutoRequest(), EasyRequest(), BuildEasyRequestArgs()
 
 
---------------
 
 BuildSysRequest
 ===============
@@ -843,7 +829,6 @@ See also
      Request(), AutoRequest(), EasyRequest(), BuildEasyRequestArgs()
 
 
---------------
 
 ChangeDecorationA
 =================
@@ -859,7 +844,6 @@ Synopsis
          struct TagItem * tagList
  );
 
---------------
 
 ChangeScreenBuffer
 ==================
@@ -919,7 +903,6 @@ See also
  graphics.library/ChangeVPBitMap()
 
 
---------------
 
 ChangeWindowBox
 ===============
@@ -960,7 +943,6 @@ Notes
  program depends on the new size.
 
 
---------------
 
 ChangeWindowShape
 =================
@@ -989,7 +971,6 @@ Inputs
  window - The window to affect.
 
 
---------------
 
 ClearDMRequest
 ==============
@@ -1016,7 +997,6 @@ See also
  SetDMRequest(), Request()
 
 
---------------
 
 ClearMenuStrip
 ==============
@@ -1029,7 +1009,6 @@ Synopsis
          struct Window * window
  );
 
---------------
 
 ClearPointer
 ============
@@ -1066,7 +1045,6 @@ See also
  SetPointer()
 
 
---------------
 
 CloseScreen
 ===========
@@ -1104,7 +1082,6 @@ Result
  windows left on the screen (which means the screen is not closed).
 
 
---------------
 
 CloseWindow
 ===========
@@ -1154,7 +1131,6 @@ See also
  OpenWindow(), OpenWindowTags()
 
 
---------------
 
 CloseWorkBench
 ==============
@@ -1186,7 +1162,6 @@ See also
  OpenWorkBench()
 
 
---------------
 
 CurrentTime
 ===========
@@ -1239,7 +1214,6 @@ See also
  timer.device/TR_GETSYSTIME
 
 
---------------
 
 DisplayAlert
 ============
@@ -1288,7 +1262,6 @@ Result
  mouse button or if the alert could not be posted.
 
 
---------------
 
 DisplayBeep
 ===========
@@ -1318,7 +1291,6 @@ Inputs
      If NULL all screens will flash.
 
 
---------------
 
 DisposeObject
 =============
@@ -1374,7 +1346,6 @@ See also
  "boopsi Class Reference" Dokument.
 
 
---------------
 
 DoGadgetMethodA
 ===============
@@ -1418,7 +1389,6 @@ Result
  gadget.
 
 
---------------
 
 DoubleClick
 ===========
@@ -1457,7 +1427,6 @@ Result
  otherwise.
 
 
---------------
 
 DrawBorder
 ==========
@@ -1530,7 +1499,6 @@ Example
  DrawBorder (rp, &demo, 50, -50);
 
 
---------------
 
 DrawImage
 =========
@@ -1569,7 +1537,6 @@ Result
  None.
 
 
---------------
 
 DrawImageState
 ==============
@@ -1621,7 +1588,6 @@ Notes
  DrawImageState(), handles both boopsi and conventional images.
 
 
---------------
 
 DumpIntuiState
 ==============
@@ -1647,7 +1613,6 @@ Result
      none
 
 
---------------
 
 EasyRequestArgs
 ===============
@@ -1704,7 +1669,6 @@ See also
  BuildEasyRequestArgs()
 
 
---------------
 
 EndRefresh
 ==========
@@ -1718,7 +1682,6 @@ Synopsis
          BOOL complete
  );
 
---------------
 
 EndRequest
 ==========
@@ -1762,7 +1725,6 @@ See also
  InitRequester(), Request()
 
 
---------------
 
 EraseImage
 ==========
@@ -1809,7 +1771,6 @@ See also
  DrawImage(), DrawImageState()
 
 
---------------
 
 FindClass
 =========
@@ -1822,7 +1783,6 @@ Synopsis
          ClassID classID
  );
 
---------------
 
 FreeClass
 =========
@@ -1904,7 +1864,6 @@ Notes
  *Always* calls RemoveClass().
 
 
---------------
 
 FreeIntuiMessage
 ================
@@ -1939,7 +1898,6 @@ Result
  none
 
 
---------------
 
 FreeRemember
 ============
@@ -1953,7 +1911,6 @@ Synopsis
          LONG reallyForget
  );
 
---------------
 
 FreeScreenBuffer
 ================
@@ -2011,7 +1968,6 @@ See also
  AllocScreenBuffer(), ChangeScreenBuffer()
 
 
---------------
 
 FreeScreenDrawInfo
 ==================
@@ -2055,7 +2011,6 @@ See also
  GetScreenDrawInfo()
 
 
---------------
 
 FreeSysRequest
 ==============
@@ -2097,7 +2052,6 @@ See also
  BuildSysRequest(), BuildEasyRequestArgs()
 
 
---------------
 
 GadgetMouse
 ===========
@@ -2146,7 +2100,6 @@ Notes
  It is recommended not to call this function!
 
 
---------------
 
 GetAttr
 =======
@@ -2209,7 +2162,6 @@ See also
 
 
 
---------------
 
 GetDefPrefs
 ===========
@@ -2253,7 +2205,6 @@ See also
  GetPrefs(), SetPrefs()
 
 
---------------
 
 GetDefaultPubScreen
 ===================
@@ -2297,7 +2248,6 @@ See also
  SetDefaultPubScreen(), OpenWindow()
 
 
---------------
 
 GetPrefs
 ========
@@ -2341,7 +2291,6 @@ See also
  GetDefPrefs(), SetPrefs()
 
 
---------------
 
 GetScreenData
 =============
@@ -2392,7 +2341,6 @@ Result
  TRUE if successful, FALSE if the screen could not be opened.
 
 
---------------
 
 GetScreenDrawInfo
 =================
@@ -2444,7 +2392,6 @@ See also
  FreeScreenDrawInfo(), LockPubScreen(), intuition/screens.h
 
 
---------------
 
 HelpControl
 ===========
@@ -2490,7 +2437,6 @@ See also
  WA_HelpGroup
 
 
---------------
 
 HideWindow
 ==========
@@ -2517,7 +2463,6 @@ Inputs
  window - The window to affect.
 
 
---------------
 
 InitRequester
 =============
@@ -2566,7 +2511,6 @@ See also
  Request(), EndRequest()
 
 
---------------
 
 IntuiTextLength
 ===============
@@ -2604,7 +2548,6 @@ Result
  The width of the text in pixels.
 
 
---------------
 
 IsWindowVisible
 ===============
@@ -2641,7 +2584,6 @@ Result
      TRUE if window is currently visible, FALSE otherwise.
 
 
---------------
 
 ItemAddress
 ===========
@@ -2690,7 +2632,6 @@ Result
  menuitem described by menunumber.
 
 
---------------
 
 LIBBASETYPE
 ===========
@@ -2702,7 +2643,6 @@ Synopsis
  InitRootClass LIBBASETYPE(
  );
 
---------------
 
 LateIntuiInit
 =============
@@ -2746,7 +2686,6 @@ Notes
  This function is private and AROS specific.
 
 
---------------
 
 LendMenus
 =========
@@ -2796,7 +2735,6 @@ See also
  SetMenuStrip(), ClearMenuStrip()
 
 
---------------
 
 LockIBase
 =========
@@ -2847,7 +2785,6 @@ See also
  UnLockIBase()
 
 
---------------
 
 LockPubScreen
 =============
@@ -2931,7 +2868,6 @@ See also
  OpenWindow(), UnlockPubScreen(), GetScreenData()
 
 
---------------
 
 LockPubScreenList
 =================
@@ -2970,7 +2906,6 @@ See also
  UnlockPubScreenList()
 
 
---------------
 
 MakeClass
 =========
@@ -3044,7 +2979,6 @@ Notes
  of classID is at least the same as the lifetime of the class itself.
 
 
---------------
 
 MakeScreen
 ==========
@@ -3078,7 +3012,6 @@ See also
  RemakeDisplay(), RethinkDisplay(), graphics.library/MakeVPort(),
 
 
---------------
 
 ModifyIDCMP
 ===========
@@ -3174,7 +3107,6 @@ See also
  OpenWindow(), CloseWindow(), intuition_extend.h
 
 
---------------
 
 ModifyProp
 ==========
@@ -3240,7 +3172,6 @@ See also
  NewModifyProp()
 
 
---------------
 
 MoveScreen
 ==========
@@ -3296,7 +3227,6 @@ See also
  RethinkDisplay()
 
 
---------------
 
 MoveWindow
 ==========
@@ -3340,7 +3270,6 @@ See also
  SizeWindow()
 
 
---------------
 
 MoveWindowInFrontOf
 ===================
@@ -3383,7 +3312,6 @@ See also
  WindowToFront(), WindowToBack(), layers.library/MoveLayerInFrontOf()
 
 
---------------
 
 NewModifyProp
 =============
@@ -3445,7 +3373,6 @@ See also
  NewModifyProp(), RefreshGadgets(), RefreshGList()
 
 
---------------
 
 NewObjectA
 ==========
@@ -3508,7 +3435,6 @@ See also
  "boopsi Class Reference" Dokument.
 
 
---------------
 
 NextObject
 ==========
@@ -3556,7 +3482,6 @@ See also
  "boopsi Class Reference" Dokument.
 
 
---------------
 
 NextPubScreen
 =============
@@ -3617,7 +3542,6 @@ See also
  OpenScreen(), PubScreenStatus()
 
 
---------------
 
 ObtainGIRPort
 =============
@@ -3671,7 +3595,6 @@ See also
  ReleaseGIRPort()
 
 
---------------
 
 OffGadget
 =========
@@ -3725,7 +3648,6 @@ See also
  AddGadget(), RefreshGadgets()
 
 
---------------
 
 OffMenu
 =======
@@ -3769,7 +3691,6 @@ See also
  OnMenu(), ResetMenuStrip()
 
 
---------------
 
 OnGadget
 ========
@@ -3816,7 +3737,6 @@ Notes
  which would update all gadgets in the window).
 
 
---------------
 
 OnMenu
 ======
@@ -3860,7 +3780,6 @@ See also
  OffMenu(), ResetMenuStrip()
 
 
---------------
 
 OpenScreenTagList
 =================
@@ -3874,7 +3793,6 @@ Synopsis
          struct TagItem   * tagList
  );
 
---------------
 
 OpenWindow
 ==========
@@ -3918,7 +3836,6 @@ See also
  CloseWindow(), ModifyIDCMP()
 
 
---------------
 
 OpenWindowTagList
 =================
@@ -3932,7 +3849,6 @@ Synopsis
          struct TagItem   * tagList
  );
 
---------------
 
 OpenWorkBench
 =============
@@ -3976,7 +3892,6 @@ See also
  CloseWorkBench()
 
 
---------------
 
 PointInImage
 ============
@@ -4014,7 +3929,6 @@ Result
  TRUE is the point is inside the image, FALSE otherwise.
 
 
---------------
 
 PrintIText
 ==========
@@ -4055,7 +3969,6 @@ Result
  None.
 
 
---------------
 
 PubScreenStatus
 ===============
@@ -4105,7 +4018,6 @@ See also
  OpenScreen()
 
 
---------------
 
 QueryOverscan
 =============
@@ -4120,7 +4032,6 @@ Synopsis
          WORD oscantype
  );
 
---------------
 
 RefreshGList
 ============
@@ -4185,7 +4096,6 @@ Notes
  BeginRefresh()/EndRefresh() pair.
 
 
---------------
 
 RefreshGadgets
 ==============
@@ -4240,7 +4150,6 @@ See also
  RefreshGList()
 
 
---------------
 
 RefreshWindowFrame
 ==================
@@ -4253,7 +4162,6 @@ Synopsis
          struct Window * window
  );
 
---------------
 
 RefreshWindowFrame
 ==================
@@ -4266,7 +4174,6 @@ Synopsis
          struct Window * window
  );
 
---------------
 
 ReleaseGIRPort
 ==============
@@ -4300,7 +4207,6 @@ Result
  None.
 
 
---------------
 
 RemakeDisplay
 =============
@@ -4334,7 +4240,6 @@ See also
  graphics.library/MrgCop(), graphics.library/LoadView()
 
 
---------------
 
 RemoveClass
 ===========
@@ -4379,7 +4284,6 @@ See also
  Dokument.
 
 
---------------
 
 RemoveGList
 ===========
@@ -4394,7 +4298,6 @@ Synopsis
          LONG numGad
  );
 
---------------
 
 RemoveGadget
 ============
@@ -4431,7 +4334,6 @@ Result
  exist or the gadget is the 65535th of the list.
 
 
---------------
 
 ReportMouse
 ===========
@@ -4476,7 +4378,6 @@ Notes
  As you might have noticed, the arguments are twisted.
 
 
---------------
 
 Request
 =======
@@ -4519,7 +4420,6 @@ See also
  EndRequest(), InitRequester()
 
 
---------------
 
 ResetMenuStrip
 ==============
@@ -4576,7 +4476,6 @@ See also
  SetMenuStrip(), ClearMenuStrip()
 
 
---------------
 
 RethinkDisplay
 ==============
@@ -4617,7 +4516,6 @@ See also
  graphics.library/MrgCop(), graphics.library/LoadView()
 
 
---------------
 
 ScreenDepth
 ===========
@@ -4678,7 +4576,6 @@ See also
  ScreenToBack(), ScreenToFront()
 
 
---------------
 
 ScreenPosition
 ==============
@@ -4750,7 +4647,6 @@ See also
  MoveScreen(), RethinkDisplay()
 
 
---------------
 
 ScreenToBack
 ============
@@ -4797,7 +4693,6 @@ See also
  ScreenToFront(), ScreenDepth()
 
 
---------------
 
 ScreenToFront
 =============
@@ -4841,7 +4736,6 @@ See also
  ScreenToBack(), ScreenDepth()
 
 
---------------
 
 ScrollWindowRaster
 ==================
@@ -4888,7 +4782,6 @@ Inputs
                  affected by the scroll
 
 
---------------
 
 SendIntuiMessage
 ================
@@ -4952,7 +4845,6 @@ Notes
 
 
 
---------------
 
 SetAttrsA
 =========
@@ -5007,7 +4899,6 @@ See also
  "boopsi Class Reference" Dokument.
 
 
---------------
 
 SetDMRequest
 ============
@@ -5067,7 +4958,6 @@ See also
  ClearDMRequest(), Request()
 
 
---------------
 
 SetDefaultPubScreen
 ===================
@@ -5108,7 +4998,6 @@ See also
  OpenWindow(), OpenScreen()
 
 
---------------
 
 SetDefaultScreenFont
 ====================
@@ -5142,7 +5031,6 @@ Notes
      PRIVATE(!!!!) Do not use
  
 
---------------
 
 SetEditHook
 ===========
@@ -5177,7 +5065,6 @@ Result
      The old edit hook.
 
 
---------------
 
 SetGadgetAttrsA
 ===============
@@ -5236,7 +5123,6 @@ See also
  "boopsi Class Reference" Dokument.
 
 
---------------
 
 SetIPrefs
 =========
@@ -5258,7 +5144,6 @@ Result
  Depending on the operation
 
 
---------------
 
 SetIPrefs
 =========
@@ -5280,7 +5165,6 @@ Result
  Depending on the operation
 
 
---------------
 
 SetMenuStrip
 ============
@@ -5335,7 +5219,6 @@ See also
  ResetMenuStrip(), ClearMenuStrip()
 
 
---------------
 
 SetMouseQueue
 =============
@@ -5388,7 +5271,6 @@ See also
  OpenWindow()
 
 
---------------
 
 SetPointer
 ==========
@@ -5432,7 +5314,6 @@ See also
  ClearPointer()
 
 
---------------
 
 SetPrefs
 ========
@@ -5479,7 +5360,6 @@ See also
  GetDefPrefs(), GetPrefs()
 
 
---------------
 
 SetPubScreenModes
 =================
@@ -5528,7 +5408,6 @@ See also
  OpenScreen()
 
 
---------------
 
 SetWindowPointerA
 =================
@@ -5542,7 +5421,6 @@ Synopsis
          struct TagItem * taglist
  );
 
---------------
 
 SetWindowTitles
 ===============
@@ -5595,7 +5473,6 @@ Notes
  may irritate the user.
 
 
---------------
 
 ShowTitle
 =========
@@ -5634,7 +5511,6 @@ Notes
  The default of the SHOWTITLE flag for new screens is TRUE.
 
 
---------------
 
 ShowWindow
 ==========
@@ -5664,7 +5540,6 @@ Inputs
  window - The window to affect.
 
 
---------------
 
 SizeWindow
 ==========
@@ -5710,7 +5585,6 @@ Notes
  information that is has changed size, wait for IDCMP_NEWSIZE.
 
 
---------------
 
 SysReqHandler
 =============
@@ -5782,7 +5656,6 @@ See also
      BuildSysRequest(), BuildEasyRequestArgs()
 
 
---------------
 
 SysReqHandler
 =============
@@ -5854,7 +5727,6 @@ See also
  BuildSysRequest(), BuildEasyRequestArgs()
 
 
---------------
 
 TimedDisplayAlert
 =================
@@ -5870,7 +5742,6 @@ Synopsis
          ULONG time
  );
 
---------------
 
 UnlockIBase
 ===========
@@ -5912,7 +5783,6 @@ See also
  LockIBase()
 
 
---------------
 
 UnlockPubScreen
 ===============
@@ -5959,7 +5829,6 @@ See also
  LockPubScreen()
 
 
---------------
 
 UnlockPubScreenList
 ===================
@@ -5987,7 +5856,6 @@ See also
  LockPubScreenList()
 
 
---------------
 
 ViewAddress
 ===========
@@ -6029,7 +5897,6 @@ See also
  graphics.library
 
 
---------------
 
 ViewPortAddress
 ===============
@@ -6073,7 +5940,6 @@ See also
  graphics.library
 
 
---------------
 
 WBenchToBack
 ============
@@ -6114,7 +5980,6 @@ See also
  ScreenToBack(), ScreenToFront(), WBenchToFront()
 
 
---------------
 
 WBenchToFront
 =============
@@ -6155,7 +6020,6 @@ See also
  ScreenToBack(), ScreenToFront(), WBenchToBack()
 
 
---------------
 
 WindowLimits
 ============
@@ -6205,7 +6069,6 @@ See also
  OpenWindow()
 
 
---------------
 
 WindowToBack
 ============
@@ -6239,7 +6102,6 @@ Result
  None.
 
 
---------------
 
 WindowToFront
 =============
@@ -6273,7 +6135,6 @@ Result
  None.
 
 
---------------
 
 ZipWindow
 =========
@@ -6324,7 +6185,6 @@ See also
  ChangeWindowBox(), MoveWindow(), SizeWindow()
 
 
---------------
 
 lockPubClass
 ============
@@ -6352,7 +6212,6 @@ See also
  unlockPubClass().
 
 
---------------
 
 unlockPubClass
 ==============
@@ -6380,5 +6239,4 @@ See also
  lockPubClass().
 
 
---------------
 

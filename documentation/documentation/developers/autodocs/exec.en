@@ -1,12 +1,12 @@
+====
+exec
+====
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-====
-exec
-====
 
 `AbortIO`_
 `AddDevice`_
@@ -176,7 +176,6 @@ See also
      OpenDevice(), CloseDevice(), DoIO(), SendIO(), WaitIO()
 
 
---------------
 
 AddDevice
 =========
@@ -213,7 +212,6 @@ See also
      RemDevice(), OpenDevice(), CloseDevice()
 
 
---------------
 
 AddHead
 =======
@@ -268,7 +266,6 @@ See also
      Enqueue()
 
 
---------------
 
 AddIntServer
 ============
@@ -290,7 +287,6 @@ Notes
      run on a native Amiga.
 
 
---------------
 
 AddLibrary
 ==========
@@ -336,7 +332,6 @@ See also
      RemLibrary(), MakeLibrary(), MakeFunctions(), InitStruct(), SumLibrary().
 
 
---------------
 
 AddMemHandler
 =============
@@ -364,7 +359,6 @@ Inputs
                   handler list.
 
 
---------------
 
 AddMemList
 ==========
@@ -406,7 +400,6 @@ Notes
      No argument checking done.
 
 
---------------
 
 AddPort
 =======
@@ -436,7 +429,6 @@ Inputs
      port - Pointer to messageport structure.
 
 
---------------
 
 AddResource
 ===========
@@ -470,7 +462,6 @@ See also
      RemResource(), OpenResource()
 
 
---------------
 
 AddSemaphore
 ============
@@ -507,7 +498,6 @@ Notes
      therefore lie in public (or at least shared) memory.
 
 
---------------
 
 AddTail
 =======
@@ -547,7 +537,6 @@ Example
      AddTail (list, node);
 
 
---------------
 
 AddTask
 =======
@@ -610,7 +599,6 @@ See also
      RemTask()
 
 
---------------
 
 Alert
 =====
@@ -661,7 +649,6 @@ Notes
      displays the message and then may reboot it.
 
 
---------------
 
 AllocAbs
 ========
@@ -705,7 +692,6 @@ See also
      FreeMem()
 
 
---------------
 
 AllocEntry
 ==========
@@ -750,7 +736,6 @@ See also
      FreeEntry()
 
 
---------------
 
 AllocMem
 ========
@@ -810,7 +795,6 @@ See also
      FreeMem()
 
 
---------------
 
 AllocPooled
 ===========
@@ -854,7 +838,6 @@ See also
      CreatePool(), DeletePool(), FreePooled()
 
 
---------------
 
 AllocSignal
 ===========
@@ -903,7 +886,6 @@ See also
      FreeSignal(), Signal(), Wait()
 
 
---------------
 
 AllocTrap
 =========
@@ -916,7 +898,6 @@ Synopsis
          long trapNum
  );
 
---------------
 
 AllocVec
 ========
@@ -962,7 +943,6 @@ See also
      FreeVec()
 
 
---------------
 
 Allocate
 ========
@@ -1042,7 +1022,6 @@ See also
      Deallocate()
 
 
---------------
 
 AttemptSemaphore
 ================
@@ -1092,7 +1071,6 @@ See also
      ReleaseSemaphore()
 
 
---------------
 
 AttemptSemaphoreShared
 ======================
@@ -1136,7 +1114,6 @@ See also
      ReleaseSemaphore()
 
 
---------------
 
 AvailMem
 ========
@@ -1194,7 +1171,6 @@ Notes
      be obsolete if this function returns.
 
 
---------------
 
 CacheClearE
 ===========
@@ -1265,7 +1241,6 @@ See also
      CacheClearU(), CacheControl()
 
 
---------------
 
 CacheClearU
 ===========
@@ -1316,7 +1291,6 @@ See also
      CacheClearE(), CacheControl(), CachePreDMA(), CachePostDMA()
 
 
---------------
 
 CacheControl
 ============
@@ -1381,7 +1355,6 @@ See also
      CacheClearE(), CacheClearU()
 
 
---------------
 
 CachePostDMA
 ============
@@ -1431,7 +1404,6 @@ See also
      CachePreDMA()
 
 
---------------
 
 CachePreDMA
 ===========
@@ -1495,7 +1467,6 @@ See also
      CachePostDMA()
 
 
---------------
 
 Cause
 =====
@@ -1577,7 +1548,6 @@ Bugs
      lower priority may not be called immediately.
 
 
---------------
 
 CheckIO
 =======
@@ -1619,7 +1589,6 @@ See also
      OpenDevice(), CloseDevice(), DoIO(), SendIO(), AbortIO(), WaitIO()
 
 
---------------
 
 ChildFree
 =========
@@ -1662,7 +1631,6 @@ Notes
      system badly.
 
 
---------------
 
 ChildOrphan
 ===========
@@ -1706,7 +1674,6 @@ Result
      actions.
 
 
---------------
 
 ChildStatus
 ===========
@@ -1742,7 +1709,6 @@ Result
      One of the CHILD_* values.
 
 
---------------
 
 ChildWait
 =========
@@ -1809,7 +1775,6 @@ Bugs
      Be careful with the return result of this function.
 
 
---------------
 
 CloseDevice
 ===========
@@ -1845,7 +1810,6 @@ See also
      OpenDevice().
 
 
---------------
 
 CloseLibrary
 ============
@@ -1880,7 +1844,6 @@ See also
      OpenLibrary().
 
 
---------------
 
 ColdReboot
 ==========
@@ -1922,7 +1885,6 @@ Notes
      not being flushed. Plus you could annoy the (other) users.
 
 
---------------
 
 CopyMem
 =======
@@ -1968,7 +1930,6 @@ See also
      CopyMemQuick()
 
 
---------------
 
 CopyMemQuick
 ============
@@ -2014,7 +1975,6 @@ See also
      CopyMem()
 
 
---------------
 
 CreateIORequest
 ===============
@@ -2057,7 +2017,6 @@ Result
      failed.
 
 
---------------
 
 CreateMsgPort
 =============
@@ -2084,7 +2043,6 @@ Result
      Pointer to messageport structure
 
 
---------------
 
 CreatePool
 ==========
@@ -2152,7 +2110,6 @@ See also
      DeletePool(), AllocPooled(), FreePooled()
 
 
---------------
 
 Deallocate
 ==========
@@ -2198,7 +2155,6 @@ See also
      Allocate()
 
 
---------------
 
 Debug
 =====
@@ -2211,7 +2167,6 @@ Synopsis
          unsigned long flags
  );
 
---------------
 
 DeleteIORequest
 ===============
@@ -2238,7 +2193,6 @@ Inputs
      iorequest - Pointer to I/O request structure or NULL.
 
 
---------------
 
 DeleteMsgPort
 =============
@@ -2268,7 +2222,6 @@ Inputs
      port - Pointer to messageport structure.
 
 
---------------
 
 DeletePool
 ==========
@@ -2302,7 +2255,6 @@ See also
      CreatePool(), AllocPooled(), FreePooled()
 
 
---------------
 
 Disable
 =======
@@ -2376,7 +2328,6 @@ See also
      Forbid(), Permit(), Enable(), Wait()
 
 
---------------
 
 DoIO
 ====
@@ -2411,7 +2362,6 @@ See also
      OpenDevice(), CloseDevice(), DoIO(), SendIO(), AbortIO(), WaitIO()
 
 
---------------
 
 Enable
 ======
@@ -2492,7 +2442,6 @@ See also
      Forbid(), Permit(), Disable(), Wait()
 
 
---------------
 
 Enqueue
 =======
@@ -2555,7 +2504,6 @@ Notes
      ln_Pri of all nodes.
 
 
---------------
 
 FindName
 ========
@@ -2605,7 +2553,6 @@ Notes
      The list must contain complete Nodes and no MinNodes.
 
 
---------------
 
 FindPort
 ========
@@ -2641,7 +2588,6 @@ Result
      Pointer to struct MsgPort or NULL if there is no port of that name.
 
 
---------------
 
 FindResident
 ============
@@ -2676,7 +2622,6 @@ Result
      not found.
 
 
---------------
 
 FindSemaphore
 =============
@@ -2712,7 +2657,6 @@ Result
      Address of semaphore structure found or NULL.
 
 
---------------
 
 FindTask
 ========
@@ -2750,7 +2694,6 @@ Result
      Address of task structure found.
 
 
---------------
 
 Forbid
 ======
@@ -2826,7 +2769,6 @@ See also
      Permit(), Disable(), Enable(), Wait()
 
 
---------------
 
 FreeEntry
 =========
@@ -2860,7 +2802,6 @@ See also
      AllocEntry()
 
 
---------------
 
 FreeMem
 =======
@@ -2896,7 +2837,6 @@ See also
      AllocMem()
 
 
---------------
 
 FreePooled
 ==========
@@ -2934,7 +2874,6 @@ See also
      CreatePool(), DeletePool(), AllocPooled()
 
 
---------------
 
 FreeSignal
 ==========
@@ -2968,7 +2907,6 @@ See also
      AllocSignal(), Signal(), Wait()
 
 
---------------
 
 FreeTrap
 ========
@@ -2981,7 +2919,6 @@ Synopsis
          long trapNum
  );
 
---------------
 
 FreeVec
 =======
@@ -3016,7 +2953,6 @@ See also
      AllocVec()
 
 
---------------
 
 GetCC
 =====
@@ -3067,7 +3003,6 @@ See also
      SetSR()
 
 
---------------
 
 GetMsg
 ======
@@ -3110,7 +3045,6 @@ See also
      WaitPort(), PutMsg()
 
 
---------------
 
 InitCode
 ========
@@ -3141,7 +3075,6 @@ Inputs
      version - a version number
 
 
---------------
 
 InitResident
 ============
@@ -3193,7 +3126,6 @@ Notes
      Non AUTOINIT modules have to do all the work themselves.
 
 
---------------
 
 InitSemaphore
 =============
@@ -3230,7 +3162,6 @@ Notes
      therefore lie in public (or at least shared) memory.
 
 
---------------
 
 InitStruct
 ==========
@@ -3283,7 +3214,6 @@ Inputs
                  for no filling.
 
 
---------------
 
 Insert
 ======
@@ -3335,7 +3265,6 @@ See also
      "AROS: Exec Lists".
 
 
---------------
 
 MakeFunctions
 =============
@@ -3379,7 +3308,6 @@ Result
      Size of the jumptable.
 
 
---------------
 
 MakeLibrary
 ===========
@@ -3447,7 +3375,6 @@ See also
      AddLibrary(), RemLibrary(), MakeFunctions(), InitStruct(), SumLibrary().
 
 
---------------
 
 NewAddTask
 ==========
@@ -3511,7 +3438,6 @@ See also
      RemTask()
 
 
---------------
 
 NewAllocEntry
 =============
@@ -3565,7 +3491,6 @@ See also
      AllocEntry(), FreeEntry()
 
 
---------------
 
 ObtainQuickVector
 =================
@@ -3578,7 +3503,6 @@ Synopsis
          APTR interruptCode
  );
 
---------------
 
 ObtainSemaphore
 ===============
@@ -3621,7 +3545,6 @@ See also
      ReleaseSemaphore()
 
 
---------------
 
 ObtainSemaphoreList
 ===================
@@ -3663,7 +3586,6 @@ Result
      The entire semaphore list will be locked.
 
 
---------------
 
 ObtainSemaphoreShared
 =====================
@@ -3708,7 +3630,6 @@ See also
      ReleaseSemaphore()
 
 
---------------
 
 OldOpenLibrary
 ==============
@@ -3736,7 +3657,6 @@ See also
      OpenLibrary().
 
 
---------------
 
 OpenDevice
 ==========
@@ -3791,7 +3711,6 @@ See also
      OpenDevice()
 
 
---------------
 
 OpenLibrary
 ===========
@@ -3837,7 +3756,6 @@ See also
      CloseLibrary().
 
 
---------------
 
 OpenResource
 ============
@@ -3879,7 +3797,6 @@ See also
      AddResource(), RemResource()
 
 
---------------
 
 Permit
 ======
@@ -3946,7 +3863,6 @@ See also
      Forbid(), Disable(), Enable(), Wait()
 
 
---------------
 
 Procure
 =======
@@ -4000,7 +3916,6 @@ See also
      Vacate()
 
 
---------------
 
 PutMsg
 ======
@@ -4049,7 +3964,6 @@ See also
      WaitPort(), GetMsg()
 
 
---------------
 
 RawDoFmt
 ========
@@ -4202,7 +4116,6 @@ Bugs
      systems.
 
 
---------------
 
 ReleaseSemaphore
 ================
@@ -4239,7 +4152,6 @@ Notes
      This function preserves all registers.
 
 
---------------
 
 ReleaseSemaphoreList
 ====================
@@ -4266,7 +4178,6 @@ Inputs
      sigSem - pointer to list full of semaphores
 
 
---------------
 
 RemDevice
 =========
@@ -4301,7 +4212,6 @@ See also
      AddDevice(), OpenDevice(), CloseDevice().
 
 
---------------
 
 RemHead
 =======
@@ -4346,7 +4256,6 @@ Example
      head = RemHead (list);
 
 
---------------
 
 RemIntServer
 ============
@@ -4360,7 +4269,6 @@ Synopsis
          struct Interrupt * interrupt
  );
 
---------------
 
 RemLibrary
 ==========
@@ -4395,7 +4303,6 @@ See also
      AddLibrary(), MakeLibrary(), MakeFunctions(), InitStruct(), SumLibrary().
 
 
---------------
 
 RemMemHandler
 =============
@@ -4422,7 +4329,6 @@ Inputs
      memHandler - The same Interrupt structure you gave to AddMemHandler().
 
 
---------------
 
 RemPort
 =======
@@ -4451,7 +4357,6 @@ Inputs
      port - Pointer to messageport structure.
 
 
---------------
 
 RemResource
 ===========
@@ -4485,7 +4390,6 @@ See also
      AddResource(), OpenResource()
 
 
---------------
 
 RemSemaphore
 ============
@@ -4520,7 +4424,6 @@ Notes
      therefore lie in public (or at least shared) memory.
 
 
---------------
 
 RemTail
 =======
@@ -4565,7 +4468,6 @@ Example
      tail = RemTail (list);
 
 
---------------
 
 RemTask
 =======
@@ -4603,7 +4505,6 @@ See also
      AddTask()
 
 
---------------
 
 Remove
 ======
@@ -4648,7 +4549,6 @@ Notes
      a list !
 
 
---------------
 
 ReplyMsg
 ========
@@ -4683,7 +4583,6 @@ See also
      WaitPort(), GetMsg(), PutMsg()
 
 
---------------
 
 SendIO
 ======
@@ -4719,7 +4618,6 @@ See also
      OpenDevice(), CloseDevice(), DoIO(), CheckIO(), AbortIO(), WaitIO()
 
 
---------------
 
 SetExcept
 =========
@@ -4762,7 +4660,6 @@ See also
      AllocSignal(), FreeSignal(), Wait(), SetSignal(), Signal()
 
 
---------------
 
 SetFunction
 ===========
@@ -4831,7 +4728,6 @@ See also
      MakeLibrary(), MakeFunctions(), SumLibrary().
 
 
---------------
 
 SetIntVector
 ============
@@ -4845,7 +4741,6 @@ Synopsis
          struct Interrupt * interrupt
  );
 
---------------
 
 SetSR
 =====
@@ -4907,7 +4802,6 @@ Bugs
      This function may do nothing on non-mc680x0 systems.
 
 
---------------
 
 SetSignal
 =========
@@ -4950,7 +4844,6 @@ See also
      AllocSignal(), FreeSignal(), Wait(), Signal(), SetExcept()
 
 
---------------
 
 SetTaskPri
 ==========
@@ -4988,7 +4881,6 @@ Result
      Old task priority.
 
 
---------------
 
 Signal
 ======
@@ -5033,7 +4925,6 @@ See also
      AllocSignal(), FreeSignal(), Wait(), SetSignal(), SetExcept()
 
 
---------------
 
 StackSwap
 =========
@@ -5096,7 +4987,6 @@ See also
      AddTask(), RemTask()
 
 
---------------
 
 SumKickData
 ===========
@@ -5108,7 +4998,6 @@ Synopsis
  ULONG SumKickData(
  );
 
---------------
 
 SumLibrary
 ==========
@@ -5144,7 +5033,6 @@ See also
      AddLibrary(), RemLibrary(), MakeLibrary(), MakeFunctions(), InitStruct().
 
 
---------------
 
 SuperState
 ==========
@@ -5203,7 +5091,6 @@ See also
      Supervisor(), UserState()
 
 
---------------
 
 Supervisor
 ==========
@@ -5281,7 +5168,6 @@ See also
      SuperState(), UserState()
 
 
---------------
 
 Switch
 ======
@@ -5317,7 +5203,6 @@ See also
      Dispatch(), Reschedule()
 
 
---------------
 
 TypeOfMem
 =========
@@ -5352,7 +5237,6 @@ Result
      The memory flags you would give to AllocMem().
 
 
---------------
 
 UserState
 =========
@@ -5393,7 +5277,6 @@ See also
      SuperState(), Supervisor()
 
 
---------------
 
 Vacate
 ======
@@ -5432,7 +5315,6 @@ See also
      Procure()
 
 
---------------
 
 Wait
 ====
@@ -5486,7 +5368,6 @@ See also
      Signal(), SetSignal(), AllocSignal(), FreeSignal()
 
 
---------------
 
 WaitIO
 ======
@@ -5529,7 +5410,6 @@ See also
      OpenDevice(), CloseDevice(), DoIO(), SendIO(), AbortIO(), CheckIO()
 
 
---------------
 
 WaitPort
 ========
@@ -5572,7 +5452,6 @@ See also
      WaitPort(), GetMsg()
 
 
---------------
 
 dummy
 =====
@@ -5584,5 +5463,4 @@ Synopsis
  ULONG dummy(
  );
 
---------------
 

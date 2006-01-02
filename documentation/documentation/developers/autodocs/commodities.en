@@ -1,12 +1,12 @@
+===========
+commodities
+===========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-===========
-commodities
-===========
 
 `ActivateCxObj`_
 `AddIEvents`_
@@ -94,7 +94,6 @@ See also
  CxBroker()
 
 
---------------
 
 AddIEvents
 ==========
@@ -124,7 +123,6 @@ Inputs
  events  --  a NULL-terminated linked list of InputEvents (may be NULL).
 
 
---------------
 
 AttachCxObj
 ===========
@@ -175,7 +173,6 @@ See also
  CxObjError(), ClearCxObjError()
 
 
---------------
 
 ClearCxObjError
 ===============
@@ -223,7 +220,6 @@ See also
  CxObjError()
 
 
---------------
 
 CreateCxObj
 ===========
@@ -292,7 +288,6 @@ See also
  cx_lib/CxDebug()
 
 
---------------
 
 CxBroker
 ========
@@ -355,7 +350,6 @@ See also
  SetCxObjPri(), <libraries/commodities.h>
 
 
---------------
 
 CxMsgData
 =========
@@ -403,7 +397,6 @@ See also
  cx_lib/CxSender(), cx_lib/CxCustom()
 
 
---------------
 
 CxMsgID
 =======
@@ -450,7 +443,6 @@ See also
  cx_lib/CxSender(), cx_lib/CxCustom()
 
 
---------------
 
 CxMsgType
 =========
@@ -489,7 +481,6 @@ Result
  in <libraries/commodities.h>.
 
 
---------------
 
 CxNotify
 ========
@@ -531,7 +522,6 @@ Result
  -3    --   No memory for operation
 
 
---------------
 
 CxObjError
 ==========
@@ -581,7 +571,6 @@ See also
  ClearCxObjError()
 
 
---------------
 
 CxObjType
 =========
@@ -627,7 +616,6 @@ See also
  CreateCxObj()
 
 
---------------
 
 DeleteCxObj
 ===========
@@ -677,7 +665,6 @@ See also
  DeleteCxObjAll(), 
 
 
---------------
 
 DeleteCxObjAll
 ==============
@@ -724,7 +711,6 @@ See also
  DeleteCxObj()
 
 
---------------
 
 DisposeCxMsg
 ============
@@ -766,7 +752,6 @@ Notes
  ReplyMsg() it instead of Disposing it.
 
 
---------------
 
 DivertCxMsg
 ===========
@@ -822,7 +807,6 @@ See also
  RouteCxMsg()
 
 
---------------
 
 EnqueueCxObj
 ============
@@ -884,7 +868,6 @@ See also
  <libraries/commodities.h>
 
 
---------------
 
 FreeBrokerList
 ==============
@@ -922,7 +905,6 @@ See also
  cxintern.h
 
 
---------------
 
 GetBrokerList
 =============
@@ -960,7 +942,6 @@ Result
  be deallocated.
 
 
---------------
 
 InsertCxObj
 ===========
@@ -1014,7 +995,6 @@ See also
  CxObjError(), ClearCxObjError()
 
 
---------------
 
 InvertKeyMap
 ============
@@ -1076,7 +1056,6 @@ See also
  cx_lib/InvertString()
 
 
---------------
 
 MatchIX
 =======
@@ -1133,7 +1112,6 @@ See also
  <libraries/commodities.h>, ParseIX()
 
 
---------------
 
 ParseIX
 =======
@@ -1191,7 +1169,6 @@ See also
  MatchIX(), <libraries/commodities.h>
 
 
---------------
 
 RemoveCxObj
 ===========
@@ -1229,7 +1206,6 @@ See also
  AttachCxObj(), EnqueueCxObj(), InsertCxObj()
 
 
---------------
 
 RouteCxMsg
 ==========
@@ -1270,7 +1246,6 @@ See also
  DivertCxMsg()
 
 
---------------
 
 SetCxObjPri
 ===========
@@ -1331,7 +1306,6 @@ See also
  EnqueueCxObj()
 
 
---------------
 
 SetFilter
 =========
@@ -1379,7 +1353,6 @@ See also
  SetFilterIX(), CxObjError()
 
 
---------------
 
 SetFilterIX
 ===========
@@ -1438,7 +1411,6 @@ See also
  SetFilter(), CxObjError(), <libraries/commodities.h>
 
 
---------------
 
 SetTranslate
 ============
@@ -1491,7 +1463,6 @@ See also
  cx_lib/CxTranslate(), <devices/inputevent.h>
 
 
---------------
 
 events
 ======
@@ -1503,5 +1474,4 @@ Synopsis
  struct InputEvent * events(
  );
 
---------------
 

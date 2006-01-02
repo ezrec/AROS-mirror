@@ -1,12 +1,12 @@
+==========
+prometheus
+==========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-==========
-prometheus
-==========
 
 `Prm_FindBoardTagList`_
 
@@ -24,5 +24,4 @@ Synopsis
          struct TagItem * tag_list
  );
 
---------------
 

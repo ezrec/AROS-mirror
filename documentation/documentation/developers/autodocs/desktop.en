@@ -1,12 +1,12 @@
+=======
+desktop
+=======
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-=======
-desktop
-=======
 
 `BuildDesktopMenus`_
 `CreateDesktopObjectA`_
@@ -25,7 +25,6 @@ Synopsis
  struct NewMenu * BuildDesktopMenus(
  );
 
---------------
 
 CreateDesktopObjectA
 ====================
@@ -39,7 +38,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 DoDesktopOperationA
 ===================
@@ -53,7 +51,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 GetMenuItemList
 ===============
@@ -66,5 +63,4 @@ Synopsis
          ULONG operationType
  );
 
---------------
 

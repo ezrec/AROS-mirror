@@ -1,12 +1,12 @@
+=========
+bsdsocket
+=========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-=========
-bsdsocket
-=========
 
 `CloseSocket`_
 `Dup2Socket`_
@@ -68,7 +68,6 @@ Synopsis
          int s
  );
 
---------------
 
 Dup2Socket
 ==========
@@ -82,7 +81,6 @@ Synopsis
          int fd2
  );
 
---------------
 
 Errno
 =====
@@ -94,7 +92,6 @@ Synopsis
  LONG Errno(
  );
 
---------------
 
 GetSocketEvents
 ===============
@@ -107,7 +104,6 @@ Synopsis
          ULONG * eventsp
  );
 
---------------
 
 Inet_LnaOf
 ==========
@@ -120,7 +116,6 @@ Synopsis
          unsigned long in
  );
 
---------------
 
 Inet_MakeAddr
 =============
@@ -134,7 +129,6 @@ Synopsis
          int lna
  );
 
---------------
 
 Inet_NetOf
 ==========
@@ -147,7 +141,6 @@ Synopsis
          unsigned long in
  );
 
---------------
 
 Inet_NtoA
 =========
@@ -160,7 +153,6 @@ Synopsis
          unsigned long in
  );
 
---------------
 
 IoctlSocket
 ===========
@@ -175,7 +167,6 @@ Synopsis
          char * argp
  );
 
---------------
 
 ObtainSocket
 ============
@@ -191,7 +182,6 @@ Synopsis
          LONG protocol
  );
 
---------------
 
 ReleaseCopyOfSocket
 ===================
@@ -205,7 +195,6 @@ Synopsis
          LONG id
  );
 
---------------
 
 ReleaseSocket
 =============
@@ -219,7 +208,6 @@ Synopsis
          LONG id
  );
 
---------------
 
 SetErrnoPtr
 ===========
@@ -233,7 +221,6 @@ Synopsis
          int size
  );
 
---------------
 
 SetSocketSignals
 ================
@@ -248,7 +235,6 @@ Synopsis
          ULONG urgmask
  );
 
---------------
 
 SocketBaseTagList
 =================
@@ -261,7 +247,6 @@ Synopsis
          struct TagItem * tagList
  );
 
---------------
 
 WaitSelect
 ==========
@@ -279,7 +264,6 @@ Synopsis
          ULONG * sigmask
  );
 
---------------
 
 accept
 ======
@@ -294,7 +278,6 @@ Synopsis
          int * addrlen
  );
 
---------------
 
 bind
 ====
@@ -309,7 +292,6 @@ Synopsis
          int namelen
  );
 
---------------
 
 connect
 =======
@@ -324,7 +306,6 @@ Synopsis
          int namelen
  );
 
---------------
 
 getdtablesize
 =============
@@ -336,7 +317,6 @@ Synopsis
  int getdtablesize(
  );
 
---------------
 
 gethostbyaddr
 =============
@@ -351,7 +331,6 @@ Synopsis
          int type
  );
 
---------------
 
 gethostbyname
 =============
@@ -364,7 +343,6 @@ Synopsis
          char * name
  );
 
---------------
 
 gethostid
 =========
@@ -376,7 +354,6 @@ Synopsis
  long gethostid(
  );
 
---------------
 
 gethostname
 ===========
@@ -390,7 +367,6 @@ Synopsis
          int namelen
  );
 
---------------
 
 getnetbyaddr
 ============
@@ -404,7 +380,6 @@ Synopsis
          int type
  );
 
---------------
 
 getnetbyname
 ============
@@ -417,7 +392,6 @@ Synopsis
          char * name
  );
 
---------------
 
 getpeername
 ===========
@@ -432,7 +406,6 @@ Synopsis
          int * namelen
  );
 
---------------
 
 getprotobyname
 ==============
@@ -445,7 +418,6 @@ Synopsis
          char * name
  );
 
---------------
 
 getprotobynumber
 ================
@@ -458,7 +430,6 @@ Synopsis
          int proto
  );
 
---------------
 
 getservbyname
 =============
@@ -472,7 +443,6 @@ Synopsis
          char * proto
  );
 
---------------
 
 getservbyport
 =============
@@ -486,7 +456,6 @@ Synopsis
          char * proto
  );
 
---------------
 
 getsockname
 ===========
@@ -501,7 +470,6 @@ Synopsis
          int * namelen
  );
 
---------------
 
 getsockopt
 ==========
@@ -518,7 +486,6 @@ Synopsis
          void * optlen
  );
 
---------------
 
 inet_addr
 =========
@@ -531,7 +498,6 @@ Synopsis
          const char * cp
  );
 
---------------
 
 inet_network
 ============
@@ -544,7 +510,6 @@ Synopsis
          const char * cp
  );
 
---------------
 
 listen
 ======
@@ -558,7 +523,6 @@ Synopsis
          int backlog
  );
 
---------------
 
 recv
 ====
@@ -574,7 +538,6 @@ Synopsis
          int flags
  );
 
---------------
 
 recvfrom
 ========
@@ -592,7 +555,6 @@ Synopsis
          int * fromlen
  );
 
---------------
 
 recvmsg
 =======
@@ -607,7 +569,6 @@ Synopsis
          int flags
  );
 
---------------
 
 send
 ====
@@ -623,7 +584,6 @@ Synopsis
          int flags
  );
 
---------------
 
 sendmsg
 =======
@@ -638,7 +598,6 @@ Synopsis
          int flags
  );
 
---------------
 
 sendto
 ======
@@ -656,7 +615,6 @@ Synopsis
          int tolen
  );
 
---------------
 
 setsockopt
 ==========
@@ -673,7 +631,6 @@ Synopsis
          int optlen
  );
 
---------------
 
 shutdown
 ========
@@ -687,7 +644,6 @@ Synopsis
          int how
  );
 
---------------
 
 socket
 ======
@@ -702,7 +658,6 @@ Synopsis
          int protocol
  );
 
---------------
 
 vsyslog
 =======
@@ -717,5 +672,4 @@ Synopsis
          LONG * args
  );
 
---------------
 

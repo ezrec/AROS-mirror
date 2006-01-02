@@ -1,12 +1,12 @@
+========
+diskfont
+========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-========
-diskfont
-========
 
 `AvailFonts`_
 `DisposeFontContents`_
@@ -79,7 +79,6 @@ See also
      OpenDiskfont(), <diskfont/diskfont.h>
 
 
---------------
 
 DisposeFontContents
 ===================
@@ -117,7 +116,6 @@ See also
  NewFontContents()
 
 
---------------
 
 NewFontContents
 ===============
@@ -169,7 +167,6 @@ See also
  DisposeFontContents()
 
 
---------------
 
 NewScaledDiskFont
 =================
@@ -183,7 +180,6 @@ Synopsis
          struct TextAttr * destTextAttr
  );
 
---------------
 
 OpenDiskFont
 ============
@@ -228,5 +224,4 @@ See also
      AvailFonts()
 
 
---------------
 

@@ -1,12 +1,12 @@
+======
+bullet
+======
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-======
-bullet
-======
 
 `CloseEngine`_
 `ObtainInfoA`_
@@ -27,7 +27,6 @@ Synopsis
          struct GlyphEngine * glyphEngine
  );
 
---------------
 
 ObtainInfoA
 ===========
@@ -41,7 +40,6 @@ Synopsis
          struct TagItem * tagList
  );
 
---------------
 
 OpenEngine
 ==========
@@ -53,7 +51,6 @@ Synopsis
  struct GlyphEngine * OpenEngine(
  );
 
---------------
 
 ReleaseInfoA
 ============
@@ -67,7 +64,6 @@ Synopsis
          struct TagItem * tagList
  );
 
---------------
 
 SetInfoA
 ========
@@ -81,5 +77,4 @@ Synopsis
          struct TagItem * tagList
  );
 
---------------
 

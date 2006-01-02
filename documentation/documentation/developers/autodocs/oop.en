@@ -1,12 +1,12 @@
+===
+oop
+===
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-===
-oop
-===
 
 `OOP_AddClass`_
 `OOP_DisposeObject`_
@@ -73,7 +73,6 @@ See also
      OOP_RemoveClass()
 
 
---------------
 
 OOP_DisposeObject
 =================
@@ -114,7 +113,6 @@ See also
      OOP_NewObjectA()
 
 
---------------
 
 OOP_GetAttr
 ===========
@@ -165,7 +163,6 @@ See also
      OOP_SetAttrs().
 
 
---------------
 
 OOP_GetAttrBase
 ===============
@@ -207,7 +204,6 @@ Result
      There are NO error conditions.
 
 
---------------
 
 OOP_GetMethod
 =============
@@ -270,7 +266,6 @@ See also
      OOP_GetMethodID()
 
 
---------------
 
 OOP_GetMethodID
 ===============
@@ -309,7 +304,6 @@ Result
      Numeric method identifier that is unique for this machine.
 
 
---------------
 
 OOP_NewObject
 =============
@@ -368,7 +362,6 @@ See also
      OOP_DisposeObject()
 
 
---------------
 
 OOP_ObtainAttrBase
 ==================
@@ -429,7 +422,6 @@ Notes
      Obtained attrbases should be released with ReleasAttrBase().
 
 
---------------
 
 OOP_ObtainAttrBases
 ===================
@@ -442,7 +434,6 @@ Synopsis
          struct OOP_ABDescr * abd
  );
 
---------------
 
 OOP_ParseAttrs
 ==============
@@ -503,7 +494,6 @@ Result
              ooperr_ParseAttrs_TooManyAttrs.
 
 
---------------
 
 OOP_ReleaseAttrBase
 ===================
@@ -547,7 +537,6 @@ Notes
      The call must be paired wit OOP_ObtainAttrBase().
 
 
---------------
 
 OOP_ReleaseAttrBases
 ====================
@@ -560,7 +549,6 @@ Synopsis
          struct OOP_ABDescr * abd
  );
 
---------------
 
 OOP_RemoveClass
 ===============
@@ -602,7 +590,6 @@ See also
      OOP_AddClass()
 
 
---------------
 
 OOP_SetAttrs
 ============
@@ -649,5 +636,4 @@ See also
      OOP_DisposeObject()
 
 
---------------
 

@@ -1,12 +1,12 @@
+===
+asl
+===
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-===
-asl
-===
 
 `AbortAslRequest`_
 `ActivateAslRequest`_
@@ -30,7 +30,6 @@ Synopsis
          APTR requester
  );
 
---------------
 
 ActivateAslRequest
 ==================
@@ -43,7 +42,6 @@ Synopsis
          APTR requester
  );
 
---------------
 
 AllocAslRequest
 ===============
@@ -57,7 +55,6 @@ Synopsis
          struct TagItem * tagList
  );
 
---------------
 
 AllocFileRequest
 ================
@@ -83,7 +80,6 @@ See also
      AllocAslRequest()
 
 
---------------
 
 AslRequest
 ==========
@@ -97,7 +93,6 @@ Synopsis
          struct TagItem * tagList
  );
 
---------------
 
 FreeAslRequest
 ==============
@@ -124,7 +119,6 @@ Inputs
      requester - The requester that is to be freed.
 
 
---------------
 
 FreeFileRequest
 ===============
@@ -151,7 +145,6 @@ See also
      FreeAslRequest()
 
 
---------------
 
 RequestFile
 ===========
@@ -178,5 +171,4 @@ See also
      AslRequest()
 
 
---------------
 

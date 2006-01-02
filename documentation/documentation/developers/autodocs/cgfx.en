@@ -1,12 +1,12 @@
+====
+cgfx
+====
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-====
-cgfx
-====
 
 `AllocCModeListTagList`_
 `BestCModeIDTagList`_
@@ -46,7 +46,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 BestCModeIDTagList
 ==================
@@ -59,7 +58,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 BltTemplateAlpha
 ================
@@ -79,7 +77,6 @@ Synopsis
          LONG height
  );
 
---------------
 
 CModeRequestTagList
 ===================
@@ -93,7 +90,6 @@ Synopsis
          struct TagItem * 
  );
 
---------------
 
 CVideoCtrlTagList
 =================
@@ -107,7 +103,6 @@ Synopsis
          struct TagItem  * tags
  );
 
---------------
 
 DoCDrawMethodTagList
 ====================
@@ -122,7 +117,6 @@ Synopsis
          struct TagItem  * 
  );
 
---------------
 
 ExtractColor
 ============
@@ -141,7 +135,6 @@ Synopsis
          ULONG Height
  );
 
---------------
 
 FillPixelArray
 ==============
@@ -159,7 +152,6 @@ Synopsis
          ULONG pixel
  );
 
---------------
 
 FreeCModeList
 =============
@@ -172,7 +164,6 @@ Synopsis
          struct List * modeList
  );
 
---------------
 
 GetCyberIDAttr
 ==============
@@ -186,7 +177,6 @@ Synopsis
          ULONG DisplayModeID
  );
 
---------------
 
 GetCyberMapAttr
 ===============
@@ -200,7 +190,6 @@ Synopsis
          ULONG attribute
  );
 
---------------
 
 InvertPixelArray
 ================
@@ -217,7 +206,6 @@ Synopsis
          UWORD height
  );
 
---------------
 
 IsCyberModeID
 =============
@@ -230,7 +218,6 @@ Synopsis
          ULONG modeID
  );
 
---------------
 
 LockBitMapTagList
 =================
@@ -244,7 +231,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 MovePixelArray
 ==============
@@ -263,7 +249,6 @@ Synopsis
          UWORD SizeY
  );
 
---------------
 
 ReadPixelArray
 ==============
@@ -285,7 +270,6 @@ Synopsis
          UBYTE dstformat
  );
 
---------------
 
 ReadRGBPixel
 ============
@@ -300,7 +284,6 @@ Synopsis
          UWORD y
  );
 
---------------
 
 ScalePixelArray
 ===============
@@ -322,7 +305,6 @@ Synopsis
          UBYTE SrcFormat
  );
 
---------------
 
 UnLockBitMap
 ============
@@ -335,7 +317,6 @@ Synopsis
          APTR Handle
  );
 
---------------
 
 UnLockBitMapTagList
 ===================
@@ -349,7 +330,6 @@ Synopsis
          struct TagItem * Tags
  );
 
---------------
 
 WriteLUTPixelArray
 ==================
@@ -372,7 +352,6 @@ Synopsis
          UBYTE CTabFormat
  );
 
---------------
 
 WritePixelArray
 ===============
@@ -394,7 +373,6 @@ Synopsis
          UBYTE srcformat
  );
 
---------------
 
 WritePixelArrayAlpha
 ====================
@@ -416,7 +394,6 @@ Synopsis
          ULONG globalalpha
  );
 
---------------
 
 WriteRGBPixel
 =============
@@ -432,5 +409,4 @@ Synopsis
          ULONG pixel
  );
 
---------------
 

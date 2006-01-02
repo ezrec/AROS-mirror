@@ -1,12 +1,12 @@
+=========
+workbench
+=========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-=========
-workbench
-=========
 
 `AddAppIconA`_
 `AddAppMenuItemA`_
@@ -226,7 +226,6 @@ See also
  RemoveAppIcon(), WorkbenchControlA(), DrawIconStateA()
 
 
---------------
 
 AddAppMenuItemA
 ===============
@@ -303,7 +302,6 @@ See also
  RemoveAppMenuItem()
 
 
---------------
 
 AddAppWindowA
 =============
@@ -375,7 +373,6 @@ See also
  AddAppWindowDropZoneA(), RemoveAppWindow()
 
 
---------------
 
 AddAppWindowDropZoneA
 =====================
@@ -485,7 +482,6 @@ Notes
  relative to the drop zone coordinates.
 
 
---------------
 
 ChangeWorkbenchSelectionA
 =========================
@@ -500,7 +496,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 CloseWorkbenchObjectA
 =====================
@@ -514,7 +509,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 MakeWorkbenchObjectVisibleA
 ===========================
@@ -528,7 +522,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 OpenWorkbenchObjectA
 ====================
@@ -542,7 +535,6 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 
 RegisterWorkbench
 =================
@@ -622,7 +614,6 @@ See also
      UnregisterWorkbench()
 
 
---------------
 
 RemoveAppIcon
 =============
@@ -677,7 +668,6 @@ See also
  AddAppIcon()
 
 
---------------
 
 RemoveAppMenuItem
 =================
@@ -732,7 +722,6 @@ See also
  AddAppMenuItem()
 
 
---------------
 
 RemoveAppWindow
 ===============
@@ -790,7 +779,6 @@ See also
  AddAppWindow(), RemoveAppWindowDropZone()
 
 
---------------
 
 RemoveAppWindowDropZone
 =======================
@@ -846,7 +834,6 @@ Notes
  the call to this function.
 
 
---------------
 
 UnregisterWorkbench
 ===================
@@ -901,7 +888,6 @@ See also
      RegisterWorkbench()
 
 
---------------
 
 UpdateWorkbenchObjectA
 ======================
@@ -952,7 +938,6 @@ Bugs
      once there is a adequate notification API in dos.library that works.
 
 
---------------
 
 WBInfo
 ======
@@ -967,7 +952,6 @@ Synopsis
          struct Screen * screen
  );
 
---------------
 
 WorkbenchControlA
 =================
@@ -981,5 +965,4 @@ Synopsis
          struct TagItem * tags
  );
 
---------------
 

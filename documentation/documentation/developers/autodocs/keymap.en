@@ -1,12 +1,12 @@
+======
+keymap
+======
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-======
-keymap
-======
 
 `AskKeyMapDefault`_
 `MapANSI`_
@@ -46,7 +46,6 @@ See also
      SetKeyMapDefault()
 
 
---------------
 
 MapANSI
 =======
@@ -96,7 +95,6 @@ Result
               generated in buffer. Or an negative value to indicate
               an error.
 
---------------
 
 MapRawKey
 =========
@@ -151,7 +149,6 @@ See also
      MapAnsi()
 
 
---------------
 
 SetKeyMapDefault
 ================
@@ -206,5 +203,4 @@ See also
      AskKeyMapDefault()
 
 
---------------
 

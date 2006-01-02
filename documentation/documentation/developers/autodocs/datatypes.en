@@ -1,12 +1,12 @@
+=========
+datatypes
+=========
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-=========
-datatypes
-=========
 
 `AddDTObject`_
 `CopyDTMethods`_
@@ -103,7 +103,6 @@ See also
  RemoveDTObject(), intuition.library/AddGList()
 
 
---------------
 
 CopyDTMethods
 =============
@@ -154,7 +153,6 @@ See also
  FindMethod(), CopyDTTriggerMethods(), FreeDTMethods()
 
 
---------------
 
 CopyDTTriggerMethods
 ====================
@@ -218,7 +216,6 @@ See also
  FindTriggerMethod(), CopyDTMethods(), FreeDTMethods()
 
 
---------------
 
 DisposeDTObject
 ===============
@@ -255,7 +252,6 @@ See also
  NewDTObjectA()
 
 
---------------
 
 DoAsyncLayout
 =============
@@ -289,7 +285,6 @@ Inputs
  gpl     --  gpLayout message pointer
 
 
---------------
 
 DoDTDomainA
 ===========
@@ -357,7 +352,6 @@ See also
  <intuition/gadgetclass.h>
 
 
---------------
 
 DoDTMethodA
 ===========
@@ -408,7 +402,6 @@ See also
  intuition.library/DoGadgetMethod()
 
 
---------------
 
 DrawDTObjectA
 =============
@@ -486,7 +479,6 @@ See also
  ObtainDataTypeA()
 
 
---------------
 
 FindMethod
 ==========
@@ -533,7 +525,6 @@ See also
  GetDTMethods(), CopyDTMethods()
 
 
---------------
 
 FindToolNodeA
 =============
@@ -600,7 +591,6 @@ See also
  LaunchToolA()
 
 
---------------
 
 FindTriggerMethod
 =================
@@ -653,7 +643,6 @@ See also
  GetDTTriggerMethods(), CopyDTTriggerMethods()
 
 
---------------
 
 FreeDTMethods
 =============
@@ -690,7 +679,6 @@ See also
  CopyDTMethods(), CopyDTTriggerMethods()
 
 
---------------
 
 GetDTAttrsA
 ===========
@@ -739,7 +727,6 @@ See also
  SetDTAttrsA(), intuition.library/GetAttr()
 
 
---------------
 
 GetDTMethods
 ============
@@ -785,7 +772,6 @@ See also
  GetDTTriggerMethods()
 
 
---------------
 
 GetDTString
 ===========
@@ -822,7 +808,6 @@ Result
  Pointer to a NULL terminated string.
 
 
---------------
 
 GetDTTriggerMethodDataFlags
 ===========================
@@ -879,7 +864,6 @@ See also
  CopyDTTriggerMethods(), FindTriggerMethod()
 
 
---------------
 
 GetDTTriggerMethods
 ===================
@@ -945,7 +929,6 @@ See also
  GetDTMethods()
 
 
---------------
 
 LaunchToolA
 ===========
@@ -1005,7 +988,6 @@ See also
  NewDTObjectA()
 
 
---------------
 
 LockDataType
 ============
@@ -1052,7 +1034,6 @@ See also
  ObtainDataTypeA(), ReleaseDataType()
 
 
---------------
 
 NewDTObjectA
 ============
@@ -1152,7 +1133,6 @@ See also
  intuition.library/NewObjectA()
 
 
---------------
 
 ObtainDTDrawInfoA
 =================
@@ -1208,7 +1188,6 @@ See also
  DrawDTObjectA(), ReleaseDTDrawInfo()
 
 
---------------
 
 ObtainDataTypeA
 ===============
@@ -1264,7 +1243,6 @@ See also
  ReleaseDataType()
 
 
---------------
 
 PrintDTObjectA
 ==============
@@ -1318,7 +1296,6 @@ Notes
  This will signal the print process with a SIGBREAK_CTRL_C.
 
 
---------------
 
 RefreshDTObjectA
 ================
@@ -1361,7 +1338,6 @@ See also
  AddDTObject(), RemoveDTObject(), intuition.library/RefreshGList()
 
 
---------------
 
 ReleaseDTDrawInfo
 =================
@@ -1416,7 +1392,6 @@ See also
  DrawDTObjectA(), ObtainDTDrawInfo()
 
 
---------------
 
 ReleaseDataType
 ===============
@@ -1454,7 +1429,6 @@ See also
  ObtainDataTypeA()
 
 
---------------
 
 RemoveDTObject
 ==============
@@ -1504,7 +1478,6 @@ See also
  AddDTObject(), intuition.library/RemoveGList()
 
 
---------------
 
 SaveDTObjectA
 =============
@@ -1561,7 +1534,6 @@ Notes
  If DTM_WRITE returns 0, the file will be deleted.
 
 
---------------
 
 SetDTAttrsA
 ===========
@@ -1605,7 +1577,6 @@ See also
  <datatypes/datatypesclass.h>
 
 
---------------
 
 StartDragSelect
 ===============
@@ -1648,5 +1619,4 @@ Result
  ERROR_OBJECT_IN_USE      --  the object is currently occupied
 
 
---------------
 

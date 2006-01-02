@@ -1,12 +1,12 @@
+====
+camd
+====
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_
 
 ----------
-
-====
-camd
-====
 
 `AddMidiLinkA`_
 `CloseMidiDevice`_
@@ -83,7 +83,6 @@ See also
              CreateMidi, SetMidiLinkAttrsA
 
 
---------------
 
 CloseMidiDevice
 ===============
@@ -110,7 +109,6 @@ See also
              OpenMidiDevice
 
 
---------------
 
 CreateMidiA
 ===========
@@ -137,7 +135,6 @@ Result
              NULL if failed.
 
 
---------------
 
 DeleteMidi
 ==========
@@ -158,7 +155,6 @@ Function
              frees all buffers, before it frees itself.
 
 
---------------
 
 EndClusterNotify
 ================
@@ -213,7 +209,6 @@ See also
      StartClusterNotify();
 
 
---------------
 
 FindCluster
 ===========
@@ -261,7 +256,6 @@ See also
              FindMidi
 
 
---------------
 
 FindMidi
 ========
@@ -302,7 +296,6 @@ Notes
              CL_Linkages must be locked.
 
 
---------------
 
 FlushMidi
 =========
@@ -336,7 +329,6 @@ See also
              GetMidi, GetSysEx
 
 
---------------
 
 GetMidi
 =======
@@ -379,7 +371,6 @@ See also
              WaitMidi
 
 
---------------
 
 GetMidiAttrsA
 =============
@@ -408,7 +399,6 @@ See also
              SetMidiAttrsA
 
 
---------------
 
 GetMidiErr
 ==========
@@ -449,7 +439,6 @@ See also
              GetMidi, WaitMidi
 
 
---------------
 
 GetMidiLinkAttrsA
 =================
@@ -486,7 +475,6 @@ See also
              SetMidiLinkAttrsA
 
 
---------------
 
 GetSysEx
 ========
@@ -522,7 +510,6 @@ See also
              SkipSysEx, QuierySysEx
 
 
---------------
 
 GoodPutMidi
 ===========
@@ -558,7 +545,6 @@ See also
              PutMidi, PutMidiMsg, Midi2Driver
 
 
---------------
 
 LockCAMD
 ========
@@ -593,7 +579,6 @@ Result
              APTR to send to UnlockCAMD
 
 
---------------
 
 Midi2Driver
 ===========
@@ -629,7 +614,6 @@ See also
              PutMidi, GoodPutMidi, PutMidiMsg
 
 
---------------
 
 MidiLinkConnected
 =================
@@ -658,7 +642,6 @@ Inputs
              midilink - pointer to midilink we want to check.
 
 
---------------
 
 MidiMsgLen
 ==========
@@ -686,7 +669,6 @@ Inputs
              msg - Message.
 
 
---------------
 
 MidiMsgType
 ===========
@@ -714,7 +696,6 @@ Inputs
              msg - midimessage.
 
 
---------------
 
 NextCluster
 ===========
@@ -818,7 +799,6 @@ See also
              NextMidiLink, NextMidi, FindCluster
 
 
---------------
 
 NextClusterLink
 ===============
@@ -864,7 +844,6 @@ Notes
              CL_Linkages must be locked.
 
 
---------------
 
 NextMidi
 ========
@@ -900,7 +879,6 @@ Notes
              CL_Linkages must be locked.
 
 
---------------
 
 NextMidiLink
 ============
@@ -938,7 +916,6 @@ Notes
              CL_Linkages must be locked.
 
 
---------------
 
 OpenMidiDevice
 ==============
@@ -965,7 +942,6 @@ See also
              CloseMidiDevice
 
 
---------------
 
 ParseMidi
 =========
@@ -1014,7 +990,6 @@ See also
              PutMidi, PutSysEx
 
 
---------------
 
 PutMidi
 =======
@@ -1069,7 +1044,6 @@ See also
              PutMidiMsg
 
 
---------------
 
 PutSysEx
 ========
@@ -1111,7 +1085,6 @@ See also
              GetSysEx
 
 
---------------
 
 QuerySysEx
 ==========
@@ -1145,7 +1118,6 @@ See also
              SkipSysEx, GetSysEx
 
 
---------------
 
 RemoveMidiLink
 ==============
@@ -1172,7 +1144,6 @@ Inputs
              midilink - pointer to midilink to remove.
 
 
---------------
 
 RethinkCAMD
 ===========
@@ -1205,7 +1176,6 @@ Bugs
              Not implemented.
 
 
---------------
 
 SetMidiAttrsA
 =============
@@ -1294,7 +1264,6 @@ See also
              GetMidiAttrsA
 
 
---------------
 
 SetMidiLinkAttrsA
 =================
@@ -1342,7 +1311,6 @@ See also
              GetMidiLinkAttrsA
 
 
---------------
 
 SkipSysEx
 =========
@@ -1376,7 +1344,6 @@ See also
              SkipSysEx, QuierySysEx, GetSysEx
 
 
---------------
 
 StartClusterNotify
 ==================
@@ -1441,7 +1408,6 @@ See also
      EndClusterNotify();
 
 
---------------
 
 UnlockCAMD
 ==========
@@ -1482,7 +1448,6 @@ See also
              LockCAMD
 
 
---------------
 
 WaitMidi
 ========
@@ -1526,5 +1491,4 @@ See also
              GetMidi
 
 
---------------
 
