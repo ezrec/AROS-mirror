@@ -215,7 +215,7 @@ in the SVN manual is quite poorly written, so an example is in order:
 
       > cd subversion-1.1.3
       > svn import -m "Initial import of SVN 1.11.12" 
-      \ https://svn.aros.org/contrib/development/versioning/svn
+      \ https://svn.aros.org:8080/svn/aros/trunk/contrib/development/versioning/svn
 
 Further reading
 ===============
