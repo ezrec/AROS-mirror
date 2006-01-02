@@ -1,0 +1,640 @@
+.. This document is automatically generated. Don't edit it!
+
+==========
+rexxsyslib
+==========
+
+`ClearRexxMsg`_
+`CreateArgstring`_
+`CreateRexxMsg`_
+`DeleteArgstring`_
+`DeleteRexxMsg`_
+`FillRexxMsg`_
+`IsRexxMsg`_
+`LengthArgstring`_
+`LockRexxBase`_
+`UnlockRexxBase`_
+
+-----------
+
+ClearRexxMsg
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID ClearRexxMsg(
+         struct RexxMsg * msgptr,
+         ULONG count
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will clear a specified number of arguments by calling
+     DeleteArgstring on them.
+
+
+Inputs
+~~~~~~
+::
+
+     msgptr - RexxMsg to clear the arguments from
+     count  - The number of arguments in the message to clear
+
+
+Result
+~~~~~~
+::
+
+     void
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+      FillRexxMsg(), DeleteArgstring()
+
+
+--------------
+
+CreateArgstring
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ UBYTE * CreateArgstring(
+         UBYTE * string,
+         ULONG length
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will create a RexxArg structure and copy the supplied
+     string into it.
+
+
+Inputs
+~~~~~~
+::
+
+     string - String to copy into the RexxArg structure
+     length - Length of the string to copy.
+
+
+Result
+~~~~~~
+::
+
+     Will return a pointer the string part of the allocated RexxArg
+     structure.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Pointer to the string returned by this function may be used as a
+     null terminated C string but should be considered read-only.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     DeleteArgstring(), LengthArgstring()
+
+
+--------------
+
+CreateRexxMsg
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct RexxMsg * CreateRexxMsg(
+         struct MsgPort * port,
+         UBYTE          * extension,
+         UBYTE          * host
+ );
+
+Function
+~~~~~~~~
+::
+
+     Creation and initialization of a RexxMsg structure
+
+
+Inputs
+~~~~~~
+::
+
+     port      - ReplyPort where the message is replied when it has been
+                 handled
+     extension - The filename extension to use when searching for macros
+     host      - Name of the port to use as the initial command host
+                 (e.g. as used in the ADDRESS Rexx statement). When NULL
+                 is given "REXX" will be used.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to the freshly allocated RexxMsg.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     DeleteRexxMsg(), IsRexxMsg(), FillRexxMsg(), ClearRexxMsg()
+
+
+--------------
+
+DeleteArgstring
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID DeleteArgstring(
+         UBYTE * argstring
+ );
+
+Function
+~~~~~~~~
+::
+
+     Deletes a RexxArg structure previously created with CreateArgstring
+
+
+Inputs
+~~~~~~
+::
+
+     Pointer to the string part of the RexxArg structure returned from
+     CreateArgstring
+
+
+Result
+~~~~~~
+::
+
+     void
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CreateArgstring()
+
+
+--------------
+
+DeleteRexxMsg
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID DeleteRexxMsg(
+         struct RexxMsg * packet
+ );
+
+Function
+~~~~~~~~
+::
+
+      Deletes a RexxMsg structure
+
+
+Inputs
+~~~~~~
+::
+
+      packet - The RexxMsg to delete.
+
+
+Result
+~~~~~~
+::
+
+      void
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+      CreateRexxMsg()
+
+
+--------------
+
+FillRexxMsg
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL FillRexxMsg(
+         struct RexxMsg * msgptr,
+         ULONG count,
+         ULONG mask
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will convert the value(s) provided in rm_Args of the
+     RexxMsg. The input can be either a string or a number.
+
+
+Inputs
+~~~~~~
+::
+
+     msgptr - RexxMsg to create the RexxArgs for.
+     count  - The number of ARGs in the rm_Args structure field that is
+              filled with a value and has to be converted.
+     mask   - Bit 0-count from this mask indicate wether the value in
+              rm_Args is a string or a number. When the bit is cleared the
+              value is a pointer to a string. When it is set it is treated
+              as a signed number.
+
+
+Result
+~~~~~~
+::
+
+     Returns TRUE if succeeded, FALSE otherwise. When FALSE is returned all
+     memory already allocated will be Freed before returning.
+
+
+Example
+~~~~~~~
+::
+
+     This code will convert a string and a number to RexxArgs:
+
+     struct RexxMsg *rm;
+
+     ...
+
+     rm->rm_Args[0] = "Test";
+     rm->rm_Args[1] = (UBYTE *)5;
+
+     if (!FillRexxMsg(rm, 2, 1<<1))
+     ...
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ClearRexxMsg(), CreateRexxMsg(), CreateArgstring()
+
+
+--------------
+
+IsRexxMsg
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL IsRexxMsg(
+         struct RexxMsg * msgptr
+ );
+
+Function
+~~~~~~~~
+::
+
+     Test to see if given Message is a RexxMsg
+
+
+Inputs
+~~~~~~
+::
+
+     msgptr - Message to test
+
+
+Result
+~~~~~~
+::
+
+     TRUE if it is one, FALSE otherwise
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CreateRexxMsg
+
+
+--------------
+
+LengthArgstring
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG LengthArgstring(
+         UBYTE * argstring
+ );
+
+Function
+~~~~~~~~
+::
+
+     This will return the length of a string created with CreateArgstring
+
+
+Inputs
+~~~~~~
+::
+
+     argstring - Pointer to the string part of a RexxArg structure returned
+                 from CreateArgstring
+
+
+Result
+~~~~~~
+::
+
+     length of the argstring
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CreateArgstring()
+
+
+--------------
+
+LockRexxBase
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID LockRexxBase(
+         ULONG resource
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+UnlockRexxBase
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID UnlockRexxBase(
+         ULONG resource
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+

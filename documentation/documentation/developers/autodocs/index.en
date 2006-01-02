@@ -1,0 +1,46 @@
+======================
+Autodocs for libraries
+======================
+
+`amigaguide <amigaguide.en>`_
+`aros <aros.en>`_
+`asl <asl.en>`_
+`battclock <battclock.en>`_
+`boopsi <boopsi.en>`_
+`bsdsocket <bsdsocket.en>`_
+`bullet <bullet.en>`_
+`camd <camd.en>`_
+`cgfx <cgfx.en>`_
+`cgxvideo <cgxvideo.en>`_
+`commodities <commodities.en>`_
+`coolimages <coolimages.en>`_
+`datatypes <datatypes.en>`_
+`desktop <desktop.en>`_
+`diskfont <diskfont.en>`_
+`dos <dos.en>`_
+`exec <exec.en>`_
+`expansion <expansion.en>`_
+`gadtools <gadtools.en>`_
+`graphics <graphics.en>`_
+`hyperlayers <hyperlayers.en>`_
+`icon <icon.en>`_
+`iffparse <iffparse.en>`_
+`index <index.en>`_
+`intuition <intuition.en>`_
+`keymap <keymap.en>`_
+`locale <locale.en>`_
+`lowlevel <lowlevel.en>`_
+`misc <misc.en>`_
+`muimaster <muimaster.en>`_
+`nonvolatile <nonvolatile.en>`_
+`oop <oop.en>`_
+`partition <partition.en>`_
+`prometheus <prometheus.en>`_
+`realtime <realtime.en>`_
+`reqtools <reqtools.en>`_
+`rexxsupport <rexxsupport.en>`_
+`rexxsyslib <rexxsyslib.en>`_
+`security <security.en>`_
+`timer <timer.en>`_
+`utility <utility.en>`_
+`workbench <workbench.en>`_

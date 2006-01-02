@@ -1,0 +1,12368 @@
+.. This document is automatically generated. Don't edit it!
+
+========
+graphics
+========
+
+`AddAnimOb`_
+`AddBob`_
+`AddFont`_
+`AddVSprite`_
+`AllocBitMap`_
+`AllocDBufInfo`_
+`AllocRaster`_
+`AllocScreenBitMap`_
+`AllocSpriteDataA`_
+`AndRectRect`_
+`AndRectRegion`_
+`AndRectRegionND`_
+`AndRegionRegion`_
+`AndRegionRegionND`_
+`Animate`_
+`AreRegionsEqual`_
+`AreaDraw`_
+`AreaEllipse`_
+`AreaEnd`_
+`AreaMove`_
+`AskFont`_
+`AskSoftStyle`_
+`AttachPalExtra`_
+`AttemptLockLayerRom`_
+`BestModeIDA`_
+`BitMapScale`_
+`BltBitMap`_
+`BltBitMapRastPort`_
+`BltClear`_
+`BltMaskBitMapRastPort`_
+`BltPattern`_
+`BltRastPortBitMap`_
+`BltTemplate`_
+`CBump`_
+`CMove`_
+`CWait`_
+`CalcIVG`_
+`ChangeExtSpriteA`_
+`ChangeSprite`_
+`ChangeVPBitMap`_
+`ClearEOL`_
+`ClearRectRegion`_
+`ClearRectRegionND`_
+`ClearRegion`_
+`ClearRegionRegion`_
+`ClearRegionRegionND`_
+`ClearScreen`_
+`ClipBlit`_
+`CloneRastPort`_
+`CloseFont`_
+`CloseMonitor`_
+`CoerceMode`_
+`CopyRegion`_
+`CopySBitMap`_
+`CreateRastPort`_
+`DeinitRastPort`_
+`DisownBlitter`_
+`DisposeRegion`_
+`DoCollision`_
+`Draw`_
+`DrawEllipse`_
+`DrawGList`_
+`EraseRect`_
+`ExtendFont`_
+`FindColor`_
+`FindDisplayInfo`_
+`Flood`_
+`FontExtent`_
+`FreeBitMap`_
+`FreeColorMap`_
+`FreeCopList`_
+`FreeCprList`_
+`FreeDBufInfo`_
+`FreeGBuffers`_
+`FreeRastPort`_
+`FreeRaster`_
+`FreeSprite`_
+`FreeSpriteData`_
+`FreeVPortCopLists`_
+`GetAPen`_
+`GetBPen`_
+`GetBitMapAttr`_
+`GetColorMap`_
+`GetDrMd`_
+`GetExtSpriteA`_
+`GetGBuffers`_
+`GetOutlinePen`_
+`GetRGB32`_
+`GetRGB4`_
+`GetRPAttrsA`_
+`GetSprite`_
+`GetVPModeID`_
+`GfxAssociate`_
+`GfxFree`_
+`GfxLookUp`_
+`GfxNew`_
+`InitArea`_
+`InitBitMap`_
+`InitGMasks`_
+`InitGels`_
+`InitGfxHidd`_
+`InitMasks`_
+`InitRastPort`_
+`InitTmpRas`_
+`InitVPort`_
+`InitView`_
+`IsPointInRegion`_
+`LateGfxInit`_
+`LoadRGB32`_
+`LoadRGB4`_
+`LoadView`_
+`LockLayerRom`_
+`MakeVPort`_
+`ModeNotAvailable`_
+`MouseCoordsRelative`_
+`Move`_
+`MoveSprite`_
+`MrgCop`_
+`NewRectRegion`_
+`NewRegion`_
+`NextDisplayInfo`_
+`ObtainBestPenA`_
+`ObtainPen`_
+`OpenFont`_
+`OpenMonitor`_
+`OrRectRegion`_
+`OrRectRegionND`_
+`OrRegionRegion`_
+`OrRegionRegionND`_
+`OwnBlitter`_
+`PolyDraw`_
+`QBSBlit`_
+`QBlit`_
+`ReadPixel`_
+`ReadPixelArray8`_
+`ReadPixelLine8`_
+`RectFill`_
+`ReleasePen`_
+`RemFont`_
+`RemIBob`_
+`RemVSprite`_
+`ScalerDiv`_
+`ScrollRaster`_
+`ScrollRasterBF`_
+`ScrollRegion`_
+`ScrollVPort`_
+`SetABPenDrMd`_
+`SetAPen`_
+`SetBPen`_
+`SetChipRev`_
+`SetCollision`_
+`SetDrMd`_
+`SetFont`_
+`SetFrontBitMap`_
+`SetMaxPen`_
+`SetOutlinePen`_
+`SetPointerPos`_
+`SetPointerShape`_
+`SetRGB32`_
+`SetRGB32CM`_
+`SetRGB4`_
+`SetRGB4CM`_
+`SetRPAttrsA`_
+`SetRast`_
+`SetRegion`_
+`SetSoftStyle`_
+`SetWriteMask`_
+`ShowImminentReset`_
+`SortGList`_
+`StripFont`_
+`SwapRegions`_
+`SyncSBitMap`_
+`Text`_
+`TextExtent`_
+`TextFit`_
+`TextLength`_
+`UCopperListInit`_
+`UnlockLayerRom`_
+`VBeamPos`_
+`VideoControl`_
+`WaitBOVP`_
+`WaitBlit`_
+`WaitTOF`_
+`WeighTAMatch`_
+`WriteChunkyPixels`_
+`WritePixel`_
+`WritePixelArray8`_
+`WritePixelLine8`_
+`XorRectRegion`_
+`XorRectRegionND`_
+`XorRegionRegion`_
+`XorRegionRegionND`_
+
+-----------
+
+AddAnimOb
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddAnimOb(
+         struct AnimOb * anOb,
+         struct AnimOb ** anKey,
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+     Link the AnimOb into the list pointed to by AnimKey.
+     Calls AddBob with all components of a Bob and initializes
+     all the timers of the components of this AnimOb.
+     You have to provide a valid GelsInfo structure that is linked
+     to the RastPort (InitGels())
+
+
+Inputs
+~~~~~~
+::
+
+     anOb  = pointer to AnimOb structure to be added to list of
+             AnimObs
+     anKey = address of a pointer to the first AnimOb in the list
+             (when first calling this function the content of
+             this address has to be NULL!)
+     rp    = pointer to a valid RastPort with initialized GelsInfo
+             structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitGels() Animate() graphics/rastport.h graphics/gels.h
+
+
+--------------
+
+AddBob
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddBob(
+         struct Bob * bob,
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+     The Bob is linked into the current gel list via AddVSprite.
+     The Bob's flags are set up.
+
+
+Inputs
+~~~~~~
+::
+
+     Bob = pointer to Bob to be added to gel list
+     rp  = pointer to RastPort that has an initilized GelsInfo linked
+           to it (see InitGels()).
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitGels() AddVSprite() graphics/rastport.h graphics/gels.h
+
+
+--------------
+
+AddFont
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddFont(
+         struct TextFont * textFont
+ );
+
+Function
+~~~~~~~~
+::
+
+     Add a font to the list of public fonts. After that, you can
+     open the font with OpenFont().
+
+
+Inputs
+~~~~~~
+::
+
+     textFont - The font to add.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenFont(), RemFont(), CloseFont(), SetFont()
+
+
+--------------
+
+AddVSprite
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddVSprite(
+         struct VSprite * vs,
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+     The VSprite is linked into the current gel list using it's
+     y and x coordinates. The VSprite's flags are set up.
+
+
+Inputs
+~~~~~~
+::
+
+     vs = pointer to VSprite to be linked into gel list
+     rp = pointer to RastPort that has an initilized GelsInfo linked
+          to it (see InitGels()).
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitGels()  graphics/gels.h graphics/rastport.h
+
+
+--------------
+
+AllocBitMap
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct BitMap * AllocBitMap(
+         ULONG sizex,
+         ULONG sizey,
+         ULONG depth,
+         ULONG flags,
+         struct BitMap * friend_bitmap
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocates and initializes a bitmap structure. Allocates and
+     initializes bitplane data, and sets the bitmap's planes to point to
+     it.
+
+
+Inputs
+~~~~~~
+::
+
+     sizex, sizey - The width and height in pixels
+     depth - The depth of the bitmap. A depth of 1 will allocate a
+         bitmap for two colors, a depth of 24 will allocate a bitmap for
+         16 million colors. Pixels with AT LEAST this many bits will be
+         allocated.
+     flags - One of these flags:
+
+         \begin{description}
+         \item{BMF_CLEAR} Fill the bitmap with color 0.
+
+         \item{BMF_DISPLAYABLE} to specify that this bitmap data should
+             be allocated in such a manner that it can be displayed.
+             Displayable data has more severe alignment restrictions
+             than non-displayable data in some systems.
+
+         \item{BMF_INTERLEAVED} tells graphics that you would like your
+             bitmap to be allocated with one large chunk of display
+             memory for all bitplanes. This minimizes color flashing on
+             deep displays. If there is not enough contiguous RAM for an
+             interleaved bitmap, graphics.library will fall back to a
+             non-interleaved one.
+
+         \item{BMF_MINPLANES} causes graphics to only allocate enough
+             space in the bitmap structure for "depth" plane pointers.
+             This is for system use and should not be used by
+             applications use as it is inefficient, and may waste
+             memory.
+
+         \item{BMF_SPECIALFMT} causes graphics to allocate a bitmap
+             of a standard CyberGraphX format. The format
+             (PIXFMT_????) must be stored in the 8 most significant bits.
+
+         \end{description}
+
+     friend_bitmap - pointer to another bitmap, or NULL. If this pointer
+         is passed, then the bitmap data will be allocated in
+         the most efficient form for blitting to friend_bitmap.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the new bitmap.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     When allocating using a friend_bitmap bitmap, it is not safe to assume
+     anything about the structure of the bitmap data if that friend_bitmap
+     BitMap might not be a standard amiga bitmap (for instance, if the
+     workbench is running on a non-amiga display device, its
+     Screen->RastPort->BitMap won't be in standard amiga format. The
+     only safe operations to perform on a non-standard BitMap are:
+
+         \begin{itemize}
+         \item blitting it to another bitmap, which must be either a
+             standard Amiga bitmap, or a friend_bitmap of this bitmap.
+
+         \item blitting from this bitmap to a friend_bitmap bitmap or to a
+             standard Amiga bitmap.
+
+         \item attaching it to a rastport and making rendering calls.
+
+         \end{itemize}
+
+     Good arguments to pass for the friend_bitmap are your window's
+     RPort->BitMap, and your screen's RastPort->BitMap. Do NOT pass
+     &(screenptr->BitMap)!
+
+     BitMaps not allocated with BMF_DISPLAYABLE may not be used as
+     Intuition Custom BitMaps or as RasInfo->BitMaps.  They may be
+     blitted to a BMF_DISPLAYABLE BitMap, using one of the BltBitMap()
+     family of functions.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     FreeBitMap()
+
+
+--------------
+
+AllocDBufInfo
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct DBufInfo * AllocDBufInfo(
+         struct ViewPort * vp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ Allocates a double buffering structure used by ChangeVPBitMap().
+
+
+Inputs
+~~~~~~
+::
+
+
+ vp  -  pointer to a ViewPort
+
+
+Result
+~~~~~~
+::
+
+
+ Returns NULL if there wasn't enough memory (or if the viewport doesn't
+ support double buffering).
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AllocRaster
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ PLANEPTR AllocRaster(
+         ULONG width,
+         ULONG height
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocates memory for a single bitplane with the specified size in
+     pixels.
+
+
+Inputs
+~~~~~~
+::
+
+     width, height - The size of the resulting bitplane in pixels.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the single bitplane.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     You should not use this function to create BitMaps. Call
+     AllocBitMap() instead.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocBitMap(), FreeRaster(), FreeBitMap()
+
+
+--------------
+
+AllocScreenBitMap
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct BitMap * AllocScreenBitMap(
+         ULONG modeid
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocates a bitmap for use with a screen opened by OpenScreen()
+
+
+Inputs
+~~~~~~
+::
+
+     modeid - the DisplayID of the screen to create
+
+
+Result
+~~~~~~
+::
+
+     bitmap - pointer to the newly created bitmap.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is private and AROS specific.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AllocSpriteDataA
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct ExtSprite * AllocSpriteDataA(
+         struct BitMap * bitmap,
+         struct TagItem * tagList
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     bitmap - pointer to a bitmap. This bitmap provides the source data
+              for the sprite image
+     tags   - pointer to a taglist
+
+
+Result
+~~~~~~
+::
+
+     SpritePtr - pointer to a ExtSprite structure,
+                 or NULL if there is a failure.
+                 You should pass this pointer to FreeSpriteData()
+                 when this sprite is not needed anymore.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AndRectRect
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL AndRectRect(
+         struct Rectangle * rect1,
+         struct Rectangle * rect2,
+         struct Rectangle * intersect
+ );
+
+Function
+~~~~~~~~
+::
+
+     Calculate the intersection rectangle between the
+     given Rectangle rect1 and the given Rectangle rect2
+     leaving the result in intersect (if intersect != NULL).
+
+
+Inputs
+~~~~~~
+::
+
+     rect1 - pointer to 1st Rectangle
+     rect2 - pointer to 2nd Rectangle
+     intersect -> pointer to rectangle which will hold result. May be NULL.
+
+
+Result
+~~~~~~
+::
+
+     TRUE if rect1 and rect2 do intersect. In this case intersect (unless NULL)
+     will contain the intersection rectangle.
+
+     FALSE if rect1 and rect2 do not overlap. "intersect" will
+     then be left unchanged.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function does not exist in AmigaOS.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AndRectRegion() AndRegionRegion()
+
+
+--------------
+
+AndRectRegion
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void AndRectRegion(
+         struct Region    * Reg,
+         struct Rectangle * Rect
+ );
+
+Function
+~~~~~~~~
+::
+
+     Remove everything inside 'region' that is outside 'rectangle'
+
+
+Inputs
+~~~~~~
+::
+
+     region - pointer to Region structure
+     rectangle - pointer to Rectangle structure
+
+
+Notes
+~~~~~
+::
+
+     This is the only *RectRegion function that cannot fail
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AndRegionRegion() OrRectRegion() XorRectRegion() ClearRectRegion()
+     NewRegion()
+
+
+--------------
+
+AndRectRegionND
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Region * AndRectRegionND(
+         struct Region    * Reg,
+         struct Rectangle * Rect
+ );
+
+Function
+~~~~~~~~
+::
+
+     Remove everything inside 'region' that is outside 'rectangle'
+
+
+Inputs
+~~~~~~
+::
+
+     region - pointer to Region structure
+     rectangle - pointer to Rectangle structure
+
+
+Result
+~~~~~~
+::
+
+     The resulting region or NULL in case there's no enough free memory
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AndRegionRegion() OrRectRegion() XorRectRegion() ClearRectRegion()
+     NewRegion()
+
+
+--------------
+
+AndRegionRegion
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL AndRegionRegion(
+         struct Region * R1,
+         struct Region * R2
+ );
+
+Function
+~~~~~~~~
+::
+
+     AND of one region with another region, leaving result in 
+     second region.
+
+
+Inputs
+~~~~~~
+::
+
+     region1 - pointer to a region structure
+     region2 - pointer to a region structure
+
+
+Result
+~~~~~~
+::
+
+     TRUE if the operation was succesful, else FALSE
+     (out of memory)
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     XorRegionRegion(), OrRegionRegion()
+
+
+--------------
+
+AndRegionRegionND
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Region * AndRegionRegionND(
+         struct Region * R1,
+         struct Region * R2
+ );
+
+Function
+~~~~~~~~
+::
+
+     AND of one region with another region
+
+
+Inputs
+~~~~~~
+::
+
+     region1 - pointer to a region structure
+     region2 - pointer to a region structure
+
+
+Result
+~~~~~~
+::
+
+     The resulting region or NULL in case there's no enough free memory
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     XorRegionRegion(), OrRegionRegion()
+
+
+--------------
+
+Animate
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void Animate(
+         struct AnimOb ** anKey,
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+     Animate every AnimOb in the list. In particular do the following:
+     - update location and velocities
+     - call AnimOb's special routine if supplied
+     - for every component of the Anim ob do:
+       - switch to new sequence if current sequence times out
+       - call the special routine of the component if supplied
+       - set the the coordinates of the VSprite of this
+         sequence to whatever these routines cause
+
+ INPUT
+     anKey = address of a pointer to the firts AnimOb in the list
+             (same address that was passed to AddAnimOb!)
+     rp    = pointer to a valid RastPort structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddAnimOb() graphics/rastport.h graphics/gels.h
+
+
+--------------
+
+AreRegionsEqual
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL AreRegionsEqual(
+         struct Region * R1,
+         struct Region * R2
+ );
+
+Function
+~~~~~~~~
+::
+
+     Compares two regions.
+
+
+Inputs
+~~~~~~
+::
+
+     region1 - pointer to a region structure
+     region2 - pointer to a region structure
+
+
+Result
+~~~~~~
+::
+
+     TRUE if the regions are equal, FALSE otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     XorRegionRegion(), OrRegionRegion()
+
+
+--------------
+
+AreaDraw
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG AreaDraw(
+         struct RastPort * rp,
+         WORD x,
+         WORD y
+ );
+
+Function
+~~~~~~~~
+::
+
+     Add a point to the vector buffer.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - pointer to a valid RastPort structure with a pointer to
+          the previously initilized AreaInfo structure.
+     x  - x-coordinate of the point in the raster
+     y  - y-coordinate of the point in the raster
+
+
+Result
+~~~~~~
+::
+
+     error -  0 for success
+             -1 if the vector collection matrix is full
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitArea() AreaMove() AreaEllipse() AreaCircle() graphics/rastport.h
+
+
+--------------
+
+AreaEllipse
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG AreaEllipse(
+         struct RastPort * rp,
+         WORD cx,
+         WORD cy,
+         WORD a,
+         WORD b
+ );
+
+Function
+~~~~~~~~
+::
+
+     Add an ellipse to the vector buffer. An ellipse takes up two
+     entries in the buffer.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - pointer to a valid RastPort structure with a pointer to
+          the previously initilized AreaInfo structure.
+     cx - x coordinate of the centerpoint relative to rastport
+     cy - y coordinate of the centerpoint relative to rastport
+     a  - horizontal radius of the ellipse (> 0)
+     b  - vertical radius of the ellipse (> 0)
+
+
+Result
+~~~~~~
+::
+
+     error -  0 for success
+             -1 if the vector collection matrix is full
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitArea() AreaMove() AreaDraw() AreaCircle() graphics/rastport.h
+
+
+--------------
+
+AreaEnd
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG AreaEnd(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+     Process the filled vector buffer. 
+     After the operation the buffer is reinitilized for
+     processing of further Area functions.
+     Makes use of the raster given by the TmpRas structure that
+     is linked to the rastport.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - pointer to a valid RastPort structure with a pointer to
+          the previously initilized AreaInfo structure.
+
+
+
+Result
+~~~~~~
+::
+
+     error -  0 for success
+             -1 a error occurred
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     There is still a problem when some polygons are filled that
+     pixels are missing. This could be due to the way lines are 
+     drawn. All lines should be drawn from lower
+     y coordinates to higher y coordinates since this is the
+     way the alogrithm calculates lines here. For example, it
+     might make a difference whether a line is drawn from lower
+     to higher y coordinates. Examples for two same lines with
+     different layout:
+     
+          ****              *****
+     *****              ****
+     
+
+
+See also
+~~~~~~~~
+::
+
+     InitArea() AreaDraw() AreaEllipse() AreaCircle() graphics/rastport.h
+
+
+--------------
+
+AreaMove
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG AreaMove(
+         struct RastPort * rp,
+         WORD x,
+         WORD y
+ );
+
+Function
+~~~~~~~~
+::
+
+     Define a new starting point in the vector list for the following
+     polygon defined by calls to AreaDraw(). The last polygon is closed
+     if it wasn't closed by the user and the new starting points are
+     added to the vector collection matrix.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - pointer to a valid RastPort structure with a pointer to
+          the previously initilized AreaInfo structure.
+     x  - x-coordinate of the starting-point in the raster
+     y  - y-coordinate of the starting-point in the raster
+
+
+Result
+~~~~~~
+::
+
+     error -  0 for success
+             -1 if the vector collection matrix is full
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitArea() AreaDraw() AreaEllipse() AreaCircle() graphics/rastport.h
+
+
+--------------
+
+AskFont
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void AskFont(
+         struct RastPort * rp,
+         struct TextAttr * textAttr
+ );
+
+Function
+~~~~~~~~
+::
+
+     Query the attributes of the current font in a RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - Query this RastPort.
+
+
+Result
+~~~~~~
+::
+
+     textAttr will contain a description of the font.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AskSoftStyle
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG AskSoftStyle(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ Query algorithmically generated style attributes. These are the bits
+ valid to set via SetSoftStyle().
+
+
+Inputs
+~~~~~~
+::
+
+
+ pr   --  pointer to rastport
+
+
+Result
+~~~~~~
+::
+
+
+ Algorithmically generated style bits (bits not defined are also set).
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+ SetSoftStyle(), graphics/text.h
+
+
+--------------
+
+AttachPalExtra
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG AttachPalExtra(
+         struct ColorMap * cm,
+         struct ViewPort * vp
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocates a PalExtra structure and attaches it to the
+     given ColorMap. This function must be called prior to palette
+     sharing. The PalExtra structure will be freed bt FreeColorMap().
+
+
+Inputs
+~~~~~~
+::
+
+     cm  - Pointer to a color map structure
+     vp  - Pointer to the viewport associated with the ColorMap
+
+
+Result
+~~~~~~
+::
+
+     0 - success
+     1 - out of memory
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AttemptLockLayerRom
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL AttemptLockLayerRom(
+         struct Layer * l
+ );
+
+Function
+~~~~~~~~
+::
+
+     Try to lock the current layer. If it is already locked this
+     function will return FALSE, TRUE otherwise.
+     If the layer could be locked successfully nesting will take place
+     which means that for every successful locking of a layer 
+     UnlockLayerRom() has to be called for that layer to let other 
+     tasks access that layer. 
+
+
+Inputs
+~~~~~~
+::
+
+     l - pointer to layer
+
+
+Result
+~~~~~~
+::
+
+     TRUE  - layer is successfully locked for the task
+     FALSE - layer could not be locked, it's locked by another task.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+   LockLayerRom() UnlockLayerRom(), 
+
+
+--------------
+
+BestModeIDA
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG BestModeIDA(
+         struct TagItem * TagItems
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     TagItems - pointer to an array of TagItems
+
+
+Result
+~~~~~~
+::
+
+     ID - ID of the best mode to use, or INVALID_ID if a match
+          could not be found
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/modeid.h graphics/displayinfo.h
+
+
+--------------
+
+BitMapScale
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void BitMapScale(
+         struct BitScaleArgs * bitScaleArgs
+ );
+
+Function
+~~~~~~~~
+::
+
+     Scale a source bit map to a destination bit map other than
+     the source bit map.
+
+
+Inputs
+~~~~~~
+::
+
+     Pass a BitScaleArgs structure filled with the following args
+     to this function:
+       bsa_SrcX, bsa_SrcY - upper left coordinate in source bitmap
+       bsa_SrcWidth, bsa_SrcHeight - Width and Height or source bitmap
+       bsa_DestX, bsa_DestY - upper left coordinate in destination
+                              bitmap
+       bsa_DestWidth, bsa_DestHeight - this function will set these
+             values. Use the bsa_???Factor for scaling
+       bsa_XSrcFactor:bsa_XDestFactor - Set these to get approximately
+             the same ratio as bsa_XSrcWidth:bsa_XDestWidth, but
+             usually not exactly the same number.
+       bsa_YSrcFactor:bsa_YDestFactor - Set these to get approximately
+             the same ratio as bsa_YSrcWidth:YDestWidth, but
+             usually not exactly the same number.
+       bsa_SrcBitMap - pointer to source bitmap to be scaled
+       bsa_DestBitMap - pointer to destination bitmap which will
+                        will hold the scaled bitmap. Make sure it's
+                        big enough!
+       bsa_Flags - reserved for future use. Set it to zero!
+       bsa_XDDA, bsa_YDDA - for future use.
+       bsa_Reserved1, bsa_Reserved2 - for future use.
+
+
+Result
+~~~~~~
+::
+
+       bsa_DestWidth and bsa_DestHeight will be set by this function
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     - Overlapping source and destination bitmaps are not supported
+     - Make sure that you provide enough memory for the destination
+       bitmap to hold the result
+     - In the destination bitmap only the area where the scaled
+       source bitmap is put into is changed. A frame of the old
+       bitmap is left.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ScalerDiv() graphics/scales.h
+
+
+--------------
+
+BltBitMap
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG BltBitMap(
+         struct BitMap * srcBitMap,
+         LONG xSrc,
+         LONG ySrc,
+         struct BitMap * destBitMap,
+         LONG xDest,
+         LONG yDest,
+         LONG xSize,
+         LONG ySize,
+         ULONG minterm,
+         ULONG mask,
+         PLANEPTR tempA
+ );
+
+Function
+~~~~~~~~
+::
+
+     Moves a part of a bitmap around or into another bitmaps.
+
+
+Inputs
+~~~~~~
+::
+
+     srcBitMap - Copy from this bitmap.
+     xSrc, ySrc - This is the upper left corner of the area to copy.
+     destBitMap - Copy to this bitmap. May be the same as srcBitMap.
+     xDest, yDest - Upper left corner where to place the copy
+     xSize, ySize - The size of the area to copy
+     minterm - How to copy. Most useful values are 0x00C0 for a vanilla
+             copy, 0x0030 to invert the source and then copy or 0x0050
+             to ignore the source and just invert the destination. If
+             you want to calculate other values, then you must know that
+             channel A is set, if you are inside the rectangle, channel
+             B is the source and channel C is the destination of the
+             rectangle.
+
+             Bit     ABC
+              0      000
+              1      001
+              2      010
+              3      011
+              4      100
+              5      101
+              6      110
+              7      111
+
+             So 0x00C0 means: D is set if one is inside the rectangle
+             (A is set) and B (the source) is set and cleared otherwise.
+
+             To fill the rectangle, you would want to set D when A is
+             set, so the value is 0x00F0.
+
+     mask - Which planes should be copied. Typically, you should set
+             this to ~0L.
+     tempA - If the copy overlaps exactly to the left or right (i.e. the
+             scan line addresses overlap), and tempA is non-zero, it
+             points to enough chip accessible memory to hold a line of a
+             source for the blit (ie. CHIP RAM). BltBitMap will allocate
+             (and free) the needed TempA if none is provided and one is
+             needed.  Blit overlap is determined from the relation of
+             the first non-masked planes in the source and destination
+             bit maps.
+
+
+Result
+~~~~~~
+::
+
+     The number of planes actually involved in the blit.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     If a special hardware is available, this function will use it.
+
+     As a special case, plane pointers of destBitMap can contain NULL
+     or -1, which will act as if the plane was filled with 0's or 1's,
+     respectively.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ClipBlit(), BltBitMapRastPort()
+
+
+--------------
+
+BltBitMapRastPort
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ void BltBitMapRastPort(
+         struct BitMap   * srcBitMap,
+         LONG xSrc,
+         LONG ySrc,
+         struct RastPort * destRP,
+         LONG xDest,
+         LONG yDest,
+         LONG xSize,
+         LONG ySize,
+         ULONG minterm
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+BltClear
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void BltClear(
+         void * memBlock,
+         ULONG bytecount,
+         ULONG flags
+ );
+
+Function
+~~~~~~~~
+::
+
+     Use the blitter for clearing a block of Chip-Ram.
+
+     some memory.
+
+
+Inputs
+~~~~~~
+::
+
+     memBlock  - pointer to beginning of memory to be cleared
+     flags     - set bit 0 to force function to wait until
+                 the blitter - if used - is done
+                 set bit 1 for row/bytesperrow - mode
+     bytecount - if bit 1 is set to 1: bytecount contains an even number
+                                       of bytes to clear
+                 if bit 1 is set to 0: low 16 bits are taken as number of
+                                       bytes per row and upper 16 bits
+                                       are taken as number of rows.
+
+
+Result
+~~~~~~
+::
+
+     A cleared block of Chip-Ram.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitGels() Animate() graphics/rastport.h graphics/gels.h
+
+
+--------------
+
+BltMaskBitMapRastPort
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+ void BltMaskBitMapRastPort(
+         struct BitMap   * srcBitMap,
+         LONG xSrc,
+         LONG ySrc,
+         struct RastPort * destRP,
+         LONG xDest,
+         LONG yDest,
+         LONG xSize,
+         LONG ySize,
+         ULONG minterm,
+         PLANEPTR bltMask
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+BltPattern
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void BltPattern(
+         struct RastPort * rp,
+         PLANEPTR mask,
+         LONG xMin,
+         LONG yMin,
+         LONG xMax,
+         LONG yMax,
+         ULONG byteCnt
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+BltRastPortBitMap
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ void BltRastPortBitMap(
+         struct RastPort * srcRastPort,
+         LONG xSrc,
+         LONG ySrc,
+         struct BitMap * destBitMap,
+         LONG xDest,
+         LONG yDest,
+         ULONG xSize,
+         ULONG ySize,
+         ULONG minterm
+ );
+
+Function
+~~~~~~~~
+::
+
+
+     Copies the content of the rast port into the bitmap.
+     Takes cliprects into consideration.
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+BltTemplate
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void BltTemplate(
+         PLANEPTR source,
+         LONG xSrc,
+         LONG srcMod,
+         struct RastPort * destRP,
+         LONG xDest,
+         LONG yDest,
+         LONG xSize,
+         LONG ySize
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+CBump
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ void CBump(
+         struct UCopList * ucl
+ );
+
+Function
+~~~~~~~~
+::
+
+     Increment user copper list pointer. If the current user copper list
+     is full a new one will be created and worked on.
+
+
+Inputs
+~~~~~~
+::
+
+     ucl - pointer to a UCopList structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     CWAIT() and CMOVE() automatically call this function!
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CINIT CWAIT CMOVE CEND graphics/copper.h
+
+
+--------------
+
+CMove
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ void CMove(
+         struct UCopList * ucl,
+         void * reg,
+         WORD value
+ );
+
+Function
+~~~~~~~~
+::
+
+     Add a copper move instruction to the given user copper list.
+     The copper is told to move a value to register reg.
+     If you are using CMOVE() a call to CMove() and CBump() will
+     be made.
+
+
+Inputs
+~~~~~~
+::
+
+     ucl   - pointer to a UCopList structure
+     reg   - hardware register
+     value - 16 bit value to be moved to the hardware register
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CINIT CWAIT CEND graphics/copper.h
+
+
+--------------
+
+CWait
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ void CWait(
+         struct UCopList * ucl,
+         WORD v,
+         WORD h
+ );
+
+Function
+~~~~~~~~
+::
+
+     Add a copper wait instruction to the given user copper list.
+     The copper is told to wait for a vertical beam position v and
+     a horizontal beam position h.
+     If you are using CWAIT() a call to CWait() and CBump() will
+     be made.
+
+
+Inputs
+~~~~~~
+::
+
+     ucl - pointer to a UCopList structure
+     v   - vertical beam position (relative to top of viewport)
+     h   - horizontal beam position
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     It's illegal to wait for horizontal values greater than 222 decimal!
+
+
+See also
+~~~~~~~~
+::
+
+     CINIT CMOVE CEND graphics/copper.h
+
+
+--------------
+
+CalcIVG
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ UWORD CalcIVG(
+         struct View * View,
+         struct ViewPort * ViewPort
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     View     - pointer to the View
+     ViewPort - pointer to the ViewPort you are interested in
+
+
+Result
+~~~~~~
+::
+
+     count - the number of ViewPort resolution scan lines needed
+             to execute all the copper instructions for ViewPort,
+             or 0 if any error
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ChangeExtSpriteA
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ChangeExtSpriteA(
+         struct ViewPort * vp,
+         struct ExtSprite * oldsprite,
+         struct ExtSprite * newsprite,
+         struct TagItem * tags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     vp        - pointer to ViewPort structure that this sprite is
+                 relative to, or NULL if relative only top of View
+     oldsprite - pointer to the old ExtSprite structure
+     newsprite - pointer to the new ExtSprite structure
+     tags      - pointer to taglist
+
+
+Result
+~~~~~~
+::
+
+     success - 0 if there was an error
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ChangeSprite
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void ChangeSprite(
+         struct ViewPort * vp,
+         struct SimpleSprite * s,
+         void * newdata
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ChangeVPBitMap
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ void ChangeVPBitMap(
+         struct ViewPort * vp,
+         struct BitMap * bm,
+         struct DBufInfo * db
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     vp - pointer to a viewport
+     bm - pointer to a BitMap structure. This BitMap structure must be of
+          the same layout as the one attached to the viewport
+          (same depth, alignment and BytesPerRow)
+     db - pointer to a DBufInfo
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ClearEOL
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void ClearEOL(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ Clear a rectangular area from the current position to the end of the
+ rastport, the height of which is the height of the current text font.
+
+
+Inputs
+~~~~~~
+::
+
+
+ pr   --  pointer to rastport
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+ Text(), ClearScreen(), SetRast(), graphics/text.h, graphics/rastport.h
+
+
+--------------
+
+ClearRectRegion
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL ClearRectRegion(
+         struct Region    * Reg,
+         struct Rectangle * Rect
+ );
+
+Function
+~~~~~~~~
+::
+
+     Clear the given Rectangle from the given Region
+
+
+Inputs
+~~~~~~
+::
+
+     region - pointer to a Region structure
+     rectangle - pointer to a Rectangle structure
+
+
+Result
+~~~~~~
+::
+
+     FALSE if not enough memory was available, else TRUE
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AndRectRegion() OrRectRegion() XorRectRegion()
+
+
+--------------
+
+ClearRectRegionND
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Region * ClearRectRegionND(
+         struct Region    * Reg,
+         struct Rectangle * Rect
+ );
+
+Function
+~~~~~~~~
+::
+
+     Clear the given Rectangle from the given Region
+
+
+Inputs
+~~~~~~
+::
+
+     region - pointer to Region structure
+     rectangle - pointer to Rectangle structure
+
+
+Result
+~~~~~~
+::
+
+     The resulting region or NULL in case there's no enough free memory
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AndRegionRegion() OrRectRegion() XorRectRegion() ClearRectRegion()
+     NewRegion()
+
+
+--------------
+
+ClearRegion
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void ClearRegion(
+         struct Region * region
+ );
+
+Function
+~~~~~~~~
+::
+
+     Removes all rectangles in the specified region.
+
+
+Inputs
+~~~~~~
+::
+
+     region - pointer to the region structure
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     NewRegion()
+
+
+--------------
+
+ClearRegionRegion
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL ClearRegionRegion(
+         struct Region * R1,
+         struct Region * R2
+ );
+
+Function
+~~~~~~~~
+::
+
+     Clear the given Region region1 from the given Region region2
+     leaving the result in region2.
+
+
+Inputs
+~~~~~~
+::
+
+     region1 - pointer to a Region structure
+     region2 - pointer to a Rectangle structure
+
+
+Result
+~~~~~~
+::
+
+     FALSE if not enough memory was available, else TRUE
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function does not exist in AmigaOS.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ClearRectRegion() AndRectRegion() OrRectRegion() XorRectRegion()
+
+
+--------------
+
+ClearRegionRegionND
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Region * ClearRegionRegionND(
+         struct Region * R1,
+         struct Region * R2
+ );
+
+Function
+~~~~~~~~
+::
+
+     Clear the given Region region1 from the given Region region2.
+
+
+Inputs
+~~~~~~
+::
+
+     region1 - pointer to a region structure
+     region2 - pointer to a region structure
+
+
+Result
+~~~~~~
+::
+
+     The resulting region or NULL in case there's no enough free memory
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     XorRegionRegion(), OrRegionRegion()
+
+
+--------------
+
+ClearScreen
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void ClearScreen(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ Clear from the current position to the end of the rastport. Clearing
+ means setting the colour to 0 (or to BgPen if the drawmode is JAM2).
+ This includes a ClearEOL().
+
+
+Inputs
+~~~~~~
+::
+
+
+ rp   --  pointer to rastport
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+ Text(), ClearEOL(), SetRast(), graphics/text.h, graphics/rastport.h
+
+
+--------------
+
+ClipBlit
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void ClipBlit(
+         struct RastPort * srcRP,
+         LONG xSrc,
+         LONG ySrc,
+         struct RastPort * destRP,
+         LONG xDest,
+         LONG yDest,
+         LONG xSize,
+         LONG ySize,
+         UBYTE minterm
+ );
+
+Function
+~~~~~~~~
+::
+
+     Copies the contents of one rastport to another rastport.
+     Takes care of layered and non-layered source and destination
+     rastports. 
+     If you have a window you should always use this function instead
+     of BltBitMap().
+
+
+Inputs
+~~~~~~
+::
+
+     srcRP        - Copy from this RastPort.
+     xSrc, ySrc   - This is the upper left corner of the area to copy.
+     destRP       - Copy to this RastPort.
+     xDest, yDest - Upper left corner where to place the copy
+     xSize, ySize - The size of the area to copy
+     minterm - How to copy. Most useful values are 0x00C0 for a vanilla
+             copy, 0x0030 to invert the source and then copy or 0x0050
+             to ignore the source and just invert the destination. If
+             you want to calculate other values, then you must know that
+             channel A is set, if you are inside the rectangle, channel
+             B is the source and channel C is the destination of the
+             rectangle.
+
+             Bit     ABC
+              0      000
+              1      001
+              2      010
+              3      011
+              4      100
+              5      101
+              6      110
+              7      111
+
+             So 0x00C0 means: D is set if one is inside the rectangle
+             (A is set) and B (the source) is set and cleared otherwise.
+
+             To fill the rectangle, you would want to set D when A is
+             set, so the value is 0x00F0.
+
+
+
+
+Result
+~~~~~~
+::
+
+     None
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     BltBitMapRastPort()
+
+
+--------------
+
+CloneRastPort
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct RastPort * CloneRastPort(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function creates a copy of a RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - The RastPort to clone.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a RastPort with the same attributes as the RastPort
+     which was specified or NULL if there was not enough memory to perform
+     the operation.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is AROS specific. For compatibility, there is a
+     function in aros.lib which does the same on Amiga.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CreateRastPort(), FreeRastPort()
+
+
+--------------
+
+CloseFont
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void CloseFont(
+         struct TextFont * textFont
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+CloseMonitor
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG CloseMonitor(
+         struct MonitorSpec * monitor_spec
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     monitor_spec - pointer to a MonitorSpec opened via OpenMonitor(),
+                    or NULL
+
+
+Result
+~~~~~~
+::
+
+     error - FALSE if MonitorSpec closed uneventfully
+             TRUE if MonitorSpec could not be closed
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenMonitor() graphics/monitor.h
+
+
+--------------
+
+CoerceMode
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG CoerceMode(
+         struct ViewPort * RealViewPort,
+         ULONG MonitorID,
+         ULONG Flags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     RealViewPort - ViewPort to coerce
+     MonitorID    - Monitor number to coerce to
+                    (i.e. a mode masked with MONITOR_ID_MASK)
+     Flags        - PRESERVE_COLORS - keep the number of bitplanes
+                                      in the ViewPort
+                    AVOID_FLICKER   - do not coerce to an interlace mode
+
+
+Result
+~~~~~~
+::
+
+     ID - ID of best mode to coerce to, or INVALID_ID if could not coerce
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+CopyRegion
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Region * CopyRegion(
+         struct Region * region
+ );
+
+Function
+~~~~~~~~
+::
+
+     Make a copy of the given Region.
+
+
+Inputs
+~~~~~~
+::
+
+     region - pointer to a Region structure
+
+
+Result
+~~~~~~
+::
+
+     the copy of the Region, or NULL if not enough memory.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function does not exist in AmigaOS.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     NewRegion() DisposeRegion()
+
+
+--------------
+
+CopySBitMap
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void CopySBitMap(
+         struct Layer * l
+ );
+
+Function
+~~~~~~~~
+::
+
+     If the layer has a superbitmap all the parts that are visible will
+     be refreshed with what is in the superbitmap. This function should
+     be called after the SuperBitMap of the layer was synchronized with
+     SyncSBitMap() and manipulated. 
+
+
+Inputs
+~~~~~~
+::
+
+     l  - pointer to superbitmapped layer 
+
+
+Result
+~~~~~~
+::
+
+     The layer will show the true contents of the superbitmap that is
+     attatched to it
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     SyncSBitMap()
+
+
+--------------
+
+CreateRastPort
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct RastPort * CreateRastPort(
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function creates a new RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a new RastPort or NULL if there was not enough memory
+     to perform the operation.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is AROS specific. For compatibility, there is a
+     function in aros.lib which does the same on Amiga.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+DeinitRastPort
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ void DeinitRastPort(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+     Frees the contents of a RastPort structure. The structure itself
+     is not freed.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - The RastPort which contents are to be freed.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     You can initialize the RastPort again via InitRastPort() but
+     you must not use any other graphics function with it before
+     that.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitRastPort()
+
+
+--------------
+
+DisownBlitter
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void DisownBlitter(
+ );
+
+Function
+~~~~~~~~
+::
+
+     The blitter is returned to usage by other tasks.
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     DisownBlitter()
+
+
+--------------
+
+DisposeRegion
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void DisposeRegion(
+         struct Region * region
+ );
+
+Function
+~~~~~~~~
+::
+
+     Frees all memory allocated by this region, including its
+     RegionRectangles.
+
+
+Inputs
+~~~~~~
+::
+
+     region - pointer to a Region structure
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     NewRegion()
+
+
+--------------
+
+DoCollision
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void DoCollision(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     rp - pointer to RastPort
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+Draw
+====
+
+Synopsis
+~~~~~~~~
+::
+
+ void Draw(
+         struct RastPort * rp,
+         LONG x,
+         LONG y
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Not yet implemented:
+     
+       - handle layer->Scroll_X/Scroll_Y.
+       
+       - handle FRST_DOT which indicates whether to draw
+         or to don't draw first pixel of line. Important
+         for COMPLEMENT drawmode.
+     
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+DrawEllipse
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void DrawEllipse(
+         struct RastPort * rp,
+         LONG xCenter,
+         LONG yCenter,
+         LONG a,
+         LONG b
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+DrawGList
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void DrawGList(
+         struct RastPort * rp,
+         struct ViewPort * vp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+EraseRect
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void EraseRect(
+         struct RastPort * rp,
+         LONG xMin,
+         LONG yMin,
+         LONG xMax,
+         LONG yMax
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ExtendFont
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ExtendFont(
+         struct TextFont * font,
+         struct TagItem  * fontTags
+ );
+
+Function
+~~~~~~~~
+::
+
+     Checks whether or not a TextFont has a TextFontExtension.
+     If no extension exists, and tags are supplied,
+     then it will try to build one.
+
+
+Inputs
+~~~~~~
+::
+
+     font            - font to check for an extension.
+     fontTags        - tags to buil the TextFontExtesion from if it doesn't exist.
+                       If a NULL pointer is given, ExtendFont will alocate default tags.
+
+Result
+~~~~~~
+::
+
+     success         - FALSE if the font has no TextFontExtension and an extension
+                       can't be built. TRUE otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ExtendFontTags(), StripFont()
+
+
+--------------
+
+FindColor
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG FindColor(
+         struct ColorMap * cm,
+         ULONG r,
+         ULONG g,
+         ULONG b,
+         ULONG maxpen
+ );
+
+Function
+~~~~~~~~
+::
+
+     Find the closest matching color in the given colormap.
+
+
+Inputs
+~~~~~~
+::
+
+     cm - colormap structure
+     r  - red level   (32 bit left justified fraction)
+     g  - green level (32 bit left justified fraction)
+     b  - blue level  (32 bit left justified fraction)
+     maxpen - the maximum entry in the color table to search.
+
+
+Result
+~~~~~~
+::
+
+     The pen number with the closest match will be returned.
+     No new pens are allocated and therefore the returned pen
+     should not be released via ReleasePen().
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FindDisplayInfo
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ DisplayInfoHandle FindDisplayInfo(
+         ULONG ID
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     ID - identifier
+
+
+Result
+~~~~~~
+::
+
+     handle - handle to a displayinfo record with that key
+              or NULL if no match
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/displayinfo.h
+
+
+--------------
+
+Flood
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL Flood(
+         struct RastPort * rp,
+         ULONG mode,
+         LONG x,
+         LONG y
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FontExtent
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void FontExtent(
+         struct TextFont   * font,
+         struct TextExtent * fontExtent
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ Fill out a text extent structure with the maximum extent of the
+ characters for the font in question.
+
+
+Inputs
+~~~~~~
+::
+
+
+ font        --  The font the extent of which to calculate.
+ fontExtent  --  TextExtent structure to hold the values.
+
+
+Result
+~~~~~~
+::
+
+
+ The extent is stored in 'fontExtent'.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+ Neither effects of algorithmic additions nor rp_TxSpacing is included
+ when the bounding box and font size are calculated. Note that te_Width
+ only will be negative when FPF_REVPATH is specified for the font; left
+ moving characters are ignored considering the font width (right moving
+ character when FPF_REVPATH is set), but affects the bounding box size.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+ TextExtent(), <graphics/text.h>
+
+
+--------------
+
+FreeBitMap
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeBitMap(
+         struct BitMap * bm
+ );
+
+Function
+~~~~~~~~
+::
+
+     Returns the memory occupied by the BitMap to the system.
+
+
+Inputs
+~~~~~~
+::
+
+     bm - The result of AllocBitMap(). Must be non-NULL.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocBitMap(), AllocRaster(), FreeRaster()
+
+
+--------------
+
+FreeColorMap
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeColorMap(
+         struct ColorMap * colormap
+ );
+
+Function
+~~~~~~~~
+::
+
+     Corretly frees a ColorMap structure and associated structures
+     that have previously been allocated via GetColorMap().
+
+
+Inputs
+~~~~~~
+::
+
+     colormap - pointer to the ColorMap strcuture previously
+                allocated via GetColorMap().
+
+
+Result
+~~~~~~
+::
+
+     Memory returned to pool of free memory.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GetColorMap SetRGB4() graphics/view.h
+
+
+--------------
+
+FreeCopList
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeCopList(
+         struct CopList * coplist
+ );
+
+Function
+~~~~~~~~
+::
+
+     Deallocate all memory associated with this copper list.
+
+
+Inputs
+~~~~~~
+::
+
+     coplist - pointer to a CopList structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/copper.h
+
+
+--------------
+
+FreeCprList
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeCprList(
+         struct cprlist * cprList
+ );
+
+Function
+~~~~~~~~
+::
+
+     Deallocate all memory associated with this cprlist structure
+
+
+Inputs
+~~~~~~
+::
+
+     cprlist - pointer to a cprlist structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/copper.h
+
+
+--------------
+
+FreeDBufInfo
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID FreeDBufInfo(
+         struct DBufInfo * db
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ Frees structure allocated with AllocDBufInfo().
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+ Frees memory occupied by 'db'; ('db' may be NULL, in that case nothing
+ is done).
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+ AllocDBufInfo(), ChangeVPBitMap()
+
+
+--------------
+
+FreeGBuffers
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeGBuffers(
+         struct AnimOb * anOb,
+         struct RastPort * rp,
+         BOOL db
+ );
+
+Function
+~~~~~~~~
+::
+
+     DeAllocate all buffers for a whole AnimOb. In particular this
+     means getting buffers for
+     - BorderLine
+     - SaveBuffer
+     - CollMask
+     - ImageShadow (points to the same memory as CollMask does)
+     - if db is set to TRUE the user wants double-buffering, so we need
+       - DBufPacket
+       - BufBuffer
+
+
+Inputs
+~~~~~~
+::
+
+     anOb = pointer to AnimOb structure to be added to list of
+            AnimObs
+     rp   = pointer to a valid RastPort with initialized GelsInfo
+            structure
+     db   = TRUE when double-buffering is wanted
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     A call to GetGBuffers() that resulted in a partially allocation
+     of the required buffers will result in a deallocation of these
+     buffers. (Possible incompatibility with the real thing, though)
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GetGBuffers() graphics/rastport.h graphics/gels.h
+
+
+--------------
+
+FreeRastPort
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeRastPort(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+     This frees a RastPort obtained with CloneRastPort() or
+     CreateRastPort().
+
+
+Inputs
+~~~~~~
+::
+
+     rp - The result of CloneRastPort() or CreateRastPort().
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is AROS specific. For compatibility, there is a function
+     with the same name in aros.lib on Amiga.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CloneRastPort(), CreateRastPort()
+
+
+--------------
+
+FreeRaster
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeRaster(
+         PLANEPTR p,
+         ULONG width,
+         ULONG height
+ );
+
+Function
+~~~~~~~~
+::
+
+     Free the single bitplane allocated by AllocRaster().
+
+
+Inputs
+~~~~~~
+::
+
+     p - The result of AllocRaster(). Must be non-NULL.
+     width, height - The size of the bitplane as passed to AllocRaster().
+
+
+Result
+~~~~~~
+::
+
+     The memory occupied by the bitplane will be returned to the system.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocRaster(), AllocBitMap(), FreeBitMap()
+
+
+--------------
+
+FreeSprite
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeSprite(
+         WORD pick
+ );
+
+Function
+~~~~~~~~
+::
+
+     Free a via GetSprite previously allocated sprite.
+     Don't even dare to free a sprite you didn't allocate.   
+
+
+Inputs
+~~~~~~
+::
+
+     pick - number of sprite in range 0-7
+
+
+Result
+~~~~~~
+::
+
+     Sprite is made available for other tasks and the Virtual Sprite
+     Machine.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GetSprite() ChangeSprite() MoveSprite() graphics/sprite.h
+
+
+--------------
+
+FreeSpriteData
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeSpriteData(
+         struct ExtSprite * extsp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     extsp - The extended sprite structure to be freed.
+             Passing NULL is a NO-OP.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FreeVPortCopLists
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeVPortCopLists(
+         struct ViewPort * vp
+ );
+
+Function
+~~~~~~~~
+::
+
+     Deallocate all memory associated with the CopList structures
+     for display, color, sprite and the user copper list. The
+     corresponding fields in this structure will be set to NULL.
+
+
+Inputs
+~~~~~~
+::
+
+     vp - pointer to a ViewPort structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/view.h
+
+
+--------------
+
+GetAPen
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG GetAPen(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+GetBPen
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG GetBPen(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+GetBitMapAttr
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ IPTR GetBitMapAttr(
+         struct BitMap * bitmap,
+         ULONG attribute
+ );
+
+Function
+~~~~~~~~
+::
+
+     Returns a specific information about a bitmap. Do not access the
+     bitmap directly!
+
+
+Inputs
+~~~~~~
+::
+
+     bitmap - The BitMap structure to get information about.
+     attribute - Number of the attribute to get. See <graphics/gfx.h> for
+                 possible values.
+
+
+Result
+~~~~~~
+::
+
+     The information you requested. If you asked for an unknown attribute,
+     0 or NULL is returned.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocBitMap()
+
+
+--------------
+
+GetColorMap
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct ColorMap * GetColorMap(
+         ULONG entries
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocates, initilizes a ColorMap structure and passes back the
+     pointer. This enables you to do calls to SetRGB4() and LoadRGB4()
+     to load colors for a view port.
+     The ColorTable pointer in the ColorMap structure points to a hardware
+     specific colormap data structure which you should not interpret.
+
+
+Inputs
+~~~~~~
+::
+
+     entries - the number of entries for the colormap
+
+
+Result
+~~~~~~
+::
+
+     NULL  - not enough memory could be allocated for the necessary
+             data structures
+     other - pointer to a initilized ColorMap structure that may be
+             stored into the ViewPort.ColorMap pointer.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     FreeColorMap SetRGB4() graphics/view.h
+
+
+--------------
+
+GetDrMd
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG GetDrMd(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+GetExtSpriteA
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG GetExtSpriteA(
+         struct ExtSprite * sprite,
+         struct TagItem * tags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     sprite - pointer to programmer´s ExtSprite (from AllocSpriteData())
+     tags   - a standard tag list
+
+
+Result
+~~~~~~
+::
+
+     Sprite_number - a sprite number or -1 for an error
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+GetGBuffers
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL GetGBuffers(
+         struct AnimOb * anOb,
+         struct RastPort * rp,
+         BOOL db
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocate all buffers for a whole AnimOb. In particular this
+     means getting buffers for
+     - BorderLine
+     - SaveBuffer
+     - CollMask
+     - ImageShadow (points to the same memory as CollMask does)
+     - if db is set to TRUE the user wants double-buffering, so we need
+       - DBufPacket
+       - BufBuffer
+
+
+Inputs
+~~~~~~
+::
+
+     anOb = pointer to AnimOb structure to be added to list of
+            AnimObs
+     rp   = pointer to a valid RastPort with initialized GelsInfo
+            structure
+     db   = TRUE when double-buffering is wanted
+
+
+Result
+~~~~~~
+::
+
+     TRUE, if all the memory allocations were successful, otherwise
+     FALSE
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     If an AnimOb is passed to GetGBuffers twice new buffers will
+     be allocated and therefore old pointers to buffers will be
+     lost in space.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     FreeGBuffers() graphics/gels.h
+
+
+--------------
+
+GetOutlinePen
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG GetOutlinePen(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+GetRGB32
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void GetRGB32(
+         struct ColorMap * cm,
+         ULONG firstcolor,
+         ULONG ncolors,
+         ULONG * table
+ );
+
+Function
+~~~~~~~~
+::
+
+     Fill the table with with the 32 bit fractional RGB values from the
+     given colormap.
+
+
+Inputs
+~~~~~~
+::
+
+     cm         - ColorMap structure obtained via GetColorMap()
+     firstcolor - the index of first color register to get (starting with 0)
+     ncolors    - the number of color registers to examine and write
+                  into the table
+     table      - a pointer to an array of 32 bit RGB triplets
+
+
+Result
+~~~~~~
+::
+
+     the ULONG pointed to by table will be filled with the 32 bit
+     fractional RGB values from the colormap
+     
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     table should point to an array of at least 3*ncolors longwords.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GetColorMap() FreeColorMap() SetRGB4() LoadRGB4()
+     LoadRGB32() SetRGB32CM() graphics/view.h
+
+
+--------------
+
+GetRGB4
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG GetRGB4(
+         struct ColorMap * colormap,
+         LONG entry
+ );
+
+Function
+~~~~~~~~
+::
+
+     Read a value from the ColorMap. Use this function, as the colormap
+     is subject to change.
+
+
+Inputs
+~~~~~~
+::
+
+     colormap - pointer to ColorMap structure
+     entry    - index into colormap
+
+
+Result
+~~~~~~
+::
+
+     -1      : if no valid entry. (index to high)
+     other   : UWORD RGB value, 4 bits per electron gun, right justified
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GetColorMap() FreeColorMap() SetRGB4() LoadRGB4() graphics/view.h
+
+
+--------------
+
+GetRPAttrsA
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void GetRPAttrsA(
+         struct RastPort * rp,
+         struct TagItem  * tags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+     Read the current settings of a RastPort into variables.
+     The ti_Tag field specifies the attribute to read and the
+     ti_Data field points to an address where to store the result.
+     All results are stored as IPTRs!
+
+     Available tags:
+
+             RPTAG_Font              Font for Text()
+             RPTAG_APen              Primary rendering pen
+             RPTAG_BPen              Secondary rendering pen
+             RPTAG_DrMd              Drawing mode (graphics/rastport.h)
+             RPTAG_OutlinePen        Area Outline pen
+             RPTAG_WriteMask         Bit Mask for writing
+             RPTAG_MaxPen            Maximum oen to render (see SetMaxPen())
+             RPTAG_DrawBounds        Determine the area that will be redered
+                                     into by rendering commands. Can be used
+                                     to optimize window refresh. Pass a pointer
+                                     to a rectangle in the ti_Data field. On
+                                     return the rectangle's MinX will be
+                                     greater than its MaxX if there are no
+                                     active cliprects.
+             RPTAG_FgColor           Primary rendering color in A8R8G8B8 format.
+                                     Only working on hicolor/truecolor bitmaps/
+                                     screens. (MorphOS extension)
+             RPTAG_BgColor           Secondary rendering color in A8R8G8B8 format.
+                                     Only working on hicolor/truecolor bitmaps/
+                                     screens. (MorphOS extension)
+             RPTAG_PatternOriginX    X Origin of fill pattern. (AROS extension)
+             RPTAG_PatternOriginY    Y Origin of fill pattern. (AROS extension)
+             RPTAG_ClipRectangle     Rectangle to clip rendering to. Rectangle will
+                                     be cloned. (AROS extension)
+             RPTAG_ClipRectangleFlags See <graphics/rpattr.h> (AROS extension)
+             RPTAG_RemapColorFonts   Automatically remap colorfonts to their color
+                                     on hicolor/truecolor screens.
+                    
+
+
+Inputs
+~~~~~~
+::
+
+     rp   = pointer to a RastPort structure
+     tags = pointer to a taglist specifying the attributes to read and
+            the addresses to store the results
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     RPTAG_ClipRectangle and RPTAG_ClipRectangleFlags must not be
+     used on manually inited or cloned rastports. Instead the rastport
+     must have been created with CreateRastPort() or CloneRastPort().
+     
+
+Bugs
+~~~~
+::
+
+     RPTAG_SoftStyle not supported, yet.
+
+
+See also
+~~~~~~~~
+::
+
+     SetRPAttrsA() GetAPen() GetBPen() GetOutLinePen() GetWriteMask()
+     graphics/rpattr.h
+
+
+--------------
+
+GetSprite
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ WORD GetSprite(
+         struct SimpleSprite * sprite,
+         WORD pick
+ );
+
+Function
+~~~~~~~~
+::
+
+     Try to get a hardware sprite for the simple sprite manager.
+     There are eight sprites available in the system and by calling
+     this function you can allocate one for yourself. You have to
+     call this function before talking to other sprite routines.
+     If you want a 15 color sprite, you must allocate both sprites
+     (see the manual!) and set the SPRITE_ATTACHED bit in the
+     odd sprite's posctldata array.
+     
+
+
+Inputs
+~~~~~~
+::
+
+     sprite - pointer to a SimpleSprite structure
+     pick   - number of the sprite (0-7) of -1 if you just want
+              the next available sprite
+
+
+Result
+~~~~~~
+::
+
+     -1 - if the selected sprite is not available (pick was 0-7) or
+          no further sprites are available (pick was -1). -1 will
+          also be found in the SimpleSprite structure.
+     0-7: The sprite number of your allocated sprite. The number will
+          also be foung in the SimpleSprite structure.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     On some machines this will never return anything else than -1!
+
+
+See also
+~~~~~~~~
+::
+
+     FreeSprite() ChangeSprite() MoveSprite() GetSprite() graphics/sprite.h
+
+
+--------------
+
+GetVPModeID
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG GetVPModeID(
+         struct ViewPort * vp
+ );
+
+Function
+~~~~~~~~
+::
+
+     returns the normal display modeID, if one is currently associated
+     with this ViewPort
+
+
+Inputs
+~~~~~~
+::
+
+     vp - pointer to ViewPort structure
+
+
+Result
+~~~~~~
+::
+
+     modeID - a 32 bit DisplayInfoRecord identifier associated
+              with this ViewPort, or INVALID_ID
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ModeNotAvailable() graphics/displayinfo.h
+
+
+--------------
+
+GfxAssociate
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void GfxAssociate(
+         void * pointer,
+         struct ExtendedNode * node
+ );
+
+Function
+~~~~~~~~
+::
+
+   Associate a special graphics extended data structure with another
+   structure via the other structure's pointer. Later, when you call
+   GfxLookUp() with the other structure's pointer you may recieve
+   the pointer to this special graphics extended data strcuture, if it
+   is available
+
+
+Inputs
+~~~~~~
+::
+
+   pointer = a pointer to a data structure
+   node = an ExtendedNode strcuture to associate with the pointer
+
+
+Result
+~~~~~~
+::
+
+   an association is created between the pointer and the node such
+   that given the pointer the node can be retrieved via GfxLookUp().
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+   Never associate one special graphics extended data structure to
+   several pointers. Only one pointer is allowed!
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+   graphics/gfxnodes.h GfxFree(), GfxNew(), GfxLookUp()
+
+
+--------------
+
+GfxFree
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void GfxFree(
+         struct ExtendedNode * node
+ );
+
+Function
+~~~~~~~~
+::
+
+   Free a special graphics extended data structure which was preciously
+   allocated by GfxNew()
+
+
+Inputs
+~~~~~~
+::
+
+   node = pointer to a graphics extended data structure obtained by
+          GfxNew()
+
+
+Result
+~~~~~~
+::
+
+   The node will be deallocated from memory. Graphics will disassociate
+   this special graphics extended node from any associated data
+   structure, if necessary, before freeing it (see GfxAssociate())
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+   graphics/gfxnodes.h GfxNew(), GfxAssociate(), GfxLookUp()
+
+
+--------------
+
+GfxLookUp
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct ExtendedNode * GfxLookUp(
+         void * pointer
+ );
+
+Function
+~~~~~~~~
+::
+
+   Finds a special graphics extended data structure (if an) associated
+   with the pointer to a data structure (eg: ViewExtra associated with
+   a View structure).
+
+
+Inputs
+~~~~~~
+::
+
+   pointer = a pointer to a data structure which may have an
+             ExtendedNode associated with it (typically a View)
+
+
+Result
+~~~~~~
+::
+
+   result = a pointer to the ExtendedNode that has previously been
+            associated with the pointer
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+   graphics/gfxnodes.h GfxNew(), GfxAssociate(), GfxFree()
+
+
+--------------
+
+GfxNew
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ struct ExtendedNode * GfxNew(
+         ULONG node_type
+ );
+
+Function
+~~~~~~~~
+::
+
+   Allocate a special graphics extended data structure. The type of
+   structure to be allocated is passed in the node_type identifier.
+
+
+Inputs
+~~~~~~
+::
+
+   node_type = the type of garphics extended data structure to allocate.
+               (see gfxnodes.h for identifier definitions.)
+
+
+Result
+~~~~~~
+::
+
+   A pointer to the allocated graphics node or NULL if the allocation
+   failed
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+   graphics/gfxnodes.h GfxFree(), GfxAssociate(), GfxLookUp()
+
+
+--------------
+
+InitArea
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void InitArea(
+         struct AreaInfo * areainfo,
+         void * buffer,
+         WORD maxvectors
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function initilizes an areainfo structure. The size of the
+     passed pointer to the buffer should be 5 times as large as
+     maxvectors (in bytes).
+
+
+Inputs
+~~~~~~
+::
+
+     areainfo   - pointer to AreaInfo strcuture to be initilized
+     buffer     - pointer to free memory to collect vectors
+     maxvectors - maximum number of vectors the buffer can hold.
+
+
+Result
+~~~~~~
+::
+
+     Areainfo structure initilized such that it will hold the vectors
+     created by AreaMove, AreaDraw and AreaEllipse (AreaCircle).
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AreaDraw() AreaMove() AreaEllipse() AreaCircle() graphics/rastport.h
+
+
+--------------
+
+InitBitMap
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID InitBitMap(
+         struct BitMap * bm,
+         BYTE depth,
+         UWORD width,
+         UWORD height
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ Initialize BitMap structure. A bitmap MUST be initialized before it's
+ used in any (other) graphics library function.
+
+
+Inputs
+~~~~~~
+::
+
+
+ bm     --  pointer to BitMap structure
+ depth  --  number of bitplanes
+ width  --  width in pixels of this bitmap
+ height --  height in pixels of this bitmap
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+ The Planes[] is not affected and must be set up the caller.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+ <graphics/gfx.h>
+
+
+--------------
+
+InitGMasks
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void InitGMasks(
+         struct AnimOb * anOb
+ );
+
+Function
+~~~~~~~~
+::
+
+     For every component's sequence initilize the Masks by calling
+     InitMasks()
+
+
+Inputs
+~~~~~~
+::
+
+     anOb = pointer to the AnimOb
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitGels() InitMasks() graphics/gels.h
+
+
+--------------
+
+InitGels
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void InitGels(
+         struct VSprite * head,
+         struct VSprite * tail,
+         struct GelsInfo * GInfo
+ );
+
+Function
+~~~~~~~~
+::
+
+     Makes the two VSprites head and tail of the gel list that is connected
+     to the GelsInfo structure. The two VSprites are linked together and
+     their x and y coordinates are initilized such that the serve as the
+     keystones of the list.
+
+
+Inputs
+~~~~~~
+::
+
+     head  - pointer to the VSprite structure to be used as head of the gel list
+     tail  - pointer to the VSprite structure to be used as tail of the gel list
+     GInfo - pointer to the GelsInfo structure to be initilized
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     graphics/rastport.h  graphics/gels.h
+
+
+--------------
+
+InitGfxHidd
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL InitGfxHidd(
+         struct Library * hiddBase
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function lets graphics.library initialize
+     the supplied gfx.hidd
+
+
+Inputs
+~~~~~~
+::
+
+     hiddBase - Library base of hidd to use for gfx.
+
+
+Result
+~~~~~~
+::
+
+     success - If TRUE initialization went OK.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is private and AROS specific.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+InitMasks
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void InitMasks(
+         struct VSprite * vs
+ );
+
+Function
+~~~~~~~~
+::
+
+     Creates the standard BorderLine and CollMask masks of the VSprite.
+     VSprites and Bobs are treated accordingly.
+
+
+Inputs
+~~~~~~
+::
+
+     vs = pointer to VSprite structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitGels() InitGMasks() graphics/gels.h
+
+
+--------------
+
+InitRastPort
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL InitRastPort(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+     Initializes a RastPort structure.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - The RastPort to initialize.
+
+
+Result
+~~~~~~
+::
+
+     TRUE if the RastPort was successfuly initialized and FALSE
+     otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     You must call DeinitRastPort() before you free the structure.
+
+     AROS defines this function with a return value which you should
+     check.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+InitTmpRas
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void InitTmpRas(
+         struct TmpRas  * tmpras,
+         void * buffer,
+         ULONG size
+ );
+
+Function
+~~~~~~~~
+::
+
+     Initializes a TmpRas structure. The user has to conect the
+     TmpRas structure to the rastport.
+     Some routines need extra memory in order to be able to operate
+     properly.
+
+
+Inputs
+~~~~~~
+::
+
+     tmpras - pointer to a TmpRas structure to be initialized
+     buffer - pointer to a piece of chip memory.
+     size   - size in bytes of buffer.
+
+
+Result
+~~~~~~
+::
+
+     Properly initilized TmpRas struture to link to RastPort structure
+     for use with functions like Flood(), Text() and AreaEnd().
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug.
+     Why does this function exist at all? The necessary memory should 
+     be allocated in InitRastPort() or the functions that need it.
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+InitVPort
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void InitVPort(
+         struct ViewPort * vp
+ );
+
+Function
+~~~~~~~~
+::
+
+     Initializes a ViewPort structure.
+
+
+Inputs
+~~~~~~
+::
+
+     view - The View to initialize.
+
+
+Result
+~~~~~~
+::
+
+     ViewPort is initialized to it`s default values - doesn't care about
+     previous contents of this structure.
+     All values except for SpritePriorities are set to 0's.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+InitView
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void InitView(
+         struct View * view
+ );
+
+Function
+~~~~~~~~
+::
+
+     Initializes a View structure.
+
+
+Inputs
+~~~~~~
+::
+
+     view - The View to initialize.
+
+
+Result
+~~~~~~
+::
+
+     View is initialized to it`s default values - doesn't care about
+     previous contents of this structure.
+     All values except for DxOffset,DyOffset are set to 0's.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+IsPointInRegion
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL IsPointInRegion(
+         struct Region * Reg,
+         WORD x,
+         WORD y
+ );
+
+Function
+~~~~~~~~
+::
+
+     Checks if the point (x, y) is contained in the region Reg
+
+
+Inputs
+~~~~~~
+::
+
+     region1 - pointer to a region structure
+     x       - The point's 'x' coord
+     y       - The point's 'y' coord
+
+
+Result
+~~~~~~
+::
+
+     TRUE if the point is contained, FALSE otherwise
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     XorRegionRegion(), OrRegionRegion()
+
+
+--------------
+
+LateGfxInit
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL LateGfxInit(
+         APTR data
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function permits late initalization
+     of gfx (After dos but *before* graphics is used, ie.
+     before the first view/screen has been set up).
+     Can be used to load gfx hidds from disk and initializing it.
+     The function only passes the data through to the
+     driver.
+
+
+Inputs
+~~~~~~
+::
+
+     data - Data passed on to graphics driver.
+
+
+Result
+~~~~~~
+::
+
+     success - If TRUE initialization went OK.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is private and AROS specific.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+LoadRGB32
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void LoadRGB32(
+         struct ViewPort * vp,
+         const ULONG     * table
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+LoadRGB4
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void LoadRGB4(
+         struct ViewPort * vp,
+         UWORD           * colors,
+         LONG count
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+LoadView
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void LoadView(
+         struct View * view
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     view - pointer to the View structure which contains the pointer to the
+            constructed coprocessor instructions list, or NULL
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+LockLayerRom
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void LockLayerRom(
+         struct Layer * l
+ );
+
+Function
+~~~~~~~~
+::
+
+     Locks the layer. Returns when the layer is locked for
+     exclusive use.
+     This call behaves like when a semaphore is locked. The
+     same task may lock the same layer several times without
+     locking itself out. For every call to this function a
+     call to UnlockLayerRom() has to be made as the calls nest.
+     This function will also prevent intuition from locking the
+     layer so the layer should not be blocked too long.
+     This function does exactly the same as layers/LockLayer()
+
+
+Inputs
+~~~~~~
+::
+
+     l - pointer to layer that is to be locked
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+    Does not save all registers.
+
+
+See also
+~~~~~~~~
+::
+
+    UnlockLayerRom() LockLayer() UnLockLayer()
+
+
+--------------
+
+MakeVPort
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG MakeVPort(
+         struct View * view,
+         struct ViewPort * viewport
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     view     - pointer to a View structure
+     viewport - pointer to a ViewPort structure
+                the viewport must have a valid pointer to a RasInfo
+
+
+Result
+~~~~~~
+::
+
+     error -
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ModeNotAvailable
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ModeNotAvailable(
+         ULONG modeID
+ );
+
+Function
+~~~~~~~~
+::
+
+     returns an error code, indicating why this modeID is not available,
+     or 0 if there is no reason known why this mode should not be there
+
+
+Inputs
+~~~~~~
+::
+
+     modeID - a 32 bit DisplayInfoRecord identifier
+
+
+Result
+~~~~~~
+::
+
+     error - a general indication of why this modeID is not available,
+             or 0 if there is no reason why it should not be available
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GetVPModeID() graphics/displayinfo.h
+
+
+--------------
+
+MouseCoordsRelative
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL MouseCoordsRelative(
+ );
+
+Function
+~~~~~~~~
+::
+
+     Tells whether mouse coordinates gotten from the below system are
+     relative or absolut.
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+     relative - TRUE if relative, FALSE if absolute.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is private and AROS specific.
+
+
+Bugs
+~~~~
+::
+
+     There should not be need for such a function.
+     All coords gotten shoul be relative.
+     This is however difficult to do
+     with HIDDs base on window systems and
+     we use one window per screen.
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+Move
+====
+
+Synopsis
+~~~~~~~~
+::
+
+ void Move(
+         struct RastPort * rp,
+         WORD x,
+         WORD y
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MoveSprite
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void MoveSprite(
+         struct ViewPort * vp,
+         struct SimpleSprite * sprite,
+         WORD x,
+         WORD y
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MrgCop
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG MrgCop(
+         struct View * view
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     view -
+
+
+Result
+~~~~~~
+::
+
+     error -
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+NewRectRegion
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Region * NewRectRegion(
+         WORD MinX,
+         WORD MinY,
+         WORD MaxX,
+         WORD MaxY
+ );
+
+Function
+~~~~~~~~
+::
+
+     Creates a new rectangular Region
+             
+
+Inputs
+~~~~~~
+::
+
+     MinX, MinY, MaxX, MaxY - The extent of the Rect
+             
+
+Result
+~~~~~~
+::
+
+     Pointer to the newly created Region. NULL on failure.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function does not exist in AmigaOS.
+     It does basically the same as:
+
+         struct Rectangle rect;
+         struct Region *region;
+
+         rect.MinX = MinX;
+         rect.MinY = MinY;
+         rect.MaxX = MaxX;
+         rect.MaxY = MaxY;
+
+         region = NewRegion();
+         OrRectRegion(region, &rect);
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     NewRegion() OrRectRegion()
+
+
+--------------
+
+NewRegion
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Region * NewRegion(
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocates memory for a new Region and initializes it
+     to an empty Region.
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+     region - pointer to a newly created Region structure that
+              should be freed by a call to DisposeRegion()
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     DisposeRegion()
+
+
+--------------
+
+NextDisplayInfo
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG NextDisplayInfo(
+         ULONG last_ID
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     last_ID - previous displayinfo identifier
+               or INVALID_ID if beginning iteration
+
+
+Result
+~~~~~~
+::
+
+     next_ID - subsequent displayinfo identifier
+               or INVALID_ID if no more records
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     FindDisplayInfo() GetDisplayInfoData() graphics/displayinfo.h
+
+
+--------------
+
+ObtainBestPenA
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ObtainBestPenA(
+         struct ColorMap * cm,
+         ULONG r,
+         ULONG g,
+         ULONG b,
+         struct TagItem * tags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ObtainPen
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ObtainPen(
+         struct ColorMap * cm,
+         ULONG n,
+         ULONG r,
+         ULONG g,
+         ULONG b,
+         ULONG flags
+ );
+
+Function
+~~~~~~~~
+::
+
+     Attempt to allocate an entry in the colormap for exclusive
+     or shared use by the application. To deallocate the pen
+     ReleasePen() must be called.
+     
+
+Inputs
+~~~~~~
+::
+
+     cm    - A pointer to a color map structure
+     n     - index of the entry in the color map; if any entry is fine
+             pass -1
+     r     - red value (left justified 32 bit fraction)
+     g     - green value (left justified 32 bit fraction)
+     b     - blue value (left justified 32 bit fraction)
+     flags - PEN_EXCLUSIVE - for exclusive access to a color register;
+                           default is shared access
+                           
+             PEN_NO_SETCOLOR - will not change the rgb values
+                               for the selected pen.
+
+
+Result
+~~~~~~
+::
+
+     n  = allocted pen number, -1 for failure
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Shared palette entries should not be changed (via SetRGB??())
+     since other aapplications might use the same color.
+     A PaletteExtra structure must have been attached to the 
+     ColorMap prior to calling this function (AttachPalExtra()). 
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+OpenFont
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct TextFont * OpenFont(
+         struct TextAttr * textAttr
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+OpenMonitor
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct MonitorSpec * OpenMonitor(
+         STRPTR monitor_name,
+         ULONG display_id
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     monitor_name - pointer to a null terminated string
+     display_id   - optional 32 bit monitor/mode identifier
+
+
+Result
+~~~~~~
+::
+
+     mspc - pointer to an open MonitorSpec structure
+            NULL if MonitorSpec could not be opened
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CloseMonitor() graphics/monitor.h
+
+
+--------------
+
+OrRectRegion
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL OrRectRegion(
+         struct Region    * Reg,
+         struct Rectangle * Rect
+ );
+
+Function
+~~~~~~~~
+::
+
+     Add the given Rectangle to the given Region (if not
+     already there)
+
+
+Inputs
+~~~~~~
+::
+
+     region - pointer to Region structure
+     rectangle - pointer to Rectangle structure
+
+
+Result
+~~~~~~
+::
+
+     TRUE if the operation was succesful, else FALSE
+     (out of memory)
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     All relevant data is copied, you may throw away the
+     given rectangle after calling this function
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AndRectRegion(), XorRectRegion(), ClearRectRegion()
+
+
+--------------
+
+OrRectRegionND
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Region * OrRectRegionND(
+         struct Region    * Reg,
+         struct Rectangle * Rect
+ );
+
+Function
+~~~~~~~~
+::
+
+     Add the given Rectangle to the given Region (if not
+     already there)
+
+
+Inputs
+~~~~~~
+::
+
+     region - pointer to Region structure
+     rectangle - pointer to Rectangle structure
+
+
+Result
+~~~~~~
+::
+
+     The resulting region or NULL in case there's no enough free memory
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AndRegionRegion() OrRectRegion() XorRectRegion() ClearRectRegion()
+     NewRegion()
+
+
+--------------
+
+OrRegionRegion
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL OrRegionRegion(
+         struct Region * R1,
+         struct Region * R2
+ );
+
+Function
+~~~~~~~~
+::
+
+     OR of one region with another region, leaving result in 
+     second region.
+
+
+Inputs
+~~~~~~
+::
+
+     region1 - pointer to a region structure
+     region2 - pointer to a region structure
+
+
+Result
+~~~~~~
+::
+
+     TRUE if the operation was succesful, else FALSE
+     (out of memory)
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AndRegionRegion(), XOrRegionRegion()
+
+
+--------------
+
+OrRegionRegionND
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Region * OrRegionRegionND(
+         struct Region * R1,
+         struct Region * R2
+ );
+
+Function
+~~~~~~~~
+::
+
+     OR of one region with another region.
+
+
+Inputs
+~~~~~~
+::
+
+     region1 - pointer to a region structure
+     region2 - pointer to a region structure
+
+
+Result
+~~~~~~
+::
+
+     The resulting region or NULL in case there's no enough free memory
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     XorRegionRegion(), OrRegionRegion()
+
+
+--------------
+
+OwnBlitter
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void OwnBlitter(
+ );
+
+Function
+~~~~~~~~
+::
+
+     The blitter is allocated for excludive use by the calling task.
+     This function returns immediatedly if no other task is using
+     the blitter right now or if no blits are in the queues (QBlit(),
+     QBSBlit()). Otherwise the function will block until the blitter
+     can be accessed.
+     It is good practice to start the blitter immediately after calling 
+     this function and then call DisownBlitter() so other tasks can
+     use the blitter. 
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     DisownBlitter()
+
+
+--------------
+
+PolyDraw
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void PolyDraw(
+         struct RastPort * rp,
+         LONG count,
+         WORD            * polyTable
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+QBSBlit
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void QBSBlit(
+         struct bltnode * bn
+ );
+
+Function
+~~~~~~~~
+::
+
+     Queus a request for a beam-synchronized  blit.
+
+
+Inputs
+~~~~~~
+::
+
+     bn - pointer to blitnode structure
+
+
+Result
+~~~~~~
+::
+
+     The routine that function in the bltnode is pointing to is
+     called when the blitter is ready for work. No other task will
+     be able to access the blitter while you're doing the blit.
+     Queued blits have precedence over a task that tries to own the
+     blitter via OwnBlitter(). So all queued blitter requests will
+     be done first until the task that attempts a OwnBlitter can
+     actually access the blitter.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Not all hardware has a blitter. On hardware where there is no
+     blitter, a blitter is simulated. Therefore all code that will
+     be executed in the function that is called must not contain
+     code that is hacking the blitter's register but should contain
+     calls to graphics functions instead.      
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     QBSBlit() OwnBlitter DisownBlitter() hardware/blit.h
+
+
+--------------
+
+QBlit
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ void QBlit(
+         struct bltnode * bn
+ );
+
+Function
+~~~~~~~~
+::
+
+     Queus a request for a blit. This request is queued at the end
+     of the list.
+
+
+Inputs
+~~~~~~
+::
+
+     bn - pointer to blitnode structure
+
+
+Result
+~~~~~~
+::
+
+     The routine that function in the bltnode is pointing to is
+     called when the blitter is ready for work. No other task will
+     be able to access the blitter while you're doing the blit.
+     Queued blits have precedence over a task that tries to own the
+     blitter via OwnBlitter(). So all queued blitter requests will
+     be done first until the task that attempts a OwnBlitter can
+     actually access the blitter.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Not all hardware has a blitter. On hardware where there is no
+     blitter, a blitter is simulated. Therefore all code that will
+     be executed in the function that is called must not contain
+     code that is hacking the blitter's register but should contain
+     calls to graphics functions instead.      
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     QBSBlit() OwnBlitter DisownBlitter() hardware/blit.h
+
+
+--------------
+
+ReadPixel
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ReadPixel(
+         struct RastPort * rp,
+         LONG x,
+         LONG y
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ReadPixelArray8
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ReadPixelArray8(
+         struct RastPort * rp,
+         LONG xstart,
+         LONG ystart,
+         LONG xstop,
+         LONG ystop,
+         UBYTE * array,
+         struct RastPort * temprp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ReadPixelLine8
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ReadPixelLine8(
+         struct RastPort * rp,
+         LONG xstart,
+         LONG ystart,
+         ULONG width,
+         UBYTE           * array,
+         struct RastPort * tempRP
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+RectFill
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void RectFill(
+         struct RastPort * rp,
+         LONG xMin,
+         LONG yMin,
+         LONG xMax,
+         LONG yMax
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ReleasePen
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void ReleasePen(
+         struct ColorMap * cm,
+         ULONG n
+ );
+
+Function
+~~~~~~~~
+::
+
+     Release a pen that was previously allocated as an exclusive
+     or shared pen by the application. Any other application can
+     then obtain this pen and make changes to the color register
+     entries.
+
+
+
+Inputs
+~~~~~~
+::
+
+     cm - ColorMap structure where the pen was allocated
+     n  - The number of the pen
+
+
+Result
+~~~~~~
+::
+
+     An exclusive pen is deallocated for other applications to use.
+     A shared pen is only completely deallocated if no other
+     application is using it anymore.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+RemFont
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemFont(
+         struct TextFont * textFont
+ );
+
+Function
+~~~~~~~~
+::
+
+     Remove a font from the list of public available fonts. Afterwards,
+     you can close it.
+
+
+Inputs
+~~~~~~
+::
+
+     textFont - Remove this font.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenFont(), CloseFont(), SetFont(), AddFont()
+
+
+--------------
+
+RemIBob
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemIBob(
+         struct Bob * bob,
+         struct RastPort * rp,
+         struct ViewPort * vp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+RemVSprite
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemVSprite(
+         struct VSprite * vs
+ );
+
+Function
+~~~~~~~~
+::
+
+     The VSprite is unlinked from the gel list.
+
+
+Inputs
+~~~~~~
+::
+
+     vs = pointer to VSprite to be removed from the gel list
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitGels() RemIBob() graphics/gels.h
+
+
+--------------
+
+ScalerDiv
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ UWORD ScalerDiv(
+         UWORD factor,
+         UWORD numerator,
+         UWORD denominator
+ );
+
+Function
+~~~~~~~~
+::
+
+     Use this to precalculate the width/height of the destination
+     bitmap. As factor give the width/height of the original bitmap
+     that is to be scaled via ScaleBitMap(), as numerator give
+     the value you will write into bsa_XSrcFactor/bsa_YSrcFactor
+     and as denominator the value of bsa_XDestFactor/bsa_YDestFactor.
+
+
+Inputs
+~~~~~~
+::
+
+     factor      - a number in the range of 0..16383
+     numerator   - a number in the range of 1..16383
+     denominator - a number in the range of 1..16383
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     BitMapScale()
+
+
+--------------
+
+ScrollRaster
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void ScrollRaster(
+         struct RastPort * rp,
+         LONG dx,
+         LONG dy,
+         LONG xMin,
+         LONG yMin,
+         LONG xMax,
+         LONG yMax
+ );
+
+Function
+~~~~~~~~
+::
+
+   Scroll the contents of a rastport (dx,dy) towards (0,0).
+   The empty spaces is filled by a call to RectFill().
+   Only the pixel in the rectangle (xMin,yMin)-(xMax,yMax)
+   will be affected. The lower right corner (xMax, yMax) is
+   automatically adjusted to the lower right corner in case
+   it would be outside.
+   After this operation the Flags bit of the layer associated
+   with this rastport, if there is any layer, should be tested
+   for simple layers in case there has any damage been created.
+   
+
+
+Inputs
+~~~~~~
+::
+
+   rp    - pointer to rastport
+   dx,dy - distance to move in x and y direction. Positive values go 
+           towards (0,0)
+   xMin,yMin - upper left  hand corner of the affected rectangle
+   xMax,yMax - lower right hand corner of the affected rectangle
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ScrollRasterBF
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ void ScrollRasterBF(
+         struct RastPort * rp,
+         LONG dx,
+         LONG dy,
+         LONG xMin,
+         LONG yMin,
+         LONG xMax,
+         LONG yMax
+ );
+
+Function
+~~~~~~~~
+::
+
+   Scroll the contents of a rastport (dx,dy) towards (0,0).
+   The empty spaces is filled by a call to EraseRect().
+   Only the pixel in the rectangle (xMin,yMin)-(xMax,yMax)
+   will be affected. The lower right corner (xMax, yMax) is
+   automatically adjusted to the lower right corner in case
+   it would be outside.
+   After this operation the Flags bit of the layer associated
+   with this rastport, if there is any layer, should be tested
+   for simple layers in case there has any damage been created.
+   
+
+
+Inputs
+~~~~~~
+::
+
+   rp    - pointer to rastport
+   dx,dy - distance to move in x and y direction. Positive values go 
+           towards (0,0)
+   xMin,yMin - upper left  hand corner of the affected rectangle
+   xMax,yMax - lower right hand corner of the affected rectangle
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ScrollRegion
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL ScrollRegion(
+         struct Region * region,
+         struct Rectangle * rect,
+         WORD dx,
+         WORD dy
+ );
+
+Function
+~~~~~~~~
+::
+
+     Scroll the rectangles in the region by the amount of pixels specified, within the
+     specified rectangle.
+
+
+Inputs
+~~~~~~
+::
+
+     region - pointer to a region structure
+     rect   - pointer to the rectangle within which the scrolling has to happen.
+              If NULL, the region's bounds are used instead.
+     dx, dy - the amount of pixels by which to scroll the region. Negative values mean
+              respectively left and up, positive values mean right and down.
+
+Result
+~~~~~~
+::
+
+     TRUE if the operation succeeded, FALSE otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+    This function doesn't exist in AmigaOS
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CreateRegion()
+
+
+--------------
+
+ScrollVPort
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void ScrollVPort(
+         struct ViewPort * vp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetABPenDrMd
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetABPenDrMd(
+         struct RastPort * rp,
+         ULONG apen,
+         ULONG bpen,
+         ULONG drawMode
+ );
+
+Function
+~~~~~~~~
+::
+
+     Changes the foreground and background pen and the drawmode in one
+     step.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - Modify this RastPort
+     apen - The new foreground pen
+     bpen - The new background pen
+     drawmode - The new drawmode
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is faster than the sequence SetAPen(), SetBPen(),
+     SetDrMd().
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetAPen
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetAPen(
+         struct RastPort * rp,
+         ULONG pen
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetBPen
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetBPen(
+         struct RastPort * rp,
+         ULONG pen
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetChipRev
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG SetChipRev(
+         ULONG ChipRev
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     ChipRev - Chip Rev that you would like to be enabled
+
+
+Result
+~~~~~~
+::
+
+     chiprevbits - Actual bits set in GfxBase->ChipRevBits0
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetCollision
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetCollision(
+         ULONG num,
+         VOID_FUNC routine,
+         struct GelsInfo * GInfo
+ );
+
+Function
+~~~~~~~~
+::
+
+     Call this function to set a specified entry (num) in the
+     user's collision vector table with the address of the
+     routine to be called by DoCollision().
+
+
+Inputs
+~~~~~~
+::
+
+     num     = number of collsion vector
+     routine = pointer to user's collision routine
+     GInfo   = pointer to a GelsInfo structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitGels() graphics/rastport.h graphics/gels.h
+
+
+--------------
+
+SetDrMd
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetDrMd(
+         struct RastPort * rp,
+         ULONG drawMode
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetFont
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetFont(
+         struct RastPort * rp,
+         struct TextFont * textFont
+ );
+
+Function
+~~~~~~~~
+::
+
+     Select a new font for rendering strings in a RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - Change this RastPort
+     textFont - This is the new font
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetFrontBitMap
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL SetFrontBitMap(
+         struct BitMap * bitmap,
+         BOOL copyback
+ );
+
+Function
+~~~~~~~~
+::
+
+     Sets the supplied screen as the frontmost, eg. shows it in the display.
+
+
+Inputs
+~~~~~~
+::
+
+     bitmap - The bitmap to put in front. Must be a displayable bitmap.
+     copyback - Whether to copy back from the framebuffer into
+                the previously front bitmap. !!!! Only set this to TRUE 
+                this if you are 100% SURE that
+                the previously shown bitmap has not been disposed
+
+
+Result
+~~~~~~
+::
+
+     success - TRUE if successfull, FALSE otherwize.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is private and AROS specific.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetMaxPen
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetMaxPen(
+         struct RastPort * rp,
+         ULONG maxpen
+ );
+
+Function
+~~~~~~~~
+::
+
+     Set the maximum pen value for a rastport. This will instruct the
+     graphics.library that the owner of the rastport will not be rendering
+     in any colors whose index is >maxpen. Therefore speed optimizations
+     on certain operations are possible and will be done.
+
+     Basically this call sets the rastport mask, if this would improve speed.
+     On devices where masking would slow things down (chunky pixels), it will
+     be a no-op.
+
+
+Inputs
+~~~~~~
+::
+
+     rp     = pointer to a valid RastPort structure
+     maxpen = longword pen value
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     SetWriteMask()
+
+
+--------------
+
+SetOutlinePen
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG SetOutlinePen(
+         struct RastPort * rp,
+         ULONG pen
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetPointerPos
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID SetPointerPos(
+         UWORD x,
+         UWORD y
+ );
+
+Function
+~~~~~~~~
+::
+
+     Set the current mouse pointer's position.
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is private and AROS specific.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetPointerShape
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID SetPointerShape(
+         UWORD * shape,
+         UWORD width,
+         UWORD height,
+         UWORD xoffset,
+         UWORD yoffset
+ );
+
+Function
+~~~~~~~~
+::
+
+     Set the current mouse pointer's shape.
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is private and AROS specific.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetRGB32
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetRGB32(
+         struct ViewPort * vp,
+         ULONG n,
+         ULONG r,
+         ULONG g,
+         ULONG b
+ );
+
+Function
+~~~~~~~~
+::
+
+     Changes a single color of a viewport.
+
+
+Inputs
+~~~~~~
+::
+
+     vp - Modify this viewport
+     n - Change this color. If the color is outside the range of
+             valid colors, it will be ignored.
+     r, g, b - The new values for the red, green and blue. The
+             valid range is from 0x000000 (no intensity) to
+             0xFFFFFFFF (full intensity).
+
+
+Result
+~~~~~~
+::
+
+     If there is a ColorMap for this viewport, then the value will
+     be stored in the ColorMap.
+     The selected color register is changed to match your specs.
+     If the color value is unused then nothing will happen.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Lower order bits of the palette specification will be discarded,
+     depending on the color palette resolution of the target graphics
+     device. Use 0xffffffff for the full value, 0x7fffffff for 50%,
+     etc. You can find out the palette range for your screen by
+     querying the graphics data base.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetRGB32CM
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetRGB32CM(
+         struct ColorMap * cm,
+         ULONG n,
+         ULONG r,
+         ULONG g,
+         ULONG b
+ );
+
+Function
+~~~~~~~~
+::
+
+     Set one color in the ColorMap.
+
+
+Inputs
+~~~~~~
+::
+
+     cm - ColorMap structure obtained via GetColorMap()
+     n  - the number of the color register to set
+     r  - red level   (32 bit left justified fraction)
+     g  - green level (32 bit left justified fraction)
+     b  - blue level  (32 bit left justified fraction)
+     
+
+Result
+~~~~~~
+::
+
+     Store the (r,g,b) triplet at index n in the ColorMap structure.
+     The chnages will not be immediately displayed. Use this function
+     before linking the ColorMap to a ViewPort. Do not access the entries
+     in the ColorTable yourself, as the ColorTable is subject to change.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GetColorMap() SetRGB32() GetRGB32() SetRGB4CM() graphics/view.h
+
+
+--------------
+
+SetRGB4
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetRGB4(
+         struct ViewPort * vp,
+         ULONG n,
+         ULONG r,
+         ULONG g,
+         ULONG b
+ );
+
+Function
+~~~~~~~~
+::
+
+     Changes a single color of a viewport.
+
+
+Inputs
+~~~~~~
+::
+
+     vp - Modify this viewport
+     n - Change this color. If the color is outside the range of
+             valid colors, it will be ignored.
+     r, g, b - The new values for the red, green and blue. The
+             valid range is from 0x0 (no intensity) to
+             0xF (full intensity).
+
+
+Result
+~~~~~~
+::
+
+     If there is a ColorMap for this viewport, then the value will
+     be stored in the ColorMap.
+     The selected color register is changed to match your specs.
+     If the color value is unused then nothing will happen.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Lower order bits of the palette specification will be discarded,
+     depending on the color palette resolution of the target graphics
+     device. Use 0xf for the full value, 0x7 for 50%,
+     etc. You can find out the palette range for your screen by
+     querying the graphics data base.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetRGB4CM
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetRGB4CM(
+         struct ColorMap * cm,
+         WORD n,
+         UBYTE r,
+         UBYTE g,
+         UBYTE b
+ );
+
+Function
+~~~~~~~~
+::
+
+     Set one color in the ColorMap.
+
+
+Inputs
+~~~~~~
+::
+
+     cm - ColorMap structure obtained via GetColorMap()
+     n  - the number of the color register to set
+     r  - red level   (0-15)
+     g  - green level (0-15)
+     b  - blue level  (0-15)
+     
+
+Result
+~~~~~~
+::
+
+     Store the (r,g,b) triplet at index n in the ColorMap structure.
+     The chnages will not be immediately displayed. Use this function
+     before linking the ColorMap to a ViewPort.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GetColorMap() SetRGB4() GetRGB4() graphics/view.h
+
+
+--------------
+
+SetRPAttrsA
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetRPAttrsA(
+         struct RastPort * rp,
+         struct TagItem  * tags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetRast
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetRast(
+         struct RastPort * rp,
+         ULONG pen
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ Set the entire contents of a specified RastPort to a specific colour.
+
+
+Inputs
+~~~~~~
+::
+
+
+ rp   --  pointer to the RastPort in question
+ pen  --  pen number to set the bitmap pixels to
+
+
+Result
+~~~~~~
+::
+
+
+ All pixels are set to the colour corresponding to the specified pen
+ number.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+ RectFill(), <graphics/rastport.h>
+
+
+--------------
+
+SetRegion
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL SetRegion(
+         struct Region * src,
+         struct Region * dest
+ );
+
+Function
+~~~~~~~~
+::
+
+     Sets the destination region to the source region.
+     Allocates necessary RegionRectangles if necessary
+     and deallocates any excessive RegionRectangles in
+     the destination Region. The source Region remains
+     untouched.
+     If the system runs out of memory during allocation
+     of RegionRectangles the destination Region will
+     .
+     
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+     TRUE if everything went alright, FALSE otherwise
+     (out of memory).
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     NewRegion() DisposeRegion() DisposeRegionRectangle()
+     CopyRegion()
+
+
+--------------
+
+SetSoftStyle
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG SetSoftStyle(
+         struct RastPort * rp,
+         ULONG style,
+         ULONG enable
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ Set the style of the current font. Only those bits set in 'enable' are
+ affected.
+
+
+Inputs
+~~~~~~
+::
+
+
+ rp     --  pointer to rastport
+ style  --  the style the font should have
+ enable --  mask for style bits
+
+
+Result
+~~~~~~
+::
+
+
+ The style bits used hereinafter (the font may not support all the styles
+ you wish to set). Note that this is possibly more style bits than you
+ affected by calling SetSoftStyle() as a font may have intrinsic style
+ bits set.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+ AskSoftStyle(), graphics/text.h
+
+
+--------------
+
+SetWriteMask
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG SetWriteMask(
+         struct RastPort * rp,
+         ULONG mask
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ShowImminentReset
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ void ShowImminentReset(
+ );
+
+Function
+~~~~~~~~
+::
+
+     Indicates that a reset is imminent by (usually)
+     blanking the screen.
+     
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SortGList
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void SortGList(
+         struct RastPort * rp
+ );
+
+Function
+~~~~~~~~
+::
+
+     Sort the current gel list by the y and x coordinates of it's
+     elements.
+     You have to call this routine prior to calling DoCollision()
+     of DrawGList or make sure that the list is sorted!
+
+
+Inputs
+~~~~~~
+::
+
+     rp  = pointer to RastPort that has an GelsInfo linked to it
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitGels() DrawGList() DoCollision() graphics/rastport.h
+
+
+--------------
+
+StripFont
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void StripFont(
+         struct TextFont * font
+ );
+
+Function
+~~~~~~~~
+::
+
+             Removes a TextFontExtension from a font.
+
+
+Inputs
+~~~~~~
+::
+
+     font    - font to remove extension from.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+             ExtendFont(), ExtendFontTags()
+
+--------------
+
+SwapRegions
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID SwapRegions(
+         struct Region * region1,
+         struct Region * region2
+ );
+
+Function
+~~~~~~~~
+::
+
+     Swap the contents of the two regions.
+
+
+Inputs
+~~~~~~
+::
+
+     region1, region2 - pointers to the two regions to swap the contents of
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+    This function doesn't exist in AmigaOS
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CreateRegion()
+
+
+--------------
+
+SyncSBitMap
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void SyncSBitMap(
+         struct Layer * l
+ );
+
+Function
+~~~~~~~~
+::
+
+     If the layer has a superbitmap all the parts that are visible will
+     be copied into the superbitmap. This is usually not done except when
+     parts of a superbitmapped layer become hidden the visible parts are 
+     stored into the superbitmap.
+
+
+Inputs
+~~~~~~
+::
+
+     l  - pointer to superbitmapped layer 
+
+
+Result
+~~~~~~
+::
+
+     The superbitmap will be synchronized with the visible part. The
+     superbitmap attatched to the layer will be up-to-date with what's
+     really in the layer.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CopySBitMap()
+
+
+--------------
+
+Text
+====
+
+Synopsis
+~~~~~~~~
+::
+
+ void Text(
+         struct RastPort * rp,
+         CONST_STRPTR string,
+         ULONG count
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+TextExtent
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void TextExtent(
+         struct RastPort   * rp,
+         CONST_STRPTR string,
+         ULONG count,
+         struct TextExtent * textExtent
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+TextFit
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG TextFit(
+         struct RastPort   * rp,
+         CONST_STRPTR string,
+         ULONG strLen,
+         struct TextExtent * textExtent,
+         struct TextExtent * constrainingExtent,
+         LONG strDirection,
+         ULONG constrainingBitWidth,
+         ULONG constrainingBitHeight
+ );
+
+Function
+~~~~~~~~
+::
+
+     Tries to fill the given space with as many characters of the
+     font in rp as possible and returns that number.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - Use the settings in this RastPort (eg. Font)
+     string - Use this string
+     strLen - The length of the string
+     textExtent - The size actually occupied will be returned here
+     constrainingExtent - If non-NULL, the routine will use the
+             dimensions of the box described here
+     strDirection - In which is the next character. Must be either 1
+             or -1. If it is -1, then string must point to the end (the
+             first character to check) of the text to fit (this is for
+             checking text which runs from right to left).
+     constrainingBitWidth - If constrainingExtent is NULL, then this
+             is the width of the bounding box.
+     constrainingBitHeight - If constrainingExtent is NULL, then this
+             is the height of the bounding box.
+
+
+Result
+~~~~~~
+::
+
+     The number of characters which fit in the bounding box.
+     If any characters fit in the bounding box, then textExtent will
+     tell how large the minimal bounding box for the string is.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     TextLength()
+
+
+--------------
+
+TextLength
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ WORD TextLength(
+         struct RastPort * rp,
+         CONST_STRPTR string,
+         ULONG count
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+UCopperListInit
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct CopList * UCopperListInit(
+         struct UCopList * ucl,
+         WORD n
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocates and initializes copperlist structures and buffers
+     internal to UCopList structure.
+
+
+Inputs
+~~~~~~
+::
+
+     ucl - pointer to a UCopList structure. Must not be NULL!
+     n   - number of instructions the buffer must be able to hold
+
+
+Result
+~~~~~~
+::
+
+     cl - pointer to a buffer that will accept n intermediate
+          copper instructions
+
+     NOTE: this is a pointer to UCopList->FirstCopList!
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CINIT CMOVE CWAIT CEND graphics/copper.h
+
+
+--------------
+
+UnlockLayerRom
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ void UnlockLayerRom(
+         struct Layer * l
+ );
+
+Function
+~~~~~~~~
+::
+
+     Unlocks a prevously locked layer for access by other applications
+     or intuition itself.
+     If a task has locked a layer multiple times it must unlock it
+     as many times as well as locks nest.
+     This functions does the same as layers/UnlockLayerRom()
+
+
+Inputs
+~~~~~~
+::
+
+     l - pointer to layer structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     Does not save all registers.
+
+
+See also
+~~~~~~~~
+::
+
+     LockLayerRom() LockLayer() UnLockLayer()
+
+
+--------------
+
+VBeamPos
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG VBeamPos(
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     none
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+VideoControl
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG VideoControl(
+         struct ColorMap * cm,
+         struct TagItem * tags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     cm   - pointer to struct ColorMap obtained via GetColorMap()
+     tags - pointer to a table of videocontrol tagitems
+
+
+Result
+~~~~~~
+::
+
+     error - 0 if no error ocurred in the control operation
+             non-0 if bad colormap pointer, no tagitems or bad tag
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+WaitBOVP
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void WaitBOVP(
+         struct ViewPort * vp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     vp - pointer to ViewPort structure
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+WaitBlit
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void WaitBlit(
+ );
+
+Function
+~~~~~~~~
+::
+
+     Wait for the blitter to return to finish, ie. the function returns
+     when the blitter is idle.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+WaitTOF
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID WaitTOF(
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ Wait for vertical blank.
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+ Adds the task to the TOF queue; it will be signalled when the vertical
+ blank interrupt occurs.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+WeighTAMatch
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ WORD WeighTAMatch(
+         struct TextAttr * reqTextAttr,
+         struct TextAttr * targetTextAttr,
+         struct TagItem  * targetTags
+ );
+
+Function
+~~~~~~~~
+::
+
+             Determines how well two font descriptions match.
+
+
+Inputs
+~~~~~~
+::
+
+     reqTextAttr             - the required textattr.
+     targetTextAttr  - textattr of potential match.
+     targetTags              - tags for the targetTextAttr.
+
+
+Result
+~~~~~~
+::
+
+     A weight number which measures how well the TextAttrs
+     match. The weight may vary from 0 (no match) to
+     MAXFONTMATCHWEIGHT (perfect match).
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     Does not yet take tags into account.
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+WriteChunkyPixels
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ void WriteChunkyPixels(
+         struct RastPort * rp,
+         LONG xstart,
+         LONG ystart,
+         LONG xstop,
+         LONG ystop,
+         UBYTE           * array,
+         LONG bytesperrow
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+WritePixel
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG WritePixel(
+         struct RastPort * rp,
+         LONG x,
+         LONG y
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+WritePixelArray8
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG WritePixelArray8(
+         struct RastPort * rp,
+         ULONG xstart,
+         ULONG ystart,
+         ULONG xstop,
+         ULONG ystop,
+         UBYTE           * array,
+         struct RastPort * temprp
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+WritePixelLine8
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG WritePixelLine8(
+         struct RastPort * rp,
+         LONG xstart,
+         LONG ystart,
+         ULONG width,
+         UBYTE * array,
+         struct RastPort * tempRP
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+XorRectRegion
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL XorRectRegion(
+         struct Region    * Reg,
+         struct Rectangle * Rect
+ );
+
+Function
+~~~~~~~~
+::
+
+     Exclusive-OR the given rectangle to the given
+     region
+
+
+Inputs
+~~~~~~
+::
+
+     region - pointer to a region structure
+     rectangle - pointer to a rectangle structure
+
+
+Result
+~~~~~~
+::
+
+     TRUE if the operation was succesful, else FALSE
+     (out of memory)
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     All relevant data is copied, you may throw away the
+     given rectangle after calling this function
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AndRectRegion(), OrRectRegion(), ClearRectRegion()
+
+
+--------------
+
+XorRectRegionND
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Region * XorRectRegionND(
+         struct Region    * Reg,
+         struct Rectangle * Rect
+ );
+
+Function
+~~~~~~~~
+::
+
+     Exclusive-OR the given rectangle to the given
+     region
+
+
+Inputs
+~~~~~~
+::
+
+     region - pointer to a region structure
+     rectangle - pointer to a rectangle structure
+
+
+Result
+~~~~~~
+::
+
+     The resulting region or NULL in case there's no enough free memory
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     All relevant data is copied, you may throw away the
+     given rectangle after calling this function
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AndRectRegion(), OrRectRegion(), ClearRectRegion()
+
+
+--------------
+
+XorRegionRegion
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL XorRegionRegion(
+         struct Region * R1,
+         struct Region * R2
+ );
+
+Function
+~~~~~~~~
+::
+
+     Exclusive-OR of one region with another region,
+     leaving result in second region.
+
+
+Inputs
+~~~~~~
+::
+
+     region1 - pointer to a region structure
+     region2 - pointer to a region structure
+
+
+Result
+~~~~~~
+::
+
+     TRUE if the operation was succesful,
+     FALSE otherwise (out of memory)
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AndRegionRegion(), OrRegionRegion()
+
+
+--------------
+
+XorRegionRegionND
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Region * XorRegionRegionND(
+         struct Region * R1,
+         struct Region * R2
+ );
+
+Function
+~~~~~~~~
+::
+
+     Exclusive-OR of one region with another region.
+
+
+Inputs
+~~~~~~
+::
+
+     region1 - pointer to a region structure
+     region2 - pointer to a region structure
+
+
+Result
+~~~~~~
+::
+
+     The resulting region or NULL in case there's no enough free memory
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is not present in AmigaOS
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AndRegionRegion(), OrRegionRegion()
+
+
+--------------
+

@@ -1,0 +1,2674 @@
+.. This document is automatically generated. Don't edit it!
+
+========
+iffparse
+========
+
+`AllocIFF`_
+`AllocLocalItem`_
+`CloseClipboard`_
+`CloseIFF`_
+`CollectionChunk`_
+`CollectionChunks`_
+`CurrentChunk`_
+`EntryHandler`_
+`ExitHandler`_
+`FindCollection`_
+`FindLocalItem`_
+`FindProp`_
+`FindPropContext`_
+`FreeIFF`_
+`FreeLocalItem`_
+`GoodID`_
+`GoodType`_
+`IDtoStr`_
+`InitIFF`_
+`InitIFFasClip`_
+`InitIFFasDOS`_
+`LocalItemData`_
+`OpenClipboard`_
+`OpenIFF`_
+`ParentChunk`_
+`ParseIFF`_
+`PopChunk`_
+`PropChunk`_
+`PropChunks`_
+`PushChunk`_
+`ReadChunkBytes`_
+`ReadChunkRecords`_
+`SetLocalItemPurge`_
+`StopChunk`_
+`StopChunks`_
+`StopOnExit`_
+`StoreItemInContext`_
+`StoreLocalItem`_
+`WriteChunkBytes`_
+`WriteChunkRecords`_
+
+-----------
+
+AllocIFF
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct IFFHandle * AllocIFF(
+ );
+
+Function
+~~~~~~~~
+::
+
+   Allocates an IFFHandle struct.
+
+
+Inputs
+~~~~~~
+::
+
+
+
+
+Result
+~~~~~~
+::
+
+     An unitialized IFFHandle structure.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     The default context-node is created in AllocIFF() and persists until
+     FreeIFF().
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     FreeIFF()
+
+
+--------------
+
+AllocLocalItem
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct LocalContextItem * AllocLocalItem(
+         LONG type,
+         LONG id,
+         LONG ident,
+         ULONG dataSize
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocates and initializes a LocalContextItem structure. It also allocates
+     dataSize user data. User data can be accesseed via LocalItemData function.
+     This is the only way to allocate such a item, since the item contains private
+     fields. Of course programmers should assume NOTHING about this private
+     fields.
+
+
+
+Inputs
+~~~~~~
+::
+
+     type, id   - Longword identifications values.
+     ident      - Longword identifier for class of item.
+     dataSize      -  Size of a user data area that will be allocated by this funcyion.
+
+
+Result
+~~~~~~
+::
+
+     item      - A initialized LocalContextItem structure.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Changed dataSize parameter to ULONG, negative-sized memory allocations are undefined.
+
+
+
+Bugs
+~~~~
+::
+
+     See notes.
+
+
+See also
+~~~~~~~~
+::
+
+     FreeLocalItem(), LocalItemData(), StoreLocalItem(), StoreItemInContext(),
+     SetLocalItemPurge()
+
+
+--------------
+
+CloseClipboard
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ void CloseClipboard(
+         struct ClipboardHandle * clipHandle
+ );
+
+Function
+~~~~~~~~
+::
+
+     Closes the clipboard.device and frees the ClipboardHandle
+
+
+Inputs
+~~~~~~
+::
+
+     clip - pointer to a ClipboardHandle struct created with OpenClipboard.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenClipboard(), InitIFFAsClip()
+
+
+--------------
+
+CloseIFF
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void CloseIFF(
+         struct IFFHandle * iff
+ );
+
+Function
+~~~~~~~~
+::
+
+     Completes a read or write session by closing the IFF handle.
+     The IFFHandle struct is ready for reuse in another session,
+     it's just to open it again with OpenIFF(). This function
+     also automatically cleans up if a read or write fails halfway through.
+
+
+Inputs
+~~~~~~
+::
+
+     iff - Pointer to an IFFhandle struct previously opened with OpenIFF()
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function tells the custom stream handler to clean up
+     by sending it a IFFCMD_CLEANUP IFFStreamCmd.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenIFF(), InitIFF()
+
+
+--------------
+
+CollectionChunk
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG CollectionChunk(
+         struct IFFHandle * iff,
+         LONG type,
+         LONG id
+ );
+
+Function
+~~~~~~~~
+::
+
+     Installs an entry handler with the given type and id, so that
+     chunks encountered with the same type and id will be stored.
+     This is quite like PropChunk(), but CollectionChunk() will
+     store the contents of multiple chunks with the same type and id.
+     To retrieve the stored collection of chunks one uses FindCollection().
+     Remember: the collection is only valid inside the current property scope.
+
+
+Inputs
+~~~~~~
+::
+
+     iff   - Pointer to IFFHandle struct. (does not need to be open).
+     type  - IFF chunk type declarator for chunk to collect.
+     id    -  IFF chunk id identifier for chunk to collect.
+
+
+Result
+~~~~~~
+::
+
+     error - 0 if successfulle. IFFERR_#? elsewise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CollectionChunks(), FindCollection, PropChunk
+
+
+--------------
+
+CollectionChunks
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG CollectionChunks(
+         struct IFFHandle * iff,
+         LONG             * propArray,
+         LONG numPairs
+ );
+
+Function
+~~~~~~~~
+::
+
+     Does multiple CollectionChunk() calls on the supplied list.
+     An easy way to install several collction chunks.
+
+
+Inputs
+~~~~~~
+::
+
+     iff       - pointer to an IFFHandle struct.
+     propArray  - pointer to an array of longword chunk types and identifiers.
+     numPairs  - number of type/id pairs in the propArray.
+
+
+Result
+~~~~~~
+::
+
+     error      - 0 if successfull, IFFERR_#? otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CollectionChunk()
+
+
+--------------
+
+CurrentChunk
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct ContextNode * CurrentChunk(
+         struct IFFHandle * iff
+ );
+
+Function
+~~~~~~~~
+::
+
+     Returns the top context node for the give IFFHandle struct.
+     The top contexte is the node most recently pushed onto the
+     context stack
+
+
+Inputs
+~~~~~~
+::
+
+     iff  - pointer to IFFHandle struct.
+
+
+Result
+~~~~~~
+::
+
+     top - Pointer to top contextnode or NULL if none.
+
+     since the default context node exists as long as the iffhandle
+     itself. However, the user is never given a pointer to this node.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     PushChunk(), PopChunk(), ParseIFF(), ParentChunk()
+
+
+--------------
+
+EntryHandler
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG EntryHandler(
+         struct IFFHandle * iff,
+         LONG type,
+         LONG id,
+         LONG position,
+         struct Hook      * handler,
+         APTR object
+ );
+
+Function
+~~~~~~~~
+::
+
+     Installs an entry handler for a specific chunk type
+     that wil be called whenever a chunk of that type is pushed on the contextstack
+     via ParseIFF().
+
+
+
+Inputs
+~~~~~~
+::
+
+     iff         - pointer to an iffhandle struct.
+     type      - type code for the chunk to handle. (ex: "ILBM").
+     id        -  ID code for the chunk to handle. (ex: "CMAP")
+     position  -  position of localcontextitem. See StoreLocalItem for
+                 more info.
+     handler    -  an initialised Hook structure for the handler function.
+     object    -  pointer to some kind of object that will be passed to
+                 your handler function.
+
+
+Result
+~~~~~~
+::
+
+     error - 0 If successfull, IFFERR_#? elsewise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ExitHandler(), StoreLocalItem(), StoreItemInContext()
+
+
+
+
+--------------
+
+ExitHandler
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ExitHandler(
+         struct IFFHandle * iff,
+         LONG type,
+         LONG id,
+         LONG position,
+         struct Hook      * handler,
+         APTR object
+ );
+
+Function
+~~~~~~~~
+::
+
+     Installs an exit handler for a specific chunk type
+     that wil be called whenever a chunk of that type is popped off the contextstack
+     via ParseIFF().
+
+
+
+Inputs
+~~~~~~
+::
+
+     iff         - pointer to an iffhandle struct.
+     type      - type code for the chunk to handle. (ex: "ILBM").
+     id        -  ID code for the chunk to handle. (ex: "CMAP")
+     position  -  position of localcontextitem. See StoreLocalItem for
+                 more info.
+     handler    -  an initialised Hook structure for the handler function.
+     object    -  pointer to some kind of object that will be passed to
+                 your handler function.
+
+
+Result
+~~~~~~
+::
+
+     error - 0 If successfull, IFFERR_#? elsewise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+      EntryHandler(), StoreLocalItem(), StoreItemInContext()
+
+
+--------------
+
+FindCollection
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct CollectionItem * FindCollection(
+         struct IFFHandle * iff,
+         LONG type,
+         LONG id
+ );
+
+Function
+~~~~~~~~
+::
+
+     Returns a pointer to a list of CollectionItems the installed
+     CollectionChunk of that type and ID.
+
+
+Inputs
+~~~~~~
+::
+
+     iff   - pointer to an IFFHandle struct.
+     type  - type code to search for.
+     id    -  id code to search for.
+
+
+
+Result
+~~~~~~
+::
+
+     ci - pointer to the last collection chunk encountered
+          with pointers to previous ones.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CollectionChunk(), CollectionChunks()
+
+
+--------------
+
+FindLocalItem
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct LocalContextItem * FindLocalItem(
+         struct IFFHandle * iff,
+         LONG type,
+         LONG id,
+         LONG ident
+ );
+
+Function
+~~~~~~~~
+::
+
+     Goes through the whole context node stack starting at the top
+     searching the contecnodes for attached LocalContextItems with the
+     specified type, id and ident codes.
+
+
+Inputs
+~~~~~~
+::
+
+     iff   - pointer to an IFFHandle struct.
+     type  - type code for item to find.
+     id    -  identifier code for item to find.
+     ident - ident code for the class of context item to find.
+
+
+Result
+~~~~~~
+::
+
+     lci   - pointer to a local context item if found, or NULL if
+             none is found.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     StoreLocalItem()
+
+
+--------------
+
+FindProp
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct StoredProperty * FindProp(
+         struct IFFHandle * iff,
+         LONG type,
+         LONG id
+ );
+
+Function
+~~~~~~~~
+::
+
+     Searches for a StoredProperty that is valid in the given context.
+     Property chunks are automatically stored by ParseIFF() when pre-declared
+     by PropChunk() or PropChunks(). The returned storedproperty contains
+     a pointer to the data in the chunk.
+
+
+Inputs
+~~~~~~
+::
+
+     iff    - a pointer to a an IFFHandle struct.
+     type  - type code of property to search for.
+     id    -  id code of property to search for.
+
+
+Result
+~~~~~~
+::
+
+     sp    - pointer to a storedproperty if found, NULL if none are found.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+
+See also
+~~~~~~~~
+::
+
+     PropChunk(), PropChunks()
+
+
+--------------
+
+FindPropContext
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct ContextNode * FindPropContext(
+         struct IFFHandle * iff
+ );
+
+Function
+~~~~~~~~
+::
+
+     Finds the proper context in which to store a property.
+     If we have installed a property entry handler via PropChunk()
+     and such a property chunk (for example id is "CMAP" and type is "ILBM"
+     inside a form, then the storedproperty will be stored in the enclosing
+     FORM chink. If the chunk was inside a PROP chunk inside a LIST, then
+     the storedproperty would be installed in the LIST context.
+
+
+Inputs
+~~~~~~
+::
+
+     iff - pointer to IFFHandle struct.
+
+
+Result
+~~~~~~
+::
+
+     cn  -  pointer to contextnode where the property might be installed, or
+           NULL if no such context exists.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is most for internal use.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ParentChunk(), CurrentChunk(), StoreItemInContext(), PropChunk()
+
+
+--------------
+
+FreeIFF
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeIFF(
+         struct IFFHandle * iff
+ );
+
+Function
+~~~~~~~~
+::
+
+     Frees an IFFHandle struct previously allocated by AllocIFF.
+
+
+Inputs
+~~~~~~
+::
+
+     iff - pointer to an IFFHandle struct.
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocIFF(), CloseIFF()
+
+
+--------------
+
+FreeLocalItem
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeLocalItem(
+         struct LocalContextItem * localItem
+ );
+
+Function
+~~~~~~~~
+::
+
+     Frees a local context item previously allocated by AllocLocalItem.
+     This functioned should always be calles by custom LCI purge hooks.
+
+
+Inputs
+~~~~~~
+::
+
+     localItem    -  pointer to LocalContextItem struct.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocLocalItem()
+
+
+--------------
+
+GoodID
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG GoodID(
+         LONG id
+ );
+
+Function
+~~~~~~~~
+::
+
+     Determines whether an ID is valid according to the IFF specification.
+
+
+Inputs
+~~~~~~
+::
+
+     id - An IFF chunk ID to be tested.
+
+
+Result
+~~~~~~
+::
+
+     TRUE if valid.
+     FALSE otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Assumes input to be in local byte order.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+GoodType
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG GoodType(
+         LONG type
+ );
+
+Function
+~~~~~~~~
+::
+
+     Determines whether a IFF chunk type is valid according to the IFF specification.
+
+
+Inputs
+~~~~~~
+::
+
+     type  - An IFF chunk type to be tested.
+
+
+Result
+~~~~~~
+::
+
+     TRUE  - type is valid.
+     FALSE  -  otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Assumes the input type to be in local byte order.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GoodID()
+
+
+--------------
+
+IDtoStr
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ STRPTR IDtoStr(
+         LONG id,
+         STRPTR buf
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     id  - pointer to an IFF chunk identfication code.
+     buf  -  buffer into which the id will be stored. Should at least be 5 bytes.
+
+
+Result
+~~~~~~
+::
+
+     buf  -  pointer to the supplied buffer.
+
+
+Example
+~~~~~~~
+::
+
+     // Print the ID of the current contextnode
+
+     UBYTE buf[5];
+     struct ContextNode *cn;
+
+     if (cn = CurrentChunk(iff)
+         printf
+         (
+             "ID of current chunk: %s\n",
+             IDtoStr(cn->cn_ID)
+         );
+
+
+
+Notes
+~~~~~
+::
+
+     Assumes that the supplied ID is stored in local byte order.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+InitIFF
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void InitIFF(
+         struct IFFHandle * iff,
+         LONG flags,
+         struct Hook      * streamHook
+ );
+
+Function
+~~~~~~~~
+::
+
+     Initializes an IFFHandle with a custom stream handler and
+     flags describing seekability of the stream.
+
+
+Inputs
+~~~~~~
+::
+
+     iff         - pointer to IFFHandle struct.
+     flags        -  stream I/O flags for the IFFHandle.
+     streamHook  - pointer to a Hook structure initialized with the streamhandler
+                   to be called.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     utility/hooks.h
+
+
+--------------
+
+InitIFFasClip
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void InitIFFasClip(
+         struct IFFHandle * iff
+ );
+
+Function
+~~~~~~~~
+::
+
+     Initializes the given IFFHandle to be a clipboard stream. It installs a
+     "custom" stream handler (via InitIFF) to handle clipboard streams.
+     The iff_Stream field of the iffhandle will still need
+     to be initializes with a ClipboardHandle struct returned from
+     OpenClipboard().
+
+
+Inputs
+~~~~~~
+::
+
+     iff  - pointer to an IFFHandle struct.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenClipboard()
+
+
+--------------
+
+InitIFFasDOS
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void InitIFFasDOS(
+         struct IFFHandle * iff
+ );
+
+Function
+~~~~~~~~
+::
+
+     Initializes the given IFFHandle to be a DOS stream. It installs a
+     "custom" stream handler (via InitIFF) to handle DOS streams.
+     The iff_Stream field of the iffhandle will still need
+     to be initializes with a filehandle struct as returned from
+     dos.library/Open(). The iff_Flags may be changed to
+     change the seekability of the stream after this function is called,
+     but before OpenIFF() is called. Seekability for dos files
+     default to IFFF_RSEEK (random seekable).
+
+
+
+
+Inputs
+~~~~~~
+::
+
+     iff  - pointer to an IFFHandle struct.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+LocalItemData
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR LocalItemData(
+         struct LocalContextItem * localItem
+ );
+
+Function
+~~~~~~~~
+::
+
+     Returns a  pointer to the userdata allocated in AllocLocalItem.
+     This function returns NULL for an input of NULL.
+
+
+Inputs
+~~~~~~
+::
+
+     localItem - pointer to a LocalContextItem struct or NULL.
+
+
+Result
+~~~~~~
+::
+
+     data      - pointer to user data or NULL.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocLocalItem(), FreeLocalItem()
+
+
+--------------
+
+OpenClipboard
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct ClipboardHandle * OpenClipboard(
+         LONG unitNumber
+ );
+
+Function
+~~~~~~~~
+::
+
+     Opens the clipboard.device with the specified unit.
+     Allocates and initializes a ClipboardHandle struct which should
+     be put into the iff_Stream field of the IFFHandle when the
+     handle is initialized with InitIFFasClip().
+
+
+
+Inputs
+~~~~~~
+::
+
+     unitNumber  - a clipboard device unit number (usually PRIMARY_CLIP).
+
+
+Result
+~~~~~~
+::
+
+     ch          -  pointer to ClipboarHandle struct or NULL if unsuccessfull.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     InitIFFasClip(), CloseClipboard()
+
+
+--------------
+
+OpenIFF
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG OpenIFF(
+         struct IFFHandle * iff,
+         LONG rwMode
+ );
+
+Function
+~~~~~~~~
+::
+
+     Initializes an IFFHandle struct for a new session of reading or
+     writing. The direction of the I/O is determined by the rwMode flags
+     supplied (IFFF_READ or IFFF_WRITE).
+
+
+Inputs
+~~~~~~
+::
+
+     iff - pointer to IFFHandle struct.
+     ewMode - IFFF_READ or IFFF_WRITE
+
+
+
+Result
+~~~~~~
+::
+
+     error -  0 if successfull, IFFERR_#? elsewise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+      This function tells the custom stream handler to initialize
+     by sending it a IFFCMD_INIT IFFStreamCmd.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CloseIFF(), InitIFF()
+
+
+--------------
+
+ParentChunk
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct ContextNode * ParentChunk(
+         struct ContextNode * contextNode
+ );
+
+Function
+~~~~~~~~
+::
+
+     Returns a pointer to the parent context node to the given
+     one on the context node stack. The parent context node
+     represents the chunk enclosing the chunk given.
+     This can be use together with CurrentChunk() to iterate the
+     context node stack top-down.
+
+
+Inputs
+~~~~~~
+::
+
+     contextNode  - pointer to a context node.
+
+
+Result
+~~~~~~
+::
+
+     parent      -  pointer to the parent context node or NULL if none.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CurrentChunk()
+
+
+--------------
+
+ParseIFF
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ParseIFF(
+         struct IFFHandle * iff,
+         LONG mode
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function is the parser itself. It has three control modes.
+         IFFPARSE_SCAN - the parser will go through the file invoking
+             entry and exit handlers on its way.
+             When it returns it might be for 3 different reasons:
+
+             - It invoked a Stop entry/exit handler ( Installed by StopChunk[s] or
+               StopOnExit )
+
+             - An error occured.
+               (return value will be negative.)
+
+             - The parser reached EOF and returns IFFERR_EOF.
+
+         IFFPARSE_STEP  -  The parser steps through the file, returning to the
+             user each time it enters (returns NULL) and each time it exits
+             (return (IFFERR_EOC) a chunk.
+             It will also invoke entry/exit - handlers.
+
+         IFFPARSE_RAWSTEP - same as IFFPARSE_STEP except that in this mode
+             the parse won't invoke any handlers.
+
+
+
+Inputs
+~~~~~~
+::
+
+     iff - pointer to IFFHandle struct.
+     mode - IFFPARSE_SCAN, IFFPARSE_STEP or IFFPARSE_RAWSTEP.
+
+
+Result
+~~~~~~
+::
+
+     0 if successfull or IFFERR_#?
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     PushChunk(), PopChunk(), EntryHandler(), ExitHandler(), PropChunk[s](),
+     CollectionChunk[s](), StopChunk[s](), StopOnExit()
+
+
+
+--------------
+
+PopChunk
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG PopChunk(
+         struct IFFHandle * iff
+ );
+
+Function
+~~~~~~~~
+::
+
+     Pops a context node of the context stack. Usually called
+     in write mode to signal the end of a chunk.
+
+
+
+Inputs
+~~~~~~
+::
+
+     iff    - pointer to IFFHandle struct.
+
+
+Result
+~~~~~~
+::
+
+     error  -  0 if successfull, IFFERR_#? otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     PushChunk()
+
+
+--------------
+
+PropChunk
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG PropChunk(
+         struct IFFHandle * iff,
+         LONG type,
+         LONG id
+ );
+
+Function
+~~~~~~~~
+::
+
+     Installs an entry handler for chunks with the given type and id.
+     When such  chunk is encoutered, the entry handler will insert
+     a StoredProperty in the proper context.
+     A stored property chunk returned by FindProp() will be the valid property
+     for the current context.
+
+
+Inputs
+~~~~~~
+::
+
+     iff    - pointer to IFFHandle struct.
+     type  -  type code for chunk to declare.
+     id    -  identifier for chunk to declare.
+
+
+Result
+~~~~~~
+::
+
+     error  - 0 if successfull, IFFERR_#? otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     PropChunks(), FindProp(), CollectionChunk()
+
+
+--------------
+
+PropChunks
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG PropChunks(
+         struct IFFHandle * iff,
+         LONG             * propArray,
+         LONG numPairs
+ );
+
+Function
+~~~~~~~~
+::
+
+     Does multiple PropChunk() calls on the supplied list.
+     An easy way to install several prop chunk handlers
+
+
+
+Inputs
+~~~~~~
+::
+
+     iff       - pointer to an IFFHandle struct.
+     propArray  - pointer to an array of longword chunk types and identifiers.
+     numPairs  - number of type/id pairs in the propArray.
+
+
+
+Result
+~~~~~~
+::
+
+     error      - 0 if successfull, IFFERR_#? otherwise.
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+PushChunk
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG PushChunk(
+         struct IFFHandle * iff,
+         LONG type,
+         LONG id,
+         LONG size
+ );
+
+Function
+~~~~~~~~
+::
+
+     Pushes a new context node onto the context stack. Usually used in write mode.
+     In write mode the contextnode will be pushed with the given parameters.
+     In Read mode the type, id and size will be read from the installed stream.
+     Note that IFFSIZE_UNKNOW can be given for size in write mode. In that case,
+     the size of will not be known until you do a PopChunk(). PopChunk()
+     will then seek back in the stream and write the correct size.
+
+
+
+Inputs
+~~~~~~
+::
+
+     iff    - pointer to IFFHandle struct.
+     type  -  chunk type specifier.
+     id    -  chunk identifier.
+     size  -  size of the new chunk. May be IFFSIZE_UNKNOWN.
+
+
+Result
+~~~~~~
+::
+
+     error  -  0 if successfull, IFFERR_#? otherwize.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     PopChunk()
+
+
+--------------
+
+ReadChunkBytes
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ReadChunkBytes(
+         struct IFFHandle * iff,
+         APTR buf,
+         LONG numBytes
+ );
+
+Function
+~~~~~~~~
+::
+
+     Read a number of bytes from the current chunk into a buffer.
+     Attempts to read past the end of the chunk will be truncated.
+
+
+Inputs
+~~~~~~
+::
+
+     iff      - pointer to IFFHandle struct.
+     buf      -  pointer to a buffer into which the data will be placed.
+     numBtes  - number of bytes to read.
+
+
+Result
+~~~~~~
+::
+
+     actual -   (positive) the actual number of bytes read.
+               (negative) IFFERR_#? error code if not succesfull.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ReadChunkRecords(), ParseIFF(), WriteChunkBytes()
+
+
+--------------
+
+ReadChunkRecords
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG ReadChunkRecords(
+         struct IFFHandle * iff,
+         APTR buf,
+         LONG bytesPerRecord,
+         LONG numRecords
+ );
+
+Function
+~~~~~~~~
+::
+
+     Read a number of records with the given size from the current chunk
+     into a buffer. Attempts to read past the end of the chunk will be truncated.
+
+
+Inputs
+~~~~~~
+::
+
+      iff              - pointer to IFFHandle struct.
+     buf              -  pointer to a buffer into which the data will be placed.
+     bytesPerRecord  - number of bytes per record.
+     numRecords      -  number of records to read.
+
+
+Result
+~~~~~~
+::
+
+     actual -   (positive) the actual number of whole records read.
+               (negative) IFFERR_#? error code if not succesfull.
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ReadChunkBytes(), ParseIFF(), WriteChunkRecords()
+
+
+--------------
+
+SetLocalItemPurge
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetLocalItemPurge(
+         struct LocalContextItem * localItem,
+         struct Hook             * purgeHook
+ );
+
+Function
+~~~~~~~~
+::
+
+     Inserts a custom purge hook for the given local context item.
+     The purge hook will be freed when the system wants to delete a local
+     context item.
+
+
+Inputs
+~~~~~~
+::
+
+     localItem  -  pointer to a local context item.
+     purgeHook  -  pointer to a hook sructure initialized with the purge function.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     The purgehook must call FreeLocalItem() on the local context item after
+     doing its own resource freeing.
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocLocalItem(), FreeLocalItem()
+
+
+--------------
+
+StopChunk
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG StopChunk(
+         struct IFFHandle * iff,
+         LONG type,
+         LONG id
+ );
+
+Function
+~~~~~~~~
+::
+
+     Inserts an entry handler for the given type and id, that will cause the parser
+     to stop when such a chunk is entered.
+
+
+Inputs
+~~~~~~
+::
+
+      iff   - Pointer to IFFHandle struct. (does not need to be open).
+     type  - IFF chunk type declarator for chunk to stop at.
+     id    -  IFF chunk id identifier for chunk to stop at.
+
+
+Result
+~~~~~~
+::
+
+     error  -  0 if successfull, IFFERR_#? otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     StopChunks(), ParseIFF()
+
+
+--------------
+
+StopChunks
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG StopChunks(
+         struct IFFHandle * iff,
+         LONG             * propArray,
+         LONG numPairs
+ );
+
+Function
+~~~~~~~~
+::
+
+     Declares multiple stop chunks from th typ/id pairs supplied.
+
+
+Inputs
+~~~~~~
+::
+
+   iff       - pointer to an IFFHandle struct.
+     propArray  - pointer to an array of longword chunk types and identifiers.
+     numPairs  - number of type/id pairs in the propArray.
+
+
+Result
+~~~~~~
+::
+
+     error      - 0 if successfull, IFFERR_#? otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     StopChunk()
+
+
+--------------
+
+StopOnExit
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG StopOnExit(
+         struct IFFHandle * iff,
+         LONG type,
+         LONG id
+ );
+
+Function
+~~~~~~~~
+::
+
+     Inserts an exit handler for the given type and id, that will cause the parser
+     to stop when such a chunk is left.
+
+
+Inputs
+~~~~~~
+::
+
+      iff   - Pointer to IFFHandle struct. (does not need to be open).
+     type  - IFF chunk type declarator for chunk to stop at.
+     id    -  IFF chunk id identifier for chunk to stop at.
+
+
+Result
+~~~~~~
+::
+
+     error  -  0 if successfull, IFFERR_#? otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ParseIFF()
+
+
+--------------
+
+StoreItemInContext
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void StoreItemInContext(
+         struct IFFHandle        * iff,
+         struct LocalContextItem * localItem,
+         struct ContextNode      * contextNode
+ );
+
+Function
+~~~~~~~~
+::
+
+     Stores the given local context item into the given context node.
+     If a LCI with the some id, type and class identifier allready exists
+     in the context node, the old one will be purged, and the new one
+     inserted.
+
+
+Inputs
+~~~~~~
+::
+
+     iff         - pointer to IFFHandle struct.
+     localItem    -  pointer to LCI to install.
+     contextNode  -  pointer to the context node in which the LCI will be stored.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     StoreLocalItem()
+
+
+--------------
+
+StoreLocalItem
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG StoreLocalItem(
+         struct IFFHandle        * iff,
+         struct LocalContextItem * localItem,
+         LONG position
+ );
+
+Function
+~~~~~~~~
+::
+
+     Stores the given local context item in a context node.
+     Which context node this is depends on the value of the position
+     argument:
+         IFFSLI_ROOT - insert into the default contextnode.
+         IFFSLI_PROP  -  insert into the node returned by FindPropContext().
+         IFFSLI_TOP  -  insert item into the current contextnode.
+
+
+
+Inputs
+~~~~~~
+::
+
+     iff        - pointer to IFFHandle struct.
+     localItem  -  pointer to local context item.
+     position  -  IFFSLI_ROOT, IFFSLI_PROP or IFFSLI_TOP.
+
+
+Result
+~~~~~~
+::
+
+     error     -  0 if succesfull, IFFERR_#? otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     StoreItemInContext(), FindLocalItem(), EntryHandler(), ExitHandler()
+
+
+--------------
+
+WriteChunkBytes
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG WriteChunkBytes(
+         struct IFFHandle * iff,
+         APTR buf,
+         LONG numBytes
+ );
+
+Function
+~~~~~~~~
+::
+
+     Writes given number of bytes in the supplied buffer into the
+     current chunk. Attempts to write past the endo of the chunk will
+     be truncated.
+
+
+Inputs
+~~~~~~
+::
+
+     iff        - pointer to IFFHandle struct.
+     buf        -  buffer with data to write.
+     numBytes  - number of bytes to write.
+
+
+Result
+~~~~~~
+::
+
+     actual    -  (positive) number of bytes actually written.
+                 (negative) IFFERR_#? indicating unsuccesfull write.
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     PushChunk(), PopChunk(), WriteChunkRecords()
+
+
+--------------
+
+WriteChunkRecords
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG WriteChunkRecords(
+         struct IFFHandle * iff,
+         APTR buf,
+         LONG bytesPerRecord,
+         LONG numRecords
+ );
+
+Function
+~~~~~~~~
+::
+
+     Write numRecods records of bytesPerRecord bytes to the current chunk.
+     Attempts to write past the end of the chunk will be truncated.
+
+
+Inputs
+~~~~~~
+::
+
+      iff              - pointer to IFFHandle struct.
+     buf              -  pointer to a buffer containig the data to be written.
+     bytesPerRecord  - number of bytes per record.
+     numRecords      -  number of records to write.
+
+
+Result
+~~~~~~
+::
+
+     actual -   (positive) the actual number of whole records written.
+               (negative) IFFERR_#? error code if not succesfull.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     WriteChunkBytes()
+
+
+--------------
+

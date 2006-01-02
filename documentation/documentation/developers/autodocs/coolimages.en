@@ -1,0 +1,66 @@
+.. This document is automatically generated. Don't edit it!
+
+==========
+coolimages
+==========
+
+`COOL_ObtainImageA`_
+
+-----------
+
+COOL_ObtainImageA
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ const struct CoolImage * COOL_ObtainImageA(
+         ULONG imageid,
+         struct TagItem * tags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+

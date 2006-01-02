@@ -1,0 +1,1496 @@
+.. This document is automatically generated. Don't edit it!
+
+=========
+muimaster
+=========
+
+`MUI_AddClipRegion`_
+`MUI_AddClipping`_
+`MUI_AllocAslRequest`_
+`MUI_AslRequest`_
+`MUI_BeginRefresh`_
+`MUI_CreateCustomClass`_
+`MUI_DeleteCustomClass`_
+`MUI_DisposeObject`_
+`MUI_EndRefresh`_
+`MUI_Error`_
+`MUI_FreeAslRequest`_
+`MUI_FreeClass`_
+`MUI_GetClass`_
+`MUI_Layout`_
+`MUI_MakeObjectA`_
+`MUI_NewObjectA`_
+`MUI_ObtainPen`_
+`MUI_Redraw`_
+`MUI_RejectIDCMP`_
+`MUI_ReleasePen`_
+`MUI_RemoveClipRegion`_
+`MUI_RemoveClipping`_
+`MUI_RequestA`_
+`MUI_RequestIDCMP`_
+`MUI_SetError`_
+
+-----------
+
+MUI_AddClipRegion
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR MUI_AddClipRegion(
+         struct MUI_RenderInfo * mri,
+         struct Region * r
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_AddClipping
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR MUI_AddClipping(
+         struct MUI_RenderInfo * mri,
+         WORD left,
+         WORD top,
+         WORD width,
+         WORD height
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_AllocAslRequest
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR MUI_AllocAslRequest(
+         unsigned long reqType,
+         struct TagItem * tagList
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_AslRequest
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL MUI_AslRequest(
+         APTR requester,
+         struct TagItem * tagList
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_BeginRefresh
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL MUI_BeginRefresh(
+         struct MUI_RenderInfo * mri,
+         ULONG flags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_CreateCustomClass
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct MUI_CustomClass * MUI_CreateCustomClass(
+         struct Library * base,
+         ClassID supername,
+         struct MUI_CustomClass * supermcc,
+         ULONG datasize,
+         APTR dispatcher
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_DeleteCustomClass
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL MUI_DeleteCustomClass(
+         struct MUI_CustomClass * mcc
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_DisposeObject
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID MUI_DisposeObject(
+         Object * obj
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_EndRefresh
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID MUI_EndRefresh(
+         struct MUI_RenderInfo * mri,
+         ULONG flags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_Error
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG MUI_Error(
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_FreeAslRequest
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID MUI_FreeAslRequest(
+         APTR requester
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_FreeClass
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID MUI_FreeClass(
+         Class * cl
+ );
+
+Function
+~~~~~~~~
+::
+
+     Frees a class returned by MUI_GetClass().
+
+
+Inputs
+~~~~~~
+::
+
+     cl - The pointer to the class.
+
+
+Result
+~~~~~~
+::
+
+     VOID - The function always succeed: if the class can't be
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is obsolete, DO NOT use it.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     MUI_GetClass(), MUI_CreateCustomClass(), MUI_DeleteCustomClass()
+
+
+--------------
+
+MUI_GetClass
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct IClass * MUI_GetClass(
+         ClassID classid
+ );
+
+Function
+~~~~~~~~
+::
+
+     Get a pointer to a MUI Class.
+
+     The main use for this function is to retrieve the pointer to a MUI class
+     for use by intuition.library/MakeClass() as superclass pointer. However,
+     this function is obsolete since MUI V8, so DO NOT USE IT, use
+     MUI_CreateCustomClass() instead.
+
+
+Inputs
+~~~~~~
+::
+
+     classid - the ID of the class whose pointer is to be retrieved.
+
+
+Result
+~~~~~~
+::
+
+     The class pointer is returned. DO NOT use it for any other reason that
+     as an argument of intuition.library/MakeClass(). DO NOT assume anything
+     about its content.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Once the pointer is not needed anymore, do not forget to call MUI_FreeClass().
+
+     This function is OBSOLETE, don't use it, use MUI_CreateCustomClass instead.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     MUI_FreeClass(), MUI_CreateCustomClass(), MUI_DeleteCustomClass()
+
+
+
+--------------
+
+MUI_Layout
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL MUI_Layout(
+         Object * obj,
+         LONG left,
+         LONG top,
+         LONG width,
+         LONG height,
+         ULONG flags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_MakeObjectA
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ Object * MUI_MakeObjectA(
+         LONG type,
+         IPTR * params
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_NewObjectA
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ Object * MUI_NewObjectA(
+         ClassID classid,
+         struct TagItem * tags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_ObtainPen
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG MUI_ObtainPen(
+         struct MUI_RenderInfo * mri,
+         struct MUI_PenSpec * spec,
+         ULONG flags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_Redraw
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID MUI_Redraw(
+         Object * obj,
+         ULONG flags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_RejectIDCMP
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID MUI_RejectIDCMP(
+         Object * obj,
+         ULONG flags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_ReleasePen
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID MUI_ReleasePen(
+         struct MUI_RenderInfo * mri,
+         LONG pen
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_RemoveClipRegion
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID MUI_RemoveClipRegion(
+         struct MUI_RenderInfo * mri,
+         APTR handle
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+     sba: This function frees the region given in MUI_AddClipRegion, but this seems wrong to me.
+     MUI_AddClipRegion should better duplicate the region.
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_RemoveClipping
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID MUI_RemoveClipping(
+         struct MUI_RenderInfo * mri,
+         APTR handle
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_RequestA
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG MUI_RequestA(
+         APTR app,
+         APTR win,
+         LONGBITS flags,
+         CONST_STRPTR title,
+         CONST_STRPTR gadgets,
+         CONST_STRPTR format,
+         APTR params
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_RequestIDCMP
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID MUI_RequestIDCMP(
+         Object * obj,
+         ULONG flags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ For custom class implementors. Valid between MUIM_Setup/MUIM_Cleanup.
+ Indicates that this object wants to receive some events. MUIM_HandleInput
+ will then be called on this object whenever there's a matching event.
+
+
+Inputs
+~~~~~~
+::
+
+
+ obj   -- an object whose class is derived from Area
+ flags -- IDCMP flags
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+ Deprecated in favor of MUIM_Window_AddEventHandler and MUIM_HandleEvent
+ event handling model (introduced in MUI V16).
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MUI_SetError
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG MUI_SetError(
+         LONG num
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     The function itself is a bug ;-) Remove it!
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+

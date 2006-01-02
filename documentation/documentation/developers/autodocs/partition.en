@@ -1,0 +1,927 @@
+.. This document is automatically generated. Don't edit it!
+
+=========
+partition
+=========
+
+`AddPartition`_
+`ClosePartitionTable`_
+`CloseRootPartition`_
+`CreatePartitionTable`_
+`DeletePartition`_
+`DestroyPartitionTable`_
+`GetPartitionAttrs`_
+`GetPartitionTableAttrs`_
+`OpenPartitionTable`_
+`OpenRootPartition`_
+`QueryPartitionAttrs`_
+`QueryPartitionTableAttrs`_
+`SetPartitionAttrs`_
+`SetPartitionTableAttrs`_
+`WritePartitionTable`_
+
+-----------
+
+AddPartition
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct PartitionHandle * AddPartition(
+         struct PartitionHandle * root,
+         struct TagItem * taglist
+ );
+
+Function
+~~~~~~~~
+::
+
+ add a new partition
+
+
+Inputs
+~~~~~~
+::
+
+ root - PartitionHandle, where to add the new partition
+ taglist - tags that specify more information about the partition
+           unknown tags are ignored
+     PT_DOSENVEC - ptr to a DosEnvec
+         de_LowCyl and de_HighCyl specify start and end of cylinder
+         de_Reserved, de_Bootblocks, ...
+         de_Surfaces, de_BlocksPerTrack, ... are inherited from "root"
+     PT_TYPE     - partition type (depends on PartitionTable type)
+     PT_POSITION - position number within the partition table (MBR->PC)
+     PT_ACTIVE   - set this partition active (MBR->PC)
+
+Result
+~~~~~~
+::
+
+ PartitionHandle of the new partition; 0 for an error
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ClosePartitionTable
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ void ClosePartitionTable(
+         struct PartitionHandle * root
+ );
+
+Function
+~~~~~~~~
+::
+
+ close a partition table (and discard all changes)
+ all partitions and subpartitions in root->list will be removed recursivly
+
+
+Inputs
+~~~~~~
+::
+
+ root - partition table to close
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+CloseRootPartition
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void CloseRootPartition(
+         struct PartitionHandle * ph
+ );
+
+Function
+~~~~~~~~
+::
+
+ close root handle allocated by OpenRootPartition()
+
+
+Inputs
+~~~~~~
+::
+
+ ph - root handle created by OpenRootPartition()
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+CreatePartitionTable
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG CreatePartitionTable(
+         struct PartitionHandle * root,
+         ULONG type
+ );
+
+Function
+~~~~~~~~
+::
+
+ Create a new partition table. 
+
+
+Inputs
+~~~~~~
+::
+
+ root - partition to create table in
+ type - the type of the partition table to create
+
+
+Result
+~~~~~~
+::
+
+ 0 on success; an error code otherwise
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+ After calling this function the state of the PartitionHandle will be the
+ same as when calling OpenPartitionTable(). Therefore before closing the
+ PartitionHandle you should call ClosePartitionTable().
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+DeletePartition
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ void DeletePartition(
+         struct PartitionHandle * ph
+ );
+
+Function
+~~~~~~~~
+::
+
+ delete a partition with it's subpartitions
+
+
+Inputs
+~~~~~~
+::
+
+ ph - PartitionHandle to delete
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+DestroyPartitionTable
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG DestroyPartitionTable(
+         struct PartitionHandle * root
+ );
+
+Function
+~~~~~~~~
+::
+
+ Destroy a partition table by immediatly overwriting table data on disk.
+
+
+Inputs
+~~~~~~
+::
+
+ root - partition table to destroy
+
+
+Result
+~~~~~~
+::
+
+ 0 on success; an error code otherwise
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+ After calling this function the state of the PartitionHandle will be the
+ same as before calling OpenPartitionTable(). Therefore do not reference
+ any children PartitionHandles anymore.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+GetPartitionAttrs
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG GetPartitionAttrs(
+         struct PartitionHandle * ph,
+         struct TagItem * taglist
+ );
+
+Function
+~~~~~~~~
+::
+
+ get attributes of a partition
+
+
+Inputs
+~~~~~~
+::
+
+ ph      - PartitionHandle
+ taglist - list of attributes; unknown tags are ignored
+     PT_DOSENVEC - struct DosEnvec *; get DosEnvec values
+     PT_TYPE     - LONG *           ; get partition type (MBR-PC)
+     PT_POSITION - LONG *           ; position of partition (MBR-PC)
+     PT_ACTIVE   - LONG *           ; is partition active
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+GetPartitionTableAttrs
+======================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG GetPartitionTableAttrs(
+         struct PartitionHandle * root,
+         struct TagItem * taglist
+ );
+
+Function
+~~~~~~~~
+::
+
+ get attributes of a partition table
+
+
+Inputs
+~~~~~~
+::
+
+ ph      - PartitionHandle of the partition table
+ taglist - list of attributes; unknown tags are ignored
+     PTT_DOSENVEC - struct DosEnvec *; get DosEnvec values
+     PTT_TYPE     - LONG *           ; get partition table type
+     PTT_RESERVED - LONG *           ; get number of reserved blocks
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+OpenPartitionTable
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG OpenPartitionTable(
+         struct PartitionHandle * root
+ );
+
+Function
+~~~~~~~~
+::
+
+     Open a partition table. On success root->list will be filled with a
+     list of PartitionHandle's. If one partition contains more
+     subpartitions, the caller should call OpenPartitionTable() on the
+     PartitionHandle recursively.
+
+
+Inputs
+~~~~~~
+::
+
+     root - root partition
+
+
+Result
+~~~~~~
+::
+
+     0 for success; an error code otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+OpenRootPartition
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct PartitionHandle * OpenRootPartition(
+         STRPTR Device,
+         LONG Unit
+ );
+
+Function
+~~~~~~~~
+::
+
+ create a root handle, open device/unit
+
+
+Inputs
+~~~~~~
+::
+
+ Device - name of the block device
+ Unit - unit of the block device
+
+
+Result
+~~~~~~
+::
+
+ handle to the device
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+QueryPartitionAttrs
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct PartitionAttribute * QueryPartitionAttrs(
+         struct PartitionHandle * table
+ );
+
+Function
+~~~~~~~~
+::
+
+ query partition attributes
+
+
+Inputs
+~~~~~~
+::
+
+ ph      - PartitionHandle to the table
+
+
+Result
+~~~~~~
+::
+
+ list of NULL-terminated ULONGs with attributes
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+QueryPartitionTableAttrs
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct PartitionAttribute * QueryPartitionTableAttrs(
+         struct PartitionHandle * table
+ );
+
+Function
+~~~~~~~~
+::
+
+ query partition table attributes
+
+
+Inputs
+~~~~~~
+::
+
+ ph      - PartitionHandle of a partition table
+
+
+Result
+~~~~~~
+::
+
+ list of NULL-terminated ULONGs with attributes
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetPartitionAttrs
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG SetPartitionAttrs(
+         struct PartitionHandle * ph,
+         struct TagItem * taglist
+ );
+
+Function
+~~~~~~~~
+::
+
+ set attributes of a partition
+
+
+Inputs
+~~~~~~
+::
+
+ ph      - PartitionHandle
+ taglist - list of attributes; unknown tags are ignored
+     PT_DOSENVEC - set new DosEnvec values
+     PT_TYPE     - change partition type (MBR-PC)
+     PT_POSITION - move partition to another position (MBR-PC)
+     PT_ACTIVE   - set partition active
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetPartitionTableAttrs
+======================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG SetPartitionTableAttrs(
+         struct PartitionHandle * root,
+         struct TagItem * taglist
+ );
+
+Function
+~~~~~~~~
+::
+
+ set attributes of a partition table
+
+
+Inputs
+~~~~~~
+::
+
+ ph      - PartitionHandle of the partition table
+ taglist - list of attributes; unknown tags are ignored
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+WritePartitionTable
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG WritePartitionTable(
+         struct PartitionHandle * root
+ );
+
+Function
+~~~~~~~~
+::
+
+ write a partition table; writing this partition table doesn't affect
+ subpartition tables
+
+
+Inputs
+~~~~~~
+::
+
+ root - partition table to write
+
+
+Result
+~~~~~~
+::
+
+ 0 for success; an error code otherwise
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+

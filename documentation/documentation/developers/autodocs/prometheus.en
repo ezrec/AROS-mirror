@@ -1,0 +1,42 @@
+.. This document is automatically generated. Don't edit it!
+
+==========
+prometheus
+==========
+
+`Prm_FindBoardTagList`_
+
+-----------
+
+Prm_FindBoardTagList
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ PCIBoard * Prm_FindBoardTagList(
+         PCIBoard * previous,
+         struct TagItem * tag_list
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+--------------
+

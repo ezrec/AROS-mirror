@@ -1,0 +1,1438 @@
+.. This document is automatically generated. Don't edit it!
+
+=========
+expansion
+=========
+
+`AddBootNode`_
+`AddConfigDev`_
+`AddDosNode`_
+`AllocBoardMem`_
+`AllocConfigDev`_
+`AllocExpansionMem`_
+`ConfigBoard`_
+`ConfigChain`_
+`FindConfigDev`_
+`FreeBoardMem`_
+`FreeConfigDev`_
+`FreeExpansionMem`_
+`GetCurrentBinding`_
+`MakeDosNode`_
+`ObtainConfigBinding`_
+`ReadExpansionByte`_
+`ReadExpansionRom`_
+`ReleaseConfigBinding`_
+`RemConfigDev`_
+`SetCurrentBinding`_
+`WriteExpansionByte`_
+
+-----------
+
+AddBootNode
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL AddBootNode(
+         LONG bootPri,
+         ULONG flags,
+         struct DeviceNode * deviceNode,
+         struct ConfigDev  * configDev
+ );
+
+Function
+~~~~~~~~
+::
+
+     AddBootNode() will add a device into the system. It does this in
+     one of two ways:
+
+     1. If DOS is running, add the device to DOS's list of devices
+        immediately.
+     2. Otherwise, save the information for later use by DOS, possibly
+        as a boot device.
+
+     This allows device drivers to add devices into the systems disk
+     device list at any time, without having to worry about whether DOS
+     is available.
+
+     If a device is added before DOS is running, then it is possible for
+     the device to be used as a boot device. This allows for the user
+     to choose which device he/she wishes to boot from, and even which
+     OS they may wish to boot from.
+
+     The bootstrap will attempt to boot from the highest priority device
+     on the Expansion eb_BootNode list, and if that fails continue
+     through the list until it can succeed.
+
+     Floppy disk devices should always be given the highest priority, to
+     allow a user to prevent a hard disk or network boot by inserting a
+     floppy disk.
+
+     AddBootNode() will also perform a second bit of magic, that if there
+     is no filesystem specified for this device, (ie dn_SegList, dn_Task
+     and dn_Handler are all NULL), then the standard DOS filesystem
+     will be used for this device.
+
+
+Inputs
+~~~~~~
+::
+
+     bootPri     -   a BYTE describing the boot priority for this disk.
+                     Recommended priorities are:
+
+                     +5      -   unit 0 on the floppy disk. The floppy
+                                 should be the highest priority.
+                     0       -   standard hard disk priority
+                     -5      -   recommended for a network disk
+                     -128    -   don't bother trying
+
+     flags       -   Additional information:
+
+                     ADNF_STARTPROC (bit 0)-
+                         if set this will cause AddBootNode() to start
+                         a filesystem handler for the device node from
+                         the information contained in the deviceNode
+                         packet. This bit is only useful when there is
+                         no running handler for this task (ie dn_Task
+                         is NULL).
+
+     deviceNode  -   DOS device node for this device. Typically created
+                     my MakeDosNode().
+
+     configDev   -   A valid expansion board ConfigDev structure, this
+                     is required for an autoboot before DOS is running.
+                     If left NULL, this will make the node non-bootable.
+
+
+Result
+~~~~~~
+::
+
+     TRUE if everything was ok,
+     FALSE if for some reason we failed (lack of memory etc).
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     The address of the ConfigDev structure is stored in the ln_Name
+     field of the BootNode structure.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddDosNode()
+
+
+--------------
+
+AddConfigDev
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddConfigDev(
+         struct ConfigDev * configDev
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will add a ConfigDev structure to the systems
+     list of Configuration Devices. This function is not normally
+     called by user code.
+
+
+Inputs
+~~~~~~
+::
+
+     configDev   -   The Configuration Device to add to the system.
+
+
+Result
+~~~~~~
+::
+
+     The device will be added to the system.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     RemConfigDev
+
+
+--------------
+
+AddDosNode
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL AddDosNode(
+         LONG bootPri,
+         ULONG flags,
+         struct DeviceNode * deviceNode
+ );
+
+Function
+~~~~~~~~
+::
+
+     This is the old function for adding devices to the system. It
+     is recommended that you use the AddBootNode() function.
+
+     Unlike AddBootNode() you will have to add a BootNode to the
+     system yourself.
+
+
+Inputs
+~~~~~~
+::
+
+     bootPri     -   The priority of the device (-128 --> 127).
+     flags       -   Flags (ADNF_STARTPROC etc)
+     deviceNode  -   The device to add to the system.
+
+
+Result
+~~~~~~
+::
+
+     non-zero if everything succeeded, zero on failure.
+
+
+Example
+~~~~~~~
+::
+
+     //  Add a bootable disk to the system. This will start a
+     //  file handler process immediately.
+
+     if( AddDosNode( 0, ADNF_STARTPROC, MakeDosNode( paramPacket )))
+     {
+         // AddDosNode() ok
+     }
+
+
+Notes
+~~~~~
+::
+
+     It is much better to use AddBootNode() as it will also
+     construct the BootNode structure, and add it to the system.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddBootNode(), MakeDosNode()
+
+
+--------------
+
+AllocBoardMem
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void AllocBoardMem(
+         ULONG slotSpec
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AllocConfigDev
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct ConfigDev * AllocConfigDev(
+ );
+
+Function
+~~~~~~~~
+::
+
+     AllocConfigDev() will allocate a new ConfigDev structure for
+     you. You should use this function in order for you to be
+     compatible with future versions of the OS in case this
+     structure changes.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     A newly created ConfigDev structure.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     FreeConfigDev()
+
+
+--------------
+
+AllocExpansionMem
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR AllocExpansionMem(
+         ULONG numSlots,
+         ULONG slotAlign
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ConfigBoard
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void ConfigBoard(
+         APTR board,
+         struct ConfigDev * configDev
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ConfigChain
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void ConfigChain(
+         APTR baseAddr
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FindConfigDev
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct ConfigDev * FindConfigDev(
+         struct ConfigDev * oldConfigDev,
+         LONG manufacturer,
+         LONG product
+ );
+
+Function
+~~~~~~~~
+::
+
+     FindConfigDev() will search through the list of ConfigDevs and find
+     the one with the matching manufacturer and product identifiers.
+
+     The search will start with the ConfigDev after the oldConfigDev,
+     or at the beginning of oldConfigDev is NULL.
+
+     A manufacturer or product of -1 is treated as a wildcard and will
+     match any value.
+
+
+Inputs
+~~~~~~
+::
+
+     oldConfigDev    -   The device to start the search after. If NULL
+                         the search will start from the beginning of the
+                         list.
+     manufacturer    -   The manufacturer id of the requested ConfigDev.
+                         A value of -1 will match any device.
+     product         -   The product id of the ConfigDev. A value of -1
+                         will match any device.
+
+
+Result
+~~~~~~
+::
+
+     The address of the first matching ConfigDev structure, or NULL if
+     none could be found.
+
+
+Example
+~~~~~~~
+::
+
+     // Find all the config devs in the system
+     struct ConfigDev *cd = NULL;
+
+     while((cd = FindConfigDev(NULL, -1, -1)))
+     {
+         Printf("Found a device:\tMan = %5d\tProd = %d\n",
+             cd->cd_Rom.er_Manufacturer,
+             cd->cd_Rom.er_Product);
+     }
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FreeBoardMem
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeBoardMem(
+         ULONG startSlot,
+         ULONG slotSpec
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FreeConfigDev
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeConfigDev(
+         struct ConfigDev * configDev
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will free a ConfigDev structure, as allocated
+     by the AllocConfigDev() function.
+
+
+Inputs
+~~~~~~
+::
+
+     configDev   -   The ConfigDev to free.
+
+
+Result
+~~~~~~
+::
+
+     The memory will be returned to the system.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocConfigDev()
+
+
+--------------
+
+FreeExpansionMem
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeExpansionMem(
+         ULONG startSlot,
+         ULONG numSlots
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+GetCurrentBinding
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG GetCurrentBinding(
+         struct CurrentBinding * currentBinding,
+         ULONG bindingSize
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will return the contents of the "currentBinding"
+     structure. The currentBinding structure may be set with
+     SetConfigBinding(). This is how arguments are passed to a newly
+     configured device.
+
+     A CurrentBinding structure has the following information:
+     -   the name of the currently loaded driver file
+     -   the product string associated with this driver
+     -   a singly linked list of ConfigDev structures
+
+     You may not need this information, but it is recommended that you
+     at least make sure you can deal with the product code in the
+     ConfigDev structure.
+
+
+Inputs
+~~~~~~
+::
+
+     currentBinding  -   a pointer to the CurrentBinding structure that
+                         you wish filled in.
+     bindingSize     -   the size of the currentBinding structure. Do
+                         not pass less than sizeof(struct CurrentBinding).
+
+
+Result
+~~~~~~
+::
+
+     The size of the CurrentBinding structure returned.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     SetCurrentBinding()
+
+
+--------------
+
+MakeDosNode
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct DeviceNode * MakeDosNode(
+         APTR parmPacket
+ );
+
+Function
+~~~~~~~~
+::
+
+     MakeDosNode() will create a DeviceNode structure suitable for
+     passing to dos.library which contains all the information about
+     a device stored in the parmPacket array. This will allow you to
+     enter a DOS device into the system from the information contained
+     in a DosEnvec structure (such as in a RigidDiskBlock PartitionBlock
+     structure).
+
+     MakeDosNode() will allocate the memory that it needs to construct
+     the DeviceNode, the strings and a FileSysStartupMsg that is passed
+     to the filesystem handler on startup.
+
+     You can use AddBootNode() to add a node to the system.
+
+
+Inputs
+~~~~~~
+::
+
+     parmPacket  -   a longword array containing the device parameters
+                     required to initialize the structures. This is a
+                     variable length structure. See also the DosEnvec
+                     structure in dos/filehandler.h
+
+         longword    description
+         --------    -----------
+         0           Exec string with dos handler name (eg ffs.handler)
+         1           Exec string with exec device name (eg fdsk.device)
+         2           unit number of device to open
+         3           flags (for OpenDevice())
+         4           length of the remaining data
+         5-n         environment data - consists of:
+
+         5           Size of standard device block in 32 bit longwords
+         6           not used; 0
+         7           # of heads - drive specific
+         8           # of sectors per block - not used; 0
+         9           # of blocks per track - drive specific
+         10          # of reserved blocks at the start of the partition
+         11          # of reserved blocks at the end of the partition
+         12          device interleave
+         13          starting cylinder of partition
+         14          end cylinder of partition
+         15          initial number of buffers
+         16          type of memory for buffers (CHIP, FAST,...)
+         17          max number of bytes to transfer at one time
+         18          address mask allowable for DMA transfers
+         19          boot priority for autobootable devices
+         20          standard DOS filesystem ID (eg 'DOS\1')
+         21          baud rate for serial handler
+         22          control word for handler/filesystem
+         23          number of boot blocks on this partition
+
+
+Result
+~~~~~~
+::
+
+     deviceNode  -   An initialized DeviceNode structure, or NULL if
+                     the required memory could not be allocated. The
+                     caller will have to modify this structure before
+                     passing it to AddBootNode().
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     There are a number of fields of the DeviceNode structure that this
+     function cannot initialize due to a lack of information. You
+     should fill these in yourself.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddBootNode(), AddDosNode(), dos/MakeDosEntry()
+
+
+--------------
+
+ObtainConfigBinding
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ void ObtainConfigBinding(
+ );
+
+Function
+~~~~~~~~
+::
+
+     ObtainConfigBinding() gives you permission to bind drivers
+     to a ConfigDev structure. It exists so that two drivers
+     at once do not try and bind the same ConfigDev structures
+     at the same time.
+
+     Since most of the data required to bind drivers is statically
+     kept, so you must lock out other users from accessing the
+     structures at the same time.
+
+     This call is based on the Exec SignalSemaphores, and will
+     block until it is safe to proceed.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     You will have the lock on the CurrentBindings. Please finish
+     as quickly as you can.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ReleaseConfigBinding()
+
+
+--------------
+
+ReadExpansionByte
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ UBYTE ReadExpansionByte(
+         APTR board,
+         ULONG offset
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ReadExpansionRom
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ void ReadExpansionRom(
+         APTR board,
+         struct ConfigDev * configDev
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ReleaseConfigBinding
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ void ReleaseConfigBinding(
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will release the lock obtained by
+     ObtainCurrentBinding(). It will release the SignalSemaphore,
+     and allow others to bind to drivers.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ObtainCurrentBinding()
+
+
+--------------
+
+RemConfigDev
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemConfigDev(
+         struct ConfigDev * configDev
+ );
+
+Function
+~~~~~~~~
+::
+
+     This routine will remove the given ConfigDev from the list
+     of Configuration Devices in the system.
+
+
+Inputs
+~~~~~~
+::
+
+     configDev   -   The ConfigDev structure to remove.
+
+
+Result
+~~~~~~
+::
+
+     The ConfigDev structure will be removed from the systems list.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddConfigDev()
+
+
+--------------
+
+SetCurrentBinding
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetCurrentBinding(
+         struct CurrentBinding * currentBinding,
+         ULONG bindingSize
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will return the contents of the "currentBinding"
+     structure. The currentBinding structure may be returned with
+     GetConfigBinding(). This is how arguments are passed to a newly
+     configured device.
+
+     A CurrentBinding structure has the following information:
+     -   the name of the currently loaded driver file
+     -   the product string associated with this driver
+     -   a singly linked list of ConfigDev structures
+
+     You may not need this information, but it is recommended that you
+     at least make sure you can deal with the product code in the
+     ConfigDev structure.
+
+
+Inputs
+~~~~~~
+::
+
+     currentBinding  -   a pointer to the CurrentBinding structure that
+                         you wish filled in.
+     bindingSize     -   the size of the currentBinding structure. Do
+                         not pass less than sizeof(struct CurrentBinding).
+
+
+Result
+~~~~~~
+::
+
+     The size of the CurrentBinding structure set.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GetCurrentBinding()
+
+
+--------------
+
+WriteExpansionByte
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void WriteExpansionByte(
+         APTR board,
+         ULONG offset,
+         ULONG byte
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+

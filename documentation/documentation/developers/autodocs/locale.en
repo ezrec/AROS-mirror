@@ -1,0 +1,1607 @@
+.. This document is automatically generated. Don't edit it!
+
+======
+locale
+======
+
+`CloseCatalog`_
+`CloseLocale`_
+`ConvToLower`_
+`ConvToUpper`_
+`FormatDate`_
+`FormatString`_
+`GetCatalogStr`_
+`GetLocaleStr`_
+`IsXXXX`_
+`LocDateToStr`_
+`LocDosGetLocalizedString`_
+`LocRawDoFmt`_
+`LocStrToDate`_
+`LocStricmp`_
+`LocStrnicmp`_
+`LocToLower`_
+`LocToUpper`_
+`OpenCatalogA`_
+`OpenLocale`_
+`ParseDate`_
+`RexxHost`_
+`StrConvert`_
+`StrnCmp`_
+
+-----------
+
+CloseCatalog
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void CloseCatalog(
+         struct Catalog * catalog
+ );
+
+Function
+~~~~~~~~
+::
+
+     Conclude access to a message catalog, and decrement the use count.
+     If this use count is 0, the catalog can be expunged when the
+     system memory is running low.
+
+
+Inputs
+~~~~~~
+::
+
+     catalog -       the message catalog to close, note that NULL is
+                     a valid catalog.
+
+
+Result
+~~~~~~
+::
+
+     The catalog is closed, and should no longer be used by the
+     application.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GetCatalogStr(), OpenCatalog() 
+
+
+--------------
+
+CloseLocale
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void CloseLocale(
+         struct Locale * locale
+ );
+
+Function
+~~~~~~~~
+::
+
+     Finish accessing a Locale.
+
+
+Inputs
+~~~~~~
+::
+
+     locale  -   An opened locale. Note that NULL is a valid
+                 parameter here, and will simply be ignored.
+
+
+Result
+~~~~~~
+::
+
+     The locale is released back to the system.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenLocale()
+
+
+--------------
+
+ConvToLower
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ConvToLower(
+         struct Locale * locale,
+         ULONG character
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function determine if the character supplied is upper case,
+     and if it is, the character will be converted to lower case.
+     Otherwise, the original character will be returned.
+
+
+Inputs
+~~~~~~
+::
+
+     locale      - The Locale to use for this conversion.
+     character   - The character to convert to lower case.
+
+
+Result
+~~~~~~
+::
+
+     The possibly converted character.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function requires a full 32-bit character in order to
+     support future multi-byte character sets.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ConvToUpper
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ConvToUpper(
+         struct Locale * locale,
+         ULONG character
+ );
+
+Function
+~~~~~~~~
+::
+
+     ConvToUpper() will determine if a character is a lower case
+     character and if so convert it to the upper case equivalent.
+     Otherwise it will return the original character.
+
+
+Inputs
+~~~~~~
+::
+
+     locale      - The Locale to use for this conversion.
+     character   - The character to convert.
+
+
+Result
+~~~~~~
+::
+
+     The possibly converted character.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function requires a full 32-bit character in order to support
+     future multi-byte character sets.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ConvToLower
+
+
+--------------
+
+FormatDate
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID FormatDate(
+         struct Locale    * locale,
+         STRPTR formatString,
+         struct DateStamp * date,
+         struct Hook      * hook
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ Generate a date string based on a template. The bytes generated are sent
+ to a user specified callback function.
+
+
+Inputs
+~~~~~~
+::
+
+
+ locale        --  the locale to use when formatting the string
+ formatString  --  the formatting template string; this is much like the
+                   printf() formatting style, i.e. a % followed by a
+                   formatting command. The following commands exist:
+
+                   %a -- abbreviated weekday name
+                   %A -- weekday name
+                   %b -- abbreviated month name
+                   %B -- month name
+                   %c -- the same as "%a %b %d %H:%M:%S %Y"
+                   %C -- the same as "%a %b %e %T %Z %Y"
+                   %d -- day number with leading zeros
+                   %D -- the same as "%m/%d/%y"
+                   %e -- day number with leading spaces
+                   %h -- abbreviated month name
+                   %H -- hour using 24 hour style with leading zeros
+                   %I -- hour using 12 hour style with leading zeros
+                   %j -- julian date
+                   %m -- month number with leading zeros
+                   %M -- the number of minutes with leading zeros
+                   %n -- linefeed
+                   %p -- AM or PM string
+                   %q -- hour using 24 hour style
+                   %Q -- hour using 12 hour style
+                   %r -- the same as "%I:%M:%S %p"
+                   %R -- the same as "%H:%M"
+                   %S -- the number of seconds with leading zeros
+                   %t -- tab
+                   %T -- the same as "%H:%M:%S"
+                   %U -- the week number, taking Sunday as the first day
+                         of the week
+                   %w -- the weekday number
+                   %W -- the week number, taking Monday as the first day
+                         of the week
+                   %x -- the same as "%m/%d/%y"
+                   %X -- the same as "%H:%M:%S"
+                   %y -- the year using two digits with leading zeros
+                   %Y -- the year using four digits with leading zeros
+
+                   If the template parameter is NULL, a single null byte
+                   is sent to the callback function.
+
+ date          --  the current date
+ hook          --  callback function; this is called for every character
+                   generated with the following arguments:
+
+                   * pointer to hook structure
+                   * character
+                   * pointer to locale
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+ ParseDate(), <libraries/locale.h>
+
+
+--------------
+
+FormatString
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR FormatString(
+         struct Locale * locale,
+         STRPTR fmtTemplate,
+         APTR dataStream,
+         struct Hook   * putCharFunc
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+GetCatalogStr
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ CONST_STRPTR GetCatalogStr(
+         const struct Catalog * catalog,
+         ULONG stringNum,
+         CONST_STRPTR defaultString
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will return the string specified by the
+     stringNum from the given message catalog, or the defaultString
+     if the string could not be found.
+
+     If the catalog == NULL, then the defaultString will also be
+     returned.
+
+
+Inputs
+~~~~~~
+::
+
+     catalog -       Message catalog to search. May be NULL.
+     stringNum -     ID of the string to find.
+     defaultString - String to return in case catalog is NULL or
+                     string could not be found.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a READ ONLY NULL terminated string. This string
+     pointer is valid as long as the catalog remains open.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenCatalog(), CloseCatalog()
+
+
+--------------
+
+GetLocaleStr
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ STRPTR GetLocaleStr(
+         struct Locale * locale,
+         ULONG stringNum
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will return a system standard string from
+     the current Locale.
+
+
+Inputs
+~~~~~~
+::
+
+     locale      - The current locale.
+     stringNum   - The number of the string to get a pointer to.
+                   See the include file <libraries/locale.h>
+                   for a list of possible values.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a NULL-terminated string, or NULL if the string
+     requested was unknown. The returned string is READ-ONLY and
+     is valid only as long as the Locale remains open.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+IsXXXX
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL IsXXXX(
+         struct Locale * locale,
+         ULONG character
+ );
+
+Function
+~~~~~~~~
+::
+
+     These functions allow you to find out whether a character
+     matches a certain type according to the current Locale
+     settings.
+
+     The functions available are:
+
+     IsAlNum()  - is this an alphanumeric character
+     IsAlpha()  - is this an alphabet character
+     IsCntrl()  - is this a control character
+     IsDigit()  - is this a decimal digit character
+     IsGraph()  - is this a graphical character
+     IsLower()  - is this a lowercase character
+     IsPrint()  - is this a printable character
+     IsPunct()  - is this a punctuation character
+     IsSpace()  - is this a whitespace character
+     IsUpper()  - is this an uppercase character
+     IsXDigit() - is this a hexadecimal digit
+
+
+Inputs
+~~~~~~
+::
+
+     locale      - The Locale to use for this function.
+     character   - the character to test
+
+
+Result
+~~~~~~
+::
+
+     ind - An indication of whether the character matches the type.
+         TRUE - if the character is of the required type,
+         FALSE - otherwise
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     The Locale MUST be supplied.
+
+     These functions require a 32-bit character to support future
+     multi-byte character sets.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+LocDateToStr
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG LocDateToStr(
+         struct DateTime * datetime
+ );
+
+Function
+~~~~~~~~
+::
+
+     See dos.library/DateToStr
+     
+
+Inputs
+~~~~~~
+::
+
+     See dos.library/DateToStr
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is not called by apps directly. Instead dos.library/DateToStr
+     is patched to use this function. This means, that the LocaleBase parameter
+     above actually points to DOSBase!!! But I may not rename it, because then
+     no entry for this function is generated in the Locale functable by the
+     corresponding script!
+     
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     dos.library/DateToStr, locale.library/FormatDate.
+
+
+--------------
+
+LocDosGetLocalizedString
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+ CONST_STRPTR LocDosGetLocalizedString(
+         LONG stringNum
+ );
+
+Function
+~~~~~~~~
+::
+
+     See dos.library/DosGetLocalizedString
+     
+
+Inputs
+~~~~~~
+::
+
+     See dos.library/DosGetLocalizedString
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is not called by apps directly. Instead dos.library/DosGet-
+     LocalizedString is patched to use this function. This means, that the
+     LocaleBase parameter above actually points to DOSBase, so we make use of 
+     the global LocaleBase variable. This function is marked as private,
+     thus the headers generator won't mind the different basename in the header.
+     
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     dos.library/DosGetString(), dos.library/DosGetLocalizedString()
+
+
+--------------
+
+LocRawDoFmt
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR LocRawDoFmt(
+         CONST_STRPTR FormatString,
+         APTR DataStream,
+         VOID_FUNC PutChProc,
+         APTR PutChData
+ );
+
+Function
+~~~~~~~~
+::
+
+     See exec.library/RawDoFmt
+
+
+Inputs
+~~~~~~
+::
+
+     See exec.library/RawDoFmt
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is not called by apps directly. Instead dos.library/DosGet-
+     LocalizedString is patched to use this function. This means, that the
+     LocaleBase parameter above actually points to SysBase, so we make use of 
+     the global LocaleBase variable. This function is marked as private,
+     thus the headers generator won't mind the different basename in the header.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     RawDoFmt(), FormatString().
+
+
+--------------
+
+LocStrToDate
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG LocStrToDate(
+         struct DateTime * datetime
+ );
+
+Function
+~~~~~~~~
+::
+
+     See dos.library/StrToDate
+     
+
+Inputs
+~~~~~~
+::
+
+     See dos.library/StrToDate
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is not called by apps directly. Instead dos.library/DosGet-
+     LocalizedString is patched to use this function. This means, that the
+     LocaleBase parameter above actually points to DOSBase, so we make use of 
+     the global LocaleBase variable. This function is marked as private,
+     thus the headers generator won't mind the different basename in the header.
+     
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     dos.library/StrToDate, locale.library/ParseDate.
+
+
+--------------
+
+LocStricmp
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG LocStricmp(
+         CONST_STRPTR string1,
+         CONST_STRPTR string2
+ );
+
+Function
+~~~~~~~~
+::
+
+     See utility.library/Stricmp
+     
+
+Inputs
+~~~~~~
+::
+
+     See utility.library/Stricmp
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is not called by apps directly. Instead dos.library/DosGet-
+     LocalizedString is patched to use this function. This means, that the
+     LocaleBase parameter above actually points to UtilityBase, so we make use of 
+     the global LocaleBase variable. This function is marked as private,
+     thus the headers generator won't mind the different basename in the header.
+     
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     utility.library/Stricmp(), locale.library/StrnCmp().
+
+
+--------------
+
+LocStrnicmp
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG LocStrnicmp(
+         CONST_STRPTR string1,
+         CONST_STRPTR string2,
+         LONG length
+ );
+
+Function
+~~~~~~~~
+::
+
+     See utility.library/Strnicmp
+     
+
+Inputs
+~~~~~~
+::
+
+     See utility.library/Strnicmp
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is not called by apps directly. Instead dos.library/DosGet-
+     LocalizedString is patched to use this function. This means, that the
+     LocaleBase parameter above actually points to UtilityBase, so we make use of 
+     the global LocaleBase variable. This function is marked as private,
+     thus the headers generator won't mind the different basename in the header.
+     
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     utility.library/Strnicmp(), locale.library/StrnCmp().
+
+
+--------------
+
+LocToLower
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG LocToLower(
+         ULONG character
+ );
+
+Function
+~~~~~~~~
+::
+
+     See utility.library/ToLower
+     
+
+Inputs
+~~~~~~
+::
+
+     See utility.library/ToLower
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is not called by apps directly. Instead dos.library/DosGet-
+     LocalizedString is patched to use this function. This means, that the
+     LocaleBase parameter above actually points to UtilityBase, so we make use of 
+     the global LocaleBase variable. This function is marked as private,
+     thus the headers generator won't mind the different basename in the header.
+     
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     utility.library/ToLower(), locale.library/ConvToLower().
+
+
+--------------
+
+LocToUpper
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG LocToUpper(
+         ULONG character
+ );
+
+Function
+~~~~~~~~
+::
+
+     See utility.library/ToUpper
+     
+
+Inputs
+~~~~~~
+::
+
+     See utility.library/ToUpper
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is not called by apps directly. Instead dos.library/DosGet-
+     LocalizedString is patched to use this function. This means, that the
+     LocaleBase parameter above actually points to UtilityBase, so we make use of 
+     the global LocaleBase variable. This function is marked as private,
+     thus the headers generator won't mind the different basename in the header.
+     
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     utility.library/ToUpper(), locale.library/ConvToUpper().
+
+
+--------------
+
+OpenCatalogA
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Catalog * OpenCatalogA(
+         struct Locale  * locale,
+         STRPTR name,
+         struct TagItem * tags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+OpenLocale
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Locale * OpenLocale(
+         STRPTR name
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will open for use a named locale. A locale is a
+     data structure that contains many different parameters that
+     an application needs in order to localise itself. Using this
+     information an application can dynamically adapt to the user's
+     environment.
+
+     Locales are created using the Locale Preferences Editor. If
+     you pass a NULL instead of a name, then you will receive the
+     current default Locale. This is the normal procedure.
+
+
+Inputs
+~~~~~~
+::
+
+     name    -   The name of the locale you wish opened, or NULL
+                 to open the current default locale. This will
+                 be an IFF PREF file which contains both LCLE
+                 and CTRY chunks.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to an initialised Locale structure, or NULL if none
+     could be opened. If NULL is returned you can use IoErr()
+     to find out what caused this error.
+
+     If you pass NULL, you will always succeed.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CloseLocale()
+
+
+--------------
+
+ParseDate
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL ParseDate(
+         struct Locale    * locale,
+         struct DateStamp * date,
+         STRPTR fmtTemplate,
+         struct Hook      * getCharFunc
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will convert a stream of characters into an AmigaDOS
+     DateStamp structure. It will obtain its characters from the
+     getCharFunc callback hook, and the given formatting template will
+     be used to direct the parse.
+
+
+Inputs
+~~~~~~
+::
+
+     locale      -   the locale to use for the formatting
+     date        -   where to put the converted date. If this is NULL,
+                     then this function can be used to verify a date
+                     string.
+     fmtTemplate -   the date template used to direct the parse of the
+                     data. The following FormatDate() formatting
+                     controls can be used:
+                       %a %A %b %B %d %e %h %H %I %m %M %p %S %y %Y
+
+                     See FormatDate() autodoc for more information.
+     getCharFunc -   A callback Hook which is used to read the data
+                     from a stream. The hook is called with:
+
+                     A0 - address of the Hook structure
+                     A2 - locale pointer
+                     A1 - NULL
+
+                     BTW: The AmigaOS autodocs which state that A1
+                     gets locale pointer and A2 NULL are wrong!!
+
+                     The read character should be returned in D0. Note
+                     that this is a 32 bit character not an 8 bit
+                     character. Return a NULL character if you reach the
+                     end of the stream.
+
+
+Result
+~~~~~~
+::
+
+     TRUE    -   If the parse could be performed.
+     FALSE   -   If the format of the data did not match the formatting
+                 string.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This has a few differences from the implementation in locale.library
+     v38. In particular:
+         - %p does not have to be at the end of the line.
+         - %d and %e are not effectively the same, ie %d requires a leading
+           zero, but %e can not handle leading 0's.
+
+
+Bugs
+~~~~
+::
+
+     %d, %e probably needs some work.
+
+
+See also
+~~~~~~~~
+::
+
+     FormatDate()
+
+
+--------------
+
+RexxHost
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG RexxHost(
+         struct RexxMsg * rxmsg
+ );
+
+Function
+~~~~~~~~
+::
+
+     locale.library rexxhost interface
+
+
+--------------
+
+StrConvert
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG StrConvert(
+         struct Locale * locale,
+         STRPTR string,
+         APTR buffer,
+         ULONG bufferSize,
+         ULONG type
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will transform the string given and place the
+     result in the supplied buffers, copying at most bufferSize
+     bytes.
+
+     The transformation is such that if the C strcmp() function
+     was called on two strings transformed by this function then
+     the result will be the same as calling the Locale StrnCmp()
+     function on the two strings.
+
+
+Inputs
+~~~~~~
+::
+
+     locale      -   the Locale to use for the transformation.
+     string      -   the string to be transformed
+     buffer      -   the destination for the transformed string.
+                     This buffer may need to be larger than the
+                     untransformed string.
+     bufferSize  -   the maximum number of bytes to place in
+                     buffer.
+     type        -   how to transform the string. See the
+                     StrnCmp() function for possible values.
+
+
+Result
+~~~~~~
+::
+
+     Length of the number of BYTES placed in the buffer by
+     the transformation process minus 1 (for NULL termination).
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     StrnCmp()
+
+
+--------------
+
+StrnCmp
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG StrnCmp(
+         struct Locale * locale,
+         STRPTR string1,
+         STRPTR string2,
+         LONG length,
+         ULONG type
+ );
+
+Function
+~~~~~~~~
+::
+
+     StrnCmp() will compare two strings, up to a maximum length
+     of length using a specific kind of collation information
+     according to the locale.
+
+     The result will be less than zero, zero, or greater than zero
+     depending upon whether the string string1 is less than, equal
+     to, or greater than the string pointed to string2.
+
+
+Inputs
+~~~~~~
+::
+
+     locale      -   Which locale to use for this comparison.
+     string1     -   NULL terminated string.
+     string2     -   NULL terminated string.
+     length      -   Maximum length of string to compare.
+     type        -   How to compare the strings, values are:
+
+         SC_ASCII
+             Perform a simple ASCII case-insensitive comparison.
+             This is the fastest comparison, but considers that
+             accented characters are different to non-accented
+             characters.
+
+         SC_COLLATE1
+             This sorts using the "primary sorting order". This
+             means that characters such as 'e' and 'é' will be
+             considered the same. This method also ignores
+             case.
+
+         SC_COLLATE2
+             This will sort using both the primary and secondary
+             sorting order. This is the slowest sorting method
+             and should be used when presenting data to a user.
+
+             The first pass is the same as SC_COLLATE1, meaning
+             that two strings such as "role" and "rôle" would
+             be sorted identically. The second pass will
+             compare the diacritical marks.
+
+
+Result
+~~~~~~
+::
+
+     The relationship between the two strings.
+
+         < 0 means   string1 < string2
+         = 0 means   string1 == string2
+         > 0 means   string1 > string2
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenLocale(), CloseLocale(), StrConvert().
+
+
+--------------
+

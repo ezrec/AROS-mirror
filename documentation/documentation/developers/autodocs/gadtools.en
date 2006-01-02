@@ -1,0 +1,1226 @@
+.. This document is automatically generated. Don't edit it!
+
+========
+gadtools
+========
+
+`CreateContext`_
+`CreateGadgetA`_
+`CreateMenusA`_
+`DrawBevelBoxA`_
+`FreeGadgets`_
+`FreeMenus`_
+`FreeVisualInfo`_
+`GT_BeginRefresh`_
+`GT_EndRefresh`_
+`GT_FilterIMsg`_
+`GT_GetGadgetAttrsA`_
+`GT_GetIMsg`_
+`GT_PostFilterIMsg`_
+`GT_RefreshWindow`_
+`GT_ReplyIMsg`_
+`GT_SetGadgetAttrsA`_
+`GetVisualInfoA`_
+`LayoutMenuItemsA`_
+`LayoutMenusA`_
+
+-----------
+
+CreateContext
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Gadget * CreateContext(
+         struct Gadget ** glistpointer
+ );
+
+Function
+~~~~~~~~
+::
+
+     Creates a virtual first gadget to which all following gadgets must be
+     linked.
+
+
+Inputs
+~~~~~~
+::
+
+     glistpointer - pointer to a pointer to the virtual gadget. Use the
+                    gadget pointer as NewWindow->FirstGadget or in
+                    AddGList(). The gadget pointer must be initialized
+                    to NULL before CreateContext() is called.
+
+
+Result
+~~~~~~
+::
+
+     A point to the first gadget or NULL, if there was an error.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+CreateGadgetA
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Gadget * CreateGadgetA(
+         ULONG kind,
+         struct Gadget * previous,
+         struct NewGadget * ng,
+         struct TagItem * taglist
+ );
+
+Function
+~~~~~~~~
+::
+
+     Creates a gadtools gadget.
+
+
+Inputs
+~~~~~~
+::
+
+
+     kind -     Kind of gadget. See <libraries/gadtools.h> for a list of
+                all possible kinds.
+     previous - Pointer to the previous gadget in gadget-list. Create the
+                first "gadget" with CreateContext(). This may be NULL, in
+                which case CreateGadgetA() fails.
+     ng -       Pointer to struct NewGadget. See <libraries/gadtools.h>.
+     taglist -  Additional tags. See <libraries/gadtools.h>.
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a gadget or NULL to indicate an error.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CreateContext(), FreeGadgets(), <libraries/gadtools.h>
+
+
+--------------
+
+CreateMenusA
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Menu * CreateMenusA(
+         struct NewMenu * newmenu,
+         struct TagItem * tagList
+ );
+
+Function
+~~~~~~~~
+::
+
+     CreateMenusA() creates a complete menu or parts of a menu.
+
+
+Inputs
+~~~~~~
+::
+
+     newmenu - pointer to struct NewMenu
+     taglist - additional tags
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a menu structure.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     CreateMenusA() stores no position information in the menu structure.
+     You need to call LayoutMenusA() to retrieve them.
+     The strings supplied for the menu are not copied into a private
+     buffer. Therefore they must be preserved, until FreeMenus() was
+     called.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     FreeMenus(), LayoutMenusA()
+
+
+--------------
+
+DrawBevelBoxA
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void DrawBevelBoxA(
+         struct RastPort * rport,
+         WORD left,
+         WORD top,
+         WORD width,
+         WORD height,
+         struct TagItem * taglist
+ );
+
+Function
+~~~~~~~~
+::
+
+     DrawBevelBoxA() does just that. It draws a bevelled box.
+
+
+Inputs
+~~~~~~
+::
+
+     rport   - rastport, in which the box should be drawn
+     left    - left edge of the box
+     top     - top edge of the box
+     width   - width of the box
+     height  - height og the box
+     taglist - additional tags
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Boxes drawn with DrawBevelBox() aren't refreshed automatically.
+     You have to refresh them yourself.
+     DrawBevelBoxA() might modify the rastport to guarantee fast drawing.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FreeGadgets
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID FreeGadgets(
+         struct Gadget * glist
+ );
+
+Function
+~~~~~~~~
+::
+
+     Frees all gadtools gadgets in a linked list of gadgets.
+
+
+Inputs
+~~~~~~
+::
+
+     glist - pointer to the first gadget to be freed, may be NULL.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CreateGadgetA()
+
+
+--------------
+
+FreeMenus
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID FreeMenus(
+         struct Menu * menu
+ );
+
+Function
+~~~~~~~~
+::
+
+     Frees the menus allocated by CreateMenusA().
+
+
+Inputs
+~~~~~~
+::
+
+     menu - pointer to the menu (or first MenuItem) to be freed, may be NULL.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CreateMenusA()
+
+
+--------------
+
+FreeVisualInfo
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeVisualInfo(
+         APTR vi
+ );
+
+Function
+~~~~~~~~
+::
+
+     FreeVisualInfo() frees a visual info structure created with
+     GetVisualInfo().
+
+
+Inputs
+~~~~~~
+::
+
+     vi - the visual info structure to free, may be NULL.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GetVisualInfo()
+
+
+--------------
+
+GT_BeginRefresh
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ void GT_BeginRefresh(
+         struct Window * win
+ );
+
+Function
+~~~~~~~~
+::
+
+     Refreshes the given window. This function must be used instead
+     of BeginRefresh(), if gadtools-gadgets are used. When you are
+     finished with refreshing the window, you must call GT_EndRefresh().
+
+
+Inputs
+~~~~~~
+::
+
+     win - window to refresh
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+     case IDCMP_REFRESHWINDOW:
+         GT_BeginRefresh(mywin);
+         GT_EndRefresh(mywin, TRUE);
+
+
+Notes
+~~~~~
+::
+
+     Due to the internal structure of gadtools, it is not possible
+     to use WFLG_NOCAREREFRESH with windows, which use gadtools-
+     gadgets.
+     You should simple rendering functions between GT_BeginRefresh() and
+     GT_EndRefresh() only. Do not render or change any gadgets.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GT_EndRefresh(), intuition.library/BeginRefresh()
+
+
+--------------
+
+GT_EndRefresh
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void GT_EndRefresh(
+         struct Window * win,
+         BOOL complete
+ );
+
+Function
+~~~~~~~~
+::
+
+     GT_EndRefresh() must be called, when a refresh initiated with
+     GT_BeginRefresh() is done.
+
+
+Inputs
+~~~~~~
+::
+
+     win      - the refreshed window
+     complete - TRUE, if refreshing is finished
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GT_BeginRefresh(), intuition.library/EndRefresh()
+
+
+--------------
+
+GT_FilterIMsg
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct IntuiMessage * GT_FilterIMsg(
+         struct IntuiMessage * imsg
+ );
+
+Function
+~~~~~~~~
+::
+
+     Processes an intuition message. Normally, you should not use this
+     function and call GT_GetIMsg() instead. If this functions returns
+     with a value != NULL, you have to call GT_PostFilterIMsg(), when
+     you are done with processing the message. If it return a NULL
+     pointer, you have to ReplyMsg() the message, you passed to
+     GT_FilterIMsg().
+
+
+Inputs
+~~~~~~
+::
+
+     imsg - pointer to the intuition message to process
+
+
+Result
+~~~~~~
+::
+
+     Either a pointer to a processed intuition message or NULL, in which
+     case the message had only meaning to gadtools.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GT_PostFilterIMsg(), GT_GetIMsg(), intuition.library/ReplyMsg()
+
+
+--------------
+
+GT_GetGadgetAttrsA
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG GT_GetGadgetAttrsA(
+         struct Gadget * gad,
+         struct Window * win,
+         struct Requester * req,
+         struct TagItem * taglist
+ );
+
+Function
+~~~~~~~~
+::
+
+     Get a list of attributes from a specific gadget.
+
+
+Inputs
+~~~~~~
+::
+
+     gad -     the gadget from which to get attributes
+     win -     the window, in which the gadget is
+     req -     the requester, in which the gadget is, or NULL
+     taglist - the list of attributes to get. ti_Tag specifies the attribute
+               and ti_Data is a pointer to an IPTR, where the data is to be
+               stored
+
+
+Result
+~~~~~~
+::
+
+     The number of attributes, which were filled correctly.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GT_SetGadgetAttrsA(), intuition.library/GetAttr()
+
+
+--------------
+
+GT_GetIMsg
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct IntuiMessage * GT_GetIMsg(
+         struct MsgPort * intuiport
+ );
+
+Function
+~~~~~~~~
+::
+
+     You must use this function instead of exec.library/GetMsg() to get
+     messages from a window, if you are using gadtools gadgets. After you
+     are done with reading the message, you have to call GT_ReplyIMsg().
+
+
+Inputs
+~~~~~~
+::
+
+     intuiport - UserPort of the window
+
+
+Result
+~~~~~~
+::
+
+     A pointer to a message or NULL, if there was no message or the messages
+     had only a meaning to gadtools.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GT_ReplyIMsg(), exec.library/GetMsg()
+
+
+--------------
+
+GT_PostFilterIMsg
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct IntuiMessage * GT_PostFilterIMsg(
+         struct IntuiMessage * modimsg
+ );
+
+Function
+~~~~~~~~
+::
+
+     Restores an intuition message formerly changed with GT_FilterIMsg().
+
+
+Inputs
+~~~~~~
+::
+
+     modimsg - The message returned from GT_FilterIMsg(). May be NULL.
+
+
+Result
+~~~~~~
+::
+
+     The original intuition message or NULL, if NULL was passed in.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GT_FilterIMsg()
+
+
+--------------
+
+GT_RefreshWindow
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ void GT_RefreshWindow(
+         struct Window * win,
+         struct Requester * req
+ );
+
+Function
+~~~~~~~~
+::
+
+     You have to call this function as soon as a window containing
+     gadtools gadgets was opened or after you have performed a
+     RefreshGList().
+
+
+Inputs
+~~~~~~
+::
+
+     win - Window to refresh.
+     req - Not used. Provide NULL for now.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+GT_ReplyIMsg
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void GT_ReplyIMsg(
+         struct IntuiMessage * imsg
+ );
+
+Function
+~~~~~~~~
+::
+
+     Replies a message gotten via GT_GetIMsg().
+
+
+Inputs
+~~~~~~
+::
+
+     imsg - The message to reply.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GT_GetIMsg(), exec.library/ReplyMsg()
+
+
+--------------
+
+GT_SetGadgetAttrsA
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void GT_SetGadgetAttrsA(
+         struct Gadget * gad,
+         struct Window * win,
+         struct Requester * req,
+         struct TagItem * tagList
+ );
+
+Function
+~~~~~~~~
+::
+
+     Change the attribute of the given gadget according to the
+     attributes chosen in the tag list. If an attribute is not
+     provided in the tag list, its value remains unchanged.
+
+
+Inputs
+~~~~~~
+::
+
+     gad -     Gadget, for which the specified attributes should be set for.
+     win -     Window, in which the gadget is.
+     req -     Not used. Specify NULL for now.
+     tagList - List of attributes to set.
+
+
+Result
+~~~~~~
+::
+
+     The gadget may be set to the specified attributes.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GT_GetGadgetAttrsA(), intuition.library/SetGadgetAttrsA()
+
+
+--------------
+
+GetVisualInfoA
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR GetVisualInfoA(
+         struct Screen * screen,
+         struct TagItem * tagList
+ );
+
+Function
+~~~~~~~~
+::
+
+     GetVisualInfoA() creates a visual info structure, which is needed
+     by several gadtools functions. When you're done using it, you have
+     to call FreeVisualInfo().
+
+
+Inputs
+~~~~~~
+::
+
+     screen -  pointer to the screen to create a visual info structure for
+               (may be NULL)
+     taglist - additional tags (none defined, yet)
+
+
+Result
+~~~~~~
+::
+
+     A (private) visual info structure. NULL indicates an error.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     FreeVisualInfo()
+
+
+--------------
+
+LayoutMenuItemsA
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL LayoutMenuItemsA(
+         struct MenuItem * menuitem,
+         APTR vi,
+         struct TagItem * tagList
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     menuitem - Menu item to be layouted.
+     vi -       Visual info to layout the menu item for.
+     tagList  - Additional tags.
+
+
+Result
+~~~~~~
+::
+
+     FALSE, if an error occured.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     LayoutMenusA(), GetVisualInfoA()
+
+
+--------------
+
+LayoutMenusA
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL LayoutMenusA(
+         struct Menu * menu,
+         APTR vi,
+         struct TagItem * tagList
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+     menu -     Menu to be layouted.
+     vi -       Visual info to layout the menu for.
+     tagList  - Additional tags.
+
+
+Result
+~~~~~~
+::
+
+     FALSE, if an error occured.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+   CreateMenusA() LayoutMenuItemsA() GetVisualInfoA()
+
+
+--------------
+

@@ -1,0 +1,391 @@
+.. This document is automatically generated. Don't edit it!
+
+=====
+timer
+=====
+
+`AddTime`_
+`BeginIO`_
+`CmpTime`_
+`GetSysTime`_
+`ReadEClock`_
+`SubTime`_
+
+-----------
+
+AddTime
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddTime(
+         struct timeval * dest,
+         struct timeval * src
+ );
+
+Function
+~~~~~~~~
+::
+
+     Add two timeval's together. The result will be the sum
+     dest + src --> dest.
+
+     The values of A0 and A1 will not be changed.
+
+
+Inputs
+~~~~~~
+::
+
+     dest    -   Destination timeval.
+     src     -   Source timeval.
+
+
+Result
+~~~~~~
+::
+
+     dest will contain (src + dest).
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function can be called from Interrupts.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     SubTime(), CmpTime()
+
+
+--------------
+
+BeginIO
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void BeginIO(
+         struct timerequest * timereq
+ );
+
+Function
+~~~~~~~~
+::
+
+     BeginIO() will perform a timer.device command. It is normally
+     called from within DoIO() and SendIO().
+
+ INPUT
+     timereq         - The request to process.
+
+
+Result
+~~~~~~
+::
+
+     The requested message will be processed.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is safe to call from interrupts.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     exec/Abort(), exec/SendIO(), exec/DoIO()
+
+
+--------------
+
+CmpTime
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG CmpTime(
+         struct timeval * dest,
+         struct timeval * src
+ );
+
+Function
+~~~~~~~~
+::
+
+     CmpTime() will compare two timeval's for magnitude, and return
+     which is the larger.
+
+
+Inputs
+~~~~~~
+::
+
+     dest    -   Destination timeval
+     src     -   Source timeval
+
+
+Result
+~~~~~~
+::
+
+     < 0 if dest has more time than src (ie dest > src)
+     = 0 if dest and src are the same (ie dest == src)
+     > 0 if dest has less time than src (ie dest < src)
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is safe to call from interrupts.
+
+
+Bugs
+~~~~
+::
+
+     The registers A0 and A1 may not be preserved.
+
+
+See also
+~~~~~~~~
+::
+
+     AddTime(), SubTime()
+
+
+--------------
+
+GetSysTime
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void GetSysTime(
+         struct timeval * dest
+ );
+
+Function
+~~~~~~~~
+::
+
+     GetSysTime() will fill in the supplied timeval with the current
+     system time.
+
+
+Inputs
+~~~~~~
+::
+
+     dest    -   A pointer to the timeval you want the time stored in.
+
+
+Result
+~~~~~~
+::
+
+     The timeval "dest" will be filled with the current system time.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is safe to call from interrupts.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     TR_GETSYSTIME, TR_SETSYSTIME
+
+
+--------------
+
+ReadEClock
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ReadEClock(
+         struct EClockVal * dest
+ );
+
+Function
+~~~~~~~~
+::
+
+     ReadEClock() reads current value of E-Clock and stores
+     it in the destination EClockVal structure passed as
+     argument. It also returns the frequency of EClock of the
+     system.
+
+     This call is supposed to be very fast.
+
+Inputs
+~~~~~~
+::
+
+     dest    -   Destination EClockVal
+
+
+Result
+~~~~~~
+::
+
+     The EClock frequency (tics/s)
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is safe to call from interrupts.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SubTime
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void SubTime(
+         struct timeval * dest,
+         struct timeval * src
+ );
+
+Function
+~~~~~~~~
+::
+
+     SubTime() will subtract the src timeval from the destination
+     timeval, ie "dest - src --> dest".
+
+
+Inputs
+~~~~~~
+::
+
+     dest    -   Destination timeval
+     src     -   Source timeval
+
+
+Result
+~~~~~~
+::
+
+     The timeval dest will contain the sum (dest - src).
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function is safe to call from interrupts.
+
+
+Bugs
+~~~~
+::
+
+     May not preserve registers.
+
+
+See also
+~~~~~~~~
+::
+
+     AddTime(), CmpTime()
+
+
+--------------
+

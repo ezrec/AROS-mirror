@@ -1,0 +1,541 @@
+.. This document is automatically generated. Don't edit it!
+
+========
+lowlevel
+========
+
+`AddKBInt`_
+`AddTimerInt`_
+`AddVBlankInt`_
+`ElapsedTime`_
+`GetKey`_
+`GetLanguageSelection`_
+`QueryKeys`_
+`ReadJoyPort`_
+`RemKBInt`_
+`RemTimerInt`_
+`RemVBlankInt`_
+`StartTimerInt`_
+`StopTimerInt`_
+
+-----------
+
+AddKBInt
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR AddKBInt(
+         APTR intRoutine,
+         APTR intData
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+--------------
+
+AddTimerInt
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR AddTimerInt(
+         APTR intRoutine,
+         APTR intData
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+--------------
+
+AddVBlankInt
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR AddVBlankInt(
+         APTR intRoutine,
+         APTR intData
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ Add a callback function that should be executed every vertical blank.
+ If your program can exit without rebooting the machine, RemVBlankInt()
+ has to be called prior to exiting.
+     Only one interrupt routine may be added; always check the return
+ value of this function in case some other program already has used this
+ function.
+
+
+Inputs
+~~~~~~
+::
+
+
+ intRoutine  --  the callback function to invoke each vertical blank
+ intData     --  data passed to the callback function
+
+
+Result
+~~~~~~
+::
+
+
+ A handle used to manipulate the interrupt or NULL if the call failed.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+ RemVBlankInt()
+
+
+--------------
+
+ElapsedTime
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ElapsedTime(
+         struct EClockVal * context
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+--------------
+
+GetKey
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG GetKey(
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+--------------
+
+GetLanguageSelection
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG GetLanguageSelection(
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+--------------
+
+QueryKeys
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID QueryKeys(
+         struct KeyQuery * queryArray,
+         UBYTE arraySize
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+--------------
+
+ReadJoyPort
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ReadJoyPort(
+         ULONG port
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+--------------
+
+RemKBInt
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID RemKBInt(
+         APTR intHandle
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+--------------
+
+RemTimerInt
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID RemTimerInt(
+         APTR intHandle
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+--------------
+
+RemVBlankInt
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID RemVBlankInt(
+         APTR intHandle
+ );
+
+Function
+~~~~~~~~
+::
+
+
+ Remove a vertical blank interrupt routine previously added by a call to
+ AddVBlankInt().
+
+
+Inputs
+~~~~~~
+::
+
+
+ intHandle  --  return value from AddVBlankInt(); may be NULL in which case
+                this function is a no-op.
+
+
+Result
+~~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+ AddVBlankInt()
+
+
+--------------
+
+StartTimerInt
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID StartTimerInt(
+         APTR intHandle,
+         ULONG timeInterval,
+         BOOL continuous
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+--------------
+
+StopTimerInt
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID StopTimerInt(
+         APTR intHandle
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+--------------
+

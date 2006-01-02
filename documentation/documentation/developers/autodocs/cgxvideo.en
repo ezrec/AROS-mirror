@@ -1,0 +1,571 @@
+.. This document is automatically generated. Don't edit it!
+
+========
+cgxvideo
+========
+
+`AttachVLayerTagList`_
+`CreateVLayerHandleTagList`_
+`DeleteVLayerHandle`_
+`DetachVLayer`_
+`GetVLayerAttr`_
+`LockVLayer`_
+`SetVLayerAttrTagList`_
+`UnlockVLayer`_
+
+-----------
+
+AttachVLayerTagList
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG AttachVLayerTagList(
+         struct VLayerHandle * VLayerHandle,
+         struct Window * Window,
+         struct TagItem  * TagItems
+ );
+
+Function
+~~~~~~~~
+::
+
+     Attaches a previously created videolayer handle to the specified window.
+     The video overlay should now be dynamically linked to the window.
+     If the window is moved or resized, the overlay is also moved or resized.
+
+
+Inputs
+~~~~~~
+::
+
+     VLayerHandle - pointer to a previously created videolayer handle
+
+     Window - pointer to the window that the videolayer should be attached to
+
+     TagItems - pointer to an optional tag list
+
+
+Result
+~~~~~~
+::
+
+     result - 0 if videolayer could be attached to the window
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Tags available are:
+
+             VOA_LeftIndent (ULONG) - additional offset from the left window border
+
+             VOA_RightIndent (ULONG) - additional offset from the right window border
+
+             VOA_TopIndent (ULONG) - additional offset from the top window border
+
+             VOA_BottomIndent (ULONG) - additional offset from the bottom window border
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     DetachVLayer()
+
+
+--------------
+
+CreateVLayerHandleTagList
+=========================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct VLayerHandle * CreateVLayerHandleTagList(
+         struct Screen * Screen,
+         struct TagItem  * TagItems
+ );
+
+Function
+~~~~~~~~
+::
+
+     Creates a video layer handle for the given screen 
+
+
+Inputs
+~~~~~~
+::
+
+     Screen - Screen we wish to create a handle for
+
+     TagItems - pointer to an optional tag list
+
+
+Result
+~~~~~~
+::
+
+     VLayerHandle - pointer to the created videolayer handle or 0
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Tags available are:
+
+             VOA_SrcType (ULONG) - specifies source type that is used for video
+                           overlay data
+
+                     Currently supported formats:
+
+                             SRCFMT_YUV16 (not recommended, use YCbCr16 instead)
+                             SRCFMT_YCbCr16
+                             SRCFMT_RGB15PC
+                             SRCFMT_RGB16PC
+
+             VOA_SrcWidth (ULONG) - source width in pixel units
+
+             VOA_SrcHeight (ULONG) -  source height in pixel units
+
+             VOA_Error (ULONG *) - If you specify VOA_Error with ti_Data pointing
+                           to an ULONG, you will get more detailed information
+                           if the creation of the video layer handle fails
+
+             VOA_UseColorKey (BOOL) - If you specify VOA_UseColorKey as TRUE, color
+                     keying is enabled for the video layer. A
+                     certain color key is generated then and the
+                     stream data is only visible where this color
+                     could be found.
+
+             VOA_UseBackFill (BOOL) - If you specify VOA_UseBackFill as TRUE automatic
+                     backfilling for the videolayer is enabled. This
+                     option is only available if color keying is
+                     enabled.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+DeleteVLayerHandle
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void DeleteVLayerHandle(
+         struct VLayerHandle * VLayerHandle
+ );
+
+Function
+~~~~~~~~
+::
+
+     Deletes a created video layer handle
+
+
+Inputs
+~~~~~~
+::
+
+     VLayerHandle - pointer to a previously created videolayer handle
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+DetachVLayer
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG DetachVLayer(
+         struct VLayerHandle * VLayerHandle
+ );
+
+Function
+~~~~~~~~
+::
+
+     Detaches a videolayer from a given window. As a result, the video
+     overlay should now be unlinked from the window and the original
+     contents of the window are visible now.
+
+
+Inputs
+~~~~~~
+::
+
+     VLayerHandle - pointer to a previously created videolayer handle
+
+
+Result
+~~~~~~
+::
+
+     result - 0 if videolayer could be detached from the window
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AttachVLayerTagList()
+
+
+--------------
+
+GetVLayerAttr
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG GetVLayerAttr(
+         struct VLayerHandle * VLayerHandle,
+         ULONG AttrNum
+ );
+
+Function
+~~~~~~~~
+::
+
+     Gets a certain attribute from a given video layer. You have to call
+     LockVLayer() to make sure that the result is valid !
+
+
+Inputs
+~~~~~~
+::
+
+     VLayerHandle - pointer to a previously created videolayer handle
+
+     AttrNum - attribute that you want to get
+
+
+Result
+~~~~~~
+::
+
+     value - the value for the given attribute
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Attributes available are:
+
+     VOA_BaseAddress -       if this attribute is specified the base address for
+                             the source data is returned
+
+     VOA_ColorKeyPen -       returns the pen number used for color keying. If color
+                             keying is not enabled, -1 is returned
+
+     VOA_ColorKey -  returns the 24 bit color value used for color keying.
+                             If color keying is not enabled, -1 is returned.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     SetVLayerAttr()
+
+
+--------------
+
+LockVLayer
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG LockVLayer(
+         struct VLayerHandle * VLayerHandle
+ );
+
+Function
+~~~~~~~~
+::
+
+     Locks the specified video layer to allow access to source data. Make
+     sure that you don't keep that lock for too long. It is only allowed
+     to keep it for a short time.
+
+
+Inputs
+~~~~~~
+::
+
+     VLayerHandle - pointer to a previously created videolayer handle
+
+
+Result
+~~~~~~
+::
+
+     result - TRUE if video layer could be locked, FALSE otherwise
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     UnlockVLayer()
+
+
+--------------
+
+SetVLayerAttrTagList
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ void SetVLayerAttrTagList(
+         struct VLayerHandle * VLayerHandle,
+         struct TagItem  * TagItems
+ );
+
+Function
+~~~~~~~~
+::
+
+     Sets certain attributes for a given video layer
+
+
+Inputs
+~~~~~~
+::
+
+     VLayerHandle - pointer to a previously created videolayer handle
+
+     TagItems - pointer to a tag list which contains attributes to be
+             modified
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Tags available are:
+
+             VOA_LeftIndent (ULONG) - additional offset from the left window
+                                             border
+
+             VOA_RightIndent (ULONG) - additional offset from the right window
+                                             border
+
+             VOA_TopIndent (ULONG) - additional offset from the top window border
+
+             VOA_BottomIndent (ULONG) - additional offset from the bottom window
+                                             border
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     GetVLayerAttr()
+
+
+--------------
+
+UnlockVLayer
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG UnlockVLayer(
+         struct VLayerHandle * VLayerHandle
+ );
+
+Function
+~~~~~~~~
+::
+
+     Unlocks a previouly locked video layer
+
+
+Inputs
+~~~~~~
+::
+
+     VLayerHandle - pointer to a previously created videolayer handle
+
+
+Result
+~~~~~~
+::
+
+     none
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     LockVLayer()
+
+
+--------------
+

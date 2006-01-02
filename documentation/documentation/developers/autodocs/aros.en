@@ -1,0 +1,76 @@
+.. This document is automatically generated. Don't edit it!
+
+====
+aros
+====
+
+`ArosInquireA`_
+
+-----------
+
+ArosInquireA
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ArosInquireA(
+         struct TagItem * taglist
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function is used to query system characteristics not easily
+     queried with another function.
+
+
+Inputs
+~~~~~~
+::
+
+     tags -- taglist with appropriate queries. The tag's ti_Data field
+             should point to the location where the result of the query
+             is stored. Do not forget to clear the location before, as
+             queries not understood will be left untouched.
+
+
+Result
+~~~~~~
+::
+
+     All queries understood by this call will have appropriate values
+     assigned to the location a tag's ti_Data pointed to.
+
+     This function will (for now) always return 0.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     aros/arosbase.h
+
+
+--------------
+

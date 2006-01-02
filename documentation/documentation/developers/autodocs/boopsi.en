@@ -1,0 +1,743 @@
+.. This document is automatically generated. Don't edit it!
+
+======
+boopsi
+======
+
+`AddClass`_
+`DisposeObject`_
+`FindClass`_
+`FreeClass`_
+`GetAttr`_
+`MakeClass`_
+`NewObjectA`_
+`NextObject`_
+`RemoveClass`_
+`SetAttrsA`_
+
+-----------
+
+AddClass
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddClass(
+         struct IClass * classPtr
+ );
+
+Function
+~~~~~~~~
+::
+
+     Makes a class publically usable. This function must not be called
+     before MakeClass().
+
+
+Inputs
+~~~~~~
+::
+
+     class - The result of MakeClass()
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Do not use this function for private classes.
+ 
+
+Bugs
+~~~~
+::
+
+     There is no protection against creating multiple classes with
+     the same name yet. The operation of the system is undefined
+     in this case.
+
+
+See also
+~~~~~~~~
+::
+
+     MakeClass(), FreeClass(), RemoveClass(), "Basic Object-Oriented
+     Programming System for Intuition" and "boopsi Class Reference"
+
+
+--------------
+
+DisposeObject
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void DisposeObject(
+         APTR object
+ );
+
+Function
+~~~~~~~~
+::
+
+     Deletes a BOOPSI object. All memory associated with the object
+     is freed. The object must have been created with NewObject().
+     Some object contain other object which might be freed as well
+     when this function is used on the "parent" while others might
+     also contain children but won't free them. Read the documentation
+     of the class carefully to find out how it behaves.
+
+
+Inputs
+~~~~~~
+::
+
+     object - The result of a call to NewObject() or a similar function,
+              may be NULL.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This functions sends OM_DISPOSE to the object.
+
+     Be careful not to use this function inside of OM_NEW to dispose
+     the current object. This can cause massive problems. Use
+     CoerceMethod() on the current class and object instead.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     NewObject(), SetAttrs((), GetAttr(), MakeClass()
+     "Basic Object-Oriented Programming System for Intuition" and
+     "boopsi Class Reference" Dokument.
+
+
+--------------
+
+FindClass
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct IClass * FindClass(
+         ClassID classID
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FreeClass
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL FreeClass(
+         struct IClass * classPtr
+ );
+
+Function
+~~~~~~~~
+::
+
+     Only for class implementatores.
+
+     Tries to free a class which has been created with MakeClass() in the
+     first place. This will not succeed in all cases: Classes which
+     still have living objects or which are still beeing used by subclasses
+     can't simply be freed. In this case this call will fail.
+
+     Public classes will always be removed with RemoveClass() no matter
+     if FreeClass() would succeed or not. This gurantees that after the
+     call to FreeClass() no new objects can be created.
+
+     If you have a pointer to allocated memory in cl_UserData, you must
+     make a copy of that pointer, call FreeClass() and if the call
+     succeeded, you may free the memory. If you don't follow these rules,
+     you might end up with a class which is partially freed.
+
+
+Inputs
+~~~~~~
+::
+
+     classPtr - The pointer you got from MakeClass().
+
+
+Result
+~~~~~~
+::
+
+     FALSE if the class couldn't be freed at this time. This can happen
+     either if there are still objects from this class or if the class
+     is used a SuperClass of at least another class.
+
+     TRUE if the class could be freed. You must not use classPtr after
+     that.
+
+
+Example
+~~~~~~~
+::
+
+     // Free a public class with dynamic memory in cl_UserD
+
+     int freeMyClass (Class * cl)
+     {
+         struct MyPerClassData * mpcd;
+
+         mpcd = (struct MyPerClassData *)cl->cl_UserData;
+
+         if (FreeClass (cl)
+         {
+             FreeMem (mpcd, sizeof (struct MyPerClassData));
+             return (TRUE);
+         }
+
+         return (FALSE);
+     }
+
+
+Notes
+~~~~~
+::
+
+     *Always* calls RemoveClass().
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+GetAttr
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG GetAttr(
+         ULONG attrID,
+         Object * object,
+         IPTR * storagePtr
+ );
+
+Function
+~~~~~~~~
+::
+
+     Asks the specified object for the value of an attribute. This is not
+     possible for all attributes of an object. Read the documentation for
+     the class to find out which can be read and which can't.
+
+
+Inputs
+~~~~~~
+::
+
+     attrID - ID of the attribute you want
+     object - Ask the attribute from this object
+     storagePtr - This is a pointer to memory which is large enough
+             to hold a copy of the attribute. Most classes will simply
+             put a copy of the value stored in the object here but this
+             behaviour is class specific. Therefore read the instructions
+             in the class description carefully.
+
+
+Result
+~~~~~~
+::
+
+     Mostly TRUE if the method is supported for the specified attribute
+     and FALSE if it isn't or the attribute can't be read at this time.
+     See the classes documentation for details.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function sends OM_GET to the object.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     NewObject(), DisposeObject(), SetAttr(), MakeClass(),
+     "Basic Object-Oriented Programming System for Intuition" and
+     "boopsi Class Reference" Dokument.
+
+
+
+--------------
+
+MakeClass
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct IClass * MakeClass(
+         UBYTE         * classID,
+         UBYTE         * superClassID,
+         struct IClass * superClassPtr,
+         ULONG instanceSize,
+         ULONG flags
+ );
+
+Function
+~~~~~~~~
+::
+
+     Only for class implementators.
+
+     This function creates a new public BOOPSI class. The SuperClass
+     should be another BOOPSI class; all BOOPSI classes are subclasses
+     of the ROOTCLASS.
+
+     SuperClasses can by private or public. You can specify a name/ID
+     for the class if you want it to become a public class. For public
+     classes, you must call AddClass() afterwards to make it public
+     accessible.
+
+     The return value contains a pointer to the IClass structure of your
+     class. You must specify your dispatcher in cl_Dispatcher. You can
+     also store shared data in cl_UserData.
+
+     To get rid of the class, you must call FreeClass().
+
+
+Inputs
+~~~~~~
+::
+
+     classID - NULL for private classes otherwise the name/ID of the
+             public class.
+     superClassID - Name/ID of a public SuperClass. NULL is you don't
+             want to use a public SuperClass or if you have the pointer
+             your SuperClass.
+     superClassPtr - Pointer to the SuperClass. If this is non-NULL,
+             then superClassID is ignored.
+     instanceSize - The amount of memory which your objects need (in
+             addition to the memory which is needed by the SuperClass(es))
+     flags - For future extensions. To maintain comaptibility, use 0
+             for now.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to the new class or NULL if
+     - There wasn't enough memory
+     - The superclass couldn't be found
+     - There already is a class with the same name/ID.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     No copy is made of classID. So make sure the lifetime of the contents
+     of classID is at least the same as the lifetime of the class itself.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+NewObjectA
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR NewObjectA(
+         struct IClass  * classPtr,
+         UBYTE          * classID,
+         struct TagItem * tagList
+ );
+
+Function
+~~~~~~~~
+::
+
+     Use this function to create BOOPSI objects (BOOPSI stands for
+     "Basic Object Oriented Programming System for Intuition).
+
+     You may specify a class either by it's name (if it's a public class)
+     or by a pointer to its definition (if it's a private class). If
+     classPtr is NULL, classID is used.
+
+
+Inputs
+~~~~~~
+::
+
+     classPtr - Pointer to a private class (or a public class if you
+             happen to have a pointer to it)
+     classID - Name of a public class
+     tagList - Initial attributes. Read the documentation of the class
+             carefully to find out which attributes must be specified
+             here and which can.
+
+
+Result
+~~~~~~
+::
+
+     A BOOPSI object which can be manipulated with general functions and
+     which must be disposed with DisposeObject() later.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This functions send OM_NEW to the dispatcher of the class.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     DisposeObject(), SetAttrs(), GetAttr(), MakeClass(),
+     "Basic Object-Oriented Programming System for Intuition" and
+     "boopsi Class Reference" Dokument.
+
+
+--------------
+
+NextObject
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR NextObject(
+         APTR objectPtrPtr
+ );
+
+Function
+~~~~~~~~
+::
+
+     Use this function to iterate through a list of BOOPSI objects.
+     You may do whatever you want with the object returned, even
+     remove it from the list or disposing it and then continue to
+     iterate thought the list.
+
+
+Inputs
+~~~~~~
+::
+
+     objectPtrPtr - the pointer to a variable. This must be the same
+         variable, as long as you iterate though the same list. This
+         variable must initially be filled with the lh_Head of a list.
+
+
+Result
+~~~~~~
+::
+
+     A BOOPSI object, which can be manipulated.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     NewObject(),
+     "Basic Object-Oriented Programming System for Intuition" and
+     "boopsi Class Reference" Dokument.
+
+
+--------------
+
+RemoveClass
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemoveClass(
+         struct IClass * classPtr
+ );
+
+Function
+~~~~~~~~
+::
+
+     Makes a public class inaccessible. This function may be called
+     several times on the same class and even if the class never was
+     in the public list.
+
+
+Inputs
+~~~~~~
+::
+
+     classPtr - Pointer to the result of MakeClass(). May be NULL.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     MakeClass(), FreeClass(), AddClass(), "Basic Object-Oriented
+     Programming System for Intuition" and "boopsi Class Reference"
+     Dokument.
+
+
+--------------
+
+SetAttrsA
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG SetAttrsA(
+         APTR object,
+         struct TagItem * tagList
+ );
+
+Function
+~~~~~~~~
+::
+
+     Changes several attributes of an object at the same time. How the
+     object interprets the new attributes depends on the class.
+
+
+Inputs
+~~~~~~
+::
+
+     object - Change the attributes of this object
+     tagList - This is a list of attribute/value-pairs
+
+
+Result
+~~~~~~
+::
+
+     Depends in the class. For gadgets, this value is non-zero if
+     they need redrawing after the values have changed. Other classes
+     will define other return values.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function sends OM_SET to the object.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     NewObject(), DisposeObject(), GetAttr(), MakeClass(),
+     "Basic Object-Oriented Programming System for Intuition" and
+     "boopsi Class Reference" Dokument.
+
+
+--------------
+

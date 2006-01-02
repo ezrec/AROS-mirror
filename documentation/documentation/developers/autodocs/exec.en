@@ -1,0 +1,8056 @@
+.. This document is automatically generated. Don't edit it!
+
+====
+exec
+====
+
+`AbortIO`_
+`AddDevice`_
+`AddHead`_
+`AddIntServer`_
+`AddLibrary`_
+`AddMemHandler`_
+`AddMemList`_
+`AddPort`_
+`AddResource`_
+`AddSemaphore`_
+`AddTail`_
+`AddTask`_
+`Alert`_
+`AllocAbs`_
+`AllocEntry`_
+`AllocMem`_
+`AllocPooled`_
+`AllocSignal`_
+`AllocTrap`_
+`AllocVec`_
+`Allocate`_
+`AttemptSemaphore`_
+`AttemptSemaphoreShared`_
+`AvailMem`_
+`CacheClearE`_
+`CacheClearU`_
+`CacheControl`_
+`CachePostDMA`_
+`CachePreDMA`_
+`Cause`_
+`CheckIO`_
+`ChildFree`_
+`ChildOrphan`_
+`ChildStatus`_
+`ChildWait`_
+`CloseDevice`_
+`CloseLibrary`_
+`ColdReboot`_
+`CopyMem`_
+`CopyMemQuick`_
+`CreateIORequest`_
+`CreateMsgPort`_
+`CreatePool`_
+`Deallocate`_
+`Debug`_
+`DeleteIORequest`_
+`DeleteMsgPort`_
+`DeletePool`_
+`Disable`_
+`DoIO`_
+`Enable`_
+`Enqueue`_
+`FindName`_
+`FindPort`_
+`FindResident`_
+`FindSemaphore`_
+`FindTask`_
+`Forbid`_
+`FreeEntry`_
+`FreeMem`_
+`FreePooled`_
+`FreeSignal`_
+`FreeTrap`_
+`FreeVec`_
+`GetCC`_
+`GetMsg`_
+`InitCode`_
+`InitResident`_
+`InitSemaphore`_
+`InitStruct`_
+`Insert`_
+`MakeFunctions`_
+`MakeLibrary`_
+`NewAddTask`_
+`NewAllocEntry`_
+`ObtainQuickVector`_
+`ObtainSemaphore`_
+`ObtainSemaphoreList`_
+`ObtainSemaphoreShared`_
+`OldOpenLibrary`_
+`OpenDevice`_
+`OpenLibrary`_
+`OpenResource`_
+`Permit`_
+`Procure`_
+`PutMsg`_
+`RawDoFmt`_
+`ReleaseSemaphore`_
+`ReleaseSemaphoreList`_
+`RemDevice`_
+`RemHead`_
+`RemIntServer`_
+`RemLibrary`_
+`RemMemHandler`_
+`RemPort`_
+`RemResource`_
+`RemSemaphore`_
+`RemTail`_
+`RemTask`_
+`Remove`_
+`ReplyMsg`_
+`SendIO`_
+`SetExcept`_
+`SetFunction`_
+`SetIntVector`_
+`SetSR`_
+`SetSignal`_
+`SetTaskPri`_
+`Signal`_
+`StackSwap`_
+`SumKickData`_
+`SumLibrary`_
+`SuperState`_
+`Supervisor`_
+`Switch`_
+`TypeOfMem`_
+`UserState`_
+`Vacate`_
+`Wait`_
+`WaitIO`_
+`WaitPort`_
+`dummy`_
+
+-----------
+
+AbortIO
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG AbortIO(
+         struct IORequest * iORequest
+ );
+
+Function
+~~~~~~~~
+::
+
+     Calls the AbortIO vector of the appropriate device to stop an
+     asynchronously started io request before completion. This may
+     or may not be done. You still have to do a WaitIO() on the
+     iorequest structure.
+
+
+Inputs
+~~~~~~
+::
+
+     iORequest - Pointer to iorequest structure.
+
+
+Result
+~~~~~~
+::
+
+     Errorcode if the abort request failed, 0 if the abort request went
+     well. io_Error will then be set to IOERR_ABORTED.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenDevice(), CloseDevice(), DoIO(), SendIO(), WaitIO()
+
+
+--------------
+
+AddDevice
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddDevice(
+         struct Device * device
+ );
+
+Function
+~~~~~~~~
+::
+
+     Adds a given device to the system's device list after checksumming
+     the device vectors. This function is not for general use but
+     (of course) for building devices that don't use exec's MakeLibrary()
+     mechanism.
+
+
+Inputs
+~~~~~~
+::
+
+     device - Pointer to a ready for use device structure.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     RemDevice(), OpenDevice(), CloseDevice()
+
+
+--------------
+
+AddHead
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddHead(
+         struct List * list,
+         struct Node * node
+ );
+
+Function
+~~~~~~~~
+::
+
+     Insert Node node as the first node of the list.
+
+
+Inputs
+~~~~~~
+::
+
+     list - The list to insert the node into
+     node - This node is to be inserted
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+     struct List * list;
+     struct Node * pred;
+
+     // Insert Node at top
+     AddHead (list, node);
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     NewList(), AddTail(), Insert(), Remove(), RemHead(), RemTail(),
+     Enqueue()
+
+
+--------------
+
+AddIntServer
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddIntServer(
+         ULONG intNumber,
+         struct Interrupt * interrupt
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function also enables the corresponding chipset interrupt if
+     run on a native Amiga.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AddLibrary
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddLibrary(
+         struct Library * library
+ );
+
+Function
+~~~~~~~~
+::
+
+     Adds a given library to the system's library list after checksumming
+     the library vectors. This function is not for general use but
+     (of course) for building shared librarys that don't use exec's
+     MakeLibrary() mechanism.
+
+
+Inputs
+~~~~~~
+::
+
+     library - Pointer to a ready for use library structure.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Some old Amiga software expects that AddLibrary returns the
+     library which was just added. When in binary compatibility mode
+     AROS does this too.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     RemLibrary(), MakeLibrary(), MakeFunctions(), InitStruct(), SumLibrary().
+
+
+--------------
+
+AddMemHandler
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddMemHandler(
+         struct Interrupt * memHandler
+ );
+
+Function
+~~~~~~~~
+::
+
+     Add some function to be called if the system is low on memory.
+
+
+Inputs
+~~~~~~
+::
+
+     memHandler - An Interrupt structure to add to the low memory
+                  handler list.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AddMemList
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddMemList(
+         ULONG size,
+         ULONG attributes,
+         LONG pri,
+         APTR base,
+         STRPTR name
+ );
+
+Function
+~~~~~~~~
+::
+
+     Add a new block of memory to the system memory lists.
+
+
+Inputs
+~~~~~~
+::
+
+     size       - Size of the block
+     attributes - The attributes the memory will have
+     pri        - Priority in the list of MemHeaders
+     base       - Base address
+     name       - A name associated with the memory
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     No argument checking done.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AddPort
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddPort(
+         struct MsgPort * port
+ );
+
+Function
+~~~~~~~~
+::
+
+     Add a port to the public port list. The ln_Name and ln_Pri fields
+     must be initialized prior to calling this function, while
+     the port itself is reinitialized before adding. Therefore it's
+     not allowed to add an active port.
+
+
+Inputs
+~~~~~~
+::
+
+     port - Pointer to messageport structure.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AddResource
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddResource(
+         APTR resource
+ );
+
+Function
+~~~~~~~~
+::
+
+     Adds a given resource to the system's resource list.
+
+
+Inputs
+~~~~~~
+::
+
+     resource - Pointer to a ready for use resource.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     RemResource(), OpenResource()
+
+
+--------------
+
+AddSemaphore
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddSemaphore(
+         struct SignalSemaphore * sigSem
+ );
+
+Function
+~~~~~~~~
+::
+
+     Adds a semaphore to the system public semaphore list. Since the
+     semaphore gets initialized by this function it must be free at
+     this time. Also the ln_Name field must be set.
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - Pointer to semaphore structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Semaphores are shared between the tasks that use them and must
+     therefore lie in public (or at least shared) memory.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AddTail
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void AddTail(
+         struct List * list,
+         struct Node * node
+ );
+
+Function
+~~~~~~~~
+::
+
+     Insert Node node at the end of a list.
+
+
+Inputs
+~~~~~~
+::
+
+     list - The list to insert the node into
+     node - This node is to be inserted
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+     struct List * list;
+     struct Node * pred;
+
+     // Insert Node at end of the list
+     AddTail (list, node);
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AddTask
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR AddTask(
+         struct Task * task,
+         APTR initialPC,
+         APTR finalPC
+ );
+
+Function
+~~~~~~~~
+::
+
+     Add a new task to the system. If the new task has the highest
+     priority of all and task switches are allowed it will be started
+     immediately.
+
+     You must initialise certain fields, and allocate a stack before
+     calling this function. The fields that must be initialised are:
+     tc_SPLower, tc_SPUpper, tc_SPReg, and the tc_Node structure.
+
+     If any other fields are initialised to zero, then they will be
+     filled in with the system defaults.
+
+     The value of tc_SPReg will be used as the location for the stack
+     pointer. You can place any arguments you wish to pass to the Task
+     onto the stack before calling AddTask(). However note that you may
+     need to consider the stack direction on your processor.
+
+     Memory can be added to the tc_MemEntry list and will be freed when
+     the task dies. The new task's registers are set to 0.
+
+
+Inputs
+~~~~~~
+::
+
+     task      - Pointer to task structure.
+     initialPC - Entry point for the new task.
+     finalPC   - Routine that is called if the initialPC() function
+                 returns. A NULL pointer installs the default finalizer.
+
+
+Result
+~~~~~~
+::
+
+     The address of the new task or NULL if the operation failed.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     RemTask()
+
+
+--------------
+
+Alert
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ void Alert(
+         ULONG alertNum
+ );
+
+Function
+~~~~~~~~
+::
+
+     Alerts the user of a serious system problem.
+
+
+Inputs
+~~~~~~
+::
+
+     alertNum - This is a number which contains information about
+             the reason for the call.
+
+
+Result
+~~~~~~
+::
+
+     This routine may return, if the alert is not a dead-end one.
+
+
+Example
+~~~~~~~
+::
+
+     // Dead-End alert: 680x0 Access To Odd Address
+     Alert (0x80000003);
+
+
+Notes
+~~~~~
+::
+
+     You should not call this routine because it halts the machine,
+     displays the message and then may reboot it.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AllocAbs
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR AllocAbs(
+         ULONG byteSize,
+         APTR location
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocate some memory from the system memory pool at a given address.
+
+
+Inputs
+~~~~~~
+::
+
+     byteSize - Number of bytes you want to get
+     location - Where you want to get the memory
+
+
+Result
+~~~~~~
+::
+
+     A pointer to some memory including the requested bytes or NULL if
+     the memory couldn't be allocated
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     FreeMem()
+
+
+--------------
+
+AllocEntry
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct MemList * AllocEntry(
+         struct MemList * entry
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocate a number of memory blocks through a MemList structure.
+
+
+Inputs
+~~~~~~
+::
+
+     entry - The MemList with one MemEntry for each block you want to get
+
+
+Result
+~~~~~~
+::
+
+     The allocation was successful if the most significant bit of the
+     result is 0. The result then contains a pointer to a copy of
+     the MemList structure with the me_Addr fields filled.
+     If the most significant bit is set the result contains the type of
+     memory that couldn't be allocated.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     FreeEntry()
+
+
+--------------
+
+AllocMem
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR AllocMem(
+         ULONG byteSize,
+         ULONG requirements
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocate some memory from the sytem memory pool with the given
+     requirements.
+
+
+Inputs
+~~~~~~
+::
+
+     byteSize     - Number of bytes you want to get
+     requirements - Type of memory
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the number of bytes you wanted or NULL if the memory
+     couldn't be allocated
+
+
+Example
+~~~~~~~
+::
+
+     mytask=(struct Task *)AllocMem(sizeof(struct Task),MEMF_PUBLIC|MEMF_CLEAR);
+
+
+Notes
+~~~~~
+::
+
+     The memory is aligned to sizeof(struct MemChunk). All requests
+     are rounded up to a multiple of that size.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     FreeMem()
+
+
+--------------
+
+AllocPooled
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR AllocPooled(
+         APTR poolHeader,
+         ULONG memSize
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocate memory out of a private memory pool.
+
+
+Inputs
+~~~~~~
+::
+
+     poolHeader - Handle of the memory pool
+     memSize    - Number of bytes you want to get
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the number of bytes you wanted or NULL if the memory
+     couldn't be allocated
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CreatePool(), DeletePool(), FreePooled()
+
+
+--------------
+
+AllocSignal
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ BYTE AllocSignal(
+         LONG signalNum
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocate a given signal out of the current task's pool of signals.
+     Every task has a set of signals to communicate with other tasks.
+     Half of them are reserved for the system and half of them are
+     free for general use. Some of the reserved signals (e.g.
+     SIGBREAKF_CTRL_C) have a defined behaviour and may be used by user
+     code, however.
+
+     You must not allocate or free signals from exception handlers.
+
+
+Inputs
+~~~~~~
+::
+
+     signalNum - Number of the signal to allocate or -1 if any signal
+                 will do.
+
+
+Result
+~~~~~~
+::
+
+     Number of the signal or -1 if the signal couldn't be allocated.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     FreeSignal(), Signal(), Wait()
+
+
+--------------
+
+AllocTrap
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG AllocTrap(
+         long trapNum
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+AllocVec
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR AllocVec(
+         ULONG byteSize,
+         ULONG requirements
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocate some memory from the sytem memory pool with the given
+     requirements and without the need to memorize the actual size
+     of the block.
+
+
+Inputs
+~~~~~~
+::
+
+     byteSize     - Number of bytes you want to get
+     requirements - Type of memory
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the number of bytes you wanted or NULL if the memory
+     couldn't be allocated
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     FreeVec()
+
+
+--------------
+
+Allocate
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR Allocate(
+         struct MemHeader * freeList,
+         ULONG byteSize
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocate memory out of a private region handled by the MemHeader
+     structure.
+
+
+Inputs
+~~~~~~
+::
+
+     freeList - Pointer to the MemHeader structure which holds the memory
+     byteSize - Number of bytes you want to get
+
+
+Result
+~~~~~~
+::
+
+     A pointer to the number of bytes you wanted or NULL if the memory
+     couldn't be allocated
+
+
+Example
+~~~~~~~
+::
+
+     #define POOLSIZE 4096
+     \* Get a MemHeader structure and some private memory *\
+     mh=(struct MemHeader *)
+         AllocMem(sizeof(struct MemHeader)+POOLSIZE,MEMF_ANY);
+     if(mh!=NULL)
+     {
+         \* Build a private pool *\
+         mh->mh_First=(struct MemChunk *)(mh+1);
+         mh->mh_First->mc_Next=NULL;
+         mh->mh_First->mc_Bytes=POOLSIZE;
+         mh->mh_Free=POOLSIZE;
+         {
+             \* Use the pool *\
+             UBYTE *mem1,*mem2;
+             mem1=Allocate(mh,1000);
+             mem2=Allocate(mh,2000);
+             \* Do something with memory... *\
+         }
+         \* Free everything at once *\
+         FreeMem(mh,sizeof(struct MemHeader)+POOLSIZE);
+     }
+
+
+Notes
+~~~~~
+::
+
+     The memory is aligned to sizeof(struct MemChunk). All requests
+     are rounded up to a multiple of that size.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     Deallocate()
+
+
+--------------
+
+AttemptSemaphore
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG AttemptSemaphore(
+         struct SignalSemaphore * sigSem
+ );
+
+Function
+~~~~~~~~
+::
+
+     Tries to get an exclusive lock on a signal semaphore. If the semaphore
+     is already in use by another task this function does not wait but
+     return false instead.
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - Pointer so semaphore structure.
+
+
+Result
+~~~~~~
+::
+
+     TRUE if the semaphore could be obtained, FALSE otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     The lock must be freed with ReleaseSemaphore().
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ReleaseSemaphore()
+
+
+--------------
+
+AttemptSemaphoreShared
+======================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG AttemptSemaphoreShared(
+         struct SignalSemaphore * sigSem
+ );
+
+Function
+~~~~~~~~
+::
+
+     Tries to get a shared lock on a signal semaphore. If the lock cannot
+     be obtained false is returned. There may be more than one shared lock
+     at a time but an exclusive lock prevents all other locks. The lock
+     must be released with ReleaseSemaphore().
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - pointer to semaphore structure
+
+
+Result
+~~~~~~
+::
+
+     True if the semaphore could be obtained, false otherwise.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ReleaseSemaphore()
+
+
+--------------
+
+AvailMem
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG AvailMem(
+         ULONG attributes
+ );
+
+Function
+~~~~~~~~
+::
+
+     Return either the total available memory or the largest available
+     chunk of a given type of memory.
+
+
+Inputs
+~~~~~~
+::
+
+     attributes - The same attributes you would give to AllocMem().
+
+
+Result
+~~~~~~
+::
+
+     Either the total of the available memory or the largest chunk if
+     MEMF_LARGEST ist set in the attributes.
+
+
+Example
+~~~~~~~
+::
+
+     Print the total available memory.
+
+     printf("Free memory: %lu bytes\n",AvailMem(0));
+
+     Print the size of the largest chunk of chip memory.
+
+     printf("Largest chipmem chunk: %lu bytes\n",
+            AvailMem(MEMF_CHIP|MEMF_LARGEST));
+
+
+Notes
+~~~~~
+::
+
+     Due to the nature of multitasking the returned value may already
+     be obsolete if this function returns.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+CacheClearE
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void CacheClearE(
+         APTR address,
+         ULONG length,
+         ULONG caches
+ );
+
+Function
+~~~~~~~~
+::
+
+     Flush the contents of the CPU instruction or data caches. If some
+     of the cache contains dirty data, push it to memory first.
+
+     For most systems DMA will not effect processor caches. If *any*
+     external (non-processor) event changes system memory, you MUST
+     clear the cache. For example:
+
+         DMA
+         Code relocation to run at a different address
+         Building jump tables
+         Loading code from disk
+
+
+Inputs
+~~~~~~
+::
+
+     address -   Address to start the operation. This address may be
+                 rounded DOWN due to hardware granularity.
+     length  -   Length of the memory to flush. This will be rounded
+                 up, of $FFFFFFFF to indicate that all addresses
+                 should be cleared.
+     caches  -   Bit flags to indicate which caches should be cleared
+
+                     CACRF_ClearI    -   Clear the instruction cache
+                     CACRF_ClearD    -   Clear the data cache
+
+                 All other bits are reserved.
+
+
+Result
+~~~~~~
+::
+
+     The caches will be flushed.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     It is possible that on some systems the entire cache will be
+     even if this was not the specific request.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CacheClearU(), CacheControl()
+
+
+--------------
+
+CacheClearU
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void CacheClearU(
+ );
+
+Function
+~~~~~~~~
+::
+
+     Flush the entire contents of the CPU instruction and data caches.
+     If some of the cache contains dirty data, push it to memory first.
+
+     For most systems DMA will not effect processor caches. If *any*
+     external (non-processor) event changes system memory, you MUST
+     clear the cache. For example:
+
+         DMA
+         Code relocation to run at a different address
+         Building jump tables
+         Loading code from disk
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+     The caches will be flushed.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     It is possible that on some systems the entire cache will be
+     even if this was not the specific request.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CacheClearE(), CacheControl(), CachePreDMA(), CachePostDMA()
+
+
+--------------
+
+CacheControl
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG CacheControl(
+         ULONG cacheBits,
+         ULONG cacheMask
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will provide global control of all the processor
+     instruction and data caches. It is not possible to have per
+     task control.
+
+     The actions undertaken by this function are very CPU dependant,
+     however the actions performed will match the specified options
+     as close as is possible.
+
+     The commands currently defined in the include file exec/execbase.h
+     are closely related to the cache control register of the Motorola
+     MC68030 CPU.
+
+
+Inputs
+~~~~~~
+::
+
+     cacheBits   -   The new state of the bits
+     cacheMask   -   A mask of the bits you wish to change.
+
+
+Result
+~~~~~~
+::
+
+     oldBits     -   The complete value of the cache control bits
+                     prior to the call of this function.
+
+     Your requested actions will have been performed. As a side effect
+     this function will also cause the caches to be cleared.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     On CPU's without a separate instruction and data cache, these will
+     be considered as equal.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CacheClearE(), CacheClearU()
+
+
+--------------
+
+CachePostDMA
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void CachePostDMA(
+         APTR address,
+         ULONG * length,
+         ULONG flags
+ );
+
+Function
+~~~~~~~~
+::
+
+     Do everything necessary to make CPU caches aware that a DMA has
+     happened.
+
+
+Inputs
+~~~~~~
+::
+
+     address - Virtual address of memory affected by the DMA
+     *length - Number of bytes affected
+     flags   - DMA_NoModify    - Indicate that the memory did not change.
+               DMA_ReadFromRAM - Indicate that the DMA goes from RAM
+                                 to the device. Set this bit in
+                                 both calls.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     DMA must follow a call to CachePreDMA() and must be followed
+     by a call to CachePostDMA().
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CachePreDMA()
+
+
+--------------
+
+CachePreDMA
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR CachePreDMA(
+         APTR address,
+         ULONG * length,
+         ULONG flags
+ );
+
+Function
+~~~~~~~~
+::
+
+     Do everything necessary to make CPU caches aware that a DMA
+     will happen. Virtual memory systems will make it possible
+     that your memory is not at one block and not at the address
+     you thought. This function gives you all the information
+     you need to split the DMA request up and to convert virtual
+     to physical addresses.
+
+
+Inputs
+~~~~~~
+::
+
+     address - Virtual address of memory affected by the DMA
+     *length - Number of bytes affected
+     flags   - DMA_Continue    - This is a call to continue a
+                                 request that was broken up.
+               DMA_ReadFromRAM - Indicate that the DMA goes from
+                                 RAM to the device. Set this bit
+                                 in both calls.
+
+
+Result
+~~~~~~
+::
+
+     The physical address in memory.
+     *length contains the number of contiguous bytes in physical
+     memory.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     DMA must follow a call to CachePreDMA() and must be followed
+     by a call to CachePostDMA().
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CachePostDMA()
+
+
+--------------
+
+Cause
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ void Cause(
+         struct Interrupt * softint
+ );
+
+Function
+~~~~~~~~
+::
+
+     Schedule a software interrupt to occur. If the processor is
+     currently running a user task, then the software interrupt will
+     prempt the current task and run itself. From a real interrupt, it
+     will queue the software interrupt for a later time.
+
+     Software interrupts are useful from hardware interrupts if you
+     wish to defer your processing down to a lower level. They can
+     also be used in some special cases of device I/O. The timer.device
+     and audio.device allow software interrupt driven timing and
+     audio output respectively.
+
+     Software interrupts are restricted to 5 different priority levels,
+     +32, +16, 0, -16, -32.
+
+     Software interrupts can only be scheduled once.
+
+     The software interrupt is called with the following prototype:
+
+     AROS_UFH3(void, YourIntCode,
+         AROS_UFHA(APTR, interruptData, A1),
+         AROS_UFHA(APTR, interruptCode, A5),
+         AROS_UFHA(struct ExecBase *, SysBase, A6))
+
+     The interruptData is the value of the is_Data field, interruptCode
+     is the value of the is_Code field - it is included for historical
+     and compatibility reasons. You can ignore the value of interruptCode,
+     but you must declare it.
+
+
+Inputs
+~~~~~~
+::
+
+     softint     -   The interrupt you wish to schedule. When setting up
+                     you should set the type of the interrupt to either
+                     NT_INTERRUPT or NT_UNKNOWN.
+
+
+Result
+~~~~~~
+::
+
+     The software interrupt will be delivered, or queued for later
+     delivery.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     No bounds checking on the software interrupt priority is done.
+     Passing a bad priority to the system can have a strange effect.
+
+
+Bugs
+~~~~
+::
+
+     Older versions of the Amiga operating system require that the
+     software interrupts preserve the A6 register.
+
+     Software interrupts which are added from a software interrupt of
+     lower priority may not be called immediately.
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+CheckIO
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ struct IORequest * CheckIO(
+         struct IORequest * iORequest
+ );
+
+Function
+~~~~~~~~
+::
+
+     Check if an I/O request is completed.
+
+
+Inputs
+~~~~~~
+::
+
+     iORequest - Pointer to iorequest structure.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to the iorequest structure or NULL if the device is still
+     at work.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenDevice(), CloseDevice(), DoIO(), SendIO(), AbortIO(), WaitIO()
+
+
+--------------
+
+ChildFree
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void ChildFree(
+         APTR tid
+ );
+
+Function
+~~~~~~~~
+::
+
+     Clean up after a child process.
+
+
+Inputs
+~~~~~~
+::
+
+     tid     --  Id of the child to clean up. This is not the same as
+                 the Task pointer.
+
+
+Result
+~~~~~~
+::
+
+     The child will be freed.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Calling ChildFree() on a running child is likely to crash your
+     system badly.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ChildOrphan
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ChildOrphan(
+         APTR tid
+ );
+
+Function
+~~~~~~~~
+::
+
+     ChildOrphan() will detach the specified task from the its parent
+     task child task tree. This is useful if the parent task will be
+     exiting, and no longer needs to be told about child task events.
+
+     Note that the default Task finaliser will orphan any remaining
+     children when the task exits. This function can be used if you just
+     do not wish to be told about a particular task.
+
+
+Inputs
+~~~~~~
+::
+
+     tid     --  The ID of the task to orphan, or 0 for all tasks. Note
+                 that this is NOT the pointer to the task.
+
+
+Result
+~~~~~~
+::
+
+     Will return 0 on success or CHILD_* on an error.
+
+     The child/children will no longer participate in child task
+     actions.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ChildStatus
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ChildStatus(
+         APTR tid
+ );
+
+Function
+~~~~~~~~
+::
+
+     Return the status of a child task. This allows the Task to
+     determine whether a particular child task is still running or not.
+
+
+Inputs
+~~~~~~
+::
+
+     tid     --  The ID of the task to examine. Note that this is _NOT_
+                 a task pointer.
+
+
+Result
+~~~~~~
+::
+
+     One of the CHILD_* values.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ChildWait
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ IPTR ChildWait(
+         APTR tid
+ );
+
+Function
+~~~~~~~~
+::
+
+     Wait for either a specific child task, or any child task to finish.
+     If you specify tid = 0, then this call will return when any child
+     task exits, otherwise it will not return until the requested task
+     finishes.
+
+     Note that the tid is NOT the task control block (ie struct Task *),
+     rather it is the value of the ETask et_UniqueID field. Passing in a
+     Task pointer will cause your Task to deadlock.
+
+     You must call ChildFree() on the returned task before calling
+     ChildWait() again. Ie.
+
+         struct ETask *et;
+
+         et = ChildWait(0);
+         ChildFree(et->et_UniqueID);
+
+
+Inputs
+~~~~~~
+::
+
+     tid -   The UniqueID of a task.
+
+
+Result
+~~~~~~
+::
+
+     Returns either the ETask structure of the child, or one of the
+     CHILD_* values on error.
+
+     This allows you to work out which of the children has exited.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Calling ChildWait() on a task that isn't your child will result in
+     a deadlock.
+
+
+Bugs
+~~~~
+::
+
+     Be careful with the return result of this function.
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+CloseDevice
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void CloseDevice(
+         struct IORequest * iORequest
+ );
+
+Function
+~~~~~~~~
+::
+
+     Closes a previously opened device. Any outstanding I/O requests must
+     be finished. It is safe to call CloseDevice with a cleared iorequest
+     structure or one that failed to open.
+
+
+Inputs
+~~~~~~
+::
+
+     iORequest - Pointer to iorequest structure.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenDevice().
+
+
+--------------
+
+CloseLibrary
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void CloseLibrary(
+         struct Library * library
+ );
+
+Function
+~~~~~~~~
+::
+
+     Closes a previously opened library. It is legal to call this function
+     with a NULL pointer.
+
+
+Inputs
+~~~~~~
+::
+
+     library - Pointer to library structure or NULL.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenLibrary().
+
+
+--------------
+
+ColdReboot
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void ColdReboot(
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will reboot the computer.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     This function does not return.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     It can be quite harmful to call this function. It may be possible that
+     you will lose data from other tasks not having saved, or disk buffers
+     not being flushed. Plus you could annoy the (other) users.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+CopyMem
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void CopyMem(
+         CONST_APTR source,
+         APTR dest,
+         ULONG size
+ );
+
+Function
+~~~~~~~~
+::
+
+     Copy some memory from one destination in memory to another using
+     a fast copying method.
+
+
+Inputs
+~~~~~~
+::
+
+     source - Pointer to source area
+     dest   - Pointer to destination
+     size   - number of bytes to copy
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     The source and destination area are not allowed to overlap.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CopyMemQuick()
+
+
+--------------
+
+CopyMemQuick
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void CopyMemQuick(
+         CONST_APTR source,
+         APTR dest,
+         ULONG size
+ );
+
+Function
+~~~~~~~~
+::
+
+     Copy some longwords from one destination in memory to another using
+     a fast copying method.
+
+
+Inputs
+~~~~~~
+::
+
+     source - Pointer to source area (must be ULONG aligned)
+     dest   - Pointer to destination (must be ULONG aligned)
+     size   - number of bytes to copy (must be a multiple of sizeof(ULONG))
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     The source and destination area are not allowed to overlap.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CopyMem()
+
+
+--------------
+
+CreateIORequest
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct IORequest * CreateIORequest(
+         struct MsgPort * ioReplyPort,
+         ULONG size
+ );
+
+Function
+~~~~~~~~
+::
+
+     Create an I/O request structure bound to a given messageport.
+     I/O requests are normally used to communicate with exec devices
+     but can be used as normal messages just as well.
+
+
+Inputs
+~~~~~~
+::
+
+     ioReplyPort - Pointer to that one of your messageports where
+                   the messages are replied to. A NULL port is legal
+                   but then the function fails always.
+     size        - Size of the message structure including the struct
+                   IORequest header. The minimal allowable size is that
+                   of a struct Message.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to a new I/O request structure or NULL if the function
+     failed.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+CreateMsgPort
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct MsgPort * CreateMsgPort(
+ );
+
+Function
+~~~~~~~~
+::
+
+     Create a new message port. A signal will be allocated and the message
+     port set to signal you task
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+     Pointer to messageport structure
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+CreatePool
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR CreatePool(
+         ULONG requirements,
+         ULONG puddleSize,
+         ULONG threshSize
+ );
+
+Function
+~~~~~~~~
+::
+
+     Create a private pool for memory allocations.
+
+
+Inputs
+~~~~~~
+::
+
+     requirements - The type of the memory
+     puddleSize   - The number of bytes that the pool expands
+                    if it is too small.
+     threshSize   - Allocations beyond the threshSize are given
+                    directly to the system. threshSize must be
+                    smaller than the puddleSize.
+
+
+Result
+~~~~~~
+::
+
+     A handle for the memory pool or NULL if the pool couldn't
+     be created
+
+
+Example
+~~~~~~~
+::
+
+     \* Get the handle to a private memory pool *\
+     po=CreatePool(MEMF_ANY,16384,8192);
+     if(po!=NULL)
+     {
+         \* Use the pool *\
+         UBYTE *mem1,*mem2;
+         mem1=AllocPooled(po,1000);
+         mem2=AllocPooled(po,2000);
+         \* Do something with the memory... *\
+
+         \* Free everything at once *\
+         DeletePool(po);
+     }
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     DeletePool(), AllocPooled(), FreePooled()
+
+
+--------------
+
+Deallocate
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void Deallocate(
+         struct MemHeader * freeList,
+         APTR memoryBlock,
+         ULONG byteSize
+ );
+
+Function
+~~~~~~~~
+::
+
+     Free block of memory associated with a given MemHandler structure.
+
+
+Inputs
+~~~~~~
+::
+
+     freeList    - Pointer to the MemHeader structure
+     memoryBlock - Pointer to the memory to be freed
+     byteSize    - Size of the block
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     The start and end borders of the block are aligned to
+     a multiple of sizeof(struct MemChunk) and to include the block.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     Allocate()
+
+
+--------------
+
+Debug
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ void Debug(
+         unsigned long flags
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+DeleteIORequest
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ void DeleteIORequest(
+         struct IORequest * iorequest
+ );
+
+Function
+~~~~~~~~
+::
+
+     Delete an I/O request created with CreateIORequest().
+
+
+Inputs
+~~~~~~
+::
+
+     iorequest - Pointer to I/O request structure or NULL.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+DeleteMsgPort
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void DeleteMsgPort(
+         struct MsgPort * port
+ );
+
+Function
+~~~~~~~~
+::
+
+     Delete a messageport allocated with CreateMsgPort(). The signal bit
+     is freed and the memory is given back to the memory pool. Remaining
+     messages are not replied. It is safe to call this function with a
+     NULL pointer.
+
+
+Inputs
+~~~~~~
+::
+
+     port - Pointer to messageport structure.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+DeletePool
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void DeletePool(
+         APTR poolHeader
+ );
+
+Function
+~~~~~~~~
+::
+
+     Delete a pool including all it's memory.
+
+
+Inputs
+~~~~~~
+::
+
+     poolHeader - The pool allocated with CreatePool() or NULL.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CreatePool(), AllocPooled(), FreePooled()
+
+
+--------------
+
+Disable
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void Disable(
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will prevent interrupts from occuring. You can
+     start the interrupts again with a call to Enable().
+
+     Note that calls to Disable() nest, and for every call to
+     Disable() you need a matching call to Enable().
+
+     ***** WARNING *****
+
+     Using this function is considered very harmful, and it is
+     not recommended to use this function for ** ANY ** reason.
+
+     It is quite possible to either crash the system, or to prevent
+     normal activities (disk/port i/o) from occuring.
+
+     Note: As taskswitching is driven by the interrupts subsystem,
+           this function has the side effect of disabling
+           multitasking.
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+     Interrupts will be disabled AFTER this call returns.
+
+
+Example
+~~~~~~~
+::
+
+     No you DEFINITELY don't want to use this function.
+
+
+Notes
+~~~~~
+::
+
+     This function preserves all registers.
+
+     To prevent deadlocks calling Wait() in disabled state breaks
+     the disable - thus interrupts may happen again.
+
+
+Bugs
+~~~~
+::
+
+     The only architecture that you can rely on the registers being
+     saved is on the Motorola mc68000 family.
+
+
+See also
+~~~~~~~~
+::
+
+     Forbid(), Permit(), Enable(), Wait()
+
+
+--------------
+
+DoIO
+====
+
+Synopsis
+~~~~~~~~
+::
+
+ BYTE DoIO(
+         struct IORequest * iORequest
+ );
+
+Function
+~~~~~~~~
+::
+
+     Start an I/O request by calling the devices's BeginIO() vector.
+     It waits until the request is complete.
+
+
+Inputs
+~~~~~~
+::
+
+     iORequest - Pointer to iorequest structure.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenDevice(), CloseDevice(), DoIO(), SendIO(), AbortIO(), WaitIO()
+
+
+--------------
+
+Enable
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ void Enable(
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will allow interrupts to occur after they have
+     been disabled by Disable().
+
+     Note that calls to Disable() nest, and for every call to
+     Disable() you need a matching call to Enable().
+
+     ***** WARNING *****
+
+     Using this function is considered very harmful, and it is
+     not recommended to use this function for ** ANY ** reason.
+
+     It is quite possible to either crash the system, or to prevent
+     normal activities (disk/port i/o) from occuring.
+
+     Note: As taskswitching is driven by the interrupts subsystem,
+           this function has the side effect of disabling
+           multitasking.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     Interrupts will be enabled again when this call returns.
+
+
+Example
+~~~~~~~
+::
+
+     No you DEFINITATELY don't want to use this function.
+
+
+Notes
+~~~~~
+::
+
+     This function preserves all registers.
+
+     To prevent deadlocks calling Wait() in disabled state breaks
+     the disable - thus interrupts may happen again.
+
+
+Bugs
+~~~~
+::
+
+     The only architecture that you can rely on the registers being
+     saved is on the Motorola mc68000 family.
+
+
+See also
+~~~~~~~~
+::
+
+     Forbid(), Permit(), Disable(), Wait()
+
+
+--------------
+
+Enqueue
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void Enqueue(
+         struct List * list,
+         struct Node * node
+ );
+
+Function
+~~~~~~~~
+::
+
+     Sort a node into a list. The sort-key is the field node->ln_Pri.
+     The node will be inserted into the list before the first node
+     with lower priority. This creates a FIFO queue for nodes with
+     the same priority.
+
+
+Inputs
+~~~~~~
+::
+
+     list - Insert into this list. The list has to be in descending
+             order in respect to the field ln_Pri of all nodes.
+     node - This node is to be inserted. Note that this has to
+             be a complete node and not a MinNode !
+
+
+Result
+~~~~~~
+::
+
+     The new node will be inserted before nodes with lower
+     priority.
+
+
+Example
+~~~~~~~
+::
+
+     struct List * list;
+     struct Node * node;
+
+     node->ln_Pri = 5;
+
+     // Sort the node at the correct place into the list
+     Enqueue (list, node);
+
+
+Notes
+~~~~~
+::
+
+     The list has to be in descending order in respect to the field
+     ln_Pri of all nodes.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FindName
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Node * FindName(
+         struct List * list,
+         const UBYTE * name
+ );
+
+Function
+~~~~~~~~
+::
+
+     Look for a node with a certain name in a list.
+
+
+Inputs
+~~~~~~
+::
+
+     list - Search this list.
+     name - This is the name to look for.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+     struct List * list;
+     struct Node * node;
+
+     // Look for a node with the name "Hello"
+     node = FindName (list, "Hello");
+
+
+Notes
+~~~~~
+::
+
+     The search is case-sensitive, so "Hello" will not find a node
+     named "hello".
+
+     The list must contain complete Nodes and no MinNodes.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FindPort
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct MsgPort * FindPort(
+         STRPTR name
+ );
+
+Function
+~~~~~~~~
+::
+
+     Look for a public messageport by name. This function doesn't
+     arbitrate for the port list and must be protected with a Forbid()
+     Permit() pair.
+
+
+Inputs
+~~~~~~
+::
+
+     port - Pointer to NUL terminated C string.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to struct MsgPort or NULL if there is no port of that name.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FindResident
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Resident * FindResident(
+         const UBYTE * name
+ );
+
+Function
+~~~~~~~~
+::
+
+     Search for a Resident module in the system resident list.
+
+
+Inputs
+~~~~~~
+::
+
+     name - pointer to the name of a Resident module to find
+
+
+Result
+~~~~~~
+::
+
+     pointer to the Resident module (struct Resident *), or null if
+     not found.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FindSemaphore
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct SignalSemaphore * FindSemaphore(
+         STRPTR name
+ );
+
+Function
+~~~~~~~~
+::
+
+     Find a semaphore with a given name in the system global semaphore list.
+     Note that this call doesn't arbitrate for the list - use Forbid() to
+     do this yourself.
+
+
+Inputs
+~~~~~~
+::
+
+     name - Pointer to name.
+
+
+Result
+~~~~~~
+::
+
+     Address of semaphore structure found or NULL.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FindTask
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Task * FindTask(
+         STRPTR name
+ );
+
+Function
+~~~~~~~~
+::
+
+     Find a task with a given name or get the address of the current task.
+     Finding the address of the current task is a very quick function
+     call, but finding a special task is a very CPU intensive instruction.
+     Note that generally a task may already be gone when this function
+     returns.
+
+
+Inputs
+~~~~~~
+::
+
+     name - Pointer to name or NULL for current task.
+
+
+Result
+~~~~~~
+::
+
+     Address of task structure found.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+Forbid
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ void Forbid(
+ );
+
+Function
+~~~~~~~~
+::
+
+     Forbid any further taskswitches until a matching call to Permit().
+     Naturally disabling taskswitches means:
+
+     THIS CALL IS DANGEROUS
+
+     Do not use it without thinking very well about it or better
+     do not use it at all. Most of the time you can live without
+     it by using semaphores or similar.
+
+     Calls to Forbid() nest, i.e. for each call to Forbid() you
+     need one call to Permit().
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     The multitasking state will be disabled AFTER this function
+     returns to the caller.
+
+
+Example
+~~~~~~~
+::
+
+     No you really don't want to use this function.
+
+
+Notes
+~~~~~
+::
+
+     This function preserves all registers.
+
+     To prevent deadlocks calling Wait() in forbidden state breaks
+     the forbid - thus taskswitches may happen again.
+
+
+Bugs
+~~~~
+::
+
+     The only architecture that you can rely on the registers being
+     saved is on the Motorola mc68000 family.
+
+
+See also
+~~~~~~~~
+::
+
+     Permit(), Disable(), Enable(), Wait()
+
+
+--------------
+
+FreeEntry
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeEntry(
+         struct MemList * entry
+ );
+
+Function
+~~~~~~~~
+::
+
+     Free some memory allocated with AllocEntry().
+
+
+Inputs
+~~~~~~
+::
+
+     entry - The MemList you got from AllocEntry().
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocEntry()
+
+
+--------------
+
+FreeMem
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeMem(
+         APTR memoryBlock,
+         ULONG byteSize
+ );
+
+Function
+~~~~~~~~
+::
+
+     Give a block of memory back to the system pool.
+
+
+Inputs
+~~~~~~
+::
+
+     memoryBlock - Pointer to the memory to be freed
+     byteSize    - Size of the block
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocMem()
+
+
+--------------
+
+FreePooled
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreePooled(
+         APTR poolHeader,
+         APTR memory,
+         ULONG memSize
+ );
+
+Function
+~~~~~~~~
+::
+
+     Free memory allocated out of a private memory pool.
+
+
+Inputs
+~~~~~~
+::
+
+     poolHeader - Handle of the memory pool
+     memory     - Pointer to the memory
+     memSize    - Size of the memory chunk
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CreatePool(), DeletePool(), AllocPooled()
+
+
+--------------
+
+FreeSignal
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeSignal(
+         LONG signalNum
+ );
+
+Function
+~~~~~~~~
+::
+
+     Free a signal allocated with AllocSignal().
+
+
+Inputs
+~~~~~~
+::
+
+     signalNum - Number of the signal to free or -1 to do nothing.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocSignal(), Signal(), Wait()
+
+
+--------------
+
+FreeTrap
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeTrap(
+         long trapNum
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+FreeVec
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void FreeVec(
+         APTR memoryBlock
+ );
+
+Function
+~~~~~~~~
+::
+
+     Free some memory previously allocated with AllocVec().
+
+
+Inputs
+~~~~~~
+::
+
+     memoryBlock - The memory to be freed. It is safe to try to free a NULL
+                   pointer.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocVec()
+
+
+--------------
+
+GetCC
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ UWORD GetCC(
+ );
+
+Function
+~~~~~~~~
+::
+
+     Read the contents of the CPU condition code register in a system
+     independant way. The flags return will be in the same format as
+     the Motorola MC680x0 family of microprocessors.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     The CPU condition codes or ~0ul if this function has not been
+     implemented.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     This function may not be implemented on platforms other than
+     Motorola mc680x0 processors.
+
+
+See also
+~~~~~~~~
+::
+
+     SetSR()
+
+
+--------------
+
+GetMsg
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Message * GetMsg(
+         struct MsgPort * port
+ );
+
+Function
+~~~~~~~~
+::
+
+     Get a message from a given messageport. This function doesn't wait
+     and returns NULL if the messageport is empty. Therefore it's
+     generally a good idea to WaitPort() or Wait() on the given port first.
+
+
+Inputs
+~~~~~~
+::
+
+     port - Pointer to messageport
+
+
+Result
+~~~~~~
+::
+
+     Pointer to message removed from the port.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     WaitPort(), PutMsg()
+
+
+--------------
+
+InitCode
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void InitCode(
+         ULONG startClass,
+         ULONG version
+ );
+
+Function
+~~~~~~~~
+::
+
+     Traverse the ResModules array and InitResident() all modules with
+     versions greater than or equal to version, and of a class equal to
+     startClass.
+
+
+Inputs
+~~~~~~
+::
+
+     startClass - which type of module to start
+     version - a version number
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+InitResident
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR InitResident(
+         struct Resident * resident,
+         BPTR segList
+ );
+
+Function
+~~~~~~~~
+::
+
+     Test the resident structure and build the library or device
+     with the information given therein. The Init() vector is
+     called and the base address returned.
+
+     The Init() vector is called with the following registers:
+             D0 = 0
+             A0 = segList
+             A6 = ExecBase
+
+
+Inputs
+~~~~~~
+::
+
+     resident - Pointer to resident structure.
+     segList  - Pointer to loaded module, 0 for resident modules.
+
+
+Result
+~~~~~~
+::
+
+     A pointer returned from the Init() vector. Usually this is the
+     base of the library/device/resource. NULL for failure.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     AUTOINIT modules are automatically added to the correct exec list.
+     Non AUTOINIT modules have to do all the work themselves.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+InitSemaphore
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void InitSemaphore(
+         struct SignalSemaphore * sigSem
+ );
+
+Function
+~~~~~~~~
+::
+
+     Prepares a semaphore structure for use by the exec semaphore system,
+     i.e. this function must be called after allocating the semaphore and
+     before using it or the semaphore functions will fail.
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - Pointer to semaphore structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Semaphores are shared between the tasks that use them and must
+     therefore lie in public (or at least shared) memory.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+InitStruct
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void InitStruct(
+         APTR initTable,
+         APTR memory,
+         ULONG size
+ );
+
+Function
+~~~~~~~~
+::
+
+     Initialize some library base or other structure depending on the
+     information in the init table. The init table consists of
+     instructions starting with an action byte followed by more
+     information. The instruction byte looks like:
+
+     iisscccc where ii is the instruction code:
+                       0 - copy following c+1 elements
+                       1 - repeat following element c+1 times
+                       2 - take next byte as offset, then copy
+                       3 - take the next 3 bytes (in the machine's
+                           particular byte ordering) as offset, then
+                           copy
+                    ss is the element size
+                       0 - LONGs
+                       1 - WORDs
+                       2 - BYTEs
+                    cccc is the element count-1
+
+     Instruction bytes must follow the same alignement restrictions as LONGs,
+     the following elements are aligned to their particular restrictions.
+
+     A 0 instruction ends the init table.
+
+
+Inputs
+~~~~~~
+::
+
+     initTable - Pointer to init table.
+     memory    - Pointer to uninitialized structure.
+     size      - Size of memory area to 0 out before decoding or 0
+                 for no filling.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+Insert
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ void Insert(
+         struct List * list,
+         struct Node * node,
+         struct Node * pred
+ );
+
+Function
+~~~~~~~~
+::
+
+     Insert Node node after pred in list.
+
+
+Inputs
+~~~~~~
+::
+
+     list - The list to insert the node into
+     node - This node is to be inserted
+     pred - Insert after this node. If this is NULL, node is inserted
+             as the first node (same as AddHead()).
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+     struct List * list;
+     struct Node * pred, * node;
+
+     // Insert Node node as second node in list
+     pred = GetHead (list);
+     Insert (list, node, pred);
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddHead(), AddTail(), Enqueue(), RemHead(), Remove(), RemTail(),
+     "AROS: Exec Lists".
+
+
+--------------
+
+MakeFunctions
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG MakeFunctions(
+         APTR target,
+         APTR functionArray,
+         APTR funcDispBase
+ );
+
+Function
+~~~~~~~~
+::
+
+     Creates the jumptable for a shared library and flushes the processor's
+     instruction cache. Does not checksum the library.
+
+
+Inputs
+~~~~~~
+::
+
+     target        - The highest byte +1 of the jumptable. Typically
+                     this is the library's base address.
+     functionArray - Pointer to either an array of function pointers or
+                     an array of WORD displacements to a given location
+                     in memory. A value of -1 terminates the array in both
+                     cases.
+     funcDispBase  - The base location for WORD displacements or NULL
+                     for function pointers.
+
+
+Result
+~~~~~~
+::
+
+     Size of the jumptable.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+MakeLibrary
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Library * MakeLibrary(
+         APTR funcInit,
+         APTR structInit,
+         ULONG_FUNC libInit,
+         ULONG dataSize,
+         BPTR segList
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocates memory for the library, builds it and calls the library's
+     init vector. Generally this function is for internal use and for
+     use by library programmers that don't want to use the automatic
+     initialization procedure.
+
+
+Inputs
+~~~~~~
+::
+
+     funcInit   - Either a pointer to an array of function offsets
+                  (starts with -1, relative to funcInit) or to an array
+                  of absolute function pointers.
+     structInit - Pointer to a InitStruct() data region or NULL.
+     libInit    - The library's init vector or NULL.
+                  The init vector is called with the library address (D0),
+                  the segList (A0) and ExecBase (A6) as arguments.
+                  If the init fails the init code has to free the base memory
+                  and return NULL (the library address for success).
+     dataSize   - Size of the library structure including system structures.
+                  Must be at least sizeof(struct Library).
+     segList    - BCPL pointer to the library segments. Used to free the
+                  library later.
+
+
+Result
+~~~~~~
+::
+
+     The library base address or NULL.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     The library base is always aligned to the maximum of sizeof(LONG)
+     and double alignment restrictions.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddLibrary(), RemLibrary(), MakeFunctions(), InitStruct(), SumLibrary().
+
+
+--------------
+
+NewAddTask
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR NewAddTask(
+         struct Task * task,
+         APTR initialPC,
+         APTR finalPC,
+         struct TagItem * tagList
+ );
+
+Function
+~~~~~~~~
+::
+
+     Add a new task to the system. If the new task has the highest
+     priority of all and task switches are allowed it will be started
+     immediately.
+
+     You must initialise certain fields, and allocate a stack before
+     calling this function. The fields that must be initialised are:
+     tc_SPLower, tc_SPUpper, tc_SPReg, and the tc_Node structure.
+
+     If any other fields are initialised to zero, then they will be
+     filled in with the system defaults.
+
+     The value of tc_SPReg will be used as the location for the stack
+     pointer. You can place any arguments you wish to pass to the Task
+     onto the stack before calling AddTask(). However note that you may
+     need to consider the stack direction on your processor.
+
+     Memory can be added to the tc_MemEntry list and will be freed when
+     the task dies. The new task's registers are set to 0.
+
+
+Inputs
+~~~~~~
+::
+
+     task      - Pointer to task structure.
+     initialPC - Entry point for the new task.
+     finalPC   - Routine that is called if the initialPC() function
+                 returns. A NULL pointer installs the default finalizer.
+
+
+Result
+~~~~~~
+::
+
+     The address of the new task or NULL if the operation failed.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     RemTask()
+
+
+--------------
+
+NewAllocEntry
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL NewAllocEntry(
+         struct MemList * entry,
+         struct MemList ** return_entry,
+         ULONG * return_flags
+ );
+
+Function
+~~~~~~~~
+::
+
+     Allocate a number of memory blocks through a MemList structure.
+
+
+Inputs
+~~~~~~
+::
+
+     entry        - The MemList with one MemEntry for each block you want to get
+     return_entry - Pointer to struct MemList *variable where the address
+                    of the MemList allocated by this function will be stored.
+     return_flags - Pointer to ULONG variable where upon failure the type of
+                    memory that could not be allocated is stored. You may pass
+                    NULL here.
+
+
+Result
+~~~~~~
+::
+
+     TRUE if the allocation was successful. In this case *return_entry will
+     be set to the address of the allocated MemList. *return_flags will be set
+     to 0.
+     
+     FALSE if the allocation failed. In this case *return_entry will be set
+     to NULL and *return_flags will be set to contain the type of memory that
+     couldn't be allocated.
+     
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocEntry(), FreeEntry()
+
+
+--------------
+
+ObtainQuickVector
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ObtainQuickVector(
+         APTR interruptCode
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ObtainSemaphore
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ void ObtainSemaphore(
+         struct SignalSemaphore * sigSem
+ );
+
+Function
+~~~~~~~~
+::
+
+     Obtain an exclusive lock on a semaphore. If the semaphore is already
+     in use by another task this function will wait until the semaphore
+     becomes free.
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - Pointer to semaphore structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function preserves all registers.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ReleaseSemaphore()
+
+
+--------------
+
+ObtainSemaphoreList
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ void ObtainSemaphoreList(
+         struct List * sigSem
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function takes a list of semaphores and locks all of them at
+     once. It is only possible for one task to attempt to lock all the
+     semaphores at once (since it uses the ss_MultipleLink field), so
+     you will need to protect the entire list (with another semaphore
+     perhaps?).
+
+     If somebody attempts to lock more than one semaphore on this list
+     with ObtainSemaphore() it is possible for a deadlock to occur due
+     to two tasks waiting for a semaphore that the other has obtained.
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - pointer to list full of semaphores
+
+
+Result
+~~~~~~
+::
+
+     The entire semaphore list will be locked.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ObtainSemaphoreShared
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+ void ObtainSemaphoreShared(
+         struct SignalSemaphore * sigSem
+ );
+
+Function
+~~~~~~~~
+::
+
+     Get a shared lock on a semaphore. If the lock cannot be obtained
+     immediately this function waits. There may be more than one shared
+     locks at the same time but only one exclusive one. An exclusive
+     lock prevents shared locks. Shared locks are released with
+     ReleaseSemaphore().
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - Pointer to semaphore structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function preserves all registers.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     ReleaseSemaphore()
+
+
+--------------
+
+OldOpenLibrary
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Library * OldOpenLibrary(
+         UBYTE * libName
+ );
+
+Function
+~~~~~~~~
+::
+
+     This is the same function as OpenLibrary(), only that it uses 0 as
+     version number. This function is obsolete. Don't use it.
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenLibrary().
+
+
+--------------
+
+OpenDevice
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ BYTE OpenDevice(
+         CONST_STRPTR devName,
+         ULONG unitNumber,
+         struct IORequest * iORequest,
+         ULONG flags
+ );
+
+Function
+~~~~~~~~
+::
+
+     Tries to open a device and fill the iORequest structure.  An error
+     is returned if this fails, 0 if all went well.
+
+     If the device doesn't exist in the current system device list, then
+     first the system ROMtag module list, then if the DOS is running,
+     then the DEVS: directory will be tried.
+
+
+Inputs
+~~~~~~
+::
+
+     devName    - Pointer to the devices's name.
+     unitNumber - The unit number. Most often 0.
+     iORequest  - Pointer do device specific information.
+                  Will be filled out by the device.
+                  Must lie in public (or at least shared) memory.
+     flags      - Some flags to give to the device.
+
+
+Result
+~~~~~~
+::
+
+     Error code or 0 if all went well. The same value can be found
+     in the io_Error field.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenDevice()
+
+
+--------------
+
+OpenLibrary
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Library * OpenLibrary(
+         CONST_STRPTR libName,
+         ULONG version
+ );
+
+Function
+~~~~~~~~
+::
+
+     Opens a library given by name and revision. If the library does not
+     exist in the current system shared library list, the first the
+     system ROMTag module list is tried. If this fails, and the DOS is
+     running, then the library will be loaded from disk.
+
+
+Inputs
+~~~~~~
+::
+
+     libName - Pointer to the library's name.
+     version - the library's version number.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to library structure or NULL.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     CloseLibrary().
+
+
+--------------
+
+OpenResource
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR OpenResource(
+         CONST_STRPTR resName
+ );
+
+Function
+~~~~~~~~
+::
+
+     Return a pointer to a previously installed resource addressed by
+     name.  If this name can't be found NULL is returned.
+
+
+Inputs
+~~~~~~
+::
+
+     libName - Pointer to the resource's name.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to resource or NULL.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddResource(), RemResource()
+
+
+--------------
+
+Permit
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ void Permit(
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function will reactivate the task dispatcher after a call
+     to Forbid(). Note that calls to Forbid() nest, and for every
+     call to Forbid() you need a matching call to Permit().
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     Multitasking will be re-enabled.
+
+
+Example
+~~~~~~~
+::
+
+     No you really don't want to use this function.
+
+
+Notes
+~~~~~
+::
+
+     This function preserves all registers.
+
+     To prevent deadlocks calling Wait() in forbidden state breaks
+     the forbid - thus taskswitches may happen again.
+
+
+Bugs
+~~~~
+::
+
+     The only architecture that you can rely on the registers being
+     saved is on the Motorola mc68000 family.
+
+
+See also
+~~~~~~~~
+::
+
+     Forbid(), Disable(), Enable(), Wait()
+
+
+--------------
+
+Procure
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG Procure(
+         struct SignalSemaphore  * sigSem,
+         struct SemaphoreMessage * bidMsg
+ );
+
+Function
+~~~~~~~~
+::
+
+     Tries to get a lock on a semaphore in an asynchronous manner.
+     If the semaphore is not free this function will not wait but
+     just post a request to the semaphore. As soon as the semaphore is
+     available the bidMsg will return and make you owner of the semaphore.
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - pointer to semaphore structure
+     bidMsg - pointer to a struct SemaphoreMessage. This should lie in
+              public or at least shared memory.
+
+
+Result
+~~~~~~
+::
+
+     Principly none. Don't know. Just ignore it.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Locks obtained with Procure() must be released with Vacate().
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     Vacate()
+
+
+--------------
+
+PutMsg
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ void PutMsg(
+         struct MsgPort * port,
+         struct Message * message
+ );
+
+Function
+~~~~~~~~
+::
+
+     Sends a message to a given message port. Messages are not copied
+     from one task to another but must lie in shared memory instead.
+     Therefore the owner of the message may generally not reuse it before
+     it is returned. But this depends on the two tasks sharing the message.
+
+
+Inputs
+~~~~~~
+::
+
+     port    - Pointer to messageport.
+     message - Pointer to message.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     It is legal to send a message from within interrupts.
+
+     Messages may either trigger a signal at the owner of the messageport
+     or raise a software interrupt, depending on port->mp_Flags&PF_ACTION.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     WaitPort(), GetMsg()
+
+
+--------------
+
+RawDoFmt
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR RawDoFmt(
+         CONST_STRPTR FormatString,
+         APTR DataStream,
+         VOID_FUNC PutChProc,
+         APTR PutChData
+ );
+
+Function
+~~~~~~~~
+::
+
+     printf-style formatting function with callback hook.
+
+
+Inputs
+~~~~~~
+::
+
+     FormatString - Pointer to the format string with any of the following
+                    DataStream formatting options allowed:
+
+                    %[leftalign][minwidth.][maxwidth][size][type]
+
+                    leftalign - '-' means align left. Default: align right.
+                    minwidth  - minimum width of field. Defaults to 0.
+                    maxwidth  - maximum width of field (for strings only).
+                                Defaults to no limit.
+
+                    size      - 'w' means WORD.
+                                'l' means LONG.
+                                'i' means IPTR.
+
+                                defaults to WORD, if nothing is specified.
+
+                    type      - 'b' BCPL string. A BPTR to a one byte
+                                    byte count followed by the characters.
+                                'c' single character.
+                                'd' signed decimal number.
+                                's' C string. NULL terminated.
+                                'u' unsigned decimal number.
+                                'x' unsigned hexdecimal number.
+
+                    As an AROS extension, the following special options
+                    are allowed:
+
+                    %[type]
+
+                    type - 'v' means that the current data in the DataStream is a pointer
+                               to a an object of type va_list, as defined in <stdarg.h>.
+
+                               From this point on the data is fetched from the va_list
+                               and not from the original DataStream array anymore.
+
+                               If the pointer is NULL, however, then nothing changes
+                               and data fetching proceeds as if no %v had been specified
+                               at all.
+
+                         - 'V' it's like 'v', but requires an additional parameter which,
+                               if non NULL, instructs RawDoFmt to switch to another
+                               format string, whose address is the value of the parameter.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to the rest of the DataStream.
+
+     NOTE: If the format string contains one of the va_list-related options, then
+           the result will be the same pointer to the va_list object
+
+
+Example
+~~~~~~~
+::
+
+                               to use this option.
+
+     DataStream   - Pointer to a zone of memory containing the data. Data has to be
+                    WORD aligned.
+
+     PutChProc    - Callback function. In caseCalled for each character, including
+                    the NULL terminator. The fuction is called as follow:
+
+                    AROS_UFC2(void, PutChProc,
+                              AROS_UFCA(UBYTE, char,      D0),
+                              AROS_UFCA(APTR , PutChData, A3));
+
+     PutChData    - Data propagated to each call of the callback hook.
+
+     Build a sprintf style function:
+
+         static void callback(UBYTE chr __reg(d0), UBYTE **data __reg(a3))
+         {
+            *(*data)++=chr;
+         }
+
+         void my_sprintf(UBYTE *buffer, UBYTE *format, ...)
+         {
+             RawDoFmt(format, &format+1, &callback, &buffer);
+         }
+
+     The above example makes the assumption that arguments are
+     all passed on the stack, which is true on some architectures
+     but is not on some others. In the general case you should NOT
+     use that approach, you should rather use the %v or %V options
+     and the standard <stdarg.h> facilities, like this:
+
+         #include <stdarg.h>
+
+         static void callback(UBYTE chr __reg(d0), UBYTE **data __reg(a3))
+         {
+            *(*data)++=chr;
+         }
+
+         void my_sprintf(UBYTE *buffer, UBYTE *format, ...)
+         {
+             va_list args;
+             va_start(args, format);
+
+             APTR raw_args[] = { &args, format };
+
+             RawDoFmt("%V", raw_args, &callback, &buffer);
+
+             va_end(args);
+         }
+
+
+Notes
+~~~~~
+::
+
+     The field size defaults to words which may be different from the
+     default integer size of the compiler.
+
+
+Bugs
+~~~~
+::
+
+     PutChData cannot be modified from the callback hook on non-m68k
+     systems.
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ReleaseSemaphore
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ void ReleaseSemaphore(
+         struct SignalSemaphore * sigSem
+ );
+
+Function
+~~~~~~~~
+::
+
+     Releases a lock on a semaphore obtained with either ObtainSemaphore(),
+     ObtainSemaphoreShared(), AttemptSemaphore or AttemptSemaphoreShared().
+     Each call to one of those functions must be accompanied with one
+     call to ReleasSemaphore().
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - pointer to semaphore structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function preserves all registers.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ReleaseSemaphoreList
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ void ReleaseSemaphoreList(
+         struct List * sigSem
+ );
+
+Function
+~~~~~~~~
+::
+
+     This function releases all semaphores in the list at once.
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - pointer to list full of semaphores
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+RemDevice
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemDevice(
+         struct Device * device
+ );
+
+Function
+~~~~~~~~
+::
+
+     Calls the given device's expunge vector, thus trying to delete it.
+     The device may refuse to do so and still be open after this call.
+
+
+Inputs
+~~~~~~
+::
+
+     device - Pointer to the device structure.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddDevice(), OpenDevice(), CloseDevice().
+
+
+--------------
+
+RemHead
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Node * RemHead(
+         struct List * list
+ );
+
+Function
+~~~~~~~~
+::
+
+     Remove the first node from a list.
+
+
+Inputs
+~~~~~~
+::
+
+     list - Remove the node from this list
+
+
+Result
+~~~~~~
+::
+
+     The node that has been removed.
+
+
+Example
+~~~~~~~
+::
+
+     struct List * list;
+     struct Node * head;
+
+     // Remove node and return it
+     head = RemHead (list);
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+RemIntServer
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemIntServer(
+         ULONG intNumber,
+         struct Interrupt * interrupt
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+RemLibrary
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemLibrary(
+         struct Library * library
+ );
+
+Function
+~~~~~~~~
+::
+
+     Calls the given library's expunge vector, thus trying to delete it.
+     The library may refuse to do so and still be open after this call.
+
+
+Inputs
+~~~~~~
+::
+
+     library - Pointer to the library structure.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddLibrary(), MakeLibrary(), MakeFunctions(), InitStruct(), SumLibrary().
+
+
+--------------
+
+RemMemHandler
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemMemHandler(
+         struct Interrupt * memHandler
+ );
+
+Function
+~~~~~~~~
+::
+
+     Remove some function added with AddMemHandler again.
+
+
+Inputs
+~~~~~~
+::
+
+     memHandler - The same Interrupt structure you gave to AddMemHandler().
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+RemPort
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemPort(
+         struct MsgPort * port
+ );
+
+Function
+~~~~~~~~
+::
+
+     Remove a public port from the public port list to make it private
+     again. Any further attempts to find this port in the public port
+     list will fail.
+
+
+Inputs
+~~~~~~
+::
+
+     port - Pointer to messageport structure.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+RemResource
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemResource(
+         APTR resource
+ );
+
+Function
+~~~~~~~~
+::
+
+     Removes a resource from the system resource list.
+
+
+Inputs
+~~~~~~
+::
+
+     resource - Pointer to the resource.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddResource(), OpenResource()
+
+
+--------------
+
+RemSemaphore
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemSemaphore(
+         struct SignalSemaphore * sigSem
+ );
+
+Function
+~~~~~~~~
+::
+
+     Removes a semaphore from the system public semaphore list.
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - Pointer to semaphore structure
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Semaphores are shared between the tasks that use them and must
+     therefore lie in public (or at least shared) memory.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+RemTail
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Node * RemTail(
+         struct List * list
+ );
+
+Function
+~~~~~~~~
+::
+
+     Remove the last node from a list.
+
+
+Inputs
+~~~~~~
+::
+
+     list - Remove the node from this list
+
+
+Result
+~~~~~~
+::
+
+     The node that has been removed.
+
+
+Example
+~~~~~~~
+::
+
+     struct List * list;
+     struct Node * tail;
+
+     // Remove node and return it
+     tail = RemTail (list);
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+RemTask
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+ void RemTask(
+         struct Task * task
+ );
+
+Function
+~~~~~~~~
+::
+
+     Remove a task from the task lists. All memory in the tc_MemEntry list
+     is freed and a rescedule is done. It's safe to call RemTask() out
+     of Forbid() or Disable().
+     This function is one way to get rid of the current task. The other way
+     is to fall through the end of the entry point.
+
+
+Inputs
+~~~~~~
+::
+
+     task - Task to be removed. NULL means current task.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddTask()
+
+
+--------------
+
+Remove
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ void Remove(
+         struct Node * node
+ );
+
+Function
+~~~~~~~~
+::
+
+     Remove a node from a list.
+
+
+Inputs
+~~~~~~
+::
+
+     node - This node to be removed.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+     struct Node * node;
+
+     // Remove node
+     Remove (node);
+
+
+Notes
+~~~~~
+::
+
+     There is no need to specify the list but the node must be in
+     a list !
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+ReplyMsg
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ void ReplyMsg(
+         struct Message * message
+ );
+
+Function
+~~~~~~~~
+::
+
+     Send a message back to where it came from. It's generally not
+     wise to access the fields of a message after it has been replied.
+
+
+Inputs
+~~~~~~
+::
+
+     message - a message got with GetMsg().
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     WaitPort(), GetMsg(), PutMsg()
+
+
+--------------
+
+SendIO
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ void SendIO(
+         struct IORequest * iORequest
+ );
+
+Function
+~~~~~~~~
+::
+
+     Start an asynchronous I/O request by calling the device's BeginIO()
+     vector. After sending the messages asynchronously you can wait for
+     the message to be replied at the I/O reply port.
+
+
+Inputs
+~~~~~~
+::
+
+     iORequest - Pointer to iorequest structure.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenDevice(), CloseDevice(), DoIO(), CheckIO(), AbortIO(), WaitIO()
+
+
+--------------
+
+SetExcept
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG SetExcept(
+         ULONG newSignals,
+         ULONG signalSet
+ );
+
+Function
+~~~~~~~~
+::
+
+     Change the mask of signals causing a task exception.
+
+
+Inputs
+~~~~~~
+::
+
+     newSignals - Set of signals causing the exception.
+     signalSet  - Mask of affected signals.
+
+
+Result
+~~~~~~
+::
+
+     Old mask of signals causing a task exception.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocSignal(), FreeSignal(), Wait(), SetSignal(), Signal()
+
+
+--------------
+
+SetFunction
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR SetFunction(
+         struct Library * library,
+         LONG funcOffset,
+         APTR newFunction
+ );
+
+Function
+~~~~~~~~
+::
+
+     Replaces a certain jumptable entry with another one. This function only
+     Forbid()s taskswitching but doesn't Disable() interrupts. You have
+     to do your own arbitration for functions which are callable from
+     interrupts.
+
+
+Inputs
+~~~~~~
+::
+
+     library     - Pointer to library structure.
+     funcOffset  - Offset of the jumpvector from the library base address in
+                   bytes.
+     newFunction - New jumptable entry (pointer to the new function).
+
+
+Result
+~~~~~~
+::
+
+     Old jumptable entry (pointer to the old function).
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     While it's more or less safe to patch a library vector with
+     SetFunction() it's not possible to safely remove the patch later.
+     So don't use this function if it can be avoided.
+
+
+Bugs
+~~~~
+::
+
+     On native builds, this contains a hack to fix dos.library/ramlib
+     attempts to setfunction exec functions. Because of this, a funcOffset
+     of more than 32 kB be truncated. This hack will also fix other programs
+     only using the lower 16 bits of funcOffset and leaving garbage in the
+     upper 16 bits. These programs should be fixed.
+
+
+See also
+~~~~~~~~
+::
+
+     MakeLibrary(), MakeFunctions(), SumLibrary().
+
+
+--------------
+
+SetIntVector
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Interrupt * SetIntVector(
+         ULONG intNumber,
+         struct Interrupt * interrupt
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetSR
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG SetSR(
+         ULONG newSR,
+         ULONG mask
+ );
+
+Function
+~~~~~~~~
+::
+
+     Read/Modify the CPU status register in an easy way. Only the bits
+     set it the mask parameter will be changed.
+
+     The bits in the register mapped to those of the Motorola MC680x0
+     family of microprocessors.
+
+
+Inputs
+~~~~~~
+::
+
+     newSR   -   The new contents of the status register.
+     mask    -   Mask of bits to change.
+
+
+Result
+~~~~~~
+::
+
+     The old contents of the status register or ~0UL if this function
+     is not implemented.
+
+
+Example
+~~~~~~~
+::
+
+     You can read the status register by calling SetSR(0,0).
+
+
+Notes
+~~~~~
+::
+
+     This function is of limited use.
+
+
+Bugs
+~~~~
+::
+
+     This function may do nothing on non-mc680x0 systems.
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SetSignal
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG SetSignal(
+         ULONG newSignals,
+         ULONG signalSet
+ );
+
+Function
+~~~~~~~~
+::
+
+     Change or read the set of signals sent to the current task.
+
+
+Inputs
+~~~~~~
+::
+
+     newSignals - New values for the signals.
+     signalSet  - Mask of signals affected by 'newSignals'.
+
+
+Result
+~~~~~~
+::
+
+     Old signal set.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocSignal(), FreeSignal(), Wait(), Signal(), SetExcept()
+
+
+--------------
+
+SetTaskPri
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ BYTE SetTaskPri(
+         struct Task * task,
+         LONG priority
+ );
+
+Function
+~~~~~~~~
+::
+
+     Change the priority of a given task. As a general rule the higher
+     the priority the more CPU time a task gets. Useful values are within
+     -127 to 5.
+
+
+Inputs
+~~~~~~
+::
+
+     task     - Pointer to task structure.
+     priority - New priority of the task.
+
+
+Result
+~~~~~~
+::
+
+     Old task priority.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+Signal
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ void Signal(
+         struct Task * task,
+         ULONG signalSet
+ );
+
+Function
+~~~~~~~~
+::
+
+     Send some signals to a given task. If the task is currently waiting
+     on these signals, has a higher priority as the current one and if
+     taskswitches are allowed the new task begins to run immediately.
+
+
+Inputs
+~~~~~~
+::
+
+     task      - Pointer to task structure.
+     signalSet - The set of signals to send to the task.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function may be used from interrupts.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AllocSignal(), FreeSignal(), Wait(), SetSignal(), SetExcept()
+
+
+--------------
+
+StackSwap
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void StackSwap(
+         struct StackSwapStruct * sss
+ );
+
+Function
+~~~~~~~~
+::
+
+     Changes the stack used by a task. The StackSwapStruct will contain
+     the value of the old stack such that the stack can be reset to the
+     previous version by another call to StackSwap().
+
+     When the stack is swapped, the data on the stack(s) will not be
+     altered, so the stack may not be set up for you. It is generally
+     required that you replace your stack before exiting from the
+     current stack frame (procedure, function call etc.).
+
+
+Inputs
+~~~~~~
+::
+
+     sss     -   A structure containing the values for the upper, lower
+                 and current bounds of the stack you wish to use. The
+                 values will be replaced by the current values and you
+                 can restore the values later.
+
+
+Result
+~~~~~~
+::
+
+     The program will be running on a new stack and sss will contain
+     the old stack.
+
+     Calling StackSwap() twice consequtively will effectively do
+     nothing.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Returning from the function that you call StackSwap() in can have
+     unexpected results.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddTask(), RemTask()
+
+
+--------------
+
+SumKickData
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG SumKickData(
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+SumLibrary
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ void SumLibrary(
+         struct Library * library
+ );
+
+Function
+~~~~~~~~
+::
+
+     Builds the checksum over a given library's jumptable and either puts
+     it into the library->lib_Sum field (if the library is marked as changed)
+     or compares it with this field and Alert()s at mismatch.
+
+
+Inputs
+~~~~~~
+::
+
+     library - Pointer to library structure.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     AddLibrary(), RemLibrary(), MakeLibrary(), MakeFunctions(), InitStruct().
+
+
+--------------
+
+SuperState
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR SuperState(
+ );
+
+Function
+~~~~~~~~
+::
+
+     Enter supervisor mode (like Supervisor()), but return on the user
+     stack. This will mean that the user stack variables are still there.
+     A call to UserState() will end this mode.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     The old supervisor stack. This must be passed to UserState(). If the
+     processor was already in supervisor mode, then this function will
+     return NULL. In that case do NOT call UserState().
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This is not a good function to use, it has limited scope, and will
+     probably be even less useful in the future.
+
+
+Bugs
+~~~~
+::
+
+     You can easily cause your system to cease operating normally.
+
+
+See also
+~~~~~~~~
+::
+
+     Supervisor(), UserState()
+
+
+--------------
+
+Supervisor
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG Supervisor(
+         ULONG_FUNC userFunction
+ );
+
+Function
+~~~~~~~~
+::
+
+     Supervisor will allow a short priviledged instruction sequence to
+     be called from user mode. This has very few uses, and it is probably
+     better to use any system supplied method to do anything.
+
+     The function supplied will be called as if it was a system interrupt,
+     notably this means that you must *NOT* make any system calls or
+     use any system data structures, and on certain systems you must
+     use special methods to leave the code.
+
+     The code will not be passed any parameters.
+
+
+Inputs
+~~~~~~
+::
+
+     userFunc    -   The address of the code you want called in supervisor
+                     mode.
+
+
+Result
+~~~~~~
+::
+
+     The code will be called.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function has completely different effects on different
+     processors and architectures.
+
+     Currently defined effects are:
+
+     Kernel                      Effect
+     -------------------------------------------------------------------
+     i386 (under emulation)      None
+     m68k (native)               Runs the process in supervisor mode.
+                                 The process must end with an RTE
+                                 instruction. It should save any
+                                 registers which is uses.
+     m68k (under emulation)
+
+
+Bugs
+~~~~
+::
+
+     You can very easily make the system unusable with this function.
+     In fact it is recommended that you do not use it at all.
+
+
+See also
+~~~~~~~~
+::
+
+     SuperState(), UserState()
+
+
+--------------
+
+Switch
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ void Switch(
+ );
+
+Function
+~~~~~~~~
+::
+
+     Switch to the next task which wishes to be run. This function has
+     a similar effect to calling Dispatch(), however it may be called
+     at any time, and will not lose the current task if it is of type
+     TS_RUN.
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     This function will preserve all its registers.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     Dispatch(), Reschedule()
+
+
+--------------
+
+TypeOfMem
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG TypeOfMem(
+         APTR address
+ );
+
+Function
+~~~~~~~~
+::
+
+     Return type of memory at a given address or 0 if there is no memory
+     there.
+
+
+Inputs
+~~~~~~
+::
+
+     address - Address to test
+
+
+Result
+~~~~~~
+::
+
+     The memory flags you would give to AllocMem().
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+UserState
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ void UserState(
+         APTR sysStack
+ );
+
+Function
+~~~~~~~~
+::
+
+     Return to user mode after a call to SuperState().
+
+
+Inputs
+~~~~~~
+::
+
+     sysStack    -   The return value from SuperState()
+
+
+Result
+~~~~~~
+::
+
+     The system will be back to normal.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     SuperState(), Supervisor()
+
+
+--------------
+
+Vacate
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ void Vacate(
+         struct SignalSemaphore  * sigSem,
+         struct SemaphoreMessage * bidMsg
+ );
+
+Function
+~~~~~~~~
+::
+
+     Release a lock obtained with Procure. This will even work if the
+     message is not yet replied - the request will be cancelled and the
+     message replied. In any case the ssm_Semaphore field will be set to
+     NULL.
+
+
+Inputs
+~~~~~~
+::
+
+     sigSem - Pointer to semaphore structure.
+     bidMsg - Pointer to struct SemaphoreMessage.
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     Procure()
+
+
+--------------
+
+Wait
+====
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG Wait(
+         ULONG signalSet
+ );
+
+Function
+~~~~~~~~
+::
+
+     Wait until some signals are sent to the current task. If any signal
+     of the specified set is already set when entering this function it
+     returns immediately. Since almost any event in the OS can send a
+     signal to your task if you specify it to do so signals are a very
+     powerful mechanism.
+
+
+Inputs
+~~~~~~
+::
+
+     signalSet - The set of signals to wait for.
+
+
+Result
+~~~~~~
+::
+
+     The set of active signals.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     Naturally it's not allowed to wait in supervisor mode.
+
+     Calling Wait() breaks an active Disable() or Forbid().
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     Signal(), SetSignal(), AllocSignal(), FreeSignal()
+
+
+--------------
+
+WaitIO
+======
+
+Synopsis
+~~~~~~~~
+::
+
+ BYTE WaitIO(
+         struct IORequest * iORequest
+ );
+
+Function
+~~~~~~~~
+::
+
+     Waits until the I/O request is completed and removes it from the
+     reply port. If the message is already done when calling this function
+     it doesn't wait but just remove the message.
+
+
+Inputs
+~~~~~~
+::
+
+     iORequest - Pointer to iorequest structure.
+
+
+Result
+~~~~~~
+::
+
+     Error state of I/O request.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OpenDevice(), CloseDevice(), DoIO(), SendIO(), AbortIO(), CheckIO()
+
+
+--------------
+
+WaitPort
+========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Message * WaitPort(
+         struct MsgPort * port
+ );
+
+Function
+~~~~~~~~
+::
+
+     Wait until a message arrives at the given port. If there is already
+     a message in it this function returns immediately.
+
+
+Inputs
+~~~~~~
+::
+
+     port    - Pointer to messageport.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to the first message that arrived at the port. The message
+     is _not_ removed from the port. GetMsg() does this for you.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     WaitPort(), GetMsg()
+
+
+--------------
+
+dummy
+=====
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG dummy(
+ );
+
+--------------
+

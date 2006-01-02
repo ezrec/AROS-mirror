@@ -1,0 +1,937 @@
+.. This document is automatically generated. Don't edit it!
+
+===
+oop
+===
+
+`OOP_AddClass`_
+`OOP_DisposeObject`_
+`OOP_GetAttr`_
+`OOP_GetAttrBase`_
+`OOP_GetMethod`_
+`OOP_GetMethodID`_
+`OOP_NewObject`_
+`OOP_ObtainAttrBase`_
+`OOP_ObtainAttrBases`_
+`OOP_ParseAttrs`_
+`OOP_ReleaseAttrBase`_
+`OOP_ReleaseAttrBases`_
+`OOP_RemoveClass`_
+`OOP_SetAttrs`_
+
+-----------
+
+OOP_AddClass
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID OOP_AddClass(
+         OOP_Class  * classPtr
+ );
+
+Function
+~~~~~~~~
+::
+
+     Adds a class to the public list of classes.
+     This means that any process can create objects of this
+     class.
+
+
+Inputs
+~~~~~~
+::
+
+     classPtr - Pointer to the class to make public.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+     Would be faster to use a hashtable to look up class IDs
+
+
+See also
+~~~~~~~~
+::
+
+     OOP_RemoveClass()
+
+
+--------------
+
+OOP_DisposeObject
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID OOP_DisposeObject(
+         OOP_Object  * obj
+ );
+
+Function
+~~~~~~~~
+::
+
+     Delete an object that was previously allocated with NewObjectA().
+
+
+Inputs
+~~~~~~
+::
+
+     obj     - pointer to object to dispose.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OOP_NewObjectA()
+
+
+--------------
+
+OOP_GetAttr
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ IPTR OOP_GetAttr(
+         OOP_Object             * object,
+         OOP_AttrID attrID,
+         IPTR           * storage
+ );
+
+Function
+~~~~~~~~
+::
+
+     Gets the specifed attribute from the object,
+     and puts it into storage.
+
+
+Inputs
+~~~~~~
+::
+
+     object  - pointer to object from which we want to
+               get an attribute.
+               
+     attrID  - Attribute ID for property to get.
+     
+     storage - Pointer to IPTR the gitten data should be put
+               into.
+
+
+
+Result
+~~~~~~
+::
+
+     Undefined.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OOP_SetAttrs().
+
+
+--------------
+
+OOP_GetAttrBase
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ OOP_AttrBase OOP_GetAttrBase(
+         STRPTR interfaceID
+ );
+
+Function
+~~~~~~~~
+::
+
+     Maps a globally unique string interface ID into
+     a numeric AttrBase ID that is unique on
+     pr. machine basis. IMPORTANT: You MUST
+     be sure that at least one class implementing 
+     specified interface is initialized at the time calling
+     this function. This function is especially useful
+     for a class to get AttrBases of the interfaces
+     it implements.
+
+
+Inputs
+~~~~~~
+::
+
+     interfaceID     - globally unique interface identifier.
+
+
+Result
+~~~~~~
+::
+
+     Numeric AttrBase that is unique for this machine.
+     There are NO error conditions.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+OOP_GetMethod
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID * OOP_GetMethod(
+         OOP_Object  * obj,
+         OOP_MethodID mid
+ );
+
+Function
+~~~~~~~~
+::
+
+     Get a specific method function for a specific object and 
+     a specific interface. This a direct pointer to the method implementation.
+     The pointer should ONLY be used on the object you aquired.
+
+
+Inputs
+~~~~~~
+::
+
+     obj     - pointer to object to get method for.
+     mid     - method id for method to get. This may be obtained with GetMethodID()
+
+
+Result
+~~~~~~
+::
+
+     The method asked for, or NULL if the method does not exist in
+     the object's class.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     !!! Use with EXTREME CAUTION. Very few programs need the extra speed gained
+         by calling a method directly 
+     !!!
+
+
+Bugs
+~~~~
+::
+
+     It returns VOID *. I got compiler errors when returning
+     IPTR (*)(Class *, Object *, Msg)
+
+
+See also
+~~~~~~~~
+::
+
+     OOP_GetMethodID()
+
+
+--------------
+
+OOP_GetMethodID
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ OOP_MethodID OOP_GetMethodID(
+         STRPTR interfaceID,
+         ULONG methodOffset
+ );
+
+Function
+~~~~~~~~
+::
+
+     Maps a globally unique full method ID
+     (Interface ID + method offset) into
+     a numeric method ID.
+
+
+Inputs
+~~~~~~
+::
+
+     interfaceID     - globally unique interface identifier.
+     methodOffset    - offset to the method in this interface.
+     
+
+
+Result
+~~~~~~
+::
+
+     Numeric method identifier that is unique for this machine.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+OOP_NewObject
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR OOP_NewObject(
+         struct OOP_IClass  * classPtr,
+         UBYTE          * classID,
+         struct TagItem * tagList
+ );
+
+Function
+~~~~~~~~
+::
+
+     Creates a new object of given class based on the TagItem
+     parameters passed.
+
+
+Inputs
+~~~~~~
+::
+
+     classPtr - pointer to a class. Use this if the class to
+                create an instance of is private.
+     classID  - Public ID of the class to create an instance of.
+                Use this if the class is public.
+     tagList  - List of TagItems (creation time attributes),
+                that specifies what initial properties the new
+                object should have.
+
+
+
+Result
+~~~~~~
+::
+
+     Pointer to the new object, or NULL if object creation failed.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     You should supply one of classPtr and classID, never
+     both. Use NULL for the unspecified one.
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OOP_DisposeObject()
+
+
+--------------
+
+OOP_ObtainAttrBase
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ OOP_AttrBase OOP_ObtainAttrBase(
+         STRPTR interfaceID
+ );
+
+Function
+~~~~~~~~
+::
+
+     Maps a globally unique string interface ID into
+     a numeric AttrBase ID that is unique on
+     pr. machine basis. The AttrBase can be combiner
+     with attribute offsets to generate attribute IDs.
+     
+     
+
+
+Inputs
+~~~~~~
+::
+
+     interfaceID     - globally unique interface identifier.
+                       for which to obtain an attrbase.
+
+
+Result
+~~~~~~
+::
+
+     Numeric AttrBase that is unique for this machine.
+     A return value of 0 means that the call failed.
+
+
+Example
+~~~~~~~
+::
+
+     #define aTimer_CurrentTime    (__AB_Timer + aoTime_CurrentTime)
+     
+     ..
+     __AB_Timer = OOP_ObtainAttrBase(IID_Timer);
+     
+     SetAttrs(timer, aTimer_CurrentTime, "10:37:00");
+     
+
+
+Notes
+~~~~~
+::
+
+     Obtained attrbases should be released with ReleasAttrBase().
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+OOP_ObtainAttrBases
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL OOP_ObtainAttrBases(
+         struct OOP_ABDescr * abd
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+OOP_ParseAttrs
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG OOP_ParseAttrs(
+         struct TagItem * tags,
+         IPTR * storage,
+         ULONG numattrs,
+         OOP_AttrCheck * attrcheck,
+         OOP_AttrBase attrbase
+ );
+
+Function
+~~~~~~~~
+::
+
+     Parse a taglist of attributes and put the result in an array.
+     It will only parse the attr from a single interface
+     which is indicated by the 'attrbase' parameter.
+
+
+Inputs
+~~~~~~
+::
+
+     tags - tags to be parsed.
+     storage - array where the tag values will be stored.
+               To get the value for a certain tag just use
+               ao#? attribute offset as an index into the array.
+               The array must be of size 'numattrs', ie. the number
+               of attributes in the interface.
+               
+     numattrs - number of attributes in the interface.
+     attrcheck - will is a flag that where flags will be set according
+                 to the attributes' offset. Since this is only 32
+                 bytes you can only parse interfaces
+                 with <= 32 attributes with this function.
+                 If you try with more, you will get a
+                 ooperr_ParseAttrs_TooManyAttrs error.
+                 The flags will be set like this if an attr is found:
+                 
+                 attrcheck |= 1L << attribute_offset
+                 
+     attrbase - attrbase for the interface whise attrs we should look for.
+                 
+
+
+Result
+~~~~~~
+::
+
+     0 for success, and an error otherwise.
+     Possible values are:
+             ooperr_ParseAttrs_TooManyAttrs.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+OOP_ReleaseAttrBase
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID OOP_ReleaseAttrBase(
+         STRPTR interfaceID
+ );
+
+Function
+~~~~~~~~
+::
+
+     Release an OOP_AttrBase previosly obtained with
+     OOP_ObtainAttrBase()
+     
+
+
+Inputs
+~~~~~~
+::
+
+     interfaceID     - globally unique interface identifier.
+                       for which to release an attrbase.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+     The call must be paired wit OOP_ObtainAttrBase().
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+OOP_ReleaseAttrBases
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID OOP_ReleaseAttrBases(
+         struct OOP_ABDescr * abd
+ );
+
+Function
+~~~~~~~~
+::
+
+
+
+Inputs
+~~~~~~
+::
+
+
+
+Result
+~~~~~~
+::
+
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+
+
+--------------
+
+OOP_RemoveClass
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ void OOP_RemoveClass(
+         OOP_Class * classPtr
+ );
+
+Function
+~~~~~~~~
+::
+
+     Remove a class from the list of public classes.
+     The class must have previously added with AddClass().
+     
+
+Inputs
+~~~~~~
+::
+
+     classPtr - Pointer to class that should be removed.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OOP_AddClass()
+
+
+--------------
+
+OOP_SetAttrs
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ IPTR OOP_SetAttrs(
+         OOP_Object     * object,
+         struct TagItem * attrList
+ );
+
+Function
+~~~~~~~~
+::
+
+     Sets the object's attributes as specified in the
+     supplied taglist.
+
+
+Inputs
+~~~~~~
+::
+
+     object  - pointer to a object in whih we
+               want to set attributes.
+              
+     tagList -  List of attributes an their new values.
+
+
+
+Result
+~~~~~~
+::
+
+     Undefined.
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+     OOP_DisposeObject()
+
+
+--------------
+

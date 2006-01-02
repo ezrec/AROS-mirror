@@ -1,0 +1,69 @@
+.. This document is automatically generated. Don't edit it!
+
+===========
+rexxsupport
+===========
+
+`ClosePortRsrc`_
+
+-----------
+
+ClosePortRsrc
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ VOID ClosePortRsrc(
+         struct RexxRsrc * rsrc
+ );
+
+Function
+~~~~~~~~
+::
+
+      Deletes a RexxMsg structure
+
+
+Inputs
+~~~~~~
+::
+
+      packet - The RexxMsg to delete.
+
+
+Result
+~~~~~~
+::
+
+      void
+
+
+Example
+~~~~~~~
+::
+
+
+
+Notes
+~~~~~
+::
+
+
+
+Bugs
+~~~~
+::
+
+
+
+See also
+~~~~~~~~
+::
+
+      CreateRexxMsg()
+
+
+--------------
+
