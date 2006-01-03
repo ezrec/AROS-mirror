@@ -62,7 +62,6 @@ dos
 `FindSegment`_
 `FindVar`_
 `Flush`_
-`Format`_
 `FreeArgs`_
 `FreeDeviceProc`_
 `FreeDosEntry`_

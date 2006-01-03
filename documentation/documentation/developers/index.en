@@ -6,6 +6,7 @@ Developers Resources
 + `SVN access and usage`__
 + `How to compile`__
 + `Applications development manual`__
++ `Autodocs for libraries`__
 + `Zune Applications development manual`__
 + `System development manual`__
 + `PCI subsystem manual`__
@@ -19,6 +20,7 @@ __ contribute
 __ svn
 __ compiling
 __ application-development
+__ autodocs/index
 __ zune-application-development
 __ system-development
 __ hardware/pci
