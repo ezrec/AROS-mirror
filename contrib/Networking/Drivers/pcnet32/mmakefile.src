@@ -1,0 +1,11 @@
+#   $Id: mmakefile.src,v 1.4 2005/08/14 14:23:47 misc Exp $
+include $(TOP)/config/make.cfg
+
+FILES := handler unit pcnet32
+
+%build_module mmake=contrib-networking-drivers-pcnet32 \
+    modname=pcnet32 modtype=device \
+    files="pcnet32_init $(FILES)" \
+    moduledir=Devs/Networks uselibs="rom amiga hiddstubs"
+
+%common
