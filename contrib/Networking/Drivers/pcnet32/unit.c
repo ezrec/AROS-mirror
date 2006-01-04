@@ -385,9 +385,9 @@ D(bug("%s: PCN32_RX_Int: packet doesnt report errors\n", unit->pcnu_name));
         /* Check for address validity */
         if(AddressFilter(LIBBASE, unit, frame->eth_packet_dest))
         {
-D(bug("%s: PCN32_RX_Int: packet's IP accepted\n", unit->pcnu_name));
             /* Packet is addressed to this driver */
             packet_type = AROS_BE2WORD(frame->eth_packet_type);
+D(bug("%s: PCN32_RX_Int: Packet IP accepted with type = %d\n", unit->pcnu_name, packet_type));
 
             opener = (APTR)unit->pcnu_Openers.mlh_Head;
             opener_tail = (APTR)&unit->pcnu_Openers.mlh_Tail;
@@ -525,7 +525,7 @@ D(bug("%s: PCN32_TX_Int()\n", unit->pcnu_name));
             if (error == 0)
             {
                 Disable();
-D(bug("%s: PCN32_TX_Int: packet %d:%d queued for transmission.", unit->pcnu_name, np->next_tx, nr));
+D(bug("%s: PCN32_TX_Int: packet %d:%d [typ = %d] queued for transmission.", unit->pcnu_name, np->next_tx, nr, np->tx_buffer[nr].eth_packet_type));
 
                 /* DEBUG? Dump frame if so */
 #ifdef DEBUG

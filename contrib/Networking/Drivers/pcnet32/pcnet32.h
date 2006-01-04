@@ -427,7 +427,7 @@ struct fe_priv {
 
 #define pci_name(unit)  (unit->pcnu_name)
 
-/* NFORCE ENET defines */
+/* ENET defines */
 
 #define HZ              1000000
 #define ETH_DATA_LEN    1500

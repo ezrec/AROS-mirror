@@ -122,7 +122,7 @@ static void pcn32_start_rx(struct net_device *dev)
     struct fe_priv *np = get_pcnpriv(dev);
     UBYTE *base = get_hwbase(dev);
 
-    D(bug("%s: pcn32_start_rx\n", dev->pcnu_name));
+D(bug("%s: pcn32_start_rx\n", dev->pcnu_name));
     // Already running? Stop it.
 #warning "TODO: Handle starting/stopping Rx"
 }
@@ -131,7 +131,7 @@ static void pcn32_stop_rx(struct net_device *dev)
 {
     UBYTE *base = get_hwbase(dev);
 
-    D(bug("%s: pcn32_stop_rx\n", dev->pcnu_name));
+D(bug("%s: pcn32_stop_rx\n", dev->pcnu_name));
 #warning "TODO: Handle starting/stopping Rx"
 }
 
@@ -139,7 +139,7 @@ static void pcn32_start_tx(struct net_device *dev)
 {
     UBYTE *base = get_hwbase(dev);
 
-    D(bug("%s: pcn32_start_tx()\n", dev->pcnu_name));
+D(bug("%s: pcn32_start_tx()\n", dev->pcnu_name));
 #warning "TODO: Handle starting/stopping Tx"
 }
 
@@ -147,7 +147,7 @@ static void pcn32_stop_tx(struct net_device *dev)
 {
     UBYTE *base = get_hwbase(dev);
 
-    D(bug("%s: pcn32_stop_tx()\n", dev->pcnu_name));
+D(bug("%s: pcn32_stop_tx()\n", dev->pcnu_name));
 #warning "TODO: Handle starting/stopping Tx"
 }
 
@@ -156,7 +156,7 @@ static void pcn32_txrx_reset(struct net_device *dev)
     struct fe_priv *np = get_pcnpriv(dev);
     UBYTE *base = get_hwbase(dev);
 
-    D(bug("%s: pcn32_txrx_reset()\n", dev->pcnu_name));
+D(bug("%s: pcn32_txrx_reset()\n", dev->pcnu_name));
 }
 
 /*
@@ -171,7 +171,7 @@ static void pcn32_set_multicast(struct net_device *dev)
     ULONG mask[2];
     ULONG pff;
 
-    D(bug("%s: pcn32_set_multicast()\n", dev->pcnu_name));
+D(bug("%s: pcn32_set_multicast()\n", dev->pcnu_name));
 
     memset(addr, 0, sizeof(addr));
     memset(mask, 0, sizeof(mask));
@@ -223,7 +223,7 @@ D(bug("%s: PCnet Chipset put into 32bit mode\n", dev->pcnu_name));
     dev->pcnu_dev_addr[4] = dev->pcnu_org_addr[4] = (np->orig_mac[1] >>  8) & 0xff;
     dev->pcnu_dev_addr[5] = dev->pcnu_org_addr[5] = (np->orig_mac[1] >>  0) & 0xff;
 
-    D(bug("%s: MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n", dev->pcnu_name,
+D(bug("%s: MAC Address %02x:%02x:%02x:%02x:%02x:%02x\n", dev->pcnu_name,
             dev->pcnu_dev_addr[0], dev->pcnu_dev_addr[1], dev->pcnu_dev_addr[2],
             dev->pcnu_dev_addr[3], dev->pcnu_dev_addr[4], dev->pcnu_dev_addr[5]));
 }
