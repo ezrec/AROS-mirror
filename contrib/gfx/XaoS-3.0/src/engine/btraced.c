@@ -1,7 +1,7 @@
 #ifndef UNSUPPORTED
-static void
-tracecolor (int xstart, int ystart, int xend, int yend, register int
-	    x, register int y) REGISTERS (3);
+//static void
+//tracecolor (int xstart, int ystart, int xend, int yend, register int
+//	    x, register int y) REGISTERS (3);
      static void
        tracecolor (int xstart, int ystart, int xend, int yend, register int
 		   x, register int y)
