@@ -22,7 +22,7 @@
     MA 02111-1307, USA.
 */
 
-#define DEBUG 1
+#define DEBUG 0
 
 #include <exec/types.h>
 #include <exec/libraries.h>
