@@ -201,8 +201,8 @@ D(bug("%s: Chipset RESET\n", dev->pcnu_name));
                     dev->pcnu_PCIDriver,
                     sizeof(struct rx_ring_desc) * (RX_RING_SIZE + TX_RING_SIZE));
 
-    np->fep_pcnet_init_block->rx_ring = AROS_LE2LONG(np->ring_addr);
-    np->fep_pcnet_init_block->tx_ring = AROS_LE2LONG(&((struct rx_ring_desc *)np->ring_addr)[RX_RING_SIZE]);
+    np->fep_pcnet_init_block->rx_ring = AROS_LONG2LE(np->ring_addr);
+    np->fep_pcnet_init_block->tx_ring = AROS_LONG2LE(&((struct rx_ring_desc *)np->ring_addr)[RX_RING_SIZE]);
 
 D(bug("%s: Allocated IO Rings [%d x Tx @ %x : %x] [%d x Rx @ %x : %x]\n",
   dev->pcnu_name,
@@ -313,14 +313,14 @@ static int pcnet32_open(struct net_device *dev)
 
    np->rx_buffer = HIDD_PCIDriver_AllocPCIMem(
                         dev->pcnu_PCIDriver,
-                        RX_RING_SIZE * ETH_MAXPACKETSIZE);
+                        RX_RING_SIZE * RXTX_ALLOC_BUFSIZE);
 
    if (np->rx_buffer == NULL)
       oom = 1;
 
    np->tx_buffer = HIDD_PCIDriver_AllocPCIMem(
                         dev->pcnu_PCIDriver,
-                        TX_RING_SIZE * ETH_MAXPACKETSIZE);
+                        TX_RING_SIZE * RXTX_ALLOC_BUFSIZE);
 
    if (np->tx_buffer == NULL)
       oom = 1;
@@ -334,8 +334,8 @@ D(bug("%s: pcnet32_open: Allocated IO Buffers [ %d x Tx @ %x] [ %d x Rx @ %x]\n"
                         RX_RING_SIZE, np->rx_buffer ));   
    
  
-   np->fep_pcnet_init_block->mode = AROS_LE2WORD(0x0003); /* Disable Rx and Tx */
-   np->fep_pcnet_init_block->tlen_rlen = AROS_LE2WORD(TX_RING_LEN_BITS | RX_RING_LEN_BITS);   
+   np->fep_pcnet_init_block->mode = AROS_WORD2LE(0x0003); /* Disable Rx and Tx */
+   np->fep_pcnet_init_block->tlen_rlen = AROS_WORD2LE(TX_RING_LEN_BITS | RX_RING_LEN_BITS);   
 
 D(bug("%s: pcnet32_open: Interrupts disabled\n",dev->pcnu_name));
 
@@ -362,9 +362,9 @@ D(bug("%s: pcnet32_open: Tx Ring initialised\n",dev->pcnu_name));
 
    for (i=0; i < RX_RING_SIZE; i++)
    {
-      ((struct rx_ring_desc *)np->ring_addr)[i].PacketBuffer = AROS_LE2LONG((IPTR)&np->rx_buffer[i]);
-      ((struct rx_ring_desc *)np->ring_addr)[i].BufferLength = AROS_LE2WORD(-ETH_MAXPACKETSIZE);
-      ((struct rx_ring_desc *)np->ring_addr)[i].BufferStatus = AROS_LE2WORD((1 << 8)|(1 << 9)|(1 << 15));
+      ((struct rx_ring_desc *)np->ring_addr)[i].PacketBuffer = AROS_LONG2LE((IPTR)&np->rx_buffer[i]);
+      ((struct rx_ring_desc *)np->ring_addr)[i].BufferLength = AROS_WORD2LE(-RXTX_ALLOC_BUFSIZE);
+      ((struct rx_ring_desc *)np->ring_addr)[i].BufferStatus = AROS_WORD2LE((1 << 8)|(1 << 9)|(1 << 15));
    }
 
 D(bug("%s: pcnet32_open: Rx Ring initialised\n",dev->pcnu_name));
@@ -372,8 +372,8 @@ D(bug("%s: pcnet32_open: Rx Ring initialised\n",dev->pcnu_name));
     dev->write_bcr(dev->pcnu_BaseMem, 20, 2); /* Set pcnet32 into 32bit mode */
 D(bug("%s: PCnet Chipset put into 32bit mode\n", dev->pcnu_name));
 
-   dev->write_csr(dev->pcnu_BaseMem, 1, (AROS_LE2LONG((IPTR)np->fep_pcnet_init_block) & 0xffff)); /* Store the pointer to the pcnet32_init_block */
-   dev->write_csr(dev->pcnu_BaseMem, 2, (AROS_LE2LONG((IPTR)np->fep_pcnet_init_block) >> 16));
+   dev->write_csr(dev->pcnu_BaseMem, 1, (AROS_LONG2LE((IPTR)np->fep_pcnet_init_block) & 0xffff)); /* Store the pointer to the pcnet32_init_block */
+   dev->write_csr(dev->pcnu_BaseMem, 2, (AROS_LONG2LE((IPTR)np->fep_pcnet_init_block) >> 16));
 
 D(bug("%s: pcnet32_open: set init_block (@ %x)\n",dev->pcnu_name,np->fep_pcnet_init_block));
 
@@ -425,8 +425,8 @@ D(bug("%s: pcnet32_open: Enabled Tx_DONE_INTR_INHIBITOR\n",dev->pcnu_name));
 
 D(bug("%s: pcnet32_open: Enable Rx & Tx\n",dev->pcnu_name));
 
-   dev->write_csr(dev->pcnu_BaseMem, 1, (AROS_LE2LONG((IPTR)np->fep_pcnet_init_block) & 0xffff)); /* Re initialise the PCnet chipset */
-   dev->write_csr(dev->pcnu_BaseMem, 2, (AROS_LE2LONG((IPTR)np->fep_pcnet_init_block) >> 16));
+   dev->write_csr(dev->pcnu_BaseMem, 1, (AROS_LONG2LE((IPTR)np->fep_pcnet_init_block) & 0xffff)); /* Re initialise the PCnet chipset */
+   dev->write_csr(dev->pcnu_BaseMem, 2, (AROS_LONG2LE((IPTR)np->fep_pcnet_init_block) >> 16));
 
 D(bug("%s: pcnet32_open: re-initialised chipset\n",dev->pcnu_name));
 

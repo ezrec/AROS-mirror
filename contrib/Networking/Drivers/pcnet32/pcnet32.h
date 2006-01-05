@@ -22,7 +22,7 @@
     MA 02111-1307, USA.
 */
 
-#define DEBUG 0
+#define DEBUG 1
 
 #include <exec/types.h>
 #include <exec/libraries.h>
@@ -429,22 +429,24 @@ struct fe_priv {
 
 /* ENET defines */
 
-#define HZ              1000000
-#define ETH_DATA_LEN    1500
+#define HZ                  1000000
+#define ETH_DATA_LEN        1500
 
-#define ETH_ADDRESSSIZE 6
-#define ETH_HEADERSIZE 14
-#define ETH_MTU (ETH_DATA_LEN)
-#define ETH_MAXPACKETSIZE ((ETH_HEADERSIZE) + (ETH_MTU))
+#define ETH_ADDRESSSIZE     6
+#define ETH_HEADERSIZE      14
+#define ETH_CRCSIZE         4
+#define ETH_MTU             (ETH_DATA_LEN)
+#define ETH_MAXPACKETSIZE   ((ETH_HEADERSIZE) + (ETH_MTU) + (ETH_CRCSIZE))
 
-#define ETH_PACKET_DEST 0
-#define ETH_PACKET_SOURCE 6
-#define ETH_PACKET_TYPE 12
-#define ETH_PACKET_IEEELEN 12
+#define ETH_PACKET_DEST     0
+#define ETH_PACKET_SOURCE   6
+#define ETH_PACKET_TYPE     12
+#define ETH_PACKET_IEEELEN  12
 #define ETH_PACKET_SNAPTYPE 20
-#define ETH_PACKET_DATA 14
+#define ETH_PACKET_DATA     14
+#define ETH_PACKET_CRC      (ETH_PACKET_DATA + ETH_MTU)
 
-#define RX_ALLOC_BUFSIZE        (ETH_DATA_LEN + 164)
+#define RXTX_ALLOC_BUFSIZE  (ETH_MAXPACKETSIZE + 26)
  
 #define TX_LIMIT_STOP   63
 #define TX_LIMIT_START  62
@@ -454,7 +456,8 @@ struct eth_frame {
     UBYTE eth_packet_source[6];
     UWORD eth_packet_type;
     UBYTE eth_packet_data[ETH_MTU];
-    UBYTE eth_pad[RX_ALLOC_BUFSIZE - ETH_MAXPACKETSIZE];
+    UBYTE eth_packet_crc[4];
+    UBYTE eth_pad[RXTX_ALLOC_BUFSIZE - ETH_MAXPACKETSIZE];
 } __attribute__((packed));
 #define eth_packet_ieeelen eth_packet_type
 

@@ -309,7 +309,7 @@ D(bug("%s: PCN32_RX_Int() !!!!\n", unit->pcnu_name));
         /* Get the in-queue number */
         i = np->cur_rx % RX_RING_SIZE;
         Flags = AROS_LE2WORD(((struct rx_ring_desc *)np->ring_addr)[i].BufferStatus);
-        len = AROS_LE2WORD(-((struct rx_ring_desc *)np->ring_addr)[i].BufferLength);
+        len = AROS_LE2WORD(((struct rx_ring_desc *)np->ring_addr)[i].BufferMsgLength);
 
 D(bug("%s: PCN32_RX_Int: looking at packet %d:%d, Flags 0x%x, len %d\n",
                 unit->pcnu_name, np->cur_rx, i, Flags, len));
@@ -447,7 +447,7 @@ D(bug("%s: PCN32_RX_Int: packet copied to orphan queue\n", unit->pcnu_name));
         }
 
         unit->pcnu_stats.PacketsReceived++;
-        ((struct rx_ring_desc *)np->ring_addr)[i].BufferStatus = AROS_LE2WORD((1 << 8)|(1 << 9)|(1 << 15)); // Mark packet as available again
+        ((struct rx_ring_desc *)np->ring_addr)[i].BufferStatus = AROS_WORD2LE((1 << 8)|(1 << 9)|(1 << 15)); // Mark packet as available again
 next_pkt:
         np->cur_rx++;
     }
@@ -525,7 +525,7 @@ D(bug("%s: PCN32_TX_Int()\n", unit->pcnu_name));
             if (error == 0)
             {
                 Disable();
-D(bug("%s: PCN32_TX_Int: packet %d:%d [typ = %d] queued for transmission.", unit->pcnu_name, np->next_tx, nr, np->tx_buffer[nr].eth_packet_type));
+D(bug("%s: PCN32_TX_Int: packet %d:%d [type = %d] queued for transmission.", unit->pcnu_name, np->next_tx, nr, np->tx_buffer[nr].eth_packet_type));
 
                 /* DEBUG? Dump frame if so */
 #ifdef DEBUG
@@ -554,10 +554,10 @@ D(bug("%s: PCN32_TX_Int: packet %d:%d [typ = %d] queued for transmission.", unit
                 Enable();
 
                 /* Set the ring details for the packet .. */
-                ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].BufferLength = AROS_LE2WORD(-packet_size);
+                ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].BufferLength = AROS_WORD2LE(-packet_size);
                 ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].Misc = 0x00000000;
-                ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].PacketBuffer = AROS_LE2LONG(buffer);
-                ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].BufferStatus = AROS_LE2WORD(0x8300);
+                ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].PacketBuffer = AROS_LONG2LE((IPTR)&np->tx_buffer[nr]);
+                ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].BufferStatus = AROS_WORD2LE(0x8300);
                 
                 unit->write_csr(unit->pcnu_BaseMem,0, ((1 << 6)|(1 << 3))); /* .. And trigger an imediate Tx poll */
 D(bug("%s: PCN32_TX_Int: send poll triggered.\n", unit->pcnu_name));
