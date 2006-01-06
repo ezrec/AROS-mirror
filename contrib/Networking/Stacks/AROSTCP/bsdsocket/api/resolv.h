@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 1983, 1987, 1989 The Regents of the University of California.
  * All rights reserved.
+ * Copyright (c) 2005 Pavel Fedin
  *
  * Redistribution and use in source and binary forms are permitted
  * provided that: (1) source distributions retain this entire copyright
@@ -22,22 +23,19 @@
 #ifndef API_RESOLV_H
 #define API_RESOLV_H
 
+#if !defined(__AROS__)
+#include <libraries/eztcp_private.h>
+#else
+#include <kern/amiga_netdb_resolver.h>
+#endif
 #include <arpa/nameser.h>
 
 /*
  * Global defines and variables for resolver stub. (INSIDE AmiTCP/IP)
  */
-#define	MAXDFLSRCH	3		/* # default domain levels to try */
-#define	LOCALDOMAINPARTS 2		/* min levels in name that is "local"*/
-
-#define	RES_TIMEOUT	5		/* min. seconds between retries */
-
-struct state {
-	int	retrans;	 	/* retransmition time interval */
-	int	retry;			/* number of times to retransmit */
-	long	options;		/* option flags - see below. */
-	u_short	id;			/* current packet id */
-};
+#define	MAXDFLSRCH	3		    /* # default domain levels to try */
+#define	LOCALDOMAINPARTS 2    /* min levels in name that is "local"*/
+#define	RES_TIMEOUT	5		    /* min. seconds between retries */
 
 /*
  * defines to hook variables to the library base.
@@ -71,7 +69,9 @@ extern struct state _res;
 /*
  * Prototypes
  */
-extern void res_init(struct state *state);
+extern int res_init(struct state *state);
+extern int res_update_db(struct state *state);
+extern void res_cleanup_db(struct state *state);
 extern int res_query(struct SocketBase *,
 		     const char *, int, int, u_char *, int);
 extern int res_search(struct SocketBase *,

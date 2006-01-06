@@ -5,6 +5,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Oopyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -41,6 +42,7 @@
 
 #include <proto/dos.h>
 
+#include "net/netdbpaths.h"
 #include <net/route.h>
 #include <netinet/in_systm.h>
 #include <netinet/in.h>
@@ -59,7 +61,7 @@
 int inet_aton(register const char *cp, struct in_addr *addr);
 int ultoa(unsigned long ul,char *buffer);
 
-extern struct Task *AmiTCP_Task; /* referenced by sendbreak() */
+extern struct Task *AROSTCP_Task; /* referenced by sendbreak() */
 
 /* Parsing error messages */
 UBYTE ERR_UNKNOWN[]     = "Unknown command\n";
@@ -121,7 +123,7 @@ parseline(struct CSource *csarg, UBYTE **errstrp, struct CSource *res)
 LONG 
 sendbreak(struct CSource *args, UBYTE **errstrp, struct CSource *res)
 {
-  Signal(AmiTCP_Task, SIGBREAKF_CTRL_C);
+  Signal(AROSTCP_Task, SIGBREAKF_CTRL_C);
   return RETURN_OK;
 }
 
@@ -411,7 +413,13 @@ parsefile(UBYTE const *name, UBYTE **errstrp, struct CSource *res)
   struct CSource arg;
   int line = 0;
   BPTR fh;
-  UBYTE *buf = AllocMem(CONFIGLINELEN, MEMF_PUBLIC);
+  UBYTE *buf;
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_config.c) parsefile('%s')\n",name));
+#endif
+
+  D(Printf("Loading config file: %s\n",name);)
+  buf = AllocMem(CONFIGLINELEN, MEMF_PUBLIC);
 
   if (buf) {
     arg.CS_Buffer = buf;
@@ -430,6 +438,10 @@ parsefile(UBYTE const *name, UBYTE **errstrp, struct CSource *res)
 	  break;
 	
 	/* Print the error to the "stdout" */
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_config.c) parsefile: %s: line %ld, col %ld: %s",
+	       name, line, arg.CS_CurChr, *errstrp));
+#endif
 	Printf("%s: line %ld, col %ld: %s",
 	       name, line, arg.CS_CurChr, *errstrp);
 	retval = RETURN_OK;
@@ -468,6 +480,9 @@ readconfig(void)
   LONG args[CL_SIZE] = { 0 };
   UBYTE *errstr;
   LONG error = 0;
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_config.c) readconfig()\n"));
+#endif
 
   res.CS_Buffer = result;      
   res.CS_Length = sizeof(result); 
@@ -477,6 +492,9 @@ readconfig(void)
   rdargs = ReadArgs(cmd_template, args, NULL);
 
   if (!rdargs) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_config.c) readconfig: Bad Args\n"));
+#endif
     Printf("Argument error. Template: %s\n", cmd_template);
     return FALSE;
   }
@@ -492,7 +510,12 @@ readconfig(void)
   FreeArgs(rdargs);
 
   if (error)
+  {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_config.c) readconfig: TCP/IP Configuration: %s\n", errstr));
+#endif
     Printf("TCP/IP Configuration: %s\n", errstr);
+  }
 
   return ((BOOL)!error);
 }
@@ -520,6 +543,9 @@ enum route_template
 LONG 
 parseroute(struct CSource *args, UBYTE **errstrp, struct CSource *res)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_config.c) parseroute()\n"));
+#endif
 #if 1
   *errstrp = "ROUTE not implemented.\n";
   return RETURN_FAIL;

@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -63,6 +64,10 @@ sleep_init(void)
 {
   register int i;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_synch.c) sleep_init()\n"));
+#endif
+
   if (!sleep_initialized) {
     /*
      * initialize the semaphore protecting sleep queues
@@ -84,7 +89,9 @@ void
 tsleep_send_timeout(struct SocketBase *p,
 		    const struct timeval *time_out)
 {
-
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_synch.c) tsleep_send_timeout()\n"));
+#endif
   /*
    * Make sure that the timer message is back from the timer device
    */
@@ -114,10 +121,13 @@ tsleep_send_timeout(struct SocketBase *p,
     SetSignal(0, 1 << p->timerPort->mp_SigBit);
 #endif
   }
+
   /*
    * send timeout request if necessary
    */
-  if (time_out) {
+  if (time_out)
+  {
+//DTSLEEP(log(LOG_DEBUG,"tsleep_send_timeout()\n");)
     /*
      * set the timeout
      */
@@ -137,10 +147,13 @@ void
 tsleep_abort_timeout(struct SocketBase *p,
 		     const struct timeval *time_out)
 {
-  if (time_out) {
-    /*
-     * do not signal us any more
-     */
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_synch.c) tsleep_abort_timeout()\n"));
+#endif
+  if (time_out)
+  {
+//DTSLEEP(log(LOG_DEBUG,"tsleep_abort_timeout()\n");)
+    /* do not signal us any more */
     p->timerPort->mp_Flags = PA_IGNORE;
   }
 }
@@ -151,7 +164,9 @@ tsleep_enter(struct SocketBase *p,
 	     const char *wmesg)		/* reason to sleep */
 {
   register queue_t	q;
-  
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_synch.c) tsleep_enter()\n"));
+#endif
   /*
    * Zero is a reserved value, used to indicate
    * that we have been woken up and are no longer on
@@ -184,7 +199,9 @@ tsleep_main(struct SocketBase *p, ULONG wakemask)
   struct timerequest *timerReply;
   register queue_t q;
   int result;
-
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_synch.c) tsleep_main()\n"));
+#endif
   /* 
    * Set the signal mask for the wait
    */
@@ -234,7 +251,7 @@ tsleep_main(struct SocketBase *p, ULONG wakemask)
     /*
      * check if we got the timer reply signal and message
      */
-    if (bmask & timermask &&
+  if (bmask & timermask &&
 	(timerReply = (struct timerequest *)GetMsg(p->timerPort)) && 
 	timerReply == p->tsleep_timer) { /* sanity check */
       /*
@@ -243,7 +260,7 @@ tsleep_main(struct SocketBase *p, ULONG wakemask)
        * Set the node type to NT_UNKNOWN to mark that it is referenced only by
        * the p->tsleep_timer.
        */
-      timerReply->tr_node.io_Message.mn_Node.ln_Type = NT_UNKNOWN;
+    timerReply->tr_node.io_Message.mn_Node.ln_Type = NT_UNKNOWN;
 
       result = EWOULDBLOCK;
       break;
@@ -296,10 +313,13 @@ tsleep(struct SocketBase *p,  /* Library base through which this call came */
 {
   int result;
   spl_t old_spl;
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_synch.c) tsleep()\n"));
+#endif
 
 #if DIAGNOSTIC
-  extern struct Task *AmiTCP_Task;
-  if (FindTask(NULL) == AmiTCP_Task) {
+  extern struct Task *AROSTCP_Task;
+  if (FindTask(NULL) == AROSTCP_Task) {
     log(LOG_ERR, "TCP/IP stack did tsleep() itself!");
     return (-1);
   }
@@ -343,7 +363,7 @@ tsleep(struct SocketBase *p,  /* Library base through which this call came */
   /*
    * abort the timeout request if necessary
    */
-  if (result != EWOULDBLOCK) 
+  if (result != EWOULDBLOCK)
     tsleep_abort_timeout(p, time_out);
 
   return (result);
@@ -354,7 +374,10 @@ wakeup(caddr_t chan)
 {
   register queue_t q;
   struct SocketBase *p, *next;
-  
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_synch.c) wakeup()\n"));
+#endif
+
 #if DIAGNOSTIC
   if (chan == 0) {
     log(LOG_ERR, "wakeup on chan zero");
@@ -423,6 +446,9 @@ static BOOL spl_initialized = FALSE;
 BOOL
 spl_init(void)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_synch.c) spl_init()\n"));
+#endif
   if (!spl_initialized) {
     /*
      * Initialize spl_semaphore for use. After this call any number of 
@@ -438,6 +464,10 @@ spl_t
 spl_n(spl_t new_level)
 {
   register spl_t old_level;
+/* Uncomment the following lines to get debug - however please note: this func runs often */
+//#if defined(__AROS__)
+//D(bug("[AROSTCP](kern_synch.c) spl_n()\n"));
+//#endif
 
   ObtainSemaphore(&spl_semaphore);
   old_level = spl_level;
@@ -467,6 +497,9 @@ spl_n(spl_t new_level)
 BOOL
 spl_init(void)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_synch.c) spl_init() VOID\n"));
+#endif
   return TRUE;
 }
 

@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -32,6 +33,7 @@
 #include <sys/synch.h>
 #include <sys/errno.h>
 
+#include <aros/libcall.h>
 #include <exec/types.h>
 #include <exec/libraries.h>
 #include <exec/semaphores.h>
@@ -57,12 +59,7 @@ static LONG recvit(struct SocketBase * p,
 		   LONG * retsize);
 
 
-LONG SAVEDS send(
-   REG(d0, LONG s),
-   REG(a0, caddr_t buf),
-   REG(d1, LONG len),
-   REG(d2, LONG flags),
-   REG(a6, struct SocketBase *libPtr))
+LONG __send(LONG s, caddr_t buf, LONG len, LONG flags, struct SocketBase *libPtr)
 {
   struct msghdr msg;
   struct iovec aiov;
@@ -85,51 +82,96 @@ LONG SAVEDS send(
   API_STD_RETURN(error, retval);
 }
 
-LONG SAVEDS sendto(
-   REG(d0, LONG s),
-   REG(a0, caddr_t buf),
-   REG(d1, LONG len),
-   REG(d2, LONG flags),
-   REG(a1, caddr_t to),
-   REG(d3, LONG tolen),
-   REG(a6, struct SocketBase *libPtr))
+AROS_LH4(LONG, send,
+   AROS_LHA(LONG, s, D0),
+   AROS_LHA(caddr_t, buf, A0),
+   AROS_LHA(LONG, len, D1),
+   AROS_LHA(LONG, flags, D2),
+   struct SocketBase *, libPtr, 12, UL)
+{
+  AROS_LIBFUNC_INIT
+  DSYSCALLS(log(LOG_DEBUG,"send(%ld, buf, %ld, 0x%08lx) called", s, len, flags);)
+  return __send(s, buf, len, flags, libPtr);
+  AROS_LIBFUNC_EXIT
+}
+
+LONG __sendto(LONG s, caddr_t buf, LONG len, LONG flags, caddr_t to, LONG tolen, struct SocketBase *libPtr)
 {
   struct msghdr msg;
   struct iovec aiov;
   LONG error, retval;
-
+#ifdef ENABLE_TTCP_SHUTUP
+  struct socket *so;
+#endif
   CHECK_TASK();
+#ifdef ENABLE_TTCP_SHUTUP
+  /* This is a workaround for IBrowse which tries to use T/TCP if it discovers miami.library
+     => V3. Before using T/TCP it sets TCP_NOPUSH option for the socket. We have to implement
+     this option because if IBrowse receives ENOPROTOOPT after this call it refusess to work
+     instead of falling back to normal TCP. Normal TCP is used in this mode only when sendto()
+     returns ENOTCONN. Here we enforce this error if TCP_NOPUSH is set. */
+  error = getSock(libPtr, s, &so);
+  if (!error) {
+    if (so->so_options & SO_TTCP_SHUTUP)
+      error = ENOTCONN;
+    else {
+#endif
+      msg.msg_name = to;
+      msg.msg_namelen = tolen;
+      msg.msg_iov = &aiov;
+      msg.msg_iovlen = 1;
+      msg.msg_control = 0;
+      aiov.iov_base = buf;
+      aiov.iov_len = len;
 
-  msg.msg_name = to;
-  msg.msg_namelen = tolen;
-  msg.msg_iov = &aiov;
-  msg.msg_iovlen = 1;
-  msg.msg_control = 0;
-  aiov.iov_base = buf;
-  aiov.iov_len = len;
-
-  ObtainSyscallSemaphore(libPtr);
-  error = sendit(libPtr, s, &msg, flags, &retval);
-  ReleaseSyscallSemaphore(libPtr);
-  
+      ObtainSyscallSemaphore(libPtr);
+      error = sendit(libPtr, s, &msg, flags, &retval);
+      ReleaseSyscallSemaphore(libPtr);
+#ifdef ENABLE_TTCP_SHUTUP
+    }
+  }
+#endif
   API_STD_RETURN(error, retval);
 }
 
-LONG SAVEDS sendmsg(
+AROS_LH6(LONG, sendto,
+   AROS_LHA(LONG, s, D0),
+   AROS_LHA(caddr_t, buf, A0),
+   AROS_LHA(LONG, len, D1),
+   AROS_LHA(LONG, flags, D2),
+   AROS_LHA(caddr_t, to, A1),
+   AROS_LHA(LONG, tolen, D3),
+   struct SocketBase *, libPtr, 13, UL)
+{
+  AROS_LIBFUNC_INIT
+  DSYSCALLS(log(LOG_DEBUG,"sendto(%ld, buf, %ld, 0x%08lx, sockaddr_in, %ld", s, len, flags, tolen);)
+  DSYSCALLS(dump_sockaddr_in((struct sockaddr_in *)to);)
+  return __sendto(s, buf, len, flags, to, tolen, libPtr);
+  AROS_LIBFUNC_EXIT
+}
+
+/*LONG SAVEDS sendmsg(
    REG(d0, LONG s),
    REG(a0, struct msghdr *msg_p),
    REG(d1, LONG flags),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH3(LONG, sendmsg,
+   AROS_LHA(LONG, s, D0),
+   AROS_LHA(struct msghdr *, msg_p, A0),
+   AROS_LHA(LONG, flags, D1),
+   struct SocketBase *, libPtr, 14, UL)
 {
+  AROS_LIBFUNC_INIT
   LONG error, retval;
 
   CHECK_TASK();
-
+  DSYSCALLS(log(LOG_DEBUG,"sendmsg(%ld, msghdr, 0x%08lx) called", s, flags);)
   ObtainSyscallSemaphore(libPtr);
   error = sendit(libPtr, s, msg_p, flags, &retval);
   ReleaseSyscallSemaphore(libPtr);
 
   API_STD_RETURN(error, retval);
+  AROS_LIBFUNC_EXIT
 }
 
 static LONG sendit(struct SocketBase * p,
@@ -197,12 +239,7 @@ static LONG sendit(struct SocketBase * p,
   return (error);
 }
 
-LONG SAVEDS recv(
-   REG(d0, LONG s),
-   REG(a0, caddr_t buf),
-   REG(d1, LONG len),
-   REG(d2, LONG flags),
-   REG(a6, struct SocketBase *libPtr))
+LONG __recv(LONG s, caddr_t buf, LONG len, LONG flags, struct SocketBase *libPtr)
 {
   struct msghdr msg;
   struct iovec aiov;
@@ -225,21 +262,43 @@ LONG SAVEDS recv(
   API_STD_RETURN(error, retval);
 }
 
-LONG SAVEDS recvfrom(
+AROS_LH4(LONG, recv,
+   AROS_LHA(LONG, s, D0),
+   AROS_LHA(caddr_t, buf, A0),
+   AROS_LHA(LONG, len, D1),
+   AROS_LHA(LONG, flags, D2),
+   struct SocketBase *, libPtr, 15, UL)
+{
+  AROS_LIBFUNC_INIT
+  DSYSCALLS(log(LOG_DEBUG,"recv(%ld, buf, %ld, 0x%08lx) called", s, len, flags);)
+  return __recv(s, buf, len, flags, libPtr);
+  AROS_LIBFUNC_EXIT
+}
+
+/*LONG SAVEDS recvfrom(
    REG(d0, LONG s),
    REG(a0, caddr_t buf),
    REG(d1, LONG len),
    REG(d2, LONG flags),
    REG(a1, caddr_t from),
    REG(a2, LONG * fromlenaddr),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH6(LONG, recvfrom,
+   AROS_LHA(LONG, s, D0),
+   AROS_LHA(caddr_t, buf, A0),
+   AROS_LHA(LONG, len, D1),
+   AROS_LHA(LONG, flags, D2),
+   AROS_LHA(caddr_t, from, A1),
+   AROS_LHA(LONG *, fromlenaddr, A2),
+   struct SocketBase *, libPtr, 16, UL)
 {
+  AROS_LIBFUNC_INIT
   struct msghdr	msg;
   struct iovec aiov;
   LONG error, retval;
 
   CHECK_TASK();
-
+  DSYSCALLS(log(LOG_DEBUG,"recvfrom(%ld, buf, %ld, 0x%08lx) called", s, len, flags);)
   if (fromlenaddr)
     msg.msg_namelen = *fromlenaddr;
   else
@@ -257,23 +316,31 @@ LONG SAVEDS recvfrom(
   ReleaseSyscallSemaphore(libPtr);
 
   API_STD_RETURN(error, retval);
+  AROS_LIBFUNC_EXIT
 }
 
-LONG SAVEDS recvmsg(
+/*LONG SAVEDS recvmsg(
    REG(d0, LONG s),
    REG(a0, struct msghdr *msg_p),
    REG(d1, LONG flags),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH3(LONG, recvmsg,
+   AROS_LHA(LONG, s, D0),
+   AROS_LHA(struct msghdr *, msg_p, A0),
+   AROS_LHA(LONG, flags, D1),
+   struct SocketBase *, libPtr, 17, UL)
 {
+  AROS_LIBFUNC_INIT
   LONG error, retval;
   
   CHECK_TASK();
-
+  DSYSCALLS(log(LOG_DEBUG,"recvmsg(%ld, msghdr, 0x%08lx) called", s, flags);)
   ObtainSyscallSemaphore(libPtr);
   error = recvit(libPtr, s, msg_p, flags, NULL, &retval);
   ReleaseSyscallSemaphore(libPtr);
 
   API_STD_RETURN(error, retval);
+  AROS_LIBFUNC_EXIT
 }
 
 static LONG recvit(struct SocketBase * p,

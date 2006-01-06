@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -30,7 +31,7 @@
 #include <sys/mbuf.h>
 #include <sys/socket.h>
 #include <sys/errno.h>
-#include <sys/ioctl.h>
+#include <sys/sockio.h>
 #include <sys/systm.h>
 #include <sys/syslog.h>
 
@@ -58,6 +59,7 @@
 #endif
 
 #include <net/if_sana.h>
+#include <net/if_types.h>
 #include <net/sana2arp.h>
 
 #include <net/sana2config.h>
@@ -65,6 +67,9 @@
 #include <net/sana2errno.h>
 
 #include <proto/dos.h>
+
+#include <net/if_protos.h>
+#include <net/if_loop_protos.h>
 
 #define ARP_MTU (sizeof(struct s2_arppkt))
 
@@ -79,12 +84,13 @@ struct sana_softc *ssq = NULL;
 /* These are wire type dependant parameters of 
  * Sana-II Network Interface
  */
- 
-#if __GNUC__ >= 4
-#warning "CHECKME. Struct not defined anywhere. Incomplete type compile error!"
-#else
+struct wiretype_parameters
+{
+   ULONG          wiretype;
+   WORD           flags;
+   struct TagItem *tags;
+};
 extern struct wiretype_parameters wiretype_table[];
-#endif
 
 /* 
  * Local prototypes
@@ -325,6 +331,7 @@ iface_make(struct ssconfig *ifc)
   else {
     req->ios2_BufferManagement = buffermanagement;
 
+    DSANA(log(LOG_DEBUG,"Opening device %s unit %ld", ifc->args->a_dev, *ifc->args->a_unit);)
     if (OpenDevice(ifc->args->a_dev, *ifc->args->a_unit, 
 		   (struct IORequest *)req, 0L)) {
       sana2perror("OpenDevice", req);
@@ -378,6 +385,34 @@ iface_make(struct ssconfig *ifc)
 	    ssc->ss_if.if_output = sana_output;
 	    ssc->ss_if.if_ioctl  = sana_ioctl;
 
+	    /* Map SANA-II hardware types to RFC1573 standard */
+	    switch (ssc->ss_hwtype) {
+	    case S2WireType_Ethernet:
+	      ssc->ss_if.if_type = IFT_ETHER;
+	      break;
+	    case S2WireType_IEEE802:
+	      ssc->ss_if.if_type = IFT_IEEE80211;
+	      break;
+	    case S2WireType_Arcnet:
+	      ssc->ss_if.if_type = IFT_ARCNET;
+	      break;
+	    case S2WireType_LocalTalk:
+	      ssc->ss_if.if_type = IFT_LOCALTALK;
+	      break;
+	    case S2WireType_PPP:
+	      ssc->ss_if.if_type = IFT_PPP;
+	      break;
+	    case S2WireType_SLIP:
+	    case S2WireType_CSLIP:
+	      ssc->ss_if.if_type = IFT_SLIP;
+	      break;
+	    case S2WireType_PLIP:
+	      ssc->ss_if.if_type = IFT_PARA;
+	      break;
+	    default:
+	      ssc->ss_if.if_type = IFT_OTHER;
+	    }
+
 	    /* Initialize */ 
 	    ssconfig(ssc, ifc);
 	    
@@ -409,7 +444,8 @@ sana_run(struct sana_softc *ssc, int requests, struct ifaddr *ifa)
   int i;
   spl_t s = splimp();
   struct IOIPReq *req, *next = ssc->ss_reqs;
-  
+
+  DSANA(log(LOG_DEBUG,"sana_run(%s%d) called",ssc->ss_if.if_name, ssc->ss_if.if_unit);)
   /*
    * Configure the Sana-II device driver
    * (now with factory address)
@@ -456,9 +492,9 @@ sana_run(struct sana_softc *ssc, int requests, struct ifaddr *ifa)
 
   if ((ssc->ss_if.if_flags & IFF_RUNNING)) {
     /* Initialize ioRequests, add them into free queue */
-    for (i = 0; i < requests ; i++) {
-      if (!(req = CreateIORequest(SanaPort, sizeof(*req))))
-	break;
+    for (i = 0; i < requests ; i++)
+    {
+      if (!(req = CreateIORequest(SanaPort, sizeof(*req)))) break;
       req->ioip_s2.ios2_Req.io_Device    = ssc->ss_dev;    
       req->ioip_s2.ios2_Req.io_Unit      = ssc->ss_unit;   
       req->ioip_s2.ios2_BufferManagement = ssc->ss_bufmgnt;
@@ -509,30 +545,54 @@ sana_ioctl(register struct ifnet *ifp, int cmd, caddr_t data)
   spl_t s = splimp();
   int error = 0;
 
+D(bug("[ATCP-SANA] sana_ioctl()\n"));
+
   switch (cmd) {
 
   case SIOCSIFFLAGS:
+D(bug("[ATCP-SANA] sana_ioctl: SIOCSIFFLAGS - \n"));
+
     if ((ifr->ifr_flags & (IFF_UP|IFF_RUNNING)) == (IFF_UP|IFF_RUNNING))
+    {
+D(bug("[ATCP-SANA] sana_ioctl: SIFFLAGS bringing interface up .. \n"));
       sana_up(ssc);
+    }
     /* Call sana_down() in every case */
-    if ((ifr->ifr_flags & IFF_UP) == 0) 
+    if ((ifr->ifr_flags & IFF_UP) == 0)
+    {
+D(bug("[ATCP-SANA] sana_ioctl: SIFFLAGS bringing interface DOWN .. \n"));
       sana_down(ssc);
+    }
     if ((ifr->ifr_flags & IFF_NOARP) == 0)
+    {
+D(bug("[ATCP-SANA] sana_ioctl: SIFFLAGS Allocating interface ARP tables .. \n"));
       alloc_arptable(ssc, 0);
+    }
     break;
 
     /*
      * Set interface address (and mark interface up).
      */
   case SIOCSIFADDR:		/* Set Interface Address */
-    if (!(ssc->ss_if.if_flags & IFF_RUNNING)) 
+D(bug("[ATCP-SANA] sana_ioctl: SIOCSIFADDR - Set Interface Address\n"));
+    if (!(ssc->ss_if.if_flags & IFF_RUNNING))
+    {
+D(bug("[ATCP-SANA] sana_ioctl: SIFADDR set interface as running .. \n"));
       sana_run(ssc, ssc->ss_reqno, ifa);
+    }
     if ((ssc->ss_if.if_flags & IFF_RUNNING) && !(ssc->ss_if.if_flags & IFF_UP))
+    {
+D(bug("[ATCP-SANA] sana_ioctl: SIFADDR bringing interface up .. \n"));
       sana_up(ssc);
-    if ((ifr->ifr_flags & IFF_NOARP) == 0)
+    }
+    if ((ssc->ss_if.if_flags & IFF_NOARP) == 0)
+    {
+D(bug("[ATCP-SANA] sana_ioctl: SIFADDR Allocating interface ARP tables .. \n"));
       alloc_arptable(ssc, 0);
+    }
     
   case SIOCAIFADDR:		/* Alter Interface Address */
+D(bug("[ATCP-SANA] sana_ioctl: SIOCAIFADDR - Alter Interface Address\n"));
     switch (ifa->ifa_addr->sa_family) {
 #if INET
     case AF_INET:
@@ -543,9 +603,11 @@ sana_ioctl(register struct ifnet *ifp, int cmd, caddr_t data)
     break;
 
   case SIOCSIFDSTADDR:		/* Sets P-P-link destination address */
+D(bug("[ATCP-SANA] sana_ioctl: SIOCSIFDSTADDR - [*] Set P-P-link destination address\n"));
     break;
 
   default:
+D(bug("[ATCP-SANA] sana_ioctl: UNKNOWN SIOC\n"));
     error = EINVAL;
     break;
   }
@@ -582,7 +644,7 @@ sana_send_read(struct sana_softc *ssc, WORD count, ULONG type, ULONG mtu,
  no_resources:
   if (req)
     AddHead((struct List*)&ssc->ss_freereq, (struct Node*)req);
-  log(LOG_ERR, "sana_up: could not queue enough read requests\n");
+  log(LOG_ERR, "sana_send_read: could not queue enough read requests\n");
   return i;
 }
 
@@ -593,8 +655,51 @@ sana_send_read(struct sana_softc *ssc, WORD count, ULONG type, ULONG mtu,
 static void
 sana_up(struct sana_softc *ssc)
 {
-  spl_t s = splimp();
-  ssc->ss_if.if_flags |= IFF_UP;
+  struct IOSana2Req *req;
+  spl_t s;
+
+DSANA(log(LOG_DEBUG,"sana_up(%s%d) called", ssc->ss_if.if_name, ssc->ss_if.if_unit);)
+D(bug("[ATCP-SANA] sana_up('%s%d')\n", ssc->ss_if.if_name, ssc->ss_if.if_unit));
+
+  s = splimp();
+
+  if (ssc->ss_if.if_flags & IFF_UP)
+  {
+D(bug("[ATCP-SANA] sana_up: ['%s%d'] Interface is already UP ..\n", ssc->ss_if.if_name, ssc->ss_if.if_unit));
+      return;
+  }
+
+  if (req = CreateIOSana2Req(ssc))
+  {
+      req->ios2_Req.io_Command = S2_ONLINE;
+      req->ios2_Req.io_Error   = S2ERR_NO_ERROR;
+
+      DoIO((struct IORequest*)req);
+
+      if (req->ios2_Req.io_Error != S2ERR_NO_ERROR)
+      {
+D(bug("[ATCP-SANA] sana_up: ['%s%d'] DoIO returnd error %d\n", ssc->ss_if.if_name, ssc->ss_if.if_unit, req->ios2_Req.io_Error));
+         if ((req->ios2_WireError == S2WERR_UNIT_ONLINE)||(req->ios2_WireError == S2WERR_IS_CONFIGURED))
+         {
+D(bug("[ATCP-SANA] sana_up: ['%s%d'] Device already configured but not marked as UP\n", ssc->ss_if.if_name, ssc->ss_if.if_unit));
+D(bug("[ATCP-SANA] sana_up: ['%s%d'] Marking as UP\n", ssc->ss_if.if_name, ssc->ss_if.if_unit));
+   	      ssc->ss_if.if_flags |= IFF_UP;
+         }
+
+         sana2perror("S2_ONLINE", req);
+      }
+      else
+      {
+	      ssc->ss_if.if_flags |= IFF_UP;
+log(LOG_NOTICE, "%s%d is now online.", ssc->ss_name, ssc->ss_if.if_unit);
+D(bug("[ATCP-SANA] sana_up: ['%s%d'] Interface marked as UP\n", ssc->ss_if.if_name, ssc->ss_if.if_unit));  
+      }
+      DeleteIOSana2Req(req);
+  }
+  else
+  {
+D(bug("[ATCP-SANA] sana_up: ['%s%d'] Failed to Create IO Request\n", ssc->ss_if.if_name, ssc->ss_if.if_unit));  
+  }
   
   /* Send read requests to device driver */
 #if	INET
@@ -650,8 +755,17 @@ AbortSanaIO(register __a1 struct IORequest *ioRequest)
 static BOOL
 sana_down(struct sana_softc *ssc)
 {
+  struct IOSana2Req * sreq;
   spl_t s = splimp();
   struct IOIPReq *req = ssc->ss_reqs;
+
+  DSANA(log(LOG_DEBUG,"sana_down(%s%d) called", ssc->ss_if.if_name, ssc->ss_if.if_unit);)
+
+  if (!(ssc->ss_if.if_flags & IFF_UP))
+  {
+D(bug("[ATCP-SANA] sana_down: '%s%d' is already DOWN ..\n", ssc->ss_if.if_name, ssc->ss_if.if_unit));
+      return;
+  }
 
   /* Completed, Remove()'d requests are not aborted */
   while (req) {
@@ -659,6 +773,16 @@ sana_down(struct sana_softc *ssc)
       AbortSanaIO((struct IORequest*)req);
     }
     req = req->ioip_next;
+  }
+  if (sreq = CreateIOSana2Req(ssc)) {
+      sreq->ios2_Req.io_Command = S2_OFFLINE;
+
+      DoIO((struct IORequest*)sreq);
+      if (sreq->ios2_Req.io_Error)
+	sana2perror("S2_OFFLINE", sreq);
+      else
+	log(LOG_NOTICE, "%s%d is now offline.", ssc->ss_name, ssc->ss_if.if_unit);
+      DeleteIOSana2Req(sreq);
   }
 
   splx(s);

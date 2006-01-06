@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 1982, 1986 Regents of the University of California.
  * All rights reserved.
+ * Copyright (c) 2005 Pavel Fedin
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -78,12 +79,21 @@ struct tcphdr {
  */
 #define	TCP_MSS	512
 
-#define	TCP_MAXWIN	65535		/* largest value for window */
+#define	TCP_MAXWIN		65535	/* largest value for window */
+#define	TTCP_CLIENT_SND_WND	4096	/* dflt send window for T/TCP client */
+
+#define TCP_MAX_WINSHIFT	14	/* maximum window shift */
+
+#define TCP_MAXHLEN	(0xf<<2)	/* max length of header in bytes */
+#define TCP_MAXOLEN	(TCP_MAXHLEN - sizeof(struct tcphdr))
+					/* max space left for options */
 
 /*
  * User-settable options (used with setsockopt).
  */
 #define	TCP_NODELAY	0x01	/* don't delay send to coalesce packets */
 #define	TCP_MAXSEG	0x02	/* set maximum segment size */
+#define TCP_NOPUSH	0x04	/* don't push last block of write */
+#define TCP_NOOPT	0x08	/* don't use TCP options */
 
 #endif /* !TCP_H */

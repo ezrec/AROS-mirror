@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -22,8 +23,6 @@
 
 #include <conf.h>
 
-/*#include <bsdsocket.library_rev.h>*/
-
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/time.h>
@@ -34,41 +33,45 @@
 #include <dos/dosextens.h>
 
 #include <kern/amiga_includes.h>
-#include <sys/syslog.h>
+#include <syslog.h>
 #include <kern/amiga_log.h>
 #include <kern/amiga_rexx.h>
 #include <utility/date.h>
 
 #include <proto/dos.h>
 #include <proto/utility.h>
+
+#include <api/apicalls.h>
+
 #define DOSBase logDOSBase
 #define UtilityBase logUtilityBase
 #undef DOSBase
 
-struct MsgPort *logPort,*logReplyPort;
+struct MsgPort *logPort;
+struct MsgPort *ExtLogPort;
 
 static struct Library *logDOSBase = NULL;
 static struct Library *logUtilityBase = NULL;
 
-extern struct Task *AmiTCP_Task;
+extern struct Task *AROSTCP_Task;
 extern struct DosLibrary *DOSBase;
 
 extern void REGARGFUN stuffchar();
 extern int logname_changed(void *p, LONG new);
 
-static struct log_msg *log_poll(void);
+static struct SysLogPacket *log_poll(void);
 static void log_task(void);
-static void log_close(struct log_msg *msg);
+static void log_close(struct SysLogPacket *msg);
 static BPTR logOpen(STRPTR name);
 
-static struct log_msg *log_messages = NULL;
+static struct SysLogPacket *log_messages = NULL;
 static char *log_buffers = NULL;
 static LONG log_messages_mem_size, log_buffers_mem_size;
 static int GetLogMsgFail;
 
 
-UBYTE consoledefname[] = _PATH_CON;
-UBYTE logfiledefname[] = _PATH_LOG;
+UBYTE consoledefname[] = "con:0/0/640/200/AROSTCP syslog/AUTO/INACTIVE";
+extern UBYTE logfiledefname[];
 STRPTR logfilename = logfiledefname;
 STRPTR consolename = consoledefname;
 
@@ -76,6 +79,9 @@ STRPTR consolename = consoledefname;
 struct log_cnf log_cnf = { LOG_BUFS, LOG_BUF_LEN };
 
 #define SOCKET_VERSION 3
+
+struct SignalSemaphore LogLock;
+struct MsgPort logReplyPort;
 
 /*
  * Initialization function for the logging subsystem
@@ -87,9 +93,12 @@ log_init(void)
   struct Message *msg;
   int i;
   ULONG sig;
-
-  if (logReplyPort)
-    return(TRUE);		/* We're allready initialized */
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_log.c) log_init()\n"));
+#endif
+/*  if (logReplyPort)
+    return(TRUE);*/		  /* We're allready initialized */
+  InitSemaphore(&LogLock);
   
   /*
    * Allocate buffers for log messages.
@@ -97,57 +106,106 @@ log_init(void)
    * Save lengths to static variables, since the configuration variables might
    * change.
    */
-  log_messages_mem_size = sizeof(struct log_msg) * log_cnf.log_bufs;
+  log_messages_mem_size = sizeof(struct SysLogPacket) * log_cnf.log_bufs;
   log_buffers_mem_size = log_cnf.log_bufs * log_cnf.log_buf_len * sizeof(char);
   if (log_messages = AllocMem(log_messages_mem_size, MEMF_CLEAR|MEMF_PUBLIC))
     if (log_buffers = AllocMem(log_buffers_mem_size, MEMF_CLEAR|MEMF_PUBLIC)) {
-      logPort = NULL; /* NETTRACE will set this on success */
-      GetLogMsgFail = 0;
-
-      if (logReplyPort = CreateMsgPort()) {
+        logPort = NULL; /* NETTRACE will set this on success */
+        GetLogMsgFail = 0;
+//#warning "TODO: NicJA - Where does SetSysLogPort() come from?"
+//#if !defined(__AROS__)
+        SetSysLogPort();
+//#endif
+	logReplyPort.mp_Flags = PA_SIGNAL;
+	logReplyPort.mp_SigBit = SIGBREAKB_CTRL_E;
+	logReplyPort.mp_SigTask = FindTask(NULL);
+	NewList(&logReplyPort.mp_MsgList);
 	/*
 	 * Start the NETTRACE process
 	 */
+D(Printf("Creating NETTRACE process...");)
+        
+#ifdef __MORPHOS__
 	if (CreateNewProcTags(NP_Entry, (LONG)&log_task,
 			      NP_Name, (LONG)LOG_TASK_NAME,
 			      NP_Priority, LOG_TASK_PRI,
-			      TAG_DONE, NULL)) {
+               NP_CodeType,CODETYPE_PPC,
+			      TAG_DONE, NULL))
+#else
+	if (CreateNewProcTags(NP_Entry, (LONG)&log_task,
+			      NP_Name, (LONG)LOG_TASK_NAME,
+			      NP_Priority, LOG_TASK_PRI,
+			      TAG_DONE, NULL))
+#endif
+  {
 	  for (;;) {
 	    /*
 	     * Wait for a signal for success or failure
 	     */
-	    sig = Wait(1<<logReplyPort->mp_SigBit | SIGBREAKF_CTRL_F);
+	    sig = Wait(SIGBREAKF_CTRL_E | SIGBREAKF_CTRL_F);
+            D(Printf(" got some reply...");)
 
 	    if (sig & SIGBREAKF_CTRL_F && logPort == (struct MsgPort *)-1) {
 	      /* Initializion failed */
+              D(Printf(" initialization failed!\n");)
 	      logPort = NULL;
 	      break;
 	    }
-	    else if (msg = GetMsg(logReplyPort)) { /* Got message back? */
+	    else if (msg = GetMsg(&logReplyPort)) { /* Got message back? */
+              D(Printf(" done!\n");)
 	      ReplyMsg(msg);
-	      logReplyPort->mp_Flags = PA_IGNORE;
+	      logReplyPort.mp_Flags = PA_IGNORE;
 	      /* 
 	       * Initialize messages
 	       */
 	      for (i = 0; i < log_cnf.log_bufs; i++) {
-		log_messages[i].msg.mn_ReplyPort = logReplyPort;
-		log_messages[i].msg.mn_Length = sizeof(struct log_msg);
-		log_messages[i].level = 0;
-		log_messages[i].string = log_buffers+i*log_cnf.log_buf_len;
-		log_messages[i].chars = 0;
-		PutMsg(logReplyPort, (struct Message *)&log_messages[i]);
+		D(Printf("Initialising log message %ld\n",i);)
+		log_messages[i].Msg.mn_ReplyPort = &logReplyPort;
+		log_messages[i].Msg.mn_Length = sizeof(struct SysLogPacket);
+		log_messages[i].Level = 0;
+		log_messages[i].String = log_buffers+i*log_cnf.log_buf_len;
+		PutMsg(&logReplyPort, (struct Message *)&log_messages[i]);
 	      }
+              D(Printf("Finished!\n");)
 	      return(TRUE);	/* We're done */
 	    }
 	  }
 	}
-      }
     }
   /*
    * Something went wrong
    */
   log_deinit();
   return(FALSE);
+}
+
+/* A little stub for calling GetMsg w/ error reporting and cheking */
+struct SysLogPacket *GetLogMsg(struct MsgPort *port)
+{
+  struct Message *msg;
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_log.c) GetLogMsg()\n"));
+#endif
+
+  /* We should have a port, if not-> fail */
+  if (port) {
+    ObtainSemaphore(&LogLock);
+    for (;;) {
+      if (msg = GetMsg(port)) {  /* Get a message */
+	SetSignal(0, SIGBREAKF_CTRL_E);
+	ReleaseSemaphore(&LogLock);
+        return (struct SysLogPacket *)msg;
+      }
+      port->mp_SigTask = FindTask(NULL);
+      port->mp_Flags = PA_SIGNAL;
+      WaitPort(port);
+      port->mp_Flags = PA_IGNORE;
+    }
+  }
+  DNETTRACE(else KPrintF("WARNING!!! port = NULL!\n");)
+
+  ++GetLogMsgFail;		/* Increment number of failed messages */
+  return NULL;
 }
 
 /*
@@ -157,70 +215,49 @@ log_init(void)
 void 
 log_deinit(void)
 {
-  struct log_msg *msg, *dump;
+  struct SysLogPacket *msg, *dump;
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_log.c) log_deinit()\n"));
+#endif
 
-  if (logReplyPort) {		/* We have our port? */
-    if (logPort) {		/* Logport exists? (=> NETTRACE is running) */
-      /*
-       * Turn on signalling on returned messages again
-       */
-      logReplyPort->mp_Flags = PA_SIGNAL;
+  D(Printf("log_deinit() called\n");)
+  if (logPort) {	      /* Logport exists? (=> NETTRACE is running) */
 
       /*
        * Get a free message, Wait() for it if necessary
        */
-      while((msg = (struct log_msg *)GetMsg(logReplyPort)) == NULL) 
-	Wait(1<<logReplyPort->mp_SigBit);
+      msg = GetLogMsg(&logReplyPort);
+      D(Printf("Got next log message\n");)
 
       /* 
        * Initalize END_MESSAGE
        */
-      msg->msg.mn_ReplyPort = logReplyPort;
-      msg->msg.mn_Length = sizeof(struct log_msg);
-      msg->level = LOG_CLOSE;
+      msg->Msg.mn_ReplyPort = &logReplyPort;
+      msg->Msg.mn_Length = sizeof(struct SysLogPacket);
+      msg->Level = LOG_CLOSE;
 
       PutMsg(logPort, (struct Message *)msg);
+      D(Printf("Sent LOG_CLOSE\n");)
       
       for (;;) {
-	dump = (struct log_msg *)GetMsg(logReplyPort);
-	if (dump) {
-	  if (dump->level == LOG_CLOSE)	/* got the Close message back */
+	dump = GetLogMsg(&logReplyPort);
+	D(Printf("Got next log message\n");)
+	if (dump->Level == LOG_CLOSE) { /* got the Close message back */
+	    D(Printf("LOG_CLOSE returned\n");)
 	    break;		/* It was the last one */
-	}	      
-	else
-	  Wait(1<<logReplyPort->mp_SigBit);
+	}
       }
-    }
-
-    /*
-     * ensure that the port is empty
-     */
-    while(GetMsg(logReplyPort))
-      ;
-    DeleteMsgPort(logReplyPort);
-    logReplyPort = NULL;
   }
   if (log_buffers) {
+    D(Printf("Freeing log_buffers\n");)
     FreeMem(log_buffers, log_buffers_mem_size);
     log_buffers = NULL;
   }
   if (log_messages) {
+    D(Printf("Freeing log_messages\n");)
     FreeMem(log_messages, log_messages_mem_size);
     log_messages = NULL;
   }
-}
-
-/* A little stub for calling GetMsg w/ error reporting and cheking */
-struct log_msg *GetLogMsg(struct MsgPort *port)
-{
-  struct Message *msg;
-
-  if (port && (msg = GetMsg(port)))  /* Get a message */
-    /* We should have a port, if not-> fail */
-    return (struct log_msg *)msg; 
-
-  ++GetLogMsgFail;		/* Increment number of failed messages */
-  return NULL;
 }
 
 /*
@@ -238,9 +275,13 @@ struct Task *Nettrace_Task = NULL;
 static void SAVEDS
 log_task(void)
 {
-  struct log_msg *initmsg = NULL;
+  struct SysLogPacket *initmsg = NULL;
   ULONG rexxmask = 0, logmask = 0, sigmask = 0;
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_log.c) log_task()\n"));
+#endif
 
+  DNETTRACE(KPrintF("NETTRACE started\n");)
   Nettrace_Task = FindTask(NULL); /* Store task pointer for AmiTCP */
 
   /* We need our own DosBase */
@@ -251,7 +292,7 @@ log_task(void)
     goto fail;
 
   /* Allocate message to reply startup */
-  if ((initmsg = AllocMem(sizeof(struct log_msg), MEMF_CLEAR|MEMF_PUBLIC))
+  if ((initmsg = AllocMem(sizeof(struct SysLogPacket), MEMF_CLEAR|MEMF_PUBLIC))
       == NULL)
     goto fail;
 
@@ -270,30 +311,38 @@ log_task(void)
   /*
    * Syncronize with AmiTCP/IP
    */
-  initmsg->msg.mn_ReplyPort = logPort;
-  initmsg->msg.mn_Length = sizeof(struct log_msg);
-  PutMsg(logReplyPort, (struct Message *)initmsg);
+  DNETTRACE(KPrintF("NETTRACE initialization complete, sending message...");)
+  initmsg->Msg.mn_ReplyPort = logPort;
+  initmsg->Msg.mn_Length = sizeof(struct SysLogPacket);
+  PutMsg(&logReplyPort, (struct Message *)initmsg);
   do {
     Wait(logmask);
-  } while(initmsg != (struct log_msg *)GetMsg(logPort));
+  } while(initmsg != (struct SysLogPacket *)GetMsg(logPort));
+#if !defined(__AROS__)
+  D(KPrintF(" done!\n");)
+#endif
 
-  FreeMem(initmsg, sizeof(struct log_msg));
+  FreeMem(initmsg, sizeof(struct SysLogPacket));
   initmsg = NULL;
 
-  sigmask = logmask | rexxmask | SIGBREAKF_CTRL_F;
+  sigmask = logmask | rexxmask | SIGBREAKF_CTRL_F | SIGBREAKF_CTRL_C;
   
   /* 
    * Main loop of the NETTRACE
    */
   for (;;) {
     ULONG sig;
-    struct log_msg *msg;
+    struct SysLogPacket *msg;
 
     sig = Wait(sigmask);	/* Wait for signals */
+    DNETTRACE(KPrintF("NETTRACE: got some signal...");)
     do {
 				/* Signal from the AmiTCP/IP: API ready */
       if ((sig & SIGBREAKF_CTRL_F) && (SocketBase == NULL)) {
 	sig &= ~SIGBREAKF_CTRL_F;
+#if !defined(__AROS__)
+        D(KPrintF(" bsdsocket API ready\n");)
+#endif
 	/*
 	 * Open a base to our own library so that ARexx message handling
 	 * can use socket functions.
@@ -305,27 +354,36 @@ log_task(void)
 	   */
 	  rexx_show();
 	  sigmask &= ~SIGBREAKF_CTRL_F;
-/*SocketBase = NULL;*/
 	}
+      }
+      if (sig & SIGBREAKF_CTRL_C) {
+	/*
+	 * Forward CTRL-C to our main task
+	 */
+	Signal(AROSTCP_Task, SIGBREAKF_CTRL_C);
+	sig &= ~SIGBREAKF_CTRL_C;
       }
 
       if (sig & logmask) {	/* Process log messages,
 				 * handles all ones pending.
 				 */
+	DNETTRACE(KPrintF(" log message\n");)
 	if (msg = log_poll()) {	/* Got an LOG_CLOSE-message? */
+	  DNETTRACE(KPrintF("Got LOG_CLOSE, exiting.\n");)
 	  log_close(msg);
 	  return;
 	}
 	sig &= ~logmask;
       }
 
-      if (sig & rexxmask)	/* One rexx message at time */
+      if (sig & rexxmask) {	  /* One rexx message at time */
+	DNETTRACE(KPrintF(" REXX message\n");)
 	if (SocketBase) {
 	  if (!rexx_poll()) 
 	    sig &= ~rexxmask;
 	} else
 	  sig &= ~rexxmask;
-
+      }
       sig |= SetSignal(0L, sigmask) & sigmask; /* Signals left? */
     } while (sig);
   }
@@ -333,19 +391,24 @@ log_task(void)
  fail:				
   /* Initializion Failed */
   if (initmsg)
-    FreeMem(initmsg, sizeof(struct log_msg));
+    FreeMem(initmsg, sizeof(struct SysLogPacket));
 
   log_close(NULL);
 
   logPort = (struct MsgPort *)-1;
   /* Inform AmiTCP that we failed */
-  Signal(AmiTCP_Task, SIGBREAKF_CTRL_F); 
+  Signal(AROSTCP_Task, SIGBREAKF_CTRL_F); 
 }
 
+#ifdef CONSOLE_SYSLOG
 static BPTR confile = NULL;
+static BOOL conopenfail = FALSE;
+static BOOL conwritefail = FALSE;
+#endif
+
 static BPTR logfile = NULL;
-static BOOL fileopenfail = FALSE, conopenfail = FALSE;
-static BOOL filewritefail = FALSE, conwritefail = FALSE;
+static BOOL fileopenfail = FALSE;
+static BOOL filewritefail = FALSE;
 
 static char *months =
   "Jan\0Feb\0Mar\0Apr\0May\0Jun\0Jul\0Aug\0Sep\0Oct\0Nov\0Dec";
@@ -367,12 +430,15 @@ static char *levels =
  * Process all pending log messages 
  */
 static
-struct log_msg *log_poll()
+struct SysLogPacket *log_poll()
 {     
-  struct log_msg *msg;
-  ULONG where;
+  struct SysLogPacket *msg;
   LONG i;
+  int chars;
   struct ClockData clockdata;
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_log.c) log_poll()\n"));
+#endif
 
   /* 28 for date, 14 for level */
 # define LEVELBUF 28+14
@@ -381,15 +447,10 @@ struct log_msg *log_poll()
   static ULONG TotalFail;
 
   /* Process all messages */
-  while (msg = (struct log_msg *)GetMsg(logPort)) { 
+  while (msg = (struct SysLogPacket *)GetMsg(logPort)) { 
     struct CSource cs;
 
-    /* All except LOG_EMERG to both log and console */
-    where = TOLOG;
-    if (msg->level != LOG_EMERG)
-      where |= TOCONS;
-
-    if (msg->level == LOG_CLOSE) {
+    if (msg->Level == LOG_CLOSE) {
       return (msg);
     }
 
@@ -397,7 +458,7 @@ struct log_msg *log_poll()
     cs.CS_Length = LEVELBUF;
     cs.CS_CurChr = 0;
 
-    Amiga2Date(msg->time, &clockdata);
+    Amiga2Date(msg->Time, &clockdata);
 
     csprintf(&cs, 
 #ifdef HAVE_TIMEZONES
@@ -415,23 +476,22 @@ struct log_msg *log_poll()
 	     "UCT",	/* Universal Coordinated Time */
 #endif
 	     clockdata.year,
-	     levels + 6 * ((msg->level <= LOG_DEBUG) ? msg->level : LOG_DEBUG)
+	     levels + 6 * ((msg->Level <= LOG_DEBUG) ? msg->Level : LOG_DEBUG)
 	     );
-
+    chars = strlen(msg->String) - 1;
     /* Remove last newline */
-    if (msg->chars > 0 && msg->string[msg->chars - 1] == '\n') {
-      msg->chars--;
+    if (msg->String[chars] == '\n') {
+      msg->String[chars] = '\0';
     }
 
     /* Replace all control chars with space */
-    for (i = 0; i < msg->chars; ++i) {
-      if ((msg->string)[i] < ' ')
-	(msg->string)[i] = ' ';
+    for (i = 0; msg->String[i]; ++i) {
+      if ((msg->String)[i] < ' ')
+	(msg->String)[i] = ' ';
     }
-
-    if (where & TOCONS) {
-      /* If console is not open, open it */
-      while (confile == NULL) {
+#ifdef CONSOLE_SYSLOG
+    /* If console is not open, open it */
+    while (confile == NULL) {
 	if ((confile = logOpen(consolename)) == NULL) {
 	  if (!conopenfail) /* log only once */
 	    log(LOG_ERR,"Opening console log '%s' failed", consolename);
@@ -443,22 +503,23 @@ struct log_msg *log_poll()
 	  consolename = consoledefname;
 	  conopenfail = conwritefail = FALSE;
 	}
-      }
-      if (confile != NULL) {
-	int error = 
-	  FPuts(confile, buffer) == -1 ||
-	    FWrite(confile, msg->string, msg->chars, 1) != 1 ||
+    }
+    if (confile != NULL) {
+	int error = FPuts(confile, buffer) == -1;
+	if ((!error) && msg->Tag)
+	  error = FPrintf(confile, "%s: ", msg->Tag) == -1;
+	error = error ||
+	    FPuts(confile, msg->String) == -1 ||
 	      FPutC(confile, '\n') == -1;
 	Flush(confile);
 	if (error && !conwritefail) {	/* To avoid loops */
 	  conwritefail = TRUE;
 	  log(LOG_ERR, "log: Write failed to console '%s'", consolename);
 	}
-      }
     }
-    if (where & TOLOG) {
-      /* If log file is not open, open it */
-      while (logfile == NULL) {
+#endif
+    /* If log file is not open, open it */
+    while (logfile == NULL) {
 	if ((logfile = logOpen(logfilename)) == NULL) {
 	  if (!fileopenfail) /* log only once */
 	    log(LOG_ERR,"Opening log file '%s' failed", logfilename);
@@ -470,21 +531,24 @@ struct log_msg *log_poll()
 	  logfilename = logfiledefname;
 	  fileopenfail = filewritefail = FALSE;
 	}
-      }
-      if (logfile != NULL) {
-	int error = 
-	  FPuts(logfile, buffer) == -1 ||
-	    FWrite(logfile, msg->string, msg->chars, 1) != 1 ||
+    }
+    if (logfile != NULL) {
+	int error = FPuts(logfile, buffer) == -1;
+	if ((!error) && msg->Tag)
+	  error = FPrintf(logfile, "%s: ", msg->Tag) == -1;
+	error = error ||
+	    FPuts(logfile, msg->String) == -1 ||
 	      FPutC(logfile, '\n') == -1;
 	Flush(logfile);
 	if (error && !filewritefail) {	/* To avoid loops */
 	  filewritefail = TRUE;
 	  log(LOG_ERR, "log: Write failed to file '%s'", logfilename);
 	}
-      }
     }
-
-    ReplyMsg((struct Message *)msg);
+    if (ExtLogPort)
+	PutMsg(ExtLogPort, (struct Message *)msg);
+    else
+	ReplyMsg((struct Message *)msg);
     if (GetLogMsgFail != TotalFail) {
       int t = GetLogMsgFail;	/* Check if we have lost messages */
 
@@ -498,24 +562,37 @@ struct log_msg *log_poll()
 
 /* Close logging subsystem */
 static
-void log_close(struct log_msg *msg)
+void log_close(struct SysLogPacket *msg)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_log.c) log_close()\n"));
+#endif
   rexx_deinit();
-  if (confile)
+  DNETTRACE(KPrintF("rexx_deinit() completed\n");)
+#ifdef CONSOLE_SYSLOG
+  if (confile) {
     Close(confile);
-  if (logfile)
+    DNETTRACE(KPrintF("confile closed\n");)
+  }
+#endif
+  if (logfile) {
     Close(logfile);
+    DNETTRACE(KPrintF("logfile closed\n");)
+  }
   if (logUtilityBase) {
     CloseLibrary(logUtilityBase);
     logUtilityBase = NULL;
+    DNETTRACE(KPrintF("logUtilityBase closed\n");)
   }
   if (logDOSBase) {		/* DOS not needed below */
     CloseLibrary(logDOSBase);
     logDOSBase = NULL;
+    DNETTRACE(KPrintF("logDOSBase closed\n");)
   }
   if (SocketBase) {
     CloseLibrary((struct Library *)SocketBase);
     SocketBase = NULL;
+    DNETTRACE(KPrintF("SocketBase closed\n");)
   }
   /*
    * Make sure that we get to end before task switch
@@ -526,15 +603,23 @@ void log_close(struct log_msg *msg)
   if (logPort) {
     struct Message *m;
 
-    while (m = GetMsg(logPort))	/* Check for messages and reply */
+    while (m = GetMsg(logPort))	{/* Check for messages and reply */
       ReplyMsg(m);
+      DNETTRACE(KPrintF("Message replied\n");)
+    }
 
     DeleteMsgPort(logPort);	/* Delete port */
     logPort = NULL;
+    DNETTRACE(KPrintF("logPort deleted\n");)
   }
 
-  if (msg)
-    ReplyMsg((struct Message *)msg);
+  if (msg) {
+    if (ExtLogPort)
+      PutMsg(ExtLogPort, (struct Message *)msg);
+    else
+      ReplyMsg((struct Message *)msg);
+    DNETTRACE(KPrintF("LOG_CLOSE replied\n");)
+  }
 
   Nettrace_Task = NULL;
 
@@ -542,6 +627,7 @@ void log_close(struct log_msg *msg)
    * Interrupts are left disabled, 
    * they will be enabled again when this process dies 
    */
+   DNETTRACE(KPrintF("log_close() finished\n");)
 }
 
 /*
@@ -551,6 +637,9 @@ static
 BPTR logOpen(STRPTR name)
 {
   BPTR file;
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_log.c) logOpen()\n"));
+#endif
 
   if ((file = Open(name, MODE_READWRITE)) ||
       (file = Open(name, MODE_OLDFILE)))
@@ -569,6 +658,9 @@ BPTR logOpen(STRPTR name)
  */
 int logname_changed(void *p, LONG new)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_log.c) logname_changed()\n"));
+#endif
   if (p == &logfilename) {	/* Is logname requested? */
      /*
       * logfile may be non-NULL only if the NETTRACE is already initialized
@@ -584,7 +676,7 @@ int logname_changed(void *p, LONG new)
      */
     return TRUE;
   }
-
+#ifdef CONSOLE_SYSLOG
   if ( p == &consolename ) { /* Name of the console log */
     
     if (confile) { /* only if NETTRACE is already initialized */
@@ -598,7 +690,7 @@ int logname_changed(void *p, LONG new)
      */
     return TRUE;
   }
-
+#endif
   /*
    * Some invalid pointer
    */

@@ -102,9 +102,12 @@
  */
 struct mbconf mbconf = {
   2,		                /* # of mbuf chunks to allocate initially */
+//8,
   64,				/* # of mbufs to allocate at a time */
+//256,
   4,				/* # of clusters to allocate at a time */
-  256,				/* maximum memory to use (in kilobytes) */
+//256,				/* maximum memory to use (in kilobytes) */
+  1024,
   2048				/* size of the mbuf cluster */
 };
 
@@ -142,6 +145,9 @@ LONG mb_read_stats(struct CSource *args, UBYTE **errstrp, struct CSource *res)
 {
   int i, total = 0;
   UBYTE *p = res->CS_Buffer;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) mb_read_stats()\n"));
+#endif
 
   for(i = 0; i < MTCOUNT; i++) {
     p += sprintf(p, "%ld ", mbstat.m_mtypes[i]);
@@ -156,6 +162,10 @@ LONG mb_read_stats(struct CSource *args, UBYTE **errstrp, struct CSource *res)
 int 
 mb_check_conf(void *dp, LONG newvalue)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) mb_check_conf()\n"));
+#endif
+
   if ((u_long *)dp == &mbconf.initial_mbuf_chunks) {
     if (newvalue > 0)
       return TRUE;
@@ -195,6 +205,9 @@ BOOL
 mbinit(void)
 {
   spl_t s;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) mbinit()\n"));
+#endif
 
   /*
    * Return success if already initialized
@@ -236,6 +249,9 @@ void
 mbdeinit(void)
 {
   struct memHeader *next;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) mbdeinit()\n"));
+#endif
 
   /*
    * free all memory chunks
@@ -267,6 +283,9 @@ m_alloc(int howmany, int canwait)
   struct mbuf *m;
   struct memHeader *mh;
   ULONG  size;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_alloc()\n"));
+#endif
 
   size = MSIZE * (howmany + 1) + sizeof(struct memHeader);
 
@@ -324,6 +343,9 @@ m_clalloc(int ncl, int canwait)
   struct mcluster *p;
   ULONG  size;
   short  i;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_clalloc()\n"));
+#endif
 
   /*
    * struct mcluster has variable length buffer so its size is not calculated
@@ -384,6 +406,9 @@ struct mbuf *
 m_retry(int canwait, int type)
 {
   register struct mbuf *m;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_retry()\n"));
+#endif
 
   m_reclaim();
 
@@ -405,6 +430,9 @@ m_reclaim()
 	register struct domain *dp;
 	register struct protosw *pr;
 	spl_t s = splimp();
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_reclaim()\n"));
+#endif
 
 	for (dp = domains; dp; dp = dp->dom_next)
 		for (pr = dp->dom_protosw; pr < dp->dom_protoswNPROTOSW; pr++)
@@ -424,6 +452,9 @@ m_get(canwait, type)
 	int canwait, type;
 {
 	register struct mbuf *m;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_get()\n"));
+#endif
 
 	MGET(m, canwait, type);
 	return (m);
@@ -434,6 +465,9 @@ m_gethdr(canwait, type)
 	int canwait, type;
 {
 	register struct mbuf *m;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_gethdr()\n"));
+#endif
 
 	MGETHDR(m, canwait, type);
 	return (m);
@@ -444,6 +478,9 @@ m_getclr(canwait, type)
 	int canwait, type;
 {
 	register struct mbuf *m;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_getclr()\n"));
+#endif
 
 	MGET(m, canwait, type);
 	if (m == 0)
@@ -457,6 +494,9 @@ m_free(m)
 	struct mbuf *m;
 {
 	register struct mbuf *n;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_free()\n"));
+#endif
 
 	MFREE(m, n);
 	return (n);
@@ -467,6 +507,9 @@ m_freem(m)
 	register struct mbuf *m;
 {
 	register struct mbuf *n;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_freem()\n"));
+#endif
 
 	if (m == NULL)
 		return;
@@ -490,6 +533,9 @@ m_prepend(m, len, canwait)
 	int len, canwait;
 {
 	struct mbuf *mn;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_prepend()\n"));
+#endif
 
 	MGET(mn, canwait, m->m_type);
 	if (mn == NULL) {
@@ -525,6 +571,9 @@ m_copym(m, off0, len, wait)
 	register int off = off0;
 	struct mbuf *top = NULL;
 	int copyhdr = 0;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_copym()\n"));
+#endif
 
 	if (off < 0 || len < 0) {
 	  log(LOG_ERR, "m_copym: Bad arguments");
@@ -603,6 +652,9 @@ m_copydata(m, off, len, cp)
 	caddr_t cp;
 {
 	register unsigned count;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_copydata()\n"));
+#endif
 
 	if (off < 0 || len < 0) {
 	  log(LOG_ERR, "m_copydata: bad arguments");
@@ -641,6 +693,10 @@ void
 m_cat(m, n)
 	register struct mbuf *m, *n;
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_cat()\n"));
+#endif
+
 	while (m->m_next)
 		m = m->m_next;
 	while (n) {
@@ -664,6 +720,9 @@ m_adj(struct mbuf *mp, int req_len)
 	register int len = req_len;
 	register struct mbuf *m;
 	register count;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_adj()\n"));
+#endif
 
 	if ((m = mp) == NULL)
 		return;
@@ -752,6 +811,9 @@ m_pullup(n, len)
 	register struct mbuf *m;
 	register int count;
 	int space;
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_pullup()\n"));
+#endif
 
 	/*
 	 * If first mbuf has no cluster, and has room for len bytes

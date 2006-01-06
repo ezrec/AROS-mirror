@@ -82,6 +82,7 @@
 #include <netinet/tcpip.h>
 #include <netinet/tcp_debug.h>
 
+#include <net/if_protos.h>
 #include <netinet/tcp_input_protos.h>
 #include <netinet/tcp_output_protos.h>
 #include <netinet/tcp_subr_protos.h>

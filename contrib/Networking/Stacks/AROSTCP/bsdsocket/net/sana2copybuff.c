@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -21,6 +22,8 @@
  */
 
 #include <conf.h>
+
+#include <aros/asmcall.h>
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -183,11 +186,16 @@ ioip_alloc_mbuf(struct IOIPReq *s2rp, ULONG MTU)
  * NOTE: this WILL be called from INTERRUPTS, so compile with stack checking
  *       disabled and use __saveds if near data is needed.
  */
-static SAVEDS BOOL m_copy_from_mbuf(
+/*static SAVEDS BOOL m_copy_from_mbuf(
    REG(a0, BYTE *to),
    REG(a1, struct IOIPReq *from),
-   REG(d0, ULONG n))
+   REG(d0, ULONG n))*/
+AROS_UFH3(BOOL, m_copy_from_mbuf,
+   AROS_UFHA(BYTE *, to, A0),
+   AROS_UFHA(struct IOIPReq *, from, A1),
+   AROS_UFHA(ULONG, n, D0))
 {
+  AROS_USERFUNC_INIT
   register struct mbuf *m = from->ioip_packet;
   register unsigned count;
 
@@ -205,6 +213,7 @@ static SAVEDS BOOL m_copy_from_mbuf(
     m = m->m_next;
   }
   return TRUE;
+  AROS_USERFUNC_EXIT
 }
 
 /*
@@ -216,11 +225,16 @@ static SAVEDS BOOL m_copy_from_mbuf(
  * NOTE: this WILL be called from INTERRUPTS, so compile with stack checking
  *       disabled and use __saveds if near data is needed.
  */
-static SAVEDS BOOL m_copy_to_mbuf(
+/*static SAVEDS BOOL m_copy_to_mbuf(
    REG(a0, struct IOIPReq* to),
    REG(a1, BYTE *from),
-   REG(d0, ULONG n))
+   REG(d0, ULONG n))*/
+AROS_UFH3(BOOL, m_copy_to_mbuf,
+   AROS_UFHA(struct IOIPReq *, to, A0),
+   AROS_UFHA(BYTE *, from, A1),
+   AROS_UFHA(ULONG, n, D0))
 {
+  AROS_USERFUNC_INIT
   register struct mbuf *f, *m = to->ioip_reserved;
   unsigned totlen = n;
 
@@ -267,11 +281,12 @@ static SAVEDS BOOL m_copy_to_mbuf(
    * More mbuf flags and interface pointer must be set later
    */
   return TRUE;
+  AROS_USERFUNC_EXIT
 }
 
 struct TagItem buffermanagement[3] = {
-    { S2_CopyToBuff,   (ULONG)m_copy_to_mbuf },
-    { S2_CopyFromBuff, (ULONG)m_copy_from_mbuf },
+    { S2_CopyToBuff,   (ULONG)AROS_ASMSYMNAME(m_copy_to_mbuf) },
+    { S2_CopyFromBuff, (ULONG)AROS_ASMSYMNAME(m_copy_from_mbuf) },
     { TAG_END, }
 };
 

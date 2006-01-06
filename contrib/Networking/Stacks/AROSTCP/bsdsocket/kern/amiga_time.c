@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -47,7 +48,11 @@
  * Commodore says that same base should not be used by different task,
  * so API users should have their own base pointer.
  */
+#ifdef __MORPHOS__
+struct Library    *TimerBase = NULL;
+#else
 struct Device     *TimerBase = NULL;
+#endif
 
 static struct MsgPort     *timerport = NULL;	 /* Timer message reply port */
 static struct timerequest *timerIORequest = NULL; /* template IORequest */
@@ -82,6 +87,9 @@ ULONG
 timer_init(void)
 {
   LONG error;
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_timer.c) timer_init()\n"));
+#endif
 
   /*
    * Return success if already initialized
@@ -97,11 +105,10 @@ timer_init(void)
     /*
      * allocate and initialize the template message structure
      */
-    timerIORequest = (struct timerequest *)
-      CreateIORequest(timerport, sizeof(struct timerequest));
+    timerIORequest = (struct timerequest *) CreateIORequest(timerport, sizeof(struct timerequest));
+    
     if (timerIORequest != NULL) {
-      error = OpenDevice(TIMERNAME, UNIT_VBLANK, 
-			 (struct IORequest *)timerIORequest, 0);
+      error = OpenDevice("timer.device", UNIT_VBLANK, (struct IORequest *)timerIORequest, 0);
       if (error == 0) {
 	/*
 	 * Make sure that we got at least V36 timer, since we use some
@@ -111,7 +118,7 @@ timer_init(void)
 	  /*
 	   * initialize TimerBase from timerIORequest
 	   */
-	  TimerBase = timerIORequest->tr_node.io_Device;
+	  TimerBase = (struct Library *)timerIORequest->tr_node.io_Device;
 	  /*
 	   * Initialize some fields of the IO request to common values
 	   */
@@ -151,6 +158,9 @@ timer_init(void)
 void
 timer_deinit(void)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_timer.c) timer_deinit()\n"));
+#endif
   can_send_timeouts = FALSE;
 
   if (protoFastTimer)
@@ -182,6 +192,9 @@ timer_deinit(void)
 void
 timer_send(void)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_timer.c) timer_send()\n"));
+#endif
   if (can_send_timeouts != FALSE) {
     /*
      * Start timeout requests
@@ -203,6 +216,10 @@ createTimeoutRequest(TimerCallback_t fun,
 		     ULONG seconds, ULONG micros)
 {
   struct timeoutRequest *tr;
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_timer.c) createTimeoutRequest()\n"));
+#endif
+
 #if DIAGNOSTIC
   /*
    * sanity check the micros value
@@ -255,6 +272,9 @@ createTimeoutRequest(TimerCallback_t fun,
 void 
 deleteTimeoutRequest(struct timeoutRequest *tr)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_timer.c) deleteTimeoutRequest()\n"));
+#endif
   /*
    * Abort the request if ever used
    */
@@ -275,7 +295,10 @@ deleteTimeoutRequest(struct timeoutRequest *tr)
 BOOL timer_poll(VOID)
 {
   struct timeoutRequest *timerReply;
-
+/* Uncomment the following lines to get debug - however please note: this func runs often */
+//#if defined(__AROS__)
+//D(bug("[AROSTCP](amiga_timer.c) timer_poll()\n"));
+//#endif
   /*
    * Get all messages from the timer reply port.
    */

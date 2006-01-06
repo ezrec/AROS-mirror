@@ -171,9 +171,7 @@ route_output(m, so)
 	m_copydata(m, 0, len, (caddr_t)rtm);
 	if (rtm->rtm_version != RTM_VERSION)
 		senderr(EPROTONOSUPPORT);
-#ifndef AMITCP
-	rtm->rtm_pid = curproc->p_pid;
-#endif /* AMITCP */
+	rtm->rtm_pid = (pid_t)FindTask(NULL);
 	lim = len + (caddr_t) rtm;
 	cp = (caddr_t) (rtm + 1);
 	if (rtm->rtm_addrs & RTA_DST) {
@@ -505,9 +503,7 @@ int error;
 	rtm->rtm_type = type;
 	rtm->rtm_addrs = RTA_DST;
 	if (type == RTM_OLDADD || type == RTM_OLDDEL) {
-#ifndef AMITCP
-		rtm->rtm_pid = curproc->p_pid;
-#endif /* AMITCP */
+		rtm->rtm_pid = (pid_t)FindTask(NULL);
 	}
 	m_copyback(m, sizeof (*rtm), dlen, (caddr_t)dst);
 	if (gate) {

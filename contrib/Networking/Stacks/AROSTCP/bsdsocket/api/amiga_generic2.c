@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -22,6 +23,8 @@
 
 #include <conf.h>
 
+#include <aros/libcall.h>
+
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/syslog.h>
@@ -34,7 +37,7 @@
 #include <api/allocdatabuffer.h>
 
 #include <api/apicalls.h>
-
+#include <api/amiga_kernvars.h>
 #include <stdarg.h>
 
 #include <bsdsocket/socketbasetags.h>
@@ -49,17 +52,20 @@ extern const char * const sana2io_errlist[];
 extern const short sana2io_nerr;
 extern const char * const sana2wire_errlist[];
 extern const short sana2wire_nerr;
+extern STRPTR version;
+extern struct kernel_var kvars[];
 
-LONG /* SAVEDS */ Errno(
-   REG(a6, struct SocketBase *libPtr))
+/*LONG Errno(
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH0(LONG, Errno,
+   struct SocketBase *, libPtr, 24, UL)
 {
+  AROS_LIBFUNC_INIT
   return (LONG)readErrnoValue(libPtr);
+  AROS_LIBFUNC_EXIT
 }
 
-LONG /* SAVEDS */ SetErrnoPtr(
-   REG(a0, VOID *err_p),
-   REG(d0, UBYTE size),
-   REG(a6, struct SocketBase *libPtr))
+LONG __SetErrnoPtr(VOID *err_p, UBYTE size, struct SocketBase *libPtr)
 {
   if (size == 4 || size == 2 || size == 1) {
     if (size & 0x1 || !((ULONG)err_p & 0x1)) {	/* either odd size or address even */
@@ -73,15 +79,49 @@ LONG /* SAVEDS */ SetErrnoPtr(
   return -1;
 }
 
-VOID SAVEDS Syslog(
+AROS_LH2(LONG, SetErrnoPtr,
+   AROS_LHA(VOID *, err_p, A0),
+   AROS_LHA(UBYTE, size, D0),
+   struct SocketBase *, libPtr, 25, UL)
+{
+  AROS_LIBFUNC_INIT
+  return __SetErrnoPtr(err_p, size, libPtr);
+  AROS_LIBFUNC_EXIT
+}
+
+/*VOID SAVEDS Syslog(
    REG(d0, ULONG pri),
    REG(a0, const char *fmt),
    REG(a1, va_list ap),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH3(VOID, Syslog,
+   AROS_LHA(ULONG, pri, D0),
+   AROS_LHA(const char *, fmt, A0),
+   AROS_LHA(LONG *, ap, A1),
+   struct SocketBase *, libPtr, 26, UL)
 {
+  AROS_LIBFUNC_INIT
   int saved_errno;
   char fmt_cpy[1024];
+  char tag_cpy[256];
+#ifdef __PPC__
+  /* This cool trick is used to convert from AmigaOS-style arguments array
+     to standard SVR4 va_list structure. We just fabricate such a structure
+     where reg_save_area is already ended up and next argument will be
+     picked up from overflow_arg_area which is our array. Note that we
+     don't need va_start() and va_end() in this case. */
+  va_list _ap = {
+    8,			/* gpr - no more left */
+    8,			/* fpr - no more left */
+    (char *)ap,		/* overflow_arg_area - here are our data */
+    (char *)0xabadcafe		/* reg_save_area - we should never get there */
+  };
+#else
+#define _ap ap
+#endif
   register char *p = fmt_cpy;
+  char *t = NULL;
+  char *t1;
 
   CHECK_TASK_VOID();
 
@@ -98,10 +138,26 @@ VOID SAVEDS Syslog(
   if ((pri & LOG_FACMASK) == 0)
     pri |= libPtr->LogFacility;
 
+  if (libPtr->LogTag) {
+    DSYSLOG(KPrintF("LogTag: %s", libPtr->LogTag);)
+    t = tag_cpy;
+    t1 = tag_cpy;
+    t1 += sprintf(t1, "%s", libPtr->LogTag);
+  }
+  DSYSLOG(else KPrintF("LogTag: <NULL>");)
+  DSYSLOG(KPrintF(", message: %s\n", fmt);)
+  if (libPtr->LogStat & LOG_PID) {
+    if (!t) {
+      t = tag_cpy;
+      t1 = tag_cpy;
+    }
+    sprintf(t1, "[%lx]", libPtr->thisTask);
+  }
+
   /* 
    * Build the new format string
    */
-  if (libPtr->LogTag) {
+/*if (libPtr->LogTag) {
     p += sprintf(p, libPtr->LogTag);
   }
   if (libPtr->LogStat & LOG_PID) {
@@ -110,12 +166,12 @@ VOID SAVEDS Syslog(
   if (libPtr->LogTag) {
     *p++ = ':';
     *p++ = ' ';
-  }
+  }*/
   /*
    * Substitute error message for %m.
    */
   {
-    char ch, *t1;
+    char ch;
     const char *t2;
 
     for (t1 = p; ch = *fmt; ++fmt) {
@@ -135,31 +191,42 @@ VOID SAVEDS Syslog(
     }
     *t1 = '\0';
   }
-
-  vlog(pri, fmt_cpy, ap);
+  vlog(pri, t, fmt_cpy, _ap);
+  AROS_LIBFUNC_EXIT
 }
 
-#if 1
-VOID SAVEDS SetSocketSignals(
+/*VOID SAVEDS SetSocketSignals(
    REG(d0, ULONG sigintrmask),
    REG(d1, ULONG sigiomask),
    REG(d2, ULONG sigurgmask),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH3(VOID, SetSocketSignals,
+   AROS_LHA(ULONG, sigintrmask, D0),
+   AROS_LHA(ULONG, sigiomask, D1),
+   AROS_LHA(ULONG, sigurgmask, D2),
+   struct SocketBase *, libPtr, 27, UL)
 {
+  AROS_LIBFUNC_INIT
   CHECK_TASK_VOID();
+  DSYSCALLS(log(LOG_DEBUG,"SetSocketSignals(0x%08lx, 0x%08lx, 0x%08lx) called", sigintrmask, sigiomask, sigurgmask);)
   /*
    * The operations below are atomic so no need to protect them
    */
   libPtr->sigIntrMask = sigintrmask;
   libPtr->sigIOMask = sigiomask;
   libPtr->sigUrgMask = sigurgmask;
+  AROS_LIBFUNC_EXIT
 }
-#endif
 
-LONG /* SAVEDS */ getdtablesize(
-   REG(a6, struct SocketBase *libPtr))
+/*LONG getdtablesize(
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH0(LONG, getdtablesize,
+   struct SocketBase *, libPtr, 28, UL)
 {
+  AROS_LIBFUNC_INIT
+  DSYSCALLS(log(LOG_DEBUG,"getdtablesize(): returned %ld", libPtr->dTableSize);)
   return (LONG)libPtr->dTableSize;
+  AROS_LIBFUNC_EXIT
 }
 
 static int getLastSockFd(struct SocketBase *libPtr)
@@ -265,7 +332,6 @@ setdtablesize(struct SocketBase * libPtr, UWORD size)
     else \
       *(UBYTE *)&libPtr->flags &= ~(flag);\
     break
-
 
 /****** bsdsocket.library/SocketBaseTagList ***********************************
 
@@ -536,10 +602,14 @@ setdtablesize(struct SocketBase * libPtr, UWORD size)
 */
 #endif
 
-ULONG SAVEDS SocketBaseTagList(
+/*ULONG SAVEDS SocketBaseTagList(
    REG(a0, struct TagItem *tags),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH1(ULONG, SocketBaseTagList,
+   AROS_LHA(struct TagItem *, tags, A0),
+   struct SocketBase *, libPtr, 29, UL)
 {
+  AROS_LIBFUNC_INIT
   ULONG errIndex = 1;
   ULONG tag;
   ULONG *tagData;
@@ -552,9 +622,15 @@ ULONG SAVEDS SocketBaseTagList(
 
   while((tag = tags->ti_Tag) != TAG_END) {
     if ((LONG)tag < 0) {		/* TAG_USER is the sign bit */
+
       /* get pointer to the actual data */
       tagData = ((UWORD)tag & SBTF_REF) ?
 	(ULONG *)tags->ti_Data : &tags->ti_Data;
+
+#ifdef DEBUG_EVENTS
+     if (((UWORD)tag & ~(SBTF_REF)) == ((SBTC_SIGEVENTMASK << SBTB_CODE) | SBTF_SET))
+	log(LOG_DEBUG,"SBTC_SIGEVENTMASK set to 0x%08lx", *tagData);
+#endif
 
       switch ((UWORD)tag & ~SBTF_REF) {
 
@@ -563,6 +639,8 @@ ULONG SAVEDS SocketBaseTagList(
       CASE_LONG( SBTC_SIGIOMASK,  sigIOMask );
 
       CASE_LONG( SBTC_SIGURGMASK, sigUrgMask );
+
+      CASE_LONG( SBTC_SIGEVENTMASK, sigEventMask );
 
       case (SBTC_ERRNO << SBTB_CODE): /* get */ 
 	*tagData = (ULONG)readErrnoValue(libPtr);
@@ -591,7 +669,7 @@ ULONG SAVEDS SocketBaseTagList(
       CASE_BYTE( SBTC_LOGSTAT,      LogStat );
 
       CASE_LONG( SBTC_LOGTAGPTR,    LogTag );
-
+      
       case (SBTC_LOGFACILITY << SBTB_CODE): /* get */
 	*tagData = (ULONG)libPtr->LogFacility;
 	break;
@@ -645,19 +723,27 @@ ULONG SAVEDS SocketBaseTagList(
 	break;
 
       case (SBTC_ERRNOBYTEPTR << SBTB_CODE) | SBTF_SET: /* set */
-        if (SetErrnoPtr((VOID *)*tagData, 1, libPtr) < 0)
+	if (__SetErrnoPtr((VOID *)*tagData, 1, libPtr) < 0)
 	  return errIndex;
         break;
       case (SBTC_ERRNOWORDPTR << SBTB_CODE) | SBTF_SET: /* set */
-        if (SetErrnoPtr((VOID *)*tagData, 2, libPtr) < 0)
+	if (__SetErrnoPtr((VOID *)*tagData, 2, libPtr) < 0)
 	  return errIndex;
         break;
       case (SBTC_ERRNOLONGPTR << SBTB_CODE) | SBTF_SET: /* set */
-        if (SetErrnoPtr((VOID *)*tagData, 4, libPtr) < 0)
+	if (__SetErrnoPtr((VOID *)*tagData, 4, libPtr) < 0)
 	  return errIndex;
         break;
 
       CASE_LONG( SBTC_HERRNOLONGPTR, hErrnoPtr );
+      
+      case (SBTC_RELEASESTRPTR << SBTB_CODE): /* get */
+	*tagData = (ULONG)&version[6];
+	break;
+
+      case (SBTC_PRIVATE_RES_STATE << SBTB_CODE): /* get */
+	*tagData = (ULONG)&libPtr->res_state;
+	break;
 
 #ifdef notyet
       CASE_FLAG( SBTC_COMPAT43, SBFB_COMPAT43 );
@@ -666,7 +752,7 @@ ULONG SAVEDS SocketBaseTagList(
       default:
 	return errIndex;
       }
-    }
+   }
     else {			/* TAG_USER not set */
       switch(tags->ti_Tag) {
       case TAG_IGNORE:
@@ -685,7 +771,7 @@ ULONG SAVEDS SocketBaseTagList(
     
     tags++; errIndex++;
   }
-  
   return 0;
+  AROS_LIBFUNC_EXIT
 }
 

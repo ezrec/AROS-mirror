@@ -109,7 +109,7 @@ _remque(register struct queue_node *node)
 void cs_putchar(unsigned char, struct CSource *);
 void panic(const char *, ...);
 void log(unsigned long, const char *, ...);
-int vlog(unsigned long, const char *, va_list);
+int vlog(unsigned long, const char *, const char *, va_list);
 int printf(const char *, ...);
 int sprintf(char * buf, const char * fmt, ...);
 int csprintf(struct CSource* buf, const char * fmt, ...);

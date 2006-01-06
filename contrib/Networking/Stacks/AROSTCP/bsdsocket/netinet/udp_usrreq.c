@@ -203,11 +203,12 @@ udp_input(m, iphlen)
 	}
 	if (inp == 0) {
 		/* don't send ICMP response for broadcast packet */
-		udpstat.udps_noport++;
 		if (m->m_flags & M_BCAST) {
 			udpstat.udps_noportbcast++;
 			goto bad;
 		}
+		udpstat.udps_noport++;
+
 		*ip = save_ip;
 		ip->ip_len += iphlen;
 		icmp_error(m, ICMP_UNREACH, ICMP_UNREACH_PORT, dest);
@@ -300,8 +301,9 @@ udp_notify(inp, error)
 {
 
 	inp->inp_socket->so_error = error;
-	sorwakeup(inp->inp_socket);
-	sowwakeup(inp->inp_socket);
+	sowakeup(inp->inp_socket, &inp->inp_socket->so_rcv);
+	sowakeup(inp->inp_socket, &inp->inp_socket->so_snd);
+	soevent(inp->inp_socket, FD_ERROR);
 }
 
 void

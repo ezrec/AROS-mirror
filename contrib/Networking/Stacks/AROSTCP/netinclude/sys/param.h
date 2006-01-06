@@ -3,6 +3,7 @@
  *                         Helsinki University of Technology, Finland.
  *                         All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Library General Public License
@@ -48,6 +49,7 @@
 
 #define MAXHOSTNAMELEN  64	/* max length of hostname */
 #define MAXLOGNAME      32	/* max length of login name */
+#define NBPG		4096	/* max bytes per page, used to define IOCPARM_MAX */
 
 /*
  * Endianness conversion macros

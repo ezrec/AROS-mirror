@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -256,6 +257,8 @@ getsockets(struct CSource *args, UBYTE **errstrp, struct CSource *res)
  */
 #include <netinet/icmp_var.h>
 #include <netinet/ip_icmp.h>
+
+extern struct icmpstat icmpstat;
 
 LONG 
 read_icmphist(struct CSource *args, UBYTE **errstrp, struct CSource *res)
@@ -549,7 +552,7 @@ extern struct Library *SocketBase; /* base opened by NETTRACE */
 LONG
 rexx_gethostname(struct CSource *args, UBYTE **errstrp, struct CSource *res)
 {
-  gethostname(CURRENT(res), SPACE(res), (struct SocketBase *)SocketBase);
+  __gethostname(CURRENT(res), SPACE(res), (struct SocketBase *)SocketBase);
   res->CS_CurChr += strlen(CURRENT(res));
 
   return RETURN_OK;

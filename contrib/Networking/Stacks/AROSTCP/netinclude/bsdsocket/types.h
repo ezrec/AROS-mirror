@@ -13,7 +13,10 @@
  * Last modified: Thu Apr  7 23:19:57 1994 jraja
  *
  * HISTORY
- * $Log$
+ * $Log: types.h,v $
+ * Revision 1.1.1.1  2005/12/07 10:50:36  sonic_amiga
+ * First full import into the CVS
+ *
  * Revision 1.1  2005/01/20 23:17:04  neil
  * Initial revision.
  *

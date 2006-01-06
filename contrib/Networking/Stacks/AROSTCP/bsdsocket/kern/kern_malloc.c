@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -34,6 +35,9 @@ static APTR mem_pool = NULL;
 BOOL
 malloc_init(void)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_malloc.c) malloc_init()\n"));
+#endif
   if (!initialized) {
     mem_pool = CreatePool(MEMF_PUBLIC, 0x4000, 0x2000);
     if(mem_pool == NULL)
@@ -52,6 +56,9 @@ malloc_init(void)
 VOID
 malloc_deinit(void)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_malloc.c) malloc_deinit()\n"));
+#endif
   DeletePool(mem_pool);
   initialized = FALSE;
   return;
@@ -61,9 +68,18 @@ void *
 bsd_malloc(unsigned long size, int type, int flags)
 {
   register void *mem;
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_malloc.c) bsd_malloc()\n"));
+#endif
 
+#ifdef DEBUG_MEM
+  size += 4;
+#endif
   ObtainSemaphore(&malloc_semaphore);
   mem = AllocVecPooled(mem_pool, size);
+#ifdef DEBUG_MEM
+  *((ULONG *)mem)++=0xbaadab00;
+#endif
   ReleaseSemaphore(&malloc_semaphore);
 
   return mem;
@@ -72,8 +88,22 @@ bsd_malloc(unsigned long size, int type, int flags)
 void
 bsd_free(void *addr, int type)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_malloc.c) bsd_free()\n"));
+#endif
+
   ObtainSemaphore(&malloc_semaphore);
-  FreeVecPooled(mem_pool, addr);
+#ifdef DEBUG_MEM
+  if (*--((ULONG *)addr) == 0xbaadab00)
+  {
+    *((ULONG *)addr) = 0xabadcafe;
+#endif
+    FreeVecPooled(mem_pool, addr);
+#ifdef DEBUG_MEM
+  }
+  else
+    log(LOG_CRIT,"Attempt to free non-allocated memory at 0x%08x!!!", addr);
+#endif
   ReleaseSemaphore(&malloc_semaphore);
 }
 
@@ -89,12 +119,36 @@ bsd_free(void *addr, int type)
 void *
 bsd_realloc(void * mem, unsigned long size, int type, int flags)
 {
-  void *new_mem;
+  void *new_mem = NULL;
+#if defined(__AROS__)
+D(bug("[AROSTCP](kern_malloc.c) bsd_realloc()\n"));
+#endif
 
   ObtainSemaphore(&malloc_semaphore);
-  new_mem = AllocVecPooled(mem_pool, size);
-  if(new_mem != NULL)
-    FreeVecPooled(mem_pool, mem);
+#ifdef DEBUG_MEM
+  {
+    ULONG *realmem = mem-4;
+    unsigned long realsize = size+4;
+    if (*realmem == 0xbaadab00)
+    {
+#else
+#define realmem mem
+#define realsize size
+#endif
+      new_mem = AllocVecPooled(mem_pool, realsize);
+      if(new_mem != NULL) {
+#ifdef DEBUG_MEM
+	*((ULONG *)new_mem)++ = 0xbaadab00;
+#endif
+	CopyMem(mem, new_mem, size);
+	FreeVecPooled(mem_pool, realmem);
+      }
+#ifdef DEBUG_MEM
+    }
+    else
+      log(LOG_CRIT,"Attempt to reallocate non-allocated memory at 0x%08x!!!", mem);
+  }
+#endif
   ReleaseSemaphore(&malloc_semaphore);
 
   return new_mem;

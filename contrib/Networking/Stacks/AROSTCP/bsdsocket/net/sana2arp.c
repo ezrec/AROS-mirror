@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -42,6 +43,7 @@
 
 #include <net/if.h>
 #include <net/if_types.h>
+#include <net/if_protos.h>
 #include <netinet/in.h>
 #include <netinet/in_systm.h>
 #include <netinet/in_var.h>
@@ -665,7 +667,8 @@ arpioctl(cmd, data)
   ssc = (struct sana_softc *)ifa->ifa_ifp;
   splx(s);
 
-  if (ssc->ss_if.if_type != IFT_SANA || !(atb = ssc->ss_arp.table)) {
+/*if (ssc->ss_if.if_type != IFT_SANA || !(atb = ssc->ss_arp.table)) {*/
+  if (ssc->ss_if.if_output != sana_output || !(atb = ssc->ss_arp.table)) {
     return (EAFNOSUPPORT);
   }
 

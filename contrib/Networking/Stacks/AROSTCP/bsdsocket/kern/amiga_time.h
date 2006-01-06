@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -34,7 +35,11 @@
 /*
  * Globals defined in amiga_time.c
  */
+#ifdef __MORPHOS__
+extern struct Library    *TimerBase;
+#else
 extern struct Device     *TimerBase;
+#endif
 
 /*
  * Define an extended timerequest to make implementing the UNIX kernel function

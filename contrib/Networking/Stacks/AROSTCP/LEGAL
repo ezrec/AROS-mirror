@@ -4,6 +4,7 @@ All files in this release, except ones noted in this file, are:
                     Helsinki University of Technology, Finland.
                     All rights reserved.
         Copyright (C) 2005 Neil Cafferkey
+	Copyright (C) 2005 Pavel Fedin
 
 	Members of the AmiTCP/IP Group are
 
@@ -12,8 +13,8 @@ All files in this release, except ones noted in this file, are:
 		Markus Peuhkuri	<Markus.Peuhkuri@hut.fi>
 		Jarno Rajahalme	<Jarno.Rajahalme@hut.fi>
 
-All files in the netinclude directory and its subdirectories are
-licensed under the GNU Library General Public License, version 2.
+All files in the netinclude and netlib directories and their subdirectories
+are licensed under the GNU Library General Public License, version 2.
 
 All other files are licensed under the GNU General Public License,
 version 2.

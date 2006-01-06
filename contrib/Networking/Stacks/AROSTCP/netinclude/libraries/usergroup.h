@@ -41,10 +41,10 @@
 #define _PID_T struct Task *
 typedef	_PID_T pid_t;			/* process id */
 #endif
-#ifndef _MODE_T
-#define _MODE_T unsigned short
-typedef _MODE_T mode_t;
-#endif
+//#ifndef _MODE_T
+//#define _MODE_T unsigned short
+//typedef _MODE_T mode_t;
+//#endif
 
 #define USERGROUPNAME "AmiTCP:libs/usergroup.library"
 

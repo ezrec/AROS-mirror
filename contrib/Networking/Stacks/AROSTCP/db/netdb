@@ -4,18 +4,20 @@
 ; Copyright © 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
 ;                  Helsinki University of Technology, Finland.
 ;                  All rights reserved.
+; Copyright © 2005 Pavel Fedin
 ;
 ; Include information from local networking environment
 ; (File created by installer)
-WITH netdb-myhost
+
 ;
 ; hosts
 ;
-H 127.0.0.1	localhost
 WITH hosts PREFIX=H
+H 127.0.0.1	localhost
 ;
 ; Local networks
 ;
+WITH networks PREFIX=N
 N loopback-net	127		software-loopback-net
 ;
 ; Protocols
@@ -25,6 +27,10 @@ WITH protocols PREFIX=P
 ; Network services, Internet style
 ;
 WITH services PREFIX=S
+;
+; Nameservers and local domains
+;
+WITH netdb-myhost
 ;
 ; Access control list for incoming connections.
 ;

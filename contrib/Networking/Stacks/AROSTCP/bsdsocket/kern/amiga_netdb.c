@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -34,6 +35,7 @@
 #include <kern/amiga_netdb.h>
 #include <kern/accesscontrol.h>
 
+#include "net/netdbpaths.h"
 #include <netinet/in.h>
 
 #include <dos/dos.h>
@@ -50,6 +52,21 @@ LONG read_netdb(struct NetDataBase *ndb, UBYTE *fname,
  * Global pointer for the NetDataBase
  */
 struct NetDataBase *NDB = NULL;
+
+/*
+ * Global lock for the NetDatabase
+ */
+struct SignalSemaphore ndb_Lock;
+
+/*
+ * Dynamic items Database (for entries supplied by DHCP)
+ */
+struct DynDataBase DynDB;
+
+/*
+ * NDB Update Counter (used to keep resolver cache up to date)
+ */
+ULONG ndb_Serial;
 
 /*
  * Default netdatabase name
@@ -131,11 +148,15 @@ ndb_parse_f ndb_parse_funs[] = {
 struct NetDataBase *
 alloc_netdb(struct NetDataBase *ndb)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) alloc_netdb()\n"));
+#endif
+
   if (ndb || 
       (ndb = bsd_malloc(sizeof (*NDB), M_NETDB, M_WAITOK))) {  
     struct MinList *gl;
 
-    InitSemaphore(&ndb->ndb_Lock);
+//  InitSemaphore(&ndb->ndb_Lock);
     for (gl = (struct MinList *)&ndb->ndb_Hosts;
 	 gl <= (struct MinList *)&ndb->ndb_Domains;        
 	 gl++)
@@ -149,6 +170,10 @@ alloc_netdb(struct NetDataBase *ndb)
     bsd_free(ndb, M_NETDB);
     ndb = NULL;
   }
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) alloc_netdb: Allocated ndb = 0x%08x, ndb_AccessTable = 0x%08x\n", ndb, ndb->ndb_AccessTable));
+#endif
+  DNETDB(else log(LOG_DEBUG,"Allocated ndb = 0x%08x, ndb_AccessTable = 0x%08x", ndb, ndb->ndb_AccessTable);)
   return ndb;
 }
 
@@ -161,7 +186,9 @@ free_netdb(struct NetDataBase *ndb)
 {
   struct GenentNode *gn;
   struct MinList *gl;
-
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) free_netdb( 0x%08x )\n", ndb));
+#endif
   for (gl = (struct MinList *)&ndb->ndb_Hosts;
        gl <= (struct MinList *)&ndb->ndb_Domains;        
        gl++)
@@ -189,6 +216,10 @@ aliascpy(UBYTE *cto, UBYTE *name, UBYTE**ato, UBYTE **afrom)
 #ifdef DEBUG
   UBYTE *logname = name;
 #endif
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) aliascopy()\n"));
+#endif
+
   do {
     while(*cto++ = *name++);
   } while (afrom && (name = *afrom++) && (*ato++ = cto));
@@ -218,6 +249,9 @@ static void *
 node_alloc(size_t nodesize, UBYTE *name, UBYTE **alias, int *aliasp)
 {
   struct GenentNode *gn;
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) node_alloc()\n"));
+#endif
 
   nodesize += strlen(name) + 1;	/* Add space needed for the name */
 
@@ -259,6 +293,10 @@ addwith(struct NetDataBase *ndb,
   LONG Args[WITHARGS] = { 0 };
   int which;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addwith()\n"));
+#endif
+
   res.CS_Buffer = result; 
   res.CS_Length = sizeof (result);
   res.CS_CurChr = 0;
@@ -280,8 +318,9 @@ addwith(struct NetDataBase *ndb,
 			  which);
 
       if (retval) {
-	log(LOG_WARNING, "netdb: WITH file %s: %s", 
+	log(LOG_WARNING, "netdb: WITH file %s: %s\n",
 	    (UBYTE *)Args[WITH_FILE], *errstrp);
+	Printf("netdb: WITH file %s: %s",(UBYTE *)Args[WITH_FILE], *errstrp);
 #if 0
 	if (retval <= RETURN_ERROR)
 	  retval = RETURN_OK;	/* forgive */
@@ -307,6 +346,10 @@ addservent(struct NetDataBase *ndb,
   LONG Args[NDBARGS] = { 0 };
   struct ServentNode *sn;     
   int aliases, plen;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addservent()\n"));
+#endif
 
   if (rdargs = ReadArgs(NETDBTEMPLATE, Args, rdargs)) {
     /* convert port number */
@@ -360,6 +403,10 @@ addhostent(struct NetDataBase *ndb,
   struct HostentNode *hn;
   struct in_addr addr;
   int aliases;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addhostent()\n"));
+#endif
 
   if (rdargs = ReadArgs(NETDBTEMPLATE, Args, rdargs)) {
     /* convert ip address */
@@ -415,6 +462,10 @@ addnetent(struct NetDataBase *ndb,
   struct in_addr addr;
   int aliases;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addnetent()\n"));
+#endif
+
   if (rdargs = ReadArgs(NETDBTEMPLATE, Args, rdargs)) {
     /* convert ip address */
     if (inet_aton((char*)Args[KNDB_DATA], &addr)) {
@@ -461,6 +512,10 @@ addprotoent(struct NetDataBase *ndb,
   struct ProtoentNode *pn;     
   int aliases;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addprotoent()\n"));
+#endif
+
   if (rdargs = ReadArgs(PROTOCOL_TEMPLATE, Args, rdargs)) {
     
     if (Args[KNDB_DATA]) {
@@ -505,21 +560,49 @@ addnameservent(struct NetDataBase *ndb,
   struct in_addr ns_addr;
   struct NameserventNode *nsn;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addnameservent()\n"));
+#endif
+
+#warning "TODO: NicJA - Where does CHECK_POINTER() Come from?"
+#if !defined(__AROS__)
+  CHECK_POINTER(ndb);
+#endif
+
   if (ReadItem(Buffer, BufLen, &rdargs->RDA_Source) <= 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addnameservent: Error in syntax\n"));
+#endif
     *errstrp = ERR_SYNTAX; 
     return RETURN_WARN;
   }
   if (!inet_aton(Buffer, &ns_addr)) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addnameservent: error with address\n"));
+#endif
     *errstrp = ERR_VALUE;
     return RETURN_WARN; 
   }
   if ((nsn = bsd_malloc(sizeof (*nsn), M_NETDB, M_WAITOK)) == NULL) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addnameservent: couldnt allocate entry\n"));
+#endif
     *errstrp = ERR_MEMORY;
     return RETURN_FAIL;
   }
   nsn->nsn_EntSize = sizeof (nsn->nsn_Ent);
-  nsn->nsn_Ent.ns_addr = ns_addr;
-  
+  nsn->nsn_Ent.ns_addr.s_addr = ns_addr.s_addr;
+
+#warning "TODO: NicJA - Where does CHECK_POINTER() Come from?"
+#if !defined(__AROS__)
+  CHECK_POINTER(nsn);
+#endif
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addnameservent: Added nameserver %s (0x%08lx) to netdb = 0x%08lx\n",Buffer, nsn->nsn_Ent.ns_addr.s_addr, ndb));
+#endif
+  DNETDB(log(LOG_DEBUG,"Added nameserver %s (0x%08lx) to netdb = 0x%08lx\n",Buffer, nsn->nsn_Ent.ns_addr.s_addr, ndb);)
+
   AddTail((struct List*)&ndb->ndb_NameServers, (struct Node*)nsn);
   return RETURN_OK;
 }
@@ -536,6 +619,10 @@ adddomainent(struct NetDataBase *ndb,
   LONG  BufLen = sizeof (Buffer);
   struct DomainentNode *dn;
   short  nodesize;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) adddomainent()\n"));
+#endif
 
   if (ReadItem(Buffer, BufLen, &rdargs->RDA_Source) <= 0) {
     *errstrp = ERR_SYNTAX; 
@@ -569,6 +656,10 @@ addaccessent(struct NetDataBase *ndb,
 
   ULONG host, mask;
   UWORD port, flags = ACF_CONTINUE;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addaccessent()\n"));
+#endif
 
   if (ndb->ndb_AccessCount >= TMPACTSIZE / sizeof (struct AccessItem)) {
     *errstrp = "Too many access control items\n";
@@ -681,6 +772,10 @@ addndbent(struct NetDataBase *ndb,
     enum ndbtype which;
     UBYTE Buffer[KEYWORDLEN];
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addndbent()\n"));
+#endif
+
     /* Get entry type */
     item = ReadItem(Buffer, sizeof (Buffer), &rdargs->RDA_Source);
 
@@ -719,15 +814,24 @@ read_netdb(struct NetDataBase *ndb, UBYTE *fname,
   ndb_parse_f parser;
   BPTR lock, oldcd;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) read_netdb('%s')\n", fname));
+#endif
+
+  DNETDB(Printf("Reading netdb file: %s\n", fname);)
   /* Get an exclusive lock on the database.
    * Multiple locks are OK (when this function is called recursively)
    */
   LOCK_W_NDB(ndb);		
-  if (ndb->ndb_Lock.ss_NestCount > 10) {
+  if (ndb_Lock.ss_NestCount > 10) {
     UNLOCK_NDB(ndb);
     *errstrp = "Too many files included";
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) read_netdb: Too many files included\n"));
+#endif
     return RETURN_ERROR;
   }
+  
   if (buf) {
 
     /* CD to netdb directory */
@@ -773,9 +877,15 @@ read_netdb(struct NetDataBase *ndb, UBYTE *fname,
 	  rdargs->RDA_Source.CS_Length = p - buf;
 	  rdargs->RDA_Buffer = NULL;
 	  rdargs->RDA_BufSiz = 0;
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) read_netdb: parsing line: %s, prefixindex=%ld\n", buf, prefixindex));
+#endif
+	  DNETDB(Printf("Processing line: %s, prefixindex=%ld\n", buf, prefixindex);)
 	  retval = parser(ndb, rdargs, errstrp);
 	  if (retval == RETURN_OK)
 	    continue;
+/*	    Printf("NetDB(%s) line %d: %s before col %ld\n",
+		fname, line, *errstrp, rdargs->RDA_Source.CS_CurChr);*/
 	  if (retval != RETURN_WARN) /* severe error */
 	    break;
 	  
@@ -792,10 +902,13 @@ read_netdb(struct NetDataBase *ndb, UBYTE *fname,
       }
       Close(fh);
     } else {
-      ioerr = IoErr();
+      //ioerr = IoErr();
     }
     
     if (ioerr) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) read_netdb: ioerror\n"));
+#endif
       Fault(ioerr, "readnetdb", res->CS_Buffer, res->CS_Length);
       *errstrp = res->CS_Buffer;
       retval = RETURN_ERROR;
@@ -809,6 +922,9 @@ read_netdb(struct NetDataBase *ndb, UBYTE *fname,
 
     FreeMem(buf, CONFIGLINELEN);
   } else {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) read_netdb: Failed to allocate buffer\n"));
+#endif
     *errstrp = ERR_MEMORY;
     retval = RETURN_FAIL;
   }
@@ -826,7 +942,11 @@ do_netdb(struct CSource *csarg, UBYTE **errstrp, struct CSource *res)
 {
   struct RDArgs *rdargs;
   LONG retval;
-  
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) do_netdb()\n"));
+#endif
+
   if (rdargs = AllocDosObject(DOS_RDARGS, NULL)) {
     /* initialize CSource of the rdargs */
     rdargs->RDA_Source = *csarg;
@@ -862,10 +982,19 @@ init_netdb(void)
   UBYTE *errstr;
   LONG   retval;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) init_netdb()\n"));
+#endif
+
   res.CS_Buffer = result;      
   res.CS_Length = sizeof (result); 
   res.CS_CurChr = 0;
-  
+
+  InitSemaphore (&ndb_Lock);
+  InitSemaphore (&DynDB.dyn_Lock);
+  NewList(&DynDB.dyn_NameServers);
+  NewList(&DynDB.dyn_Domains);
+
   /* Allocate the NetDataBase */
   if (!(NDB = alloc_netdb(NULL))) {
     return RETURN_FAIL;
@@ -873,9 +1002,10 @@ init_netdb(void)
 
   /* Read in the default data base file */
   retval = read_netdb(NDB, netdbname, &errstr, &res, -1);
-  if (retval)
+  if (retval) {
+    Printf("init_netdb: file %s: %s", netdbname, errstr);
     log(LOG_WARNING, "init_netdb: file %s: %s", netdbname, errstr);
-  else
+  } else
     setup_accesscontroltable(NDB);
 
   return retval;
@@ -884,6 +1014,9 @@ init_netdb(void)
 
 void netdb_deinit(void)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) netdb_deinit()\n"));
+#endif
   /* A Placeholder for possible future deinitializations */
 }
   
@@ -897,6 +1030,10 @@ LONG reset_netdb(struct CSource *cs,
   LONG retval;
   struct NetDataBase *newnetdb;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) reset_netdb()\n"));
+#endif
+
   /* Allocate a temporary NetDataBase */
   if (!(newnetdb = alloc_netdb(NULL))) {
     *errstrp = ERR_MEMORY;
@@ -909,14 +1046,16 @@ LONG reset_netdb(struct CSource *cs,
     /*
      * Success
      */
-    struct MinList *gl, *ol;
+//  struct MinList *gl, *ol;
 
     setup_accesscontroltable(NDB);
 
     /* Now clear the old lists of the NDB */
     LOCK_W_NDB(NDB);
     free_netdb(NDB);
+    NDB = newnetdb;
 
+#ifdef notanymore
     /*
      * Transfer the lists of the new (temporary) database
      * to the NDB.
@@ -937,12 +1076,14 @@ LONG reset_netdb(struct CSource *cs,
      * Perhaps ugly...
      */
     newnetdb->ndb_AccessTable = NULL; 
-
+#endif
     UNLOCK_NDB(NDB);
+    ndb_Serial++;
   } else {
     free_netdb(newnetdb);
   }
 
-  bsd_free(newnetdb, M_NETDB);	/* free the temporary database */
+//bsd_free(newnetdb, M_NETDB);	/* free the temporary database */
   return retval;
 }
+

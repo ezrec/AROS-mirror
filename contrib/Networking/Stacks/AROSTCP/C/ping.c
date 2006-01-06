@@ -8,6 +8,8 @@
  *	Mike Muuss
  *	U. S. Army Ballistic Research Laboratory
  *	December, 1983
+ *	Pavel Fedin
+ *	September, 2005
  *
  * Status -
  *	Public Domain.  Distribution Unlimited.
@@ -344,17 +346,15 @@ VOID CleanUpExit(LONG error);
 #include <clib/exec_protos.h>
 #include <pragmas/exec_sysbase_pragmas.h>
 extern struct ExecBase *SysBase;
-/* Disable ^C signaling */
-void __regargs __chkabort(void) {}
 #endif
+/* Disable ^C signaling */
+void __chkabort(void) {}
 
 #include <dos/dos.h>
 #include <devices/timer.h>
 
 #include <proto/exec.h>
 #include <proto/timer.h>
-
-#define getpid(x) ((ULONG)FindTask(NULL)) /* This is only for ident... */
 
 struct MsgPort *timerport = NULL;
 struct timerequest *timermsg = NULL;
@@ -363,7 +363,7 @@ BOOL notopen = TRUE;
 
 #define SOCKET_VERSION 3
 struct Library *SocketBase;
-const TEXT version[] = "ping 3.8 (29.12.2004)";
+const TEXT version[] = "$VER: ping 3.10 (14.10.2005)";
 const TEXT socket_name[] = "bsdsocket.library";
 
 void
@@ -410,8 +410,10 @@ main(argc, argv)
 #endif
 
   SocketBase = OpenLibrary(socket_name, SOCKET_VERSION);
-  if(SocketBase == NULL)
+  if(SocketBase == NULL) {
+    fprintf(stderr, "ping: cannot open bsdsocket.library version 3.\n");
     return RETURN_FAIL;
+  }
   SetErrnoPtr(&errno, sizeof(errno));
 
   outpack = malloc(MAXPACKET);
@@ -599,12 +601,8 @@ main(argc, argv)
     CleanUpExit(1);
   }
 
-#ifdef __AROS__
-  if (notopen = OpenDevice("timer.device", UNIT_VBLANK,(struct IORequest *)timermsg, 0))
-#else
-  if (notopen = OpenDevice("timer.device", UNIT_MICROHZ,(struct IORequest *)timermsg, 0))
-#endif
-  {
+  if (notopen = OpenDevice("timer.device", UNIT_MICROHZ,
+		 (struct IORequest *)timermsg, 0)) {
     (void)fprintf(stderr, "ping: could not open timer device.\n");
     CleanUpExit(1);
   }

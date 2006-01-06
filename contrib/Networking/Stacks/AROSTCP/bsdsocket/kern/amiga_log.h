@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -23,9 +24,11 @@
 #ifndef KERN_AMIGA_LOG_H
 #define KERN_AMIGA_LOG_H
 
+#define _PATH_SYSLOG "Log/Syslog"
+
 #define LOG_TASK_NAME "NETTRACE"
 #define LOG_TASK_PRI 4
-#define LOG_BUFS 4
+#define LOG_BUFS 5
 #define LOG_BUF_LEN 128
 #define TOCONS	0x01
 #define TOTTY	0x02
@@ -44,7 +47,6 @@ extern struct log_cnf log_cnf;
 /*
  * These are options to config log
  */
-#define LOG_CLOSE 0xff000000
 #define LOG_CONFILE 0xfe000000
 #define LOG_LOGFILE 0xfd000000
 #define LOG_PORTOPEN 0xfc000000
@@ -55,20 +57,11 @@ extern struct Task *Nettrace_Task;
 extern struct Process *logProc;
 extern BOOL log_init(void);
 extern void log_deinit(void);
-extern struct log_msg *GetLogMsg(struct MsgPort *);
+extern struct SysLogPacket *GetLogMsg(struct MsgPort *);
 
-extern struct MsgPort *logReplyPort;
+extern struct MsgPort logReplyPort;
 extern struct MsgPort *logPort;
-
-struct log_msg {
-  struct Message msg;		/* Standard Exec message */
-  ULONG level;			/* Level of log message */
-  UBYTE * string;		/* Pointer to string */
-  ULONG chars;			/* Length of string */
-  ULONG time;			/* Logging time */
-};
-
-extern struct log_msg *log_message;
+extern struct SysLogPacket *log_message;
 extern STRPTR consolename, logfilename;
 extern struct log_cnf log_cnf;
 

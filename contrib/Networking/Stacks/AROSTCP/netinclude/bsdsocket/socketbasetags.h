@@ -7,45 +7,8 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * 
- * Created: Sun Jan 9 14:33:12 1994 jraja
- * Last modified: Thu Apr  7 23:32:25 1994 jraja
  *
- * HISTORY
- * $Log$
- * Revision 1.1  2005/01/20 23:17:04  neil
- * Initial revision.
- *
- * Revision 1.2  2004/12/30 11:15:36  neil
- * Started tidying up netincludes.
- *
- * Revision 1.1.1.1  2004/12/13 07:00:22  neil
- * Imported sources.
- *
- * Revision 3.3  1994/04/07  20:33:07  jraja
- * Put SBTC_COMPAT43 inside #ifdef notyet.
- *
- * Revision 3.2  1994/04/02  10:22:38  jraja
- * Added tag code SBTC_HERRNOLONGPTR for h_errno pointer.
- *
- * Revision 3.1  1994/03/29  12:56:35  ppessi
- * Added SBTC_COMPAT43 tag
- *
- * Revision 1.5  1994/03/22  07:17:13  jraja
- * Added SBTC_FDCALLBACK & definitions for its actions.
- *
- * Revision 1.4  1994/02/26  18:03:28  jraja
- * Moved from netinclude to netinclude/amitcp.
- *
- * Revision 1.3  1994/02/15  21:13:47  jraja
- * fixed the SBTC_ERRNOPTR(size) macro.
- *
- * Revision 1.2  1994/01/20  02:38:00  jraja
- * Reorganized the tags, added rest of the error string table tags and
- * changed the errnoPtr setting tags.
- *
- * Revision 1.1  1994/01/12  06:59:54  jraja
- * Initial revision
- *
+ *       TAG Values for SocketBaseTagList()
  */
 
 #ifndef UTILITY_TAGITEM_H
@@ -100,6 +63,7 @@
 #define SBTC_BREAKMASK		1
 #define SBTC_SIGIOMASK		2
 #define SBTC_SIGURGMASK		3
+#define SBTC_SIGEVENTMASK  4                 /* AMITCP v4.0 Stack Addition */
 
 /* error code handling */
 #define SBTC_ERRNO		6
@@ -163,12 +127,15 @@
 /* h_errno pointer */
 #define SBTC_HERRNOLONGPTR	25
 
+/* release string pointer (read only!) */
+#define SBTC_RELEASESTRPTR 29
+
 #ifdef notyet
 /*
  * Different boolean variables
  */
 /* use 4.3BSD compatible sockaddr structures */
-#define SBTC_COMPAT43           29 
+#define SBTC_COMPAT43           30
 #endif
 
 #endif /* !BSDSOCKET_SOCKETBASETAGS_H */

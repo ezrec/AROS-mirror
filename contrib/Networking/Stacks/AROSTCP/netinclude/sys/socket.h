@@ -1,70 +1,28 @@
-/*
- * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
- *                    Helsinki University of Technology, Finland.
- *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Library General Public License
- * version 2 as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this file; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
- */
-
-/*
- * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- *	@(#)socket.h	7.13 (Berkeley) 4/20/91
- */
-
 #ifndef SYS_SOCKET_H
-#define SYS_SOCKET_H
+#define SYS_SOCKET_H \
+       "$Id$"
+/*
+ *      Definitions related to sockets: types, address families, options
+ *
+ *      Copyright © 1994 AmiTCP/IP Group,
+ *                       Network Solutions Development, Inc.
+ *                       All rights reserved.
+ */
 
 #ifndef SYS_TYPES_H
 #include <sys/types.h>
 #endif
 
 /*
- * Definitions related to sockets: types, address families, options.
+ * AmiTCP asynchronous event definitions
  */
+#define FD_ACCEPT	 0x001	/* there is a connection to accept() */
+#define FD_CONNECT	 0x002	/* connect() completed */
+#define FD_OOB		 0x004	/* socket has out-of-band data */
+#define FD_READ		 0x008	/* socket is readable */
+#define FD_WRITE	 0x010	/* socket is writeable */
+#define FD_ERROR	 0x020	/* asynchronous error on socket */
+#define FD_CLOSE	 0x040	/* connection closed (graceful or not) */
 
 /*
  * Definition for Release(CopyOf)Socket unique id
@@ -104,6 +62,12 @@
 #define SO_RCVTIMEO	0x1006		/* receive timeout */
 #define	SO_ERROR	0x1007		/* get error status and clear */
 #define	SO_TYPE		0x1008		/* get socket type */
+
+/*
+ * AmiTCP/IP specific socket options
+ */
+#define SO_EVENTMASK	0x2001		/* socket event mask,     */
+					/* defaults to no events (0) */
 
 /*
  * Structure used for manipulating linger option.
@@ -200,12 +164,10 @@ struct sockproto {
  * Message header for recvmsg and sendmsg calls.
  * Used value-result for recvmsg, value only for sendmsg.
  */
-#if 1 /* NC */
 struct iovec {
 	caddr_t	iov_base;
 	int	iov_len;
 };
-#endif
 
 struct msghdr {
 	caddr_t	msg_name;		/* optional address */
@@ -273,16 +235,14 @@ struct omsghdr {
 	int	msg_accrightslen;
 };
 
-#if 0
-/*#ifndef KERNEL*/
-
+#if !defined(KERNEL) && !defined(__AROS__)
 /*
  * Include socket protos/inlines/pragmas
  */
-#ifndef BSDSOCKET_H
+#if !defined(BSDSOCKET_H) && !defined(CLIB_SOCKET_PROTOS_H)
 #include <bsdsocket.h>
 #endif
 
-#endif /* !KERNEL */
+#endif /* !defined(KERNEL) && !defined(__AROS__) */
 
 #endif /* !SYS_SOCKET_H */

@@ -75,6 +75,7 @@
 #include <netinet/in_pcb.h>
 #include <netinet/in_var.h>
 
+#include <net/if_protos.h>
 #include <netinet/in_protos.h>
 #include <netinet/in_pcb_protos.h>
 #include <kern/uipc_socket_protos.h>

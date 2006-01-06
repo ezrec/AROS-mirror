@@ -66,7 +66,7 @@
 #include <sys/mbuf.h>
 #include <sys/socket.h>
 #include <sys/errno.h>
-#include <sys/ioctl.h>
+#include <sys/sockio.h>
 #include <sys/synch.h>
 
 #include <net/if.h>
@@ -92,6 +92,7 @@
 #include <netiso/iso_var.h>
 #endif
 
+#include <net/if_protos.h>
 #include <net/if_loop_protos.h>
 
 #define	LOMTU	(1024+512)

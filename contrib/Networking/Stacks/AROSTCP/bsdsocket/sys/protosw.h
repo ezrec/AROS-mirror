@@ -82,6 +82,11 @@
  * The userreq routine interfaces protocols to the system and is
  * described below.
  */
+ 
+#if defined(__AROS__)
+#define STKARGFUN
+#endif
+
 struct protosw {
 	short	pr_type;		/* socket type used for */
 	struct	domain *pr_domain;	/* domain protocol a member of */

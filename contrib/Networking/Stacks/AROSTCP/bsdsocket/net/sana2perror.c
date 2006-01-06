@@ -21,6 +21,9 @@
  */
 
 #include <conf.h>
+#if !defined(__AROS__)
+#include <proto/sysdebug.h>
+#endif
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/syslog.h>

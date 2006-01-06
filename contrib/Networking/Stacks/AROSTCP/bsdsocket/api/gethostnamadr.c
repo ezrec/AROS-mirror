@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -59,6 +60,8 @@ static char sccsid[] = "@(#)gethostnamadr.c	6.45 (Berkeley) 2/24/91";
 
 #include <conf.h>
 
+#include <aros/libcall.h>
+
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/socket.h>
@@ -81,6 +84,7 @@ static char sccsid[] = "@(#)gethostnamadr.c	6.45 (Berkeley) 2/24/91";
 
 #include <api/gethtbynamadr.h>     /* prototypes (NO MORE BUGS HERE) */
 #include <api/apicalls.h>
+     
      
 #define	MAXALIASES	35
 #define	MAXADDRS	35
@@ -149,7 +153,11 @@ static char *
   int type, class, ancount, qdcount;
   int haveanswer, getclass = C_ANY;
   char **ap, **hap;
-  
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) getanswer()\n"));
+#endif
+
   eom = answer->buf + anslen;
   /*
    * find first satisfactory answer
@@ -318,7 +326,7 @@ static char *
 		
     if (HS->host.h_length >= buflen) {
 #ifdef RES_DEBUG
-      printf("size (%d) too big\n", host->h_length);
+      printf("size (%d) too big\n", HS->host.h_length);
 #endif
       break;
     }
@@ -344,25 +352,55 @@ static char *
   }
 }
 
-struct hostent * SAVEDS gethostbyname(
-   REG(a0, const char * name),
-   REG(a6, struct SocketBase * libPtr))
+int isipaddr(const char *name)
 {
+	const char *c;
+	int i=0;
+	for (c=name;*c;c++)
+	{
+		if (!isdigit(*c))
+		{
+			if ((*c) == '.')
+				i++;
+			else
+				return 0;
+		}
+	}
+	return (i == 3);
+}
+
+/*struct hostent * SAVEDS gethostbyname(
+   REG(a0, const char * name),
+   REG(a6, struct SocketBase * libPtr))*/
+AROS_LH1(struct hostent *, gethostbyname,
+   AROS_LHA(char *, name, A0),
+   struct SocketBase *, libPtr, 30, UL)
+{
+  AROS_LIBFUNC_INIT
   querybuf *buf;
   int n;
   char * ptr;
-  extern int inet_aton(const char *name, struct in_addr *ia);
   struct hoststruct * HS = NULL;
   struct hostent * anshost = NULL;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) gethostbyname('%s')\n", name));
+#endif
 
   CHECK_TASK2();
 
   /*
    * check if name consists of only dots and digits.
    */
-  if (isdigit(name[0])) {
+  if (isipaddr(name))
+  {
+
     struct in_addr inaddr;
     u_long * lptr;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) gethostbyname: name IS an IP address\n"));
+#endif
 
     if (!inet_aton(name, &inaddr)) {
       writeErrnoValue(libPtr, EINVAL);
@@ -388,17 +426,32 @@ struct hostent * SAVEDS gethostbyname(
 
     return HOSTENT;
   }
+  else
+  {
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) gethostbyname: name ISNT an IP address\n"));
+#endif
+  }
+  
   /*
    * Search local database (first) is usens not FIRST
    */
   if (usens != 1)
     if ((anshost =_gethtbyname(libPtr, name)) != NULL || usens == 0)
+    {
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) gethostbyname: host found in local database\n"));
+#endif
       return anshost;
+    }
   /*
    * Here if usens is FIRST or host not in local database and usens is SECOND
    */
   if ((HS = bsd_malloc(sizeof (querybuf) + sizeof (struct hoststruct),
 		       M_TEMP, M_WAITOK)) == NULL) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) gethostbyname: couldnt allocate memory for res search entry\n"));
+#endif
     writeErrnoValue(libPtr, ENOMEM);
     return NULL;
   }
@@ -406,15 +459,27 @@ struct hostent * SAVEDS gethostbyname(
 
   n = res_search(libPtr, name, C_IN, T_A, buf->buf, sizeof (querybuf));
   if (n >= 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) gethostbyname: [res_search] returns %d\n", n));
+#endif
     ptr = getanswer(libPtr, buf, n, 0, HS);
     if (ptr != NULL) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) gethostbyname: [getanswer] returns valid ptr\n"));
+#endif
       if ((anshost = makehostent(libPtr, HS, ptr)) != NULL) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) gethostbyname: [makehostent] returns success\n"));
+#endif
 	anshost->h_addrtype = HS->host.h_addrtype;
 	anshost->h_length = HS->host.h_length;
-      }    
+      }
     }
   }
   else {
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) gethostbyname: [res_search] failed\n"));
+#endif
 #ifdef RES_DEBUG
     printf("res_search failed\n");
 #endif
@@ -424,17 +489,18 @@ struct hostent * SAVEDS gethostbyname(
     if (usens != 2)
       anshost =_gethtbyname(libPtr, name);
   }
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) gethostbyname: finished search\n"));
+#endif
+
   if (HS)
     bsd_free(HS, M_TEMP);
+
   return anshost;
-  
+  AROS_LIBFUNC_EXIT
 }
 
-struct hostent * SAVEDS gethostbyaddr(
-   REG(a0, const UBYTE *addr),
-   REG(d0, int len),
-   REG(d1, int type),
-   REG(a6, struct SocketBase * libPtr))
+struct hostent * __gethostbyaddr(UBYTE *addr, int len, int type, struct SocketBase * libPtr)
 {
   querybuf * buf;
   int n;
@@ -443,6 +509,10 @@ struct hostent * SAVEDS gethostbyaddr(
   char * qbuf;
   struct hostent * anshost = NULL;
   
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) __gethostbyaddr()\n"));  
+#endif
+
   CHECK_TASK2();
   
   if (type != AF_INET)
@@ -507,11 +577,30 @@ struct hostent * SAVEDS gethostbyaddr(
   return anshost;
 }
 
+AROS_LH3(struct hostent *, gethostbyaddr,
+   AROS_LHA(UBYTE *, addr, A0),
+   AROS_LHA(int, len, D0),
+   AROS_LHA(int, type, D1),
+   struct SocketBase *, libPtr, 31, UL)
+{
+  AROS_LIBFUNC_INIT
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) gethostbyaddr()\n"));
+#endif
+
+  return __gethostbyaddr(addr, len, type, libPtr);
+  AROS_LIBFUNC_EXIT
+}
+
 static struct hostent * makehostent(struct SocketBase * libPtr,
 				    struct hoststruct * HS,
 				    char * ptr)
 {
   int n, i;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) makehostent()\n"));
+#endif
 
   i = (caddr_t)ALIGN(ptr) - (caddr_t)&HS->hostbuf;
   n = i + sizeof (struct hostent) + HS->h_addr_count * sizeof (char *) +
@@ -596,15 +685,19 @@ size_t host_namelen = 0;
 *****************************************************************************
 *
 */
-int
-sethostname(const char * name, size_t namelen)
+int SAVEDS sethostname(REG(a0, const char * name), REG(d0, size_t namelen))
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) sethostname()\n"));
+#endif
+
   if (namelen > MAXHOSTNAMELEN)
     namelen = MAXHOSTNAMELEN;
 
   memcpy(host_name, name, namelen);
   host_name[namelen] = '\0';
   host_namelen = namelen;
+  SetVar("HOSTNAME", name, namelen, GVF_GLOBAL_ONLY);
 
   return 0;
 }
@@ -654,30 +747,50 @@ sethostname(const char * name, size_t namelen)
 *****************************************************************************
 *
 */
-LONG SAVEDS gethostname(
-   REG(a0, STRPTR name),
-   REG(d0, LONG namelen),
-   REG(a6, struct SocketBase * libPtr))
+LONG __gethostname(STRPTR name, LONG namelen, struct SocketBase * libPtr)
 {
+  size_t host_namelen = 0;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) __gethostname()\n"));
+#endif
+
   CHECK_TASK();
 
   /*
    * Get the name with the gethostbyaddr(), if the name is not set yet.
    */
-  if (*host_name == '\0') {
+  if (*host_name == '\0')
+  {
     struct hostent * hent;
     /* gethostid() */
     if (id_addr == 0)
       findid(&id_addr);
-    if (id_addr != 0) { /* query if we have an address */
-      hent = gethostbyaddr((const UBYTE *)&id_addr,
+
+    if (id_addr != 0)
+    { /* query if we have an address */
+      hent = __gethostbyaddr((UBYTE *)&id_addr,
 			   sizeof(id_addr), AF_INET, libPtr);
-      if (hent != NULL) {
-	sethostname(hent->h_name, strlen(hent->h_name));
+
+      if (hent != NULL)
+      {
+	     host_namelen = strlen(hent->h_name);
+	     sethostname(hent->h_name, host_namelen);
+      }
+      else
+      {
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) __gethostname: BUG!?! No Host ??\n"));
+#endif
       }
     }
   }
-  
+  else host_namelen = strlen(host_name);
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) __gethostname: namelen: %d host_namelen: %d\n", namelen, host_namelen));
+#endif
+
   /*
    * Copy the name to the user buffer. stccpy() ensures that the buffer
    * is not written over and that it will be null-terminated.
@@ -691,6 +804,19 @@ LONG SAVEDS gethostname(
   name[namelen] = '\0';
 
   API_STD_RETURN(0, 0);
+}
+
+AROS_LH2(LONG, gethostname,
+   AROS_LHA(STRPTR, name, A0),
+   AROS_LHA(LONG, namelen, D0),
+   struct SocketBase *, libPtr, 32, UL)
+{
+  AROS_LIBFUNC_INIT
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) gethostname()\n"));
+#endif
+  return __gethostname(name, namelen, libPtr);
+  AROS_LIBFUNC_EXIT
 }
 
 /****** bsdsocket.library/gethostid ***************************************
@@ -737,10 +863,19 @@ LONG SAVEDS gethostname(
 *****************************************************************************
 *
 */
-ULONG SAVEDS gethostid(
-   REG(a6, struct SocketBase * libPtr))
+/*ULONG SAVEDS gethostid(
+   REG(a6, struct SocketBase * libPtr))*/
+AROS_LH0(ULONG, gethostid,
+   struct SocketBase *, libPtr, 33, UL)
 {
+  AROS_LIBFUNC_INIT
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](gethostnameadr.c) gethostid()\n"));
+#endif
+
   if (id_addr == 0)
     findid(&id_addr);
   return id_addr;
+  AROS_LIBFUNC_EXIT
 }

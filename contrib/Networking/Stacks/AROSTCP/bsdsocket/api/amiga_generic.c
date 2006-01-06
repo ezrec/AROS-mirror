@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * COPYRIGHT (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -21,6 +22,9 @@
  */
 
 #include <conf.h>
+
+#include <aros/asmcall.h>
+#include <aros/libcall.h>
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -100,12 +104,18 @@ static inline int ffs(register long mask)
  * Ioctl system call
  */
 
-LONG SAVEDS IoctlSocket(
+/*LONG SAVEDS IoctlSocket(
 		 REG(d0, LONG fdes),
 		 REG(d1, ULONG cmd),
 		 REG(a0, caddr_t data),
-		 REG(a6, struct SocketBase *libPtr))
+		 REG(a6, struct SocketBase *libPtr))*/
+AROS_LH3(LONG, IoctlSocket,
+	AROS_LHA(LONG, fdes, D0),
+        AROS_LHA(ULONG, cmd, D1),
+        AROS_LHA(caddr_t, data, A0),
+        struct SocketBase *, libPtr, 18, UL)
 {
+  AROS_LIBFUNC_INIT
   register int error;
   register u_int size;
   struct socket *so;
@@ -115,6 +125,7 @@ LONG SAVEDS IoctlSocket(
    * the same socket. (can it be changed to spl_? ?)
    */
   CHECK_TASK();
+  DSYSCALLS(log(LOG_DEBUG,"IoctlSocket(%ld, 0x%08lx, 0x%08lx) called", fdes, cmd, *(ULONG *)data);)
   ObtainSyscallSemaphore(libPtr);
   
   if (error = getSock(libPtr, fdes, &so))
@@ -203,7 +214,9 @@ LONG SAVEDS IoctlSocket(
 
  Return:
   ReleaseSyscallSemaphore(libPtr);
+  DOPTERR(if (error) log(LOG_ERR,"IoctlSocket(): error %ld on command 0x%08lx", error, cmd);)
   API_STD_RETURN(error, 0);
+  AROS_LIBFUNC_EXIT
 }
 
 
@@ -248,14 +261,8 @@ void select_init(void)
  * Althrough the fd_set is used as the type of the masks, the size
  * of the fd_set is not fixed, and is indeed calculated from nfds.
  */
-LONG SAVEDS WaitSelect(
-   REG(d0, ULONG nfds),
-   REG(a0, fd_set *readfds),
-   REG(a1, fd_set *writefds),
-   REG(a2, fd_set *exeptfds),
-   REG(a3, struct timeval *timeout),
-   REG(d1, ULONG *sigmp),
-   REG(a6, struct SocketBase *libPtr))
+LONG __WaitSelect(ULONG nfds, fd_set *readfds, fd_set *writefds, fd_set *exeptfds,
+   struct timeval *timeout, ULONG *sigmp, struct SocketBase *libPtr)
 {
   fd_mask * obits;
   u_int obitsize;  /* in bytes */
@@ -429,6 +436,10 @@ LONG SAVEDS WaitSelect(
   if (error == 0) {
     if (sigmp)
       *sigmp &= SetSignal(0L, sigmask);
+/*  ULONG sigs = SetSignal(0L, sigmask);
+    if (sigmp)
+      *sigmp &= sigs;
+    SetSignal(0L,libPtr->sigIntrMask);*/
     
     putbits(readfds, 0);
     putbits(writefds, 1);
@@ -437,6 +448,48 @@ LONG SAVEDS WaitSelect(
 #undef putbits
 
   API_STD_RETURN(error, retval);
+}
+
+AROS_LH6(LONG, WaitSelect,
+   AROS_LHA(ULONG, nfds, D0),
+   AROS_LHA(fd_set *, readfds, A0),
+   AROS_LHA(fd_set *, writefds, A1),
+   AROS_LHA(fd_set *, exeptfds, A2),
+   AROS_LHA(struct timeval *, timeout, A3),
+   AROS_LHA(ULONG *, sigmp, D1),
+   struct SocketBase *, libPtr, 19, UL)
+{
+  AROS_LIBFUNC_INIT
+  DSYSCALLS(log(LOG_DEBUG,"WaitSelect(%lu, 0x%08lx, 0x%08lx, 0x%08lx, 0x%08lx, 0x%08lx) called", nfds, readfds, writefds, exeptfds, timeout, sigmp);)
+  return __WaitSelect(nfds, readfds, writefds, exeptfds, timeout, sigmp, libPtr);
+  AROS_LIBFUNC_EXIT
+}
+
+AROS_LH1(LONG, GetSocketEvents,
+   AROS_LHA(ULONG *,eventsp, A0),
+   struct SocketBase *, libPtr, 46, UL)
+{
+   AROS_LIBFUNC_INIT
+   struct soevent *se;
+   struct socket *so;
+   int i;
+
+   ObtainSemaphore(&libPtr->EventLock);
+   se = (struct soevent *)RemHead((struct List *)&libPtr->EventList);
+   ReleaseSemaphore(&libPtr->EventLock);
+   if (se) {
+      *eventsp = se->events;
+      DEVENTS(log(LOG_DEBUG,"GetSocketEvents(): events 0x%08lx for socket 0x%08lx libPtr = 0x%08lx", se->events, se->socket, libPtr);)
+      so = se->socket;
+      bsd_free(se, NULL);
+      for (i = 0; i < libPtr->dTableSize; i++)
+        if (libPtr->dTable[i] == so)
+	   return i;
+      DEVENTS(log(LOG_CRIT,"GetSocketEvents(): unreferenced socket 0x%08lx libPtr = 0x%08lx", so, libPtr);)
+   }
+      DEVENTS(else log (LOG_DEBUG,"GetSocketEvents(): no events pending libPtr = 0x%08lx", libPtr);)
+   return -1;
+   AROS_LIBFUNC_EXIT
 }
 
 /* 
@@ -641,13 +694,11 @@ countSockets(struct SocketBase * libPtr, struct socket * so)
   return count;
 }
 
-LONG SAVEDS CloseSocket(
-   REG(d0, LONG fd),
-   REG(a6, struct SocketBase *libPtr))
+LONG __CloseSocket(LONG fd, struct SocketBase *libPtr)
 {
-
   register int error;
   struct socket *so;
+  struct soevent *se;
 
   CHECK_TASK();
   ObtainSyscallSemaphore(libPtr);
@@ -664,7 +715,9 @@ LONG SAVEDS CloseSocket(
    * If the link library cannot free the fd, then we cannot do it either.
    */
   if (libPtr->fdCallback)
-    if (error = libPtr->fdCallback(fd, FDCB_FREE))
+    if (error = AROS_UFC2(int, libPtr->fdCallback,
+	AROS_UFCA(int, fd, D0),
+	AROS_UFCA(int, FDCB_FREE, D1)))
       goto Return;
 
   FD_CLR(fd, (fd_set *)(libPtr->dTable + libPtr->dTableSize));
@@ -682,7 +735,20 @@ LONG SAVEDS CloseSocket(
    * not zero.
    */
   if (--so->so_refcnt <= 0)
+  {
     error = soclose(so);
+    /* Remove all events associated with this socket */
+    ObtainSemaphore(&libPtr->EventLock);
+    for (se = (struct soevent *)libPtr->EventList.mlh_Head; se->node.mln_Succ; se = (struct soevent *)se->node.mln_Succ)
+    {
+	  if (se->socket == so)
+	  {
+	    Remove((struct Node *)se);
+	    bsd_free(se, NULL);
+	  }
+  }
+  ReleaseSemaphore(&libPtr->EventLock);
+  }
 
   /*
    * now clear socket from descriptor table. Socket usage bitmask has been
@@ -695,6 +761,15 @@ LONG SAVEDS CloseSocket(
   API_STD_RETURN(error, 0);
 }
 
+AROS_LH1(LONG, CloseSocket,
+   AROS_LHA(LONG, fd, D0),
+   struct SocketBase *, libPtr,20, UL)
+{
+  AROS_LIBFUNC_INIT
+  DSYSCALLS(log(LOG_DEBUG,"CloseSocket(%ld) called", fd);)
+  return __CloseSocket(fd, libPtr);
+  AROS_LIBFUNC_EXIT
+}
 
 struct SocketNode {
   struct MinNode	sn_Node;
@@ -749,17 +824,22 @@ static LONG makeId(LONG id)
   }
 }
 
-LONG SAVEDS ReleaseSocket(
+/*LONG SAVEDS ReleaseSocket(
    REG(d0, LONG fd),
    REG(d1, LONG id),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH2(LONG, ReleaseSocket,
+   AROS_LHA(LONG, fd, D0),
+   AROS_LHA(LONG, id, D1),
+   struct SocketBase *,libPtr, 21, UL)
 {
+  AROS_LIBFUNC_INIT
   struct SocketNode *sn;
   struct socket *so;
   int error = 0;
 
   CHECK_TASK();
-
+  DSYSCALLS(log(LOG_DEBUG,"ReleaseSocket(%ld, %ld) called", fd, id);)
   if ((ULONG)id >= FIRSTUNIQUEID && (id = makeId(id)) == -1) {
     error = EINVAL;
     goto Return;
@@ -776,13 +856,16 @@ LONG SAVEDS ReleaseSocket(
    * Tell the link library that the fd is free
    */
   if (libPtr->fdCallback)
-    if (error = libPtr->fdCallback(fd, FDCB_FREE)) {
+    if (error = AROS_UFC2(int, libPtr->fdCallback,
+	AROS_UFCA(int, fd, D0),
+	AROS_UFCA(int, FDCB_FREE, D1)))
+ {
       FreeMem(sn, sizeof (struct SocketNode));
       goto Return;
     }
   
-  if (so->so_pgid == libPtr && countSockets(libPtr, so) == 1) 
-    so->so_pgid = NULL;		/* not ours any more */
+/*if (so->so_pgid == libPtr && countSockets(libPtr, so) == 1)
+    so->so_pgid = NULL;*/	  /* not ours any more */
   sn->sn_Id = id;
   sn->sn_Socket = so;
   libPtr->dTable[fd] = NULL;
@@ -793,19 +876,25 @@ LONG SAVEDS ReleaseSocket(
   Permit();
 
  Return: API_STD_RETURN(error, id);
+  AROS_LIBFUNC_EXIT
 }
 
-LONG SAVEDS ReleaseCopyOfSocket(
+/*LONG SAVEDS ReleaseCopyOfSocket(
    REG(d0, LONG fd),
    REG(d1, LONG id),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH2(LONG, ReleaseCopyOfSocket,
+   AROS_LHA(LONG, fd, D0),
+   AROS_LHA(LONG, id, D1),
+   struct SocketBase *, libPtr, 22, UL)
 {
+  AROS_LIBFUNC_INIT
   struct SocketNode *sn;
   struct socket *so;
   int error = 0;
 
   CHECK_TASK();
-
+  DSYSCALLS(log(LOG_DEBUG,"ReleaseCopyOfSocket(%ld, %ld) called", fd, id);)
   if ((ULONG)id >= FIRSTUNIQUEID && (id = makeId(id)) == -1) {
     error = EINVAL;
     goto Return;
@@ -827,22 +916,30 @@ LONG SAVEDS ReleaseCopyOfSocket(
   Permit();
 
  Return: API_STD_RETURN(error, id);
+  AROS_LIBFUNC_EXIT
 }
 
-LONG SAVEDS ObtainSocket(
+/*LONG SAVEDS ObtainSocket(
    REG(d0, LONG id),
    REG(d1, LONG domain),
    REG(d2, LONG type),
    REG(d3, LONG protocol),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH4(LONG, ObtainSocket,
+   AROS_LHA(LONG, id, D0),
+   AROS_LHA(LONG, domain, D1),
+   AROS_LHA(LONG, type, D2),
+   AROS_LHA(LONG, protocol, D3),
+   struct SocketBase *, libPtr, 23, UL)
 {
+  AROS_LIBFUNC_INIT
   struct protosw *prp;
   struct Node * sn;
   int error = 0;
   LONG fd;
 
   CHECK_TASK();
-
+  DSYSCALLS(log(LOG_DEBUG,"ObtainSocket(%ld, %ld, %ld, %ld) called", id, domain, type, protocol);)
   if (domain == 0) {
     if (id < FIRSTUNIQUEID) {
       error = EPFNOSUPPORT;
@@ -869,7 +966,9 @@ LONG SAVEDS ObtainSocket(
    * Tell the link library about the new fd
    */
   if (libPtr->fdCallback)
-    if (error = libPtr->fdCallback(fd, FDCB_ALLOC))
+    if (error = AROS_UFC2(int, libPtr->fdCallback,
+	AROS_UFCA(int, fd, D0),
+	AROS_UFCA(int, FDCB_ALLOC, D1)))
       goto Return;
   
   Forbid();
@@ -880,6 +979,7 @@ LONG SAVEDS ObtainSocket(
       Remove(sn);
       Permit();
       libPtr->dTable[fd] = ((struct SocketNode *)sn)->sn_Socket;
+//    ((struct SocketNode *)sn)->sn_Socket->so_pgid = libPtr;
       FD_SET(fd, (fd_set *)(libPtr->dTable + libPtr->dTableSize));
       FreeMem(sn, sizeof (struct SocketNode));
       goto Return;
@@ -891,23 +991,32 @@ LONG SAVEDS ObtainSocket(
    * Free the just allocated fd
    */
   if (libPtr->fdCallback)
-    libPtr->fdCallback(fd, FDCB_FREE);
+    AROS_UFC2(int, libPtr->fdCallback,
+	AROS_UFCA(int, fd, D0),
+	AROS_UFCA(int, FDCB_FREE, D1));
 
   error = EWOULDBLOCK;
   
  Return: API_STD_RETURN(error, fd);
+  AROS_LIBFUNC_EXIT
 }
 
-LONG SAVEDS Dup2Socket(
+/*LONG SAVEDS Dup2Socket(
    REG(d0, LONG fd1),
    REG(d1, LONG fd2),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH2(LONG, Dup2Socket,
+   AROS_LHA(LONG, fd1, D0),
+   AROS_LHA(LONG, fd2, D1),
+   struct SocketBase *, libPtr, 23, UL)
 {
+  AROS_LIBFUNC_INIT
   LONG newfd;
   int error = 0;
   struct socket *so;
 
   CHECK_TASK();
+  DSYSCALLS(log(LOG_DEBUG,"Dup2Socket(%ld, %ld) called", fd1, fd2);)
   ObtainSyscallSemaphore(libPtr); /*many tasks may have access to the socket */
 
   if (fd1 == -1)
@@ -926,12 +1035,14 @@ LONG SAVEDS Dup2Socket(
       goto Return;
     }
     if (libPtr->dTable[fd2] != NULL)
-      CloseSocket(fd2, libPtr);
+      __CloseSocket(fd2, libPtr);
     /*
      * Check if the fd is free on the link library
      */
     if (libPtr->fdCallback)
-      if (error = libPtr->fdCallback(fd2, FDCB_CHECK))
+      if (error = AROS_UFC2(int, libPtr->fdCallback,
+	AROS_UFCA(int, fd2, D0),
+	AROS_UFCA(int, FDCB_CHECK, D1)))
 	goto Return;
 
   }
@@ -939,7 +1050,9 @@ LONG SAVEDS Dup2Socket(
    * Tell the link library about the new fd
    */
   if (libPtr->fdCallback)
-    if (error = libPtr->fdCallback(fd2, FDCB_ALLOC))
+    if (error = AROS_UFC2(int, libPtr->fdCallback,
+	AROS_UFCA(int, fd2, D0),
+	AROS_UFCA(int, FDCB_ALLOC, D1)))
       goto Return;
 
   FD_SET(fd2, (fd_set *)(libPtr->dTable + libPtr->dTableSize));
@@ -952,4 +1065,5 @@ LONG SAVEDS Dup2Socket(
  Return:
   ReleaseSyscallSemaphore(libPtr);
   API_STD_RETURN(error, fd2);
+  AROS_LIBFUNC_EXIT
 }

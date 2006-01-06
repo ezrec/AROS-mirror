@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -123,7 +124,15 @@ struct socket {
 #define	SB_COLL		0x20		/* collision selecting */
 #define	SB_NOINTR	0x40		/* operations not interruptible */
 
+	u_long so_eventmask;		/* Events mask */
 	caddr_t	so_tpcb;		/* Wisc. protocol control block XXX */
+};
+
+/* Socket event descriptor */
+struct soevent {
+	struct MinNode node;
+	struct socket *socket;
+	u_long events;
 };
 
 /*
@@ -142,6 +151,10 @@ struct socket {
 #define	SS_ASYNC		0x200	/* async i/o notify */
 #define	SS_ISCONFIRMING		0x400	/* deciding to accept connection req */
 
+/*
+ * Private socket options
+ */
+#define SO_TTCP_SHUTUP 0x8000
 
 /*
  * Macros for sockets and socket buffering.
@@ -207,10 +220,10 @@ struct socket {
 		wakeup((caddr_t)&(sb)->sb_flags); \
 	} \
 }
-
+/*
 #define	sorwakeup(so)	sowakeup((so), &(so)->so_rcv)
 #define	sowwakeup(so)	sowakeup((so), &(so)->so_snd)
-
+*/
 #ifdef KERNEL
 extern u_long	sb_max;
 

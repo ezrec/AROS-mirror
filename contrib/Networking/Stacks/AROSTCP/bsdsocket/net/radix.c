@@ -73,6 +73,8 @@ struct radix_node_head *mask_rnhead=NULL;
 #define rn_maskhead mask_rnhead->rnh_treetop
 struct radix_mask *rn_mkfreelist = NULL;
 struct radix_node_head *radix_node_head = NULL;
+struct radix_node_head *rt_tables[AF_MAX+1] = {0};
+
 #undef Bcmp
 #define Bcmp(a, b, l) (l == 0 ? 0 : bcmp((caddr_t)(a), (caddr_t)(b), (u_long)l))
 /*
@@ -667,5 +669,6 @@ int af;
 	rnh->rnh_next = radix_node_head->rnh_next;
 	if (radix_node_head != rnh)
 		radix_node_head->rnh_next = rnh;
+	rt_tables[af] = rnh;
 	return (1);
 }

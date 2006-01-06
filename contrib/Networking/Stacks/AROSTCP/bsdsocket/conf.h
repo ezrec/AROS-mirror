@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -197,8 +198,57 @@ extern struct ExecBase *SysBase;
 #include <stdarg.h>
 #include <limits.h>
 #include <stddef.h>
-/*#include <aros/debug.h>*/
 
+#ifdef DEBUG
+#define D(x) x
+#else
+#define D(x)
+#endif
+#ifdef DEBUG_NETDB
+#define DNETDB(x) x
+#else
+#define DNETDB(x)
+#endif
+#ifdef DEBUG_SANA
+#define DSANA(x) x
+#else
+#define DSANA(x)
+#endif
+#ifdef DEBUG_NETTRACE
+#define DNETTRACE(x) x
+#else
+#define DNETTRACE(x)
+#endif
+#ifdef RES_DEBUG
+#define DRES(x) x
+#else
+#define DRES(x)
+#endif
+#ifdef DEBUG_TSLEEP
+#define DTSLEEP(x) x
+#else
+#define DTSLEEP(x)
+#endif
+#ifdef DEBUG_EVENTS
+#define DEVENTS(x) x
+#else
+#define DEVENTS(x)
+#endif
+#ifdef DEBUG_SYSLOG
+#define DSYSLOG(x) x
+#else
+#define DSYSLOG(x)
+#endif
+#ifdef DEBUG_SYSCALLS
+#define DSYSCALLS(x) x
+#else
+#define DSYSCALLS(x)
+#endif
+#ifdef DEBUG_OPTERR
+#define DOPTERR(x) x
+#else
+#define DOPTERR(x)
+#endif
 
 #if 0
 GLOBAL struct IntuitionBase *IntuitionBase;
@@ -206,8 +256,17 @@ GLOBAL struct Library *GadToolsBase;
 GLOBAL struct GfxBase *GfxBase;
 #endif
 GLOBAL struct DosLibrary *DOSBase;
+#ifdef __MORPHOS__
+GLOBAL struct Library *UtilityBase;
+GLOBAL struct Library *RexxSysBase;
+#else
 GLOBAL struct UtilityBase *UtilityBase;
-/*GLOBAL struct Library *RexxSysBase;*/
 GLOBAL struct RxsLib *RexxSysBase;
+#endif
 
+#define ENABLE_TTCP_SHUTUP
 
+#if defined(__AROS__)
+#define DEBUG 0
+#include <aros/debug.h>
+#endif

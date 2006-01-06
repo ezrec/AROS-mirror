@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -40,6 +41,7 @@
 #include <netinet/in.h>
 #include <devices/sana2.h>
 #include <utility/tagitem.h>
+#include "net/netdbpaths.h"
 #include <net/sana2tags.h>
 #include <net/sana2config.h>
 #include <net/if_arp.h>
@@ -354,7 +356,7 @@ ssconfig(struct sana_softc *ifp, struct ssconfig *ifc)
   LONG reqtotal = 0;
 
   assert(ifp != NULL);
-  assert(ifp->ss_if.if_type == IFT_SANA);
+/*assert(ifp->ss_if.if_type == IFT_SANA);*/
 
   for (wd = wire_defaults; wd->wd_wiretype != 0; wd++) {
     if (wt == wd->wd_wiretype)

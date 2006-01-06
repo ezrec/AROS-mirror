@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -55,6 +56,8 @@
 
 #include <conf.h>
 
+#include <aros/libcall.h>
+
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/socketvar.h>
@@ -76,6 +79,8 @@
 
 #include <ctype.h>
 
+extern struct MsgPort *ExtLogPort;
+
 /*
  * Functions which are defined in link library in unix systems
  */
@@ -85,14 +90,11 @@
  * Convert network-format internet address
  * to base 256 d.d.d.d representation.
  */
-char *SAVEDS Inet_NtoA(
-   REG(d0, ULONG s_addr),
-   REG(a6, struct SocketBase *libPtr))
+char * __inet_ntoa(ULONG s_addr, struct SocketBase *libPtr)
 {
   NTOHL(s_addr);
 
   CHECK_TASK2();
-
   sprintf(libPtr->inet_ntoa,
 	  "%ld.%ld.%ld.%ld", 
 	  (s_addr>>24) & 0xff, 
@@ -100,6 +102,15 @@ char *SAVEDS Inet_NtoA(
 	  (s_addr>>8) & 0xff, 
 	  s_addr & 0xff);
   return ((char *)libPtr->inet_ntoa);
+}
+AROS_LH1(char *, Inet_NtoA,
+   AROS_LHA(ULONG, s_addr, D0),
+   struct SocketBase *, libPtr, 30, UL)
+{
+  AROS_LIBFUNC_INIT
+  D(log(LOG_DEBUG,"Inet_NtoA(0x%08lx) called",s_addr);)
+  return __inet_ntoa(s_addr, libPtr);
+  AROS_LIBFUNC_EXIT
 }
 
 /* from inet_addr.c */
@@ -111,8 +122,11 @@ char *SAVEDS Inet_NtoA(
  * cannot distinguish between failure and a local broadcast address.
  */
 
-int
-inet_aton(register const char *cp, struct in_addr *addr)
+/*int
+inet_aton(register const char *cp, struct in_addr *addr)*/
+int SAVEDS inet_aton(
+   REG(a0, const char *cp),
+   REG(a1, struct in_addr *addr))
 {
 	register u_long val, base, n;
 	register char c;
@@ -201,15 +215,20 @@ inet_aton(register const char *cp, struct in_addr *addr)
  * The value returned is in network order.
  */
 
-ULONG SAVEDS inet_addr(
+/*ULONG SAVEDS inet_addr(
    REG(a0, const char *cp),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH1(ULONG, inet_addr,
+   AROS_LHA(const char *, cp, A0),
+   struct SocketBase *, libPtr, 31, UL)
 {
+        AROS_LIBFUNC_INIT
 	struct in_addr val;
 
 	if (inet_aton(cp, &val))
 		return (val.s_addr);
 	return (INADDR_NONE);
+        AROS_LIBFUNC_EXIT
 }
 
 /* from inet_lnaof.c */
@@ -218,10 +237,14 @@ ULONG SAVEDS inet_addr(
  * internet address; handles class a/b/c network
  * number formats.
  */
-ULONG SAVEDS Inet_LnaOf(
+/*ULONG SAVEDS Inet_LnaOf(
    REG(d0, ULONG s_addr),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH1(ULONG, Inet_LnaOf,
+   AROS_LHA(ULONG, s_addr, D0),
+   struct SocketBase *, libPtr, 32, UL)
 {
+        AROS_LIBFUNC_INIT
 	NTOHL(s_addr);
 
 	if (IN_CLASSA(s_addr))
@@ -230,6 +253,7 @@ ULONG SAVEDS Inet_LnaOf(
 		return ((s_addr)&IN_CLASSB_HOST);
 	else
 		return ((s_addr)&IN_CLASSC_HOST);
+        AROS_LIBFUNC_EXIT
 }
 
 /* from inet_netof.c */
@@ -237,10 +261,14 @@ ULONG SAVEDS Inet_LnaOf(
  * Return the network number from an internet
  * address; handles class a/b/c network #'s.
  */
-ULONG SAVEDS Inet_NetOf(
+/*ULONG SAVEDS Inet_NetOf(
    REG(d0, ULONG s_addr),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH1(ULONG, Inet_NetOf,
+   AROS_LHA(ULONG, s_addr, D0),
+   struct SocketBase *, libPtr, 33, UL)
 {
+        AROS_LIBFUNC_INIT
 	NTOHL(s_addr);
 
 	if (IN_CLASSA(s_addr))
@@ -249,6 +277,7 @@ ULONG SAVEDS Inet_NetOf(
 		return (((s_addr)&IN_CLASSB_NET) >> IN_CLASSB_NSHIFT);
 	else
 		return (((s_addr)&IN_CLASSC_NET) >> IN_CLASSC_NSHIFT);
+        AROS_LIBFUNC_EXIT
 }
 
 /* from inet_makeaddr.c */
@@ -256,23 +285,29 @@ ULONG SAVEDS Inet_NetOf(
  * Formulate an Internet address from network + host.  Used in
  * building addresses stored in the ifnet structure.
  */
-ULONG SAVEDS Inet_MakeAddr(
+/*ULONG SAVEDS Inet_MakeAddr(
    REG(d0, ULONG net),
    REG(d1, ULONG host),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH2(ULONG, Inet_MakeAddr,
+   AROS_LHA(int, net, D0),
+   AROS_LHA(int, host, D1),
+   struct SocketBase *, libPtr, 34, UL)
 {
+	AROS_LIBFUNC_INIT
 	u_long addr;
 
-	if (net < 128)
-		addr = (net << IN_CLASSA_NSHIFT) | (host & IN_CLASSA_HOST);
+	if ((ULONG)net < 128)
+		addr = ((ULONG)net << IN_CLASSA_NSHIFT) | ((ULONG)host & IN_CLASSA_HOST);
 	else if (net < 65536)
-		addr = (net << IN_CLASSB_NSHIFT) | (host & IN_CLASSB_HOST);
+		addr = ((ULONG)net << IN_CLASSB_NSHIFT) | ((ULONG)host & IN_CLASSB_HOST);
 	else if (net < 16777216L)
-		addr = (net << IN_CLASSC_NSHIFT) | (host & IN_CLASSC_HOST);
+		addr = ((ULONG)net << IN_CLASSC_NSHIFT) | ((ULONG)host & IN_CLASSC_HOST);
 	else
-		addr = net | host;
+		addr = (ULONG)net | (ULONG)host;
 
 	return htonl(addr);
+	AROS_LIBFUNC_EXIT
 }
 
 /* from inet_network.c */
@@ -281,10 +316,14 @@ ULONG SAVEDS Inet_MakeAddr(
  * The library routines call this routine to interpret
  * network numbers.
  */
-ULONG SAVEDS inet_network(
+/*ULONG SAVEDS inet_network(
    REG(a0, const char *cp),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH1(ULONG, inet_network,
+   AROS_LHA(const char *, cp, A0),
+   struct SocketBase *, libPtr, 35, UL)
 {
+	AROS_LIBFUNC_INIT
 	register u_long val, base, n;
 	register char c;
 	u_long parts[4], *pp = parts;
@@ -326,5 +365,35 @@ again:
 		val |= parts[i] & 0xff;
 	}
 	return (val);
+	AROS_LIBFUNC_EXIT
+}
+
+void SAVEDS SetSysLogPort()
+{
+	ExtLogPort = FindPort("SysLog");
+}
+
+#warning "TODO: NicJA - Do we really need these NEW functions? EZTCP_free"
+AROS_LH1(ULONG, EZTCP_free,
+   AROS_LHA(void *, addr, A0),
+   struct SocketBase *, libPtr, 80, UL)
+{
+	AROS_LIBFUNC_INIT
+
+	bsd_free(addr, NULL);
+
+	AROS_LIBFUNC_EXIT
+}
+
+#warning "TODO: NicJA - Do we really need these NEW functions? EZTCP_malloc"
+AROS_LH1(ULONG, EZTCP_malloc,
+   AROS_LHA(unsigned long, size, D0),
+   struct SocketBase *, libPtr, 81, UL)
+{
+	AROS_LIBFUNC_INIT
+
+	return bsd_malloc(size, NULL, NULL);
+
+	AROS_LIBFUNC_EXIT
 }
 

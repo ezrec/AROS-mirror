@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 1985, 1989 Regents of the University of California.
  * All rights reserved.
+ * Copyright (C) 2005 Pavel Fedin
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,6 +57,7 @@ static char sccsid[] = "@(#)res_send.c	6.27 (Berkeley) 2/24/91";
 #include <api/amiga_api.h>
 #include <kern/amiga_subr.h>     
 #include <kern/amiga_netdb.h>     
+#include <stdio.h>
 
 #ifndef AMITCP /* AmiTCP has this in the SocketBase */     
 static int res_sock = -1;	/* socket used for communications */
@@ -73,6 +75,9 @@ static const struct sockaddr no_addr = { sizeof(struct sockaddr), AF_INET, 0 };
 #define FD_ZERO(p)	bzero((char *)(p), sizeof(*(p)))
 #endif
 
+extern const char * const __sys_errlist[];
+#define Perror(string) Printf("%s: %s\n", string, __sys_errlist[readErrnoValue(libPtr)])
+
 int
 res_send(struct SocketBase *	libPtr,
 	 const char *		buf,
@@ -88,7 +93,7 @@ res_send(struct SocketBase *	libPtr,
 	char *cp;
 	fd_set dsmask;
 	struct timeval timeout;
-	struct NameserventNode *ns;
+	struct in_addr *ns;
 	struct sockaddr_in host;
 	HEADER *hp = (HEADER *) buf;
 	HEADER *anhp = (HEADER *) answer;
@@ -96,9 +101,14 @@ res_send(struct SocketBase *	libPtr,
 #define JUNK_SIZE 512
 	char junk[JUNK_SIZE]; /* buffer for trash data */
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send()\n"));
+D(bug("[AROSTCP](res_send.c) res_send: using socket %d\n", res_sock));
+#endif
+
 #ifdef RES_DEBUG
 		printf("res_send()\n");
-		__p_query(buf);
+		__p_query(buf, libPtr);
 #endif /* RES_DEBUG */
 
 	v_circuit = (_res.options & RES_USEVC) || buflen > PACKETSZ;
@@ -106,23 +116,35 @@ res_send(struct SocketBase *	libPtr,
 	/*
 	 * Send request, RETRY times, or until successful
 	 */
-	for (try = 0; try < _res.retry; try++) {
+	for (try = 0; try < _res.retry; try++)
+   {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Attempt %d\n", try));
+#endif
 	  nscount = 0;
-	  for (ns = (struct NameserventNode *)NDB->ndb_NameServers.mlh_Head;
-	       ns->nsn_Node.mln_Succ;
-	       ns = (struct NameserventNode *)ns->nsn_Node.mln_Succ) {
+	  DRES(Printf("Retry #%ld\n",try);)
+	  for (ns = _res.nsaddr_list; ns->s_addr ; *ns++) {
 	    nscount++;
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Querying server #%ld address = %s\n", nscount,
+			      __inet_ntoa(ns->s_addr, libPtr)));
+#endif
+
 #ifdef RES_DEBUG
-			printf("Querying server #%d address = %s\n", nscount,
-			      inet_ntoa(ns->nsn_Ent.ns_addr));
+			Printf("Querying server #%ld address = %s\n", nscount,
+			      __inet_ntoa(ns->s_addr, libPtr));
 #endif /* RES_DEBUG */
+
 	    host.sin_len = sizeof(host);
 	    host.sin_family = AF_INET;
 	    host.sin_port = htons(NAMESERVER_PORT);
-	    host.sin_addr = ns->nsn_Ent.ns_addr;
+	    host.sin_addr.s_addr = ns->s_addr;
 	    aligned_bzero_const(&host.sin_zero, sizeof(host.sin_zero));
 	usevc:
 		if (v_circuit) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Using v_circuit\n"));
+#endif
 			int truncated = 0;
 
 			/*
@@ -131,22 +153,32 @@ res_send(struct SocketBase *	libPtr,
 			 */
 			try = _res.retry;
 			if (res_sock < 0) {
-				res_sock = socket(AF_INET, SOCK_STREAM, 0, libPtr);
+			
+				res_sock = __socket(AF_INET, SOCK_STREAM, 0, libPtr);
 				if (res_sock < 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Failed to create socket!!\n"));
 					terrno = readErrnoValue(libPtr);
+#endif
 #ifdef RES_DEBUG
-					    perror("socket (vc) failed");
+					    Perror("socket (vc)");
 #endif /* RES_DEBUG */
 					continue;
 				}
-				if (connect(res_sock,
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: created socket %d\n", res_sock));
+#endif
+				if (__connect(res_sock,
 					    (struct sockaddr *)&host,
 					    sizeof(struct sockaddr), libPtr) < 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Failed to connect\n"));
+#endif
 				        terrno = readErrnoValue(libPtr);
 #ifdef RES_DEBUG
-					    perror("connect failed");
+					    Perror("connect (vc)");
 #endif /* RES_DEBUG */
-					(void) CloseSocket(res_sock, libPtr);
+					(void) __CloseSocket(res_sock, libPtr);
 					res_sock = -1;
 					continue;
 				}
@@ -155,15 +187,18 @@ res_send(struct SocketBase *	libPtr,
 			 * Send length & message
 			 */
 			len = htons((u_short)buflen);
-			if ((send(res_sock, (char *)&len, sizeof(len), 0, libPtr)
+			if ((__send(res_sock, (char *)&len, sizeof(len), 0, libPtr)
 			     != sizeof(len)) ||
-			   ((send(res_sock, (char *)buf, buflen, 0, libPtr)
+			   ((__send(res_sock, (char *)buf, buflen, 0, libPtr)
 			     != buflen))) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Failed sending query\n"));
+#endif
 				terrno = readErrnoValue(libPtr);
 #ifdef RES_DEBUG
-					perror("write failed");
+					Perror("write(vc)");
 #endif /* RES_DEBUG */
-				(void) CloseSocket(res_sock, libPtr);
+				(void) __CloseSocket(res_sock, libPtr);
 				res_sock = -1;
 				continue;
 			}
@@ -173,17 +208,20 @@ res_send(struct SocketBase *	libPtr,
 			cp = answer;
 			len = sizeof(short);
 			while (len != 0 &&
-			    (n = recv(res_sock,
+			    (n = __recv(res_sock,
 				      (char *)cp, (int)len, 0, libPtr)) > 0) {
 				cp += n;
 				len -= n;
 			}
 			if (n <= 0) {
 				terrno = readErrnoValue(libPtr);
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Failed recieving response\n"));
+#endif
 #ifdef RES_DEBUG
-					perror("read failed");
+					Perror("read (vc)");
 #endif /* RES_DEBUG */
-				(void) CloseSocket(res_sock, libPtr);
+				(void) __CloseSocket(res_sock, libPtr);
 				res_sock = -1;
 				/*
 				 * A long running process might get its TCP
@@ -200,27 +238,36 @@ res_send(struct SocketBase *	libPtr,
 				}
 				continue;
 			}
+
 			cp = answer;
 			if ((resplen = ntohs(*(u_short *)cp)) > anslen) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Trancated response\n"));
+#endif
 #ifdef RES_DEBUG
-			               fprintf(stderr, "response truncated\n");
+				       Printf("response truncated\n");
 #endif /* RES_DEBUG */
 				len = anslen;
 				truncated = 1;
 			} else
 				len = resplen;
+
 			while (len != 0 &&
-			   (n = recv(res_sock,
-				     (char *)cp, (int)len, 0, libPtr)) > 0) {
+			   (n = __recv(res_sock,
+				     (char *)cp, (int)len, 0, libPtr)) > 0)
+         {
 				cp += n;
 				len -= n;
 			}
 			if (n <= 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Error recieving response\n"));
+#endif
 				terrno = readErrnoValue(libPtr);
 #ifdef RES_DEBUG
-					perror("read failed");
+					Perror("read (vc)");
 #endif /* RES_DEBUG */
-				(void) CloseSocket(res_sock, libPtr);
+				(void) __CloseSocket(res_sock, libPtr);
 				res_sock = -1;
 				continue;
 			}
@@ -233,7 +280,7 @@ res_send(struct SocketBase *	libPtr,
 				len = resplen - anslen;
 				while (len != 0) {
 					n = (len > JUNK_SIZE ? JUNK_SIZE : len);
-					if ((n = recv(res_sock,
+					if ((n = __recv(res_sock,
 						      junk, n, 0, libPtr)) > 0)
 						len -= n;
 					else
@@ -241,15 +288,21 @@ res_send(struct SocketBase *	libPtr,
 				}
 			}
 		} else {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Using datagrams\n"));
+#endif
 			/*
 			 * Use datagrams.
 			 */
 			if (res_sock < 0) {
-				res_sock = socket(AF_INET, SOCK_DGRAM, 0, libPtr);
+				res_sock = __socket(AF_INET, SOCK_DGRAM, 0, libPtr);
 				if (res_sock < 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Failed to create socket\n"));
+#endif
 					terrno = readErrnoValue(libPtr);
 #ifdef RES_DEBUG
-					    perror("socket (dg) failed");
+					    Perror("socket (dg)");
 #endif /* RES_DEBUG */
 					continue;
 				}
@@ -270,6 +323,13 @@ res_send(struct SocketBase *	libPtr,
 			 * as we wish to receive answers from the first
 			 * server to respond.
 			 */
+#warning "TODO*: see comment here .."
+			/* This piece of code still behaves slightly wrong in
+			   case of ECONNREFUSED error. On next retry socket will
+			   be in disconnected state and instead of getting
+			   ECONNREFUSED again we'll timeout in WaitSelect() and
+			   get ETIMEDOUT. However, this is not critical and is
+			   queued for future - Pavel Fedin*/
 			if (try == 0 && nscount == 1) {
 				/*
 				 * Don't use connect if we might
@@ -277,21 +337,27 @@ res_send(struct SocketBase *	libPtr,
 				 * from another server.
 				 */
 				if (connected == 0) {
-				  if (connect(res_sock,
+				  if (__connect(res_sock,
 					      (struct sockaddr *)&host,
 					      sizeof(struct sockaddr),
 					      libPtr) < 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Error connecting\n"));
+#endif
 #ifdef RES_DEBUG
-							perror("connect");
+							Perror("connect (dg)");
 #endif /* RES_DEBUG */
 						continue;
 					}
 					connected = 1;
 				}
-				if (send(res_sock,
+				if (__send(res_sock,
 					 buf, buflen, 0, libPtr) != buflen) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Error sending\n"));
+#endif
 #ifdef RES_DEBUG
-						perror("send");
+						Perror("send (dg)");
 #endif /* RES_DEBUG */
 					continue;
 				}
@@ -301,15 +367,18 @@ res_send(struct SocketBase *	libPtr,
 				 * for responses from more than one server.
 				 */
 				if (connected) {
-					(void) connect(res_sock, &no_addr,
+					(void) __connect(res_sock, &no_addr,
 					    sizeof(no_addr), libPtr);
 					connected = 0;
 				}
-				if (sendto(res_sock, buf, buflen, 0,
+				if (__sendto(res_sock, buf, buflen, 0,
 				    (struct sockaddr *)&host,
 				    sizeof(struct sockaddr), libPtr) != buflen) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: [__sendto] Error\n"));
+#endif
 #ifdef RES_DEBUG
-						perror("sendto");
+						Perror("sendto (dg)");
 #endif /* RES_DEBUG */
 					continue;
 				}
@@ -327,30 +396,49 @@ res_send(struct SocketBase *	libPtr,
 wait:
 			FD_ZERO(&dsmask);
 			FD_SET(res_sock, &dsmask);
-			n = WaitSelect(res_sock+1, &dsmask, NULL,
+			n = __WaitSelect(res_sock+1, &dsmask, NULL,
 				NULL, &timeout, NULL, libPtr);
 			if (n < 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: [__WaitSelect] Error\n"));
+#endif
 #ifdef RES_DEBUG
-					perror("select");
+					Perror("select");
 #endif /* RES_DEBUG */
+
+            terrno = readErrnoValue(libPtr);
+				if (terrno == EINTR) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: closing socket\n"));
+#endif
+					__CloseSocket(res_sock, libPtr);
+					res_sock = -1;
+					return (-1);
+				}
 				continue;
 			}
 			if (n == 0) {
 				/*
 				 * timeout
 				 */
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Timeout!\n"));
+#endif
 #ifdef RES_DEBUG
-					printf("timeout\n");
+					Printf("timeout\n");
 #endif /* RES_DEBUG */
 #if 1 || BSD >= 43
 				gotsomewhere = 1;
 #endif
 				continue;
 			}
-			if ((resplen = recv(res_sock,
+			if ((resplen = __recv(res_sock,
 					    answer, anslen, 0, libPtr)) <= 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Error recieving\n"));
+#endif
 #ifdef RES_DEBUG
-					perror("recvfrom");
+					Perror("recv (dg)");
 #endif /* RES_DEBUG */
 				continue;
 			}
@@ -360,8 +448,8 @@ wait:
 				 * response from old query, ignore it
 				 */
 #ifdef RES_DEBUG
-					printf("old answer:\n");
-					__p_query(answer);
+					Printf("old answer:\n");
+					__p_query(answer, libPtr);
 #endif /* RES_DEBUG */
 				goto wait;
 			}
@@ -370,18 +458,26 @@ wait:
 				 * get rest of answer;
 				 * use TCP with same server.
 				 */
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Response is truncated\n"));
+#endif
 #ifdef RES_DEBUG
-					printf("truncated answer\n");
+					Printf("truncated answer\n");
 #endif /* RES_DEBUG */
-				(void)CloseSocket(res_sock, libPtr);
+				(void)__CloseSocket(res_sock, libPtr);
 				res_sock = -1;
 				v_circuit = 1;
 				goto usevc;
 			}
 		}
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Recieved answer\n"));
+#endif
+
 #ifdef RES_DEBUG
-			printf("got answer:\n");
-			__p_query(answer);
+			Printf("got answer:\n");
+			__p_query(answer, libPtr);
 #endif /* RES_DEBUG */
 		/*
 		 * If using virtual circuits, we assume that the first server
@@ -391,26 +487,52 @@ wait:
 		 * or if we haven't been asked to keep a socket open,
 		 * close the socket.
 		 */
+
 		if ((v_circuit &&
-		    ((_res.options & RES_USEVC) == 0 || ns != 0)) ||
+		    ((_res.options & RES_USEVC) == 0 || ns->s_addr != 0)) ||
 		    (_res.options & RES_STAYOPEN) == 0) {
-			(void) CloseSocket(res_sock, libPtr);
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Closing socket\n"));
+#endif
+			(void) __CloseSocket(res_sock, libPtr);
 			res_sock = -1;
 		}
 		return (resplen);
 	   }
 	}
+
 	if (res_sock >= 0) {
-		(void) CloseSocket(res_sock, libPtr);
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Closing open socket\n"));
+#endif
+		(void) __CloseSocket(res_sock, libPtr);
 		res_sock = -1;
 	}
+
 	if (v_circuit == 0)
+	{
 	  if (gotsomewhere == 0)
+	  {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: No NAMESERVERs Found!\n"));
+#endif
 	    writeErrnoValue(libPtr, ECONNREFUSED); /* no nameservers found */
+	  }
 	  else
+	  {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: No Response!\n"));
+#endif
 	    writeErrnoValue(libPtr, ETIMEDOUT);	   /* no answer obtained */
-	else
-	  writeErrnoValue(libPtr, terrno);	
+	  }
+	}
+	else writeErrnoValue(libPtr, terrno);
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) res_send: Finished\n"));
+#endif
+
+	DRES(Perror("res_send()");)
 	return (-1);
 }
 
@@ -424,8 +546,14 @@ wait:
 void
 _res_close(struct SocketBase * libPtr)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) _res_close()\n"));
+#endif
 	if (res_sock != -1) {
-		(void) CloseSocket(res_sock, libPtr);
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_send.c) _res_close: Closing socket\n"));
+#endif
+		(void) __CloseSocket(res_sock, libPtr);
 		res_sock = -1;
 	}
 }

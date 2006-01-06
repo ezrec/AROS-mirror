@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -21,6 +22,8 @@
  */
 
 #include <conf.h>
+
+#include <aros/libcall.h>
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -82,7 +85,7 @@ static long copyGenent(struct SocketBase * libPtr,
 static BOOL matchAlias(char ** aliases, const char * name)
 {
   for ( ; *aliases != 0; aliases++)
-    if (strcmp(*aliases, name) == 0)
+    if (strcasecmp(*aliases, name) == 0)
       return TRUE;
 
   return FALSE;
@@ -202,10 +205,14 @@ static struct netent * makenetent(struct SocketBase * libPtr,
 }  
 
 
-struct netent * SAVEDS getnetbyname(
+/*struct netent * SAVEDS getnetbyname(
    REG(a0, const char * name),
-   REG(a6, struct SocketBase * libPtr))
+   REG(a6, struct SocketBase * libPtr))*/
+AROS_LH1(struct netent *, getnetbyname,
+   AROS_LHA(const char *, name, A0),
+   struct SocketBase *, libPtr, 34, UL)
 {
+  AROS_LIBFUNC_INIT
   struct NetentNode * entNode;
   struct netent * net;
   
@@ -224,13 +231,19 @@ struct netent * SAVEDS getnetbyname(
   UNLOCK_NDB(NDB);
   writeErrnoValue(libPtr, 0);
   return NULL;
+  AROS_LIBFUNC_EXIT
 }
 
-struct netent * SAVEDS getnetbyaddr(
+/*struct netent * SAVEDS getnetbyaddr(
    REG(d0, long netw),
    REG(d1, long type),
-   REG(a6, struct SocketBase * libPtr))
+   REG(a6, struct SocketBase * libPtr))*/
+AROS_LH2(struct netent *, getnetbyaddr,
+   AROS_LHA(long, netw, D0),
+   AROS_LHA(long, type, D1),
+   struct SocketBase *, libPtr, 35, UL)
 {
+  AROS_LIBFUNC_INIT
   struct NetentNode * entNode;
   struct netent * net;
 
@@ -248,6 +261,7 @@ struct netent * SAVEDS getnetbyaddr(
   UNLOCK_NDB(NDB);
   writeErrnoValue(libPtr, 0);
   return NULL;
+  AROS_LIBFUNC_EXIT
 }
 
 
@@ -307,11 +321,16 @@ struct ServentNode * findServentNode(struct NetDataBase * ndb,
   
 
 
-struct servent * SAVEDS getservbyname(
+/*struct servent * SAVEDS getservbyname(
    REG(a0, const char * name),
    REG(a1, const char * proto),
-   REG(a6, struct SocketBase * libPtr))
+   REG(a6, struct SocketBase * libPtr))*/
+AROS_LH2(struct servent *, getservbyname,
+   AROS_LHA(const char *, name, A0),
+   AROS_LHA(const char *, proto, A1),
+   struct SocketBase *, libPtr, 36, UL)
 {
+  AROS_LIBFUNC_INIT
   struct ServentNode * entNode;
   struct servent * serv;
   
@@ -326,13 +345,19 @@ struct servent * SAVEDS getservbyname(
   UNLOCK_NDB(NDB);
   writeErrnoValue(libPtr, 0);
   return NULL;
+  AROS_LIBFUNC_EXIT
 }
 
-struct servent * SAVEDS getservbyport(
+/*struct servent * SAVEDS getservbyport(
    REG(d0, LONG port),
    REG(a0, const char * proto),
-   REG(a6, struct SocketBase * libPtr))
+   REG(a6, struct SocketBase * libPtr))*/
+AROS_LH2(struct servent *, getservbyport,
+   AROS_LHA(LONG, port, D0),
+   AROS_LHA(const char *, proto, A0),
+   struct SocketBase *, libPtr, 37, UL)
 {
+  AROS_LIBFUNC_INIT
   struct ServentNode * entNode;
   struct servent * serv;
   
@@ -352,6 +377,7 @@ struct servent * SAVEDS getservbyport(
   UNLOCK_NDB(NDB);
   writeErrnoValue(libPtr, 0);
   return NULL;
+  AROS_LIBFUNC_EXIT
 }
 
 
@@ -387,10 +413,14 @@ static struct protoent * makeprotoent(struct SocketBase * libPtr,
 #undef PROTOENT
 }  
 
-struct protoent * SAVEDS getprotobyname(
+/*struct protoent * SAVEDS getprotobyname(
    REG(a0, const char * name),
-   REG(a6, struct SocketBase * libPtr))
+   REG(a6, struct SocketBase * libPtr))*/
+AROS_LH1(struct protoent *, getprotobyname,
+   AROS_LHA(const char *, name, A0),
+   struct SocketBase *, libPtr, 38, UL)
 {
+  AROS_LIBFUNC_INIT
   struct ProtoentNode * entNode;
   struct protoent * proto;
   
@@ -409,12 +439,17 @@ struct protoent * SAVEDS getprotobyname(
   UNLOCK_NDB(NDB);
   writeErrnoValue(libPtr, 0);
   return NULL;
+  AROS_LIBFUNC_EXIT
 }
 
-struct protoent * SAVEDS getprotobynumber(
+/*struct protoent * SAVEDS getprotobynumber(
    REG(a0, long protoc),
-   REG(a6, struct SocketBase * libPtr))
+   REG(a6, struct SocketBase * libPtr))*/
+AROS_LH1(struct protoent *, getprotobynumber,
+   AROS_LHA(long, protoc, A0),
+   struct SocketBase *, libPtr, 39, UL)
 {
+  AROS_LIBFUNC_INIT
   struct ProtoentNode * entNode;
   struct protoent * proto;
 
@@ -433,4 +468,5 @@ struct protoent * SAVEDS getprotobynumber(
   UNLOCK_NDB(NDB);
   writeErrnoValue(libPtr, 0);
   return NULL;
+  AROS_LIBFUNC_EXIT
 }

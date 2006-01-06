@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -67,13 +68,11 @@
 #include <sys/socketvar.h>
 #include <sys/protosw.h>
 #include <sys/kernel.h>
-#include <sys/ioctl.h>
+#include <sys/sockio.h>
 #include <sys/synch.h>
 
 #include <net/if.h>
-#ifndef AMITCP
 #include <net/if_dl.h>
-#endif
 #include <netinet/in.h> /* for findid */
 
 void ifinit(void);
@@ -137,10 +136,7 @@ ifubareset(uban)
 #endif
 
 int if_index = 0;
-#ifndef AMITCP
 struct ifaddr **ifnet_addrs;
-static char *sprint_d();
-#endif
 
 /*
  * Attach an interface to the
@@ -150,21 +146,18 @@ void
 if_attach(ifp)
      struct ifnet *ifp;
 {
-#ifndef AMITCP
 	unsigned socksize, ifasize;
 	int namelen, unitlen;
 	char workbuf[12], *unitname;
 	register struct sockaddr_dl *sdl;
 	register struct ifaddr *ifa;
 	static int if_indexlim = 8;
-#endif
 	register struct ifnet **p = &ifnet;
 
 	while (*p)
 		p = &((*p)->if_next);
 	*p = ifp;
 	ifp->if_index = ++if_index;
-#ifndef AMITCP
 	if (ifnet_addrs == 0 || if_index >= if_indexlim) {
 		unsigned n = (if_indexlim <<= 1) * sizeof(ifa);
 		struct ifaddr **q = (struct ifaddr **)
@@ -178,15 +171,7 @@ if_attach(ifp)
 	/*
 	 * create a Link Level name for this device
 	 */
-#ifdef notanymore
-	/* Exec device name can contain digits, workaround with slash */
-	unitname = sprint_d((u_int)ifp->if_unit, 
-			    workbuf + 1, 
-			    sizeof(workbuf) - 1);
-	*--unitname = '/';
-#else
 	unitname = sprint_d((u_int)ifp->if_unit, workbuf, sizeof(workbuf));
-#endif
 	namelen = strlen(ifp->if_name);
         unitlen = strlen(unitname);
 #define _offsetof(t, m) ((int)((caddr_t)&((t *)0)->m))
@@ -211,6 +196,11 @@ if_attach(ifp)
 	bcopy(unitname, namelen + (caddr_t)sdl->sdl_data, unitlen);
 	sdl->sdl_nlen = (namelen += unitlen);
 	sdl->sdl_index = ifp->if_index;
+	/* Fill in the hardware address */
+	sdl->sdl_type = ifp->if_type;
+	sdl->sdl_alen = ifp->if_addrlen;
+	if ((ifp->if_output == sana_output) && (sdl->sdl_alen))
+		bcopy((caddr_t)((struct sana_softc *)ifp)->ss_hwaddr,LLADDR(sdl), sdl->sdl_alen);
 	sdl = (struct sockaddr_dl *)(socksize + (caddr_t)sdl);
 	ifa->ifa_netmask = (struct sockaddr *)sdl;
 	sdl->sdl_len = socksize - ifp->if_addrlen;
@@ -219,7 +209,6 @@ if_attach(ifp)
 	ifa->ifa_next = ifp->if_addrlist;
 	ifa->ifa_rtrequest = link_rtrequest;
 	ifp->if_addrlist = ifa;
-#endif
 }
 
 /*
@@ -312,13 +301,11 @@ ifa_ifwithnet(addr)
 
 	if (af >= AF_MAX)
 		return (0);
-#ifndef AMITCP
 	if (af == AF_LINK) {
 	    register struct sockaddr_dl *sdl = (struct sockaddr_dl *)addr;
 	    if (sdl->sdl_index && sdl->sdl_index <= if_index)
 		return (ifnet_addrs[sdl->sdl_index - 1]);
 	}
-#endif
 	for (ifp = ifnet; ifp; ifp = ifp->if_next)
 	    for (ifa = ifp->if_addrlist; ifa; ifa = ifa->ifa_next) {
 		register char *cp, *cp2, *cp3;
@@ -403,7 +390,7 @@ ifaof_ifpforaddr(addr, ifp)
  * This should be moved to /sys/net/link.c eventually.
  */
 void
-link_rtrequest(int cmd, register struct rtentry *rt, struct sockaddr *sa)
+link_rtrequest(int cmd, struct rtentry *rt, struct sockaddr *sa)
 {
 	register struct ifaddr *ifa;
 	struct sockaddr *dst;
@@ -596,12 +583,20 @@ ifioctl(so, cmd, data)
 		return (ENXIO);
 	switch (cmd) {
 
+        case SIOCGIFINDEX:
+                ifr->ifr_index = ifp->if_index;
+                break;
+
 	case SIOCGIFFLAGS:
 		ifr->ifr_flags = ifp->if_flags;
 		break;
 
 	case SIOCGIFMETRIC:
 		ifr->ifr_metric = ifp->if_metric;
+		break;
+
+	case SIOCGIFMTU:
+		ifr->ifr_mtu = ifp->if_mtu;
 		break;
 
 	case SIOCSIFFLAGS:
@@ -682,13 +677,7 @@ ifconf(cmd, data)
 #endif
 		if ((ifa = ifp->if_addrlist) == 0) {
 			aligned_bzero_const((caddr_t)&ifr.ifr_addr, sizeof(ifr.ifr_addr));
-#ifdef AMITCP
-			*ifrp = ifr;
-#else
-			error = copyout((caddr_t)&ifr, (caddr_t)ifrp, sizeof (ifr));
-			if (error)
-				break;
-#endif
+			bcopy(&ifr, ifrp, sizeof(ifr));
 			space -= sizeof (ifr), ifrp++;
 		} else 
 		    for ( ; space > sizeof (ifr) && ifa; ifa = ifa->ifa_next) {
@@ -706,12 +695,7 @@ ifconf(cmd, data)
 #endif
 			if (sa->sa_len <= sizeof(*sa)) {
 				ifr.ifr_addr = *sa;
-#ifdef AMITCP
-				*ifrp = ifr;
-#else
-				error = copyout((caddr_t)&ifr, (caddr_t)ifrp,
-						sizeof (ifr));
-#endif
+				bcopy(&ifr, ifrp, sizeof(ifr));
 				ifrp++;
 			} else {
 				space -= sa->sa_len - sizeof(*sa);

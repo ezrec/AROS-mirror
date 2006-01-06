@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -158,12 +159,14 @@ soisconnected(so)
 	so->so_state |= SS_ISCONNECTED;
 	if (head && soqremque(so, 0)) {
 		soqinsque(head, so, 1);
-		sorwakeup(head);
+		sowakeup(head, &head->so_rcv);
+		soevent(head, FD_CONNECT);
 		wakeup((caddr_t)&head->so_timeo);
 	} else {
 		wakeup((caddr_t)&so->so_timeo);
-		sorwakeup(so);
-		sowwakeup(so);
+		sowakeup(so, &so->so_rcv);
+		sowakeup(so, &so->so_snd);
+		soevent(so, FD_CONNECT);
 	}
 }
 
@@ -175,8 +178,10 @@ soisdisconnecting(so)
 	so->so_state &= ~SS_ISCONNECTING;
 	so->so_state |= (SS_ISDISCONNECTING|SS_CANTRCVMORE|SS_CANTSENDMORE);
 	wakeup((caddr_t)&so->so_timeo);
-	sowwakeup(so);
-	sorwakeup(so);
+	sowakeup(so, &so->so_snd);
+	sowakeup(so, &so->so_rcv);
+	DEVENTS(log(LOG_DEBUG,"soisdisconnecting(0x%08lx) called", so);)
+//	soevent(so, FD_CLOSE);
 }
 
 void
@@ -187,8 +192,10 @@ soisdisconnected(so)
 	so->so_state &= ~(SS_ISCONNECTING|SS_ISCONNECTED|SS_ISDISCONNECTING);
 	so->so_state |= (SS_CANTRCVMORE|SS_CANTSENDMORE);
 	wakeup((caddr_t)&so->so_timeo);
-	sowwakeup(so);
-	sorwakeup(so);
+	sowakeup(so, &so->so_snd);
+	sowakeup(so, &so->so_rcv);
+	DEVENTS(log(LOG_DEBUG,"soisdisconnected(0x%08lx) called", so);)
+//	soevent(so, FD_CLOSE);
 }
 
 /*
@@ -220,6 +227,7 @@ sonewconn(head, connstatus)
 	so->so_proto = head->so_proto;
 	so->so_timeo = head->so_timeo;
 	so->so_pgid = head->so_pgid;
+	so->so_eventmask = head->so_eventmask;
 	(void) soreserve(so, head->so_snd.sb_hiwat, head->so_rcv.sb_hiwat);
 	soqinsque(head, so, soqueue);
 	if ((*so->so_proto->pr_usrreq)(so, PRU_ATTACH,
@@ -229,10 +237,12 @@ sonewconn(head, connstatus)
 		return ((struct socket *)0);
 	}
 	if (connstatus) {
-		sorwakeup(head);
+		sowakeup(head, &head->so_rcv);
+//		soevent(head, FD_ACCEPT);
 		wakeup((caddr_t)&head->so_timeo);
 		so->so_state |= connstatus;
 	}
+	soevent(head, FD_ACCEPT);
 	return (so);
 }
 
@@ -303,7 +313,8 @@ socantsendmore(so)
 {
 
 	so->so_state |= SS_CANTSENDMORE;
-	sowwakeup(so);
+	sowakeup(so, &so->so_snd);
+	DEVENTS(log(LOG_DEBUG,"socantsendmore(0x%08lx) called", so);)
 }
 
 void
@@ -312,7 +323,9 @@ socantrcvmore(so)
 {
 
 	so->so_state |= SS_CANTRCVMORE;
-	sorwakeup(so);
+	sowakeup(so, &so->so_rcv);
+	DEVENTS(log(LOG_DEBUG,"socantrcvmore(0x%08lx) called", so);)
+	soevent(so, FD_CLOSE);
 }
 
 /*
@@ -397,6 +410,64 @@ sowakeup(so, sb)
 		else if (so->so_pgid > 0 && (p = pfind(so->so_pgid)) != 0)
 			psignal(p, SIGIO);
 #endif
+	}
+}
+
+/* Wakeup processes with socket events notification */
+
+void sorwakeup(struct socket *so)
+{
+	sowakeup(so, &so->so_rcv);
+	soevent(so, FD_READ);
+}
+
+void sowwakeup(struct socket *so)
+{
+	sowakeup(so, &so->so_snd);
+	if (so->so_state & SS_NBIO)
+		soevent(so, FD_WRITE);
+}
+
+/* Queue an event for the socket */
+
+void soevent(struct socket *so, u_long event)
+{
+	struct soevent *tse;
+	struct soevent *se = NULL;
+	if (so->so_pgid && ((so->so_state & (SS_ASYNC | SS_NOFDREF)) == SS_ASYNC))
+	{
+		if (so->so_pgid->sigEventMask)
+		{
+			if (event & so->so_eventmask)
+			{
+				DEVENTS(log(LOG_DEBUG,"Sending event 0x%08lx for socket 0x%08lx", event, so);)
+				ObtainSemaphore(&so->so_pgid->EventLock);
+				for (tse = (struct soevent *)so->so_pgid->EventList.mlh_Head; tse->node.mln_Succ; tse = (struct soevent *)tse->node.mln_Succ)
+				{
+					if (tse->socket == so) {
+						se = tse;
+						break;
+					}
+				}
+				if (se)
+					event |= se->events;
+				else {
+					se = bsd_malloc(sizeof(struct soevent), NULL, NULL);
+					if (se) {
+						se->socket = so;
+                                                AddTail((struct List *)&so->so_pgid->EventList, (struct Node *)se);
+					}
+				}
+				if (se)
+				{
+					se->events = event;
+					Signal(so->so_pgid->thisTask, so->so_pgid->sigEventMask);
+				}
+				else
+					log(LOG_CRIT,"Unable to send socket event, out of memory");
+				ReleaseSemaphore(&so->so_pgid->EventLock);
+			}
+		}
 	}
 }
 

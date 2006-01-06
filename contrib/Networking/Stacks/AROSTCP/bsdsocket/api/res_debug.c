@@ -1,6 +1,7 @@
 /*-
  * Copyright (c) 1985, 1990 Regents of the University of California.
  * All rights reserved.
+ * Copyright (C) 2005 Pavel Fedin
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -44,8 +45,10 @@ static char sccsid[] = "@(#)res_debug.c	5.36 (Berkeley) 3/6/91";
 #include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <api/arpa_nameser.h>
+//#include <api/arpa_nameser.h>
+#include <api/apicalls.h>
 #include <api/resolv.h>
+#include <stdio.h>
 /* #include <string.h> */
 
 void __fp_query();
@@ -90,10 +93,11 @@ char *_res_resultcodes[] = {
 	"NOCHANGE",
 };
 
-__p_query(msg)
+__p_query(msg, libPtr)
 	char *msg;
+	struct SocketBase *libPtr;
 {
-	__fp_query(msg,stdout);
+	__fp_query(msg,libPtr);
 }
 
 /*
@@ -101,9 +105,9 @@ __p_query(msg)
  * This is intended to be primarily a debugging routine.
  */
 void
-__fp_query(msg,file)
+__fp_query(msg,libPtr)
 	char *msg;
-	FILE *file;
+	struct SocketBase *libPtr;
 {
 	register char *cp;
 	register HEADER *hp;
@@ -114,40 +118,40 @@ __fp_query(msg,file)
 	 */
 	hp = (HEADER *)msg;
 	cp = msg + sizeof(HEADER);
-	fprintf(file,"HEADER:\n");
-	fprintf(file,"\topcode = %s", _res_opcodes[hp->opcode]);
-	fprintf(file,", id = %d", ntohs(hp->id));
-	fprintf(file,", rcode = %s\n", _res_resultcodes[hp->rcode]);
-	fprintf(file,"\theader flags: ");
+	Printf("HEADER:\n");
+	Printf("\topcode = %s", _res_opcodes[hp->opcode]);
+	Printf(", id = %ld", ntohs(hp->id));
+	Printf(", rcode = %s\n", _res_resultcodes[hp->rcode]);
+	Printf("\theader flags: ");
 	if (hp->qr)
-		fprintf(file," qr");
+		Printf(" qr");
 	if (hp->aa)
-		fprintf(file," aa");
+		Printf(" aa");
 	if (hp->tc)
-		fprintf(file," tc");
+		Printf(" tc");
 	if (hp->rd)
-		fprintf(file," rd");
+		Printf(" rd");
 	if (hp->ra)
-		fprintf(file," ra");
+		Printf(" ra");
 	if (hp->pr)
-		fprintf(file," pr");
-	fprintf(file,"\n\tqdcount = %d", ntohs(hp->qdcount));
-	fprintf(file,", ancount = %d", ntohs(hp->ancount));
-	fprintf(file,", nscount = %d", ntohs(hp->nscount));
-	fprintf(file,", arcount = %d\n\n", ntohs(hp->arcount));
+		Printf(" pr");
+	Printf("\n\tqdcount = %ld", ntohs(hp->qdcount));
+	Printf(", ancount = %ld", ntohs(hp->ancount));
+	Printf(", nscount = %ld", ntohs(hp->nscount));
+	Printf(", arcount = %ld\n\n", ntohs(hp->arcount));
 	/*
 	 * Print question records.
 	 */
 	if (n = ntohs(hp->qdcount)) {
-		fprintf(file,"QUESTIONS:\n");
+		Printf("QUESTIONS:\n");
 		while (--n >= 0) {
-			fprintf(file,"\t");
-			cp = p_cdname(cp, msg, file);
+			Printf("\t");
+			cp = p_cdname(cp, msg);
 			if (cp == NULL)
 				return;
-			fprintf(file,", type = %s", __p_type(_getshort(cp)));
+			Printf(", type = %s", __p_type(_getshort(cp)));
 			cp += sizeof(u_short);
-			fprintf(file,
+			Printf(
 			    ", class = %s\n\n", __p_class(_getshort(cp)));
 			cp += sizeof(u_short);
 		}
@@ -156,10 +160,10 @@ __fp_query(msg,file)
 	 * Print authoritative answer records
 	 */
 	if (n = ntohs(hp->ancount)) {
-		fprintf(file,"ANSWERS:\n");
+		Printf("ANSWERS:\n");
 		while (--n >= 0) {
-			fprintf(file,"\t");
-			cp = p_rr(cp, msg, file);
+			Printf("\t");
+			cp = p_rr(cp, msg, libPtr);
 			if (cp == NULL)
 				return;
 		}
@@ -168,10 +172,10 @@ __fp_query(msg,file)
 	 * print name server records
 	 */
 	if (n = ntohs(hp->nscount)) {
-		fprintf(file,"NAME SERVERS:\n");
+		Printf("NAME SERVERS:\n");
 		while (--n >= 0) {
-			fprintf(file,"\t");
-			cp = p_rr(cp, msg, file);
+			Printf("\t");
+			cp = p_rr(cp, msg, libPtr);
 			if (cp == NULL)
 				return;
 		}
@@ -180,10 +184,10 @@ __fp_query(msg,file)
 	 * print additional records
 	 */
 	if (n = ntohs(hp->arcount)) {
-		fprintf(file,"ADDITIONAL RECORDS:\n");
+		Printf("ADDITIONAL RECORDS:\n");
 		while (--n >= 0) {
-			fprintf(file,"\t");
-			cp = p_rr(cp, msg, file);
+			Printf("\t");
+			cp = p_rr(cp, msg, libPtr);
 			if (cp == NULL)
 				return;
 		}
@@ -191,9 +195,8 @@ __fp_query(msg,file)
 }
 
 static char *
-p_cdname(cp, msg, file)
+p_cdname(cp, msg)
 	char *cp, *msg;
-	FILE *file;
 {
 	char name[MAXDNAME];
 	int n;
@@ -205,7 +208,7 @@ p_cdname(cp, msg, file)
 		name[0] = '.';
 		name[1] = '\0';
 	}
-	fputs(name, file);
+	PutStr(name);
 	return (cp + n);
 }
 
@@ -213,23 +216,23 @@ p_cdname(cp, msg, file)
  * Print resource record fields in human readable form.
  */
 static char *
-p_rr(cp, msg, file)
+p_rr(cp, msg, libPtr)
 	char *cp, *msg;
-	FILE *file;
+	struct SocketBase *libPtr;
 {
 	int type, class, dlen, n, c;
 	struct in_addr inaddr;
 	char *cp1, *cp2;
 
-	if ((cp = p_cdname(cp, msg, file)) == NULL)
+	if ((cp = p_cdname(cp, msg)) == NULL)
 		return (NULL);			/* compression error */
-	fprintf(file,"\n\ttype = %s", __p_type(type = _getshort(cp)));
+	Printf("\n\ttype = %s", __p_type(type = _getshort(cp)));
 	cp += sizeof(u_short);
-	fprintf(file,", class = %s", __p_class(class = _getshort(cp)));
+	Printf(", class = %s", __p_class(class = _getshort(cp)));
 	cp += sizeof(u_short);
-	fprintf(file,", ttl = %s", __p_time(_getlong(cp)));
+	Printf(", ttl = %s", __p_time(_getlong(cp)));
 	cp += sizeof(u_long);
-	fprintf(file,", dlen = %d\n", dlen = _getshort(cp));
+	Printf(", dlen = %d\n", dlen = _getshort(cp));
 	cp += sizeof(u_short);
 	cp1 = cp;
 	/*
@@ -242,14 +245,14 @@ p_rr(cp, msg, file)
 		case C_HS:
 			bcopy(cp, (char *)&inaddr, sizeof(inaddr));
 			if (dlen == 4) {
-				fprintf(file,"\tinternet address = %s\n",
-					inet_ntoa(inaddr));
+				Printf("\tinternet address = %s\n",
+					__inet_ntoa(inaddr.s_addr, libPtr));
 				cp += dlen;
 			} else if (dlen == 7) {
-				fprintf(file,"\tinternet address = %s",
-					inet_ntoa(inaddr));
-				fprintf(file,", protocol = %d", cp[4]);
-				fprintf(file,", port = %d\n",
+				Printf("\tinternet address = %s",
+					__inet_ntoa(inaddr.s_addr, libPtr));
+				Printf(", protocol = %d", cp[4]);
+				Printf(", port = %d\n",
 					(cp[5] << 8) + cp[6]);
 				cp += dlen;
 			}
@@ -264,78 +267,78 @@ p_rr(cp, msg, file)
 	case T_MR:
 	case T_NS:
 	case T_PTR:
-		fprintf(file,"\tdomain name = ");
-		cp = p_cdname(cp, msg, file);
-		fprintf(file,"\n");
+		Printf("\tdomain name = ");
+		cp = p_cdname(cp, msg);
+		Printf("\n");
 		break;
 
 	case T_HINFO:
 		if (n = *cp++) {
-			fprintf(file,"\tCPU=%.*s\n", n, cp);
+			Printf("\tCPU=%.*s\n", n, cp);
 			cp += n;
 		}
 		if (n = *cp++) {
-			fprintf(file,"\tOS=%.*s\n", n, cp);
+			Printf("\tOS=%.*s\n", n, cp);
 			cp += n;
 		}
 		break;
 
 	case T_SOA:
-		fprintf(file,"\torigin = ");
-		cp = p_cdname(cp, msg, file);
-		fprintf(file,"\n\tmail addr = ");
-		cp = p_cdname(cp, msg, file);
-		fprintf(file,"\n\tserial = %ld", _getlong(cp));
+		Printf("\torigin = ");
+		cp = p_cdname(cp, msg);
+		Printf("\n\tmail addr = ");
+		cp = p_cdname(cp, msg);
+		Printf("\n\tserial = %ld", _getlong(cp));
 		cp += sizeof(u_long);
-		fprintf(file,"\n\trefresh = %s", __p_time(_getlong(cp)));
+		Printf("\n\trefresh = %s", __p_time(_getlong(cp)));
 		cp += sizeof(u_long);
-		fprintf(file,"\n\tretry = %s", __p_time(_getlong(cp)));
+		Printf("\n\tretry = %s", __p_time(_getlong(cp)));
 		cp += sizeof(u_long);
-		fprintf(file,"\n\texpire = %s", __p_time(_getlong(cp)));
+		Printf("\n\texpire = %s", __p_time(_getlong(cp)));
 		cp += sizeof(u_long);
-		fprintf(file,"\n\tmin = %s\n", __p_time(_getlong(cp)));
+		Printf("\n\tmin = %s\n", __p_time(_getlong(cp)));
 		cp += sizeof(u_long);
 		break;
 
 	case T_MX:
-		fprintf(file,"\tpreference = %ld,",_getshort(cp));
+		Printf("\tpreference = %ld,",_getshort(cp));
 		cp += sizeof(u_short);
-		fprintf(file," name = ");
-		cp = p_cdname(cp, msg, file);
+		Printf(" name = ");
+		cp = p_cdname(cp, msg);
 		break;
 
   	case T_TXT:
-		(void) fputs("\t\"", file);
+		PutStr("\t\"");
 		cp2 = cp1 + dlen;
 		while (cp < cp2) {
 			if (n = (unsigned char) *cp++) {
 				for (c = n; c > 0 && cp < cp2; c--)
 					if (*cp == '\n') {
-					    (void) putc('\\', file);
-					    (void) putc(*cp++, file);
+					    PutStr("\\");
+					    WriteChars(cp++, 1);
 					} else
-					    (void) putc(*cp++, file);
+					    WriteChars(cp++, 2);
 			}
 		}
-		(void) fputs("\"\n", file);
+		PutStr("\"\n");
   		break;
 
 	case T_MINFO:
-		fprintf(file,"\trequests = ");
-		cp = p_cdname(cp, msg, file);
-		fprintf(file,"\n\terrors = ");
-		cp = p_cdname(cp, msg, file);
+		Printf("\trequests = ");
+		cp = p_cdname(cp, msg);
+		Printf("\n\terrors = ");
+		cp = p_cdname(cp, msg);
 		break;
 
 	case T_UINFO:
-		fprintf(file,"\t%s\n", cp);
+		Printf("\t%s\n", cp);
 		cp += dlen;
 		break;
 
 	case T_UID:
 	case T_GID:
 		if (dlen == 4) {
-			fprintf(file,"\t%ld\n", _getlong(cp));
+			Printf("\t%ld\n", _getlong(cp));
 			cp += sizeof(int);
 		}
 		break;
@@ -345,18 +348,18 @@ p_rr(cp, msg, file)
 			break;
 		bcopy(cp, (char *)&inaddr, sizeof(inaddr));
 		cp += sizeof(u_long);
-		fprintf(file,"\tinternet address = %s, protocol = %d\n\t",
-			inet_ntoa(inaddr), *cp++);
+		Printf("\tinternet address = %s, protocol = %d\n\t",
+			__inet_ntoa(inaddr.s_addr, libPtr), *cp++);
 		n = 0;
 		while (cp < cp1 + dlen) {
 			c = *cp++;
 			do {
  				if (c & 0200)
-					fprintf(file," %d", n);
+					Printf(" %ld", n);
  				c <<= 1;
 			} while (++n & 07);
 		}
-		putc('\n',file);
+		PutStr("\n");
 		break;
 
 #ifdef ALLOW_T_UNSPEC
@@ -367,25 +370,25 @@ p_rr(cp, msg, file)
 			int i;
 
 			if (dlen < NumBytes) NumBytes = dlen;
-			fprintf(file, "\tFirst %d bytes of hex data:",
+			Printf( "\tFirst %ld bytes of hex data:",
 				NumBytes);
 			for (i = 0, DataPtr = cp; i < NumBytes; i++, DataPtr++)
-				fprintf(file, " %x", *DataPtr);
-			fputs("\n", file);
+				Printf( " %x", *DataPtr);
+			PutStr("\n");
 			cp += dlen;
 		}
 		break;
 #endif /* ALLOW_T_UNSPEC */
 
 	default:
-		fprintf(file,"\t???\n");
+		Printf("\t???\n");
 		cp += dlen;
 	}
 	if (cp != cp1 + dlen) {
-		fprintf(file,"packet size error (%#x != %#x)\n", cp, cp1+dlen);
+		Printf("packet size error (%#x != %#x)\n", cp, cp1+dlen);
 		cp = NULL;
 	}
-	fprintf(file,"\n");
+	Printf("\n");
 	return (cp);
 }
 
@@ -446,7 +449,7 @@ __p_type(type)
 		return("UNSPEC");
 #endif /* ALLOW_T_UNSPEC */
 	default:
-		(void)sprintf(nbuf, "%d", type);
+		(void)sprintf(nbuf, "%ld", type);
 		return(nbuf);
 	}
 }
@@ -467,7 +470,7 @@ __p_class(class)
 	case C_ANY:		/* matches any class */
 		return("ANY");
 	default:
-		(void)sprintf(nbuf, "%d", class);
+		(void)sprintf(nbuf, "%ld", class);
 		return(nbuf);
 	}
 }
@@ -497,25 +500,25 @@ __p_time(value)
 #define	PLURALIZE(x)	x, (x == 1) ? "" : "s"
 	p = nbuf;
 	if (value) {
-		(void)sprintf(p, "%d day%s", PLURALIZE(value));
+		(void)sprintf(p, "%ld day%s", PLURALIZE(value));
 		while (*++p);
 	}
 	if (hours) {
 		if (value)
 			*p++ = ' ';
-		(void)sprintf(p, "%d hour%s", PLURALIZE(hours));
+		(void)sprintf(p, "%ld hour%s", PLURALIZE(hours));
 		while (*++p);
 	}
 	if (mins) {
 		if (value || hours)
 			*p++ = ' ';
-		(void)sprintf(p, "%d min%s", PLURALIZE(mins));
+		(void)sprintf(p, "%ld min%s", PLURALIZE(mins));
 		while (*++p);
 	}
 	if (secs || ! (value || hours || mins)) {
 		if (value || hours || mins)
 			*p++ = ' ';
-		(void)sprintf(p, "%d sec%s", PLURALIZE(secs));
+		(void)sprintf(p, "%ld sec%s", PLURALIZE(secs));
 	}
 	return(nbuf);
 }

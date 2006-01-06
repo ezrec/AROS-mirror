@@ -198,8 +198,10 @@ int setlogmask(int);
  * Include protos/inlines/pragmas for the syslog()
  * (+ all other AmiTCP functions)
  */
+#if !defined(__AROS__)
 #ifndef BSDSOCKET_H
 #include <bsdsocket.h>
+#endif
 #endif
 #endif /* !KERNEL */
 

@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -56,9 +57,13 @@ extern LONG nthLibrary;
 
 #include <kern/amiga_rexx.h>
 
+#ifdef __MORPHOS__
+struct Library *UtilityBase = NULL;
+struct Library *RexxSysBase = NULL;
+#else
 struct UtilityBase *UtilityBase = NULL;
-/*struct Library *RexxSysBase = NULL;*/
 struct RxsLib *RexxSysBase = NULL;
+#endif
 
 struct MsgPort *ARexxPort = NULL;
 

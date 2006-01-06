@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -509,7 +510,7 @@ restart:
 				MGET(m, M_WAIT, MT_DATA);
 				mlen = MLEN;
 			}
-			if (resid >= MINCLSIZE && space >= mbconf.mclbytes) {
+			if (resid >= mlen && space >= mbconf.mclbytes) {
 				MCLGET(m, M_WAIT);
 				if ((m->m_flags & M_EXT) == 0)
 					goto nopages;
@@ -992,6 +993,19 @@ sosetopt(so, level, optname, m0)
 	int error = 0;
 	register struct mbuf *m = m0;
 
+#ifdef ENABLE_TTCP_SHUTUP
+	if ((optname == TCP_NOPUSH) && (level == IPPROTO_TCP)) {
+		if (m == NULL || m->m_len < sizeof (int))
+			error = EINVAL;
+		else {
+			if (*mtod(m, int *))
+				so->so_options |= SO_TTCP_SHUTUP;
+			else
+				so->so_options &= ~SO_TTCP_SHUTUP;
+		}
+		goto bad;
+	}
+#endif
 	if (level != SOL_SOCKET) {
 		if (so->so_proto && so->so_proto->pr_ctloutput)
 			return ((*so->so_proto->pr_ctloutput)
@@ -1041,6 +1055,7 @@ sosetopt(so, level, optname, m0)
 		case SO_RCVBUF:
 		case SO_SNDLOWAT:
 		case SO_RCVLOWAT:
+		case SO_EVENTMASK:
 			if (m == NULL || m->m_len < sizeof (int)) {
 				error = EINVAL;
 				goto bad;
@@ -1063,6 +1078,12 @@ sosetopt(so, level, optname, m0)
 			case SO_RCVLOWAT:
 				so->so_rcv.sb_lowat = *mtod(m, int *);
 				break;
+			case SO_EVENTMASK:
+				so->so_eventmask = *mtod(m, int *);
+				so->so_state |= SS_ASYNC;
+				so->so_rcv.sb_flags |= SB_ASYNC;
+				so->so_snd.sb_flags |= SB_ASYNC;
+				DEVENTS(log(LOG_DEBUG, "Setting SO_EVENTMASK = 0x%08lx", so->so_eventmask);)
 			}
 			break;
 
@@ -1171,6 +1192,11 @@ sogetopt(so, level, optname, mp)
 			*mtod(m, int *) = so->so_rcv.sb_lowat;
 			break;
 
+		case SO_EVENTMASK:
+			DEVENTS(log(LOG_DEBUG, "Getting SO_EVENTMASK = 0x%08lx", so->so_eventmask);)
+			*mtod(m, int *) = so->so_eventmask;
+			break;
+
 		case SO_SNDTIMEO:
 		case SO_RCVTIMEO:
 		    {
@@ -1199,6 +1225,7 @@ sohasoutofband(so)
 #ifdef AMITCP
 	if (so->so_pgid)
 		Signal(so->so_pgid->thisTask, so->so_pgid->sigUrgMask);
+	soevent(so, FD_OOB);
 #else
 	struct proc *p;
 

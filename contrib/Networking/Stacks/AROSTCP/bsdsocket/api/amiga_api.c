@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -21,7 +22,7 @@
  */
 
 #include <version.h>
-#define RELEASESTRING "Net-stack release 3 "
+#define RELEASESTRING "Network stack release 4 "
 
 /*
  * NOTE: Exec has turned off task switching while in Open, Close, Expunge and
@@ -30,6 +31,8 @@
  */
 
 #include <conf.h>
+
+#include <aros/libcall.h>
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -55,7 +58,7 @@
 /*
  *  Semaphore to prevent simultaneous access to library functions.
  */
-struct SignalSemaphore syscall_semaphore = { 0 };
+struct SignalSemaphore syscall_semaphore = { {0} };
 
 /*
  *  some globals.
@@ -67,7 +70,7 @@ struct List	garbageSocketBaseList; /* list of libray bases not active
 struct List	releasedSocketList; /* List for sockets that are in no-one's
 				       context, waiting for Obtain */
 
-extern struct Task * AmiTCP_Task; /* reference to AmiTCP/IP task information */
+extern struct Task * AROSTCP_Task; /* reference to AmiTCP/IP task information */
 extern f_void UserLibrary_funcTable[];
 
 /*
@@ -101,6 +104,9 @@ const char wrongTaskErrorFmt[] =
 #define id_word 0x90
 #define id_long 0x80
 
+#ifdef __MORPHOS__
+#pragma pack(2)
+#endif
 struct {
   UBYTE byte1; UBYTE offset1; UBYTE ln_type; UBYTE pad0;
   UBYTE byte2; UBYTE offset2; UBYTE lib_flags; UBYTE pad1;
@@ -119,6 +125,10 @@ struct {
     id_long, OFFSET(Library, lib_IdString), (ULONG)RELEASESTRING VSTRING,
     0x00
     };
+#ifdef __MORPHOS__
+#pragma pack()
+#endif
+
 #undef id_byte
 #undef id_word
 #undef id_long
@@ -145,14 +155,20 @@ BOOL AmiTCP_lets_you_do_expunge = FALSE;
 BOOL SB_Expunged = FALSE; /* boolean value set by ELL_Expunge */
 
 
-struct Library * SAVEDS ELL_Open(
-			     REG(d0, ULONG version),
-			     REG(a6, struct Library *libPtr))
+AROS_LH1 (struct Library *, Open,
+	AROS_LHA(ULONG, version, D0),
+        struct Library *, libPtr, 1, ELL)
 {
+  AROS_LIBFUNC_INIT
   struct SocketBase * newBase;
   LONG error;
   WORD * i;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) ELL_Open()\n[AROSTCP](amiga_api.c) ELL_Open: version=%lu, libPtr=%08lx\n", version, libPtr));
+#else
+  D(KPrintF("ELL_Open: version=%lu, libPtr=%08lx\n", version, libPtr);)
+#endif
   /*
    * One task may open socket library more than once. In that case caller
    * receives the base it has opened already.
@@ -171,6 +187,10 @@ struct Library * SAVEDS ELL_Open(
 					     NULL,
 					     sizeof(struct SocketBase),
 					     NULL);
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) ELL_Open: Created user library base @ %08lx\n", newBase));
+#endif
+  D(log(LOG_DEBUG,"Created user library base: %08lx\n", newBase);)
   if (newBase == NULL)
     return NULL;
 
@@ -209,7 +229,11 @@ struct Library * SAVEDS ELL_Open(
   /* initialize resolver variables */
   newBase->hErrnoPtr = &newBase->defHErrno;
   newBase->res_socket = -1;
-  res_init(&newBase->res_state);
+//res_init(&newBase->res_state);
+
+  /* Initialize events list */
+  InitSemaphore(&newBase->EventLock);
+  NewList((struct List *)&newBase->EventList);
 
   /* initialize dtable variables */
 #if 0 /* initialization to zero is implicit */
@@ -228,7 +252,7 @@ struct Library * SAVEDS ELL_Open(
       /*
        * Disable signalling for now
        */
-      newBase->timerPort->mp_Flags = PA_IGNORE;
+//    newBase->timerPort->mp_Flags = PA_IGNORE;
       /*
        * allocate and initialize the timerequest
        */
@@ -252,24 +276,18 @@ struct Library * SAVEDS ELL_Open(
    * There was some error if we reached here. Call Close to clean up.
    */
   {
-#if __GNUC__NOT
-    extern ULONG* REGARGFUN UL_Close(VOID);
-    register struct SocketBase *a6 __asm("a6") = newBase;
-    UL_Close();
-#elif __SASC
-#error Compiler not supported!
-#else 
-    extern ULONG* REGARGFUN UL_Close(REG(a6, struct SocketBase *));
-    UL_Close(newBase);
-#endif
+    extern ULONG* __UL_Close(struct SocketBase *);
+    __UL_Close(newBase);
   }
   return NULL;
+  AROS_LIBFUNC_EXIT
 }
 
-
-ULONG * SAVEDS ELL_Expunge(
-		    REG(a6, struct Library *libPtr))
+ULONG *__ELL_Expunge(struct Library *libPtr)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) __ELL_Expunge()\n"));
+#endif
   /*
    * Since every user gets her own library base, Major library base
    * can be removed immediately after 
@@ -291,7 +309,7 @@ ULONG * SAVEDS ELL_Expunge(
     MasterSocketBase = NULL; 
 
     SB_Expunged = TRUE;
-    Signal(AmiTCP_Task, SIGBREAKF_CTRL_F);
+    Signal(AROSTCP_Task, SIGBREAKF_CTRL_F);
     return NULL; /* no AmigaDos seglist there (for system use) */
   }
   /*
@@ -302,23 +320,35 @@ ULONG * SAVEDS ELL_Expunge(
   return NULL;
 }
 
-LONG /* SAVEDS */ Null(void)
+AROS_LH0(ULONG *, Expunge, struct Library *, libPtr, 2, ELL)
 {
+  AROS_LIBFUNC_INIT
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) ELL_Expunge()\n"));
+#endif
+  return __ELL_Expunge(libPtr);
+  AROS_LIBFUNC_EXIT
+}
+
+AROS_LH0I(LONG, Null, struct Library *, libPtr, 3, Null)
+{
+  AROS_LIBFUNC_INIT
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) ELL_Null: WARNING!!! Null() called\n"));
+#else
+  D(KPrintF("WARNING!!! Null() called\n");)
+#endif
+
   return 0L;
+  AROS_LIBFUNC_EXIT
 }
 
-LONG /* SAVEDS */ Garbage(void)
-{     
-  return -1L;
-}
-
-
-ULONG * SAVEDS UL_Close(
-	  REG(a6, struct SocketBase *libPtr))
+ULONG *__UL_Close(struct SocketBase *libPtr)
 {
   VOID * freestart;
   ULONG  size;
   int	 i;
+  struct soevent *se;
 
   /*
    * one task may have SocketLibrary opened more than once.
@@ -326,9 +356,13 @@ ULONG * SAVEDS UL_Close(
   if (--libPtr->libNode.lib_OpenCnt > 0)
     return NULL;
 #ifdef DEBUG
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) __UL_Close: Closing proc 0x%lx base 0x%lx\n", libPtr->thisTask, libPtr));
+#endif
   log(LOG_DEBUG, "Closing proc 0x%lx base 0x%lx\n", 
       libPtr->thisTask, libPtr);
 #endif
+
   /*
    * Since library base is to be closed, all sockets referenced by this
    * library base must be closed too. Next piece of code searches for open
@@ -341,16 +375,18 @@ ULONG * SAVEDS UL_Close(
   libPtr->fdCallback = NULL; /* don't call the callback any more */
   for (i = 0; i < libPtr->dTableSize; i++)
     if (libPtr->dTable[i] != NULL)
-      CloseSocket(i, libPtr);
+      __CloseSocket(i, libPtr);
   
   Remove((struct Node *)libPtr); /* remove this librarybase from our list
 				    of opened library bases */
 
   if (libPtr->tsleep_timer) {
     if (libPtr->tsleep_timer->tr_node.io_Device != NULL) {
-#if 0 /* NC: must check if request has been used */
-      AbortIO((struct IORequest *)(libPtr->tsleep_timer));
-#endif
+      if (libPtr->tsleep_timer->tr_node.io_Message.mn_Node.ln_Type != NT_UNKNOWN) {
+        /* NC: must check if request has been used */
+        AbortIO((struct IORequest *)(libPtr->tsleep_timer));
+        WaitIO((struct IORequest *)(libPtr->tsleep_timer));
+      }
       CloseDevice((struct IORequest *)libPtr->tsleep_timer);
     }
     DeleteIORequest((struct IORequest *)libPtr->tsleep_timer);
@@ -368,6 +404,8 @@ ULONG * SAVEDS UL_Close(
     FreeMem(libPtr->dTable, libPtr->dTableSize * sizeof (struct socket *) +
 	    ((libPtr->dTableSize - 1) / NFDBITS + 1) * sizeof (fd_mask));
 
+  res_cleanup_db(&libPtr->res_state);
+
   freestart = (void *)((ULONG)libPtr - (ULONG)libPtr->libNode.lib_NegSize);
   size = libPtr->libNode.lib_NegSize + libPtr->libNode.lib_PosSize;
   bzero(freestart, size);
@@ -380,23 +418,31 @@ ULONG * SAVEDS UL_Close(
    */
   if (MasterSocketBase->lib_OpenCnt == 0 &&
       (MasterSocketBase->lib_Flags & LIBF_DELEXP)) {
-#if __GNUC__NOT
-    register struct Library *a6 __asm("a6") = MasterSocketBase;
-    return ELL_Expunge();
-#elif __SASC
-#error Compiler not supported!
-#else 
-    return ELL_Expunge(MasterSocketBase);
-#endif
+    return __ELL_Expunge(MasterSocketBase);
   }
 
   return NULL; /* always return null */
 }
 
+AROS_LH0(ULONG *, Close, struct SocketBase *, libPtr, 1, UL)
+{
+  AROS_LIBFUNC_INIT
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) ELL_Close()\n"));
+#endif
+  return __UL_Close(libPtr);
+  AROS_LIBFUNC_EXIT
+}
+
+
 BOOL api_init()
 {
   extern void select_init(void);
   extern f_void ExecLibraryList_funcTable[];
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) api_init()\n"));
+#endif
 
   if (api_state != API_SCRATCH)
     return TRUE;
@@ -408,6 +454,10 @@ BOOL api_init()
 				 NULL,
 				 sizeof(struct Library),
 				 NULL);
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) api_init: Created master library base: %08lx\n", MasterSocketBase));
+#endif
+  D(Printf("Created master library base: %08lx\n", MasterSocketBase);)
   if (MasterSocketBase == NULL)
     return FALSE;
 
@@ -426,7 +476,11 @@ LONG nthLibrary = 0;
 BOOL api_show()
 {
   struct Node * libNode;
-  STRPTR libName = (STRPTR)Library_initTable.ln_Name;
+  STRPTR libName = SOCLIBNAME;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) api_show()\n"));
+#endif
 
   if (api_state == API_SHOWN)
     return TRUE;
@@ -470,6 +524,10 @@ BOOL api_show()
 
 VOID api_hide()
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) api_hide()\n"));
+#endif
+
   if (api_state != API_SHOWN)
     return;
   Forbid();
@@ -482,6 +540,10 @@ VOID api_hide()
 VOID api_setfunctions() /* DOES NOTHING NOW */
 {
 /*  struct Node *node2move; */
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) api_setfunctions()\n"));
+#endif
   
   if (api_state == API_SCRATCH)
     return;
@@ -505,6 +567,10 @@ VOID api_sendbreaktotasks()
   extern struct List socketBaseList; /* :/ */
   struct Node * libNode;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) api_sendbreaktotask()\n"));
+#endif
+
   Forbid();
   for (libNode = socketBaseList.lh_Head; libNode->ln_Succ;
        libNode = libNode->ln_Succ)
@@ -517,10 +583,18 @@ VOID api_sendbreaktotasks()
 
 VOID api_deinit()
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) api_deinit()\n"));
+#endif
 #if DIAGNOSTIC
-  if (FindTask(NULL) != AmiTCP_Task)
+  if (FindTask(NULL) != AROSTCP_Task)
+  {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) api_deinit: The calling task of api_deinit() was not bsdsocket.library's"));
+#endif
     log(LOG_ERR,
       "The calling task of api_deinit() was not bsdsocket.library's");
+  }
 #endif
   if (api_state == API_SHOWN || api_state == API_HIDDEN)
     api_setfunctions();
@@ -529,7 +603,7 @@ VOID api_deinit()
 
   Forbid();
   AmiTCP_lets_you_do_expunge = TRUE;
-  ELL_Expunge(MasterSocketBase);
+  __ELL_Expunge(MasterSocketBase);
   Permit();
 
   /*
@@ -544,6 +618,9 @@ VOID api_deinit()
 
 VOID writeErrnoValue(struct SocketBase * libPtr, int error)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) writeErrnoValue()\n"));
+#endif
   /*
    * errnoSize is now restricted to 1, 2 or 4
    */
@@ -564,6 +641,9 @@ VOID writeErrnoValue(struct SocketBase * libPtr, int error)
 
 int readErrnoValue(struct SocketBase * libPtr)
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_api.c) readErrnoValue()\n"));
+#endif
   /*
    * errnoSize is now restricted to 1, 2 or 4
    */

@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -56,6 +57,7 @@
 #endif
 
 #include <proto/exec.h>
+#include <kern/amiga_config.h>
 
 struct newselbuf;
 
@@ -92,6 +94,7 @@ struct SocketBase {
   ULONG			sigIntrMask;
   ULONG			sigIOMask;
   ULONG			sigUrgMask;
+  ULONG			sigEventMask;
 /* -- these are used by tsleep()/wakeup() -- */
   const char *		p_wmesg;
   queue_chain_t 	p_sleep_link;
@@ -119,6 +122,13 @@ struct SocketBase {
   LONG			defHErrno;
   LONG			res_socket;       /* socket used for resolver comm. */
   struct state          res_state;
+/* -- socket events -- */
+  struct SignalSemaphore EventLock;
+  struct MinList	EventList;
+/* -- buffer for string returns -- */
+  UBYTE			result_str[REPLYBUFLEN + 1];
+/* -- state of NetDB lock for external netdb manipulation functions-- */
+  LONG			NetDB_State;
 };
 
 /* 
@@ -158,11 +168,11 @@ VOID writeErrnoValue(struct SocketBase *, int);
 
 static inline void ObtainSyscallSemaphore(struct SocketBase *libPtr)
 {
-  extern struct Task *AmiTCP_Task;
+  extern struct Task *AROSTCP_Task;
 
   ObtainSemaphore(&syscall_semaphore);
   libPtr->myPri = SetTaskPri(libPtr->thisTask,
-			     libPtr->libCallPri = AmiTCP_Task->tc_Node.ln_Pri);
+			     libPtr->libCallPri = AROSTCP_Task->tc_Node.ln_Pri);
 }
 
 static inline void ReleaseSyscallSemaphore(struct SocketBase *libPtr)

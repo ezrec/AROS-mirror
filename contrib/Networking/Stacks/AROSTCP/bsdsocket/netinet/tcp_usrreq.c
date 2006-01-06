@@ -416,10 +416,19 @@ tcp_ctloutput(op, so, level, optname, mp)
 			else
 				tp->t_flags &= ~TF_NODELAY;
 			break;
-
+#ifdef ENABLE_TTCP
+		case TCP_NOPUSH:
+			if (m == NULL || m->m_len < sizeof (int))
+				error = EINVAL;
+			else if (*mtod(m, int *))
+				tp->t_flags |= TF_NOPUSH;
+			else
+				tp->t_flags &= ~TF_NOPUSH;
+			break;
+#endif
 		case TCP_MAXSEG:	/* not yet */
 		default:
-			error = EINVAL;
+			error = ENOPROTOOPT;
 			break;
 		}
 		if (m)
@@ -437,8 +446,13 @@ tcp_ctloutput(op, so, level, optname, mp)
 		case TCP_MAXSEG:
 			*mtod(m, int *) = tp->t_maxseg;
 			break;
+#ifdef ENABLE_TTCP
+		case TCP_NOPUSH:
+			*mtod(m, int *)	= tp->t_flags & TF_NOPUSH;
+			break;
+#endif
 		default:
-			error = EINVAL;
+			error = ENOPROTOOPT;
 			break;
 		}
 		break;

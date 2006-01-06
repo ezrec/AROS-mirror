@@ -23,5 +23,25 @@
 #define SYSLOG_H
 
 #include <sys/syslog.h>
+#include <exec/ports.h>
+
+#if defined(__MORPHOS__)
+#pragma pack(2)
+#endif
+
+struct SysLogPacket
+{
+   struct Message    Msg;
+   ULONG             Level;
+   ULONG             Time;
+   STRPTR            Tag;
+   STRPTR            String;
+};
+
+#define LOG_CLOSE    0xff000000
+
+#if defined(__MORPHOS__)
+#pragma pack()
+#endif
 
 #endif /* !SYSLOG_H */

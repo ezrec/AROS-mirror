@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -24,7 +25,7 @@
 
 #include <sys/param.h>
 #include <sys/systm.h>
-#include <sys/syslog.h>
+#include <syslog.h>
 #include <sys/time.h>
 
 #include <kern/amiga_includes.h>
@@ -111,7 +112,7 @@ panic(const char *fmt,...)
   char buffer[PANICBUFFERSIZE];
   va_list ap;
   struct Library *IntuitionBase = NULL; /* local intuitionbase */
-  extern struct Task *AmiTCP_Task;
+  extern struct Task *AROSTCP_Task;
 
   if (!in_panic){
 				/* If we're called previously.. */
@@ -146,7 +147,7 @@ panic(const char *fmt,...)
    * If the caller is not the AmiTCP task, sleep forever. 
    * This should go to API or where ever we came in AmiTCP code
    */
-  if (FindTask(NULL) != AmiTCP_Task)
+  if (FindTask(NULL) != AROSTCP_Task)
     Wait(0);
 
   Wait(SIGBREAKF_CTRL_F);	/* AmiTCP/IP waits here */
@@ -211,28 +212,36 @@ log(unsigned long level, const char *fmt, ...)
   va_list ap;
 
   va_start(ap, fmt);
-  vlog(level, fmt, ap);		/* Call actual function */
+  vlog(level, "kernel", fmt, ap);		/* Call actual function */
   va_end(ap);
 }
 
 int
-vlog(unsigned long level, const char *fmt, va_list ap)
+vlog(unsigned long level, const char *tag, const char *fmt, va_list ap)
 {
-  struct log_msg *msg;
+  struct SysLogPacket *msg;
   struct timeval now;
-  if (msg = (struct log_msg *)GetLogMsg(logReplyPort)) {
+  if (msg = (struct SysLogPacket *)GetLogMsg(&logReplyPort)) {
     ULONG ret;
     struct CSource cs;
-    cs.CS_Buffer = msg->string;
-    cs.CS_Length = log_cnf.log_buf_len;
+    if (tag) {
+      cs.CS_Length = log_cnf.log_buf_len-strlen(tag)-1;
+      msg->Tag = &msg->String[cs.CS_Length];
+      strcpy(msg->Tag, tag);
+    } else {
+      cs.CS_Length = log_cnf.log_buf_len;
+      msg->Tag = NULL;
+    }
+    cs.CS_Buffer = msg->String;
     cs.CS_CurChr = 0;
 
     GetSysTime(&now);
 
     vcsprintf(&cs, fmt, ap);
-    msg->level = level & (LOG_FACMASK | LOG_PRIMASK);	/* Level of message */
-    ret = msg->chars = cs.CS_CurChr;
-    msg->time = now.tv_secs;
+    msg->Level = level & (LOG_FACMASK | LOG_PRIMASK);	/* Level of message */
+    ret = cs.CS_CurChr;
+    msg->Time = now.tv_secs;
+    DSYSLOG(KPrintF("Putting message = 0x%08x, tag: %s, text: %s\n",msg, msg->Tag, msg->String );)
     PutMsg(logPort, (struct Message *)msg);
     return ret;
   }
@@ -285,21 +294,21 @@ printf(const char *fmt, ...)
   va_list ap;
 
   va_start(ap, fmt);
-  ret = vlog(LOG_INFO, fmt, ap);
+  ret = vlog(LOG_INFO, "kernel", fmt, ap);
   va_end(ap);
   
   return ret;
 #else
   va_list ap;
-  struct log_msg *msg;
+  struct SysLogPacket *msg;
   struct timeval now;
 
-  if (msg = GetLogMsg(logReplyPort)) {	/* Get next free message */
+  if (msg = GetLogMsg(&logReplyPort)) {	 /* Get next free message */
     struct CSource cs;
 
     GetSysTime(&now);
 
-    cs.CS_Buffer = msg->string;
+    cs.CS_Buffer = msg->String;
     cs.CS_Length = log_cnf.log_buf_len;
     cs.CS_CurChr = 0;
 
@@ -307,9 +316,9 @@ printf(const char *fmt, ...)
     vcsprintf(&cs, fmt, ap);
     va_end(ap);
 
-    msg->level = LOG_INFO;
+    msg->Level = LOG_INFO;
     msg->chars = cs.CS_CurChr;
-    msg->time = now.tv_secs;
+    msg->Time = now.tv_secs;
     PutMsg(logPort,(struct Message *)msg);
 
     return (ULONG)cs.CS_CurChr;

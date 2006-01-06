@@ -80,6 +80,7 @@
 #include <netinet/ip_var.h>
 #include <netinet/ip_icmp.h>
 
+#include <net/if_protos.h>
 #include <netinet/ip_input_protos.h>
 #include <netinet/ip_output_protos.h>
 #include <netinet/ip_icmp_protos.h>

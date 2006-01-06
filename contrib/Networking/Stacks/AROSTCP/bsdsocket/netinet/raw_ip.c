@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -77,10 +78,13 @@
 #include <netinet/ip_var.h>
 #include <netinet/in_pcb.h>
 
+#include <net/if_protos.h>
 #include <netinet/raw_ip_protos.h>
 #include <netinet/ip_output_protos.h>
 #include <net/raw_usrreq_protos.h>
 #include <kern/uipc_socket2_protos.h>
+
+extern struct ifnet *ifnet;
 
 /*
  * Raw interface to IP protocol.

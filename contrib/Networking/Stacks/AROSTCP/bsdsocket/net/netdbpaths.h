@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -22,18 +23,25 @@
 
 #include <exec/types.h>
 
+
 #define _PATH_DB            "db"
 #define _PATH_SANA2CONFIG   "db/interfaces"
+#define _FILE_SANA2CONFIG   "interfaces"
 #define _PATH_CONFIG        "db/general.config"
+#define _FILE_CONFIG        "general.config"
 #define _PATH_NETDB         "db/netdb"
+#define _FILE_NETDB         "netdb"
+/*
 #define	_PATH_HEQUIV        "db/hosts.equiv"
 #define	_PATH_INETDCONF	    "db/inetd.conf"
-
+*/
 extern TEXT db_path[];
 extern TEXT interfaces_path[];
 extern TEXT config_path[];
 extern TEXT netdb_path[];
+/*
 extern TEXT hequiv_path[];
 extern TEXT inetdconf_path[];
+*/
 
 #endif /* !NET_NETDBPATHS_H */

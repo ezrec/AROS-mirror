@@ -1,6 +1,7 @@
 /*
  * Copyright © 1983, 1989 The Regents of the University of California.
  * All rights reserved.
+ * Copyright © 2005 Pavel Fedin
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -127,6 +128,7 @@ static char sccsid[] = "@(#)route.c	5.35 (Berkeley) 6/27/91";
 *****************************************************************************
 *
 */
+#define D(x)
 
 #include <stdio.h>
 #include <sys/errno.h>
@@ -137,7 +139,7 @@ static char sccsid[] = "@(#)route.c	5.35 (Berkeley) 6/27/91";
 #include <stdio.h> /* NC */
 #include <sys/param.h>
 #include <sys/socket.h>
-#include <sys/ioctl.h>
+#include <sys/sockio.h>
 
 #include <net/route.h>
 #include <netinet/in.h>
@@ -201,7 +203,7 @@ extern	char *inet_ntoa(), *iso_ntoa(), *link_ntoa();
 
 #define SOCKET_VERSION 3
 struct Library *SocketBase;
-const TEXT version[] = "route 3.2 (29.12.2004)";
+const TEXT version[] = "route 3.4 (14.10.2005)";
 const TEXT socket_name[] = "bsdsocket.library";
 
 void
@@ -241,8 +243,10 @@ main(argc, argv)
 	char *argvp;
 
 	SocketBase = OpenLibrary(socket_name, SOCKET_VERSION);
-	if(SocketBase == NULL)
+	if(SocketBase == NULL) {
+		fprintf(stderr, "route: cannot open bsdsocket.library version 3\n");
 		return RETURN_FAIL;
+	}
 	SetErrnoPtr(&errno, sizeof(errno));
 
 	if (argc < 2)
@@ -744,6 +748,9 @@ newroute(argc, argv)
 	for (attempts = 1; ; attempts++) {
 		errno = 0;
 		if (Cflag && (af == AF_INET || af == AF_NS)) {
+			D(printf ("Flags: 0x%08lx\n", flags);)
+			D(printf ("Dst = 0x%08lx\n", so_dst.s_in.sin_addr.s_addr);)
+			D(printf ("Gate = 0x%08lx\n", so_gate.s_in.sin_addr.s_addr);)
 			route.rt_flags = flags;
 			route.rt_dst = so_dst.sa;
 			route.rt_gateway = so_gate.sa;

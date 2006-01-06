@@ -412,8 +412,9 @@ tcp_notify(inp, error)
 
 	((struct tcpcb *)inp->inp_ppcb)->t_softerror = error;
 	wakeup((caddr_t) &inp->inp_socket->so_timeo);
-	sorwakeup(inp->inp_socket);
-	sowwakeup(inp->inp_socket);
+	sowakeup(inp->inp_socket, &inp->inp_socket->so_rcv);
+	sowakeup(inp->inp_socket, &inp->inp_socket->so_snd);
+	soevent(inp->inp_socket, FD_ERROR);
 }
 
 void

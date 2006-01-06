@@ -6,19 +6,28 @@ hard disk.
 Configuration
 =============
 
-There are a number of files in AROSTCP's 'db' subdirectory that need to
+If The ENV Variable "AROSTCP-CONFIG" is specified - it is used to find
+the location of the database files that will configure AROSTCP.  If not
+specified AROSTCP will default to it's 'db' subdirectory. From here
+on this dir will be refered to as the AROSTCP-CONFIG dir.
+
+This option is mostly of use to systems which boot from read only media,
+or environments where a number of differing network configs may be
+necessary.
+
+There are a number of files in the AROSTCP-CONFIG that need to
 be changed using a text editor (eg. 'Editor', found in AROS's Tools
 directory):
 
-db/hosts: At the end of the file, there is an entry for a computer/device
+* hosts: At the end of the file, there is an entry for a computer/device
 called "gateway". Change the IP address at the start of this line to
 that of your actual gateway, eg. your router.
 
-db/netdb-myhost: In the 'HOST' line, change the IP address to the real
+* netdb-myhost: In the 'HOST' line, change the IP address to the real
 IP address of your computer. You also need to change the address in the
 NAMESERVER line to that of your real DNS server.
 
-db/interfaces: At the end of the file, there are configuration entries
+* interfaces: At the end of the file, there are configuration entries
 for different network cards. Enable the entry for your network card by
 removing the '#' from the start of one of the lines that begin with
 "#eth0".
@@ -42,3 +51,9 @@ number, and then enter
  Break N
 
 where N is the process number.
+
+If you have configured your db files in a differing location to the default (ie not the /db/ subfolder) then use
+
+   SetEnv AROSTCP-CONFIG <path to modified files>
+   
+to enable AROSTCP to use it.  Please note that this must be done before launching AROSTCP.

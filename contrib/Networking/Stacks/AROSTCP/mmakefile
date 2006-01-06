@@ -1,0 +1,32 @@
+#   $Id: $
+include $(TOP)/config/make.cfg
+
+#MM contrib-networking-stacks-arostcp
+
+contrib-networking-stacks-arostcp : files-copy
+
+SRC_FILES := $(foreach f, README, ./$(f))
+DST_FILES := $(foreach f, README, $(CONTRIBDIR)/Networking/Stacks/AROSTCP/$(f))
+
+files-copy : setup $(DST_FILES)
+
+$(DST_FILES) : $(CONTRIBDIR)/Networking/Stacks/AROSTCP/% : ./%
+	@$(CP) $< $@
+	
+setup ::
+	@$(FOR) dir in $(CONTRIBDIR)/Networking/Stacks/AROSTCP ; do \
+	    $(IF) $(TEST) ! -d $$dir ; then $(MKDIR) $$dir ; else $(NOP) ; fi ; \
+	done
+
+
+#%common
+
+
+# Delete generated makefiles
+#MM
+clean ::
+	@$(RM) $(TOP)/$(CURDIR)/mmakefile $(TOP)/$(CURDIR)/mmakefile.bak
+
+include $(TOP)/config/make.tail
+
+BDID := $(BDTARGETID)

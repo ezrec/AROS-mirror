@@ -3,6 +3,7 @@
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
  * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -32,6 +33,8 @@
 #include <sys/synch.h>
 #include <sys/errno.h>
 
+#include <aros/asmcall.h>
+#include <aros/libcall.h>
 #include <exec/types.h>
 #include <exec/libraries.h>
 #include <exec/semaphores.h>
@@ -45,15 +48,25 @@
 #include <kern/uipc_socket_protos.h>
 #include <kern/uipc_socket2_protos.h>
 
+#ifdef DEBUG_SYSCALLS
+void dump_sockaddr_in (struct sockaddr_in *name, struct SocketBase *libPtr)
+{
+  log(LOG_DEBUG,"sockaddr_in contents:");
+  log(LOG_DEBUG,"sin_len: %u", name->sin_len);
+  log(LOG_DEBUG,"sin_family: %u", name->sin_family);
+  log(LOG_DEBUG,"sin_port: %u", name->sin_port);
+  log(LOG_DEBUG,"sin_addr: %s", __Inet_NtoA(name->sin_addr.s_addr, libPtr));
+}
+#endif
 
-LONG SAVEDS socket(
-   REG(d0, LONG domain),
-   REG(d1, LONG type),
-   REG(d2, LONG protocol),
-   REG(a6, struct SocketBase *libPtr))
+LONG __socket(LONG domain, LONG type, LONG protocol, struct SocketBase *libPtr)
 {
   struct socket *so;
   LONG fd, error;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) __socket()\n"));
+#endif
 
   CHECK_TASK();
 
@@ -69,29 +82,65 @@ LONG SAVEDS socket(
      * Tell the link library about the new fd
      */
     if (libPtr->fdCallback)
-      error = libPtr->fdCallback(fd, FDCB_ALLOC);
+      error = AROS_UFC2(int, libPtr->fdCallback,
+	AROS_UFCA(int, fd, D0),
+	AROS_UFCA(int, FDCB_ALLOC, D1));
     if (! error) {
       so->so_refcnt = 1;		/* reference count is pure AmiTCP addition */
       libPtr->dTable[fd] = so;
+      so->so_pgid = libPtr;
       FD_SET(fd, (fd_set *)(libPtr->dTable + libPtr->dTableSize));
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) __socket: created socket 0x%08lx fd = %ld libPtr = 0x%08lx\n", so, fd, libPtr));
+#endif
+      DEVENTS(log(LOG_DEBUG,"socket(): created socket 0x%08lx fd = %ld libPtr = 0x%08lx", so, fd, libPtr);)
     }
   }
   
  Return: API_STD_RETURN(error, fd);
 }
 
+AROS_LH3(LONG, socket,
+   AROS_LHA(LONG, domain, D0),
+   AROS_LHA(LONG, type, D1),
+   AROS_LHA(LONG, protocol, D2),
+   struct SocketBase *, libPtr, 2, UL)
+{
+  AROS_LIBFUNC_INIT
+  
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) UL_socket(%ld, %ld, %ld)\n", domain, type, protocol));
+#endif
+  
+  DSYSCALLS(log(LOG_DEBUG,"socket(%ld, %ld, %ld) called", domain, type, protocol);)
+  return __socket(domain, type, protocol, libPtr);
+  AROS_LIBFUNC_EXIT
+}
 
-LONG SAVEDS bind(
+
+/*LONG SAVEDS bind(
    REG(d0, LONG s),
    REG(a0, caddr_t name),
    REG(d1, LONG namelen),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH3(LONG, bind,
+   AROS_LHA(LONG, s, D0),
+   AROS_LHA(caddr_t, name, A0),
+   AROS_LHA(LONG, namelen, D1),
+   struct SocketBase *, libPtr, 3, UL)
 {
+  AROS_LIBFUNC_INIT
   struct socket *so;
   struct mbuf *nam;
   LONG error;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) UL_bind(%ld, sockaddr_in, %ld)\n", s, namelen));
+#endif
+
   CHECK_TASK();
+  DSYSCALLS(log(LOG_DEBUG,"bind(%ld, sockaddr_in, %ld) called", s, namelen);)
+  DSYSCALLS(dump_sockaddr_in((struct sockaddr_in *)name, libPtr);)
   ObtainSyscallSemaphore(libPtr);
   
   if (error = getSock(libPtr, s, &so))
@@ -104,17 +153,28 @@ LONG SAVEDS bind(
  Return:
   ReleaseSyscallSemaphore(libPtr);
   API_STD_RETURN(error, 0);
+  AROS_LIBFUNC_EXIT
 }
 
-LONG SAVEDS listen(
+/*LONG SAVEDS listen(
    REG(d0, LONG s),
    REG(d1, LONG backlog),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH2(LONG, listen,
+   AROS_LHA(LONG, s, D0),
+   AROS_LHA(LONG, backlog, D1),
+   struct SocketBase *, libPtr, 4, UL)
 {
+  AROS_LIBFUNC_INIT
   struct socket *so;
   LONG error;
   
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) UL_Listen(%ld, %ld)\n", s, backlog));
+#endif
+  
   CHECK_TASK();
+  DSYSCALLS(log("listen(%ld, %ld) called ", s, backlog);)
   ObtainSyscallSemaphore(libPtr);
   
   if (error = getSock(libPtr, s, &so))
@@ -124,21 +184,33 @@ LONG SAVEDS listen(
  Return:
   ReleaseSyscallSemaphore(libPtr);
   API_STD_RETURN(error, 0);
-
+  AROS_LIBFUNC_EXIT
 }
     
-LONG SAVEDS accept(
+/*LONG SAVEDS accept(
    REG(d0, LONG s),
    REG(a0, caddr_t name),
    REG(a1, ULONG *anamelen),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH3(LONG, accept,
+   AROS_LHA(LONG, s, D0),
+   AROS_LHA(caddr_t, name, A0),
+   AROS_LHA(ULONG *, anamelen, A1),
+   struct SocketBase *, libPtr, 5, UL)
 {
+  AROS_LIBFUNC_INIT
   struct socket *so;
   struct mbuf *nam;
   spl_t old_spl;
   LONG error, fd;
+  D(int i;)
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) UL_accept(%ld)\n", s));
+#endif
 
   CHECK_TASK();
+  DSYSCALLS(log("accept(%ld) called", s);)
   ObtainSyscallSemaphore(libPtr);
 
   if (error = getSock(libPtr, s, &so))
@@ -176,7 +248,9 @@ LONG SAVEDS accept(
    * Tell the link library about the new fd
    */
   if (libPtr->fdCallback)
-    if (error = libPtr->fdCallback(fd, FDCB_ALLOC))
+    if (error = AROS_UFC2(int, libPtr->fdCallback,
+	AROS_UFCA(int, fd, D0),
+	AROS_UFCA(int, FDCB_ALLOC, D1)))
       goto Return_spl;
 
   {
@@ -196,7 +270,7 @@ LONG SAVEDS accept(
     if (*anamelen > nam->m_len)
       *anamelen = nam->m_len;
     /* SHOULD COPY OUT A CHAIN HERE */
-    aligned_bcopy(mtod(nam, caddr_t), (caddr_t)name, (u_int)*anamelen);
+   aligned_bcopy(mtod(nam, caddr_t), (caddr_t)name, (u_int)*anamelen);
   }
   m_freem(nam);
 
@@ -205,19 +279,22 @@ LONG SAVEDS accept(
 
  Return:
   ReleaseSyscallSemaphore(libPtr);
+  DSYSCALLS(log(LOG_DEBUG,"accept() executed");)
+  DSYSCALLS(dump_sockaddr_in((struct sockaddr_in *)name, libPtr);)
   API_STD_RETURN(error, fd);
+  AROS_LIBFUNC_EXIT
 }
 
-LONG SAVEDS connect(
-   REG(d0, LONG s),
-   REG(a0, caddr_t name),
-   REG(d1, LONG namelen),
-   REG(a6, struct SocketBase *libPtr))
+LONG __connect(LONG s, caddr_t name, LONG namelen, struct SocketBase *libPtr)
 {
   /*register*/ struct socket *so;
   struct mbuf *nam;
   LONG error;
   spl_t old_spl;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) __connect()\n"));
+#endif
 
   CHECK_TASK();
   ObtainSyscallSemaphore(libPtr);
@@ -256,18 +333,45 @@ LONG SAVEDS connect(
  Return:
   ReleaseSyscallSemaphore(libPtr);
   API_STD_RETURN(error, 0);
-
 }
 
-LONG SAVEDS shutdown(
+AROS_LH3(LONG, connect,
+   AROS_LHA(LONG, s, D0),
+   AROS_LHA(caddr_t, name, A0),
+   AROS_LHA(LONG, namelen, D1),
+   struct SocketBase *, libPtr, 6, UL)
+{
+  AROS_LIBFUNC_INIT
+  
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) UL_connect(%ld, sockaddr_in, %ld)\n", s, namelen));
+#endif
+  
+  DSYSCALLS(log(LOG_DEBUG, "connect(%ld, sockaddr_in, %ld) called", s, namelen);)
+  DSYSCALLS(dump_sockaddr_in((struct sockaddr_in *)s, libPtr);)
+  return __connect(s, name, namelen, libPtr);
+  AROS_LIBFUNC_EXIT
+}
+
+/*LONG SAVEDS shutdown(
    REG(d0, LONG s),
    REG(d1, LONG how),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH2(LONG, shutdown,
+   AROS_LHA(LONG, s, D0),
+   AROS_LHA(LONG, how, D1),
+   struct SocketBase *, libPtr, 7, UL)
 {
+  AROS_LIBFUNC_INIT
   struct socket *so;
   LONG error;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) UL_shutdown(%ld, %ld)\n", s, how));
+#endif
+
   CHECK_TASK();
+  DSYSCALLS(log(LOG_DEBUG,"shutdown(%ld, %ld) called", s, how);)
   ObtainSyscallSemaphore(libPtr);
 
   if (error = getSock(libPtr, s, &so))
@@ -278,21 +382,35 @@ LONG SAVEDS shutdown(
  Return:
   ReleaseSyscallSemaphore(libPtr);
   API_STD_RETURN(error, 0);
+  AROS_LIBFUNC_EXIT
 }
 
-LONG SAVEDS setsockopt(
+/*LONG SAVEDS setsockopt(
    REG(d0, LONG s),
    REG(d1, LONG level),
    REG(d2, LONG name),
    REG(a0, caddr_t val),
    REG(d3, ULONG valsize),
-   REG(a6, struct SocketBase *libPtr))
+   REG(a6, struct SocketBase *libPtr))*/
+AROS_LH5(LONG, setsockopt,
+   AROS_LHA(LONG, s, D0),
+   AROS_LHA(LONG, level, D1),
+   AROS_LHA(LONG, name, D2),
+   AROS_LHA(caddr_t, val, A0),
+   AROS_LHA(ULONG, valsize, D3),
+   struct SocketBase *, libPtr, 8, UL)
 {
+  AROS_LIBFUNC_INIT
   struct socket *so;
   struct mbuf *m = NULL;
   LONG error;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) UL_setsockopt(%ld, 0x%08lx, 0x%08lx, %lu, %lu)\n", s, level, name, *(ULONG *)val , valsize));
+#endif
+
   CHECK_TASK();
+  DSYSCALLS(log(LOG_DEBUG,"setsockopt(%ld, 0x%08lx, 0x%08lx, %lu, %lu) called", s, level, name, *(ULONG *)val , valsize);)
   ObtainSyscallSemaphore(libPtr);
 
   if (error = getSock(libPtr, s, &so))
@@ -314,23 +432,38 @@ LONG SAVEDS setsockopt(
 
  Return:
   ReleaseSyscallSemaphore(libPtr);
+  DOPTERR (if (error) log(LOG_ERR,"setsockopt(): error %ld on option 0x%08lx, level 0x%08lx", error, name, level);)
   API_STD_RETURN(error, 0);
+  AROS_LIBFUNC_EXIT
 }
 
 
-LONG SAVEDS getsockopt(
+/*LONG SAVEDS getsockopt(
    REG(d0, LONG s),
    REG(d1, LONG level),
    REG(d2, LONG name),
    REG(a0, caddr_t val),
    REG(a1, ULONG * avalsize),
-   REG(a6, struct SocketBase * libPtr))
+   REG(a6, struct SocketBase * libPtr))*/
+AROS_LH5(LONG, getsockopt,
+   AROS_LHA(LONG, s, D0),
+   AROS_LHA(LONG, level, D1),
+   AROS_LHA(LONG, name, D2),
+   AROS_LHA(caddr_t, val, A0),
+   AROS_LHA(ULONG *, avalsize, A1),
+   struct SocketBase *, libPtr, 9, UL)
 {
+  AROS_LIBFUNC_INIT
   struct socket *so;
   struct mbuf *m = NULL;
   ULONG valsize, error;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) UL_getsockopt(%ld, 0x%08lx, 0x%08lx)\n", s, level, name));
+#endif
+
   CHECK_TASK();
+  DSYSCALLS(log(LOG_DEBUG,"getsockopt(%ld, 0x%08lx, 0x%08lx) called", s, level, name);)
   ObtainSyscallSemaphore(libPtr);
 
   if (error = getSock(libPtr, s, &so))
@@ -353,21 +486,34 @@ LONG SAVEDS getsockopt(
 
  Return:
   ReleaseSyscallSemaphore(libPtr);
+  DOPTERR(if (error) log(LOG_ERR,"setsockopt(): error %ld on option 0x%08lx, level 0x%08lx", error, name, level);)
   API_STD_RETURN(error, 0);
+  AROS_LIBFUNC_EXIT
 }
 
-LONG SAVEDS getsockname(
+/*LONG SAVEDS getsockname(
    REG(d0, LONG fdes),
    REG(a0, caddr_t asa),
    REG(a1, ULONG * alen),
-   REG(a6, struct SocketBase * libPtr))
+   REG(a6, struct SocketBase * libPtr))*/
+AROS_LH3(LONG, getsockname,
+   AROS_LHA(LONG, fdes, D0),
+   AROS_LHA(caddr_t, asa, A0),
+   AROS_LHA(ULONG *, alen, A1),
+   struct SocketBase *, libPtr, 10, UL)
 {
+  AROS_LIBFUNC_INIT
   /*register*/
   struct socket *so;
   struct mbuf *m;
   LONG error;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) UL_getsockname(%ld)\n", fdes));
+#endif
+
   CHECK_TASK();
+  DSYSCALLS(log(LOG_DEBUG,"getsockname(%ld) called", fdes);)
   ObtainSyscallSemaphore(libPtr);
 
   if (error = getSock(libPtr, fdes, &so))
@@ -390,19 +536,31 @@ LONG SAVEDS getsockname(
  Return:
   ReleaseSyscallSemaphore(libPtr);
   API_STD_RETURN(error, 0);
+  AROS_LIBFUNC_EXIT
 }
 
-LONG SAVEDS getpeername(
+/*LONG SAVEDS getpeername(
    REG(d0, LONG fdes),
    REG(a0, caddr_t asa),
    REG(a1, ULONG * alen),
-   REG(a6, struct SocketBase * libPtr))
+   REG(a6, struct SocketBase * libPtr))*/
+AROS_LH3(LONG, getpeername,
+   AROS_LHA(LONG, fdes, D0),
+   AROS_LHA(caddr_t, asa, A0),
+   AROS_LHA(ULONG *, alen, A1),
+   struct SocketBase *, libPtr, 11, UL)
 {
+  AROS_LIBFUNC_INIT
   struct socket *so;
   struct mbuf *m;
   LONG error;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) UL_getpeername(%ld)\n", fdes));
+#endif
+
   CHECK_TASK();
+  DSYSCALLS(log(LOG_DEBUG,"getpeername(%ld) called", fdes);)
   ObtainSyscallSemaphore(libPtr);
 
   if (error = getSock(libPtr, fdes, &so))
@@ -431,6 +589,7 @@ LONG SAVEDS getpeername(
  Return:
   ReleaseSyscallSemaphore(libPtr);
   API_STD_RETURN(error, 0);
+  AROS_LIBFUNC_EXIT
 }
 
 LONG sockArgs(struct mbuf **mp,
@@ -440,6 +599,10 @@ LONG sockArgs(struct mbuf **mp,
 {
   register struct mbuf *m;
   LONG error = 0;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) sockArgs()\n"));
+#endif
 
   if ((u_int)buflen > MLEN)
     return (EINVAL);
@@ -468,6 +631,10 @@ LONG sdFind(struct SocketBase * libPtr, LONG *fdp)
   ULONG * smaskp;
   int mlongs = (libPtr->dTableSize - 1) / NFDBITS + 1;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_syscalls.c) sdFind()\n"));
+#endif
+
   moffset = 0, smaskp = (ULONG  *)(libPtr->dTable + libPtr->dTableSize);
   while (mlongs) {
     unsigned long cmask = *smaskp;
@@ -489,7 +656,10 @@ LONG sdFind(struct SocketBase * libPtr, LONG *fdp)
      * Check if link library agrees with us on the next free fd...
      */
     if (libPtr->fdCallback)
-      if (libPtr->fdCallback(moffset + bit, FDCB_CHECK)) {
+      if (AROS_UFC2(int, libPtr->fdCallback,
+	AROS_UFCA(int, moffset+bit, D0),
+	AROS_UFCA(int, FDCB_CHECK, D1)))
+ {
 	*smaskp |= cmask; /* mark this fd as used */
 	continue; /* search for the next _bit_ */
       }

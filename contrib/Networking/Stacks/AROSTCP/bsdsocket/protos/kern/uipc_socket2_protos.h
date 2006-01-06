@@ -34,6 +34,12 @@ int sb_lock(struct sockbuf * sb,
 void sowakeup(register struct socket * so,
              register struct sockbuf * sb);
 
+void sorwakeup(struct socket *so);
+
+void sowwakeup(struct socket *so);
+
+void soevent(struct socket *so, u_long event);
+
 int soreserve(register struct socket * so,
               u_long sndcc,
               u_long rcvcc);

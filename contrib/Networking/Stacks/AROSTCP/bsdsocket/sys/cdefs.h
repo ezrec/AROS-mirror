@@ -57,7 +57,6 @@
 
 #ifndef	SYS_CDEFS_H
 #define	SYS_CDEFS_H
-#error Dont want this
 
 #if defined(__cplusplus)
 #define	__BEGIN_DECLS	extern "C" {
