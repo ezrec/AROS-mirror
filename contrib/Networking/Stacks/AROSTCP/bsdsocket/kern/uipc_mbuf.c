@@ -155,6 +155,10 @@ D(bug("[AROSTCP](uipc_mbuf.c) mb_read_stats()\n"));
   }
   p += sprintf(p, "%ld", total);
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) mb_read_stats: %s\n", res->CS_Buffer));
+#endif
+
   res->CS_CurChr = p - res->CS_Buffer;
   return RETURN_OK;
 }
@@ -163,7 +167,7 @@ int
 mb_check_conf(void *dp, LONG newvalue)
 {
 #if defined(__AROS__)
-D(bug("[AROSTCP](uipc_mbuf.c) mb_check_conf()\n"));
+D(bug("[AROSTCP](uipc_mbuf.c) mb_check_conf(0x%08x, %d)\n", dp, newvalue));
 #endif
 
   if ((u_long *)dp == &mbconf.initial_mbuf_chunks) {
@@ -232,6 +236,9 @@ D(bug("[AROSTCP](uipc_mbuf.c) mbinit()\n"));
   splx(s);
   
   if (!initialized) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) mbinit: Failed to allocate memory!\n"));
+#endif
     log(LOG_ERR, "mbinit: Failed to allocate memory.");
     mbdeinit();
   }
@@ -257,6 +264,9 @@ D(bug("[AROSTCP](uipc_mbuf.c) mbdeinit()\n"));
    * free all memory chunks
    */
   while (mbufmem) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) mbdeinit: Freeing %d bytes @ 0x%08x\n", mbufmem, mbufmem->size));
+#endif
     next = mbufmem->next;
     mbstat.m_memused -= mbufmem->size;
     FreeMem(mbufmem, mbufmem->size);
@@ -293,6 +303,10 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_alloc()\n"));
    * check if allowed to allocate more
    */
   if (mbstat.m_memused + size > mbconf.maxmem * 1024) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_alloc: max amount of memory already used (%ld bytes).\n",
+	mbstat.m_memused));
+#endif
     log(LOG_ERR, "m_alloc: max amount of memory already used (%ld bytes).",
 	mbstat.m_memused);
     return FALSE;
@@ -300,6 +314,9 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_alloc()\n"));
 
   mh = AllocMem(size, MEMF_PUBLIC);	/* public since used from interrupts */
   if (mh == NULL) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_alloc: Cannot allocate memory for mbufs\n"));
+#endif
     log(LOG_ERR, "m_alloc: Cannot allocate memory for mbufs.");
     return FALSE;
   }
@@ -360,6 +377,10 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_clalloc()\n"));
    * check if allowed to allocate more
    */
   if (mbstat.m_memused + size > mbconf.maxmem * 1024) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_clalloc: max amount of memory already used (%ld bytes).\n",
+	mbstat.m_memused));
+#endif
     log(LOG_ERR, "m_clalloc: max amount of memory already used (%ld bytes).",
 	mbstat.m_memused);
     return FALSE;
@@ -367,6 +388,9 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_clalloc()\n"));
 
   mh = AllocMem(size, MEMF_PUBLIC); /* public since used from interrupts */
   if (mh == NULL) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_clalloc: Cannot allocate memory for mbuf clusters\n"));
+#endif
     log(LOG_ERR, "m_clalloc: Cannot allocate memory for mbuf clusters");
     return FALSE;
   }
@@ -453,10 +477,14 @@ m_get(canwait, type)
 {
 	register struct mbuf *m;
 #if defined(__AROS__)
-D(bug("[AROSTCP](uipc_mbuf.c) m_get()\n"));
+D(bug("[AROSTCP](uipc_mbuf.c) m_get(canwait:%d, type:%d)\n", canwait, type));
 #endif
 
 	MGET(m, canwait, type);
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_get: returning 0x%08x\n", m));
+#endif
+
 	return (m);
 }
 
@@ -508,11 +536,16 @@ m_freem(m)
 {
 	register struct mbuf *n;
 #if defined(__AROS__)
-D(bug("[AROSTCP](uipc_mbuf.c) m_freem()\n"));
+D(bug("[AROSTCP](uipc_mbuf.c) m_freem(0x%08x)\n", m));
 #endif
 
 	if (m == NULL)
-		return;
+	{
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_freem: Attempting to free NOTHING!!\n"));
+#endif
+			return;
+	}
 	do {
 		MFREE(m, n);
 	} while (m = n);
@@ -534,7 +567,7 @@ m_prepend(m, len, canwait)
 {
 	struct mbuf *mn;
 #if defined(__AROS__)
-D(bug("[AROSTCP](uipc_mbuf.c) m_prepend()\n"));
+D(bug("[AROSTCP](uipc_mbuf.c) m_prepend(0x%08x, len = %d)\n", m, len));
 #endif
 
 	MGET(mn, canwait, m->m_type);
@@ -572,10 +605,13 @@ m_copym(m, off0, len, wait)
 	struct mbuf *top = NULL;
 	int copyhdr = 0;
 #if defined(__AROS__)
-D(bug("[AROSTCP](uipc_mbuf.c) m_copym()\n"));
+D(bug("[AROSTCP](uipc_mbuf.c) m_copym(0x%08x, len = %d)\n", m, len));
 #endif
 
 	if (off < 0 || len < 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_copym: bad args\n"));
+#endif
 	  log(LOG_ERR, "m_copym: Bad arguments");
 	  goto nospace;
 	}
@@ -586,6 +622,9 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_copym()\n"));
 	 */
 	while (off > 0) {
 		if (m == 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_copym: short mbuf chain!\n"));
+#endif
 		  log(LOG_ERR, "m_copym: short mbuf chain");
 		  goto nospace;
 		}
@@ -598,6 +637,9 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_copym()\n"));
 	while (len > 0) {
 		if (m == 0) {
 			if (len != M_COPYALL) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_copym: short mbuf chain!!\n"));
+#endif
 			  log(LOG_ERR, "m_copym: short mbuf chain");
 			  goto nospace;
 			}
@@ -653,15 +695,21 @@ m_copydata(m, off, len, cp)
 {
 	register unsigned count;
 #if defined(__AROS__)
-D(bug("[AROSTCP](uipc_mbuf.c) m_copydata()\n"));
+D(bug("[AROSTCP](uipc_mbuf.c) m_copydata(0x%08x, len = %d)\n", m, len));
 #endif
 
 	if (off < 0 || len < 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_copydata: bad arguments!\n"));
+#endif
 	  log(LOG_ERR, "m_copydata: bad arguments");
 	  return;
 	}
 	while (off > 0) {
 		if (m == 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_copydata: short mbuf chain to copy from!\n"));
+#endif
 		  log(LOG_ERR, "m_copydata: short mbuf chain to copy from");
 		  return;
 		}
@@ -672,6 +720,9 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_copydata()\n"));
 	}
 	while (len > 0) {
 		if (m == 0) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](uipc_mbuf.c) m_copydata: short mbuf chain to copy from!!\n"));
+#endif
 		  log(LOG_ERR, "m_copydata: short mbuf chain to copy from");
 		  return;
 		}
@@ -694,7 +745,7 @@ m_cat(m, n)
 	register struct mbuf *m, *n;
 {
 #if defined(__AROS__)
-D(bug("[AROSTCP](uipc_mbuf.c) m_cat()\n"));
+D(bug("[AROSTCP](uipc_mbuf.c) m_cat(0x%08x, 0x%08x)\n", m, n));
 #endif
 
 	while (m->m_next)
