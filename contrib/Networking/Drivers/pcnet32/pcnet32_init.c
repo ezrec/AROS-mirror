@@ -45,7 +45,6 @@
 
 #include "pcnet32.h"
 #include "unit.h"
-#include <aros/debug.h>
 #include LC_LIBDEFS_FILE
 
 struct Library *OOPBase;

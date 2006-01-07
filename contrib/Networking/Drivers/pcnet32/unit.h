@@ -24,8 +24,6 @@
 #include <exec/ports.h>
 #include <exec/errors.h>
 
-#include <aros/debug.h>
-
 #include <devices/sana2.h>
 #include <devices/sana2specialstats.h>
 #include <devices/newstyle.h>

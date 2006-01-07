@@ -41,6 +41,7 @@
 #include <devices/sana2specialstats.h>
 
 #include <proto/exec.h>
+#include <aros/debug.h>
 
 #include LC_LIBDEFS_FILE
 
@@ -468,8 +469,8 @@ void pcn32_get_functions(struct PCN32Unit *Unit);
 /* ************************************** */
 
 #ifndef PCNET32_LOG_TX_BUFFERS
-#define PCNET32_LOG_TX_BUFFERS      1
-#define PCNET32_LOG_RX_BUFFERS      3
+#define PCNET32_LOG_TX_BUFFERS      3
+#define PCNET32_LOG_RX_BUFFERS      4
 #endif
 
 #define TX_RING_SIZE                (1 << (PCNET32_LOG_TX_BUFFERS))

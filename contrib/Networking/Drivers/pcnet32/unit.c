@@ -47,7 +47,6 @@
 
 #include "pcnet32.h"
 #include "unit.h"
-#include <aros/debug.h>
 #include LC_LIBDEFS_FILE
 
 /* BYTE IO */
@@ -467,7 +466,7 @@ AROS_UFH3(void, PCN32_TX_Int,
 
     struct fe_priv *np = unit->pcnu_fe_priv;
     struct PCN32Base *PCNet32Base = unit->pcnu_device;
-    int nr;
+    int nr, try_count=1;
     BOOL proceed = FALSE; /* Fails by default */
 
 D(bug("%s: PCN32_TX_Int()\n", unit->pcnu_name));
@@ -495,95 +494,102 @@ D(bug("%s: PCN32_TX_Int()\n", unit->pcnu_name));
             nr = np->next_tx % TX_RING_SIZE;
             error = 0;
 
-            request = (APTR)port->mp_MsgList.lh_Head;
-            data_size = packet_size = request->ios2_DataLength;
-
-            opener = (APTR)request->ios2_BufferManagement;
-
-            if((request->ios2_Req.io_Flags & SANA2IOF_RAW) == 0)
+            if (!((((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].BufferStatus) & (1 << 15)))
             {
-                packet_size += ETH_PACKET_DATA;
-                CopyMem(request->ios2_DstAddr, np->tx_buffer[nr].eth_packet_dest, ETH_ADDRESSSIZE);
-                CopyMem(unit->pcnu_dev_addr, np->tx_buffer[nr].eth_packet_source, ETH_ADDRESSSIZE);
-                np->tx_buffer[nr].eth_packet_type = AROS_WORD2BE(request->ios2_PacketType);
 
-                buffer = np->tx_buffer[nr].eth_packet_data;
-            }
-            else
-                buffer = (UBYTE*)&np->tx_buffer[nr];
+               request = (APTR)port->mp_MsgList.lh_Head;
+               data_size = packet_size = request->ios2_DataLength;
 
-            if (!opener->tx_function(buffer, request->ios2_Data, data_size))
-            {
-                error = S2ERR_NO_RESOURCES;
-                wire_error = S2WERR_BUFF_ERROR;
-                ReportEvents(LIBBASE, unit,
-                  S2EVENT_ERROR | S2EVENT_SOFTWARE | S2EVENT_BUFF
-                  | S2EVENT_TX);
-            }
+               opener = (APTR)request->ios2_BufferManagement;
 
-            /* Now the packet is already in TX buffer, update flags for NIC */
-            if (error == 0)
-            {
-                Disable();
+               if((request->ios2_Req.io_Flags & SANA2IOF_RAW) == 0)
+               {
+                  packet_size += ETH_PACKET_DATA;
+                  CopyMem(request->ios2_DstAddr, np->tx_buffer[nr].eth_packet_dest, ETH_ADDRESSSIZE);
+                  CopyMem(unit->pcnu_dev_addr, np->tx_buffer[nr].eth_packet_source, ETH_ADDRESSSIZE);
+                  np->tx_buffer[nr].eth_packet_type = AROS_WORD2BE(request->ios2_PacketType);
+
+                  buffer = np->tx_buffer[nr].eth_packet_data;
+               }
+               else
+                  buffer = (UBYTE*)&np->tx_buffer[nr];
+
+               if (!opener->tx_function(buffer, request->ios2_Data, data_size))
+               {
+                  error = S2ERR_NO_RESOURCES;
+                  wire_error = S2WERR_BUFF_ERROR;
+                  ReportEvents(LIBBASE, unit,
+                     S2EVENT_ERROR | S2EVENT_SOFTWARE | S2EVENT_BUFF
+                     | S2EVENT_TX);
+               }
+
+               /* Now the packet is already in TX buffer, update flags for NIC */
+               if (error == 0)
+               {
+                  Disable();
 D(bug("%s: PCN32_TX_Int: packet %d:%d [type = %d] queued for transmission.", unit->pcnu_name, np->next_tx, nr, np->tx_buffer[nr].eth_packet_type));
 
-                /* DEBUG? Dump frame if so */
+                  /* DEBUG? Dump frame if so */
 #ifdef DEBUG
-                {
-                int j;
-                    for (j=0; j<64; j++) {
-                        if ((j%16) == 0)
-                            D(bug("\n%03x:", j));
-                        D(bug(" %02x", ((unsigned char*)&np->tx_buffer[nr])[j]));
-                    }
-                    D(bug("\n"));
-                }
+                  {
+                  int j;
+                       for (j=0; j<64; j++) {
+                          if ((j%16) == 0)
+                              D(bug("\n%03x:", j));
+                          D(bug(" %02x", ((unsigned char*)&np->tx_buffer[nr])[j]));
+                     }
+                      D(bug("\n"));
+                  }
 #endif
-                np->next_tx++;
 
-                /* 
-                 * If we've just run out of free space on the TX queue, stop
-                 * it and give up pushing further frames
-                 */
-                if (np->next_tx - np->nic_tx >= TX_LIMIT_STOP)
-                {
-                    bug("%s: output queue full. Stopping\n", unit->pcnu_name);
-                    netif_stop_queue(unit);
-                    proceed = FALSE;
-                }
-                Enable();
+                  Enable();
 
-                /* Set the ring details for the packet .. */
-                ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].BufferLength = AROS_WORD2LE(-packet_size);
-                ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].Misc = 0x00000000;
-                ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].PacketBuffer = AROS_LONG2LE((IPTR)&np->tx_buffer[nr]);
-                ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].BufferStatus = AROS_WORD2LE(0x8300);
+                  /* Set the ring details for the packet .. */
+                  ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].BufferLength = AROS_WORD2LE(-packet_size);
+                  ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].Misc = 0x00000000;
+                  ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].PacketBuffer = AROS_LONG2LE((IPTR)&np->tx_buffer[nr]);
+                  ((struct tx_ring_desc *)np->ring_addr)[nr + RX_RING_SIZE].BufferStatus = AROS_WORD2LE(0x8300);
                 
-                unit->write_csr(unit->pcnu_BaseMem,0, ((1 << 6)|(1 << 3))); /* .. And trigger an imediate Tx poll */
+                  unit->write_csr(unit->pcnu_BaseMem,0, ((1 << 6)|(1 << 3))); /* .. And trigger an imediate Tx poll */
 D(bug("%s: PCN32_TX_Int: send poll triggered.\n", unit->pcnu_name));
+               }
+
+               /* Reply packet */
+
+               request->ios2_Req.io_Error = error;
+               request->ios2_WireError = wire_error;
+               Disable();
+               Remove((APTR)request);
+               Enable();
+               ReplyMsg((APTR)request);
+
+               /* Update statistics */
+  
+               if(error == 0)
+               {
+                   tracker = FindTypeStats(LIBBASE, unit, &unit->pcnu_type_trackers,
+                       request->ios2_PacketType);
+                   if(tracker != NULL)
+                   {
+                       tracker->stats.PacketsSent++;
+                       tracker->stats.BytesSent += packet_size;
+                   }
+               }
+               try_count=0;
             }
-
-            /* Reply packet */
-
-            request->ios2_Req.io_Error = error;
-            request->ios2_WireError = wire_error;
-            Disable();
-            Remove((APTR)request);
-            Enable();
-            ReplyMsg((APTR)request);
-
-            /* Update statistics */
-
-            if(error == 0)
+            np->next_tx++;
+            try_count++;
+            
+            /* 
+             * If we've just run out of free space on the TX queue, stop
+             * it and give up pushing further frames
+             */
+            if ( (try_count + 1) >= TX_RING_SIZE)
             {
-                tracker = FindTypeStats(LIBBASE, unit, &unit->pcnu_type_trackers,
-                    request->ios2_PacketType);
-                if(tracker != NULL)
-                {
-                    tracker->stats.PacketsSent++;
-                    tracker->stats.BytesSent += packet_size;
-                }
-            }	
+D(bug("%s: output queue full!. Stopping [count = %d, TX_RING_SIZE = %d\n", unit->pcnu_name, try_count, TX_RING_SIZE));
+               netif_stop_queue(unit);
+               proceed = FALSE;
+            }
         }
     }
 

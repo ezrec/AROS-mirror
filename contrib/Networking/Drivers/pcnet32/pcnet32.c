@@ -49,7 +49,6 @@
 
 #include "pcnet32.h"
 #include "unit.h"
-#include <aros/debug.h>
 #include LC_LIBDEFS_FILE
 
 /* A bit fixed linux stuff here :) */
