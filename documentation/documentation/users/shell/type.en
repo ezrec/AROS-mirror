@@ -1,0 +1,57 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <status>`_ `Next <unalias>`_ 
+
+---------------
+
+
+====
+Type
+====
+
+Synopsis
+~~~~~~~~
+::
+
+
+     FROM/A/M,TO/K,OPT/K,HEX/S,NUMBER/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Displays content of a file
+     
+
+Inputs
+~~~~~~
+::
+
+
+     FROM   -- one or more files to display
+     TO     -- print output to file
+     OPT    -- H or N (see HEX or NUMBER)
+     HEX    -- displays output in hexadecimal format
+     NUMBER -- the lines are numbered
+               HEX and NUMBER are mutually exclusive
+
+
+Example
+~~~~~~~
+::
+
+
+     type abc.txt
+     type xyz.dat hex
+     
+

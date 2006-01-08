@@ -1,0 +1,52 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <unsetenv>`_ `Next <wait>`_ 
+
+---------------
+
+
+=======
+Version
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+
+     NAME/M,MD5SUM/S,VERSION/N,REVISION/N,FILE/S,FULL/S,RES/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Prints or checks the version and revision information of a file, library or device.
+       
+
+Inputs
+~~~~~~
+::
+
+
+     NAME      -- name of file, library or device to check. If not given it
+                  prints version and revision of Kickstart.
+     MD5SUM    -- #FIXME what is that?
+     VERSION   -- checks for version and returns error code 5 (warn) if the
+                  version of the file is lower.
+     REVISION  -- checks for revision and returns error code 5 (warn) if the
+                  revision of the file is lower.
+     FILE      -- reads from file and ignores currently loaded libraries and devices
+     FULL      -- prints additional information
+     RES       -- gets version of resident commands
+     
+

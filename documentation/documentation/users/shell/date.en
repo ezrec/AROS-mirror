@@ -1,0 +1,57 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <copy>`_ `Next <delete>`_ 
+
+---------------
+
+
+====
+Date
+====
+
+Synopsis
+~~~~~~~~
+::
+
+
+     DAY,DATE,TIME,TO=VER/K
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Displays or sets the system date and/or time.
+
+
+Inputs
+~~~~~~
+::
+
+
+     DAY  -- sets date by name (monday, tuesday, ... , tomorrow, yesterday)
+     DATE -- sets date in format DD-MMM-YY.
+             For MMM either the number or the first 3 letters of the
+             month in English        
+     TIME -- sets time in format HH:MM:SS
+     TO   -- output is sent to file          
+
+
+Example
+~~~~~~~
+::
+
+
+     date 2-feb-06
+     date 21:10
+
+

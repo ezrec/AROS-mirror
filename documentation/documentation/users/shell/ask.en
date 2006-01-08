@@ -1,0 +1,52 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <alias>`_ `Next <assign>`_ 
+
+---------------
+
+
+===
+Ask
+===
+
+Synopsis
+~~~~~~~~
+::
+
+
+     PROMPT/A
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Prompts the user for an input. Possible inputs are y for yes
+     and n or Return for no. Selecting y sets the return code to 5.
+
+
+Inputs
+~~~~~~
+::
+
+
+     PROMPT -- the string is displayed in the window
+
+
+See also
+~~~~~~~~
+::
+
+     
+     RequestChoice
+     
+

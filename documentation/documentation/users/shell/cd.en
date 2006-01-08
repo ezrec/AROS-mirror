@@ -1,0 +1,44 @@
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <break>`_ `Next <changetaskpri>`_ 
+
+---------------
+
+
+==
+CD
+==
+
+Synopsis
+~~~~~~~~
+::
+
+
+     DIR
+
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C/
+        
+
+Function
+~~~~~~~~
+::
+
+
+     Without argument it shows the name of the current directory.
+     With argument it changes the current directory.
+     
+
+Inputs
+~~~~~~
+::
+
+
+     DIR -- path to change to current directory
+
+
