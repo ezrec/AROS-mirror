@@ -1,18 +1,18 @@
-`Index <index>`_
-
--------------
-
 ==========================
 Introduction to AROS Shell
 ==========================
 
 :Authors:   Matthias Rustler 
 :Copyright: Copyright © 2006, The AROS Development Team
-:Version:   $Revision: $
-:Date:      $Date: $
-:Status:    First attempt
-:Abstract:
-    This manual shows the usage of AROS with the Shell.
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Draft
+
+-------------
+
+`Index <index>`_
+
+-------------
 
 AROS has a command line interface, the 'Shell'. 
 You can start it with menu Wanderer>Shell. A window
@@ -22,28 +22,34 @@ normally shows the the number of the Shell and the current path.
 The Shell has a history. You can access it with cursor up
 and down keys.
 
+There is a completion feature. If you type the first letters of a command
+or a file name and press the tabulator key, the Shell searches for a matching
+name. If there are more possibilties a window will be opened where you can
+select an entry.
+
 AROS commands and file names are case insensitiv. You can even use
 mixed case.
 
 AROS searches commands in the current directory and in the search path.
-You can view and change the search path with the 'path' command.
+You can view and change the search path with the `path <path>`_ command.
 
 Some important commands
 -----------------------
-+ CD -- change directory
-+ DIR -- shows content of directory
-+ COPY -- copy files
-+ DELETE -- delete files and directories
-+ INFO -- shows available drives
-+ MAKEDIR -- create directory
-+ RENAME -- rename files
-+ TYPE -- show content of text file
++ `CD <cd>`_ -- changes directory
++ `DIR <dir>`_ -- shows content of directory
++ `COPY <copy>`_ -- copies files and directories
++ `DELETE <delete>`_ -- deletes files and directories
++ `INFO <info>`_ -- shows available drives
++ `MAKEDIR <makedir>`_ -- creates directory
++ `RENAME <rename>`_ -- renames files and directories
++ `TYPE <type>`_ -- show content of text file
 
 Path
 ----
 Absolute paths start with the drive name and a colon (:),
 directories are separated with a slash (/). 
-The drive name can be a device name or a logical drive (see 'assign' command)
+The drive name can be a device name (dh0:), a volume name (workbench:)
+or a logical drive (see `assign <assign>`_ command)
 
 ::
   
@@ -62,7 +68,7 @@ directory of the given path.
 A slash at the beginning of a path means: go one level up. Two slashes mean go two
 levels up and so on.
 
-When a path contains spaces it must be written within quote chars.
+When a path contains spaces it must be written within double quote characters.
 
 ::
 
@@ -70,7 +76,8 @@ When a path contains spaces it must be written within quote chars.
 
 Command template
 ----------------
-A question mark after the command shows the parameter template of the command
+A question mark after the command shows the parameter template of the command. The
+command is then in a mode where it waits for you to type in the parameters.
 
 ::
 
@@ -120,10 +127,29 @@ Redirection
   < redirects input from file or device
   Example: dir >ram:a 
 
+Pipe
+----
+If you want to forward the output of a command to another command you can use
+the pipe. You have to connect the commands with a \| character. There must be
+at least one space before and after the \|::
+
+  Example: dir | othercommand
+  
+But what if the second command wants to read the input from a file? The solution
+is to use the fake device 'in:'::
+
+  Example: dir | more in:  
+
+Special devices
+---------------
++ ram: you can use the ram disk like a hard drive. But after a reset its content is lost. 
++ nil: if you don't want the messages of a command to be displayed in the window you
+  can use the 'nil:' device. Example: delete #? >nil:
+
 Running in background
 ---------------------
 Normally, a command blocks the Shell until it is finished. You can run
-commands in the background with the 'run' command.
+commands in the background with the `run <run>`_ command.
 
 ::
 
