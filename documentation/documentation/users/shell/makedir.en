@@ -39,6 +39,7 @@ Inputs
 
 
      NAME  --  names of the directories that should be created
+     ALL   --  creates intermediate directories
 
 
 Notes

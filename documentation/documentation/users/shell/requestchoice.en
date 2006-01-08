@@ -95,6 +95,6 @@ See also
 ::
 
 
-     EasyRequest(), EasyRequestArgs()
+     intuition.library/EasyRequest(), intuition.library/EasyRequestArgs()
 
 

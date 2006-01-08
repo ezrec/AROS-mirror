@@ -95,6 +95,6 @@ See also
 ::
 
 
-     SetComment()
+     dos.library/SetComment()
 
 
