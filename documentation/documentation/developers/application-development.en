@@ -124,7 +124,7 @@ Below is an AROS program that shows a "Hello, World!" message - a programmer's
 tradition since ages. But to keep up the Amiga spirit, this message won't show
 up on the command line, but as the title of a window instead.
 
-(LINK TO HELLOWORLD.C)
+`helloworld.c <samplecode/helloworld.c>`_
 
 The first thing you will have to do in an AROS program, is #include the
 necessary header files. These header files contain specifications for the
