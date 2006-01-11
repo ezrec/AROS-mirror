@@ -886,7 +886,7 @@ class HTMLTranslator(nodes.NodeVisitor):
             if ':' not in href:
                 # This is a relative URL, so we assume we want to mangle it. :-)
                 words = href.split( '#' )
-                if not words[0].endswith( suffix ) and not words[0].endswith( '/' ):
+                if not ('.' in words[0] or words[0].endswith( '/' )):
                     # It doesn't have the correct suffix...
                     words[0] = words[0] + suffix
                 
