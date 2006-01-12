@@ -1,10 +1,8 @@
-## version $VER: ahiprefs.catalog 4.6 (4.8.2004)
+## version $VER: ahiprefs.catalog 4.7 (11.01.2006)
 ## language français
 ## codeset 0
 ;
 ## chunk AUTH Translated by Stéphane Barbaray <opty@club-internet.fr>
-;#language english
-;#version 4
 ;
 ;    AHI - Hardware independent audio subsystem
 ;    Copyright (C) 1996-2005 Martin Blom <martin@blom.org>
@@ -39,7 +37,7 @@ S\000Sauver en...
 ; A\000Save As...
 ;
 msgItemAbout
-?\000A propos...
+?\000À propos...
 ; ?\000About...
 ;
 msgItemQuit
@@ -47,7 +45,7 @@ Q\000Quitter
 ; Q\000Quit
 ;
 msgMenuEdit
-\000Editer
+\000Éditer
 ; \000Edit
 ;
 msgItemDefaults
@@ -67,7 +65,7 @@ msgMenuSettings
 ; \000Settings
 ;
 msgItemCreateIcons
-I\000Créer des Icones?
+I\000Créer des Icônes?
 ; I\000Create Icons?
 ;
 msgMenuHelp
@@ -99,7 +97,7 @@ Préférences avancées
 ; *** The units ***
 ;
 msgUnitDevice
-Unitée %ld
+Unité %ld
 ; Unit %ld
 ;
 msgUnitMusic
@@ -186,7 +184,7 @@ Mode _Déboggue
 ; _Debug level
 ;
 msgGlobOptEcho
-_Echo
+_Écho
 ; _Echo
 ;
 msgGlobOptSurround
@@ -287,66 +285,66 @@ Incapable d'ouvrir `%s´ version %ld.
 ; *** Additions
 ;
 msgGlobOptMasterVol
-
+Volume
 ; _Master volume
 ;
 msgMVNoClip
-
+Sans clipping
 ; Without clipping
 ;
 msgMVClip
-
+Avec clipping
 ; With clipping
 ;
 msgGlobOptACTime
-
+Délai anti-clic par défaut
 ; Default anti-click time
 ;
 msgButtonPlay
-
+Tester le son
 ; _Play a test sound
 ;
 msgOptScalemode
-
+Échelon de volume
 ; Volume sc_aling
 ;
 msgSMFixedSafe
-
+Sûr
 ; Safe
 ;
 msgSMDynSafe
-
+Sûr, dynamique
 ; Safe, dynamic
 ;
 msgSM0dB
-
+Volume maximum
 ; Full volume
 ;
 msgSM3dB
-
+-3 dB
 ; -3 dB
 ;
 msgSM6dB
-
+-6 db
 ; -6 dB
 ;
 msgFreqFmt
-
+%ld Hz
 ; %ld Hz
 ;
 msgChanFmt
-
+%ld
 ; %ld
 ;
 msgVolFmt
-
+%+4.1f db
 ; %+4.1f dB
 ;
 msgACTimeFmt
-
+%ld ms
 ; %ld ms
 ;
 msgPercentFmt
-
+%ld%%
 ; %ld%%
 ;
