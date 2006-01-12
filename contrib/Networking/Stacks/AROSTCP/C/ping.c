@@ -323,9 +323,9 @@ int interval = 1;		/* interval between packets */
 
 /* timing */
 int timing;			/* flag to do timing */
-long tmin = LONG_MAX;		/* minimum round trip time */
-long tmax;			/* maximum round trip time */
-u_long tsum;			/* sum of all times, for doing average */
+unsigned long tmin = LONG_MAX;		/* minimum round trip time */
+unsigned long tmax;			/* maximum round trip time */
+unsigned long tsum;			/* sum of all times, for doing average */
 
 char *pr_addr(u_long l);
 void catcher(void), pinger(void), finish(void), usage(void);
