@@ -4,6 +4,10 @@
 #include "library.h"
 #include "DriverData.h"
 
+#define AHI_AROSQUIET
+#define DEBUG 1
+#include <aros/debug.h>
+
 /******************************************************************************
 ** Custom driver init *********************************************************
 ******************************************************************************/
@@ -17,7 +21,11 @@ DriverInit( struct DriverBase* AHIsubBase )
 
   if( DOSBase == NULL )
   {
+#ifndef AHI_AROSQUIET
     Req( "Unable to open 'dos.library' version 37.\n" );
+#else
+    D(bug("Unable to open 'dos.library' version 37.\n" ));
+#endif
     return FALSE;
   }
 
@@ -25,7 +33,9 @@ DriverInit( struct DriverBase* AHIsubBase )
 
   if( OSSBase == NULL )
   {
+#ifndef AHI_AROSQUIET
     Req( "Unable to open 'oss.library'.\n" );
+#endif
     return FALSE;
   }
   
@@ -35,7 +45,11 @@ DriverInit( struct DriverBase* AHIsubBase )
 
   if( ! OSS_Open( "/dev/dsp", FALSE, TRUE, FALSE ) )
   {
+#ifndef AHI_AROSQUIET
     Req( "No sound card present.\n" );
+#else
+    D(bug( "No sound card present.\n" ));
+#endif
     return FALSE;
   }
 
