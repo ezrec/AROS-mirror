@@ -693,6 +693,7 @@ BOOL BuildGUI(char *screenname)
     MUIA_Application_Version, Version,
     MUIA_Application_Copyright, "©1996-2005 Martin Blom",
     MUIA_Application_Author, "Stéphane Barbaray/Martin Blom",
+    MUIA_Application_Description, (char *) msgTextProgramName,
     MUIA_Application_Base, "AHI",
     MUIA_Application_HelpFile, HELPFILE,
     MUIA_Application_Menustrip, MUIMenu = MUI_MakeObject(MUIO_MenustripNM,Menus,0),
