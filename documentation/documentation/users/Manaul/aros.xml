@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+<!DOCTYPE package
+  PUBLIC "+//ISBN 0-9673008-1-9//DTD OEB 1.0 Package//EN"
+  "http://openebook.org/dtds/oeb-1.0/oebpkg1.dtd">
+-->
+<!--=================================================================-->
+
+<package unique-identifier="AROS-end-user-manual"
+         xmlns="http://openebook.org/namespaces/oeb-package/1.0/">
+
+<metadata> 
+	<dc-metadata xmlns:dc="http://purl.org/metadata/dublin_core"
+ xmlns:oebpackage="http://openebook.org/namespaces/oeb-package/1.0/">
+		<dc:Identifier id="AROS-end_user_manual">AROS: End_user Manual</dc:Identifier>
+		<dc:Title>AROS: End User manual</dc:Title>
+		<dc:Creator role="aut" file-as="AROS">AROS</dc:Creator>
+		<dc:Language>en-us</dc:Language>
+		<dc:Subject>Computing, AROS, OS</dc:Subject>
+		<dc:Description>AROS's User Manual</dc:Description>
+		<dc:Publisher>N/A</dc:Publisher>
+		<dc:Contributor>AROS</dc:Contributor>
+		<dc:Date></dc:Date>
+		<dc:Type> Text </dc:Type>
+		<dc:Format></dc:Format>
+		<dc:Source></dc:Source>
+		<dc:Relation></dc:Relation>
+		<dc:Coverage></dc:Coverage>
+		<dc:Rights>AROS</dc:Rights>
+	</dc-metadata>
+	<x-metadata>
+		<meta name="AROS_front_cover" content="images/front_cover.png" fallback="image/jpeg" />
+	</x-metadata>
+</metadata>
+<!--=================================================================-->
+
+<manifest>
+<item id="unknown_type" href="unknown.htm" media-type="text/x-oeb1-document" />
+<item id="content" href="index.html" media-type="text/x-oeb1-document" />
+
+
+<!-- other media -->
+<item id="AROS" href="images/AROS.png" media-type="images/png" />
+<item id="AROS_text" href="images/aros_text.png" media-type="images/png" />
+</manifest>
+
+<!--=================================================================-->
+
+<spine>
+<itemref idref="content" />
+</spine>
+
+</package>
