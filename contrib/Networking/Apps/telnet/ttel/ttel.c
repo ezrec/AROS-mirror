@@ -39,11 +39,20 @@
  * 2003-01-13  fitz          More explicit masking on echo_hex()
  * 2003-01-07  fitz          Initial version.
  * ---------------------------------------------------------------------------------- */
-
+#ifdef __AROS__
+#include <bsdsocket.h>
+#include <termcap.h>
+#include <dos/dos.h>
+#include <proto/exec.h>
+#include <errno.h>
+struct Library *SocketBase;
+#endif /* __AROS__ */
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#ifndef __AROS__
 #include <termios.h>
+#endif /* __AROS__ */
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -160,14 +169,20 @@ static void echo(const char ch)
 
 int main(int argc, char **argv)
 {
-
+#ifdef __AROS__
+  SocketBase = OpenLibrary("bsdsocket.library", 3);
+  if(SocketBase == NULL)
+    return RETURN_FAIL;
+  SetErrnoPtr(&errno, sizeof(errno));
+#endif /* __AROS__ */
     int                 retval   = -1;
     int                 convert_nl = 1;
     int                 sock;
     char                *msgp;
     struct sockaddr_in  inaddr;
+#ifndef __AROS__
     struct termios      save_termattr;
-
+#endif /* __AROS__ */
     inaddr.sin_family = AF_INET;
     inaddr.sin_addr.s_addr = htonl(0x7F000001); /* 127.0.0.1 */
 
@@ -274,6 +289,7 @@ int main(int argc, char **argv)
      * Step 2: Attempt to put the tty in raw character-by-character i/o mode
      */
     {
+#ifndef __AROS__ /* Our CLI can't do this stuff atm. */
         struct termios termattr;
 
         if (tcgetattr (STDIN_FILENO, &termattr) < 0)
@@ -296,12 +312,12 @@ int main(int argc, char **argv)
             err_printf("can't set tty info.\n");
             goto err_notty;
         }
+#endif /* __AROS__ */
     }
 
 #ifdef _DEBUG_TTEL
     err_printf ("DEBUG: TTY in raw mode. Attempting to connect to host.\r\n");
 #endif
-
     /*
      * Step 3: Attempt to connect to the remote ip address/port
      */
@@ -324,9 +340,6 @@ int main(int argc, char **argv)
     /*
      * Step 4: We're now connected and in raw tty i/o mode  - run the session
      */
-
-
-
     {
         int    pos = 0;
         int    keeppos = 0;
@@ -337,7 +350,6 @@ int main(int argc, char **argv)
         char   outbuf[OUTBUF_SIZE];
         char   inbuf[INBUF_SIZE];
         char   keepbuf[INBUF_SIZE];
-int y;
 
         while (1)
         {
@@ -359,16 +371,6 @@ int y;
                 for (i = 0; i < read_count; i++)
                 {
                     ch = inbuf[i];
-/*AROS*/
-  if ((atoi(ch) == 251) || (atoi(ch) == 252))     /* WILL or WONT */
-      y = (254);                          /* -> DONT */
-  if ((atoi(ch) == 251) || (atoi(ch)  == 252))     /* WILL or WONT */
-      y = 254;                          /* -> DONT */
-int vv;
-vv = itoa(y);
-write(sock,vv,1);
-
-
                     if (convert_nl)
                     {
                         if ((prev_ch == CR) && (ch != LF))
@@ -457,7 +459,9 @@ done:
 err:
     close(sock);
 err_nosock:
+#ifndef __AROS__ /* AROS cli can't do this yet. */
     tcsetattr (STDIN_FILENO, TCSAFLUSH, &save_termattr);
+#endif /* __AROS__ */
 err_notty:
     return (retval);
 
