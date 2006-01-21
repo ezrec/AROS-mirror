@@ -62,6 +62,7 @@ dos
 `FindSegment`_
 `FindVar`_
 `Flush`_
+`Format`_
 `FreeArgs`_
 `FreeDeviceProc`_
 `FreeDosEntry`_
@@ -1185,50 +1186,52 @@ Function
 ~~~~~~~~
 ::
 
- DateToStr converts an AmigaDOS DateStamp to a human
- readable ASCII string as requested by your settings in the
- DateTime structure.
+     DateToStr converts an AmigaDOS DateStamp to a human
+     readable ASCII string as requested by your settings in the
+     DateTime structure.
+
 
 Inputs
 ~~~~~~
 ::
 
- DateTime - a pointer to an initialized DateTime structure. The
- DateTime structure should be initialized as follows:
+     DateTime - a pointer to an initialized DateTime structure. The
+                DateTime structure should be initialized as follows:
 
- dat_Stamp:  The datestamp to convert to ascii
+             dat_Stamp: The datestamp to convert to ascii
 
- dat_Format:    How to convert the datestamp into
-                dat_StrDate. Can be any of the following:
+             dat_Format: How to convert the datestamp into
+                     dat_StrDate. Can be any of the following:
 
-        FORMAT_DOS: AmigaDOS format (dd-mmm-yy). This
-                    is the default if you specify something other
-                    than any entry in this list.
+                 FORMAT_DOS: AmigaDOS format (dd-mmm-yy). This
+                     is the default if you specify something other
+                     than any entry in this list.
 
-        FORMAT_INT: International format (yy-mmm-dd).
+                 FORMAT_INT: International format (yy-mmm-dd).
 
-        FORMAT_USA: American format (mm-dd-yy).
+                 FORMAT_USA: American format (mm-dd-yy).
 
-        FORMAT_CDN: Canadian format (dd-mm-yy).
+                 FORMAT_CDN: Canadian format (dd-mm-yy).
 
-        FORMAT_DEF: default format for locale.
+                 FORMAT_DEF default format for locale.
 
- dat_Flags: Modifies dat_Format. The only flag
-            used by this function is DTF_SUBST. If set, then
-            a string like "Today" or "Monday" is generated
-            instead of the normal format if possible.
 
- dat_StrDay:    Pointer to a buffer to receive the day of
-                the week string. (Monday, Tuesday, etc.). If null,
-                this string will not be generated.
+             dat_Flags: Modifies dat_Format. The only flag
+                     used by this function is DTF_SUBST. If set, then
+                     a string like "Today" or "Monday" is generated
+                     instead of the normal format if possible.
 
- dat_StrDate:   Pointer to a buffer to receive the date
-                string, in the format requested by dat_Format,
-                subject to possible modifications by DTF_SUBST. If
-                null, this string will not be generated.
+             dat_StrDay: Pointer to a buffer to receive the day of
+                     the week string. (Monday, Tuesday, etc.). If null,
+                     this string will not be generated.
 
- dat_StrTime:   Pointer to a buffer to receive the time
-                of day string. If NULL, this will not be generated.
+             dat_StrDate: Pointer to a buffer to receive the date
+                     string, in the format requested by dat_Format,
+                     subject to possible modifications by DTF_SUBST. If
+                     null, this string will not be generated.
+
+             dat_StrTime: Pointer to a buffer to receive the time
+                     of day string. If NULL, this will not be generated.
 
 
 
@@ -3997,13 +4000,6 @@ Result
      other = DOS error code
 
 
-Bugs
-~~~~
-::
-
-     Copying of the relative path to ap_Buf is not implemented yet
-
-
 See also
 ~~~~~~~~
 ::
@@ -6274,43 +6270,6 @@ Synopsis
          struct DateTime * datetime
  );
 
-Format
-~~~~~~
-::
-
-                         is the default if you specify something other
-                         than any entry in this list.
-
-
-
-
-
-                 \end{description}
-
-             \item{dat_Flags} Modifies dat_Format. The only flag
-                 used by this function is DTF_FUTURE. If set, then
-                 a string like "Monday" refers to the next monday.
-                 Otherwise it refers to the last monday.
-
-             \item{dat_StrDay} Ignored.
-
-             \item{dat_StrDate} Pointer to valid string representing the
-                     date. This can be a "DTF_SUBST" style string such
-                     as "Today" "Tomorrow" "Monday", or it may be a
-                     string as specified by the dat_Format byte. This
-                     will be converted to the ds_Days portion of the
-                     DateStamp. If this pointer is NULL,
-                     DateStamp->ds_Days will not be affected.
-
-             \item{dat_StrTime} Pointer to a buffer which contains the
-                     time in the ASCII format hh:mm:ss. This will be
-                     converted to the ds_Minutes and ds_Ticks portions
-                     of the DateStamp.  If this pointer is NULL,
-                     ds_Minutes and ds_Ticks will be unchanged.
-
-             \end{description}
-
-
 Function
 ~~~~~~~~
 ::
@@ -6326,13 +6285,46 @@ Inputs
      DateTime - a pointer to an initialized DateTime structure.
              The structure should be initialized as follows:
 
-             \begin{description}
-             \item{dat_Stamp} The converted date will be written here
+             dat_Stamp: The converted date will be written here
 
-             \item{dat_Format} How to convert the datestamp into
+             dat_Format: How to convert the datestamp into
                  dat_StrDate. Can be any of the following:
 
-                 \begin{description}
+                 FORMAT_DOS: AmigaDOS format (dd-mmm-yy). This
+                         is the default if you specify something other
+                         than any entry in this list.
+
+                 FORMAT_INT: International format (yy-mmm-dd).
+
+                 FORMAT_USA: American format (mm-dd-yy).
+
+                 FORMAT_CDN: Canadian format (dd-mm-yy).
+
+                 FORMAT_DEF: default format for locale.
+
+
+             dat_Flags: Modifies dat_Format. The only flag
+                     used by this function is DTF_FUTURE. If set, then
+                     a string like "Monday" refers to the next monday.
+                     Otherwise it refers to the last monday.
+
+             dat_StrDay: Ignored.
+
+             dat_StrDate: Pointer to valid string representing the
+                     date. This can be a "DTF_SUBST" style string such
+                     as "Today" "Tomorrow" "Monday", or it may be a
+                     string as specified by the dat_Format byte. This
+                     will be converted to the ds_Days portion of the
+                     DateStamp. If this pointer is NULL,
+                     DateStamp->ds_Days will not be affected.
+
+             dat_StrTime: Pointer to a buffer which contains the
+                     time in the ASCII format hh:mm:ss. This will be
+                     converted to the ds_Minutes and ds_Ticks portions
+                     of the DateStamp.  If this pointer is NULL,
+                     ds_Minutes and ds_Ticks will be unchanged.
+
+
 
 Result
 ~~~~~~

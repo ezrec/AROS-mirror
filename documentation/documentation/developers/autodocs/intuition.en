@@ -657,40 +657,41 @@ Function
 ~~~~~~~~
 ::
 
- Opens a requester, which provides one or more choices. The control is
- returned to the application after the requester was opened. It is
- handled by subsequent calls to SysReqHandler() and closed by calling
- FreeSysRequest().
+     Opens a requester, which provides one or more choices. The control is
+     returned to the application after the requester was opened. It is
+     handled by subsequent calls to SysReqHandler() and closed by calling
+     FreeSysRequest().
 
 
 Inputs
 ~~~~~~
 ::
 
- RefWindow - A reference window. If NULL, the requester opens on
-         the default public screen.
- easyStruct - The EasyStruct structure (<intuition/intuition.h>),
-          which describes the requester.
- IDCMP - IDCMP flags, which should satisfy the requester, too. This is
-     useful for requesters, which want to listen to disk changes,
-     etc. Note that this is not a pointer to the flags as in
-     EasyRequestArgs().
- Args - The arguments for easyStruct->es_TextFormat.
+     RefWindow - A reference window. If NULL, the requester opens on
+                 the default public screen.
+     easyStruct - The EasyStruct structure (<intuition/intuition.h>),
+                  which describes the requester.
+     IDCMP - IDCMP flags, which should satisfy the requester, too. This is
+             useful for requesters, which want to listen to disk changes,
+             etc. Note that this is not a pointer to the flags as in
+             EasyRequestArgs().
+     Args - The arguments for easyStruct->es_TextFormat.
 
 
 Result
 ~~~~~~
 ::
 
- Returns a pointer to the requester. Use this pointer only for calls
- to SysReqHandler() and FreeSysRequest().
+     Returns a pointer to the requester. Use this pointer only for calls
+     to SysReqHandler() and FreeSysRequest().
 
 
 See also
 ~~~~~~~~
 ::
 
- EasyRequestArgs(), SysReqHandler(), FreeSysRequest()
+     EasyRequestArgs(), SysReqHandler(), FreeSysRequest()
+
 
 
 BuildSysRequest
@@ -714,20 +715,20 @@ Inputs
 ~~~~~~
 ::
 
- window - The window in which the requester will appear
- bodytext - The Text to be shown in the body of the requester
- postext - The Text to be shown in the positive choice gadget
- negtext - The Text to be shown in the negative choice gadget
- IDCMPFlags - The IDCMP Flags for this requester
- width, height - The dimensions of the requester
+     window - The window in which the requester will appear
+     bodytext - The Text to be shown in the body of the requester
+     postext - The Text to be shown in the positive choice gadget
+     negtext - The Text to be shown in the negative choice gadget
+     IDCMPFlags - The IDCMP Flags for this requester
+     width, height - The dimensions of the requester
 
 
 See also
 ~~~~~~~~
 ::
 
- FreeSysRequest(), DisplayAlert(), ModifyIDCMP(), exec-library/Wait(),
- Request(), AutoRequest(), EasyRequest(), BuildEasyRequestArgs()
+     FreeSysRequest(), DisplayAlert(), ModifyIDCMP(), exec-library/Wait(),
+     Request(), AutoRequest(), EasyRequest(), BuildEasyRequestArgs()
 
 
 
@@ -4062,7 +4063,6 @@ Synopsis
  void RefreshWindowFrame(
          struct Window * window
  );
-
 
 
 ReleaseGIRPort

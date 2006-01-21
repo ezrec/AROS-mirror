@@ -477,7 +477,8 @@ Inputs
 ~~~~~~
 ::
 
-     gad -     the gadget from which to get attributes
+     gad -     the gadget from which to get attributes.
+               may be null. if so, this function returns 0.
      win -     the window, in which the gadget is
      req -     the requester, in which the gadget is, or NULL
      taglist - the list of attributes to get. ti_Tag specifies the attribute
@@ -674,6 +675,7 @@ Inputs
 ::
 
      gad -     Gadget, for which the specified attributes should be set for.
+               May be be NULL. If so this functions does nothing.
      win -     Window, in which the gadget is.
      req -     Not used. Specify NULL for now.
      tagList - List of attributes to set.
