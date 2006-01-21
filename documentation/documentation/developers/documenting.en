@@ -2,8 +2,8 @@
 AROS Documentation Manual
 =========================
 
-:Authors:   Adam Chodorowski 
-:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Authors:   Adam Chodorowski, Matthias Rustler 
+:Copyright: Copyright © 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Work in progress.
@@ -26,16 +26,14 @@ follow when writing documentation for AROS.
 .. Contents::
 
 
-------------
 Introduction
-------------
+============
 
 FIXME: Write.
 
 
----------------------
 Writing documentation
----------------------
+=====================
 
 The documentation format we use is reStructuredText (or ReST for short) as
 specified by the `Docutils Project`__. ReST is an easy to read and write,
@@ -61,12 +59,67 @@ __ http://docutils.sourceforge.net/spec/rst/introduction.html
 __ http://docutils.sourceforge.net/docs/rst/quickstart.html
 __ http://docutils.sourceforge.net/docs/rst/quickref.html
 
----------------
+The documentation archive
+-------------------------
+
+In order to change or write documentation you need a checkout of the
+`subversion archive <svn>`_ 'documentation'. The archive contains:
+
++ some common documents like contact.en, credits.en, links.en etc.
++ a directory 'documentation' with user and developer documentation
++ a directory 'scripts' with the scripts which are used to build
+  the HTML and WWW targets
++ ...
+
+.. Note::
+    
+    Both the subversion archive and the directory with the user and developer
+    manuals have the name 'documentation'. Don't mix them.
+    
+Subdirectories
+--------------
+
+You can create additional directories in 'documentation/users' and
+'documentation/developers'. The build system scans recursivly the subdirectories.
+It is recommended that you create a file 'index.en' in the new directories. 
+
+Internationalisation
+--------------------
+
+The build system is prepared to support I18n. You have to append a
+language shortcut to the document file name (e.g. commands.en).
+Currently there is only support for English (.en). When you create
+a link to a document you have to omit the shortcut (e.g \`Commands <user/commands>\`_).
+
+Sample code
+-----------
+
+The directory 'documentation/developers/samplecode' is for source code examples.
+The content is copied unmodified to the targets.
+ 
+Pictures
+--------
+
+The names and paths of the pictures are hard-coded in the python script
+'buildit.py'. If you want to add pictures you have to change the script.
+Feel free to make a feature request in the developer mailing list if 
+you want this to be changed.
+
+Checkin
+-------
+
+Before you checkin the new or modified documents you should `build`__ both the
+HTML and WWW targets locally. Look for error messages and fix them. Check the
+result in a web browser. Normally, the changes are applied to http://www.aros.org
+within some hours after a checkin.
+
+__ building_
+ 
 Technical notes
----------------
+===============
 
 Databases
-=========
+---------
 
 There are several small databases, which you can find in the ``db`` directory,
 all of which are plain text files but using a couple of slightly different
@@ -75,7 +128,7 @@ the future, but for now it's easiest to keep them as-is.
 
 
 Sizes
------
+~~~~~
 
 The files ``aros.size`` and ``contrib.size`` contain size measurements of the
 main AROS and contrib sources in SVN, respectively. The sizes are sampled
@@ -97,28 +150,28 @@ ignored.
     
 
 Credits
--------
+~~~~~~~
 
 FIXME: Write
 
 
 Mirrors
--------
+~~~~~~~
 
 FIXME: Write
 
 
 Tasks
------
+~~~~~
 
 FIXME: Write
 
 
 Building
-========
+--------
 
 Requirements
-------------
+~~~~~~~~~~~~
 
 You will need the following to build the AROS documentation from scratch:
 
@@ -133,7 +186,7 @@ __ http://www.pythonware.com/products/pil/
 
 
 Setting up
-----------
+~~~~~~~~~~
 
 Before you can start building the documentation, there might be some setup
 required if the needed version of the Python interpreter is not named "python"
@@ -155,7 +208,7 @@ it to ``python2`` or ``python2.2`` on some systems.
 
 
 Targets
--------
+~~~~~~~
 
 There are currently two targets supported: 
 
@@ -172,7 +225,7 @@ There are currently two targets supported:
 
 
 Procedure
----------
+~~~~~~~~~
 
 To build a specific target, simply invoke the build script with the target name
 as the first argument. The current directory needs to be the root of the
@@ -197,4 +250,3 @@ directory.
     directories, so you cannot put it on a read-only filesystem. If you have
     checked out the sources from SVN there's no need to worry: the generated
     files are ignored as appropriate.
-
