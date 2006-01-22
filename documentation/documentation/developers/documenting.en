@@ -105,15 +105,16 @@ The names and paths of the pictures are hard-coded in the python script
 Feel free to make a feature request in the developer mailing list if 
 you want this to be changed.
 
-Checkin
+Commit
 -------
 
-Before you checkin the new or modified documents you should `build`__ both the
+Before you commit the new or modified documents you should `build`__ both the
 HTML and WWW targets locally. Look for error messages and fix them. Check the
 result in a web browser. Normally, the changes are applied to http://www.aros.org
-within some hours after a checkin.
+within some hours after a commit.
 
 __ building_
+
  
 Technical notes
 ===============
@@ -127,44 +128,41 @@ formats. This is mostly a historical artifact and should perhaps be rectified in
 the future, but for now it's easiest to keep them as-is. 
 
 
+credits
+~~~~~~~
+
+This is a list of people which have contributed to AROS. The build system first
+creates the file 'credits.en'. This file is used for both WWW and HTML
+target. Please note, that you also have to change the file
+workbench/system/AboutAROS/db/credits in the AROS repository.
+
+
+quotes
+~~~~~~
+
+Remarkable quotes of AROS celebrities. The format is spell;author. The build
+system copies this file to the WWW target.
+
+
+mirrors
+~~~~~~~
+
+Since AROS is hosted on Sourceforge there arent't any mirrors. This file
+is ignored by the build system.
+
+
+tasks
+~~~~~
+
+TODO database. This file hasn't been maintained for a long time and isn't
+used for the targets.
+
+
 Sizes
 ~~~~~
 
-The files ``aros.size`` and ``contrib.size`` contain size measurements of the
-main AROS and contrib sources in SVN, respectively. The sizes are sampled
-periodically and added to these databases, which are then used to generate some
-nice graphs.
-
-Each line into three whitespace separated fields: date, size in kB and directory
-(in that order). The directory part is basically redundant information and can be
-ignored.
-
-.. Note::
-
-    The sizes are sampled using the UNIX "du" program. This means that they
-    can be slightly misleading since "du" measures "disk usage" and not "total
-    file size", which means that it counts the number of blocks used on the
-    filesystem for any particular file and not the amount of data it contains.
-    So if there is a file that is 66 bytes long and the block size of the file
-    system is 4096 bytes, "du" will report 4096 bytes.
-    
-
-Credits
-~~~~~~~
-
-FIXME: Write
-
-
-Mirrors
-~~~~~~~
-
-FIXME: Write
-
-
-Tasks
-~~~~~
-
-FIXME: Write
+The files ``aros.size`` and ``contrib.size`` aren't used anymore and will
+probably be deleted.
 
 
 Building
