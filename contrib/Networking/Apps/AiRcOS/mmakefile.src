@@ -1,0 +1,19 @@
+# $Id: mmakefile.src,v 1.1 2005/01/04 03:29:51 nicja Exp $
+#
+# Makefile for AiRcOS Internet Relay Chat
+
+include $(TOP)/config/make.cfg
+
+FILES  := aircos_main aircos_gui aircos_server_gui aircos_funcs_irc aircos_funcs_dcc
+
+EXEDIR := $(CONTRIBDIR)/Networking/Apps/AiRcOS
+
+USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -I $(TOP)/contrib/Networking/Stacks/AROSTCP/netinclude
+
+#MM aros-tcpip-apps-aircos : aros-tcpip aircos-gadgets includes linklibs
+
+%build_prog mmake=aros-tcpip-apps-aircos \
+    progname=AiRcOS targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="mui arossupport amiga arosc"
+
+%common
