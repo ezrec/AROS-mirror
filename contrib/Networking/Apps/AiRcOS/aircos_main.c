@@ -432,9 +432,9 @@ D(bug("[AiRcOS](serverconnect_func) Socket connection failed\n"));
 		dtest_connection = NULL;
 	}
 	
-//	if (dtest_connection) AddTail((struct List *)&aircos_looseconnectionlist,(struct Node *) &dtest_connection->connection_node);
+	if (dtest_connection) AddTail((struct List *)&AiRcOS_Base->aircos_looseconnectionlist,(struct Node *) &dtest_connection->connection_node);
 
-	AiRcOS_Base->temp_process_thisConnection = dtest_connection;   set(AiRcOS_Base->butt_connectServer,MUIA_Disabled,FALSE);
+//	AiRcOS_Base->temp_process_thisConnection = dtest_connection;   set(AiRcOS_Base->butt_connectServer,MUIA_Disabled,FALSE);
 
 	AROS_USERFUNC_EXIT
 };
@@ -472,93 +472,101 @@ D(bug("[AiRcOS] aircos_MainProcessLoop()\n"));
 				ULONG mask = sigs | SIGBREAKF_CTRL_C | SIGBREAKF_CTRL_D | (1<<AiRcOS_Base->Ai_sigbit_ProcessStack);
 				int sel_sock;
 
-            struct IRC_Connection_Private	*process_thisConnection = AiRcOS_Base->temp_process_thisConnection;
+            struct IRC_Connection_Private	*process_thisConnection = NULL;
+            int   connection_Count = 0;
 
-				if (process_thisConnection)
+   			FD_ZERO(&AiRcOS_Base->Ai_readfs);
+            ForeachNode(&AiRcOS_Base->aircos_looseconnectionlist, process_thisConnection)
+            {
+               FD_SET(process_thisConnection->connection_socket, &AiRcOS_Base->Ai_readfs);
+               connection_Count++;
+            }
+
+				if (connection_Count > 0)
 				{
 //D(bug("[AiRcOS](MPL) Use WaitSelect ..\n"));
-					FD_ZERO(&AiRcOS_Base->Ai_readfs);
-					FD_SET(process_thisConnection->connection_socket, &AiRcOS_Base->Ai_readfs);
 					sel_sock = WaitSelect(process_thisConnection->connection_socket+1, &AiRcOS_Base->Ai_readfs, NULL, NULL, NULL, &mask);
 					if (sel_sock > 0)
 					{
-						if (FD_ISSET(process_thisConnection->connection_socket, &AiRcOS_Base->Ai_readfs))
-						{
-//D(bug("[AiRcOS](MPL) Recieved signal from stack ..\n"));
-						   char *tmpbuff = NULL,*tmpunprocbuff=NULL;
-						   UWORD	tmpbuff_currpos=0;
-    					   int count, i;
-    					   BOOL processed = FALSE;
-
-                     if(process_thisConnection->connection_rawdata) CopyMem(process_thisConnection->connection_rawdata, process_thisConnection->connection_buff_recieve, process_thisConnection->connection_rawdata_length);
-
-    					   if ((count = recv(process_thisConnection->connection_socket,(process_thisConnection->connection_buff_recieve) + process_thisConnection->connection_rawdata_length , AIRCOS_MAXSERVERRESPONSE - process_thisConnection->connection_rawdata_length,0)) > 0)
+                  ForeachNode(&AiRcOS_Base->aircos_looseconnectionlist, process_thisConnection)
+                  {
+   						if (FD_ISSET(process_thisConnection->connection_socket, &AiRcOS_Base->Ai_readfs))
 						   {
-						   
-                        if(process_thisConnection->connection_rawdata)
-                        {
-                           FreeVec(process_thisConnection->connection_rawdata);
-                           process_thisConnection->connection_rawdata_length = 0;
-                        }
-                     
-   						   if ((tmpbuff = AllocVec(count,MEMF_CLEAR)))
-   						   {
-D(bug("[AiRcOS](MPL) Processing server output (%d bytes)\n", count));
-	    					     for (i = 0; i < count; i++)
-							     {
-								      if (process_thisConnection->connection_buff_recieve[i] == '\n')
-								      {
-D(bug("\n[AiRcOS](MPL) Process server line (%d bytes)\n"));
-			    					      tmpbuff[tmpbuff_currpos] = '\0';
-			    					      processed = TRUE;
-			    					      if (!aircos_processServerData(process_thisConnection, tmpbuff))
-									      {
-D(bug("[AiRcOS](MPL) Response End/Error?\n"));
-//									    	    return 0;
-									      }
-D(bug("[AiRcOS](MPL)         '%s'\n",tmpbuff));
-									      tmpbuff_currpos=0;
-									      tmpunprocbuff=NULL;
-								      }
-								      else if (process_thisConnection->connection_buff_recieve[i] != '\r')
-								      {
-D(bug("."));
-			    					      tmpbuff[tmpbuff_currpos++] = process_thisConnection->connection_buff_recieve[i];
-								      }
-								      else 
-								      {
-D(bug("[AiRcOS](MPL) Response = r after %d bytes\n", i));
-//  		  					         return 1;
-                                 if ((count - i) > 1)
-                                 {
-                                    if (tmpunprocbuff==NULL)
-                                    {
-                                       tmpunprocbuff=&process_thisConnection->connection_buff_recieve[i]+1;
-                                       processed = FALSE;
-                                    }
-                                 }
-                              }
-							      }
-D(bug("[AiRcOS](MPL) Server output done\n"));
-                           if (!(processed))
+//D(bug("[AiRcOS](MPL) Recieved signal from stack ..\n"));
+						      char *tmpbuff = NULL,*tmpunprocbuff=NULL;
+						      UWORD	tmpbuff_currpos=0;
+    					      int count, i;
+    					      BOOL processed = FALSE;
+
+                        if(process_thisConnection->connection_rawdata) CopyMem(process_thisConnection->connection_rawdata, process_thisConnection->connection_buff_recieve, process_thisConnection->connection_rawdata_length);
+  
+       					   if ((count = recv(process_thisConnection->connection_socket,(process_thisConnection->connection_buff_recieve) + process_thisConnection->connection_rawdata_length , AIRCOS_MAXSERVERRESPONSE - process_thisConnection->connection_rawdata_length,0)) > 0)
+						      {
+                           if(process_thisConnection->connection_rawdata)
                            {
-                              if (tmpunprocbuff)
-                              {
-                                 process_thisConnection->connection_rawdata_length = (IPTR)&process_thisConnection->connection_buff_recieve[count] - (IPTR)tmpunprocbuff;
-                                 process_thisConnection->connection_rawdata = AllocVec(process_thisConnection->connection_rawdata_length, MEMF_CLEAR);
-                                 CopyMem(tmpunprocbuff, process_thisConnection->connection_rawdata, process_thisConnection->connection_rawdata_length);
-                              }
-                           }
-                           else
-                           {
-                              if (process_thisConnection->connection_rawdata) FreeVec(process_thisConnection->connection_rawdata);
-                              process_thisConnection->connection_rawdata = NULL;		
+                              FreeVec(process_thisConnection->connection_rawdata);
                               process_thisConnection->connection_rawdata_length = 0;
                            }
+                     
+   						      if ((tmpbuff = AllocVec(count,MEMF_CLEAR)))
+   						      {
+D(bug("[AiRcOS](MPL) Processing server output (%d bytes)\n", count));
+	    					        for (i = 0; i < count; i++)
+							        {
+								        if (process_thisConnection->connection_buff_recieve[i] == '\n')
+								        {
+D(bug("\n[AiRcOS](MPL) Process server line (%d bytes)\n"));
+			    					        tmpbuff[tmpbuff_currpos] = '\0';
+			    					        processed = TRUE;
+			    					        if (!aircos_processServerData(process_thisConnection, tmpbuff))
+									        {
+D(bug("[AiRcOS](MPL) Response End/Error?\n"));
+//									    	     return 0;
+									        }
+D(bug("[AiRcOS](MPL)         '%s'\n",tmpbuff));
+									        tmpbuff_currpos=0;
+									        tmpunprocbuff=NULL;
+								        }
+								        else if (process_thisConnection->connection_buff_recieve[i] != '\r')
+								        {
+D(bug("."));
+			    			  		        tmpbuff[tmpbuff_currpos++] = process_thisConnection->connection_buff_recieve[i];
+							  	        }
+							  	        else 
+							  	        {
+D(bug("[AiRcOS](MPL) Response = r after %d bytes\n", i));
+//  		  				   	        return 1;
+                                   if ((count - i) > 1)
+                                   {
+                                      if (tmpunprocbuff==NULL)
+                                      {
+                                          tmpunprocbuff=&process_thisConnection->connection_buff_recieve[i]+1;
+                                          processed = FALSE;
+                                      }
+                                   }
+                                }
+							        }
+D(bug("[AiRcOS](MPL) Server output done\n"));
+                              if (!(processed))
+                              {
+                                 if (tmpunprocbuff)
+                                 {
+                                    process_thisConnection->connection_rawdata_length = (IPTR)&process_thisConnection->connection_buff_recieve[count] - (IPTR)tmpunprocbuff;
+                                    process_thisConnection->connection_rawdata = AllocVec(process_thisConnection->connection_rawdata_length, MEMF_CLEAR);
+                                    CopyMem(tmpunprocbuff, process_thisConnection->connection_rawdata, process_thisConnection->connection_rawdata_length);
+                                 }
+                              }
+                              else
+                              {
+                                 if (process_thisConnection->connection_rawdata) FreeVec(process_thisConnection->connection_rawdata);
+                                 process_thisConnection->connection_rawdata = NULL;		
+                                 process_thisConnection->connection_rawdata_length = 0;
+                              }
+						         }
+						         FreeVec(tmpbuff);
 						      }
-						      FreeVec(tmpbuff);
 						   }
-						}			
+						}
 					}
 					else if (sel_sock < 0)
 					{
