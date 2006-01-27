@@ -408,7 +408,7 @@ D(bug("[AiRcOS](serverconnect_func) Failed to create connection page!!.\n"));
 D(bug("[AiRcOS](serverconnect_func) Socket connection successfull\n"));
       if (join_channel != "")
       {
-D(bug("[AiRcOS](serverconnect_func) Attempting to join channel #AROS ..\n"));
+D(bug("[AiRcOS](serverconnect_func) Attempting to join channel %s ..\n", join_channel));
 
 		   sprintf(dtest_connection->connection_buff_send, "JOIN %s\n", join_channel);
 		   aircos_sendline(dtest_connection);
@@ -470,22 +470,21 @@ D(bug("[AiRcOS] aircos_MainProcessLoop()\n"));
 	    	if (sigs)
 	    	{
 				ULONG mask = sigs | SIGBREAKF_CTRL_C | SIGBREAKF_CTRL_D | (1<<AiRcOS_Base->Ai_sigbit_ProcessStack);
-				int sel_sock;
-
+				int sel_sock, connection_Count = 0, highest_socket = 0;
             struct IRC_Connection_Private	*process_thisConnection = NULL;
-            int   connection_Count = 0;
 
    			FD_ZERO(&AiRcOS_Base->Ai_readfs);
             ForeachNode(&AiRcOS_Base->aircos_looseconnectionlist, process_thisConnection)
             {
                FD_SET(process_thisConnection->connection_socket, &AiRcOS_Base->Ai_readfs);
+               if (process_thisConnection->connection_socket > highest_socket) highest_socket = process_thisConnection->connection_socket;
                connection_Count++;
             }
 
 				if (connection_Count > 0)
 				{
 //D(bug("[AiRcOS](MPL) Use WaitSelect ..\n"));
-					sel_sock = WaitSelect(process_thisConnection->connection_socket+1, &AiRcOS_Base->Ai_readfs, NULL, NULL, NULL, &mask);
+					sel_sock = WaitSelect(highest_socket+1, &AiRcOS_Base->Ai_readfs, NULL, NULL, NULL, &mask);
 					if (sel_sock > 0)
 					{
                   ForeachNode(&AiRcOS_Base->aircos_looseconnectionlist, process_thisConnection)
@@ -588,6 +587,31 @@ D(bug("[AiRcOS](MPL) Application exiting ..\n"));
 		MUI_DisposeObject(AiRcOS_Base->aircos_app);
 }
 
+AROS_UFH3 ( void, menuprocess_func,
+	AROS_UFHA ( struct Hook*, h, A0 ),
+	AROS_UFHA ( APTR, obj, A2 ),
+	AROS_UFHA ( APTR, param, A1 )
+)
+{
+	AROS_USERFUNC_INIT
+
+D(bug("[AiRcOS] menuprocess_func()\n"));
+
+	switch ( *( int* )param )
+	{
+		case AiRcOS_MENUID_CONNECT:
+		   set(AiRcOS_Base->aircos_quickconnectwin,MUIA_Window_Open,TRUE);	
+			break;
+		
+		case AiRcOS_MENUID_QUIT:
+         set(AiRcOS_Base->aircos_clientwin, MUIA_Window_Open, FALSE);
+			break;
+			
+		default:
+			break;
+	}
+	AROS_USERFUNC_EXIT
+}
 
 //
 /* ************** MAIN/NORMAL PROGRAM ENTRY POINT *************** */
@@ -764,6 +788,9 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
 		MUIA_Application_Base,        (IPTR) "AiRcOS",
 
    	  SubWindow, (IPTR) AiRcOS_Base->aircos_clientwin = WindowObject,
+
+   			MUIA_Window_Menustrip,(IPTR) ( AiRcOS_Base->aircos_clientwin_menu = MUI_MakeObject(MUIO_MenustripNM, 
+   			                                                                     (IPTR)AiRcOs_Menus, (IPTR)NULL)),
         
             MUIA_Window_Title, (IPTR) "AiRcOS Internet Relay Chat..",
             MUIA_Window_Activate, TRUE,
@@ -843,7 +870,17 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
 
    if (AiRcOS_Base->aircos_app)
    {
-   
+
+   AiRcOS_Base->aircos_menuhook.h_MinNode.mln_Succ = NULL;
+   AiRcOS_Base->aircos_menuhook.h_MinNode.mln_Pred = NULL;
+   AiRcOS_Base->aircos_menuhook.h_Entry = HookEntry;
+   AiRcOS_Base->aircos_menuhook.h_SubEntry = (void *)menuprocess_func;
+
+	DoMethod (
+		AiRcOS_Base->aircos_clientwin, MUIM_Notify, MUIA_Window_MenuAction, MUIV_EveryTime,
+		( IPTR ) AiRcOS_Base->aircos_app, 3, MUIM_CallHook, ( IPTR )&AiRcOS_Base->aircos_menuhook, MUIV_EveryTime
+	);
+
    set(AiRcOS_Base->butt_connectServer, MUIA_CycleChain, 1);
 
    set( AiRcOS_Base->quickcon_servadd, MUIA_String_Contents, "chat.freenode.net");

@@ -202,6 +202,7 @@ struct AiRcOS_internal
 
    Object          *aircos_app;                    /* Main Application Object */
    Object          *aircos_clientwin;
+   Object          *aircos_clientwin_menu;
    Object          *aircos_window_content;         /* Main Group holding   All our "bits" */
    Object          *aircos_window_page;
    Object          *aircos_window_pagemd_grp;      /* Main Group holding All our "bits" */
@@ -224,7 +225,8 @@ struct AiRcOS_internal
 
    IPTR            aircos_serv_no;                 /* no of servers 'connected' */
    struct Hook     aircos_connect_hook;
-        
+   struct Hook     aircos_menuhook;
+
    BOOL            aircos_got_userimg;
    BOOL            aircos_got_speekimg;
    BOOL            aircos_got_fontbaimg;
@@ -242,6 +244,96 @@ struct AiRcOS_internal
 
 #define SocketBase AiRcOS_Base->Ai_SocketBase
 #define MUIMasterBase AiRcOS_Base->Ai_MUIMasterBase
+
+#define AiRcOS_MENUID (0x50505000)
+
+static struct NewMenu AiRcOs_Menus[] =
+{
+	{NM_TITLE, "Project"																                          },
+#define AiRcOS_MENUID_CONNECT          (AiRcOS_MENUID + 1)
+		{NM_ITEM, "Connect ..", 			"Ctrl C",		2, 0L, (APTR)AiRcOS_MENUID_CONNECT       },
+#define AiRcOS_MENUID_CLOSE            (AiRcOS_MENUID + 2)
+		{NM_ITEM, "Close connection",		"Ctrl X",		2, 0L, (APTR)AiRcOS_MENUID_CLOSE	        },
+#define AiRcOS_MENUID_QUIT             (AiRcOS_MENUID + 3)
+		{NM_ITEM, "Quit", 				   "Ctrl Q",		2, 0L, (APTR)AiRcOS_MENUID_QUIT	        },
+	{NM_TITLE, "Settings"															                          },
+#define AiRcOS_MENUID_PREFS            (AiRcOS_MENUID + 4)
+		{NM_ITEM, "Application Options",	"Ctrl P", 		2, 0L, (APTR)AiRcOS_MENUID_PREFS         },
+#define AiRcOS_MENUID_SERVERMANAGE     (AiRcOS_MENUID + 1)
+		{NM_ITEM, "Server Manager",	   "Ctrl S", 		2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE  },
+	{NM_TITLE, "Help"															                                },
+#define AiRcOS_MENUID_HELP             (AiRcOS_MENUID + 5)
+		{NM_ITEM, "Application Help",	   "Ctrl H", 		2, 0L, (APTR)AiRcOS_MENUID_HELP	        },
+#define AiRcOS_MENUID_ABOUT            (AiRcOS_MENUID + 6)
+		{NM_ITEM, "About AiRcOS",	      "Ctrl A", 		2, 0L, (APTR)AiRcOS_MENUID_ABOUT	        },
+	{NM_END}
+};
+
+static struct NewMenu AiRcOs_Group_Opp_CMenu[] =
+{
+	{NM_TITLE, "Project"																                          },
+#define AiRcOS_MENUID_CONNECT          (AiRcOS_MENUID + 1)
+		{NM_ITEM, "Connect ..", 			"Ctrl C",		2, 0L, (APTR)AiRcOS_MENUID_CONNECT       },
+#define AiRcOS_MENUID_CLOSE            (AiRcOS_MENUID + 2)
+		{NM_ITEM, "Close connection",		"Ctrl X",		2, 0L, (APTR)AiRcOS_MENUID_CLOSE	        },
+#define AiRcOS_MENUID_QUIT             (AiRcOS_MENUID + 3)
+		{NM_ITEM, "Quit", 				   "Ctrl Q",		2, 0L, (APTR)AiRcOS_MENUID_QUIT	        },
+	{NM_TITLE, "Settings"															                          },
+#define AiRcOS_MENUID_PREFS            (AiRcOS_MENUID + 4)
+		{NM_ITEM, "Application Options",	"Ctrl P", 		2, 0L, (APTR)AiRcOS_MENUID_PREFS         },
+#define AiRcOS_MENUID_SERVERMANAGE     (AiRcOS_MENUID + 1)
+		{NM_ITEM, "Server Manager",	   "Ctrl S", 		2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE  },
+	{NM_TITLE, "Help"															                                },
+#define AiRcOS_MENUID_HELP             (AiRcOS_MENUID + 5)
+		{NM_ITEM, "Application Help",	   "Ctrl H", 		2, 0L, (APTR)AiRcOS_MENUID_HELP	        },
+#define AiRcOS_MENUID_ABOUT            (AiRcOS_MENUID + 6)
+		{NM_ITEM, "About AiRcOS",	      "Ctrl A", 		2, 0L, (APTR)AiRcOS_MENUID_ABOUT	        },
+	{NM_END}
+};
+
+static struct NewMenu AiRcOs_Group_Voice_CMenu[] =
+{
+	{NM_TITLE, "Project"																                          },
+#define AiRcOS_MENUID_CONNECT          (AiRcOS_MENUID + 1)
+		{NM_ITEM, "Connect ..", 			"Ctrl C",		2, 0L, (APTR)AiRcOS_MENUID_CONNECT       },
+#define AiRcOS_MENUID_CLOSE            (AiRcOS_MENUID + 2)
+		{NM_ITEM, "Close connection",		"Ctrl X",		2, 0L, (APTR)AiRcOS_MENUID_CLOSE	        },
+#define AiRcOS_MENUID_QUIT             (AiRcOS_MENUID + 3)
+		{NM_ITEM, "Quit", 				   "Ctrl Q",		2, 0L, (APTR)AiRcOS_MENUID_QUIT	        },
+	{NM_TITLE, "Settings"															                          },
+#define AiRcOS_MENUID_PREFS            (AiRcOS_MENUID + 4)
+		{NM_ITEM, "Application Options",	"Ctrl P", 		2, 0L, (APTR)AiRcOS_MENUID_PREFS         },
+#define AiRcOS_MENUID_SERVERMANAGE     (AiRcOS_MENUID + 1)
+		{NM_ITEM, "Server Manager",	   "Ctrl S", 		2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE  },
+	{NM_TITLE, "Help"															                                },
+#define AiRcOS_MENUID_HELP             (AiRcOS_MENUID + 5)
+		{NM_ITEM, "Application Help",	   "Ctrl H", 		2, 0L, (APTR)AiRcOS_MENUID_HELP	        },
+#define AiRcOS_MENUID_ABOUT            (AiRcOS_MENUID + 6)
+		{NM_ITEM, "About AiRcOS",	      "Ctrl A", 		2, 0L, (APTR)AiRcOS_MENUID_ABOUT	        },
+	{NM_END}
+};
+
+static struct NewMenu AiRcOs_Group_Normal_CMenu[] =
+{
+	{NM_TITLE, "Project"																                          },
+#define AiRcOS_MENUID_CONNECT          (AiRcOS_MENUID + 1)
+		{NM_ITEM, "Connect ..", 			"Ctrl C",		2, 0L, (APTR)AiRcOS_MENUID_CONNECT       },
+#define AiRcOS_MENUID_CLOSE            (AiRcOS_MENUID + 2)
+		{NM_ITEM, "Close connection",		"Ctrl X",		2, 0L, (APTR)AiRcOS_MENUID_CLOSE	        },
+#define AiRcOS_MENUID_QUIT             (AiRcOS_MENUID + 3)
+		{NM_ITEM, "Quit", 				   "Ctrl Q",		2, 0L, (APTR)AiRcOS_MENUID_QUIT	        },
+	{NM_TITLE, "Settings"															                          },
+#define AiRcOS_MENUID_PREFS            (AiRcOS_MENUID + 4)
+		{NM_ITEM, "Application Options",	"Ctrl P", 		2, 0L, (APTR)AiRcOS_MENUID_PREFS         },
+#define AiRcOS_MENUID_SERVERMANAGE     (AiRcOS_MENUID + 1)
+		{NM_ITEM, "Server Manager",	   "Ctrl S", 		2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE  },
+	{NM_TITLE, "Help"															                                },
+#define AiRcOS_MENUID_HELP             (AiRcOS_MENUID + 5)
+		{NM_ITEM, "Application Help",	   "Ctrl H", 		2, 0L, (APTR)AiRcOS_MENUID_HELP	        },
+#define AiRcOS_MENUID_ABOUT            (AiRcOS_MENUID + 6)
+		{NM_ITEM, "About AiRcOS",	      "Ctrl A", 		2, 0L, (APTR)AiRcOS_MENUID_ABOUT	        },
+	{NM_END}
+};
 
 struct irccommand
 {
