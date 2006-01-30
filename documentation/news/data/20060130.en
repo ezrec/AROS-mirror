@@ -5,7 +5,7 @@ Status update
 :Author:   Paolo Besser
 :Date:     2006-01-30
 
-This is the first status update of 2006, and we wish to thank all AROS users, sponsors and enthusiasts for their support: at the beginning of 2005 `AROS-Exec`__ had about 250 members, now this number has doubled with more than 500 (and growing). During these months AROS has achieved some key goals such as self-compilation, network support, CVS to Subversion migration and PPC porting. More and more applications had been ported or added, lots of bug had been fixed, and there's also a flavour of AROS running on top of classic AmigaOS, in order to modernize it. We're all sure that 2006 will be a very interesting year for AROS. And now, let's go with our fresh news...
+This is the first status update of 2006, and we wish to thank all AROS users, sponsors and enthusiasts for their support: at the beginning of 2005 `AROS-Exec`__ had about 250 members, now this number has doubled with more than 500 (and growing). During these months AROS has achieved some key goals such as network support, CVS to Subversion migration and PPC porting. More and more applications had been ported or added, lots of bug had been fixed, and there's also a flavour of AROS running on top of classic AmigaOS, in order to modernize it. We're all sure that 2006 will be a very interesting year for AROS. And now, let's go with our fresh news...
 
 Georg Steger has fixed input preferences for mouse, in order to improve mice tracking and pointer precision on the screen.
 
