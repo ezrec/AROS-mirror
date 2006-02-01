@@ -1,11 +1,11 @@
 /*
-    Copyright © 1995-2003, The AROS Development Team. All rights reserved.
-    $Id$
+   Copyright © 1995-2006, The AROS Development Team. All rights reserved.
+   $Id$
 
-    Desc: Disk subsystem Benchmarking Utility..
-    Lang: English.
+   Desc: Disk subsystem Benchmarking Utility..
+   Lang: English.
 
-    Based on DiskSpeed v4.2 by Michael Sinz
+   Based on DiskSpeed v4.2 by Michael Sinz
 */
 
 /*********************************************************************************************/
@@ -84,56 +84,65 @@
 /*********************************************************************************************/
 
 struct DiskSpeedMUI_Intern {
-    BOOL            app_ret_val;
-    Object          *disk_app;                  /* our application itself..     */
-    Object          *disk_main_win;             /* The Main Benchmark Window    */
-    Object          *disk_config_win;           /* The Configuration Window     */
-    Object          *disk_about_win;            /* The Main Benchmark Window    */
+   BOOL         app_ret_val;
+   Object        *disk_app;              /* our application itself..    */
+   Object        *disk_main_win;          /* The Main Benchmark Window   */
+   Object        *disk_config_win;         /* The Configuration Window    */
+   Object        *disk_about_win;         /* The Main Benchmark Window   */
 
-    Object          *about_item;
-    Object          *quit_item;
+   Object        *about_item;
+   Object        *quit_item;
 
-    Object          *welctext;
+   Object        *welctext;
 
-    Object          *devicestr;
-    Object          *commentstr;
+   Object        *devicestr;
+   Object        *commentstr;
 
-    Object          *resultlv;
+   Object        *resultlv;
 
-    Object          *configobj;                 /* Open Config Window gadget */
-    Object          *beginobj;
-	Object          *stopobj;
-	Object          *saveobj;
+   Object        *configobj;             /* Open Config Window gadget */
+   Object        *beginobj;
+	Object        *stopobj;
+	Object        *saveobj;
 
-    Object          *conokobj;                  /* Configuration Windows OK gadget */
+   Object        *conokobj;              /* Configuration Windows OK gadget    */
+   Object        *consaveobj;            /* Configuration Windows Save gadget   */
+   Object        *conuseobj;             /* Configuration Windows Use gadget   */
+   Object        *concancelobj;           /* Configuration Windows Cancel gadget */
 };
 
 struct DiskSpeedConfig_Intern {
-    Object          *dir_checkmark;             /* Benchmark Configuration Option Objects */
-    Object          *seek_checkmark;
-    Object          *nocpu_checkmark;
-    Object          *mintime;
+#ifndef SCSI_SPEED
+   Object        *dir_checkmark;          /* Benchmark Configuration Option Objects */
+#endif
+   Object        *seek_checkmark;
+   Object        *nocpu_checkmark;
+   Object        *mintime;
 
-    Object          *buffer1;
-    Object          *buffer2;
-    Object          *buffer3;
-    Object          *buffer4;
+   Object        *buffer1;
+   Object        *buffer2;
+   Object        *buffer3;
+   Object        *buffer4;
 
-    Object          *long_checkmark;
-    Object          *word_checkmark;
-    Object          *byte_checkmark;
+   Object        *long_checkmark;
+   Object        *word_checkmark;
+   Object        *byte_checkmark;
 
-    Object          *fast_checkmark;
-    Object          *chip_checkmark;
+   Object        *fast_checkmark;
+   Object        *chip_checkmark;
 };
 
 struct DiskSpeedMUI_Intern diskspeedmui_intern;
 struct DiskSpeedConfig_Intern diskspeedmui_config;
 
-#define RETURNID_BEGIN 	1
-#define RETURNID_STOP   2
-#define RETURNID_SAVE 	3
-#define RETURNID_CONFIG	4
+enum
+{
+   RETURNID_BEGIN = 1,
+   RETURNID_STOP,
+   RETURNID_SAVE,
+   RETURNID_SAVECONFIG,
+   RETURNID_USECONFIG,
+};
 
 /*********************************************************************************************/
 
@@ -155,148 +164,145 @@ struct DiskSpeedConfig_Intern diskspeedmui_config;
 
 /*********************************************************************************************/
 
-#define VERS			    APPNAME " 4.9"
-#define	VSTRING                     APPNAME " 4.9 (" DATE ")\n\r"
-#define	VERSTAG                     "\0$VER: " APPNAME " 4.9 (" DATE ")"
-#define CXVERSION	            VERS " (" DATE ")" 
-#define STR_SEPERATOR               "------------------------------------------------------------------"
+#define VERS               APPNAME " 4.10"
+#define VSTRING             APPNAME " 4.10 (" DATE ")\n\r"
+#define VERSTAG             "\0$VER: " APPNAME " 4.10 (" DATE ")"
+#define CXVERSION            VERS " (" DATE ")" 
+#define STR_SEPERATOR         "------------------------------------------------------------------"
 
-char	COPYRIGHT[]=                    "Aros " VERS " Copyright © 2004 The AROS Development Team" VERSTAG;
+const char COPYRIGHT[] =      "Aros " VERS " Copyright © 2004-2006 The AROS Development Team" VERSTAG;
 
-#ifdef	SCSI_SPEED
-#   define	MSG_BYTES_READ              MSG_BYTES_READ_S
-    char	RESULTS_FILE[]=             APPNAME ".Results";
+#ifdef SCSI_SPEED
+#   define MSG_BYTES_READ      MSG_BYTES_READ_S
+   const char	RESULTS_FILE[] = APPNAME ".Results";
 #else
-#   define	MSG_BYTES_READ              MSG_BYTES_READ_N
-    char	FILE_STRING[]=              "%04lx " APPNAME " Test File ";
-    char	TEST_DIR[]=                 " " APPNAME " Test Directory ";
-    char	RESULTS_FILE[]=             APPNAME ".Results";
+#   define MSG_BYTES_READ      MSG_BYTES_READ_N
+   const char FILE_STRING[] =  "%04lx " APPNAME " Test File ";
+   const char TEST_DIR[] =    " " APPNAME " Test Directory ";
+   const char RESULTS_FILE[] = APPNAME ".Results";
 #endif	/* SCSI_SPEED */
 
 /*********************************************************************************************/
 /*
-    Timer related stuff...
+   Timer related stuff...
 */
 
 struct SpeedTimer
 {
-    struct  MsgPort                 *tmPort;
-    struct	timerequest             *tmReq;
-    struct	timeval                 tmVal;
+   struct  MsgPort             *tmPort;
+   struct	timerequest         *tmReq;
+   struct	timeval            tmVal;
 
-	BOOL                            Open;
+   LONG                     Open;
 };
 
 /*********************************************************************************************/
 /*
-    Our Disk/ScsiSpeed global structure...
+   Our Disk/ScsiSpeed global structure...
 */
 
 struct DiskSpeed
 {
-    struct	Window                  *Window;                /* The DiskSpeed window... */
-    struct	RenderInfo              *ri;                    /* MKSoft Render Info */
+   struct	Window              *Window;            /* The DiskSpeed window... */
+   struct	RenderInfo           *ri;               /* MKSoft Render Info */
 
 #ifdef	SCSI_SPEED
 
-    struct	IOExtTD	                DiskIO;                 /* Disk IO request */
+   struct	IOExtTD	            DiskIO;             /* Disk IO request */
 
 #endif	/* SCSI_SPEED */
 
-	BPTR                            Output;                 /* The output file handle! */
-    struct	Process                 *Me;                    /* Pointer to my process... */
-    struct	SpeedTimer              *timer;                 /* Pointer to a timer structure */
+	BPTR                     Output;             /* The output file handle! */
+   struct	Process             *Me;               /* Pointer to my process... */
+   struct	SpeedTimer           *timer;             /* Pointer to a timer structure */
 
 #ifndef	SCSI_SPEED
 
-    struct	FileInfoBlock           *fib;                   /* Pointer to a FileInfoBlock */
+   struct	FileInfoBlock         *fib;               /* Pointer to a FileInfoBlock */
 
 #endif	/* !SCSI_SPEED */
 
 /* */
-    struct	MinList                 TextList;               /* The list the results test is linked to... */
-    struct	DisplayList             *List;                  /* The "List" gadget */
+   struct	MinList             TextList;            /* The list the results test is linked to... */
+   struct	DisplayList          *List;              /* The "List" gadget */
 /* */
-	ULONG                           Min_Time;               /* Minimum tmVal in seconds for a test */
-	ULONG                           Base_CPU;               /* Base CPU available... */
-	ULONG                           CPU_Total;              /* Sum of CPU availability */
-	ULONG                           CPU_Count;              /* Count of CPU availability */
+	ULONG                     Min_Time;            /* Minimum tmVal in seconds for a test */
+	ULONG                     Base_CPU;            /* Base CPU available... */
+	ULONG                     CPU_Total;           /* Sum of CPU availability */
+	ULONG                     CPU_Count;           /* Count of CPU availability */
 
 /* Testing parameters */
-	unsigned short                  HighDMA;                /* Set to TRUE for high video DMA... */
-	unsigned short                  Test_DIR;               /* Set to test directory stuff */
-	unsigned short                  Test_SEEK;              /* Set to test SEEK/READ */
-	unsigned short                  pad;
+	unsigned short              HighDMA;            /* Set to TRUE for high video DMA... */
+	unsigned short              Test_DIR;            /* Set to test directory stuff */
+	unsigned short              Test_SEEK;           /* Set to test SEEK/READ */
+	unsigned short              pad;
 
-	ULONG                           Align_Types;            /* Set bits of alignment types... */
-	ULONG                           Mem_TYPES;              /* Set memory type flags to test... */
-	ULONG                           Test_Size[4];           /* The four test sizes... */
+	ULONG                     Align_Types;         /* Set bits of alignment types... */
+	ULONG                     Mem_TYPES;           /* Set memory type flags to test... */
+	ULONG                     Test_Size[4];         /* The four test sizes... */
 
-	short                           StringVectors[5*2*4];
-	short                           ActionVectors[5*2*2];
-
-/* */
-	char                            Device[256];            /* Device name under test... */
-	char                            Comments[256];          /* Comments string gadget... */
-	char                            Undo[256];              /* Our one UNDO buffer... */
+	short                     StringVectors[5*2*4];
+	short                     ActionVectors[5*2*2];
 
 /* */
-	char                            CPU_Type[22];           /* Processor name in this string (plus NULL) */
-	char                            Exec_Ver[14];           /* Version of Exec */
+	char                     Device[256];         /* Device name under test... */
+	char                     Comments[256];        /* Comments string gadget... */
+	char                     Undo[256];           /* Our one UNDO buffer... */
 
 /* */
-	char                            tmp1[128];              /* Temporary buffer space... */
-	char                            tmp2[128];              /* Temporary buffer space... */
+	char                     CPU_Type[22];         /* Processor name in this string (plus NULL) */
+	char                     Exec_Ver[14];         /* Version of Exec */
+
+/* */
+	char                     tmp1[128];           /* Temporary buffer space... */
+	char                     tmp2[128];           /* Temporary buffer space... */
 };
 
 struct DiskSpeed *global;
 
-void GrabDevice(char *theString);
-void GrabComment(char *theString);
-
 /*********************************************************************************************/
 
-#define	DEVICE_GADGET               1
-#define	COMMENT_GADGET              2
-#define	TEST_GADGET                 3
-#define	SAVE_GADGET                 4
-#define	STOP_GADGET                 5
+#define	DEVICE_GADGET            1
+#define	COMMENT_GADGET           2
+#define	TEST_GADGET             3
+#define	SAVE_GADGET             4
+#define	STOP_GADGET             5
 
 /*********************************************************************************************/
 /*
-    This is the minimum timeval for test that can be extended/shorted automatically
-    This number should not be set too low otherwise the test results will be
-    inaccurate due to timer granularity.  (in seconds)
+   This is the minimum timeval for test that can be extended/shorted automatically
+   This number should not be set too low otherwise the test results will be
+   inaccurate due to timer granularity.  (in seconds)
 */
 
 #ifdef	SCSI_SPEED
 
-#define	MIN_TEST_TIME               20
+#define	MIN_TEST_TIME            20
 
 #else	/* SCSI_SPEED */
 
-#define	MIN_TEST_TIME               8
-#define	NUM_FILES                   200
+#define	MIN_TEST_TIME            8
+#define	NUM_FILES               200
 
 #endif	/* SCSI_SPEED */
 
 /*********************************************************************************************/
 /*
-    This section of code is used to test CPU availability.
+   This section of code is used to test CPU availability.
 */
 
 struct CPU_AVAIL
 {
-    ULONG   _CPU_Use_Base;              /* Set to TRUE in order to use CPU...   */
-    ULONG   _CPU_State_Flag;            /* Used to control this routine...      */
-    ULONG   _CPU_Count_Low;             /* The low-order word for CPU count     */
-    ULONG   _CPU_Count_High;            /* The high-order word for CPU count    */
-    ULONG   CPU_Task;                   /* The task pointer...                  */
+   ULONG   _CPU_Use_Base;           /* Set to TRUE in order to use CPU...   */
+   ULONG   _CPU_State_Flag;         /* Used to control this routine...     */
+   ULONG   _CPU_Count_Low;          /* The low-order word for CPU count    */
+   ULONG   _CPU_Count_High;         /* The high-order word for CPU count   */
+   ULONG   CPU_Task;               /* The task pointer...              */
 };
 
 struct  Task *Init_CPU_Available( struct CPU_AVAIL *CPU_AVAIL_struct );
-void    Free_CPU_Available( struct CPU_AVAIL *CPU_AVAIL_struct );
-void    CPU_Calibrate( struct CPU_AVAIL *CPU_AVAIL_struct );
+void   Free_CPU_Available( struct CPU_AVAIL *CPU_AVAIL_struct );
+void   CPU_Calibrate( struct CPU_AVAIL *CPU_AVAIL_struct );
 
 /*********************************************************************************************/
 unsigned short BusyPointer[36] =
@@ -308,23 +314,53 @@ unsigned short BusyPointer[36] =
 };
 
 /*
-    These two defines set up and clear the BusyPointer...
+   These two defines set up and clear the BusyPointer...
 */
 
-#define SetWait(x)      SetPointer(x,BusyPointer,16L,16L,-6L,0L)
-#define ClearWait(x)    ClearPointer(x)
+#define SetWait(x)     SetPointer(x,BusyPointer,16L,16L,-6L,0L)
+#define ClearWait(x)   ClearPointer(x)
+
+#if !defined(__AROS__)
+/*********************************************************************************************/
+static struct Catalog *MyCatalog;
+
+static char *GetString(LONG num)
+{
+   const struct CatCompArrayType *x = CatCompArray;
+   STRPTR s;
+   
+   for (;;)
+   {
+     if (x->cca_ID == num)
+     {
+       s = x->cca_Str;
+       break;
+     }
+     x++;
+   }
+   s = GetCatalogStr(MyCatalog, num, s);
+   return s;
+}
+#endif
+
+static ULONG getv(APTR obj, ULONG tag)
+{
+   ULONG x;
+   GetAttr(tag, obj, &x);
+   return x;
+}
 
 /*********************************************************************************************/
 /*********************************************************************************************/
 /*********************************************************************************************/
 /*
-                This routine returns the amount of timeval in the timer...
-                The number returned is in Seconds...
+            This routine returns the amount of timeval in the timer...
+            The number returned is in Seconds...
 */
 
-ULONG Read_Timer(struct SpeedTimer *spt)
+static ULONG Read_Timer(struct SpeedTimer *spt)
 {
-    struct	Library     *TimerBase = (struct Library *)(spt->tmReq->tr_node.io_Device);
+   struct	Library    *TimerBase = (struct Library *)(spt->tmReq->tr_node.io_Device);
 
 	/* Get the current timeval... */
 	spt->tmReq->tr_node.io_Command = TR_GETSYSTIME;
@@ -337,10 +373,10 @@ ULONG Read_Timer(struct SpeedTimer *spt)
 }
 
 /*
-                Start the timer...
+            Start the timer...
 */
 
-void Start_Timer(struct SpeedTimer *spt)
+static void Start_Timer(struct SpeedTimer *spt)
 {
 	/* Get the current timeval... */
 	spt->tmReq->tr_node.io_Command = TR_GETSYSTIME;
@@ -377,30 +413,30 @@ void Start_Timer(struct SpeedTimer *spt)
 }
 
 /*
-                Stop the timer...
+            Stop the timer...
 */
 
-void Stop_Timer(struct SpeedTimer *spt)
+static void Stop_Timer(struct SpeedTimer *spt)
 {
-    struct	Library     *TimerBase = (struct Library *)(spt->tmReq->tr_node.io_Device);
+   struct	Library    *TimerBase = (struct Library *)(spt->tmReq->tr_node.io_Device);
 
-	/*  Get the current timeval.                                   */
+	/*  Get the current timeval.                           */
 	spt->tmReq->tr_node.io_Command = TR_GETSYSTIME;
 	spt->tmReq->tr_node.io_Flags = IOF_QUICK;
 
 	DoIO((struct IORequest *)(spt->tmReq));
 
-	/*  Subtract last timer result and store as the timer result    */
+	/*  Subtract last timer result and store as the timer result   */
 	SubTime(&(spt->tmReq->tr_time),&(spt->tmVal));
 	spt->tmVal=spt->tmReq->tr_time;
 }
 
 /*
-                Free a SpeedTimer structure as best as possible.  Do all of the error checks
-                here since this will also be called for partial timer initializations.
+            Free a SpeedTimer structure as best as possible.  Do all of the error checks
+            here since this will also be called for partial timer initializations.
 */
 
-void Free_Timer(struct SpeedTimer *spt)
+static void Free_Timer(struct SpeedTimer *spt)
 {
 	if (spt)
 	{
@@ -409,30 +445,30 @@ void Free_Timer(struct SpeedTimer *spt)
 			if (spt->tmReq)
 			{
 				if (spt->Open) CloseDevice((struct IORequest *)(spt->tmReq));
-				DeleteExtIO((struct IORequest *)(spt->tmReq));
+				DeleteIORequest((struct IORequest *)(spt->tmReq));
 			}
-			DeletePort(spt->tmPort);
+			DeleteMsgPort(spt->tmPort);
 		}
 		FreeMem(spt,sizeof(struct SpeedTimer));
 	}
 }
 
 /*
-                Initialize a SpeedTimer structure.  It will return NULL if it did not work.
+            Initialize a SpeedTimer structure.  It will return NULL if it did not work.
 */
 
-struct SpeedTimer *Init_Timer(void)
+static struct SpeedTimer *Init_Timer(void)
 {
-    struct	SpeedTimer      *spt;
+   struct	SpeedTimer     *spt;
 
 	if ((spt = AllocMem(sizeof(struct SpeedTimer),MEMF_PUBLIC|MEMF_CLEAR)))
 	{
 		spt->Open = FALSE;
-		if ((spt->tmPort = CreatePort(NULL,0L)))
+		if ((spt->tmPort = CreateMsgPort()))
 		{
-			if ((spt->tmReq = (struct IORequest *)CreateExtIO(spt->tmPort,sizeof(struct timerequest))))
+			if ((spt->tmReq = (struct timerrequest *)CreateIORequest(spt->tmPort,sizeof(struct timerequest))))
 			{
-				if (!OpenDevice(TIMERNAME,UNIT_VBLANK,(struct IORequest *)(spt->tmReq),0L)) spt->Open = TRUE;
+				if (!OpenDevice(TIMERNAME,UNIT_MICROHZ,(struct IORequest *)(spt->tmReq),0L)) spt->Open = TRUE;
 			}
 		}
 		if (!(spt->Open))
@@ -445,31 +481,32 @@ struct SpeedTimer *Init_Timer(void)
 }
 
 /*
-                Now, for the routines that will pull in the lines and display them as
-                needed in the display...
+            Now, for the routines that will pull in the lines and display them as
+            needed in the display...
 */
 
-void AddDisplayLine(struct DiskSpeed *global,char *line)
+static void AddDisplayLine(struct DiskSpeed *global,char *line)
 {
-	ULONG		            size = strlen(line);
+	ULONG		         size = strlen(line);
 
 	if (diskspeedmui_intern.disk_main_win) /* add the line to the zune listview */
 	{
-        DoMethod(diskspeedmui_intern.resultlv, MUIM_List_InsertSingle, (IPTR)line,
-		     MUIV_List_Insert_Bottom);
-    }
+      DoMethod(diskspeedmui_intern.resultlv, MUIM_List_InsertSingle, (IPTR)line, MUIV_List_Insert_Bottom);
+      DoMethod(diskspeedmui_intern.resultlv, MUIM_List_Jump, 0x7fffffff);
+      DoMethod(diskspeedmui_intern.disk_app, MUIM_Application_CheckRefresh);
+   }
 	else if (global->Output)
 	{
-		Write(global->Output,line,size);
+		Write(global->Output,(APTR)line,size);
 		Write(global->Output,"\n",1);
 	}
 }
 
 /*...*/
 
-BOOL Check_Quit(struct DiskSpeed *global)
+static LONG Check_Quit(struct DiskSpeed *global)
 {
-    BOOL	                worked = TRUE;
+   LONG	            worked = TRUE;
  
 	if (SetSignal(0,SIGBREAKF_CTRL_C) & SIGBREAKF_CTRL_C) worked = FALSE;
 
@@ -479,13 +516,13 @@ BOOL Check_Quit(struct DiskSpeed *global)
 }
 
 /*
-                It knows that the Y value is fixed point by n-digits...
+            It knows that the Y value is fixed point by n-digits...
 */
 
-ULONG MaxDivide(ULONG x,ULONG y,ULONG digits)
+static ULONG MaxDivide(ULONG x,ULONG y,ULONG digits)
 {
-    ULONG	            result;
-    ULONG	            num = 0;	                    /* Number of 10 units adjusted for so far */
+   ULONG	         result;
+   ULONG	         num = 0;	               /* Number of 10 units adjusted for so far */
 
 	while ((x<399999999) && (num<digits))
 	{
@@ -496,34 +533,34 @@ ULONG MaxDivide(ULONG x,ULONG y,ULONG digits)
 	while (num<digits)
 	{
 		num++;
-		if (num == digits) y+=5;	                    /* Round it if last digit... */
+		if (num == digits) y+=5;	               /* Round it if last digit... */
 		y = y/10;
 	}
 
 	if (y) result = x/y;
-	else result = -1;	                                /* MAX INT if y=0 */
+	else result = -1;	                        /* MAX INT if y=0 */
 
 	return(result);
 }
 
 /*
-                Build a string and add it to the display of results.
-                This routine knows how to take the timer results and the CPU
-                results and format them into a string with the given header
-                and the given unit of measure.
+            Build a string and add it to the display of results.
+            This routine knows how to take the timer results and the CPU
+            results and format them into a string with the given header
+            and the given unit of measure.
 */
 
-VOID Display_Result(struct DiskSpeed *global,char *Header,ULONG number,char *Units, struct CPU_AVAIL *CPU_AVAIL_struct)
+static VOID Display_Result(struct DiskSpeed *global,char *Header,ULONG number,char *Units, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    char	            *st_string = global->tmp1;
-    char	            format[48];
-    ULONG	            clicks = 0;                     /* To figure out the number of clicks/second */
-    ULONG	            tmVal;
-    ULONG	            tmp_time;
+   char	         *st_string = global->tmp1;
+   char	         format[48];
+   ULONG	         clicks = 0;                /* To figure out the number of clicks/second */
+   ULONG	         tmVal;
+   ULONG	         tmp_time;
 
 	/* First, make sure (as best as possible) that the CPU values are right */
 	CPU_AVAIL_struct->_CPU_State_Flag = TRUE;
-	Delay(1);                                           /* Let it run into the TRUE _CPU_State_Flag */
+	Delay(1);                                 /* Let it run into the TRUE _CPU_State_Flag */
 
 	/* 1,000,000 micro = 1 second... */
 	tmVal = (global->timer->tmVal.tv_secs * 1000000) + global->timer->tmVal.tv_micro;
@@ -534,7 +571,7 @@ VOID Display_Result(struct DiskSpeed *global,char *Header,ULONG number,char *Uni
 	strcpy(format,"%s %9ld %s");
 	if (!number)
 	{
-		strcpy(format,"%s       < %ld %s");
+		strcpy(format,"%s      < %ld %s");
 		number = 1;
 	}
 
@@ -564,7 +601,7 @@ VOID Display_Result(struct DiskSpeed *global,char *Header,ULONG number,char *Uni
 	AddDisplayLine(global,st_string);
 }
 
-VOID Display_Error(struct DiskSpeed *global,char *test)
+static VOID Display_Error(struct DiskSpeed *global,char *test)
 {
 	sprintf(global->tmp1,GetString(MSG_ERR_FAIL),test);
 	AddDisplayLine(global,global->tmp1);
@@ -572,14 +609,14 @@ VOID Display_Error(struct DiskSpeed *global,char *test)
 
 #ifdef	SCSI_SPEED
 
-BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem_type, struct CPU_AVAIL *CPU_AVAIL_struct)
+static BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem_type, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    BOOL	            worked=TRUE;
-    char	            *buffer;
-    char	            *mem;		                            /* What we really allocated */
-    char	            *type;
-    char	            *type2;
-    ULONG	            count;
+   BOOL	         worked=TRUE;
+   char	         *buffer;
+   char	         *mem;		                     /* What we really allocated */
+   char	         *type;
+   char	         *type2;
+   ULONG	         count;
 
 	AddDisplayLine(global,"");
 
@@ -604,7 +641,7 @@ BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem_type, 
 		count = 0;
 
 		Start_Timer(global->timer);
-		Init_CPU_Available(CPU_AVAIL_struct);		            /* Start counting free CPU cycles... */
+		Init_CPU_Available(CPU_AVAIL_struct);		         /* Start counting free CPU cycles... */
 		while ((worked &= Check_Quit(global)) && (Read_Timer(global->timer) < global->Min_Time))
 		{
 			global->DiskIO.iotd_Req.io_Command = CMD_READ;
@@ -613,7 +650,7 @@ BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem_type, 
 			global->DiskIO.iotd_Req.io_Data = buffer;
 			global->DiskIO.iotd_Req.io_Offset = count;
 
-			DoIO(&(global->DiskIO));
+			DoIO((struct IORequest *)&global->DiskIO);
 			count += global->DiskIO.iotd_Req.io_Actual;
 
 			if (global->DiskIO.iotd_Req.io_Error)
@@ -641,20 +678,20 @@ BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem_type, 
 #else	/* SCSI_SPEED */
 
 /*
-                In order to keep the file create test fair, it must always do
-                the same number of files.  The way filing systems work, many times
-                the get slower as the number of files in a directory grow
+            In order to keep the file create test fair, it must always do
+            the same number of files.  The way filing systems work, many times
+            the get slower as the number of files in a directory grow
 */
 
-BOOL CreateFileTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
+static LONG CreateFileTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    BPTR	            file;
-    ULONG	            count;
-    BOOL	            worked = TRUE;
-    char	            *st_string = global->tmp1;	            /* For speed reasons */
+   BPTR	         file;
+   ULONG	       count;
+   LONG	         worked = TRUE;
+   STRPTR         st_string = global->tmp1;	         /* For speed reasons */
 
 	Start_Timer(global->timer);
-	Init_CPU_Available(CPU_AVAIL_struct);		                /* Start counting free CPU cycles... */
+	Init_CPU_Available(CPU_AVAIL_struct);		            /* Start counting free CPU cycles... */
 
 	for (count=0;(count<NUM_FILES) && (worked &= Check_Quit(global));count++)
 	{
@@ -676,12 +713,12 @@ BOOL CreateFileTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct
 	return(worked);
 }
 
-BOOL OpenFileTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
+static LONG OpenFileTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    BPTR	            file;
-    ULONG	            count = 0;
-    BOOL	            worked = TRUE;
-    char	            *st_string = global->tmp1;
+   BPTR	         file;
+   ULONG	       count = 0;
+   LONG	         worked = TRUE;
+   STRPTR         st_string = global->tmp1;
 
 	Start_Timer(global->timer);
 	Init_CPU_Available(CPU_AVAIL_struct);		/* Start counting free CPU cycles... */
@@ -704,11 +741,11 @@ BOOL OpenFileTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 	return(worked);
 }
 
-BOOL ScanDirectoryTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
+static LONG ScanDirectoryTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    BPTR	            lock = NULL;
-    ULONG	            count = 0;
-    BOOL	            worked = TRUE;
+   BPTR	         lock = NULL;
+   ULONG	       count = 0;
+   LONG	         worked = TRUE;
 
 	Start_Timer(global->timer);
 	Init_CPU_Available(CPU_AVAIL_struct);		/* Start counting free CPU cycles... */
@@ -739,16 +776,16 @@ BOOL ScanDirectoryTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_str
 }
 
 /*
-                In order to keep the file delete test fair, it must always do
-                the same number of files.  The way filing systems work, many times
-                the get slower as the number of files in a directory grow
+            In order to keep the file delete test fair, it must always do
+            the same number of files.  The way filing systems work, many times
+            the get slower as the number of files in a directory grow
 */
 
-BOOL DeleteFileTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
+static LONG DeleteFileTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    ULONG	            count;
-    BOOL	            worked = TRUE;
-    char	            *st_string = global->tmp1;
+   ULONG	       count;
+   LONG	         worked = TRUE;
+   STRPTR         st_string = global->tmp1;
 
 	Start_Timer(global->timer);
 	Init_CPU_Available(CPU_AVAIL_struct);		/* Start counting free CPU cycles... */
@@ -772,15 +809,15 @@ BOOL DeleteFileTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct
 	return(worked);
 }
 
-BOOL SeekReadTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
+static LONG SeekReadTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    BPTR	            file;
-    ULONG	            size;
-    ULONG	            count;
-    LONG	            pos = 0;
-    LONG	            buffer[16];
-    BOOL	            worked = FALSE;
-    void	            *buf;
+   BPTR	         file;
+   ULONG	       size;
+   ULONG	       count;
+   LONG	         pos = 0;
+   LONG	         buffer[16];
+   LONG	         worked = FALSE;
+   void	         *buf;
 
 	/* First we build a file by writing the ROM to disk... */
 	if (file = Open(FILE_STRING,MODE_NEWFILE))
@@ -839,17 +876,17 @@ BOOL SeekReadTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 	return(worked);
 }
 
-BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem_type, struct CPU_AVAIL *CPU_AVAIL_struct)
+static BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem_type, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    BOOL	worked=TRUE;
-    char	*buffer;
-    char	*mem;		/* What we really allocated */
-    char	*type;
-    char	*type2;
-    ULONG	loop;
-    ULONG	count;
-    LONG	times;
-    BPTR	file=NULL;
+   BOOL	worked=TRUE;
+   char	*buffer;
+   char	*mem;		/* What we really allocated */
+   char	*type;
+   char	*type2;
+   ULONG	loop;
+   ULONG	count;
+   LONG	times;
+   BPTR	file=NULL;
 
 	AddDisplayLine(global,"");
 
@@ -998,12 +1035,12 @@ BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem_type, 
 }
 
 /*
-                Clean up (remove) all of the files in the current directory...
+            Clean up (remove) all of the files in the current directory...
 */
 
-void CleanUpFiles(struct DiskSpeed *global)
+static void CleanUpFiles(struct DiskSpeed *global)
 {
-    BPTR	lock;
+   BPTR	lock;
 
 	CurrentDir(lock = CurrentDir(NULL));	/* Get current directory lock */
 
@@ -1020,27 +1057,31 @@ void CleanUpFiles(struct DiskSpeed *global)
 
 #endif	/* SCSI_SPEED */
 
-void DoTests(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
+static void DoTests(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    char                *st_string=global->tmp1;
-    BOOL                working;
-    ULONG               memtype;
-    ULONG               offset;
-    short               size;
+   char            *st_string=global->tmp1;
+   BOOL            working;
+   ULONG            memtype;
+   ULONG            offset;
+   short            size;
 
 #ifndef	SCSI_SPEED
-    char                *fstring;
-    LONG                buffers;
+   char            *fstring;
+   LONG            buffers;
 #endif	/* !SCSI_SPEED */
 
 	/*
-	    Ok, so now we are ready to run...  Display the
-	    test conditions...
+	   Ok, so now we are ready to run...  Display the
+	   test conditions...
 	*/
 
 	strcpy(st_string,GetString(MSG_PROCESSOR));
 	strcat(st_string,global->CPU_Type);
+#if defined(__AROS__)
 	strcat(st_string,GetString(MSG_BLDAROS));
+#else
+	strcat(st_string,GetString(MSG_BLDMOS));   
+#endif
 	strcat(st_string,global->Exec_Ver);
 	if (global->HighDMA) strcat(st_string,GetString(MSG_DMAHIGH));
 	else strcat(st_string,GetString(MSG_DMANORM));
@@ -1048,8 +1089,8 @@ void DoTests(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 	AddDisplayLine(global,st_string);
 
 	/*
-	    Now, if we are in 2.0 OS, we can also find out the number of buffers
-	    (maybe) on that device.  This is important.
+	   Now, if we are in 2.0 OS, we can also find out the number of buffers
+	   (maybe) on that device.  This is important.
 	*/
 #ifdef	SCSI_SPEED
 
@@ -1057,17 +1098,19 @@ void DoTests(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 
 #else
 
-	fstring = "Device: %s    Buffers: <information unavailable>";
+	fstring = "Device: %s   Buffers: <information unavailable>";
+#ifndef __MORPHOS__
 	if (DOSBase->dl_lib.lib_Version > 36L)
+#endif
 	{
 		/*
-		    Ok, so we can now try to get a reading of the buffers
-		    for the place we are about to test...
+		   Ok, so we can now try to get a reading of the buffers
+		   for the place we are about to test...
 
-		    Note:  Since we are in the "CURRENTDIR" of the test disk,
-		    we are using "" as the "device" to which to call AddBuffers()
+		   Note:  Since we are in the "CURRENTDIR" of the test disk,
+		   we are using "" as the "device" to which to call AddBuffers()
 		*/
-		if ((buffers = AddBuffers("",0)) > 0) fstring="Device:  %s    Buffers: %ld";
+		if ((buffers = AddBuffers("",0)) > 0) fstring="Device:  %s   Buffers: %ld";
 	}
 
 	sprintf(st_string,fstring,global->Device,buffers);
@@ -1085,7 +1128,7 @@ void DoTests(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 
 	AddDisplayLine(global,"");
 
-    if (CPU_AVAIL_struct->_CPU_Use_Base) Delay(60);     /* Make sure filesystem has flushed... */
+   if (CPU_AVAIL_struct->_CPU_Use_Base) Delay(60);    /* Make sure filesystem has flushed... */
 
 	Init_CPU_Available(CPU_AVAIL_struct);
 	if (CPU_AVAIL_struct->_CPU_Use_Base) Delay(225);	/* Get a quick reading (~4.5 seconds) */
@@ -1095,7 +1138,7 @@ void DoTests(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 	if (CPU_AVAIL_struct->_CPU_Use_Base)
 	{
 		/*
-		    Now, generate a countdown value that is aprox 3 times 4.5 second...
+		   Now, generate a countdown value that is aprox 3 times 4.5 second...
 		*/
 		CPU_AVAIL_struct->_CPU_Use_Base = (CPU_AVAIL_struct->_CPU_Count_Low * 3) + 1;
 		CPU_AVAIL_struct->_CPU_Count_Low = CPU_AVAIL_struct->_CPU_Use_Base;
@@ -1107,12 +1150,12 @@ void DoTests(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 		Permit();
 
 		/*
-		    If it looks like we did not get a good reading,
-		    set up _CPU_Use_Base to 0 in order to turn off
-		    CPU readings...
+		   If it looks like we did not get a good reading,
+		   set up _CPU_Use_Base to 0 in order to turn off
+		   CPU readings...
 		*/
-    
-        if (global->timer->tmVal.tv_secs < 4)
+   
+      if (global->timer->tmVal.tv_secs < 4)
 		{
 			AddDisplayLine(global,GetString(MSG_ERR_CALIB1));
 			AddDisplayLine(global,GetString(MSG_ERR_CALIB2));
@@ -1135,7 +1178,7 @@ void DoTests(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 
 #ifndef	SCSI_SPEED
 
-	if (working) if (global->Test_DIR)
+	if (working && global->Test_DIR)
 	{
 		AddDisplayLine(global,GetString(MSG_TSTMANP));
 		if (working) working = CreateFileTest(global, CPU_AVAIL_struct);
@@ -1144,7 +1187,7 @@ void DoTests(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 		if (working) working = DeleteFileTest(global, CPU_AVAIL_struct);
 	}
 
-	if (working) if (global->Test_SEEK)
+	if (working && global->Test_SEEK)
 	{
 		AddDisplayLine(global,"");
 		if (working) working = SeekReadTest(global, CPU_AVAIL_struct);
@@ -1152,8 +1195,8 @@ void DoTests(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 
 #endif	/* !SCSI_SPEED */
 
-	/*  Now for some of the more complex tests              */
-	/*  result=SpeedTest(global,Buffer,offset,mem_type);    */
+	/*  Now for some of the more complex tests           */
+	/*  result=SpeedTest(global,Buffer,offset,mem_type);   */
 
 	memtype = MEMF_FAST;
 	while (memtype)
@@ -1172,7 +1215,7 @@ void DoTests(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 
 #ifndef	SCSI_SPEED
 
-    CleanUpFiles(global);
+   CleanUpFiles(global);
 
 #endif	/* !SCSI_SPEED */
 
@@ -1188,17 +1231,18 @@ void DoTests(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 
 #ifdef	SCSI_SPEED
 
-void StartTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
+static void StartTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    APTR	            oldwindow;
-    char	            *st_string;
-    char	            *unit = NULL;
-    ULONG	            scsi_unit;
+   APTR	         oldwindow;
+   char	         *st_string;
+   char	         *unit = NULL;
+   ULONG	         scsi_unit;
 
 	oldwindow = global->Me->pr_WindowPtr;
 	global->Me->pr_WindowPtr = (APTR)(-1L);
 
-    DoMethod(diskspeedmui_intern.resultlv, MUIM_List_Clear);
+   if (diskspeedmui_intern.resultlv)
+     DoMethod(diskspeedmui_intern.resultlv, MUIM_List_Clear);
 
 	AddDisplayLine(global,COPYRIGHT);
 	AddDisplayLine(global,STR_SEPERATOR);
@@ -1232,16 +1276,16 @@ void StartTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 	if (unit)
 	{
 		memset(&(global->DiskIO),0,sizeof(struct IOExtTD));
-		if ((global->DiskIO.iotd_Req.io_Message.mn_ReplyPort = CreatePort(NULL,0)))
+		if ((global->DiskIO.iotd_Req.io_Message.mn_ReplyPort = CreateMsgPort()))
 		{
-			if (!OpenDevice(global->Device,scsi_unit,&(global->DiskIO),NULL))
+			if (!OpenDevice(global->Device,scsi_unit, (struct IORequest *)&global->DiskIO, NULL))
 			{
 				unit = NULL;
 				*st_string = ':';
 				DoTests(global, CPU_AVAIL_struct);
-				CloseDevice(&(global->DiskIO));
+				CloseDevice((struct IORequest *)&global->DiskIO);
 			}
-			DeletePort(global->DiskIO.iotd_Req.io_Message.mn_ReplyPort);
+			DeleteMsgPort(global->DiskIO.iotd_Req.io_Message.mn_ReplyPort);
 		}
 		if (unit) AddDisplayLine(global,GetString(MSG_ERR_NODEV));
 	}
@@ -1254,11 +1298,11 @@ void StartTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 
 #else	/* SCSI_SPEED */
 
-void StartTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
+static void StartTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    BPTR	            lock;
-    BPTR	            newlock;
-    APTR	            oldwindow;
+   BPTR	         lock;
+   BPTR	         newlock;
+   APTR	         oldwindow;
 
 	oldwindow = global->Me->pr_WindowPtr;
 	global->Me->pr_WindowPtr = (APTR)(-1L);
@@ -1277,7 +1321,7 @@ void StartTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 				newlock = CurrentDir(newlock);
 
 				/*
-				    Now do all of the tests...
+				   Now do all of the tests...
 				*/
 
 				DoTests(global, CPU_AVAIL_struct);
@@ -1299,29 +1343,33 @@ void StartTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 
 #endif	/* SCSI_SPEED */
 
-VOID SetVersionStrings(struct DiskSpeed *global)
+static VOID SetVersionStrings(struct DiskSpeed *global)
 {
-    //UWORD	            flags = ((struct ExecBase *)(SysBase))->AttnFlags;
-    ULONG	            sysVer = ((struct ExecBase *)(SysBase))->LibNode.lib_Version;
-    ULONG	            sofVer = ((struct ExecBase *)(SysBase))->SoftVer;
-    char	            *st_string;
+//  UWORD	         flags = ((struct ExecBase *)(SysBase))->AttnFlags;
+   ULONG	         sysVer = ((struct ExecBase *)(SysBase))->LibNode.lib_Version;
+   ULONG	         sofVer = ((struct ExecBase *)(SysBase))->SoftVer;
+   char	         *st_string;
 
+#if defined(__PPC__)
+	strcpy( global->CPU_Type,"PPC" );
+#else
 	strcpy( global->CPU_Type,"i386" );
+#endif
 	st_string = &( global->CPU_Type[1] );
 
 	sprintf(global->Exec_Ver,"%ld.%ld",(ULONG) sysVer,(ULONG) sofVer);
 }
 
 /*
-                A simple string check that also works with '=' at the end of the string
+            A simple string check that also works with '=' at the end of the string
 */
 
-char *Check_String(char *arg,char *match)
+static char *Check_String(char *arg,char *match)
 {
-    char            *st_string;
-    char            *next = NULL;
+   char         *st_string;
+   char         *next = NULL;
 
-    D(bug("ParseArg() in Check_String()\n"));
+   D(bug("ParseArg() in Check_String()\n"));
 
 	st_string = arg;
 	while (*st_string)
@@ -1349,308 +1397,373 @@ char *Check_String(char *arg,char *match)
 }
 
 /*
-                This routine closes down the GUI
+            This routine closes down the GUI
 */
 
-void Close_GUI(struct DiskSpeed *global)
+static void Close_GUI(struct DiskSpeed *global)
 {
-    DisposeObject(diskspeedmui_intern.disk_app);
-    
-    if (MUIMasterBase)
-	CloseLibrary(MUIMasterBase);
+   if (MUIMasterBase)
+   {
+      MUI_DisposeObject(diskspeedmui_intern.disk_app);
+      CloseLibrary(MUIMasterBase);
+   }
 }
 
-Object *MakeCheck (CONST_STRPTR label)
+static Object *MakeCheck (CONST_STRPTR label, ULONG id, ULONG checked)
 {
-    Object *obj = MUI_MakeObject(MUIO_Checkmark, (IPTR)label);
-    if (obj)
-	set(obj, MUIA_CycleChain, 1);
-    return obj;
+   Object *obj = MUI_MakeObject(MUIO_Checkmark, (IPTR)label);
+
+   if (obj)
+     SetAttrs(obj, MUIA_CycleChain, 1, MUIA_ObjectID, id, MUIA_Selected, checked, TAG_DONE);
+
+   return obj;
 }
+
+static APTR MakeButton(char *string)
+{
+   APTR obj;
+   if (obj = MUI_MakeObject(MUIO_Button, (IPTR)string))
+     SetAttrs(obj, MUIA_CycleChain, 1, TAG_DONE);
+
+   return obj;
+}
+
 
 /*
-                This routine is used to open the GUI...
+            This routine is used to open the GUI...
 */
 
-BOOL Open_GUI(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
+static APTR Open_GUI(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct, struct DiskObject *dobj, int load_config)
 {
-    //BOOL		        worked = FALSE;
+// BOOL		      worked = FALSE;
 
-    D(bug("Open_GUI()\n"));
+D(bug("Open_GUI()\n"));
 
-	if ((MUIMasterBase)&&(!diskspeedmui_intern.disk_app))
-	{
-        sprintf(global->tmp1,GetString(MSG_MAIN_WINTITLE),APPNAME);
-        sprintf(global->tmp2,GetString(MSG_Welcome),
+   if ((MUIMasterBase)&&(!diskspeedmui_intern.disk_app))
+   {
+      sprintf(global->tmp1,GetString(MSG_MAIN_WINTITLE),APPNAME);
+      sprintf(global->tmp2,GetString(MSG_Welcome),
 #ifdef	SCSI_SPEED
-            GetString(MSG_W_DEVICE));
+      GetString(MSG_W_DEVICE));
 #else
-            GetString(MSG_W_FILESYS));
+      GetString(MSG_W_FILESYS));
 #endif /* SCSI_SPEED */
 
-        diskspeedmui_intern.disk_app = ApplicationObject,
-	                    MUIA_Application_Title, (IPTR)APPNAME,
-	                    MUIA_Application_Version, (IPTR)CXVERSION,
-	                    MUIA_Application_Copyright, (IPTR)"Copyright © 1995-2002, The AROS Development Team",
-	                    MUIA_Application_Author, (IPTR)"The AROS Development Team",
-                            MUIA_Application_Description, GetString(MSG_DESCRIPTION),
-	                    MUIA_Application_Base, (IPTR)APPNAME,
-		    MUIA_Application_Menustrip, MenuitemObject,
-			    MUIA_Family_Child, MenuitemObject,
-				    MUIA_Menuitem_Title, GetString(WORD_MENU_Project),
-				    MUIA_Family_Child,
-					    diskspeedmui_intern.about_item = MenuitemObject, MUIA_Menuitem_Title, GetString(WORD_MENU_About),
-				    End,
-				    MUIA_Family_Child,
-					    diskspeedmui_intern.quit_item  = MenuitemObject, MUIA_Menuitem_Title, GetString(WORD_MENU_Quit),
-				    End,
-			    End,
-		    End,
-  	        SubWindow, diskspeedmui_intern.disk_main_win = WindowObject,
-	            MUIA_Window_Title, global->tmp1,
-	            MUIA_Window_ID, MAKE_ID('D','W','I','N'),
-			    MUIA_Window_Activate, TRUE,
-			    MUIA_Window_Height, MUIV_Window_Height_Visible(50),
-			    MUIA_Window_Width, MUIV_Window_Width_Visible(60),
-	            WindowContents, VGroup,
-		            Child, VGroup, /* Main Panel */
-		    	        GroupFrame,
-			            MUIA_Background, MUII_GroupBack,
-    				    Child, diskspeedmui_intern.welctext = TextObject,
-						    TextFrame,
-						    MUIA_Text_Contents, global->tmp2,
-					    End,
-				        Child, HGroup,
-                            Child, ColGroup(2),
-                                MUIA_HorizWeight,100,
-					            Child, Label(GetString(MSG_DEVICE)),
-                                Child, diskspeedmui_intern.devicestr = StringObject,
-						            StringFrame,
-                                    MUIA_CycleChain, TRUE,
-                                    MUIA_String_MaxLen, 255,
-					            End,
-                                Child, Label(GetString(MSG_CMMNTS)),
-                                Child, diskspeedmui_intern.commentstr = StringObject,
-						            StringFrame,
-                                    MUIA_CycleChain, TRUE,
-                                    MUIA_String_MaxLen, 255,
-					            End,
-				            End,
-      		                Child, diskspeedmui_intern.configobj = CoolImageIDButton(NULL, COOL_INFOIMAGE_ID),
-                        End,
-				        Child, ListviewObject,  /* Our results view */
-						    MUIA_Listview_List, diskspeedmui_intern.resultlv = ListObject,
-							    ReadListFrame,
-							    MUIA_Listview_Input, FALSE,
-							    MUIA_List_Title, TRUE,
-							    MUIA_List_ConstructHook, MUIV_List_ConstructHook_String,
-							    MUIA_List_DestructHook, MUIV_List_DestructHook_String,
-						    End,
-				        End,
-                    End,
-		            Child, HGroup, /* save/use/cancel button row */
-		                MUIA_FixHeight, 1,
-		                MUIA_Group_SameWidth, TRUE,
-		                Child, diskspeedmui_intern.beginobj = CoolImageIDButton(GetString(MSG_START_TEST), COOL_DOTIMAGE_ID),
-                        Child, HSpace(0),
-		                /*Child, diskspeedmui_intern.stopobj = CoolImageIDButton(GetString(MSG_STOP_TEST), COOL_CANCELIMAGE_ID),*/
-		                Child, diskspeedmui_intern.saveobj = CoolImageIDButton(GetString(MSG_SAVE_RESULTS), COOL_SAVEIMAGE_ID),
-		            End,
-	            End,
-	        End,
-            //NEXT WINDOW.. ABOUT
-            SubWindow, diskspeedmui_intern.disk_about_win = AboutWindowObject,
-                MUIA_AboutWindow_Authors, (IPTR) TAGLIST
-                (
-                    SECTION
-                    (
-                        SID_PROGRAMMING,
-                        NAME("Nic Andrews")
-                    ),
-                    SECTION
-                    (
-                        SID_TRANSLATING,
-                        NAME("Adam Chodorowski"),
-                        NAME("Fabio Alemagna")
-                    )
-                ),
+      diskspeedmui_intern.disk_app = ApplicationObject,
+         MUIA_Application_DiskObject, (IPTR)dobj,
+         MUIA_Application_Title, (IPTR)APPNAME,
+         MUIA_Application_Version, (IPTR)CXVERSION,
+         MUIA_Application_Copyright, (IPTR)"Copyright © 1995-2006, The AROS Development Team",
+         MUIA_Application_Author, (IPTR)"The AROS Development Team",
+         MUIA_Application_Description, (IPTR)GetString(MSG_DESCRIPTION),
+         MUIA_Application_Base, (IPTR)APPNAME,
+         MUIA_Application_Menustrip, (IPTR)(MenustripObject,
+            MUIA_Family_Child, (IPTR)(MenuObject,
+               MUIA_Menuitem_Title, (IPTR)GetString(WORD_MENU_Project),
+               MUIA_Family_Child, (IPTR)(diskspeedmui_intern.about_item = MenuitemObject,
+                  MUIA_Menuitem_Title, (IPTR)GetString(WORD_MENU_About),
+               End),
+               MUIA_Family_Child, (IPTR)(diskspeedmui_intern.quit_item  = MenuitemObject,
+                  MUIA_Menuitem_Title, (IPTR)GetString(WORD_MENU_Quit),
+               End),
+            End),
+         End),
+         SubWindow, (IPTR)(diskspeedmui_intern.disk_main_win = WindowObject,
+            MUIA_Window_Title, global->tmp1,
+            MUIA_Window_ID, MAKE_ID('D','W','I','N'),
+            MUIA_Window_Activate, TRUE,
+            MUIA_Window_Height, MUIV_Window_Height_Visible(50),
+            MUIA_Window_Width, MUIV_Window_Width_Visible(60),
+            WindowContents, VGroup,
+               Child, VGroup, /* Main Panel */
+                  GroupFrame,
+                  MUIA_Background, MUII_GroupBack,
+                  Child, (IPTR)(diskspeedmui_intern.welctext = TextObject,
+                     TextFrame,
+                     MUIA_Text_Contents, global->tmp2,
+                  End),
+                  Child, HGroup,
+                     Child, ColGroup(2),
+                        MUIA_HorizWeight,100,
+					         Child, Label(GetString(MSG_DEVICE)),
+                        Child, (IPTR)(diskspeedmui_intern.devicestr = StringObject,
+						         StringFrame,
+                           MUIA_CycleChain, TRUE,
+                           MUIA_String_MaxLen, 255,
+                           MUIA_String_Contents, global->Device,
+					         End),
+                        Child, Label(GetString(MSG_CMMNTS)),
+                        Child, (IPTR)(diskspeedmui_intern.commentstr = StringObject,
+						         StringFrame,
+                           MUIA_CycleChain, TRUE,
+                           MUIA_String_MaxLen, 255,
+					         End),
+				         End,
+     		            Child, (IPTR)(diskspeedmui_intern.configobj = CoolImageIDButton(NULL, COOL_INFOIMAGE_ID)),
+                  End,
+				      Child, ListviewObject,  /* Our results view */
+						   MUIA_Listview_List, diskspeedmui_intern.resultlv = ListObject,
+							   ReadListFrame,
+							   MUIA_Listview_Input, FALSE,
+							   /*MUIA_List_Title, TRUE,*/
+							   MUIA_List_ConstructHook, MUIV_List_ConstructHook_String,
+							   MUIA_List_DestructHook, MUIV_List_DestructHook_String,
+						   End,
+				      End,
+               End,
+		         Child, HGroup, /* save/use/cancel button row */
+		            MUIA_FixHeight, 1,
+		            MUIA_Group_SameWidth, TRUE,
+		            Child, (IPTR)(diskspeedmui_intern.beginobj = CoolImageIDButton(GetString(MSG_START_TEST), COOL_DOTIMAGE_ID)),
+                  Child, HSpace(0),
+		            /*Child, diskspeedmui_intern.stopobj = CoolImageIDButton(GetString(MSG_STOP_TEST), COOL_CANCELIMAGE_ID),*/
+		            Child, (IPTR)(diskspeedmui_intern.saveobj = CoolImageIDButton(GetString(MSG_SAVE_RESULTS), COOL_SAVEIMAGE_ID)),
+		         End,
+	         End,
+	      End),
+         //NEXT WINDOW.. ABOUT
+         SubWindow, (IPTR)(diskspeedmui_intern.disk_about_win = AboutWindowObject,
+            MUIA_AboutWindow_Authors, (IPTR) TAGLIST
+            (
+               SECTION
+               (
+                  SID_PROGRAMMING,
+                  NAME("Nic Andrews")
+               ),
+               SECTION
+               (
+                  SID_TRANSLATING,
+                  NAME("Adam Chodorowski"),
+                  NAME("Fabio Alemagna")
+               )
+            ),
+         End),
+         //NEXT WINDOW.. CONFIG
+         SubWindow, (IPTR)(diskspeedmui_intern.disk_config_win = WindowObject,
+	         MUIA_Window_Title, (IPTR)GetString(MSG_CONFIG_WINTITLE),
+	         MUIA_Window_ID, MAKE_ID('C','W','I','N'),
+	         WindowContents, VGroup,
+               Child, VGroup,
+                  MUIA_Group_VertSpacing, 0,
+                  Child, VSpace(0),
+                  Child, HGroup,
+                     MUIA_Group_VertSpacing, 2,
+                     MUIA_Background, MUII_GroupBack,
+                     GroupFrame,
+                     Child, HSpace(0),
+                     Child, ColGroup(2),
+#ifndef SCSI_SPEED
+                        Child, (IPTR)(diskspeedmui_config.dir_checkmark = MakeCheck(NULL, MAKE_ID('C','D','I','R'), TRUE)),
+                        Child, (IPTR) LLabel("DIR"),
+#endif
+                        Child, (IPTR)(diskspeedmui_config.seek_checkmark = MakeCheck(NULL, MAKE_ID('S','E','E','K'), TRUE)),
+                        Child, (IPTR) LLabel("SEEK"),
+                        Child, (IPTR)(diskspeedmui_config.nocpu_checkmark = MakeCheck(NULL, MAKE_ID('N','C','P','U'), TRUE)),
+                        Child, (IPTR) LLabel("NOCPU"),
+                     End, 
+                     Child, HSpace(0),
+                     Child, VGroup,
+                        /*MUIA_Background, MUII_GroupBack,*/
+                        Child, (IPTR) CLabel("MINTIME"),
+					         Child,(IPTR)(diskspeedmui_config.mintime = StringObject,
+						         StringFrame,
+                           MUIA_CycleChain, 1,
+                           MUIA_ObjectID, MAKE_ID('M','I','N','T'),
+				               MUIA_String_Accept, (IPTR)"0123456789",
+					         End), 
+                     End,
+                     Child, HSpace(0),
+                  End, 
+                  Child, VSpace(0),
+               End, /* Misc Options */
+               Child, HSpace(0),
+               Child, VGroup,
+                  GroupFrameT(GetString(MSG_RWBUFS)),
+                  MUIA_Group_VertSpacing, 0,
+                  Child, VSpace(0),
+                  Child, ColGroup(3),
+                     MUIA_Group_VertSpacing, 2,
+                     Child, LLabel(GetString(MSG_BUF1TXT)),
+                     Child, HSpace(0),
+                     Child,(IPTR)(diskspeedmui_config.buffer1 = StringObject,
+                        StringFrame,
+                        MUIA_CycleChain, 1,
+                        MUIA_ObjectID, MAKE_ID('B','U','F','1'),
+                        MUIA_String_Accept, (IPTR)"0123456789",
+                        MUIA_String_Format, MUIV_String_Format_Right,
+                     End), 
+                     Child, LLabel(GetString(MSG_BUF2TXT)),
+                     Child, HSpace(0),
+                     Child,(IPTR)(diskspeedmui_config.buffer2 = StringObject,
+                        StringFrame,
+                        MUIA_CycleChain, 1,
+                        MUIA_ObjectID, MAKE_ID('B','U','F','2'),
+                        MUIA_String_Accept, (IPTR)"0123456789",
+                        MUIA_String_Format, MUIV_String_Format_Right,
+                     End), 
+                     Child, LLabel(GetString(MSG_BUF3TXT)),
+                     Child, HSpace(0),
+                     Child,(IPTR)(diskspeedmui_config.buffer3 = StringObject,
+                        StringFrame,
+                        MUIA_CycleChain, 1,
+                        MUIA_ObjectID, MAKE_ID('B','U','F','3'),
+                        MUIA_String_Accept, (IPTR)"0123456789",
+                        MUIA_String_Format, MUIV_String_Format_Right,
+                     End), 
+                     Child, LLabel(GetString(MSG_BUF4TXT)),
+                     Child, HSpace(0),
+                     Child,(IPTR)(diskspeedmui_config.buffer4 = StringObject,
+                        StringFrame,
+                        MUIA_CycleChain, 1,
+                        MUIA_ObjectID, MAKE_ID('B','U','F','4'),
+                        MUIA_String_Accept, (IPTR)"0123456789",
+                        MUIA_String_Format, MUIV_String_Format_Right,
+                     End),
+                  End, 
+                  Child, VSpace(0),
+               End, /* Buffer Sizes */
+               Child, VGroup,
+                  GroupFrameT(GetString(MSG_RWBUFS)),
+                  MUIA_Group_VertSpacing, 0,
+                  Child, VSpace(0),
+                  Child, ColGroup(5),
+                     Child, HSpace(0),
+                     Child, ColGroup(2),
+                        MUIA_Group_VertSpacing, 2,
+                        Child, (IPTR)(diskspeedmui_config.long_checkmark = MakeCheck(NULL, MAKE_ID('L','O','N','G'), TRUE)),
+                        Child, (IPTR) LLabel("LONG"),
+                        Child, (IPTR)(diskspeedmui_config.word_checkmark = MakeCheck(NULL, MAKE_ID('W','O','R','D'), TRUE)),
+                        Child, (IPTR) LLabel("WORD"),
+                        Child, (IPTR)(diskspeedmui_config.byte_checkmark = MakeCheck(NULL, MAKE_ID('B','Y','T','E'), TRUE)),
+                        Child, (IPTR) LLabel("BYTE"),
+                     End, 
+                     Child, HSpace(0),
+                     Child, ColGroup(2),
+                        MUIA_Group_VertSpacing, 2,
+                        Child, (IPTR)(diskspeedmui_config.fast_checkmark = MakeCheck(NULL, MAKE_ID('F','A','S','T'), TRUE)),
+                        Child, (IPTR) LLabel("FAST"),
+                        Child, (IPTR)(diskspeedmui_config.chip_checkmark = MakeCheck(NULL, MAKE_ID('C','H','I','P'), TRUE)),
+                        Child, (IPTR) LLabel("CHIP"),
+                     End,
+                     Child, HSpace(0),
+                  End, 
+                  Child, VSpace(0),
+               End, /* Buffer Types */
+//               Child, diskspeedmui_intern.conokobj = CoolImageIDButton(GetString(MSG_OK), COOL_DOTIMAGE_ID),
+               Child, HGroup,
+                  Child, (IPTR)(diskspeedmui_intern.consaveobj = MakeButton(GetString(MSG_GAD_SAVE))),
+                  Child, HSpace(30),
+                  Child, (IPTR)(diskspeedmui_intern.conuseobj = MakeButton(GetString(MSG_GAD_USE))),
+                  Child, HSpace(30),
+                  Child, (IPTR)(diskspeedmui_intern.concancelobj = MakeButton(GetString(MSG_GAD_CANCEL))),
+               End,
             End,
-            //NEXT WINDOW.. CONFIG
-            SubWindow, diskspeedmui_intern.disk_config_win = WindowObject,
-	            MUIA_Window_Title, (IPTR)GetString(MSG_CONFIG_WINTITLE),
-	            MUIA_Window_ID, MAKE_ID('C','W','I','N'),
-			    MUIA_Window_Activate, TRUE,
-			    MUIA_Window_Height, MUIV_Window_Height_Visible(40),
-			    MUIA_Window_Width, MUIV_Window_Width_Visible(40),
-	            WindowContents, VGroup,
-                    Child, VGroup,
-                        MUIA_Group_VertSpacing, 0,
-                        Child, VSpace(0),
-                        Child, ColGroup(5),
-                            Child, HSpace(0),
-                            Child, ColGroup(2),
-                                MUIA_Group_VertSpacing, 2,
-                                Child, diskspeedmui_config.dir_checkmark = MakeCheck(NULL),
-                                Child, (IPTR) LLabel("DIR"),
-                                Child, diskspeedmui_config.seek_checkmark = MakeCheck(NULL),
-                                Child, (IPTR) LLabel("SEEK"),
-                                Child, diskspeedmui_config.nocpu_checkmark = MakeCheck(NULL),
-                                Child, (IPTR) LLabel("NOCPU"),
-                            End, 
-                            Child, HSpace(0),
-                            Child, VGroup,
-                                MUIA_Background, MUII_GroupBack,
-                                Child, (IPTR) CLabel("MINTIME"),
-					            Child, diskspeedmui_config.mintime = StringObject,
-						            StringFrame,
-                                    MUIA_CycleChain, TRUE,
-				                    MUIA_String_Accept, (IPTR)"0123456789",
-					            End, 
-                            End,
-                            Child, HSpace(0),
-                        End, 
-                        Child, VSpace(0),
-                    End, /* Misc Options */
-                    Child, HSpace(0),
-                    Child, VGroup,
-                        GroupFrameT(GetString(MSG_RWBUFS)),
-                        MUIA_Group_VertSpacing, 0,
-                        Child, VSpace(0),
-                        Child, ColGroup(3),
-                            MUIA_Group_VertSpacing, 2,
-                            Child, LLabel(GetString(MSG_BUF1TXT)),
-					        Child, HSpace(0),
-                            Child, diskspeedmui_config.buffer1 = StringObject,
-						        StringFrame,
-                                MUIA_CycleChain, TRUE,
-				                MUIA_String_Accept, (IPTR)"0123456789",
-                                MUIA_String_Format, MUIV_String_Format_Right,
-					        End, 
-                            Child, LLabel(GetString(MSG_BUF2TXT)),
-                            Child, HSpace(0),
-					        Child, diskspeedmui_config.buffer2 = StringObject,
-						        StringFrame,
-                                MUIA_CycleChain, TRUE,
-				                MUIA_String_Accept, (IPTR)"0123456789",
-                                MUIA_String_Format, MUIV_String_Format_Right,
-                            End, 
-                            Child, LLabel(GetString(MSG_BUF3TXT)),
-                            Child, HSpace(0),
-					        Child, diskspeedmui_config.buffer3 = StringObject,
-						        StringFrame,
-                                MUIA_CycleChain, TRUE,
-				                MUIA_String_Accept, (IPTR)"0123456789",
-                                MUIA_String_Format, MUIV_String_Format_Right,
-                            End, 
-                            Child, LLabel(GetString(MSG_BUF4TXT)),
-                            Child, HSpace(0),
-					        Child, diskspeedmui_config.buffer4 = StringObject,
-						        StringFrame,
-                                MUIA_CycleChain, TRUE,
-				                MUIA_String_Accept, (IPTR)"0123456789",
-                                MUIA_String_Format, MUIV_String_Format_Right,
-                            End,                        
-                        End, 
-                        Child, VSpace(0),
-                    End, /* Buffer Sizes */
-                    Child, VGroup,
-                        GroupFrameT(GetString(MSG_RWBUFS)),
-                        MUIA_Group_VertSpacing, 0,
-                        Child, VSpace(0),
-                        Child, ColGroup(5),
-                            Child, HSpace(0),
-                            Child, ColGroup(2),
-                                MUIA_Group_VertSpacing, 2,
-                                Child, diskspeedmui_config.long_checkmark = MakeCheck(NULL),
-                                Child, (IPTR) LLabel("LONG"),
-                                Child, diskspeedmui_config.word_checkmark = MakeCheck(NULL),
-                                Child, (IPTR) LLabel("WORD"),
-                                Child, diskspeedmui_config.byte_checkmark = MakeCheck(NULL),
-                                Child, (IPTR) LLabel("BYTE"),
-                            End, 
-                            Child, HSpace(0),
-                            Child, ColGroup(2),
-                                MUIA_Group_VertSpacing, 2,
-                                Child, diskspeedmui_config.fast_checkmark = MakeCheck(NULL),
-                                Child, (IPTR) LLabel("FAST"),
-                                Child, diskspeedmui_config.chip_checkmark = MakeCheck(NULL),
-                                Child, (IPTR) LLabel("CHIP"),
-                            End,
-                            Child, HSpace(0),
-                        End, 
-                        Child, VSpace(0),
-                    End, /* Buffer Types */
-                    Child, diskspeedmui_intern.conokobj = CoolImageIDButton(GetString(MSG_OK), COOL_DOTIMAGE_ID),
-                End,
-	        End,
-        End;        
+	      End),
+      End;      
 
-        if (diskspeedmui_intern.disk_app)
-        {
+      if (diskspeedmui_intern.disk_app)
+      {
+         if (load_config)
+         {
+              /* Load Settings
+              **
+              ** Ditched config items stored to icon tooltypes. However DRIVE and COMMENT
+              ** options are recognized still.
+              */
+
+              DoMethod(diskspeedmui_intern.disk_app, MUIM_Application_Load, MUIV_Application_Load_ENV);
+
+              if (dobj)
+              {
+                  STRPTR s;
+                  
+                  if ((s = FindToolType(dobj->do_ToolTypes, "DRIVE")))
+                  {
+                     strcpy(global->Device, s);
+                  }
+                  
+                  if ((s = FindToolType(dobj->do_ToolTypes, "COMMENT")))
+                  {
+                     strcpy(global->Comments, s);
+                  }
+              }
+          }
 /*********/
-            DoMethod(diskspeedmui_intern.disk_main_win, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, (IPTR) diskspeedmui_intern.disk_app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+         DoMethod(diskspeedmui_intern.disk_main_win, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, MUIV_Notify_Application, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
 
-            DoMethod(diskspeedmui_intern.configobj, MUIM_Notify, MUIA_Pressed, FALSE, (IPTR) diskspeedmui_intern.disk_config_win, 3, MUIM_Set, MUIA_Window_Open, TRUE);
+         DoMethod(diskspeedmui_intern.configobj, MUIM_Notify, MUIA_Pressed, FALSE, (IPTR)diskspeedmui_intern.disk_config_win, 3, MUIM_Set, MUIA_Window_Open, TRUE);
 
-        //DoMethod(diskspeedmui_intern.stopobj, MUIM_Notify, MUIA_Pressed, FALSE, (IPTR) diskspeedmui_intern.disk_app, 2, MUIM_Application_ReturnID, RETURNID_STOP);
-            DoMethod(diskspeedmui_intern.saveobj, MUIM_Notify, MUIA_Pressed, FALSE, (IPTR) diskspeedmui_intern.disk_app, 2, MUIM_Application_ReturnID, RETURNID_SAVE);
-            DoMethod(diskspeedmui_intern.beginobj, MUIM_Notify, MUIA_Pressed, FALSE, (IPTR) diskspeedmui_intern.disk_app, 2, MUIM_Application_ReturnID, RETURNID_BEGIN);
+//        DoMethod(diskspeedmui_intern.stopobj, MUIM_Notify, MUIA_Pressed, FALSE, MUIV_Notify_Application, 2, MUIM_Application_ReturnID, RETURNID_STOP);
+         DoMethod(diskspeedmui_intern.saveobj, MUIM_Notify, MUIA_Pressed, FALSE, MUIV_Notify_Application, 2, MUIM_Application_ReturnID, RETURNID_SAVE);
+         DoMethod(diskspeedmui_intern.beginobj, MUIM_Notify, MUIA_Pressed, FALSE, MUIV_Notify_Application, 2, MUIM_Application_ReturnID, RETURNID_BEGIN);
 /**/
-            DoMethod(diskspeedmui_intern.disk_config_win, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, (IPTR) diskspeedmui_intern.disk_config_win, 3, MUIM_Set, MUIA_Window_Open, FALSE);
-            DoMethod(diskspeedmui_intern.conokobj, MUIM_Notify, MUIA_Pressed, FALSE, (IPTR) diskspeedmui_intern.disk_app, 2, MUIM_Application_ReturnID, RETURNID_CONFIG);
+         DoMethod(diskspeedmui_intern.disk_config_win, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, (IPTR)diskspeedmui_intern.disk_config_win, 3, MUIM_Set, MUIA_Window_Open, FALSE);
+         DoMethod(diskspeedmui_intern.consaveobj, MUIM_Notify, MUIA_Pressed, FALSE, MUIV_Notify_Application, 2, MUIM_Application_ReturnID, RETURNID_SAVECONFIG);
+         DoMethod(diskspeedmui_intern.conuseobj, MUIM_Notify, MUIA_Pressed, FALSE, MUIV_Notify_Application, 2, MUIM_Application_ReturnID, RETURNID_USECONFIG);
+         DoMethod(diskspeedmui_intern.concancelobj, MUIM_Notify, MUIA_Pressed, FALSE, MUIV_Notify_Window, 3, MUIM_Set, MUIA_Window_Open, FALSE);
 /**/
-            DoMethod(diskspeedmui_intern.disk_about_win, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, (IPTR) diskspeedmui_intern.disk_about_win, 3, MUIM_Set, MUIA_Window_Open, FALSE);
+         DoMethod(diskspeedmui_intern.disk_about_win, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, MUIV_Notify_Window, 3, MUIM_Set, MUIA_Window_Open, FALSE);
 /**/
-            DoMethod(diskspeedmui_intern.quit_item, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, (IPTR) diskspeedmui_intern.disk_app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
-            DoMethod(diskspeedmui_intern.about_item, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, (IPTR) diskspeedmui_intern.disk_about_win, 3, MUIM_Set, MUIA_Window_Open, TRUE);
+         DoMethod(diskspeedmui_intern.quit_item, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, MUIV_Notify_Application, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+         DoMethod(diskspeedmui_intern.about_item, MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, (IPTR)diskspeedmui_intern.disk_about_win, 3, MUIM_Set, MUIA_Window_Open, TRUE);
 
 /**********/
-            set(diskspeedmui_intern.configobj, MUIA_HorizWeight, 0); /* Set up the weight for the image ( so it takes up least space..) */ 
+         set(diskspeedmui_intern.configobj, MUIA_HorizWeight, 0); /* Set up the weight for the image ( so it takes up least space..) */ 
 /*********/
-            set(diskspeedmui_intern.commentstr, MUIA_String_Contents, global->Comments);
-            set(diskspeedmui_intern.devicestr, MUIA_String_Contents, global->Device);
+         set(diskspeedmui_intern.commentstr, MUIA_String_Contents, global->Comments);
+         set(diskspeedmui_intern.devicestr, MUIA_String_Contents, global->Device);
 
-            DoMethod(diskspeedmui_intern.commentstr, MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime, diskspeedmui_intern.commentstr, 3, MUIM_CallHook, &GrabComment, MUIV_TriggerValue);
-            DoMethod(diskspeedmui_intern.devicestr, MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime, diskspeedmui_intern.devicestr, 3, MUIM_CallHook, &GrabDevice, MUIV_TriggerValue);
-
+         /* Set some reasonable values if saved values are rubbish */
+         if (!getv(diskspeedmui_config.mintime, MUIA_String_Integer))
             set(diskspeedmui_config.mintime, MUIA_String_Integer, global->Min_Time);
 
+         if (!getv(diskspeedmui_config.buffer1, MUIA_String_Integer))
             set(diskspeedmui_config.buffer1, MUIA_String_Integer, global->Test_Size[0]);
+
+         if (!getv(diskspeedmui_config.buffer2, MUIA_String_Integer))
             set(diskspeedmui_config.buffer2, MUIA_String_Integer, global->Test_Size[1]);
+
+         if (!getv(diskspeedmui_config.buffer3, MUIA_String_Integer))
             set(diskspeedmui_config.buffer3, MUIA_String_Integer, global->Test_Size[2]);
+
+         if (!getv(diskspeedmui_config.buffer4, MUIA_String_Integer))
             set(diskspeedmui_config.buffer4, MUIA_String_Integer, global->Test_Size[3]);
 
-#ifdef	SCSI_SPEED			
-                nnset( diskspeedmui_config.dir_checkmark, MUIA_Disabled, TRUE);
-                nnset( diskspeedmui_config.seek_checkmark, MUIA_Disabled, TRUE);
-                set( diskspeedmui_config.long_checkmark, MUIA_Selected, TRUE);
-                nnset( diskspeedmui_config.long_checkmark, MUIA_Disabled, TRUE);
-                nnset( diskspeedmui_config.word_checkmark, MUIA_Disabled, TRUE);
-                nnset( diskspeedmui_config.byte_checkmark, MUIA_Disabled, TRUE);
+#if 0
+#ifdef SCSI_SPEED			
+         set( diskspeedmui_config.dir_checkmark, MUIA_Disabled, TRUE);
+         set( diskspeedmui_config.seek_checkmark, MUIA_Disabled, TRUE);
+         set( diskspeedmui_config.long_checkmark, MUIA_Selected, TRUE);
+         set( diskspeedmui_config.long_checkmark, MUIA_Disabled, TRUE);
+         set( diskspeedmui_config.word_checkmark, MUIA_Disabled, TRUE);
+         set( diskspeedmui_config.byte_checkmark, MUIA_Disabled, TRUE);
 #else	/* SCSI_SPEED */
-                if (global->Test_DIR) nnset( diskspeedmui_config.dir_checkmark, MUIA_Selected,TRUE);
-                if (global->Test_SEEK) nnset( diskspeedmui_config.seek_checkmark, MUIA_Selected,TRUE);
-                if (global->Align_Types & 4) nnset( diskspeedmui_config.long_checkmark, MUIA_Selected, TRUE);
-                if (global->Align_Types & 2) nnset( diskspeedmui_config.word_checkmark, MUIA_Selected, TRUE);
-                if (global->Align_Types & 1) nnset( diskspeedmui_config.byte_checkmark, MUIA_Selected, TRUE);
+         if (global->Test_DIR) set( diskspeedmui_config.dir_checkmark, MUIA_Selected,TRUE);
+         if (global->Test_SEEK) set( diskspeedmui_config.seek_checkmark, MUIA_Selected,TRUE);
+         if (global->Align_Types & 4) set( diskspeedmui_config.long_checkmark, MUIA_Selected, TRUE);
+         if (global->Align_Types & 2) set( diskspeedmui_config.word_checkmark, MUIA_Selected, TRUE);
+         if (global->Align_Types & 1) set( diskspeedmui_config.byte_checkmark, MUIA_Selected, TRUE);
 #endif	/* SCSI_SPEED */
-            if (CPU_AVAIL_struct->_CPU_Use_Base==0) nnset( diskspeedmui_config.nocpu_checkmark, MUIA_Selected,TRUE);
-                
-            if (global->Mem_TYPES & MEMF_FAST) nnset( diskspeedmui_config.fast_checkmark,MUIA_Selected,TRUE);
-            if (global->Mem_TYPES & MEMF_CHIP) nnset( diskspeedmui_config.chip_checkmark,MUIA_Selected,TRUE);
-        }
-    }
+         if (CPU_AVAIL_struct->_CPU_Use_Base==0) set( diskspeedmui_config.nocpu_checkmark, MUIA_Selected,TRUE);
+            
+         if (global->Mem_TYPES & MEMF_FAST) set( diskspeedmui_config.fast_checkmark,MUIA_Selected,TRUE);
+         if (global->Mem_TYPES & MEMF_CHIP) set( diskspeedmui_config.chip_checkmark,MUIA_Selected,TRUE);
+#endif
+         if (SysBase->MaxLocMem == 0)
+           set( diskspeedmui_config.chip_checkmark, MUIA_Disabled, TRUE);
+      }
+   }
 
-    return(diskspeedmui_intern.disk_app);
+   return(diskspeedmui_intern.disk_app);
 }
 
 /*
-                This routine will append to the end of a file the results currently in memory...
+            This routine will append to the end of a file the results currently in memory...
 */
-void Save_Results(struct DiskSpeed *global)
+static void Save_Results(struct DiskSpeed *global)
 {
-	BPTR                fh;
-    struct	Node		*node;
+	BPTR            fh;
+   struct	Node		*node;
 
 	if ((fh = Open(RESULTS_FILE,MODE_OLDFILE)))
 	{
@@ -1674,91 +1787,96 @@ void Save_Results(struct DiskSpeed *global)
 }
 
 /*
-                This routine will retrieve the config settings from the MUI_Objects
+            This routine will retrieve the config settings from the MUI_Objects
  */
-void GET_Config(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
+static void GET_Config(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-	//BOOL                        error = TRUE;
-    ULONG                       tmp;
+	//BOOL                  error = TRUE;
+   ULONG                  tmp;
 
 	/*
 		Ok, now get the information back out...
 	*/
 
-    get(diskspeedmui_config.mintime, MUIA_String_Integer, &global->Min_Time);
+   get(diskspeedmui_config.mintime, MUIA_String_Integer, &global->Min_Time);
 
-    get(diskspeedmui_config.buffer1, MUIA_String_Integer, &global->Test_Size[0]);
-    get(diskspeedmui_config.buffer2, MUIA_String_Integer, &global->Test_Size[1]);
-    get(diskspeedmui_config.buffer3, MUIA_String_Integer, &global->Test_Size[2]);
-    get(diskspeedmui_config.buffer4, MUIA_String_Integer, &global->Test_Size[3]);
+   get(diskspeedmui_config.buffer1, MUIA_String_Integer, &global->Test_Size[0]);
+   get(diskspeedmui_config.buffer2, MUIA_String_Integer, &global->Test_Size[1]);
+   get(diskspeedmui_config.buffer3, MUIA_String_Integer, &global->Test_Size[2]);
+   get(diskspeedmui_config.buffer4, MUIA_String_Integer, &global->Test_Size[3]);
 
-    global->Test_DIR=0;
-    get( diskspeedmui_config.dir_checkmark, MUIA_Selected, &tmp);
-    if (tmp) global->Test_DIR=1;
+#ifndef SCSI_SPEED
+   global->Test_DIR=0;
+   get( diskspeedmui_config.dir_checkmark, MUIA_Selected, &tmp);
+   if (tmp) global->Test_DIR=1;
+#endif
 
-    global->Test_SEEK=0;
-    get( diskspeedmui_config.seek_checkmark, MUIA_Selected, &tmp);
-    if (tmp) global->Test_SEEK=1;
+   global->Test_SEEK=0;
+   get( diskspeedmui_config.seek_checkmark, MUIA_Selected, &tmp);
+   if (tmp) global->Test_SEEK=1;
 
-    CPU_AVAIL_struct->_CPU_Use_Base=1;
-    get( diskspeedmui_config.nocpu_checkmark, MUIA_Selected, &tmp);
-    if (tmp) CPU_AVAIL_struct->_CPU_Use_Base=0;
+   CPU_AVAIL_struct->_CPU_Use_Base=1;
+   get( diskspeedmui_config.nocpu_checkmark, MUIA_Selected, &tmp);
+   if (tmp) CPU_AVAIL_struct->_CPU_Use_Base=0;
 
-    global->Align_Types &= (~4);
-    get( diskspeedmui_config.long_checkmark, MUIA_Selected,&tmp);
-    if (tmp) global->Align_Types |= 1<<2;
+   global->Align_Types &= (~4);
+   get( diskspeedmui_config.long_checkmark, MUIA_Selected,&tmp);
+   if (tmp) global->Align_Types |= 1<<2;
 
-    global->Align_Types &= (~2);
-    get( diskspeedmui_config.word_checkmark, MUIA_Selected,&tmp);
-    if (tmp) global->Align_Types |= 1<<1;
-    
-    global->Align_Types &= (~1);
-    get( diskspeedmui_config.byte_checkmark, MUIA_Selected,&tmp);
-    if (tmp) global->Align_Types |= 1;
+   global->Align_Types &= (~2);
+   get( diskspeedmui_config.word_checkmark, MUIA_Selected,&tmp);
+   if (tmp) global->Align_Types |= 1<<1;
+   
+   global->Align_Types &= (~1);
+   get( diskspeedmui_config.byte_checkmark, MUIA_Selected,&tmp);
+   if (tmp) global->Align_Types |= 1;
 
-    global->Mem_TYPES &= (~MEMF_FAST);
-    get( diskspeedmui_config.fast_checkmark,MUIA_Selected,&tmp);
-    if (tmp) global->Mem_TYPES |= (1 * MEMF_FAST);
+   global->Mem_TYPES &= (~MEMF_FAST);
+   get( diskspeedmui_config.fast_checkmark,MUIA_Selected,&tmp);
+   if (tmp) global->Mem_TYPES |= (1 * MEMF_FAST);
 
-    global->Mem_TYPES &= (~MEMF_CHIP);
-    get( diskspeedmui_config.chip_checkmark,MUIA_Selected,&tmp);
-    if (tmp) global->Mem_TYPES |= (1 * MEMF_CHIP);
+   global->Mem_TYPES &= (~MEMF_CHIP);
+   if (SysBase->MaxLocMem)
+   {
+      get( diskspeedmui_config.chip_checkmark,MUIA_Selected,&tmp);
+      if (tmp) global->Mem_TYPES |= (1 * MEMF_CHIP);
+   }
 		
-    set (diskspeedmui_intern.disk_config_win, MUIA_Window_Open, FALSE);
+   set (diskspeedmui_intern.disk_config_win, MUIA_Window_Open, FALSE);
 }
 
 /*
-     DRIVE/K	- select drive  (Default is current directory or scsi.device:6)
-    COMMENT/K	- set comment string
-    ALL/S	- select all tests
-    DIR/S	- setect DIR tests
-    SEEK/S	- select SEEK tests
-    CHIP/S	- select CHIP memory buffer tests
-    FAST/S	- select FAST memory buffer tests
-    LONG/S	- select LONG aligned tests
-    WORD/S	- select WORD aligned tests
-    BYTE/S	- select BYTE aligned tests
-    NOCPU/S	- turn off CPU availability tests
-    BUF1/K/N	- select buffer size 1
-    BUF2/K/N	- select buffer size 2
-    BUF3/K/N	- select buffer size 3
-    BUF4/K/N	- select buffer size 4
-    MINTIME/K/N	- select the minimum test tmVal (default=8) in seconds
-    WINDOW/S	- use the GUI even though started from the CLI
+   DRIVE/K	- select drive  (Default is current directory or scsi.device:6)
+   COMMENT/K	- set comment string
+   ALL/S	- select all tests
+   DIR/S	- setect DIR tests
+   SEEK/S	- select SEEK tests
+   CHIP/S	- select CHIP memory buffer tests
+   FAST/S	- select FAST memory buffer tests
+   LONG/S	- select LONG aligned tests
+   WORD/S	- select WORD aligned tests
+   BYTE/S	- select BYTE aligned tests
+   NOCPU/S	- turn off CPU availability tests
+   BUF1/K/N	- select buffer size 1
+   BUF2/K/N	- select buffer size 2
+   BUF3/K/N	- select buffer size 3
+   BUF4/K/N	- select buffer size 4
+   MINTIME/K/N	- select the minimum test tmVal (default=8) in seconds
+   WINDOW/S	- use the GUI even though started from the CLI
  */
 
 /*
-            do the command line parsing here...
+         do the command line parsing here...
  */
-BOOL ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,struct CPU_AVAIL *CPU_AVAIL_struct)
+static LONG ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    D(bug("ParseArg()\n"));
+   int    loop;
+   char	*arg;
+   char	*next;
+   LONG	working = TRUE;
+   LONG	window = FALSE;
 
-    int     loop;
-    char	*arg;
-    char	*next;
-    BOOL	working = TRUE;
-    BOOL	window = FALSE;
+   D(bug("ParseArg()\n"));
 
 #ifdef	SCSI_SPEED
 	global->Align_Types = 4;
@@ -1767,18 +1885,18 @@ BOOL ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,struct CP
 	for (loop = start;loop<argc;loop++)
 	{
 		if (loop >= 10) break;
-        D(bug("ParseArg() in loop(argv=%ld,argc=%ld,start=%ld,loop=%ld))\n",argv,argc,start,loop));
-        arg = argv[loop];
+      D(bug("ParseArg() in loop(argv=%ld,argc=%ld,start=%ld,loop=%ld))\n",argv,argc,start,loop));
+      arg = argv[loop];
 		if (*arg == '?')
 		{
 			D(bug("ParseArg() Arg = ?\n"));
-            loop = argc;
+         loop = argc;
 			working = FALSE;
 		}
 		else if ((next=Check_String(arg,"DRIVE")))
 		{
 			D(bug("ParseArg() Arg = DRIVE\n"));
-            if (!(*next))
+         if (!(*next))
 			{
 				loop++;
 				if (loop<argc) next = argv[loop];
@@ -1790,7 +1908,7 @@ BOOL ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,struct CP
 		else if ((next=Check_String(arg,"COMMENT")))
 		{
 			D(bug("ParseArg() Arg = COMMENT\n"));
-            if (!(*next))
+         if (!(*next))
 			{
 				loop++;
 				if (loop<argc) next = argv[loop];
@@ -1801,8 +1919,8 @@ BOOL ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,struct CP
 		}
 		else if (Check_String(arg,"ALL"))
 		{
-            D(bug("ParseArg() Arg = ALL\n"));
-            /* All tests */
+         D(bug("ParseArg() Arg = ALL\n"));
+         /* All tests */
 
 #ifndef	SCSI_SPEED
 
@@ -1812,12 +1930,12 @@ BOOL ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,struct CP
 
 #endif	/* !SCSI_SPEED */
 
-			global->Mem_TYPES = MEMF_CHIP | MEMF_FAST;
+			global->Mem_TYPES = (SysBase->MaxLocMem ? MEMF_CHIP : 0) | MEMF_FAST;
 		}
 		else if ((next = Check_String(arg,"BUF1")))
 		{
 			D(bug("ParseArg() Arg = BUF1\n"));
-            if (!(*next))
+         if (!(*next))
 			{
 				loop++;
 				if (loop<argc) next = argv[loop];
@@ -1828,7 +1946,7 @@ BOOL ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,struct CP
 		else if ((next = Check_String(arg,"BUF2")))
 		{
 			D(bug("ParseArg() Arg = BUF2\n"));
-            if (!(*next))
+         if (!(*next))
 			{
 				loop++;
 				if (loop<argc) next = argv[loop];
@@ -1839,7 +1957,7 @@ BOOL ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,struct CP
 		else if ((next = Check_String(arg,"BUF3")))
 		{
 			D(bug("ParseArg() Arg = BUF3\n"));
-            if (!(*next))
+         if (!(*next))
 			{
 				loop++;
 				if (loop<argc) next = argv[loop];
@@ -1850,7 +1968,7 @@ BOOL ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,struct CP
 		else if ((next = Check_String(arg,"BUF4")))
 		{
 			D(bug("ParseArg() Arg = BUF4\n"));
-            if (!(*next))
+         if (!(*next))
 			{
 				loop++;
 				if (loop<argc) next=argv[loop];
@@ -1861,7 +1979,7 @@ BOOL ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,struct CP
 		else if ((next = Check_String(arg,"MINTIME")))
 		{
 			D(bug("ParseArg() Arg = MINTIME\n"));
-            if (!(*next))
+         if (!(*next))
 			{
 				loop++;
 				if (loop<argc) next = argv[loop];
@@ -1882,129 +2000,131 @@ BOOL ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,struct CP
 		else if (Check_String(arg,"CHIP")) global->Mem_TYPES |=MEMF_CHIP;
 		else if (Check_String(arg,"FAST")) global->Mem_TYPES |= MEMF_FAST;
 		else if (Check_String(arg,"NOCPU")) CPU_AVAIL_struct->_CPU_Use_Base = FALSE;
-        else if (Check_String(arg,"WINDOW")) window = TRUE;
+      else if (Check_String(arg,"WINDOW")) window = TRUE;
 		else
 		{	/* Did not match, so error */
 			D(bug("ParseArg() NO ARG MATCHES\n"));
-            working = FALSE;
+         working = FALSE;
 		}
 	}
 
 
-    D(bug("ParseArg() loop().. FINISHED\n"));
+   D(bug("ParseArg() loop().. FINISHED\n"));
 
 	if (global->Min_Time < 1) global->Min_Time = 1;
 
-    D(bug("ParseArg() - preparing to open MUI window\n"));
+   D(bug("ParseArg() - preparing to open MUI window\n"));
 
-	if (working) if (window) working = Open_GUI(global,CPU_AVAIL_struct);
+	if (working && window) working = Open_GUI(global,CPU_AVAIL_struct, NULL, 0);
 
 	return(working);
 }
 
 void GrabComment (char *theString)
 {
-    strcpy(global->Comments, theString);
+   strcpy(global->Comments, theString);
 }
 
 void GrabDevice (char *theString)
 {
-    strcpy(global->Device, theString);
+   strcpy(global->Device, theString);
 }
 
-void HandleAll (struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
+static void HandleAll (struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    ULONG sigs = 0;
-    LONG returnid;
-    diskspeedmui_intern.app_ret_val = FALSE;
+   ULONG sigs = 0;
+   LONG returnid;
+   diskspeedmui_intern.app_ret_val = FALSE;
 
-    set (diskspeedmui_intern.disk_main_win, MUIA_Window_Open, TRUE);
-    
-    for(;;)
-    {
-    	returnid = (LONG) DoMethod(diskspeedmui_intern.disk_app, MUIM_Application_NewInput, (IPTR) &sigs);
+   set (diskspeedmui_intern.disk_main_win, MUIA_Window_Open, TRUE);
+   
+   for(;;)
+   {
+   	returnid = (LONG) DoMethod(diskspeedmui_intern.disk_app, MUIM_Application_NewInput, (IPTR) &sigs);
 
-	    if (returnid == MUIV_Application_ReturnID_Quit)
-        {
-            diskspeedmui_intern.app_ret_val = TRUE;
-            break;
-        }
-    	
-        if ((returnid == RETURNID_CONFIG) || (returnid == RETURNID_BEGIN) || (returnid == RETURNID_STOP) || (returnid == RETURNID_SAVE)) break;
+	   if (returnid == MUIV_Application_ReturnID_Quit)
+      {
+         diskspeedmui_intern.app_ret_val = TRUE;
+         break;
+      }
+   	
+      if ((returnid == RETURNID_SAVECONFIG) || (returnid == RETURNID_USECONFIG) || (returnid == RETURNID_BEGIN) || (returnid == RETURNID_STOP) || (returnid == RETURNID_SAVE)) break;
 
-	    if (sigs)
-	    {
-	        sigs = Wait(sigs | SIGBREAKF_CTRL_C);
-	        if (sigs & SIGBREAKF_CTRL_C) break;
-	    }
-    }
+	   if (sigs)
+	   {
+	      sigs = Wait(sigs | SIGBREAKF_CTRL_C);
+	      if (sigs & SIGBREAKF_CTRL_C) break;
+	   }
+   }
 
-    switch(returnid)
-    {
-        case RETURNID_BEGIN:
-        {
-            StartTest(global, CPU_AVAIL_struct);
-            break;
-        }
-        case RETURNID_STOP:
-        {
-            break;
-        }
-    	case RETURNID_SAVE:
-	    {
-			Save_Results(global);
-            break;
-	    }
-        case RETURNID_CONFIG:
-        {
-            GET_Config(global, CPU_AVAIL_struct);
-            break;
-        }
-	    break;
-	    
-    }
+   switch(returnid)
+   {
+      case RETURNID_BEGIN:
+      {
+         ULONG str1, str2;
+         
+         GET_Config(global, CPU_AVAIL_struct);
+
+         GetAttr(MUIA_String_Contents, diskspeedmui_intern.commentstr, &str1);
+         GetAttr(MUIA_String_Contents, diskspeedmui_intern.devicestr, &str2);
+         
+         strcpy(global->Comments, (char *)str1);
+         strcpy(global->Device, (char *)str2);
+
+         set(diskspeedmui_intern.disk_app, MUIA_Application_Sleep, TRUE);
+         StartTest(global, CPU_AVAIL_struct);
+         set(diskspeedmui_intern.disk_app, MUIA_Application_Sleep, FALSE);
+         break;
+      }
+      case RETURNID_STOP:
+      {
+         /* In order to support this the GUI would need to be threaded */
+         break;
+      }
+   	case RETURNID_SAVE:
+	   {
+ 			Save_Results(global);
+         break;
+	   }
+      case RETURNID_SAVECONFIG:
+         DoMethod(diskspeedmui_intern.disk_app, MUIM_Application_Save, MUIV_Application_Save_ENVARC); /* fall through to USECONFIG */
+      case RETURNID_USECONFIG:
+         DoMethod(diskspeedmui_intern.disk_app, MUIM_Application_Save, MUIV_Application_Save_ENV);
+         set(diskspeedmui_intern.disk_config_win, MUIA_Window_Open, FALSE);
+         break;
+	   break;
+	   
+   }
 }
 
 /*
-                This routine is called when we want to run from a GUI
-                Normally, it is only called when started from Workbench
-                or when the CLI WINDOW option is given...
+            This routine is called when we want to run from a GUI
+            Normally, it is only called when started from Workbench
+            or when the CLI WINDOW option is given...
  */
-void FromWanderer(struct DiskSpeed *global,int argc,char *argv[], struct CPU_AVAIL *CPU_AVAIL_struct)
+static void FromWanderer(struct DiskSpeed *global,int argc,char *argv[], struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-    D(bug("FromWanderer()\n"));
-
-    struct	WBStartup	*startup;
-    struct	WBArg		*wbarg;
-	BPTR                lock;
-    struct	DiskObject	*icon;
+   struct	WBStartup	*startup;
+   struct	WBArg		*wbarg;
 
 	startup = (struct WBStartup *) argv;
 
+//   D(bug("FromWanderer()\n"));
+
 	if ((wbarg = startup->sm_ArgList) && (startup->sm_NumArgs))
 	{
+   	BPTR            lock;
+      struct	DiskObject	*icon;
 		/*
-		    Check if we were started as a project and
-		    use that icon insted...
+		   Check if we were started as a project and
+		   use that icon insted...
 		*/
 		if ((startup->sm_NumArgs) > 1) wbarg++;
 
 		lock = CurrentDir(wbarg->wa_Lock);
+		icon = GetDiskObject(wbarg->wa_Name);
 
-		argc=0;
-		if ((icon = GetDiskObject(wbarg->wa_Name)))
-		{
-			D(bug("FromWanderer() - parsing args\n"));
-            argv=icon->do_ToolTypes;
-			while (argv[argc]) argc++;
-			/*
-			    Don't care about argument errors in tooltypes
-			    since other things may have been in there...
-			*/
-			ParseArg(global,argc,argv,0,CPU_AVAIL_struct);
-			FreeDiskObject(icon);
-		}
-
+#if 0
 		if (!argc)
 		{
 			/* All tests */
@@ -2013,44 +2133,48 @@ void FromWanderer(struct DiskSpeed *global,int argc,char *argv[], struct CPU_AVA
 			global->Align_Types = 4|2|1;
 			global->Mem_TYPES = MEMF_CHIP | MEMF_FAST;
 		}
+#endif
 
-        D(bug("FromWanderer() - launching GUI\n"));
+      D(bug("FromWanderer() - launching GUI\n"));
 
-		if (Open_GUI(global,CPU_AVAIL_struct))
-        {
-            for(;;)
-            {
-                HandleAll(global,CPU_AVAIL_struct);
-                if (diskspeedmui_intern.app_ret_val == TRUE)
-                {	Close_GUI(global);
-                    break;
-                }
+		if (Open_GUI(global,CPU_AVAIL_struct, icon, 1))
+      {
+         for(;;)
+         {
+            HandleAll(global,CPU_AVAIL_struct);
+            if (diskspeedmui_intern.app_ret_val == TRUE)
+            {	Close_GUI(global);
+               break;
             }
-        }
+         }
+      }
+
+      if (icon)
+         FreeDiskObject(icon);
 
 		CurrentDir(lock);
 	}
-    D(bug("FromWanderer() Finished..\n"));
+   D(bug("FromWanderer() Finished..\n"));
 }
 
 /*
-                This is the CLI starting point.  We do the command line parsing here...
+            This is the CLI starting point.  We do the command line parsing here...
  */
-void FromCLI(struct DiskSpeed *global,int argc,char *argv[], struct CPU_AVAIL *CPU_AVAIL_struct)
+static void FromCLI(struct DiskSpeed *global,int argc,char *argv[], struct CPU_AVAIL *CPU_AVAIL_struct)
 {
 	if (ParseArg(global,argc,argv,1,CPU_AVAIL_struct))
 	{
-        if ( diskspeedmui_intern.disk_app )
-        {
-            for(;;)
-            {
-                HandleAll(global,CPU_AVAIL_struct);
-                if (diskspeedmui_intern.app_ret_val == TRUE)
-                {	Close_GUI(global);
-                    break;
-                }
+      if ( diskspeedmui_intern.disk_app )
+      {
+         for(;;)
+         {
+            HandleAll(global,CPU_AVAIL_struct);
+            if (diskspeedmui_intern.app_ret_val == TRUE)
+            {	Close_GUI(global);
+               break;
             }
-        }
+         }
+      }
 		else StartTest(global, CPU_AVAIL_struct);
 	}
 	else
@@ -2067,16 +2191,19 @@ void FromCLI(struct DiskSpeed *global,int argc,char *argv[], struct CPU_AVAIL *C
 
 int main(int argc, char *argv[])
 {
-    struct	DiskSpeed	*global;
-    struct  CPU_AVAIL  *CPU_AVAIL_struct;
+   struct	DiskSpeed	*global;
+   struct  CPU_AVAIL  *CPU_AVAIL_struct;
 
 	if ((CPU_AVAIL_struct = AllocMem(sizeof(struct CPU_AVAIL),MEMF_PUBLIC|MEMF_CLEAR)))
-    {
-	    CPU_AVAIL_struct->_CPU_Use_Base = TRUE;                             /* We want to test with CPU */
+   {
+	   CPU_AVAIL_struct->_CPU_Use_Base = TRUE;                      /* We want to test with CPU */
 
 		if ((global = AllocMem(sizeof(struct DiskSpeed),MEMF_PUBLIC|MEMF_CLEAR)))
 		{
-			NewList((struct List *)&(global->TextList));
+#if !defined(__AROS__)
+         MyCatalog = OpenCatalog(NULL, "DiskSpeed.catalog", OC_BuiltInLanguage, "english", TAG_DONE);
+#endif
+			NEWLIST((struct List *)&(global->TextList));
 			SetVersionStrings(global);
 			global->Me = (struct Process *)FindTask(NULL);
 
@@ -2089,8 +2216,13 @@ int main(int argc, char *argv[])
 			global->Test_Size[2] = 0x8000;
 			global->Test_Size[3] = 0x40000;
 #ifdef	SCSI_SPEED
-            if ((global->timer = Init_Timer()))
+         if ((global->timer = Init_Timer()))
 			{
+#if defined (__MORPHOS__)
+            strcpy(global->Device, SysBase->MaxLocMem ? "scsi.device:0" : "ide.device:0");
+#else
+            strcpy(global->Device, "ata.device:0");
+#endif
 				/*
 					Now either set up Window or Output
 					depending on where we were started...
@@ -2107,6 +2239,18 @@ int main(int argc, char *argv[])
 			{
 				if ((global->timer = Init_Timer()))
 				{
+				   BPTR lock;
+				   if((lock = Lock("",ACCESS_READ)))
+				   {
+				      char  *p;
+				      NameFromLock(lock, global->Device, sizeof(global->Device));
+				      UnLock(lock);
+				     
+				      if ((p = strchr(global->Device, ':')))
+				      {
+				         p[1] = '\0';
+				      }
+				   }
 					/*
 						Now either set up Window or Output
 						depending on where we were started...
@@ -2122,9 +2266,12 @@ int main(int argc, char *argv[])
 			}
 
 #endif	/* SCSI_SPEED */
+#if !defined(__AROS__)
+         CloseCatalog(MyCatalog);
+#endif
 			FreeMem(global,sizeof(struct DiskSpeed));
-	    }
-        FreeMem(CPU_AVAIL_struct,sizeof(struct CPU_AVAIL));
-    }
-    return 0;
+	   }
+      FreeMem(CPU_AVAIL_struct,sizeof(struct CPU_AVAIL));
+   }
+   return 0;
 }

@@ -6,7 +6,7 @@ MSG_CANT_CREATE_APP (//)
 Can't create application object!
 ;
 MSG_MAIN_WINTITLE (//)
-%s 4.9 Benchmark Window
+%s 4.10 Benchmark Window
 ;
 MSG_ABOUT_WINTITLE (//)
 About AROS DiskSpeed..
