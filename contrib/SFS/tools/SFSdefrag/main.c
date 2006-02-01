@@ -33,8 +33,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "locale.h"
+
 #define APPNAME "SFSdefrag"
-#define VERSION "sfsdefrag 0.1 (29.11.05)"
+#define VERSION "sfsdefrag 0.1 (29.11.05) ©AROS Dev Team"
 
 #define MIN(x,y) ((x)<(y)?(x):(y))
 #define MAX(x,y) ((x)>(y)?(x):(y))
@@ -367,18 +369,18 @@ BOOL GUIinit()
     app = ApplicationObject,
             MUIA_Application_Title,         (IPTR)APPNAME,
             MUIA_Application_Version,       (IPTR)VERSION,
-            MUIA_Application_Copyright,     (IPTR)"© 2004, The AROS Development Team",
+            MUIA_Application_Copyright,     (IPTR)"© 2006, The AROS Development Team",
             MUIA_Application_Author,        (IPTR)"Michal Schulz",
             MUIA_Application_Base,          (IPTR)APPNAME,
-            MUIA_Application_Description,   "SFS Defragmenter",
+            MUIA_Application_Description,   _(MSG_DESCRIPTION),
 
             SubWindow, MainWindow = WindowObject,
-                MUIA_Window_Title,      "SFS Defragmenter",
+                MUIA_Window_Title,      _(MSG_DESCRIPTION),
 //              MUIA_Window_Height,     MUIV_Window_Height_Visible(50),
 //              MUIA_Window_Width,      MUIV_Window_Width_Visible(60),
                 WindowContents, HGroup,
                     MUIA_Group_SameWidth, FALSE,
-                    Child, VGroup, GroupFrameT("Device bitmap"),
+                    Child, VGroup, GroupFrameT(_(MSG_BITMAP)),
                         Child, Bmp = BitmapObject,
                             MUIA_FixWidth, 498,
                             MUIA_FixHeight, 348,
@@ -387,16 +389,16 @@ BOOL GUIinit()
                         End, // ImageObject
                     End, // VGroup
                     Child, VGroup, 
-                        Child, VGroup, GroupFrameT("Device selection"),
+                        Child, VGroup, GroupFrameT(_(MSG_SELECTION)),
                             Child, DevList = ListObject,
                                 InputListFrame,
 //                                MUIA_List_AdjustWidth, TRUE,
                             End, // ListObject
                         End, // VGroup
 //                        Child, HVSpace,
-                        Child, RefreshButton = MUI_MakeObject(MUIO_Button, "Refresh bitmap"),
-                        Child, StartButton = MUI_MakeObject(MUIO_Button, "Start!"),
-                        Child, StopButton = MUI_MakeObject(MUIO_Button, "Cancel"),
+                        Child, RefreshButton = MUI_MakeObject(MUIO_Button, _(MSG_REFRESH)),
+                        Child, StartButton = MUI_MakeObject(MUIO_Button, _(MSG_START)),
+                        Child, StopButton = MUI_MakeObject(MUIO_Button, _(MSG_CANCEL)),
                     End, // HGroup
                 End, // WindowContents
             End, // MainWindow
@@ -470,7 +472,9 @@ int main(int argc, char *argv[])
     start_hook.h_Entry = (APTR)start_function;
     stop_hook.h_Entry = (APTR)stop_function;
     refresh_hook.h_Entry = (APTR)refresh_function;
-    
+
+    Locale_Initialize();
+
     if(openLibs())
     {
         if(GUIinit())
@@ -512,6 +516,8 @@ int main(int argc, char *argv[])
         closeLibs();
     }
     cleanup(NULL);
+
+    Locale_Deinitialize();
 
     return 0;
 } /* main(int argc, char *argv[]) */

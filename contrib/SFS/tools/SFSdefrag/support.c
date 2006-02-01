@@ -13,6 +13,7 @@
 #include <ctype.h>
 
 #include "support.h"
+#include "locale.h"
 
 STRPTR GetENV(CONST_STRPTR name)
 {

@@ -2,13 +2,13 @@
 
 include $(TOP)/config/make.cfg
 
-FILES = main support
+FILES = main support locale
 
 EXEDIR = $(AROSDIR)/Tools
 
-#MM contrib-sfs-c-sfsdefrag : includes symlinks 
-
-# //#MM workbench-tools-pcitool-catalogs
+#MM contrib-sfs-c-sfsdefrag : includes symlinks \
+#MM contrib-sfs-c-sfsdefrag-catalogs \
+#MM contrib-sfs-c-sfsdefrag-icons
 
 %build_prog mmake=contrib-sfs-c-sfsdefrag \
     progname=SFSdefrag targetdir=$(EXEDIR) \
