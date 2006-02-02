@@ -170,8 +170,7 @@ The Subversion repository
 The AROS repository is running with password protected Subversion server, which means
 that you need to request access to it to be able to collaborate in the
 development. The passwords are in encrypted form, which you can generate with
-our `online password encryption tool`__. At the request of Amiga Inc., anonymous
-read-only access to the repository has been disabled. 
+our `online password encryption tool`__.
 
 Please mail the encrypted password together with your preferred username and
 your real name to `Aaron Digulla`__ and wait for a reply. To facilitate a quick

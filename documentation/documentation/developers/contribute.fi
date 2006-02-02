@@ -172,8 +172,7 @@ Subversion varasto
 AROS:in säilytyspaikka pyörii salasanalla suojatussa Subversion palvelimessa,
 joka tarkoittaa sitä että sinun on pyydettävä käyttöoikeus sille jotta voit
 ottaa osaa kehitystyöhön. Salasanat ovat salatussa muodossa, jonka voit
-generoida `online password encryption tool`__:illamme. Amiga Inc.:in
-vaatimuksesta on anonyymi käyttöoikeus evätty.
+generoida `online password encryption tool`__:illamme. 
 
 Lähetä koodattu salasanasi yhdessä käyttäjä- ja oikean nimesi kanssa `Aaron
 Digulla`__:lle ja odota vastausta. Nopeuttaaksesi prosessia aseta viestisi

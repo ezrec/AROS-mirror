@@ -190,8 +190,6 @@ Das AROS Repository liegt auf einem passwortgeschützen Subversion Server, das
 bedeutet, dass Du einen persönlichen Zugang benötigst um Dich an der
 Entwicklung zu beteiligen. Die Passworte sind verschlüsselt und können
 mit unserem `online password encryption tool`__ generiert werden.
-Durch Aufforderung von Amiga Inc. wurden wir angewiesen den anonymen
-Read-Only Zugang zu unserem Repository zu sperren. 
 
 Bitte maile Dein verschlüsseltes Passwort zusammen mit Deinem
 gewünschten Usernamen und deinem realen Namen an `Aaron Digulla`__ und
