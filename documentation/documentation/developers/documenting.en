@@ -147,7 +147,7 @@ system copies this file to the WWW target.
 mirrors
 ~~~~~~~
 
-Since AROS is hosted on Sourceforge there arent't any mirrors. This file
+Since AROS is hosted on Sourceforge there aren't any mirrors. This file
 is ignored by the build system.
 
 

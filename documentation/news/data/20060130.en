@@ -9,7 +9,7 @@ This is the first status update of 2006, and we wish to thank all AROS users, sp
 
 Georg Steger has fixed input preferences for mouse, in order to improve mice tracking and pointer precision on the screen.
 
-Mathias Rustler has updated documentation for users and developers, adding some nice hints and removing obsolete informations. You'll find signs of his work through this site. Mathias has also commited ExecuteStartup, a little tool that executes whatever application you'll copy in the SYS:WBstartup drawer.
+Matthias Rustler has updated documentation for users and developers, adding some nice hints and removing obsolete informations. You'll find signs of his work through this site. Matthias has also commited ExecuteStartup, a little tool that executes whatever application you'll copy in the SYS:WBstartup drawer.
 
 __ http://aros-exec.org
 
