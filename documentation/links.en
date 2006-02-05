@@ -2,8 +2,8 @@
 Links
 =====
 
-:Authors:   Aaron Digulla, Adam Chodorowski 
-:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Authors:   Aaron Digulla, Adam Chodorowski, Matthias Rustler 
+:Copyright: Copyright © 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -71,20 +71,29 @@ please contact_ us so we can add it. Thanks.
 Homepages of developers
 =======================
 
++ `Aaron Digulla`__
 + `Adam Chodorowski`__
++ `Adam Olivier`__
 + `Henrik Berglund`__
 + `Johan Alfredsson`__
 + `Lennard voor den Dag`__
 + `Martin Steigerwald`__
 + `Matt 'Crazy' Parsons`__
++ `Matthias Rustler`__
++ `Oliver Brunner`__
 + `Sebastian Rittau`__
 
+
+__ http://www.philmann-dark.de/
 __ http://www.chodorowski.com/
+__ http://reziztanzia.free.fr/aros/
 __ http://www.mds.mdh.se/~adb94hbd/
 __ http://www.dtek.chalmers.se/~d95duvan/
 __ http://www.xs4all.nl/~ldp/
 __ http://www.lichtvoll.de
 __ http://www.ahsodit.com/aros
+__ http://www.mazze-online.de/
+__ http://homes.hallertau.net/~oli/
 __ http://www.in-berlin.de/User/jroger/index.html
 
 
@@ -109,9 +118,23 @@ Miscellaneous
 
   A great nostalgia site where you can find licensed and free Amiga games.
 
++ `AROS software archive`__
+
++ `AROS Max`__
+
+  AROS Max is a pre-configured live bootable CD image.
+
++ `AROS Polska`__
+
++ `Map of AROS users`__
+
 
 __ http://phinixi.com/
 __ http://www.thenostromo.com/teamaros/
 __ http://www.back2roots.org/
+__ http://archives.aros-exec.org/
+__ http://www.aros-max.co.uk/
+__ http://www.aros.bbs.pl/
+__ http://www.frappr.com/arosusers
 
 .. _contact: contact
