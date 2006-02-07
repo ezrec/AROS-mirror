@@ -3,6 +3,9 @@
 ## codeset 0
 ;
 MSG_TITLE
+AiRcOS
+;
+MSG_WIN_TITLE
 AiRcOS Internet Relay Chat
 ;
 MSG_DESCRIPTION
@@ -12,22 +15,22 @@ MSG_SERVER_CONNECT
 Se connecter à...
 ;
 MSG_SERVER_ADDRESS
-Addresse du serveur
+Addresse du serveur :
 ;
 MSG_SERVER_PORT
-...Se connecter au port
+Se connecter au port :
 ;
 MSG_USERNAME
-Nom d'utilisateur
+Nom d'utilisateur :
 ;
 MSG_PASSWORD
-Mot de passe...
+Mot de passe :
 ;
 MSG_NICKNAME
-Pseudo ...
+Pseudo :
 ;
 MSG_JOIN
-Joindre le Canal
+Joindre le Canal :
 ;
 MSG_CONNECT
 Connecter
@@ -43,4 +46,115 @@ aircos_guest
 ;
 MSG_DEFAULT_CHAN
 #AROS
+;
+MSG_USER_JOINED
+\0335*** %s a joint %s
+;
+MSG_ADMINS
+Admins
+;
+MSG_VOICE
+Voix
+;
+MSG_NORMAL
+Normaux
+;
+MSG_SET_MODE
+\0335*** %s choisit le mode: %s %s
+;
+MSG_CHANGED_NICK
+\0335*** %s a changé son pseudo en %s
+;
+MSG_DO_NOTICE
+\0335-%s- %s
+;
+MSG_HAS_LEFT
+\0335*** %s a quitté %s
+;
+MSG_HANDLE_ACTION
+\033P[-3]*** %s %s
+;
+MSG_HAS_QUIT
+\0335*** %s a quitté IRC ('%s')
+;
+MSG_CHANGES_TOPIC
+\0335*** %s change le sujet en %s
+;
+MSG_INITIAL_TOPIC
+\0335*** Sujet initial : %s
+;
+MSG_UNHANDLED_COMMAND
+*** # Commande non gérée '%s'
+;
+MSG_SERVER_LOG
+Journal du Serveur
+;
+MSG_SEND
+envoyer
+;
+MSG_CLOSE_IRC
+ X
+;
+MSG_CLOSE_USERLIST
+ X
+;
+MSG_USERS
+Utilisateurs
+;
+MSG_FROM_TO
+De %s à %s
+;
+MSG_TOPIC
+Sujet :
+;
+MENU_PROJECT
+Projet
+;
+MENU_CONNECT
+Connecter...
+;
+MENU_CONNECT_SC
+C
+;
+MENU_CLOSE
+Fermer la connexion
+;
+MENU_CLOSE_SC
+X
+;
+MENU_QUIT
+Quitter
+;
+MENU_QUIT_SC
+Q
+;
+MENU_SETTINGS
+Préférences
+;
+MENU_APP_OPTIONS
+Options de l'application
+;
+MENU_APP_OPTIONS_SC
+P
+;
+MENU_SERVER_MANAGER
+Gestion du serveur
+;
+MENU_SERVER_MANAGER_SC
+S
+;
+MENU_HELP
+Aide
+;
+MENU_APP_HELP
+Aide de l'application
+;
+MENU_APP_HELP_SC
+H
+;
+MENU_ABOUT
+À propos...
+;
+MENU_ABOUT_SC
+?
 ;

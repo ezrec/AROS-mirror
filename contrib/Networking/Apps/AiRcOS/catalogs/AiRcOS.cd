@@ -1,5 +1,8 @@
 ;
 MSG_TITLE (//)
+AiRcOS
+;
+MSG_WIN_TITLE (//)
 AiRcOS Internet Relay Chat
 ;
 MSG_DESCRIPTION (//)
@@ -40,4 +43,115 @@ aircos_guest
 ;
 MSG_DEFAULT_CHAN (//)
 #AROS
+;
+MSG_USER_JOINED (//)
+\0335*** %s has joined %s
+;
+MSG_ADMINS (//)
+Admins
+;
+MSG_VOICE (//)
+Voice
+;
+MSG_NORMAL (//)
+Normal
+;
+MSG_SET_MODE (//)
+\0335*** %s sets mode: %s %s
+;
+MSG_CHANGED_NICK (//)
+\0335*** %s has changed nick to %s
+;
+MSG_DO_NOTICE (//)
+\0335-%s- %s
+;
+MSG_HAS_LEFT (//)
+\0335*** %s has left %s
+;
+MSG_HANDLE_ACTION (//)
+\033P[-3]*** %s %s
+;
+MSG_HAS_QUIT (//)
+\0335*** %s has quit IRC ('%s')
+;
+MSG_CHANGES_TOPIC (//)
+\0335*** %s changes topic to %s
+;
+MSG_INITIAL_TOPIC (//)
+\0335*** Initial topic: %s
+;
+MSG_UNHANDLED_COMMAND (//)
+*** # Unhandled command '%s'
+;
+MSG_SERVER_LOG (//)
+Server Log
+;
+MSG_SEND (//)
+send
+;
+MSG_CLOSE_IRC (//)
+ X
+;
+MSG_CLOSE_USERLIST (//)
+ X
+;
+MSG_USERS (//)
+Users
+;
+MSG_FROM_TO (//)
+From %s to %s
+;
+MSG_TOPIC (//)
+Topic:
+;
+MENU_PROJECT (//)
+Project
+;
+MENU_CONNECT (//)
+Connect...
+;
+MENU_CONNECT_SC (//)
+C
+;
+MENU_CLOSE (//)
+Close connection
+;
+MENU_CLOSE_SC (//)
+X
+;
+MENU_QUIT (//)
+Quit
+;
+MENU_QUIT_SC (//)
+Q
+;
+MENU_SETTINGS (//)
+Settings
+;
+MENU_APP_OPTIONS (//)
+Application Options
+;
+MENU_APP_OPTIONS_SC (//)
+P
+;
+MENU_SERVER_MANAGER (//)
+Server Manager
+;
+MENU_SERVER_MANAGER_SC (//)
+S
+;
+MENU_HELP (//)
+Help
+;
+MENU_APP_HELP (//)
+Application Help
+;
+MENU_APP_HELP_SC (//)
+H
+;
+MENU_ABOUT (//)
+About...
+;
+MENU_ABOUT_SC (//)
+?
 ;
