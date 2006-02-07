@@ -33,7 +33,7 @@
 /* Start Network Includes */
 #include <proto/socket.h>
 #include <bsdsocket/socketbasetags.h>
-#include <sys/param.h>
+//#include <sys/param.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <sys/errno.h>
@@ -43,7 +43,9 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
-#include    "aircos_global.h"
+#include "aircos_global.h"
+#include "locale.h"
+
 extern struct AiRcOS_internal *AiRcOS_Base;
 
 
@@ -182,7 +184,7 @@ D(bug("[AiRcOS](irc;DoMode) Found record for channel '%s'\n", currentConnection-
       ForeachNode(&thisChanPriv->chan_usergroup, current_Group)
       {
          struct IRC_Channel_Group_User *change_ChanUser = NULL;
-         if ( change_ChanUser = aircos_Find_User( thisChanPriv, current_Group->group_name, currentConnection->connection_serv_ARGS[4]))
+         if (( change_ChanUser = aircos_Find_User( thisChanPriv, current_Group->group_name, currentConnection->connection_serv_ARGS[4])))
          {
 D(bug("[AiRcOS](irc;DoMode) Users Record for '%s' found\n", currentConnection->connection_serv_ARGS[4]));
             char *new_modeset = currentConnection->connection_serv_ARGS[3];
@@ -247,7 +249,7 @@ D(bug("[AiRcOS] ## IRC ## DoNick()\n"));
 
     if (strcasecmp(currentConnection->connection_serv_ARGS[0], currentConnection->connection_nick) == 0)
     {
-      if (nicknamenew = (char *)AllocVec(strlen(currentConnection->connection_serv_ARGS[2])+1,MEMF_CLEAR))
+        if ((nicknamenew = (char *)AllocVec(strlen(currentConnection->connection_serv_ARGS[2])+1,MEMF_CLEAR)))
       {
          strcpy(nicknamenew, currentConnection->connection_serv_ARGS[2]);
          FreeVec(currentConnection->connection_nick);
@@ -271,7 +273,7 @@ D(bug("[AiRcOS](irc;DoNick) Searching For user record on '%s'\n",thisChanPriv->c
       ForeachNode(&thisChanPriv->chan_usergroup, current_Group)
       {
          struct IRC_Channel_Group_User *rename_ChanUser = NULL;
-         if ( rename_ChanUser = aircos_Find_User( thisChanPriv, current_Group->group_name, username))
+         if ((rename_ChanUser = aircos_Find_User( thisChanPriv, current_Group->group_name, username)))
          {
 D(bug("[AiRcOS](irc;DoNick) Users Record found - removing\n"));
             Remove(&rename_ChanUser->group_node);
@@ -364,7 +366,7 @@ D(bug("[AiRcOS](irc;DoPart) Displaying Message\n"));
       ForeachNode(&thisChanPriv->chan_usergroup, current_Group)
       {
          struct IRC_Channel_Group_User *left_ChanUser = NULL;
-         if ( left_ChanUser = aircos_Find_User( thisChanPriv, current_Group->group_name, username))
+         if ((left_ChanUser = aircos_Find_User( thisChanPriv, current_Group->group_name, username)))
          {
 D(bug("[AiRcOS](irc;DoPart) Users Record found - removing\n"));
             Remove(&left_ChanUser->group_node);
@@ -522,7 +524,7 @@ D(bug("[AiRcOS](irc;DoPart) Searching For user record on '%s'\n",thisChanPriv->c
       ForeachNode(&thisChanPriv->chan_usergroup, current_Group)
       {
          struct IRC_Channel_Group_User *left_ChanUser = NULL;
-         if ( left_ChanUser = aircos_Find_User( thisChanPriv, current_Group->group_name, username))
+         if ((left_ChanUser = aircos_Find_User( thisChanPriv, current_Group->group_name, username)))
          {
 D(bug("[AiRcOS](irc;DoQuit) Users Record found - removing\n"));
             Remove(&left_ChanUser->group_node);
@@ -772,7 +774,8 @@ D(bug("[AiRcOS] ## CLIENT ## NOP('%s')\n",sendOnThisChannel->chan_send_ARGS[0]))
 static int aircos_CLIENT_doSingleArg(struct IRC_Channel_Priv  *sendOnThisChannel)
 {
 D(bug("[AiRcOS] ## CLIENT ## DoSingleArg(Action:'%s', Arg:'",sendOnThisChannel->chan_send_ARGS[0]));
-   int action_argcount = 1,i = 0;
+   int action_argcount = 1;
+//   int i = 0;
    ULONG action_argsize = 0;
 
    while (sendOnThisChannel->chan_send_ARGS[action_argcount] != NULL)
@@ -794,7 +797,8 @@ D(bug("')\n"));
 static int aircos_CLIENT_doMe(struct IRC_Channel_Priv  *sendOnThisChannel)
 {
 D(bug("[AiRcOS] ## CLIENT ## DoMe('"));
-   int action_argcount = 1,i = 0;
+   int action_argcount = 1;
+//   int i = 0;
    ULONG action_argsize = 0;
 
 while (sendOnThisChannel->chan_send_ARGS[action_argcount] != NULL)
@@ -1092,15 +1096,15 @@ struct IRC_Server_Priv  *aircos_add_server(char *addserv)
         Object          * tmp_servlog = HGroup, MUIA_Weight, 0, MUIA_Background, PAGE_BUT_BACK, Child, (IPTR) LLabel("Server Log"), MUIA_InputMode, MUIV_InputMode_RelVerify, End;
         
         new_ircServer->serv_page = VGroup,
-                        Child, (IPTR) new_ircServer->serv_page_reg_grp = HGroup,
-                            Child, (IPTR) tmp_servlog,
-                            Child, (IPTR) new_ircServer->serv_page_reg_spcr = RectangleObject, MUIA_Background, MUII_SHADOWFILL,
-                            End,
-                        End,
-                        Child, (IPTR) HGroup,
-                            Child, (IPTR) new_ircServer->serv_pagemd_grp,
-                        End,
-                    End;
+            Child, (IPTR) (new_ircServer->serv_page_reg_grp = HGroup,
+                Child, (IPTR) tmp_servlog,
+                Child, (IPTR) (new_ircServer->serv_page_reg_spcr = RectangleObject, MUIA_Background, MUII_SHADOWFILL,
+                End),
+            End),
+            Child, (IPTR) HGroup,
+                Child, (IPTR) new_ircServer->serv_pagemd_grp,
+            End,
+        End;
 
         if (!(new_ircServer->serv_page)) goto newircs_err4;
 
@@ -1147,13 +1151,19 @@ struct IRC_Server_Priv  *aircos_add_server(char *addserv)
                     End;
 
             AiRcOS_Base->aircos_window_page = VGroup,
-                        Child, (IPTR) AiRcOS_Base->aircos_window_pagemd_reg_grp = HGroup,
-                            Child, (IPTR)(new_butt = HGroup, MUIA_Weight, 0, MUIA_Background, PAGE_BUT_BACK, Child, (IPTR) LLabel( new_ircServer->serv_name), MUIA_InputMode, MUIV_InputMode_RelVerify, End),
-                            Child, (IPTR) AiRcOS_Base->aircos_window_pagemd_reg_spcr = RectangleObject, MUIA_Background, MUII_SHADOWFILL,
-                            End,
-                        End,
-                        Child, (IPTR) AiRcOS_Base->aircos_window_pagemd_grp,
-                    End;
+                Child, (IPTR) (AiRcOS_Base->aircos_window_pagemd_reg_grp = HGroup,
+                    Child, (IPTR)(new_butt = HGroup,
+                        MUIA_Weight, 0,
+                        MUIA_Background, PAGE_BUT_BACK,
+                        Child, (IPTR) LLabel( new_ircServer->serv_name),
+                            MUIA_InputMode, MUIV_InputMode_RelVerify,
+                        End),
+                    Child, (IPTR) (AiRcOS_Base->aircos_window_pagemd_reg_spcr = RectangleObject,
+                            MUIA_Background, MUII_SHADOWFILL,
+                    End),
+                End),
+                Child, (IPTR) AiRcOS_Base->aircos_window_pagemd_grp,
+                End;
         
               if (DoMethod(AiRcOS_Base->aircos_window_content, MUIM_Group_InitChange))
               {
