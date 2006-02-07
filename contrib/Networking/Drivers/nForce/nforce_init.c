@@ -1,5 +1,5 @@
 /*
- * $Id: nforce_init.c,v 1.10 2005/08/15 23:56:19 misc Exp $
+ * $Id$
  */
 
 /*

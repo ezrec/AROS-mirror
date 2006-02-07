@@ -2,8 +2,8 @@
 #define MIAMI_H
 
 /*
-    Copyright Â© 2003, The AROS Development Team. All rights reserved.
-    $Id: miami.h 22490 2004-11-16 21:34:27Z verhaegs $
+    Copyright © 2003, The AROS Development Team. All rights reserved.
+    $Id$
 */
 
 #include <devices/trackdisk.h>

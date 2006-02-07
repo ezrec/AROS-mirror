@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team.
     All rights reserved.
 
-    $Id: aircos_gui.c,v 1.1 2005/01/04 03:29:51 nicja Exp $
+    $Id$
 */
 
 //#include    <exec/types.h>

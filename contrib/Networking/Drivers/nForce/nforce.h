@@ -2,7 +2,7 @@
 #define _NFORCE_H
 
 /*
- * $Id: nforce.h,v 1.11 2005/08/15 23:56:19 misc Exp $
+ * $Id$
  */
 
 /*

@@ -2,7 +2,7 @@
 #define NET_IF_DL_H
 /*
     Copyright © 2003-2004, The AROS Development Team. All rights reserved.
-    $Id: if_dl.h 22859 2005-02-07 02:15:23Z NicJA $
+    $Id$
 */
 
 /* 

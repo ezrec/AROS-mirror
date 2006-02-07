@@ -1,4 +1,4 @@
-/* $Id: arp.c,v 1.2 2005/12/22 06:44:55 sonic_amiga Exp $
+/* $Id$
  *
  * arp.c --- arp utility for AmiTCP/IP
  *

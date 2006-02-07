@@ -1,4 +1,4 @@
-/* $Id: resolve.c,v 1.1.1.1 2005/12/07 10:50:36 sonic_amiga Exp $
+/* $Id$
  *
  * resolve.c --- resolve the given IP address or hostname
  *
