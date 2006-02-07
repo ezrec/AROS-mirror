@@ -1,0 +1,46 @@
+## version $VER: aircos.catalog 1.0 (07.02.2006)
+## language français
+## codeset 0
+;
+MSG_TITLE
+AiRcOS Internet Relay Chat
+;
+MSG_DESCRIPTION
+Client IRC pour AROS !
+;
+MSG_SERVER_CONNECT
+Se connecter à...
+;
+MSG_SERVER_ADDRESS
+Addresse du serveur
+;
+MSG_SERVER_PORT
+...Se connecter au port
+;
+MSG_USERNAME
+Nom d'utilisateur
+;
+MSG_PASSWORD
+Mot de passe...
+;
+MSG_NICKNAME
+Pseudo ...
+;
+MSG_JOIN
+Joindre le Canal
+;
+MSG_CONNECT
+Connecter
+;
+MSG_DEFAULT_SERVER
+chat.freenode.net
+;
+MSG_DEFAULT_USERNAME
+aircosuser
+;
+MSG_DEFAULT_NICKNAME
+aircos_guest
+;
+MSG_DEFAULT_CHAN
+#AROS
+;

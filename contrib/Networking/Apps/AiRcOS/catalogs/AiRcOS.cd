@@ -2,3 +2,42 @@
 MSG_TITLE (//)
 AiRcOS Internet Relay Chat
 ;
+MSG_DESCRIPTION (//)
+Internet Relay Chat Client for AROS!
+;
+MSG_SERVER_CONNECT (//)
+Connect to ...
+;
+MSG_SERVER_ADDRESS (//)
+IRC Server Address
+;
+MSG_SERVER_PORT (//)
+...connect on Port
+;
+MSG_USERNAME (//)
+Login Username
+;
+MSG_PASSWORD (//)
+Login Password ...
+;
+MSG_NICKNAME (//)
+Nickname ...
+;
+MSG_JOIN (//)
+Join Channel
+;
+MSG_CONNECT (//)
+Connect
+;
+MSG_DEFAULT_SERVER (//)
+chat.freenode.net
+;
+MSG_DEFAULT_USERNAME (//)
+aircosuser
+;
+MSG_DEFAULT_NICKNAME (//)
+aircos_guest
+;
+MSG_DEFAULT_CHAN (//)
+#AROS
+;

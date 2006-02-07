@@ -3,5 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-%build_catalogs mmake=aros-tcpip-aircos-catalogs \
+#MM aros-tcpip-apps-aircos-catalogs
+
+%build_catalogs mmake=aros-tcpip-apps-aircos-catalogs \
                 name=AiRcOS subdir=Extras/Networking/Apps/AiRcOS
