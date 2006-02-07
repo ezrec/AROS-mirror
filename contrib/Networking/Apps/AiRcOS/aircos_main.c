@@ -706,21 +706,21 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
     NewList((struct List *)&AiRcOS_Base->aircos_looseconnectionlist);
 
     AiRcOS_Base->aircos_serv_no = 0;
-    static struct NewMenu AiRcOs_Menus[] =
+    struct NewMenu AiRcOs_Menus[] =
 {
-    {NM_TITLE, "Project" },
-        {NM_ITEM, "Connect ..",             "Ctrl C",       2, 0L, (APTR)AiRcOS_MENUID_CONNECT},
-        {NM_ITEM, "Close connection",       "Ctrl X",       2, 0L, (APTR)AiRcOS_MENUID_CLOSE},
-        {NM_ITEM, "Quit",                  "Ctrl Q",        2, 0L, (APTR)AiRcOS_MENUID_QUIT},
-    {NM_TITLE, "Settings" },
-        {NM_ITEM, "Application Options",    "Ctrl P",       2, 0L, (APTR)AiRcOS_MENUID_PREFS},
-        {NM_ITEM, "Server Manager",    "Ctrl S",        2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE},
-    {NM_TITLE, "Help" },
-        {NM_ITEM, "Application Help",      "Ctrl H",        2, 0L, (APTR)AiRcOS_MENUID_HELP},
-        {NM_ITEM, "About AiRcOS",         "Ctrl A",         2, 0L, (APTR)AiRcOS_MENUID_ABOUT},
+    {NM_TITLE, _(MENU_PROJECT)},
+        {NM_ITEM, _(MENU_CONNECT), _(MENU_CONNECT_SC), 2, 0L, (APTR)AiRcOS_MENUID_CONNECT},
+        {NM_ITEM, _(MENU_CLOSE), _(MENU_CLOSE_SC),     2, 0L, (APTR)AiRcOS_MENUID_CLOSE},
+        {NM_ITEM, _(MENU_QUIT), _(MENU_QUIT_SC),       2, 0L, (APTR)AiRcOS_MENUID_QUIT},
+    {NM_TITLE, _(MENU_SETTINGS)},
+        {NM_ITEM, _(MENU_APP_OPTIONS), _(MENU_APP_OPTIONS_SC ),      2, 0L, (APTR)AiRcOS_MENUID_PREFS},
+        {NM_ITEM, _(MENU_SERVER_MANAGER), _(MENU_SERVER_MANAGER_SC), 2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE},
+    {NM_TITLE, _(MENU_HELP)},
+        {NM_ITEM, _(MENU_APP_HELP), _(MENU_APP_HELP_SC),   2, 0L, (APTR)AiRcOS_MENUID_HELP},
+        {NM_ITEM, _(MENU_ABOUT), _(MENU_ABOUT_SC),         2, 0L, (APTR)AiRcOS_MENUID_ABOUT},
     {NM_END}
 };
-
+/*
 static struct NewMenu AiRcOs_Group_Opp_CMenu[] =
 {
     {NM_TITLE, "Project" },
@@ -765,7 +765,7 @@ static struct NewMenu AiRcOs_Group_Normal_CMenu[] =
         {NM_ITEM, "About AiRcOS",         "Ctrl A",         2, 0L, (APTR)AiRcOS_MENUID_ABOUT},
     {NM_END}
 };
-
+*/
 /* Get the speech icon image */
     
     lock = NULL;
@@ -893,7 +893,7 @@ static struct NewMenu AiRcOs_Group_Normal_CMenu[] =
 
     AiRcOS_Base->aircos_app = ApplicationObject,
         MUIA_Application_Title,       __(MSG_TITLE),
-        MUIA_Application_Version,     (IPTR) "$VER: AiRcOS 0.0.3 (11.12.05) © 2005 The AROS Development Team",
+        MUIA_Application_Version,     (IPTR) "$VER: AiRcOS 0.3 (11.12.05) ©AROS Dev Team",
         MUIA_Application_Copyright,   (IPTR) "Copyright © 2005, The AROS Development Team. All rights reserved.",
         MUIA_Application_Author,      (IPTR) "Nic Andrews",
         MUIA_Application_Description, __(MSG_DESCRIPTION),
@@ -903,7 +903,7 @@ static struct NewMenu AiRcOs_Group_Normal_CMenu[] =
             MUIA_Window_Menustrip,(IPTR) ( AiRcOS_Base->aircos_clientwin_menu = MUI_MakeObject(MUIO_MenustripNM,
                 (IPTR)AiRcOs_Menus, (IPTR)NULL)),
 
-            MUIA_Window_Title, __(MSG_TITLE),
+            MUIA_Window_Title, __(MSG_WIN_TITLE),
             MUIA_Window_Activate, TRUE,
             MUIA_Window_Width,600,
             MUIA_Window_Height,400,

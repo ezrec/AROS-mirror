@@ -138,16 +138,16 @@ D(bug("[AiRcOS](irc:DoJoin) Found internal channel record\n"));
 D(bug("[AiRcOS](irc:DoJoin) Displaying Message\n"));
             char *tmpline = (char *)&sa[1];
 
-		      sprintf( tmpline, "\0335*** %s has joined %s", username, currentConnection->connection_serv_ARGS[2] );
+		      sprintf( tmpline, _(MSG_USER_JOINED), username, currentConnection->connection_serv_ARGS[2] );
 		      sa->so_name = (STRPTR)&sa[1];
 
             aircos_showChanOutput(thisChanPriv,sa);
 	      }
 	      
 	      /* Add the user to the usergroup */
-         if (username[0] == '@') aircos_Add_ChannelUser( thisChanPriv, "Admins", username+1);
-         else if (username[0] == '+') aircos_Add_ChannelUser( thisChanPriv, "Voice", username+1);
-         else aircos_Add_ChannelUser( thisChanPriv, "Normal", username);
+         if (username[0] == '@') aircos_Add_ChannelUser( thisChanPriv, (char *)_(MSG_ADMINS), username+1);
+         else if (username[0] == '+') aircos_Add_ChannelUser( thisChanPriv, (char *)_(MSG_VOICE), username+1);
+         else aircos_Add_ChannelUser( thisChanPriv,  (char *)_(MSG_NORMAL), username);
       }
 	}
 
@@ -193,17 +193,17 @@ D(bug("[AiRcOS](irc;DoMode) Users Record for '%s' found\n", currentConnection->c
 D(bug("[AiRcOS](irc;DoMode) Checking if mode changed ..\n"));
             if (new_modeset[1] == 'o')
             {
-               if (new_modeset[0] == '+') new_group = "Admins";
-               else new_group = "Normal";
+               if (new_modeset[0] == '+') new_group = (char *)_(MSG_ADMINS);
+               else new_group = (char *)_(MSG_NORMAL);
             }
             else if (new_modeset[1] == 'v')
             {
-               if (new_modeset[0] == '+') new_group = "Voice";
-               else new_group = "Normal";
+               if (new_modeset[0] == '+') new_group = (char *)_(MSG_VOICE);
+               else new_group = (char *)_(MSG_NORMAL);
             }
             else
             {
-               new_group = "Normal";
+               new_group = (char *)_(MSG_NORMAL);
             }
             
             if (strcasecmp(current_Group->group_name, new_group)!=0)
@@ -217,7 +217,7 @@ D(bug("{AiRcOS](irc;DoMode) CHANGE : removing old user record\n"));
 D(bug("[AiRcOS](irc;DoMode) Displaying Message\n"));
                   sa->so_name = (STRPTR)&sa[1];
 
-   		         sprintf( sa->so_name, "\0335*** %s sets mode: %s %s", currentConnection->connection_serv_ARGS[0], currentConnection->connection_serv_ARGS[3], currentConnection->connection_serv_ARGS[4]);
+   		         sprintf( sa->so_name, _(MSG_SET_MODE), currentConnection->connection_serv_ARGS[0], currentConnection->connection_serv_ARGS[3], currentConnection->connection_serv_ARGS[4]);
 	
                   aircos_showChanOutput(thisChanPriv,sa);
    	         }
@@ -283,7 +283,7 @@ D(bug("[AiRcOS](irc;DoNick) Users Record found - removing\n"));
 D(bug("[AiRcOS](irc;DoNick) Displaying Message\n"));
                char *tmpline = (char *)&sa[1];
 
-		       sprintf( tmpline, "\0335*** %s has changed nick to %s", username, nicknamenew );
+		       sprintf( tmpline, _(MSG_CHANGED_NICK), username, nicknamenew );
 		       sa->so_name = (STRPTR)&sa[1];
 		
                aircos_showChanOutput(thisChanPriv,sa);
@@ -326,7 +326,7 @@ D(bug("[AiRcOS](irc;DoNotice.chan) Found internal channel record\n"));
 D(bug("[AiRcOS](irc;DoNotice.chan) Displaying Message\n"));
             char *tmpline = (char *)&sa[1];
 
-	   	   sprintf( tmpline, "\0335-%s- %s", username, currentConnection->connection_serv_ARGS[3] );
+	   	   sprintf( tmpline, _(MSG_DO_NOTICE), username, currentConnection->connection_serv_ARGS[3] );
 	   	   sa->so_name = (STRPTR)&sa[1];
 
             aircos_showChanOutput(thisChanPriv,sa);
@@ -356,7 +356,7 @@ D(bug("[AiRcOS](irc;DoPart) Found internal channel record\n"));
 D(bug("[AiRcOS](irc;DoPart) Displaying Message\n"));
          char *tmpline = (char *)&sa[1];
 
-         sprintf( tmpline, "\0335*** %s has left %s", username, currentConnection->connection_serv_ARGS[2] );
+         sprintf( tmpline, _(MSG_HAS_LEFT), username, currentConnection->connection_serv_ARGS[2] );
 		   sa->so_name = (STRPTR)&sa[1];
 
          aircos_showChanOutput(thisChanPriv,sa);
@@ -425,7 +425,7 @@ D(bug("[AiRcOS](irc;handleAction) 'ACTION' : Found internal channel record\n"));
 D(bug("[AiRcOS](irc;handleAction) 'ACTION' : Displaying Message\n"));
                sa->so_name = (STRPTR)&sa[1];
 
-		         sprintf( sa->so_name, "\033P[-3]*** %s %s", username, action_param );
+		         sprintf( sa->so_name, _(MSG_HANDLE_ACTION), username, action_param );
 
                aircos_showChanOutput(thisChanPriv,sa);
 	        }
@@ -534,7 +534,7 @@ D(bug("[AiRcOS](irc;DoQuit) Users Record found - removing\n"));
 D(bug("[AiRcOS](irc;DoQuit) Displaying Message\n"));
                char *tmpline = (char *)&sa[1];
 
-		       sprintf( tmpline, "\0335*** %s has quit IRC ('%s')", username, currentConnection->connection_serv_ARGS[2] );
+		       sprintf( tmpline, _(MSG_HAS_QUIT), username, currentConnection->connection_serv_ARGS[2] );
 		       sa->so_name = (STRPTR)&sa[1];
 		
                aircos_showChanOutput(thisChanPriv,sa);
@@ -580,7 +580,7 @@ D(bug("[AiRcOS](irc;DoTopic) Changing topic display\n"));
 D(bug("[AiRcOS](irc;DoTopic) Displaying Message in local channel\n"));
          char *tmpline = (char *)&sa[1];
 
-		   sprintf( tmpline, "\0335*** %s changes topic to %s", username, currentConnection->connection_serv_ARGS[3] );
+		   sprintf( tmpline, _(MSG_CHANGES_TOPIC), username, currentConnection->connection_serv_ARGS[3] );
 		   sa->so_name = (STRPTR)&sa[1];
 		
          aircos_showChanOutput(thisChanPriv,sa);
@@ -637,7 +637,7 @@ D(bug("[AiRcOS](numeric;initialtopic) Changing topic display\n"));
 D(bug("[AiRcOS](numeric;initialtopic) Displaying Message in local channel\n"));
             char *tmpline = (char *)&sa[1];
 
-		      sprintf( tmpline, "\0335*** Initial topic: %s", currentConnection->connection_serv_ARGS[4] );
+		      sprintf( tmpline, _(MSG_INITIAL_TOPIC), currentConnection->connection_serv_ARGS[4] );
 		      sa->so_name = (STRPTR)&sa[1];
 
             aircos_showChanOutput(thisChanPriv,sa);
@@ -695,9 +695,9 @@ D(bug("[AiRcOS](numeric;userlist) Processing userlist [%d]'%s' ..\n", userlist_l
                userlist[i] = '\0';
 D(bug("[AiRcOS](numeric;userlist) Adding user  %d '%s' [start %d, end %d]\n",usercount, &userlist[namestart], namestart, i));
 
-               if (userlist[namestart] == '@') aircos_Add_ChannelUser( thisChanPriv, "Admins", &userlist[namestart+1]);
-               else if (userlist[namestart] == '+') aircos_Add_ChannelUser( thisChanPriv, "Voice", &userlist[namestart+1]);
-               else aircos_Add_ChannelUser( thisChanPriv, "Normal", &userlist[namestart]);
+               if (userlist[namestart] == '@') aircos_Add_ChannelUser( thisChanPriv, (char *)_(MSG_ADMINS), &userlist[namestart+1]);
+               else if (userlist[namestart] == '+') aircos_Add_ChannelUser( thisChanPriv, (char *)_(MSG_VOICE), &userlist[namestart+1]);
+               else aircos_Add_ChannelUser( thisChanPriv, (char *)_(MSG_NORMAL), &userlist[namestart]);
                namestart = i+1;
 
                usercount++;
@@ -762,7 +762,7 @@ D(bug("[AiRcOS] ## CLIENT ## NOP('%s')\n",sendOnThisChannel->chan_send_ARGS[0]))
    if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( sendOnThisChannel->chan_send_ARGS[0] ) + 28, MEMF_CLEAR ) ))
 	{
       char *tmpline = (char *)&sa[1];
-		sprintf( tmpline, "*** # Unhandled command '%s'", sendOnThisChannel->chan_send_ARGS[0] );
+		sprintf( tmpline, _(MSG_UNHANDLED_COMMAND), sendOnThisChannel->chan_send_ARGS[0] );
 		sa->so_name = (STRPTR)&sa[1];
 
       aircos_showChanOutput(sendOnThisChannel,sa);
@@ -1093,7 +1093,7 @@ struct IRC_Server_Priv  *aircos_add_server(char *addserv)
 
         if (!(new_ircServer->serv_pagemd_grp)) goto newircs_err3;
 
-        Object          * tmp_servlog = HGroup, MUIA_Weight, 0, MUIA_Background, PAGE_BUT_BACK, Child, (IPTR) LLabel("Server Log"), MUIA_InputMode, MUIV_InputMode_RelVerify, End;
+        Object          * tmp_servlog = HGroup, MUIA_Weight, 0, MUIA_Background, PAGE_BUT_BACK, Child, (IPTR) LLabel(_(MSG_SERVER_LOG)), MUIA_InputMode, MUIV_InputMode_RelVerify, End;
         
         new_ircServer->serv_page = VGroup,
             Child, (IPTR) (new_ircServer->serv_page_reg_grp = HGroup,
@@ -1406,10 +1406,10 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
 
         /* Create the buttons */      
       
-        new_ircChannel->chan_send = HGroup, ButtonFrame, MUIA_Weight, 0, MUIA_Background, MUII_ButtonBack, Child, (IPTR) LLabel("send"), MUIA_InputMode, MUIV_InputMode_RelVerify, End;
+        new_ircChannel->chan_send = HGroup, ButtonFrame, MUIA_Weight, 0, MUIA_Background, MUII_ButtonBack, Child, (IPTR) LLabel(_(MSG_SEND)), MUIA_InputMode, MUIV_InputMode_RelVerify, End;
     
-        gad_close_irc_out   = HGroup, MUIA_Weight, 0, Child, (IPTR) LLabel(" X "), MUIA_InputMode, MUIV_InputMode_RelVerify, End;
-        gad_close_userlist  = HGroup, MUIA_Weight, 0, Child, (IPTR) LLabel(" X "), MUIA_InputMode, MUIV_InputMode_RelVerify, End;
+        gad_close_irc_out   = HGroup, MUIA_Weight, 0, Child, (IPTR) LLabel(_(MSG_CLOSE_IRC)), MUIA_InputMode, MUIV_InputMode_RelVerify, End;
+        gad_close_userlist  = HGroup, MUIA_Weight, 0, Child, (IPTR) LLabel(_(MSG_CLOSE_USERLIST)), MUIA_InputMode, MUIV_InputMode_RelVerify, End;
 
         /* Create the image objects */
 
@@ -1585,7 +1585,7 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
     
          user_nodes = MUI_NewObject( MUIC_NListview,
                         MUIA_HorizWeight, 20,
-                        MUIA_ShortHelp, (IPTR) "Users",
+                        MUIA_ShortHelp, __(MSG_USERS),
                         MUIA_NListview_NList, (IPTR) new_ircChannel->chan_users,
                 TAG_DONE);
 
@@ -1598,14 +1598,14 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
 		new_ircChannel->chan_topic = AllocVec(strlen(new_ircChannel->chan_name) +1, MEMF_CLEAR);
 		char *output_grp_label = AllocVec(output_grp_txt_len, MEMF_CLEAR);
 
-		sprintf(output_grp_label,"From %s to %s", new_ircChannel->chan_serv->serv_name, new_ircChannel->chan_name);
+		sprintf(output_grp_label,_(MSG_FROM_TO), new_ircChannel->chan_serv->serv_name, new_ircChannel->chan_name);
 		sprintf(new_ircChannel->chan_topic,"%s",new_ircChannel->chan_name);
 
         new_ircChannel->chan_page = VGroup,
                             Child, (IPTR) HGroup,
                                 MUIA_Group_SameWidth, FALSE,
                                 MUIA_Weight,0,
-                                Child, (IPTR) LLabel("Topic:"),
+                                Child, (IPTR) LLabel(_(MSG_TOPIC)),
                                 Child, (IPTR) ( new_ircChannel->chan_topic_obj = TextObject,
                                     MUIA_Text_Contents, new_ircChannel->chan_topic,
                                 End),
@@ -1701,7 +1701,7 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
                                         MUIA_Weight,0,
                                         MUIA_Background, MUII_FILL,
                                         Child, (IPTR) img_user,
-                                        Child, (IPTR) LLabel("Users"),
+                                        Child, (IPTR) LLabel(_(MSG_USERS)),
                                         Child, HVSpace,
                                         Child, (IPTR) gad_close_userlist,
                                     End,

@@ -9,7 +9,7 @@
 #define CATCOMP_ARRAY
 #include "strings.h"
 
-#define CATALOG_NAME     "Extras/Networking/Apps/AiRcOS.catalog"
+#define CATALOG_NAME     "AiRcOS.catalog"
 #define CATALOG_VERSION  0
 
 /*** Variables **************************************************************/
