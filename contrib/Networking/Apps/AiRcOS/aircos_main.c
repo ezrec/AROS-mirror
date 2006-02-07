@@ -1,5 +1,5 @@
 /*
-    Copyright Â© 2002, The AROS Development Team.
+    Copyright © 2002, The AROS Development Team.
     All rights reserved.
 
     $Id: aircos_main.c,v 1.1 2005/01/04 03:29:51 nicja Exp $
@@ -434,7 +434,7 @@ D(bug("[AiRcOS](serverconnect_func) Socket connection failed\n"));
 	
 	if (dtest_connection) AddTail((struct List *)&AiRcOS_Base->aircos_looseconnectionlist,(struct Node *) &dtest_connection->connection_node);
 
-//	AiRcOS_Base->temp_process_thisConnection = dtest_connection;   set(AiRcOS_Base->butt_connectServer,MUIA_Disabled,FALSE);
+//	AiRcOS_Base->temp_process_thisConnection = dtest_connection;   set(AiRcOS_Base->butt_connectServer,MUIA_Disabled,FALSE);
 
 	AROS_USERFUNC_EXIT
 };
@@ -619,7 +619,7 @@ D(bug("[AiRcOS] menuprocess_func()\n"));
 
 int main(void)
 {
-   IPTR                    argarray[TOTAL_ARGS] = { NULL };   struct RDArgs           *args = NULL;
+   IPTR                    argarray[TOTAL_ARGS] = { NULL };   struct RDArgs           *args = NULL;
 
     BPTR                    lock                = NULL;
     
@@ -782,7 +782,7 @@ D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
     AiRcOS_Base->aircos_app = ApplicationObject,
 		MUIA_Application_Title,       (IPTR) "AiRcOS IRC",
 		MUIA_Application_Version,     (IPTR) "$VER: AiRcOS 0.0.3 (11.12.05)",
-		MUIA_Application_Copyright,   (IPTR) "Copyright Â© 2005, The AROS Development Team. All rights reserved.",
+		MUIA_Application_Copyright,   (IPTR) "Copyright © 2005, The AROS Development Team. All rights reserved.",
 		MUIA_Application_Author,      (IPTR) "Nic Andrews",
 		MUIA_Application_Description, (IPTR) "Internet Relay Chat Client for AROS!.",
 		MUIA_Application_Base,        (IPTR) "AiRcOS",
@@ -960,3 +960,4 @@ LibError:
 
     return(error);
 }
+

@@ -963,7 +963,7 @@ struct IRC_Channel_Group_User *aircos_Find_User
          if (strcasecmp(current_User->user_name,findThisUser)==0) return current_User;
       }
    }
-        
+   
    return NULL;
 }
 
@@ -1200,7 +1200,7 @@ newircs_err2:
 newircs_err1:
 
       FreeVec(new_ircServer);
-      return NULL;
+	      return NULL;
 }
 
 /* returns our private structure for a named server, or null if not found */
@@ -1467,7 +1467,7 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
                     MUIA_Frame, MUIV_Frame_None,
                     MUIA_ShowSelState, FALSE,
                     MUIA_Image_Spec, (IPTR)"3:"FONT_DEF_IMAGE,
-                    MUIA_InputMode, MUIV_InputMode_RelVerify, 
+                    MUIA_InputMode, MUIV_InputMode_RelVerify,
                 End;
         }
         else gad_font_s_d = HGroup, MUIA_Weight, 0, MUIA_Background, PAGE_BUT_BACK, Child, (IPTR) LLabel("F"), MUIA_InputMode, MUIV_InputMode_RelVerify, End; /* Font size def */
@@ -1665,7 +1665,7 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
                                         End,
         
                                         Child, (IPTR) gad_Pop_smiley, /* smilley! */
-                                                                                    
+                                                                                   
                                         Child, RectangleObject,
                                             MUIA_Weight,100,
                                         End,
@@ -1782,3 +1782,4 @@ BOOL  aircos_rem_channel(char *remfromserv,char *remchann)
 {
         return FALSE;
 }
+

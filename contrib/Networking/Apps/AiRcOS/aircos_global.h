@@ -1,5 +1,5 @@
 /*
-    Copyright Â© 2002, The AROS Development Team.
+    Copyright © 2005, The AROS Development Team.
     All rights reserved.
 
     $Id: aircos_gui.c,v 1.1 2005/01/04 03:29:51 nicja Exp $
@@ -346,3 +346,4 @@ struct irccommand
    int      (*command_clientFunction)(struct IRC_Channel_Priv  *);
    int      clientArgCount;                                                   /* No. of args used by command */
 };
+
