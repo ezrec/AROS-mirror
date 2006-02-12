@@ -115,12 +115,15 @@ Tools
 + `Jocke 'Zerohero' Birging's crosscompiler`__
 
   Crosscompilers for Cygwin and Linux for creating of AROS programs.
+
++ `68k Hosted cross compiler for generating x86-AROS binaries`__
+
   
 __ http://www.geocities.com/SiliconValley/Bridge/5737/Main/oop4a_e.html
 __ http://ftp.back2roots.org/geekgadgets/
 __ http://www.lysator.liu.se/~lcs/files/gg-cross/
 __ http://www.zerohero.se/cross/aros.html
-
+__ http://www.whoosh777.pwp.blueyonder.co.uk/amiga-68k-x-x86-aros-gcc.html
 
 Miscellanous
 ------------
