@@ -10,9 +10,9 @@
 // #include "cdrom.h"
 //#include "devsupp.h"
 
-extern const char name[];
-extern const char version[];
-extern const APTR inittab[4];
+extern const char asfsname[];
+extern const char asfsversion[];
+extern const APTR asfsinittab[4];
 static struct ASFSBase *AROS_SLIB_ENTRY(init,asfsdev)();
 static void AROS_SLIB_ENTRY(open,asfsdev)();
 static BPTR AROS_SLIB_ENTRY(close,asfsdev)();
@@ -43,13 +43,13 @@ const struct Resident ASFS_resident=
         41,
         NT_DEVICE,
         -122,
-        (char *)name,
-        (char *)&version[6],
-        (ULONG *)inittab
+        (char *)asfsname,
+        (char *)&asfsversion[6],
+        (ULONG *)asfsinittab
 };
 
-static const char name[]="sfs.handler";
-static const char version[]="$VER: sfs 1.84 (30.11.2005)\r\n";
+const char asfsname[]="sfs.handler";
+const char asfsversion[]="$VER: sfs 1.84 (30.11.2005)\r\n";
 
 static const UBYTE asfsdatatable = 0;
 
@@ -64,7 +64,7 @@ static void *const asfsfunctable[]=
         (void *)-1
 };
 
-static const APTR inittab[4]=
+const APTR asfsinittab[4]=
 {
         (APTR)sizeof(struct ASFSBase),
         (APTR)asfsfunctable,
@@ -267,4 +267,4 @@ AROS_LH1(LONG, abortio,
         AROS_LIBFUNC_EXIT
 }
 
-static const char asfshandlerend = 0;
+const char asfshandlerend = 0;
