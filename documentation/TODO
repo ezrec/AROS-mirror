@@ -32,3 +32,5 @@ goes public, but are IMHO not *necessary*:
   introduction/index to a couple of languages.
 + Better build system (not the ad-hoc thing it is now)
 + Support for different languages.
++ Some files/scripts have to be manually updated when a new year begins => automation
++ The script buildit.py has hardcoded paths to pictures => use pattern
