@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2002-2003, The AROS Development Team. All rights reserved.
+# Copyright © 2002-2006, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os, sys, shutil
@@ -348,10 +348,14 @@ def buildClean():
     remove( 'news/archive/2003.en' )
     remove( 'news/archive/2004.en' )
     remove( 'news/archive/2005.en' )
-
+    remove( 'news/archive/2006.en' )
+    
 def buildWWW():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'www' )
 
+    remove( os.path.join( DSTROOT, 'index.php' ) )
+    remove( os.path.join( DSTROOT, 'news', 'archive', '2006.php' ) )
+    
     makeNews()
     makeTemplates()
 
