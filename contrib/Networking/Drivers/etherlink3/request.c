@@ -1,7 +1,5 @@
 /*
 
-File: request.c
-Author: Neil Cafferkey
 Copyright (C) 2001-2005 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
@@ -713,7 +711,7 @@ static BOOL CmdTrackType(struct IOSana2Req *request,
    else
    {
       tracker =
-         AllocMem(sizeof(struct TypeTracker), MEMF_PUBLIC|MEMF_CLEAR);
+         AllocMem(sizeof(struct TypeTracker), MEMF_PUBLIC | MEMF_CLEAR);
       if(tracker != NULL)
       {
          tracker->packet_type = packet_type;

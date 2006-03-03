@@ -19,18 +19,21 @@ MA 02111-1307, USA.
 
 */
 
-#ifndef PCI_PROTOS_H
-#define PCI_PROTOS_H
+#ifndef PROMETHEUS_PROTOS_H
+#define PROMETHEUS_PROTOS_H
 
 
 #include "device.h"
 
-ULONG GetPCICount(struct DevBase *base);
-struct DevUnit *GetPCIUnit(ULONG index, struct DevBase *base);
-VOID DeletePCIUnit(struct DevUnit *unit, struct DevBase *base);
-BOOL IsCardCompatible(UWORD vendor_id, UWORD product_id,
+ULONG GetPrometheusCount(struct DevBase *base);
+struct BusContext *AllocPrometheusCard(ULONG index, struct DevBase *base);
+VOID FreePrometheusCard(struct BusContext *context, struct DevBase *base);
+BOOL AddPrometheusIntServer(APTR card, struct Interrupt *interrupt,
    struct DevBase *base);
-UWORD GetGeneration(UWORD product_id, struct DevBase *base);
+VOID RemPrometheusIntServer(APTR card, struct Interrupt *interrupt,
+   struct DevBase *base);
+APTR AllocPrometheusDMAMem(UPINT size, struct DevBase *base);
+VOID FreePrometheusDMAMem(APTR mem, UPINT size, struct DevBase *base);
 
 #endif
 

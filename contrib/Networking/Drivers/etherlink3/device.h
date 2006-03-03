@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2001-2005 Neil Cafferkey
+Copyright (C) 2001-2006 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,6 +33,18 @@ MA 02111-1307, USA.
 
 #include "io.h"
 
+#define DEVICE_NAME "etherlink3.device"
+#define VERSION 0
+#define REVISION 8
+#define DATE "3.3.2006"
+
+#define UTILITY_VERSION 39
+#define PROMETHEUS_VERSION 2
+#define POWERPCI_VERSION 2
+#define EXPANSION_VERSION 50
+#define OPENPCI_VERSION 1
+#define PCCARD_VERSION 1
+
 #ifndef UPINT
 typedef ULONG UPINT;
 typedef LONG PINT;
@@ -47,6 +59,9 @@ typedef LONG PINT;
 #endif
 #endif
 
+#define _STR(A) #A
+#define STR(A) _STR(A)
+
 #ifndef __AROS__
 #define USE_HACKS
 #endif
@@ -60,9 +75,11 @@ struct DevBase
    struct UtilityBase *utility_base;
    struct Library *prometheus_base;
    struct Library *powerpci_base;
+   struct Library *openpci_base;
    struct Library *pccard_base;
    APTR card_base;
    struct MinList pci_units;
+   struct MinList isa_units;
    struct MinList pccard_units;
    struct timerequest timer_request;
 #ifdef __amigaos4__
@@ -70,8 +87,11 @@ struct DevBase
    struct ExecIFace *i_exec;
    struct UtilityIFace *i_utility;
    struct PCIIFace *i_pci;
+   struct CardIFace *i_card;
+   struct PCCardIFace *i_pccard;
    struct TimerIFace *i_timer;
 #endif
+   VOID (*wrapper_int_code)();
 };
 
 
@@ -248,67 +268,6 @@ struct AddressRange
 #define UNITF_TXBUFFERINUSE (1 << 8)
 
 
-IMPORT const TEXT device_name[];
-
-
-/* Endianness macros */
-
-#define FlipWord(A) \
-   ({ \
-      UWORD _FlipWord_A = (A); \
-      _FlipWord_A = (_FlipWord_A << 8) | (_FlipWord_A >> 8); \
-   })
-
-#define FlipLong(A) \
-   ({ \
-      ULONG _FlipLong_A = (A); \
-      _FlipLong_A = \
-         (FlipWord(_FlipLong_A) << 16) | FlipWord(_FlipLong_A >> 16); \
-   })
-
-#ifndef __i386__ /* Big endian */
-
-#define BEWord(A) \
-   (A)
-
-#define BELong(A) \
-   (A)
-
-#define LEWord(A) \
-   FlipWord(A)
-
-#define LELong(A) \
-   FlipLong(A)
-
-#else
-
-#define BEWord(A) \
-   FlipWord(A)
-
-#define BELong(A) \
-   FlipLong(A)
-
-#define LEWord(A) \
-   (A)
-
-#define LELong(A) \
-   (A)
-
-#endif
-
-#define MakeBEWord(A) \
-   BEWord(A)
-
-#define MakeBELong(A) \
-   BELong(A)
-
-#define MakeLEWord(A) \
-   LEWord(A)
-
-#define MakeLELong(A) \
-   LELong(A)
-
-
 /* Library and device bases */
 
 #define SysBase (base->sys_base)
@@ -317,12 +276,15 @@ IMPORT const TEXT device_name[];
 #define ExpansionBase (base->expansion_base)
 #define PrometheusBase (base->prometheus_base)
 #define PowerPCIBase (base->powerpci_base)
+#define OpenPciBase (base->openpci_base)
 #define PCCardBase (base->pccard_base)
 #define TimerBase (base->timer_request.tr_node.io_Device)
 
 #ifdef __amigaos4__
 #define IExec (base->i_exec)
 #define IUtility (base->i_utility)
+#define ICard (base->i_card)
+#define IPCCard (base->i_pccard)
 #define ITimer (base->i_timer)
 #endif
 

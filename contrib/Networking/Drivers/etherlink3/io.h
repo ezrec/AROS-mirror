@@ -23,6 +23,12 @@ MA 02111-1307, USA.
 #define IO_H
 
 
+#include <exec/types.h>
+#include <utility/tagitem.h>
+
+#include "endian.h"
+
+
 /* I/O tags */
 
 #define IOTAG_ByteIn (TAG_USER + 0)

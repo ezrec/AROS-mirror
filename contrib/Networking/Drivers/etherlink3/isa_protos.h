@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2005 Neil Cafferkey
+Copyright (C) 2006 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,18 +19,15 @@ MA 02111-1307, USA.
 
 */
 
-#ifndef PCI_PROTOS_H
-#define PCI_PROTOS_H
+#ifndef ISA_PROTOS_H
+#define ISA_PROTOS_H
 
 
 #include "device.h"
 
-ULONG GetPCICount(struct DevBase *base);
-struct DevUnit *GetPCIUnit(ULONG index, struct DevBase *base);
-VOID DeletePCIUnit(struct DevUnit *unit, struct DevBase *base);
-BOOL IsCardCompatible(UWORD vendor_id, UWORD product_id,
-   struct DevBase *base);
-UWORD GetGeneration(UWORD product_id, struct DevBase *base);
+ULONG GetISACount(struct DevBase *base);
+struct DevUnit *GetISAUnit(ULONG index, struct DevBase *base);
+VOID DeleteISAUnit(struct DevUnit *unit, struct DevBase *base);
 
 #endif
 

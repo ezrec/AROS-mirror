@@ -31,8 +31,6 @@ struct DevUnit *CreateUnit(ULONG index, APTR card,
    const struct TagItem *io_tags, UWORD generation, UWORD bus,
    struct DevBase *base);
 VOID DeleteUnit(struct DevUnit *unit, struct DevBase *base);
-struct DevUnit *CreateISAUnit(ULONG unit_num, struct DevBase *base);
-VOID DeleteISAUnit(struct DevUnit *unit, struct DevBase *base);
 BOOL InitialiseAdapter(struct DevUnit *unit, BOOL reinsertion,
    struct DevBase *base);
 VOID ConfigureAdapter(struct DevUnit *unit, struct DevBase *base);
@@ -46,7 +44,7 @@ struct TypeStats *FindTypeStats(struct DevUnit *unit, struct MinList *list,
    ULONG packet_type, struct DevBase *base);
 VOID FlushUnit(struct DevUnit *unit, UBYTE last_queue, BYTE error,
    struct DevBase *base);
-BOOL StatusInt(REG(a1, struct DevUnit *unit), REG(a5, APTR int_code));
+BOOL StatusInt(REG(a1, struct DevUnit *unit), REG(a6, APTR int_code));
 VOID UpdateStats(struct DevUnit *unit, struct DevBase *base);
 
 

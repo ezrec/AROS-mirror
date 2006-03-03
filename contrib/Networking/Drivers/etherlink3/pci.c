@@ -1,7 +1,5 @@
 /*
 
-File: pci.c
-Author: Neil Cafferkey
 Copyright (C) 2004,2005 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
@@ -24,69 +22,36 @@ MA 02111-1307, USA.
 
 #include <exec/types.h>
 #include <utility/tagitem.h>
+
 #ifdef __amigaos4__
 #include <expansion/pci.h>
-#else
-#include <hardware/intbits.h>
-#include <libraries/prometheus.h>
-#ifndef __AROS__
-#include <pci/powerpci_pci.h>
-#endif
 #endif
 
 #include <proto/exec.h>
 #include <proto/expansion.h>
-#include <proto/prometheus.h>
-#ifndef __AROS__
-#include <proto/powerpci.h>
-#endif
 
 #include "device.h"
+#include "pci.h"
 
 #include "pci_protos.h"
+#include "device_protos.h"
+#include "prometheus_protos.h"
+#include "powerpci_protos.h"
+#include "expansion_protos.h"
+/*#include "openpci_protos.h"*/
 #include "unit_protos.h"
-
-
-struct BusContext
-{
-   struct DevUnit *unit;
-   struct DevBase *device;
-   VOID *card;
-   UPINT io_base;
-   UWORD generation;
-   const struct TagItem *unit_tags;
-};
 
 
 /* Private prototypes */
 
-static ULONG GetPrometheusCount(struct DevBase *base);
-#ifndef __AROS__
-static ULONG GetPowerPCICount(struct DevBase *base);
-#endif
 static struct DevUnit *FindPCIUnit(ULONG index, struct DevBase *base);
 static struct DevUnit *CreatePCIUnit(ULONG index, struct DevBase *base);
 static struct BusContext *AllocCard(ULONG index, struct DevBase *base);
-static struct BusContext *AllocPrometheusCard(ULONG index,
-   struct DevBase *base);
-#ifndef __AROS__
-static struct BusContext *AllocPowerPCICard(ULONG index,
-   struct DevBase *base);
-#endif
 static VOID FreeCard(struct BusContext *context, struct DevBase *base);
-static VOID FreePrometheusCard(struct BusContext *context,
-   struct DevBase *base);
-#ifndef __AROS__
-static VOID FreePowerPCICard(struct BusContext *context,
-   struct DevBase *base);
-#endif
 static BOOL AddPCIIntServer(APTR card, struct Interrupt *interrupt,
    struct DevBase *base);
 static VOID RemPCIIntServer(APTR card, struct Interrupt *interrupt,
    struct DevBase *base);
-static BOOL IsCardCompatible(UWORD vendor_id, UWORD product_id,
-   struct DevBase *base);
-static UWORD GetGeneration(UWORD product_id, struct DevBase *base);
 static UBYTE ByteInHook(struct BusContext *context, ULONG offset);
 static ULONG LongInHook(struct BusContext *context, ULONG offset);
 static VOID ByteOutHook(struct BusContext *context, ULONG offset,
@@ -112,7 +77,7 @@ static APTR AllocDMAMemHook(struct BusContext *context, UPINT size,
 static VOID FreeDMAMemHook(struct BusContext *context, APTR mem);
 
 
-static const UWORD product_codes[] =
+const UWORD product_codes[] =
 {
    0x10b7, 0x1201,
    0x10b7, 0x1202,
@@ -180,120 +145,25 @@ ULONG GetPCICount(struct DevBase *base)
 {
    ULONG count = 0;
 
+#if !(defined(__MORPHOS__) || defined(__amigaos4__))
    if(base->prometheus_base != NULL)
       count = GetPrometheusCount(base);
-#ifndef __AROS__
-   else if(base->powerpci_base != NULL)
+#endif
+#ifdef __mc68000__
+   if(base->powerpci_base != NULL)
       count = GetPowerPCICount(base);
 #endif
-
-   return count;
-}
-
-
-
-/****i* etherlink3.device/GetPrometheusCount *******************************
-*
-*   NAME
-*	GetPrometheusCount
-*
-*   SYNOPSIS
-*	count = GetPrometheusCount()
-*
-*	ULONG GetPrometheusCount();
-*
-****************************************************************************
-*
-*/
-
-static ULONG GetPrometheusCount(struct DevBase *base)
-{
-   ULONG count = 0;
-   PCIBoard *card = NULL;
-   UPINT vendor_id, product_id;
-
-   while((card = Prm_FindBoardTagList(card, NULL)) != NULL)
-   {
-      Prm_GetBoardAttrsTags(card, PRM_Vendor, (UPINT)&vendor_id,
-         PRM_Device, (UPINT)&product_id, TAG_END);
-      if(IsCardCompatible(vendor_id, product_id, base))
-         count++;
-   }
-
-   return count;
-}
-
-
-
-/****i* etherlink3.device/GetPowerPCICount *********************************
-*
-*   NAME
-*	GetPowerPCICount
-*
-*   SYNOPSIS
-*	count = GetPowerPCICount()
-*
-*	ULONG GetPowerPCICount();
-*
-****************************************************************************
-*
-*/
-
-#ifndef __AROS__
-static ULONG GetPowerPCICount(struct DevBase *base)
-{
-   ULONG count = 0;
-   ULONG card = 0;
-   UWORD vendor_id, product_id;
-
-   while((card = pci_find_device(0xffff, 0xffff, card)) != NULL)
-   {
-      product_id = pci_read_conf_word(card, PCI_DEVICE_ID);
-      vendor_id = pci_read_conf_word(card, PCI_VENDOR_ID);
-      if(IsCardCompatible(vendor_id, product_id, base))
-         count++;
-   }
-
-   return count;
-}
-#endif
-
-
-
-/****i* etherlink3.device/GetOS4Count **************************************
-*
-*   NAME
-*	GetOS4Count
-*
-*   SYNOPSIS
-*	count = GetOS4Count()
-*
-*	ULONG GetOS4Count();
-*
-****************************************************************************
-*
-*/
-
 #ifdef __amigaos4__
-static ULONG GetOS4Count(struct DevBase *base)
-{
-   ULONG count = 0;
-   struct PCIDevice *card;
-
-   if(base->i_pci != NULL)
-   {
-      while((card =
-         base->i_pci->FindDeviceTags(FDT_CandidateList, product_codes,
-         FDT_Index, count, TAG_END)) != NULL)
-      {
-         base->i_pci->FreeDevice(card);
-         count++;
-      }
-   }
+   if(base->expansion_base != NULL)
+      count = GetExpansionCount(base);
+#endif
+#ifdef __MORPHOS__
+   if(base->openpci_base != NULL)
+      count = GetOpenPCICount(base);
+#endif
 
    return count;
 }
-#endif
 
 
 
@@ -372,7 +242,7 @@ static struct DevUnit *FindPCIUnit(ULONG index, struct DevBase *base)
 /****i* etherlink3.device/CreatePCIUnit ************************************
 *
 *   NAME
-*	CreatePCIUnit -- Create a unit.
+*	CreatePCIUnit -- Create a PCI unit.
 *
 *   SYNOPSIS
 *	unit = CreatePCIUnit(index)
@@ -380,7 +250,7 @@ static struct DevUnit *FindPCIUnit(ULONG index, struct DevBase *base)
 *	struct DevUnit *CreatePCIUnit(ULONG);
 *
 *   FUNCTION
-*	Creates a PCI new unit.
+*	Creates a new PCI unit.
 *
 ****************************************************************************
 *
@@ -398,10 +268,17 @@ static struct DevUnit *CreatePCIUnit(ULONG index, struct DevBase *base)
 
    if(success)
    {
+      if(context->unit_tags == NULL)
+      {
+         context->unit_tags = unit_tags;
+      }
+   }
+
+   if(success)
+   {
       context->device = base;
-      context->unit = unit =
-         CreateUnit(index, context, context->unit_tags, context->generation,
-            PCI_BUS, base);
+      context->unit = unit = CreateUnit(index, context, context->unit_tags,
+         context->generation, PCI_BUS, base);
       if(unit == NULL)
          success = FALSE;
    }
@@ -409,7 +286,14 @@ static struct DevUnit *CreatePCIUnit(ULONG index, struct DevBase *base)
    /* Add interrupt */
 
    if(success)
-      AddPCIIntServer(context->card, &unit->status_int, base);
+   {
+      if(!(WrapInt(&unit->status_int, base)
+         && WrapInt(&unit->rx_int, base)
+         && WrapInt(&unit->tx_int, base)
+         && WrapInt(&unit->tx_end_int, base)))
+         success = FALSE;
+      success = AddPCIIntServer(context->card, &unit->status_int, base);
+   }
 
    if(!success)
    {
@@ -457,6 +341,10 @@ VOID DeletePCIUnit(struct DevUnit *unit, struct DevBase *base)
    {
       context = unit->card;
       RemPCIIntServer(context->card, &unit->status_int, base);
+      UnwrapInt(&unit->tx_end_int, base);
+      UnwrapInt(&unit->tx_int, base);
+      UnwrapInt(&unit->rx_int, base);
+      UnwrapInt(&unit->status_int, base);
       DeleteUnit(unit, base);
       FreeCard(context, base);
    }
@@ -484,228 +372,25 @@ static struct BusContext *AllocCard(ULONG index, struct DevBase *base)
 {
    struct BusContext *context;
 
+#if !(defined(__MORPHOS__) || defined(__amigaos4__))
    if(base->prometheus_base != NULL)
       context = AllocPrometheusCard(index, base);
-#ifndef __AROS__
-   else if(base->powerpci_base != NULL)
+#endif
+#ifdef __mc68000__
+   if(base->powerpci_base != NULL)
       context = AllocPowerPCICard(index, base);
 #endif
-
-   return context;
-}
-
-
-
-/****i* etherlink3.device/AllocPrometheusCard ******************************
-*
-*   NAME
-*	AllocPrometheusCard -- Create a unit.
-*
-*   SYNOPSIS
-*	context = AllocPrometheusCard(index)
-*
-*	struct BusContext *AllocPrometheusCard(ULONG);
-*
-****************************************************************************
-*
-*/
-
-static struct BusContext *AllocPrometheusCard(ULONG index,
-   struct DevBase *base)
-{
-   BOOL success = TRUE;
-   struct BusContext *context;
-   PCIBoard *card = NULL;
-   UWORD i = 0;
-   UPINT vendor_id, product_id;
-
-   /* Find a compatible card */
-
-   context = AllocMem(sizeof(struct BusContext), MEMF_PUBLIC | MEMF_CLEAR);
-   if(context == NULL)
-      success = FALSE;
-
-   if(success)
-   {
-      context->unit_tags = unit_tags;
-
-      while(i <= index)
-      {
-         card = Prm_FindBoardTagList(card, NULL);
-         Prm_GetBoardAttrsTags(card, PRM_Vendor, (UPINT)&vendor_id,
-            PRM_Device, (UPINT)&product_id, TAG_END);
-         if(IsCardCompatible(vendor_id, product_id, base))
-            i++;
-      }
-
-      context->card = card;
-      context->generation = GetGeneration(product_id, base);
-      if(card == NULL)
-         success = FALSE;
-   }
-
-   /* Get base address */
-
-   if(success)
-   {
-      Prm_GetBoardAttrsTags(card, PRM_MemoryAddr0, (UPINT)&context->io_base,
-         TAG_END);
-      if(context->io_base == 0)
-         success = FALSE;
-   }
-
-   /* Lock card */
-
-   if(success)
-   {
-      if(!Prm_SetBoardAttrsTags(card, PRM_BoardOwner, (UPINT)base, TAG_END))
-         success = FALSE;
-   }
-
-   if(!success)
-   {
-      FreeCard(context, base);
-      context = NULL;
-   }
-
-   return context;
-}
-
-
-
-/****i* etherlink3.device/AllocPowerPCICard ********************************
-*
-*   NAME
-*	AllocPowerPCICard -- Create a unit.
-*
-*   SYNOPSIS
-*	context = AllocPowerPCICard(index)
-*
-*	struct BusContext *AllocPowerPCICard(ULONG);
-*
-****************************************************************************
-*
-*/
-
-#ifndef __AROS__
-static struct BusContext *AllocPowerPCICard(ULONG index,
-   struct DevBase *base)
-{
-   BOOL success = TRUE;
-   struct BusContext *context;
-   ULONG card = 0;
-   UWORD i = 0, vendor_id, product_id;
-
-   /* Find a compatible card */
-
-   context = AllocMem(sizeof(struct BusContext), MEMF_PUBLIC | MEMF_CLEAR);
-   if(context == NULL)
-      success = FALSE;
-
-   if(success)
-   {
-      context->unit_tags = unit_tags;
-
-      while(i <= index)
-      {
-         card = pci_find_device(0xffff, 0xffff, card);
-         product_id = pci_read_conf_word(card, PCI_DEVICE_ID);
-         vendor_id = pci_read_conf_word(card, PCI_VENDOR_ID);
-         if(IsCardCompatible(vendor_id, product_id, base))
-            i++;
-      }
-
-      context->card = (APTR)card;
-      context->generation = GetGeneration(product_id, base);
-      if(card == NULL) /* ??? */
-         success = FALSE;
-   }
-
-   /* Get base address */
-
-   if(success)
-   {
-      context->io_base = (UPINT)pci_get_base_start(card, 0);
-      if(context->io_base == NULL)
-         success = FALSE;
-context->io_base += 0x10000;
-   }
-
-   if(!success)
-   {
-      FreeCard(context, base);
-      context = NULL;
-   }
-
-   return context;
-}
-#endif
-
-
-
-/****i* etherlink3.device/AllocOS4Card *************************************
-*
-*   NAME
-*	AllocOS4Card -- Create a unit.
-*
-*   SYNOPSIS
-*	context = AllocOS4Card(index)
-*
-*	struct BusContext *AllocOS4Card(ULONG);
-*
-****************************************************************************
-*
-*/
-
 #ifdef __amigaos4__
-static struct BusContext *AllocOS4Card(ULONG index, struct DevBase *base)
-{
-   BOOL success = TRUE;
-   struct BusContext *context;
-   struct PCIDevice *card = NULL;
-   struct PCIResourceRange *io_range = NULL;
-
-   /* Find a compatible card */
-
-   context = AllocMem(sizeof(struct BusContext), MEMF_PUBLIC | MEMF_CLEAR);
-   if(context == NULL)
-      success = FALSE;
-
-   context->card = card =
-      base->i_pci->FindDeviceTags(FDT_CandidateList, product_codes,
-         FDT_Index, index, TAG_END);
-   if(card == NULL)
-      success = FALSE;
-
-   if(success)
-   {
-      if(!card->Lock(PCI_LOCK_EXCLUSIVE))
-         success = FALSE;
-   }
-
-   if(success)
-   {
-      card->SetEndian(PCI_MODE_REVERSE_ENDIAN);
-      io_range = card->GetResourceRange(0);
-      if(io_range == NULL)
-         success = FALSE;
-   }
-
-   if(success)
-   {
-      context->io_base = io_range->BaseAddress;
-      context->unit_tags = unit_tags;
-   }
-
-   if(!success)
-   {
-      FreeCard(context, base);
-      context = NULL;
-   }
+   if(base->expansion_base != NULL)
+      context = AllocExpansionCard(index, base);
+#endif
+#ifdef __MORPHOS__
+   if(base->openpci_base != NULL)
+      context = AllocOpenPCICard(index, base);
+#endif
 
    return context;
 }
-#endif
 
 
 
@@ -728,86 +413,26 @@ static VOID FreeCard(struct BusContext *context, struct DevBase *base)
 
    if(context != NULL)
    {
+#if !(defined(__MORPHOS__) || defined(__amigaos4__))
       if(base->prometheus_base != NULL)
          FreePrometheusCard(context, base);
-#ifndef __AROS__
-      else if(base->powerpci_base != NULL)
+#endif
+#ifdef __mc68000
+      if(base->powerpci_base != NULL)
          FreePowerPCICard(context, base);
 #endif
-   }
-
-   return;
-}
-
-
-
-/****i* etherlink3.device/FreePrometheusCard *******************************
-*
-*   NAME
-*	FreePrometheusCard
-*
-*   SYNOPSIS
-*	FreePrometheusCard(context)
-*
-*	VOID FreePrometheusCard(struct BusContext *);
-*
-****************************************************************************
-*
-*/
-
-static VOID FreePrometheusCard(struct BusContext *context,
-   struct DevBase *base)
-{
-   PCIBoard *card;
-   APTR owner;
-
-   if(context != NULL)
-   {
-      card = context->card;
-      if(card != NULL)
-      {
-         /* Unlock board */
-
-         Prm_GetBoardAttrsTags(card, PRM_BoardOwner, (UPINT)&owner,
-            TAG_END);
-         if(owner == base)
-            Prm_SetBoardAttrsTags(card, PRM_BoardOwner, NULL, TAG_END);
-      }
-
-      FreeMem(context, sizeof(struct BusContext));
-   }
-
-   return;
-}
-
-
-
-/****i* etherlink3.device/FreePowerPCICard *********************************
-*
-*   NAME
-*	FreePowerPCICard
-*
-*   SYNOPSIS
-*	FreePowerPCICard(context)
-*
-*	VOID FreePowerPCICard(struct BusContext *);
-*
-****************************************************************************
-*
-*/
-
-#ifndef __AROS__
-static VOID FreePowerPCICard(struct BusContext *context,
-   struct DevBase *base)
-{
-   if(context != NULL)
-   {
-      FreeMem(context, sizeof(struct BusContext));
-   }
-
-   return;
-}
+#ifdef __amigaos4__
+      if(base->expansion_base != NULL)
+         FreeExpansionCard(context, base);
 #endif
+#ifdef __MORPHOS__
+      if(base->openpci_base != NULL)
+         FreeOpenPCICard(context, base);
+#endif
+   }
+
+   return;
+}
 
 
 
@@ -830,11 +455,21 @@ static BOOL AddPCIIntServer(APTR card, struct Interrupt *interrupt,
 {
    BOOL success;
 
+#if !(defined(__MORPHOS__) || defined(__amigaos4__))
    if(base->prometheus_base != NULL)
-      success = Prm_AddIntServer(card, interrupt);
-#ifndef __AROS__
-   else if(base->powerpci_base != NULL)
-      success = pci_add_irq((ULONG)card, interrupt);
+      success = AddPrometheusIntServer(card, interrupt, base);
+#endif
+#ifdef __mc68000
+   if(base->powerpci_base != NULL)
+      success = AddPowerPCIIntServer(card, interrupt, base);
+#endif
+#ifdef __amigaos4__
+   if(base->expansion_base != NULL)
+      success = AddExpansionIntServer(card, interrupt, base);
+#endif
+#ifdef __MORPHOS__
+   if(base->openpci_base != NULL)
+      success = AddOpenPCIIntServer(card, interrupt, base);
 #endif
 
    return success;
@@ -859,11 +494,21 @@ static BOOL AddPCIIntServer(APTR card, struct Interrupt *interrupt,
 static VOID RemPCIIntServer(APTR card, struct Interrupt *interrupt,
    struct DevBase *base)
 {
+#if !(defined(__MORPHOS__) || defined(__amigaos4__))
    if(base->prometheus_base != NULL)
-      Prm_RemIntServer(card, interrupt);
-#ifndef __AROS__
-   else if(base->powerpci_base != NULL)
-      pci_rem_irq((ULONG)card, interrupt);
+      RemPrometheusIntServer(card, interrupt, base);
+#endif
+#ifdef __mc68000
+   if(base->powerpci_base != NULL)
+      RemPowerPCIIntServer(card, interrupt, base);
+#endif
+#ifdef __amigaos4__
+   if(base->expansion_base != NULL)
+      RemExpansionIntServer(card, interrupt, base);
+#endif
+#ifdef __MORPHOS__
+   if(base->openpci_base != NULL)
+      RemOpenPCIIntServer(card, interrupt, base);
 #endif
 
    return;
@@ -877,15 +522,15 @@ static VOID RemPCIIntServer(APTR card, struct Interrupt *interrupt,
 *	IsCardCompatible
 *
 *   SYNOPSIS
-*	compatible = IsCardCompatible(context)
+*	compatible = IsCardCompatible(vendor_id, product_id)
 *
-*	BOOL IsCardCompatible(struct BusContext *);
+*	BOOL IsCardCompatible(UWORD, UWORD);
 *
 ****************************************************************************
 *
 */
 
-static BOOL IsCardCompatible(UWORD vendor_id, UWORD product_id,
+BOOL IsCardCompatible(UWORD vendor_id, UWORD product_id,
    struct DevBase *base)
 {
    BOOL compatible = FALSE;
@@ -916,7 +561,7 @@ static BOOL IsCardCompatible(UWORD vendor_id, UWORD product_id,
 *
 */
 
-static UWORD GetGeneration(UWORD product_id, struct DevBase *base)
+UWORD GetGeneration(UWORD product_id, struct DevBase *base)
 {
    UWORD generation;
 
@@ -1068,7 +713,7 @@ static VOID LongOutHook(struct BusContext *context, ULONG offset,
 
 
 
-/****i* prism2.device/LongsInHook ******************************************
+/****i* etherlink3.device/LongsInHook **************************************
 *
 *   NAME
 *	LongsInHook
@@ -1254,9 +899,11 @@ static APTR AllocDMAMemHook(struct BusContext *context, UPINT size,
 
    base = context->device;
    size += 2 * sizeof(APTR) + alignment;
+#if !(defined(__MORPHOS__) || defined(__amigaos4__))
    if(base->prometheus_base != NULL)
-      original_mem = Prm_AllocDMABuffer(size);
+      original_mem = AllocPrometheusDMAMem(size, base);
    else
+#endif
       original_mem = AllocMem(size, MEMF_PUBLIC);
    if(original_mem != NULL)
    {
@@ -1292,9 +939,12 @@ static VOID FreeDMAMemHook(struct BusContext *context, APTR mem)
    base = context->device;
    if(mem != NULL)
    {
+#if !(defined(__MORPHOS__) || defined(__amigaos4__))
       if(base->prometheus_base != NULL)
-         Prm_FreeDMABuffer(*((APTR *)mem - 1), *((UPINT *)mem - 2));
+         FreePrometheusDMAMem(*((APTR *)mem - 1), *((UPINT *)mem - 2),
+            base);
       else
+#endif
          FreeMem(*((APTR *)mem - 1), *((UPINT *)mem - 2));
    }
 

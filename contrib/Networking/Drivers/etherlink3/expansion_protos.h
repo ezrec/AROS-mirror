@@ -19,18 +19,19 @@ MA 02111-1307, USA.
 
 */
 
-#ifndef PCI_PROTOS_H
-#define PCI_PROTOS_H
+#ifndef EXPANSION_PROTOS_H
+#define EXPANSION_PROTOS_H
 
 
 #include "device.h"
 
-ULONG GetPCICount(struct DevBase *base);
-struct DevUnit *GetPCIUnit(ULONG index, struct DevBase *base);
-VOID DeletePCIUnit(struct DevUnit *unit, struct DevBase *base);
-BOOL IsCardCompatible(UWORD vendor_id, UWORD product_id,
+ULONG GetExpansionCount(struct DevBase *base);
+struct BusContext *AllocExpansionCard(ULONG index, struct DevBase *base);
+VOID FreeExpansionCard(struct BusContext *context, struct DevBase *base);
+BOOL AddExpansionIntServer(APTR card, struct Interrupt *interrupt,
    struct DevBase *base);
-UWORD GetGeneration(UWORD product_id, struct DevBase *base);
+VOID RemExpansionIntServer(APTR card, struct Interrupt *interrupt,
+   struct DevBase *base);
 
 #endif
 
