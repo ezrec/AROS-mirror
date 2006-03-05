@@ -4,6 +4,10 @@ Download
 
 .. Contents::
 
+.. Note::
+
+   You have to use a download manager which can continue an interrupted
+   download or "wget -c".
 
 Snapshots
 =========
