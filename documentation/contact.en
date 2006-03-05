@@ -2,8 +2,8 @@
 Contact Information
 ===================
 
-:Authors:   Adam Chodorowski 
-:Copyright: Copyright © 1995-2005, The AROS Development Team
+:Authors:   Adam Chodorowski, Matthias Rustler 
+:Copyright: Copyright © 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -59,14 +59,20 @@ mailings lists are available:
 
 + `AROS CVS`__
 
-  This is a read-only developer mailing list where CVS logs are automatically
-  posted whenever something is commited to the CVS server. In contrast to the
-  daily CVS logs posted to the AROS Developer list, where the mails contain
-  a digest of all activity that happened on the CVS server during the day,
+  This is a read-only developer mailing list where Subversion logs are automatically
+  posted whenever something is commited to the Subversion server. In contrast to the
+  daily Subversion logs posted to the AROS Developer list, where the mails contain
+  a digest of all activity that happened on the Subversion server during the day,
   individual mails are sent here *immediately* for every logged activity. So if
-  you want almost real-time feedback on the CVS server, this is the list for
+  you want almost real-time feedback on the Subversion server, this is the list for
   you. The volume to this list can be quite high.
-  
+
++ `AROS Website`__
+
+  The website build script sents mail to this list,
+  so those who commit changes to the documentation or can fix stuff
+  if something explodes should subscribe to it.
+
 + `AROS Bootlogs`__
     
   This is a mailing list set up for receiving AROS bootlogs, which will help us
@@ -81,6 +87,7 @@ __ http://mail.aros.org/mailman/listinfo/aros-announce/
 __ http://mail.aros.org/mailman/listinfo/aros-dev/
 __ http://lists.sourceforge.net/mailman/listinfo/aros-bugs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
+__ http://lists.sourceforge.net/mailman/listinfo/aros-website
 __ http://lists.sourceforge.net/mailman/listinfo/aros-bootlogs
 
 .. _`bug database`: http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
