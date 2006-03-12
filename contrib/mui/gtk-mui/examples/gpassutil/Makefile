@@ -5,7 +5,7 @@
 #
 # Oliver Brunner 2005
 #
-# $Id: Makefile,v 1.1 2005/12/04 00:50:21 o1i Exp $
+# $Id$
 #
 TARGET=gpass
 CFLAGS=-I../.. -I../../include -I../../classes 

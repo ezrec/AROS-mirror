@@ -30,7 +30,7 @@
  */
 
 /* modified by o1i 2005
- * $Id: gtktoolbar.h,v 1.2 2005/12/03 09:14:25 o1i Exp $ 
+ * $Id$ 
  */
 
 #ifndef __GTK_TOOLBAR_H__

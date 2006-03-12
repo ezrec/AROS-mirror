@@ -1,4 +1,4 @@
-#   $Id: mmakefile.src 22261 2004-09-01 14:51:38Z falemagn $
+#   $Id$
 #
 include $(TOP)/config/make.cfg
 
@@ -11,7 +11,7 @@ INCLUDE_FILES	:= gobject.h \
 	gvaluecollector.h \
 
 		   
-%copy_includes path=gdk/gobject dir= includes=$(INCLUDE_FILES)
+%copy_includes path=glib/gobject dir= includes=$(INCLUDE_FILES)
 
 %common
 

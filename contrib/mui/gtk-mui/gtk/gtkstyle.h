@@ -26,7 +26,7 @@
 
 /* modified by o1i 2005
  *
- * $Id: gtkstyle.h,v 1.2 2005/12/03 09:14:25 o1i Exp $
+ * $Id$
  */
 
 #ifndef __GTK_STYLE_H__

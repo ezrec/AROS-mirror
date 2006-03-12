@@ -21,7 +21,7 @@
  */
 
 /* modified 2005 o1i
- * $Id: gtktoolitem.h,v 1.2 2005/12/03 09:14:25 o1i Exp $
+ * $Id$
  */
 
 #ifndef __GTK_TOOL_ITEM_H__
