@@ -1,0 +1,93 @@
+===================================
+AROS Application Development Manual
+===================================
+
+:Authors:   Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
+            Adam Chodorowski, Fabio Alemagna, Matthias Rustler
+:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Unfinished; integration started (looong way left to go).
+:ToDo:      Integrate the various parts. Update and revise. Complete...
+
+`Index <index>`__
+
+.. Warning::
+
+   This document is not finished! It is highly likely that many parts are
+   out-of-date, contain incorrect information or are simply missing
+   altogether. If you want to help rectify this, please contact us.
+
+.. Contents::
+
+--------------------------------
+Graphical User Interfaces (GUIs)
+--------------------------------
+
+Windows
+-------
+
+FIXME
+
+
+Requesters
+----------
+
+Requesters are a special kind of windows_. They either confront the user with
+some information or request some information. Requesters always interrupt the
+user's normal workflow, so they should only be used either to inform him of some
+important event or to request an information, without which the application
+can't continue to work. This kind of requester is called modal requester.
+
+Examples of informational requesters are requesters that report errors (like
+failing to open a file) or about requesters, which show information about the
+program, when requested by the user.
+
+Like the name indicates, requesters can also request information from the user,
+like a file name (using file-requesters), his name or a simple yes/no decision
+("Really quit application?").
+
+Requesters should only pop-up, if an application can't go on without knowing
+that the user learned about a certain fact or without getting a certain kind of
+information. Therefore, most requesters will block the application. That means
+that they will not listen to any input, except that in the requester. An
+exception are requesters that are explicitly requested by the user, like most
+file-requesters or about-requesters. Normally, these should not block the
+application.
+
+
+Easy Requesters
+"""""""""""""""
+
+The so-called easy requesters are simple requesters. They can be used to either
+provide an information or to ask for a choice. The number of choices is limited
+to 256, but it is generally a bad idea to have more than about five different
+choices. You also have to take into account that the width of the screen is
+limited.
+
+FIXME: EasyRequestArgs(), BuildEasyRequest()
+
+
+Complex Requesters
+""""""""""""""""""
+
+FIXME
+
+
+Asl Requesters (Font-, File- and Screenmode-)
+"""""""""""""""""""""""""""""""""""""""""""""
+
+FIXME
+
+
+Screens
+-------
+
+FIXME
+
+
+Gadgets
+-------
+
+FIXME
+

@@ -1,0 +1,340 @@
+===================================
+AROS Application Development Manual
+===================================
+
+:Authors:   Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
+            Adam Chodorowski, Fabio Alemagna, Matthias Rustler
+:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Unfinished; integration started (looong way left to go).
+:ToDo:      Integrate the various parts. Update and revise. Complete...
+
+`Index <index>`__
+
+.. Warning::
+
+   This document is not finished! It is highly likely that many parts are
+   out-of-date, contain incorrect information or are simply missing
+   altogether. If you want to help rectify this, please contact us.
+
+.. Contents::
+
+-----------
+dos.library
+-----------
+
+Program execution
+=================
+
+All AROS programs must return a program execution status. This status
+expresses, if the program was executed successful, and if not, how serious
+the case of failure was. In `dos/dos.h` the following constants are defined,
+which represent the standard return states:
+
++ `RETURN_OK` is returned, if the program executed successfully.
+
++ `RETURN_WARN` means that the program executed successfully, but there was
+  something not quite right. This could be returned, if for example a temporary
+  file could not be deleted after use.
+
+  `RETURN_WARN` is also returned to express a boolean state. In this case
+  `RETURN_WARN` means true, while `RETURN_OK` means false.
+
++ `RETURN_ERROR` is returned on errors that caused the execution of the program
+   to fail partly.
+
++ `RETURN_FAIL` is returned if the execution of the program failed completely.
+
++ As an alternative you can use the ANSI C return codes EXIT_SUCCESS and EXIT_FAILURE.
+
+
+Files and directories
+=====================
+
+Paths
+-----
+
+FIXME: relative and absolute paths
+
+
+Files
+-----
+
+FIXME
+
+Reading files
+~~~~~~~~~~~~~
+
+FIXME
+
+
+Writing and creating files
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+FIXME
+
+
+Directories
+-----------
+
+FIXME
+
+
+Links
+-----
+
+Links are a method to apply multiple filenames to the same physical file or
+directory. This way the file can be stored in multiple directories with
+different filenames. There are two different types of links: hardlinks and
+softlinks. A softlink is just a reference to another file by its name. This name
+may be stated as relative or absolute path. If a softlink is accessed, AROS
+tries to resolve the name of the file the link points to and redirects all
+actions to that file. Of course, the file pointed to does not have to exist. It
+may have been deleted after the link was created. Hardlinks are another instance
+of the same file. They don't just reference the file by its name, they *are* the
+file. Normally, a hardlink can't be distinguished from the orginal filename;
+effectively the file has been given a second name. Due to this, hardlinks can
+not be created over different volumes; they must be at the same volume.
+
+.. Note::
+
+    Not all filesystems support both types of links or any links at all.
+
+
+FIXME
+
+Low level file access (filehandlers)
+------------------------------------
+
+FIXME
+
+
+Tasks, Processes and the Shell
+------------------------------
+
+Tasks
+~~~~~
+
+AROS is a multitasking operating system. This essentially means that multiple
+programs may be run at the same time. Every program running is called a task.
+But there are also tasks that are not user-programs. There are, for example,
+tasks handling the file-system and tasks watching the input devices. Every task
+gets a certain amount of time, in which it is running. After this time it's the
+next task's turn; the system reschedules the tasks.
+
+Plain tasks are very limited in their capabilities. Plain tasks must not call
+a function of ``dos.library`` or a function that could call a function of
+``dos.library`` (this includes ``OpenLibrary()`` for most cases!). Processes_
+don't have this limitation.
+
+
+The Task Structure
+^^^^^^^^^^^^^^^^^^
+
+A task is described by a struct ``Task`` as defined in ``exec/tasks.h``.
+This structure contains information about the task like the its stack, its
+signls and some management data. To get the address of a task strucure, use::
+
+    #include <proto/exec.h>
+
+    struct Task *FindTask( STRPTR name );
+
+``name`` is a pointer to the name of the task to find. *Note that this name is
+case-sensitive!* If the named task is not found, ``NULL`` is returned, otherwise
+a pointer to a ``struct Task``.
+
+To get a pointer to the current task, supply ``NULL`` as ``name``. This can
+never fail.
+
+The task structure contains a field called ``tc_UserData``. You can use it for
+your own purposes. It is ignored by AROS.
+
+
+States
+^^^^^^
+
+A task must be in one of following states (as set in the field
+`tc_State` of the task structure):
+
+TS_INVALID
+    This state should never be set!
+
+TS_ADDED
+    FIXME
+
+TS_RUN
+    The task is currently running. On single processor architectures only
+    one task can be in that state.
+
+TS_READY
+    The task waits for its execution.
+
+TS_WAIT
+    The task waits for some
+    .. FIXME: *signal*
+    to get activated. As long as this does not
+    happen, the program doesn't become active; it is ignored on rescheduling.
+    Most interactive programs are in this state most of the time, as they wait
+    for user input.
+
+TS_EXCEPT
+    The task is in an exception.
+
+TS_REMOVED
+    FIXME
+
+.. Note::
+
+    Do not set these states yourself, unless you know exactly what you are
+    doing!
+
+
+Priorities
+^^^^^^^^^^
+
+The field ``tc_Node.ln_Pri`` of the ``struct Node`` embedded in the task
+structure (see ``exec/nodes.h`` and the
+.. FIXME:: *section about exec lists*
+)
+specifies the priority of the task. Possible priorities reach from ``-128`` to
+``127``. The higher the priority the more processor time the task gets from the
+system. To set a task's priority use the function::
+
+    #include <proto/exec.h>
+
+    BYTE SetTaskPri( struct Task *task, BYTE newpri );
+
+The old priority is returned.
+
+
+Stack
+^^^^^
+
+Every task has a stack. A stack is a piece of memory, in which a tasks stores
+its temorary data. Compilers, for example, use the stack to store variables, you
+use in your programs. On many architectures, the stack is also used to supply
+library functions with parameters.
+
+The size of the stack is limited. Therefore only a certain amount of data can be
+stored in the stack. The stack-size of a task is chosen by its caller and must
+be at least 4096 bytes. Tasks should generally not assume that their stack-size
+is bigger. So, if a task needs more stack, the stack can be exchanged by using
+the function::
+
+    #include <proto/exec.h>
+
+    void StackSwap( struct StackSwapStruct *sss );
+
+The only argument, ``sss``, is a pointer to a ``struct StackSwapStruct`` as
+defined in ``exec/tasks.h``.
+
+``struct StackSwapStack`` must contain a pointer to the beginning of the new
+stack (``strk_Lower``), to the end of the new stack (``stk_Upper``) and a new
+stack-pointer (``stk_Pointer``). This stack-pointer is normally set either to
+the same address as ``stk_Lower`` or to the same address as ``stk_Upper``,
+depending on the kind of CPU used.
+
+When calling `StackSwap()`, the ``StackSwapStruct`` structure supplied as
+``sss`` will be filled with information about the current stack.
+
+After finishing using the new stack, the old stack must be restored by calling
+`StackSwap()` a second time with the same ``StackSwapStruct``.
+
+.. Note::
+
+    Normally, only compilers need this function. Handle it with great care as
+    different architectures use the stack in different ways!
+
+
+Processes
+~~~~~~~~~
+
+A process is an expanded task. Opposed to a task, it can use functions of
+dos.library, because a process structure contains some special fields,
+concerning files and directories. But of course, all functions that can be used
+on tasks can also be used on processes.
+
+
+The Process Structure
+^^^^^^^^^^^^^^^^^^^^^
+
+A process is described by a ``struct Process`` as defined in
+``dos/dosextens.h``. The first field in ``struct Process`` is an embedded
+``struct Task``. The extra fields include information about the file-system, the
+console, the process is connected to, and miscellaneous other stuff.
+
+
+Creating own Tasks and Processes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are mainly two methods of creating tasks and processes: you can either
+call an external program (ie open an executable file and run the program
+contained in it) or you can execute a piece of code, already in memory.
+
+
+Starting External Programs
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+External programs are always processes.
+FIXME
+
+Expanded Error Diagnostics
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Most functions of `dos.library` set the secondary error-code of the process
+structure on error. This way the caller can determine, why a certain system-call
+failed. Imagine, the function `Open()`, which opens a named file, fails. There
+can be multiple reasons for this: maybe the file named doesn't exist, maybe it
+is read protected. To find this out, you can query the secondary error-code set
+by the last function by using::
+
+	#include <proto/dos.h>
+
+    LONG IoErr()
+
+DOS-functions return one of the ``ERROR_`` definitions from
+``dos/dos.h``. Applications can, of course, process these error-codes by
+hand (which is useful in many cases), but often we just want to inform the user
+what went wrong. (Applications normally need not care, if a file could not be
+opened, because it did not exist or because it was read protected.) To output
+human-readable error messages, dos.library provides two functions::
+
+    #include <proto/dos.h>
+
+    LONG Fault( LONG code, STRPTR header, STRPTR buffer, LONG length );
+    BOOL PrintFault( LONG code, STRPTR header );
+
+While `PrintFault()` simply prints an error message to the `standard output`,
+`Fault()` fills a supplied buffer with the message. Both functions take
+a ``code`` argument. This is the code to be converted into a string. You can
+also supply a ``header`` string, which will prefix the error message. ``header``
+may be ``NULL``, in which case nothing is prefixed.
+
+`Fault()` also required a pointer to a ``buffer``, which is to be filled with
+the converted string. The ``length`` of this buffer (in bytes) is to be passed
+in as last argument. The total number of characters put into the buffer is
+returned. You are on the safe side, if your buffer has a size for 83 character
+plus the size of the header.
+
+Examples for the use of these functions can be found in later chapters,
+especially in the chapter about
+.. FIXME:: *Files and Directories*.
+
+Secondary error-codes of a program are handed back to the caller. If this is
+a shell, the secondary error-code will be put into the field ``cli_Result2`` of
+the shell structure (struct ``CommandLineInterface`` as defined in
+``dos/dosextens.h`` and
+.. FIXME:: *discussed later*.
+
+You can also set the secondary error-code yourself. This way, you can either to
+pass it back to another function in your program or to your caller. To set the
+secondary error, use::
+
+    #include <proto/dos.h>
+
+    LONG SetIoErr( LONG code );
+
+``code`` is the new secondary error-code and the old secondary error-code is
+returned.
+

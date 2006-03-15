@@ -1,0 +1,518 @@
+===================================
+AROS Application Development Manual
+===================================
+
+:Authors:   Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
+            Adam Chodorowski, Fabio Alemagna, Matthias Rustler
+:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Unfinished; integration started (looong way left to go).
+:ToDo:      Integrate the various parts. Update and revise. Complete...
+:Abstract:
+    AROS - The Amiga Research Operating System tries to port the API of the
+    Amiga Operating System to different hardware platform. This document
+    provides an introduction to programming AROS by describing how AROS works
+    and by describing its API.
+
+`Index <index>`__
+
+.. Warning::
+
+   This document is not finished! It is highly likely that many parts are
+   out-of-date, contain incorrect information or are simply missing
+   altogether. If you want to help rectify this, please contact us.
+
+.. Contents::
+
+
+------------
+Introduction
+------------
+
+
+Developing for the AROS platform
+================================
+
+This chapter explains how to develop programs that will run on the AROS
+platform.  It also tells you how to compile them on the different machines that
+AROS runs on. It assumes that you have an average knowledge of the C language
+and basic concepts like `linking`.
+
+
+The "Hello, World!" program
+----------------------------
+
+Below is a program that shows a "Hello, World!" message - a programmer's
+tradition since ages::
+
+  #include <stdio.h>
+
+  int main(void)
+  {
+    puts("Hello World");      
+    return 0;
+  }
+
+
+Compiling on Linux with GCC
+---------------------------
+
+Under AROS/hosted you are using a configured version of the Linux GCC. 
+There is a difference depending on whether you use the compiled version
+of AROS (i386-linux-system) or you compile the source yourself:
+
++ i386-linux-system
+
+  You have to download the package `i386-all-sdk`. Unpack it, cd into the
+  created directory and start the script `AROS-SDK-Install`. Follow the instructions.
+
++ self-compiled
+
+  The AROS compiler has the path `AROS/bin/linux-i386/tools`. Add this path to your
+  Linux paths.
+  
+In both cases the name of the C compiler is i386-linux-aros-gcc. You have to
+start it from the Linux side.
+
+You will find additional tools in the path of the AROS C compiler:
+AROS versions of ld, ranlib, the catalog compiler Flexcat, etc.
+
+.. Note:: If you are using i386-linux-aros-strip you have to add the parameters
+   `--strip-unneeded --remove-section .comment`. Otherwise strip will create 
+   corrupt binaries.
+ 
+
+Compiling for native-i386
+-------------------------
+
+A native version of the compiler GCC is included.
+
+
+Concepts
+========
+
+Include files
+-------------
+
+AROS comes with a variety of include files. They are placed in `sys:Development/include`.
+The subdirectory `proto` contains include files with function prototypes for the
+system libraries. In `libraries` are headers with structures and defines.
+Some of the bigger libraries like `Intuition` have their own directory
+with headers.
+
+
+How AROS libraries work
+-----------------------
+
+The term `library` usually refers to an object whose purpose is to collect in a
+single place functions that programs may want to use more often than others,
+and usually such functions all serve one common purpose, so that there can be
+libraries to parse configuration files, to handle localization, and other kind
+of tasks which a program might want to perform.
+
+There are generally are 2 kinds of libraries: link-time libraries, and run-time
+libraries. The link time libraries, as the name suggests, are used only at
+program linking stage: the linker simply takes note of which functions the main
+program references and tries to take them from the provided libraries. The
+run-time ones, instead, are only used when the program is run, that is the
+operating system, the program itself or even a link-time library.
+Whilst link-time libraries are handled more or less the same way across all
+operating systems, since they're independent from the OS itself, run-time
+libraries may be handled differently by different OSs.
+
+AROS `shared` libraries are collections of functions indexed in the library by
+a `function vectors table`. This table is simply an array of pointers [#]_ to
+the library's functions, and user programs access these functions by knowing
+their address' index in the table. Every function in the library gets passed a
+parameter [#]_ which points to a zone of memory that both holds the function
+vectors and the library's own data [#]_. Such memory area is named `library
+base`, and libraries are free to choose, trough a particular implementation of
+some of their mandatory functions, whether the library base is to be shared
+among various instances of the library or if it's to be used by all of its
+instances. User programs are generally not invited to access this area
+directly, but rather trough the use of accessor functions, but again this is
+not a mandatory policy, rather it's up to the library to decide how to do
+certain things.
+
+Libraries can of course `open` other libraries and use their functions and data
+the way described above, but since the main program is not a library, libraries
+have no means to access the program's data and functions other than the program
+itself telling the interested library how to do so, in a way that is
+library-dependent. 
+
+Currently, in AROS, when a shared
+object would be needed, a special wrapper around a shared library is built -
+and certain tools used by the AROS build system can do this automatically - so
+that programs can transparently use the shared version of what they think are
+link-time, or `static` libraries. This approach only works in part, since it
+doesn't replicate all functionalities of the shared objects, but it's
+sufficient in many cases.
+
+.. [#] In reality, on certain flavours, this table may hold more than just
+       function pointers. On AROS for 68k, in fact, where binary compatibility
+       with AmigaOS (TM) is an issue, every entry in the table contains a JMP
+       instruction followed by the function address (which is thus part of the
+       JMP opcode), and the user programs don't jump to the address in the
+       vector, they jump to the vector itself, and then the JMP instruction
+       redirects the program's flow to the right function.
+
+.. [#] Such a parameter may be explicit or implicit, depending on the ABI
+       chosen for a particular AROS flavour.
+
+.. [#] If you know C++, you might think of the vectors table as the `VTable`
+       used for virtual methods, and the library base pointer as the `this`
+       pointer.
+
+
+
+Shared libraries are the magic that make AROS work. Every library is
+a collection of functions that fulfill a certain purpose. Normally functions
+with a similar purpose are contained in one library. For example all the basic
+memory handling functions are contained in `exec.library`.
+
+Libraries are normally found in the `LIBS:` directory, but can also be stored at
+other places. Some important libraries are not stored as a separate file, but
+are contained in the kernel. Note that this the kernel libraries are different
+from installation to installation, so don't depend on a specific library being
+part of the kernel.
+
+Here is a list of some important libraries and their function.
+You don't have to remember all of these, as they will be discussed
+later in detail.
+
++ `exec.library` is the most important library. It is responsible for handling
+  the most basic things like managing `tasks` (ie programs), `memory`,
+  `libraries` and many other  things.
+
++ `utility.library` implements very important mechanisms for "talking" to
+  libraries: `taglists` that will be dicussed later in this chapter and `hooks`.
+  Apart from that, utility contains miscellaneous small utility functions.
+
++ `dos.library` is responsible for file-handling and some basic I/O functions.
+  Without dos, AROS would not be able to access files.
+
++ `intuition.library` handles `graphical user interfaces (GUIs)`. With Intuition
+  you can create `windows` and `gadgets` and handle them accordingly. There are
+  other libraries, which work on top of intuition and provide more sophisticated
+  and more specialized GUI functions. Examples are `gadtools.library`, which
+  implements some more complicated gadgets and `asl.library`, which provides
+  file- and other `requesters`.
+
+
+Usage of libraries
+------------------
+
+To use the functions of a library, you have to open the library
+first. The only library that doesn't have to be opened first is
+`exec.library`. Exec is always open and your compiler
+knows how to access it. Your compiler may addtionally open some
+libraries for you, so you don't have to open them manually. Read your
+compiler's manual to learn about such features.
+
+To open a library you have to use a function of `exec.library`::
+
+    #include <proto/exec.h>
+
+    struct Library *OpenLibrary( STRPTR name, ULONG version );
+
+`OpenLibrary()` takes two arguments:
+
+name
+    points to the name of the library. Normally this is just the plain name, but
+    this can also be a complete (absolute or relative) path to the library.
+
+    .. Note:: Paths do not work with kernel-based libraries
+              (ie. libraries that are included in the kernel).
+              Use absolute path only, if you know exactly, what you
+              are doing!
+
+version
+    is the minimal version of the library to open. If the named library is
+    found, but its version is lower than `version`, the library will not be
+    opened, but an error will be returned. Versions are important, because
+    libraries are supposed to be expandable. Some functions are only available
+    from a certain version of a library on. For example the function
+    `AllocVec()` of `exec.library` was introduced in version 36 of the library.
+    If you try to call this function with lower versions of `exec.library`
+    installed, unexpected things will happen (most likely the application will
+    crash).
+
+The following procedure is used to load the library to open:
+
+1. First, the name of the library is searched in the list of already loaded
+   libraries. If this library was loaded into memory before (eg. by a different
+   program) and still is there, everything is fine and `OpenLibrary()` returns
+   now.
+
+   Libraries in the kernel are always on list of loaded libraries.
+
+   .. Note:: Comparisons in this list are case sensitive! Be sure to use the
+             right case in `name`. Normally all characters in a library name
+             are lower-case.
+
+2. If the library was not found in the resident list and a path was supplied
+   with `name`, the given file is tried to be opened. If this fails,
+   `OpenLibrary()` returns an error.
+
+3. If only the plain library-name was given, the library is searched in the
+   `current directory` first. If it's not found there, it is searched in
+   the directory `LIBS:`.
+
+
+`OpenLibrary()` returns either a pointer to a structure, describing the
+library (`struct Library *` defined in ``exec/libraries.h``) or `NULL`,
+meaning that opening the library failed for some reason. The resulting pointer
+has to be stored for the compiler's use. Normally it is stored in a variable in
+the form: `<libraryname>Base`, eg. `IntuitionBase` for the pointer to
+*intuition.library*.
+
+After opening the library, you can use its functions by just calling them like
+any other function in your program. But to let your compiler know, what to do,
+you have to include the library-specific header-file. This is normally called
+*proto/<libraryname>.h* for C compilers.
+
+When you have finished using the library you have to close it again to free the
+resources used by it. This is performed with::
+
+    #include <proto/exec.h>
+
+    void CloseLibrary( struct Library *base );
+
+
+`CloseLibrary()` closes the library pointed to by `base`. This may
+also be `NULL`, in which case `CloseLibrary()` does nothing.
+
+We will demonstrate the use of libraries by creating a small graphical
+hello-world program. Instead of printing ``Hello World!`` to the console, we
+will display it in a requester. A function to display a requester is
+`EasyRequestArgs()`, being a function of *intuition.library*. We will
+not discuss its usage here. For more information, see the section about
+`Requesters`.
+
+Example usage of libraries::
+
+    #include <proto/exec.h>          /* OpenLibrary() and CloseLibrary() */
+    #include <exec/libraries.h>      /* struct Library */
+    #include <dos/dos.h>             /* RETURN_OK and RETURN_FAIL */
+    #include <proto/intuition.h>     /* EasyRequestArgs() */
+    #include <intuition/intuition.h> /* struct EasyStruct */
+
+    /* This variable will store the pointer to intuition.library */
+    struct Library *IntuitionBase;
+
+    int main(int argc, char *argv[])
+    {
+        /* Needed for EasyRequestArgs(). */
+        struct EasyStruct es = {
+          sizeof(struct EasyStruct), 0UL,
+          "Requester", "Hello World!", "Ok"
+        };
+
+        /* First, we open intuition.library. We need version 36 or better,
+           because EasyRequestArgs() was introduced in that version of
+           intuition.library.
+        */
+        IntuitionBase = OpenLibrary("intuition.library", 36);
+
+        /* We have to check, if intuition.library was successfully opened.
+           If it was not, we must not call a function from it, so we return
+           immediatly with an error.
+        */
+        if (!IntuitionBase)
+            return RETURN_FAIL;
+
+        /* After opening intuition.library, we can call EasyRequestArgs(). */
+        EasyRequestArgs(NULL, &es, NULL, NULL);
+
+        /* At last, we have to close intuition.library again. */
+        CloseLibrary(IntuitionBase);
+
+        return RETURN_OK;
+    }
+
+Try to compile and run this program. It should present you a
+handsome hello-world requester.
+
+
+Giving additional arguments with taglists
+-----------------------------------------
+
+Every library function takes a fixed number of arguments. This poses quite
+a problem with complex functions that would need a lot of arguments. To avoid
+this problem, so-called taglists were introduced. In ``utility/tagitem.h`` we
+find a structure `TagItem`, which contains the members `ti_Tag` and `ti_Data`.
+A taglist contains of an array of this structure. The size of the list is not
+limited. The field `ti_Tag` is an identifier (often referred to as Tag) that
+declares what `ti_Data` contains. `ti_Data` is either an integer or a pointer.
+It is guaranteed to be at least of the size of a long-word or a pointer
+(whichever is bigger).
+
+In every description of a function that uses a tag-list, all possible tags are
+listed. Functions have to ignore unknown tags and use defaults for tags not
+provided, so taglists are a very flexible way of providing arguments to
+a function.
+
+There are some special tags that all functions understand
+(defined in ``utility/tagitem.h``):
+
+
+`TAG_DONE` and `TAG_END`
+    Define the end of a taglist. Every taglist must be terminated with
+    one of it. A following `ti_Data` must be ignored by the called function,
+    so it doesn't have to exist in memory.
+
+`TAG_IGNORE`
+    means that the contents of `ti_Data` is to be ignored. This tag is
+    especially useful for conditional inclusion of tags.
+
+`TAG_MORE`
+    By using this tag, you can link taglists together. `ti_Data` points to
+    another taglist. Processing of the current taglist will be stopped and
+    instead the new one will be processed. This tag also terminates the current
+    taglist.
+
+`TAG_SKIP`
+    forces the parser to skip the next `ti_Data` tags. They will not be
+    processed.
+
+You may always provide `NULL` instead of a pointer to a taglist. All functions
+must be able to handle `NULL` pointers. They are equal to taglists with
+`TAG_DONE` as first tag.
+
+A function that requires a taglist is::
+
+    #include <proto/intuition.h>
+
+    struct Window *OpenWindowTagList
+    (
+        struct NewWindow *newwin, struct TagList *taglist
+    );
+
+This function will be discussed in detail in the
+.. FIXME:: *chapter about windows*.
+For
+now you only have to know that this function opens a new window. We set the
+argument `newwin` to ``NULL``. The only tags looked at for now are:
+
+==========  ===============================  ========
+Tag         Description                      Type
+==========  ===============================  ========
+WA_Width    Width of window in pixels        UWORD
+WA_Height   Height of window in pixels       UWORD
+WA_Title    Window title                     STRPTR
+==========  ===============================  ========
+
+Another function we need for our small example is::
+
+    #include <proto/intuition.h>
+
+    void CloseWindow( struct Window *window );
+
+This function is used to close an opened window.
+
+Now let's have a look at another small hello-world-program. This opens a window,
+which says "Hello World!" in the title-bar, for two seconds::
+
+    #include <proto/exec.h>
+    #include <exec/libraries.h>
+    #include <proto/dos.h>
+    #include <proto/intuition.h>
+    #include <intuition/intuition.h>
+
+    struct DosLibrary    *DOSBase;
+    struct IntuitionBase *IntuitionBase;
+
+    int main(int argc, char *argv[])
+    {
+        int error = RETURN_OK;
+
+        /* We need this for Delay() later on. */
+        DOSBase = (struct DosLibrary *)OpenLibrary("dos.library", 36);
+        if (DOSBase)
+        {
+            IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 36);
+            if (IntuitionBase)
+            {
+                struct Window *win;
+                /* We set up our tags. */
+                struct TagItem tags[] =
+                {
+                    { WA_Width, 100                  },
+                    { WA_Height, 50                  },
+                    { WA_Title, (IPTR)"Hello World!" },
+                    { TAG_DONE, 0UL                  }
+                };
+
+                win = OpenWindowTagList(NULL, tags);
+                if (win)
+                {
+                    /* Now wait for two seconds, so we can look at our nice
+                       window.
+                    */
+                    Delay(100);
+
+                    /* We close our window again. */
+                    CloseWindow(win);
+                }
+
+                CloseLibrary((struct Library *)IntuitionBase);
+            }
+            else
+                error = RETURN_FAIL;
+
+            CloseLibrary((struct Library *)DOSBase);
+        } else
+            error = RETURN_FAIL;
+
+        return error;
+    }
+
+Of course, this method of setting up the taglist is quite complicated. So for
+most functions that use taglists short-cuts are available. The link-library
+`amiga.lib` provides these short-cuts for all internal AROS functions. These
+varargs versions can be used like this:
+
+    #include <proto/alib.h>
+
+    Function( arg1, ..., argn, TAG1, data1, ..., TAG_DONE );
+
+Our example above would look like this, using the varargs version of
+`OpenWindowTagList()`, called `OpenWindowTags()`::
+
+    [...]
+
+    if( IntuitionBase )
+    {
+        struct Window *win;
+
+        win = OpenWindowTags
+        (
+            NULL, WA_Width, 100, WA_Height, 20,
+            WA_Title, "Hello World!", TAG_DONE
+        );
+        )
+        if( win )
+        {
+
+    [...]
+
+Much easier, isn't it?
+
+
+Getting more documentation
+==========================
+
+"Hello, World!" is not a Museum of Programmer's Talent, so you might wonder if
+there is more to AROS than that. Why dear, of course there is. But this 
+guide is not a Programmer's Guide nor a Programmer's Reference Guide. Such
+guides might be written in the future, but for now, the best AROS Programmer's
+Guides you can find are the books that have been written for the Amiga, and
+the best reference for AROS are the AROS `autodocs <./../autodocs/index>`__ (autodocs
+are descriptions of AROS library functions that are created by parsing the
+AROS sources).
+But they are mainly useful to advanced Amiga programmers: they only provide a
+very short explanation for each function. If you have to learn AROS programming
+from the beginning, you really should try to find that old Amiga book, or buy
+the Amiga Developer CDRom.
+
