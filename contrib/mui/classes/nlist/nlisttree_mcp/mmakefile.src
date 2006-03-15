@@ -5,9 +5,7 @@ include $(TOP)/config/make.cfg
 
 USER_INCLUDES = -I../commonaros
 
-%build_module_macro mmake=contrib-zune-classes-nlisttree-mcp \
-  modname=NListtree modtype=mcp dir=$(CONTRIBDIR)/MCC_NList/Classes/Zune \
-  initfile=library files="NListtree locale" \
+%build_module_simple mmake=contrib-zune-classes-nlisttree-mcp \
+  modname=NListtree modtype=mcp moduledir=$(CONTRIBDIR)/MCC_NList/Classes/Zune \
+  files="library NListtree locale" \
   uselibs="amiga mui rom m"
-
-%common

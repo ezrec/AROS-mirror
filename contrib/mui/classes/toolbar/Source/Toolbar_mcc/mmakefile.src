@@ -14,9 +14,9 @@ FILES := Dispatcher \
 	 SetupCleanup \
 	 ShowHide
 	 
-%build_module_macro mmake=contrib-zune-classes-toolbar-class \
-  modname=Toolbar modtype=mcc dir=$(CONTRIBDIR)/MCC_Toolbar/Classes/Zune \
-  initfile=library files=$(FILES) \
+%build_module_simple mmake=contrib-zune-classes-toolbar-class \
+  modname=Toolbar modtype=mcc moduledir=$(CONTRIBDIR)/MCC_Toolbar/Classes/Zune \
+  files="library $(FILES)" \
   uselibs="amiga mui rom m"
 
 
@@ -24,5 +24,3 @@ FILES := Dispatcher \
 
 INCLUDE_FILES := $(TOP)/$(CURDIR)/Toolbar_mcc.h
 %copy_includes path=MUI dir=$(TOP)/$(CURDIR)
-
-%common

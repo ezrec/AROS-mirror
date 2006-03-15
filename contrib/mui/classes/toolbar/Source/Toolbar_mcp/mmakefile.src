@@ -5,13 +5,13 @@ include $(TOP)/config/make.cfg
 
 USER_INCLUDES = -I../../../nlist/commonaros
 
-FILES := Dispatcher \
+FILES := library \
+      	 Dispatcher \
 	 CreatePrefs \
 	 MyLocale
 	 
-%build_module_macro mmake=contrib-zune-classes-toolbar-mcp \
-  modname=Toolbar modtype=mcp dir=$(CONTRIBDIR)/MCC_Toolbar/Classes/Zune \
-  initfile=library files=$(FILES) \
+%build_module_simple mmake=contrib-zune-classes-toolbar-mcp \
+  modname=Toolbar modtype=mcp moduledir=$(CONTRIBDIR)/MCC_Toolbar/Classes/Zune \
+  files="$(FILES)" \
   uselibs="amiga mui rom m"
 
-%common

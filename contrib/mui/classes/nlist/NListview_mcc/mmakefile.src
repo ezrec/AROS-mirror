@@ -5,9 +5,9 @@ include $(TOP)/config/make.cfg
 
 USER_INCLUDES = -I../commonaros
 
-%build_module_macro mmake=contrib-zune-classes-nlistview-class \
-  modname=NListview modtype=mcc dir=$(CONTRIBDIR)/MCC_NList/Classes/Zune \
-  initfile=library files=NListview \
+%build_module_simple mmake=contrib-zune-classes-nlistview-class \
+  modname=NListview modtype=mcc moduledir=$(CONTRIBDIR)/MCC_NList/Classes/Zune \
+  files="library NListview" \
   uselibs="amiga mui rom m"
 
 
@@ -15,5 +15,3 @@ USER_INCLUDES = -I../commonaros
 
 INCLUDE_FILES := $(TOP)/$(CURDIR)/NListview_mcc.h
 %copy_includes path=MUI dir=$(TOP)/$(CURDIR)
-
-%common
