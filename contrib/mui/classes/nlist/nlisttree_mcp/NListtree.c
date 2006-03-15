@@ -31,12 +31,11 @@
 #include <proto/graphics.h>
 #include <proto/locale.h>
 #include <proto/exec.h>
-#include <proto/muimaster.h>
 
 #ifdef __AROS__
 #define MUI_OBSOLETE
-#include <libraries/mui.h>
 #endif
+#include <proto/muimaster.h>
 
 #include <utility/hooks.h>
 #include <exec/types.h>
