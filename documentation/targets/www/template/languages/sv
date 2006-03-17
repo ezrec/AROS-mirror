@@ -22,6 +22,8 @@ users:            Användare
 installation:     Installation
 using:            Användning
 faq:              Frågor och svar
+shell:            Shell commands
+# FIXME: above
 developers:       Utvecklare
 contribute:       Medverka
 bug-tracker:      Bug Tracker

@@ -20,6 +20,7 @@ documentation:    Documentation
 users:            Users
 installation:     Installation
 using:            Using
+shell:            Shell commands
 faq:              FAQ
 developers:       Developers
 contribute:       Contribute

@@ -32,6 +32,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
             ( [
                 A( _N['installation'], href='%(BASE)sdocumentation/users/installation.php' ),
                 A( _N['using'], href='%(BASE)sdocumentation/users/using.php' ),
+                A( _N['shell'], href='%(BASE)sdocumentation/users/shell/index.php' ),
                 A( _N['faq'], href='%(BASE)sdocumentation/users/faq.php' ),
                 #_N['ports'],
                 #A( _N['links'], href='%(BASE)sdocumentation/users/links.php' )
@@ -44,11 +45,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
                 A( _N['bug-tracker'], href='http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse' ),
                 A( _N['working-with-subversion'], href='%(BASE)sdocumentation/developers/svn.php' ),
                 A( _N['compiling'],  href='%(BASE)sdocumentation/developers/compiling.php' ),
-                A( _N['application-development-manual'], href='%(BASE)sdocumentation/developers/application-development.php' ),
+                A( _N['application-development-manual'], href='%(BASE)sdocumentation/developers/app-dev/index.php' ),
                 A( _N['zune-application-development-manual'], href='%(BASE)sdocumentation/developers/zune-application-development.php' ),
                 A( _N['system-development-manual'], href='%(BASE)sdocumentation/developers/system-development.php' ),
                 A( _N['debugging-manual'], href='%(BASE)sdocumentation/developers/debugging.php' ),
-                #A( _N['reference'], href='%(BASE)sdocumentation/developers/reference' ),
+                A( _N['reference'], href='%(BASE)sdocumentation/developers/autodocs/index.php' ),
                 A( _N['specifications'], href='%(BASE)sdocumentation/developers/specifications/' ),
                 A( _N['ui-style-guide'], href='%(BASE)sdocumentation/developers/ui.php' ),
                 A( _N['documenting'], href='%(BASE)sdocumentation/developers/documenting.php' ),
