@@ -1,0 +1,22 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2006-03-25
+
+Radeon hidd
+-----------
+
+Michal Schulz has done it again: the day every ATI fanboy was waiting for has finaly come! AROS has got its Radeon driver - pardon - hidd, so it's now possible to access Radeon cards directly and forget the old VESA modes. All Radeon owners are encouraged to download tonite's nightly build and test it.
+
+AROS-EXEC.org down
+------------------
+
+Due to a change of IP address, our community's website aros-exec.org is temporary down. We apologize for that. The website, its forum and services will be back around March 29th, better and stronger than before.
+
+
+
+
+
+
