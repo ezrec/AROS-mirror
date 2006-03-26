@@ -81,7 +81,7 @@ usage of some instructions not available on the 386.
 
 This port works quite well, but we only have the most basic driver
 support.  One of the biggest limitations is that we currently only have
-support for accelerated graphics on nVidia graphics hardware. Other
+support for accelerated graphics on nVidia and ATI graphics hardware. Other
 graphics adapters must be used with generic (non-accelerated) VGA and
 VBE graphics drivers. There are more drivers in the works, but
 development is quite slow since we only have about 2.5 hardware hackers.
