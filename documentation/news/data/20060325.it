@@ -1,0 +1,25 @@
+=============
+Aggiornamento
+=============
+
+:Autore:   Paolo Besser
+:Data:     2006-03-25
+
+Radeon hidd
+-----------
+
+Michal Schulz ce l'ha fatta un'altra volta! Il giorno che tutti i fanatici di 
+ATI stavano aspettando finalmente è arrivato: AROS ha un driver, pardon, un hidd 
+per schede video Radeon con il quale è possibile accedere direttamente a questo 
+tipo di schede video, senza più passare attraverso le modalità VESA. Evviva!
+
+AROS-EXEC.org
+-------------
+
+A causa del cambio di indirizzo IP del server, il sito della nostra community 
+Aros-Exec.org è temporaneamente inattivo. La ripresa di tutte le attività 
+avverrà quando i server DNS si saranno aggiornati, presumibilmente intorno 
+al 29 marzo.
+
+
+

@@ -1,0 +1,54 @@
+========
+Download
+========
+
+.. Contents::
+
+.. Nota::
+
+   Per scaricare correttamente una nightly build, consigliamo vivamente l'uso 
+   di un download manager che possa recuperare un download interrotto, oppure 
+   il comando wget (con "wget -c" per scaricare la porzione rimanente di un file
+   già scaricato in parte da un altro programma).
+
+Snapshot
+========
+
+Le versioni Snapshot escono più spesso delle versioni complete, ma più di rado 
+rispetto le nightly build. Al contrario di queste ultime, le snapshot vengono  
+provate su alcuni computer prima del loro rilascio, per cui generalmente sono 
+più stabili. Purtroppo, però, non contengono il codice più fresco.
+
+Per cortesia, se trovate errori segnalateceli attraverso lo strumento apposito,
+il `bug tracker`__. Per qualsiasi altra necessità, non esitate a contattarci  
+per mezzo dei forum di `AROS-Exec`__.
+
+.. raw:: html
+
+   <?php virtual( "/cgi-bin/files?snapshots" ); ?>
+
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+__ http://aros-exec.org/
+
+
+Nightly build
+=============
+
+Le nightly build vengono create automaticamente ogni notte a partire dal 
+codice sorgente più aggiornato. Siccome si tratta di versioni in piena fase 
+di sviluppo, è possibile che non si compilino o che non funzionino 
+correttamente. Chi vuole provare AROS sul suo PC farebbe meglio a scaricare 
+una snapshot, mentre le nightly build permettono di provare sul campo le 
+modifiche più recenti.
+
+Per cortesia, se trovate errori segnalateceli attraverso lo strumento apposito,
+il `bug tracker`__. Per qualsiasi altra necessità, non esitate a contattarci  
+per mezzo dei forum di `AROS-Exec`__.
+
+.. raw:: html
+
+   <?php virtual( "/cgi-bin/files?nightly" ); ?>
+
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+__ http://aros-exec.org/
+

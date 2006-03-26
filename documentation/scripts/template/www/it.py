@@ -1,0 +1,1 @@
+largeImage = 'Dimensioni originali...'
