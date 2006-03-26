@@ -6,8 +6,10 @@ Download
 
 .. Note::
 
-   You have to use a download manager which can continue an interrupted
-   download or "wget -c".
+   When downloading nightly builds, you must use a download manager
+   that can continue an interrupted download, or a command line utility such
+   as wget (you can use "wget -c" to get the rest of a file partially
+   downloaded by another program).
 
 Snapshots
 =========
