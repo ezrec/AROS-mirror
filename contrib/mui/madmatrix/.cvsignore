@@ -1,7 +1,0 @@
-SCOPTIONS
-*.o
-MadMatrix
-*.info
-*.bak
-*.lnk
-mmakefile
