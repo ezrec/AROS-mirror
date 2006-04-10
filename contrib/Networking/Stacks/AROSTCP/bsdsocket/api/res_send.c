@@ -123,7 +123,7 @@ D(bug("[AROSTCP](res_send.c) res_send: Attempt %d\n", try));
 #endif
 	  nscount = 0;
 	  DRES(Printf("Retry #%ld\n",try);)
-	  for (ns = _res.nsaddr_list; ns->s_addr ; *ns++) {
+	  for (ns = _res.nsaddr_list; ns->s_addr ; ns++) {
 	    nscount++;
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_send.c) res_send: Querying server #%ld address = %s\n", nscount,

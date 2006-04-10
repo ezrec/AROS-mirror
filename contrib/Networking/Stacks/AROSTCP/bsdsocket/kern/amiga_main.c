@@ -209,23 +209,17 @@ D(bug("[AROSTCP](amiga_main.c) main: successfully locked config dir '%s'\n", tmp
 D(bug("[AROSTCP](amiga_main.c) main: Log file defaulting to '%s'\n", logfiledefname));
 #endif
 
-  /*
-   * Save pointer to this tasks old name
-   */
+  /* Save pointer to this tasks old name */
   oldname = AROSTCP_Task->tc_Node.ln_Name;
 
   if (init_all()) {
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_main.c) main: preparing AROSTCP_Task\n"));
 #endif
-    /*
-     * Set our priority 
-     */
+    /* Set our priority */
     oldpri = SetTaskPri(AROSTCP_Task, 5);
 
-    /*
-     * Set our Task name 
-     */
+    /* Set our Task name */
     if (!taskname) {
 #ifdef DEBUG
       if (nthLibrary) {
@@ -240,25 +234,17 @@ D(bug("[AROSTCP](amiga_main.c) main: preparing AROSTCP_Task\n"));
       }
 #endif
     }
-    if (taskname)
-      AROSTCP_Task->tc_Node.ln_Name = taskname;
+    if (taskname) AROSTCP_Task->tc_Node.ln_Name = taskname;
 
-    /* 
-     * Global initialization flag;
-     */
-    initialized = TRUE;
+    initialized = TRUE;           /* Global initialization flag */
 
 #ifdef DEBUG
-    /* 
-     * Show our task address
-     */
+    /* Show our task address */
     printf("%s Task address : %lx\n", taskname, (long) AROSTCP_Task);
 #endif
 
-    /*
-     * Initialize signal mask for the wait
-     */
-    breakmask = SIGBREAKF_CTRL_C;
+    /* Initialize signal mask for the wait */
+    breakmask = SIGBREAKF_CTRL_C | SIGBREAKF_CTRL_F;
     signalmask = timermask | breakmask | sanamask;
 
     /*
@@ -268,66 +254,58 @@ D(bug("[AROSTCP](amiga_main.c) main: preparing AROSTCP_Task\n"));
     timer_send();
 
     for(;;) {
-      /*
-       * Sleep until we are signalled.
-       */
-      sig = Wait(signalmask);
+      sig = Wait(signalmask);     /* Sleep until we are signalled. */
 
       do {
-	if (sig & sanamask) {
-	  if (!sana_poll())
-	    sig &= ~sanamask;
-	}
+        if (sig & sanamask) {
+          if (!sana_poll()) sig &= ~sanamask;
+	     }
 
-	if (sig & timermask) {
-	  if (!timer_poll()) 
-	    sig &= ~timermask;
-	}
+        if (sig & timermask) {
+	       if (!timer_poll()) sig &= ~timermask;
+	     }
 
-	sig |= SetSignal(0L, signalmask) & signalmask;
-      } while (sig && sig != breakmask);
+	     sig |= SetSignal(0L, signalmask) & signalmask;
+      } while (sig & (~breakmask));
 
       if (sig & breakmask) {
-	int i;
+	     int i;
+
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_main.c) main: Task recieved CTRL-C\n"));
 #endif
-	/*
-	 * We got CTRL-C
-	 *
-	 * NETTRACE task keeps one base open, it is not counted.
-	 */
-	api_hide();		/* hides the API from users */
+	    /* We recieved CTRL-C
+	     * NETTRACE task keeps one base open, it is not counted. */
+        api_hide();		          /* hides the API from users */
 
-	/*
-	 * Try three times with a short delay
-	 */
-	for (i = 0; i < 3 && MasterSocketBase->lib_OpenCnt > 1; i++) {
-	  api_sendbreaktotasks(); /* send brk to all tasks w/ SBase open */ 
-	  Delay(50);		  /* give tasks time to close socket base */
-	}
-	if (MasterSocketBase->lib_OpenCnt > 1) {
+        /* Try three times with a short delay */
+        for (i = 0; i < 3 && MasterSocketBase->lib_OpenCnt > 1; i++) {
+          api_sendbreaktotasks(); /* send brk to all tasks w/ SBase open */ 
+          Delay(50);		          /* give tasks time to close socket base */
+        }
+
+        if (MasterSocketBase->lib_OpenCnt > 1) {
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_main.c) main: Got CTRL-C while %ld %s still open.\n",
-	      MasterSocketBase->lib_OpenCnt - 1,
-	      (MasterSocketBase->lib_OpenCnt == 2) ? "library" : "libraries"));
+          MasterSocketBase->lib_OpenCnt - 1,
+	             (MasterSocketBase->lib_OpenCnt == 2) ? "library" : "libraries"));
 #endif
-	  log(LOG_ERR, "Got CTRL-C while %ld %s still open.\n",
-	      MasterSocketBase->lib_OpenCnt - 1,
-	      (MasterSocketBase->lib_OpenCnt == 2) ? "library" : "libraries");
-	  api_show(); /* stopping not successfull, show API to users */ 
-	} else {
-	  break;
-	}
+
+          log(LOG_ERR, "Got CTRL-C while %ld %s still open.\n",
+	       MasterSocketBase->lib_OpenCnt - 1,
+	             (MasterSocketBase->lib_OpenCnt == 2) ? "library" : "libraries");
+
+          api_show(); /* stopping not successfull, show API to users */ 
+        } else {
+          break;
+        }
       }
     }
     retval = 0;
   } else
     retval = 20;
 
-  /*
-   * free all resources
-   */
+  /* free all resources */
   deinit_all();
   initialized = FALSE;
 

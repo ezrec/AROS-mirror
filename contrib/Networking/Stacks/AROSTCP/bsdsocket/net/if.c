@@ -513,11 +513,6 @@ ifunit(name)
 			break;
 	}
 	*ep = c;
-	{
-	    extern struct ifnet *iface_find(char *, short unit);
-	    if (ifp == 0)
-		ifp = iface_find(name, unit);
-	}
 	return (ifp);
 }
 
@@ -600,20 +595,18 @@ ifioctl(so, cmd, data)
 		break;
 
 	case SIOCSIFFLAGS:
-#ifndef AMITCP /* no protection on AmigaOS */
-		if (error = suser(p->p_ucred, &p->p_acflag))
-			return (error);
-#endif /* AMITCP */
 		/* if_down() is kludged for Sana-II driver ioctl */
 		if (ifp->if_flags & IFF_UP && (ifr->ifr_flags & IFF_UP) == 0) {
 			spl_t s = splimp();
 			if_down(ifp);
 			splx(s);
 		}
-		ifp->if_flags = (ifp->if_flags & IFF_CANTCHANGE) |
-			(ifr->ifr_flags &~ IFF_CANTCHANGE);
+
 		if (ifp->if_ioctl)
 			(void) (*ifp->if_ioctl)(ifp, cmd, data);
+
+		ifp->if_flags = (ifp->if_flags & IFF_CANTCHANGE) |
+			(ifr->ifr_flags &~ IFF_CANTCHANGE);
 		break;
 
 	case SIOCSIFMETRIC:

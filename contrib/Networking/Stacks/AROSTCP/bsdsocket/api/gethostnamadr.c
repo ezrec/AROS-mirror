@@ -138,7 +138,7 @@ static struct hostent * makehostent(struct SocketBase * libPtr,
 				    struct hoststruct * HS,
 				    char * ptr);
 
-LONG usens = 1;
+LONG usens = 2;
 
 static char *
  getanswer(struct SocketBase * libPtr, querybuf *answer,int anslen, int iquery,

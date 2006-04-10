@@ -156,7 +156,6 @@ D(bug("[AROSTCP](amiga_netdb.c) alloc_netdb()\n"));
       (ndb = bsd_malloc(sizeof (*NDB), M_NETDB, M_WAITOK))) {  
     struct MinList *gl;
 
-//  InitSemaphore(&ndb->ndb_Lock);
     for (gl = (struct MinList *)&ndb->ndb_Hosts;
 	 gl <= (struct MinList *)&ndb->ndb_Domains;        
 	 gl++)
@@ -280,7 +279,7 @@ D(bug("[AROSTCP](amiga_netdb.c) node_alloc()\n"));
 }
 
 /*
- * Parse a service entry.
+ * Parse an include entry.
  */
 LONG
 addwith(struct NetDataBase *ndb,
@@ -902,7 +901,7 @@ D(bug("[AROSTCP](amiga_netdb.c) read_netdb: parsing line: %s, prefixindex=%ld\n"
       }
       Close(fh);
     } else {
-      //ioerr = IoErr();
+      ioerr = IoErr();
     }
     
     if (ioerr) {
@@ -992,8 +991,9 @@ D(bug("[AROSTCP](amiga_netdb.c) init_netdb()\n"));
 
   InitSemaphore (&ndb_Lock);
   InitSemaphore (&DynDB.dyn_Lock);
-  NewList(&DynDB.dyn_NameServers);
-  NewList(&DynDB.dyn_Domains);
+  NewList((struct List *)&DynDB.dyn_NameServers);
+  NewList((struct List *)&DynDB.dyn_Domains);
+  ndb_Serial = 0;
 
   /* Allocate the NetDataBase */
   if (!(NDB = alloc_netdb(NULL))) {
@@ -1002,10 +1002,14 @@ D(bug("[AROSTCP](amiga_netdb.c) init_netdb()\n"));
 
   /* Read in the default data base file */
   retval = read_netdb(NDB, netdbname, &errstr, &res, -1);
-  if (retval) {
+/*  if (retval) {
     Printf("init_netdb: file %s: %s", netdbname, errstr);
     log(LOG_WARNING, "init_netdb: file %s: %s", netdbname, errstr);
-  } else
+  } else */
+  if (retval == RETURN_WARN)
+    retval = RETURN_OK;
+
+  if (!retval)
     setup_accesscontroltable(NDB);
 
   return retval;
@@ -1043,47 +1047,20 @@ D(bug("[AROSTCP](amiga_netdb.c) reset_netdb()\n"));
   retval = read_netdb(newnetdb, netdbname, errstrp, res, -1);
 
   if (retval == RETURN_OK) {
-    /*
-     * Success
-     */
-//  struct MinList *gl, *ol;
-
-    setup_accesscontroltable(NDB);
+    setup_accesscontroltable(newnetdb);
 
     /* Now clear the old lists of the NDB */
     LOCK_W_NDB(NDB);
+
     free_netdb(NDB);
     NDB = newnetdb;
 
-#ifdef notanymore
-    /*
-     * Transfer the lists of the new (temporary) database
-     * to the NDB.
-     */
-    for (gl = (struct MinList *)&newnetdb->ndb_Hosts,
-	 ol = (struct MinList *)&NDB->ndb_Hosts;
-	 gl <= (struct MinList *)&newnetdb->ndb_Domains;        
-	 gl++, ol++) {
-      if (gl->mlh_Head->mln_Succ) {
-	/* There is a non-empty list */
-        *ol = *gl;
-	ol->mlh_Head->mln_Pred = (struct MinNode*)&ol->mlh_Head;
-	ol->mlh_TailPred->mln_Succ = (struct MinNode*)&ol->mlh_Tail;
-      }
-    }
-    NDB->ndb_AccessTable = newnetdb->ndb_AccessTable;
-    /*
-     * Perhaps ugly...
-     */
-    newnetdb->ndb_AccessTable = NULL; 
-#endif
     UNLOCK_NDB(NDB);
     ndb_Serial++;
   } else {
     free_netdb(newnetdb);
   }
 
-//bsd_free(newnetdb, M_NETDB);	/* free the temporary database */
   return retval;
 }
 

@@ -197,7 +197,7 @@ int ip_output(m0, opt, ro, flags)
 		if (ro->ro_rt->rt_flags & RTF_GATEWAY)
 			dst = (struct sockaddr_in *)ro->ro_rt->rt_gateway;
 	}
-#ifdef ENABLE_MOLTICAST
+#ifdef ENABLE_MULTICAST
 	if (IN_MULTICAST(ntohl(ip->ip_dst.s_addr))) {
 		struct in_multi *inm;
 		extern struct ifnet loif;

@@ -312,8 +312,8 @@ in_control(so, cmd, data, ifp)
 	case SIOCSIFADDR:
 	case SIOCSIFNETMASK:
 	case SIOCSIFDSTADDR:
-		if ((so->so_state & SS_PRIV) == 0)
-			return (EPERM);
+/*		if ((so->so_state & SS_PRIV) == 0)
+			return (EPERM);*/
 
 		if (ifp == 0)
 			panic("in_control");
@@ -351,8 +351,8 @@ in_control(so, cmd, data, ifp)
 		break;
 
 	case SIOCSIFBRDADDR:
-		if ((so->so_state & SS_PRIV) == 0)
-			return (EPERM);
+/*		if ((so->so_state & SS_PRIV) == 0)
+			return (EPERM);*/
 		/* FALLTHROUGH */
 
 	case SIOCGIFADDR:

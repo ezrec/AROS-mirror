@@ -50,16 +50,20 @@ D(bug("[AROSTCP](res_init.c) res_cleanup_db()\n"));
 		bsd_free(state->nsaddr_list, NULL);
 }
 
-int res_copy_db(struct state *state)
+int res_update_db(struct state *state)
 {
   struct DomainentNode *domain = NULL;
   struct NameserventNode *ns = NULL;
   int l;
+  long opts;
   ULONG n = 1;
 
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_init.c) res_copy_db()\n"));
 #endif
+
+  opts = state->options;
+  res_cleanup_db(state);
 
   LOCK_R_NDB(NDB);
   /* Count number of domain names in the NetDB */
@@ -204,6 +208,7 @@ D(bug("[AROSTCP](res_init.c) res_copy_db: Failed to allocate array for nsaddr_li
   ((struct in_addr *)state->nsaddr_list)[n].s_addr = NULL;
   /* Remember NetDB update count */
   state->dbserial = ndb_Serial;
+  state->options = opts;
   return 0;
 }
 
@@ -211,21 +216,11 @@ int
 res_init(struct state *state)
 {
   /* Fill in domain names and nameserver addresses */
-  if (res_copy_db(state))
-    return -1;
+  if (res_update_db(state)) return -1;
+
   /* Set up default options */
   state->retrans = RES_TIMEOUT;
   state->retry   = 3;
   state->options = RES_DEFAULT;
   return 0;
-}
-
-int res_update_db(struct state *state)
-{
-	res_cleanup_db(state);
-	if (res_copy_db(state)) {
-		state->options = NULL;
-		return -1;
-	}
-	return 0;
 }

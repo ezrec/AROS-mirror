@@ -303,7 +303,8 @@ printf(const char *fmt, ...)
   struct SysLogPacket *msg;
   struct timeval now;
 
-  if (msg = GetLogMsg(&logReplyPort)) {	 /* Get next free message */
+  msg = GetLogMsg(&logReplyPort);
+  if (msg) {	 /* Get next free message */
     struct CSource cs;
 
     GetSysTime(&now);

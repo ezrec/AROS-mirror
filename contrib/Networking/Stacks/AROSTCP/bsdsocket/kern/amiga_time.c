@@ -105,10 +105,10 @@ D(bug("[AROSTCP](amiga_timer.c) timer_init()\n"));
     /*
      * allocate and initialize the template message structure
      */
-    timerIORequest = (struct timerequest *) CreateIORequest(timerport, sizeof(struct timerequest));
+    timerIORequest = (struct timerequest *)CreateIORequest(timerport, sizeof(struct timerequest));
     
     if (timerIORequest != NULL) {
-      error = OpenDevice("timer.device", UNIT_VBLANK, (struct IORequest *)timerIORequest, 0);
+      error = OpenDevice(TIMERNAME, UNIT_VBLANK, (struct IORequest *)timerIORequest, 0);
       if (error == 0) {
 	/*
 	 * Make sure that we got at least V36 timer, since we use some
