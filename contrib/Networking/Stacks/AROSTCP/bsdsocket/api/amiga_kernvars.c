@@ -42,7 +42,7 @@ void * SAVEDS FindKernelVar(REG(A0, STRPTR name))
    struct kernel_var *kvar = NULL;
    for (kvar = kvars; kvar->v_name; kvar++)
    {
-      if (!(strcmp(name, kvar->v_name)) return kvar->v_addr;
+      if (!(strcmp(name, kvar->v_name))) return kvar->v_addr;
    }
    return NULL;
 }
