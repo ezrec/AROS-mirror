@@ -272,7 +272,7 @@ GLOBAL struct RxsLib *RexxSysBase;
 #include <aros/debug.h>
 #endif
 
-#warning "TODO: NicJA - Would it be better to use differing pools for different data types?"
+// ## "TODO: NicJA - Would it be better to use differing pools for different data types?"
 /* Defines used by the stack to Allocate sufficient memory space for _ALL_ allocated blocks */
 /*       see kern_malloc.c                                                                  */
 #define __MALLOC_POOLSIZE            (128*1024)               // original Value was (16x1024)bytes

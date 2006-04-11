@@ -23,15 +23,16 @@
 #ifndef SYS_TYPES_H
 #define	SYS_TYPES_H
 
-typedef	unsigned char	u_char;
-typedef	unsigned short	u_short;
-typedef	unsigned int	u_int;
-typedef	unsigned long	u_long;
-typedef	unsigned short	ushort;		/* Sys V compatibility */
-typedef	char*           caddr_t;        /* core address */
-typedef unsigned long   dev_t;
-typedef unsigned long   ino_t;
-typedef long            off_t;
+typedef	unsigned char	    u_char;
+typedef	unsigned short	    u_short;
+typedef	unsigned int	    u_int;
+typedef	unsigned long	    u_long;
+typedef  unsigned long long u_quad_t;
+typedef	unsigned short	    ushort;		/* Sys V compatibility */
+typedef	char*              caddr_t;        /* core address */
+typedef unsigned long       dev_t;
+typedef unsigned long       ino_t;
+typedef long                off_t;
 
 #ifndef BSDSOCKET_TYPES_H
 #include <bsdsocket/types.h>
