@@ -59,6 +59,14 @@
 #include <proto/exec.h>
 #include <kern/amiga_config.h>
 
+enum apistate {	API_SCRATCH, /* api not initialized */
+	API_INITIALIZED,            /* librarybase created */
+	API_SHOWN,                  /* librarybase made visible */
+	API_HIDDEN,                 /* librarybase hidden */
+	API_FUNCTIONPATCHED         /* Api functions set to return -1 */
+};
+extern enum apistate api_state;
+
 struct newselbuf;
 
 /*

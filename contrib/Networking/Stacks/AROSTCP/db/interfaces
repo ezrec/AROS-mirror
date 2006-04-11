@@ -33,6 +33,14 @@
 # UNIT/N/K
 #   Sana-II (old-style AmiTCP/IP) device unit number. Default value is 0.
 #   If no Sana-II unit number is given, the interface unit number is used
+# IP/N/K
+#   IPv4 Address of the interface.
+#   (unimplemented) specifying DHCP for the address will cause th interface
+#   retrieve configuration information using the DHCP protocol.
+# NETMASK/K
+#   Netmask the interface should use.
+# UP/S
+#   Automatically put the interface ONLINE.
 # IPTYPE/N/K (*
 #   Packet type (framing) for Internet Protocol (IP)
 # IPREQ=IPREQUESTS/N/K
@@ -68,17 +76,17 @@
 #
 # 3Com Ethernet cards
 #
-#eth0 DEV=DEVS:networks/etherlink3.device UNIT=0
+#eth0 DEV=DEVS:networks/etherlink3.device UNIT=0 UP
 #
 # nForce Ethernet
 #
-#eth0 DEV=DEVS:networks/nforce.device UNIT=0
+#eth0 DEV=DEVS:networks/nforce.device UNIT=0 UP
 #
 # RTL8029 Ethernet cards
 #
-#eth0 DEV=DEVS:networks/prm-rtl8029.device UNIT=0 NOTRACKING
+#eth0 DEV=DEVS:networks/prm-rtl8029.device UNIT=0 NOTRACKING UP
 #
 # Prism II wireless cards
 #
-#eth0 DEV=DEVS:networks/prism2.device UNIT=0
+#eth0 DEV=DEVS:networks/prism2.device UNIT=0 UP
 # EOF

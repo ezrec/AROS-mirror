@@ -54,24 +54,16 @@ static const char template[] = SSC_TEMPLATE;
 /*
  * Parse the configuration
  */
-static struct ssconfig *
-ssconfig_parse(struct CSource argfile[])
+struct ssconfig *
+ssconfig_parse(struct RDArgs *rdargs)
 {
   struct ssconfig *config = AllocVec(sizeof(*config), MEMF_CLEAR|MEMF_PUBLIC);
-  /*
-   * Initialize the RDArgs structure for ReadArgs()
-   */
-  struct RDArgs *rdargs = config->rdargs;
-  
+
+D(bug("[AROSTCP] ssconfig_parse()\n"));
+
   if (config != NULL) {
-    rdargs->RDA_Source = *argfile;
-    rdargs->RDA_DAList = NULL;
-    rdargs->RDA_Buffer = NULL;
-    rdargs->RDA_BufSiz = 0;
-    rdargs->RDA_ExtHelp = NULL;
-    rdargs->RDA_Flags = RDAF_NOPROMPT;
-    
     if (ReadArgs(template, (LONG *)config->args, rdargs)) {
+      config->rdargs = rdargs;
       config->flags |= SSCF_RDARGS;
       return config;
     } else {
@@ -87,6 +79,7 @@ ssconfig_parse(struct CSource argfile[])
 void
 ssconfig_free(struct ssconfig config[])
 {
+D(bug("[AROSTCP] ssconfig_free()\n"));
   if (config->flags & SSCF_RDARGS)
     FreeArgs(config->rdargs);
   FreeVec(config);
@@ -96,6 +89,8 @@ static int
 getconfs(BPTR iffh, UBYTE *buf)
 {
   LONG i, quoted = 0, escaped = 0;
+
+D(bug("[AROSTCP] getconfs()\n"));
 
   if (FGets(iffh, buf, CONFIGLINELEN - 1)) {
     for (i = 0; buf[i]; i++) {
@@ -140,155 +135,6 @@ getconfs(BPTR iffh, UBYTE *buf)
 
   buf[0] = '\0';
   return IoErr();
-}
-
-/*
- * Read configuration file 
- */
-struct ssconfig *
-ssconfig_make(int how, char *unitname, long unit)
-{
-  LONG ioerr = 0;
-  BPTR iffh;
-  UBYTE *buf;
-  struct ssconfig *ssc = NULL, *ssc_generic = NULL;
-  char devname[IFNAMSIZ];
-  char *cp;
-
-  if (how == SSC_ALIAS) {
-    /* Copy the interface name */
-    cp = strncpy(devname, unitname, IFNAMSIZ); 
-    devname[IFNAMSIZ-1] = '\0';
-  
-    for (; *cp; cp++)
-      if (*cp >= '0' && *cp <= '9')
-	break;
-    *cp = '\0';
-  }
-#ifdef COMPAT_AMITCP2
-  else if (how == SSC_COMPAT) {
-  }
-#endif
-  else {
-    return NULL;
-  }
-
-  buf = AllocVec(CONFIGLINELEN, MEMF_PUBLIC);
-/*  iffh = Open(_PATH_SANA2CONFIG, MODE_OLDFILE);*/
-/*  strcpy(SocketBase->PathBuffer, db_path);
-  AddPart(SocketBase->PathBuffer, _PATH_SANA2CONFIG);
-  iffh = Open(SocketBase->PathBuffer, MODE_OLDFILE);*/
-  iffh = Open(interfaces_path, MODE_OLDFILE);
-  if (iffh && buf) {
-    BPTR oldinfh = SelectInput(iffh);
-    struct CSource arg[1];
-
-    /* There is bug in FGets -- the last char is not necessary 0 */
-    buf[CONFIGLINELEN - 1] = '\0';
-
-    while ((ioerr = getconfs(iffh, buf)) == 0) {
-      struct ssconfig *s; 
-      if (buf[0] == '\n')
-	continue;
-      if (buf[0] == '\0')
-	break;
-
-      arg->CS_Buffer = buf;
-      arg->CS_Length = strlen(buf);
-      arg->CS_CurChr = 0;
-      if (s = ssconfig_parse(arg)) {
-	if (how == SSC_ALIAS) {
-	  s->unit = unit;
-	  if (strcmp(s->args->a_name, unitname) == 0) {
-	    ssc = s;
-	    break;
-	  } else if (ssc_generic == NULL && 
-		     strcmp(s->args->a_name, devname) == 0) {
-	    ssc_generic = s;
-	    continue;
-	  }
-	} 
-#ifdef COMPAT_AMITCP2
-	else if (how == SSC_COMPAT) {
-	  /*
-	   * Try to find interface with matching exec device and unit
-	   */
-	  if (strcmp(FilePart(s->args->a_dev), FilePart(unitname)) == 0 &&
-	      (s->args->a_unit == NULL || *s->args->a_unit == unit)) {
-	    /* Copy the devname */
-	    cp = strncpy(devname,  s->args->a_name, IFNAMSIZ); 
-	    devname[IFNAMSIZ-1] = '\0';
-  
-	    for (; *cp; cp++)
-	      if (*cp >= '0' && *cp <= '9')
-		break;
-
-	    if (*cp) { 
-	      /* an interface with unit number, eg. "slip0" */
-	      int ifunit = *cp - '0';
-	      *cp++ = '\0';
-
-	      while (*cp >= '0' && *cp <= '9')
-		ifunit = ifunit * 10 + *cp++ - '0';
-
-	      if (s->args->a_unit == NULL && ifunit != unit) {
-		continue;
-	      }
-	      s->unit = ifunit;
-	    } else {
-	      /* an interface sans unit number, eg. "slip" */
-	      s->unit = unit - (s->args->a_unit ? *s->args->a_unit : 0);
-	    }
-	    *cp = '\0';
-	    ssc = s;
-	    break;
-	  }
-	}
-#endif
-	ssconfig_free(s);
-	continue;
-      }
-      break;
-    } 
-    SelectInput(oldinfh);
-  } else {
-    if (buf)
-      ioerr = IoErr();
-    else
-      ioerr = ERROR_NO_FREE_STORE;
-  }
-
-  if (iffh) Close(iffh);
-  if (buf) FreeVec(buf);
-
-  if (ioerr) {
-    if (ssc)
-      ssconfig_free(ssc);
-    if (ssc_generic)
-      ssconfig_free(ssc_generic);
-    ssc_generic = ssc = NULL;
-  } 
-
-  if (ssc == NULL) {
-    ssc = ssc_generic;
-  } else {
-    if (ssc && ssc_generic)
-      ssconfig_free(ssc_generic);
-    ssc_generic = NULL;
-  }
-
-  if (ssc) {
-    if (ssc->args->a_unit) {
-      if (ssc_generic)
-	*ssc->args->a_unit += unit;
-    } else {
-      ssc->args->a_unit = &ssc->unit;
-    }
-
-    strcpy(ssc->name, devname);
-  }
-
-  return ssc;
 }
 
 /*
@@ -355,8 +201,9 @@ ssconfig(struct sana_softc *ifp, struct ssconfig *ifc)
   LONG wt = ifp->ss_hwtype;
   LONG reqtotal = 0;
 
+D(bug("[AROSTCP] ssconfig()\n"));
+
   assert(ifp != NULL);
-/*assert(ifp->ss_if.if_type == IFT_SANA);*/
 
   for (wd = wire_defaults; wd->wd_wiretype != 0; wd++) {
     if (wt == wd->wd_wiretype)

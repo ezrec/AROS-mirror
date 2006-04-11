@@ -115,6 +115,15 @@ loattach()
 	if_attach(ifp);
 }
 
+void loconfig()
+{
+	struct ifreq ifr = {0};
+	ifr.ifr_addr.sa_len = sizeof(struct sockaddr_in);
+	ifr.ifr_addr.sa_family = AF_INET;
+	((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr.s_addr = 0x7f000001;
+	in_control(NULL, SIOCSIFADDR, &ifr, &loif);
+}
+
 int
 looutput(ifp, m, dst, rt)
 	struct ifnet *ifp;

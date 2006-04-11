@@ -64,15 +64,15 @@ int ultoa(unsigned long ul,char *buffer);
 extern struct Task *AROSTCP_Task; /* referenced by sendbreak() */
 
 /* Parsing error messages */
-UBYTE ERR_UNKNOWN[]     = "Unknown command\n";
-UBYTE ERR_ILLEGAL_VAR[] = "%s: unknown variable %s\n";
-UBYTE ERR_ILLEGAL_IND[] = "%s: unknown index %s\n";
-UBYTE ERR_SYNTAX[]      = "Syntax error\n";
-UBYTE ERR_TOO_LONG[]    = "Result too long\n";
-UBYTE ERR_MEMORY[]      = "Memory exhausted\n";
-UBYTE ERR_NONETDB[]     = "No active net database\n";
-UBYTE ERR_VALUE[]       = "Illegal value\n";
-UBYTE ERR_NOWRITE[]     = "%s: Variable %s is not writeable\n";
+UBYTE ERR_UNKNOWN[]     = "Unknown command";
+UBYTE ERR_ILLEGAL_VAR[] = "%s: unknown variable %s";
+UBYTE ERR_ILLEGAL_IND[] = "%s: unknown index %s";
+UBYTE ERR_SYNTAX[]      = "Syntax error";
+UBYTE ERR_TOO_LONG[]    = "Result too long";
+UBYTE ERR_MEMORY[]      = "Memory exhausted";
+UBYTE ERR_NONETDB[]     = "No active net database";
+UBYTE ERR_VALUE[]       = "Illegal value";
+UBYTE ERR_NOWRITE[]     = "%s: Variable %s is not writeable";
 
 /* Command-line template */
 const TEXT cmd_template[] = "WITH/K,NOO=NOCONFIG/S,DEBUG/S";
@@ -425,26 +425,27 @@ D(bug("[AROSTCP](amiga_config.c) parsefile('%s')\n",name));
     arg.CS_Buffer = buf;
     if (fh = Open(name, MODE_OLDFILE)) {
       while (FGets(fh, buf, CONFIGLINELEN)) {
-	line++;
-	if (*buf == '#')
-	  continue;
-	arg.CS_Length = strlen(buf);
-	arg.CS_CurChr = 0;
-	retval = setvalue(&arg, errstrp, res);
+        line++;
+        if (*buf == '#')
+          continue;
+        arg.CS_Length = strlen(buf);
+        arg.CS_CurChr = 0;
+        retval = setvalue(&arg, errstrp, res);
 
-	if (retval == RETURN_OK)
-	  continue;
-	if (retval != RETURN_WARN) /* severe error */
-	  break;
-	
+        if (retval == RETURN_OK)
+          continue;
+        if (retval != RETURN_WARN) { /* severe error */
+          break;
+        }
+
 	/* Print the error to the "stdout" */
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_config.c) parsefile: %s: line %ld, col %ld: %s",
 	       name, line, arg.CS_CurChr, *errstrp));
 #endif
-	Printf("%s: line %ld, col %ld: %s",
-	       name, line, arg.CS_CurChr, *errstrp);
-	retval = RETURN_OK;
+        Printf("%s: line %ld, col %ld: %s",
+           name, line, arg.CS_CurChr, *errstrp);
+        retval = RETURN_OK;
       }
       /* Check file error */ 
       ioerr = IoErr();

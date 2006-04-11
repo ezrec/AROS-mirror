@@ -33,6 +33,7 @@
   "NAME/A," \
   "DEV=DEVICE/A/K," \
   "UNIT/N/K," \
+  "IP/K,NETMASK/K,UP/S," \
   "IPTYPE/N/K," \
   "ARPTYPE=IPARPTYPE/N/K," \
   "IPREQ=IPREQUESTS/N/K," \
@@ -47,6 +48,9 @@ struct ssc_args {
   UBYTE *a_name;
   UBYTE *a_dev;
   LONG  *a_unit;
+  UBYTE *a_ip;
+  UBYTE *a_netmask;
+  LONG  a_up;
   LONG  *a_iptype;
   LONG  *a_arptype;
   LONG  *a_ipno;
@@ -64,7 +68,7 @@ struct ssconfig {
   LONG            flags;
   LONG            unit;
   char            name[IFNAMSIZ];
-  struct RDArgs   rdargs[1];
+  struct RDArgs   *rdargs;
   struct ssc_args args[1];
 };
 
@@ -77,7 +81,8 @@ struct ssconfig {
 #define SSC_COMPAT 1
 
 void ssconfig_free(struct ssconfig *config);
-struct ssconfig *ssconfig_make(int how, char *name, long unit);
+struct ssconfig *ssconfig_parse(struct RDArgs *rdargs);
+//struct ssconfig *ssconfig_make(int how, char *name, long unit);
 void ssconfig(struct sana_softc *ifp, struct ssconfig *sscp);
 
 #endif /* !NET_SANA2CONFIG_H */

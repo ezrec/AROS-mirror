@@ -131,6 +131,11 @@ struct if_data {
 	u_long	ifi_iqdrops;	/* dropped on input, this interface */
 	u_long	ifi_noproto;	/* destined for unsupported protocol */
 	struct	timeval ifi_lastchange;/* last updated */
+/* AROSTCP/MOSNet specific additions */
+   struct   timeval ifi_aros_ontime;
+   u_quad_t ifi_aros_lasttotal;
+   u_char   ifi_aros_usedhcp;
+   pid_t    ifi_aros_dhcp_pid;
 };
 
 struct ifnet {

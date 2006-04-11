@@ -1,4 +1,5 @@
 void loattach(void);
+void loconfig(void);
 int looutput(struct ifnet *, 
 	     register struct mbuf *, 
 	     struct sockaddr *, 

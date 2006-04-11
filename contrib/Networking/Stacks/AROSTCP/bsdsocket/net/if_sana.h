@@ -128,6 +128,10 @@ struct sana_softc {
 /* Default configuration flags */
 #define SS_CFLAGS (SSF_TRACK)
 
+/* Private Interface Config flags */
+#define IFF_NOUP     0x8000
+#define IFF_DELAYUP  0x4000
+
 /*
  * Global functions defined in if_sana.c
  */

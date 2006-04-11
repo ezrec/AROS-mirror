@@ -10,6 +10,10 @@
 ; (File created by installer)
 
 ;
+; interfaces
+;
+WITH interfaces PREFIX=I
+;
 ; hosts
 ;
 WITH hosts PREFIX=H
@@ -17,7 +21,7 @@ H 127.0.0.1	localhost
 ;
 ; Local networks
 ;
-WITH networks PREFIX=N
+;WITH networks PREFIX=N
 N loopback-net	127		software-loopback-net
 ;
 ; Protocols
@@ -27,6 +31,10 @@ WITH protocols PREFIX=P
 ; Network services, Internet style
 ;
 WITH services PREFIX=S
+;
+; Static routes
+;
+WITH static-routes PREFIX=R
 ;
 ; Nameservers and local domains
 ;

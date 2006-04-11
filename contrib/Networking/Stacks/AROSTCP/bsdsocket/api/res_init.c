@@ -59,7 +59,7 @@ int res_update_db(struct state *state)
   ULONG n = 1;
 
 #if defined(__AROS__)
-D(bug("[AROSTCP](res_init.c) res_copy_db()\n"));
+D(bug("[AROSTCP](res_init.c) res_update_db()\n"));
 #endif
 
   opts = state->options;
@@ -74,7 +74,7 @@ D(bug("[AROSTCP](res_init.c) res_copy_db()\n"));
     n++;
   }
 #if defined(__AROS__)
-D(bug("[AROSTCP](res_init.c) res_copy_db: %d Domains in NetDB\n", n-1));
+D(bug("[AROSTCP](res_init.c) res_update_db: %d Domains in NetDB\n", n-1));
   ULONG tmp_n = n;
 #endif
 
@@ -89,7 +89,7 @@ D(bug("[AROSTCP](res_init.c) res_copy_db: %d Domains in NetDB\n", n-1));
   }
 
 #if defined(__AROS__)
-D(bug("[AROSTCP](res_init.c) res_copy_db: %d Domains in DynDB\n", n-tmp_n-1));
+D(bug("[AROSTCP](res_init.c) res_update_db: %d Domains in DynDB\n", n-tmp_n-1));
 #endif
 
   /* Allocate space for the array */
@@ -97,7 +97,7 @@ D(bug("[AROSTCP](res_init.c) res_copy_db: %d Domains in DynDB\n", n-tmp_n-1));
 
   if (!state->dnsrch) {
 #if defined(__AROS__)
-D(bug("[AROSTCP](res_init.c) res_copy_db: Failed to allocate array for dnsrch pointers\n"));  
+D(bug("[AROSTCP](res_init.c) res_update_db: Failed to allocate array for dnsrch pointers\n"));  
 #endif
     UNLOCK_NDB(NDB);
     ReleaseSemaphore(&DynDB.dyn_Lock);
@@ -114,7 +114,7 @@ D(bug("[AROSTCP](res_init.c) res_copy_db: Failed to allocate array for dnsrch po
     state->dnsrch[n] = bsd_malloc(l, NULL, NULL);
     if (!state->dnsrch[n]) {
 #if defined(__AROS__)
-D(bug("[AROSTCP](res_init.c) res_copy_db: Failed to allocate space for entry %d from NetDB entry '%s' name\n", n,
+D(bug("[AROSTCP](res_init.c) res_update_db: Failed to allocate space for entry %d from NetDB entry '%s' name\n", n,
  domain->dn_Ent.d_name));
 #endif
       UNLOCK_NDB(NDB);
@@ -134,7 +134,7 @@ D(bug("[AROSTCP](res_init.c) res_copy_db: Failed to allocate space for entry %d 
     state->dnsrch[n] = bsd_malloc(l, NULL, NULL);
     if (!state->dnsrch[n]) {
 #if defined(__AROS__)
-D(bug("[AROSTCP](res_init.c) res_copy_db: Failed to allocate space for entry %d from DynDB entry '%s' name\n", n, domain->dn_Ent.d_name));
+D(bug("[AROSTCP](res_init.c) res_update_db: Failed to allocate space for entry %d from DynDB entry '%s' name\n", n, domain->dn_Ent.d_name));
 #endif
       UNLOCK_NDB(NDB);
       ReleaseSemaphore(&DynDB.dyn_Lock);
@@ -148,7 +148,7 @@ D(bug("[AROSTCP](res_init.c) res_copy_db: Failed to allocate space for entry %d 
 
   state->dnsrch[n] = NULL;
 #if defined(__AROS__)
-D(bug("[AROSTCP](res_init.c) res_copy_db: Last dnsrch array pointer (%d) marked empty\n", n));
+D(bug("[AROSTCP](res_init.c) res_update_db: Last dnsrch array pointer (%d) marked empty\n", n));
 #endif
 
   /* Count nameservers in the NetDB */
@@ -161,7 +161,7 @@ D(bug("[AROSTCP](res_init.c) res_copy_db: Last dnsrch array pointer (%d) marked 
   }
 
 #if defined(__AROS__)
-D(bug("[AROSTCP](res_init.c) res_copy_db: %d Nameservers in NetDB\n", n-1));
+D(bug("[AROSTCP](res_init.c) res_update_db: %d Nameservers in NetDB\n", n-1));
    tmp_n = n;
 #endif
 
@@ -172,14 +172,14 @@ D(bug("[AROSTCP](res_init.c) res_copy_db: %d Nameservers in NetDB\n", n-1));
     n++;
   }
 #if defined(__AROS__)
-D(bug("[AROSTCP](res_init.c) res_copy_db: %d Nameservers in DynDB\n", n-tmp_n-1));
+D(bug("[AROSTCP](res_init.c) res_update_db: %d Nameservers in DynDB\n", n-tmp_n-1));
 #endif
 
   /* Allocate space for the array */
   state->nsaddr_list = bsd_malloc(n*sizeof(struct in_addr), NULL, NULL);
   if (!state->nsaddr_list) {
 #if defined(__AROS__)
-D(bug("[AROSTCP](res_init.c) res_copy_db: Failed to allocate array for nsaddr_list pointers\n"));  
+D(bug("[AROSTCP](res_init.c) res_update_db: Failed to allocate array for nsaddr_list pointers\n"));  
 #endif
     UNLOCK_NDB(NDB);
     ReleaseSemaphore(&DynDB.dyn_Lock);

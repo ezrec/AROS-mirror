@@ -741,13 +741,13 @@ LONG __CloseSocket(LONG fd, struct SocketBase *libPtr)
     ObtainSemaphore(&libPtr->EventLock);
     for (se = (struct soevent *)libPtr->EventList.mlh_Head; se->node.mln_Succ; se = (struct soevent *)se->node.mln_Succ)
     {
-	  if (se->socket == so)
-	  {
-	    Remove((struct Node *)se);
-	    bsd_free(se, NULL);
-	  }
-  }
-  ReleaseSemaphore(&libPtr->EventLock);
+      if (se->socket == so)
+      {
+        Remove((struct Node *)se);
+        bsd_free(se, NULL);
+      }
+    }
+    ReleaseSemaphore(&libPtr->EventLock);
   }
 
   /*

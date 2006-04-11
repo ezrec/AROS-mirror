@@ -146,5 +146,10 @@ struct addrinfo {
 #define	EAI_SYSTEM	11	/* system error returned in errno */
 
 
+/* Flags for ResetNetDB() */
+#define NETDB_IFF_CLEANOLD   1
+#define NETDB_IFF_MODIFYOLD  2
+#define NETDB_IFF_ADDNEW     4
+
 #endif /* !NETDB_H */
 
