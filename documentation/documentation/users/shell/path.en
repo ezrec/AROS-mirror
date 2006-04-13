@@ -1,13 +1,16 @@
+====
+Path
+====
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_ `Prev <newshell>`_ `Next <prompt>`_ 
 
 ---------------
 
+::
 
-====
-Path
-====
+ Path [{<dir>}] [ADD] [SHOW] [RESET] [REMOVE] [QUIET] [HEAD]
 
 Synopsis
 ~~~~~~~~

@@ -1,13 +1,16 @@
+=====
+Avail
+=====
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_ `Prev <assign>`_ `Next <beep>`_ 
 
 ---------------
 
+::
 
-=====
-Avail
-=====
+ Avail [CHIP | FAST | TOTAL | FLUSH] [H | HUMAN]
 
 Synopsis
 ~~~~~~~~

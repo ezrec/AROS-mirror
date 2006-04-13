@@ -1,13 +1,16 @@
+======
+Assign
+======
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_ `Prev <ask>`_ `Next <avail>`_ 
 
 ---------------
 
+::
 
-======
-Assign
-======
+ Assign [(name):] [{(target)}] [LIST] [EXISTS] [DISMOUNT] [DEFER]
 
 Synopsis
 ~~~~~~~~

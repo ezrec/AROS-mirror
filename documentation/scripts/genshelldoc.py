@@ -53,6 +53,7 @@ class autodoc:
         self.docfilename=""
         self.prevdocfilename=""
         self.nextdocfilename=""
+        self.templ=""
         
     def __cmp__(self, other):
         return cmp(self.docfilename, other.docfilename)
@@ -139,10 +140,12 @@ class autodoc:
     def checkname(self):
         #scans the 'name' chapter for the name
         for line in self.name:
-            part=string.split(line)
+            part=string.split(string.strip(line), " ", 1)
             if len(part) > 0 and len(part[0]) > 1:
                 self.docname = part[0]
                 self.docfilename = string.lower(self.docname)
+                if len(part) > 1:
+                    self.templ = part[1]
                 return True
         return False
                                 
@@ -150,7 +153,7 @@ class autodoc:
         # check for empty chapter
         nonempty = 0
         for line in content:
-            if line != "\n":
+            if string.strip(line) != "":
                 nonempty = 1
                 break
                 
@@ -171,18 +174,25 @@ class autodoc:
         targetfile = targetdir + "/" + self.docfilename+".en" 
         print "Creating file " + targetfile
         f=open(targetfile, "w")
+
+        marks="=" * len(self.docname) + "\n"
+        f.write(marks)
+        f.write(self.docname + "\n")
+        f.write(marks + "\n")
+
         f.write(".. This document is automatically generated. Don't edit it!\n\n")
+
         f.write("`Index <index>`_ ")
         if self.prevdocfilename:
             f.write("`Prev <" + self.prevdocfilename + ">`_ ")
         if self.nextdocfilename:
             f.write("`Next <" + self.nextdocfilename + ">`_ ")
-                
-        f.write("\n\n---------------\n")
-        marks="=" * len(self.docname) + "\n"
-        f.write("\n\n" + marks)
-        f.write(self.docname + "\n")
-        f.write(marks + "\n")
+
+        f.write("\n\n---------------\n\n")
+
+        f.write("::\n\n")
+        f.write(" " + self.docname + " " + self.templ + "\n\n")
+        
         self.printchapter(f, "Format", self.format)
         self.printchapter(f, "Template", self.template)
         self.printchapter(f, "Synopsis", self.synopsis)

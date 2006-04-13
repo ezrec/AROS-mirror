@@ -1,13 +1,16 @@
+====
+Type
+====
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_ `Prev <status>`_ `Next <unalias>`_ 
 
 ---------------
 
+::
 
-====
-Type
-====
+ Type {<file | pattern>} [TO <name>] [OPT H | N] [HEX | NUMBER]
 
 Synopsis
 ~~~~~~~~

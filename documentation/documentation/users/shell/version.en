@@ -1,13 +1,16 @@
+=======
+Version
+=======
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_ `Prev <unsetenv>`_ `Next <wait>`_ 
 
 ---------------
 
+::
 
-=======
-Version
-=======
+ Version [<library|device|file>] [<version #>] [<revision #>] [FILE] [FULL] [RES]
 
 Synopsis
 ~~~~~~~~

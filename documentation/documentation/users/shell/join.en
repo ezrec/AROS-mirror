@@ -1,13 +1,16 @@
+====
+Join
+====
+
 .. This document is automatically generated. Don't edit it!
 
 `Index <index>`_ `Prev <info>`_ `Next <lab>`_ 
 
 ---------------
 
+::
 
-====
-Join
-====
+ Join [FILE] {(file | pattern)} AS|TO (filename)
 
 Synopsis
 ~~~~~~~~
