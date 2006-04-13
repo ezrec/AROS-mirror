@@ -22,7 +22,7 @@
 ZUNE_CUSTOMCLASS_INLINE_10
 (
     UAEDisplay, NULL, MUIC_Area, NULL,
-    {
+    (
         int   width;
         int   height;
 	int   modifysize;
@@ -42,10 +42,10 @@ ZUNE_CUSTOMCLASS_INLINE_10
 	int   nomenu;
 
 	struct MUI_EventHandlerNode ehnode;
-    },
+    ),
 
     __MUIM_UAEDisplay_ReallocMemory, Msg,
-    ({
+    (
          if (data->memory) FreeVec(data->memory);
 	 data->memory = NULL;
 
@@ -65,10 +65,10 @@ ZUNE_CUSTOMCLASS_INLINE_10
 	 data->bytesperrow = data->bytesperpix * data->width;
 
 	 return TRUE;
-    }),
+    ),
 
     OM_NEW, struct opSet *,
-    ({
+    (
          const struct TagItem *tstate = message->ops_AttrList;
          struct TagItem       *tag;
 
@@ -100,10 +100,10 @@ ZUNE_CUSTOMCLASS_INLINE_10
          }
 
 	 return (IPTR)self;
-    }),
+    ),
 
     OM_SET, struct opSet *,
-    ({
+    (
 	 const struct TagItem *tstate = message->ops_AttrList;
          struct TagItem       *tag;
 
@@ -148,10 +148,10 @@ ZUNE_CUSTOMCLASS_INLINE_10
 	 DoMethod(_parent(self), MUIM_Group_ExitChange);
 
          return DoSuperMethodA(CLASS, self, (Msg)message);
-    }),
+    ),
 
     OM_GET, struct opGet *,
-    ({
+    (
         switch (message->opg_AttrID)
 	{
 	    case MUIA_UAEDisplay_Memory:
@@ -195,10 +195,10 @@ ZUNE_CUSTOMCLASS_INLINE_10
 	}
 
         return TRUE;
-    }),
+    ),
 
     MUIM_Setup, struct MUIP_Setup *,
-    ({
+    (
          if (!DoSuperMethodA(CLASS, self, (Msg)message))
 	     return FALSE;
 
@@ -237,20 +237,20 @@ ZUNE_CUSTOMCLASS_INLINE_10
 	 CoerceMethod(CLASS, self, MUIM_Cleanup);
 
 	 return FALSE;
-    }),
+    ),
 
     MUIM_Cleanup, struct MUIP_Cleanup *,
-    ({
+    (
 	 DoMethod(_win(self), MUIM_Window_RemEventHandler, (IPTR)&data->ehnode);
 
 	 if (data->memory)
 	     FreeVec(data->memory);
 
 	 return DoSuperMethodA(CLASS, self, (Msg)message);
-    }),
+    ),
 
     MUIM_HandleEvent, struct MUIP_HandleEvent *,
-    ({
+    (
          if (!message->imsg || !data->eventhandler)
 	     return 0;
 
@@ -278,10 +278,10 @@ ZUNE_CUSTOMCLASS_INLINE_10
 	 }
 
 	 return 0;
-    }),
+    ),
 
     MUIM_AskMinMax, struct MUIP_AskMinMax *,
-    ({
+    (
         DoSuperMethodA(CLASS, self, (Msg)message);
 
 	if (data->modifysize)
@@ -301,10 +301,10 @@ ZUNE_CUSTOMCLASS_INLINE_10
         message->MinMaxInfo->MaxHeight += data->height;
 
 	return TRUE;
-    }),
+    ),
 
     MUIM_Draw, struct MUIP_Draw *,
-    ({
+    (
         WORD top, bottom;
 
 	if (!_mwidth(self) || !_mheight(self) || !data->memory)
@@ -337,10 +337,10 @@ ZUNE_CUSTOMCLASS_INLINE_10
         );
 
         return TRUE;
-    }),
+    ),
 
     MUIM_UAEDisplay_Update, struct MUIP_UAEDisplay_Update *,
-    ({
+    (
 
 	if (message->top >= data->height || message->bottom <= 0)
 	    return TRUE;
@@ -354,5 +354,5 @@ ZUNE_CUSTOMCLASS_INLINE_10
 	MUI_Redraw(self, MADF_DRAWUPDATE);
 
         return TRUE;
-    })
+    )
 );
