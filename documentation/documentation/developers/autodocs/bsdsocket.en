@@ -8,52 +8,20 @@ bsdsocket
 
 ----------
 
-`CloseSocket`_
-`Dup2Socket`_
-`Errno`_
-`GetSocketEvents`_
-`Inet_LnaOf`_
-`Inet_MakeAddr`_
-`Inet_NetOf`_
-`Inet_NtoA`_
-`IoctlSocket`_
-`ObtainSocket`_
-`ReleaseCopyOfSocket`_
-`ReleaseSocket`_
-`SetErrnoPtr`_
-`SetSocketSignals`_
-`SocketBaseTagList`_
-`WaitSelect`_
-`accept`_
-`bind`_
-`connect`_
-`getdtablesize`_
-`gethostbyaddr`_
-`gethostbyname`_
-`gethostid`_
-`gethostname`_
-`getnetbyaddr`_
-`getnetbyname`_
-`getpeername`_
-`getprotobyname`_
-`getprotobynumber`_
-`getservbyname`_
-`getservbyport`_
-`getsockname`_
-`getsockopt`_
-`inet_addr`_
-`inet_network`_
-`listen`_
-`recv`_
-`recvfrom`_
-`recvmsg`_
-`send`_
-`sendmsg`_
-`sendto`_
-`setsockopt`_
-`shutdown`_
-`socket`_
-`vsyslog`_
+======================================= ======================================= ======================================= ======================================= 
+`CloseSocket`_                          `Dup2Socket`_                           `Errno`_                                `GetSocketEvents`_                      
+`Inet_LnaOf`_                           `Inet_MakeAddr`_                        `Inet_NetOf`_                           `Inet_NtoA`_                            
+`IoctlSocket`_                          `ObtainSocket`_                         `ReleaseCopyOfSocket`_                  `ReleaseSocket`_                        
+`SetErrnoPtr`_                          `SetSocketSignals`_                     `SocketBaseTagList`_                    `WaitSelect`_                           
+`accept`_                               `bind`_                                 `connect`_                              `getdtablesize`_                        
+`gethostbyaddr`_                        `gethostbyname`_                        `gethostid`_                            `gethostname`_                          
+`getnetbyaddr`_                         `getnetbyname`_                         `getpeername`_                          `getprotobyname`_                       
+`getprotobynumber`_                     `getservbyname`_                        `getservbyport`_                        `getsockname`_                          
+`getsockopt`_                           `inet_addr`_                            `inet_network`_                         `listen`_                               
+`recv`_                                 `recvfrom`_                             `recvmsg`_                              `send`_                                 
+`sendmsg`_                              `sendto`_                               `setsockopt`_                           `shutdown`_                             
+`socket`_                               `vsyslog`_                              
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -65,8 +33,7 @@ Synopsis
 ::
 
  int CloseSocket(
-         int s
- );
+          int s );
 
 
 Dup2Socket
@@ -77,9 +44,8 @@ Synopsis
 ::
 
  int Dup2Socket(
-         int fd1,
-         int fd2
- );
+          int fd1,
+          int fd2 );
 
 
 Errno
@@ -89,8 +55,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG Errno(
- );
+ LONG Errno();
 
 
 GetSocketEvents
@@ -101,8 +66,7 @@ Synopsis
 ::
 
  LONG GetSocketEvents(
-         ULONG * eventsp
- );
+          ULONG * eventsp );
 
 
 Inet_LnaOf
@@ -113,8 +77,7 @@ Synopsis
 ::
 
  unsigned long Inet_LnaOf(
-         unsigned long in
- );
+          unsigned long in );
 
 
 Inet_MakeAddr
@@ -125,9 +88,8 @@ Synopsis
 ::
 
  unsigned long Inet_MakeAddr(
-         int net,
-         int lna
- );
+          int net,
+          int lna );
 
 
 Inet_NetOf
@@ -138,8 +100,7 @@ Synopsis
 ::
 
  unsigned long Inet_NetOf(
-         unsigned long in
- );
+          unsigned long in );
 
 
 Inet_NtoA
@@ -150,8 +111,7 @@ Synopsis
 ::
 
  char * Inet_NtoA(
-         unsigned long in
- );
+          unsigned long in );
 
 
 IoctlSocket
@@ -162,10 +122,9 @@ Synopsis
 ::
 
  int IoctlSocket(
-         int s,
-         unsigned long request,
-         char * argp
- );
+          int s,
+          unsigned long request,
+          char * argp );
 
 
 ObtainSocket
@@ -176,11 +135,10 @@ Synopsis
 ::
 
  LONG ObtainSocket(
-         LONG id,
-         LONG domain,
-         LONG type,
-         LONG protocol
- );
+          LONG id,
+          LONG domain,
+          LONG type,
+          LONG protocol );
 
 
 ReleaseCopyOfSocket
@@ -191,9 +149,8 @@ Synopsis
 ::
 
  LONG ReleaseCopyOfSocket(
-         LONG sd,
-         LONG id
- );
+          LONG sd,
+          LONG id );
 
 
 ReleaseSocket
@@ -204,9 +161,8 @@ Synopsis
 ::
 
  LONG ReleaseSocket(
-         LONG sd,
-         LONG id
- );
+          LONG sd,
+          LONG id );
 
 
 SetErrnoPtr
@@ -217,9 +173,8 @@ Synopsis
 ::
 
  void SetErrnoPtr(
-         void * ptr,
-         int size
- );
+          void * ptr,
+          int size );
 
 
 SetSocketSignals
@@ -230,10 +185,9 @@ Synopsis
 ::
 
  void SetSocketSignals(
-         ULONG intrmask,
-         ULONG iomask,
-         ULONG urgmask
- );
+          ULONG intrmask,
+          ULONG iomask,
+          ULONG urgmask );
 
 
 SocketBaseTagList
@@ -244,8 +198,7 @@ Synopsis
 ::
 
  ULONG SocketBaseTagList(
-         struct TagItem * tagList
- );
+          struct TagItem * tagList );
 
 
 WaitSelect
@@ -256,13 +209,12 @@ Synopsis
 ::
 
  int WaitSelect(
-         int nfds,
-         fd_set * readfds,
-         fd_set * writefds,
-         fd_set * exceptfds,
-         struct timeval * timeout,
-         ULONG * sigmask
- );
+          int nfds,
+          fd_set * readfds,
+          fd_set * writefds,
+          fd_set * exceptfds,
+          struct timeval * timeout,
+          ULONG * sigmask );
 
 
 accept
@@ -273,10 +225,9 @@ Synopsis
 ::
 
  int accept(
-         int s,
-         struct sockaddr * addr,
-         int * addrlen
- );
+          int s,
+          struct sockaddr * addr,
+          int * addrlen );
 
 
 bind
@@ -287,10 +238,9 @@ Synopsis
 ::
 
  int bind(
-         int s,
-         struct sockaddr * name,
-         int namelen
- );
+          int s,
+          struct sockaddr * name,
+          int namelen );
 
 
 connect
@@ -301,10 +251,9 @@ Synopsis
 ::
 
  int connect(
-         int s,
-         struct sockaddr * name,
-         int namelen
- );
+          int s,
+          struct sockaddr * name,
+          int namelen );
 
 
 getdtablesize
@@ -314,8 +263,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- int getdtablesize(
- );
+ int getdtablesize();
 
 
 gethostbyaddr
@@ -326,10 +274,9 @@ Synopsis
 ::
 
  struct hostent * gethostbyaddr(
-         char * addr,
-         int len,
-         int type
- );
+          char * addr,
+          int len,
+          int type );
 
 
 gethostbyname
@@ -340,8 +287,7 @@ Synopsis
 ::
 
  struct hostent * gethostbyname(
-         char * name
- );
+          char * name );
 
 
 gethostid
@@ -351,8 +297,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- long gethostid(
- );
+ long gethostid();
 
 
 gethostname
@@ -363,9 +308,8 @@ Synopsis
 ::
 
  int gethostname(
-         char * name,
-         int namelen
- );
+          char * name,
+          int namelen );
 
 
 getnetbyaddr
@@ -376,9 +320,8 @@ Synopsis
 ::
 
  struct netent * getnetbyaddr(
-         long net,
-         int type
- );
+          long net,
+          int type );
 
 
 getnetbyname
@@ -389,8 +332,7 @@ Synopsis
 ::
 
  struct netent * getnetbyname(
-         char * name
- );
+          char * name );
 
 
 getpeername
@@ -401,10 +343,9 @@ Synopsis
 ::
 
  int getpeername(
-         int s,
-         struct sockaddr * name,
-         int * namelen
- );
+          int s,
+          struct sockaddr * name,
+          int * namelen );
 
 
 getprotobyname
@@ -415,8 +356,7 @@ Synopsis
 ::
 
  struct protoent * getprotobyname(
-         char * name
- );
+          char * name );
 
 
 getprotobynumber
@@ -427,8 +367,7 @@ Synopsis
 ::
 
  struct protoent * getprotobynumber(
-         int proto
- );
+          int proto );
 
 
 getservbyname
@@ -439,9 +378,8 @@ Synopsis
 ::
 
  struct servent * getservbyname(
-         char * name,
-         char * proto
- );
+          char * name,
+          char * proto );
 
 
 getservbyport
@@ -452,9 +390,8 @@ Synopsis
 ::
 
  struct servent * getservbyport(
-         int port,
-         char * proto
- );
+          int port,
+          char * proto );
 
 
 getsockname
@@ -465,10 +402,9 @@ Synopsis
 ::
 
  int getsockname(
-         int s,
-         struct sockaddr * name,
-         int * namelen
- );
+          int s,
+          struct sockaddr * name,
+          int * namelen );
 
 
 getsockopt
@@ -479,12 +415,11 @@ Synopsis
 ::
 
  int getsockopt(
-         int s,
-         int level,
-         int optname,
-         void * optval,
-         void * optlen
- );
+          int s,
+          int level,
+          int optname,
+          void * optval,
+          void * optlen );
 
 
 inet_addr
@@ -495,8 +430,7 @@ Synopsis
 ::
 
  unsigned long inet_addr(
-         const char * cp
- );
+          const char * cp );
 
 
 inet_network
@@ -507,8 +441,7 @@ Synopsis
 ::
 
  unsigned long inet_network(
-         const char * cp
- );
+          const char * cp );
 
 
 listen
@@ -519,9 +452,8 @@ Synopsis
 ::
 
  int listen(
-         int s,
-         int backlog
- );
+          int s,
+          int backlog );
 
 
 recv
@@ -532,11 +464,10 @@ Synopsis
 ::
 
  int recv(
-         int s,
-         void * buf,
-         int len,
-         int flags
- );
+          int s,
+          void * buf,
+          int len,
+          int flags );
 
 
 recvfrom
@@ -547,13 +478,12 @@ Synopsis
 ::
 
  int recvfrom(
-         int s,
-         void * buf,
-         int len,
-         int flags,
-         struct sockaddr * from,
-         int * fromlen
- );
+          int s,
+          void * buf,
+          int len,
+          int flags,
+          struct sockaddr * from,
+          int * fromlen );
 
 
 recvmsg
@@ -564,10 +494,9 @@ Synopsis
 ::
 
  int recvmsg(
-         int s,
-         struct msghdr * msg,
-         int flags
- );
+          int s,
+          struct msghdr * msg,
+          int flags );
 
 
 send
@@ -578,11 +507,10 @@ Synopsis
 ::
 
  int send(
-         int s,
-         const void * msg,
-         int len,
-         int flags
- );
+          int s,
+          const void * msg,
+          int len,
+          int flags );
 
 
 sendmsg
@@ -593,10 +521,9 @@ Synopsis
 ::
 
  int sendmsg(
-         int s,
-         const struct msghdr * msg,
-         int flags
- );
+          int s,
+          const struct msghdr * msg,
+          int flags );
 
 
 sendto
@@ -607,13 +534,12 @@ Synopsis
 ::
 
  int sendto(
-         int s,
-         const void * msg,
-         int len,
-         int flags,
-         const struct sockaddr * to,
-         int tolen
- );
+          int s,
+          const void * msg,
+          int len,
+          int flags,
+          const struct sockaddr * to,
+          int tolen );
 
 
 setsockopt
@@ -624,12 +550,11 @@ Synopsis
 ::
 
  int setsockopt(
-         int s,
-         int level,
-         int optname,
-         void * optval,
-         int optlen
- );
+          int s,
+          int level,
+          int optname,
+          void * optval,
+          int optlen );
 
 
 shutdown
@@ -640,9 +565,8 @@ Synopsis
 ::
 
  int shutdown(
-         int s,
-         int how
- );
+          int s,
+          int how );
 
 
 socket
@@ -653,10 +577,9 @@ Synopsis
 ::
 
  int socket(
-         int domain,
-         int type,
-         int protocol
- );
+          int domain,
+          int type,
+          int protocol );
 
 
 vsyslog
@@ -667,9 +590,8 @@ Synopsis
 ::
 
  void vsyslog(
-         int level,
-         const char * format,
-         LONG * args
- );
+          int level,
+          const char * format,
+          LONG * args );
 
 

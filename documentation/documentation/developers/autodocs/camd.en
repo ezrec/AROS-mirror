@@ -8,42 +8,18 @@ camd
 
 ----------
 
-`AddMidiLinkA`_
-`CloseMidiDevice`_
-`CreateMidiA`_
-`DeleteMidi`_
-`EndClusterNotify`_
-`FindCluster`_
-`FindMidi`_
-`FlushMidi`_
-`GetMidi`_
-`GetMidiAttrsA`_
-`GetMidiErr`_
-`GetMidiLinkAttrsA`_
-`GetSysEx`_
-`GoodPutMidi`_
-`LockCAMD`_
-`Midi2Driver`_
-`MidiLinkConnected`_
-`MidiMsgLen`_
-`MidiMsgType`_
-`NextCluster`_
-`NextClusterLink`_
-`NextMidi`_
-`NextMidiLink`_
-`OpenMidiDevice`_
-`ParseMidi`_
-`PutMidi`_
-`PutSysEx`_
-`QuerySysEx`_
-`RemoveMidiLink`_
-`RethinkCAMD`_
-`SetMidiAttrsA`_
-`SetMidiLinkAttrsA`_
-`SkipSysEx`_
-`StartClusterNotify`_
-`UnlockCAMD`_
-`WaitMidi`_
+======================================= ======================================= ======================================= ======================================= 
+`AddMidiLinkA`_                         `CloseMidiDevice`_                      `CreateMidiA`_                          `DeleteMidi`_                           
+`EndClusterNotify`_                     `FindCluster`_                          `FindMidi`_                             `FlushMidi`_                            
+`GetMidi`_                              `GetMidiAttrsA`_                        `GetMidiErr`_                           `GetMidiLinkAttrsA`_                    
+`GetSysEx`_                             `GoodPutMidi`_                          `LockCAMD`_                             `Midi2Driver`_                          
+`MidiLinkConnected`_                    `MidiMsgLen`_                           `MidiMsgType`_                          `NextCluster`_                          
+`NextClusterLink`_                      `NextMidi`_                             `NextMidiLink`_                         `OpenMidiDevice`_                       
+`ParseMidi`_                            `PutMidi`_                              `PutSysEx`_                             `QuerySysEx`_                           
+`RemoveMidiLink`_                       `RethinkCAMD`_                          `SetMidiAttrsA`_                        `SetMidiLinkAttrsA`_                    
+`SkipSysEx`_                            `StartClusterNotify`_                   `UnlockCAMD`_                           `WaitMidi`_                             
+
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -55,10 +31,9 @@ Synopsis
 ::
 
  struct MidiLink * AddMidiLinkA(
-         struct MidiNode * midinode,
-         LONG type,
-         struct TagItem * tags
- );
+          struct MidiNode * midinode,
+          LONG type,
+          struct TagItem * tags );
 
 Function
 ~~~~~~~~
@@ -92,8 +67,7 @@ Synopsis
 ::
 
  void CloseMidiDevice(
-         struct MidiDeviceData * mididevicedata
- );
+          struct MidiDeviceData * mididevicedata );
 
 Function
 ~~~~~~~~
@@ -118,8 +92,7 @@ Synopsis
 ::
 
  struct MidiNode * CreateMidiA(
-         struct TagItem * tags
- );
+          struct TagItem * tags );
 
 Inputs
 ~~~~~~
@@ -144,8 +117,7 @@ Synopsis
 ::
 
  void DeleteMidi(
-         struct MidiNode * midinode
- );
+          struct MidiNode * midinode );
 
 Function
 ~~~~~~~~
@@ -164,8 +136,7 @@ Synopsis
 ::
 
  void EndClusterNotify(
-         struct ClusterNotifyNode * cn
- );
+          struct ClusterNotifyNode * cn );
 
 Function
 ~~~~~~~~
@@ -218,8 +189,7 @@ Synopsis
 ::
 
  struct MidiCluster * FindCluster(
-         STRPTR name
- );
+          STRPTR name );
 
 Function
 ~~~~~~~~
@@ -265,8 +235,7 @@ Synopsis
 ::
 
  struct MidiNode * FindMidi(
-         STRPTR name
- );
+          STRPTR name );
 
 Function
 ~~~~~~~~
@@ -305,8 +274,7 @@ Synopsis
 ::
 
  void FlushMidi(
-         struct MidiNode * midinode
- );
+          struct MidiNode * midinode );
 
 Function
 ~~~~~~~~
@@ -338,9 +306,8 @@ Synopsis
 ::
 
  BOOL GetMidi(
-         struct MidiNode * midinode,
-         MidiMsg * msg
- );
+          struct MidiNode * midinode,
+          MidiMsg * msg );
 
 Function
 ~~~~~~~~
@@ -380,9 +347,8 @@ Synopsis
 ::
 
  ULONG GetMidiAttrsA(
-         struct MidiNode * midinode,
-         struct TagItem * tags
- );
+          struct MidiNode * midinode,
+          struct TagItem * tags );
 
 Notes
 ~~~~~
@@ -408,8 +374,7 @@ Synopsis
 ::
 
  UBYTE GetMidiErr(
-         struct MidiNode * midinode
- );
+          struct MidiNode * midinode );
 
 Function
 ~~~~~~~~
@@ -448,9 +413,8 @@ Synopsis
 ::
 
  ULONG GetMidiLinkAttrsA(
-         struct MidiLink * midilink,
-         struct TagItem * tags
- );
+          struct MidiLink * midilink,
+          struct TagItem * tags );
 
 Function
 ~~~~~~~~
@@ -484,10 +448,9 @@ Synopsis
 ::
 
  ULONG GetSysEx(
-         struct MidiNode * midinode,
-         UBYTE * Buf,
-         ULONG len
- );
+          struct MidiNode * midinode,
+          UBYTE * Buf,
+          ULONG len );
 
 Function
 ~~~~~~~~
@@ -519,10 +482,9 @@ Synopsis
 ::
 
  APTR GoodPutMidi(
-         struct MidiLink * midilink,
-         ULONG msg,
-         ULONG maxbuff
- );
+          struct MidiLink * midilink,
+          ULONG msg,
+          ULONG maxbuff );
 
 Function
 ~~~~~~~~
@@ -554,8 +516,7 @@ Synopsis
 ::
 
  APTR LockCAMD(
-         ULONG locktype
- );
+          ULONG locktype );
 
 Function
 ~~~~~~~~
@@ -588,10 +549,9 @@ Synopsis
 ::
 
  BOOL Midi2Driver(
-         APTR driverdata,
-         ULONG msg,
-         ULONG maxbuff
- );
+          APTR driverdata,
+          ULONG msg,
+          ULONG maxbuff );
 
 Function
 ~~~~~~~~
@@ -623,8 +583,7 @@ Synopsis
 ::
 
  BOOL MidiLinkConnected(
-         struct MidiLink * midilink
- );
+          struct MidiLink * midilink );
 
 Function
 ~~~~~~~~
@@ -651,8 +610,7 @@ Synopsis
 ::
 
  WORD MidiMsgLen(
-         ULONG msg
- );
+          ULONG msg );
 
 Function
 ~~~~~~~~
@@ -678,8 +636,7 @@ Synopsis
 ::
 
  WORD MidiMsgType(
-         MidiMsg * msg
- );
+          MidiMsg * msg );
 
 Function
 ~~~~~~~~
@@ -705,8 +662,7 @@ Synopsis
 ::
 
  struct MidiCluster * NextCluster(
-         struct MidiCluster * last
- );
+          struct MidiCluster * last );
 
 Function
 ~~~~~~~~
@@ -808,10 +764,9 @@ Synopsis
 ::
 
  struct MidiLink * NextClusterLink(
-         struct MidiCluster * cluster,
-         struct MidiLink * midilink,
-         LONG type
- );
+          struct MidiCluster * cluster,
+          struct MidiLink * midilink,
+          LONG type );
 
 Function
 ~~~~~~~~
@@ -853,8 +808,7 @@ Synopsis
 ::
 
  struct MidiNode * NextMidi(
-         struct MidiNode * midinode
- );
+          struct MidiNode * midinode );
 
 Function
 ~~~~~~~~
@@ -888,10 +842,9 @@ Synopsis
 ::
 
  struct MidiLink * NextMidiLink(
-         struct MidiNode * midinode,
-         struct MidiLink * midilink,
-         LONG type
- );
+          struct MidiNode * midinode,
+          struct MidiLink * midilink,
+          LONG type );
 
 Function
 ~~~~~~~~
@@ -925,8 +878,7 @@ Synopsis
 ::
 
  struct MidiDeviceData * OpenMidiDevice(
-         UBYTE * name
- );
+          UBYTE * name );
 
 Function
 ~~~~~~~~
@@ -951,10 +903,9 @@ Synopsis
 ::
 
  void ParseMidi(
-         struct MidiLink * midilink,
-         UBYTE * buffer,
-         ULONG length
- );
+          struct MidiLink * midilink,
+          UBYTE * buffer,
+          ULONG length );
 
 Function
 ~~~~~~~~
@@ -999,9 +950,8 @@ Synopsis
 ::
 
  void PutMidi(
-         struct MidiLink * link,
-         ULONG msg
- );
+          struct MidiLink * link,
+          ULONG msg );
 
 Function
 ~~~~~~~~
@@ -1053,9 +1003,8 @@ Synopsis
 ::
 
  void PutSysEx(
-         struct MidiLink * midilink,
-         UBYTE * buffer
- );
+          struct MidiLink * midilink,
+          UBYTE * buffer );
 
 Function
 ~~~~~~~~
@@ -1094,8 +1043,7 @@ Synopsis
 ::
 
  ULONG QuerySysEx(
-         struct MidiNode * midinode
- );
+          struct MidiNode * midinode );
 
 Function
 ~~~~~~~~
@@ -1127,8 +1075,7 @@ Synopsis
 ::
 
  void RemoveMidiLink(
-         struct MidiLink * midilink
- );
+          struct MidiLink * midilink );
 
 Function
 ~~~~~~~~
@@ -1152,8 +1099,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG RethinkCAMD(
- );
+ LONG RethinkCAMD();
 
 Function
 ~~~~~~~~
@@ -1185,9 +1131,8 @@ Synopsis
 ::
 
  BOOL SetMidiAttrsA(
-         struct MidiNode * midinode,
-         struct TagItem * tags
- );
+          struct MidiNode * midinode,
+          struct TagItem * tags );
 
 Inputs
 ~~~~~~
@@ -1273,9 +1218,8 @@ Synopsis
 ::
 
  BOOL SetMidiLinkAttrsA(
-         struct MidiLink * midilink,
-         struct TagItem * tags
- );
+          struct MidiLink * midilink,
+          struct TagItem * tags );
 
 Function
 ~~~~~~~~
@@ -1320,8 +1264,7 @@ Synopsis
 ::
 
  void SkipSysEx(
-         struct MidiNode * midinode
- );
+          struct MidiNode * midinode );
 
 Function
 ~~~~~~~~
@@ -1353,8 +1296,7 @@ Synopsis
 ::
 
  void StartClusterNotify(
-         struct ClusterNotifyNode * cn
- );
+          struct ClusterNotifyNode * cn );
 
 Function
 ~~~~~~~~
@@ -1417,8 +1359,7 @@ Synopsis
 ::
 
  void UnlockCAMD(
-         APTR lock
- );
+          APTR lock );
 
 Function
 ~~~~~~~~
@@ -1457,9 +1398,8 @@ Synopsis
 ::
 
  BOOL WaitMidi(
-         struct MidiNode * midinode,
-         MidiMsg * msg
- );
+          struct MidiNode * midinode,
+          MidiMsg * msg );
 
 Function
 ~~~~~~~~

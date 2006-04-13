@@ -8,28 +8,14 @@ icon
 
 ----------
 
-`AddFreeList`_
-`BumpRevision`_
-`ChangeToSelectedIconColor`_
-`DeleteDiskObject`_
-`DrawIconStateA`_
-`DupDiskObjectA`_
-`FindToolType`_
-`FreeDiskObject`_
-`FreeFreeList`_
-`GetDefDiskObject`_
-`GetDiskObject`_
-`GetDiskObjectNew`_
-`GetIconRectangleA`_
-`GetIconTagList`_
-`IconControlA`_
-`LIBBASETYPE`_
-`LayoutIconA`_
-`MatchToolValue`_
-`NewDiskObject`_
-`PutDefDiskObject`_
-`PutDiskObject`_
-`PutIconTagList`_
+======================================= ======================================= ======================================= ======================================= 
+`AddFreeList`_                          `BumpRevision`_                         `ChangeToSelectedIconColor`_            `DeleteDiskObject`_                     
+`DrawIconStateA`_                       `DupDiskObjectA`_                       `FindToolType`_                         `FreeDiskObject`_                       
+`FreeFreeList`_                         `GetDefDiskObject`_                     `GetDiskObject`_                        `GetDiskObjectNew`_                     
+`GetIconRectangleA`_                    `GetIconTagList`_                       `IconControlA`_                         `LIBBASETYPE`_                          
+`LayoutIconA`_                          `MatchToolValue`_                       `NewDiskObject`_                        `PutDefDiskObject`_                     
+`PutDiskObject`_                        `PutIconTagList`_                       
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -41,10 +27,9 @@ Synopsis
 ::
 
  BOOL AddFreeList(
-         struct FreeList * freelist,
-         APTR mem,
-         unsigned long size
- );
+          struct FreeList * freelist,
+          APTR mem,
+          unsigned long size );
 
 Function
 ~~~~~~~~
@@ -88,9 +73,8 @@ Synopsis
 ::
 
  UBYTE * BumpRevision(
-         UBYTE * newname,
-         UBYTE * oldname
- );
+          UBYTE * newname,
+          UBYTE * oldname );
 
 Function
 ~~~~~~~~
@@ -123,8 +107,7 @@ Synopsis
 ::
 
  VOID ChangeToSelectedIconColor(
-         struct ColorRegister * cr
- );
+          struct ColorRegister * cr );
 
 
 DeleteDiskObject
@@ -135,8 +118,7 @@ Synopsis
 ::
 
  BOOL DeleteDiskObject(
-         UBYTE * name
- );
+          UBYTE * name );
 
 Function
 ~~~~~~~~
@@ -168,14 +150,13 @@ Synopsis
 ::
 
  void DrawIconStateA(
-         struct RastPort * rp,
-         struct DiskObject * icon,
-         STRPTR label,
-         LONG leftEdge,
-         LONG topEdge,
-         ULONG state,
-         struct TagItem * tags
- );
+          struct RastPort * rp,
+          struct DiskObject * icon,
+          STRPTR label,
+          LONG leftEdge,
+          LONG topEdge,
+          ULONG state,
+          struct TagItem * tags );
 
 See also
 ~~~~~~~~
@@ -193,9 +174,8 @@ Synopsis
 ::
 
  struct DiskObject * DupDiskObjectA(
-         struct DiskObject * icon,
-         struct TagItem * tags
- );
+          struct DiskObject * icon,
+          struct TagItem * tags );
 
 
 FindToolType
@@ -206,9 +186,8 @@ Synopsis
 ::
 
  UBYTE * FindToolType(
-         CONST STRPTR * toolTypeArray,
-         CONST STRPTR typeName
- );
+          CONST STRPTR * toolTypeArray,
+          CONST STRPTR typeName );
 
 Function
 ~~~~~~~~
@@ -249,8 +228,29 @@ Synopsis
 ::
 
  void FreeDiskObject(
-         struct DiskObject * diskobj
- );
+          struct DiskObject * diskobj );
+
+Function
+~~~~~~~~
+::
+
+     Frees all memory for a DiskObject structure.
+     
+
+Inputs
+~~~~~~
+::
+
+     diskobj --  a pointer to a DiskObject structure. A NULL pointer will be
+                 ignored.
+     
+
+See also
+~~~~~~~~
+::
+
+     GetDiskObject()
+     
 
 
 FreeFreeList
@@ -261,8 +261,7 @@ Synopsis
 ::
 
  void FreeFreeList(
-         struct FreeList * freelist
- );
+          struct FreeList * freelist );
 
 Function
 ~~~~~~~~
@@ -276,7 +275,7 @@ Inputs
 ~~~~~~
 ::
 
-     freelist  - pointer to FreeList struct.
+     freelist  - pointer to FreeList struct. It is save to use NULL.
 
 
 See also
@@ -295,8 +294,7 @@ Synopsis
 ::
 
  struct DiskObject * GetDefDiskObject(
-         LONG type
- );
+          LONG type );
 
 Function
 ~~~~~~~~
@@ -337,8 +335,7 @@ Synopsis
 ::
 
  struct DiskObject * GetDiskObject(
-         CONST_STRPTR name
- );
+          CONST_STRPTR name );
 
 
 GetDiskObjectNew
@@ -349,8 +346,7 @@ Synopsis
 ::
 
  struct DiskObject * GetDiskObjectNew(
-         CONST_STRPTR name
- );
+          CONST_STRPTR name );
 
 Function
 ~~~~~~~~
@@ -391,12 +387,11 @@ Synopsis
 ::
 
  BOOL GetIconRectangleA(
-         struct RastPort * rp,
-         struct DiskObject * icon,
-         STRPTR label,
-         struct Rectangle * rectangle,
-         struct TagItem * tags
- );
+          struct RastPort * rp,
+          struct DiskObject * icon,
+          STRPTR label,
+          struct Rectangle * rectangle,
+          struct TagItem * tags );
 
 
 GetIconTagList
@@ -407,9 +402,8 @@ Synopsis
 ::
 
  struct DiskObject * GetIconTagList(
-         CONST_STRPTR name,
-         struct TagItem * tags
- );
+          CONST_STRPTR name,
+          struct TagItem * tags );
 
 
 IconControlA
@@ -420,9 +414,8 @@ Synopsis
 ::
 
  ULONG IconControlA(
-         struct DiskObject * icon,
-         struct TagItem * tags
- );
+          struct DiskObject * icon,
+          struct TagItem * tags );
 
 
 LIBBASETYPE
@@ -432,8 +425,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- Expunge LIBBASETYPE(
- );
+ Expunge LIBBASETYPE();
 
 
 LayoutIconA
@@ -444,10 +436,9 @@ Synopsis
 ::
 
  BOOL LayoutIconA(
-         struct DiskObject * icon,
-         struct Screen * screen,
-         struct TagItem * tags
- );
+          struct DiskObject * icon,
+          struct Screen * screen,
+          struct TagItem * tags );
 
 
 MatchToolValue
@@ -458,9 +449,8 @@ Synopsis
 ::
 
  BOOL MatchToolValue(
-         UBYTE * typeString,
-         UBYTE * value
- );
+          UBYTE * typeString,
+          UBYTE * value );
 
 Function
 ~~~~~~~~
@@ -493,8 +483,7 @@ Synopsis
 ::
 
  struct DiskObject * NewDiskObject(
-         ULONG type
- );
+          ULONG type );
 
 
 PutDefDiskObject
@@ -505,8 +494,7 @@ Synopsis
 ::
 
  BOOL PutDefDiskObject(
-         struct DiskObject * icon
- );
+          struct DiskObject * icon );
 
 Function
 ~~~~~~~~
@@ -546,9 +534,8 @@ Synopsis
 ::
 
  BOOL PutDiskObject(
-         CONST_STRPTR name,
-         struct DiskObject * icon
- );
+          CONST_STRPTR name,
+          struct DiskObject * icon );
 
 
 PutIconTagList
@@ -559,9 +546,8 @@ Synopsis
 ::
 
  BOOL PutIconTagList(
-         CONST_STRPTR name,
-         struct DiskObject * icon,
-         struct TagItem * tags
- );
+          CONST_STRPTR name,
+          struct DiskObject * icon,
+          struct TagItem * tags );
 
 

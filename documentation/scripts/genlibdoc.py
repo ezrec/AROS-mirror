@@ -187,14 +187,19 @@ class autodoc:
         
         f.write("Synopsis\n~~~~~~~~\n")
         f.write("::\n\n")
-        f.write(" %s %s(\n" % (self.rettype, self.name))
-        for linenr in range(len(self.parameters)):
-            line = self.parameters[linenr]
-            f.write("         %s %s" % (line[0], line[1]))
-            if linenr < len(self.parameters) - 1:
-                f.write(",")
-            f.write("\n")    
-        f.write(" );\n\n")    
+        f.write(" " + self.rettype + " " + self.name)
+        if len(self.parameters) == 0:
+            f.write("();\n")
+        else:
+            f.write("(\n")
+            for linenr in range(len(self.parameters)):
+                line = self.parameters[linenr]
+                f.write("          " + line[0] + " " + line[1])
+                if linenr < len(self.parameters) - 1:
+                    f.write(",\n")
+                else:
+                    f.write(" );\n")
+        f.write("\n")
         #self.printchapter(f, "Name", self.name)
         #self.printchapter(f, "Format", self.format)
         self.printchapter(f, "Template", self.template)
@@ -240,9 +245,15 @@ def createdocfile(docdir, docname):
         f.write("----------\n\n")
 
         # create toc
-        for doc in doclist:
-            f.write("`%s`_\n" % doc.name)
-        f.write("\n-----------\n\n")            
+        tablesep = (("=" * 39) + " ") * 4
+        f.write(tablesep + "\n")
+        for docnr in range(len(doclist)):
+            tocname = string.ljust("`" + doclist[docnr].name + "`_", 40)
+            f.write(tocname)
+            if (docnr + 1) % 4 == 0:
+                f.write("\n")
+        f.write("\n" + tablesep)
+        f.write("\n\n-----------\n\n")            
         
         # create the chapters
         for doc in doclist:

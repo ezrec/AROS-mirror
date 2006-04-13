@@ -8,16 +8,11 @@ realtime
 
 ----------
 
-`CreatePlayerA`_
-`DeletePlayer`_
-`ExternalSync`_
-`FindConductor`_
-`GetPlayerAttrsA`_
-`LockRealTime`_
-`NextConductor`_
-`SetConductorState`_
-`SetPlayerAttrsA`_
-`UnlockRealTime`_
+======================================= ======================================= ======================================= ======================================= 
+`CreatePlayerA`_                        `DeletePlayer`_                         `ExternalSync`_                         `FindConductor`_                        
+`GetPlayerAttrsA`_                      `LockRealTime`_                         `NextConductor`_                        `SetConductorState`_                    
+`SetPlayerAttrsA`_                      `UnlockRealTime`_                       
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -29,8 +24,7 @@ Synopsis
 ::
 
  struct Player * CreatePlayerA(
-         struct TagItem * tagList
- );
+          struct TagItem * tagList );
 
 Function
 ~~~~~~~~
@@ -142,8 +136,7 @@ Synopsis
 ::
 
  VOID DeletePlayer(
-         struct Player * player
- );
+          struct Player * player );
 
 Function
 ~~~~~~~~
@@ -180,10 +173,9 @@ Synopsis
 ::
 
  BOOL ExternalSync(
-         struct Player * player,
-         LONG minTime,
-         LONG maxTime
- );
+          struct Player * player,
+          LONG minTime,
+          LONG maxTime );
 
 Function
 ~~~~~~~~
@@ -224,8 +216,7 @@ Synopsis
 ::
 
  struct Conductor * FindConductor(
-         STRPTR name
- );
+          STRPTR name );
 
 Function
 ~~~~~~~~
@@ -278,9 +269,8 @@ Synopsis
 ::
 
  BOOL GetPlayerAttrsA(
-         struct Player  * player,
-         struct TagItem * tagList
- );
+          struct Player  * player,
+          struct TagItem * tagList );
 
 Function
 ~~~~~~~~
@@ -332,8 +322,7 @@ Synopsis
 ::
 
  APTR LockRealTime(
-         ULONG lockType
- );
+          ULONG lockType );
 
 Function
 ~~~~~~~~
@@ -378,8 +367,7 @@ Synopsis
 ::
 
  struct Conductor * NextConductor(
-         struct Conductor * previousConductor
- );
+          struct Conductor * previousConductor );
 
 Function
 ~~~~~~~~
@@ -435,10 +423,9 @@ Synopsis
 ::
 
  LONG SetConductorState(
-         struct Player * player,
-         ULONG state,
-         LONG time
- );
+          struct Player * player,
+          ULONG state,
+          LONG time );
 
 Function
 ~~~~~~~~
@@ -499,9 +486,8 @@ Synopsis
 ::
 
  BOOL SetPlayerAttrsA(
-         struct Player  * player,
-         struct TagItem * tagList
- );
+          struct Player  * player,
+          struct TagItem * tagList );
 
 Function
 ~~~~~~~~
@@ -552,8 +538,7 @@ Synopsis
 ::
 
  VOID UnlockRealTime(
-         APTR lockHandle
- );
+          APTR lockHandle );
 
 Function
 ~~~~~~~~

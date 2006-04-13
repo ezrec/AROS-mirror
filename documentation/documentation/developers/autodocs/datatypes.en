@@ -8,36 +8,16 @@ datatypes
 
 ----------
 
-`AddDTObject`_
-`CopyDTMethods`_
-`CopyDTTriggerMethods`_
-`DisposeDTObject`_
-`DoAsyncLayout`_
-`DoDTDomainA`_
-`DoDTMethodA`_
-`DrawDTObjectA`_
-`FindMethod`_
-`FindToolNodeA`_
-`FindTriggerMethod`_
-`FreeDTMethods`_
-`GetDTAttrsA`_
-`GetDTMethods`_
-`GetDTString`_
-`GetDTTriggerMethodDataFlags`_
-`GetDTTriggerMethods`_
-`LaunchToolA`_
-`LockDataType`_
-`NewDTObjectA`_
-`ObtainDTDrawInfoA`_
-`ObtainDataTypeA`_
-`PrintDTObjectA`_
-`RefreshDTObjectA`_
-`ReleaseDTDrawInfo`_
-`ReleaseDataType`_
-`RemoveDTObject`_
-`SaveDTObjectA`_
-`SetDTAttrsA`_
-`StartDragSelect`_
+======================================= ======================================= ======================================= ======================================= 
+`AddDTObject`_                          `CopyDTMethods`_                        `CopyDTTriggerMethods`_                 `DisposeDTObject`_                      
+`DoAsyncLayout`_                        `DoDTDomainA`_                          `DoDTMethodA`_                          `DrawDTObjectA`_                        
+`FindMethod`_                           `FindToolNodeA`_                        `FindTriggerMethod`_                    `FreeDTMethods`_                        
+`GetDTAttrsA`_                          `GetDTMethods`_                         `GetDTString`_                          `GetDTTriggerMethodDataFlags`_          
+`GetDTTriggerMethods`_                  `LaunchToolA`_                          `LockDataType`_                         `NewDTObjectA`_                         
+`ObtainDTDrawInfoA`_                    `ObtainDataTypeA`_                      `PrintDTObjectA`_                       `RefreshDTObjectA`_                     
+`ReleaseDTDrawInfo`_                    `ReleaseDataType`_                      `RemoveDTObject`_                       `SaveDTObjectA`_                        
+`SetDTAttrsA`_                          `StartDragSelect`_                      
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -49,11 +29,10 @@ Synopsis
 ::
 
  LONG AddDTObject(
-         struct Window    * win,
-         struct Requester * req,
-         Object           * obj,
-         LONG pos
- );
+          struct Window    * win,
+          struct Requester * req,
+          Object           * obj,
+          LONG pos );
 
 Function
 ~~~~~~~~
@@ -112,10 +91,9 @@ Synopsis
 ::
 
  ULONG * CopyDTMethods(
-         ULONG * methods,
-         ULONG * include,
-         ULONG * exclude
- );
+          ULONG * methods,
+          ULONG * include,
+          ULONG * exclude );
 
 Function
 ~~~~~~~~
@@ -162,10 +140,9 @@ Synopsis
 ::
 
  struct DTMethod * CopyDTTriggerMethods(
-         struct DTMethod * methods,
-         struct DTMethod * include,
-         struct DTMethod * exclude
- );
+          struct DTMethod * methods,
+          struct DTMethod * include,
+          struct DTMethod * exclude );
 
 Function
 ~~~~~~~~
@@ -225,8 +202,7 @@ Synopsis
 ::
 
  void DisposeDTObject(
-         Object * o
- );
+          Object * o );
 
 Function
 ~~~~~~~~
@@ -261,9 +237,8 @@ Synopsis
 ::
 
  ULONG DoAsyncLayout(
-         Object * object,
-         struct gpLayout * gpl
- );
+          Object * object,
+          struct gpLayout * gpl );
 
 Function
 ~~~~~~~~
@@ -294,14 +269,13 @@ Synopsis
 ::
 
  ULONG DoDTDomainA(
-         Object           * o,
-         struct Window    * win,
-         struct Requester * req,
-         struct RastPort  * rport,
-         ULONG which,
-         struct IBox      * domain,
-         struct TagItem   * attrs
- );
+          Object           * o,
+          struct Window    * win,
+          struct Requester * req,
+          struct RastPort  * rport,
+          ULONG which,
+          struct IBox      * domain,
+          struct TagItem   * attrs );
 
 Function
 ~~~~~~~~
@@ -361,11 +335,10 @@ Synopsis
 ::
 
  IPTR DoDTMethodA(
-         Object           * o,
-         struct Window    * win,
-         struct Requester * req,
-         Msg msg
- );
+          Object           * o,
+          struct Window    * win,
+          struct Requester * req,
+          Msg msg );
 
 Function
 ~~~~~~~~
@@ -411,16 +384,15 @@ Synopsis
 ::
 
  LONG DrawDTObjectA(
-         struct RastPort * rp,
-         Object          * o,
-         LONG x,
-         LONG y,
-         LONG w,
-         LONG h,
-         LONG th,
-         LONG tv,
-         struct TagItem  * attrs
- );
+          struct RastPort * rp,
+          Object          * o,
+          LONG x,
+          LONG y,
+          LONG w,
+          LONG h,
+          LONG th,
+          LONG tv,
+          struct TagItem  * attrs );
 
 Function
 ~~~~~~~~
@@ -488,9 +460,8 @@ Synopsis
 ::
 
  ULONG * FindMethod(
-         ULONG * methods,
-         ULONG searchmethodid
- );
+          ULONG * methods,
+          ULONG searchmethodid );
 
 Function
 ~~~~~~~~
@@ -534,9 +505,8 @@ Synopsis
 ::
 
  struct ToolNode * FindToolNodeA(
-         struct List    * toollist,
-         struct TagItem * attrs
- );
+          struct List    * toollist,
+          struct TagItem * attrs );
 
 Function
 ~~~~~~~~
@@ -600,10 +570,9 @@ Synopsis
 ::
 
  struct DTMethod * FindTriggerMethod(
-         struct DTMethod * methods,
-         STRPTR command,
-         ULONG method
- );
+          struct DTMethod * methods,
+          STRPTR command,
+          ULONG method );
 
 Function
 ~~~~~~~~
@@ -652,8 +621,7 @@ Synopsis
 ::
 
  VOID FreeDTMethods(
-         APTR methods
- );
+          APTR methods );
 
 Function
 ~~~~~~~~
@@ -688,9 +656,8 @@ Synopsis
 ::
 
  ULONG GetDTAttrsA(
-         Object         * o,
-         struct TagItem * attrs
- );
+          Object         * o,
+          struct TagItem * attrs );
 
 Function
 ~~~~~~~~
@@ -736,8 +703,7 @@ Synopsis
 ::
 
  ULONG * GetDTMethods(
-         Object * object
- );
+          Object * object );
 
 Function
 ~~~~~~~~
@@ -781,8 +747,7 @@ Synopsis
 ::
 
  CONST_STRPTR GetDTString(
-         ULONG id
- );
+          ULONG id );
 
 Function
 ~~~~~~~~
@@ -817,8 +782,7 @@ Synopsis
 ::
 
  ULONG GetDTTriggerMethodDataFlags(
-         ULONG method
- );
+          ULONG method );
 
 Function
 ~~~~~~~~
@@ -873,8 +837,7 @@ Synopsis
 ::
 
  struct DTMethods * GetDTTriggerMethods(
-         Object * object
- );
+          Object * object );
 
 Function
 ~~~~~~~~
@@ -938,10 +901,9 @@ Synopsis
 ::
 
  ULONG LaunchToolA(
-         struct Tool * tool,
-         STRPTR project,
-         struct TagItem * attrs
- );
+          struct Tool * tool,
+          STRPTR project,
+          struct TagItem * attrs );
 
 Function
 ~~~~~~~~
@@ -997,8 +959,7 @@ Synopsis
 ::
 
  VOID LockDataType(
-         struct DataType * dt
- );
+          struct DataType * dt );
 
 Function
 ~~~~~~~~
@@ -1043,9 +1004,8 @@ Synopsis
 ::
 
  Object * NewDTObjectA(
-         APTR name,
-         struct TagItem * attrs
- );
+          APTR name,
+          struct TagItem * attrs );
 
 Function
 ~~~~~~~~
@@ -1142,9 +1102,8 @@ Synopsis
 ::
 
  APTR ObtainDTDrawInfoA(
-         Object         * o,
-         struct TagItem * attrs
- );
+          Object         * o,
+          struct TagItem * attrs );
 
 Function
 ~~~~~~~~
@@ -1197,10 +1156,9 @@ Synopsis
 ::
 
  struct DataType * ObtainDataTypeA(
-         ULONG type,
-         APTR handle,
-         struct TagItem * attrs
- );
+          ULONG type,
+          APTR handle,
+          struct TagItem * attrs );
 
 Function
 ~~~~~~~~
@@ -1252,11 +1210,10 @@ Synopsis
 ::
 
  ULONG PrintDTObjectA(
-         Object           * object,
-         struct Window    * window,
-         struct Requester * requester,
-         struct dtPrint   * msg
- );
+          Object           * object,
+          struct Window    * window,
+          struct Requester * requester,
+          struct dtPrint   * msg );
 
 Function
 ~~~~~~~~
@@ -1305,11 +1262,10 @@ Synopsis
 ::
 
  void RefreshDTObjectA(
-         Object           * object,
-         struct Window    * window,
-         struct Requester * req,
-         struct TagItem   * attrs
- );
+          Object           * object,
+          struct Window    * window,
+          struct Requester * req,
+          struct TagItem   * attrs );
 
 Function
 ~~~~~~~~
@@ -1347,9 +1303,8 @@ Synopsis
 ::
 
  VOID ReleaseDTDrawInfo(
-         Object * o,
-         APTR handle
- );
+          Object * o,
+          APTR handle );
 
 Function
 ~~~~~~~~
@@ -1401,8 +1356,7 @@ Synopsis
 ::
 
  VOID ReleaseDataType(
-         struct DataType * dt
- );
+          struct DataType * dt );
 
 Function
 ~~~~~~~~
@@ -1438,9 +1392,8 @@ Synopsis
 ::
 
  LONG RemoveDTObject(
-         struct Window * window,
-         Object        * object
- );
+          struct Window * window,
+          Object        * object );
 
 Function
 ~~~~~~~~
@@ -1487,14 +1440,13 @@ Synopsis
 ::
 
  ULONG SaveDTObjectA(
-         Object           * o,
-         struct Window    * win,
-         struct Requester * req,
-         STRPTR file,
-         ULONG mode,
-         BOOL saveicon,
-         struct TagItem   * attrs
- );
+          Object           * o,
+          struct Window    * win,
+          struct Requester * req,
+          STRPTR file,
+          ULONG mode,
+          BOOL saveicon,
+          struct TagItem   * attrs );
 
 Function
 ~~~~~~~~
@@ -1543,11 +1495,10 @@ Synopsis
 ::
 
  ULONG SetDTAttrsA(
-         Object * o,
-         struct Window    * win,
-         struct Requester * req,
-         struct TagItem   * attrs
- );
+          Object * o,
+          struct Window    * win,
+          struct Requester * req,
+          struct TagItem   * attrs );
 
 Function
 ~~~~~~~~
@@ -1586,8 +1537,7 @@ Synopsis
 ::
 
  ULONG StartDragSelect(
-         Object * o
- );
+          Object * o );
 
 Function
 ~~~~~~~~

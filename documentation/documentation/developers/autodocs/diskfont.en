@@ -8,11 +8,10 @@ diskfont
 
 ----------
 
-`AvailFonts`_
-`DisposeFontContents`_
-`NewFontContents`_
-`NewScaledDiskFont`_
-`OpenDiskFont`_
+======================================= ======================================= ======================================= ======================================= 
+`AvailFonts`_                           `DisposeFontContents`_                  `NewFontContents`_                      `NewScaledDiskFont`_                    
+`OpenDiskFont`_                         
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -24,10 +23,9 @@ Synopsis
 ::
 
  LONG AvailFonts(
-         STRPTR buffer,
-         LONG bufBytes,
-         LONG flags
- );
+          STRPTR buffer,
+          LONG bufBytes,
+          LONG flags );
 
 Function
 ~~~~~~~~
@@ -88,8 +86,7 @@ Synopsis
 ::
 
  VOID DisposeFontContents(
-         struct FontContentsHeader * fontContentsHeader
- );
+          struct FontContentsHeader * fontContentsHeader );
 
 Function
 ~~~~~~~~
@@ -125,9 +122,8 @@ Synopsis
 ::
 
  struct FontContentsHeader * NewFontContents(
-         BPTR fontsLock,
-         STRPTR fontName
- );
+          BPTR fontsLock,
+          STRPTR fontName );
 
 Function
 ~~~~~~~~
@@ -176,9 +172,8 @@ Synopsis
 ::
 
  struct DiskFont * NewScaledDiskFont(
-         struct TextFont * sourceFont,
-         struct TextAttr * destTextAttr
- );
+          struct TextFont * sourceFont,
+          struct TextAttr * destTextAttr );
 
 
 OpenDiskFont
@@ -189,8 +184,7 @@ Synopsis
 ::
 
  struct TextFont * OpenDiskFont(
-         struct TextAttr * textAttr
- );
+          struct TextAttr * textAttr );
 
 Function
 ~~~~~~~~

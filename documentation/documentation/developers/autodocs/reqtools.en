@@ -8,31 +8,15 @@ reqtools
 
 ----------
 
-`rtAllocRequestA`_
-`rtChangeReqAttrA`_
-`rtCloseWindowSafely`_
-`rtEZRequestA`_
-`rtFileRequestA`_
-`rtFontRequestA`_
-`rtFreeFileList`_
-`rtFreeReqBuffer`_
-`rtFreeRequest`_
-`rtGetLongA`_
-`rtGetStringA`_
-`rtGetVScreenSize`_
-`rtInternalEnterPasswordA`_
-`rtInternalGetPasswordA`_
-`rtLockPrefs`_
-`rtLockWindow`_
-`rtPaletteRequestA`_
-`rtReqHandlerA`_
-`rtScreenModeRequestA`_
-`rtScreenToFrontSafely`_
-`rtSetReqPosition`_
-`rtSetWaitPointer`_
-`rtSpread`_
-`rtUnlockPrefs`_
-`rtUnlockWindow`_
+======================================= ======================================= ======================================= ======================================= 
+`rtAllocRequestA`_                      `rtChangeReqAttrA`_                     `rtCloseWindowSafely`_                  `rtEZRequestA`_                         
+`rtFileRequestA`_                       `rtFontRequestA`_                       `rtFreeFileList`_                       `rtFreeReqBuffer`_                      
+`rtFreeRequest`_                        `rtGetLongA`_                           `rtGetStringA`_                         `rtGetVScreenSize`_                     
+`rtInternalEnterPasswordA`_             `rtInternalGetPasswordA`_               `rtLockPrefs`_                          `rtLockWindow`_                         
+`rtPaletteRequestA`_                    `rtReqHandlerA`_                        `rtScreenModeRequestA`_                 `rtScreenToFrontSafely`_                
+`rtSetReqPosition`_                     `rtSetWaitPointer`_                     `rtSpread`_                             `rtUnlockPrefs`_                        
+`rtUnlockWindow`_                       
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -44,9 +28,8 @@ Synopsis
 ::
 
  APTR rtAllocRequestA(
-         ULONG type,
-         struct TagItem * taglist
- );
+          ULONG type,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -103,9 +86,8 @@ Synopsis
 ::
 
  LONG rtChangeReqAttrA(
-         APTR req,
-         struct TagItem * taglist
- );
+          APTR req,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -236,8 +218,7 @@ Synopsis
 ::
 
  VOID rtCloseWindowSafely(
-         struct Window * window
- );
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -303,12 +284,11 @@ Synopsis
 ::
 
  ULONG rtEZRequestA(
-         char * bodyfmt,
-         char * gadfmt,
-         struct rtReqInfo * reqinfo,
-         APTR argarray,
-         struct TagItem * taglist
- );
+          char * bodyfmt,
+          char * gadfmt,
+          struct rtReqInfo * reqinfo,
+          APTR argarray,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -613,11 +593,10 @@ Synopsis
 ::
 
  APTR rtFileRequestA(
-         struct rtFileRequester * filereq,
-         char * file,
-         char * title,
-         struct TagItem * taglist
- );
+          struct rtFileRequester * filereq,
+          char * file,
+          char * title,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -878,10 +857,9 @@ Synopsis
 ::
 
  ULONG rtFontRequestA(
-         struct rtFontRequester * fontreq,
-         char * title,
-         struct TagItem * taglist
- );
+          struct rtFontRequester * fontreq,
+          char * title,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -1039,8 +1017,7 @@ Synopsis
 ::
 
  VOID rtFreeFileList(
-         struct rtFileList * selfile
- );
+          struct rtFileList * selfile );
 
 Function
 ~~~~~~~~
@@ -1092,8 +1069,7 @@ Synopsis
 ::
 
  void rtFreeReqBuffer(
-         APTR req
- );
+          APTR req );
 
 Function
 ~~~~~~~~
@@ -1145,8 +1121,7 @@ Synopsis
 ::
 
  void rtFreeRequest(
-         APTR req
- );
+          APTR req );
 
 Function
 ~~~~~~~~
@@ -1194,11 +1169,10 @@ Synopsis
 ::
 
  ULONG rtGetLongA(
-         ULONG * longptr,
-         char * title,
-         struct rtReqInfo * reqinfo,
-         struct TagItem * taglist
- );
+          ULONG * longptr,
+          char * title,
+          struct rtReqInfo * reqinfo,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -1356,12 +1330,11 @@ Synopsis
 ::
 
  ULONG rtGetStringA(
-         UBYTE * buffer,
-         ULONG maxchars,
-         char * title,
-         struct rtReqInfo * reqinfo,
-         struct TagItem * taglist
- );
+          UBYTE * buffer,
+          ULONG maxchars,
+          char * title,
+          struct rtReqInfo * reqinfo,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -1522,10 +1495,9 @@ Synopsis
 ::
 
  ULONG rtGetVScreenSize(
-         struct Screen * screen,
-         ULONG * widthptr,
-         ULONG * heightptr
- );
+          struct Screen * screen,
+          ULONG * widthptr,
+          ULONG * heightptr );
 
 Function
 ~~~~~~~~
@@ -1576,11 +1548,10 @@ Synopsis
 ::
 
  BOOL rtInternalEnterPasswordA(
-         UBYTE * buffer,
-         PWCALLBACKFUNPTR pwcallback,
-         struct rtReqInfo * reqinfo,
-         struct TagItem * taglist
- );
+          UBYTE * buffer,
+          PWCALLBACKFUNPTR pwcallback,
+          struct rtReqInfo * reqinfo,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -1741,12 +1712,11 @@ Synopsis
 ::
 
  BOOL rtInternalGetPasswordA(
-         UBYTE * buffer,
-         ULONG checksum,
-         PWCALLBACKFUNPTR pwcallback,
-         struct rtReqInfo * reqinfo,
-         struct TagItem * taglist
- );
+          UBYTE * buffer,
+          ULONG checksum,
+          PWCALLBACKFUNPTR pwcallback,
+          struct rtReqInfo * reqinfo,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -1909,8 +1879,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct ReqToolsPrefs * rtLockPrefs(
- );
+ struct ReqToolsPrefs * rtLockPrefs();
 
 See also
 ~~~~~~~~
@@ -1929,8 +1898,7 @@ Synopsis
 ::
 
  APTR rtLockWindow(
-         struct Window * window
- );
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -1996,10 +1964,9 @@ Synopsis
 ::
 
  LONG rtPaletteRequestA(
-         char * title,
-         struct rtReqInfo * reqinfo,
-         struct TagItem * taglist
- );
+          char * title,
+          struct rtReqInfo * reqinfo,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -2112,10 +2079,9 @@ Synopsis
 ::
 
  ULONG rtReqHandlerA(
-         struct rtHandlerInfo * handlerinfo,
-         ULONG sigs,
-         struct TagItem * taglist
- );
+          struct rtHandlerInfo * handlerinfo,
+          ULONG sigs,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -2251,10 +2217,9 @@ Synopsis
 ::
 
  ULONG rtScreenModeRequestA(
-         struct rtScreenModeRequester * screenmodereq,
-         char * title,
-         struct TagItem * taglist
- );
+          struct rtScreenModeRequester * screenmodereq,
+          char * title,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -2464,8 +2429,7 @@ Synopsis
 ::
 
  VOID rtScreenToFrontSafely(
-         struct Screen * screen
- );
+          struct Screen * screen );
 
 Function
 ~~~~~~~~
@@ -2525,11 +2489,10 @@ Synopsis
 ::
 
  void rtSetReqPosition(
-         ULONG reqpos,
-         struct NewWindow * nw,
-         struct Screen * scr,
-         struct Window * win
- );
+          ULONG reqpos,
+          struct NewWindow * nw,
+          struct Screen * scr,
+          struct Window * win );
 
 Function
 ~~~~~~~~
@@ -2613,8 +2576,7 @@ Synopsis
 ::
 
  VOID rtSetWaitPointer(
-         struct Window * window
- );
+          struct Window * window );
 
 Function
 ~~~~~~~~
@@ -2676,13 +2638,12 @@ Synopsis
 ::
 
  VOID rtSpread(
-         ULONG * posarray,
-         ULONG * sizearray,
-         ULONG totalsize,
-         ULONG min,
-         ULONG max,
-         ULONG num
- );
+          ULONG * posarray,
+          ULONG * sizearray,
+          ULONG totalsize,
+          ULONG min,
+          ULONG max,
+          ULONG num );
 
 Function
 ~~~~~~~~
@@ -2756,8 +2717,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- VOID rtUnlockPrefs(
- );
+ VOID rtUnlockPrefs();
 
 See also
 ~~~~~~~~
@@ -2776,9 +2736,8 @@ Synopsis
 ::
 
  VOID rtUnlockWindow(
-         struct Window * window,
-         APTR windowlock
- );
+          struct Window * window,
+          APTR windowlock );
 
 Function
 ~~~~~~~~

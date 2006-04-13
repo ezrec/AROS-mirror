@@ -8,10 +8,10 @@ keymap
 
 ----------
 
-`AskKeyMapDefault`_
-`MapANSI`_
-`MapRawKey`_
-`SetKeyMapDefault`_
+======================================= ======================================= ======================================= ======================================= 
+`AskKeyMapDefault`_                     `MapANSI`_                              `MapRawKey`_                            `SetKeyMapDefault`_                     
+
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -22,8 +22,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct KeyMap * AskKeyMapDefault(
- );
+ struct KeyMap * AskKeyMapDefault();
 
 Function
 ~~~~~~~~
@@ -55,12 +54,11 @@ Synopsis
 ::
 
  LONG MapANSI(
-         STRPTR string,
-         LONG count,
-         STRPTR buffer,
-         LONG length,
-         struct KeyMap * keyMap
- );
+          STRPTR string,
+          LONG count,
+          STRPTR buffer,
+          LONG length,
+          struct KeyMap * keyMap );
 
 Function
 ~~~~~~~~
@@ -104,11 +102,10 @@ Synopsis
 ::
 
  WORD MapRawKey(
-         struct InputEvent * event,
-         STRPTR buffer,
-         LONG length,
-         struct KeyMap     * keyMap
- );
+          struct InputEvent * event,
+          STRPTR buffer,
+          LONG length,
+          struct KeyMap     * keyMap );
 
 Function
 ~~~~~~~~
@@ -158,8 +155,7 @@ Synopsis
 ::
 
  void SetKeyMapDefault(
-         struct KeyMap * keyMap
- );
+          struct KeyMap * keyMap );
 
 Function
 ~~~~~~~~

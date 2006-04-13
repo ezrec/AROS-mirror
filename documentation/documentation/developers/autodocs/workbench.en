@@ -8,23 +8,13 @@ workbench
 
 ----------
 
-`AddAppIconA`_
-`AddAppMenuItemA`_
-`AddAppWindowA`_
-`AddAppWindowDropZoneA`_
-`ChangeWorkbenchSelectionA`_
-`CloseWorkbenchObjectA`_
-`MakeWorkbenchObjectVisibleA`_
-`OpenWorkbenchObjectA`_
-`RegisterWorkbench`_
-`RemoveAppIcon`_
-`RemoveAppMenuItem`_
-`RemoveAppWindow`_
-`RemoveAppWindowDropZone`_
-`UnregisterWorkbench`_
-`UpdateWorkbenchObjectA`_
-`WBInfo`_
-`WorkbenchControlA`_
+======================================= ======================================= ======================================= ======================================= 
+`AddAppIconA`_                          `AddAppMenuItemA`_                      `AddAppWindowA`_                        `AddAppWindowDropZoneA`_                
+`ChangeWorkbenchSelectionA`_            `CloseWorkbenchObjectA`_                `MakeWorkbenchObjectVisibleA`_          `OpenWorkbenchObjectA`_                 
+`RegisterWorkbench`_                    `RemoveAppIcon`_                        `RemoveAppMenuItem`_                    `RemoveAppWindow`_                      
+`RemoveAppWindowDropZone`_              `UnregisterWorkbench`_                  `UpdateWorkbenchObjectA`_               `WBInfo`_                               
+`WorkbenchControlA`_                    
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -36,14 +26,13 @@ Synopsis
 ::
 
  struct AppIcon * AddAppIconA(
-         ULONG id,
-         ULONG userdata,
-         char * text,
-         struct MsgPort * msgport,
-         BPTR lock,
-         struct DiskObject * diskobj,
-         struct TagItem * taglist
- );
+          ULONG id,
+          ULONG userdata,
+          char * text,
+          struct MsgPort * msgport,
+          BPTR lock,
+          struct DiskObject * diskobj,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -235,12 +224,11 @@ Synopsis
 ::
 
  struct AppMenuItem * AddAppMenuItemA(
-         ULONG id,
-         ULONG userdata,
-         APTR text,
-         struct MsgPort * msgport,
-         struct TagItem * taglist
- );
+          ULONG id,
+          ULONG userdata,
+          APTR text,
+          struct MsgPort * msgport,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -311,12 +299,11 @@ Synopsis
 ::
 
  struct AppWindow * AddAppWindowA(
-         ULONG id,
-         ULONG userdata,
-         struct Window * window,
-         struct MsgPort * msgport,
-         struct TagItem * taglist
- );
+          ULONG id,
+          ULONG userdata,
+          struct Window * window,
+          struct MsgPort * msgport,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -382,11 +369,10 @@ Synopsis
 ::
 
  struct AppWindowDropZone * AddAppWindowDropZoneA(
-         struct AppWindow * aw,
-         ULONG id,
-         ULONG userdata,
-         struct TagItem * tags
- );
+          struct AppWindow * aw,
+          ULONG id,
+          ULONG userdata,
+          struct TagItem * tags );
 
 Function
 ~~~~~~~~
@@ -491,10 +477,9 @@ Synopsis
 ::
 
  BOOL ChangeWorkbenchSelectionA(
-         STRPTR name,
-         struct Hook * hook,
-         struct TagItem * tags
- );
+          STRPTR name,
+          struct Hook * hook,
+          struct TagItem * tags );
 
 
 CloseWorkbenchObjectA
@@ -505,9 +490,8 @@ Synopsis
 ::
 
  BOOL CloseWorkbenchObjectA(
-         STRPTR name,
-         struct TagItem * tags
- );
+          STRPTR name,
+          struct TagItem * tags );
 
 
 MakeWorkbenchObjectVisibleA
@@ -518,9 +502,8 @@ Synopsis
 ::
 
  BOOL MakeWorkbenchObjectVisibleA(
-         STRPTR name,
-         struct TagItem * tags
- );
+          STRPTR name,
+          struct TagItem * tags );
 
 
 OpenWorkbenchObjectA
@@ -531,9 +514,8 @@ Synopsis
 ::
 
  BOOL OpenWorkbenchObjectA(
-         STRPTR name,
-         struct TagItem * tags
- );
+          STRPTR name,
+          struct TagItem * tags );
 
 
 RegisterWorkbench
@@ -544,8 +526,7 @@ Synopsis
 ::
 
  BOOL RegisterWorkbench(
-         struct MsgPort * messageport
- );
+          struct MsgPort * messageport );
 
 Function
 ~~~~~~~~
@@ -623,8 +604,7 @@ Synopsis
 ::
 
  BOOL RemoveAppIcon(
-         struct AppIcon * appIcon
- );
+          struct AppIcon * appIcon );
 
 Function
 ~~~~~~~~
@@ -677,8 +657,7 @@ Synopsis
 ::
 
  BOOL RemoveAppMenuItem(
-         struct AppMenuItem * appMenuItem
- );
+          struct AppMenuItem * appMenuItem );
 
 Function
 ~~~~~~~~
@@ -731,8 +710,7 @@ Synopsis
 ::
 
  BOOL RemoveAppWindow(
-         struct AppWindow * appWindow
- );
+          struct AppWindow * appWindow );
 
 Function
 ~~~~~~~~
@@ -788,9 +766,8 @@ Synopsis
 ::
 
  BOOL RemoveAppWindowDropZone(
-         struct AppWindow * aw,
-         struct AppWindowDropZone * dropZone
- );
+          struct AppWindow * aw,
+          struct AppWindowDropZone * dropZone );
 
 Function
 ~~~~~~~~
@@ -843,8 +820,7 @@ Synopsis
 ::
 
  BOOL UnregisterWorkbench(
-         struct MsgPort * messageport
- );
+          struct MsgPort * messageport );
 
 Function
 ~~~~~~~~
@@ -897,10 +873,9 @@ Synopsis
 ::
 
  BOOL UpdateWorkbenchObjectA(
-         STRPTR name,
-         LONG type,
-         struct TagItem * tags
- );
+          STRPTR name,
+          LONG type,
+          struct TagItem * tags );
 
 Function
 ~~~~~~~~
@@ -947,10 +922,9 @@ Synopsis
 ::
 
  BOOL WBInfo(
-         BPTR lock,
-         CONST_STRPTR name,
-         struct Screen * screen
- );
+          BPTR lock,
+          CONST_STRPTR name,
+          struct Screen * screen );
 
 
 WorkbenchControlA
@@ -961,8 +935,7 @@ Synopsis
 ::
 
  BOOL WorkbenchControlA(
-         STRPTR name,
-         struct TagItem * tags
- );
+          STRPTR name,
+          struct TagItem * tags );
 
 

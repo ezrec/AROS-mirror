@@ -8,14 +8,11 @@ cgxvideo
 
 ----------
 
-`AttachVLayerTagList`_
-`CreateVLayerHandleTagList`_
-`DeleteVLayerHandle`_
-`DetachVLayer`_
-`GetVLayerAttr`_
-`LockVLayer`_
-`SetVLayerAttrTagList`_
-`UnlockVLayer`_
+======================================= ======================================= ======================================= ======================================= 
+`AttachVLayerTagList`_                  `CreateVLayerHandleTagList`_            `DeleteVLayerHandle`_                   `DetachVLayer`_                         
+`GetVLayerAttr`_                        `LockVLayer`_                           `SetVLayerAttrTagList`_                 `UnlockVLayer`_                         
+
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -27,10 +24,9 @@ Synopsis
 ::
 
  ULONG AttachVLayerTagList(
-         struct VLayerHandle * VLayerHandle,
-         struct Window * Window,
-         struct TagItem  * TagItems
- );
+          struct VLayerHandle * VLayerHandle,
+          struct Window * Window,
+          struct TagItem  * TagItems );
 
 Function
 ~~~~~~~~
@@ -90,9 +86,8 @@ Synopsis
 ::
 
  struct VLayerHandle * CreateVLayerHandleTagList(
-         struct Screen * Screen,
-         struct TagItem  * TagItems
- );
+          struct Screen * Screen,
+          struct TagItem  * TagItems );
 
 Function
 ~~~~~~~~
@@ -162,8 +157,7 @@ Synopsis
 ::
 
  void DeleteVLayerHandle(
-         struct VLayerHandle * VLayerHandle
- );
+          struct VLayerHandle * VLayerHandle );
 
 Function
 ~~~~~~~~
@@ -195,8 +189,7 @@ Synopsis
 ::
 
  ULONG DetachVLayer(
-         struct VLayerHandle * VLayerHandle
- );
+          struct VLayerHandle * VLayerHandle );
 
 Function
 ~~~~~~~~
@@ -237,9 +230,8 @@ Synopsis
 ::
 
  ULONG GetVLayerAttr(
-         struct VLayerHandle * VLayerHandle,
-         ULONG AttrNum
- );
+          struct VLayerHandle * VLayerHandle,
+          ULONG AttrNum );
 
 Function
 ~~~~~~~~
@@ -297,8 +289,7 @@ Synopsis
 ::
 
  ULONG LockVLayer(
-         struct VLayerHandle * VLayerHandle
- );
+          struct VLayerHandle * VLayerHandle );
 
 Function
 ~~~~~~~~
@@ -339,9 +330,8 @@ Synopsis
 ::
 
  void SetVLayerAttrTagList(
-         struct VLayerHandle * VLayerHandle,
-         struct TagItem  * TagItems
- );
+          struct VLayerHandle * VLayerHandle,
+          struct TagItem  * TagItems );
 
 Function
 ~~~~~~~~
@@ -401,8 +391,7 @@ Synopsis
 ::
 
  ULONG UnlockVLayer(
-         struct VLayerHandle * VLayerHandle
- );
+          struct VLayerHandle * VLayerHandle );
 
 Function
 ~~~~~~~~

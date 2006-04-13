@@ -8,128 +8,39 @@ exec
 
 ----------
 
-`AbortIO`_
-`AddDevice`_
-`AddHead`_
-`AddIntServer`_
-`AddLibrary`_
-`AddMemHandler`_
-`AddMemList`_
-`AddPort`_
-`AddResource`_
-`AddSemaphore`_
-`AddTail`_
-`AddTask`_
-`Alert`_
-`AllocAbs`_
-`AllocEntry`_
-`AllocMem`_
-`AllocPooled`_
-`AllocSignal`_
-`AllocTrap`_
-`AllocVec`_
-`Allocate`_
-`AttemptSemaphore`_
-`AttemptSemaphoreShared`_
-`AvailMem`_
-`CacheClearE`_
-`CacheClearU`_
-`CacheControl`_
-`CachePostDMA`_
-`CachePreDMA`_
-`Cause`_
-`CheckIO`_
-`ChildFree`_
-`ChildOrphan`_
-`ChildStatus`_
-`ChildWait`_
-`CloseDevice`_
-`CloseLibrary`_
-`ColdReboot`_
-`CopyMem`_
-`CopyMemQuick`_
-`CreateIORequest`_
-`CreateMsgPort`_
-`CreatePool`_
-`Deallocate`_
-`Debug`_
-`DeleteIORequest`_
-`DeleteMsgPort`_
-`DeletePool`_
-`Disable`_
-`DoIO`_
-`Enable`_
-`Enqueue`_
-`FindName`_
-`FindPort`_
-`FindResident`_
-`FindSemaphore`_
-`FindTask`_
-`Forbid`_
-`FreeEntry`_
-`FreeMem`_
-`FreePooled`_
-`FreeSignal`_
-`FreeTrap`_
-`FreeVec`_
-`GetCC`_
-`GetMsg`_
-`InitCode`_
-`InitResident`_
-`InitSemaphore`_
-`InitStruct`_
-`Insert`_
-`MakeFunctions`_
-`MakeLibrary`_
-`NewAddTask`_
-`NewAllocEntry`_
-`ObtainQuickVector`_
-`ObtainSemaphore`_
-`ObtainSemaphoreList`_
-`ObtainSemaphoreShared`_
-`OldOpenLibrary`_
-`OpenDevice`_
-`OpenLibrary`_
-`OpenResource`_
-`Permit`_
-`Procure`_
-`PutMsg`_
-`RawDoFmt`_
-`ReleaseSemaphore`_
-`ReleaseSemaphoreList`_
-`RemDevice`_
-`RemHead`_
-`RemIntServer`_
-`RemLibrary`_
-`RemMemHandler`_
-`RemPort`_
-`RemResource`_
-`RemSemaphore`_
-`RemTail`_
-`RemTask`_
-`Remove`_
-`ReplyMsg`_
-`SendIO`_
-`SetExcept`_
-`SetFunction`_
-`SetIntVector`_
-`SetSR`_
-`SetSignal`_
-`SetTaskPri`_
-`Signal`_
-`StackSwap`_
-`SumKickData`_
-`SumLibrary`_
-`SuperState`_
-`Supervisor`_
-`Switch`_
-`TypeOfMem`_
-`UserState`_
-`Vacate`_
-`Wait`_
-`WaitIO`_
-`WaitPort`_
-`dummy`_
+======================================= ======================================= ======================================= ======================================= 
+`AbortIO`_                              `AddDevice`_                            `AddHead`_                              `AddIntServer`_                         
+`AddLibrary`_                           `AddMemHandler`_                        `AddMemList`_                           `AddPort`_                              
+`AddResource`_                          `AddSemaphore`_                         `AddTail`_                              `AddTask`_                              
+`Alert`_                                `AllocAbs`_                             `AllocEntry`_                           `AllocMem`_                             
+`AllocPooled`_                          `AllocSignal`_                          `AllocTrap`_                            `AllocVec`_                             
+`Allocate`_                             `AttemptSemaphore`_                     `AttemptSemaphoreShared`_               `AvailMem`_                             
+`CacheClearE`_                          `CacheClearU`_                          `CacheControl`_                         `CachePostDMA`_                         
+`CachePreDMA`_                          `Cause`_                                `CheckIO`_                              `ChildFree`_                            
+`ChildOrphan`_                          `ChildStatus`_                          `ChildWait`_                            `CloseDevice`_                          
+`CloseLibrary`_                         `ColdReboot`_                           `CopyMem`_                              `CopyMemQuick`_                         
+`CreateIORequest`_                      `CreateMsgPort`_                        `CreatePool`_                           `Deallocate`_                           
+`Debug`_                                `DeleteIORequest`_                      `DeleteMsgPort`_                        `DeletePool`_                           
+`Disable`_                              `DoIO`_                                 `Enable`_                               `Enqueue`_                              
+`FindName`_                             `FindPort`_                             `FindResident`_                         `FindSemaphore`_                        
+`FindTask`_                             `Forbid`_                               `FreeEntry`_                            `FreeMem`_                              
+`FreePooled`_                           `FreeSignal`_                           `FreeTrap`_                             `FreeVec`_                              
+`GetCC`_                                `GetMsg`_                               `InitCode`_                             `InitResident`_                         
+`InitSemaphore`_                        `InitStruct`_                           `Insert`_                               `MakeFunctions`_                        
+`MakeLibrary`_                          `NewAddTask`_                           `NewAllocEntry`_                        `ObtainQuickVector`_                    
+`ObtainSemaphore`_                      `ObtainSemaphoreList`_                  `ObtainSemaphoreShared`_                `OldOpenLibrary`_                       
+`OpenDevice`_                           `OpenLibrary`_                          `OpenResource`_                         `Permit`_                               
+`Procure`_                              `PutMsg`_                               `RawDoFmt`_                             `ReleaseSemaphore`_                     
+`ReleaseSemaphoreList`_                 `RemDevice`_                            `RemHead`_                              `RemIntServer`_                         
+`RemLibrary`_                           `RemMemHandler`_                        `RemPort`_                              `RemResource`_                          
+`RemSemaphore`_                         `RemTail`_                              `RemTask`_                              `Remove`_                               
+`ReplyMsg`_                             `SendIO`_                               `SetExcept`_                            `SetFunction`_                          
+`SetIntVector`_                         `SetSR`_                                `SetSignal`_                            `SetTaskPri`_                           
+`Signal`_                               `StackSwap`_                            `SumKickData`_                          `SumLibrary`_                           
+`SuperState`_                           `Supervisor`_                           `Switch`_                               `TypeOfMem`_                            
+`UserState`_                            `Vacate`_                               `Wait`_                                 `WaitIO`_                               
+`WaitPort`_                             `dummy`_                                
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -141,8 +52,7 @@ Synopsis
 ::
 
  LONG AbortIO(
-         struct IORequest * iORequest
- );
+          struct IORequest * iORequest );
 
 Function
 ~~~~~~~~
@@ -185,8 +95,7 @@ Synopsis
 ::
 
  void AddDevice(
-         struct Device * device
- );
+          struct Device * device );
 
 Function
 ~~~~~~~~
@@ -221,9 +130,8 @@ Synopsis
 ::
 
  void AddHead(
-         struct List * list,
-         struct Node * node
- );
+          struct List * list,
+          struct Node * node );
 
 Function
 ~~~~~~~~
@@ -275,9 +183,8 @@ Synopsis
 ::
 
  void AddIntServer(
-         ULONG intNumber,
-         struct Interrupt * interrupt
- );
+          ULONG intNumber,
+          struct Interrupt * interrupt );
 
 Notes
 ~~~~~
@@ -296,8 +203,7 @@ Synopsis
 ::
 
  void AddLibrary(
-         struct Library * library
- );
+          struct Library * library );
 
 Function
 ~~~~~~~~
@@ -341,8 +247,7 @@ Synopsis
 ::
 
  void AddMemHandler(
-         struct Interrupt * memHandler
- );
+          struct Interrupt * memHandler );
 
 Function
 ~~~~~~~~
@@ -368,12 +273,11 @@ Synopsis
 ::
 
  void AddMemList(
-         ULONG size,
-         ULONG attributes,
-         LONG pri,
-         APTR base,
-         STRPTR name
- );
+          ULONG size,
+          ULONG attributes,
+          LONG pri,
+          APTR base,
+          STRPTR name );
 
 Function
 ~~~~~~~~
@@ -409,8 +313,7 @@ Synopsis
 ::
 
  void AddPort(
-         struct MsgPort * port
- );
+          struct MsgPort * port );
 
 Function
 ~~~~~~~~
@@ -438,8 +341,7 @@ Synopsis
 ::
 
  void AddResource(
-         APTR resource
- );
+          APTR resource );
 
 Function
 ~~~~~~~~
@@ -471,8 +373,7 @@ Synopsis
 ::
 
  void AddSemaphore(
-         struct SignalSemaphore * sigSem
- );
+          struct SignalSemaphore * sigSem );
 
 Function
 ~~~~~~~~
@@ -507,9 +408,8 @@ Synopsis
 ::
 
  void AddTail(
-         struct List * list,
-         struct Node * node
- );
+          struct List * list,
+          struct Node * node );
 
 Function
 ~~~~~~~~
@@ -546,10 +446,9 @@ Synopsis
 ::
 
  APTR AddTask(
-         struct Task * task,
-         APTR initialPC,
-         APTR finalPC
- );
+          struct Task * task,
+          APTR initialPC,
+          APTR finalPC );
 
 Function
 ~~~~~~~~
@@ -608,8 +507,7 @@ Synopsis
 ::
 
  void Alert(
-         ULONG alertNum
- );
+          ULONG alertNum );
 
 Function
 ~~~~~~~~
@@ -658,9 +556,8 @@ Synopsis
 ::
 
  APTR AllocAbs(
-         ULONG byteSize,
-         APTR location
- );
+          ULONG byteSize,
+          APTR location );
 
 Function
 ~~~~~~~~
@@ -701,8 +598,7 @@ Synopsis
 ::
 
  struct MemList * AllocEntry(
-         struct MemList * entry
- );
+          struct MemList * entry );
 
 Function
 ~~~~~~~~
@@ -745,9 +641,8 @@ Synopsis
 ::
 
  APTR AllocMem(
-         ULONG byteSize,
-         ULONG requirements
- );
+          ULONG byteSize,
+          ULONG requirements );
 
 Function
 ~~~~~~~~
@@ -804,9 +699,8 @@ Synopsis
 ::
 
  APTR AllocPooled(
-         APTR poolHeader,
-         ULONG memSize
- );
+          APTR poolHeader,
+          ULONG memSize );
 
 Function
 ~~~~~~~~
@@ -847,8 +741,7 @@ Synopsis
 ::
 
  BYTE AllocSignal(
-         LONG signalNum
- );
+          LONG signalNum );
 
 Function
 ~~~~~~~~
@@ -895,8 +788,7 @@ Synopsis
 ::
 
  LONG AllocTrap(
-         long trapNum
- );
+          long trapNum );
 
 
 AllocVec
@@ -907,9 +799,8 @@ Synopsis
 ::
 
  APTR AllocVec(
-         ULONG byteSize,
-         ULONG requirements
- );
+          ULONG byteSize,
+          ULONG requirements );
 
 Function
 ~~~~~~~~
@@ -952,9 +843,8 @@ Synopsis
 ::
 
  APTR Allocate(
-         struct MemHeader * freeList,
-         ULONG byteSize
- );
+          struct MemHeader * freeList,
+          ULONG byteSize );
 
 Function
 ~~~~~~~~
@@ -1031,8 +921,7 @@ Synopsis
 ::
 
  ULONG AttemptSemaphore(
-         struct SignalSemaphore * sigSem
- );
+          struct SignalSemaphore * sigSem );
 
 Function
 ~~~~~~~~
@@ -1080,8 +969,7 @@ Synopsis
 ::
 
  ULONG AttemptSemaphoreShared(
-         struct SignalSemaphore * sigSem
- );
+          struct SignalSemaphore * sigSem );
 
 Function
 ~~~~~~~~
@@ -1123,8 +1011,7 @@ Synopsis
 ::
 
  ULONG AvailMem(
-         ULONG attributes
- );
+          ULONG attributes );
 
 Function
 ~~~~~~~~
@@ -1180,10 +1067,9 @@ Synopsis
 ::
 
  void CacheClearE(
-         APTR address,
-         ULONG length,
-         ULONG caches
- );
+          APTR address,
+          ULONG length,
+          ULONG caches );
 
 Function
 ~~~~~~~~
@@ -1249,8 +1135,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void CacheClearU(
- );
+ void CacheClearU();
 
 Function
 ~~~~~~~~
@@ -1300,9 +1185,8 @@ Synopsis
 ::
 
  ULONG CacheControl(
-         ULONG cacheBits,
-         ULONG cacheMask
- );
+          ULONG cacheBits,
+          ULONG cacheMask );
 
 Function
 ~~~~~~~~
@@ -1364,10 +1248,9 @@ Synopsis
 ::
 
  void CachePostDMA(
-         APTR address,
-         ULONG * length,
-         ULONG flags
- );
+          APTR address,
+          ULONG * length,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -1413,10 +1296,9 @@ Synopsis
 ::
 
  APTR CachePreDMA(
-         APTR address,
-         ULONG * length,
-         ULONG flags
- );
+          APTR address,
+          ULONG * length,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -1476,8 +1358,7 @@ Synopsis
 ::
 
  void Cause(
-         struct Interrupt * softint
- );
+          struct Interrupt * softint );
 
 Function
 ~~~~~~~~
@@ -1557,8 +1438,7 @@ Synopsis
 ::
 
  struct IORequest * CheckIO(
-         struct IORequest * iORequest
- );
+          struct IORequest * iORequest );
 
 Function
 ~~~~~~~~
@@ -1598,8 +1478,7 @@ Synopsis
 ::
 
  void ChildFree(
-         APTR tid
- );
+          APTR tid );
 
 Function
 ~~~~~~~~
@@ -1640,8 +1519,7 @@ Synopsis
 ::
 
  ULONG ChildOrphan(
-         APTR tid
- );
+          APTR tid );
 
 Function
 ~~~~~~~~
@@ -1683,8 +1561,7 @@ Synopsis
 ::
 
  ULONG ChildStatus(
-         APTR tid
- );
+          APTR tid );
 
 Function
 ~~~~~~~~
@@ -1718,8 +1595,7 @@ Synopsis
 ::
 
  IPTR ChildWait(
-         APTR tid
- );
+          APTR tid );
 
 Function
 ~~~~~~~~
@@ -1784,8 +1660,7 @@ Synopsis
 ::
 
  void CloseDevice(
-         struct IORequest * iORequest
- );
+          struct IORequest * iORequest );
 
 Function
 ~~~~~~~~
@@ -1819,8 +1694,7 @@ Synopsis
 ::
 
  void CloseLibrary(
-         struct Library * library
- );
+          struct Library * library );
 
 Function
 ~~~~~~~~
@@ -1852,8 +1726,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ColdReboot(
- );
+ void ColdReboot();
 
 Function
 ~~~~~~~~
@@ -1894,10 +1767,9 @@ Synopsis
 ::
 
  void CopyMem(
-         CONST_APTR source,
-         APTR dest,
-         ULONG size
- );
+          CONST_APTR source,
+          APTR dest,
+          ULONG size );
 
 Function
 ~~~~~~~~
@@ -1939,10 +1811,9 @@ Synopsis
 ::
 
  void CopyMemQuick(
-         CONST_APTR source,
-         APTR dest,
-         ULONG size
- );
+          CONST_APTR source,
+          APTR dest,
+          ULONG size );
 
 Function
 ~~~~~~~~
@@ -1984,9 +1855,8 @@ Synopsis
 ::
 
  struct IORequest * CreateIORequest(
-         struct MsgPort * ioReplyPort,
-         ULONG size
- );
+          struct MsgPort * ioReplyPort,
+          ULONG size );
 
 Function
 ~~~~~~~~
@@ -2025,8 +1895,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct MsgPort * CreateMsgPort(
- );
+ struct MsgPort * CreateMsgPort();
 
 Function
 ~~~~~~~~
@@ -2052,10 +1921,9 @@ Synopsis
 ::
 
  APTR CreatePool(
-         ULONG requirements,
-         ULONG puddleSize,
-         ULONG threshSize
- );
+          ULONG requirements,
+          ULONG puddleSize,
+          ULONG threshSize );
 
 Function
 ~~~~~~~~
@@ -2119,10 +1987,9 @@ Synopsis
 ::
 
  void Deallocate(
-         struct MemHeader * freeList,
-         APTR memoryBlock,
-         ULONG byteSize
- );
+          struct MemHeader * freeList,
+          APTR memoryBlock,
+          ULONG byteSize );
 
 Function
 ~~~~~~~~
@@ -2164,8 +2031,7 @@ Synopsis
 ::
 
  void Debug(
-         unsigned long flags
- );
+          unsigned long flags );
 
 
 DeleteIORequest
@@ -2176,8 +2042,7 @@ Synopsis
 ::
 
  void DeleteIORequest(
-         struct IORequest * iorequest
- );
+          struct IORequest * iorequest );
 
 Function
 ~~~~~~~~
@@ -2202,8 +2067,7 @@ Synopsis
 ::
 
  void DeleteMsgPort(
-         struct MsgPort * port
- );
+          struct MsgPort * port );
 
 Function
 ~~~~~~~~
@@ -2231,8 +2095,7 @@ Synopsis
 ::
 
  void DeletePool(
-         APTR poolHeader
- );
+          APTR poolHeader );
 
 Function
 ~~~~~~~~
@@ -2263,8 +2126,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void Disable(
- );
+ void Disable();
 
 Function
 ~~~~~~~~
@@ -2337,8 +2199,7 @@ Synopsis
 ::
 
  BYTE DoIO(
-         struct IORequest * iORequest
- );
+          struct IORequest * iORequest );
 
 Function
 ~~~~~~~~
@@ -2370,8 +2231,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void Enable(
- );
+ void Enable();
 
 Function
 ~~~~~~~~
@@ -2451,9 +2311,8 @@ Synopsis
 ::
 
  void Enqueue(
-         struct List * list,
-         struct Node * node
- );
+          struct List * list,
+          struct Node * node );
 
 Function
 ~~~~~~~~
@@ -2513,9 +2372,8 @@ Synopsis
 ::
 
  struct Node * FindName(
-         struct List * list,
-         const UBYTE * name
- );
+          struct List * list,
+          const UBYTE * name );
 
 Function
 ~~~~~~~~
@@ -2562,8 +2420,7 @@ Synopsis
 ::
 
  struct MsgPort * FindPort(
-         STRPTR name
- );
+          STRPTR name );
 
 Function
 ~~~~~~~~
@@ -2597,8 +2454,7 @@ Synopsis
 ::
 
  struct Resident * FindResident(
-         const UBYTE * name
- );
+          const UBYTE * name );
 
 Function
 ~~~~~~~~
@@ -2631,8 +2487,7 @@ Synopsis
 ::
 
  struct SignalSemaphore * FindSemaphore(
-         STRPTR name
- );
+          STRPTR name );
 
 Function
 ~~~~~~~~
@@ -2666,8 +2521,7 @@ Synopsis
 ::
 
  struct Task * FindTask(
-         STRPTR name
- );
+          STRPTR name );
 
 Function
 ~~~~~~~~
@@ -2702,8 +2556,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void Forbid(
- );
+ void Forbid();
 
 Function
 ~~~~~~~~
@@ -2778,8 +2631,7 @@ Synopsis
 ::
 
  void FreeEntry(
-         struct MemList * entry
- );
+          struct MemList * entry );
 
 Function
 ~~~~~~~~
@@ -2811,9 +2663,8 @@ Synopsis
 ::
 
  void FreeMem(
-         APTR memoryBlock,
-         ULONG byteSize
- );
+          APTR memoryBlock,
+          ULONG byteSize );
 
 Function
 ~~~~~~~~
@@ -2846,10 +2697,9 @@ Synopsis
 ::
 
  void FreePooled(
-         APTR poolHeader,
-         APTR memory,
-         ULONG memSize
- );
+          APTR poolHeader,
+          APTR memory,
+          ULONG memSize );
 
 Function
 ~~~~~~~~
@@ -2883,8 +2733,7 @@ Synopsis
 ::
 
  void FreeSignal(
-         LONG signalNum
- );
+          LONG signalNum );
 
 Function
 ~~~~~~~~
@@ -2916,8 +2765,7 @@ Synopsis
 ::
 
  void FreeTrap(
-         long trapNum
- );
+          long trapNum );
 
 
 FreeVec
@@ -2928,8 +2776,7 @@ Synopsis
 ::
 
  void FreeVec(
-         APTR memoryBlock
- );
+          APTR memoryBlock );
 
 Function
 ~~~~~~~~
@@ -2961,8 +2808,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- UWORD GetCC(
- );
+ UWORD GetCC();
 
 Function
 ~~~~~~~~
@@ -3012,8 +2858,7 @@ Synopsis
 ::
 
  struct Message * GetMsg(
-         struct MsgPort * port
- );
+          struct MsgPort * port );
 
 Function
 ~~~~~~~~
@@ -3054,9 +2899,8 @@ Synopsis
 ::
 
  void InitCode(
-         ULONG startClass,
-         ULONG version
- );
+          ULONG startClass,
+          ULONG version );
 
 Function
 ~~~~~~~~
@@ -3084,9 +2928,8 @@ Synopsis
 ::
 
  APTR InitResident(
-         struct Resident * resident,
-         BPTR segList
- );
+          struct Resident * resident,
+          BPTR segList );
 
 Function
 ~~~~~~~~
@@ -3135,8 +2978,7 @@ Synopsis
 ::
 
  void InitSemaphore(
-         struct SignalSemaphore * sigSem
- );
+          struct SignalSemaphore * sigSem );
 
 Function
 ~~~~~~~~
@@ -3171,10 +3013,9 @@ Synopsis
 ::
 
  void InitStruct(
-         APTR initTable,
-         APTR memory,
-         ULONG size
- );
+          APTR initTable,
+          APTR memory,
+          ULONG size );
 
 Function
 ~~~~~~~~
@@ -3223,10 +3064,9 @@ Synopsis
 ::
 
  void Insert(
-         struct List * list,
-         struct Node * node,
-         struct Node * pred
- );
+          struct List * list,
+          struct Node * node,
+          struct Node * pred );
 
 Function
 ~~~~~~~~
@@ -3274,10 +3114,9 @@ Synopsis
 ::
 
  ULONG MakeFunctions(
-         APTR target,
-         APTR functionArray,
-         APTR funcDispBase
- );
+          APTR target,
+          APTR functionArray,
+          APTR funcDispBase );
 
 Function
 ~~~~~~~~
@@ -3317,12 +3156,11 @@ Synopsis
 ::
 
  struct Library * MakeLibrary(
-         APTR funcInit,
-         APTR structInit,
-         ULONG_FUNC libInit,
-         ULONG dataSize,
-         BPTR segList
- );
+          APTR funcInit,
+          APTR structInit,
+          ULONG_FUNC libInit,
+          ULONG dataSize,
+          BPTR segList );
 
 Function
 ~~~~~~~~
@@ -3384,11 +3222,10 @@ Synopsis
 ::
 
  APTR NewAddTask(
-         struct Task * task,
-         APTR initialPC,
-         APTR finalPC,
-         struct TagItem * tagList
- );
+          struct Task * task,
+          APTR initialPC,
+          APTR finalPC,
+          struct TagItem * tagList );
 
 Function
 ~~~~~~~~
@@ -3447,10 +3284,9 @@ Synopsis
 ::
 
  BOOL NewAllocEntry(
-         struct MemList * entry,
-         struct MemList ** return_entry,
-         ULONG * return_flags
- );
+          struct MemList * entry,
+          struct MemList ** return_entry,
+          ULONG * return_flags );
 
 Function
 ~~~~~~~~
@@ -3500,8 +3336,7 @@ Synopsis
 ::
 
  ULONG ObtainQuickVector(
-         APTR interruptCode
- );
+          APTR interruptCode );
 
 
 ObtainSemaphore
@@ -3512,8 +3347,7 @@ Synopsis
 ::
 
  void ObtainSemaphore(
-         struct SignalSemaphore * sigSem
- );
+          struct SignalSemaphore * sigSem );
 
 Function
 ~~~~~~~~
@@ -3554,8 +3388,7 @@ Synopsis
 ::
 
  void ObtainSemaphoreList(
-         struct List * sigSem
- );
+          struct List * sigSem );
 
 Function
 ~~~~~~~~
@@ -3595,8 +3428,7 @@ Synopsis
 ::
 
  void ObtainSemaphoreShared(
-         struct SignalSemaphore * sigSem
- );
+          struct SignalSemaphore * sigSem );
 
 Function
 ~~~~~~~~
@@ -3639,8 +3471,7 @@ Synopsis
 ::
 
  struct Library * OldOpenLibrary(
-         UBYTE * libName
- );
+          UBYTE * libName );
 
 Function
 ~~~~~~~~
@@ -3666,11 +3497,10 @@ Synopsis
 ::
 
  BYTE OpenDevice(
-         CONST_STRPTR devName,
-         ULONG unitNumber,
-         struct IORequest * iORequest,
-         ULONG flags
- );
+          CONST_STRPTR devName,
+          ULONG unitNumber,
+          struct IORequest * iORequest,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -3720,9 +3550,8 @@ Synopsis
 ::
 
  struct Library * OpenLibrary(
-         CONST_STRPTR libName,
-         ULONG version
- );
+          CONST_STRPTR libName,
+          ULONG version );
 
 Function
 ~~~~~~~~
@@ -3765,8 +3594,7 @@ Synopsis
 ::
 
  APTR OpenResource(
-         CONST_STRPTR resName
- );
+          CONST_STRPTR resName );
 
 Function
 ~~~~~~~~
@@ -3805,8 +3633,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void Permit(
- );
+ void Permit();
 
 Function
 ~~~~~~~~
@@ -3872,9 +3699,8 @@ Synopsis
 ::
 
  ULONG Procure(
-         struct SignalSemaphore  * sigSem,
-         struct SemaphoreMessage * bidMsg
- );
+          struct SignalSemaphore  * sigSem,
+          struct SemaphoreMessage * bidMsg );
 
 Function
 ~~~~~~~~
@@ -3925,9 +3751,8 @@ Synopsis
 ::
 
  void PutMsg(
-         struct MsgPort * port,
-         struct Message * message
- );
+          struct MsgPort * port,
+          struct Message * message );
 
 Function
 ~~~~~~~~
@@ -3973,11 +3798,10 @@ Synopsis
 ::
 
  APTR RawDoFmt(
-         CONST_STRPTR FormatString,
-         APTR DataStream,
-         VOID_FUNC PutChProc,
-         APTR PutChData
- );
+          CONST_STRPTR FormatString,
+          APTR DataStream,
+          VOID_FUNC PutChProc,
+          APTR PutChData );
 
 Function
 ~~~~~~~~
@@ -4125,8 +3949,7 @@ Synopsis
 ::
 
  void ReleaseSemaphore(
-         struct SignalSemaphore * sigSem
- );
+          struct SignalSemaphore * sigSem );
 
 Function
 ~~~~~~~~
@@ -4161,8 +3984,7 @@ Synopsis
 ::
 
  void ReleaseSemaphoreList(
-         struct List * sigSem
- );
+          struct List * sigSem );
 
 Function
 ~~~~~~~~
@@ -4187,8 +4009,7 @@ Synopsis
 ::
 
  void RemDevice(
-         struct Device * device
- );
+          struct Device * device );
 
 Function
 ~~~~~~~~
@@ -4221,8 +4042,7 @@ Synopsis
 ::
 
  struct Node * RemHead(
-         struct List * list
- );
+          struct List * list );
 
 Function
 ~~~~~~~~
@@ -4265,9 +4085,8 @@ Synopsis
 ::
 
  void RemIntServer(
-         ULONG intNumber,
-         struct Interrupt * interrupt
- );
+          ULONG intNumber,
+          struct Interrupt * interrupt );
 
 
 RemLibrary
@@ -4278,8 +4097,7 @@ Synopsis
 ::
 
  void RemLibrary(
-         struct Library * library
- );
+          struct Library * library );
 
 Function
 ~~~~~~~~
@@ -4312,8 +4130,7 @@ Synopsis
 ::
 
  void RemMemHandler(
-         struct Interrupt * memHandler
- );
+          struct Interrupt * memHandler );
 
 Function
 ~~~~~~~~
@@ -4338,8 +4155,7 @@ Synopsis
 ::
 
  void RemPort(
-         struct MsgPort * port
- );
+          struct MsgPort * port );
 
 Function
 ~~~~~~~~
@@ -4366,8 +4182,7 @@ Synopsis
 ::
 
  void RemResource(
-         APTR resource
- );
+          APTR resource );
 
 Function
 ~~~~~~~~
@@ -4399,8 +4214,7 @@ Synopsis
 ::
 
  void RemSemaphore(
-         struct SignalSemaphore * sigSem
- );
+          struct SignalSemaphore * sigSem );
 
 Function
 ~~~~~~~~
@@ -4433,8 +4247,7 @@ Synopsis
 ::
 
  struct Node * RemTail(
-         struct List * list
- );
+          struct List * list );
 
 Function
 ~~~~~~~~
@@ -4477,8 +4290,7 @@ Synopsis
 ::
 
  void RemTask(
-         struct Task * task
- );
+          struct Task * task );
 
 Function
 ~~~~~~~~
@@ -4514,8 +4326,7 @@ Synopsis
 ::
 
  void Remove(
-         struct Node * node
- );
+          struct Node * node );
 
 Function
 ~~~~~~~~
@@ -4558,8 +4369,7 @@ Synopsis
 ::
 
  void ReplyMsg(
-         struct Message * message
- );
+          struct Message * message );
 
 Function
 ~~~~~~~~
@@ -4592,8 +4402,7 @@ Synopsis
 ::
 
  void SendIO(
-         struct IORequest * iORequest
- );
+          struct IORequest * iORequest );
 
 Function
 ~~~~~~~~
@@ -4627,9 +4436,8 @@ Synopsis
 ::
 
  ULONG SetExcept(
-         ULONG newSignals,
-         ULONG signalSet
- );
+          ULONG newSignals,
+          ULONG signalSet );
 
 Function
 ~~~~~~~~
@@ -4669,10 +4477,9 @@ Synopsis
 ::
 
  APTR SetFunction(
-         struct Library * library,
-         LONG funcOffset,
-         APTR newFunction
- );
+          struct Library * library,
+          LONG funcOffset,
+          APTR newFunction );
 
 Function
 ~~~~~~~~
@@ -4737,9 +4544,8 @@ Synopsis
 ::
 
  struct Interrupt * SetIntVector(
-         ULONG intNumber,
-         struct Interrupt * interrupt
- );
+          ULONG intNumber,
+          struct Interrupt * interrupt );
 
 
 SetSR
@@ -4750,9 +4556,8 @@ Synopsis
 ::
 
  ULONG SetSR(
-         ULONG newSR,
-         ULONG mask
- );
+          ULONG newSR,
+          ULONG mask );
 
 Function
 ~~~~~~~~
@@ -4811,9 +4616,8 @@ Synopsis
 ::
 
  ULONG SetSignal(
-         ULONG newSignals,
-         ULONG signalSet
- );
+          ULONG newSignals,
+          ULONG signalSet );
 
 Function
 ~~~~~~~~
@@ -4853,9 +4657,8 @@ Synopsis
 ::
 
  BYTE SetTaskPri(
-         struct Task * task,
-         LONG priority
- );
+          struct Task * task,
+          LONG priority );
 
 Function
 ~~~~~~~~
@@ -4890,9 +4693,8 @@ Synopsis
 ::
 
  void Signal(
-         struct Task * task,
-         ULONG signalSet
- );
+          struct Task * task,
+          ULONG signalSet );
 
 Function
 ~~~~~~~~
@@ -4934,8 +4736,7 @@ Synopsis
 ::
 
  void StackSwap(
-         struct StackSwapStruct * sss
- );
+          struct StackSwapStruct * sss );
 
 Function
 ~~~~~~~~
@@ -4995,8 +4796,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG SumKickData(
- );
+ ULONG SumKickData();
 
 
 SumLibrary
@@ -5007,8 +4807,7 @@ Synopsis
 ::
 
  void SumLibrary(
-         struct Library * library
- );
+          struct Library * library );
 
 Function
 ~~~~~~~~
@@ -5041,8 +4840,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- APTR SuperState(
- );
+ APTR SuperState();
 
 Function
 ~~~~~~~~
@@ -5100,8 +4898,7 @@ Synopsis
 ::
 
  ULONG Supervisor(
-         ULONG_FUNC userFunction
- );
+          ULONG_FUNC userFunction );
 
 Function
 ~~~~~~~~
@@ -5176,8 +4973,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void Switch(
- );
+ void Switch();
 
 Function
 ~~~~~~~~
@@ -5212,8 +5008,7 @@ Synopsis
 ::
 
  ULONG TypeOfMem(
-         APTR address
- );
+          APTR address );
 
 Function
 ~~~~~~~~
@@ -5246,8 +5041,7 @@ Synopsis
 ::
 
  void UserState(
-         APTR sysStack
- );
+          APTR sysStack );
 
 Function
 ~~~~~~~~
@@ -5286,9 +5080,8 @@ Synopsis
 ::
 
  void Vacate(
-         struct SignalSemaphore  * sigSem,
-         struct SemaphoreMessage * bidMsg
- );
+          struct SignalSemaphore  * sigSem,
+          struct SemaphoreMessage * bidMsg );
 
 Function
 ~~~~~~~~
@@ -5324,8 +5117,7 @@ Synopsis
 ::
 
  ULONG Wait(
-         ULONG signalSet
- );
+          ULONG signalSet );
 
 Function
 ~~~~~~~~
@@ -5377,8 +5169,7 @@ Synopsis
 ::
 
  BYTE WaitIO(
-         struct IORequest * iORequest
- );
+          struct IORequest * iORequest );
 
 Function
 ~~~~~~~~
@@ -5419,8 +5210,7 @@ Synopsis
 ::
 
  struct Message * WaitPort(
-         struct MsgPort * port
- );
+          struct MsgPort * port );
 
 Function
 ~~~~~~~~
@@ -5460,7 +5250,6 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG dummy(
- );
+ ULONG dummy();
 
 

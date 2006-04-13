@@ -8,16 +8,11 @@ rexxsyslib
 
 ----------
 
-`ClearRexxMsg`_
-`CreateArgstring`_
-`CreateRexxMsg`_
-`DeleteArgstring`_
-`DeleteRexxMsg`_
-`FillRexxMsg`_
-`IsRexxMsg`_
-`LengthArgstring`_
-`LockRexxBase`_
-`UnlockRexxBase`_
+======================================= ======================================= ======================================= ======================================= 
+`ClearRexxMsg`_                         `CreateArgstring`_                      `CreateRexxMsg`_                        `DeleteArgstring`_                      
+`DeleteRexxMsg`_                        `FillRexxMsg`_                          `IsRexxMsg`_                            `LengthArgstring`_                      
+`LockRexxBase`_                         `UnlockRexxBase`_                       
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -29,9 +24,8 @@ Synopsis
 ::
 
  VOID ClearRexxMsg(
-         struct RexxMsg * msgptr,
-         ULONG count
- );
+          struct RexxMsg * msgptr,
+          ULONG count );
 
 Function
 ~~~~~~~~
@@ -72,9 +66,8 @@ Synopsis
 ::
 
  UBYTE * CreateArgstring(
-         UBYTE * string,
-         ULONG length
- );
+          UBYTE * string,
+          ULONG length );
 
 Function
 ~~~~~~~~
@@ -124,10 +117,9 @@ Synopsis
 ::
 
  struct RexxMsg * CreateRexxMsg(
-         struct MsgPort * port,
-         UBYTE          * extension,
-         UBYTE          * host
- );
+          struct MsgPort * port,
+          UBYTE          * extension,
+          UBYTE          * host );
 
 Function
 ~~~~~~~~
@@ -171,8 +163,7 @@ Synopsis
 ::
 
  VOID DeleteArgstring(
-         UBYTE * argstring
- );
+          UBYTE * argstring );
 
 Function
 ~~~~~~~~
@@ -212,8 +203,7 @@ Synopsis
 ::
 
  VOID DeleteRexxMsg(
-         struct RexxMsg * packet
- );
+          struct RexxMsg * packet );
 
 Function
 ~~~~~~~~
@@ -252,10 +242,9 @@ Synopsis
 ::
 
  BOOL FillRexxMsg(
-         struct RexxMsg * msgptr,
-         ULONG count,
-         ULONG mask
- );
+          struct RexxMsg * msgptr,
+          ULONG count,
+          ULONG mask );
 
 Function
 ~~~~~~~~
@@ -319,8 +308,7 @@ Synopsis
 ::
 
  BOOL IsRexxMsg(
-         struct RexxMsg * msgptr
- );
+          struct RexxMsg * msgptr );
 
 Function
 ~~~~~~~~
@@ -359,8 +347,7 @@ Synopsis
 ::
 
  ULONG LengthArgstring(
-         UBYTE * argstring
- );
+          UBYTE * argstring );
 
 Function
 ~~~~~~~~
@@ -400,8 +387,7 @@ Synopsis
 ::
 
  VOID LockRexxBase(
-         ULONG resource
- );
+          ULONG resource );
 
 
 UnlockRexxBase
@@ -412,7 +398,6 @@ Synopsis
 ::
 
  VOID UnlockRexxBase(
-         ULONG resource
- );
+          ULONG resource );
 
 

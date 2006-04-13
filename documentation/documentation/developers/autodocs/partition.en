@@ -8,21 +8,12 @@ partition
 
 ----------
 
-`AddPartition`_
-`ClosePartitionTable`_
-`CloseRootPartition`_
-`CreatePartitionTable`_
-`DeletePartition`_
-`DestroyPartitionTable`_
-`GetPartitionAttrs`_
-`GetPartitionTableAttrs`_
-`OpenPartitionTable`_
-`OpenRootPartition`_
-`QueryPartitionAttrs`_
-`QueryPartitionTableAttrs`_
-`SetPartitionAttrs`_
-`SetPartitionTableAttrs`_
-`WritePartitionTable`_
+======================================= ======================================= ======================================= ======================================= 
+`AddPartition`_                         `ClosePartitionTable`_                  `CloseRootPartition`_                   `CreatePartitionTable`_                 
+`DeletePartition`_                      `DestroyPartitionTable`_                `GetPartitionAttrs`_                    `GetPartitionTableAttrs`_               
+`OpenPartitionTable`_                   `OpenRootPartition`_                    `QueryPartitionAttrs`_                  `QueryPartitionTableAttrs`_             
+`SetPartitionAttrs`_                    `SetPartitionTableAttrs`_               `WritePartitionTable`_                  
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -34,9 +25,8 @@ Synopsis
 ::
 
  struct PartitionHandle * AddPartition(
-         struct PartitionHandle * root,
-         struct TagItem * taglist
- );
+          struct PartitionHandle * root,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -76,8 +66,7 @@ Synopsis
 ::
 
  void ClosePartitionTable(
-         struct PartitionHandle * root
- );
+          struct PartitionHandle * root );
 
 Function
 ~~~~~~~~
@@ -103,8 +92,7 @@ Synopsis
 ::
 
  void CloseRootPartition(
-         struct PartitionHandle * ph
- );
+          struct PartitionHandle * ph );
 
 Function
 ~~~~~~~~
@@ -129,9 +117,8 @@ Synopsis
 ::
 
  LONG CreatePartitionTable(
-         struct PartitionHandle * root,
-         ULONG type
- );
+          struct PartitionHandle * root,
+          ULONG type );
 
 Function
 ~~~~~~~~
@@ -172,8 +159,7 @@ Synopsis
 ::
 
  void DeletePartition(
-         struct PartitionHandle * ph
- );
+          struct PartitionHandle * ph );
 
 Function
 ~~~~~~~~
@@ -198,8 +184,7 @@ Synopsis
 ::
 
  LONG DestroyPartitionTable(
-         struct PartitionHandle * root
- );
+          struct PartitionHandle * root );
 
 Function
 ~~~~~~~~
@@ -240,9 +225,8 @@ Synopsis
 ::
 
  LONG GetPartitionAttrs(
-         struct PartitionHandle * ph,
-         struct TagItem * taglist
- );
+          struct PartitionHandle * ph,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -271,9 +255,8 @@ Synopsis
 ::
 
  LONG GetPartitionTableAttrs(
-         struct PartitionHandle * root,
-         struct TagItem * taglist
- );
+          struct PartitionHandle * root,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -302,8 +285,7 @@ Synopsis
 ::
 
  LONG OpenPartitionTable(
-         struct PartitionHandle * root
- );
+          struct PartitionHandle * root );
 
 Function
 ~~~~~~~~
@@ -338,9 +320,8 @@ Synopsis
 ::
 
  struct PartitionHandle * OpenRootPartition(
-         STRPTR Device,
-         LONG Unit
- );
+          STRPTR Device,
+          LONG Unit );
 
 Function
 ~~~~~~~~
@@ -373,8 +354,7 @@ Synopsis
 ::
 
  struct PartitionAttribute * QueryPartitionAttrs(
-         struct PartitionHandle * table
- );
+          struct PartitionHandle * table );
 
 Function
 ~~~~~~~~
@@ -406,8 +386,7 @@ Synopsis
 ::
 
  struct PartitionAttribute * QueryPartitionTableAttrs(
-         struct PartitionHandle * table
- );
+          struct PartitionHandle * table );
 
 Function
 ~~~~~~~~
@@ -439,9 +418,8 @@ Synopsis
 ::
 
  LONG SetPartitionAttrs(
-         struct PartitionHandle * ph,
-         struct TagItem * taglist
- );
+          struct PartitionHandle * ph,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -470,9 +448,8 @@ Synopsis
 ::
 
  LONG SetPartitionTableAttrs(
-         struct PartitionHandle * root,
-         struct TagItem * taglist
- );
+          struct PartitionHandle * root,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -498,8 +475,7 @@ Synopsis
 ::
 
  LONG WritePartitionTable(
-         struct PartitionHandle * root
- );
+          struct PartitionHandle * root );
 
 Function
 ~~~~~~~~

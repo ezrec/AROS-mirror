@@ -8,30 +8,15 @@ cgfx
 
 ----------
 
-`AllocCModeListTagList`_
-`BestCModeIDTagList`_
-`BltTemplateAlpha`_
-`CModeRequestTagList`_
-`CVideoCtrlTagList`_
-`DoCDrawMethodTagList`_
-`ExtractColor`_
-`FillPixelArray`_
-`FreeCModeList`_
-`GetCyberIDAttr`_
-`GetCyberMapAttr`_
-`InvertPixelArray`_
-`IsCyberModeID`_
-`LockBitMapTagList`_
-`MovePixelArray`_
-`ReadPixelArray`_
-`ReadRGBPixel`_
-`ScalePixelArray`_
-`UnLockBitMap`_
-`UnLockBitMapTagList`_
-`WriteLUTPixelArray`_
-`WritePixelArray`_
-`WritePixelArrayAlpha`_
-`WriteRGBPixel`_
+======================================= ======================================= ======================================= ======================================= 
+`AllocCModeListTagList`_                `BestCModeIDTagList`_                   `BltTemplateAlpha`_                     `CModeRequestTagList`_                  
+`CVideoCtrlTagList`_                    `DoCDrawMethodTagList`_                 `ExtractColor`_                         `FillPixelArray`_                       
+`FreeCModeList`_                        `GetCyberIDAttr`_                       `GetCyberMapAttr`_                      `InvertPixelArray`_                     
+`IsCyberModeID`_                        `LockBitMapTagList`_                    `MovePixelArray`_                       `ReadPixelArray`_                       
+`ReadRGBPixel`_                         `ScalePixelArray`_                      `UnLockBitMap`_                         `UnLockBitMapTagList`_                  
+`WriteLUTPixelArray`_                   `WritePixelArray`_                      `WritePixelArrayAlpha`_                 `WriteRGBPixel`_                        
+
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -43,8 +28,7 @@ Synopsis
 ::
 
  struct List * AllocCModeListTagList(
-         struct TagItem * tags
- );
+          struct TagItem * tags );
 
 
 BestCModeIDTagList
@@ -55,8 +39,7 @@ Synopsis
 ::
 
  ULONG BestCModeIDTagList(
-         struct TagItem * tags
- );
+          struct TagItem * tags );
 
 
 BltTemplateAlpha
@@ -67,15 +50,14 @@ Synopsis
 ::
 
  void BltTemplateAlpha(
-         APTR src,
-         LONG srcx,
-         LONG srcmod,
-         struct RastPort * rp,
-         LONG destx,
-         LONG desty,
-         LONG width,
-         LONG height
- );
+          APTR src,
+          LONG srcx,
+          LONG srcmod,
+          struct RastPort * rp,
+          LONG destx,
+          LONG desty,
+          LONG width,
+          LONG height );
 
 
 CModeRequestTagList
@@ -86,9 +68,8 @@ Synopsis
 ::
 
  ULONG CModeRequestTagList(
-         APTR ,
-         struct TagItem * 
- );
+          APTR ,
+          struct TagItem *  );
 
 
 CVideoCtrlTagList
@@ -99,9 +80,8 @@ Synopsis
 ::
 
  void CVideoCtrlTagList(
-         struct ViewPort * vp,
-         struct TagItem  * tags
- );
+          struct ViewPort * vp,
+          struct TagItem  * tags );
 
 
 DoCDrawMethodTagList
@@ -112,10 +92,9 @@ Synopsis
 ::
 
  void DoCDrawMethodTagList(
-         struct Hook     * ,
-         struct RastPort * ,
-         struct TagItem  * 
- );
+          struct Hook     * ,
+          struct RastPort * ,
+          struct TagItem  *  );
 
 
 ExtractColor
@@ -126,14 +105,13 @@ Synopsis
 ::
 
  ULONG ExtractColor(
-         struct RastPort * RastPort,
-         struct BitMap   * SingleMap,
-         ULONG Colour,
-         ULONG sX,
-         ULONG sY,
-         ULONG Width,
-         ULONG Height
- );
+          struct RastPort * RastPort,
+          struct BitMap   * SingleMap,
+          ULONG Colour,
+          ULONG sX,
+          ULONG sY,
+          ULONG Width,
+          ULONG Height );
 
 
 FillPixelArray
@@ -144,13 +122,12 @@ Synopsis
 ::
 
  ULONG FillPixelArray(
-         struct RastPort * rp,
-         UWORD destx,
-         UWORD desty,
-         UWORD width,
-         UWORD height,
-         ULONG pixel
- );
+          struct RastPort * rp,
+          UWORD destx,
+          UWORD desty,
+          UWORD width,
+          UWORD height,
+          ULONG pixel );
 
 
 FreeCModeList
@@ -161,8 +138,7 @@ Synopsis
 ::
 
  void FreeCModeList(
-         struct List * modeList
- );
+          struct List * modeList );
 
 
 GetCyberIDAttr
@@ -173,9 +149,8 @@ Synopsis
 ::
 
  ULONG GetCyberIDAttr(
-         ULONG attribute,
-         ULONG DisplayModeID
- );
+          ULONG attribute,
+          ULONG DisplayModeID );
 
 
 GetCyberMapAttr
@@ -186,9 +161,8 @@ Synopsis
 ::
 
  ULONG GetCyberMapAttr(
-         struct BitMap * bitMap,
-         ULONG attribute
- );
+          struct BitMap * bitMap,
+          ULONG attribute );
 
 
 InvertPixelArray
@@ -199,12 +173,11 @@ Synopsis
 ::
 
  ULONG InvertPixelArray(
-         struct RastPort * rp,
-         UWORD destx,
-         UWORD desty,
-         UWORD width,
-         UWORD height
- );
+          struct RastPort * rp,
+          UWORD destx,
+          UWORD desty,
+          UWORD width,
+          UWORD height );
 
 
 IsCyberModeID
@@ -215,8 +188,7 @@ Synopsis
 ::
 
  BOOL IsCyberModeID(
-         ULONG modeID
- );
+          ULONG modeID );
 
 
 LockBitMapTagList
@@ -227,9 +199,8 @@ Synopsis
 ::
 
  APTR LockBitMapTagList(
-         APTR bitmap,
-         struct TagItem * tags
- );
+          APTR bitmap,
+          struct TagItem * tags );
 
 
 MovePixelArray
@@ -240,14 +211,13 @@ Synopsis
 ::
 
  ULONG MovePixelArray(
-         UWORD SrcX,
-         UWORD SrcY,
-         struct RastPort * RastPort,
-         UWORD DstX,
-         UWORD DstY,
-         UWORD SizeX,
-         UWORD SizeY
- );
+          UWORD SrcX,
+          UWORD SrcY,
+          struct RastPort * RastPort,
+          UWORD DstX,
+          UWORD DstY,
+          UWORD SizeX,
+          UWORD SizeY );
 
 
 ReadPixelArray
@@ -258,17 +228,16 @@ Synopsis
 ::
 
  ULONG ReadPixelArray(
-         APTR dst,
-         UWORD destx,
-         UWORD desty,
-         UWORD dstmod,
-         struct RastPort * rp,
-         UWORD srcx,
-         UWORD srcy,
-         UWORD width,
-         UWORD height,
-         UBYTE dstformat
- );
+          APTR dst,
+          UWORD destx,
+          UWORD desty,
+          UWORD dstmod,
+          struct RastPort * rp,
+          UWORD srcx,
+          UWORD srcy,
+          UWORD width,
+          UWORD height,
+          UBYTE dstformat );
 
 
 ReadRGBPixel
@@ -279,10 +248,9 @@ Synopsis
 ::
 
  ULONG ReadRGBPixel(
-         struct RastPort * rp,
-         UWORD x,
-         UWORD y
- );
+          struct RastPort * rp,
+          UWORD x,
+          UWORD y );
 
 
 ScalePixelArray
@@ -293,17 +261,16 @@ Synopsis
 ::
 
  LONG ScalePixelArray(
-         APTR srcRect,
-         UWORD SrcW,
-         UWORD SrcH,
-         UWORD SrcMod,
-         struct RastPort * RastPort,
-         UWORD DestX,
-         UWORD DestY,
-         UWORD DestW,
-         UWORD DestH,
-         UBYTE SrcFormat
- );
+          APTR srcRect,
+          UWORD SrcW,
+          UWORD SrcH,
+          UWORD SrcMod,
+          struct RastPort * RastPort,
+          UWORD DestX,
+          UWORD DestY,
+          UWORD DestW,
+          UWORD DestH,
+          UBYTE SrcFormat );
 
 
 UnLockBitMap
@@ -314,8 +281,7 @@ Synopsis
 ::
 
  void UnLockBitMap(
-         APTR Handle
- );
+          APTR Handle );
 
 
 UnLockBitMapTagList
@@ -326,9 +292,8 @@ Synopsis
 ::
 
  void UnLockBitMapTagList(
-         APTR Handle,
-         struct TagItem * Tags
- );
+          APTR Handle,
+          struct TagItem * Tags );
 
 
 WriteLUTPixelArray
@@ -339,18 +304,17 @@ Synopsis
 ::
 
  LONG WriteLUTPixelArray(
-         APTR srcRect,
-         UWORD SrcX,
-         UWORD SrcY,
-         UWORD SrcMod,
-         struct RastPort * rp,
-         APTR CTable,
-         UWORD DestX,
-         UWORD DestY,
-         UWORD SizeX,
-         UWORD SizeY,
-         UBYTE CTabFormat
- );
+          APTR srcRect,
+          UWORD SrcX,
+          UWORD SrcY,
+          UWORD SrcMod,
+          struct RastPort * rp,
+          APTR CTable,
+          UWORD DestX,
+          UWORD DestY,
+          UWORD SizeX,
+          UWORD SizeY,
+          UBYTE CTabFormat );
 
 
 WritePixelArray
@@ -361,17 +325,16 @@ Synopsis
 ::
 
  ULONG WritePixelArray(
-         APTR src,
-         UWORD srcx,
-         UWORD srcy,
-         UWORD srcmod,
-         struct RastPort * rp,
-         UWORD destx,
-         UWORD desty,
-         UWORD width,
-         UWORD height,
-         UBYTE srcformat
- );
+          APTR src,
+          UWORD srcx,
+          UWORD srcy,
+          UWORD srcmod,
+          struct RastPort * rp,
+          UWORD destx,
+          UWORD desty,
+          UWORD width,
+          UWORD height,
+          UBYTE srcformat );
 
 
 WritePixelArrayAlpha
@@ -382,17 +345,16 @@ Synopsis
 ::
 
  ULONG WritePixelArrayAlpha(
-         APTR src,
-         UWORD srcx,
-         UWORD srcy,
-         UWORD srcmod,
-         struct RastPort * rp,
-         UWORD destx,
-         UWORD desty,
-         UWORD width,
-         UWORD height,
-         ULONG globalalpha
- );
+          APTR src,
+          UWORD srcx,
+          UWORD srcy,
+          UWORD srcmod,
+          struct RastPort * rp,
+          UWORD destx,
+          UWORD desty,
+          UWORD width,
+          UWORD height,
+          ULONG globalalpha );
 
 
 WriteRGBPixel
@@ -403,10 +365,9 @@ Synopsis
 ::
 
  LONG WriteRGBPixel(
-         struct RastPort * rp,
-         UWORD x,
-         UWORD y,
-         ULONG pixel
- );
+          struct RastPort * rp,
+          UWORD x,
+          UWORD y,
+          ULONG pixel );
 
 

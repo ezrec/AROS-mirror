@@ -8,29 +8,14 @@ locale
 
 ----------
 
-`CloseCatalog`_
-`CloseLocale`_
-`ConvToLower`_
-`ConvToUpper`_
-`FormatDate`_
-`FormatString`_
-`GetCatalogStr`_
-`GetLocaleStr`_
-`IsXXXX`_
-`LocDateToStr`_
-`LocDosGetLocalizedString`_
-`LocRawDoFmt`_
-`LocStrToDate`_
-`LocStricmp`_
-`LocStrnicmp`_
-`LocToLower`_
-`LocToUpper`_
-`OpenCatalogA`_
-`OpenLocale`_
-`ParseDate`_
-`RexxHost`_
-`StrConvert`_
-`StrnCmp`_
+======================================= ======================================= ======================================= ======================================= 
+`CloseCatalog`_                         `CloseLocale`_                          `ConvToLower`_                          `ConvToUpper`_                          
+`FormatDate`_                           `FormatString`_                         `GetCatalogStr`_                        `GetLocaleStr`_                         
+`IsXXXX`_                               `LocDateToStr`_                         `LocDosGetLocalizedString`_             `LocRawDoFmt`_                          
+`LocStrToDate`_                         `LocStricmp`_                           `LocStrnicmp`_                          `LocToLower`_                           
+`LocToUpper`_                           `OpenCatalogA`_                         `OpenLocale`_                           `ParseDate`_                            
+`RexxHost`_                             `StrConvert`_                           `StrnCmp`_                              
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -42,8 +27,7 @@ Synopsis
 ::
 
  void CloseCatalog(
-         struct Catalog * catalog
- );
+          struct Catalog * catalog );
 
 Function
 ~~~~~~~~
@@ -86,8 +70,7 @@ Synopsis
 ::
 
  void CloseLocale(
-         struct Locale * locale
- );
+          struct Locale * locale );
 
 Function
 ~~~~~~~~
@@ -127,9 +110,8 @@ Synopsis
 ::
 
  ULONG ConvToLower(
-         struct Locale * locale,
-         ULONG character
- );
+          struct Locale * locale,
+          ULONG character );
 
 Function
 ~~~~~~~~
@@ -172,9 +154,8 @@ Synopsis
 ::
 
  ULONG ConvToUpper(
-         struct Locale * locale,
-         ULONG character
- );
+          struct Locale * locale,
+          ULONG character );
 
 Function
 ~~~~~~~~
@@ -224,11 +205,10 @@ Synopsis
 ::
 
  VOID FormatDate(
-         struct Locale    * locale,
-         STRPTR formatString,
-         struct DateStamp * date,
-         struct Hook      * hook
- );
+          struct Locale    * locale,
+          STRPTR formatString,
+          struct DateStamp * date,
+          struct Hook      * hook );
 
 Function
 ~~~~~~~~
@@ -312,11 +292,10 @@ Synopsis
 ::
 
  APTR FormatString(
-         struct Locale * locale,
-         STRPTR fmtTemplate,
-         APTR dataStream,
-         struct Hook   * putCharFunc
- );
+          struct Locale * locale,
+          STRPTR fmtTemplate,
+          APTR dataStream,
+          struct Hook   * putCharFunc );
 
 
 GetCatalogStr
@@ -327,10 +306,9 @@ Synopsis
 ::
 
  CONST_STRPTR GetCatalogStr(
-         const struct Catalog * catalog,
-         ULONG stringNum,
-         CONST_STRPTR defaultString
- );
+          const struct Catalog * catalog,
+          ULONG stringNum,
+          CONST_STRPTR defaultString );
 
 Function
 ~~~~~~~~
@@ -378,9 +356,8 @@ Synopsis
 ::
 
  STRPTR GetLocaleStr(
-         struct Locale * locale,
-         ULONG stringNum
- );
+          struct Locale * locale,
+          ULONG stringNum );
 
 Function
 ~~~~~~~~
@@ -418,9 +395,8 @@ Synopsis
 ::
 
  BOOL IsXXXX(
-         struct Locale * locale,
-         ULONG character
- );
+          struct Locale * locale,
+          ULONG character );
 
 Function
 ~~~~~~~~
@@ -481,8 +457,7 @@ Synopsis
 ::
 
  LONG LocDateToStr(
-         struct DateTime * datetime
- );
+          struct DateTime * datetime );
 
 Function
 ~~~~~~~~
@@ -525,8 +500,7 @@ Synopsis
 ::
 
  CONST_STRPTR LocDosGetLocalizedString(
-         LONG stringNum
- );
+          LONG stringNum );
 
 Function
 ~~~~~~~~
@@ -569,11 +543,10 @@ Synopsis
 ::
 
  APTR LocRawDoFmt(
-         CONST_STRPTR FormatString,
-         APTR DataStream,
-         VOID_FUNC PutChProc,
-         APTR PutChData
- );
+          CONST_STRPTR FormatString,
+          APTR DataStream,
+          VOID_FUNC PutChProc,
+          APTR PutChData );
 
 Function
 ~~~~~~~~
@@ -616,8 +589,7 @@ Synopsis
 ::
 
  LONG LocStrToDate(
-         struct DateTime * datetime
- );
+          struct DateTime * datetime );
 
 Function
 ~~~~~~~~
@@ -660,9 +632,8 @@ Synopsis
 ::
 
  LONG LocStricmp(
-         CONST_STRPTR string1,
-         CONST_STRPTR string2
- );
+          CONST_STRPTR string1,
+          CONST_STRPTR string2 );
 
 Function
 ~~~~~~~~
@@ -705,10 +676,9 @@ Synopsis
 ::
 
  LONG LocStrnicmp(
-         CONST_STRPTR string1,
-         CONST_STRPTR string2,
-         LONG length
- );
+          CONST_STRPTR string1,
+          CONST_STRPTR string2,
+          LONG length );
 
 Function
 ~~~~~~~~
@@ -751,8 +721,7 @@ Synopsis
 ::
 
  ULONG LocToLower(
-         ULONG character
- );
+          ULONG character );
 
 Function
 ~~~~~~~~
@@ -795,8 +764,7 @@ Synopsis
 ::
 
  ULONG LocToUpper(
-         ULONG character
- );
+          ULONG character );
 
 Function
 ~~~~~~~~
@@ -839,10 +807,9 @@ Synopsis
 ::
 
  struct Catalog * OpenCatalogA(
-         struct Locale  * locale,
-         STRPTR name,
-         struct TagItem * tags
- );
+          struct Locale  * locale,
+          STRPTR name,
+          struct TagItem * tags );
 
 
 OpenLocale
@@ -853,8 +820,7 @@ Synopsis
 ::
 
  struct Locale * OpenLocale(
-         STRPTR name
- );
+          STRPTR name );
 
 Function
 ~~~~~~~~
@@ -908,11 +874,10 @@ Synopsis
 ::
 
  BOOL ParseDate(
-         struct Locale    * locale,
-         struct DateStamp * date,
-         STRPTR fmtTemplate,
-         struct Hook      * getCharFunc
- );
+          struct Locale    * locale,
+          struct DateStamp * date,
+          STRPTR fmtTemplate,
+          struct Hook      * getCharFunc );
 
 Function
 ~~~~~~~~
@@ -997,8 +962,7 @@ Synopsis
 ::
 
  ULONG RexxHost(
-         struct RexxMsg * rxmsg
- );
+          struct RexxMsg * rxmsg );
 
 Function
 ~~~~~~~~
@@ -1016,12 +980,11 @@ Synopsis
 ::
 
  ULONG StrConvert(
-         struct Locale * locale,
-         STRPTR string,
-         APTR buffer,
-         ULONG bufferSize,
-         ULONG type
- );
+          struct Locale * locale,
+          STRPTR string,
+          APTR buffer,
+          ULONG bufferSize,
+          ULONG type );
 
 Function
 ~~~~~~~~
@@ -1076,12 +1039,11 @@ Synopsis
 ::
 
  LONG StrnCmp(
-         struct Locale * locale,
-         STRPTR string1,
-         STRPTR string2,
-         LONG length,
-         ULONG type
- );
+          struct Locale * locale,
+          STRPTR string1,
+          STRPTR string2,
+          LONG length,
+          ULONG type );
 
 Function
 ~~~~~~~~

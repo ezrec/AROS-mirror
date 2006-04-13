@@ -8,13 +8,10 @@ nonvolatile
 
 ----------
 
-`DeleteNV`_
-`FreeNVData`_
-`GetCopyNV`_
-`GetNVInfo`_
-`GetNVList`_
-`SetNVProtection`_
-`StoreNV`_
+======================================= ======================================= ======================================= ======================================= 
+`DeleteNV`_                             `FreeNVData`_                           `GetCopyNV`_                            `GetNVInfo`_                            
+`GetNVList`_                            `SetNVProtection`_                      `StoreNV`_                              
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -26,10 +23,9 @@ Synopsis
 ::
 
  BOOL DeleteNV(
-         STRPTR appName,
-         STRPTR itemName,
-         BOOL killRequesters
- );
+          STRPTR appName,
+          STRPTR itemName,
+          BOOL killRequesters );
 
 Function
 ~~~~~~~~
@@ -78,8 +74,7 @@ Synopsis
 ::
 
  VOID FreeNVData(
-         APTR data
- );
+          APTR data );
 
 Function
 ~~~~~~~~
@@ -116,10 +111,9 @@ Synopsis
 ::
 
  APTR GetCopyNV(
-         STRPTR appName,
-         STRPTR itemName,
-         BOOL killRequesters
- );
+          STRPTR appName,
+          STRPTR itemName,
+          BOOL killRequesters );
 
 Function
 ~~~~~~~~
@@ -166,8 +160,7 @@ Synopsis
 ::
 
  struct NVInfo * GetNVInfo(
-         BOOL killRequesters
- );
+          BOOL killRequesters );
 
 Function
 ~~~~~~~~
@@ -212,9 +205,8 @@ Synopsis
 ::
 
  struct MinList * GetNVList(
-         STRPTR appName,
-         BOOL killRequesters
- );
+          STRPTR appName,
+          BOOL killRequesters );
 
 Function
 ~~~~~~~~
@@ -271,11 +263,10 @@ Synopsis
 ::
 
  BOOL SetNVProtection(
-         STRPTR appName,
-         STRPTR itemName,
-         LONG mask,
-         BOOL killRequesters
- );
+          STRPTR appName,
+          STRPTR itemName,
+          LONG mask,
+          BOOL killRequesters );
 
 Function
 ~~~~~~~~
@@ -332,12 +323,11 @@ Synopsis
 ::
 
  LONG StoreNV(
-         STRPTR appName,
-         STRPTR itemName,
-         APTR data,
-         ULONG length,
-         BOOL killRequesters
- );
+          STRPTR appName,
+          STRPTR itemName,
+          APTR data,
+          ULONG length,
+          BOOL killRequesters );
 
 Function
 ~~~~~~~~

@@ -8,24 +8,13 @@ amigaguide
 
 ----------
 
-`AddAmigaGuideHostA`_
-`AmigaGuideSignal`_
-`CloseAmigaGuide`_
-`ExpungeXRef`_
-`GetAmigaGuideAttr`_
-`GetAmigaGuideMsg`_
-`GetAmigaGuideString`_
-`LoadXRef`_
-`LockAmigaGuideBase`_
-`OpenAmigaGuideA`_
-`OpenAmigaGuideAsyncA`_
-`RemoveAmigaGuideHostA`_
-`ReplyAmigaGuideMsg`_
-`SendAmigaGuideCmdA`_
-`SendAmigaGuideContextA`_
-`SetAmigaGuideAttrsA`_
-`SetAmigaGuideContextA`_
-`UnlockAmigaGuideBase`_
+======================================= ======================================= ======================================= ======================================= 
+`AddAmigaGuideHostA`_                   `AmigaGuideSignal`_                     `CloseAmigaGuide`_                      `ExpungeXRef`_                          
+`GetAmigaGuideAttr`_                    `GetAmigaGuideMsg`_                     `GetAmigaGuideString`_                  `LoadXRef`_                             
+`LockAmigaGuideBase`_                   `OpenAmigaGuideA`_                      `OpenAmigaGuideAsyncA`_                 `RemoveAmigaGuideHostA`_                
+`ReplyAmigaGuideMsg`_                   `SendAmigaGuideCmdA`_                   `SendAmigaGuideContextA`_               `SetAmigaGuideAttrsA`_                  
+`SetAmigaGuideContextA`_                `UnlockAmigaGuideBase`_                 
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -37,10 +26,9 @@ Synopsis
 ::
 
  AMIGAGUIDEHOST AddAmigaGuideHostA(
-         struct Hook * hook,
-         STRPTR name,
-         struct TagItem * attrs
- );
+          struct Hook * hook,
+          STRPTR name,
+          struct TagItem * attrs );
 
 
 AmigaGuideSignal
@@ -51,8 +39,7 @@ Synopsis
 ::
 
  ULONG AmigaGuideSignal(
-         AMIGAGUIDECONTEXT handle
- );
+          AMIGAGUIDECONTEXT handle );
 
 
 CloseAmigaGuide
@@ -63,8 +50,7 @@ Synopsis
 ::
 
  void CloseAmigaGuide(
-         AMIGAGUIDECONTEXT handle
- );
+          AMIGAGUIDECONTEXT handle );
 
 
 ExpungeXRef
@@ -74,8 +60,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ExpungeXRef(
- );
+ void ExpungeXRef();
 
 
 GetAmigaGuideAttr
@@ -86,10 +71,9 @@ Synopsis
 ::
 
  LONG GetAmigaGuideAttr(
-         Tag tag,
-         AMIGAGUIDECONTEXT handle,
-         ULONG * storage
- );
+          Tag tag,
+          AMIGAGUIDECONTEXT handle,
+          ULONG * storage );
 
 
 GetAmigaGuideMsg
@@ -100,8 +84,7 @@ Synopsis
 ::
 
  struct AmigaGuideMsg * GetAmigaGuideMsg(
-         AMIGAGUIDECONTEXT handle
- );
+          AMIGAGUIDECONTEXT handle );
 
 
 GetAmigaGuideString
@@ -112,8 +95,7 @@ Synopsis
 ::
 
  STRPTR GetAmigaGuideString(
-         ULONG id
- );
+          ULONG id );
 
 
 LoadXRef
@@ -124,9 +106,8 @@ Synopsis
 ::
 
  LONG LoadXRef(
-         BPTR lock,
-         STRPTR name
- );
+          BPTR lock,
+          STRPTR name );
 
 
 LockAmigaGuideBase
@@ -137,8 +118,7 @@ Synopsis
 ::
 
  LONG LockAmigaGuideBase(
-         AMIGAGUIDECONTEXT handle
- );
+          AMIGAGUIDECONTEXT handle );
 
 
 OpenAmigaGuideA
@@ -149,9 +129,8 @@ Synopsis
 ::
 
  AMIGAGUIDECONTEXT OpenAmigaGuideA(
-         struct NewAmigaGuide * nag,
-         struct TagItem * attrs
- );
+          struct NewAmigaGuide * nag,
+          struct TagItem * attrs );
 
 
 OpenAmigaGuideAsyncA
@@ -162,9 +141,8 @@ Synopsis
 ::
 
  AMIGAGUIDECONTEXT OpenAmigaGuideAsyncA(
-         struct NewAmigaGuide * nag,
-         struct TagItem * attrs
- );
+          struct NewAmigaGuide * nag,
+          struct TagItem * attrs );
 
 
 RemoveAmigaGuideHostA
@@ -175,9 +153,8 @@ Synopsis
 ::
 
  LONG RemoveAmigaGuideHostA(
-         AMIGAGUIDEHOST key,
-         struct TagItem * attrs
- );
+          AMIGAGUIDEHOST key,
+          struct TagItem * attrs );
 
 
 ReplyAmigaGuideMsg
@@ -188,8 +165,7 @@ Synopsis
 ::
 
  void ReplyAmigaGuideMsg(
-         struct AmigaGuideMsg * msg
- );
+          struct AmigaGuideMsg * msg );
 
 
 SendAmigaGuideCmdA
@@ -200,10 +176,9 @@ Synopsis
 ::
 
  BOOL SendAmigaGuideCmdA(
-         AMIGAGUIDECONTEXT handle,
-         STRPTR cmd,
-         struct TagItem * attrs
- );
+          AMIGAGUIDECONTEXT handle,
+          STRPTR cmd,
+          struct TagItem * attrs );
 
 
 SendAmigaGuideContextA
@@ -214,9 +189,8 @@ Synopsis
 ::
 
  BOOL SendAmigaGuideContextA(
-         AMIGAGUIDECONTEXT handle,
-         struct TagItem * attrs
- );
+          AMIGAGUIDECONTEXT handle,
+          struct TagItem * attrs );
 
 
 SetAmigaGuideAttrsA
@@ -227,9 +201,8 @@ Synopsis
 ::
 
  LONG SetAmigaGuideAttrsA(
-         AMIGAGUIDECONTEXT handle,
-         struct TagItem * attrs
- );
+          AMIGAGUIDECONTEXT handle,
+          struct TagItem * attrs );
 
 
 SetAmigaGuideContextA
@@ -240,10 +213,9 @@ Synopsis
 ::
 
  BOOL SetAmigaGuideContextA(
-         AMIGAGUIDECONTEXT handle,
-         ULONG context,
-         struct TagItem * attrs
- );
+          AMIGAGUIDECONTEXT handle,
+          ULONG context,
+          struct TagItem * attrs );
 
 
 UnlockAmigaGuideBase
@@ -254,7 +226,6 @@ Synopsis
 ::
 
  void UnlockAmigaGuideBase(
-         LONG key
- );
+          LONG key );
 
 

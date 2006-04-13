@@ -8,16 +8,11 @@ boopsi
 
 ----------
 
-`AddClass`_
-`DisposeObject`_
-`FindClass`_
-`FreeClass`_
-`GetAttr`_
-`MakeClass`_
-`NewObjectA`_
-`NextObject`_
-`RemoveClass`_
-`SetAttrsA`_
+======================================= ======================================= ======================================= ======================================= 
+`AddClass`_                             `DisposeObject`_                        `FindClass`_                            `FreeClass`_                            
+`GetAttr`_                              `MakeClass`_                            `NewObjectA`_                           `NextObject`_                           
+`RemoveClass`_                          `SetAttrsA`_                            
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -29,8 +24,7 @@ Synopsis
 ::
 
  void AddClass(
-         struct IClass * classPtr
- );
+          struct IClass * classPtr );
 
 Function
 ~~~~~~~~
@@ -87,8 +81,7 @@ Synopsis
 ::
 
  void DisposeObject(
-         APTR object
- );
+          APTR object );
 
 Function
 ~~~~~~~~
@@ -146,8 +139,7 @@ Synopsis
 ::
 
  struct IClass * FindClass(
-         ClassID classID
- );
+          ClassID classID );
 
 
 FreeClass
@@ -158,8 +150,7 @@ Synopsis
 ::
 
  BOOL FreeClass(
-         struct IClass * classPtr
- );
+          struct IClass * classPtr );
 
 Function
 ~~~~~~~~
@@ -239,10 +230,9 @@ Synopsis
 ::
 
  ULONG GetAttr(
-         ULONG attrID,
-         Object * object,
-         IPTR * storagePtr
- );
+          ULONG attrID,
+          Object * object,
+          IPTR * storagePtr );
 
 Function
 ~~~~~~~~
@@ -301,12 +291,11 @@ Synopsis
 ::
 
  struct IClass * MakeClass(
-         UBYTE         * classID,
-         UBYTE         * superClassID,
-         struct IClass * superClassPtr,
-         ULONG instanceSize,
-         ULONG flags
- );
+          UBYTE         * classID,
+          UBYTE         * superClassID,
+          struct IClass * superClassPtr,
+          ULONG instanceSize,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -374,10 +363,9 @@ Synopsis
 ::
 
  APTR NewObjectA(
-         struct IClass  * classPtr,
-         UBYTE          * classID,
-         struct TagItem * tagList
- );
+          struct IClass  * classPtr,
+          UBYTE          * classID,
+          struct TagItem * tagList );
 
 Function
 ~~~~~~~~
@@ -436,8 +424,7 @@ Synopsis
 ::
 
  APTR NextObject(
-         APTR objectPtrPtr
- );
+          APTR objectPtrPtr );
 
 Function
 ~~~~~~~~
@@ -483,8 +470,7 @@ Synopsis
 ::
 
  void RemoveClass(
-         struct IClass * classPtr
- );
+          struct IClass * classPtr );
 
 Function
 ~~~~~~~~
@@ -527,9 +513,8 @@ Synopsis
 ::
 
  ULONG SetAttrsA(
-         APTR object,
-         struct TagItem * tagList
- );
+          APTR object,
+          struct TagItem * tagList );
 
 Function
 ~~~~~~~~

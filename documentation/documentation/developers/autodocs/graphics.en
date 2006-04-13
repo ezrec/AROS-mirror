@@ -8,198 +8,57 @@ graphics
 
 ----------
 
-`AddAnimOb`_
-`AddBob`_
-`AddFont`_
-`AddVSprite`_
-`AllocBitMap`_
-`AllocDBufInfo`_
-`AllocRaster`_
-`AllocScreenBitMap`_
-`AllocSpriteDataA`_
-`AndRectRect`_
-`AndRectRegion`_
-`AndRectRegionND`_
-`AndRegionRegion`_
-`AndRegionRegionND`_
-`Animate`_
-`AreRegionsEqual`_
-`AreaDraw`_
-`AreaEllipse`_
-`AreaEnd`_
-`AreaMove`_
-`AskFont`_
-`AskSoftStyle`_
-`AttachPalExtra`_
-`AttemptLockLayerRom`_
-`BestModeIDA`_
-`BitMapScale`_
-`BltBitMap`_
-`BltBitMapRastPort`_
-`BltClear`_
-`BltMaskBitMapRastPort`_
-`BltPattern`_
-`BltRastPortBitMap`_
-`BltTemplate`_
-`CBump`_
-`CMove`_
-`CWait`_
-`CalcIVG`_
-`ChangeExtSpriteA`_
-`ChangeSprite`_
-`ChangeVPBitMap`_
-`ClearEOL`_
-`ClearRectRegion`_
-`ClearRectRegionND`_
-`ClearRegion`_
-`ClearRegionRegion`_
-`ClearRegionRegionND`_
-`ClearScreen`_
-`ClipBlit`_
-`CloneRastPort`_
-`CloseFont`_
-`CloseMonitor`_
-`CoerceMode`_
-`CopyRegion`_
-`CopySBitMap`_
-`CreateRastPort`_
-`DeinitRastPort`_
-`DisownBlitter`_
-`DisposeRegion`_
-`DoCollision`_
-`Draw`_
-`DrawEllipse`_
-`DrawGList`_
-`EraseRect`_
-`ExtendFont`_
-`FindColor`_
-`FindDisplayInfo`_
-`Flood`_
-`FontExtent`_
-`FreeBitMap`_
-`FreeColorMap`_
-`FreeCopList`_
-`FreeCprList`_
-`FreeDBufInfo`_
-`FreeGBuffers`_
-`FreeRastPort`_
-`FreeRaster`_
-`FreeSprite`_
-`FreeSpriteData`_
-`FreeVPortCopLists`_
-`GetAPen`_
-`GetBPen`_
-`GetBitMapAttr`_
-`GetColorMap`_
-`GetDrMd`_
-`GetExtSpriteA`_
-`GetGBuffers`_
-`GetOutlinePen`_
-`GetRGB32`_
-`GetRGB4`_
-`GetRPAttrsA`_
-`GetSprite`_
-`GetVPModeID`_
-`GfxAssociate`_
-`GfxFree`_
-`GfxLookUp`_
-`GfxNew`_
-`InitArea`_
-`InitBitMap`_
-`InitGMasks`_
-`InitGels`_
-`InitGfxHidd`_
-`InitMasks`_
-`InitRastPort`_
-`InitTmpRas`_
-`InitVPort`_
-`InitView`_
-`IsPointInRegion`_
-`LateGfxInit`_
-`LoadRGB32`_
-`LoadRGB4`_
-`LoadView`_
-`LockLayerRom`_
-`MakeVPort`_
-`ModeNotAvailable`_
-`MouseCoordsRelative`_
-`Move`_
-`MoveSprite`_
-`MrgCop`_
-`NewRectRegion`_
-`NewRegion`_
-`NextDisplayInfo`_
-`ObtainBestPenA`_
-`ObtainPen`_
-`OpenFont`_
-`OpenMonitor`_
-`OrRectRegion`_
-`OrRectRegionND`_
-`OrRegionRegion`_
-`OrRegionRegionND`_
-`OwnBlitter`_
-`PolyDraw`_
-`QBSBlit`_
-`QBlit`_
-`ReadPixel`_
-`ReadPixelArray8`_
-`ReadPixelLine8`_
-`RectFill`_
-`ReleasePen`_
-`RemFont`_
-`RemIBob`_
-`RemVSprite`_
-`ScalerDiv`_
-`ScrollRaster`_
-`ScrollRasterBF`_
-`ScrollRegion`_
-`ScrollVPort`_
-`SetABPenDrMd`_
-`SetAPen`_
-`SetBPen`_
-`SetChipRev`_
-`SetCollision`_
-`SetDrMd`_
-`SetFont`_
-`SetFrontBitMap`_
-`SetMaxPen`_
-`SetOutlinePen`_
-`SetPointerPos`_
-`SetPointerShape`_
-`SetRGB32`_
-`SetRGB32CM`_
-`SetRGB4`_
-`SetRGB4CM`_
-`SetRPAttrsA`_
-`SetRast`_
-`SetRegion`_
-`SetSoftStyle`_
-`SetWriteMask`_
-`ShowImminentReset`_
-`SortGList`_
-`StripFont`_
-`SwapRegions`_
-`SyncSBitMap`_
-`Text`_
-`TextExtent`_
-`TextFit`_
-`TextLength`_
-`UCopperListInit`_
-`UnlockLayerRom`_
-`VBeamPos`_
-`VideoControl`_
-`WaitBOVP`_
-`WaitBlit`_
-`WaitTOF`_
-`WeighTAMatch`_
-`WriteChunkyPixels`_
-`WritePixel`_
-`WritePixelArray8`_
-`WritePixelLine8`_
-`XorRectRegion`_
-`XorRectRegionND`_
-`XorRegionRegion`_
-`XorRegionRegionND`_
+======================================= ======================================= ======================================= ======================================= 
+`AddAnimOb`_                            `AddBob`_                               `AddFont`_                              `AddVSprite`_                           
+`AllocBitMap`_                          `AllocDBufInfo`_                        `AllocRaster`_                          `AllocScreenBitMap`_                    
+`AllocSpriteDataA`_                     `AndRectRect`_                          `AndRectRegion`_                        `AndRectRegionND`_                      
+`AndRegionRegion`_                      `AndRegionRegionND`_                    `Animate`_                              `AreRegionsEqual`_                      
+`AreaDraw`_                             `AreaEllipse`_                          `AreaEnd`_                              `AreaMove`_                             
+`AskFont`_                              `AskSoftStyle`_                         `AttachPalExtra`_                       `AttemptLockLayerRom`_                  
+`BestModeIDA`_                          `BitMapScale`_                          `BltBitMap`_                            `BltBitMapRastPort`_                    
+`BltClear`_                             `BltMaskBitMapRastPort`_                `BltPattern`_                           `BltRastPortBitMap`_                    
+`BltTemplate`_                          `CBump`_                                `CMove`_                                `CWait`_                                
+`CalcIVG`_                              `ChangeExtSpriteA`_                     `ChangeSprite`_                         `ChangeVPBitMap`_                       
+`ClearEOL`_                             `ClearRectRegion`_                      `ClearRectRegionND`_                    `ClearRegion`_                          
+`ClearRegionRegion`_                    `ClearRegionRegionND`_                  `ClearScreen`_                          `ClipBlit`_                             
+`CloneRastPort`_                        `CloseFont`_                            `CloseMonitor`_                         `CoerceMode`_                           
+`CopyRegion`_                           `CopySBitMap`_                          `CreateRastPort`_                       `DeinitRastPort`_                       
+`DisownBlitter`_                        `DisposeRegion`_                        `DoCollision`_                          `Draw`_                                 
+`DrawEllipse`_                          `DrawGList`_                            `EraseRect`_                            `ExtendFont`_                           
+`FindColor`_                            `FindDisplayInfo`_                      `Flood`_                                `FontExtent`_                           
+`FreeBitMap`_                           `FreeColorMap`_                         `FreeCopList`_                          `FreeCprList`_                          
+`FreeDBufInfo`_                         `FreeGBuffers`_                         `FreeRastPort`_                         `FreeRaster`_                           
+`FreeSprite`_                           `FreeSpriteData`_                       `FreeVPortCopLists`_                    `GetAPen`_                              
+`GetBPen`_                              `GetBitMapAttr`_                        `GetColorMap`_                          `GetDrMd`_                              
+`GetExtSpriteA`_                        `GetGBuffers`_                          `GetOutlinePen`_                        `GetRGB32`_                             
+`GetRGB4`_                              `GetRPAttrsA`_                          `GetSprite`_                            `GetVPModeID`_                          
+`GfxAssociate`_                         `GfxFree`_                              `GfxLookUp`_                            `GfxNew`_                               
+`InitArea`_                             `InitBitMap`_                           `InitGMasks`_                           `InitGels`_                             
+`InitGfxHidd`_                          `InitMasks`_                            `InitRastPort`_                         `InitTmpRas`_                           
+`InitVPort`_                            `InitView`_                             `IsPointInRegion`_                      `LateGfxInit`_                          
+`LoadRGB32`_                            `LoadRGB4`_                             `LoadView`_                             `LockLayerRom`_                         
+`MakeVPort`_                            `ModeNotAvailable`_                     `MouseCoordsRelative`_                  `Move`_                                 
+`MoveSprite`_                           `MrgCop`_                               `NewRectRegion`_                        `NewRegion`_                            
+`NextDisplayInfo`_                      `ObtainBestPenA`_                       `ObtainPen`_                            `OpenFont`_                             
+`OpenMonitor`_                          `OrRectRegion`_                         `OrRectRegionND`_                       `OrRegionRegion`_                       
+`OrRegionRegionND`_                     `OwnBlitter`_                           `PolyDraw`_                             `QBSBlit`_                              
+`QBlit`_                                `ReadPixel`_                            `ReadPixelArray8`_                      `ReadPixelLine8`_                       
+`RectFill`_                             `ReleasePen`_                           `RemFont`_                              `RemIBob`_                              
+`RemVSprite`_                           `ScalerDiv`_                            `ScrollRaster`_                         `ScrollRasterBF`_                       
+`ScrollRegion`_                         `ScrollVPort`_                          `SetABPenDrMd`_                         `SetAPen`_                              
+`SetBPen`_                              `SetChipRev`_                           `SetCollision`_                         `SetDrMd`_                              
+`SetFont`_                              `SetFrontBitMap`_                       `SetMaxPen`_                            `SetOutlinePen`_                        
+`SetPointerPos`_                        `SetPointerShape`_                      `SetRGB32`_                             `SetRGB32CM`_                           
+`SetRGB4`_                              `SetRGB4CM`_                            `SetRPAttrsA`_                          `SetRast`_                              
+`SetRegion`_                            `SetSoftStyle`_                         `SetWriteMask`_                         `ShowImminentReset`_                    
+`SortGList`_                            `StripFont`_                            `SwapRegions`_                          `SyncSBitMap`_                          
+`Text`_                                 `TextExtent`_                           `TextFit`_                              `TextLength`_                           
+`UCopperListInit`_                      `UnlockLayerRom`_                       `VBeamPos`_                             `VideoControl`_                         
+`WaitBOVP`_                             `WaitBlit`_                             `WaitTOF`_                              `WeighTAMatch`_                         
+`WriteChunkyPixels`_                    `WritePixel`_                           `WritePixelArray8`_                     `WritePixelLine8`_                      
+`XorRectRegion`_                        `XorRectRegionND`_                      `XorRegionRegion`_                      `XorRegionRegionND`_                    
+
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -211,10 +70,9 @@ Synopsis
 ::
 
  void AddAnimOb(
-         struct AnimOb * anOb,
-         struct AnimOb ** anKey,
-         struct RastPort * rp
- );
+          struct AnimOb * anOb,
+          struct AnimOb ** anKey,
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -256,9 +114,8 @@ Synopsis
 ::
 
  void AddBob(
-         struct Bob * bob,
-         struct RastPort * rp
- );
+          struct Bob * bob,
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -293,8 +150,7 @@ Synopsis
 ::
 
  void AddFont(
-         struct TextFont * textFont
- );
+          struct TextFont * textFont );
 
 Function
 ~~~~~~~~
@@ -334,9 +190,8 @@ Synopsis
 ::
 
  void AddVSprite(
-         struct VSprite * vs,
-         struct RastPort * rp
- );
+          struct VSprite * vs,
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -371,12 +226,11 @@ Synopsis
 ::
 
  struct BitMap * AllocBitMap(
-         ULONG sizex,
-         ULONG sizey,
-         ULONG depth,
-         ULONG flags,
-         struct BitMap * friend_bitmap
- );
+          ULONG sizex,
+          ULONG sizey,
+          ULONG depth,
+          ULONG flags,
+          struct BitMap * friend_bitmap );
 
 Function
 ~~~~~~~~
@@ -481,8 +335,7 @@ Synopsis
 ::
 
  struct DBufInfo * AllocDBufInfo(
-         struct ViewPort * vp
- );
+          struct ViewPort * vp );
 
 Function
 ~~~~~~~~
@@ -518,9 +371,8 @@ Synopsis
 ::
 
  PLANEPTR AllocRaster(
-         ULONG width,
-         ULONG height
- );
+          ULONG width,
+          ULONG height );
 
 Function
 ~~~~~~~~
@@ -568,8 +420,7 @@ Synopsis
 ::
 
  struct BitMap * AllocScreenBitMap(
-         ULONG modeid
- );
+          ULONG modeid );
 
 Function
 ~~~~~~~~
@@ -608,9 +459,8 @@ Synopsis
 ::
 
  struct ExtSprite * AllocSpriteDataA(
-         struct BitMap * bitmap,
-         struct TagItem * tagList
- );
+          struct BitMap * bitmap,
+          struct TagItem * tagList );
 
 Inputs
 ~~~~~~
@@ -640,10 +490,9 @@ Synopsis
 ::
 
  BOOL AndRectRect(
-         struct Rectangle * rect1,
-         struct Rectangle * rect2,
-         struct Rectangle * intersect
- );
+          struct Rectangle * rect1,
+          struct Rectangle * rect2,
+          struct Rectangle * intersect );
 
 Function
 ~~~~~~~~
@@ -697,9 +546,8 @@ Synopsis
 ::
 
  void AndRectRegion(
-         struct Region    * Reg,
-         struct Rectangle * Rect
- );
+          struct Region    * Reg,
+          struct Rectangle * Rect );
 
 Function
 ~~~~~~~~
@@ -740,9 +588,8 @@ Synopsis
 ::
 
  struct Region * AndRectRegionND(
-         struct Region    * Reg,
-         struct Rectangle * Rect
- );
+          struct Region    * Reg,
+          struct Rectangle * Rect );
 
 Function
 ~~~~~~~~
@@ -783,9 +630,8 @@ Synopsis
 ::
 
  BOOL AndRegionRegion(
-         struct Region * R1,
-         struct Region * R2
- );
+          struct Region * R1,
+          struct Region * R2 );
 
 Function
 ~~~~~~~~
@@ -827,9 +673,8 @@ Synopsis
 ::
 
  struct Region * AndRegionRegionND(
-         struct Region * R1,
-         struct Region * R2
- );
+          struct Region * R1,
+          struct Region * R2 );
 
 Function
 ~~~~~~~~
@@ -869,9 +714,8 @@ Synopsis
 ::
 
  void Animate(
-         struct AnimOb ** anKey,
-         struct RastPort * rp
- );
+          struct AnimOb ** anKey,
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -908,9 +752,8 @@ Synopsis
 ::
 
  BOOL AreRegionsEqual(
-         struct Region * R1,
-         struct Region * R2
- );
+          struct Region * R1,
+          struct Region * R2 );
 
 Function
 ~~~~~~~~
@@ -950,10 +793,9 @@ Synopsis
 ::
 
  ULONG AreaDraw(
-         struct RastPort * rp,
-         WORD x,
-         WORD y
- );
+          struct RastPort * rp,
+          WORD x,
+          WORD y );
 
 Function
 ~~~~~~~~
@@ -996,12 +838,11 @@ Synopsis
 ::
 
  ULONG AreaEllipse(
-         struct RastPort * rp,
-         WORD cx,
-         WORD cy,
-         WORD a,
-         WORD b
- );
+          struct RastPort * rp,
+          WORD cx,
+          WORD cy,
+          WORD a,
+          WORD b );
 
 Function
 ~~~~~~~~
@@ -1047,8 +888,7 @@ Synopsis
 ::
 
  LONG AreaEnd(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -1112,10 +952,9 @@ Synopsis
 ::
 
  ULONG AreaMove(
-         struct RastPort * rp,
-         WORD x,
-         WORD y
- );
+          struct RastPort * rp,
+          WORD x,
+          WORD y );
 
 Function
 ~~~~~~~~
@@ -1161,9 +1000,8 @@ Synopsis
 ::
 
  void AskFont(
-         struct RastPort * rp,
-         struct TextAttr * textAttr
- );
+          struct RastPort * rp,
+          struct TextAttr * textAttr );
 
 Function
 ~~~~~~~~
@@ -1195,8 +1033,7 @@ Synopsis
 ::
 
  ULONG AskSoftStyle(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -1240,9 +1077,8 @@ Synopsis
 ::
 
  LONG AttachPalExtra(
-         struct ColorMap * cm,
-         struct ViewPort * vp
- );
+          struct ColorMap * cm,
+          struct ViewPort * vp );
 
 Function
 ~~~~~~~~
@@ -1278,8 +1114,7 @@ Synopsis
 ::
 
  BOOL AttemptLockLayerRom(
-         struct Layer * l
- );
+          struct Layer * l );
 
 Function
 ~~~~~~~~
@@ -1324,8 +1159,7 @@ Synopsis
 ::
 
  ULONG BestModeIDA(
-         struct TagItem * TagItems
- );
+          struct TagItem * TagItems );
 
 Inputs
 ~~~~~~
@@ -1358,8 +1192,7 @@ Synopsis
 ::
 
  void BitMapScale(
-         struct BitScaleArgs * bitScaleArgs
- );
+          struct BitScaleArgs * bitScaleArgs );
 
 Function
 ~~~~~~~~
@@ -1431,18 +1264,17 @@ Synopsis
 ::
 
  LONG BltBitMap(
-         struct BitMap * srcBitMap,
-         LONG xSrc,
-         LONG ySrc,
-         struct BitMap * destBitMap,
-         LONG xDest,
-         LONG yDest,
-         LONG xSize,
-         LONG ySize,
-         ULONG minterm,
-         ULONG mask,
-         PLANEPTR tempA
- );
+          struct BitMap * srcBitMap,
+          LONG xSrc,
+          LONG ySrc,
+          struct BitMap * destBitMap,
+          LONG xDest,
+          LONG yDest,
+          LONG xSize,
+          LONG ySize,
+          ULONG minterm,
+          ULONG mask,
+          PLANEPTR tempA );
 
 Function
 ~~~~~~~~
@@ -1530,16 +1362,15 @@ Synopsis
 ::
 
  void BltBitMapRastPort(
-         struct BitMap   * srcBitMap,
-         LONG xSrc,
-         LONG ySrc,
-         struct RastPort * destRP,
-         LONG xDest,
-         LONG yDest,
-         LONG xSize,
-         LONG ySize,
-         ULONG minterm
- );
+          struct BitMap   * srcBitMap,
+          LONG xSrc,
+          LONG ySrc,
+          struct RastPort * destRP,
+          LONG xDest,
+          LONG yDest,
+          LONG xSize,
+          LONG ySize,
+          ULONG minterm );
 
 
 BltClear
@@ -1550,10 +1381,9 @@ Synopsis
 ::
 
  void BltClear(
-         void * memBlock,
-         ULONG bytecount,
-         ULONG flags
- );
+          void * memBlock,
+          ULONG bytecount,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -1602,17 +1432,16 @@ Synopsis
 ::
 
  void BltMaskBitMapRastPort(
-         struct BitMap   * srcBitMap,
-         LONG xSrc,
-         LONG ySrc,
-         struct RastPort * destRP,
-         LONG xDest,
-         LONG yDest,
-         LONG xSize,
-         LONG ySize,
-         ULONG minterm,
-         PLANEPTR bltMask
- );
+          struct BitMap   * srcBitMap,
+          LONG xSrc,
+          LONG ySrc,
+          struct RastPort * destRP,
+          LONG xDest,
+          LONG yDest,
+          LONG xSize,
+          LONG ySize,
+          ULONG minterm,
+          PLANEPTR bltMask );
 
 
 BltPattern
@@ -1623,14 +1452,13 @@ Synopsis
 ::
 
  void BltPattern(
-         struct RastPort * rp,
-         PLANEPTR mask,
-         LONG xMin,
-         LONG yMin,
-         LONG xMax,
-         LONG yMax,
-         ULONG byteCnt
- );
+          struct RastPort * rp,
+          PLANEPTR mask,
+          LONG xMin,
+          LONG yMin,
+          LONG xMax,
+          LONG yMax,
+          ULONG byteCnt );
 
 
 BltRastPortBitMap
@@ -1641,16 +1469,15 @@ Synopsis
 ::
 
  void BltRastPortBitMap(
-         struct RastPort * srcRastPort,
-         LONG xSrc,
-         LONG ySrc,
-         struct BitMap * destBitMap,
-         LONG xDest,
-         LONG yDest,
-         ULONG xSize,
-         ULONG ySize,
-         ULONG minterm
- );
+          struct RastPort * srcRastPort,
+          LONG xSrc,
+          LONG ySrc,
+          struct BitMap * destBitMap,
+          LONG xDest,
+          LONG yDest,
+          ULONG xSize,
+          ULONG ySize,
+          ULONG minterm );
 
 Function
 ~~~~~~~~
@@ -1669,15 +1496,14 @@ Synopsis
 ::
 
  void BltTemplate(
-         PLANEPTR source,
-         LONG xSrc,
-         LONG srcMod,
-         struct RastPort * destRP,
-         LONG xDest,
-         LONG yDest,
-         LONG xSize,
-         LONG ySize
- );
+          PLANEPTR source,
+          LONG xSrc,
+          LONG srcMod,
+          struct RastPort * destRP,
+          LONG xDest,
+          LONG yDest,
+          LONG xSize,
+          LONG ySize );
 
 
 CBump
@@ -1688,8 +1514,7 @@ Synopsis
 ::
 
  void CBump(
-         struct UCopList * ucl
- );
+          struct UCopList * ucl );
 
 Function
 ~~~~~~~~
@@ -1729,10 +1554,9 @@ Synopsis
 ::
 
  void CMove(
-         struct UCopList * ucl,
-         void * reg,
-         WORD value
- );
+          struct UCopList * ucl,
+          void * reg,
+          WORD value );
 
 Function
 ~~~~~~~~
@@ -1769,10 +1593,9 @@ Synopsis
 ::
 
  void CWait(
-         struct UCopList * ucl,
-         WORD v,
-         WORD h
- );
+          struct UCopList * ucl,
+          WORD v,
+          WORD h );
 
 Function
 ~~~~~~~~
@@ -1817,9 +1640,8 @@ Synopsis
 ::
 
  UWORD CalcIVG(
-         struct View * View,
-         struct ViewPort * ViewPort
- );
+          struct View * View,
+          struct ViewPort * ViewPort );
 
 Inputs
 ~~~~~~
@@ -1847,11 +1669,10 @@ Synopsis
 ::
 
  LONG ChangeExtSpriteA(
-         struct ViewPort * vp,
-         struct ExtSprite * oldsprite,
-         struct ExtSprite * newsprite,
-         struct TagItem * tags
- );
+          struct ViewPort * vp,
+          struct ExtSprite * oldsprite,
+          struct ExtSprite * newsprite,
+          struct TagItem * tags );
 
 Inputs
 ~~~~~~
@@ -1880,10 +1701,9 @@ Synopsis
 ::
 
  void ChangeSprite(
-         struct ViewPort * vp,
-         struct SimpleSprite * s,
-         void * newdata
- );
+          struct ViewPort * vp,
+          struct SimpleSprite * s,
+          void * newdata );
 
 
 ChangeVPBitMap
@@ -1894,10 +1714,9 @@ Synopsis
 ::
 
  void ChangeVPBitMap(
-         struct ViewPort * vp,
-         struct BitMap * bm,
-         struct DBufInfo * db
- );
+          struct ViewPort * vp,
+          struct BitMap * bm,
+          struct DBufInfo * db );
 
 Inputs
 ~~~~~~
@@ -1919,8 +1738,7 @@ Synopsis
 ::
 
  void ClearEOL(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -1956,9 +1774,8 @@ Synopsis
 ::
 
  BOOL ClearRectRegion(
-         struct Region    * Reg,
-         struct Rectangle * Rect
- );
+          struct Region    * Reg,
+          struct Rectangle * Rect );
 
 Function
 ~~~~~~~~
@@ -1998,9 +1815,8 @@ Synopsis
 ::
 
  struct Region * ClearRectRegionND(
-         struct Region    * Reg,
-         struct Rectangle * Rect
- );
+          struct Region    * Reg,
+          struct Rectangle * Rect );
 
 Function
 ~~~~~~~~
@@ -2041,8 +1857,7 @@ Synopsis
 ::
 
  void ClearRegion(
-         struct Region * region
- );
+          struct Region * region );
 
 Function
 ~~~~~~~~
@@ -2081,9 +1896,8 @@ Synopsis
 ::
 
  BOOL ClearRegionRegion(
-         struct Region * R1,
-         struct Region * R2
- );
+          struct Region * R1,
+          struct Region * R2 );
 
 Function
 ~~~~~~~~
@@ -2131,9 +1945,8 @@ Synopsis
 ::
 
  struct Region * ClearRegionRegionND(
-         struct Region * R1,
-         struct Region * R2
- );
+          struct Region * R1,
+          struct Region * R2 );
 
 Function
 ~~~~~~~~
@@ -2173,8 +1986,7 @@ Synopsis
 ::
 
  void ClearScreen(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -2211,16 +2023,15 @@ Synopsis
 ::
 
  void ClipBlit(
-         struct RastPort * srcRP,
-         LONG xSrc,
-         LONG ySrc,
-         struct RastPort * destRP,
-         LONG xDest,
-         LONG yDest,
-         LONG xSize,
-         LONG ySize,
-         UBYTE minterm
- );
+          struct RastPort * srcRP,
+          LONG xSrc,
+          LONG ySrc,
+          struct RastPort * destRP,
+          LONG xDest,
+          LONG yDest,
+          LONG xSize,
+          LONG ySize,
+          UBYTE minterm );
 
 Function
 ~~~~~~~~
@@ -2292,8 +2103,7 @@ Synopsis
 ::
 
  struct RastPort * CloneRastPort(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -2342,8 +2152,7 @@ Synopsis
 ::
 
  void CloseFont(
-         struct TextFont * textFont
- );
+          struct TextFont * textFont );
 
 
 CloseMonitor
@@ -2354,8 +2163,7 @@ Synopsis
 ::
 
  LONG CloseMonitor(
-         struct MonitorSpec * monitor_spec
- );
+          struct MonitorSpec * monitor_spec );
 
 Inputs
 ~~~~~~
@@ -2389,10 +2197,9 @@ Synopsis
 ::
 
  ULONG CoerceMode(
-         struct ViewPort * RealViewPort,
-         ULONG MonitorID,
-         ULONG Flags
- );
+          struct ViewPort * RealViewPort,
+          ULONG MonitorID,
+          ULONG Flags );
 
 Inputs
 ~~~~~~
@@ -2422,8 +2229,7 @@ Synopsis
 ::
 
  struct Region * CopyRegion(
-         struct Region * region
- );
+          struct Region * region );
 
 Function
 ~~~~~~~~
@@ -2469,8 +2275,7 @@ Synopsis
 ::
 
  void CopySBitMap(
-         struct Layer * l
- );
+          struct Layer * l );
 
 Function
 ~~~~~~~~
@@ -2512,8 +2317,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct RastPort * CreateRastPort(
- );
+ struct RastPort * CreateRastPort();
 
 Function
 ~~~~~~~~
@@ -2554,8 +2358,7 @@ Synopsis
 ::
 
  void DeinitRastPort(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -2603,8 +2406,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void DisownBlitter(
- );
+ void DisownBlitter();
 
 Function
 ~~~~~~~~
@@ -2629,8 +2431,7 @@ Synopsis
 ::
 
  void DisposeRegion(
-         struct Region * region
- );
+          struct Region * region );
 
 Function
 ~~~~~~~~
@@ -2670,8 +2471,7 @@ Synopsis
 ::
 
  void DoCollision(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 Inputs
 ~~~~~~
@@ -2689,10 +2489,9 @@ Synopsis
 ::
 
  void Draw(
-         struct RastPort * rp,
-         LONG x,
-         LONG y
- );
+          struct RastPort * rp,
+          LONG x,
+          LONG y );
 
 Notes
 ~~~~~
@@ -2716,12 +2515,11 @@ Synopsis
 ::
 
  void DrawEllipse(
-         struct RastPort * rp,
-         LONG xCenter,
-         LONG yCenter,
-         LONG a,
-         LONG b
- );
+          struct RastPort * rp,
+          LONG xCenter,
+          LONG yCenter,
+          LONG a,
+          LONG b );
 
 
 DrawGList
@@ -2732,9 +2530,8 @@ Synopsis
 ::
 
  void DrawGList(
-         struct RastPort * rp,
-         struct ViewPort * vp
- );
+          struct RastPort * rp,
+          struct ViewPort * vp );
 
 
 EraseRect
@@ -2745,12 +2542,11 @@ Synopsis
 ::
 
  void EraseRect(
-         struct RastPort * rp,
-         LONG xMin,
-         LONG yMin,
-         LONG xMax,
-         LONG yMax
- );
+          struct RastPort * rp,
+          LONG xMin,
+          LONG yMin,
+          LONG xMax,
+          LONG yMax );
 
 
 ExtendFont
@@ -2761,9 +2557,8 @@ Synopsis
 ::
 
  ULONG ExtendFont(
-         struct TextFont * font,
-         struct TagItem  * fontTags
- );
+          struct TextFont * font,
+          struct TagItem  * fontTags );
 
 Function
 ~~~~~~~~
@@ -2806,12 +2601,11 @@ Synopsis
 ::
 
  ULONG FindColor(
-         struct ColorMap * cm,
-         ULONG r,
-         ULONG g,
-         ULONG b,
-         ULONG maxpen
- );
+          struct ColorMap * cm,
+          ULONG r,
+          ULONG g,
+          ULONG b,
+          ULONG maxpen );
 
 Function
 ~~~~~~~~
@@ -2849,8 +2643,7 @@ Synopsis
 ::
 
  DisplayInfoHandle FindDisplayInfo(
-         ULONG ID
- );
+          ULONG ID );
 
 Inputs
 ~~~~~~
@@ -2883,11 +2676,10 @@ Synopsis
 ::
 
  BOOL Flood(
-         struct RastPort * rp,
-         ULONG mode,
-         LONG x,
-         LONG y
- );
+          struct RastPort * rp,
+          ULONG mode,
+          LONG x,
+          LONG y );
 
 
 FontExtent
@@ -2898,9 +2690,8 @@ Synopsis
 ::
 
  void FontExtent(
-         struct TextFont   * font,
-         struct TextExtent * fontExtent
- );
+          struct TextFont   * font,
+          struct TextExtent * fontExtent );
 
 Function
 ~~~~~~~~
@@ -2957,8 +2748,7 @@ Synopsis
 ::
 
  void FreeBitMap(
-         struct BitMap * bm
- );
+          struct BitMap * bm );
 
 Function
 ~~~~~~~~
@@ -2997,8 +2787,7 @@ Synopsis
 ::
 
  void FreeColorMap(
-         struct ColorMap * colormap
- );
+          struct ColorMap * colormap );
 
 Function
 ~~~~~~~~
@@ -3039,8 +2828,7 @@ Synopsis
 ::
 
  void FreeCopList(
-         struct CopList * coplist
- );
+          struct CopList * coplist );
 
 Function
 ~~~~~~~~
@@ -3072,8 +2860,7 @@ Synopsis
 ::
 
  void FreeCprList(
-         struct cprlist * cprList
- );
+          struct cprlist * cprList );
 
 Function
 ~~~~~~~~
@@ -3105,8 +2892,7 @@ Synopsis
 ::
 
  VOID FreeDBufInfo(
-         struct DBufInfo * db
- );
+          struct DBufInfo * db );
 
 Function
 ~~~~~~~~
@@ -3142,10 +2928,9 @@ Synopsis
 ::
 
  void FreeGBuffers(
-         struct AnimOb * anOb,
-         struct RastPort * rp,
-         BOOL db
- );
+          struct AnimOb * anOb,
+          struct RastPort * rp,
+          BOOL db );
 
 Function
 ~~~~~~~~
@@ -3198,8 +2983,7 @@ Synopsis
 ::
 
  void FreeRastPort(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -3247,10 +3031,9 @@ Synopsis
 ::
 
  void FreeRaster(
-         PLANEPTR p,
-         ULONG width,
-         ULONG height
- );
+          PLANEPTR p,
+          ULONG width,
+          ULONG height );
 
 Function
 ~~~~~~~~
@@ -3290,8 +3073,7 @@ Synopsis
 ::
 
  void FreeSprite(
-         WORD pick
- );
+          WORD pick );
 
 Function
 ~~~~~~~~
@@ -3332,8 +3114,7 @@ Synopsis
 ::
 
  void FreeSpriteData(
-         struct ExtSprite * extsp
- );
+          struct ExtSprite * extsp );
 
 Inputs
 ~~~~~~
@@ -3352,8 +3133,7 @@ Synopsis
 ::
 
  void FreeVPortCopLists(
-         struct ViewPort * vp
- );
+          struct ViewPort * vp );
 
 Function
 ~~~~~~~~
@@ -3387,8 +3167,7 @@ Synopsis
 ::
 
  ULONG GetAPen(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 
 GetBPen
@@ -3399,8 +3178,7 @@ Synopsis
 ::
 
  ULONG GetBPen(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 
 GetBitMapAttr
@@ -3411,9 +3189,8 @@ Synopsis
 ::
 
  IPTR GetBitMapAttr(
-         struct BitMap * bitmap,
-         ULONG attribute
- );
+          struct BitMap * bitmap,
+          ULONG attribute );
 
 Function
 ~~~~~~~~
@@ -3456,8 +3233,7 @@ Synopsis
 ::
 
  struct ColorMap * GetColorMap(
-         ULONG entries
- );
+          ULONG entries );
 
 Function
 ~~~~~~~~
@@ -3503,8 +3279,7 @@ Synopsis
 ::
 
  ULONG GetDrMd(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 
 GetExtSpriteA
@@ -3515,9 +3290,8 @@ Synopsis
 ::
 
  LONG GetExtSpriteA(
-         struct ExtSprite * sprite,
-         struct TagItem * tags
- );
+          struct ExtSprite * sprite,
+          struct TagItem * tags );
 
 Inputs
 ~~~~~~
@@ -3543,10 +3317,9 @@ Synopsis
 ::
 
  BOOL GetGBuffers(
-         struct AnimOb * anOb,
-         struct RastPort * rp,
-         BOOL db
- );
+          struct AnimOb * anOb,
+          struct RastPort * rp,
+          BOOL db );
 
 Function
 ~~~~~~~~
@@ -3607,8 +3380,7 @@ Synopsis
 ::
 
  ULONG GetOutlinePen(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 
 GetRGB32
@@ -3619,11 +3391,10 @@ Synopsis
 ::
 
  void GetRGB32(
-         struct ColorMap * cm,
-         ULONG firstcolor,
-         ULONG ncolors,
-         ULONG * table
- );
+          struct ColorMap * cm,
+          ULONG firstcolor,
+          ULONG ncolors,
+          ULONG * table );
 
 Function
 ~~~~~~~~
@@ -3676,9 +3447,8 @@ Synopsis
 ::
 
  ULONG GetRGB4(
-         struct ColorMap * colormap,
-         LONG entry
- );
+          struct ColorMap * colormap,
+          LONG entry );
 
 Function
 ~~~~~~~~
@@ -3720,9 +3490,8 @@ Synopsis
 ::
 
  void GetRPAttrsA(
-         struct RastPort * rp,
-         struct TagItem  * tags
- );
+          struct RastPort * rp,
+          struct TagItem  * tags );
 
 Function
 ~~~~~~~~
@@ -3808,9 +3577,8 @@ Synopsis
 ::
 
  WORD GetSprite(
-         struct SimpleSprite * sprite,
-         WORD pick
- );
+          struct SimpleSprite * sprite,
+          WORD pick );
 
 Function
 ~~~~~~~~
@@ -3869,8 +3637,7 @@ Synopsis
 ::
 
  ULONG GetVPModeID(
-         struct ViewPort * vp
- );
+          struct ViewPort * vp );
 
 Function
 ~~~~~~~~
@@ -3911,9 +3678,8 @@ Synopsis
 ::
 
  void GfxAssociate(
-         void * pointer,
-         struct ExtendedNode * node
- );
+          void * pointer,
+          struct ExtendedNode * node );
 
 Function
 ~~~~~~~~
@@ -3966,8 +3732,7 @@ Synopsis
 ::
 
  void GfxFree(
-         struct ExtendedNode * node
- );
+          struct ExtendedNode * node );
 
 Function
 ~~~~~~~~
@@ -4010,8 +3775,7 @@ Synopsis
 ::
 
  struct ExtendedNode * GfxLookUp(
-         void * pointer
- );
+          void * pointer );
 
 Function
 ~~~~~~~~
@@ -4054,8 +3818,7 @@ Synopsis
 ::
 
  struct ExtendedNode * GfxNew(
-         ULONG node_type
- );
+          ULONG node_type );
 
 Function
 ~~~~~~~~
@@ -4097,10 +3860,9 @@ Synopsis
 ::
 
  void InitArea(
-         struct AreaInfo * areainfo,
-         void * buffer,
-         WORD maxvectors
- );
+          struct AreaInfo * areainfo,
+          void * buffer,
+          WORD maxvectors );
 
 Function
 ~~~~~~~~
@@ -4144,11 +3906,10 @@ Synopsis
 ::
 
  VOID InitBitMap(
-         struct BitMap * bm,
-         BYTE depth,
-         UWORD width,
-         UWORD height
- );
+          struct BitMap * bm,
+          BYTE depth,
+          UWORD width,
+          UWORD height );
 
 Function
 ~~~~~~~~
@@ -4195,8 +3956,7 @@ Synopsis
 ::
 
  void InitGMasks(
-         struct AnimOb * anOb
- );
+          struct AnimOb * anOb );
 
 Function
 ~~~~~~~~
@@ -4229,10 +3989,9 @@ Synopsis
 ::
 
  void InitGels(
-         struct VSprite * head,
-         struct VSprite * tail,
-         struct GelsInfo * GInfo
- );
+          struct VSprite * head,
+          struct VSprite * tail,
+          struct GelsInfo * GInfo );
 
 Function
 ~~~~~~~~
@@ -4269,8 +4028,7 @@ Synopsis
 ::
 
  BOOL InitGfxHidd(
-         struct Library * hiddBase
- );
+          struct Library * hiddBase );
 
 Function
 ~~~~~~~~
@@ -4310,8 +4068,7 @@ Synopsis
 ::
 
  void InitMasks(
-         struct VSprite * vs
- );
+          struct VSprite * vs );
 
 Function
 ~~~~~~~~
@@ -4344,8 +4101,7 @@ Synopsis
 ::
 
  BOOL InitRastPort(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -4388,10 +4144,9 @@ Synopsis
 ::
 
  void InitTmpRas(
-         struct TmpRas  * tmpras,
-         void * buffer,
-         ULONG size
- );
+          struct TmpRas  * tmpras,
+          void * buffer,
+          ULONG size );
 
 Function
 ~~~~~~~~
@@ -4438,8 +4193,7 @@ Synopsis
 ::
 
  void InitVPort(
-         struct ViewPort * vp
- );
+          struct ViewPort * vp );
 
 Function
 ~~~~~~~~
@@ -4473,8 +4227,7 @@ Synopsis
 ::
 
  void InitView(
-         struct View * view
- );
+          struct View * view );
 
 Function
 ~~~~~~~~
@@ -4508,10 +4261,9 @@ Synopsis
 ::
 
  BOOL IsPointInRegion(
-         struct Region * Reg,
-         WORD x,
-         WORD y
- );
+          struct Region * Reg,
+          WORD x,
+          WORD y );
 
 Function
 ~~~~~~~~
@@ -4552,8 +4304,7 @@ Synopsis
 ::
 
  BOOL LateGfxInit(
-         APTR data
- );
+          APTR data );
 
 Function
 ~~~~~~~~
@@ -4597,9 +4348,8 @@ Synopsis
 ::
 
  void LoadRGB32(
-         struct ViewPort * vp,
-         const ULONG     * table
- );
+          struct ViewPort * vp,
+          const ULONG     * table );
 
 
 LoadRGB4
@@ -4610,10 +4360,9 @@ Synopsis
 ::
 
  void LoadRGB4(
-         struct ViewPort * vp,
-         UWORD           * colors,
-         LONG count
- );
+          struct ViewPort * vp,
+          UWORD           * colors,
+          LONG count );
 
 
 LoadView
@@ -4624,8 +4373,7 @@ Synopsis
 ::
 
  void LoadView(
-         struct View * view
- );
+          struct View * view );
 
 Inputs
 ~~~~~~
@@ -4644,8 +4392,7 @@ Synopsis
 ::
 
  void LockLayerRom(
-         struct Layer * l
- );
+          struct Layer * l );
 
 Function
 ~~~~~~~~
@@ -4692,9 +4439,8 @@ Synopsis
 ::
 
  ULONG MakeVPort(
-         struct View * view,
-         struct ViewPort * viewport
- );
+          struct View * view,
+          struct ViewPort * viewport );
 
 Inputs
 ~~~~~~
@@ -4721,8 +4467,7 @@ Synopsis
 ::
 
  ULONG ModeNotAvailable(
-         ULONG modeID
- );
+          ULONG modeID );
 
 Function
 ~~~~~~~~
@@ -4762,8 +4507,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BOOL MouseCoordsRelative(
- );
+ BOOL MouseCoordsRelative();
 
 Function
 ~~~~~~~~
@@ -4806,10 +4550,9 @@ Synopsis
 ::
 
  void Move(
-         struct RastPort * rp,
-         WORD x,
-         WORD y
- );
+          struct RastPort * rp,
+          WORD x,
+          WORD y );
 
 
 MoveSprite
@@ -4820,11 +4563,10 @@ Synopsis
 ::
 
  void MoveSprite(
-         struct ViewPort * vp,
-         struct SimpleSprite * sprite,
-         WORD x,
-         WORD y
- );
+          struct ViewPort * vp,
+          struct SimpleSprite * sprite,
+          WORD x,
+          WORD y );
 
 
 MrgCop
@@ -4835,8 +4577,7 @@ Synopsis
 ::
 
  ULONG MrgCop(
-         struct View * view
- );
+          struct View * view );
 
 Inputs
 ~~~~~~
@@ -4861,11 +4602,10 @@ Synopsis
 ::
 
  struct Region * NewRectRegion(
-         WORD MinX,
-         WORD MinY,
-         WORD MaxX,
-         WORD MaxY
- );
+          WORD MinX,
+          WORD MinY,
+          WORD MaxX,
+          WORD MaxY );
 
 Function
 ~~~~~~~~
@@ -4922,8 +4662,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Region * NewRegion(
- );
+ struct Region * NewRegion();
 
 Function
 ~~~~~~~~
@@ -4957,8 +4696,7 @@ Synopsis
 ::
 
  ULONG NextDisplayInfo(
-         ULONG last_ID
- );
+          ULONG last_ID );
 
 Inputs
 ~~~~~~
@@ -4992,12 +4730,11 @@ Synopsis
 ::
 
  LONG ObtainBestPenA(
-         struct ColorMap * cm,
-         ULONG r,
-         ULONG g,
-         ULONG b,
-         struct TagItem * tags
- );
+          struct ColorMap * cm,
+          ULONG r,
+          ULONG g,
+          ULONG b,
+          struct TagItem * tags );
 
 
 ObtainPen
@@ -5008,13 +4745,12 @@ Synopsis
 ::
 
  LONG ObtainPen(
-         struct ColorMap * cm,
-         ULONG n,
-         ULONG r,
-         ULONG g,
-         ULONG b,
-         ULONG flags
- );
+          struct ColorMap * cm,
+          ULONG n,
+          ULONG r,
+          ULONG g,
+          ULONG b,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -5068,8 +4804,7 @@ Synopsis
 ::
 
  struct TextFont * OpenFont(
-         struct TextAttr * textAttr
- );
+          struct TextAttr * textAttr );
 
 
 OpenMonitor
@@ -5080,9 +4815,8 @@ Synopsis
 ::
 
  struct MonitorSpec * OpenMonitor(
-         STRPTR monitor_name,
-         ULONG display_id
- );
+          STRPTR monitor_name,
+          ULONG display_id );
 
 Inputs
 ~~~~~~
@@ -5116,9 +4850,8 @@ Synopsis
 ::
 
  BOOL OrRectRegion(
-         struct Region    * Reg,
-         struct Rectangle * Rect
- );
+          struct Region    * Reg,
+          struct Rectangle * Rect );
 
 Function
 ~~~~~~~~
@@ -5168,9 +4901,8 @@ Synopsis
 ::
 
  struct Region * OrRectRegionND(
-         struct Region    * Reg,
-         struct Rectangle * Rect
- );
+          struct Region    * Reg,
+          struct Rectangle * Rect );
 
 Function
 ~~~~~~~~
@@ -5212,9 +4944,8 @@ Synopsis
 ::
 
  BOOL OrRegionRegion(
-         struct Region * R1,
-         struct Region * R2
- );
+          struct Region * R1,
+          struct Region * R2 );
 
 Function
 ~~~~~~~~
@@ -5256,9 +4987,8 @@ Synopsis
 ::
 
  struct Region * OrRegionRegionND(
-         struct Region * R1,
-         struct Region * R2
- );
+          struct Region * R1,
+          struct Region * R2 );
 
 Function
 ~~~~~~~~
@@ -5297,8 +5027,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void OwnBlitter(
- );
+ void OwnBlitter();
 
 Function
 ~~~~~~~~
@@ -5330,10 +5059,9 @@ Synopsis
 ::
 
  void PolyDraw(
-         struct RastPort * rp,
-         LONG count,
-         WORD            * polyTable
- );
+          struct RastPort * rp,
+          LONG count,
+          WORD            * polyTable );
 
 
 QBSBlit
@@ -5344,8 +5072,7 @@ Synopsis
 ::
 
  void QBSBlit(
-         struct bltnode * bn
- );
+          struct bltnode * bn );
 
 Function
 ~~~~~~~~
@@ -5401,8 +5128,7 @@ Synopsis
 ::
 
  void QBlit(
-         struct bltnode * bn
- );
+          struct bltnode * bn );
 
 Function
 ~~~~~~~~
@@ -5459,10 +5185,9 @@ Synopsis
 ::
 
  LONG ReadPixel(
-         struct RastPort * rp,
-         LONG x,
-         LONG y
- );
+          struct RastPort * rp,
+          LONG x,
+          LONG y );
 
 
 ReadPixelArray8
@@ -5473,14 +5198,13 @@ Synopsis
 ::
 
  LONG ReadPixelArray8(
-         struct RastPort * rp,
-         LONG xstart,
-         LONG ystart,
-         LONG xstop,
-         LONG ystop,
-         UBYTE * array,
-         struct RastPort * temprp
- );
+          struct RastPort * rp,
+          LONG xstart,
+          LONG ystart,
+          LONG xstop,
+          LONG ystop,
+          UBYTE * array,
+          struct RastPort * temprp );
 
 
 ReadPixelLine8
@@ -5491,13 +5215,12 @@ Synopsis
 ::
 
  LONG ReadPixelLine8(
-         struct RastPort * rp,
-         LONG xstart,
-         LONG ystart,
-         ULONG width,
-         UBYTE           * array,
-         struct RastPort * tempRP
- );
+          struct RastPort * rp,
+          LONG xstart,
+          LONG ystart,
+          ULONG width,
+          UBYTE           * array,
+          struct RastPort * tempRP );
 
 
 RectFill
@@ -5508,12 +5231,11 @@ Synopsis
 ::
 
  void RectFill(
-         struct RastPort * rp,
-         LONG xMin,
-         LONG yMin,
-         LONG xMax,
-         LONG yMax
- );
+          struct RastPort * rp,
+          LONG xMin,
+          LONG yMin,
+          LONG xMax,
+          LONG yMax );
 
 
 ReleasePen
@@ -5524,9 +5246,8 @@ Synopsis
 ::
 
  void ReleasePen(
-         struct ColorMap * cm,
-         ULONG n
- );
+          struct ColorMap * cm,
+          ULONG n );
 
 Function
 ~~~~~~~~
@@ -5565,8 +5286,7 @@ Synopsis
 ::
 
  void RemFont(
-         struct TextFont * textFont
- );
+          struct TextFont * textFont );
 
 Function
 ~~~~~~~~
@@ -5606,10 +5326,9 @@ Synopsis
 ::
 
  void RemIBob(
-         struct Bob * bob,
-         struct RastPort * rp,
-         struct ViewPort * vp
- );
+          struct Bob * bob,
+          struct RastPort * rp,
+          struct ViewPort * vp );
 
 
 RemVSprite
@@ -5620,8 +5339,7 @@ Synopsis
 ::
 
  void RemVSprite(
-         struct VSprite * vs
- );
+          struct VSprite * vs );
 
 Function
 ~~~~~~~~
@@ -5653,10 +5371,9 @@ Synopsis
 ::
 
  UWORD ScalerDiv(
-         UWORD factor,
-         UWORD numerator,
-         UWORD denominator
- );
+          UWORD factor,
+          UWORD numerator,
+          UWORD denominator );
 
 Function
 ~~~~~~~~
@@ -5694,14 +5411,13 @@ Synopsis
 ::
 
  void ScrollRaster(
-         struct RastPort * rp,
-         LONG dx,
-         LONG dy,
-         LONG xMin,
-         LONG yMin,
-         LONG xMax,
-         LONG yMax
- );
+          struct RastPort * rp,
+          LONG dx,
+          LONG dy,
+          LONG xMin,
+          LONG yMin,
+          LONG xMax,
+          LONG yMax );
 
 Function
 ~~~~~~~~
@@ -5739,14 +5455,13 @@ Synopsis
 ::
 
  void ScrollRasterBF(
-         struct RastPort * rp,
-         LONG dx,
-         LONG dy,
-         LONG xMin,
-         LONG yMin,
-         LONG xMax,
-         LONG yMax
- );
+          struct RastPort * rp,
+          LONG dx,
+          LONG dy,
+          LONG xMin,
+          LONG yMin,
+          LONG xMax,
+          LONG yMax );
 
 Function
 ~~~~~~~~
@@ -5784,11 +5499,10 @@ Synopsis
 ::
 
  BOOL ScrollRegion(
-         struct Region * region,
-         struct Rectangle * rect,
-         WORD dx,
-         WORD dy
- );
+          struct Region * region,
+          struct Rectangle * rect,
+          WORD dx,
+          WORD dy );
 
 Function
 ~~~~~~~~
@@ -5838,8 +5552,7 @@ Synopsis
 ::
 
  void ScrollVPort(
-         struct ViewPort * vp
- );
+          struct ViewPort * vp );
 
 
 SetABPenDrMd
@@ -5850,11 +5563,10 @@ Synopsis
 ::
 
  void SetABPenDrMd(
-         struct RastPort * rp,
-         ULONG apen,
-         ULONG bpen,
-         ULONG drawMode
- );
+          struct RastPort * rp,
+          ULONG apen,
+          ULONG bpen,
+          ULONG drawMode );
 
 Function
 ~~~~~~~~
@@ -5898,9 +5610,8 @@ Synopsis
 ::
 
  void SetAPen(
-         struct RastPort * rp,
-         ULONG pen
- );
+          struct RastPort * rp,
+          ULONG pen );
 
 
 SetBPen
@@ -5911,9 +5622,8 @@ Synopsis
 ::
 
  void SetBPen(
-         struct RastPort * rp,
-         ULONG pen
- );
+          struct RastPort * rp,
+          ULONG pen );
 
 
 SetChipRev
@@ -5924,8 +5634,7 @@ Synopsis
 ::
 
  ULONG SetChipRev(
-         ULONG ChipRev
- );
+          ULONG ChipRev );
 
 Inputs
 ~~~~~~
@@ -5950,10 +5659,9 @@ Synopsis
 ::
 
  void SetCollision(
-         ULONG num,
-         VOID_FUNC routine,
-         struct GelsInfo * GInfo
- );
+          ULONG num,
+          VOID_FUNC routine,
+          struct GelsInfo * GInfo );
 
 Function
 ~~~~~~~~
@@ -5989,9 +5697,8 @@ Synopsis
 ::
 
  void SetDrMd(
-         struct RastPort * rp,
-         ULONG drawMode
- );
+          struct RastPort * rp,
+          ULONG drawMode );
 
 
 SetFont
@@ -6002,9 +5709,8 @@ Synopsis
 ::
 
  void SetFont(
-         struct RastPort * rp,
-         struct TextFont * textFont
- );
+          struct RastPort * rp,
+          struct TextFont * textFont );
 
 Function
 ~~~~~~~~
@@ -6037,9 +5743,8 @@ Synopsis
 ::
 
  BOOL SetFrontBitMap(
-         struct BitMap * bitmap,
-         BOOL copyback
- );
+          struct BitMap * bitmap,
+          BOOL copyback );
 
 Function
 ~~~~~~~~
@@ -6082,9 +5787,8 @@ Synopsis
 ::
 
  void SetMaxPen(
-         struct RastPort * rp,
-         ULONG maxpen
- );
+          struct RastPort * rp,
+          ULONG maxpen );
 
 Function
 ~~~~~~~~
@@ -6124,9 +5828,8 @@ Synopsis
 ::
 
  ULONG SetOutlinePen(
-         struct RastPort * rp,
-         ULONG pen
- );
+          struct RastPort * rp,
+          ULONG pen );
 
 
 SetPointerPos
@@ -6137,9 +5840,8 @@ Synopsis
 ::
 
  VOID SetPointerPos(
-         UWORD x,
-         UWORD y
- );
+          UWORD x,
+          UWORD y );
 
 Function
 ~~~~~~~~
@@ -6164,12 +5866,11 @@ Synopsis
 ::
 
  VOID SetPointerShape(
-         UWORD * shape,
-         UWORD width,
-         UWORD height,
-         UWORD xoffset,
-         UWORD yoffset
- );
+          UWORD * shape,
+          UWORD width,
+          UWORD height,
+          UWORD xoffset,
+          UWORD yoffset );
 
 Function
 ~~~~~~~~
@@ -6194,12 +5895,11 @@ Synopsis
 ::
 
  void SetRGB32(
-         struct ViewPort * vp,
-         ULONG n,
-         ULONG r,
-         ULONG g,
-         ULONG b
- );
+          struct ViewPort * vp,
+          ULONG n,
+          ULONG r,
+          ULONG g,
+          ULONG b );
 
 Function
 ~~~~~~~~
@@ -6250,12 +5950,11 @@ Synopsis
 ::
 
  void SetRGB32CM(
-         struct ColorMap * cm,
-         ULONG n,
-         ULONG r,
-         ULONG g,
-         ULONG b
- );
+          struct ColorMap * cm,
+          ULONG n,
+          ULONG r,
+          ULONG g,
+          ULONG b );
 
 Function
 ~~~~~~~~
@@ -6301,12 +6000,11 @@ Synopsis
 ::
 
  void SetRGB4(
-         struct ViewPort * vp,
-         ULONG n,
-         ULONG r,
-         ULONG g,
-         ULONG b
- );
+          struct ViewPort * vp,
+          ULONG n,
+          ULONG r,
+          ULONG g,
+          ULONG b );
 
 Function
 ~~~~~~~~
@@ -6357,12 +6055,11 @@ Synopsis
 ::
 
  void SetRGB4CM(
-         struct ColorMap * cm,
-         WORD n,
-         UBYTE r,
-         UBYTE g,
-         UBYTE b
- );
+          struct ColorMap * cm,
+          WORD n,
+          UBYTE r,
+          UBYTE g,
+          UBYTE b );
 
 Function
 ~~~~~~~~
@@ -6407,9 +6104,8 @@ Synopsis
 ::
 
  void SetRPAttrsA(
-         struct RastPort * rp,
-         struct TagItem  * tags
- );
+          struct RastPort * rp,
+          struct TagItem  * tags );
 
 
 SetRast
@@ -6420,9 +6116,8 @@ Synopsis
 ::
 
  void SetRast(
-         struct RastPort * rp,
-         ULONG pen
- );
+          struct RastPort * rp,
+          ULONG pen );
 
 Function
 ~~~~~~~~
@@ -6467,9 +6162,8 @@ Synopsis
 ::
 
  BOOL SetRegion(
-         struct Region * src,
-         struct Region * dest
- );
+          struct Region * src,
+          struct Region * dest );
 
 Function
 ~~~~~~~~
@@ -6510,10 +6204,9 @@ Synopsis
 ::
 
  ULONG SetSoftStyle(
-         struct RastPort * rp,
-         ULONG style,
-         ULONG enable
- );
+          struct RastPort * rp,
+          ULONG style,
+          ULONG enable );
 
 Function
 ~~~~~~~~
@@ -6562,9 +6255,8 @@ Synopsis
 ::
 
  ULONG SetWriteMask(
-         struct RastPort * rp,
-         ULONG mask
- );
+          struct RastPort * rp,
+          ULONG mask );
 
 
 ShowImminentReset
@@ -6574,8 +6266,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ShowImminentReset(
- );
+ void ShowImminentReset();
 
 Function
 ~~~~~~~~
@@ -6594,8 +6285,7 @@ Synopsis
 ::
 
  void SortGList(
-         struct RastPort * rp
- );
+          struct RastPort * rp );
 
 Function
 ~~~~~~~~
@@ -6630,8 +6320,7 @@ Synopsis
 ::
 
  void StripFont(
-         struct TextFont * font
- );
+          struct TextFont * font );
 
 Function
 ~~~~~~~~
@@ -6662,9 +6351,8 @@ Synopsis
 ::
 
  VOID SwapRegions(
-         struct Region * region1,
-         struct Region * region2
- );
+          struct Region * region1,
+          struct Region * region2 );
 
 Function
 ~~~~~~~~
@@ -6703,8 +6391,7 @@ Synopsis
 ::
 
  void SyncSBitMap(
-         struct Layer * l
- );
+          struct Layer * l );
 
 Function
 ~~~~~~~~
@@ -6748,10 +6435,9 @@ Synopsis
 ::
 
  void Text(
-         struct RastPort * rp,
-         CONST_STRPTR string,
-         ULONG count
- );
+          struct RastPort * rp,
+          CONST_STRPTR string,
+          ULONG count );
 
 
 TextExtent
@@ -6762,11 +6448,10 @@ Synopsis
 ::
 
  void TextExtent(
-         struct RastPort   * rp,
-         CONST_STRPTR string,
-         ULONG count,
-         struct TextExtent * textExtent
- );
+          struct RastPort   * rp,
+          CONST_STRPTR string,
+          ULONG count,
+          struct TextExtent * textExtent );
 
 
 TextFit
@@ -6777,15 +6462,14 @@ Synopsis
 ::
 
  ULONG TextFit(
-         struct RastPort   * rp,
-         CONST_STRPTR string,
-         ULONG strLen,
-         struct TextExtent * textExtent,
-         struct TextExtent * constrainingExtent,
-         LONG strDirection,
-         ULONG constrainingBitWidth,
-         ULONG constrainingBitHeight
- );
+          struct RastPort   * rp,
+          CONST_STRPTR string,
+          ULONG strLen,
+          struct TextExtent * textExtent,
+          struct TextExtent * constrainingExtent,
+          LONG strDirection,
+          ULONG constrainingBitWidth,
+          ULONG constrainingBitHeight );
 
 Function
 ~~~~~~~~
@@ -6840,10 +6524,9 @@ Synopsis
 ::
 
  WORD TextLength(
-         struct RastPort * rp,
-         CONST_STRPTR string,
-         ULONG count
- );
+          struct RastPort * rp,
+          CONST_STRPTR string,
+          ULONG count );
 
 
 UCopperListInit
@@ -6854,9 +6537,8 @@ Synopsis
 ::
 
  struct CopList * UCopperListInit(
-         struct UCopList * ucl,
-         WORD n
- );
+          struct UCopList * ucl,
+          WORD n );
 
 Function
 ~~~~~~~~
@@ -6900,8 +6582,7 @@ Synopsis
 ::
 
  void UnlockLayerRom(
-         struct Layer * l
- );
+          struct Layer * l );
 
 Function
 ~~~~~~~~
@@ -6943,8 +6624,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG VBeamPos(
- );
+ LONG VBeamPos();
 
 Inputs
 ~~~~~~
@@ -6969,9 +6649,8 @@ Synopsis
 ::
 
  ULONG VideoControl(
-         struct ColorMap * cm,
-         struct TagItem * tags
- );
+          struct ColorMap * cm,
+          struct TagItem * tags );
 
 Inputs
 ~~~~~~
@@ -6997,8 +6676,7 @@ Synopsis
 ::
 
  void WaitBOVP(
-         struct ViewPort * vp
- );
+          struct ViewPort * vp );
 
 Inputs
 ~~~~~~
@@ -7022,8 +6700,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void WaitBlit(
- );
+ void WaitBlit();
 
 Function
 ~~~~~~~~
@@ -7055,8 +6732,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- VOID WaitTOF(
- );
+ VOID WaitTOF();
 
 Function
 ~~~~~~~~
@@ -7084,10 +6760,9 @@ Synopsis
 ::
 
  WORD WeighTAMatch(
-         struct TextAttr * reqTextAttr,
-         struct TextAttr * targetTextAttr,
-         struct TagItem  * targetTags
- );
+          struct TextAttr * reqTextAttr,
+          struct TextAttr * targetTextAttr,
+          struct TagItem  * targetTags );
 
 Function
 ~~~~~~~~
@@ -7130,14 +6805,13 @@ Synopsis
 ::
 
  void WriteChunkyPixels(
-         struct RastPort * rp,
-         LONG xstart,
-         LONG ystart,
-         LONG xstop,
-         LONG ystop,
-         UBYTE           * array,
-         LONG bytesperrow
- );
+          struct RastPort * rp,
+          LONG xstart,
+          LONG ystart,
+          LONG xstop,
+          LONG ystop,
+          UBYTE           * array,
+          LONG bytesperrow );
 
 
 WritePixel
@@ -7148,10 +6822,9 @@ Synopsis
 ::
 
  LONG WritePixel(
-         struct RastPort * rp,
-         LONG x,
-         LONG y
- );
+          struct RastPort * rp,
+          LONG x,
+          LONG y );
 
 
 WritePixelArray8
@@ -7162,14 +6835,13 @@ Synopsis
 ::
 
  LONG WritePixelArray8(
-         struct RastPort * rp,
-         ULONG xstart,
-         ULONG ystart,
-         ULONG xstop,
-         ULONG ystop,
-         UBYTE           * array,
-         struct RastPort * temprp
- );
+          struct RastPort * rp,
+          ULONG xstart,
+          ULONG ystart,
+          ULONG xstop,
+          ULONG ystop,
+          UBYTE           * array,
+          struct RastPort * temprp );
 
 
 WritePixelLine8
@@ -7180,13 +6852,12 @@ Synopsis
 ::
 
  LONG WritePixelLine8(
-         struct RastPort * rp,
-         LONG xstart,
-         LONG ystart,
-         ULONG width,
-         UBYTE * array,
-         struct RastPort * tempRP
- );
+          struct RastPort * rp,
+          LONG xstart,
+          LONG ystart,
+          ULONG width,
+          UBYTE * array,
+          struct RastPort * tempRP );
 
 
 XorRectRegion
@@ -7197,9 +6868,8 @@ Synopsis
 ::
 
  BOOL XorRectRegion(
-         struct Region    * Reg,
-         struct Rectangle * Rect
- );
+          struct Region    * Reg,
+          struct Rectangle * Rect );
 
 Function
 ~~~~~~~~
@@ -7249,9 +6919,8 @@ Synopsis
 ::
 
  struct Region * XorRectRegionND(
-         struct Region    * Reg,
-         struct Rectangle * Rect
- );
+          struct Region    * Reg,
+          struct Rectangle * Rect );
 
 Function
 ~~~~~~~~
@@ -7300,9 +6969,8 @@ Synopsis
 ::
 
  BOOL XorRegionRegion(
-         struct Region * R1,
-         struct Region * R2
- );
+          struct Region * R1,
+          struct Region * R2 );
 
 Function
 ~~~~~~~~
@@ -7344,9 +7012,8 @@ Synopsis
 ::
 
  struct Region * XorRegionRegionND(
-         struct Region * R1,
-         struct Region * R2
- );
+          struct Region * R1,
+          struct Region * R2 );
 
 Function
 ~~~~~~~~

@@ -8,36 +8,16 @@ commodities
 
 ----------
 
-`ActivateCxObj`_
-`AddIEvents`_
-`AttachCxObj`_
-`ClearCxObjError`_
-`CreateCxObj`_
-`CxBroker`_
-`CxMsgData`_
-`CxMsgID`_
-`CxMsgType`_
-`CxNotify`_
-`CxObjError`_
-`CxObjType`_
-`DeleteCxObj`_
-`DeleteCxObjAll`_
-`DisposeCxMsg`_
-`DivertCxMsg`_
-`EnqueueCxObj`_
-`FreeBrokerList`_
-`GetBrokerList`_
-`InsertCxObj`_
-`InvertKeyMap`_
-`MatchIX`_
-`ParseIX`_
-`RemoveCxObj`_
-`RouteCxMsg`_
-`SetCxObjPri`_
-`SetFilter`_
-`SetFilterIX`_
-`SetTranslate`_
-`events`_
+======================================= ======================================= ======================================= ======================================= 
+`ActivateCxObj`_                        `AddIEvents`_                           `AttachCxObj`_                          `ClearCxObjError`_                      
+`CreateCxObj`_                          `CxBroker`_                             `CxMsgData`_                            `CxMsgID`_                              
+`CxMsgType`_                            `CxNotify`_                             `CxObjError`_                           `CxObjType`_                            
+`DeleteCxObj`_                          `DeleteCxObjAll`_                       `DisposeCxMsg`_                         `DivertCxMsg`_                          
+`EnqueueCxObj`_                         `FreeBrokerList`_                       `GetBrokerList`_                        `InsertCxObj`_                          
+`InvertKeyMap`_                         `MatchIX`_                              `ParseIX`_                              `RemoveCxObj`_                          
+`RouteCxMsg`_                           `SetCxObjPri`_                          `SetFilter`_                            `SetFilterIX`_                          
+`SetTranslate`_                         `events`_                               
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -49,9 +29,8 @@ Synopsis
 ::
 
  LONG ActivateCxObj(
-         CxObj * co,
-         LONG true
- );
+          CxObj * co,
+          LONG true );
 
 Function
 ~~~~~~~~
@@ -103,8 +82,7 @@ Synopsis
 ::
 
  VOID AddIEvents(
-         struct InputEvent * events
- );
+          struct InputEvent * events );
 
 Function
 ~~~~~~~~
@@ -132,9 +110,8 @@ Synopsis
 ::
 
  VOID AttachCxObj(
-         CxObj * headObj,
-         CxObj * co
- );
+          CxObj * headObj,
+          CxObj * co );
 
 Function
 ~~~~~~~~
@@ -182,8 +159,7 @@ Synopsis
 ::
 
  VOID ClearCxObjError(
-         CxObj * co
- );
+          CxObj * co );
 
 Function
 ~~~~~~~~
@@ -229,10 +205,9 @@ Synopsis
 ::
 
  CxObj * CreateCxObj(
-         ULONG type,
-         IPTR arg1,
-         IPTR arg2
- );
+          ULONG type,
+          IPTR arg1,
+          IPTR arg2 );
 
 Function
 ~~~~~~~~
@@ -297,9 +272,8 @@ Synopsis
 ::
 
  CxObj * CxBroker(
-         struct NewBroker * nb,
-         LONG * error
- );
+          struct NewBroker * nb,
+          LONG * error );
 
 Function
 ~~~~~~~~
@@ -359,8 +333,7 @@ Synopsis
 ::
 
  APTR CxMsgData(
-         CxMsg * cxm
- );
+          CxMsg * cxm );
 
 Function
 ~~~~~~~~
@@ -406,8 +379,7 @@ Synopsis
 ::
 
  LONG CxMsgID(
-         CxMsg * cxm
- );
+          CxMsg * cxm );
 
 Function
 ~~~~~~~~
@@ -452,8 +424,7 @@ Synopsis
 ::
 
  ULONG CxMsgType(
-         CxMsg * cxm
- );
+          CxMsg * cxm );
 
 Function
 ~~~~~~~~
@@ -490,9 +461,8 @@ Synopsis
 ::
 
  ULONG CxNotify(
-         STRPTR name,
-         ULONG command
- );
+          STRPTR name,
+          ULONG command );
 
 Function
 ~~~~~~~~
@@ -531,8 +501,7 @@ Synopsis
 ::
 
  LONG CxObjError(
-         CxObj * co
- );
+          CxObj * co );
 
 Function
 ~~~~~~~~
@@ -580,8 +549,7 @@ Synopsis
 ::
 
  ULONG CxObjType(
-         CxObj * co
- );
+          CxObj * co );
 
 Function
 ~~~~~~~~
@@ -625,8 +593,7 @@ Synopsis
 ::
 
  VOID DeleteCxObj(
-         CxObj * co
- );
+          CxObj * co );
 
 Function
 ~~~~~~~~
@@ -674,8 +641,7 @@ Synopsis
 ::
 
  VOID DeleteCxObjAll(
-         CxObj * co
- );
+          CxObj * co );
 
 Function
 ~~~~~~~~
@@ -720,8 +686,7 @@ Synopsis
 ::
 
  VOID DisposeCxMsg(
-         CxMsg * cxm
- );
+          CxMsg * cxm );
 
 Function
 ~~~~~~~~
@@ -738,7 +703,7 @@ Inputs
 ::
 
 
- cxm  -  the commodity message to delete (may NOT be NULL) 
+ cxm  -  the commodity message to delete (must NOT be NULL) 
 
 
 Notes
@@ -761,10 +726,9 @@ Synopsis
 ::
 
  VOID DivertCxMsg(
-         CxMsg * cxm,
-         CxObj * headObj,
-         CxObj * returnObj
- );
+          CxMsg * cxm,
+          CxObj * headObj,
+          CxObj * returnObj );
 
 Function
 ~~~~~~~~
@@ -816,9 +780,8 @@ Synopsis
 ::
 
  VOID EnqueueCxObj(
-         CxObj * headObj,
-         CxObj * co
- );
+          CxObj * headObj,
+          CxObj * co );
 
 Function
 ~~~~~~~~
@@ -877,8 +840,7 @@ Synopsis
 ::
 
  VOID FreeBrokerList(
-         struct List * brokerList
- );
+          struct List * brokerList );
 
 Function
 ~~~~~~~~
@@ -914,8 +876,7 @@ Synopsis
 ::
 
  LONG GetBrokerList(
-         struct List * CopyofList
- );
+          struct List * CopyofList );
 
 Function
 ~~~~~~~~
@@ -951,10 +912,9 @@ Synopsis
 ::
 
  VOID InsertCxObj(
-         CxObj * headObj,
-         CxObj * co,
-         CxObj * pred
- );
+          CxObj * headObj,
+          CxObj * co,
+          CxObj * pred );
 
 Function
 ~~~~~~~~
@@ -1004,10 +964,9 @@ Synopsis
 ::
 
  BOOL InvertKeyMap(
-         ULONG ansiCode,
-         struct InputEvent * event,
-         struct KeyMap     * km
- );
+          ULONG ansiCode,
+          struct InputEvent * event,
+          struct KeyMap     * km );
 
 Function
 ~~~~~~~~
@@ -1065,9 +1024,8 @@ Synopsis
 ::
 
  BOOL MatchIX(
-         struct InputEvent * event,
-         IX * ix
- );
+          struct InputEvent * event,
+          IX * ix );
 
 Function
 ~~~~~~~~
@@ -1121,9 +1079,8 @@ Synopsis
 ::
 
  LONG ParseIX(
-         CONST_STRPTR desc,
-         IX * ix
- );
+          CONST_STRPTR desc,
+          IX * ix );
 
 Function
 ~~~~~~~~
@@ -1178,8 +1135,7 @@ Synopsis
 ::
 
  VOID RemoveCxObj(
-         CxObj * co
- );
+          CxObj * co );
 
 Function
 ~~~~~~~~
@@ -1215,9 +1171,8 @@ Synopsis
 ::
 
  VOID RouteCxMsg(
-         CxMsg * cxm,
-         CxObj * co
- );
+          CxMsg * cxm,
+          CxObj * co );
 
 Function
 ~~~~~~~~
@@ -1255,9 +1210,8 @@ Synopsis
 ::
 
  LONG SetCxObjPri(
-         CxObj * co,
-         LONG pri
- );
+          CxObj * co,
+          LONG pri );
 
 Function
 ~~~~~~~~
@@ -1315,9 +1269,8 @@ Synopsis
 ::
 
  VOID SetFilter(
-         CxObj * filter,
-         STRPTR text
- );
+          CxObj * filter,
+          STRPTR text );
 
 Function
 ~~~~~~~~
@@ -1362,9 +1315,8 @@ Synopsis
 ::
 
  VOID SetFilterIX(
-         CxObj * filter,
-         IX * ix
- );
+          CxObj * filter,
+          IX * ix );
 
 Function
 ~~~~~~~~
@@ -1420,9 +1372,8 @@ Synopsis
 ::
 
  VOID SetTranslate(
-         CxObj * translator,
-         struct InputEvent * events
- );
+          CxObj * translator,
+          struct InputEvent * events );
 
 Function
 ~~~~~~~~
@@ -1471,7 +1422,6 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct InputEvent * events(
- );
+ struct InputEvent * events();
 
 

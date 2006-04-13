@@ -8,31 +8,15 @@ muimaster
 
 ----------
 
-`MUI_AddClipRegion`_
-`MUI_AddClipping`_
-`MUI_AllocAslRequest`_
-`MUI_AslRequest`_
-`MUI_BeginRefresh`_
-`MUI_CreateCustomClass`_
-`MUI_DeleteCustomClass`_
-`MUI_DisposeObject`_
-`MUI_EndRefresh`_
-`MUI_Error`_
-`MUI_FreeAslRequest`_
-`MUI_FreeClass`_
-`MUI_GetClass`_
-`MUI_Layout`_
-`MUI_MakeObjectA`_
-`MUI_NewObjectA`_
-`MUI_ObtainPen`_
-`MUI_Redraw`_
-`MUI_RejectIDCMP`_
-`MUI_ReleasePen`_
-`MUI_RemoveClipRegion`_
-`MUI_RemoveClipping`_
-`MUI_RequestA`_
-`MUI_RequestIDCMP`_
-`MUI_SetError`_
+======================================= ======================================= ======================================= ======================================= 
+`MUI_AddClipRegion`_                    `MUI_AddClipping`_                      `MUI_AllocAslRequest`_                  `MUI_AslRequest`_                       
+`MUI_BeginRefresh`_                     `MUI_CreateCustomClass`_                `MUI_DeleteCustomClass`_                `MUI_DisposeObject`_                    
+`MUI_EndRefresh`_                       `MUI_Error`_                            `MUI_FreeAslRequest`_                   `MUI_FreeClass`_                        
+`MUI_GetClass`_                         `MUI_Layout`_                           `MUI_MakeObjectA`_                      `MUI_NewObjectA`_                       
+`MUI_ObtainPen`_                        `MUI_Redraw`_                           `MUI_RejectIDCMP`_                      `MUI_ReleasePen`_                       
+`MUI_RemoveClipRegion`_                 `MUI_RemoveClipping`_                   `MUI_RequestA`_                         `MUI_RequestIDCMP`_                     
+`MUI_SetError`_                         
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -44,9 +28,8 @@ Synopsis
 ::
 
  APTR MUI_AddClipRegion(
-         struct MUI_RenderInfo * mri,
-         struct Region * r
- );
+          struct MUI_RenderInfo * mri,
+          struct Region * r );
 
 Bugs
 ~~~~
@@ -64,12 +47,11 @@ Synopsis
 ::
 
  APTR MUI_AddClipping(
-         struct MUI_RenderInfo * mri,
-         WORD left,
-         WORD top,
-         WORD width,
-         WORD height
- );
+          struct MUI_RenderInfo * mri,
+          WORD left,
+          WORD top,
+          WORD width,
+          WORD height );
 
 Bugs
 ~~~~
@@ -87,9 +69,8 @@ Synopsis
 ::
 
  APTR MUI_AllocAslRequest(
-         unsigned long reqType,
-         struct TagItem * tagList
- );
+          unsigned long reqType,
+          struct TagItem * tagList );
 
 Bugs
 ~~~~
@@ -107,9 +88,8 @@ Synopsis
 ::
 
  BOOL MUI_AslRequest(
-         APTR requester,
-         struct TagItem * tagList
- );
+          APTR requester,
+          struct TagItem * tagList );
 
 Bugs
 ~~~~
@@ -127,9 +107,8 @@ Synopsis
 ::
 
  BOOL MUI_BeginRefresh(
-         struct MUI_RenderInfo * mri,
-         ULONG flags
- );
+          struct MUI_RenderInfo * mri,
+          ULONG flags );
 
 Bugs
 ~~~~
@@ -147,12 +126,11 @@ Synopsis
 ::
 
  struct MUI_CustomClass * MUI_CreateCustomClass(
-         struct Library * base,
-         ClassID supername,
-         struct MUI_CustomClass * supermcc,
-         ULONG datasize,
-         APTR dispatcher
- );
+          struct Library * base,
+          ClassID supername,
+          struct MUI_CustomClass * supermcc,
+          ULONG datasize,
+          APTR dispatcher );
 
 Bugs
 ~~~~
@@ -170,8 +148,7 @@ Synopsis
 ::
 
  BOOL MUI_DeleteCustomClass(
-         struct MUI_CustomClass * mcc
- );
+          struct MUI_CustomClass * mcc );
 
 Bugs
 ~~~~
@@ -189,8 +166,22 @@ Synopsis
 ::
 
  VOID MUI_DisposeObject(
-         Object * obj
- );
+          Object * obj );
+
+Function
+~~~~~~~~
+::
+
+     Deletes MUI object and its child objects.
+     
+
+Inputs
+~~~~~~
+::
+
+     obj -- pointer to MUI object created with MUI_NewObject. Maybe NULL,
+     in which case this function has no effect.
+     
 
 Bugs
 ~~~~
@@ -208,9 +199,8 @@ Synopsis
 ::
 
  VOID MUI_EndRefresh(
-         struct MUI_RenderInfo * mri,
-         ULONG flags
- );
+          struct MUI_RenderInfo * mri,
+          ULONG flags );
 
 Bugs
 ~~~~
@@ -227,8 +217,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG MUI_Error(
- );
+ LONG MUI_Error();
 
 Bugs
 ~~~~
@@ -246,8 +235,7 @@ Synopsis
 ::
 
  VOID MUI_FreeAslRequest(
-         APTR requester
- );
+          APTR requester );
 
 Bugs
 ~~~~
@@ -265,8 +253,7 @@ Synopsis
 ::
 
  VOID MUI_FreeClass(
-         Class * cl
- );
+          Class * cl );
 
 Function
 ~~~~~~~~
@@ -312,8 +299,7 @@ Synopsis
 ::
 
  struct IClass * MUI_GetClass(
-         ClassID classid
- );
+          ClassID classid );
 
 Function
 ~~~~~~~~
@@ -369,13 +355,12 @@ Synopsis
 ::
 
  BOOL MUI_Layout(
-         Object * obj,
-         LONG left,
-         LONG top,
-         LONG width,
-         LONG height,
-         ULONG flags
- );
+          Object * obj,
+          LONG left,
+          LONG top,
+          LONG width,
+          LONG height,
+          ULONG flags );
 
 Bugs
 ~~~~
@@ -393,9 +378,8 @@ Synopsis
 ::
 
  Object * MUI_MakeObjectA(
-         LONG type,
-         IPTR * params
- );
+          LONG type,
+          IPTR * params );
 
 Bugs
 ~~~~
@@ -413,9 +397,8 @@ Synopsis
 ::
 
  Object * MUI_NewObjectA(
-         ClassID classid,
-         struct TagItem * tags
- );
+          ClassID classid,
+          struct TagItem * tags );
 
 Bugs
 ~~~~
@@ -433,10 +416,9 @@ Synopsis
 ::
 
  LONG MUI_ObtainPen(
-         struct MUI_RenderInfo * mri,
-         struct MUI_PenSpec * spec,
-         ULONG flags
- );
+          struct MUI_RenderInfo * mri,
+          struct MUI_PenSpec * spec,
+          ULONG flags );
 
 Bugs
 ~~~~
@@ -454,9 +436,8 @@ Synopsis
 ::
 
  VOID MUI_Redraw(
-         Object * obj,
-         ULONG flags
- );
+          Object * obj,
+          ULONG flags );
 
 Bugs
 ~~~~
@@ -474,9 +455,8 @@ Synopsis
 ::
 
  VOID MUI_RejectIDCMP(
-         Object * obj,
-         ULONG flags
- );
+          Object * obj,
+          ULONG flags );
 
 Bugs
 ~~~~
@@ -494,9 +474,8 @@ Synopsis
 ::
 
  VOID MUI_ReleasePen(
-         struct MUI_RenderInfo * mri,
-         LONG pen
- );
+          struct MUI_RenderInfo * mri,
+          LONG pen );
 
 Bugs
 ~~~~
@@ -514,9 +493,8 @@ Synopsis
 ::
 
  VOID MUI_RemoveClipRegion(
-         struct MUI_RenderInfo * mri,
-         APTR handle
- );
+          struct MUI_RenderInfo * mri,
+          APTR handle );
 
 Notes
 ~~~~~
@@ -543,9 +521,8 @@ Synopsis
 ::
 
  VOID MUI_RemoveClipping(
-         struct MUI_RenderInfo * mri,
-         APTR handle
- );
+          struct MUI_RenderInfo * mri,
+          APTR handle );
 
 Bugs
 ~~~~
@@ -563,14 +540,13 @@ Synopsis
 ::
 
  LONG MUI_RequestA(
-         APTR app,
-         APTR win,
-         LONGBITS flags,
-         CONST_STRPTR title,
-         CONST_STRPTR gadgets,
-         CONST_STRPTR format,
-         APTR params
- );
+          APTR app,
+          APTR win,
+          LONGBITS flags,
+          CONST_STRPTR title,
+          CONST_STRPTR gadgets,
+          CONST_STRPTR format,
+          APTR params );
 
 
 MUI_RequestIDCMP
@@ -581,9 +557,8 @@ Synopsis
 ::
 
  VOID MUI_RequestIDCMP(
-         Object * obj,
-         ULONG flags
- );
+          Object * obj,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -622,8 +597,7 @@ Synopsis
 ::
 
  LONG MUI_SetError(
-         LONG num
- );
+          LONG num );
 
 Bugs
 ~~~~

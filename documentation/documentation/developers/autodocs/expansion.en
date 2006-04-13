@@ -8,27 +8,14 @@ expansion
 
 ----------
 
-`AddBootNode`_
-`AddConfigDev`_
-`AddDosNode`_
-`AllocBoardMem`_
-`AllocConfigDev`_
-`AllocExpansionMem`_
-`ConfigBoard`_
-`ConfigChain`_
-`FindConfigDev`_
-`FreeBoardMem`_
-`FreeConfigDev`_
-`FreeExpansionMem`_
-`GetCurrentBinding`_
-`MakeDosNode`_
-`ObtainConfigBinding`_
-`ReadExpansionByte`_
-`ReadExpansionRom`_
-`ReleaseConfigBinding`_
-`RemConfigDev`_
-`SetCurrentBinding`_
-`WriteExpansionByte`_
+======================================= ======================================= ======================================= ======================================= 
+`AddBootNode`_                          `AddConfigDev`_                         `AddDosNode`_                           `AllocBoardMem`_                        
+`AllocConfigDev`_                       `AllocExpansionMem`_                    `ConfigBoard`_                          `ConfigChain`_                          
+`FindConfigDev`_                        `FreeBoardMem`_                         `FreeConfigDev`_                        `FreeExpansionMem`_                     
+`GetCurrentBinding`_                    `MakeDosNode`_                          `ObtainConfigBinding`_                  `ReadExpansionByte`_                    
+`ReadExpansionRom`_                     `ReleaseConfigBinding`_                 `RemConfigDev`_                         `SetCurrentBinding`_                    
+`WriteExpansionByte`_                   
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -40,11 +27,10 @@ Synopsis
 ::
 
  BOOL AddBootNode(
-         LONG bootPri,
-         ULONG flags,
-         struct DeviceNode * deviceNode,
-         struct ConfigDev  * configDev
- );
+          LONG bootPri,
+          ULONG flags,
+          struct DeviceNode * deviceNode,
+          struct ConfigDev  * configDev );
 
 Function
 ~~~~~~~~
@@ -144,8 +130,7 @@ Synopsis
 ::
 
  void AddConfigDev(
-         struct ConfigDev * configDev
- );
+          struct ConfigDev * configDev );
 
 Function
 ~~~~~~~~
@@ -186,10 +171,9 @@ Synopsis
 ::
 
  BOOL AddDosNode(
-         LONG bootPri,
-         ULONG flags,
-         struct DeviceNode * deviceNode
- );
+          LONG bootPri,
+          ULONG flags,
+          struct DeviceNode * deviceNode );
 
 Function
 ~~~~~~~~
@@ -255,8 +239,7 @@ Synopsis
 ::
 
  void AllocBoardMem(
-         ULONG slotSpec
- );
+          ULONG slotSpec );
 
 
 AllocConfigDev
@@ -266,8 +249,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct ConfigDev * AllocConfigDev(
- );
+ struct ConfigDev * AllocConfigDev();
 
 Function
 ~~~~~~~~
@@ -309,9 +291,8 @@ Synopsis
 ::
 
  APTR AllocExpansionMem(
-         ULONG numSlots,
-         ULONG slotAlign
- );
+          ULONG numSlots,
+          ULONG slotAlign );
 
 
 ConfigBoard
@@ -322,9 +303,8 @@ Synopsis
 ::
 
  void ConfigBoard(
-         APTR board,
-         struct ConfigDev * configDev
- );
+          APTR board,
+          struct ConfigDev * configDev );
 
 
 ConfigChain
@@ -335,8 +315,7 @@ Synopsis
 ::
 
  void ConfigChain(
-         APTR baseAddr
- );
+          APTR baseAddr );
 
 
 FindConfigDev
@@ -347,10 +326,9 @@ Synopsis
 ::
 
  struct ConfigDev * FindConfigDev(
-         struct ConfigDev * oldConfigDev,
-         LONG manufacturer,
-         LONG product
- );
+          struct ConfigDev * oldConfigDev,
+          LONG manufacturer,
+          LONG product );
 
 Function
 ~~~~~~~~
@@ -411,9 +389,8 @@ Synopsis
 ::
 
  void FreeBoardMem(
-         ULONG startSlot,
-         ULONG slotSpec
- );
+          ULONG startSlot,
+          ULONG slotSpec );
 
 
 FreeConfigDev
@@ -424,8 +401,7 @@ Synopsis
 ::
 
  void FreeConfigDev(
-         struct ConfigDev * configDev
- );
+          struct ConfigDev * configDev );
 
 Function
 ~~~~~~~~
@@ -465,9 +441,8 @@ Synopsis
 ::
 
  void FreeExpansionMem(
-         ULONG startSlot,
-         ULONG numSlots
- );
+          ULONG startSlot,
+          ULONG numSlots );
 
 
 GetCurrentBinding
@@ -478,9 +453,8 @@ Synopsis
 ::
 
  ULONG GetCurrentBinding(
-         struct CurrentBinding * currentBinding,
-         ULONG bindingSize
- );
+          struct CurrentBinding * currentBinding,
+          ULONG bindingSize );
 
 Function
 ~~~~~~~~
@@ -534,8 +508,7 @@ Synopsis
 ::
 
  struct DeviceNode * MakeDosNode(
-         APTR parmPacket
- );
+          APTR parmPacket );
 
 Function
 ~~~~~~~~
@@ -628,8 +601,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ObtainConfigBinding(
- );
+ void ObtainConfigBinding();
 
 Function
 ~~~~~~~~
@@ -679,9 +651,8 @@ Synopsis
 ::
 
  UBYTE ReadExpansionByte(
-         APTR board,
-         ULONG offset
- );
+          APTR board,
+          ULONG offset );
 
 
 ReadExpansionRom
@@ -692,9 +663,8 @@ Synopsis
 ::
 
  void ReadExpansionRom(
-         APTR board,
-         struct ConfigDev * configDev
- );
+          APTR board,
+          struct ConfigDev * configDev );
 
 
 ReleaseConfigBinding
@@ -704,8 +674,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- void ReleaseConfigBinding(
- );
+ void ReleaseConfigBinding();
 
 Function
 ~~~~~~~~
@@ -746,8 +715,7 @@ Synopsis
 ::
 
  void RemConfigDev(
-         struct ConfigDev * configDev
- );
+          struct ConfigDev * configDev );
 
 Function
 ~~~~~~~~
@@ -787,9 +755,8 @@ Synopsis
 ::
 
  void SetCurrentBinding(
-         struct CurrentBinding * currentBinding,
-         ULONG bindingSize
- );
+          struct CurrentBinding * currentBinding,
+          ULONG bindingSize );
 
 Function
 ~~~~~~~~
@@ -843,9 +810,8 @@ Synopsis
 ::
 
  void WriteExpansionByte(
-         APTR board,
-         ULONG offset,
-         ULONG byte
- );
+          APTR board,
+          ULONG offset,
+          ULONG byte );
 
 

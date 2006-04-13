@@ -8,159 +8,47 @@ dos
 
 ----------
 
-`AbortPkt`_
-`AddBuffers`_
-`AddDosEntry`_
-`AddPart`_
-`AddSegment`_
-`AllocDosObject`_
-`AssignAdd`_
-`AssignLate`_
-`AssignLock`_
-`AssignPath`_
-`AttemptLockDosList`_
-`ChangeMode`_
-`CheckSignal`_
-`Cli`_
-`CliInitNewcli`_
-`CliInitRun`_
-`Close`_
-`CompareDates`_
-`CreateDir`_
-`CreateNewProc`_
-`CreateProc`_
-`CurrentDir`_
-`DateStamp`_
-`DateToStr`_
-`Delay`_
-`DeleteFile`_
-`DeleteVar`_
-`DeviceProc`_
-`DisplayError`_
-`DoPkt`_
-`DupLock`_
-`EndNotify`_
-`Error`_
-`ErrorReport`_
-`ExAll`_
-`ExAllEnd`_
-`ExNext`_
-`Examine`_
-`Execute`_
-`Exit`_
-`FGetC`_
-`FGets`_
-`FPutC`_
-`FPuts`_
-`FRead`_
-`FWrite`_
-`Fault`_
-`FilePart`_
-`FindArg`_
-`FindCliProc`_
-`FindDosEntry`_
-`FindSegment`_
-`FindVar`_
-`Flush`_
-`Format`_
-`FreeArgs`_
-`FreeDeviceProc`_
-`FreeDosEntry`_
-`FreeDosObject`_
-`GetArgStr`_
-`GetConsoleTask`_
-`GetCurrentDirName`_
-`GetDeviceProc`_
-`GetFileSysTask`_
-`GetProgramDir`_
-`GetProgramName`_
-`GetPrompt`_
-`GetVar`_
-`Info`_
-`Inhibit`_
-`Input`_
-`InternalLoadSeg`_
-`InternalUnLoadSeg`_
-`IoErr`_
-`IsFileSystem`_
-`IsInteractive`_
-`LoadSeg`_
-`Lock`_
-`LockDosList`_
-`LockRecord`_
-`LockRecords`_
-`MakeDosEntry`_
-`MakeLink`_
-`MatchEnd`_
-`MatchFirst`_
-`MatchNext`_
-`MatchPattern`_
-`MatchPatternNoCase`_
-`MaxCli`_
-`NameFromLock`_
-`NewLoadSeg`_
-`NextDosEntry`_
-`Open`_
-`OpenFromLock`_
-`Output`_
-`ParentDir`_
-`ParentOfFH`_
-`ParsePattern`_
-`ParsePatternNoCase`_
-`PathPart`_
-`PrintFault`_
-`PutStr`_
-`Read`_
-`ReadArgs`_
-`ReadItem`_
-`ReadLink`_
-`Relabel`_
-`RemAssignList`_
-`RemDosEntry`_
-`RemSegment`_
-`Rename`_
-`ReplyPkt`_
-`RunCommand`_
-`SameDevice`_
-`SameLock`_
-`Seek`_
-`SelectError`_
-`SelectInput`_
-`SelectOutput`_
-`SendPkt`_
-`SetArgStr`_
-`SetComment`_
-`SetConsoleTask`_
-`SetCurrentDirName`_
-`SetFileDate`_
-`SetFileSize`_
-`SetFileSysTask`_
-`SetIoErr`_
-`SetMode`_
-`SetOwner`_
-`SetProgramDir`_
-`SetProgramName`_
-`SetPrompt`_
-`SetProtection`_
-`SetVBuf`_
-`SetVar`_
-`SplitName`_
-`StartNotify`_
-`StrToDate`_
-`StrToLong`_
-`SystemTagList`_
-`UnGetC`_
-`UnLoadSeg`_
-`UnLockDosList`_
-`UnLockRecord`_
-`UnLockRecords`_
-`VFPrintf`_
-`VFWritef`_
-`VPrintf`_
-`WaitForChar`_
-`WaitPkt`_
-`Write`_
-`WriteChars`_
+======================================= ======================================= ======================================= ======================================= 
+`AbortPkt`_                             `AddBuffers`_                           `AddDosEntry`_                          `AddPart`_                              
+`AddSegment`_                           `AllocDosObject`_                       `AssignAdd`_                            `AssignLate`_                           
+`AssignLock`_                           `AssignPath`_                           `AttemptLockDosList`_                   `ChangeMode`_                           
+`CheckSignal`_                          `Cli`_                                  `CliInitNewcli`_                        `CliInitRun`_                           
+`Close`_                                `CompareDates`_                         `CreateDir`_                            `CreateNewProc`_                        
+`CreateProc`_                           `CurrentDir`_                           `DateStamp`_                            `DateToStr`_                            
+`Delay`_                                `DeleteFile`_                           `DeleteVar`_                            `DeviceProc`_                           
+`DisplayError`_                         `DoPkt`_                                `DupLock`_                              `EndNotify`_                            
+`Error`_                                `ErrorReport`_                          `ExAll`_                                `ExAllEnd`_                             
+`ExNext`_                               `Examine`_                              `Execute`_                              `Exit`_                                 
+`FGetC`_                                `FGets`_                                `FPutC`_                                `FPuts`_                                
+`FRead`_                                `FWrite`_                               `Fault`_                                `FilePart`_                             
+`FindArg`_                              `FindCliProc`_                          `FindDosEntry`_                         `FindSegment`_                          
+`FindVar`_                              `Flush`_                                `Format`_                               `FreeArgs`_                             
+`FreeDeviceProc`_                       `FreeDosEntry`_                         `FreeDosObject`_                        `GetArgStr`_                            
+`GetConsoleTask`_                       `GetCurrentDirName`_                    `GetDeviceProc`_                        `GetFileSysTask`_                       
+`GetProgramDir`_                        `GetProgramName`_                       `GetPrompt`_                            `GetVar`_                               
+`Info`_                                 `Inhibit`_                              `Input`_                                `InternalLoadSeg`_                      
+`InternalUnLoadSeg`_                    `IoErr`_                                `IsFileSystem`_                         `IsInteractive`_                        
+`LoadSeg`_                              `Lock`_                                 `LockDosList`_                          `LockRecord`_                           
+`LockRecords`_                          `MakeDosEntry`_                         `MakeLink`_                             `MatchEnd`_                             
+`MatchFirst`_                           `MatchNext`_                            `MatchPattern`_                         `MatchPatternNoCase`_                   
+`MaxCli`_                               `NameFromLock`_                         `NewLoadSeg`_                           `NextDosEntry`_                         
+`Open`_                                 `OpenFromLock`_                         `Output`_                               `ParentDir`_                            
+`ParentOfFH`_                           `ParsePattern`_                         `ParsePatternNoCase`_                   `PathPart`_                             
+`PrintFault`_                           `PutStr`_                               `Read`_                                 `ReadArgs`_                             
+`ReadItem`_                             `ReadLink`_                             `Relabel`_                              `RemAssignList`_                        
+`RemDosEntry`_                          `RemSegment`_                           `Rename`_                               `ReplyPkt`_                             
+`RunCommand`_                           `SameDevice`_                           `SameLock`_                             `Seek`_                                 
+`SelectError`_                          `SelectInput`_                          `SelectOutput`_                         `SendPkt`_                              
+`SetArgStr`_                            `SetComment`_                           `SetConsoleTask`_                       `SetCurrentDirName`_                    
+`SetFileDate`_                          `SetFileSize`_                          `SetFileSysTask`_                       `SetIoErr`_                             
+`SetMode`_                              `SetOwner`_                             `SetProgramDir`_                        `SetProgramName`_                       
+`SetPrompt`_                            `SetProtection`_                        `SetVBuf`_                              `SetVar`_                               
+`SplitName`_                            `StartNotify`_                          `StrToDate`_                            `StrToLong`_                            
+`SystemTagList`_                        `UnGetC`_                               `UnLoadSeg`_                            `UnLockDosList`_                        
+`UnLockRecord`_                         `UnLockRecords`_                        `VFPrintf`_                             `VFWritef`_                             
+`VPrintf`_                              `WaitForChar`_                          `WaitPkt`_                              `Write`_                                
+`WriteChars`_                           
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -172,9 +60,8 @@ Synopsis
 ::
 
  void AbortPkt(
-         struct MsgPort   * port,
-         struct DosPacket * pkt
- );
+          struct MsgPort   * port,
+          struct DosPacket * pkt );
 
 
 AddBuffers
@@ -185,9 +72,8 @@ Synopsis
 ::
 
  LONG AddBuffers(
-         CONST_STRPTR devicename,
-         LONG numbuffers
- );
+          CONST_STRPTR devicename,
+          LONG numbuffers );
 
 Function
 ~~~~~~~~
@@ -221,8 +107,7 @@ Synopsis
 ::
 
  LONG AddDosEntry(
-         struct DosList * dlist
- );
+          struct DosList * dlist );
 
 Function
 ~~~~~~~~
@@ -268,10 +153,9 @@ Synopsis
 ::
 
  BOOL AddPart(
-         STRPTR dirname,
-         CONST_STRPTR filename,
-         ULONG size
- );
+          STRPTR dirname,
+          CONST_STRPTR filename,
+          ULONG size );
 
 Function
 ~~~~~~~~
@@ -343,10 +227,9 @@ Synopsis
 ::
 
  BOOL AddSegment(
-         CONST_STRPTR name,
-         BPTR seg,
-         LONG type
- );
+          CONST_STRPTR name,
+          BPTR seg,
+          LONG type );
 
 Function
 ~~~~~~~~
@@ -405,9 +288,8 @@ Synopsis
 ::
 
  APTR AllocDosObject(
-         ULONG type,
-         struct TagItem * tags
- );
+          ULONG type,
+          struct TagItem * tags );
 
 Function
 ~~~~~~~~
@@ -442,9 +324,8 @@ Synopsis
 ::
 
  BOOL AssignAdd(
-         CONST_STRPTR name,
-         BPTR lock
- );
+          CONST_STRPTR name,
+          BPTR lock );
 
 Function
 ~~~~~~~~
@@ -496,9 +377,8 @@ Synopsis
 ::
 
  BOOL AssignLate(
-         CONST_STRPTR name,
-         CONST_STRPTR path
- );
+          CONST_STRPTR name,
+          CONST_STRPTR path );
 
 Function
 ~~~~~~~~
@@ -543,9 +423,8 @@ Synopsis
 ::
 
  BOOL AssignLock(
-         CONST_STRPTR name,
-         BPTR lock
- );
+          CONST_STRPTR name,
+          BPTR lock );
 
 Function
 ~~~~~~~~
@@ -582,9 +461,8 @@ Synopsis
 ::
 
  BOOL AssignPath(
-         CONST_STRPTR name,
-         CONST_STRPTR path
- );
+          CONST_STRPTR name,
+          CONST_STRPTR path );
 
 Function
 ~~~~~~~~
@@ -630,8 +508,7 @@ Synopsis
 ::
 
  struct DosList * AttemptLockDosList(
-         ULONG flags
- );
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -667,10 +544,9 @@ Synopsis
 ::
 
  BOOL ChangeMode(
-         ULONG type,
-         BPTR object,
-         ULONG newmode
- );
+          ULONG type,
+          BPTR object,
+          ULONG newmode );
 
 Function
 ~~~~~~~~
@@ -713,8 +589,7 @@ Synopsis
 ::
 
  LONG CheckSignal(
-         LONG mask
- );
+          LONG mask );
 
 Function
 ~~~~~~~~
@@ -747,8 +622,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct CommandLineInterface * Cli(
- );
+ struct CommandLineInterface * Cli();
 
 Function
 ~~~~~~~~
@@ -781,8 +655,7 @@ Synopsis
 ::
 
  IPTR CliInitNewcli(
-         struct DosPacket * dp
- );
+          struct DosPacket * dp );
 
 Function
 ~~~~~~~~
@@ -828,8 +701,7 @@ Synopsis
 ::
 
  IPTR CliInitRun(
-         struct DosPacket * dp
- );
+          struct DosPacket * dp );
 
 Function
 ~~~~~~~~
@@ -873,8 +745,7 @@ Synopsis
 ::
 
  BOOL Close(
-         BPTR file
- );
+          BPTR file );
 
 Function
 ~~~~~~~~
@@ -915,9 +786,8 @@ Synopsis
 ::
 
  LONG CompareDates(
-         const struct DateStamp * date1,
-         const struct DateStamp * date2
- );
+          const struct DateStamp * date1,
+          const struct DateStamp * date2 );
 
 Function
 ~~~~~~~~
@@ -957,8 +827,7 @@ Synopsis
 ::
 
  BPTR CreateDir(
-         CONST_STRPTR name
- );
+          CONST_STRPTR name );
 
 Function
 ~~~~~~~~
@@ -992,8 +861,7 @@ Synopsis
 ::
 
  struct Process * CreateNewProc(
-         struct TagItem * tags
- );
+          struct TagItem * tags );
 
 Function
 ~~~~~~~~
@@ -1025,11 +893,10 @@ Synopsis
 ::
 
  struct MsgPort * CreateProc(
-         CONST_STRPTR name,
-         LONG pri,
-         BPTR segList,
-         LONG stackSize
- );
+          CONST_STRPTR name,
+          LONG pri,
+          BPTR segList,
+          LONG stackSize );
 
 Function
 ~~~~~~~~
@@ -1099,8 +966,7 @@ Synopsis
 ::
 
  BPTR CurrentDir(
-         BPTR lock
- );
+          BPTR lock );
 
 Function
 ~~~~~~~~
@@ -1133,8 +999,7 @@ Synopsis
 ::
 
  struct DateStamp * DateStamp(
-         struct DateStamp * date
- );
+          struct DateStamp * date );
 
 Function
 ~~~~~~~~
@@ -1179,8 +1044,7 @@ Synopsis
 ::
 
  BOOL DateToStr(
-         struct DateTime * datetime
- );
+          struct DateTime * datetime );
 
 Function
 ~~~~~~~~
@@ -1266,8 +1130,7 @@ Synopsis
 ::
 
  void Delay(
-         ULONG timeout
- );
+          ULONG timeout );
 
 Function
 ~~~~~~~~
@@ -1292,8 +1155,7 @@ Synopsis
 ::
 
  BOOL DeleteFile(
-         CONST_STRPTR name
- );
+          CONST_STRPTR name );
 
 Function
 ~~~~~~~~
@@ -1327,9 +1189,8 @@ Synopsis
 ::
 
  LONG DeleteVar(
-         CONST_STRPTR name,
-         ULONG flags
- );
+          CONST_STRPTR name,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -1387,8 +1248,7 @@ Synopsis
 ::
 
  struct Device * DeviceProc(
-         CONST_STRPTR name
- );
+          CONST_STRPTR name );
 
 Function
 ~~~~~~~~
@@ -1451,10 +1311,9 @@ Synopsis
 ::
 
  LONG DisplayError(
-         CONST_STRPTR formatStr,
-         ULONG flags,
-         APTR args
- );
+          CONST_STRPTR formatStr,
+          ULONG flags,
+          APTR args );
 
 Function
 ~~~~~~~~
@@ -1495,14 +1354,13 @@ Synopsis
 ::
 
  LONG DoPkt(
-         struct MsgPort * port,
-         LONG action,
-         LONG arg1,
-         LONG arg2,
-         LONG arg3,
-         LONG arg4,
-         LONG arg5
- );
+          struct MsgPort * port,
+          LONG action,
+          LONG arg1,
+          LONG arg2,
+          LONG arg3,
+          LONG arg4,
+          LONG arg5 );
 
 Function
 ~~~~~~~~
@@ -1531,8 +1389,7 @@ Synopsis
 ::
 
  BPTR DupLock(
-         BPTR lock
- );
+          BPTR lock );
 
 Function
 ~~~~~~~~
@@ -1573,8 +1430,7 @@ Synopsis
 ::
 
  void EndNotify(
-         struct NotifyRequest * notify
- );
+          struct NotifyRequest * notify );
 
 Function
 ~~~~~~~~
@@ -1609,8 +1465,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BPTR Error(
- );
+ BPTR Error();
 
 Function
 ~~~~~~~~
@@ -1643,11 +1498,10 @@ Synopsis
 ::
 
  BOOL ErrorReport(
-         LONG code,
-         LONG type,
-         ULONG arg1,
-         struct MsgPort * device
- );
+          LONG code,
+          LONG type,
+          ULONG arg1,
+          struct MsgPort * device );
 
 Inputs
 ~~~~~~
@@ -1685,12 +1539,11 @@ Synopsis
 ::
 
  BOOL ExAll(
-         BPTR lock,
-         struct ExAllData * buffer,
-         LONG size,
-         LONG data,
-         struct ExAllControl * control
- );
+          BPTR lock,
+          struct ExAllData * buffer,
+          LONG size,
+          LONG data,
+          struct ExAllControl * control );
 
 Function
 ~~~~~~~~
@@ -1753,12 +1606,11 @@ Synopsis
 ::
 
  void ExAllEnd(
-         BPTR lock,
-         struct ExAllData * buffer,
-         LONG size,
-         LONG data,
-         struct ExAllControl * control
- );
+          BPTR lock,
+          struct ExAllData * buffer,
+          LONG size,
+          LONG data,
+          struct ExAllControl * control );
 
 Function
 ~~~~~~~~
@@ -1807,9 +1659,8 @@ Synopsis
 ::
 
  BOOL ExNext(
-         BPTR lock,
-         struct FileInfoBlock * fileInfoBlock
- );
+          BPTR lock,
+          struct FileInfoBlock * fileInfoBlock );
 
 Function
 ~~~~~~~~
@@ -1890,9 +1741,8 @@ Synopsis
 ::
 
  BOOL Examine(
-         BPTR lock,
-         struct FileInfoBlock * fib
- );
+          BPTR lock,
+          struct FileInfoBlock * fib );
 
 Function
 ~~~~~~~~
@@ -1947,10 +1797,9 @@ Synopsis
 ::
 
  LONG Execute(
-         STRPTR string,
-         BPTR input,
-         BPTR output
- );
+          STRPTR string,
+          BPTR input,
+          BPTR output );
 
 Function
 ~~~~~~~~
@@ -2005,8 +1854,7 @@ Synopsis
 ::
 
  void Exit(
-         LONG returnCode
- );
+          LONG returnCode );
 
 Function
 ~~~~~~~~
@@ -2034,8 +1882,7 @@ Synopsis
 ::
 
  LONG FGetC(
-         BPTR file
- );
+          BPTR file );
 
 Function
 ~~~~~~~~
@@ -2078,10 +1925,9 @@ Synopsis
 ::
 
  STRPTR FGets(
-         BPTR fh,
-         STRPTR buf,
-         ULONG buflen
- );
+          BPTR fh,
+          STRPTR buf,
+          ULONG buflen );
 
 Function
 ~~~~~~~~
@@ -2118,9 +1964,8 @@ Synopsis
 ::
 
  LONG FPutC(
-         BPTR file,
-         LONG character
- );
+          BPTR file,
+          LONG character );
 
 Inputs
 ~~~~~~
@@ -2154,9 +1999,8 @@ Synopsis
 ::
 
  LONG FPuts(
-         BPTR file,
-         CONST_STRPTR string
- );
+          BPTR file,
+          CONST_STRPTR string );
 
 Function
 ~~~~~~~~
@@ -2198,11 +2042,10 @@ Synopsis
 ::
 
  LONG FRead(
-         BPTR fh,
-         APTR block,
-         ULONG blocklen,
-         ULONG number
- );
+          BPTR fh,
+          APTR block,
+          ULONG blocklen,
+          ULONG number );
 
 Function
 ~~~~~~~~
@@ -2246,11 +2089,10 @@ Synopsis
 ::
 
  LONG FWrite(
-         BPTR fh,
-         CONST APTR block,
-         ULONG blocklen,
-         ULONG numblocks
- );
+          BPTR fh,
+          CONST APTR block,
+          ULONG blocklen,
+          ULONG numblocks );
 
 Function
 ~~~~~~~~
@@ -2293,11 +2135,10 @@ Synopsis
 ::
 
  BOOL Fault(
-         LONG code,
-         CONST_STRPTR header,
-         STRPTR buffer,
-         LONG len
- );
+          LONG code,
+          CONST_STRPTR header,
+          STRPTR buffer,
+          LONG len );
 
 Function
 ~~~~~~~~
@@ -2342,8 +2183,7 @@ Synopsis
 ::
 
  STRPTR FilePart(
-         CONST_STRPTR path
- );
+          CONST_STRPTR path );
 
 Function
 ~~~~~~~~
@@ -2400,9 +2240,8 @@ Synopsis
 ::
 
  LONG FindArg(
-         CONST_STRPTR template,
-         CONST_STRPTR keyword
- );
+          CONST_STRPTR template,
+          CONST_STRPTR keyword );
 
 
 FindCliProc
@@ -2413,8 +2252,7 @@ Synopsis
 ::
 
  struct Process * FindCliProc(
-         ULONG num
- );
+          ULONG num );
 
 Function
 ~~~~~~~~
@@ -2462,10 +2300,9 @@ Synopsis
 ::
 
  struct DosList * FindDosEntry(
-         struct DosList * dlist,
-         CONST_STRPTR name,
-         ULONG flags
- );
+          struct DosList * dlist,
+          CONST_STRPTR name,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -2504,10 +2341,9 @@ Synopsis
 ::
 
  struct Segment * FindSegment(
-         STRPTR name,
-         struct Segment * seg,
-         BOOL system
- );
+          STRPTR name,
+          struct Segment * seg,
+          BOOL system );
 
 Function
 ~~~~~~~~
@@ -2564,9 +2400,8 @@ Synopsis
 ::
 
  struct LocalVar * FindVar(
-         CONST_STRPTR name,
-         ULONG type
- );
+          CONST_STRPTR name,
+          ULONG type );
 
 Function
 ~~~~~~~~
@@ -2612,8 +2447,7 @@ Synopsis
 ::
 
  LONG Flush(
-         BPTR file
- );
+          BPTR file );
 
 Function
 ~~~~~~~~
@@ -2648,10 +2482,9 @@ Synopsis
 ::
 
  BOOL Format(
-         CONST_STRPTR devicename,
-         CONST_STRPTR volumename,
-         ULONG dostype
- );
+          CONST_STRPTR devicename,
+          CONST_STRPTR volumename,
+          ULONG dostype );
 
 Function
 ~~~~~~~~
@@ -2689,8 +2522,7 @@ Synopsis
 ::
 
  void FreeArgs(
-         struct RDArgs * args
- );
+          struct RDArgs * args );
 
 Function
 ~~~~~~~~
@@ -2734,8 +2566,7 @@ Synopsis
 ::
 
  void FreeDeviceProc(
-         struct DevProc * dp
- );
+          struct DevProc * dp );
 
 Function
 ~~~~~~~~
@@ -2774,8 +2605,7 @@ Synopsis
 ::
 
  void FreeDosEntry(
-         struct DosList * dlist
- );
+          struct DosList * dlist );
 
 Function
 ~~~~~~~~
@@ -2800,9 +2630,8 @@ Synopsis
 ::
 
  void FreeDosObject(
-         ULONG type,
-         APTR ptr
- );
+          ULONG type,
+          APTR ptr );
 
 Function
 ~~~~~~~~
@@ -2827,8 +2656,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- STRPTR GetArgStr(
- );
+ STRPTR GetArgStr();
 
 Function
 ~~~~~~~~
@@ -2853,8 +2681,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct MsgPort * GetConsoleTask(
- );
+ struct MsgPort * GetConsoleTask();
 
 Function
 ~~~~~~~~
@@ -2902,9 +2729,8 @@ Synopsis
 ::
 
  BOOL GetCurrentDirName(
-         STRPTR buf,
-         LONG len
- );
+          STRPTR buf,
+          LONG len );
 
 Function
 ~~~~~~~~
@@ -2949,9 +2775,8 @@ Synopsis
 ::
 
  struct DevProc * GetDeviceProc(
-         STRPTR name,
-         struct DevProc * dp
- );
+          STRPTR name,
+          struct DevProc * dp );
 
 Function
 ~~~~~~~~
@@ -3008,8 +2833,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct MsgPort * GetFileSysTask(
- );
+ struct MsgPort * GetFileSysTask();
 
 Function
 ~~~~~~~~
@@ -3047,8 +2871,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BPTR GetProgramDir(
- );
+ BPTR GetProgramDir();
 
 Function
 ~~~~~~~~
@@ -3080,9 +2903,8 @@ Synopsis
 ::
 
  BOOL GetProgramName(
-         STRPTR buf,
-         LONG len
- );
+          STRPTR buf,
+          LONG len );
 
 Function
 ~~~~~~~~
@@ -3127,9 +2949,8 @@ Synopsis
 ::
 
  BOOL GetPrompt(
-         STRPTR buf,
-         LONG len
- );
+          STRPTR buf,
+          LONG len );
 
 Function
 ~~~~~~~~
@@ -3173,11 +2994,10 @@ Synopsis
 ::
 
  LONG GetVar(
-         CONST_STRPTR name,
-         STRPTR buffer,
-         LONG size,
-         LONG flags
- );
+          CONST_STRPTR name,
+          STRPTR buffer,
+          LONG size,
+          LONG flags );
 
 Function
 ~~~~~~~~
@@ -3259,9 +3079,8 @@ Synopsis
 ::
 
  BOOL Info(
-         BPTR lock,
-         struct InfoData * parameterBlock
- );
+          BPTR lock,
+          struct InfoData * parameterBlock );
 
 Function
 ~~~~~~~~
@@ -3307,9 +3126,8 @@ Synopsis
 ::
 
  LONG Inhibit(
-         CONST_STRPTR name,
-         LONG onoff
- );
+          CONST_STRPTR name,
+          LONG onoff );
 
 Function
 ~~~~~~~~
@@ -3354,8 +3172,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BPTR Input(
- );
+ BPTR Input();
 
 Function
 ~~~~~~~~
@@ -3381,11 +3198,10 @@ Synopsis
 ::
 
  BPTR InternalLoadSeg(
-         BPTR fh,
-         BPTR table,
-         LONG_FUNC functionarray,
-         LONG * stack
- );
+          BPTR fh,
+          BPTR table,
+          LONG_FUNC functionarray,
+          LONG * stack );
 
 Function
 ~~~~~~~~
@@ -3445,9 +3261,8 @@ Synopsis
 ::
 
  BOOL InternalUnLoadSeg(
-         BPTR seglist,
-         VOID_FUNC freefunc
- );
+          BPTR seglist,
+          VOID_FUNC freefunc );
 
 
 IoErr
@@ -3457,8 +3272,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- LONG IoErr(
- );
+ LONG IoErr();
 
 Function
 ~~~~~~~~
@@ -3483,8 +3297,7 @@ Synopsis
 ::
 
  BOOL IsFileSystem(
-         STRPTR devicename
- );
+          STRPTR devicename );
 
 Function
 ~~~~~~~~
@@ -3528,8 +3341,7 @@ Synopsis
 ::
 
  BOOL IsInteractive(
-         BPTR file
- );
+          BPTR file );
 
 Function
 ~~~~~~~~
@@ -3562,8 +3374,7 @@ Synopsis
 ::
 
  BPTR LoadSeg(
-         CONST_STRPTR name
- );
+          CONST_STRPTR name );
 
 Function
 ~~~~~~~~
@@ -3612,9 +3423,8 @@ Synopsis
 ::
 
  BPTR Lock(
-         CONST_STRPTR name,
-         LONG accessMode
- );
+          CONST_STRPTR name,
+          LONG accessMode );
 
 Function
 ~~~~~~~~
@@ -3660,8 +3470,7 @@ Synopsis
 ::
 
  struct DosList * LockDosList(
-         ULONG flags
- );
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -3698,12 +3507,11 @@ Synopsis
 ::
 
  BOOL LockRecord(
-         BPTR fh,
-         ULONG offset,
-         ULONG length,
-         ULONG mode,
-         ULONG timeout
- );
+          BPTR fh,
+          ULONG offset,
+          ULONG length,
+          ULONG mode,
+          ULONG timeout );
 
 Function
 ~~~~~~~~
@@ -3760,9 +3568,8 @@ Synopsis
 ::
 
  BOOL LockRecords(
-         struct RecordLock * recArray,
-         ULONG timeout
- );
+          struct RecordLock * recArray,
+          ULONG timeout );
 
 Function
 ~~~~~~~~
@@ -3818,9 +3625,8 @@ Synopsis
 ::
 
  struct DosList * MakeDosEntry(
-         CONST_STRPTR name,
-         LONG type
- );
+          CONST_STRPTR name,
+          LONG type );
 
 Function
 ~~~~~~~~
@@ -3864,10 +3670,9 @@ Synopsis
 ::
 
  LONG MakeLink(
-         STRPTR name,
-         APTR dest,
-         LONG soft
- );
+          STRPTR name,
+          APTR dest,
+          LONG soft );
 
 Function
 ~~~~~~~~
@@ -3928,8 +3733,7 @@ Synopsis
 ::
 
  void MatchEnd(
-         struct AnchorPath * AP
- );
+          struct AnchorPath * AP );
 
 Function
 ~~~~~~~~
@@ -3963,9 +3767,8 @@ Synopsis
 ::
 
  LONG MatchFirst(
-         STRPTR pat,
-         struct AnchorPath * AP
- );
+          STRPTR pat,
+          struct AnchorPath * AP );
 
 Function
 ~~~~~~~~
@@ -4017,8 +3820,7 @@ Synopsis
 ::
 
  LONG MatchNext(
-         struct AnchorPath * AP
- );
+          struct AnchorPath * AP );
 
 Function
 ~~~~~~~~
@@ -4054,9 +3856,8 @@ Synopsis
 ::
 
  BOOL MatchPattern(
-         STRPTR pat,
-         STRPTR str
- );
+          STRPTR pat,
+          STRPTR str );
 
 Function
 ~~~~~~~~
@@ -4101,9 +3902,8 @@ Synopsis
 ::
 
  BOOL MatchPatternNoCase(
-         STRPTR pat,
-         STRPTR str
- );
+          STRPTR pat,
+          STRPTR str );
 
 Function
 ~~~~~~~~
@@ -4147,8 +3947,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG MaxCli(
- );
+ ULONG MaxCli();
 
 Function
 ~~~~~~~~
@@ -4175,10 +3974,9 @@ Synopsis
 ::
 
  BOOL NameFromLock(
-         BPTR lock,
-         STRPTR buffer,
-         LONG length
- );
+          BPTR lock,
+          STRPTR buffer,
+          LONG length );
 
 Function
 ~~~~~~~~
@@ -4215,9 +4013,8 @@ Synopsis
 ::
 
  BPTR NewLoadSeg(
-         STRPTR file,
-         struct TagItem * tags
- );
+          STRPTR file,
+          struct TagItem * tags );
 
 Function
 ~~~~~~~~
@@ -4267,9 +4064,8 @@ Synopsis
 ::
 
  struct DosList * NextDosEntry(
-         struct DosList * dlist,
-         ULONG flags
- );
+          struct DosList * dlist,
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -4305,9 +4101,8 @@ Synopsis
 ::
 
  BPTR Open(
-         CONST_STRPTR name,
-         LONG accessMode
- );
+          CONST_STRPTR name,
+          LONG accessMode );
 
 Function
 ~~~~~~~~
@@ -4344,8 +4139,7 @@ Synopsis
 ::
 
  BPTR OpenFromLock(
-         BPTR lock
- );
+          BPTR lock );
 
 Function
 ~~~~~~~~
@@ -4387,8 +4181,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BPTR Output(
- );
+ BPTR Output();
 
 Function
 ~~~~~~~~
@@ -4414,8 +4207,7 @@ Synopsis
 ::
 
  BPTR ParentDir(
-         BPTR lock
- );
+          BPTR lock );
 
 Function
 ~~~~~~~~
@@ -4458,8 +4250,7 @@ Synopsis
 ::
 
  BPTR ParentOfFH(
-         BPTR fh
- );
+          BPTR fh );
 
 Function
 ~~~~~~~~
@@ -4500,10 +4291,9 @@ Synopsis
 ::
 
  LONG ParsePattern(
-         STRPTR Source,
-         STRPTR Dest,
-         LONG DestLength
- );
+          STRPTR Source,
+          STRPTR Dest,
+          LONG DestLength );
 
 Function
 ~~~~~~~~
@@ -4556,10 +4346,9 @@ Synopsis
 ::
 
  LONG ParsePatternNoCase(
-         STRPTR Source,
-         STRPTR Dest,
-         LONG DestLength
- );
+          STRPTR Source,
+          STRPTR Dest,
+          LONG DestLength );
 
 Function
 ~~~~~~~~
@@ -4585,8 +4374,7 @@ Synopsis
 ::
 
  STRPTR PathPart(
-         CONST_STRPTR path
- );
+          CONST_STRPTR path );
 
 Function
 ~~~~~~~~
@@ -4627,9 +4415,8 @@ Synopsis
 ::
 
  BOOL PrintFault(
-         LONG code,
-         STRPTR header
- );
+          LONG code,
+          STRPTR header );
 
 Function
 ~~~~~~~~
@@ -4672,8 +4459,7 @@ Synopsis
 ::
 
  LONG PutStr(
-         CONST_STRPTR string
- );
+          CONST_STRPTR string );
 
 Function
 ~~~~~~~~
@@ -4714,10 +4500,9 @@ Synopsis
 ::
 
  LONG Read(
-         BPTR file,
-         APTR buffer,
-         LONG length
- );
+          BPTR file,
+          APTR buffer,
+          LONG length );
 
 Function
 ~~~~~~~~
@@ -4758,10 +4543,9 @@ Synopsis
 ::
 
  struct RDArgs * ReadArgs(
-         CONST_STRPTR template,
-         IPTR * array,
-         struct RDArgs * rdargs
- );
+          CONST_STRPTR template,
+          IPTR * array,
+          struct RDArgs * rdargs );
 
 Function
 ~~~~~~~~
@@ -4807,10 +4591,9 @@ Synopsis
 ::
 
  LONG ReadItem(
-         STRPTR buffer,
-         LONG maxchars,
-         struct CSource * input
- );
+          STRPTR buffer,
+          LONG maxchars,
+          struct CSource * input );
 
 Function
 ~~~~~~~~
@@ -4860,12 +4643,11 @@ Synopsis
 ::
 
  LONG ReadLink(
-         struct MsgPort * port,
-         BPTR lock,
-         STRPTR path,
-         STRPTR buffer,
-         ULONG size
- );
+          struct MsgPort * port,
+          BPTR lock,
+          STRPTR path,
+          STRPTR buffer,
+          ULONG size );
 
 Function
 ~~~~~~~~
@@ -4912,9 +4694,8 @@ Synopsis
 ::
 
  LONG Relabel(
-         CONST_STRPTR drive,
-         CONST_STRPTR newname
- );
+          CONST_STRPTR drive,
+          CONST_STRPTR newname );
 
 Function
 ~~~~~~~~
@@ -4950,9 +4731,8 @@ Synopsis
 ::
 
  LONG RemAssignList(
-         STRPTR name,
-         BPTR lock
- );
+          STRPTR name,
+          BPTR lock );
 
 Function
 ~~~~~~~~
@@ -4999,8 +4779,7 @@ Synopsis
 ::
 
  LONG RemDosEntry(
-         struct DosList * dlist
- );
+          struct DosList * dlist );
 
 Function
 ~~~~~~~~
@@ -5044,8 +4823,7 @@ Synopsis
 ::
 
  LONG RemSegment(
-         struct Segment * seg
- );
+          struct Segment * seg );
 
 Function
 ~~~~~~~~
@@ -5089,9 +4867,8 @@ Synopsis
 ::
 
  LONG Rename(
-         CONST_STRPTR oldName,
-         CONST_STRPTR newName
- );
+          CONST_STRPTR oldName,
+          CONST_STRPTR newName );
 
 Function
 ~~~~~~~~
@@ -5126,10 +4903,9 @@ Synopsis
 ::
 
  void ReplyPkt(
-         struct DosPacket * dp,
-         LONG res1,
-         LONG res2
- );
+          struct DosPacket * dp,
+          LONG res1,
+          LONG res2 );
 
 Notes
 ~~~~~
@@ -5150,11 +4926,10 @@ Synopsis
 ::
 
  LONG RunCommand(
-         BPTR segList,
-         ULONG stacksize,
-         STRPTR argptr,
-         ULONG argsize
- );
+          BPTR segList,
+          ULONG stacksize,
+          STRPTR argptr,
+          ULONG argsize );
 
 Function
 ~~~~~~~~
@@ -5213,9 +4988,8 @@ Synopsis
 ::
 
  BOOL SameDevice(
-         BPTR lock1,
-         BPTR lock2
- );
+          BPTR lock1,
+          BPTR lock2 );
 
 
 SameLock
@@ -5226,9 +5000,8 @@ Synopsis
 ::
 
  LONG SameLock(
-         BPTR lock1,
-         BPTR lock2
- );
+          BPTR lock1,
+          BPTR lock2 );
 
 
 Seek
@@ -5239,10 +5012,9 @@ Synopsis
 ::
 
  LONG Seek(
-         BPTR file,
-         LONG position,
-         LONG mode
- );
+          BPTR file,
+          LONG position,
+          LONG mode );
 
 Function
 ~~~~~~~~
@@ -5283,8 +5055,7 @@ Synopsis
 ::
 
  BPTR SelectError(
-         BPTR fh
- );
+          BPTR fh );
 
 Function
 ~~~~~~~~
@@ -5324,8 +5095,7 @@ Synopsis
 ::
 
  BPTR SelectInput(
-         BPTR fh
- );
+          BPTR fh );
 
 Function
 ~~~~~~~~
@@ -5358,8 +5128,7 @@ Synopsis
 ::
 
  BPTR SelectOutput(
-         BPTR fh
- );
+          BPTR fh );
 
 Function
 ~~~~~~~~
@@ -5392,10 +5161,9 @@ Synopsis
 ::
 
  void SendPkt(
-         struct DosPacket * dp,
-         struct MsgPort   * port,
-         struct MsgPort   * replyport
- );
+          struct DosPacket * dp,
+          struct MsgPort   * port,
+          struct MsgPort   * replyport );
 
 Function
 ~~~~~~~~
@@ -5441,8 +5209,7 @@ Synopsis
 ::
 
  STRPTR SetArgStr(
-         STRPTR string
- );
+          STRPTR string );
 
 Function
 ~~~~~~~~
@@ -5482,9 +5249,8 @@ Synopsis
 ::
 
  BOOL SetComment(
-         STRPTR name,
-         STRPTR comment
- );
+          STRPTR name,
+          STRPTR comment );
 
 Function
 ~~~~~~~~
@@ -5520,8 +5286,7 @@ Synopsis
 ::
 
  struct MsgPort * SetConsoleTask(
-         struct MsgPort * handler
- );
+          struct MsgPort * handler );
 
 Function
 ~~~~~~~~
@@ -5569,8 +5334,7 @@ Synopsis
 ::
 
  BOOL SetCurrentDirName(
-         CONST_STRPTR name
- );
+          CONST_STRPTR name );
 
 Function
 ~~~~~~~~
@@ -5619,9 +5383,8 @@ Synopsis
 ::
 
  BOOL SetFileDate(
-         CONST_STRPTR name,
-         struct DateStamp * date
- );
+          CONST_STRPTR name,
+          struct DateStamp * date );
 
 Function
 ~~~~~~~~
@@ -5655,10 +5418,9 @@ Synopsis
 ::
 
  LONG SetFileSize(
-         BPTR file,
-         LONG offset,
-         LONG mode
- );
+          BPTR file,
+          LONG offset,
+          LONG mode );
 
 Function
 ~~~~~~~~
@@ -5693,8 +5455,7 @@ Synopsis
 ::
 
  struct MsgPort * SetFileSysTask(
-         struct MsgPort * task
- );
+          struct MsgPort * task );
 
 Function
 ~~~~~~~~
@@ -5734,8 +5495,7 @@ Synopsis
 ::
 
  LONG SetIoErr(
-         LONG result
- );
+          LONG result );
 
 Function
 ~~~~~~~~
@@ -5767,9 +5527,8 @@ Synopsis
 ::
 
  LONG SetMode(
-         BPTR fh,
-         LONG mode
- );
+          BPTR fh,
+          LONG mode );
 
 Function
 ~~~~~~~~
@@ -5808,9 +5567,8 @@ Synopsis
 ::
 
  BOOL SetOwner(
-         STRPTR name,
-         ULONG owner_info
- );
+          STRPTR name,
+          ULONG owner_info );
 
 Inputs
 ~~~~~~
@@ -5837,8 +5595,7 @@ Synopsis
 ::
 
  BPTR SetProgramDir(
-         BPTR lock
- );
+          BPTR lock );
 
 Function
 ~~~~~~~~
@@ -5889,8 +5646,7 @@ Synopsis
 ::
 
  BOOL SetProgramName(
-         STRPTR name
- );
+          STRPTR name );
 
 Function
 ~~~~~~~~
@@ -5939,8 +5695,7 @@ Synopsis
 ::
 
  BOOL SetPrompt(
-         STRPTR name
- );
+          STRPTR name );
 
 Function
 ~~~~~~~~
@@ -5988,9 +5743,8 @@ Synopsis
 ::
 
  BOOL SetProtection(
-         CONST_STRPTR name,
-         ULONG protect
- );
+          CONST_STRPTR name,
+          ULONG protect );
 
 Inputs
 ~~~~~~
@@ -6017,11 +5771,10 @@ Synopsis
 ::
 
  LONG SetVBuf(
-         BPTR file,
-         STRPTR buff,
-         LONG type,
-         LONG size
- );
+          BPTR file,
+          STRPTR buff,
+          LONG type,
+          LONG size );
 
 Function
 ~~~~~~~~
@@ -6062,11 +5815,10 @@ Synopsis
 ::
 
  BOOL SetVar(
-         CONST_STRPTR name,
-         CONST_STRPTR buffer,
-         LONG size,
-         LONG flags
- );
+          CONST_STRPTR name,
+          CONST_STRPTR buffer,
+          LONG size,
+          LONG flags );
 
 Function
 ~~~~~~~~
@@ -6158,12 +5910,11 @@ Synopsis
 ::
 
  LONG SplitName(
-         STRPTR name,
-         ULONG seperator,
-         STRPTR buf,
-         LONG oldpos,
-         LONG size
- );
+          STRPTR name,
+          ULONG seperator,
+          STRPTR buf,
+          LONG oldpos,
+          LONG size );
 
 Function
 ~~~~~~~~
@@ -6211,8 +5962,7 @@ Synopsis
 ::
 
  BOOL StartNotify(
-         struct NotifyRequest * notify
- );
+          struct NotifyRequest * notify );
 
 Function
 ~~~~~~~~
@@ -6267,8 +6017,7 @@ Synopsis
 ::
 
  BOOL StrToDate(
-         struct DateTime * datetime
- );
+          struct DateTime * datetime );
 
 Function
 ~~~~~~~~
@@ -6351,9 +6100,8 @@ Synopsis
 ::
 
  LONG StrToLong(
-         CONST_STRPTR string,
-         LONG * value
- );
+          CONST_STRPTR string,
+          LONG * value );
 
 Function
 ~~~~~~~~
@@ -6401,9 +6149,8 @@ Synopsis
 ::
 
  LONG SystemTagList(
-         CONST_STRPTR command,
-         struct TagItem * tags
- );
+          CONST_STRPTR command,
+          struct TagItem * tags );
 
 Function
 ~~~~~~~~
@@ -6489,9 +6236,8 @@ Synopsis
 ::
 
  LONG UnGetC(
-         BPTR file,
-         LONG character
- );
+          BPTR file,
+          LONG character );
 
 Function
 ~~~~~~~~
@@ -6535,8 +6281,7 @@ Synopsis
 ::
 
  BOOL UnLoadSeg(
-         BPTR seglist
- );
+          BPTR seglist );
 
 Function
 ~~~~~~~~
@@ -6575,8 +6320,7 @@ Synopsis
 ::
 
  void UnLockDosList(
-         ULONG flags
- );
+          ULONG flags );
 
 Function
 ~~~~~~~~
@@ -6601,10 +6345,9 @@ Synopsis
 ::
 
  BOOL UnLockRecord(
-         BPTR fh,
-         ULONG offset,
-         ULONG length
- );
+          BPTR fh,
+          ULONG offset,
+          ULONG length );
 
 Function
 ~~~~~~~~
@@ -6650,8 +6393,7 @@ Synopsis
 ::
 
  BOOL UnLockRecords(
-         struct RecordLock * recArray
- );
+          struct RecordLock * recArray );
 
 Function
 ~~~~~~~~
@@ -6694,10 +6436,9 @@ Synopsis
 ::
 
  LONG VFPrintf(
-         BPTR file,
-         CONST_STRPTR format,
-         IPTR * argarray
- );
+          BPTR file,
+          CONST_STRPTR format,
+          IPTR * argarray );
 
 
 VFWritef
@@ -6708,10 +6449,9 @@ Synopsis
 ::
 
  LONG VFWritef(
-         BPTR fh,
-         STRPTR fmt,
-         IPTR * argarray
- );
+          BPTR fh,
+          STRPTR fmt,
+          IPTR * argarray );
 
 Function
 ~~~~~~~~
@@ -6771,9 +6511,8 @@ Synopsis
 ::
 
  LONG VPrintf(
-         CONST_STRPTR format,
-         IPTR * argarray
- );
+          CONST_STRPTR format,
+          IPTR * argarray );
 
 
 WaitForChar
@@ -6784,9 +6523,8 @@ Synopsis
 ::
 
  BOOL WaitForChar(
-         BPTR file,
-         LONG timeout
- );
+          BPTR file,
+          LONG timeout );
 
 Function
 ~~~~~~~~
@@ -6830,8 +6568,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct DosPacket * WaitPkt(
- );
+ struct DosPacket * WaitPkt();
 
 Function
 ~~~~~~~~
@@ -6870,10 +6607,9 @@ Synopsis
 ::
 
  LONG Write(
-         BPTR file,
-         CONST_APTR buffer,
-         LONG length
- );
+          BPTR file,
+          CONST_APTR buffer,
+          LONG length );
 
 Function
 ~~~~~~~~
@@ -6913,9 +6649,8 @@ Synopsis
 ::
 
  LONG WriteChars(
-         STRPTR buf,
-         ULONG buflen
- );
+          STRPTR buf,
+          ULONG buflen );
 
 Function
 ~~~~~~~~

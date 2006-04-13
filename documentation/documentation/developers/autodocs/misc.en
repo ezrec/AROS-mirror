@@ -8,8 +8,9 @@ misc
 
 ----------
 
-`AllocMiscResource`_
-`FreeMiscResource`_
+======================================= ======================================= ======================================= ======================================= 
+`AllocMiscResource`_                    `FreeMiscResource`_                     
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -21,9 +22,8 @@ Synopsis
 ::
 
  char * AllocMiscResource(
-         ULONG unitNum,
-         char * name
- );
+          ULONG unitNum,
+          char * name );
 
 Function
 ~~~~~~~~
@@ -67,8 +67,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- VOID FreeMiscResource(
- );
+ VOID FreeMiscResource();
 
 Function
 ~~~~~~~~

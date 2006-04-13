@@ -8,52 +8,20 @@ security
 
 ----------
 
-`secAccess_Control`_
-`secAddMonitor`_
-`secAllocGroupInfo`_
-`secAllocUserInfo`_
-`secCheckPasswd`_
-`secContextLocate`_
-`secEnumChildren`_
-`secFreeExtOwner`_
-`secFreeGroupInfo`_
-`secFreeUserInfo`_
-`secFreeze`_
-`secGetConfigDirLock`_
-`secGetDefProtection`_
-`secGetGroupInfo`_
-`secGetPasswdDirLock`_
-`secGetPktDefProtection`_
-`secGetPktOwner`_
-`secGetRelationshipA`_
-`secGetTaskExtOwner`_
-`secGetTaskOwner`_
-`secGetUserInfo`_
-`secKill`_
-`secLimitDOSSetProtection`_
-`secLoadPlugin`_
-`secLocksecBase`_
-`secLoginA`_
-`secLogout`_
-`secPasswd`_
-`secPluginOperationComplete`_
-`secRegisterHandler`_
-`secRemMonitor`_
-`secSetDefProtectionA`_
-`secSetProtection`_
-`secUnRegisterHandler`_
-`secUnfreeze`_
-`secUnloadPlugin`_
-`secUnlocksecBase`_
-`secUserInfo2ExtOwner`_
-`secgetgid`_
-`secgetpgid`_
-`secgetuid`_
-`secsetegid`_
-`secseteuid`_
-`secsetgid`_
-`secsetreuid`_
-`secsetuid`_
+======================================= ======================================= ======================================= ======================================= 
+`secAccess_Control`_                    `secAddMonitor`_                        `secAllocGroupInfo`_                    `secAllocUserInfo`_                     
+`secCheckPasswd`_                       `secContextLocate`_                     `secEnumChildren`_                      `secFreeExtOwner`_                      
+`secFreeGroupInfo`_                     `secFreeUserInfo`_                      `secFreeze`_                            `secGetConfigDirLock`_                  
+`secGetDefProtection`_                  `secGetGroupInfo`_                      `secGetPasswdDirLock`_                  `secGetPktDefProtection`_               
+`secGetPktOwner`_                       `secGetRelationshipA`_                  `secGetTaskExtOwner`_                   `secGetTaskOwner`_                      
+`secGetUserInfo`_                       `secKill`_                              `secLimitDOSSetProtection`_             `secLoadPlugin`_                        
+`secLocksecBase`_                       `secLoginA`_                            `secLogout`_                            `secPasswd`_                            
+`secPluginOperationComplete`_           `secRegisterHandler`_                   `secRemMonitor`_                        `secSetDefProtectionA`_                 
+`secSetProtection`_                     `secUnRegisterHandler`_                 `secUnfreeze`_                          `secUnloadPlugin`_                      
+`secUnlocksecBase`_                     `secUserInfo2ExtOwner`_                 `secgetgid`_                            `secgetpgid`_                           
+`secgetuid`_                            `secsetegid`_                           `secseteuid`_                           `secsetgid`_                            
+`secsetreuid`_                          `secsetuid`_                            
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -65,11 +33,10 @@ Synopsis
 ::
 
  BOOL secAccess_Control(
-         ULONG fs,
-         APTR task,
-         struct secExtOwner * owner,
-         ULONG prot
- );
+          ULONG fs,
+          APTR task,
+          struct secExtOwner * owner,
+          ULONG prot );
 
 
 secAddMonitor
@@ -80,8 +47,7 @@ Synopsis
 ::
 
  BOOL secAddMonitor(
-         struct secMonitor * monitor
- );
+          struct secMonitor * monitor );
 
 
 secAllocGroupInfo
@@ -91,8 +57,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct muGroupInfo * secAllocGroupInfo(
- );
+ struct muGroupInfo * secAllocGroupInfo();
 
 
 secAllocUserInfo
@@ -102,8 +67,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct muUserInfo * secAllocUserInfo(
- );
+ struct muUserInfo * secAllocUserInfo();
 
 
 secCheckPasswd
@@ -114,8 +78,7 @@ Synopsis
 ::
 
  BOOL secCheckPasswd(
-         struct TagItem * taglist
- );
+          struct TagItem * taglist );
 
 
 secContextLocate
@@ -126,11 +89,10 @@ Synopsis
 ::
 
  APTR secContextLocate(
-         secPluginModule * module,
-         ULONG id,
-         struct Task * caller,
-         ULONG size
- );
+          secPluginModule * module,
+          ULONG id,
+          struct Task * caller,
+          ULONG size );
 
 
 secEnumChildren
@@ -141,10 +103,9 @@ Synopsis
 ::
 
  LONG secEnumChildren(
-         struct Task * task,
-         struct Task ** kids,
-         LONG size
- );
+          struct Task * task,
+          struct Task ** kids,
+          LONG size );
 
 
 secFreeExtOwner
@@ -155,8 +116,7 @@ Synopsis
 ::
 
  void secFreeExtOwner(
-         struct secExtOwner * info
- );
+          struct secExtOwner * info );
 
 
 secFreeGroupInfo
@@ -167,8 +127,7 @@ Synopsis
 ::
 
  void secFreeGroupInfo(
-         struct secGroupInfo * info
- );
+          struct secGroupInfo * info );
 
 
 secFreeUserInfo
@@ -179,8 +138,7 @@ Synopsis
 ::
 
  void secFreeUserInfo(
-         struct secUserInfo * info
- );
+          struct secUserInfo * info );
 
 
 secFreeze
@@ -191,8 +149,7 @@ Synopsis
 ::
 
  BOOL secFreeze(
-         struct Task * task
- );
+          struct Task * task );
 
 
 secGetConfigDirLock
@@ -202,8 +159,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BPTR secGetConfigDirLock(
- );
+ BPTR secGetConfigDirLock();
 
 
 secGetDefProtection
@@ -214,8 +170,7 @@ Synopsis
 ::
 
  ULONG secGetDefProtection(
-         struct Task * task
- );
+          struct Task * task );
 
 
 secGetGroupInfo
@@ -226,9 +181,8 @@ Synopsis
 ::
 
  struct muGroupInfo * secGetGroupInfo(
-         struct muGroupInfo * info,
-         ULONG keytype
- );
+          struct muGroupInfo * info,
+          ULONG keytype );
 
 
 secGetPasswdDirLock
@@ -238,8 +192,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- BPTR secGetPasswdDirLock(
- );
+ BPTR secGetPasswdDirLock();
 
 
 secGetPktDefProtection
@@ -250,8 +203,7 @@ Synopsis
 ::
 
  LONG secGetPktDefProtection(
-         struct DosPacket * pkt
- );
+          struct DosPacket * pkt );
 
 
 secGetPktOwner
@@ -262,8 +214,7 @@ Synopsis
 ::
 
  struct muExtOwner * secGetPktOwner(
-         struct DosPacket * pkt
- );
+          struct DosPacket * pkt );
 
 
 secGetRelationshipA
@@ -274,10 +225,9 @@ Synopsis
 ::
 
  ULONG secGetRelationshipA(
-         struct secExtOwner * user,
-         ULONG owner,
-         struct TagItem * taglist
- );
+          struct secExtOwner * user,
+          ULONG owner,
+          struct TagItem * taglist );
 
 
 secGetTaskExtOwner
@@ -288,8 +238,7 @@ Synopsis
 ::
 
  struct muExtOwner * secGetTaskExtOwner(
-         struct Task * task
- );
+          struct Task * task );
 
 
 secGetTaskOwner
@@ -300,8 +249,7 @@ Synopsis
 ::
 
  ULONG secGetTaskOwner(
-         struct Task * task
- );
+          struct Task * task );
 
 
 secGetUserInfo
@@ -312,9 +260,8 @@ Synopsis
 ::
 
  struct muUserInfo * secGetUserInfo(
-         struct muUserInfo * info,
-         ULONG keytype
- );
+          struct muUserInfo * info,
+          ULONG keytype );
 
 
 secKill
@@ -325,8 +272,7 @@ Synopsis
 ::
 
  BOOL secKill(
-         struct Task * task
- );
+          struct Task * task );
 
 
 secLimitDOSSetProtection
@@ -337,8 +283,7 @@ Synopsis
 ::
 
  BOOL secLimitDOSSetProtection(
-         BOOL flag
- );
+          BOOL flag );
 
 
 secLoadPlugin
@@ -349,8 +294,7 @@ Synopsis
 ::
 
  BOOL secLoadPlugin(
-         STRPTR name
- );
+          STRPTR name );
 
 
 secLocksecBase
@@ -360,8 +304,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct muPointers * secLocksecBase(
- );
+ struct muPointers * secLocksecBase();
 
 
 secLoginA
@@ -372,8 +315,7 @@ Synopsis
 ::
 
  ULONG secLoginA(
-         struct TagItem * taglist
- );
+          struct TagItem * taglist );
 
 
 secLogout
@@ -383,8 +325,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG secLogout(
- );
+ ULONG secLogout();
 
 
 secPasswd
@@ -395,9 +336,8 @@ Synopsis
 ::
 
  struct muPrivGroupInfo * secPasswd(
-         STRPTR oldpwd,
-         STRPTR newpwd
- );
+          STRPTR oldpwd,
+          STRPTR newpwd );
 
 
 secPluginOperationComplete
@@ -408,9 +348,8 @@ Synopsis
 ::
 
  void secPluginOperationComplete(
-         APTR context,
-         ULONG result
- );
+          APTR context,
+          ULONG result );
 
 
 secRegisterHandler
@@ -421,8 +360,7 @@ Synopsis
 ::
 
  ULONG secRegisterHandler(
-         struct plugin_ops * ops
- );
+          struct plugin_ops * ops );
 
 
 secRemMonitor
@@ -433,8 +371,7 @@ Synopsis
 ::
 
  void secRemMonitor(
-         struct secMonitor * monitor
- );
+          struct secMonitor * monitor );
 
 
 secSetDefProtectionA
@@ -445,8 +382,7 @@ Synopsis
 ::
 
  BOOL secSetDefProtectionA(
-         struct TagItem * taglist
- );
+          struct TagItem * taglist );
 
 
 secSetProtection
@@ -457,9 +393,8 @@ Synopsis
 ::
 
  BOOL secSetProtection(
-         STRPTR name,
-         LONG mask
- );
+          STRPTR name,
+          LONG mask );
 
 
 secUnRegisterHandler
@@ -470,8 +405,7 @@ Synopsis
 ::
 
  void secUnRegisterHandler(
-         struct plugin_ops * ops
- );
+          struct plugin_ops * ops );
 
 
 secUnfreeze
@@ -482,8 +416,7 @@ Synopsis
 ::
 
  BOOL secUnfreeze(
-         struct Task * task
- );
+          struct Task * task );
 
 
 secUnloadPlugin
@@ -494,8 +427,7 @@ Synopsis
 ::
 
  BOOL secUnloadPlugin(
-         STRPTR name
- );
+          STRPTR name );
 
 
 secUnlocksecBase
@@ -506,8 +438,7 @@ Synopsis
 ::
 
  void secUnlocksecBase(
-         struct secPointers * muP
- );
+          struct secPointers * muP );
 
 
 secUserInfo2ExtOwner
@@ -518,8 +449,7 @@ Synopsis
 ::
 
  struct secExtOwner * secUserInfo2ExtOwner(
-         struct secUserInfo * info
- );
+          struct secUserInfo * info );
 
 
 secgetgid
@@ -529,8 +459,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- UWORD secgetgid(
- );
+ UWORD secgetgid();
 
 
 secgetpgid
@@ -541,8 +470,7 @@ Synopsis
 ::
 
  int secgetpgid(
-         int pid
- );
+          int pid );
 
 
 secgetuid
@@ -552,8 +480,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- UWORD secgetuid(
- );
+ UWORD secgetuid();
 
 
 secsetegid
@@ -564,8 +491,7 @@ Synopsis
 ::
 
  int secsetegid(
-         UWORD gid
- );
+          UWORD gid );
 
 
 secseteuid
@@ -576,8 +502,7 @@ Synopsis
 ::
 
  int secseteuid(
-         UWORD uid
- );
+          UWORD uid );
 
 
 secsetgid
@@ -588,8 +513,7 @@ Synopsis
 ::
 
  int secsetgid(
-         UWORD gid
- );
+          UWORD gid );
 
 
 secsetreuid
@@ -600,9 +524,8 @@ Synopsis
 ::
 
  int secsetreuid(
-         int ruid,
-         int euid
- );
+          int ruid,
+          int euid );
 
 
 secsetuid
@@ -613,7 +536,6 @@ Synopsis
 ::
 
  int secsetuid(
-         UWORD uid
- );
+          UWORD uid );
 
 

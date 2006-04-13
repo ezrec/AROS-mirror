@@ -8,12 +8,10 @@ timer
 
 ----------
 
-`AddTime`_
-`BeginIO`_
-`CmpTime`_
-`GetSysTime`_
-`ReadEClock`_
-`SubTime`_
+======================================= ======================================= ======================================= ======================================= 
+`AddTime`_                              `BeginIO`_                              `CmpTime`_                              `GetSysTime`_                           
+`ReadEClock`_                           `SubTime`_                              
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -25,9 +23,8 @@ Synopsis
 ::
 
  void AddTime(
-         struct timeval * dest,
-         struct timeval * src
- );
+          struct timeval * dest,
+          struct timeval * src );
 
 Function
 ~~~~~~~~
@@ -77,8 +74,7 @@ Synopsis
 ::
 
  void BeginIO(
-         struct timerequest * timereq
- );
+          struct timerequest * timereq );
 
 Function
 ~~~~~~~~
@@ -121,9 +117,8 @@ Synopsis
 ::
 
  LONG CmpTime(
-         struct timeval * dest,
-         struct timeval * src
- );
+          struct timeval * dest,
+          struct timeval * src );
 
 Function
 ~~~~~~~~
@@ -180,8 +175,7 @@ Synopsis
 ::
 
  void GetSysTime(
-         struct timeval * dest
- );
+          struct timeval * dest );
 
 Function
 ~~~~~~~~
@@ -228,8 +222,7 @@ Synopsis
 ::
 
  ULONG ReadEClock(
-         struct EClockVal * dest
- );
+          struct EClockVal * dest );
 
 Function
 ~~~~~~~~
@@ -272,9 +265,8 @@ Synopsis
 ::
 
  void SubTime(
-         struct timeval * dest,
-         struct timeval * src
- );
+          struct timeval * dest,
+          struct timeval * src );
 
 Function
 ~~~~~~~~

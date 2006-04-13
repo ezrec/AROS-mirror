@@ -8,47 +8,19 @@ hyperlayers
 
 ----------
 
-`BeginUpdate`_
-`BehindLayer`_
-`ChangeLayerShape`_
-`ChangeLayerVisibility`_
-`CollectPixelsLayer`_
-`CreateBehindHookLayer`_
-`CreateBehindLayer`_
-`CreateLayerTagList`_
-`CreateUpfrontHookLayer`_
-`CreateUpfrontLayer`_
-`DeleteLayer`_
-`DisposeLayerInfo`_
-`DoHookClipRects`_
-`EndUpdate`_
-`FattenLayerInfo`_
-`GetFirstFamilyMember`_
-`InitLayers`_
-`InstallClipRegion`_
-`InstallLayerHook`_
-`InstallLayerInfoHook`_
-`IsFrontmostLayer`_
-`IsLayerHiddenBySibling`_
-`IsLayerVisible`_
-`LockLayer`_
-`LockLayerInfo`_
-`LockLayers`_
-`MoveLayer`_
-`MoveLayerInFrontOf`_
-`MoveSizeLayer`_
-`NewLayerInfo`_
-`ScaleLayer`_
-`ScrollLayer`_
-`SizeLayer`_
-`SortLayerCR`_
-`SwapBitsRastPortClipRect`_
-`ThinLayerInfo`_
-`UnlockLayer`_
-`UnlockLayerInfo`_
-`UnlockLayers`_
-`UpfrontLayer`_
-`WhichLayer`_
+======================================= ======================================= ======================================= ======================================= 
+`BeginUpdate`_                          `BehindLayer`_                          `ChangeLayerShape`_                     `ChangeLayerVisibility`_                
+`CollectPixelsLayer`_                   `CreateBehindHookLayer`_                `CreateBehindLayer`_                    `CreateLayerTagList`_                   
+`CreateUpfrontHookLayer`_               `CreateUpfrontLayer`_                   `DeleteLayer`_                          `DisposeLayerInfo`_                     
+`DoHookClipRects`_                      `EndUpdate`_                            `FattenLayerInfo`_                      `GetFirstFamilyMember`_                 
+`InitLayers`_                           `InstallClipRegion`_                    `InstallLayerHook`_                     `InstallLayerInfoHook`_                 
+`IsFrontmostLayer`_                     `IsLayerHiddenBySibling`_               `IsLayerVisible`_                       `LockLayer`_                            
+`LockLayerInfo`_                        `LockLayers`_                           `MoveLayer`_                            `MoveLayerInFrontOf`_                   
+`MoveSizeLayer`_                        `NewLayerInfo`_                         `ScaleLayer`_                           `ScrollLayer`_                          
+`SizeLayer`_                            `SortLayerCR`_                          `SwapBitsRastPortClipRect`_             `ThinLayerInfo`_                        
+`UnlockLayer`_                          `UnlockLayerInfo`_                      `UnlockLayers`_                         `UpfrontLayer`_                         
+`WhichLayer`_                           
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -60,8 +32,7 @@ Synopsis
 ::
 
  LONG BeginUpdate(
-         struct Layer * l
- );
+          struct Layer * l );
 
 Function
 ~~~~~~~~
@@ -106,9 +77,8 @@ Synopsis
 ::
 
  LONG BehindLayer(
-         LONG dummy,
-         struct Layer * l
- );
+          LONG dummy,
+          struct Layer * l );
 
 Function
 ~~~~~~~~
@@ -147,10 +117,9 @@ Synopsis
 ::
 
  struct Region * ChangeLayerShape(
-         struct Layer  * l,
-         struct Region * newshape,
-         struct Hook   * callback
- );
+          struct Layer  * l,
+          struct Region * newshape,
+          struct Hook   * callback );
 
 Function
 ~~~~~~~~
@@ -196,9 +165,8 @@ Synopsis
 ::
 
  LONG ChangeLayerVisibility(
-         struct Layer * l,
-         int visible
- );
+          struct Layer * l,
+          int visible );
 
 Function
 ~~~~~~~~
@@ -234,10 +202,9 @@ Synopsis
 ::
 
  void CollectPixelsLayer(
-         struct Layer  * l,
-         struct Region * r,
-         struct Hook   * callback
- );
+          struct Layer  * l,
+          struct Region * r,
+          struct Hook   * callback );
 
 Function
 ~~~~~~~~
@@ -272,16 +239,15 @@ Synopsis
 ::
 
  struct Layer * CreateBehindHookLayer(
-         struct Layer_Info * li,
-         struct BitMap     * bm,
-         LONG x0,
-         LONG y0,
-         LONG x1,
-         LONG y1,
-         LONG flags,
-         struct Hook       * hook,
-         struct BitMap     * bm2
- );
+          struct Layer_Info * li,
+          struct BitMap     * bm,
+          LONG x0,
+          LONG y0,
+          LONG x1,
+          LONG y1,
+          LONG flags,
+          struct Hook       * hook,
+          struct BitMap     * bm2 );
 
 Function
 ~~~~~~~~
@@ -345,15 +311,14 @@ Synopsis
 ::
 
  struct Layer * CreateBehindLayer(
-         struct Layer_Info * li,
-         struct BitMap     * bm,
-         LONG x0,
-         LONG y0,
-         LONG x1,
-         LONG y1,
-         LONG flags,
-         struct BitMap     * bm2
- );
+          struct Layer_Info * li,
+          struct BitMap     * bm,
+          LONG x0,
+          LONG y0,
+          LONG x1,
+          LONG y1,
+          LONG flags,
+          struct BitMap     * bm2 );
 
 
 CreateLayerTagList
@@ -364,15 +329,14 @@ Synopsis
 ::
 
  struct Layer * CreateLayerTagList(
-         struct Layer_Info * li,
-         struct BitMap     * bm,
-         LONG x0,
-         LONG y0,
-         LONG x1,
-         LONG y1,
-         LONG flags,
-         struct TagItem    * tagList
- );
+          struct Layer_Info * li,
+          struct BitMap     * bm,
+          LONG x0,
+          LONG y0,
+          LONG x1,
+          LONG y1,
+          LONG flags,
+          struct TagItem    * tagList );
 
 Function
 ~~~~~~~~
@@ -439,16 +403,15 @@ Synopsis
 ::
 
  struct Layer * CreateUpfrontHookLayer(
-         struct Layer_Info * li,
-         struct BitMap     * bm,
-         LONG x0,
-         LONG y0,
-         LONG x1,
-         LONG y1,
-         LONG flags,
-         struct Hook       * hook,
-         struct BitMap     * bm2
- );
+          struct Layer_Info * li,
+          struct BitMap     * bm,
+          LONG x0,
+          LONG y0,
+          LONG x1,
+          LONG y1,
+          LONG flags,
+          struct Hook       * hook,
+          struct BitMap     * bm2 );
 
 Function
 ~~~~~~~~
@@ -511,15 +474,14 @@ Synopsis
 ::
 
  struct Layer * CreateUpfrontLayer(
-         struct Layer_Info * li,
-         struct BitMap     * bm,
-         LONG x0,
-         LONG y0,
-         LONG x1,
-         LONG y1,
-         LONG flags,
-         struct BitMap     * bm2
- );
+          struct Layer_Info * li,
+          struct BitMap     * bm,
+          LONG x0,
+          LONG y0,
+          LONG x1,
+          LONG y1,
+          LONG flags,
+          struct BitMap     * bm2 );
 
 
 DeleteLayer
@@ -530,9 +492,8 @@ Synopsis
 ::
 
  LONG DeleteLayer(
-         LONG dummy,
-         struct Layer * l
- );
+          LONG dummy,
+          struct Layer * l );
 
 Function
 ~~~~~~~~
@@ -569,8 +530,7 @@ Synopsis
 ::
 
  void DisposeLayerInfo(
-         struct Layer_Info * li
- );
+          struct Layer_Info * li );
 
 
 DoHookClipRects
@@ -581,10 +541,9 @@ Synopsis
 ::
 
  void DoHookClipRects(
-         struct Hook      * hook,
-         struct RastPort  * rport,
-         struct Rectangle * rect
- );
+          struct Hook      * hook,
+          struct RastPort  * rport,
+          struct Rectangle * rect );
 
 Inputs
 ~~~~~~
@@ -610,9 +569,8 @@ Synopsis
 ::
 
  void EndUpdate(
-         struct Layer * l,
-         UWORD flag
- );
+          struct Layer * l,
+          UWORD flag );
 
 Function
 ~~~~~~~~
@@ -655,8 +613,7 @@ Synopsis
 ::
 
  LONG FattenLayerInfo(
-         struct Layer_Info * li
- );
+          struct Layer_Info * li );
 
 
 GetFirstFamilyMember
@@ -667,8 +624,7 @@ Synopsis
 ::
 
  struct Layer * GetFirstFamilyMember(
-         struct Layer * l
- );
+          struct Layer * l );
 
 Function
 ~~~~~~~~
@@ -706,8 +662,7 @@ Synopsis
 ::
 
  void InitLayers(
-         struct Layer_Info * li
- );
+          struct Layer_Info * li );
 
 Function
 ~~~~~~~~
@@ -747,9 +702,8 @@ Synopsis
 ::
 
  struct Region * InstallClipRegion(
-         struct Layer  * l,
-         struct Region * region
- );
+          struct Layer  * l,
+          struct Region * region );
 
 Function
 ~~~~~~~~
@@ -780,9 +734,8 @@ Synopsis
 ::
 
  struct Hook * InstallLayerHook(
-         struct Layer * layer,
-         struct Hook  * hook
- );
+          struct Layer * layer,
+          struct Hook  * hook );
 
 Function
 ~~~~~~~~
@@ -809,9 +762,8 @@ Synopsis
 ::
 
  struct Hook * InstallLayerInfoHook(
-         struct Layer_Info * li,
-         struct Hook       * hook
- );
+          struct Layer_Info * li,
+          struct Hook       * hook );
 
 Function
 ~~~~~~~~
@@ -857,9 +809,8 @@ Synopsis
 ::
 
  BOOL IsFrontmostLayer(
-         struct Layer * l,
-         BOOL check_invisible
- );
+          struct Layer * l,
+          BOOL check_invisible );
 
 Function
 ~~~~~~~~
@@ -900,9 +851,8 @@ Synopsis
 ::
 
  BOOL IsLayerHiddenBySibling(
-         struct Layer * l,
-         BOOL check_invisible
- );
+          struct Layer * l,
+          BOOL check_invisible );
 
 Function
 ~~~~~~~~
@@ -940,8 +890,7 @@ Synopsis
 ::
 
  LONG IsLayerVisible(
-         struct Layer * l
- );
+          struct Layer * l );
 
 Function
 ~~~~~~~~
@@ -974,9 +923,8 @@ Synopsis
 ::
 
  void LockLayer(
-         LONG dummy,
-         struct Layer * layer
- );
+          LONG dummy,
+          struct Layer * layer );
 
 Function
 ~~~~~~~~
@@ -1004,8 +952,7 @@ Synopsis
 ::
 
  void LockLayerInfo(
-         struct Layer_Info * li
- );
+          struct Layer_Info * li );
 
 
 LockLayers
@@ -1016,8 +963,7 @@ Synopsis
 ::
 
  void LockLayers(
-         struct Layer_Info * li
- );
+          struct Layer_Info * li );
 
 Function
 ~~~~~~~~
@@ -1044,11 +990,10 @@ Synopsis
 ::
 
  LONG MoveLayer(
-         LONG dummy,
-         struct Layer * l,
-         LONG dx,
-         LONG dy
- );
+          LONG dummy,
+          struct Layer * l,
+          LONG dx,
+          LONG dy );
 
 Function
 ~~~~~~~~
@@ -1086,9 +1031,8 @@ Synopsis
 ::
 
  LONG MoveLayerInFrontOf(
-         struct Layer * layer_to_move,
-         struct Layer * other_layer
- );
+          struct Layer * layer_to_move,
+          struct Layer * other_layer );
 
 Function
 ~~~~~~~~
@@ -1131,12 +1075,11 @@ Synopsis
 ::
 
  LONG MoveSizeLayer(
-         struct Layer * l,
-         LONG dx,
-         LONG dy,
-         LONG dw,
-         LONG dh
- );
+          struct Layer * l,
+          LONG dx,
+          LONG dy,
+          LONG dw,
+          LONG dh );
 
 Function
 ~~~~~~~~
@@ -1176,8 +1119,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Layer_Info * NewLayerInfo(
- );
+ struct Layer_Info * NewLayerInfo();
 
 
 ScaleLayer
@@ -1188,9 +1130,8 @@ Synopsis
 ::
 
  ULONG ScaleLayer(
-         struct Layer   * l,
-         struct TagItem * taglist
- );
+          struct Layer   * l,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -1226,11 +1167,10 @@ Synopsis
 ::
 
  void ScrollLayer(
-         LONG dummy,
-         struct Layer * l,
-         LONG dx,
-         LONG dy
- );
+          LONG dummy,
+          struct Layer * l,
+          LONG dx,
+          LONG dy );
 
 Function
 ~~~~~~~~
@@ -1271,11 +1211,10 @@ Synopsis
 ::
 
  LONG SizeLayer(
-         LONG dummy,
-         struct Layer * l,
-         LONG dw,
-         LONG dh
- );
+          LONG dummy,
+          struct Layer * l,
+          LONG dw,
+          LONG dh );
 
 Function
 ~~~~~~~~
@@ -1317,10 +1256,9 @@ Synopsis
 ::
 
  void SortLayerCR(
-         struct Layer * layer,
-         LONG dx,
-         LONG dy
- );
+          struct Layer * layer,
+          LONG dx,
+          LONG dy );
 
 Function
 ~~~~~~~~
@@ -1355,9 +1293,8 @@ Synopsis
 ::
 
  void SwapBitsRastPortClipRect(
-         struct RastPort * rp,
-         struct ClipRect * cr
- );
+          struct RastPort * rp,
+          struct ClipRect * cr );
 
 
 ThinLayerInfo
@@ -1368,8 +1305,7 @@ Synopsis
 ::
 
  void ThinLayerInfo(
-         struct Layer_Info * li
- );
+          struct Layer_Info * li );
 
 
 UnlockLayer
@@ -1380,8 +1316,7 @@ Synopsis
 ::
 
  void UnlockLayer(
-         struct Layer * layer
- );
+          struct Layer * layer );
 
 Function
 ~~~~~~~~
@@ -1408,8 +1343,7 @@ Synopsis
 ::
 
  void UnlockLayerInfo(
-         struct Layer_Info * li
- );
+          struct Layer_Info * li );
 
 
 UnlockLayers
@@ -1420,8 +1354,7 @@ Synopsis
 ::
 
  void UnlockLayers(
-         struct Layer_Info * li
- );
+          struct Layer_Info * li );
 
 Function
 ~~~~~~~~
@@ -1447,9 +1380,8 @@ Synopsis
 ::
 
  LONG UpfrontLayer(
-         LONG dummy,
-         struct Layer * l
- );
+          LONG dummy,
+          struct Layer * l );
 
 Function
 ~~~~~~~~
@@ -1496,10 +1428,9 @@ Synopsis
 ::
 
  struct Layer * WhichLayer(
-         struct Layer_Info * li,
-         LONG x,
-         LONG y
- );
+          struct Layer_Info * li,
+          LONG x,
+          LONG y );
 
 Function
 ~~~~~~~~

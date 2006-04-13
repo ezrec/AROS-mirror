@@ -8,11 +8,10 @@ bullet
 
 ----------
 
-`CloseEngine`_
-`ObtainInfoA`_
-`OpenEngine`_
-`ReleaseInfoA`_
-`SetInfoA`_
+======================================= ======================================= ======================================= ======================================= 
+`CloseEngine`_                          `ObtainInfoA`_                          `OpenEngine`_                           `ReleaseInfoA`_                         
+`SetInfoA`_                             
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -24,8 +23,7 @@ Synopsis
 ::
 
  void CloseEngine(
-         struct GlyphEngine * glyphEngine
- );
+          struct GlyphEngine * glyphEngine );
 
 
 ObtainInfoA
@@ -36,9 +34,8 @@ Synopsis
 ::
 
  ULONG ObtainInfoA(
-         struct GlyphEngine * glyphEngine,
-         struct TagItem * tagList
- );
+          struct GlyphEngine * glyphEngine,
+          struct TagItem * tagList );
 
 
 OpenEngine
@@ -48,8 +45,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct GlyphEngine * OpenEngine(
- );
+ struct GlyphEngine * OpenEngine();
 
 
 ReleaseInfoA
@@ -60,9 +56,8 @@ Synopsis
 ::
 
  ULONG ReleaseInfoA(
-         struct GlyphEngine * glyphEngine,
-         struct TagItem * tagList
- );
+          struct GlyphEngine * glyphEngine,
+          struct TagItem * tagList );
 
 
 SetInfoA
@@ -73,8 +68,7 @@ Synopsis
 ::
 
  ULONG SetInfoA(
-         struct GlyphEngine * glyphEngine,
-         struct TagItem * tagList
- );
+          struct GlyphEngine * glyphEngine,
+          struct TagItem * tagList );
 
 

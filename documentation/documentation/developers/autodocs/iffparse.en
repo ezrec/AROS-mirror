@@ -8,46 +8,19 @@ iffparse
 
 ----------
 
-`AllocIFF`_
-`AllocLocalItem`_
-`CloseClipboard`_
-`CloseIFF`_
-`CollectionChunk`_
-`CollectionChunks`_
-`CurrentChunk`_
-`EntryHandler`_
-`ExitHandler`_
-`FindCollection`_
-`FindLocalItem`_
-`FindProp`_
-`FindPropContext`_
-`FreeIFF`_
-`FreeLocalItem`_
-`GoodID`_
-`GoodType`_
-`IDtoStr`_
-`InitIFF`_
-`InitIFFasClip`_
-`InitIFFasDOS`_
-`LocalItemData`_
-`OpenClipboard`_
-`OpenIFF`_
-`ParentChunk`_
-`ParseIFF`_
-`PopChunk`_
-`PropChunk`_
-`PropChunks`_
-`PushChunk`_
-`ReadChunkBytes`_
-`ReadChunkRecords`_
-`SetLocalItemPurge`_
-`StopChunk`_
-`StopChunks`_
-`StopOnExit`_
-`StoreItemInContext`_
-`StoreLocalItem`_
-`WriteChunkBytes`_
-`WriteChunkRecords`_
+======================================= ======================================= ======================================= ======================================= 
+`AllocIFF`_                             `AllocLocalItem`_                       `CloseClipboard`_                       `CloseIFF`_                             
+`CollectionChunk`_                      `CollectionChunks`_                     `CurrentChunk`_                         `EntryHandler`_                         
+`ExitHandler`_                          `FindCollection`_                       `FindLocalItem`_                        `FindProp`_                             
+`FindPropContext`_                      `FreeIFF`_                              `FreeLocalItem`_                        `GoodID`_                               
+`GoodType`_                             `IDtoStr`_                              `InitIFF`_                              `InitIFFasClip`_                        
+`InitIFFasDOS`_                         `LocalItemData`_                        `OpenClipboard`_                        `OpenIFF`_                              
+`ParentChunk`_                          `ParseIFF`_                             `PopChunk`_                             `PropChunk`_                            
+`PropChunks`_                           `PushChunk`_                            `ReadChunkBytes`_                       `ReadChunkRecords`_                     
+`SetLocalItemPurge`_                    `StopChunk`_                            `StopChunks`_                           `StopOnExit`_                           
+`StoreItemInContext`_                   `StoreLocalItem`_                       `WriteChunkBytes`_                      `WriteChunkRecords`_                    
+
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -58,8 +31,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct IFFHandle * AllocIFF(
- );
+ struct IFFHandle * AllocIFF();
 
 Function
 ~~~~~~~~
@@ -99,11 +71,10 @@ Synopsis
 ::
 
  struct LocalContextItem * AllocLocalItem(
-         LONG type,
-         LONG id,
-         LONG ident,
-         ULONG dataSize
- );
+          LONG type,
+          LONG id,
+          LONG ident,
+          ULONG dataSize );
 
 Function
 ~~~~~~~~
@@ -165,8 +136,7 @@ Synopsis
 ::
 
  void CloseClipboard(
-         struct ClipboardHandle * clipHandle
- );
+          struct ClipboardHandle * clipHandle );
 
 Function
 ~~~~~~~~
@@ -205,8 +175,7 @@ Synopsis
 ::
 
  void CloseIFF(
-         struct IFFHandle * iff
- );
+          struct IFFHandle * iff );
 
 Function
 ~~~~~~~~
@@ -249,10 +218,9 @@ Synopsis
 ::
 
  LONG CollectionChunk(
-         struct IFFHandle * iff,
-         LONG type,
-         LONG id
- );
+          struct IFFHandle * iff,
+          LONG type,
+          LONG id );
 
 Function
 ~~~~~~~~
@@ -298,10 +266,9 @@ Synopsis
 ::
 
  LONG CollectionChunks(
-         struct IFFHandle * iff,
-         LONG             * propArray,
-         LONG numPairs
- );
+          struct IFFHandle * iff,
+          LONG             * propArray,
+          LONG numPairs );
 
 Function
 ~~~~~~~~
@@ -343,8 +310,7 @@ Synopsis
 ::
 
  struct ContextNode * CurrentChunk(
-         struct IFFHandle * iff
- );
+          struct IFFHandle * iff );
 
 Function
 ~~~~~~~~
@@ -388,13 +354,12 @@ Synopsis
 ::
 
  LONG EntryHandler(
-         struct IFFHandle * iff,
-         LONG type,
-         LONG id,
-         LONG position,
-         struct Hook      * handler,
-         APTR object
- );
+          struct IFFHandle * iff,
+          LONG type,
+          LONG id,
+          LONG position,
+          struct Hook      * handler,
+          APTR object );
 
 Function
 ~~~~~~~~
@@ -445,13 +410,12 @@ Synopsis
 ::
 
  LONG ExitHandler(
-         struct IFFHandle * iff,
-         LONG type,
-         LONG id,
-         LONG position,
-         struct Hook      * handler,
-         APTR object
- );
+          struct IFFHandle * iff,
+          LONG type,
+          LONG id,
+          LONG position,
+          struct Hook      * handler,
+          APTR object );
 
 Function
 ~~~~~~~~
@@ -500,10 +464,9 @@ Synopsis
 ::
 
  struct CollectionItem * FindCollection(
-         struct IFFHandle * iff,
-         LONG type,
-         LONG id
- );
+          struct IFFHandle * iff,
+          LONG type,
+          LONG id );
 
 Function
 ~~~~~~~~
@@ -547,11 +510,10 @@ Synopsis
 ::
 
  struct LocalContextItem * FindLocalItem(
-         struct IFFHandle * iff,
-         LONG type,
-         LONG id,
-         LONG ident
- );
+          struct IFFHandle * iff,
+          LONG type,
+          LONG id,
+          LONG ident );
 
 Function
 ~~~~~~~~
@@ -596,10 +558,9 @@ Synopsis
 ::
 
  struct StoredProperty * FindProp(
-         struct IFFHandle * iff,
-         LONG type,
-         LONG id
- );
+          struct IFFHandle * iff,
+          LONG type,
+          LONG id );
 
 Function
 ~~~~~~~~
@@ -643,8 +604,7 @@ Synopsis
 ::
 
  struct ContextNode * FindPropContext(
-         struct IFFHandle * iff
- );
+          struct IFFHandle * iff );
 
 Function
 ~~~~~~~~
@@ -696,8 +656,7 @@ Synopsis
 ::
 
  void FreeIFF(
-         struct IFFHandle * iff
- );
+          struct IFFHandle * iff );
 
 Function
 ~~~~~~~~
@@ -728,8 +687,7 @@ Synopsis
 ::
 
  void FreeLocalItem(
-         struct LocalContextItem * localItem
- );
+          struct LocalContextItem * localItem );
 
 Function
 ~~~~~~~~
@@ -762,8 +720,7 @@ Synopsis
 ::
 
  LONG GoodID(
-         LONG id
- );
+          LONG id );
 
 Function
 ~~~~~~~~
@@ -803,8 +760,7 @@ Synopsis
 ::
 
  LONG GoodType(
-         LONG type
- );
+          LONG type );
 
 Function
 ~~~~~~~~
@@ -851,9 +807,8 @@ Synopsis
 ::
 
  STRPTR IDtoStr(
-         LONG id,
-         STRPTR buf
- );
+          LONG id,
+          STRPTR buf );
 
 Inputs
 ~~~~~~
@@ -904,10 +859,9 @@ Synopsis
 ::
 
  void InitIFF(
-         struct IFFHandle * iff,
-         LONG flags,
-         struct Hook      * streamHook
- );
+          struct IFFHandle * iff,
+          LONG flags,
+          struct Hook      * streamHook );
 
 Function
 ~~~~~~~~
@@ -943,8 +897,7 @@ Synopsis
 ::
 
  void InitIFFasClip(
-         struct IFFHandle * iff
- );
+          struct IFFHandle * iff );
 
 Function
 ~~~~~~~~
@@ -980,8 +933,7 @@ Synopsis
 ::
 
  void InitIFFasDOS(
-         struct IFFHandle * iff
- );
+          struct IFFHandle * iff );
 
 Function
 ~~~~~~~~
@@ -1015,8 +967,7 @@ Synopsis
 ::
 
  APTR LocalItemData(
-         struct LocalContextItem * localItem
- );
+          struct LocalContextItem * localItem );
 
 Function
 ~~~~~~~~
@@ -1056,8 +1007,7 @@ Synopsis
 ::
 
  struct ClipboardHandle * OpenClipboard(
-         LONG unitNumber
- );
+          LONG unitNumber );
 
 Function
 ~~~~~~~~
@@ -1100,9 +1050,8 @@ Synopsis
 ::
 
  LONG OpenIFF(
-         struct IFFHandle * iff,
-         LONG rwMode
- );
+          struct IFFHandle * iff,
+          LONG rwMode );
 
 Function
 ~~~~~~~~
@@ -1153,8 +1102,7 @@ Synopsis
 ::
 
  struct ContextNode * ParentChunk(
-         struct ContextNode * contextNode
- );
+          struct ContextNode * contextNode );
 
 Function
 ~~~~~~~~
@@ -1197,9 +1145,8 @@ Synopsis
 ::
 
  LONG ParseIFF(
-         struct IFFHandle * iff,
-         LONG mode
- );
+          struct IFFHandle * iff,
+          LONG mode );
 
 Function
 ~~~~~~~~
@@ -1261,8 +1208,7 @@ Synopsis
 ::
 
  LONG PopChunk(
-         struct IFFHandle * iff
- );
+          struct IFFHandle * iff );
 
 Function
 ~~~~~~~~
@@ -1303,10 +1249,9 @@ Synopsis
 ::
 
  LONG PropChunk(
-         struct IFFHandle * iff,
-         LONG type,
-         LONG id
- );
+          struct IFFHandle * iff,
+          LONG type,
+          LONG id );
 
 Function
 ~~~~~~~~
@@ -1351,10 +1296,9 @@ Synopsis
 ::
 
  LONG PropChunks(
-         struct IFFHandle * iff,
-         LONG             * propArray,
-         LONG numPairs
- );
+          struct IFFHandle * iff,
+          LONG             * propArray,
+          LONG numPairs );
 
 Function
 ~~~~~~~~
@@ -1392,11 +1336,10 @@ Synopsis
 ::
 
  LONG PushChunk(
-         struct IFFHandle * iff,
-         LONG type,
-         LONG id,
-         LONG size
- );
+          struct IFFHandle * iff,
+          LONG type,
+          LONG id,
+          LONG size );
 
 Function
 ~~~~~~~~
@@ -1444,10 +1387,9 @@ Synopsis
 ::
 
  LONG ReadChunkBytes(
-         struct IFFHandle * iff,
-         APTR buf,
-         LONG numBytes
- );
+          struct IFFHandle * iff,
+          APTR buf,
+          LONG numBytes );
 
 Function
 ~~~~~~~~
@@ -1490,11 +1432,10 @@ Synopsis
 ::
 
  LONG ReadChunkRecords(
-         struct IFFHandle * iff,
-         APTR buf,
-         LONG bytesPerRecord,
-         LONG numRecords
- );
+          struct IFFHandle * iff,
+          APTR buf,
+          LONG bytesPerRecord,
+          LONG numRecords );
 
 Function
 ~~~~~~~~
@@ -1539,9 +1480,8 @@ Synopsis
 ::
 
  void SetLocalItemPurge(
-         struct LocalContextItem * localItem,
-         struct Hook             * purgeHook
- );
+          struct LocalContextItem * localItem,
+          struct Hook             * purgeHook );
 
 Function
 ~~~~~~~~
@@ -1585,10 +1525,9 @@ Synopsis
 ::
 
  LONG StopChunk(
-         struct IFFHandle * iff,
-         LONG type,
-         LONG id
- );
+          struct IFFHandle * iff,
+          LONG type,
+          LONG id );
 
 Function
 ~~~~~~~~
@@ -1630,10 +1569,9 @@ Synopsis
 ::
 
  LONG StopChunks(
-         struct IFFHandle * iff,
-         LONG             * propArray,
-         LONG numPairs
- );
+          struct IFFHandle * iff,
+          LONG             * propArray,
+          LONG numPairs );
 
 Function
 ~~~~~~~~
@@ -1674,10 +1612,9 @@ Synopsis
 ::
 
  LONG StopOnExit(
-         struct IFFHandle * iff,
-         LONG type,
-         LONG id
- );
+          struct IFFHandle * iff,
+          LONG type,
+          LONG id );
 
 Function
 ~~~~~~~~
@@ -1719,10 +1656,9 @@ Synopsis
 ::
 
  void StoreItemInContext(
-         struct IFFHandle        * iff,
-         struct LocalContextItem * localItem,
-         struct ContextNode      * contextNode
- );
+          struct IFFHandle        * iff,
+          struct LocalContextItem * localItem,
+          struct ContextNode      * contextNode );
 
 Function
 ~~~~~~~~
@@ -1759,10 +1695,9 @@ Synopsis
 ::
 
  LONG StoreLocalItem(
-         struct IFFHandle        * iff,
-         struct LocalContextItem * localItem,
-         LONG position
- );
+          struct IFFHandle        * iff,
+          struct LocalContextItem * localItem,
+          LONG position );
 
 Function
 ~~~~~~~~
@@ -1809,10 +1744,9 @@ Synopsis
 ::
 
  LONG WriteChunkBytes(
-         struct IFFHandle * iff,
-         APTR buf,
-         LONG numBytes
- );
+          struct IFFHandle * iff,
+          APTR buf,
+          LONG numBytes );
 
 Function
 ~~~~~~~~
@@ -1855,11 +1789,10 @@ Synopsis
 ::
 
  LONG WriteChunkRecords(
-         struct IFFHandle * iff,
-         APTR buf,
-         LONG bytesPerRecord,
-         LONG numRecords
- );
+          struct IFFHandle * iff,
+          APTR buf,
+          LONG bytesPerRecord,
+          LONG numRecords );
 
 Function
 ~~~~~~~~

@@ -8,19 +8,12 @@ lowlevel
 
 ----------
 
-`AddKBInt`_
-`AddTimerInt`_
-`AddVBlankInt`_
-`ElapsedTime`_
-`GetKey`_
-`GetLanguageSelection`_
-`QueryKeys`_
-`ReadJoyPort`_
-`RemKBInt`_
-`RemTimerInt`_
-`RemVBlankInt`_
-`StartTimerInt`_
-`StopTimerInt`_
+======================================= ======================================= ======================================= ======================================= 
+`AddKBInt`_                             `AddTimerInt`_                          `AddVBlankInt`_                         `ElapsedTime`_                          
+`GetKey`_                               `GetLanguageSelection`_                 `QueryKeys`_                            `ReadJoyPort`_                          
+`RemKBInt`_                             `RemTimerInt`_                          `RemVBlankInt`_                         `StartTimerInt`_                        
+`StopTimerInt`_                         
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -32,9 +25,8 @@ Synopsis
 ::
 
  APTR AddKBInt(
-         APTR intRoutine,
-         APTR intData
- );
+          APTR intRoutine,
+          APTR intData );
 
 
 AddTimerInt
@@ -45,9 +37,8 @@ Synopsis
 ::
 
  APTR AddTimerInt(
-         APTR intRoutine,
-         APTR intData
- );
+          APTR intRoutine,
+          APTR intData );
 
 
 AddVBlankInt
@@ -58,9 +49,8 @@ Synopsis
 ::
 
  APTR AddVBlankInt(
-         APTR intRoutine,
-         APTR intData
- );
+          APTR intRoutine,
+          APTR intData );
 
 Function
 ~~~~~~~~
@@ -109,8 +99,7 @@ Synopsis
 ::
 
  ULONG ElapsedTime(
-         struct EClockVal * context
- );
+          struct EClockVal * context );
 
 
 GetKey
@@ -120,8 +109,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG GetKey(
- );
+ ULONG GetKey();
 
 
 GetLanguageSelection
@@ -131,8 +119,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- ULONG GetLanguageSelection(
- );
+ ULONG GetLanguageSelection();
 
 
 QueryKeys
@@ -143,9 +130,8 @@ Synopsis
 ::
 
  VOID QueryKeys(
-         struct KeyQuery * queryArray,
-         UBYTE arraySize
- );
+          struct KeyQuery * queryArray,
+          UBYTE arraySize );
 
 
 ReadJoyPort
@@ -156,8 +142,7 @@ Synopsis
 ::
 
  ULONG ReadJoyPort(
-         ULONG port
- );
+          ULONG port );
 
 
 RemKBInt
@@ -168,8 +153,7 @@ Synopsis
 ::
 
  VOID RemKBInt(
-         APTR intHandle
- );
+          APTR intHandle );
 
 
 RemTimerInt
@@ -180,8 +164,7 @@ Synopsis
 ::
 
  VOID RemTimerInt(
-         APTR intHandle
- );
+          APTR intHandle );
 
 
 RemVBlankInt
@@ -192,8 +175,7 @@ Synopsis
 ::
 
  VOID RemVBlankInt(
-         APTR intHandle
- );
+          APTR intHandle );
 
 Function
 ~~~~~~~~
@@ -230,10 +212,9 @@ Synopsis
 ::
 
  VOID StartTimerInt(
-         APTR intHandle,
-         ULONG timeInterval,
-         BOOL continuous
- );
+          APTR intHandle,
+          ULONG timeInterval,
+          BOOL continuous );
 
 
 StopTimerInt
@@ -244,7 +225,6 @@ Synopsis
 ::
 
  VOID StopTimerInt(
-         APTR intHandle
- );
+          APTR intHandle );
 
 

@@ -8,25 +8,13 @@ gadtools
 
 ----------
 
-`CreateContext`_
-`CreateGadgetA`_
-`CreateMenusA`_
-`DrawBevelBoxA`_
-`FreeGadgets`_
-`FreeMenus`_
-`FreeVisualInfo`_
-`GT_BeginRefresh`_
-`GT_EndRefresh`_
-`GT_FilterIMsg`_
-`GT_GetGadgetAttrsA`_
-`GT_GetIMsg`_
-`GT_PostFilterIMsg`_
-`GT_RefreshWindow`_
-`GT_ReplyIMsg`_
-`GT_SetGadgetAttrsA`_
-`GetVisualInfoA`_
-`LayoutMenuItemsA`_
-`LayoutMenusA`_
+======================================= ======================================= ======================================= ======================================= 
+`CreateContext`_                        `CreateGadgetA`_                        `CreateMenusA`_                         `DrawBevelBoxA`_                        
+`FreeGadgets`_                          `FreeMenus`_                            `FreeVisualInfo`_                       `GT_BeginRefresh`_                      
+`GT_EndRefresh`_                        `GT_FilterIMsg`_                        `GT_GetGadgetAttrsA`_                   `GT_GetIMsg`_                           
+`GT_PostFilterIMsg`_                    `GT_RefreshWindow`_                     `GT_ReplyIMsg`_                         `GT_SetGadgetAttrsA`_                   
+`GetVisualInfoA`_                       `LayoutMenuItemsA`_                     `LayoutMenusA`_                         
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -38,8 +26,7 @@ Synopsis
 ::
 
  struct Gadget * CreateContext(
-         struct Gadget ** glistpointer
- );
+          struct Gadget ** glistpointer );
 
 Function
 ~~~~~~~~
@@ -75,11 +62,10 @@ Synopsis
 ::
 
  struct Gadget * CreateGadgetA(
-         ULONG kind,
-         struct Gadget * previous,
-         struct NewGadget * ng,
-         struct TagItem * taglist
- );
+          ULONG kind,
+          struct Gadget * previous,
+          struct NewGadget * ng,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -125,9 +111,8 @@ Synopsis
 ::
 
  struct Menu * CreateMenusA(
-         struct NewMenu * newmenu,
-         struct TagItem * tagList
- );
+          struct NewMenu * newmenu,
+          struct TagItem * tagList );
 
 Function
 ~~~~~~~~
@@ -178,13 +163,12 @@ Synopsis
 ::
 
  void DrawBevelBoxA(
-         struct RastPort * rport,
-         WORD left,
-         WORD top,
-         WORD width,
-         WORD height,
-         struct TagItem * taglist
- );
+          struct RastPort * rport,
+          WORD left,
+          WORD top,
+          WORD width,
+          WORD height,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -223,8 +207,7 @@ Synopsis
 ::
 
  VOID FreeGadgets(
-         struct Gadget * glist
- );
+          struct Gadget * glist );
 
 Function
 ~~~~~~~~
@@ -256,8 +239,7 @@ Synopsis
 ::
 
  VOID FreeMenus(
-         struct Menu * menu
- );
+          struct Menu * menu );
 
 Function
 ~~~~~~~~
@@ -289,8 +271,7 @@ Synopsis
 ::
 
  void FreeVisualInfo(
-         APTR vi
- );
+          APTR vi );
 
 Function
 ~~~~~~~~
@@ -323,8 +304,7 @@ Synopsis
 ::
 
  void GT_BeginRefresh(
-         struct Window * win
- );
+          struct Window * win );
 
 Function
 ~~~~~~~~
@@ -378,9 +358,8 @@ Synopsis
 ::
 
  void GT_EndRefresh(
-         struct Window * win,
-         BOOL complete
- );
+          struct Window * win,
+          BOOL complete );
 
 Function
 ~~~~~~~~
@@ -414,8 +393,7 @@ Synopsis
 ::
 
  struct IntuiMessage * GT_FilterIMsg(
-         struct IntuiMessage * imsg
- );
+          struct IntuiMessage * imsg );
 
 Function
 ~~~~~~~~
@@ -460,11 +438,10 @@ Synopsis
 ::
 
  LONG GT_GetGadgetAttrsA(
-         struct Gadget * gad,
-         struct Window * win,
-         struct Requester * req,
-         struct TagItem * taglist
- );
+          struct Gadget * gad,
+          struct Window * win,
+          struct Requester * req,
+          struct TagItem * taglist );
 
 Function
 ~~~~~~~~
@@ -509,8 +486,7 @@ Synopsis
 ::
 
  struct IntuiMessage * GT_GetIMsg(
-         struct MsgPort * intuiport
- );
+          struct MsgPort * intuiport );
 
 Function
 ~~~~~~~~
@@ -552,8 +528,7 @@ Synopsis
 ::
 
  struct IntuiMessage * GT_PostFilterIMsg(
-         struct IntuiMessage * modimsg
- );
+          struct IntuiMessage * modimsg );
 
 Function
 ~~~~~~~~
@@ -592,9 +567,8 @@ Synopsis
 ::
 
  void GT_RefreshWindow(
-         struct Window * win,
-         struct Requester * req
- );
+          struct Window * win,
+          struct Requester * req );
 
 Function
 ~~~~~~~~
@@ -622,8 +596,7 @@ Synopsis
 ::
 
  void GT_ReplyIMsg(
-         struct IntuiMessage * imsg
- );
+          struct IntuiMessage * imsg );
 
 Function
 ~~~~~~~~
@@ -655,11 +628,10 @@ Synopsis
 ::
 
  void GT_SetGadgetAttrsA(
-         struct Gadget * gad,
-         struct Window * win,
-         struct Requester * req,
-         struct TagItem * tagList
- );
+          struct Gadget * gad,
+          struct Window * win,
+          struct Requester * req,
+          struct TagItem * tagList );
 
 Function
 ~~~~~~~~
@@ -704,9 +676,8 @@ Synopsis
 ::
 
  APTR GetVisualInfoA(
-         struct Screen * screen,
-         struct TagItem * tagList
- );
+          struct Screen * screen,
+          struct TagItem * tagList );
 
 Function
 ~~~~~~~~
@@ -749,10 +720,9 @@ Synopsis
 ::
 
  BOOL LayoutMenuItemsA(
-         struct MenuItem * menuitem,
-         APTR vi,
-         struct TagItem * tagList
- );
+          struct MenuItem * menuitem,
+          APTR vi,
+          struct TagItem * tagList );
 
 Inputs
 ~~~~~~
@@ -786,10 +756,9 @@ Synopsis
 ::
 
  BOOL LayoutMenusA(
-         struct Menu * menu,
-         APTR vi,
-         struct TagItem * tagList
- );
+          struct Menu * menu,
+          APTR vi,
+          struct TagItem * tagList );
 
 Inputs
 ~~~~~~

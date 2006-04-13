@@ -8,14 +8,11 @@ asl
 
 ----------
 
-`AbortAslRequest`_
-`ActivateAslRequest`_
-`AllocAslRequest`_
-`AllocFileRequest`_
-`AslRequest`_
-`FreeAslRequest`_
-`FreeFileRequest`_
-`RequestFile`_
+======================================= ======================================= ======================================= ======================================= 
+`AbortAslRequest`_                      `ActivateAslRequest`_                   `AllocAslRequest`_                      `AllocFileRequest`_                     
+`AslRequest`_                           `FreeAslRequest`_                       `FreeFileRequest`_                      `RequestFile`_                          
+
+======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
@@ -27,8 +24,7 @@ Synopsis
 ::
 
  void AbortAslRequest(
-         APTR requester
- );
+          APTR requester );
 
 
 ActivateAslRequest
@@ -39,8 +35,7 @@ Synopsis
 ::
 
  void ActivateAslRequest(
-         APTR requester
- );
+          APTR requester );
 
 
 AllocAslRequest
@@ -51,9 +46,8 @@ Synopsis
 ::
 
  APTR AllocAslRequest(
-         ULONG reqType,
-         struct TagItem * tagList
- );
+          ULONG reqType,
+          struct TagItem * tagList );
 
 
 AllocFileRequest
@@ -63,8 +57,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct FileRequester * AllocFileRequest(
- );
+ struct FileRequester * AllocFileRequest();
 
 Function
 ~~~~~~~~
@@ -89,9 +82,8 @@ Synopsis
 ::
 
  BOOL AslRequest(
-         APTR requester,
-         struct TagItem * tagList
- );
+          APTR requester,
+          struct TagItem * tagList );
 
 
 FreeAslRequest
@@ -102,8 +94,7 @@ Synopsis
 ::
 
  void FreeAslRequest(
-         APTR requester
- );
+          APTR requester );
 
 Function
 ~~~~~~~~
@@ -128,8 +119,7 @@ Synopsis
 ::
 
  void FreeFileRequest(
-         struct FileRequester * fileReq
- );
+          struct FileRequester * fileReq );
 
 Function
 ~~~~~~~~
@@ -154,8 +144,7 @@ Synopsis
 ::
 
  BOOL RequestFile(
-         struct FileRequester * fileReq
- );
+          struct FileRequester * fileReq );
 
 Function
 ~~~~~~~~
