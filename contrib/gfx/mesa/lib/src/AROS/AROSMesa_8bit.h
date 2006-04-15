@@ -1,3 +1,6 @@
+#if !defined(AROSMESA_8BIT_H)
+#define AROSMESA_8BIT_H
+
 /* Private Includes and protos for 8bit driver */
 
 extern BOOL aros8bit_Standard_init(struct arosmesa_context *c,struct TagItem *tagList);
@@ -18,3 +21,5 @@ void free_temp_rastport(struct arosmesa_context * c);
 void aros8bit_Standard_SwapBuffer(struct arosmesa_context *amesa);
 void aros8bit_Standard_Dispose(struct arosmesa_context *c);
 void aros8bit_Standard_Dispose_db(struct arosmesa_context *c);
+
+#endif /* AROSMESA_8BIT_H */

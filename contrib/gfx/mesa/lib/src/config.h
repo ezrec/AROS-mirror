@@ -110,7 +110,7 @@
 #define NUM_AUX_BUFFERS 0
 
 /* Maximum order (degree) of curves: */
-#ifdef AMIGA
+#if defined(AMIGA) && !defined(AROS)
 #   define MAX_EVAL_ORDER 12
 #else
 #   define MAX_EVAL_ORDER 30

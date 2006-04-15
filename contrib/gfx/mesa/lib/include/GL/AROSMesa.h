@@ -122,9 +122,6 @@ extern "C" {
 
 /*      Drawmode to use         */
 
-#define ADISP_CYBERGFX
-#define ADISP_AGA
-
 enum AMesaError
 {
 	AMESA_OUT_OF_MEM,
@@ -210,6 +207,8 @@ typedef struct arosmesa_context *AROSMesaContext;
  */
 #define AMA_Dummy			(TAG_USER + 32)
 
+#define AMA_Context		(AMA_Dummy + 0x0001)
+
 /*
 Offset to use. WARNING AMA_Left, AMA_Bottom Specifies the low left corner
 of the drawing area in deltapixles from the lowest left corner
@@ -222,10 +221,10 @@ Untuched (default) will result in
 AMA_Left=0;
 AMA_Bottom=0;
 */
-#define AMA_Left			(AMA_Dummy + 0x0001)
-#define AMA_Right			(AMA_Dummy + 0x0002)
-#define AMA_Top 			(AMA_Dummy + 0x0003)
-#define AMA_Bottom			(AMA_Dummy + 0x0004)
+#define AMA_Left			(AMA_Dummy + 0x0002)
+#define AMA_Right			(AMA_Dummy + 0x0003)
+#define AMA_Top 			(AMA_Dummy + 0x0004)
+#define AMA_Bottom		(AMA_Dummy + 0x0005)
 
 /*
 Size in pixels of drawing area if others than the whole rastport.
@@ -235,8 +234,8 @@ Untuched (default) will result in
 AMA_Width =rp->BitMap->BytesPerRow*8;
 AMA_Height=rp->BitMap->Rows;
 */
-#define AMA_Width			(AMA_Dummy + 0x0005)
-#define AMA_Height			(AMA_Dummy + 0x0006)
+#define AMA_Width			(AMA_Dummy + 0x0006)
+#define AMA_Height		(AMA_Dummy + 0x0007)
 
 /*
 This may become unneaded, and code to autodetect the gfx-card should be added

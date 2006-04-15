@@ -1,3 +1,6 @@
+#if !defined(AROSMESA_TC_H)
+#define AROSMESA_TC_H
+
 /* Private Includes and protos for TrueColor driver */
 
 BOOL arosTC_Standard_init(struct arosmesa_context *c,struct TagItem *tagList);
@@ -13,3 +16,4 @@ BOOL arosTC_Standard_init_db(struct arosmesa_context *c,struct TagItem *tagList)
 
 #include "AROSMesa_8bit.h"
 
+#endif /* AROSMESA_TC_H */

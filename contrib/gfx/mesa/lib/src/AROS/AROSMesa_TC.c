@@ -57,12 +57,12 @@ Amiga Mesa 2.2 ported to AROS by Nic Andrews. Build with 'make aros'. Not built 
 
 /*
 TODO:
-Dynamic allocate the vectorbuffer for polydrawing. (memory improvment)
+Dynamic allocate the vectorbuffer for polydrawing. (memory improvement)
 implement shared list.
 fix resizing bug.
 some native asm routine
 fast asm line drawin in db mode
-fast asm clear       in db mode
+fast asm clear     in db mode
 read buffer rutines  in db-mode
 
 IDEAS:
@@ -126,27 +126,21 @@ extern struct Library*  CyberGfxBase;
 #include "macros.h"
 #include "vb.h"
 
-#define MAX_POLYGON 300
-
-#define         TC_RGBA(r,g,b,a)                ((((((a<<8)|r)<<8)|g)<<8)|b)
-#define         PACK_8B8G8R( R, G, B )          ( ((B) << 16) | ((G) << 8) | (R) )
-//#define       PACK_8A8B8G8R( R, G, B, A ) 
-#define DEBUG 1
-#include <aros/debug.h>
+#include "AROSMesa_common.h"
 
 extern void aros8bit_standard_DD_pointers( GLcontext *ctx );
 
 /**********************************************************************/
-/*****                Some Usefull code                                     *****/
+/*****        Some Usefull code                   *****/
 /**********************************************************************/
 
 /*
-    The Drawing area is defined by:
+  The Drawing area is defined by:
 
-    CC.Viewport.X = x;
-    CC.Viewport.Width = width;
-    CC.Viewport.Y = y;
-    CC.Viewport.Height = height;
+  CC.Viewport.X = x;
+  CC.Viewport.Width = width;
+  CC.Viewport.Y = y;
+  CC.Viewport.Height = height;
 */
 
 static void arosTC_Standard_resize( GLcontext *ctx,GLuint *width, GLuint *height);
@@ -157,47 +151,43 @@ extern void destroy_rastport( struct RastPort *rp );
 extern void AllocOneLine(struct arosmesa_context *AROSMesaCreateContext);
 extern void FreeOneLine(struct arosmesa_context *AROSMesaCreateContext);
 
-/*
- * Convert Mesa window coordinate(s) to AROS screen coordinate(s):
- */
-
-#define FIXx(x) (amesa->left + (x))
-
-#define FIXy(y) (amesa->RealHeight-amesa->bottom - (y))
-
-#define FIXxy(x,y) ((amesa->RealWidth*FIXy(y)+FIXx(x)))
-
 /**********************************************************************/
-/*****                Miscellaneous device driver funcs                 *****/
+/*****        Miscellaneous device driver funcs       *****/
 /**********************************************************************/
 
 static void arosTC_finish( void )
 {
-    /* implements glFinish if possible */
+  /* implements glFinish if possible */
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : ararosTC_finish() : Unimplemented - glFinish()\n"));
+#endif
 }
 
 static void arosTC_flush( void )
 {
-    /* implements glFlush if possible */
+  /* implements glFlush if possible */
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : ararosTC_flush() : Unimplemented - glFlush()\n"));
+#endif
 }
 
 /* implements glClearIndex - Set the color index used to clear the color buffer. */
 static void arosTC_clear_index( GLcontext *ctx, GLuint index )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    amesa->clearpixel = amesa->penconv[index];
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  amesa->clearpixel = amesa->penconv[index];
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_clear_index(c=%x,i=%d) = %x\n",ctx,index,amesa->clearpixel));
+D(bug("[AMESA:TC] : arosTC_clear_index(c=%x,i=%d) = %x\n", ctx, index, amesa->clearpixel));
 #endif
 }
 
 /* implements glClearColor - Set the color used to clear the color buffer. */
 static void arosTC_clear_color( GLcontext *ctx,
-                          GLubyte r, GLubyte g, GLubyte b, GLubyte a )
+              GLubyte r, GLubyte g, GLubyte b, GLubyte a )
 {
-#warning TODO: Free pen color if not used
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    amesa->clearpixel = TC_RGBA(r,g,b,a);
+#warning "TODO: Free pen color if not used"
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  amesa->clearpixel = TC_ARGB(r, g, b, a);
 #ifdef DEBUGPRINT
 D(bug("[AMESA:TC] : arosTC_clear_color(c=%x,r=%d,g=%d,b=%d,a=%d) = %x\n",ctx, r, g, b, a, amesa->clearpixel));
 #endif
@@ -208,34 +198,37 @@ D(bug("[AMESA:TC] : arosTC_clear_color(c=%x,r=%d,g=%d,b=%d,a=%d) = %x\n",ctx, r,
 * or index as specified by one of the two functions above.
 */
 static GLbitfield arosTC_clear(GLcontext* ctx, GLbitfield mask,
-                                GLboolean all, GLint x, GLint y, GLint width, GLint height)
+                GLboolean all, GLint x, GLint y, GLint width, GLint height)
 {
-    /*
-    * If all==GL_TRUE, clear whole buffer
-    */
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
+  /*
+  * If all==GL_TRUE, clear whole buffer
+  */
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_clear(all:%d,x:%d,y:%d,w:%d,h:%d)\n",all,x,y,width,height));
+D(bug("[AMESA:TC] : arosTC_clear(all:%d,x:%d,y:%d,w:%d,h:%d)\n", all, x, y, width, height));
 #endif
 
-    if(amesa->rp!=0)
-    {
-        if(all) FillPixelArray (amesa->rp,FIXx(ctx->Viewport.X),FIXy(ctx->Viewport.Y)-ctx->Viewport.Height+1,/*FIXx(ctx->Viewport.X)+*/ctx->Viewport.Width/*-1*/,ctx->Viewport.Height/*FIXy(ctx->Viewport.Y)*/,amesa->clearpixel);
-        else FillPixelArray (amesa->rp,FIXx(x),FIXy(y)-height,width,FIXy(y),amesa->clearpixel);
-    }
-    else printf("Serious error amesa->rp=0 detected in arosTC_clear() in file cybmesa.c\n");
+  if(amesa->rp != 0)
+  {
+    if(all) FillPixelArray (amesa->rp, FIXx(ctx->Viewport.X), FIXy(ctx->Viewport.Y)-ctx->Viewport. Height+1, /*FIXx(ctx->Viewport.X)+*/ctx->Viewport.Width/*-1*/, ctx->Viewport.Height/*FIXy(ctx->Viewport.Y)*/, amesa->clearpixel);
+    else FillPixelArray (amesa->rp, FIXx(x), FIXy(y) - height, width, FIXy(y), amesa->clearpixel);
+  }
+  else
+  {
+    printf("Serious error amesa->rp=0 detected in arosTC_clear() in file cybmesa.c\n");
+  }
 
-#warning TODO: I doubt this is correct. dd.h doesnt explain what this should be...
-    return mask;
+#warning "TODO: I doubt this is correct. dd.h doesnt explain what this should be..."
+  return mask;
 }
 
 /* Set the current color index. */
 static void arosTC_set_index( GLcontext *ctx,GLuint index )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
 
-    /* Set the amesa color index. */
-    amesa->pixel = amesa->penconv[index];
+  /* Set the amesa color index. */
+  amesa->pixel = amesa->penconv[index];
 #ifdef DEBUGPRINT
 D(bug("[AMESA:TC] : arosTC_set_index(c=%x,i=%d) = %x\n", ctx, index,amesa->pixel));
 #endif
@@ -243,41 +236,44 @@ D(bug("[AMESA:TC] : arosTC_set_index(c=%x,i=%d) = %x\n", ctx, index,amesa->pixel
 
 static void arosTC_set_color( GLcontext *ctx,GLubyte r, GLubyte g, GLubyte b, GLubyte a )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
 
-    /* Set the current RGBA color. */
-    /* r is in 0..255.RedScale */
-    /* g is in 0..255.GreenScale */
-    /* b is in 0..255.BlueScale */
-    /* a is in 0..255.AlphaScale */
-    amesa->pixel = TC_RGBA(r,g,b,a);
+  /* Set the current RGBA color. */
+  /* r is in 0..255.RedScale */
+  /* g is in 0..255.GreenScale */
+  /* b is in 0..255.BlueScale */
+  /* a is in 0..255.AlphaScale */
+  amesa->pixel = TC_ARGB(r,g,b,a);
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_set_color(c=%x,r=%d,g=%d,b=%d,a=%d) = %x\n",ctx, r, g, b, a, amesa->pixel));
+D(bug("[AMESA:TC] : arosTC_set_color(c=%x,r=%d,g=%d,b=%d,a=%d) = %x\n", ctx, r, g, b, a, amesa->pixel));
 #endif
 }
 
 /* Set the index mode bitplane mask. */
 static GLboolean arosTC_index_mask( GLcontext *ctx,GLuint mask )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
 
-    /* implement glIndexMask if possible, else return GL_FALSE */
-D(bug("[AMESA:TC] : arosTC_index_mask(0x%x)\n",mask));
-    amesa->rp->Mask = (UBYTE) mask;
+  /* implement glIndexMask if possible, else return GL_FALSE */
+D(bug("[AMESA:TC] : arosTC_index_mask(0x%x)\n", mask));
+  amesa->rp->Mask = (UBYTE)mask;
 
-    return(GL_TRUE);
+  return (GL_TRUE);
 }
 
 /* Set the RGBA drawing mask. */
 static GLboolean arosTC_color_mask( GLcontext *ctx,GLboolean rmask, GLboolean gmask,
-                                      GLboolean bmask, GLboolean amask)
+                    GLboolean bmask, GLboolean amask)
 {
-    /* implement glColorMask if possible, else return GL_FALSE */
-    return(GL_FALSE);
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : arosTC_color_mask()\n"));
+#endif
+  /* implement glColorMask if possible, else return GL_FALSE */
+  return (GL_FALSE);
 }
 
 /**********************************************************************/
-/*****            Accelerated point, line, polygon rendering      *****/
+/*****      Accelerated point, line, polygon rendering    *****/
 /**********************************************************************/
 
 /*
@@ -286,56 +282,66 @@ static GLboolean arosTC_color_mask( GLcontext *ctx,GLboolean rmask, GLboolean gm
 
 static void arosTC_fast_points_function(GLcontext *ctx,GLuint first, GLuint last )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    struct vertex_buffer *VB = ctx->VB;
-    int i,col;
-    register struct RastPort * rp=amesa->rp;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  struct vertex_buffer *VB = ctx->VB;
+  int i, col;
+  register struct RastPort *rp = amesa->rp;
 #ifdef DEBUGPRINT
 D(bug("[AMESA:TC] : arosTC_fast_points_function(f:%d, l:%d)\n", first, last));
 #endif
 
-    if (VB->MonoColor) {
-        /* draw all points using the current color (set_color) */
-/*      D(bug("[AMESA:TC] : VB->MonoColor\n"));*/
-        for (i=first;i<=last;i++) {
-           if (VB->ClipMask[i]==0) {
-                /* compute window coordinate */
-                int x, y;
-                x =FIXx((GLint) (VB->Win[i][0]));
-                y =FIXy((GLint) (VB->Win[i][1]));
-                WriteRGBPixel(rp,x,y,amesa->pixel);
-/*      printf("WriteRGBPixel(%d,%d)\n",x,y);*/
-            }
-        }
-    } else {
-        /* each point is a different color */
-/*      D(bug("[AMESA:TC] : !VB.MonoColor\n"));*/
-
-        for (i=first;i<=last;i++) {
-            if ((VB->ClipMask[i]==0)) {
-                int x, y;
-                x =FIXx((GLint) (VB->Win[i][0]));
-                y =FIXy((GLint) (VB->Win[i][1]));
-                col=*VB->Color[i];
-                WriteRGBPixel(rp,x,y,amesa->penconv[col]);
-/*      D(bug("[AMESA:TC] : WriteRGBPixel(%d,%d)\n",x,y));*/
-            }
-        }
+  if (VB->MonoColor) {
+    /* draw all points using the current color (set_color) */
+/*    D(bug("[AMESA:TC] : VB->MonoColor\n"));*/
+    for (i = first ; i <= last ; i++)
+    {
+      if (VB->ClipMask[i] == 0)
+      {
+        /* compute window coordinate */
+        int x, y;
+        x = FIXx((GLint) (VB->Win[i][0]));
+        y = FIXy((GLint) (VB->Win[i][1]));
+        WriteRGBPixel(rp, x, y, amesa->pixel);
+/*    printf("WriteRGBPixel(%d,%d)\n", x, y);*/
+      }
     }
+  } else {
+    /* each point is a different color */
+/*    D(bug("[AMESA:TC] : !VB.MonoColor\n"));*/
+
+    for (i = first ; i <= last ; i++)
+    {
+      if ((VB->ClipMask[i] == 0))
+      {
+        int x, y;
+        x = FIXx((GLint) (VB->Win[i][0]));
+        y = FIXy((GLint) (VB->Win[i][1]));
+        col =* VB->Color[i];
+        WriteRGBPixel(rp, x, y, amesa->penconv[col]);
+/*    D(bug("[AMESA:TC] : WriteRGBPixel(%d,%d)\n", x, y));*/
+      }
+    }
+  }
 }
 
 static points_func arosTC_choose_points_function( GLcontext *ctx )
 {
 /*D(bug("[AMESA:TC] : arosTC_choose_points_function\n"));*/
-    /* Examine the current rendering state and return a pointer to a */
-    /* fast point-rendering function if possible. */
-    if (ctx->Point.Size==1.0 && !ctx->Point.SmoothFlag && ctx->RasterMask==0
-       && !ctx->Texture.Enabled /*&&  ETC, ETC */) {
-        return arosTC_fast_points_function;
-    }
-    else {
-        return NULL;
-    }
+  /* Examine the current rendering state and return a pointer to a */
+  /* fast point-rendering function if possible. */
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : ararosTC_choose_points_function()\n"));
+#endif
+  if ((ctx->Point.Size == 1.0)
+     && (!(ctx->Point.SmoothFlag))
+     && (ctx->RasterMask == 0)
+     && (!(ctx->Texture.Enabled)) /*&&  ETC, ETC */)
+  {
+    return arosTC_fast_points_function;
+  }
+  else {
+    return NULL;
+  }
 }
 
 /*
@@ -344,16 +350,16 @@ static points_func arosTC_choose_points_function( GLcontext *ctx )
 
 static line_func arosTC_choose_line_function( GLcontext *ctx)
 {
-    /*D(bug("[AMESA:TC] : arosTC_choose_line_function\n"));*/
+D(bug("[AMESA:TC] : arosTC_choose_line_function()\n"));
 
-    /* Examine the current rendering state and return a pointer to a */
-    /* fast line-rendering function if possible. */
+  /* Examine the current rendering state and return a pointer to a */
+  /* fast line-rendering function if possible. */
 
-    return NULL;
+  return NULL;
 }
 
 /**********************************************************************/
-/*****                  Optimized polygon rendering               *****/
+/*****          Optimized polygon rendering         *****/
 /**********************************************************************/
 
 /*
@@ -362,343 +368,372 @@ static line_func arosTC_choose_line_function( GLcontext *ctx)
  * polygon.c to do the drawing.
  */
 
-#warning TODO: removed next [obsolete] function to compile on 2.6
+#warning "TODO: removed next [obsolete] function to compile on 2.6"
 /*static polygon_func arosTC_choose_polygon_function( GLcontext *ctx )
 {*/
-    /* D(bug("[AMESA:TC] : arosTC_choose_polygon_function\n"));*/
+  /* D(bug("[AMESA:TC] : arosTC_choose_polygon_function\n"));*/
 
-    /* Examine the current rendering state and return a pointer to a */
-    /* fast polygon-rendering function if possible. */
+  /* Examine the current rendering state and return a pointer to a */
+  /* fast polygon-rendering function if possible. */
 
-/*    return NULL;
+/*  return NULL;
 }*/
 
 /**********************************************************************/
-/*****                 Span-based pixel drawing                   *****/
+/*****         Span-based pixel drawing           *****/
 /**********************************************************************/
 
 /* Write a horizontal span of 32-bit color-index pixels with a boolean mask. */
 static void arosTC_write_ci32_span(const GLcontext *ctx,
-                                GLuint n, GLint x, GLint y,
-                                const GLuint index[],
-                                const GLubyte mask[] )
+                GLuint n, GLint x, GLint y,
+                const GLuint index[],
+                const GLubyte mask[] )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i,ant;
-    ULONG *dp=NULL;
-    unsigned long * penconv=amesa->penconv;
-    register struct RastPort * rp=amesa->rp;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i, drawbits_counter;
+  ULONG *dp = NULL;
+  unsigned long *penconv = amesa->penconv;
+  register struct RastPort *rp = amesa->rp;
 
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_write_ci32_span(n:%d,x:%d,y:%d)\n",n,x,y));
+D(bug("[AMESA:TC] : arosTC_write_ci32_span(n:%d,x:%d,y:%d)\n", n, x, y));
 #endif
-    
-    y=FIXy(y);
-    x=FIXx(x);
-    if((dp = (ULONG*)amesa->imageline))
-    {                     /* if imageline has been
-                        allocated then use fastversion */
+  
+  y = FIXy(y);
+  x = FIXx(x);
+  if((dp = (ULONG*)amesa->imageline))
+  {           /* if imageline has been
+            allocated then use fastversion */
 
-        ant=0;
-        for (i=0;i<n;i++) { /* draw pixel (x[i],y[i]) using index[i] */
-            if (mask[i]) {
-                ant++;
-/*              x++;*/
-                *dp = penconv[index[i]];dp++;
-            } else {
-                if(ant)
-                {
-#ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_write_ci32_span: WritePixelArray()\n"));
-#endif
-                    WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
-                    dp=(ULONG*)amesa->imageline;
-                    x=x+ant;
-                    ant=0;
-                }
-                else x++;
-            }
-        }
-        if(ant)
+    drawbits_counter = 0;
+    for (i = 0 ; i<n ; i++)
+    { /* draw pixel (x[i],y[i]) using index[i] */
+      if (mask[i])
+      {
+        drawbits_counter++;
+/*        x++;*/
+        *dp = penconv[index[i]];
+        dp++;
+      } else {
+        if(drawbits_counter)
         {
 #ifdef DEBUGPRINT
 D(bug("[AMESA:TC] : arosTC_write_ci32_span: WritePixelArray()\n"));
 #endif
-            WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
+          WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+          dp = (ULONG*)amesa->imageline;
+          x = x + drawbits_counter;
+          drawbits_counter = 0;
         }
-
-    } else {            /* Slower */
-        for (i=0;i<n;i++,x++) {
-            if (mask[i]) {
-                /* draw pixel (x[i],y[i]) using index[i] */
-                WriteRGBPixel(rp,x,y,penconv[index[i]]);
-            }
+        else 
+        {
+          x++;
+          dp++;
         }
+      }
     }
+    if(drawbits_counter)
+    {
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : arosTC_write_ci32_span: WritePixelArray()\n"));
+#endif
+      WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+    }
+
+  } else {      /* Slower */
+    for (i = 0 ; i < n ; i++, x++)
+    {
+      if (mask[i])
+      {
+        /* draw pixel (x[i],y[i]) using index[i] */
+        WriteRGBPixel(rp, x, y, penconv[index[i]]);
+      }
+    }
+  }
 }
 
 /* Write a horizontal span of 8-bit color-index pixels with a boolean mask. */
 static void arosTC_write_ci8_span(const GLcontext *ctx,
-                                GLuint n, GLint x, GLint y,
-                                const GLubyte index[],
-                                const GLubyte mask[] )
+                GLuint n, GLint x, GLint y,
+                const GLubyte index[],
+                const GLubyte mask[] )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i,ant;
-    ULONG *dp=NULL;
-    unsigned long * penconv=amesa->penconv;
-    register struct RastPort * rp=amesa->rp;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i, drawbits_counter;
+  ULONG *dp = NULL;
+  unsigned long *penconv = amesa->penconv;
+  register struct RastPort *rp = amesa->rp;
 
 #ifdef DEBUGPRINT
 D(bug("[AMESA:TC] : arosTC_write_ci8_span(n:%d,x:%d,y:%d)\n",n,x,y));
 #endif
 
-    y=FIXy(y);
-    x=FIXx(x);
-    if((dp = (ULONG*)amesa->imageline))
-    {                     /* if imageline have been
-                        allocated then use fastversion */
-
-        ant=0;
-        for (i=0;i<n;i++) { /* draw pixel (x[i],y[i]) using index[i] */
-            if (mask[i]) {
-                ant++;
-/*              x++;*/
-                *dp = penconv[index[i]];dp++;
-            } else {
-                if(ant)
-                {
-#ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_write_ci8_span: WritePixelArray()\n"));
-#endif
-                    WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
-                    dp=(ULONG*)amesa->imageline;
-                    x=x+ant;
-                    ant=0;
-                }
-                else x++;
-            }
-        }
-        if(ant)
+  y = FIXy(y);
+  x = FIXx(x);
+  if((dp = (ULONG*)amesa->imageline))
+  {           /* if imageline have been
+            allocated then use fastversion */
+    drawbits_counter = 0;
+    for (i = 0 ; i < n ; i++)
+    { /* draw pixel (x[i],y[i]) using index[i] */
+      if (mask[i])
+      {
+        drawbits_counter++;
+/*        x++;*/
+        *dp = penconv[index[i]];
+        dp++;
+      } else {
+        if(drawbits_counter)
         {
 #ifdef DEBUGPRINT
 D(bug("[AMESA:TC] : arosTC_write_ci8_span: WritePixelArray()\n"));
 #endif
-            WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
+          WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+          dp = (ULONG*)amesa->imageline;
+          x = x + drawbits_counter;
+          drawbits_counter = 0;
         }
-
-    } else {            /* Slower */
-        for (i=0;i<n;i++,x++) {
-            if (mask[i]) {
-                /* draw pixel (x[i],y[i]) using index[i] */
-                WriteRGBPixel(rp,x,y,penconv[index[i]]);
-            }
+        else
+        {
+          x++;
+          dp++;
         }
+      }
     }
+    if(drawbits_counter)
+    {
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : arosTC_write_ci8_span: WritePixelArray()\n"));
+#endif
+      WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+    }
+
+  } else {      /* Slower */
+    for (i = 0 ; i < n ; i++, x++)
+    {
+      if (mask[i])
+      {
+        /* draw pixel (x[i],y[i]) using index[i] */
+        WriteRGBPixel(rp, x, y, penconv[index[i]]);
+      }
+    }
+  }
 }
 
 /* Write a horizontal span of RGBA color pixels with a boolean mask. */
 static void arosTC_write_rgba_span( const GLcontext *ctx, GLuint n, GLint x, GLint y,
-                                const GLubyte rgba[][4], const GLubyte mask[])
+                const GLubyte rgba[][4], const GLubyte mask[])
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i,ant;
-    ULONG *dp=NULL;
-    register struct RastPort * rp = amesa->rp;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i, drawbits_counter;
+  ULONG *dp = NULL;
+  register struct RastPort *rp = amesa->rp;
 
-    y=FIXy(y);
-    x=FIXx(x);
+  y = FIXy(y);
+  x = FIXx(x);
 
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_write_rgba_span(ant=%d,x=%d,y=%d)",n,x,y));
+D(bug("[AMESA:TC] : arosTC_write_rgba_span(count=%d,x=%d,y=%d)", n, x, y));
 #endif
 
-    if((dp = (ULONG*)amesa->imageline))
-    {           /* if imageline allocated then use fastversion */
+  if((dp = (ULONG*)amesa->imageline))
+  {       /* if imageline allocated then use fastversion */
 #ifdef DEBUGPRINT
 D(bug("FAST "));
 #endif
-        if (mask)
-        {
+    if (mask)
+    {
 #ifdef DEBUGPRINT
 D(bug("mask\n"));
 #endif
-            ant=0;
-            for (i=0;i<n;i++)           /* draw pixel (x[i],y[i]) */
-            {
-                if (mask[i])
-                {
-                    ant++;
-                    *dp = TC_RGBA(rgba[i][RCOMP],rgba[i][GCOMP],rgba[i][BCOMP],rgba[i][ACOMP]);dp++;
-                }
-                else
-                {
-                    if(ant)
-                    {
-                        WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
-/*D(bug("[AMESA:TC] : arosTC_write_rgba_span: WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
-                        dp=(ULONG*)amesa->imageline;
-                        x=x+ant;
-                        ant=0;
-                    }
-                    else x++;
-                }
-            }
-
-            if(ant)
-            {
-                WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
-/*D(bug("[AMESA:TC] : arosTC_write_rgba_span: WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
-            }
+      drawbits_counter = 0;
+      for (i = 0; i < n; i++)       /* draw pixel (x[i],y[i]) */
+      {
+        if (mask[i])
+        {
+          /* Mask Bit Set, So Draw */
+          drawbits_counter++;
+          *dp = TC_ARGB(rgba[i][RCOMP], rgba[i][GCOMP], rgba[i][BCOMP], rgba[i][ACOMP]);
+          dp++;
         }
         else
         {
+          if(drawbits_counter)
+          {
+            WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+/*D(bug("[AMESA:TC] : arosTC_write_rgba_span: WritePixelArray(ant=%d,x=%d,y=%d)\n", ant, x, y));*/
+            dp = (ULONG*)amesa->imageline;
+            x = x + drawbits_counter;
+            drawbits_counter = 0;
+          }
+          else
+          {
+            x++;
+            dp++;
+          }
+        }
+      }
+
+      if(drawbits_counter)
+      {
+        WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+/*D(bug("[AMESA:TC] : arosTC_write_rgba_span: WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
+      }
+    }
+    else
+    {
 #ifdef DEBUGPRINT
 D(bug("nomask\n"));
 #endif
-            for (i=0;i<n;i++)                   /* draw pixel (x[i],y[i])*/
-            {
-                *dp = TC_RGBA(rgba[i][RCOMP],rgba[i][GCOMP],rgba[i][BCOMP],rgba[i][ACOMP]);dp++;
-            }
-            WritePixelArray(amesa->imageline,0,0,4*n,rp,x,y,n,1,RECTFMT_ARGB);
-        }
-        
+      for (i = 0; i < n; i++)           /* draw pixel (x[i],y[i])*/
+      {
+        *dp = TC_ARGB(rgba[i][RCOMP], rgba[i][GCOMP], rgba[i][BCOMP], rgba[i][ACOMP]);
+        dp++;
+      }
+      WritePixelArray(amesa->imageline, 0, 0, 4 * n, rp, x, y, n, 1, RECTFMT_ARGB);
     }
-    else
-    {    /* Slower version */
+  }
+  else
+  {  /* Slower version */
 #ifdef DEBUGPRINT
 D(bug("SLOW "));
 #endif
-        if (mask)
-        {
+    if (mask)
+    {
 #ifdef DEBUGPRINT
 D(bug("mask\n"));
 #endif
-            /* draw some pixels */
-            for (i=0; i<n; i++, x++)
-            {
-                if (mask[i])
-                {
-                    /* draw pixel x,y using color red[i]/green[i]/blue[i]/alpha[i] */
-                    WriteRGBPixel(rp,x,y,TC_RGBA(rgba[i][RCOMP],rgba[i][GCOMP],rgba[i][BCOMP],rgba[i][ACOMP]));
-                }
-            }
-        }
-        else
+      /* draw some pixels */
+      for (i = 0; i < n; i++, x++)
+      {
+        if (mask[i])
         {
+          /* draw pixel x,y using color red[i]/green[i]/blue[i]/alpha[i] */
+          WriteRGBPixel(rp, x, y, TC_ARGB(rgba[i][RCOMP], rgba[i][GCOMP], rgba[i][BCOMP], rgba[i][ACOMP]));
+        }
+      }
+    }
+    else
+    {
 #ifdef DEBUGPRINT
 D(bug("nomask\n"));
 #endif
-            /* draw all pixels */
-            for (i=0; i<n; i++, x++)
-            {
-                /* draw pixel x,y using color red[i]/green[i]/blue[i]/alpha[i] */
-                WriteRGBPixel(rp,x,y,TC_RGBA(rgba[i][RCOMP],rgba[i][GCOMP],rgba[i][BCOMP],rgba[i][ACOMP]));
-            }
-        }
+      /* draw all pixels */
+      for (i = 0; i < n; i++, x++)
+      {
+        /* draw pixel x,y using color red[i]/green[i]/blue[i]/alpha[i] */
+        WriteRGBPixel(rp, x, y,TC_ARGB(rgba[i][RCOMP], rgba[i][GCOMP], rgba[i][BCOMP], rgba[i][ACOMP]));
+      }
     }
+  }
 }
 
 /* Write a horizontal span of RGB color pixels with a boolean mask. */
 static void arosTC_write_rgb_span( const GLcontext *ctx, GLuint n, GLint x, GLint y,
-                                const GLubyte rgba[][3], const GLubyte mask[])
+                const GLubyte rgba[][3], const GLubyte mask[])
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i,ant;
-    ULONG *dp=NULL;
-    register struct RastPort * rp = amesa->rp;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i, drawbits_counter;
+  ULONG *dp = NULL;
+  register struct RastPort *rp = amesa->rp;
 
-    y=FIXy(y);
-    x=FIXx(x);
-    
+  y = FIXy(y);
+  x = FIXx(x);
+  
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_write_color_span(ant=%d,x=%d,y=%d)",n,x,y));
+D(bug("[AMESA:TC] : arosTC_write_color_span(ant=%d,x=%d,y=%d)", n, x, y));
 #endif
 
-    if((dp = (ULONG*)amesa->imageline))
-    {           /* if imageline allocated then use fastversion */
+  if((dp = (ULONG*)amesa->imageline))
+  {       /* if imageline allocated then use fastversion */
 #ifdef DEBUGPRINT
 D(bug("FAST "));
 #endif
-        if (mask)
-        {
+    if (mask)
+    {
 #ifdef DEBUGPRINT
 D(bug("mask\n"));
 #endif
-            ant=0;
-            for (i=0;i<n;i++)           /* draw pixel (x[i],y[i]) */
-            {
-                if (mask[i])
-                {
-                    ant++;
-                    *dp = TC_RGBA(rgba[i][RCOMP],rgba[i][GCOMP],rgba[i][BCOMP],0xff);dp++;
-                }
-                else
-                {
-                    if(ant)
-                    {
-                        WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
-/*D(bug("[AMESA:TC] : WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
-                        dp=(ULONG*)amesa->imageline;
-                        x=x+ant;
-                        ant=0;
-                    }
-                    else x++;
-                }
-            }
-
-            if(ant)
-            {
-                WritePixelArray(amesa->imageline,0,0,4*ant,rp,x,y,ant,1,RECTFMT_ARGB);
-/*D(bug("[AMESA:TC] : WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
-            }
+      drawbits_counter = 0;
+      for (i = 0; i < n; i++)       /* draw pixel (x[i],y[i]) */
+      {
+        if (mask[i])
+        {
+          drawbits_counter++;
+          *dp = TC_ARGB(rgba[i][RCOMP], rgba[i][GCOMP], rgba[i][BCOMP], 0xff);
+          dp++;
         }
         else
         {
+          if(drawbits_counter)
+          {
+            WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+/*D(bug("[AMESA:TC] : WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
+            dp = (ULONG*)amesa->imageline;
+            x = x + drawbits_counter;
+            drawbits_counter = 0;
+          }
+          else
+          {
+            x++;
+            dp++;
+          }
+        }
+      }
+
+      if(drawbits_counter)
+      {
+        WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+/*D(bug("[AMESA:TC] : WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
+      }
+    }
+    else
+    {
 #ifdef DEBUGPRINT
 D(bug("nomask\n"));
 #endif
-            for (i=0;i<n;i++)                   /* draw pixel (x[i],y[i])*/
-            {
-                *dp = TC_RGBA(rgba[i][RCOMP],rgba[i][GCOMP],rgba[i][BCOMP],0xff);dp++;
-            }
-            WritePixelArray(amesa->imageline,0,0,4*n,rp,x,y,n,1,RECTFMT_ARGB);
-        }
-        
+      for (i = 0; i < n; i++)           /* draw pixel (x[i],y[i])*/
+      {
+        *dp = TC_ARGB(rgba[i][RCOMP], rgba[i][GCOMP], rgba[i][BCOMP],0xff);
+        dp++;
+      }
+      WritePixelArray(amesa->imageline, 0, 0, 4 * n, rp, x, y, n, 1, RECTFMT_ARGB);
     }
-    else
-    {    /* Slower version */
+    
+  }
+  else
+  {  /* Slower version */
 #ifdef DEBUGPRINT
 D(bug("SLOW "));
 #endif
-        if (mask)
-        {
+    if (mask)
+    {
 #ifdef DEBUGPRINT
 D(bug("mask\n"));
 #endif
-            /* draw some pixels */
-            for (i=0; i<n; i++, x++)
-            {
-                if (mask[i])
-                {
-                    /* draw pixel x,y using color red[i]/green[i]/blue[i]/alpha[i] */
-                    WriteRGBPixel(rp,x,y,TC_RGBA(rgba[i][RCOMP],rgba[i][GCOMP],rgba[i][BCOMP],0xff));
-                }
-            }
-        }
-        else
+      /* draw some pixels */
+      for (i=0; i<n; i++, x++)
+      {
+        if (mask[i])
         {
+          /* draw pixel x,y using color red[i]/green[i]/blue[i]/alpha[i] */
+          WriteRGBPixel(rp, x, y, TC_ARGB(rgba[i][RCOMP], rgba[i][GCOMP], rgba[i][BCOMP], 0xff));
+        }
+      }
+    }
+    else
+    {
 #ifdef DEBUGPRINT
 D(bug("nomask\n"));
 #endif
-            /* draw all pixels */
-            for (i=0; i<n; i++, x++)
-            {
-                /* draw pixel x,y using color red[i]/green[i]/blue[i]/alpha[i] */
-                WriteRGBPixel(rp,x,y,TC_RGBA(rgba[i][RCOMP],rgba[i][GCOMP],rgba[i][BCOMP],0xff));
-            }
-        }
+      /* draw all pixels */
+      for (i = 0; i < n; i++, x++)
+      {
+        /* draw pixel x,y using color red[i]/green[i]/blue[i]/alpha[i] */
+        WriteRGBPixel(rp, x, y, TC_ARGB(rgba[i][RCOMP], rgba[i][GCOMP], rgba[i][BCOMP], 0xff));
+      }
     }
+  }
 }
 
 /*
@@ -706,36 +741,38 @@ D(bug("nomask\n"));
 * color index is used for all pixels.
 */
 static void arosTC_write_mono_ci_span(const GLcontext* ctx,
-                               GLuint n,GLint x,GLint y,
-                               const GLubyte mask[])
+                 GLuint n,GLint x,GLint y,
+                 const GLubyte mask[])
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i,j;
-    y=FIXy(y);
-    x=FIXx(x);
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i, j;
+  y = FIXy(y);
+  x = FIXx(x);
 
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_write_mono_ci_span\n"));
+D(bug("[AMESA:TC] : arosTC_write_mono_ci_span()\n"));
 #endif
 
-    i=0;
-    while(i<n)
+  i = 0;
+  while(i < n)
+  {
+    while((!(mask[i])) && (i < n))
     {
-        while(!mask[i] && i<n)
-        {
-            i++;x++;
-        }
-
-        if(i<n)
-        {
-            j=0;
-            while(mask[i] && i<n)
-            {
-                i++;j++;
-            }
-            FillPixelArray (amesa->rp,x,y,j,1,amesa->pixel);
-        }
+      i++;
+      x++;
     }
+
+    if(i < n)
+    {
+      j = 0;
+      while(mask[i] && (i < n))
+      {
+        i++;
+        j++;
+      }
+      FillPixelArray (amesa->rp, x, y, j, 1, amesa->pixel);
+    }
+  }
 }
 
 /*
@@ -744,131 +781,142 @@ D(bug("[AMESA:TC] : arosTC_write_mono_ci_span\n"));
 */
 
 static void arosTC_write_mono_rgba_span( const GLcontext *ctx,
-                                      GLuint n, GLint x, GLint y,
-                                      const GLubyte mask[])
+                    GLuint n, GLint x, GLint y,
+                    const GLubyte mask[])
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i,j;
-    register struct RastPort * rp = amesa->rp;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i, j;
+  register struct RastPort *rp = amesa->rp;
 
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_write_mono_rgba_span(n:%d,x:%d,y:%d)\n",n,x,y));
+D(bug("[AMESA:TC] : arosTC_write_mono_rgba_span(n:%d,x:%d,y:%d)\n", n, x, y));
 #endif
 
-    y=FIXy(y);
-    x=FIXx(x);
-    i=0;
-    while(i<n)
-    {
-        while(!mask[i] && i<n)
-        {
-            i++;
-            x++;
-        }
+  y = FIXy(y);
+  x = FIXx(x);
 
-        if(i<n)
-        {
-            j = 0;
-            while(mask[i] && i<n)
-            {
-                i++;
-                j++;
-            }
-            FillPixelArray(rp,x,y,j,1,amesa->pixel);
-        }
+  i = 0;
+  while(i < n)
+  {
+    while((!(mask[i])) && (i < n))
+    {
+      i++;
+      x++;
     }
+
+    if(i < n)
+    {
+      j = 0;
+      while(mask[i] && (i < n))
+      {
+        i++;
+        j++;
+      }
+      FillPixelArray(rp, x, y, j, 1, amesa->pixel);
+    }
+  }
 }
 
 /**********************************************************************/
-/*****                    Read spans of pixels                              *****/
+/*****          Read spans of pixels                *****/
 /**********************************************************************/
 
 /* Read a horizontal span of color-index pixels. */
 static void arosTC_read_ci32_span( const GLcontext* ctx, GLuint n, GLint x, GLint y,
-                            GLuint index[])
+              GLuint index[])
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i;
 
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_read_ci32_span>>\n"));
+D(bug("[AMESA:TC] : arosTC_read_ci32_span()\n"));
 #endif
 
-    y=FIXy(y);
-    x=FIXx(x);
+  y = FIXy(y);
+  x = FIXx(x);
 
-    /* Currently this is wrong ARGB-values are NOT indexes !!!*/
-    if(amesa->imageline) {
-        ReadPixelArray(amesa->imageline,0,0,4*n,amesa->rp,x,y,n,1,RECTFMT_ARGB);
-        for(i=0; i<n; i++) index[i]=((ULONG*)amesa->imageline)[i];
-    } else {
-        for (i=0; i<n; i++,x++) index[i] = ReadRGBPixel(amesa->rp,x,y);
+  /* Currently this is wrong ARGB-values are NOT indexes !!!*/
+  if(amesa->imageline)
+  {
+    ReadPixelArray(amesa->imageline, 0, 0, 4 * n, amesa->rp, x, y, n, 1, RECTFMT_ARGB);
+    for(i = 0; i < n; i++)
+    {
+      index[i] = ((ULONG*)amesa->imageline)[i];
     }
+  } else {
+    for (i = 0; i < n; i++, x++)
+    {
+      index[i] = ReadRGBPixel(amesa->rp, x, y);
+    }
+  }
 }
 
 static void MyReadPixelArray(UBYTE *a, ULONG b, ULONG c, ULONG d, struct RastPort *e,ULONG f, ULONG g,ULONG h, ULONG i,ULONG j)
 {
-    ReadPixelArray(a,b,c,d,e,f,g,h,i,j);
+  ReadPixelArray(a,b,c,d,e,f,g,h,i,j);
 }
 
 /* Read a horizontal span of color pixels. */
 static void arosTC_read_rgba_span( const GLcontext* ctx,
-                            GLuint n, GLint x, GLint y,
-                            GLubyte rgba[][4] )
+              GLuint n, GLint x, GLint y,
+              GLubyte rgba[][4] )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i;
-    ULONG col;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i;
+  ULONG col;
 
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_read_color_span>>\n"));
+D(bug("[AMESA:TC] : arosTC_read_color_span()\n"));
 #endif
 
-    y=FIXy(y);
-    x=FIXx(x);
+  y = FIXy(y);
+  x = FIXx(x);
 
-    if(amesa->imageline) {
-        MyReadPixelArray(amesa->imageline,0,0,n*4,amesa->rp,x,y,n,1,RECTFMT_ARGB);
-        for(i=0; i<n; i++) {
-            col = ((ULONG*)amesa->imageline)[i];
-            rgba[i][RCOMP] = (col & 0xff0000)>>16;
-            rgba[i][GCOMP] = (col & 0xff00)>>8;
-            rgba[i][BCOMP] = col & 0xff;
-            rgba[i][ACOMP] = 255;
-        }
-    } else
-        for (i=0; i<n; i++, x++) {
-            col=ReadRGBPixel(amesa->rp,x,y);
-            rgba[i][RCOMP] = (col & 0xff0000)>>16;
-            rgba[i][GCOMP] = (col & 0xff00)>>8;
-            rgba[i][BCOMP] = col & 0xff;
-            rgba[i][ACOMP] = 255;
-        }
+  if(amesa->imageline)
+  {
+    MyReadPixelArray(amesa->imageline, 0, 0, n * 4, amesa->rp, x, y, n, 1, RECTFMT_ARGB);
+    for(i = 0; i < n; i++)
+    {
+      col = ((ULONG*)amesa->imageline)[i];
+      rgba[i][RCOMP] = (col & 0xff0000) >> 16;
+      rgba[i][GCOMP] = (col & 0xff00) >> 8;
+      rgba[i][BCOMP] = col & 0xff;
+      rgba[i][ACOMP] = 255;
+    }
+  } else
+    for (i=0; i<n; i++, x++)
+    {
+      col = ReadRGBPixel(amesa->rp, x, y);
+      rgba[i][RCOMP] = (col & 0xff0000) >> 16;
+      rgba[i][GCOMP] = (col & 0xff00) >> 8;
+      rgba[i][BCOMP] = col & 0xff;
+      rgba[i][ACOMP] = 255;
+    }
 }
 
 /**********************************************************************/
-/*****                   Array-based pixel drawing                *****/
+/*****           Array-based pixel drawing        *****/
 /**********************************************************************/
 
 /* Write an array of 32-bit index pixels with a boolean mask. */
 static void arosTC_write_ci32_pixels( const GLcontext* ctx,
-                               GLuint n, const GLint x[], const GLint y[],
-                               const GLuint index[], const GLubyte mask[] )
+                 GLuint n, const GLint x[], const GLint y[],
+                 const GLuint index[], const GLubyte mask[] )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i;
-    register struct RastPort * rp = amesa->rp;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i;
+  register struct RastPort *rp = amesa->rp;
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_write_ci32_pixels<\n"));
+D(bug("[AMESA:TC] : arosTC_write_ci32_pixels()\n"));
 #endif
 
-    for (i=0; i<n; i++)
+  for (i = 0; i < n; i++)
+  {
+    if (mask[i])
     {
-        if (mask[i])
-        {
-            WriteRGBPixel(rp,FIXx(x[i]),FIXy(y[i]),amesa->pixel);
-        }
+      WriteRGBPixel(rp, FIXx(x[i]), FIXy(y[i]), amesa->pixel);
     }
+  }
 }
 
 /*
@@ -876,44 +924,47 @@ D(bug("[AMESA:TC] : arosTC_write_ci32_pixels<\n"));
 * index is used for all pixels.
 */
 static void arosTC_write_mono_ci_pixels( const GLcontext* ctx,
-                                  GLuint n,
-                                  const GLint x[], const GLint y[],
-                                  const GLubyte mask[] )
+                  GLuint n,
+                  const GLint x[], const GLint y[],
+                  const GLubyte mask[] )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i;
-    register struct RastPort * rp = amesa->rp;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i;
+  register struct RastPort *rp = amesa->rp;
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_write_mono_ci_pixels<\n"));
+D(bug("[AMESA:TC] : arosTC_write_mono_ci_pixels()\n"));
 #endif
 
-    for (i=0; i<n; i++) {
-        if (mask[i]) {
-/*        write pixel x[i], y[i] using current index  */
-            WriteRGBPixel(rp,FIXx(x[i]),FIXy(y[i]),amesa->pixel);
-
-        }
+  for (i = 0; i < n; i++)
+  {
+    if (mask[i])
+    {
+/*    write pixel x[i], y[i] using current index  */
+      WriteRGBPixel(rp, FIXx(x[i]), FIXy(y[i]), amesa->pixel);
     }
+  }
 }
 
 /* Write an array of RGBA pixels with a boolean mask. */
 static void arosTC_write_rgba_pixels( const GLcontext* ctx,
-                               GLuint n, const GLint x[], const GLint y[],
-                               const GLubyte rgba[][4], const GLubyte mask[] )
+                 GLuint n, const GLint x[], const GLint y[],
+                 const GLubyte rgba[][4], const GLubyte mask[] )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i;
-    register struct RastPort * rp = amesa->rp;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i;
+  register struct RastPort *rp = amesa->rp;
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_write_rgba_pixels<\n"));
+D(bug("[AMESA:TC] : arosTC_write_rgba_pixels()\n"));
 #endif
 
-    for (i=0; i<n; i++) {
-        if (mask[i]) {
-/*        write pixel x[i], y[i] using red[i],green[i],blue[i],alpha[i] */
-            WriteRGBPixel(rp,FIXx(x[i]),FIXy(y[i]),TC_RGBA(rgba[i][RCOMP],rgba[i][GCOMP],rgba[i][BCOMP],rgba[i][ACOMP]));
-        }
+  for (i = 0; i < n; i++)
+  {
+    if (mask[i])
+    {
+/*    write pixel x[i], y[i] using red[i],green[i],blue[i],alpha[i] */
+      WriteRGBPixel(rp, FIXx(x[i]), FIXy(y[i]), TC_ARGB(rgba[i][RCOMP], rgba[i][GCOMP], rgba[i][BCOMP], rgba[i][ACOMP]));
     }
+  }
 }
 
 /*
@@ -921,75 +972,79 @@ D(bug("[AMESA:TC] : arosTC_write_rgba_pixels<\n"));
 * is used for all pixels.
 */
 static void arosTC_write_mono_rgba_pixels( const GLcontext* ctx,
-                                    GLuint n,
-                                    const GLint x[], const GLint y[],
-                                    const GLubyte mask[] )
+                  GLuint n,
+                  const GLint x[], const GLint y[],
+                  const GLubyte mask[] )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i;
-    register struct RastPort * rp = amesa->rp;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i;
+  register struct RastPort *rp = amesa->rp;
 #ifdef DEBUGPRINT
 D(bug("[AMESA:TC] : arosTC_write_mono_rgba_pixels<\n"));
 #endif
 
-    for (i=0; i<n; i++) {
-        if (mask[i]) {
-/*        write pixel x[i], y[i] using current color*/
-            WriteRGBPixel(rp,FIXx(x[i]),FIXy(y[i]),amesa->pixel);
-        }
+  for (i = 0; i < n; i++)
+  {
+    if (mask[i])
+    {
+/*    write pixel x[i], y[i] using current color*/
+      WriteRGBPixel(rp, FIXx(x[i]), FIXy(y[i]), amesa->pixel);
     }
+  }
 }
 
 /**********************************************************************/
-/*****                       Read arrays of pixels                          *****/
+/*****             Read arrays of pixels              *****/
 /**********************************************************************/
 
 /* Read an array of color index pixels. */
 static void arosTC_read_ci32_pixels( const GLcontext* ctx,
-                              GLuint n, const GLint x[], const GLint y[],
-                              GLuint index[], const GLubyte mask[] )
+                GLuint n, const GLint x[], const GLint y[],
+                GLuint index[], const GLubyte mask[] )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i;
-    register struct RastPort * rp = amesa->rp;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i;
+  register struct RastPort *rp = amesa->rp;
 #ifdef DEBUGPRINT
 D(bug("[AMESA:TC] : arosTC_read_ci32_pixels-\n"));
 #endif
 
-    for (i=0; i<n; i++) {
-        if (mask[i]) {
-/*       index[i] = read_pixel x[i], y[i] */
-            index[i] = ReadRGBPixel(rp,FIXx(x[i]),FIXy(y[i])); /* that's wrong! we get ARGB!*/
-        }
+  for (i = 0; i < n; i++)
+  {
+    if (mask[i])
+    {
+/*     index[i] = read_pixel x[i], y[i] */
+      index[i] = ReadRGBPixel(rp, FIXx(x[i]), FIXy(y[i])); /* that's wrong! we get ARGB!*/
     }
+  }
 }
 
 /* Read an array of color pixels. */
 static void arosTC_read_rgba_pixels( const GLcontext* ctx,
-                              GLuint n, const GLint x[], const GLint y[],
-                              GLubyte rgba[][4], const GLubyte mask[] )
+                GLuint n, const GLint x[], const GLint y[],
+                GLubyte rgba[][4], const GLubyte mask[] )
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
-    int i,col;
-    register struct RastPort * rp = amesa->rp;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
+  int i, col;
+  register struct RastPort *rp = amesa->rp;
 
 /*  ULONG ColTab[3];*/
 #ifdef DEBUGPRINT
 D(bug("[AMESA:TC] : arosTC_read_rgba_pixels-\n"));
 #endif
 
-    for (i=0; i<n; i++)
+  for (i = 0; i < n; i++)
+  {
+    if (mask[i])
     {
-        if (mask[i])
-        {
-            col=ReadRGBPixel(rp,FIXx(x[i]),FIXy(y[i]));
+      col = ReadRGBPixel(rp, FIXx(x[i]), FIXy(y[i]));
 
-            rgba[i][RCOMP] = (col&0xff0000)>>16;
-            rgba[i][GCOMP] = (col&0xff00)>>8;
-            rgba[i][BCOMP] = col&0xff;
-            rgba[i][ACOMP] = 255;
-        }
+      rgba[i][RCOMP] = (col&0xff0000) >> 16;
+      rgba[i][GCOMP] = (col&0xff00) >> 8;
+      rgba[i][BCOMP] = col & 0xff;
+      rgba[i][ACOMP] = 255;
     }
+  }
 }
 
 /**********************************************************************/
@@ -997,272 +1052,276 @@ D(bug("[AMESA:TC] : arosTC_read_rgba_pixels-\n"));
 
 GLboolean arosTC_logicop( GLcontext* ctx, GLenum op )
 {
-    /* can't implement */
-    return GL_FALSE;
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : arosTC_logicop()\n"));
+#endif
+  /* can't implement */
+  return GL_FALSE;
 }
 
 static void arosTC_dither( GLcontext* ctx, GLboolean enable )
 {
-    /* currently unsuported */
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : arosTC_dither()\n"));
+#endif
+  /* currently unsuported */
 }
 
 static GLboolean arosTC_set_buffer( GLcontext *ctx,GLenum mode )
 {
-    /* set the current drawing/reading buffer, return GL_TRUE or GL_FALSE */
-    /* for success/failure */
-    
+  /* set the current drawing/reading buffer, return GL_TRUE or GL_FALSE */
+  /* for success/failure */
+  
 /*   AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx; */
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_set_buffer TODO\n"));
+D(bug("[AMESA:TC] : arosTC_set_buffer() : TODO\n"));
 #endif
-    
+  
 /* TODO implemed a set of buffers */
-    if (mode==GL_FRONT)
-    {
-        return(GL_TRUE);
-    }
-    else if (mode==GL_BACK)
-    {
-        return(GL_TRUE);
-    }
-    else
-    {
-        return(GL_FALSE);
-    }
+  if (mode == GL_FRONT)
+  {
+    return(GL_TRUE);
+  }
+  else if (mode == GL_BACK)
+  {
+    return(GL_TRUE);
+  }
+  else
+  {
+    return(GL_FALSE);
+  }
 }
 
 static const char *arosTC_renderer_string(void)
 {
-   return "AROS TrueColor";
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : arosTC_renderer_string()\n"));
+#endif
+   return "AROS TrueColor Rasterizer";
 }
 
 /**********************************************************************/
 /**********************************************************************/
-    /* Initialize all the pointers in the DD struct.  Do this whenever   */
-    /* a new context is made current or we change buffers via set_buffer! */
+  /* Initialize all the pointers in the DD struct.  Do this whenever   */
+  /* a new context is made current or we change buffers via set_buffer! */
 void arosTC_standard_DD_pointers( GLcontext *ctx )
 {
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : Inside arosTC_standard_DD_pointers : ctx=0x%x, CC=0x%x\n",ctx,CC));
+D(bug("[AMESA:TC] : Inside arosTC_standard_DD_pointers : ctx=0x%x, CC=0x%x\n", ctx, CC));
 #endif
-    ctx->Driver.RendererString = arosTC_renderer_string;
-    ctx->Driver.UpdateState = arosTC_standard_DD_pointers;
-    ctx->Driver.GetBufferSize = arosTC_Standard_resize;
-    ctx->Driver.Finish = arosTC_finish;
-    ctx->Driver.Flush = arosTC_flush;
+  ctx->Driver.RendererString = arosTC_renderer_string;
+  ctx->Driver.UpdateState = arosTC_standard_DD_pointers;
+  ctx->Driver.GetBufferSize = arosTC_Standard_resize;
+  ctx->Driver.Finish = arosTC_finish;
+  ctx->Driver.Flush = arosTC_flush;
 
-    ctx->Driver.ClearIndex = arosTC_clear_index;
-    ctx->Driver.ClearColor = arosTC_clear_color;
-    ctx->Driver.Clear = arosTC_clear;
-    
-    ctx->Driver.Index = arosTC_set_index;
-    ctx->Driver.Color = arosTC_set_color;
-    ctx->Driver.IndexMask = arosTC_index_mask;
-    ctx->Driver.ColorMask = arosTC_color_mask;
+  ctx->Driver.ClearIndex = arosTC_clear_index;
+  ctx->Driver.ClearColor = arosTC_clear_color;
+  ctx->Driver.Clear = arosTC_clear;
+  
+  ctx->Driver.Index = arosTC_set_index;
+  ctx->Driver.Color = arosTC_set_color;
+  ctx->Driver.IndexMask = arosTC_index_mask;
+  ctx->Driver.ColorMask = arosTC_color_mask;
 
-    ctx->Driver.LogicOp = arosTC_logicop;
-    ctx->Driver.Dither = arosTC_dither;
+  ctx->Driver.LogicOp = arosTC_logicop;
+  ctx->Driver.Dither = arosTC_dither;
 
-    ctx->Driver.SetBuffer = arosTC_set_buffer;
-//    ctx->Driver.GetBufferSize = arosTC_Standard_resize;
-    
-    ctx->Driver.PointsFunc = arosTC_choose_points_function( ctx );
-    ctx->Driver.LineFunc = arosTC_choose_line_function( ctx );
-#warning TODO: Write Triangle operations!!
-    ctx->Driver.TriangleFunc = FALSE;
-    
-#warning TODO: Replace with RGBA functions [IMPORTANT!]
-    /* Pixel/span writing functions: */
-    ctx->Driver.WriteRGBASpan        = arosTC_write_rgba_span;
-    ctx->Driver.WriteRGBSpan         = arosTC_write_rgb_span;
-    ctx->Driver.WriteMonoRGBASpan    = arosTC_write_mono_rgba_span;
-    ctx->Driver.WriteRGBAPixels      = arosTC_write_rgba_pixels;
-    ctx->Driver.WriteMonoRGBAPixels  = arosTC_write_mono_rgba_pixels;
-    ctx->Driver.WriteCI32Span        = arosTC_write_ci32_span;
-    ctx->Driver.WriteCI8Span         = arosTC_write_ci8_span;
-    ctx->Driver.WriteMonoCISpan      = arosTC_write_mono_ci_span;
-    ctx->Driver.WriteCI32Pixels      = arosTC_write_ci32_pixels;
-    ctx->Driver.WriteMonoCIPixels    = arosTC_write_mono_ci_pixels;
-    
-    /* Pixel/span reading functions: */
-    ctx->Driver.ReadCI32Span        = arosTC_read_ci32_span;
-    ctx->Driver.ReadRGBASpan        = arosTC_read_rgba_span;
-    ctx->Driver.ReadCI32Pixels      = arosTC_read_ci32_pixels;
-    ctx->Driver.ReadRGBAPixels      = arosTC_read_rgba_pixels;
+  ctx->Driver.SetBuffer = arosTC_set_buffer;
+//  ctx->Driver.GetBufferSize = arosTC_Standard_resize;
+  
+  ctx->Driver.PointsFunc = arosTC_choose_points_function( ctx );
+  ctx->Driver.LineFunc = arosTC_choose_line_function( ctx );
+#warning "TODO: Write Triangle operations!!"
+  ctx->Driver.TriangleFunc = FALSE;
+  
+#warning "TODO: Replace with RGBA functions [IMPORTANT!]"
+  /* Pixel/span writing functions: */
+  ctx->Driver.WriteRGBASpan       = arosTC_write_rgba_span;
+  ctx->Driver.WriteRGBSpan        = arosTC_write_rgb_span;
+  ctx->Driver.WriteMonoRGBASpan   = arosTC_write_mono_rgba_span;
+  ctx->Driver.WriteRGBAPixels     = arosTC_write_rgba_pixels;
+  ctx->Driver.WriteMonoRGBAPixels = arosTC_write_mono_rgba_pixels;
+  ctx->Driver.WriteCI32Span       = arosTC_write_ci32_span;
+  ctx->Driver.WriteCI8Span        = arosTC_write_ci8_span;
+  ctx->Driver.WriteMonoCISpan     = arosTC_write_mono_ci_span;
+  ctx->Driver.WriteCI32Pixels     = arosTC_write_ci32_pixels;
+  ctx->Driver.WriteMonoCIPixels   = arosTC_write_mono_ci_pixels;
+  
+  /* Pixel/span reading functions: */
+  ctx->Driver.ReadCI32Span       = arosTC_read_ci32_span;
+  ctx->Driver.ReadRGBASpan       = arosTC_read_rgba_span;
+  ctx->Driver.ReadCI32Pixels     = arosTC_read_ci32_pixels;
+  ctx->Driver.ReadRGBAPixels     = arosTC_read_rgba_pixels;
 }
 
 /**********************************************************************/
-/*****                  AROS/Mesa private misc procedures        *****/
+/*****          AROS/Mesa private misc procedures    *****/
 /**********************************************************************/
 
-static void MyWritePixelArray(void *a,int b,int c,int d,struct RastPort *e,int f,int g, int h, int i, int j)
+static void MyWritePixelArray(void *a, int b, int c, int d, struct RastPort *e, int f, int g, int h, int i, int j)
 {
-    WritePixelArray(a,b,c,d,e,f,g,h,i,j);
+  WritePixelArray(a, b, c, d, e, f, g, h, i, j);
 }
 
 /**********************************************************************/
-/***** AROSMesaSetOneColor                                       *****/
+/***** AROSMesaSetOneColor                     *****/
 /**********************************************************************/
 void AROSMesaSetOneColor(struct arosmesa_context *c,int index, float r, float g, float b)
 {
-    if (c->depth>8) {
-        c->penconv[index] = TC_RGBA((int)r*255,(int)g*255,(int)b*255,255);
-    } else {
-        c->penconv[index] = RGBA(c,r*255,g*255,b*255,255);
-    }
+#ifdef DEBUGPRINT
+D(bug("[AMESA:TC] : AROSMesaSetOneColor()\n"));
+#endif
+  if (c->depth > 8)
+  {
+    c->penconv[index] = TC_ARGB((int)r * 255, (int)g * 255, (int)b * 255, 255);
+  } else {
+    c->penconv[index] = RGBA(c, r * 255, g * 255, b * 255, 255);
+  }
 }
 
 static void
 arosTC_Standard_resize( GLcontext *ctx,GLuint *width, GLuint *height)
 {
-    AROSMesaContext amesa = (AROSMesaContext) ctx->DriverCtx;
+  AROSMesaContext amesa = (AROSMesaContext)ctx->DriverCtx;
 
-    *width=amesa->width;
-    *height=amesa->height;
+  *width = amesa->width;
+  *height = amesa->height;
 
-    if(!((  amesa->width  == (amesa->front_rp->Layer->bounds.MaxX-amesa->front_rp->Layer->bounds.MinX-amesa->left-amesa->right) )
-    &&  ( amesa->height == (amesa->front_rp->Layer->bounds.MaxY-amesa->front_rp->Layer->bounds.MinY-amesa->bottom-amesa->top)  )))
+  if(!(( amesa->width  == (amesa->front_rp->Layer->bounds.MaxX - amesa->front_rp->Layer->bounds.MinX - amesa->left-amesa->right) )
+  && ( amesa->height == (amesa->front_rp->Layer->bounds.MaxY - amesa->front_rp->Layer->bounds.MinY - amesa->bottom-amesa->top) )))
+  {
+    FreeOneLine(amesa);
+
+    amesa->RealWidth = amesa->front_rp->Layer->bounds.MaxX - amesa->front_rp->Layer->bounds.MinX;
+    amesa->FixedWidth = amesa->RealWidth;
+
+    amesa->RealHeight= amesa->front_rp->Layer->bounds.MaxY - amesa->front_rp->Layer->bounds.MinY;
+    amesa->FixedHeight = amesa->RealHeight;
+
+    amesa->width = amesa->RealWidth - amesa->left-amesa->right;
+    *width = amesa->width;
+
+    amesa->height = amesa->RealHeight - amesa->bottom-amesa->top;
+    *height = amesa->height;
+    
+    amesa->depth = GetCyberMapAttr(amesa->front_rp->BitMap, CYBRMATTR_DEPTH);
+
+    if (amesa->visual->db_flag)
     {
-        FreeOneLine(amesa);
+      if (amesa->back_rp)
+      {
+        destroy_rastport(amesa->back_rp); /* Free double buffer */
+      }
 
-        amesa->FixedWidth =amesa->RealWidth =amesa->front_rp->Layer->bounds.MaxX-amesa->front_rp->Layer->bounds.MinX;
-        amesa->FixedHeight=amesa->RealHeight=amesa->front_rp->Layer->bounds.MaxY-amesa->front_rp->Layer->bounds.MinY;
-
-        *width=amesa->width = amesa->RealWidth-amesa->left-amesa->right;
-        *height=amesa->height = amesa->RealHeight-amesa->bottom-amesa->top;
-        amesa->depth = GetCyberMapAttr(amesa->front_rp->BitMap,CYBRMATTR_DEPTH);
-
-        if (amesa->visual->db_flag)
-        {
-            if (amesa->back_rp) destroy_rastport(amesa->back_rp); /* Free double buffer */
-            if((amesa->back_rp = make_rastport(amesa->RealWidth,amesa->RealHeight,amesa->depth,amesa->rp->BitMap))==NULL) {
-                amesa->rp = amesa->front_rp;
-                printf("AROSMesa Error : To little mem free. Couldn't allocate Dubblebuffer in this size.\n");
-            }
-            else amesa->rp=amesa->back_rp;
-        }
-
-        AllocOneLine(amesa);
+      if((amesa->back_rp = make_rastport(amesa->RealWidth, amesa->RealHeight, amesa->depth, amesa->rp->BitMap)) == NULL)
+      {
+        amesa->rp = amesa->front_rp;
+D(bug("[AMESA:TC] : arosTC_Standard_resize: ERROR : To little mem free. Couldn't allocate Dubblebuffer in this size.\n"));
+      }
+      else
+      {
+        amesa->rp = amesa->back_rp;
+      }
     }
+
+    AllocOneLine(amesa);
+  }
+
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_Standard_resize(ctx=%x) = w:%d x h:%d\n",ctx,*width,*height));
+D(bug("[AMESA:TC] : arosTC_Standard_resize(ctx=%x) = w:%d x h:%d\n", ctx, *width, *height));
 #endif
-      
+    
 #ifdef DEBUGPRINT
-        printf("amesa->RealWidth =%d\n",amesa->RealWidth);
-        printf("amesa->RealHeight=%d\n",amesa->RealHeight);
-        printf("amesa->width =%d\n",amesa->width);
-        printf("amesa->height=%d\n",amesa->height);
-        printf("amesa->left  =%d\n",amesa->left);
-        printf("amesa->bottom=%d\n",amesa->bottom);
-        printf("amesa->depth =%d\n",amesa->depth);
+D(bug("[AMESA:TC] : arosTC_Standard_resize:    amesa->RealWidth =%d\n", amesa->RealWidth));
+D(bug("[AMESA:TC] : arosTC_Standard_resize:    amesa->RealHeight=%d\n", amesa->RealHeight));
+D(bug("[AMESA:TC] : arosTC_Standard_resize:    amesa->width =%d\n", amesa->width));
+D(bug("[AMESA:TC] : arosTC_Standard_resize:    amesa->height=%d\n", amesa->height));
+D(bug("[AMESA:TC] : arosTC_Standard_resize:    amesa->left  =%d\n", amesa->left));
+D(bug("[AMESA:TC] : arosTC_Standard_resize:    amesa->bottom=%d\n", amesa->bottom));
+D(bug("[AMESA:TC] : arosTC_Standard_resize:    amesa->depth =%d\n", amesa->depth));
 #endif
 }
 
 /**********************************************************************/
-/*****                  AROS/Mesa private init/despose/resize       *****/
+/*****          AROS/Mesa private init/despose/resize     *****/
 /**********************************************************************/
 
 BOOL
 arosTC_Standard_init(struct arosmesa_context *c,struct TagItem *tagList)
 {
 #ifdef DEBUGPRINT
-D(bug("[AMESA:TC] : arosTC_Standard_init(amctx=%x,taglist=%x)\n",c,tagList));
+D(bug("[AMESA:TC] : arosTC_Standard_init(amctx=%x,taglist=%x)\n", c, tagList));
 #endif
-    c->window=(struct Window *)GetTagData(AMA_Window,0,tagList);
-    if (!c->window)
-    {
-        c->rp=(struct RastPort *)GetTagData(AMA_RastPort,0,tagList);
-        if (!c->rp)
-        {
-            LastError=AMESA_RASTPORT_TAG_MISSING;
-            return(FALSE);
-        }
-        c->Screen=(struct Screen *)GetTagData(AMA_Screen,0,tagList);
-        if (!c->Screen)
-        {
-            LastError=AMESA_SCREEN_TAG_MISSING;
-            return(FALSE);
-        }
-    }
-    else
-    {
-        c->rp =c->window->RPort;
-        c->Screen=c->window->WScreen;
-    }
 
-    c->FixedWidth =c->RealWidth =c->rp->Layer->bounds.MaxX-c->rp->Layer->bounds.MinX;
-    c->FixedHeight=c->RealHeight=c->rp->Layer->bounds.MaxY-c->rp->Layer->bounds.MinY;
+  c->RealWidth = c->rp->Layer->bounds.MaxX - c->rp->Layer->bounds.MinX;
+  c->FixedWidth = c->RealWidth;
+  
+  c->RealHeight = c->rp->Layer->bounds.MaxY - c->rp->Layer->bounds.MinY;
+  c->FixedHeight = c->RealHeight;
 
-    c->left = GetTagData(AMA_Left,0,tagList);
-    c->right = GetTagData(AMA_Right,0,tagList);
-    c->top = GetTagData(AMA_Top,0,tagList);
-    c->bottom = GetTagData(AMA_Bottom,0,tagList);
+  c->left = GetTagData(AMA_Left, 0, tagList);
+  c->right = GetTagData(AMA_Right, 0, tagList);
+  c->top = GetTagData(AMA_Top, 0, tagList);
+  c->bottom = GetTagData(AMA_Bottom, 0, tagList);
 
-    c->front_rp =c->rp;
-    c->back_rp=NULL;
-/*  c->rp = c->front_rp;*/
+  c->front_rp = c->rp;
+  c->back_rp = NULL;
 
-    c->width = GetTagData(AMA_Width,c->RealWidth - c->left - c->right,tagList);
-    c->height= GetTagData(AMA_Height,c->RealHeight - c->top - c->bottom,tagList);
+  c->width = GetTagData(AMA_Width, (c->RealWidth - c->left - c->right), tagList);
+  c->height = GetTagData(AMA_Height, (c->RealHeight - c->top - c->bottom), tagList);
 
-    if (CyberGfxBase != NULL && IsCyberModeID(GetVPModeID(&c->Screen->ViewPort))) c->depth = GetCyberMapAttr(c->rp->BitMap,CYBRMATTR_DEPTH);
-    else c->depth = GetBitMapAttr(c->rp->BitMap,BMA_DEPTH);
+  c->pixel = 0;   /* current drawing pen */
 
-/*  c->gl_ctx->BufferWidth = c->width;*/
-/*  c->gl_ctx->BufferHeight = c->height;*/
+  if (c->depth <= 8) AllocCMap(c->Screen);
 
-    c->pixel = 0;   /* current drawing pen */
-
-    if (c->depth <= 8) AllocCMap(c->Screen);
-
-    if (c->visual->db_flag==GL_TRUE)
-    {
+  if (c->visual->db_flag == GL_TRUE)
+  {
 #ifdef DEBUGPRINT
 D(bug("[AMESA:TC] : Allocating DOUBLE BUFFERED display inside arosTC_Standard_init\n"));
 #endif
-        if((c->back_rp = make_rastport(c->RealWidth,c->RealHeight,c->depth, c->rp->BitMap))!=NULL)
-        {
-            c->gl_ctx->Color.DrawBuffer = GL_BACK;
-            c->rp = c->back_rp;
-        }
-        else
-        {
-            printf("make_rastport Failed\n");
-            c->gl_ctx->Color.DrawBuffer = GL_FRONT;
-        }
+    if((c->back_rp = make_rastport(c->RealWidth, c->RealHeight, c->depth, c->rp->BitMap)) != NULL)
+    {
+      c->gl_ctx->Color.DrawBuffer = GL_BACK;
+      c->rp = c->back_rp;
     }
-    else c->gl_ctx->Color.DrawBuffer = GL_FRONT;
+    else
+    {
+      printf("make_rastport Failed\n");
+      c->gl_ctx->Color.DrawBuffer = GL_FRONT;
+    }
+  }
+  else c->gl_ctx->Color.DrawBuffer = GL_FRONT;
 
-    AllocOneLine(c); /* A linebuffer for WritePixelLine */
+  AllocOneLine(c); /* A linebuffer for WritePixelLine */
 
 /* this shall not be invoked att all if not cybergfx
-    if (c->depth<=8) {
-        if (!make_temp_raster( c->rp ))
-            printf("Error allocating TmpRastPort\n");*/
-        /* JAM: Added alloc_temp_rastport */
-/*        alloc_temp_rastport(c);
-        allocarea(c->rp);
-    }
+  if (c->depth<=8) {
+    if (!make_temp_raster( c->rp ))
+      printf("Error allocating TmpRastPort\n");*/
+    /* JAM: Added alloc_temp_rastport */
+/*    alloc_temp_rastport(c);
+    allocarea(c->rp);
+  }
 */
-    c->InitDD=c->depth<=8 ? aros8bit_standard_DD_pointers : arosTC_standard_DD_pointers;  /*standard drawing*/
-    c->Dispose=aros8bit_Standard_Dispose;
-    c->SwapBuffer=aros8bit_Standard_SwapBuffer;
+  c->InitDD = c->depth <= 8 ? aros8bit_standard_DD_pointers : arosTC_standard_DD_pointers;  /*standard drawing*/
+  c->Dispose = aros8bit_Standard_Dispose;
+  c->SwapBuffer = aros8bit_Standard_SwapBuffer;
 
 
 #ifdef DEBUGPRINT
-    printf("c->RealWidth =%d\n",c->RealWidth);
-    printf("c->RealHeight=%d\n",c->RealHeight);
-    printf("c->width =%d\n",c->width);
-    printf("c->height=%d\n",c->height);
-    printf("c->left:%d, ",c->left);
-    printf("c->right:%d, ",c->right);
-    printf("c->top:%d, ",c->top);
-    printf("c->bottom:%d\n",c->bottom);
-    printf("c->depth =%d\n",c->depth);
+  printf("c->RealWidth =%d\n", c->RealWidth);
+  printf("c->RealHeight=%d\n", c->RealHeight);
+  printf("c->width =%d\n", c->width);
+  printf("c->height=%d\n", c->height);
+  printf("c->left:%d, ", c->left);
+  printf("c->right:%d, ", c->right);
+  printf("c->top:%d, ", c->top);
+  printf("c->bottom:%d\n", c->bottom);
+  printf("c->depth =%d\n", c->depth);
 #endif
 
-    return(TRUE);
+  return(TRUE);
 }
 
 /* Disabled for now .. (nicja)
