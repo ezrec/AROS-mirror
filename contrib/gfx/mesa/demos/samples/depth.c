@@ -32,7 +32,7 @@
 #define CI_OFFSET_2 32
 
 
-GLenum rgb, doubleBuffer, directRender;
+GLenum rgb, doubleBuffer;
 
 GLenum antiAlias, stipple;
 GLubyte stippleBits[32*4] = {
@@ -155,7 +155,6 @@ static GLenum Args(int argc, char **argv)
 
     rgb = GL_TRUE;
     doubleBuffer = GL_FALSE;
-    directRender = GL_TRUE;
 
     for (i = 1; i < argc; i++) {
 	if (strcmp(argv[i], "-ci") == 0) {
@@ -166,10 +165,6 @@ static GLenum Args(int argc, char **argv)
 	    doubleBuffer = GL_FALSE;
 	} else if (strcmp(argv[i], "-db") == 0) {
 	    doubleBuffer = GL_TRUE;
-	} else if (strcmp(argv[i], "-dr") == 0) {
-	    directRender = GL_TRUE;
-	} else if (strcmp(argv[i], "-ir") == 0) {
-	    directRender = GL_FALSE;
 	} else {
 	    printf("%s (Bad option).\n", argv[i]);
 	    return GL_FALSE;
@@ -178,7 +173,7 @@ static GLenum Args(int argc, char **argv)
     return GL_TRUE;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     GLenum type;
 
@@ -191,7 +186,6 @@ void main(int argc, char **argv)
     type = TK_DEPTH;
     type |= (rgb) ? TK_RGB : TK_INDEX;
     type |= (doubleBuffer) ? TK_DOUBLE : TK_SINGLE;
-    type |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(type);
 
     if (tkInitWindow("Depth Test") == GL_FALSE) {
@@ -205,4 +199,5 @@ void main(int argc, char **argv)
     tkKeyDownFunc(Key);
     tkDisplayFunc(Draw);
     tkExec();
+	return 0;
 }

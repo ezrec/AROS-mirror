@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 1993, Silicon Graphics, Inc.
+ * Copyright (c) 1993-1997, Silicon Graphics, Inc.
  * ALL RIGHTS RESERVED 
  * Permission to use, copy, modify, and distribute this software for 
  * any purpose and without fee is hereby granted, provided that the above
@@ -32,8 +32,9 @@
  * United States.  Contractor/manufacturer is Silicon Graphics,
  * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
  *
- * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
+ * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
  */
+
 /*
  *  alpha.c
  *  This program draws several overlapping filled polygons
@@ -44,45 +45,67 @@
 #include <stdlib.h>
 #include "glaux.h"
 
+static int leftFirst = GL_TRUE;
+
 /*  Initialize alpha blending function.
  */
-void myinit(void)
+static void init(void)
 {
-    glEnable (GL_BLEND);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glShadeModel (GL_FLAT);
-    glClearColor (0.0, 0.0, 0.0, 0.0);
+   glEnable (GL_BLEND);
+   glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glShadeModel (GL_FLAT);
+   glClearColor (0.0, 0.0, 0.0, 0.0);
+}
+
+static void drawLeftTriangle(void)
+{
+   /* draw yellow triangle on LHS of screen */
+
+   glBegin (GL_TRIANGLES);
+      glColor4f(1.0, 1.0, 0.0, 0.75);
+      glVertex3f(0.1, 0.9, 0.0); 
+      glVertex3f(0.1, 0.1, 0.0); 
+      glVertex3f(0.7, 0.5, 0.0); 
+   glEnd();
+}
+
+static void drawRightTriangle(void)
+{
+   /* draw cyan triangle on RHS of screen */
+
+   glBegin (GL_TRIANGLES);
+      glColor4f(0.0, 1.0, 1.0, 0.75);
+      glVertex3f(0.9, 0.9, 0.0); 
+      glVertex3f(0.3, 0.5, 0.0); 
+      glVertex3f(0.9, 0.1, 0.0); 
+   glEnd();
 }
 
 void display(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+   glClear(GL_COLOR_BUFFER_BIT);
 
-    glColor4f (1.0, 1.0, 0.0, 0.75);
-    glRectf (0.0, 0.0, 0.5, 1.0);
+   if (leftFirst) {
+      drawLeftTriangle();
+      drawRightTriangle();
+   }
+   else {
+      drawRightTriangle();
+      drawLeftTriangle();
+   }
 
-    glColor4f (0.0, 1.0, 1.0, 0.75);
-    glRectf (0.0, 0.0, 1.0, 0.5);
-/*	draw colored polygons in reverse order in upper right  */
-    glColor4f (0.0, 1.0, 1.0, 0.75);
-    glRectf (0.5, 0.5, 1.0, 1.0);
-
-    glColor4f (1.0, 1.0, 0.0, 0.75);
-    glRectf (0.5, 0.5, 1.0, 1.0);
-
-    glFlush();
+   glFlush();
 }
 
-void myReshape(int w, int h)
+void reshape(int w, int h)
 {
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    if (w <= h) 
-	gluOrtho2D (0.0, 1.0, 0.0, 1.0*(GLfloat)h/(GLfloat)w);
-    else 
-	gluOrtho2D (0.0, 1.0*(GLfloat)w/(GLfloat)h, 0.0, 1.0);
-    glMatrixMode(GL_MODELVIEW);
+   glViewport(0, 0, (GLsizei) w, (GLsizei) h);
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+   if (w <= h) 
+      gluOrtho2D (0.0, 1.0, 0.0, 1.0*(GLfloat)h/(GLfloat)w);
+   else 
+      gluOrtho2D (0.0, 1.0*(GLfloat)w/(GLfloat)h, 0.0, 1.0);
 }
 
 /*  Main Loop
@@ -95,8 +118,8 @@ int main(int argc, char** argv)
     auxInitPosition (0, 0, 500, 500);
     if (!auxInitWindow (argv[0]))
        auxQuit();
-    myinit();
-    auxReshapeFunc (myReshape);
+   init();
+    auxReshapeFunc (reshape);
     auxMainLoop(display);
-    return 0;
+   return 0;
 }

@@ -30,6 +30,10 @@
 #include <math.h>
 #include "gltk.h"
 
+#ifndef CALLBACK
+#define CALLBACK
+#endif
+
 
 #define INREAL float
 
@@ -45,7 +49,7 @@
 typedef INREAL Point[4];
 
 
-GLenum doubleBuffer, directRender;
+GLenum doubleBuffer;
 
 GLenum expectedError;
 GLint rotX = 40, rotY = 40;
@@ -209,7 +213,7 @@ static void CALLBACK ErrorCallback(GLenum which)
 
     if (which != expectedError) {
 	fprintf(stderr, "Unexpected error occured (%d):\n", which);
-	fprintf(stderr, "    %s\n", gluErrorString(which));
+	fprintf(stderr, "    %s\n", (char *) gluErrorString(which));
     }
 }
 
@@ -299,17 +303,12 @@ static GLenum Args(int argc, char **argv)
     GLint i;
 
     doubleBuffer = GL_FALSE;
-    directRender = GL_TRUE;
 
     for (i = 1; i < argc; i++) {
 	if (strcmp(argv[i], "-sb") == 0) {
 	    doubleBuffer = GL_FALSE;
 	} else if (strcmp(argv[i], "-db") == 0) {
 	    doubleBuffer = GL_TRUE;
-	} else if (strcmp(argv[i], "-dr") == 0) {
-	    directRender = GL_TRUE;
-	} else if (strcmp(argv[i], "-ir") == 0) {
-	    directRender = GL_FALSE;
 	} else {
 	    printf("%s (Bad option).\n", argv[i]);
 	    return GL_FALSE;
@@ -318,7 +317,7 @@ static GLenum Args(int argc, char **argv)
     return GL_TRUE;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     GLenum type;
 
@@ -330,7 +329,6 @@ void main(int argc, char **argv)
 
     type = TK_RGB;
     type |= (doubleBuffer) ? TK_DOUBLE : TK_SINGLE;
-    type |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(type);
 
     if (tkInitWindow("NURBS Test") == GL_FALSE) {
@@ -344,4 +342,5 @@ void main(int argc, char **argv)
     tkKeyDownFunc(Key);
     tkDisplayFunc(Draw);
     tkExec();
+	return 0;
 }

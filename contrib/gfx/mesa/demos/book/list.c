@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 1993, Silicon Graphics, Inc.
+ * Copyright (c) 1993-1997, Silicon Graphics, Inc.
  * ALL RIGHTS RESERVED 
  * Permission to use, copy, modify, and distribute this software for 
  * any purpose and without fee is hereby granted, provided that the above
@@ -32,8 +32,9 @@
  * United States.  Contractor/manufacturer is Silicon Graphics,
  * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
  *
- * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
+ * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
  */
+
 /*
  *  list.c
  *  This program demonstrates how to make and execute a 
@@ -45,54 +46,56 @@
 #include <stdlib.h>
 #include "glaux.h"
 
-GLuint listName = 1;
+GLuint listName;
 
-void myinit (void)
+static void init (void)
 {
-    glNewList (listName, GL_COMPILE);
-	glColor3f (1.0, 0.0, 0.0);
-	glBegin (GL_TRIANGLES);
-	glVertex2f (0.0, 0.0);
-	glVertex2f (1.0, 0.0);
-	glVertex2f (0.0, 1.0);
-	glEnd ();
-	glTranslatef (1.5, 0.0, 0.0);
-    glEndList ();
-    glShadeModel (GL_FLAT);
+   listName = glGenLists (1);
+   glNewList (listName, GL_COMPILE);
+      glColor3f (1.0, 0.0, 0.0);  /*  current color red  */
+      glBegin (GL_TRIANGLES);
+      glVertex2f (0.0, 0.0);
+      glVertex2f (1.0, 0.0);
+      glVertex2f (0.0, 1.0);
+      glEnd ();
+      glTranslatef (1.5, 0.0, 0.0); /*  move position  */
+   glEndList ();
+   glShadeModel (GL_FLAT);
 }
 
-void drawLine (void)
+static void drawLine (void)
 {
-    glBegin (GL_LINES);
-    glVertex2f (0.0, 0.5);
-    glVertex2f (15.0, 0.5);
-    glEnd ();
+   glBegin (GL_LINES);
+   glVertex2f (0.0, 0.5);
+   glVertex2f (15.0, 0.5);
+   glEnd ();
 }
 
 void display(void)
 {
-    GLuint i;
+   GLuint i;
 
-    glClear (GL_COLOR_BUFFER_BIT);
-    glColor3f (0.0, 1.0, 0.0);
-    for (i = 0; i < 10; i++)
-	glCallList (listName);
-    drawLine ();
-    glFlush ();
+   glClear (GL_COLOR_BUFFER_BIT);
+   glColor3f (0.0, 1.0, 0.0);  /*  current color green  */
+   for (i = 0; i < 10; i++)    /*  draw 10 triangles    */
+      glCallList (listName);
+   drawLine ();  /*  is this line green?  NO!  */
+                 /*  where is the line drawn?  */
+   glFlush ();
 }
 
-void myReshape(int w, int h)
+void reshape(int w, int h)
 {
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    if (w <= h) 
-	gluOrtho2D (0.0, 2.0, -0.5 * (GLfloat) h/(GLfloat) w, 
-	    1.5 * (GLfloat) h/(GLfloat) w);
-    else 
-	gluOrtho2D (0.0, 2.0 * (GLfloat) w/(GLfloat) h, -0.5, 1.5); 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+   glViewport(0, 0, w, h);
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+   if (w <= h) 
+      gluOrtho2D (0.0, 2.0, -0.5 * (GLfloat) h/(GLfloat) w, 
+         1.5 * (GLfloat) h/(GLfloat) w);
+   else 
+      gluOrtho2D (0.0, 2.0 * (GLfloat) w/(GLfloat) h, -0.5, 1.5); 
+   glMatrixMode(GL_MODELVIEW);
+   glLoadIdentity();
 }
 
 /*  Main Loop
@@ -105,8 +108,8 @@ int main(int argc, char** argv)
     auxInitPosition (0, 0, 400, 50);
     if (!auxInitWindow (argv[0]))
        auxQuit();
-    myinit ();
-    auxReshapeFunc (myReshape);
+   init ();
+    auxReshapeFunc (reshape);
     auxMainLoop(display);
-    return 0;
+   return 0;
 }

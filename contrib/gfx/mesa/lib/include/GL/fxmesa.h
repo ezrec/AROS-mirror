@@ -2,8 +2,8 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
+ * Version:  3.3
+ * Copyright (C) 1995-1999  Brian Paul
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -18,24 +18,6 @@
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the Free
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:29  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.1  1998/04/01 03:00:28  brianp
- * updated for v0.24 of 3Dfx/Glide driver
- *
- * Revision 3.0  1998/02/20 05:04:45  brianp
- * initial rev
- *
  */
 
 
@@ -59,7 +41,7 @@ extern "C" {
 
 
 #define FXMESA_MAJOR_VERSION 3
-#define FXMESA_MINOR_VERSION 0
+#define FXMESA_MINOR_VERSION 3
 
 
 /*
@@ -82,30 +64,30 @@ typedef struct tfxMesaContext *fxMesaContext;
 #endif
 
 
-WINGDIAPI fxMesaContext APIENTRY fxMesaCreateContext(GLuint win, GrScreenResolution_t,
-                                         GrScreenRefresh_t,
-                                         const GLint attribList[]);
+GLAPI fxMesaContext GLAPIENTRY fxMesaCreateContext(GLuint win, GrScreenResolution_t,
+						  GrScreenRefresh_t,
+						  const GLint attribList[]);
 
-WINGDIAPI fxMesaContext APIENTRY fxMesaCreateBestContext(GLuint win,
-                                             GLint width, GLint height,
-                                             const GLint attribList[]);
-WINGDIAPI void APIENTRY fxMesaDestroyContext(fxMesaContext ctx);
+GLAPI fxMesaContext GLAPIENTRY fxMesaCreateBestContext(GLuint win,
+						      GLint width, GLint height,
+						      const GLint attribList[]);
+GLAPI void GLAPIENTRY fxMesaDestroyContext(fxMesaContext ctx);
 
-WINGDIAPI GLboolean APIENTRY fxMesaSelectCurrentBoard(int n);
+GLAPI GLboolean GLAPIENTRY fxMesaSelectCurrentBoard(int n);
 
-WINGDIAPI void APIENTRY fxMesaMakeCurrent(fxMesaContext ctx);
+GLAPI void GLAPIENTRY fxMesaMakeCurrent(fxMesaContext ctx);
 
-WINGDIAPI fxMesaContext APIENTRY fxMesaGetCurrentContext(void);
+GLAPI fxMesaContext GLAPIENTRY fxMesaGetCurrentContext(void);
 
-WINGDIAPI void APIENTRY fxMesaSwapBuffers(void);
+GLAPI void GLAPIENTRY fxMesaSwapBuffers(void);
 
-WINGDIAPI void APIENTRY fxMesaSetNearFar(GLfloat nearVal, GLfloat farVal);
+GLAPI void GLAPIENTRY fxMesaSetNearFar(GLfloat nearVal, GLfloat farVal);
 
-WINGDIAPI void APIENTRY fxMesaUpdateScreenSize(fxMesaContext ctx);
+GLAPI void GLAPIENTRY fxMesaUpdateScreenSize(fxMesaContext ctx);
 
-WINGDIAPI int APIENTRY fxQueryHardware(void);
+GLAPI int GLAPIENTRY fxQueryHardware(void);
 
-WINGDIAPI void APIENTRY fxCloseHardware(void);
+GLAPI void GLAPIENTRY fxCloseHardware(void);
 
 
 #if defined (__BEOS__)

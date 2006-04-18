@@ -22,13 +22,12 @@
 
 
 /*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:29  NicJA
- * AROSMesa 3.0
+ * $Log: glx_mangle.h,v $
+ * Revision 1.1.1.1  1999/08/19 00:55:40  jtg
+ * Imported sources
  *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
+ * Revision 3.3  1999/06/21 22:01:00  brianp
+ * added #ifndef GLX_MANGLE_H stuff, video sync extension functions
  *
  * Revision 3.2  1998/03/26 02:44:53  brianp
  * removed ^M characters
@@ -41,6 +40,8 @@
  *
  */
 
+#ifndef GLX_MANGLE_H
+#define GLX_MANGLE_H
 
 #define glXChooseVisual mglXChooseVisual
 #define glXCreateContext mglXCreateContext
@@ -65,3 +66,7 @@
 #define glXCreateGLXPixmapMESA mglXCreateGLXPixmapMESA
 #define glXReleaseBuffersMESA mglXReleaseBuffersMESA
 #define glXCopySubBufferMESA mglXCopySubBufferMESA
+#define glXGetVideoSyncSGI mglXGetVideoSyncSGI
+#define glXWaitVideoSyncSGI mglXWaitVideoSyncSGI
+
+#endif

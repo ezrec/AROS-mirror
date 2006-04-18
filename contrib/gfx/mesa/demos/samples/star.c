@@ -59,7 +59,7 @@ typedef struct _starRec {
 } starRec;
 
 
-GLenum doubleBuffer, directRender;
+GLenum doubleBuffer;
 GLint windW, windH;
 
 GLenum flag = NORMAL;
@@ -254,7 +254,7 @@ static GLenum Key(int key, GLenum mask)
     return GL_TRUE;
 }
 
-void Idle(void)
+void Draw(void)
 {
 
     MoveStars();
@@ -285,24 +285,19 @@ static GLenum Args(int argc, char **argv)
 {
     GLint i;
 
-    doubleBuffer = GL_FALSE;
-    directRender = GL_TRUE;
+    doubleBuffer = GL_TRUE;
 
     for (i = 1; i < argc; i++) {
 	if (strcmp(argv[i], "-sb") == 0) {
 	    doubleBuffer = GL_FALSE;
 	} else if (strcmp(argv[i], "-db") == 0) {
 	    doubleBuffer = GL_TRUE;
-	} else if (strcmp(argv[i], "-dr") == 0) {
-	    directRender = GL_TRUE;
-	} else if (strcmp(argv[i], "-ir") == 0) {
-	    directRender = GL_FALSE;
 	}
     }
     return GL_TRUE;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     GLenum type;
 
@@ -316,7 +311,6 @@ void main(int argc, char **argv)
 
     type = TK_RGB;
     type |= (doubleBuffer) ? TK_DOUBLE : TK_SINGLE;
-    type |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(type);
 
     if (tkInitWindow("Stars") == GL_FALSE) {
@@ -328,6 +322,7 @@ void main(int argc, char **argv)
     tkExposeFunc(Reshape);
     tkReshapeFunc(Reshape);
     tkKeyDownFunc(Key);
-    tkIdleFunc(Idle);
+    tkIdleFunc(Draw);
     tkExec();
+	return 0;
 }

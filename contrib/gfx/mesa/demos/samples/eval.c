@@ -53,7 +53,7 @@
 #define MESH 4
 
 
-GLenum doubleBuffer, directRender;
+GLenum doubleBuffer;
 
 float rotX = 0.0, rotY = 0.0, translateZ = -1.0;
 
@@ -417,17 +417,12 @@ static GLenum Args(int argc, char **argv)
     GLint i;
 
     doubleBuffer = GL_FALSE;
-    directRender = GL_TRUE;
 
     for (i = 1; i < argc; i++) {
 	if (strcmp(argv[i], "-sb") == 0) {
 	    doubleBuffer = GL_FALSE;
 	} else if (strcmp(argv[i], "-db") == 0) {
 	    doubleBuffer = GL_TRUE;
-	} else if (strcmp(argv[i], "-dr") == 0) {
-	    directRender = GL_TRUE;
-	} else if (strcmp(argv[i], "-ir") == 0) {
-	    directRender = GL_FALSE;
 	} else {
 	    printf("%s (Bad option).\n", argv[i]);
 	    return GL_FALSE;
@@ -436,7 +431,7 @@ static GLenum Args(int argc, char **argv)
     return GL_TRUE;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     GLenum type;
 
@@ -448,7 +443,6 @@ void main(int argc, char **argv)
 
     type = TK_RGB | TK_DEPTH;
     type |= (doubleBuffer) ? TK_DOUBLE : TK_SINGLE;
-    type |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(type);
 
     if (tkInitWindow("Evaluator Test") == GL_FALSE) {
@@ -462,4 +456,5 @@ void main(int argc, char **argv)
     tkKeyDownFunc(Key);
     tkDisplayFunc(Draw);
     tkExec();
+	return 0;
 }

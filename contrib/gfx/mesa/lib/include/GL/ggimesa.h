@@ -1,7 +1,9 @@
+/* $Id$ */
+
 /*
  * Mesa 3-D graphics library
- * Version:  2.4
- * Copyright (C) 1995-1997  Brian Paul
+ * Version:  3.3
+ * Copyright (C) 1995-2000  Brian Paul
  * Copyright (C) 1998  Uwe Maurer
  *
  * This library is free software; you can redistribute it and/or
@@ -20,14 +22,13 @@
  */
 
 
-/*
- *
- *
- */
-
-
 #ifndef GGIMESA_H
 #define GGIMESA_H
+
+
+#define GGIMESA_MAJOR_VERSION 3
+#define GGIMESA_MINOR_VERSION 3
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,20 +39,20 @@ extern "C" {
 
 typedef struct ggi_mesa_context *GGIMesaContext;
 
-#include <ggi/libggi.h>
+#include <ggi/ggi.h>
 
 extern GGIMesaContext GGIMesaCreateContext(void);
 
-extern void GGIMesaDestroyContext( GGIMesaContext ctx );
+extern void GGIMesaDestroyContext(GGIMesaContext ctx);
 
-extern void GGIMesaMakeCurrent(GGIMesaContext ctx );
+extern void GGIMesaMakeCurrent(GGIMesaContext ctx);
 
-extern GGIMesaContext GGIMesaGetCurrentContext( void );
+extern GGIMesaContext GGIMesaGetCurrentContext(void);
 
-extern void GGIMesaSwapBuffers( void );
+extern void GGIMesaSwapBuffers(void);
 
-extern int GGIMesaSetVisual(GGIMesaContext ctx,ggi_visual_t vis,
-				GLboolean rgb_flag,GLboolean db_flag);
+extern int GGIMesaSetVisual(GGIMesaContext ctx, ggi_visual_t vis,
+			    GLboolean rgb_flag, GLboolean db_flag);
 
 #ifdef __cplusplus
 }

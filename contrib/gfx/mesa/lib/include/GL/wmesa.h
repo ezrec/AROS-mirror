@@ -23,13 +23,15 @@
 
 
 /*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:29  NicJA
- * AROSMesa 3.0
+ * $Log: wmesa.h,v $
+ * Revision 1.1.1.1  1999/08/19 00:55:40  jtg
+ * Imported sources
  *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
+ * Revision 3.2  1999/01/03 02:54:45  brianp
+ * updated per Ted Jump
+ *
+ * Revision 3.1  1998/12/01 02:34:27  brianp
+ * applied Mark Kilgard's patches from November 30, 1998
  *
  * Revision 3.0  1998/02/20 05:06:59  brianp
  * initial rev
@@ -67,7 +69,6 @@ extern "C" {
 #endif
 
 
-#include <windows.h>
 #include "gl\gl.h"
 
 #pragma warning (disable:4273)
@@ -114,6 +115,7 @@ extern WMesaContext WMesaCreateContext(HWND hWnd,HPALETTE* pPal,
  */
 /*extern void WMesaDestroyContext( WMesaContext ctx );*/
 extern void WMesaDestroyContext( void );
+
 
 
 /*

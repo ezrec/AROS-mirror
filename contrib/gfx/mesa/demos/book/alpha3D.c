@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 1993, Silicon Graphics, Inc.
+ * Copyright (c) 1993-1997, Silicon Graphics, Inc.
  * ALL RIGHTS RESERVED 
  * Permission to use, copy, modify, and distribute this software for 
  * any purpose and without fee is hereby granted, provided that the above
@@ -32,85 +32,110 @@
  * United States.  Contractor/manufacturer is Silicon Graphics,
  * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
  *
- * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
+ * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
  */
+
 /*
  *  alpha3D.c
  *  This program demonstrates how to intermix opaque and
- *  alpha blended polygons in the same scene, by using glDepthMask.
- *  Pressing the left mouse button toggles the eye position.
+ *  alpha blended polygons in the same scene, by using 
+ *  glDepthMask.  Press the 'a' key to animate moving the 
+ *  transparent object through the opaque object.  Press 
+ *  the 'r' key to reset the scene.
  */
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <stdlib.h>
 #include "glaux.h"
 
-void myinit(void)
+#define MAXZ 8.0
+#define MINZ -8.0
+#define ZINC 0.4
+
+static float solidZ = MAXZ;
+static float transparentZ = MINZ;
+static GLuint sphereList, cubeList;
+
+static void init(void)
 {
-    GLfloat mat_ambient[] = { 0.0, 0.0, 0.0, 0.15 };
-    GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 0.15 };
-    GLfloat mat_shininess[] = { 15.0 };
+   GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 0.15 };
+   GLfloat mat_shininess[] = { 100.0 };
+   GLfloat position[] = { 0.5, 0.5, 1.0, 0.0 };
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+   glLightfv(GL_LIGHT0, GL_POSITION, position);
 
-    glEnable (GL_LIGHTING);
-    glEnable (GL_LIGHT0);
-    glDepthFunc(GL_LESS);
-    glEnable(GL_DEPTH_TEST);
+   glEnable(GL_LIGHTING);
+   glEnable(GL_LIGHT0);
+   glEnable(GL_DEPTH_TEST);
+
+   sphereList = glGenLists(1);
+   glNewList(sphereList, GL_COMPILE);
+      auxSolidTorus (0.275, 0.85);
+   glEndList();
+
+   cubeList = glGenLists(1);
+   glNewList(cubeList, GL_COMPILE);
+      auxSolidCylinder (1.0, 2.0);
+   glEndList();
 }
 
 GLboolean eyePosition = GL_FALSE;
-
-void toggleEye (AUX_EVENTREC *event)
+void toggleEye(AUX_EVENTREC *event)
 {
-    if (eyePosition)
-	eyePosition = GL_FALSE;
-    else
-	eyePosition = GL_TRUE;
+  if (eyePosition)
+    eyePosition = GL_FALSE;
+  else
+    eyePosition = GL_TRUE;
 }
 
 void display(void)
 {
-    GLfloat position[] = { 0.0, 0.0, 1.0, 1.0 };
-    GLfloat mat_torus[] = { 0.75, 0.75, 0.0, 1.0 };
-    GLfloat mat_cylinder[] = { 0.0, 0.75, 0.75, 0.15 };
+   GLfloat mat_solid[] = { 0.75, 0.75, 0.0, 1.0 };
+   GLfloat mat_zero[] = { 0.0, 0.0, 0.0, 1.0 };
+   GLfloat mat_transparent[] = { 0.0, 0.8, 0.8, 0.6 };
+   GLfloat mat_emission[] = { 0.0, 0.3, 0.3, 0.6 };
 
-    glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLightfv (GL_LIGHT0, GL_POSITION, position);
-    glPushMatrix ();
-	if (eyePosition)
-	    gluLookAt (0.0, 0.0, 9.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0); 
-	else 
-	    gluLookAt (0.0, 0.0, -9.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0); 
-	glPushMatrix ();
-	glTranslatef (0.0, 0.0, 1.0);    
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_torus);
-	auxSolidTorus (0.275, 0.85);
-	glPopMatrix ();
+   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glEnable (GL_BLEND);
-	glDepthMask (GL_FALSE);
-	glBlendFunc (GL_SRC_ALPHA, GL_ONE);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_cylinder);
-	glTranslatef (0.0, 0.0, -1.0);    
-	auxSolidCylinder (1.0, 2.0);
-	glDepthMask (GL_TRUE);
-	glDisable (GL_BLEND);
-    glPopMatrix ();
+   glPushMatrix ();
+      glTranslatef (-0.15, -0.15, solidZ);
+      glMaterialfv(GL_FRONT, GL_EMISSION, mat_zero);
+      glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_solid);
+      glCallList (sphereList);
+   glPopMatrix ();
 
-    glFlush ();
+   glPushMatrix ();
+      glTranslatef (0.15, 0.15, transparentZ);
+      glRotatef (15.0, 1.0, 1.0, 0.0);
+      glRotatef (30.0, 0.0, 1.0, 0.0);
+      glMaterialfv(GL_FRONT, GL_EMISSION, mat_emission);
+      glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_transparent);
+      glEnable (GL_BLEND);
+      glDepthMask (GL_FALSE);
+      glBlendFunc (GL_SRC_ALPHA, GL_ONE);
+      glCallList (cubeList);
+      glDepthMask (GL_TRUE);
+      glDisable (GL_BLEND);
+   glPopMatrix ();
+
+   glFlush();
 }
 
-void myReshape(int w, int h)
+void reshape(int w, int h)
 {
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(30.0, (GLfloat) w/(GLfloat) h, 1.0, 20.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+   glViewport(0, 0, (GLint) w, (GLint) h);
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+   if (w <= h)
+      glOrtho (-1.5, 1.5, -1.5*(GLfloat)h/(GLfloat)w,
+               1.5*(GLfloat)h/(GLfloat)w, -10.0, 10.0);
+   else
+      glOrtho (-1.5*(GLfloat)w/(GLfloat)h,
+               1.5*(GLfloat)w/(GLfloat)h, -1.5, 1.5, -10.0, 10.0);
+   glMatrixMode(GL_MODELVIEW);
+   glLoadIdentity();
 }
 
 /*  Main Loop
@@ -124,14 +149,8 @@ int main(int argc, char** argv)
     if (!auxInitWindow (argv[0]))
        auxQuit();
     auxMouseFunc (AUX_LEFTBUTTON, AUX_MOUSEDOWN, toggleEye);
-    myinit();
-    auxReshapeFunc (myReshape);
+   init();
+    auxReshapeFunc (reshape);
     auxMainLoop(display);
-    return 0;
+   return 0;
 }
-
-
-
-
-
-

@@ -32,7 +32,7 @@
 #define OPENGL_HEIGHT 13
 
 
-GLenum rgb, doubleBuffer, directRender, windType;
+GLenum rgb, doubleBuffer, windType;
 GLint objectIndex = 0;
 GLuint bases[20];
 float angleX = 0.0, angleY = 0.0, angleZ = 0.0;
@@ -44,28 +44,62 @@ static void Init(void)
 {
 
     bases[0] = glGenLists(1);
+    glNewList(bases[0], GL_COMPILE);
     tkWireSphere(bases[0], 5.0);
+    glEndList();
+
     bases[1] = glGenLists(1);
+    glNewList(bases[1], GL_COMPILE);
     tkSolidSphere(bases[1], 5.0);
+    glEndList();
+
     bases[2] = glGenLists(1);
+    glNewList(bases[2], GL_COMPILE);
     tkWireCube(bases[2], 5.0);
+    glEndList();
+
     bases[3] = glGenLists(1);
+    glNewList(bases[3], GL_COMPILE);
     tkSolidCube(bases[3], 5.0);
+    glEndList();
+
     bases[4] = glGenLists(1);
+    glNewList(bases[4], GL_COMPILE);
     tkWireBox(bases[4], 4.0, 5.0, 6.0);
+    glEndList();
+
     bases[5] = glGenLists(1);
+    glNewList(bases[5], GL_COMPILE);
     tkSolidBox(bases[5], 4.0, 5.0, 6.0);
+    glEndList();
+
     bases[6] = glGenLists(1);
+    glNewList(bases[6], GL_COMPILE);
     tkWireTorus(bases[6], 5.0, 5.0);
+    glEndList();
+
     bases[7] = glGenLists(1);
+    glNewList(bases[7], GL_COMPILE);
     tkSolidTorus(bases[7], 5.0, 5.0);
+    glEndList();
+
     bases[8] = glGenLists(1);
+    glNewList(bases[8], GL_COMPILE);
     tkWireCylinder(bases[8], 5.0, 5.0);
+    glEndList();
+
     bases[9] = glGenLists(1);
+    glNewList(bases[9], GL_COMPILE);
     tkSolidCylinder(bases[9], 5.0, 5.0);
+    glEndList();
+
     bases[10] = glGenLists(1);
+    glNewList(bases[10], GL_COMPILE);
     tkWireCone(bases[10], 5.0, 5.0);
+    glEndList();
+
     bases[11] = glGenLists(1);
+    glNewList(bases[11], GL_COMPILE);
     tkSolidCone(bases[11], 5.0, 5.0);
 
     glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -217,7 +251,6 @@ static GLenum Args(int argc, char **argv)
 
     rgb = GL_TRUE;
     doubleBuffer = GL_FALSE;
-    directRender = GL_TRUE;
 
     for (i = 1; i < argc; i++) {
 	if (strcmp(argv[i], "-ci") == 0) {
@@ -228,10 +261,6 @@ static GLenum Args(int argc, char **argv)
 	    doubleBuffer = GL_FALSE;
 	} else if (strcmp(argv[i], "-db") == 0) {
 	    doubleBuffer = GL_TRUE;
-	} else if (strcmp(argv[i], "-dr") == 0) {
-	    directRender = GL_TRUE;
-	} else if (strcmp(argv[i], "-ir") == 0) {
-	    directRender = GL_FALSE;
 	} else {
 	    printf("%s (Bad option).\n", argv[i]);
 	    return GL_FALSE;
@@ -240,7 +269,7 @@ static GLenum Args(int argc, char **argv)
     return GL_TRUE;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 
     if (Args(argc, argv) == GL_FALSE) {
@@ -251,7 +280,6 @@ void main(int argc, char **argv)
 
     windType = (rgb) ? TK_RGB : TK_INDEX;
     windType |= (doubleBuffer) ? TK_DOUBLE : TK_SINGLE;
-    windType |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(windType);
 
     if (tkInitWindow("Font Test") == GL_FALSE) {
@@ -265,4 +293,5 @@ void main(int argc, char **argv)
     tkKeyDownFunc(Key);
     tkDisplayFunc(Draw);
     tkExec();
+	return 0;
 }

@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 1993, Silicon Graphics, Inc.
+ * Copyright (c) 1993-1997, Silicon Graphics, Inc.
  * ALL RIGHTS RESERVED 
  * Permission to use, copy, modify, and distribute this software for 
  * any purpose and without fee is hereby granted, provided that the above
@@ -32,8 +32,9 @@
  * United States.  Contractor/manufacturer is Silicon Graphics,
  * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
  *
- * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
+ * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
  */
+
 /*
  *  clip.c
  *  This program demonstrates arbitrary clipping planes.
@@ -43,56 +44,59 @@
 #include <stdlib.h>
 #include "glaux.h"
 
+void init(void) 
+{
+   glClearColor (0.0, 0.0, 0.0, 0.0);
+   glShadeModel (GL_FLAT);
+}
+
 void display(void)
 {
-    GLdouble eqn[4] = {0.0, 1.0, 0.0, 0.0};
-    GLdouble eqn2[4] = {1.0, 0.0, 0.0, 0.0};
+   GLdouble eqn[4] = {0.0, 1.0, 0.0, 0.0};
+   GLdouble eqn2[4] = {1.0, 0.0, 0.0, 0.0};
 
-    glClear(GL_COLOR_BUFFER_BIT);
+   glClear(GL_COLOR_BUFFER_BIT);
 
-    glColor3f (1.0, 1.0, 1.0);
-    glPushMatrix();
-    glTranslatef (0.0, 0.0, -5.0);
+   glColor3f (1.0, 1.0, 1.0);
+   glPushMatrix();
+   glTranslatef (0.0, 0.0, -5.0);
 
-/*    clip lower half -- y < 0		*/
-    glClipPlane (GL_CLIP_PLANE0, eqn);
-    glEnable (GL_CLIP_PLANE0);
-/*    clip left half -- x < 0		*/
-    glClipPlane (GL_CLIP_PLANE1, eqn2);
-    glEnable (GL_CLIP_PLANE1);
+/*    clip lower half -- y < 0          */
+   glClipPlane (GL_CLIP_PLANE0, eqn);
+   glEnable (GL_CLIP_PLANE0);
+/*    clip left half -- x < 0           */
+   glClipPlane (GL_CLIP_PLANE1, eqn2);
+   glEnable (GL_CLIP_PLANE1);
 
-    glRotatef (90.0, 1.0, 0.0, 0.0);
+   glRotatef (90.0, 1.0, 0.0, 0.0);
     auxWireSphere(1.0);
-    glPopMatrix();
-    glFlush();
+   glPopMatrix();
+
+   glFlush ();
 }
 
-void myinit (void) {
-    glShadeModel (GL_FLAT);
-}
-
-void myReshape(int w, int h)
+void reshape (int w, int h)
 {
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(60.0, (GLfloat) w/(GLfloat) h, 1.0, 20.0);
-    glMatrixMode(GL_MODELVIEW);
+   glViewport (0, 0, (GLsizei) w, (GLsizei) h); 
+   glMatrixMode (GL_PROJECTION);
+   glLoadIdentity ();
+   gluPerspective(60.0, (GLfloat) w/(GLfloat) h, 1.0, 20.0);
+   glMatrixMode (GL_MODELVIEW);
 }
 
 /*  Main Loop
  *  Open window with initial window size, title bar, 
  *  RGBA display mode, and handle input events.
  */
+
 int main(int argc, char** argv)
 {
     auxInitDisplayMode (AUX_SINGLE | AUX_RGB);
     auxInitPosition (0, 0, 500, 500);
     if (!auxInitWindow (argv[0]))
        auxQuit();
-    myinit ();
-    auxReshapeFunc (myReshape);
+   init ();
+    auxReshapeFunc (reshape);
     auxMainLoop(display);
-    return 0;
+   return 0;
 }
-

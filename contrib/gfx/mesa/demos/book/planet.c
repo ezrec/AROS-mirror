@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 1993, Silicon Graphics, Inc.
+ * Copyright (c) 1993-1997, Silicon Graphics, Inc.
  * ALL RIGHTS RESERVED 
  * Permission to use, copy, modify, and distribute this software for 
  * any purpose and without fee is hereby granted, provided that the above
@@ -32,14 +32,15 @@
  * United States.  Contractor/manufacturer is Silicon Graphics,
  * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
  *
- * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
+ * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
  */
+
 /*
  *  planet.c
  *  This program shows how to composite modeling transformations
  *  to draw translated and rotated models.
- *  Interaction:  pressing the left, right, up, and down 
- *  arrow keys alters the rotation of the planet around the sun.
+ *  Interaction:  pressing the d and y keys (day and year)
+ *  alters the rotation of the planet around the sun.
  */
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -47,6 +48,12 @@
 #include "glaux.h"
 
 static int year = 0, day = 0;
+
+void init(void) 
+{
+   glClearColor (0.0, 0.0, 0.0, 0.0);
+   glShadeModel (GL_FLAT);
+}
 
 void dayAdd (void)
 {
@@ -70,60 +77,47 @@ void yearSubtract (void)
 
 void display(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+   glClear (GL_COLOR_BUFFER_BIT);
+   glColor3f (1.0, 1.0, 1.0);
 
-    glColor3f (1.0, 1.0, 1.0);
-    glPushMatrix();
-/*	draw sun	*/
-    auxWireSphere(1.0);
-/*	draw smaller planet	*/
-    glRotatef ((GLfloat) year, 0.0, 1.0, 0.0);
-    glTranslatef (2.0, 0.0, 0.0);
-    glRotatef ((GLfloat) day, 0.0, 1.0, 0.0);
+   glPushMatrix();
+    auxWireSphere(1.0);   /* draw sun */
+   glRotatef ((GLfloat) year, 0.0, 1.0, 0.0);
+   glTranslatef (2.0, 0.0, 0.0);
+   glRotatef ((GLfloat) day, 0.0, 1.0, 0.0);
     auxWireSphere(0.2);
-    glPopMatrix();
+   glPopMatrix();
     glFlush();
 }
 
-void myinit (void) {
-    glShadeModel (GL_FLAT);
-}
-
-void myReshape(int w, int h)
+void reshape (int w, int h)
 {
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(60.0, (GLfloat) w/(GLfloat) h, 1.0, 20.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef (0.0, 0.0, -5.0);
+   glViewport (0, 0, (GLsizei) w, (GLsizei) h); 
+   glMatrixMode (GL_PROJECTION);
+   glLoadIdentity ();
+   gluPerspective(60.0, (GLfloat) w/(GLfloat) h, 1.0, 20.0);
+   glMatrixMode(GL_MODELVIEW);
+   glLoadIdentity();
+   gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
 
 /*  Main Loop
  *  Open window with initial window size, title bar, 
  *  RGBA display mode, and handle input events.
  */
+
 int main(int argc, char** argv)
 {
     auxInitDisplayMode (AUX_SINGLE | AUX_RGB);
     auxInitPosition (0, 0, 500, 500);
     if (!auxInitWindow (argv[0]))
        auxQuit();
-    myinit ();
+   init ();
     auxKeyFunc (AUX_LEFT, yearSubtract);
     auxKeyFunc (AUX_RIGHT, yearAdd);
     auxKeyFunc (AUX_UP, dayAdd);
     auxKeyFunc (AUX_DOWN, daySubtract);
-    auxReshapeFunc (myReshape);
+    auxReshapeFunc (reshape);
     auxMainLoop(display);
-    return 0;
+   return 0;
 }
-
-
-
-
-
-
-
-

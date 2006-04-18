@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 1993, Silicon Graphics, Inc.
+ * Copyright (c) 1993-1997, Silicon Graphics, Inc.
  * ALL RIGHTS RESERVED 
  * Permission to use, copy, modify, and distribute this software for 
  * any purpose and without fee is hereby granted, provided that the above
@@ -32,12 +32,21 @@
  * United States.  Contractor/manufacturer is Silicon Graphics,
  * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
  *
- * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
+ * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
  */
+
 /*  texgen.c
  *  This program draws a texture mapped teapot with 
  *  automatically generated texture coordinates.  The
  *  texture is rendered as stripes on the teapot.
+ *  Initially, the object is drawn with texture coordinates
+ *  based upon the object coordinates of the vertex
+ *  and distance from the plane x = 0.  Pressing the 'e'
+ *  key changes the coordinate generation to eye coordinates
+ *  of the vertex.  Pressing the 'o' key switches it back
+ *  to the object coordinates.  Pressing the 's' key 
+ *  changes the plane to a slanted one (x + y + z = 0).
+ *  Pressing the 'x' key switches it back to x = 0.
  */
 
 #include <GL/gl.h>
@@ -46,76 +55,101 @@
 #include "glaux.h"
 
 #define	stripeImageWidth 32
-GLubyte stripeImage[3*stripeImageWidth];
+GLubyte stripeImage[4*stripeImageWidth];
+
+#ifdef GL_VERSION_1_1
+static GLuint texName;
+#endif
 
 void makeStripeImage(void)
 {
-    int j;
+   int j;
     
-    for (j = 0; j < stripeImageWidth; j++) {
-	    stripeImage[3*j] = (j<=4) ? 255 : 0;
-	    stripeImage[3*j+1] = (j>4) ? 255 : 0;
-	    stripeImage[3*j+2] = 0;
-    }
+   for (j = 0; j < stripeImageWidth; j++) {
+      stripeImage[4*j] = (GLubyte) ((j<=4) ? 255 : 0);
+      stripeImage[4*j+1] = (GLubyte) ((j>4) ? 255 : 0);
+      stripeImage[4*j+2] = (GLubyte) 0;
+      stripeImage[4*j+3] = (GLubyte) 255;
+   }
 }
 
-/* glTexGen stuff: */
+/*  planes for texture coordinate generation  */
+static GLfloat xequalzero[] = {1.0, 0.0, 0.0, 0.0};
+static GLfloat slanted[] = {1.0, 1.0, 1.0, 0.0};
+static GLfloat *currentCoeff;
+static GLenum currentPlane;
+static GLint currentGenMode;
 
-GLfloat sgenparams[] = {1.0, 1.0, 1.0, 0.0};
-
-void myinit(void)
+void init(void)
 {
-    glClearColor (0.0, 0.0, 0.0, 0.0);
+   glClearColor (0.0, 0.0, 0.0, 0.0);
+   glEnable(GL_DEPTH_TEST);
+   glShadeModel(GL_SMOOTH);
 
-    makeStripeImage();
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glTexParameterf(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameterf(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage1D(GL_TEXTURE_1D, 0, 3, stripeImageWidth, 0,
-		 GL_RGB, GL_UNSIGNED_BYTE, stripeImage);
+   makeStripeImage();
+   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-    glTexGenfv(GL_S, GL_OBJECT_PLANE, sgenparams);
+#ifdef GL_VERSION_1_1
+   glGenTextures(1, &texName);
+   glBindTexture(GL_TEXTURE_1D, texName);
+#endif
+   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+#ifdef GL_VERSION_1_1
+   glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA, stripeImageWidth, 0,
+                GL_RGBA, GL_UNSIGNED_BYTE, stripeImage);
+#else
+   glTexImage1D(GL_TEXTURE_1D, 0, 4, stripeImageWidth, 0,
+                GL_RGBA, GL_UNSIGNED_BYTE, stripeImage);
+#endif
 
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glEnable(GL_TEXTURE_GEN_S);
-    glEnable(GL_TEXTURE_1D);
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_AUTO_NORMAL);
-    glEnable(GL_NORMALIZE);
-    glFrontFace(GL_CW);
-    glCullFace(GL_BACK);
-    glMaterialf (GL_FRONT, GL_SHININESS, 64.0);
+   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+   currentCoeff = xequalzero;
+   currentGenMode = GL_OBJECT_LINEAR;
+   currentPlane = GL_OBJECT_PLANE;
+   glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, currentGenMode);
+   glTexGenfv(GL_S, currentPlane, currentCoeff);
+
+   glEnable(GL_TEXTURE_GEN_S);
+   glEnable(GL_TEXTURE_1D);
+   glEnable(GL_CULL_FACE);
+   glEnable(GL_LIGHTING);
+   glEnable(GL_LIGHT0);
+   glEnable(GL_AUTO_NORMAL);
+   glEnable(GL_NORMALIZE);
+   glFrontFace(GL_CW);
+   glCullFace(GL_BACK);
+   glMaterialf (GL_FRONT, GL_SHININESS, 64.0);
 }
 
 void display(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glPushMatrix ();
-    glRotatef(45.0, 0.0, 0.0, 1.0);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+   glPushMatrix ();
+   glRotatef(45.0, 0.0, 0.0, 1.0);
+#ifdef GL_VERSION_1_1
+   glBindTexture(GL_TEXTURE_1D, texName);
+#endif
     auxSolidTeapot(2.0);
-    glPopMatrix ();
-    glFlush();
+   glPopMatrix ();
+   glFlush();
 }
 
-void myReshape(int w, int h)
+void reshape(int w, int h)
 {
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    if (w <= h)
-	glOrtho (-3.5, 3.5, -3.5*(GLfloat)h/(GLfloat)w, 
-	    3.5*(GLfloat)h/(GLfloat)w, -3.5, 3.5);
-    else
-	glOrtho (-3.5*(GLfloat)w/(GLfloat)h, 
-	    3.5*(GLfloat)w/(GLfloat)h, -3.5, 3.5, -3.5, 3.5);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+   glViewport(0, 0, (GLsizei) w, (GLsizei) h);
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+   if (w <= h)
+      glOrtho (-3.5, 3.5, -3.5*(GLfloat)h/(GLfloat)w, 
+               3.5*(GLfloat)h/(GLfloat)w, -3.5, 3.5);
+   else
+      glOrtho (-3.5*(GLfloat)w/(GLfloat)h, 
+               3.5*(GLfloat)w/(GLfloat)h, -3.5, 3.5, -3.5, 3.5);
+   glMatrixMode(GL_MODELVIEW);
+   glLoadIdentity();
 }
 
 int main(int argc, char** argv)
@@ -124,8 +158,8 @@ int main(int argc, char** argv)
     auxInitPosition (0, 0, 200, 200);
     if (!auxInitWindow (argv[0]))
        auxQuit();
-    myinit();
-    auxReshapeFunc (myReshape);
+   init ();
+    auxReshapeFunc (reshape);
     auxMainLoop(display);
-    return 0;
+   return 0;
 }

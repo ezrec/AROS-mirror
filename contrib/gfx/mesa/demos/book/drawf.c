@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 1993, Silicon Graphics, Inc.
+ * Copyright (c) 1993-1997, Silicon Graphics, Inc.
  * ALL RIGHTS RESERVED 
  * Permission to use, copy, modify, and distribute this software for 
  * any purpose and without fee is hereby granted, provided that the above
@@ -32,8 +32,9 @@
  * United States.  Contractor/manufacturer is Silicon Graphics,
  * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
  *
- * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
+ * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
  */
+
 /*
  *  drawf.c
  *  Draws the bitmapped letter F on the screen (several times).
@@ -45,34 +46,34 @@
 #include "glaux.h"
 
 GLubyte rasters[24] = {
-    0xc0, 0x00, 0xc0, 0x00, 0xc0, 0x00, 0xc0, 0x00, 0xc0, 0x00,
-    0xff, 0x00, 0xff, 0x00, 0xc0, 0x00, 0xc0, 0x00, 0xc0, 0x00,
-    0xff, 0xc0, 0xff, 0xc0};
+   0xc0, 0x00, 0xc0, 0x00, 0xc0, 0x00, 0xc0, 0x00, 0xc0, 0x00,
+   0xff, 0x00, 0xff, 0x00, 0xc0, 0x00, 0xc0, 0x00, 0xc0, 0x00,
+   0xff, 0xc0, 0xff, 0xc0};
 
-void myinit(void)
+void init(void)
 {
-    glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
-    glClearColor (0.0, 0.0, 0.0, 0.0);
+   glPixelStorei (GL_UNPACK_ALIGNMENT, 1);
+   glClearColor (0.0, 0.0, 0.0, 0.0);
 }
 
 void display(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f (1.0, 1.0, 1.0);
-    glRasterPos2i (20.5, 20.5);
-    glBitmap (10, 12, 0.0, 0.0, 12.0, 0.0, rasters);
-    glBitmap (10, 12, 0.0, 0.0, 12.0, 0.0, rasters);
-    glBitmap (10, 12, 0.0, 0.0, 12.0, 0.0, rasters);
-    glFlush();
+   glClear(GL_COLOR_BUFFER_BIT);
+   glColor3f (1.0, 1.0, 1.0);
+   glRasterPos2i (20, 20);
+   glBitmap (10, 12, 0.0, 0.0, 11.0, 0.0, rasters);
+   glBitmap (10, 12, 0.0, 0.0, 11.0, 0.0, rasters);
+   glBitmap (10, 12, 0.0, 0.0, 11.0, 0.0, rasters);
+   glFlush();
 }
 
-void myReshape(int w, int h)
+void reshape(int w, int h)
 {
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho (0, w, 0, h, -1.0, 1.0);
-    glMatrixMode(GL_MODELVIEW);
+   glViewport(0, 0, (GLsizei) w, (GLsizei) h);
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+   glOrtho (0, w, 0, h, -1.0, 1.0);
+   glMatrixMode(GL_MODELVIEW);
 }
 
 /*  Main Loop
@@ -85,8 +86,8 @@ int main(int argc, char** argv)
     auxInitPosition (0, 0, 500, 500);
     if (!auxInitWindow (argv[0]))
        auxQuit();
-    myinit();
-    auxReshapeFunc (myReshape);
+   init();
+    auxReshapeFunc (reshape);
     auxMainLoop(display);
-    return 0;
+   return 0;
 }

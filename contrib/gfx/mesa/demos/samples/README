@@ -23,45 +23,39 @@
  */
 
 accum - Accumulation test.
-    - RGBA, SB/DB (SB default), DR/ID (ID default).
+    - RGBA, SB/DB (SB default).
     - cmd line options:
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit
 	1	Use filled polygon mode.
 	2	Use outlined polygon mode.
 
 bitmap1 - Bitmap test.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb	RGBA mode.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 
 bitmap2 - Bitmap test.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb	RGBA mode.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	1	Toggle display list mode.
 	2	Toggle color animation mode.
 
 copy - Pixel copy test.
-    - RGBA, SB/DB (SB default), DR/ID (ID default).
+    - RGBA, SB/DB (SB default).
     - cmd line options:
 	-sb		Single buffer mode.
 	-db		Double buffer mode.
@@ -76,39 +70,33 @@ copy - Pixel copy test.
 	Left		Copy location.
 
 cursor - Cursor test.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb	RGBA mode.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	SPACE	switch cursor color.
 
 depth - Z buffer test.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb	RGBA mode.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	1	Toggle anti-aliased mode.
 	2	Toggle stipple mode.
 
 eval - Evaluator test.
-    - RGBA, SB/DB (SB default), DR/ID (ID default).
+    - RGBA, SB/DB (SB default).
     - cmd line options:
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	LEFT	Rotate.
@@ -126,14 +114,12 @@ eval - Evaluator test.
 	l	Toggle lighting mode.
 
 fog - Fog test.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb	RGBA mode.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	LEFT	Rotate.
@@ -144,14 +130,12 @@ fog - Fog test.
 	d	Decrease fog density.
 
 font - font test.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb	RGBA mode.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	Left	Shift left.
@@ -174,14 +158,12 @@ font - font test.
 	v	Rotate counter-clockwise z.
 
 line - Line test.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb	RGBA mode.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	W	Increase line width.
@@ -190,14 +172,12 @@ line - Line test.
 	2	Toggle anti-aliased mode.
 
 logo - Demo.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb	RGBA mode.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	LEFT	Rotate.
@@ -230,12 +210,10 @@ logo - Demo.
 	g	Use modulate texture environment mode.
 
 nurb - Nurb test.
-    - RGBA, SB/DB (SB default), DR/ID (ID default).
+    - RGBA, SB/DB (SB default).
     - cmd line options:
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	LEFT	Rotate.
@@ -244,39 +222,33 @@ nurb - Nurb test.
 	DOWN	Rotate.
 
 olympic - Olymipic rings demo.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb	RGBA mode.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	SPACE	Restart demo.
 
 overlay - Overlay plane demo.
-    - RGBA, SB/DB (SB default), DR/ID (ID default).
+    - RGBA, SB/DB (SB default).
     - cmd line options:
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	SPACE	Toggle star weird movement mode.
 	t	Toggle star turbo mode.
 
 point - Point test.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb	RGBA mode.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	LEFT	Translate.
@@ -288,14 +260,12 @@ point - Point test.
 	1	Toggle anti-aliased mode.
 
 prim - Primitive test.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb	RGBA mode.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	1	Toggle flat/smooth shade mode.
@@ -303,7 +273,7 @@ prim - Primitive test.
 	3	Toggle color mask mode.
 
 quad - Quadric test.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb		RGBA mode.
 	-ci		Color index mode.
@@ -350,10 +320,8 @@ quad - Quadric test.
 	y		Toggle dither mode.
 
 select - Selection test.
-    - RGBA, SB, DR/ID (ID default).
+    - RGBA, SB.
     - cmd line options:
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	LEFT	Rotate.
@@ -369,14 +337,12 @@ select - Selection test.
 	Right	Delete selected triangle.
 
 shape - shape test.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb	RGBA mode.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	Left	Shift left.
@@ -406,8 +372,6 @@ speed - Speed test.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	a	Toggle anti-aliased mode.
@@ -418,7 +382,7 @@ speed - Speed test.
 	t	Toggle texturing mode.
 
 sphere - Spheremap test.
-    - RGBA, SB/DB (SB default), DR/ID (ID default).
+    - RGBA, SB/DB (SB default).
     - cmd line options:
 	-sb		Single buffer mode.
 	-db		Double buffer mode.
@@ -450,25 +414,21 @@ sphere - Spheremap test.
         7		Use linear-mipmap-linear minification filter. 
 
 star - Demo.
-    - RGBA, SB/DB (SB default), DR/ID (ID default).
+    - RGBA, SB/DB (SB default).
     - cmd line options:
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	SPACE	Toggle weird movement mode.
 	t	Toggle turbo mode.
 
 stencil - Stencil test.
-    - RGBA, SB, DR/ID (ID default).
+    - RGBA, SB.
     - cmd line options:
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
 
 stretch - Texture test.
-    - RGBA, SB, DR/ID (ID default).
+    - RGBA, SB.
     - cmd line options:
 	-sb		Single buffer mode.
 	-db		Double buffer mode.
@@ -482,7 +442,7 @@ stretch - Texture test.
 	Left		Added stretch point.
 
 texture - Texture test.
-    - RGBA, SB/DB (SB default), DR/ID (ID default).
+    - RGBA, SB/DB (SB default).
     - cmd line options:
 	-sb		Single buffer mode.
 	-db		Double buffer mode.
@@ -508,14 +468,12 @@ texture - Texture test.
 	7		Use linear-mipmap-linear minification filter.
 
 tri - Triangle test.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb	RGBA mode.
 	-ci	Color index mode.
 	-sb	Single buffer mode.
 	-db	Double buffer mode.
-	-dr	Direct render mode.
-	-ir	Indirect render mode.
     - keys:
 	ESC	Quit.
 	LEFT	Translate.
@@ -539,7 +497,7 @@ tri - Triangle test.
 	0	Toggle anti-aliased mode.
 
 wave - Demo.
-    - RGBA/CI (RGBA default), SB/DB (SB default), DR/ID (ID default).
+    - RGBA/CI (RGBA default), SB/DB (SB default).
     - cmd line options:
 	-rgb		RGBA mode.
 	-ci		Color index mode.

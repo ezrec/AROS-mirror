@@ -1,13 +1,13 @@
 /*
  * (c) Copyright 1993, Silicon Graphics, Inc.
- * ALL RIGHTS RESERVED 
- * Permission to use, copy, modify, and distribute this software for 
+ * ALL RIGHTS RESERVED
+ * Permission to use, copy, modify, and distribute this software for
  * any purpose and without fee is hereby granted, provided that the above
  * copyright notice appear in all copies and that both the copyright notice
- * and this permission notice appear in supporting documentation, and that 
+ * and this permission notice appear in supporting documentation, and that
  * the name of Silicon Graphics, Inc. not be used in advertising
  * or publicity pertaining to distribution of the software without specific,
- * written prior permission. 
+ * written prior permission.
  *
  * THE MATERIAL EMBODIED ON THIS SOFTWARE IS PROVIDED TO YOU "AS-IS"
  * AND WITHOUT WARRANTY OF ANY KIND, EXPRESS, IMPLIED OR OTHERWISE,
@@ -21,8 +21,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH LOSS, HOWEVER CAUSED AND ON
  * ANY THEORY OF LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE
  * POSSESSION, USE OR PERFORMANCE OF THIS SOFTWARE.
- * 
- * US Government Users Restricted Rights 
+ *
+ * US Government Users Restricted Rights
  * Use, duplication, or disclosure by the Government is subject to
  * restrictions set forth in FAR 52.227.19(c)(2) or subparagraph
  * (c)(1)(ii) of the Rights in Technical Data and Computer Software
@@ -34,9 +34,9 @@
  *
  * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
  */
-/*
+/**
  *  surface.c
- *  This program draws a NURBS surface in the shape of a 
+ *  This program draws a NURBS surface in the shape of a
  *  symmetrical hill.
  */
 #include <GL/gl.h>
@@ -45,6 +45,7 @@
 #include "glaux.h"
 
 GLfloat ctlpoints[4][4][3];
+int showPoints = 0;
 
 GLUnurbsObj *theNurb;
 
@@ -61,13 +62,13 @@ void init_surface(void)
 	    ctlpoints[u][v][1] = 2.0*((GLfloat)v - 1.5);
 
 	    if ( (u == 1 || u == 2) && (v == 1 || v == 2))
-		ctlpoints[u][v][2] = 3.0;
+		ctlpoints[u][v][2] = 7.0;
 	    else
 		ctlpoints[u][v][2] = -3.0;
 	}
-    }				
-}				
-			
+    }
+}
+
 /*  Initialize material property and depth buffer.
  */
 void myinit(void)
@@ -93,34 +94,53 @@ void myinit(void)
     theNurb = gluNewNurbsRenderer();
     gluNurbsProperty(theNurb, GLU_SAMPLING_TOLERANCE, 25.0);
     gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glTranslatef (0.0, 0.0, -5.0);
 }
 
 void display(void)
 {
     GLfloat knots[8] = {0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0};
+    int i, j;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glPushMatrix();
     glRotatef(330.0, 1.,0.,0.);
-    glScalef (0.5, 0.5, 0.5);
+    glScalef (0.25, 0.25, 0.25);
 
     gluBeginSurface(theNurb);
-    gluNurbsSurface(theNurb, 
+    gluNurbsSurface(theNurb,
 	    8, knots,
 	    8, knots,
 	    4 * 3,
 	    3,
-	    &ctlpoints[0][0][0], 
+	    &ctlpoints[0][0][0],
 	    4, 4,
 	    GL_MAP2_VERTEX_3);
     gluEndSurface(theNurb);
-        
+
+    if(showPoints) {
+    glPointSize(5.0);
+    glDisable(GL_LIGHTING);
+    glColor3f(1.0, 1.0, 0.0);
+    glBegin(GL_POINTS);
+    for(i=0;i<4;i++) {
+      for(j=0;j<4;j++) {
+	glVertex3f(ctlpoints[i][j][0], ctlpoints[i][j][1], ctlpoints[i][j][2]);
+      }
+    }
+    glEnd();
+    glEnable(GL_LIGHTING);
+    }
+
     glPopMatrix();
     glFlush();
 }
 
-void myReshape(int w, int h)
+void reshape(int w, int h)
 {
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
@@ -128,20 +148,18 @@ void myReshape(int w, int h)
     gluPerspective (45.0, (GLdouble)w/(GLdouble)h, 3.0, 8.0);
 
     glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef (0.0, 0.0, -5.0);
 }
 
-/*  Main Loop 
- */
-int main(int argc, char** argv)
+/* Main Loop */
+int
+main(int argc, char** argv)
 {
     auxInitDisplayMode (AUX_SINGLE | AUX_RGB | AUX_DEPTH);
     auxInitPosition (0, 0, 500, 500);
     if (!auxInitWindow (argv[0]))
        auxQuit();
     myinit();
-    auxReshapeFunc (myReshape);
+    auxReshapeFunc (reshape);
     auxMainLoop(display);
-    return 0;
+    return 0;             /* ANSI C requires main to return int. */
 }

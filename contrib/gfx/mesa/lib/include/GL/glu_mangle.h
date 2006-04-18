@@ -22,18 +22,23 @@
 
 
 /*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:29  NicJA
- * AROSMesa 3.0
+ * $Log: glu_mangle.h,v $
+ * Revision 1.2  1999/09/10 02:08:19  gareth
+ * Added GLU 1.3 tessellation (except winding rule code).
  *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
+ * Revision 1.1.1.1  1999/08/19 00:55:40  jtg
+ * Imported sources
+ *
+ * Revision 3.1  1999/06/21 22:00:42  brianp
+ * added #ifndef GLU_MANGLE_H stuff
  *
  * Revision 3.0  1998/02/20 05:04:45  brianp
  * initial rev
  *
  */
+
+#ifndef GLU_MANGLE_H
+#define GLU_MANGLE_H
 
 
 #define gluLookAt mgluLookAt
@@ -73,10 +78,19 @@
 #define gluPwlCurve mgluPwlCurve
 #define gluNurbsCallback mgluNurbsCallback
 #define gluNewTess mgluNewTess
-#define gluTessCallback mgluTessCallback
 #define gluDeleteTess mgluDeleteTess
-#define gluBeginPolygon mgluBeginPolygon
-#define gluEndPolygon mgluEndPolygon
-#define gluNextContour mgluNextContour
+#define gluTessBeginPolygon mgluTessBeginPolygon
+#define gluTessBeginContour mgluTessBeginContour
 #define gluTessVertex mgluTessVertex
+#define gluTessEndPolygon mgluTessEndPolygon
+#define gluTessEndContour mgluTessEndContour
+#define gluTessProperty mgluTessProperty
+#define gluTessNormal mgluTessNormal
+#define gluTessCallback mgluTessCallback
+#define gluGetTessProperty mgluGetTessProperty
+#define gluBeginPolygon mgluBeginPolygon
+#define gluNextContour mgluNextContour
+#define gluEndPolygon mgluEndPolygon
 #define gluGetString mgluGetString
+
+#endif

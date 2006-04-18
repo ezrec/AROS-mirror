@@ -23,12 +23,10 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include "gltk.h"
-
-
-GLenum directRender;
 
 
 static void Init(void)
@@ -106,13 +104,9 @@ static GLenum Args(int argc, char **argv)
 {
     GLint i;
 
-    directRender = GL_TRUE;
 
     for (i = 1; i < argc; i++) {
 	if (strcmp(argv[i], "-dr") == 0) {
-	    directRender = GL_TRUE;
-	} else if (strcmp(argv[i], "-ir") == 0) {
-	    directRender = GL_FALSE;
 	} else {
 	    printf("%s (Bad option).\n", argv[i]);
 	    return GL_FALSE;
@@ -121,7 +115,7 @@ static GLenum Args(int argc, char **argv)
     return GL_TRUE;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     GLenum type;
 
@@ -132,7 +126,6 @@ void main(int argc, char **argv)
     tkInitPosition(0, 0, 300, 300);
 
     type = TK_RGB | TK_SINGLE | TK_STENCIL;
-    type |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(type);
 
     if (tkInitWindow("Stencil Test") == GL_FALSE) {
@@ -146,4 +139,5 @@ void main(int argc, char **argv)
     tkKeyDownFunc(Key);
     tkDisplayFunc(Draw);
     tkExec();
+	return 0;
 }

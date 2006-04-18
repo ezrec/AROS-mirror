@@ -1,47 +1,39 @@
-/* clearspd.c */
+/* $Id$ */
 
 /*
  * Simple GLUT program to measure glClear() and glutSwapBuffers() speed.
- * Brian Paul  February 15, 1997
+ * Brian Paul  February 15, 1997  This file in public domain.
+ */
+
+/*
+ * $Log: clearspd.c,v $
+ * Revision 1.2  2000/04/10 16:25:15  brianp
+ * fixed visual selection and reporting results
+ *
+ * Revision 1.1.1.1  1999/08/19 00:55:40  jtg
+ * Imported sources
+ *
+ * Revision 3.3  1999/03/28 18:18:33  brianp
+ * minor clean-up
+ *
+ * Revision 3.2  1999/03/18 08:16:34  joukj
+ *
+ *     cmpstr needs string.h to included to avoid warnings
+ *
+ * Revision 3.1  1998/06/29 02:38:30  brianp
+ * removed unneeded includes
+ *
+ * Revision 3.0  1998/02/14 18:42:29  brianp
+ * initial rev
+ *
  */
 
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 #include <GL/glut.h>
-#include <sys/times.h>
-#include <sys/param.h>
-
-
-
-/*
- * Return system time in seconds.
- * NOTE:  this implementation may not be very portable!
- */
-GLdouble GetTime( void )
-{
-   static GLdouble prev_time = 0.0;
-   static GLdouble time;
-   struct tms tm;
-   clock_t clk;
-
-   clk = times(&tm);
-
-#ifdef CLK_TCK
-   time = (double)clk / (double)CLK_TCK;
-#else
-   time = (double)clk / (double)HZ;
-#endif
-
-   if (time>prev_time) {
-      prev_time = time;
-      return time;
-   }
-   else {
-      return prev_time;
-   }
-}
 
 
 static float MinPeriod = 2.0;   /* 2 seconds */
@@ -49,7 +41,6 @@ static int ColorMode = GLUT_RGB;
 static int Width = 400.0;
 static int Height = 400.0;
 static int Loops = 100;
-static int Size = 50;
 static float ClearColor = 0.0;
 static GLbitfield BufferMask = GL_COLOR_BUFFER_BIT;
 static GLboolean SwapFlag = GL_FALSE;
@@ -75,19 +66,20 @@ static void Display( void )
       ClearColor = 0.0;
 
    if (SwapFlag) {
-      t0 = GetTime();
+      t0 = glutGet(GLUT_ELAPSED_TIME) * 0.001;
       for (i=0;i<Loops;i++) {
          glClear( BufferMask );
          glutSwapBuffers();
       }
-      t1 = GetTime();
+      t1 = glutGet(GLUT_ELAPSED_TIME) * 0.001;
    }
    else {
-      t0 = GetTime();
+      t0 = glutGet(GLUT_ELAPSED_TIME) * 0.001;
       for (i=0;i<Loops;i++) {
          glClear( BufferMask );
+         glFlush();
       }
-      t1 = GetTime();
+      t1 = glutGet(GLUT_ELAPSED_TIME) * 0.001;
       glutSwapBuffers();
    }
 
@@ -100,12 +92,12 @@ static void Display( void )
    clearRate = Loops / (t1-t0);
    pixelRate = clearRate * Width * Height;
    if (SwapFlag) {
-      printf("Rate: %d clears+swaps in %gs = %g clears+swaps/s   %d pixels/s\n",
-             Loops, t1-t0, clearRate, (int)pixelRate );
+      printf("Rate: %d clears+swaps in %gs = %g clears+swaps/s   %g pixels/s\n",
+             Loops, t1-t0, clearRate, pixelRate );
    }
    else {
-      printf("Rate: %d clears in %gs = %g clears/s   %d pixels/s\n",
-             Loops, t1-t0, clearRate, (int)pixelRate);
+      printf("Rate: %d clears in %gs = %g clears/s   %g pixels/s\n",
+             Loops, t1-t0, clearRate, pixelRate);
    }
 }
 
@@ -125,6 +117,8 @@ static void Reshape( int width, int height )
 
 static void Key( unsigned char key, int x, int y )
 {
+   (void) x;
+   (void) y;
    switch (key) {
       case 27:
          exit(0);
@@ -136,8 +130,6 @@ static void Key( unsigned char key, int x, int y )
 
 static void Init( int argc, char *argv[] )
 {
-   GLint shade;
-
    int i;
    for (i=1; i<argc; i++) {
       if (strcmp(argv[i],"+rgb")==0)
@@ -206,6 +198,8 @@ static void Help( const char *program )
 
 int main( int argc, char *argv[] )
 {
+   GLint mode;
+
    printf("For options:  %s -help\n", argv[0]);
 
    Init( argc, argv );
@@ -214,7 +208,15 @@ int main( int argc, char *argv[] )
    glutInitWindowSize( (int) Width, (int) Height );
    glutInitWindowPosition( 0, 0 );
 
-   glutInitDisplayMode( ColorMode | GLUT_DOUBLE | GLUT_DEPTH | GLUT_STENCIL | GLUT_ACCUM );
+   mode = ColorMode | GLUT_DOUBLE;
+   if (BufferMask & GL_STENCIL_BUFFER_BIT)
+      mode |= GLUT_STENCIL;
+   if (BufferMask & GL_ACCUM_BUFFER_BIT)
+      mode |= GLUT_ACCUM;
+   if (BufferMask & GL_DEPTH_BUFFER_BIT)
+      mode |= GLUT_DEPTH;
+         
+   glutInitDisplayMode(mode);
 
    glutCreateWindow( argv[0] );
 
@@ -229,4 +231,5 @@ int main( int argc, char *argv[] )
    glutIdleFunc( Idle );
 
    glutMainLoop();
+   return 0;
 }

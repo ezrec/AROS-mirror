@@ -13,67 +13,89 @@ include $(TOP)/config/make.cfg
 AMIGASRCDIR = aros
 MESASRCDIR = src
 
-LIBMESAGLM = $(MESASRCDIR)/accum \
+LIBMESAGLM = $(MESASRCDIR)/aatriangle \
+            $(MESASRCDIR)/accum \
             $(MESASRCDIR)/alpha \
             $(MESASRCDIR)/alphabuf \
-            $(MESASRCDIR)/api1 \
-            $(MESASRCDIR)/api2 \
-            $(MESASRCDIR)/apiext \
             $(MESASRCDIR)/attrib \
+            $(MESASRCDIR)/bbox \
             $(MESASRCDIR)/bitmap \
             $(MESASRCDIR)/blend \
+            $(MESASRCDIR)/buffers \
             $(MESASRCDIR)/clip \
             $(MESASRCDIR)/colortab \
+            $(MESASRCDIR)/config \
             $(MESASRCDIR)/context \
             $(MESASRCDIR)/copypix \
+            $(MESASRCDIR)/cva \
+            $(MESASRCDIR)/debug_xform \
             $(MESASRCDIR)/depth \
+            $(MESASRCDIR)/dispatch \
             $(MESASRCDIR)/dlist \
             $(MESASRCDIR)/drawpix \
             $(MESASRCDIR)/enable \
+            $(MESASRCDIR)/enums \
             $(MESASRCDIR)/eval \
+            $(MESASRCDIR)/extensions \
             $(MESASRCDIR)/feedback \
+            $(MESASRCDIR)/glapi \
+            $(MESASRCDIR)/glapinoop \
+            $(MESASRCDIR)/glthread \
             $(MESASRCDIR)/fog \
             $(MESASRCDIR)/get \
             $(MESASRCDIR)/hash \
+            $(MESASRCDIR)/hint \
             $(AMIGASRCDIR)/misc/ht_colors \
+            $(MESASRCDIR)/imaging \
             $(MESASRCDIR)/image \
             $(MESASRCDIR)/light \
             $(MESASRCDIR)/lines \
             $(MESASRCDIR)/logic \
             $(MESASRCDIR)/masking \
             $(MESASRCDIR)/matrix \
-            $(MESASRCDIR)/misc \
+            $(MESASRCDIR)/mem \
             $(MESASRCDIR)/mmath \
             $(MESASRCDIR)/OSmesa/osmesa \
             $(MESASRCDIR)/pb \
+            $(MESASRCDIR)/pipeline \
             $(MESASRCDIR)/pixel \
+            $(MESASRCDIR)/pixeltex \
             $(MESASRCDIR)/points \
-            $(MESASRCDIR)/pointers \
             $(MESASRCDIR)/polygon \
             $(MESASRCDIR)/quads \
-            $(MESASRCDIR)/rect \
             $(MESASRCDIR)/rastpos \
             $(MESASRCDIR)/readpix \
+            $(MESASRCDIR)/rect \
             $(MESASRCDIR)/scissor \
             $(MESASRCDIR)/shade \
             $(MESASRCDIR)/span \
+            $(MESASRCDIR)/stages \
+            $(MESASRCDIR)/state \
             $(MESASRCDIR)/stencil \
+            $(MESASRCDIR)/texformat \
             $(MESASRCDIR)/teximage \
             $(MESASRCDIR)/texobj \
             $(MESASRCDIR)/texstate \
             $(MESASRCDIR)/texture \
+            $(MESASRCDIR)/texutil \
+            $(MESASRCDIR)/translate \
             $(MESASRCDIR)/triangle \
             $(MESASRCDIR)/varray \
             $(MESASRCDIR)/vb \
+            $(MESASRCDIR)/vbcull \
             $(MESASRCDIR)/vbfill \
+            $(MESASRCDIR)/vbindirect \
             $(MESASRCDIR)/vbrender \
             $(MESASRCDIR)/vbxform \
+            $(MESASRCDIR)/vector \
+            $(MESASRCDIR)/vertices \
             $(MESASRCDIR)/winpos \
             $(MESASRCDIR)/xform \
             $(MESASRCDIR)/zoom \
             $(MESASRCDIR)/AROS/AROSMesa \
-            $(MESASRCDIR)/AROS/AROSMesa_TC \
-            $(MESASRCDIR)/AROS/AROSMesa_8bit
+            $(MESASRCDIR)/AROS/AROSMesa_rast_common \
+            $(MESASRCDIR)/AROS/AROSMesa_rast_TC \
+            $(MESASRCDIR)/AROS/AROSMesa_rast_8bit
 
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR)/AROS -I$(MESASRCDIR) -Iamiga/misc
 USER_CFLAGS	:= -DNO_ERRNO_H

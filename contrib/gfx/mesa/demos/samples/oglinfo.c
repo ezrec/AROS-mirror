@@ -30,26 +30,29 @@ int main(int argc, char **argv)
   int dontcare;
 
   /* parse arguments */
-  if(argc > 1)
+  if(argc > 1) {
     if(!strcmp(argv[1],"-display"))
       display_name = argv[2];
     else {
       fprintf(stderr, "Usage: %s [-display <display>]\n",argv[0]);
-      return -1;
+      return 0;
     }
+  }
 
   /* get display */
   if (!(dpy = XOpenDisplay(display_name))) {
     fprintf(stderr,"Error: XOpenDisplay() failed.\n");
-    return -1;
+    return 1;
   }
 
   /* does the server know about OpenGL & GLX? */
 #ifndef MESA
   if(!XQueryExtension(dpy, "GLX", &dontcare, &dontcare, &dontcare)) {
     fprintf(stderr,"This system doesn't appear to support OpenGL\n");
-    return -1;
+    return 1;
   }
+#else
+  (void) dontcare;
 #endif
 
   /* find the glx version */
@@ -57,7 +60,7 @@ int main(int argc, char **argv)
     printf("GLX Version: %d.%d\n", major, minor);
   else {
     fprintf(stderr, "Error: glXQueryVersion() failed.\n");
-    return -1;
+    return 1;
   }
 
   /* get screen number */
@@ -91,7 +94,7 @@ int main(int argc, char **argv)
 	   string);
   else {
     fprintf(stderr, "Error: glXQueryExtensionsString() failed.\n");
-    return -1;
+    return 1;
   }
 
   if (minor>0 || major>1) {
@@ -109,9 +112,9 @@ int main(int argc, char **argv)
    /* get any valid OpenGL visual */
    if (!(vis = glXChooseVisual(dpy, screen_num, visual_request0)))  {
       if (!(vis = glXChooseVisual(dpy, screen_num, visual_request1)))  {
-     fprintf(stderr,"Error: glXChooseVisual() failed.\n");
-     return -1;
-     }
+         fprintf(stderr,"Error: glXChooseVisual() failed.\n");
+         return 1;
+      }
    }
 
    /* get context */
@@ -143,7 +146,7 @@ int main(int argc, char **argv)
 #endif
   else {
     fprintf(stderr, "Error: glGetString(GL_VERSION) failed.\n");
-    return -1;
+    return 1;
   }
 
   string = (char *) glGetString(GL_EXTENSIONS);
@@ -156,7 +159,7 @@ int main(int argc, char **argv)
 #endif
   else {
     fprintf(stderr, "Error: glGetString(GL_EXTENSIONS) failed.\n");
-    return -1;
+    return 1;
   }
 
   string = (char *) glGetString(GL_RENDERER);
@@ -169,7 +172,7 @@ int main(int argc, char **argv)
 #endif
   else {
     fprintf(stderr, "Error: glGetString(GL_RENDERER) failed.\n");
-    return -1;
+    return 1;
   }
 
 /*
@@ -195,7 +198,7 @@ int main(int argc, char **argv)
     printf("GLU Version: %s\n", string);
   else {
     fprintf(stderr, "Error: gluGetString(GLU_VERSION) failed.\n");
-    return -1;
+    return 1;
   }
   
   if(minor > 0 || major > 1)
@@ -207,9 +210,8 @@ int main(int argc, char **argv)
     printf("GLU Extensions: %s\n", string);
   else {
     fprintf(stderr, "Error: gluGetString(GLU_EXTENSIONS) failed.\n");
-    return -1;
+    return 1;
   }
-
 
 #endif
   return 0;

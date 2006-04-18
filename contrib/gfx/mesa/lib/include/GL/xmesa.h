@@ -2,37 +2,26 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:29  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 1.1  1998/02/13 03:17:32  brianp
- * Initial revision
- *
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
@@ -84,8 +73,13 @@ extern "C" {
 #endif
 
 
+#ifdef XFree86Server
+#include "xmesa_xf86.h"
+#else
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include "xmesa_x.h"
+#endif
 #include "GL/gl.h"
 
 #ifdef AMIWIN
@@ -95,7 +89,7 @@ extern struct Library *XLibBase;
 
 
 #define XMESA_MAJOR_VERSION 3
-#define XMESA_MINOR_VERSION 0
+#define XMESA_MINOR_VERSION 4
 
 
 
@@ -122,7 +116,6 @@ typedef struct xmesa_buffer *XMesaBuffer;
 
 
 
-
 /*
  * Create a new X/Mesa visual.
  * Input:  display - X11 display
@@ -133,15 +126,21 @@ typedef struct xmesa_buffer *XMesaBuffer;
  *         db_flag - GL_TRUE = double-buffered,
  *                   GL_FALSE = single buffered
  *         stereo_flag - stereo visual?
- *         depth_size - requested bits/depth values, or zero
- *         stencil_size - requested bits/stencil values, or zero
- *         accum_size - requested bits/component values, or zero
  *         ximage_flag - GL_TRUE = use an XImage for back buffer,
  *                       GL_FALSE = use an off-screen pixmap for back buffer
+ *         depth_size - requested bits/depth values, or zero
+ *         stencil_size - requested bits/stencil values, or zero
+ *         accum_red_size - requested bits/red accum values, or zero
+ *         accum_green_size - requested bits/green accum values, or zero
+ *         accum_blue_size - requested bits/blue accum values, or zero
+ *         accum_alpha_size - requested bits/alpha accum values, or zero
+ *         num_samples - number of samples/pixel if multisampling, or zero
+ *         level - visual level, usually 0
+ *         visualCaveat - ala the GLX extension, usually GLX_NONE_EXT
  * Return;  a new XMesaVisual or 0 if error.
  */
-extern XMesaVisual XMesaCreateVisual( Display *display,
-                                      XVisualInfo *visinfo,
+extern XMesaVisual XMesaCreateVisual( XMesaDisplay *display,
+                                      XMesaVisualInfo visinfo,
                                       GLboolean rgb_flag,
                                       GLboolean alpha_flag,
                                       GLboolean db_flag,
@@ -149,8 +148,13 @@ extern XMesaVisual XMesaCreateVisual( Display *display,
                                       GLboolean ximage_flag,
                                       GLint depth_size,
                                       GLint stencil_size,
-                                      GLint accum_size,
-                                      GLint level );
+                                      GLint accum_red_size,
+                                      GLint accum_green_size,
+                                      GLint accum_blue_size,
+                                      GLint accum_alpha_size,
+                                      GLint num_samples,
+                                      GLint level,
+                                      GLint visualCaveat );
 
 /*
  * Destroy an XMesaVisual, but not the associated XVisualInfo.
@@ -167,8 +171,8 @@ extern void XMesaDestroyVisual( XMesaVisual v );
  *                      lists or NULL if no sharing is wanted.
  * Return:  an XMesaContext or NULL if error.
  */
-extern XMesaContext XMesaCreateContext( XMesaVisual visual,
-                                        XMesaContext share_list );
+extern XMesaContext XMesaCreateContext( XMesaVisual v,
+					XMesaContext share_list );
 
 
 /*
@@ -180,14 +184,15 @@ extern void XMesaDestroyContext( XMesaContext c );
 /*
  * Create an XMesaBuffer from an X window.
  */
-extern XMesaBuffer XMesaCreateWindowBuffer( XMesaVisual v, Window w );
+extern XMesaBuffer XMesaCreateWindowBuffer( XMesaVisual v, XMesaWindow w );
 
 
 /*
  * Create an XMesaBuffer from an X pixmap.
  */
-extern XMesaBuffer XMesaCreatePixmapBuffer( XMesaVisual v, Pixmap p,
-                                            Colormap c );
+extern XMesaBuffer XMesaCreatePixmapBuffer( XMesaVisual v,
+					    XMesaPixmap p,
+					    XMesaColormap cmap );
 
 
 /*
@@ -201,14 +206,32 @@ extern void XMesaDestroyBuffer( XMesaBuffer b );
  *
  * New in Mesa 2.3.
  */
-extern XMesaBuffer XMesaFindBuffer( Display *dpy, Drawable d );
+extern XMesaBuffer XMesaFindBuffer( XMesaDisplay *dpy,
+				    XMesaDrawable d );
 
 
 
 /*
  * Bind a buffer to a context and make the context the current one.
  */
-extern GLboolean XMesaMakeCurrent( XMesaContext c, XMesaBuffer b );
+extern GLboolean XMesaMakeCurrent( XMesaContext c,
+				   XMesaBuffer b );
+
+
+/*
+ * Bind two buffers (read and draw) to a context and make the
+ * context the current one.
+ * New in Mesa 3.3
+ */
+extern GLboolean XMesaMakeCurrent2( XMesaContext c,
+                                    XMesaBuffer drawBuffer,
+                                    XMesaBuffer readBuffer );
+
+
+/*
+ * Unbind the current context from its buffer.
+ */
+extern GLboolean XMesaUnbindContext( XMesaContext c );
 
 
 /*
@@ -218,9 +241,16 @@ extern XMesaContext XMesaGetCurrentContext( void );
 
 
 /*
- * Return handle to the current buffer.
+ * Return handle to the current (draw) buffer.
  */
 extern XMesaBuffer XMesaGetCurrentBuffer( void );
+
+
+/*
+ * Return handle to the current read buffer.
+ * New in Mesa 3.3
+ */
+extern XMesaBuffer XMesaGetCurrentReadBuffer( void );
 
 
 /*
@@ -236,7 +266,10 @@ extern void XMesaSwapBuffers( XMesaBuffer b );
  * New in Mesa 2.6
  */
 extern void XMesaCopySubBuffer( XMesaBuffer b,
-                                int x, int y, int width, int height );
+				int x,
+				int y,
+				int width,
+				int height );
 
 
 /*
@@ -250,7 +283,8 @@ extern void XMesaCopySubBuffer( XMesaBuffer b,
  *          GL_FALSE = context is single buffered
  */
 extern GLboolean XMesaGetBackBuffer( XMesaBuffer b,
-                                     Pixmap *pixmap, XImage **ximage );
+				     XMesaPixmap *pixmap,
+				     XMesaImage **ximage );
 
 
 
@@ -265,8 +299,10 @@ extern GLboolean XMesaGetBackBuffer( XMesaBuffer b,
  * New in Mesa 2.4.
  */
 extern GLboolean XMesaGetDepthBuffer( XMesaBuffer b,
-                                      GLint *width, GLint *height,
-                                      GLint *bytesPerValue, void **buffer );
+				      GLint *width,
+				      GLint *height,
+				      GLint *bytesPerValue,
+				      void **buffer );
 
 
 
@@ -304,9 +340,13 @@ extern void XMesaGarbageCollect( void );
  *
  * New in Mesa 2.3.
  */
-extern unsigned long XMesaDitherColor( XMesaContext c, GLint x, GLint y,
-                                       GLfloat red, GLfloat green,
-                                       GLfloat blue, GLfloat alpha );
+extern unsigned long XMesaDitherColor( XMesaContext xmesa,
+				       GLint x,
+				       GLint y,
+				       GLfloat red,
+				       GLfloat green,
+				       GLfloat blue,
+				       GLfloat alpha );
 
 
 

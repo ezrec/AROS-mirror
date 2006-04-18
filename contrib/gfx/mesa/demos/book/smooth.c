@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 1993, Silicon Graphics, Inc.
+ * Copyright (c) 1993-1997, Silicon Graphics, Inc.
  * ALL RIGHTS RESERVED 
  * Permission to use, copy, modify, and distribute this software for 
  * any purpose and without fee is hereby granted, provided that the above
@@ -32,8 +32,9 @@
  * United States.  Contractor/manufacturer is Silicon Graphics,
  * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
  *
- * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
+ * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
  */
+
 /*
  * smooth.c
  * This program demonstrates smooth shading.
@@ -44,41 +45,41 @@
 #include <stdlib.h>
 #include "glaux.h"
 
-/*  GL_SMOOTH is actually the default shading model.  */
-void myinit (void)
+void init(void) 
 {
-    glShadeModel (GL_SMOOTH);
+   glClearColor (0.0, 0.0, 0.0, 0.0);
+   glShadeModel (GL_SMOOTH);
 }
 
 void triangle(void)
 {
-    glBegin (GL_TRIANGLES);
-    glColor3f (1.0, 0.0, 0.0);
-    glVertex2f (5.0, 5.0);
-    glColor3f (0.0, 1.0, 0.0);
-    glVertex2f (25.0, 5.0);
-    glColor3f (0.0, 0.0, 1.0);
-    glVertex2f (5.0, 25.0);
-    glEnd ();
+   glBegin (GL_TRIANGLES);
+   glColor3f (1.0, 0.0, 0.0);
+   glVertex2f (5.0, 5.0);
+   glColor3f (0.0, 1.0, 0.0);
+   glVertex2f (25.0, 5.0);
+   glColor3f (0.0, 0.0, 1.0);
+   glVertex2f (5.0, 25.0);
+   glEnd();
 }
 
 void display(void)
 {
-    glClear (GL_COLOR_BUFFER_BIT);
-    triangle ();
-    glFlush ();
+   glClear (GL_COLOR_BUFFER_BIT);
+   triangle ();
+   glFlush ();
 }
 
-void myReshape(int w, int h)
+void reshape (int w, int h)
 {
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    if (w <= h) 
-	gluOrtho2D (0.0, 30.0, 0.0, 30.0 * (GLfloat) h/(GLfloat) w);
-    else 
-	gluOrtho2D (0.0, 30.0 * (GLfloat) w/(GLfloat) h, 0.0, 30.0);
-    glMatrixMode(GL_MODELVIEW);
+   glViewport (0, 0, (GLsizei) w, (GLsizei) h);
+   glMatrixMode (GL_PROJECTION);
+   glLoadIdentity ();
+   if (w <= h)
+      gluOrtho2D (0.0, 30.0, 0.0, 30.0 * (GLfloat) h/(GLfloat) w);
+   else
+      gluOrtho2D (0.0, 30.0 * (GLfloat) w/(GLfloat) h, 0.0, 30.0);
+   glMatrixMode(GL_MODELVIEW);
 }
 
 /*  Main Loop
@@ -91,8 +92,8 @@ int main(int argc, char** argv)
     auxInitPosition (0, 0, 500, 500);
     if (!auxInitWindow (argv[0]))
        auxQuit();
-    myinit();
-    auxReshapeFunc (myReshape);
+   init ();
+    auxReshapeFunc (reshape);
     auxMainLoop(display);
-    return 0;
+   return 0;
 }

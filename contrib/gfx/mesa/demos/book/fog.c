@@ -1,13 +1,16 @@
-/*
+
+/* Copyright (c) Mark J. Kilgard, 1994. */
+
+/**
  * (c) Copyright 1993, Silicon Graphics, Inc.
- * ALL RIGHTS RESERVED 
- * Permission to use, copy, modify, and distribute this software for 
+ * ALL RIGHTS RESERVED
+ * Permission to use, copy, modify, and distribute this software for
  * any purpose and without fee is hereby granted, provided that the above
  * copyright notice appear in all copies and that both the copyright notice
- * and this permission notice appear in supporting documentation, and that 
+ * and this permission notice appear in supporting documentation, and that
  * the name of Silicon Graphics, Inc. not be used in advertising
  * or publicity pertaining to distribution of the software without specific,
- * written prior permission. 
+ * written prior permission.
  *
  * THE MATERIAL EMBODIED ON THIS SOFTWARE IS PROVIDED TO YOU "AS-IS"
  * AND WITHOUT WARRANTY OF ANY KIND, EXPRESS, IMPLIED OR OTHERWISE,
@@ -21,8 +24,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH LOSS, HOWEVER CAUSED AND ON
  * ANY THEORY OF LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE
  * POSSESSION, USE OR PERFORMANCE OF THIS SOFTWARE.
- * 
- * US Government Users Restricted Rights 
+ *
+ * US Government Users Restricted Rights
  * Use, duplication, or disclosure by the Government is subject to
  * restrictions set forth in FAR 52.227.19(c)(2) or subparagraph
  * (c)(1)(ii) of the Rights in Technical Data and Computer Software
@@ -36,11 +39,11 @@
  */
 /*
  *  fog.c
- *  This program draws 5 red teapots, each at a different 
- *  z distance from the eye, in different types of fog.  
- *  Pressing the left mouse button chooses between 3 types of 
- *  fog:  exponential, exponential squared, and linear.  
- *  In this program, there is a fixed density value, as well 
+ *  This program draws 5 red teapots, each at a different
+ *  z distance from the eye, in different types of fog.
+ *  Pressing the left mouse button chooses between 3 types of
+ *  fog:  exponential, exponential squared, and linear.
+ *  In this program, there is a fixed density value, as well
  *  as fixed start and end values for the linear fog.
  */
 #include <GL/gl.h>
@@ -70,13 +73,16 @@ void cycleFog (AUX_EVENTREC *event)
     glFogi (GL_FOG_MODE, fogMode);
 }
 
-/*  Initialize z-buffer, projection matrix, light source, 
+/*  Initialize z-buffer, projection matrix, light source,
  *  and lighting model.  Do not specify a material property here.
  */
-void myinit(void)
+void
+myinit(void)
 {
-    GLfloat position[] = { 0.0, 3.0, 3.0, 0.0 };
-    GLfloat local_view[] = { 0.0 };
+    GLfloat position[] =
+    {0.0, 3.0, 3.0, 0.0};
+    GLfloat local_view[] =
+    {0.0};
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -84,72 +90,82 @@ void myinit(void)
     glLightfv(GL_LIGHT0, GL_POSITION, position);
     glLightModelfv(GL_LIGHT_MODEL_LOCAL_VIEWER, local_view);
 
-    glFrontFace (GL_CW);
+    glFrontFace(GL_CW);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_AUTO_NORMAL);
     glEnable(GL_NORMALIZE);
     glEnable(GL_FOG);
     {
-	GLfloat fogColor[4] = {0.5, 0.5, 0.5, 1.0};
+        GLfloat fogColor[4] =
+        {0.5, 0.5, 0.5, 1.0};
 
-	fogMode = GL_EXP;
-	glFogi (GL_FOG_MODE, fogMode);
-	glFogfv (GL_FOG_COLOR, fogColor);
-	glFogf (GL_FOG_DENSITY, 0.35);
-	glHint (GL_FOG_HINT, GL_DONT_CARE);
-	glClearColor(0.5, 0.5, 0.5, 1.0);
+        fogMode = GL_EXP;
+        glFogi(GL_FOG_MODE, fogMode);
+        glFogfv(GL_FOG_COLOR, fogColor);
+        glFogf(GL_FOG_DENSITY, 0.35);
+        glHint(GL_FOG_HINT, GL_DONT_CARE);
+        glClearColor(0.5, 0.5, 0.5, 1.0);
     }
 }
 
-void renderRedTeapot (GLfloat x, GLfloat y, GLfloat z)
+void
+renderRedTeapot(GLfloat x, GLfloat y, GLfloat z)
 {
     float mat[4];
 
     glPushMatrix();
-    glTranslatef (x, y, z);
-    mat[0] = 0.1745; mat[1] = 0.01175; mat[2] = 0.01175; mat[3] = 1.0;	
-    glMaterialfv (GL_FRONT, GL_AMBIENT, mat);
-    mat[0] = 0.61424; mat[1] = 0.04136; mat[2] = 0.04136;	
-    glMaterialfv (GL_FRONT, GL_DIFFUSE, mat);
-    mat[0] = 0.727811; mat[1] = 0.626959; mat[2] = 0.626959;
-    glMaterialfv (GL_FRONT, GL_SPECULAR, mat);
-    glMaterialf (GL_FRONT, GL_SHININESS, 0.6*128.0);
-    glColor3f(1, 1, 1);
+    glTranslatef(x, y, z);
+    mat[0] = 0.1745;
+    mat[1] = 0.01175;
+    mat[2] = 0.01175;
+    mat[3] = 1.0;
+    glMaterialfv(GL_FRONT, GL_AMBIENT, mat);
+    mat[0] = 0.61424;
+    mat[1] = 0.04136;
+    mat[2] = 0.04136;
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat);
+    mat[0] = 0.727811;
+    mat[1] = 0.626959;
+    mat[2] = 0.626959;
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat);
+    glMaterialf(GL_FRONT, GL_SHININESS, 0.6 * 128.0);
     auxSolidTeapot(1.0);
     glPopMatrix();
 }
 
 /*  display() draws 5 teapots at different z positions.
  */
-void display(void)
+void
+display(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    renderRedTeapot (-4.0, -0.5, -1.0);
-    renderRedTeapot (-2.0, -0.5, -2.0);
-    renderRedTeapot (0.0, -0.5, -3.0);
-    renderRedTeapot (2.0, -0.5, -4.0);
-    renderRedTeapot (4.0, -0.5, -5.0);
+    renderRedTeapot(-4.0, -0.5, -1.0);
+    renderRedTeapot(-2.0, -0.5, -2.0);
+    renderRedTeapot(0.0, -0.5, -3.0);
+    renderRedTeapot(2.0, -0.5, -4.0);
+    renderRedTeapot(4.0, -0.5, -5.0);
     glFlush();
 }
 
-void myReshape(int w, int h)
+void
+myReshape(int w, int h)
 {
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    if (w <= (h*3))
-	glOrtho (-6.0, 6.0, -2.0*((GLfloat) h*3)/(GLfloat) w, 
-	    2.0*((GLfloat) h*3)/(GLfloat) w, 0.0, 10.0);
+    if (w <= (h * 3))
+        glOrtho(-6.0, 6.0, -2.0 * ((GLfloat) h * 3) / (GLfloat) w,
+            2.0 * ((GLfloat) h * 3) / (GLfloat) w, 0.0, 10.0);
     else
-	glOrtho (-6.0*(GLfloat) w/((GLfloat) h*3), 
-	    6.0*(GLfloat) w/((GLfloat) h*3), -2.0, 2.0, 0.0, 10.0);
+        glOrtho(-6.0 * (GLfloat) w / ((GLfloat) h * 3),
+            6.0 * (GLfloat) w / ((GLfloat) h * 3), -2.0, 2.0, 0.0, 10.0);
     glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity ();
+    glLoadIdentity();
 }
 
 /*  Main Loop
- *  Open window with initial window size, title bar, 
+ *  Open window with initial window size, title bar,
  *  RGBA display mode, depth buffer, and handle input events.
  */
 int main(int argc, char** argv)
@@ -162,6 +178,5 @@ int main(int argc, char** argv)
     myinit();
     auxReshapeFunc (myReshape);
     auxMainLoop(display);
-    return 0;
+    return 0;             /* ANSI C requires main to return int. */
 }
-

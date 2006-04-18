@@ -282,7 +282,6 @@ void main(int argc, char **argv)
     type = TK_DEPTH;
     type |= (rgb) ? TK_RGB : TK_INDEX;
     type |= (doubleBuffer) ? TK_DOUBLE : TK_SINGLE;
-    type |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(type);
 
     if (tkInitWindow("Fog Test") == GL_FALSE) {

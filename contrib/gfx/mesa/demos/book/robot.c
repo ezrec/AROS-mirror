@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 1993, Silicon Graphics, Inc.
+ * Copyright (c) 1993-1997, Silicon Graphics, Inc.
  * ALL RIGHTS RESERVED 
  * Permission to use, copy, modify, and distribute this software for 
  * any purpose and without fee is hereby granted, provided that the above
@@ -32,14 +32,15 @@
  * United States.  Contractor/manufacturer is Silicon Graphics,
  * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
  *
- * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
+ * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
  */
+
 /*
- *  robot.c
- *  This program shows how to composite modeling transformations
- *  to draw translated and rotated hierarchical models.
- *  Interaction:  pressing the arrow keys alters the rotation 
- *  of robot arm.
+ * robot.c
+ * This program shows how to composite modeling transformations
+ * to draw translated and rotated hierarchical models.
+ * Interaction:  pressing the s and e keys (shoulder and elbow)
+ * alters the rotation of the robot arm.
  */
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -47,6 +48,12 @@
 #include "glaux.h"
 
 static int shoulder = 0, elbow = 0;
+
+void init(void) 
+{
+  glClearColor (0.0, 0.0, 0.0, 0.0);
+  glShadeModel (GL_FLAT);
+}
 
 void elbowAdd (void)
 {
@@ -70,45 +77,44 @@ void shoulderSubtract (void)
 
 void display(void)
 {
-
-    glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f (1.0, 1.0, 1.0);
-
-    glPushMatrix();
-    glTranslatef (-1.0, 0.0, 0.0);
-    glRotatef ((GLfloat) shoulder, 0.0, 0.0, 1.0);
-    glTranslatef (1.0, 0.0, 0.0);
+   glClear (GL_COLOR_BUFFER_BIT);
+   glPushMatrix();
+   glTranslatef (-1.0, 0.0, 0.0);
+   glRotatef ((GLfloat) shoulder, 0.0, 0.0, 1.0);
+   glTranslatef (1.0, 0.0, 0.0);
+   glPushMatrix();
+   glScalef (2.0, 0.4, 1.0);
     auxWireBox(2.0, 0.4, 1.0);
+   glPopMatrix();
 
-    glTranslatef (1.0, 0.0, 0.0);
-    glRotatef ((GLfloat) elbow, 0.0, 0.0, 1.0);
-    glTranslatef (1.0, 0.0, 0.0);
+   glTranslatef (1.0, 0.0, 0.0);
+   glRotatef ((GLfloat) elbow, 0.0, 0.0, 1.0);
+   glTranslatef (1.0, 0.0, 0.0);
+   glPushMatrix();
+   glScalef (2.0, 0.4, 1.0);
     auxWireBox(2.0, 0.4, 1.0);
+   glPopMatrix();
 
-    glPopMatrix();
+   glPopMatrix();
     glFlush();
 }
 
-void myinit (void) 
+void reshape (int w, int h)
 {
-    glShadeModel (GL_FLAT);
-}
-
-void myReshape(int w, int h)
-{
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(65.0, (GLfloat) w/(GLfloat) h, 1.0, 20.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef (0.0, 0.0, -5.0);  /* viewing transform  */
+   glViewport (0, 0, (GLsizei) w, (GLsizei) h); 
+   glMatrixMode (GL_PROJECTION);
+   glLoadIdentity ();
+   gluPerspective(65.0, (GLfloat) w/(GLfloat) h, 1.0, 20.0);
+   glMatrixMode(GL_MODELVIEW);
+   glLoadIdentity();
+   glTranslatef (0.0, 0.0, -5.0);
 }
 
 /*  Main Loop
  *  Open window with initial window size, title bar, 
  *  RGBA display mode, and handle input events.
  */
+
 int main(int argc, char** argv)
 {
     auxInitDisplayMode (AUX_SINGLE | AUX_RGB | AUX_DIRECT);
@@ -116,20 +122,13 @@ int main(int argc, char** argv)
     if (!auxInitWindow (argv[0]))
        auxQuit();
 
-    myinit ();
+   init ();
 
     auxKeyFunc (AUX_LEFT, shoulderSubtract);
     auxKeyFunc (AUX_RIGHT, shoulderAdd);
     auxKeyFunc (AUX_UP, elbowAdd);
     auxKeyFunc (AUX_DOWN, elbowSubtract);
-    auxReshapeFunc (myReshape);
+    auxReshapeFunc (reshape);
     auxMainLoop(display);
-    return 0;
+   return 0;
 }
-
-
-
-
-
-
-

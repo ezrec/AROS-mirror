@@ -38,7 +38,6 @@
 #define	POINT 3
 
 
-GLenum directRender;
 GLint windW, windH;
 
 GLuint selectBuf[MAXSELECT];
@@ -419,24 +418,10 @@ static GLenum Key(int key, GLenum mask)
 
 static GLenum Args(int argc, char **argv)
 {
-    GLint i;
-
-    directRender = GL_TRUE;
-
-    for (i = 1; i < argc; i++) {
-	if (strcmp(argv[i], "-dr") == 0) {
-	    directRender = GL_TRUE;
-	} else if (strcmp(argv[i], "-ir") == 0) {
-	    directRender = GL_FALSE;
-	} else {
-	    printf("%s (Bad option).\n", argv[i]);
-	    return GL_FALSE;
-	}
-    }
     return GL_TRUE;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     GLenum type;
 
@@ -449,7 +434,6 @@ void main(int argc, char **argv)
     tkInitPosition(0, 0, windW, windH);
 
     type = TK_RGB | TK_SINGLE;
-    type |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(type);
 
     if (tkInitWindow("Select Test") == GL_FALSE) {
@@ -464,4 +448,5 @@ void main(int argc, char **argv)
     tkMouseDownFunc(Mouse);
     tkDisplayFunc(Draw);
     tkExec();
+	return 0;
 }

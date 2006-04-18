@@ -60,7 +60,7 @@ typedef struct _starRec {
 } starRec;
 
 
-GLenum doubleBuffer, directRender;
+GLenum doubleBuffer;
 GLint windW, windH;
 
 GLenum flag = NORMAL, overlayInit = GL_FALSE;
@@ -230,20 +230,20 @@ void Reshape(int width, int height)
     windH = (GLint)height;
 
     if (tkSetWindowLevel(TK_OVERLAY) == GL_TRUE) {
-	glViewport(0, 0, windW, windH);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(-0.5, windW+0.5, -0.5, windH+0.5);
-	glMatrixMode(GL_MODELVIEW);
-	overlayInit = GL_FALSE;
+    glViewport(0, 0, windW, windH);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-0.5, windW+0.5, -0.5, windH+0.5);
+    glMatrixMode(GL_MODELVIEW);
+    overlayInit = GL_FALSE;
     }
 
     if (tkSetWindowLevel(TK_RGB) == GL_TRUE) {
-	glViewport(0, 0, windW, windH);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(-0.5, windW+0.5, -0.5, windH+0.5);
-	glMatrixMode(GL_MODELVIEW);
+    glViewport(0, 0, windW, windH);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-0.5, windW+0.5, -0.5, windH+0.5);
+    glMatrixMode(GL_MODELVIEW);
     }
 }
 
@@ -270,33 +270,32 @@ void Idle(void)
 
     if (overlayInit == GL_FALSE) {
 	if (tkSetWindowLevel(TK_OVERLAY) == GL_TRUE) {
-	    glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 /*	    glColor3f(1.0, 0.0, 0.0);*/
 
-            glIndexf( 2.0 );
-	    glBegin(GL_POLYGON);
-		glVertex2i(windW/4-10, windH/4-10);
-		glVertex2i(windW/2-10, windH/4-10);
-		glVertex2i(windW/2-10, windH/2-10);
-		glVertex2i(windW/4-10, windH/2-10);
-	    glEnd();
+	glIndexf( 2.0 );
+	glBegin(GL_POLYGON);
+	    glVertex2i(windW/4-10, windH/4-10);
+	    glVertex2i(windW/2-10, windH/4-10);
+	    glVertex2i(windW/2-10, windH/2-10);
+	    glVertex2i(windW/4-10, windH/2-10);
+	glEnd();
 
-            glIndexf( 0.0 );
-	    glBegin(GL_POLYGON);
-		glVertex2i(windW/4, windH/4);
-		glVertex2i(windW/2, windH/4);
-		glVertex2i(windW/2, windH/2);
-		glVertex2i(windW/4, windH/2);
-	    glEnd();
+        glIndexf( 0.0 );
+	glBegin(GL_POLYGON);
+	    glVertex2i(windW/4, windH/4);
+	    glVertex2i(windW/2, windH/4);
+	    glVertex2i(windW/2, windH/2);
+	    glVertex2i(windW/4, windH/2);
+	glEnd();
 
-            glIndexf( 1.0 );
-	    glBegin(GL_POLYGON);
-		glVertex2i(windW/4+10, windH/4+10);
-		glVertex2i(windW/2+10, windH/4+10);
-		glVertex2i(windW/2+10, windH/2+10);
-		glVertex2i(windW/4+10, windH/2+10);
-	    glEnd();
-
+        glIndexf( 1.0 );
+	glBegin(GL_POLYGON);
+	    glVertex2i(windW/4+10, windH/4+10);
+	    glVertex2i(windW/2+10, windH/4+10);
+	    glVertex2i(windW/2+10, windH/2+10);
+	    glVertex2i(windW/4+10, windH/2+10);
+	glEnd();
 
 	    if (tkSetWindowLevel(TK_RGB) == GL_FALSE) {
 		printf("Can't switch to main window!\n");
@@ -333,24 +332,19 @@ static GLenum Args(int argc, char **argv)
 {
     GLint i;
 
-    doubleBuffer = GL_FALSE;
-    directRender = GL_TRUE;
+    doubleBuffer = GL_TRUE;
 
     for (i = 1; i < argc; i++) {
 	if (strcmp(argv[i], "-sb") == 0) {
 	    doubleBuffer = GL_FALSE;
 	} else if (strcmp(argv[i], "-db") == 0) {
 	    doubleBuffer = GL_TRUE;
-	} else if (strcmp(argv[i], "-dr") == 0) {
-	    directRender = GL_TRUE;
-	} else if (strcmp(argv[i], "-ir") == 0) {
-	    directRender = GL_FALSE;
 	}
     }
     return GL_TRUE;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     GLenum type;
 
@@ -364,7 +358,6 @@ void main(int argc, char **argv)
 
     type = TK_OVERLAY | TK_RGB;
     type |= (doubleBuffer) ? TK_DOUBLE : TK_SINGLE;
-    type |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(type);
 
     if (tkInitWindow("Overlay Test") == GL_FALSE) {
@@ -378,4 +371,5 @@ void main(int argc, char **argv)
     tkKeyDownFunc(Key);
     tkIdleFunc(Idle);
     tkExec();
+	return 0;
 }

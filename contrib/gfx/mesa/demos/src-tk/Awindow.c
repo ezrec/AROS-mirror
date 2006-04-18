@@ -121,8 +121,7 @@ Exposefunc
 #endif
 
 #include "gltk.h"
-#include "../../lib/include/GL/AROSMesa.h"
-
+#include <GL/AROSMesa.h>
 
 
 #define static

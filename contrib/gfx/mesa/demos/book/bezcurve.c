@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 1993, Silicon Graphics, Inc.
+ * Copyright (c) 1993-1997, Silicon Graphics, Inc.
  * ALL RIGHTS RESERVED 
  * Permission to use, copy, modify, and distribute this software for 
  * any purpose and without fee is hereby granted, provided that the above
@@ -32,8 +32,9 @@
  * United States.  Contractor/manufacturer is Silicon Graphics,
  * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
  *
- * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
+ * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
  */
+
 /*  bezcurve.c			
  *  This program uses evaluators to draw a Bezier curve.
  */
@@ -46,47 +47,47 @@ GLfloat ctrlpoints[4][3] = {
 	{ -4.0, -4.0, 0.0}, { -2.0, 4.0, 0.0}, 
 	{2.0, -4.0, 0.0}, {4.0, 4.0, 0.0}};
 
-void myinit(void)
+void init(void)
 {
-    glClearColor(0.0, 0.0, 0.0, 1.0);
-    glMap1f(GL_MAP1_VERTEX_3, 0.0, 1.0, 3, 4, &ctrlpoints[0][0]);
-    glEnable(GL_MAP1_VERTEX_3);
-    glShadeModel(GL_FLAT);
+   glClearColor(0.0, 0.0, 0.0, 0.0);
+   glShadeModel(GL_FLAT);
+   glMap1f(GL_MAP1_VERTEX_3, 0.0, 1.0, 3, 4, &ctrlpoints[0][0]);
+   glEnable(GL_MAP1_VERTEX_3);
 }
 
 void display(void)
 {
-    int i;
+   int i;
 
-    glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f(1.0, 1.0, 1.0);
-    glBegin(GL_LINE_STRIP);
-	for (i = 0; i <= 30; i++) 
-	    glEvalCoord1f((GLfloat) i/30.0);
-    glEnd();
-    /* The following code displays the control points as dots. */
-    glPointSize(5.0);
-    glColor3f(1.0, 1.0, 0.0);
-    glBegin(GL_POINTS);
-	for (i = 0; i < 4; i++) 
-	    glVertex3fv(&ctrlpoints[i][0]);
-    glEnd();
-    glFlush();
+   glClear(GL_COLOR_BUFFER_BIT);
+   glColor3f(1.0, 1.0, 1.0);
+   glBegin(GL_LINE_STRIP);
+      for (i = 0; i <= 30; i++) 
+         glEvalCoord1f((GLfloat) i/30.0);
+   glEnd();
+   /* The following code displays the control points as dots. */
+   glPointSize(5.0);
+   glColor3f(1.0, 1.0, 0.0);
+   glBegin(GL_POINTS);
+      for (i = 0; i < 4; i++) 
+         glVertex3fv(&ctrlpoints[i][0]);
+   glEnd();
+   glFlush();
 }
 
-void myReshape(int w, int h)
+void reshape(int w, int h)
 {
-    glViewport(0, 0, w, h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    if (w <= h)
-	glOrtho(-5.0, 5.0, -5.0*(GLfloat)h/(GLfloat)w, 
-	    5.0*(GLfloat)h/(GLfloat)w, -5.0, 5.0);
-    else
-	glOrtho(-5.0*(GLfloat)w/(GLfloat)h, 
-	    5.0*(GLfloat)w/(GLfloat)h, -5.0, 5.0, -5.0, 5.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+   glViewport(0, 0, (GLsizei) w, (GLsizei) h);
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+   if (w <= h)
+      glOrtho(-5.0, 5.0, -5.0*(GLfloat)h/(GLfloat)w, 
+               5.0*(GLfloat)h/(GLfloat)w, -5.0, 5.0);
+   else
+      glOrtho(-5.0*(GLfloat)w/(GLfloat)h, 
+               5.0*(GLfloat)w/(GLfloat)h, -5.0, 5.0, -5.0, 5.0);
+   glMatrixMode(GL_MODELVIEW);
+   glLoadIdentity();
 }
 
 int main(int argc, char** argv)
@@ -95,8 +96,8 @@ int main(int argc, char** argv)
     auxInitPosition (0, 0, 500, 500);
     if (!auxInitWindow (argv[0]))
        auxQuit();
-    myinit();
-    auxReshapeFunc (myReshape);
+   init ();
+    auxReshapeFunc (reshape);
     auxMainLoop(display);
-    return 0;
+   return 0;
 }

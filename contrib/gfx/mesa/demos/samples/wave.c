@@ -36,7 +36,7 @@
 #define GETFACET(frame, x, y) (&(theMesh.facets[frame*theMesh.numFacets+(x)+(y)*theMesh.widthX]))
 
 
-GLenum rgb, doubleBuffer, directRender;
+GLenum rgb, doubleBuffer;
 
 GLint colorIndexes1[3];
 GLint colorIndexes2[3];
@@ -122,7 +122,7 @@ static void Animate(void)
 		    glColor3fv(facet->color);
 		} else {
 		    thisColor = facet->color;
-		    glMaterialfv(GL_FRONT_AND_BACK, GL_COLOR_INDEXES, 
+		    glMaterialfv(GL_FRONT_AND_BACK, GL_COLOR_INDEXES,
 				 facet->color);
 		}
 	    } else {
@@ -176,12 +176,12 @@ static void Animate(void)
     }
 }
 
-static void SetColorMap(void) 
+static void SetColorMap(void)
 {
     static float green[3] = {0.2, 1.0, 0.2};
     static float red[3] = {1.0, 0.2, 0.2};
-    float *color, percent;
-    GLint *indexes, entries, i, j;
+    float *color = 0, percent;
+    GLint *indexes = 0, entries, i, j;
 
     entries = tkGetColorMapSize();
 
@@ -354,7 +354,7 @@ static void InitMaterials(void)
     glLightModelfv(GL_LIGHT_MODEL_TWO_SIDE, lmodel_twoside);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    
+
     glMaterialfv(GL_FRONT, GL_SHININESS, front_mat_shininess);
     glMaterialfv(GL_FRONT, GL_SPECULAR, front_mat_specular);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, front_mat_diffuse);
@@ -388,7 +388,7 @@ static void Init(void)
     glClearColor(0.0, 0.0, 0.0, 0.0);
 
     glShadeModel(GL_FLAT);
-    
+
     glFrontFace(GL_CW);
 
     glEnable(GL_DEPTH_TEST);
@@ -511,8 +511,7 @@ static GLenum Args(int argc, char **argv)
     GLint i;
 
     rgb = GL_TRUE;
-    doubleBuffer = GL_FALSE;
-    directRender = GL_TRUE;
+    doubleBuffer = GL_TRUE;
     frames = 10;
     widthX = 10;
     widthY = 10;
@@ -528,10 +527,6 @@ static GLenum Args(int argc, char **argv)
 	    doubleBuffer = GL_FALSE;
 	} else if (strcmp(argv[i], "-db") == 0) {
 	    doubleBuffer = GL_TRUE;
-	} else if (strcmp(argv[i], "-dr") == 0) {
-	    directRender = GL_TRUE;
-	} else if (strcmp(argv[i], "-ir") == 0) {
-	    directRender = GL_FALSE;
 	} else if (strcmp(argv[i], "-grid") == 0) {
 	    if (i+2 >= argc || argv[i+1][0] == '-' || argv[i+2][0] == '-') {
 		printf("-grid (No numbers).\n");
@@ -569,7 +564,7 @@ static GLenum Args(int argc, char **argv)
     return GL_TRUE;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     GLenum type;
 
@@ -582,7 +577,6 @@ void main(int argc, char **argv)
     type = TK_DEPTH;
     type |= (rgb) ? TK_RGB : TK_INDEX;
     type |= (doubleBuffer) ? TK_DOUBLE : TK_SINGLE;
-    type |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(type);
 
     if (tkInitWindow("Wave Demo") == GL_FALSE) {
@@ -596,4 +590,5 @@ void main(int argc, char **argv)
     tkKeyDownFunc(Key);
     tkIdleFunc(Animate);
     tkExec();
+	return 0;
 }

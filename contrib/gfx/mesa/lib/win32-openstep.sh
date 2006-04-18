@@ -2,6 +2,5 @@
 # provided for OpenStep implementations under WIN32
 
 mkdir lib
-( cd src; make -f Makefile.OpenStep openstep )
-( cd src-glu; make -f Makefile.OpenStep openstep )
-( cd OpenStep/MesaView; make )
+( cd src; make openstep-win32 )
+( cd src-glu; make openstep-win32 )

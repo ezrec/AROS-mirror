@@ -2,8 +2,8 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
+ * Version:  3.3
+ * Copyright (C) 1995-2000  Brian Paul
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -19,22 +19,6 @@
  * License along with this library; if not, write to the Free
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:29  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.0  1998/02/20 05:07:24  brianp
- * initial rev
- *
- */
-
 
 
 /*
@@ -69,7 +53,7 @@
 
 
 #define SVGAMESA_MAJOR_VERSION 3
-#define SVGAMESA_MINOR_VERSION 0
+#define SVGAMESA_MINOR_VERSION 3
 
 
 #ifdef __cplusplus
@@ -91,16 +75,21 @@ typedef struct svgamesa_context *SVGAMesaContext;
 /*
  * doubleBuffer flag new in version 2.4
  */
+extern int SVGAMesaInit( int GraphMode );
+
+extern int SVGAMesaClose( void );
+
 extern SVGAMesaContext SVGAMesaCreateContext( GLboolean doubleBuffer );
 
 extern void SVGAMesaDestroyContext( SVGAMesaContext ctx );
 
 extern void SVGAMesaMakeCurrent( SVGAMesaContext ctx );
 
-extern SVGAMesaContext SVGAMesaGetCurrentContext( void );
-
 extern void SVGAMesaSwapBuffers( void );
 
+extern void SVGAMesaSetCI(int ndx, GLubyte red, GLubyte green, GLubyte blue);
+
+extern SVGAMesaContext SVGAMesaGetCurrentContext( void );
 
 #ifdef __cplusplus
 }

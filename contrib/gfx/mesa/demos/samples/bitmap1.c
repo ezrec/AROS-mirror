@@ -32,7 +32,7 @@
 #define OPENGL_HEIGHT 13
 
 
-GLenum rgb, doubleBuffer, directRender, windType;
+GLenum rgb, doubleBuffer, windType;
 
 float boxA[3] = {
     0, 0, 0
@@ -98,6 +98,7 @@ GLubyte logo_bits[] = {
    0xff, 0x66, 0x66, 
 };
 
+//#include "tkmap.c"
 
 static void Init(void)
 {
@@ -146,6 +147,7 @@ static void Draw(void)
     glPixelMapfv(GL_PIXEL_MAP_I_TO_A, 2, mapIA);
     glPixelTransferi(GL_MAP_COLOR, GL_TRUE);
     
+    TK_SETCOLOR(windType, TK_WHITE);
     glRasterPos3fv(boxA);
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 24);
     glPixelStorei(GL_UNPACK_SKIP_PIXELS, 8);
@@ -201,7 +203,6 @@ static GLenum Args(int argc, char **argv)
 
     rgb = GL_TRUE;
     doubleBuffer = GL_FALSE;
-    directRender = GL_TRUE;
 
     for (i = 1; i < argc; i++) {
 	if (strcmp(argv[i], "-ci") == 0) {
@@ -212,10 +213,6 @@ static GLenum Args(int argc, char **argv)
 	    doubleBuffer = GL_FALSE;
 	} else if (strcmp(argv[i], "-db") == 0) {
 	    doubleBuffer = GL_TRUE;
-	} else if (strcmp(argv[i], "-dr") == 0) {
-	    directRender = GL_TRUE;
-	} else if (strcmp(argv[i], "-ir") == 0) {
-	    directRender = GL_FALSE;
 	} else {
 	    printf("%s (Bad option).\n", argv[i]);
 	    return GL_FALSE;
@@ -224,7 +221,7 @@ static GLenum Args(int argc, char **argv)
     return GL_TRUE;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 
     if (Args(argc, argv) == GL_FALSE) {
@@ -235,7 +232,6 @@ void main(int argc, char **argv)
 
     windType = (rgb) ? TK_RGB : TK_INDEX;
     windType |= (doubleBuffer) ? TK_DOUBLE : TK_SINGLE;
-    windType |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(windType);
 
     if (tkInitWindow("Bitmap Test") == GL_FALSE) {
@@ -249,4 +245,5 @@ void main(int argc, char **argv)
     tkKeyDownFunc(Key);
     tkDisplayFunc(Draw);
     tkExec();
+	return 0;
 }

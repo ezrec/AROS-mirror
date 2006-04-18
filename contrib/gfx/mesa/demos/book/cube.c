@@ -1,5 +1,5 @@
 /*
- * (c) Copyright 1993, Silicon Graphics, Inc.
+ * Copyright (c) 1993-1997, Silicon Graphics, Inc.
  * ALL RIGHTS RESERVED 
  * Permission to use, copy, modify, and distribute this software for 
  * any purpose and without fee is hereby granted, provided that the above
@@ -32,46 +32,51 @@
  * United States.  Contractor/manufacturer is Silicon Graphics,
  * Inc., 2011 N.  Shoreline Blvd., Mountain View, CA 94039-7311.
  *
- * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
+ * OpenGL(R) is a registered trademark of Silicon Graphics, Inc.
  */
+
 /*
  *  cube.c
- *  Draws a 3-D cube, viewed with perspective, stretched 
- *  along the y-axis.
+ *  This program demonstrates a single modeling transformation,
+ *  glScalef() and a single viewing transformation, gluLookAt().
+ *  A wireframe cube is rendered.
  */
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <stdlib.h>
 #include "glaux.h"
 
+void init(void) 
+{
+   glClearColor (0.0, 0.0, 0.0, 0.0);
+   glShadeModel (GL_FLAT);
+}
+
 /*  Clear the screen.  Set the current color to white.
  *  Draw the wire frame cube.
  */
-void display (void)
+void display(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f (1.0, 1.0, 1.0);
-    glLoadIdentity ();	/*  clear the matrix	*/
-    glTranslatef (0.0, 0.0, -5.0);	/*  viewing transformation	*/
-    glScalef (1.0, 2.0, 1.0);	/*  modeling transformation	*/
+   glClear (GL_COLOR_BUFFER_BIT);
+   glColor3f (1.0, 1.0, 1.0);
+   glLoadIdentity ();             /* clear the matrix */
+           /* viewing transformation  */
+   gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+   glScalef (1.0, 2.0, 1.0);      /* modeling transformation */ 
     auxWireCube(1.0);	/*  draw the cube	*/
-    glFlush();
-}
-
-void myinit (void) {
-    glShadeModel (GL_FLAT);
+   glFlush ();
 }
 
 /*  Called when the window is first opened and whenever 
  *  the window is reconfigured (moved or resized).
  */
-void myReshape(int w, int h)
+void reshape (int w, int h)
 {
-    glMatrixMode (GL_PROJECTION);	/*  prepare for and then  */ 
-    glLoadIdentity ();	/*  define the projection  */
-    glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 20.0);	/*  transformation  */
-    glMatrixMode (GL_MODELVIEW);	/*  back to modelview matrix	*/
-    glViewport (0, 0, w, h);	/*  define the viewport	*/
+   glViewport (0, 0, (GLsizei) w, (GLsizei) h); 
+   glMatrixMode (GL_PROJECTION);
+   glLoadIdentity ();
+   glFrustum (-1.0, 1.0, -1.0, 1.0, 1.5, 20.0);
+   glMatrixMode (GL_MODELVIEW);
 }
 
 /*  Main Loop
@@ -84,8 +89,8 @@ int main(int argc, char** argv)
     auxInitPosition (0, 0, 500, 500);
     if (!auxInitWindow (argv[0]))
        auxQuit();
-    myinit ();
-    auxReshapeFunc (myReshape);
+   init ();
+    auxReshapeFunc (reshape);
     auxMainLoop(display);
-    return 0;
+   return 0;
 }

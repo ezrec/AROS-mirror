@@ -2,40 +2,26 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:29  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 1.2  1998/07/26 01:33:51  brianp
- * added WINGDIAPI and APIENTRY keywords per Ted Jump
- *
- * Revision 1.1  1998/02/13 03:17:50  brianp
- * Initial revision
- *
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
@@ -64,10 +50,8 @@
  */
 
 
-
 #ifndef OSMESA_H
 #define OSMESA_H
-
 
 
 #ifdef __cplusplus
@@ -78,9 +62,8 @@ extern "C" {
 #include "GL/gl.h"
 
 
-
 #define OSMESA_MAJOR_VERSION 3
-#define OSMESA_MINOR_VERSION 0
+#define OSMESA_MINOR_VERSION 3
 
 
 
@@ -113,7 +96,6 @@ extern "C" {
 #define OSMESA_TYPE		0x23
 
 
-
 typedef struct osmesa_context *OSMesaContext;
 
 
@@ -132,8 +114,8 @@ typedef struct osmesa_context *OSMesaContext;
  *                     display lists.  NULL indicates no sharing.
  * Return:  an OSMesaContext or 0 if error
  */
-WINGDIAPI OSMesaContext APIENTRY OSMesaCreateContext( GLenum format,
-                                          OSMesaContext sharelist );
+GLAPI OSMesaContext GLAPIENTRY OSMesaCreateContext( GLenum format,
+                                                    OSMesaContext sharelist );
 
 
 
@@ -143,7 +125,7 @@ WINGDIAPI OSMesaContext APIENTRY OSMesaCreateContext( GLenum format,
  *
  * Input:  ctx - the context to destroy
  */
-WINGDIAPI void APIENTRY OSMesaDestroyContext( OSMesaContext ctx );
+GLAPI void GLAPIENTRY OSMesaDestroyContext( OSMesaContext ctx );
 
 
 
@@ -174,9 +156,9 @@ WINGDIAPI void APIENTRY OSMesaDestroyContext( OSMesaContext ctx );
  *          invalid buffer address, type!=GL_UNSIGNED_BYTE, width<1, height<1,
  *          width>internal limit or height>internal limit.
  */
-WINGDIAPI GLboolean APIENTRY OSMesaMakeCurrent( OSMesaContext ctx,
-                                    void *buffer, GLenum type,
-                                    GLsizei width, GLsizei height );
+GLAPI GLboolean GLAPIENTRY OSMesaMakeCurrent( OSMesaContext ctx,
+                                              void *buffer, GLenum type,
+                                              GLsizei width, GLsizei height );
 
 
 
@@ -184,7 +166,7 @@ WINGDIAPI GLboolean APIENTRY OSMesaMakeCurrent( OSMesaContext ctx,
 /*
  * Return the current Off-Screen Mesa rendering context handle.
  */
-WINGDIAPI OSMesaContext APIENTRY OSMesaGetCurrentContext( void );
+GLAPI OSMesaContext GLAPIENTRY OSMesaGetCurrentContext( void );
 
 
 
@@ -201,12 +183,12 @@ WINGDIAPI OSMesaContext APIENTRY OSMesaGetCurrentContext( void );
  *
  * New in version 2.0.
  */
-WINGDIAPI void APIENTRY OSMesaPixelStore( GLint pname, GLint value );
+GLAPI void GLAPIENTRY OSMesaPixelStore( GLint pname, GLint value );
 
 
 
 /*
- * Return context info.  This is like glGetIntegerv.
+ * Return an integer value like glGetIntegerv.
  * Input:  pname -
  *                 OSMESA_WIDTH  return current image width
  *                 OSMESA_HEIGHT  return current image height
@@ -216,7 +198,7 @@ WINGDIAPI void APIENTRY OSMesaPixelStore( GLint pname, GLint value );
  *                 OSMESA_Y_UP returns 1 or 0 to indicate Y axis direction
  *         value - pointer to integer in which to return result.
  */
-WINGDIAPI void APIENTRY OSMesaGetIntegerv( GLint pname, GLint *value );
+GLAPI void GLAPIENTRY OSMesaGetIntegerv( GLint pname, GLint *value );
 
 
 
@@ -230,11 +212,26 @@ WINGDIAPI void APIENTRY OSMesaGetIntegerv( GLint pname, GLint *value );
  *
  * New in Mesa 2.4.
  */
-WINGDIAPI GLboolean APIENTRY OSMesaGetDepthBuffer( OSMesaContext c,
-                                       GLint *width, GLint *height,
-                                       GLint *bytesPerValue, void **buffer );
+GLAPI GLboolean GLAPIENTRY OSMesaGetDepthBuffer( OSMesaContext c,
+                                                 GLint *width, GLint *height,
+                                                 GLint *bytesPerValue,
+                                                 void **buffer );
 
 
+/*
+ * Return the color buffer associated with an OSMesa context.
+ * Input:  c - the OSMesa context
+ * Output:  width, height - size of buffer in pixels
+ *          format - buffer format (OSMESA_FORMAT)
+ *          buffer - pointer to depth buffer values
+ * Return:  GL_TRUE or GL_FALSE to indicate success or failure.
+ *
+ * New in Mesa 3.3.
+ */
+GLAPI GLboolean GLAPIENTRY OSMesaGetColorBuffer( OSMesaContext c,
+                                                 GLint *width, GLint *height,
+                                                 GLint *format,
+                                                 void **buffer );
 
 
 #if defined(__BEOS__) || defined(__QUICKDRAW__)

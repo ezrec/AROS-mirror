@@ -1,13 +1,16 @@
+
+/* Copyright (c) Mark J. Kilgard, 1994. */
+
 /*
  * (c) Copyright 1993, Silicon Graphics, Inc.
- * ALL RIGHTS RESERVED 
- * Permission to use, copy, modify, and distribute this software for 
+ * ALL RIGHTS RESERVED
+ * Permission to use, copy, modify, and distribute this software for
  * any purpose and without fee is hereby granted, provided that the above
  * copyright notice appear in all copies and that both the copyright notice
- * and this permission notice appear in supporting documentation, and that 
+ * and this permission notice appear in supporting documentation, and that
  * the name of Silicon Graphics, Inc. not be used in advertising
  * or publicity pertaining to distribution of the software without specific,
- * written prior permission. 
+ * written prior permission.
  *
  * THE MATERIAL EMBODIED ON THIS SOFTWARE IS PROVIDED TO YOU "AS-IS"
  * AND WITHOUT WARRANTY OF ANY KIND, EXPRESS, IMPLIED OR OTHERWISE,
@@ -21,8 +24,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH LOSS, HOWEVER CAUSED AND ON
  * ANY THEORY OF LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE
  * POSSESSION, USE OR PERFORMANCE OF THIS SOFTWARE.
- * 
- * US Government Users Restricted Rights 
+ *
+ * US Government Users Restricted Rights
  * Use, duplication, or disclosure by the Government is subject to
  * restrictions set forth in FAR 52.227.19(c)(2) or subparagraph
  * (c)(1)(ii) of the Rights in Technical Data and Computer Software
@@ -75,7 +78,7 @@ void display(void)
 /*  draw all polygons in white	*/
     glColor3f (1.0, 1.0, 1.0);
 
-/*  draw one solid, unstippled rectangle,	*/	
+/*  draw one solid, unstippled rectangle,	*/
 /*  then two stippled rectangles		*/
     glRectf (25.0, 25.0, 125.0, 125.0);
     glEnable (GL_POLYGON_STIPPLE);
@@ -88,12 +91,23 @@ void display(void)
     glFlush ();
 }
 
-void myinit (void) 
+void myinit (void)
 {
 /*  clear background to black	*/
     glClearColor (0.0, 0.0, 0.0, 0.0);
-    glShadeModel (GL_FLAT);    
+    glShadeModel (GL_FLAT);
 }
+
+static void reshape(GLsizei w, GLsizei h)
+{
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0.0, (GLdouble)w, 0.0, (GLdouble)h, -1.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
 
 /*  Main Loop
  *  Open window with initial window size, title bar, 
@@ -107,5 +121,5 @@ int main(int argc, char** argv)
        auxQuit();
     myinit ();
     auxMainLoop(display);
-    return 0;
+    return 0;             /* ANSI C requires main to return int. */
 }

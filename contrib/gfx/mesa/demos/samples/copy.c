@@ -32,7 +32,7 @@
 #include "gltk.h"
 
 
-GLenum doubleBuffer, directRender;
+GLenum doubleBuffer;
 GLint windW, windH;
 
 char *fileName = 0;
@@ -132,17 +132,12 @@ static GLenum Args(int argc, char **argv)
     GLint i;
 
     doubleBuffer = GL_FALSE;
-    directRender = GL_TRUE;
 
     for (i = 1; i < argc; i++) {
 	if (strcmp(argv[i], "-sb") == 0) {
 	    doubleBuffer = GL_FALSE;
 	} else if (strcmp(argv[i], "-db") == 0) {
 	    doubleBuffer = GL_TRUE;
-	} else if (strcmp(argv[i], "-dr") == 0) {
-	    directRender = GL_TRUE;
-	} else if (strcmp(argv[i], "-ir") == 0) {
-	    directRender = GL_FALSE;
 	} else if (strcmp(argv[i], "-f") == 0) {
 	    if (i+1 >= argc || argv[i+1][0] == '-') {
 		printf("-f (No file name).\n");
@@ -158,7 +153,7 @@ static GLenum Args(int argc, char **argv)
     return GL_TRUE;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     GLenum type;
 
@@ -179,7 +174,6 @@ void main(int argc, char **argv)
 
     type = TK_RGB;
     type |= (doubleBuffer) ? TK_DOUBLE : TK_SINGLE;
-    type |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(type);
 
     if (tkInitWindow("Copy Test") == GL_FALSE) {
@@ -194,4 +188,5 @@ void main(int argc, char **argv)
     tkMouseDownFunc(Mouse);
     tkDisplayFunc(Draw);
     tkExec();
+	return 0;
 }

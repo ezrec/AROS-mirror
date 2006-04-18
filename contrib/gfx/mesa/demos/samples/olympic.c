@@ -26,7 +26,7 @@
  * Nov 20, 1995 use stdlib's rand()/srand() instead of random()/srand48(), etc.
  */
 
-/* 
+/*
  * Modified by Li Wei(liwei@aiar.xjtu.edu.cn) to be able to run in Windows
  * 6/13
  *
@@ -75,8 +75,7 @@ enum {
 };
 
 
-GLenum rgb, doubleBuffer, directRender;
-
+GLenum rgb, doubleBuffer;
 unsigned char rgb_colors[RINGS][3];
 int mapped_colors[RINGS];
 float dests[RINGS][3];
@@ -96,7 +95,7 @@ void FillTorus(float rc, int numc, float rt, int numt)
 
     pi = 3.14159265358979323846;
     twopi = 2 * pi;
- 
+
     for (i = 0; i < numc; i++) {
 	glBegin(GL_QUAD_STRIP);
         for (j = 0; j <= numt; j++) {
@@ -149,7 +148,7 @@ void DrawScene(void)
     }
 
     glPushMatrix();
-    
+
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     gluLookAt(0,0,10, 0,0,0, 0,1,0);
 
@@ -271,7 +270,7 @@ void Init(void)
     dests[GREENRING][1] = bottom_y;
     dests[GREENRING][2] = bottom_z;
 
-    base = 2.0; 
+    base = 2.0;
     height = 2.0;
     theTorus = glGenLists(1);
     glNewList(theTorus, GL_COMPILE);
@@ -343,8 +342,7 @@ GLenum Args(int argc, char **argv)
     GLint i;
 
     rgb = GL_TRUE;
-    doubleBuffer = GL_FALSE;
-    directRender = GL_TRUE;
+    doubleBuffer = GL_TRUE;
 
     for (i = 1; i < argc; i++) {
 	if (strcmp(argv[i], "-ci") == 0) {
@@ -355,10 +353,6 @@ GLenum Args(int argc, char **argv)
 	    doubleBuffer = GL_FALSE;
 	} else if (strcmp(argv[i], "-db") == 0) {
 	    doubleBuffer = GL_TRUE;
-	} else if (strcmp(argv[i], "-dr") == 0) {
-	    directRender = GL_TRUE;
-	} else if (strcmp(argv[i], "-ir") == 0) {
-	    directRender = GL_FALSE;
 	} else {
 	    printf("%s (Bad option).\n", argv[i]);
 	    return GL_FALSE;
@@ -367,7 +361,7 @@ GLenum Args(int argc, char **argv)
     return GL_TRUE;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     GLenum type;
 
@@ -380,7 +374,6 @@ void main(int argc, char **argv)
     type = TK_DEPTH;
     type |= (rgb) ? TK_RGB : TK_INDEX;
     type |= (doubleBuffer) ? TK_DOUBLE : TK_SINGLE;
-    type |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(type);
 
     if (tkInitWindow("Olympic") == GL_FALSE) {
@@ -395,4 +388,5 @@ void main(int argc, char **argv)
     tkIdleFunc(DrawScene);
 
     tkExec();
+	return 0;
 }

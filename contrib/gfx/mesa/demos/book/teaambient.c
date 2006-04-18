@@ -1,13 +1,16 @@
-/*
+
+/* Copyright (c) Mark J. Kilgard, 1994. */
+
+/**
  * (c) Copyright 1993, Silicon Graphics, Inc.
- * ALL RIGHTS RESERVED 
- * Permission to use, copy, modify, and distribute this software for 
+ * ALL RIGHTS RESERVED
+ * Permission to use, copy, modify, and distribute this software for
  * any purpose and without fee is hereby granted, provided that the above
  * copyright notice appear in all copies and that both the copyright notice
- * and this permission notice appear in supporting documentation, and that 
+ * and this permission notice appear in supporting documentation, and that
  * the name of Silicon Graphics, Inc. not be used in advertising
  * or publicity pertaining to distribution of the software without specific,
- * written prior permission. 
+ * written prior permission.
  *
  * THE MATERIAL EMBODIED ON THIS SOFTWARE IS PROVIDED TO YOU "AS-IS"
  * AND WITHOUT WARRANTY OF ANY KIND, EXPRESS, IMPLIED OR OTHERWISE,
@@ -21,8 +24,8 @@
  * ADVISED OF THE POSSIBILITY OF SUCH LOSS, HOWEVER CAUSED AND ON
  * ANY THEORY OF LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE
  * POSSESSION, USE OR PERFORMANCE OF THIS SOFTWARE.
- * 
- * US Government Users Restricted Rights 
+ *
+ * US Government Users Restricted Rights
  * Use, duplication, or disclosure by the Government is subject to
  * restrictions set forth in FAR 52.227.19(c)(2) or subparagraph
  * (c)(1)(ii) of the Rights in Technical Data and Computer Software
@@ -34,7 +37,7 @@
  *
  * OpenGL(TM) is a trademark of Silicon Graphics, Inc.
  */
-/*
+/**
  *  teaambient.c
  *  This program renders three lighted, shaded teapots, with
  *  different ambient values.
@@ -46,23 +49,29 @@
 
 /*  Initialize light source and lighting model.
  */
-void myinit(void)
+void
+myinit(void)
 {
-    GLfloat light_ambient[] = { 0.0, 0.0, 0.0, 1.0 };
-    GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-    GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-/*	light_position is NOT default value	*/
-    GLfloat light_position[] = { 1.0, 0.0, 0.0, 0.0 };
-    GLfloat global_ambient[] = { 0.75, 0.75, 0.75, 1.0 };
+    GLfloat light_ambient[] =
+    {0.0, 0.0, 0.0, 1.0};
+    GLfloat light_diffuse[] =
+    {1.0, 1.0, 1.0, 1.0};
+    GLfloat light_specular[] =
+    {1.0, 1.0, 1.0, 1.0};
+/* light_position is NOT default value */
+    GLfloat light_position[] =
+    {1.0, 0.0, 0.0, 0.0};
+    GLfloat global_ambient[] =
+    {0.75, 0.75, 0.75, 1.0};
 
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-    
+
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
-    
-    glFrontFace (GL_CW);
+
+    glFrontFace(GL_CW);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_AUTO_NORMAL);
@@ -71,57 +80,63 @@ void myinit(void)
     glEnable(GL_DEPTH_TEST);
 }
 
-void display(void)
+void
+display(void)
 {
-    GLfloat low_ambient[] = { 0.1, 0.1, 0.1, 1.0 };
-    GLfloat more_ambient[] = { 0.4, 0.4, 0.4, 1.0 };
-    GLfloat most_ambient[] = { 1.0, 1.0, 1.0, 1.0 };
+    GLfloat low_ambient[] =
+    {0.1, 0.1, 0.1, 1.0};
+    GLfloat more_ambient[] =
+    {0.4, 0.4, 0.4, 1.0};
+    GLfloat most_ambient[] =
+    {1.0, 1.0, 1.0, 1.0};
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	/*  material has small ambient reflection	*/
+    /*  material has small ambient reflection */
     glMaterialfv(GL_FRONT, GL_AMBIENT, low_ambient);
     glMaterialf(GL_FRONT, GL_SHININESS, 40.0);
-    glPushMatrix ();
-    glTranslatef (0.0, 2.0, 0.0);
+    glPushMatrix();
+    glTranslatef(0.0, 2.0, 0.0);
     auxSolidTeapot(1.0);
-    glPopMatrix ();
+    glPopMatrix();
 
-	/*  material has moderate ambient reflection	*/
+    /*  material has moderate ambient reflection */
     glMaterialfv(GL_FRONT, GL_AMBIENT, more_ambient);
-    glPushMatrix ();
-    glTranslatef (0.0, 0.0, 0.0);
+    glPushMatrix();
+    glTranslatef(0.0, 0.0, 0.0);
     auxSolidTeapot(1.0);
-    glPopMatrix ();
+    glPopMatrix();
 
-	/*  material has large ambient reflection	*/
+    /*  material has large ambient reflection */
     glMaterialfv(GL_FRONT, GL_AMBIENT, most_ambient);
-    glPushMatrix ();
-    glTranslatef (0.0, -2.0, 0.0);
+    glPushMatrix();
+    glTranslatef(0.0, -2.0, 0.0);
     auxSolidTeapot(1.0);
-    glPopMatrix ();
+    glPopMatrix();
     glFlush();
 }
 
-void myReshape(int w, int h)
+void
+myReshape(int w, int h)
 {
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    if (w <= h) 
-	glOrtho (-4.0, 4.0, -4.0*(GLfloat)h/(GLfloat)w, 
-	    4.0*(GLfloat)h/(GLfloat)w, -10.0, 10.0);
-    else 
-	glOrtho (-4.0*(GLfloat)w/(GLfloat)h, 
-	    4.0*(GLfloat)w/(GLfloat)h, -4.0, 4.0, -10.0, 10.0);
+    if (w <= h)
+        glOrtho(-4.0, 4.0, -4.0 * (GLfloat) h / (GLfloat) w,
+            4.0 * (GLfloat) h / (GLfloat) w, -10.0, 10.0);
+    else
+        glOrtho(-4.0 * (GLfloat) w / (GLfloat) h,
+            4.0 * (GLfloat) w / (GLfloat) h, -4.0, 4.0, -10.0, 10.0);
     glMatrixMode(GL_MODELVIEW);
 }
 
 /*  Main Loop
- *  Open window with initial window size, title bar, 
+ *  Open window with initial window size, title bar,
  *  RGBA display mode, and handle input events.
  */
-int main(int argc, char** argv)
+int
+main(int argc, char **argv)
 {
     auxInitDisplayMode (AUX_SINGLE | AUX_RGB | AUX_DEPTH);
     auxInitPosition (0, 0, 500, 500);
@@ -130,12 +145,5 @@ int main(int argc, char** argv)
     myinit();
     auxReshapeFunc (myReshape);
     auxMainLoop(display);
-    return 0;
+    return 0;             /* ANSI C requires main to return int. */
 }
-
-
-
-
-
-
-

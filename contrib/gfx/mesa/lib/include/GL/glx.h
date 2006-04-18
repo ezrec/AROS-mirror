@@ -2,43 +2,26 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:29  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.2  1998/06/18 03:44:00  brianp
- * replaced "uint" with "unsigned int"
- *
- * Revision 3.1  1998/06/01 00:00:17  brianp
- * added GLX_SGI_video_sync extension
- *
- * Revision 3.0  1998/02/20 05:06:01  brianp
- * initial rev
- *
+ * Version:  3.4
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
@@ -46,26 +29,21 @@
 #define GLX_H
 
 
-/*
- * A pseudo-GLX implementation to allow GLX-based OpenGL programs to
- * work with Mesa.
- *
- * Notes:
- *   1. If the visual passed to glXGetConfig was not one returned by
- *      glXChooseVisual then the GLX_RGBA and GLX_DOUBLEBUFFER queries
- *      will always return True and the GLX_DEPTH_SIZE query will always
- *      return non-zero.
- *   2. The glXIsDirect() function always returns True.
- */
-
-
-
+#ifdef __VMS
+# ifdef __cplusplus
+/* VMS Xlib.h gives problems with C++.
+ * this avoids a bunch of trivial warnings */
+#pragma message disable nosimpint
+#endif
+#endif
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include "GL/gl.h"
-#ifdef MESA
-#include "GL/xmesa.h"
+#ifdef __VMS
+# ifdef __cplusplus
+#pragma message enable nosimpint
 #endif
+#endif
+#include "GL/gl.h"
 
 
 #if defined(USE_MGL_NAMESPACE)
@@ -79,39 +57,33 @@ extern "C" {
 
 
 #define GLX_VERSION_1_1		1
+#define GLX_VERSION_1_2		1
+#define GLX_VERSION_1_3		1
+
+#define GLX_EXTENSION_NAME   "GLX"
+
 
 
 /*
  * Tokens for glXChooseVisual and glXGetConfig:
  */
-enum _GLX_CONFIGS {
-	GLX_USE_GL		= 1,
-	GLX_BUFFER_SIZE		= 2,
-	GLX_LEVEL		= 3,
-	GLX_RGBA		= 4,
-	GLX_DOUBLEBUFFER	= 5, 
-	GLX_STEREO		= 6,
-	GLX_AUX_BUFFERS		= 7,
-	GLX_RED_SIZE		= 8,
-	GLX_GREEN_SIZE		= 9,
-	GLX_BLUE_SIZE		= 10,
-	GLX_ALPHA_SIZE		= 11,
-	GLX_DEPTH_SIZE		= 12,
-	GLX_STENCIL_SIZE	= 13,
-	GLX_ACCUM_RED_SIZE	= 14,
-	GLX_ACCUM_GREEN_SIZE	= 15,
-	GLX_ACCUM_BLUE_SIZE	= 16,
-	GLX_ACCUM_ALPHA_SIZE	= 17,
-
-	/* GLX_EXT_visual_info extension */
-	GLX_X_VISUAL_TYPE_EXT		= 0x22,
-	GLX_TRANSPARENT_TYPE_EXT	= 0x23,
-	GLX_TRANSPARENT_INDEX_VALUE_EXT	= 0x24,
-	GLX_TRANSPARENT_RED_VALUE_EXT	= 0x25,
-	GLX_TRANSPARENT_GREEN_VALUE_EXT	= 0x26,
-	GLX_TRANSPARENT_BLUE_VALUE_EXT	= 0x27,
-	GLX_TRANSPARENT_ALPHA_VALUE_EXT	= 0x28
-};
+#define GLX_USE_GL		1
+#define GLX_BUFFER_SIZE		2
+#define GLX_LEVEL		3
+#define GLX_RGBA		4
+#define GLX_DOUBLEBUFFER	5
+#define GLX_STEREO		6
+#define GLX_AUX_BUFFERS		7
+#define GLX_RED_SIZE		8
+#define GLX_GREEN_SIZE		9
+#define GLX_BLUE_SIZE		10
+#define GLX_ALPHA_SIZE		11
+#define GLX_DEPTH_SIZE		12
+#define GLX_STENCIL_SIZE	13
+#define GLX_ACCUM_RED_SIZE	14
+#define GLX_ACCUM_GREEN_SIZE	15
+#define GLX_ACCUM_BLUE_SIZE	16
+#define GLX_ACCUM_ALPHA_SIZE	17
 
 
 /*
@@ -135,42 +107,70 @@ enum _GLX_CONFIGS {
 
 
 /*
- * GLX_visual_info extension
+ * GLX 1.3 and later:
  */
-#define GLX_TRUE_COLOR_EXT		0x8002
-#define GLX_DIRECT_COLOR_EXT		0x8003
-#define GLX_PSEUDO_COLOR_EXT		0x8004
-#define GLX_STATIC_COLOR_EXT		0x8005
-#define GLX_GRAY_SCALE_EXT		0x8006
-#define GLX_STATIC_GRAY_EXT		0x8007
-#define GLX_NONE_EXT			0x8000
-#define GLX_TRANSPARENT_RGB_EXT		0x8008
-#define GLX_TRANSPARENT_INDEX_EXT	0x8009
+#define GLX_CONFIG_CAVEAT		0x20
+#define GLX_DONT_CARE			0xFFFFFFFF
+#define GLX_SLOW_CONFIG			0x8001
+#define GLX_NON_CONFORMANT_CONFIG	0x800D
+#define GLX_X_VISUAL_TYPE		0x22
+#define GLX_TRANSPARENT_TYPE		0x23
+#define GLX_TRANSPARENT_INDEX_VALUE	0x24
+#define GLX_TRANSPARENT_RED_VALUE	0x25
+#define GLX_TRANSPARENT_GREEN_VALUE	0x26
+#define GLX_TRANSPARENT_BLUE_VALUE	0x27
+#define GLX_TRANSPARENT_ALPHA_VALUE	0x28
+#define GLX_MAX_PBUFFER_WIDTH		0x8016
+#define GLX_MAX_PBUFFER_HEIGHT		0x8017
+#define GLX_MAX_PBUFFER_PIXELS		0x8018
+#define GLX_PRESERVED_CONTENTS		0x801B
+#define GLX_LARGEST_BUFFER		0x801C
+#define GLX_DRAWABLE_TYPE		0x8010
+#define GLX_FBCONFIG_ID			0x8013
+#define GLX_VISUAL_ID			0x800B
+#define GLX_WINDOW_BIT			0x00000001
+#define GLX_PIXMAP_BIT			0x00000002
+#define GLX_PBUFFER_BIT			0x00000004
+#define GLX_AUX_BUFFERS_BIT		0x00000010
+#define GLX_FRONT_LEFT_BUFFER_BIT	0x00000001
+#define GLX_FRONT_RIGHT_BUFFER_BIT	0x00000002
+#define GLX_BACK_LEFT_BUFFER_BIT	0x00000004
+#define GLX_BACK_RIGHT_BUFFER_BIT	0x00000008
+#define GLX_AUX_BUFFERS_BIT		0x00000010
+#define GLX_DEPTH_BUFFER_BIT		0x00000020
+#define GLX_STENCIL_BUFFER_BIT		0x00000040
+#define GLX_ACCUM_BUFFER_BIT		0x00000080
+#define GLX_DRAWABLE_TYPE		0x8010
+#define GLX_RENDER_TYPE			0x8011
+#define GLX_X_RENDERABLE		0x8012
+#define GLX_NONE			0x8000
+#define GLX_TRUE_COLOR			0x8002
+#define GLX_DIRECT_COLOR		0x8003
+#define GLX_PSEUDO_COLOR		0x8004
+#define GLX_STATIC_COLOR		0x8005
+#define GLX_GRAY_SCALE			0x8006
+#define GLX_STATIC_GRAY			0x8007
+#define GLX_TRANSPARENT_INDEX		0x8009
+#define GLX_COLOR_INDEX_TYPE		0x8015
+#define GLX_COLOR_INDEX_BIT		0x00000002
+#define GLX_SCREEN			0x800C
+#define GLX_PBUFFER_CLOBBER_MASK	0x08000000
+#define GLX_DAMAGED			0x8020
+#define GLX_SAVED			0x8021
+#define GLX_WINDOW			0x8022
+#define GLX_PBUFFER			0x8023
 
 
-/*
- * Compile-time extension tests
- */
-#ifdef MESA
-#define GLX_EXT_visual_info		1
-#define GLX_MESA_pixmap_colormap	1
-#define GLX_MESA_release_buffers	1
-#define GLX_MESA_copy_sub_buffer	1
-#define GLX_SGI_video_sync		1
-#endif
 
-
-
-#ifdef MESA
-   typedef XMesaContext GLXContext;
-   typedef Pixmap GLXPixmap;
-   typedef Drawable GLXDrawable;
-#else
-   typedef void * GLXContext;
-   typedef XID GLXPixmap;
-   typedef XID GLXDrawable;
-#endif
+typedef void * GLXContext;
+typedef XID GLXPixmap;
+typedef XID GLXDrawable;
+/* GLX 1.3 and later */
+typedef void * GLXFBConfig;
+typedef XID GLXFBConfigID;
 typedef XID GLXContextID;
+typedef XID GLXWindow;
+typedef XID GLXPbuffer;
 
 
 
@@ -186,7 +186,7 @@ extern Bool glXMakeCurrent( Display *dpy, GLXDrawable drawable,
 			    GLXContext ctx);
 
 extern void glXCopyContext( Display *dpy, GLXContext src, GLXContext dst,
-			    GLuint mask );
+			    unsigned long mask );
 
 extern void glXSwapBuffers( Display *dpy, GLXDrawable drawable );
 
@@ -224,30 +224,214 @@ extern const char *glXQueryServerString( Display *dpy, int screen, int name );
 extern const char *glXGetClientString( Display *dpy, int name );
 
 
+/* GLX 1.2 and later */
+extern Display *glXGetCurrentDisplay( void );
+
+
+/* GLX 1.3 and later */
+extern GLXFBConfig *glXChooseFBConfig( Display *dpy, int screen,
+                                       const int *attribList, int *nitems );
+
+extern int glXGetFBConfigAttrib( Display *dpy, GLXFBConfig config,
+                                 int attribute, int *value );
+
+extern GLXFBConfig *glXGetFBConfigs( Display *dpy, int screen,
+                                     int *nelements );
+
+extern XVisualInfo *glXGetVisualFromFBConfig( Display *dpy,
+                                              GLXFBConfig config );
+
+extern GLXWindow glXCreateWindow( Display *dpy, GLXFBConfig config,
+                                  Window win, const int *attribList );
+
+extern void glXDestroyWindow( Display *dpy, GLXWindow window );
+
+extern GLXPixmap glXCreatePixmap( Display *dpy, GLXFBConfig config,
+                                  Pixmap pixmap, const int *attribList );
+
+extern void glXDestroyPixmap( Display *dpy, GLXPixmap pixmap );
+
+extern GLXPbuffer glXCreatePbuffer( Display *dpy, GLXFBConfig config,
+                                    const int *attribList );
+
+extern void glXDestroyPbuffer( Display *dpy, GLXPbuffer pbuf );
+
+extern void glXQueryDrawable( Display *dpy, GLXDrawable draw, int attribute,
+                              unsigned int *value );
+
+extern GLXContext glXCreateNewContext( Display *dpy, GLXFBConfig config,
+                                       int renderType, GLXContext shareList,
+                                       Bool direct );
+
+extern Bool glXMakeContextCurrent( Display *dpy, GLXDrawable draw,
+                                   GLXDrawable read, GLXContext ctx );
+
+extern GLXDrawable glXGetCurrentReadDrawable( void );
+
+extern int glXQueryContext( Display *dpy, GLXContext ctx, int attribute,
+                            int *value );
+
+extern void glXSelectEvent( Display *dpy, GLXDrawable drawable,
+                            unsigned long mask );
+
+extern void glXGetSelectedEvent( Display *dpy, GLXDrawable drawable,
+                                 unsigned long *mask );
+
+
+
+/*#ifndef GLX_GLXEXT_LEGACY*/
+
+/*#include <GL/glxext.h>*/
+
+/*#else*/
+
 
 /*
- * Mesa GLX Extensions
+ * 28. GLX_EXT_visual_info extension
  */
+#ifndef GLX_EXT_visual_info
+#define GLX_EXT_visual_info		1
 
-#ifdef GLX_MESA_pixmap_colormap
-extern GLXPixmap glXCreateGLXPixmapMESA( Display *dpy, XVisualInfo *visual,
-                                         Pixmap pixmap, Colormap cmap );
-#endif
+#define GLX_X_VISUAL_TYPE_EXT		0x22
+#define GLX_TRANSPARENT_TYPE_EXT	0x23
+#define GLX_TRANSPARENT_INDEX_VALUE_EXT	0x24
+#define GLX_TRANSPARENT_RED_VALUE_EXT	0x25
+#define GLX_TRANSPARENT_GREEN_VALUE_EXT	0x26
+#define GLX_TRANSPARENT_BLUE_VALUE_EXT	0x27
+#define GLX_TRANSPARENT_ALPHA_VALUE_EXT	0x28
+#define GLX_TRUE_COLOR_EXT		0x8002
+#define GLX_DIRECT_COLOR_EXT		0x8003
+#define GLX_PSEUDO_COLOR_EXT		0x8004
+#define GLX_STATIC_COLOR_EXT		0x8005
+#define GLX_GRAY_SCALE_EXT		0x8006
+#define GLX_STATIC_GRAY_EXT		0x8007
+#define GLX_NONE_EXT			0x8000
+#define GLX_TRANSPARENT_RGB_EXT		0x8008
+#define GLX_TRANSPARENT_INDEX_EXT	0x8009
 
-#ifdef GLX_MESA_release_buffers
-extern Bool glXReleaseBuffersMESA( Display *dpy, GLXDrawable d );
-#endif
+#endif /* 28. GLX_EXT_visual_info extension */
 
-#ifdef GLX_MESA_copy_sub_buffer
+
+
+/*
+ * 41. GLX_SGI_video_sync
+ */
+#ifndef GLX_SGI_video_sync
+#define GLX_SGI_video_sync 1
+
+extern int glXGetVideoSyncSGI(unsigned int *count);
+extern int glXWaitVideoSyncSGI(int divisor, int remainder, unsigned int *count);
+
+#endif /* GLX_SGI_video_sync */
+
+
+
+/*
+ * 42. GLX_EXT_visual_rating
+ */
+#ifndef GLX_EXT_visual_rating
+#define GLX_EXT_visual_rating		1
+
+#define GLX_VISUAL_CAVEAT_EXT		0x20
+/*#define GLX_NONE_EXT			0x8000*/
+#define GLX_SLOW_VISUAL_EXT		0x8001
+#define GLX_NON_CONFORMANT_VISUAL_EXT	0x800D
+
+#endif /* GLX_EXT_visual_rating	*/
+
+
+
+/*
+ * 47. GLX_EXT_import_context
+ */
+#ifndef GLX_EXT_import_context
+#define GLX_EXT_import_context 1
+
+#define GLX_SHARE_CONTEXT_EXT		0x800A
+#define GLX_VISUAL_ID_EXT		0x800B
+#define GLX_SCREEN_EXT			0x800C
+
+extern void glXFreeContextEXT(Display *dpy, GLXContext context);
+
+extern GLXContextID glXGetContextIDEXT(const GLXContext context);
+
+extern Display *glXGetCurrentDisplayEXT(void);
+
+extern GLXContext glXImportContextEXT(Display *dpy, GLXContextID contextID);
+
+extern int glXQueryContextInfoEXT(Display *dpy, GLXContext context,
+                                  int attribute,int *value);
+
+#endif /* GLX_EXT_import_context */
+
+
+
+/*
+ * 215. GLX_MESA_copy_sub_buffer
+ */
+#ifndef GLX_MESA_copy_sub_buffer
+#define GLX_MESA_copy_sub_buffer 1
+
 extern void glXCopySubBufferMESA( Display *dpy, GLXDrawable drawable,
                                   int x, int y, int width, int height );
+
 #endif
 
-#ifdef GLX_SGI_video_sync
-extern int glXGetVideoSyncSGI(unsigned int *count);
-extern int glXWaitVideoSyncSGI(int divisor, int remainder,
-                               unsigned int *count);
-#endif
+
+
+/*
+ * 216. GLX_MESA_pixmap_colormap
+ */
+#ifndef GLX_MESA_pixmap_colormap
+#define GLX_MESA_pixmap_colormap 1
+
+extern GLXPixmap glXCreateGLXPixmapMESA( Display *dpy, XVisualInfo *visual,
+                                         Pixmap pixmap, Colormap cmap );
+
+#endif /* GLX_MESA_pixmap_colormap */
+
+
+
+/*
+ * 217. GLX_MESA_release_buffers
+ */
+#ifndef GLX_MESA_release_buffers
+#define GLX_MESA_release_buffers 1
+
+extern Bool glXReleaseBuffersMESA( Display *dpy, GLXDrawable d );
+
+#endif /* GLX_MESA_release_buffers */
+
+
+
+/*
+ * 218. GLX_MESA_set_3dfx_mode
+ */
+#ifndef GLX_MESA_set_3dfx_mode
+#define GLX_MESA_set_3dfx_mode 1
+
+#define GLX_3DFX_WINDOW_MODE_MESA       0x1
+#define GLX_3DFX_FULLSCREEN_MODE_MESA   0x2
+
+extern GLboolean glXSet3DfxModeMESA( GLint mode );
+
+#endif /* GLX_MESA_set_3dfx_mode */
+
+
+
+/*
+ * ARB 2. GLX_ARB_get_proc_address
+ */
+#ifndef GLX_ARB_get_proc_address
+#define GLX_ARB_get_proc_address 1
+
+extern void (*glXGetProcAddressARB(const GLubyte *procName))();
+
+#endif /* GLX_ARB_get_proc_address */
+
+
+
+/*#endif*/ /* GLX_GLXEXT_LEGACY */
 
 
 

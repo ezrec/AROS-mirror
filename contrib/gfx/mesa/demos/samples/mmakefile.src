@@ -5,12 +5,7 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM contrib-mesa-demos-samples : contrib-mesa-demos-common setup-mesa2-samples 
-#MM setup-mesa2-samples : setup
-#MM setup-mesa2-sampdemos : setup
-
-MESASAMPFILES = 1.rgb 2.rgb 3.rgb 4.rgb
-MESASAMPDEMOFILES = 1.rgb
+#MM contrib-mesa-demos-samples : contrib-mesa-demos-common
 
 MESASAMPLES :=  accum \
             bitmap1 \
@@ -33,7 +28,6 @@ MESASAMPLES :=  accum \
             quad \
             select \
             shape \
-            speed \
             sphere \
             star \
             stencil \
@@ -49,12 +43,5 @@ USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
 %build_progs mmake=contrib-mesa-demos-samples files=$(MESASAMPLES) \
     targetdir=$(CONTRIBDIR)/Gfx/Mesa/Samples \
     uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
-
-setup-mesa2-samples : files-copy
-%copy_files_q files="$(MESASAMPFILES)" dst=$(CONTRIBDIR)/Gfx/Mesa/Samples
-
-setup-mesa2-sampdemos : files-copy
-%copy_files_q files="$(MESASAMPDEMOFILES)" dst=$(CONTRIBDIR)/Gfx/Mesa/Demos-GLUT
-%copy_files_q files="$(MESASAMPDEMOFILES)" dst=$(CONTRIBDIR)/Gfx/Mesa/Demos-old
 
 %common

@@ -50,18 +50,18 @@ extern "C" {            /* Use "C" linkage when in C++ mode */
 #endif
 
 #ifndef __WINDOWS__
-#define APIENTRY
+#define GLAPIENTRY
 #endif
 
 #ifdef  __WINDOWS__
-bool    APIENTRY MGLMesaInitDLL(MGLCallbacks *cb,char *version);
+bool    GLAPIENTRY MGLMesaInitDLL(MGLCallbacks *cb,char *version);
 #endif
-void    APIENTRY MGLMesaChooseVisual(MGLDC *dc,MGLVisual *visual);
-bool    APIENTRY MGLMesaSetVisual(MGLDC *dc,MGLVisual *visual);
-bool    APIENTRY MGLMesaCreateContext(MGLDC *dc,bool forceMemDC);
-void    APIENTRY MGLMesaDestroyContext(MGLDC *dc);
-void    APIENTRY MGLMesaMakeCurrent(MGLDC *dc);
-void    APIENTRY MGLMesaSwapBuffers(MGLDC *dc,bool waitVRT);
+void    GLAPIENTRY MGLMesaChooseVisual(MGLDC *dc,MGLVisual *visual);
+bool    GLAPIENTRY MGLMesaSetVisual(MGLDC *dc,MGLVisual *visual);
+bool    GLAPIENTRY MGLMesaCreateContext(MGLDC *dc,bool forceMemDC);
+void    GLAPIENTRY MGLMesaDestroyContext(MGLDC *dc);
+void    GLAPIENTRY MGLMesaMakeCurrent(MGLDC *dc);
+void    GLAPIENTRY MGLMesaSwapBuffers(MGLDC *dc,bool waitVRT);
 
 /* Palette manipulation support. The reason we provide palette manipulation
  * routines is so that when rendering in double buffered modes with a
@@ -69,13 +69,12 @@ void    APIENTRY MGLMesaSwapBuffers(MGLDC *dc,bool waitVRT);
  * with the hardware front buffer.
  */
 
-void    APIENTRY MGLMesaSetPaletteEntry(MGLDC *dc,int entry,uchar red,uchar green,uchar blue);
-void    APIENTRY MGLMesaSetPalette(MGLDC *dc,palette_t *pal,int numColors,int startIndex);
-void    APIENTRY MGLMesaRealizePalette(MGLDC *dc,int numColors,int startIndex,int waitVRT);
+void    GLAPIENTRY MGLMesaSetPaletteEntry(MGLDC *dc,int entry,uchar red,uchar green,uchar blue);
+void    GLAPIENTRY MGLMesaSetPalette(MGLDC *dc,palette_t *pal,int numColors,int startIndex);
+void    GLAPIENTRY MGLMesaRealizePalette(MGLDC *dc,int numColors,int startIndex,int waitVRT);
 
 #ifdef  __cplusplus
 }                       /* End of "C" linkage for C++   */
 #endif  /* __cplusplus */
 
 #endif  /* __MGLMESA_H */
-

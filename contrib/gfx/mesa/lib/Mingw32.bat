@@ -1,66 +1,75 @@
 echo off
-rem EGCS-Mingw32 build of Mesa 3-D Graphics Library
+rem
+rem .bat file for building Mesa3d/Mingw32
+rem
 rem Paul Garceau, August 26, 1998
+rem Updated January, 13, 2000 -- Paul Garceau
 rem
-rem bat file uses Make 3.76.1
-rem touch command requires "touch" to be somewhere on your system path
-rem
-touch src/depend
-touch src-glu/depend
-rem touch src-glut/depend
+rem GCC-2.95.2/Mingw32 build of Mesa 3-D Graphics Library (v3.3)
 
-rem Create a lib directory/folder
+rem Build Requirements:
 rem
+rem .bat file uses Make 3.77
+rem "touch" must be somewhere on your system path variable %PATH%
+rem
+rem "touch" doesn't seem to work using OS environment variables so
+rem we need to directly access any "touch" directory/folder references
+
+
+rem Set up Mesa Root directory/folder -- modify as needed
+rem
+set mesaroot=d:\mesa-3.3
+
+rem move to Mesa3d root directory
+cd %mesaroot%
+
+rem set up Mesa3d build path
+PATH=%mesaroot%;%PATH%
+
+rem Set up Mesa Source directory/folder
+set mesasrc=%mesaroot%\src
+
+rem Set up Mesa lib directory/folder
 md lib
 
+rem Set up Mesa lib directory/folder
+set mesalib=%mesaroot%\lib
+
+touch src/depend
+touch src-glu/depend
+
+rem touch src-glut/depend
+
 rem Generate wing32.dll for the sake of Mesa build
-cd src\windows
+cd %mesasrc%\windows
+
 rem
 rem Create a .a lib file
 rem
-dlltool --def wing32.def --output-lib wing32.a
+dlltool --input-def wing32.def --output-lib wing32.a --dllname wing32.dll
 rem
-rem Create a .dll file (wing32.dll); EGCS-Mingw32 compiler used
+rem Create a .dll file (wing32.dll); GCC-2.95.2/Mingw32 compiler used
 rem
 gcc -mdll -o wing32.dll wing32.a -WI,temp.exp
-rem
-rem wing32.dll is now created -- move .a and .dll to
-rem lib dir
-mv wing32.dll wing32.a c:\mesa-3.0\lib
-rem files moved
+move wing32.dll %mesalib%
 
-rem Return to mesa-3.0 'root' directory
-cd c:\mesa-3.0
+rem Return to mesa-3.3 'root' directory
+cd %mesaroot%
 
-rem Now begins the build of mesa-2.6 libs for EGCS/Mingw32
+rem Begin build of mesa-3.3 libs for GCC-2.95.2/Mingw32
 
-rem  Build libMesaGL.a
+rem  Build libGL.a
 rem
-make -w --directory=c:\mesa-3.0\src -f makefile.nt4
+make -w --directory=%mesasrc% -fmakefile.m32
 
-rem  Build libMesaGLU.a
-rem
-make -w --directory=c:\mesa-3.0\src-glu -f makefile.nt4
+rem move the completed library
+move %mesasrc%\libGL.a %mesalib%\libGL.a
 
-rem  Optional libraries:
-rem The following libraries, apparently, are optional
-rem for Mesa and should only be uncommented if you have the
-rem necessary support already available on your machine
+rem  Build libGLU.a
 rem
-rem         Mesaaux.a lib for aux extension
-rem make -w --directory=c:\mesa-3.0\src-aux -f makefile.nt4
+make -w --directory=%mesaroot%\src-glu -f makefile.m32
 
-rem         libglut.a for glut extension of Mesa:
-rem make -w --directory=c:\mesa-3.0\src-glut -f makefile.nt4
-rem
-rem         libMesatk.a for tk extensions of Mesa
-rem make -w --directory=c:\mesa-3.0\src-tk -f makefile.nt4
-rem
-rem Clean up the object files floating around out there...
-rem comment the next lines depending on which collection of
-rem Mesa libs you built
-rem
-del src\*.o
-del src-glu\*.o
-rem del src-aux\*.o
-rem del src-glut\*.o
+rem move the completed library to the lib directory
+move %mesaroot%\src-glu\libGLU.a %mesalib%\libGLU.a
+
+rem Library build complete

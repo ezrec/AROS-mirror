@@ -1,0 +1,24 @@
+
+#   $Id: mmakefile.src 22692 2005-01-11 18:56:14Z NicJA $
+#
+#   Old (pre 2.6) Misc Demos - these do _not_ require GLUT
+#
+include $(TOP)/config/make.cfg
+
+#MM contrib-mesa-misc : contrib-mesa-demos setup-mesa2-misc
+#MM setup-mesa2-misc : setup
+
+MESAMISCFILES := mnt.bin
+
+MESAMISC :=  mesaland
+
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
+
+%build_progs mmake=contrib-mesa-misc files=$(MESAMISC) \
+    targetdir=$(CONTRIBDIR)/Gfx/Mesa/Misc \
+    uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
+
+setup-mesa2-misc : files-copy
+%copy_files_q files="$(MESAMISCFILES)" dst=$(CONTRIBDIR)/Gfx/Mesa/Misc
+
+%common

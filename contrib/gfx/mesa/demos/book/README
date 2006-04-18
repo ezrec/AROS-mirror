@@ -39,7 +39,3 @@
 The source code examples in this directory accompany the examples
 printed in the _OpenGL Programming Guide_, published by Addison-Wesley;
 ISBN 0-201-63274-8.
-
-The source code examples here need to be compiled with libaux.a
-(which in turn needs files from libtk.a).
-

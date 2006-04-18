@@ -38,7 +38,9 @@
 #endif
 
 
-GLenum doubleBuffer, directRender;
+int rgb;	/* unused */
+
+GLenum doubleBuffer;
 int W = 400, H = 400;
 
 char *imageFileName = 0;
@@ -79,7 +81,7 @@ float c[6][4][4][3] = {
 	{
 	    {
 		1.0, 1.0, -1.0
-	    }, 
+	    },
 	    {
 		0.0, 1.0, -1.0
 	    },
@@ -96,10 +98,10 @@ float c[6][4][4][3] = {
 	    },
 	    {
 		-1.0, 1.0, -1.0
-	    }, 
+	    },
 	    {
 		-1.0, 0.0, -1.0
-	    }, 
+	    },
 	    {
 		0.0, 0.0, -1.0
 	    },
@@ -263,7 +265,7 @@ float c[6][4][4][3] = {
 	    {
 		-1.0, 0.0, -1.0
 	    },
-	}, 
+	},
 	{
 	    {
 		-1.0, 1.0, 0.0
@@ -277,7 +279,7 @@ float c[6][4][4][3] = {
 	    {
 		-1.0, 0.0, 0.0
 	    },
-	}, 
+	},
 	{
 	    {
 		-1.0, 0.0, 1.0
@@ -291,7 +293,7 @@ float c[6][4][4][3] = {
 	    {
 		-1.0, 0.0, 0.0
 	    },
-	}, 
+	},
 	{
 	    {
 		-1.0, -1.0, 0.0
@@ -305,7 +307,7 @@ float c[6][4][4][3] = {
 	    {
 		-1.0, 0.0, 0.0
 	    },
-	}, 
+	},
     },
     {
 	{
@@ -457,8 +459,8 @@ GLfloat identity[16] = {
 void BuildCylinder(int numEdges)
 {
     int i, top = 1.0, bottom = -1.0;
-    float x[100], y[100], angle; 
-    
+    float x[100], y[100], angle;
+
     for (i = 0; i <= numEdges; i++) {
 	angle = i * 2.0 * PI / numEdges;
 	x[i] = cos(angle);   /* was cosf() */
@@ -499,7 +501,7 @@ void BuildTorus(float rc, int numc, float rt, int numt)
 
     pi = 3.14159265358979323846;
     twopi = 2.0 * pi;
- 
+
     glNewList(torus, GL_COMPILE);
     for (i = 0; i < numc; i++) {
 	glBegin(GL_QUAD_STRIP);
@@ -536,7 +538,7 @@ void BuildCage(void)
     left   = -4.0;
     bottom = -4.0;
     right  = 4.0;
-    top    = 4.0; 
+    top    = 4.0;
 
     inc = 2.0 * 4.0 * 0.1;
 
@@ -625,7 +627,7 @@ void BuildCube(void)
     glNewList(cube, GL_COMPILE);
     for (i = 0; i < 6; i++) {
 	for (j = 0; j < 4; j++) {
-	    glNormal3fv(n[i]); 
+	    glNormal3fv(n[i]);
 	    glBegin(GL_POLYGON);
 		glVertex3fv(c[i][j][0]);
 		glVertex3fv(c[i][j][1]);
@@ -720,17 +722,17 @@ void Init(void)
 	image->data = AlphaPadImage(image->sizeX*image->sizeY,
                                     image->data, 128);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	gluBuild2DMipmaps(GL_TEXTURE_2D, numComponents, 
-			  image->sizeX, image->sizeY, 
+	gluBuild2DMipmaps(GL_TEXTURE_2D, numComponents,
+			  image->sizeX, image->sizeY,
 			  GL_RGBA, GL_UNSIGNED_BYTE, image->data);
     } else {
 	image = tkRGBImageLoad(imageFileName);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	gluBuild2DMipmaps(GL_TEXTURE_2D, numComponents, 
-			  image->sizeX, image->sizeY, 
+	gluBuild2DMipmaps(GL_TEXTURE_2D, numComponents,
+			  image->sizeX, image->sizeY,
 			  GL_RGB, GL_UNSIGNED_BYTE, image->data);
     }
-    
+
     glFogf(GL_FOG_DENSITY, 0.125);
     glFogi(GL_FOG_MODE, GL_LINEAR);
     glFogf(GL_FOG_START, 4.0);
@@ -741,7 +743,7 @@ void Init(void)
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
     glLightfv(GL_LIGHT0, GL_POSITION, position);
-    
+
     glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat_shininess);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat_specular);
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat_diffuse);
@@ -951,8 +953,7 @@ GLenum Args(int argc, char **argv)
 {
     GLint i;
 
-    doubleBuffer = GL_FALSE;
-    directRender = GL_TRUE;
+    doubleBuffer = GL_TRUE;
     numComponents = 4;
 
     for (i = 1; i < argc; i++) {
@@ -960,10 +961,6 @@ GLenum Args(int argc, char **argv)
 	    doubleBuffer = GL_FALSE;
 	} else if (strcmp(argv[i], "-db") == 0) {
 	    doubleBuffer = GL_TRUE;
-	} else if (strcmp(argv[i], "-dr") == 0) {
-	    directRender = GL_TRUE;
-	} else if (strcmp(argv[i], "-ir") == 0) {
-	    directRender = GL_FALSE;
 	} else if (strcmp(argv[i], "-f") == 0) {
 	    if (i+1 >= argc || argv[i+1][0] == '-') {
 		printf("-f (No file name).\n");
@@ -983,7 +980,7 @@ GLenum Args(int argc, char **argv)
     return GL_TRUE;
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     GLenum type;
 
@@ -1000,7 +997,6 @@ void main(int argc, char **argv)
 
     type = TK_RGB | TK_DEPTH;
     type |= (doubleBuffer) ? TK_DOUBLE : TK_SINGLE;
-    type |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(type);
 
     if (tkInitWindow("Texture Test") == GL_FALSE) {
@@ -1015,4 +1011,5 @@ void main(int argc, char **argv)
     tkIdleFunc(Draw);
 
     tkExec();
+	return 0;
 }

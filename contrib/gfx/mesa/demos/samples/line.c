@@ -202,7 +202,6 @@ void main(int argc, char **argv)
 
     windType = (rgb) ? TK_RGB : TK_INDEX;
     windType |= (doubleBuffer) ? TK_DOUBLE : TK_SINGLE;
-    windType |= (directRender) ? TK_DIRECT : TK_INDIRECT;
     tkInitDisplayMode(windType);
 
     if (tkInitWindow("Line Test") == GL_FALSE) {
