@@ -15,6 +15,7 @@
 #include <GL/gl.h>
 #include "gltk.h"
 
+#define IMAGE_FILE "/images/girl.rgb"
 
 #ifndef M_PI
 #  define M_PI 3.14159265
@@ -74,11 +75,10 @@ static void reshape( int width, int height )
 
 static void init( void )
 {
-   char *filename = "1.rgb";
-   image = tkRGBImageLoad( filename );
+   image = tkRGBImageLoad( IMAGE_FILE );
 
    if (!image) {
-      printf("Error: couldn't load image file: %s\n", filename );
+      printf("Error: couldn't load image file: %s\n", IMAGE_FILE );
       exit(1);
    }
 }

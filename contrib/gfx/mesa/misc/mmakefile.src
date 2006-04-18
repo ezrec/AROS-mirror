@@ -5,20 +5,20 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM contrib-mesa-misc : contrib-mesa-demos setup-mesa2-misc
-#MM setup-mesa2-misc : setup
+#MM contrib-mesa-misc : contrib-mesa-demos setup-mesa-misc
+#MM setup-mesa-misc : setup
 
-MESAMISCFILES := mnt.bin
+MESAMISCDATAFILES := mnt.bin
 
-MESAMISC :=  mesaland
+MESAMISCFILES :=  mesaland
 
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
 
-%build_progs mmake=contrib-mesa-misc files=$(MESAMISC) \
+%build_progs mmake=contrib-mesa-misc files=$(MESAMISCFILES) \
     targetdir=$(CONTRIBDIR)/Gfx/Mesa/Misc \
     uselibs="Mesaaux Mesatk MesaGLU MesaGL arossupport amiga arosc m"
 
-setup-mesa2-misc : files-copy
-%copy_files_q files="$(MESAMISCFILES)" dst=$(CONTRIBDIR)/Gfx/Mesa/Misc
+setup-mesa-misc : files-copy
+%copy_files_q files="$(MESAMISCDATAFILES)" dst=$(CONTRIBDIR)/Gfx/Mesa/Misc
 
 %common

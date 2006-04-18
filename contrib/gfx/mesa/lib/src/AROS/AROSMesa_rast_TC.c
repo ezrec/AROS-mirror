@@ -54,6 +54,15 @@ extern struct Library*  CyberGfxBase;
 #include "../macros.h"
 #include "../vb.h"
 
+
+/** set the correct storage format for pixels **/
+
+#if (AROS_BIG_ENDIAN == 1)
+#define AROS_PIXFMT RECFMT_ARGB    /* Big Endian Archs. */
+#else
+#define AROS_PIXFMT RECTFMT_BGRA32   /* Little Endian Archs. */
+#endif
+
 /**********************************************************************/
 /*****        Some Usefull code                   *****/
 /**********************************************************************/
@@ -370,7 +379,7 @@ D(bug("[AROSMESA:TC] arosTC_write_ci32_span(n:%d,x:%d,y:%d)\n", n, x, y));
 #ifdef DEBUGPRINT
 D(bug("[AROSMESA:TC] arosTC_write_ci32_span: WritePixelArray()\n"));
 #endif
-          WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+          WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, AROS_PIXFMT);
           dp = (ULONG*)amesa->imageline;
           x = x + drawbits_counter;
           drawbits_counter = 0;
@@ -387,7 +396,7 @@ D(bug("[AROSMESA:TC] arosTC_write_ci32_span: WritePixelArray()\n"));
 #ifdef DEBUGPRINT
 D(bug("[AROSMESA:TC] arosTC_write_ci32_span: WritePixelArray()\n"));
 #endif
-      WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+      WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, AROS_PIXFMT);
     }
 
   } else {      /* Slower */
@@ -439,7 +448,7 @@ D(bug("[AROSMESA:TC] arosTC_write_ci8_span(n:%d,x:%d,y:%d)\n",n,x,y));
 #ifdef DEBUGPRINT
 D(bug("[AROSMESA:TC] arosTC_write_ci8_span: WritePixelArray()\n"));
 #endif
-          WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+          WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, AROS_PIXFMT);
           dp = (ULONG*)amesa->imageline;
           x = x + drawbits_counter;
           drawbits_counter = 0;
@@ -456,7 +465,7 @@ D(bug("[AROSMESA:TC] arosTC_write_ci8_span: WritePixelArray()\n"));
 #ifdef DEBUGPRINT
 D(bug("[AROSMESA:TC] arosTC_write_ci8_span: WritePixelArray()\n"));
 #endif
-      WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+      WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, AROS_PIXFMT);
     }
 
   } else {      /* Slower */
@@ -512,7 +521,7 @@ D(bug("mask\n"));
         {
           if(drawbits_counter)
           {
-            WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+            WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, AROS_PIXFMT);
 /*D(bug("[AROSMESA:TC] arosTC_write_rgba_span3: WritePixelArray(ant=%d,x=%d,y=%d)\n", ant, x, y));*/
             dp = (ULONG*)amesa->imageline;
             x = x + drawbits_counter;
@@ -528,7 +537,7 @@ D(bug("mask\n"));
 
       if(drawbits_counter)
       {
-        WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+        WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, AROS_PIXFMT);
 /*D(bug("[AROSMESA:TC] arosTC_write_rgba_span3: WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
       }
     }
@@ -542,7 +551,7 @@ D(bug("nomask\n"));
         *dp = TC_ARGB(rgba[i][RCOMP], rgba[i][GCOMP], rgba[i][BCOMP], rgba[i][ACOMP]);
         dp++;
       }
-      WritePixelArray(amesa->imageline, 0, 0, 4 * n, rp, x, y, n, 1, RECTFMT_ARGB);
+      WritePixelArray(amesa->imageline, 0, 0, 4 * n, rp, x, y, n, 1, AROS_PIXFMT);
     }
   }
   else
@@ -620,7 +629,7 @@ D(bug("mask\n"));
         {
           if(drawbits_counter)
           {
-            WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+            WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, AROS_PIXFMT);
 /*D(bug("[AROSMESA:TC] WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
             dp = (ULONG*)amesa->imageline;
             x = x + drawbits_counter;
@@ -636,7 +645,7 @@ D(bug("mask\n"));
 
       if(drawbits_counter)
       {
-        WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, RECTFMT_ARGB);
+        WritePixelArray(amesa->imageline, 0, 0, 4 * drawbits_counter, rp, x, y, drawbits_counter, 1, AROS_PIXFMT);
 /*D(bug("[AROSMESA:TC] WritePixelArray(ant=%d,x=%d,y=%d)\n",ant,x,y));*/
       }
     }
@@ -650,7 +659,7 @@ D(bug("nomask\n"));
         *dp = TC_ARGB(rgba[i][RCOMP], rgba[i][GCOMP], rgba[i][BCOMP],0xff);
         dp++;
       }
-      WritePixelArray(amesa->imageline, 0, 0, 4 * n, rp, x, y, n, 1, RECTFMT_ARGB);
+      WritePixelArray(amesa->imageline, 0, 0, 4 * n, rp, x, y, n, 1, AROS_PIXFMT);
     }
     
   }
@@ -794,7 +803,7 @@ D(bug("[AROSMESA:TC] arosTC_read_ci32_span()\n"));
   /* Currently this is wrong ARGB-values are NOT indexes !!!*/
   if(amesa->imageline)
   {
-    ReadPixelArray(amesa->imageline, 0, 0, 4 * n, amesa->rp, x, y, n, 1, RECTFMT_ARGB);
+    ReadPixelArray(amesa->imageline, 0, 0, 4 * n, amesa->rp, x, y, n, 1, AROS_PIXFMT);
     for(i = 0; i < n; i++)
     {
       index[i] = ((ULONG*)amesa->imageline)[i];
@@ -832,7 +841,7 @@ D(bug("[AROSMESA:TC] arosTC_read_color_span()\n"));
 
   if(amesa->imageline)
   {
-    MyReadPixelArray(amesa->imageline, 0, 0, n * 4, amesa->rp, x, y, n, 1, RECTFMT_ARGB);
+    MyReadPixelArray(amesa->imageline, 0, 0, n * 4, amesa->rp, x, y, n, 1, AROS_PIXFMT);
     for(i = 0; i < n; i++)
     {
       col = ((ULONG*)amesa->imageline)[i];
