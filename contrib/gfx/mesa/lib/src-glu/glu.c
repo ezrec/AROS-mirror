@@ -2,8 +2,8 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
+ * Version:  3.4
+ * Copyright (C) 1995-2000  Brian Paul
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -21,54 +21,14 @@
  */
 
 
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:29  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 1.10  1998/04/22 00:35:50  brianp
- * changed version to 3.0
- *
- * Revision 1.9  1997/12/09 03:03:32  brianp
- * changed version to 2.6
- *
- * Revision 1.8  1997/10/04 01:30:20  brianp
- * changed version to 2.5
- *
- * Revision 1.7  1997/08/13 01:25:21  brianp
- * changed version string to 2.4
- *
- * Revision 1.6  1997/07/24 01:28:44  brianp
- * changed precompiled header symbol from PCH to PC_HEADER
- *
- * Revision 1.5  1997/07/13 22:59:11  brianp
- * added const to viewport parameter of gluPickMatrix()
- *
- * Revision 1.4  1997/05/28 02:29:38  brianp
- * added support for precompiled headers (PCH), inserted APIENTRY keyword
- *
- * Revision 1.3  1997/04/12 16:19:02  brianp
- * changed version to 2.3
- *
- * Revision 1.2  1997/03/11 00:58:34  brianp
- * changed version to 2.2
- *
- * Revision 1.1  1996/09/27 01:19:39  brianp
- * Initial revision
- *
- */
-
-
 #ifdef PC_HEADER
 #include "all.h"
 #else
+#include <assert.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "gluP.h"
 #endif
 
@@ -86,9 +46,10 @@
 
 
 
-void APIENTRY gluLookAt( GLdouble eyex, GLdouble eyey, GLdouble eyez,
-		GLdouble centerx, GLdouble centery, GLdouble centerz,
-		GLdouble upx, GLdouble upy, GLdouble upz )
+void GLAPIENTRY
+gluLookAt(GLdouble eyex, GLdouble eyey, GLdouble eyez,
+	  GLdouble centerx, GLdouble centery, GLdouble centerz,
+	  GLdouble upx, GLdouble upy, GLdouble upz)
 {
    GLdouble m[16];
    GLdouble x[3], y[3], z[3];
@@ -100,8 +61,8 @@ void APIENTRY gluLookAt( GLdouble eyex, GLdouble eyey, GLdouble eyez,
    z[0] = eyex - centerx;
    z[1] = eyey - centery;
    z[2] = eyez - centerz;
-   mag = sqrt( z[0]*z[0] + z[1]*z[1] + z[2]*z[2] );
-   if (mag) {  /* mpichler, 19950515 */
+   mag = sqrt(z[0] * z[0] + z[1] * z[1] + z[2] * z[2]);
+   if (mag) {			/* mpichler, 19950515 */
       z[0] /= mag;
       z[1] /= mag;
       z[2] /= mag;
@@ -113,28 +74,28 @@ void APIENTRY gluLookAt( GLdouble eyex, GLdouble eyey, GLdouble eyez,
    y[2] = upz;
 
    /* X vector = Y cross Z */
-   x[0] =  y[1]*z[2] - y[2]*z[1];
-   x[1] = -y[0]*z[2] + y[2]*z[0];
-   x[2] =  y[0]*z[1] - y[1]*z[0];
+   x[0] = y[1] * z[2] - y[2] * z[1];
+   x[1] = -y[0] * z[2] + y[2] * z[0];
+   x[2] = y[0] * z[1] - y[1] * z[0];
 
    /* Recompute Y = Z cross X */
-   y[0] =  z[1]*x[2] - z[2]*x[1];
-   y[1] = -z[0]*x[2] + z[2]*x[0];
-   y[2] =  z[0]*x[1] - z[1]*x[0];
+   y[0] = z[1] * x[2] - z[2] * x[1];
+   y[1] = -z[0] * x[2] + z[2] * x[0];
+   y[2] = z[0] * x[1] - z[1] * x[0];
 
    /* mpichler, 19950515 */
    /* cross product gives area of parallelogram, which is < 1.0 for
     * non-perpendicular unit-length vectors; so normalize x, y here
     */
 
-   mag = sqrt( x[0]*x[0] + x[1]*x[1] + x[2]*x[2] );
+   mag = sqrt(x[0] * x[0] + x[1] * x[1] + x[2] * x[2]);
    if (mag) {
       x[0] /= mag;
       x[1] /= mag;
       x[2] /= mag;
    }
 
-   mag = sqrt( y[0]*y[0] + y[1]*y[1] + y[2]*y[2] );
+   mag = sqrt(y[0] * y[0] + y[1] * y[1] + y[2] * y[2]);
    if (mag) {
       y[0] /= mag;
       y[1] /= mag;
@@ -142,47 +103,59 @@ void APIENTRY gluLookAt( GLdouble eyex, GLdouble eyey, GLdouble eyez,
    }
 
 #define M(row,col)  m[col*4+row]
-   M(0,0) = x[0];  M(0,1) = x[1];  M(0,2) = x[2];  M(0,3) = 0.0;
-   M(1,0) = y[0];  M(1,1) = y[1];  M(1,2) = y[2];  M(1,3) = 0.0;
-   M(2,0) = z[0];  M(2,1) = z[1];  M(2,2) = z[2];  M(2,3) = 0.0;
-   M(3,0) = 0.0;   M(3,1) = 0.0;   M(3,2) = 0.0;   M(3,3) = 1.0;
+   M(0, 0) = x[0];
+   M(0, 1) = x[1];
+   M(0, 2) = x[2];
+   M(0, 3) = 0.0;
+   M(1, 0) = y[0];
+   M(1, 1) = y[1];
+   M(1, 2) = y[2];
+   M(1, 3) = 0.0;
+   M(2, 0) = z[0];
+   M(2, 1) = z[1];
+   M(2, 2) = z[2];
+   M(2, 3) = 0.0;
+   M(3, 0) = 0.0;
+   M(3, 1) = 0.0;
+   M(3, 2) = 0.0;
+   M(3, 3) = 1.0;
 #undef M
-   glMultMatrixd( m );
+   glMultMatrixd(m);
 
    /* Translate Eye to Origin */
-   glTranslated( -eyex, -eyey, -eyez );
+   glTranslated(-eyex, -eyey, -eyez);
 
 }
 
 
 
-void APIENTRY gluOrtho2D( GLdouble left, GLdouble right,
-		 GLdouble bottom, GLdouble top )
+void GLAPIENTRY
+gluOrtho2D(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top)
 {
-   glOrtho( left, right, bottom, top, -1.0, 1.0 );
+   glOrtho(left, right, bottom, top, -1.0, 1.0);
 }
 
 
 
-void APIENTRY gluPerspective( GLdouble fovy, GLdouble aspect,
-		     GLdouble zNear, GLdouble zFar )
+void GLAPIENTRY
+gluPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar)
 {
    GLdouble xmin, xmax, ymin, ymax;
 
-   ymax = zNear * tan( fovy * M_PI / 360.0 );
+   ymax = zNear * tan(fovy * M_PI / 360.0);
    ymin = -ymax;
 
    xmin = ymin * aspect;
    xmax = ymax * aspect;
 
-   glFrustum( xmin, xmax, ymin, ymax, zNear, zFar );
+   glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
 }
 
 
 
-void APIENTRY gluPickMatrix( GLdouble x, GLdouble y,
-		    GLdouble width, GLdouble height,
-                             const GLint viewport[4] )
+void GLAPIENTRY
+gluPickMatrix(GLdouble x, GLdouble y,
+	      GLdouble width, GLdouble height, const GLint viewport[4])
 {
    GLfloat m[16];
    GLfloat sx, sy;
@@ -194,29 +167,41 @@ void APIENTRY gluPickMatrix( GLdouble x, GLdouble y,
    ty = (viewport[3] + 2.0 * (viewport[1] - y)) / height;
 
 #define M(row,col)  m[col*4+row]
-   M(0,0) = sx;   M(0,1) = 0.0;  M(0,2) = 0.0;  M(0,3) = tx;
-   M(1,0) = 0.0;  M(1,1) = sy;   M(1,2) = 0.0;  M(1,3) = ty;
-   M(2,0) = 0.0;  M(2,1) = 0.0;  M(2,2) = 1.0;  M(2,3) = 0.0;
-   M(3,0) = 0.0;  M(3,1) = 0.0;  M(3,2) = 0.0;  M(3,3) = 1.0;
+   M(0, 0) = sx;
+   M(0, 1) = 0.0;
+   M(0, 2) = 0.0;
+   M(0, 3) = tx;
+   M(1, 0) = 0.0;
+   M(1, 1) = sy;
+   M(1, 2) = 0.0;
+   M(1, 3) = ty;
+   M(2, 0) = 0.0;
+   M(2, 1) = 0.0;
+   M(2, 2) = 1.0;
+   M(2, 3) = 0.0;
+   M(3, 0) = 0.0;
+   M(3, 1) = 0.0;
+   M(3, 2) = 0.0;
+   M(3, 3) = 1.0;
 #undef M
 
-   glMultMatrixf( m );
+   glMultMatrixf(m);
 }
 
 
 
-const GLubyte* APIENTRY gluErrorString( GLenum errorCode )
+const GLubyte *GLAPIENTRY
+gluErrorString(GLenum errorCode)
 {
    static char *tess_error[] = {
-      "missing gluEndPolygon",
       "missing gluBeginPolygon",
-      "misoriented contour",
-      "vertex/edge intersection",
+      "missing gluBeginContour",
+      "missing gluEndPolygon",
+      "missing gluEndContour",
       "misoriented or self-intersecting loops",
       "coincident vertices",
       "colinear vertices",
-      "intersecting edges",
-      "not coplanar contours"
+      "FIST recovery process fatal error"
    };
    static char *nurbs_error[] = {
       "spline order un-supported",
@@ -252,55 +237,55 @@ const GLubyte* APIENTRY gluErrorString( GLenum errorCode )
       "unconnected trim curves",
       "unknown knot error",
       "negative vertex count encountered",
-      "negative byte-stride encounteed",
+      "negative byte-stride encountered",
       "unknown type descriptor",
       "null control array or knot vector",
       "duplicate point on pwlcurve"
    };
 
    /* GL Errors */
-   if (errorCode==GL_NO_ERROR) {
+   if (errorCode == GL_NO_ERROR) {
       return (GLubyte *) "no error";
    }
-   else if (errorCode==GL_INVALID_VALUE) {
+   else if (errorCode == GL_INVALID_VALUE) {
       return (GLubyte *) "invalid value";
    }
-   else if (errorCode==GL_INVALID_ENUM) {
+   else if (errorCode == GL_INVALID_ENUM) {
       return (GLubyte *) "invalid enum";
    }
-   else if (errorCode==GL_INVALID_OPERATION) {
+   else if (errorCode == GL_INVALID_OPERATION) {
       return (GLubyte *) "invalid operation";
    }
-   else if (errorCode==GL_STACK_OVERFLOW) {
+   else if (errorCode == GL_STACK_OVERFLOW) {
       return (GLubyte *) "stack overflow";
    }
-   else if (errorCode==GL_STACK_UNDERFLOW) {
+   else if (errorCode == GL_STACK_UNDERFLOW) {
       return (GLubyte *) "stack underflow";
    }
-   else if (errorCode==GL_OUT_OF_MEMORY) {
+   else if (errorCode == GL_OUT_OF_MEMORY) {
       return (GLubyte *) "out of memory";
    }
    /* GLU Errors */
-   else if (errorCode==GLU_NO_ERROR) {
+   else if (errorCode == GLU_NO_ERROR) {
       return (GLubyte *) "no error";
    }
-   else if (errorCode==GLU_INVALID_ENUM) {
+   else if (errorCode == GLU_INVALID_ENUM) {
       return (GLubyte *) "invalid enum";
    }
-   else if (errorCode==GLU_INVALID_VALUE) {
+   else if (errorCode == GLU_INVALID_VALUE) {
       return (GLubyte *) "invalid value";
    }
-   else if (errorCode==GLU_OUT_OF_MEMORY) {
+   else if (errorCode == GLU_OUT_OF_MEMORY) {
       return (GLubyte *) "out of memory";
    }
-   else if (errorCode==GLU_INCOMPATIBLE_GL_VERSION) {
+   else if (errorCode == GLU_INCOMPATIBLE_GL_VERSION) {
       return (GLubyte *) "incompatible GL version";
    }
-   else if (errorCode>=GLU_TESS_ERROR1 && errorCode<=GLU_TESS_ERROR9) {
-      return (GLubyte *) tess_error[errorCode-GLU_TESS_ERROR1];
+   else if (errorCode >= GLU_TESS_ERROR1 && errorCode <= GLU_TESS_ERROR8) {
+      return (GLubyte *) tess_error[errorCode - GLU_TESS_ERROR1];
    }
-   else if (errorCode>=GLU_NURBS_ERROR1 && errorCode<=GLU_NURBS_ERROR37) {
-      return (GLubyte *) nurbs_error[errorCode-GLU_NURBS_ERROR1];
+   else if (errorCode >= GLU_NURBS_ERROR1 && errorCode <= GLU_NURBS_ERROR37) {
+      return (GLubyte *) nurbs_error[errorCode - GLU_NURBS_ERROR1];
    }
    else {
       return NULL;
@@ -313,18 +298,92 @@ const GLubyte* APIENTRY gluErrorString( GLenum errorCode )
  * New in GLU 1.1
  */
 
-const GLubyte* APIENTRY gluGetString( GLenum name )
+const GLubyte *GLAPIENTRY
+gluGetString(GLenum name)
 {
-   static char *extensions = "";
-   static char *version = "1.1 Mesa 3.0";
+   static char *extensions = "GL_EXT_abgr";
+   static char *version = "1.1 Mesa 3.4.2";
 
    switch (name) {
-      case GLU_EXTENSIONS:
-         return (GLubyte *) extensions;
-      case GLU_VERSION:
-	 return (GLubyte *) version;
-      default:
-	 return NULL;
+   case GLU_EXTENSIONS:
+      return (GLubyte *) extensions;
+   case GLU_VERSION:
+      return (GLubyte *) version;
+   default:
+      return NULL;
    }
 }
 
+
+
+#if 0				/* gluGetProcAddressEXT not finalized yet! */
+
+#ifdef __cplusplus
+   /* for BeOS R4.5 */
+void GLAPIENTRY(*gluGetProcAddressEXT(const GLubyte * procName)) (...)
+#else
+void (GLAPIENTRY * gluGetProcAddressEXT(const GLubyte * procName)) ()
+#endif
+{
+   struct proc
+   {
+      const char *name;
+      void *address;
+   };
+   static struct proc procTable[] = {
+      {"gluGetProcAddressEXT", (void *) gluGetProcAddressEXT},	/* me! */
+
+      /* new 1.1 functions */
+      {"gluGetString", (void *) gluGetString},
+
+      /* new 1.2 functions */
+      {"gluTessBeginPolygon", (void *) gluTessBeginPolygon},
+      {"gluTessBeginContour", (void *) gluTessBeginContour},
+      {"gluTessEndContour", (void *) gluTessEndContour},
+      {"gluTessEndPolygon", (void *) gluTessEndPolygon},
+      {"gluGetTessProperty", (void *) gluGetTessProperty},
+
+      /* new 1.3 functions */
+
+      {NULL, NULL}
+   };
+   GLuint i;
+
+   for (i = 0; procTable[i].address; i++) {
+      if (strcmp((const char *) procName, procTable[i].name) == 0)
+	 return (void (GLAPIENTRY *) ()) procTable[i].address;
+   }
+
+   return NULL;
+}
+
+#endif
+
+
+
+/*
+ * New in GLU 1.3
+ */
+#ifdef GLU_VERSION_1_3
+GLboolean GLAPIENTRY
+gluCheckExtension(const char *extName, const GLubyte * extString)
+{
+   assert(extName);
+   assert(extString);
+   {
+      const int len = strlen(extName);
+      const char *start = (const char *) extString;
+
+      while (1) {
+	 const char *c = strstr(start, extName);
+	 if (!c)
+	    return GL_FALSE;
+
+	 if ((c == start || c[-1] == ' ') && (c[len] == ' ' || c[len] == 0))
+	    return GL_TRUE;
+
+	 start = c + len;
+      }
+   }
+}
+#endif

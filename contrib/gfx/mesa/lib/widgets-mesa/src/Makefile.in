@@ -139,14 +139,14 @@ GLwDrawingArea.o: \
 
 GLwDrawingAreaMakeCurrent.o: GLwDrawingAreaMakeCurrent.c
 GLwDrawingAreaSwapBuffers.o: GLwDrawingAreaSwapBuffers.c
-  
+
 GLwMDrawingArea.o: \
   GLwMDrawingArea.c \
   GLwDrawingArea.c \
   $(srcincdir)/GLwMDrawAP.h \
   $(srcincdir)/GLwDrawAP.h $(srcincdir)/GLwMDrawA.h \
   $(srcincdir)/GLwDrawA.h
- 
+
 GLwMMakeCurrent.o: \
   GLwMMakeCurrent.c \
   $(srcincdir)/MesaMDrawingAreaP.h \

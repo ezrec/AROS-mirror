@@ -2,37 +2,26 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
+ * Version:  3.4
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:32  NicJA
- * AROSMesa 3.0
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.0  1998/01/31 21:04:38  brianp
- * initial rev
- *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
@@ -46,149 +35,173 @@
 /*** Internal functions ***/
 
 
-extern struct gl_texture_image *gl_alloc_texture_image( void );
-
-
-extern void gl_free_texture_image( struct gl_texture_image *teximage );
-
-
-extern struct gl_image *
-gl_unpack_texsubimage( GLcontext *ctx, GLint width, GLint height,
-                       GLenum format, GLenum type, const GLvoid *pixels );
-
-
-extern struct gl_image *
-gl_unpack_texsubimage3D( GLcontext *ctx, GLint width, GLint height,GLint depth,
-                         GLenum format, GLenum type, const GLvoid *pixels );
+extern GLint
+_mesa_base_tex_format( GLcontext *ctx, GLint format );
 
 
 extern struct gl_texture_image *
-gl_unpack_texture( GLcontext *ctx,
-                   GLint dimensions,
-                   GLenum target,
-                   GLint level,
-                   GLint internalformat,
-                   GLsizei width, GLsizei height,
-                   GLint border,
-                   GLenum format, GLenum type,
-                   const GLvoid *pixels );
+_mesa_alloc_texture_image( void );
+
+
+extern void
+_mesa_free_texture_image( struct gl_texture_image *teximage );
+
+
+extern GLuint
+_mesa_compressed_image_size(GLcontext *ctx,
+                            GLenum internalFormat,
+                            GLint numDimensions,
+                            GLint width, GLint height, GLint depth);
+
+
+extern struct gl_texture_object *
+_mesa_select_tex_object(GLcontext *ctx, struct gl_texture_unit *texUnit,
+                        GLenum target);
+
 
 extern struct gl_texture_image *
-gl_unpack_texture3D( GLcontext *ctx,
-                     GLint dimensions,
-                     GLenum target,
-                     GLint level,
-                     GLint internalformat,
+_mesa_select_tex_image(GLcontext *ctx, const struct gl_texture_unit *texUnit,
+                       GLenum target, GLint level);
+
+
+extern void
+_mesa_get_teximage_from_driver(GLcontext *ctx, GLenum target, GLint level,
+                               const struct gl_texture_object *texObj);
+
+
+extern GLboolean
+_mesa_get_teximages_from_driver(GLcontext *ctx,
+                                struct gl_texture_object *texObj);
+
+
+
+/*** API entry point functions ***/
+
+
+extern void
+_mesa_TexImage1D( GLenum target, GLint level, GLint internalformat,
+                  GLsizei width, GLint border,
+                  GLenum format, GLenum type, const GLvoid *pixels );
+
+
+extern void
+_mesa_TexImage2D( GLenum target, GLint level, GLint internalformat,
+                  GLsizei width, GLsizei height, GLint border,
+                  GLenum format, GLenum type, const GLvoid *pixels );
+
+
+extern void
+_mesa_TexImage3D( GLenum target, GLint level, GLint internalformat,
+                  GLsizei width, GLsizei height, GLsizei depth, GLint border,
+                  GLenum format, GLenum type, const GLvoid *pixels );
+
+
+extern void
+_mesa_TexImage3DEXT( GLenum target, GLint level, GLenum internalformat,
                      GLsizei width, GLsizei height, GLsizei depth,
-                     GLint border,
+                     GLint border, GLenum format, GLenum type,
+                     const GLvoid *pixels );
+
+
+extern void
+_mesa_GetTexImage( GLenum target, GLint level,
+                   GLenum format, GLenum type, GLvoid *pixels );
+
+
+extern void
+_mesa_TexSubImage1D( GLenum target, GLint level, GLint xoffset,
+                     GLsizei width,
                      GLenum format, GLenum type,
                      const GLvoid *pixels );
 
 
-extern void gl_tex_image_1D( GLcontext *ctx,
-                             GLenum target, GLint level, GLint internalformat,
-                             GLsizei width, GLint border, GLenum format,
-                             GLenum type, const GLvoid *pixels );
+extern void
+_mesa_TexSubImage2D( GLenum target, GLint level,
+                     GLint xoffset, GLint yoffset,
+                     GLsizei width, GLsizei height,
+                     GLenum format, GLenum type,
+                     const GLvoid *pixels );
 
 
-extern void gl_tex_image_2D( GLcontext *ctx,
-                             GLenum target, GLint level, GLint internalformat,
-                             GLsizei width, GLint height, GLint border,
-                             GLenum format, GLenum type,
-                             const GLvoid *pixels );
-
-extern void gl_tex_image_3D( GLcontext *ctx,
-                             GLenum target, GLint level, GLint internalformat,
-                             GLsizei width, GLint height, GLint depth,
-                             GLint border,
-                             GLenum format, GLenum type,
-                             const GLvoid *pixels );
+extern void
+_mesa_TexSubImage3D( GLenum target, GLint level,
+                     GLint xoffset, GLint yoffset, GLint zoffset,
+                     GLsizei width, GLsizei height, GLsizei depth,
+                     GLenum format, GLenum type,
+                     const GLvoid *pixels );
 
 
-/*** API entry points ***/
+extern void
+_mesa_CopyTexImage1D( GLenum target, GLint level, GLenum internalformat,
+                      GLint x, GLint y, GLsizei width, GLint border );
 
 
-extern void gl_TexImage1D( GLcontext *ctx,
-                           GLenum target, GLint level, GLint internalformat,
-                           GLsizei width, GLint border, GLenum format,
-                           GLenum type, struct gl_image *teximage );
+extern void
+_mesa_CopyTexImage2D( GLenum target, GLint level,
+                      GLenum internalformat, GLint x, GLint y,
+                      GLsizei width, GLsizei height, GLint border );
 
 
-extern void gl_TexImage2D( GLcontext *ctx,
-                           GLenum target, GLint level, GLint internalformat,
-                           GLsizei width, GLsizei height, GLint border,
-                           GLenum format, GLenum type,
-                           struct gl_image *teximage );
+extern void
+_mesa_CopyTexSubImage1D( GLenum target, GLint level, GLint xoffset,
+                         GLint x, GLint y, GLsizei width );
 
 
-extern void gl_TexImage3DEXT( GLcontext *ctx,
-                              GLenum target, GLint level, GLint internalformat,
-                              GLsizei width, GLsizei height, GLsizei depth,
-                              GLint border,
-                              GLenum format, GLenum type,
-                              struct gl_image *teximage );
+extern void
+_mesa_CopyTexSubImage2D( GLenum target, GLint level,
+                         GLint xoffset, GLint yoffset,
+                         GLint x, GLint y, GLsizei width, GLsizei height );
 
 
-extern void gl_GetTexImage( GLcontext *ctx, GLenum target, GLint level,
-                            GLenum format, GLenum type, GLvoid *pixels );
+extern void
+_mesa_CopyTexSubImage3D( GLenum target, GLint level,
+                         GLint xoffset, GLint yoffset, GLint zoffset,
+                         GLint x, GLint y, GLsizei width, GLsizei height );
 
 
 
-extern void gl_TexSubImage1D( GLcontext *ctx,
-                              GLenum target, GLint level, GLint xoffset,
-                              GLsizei width, GLenum format, GLenum type,
-                              struct gl_image *image );
+extern void
+_mesa_CompressedTexImage1DARB(GLenum target, GLint level,
+                              GLenum internalformat, GLsizei width,
+                              GLint border, GLsizei imageSize,
+                              const GLvoid *data);
 
+extern void
+_mesa_CompressedTexImage2DARB(GLenum target, GLint level,
+                              GLenum internalformat, GLsizei width,
+                              GLsizei height, GLint border, GLsizei imageSize,
+                              const GLvoid *data);
 
-extern void gl_TexSubImage2D( GLcontext *ctx,
-                              GLenum target, GLint level,
-                              GLint xoffset, GLint yoffset,
-                              GLsizei width, GLsizei height,
-                              GLenum format, GLenum type,
-                              struct gl_image *image );
+extern void
+_mesa_CompressedTexImage3DARB(GLenum target, GLint level,
+                              GLenum internalformat, GLsizei width,
+                              GLsizei height, GLsizei depth, GLint border,
+                              GLsizei imageSize, const GLvoid *data);
 
+#ifdef VMS
+#define _mesa_CompressedTexSubImage1DARB _mesa_CompressedTexSubImage1DAR
+#define _mesa_CompressedTexSubImage2DARB _mesa_CompressedTexSubImage2DAR
+#define _mesa_CompressedTexSubImage3DARB _mesa_CompressedTexSubImage3DAR
+#endif
+extern void
+_mesa_CompressedTexSubImage1DARB(GLenum target, GLint level, GLint xoffset,
+                                 GLsizei width, GLenum format,
+                                 GLsizei imageSize, const GLvoid *data);
 
-extern void gl_TexSubImage3DEXT( GLcontext *ctx,
-                                 GLenum target, GLint level,
-                                 GLint xoffset, GLint yoffset, GLint zoffset,
-                                 GLsizei width, GLsizei height, GLsizei depth,
-                                 GLenum format, GLenum type,
-                                 struct gl_image *image );
+extern void
+_mesa_CompressedTexSubImage2DARB(GLenum target, GLint level, GLint xoffset,
+                                 GLint yoffset, GLsizei width, GLsizei height,
+                                 GLenum format, GLsizei imageSize,
+                                 const GLvoid *data);
 
+extern void
+_mesa_CompressedTexSubImage3DARB(GLenum target, GLint level, GLint xoffset,
+                                 GLint yoffset, GLint zoffset, GLsizei width,
+                                 GLsizei height, GLsizei depth, GLenum format,
+                                 GLsizei imageSize, const GLvoid *data);
 
-extern void gl_CopyTexImage1D( GLcontext *ctx,
-                               GLenum target, GLint level,
-                               GLenum internalformat,
-                               GLint x, GLint y,
-                               GLsizei width, GLint border );
+extern void
+_mesa_GetCompressedTexImageARB(GLenum target, GLint lod, GLvoid *img);
 
-
-extern void gl_CopyTexImage2D( GLcontext *ctx,
-                               GLenum target, GLint level,
-                               GLenum internalformat, GLint x, GLint y,
-                               GLsizei width, GLsizei height,
-                               GLint border );
-
-
-extern void gl_CopyTexSubImage1D( GLcontext *ctx,
-                                  GLenum target, GLint level,
-                                  GLint xoffset, GLint x, GLint y,
-                                  GLsizei width );
-
-
-extern void gl_CopyTexSubImage2D( GLcontext *ctx,
-                                  GLenum target, GLint level,
-                                  GLint xoffset, GLint yoffset,
-                                  GLint x, GLint y,
-                                  GLsizei width, GLsizei height );
-
-
-extern void gl_CopyTexSubImage3DEXT( GLcontext *ctx,
-                                     GLenum target, GLint level,
-                                     GLint xoffset, GLint yoffset,
-                                     GLint zoffset,
-                                     GLint x, GLint y,
-                                     GLsizei width, GLsizei height );
 
 #endif
-

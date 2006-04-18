@@ -1,66 +1,45 @@
-/* $Id$ */
+/* $Id$*/
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:31  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.5  1998/09/01 03:07:37  brianp
- * references to texture coords now indexed by ctx->TexCoordSet
- *
- * Revision 3.4  1998/03/28 03:58:30  brianp
- * removed unneeded break
- *
- * Revision 3.3  1998/02/20 04:50:44  brianp
- * implemented GL_SGIS_multitexture
- *
- * Revision 3.2  1998/02/08 20:18:20  brianp
- * removed unneeded headers
- *
- * Revision 3.1  1998/02/01 16:37:19  brianp
- * added GL_EXT_rescale_normal extension
- *
- * Revision 3.0  1998/01/31 20:51:23  brianp
- * initial rev
- *
+ * Version:  3.4
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
 #ifdef PC_HEADER
 #include "all.h"
 #else
-#include <string.h>
+#include "glheader.h"
 #include "context.h"
 #include "enable.h"
 #include "light.h"
 #include "macros.h"
+#include "matrix.h"
+#include "mmath.h"
+#include "simple_list.h"
 #include "types.h"
 #include "vbfill.h"
+#include "xform.h"
+#include "enums.h"
 #endif
 
 
@@ -68,20 +47,15 @@
 /*
  * Perform glEnable and glDisable calls.
  */
-static void gl_enable( GLcontext* ctx, GLenum cap, GLboolean state )
+void _mesa_set_enable( GLcontext *ctx, GLenum cap, GLboolean state )
 {
-   GLuint texSet = ctx->Texture.CurrentSet;
-   GLuint p;
+   ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH( ctx, state ? "glEnable" : "glDisable" );
 
-   if (INSIDE_BEGIN_END(ctx)) {
-      if (state) {
-	 gl_error( ctx, GL_INVALID_OPERATION, "glEnable" );
-      }
-      else {
-	 gl_error( ctx, GL_INVALID_OPERATION, "glDisable" );
-      }
-      return;
-   }
+   if (MESA_VERBOSE & VERBOSE_API) 
+      fprintf(stderr, "%s %s (newstate is %x)\n", 
+	      state ? "glEnable" : "glDisable",
+	      gl_lookup_enum_by_nr(cap),
+	      ctx->NewState);
 
    switch (cap) {
       case GL_ALPHA_TEST:
@@ -112,35 +86,44 @@ static void gl_enable( GLcontext* ctx, GLenum cap, GLboolean state )
       case GL_CLIP_PLANE3:
       case GL_CLIP_PLANE4:
       case GL_CLIP_PLANE5:
-	 ctx->Transform.ClipEnabled[cap-GL_CLIP_PLANE0] = state;
-	 /* Check if any clip planes enabled */
-         ctx->Transform.AnyClip = GL_FALSE;
-         for (p=0;p<MAX_CLIP_PLANES;p++) {
-            if (ctx->Transform.ClipEnabled[p]) {
-               ctx->Transform.AnyClip = GL_TRUE;
-               break;
-            }
-         }
+	 if (cap >= GL_CLIP_PLANE0 && 
+	     cap <= GL_CLIP_PLANE5 &&
+	     ctx->Transform.ClipEnabled[cap-GL_CLIP_PLANE0] != state) 
+	 {
+	    GLuint p = cap-GL_CLIP_PLANE0;
+
+	    ctx->Transform.ClipEnabled[p] = state;
+	    ctx->NewState |= NEW_USER_CLIP;
+
+	    if (state) {
+	       ctx->Enabled |= ENABLE_USERCLIP;
+	       ctx->Transform.AnyClip++;
+	       
+	       if (ctx->ProjectionMatrix.flags & MAT_DIRTY_ALL_OVER) {
+		  gl_matrix_analyze( &ctx->ProjectionMatrix );
+	       }
+	       
+	       gl_transform_vector( ctx->Transform.ClipUserPlane[p],
+				    ctx->Transform.EyeUserPlane[p],
+				    ctx->ProjectionMatrix.inv );
+	    } else {
+	       if (--ctx->Transform.AnyClip == 0)
+		  ctx->Enabled &= ~ENABLE_USERCLIP;	       
+	    }	    
+	 }
 	 break;
       case GL_COLOR_MATERIAL:
          if (ctx->Light.ColorMaterialEnabled!=state) {
             ctx->Light.ColorMaterialEnabled = state;
-            if (state) {
-               GLfloat color[4];
-               color[0] = ctx->Current.ByteColor[0] * (1.0F / 255.0F);
-               color[1] = ctx->Current.ByteColor[1] * (1.0F / 255.0F);
-               color[2] = ctx->Current.ByteColor[2] * (1.0F / 255.0F);
-               color[3] = ctx->Current.ByteColor[3] * (1.0F / 255.0F);
-               /* update material with current color */
-               gl_set_material( ctx, ctx->Light.ColorMaterialBitmask, color );
-            }
-            gl_set_color_function(ctx);
-            ctx->NewState |= NEW_LIGHTING;
+	    ctx->NewState |= NEW_LIGHTING;
+            if (state)
+               gl_update_color_material( ctx, ctx->Current.ByteColor );
          }
 	 break;
       case GL_CULL_FACE:
          if (ctx->Polygon.CullFlag!=state) {
             ctx->Polygon.CullFlag = state;
+	    ctx->TriangleCaps ^= DD_TRI_CULL;
             ctx->NewState |= NEW_POLYGON;
          }
 	 break;
@@ -160,16 +143,20 @@ static void gl_enable( GLcontext* ctx, GLenum cap, GLboolean state )
             state = GL_FALSE;
          }
          if (ctx->Color.DitherFlag!=state) {
-	 ctx->Color.DitherFlag = state;
+            ctx->Color.DitherFlag = state;
             ctx->NewState |= NEW_RASTER_OPS;
          }
 	 break;
       case GL_FOG:
 	 if (ctx->Fog.Enabled!=state) {
             ctx->Fog.Enabled = state;
-            ctx->NewState |= NEW_RASTER_OPS;
+	    ctx->Enabled ^= ENABLE_FOG;
+            ctx->NewState |= NEW_FOG|NEW_RASTER_OPS;
          }
 	 break;
+      case GL_HISTOGRAM:
+         ctx->Pixel.HistogramEnabled = state;
+         break;
       case GL_LIGHT0:
       case GL_LIGHT1:
       case GL_LIGHT2:
@@ -178,38 +165,58 @@ static void gl_enable( GLcontext* ctx, GLenum cap, GLboolean state )
       case GL_LIGHT5:
       case GL_LIGHT6:
       case GL_LIGHT7:
-         ctx->Light.Light[cap-GL_LIGHT0].Enabled = state;
-         ctx->NewState |= NEW_LIGHTING;
+	 if (ctx->Light.Light[cap-GL_LIGHT0].Enabled != state) 
+	 {
+	    ctx->Light.Light[cap-GL_LIGHT0].Enabled = state;
+
+	    if (state) {
+	       insert_at_tail(&ctx->Light.EnabledList, 
+			      &ctx->Light.Light[cap-GL_LIGHT0]);
+	       if (ctx->Light.Enabled)
+		  ctx->Enabled |= ENABLE_LIGHT;
+	    } else {
+	       remove_from_list(&ctx->Light.Light[cap-GL_LIGHT0]);
+	       if (is_empty_list(&ctx->Light.EnabledList))
+		  ctx->Enabled &= ~ENABLE_LIGHT;
+	    }
+
+	    ctx->NewState |= NEW_LIGHTING;
+	 }
          break;
       case GL_LIGHTING:
          if (ctx->Light.Enabled!=state) {
             ctx->Light.Enabled = state;
+	    ctx->Enabled &= ~ENABLE_LIGHT;
+            if (state)
+	       ctx->Enabled |= ENABLE_LIGHT;
             ctx->NewState |= NEW_LIGHTING;
          }
          break;
       case GL_LINE_SMOOTH:
 	 if (ctx->Line.SmoothFlag!=state) {
             ctx->Line.SmoothFlag = state;
+	    ctx->TriangleCaps ^= DD_LINE_SMOOTH;
             ctx->NewState |= NEW_RASTER_OPS;
          }
 	 break;
       case GL_LINE_STIPPLE:
 	 if (ctx->Line.StippleFlag!=state) {
             ctx->Line.StippleFlag = state;
+	    ctx->TriangleCaps ^= DD_LINE_STIPPLE;
             ctx->NewState |= NEW_RASTER_OPS;
          }
 	 break;
       case GL_INDEX_LOGIC_OP:
          if (ctx->Color.IndexLogicOpEnabled!=state) {
+	    ctx->Color.IndexLogicOpEnabled = state;
             ctx->NewState |= NEW_RASTER_OPS;
          }
-	 ctx->Color.IndexLogicOpEnabled = state;
 	 break;
       case GL_COLOR_LOGIC_OP:
          if (ctx->Color.ColorLogicOpEnabled!=state) {
+	    ctx->Color.ColorLogicOpEnabled = state;
             ctx->NewState |= NEW_RASTER_OPS;
          }
-	 ctx->Color.ColorLogicOpEnabled = state;
 	 break;
       case GL_MAP1_COLOR_4:
 	 ctx->Eval.Map1Color4 = state;
@@ -265,24 +272,34 @@ static void gl_enable( GLcontext* ctx, GLenum cap, GLboolean state )
       case GL_MAP2_VERTEX_4:
 	 ctx->Eval.Map2Vertex4 = state;
 	 break;
+      case GL_MINMAX:
+         ctx->Pixel.MinMaxEnabled = state;
+         break;
       case GL_NORMALIZE:
-	 ctx->Transform.Normalize = state;
+	 if (ctx->Transform.Normalize != state) {
+	    ctx->Transform.Normalize = state;
+	    ctx->NewState |= NEW_NORMAL_TRANSFORM|NEW_LIGHTING;
+	    ctx->Enabled ^= ENABLE_NORMALIZE;
+	 }
 	 break;
       case GL_POINT_SMOOTH:
 	 if (ctx->Point.SmoothFlag!=state) {
             ctx->Point.SmoothFlag = state;
+	    ctx->TriangleCaps ^= DD_POINT_SMOOTH;
             ctx->NewState |= NEW_RASTER_OPS;
          }
 	 break;
       case GL_POLYGON_SMOOTH:
 	 if (ctx->Polygon.SmoothFlag!=state) {
             ctx->Polygon.SmoothFlag = state;
+	    ctx->TriangleCaps ^= DD_TRI_SMOOTH;
             ctx->NewState |= NEW_RASTER_OPS;
          }
 	 break;
       case GL_POLYGON_STIPPLE:
 	 if (ctx->Polygon.StippleFlag!=state) {
             ctx->Polygon.StippleFlag = state;
+	    ctx->TriangleCaps ^= DD_TRI_STIPPLE;
             ctx->NewState |= NEW_RASTER_OPS;
          }
 	 break;
@@ -306,7 +323,11 @@ static void gl_enable( GLcontext* ctx, GLenum cap, GLboolean state )
          }
          break;
       case GL_RESCALE_NORMAL_EXT:
-         ctx->Transform.RescaleNormals = state;
+	 if (ctx->Transform.RescaleNormals != state) {
+	    ctx->Transform.RescaleNormals = state;
+	    ctx->NewState |= NEW_NORMAL_TRANSFORM|NEW_LIGHTING;
+	    ctx->Enabled ^= ENABLE_RESCALE;
+	 }
          break;
       case GL_SCISSOR_TEST:
          if (ctx->Scissor.Enabled!=state) {
@@ -316,8 +337,6 @@ static void gl_enable( GLcontext* ctx, GLenum cap, GLboolean state )
 	 break;
       case GL_SHARED_TEXTURE_PALETTE_EXT:
          ctx->Texture.SharedPalette = state;
-         if (ctx->Driver.UseGlobalTexturePalette)
-            (*ctx->Driver.UseGlobalTexturePalette)( ctx, state );
          break;
       case GL_STENCIL_TEST:
 	 if (state && ctx->Visual->StencilBits==0) {
@@ -327,136 +346,239 @@ static void gl_enable( GLcontext* ctx, GLenum cap, GLboolean state )
 	 if (ctx->Stencil.Enabled!=state) {
             ctx->Stencil.Enabled = state;
             ctx->NewState |= NEW_RASTER_OPS;
+	    ctx->TriangleCaps ^= DD_STENCIL;
          }
 	 break;
       case GL_TEXTURE_1D:
          if (ctx->Visual->RGBAflag) {
-            /* texturing only works in RGB mode */
-            GLuint bit = TEXTURE0_1D << (ctx->Texture.CurrentSet * 4);
+	    const GLuint curr = ctx->Texture.CurrentUnit;
+            struct gl_texture_unit *texUnit = &ctx->Texture.Unit[curr];
+	    ctx->NewState |= NEW_TEXTURE_ENABLE;
             if (state) {
-               ctx->Texture.Enabled |= bit;
-            }
+	       texUnit->Enabled |= TEXTURE0_1D;
+	    }
             else {
-               ctx->Texture.Enabled &= (~bit);
+               texUnit->Enabled &= ~TEXTURE0_1D;
             }
-            ctx->NewState |= (NEW_RASTER_OPS | NEW_TEXTURING);
          }
-	 break;
+         break;
       case GL_TEXTURE_2D:
          if (ctx->Visual->RGBAflag) {
-            /* texturing only works in RGB mode */
-            GLuint bit = TEXTURE0_2D << (ctx->Texture.CurrentSet * 4);
+	    const GLuint curr = ctx->Texture.CurrentUnit;
+            struct gl_texture_unit *texUnit = &ctx->Texture.Unit[curr];
+	    ctx->NewState |= NEW_TEXTURE_ENABLE;
             if (state) {
-               ctx->Texture.Enabled |= bit;
-            }
+	       texUnit->Enabled |= TEXTURE0_2D;
+	    }
             else {
-               ctx->Texture.Enabled &= (~bit);
+               texUnit->Enabled &= ~TEXTURE0_2D;
             }
-            ctx->NewState |= (NEW_RASTER_OPS | NEW_TEXTURING);
          }
 	 break;
-      case GL_TEXTURE_3D_EXT:
+      case GL_TEXTURE_3D:
          if (ctx->Visual->RGBAflag) {
-            /* texturing only works in RGB mode */
-            GLuint bit = TEXTURE0_3D << (ctx->Texture.CurrentSet * 4);
+	    const GLuint curr = ctx->Texture.CurrentUnit;
+            struct gl_texture_unit *texUnit = &ctx->Texture.Unit[curr];
+	    ctx->NewState |= NEW_TEXTURE_ENABLE;
             if (state) {
-               ctx->Texture.Enabled |= bit;
-            }
+	       texUnit->Enabled |= TEXTURE0_3D;
+	    }
             else {
-               ctx->Texture.Enabled &= (~bit);
+               texUnit->Enabled &= ~TEXTURE0_3D;
             }
-            ctx->NewState |= (NEW_RASTER_OPS | NEW_TEXTURING);
          }
          break;
       case GL_TEXTURE_GEN_Q:
-         if (state) {
-            ctx->Texture.Set[texSet].TexGenEnabled |= Q_BIT;
+         {
+            struct gl_texture_unit *texUnit = &ctx->Texture.Unit[ctx->Texture.CurrentUnit];
+            if (state)
+               texUnit->TexGenEnabled |= Q_BIT;
+            else
+               texUnit->TexGenEnabled &= ~Q_BIT;
+            ctx->NewState |= NEW_TEXTURING;
          }
-         else {
-            ctx->Texture.Set[texSet].TexGenEnabled &= ~Q_BIT;
-         }
-         ctx->NewState |= NEW_TEXTURING;
 	 break;
       case GL_TEXTURE_GEN_R:
-         if (state) {
-            ctx->Texture.Set[texSet].TexGenEnabled |= R_BIT;
+         {
+            struct gl_texture_unit *texUnit = &ctx->Texture.Unit[ctx->Texture.CurrentUnit];
+            if (state)
+               texUnit->TexGenEnabled |= R_BIT;
+            else
+               texUnit->TexGenEnabled &= ~R_BIT;
+            ctx->NewState |= NEW_TEXTURING;
          }
-         else {
-            ctx->Texture.Set[texSet].TexGenEnabled &= ~R_BIT;
-         }
-         ctx->NewState |= NEW_TEXTURING;
 	 break;
       case GL_TEXTURE_GEN_S:
-	 if (state) {
-            ctx->Texture.Set[texSet].TexGenEnabled |= S_BIT;
+         {
+            struct gl_texture_unit *texUnit = &ctx->Texture.Unit[ctx->Texture.CurrentUnit];
+            if (state)
+               texUnit->TexGenEnabled |= S_BIT;
+            else
+               texUnit->TexGenEnabled &= ~S_BIT;
+            ctx->NewState |= NEW_TEXTURING;
          }
-         else {
-            ctx->Texture.Set[texSet].TexGenEnabled &= ~S_BIT;
-         }
-         ctx->NewState |= NEW_TEXTURING;
 	 break;
       case GL_TEXTURE_GEN_T:
-         if (state) {
-            ctx->Texture.Set[texSet].TexGenEnabled |= T_BIT;
+         {
+            struct gl_texture_unit *texUnit = &ctx->Texture.Unit[ctx->Texture.CurrentUnit];
+            if (state)
+               texUnit->TexGenEnabled |= T_BIT;
+            else
+               texUnit->TexGenEnabled &= ~T_BIT;
+            ctx->NewState |= NEW_TEXTURING;
          }
-         else {
-            ctx->Texture.Set[texSet].TexGenEnabled &= ~T_BIT;
-         }
-         ctx->NewState |= NEW_TEXTURING;
 	 break;
 
       /*
        * CLIENT STATE!!!
        */
       case GL_VERTEX_ARRAY:
-         ctx->Array.VertexEnabled = state;
+#ifdef VAO
+         ctx->Array.Current->Vertex.Enabled = state;
+#else
+         ctx->Array.Vertex.Enabled = state;
+#endif
          break;
       case GL_NORMAL_ARRAY:
-         ctx->Array.NormalEnabled = state;
+#ifdef VAO
+         ctx->Array.Current->Normal.Enabled = state;
+#else
+         ctx->Array.Normal.Enabled = state;
+#endif
          break;
       case GL_COLOR_ARRAY:
-         ctx->Array.ColorEnabled = state;
+#ifdef VAO
+         ctx->Array.Current->Color.Enabled = state;
+#else
+         ctx->Array.Color.Enabled = state;
+#endif
          break;
       case GL_INDEX_ARRAY:
-         ctx->Array.IndexEnabled = state;
+#ifdef VAO
+         ctx->Array.Current->Index.Enabled = state;
+#else
+         ctx->Array.Index.Enabled = state;
+#endif
          break;
       case GL_TEXTURE_COORD_ARRAY:
-         ctx->Array.TexCoordEnabled[ctx->TexCoordSet] = state;
+#ifdef VAO
+         ctx->Array.Current->TexCoord[ctx->Array.ActiveTexture].Enabled = state;
+#else
+         ctx->Array.TexCoord[ctx->Array.ActiveTexture].Enabled = state;
+#endif
          break;
       case GL_EDGE_FLAG_ARRAY:
-         ctx->Array.EdgeFlagEnabled = state;
+#ifdef VAO
+         ctx->Array.Current->EdgeFlag.Enabled = state;
+#else
+         ctx->Array.EdgeFlag.Enabled = state;
+#endif
          break;
 
-      default:
-	 if (state) {
-	    gl_error( ctx, GL_INVALID_ENUM, "glEnable" );
-	 }
-	 else {
-	    gl_error( ctx, GL_INVALID_ENUM, "glDisable" );
-	 }
+      /* GL_HP_occlusion_test */
+      case GL_OCCLUSION_TEST_HP:
+         if (ctx->Extensions.HaveHpOcclusionTest) {
+            ctx->Depth.OcclusionTest = state;
+            if (state)
+               ctx->OcclusionResult = ctx->OcclusionResultSaved;
+            else
+               ctx->OcclusionResultSaved = ctx->OcclusionResult;
+            ctx->NewState |= NEW_RASTER_OPS;
+         }
+         else {
+            gl_error( ctx, GL_INVALID_ENUM, state ? "glEnable": "glDisable" );
+            return;
+         }
          break;
+
+      /* GL_SGIS_pixel_texture */
+      case GL_PIXEL_TEXTURE_SGIS:
+         ctx->Pixel.PixelTextureEnabled = state;
+         break;
+
+      /* GL_SGIX_pixel_texture */
+      case GL_PIXEL_TEX_GEN_SGIX:
+         ctx->Pixel.PixelTextureEnabled = state;
+         break;
+
+      /* GL_SGI_color_table */
+      case GL_COLOR_TABLE_SGI:
+         ctx->Pixel.ColorTableEnabled = state;
+         break;
+      case GL_POST_CONVOLUTION_COLOR_TABLE_SGI:
+         ctx->Pixel.PostConvolutionColorTableEnabled = state;
+         break;
+      case GL_POST_COLOR_MATRIX_COLOR_TABLE_SGI:
+         ctx->Pixel.PostColorMatrixColorTableEnabled = state;
+         break;
+
+      /* GL_EXT_convolution */
+      case GL_CONVOLUTION_1D:
+         ctx->Pixel.Convolution1DEnabled = state;
+         break;
+      case GL_CONVOLUTION_2D:
+         ctx->Pixel.Convolution2DEnabled = state;
+         break;
+      case GL_SEPARABLE_2D:
+         ctx->Pixel.Separable2DEnabled = state;
+         break;
+
+      /* GL_ARB_texture_cube_map */
+      case GL_TEXTURE_CUBE_MAP_ARB:
+         if (ctx->Extensions.HaveTextureCubeMap) {
+            if (ctx->Visual->RGBAflag) {
+               const GLuint curr = ctx->Texture.CurrentUnit;
+               struct gl_texture_unit *texUnit = &ctx->Texture.Unit[curr];
+               ctx->NewState |= NEW_TEXTURE_ENABLE;
+               if (state) {
+                  texUnit->Enabled |= TEXTURE0_CUBE;
+               }
+               else {
+                  texUnit->Enabled &= ~TEXTURE0_CUBE;
+               }
+            }
+         }
+         else {
+            gl_error(ctx, GL_INVALID_ENUM, state ? "glEnable" : "glDisable");
+            return;
+         }
+	 break;
+
+      default:
+         gl_error(ctx, GL_INVALID_ENUM, state ? "glEnable" : "glDisable");
+         return;
+   }
+
+   if (ctx->Driver.Enable) {
+      (*ctx->Driver.Enable)( ctx, cap, state );
    }
 }
 
 
 
 
-void gl_Enable( GLcontext* ctx, GLenum cap )
+void
+_mesa_Enable( GLenum cap )
 {
-   gl_enable( ctx, cap, GL_TRUE );
+   GET_CURRENT_CONTEXT(ctx);
+   _mesa_set_enable( ctx, cap, GL_TRUE );
 }
 
 
 
-void gl_Disable( GLcontext* ctx, GLenum cap )
+void
+_mesa_Disable( GLenum cap )
 {
-   gl_enable( ctx, cap, GL_FALSE );
+   GET_CURRENT_CONTEXT(ctx);
+   _mesa_set_enable( ctx, cap, GL_FALSE );
 }
 
 
 
-GLboolean gl_IsEnabled( GLcontext* ctx, GLenum cap )
+GLboolean
+_mesa_IsEnabled( GLenum cap )
 {
+   GET_CURRENT_CONTEXT(ctx);
    switch (cap) {
       case GL_ALPHA_TEST:
          return ctx->Color.AlphaEnabled;
@@ -481,6 +603,8 @@ GLboolean gl_IsEnabled( GLcontext* ctx, GLenum cap )
 	 return ctx->Color.DitherFlag;
       case GL_FOG:
 	 return ctx->Fog.Enabled;
+      case GL_HISTOGRAM:
+         return ctx->Pixel.HistogramEnabled;
       case GL_LIGHTING:
          return ctx->Light.Enabled;
       case GL_LIGHT0:
@@ -536,6 +660,8 @@ GLboolean gl_IsEnabled( GLcontext* ctx, GLenum cap )
 	 return ctx->Eval.Map2Vertex3;
       case GL_MAP2_VERTEX_4:
 	 return ctx->Eval.Map2Vertex4;
+      case GL_MINMAX:
+         return ctx->Pixel.MinMaxEnabled;
       case GL_NORMALIZE:
 	 return ctx->Transform.Normalize;
       case GL_POINT_SMOOTH:
@@ -561,55 +687,125 @@ GLboolean gl_IsEnabled( GLcontext* ctx, GLenum cap )
 	 return ctx->Stencil.Enabled;
       case GL_TEXTURE_1D:
          {
-            GLuint bit = TEXTURE0_1D << (ctx->Texture.CurrentSet * 4);
-            return (ctx->Texture.Enabled & bit) ? GL_TRUE : GL_FALSE;
+            const struct gl_texture_unit *texUnit = &ctx->Texture.Unit[ctx->Texture.CurrentUnit];
+            return (texUnit->Enabled & TEXTURE0_1D) ? GL_TRUE : GL_FALSE;
          }
       case GL_TEXTURE_2D:
          {
-            GLuint bit = TEXTURE0_1D << (ctx->Texture.CurrentSet * 4);
-            return (ctx->Texture.Enabled & bit) ? GL_TRUE : GL_FALSE;
+            const struct gl_texture_unit *texUnit = &ctx->Texture.Unit[ctx->Texture.CurrentUnit];
+            return (texUnit->Enabled & TEXTURE0_2D) ? GL_TRUE : GL_FALSE;
          }
-      case GL_TEXTURE_3D_EXT:
+      case GL_TEXTURE_3D:
          {
-            GLuint bit = TEXTURE0_1D << (ctx->Texture.CurrentSet * 4);
-            return (ctx->Texture.Enabled & bit) ? GL_TRUE : GL_FALSE;
+            const struct gl_texture_unit *texUnit = &ctx->Texture.Unit[ctx->Texture.CurrentUnit];
+            return (texUnit->Enabled & TEXTURE0_3D) ? GL_TRUE : GL_FALSE;
          }
       case GL_TEXTURE_GEN_Q:
          {
-            const struct gl_texture_set *texSet = &ctx->Texture.Set[ctx->Texture.CurrentSet];
-            return (texSet->TexGenEnabled & Q_BIT) ? GL_TRUE : GL_FALSE;
+            const struct gl_texture_unit *texUnit = &ctx->Texture.Unit[ctx->Texture.CurrentUnit];
+            return (texUnit->TexGenEnabled & Q_BIT) ? GL_TRUE : GL_FALSE;
          }
       case GL_TEXTURE_GEN_R:
          {
-            const struct gl_texture_set *texSet = &ctx->Texture.Set[ctx->Texture.CurrentSet];
-            return (texSet->TexGenEnabled & R_BIT) ? GL_TRUE : GL_FALSE;
+            const struct gl_texture_unit *texUnit = &ctx->Texture.Unit[ctx->Texture.CurrentUnit];
+            return (texUnit->TexGenEnabled & R_BIT) ? GL_TRUE : GL_FALSE;
          }
       case GL_TEXTURE_GEN_S:
          {
-            const struct gl_texture_set *texSet = &ctx->Texture.Set[ctx->Texture.CurrentSet];
-            return (texSet->TexGenEnabled & S_BIT) ? GL_TRUE : GL_FALSE;
+            const struct gl_texture_unit *texUnit = &ctx->Texture.Unit[ctx->Texture.CurrentUnit];
+            return (texUnit->TexGenEnabled & S_BIT) ? GL_TRUE : GL_FALSE;
          }
       case GL_TEXTURE_GEN_T:
          {
-            const struct gl_texture_set *texSet = &ctx->Texture.Set[ctx->Texture.CurrentSet];
-            return (texSet->TexGenEnabled & T_BIT) ? GL_TRUE : GL_FALSE;
+            const struct gl_texture_unit *texUnit = &ctx->Texture.Unit[ctx->Texture.CurrentUnit];
+            return (texUnit->TexGenEnabled & T_BIT) ? GL_TRUE : GL_FALSE;
          }
 
       /*
        * CLIENT STATE!!!
        */
       case GL_VERTEX_ARRAY:
-         return ctx->Array.VertexEnabled;
+#ifdef VAO
+         return ctx->Array.Current->Vertex.Enabled;
+#else
+         return ctx->Array.Vertex.Enabled;
+#endif
       case GL_NORMAL_ARRAY:
-         return ctx->Array.NormalEnabled;
+#ifdef VAO
+         return ctx->Array.Current->Normal.Enabled;
+#else
+         return ctx->Array.Normal.Enabled;
+#endif
       case GL_COLOR_ARRAY:
-         return ctx->Array.ColorEnabled;
+#ifdef VAO
+         return ctx->Array.Current->Color.Enabled;
+#else
+         return ctx->Array.Color.Enabled;
+#endif
       case GL_INDEX_ARRAY:
-         return ctx->Array.IndexEnabled;
+#ifdef VAO
+         return ctx->Array.Current->Index.Enabled;
+#else
+         return ctx->Array.Index.Enabled;
+#endif
       case GL_TEXTURE_COORD_ARRAY:
-         return ctx->Array.TexCoordEnabled[ctx->TexCoordSet];
+#ifdef VAO
+         return ctx->Array.Current->TexCoord[ctx->Array.ActiveTexture].Enabled;
+#else
+         return ctx->Array.TexCoord[ctx->Array.ActiveTexture].Enabled;
+#endif
       case GL_EDGE_FLAG_ARRAY:
-         return ctx->Array.EdgeFlagEnabled;
+#ifdef VAO
+         return ctx->Array.Current->EdgeFlag.Enabled;
+#else
+         return ctx->Array.EdgeFlag.Enabled;
+#endif
+
+      /* GL_HP_occlusion_test */
+      case GL_OCCLUSION_TEST_HP:
+         if (ctx->Extensions.HaveHpOcclusionTest) {
+            return ctx->Depth.OcclusionTest;
+         }
+         else {
+            gl_error( ctx, GL_INVALID_ENUM, "glIsEnabled" );
+            return GL_FALSE;
+         }
+
+      /* GL_SGIS_pixel_texture */
+      case GL_PIXEL_TEXTURE_SGIS:
+         return ctx->Pixel.PixelTextureEnabled;
+
+      /* GL_SGIX_pixel_texture */
+      case GL_PIXEL_TEX_GEN_SGIX:
+         return ctx->Pixel.PixelTextureEnabled;
+
+      /* GL_SGI_color_table */
+      case GL_COLOR_TABLE_SGI:
+         return ctx->Pixel.ColorTableEnabled;
+      case GL_POST_CONVOLUTION_COLOR_TABLE_SGI:
+         return ctx->Pixel.PostConvolutionColorTableEnabled;
+      case GL_POST_COLOR_MATRIX_COLOR_TABLE_SGI:
+         return ctx->Pixel.PostColorMatrixColorTableEnabled;
+
+      /* GL_EXT_convolution */
+      case GL_CONVOLUTION_1D:
+         return ctx->Pixel.Convolution1DEnabled;
+      case GL_CONVOLUTION_2D:
+         return ctx->Pixel.Convolution2DEnabled;
+      case GL_SEPARABLE_2D:
+         return ctx->Pixel.Separable2DEnabled;
+
+      /* GL_ARB_texture_cube_map */
+      case GL_TEXTURE_CUBE_MAP_ARB:
+         if (ctx->Extensions.HaveTextureCubeMap) {
+            const struct gl_texture_unit *texUnit = &ctx->Texture.Unit[ctx->Texture.CurrentUnit];
+            return (texUnit->Enabled & TEXTURE0_CUBE) ? GL_TRUE : GL_FALSE;
+         }
+         else {
+            gl_error(ctx, GL_INVALID_ENUM, "glIsEnabled");
+            return GL_FALSE;
+         }
+
       default:
 	 gl_error( ctx, GL_INVALID_ENUM, "glIsEnabled" );
 	 return GL_FALSE;
@@ -619,43 +815,79 @@ GLboolean gl_IsEnabled( GLcontext* ctx, GLenum cap )
 
 
 
-void gl_client_state( GLcontext *ctx, GLenum cap, GLboolean state )
+static void
+client_state( GLcontext *ctx, GLenum cap, GLboolean state )
 {
+   ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH( ctx, 
+				       (state 
+					? "glEnableClientState" 
+					: "glDisableClientState") );
+
    switch (cap) {
       case GL_VERTEX_ARRAY:
-         ctx->Array.VertexEnabled = state;
+#ifdef VAO
+         ctx->Array.Current->Vertex.Enabled = state;
+#else
+         ctx->Array.Vertex.Enabled = state;
+#endif
          break;
       case GL_NORMAL_ARRAY:
-         ctx->Array.NormalEnabled = state;
+#ifdef VAO
+         ctx->Array.Current->Normal.Enabled = state;
+#else
+         ctx->Array.Normal.Enabled = state;
+#endif
          break;
       case GL_COLOR_ARRAY:
-         ctx->Array.ColorEnabled = state;
+#ifdef VAO
+         ctx->Array.Current->Color.Enabled = state;
+#else
+         ctx->Array.Color.Enabled = state;
+#endif
          break;
       case GL_INDEX_ARRAY:
-         ctx->Array.IndexEnabled = state;
+#ifdef VAO
+         ctx->Array.Current->Index.Enabled = state;
+#else
+         ctx->Array.Index.Enabled = state;
+#endif
          break;
       case GL_TEXTURE_COORD_ARRAY:
-         ctx->Array.TexCoordEnabled[ctx->TexCoordSet] = state;
+#ifdef VAO
+         ctx->Array.Current->TexCoord[ctx->Array.ActiveTexture].Enabled = state;
+#else
+         ctx->Array.TexCoord[ctx->Array.ActiveTexture].Enabled = state;
+#endif
          break;
       case GL_EDGE_FLAG_ARRAY:
-         ctx->Array.EdgeFlagEnabled = state;
+#ifdef VAO
+         ctx->Array.Current->EdgeFlag.Enabled = state;
+#else
+         ctx->Array.EdgeFlag.Enabled = state;
+#endif
          break;
       default:
          gl_error( ctx, GL_INVALID_ENUM, "glEnable/DisableClientState" );
    }
+
+   ctx->NewState |= NEW_CLIENT_STATE;
 }
 
 
 
-void gl_EnableClientState( GLcontext *ctx, GLenum cap )
+void
+_mesa_EnableClientState( GLenum cap )
 {
-   gl_client_state( ctx, cap, GL_TRUE );
+   GET_CURRENT_CONTEXT(ctx);
+   client_state( ctx, cap, GL_TRUE );
 }
 
 
 
-void gl_DisableClientState( GLcontext *ctx, GLenum cap )
+void
+_mesa_DisableClientState( GLenum cap )
 {
-   gl_client_state( ctx, cap, GL_FALSE );
+   GET_CURRENT_CONTEXT(ctx);
+   client_state( ctx, cap, GL_FALSE );
 }
 

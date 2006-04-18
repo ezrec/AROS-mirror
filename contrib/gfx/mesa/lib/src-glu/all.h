@@ -2,8 +2,8 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  2.3
- * Copyright (C) 1995-1997  Brian Paul
+ * Version:  3.3
+ * Copyright (C) 1995-2000  Brian Paul
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,24 +22,6 @@
 
 
 /*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:29  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 1.2  1997/11/20 00:28:20  brianp
- * changed PCH to PC_HEADER
- *
- * Revision 1.1  1997/05/28 02:29:14  brianp
- * Initial revision
- *
- */
-
-
-/*
  * This file includes all .h files needed for the GLU source code for
  * the purpose of precompiled headers.
  *
@@ -54,7 +36,7 @@
 
 
 #ifndef PC_HEADER
-  This is an error.  all.h should be included only if PCH is defined.
+This is an error.  all.h should be included only if PCH is defined.
 #endif
 
 
@@ -70,4 +52,4 @@
 #include "tess.h"
 
 
-#endif /*GLU_ALL_H*/
+#endif /*GLU_ALL_H */

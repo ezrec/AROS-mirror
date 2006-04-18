@@ -2,37 +2,26 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:31  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.0  1998/01/31 20:51:54  brianp
- * initial rev
- *
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
@@ -44,6 +33,9 @@
 
 
 extern void gl_init_eval( void );
+
+
+extern GLuint _mesa_evaluator_components( GLenum target );
 
 
 extern void gl_free_control_points( GLcontext *ctx,
@@ -69,44 +61,86 @@ extern GLfloat *gl_copy_map_points2d(GLenum target,
                                      const GLdouble *points );
 
 
-extern void gl_Map1f( GLcontext* ctx,
-                      GLenum target, GLfloat u1, GLfloat u2, GLint stride,
-                      GLint order, const GLfloat *points, GLboolean retain );
-
-extern void gl_Map2f( GLcontext* ctx, GLenum target,
-                      GLfloat u1, GLfloat u2, GLint ustride, GLint uorder,
-                      GLfloat v1, GLfloat v2, GLint vstride, GLint vorder,
-                      const GLfloat *points, GLboolean retain );
+extern void gl_eval_vb( struct vertex_buffer *VB );
 
 
-extern void gl_EvalCoord1f( GLcontext* ctx, GLfloat u );
+extern void
+_mesa_Map1f( GLenum target, GLfloat u1, GLfloat u2, GLint stride,
+             GLint order, const GLfloat *points );
 
-extern void gl_EvalCoord2f( GLcontext* ctx, GLfloat u, GLfloat v );
+extern void
+_mesa_Map2f( GLenum target,
+             GLfloat u1, GLfloat u2, GLint ustride, GLint uorder,
+             GLfloat v1, GLfloat v2, GLint vstride, GLint vorder,
+             const GLfloat *points );
 
+extern void
+_mesa_Map1d( GLenum target, GLdouble u1, GLdouble u2, GLint stride,
+             GLint order, const GLdouble *points );
 
-extern void gl_MapGrid1f( GLcontext* ctx, GLint un, GLfloat u1, GLfloat u2 );
+extern void
+_mesa_Map2d( GLenum target,
+             GLdouble u1, GLdouble u2, GLint ustride, GLint uorder,
+             GLdouble v1, GLdouble v2, GLint vstride, GLint vorder,
+             const GLdouble *points );
 
-extern void gl_MapGrid2f( GLcontext* ctx,
-                          GLint un, GLfloat u1, GLfloat u2,
-                          GLint vn, GLfloat v1, GLfloat v2 );
+extern void
+_mesa_MapGrid1f( GLint un, GLfloat u1, GLfloat u2 );
 
+extern void
+_mesa_MapGrid1d( GLint un, GLdouble u1, GLdouble u2 );
 
-extern void gl_GetMapdv( GLcontext* ctx,
-                         GLenum target, GLenum query, GLdouble *v );
+extern void
+_mesa_MapGrid2f( GLint un, GLfloat u1, GLfloat u2,
+                 GLint vn, GLfloat v1, GLfloat v2 );
 
-extern void gl_GetMapfv( GLcontext* ctx,
-                         GLenum target, GLenum query, GLfloat *v );
+extern void
+_mesa_MapGrid2d( GLint un, GLdouble u1, GLdouble u2,
+                 GLint vn, GLdouble v1, GLdouble v2 );
 
-extern void gl_GetMapiv( GLcontext* ctx,
-                         GLenum target, GLenum query, GLint *v );
+extern void
+_mesa_GetMapdv( GLenum target, GLenum query, GLdouble *v );
 
-extern void gl_EvalPoint1( GLcontext* ctx, GLint i );
+extern void
+_mesa_GetMapfv( GLenum target, GLenum query, GLfloat *v );
 
-extern void gl_EvalPoint2( GLcontext* ctx, GLint i, GLint j );
+extern void
+_mesa_GetMapiv( GLenum target, GLenum query, GLint *v );
 
-extern void gl_EvalMesh1( GLcontext* ctx, GLenum mode, GLint i1, GLint i2 );
+extern void
+_mesa_EvalMesh1( GLenum mode, GLint i1, GLint i2 );
 
-extern void gl_EvalMesh2( GLcontext* ctx, GLenum mode,
-                          GLint i1, GLint i2, GLint j1, GLint j2 );
+extern void
+_mesa_EvalMesh2( GLenum mode, GLint i1, GLint i2, GLint j1, GLint j2 );
+
+extern void
+_mesa_EvalCoord1d( GLdouble u );
+
+extern void
+_mesa_EvalCoord1f( GLfloat u );
+
+extern void
+_mesa_EvalCoord1dv( const GLdouble *u );
+
+extern void
+_mesa_EvalCoord1fv( const GLfloat *u );
+
+extern void
+_mesa_EvalCoord2d( GLdouble u, GLdouble v );
+
+extern void
+_mesa_EvalCoord2f( GLfloat u, GLfloat v );
+
+extern void
+_mesa_EvalCoord2dv( const GLdouble *u );
+
+extern void
+_mesa_EvalCoord2fv( const GLfloat *u );
+
+extern void
+_mesa_EvalPoint1( GLint i );
+
+extern void
+_mesa_EvalPoint2( GLint i, GLint j );
 
 #endif

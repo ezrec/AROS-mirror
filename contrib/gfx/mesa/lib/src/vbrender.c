@@ -2,62 +2,33 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:32  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.6  1998/08/06 01:36:38  brianp
- * if polygon area is zero and using GL_LINE or GL_POINT mode don't cull it
- *
- * Revision 3.5  1998/06/13 15:23:31  brianp
- * added some new debugging code
- *
- * Revision 3.4  1998/03/27 04:33:33  brianp
- * fixed more G++ warnings
- *
- * Revision 3.3  1998/03/27 04:26:44  brianp
- * fixed G++ warnings
- *
- * Revision 3.2  1998/03/05 03:09:31  brianp
- * added a few assertions in gl_render_vb()
- *
- * Revision 3.1  1998/02/02 03:09:34  brianp
- * added GL_LIGHT_MODEL_COLOR_CONTROL (separate specular color interpolation)
- *
- * Revision 3.0  1998/01/31 21:06:45  brianp
- * initial rev
- *
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
 /*
  * Render points, lines, and polygons.  The only entry point to this
  * file is the gl_render_vb() function.  This function is called after
- * the vertex buffer has filled up or glEnd() has been called.
+ * the vertex buffer has filled up or a state change has occurred.
  *
  * This file basically only makes calls to the clipping functions and
  * the point, line and triangle rasterizers via the function pointers.
@@ -70,7 +41,7 @@
 #ifdef PC_HEADER
 #include "all.h"
 #else
-#include <stdio.h>
+#include "glheader.h"
 #include "clip.h"
 #include "context.h"
 #include "light.h"
@@ -79,9 +50,13 @@
 #include "matrix.h"
 #include "pb.h"
 #include "points.h"
+#include "pipeline.h"
+#include "stages.h"
 #include "types.h"
 #include "vb.h"
+#include "vbcull.h"
 #include "vbrender.h"
+#include "vbindirect.h"
 #include "xform.h"
 #endif
 
@@ -91,131 +66,30 @@
  * vertices in the vertex buffer.
  */
 
-
-
-#ifdef PROFILE
-#  define START_PROFILE				\
-	{					\
-	   GLdouble t0 = gl_time();
-
-#  define END_PROFILE( TIMER, COUNTER, INCR )	\
-	   TIMER += (gl_time() - t0);		\
-	   COUNTER += INCR;			\
-	}
-#else
-#  define START_PROFILE
-#  define END_PROFILE( TIMER, COUNTER, INCR )
-#endif
-
-
-
-/*
- * These are called just before the device driver point, line and triangle
- * functions.  It's useful to be able to set breakpoints in these stubs.
- */
-#ifdef DEBUG
-static void debug_points(void)
-{
-   ;  /* no-op */
-}
-
-static void debug_line(void)
-{
-   ;  /* no-op */
-}
-
-static void debug_triangle(void)
-{
-   ;  /* no-op */
-}
-#endif
-
-
-
 /*
  * Render a line segment from VB[v1] to VB[v2] when either one or both
  * endpoints must be clipped.
  */
-static void render_clipped_line( GLcontext *ctx, GLuint v1, GLuint v2 )
+void gl_render_clipped_line( GLcontext *ctx, GLuint v1, GLuint v2 )
 {
-   GLfloat ndc_x, ndc_y, ndc_z;
-   GLuint provoking_vertex;
+   GLuint pv = v2;
    struct vertex_buffer *VB = ctx->VB;
+   GLubyte mask = (GLubyte) (VB->ClipMask[v1] | VB->ClipMask[v2]);
+/*     GLubyte andmask = VB->ClipMask[v1] & VB->ClipMask[v2]; */
 
-   /* which vertex dictates the color when flat shading: */
-   provoking_vertex = v2;
+   if ((ctx->line_clip_tab[VB->ClipPtr->size])( VB, &v1, &v2, mask ))
+      ctx->Driver.LineFunc( ctx, v1, v2, pv );
+}
 
-   /*
-    * Clipping may introduce new vertices.  New vertices will be stored
-    * in the vertex buffer arrays starting with location VB->Free.  After
-    * we've rendered the line, these extra vertices can be overwritten.
-    */
-   VB->Free = VB_MAX;
+static INLINE void gl_render_clipped_line2( GLcontext *ctx, 
+					    GLuint v1, GLuint v2 )
+{
+   GLuint pv = v2;
+   struct vertex_buffer *VB = ctx->VB;
+   GLubyte mask = (GLubyte) (VB->ClipMask[v1] | VB->ClipMask[v2]);
 
-   /* Clip against user clipping planes */
-   if (ctx->Transform.AnyClip) {
-      GLuint orig_v1 = v1, orig_v2 = v2;
-      if (gl_userclip_line( ctx, &v1, &v2 )==0)
-	return;
-      /* Apply projection matrix:  clip = Proj * eye */
-      if (v1!=orig_v1) {
-         TRANSFORM_POINT( VB->Clip[v1], ctx->ProjectionMatrix, VB->Eye[v1] );
-      }
-      if (v2!=orig_v2) {
-         TRANSFORM_POINT( VB->Clip[v2], ctx->ProjectionMatrix, VB->Eye[v2] );
-      }
-   }
-
-   /* Clip against view volume */
-   if (gl_viewclip_line( ctx, &v1, &v2 )==0)
-      return;
-
-   /* Transform from clip coords to ndc:  ndc = clip / W */
-   if (VB->Clip[v1][3] != 0.0F) {
-      GLfloat wInv = 1.0F / VB->Clip[v1][3];
-      ndc_x = VB->Clip[v1][0] * wInv;
-      ndc_y = VB->Clip[v1][1] * wInv;
-      ndc_z = VB->Clip[v1][2] * wInv;
-   }
-   else {
-      /* Can't divide by zero, so... */
-      ndc_x = ndc_y = ndc_z = 0.0F;
-   }
-
-   /* Map ndc coord to window coords. */
-   VB->Win[v1][0] = ndc_x * ctx->Viewport.Sx + ctx->Viewport.Tx;
-   VB->Win[v1][1] = ndc_y * ctx->Viewport.Sy + ctx->Viewport.Ty;
-   VB->Win[v1][2] = ndc_z * ctx->Viewport.Sz + ctx->Viewport.Tz;
-
-   /* Transform from clip coords to ndc:  ndc = clip / W */
-   if (VB->Clip[v2][3] != 0.0F) {
-      GLfloat wInv = 1.0F / VB->Clip[v2][3];
-      ndc_x = VB->Clip[v2][0] * wInv;
-      ndc_y = VB->Clip[v2][1] * wInv;
-      ndc_z = VB->Clip[v2][2] * wInv;
-   }
-   else {
-      /* Can't divide by zero, so... */
-      ndc_x = ndc_y = ndc_z = 0.0F;
-   }
-
-   /* Map ndc coord to window coords. */
-   VB->Win[v2][0] = ndc_x * ctx->Viewport.Sx + ctx->Viewport.Tx;
-   VB->Win[v2][1] = ndc_y * ctx->Viewport.Sy + ctx->Viewport.Ty;
-   VB->Win[v2][2] = ndc_z * ctx->Viewport.Sz + ctx->Viewport.Tz;
-
-   if (ctx->Driver.RasterSetup) {
-      /* Device driver rasterization setup */
-      (*ctx->Driver.RasterSetup)( ctx, v1, v1+1 );
-      (*ctx->Driver.RasterSetup)( ctx, v2, v2+1 );
-   }
-
-   START_PROFILE
-#ifdef DEBUG
-      debug_line();
-#endif
-   (*ctx->Driver.LineFunc)( ctx, v1, v2, provoking_vertex );
-   END_PROFILE( ctx->LineTime, ctx->LineCount, 1 )
+   if (!mask || (ctx->line_clip_tab[VB->ClipPtr->size])( VB, &v1, &v2, mask ))
+      ctx->Driver.LineFunc( ctx, v1, v2, pv );
 }
 
 
@@ -227,20 +101,14 @@ static void render_clipped_line( GLcontext *ctx, GLuint v1, GLuint v2 )
 static void offset_polygon( GLcontext *ctx, GLfloat a, GLfloat b, GLfloat c )
 {
    GLfloat ac, bc, m;
-   GLfloat offset;
+   GLfloat offset = 0.0F;
 
-   if (c<0.001F && c>-0.001F) {
-      /* to prevent underflow problems */
-      offset = 0.0F;
-   }
-   else {
+   if (c*c > 1e-16) {
       ac = a / c;
       bc = b / c;
       if (ac<0.0F)  ac = -ac;
       if (bc<0.0F)  bc = -bc;
       m = MAX2( ac, bc );
-      /* m = sqrt( ac*ac + bc*bc ); */
-
       offset = m * ctx->Polygon.OffsetFactor + ctx->Polygon.OffsetUnits;
    }
 
@@ -249,6 +117,19 @@ static void offset_polygon( GLcontext *ctx, GLfloat a, GLfloat b, GLfloat c )
    ctx->PolygonZoffset = ctx->Polygon.OffsetFill  ? offset : 0.0F;
 }
 
+#define FLUSH_PRIM(prim)			\
+do {						\
+   if (ctx->PB->primitive != prim) {		\
+      gl_reduced_prim_change( ctx, prim );	\
+   }						\
+} while(0)
+
+#define FLUSH_POLY(prim)					\
+do {								\
+   if ((ctx->IndirectTriangles & DD_TRI_UNFILLED) == 0) {	\
+      FLUSH_PRIM(prim);						\
+   }								\
+} while(0)
 
 
 /*
@@ -261,63 +142,41 @@ static void unfilled_polygon( GLcontext *ctx,
 {
    GLenum mode = facing ? ctx->Polygon.BackMode : ctx->Polygon.FrontMode;
    struct vertex_buffer *VB = ctx->VB;
+   GLubyte *edge_ptr = (GLubyte *)VB->EdgeFlagPtr->data;
+
+   FLUSH_PRIM(mode);
 
    if (mode==GL_POINT) {
       GLuint i, j;
-      GLboolean edge;
-
-      if (!ctx->Driver.PointsFunc)
-         gl_set_point_function( ctx );
-
-      if (   ctx->Primitive==GL_TRIANGLES
-          || ctx->Primitive==GL_QUADS
-          || ctx->Primitive==GL_POLYGON) {
-         edge = GL_FALSE;
-      }
-      else {
-         edge = GL_TRUE;
-      }
-
       for (i=0;i<n;i++) {
          j = vlist[i];
-         if (edge || VB->Edgeflag[j]) {
-#ifdef DEBUG
-            debug_points();
-#endif
-            (*ctx->Driver.PointsFunc)( ctx, j, j );
+         if (edge_ptr[j] & 0x3) {
+	    edge_ptr[j] &= ~0x3;
+            (*ctx->Driver.PointsFunc)( ctx, j, j+1 );
          }
       }
    }
    else if (mode==GL_LINE) {
       GLuint i, j0, j1;
-      GLboolean edge;
-
-      if (!ctx->Driver.LineFunc)
-         gl_set_line_function( ctx );
-
-      ctx->StippleCounter = 0;
-
-      if (   ctx->Primitive==GL_TRIANGLES
-          || ctx->Primitive==GL_QUADS
-          || ctx->Primitive==GL_POLYGON) {
-         edge = GL_FALSE;
-      }
-      else {
-         edge = GL_TRUE;
-      }
 
       /* draw the edges */
-      for (i=0;i<n;i++) {
-         j0 = (i==0) ? vlist[n-1] : vlist[i-1];
-         j1 = vlist[i];
-         if (edge || VB->Edgeflag[j0]) {
-            START_PROFILE
-#ifdef DEBUG
-      debug_line();
-#endif
-            (*ctx->Driver.LineFunc)( ctx, j0, j1, pv );
-            END_PROFILE( ctx->LineTime, ctx->LineCount, 1 )
-         }
+      for (i=0;i<n-1;i++) {
+	 j0 = vlist[i];
+	 j1 = vlist[i+1];
+	
+	 if (edge_ptr[j0] & 0x1) {
+	    edge_ptr[j0] &= ~0x1;
+	    (*ctx->Driver.LineFunc)( ctx, j0, j1, pv );
+	 }
+      }
+      
+      /* last edge is special */
+      j0 = vlist[i];
+      j1 = vlist[0];
+
+      if (edge_ptr[j0] & 0x2) {
+	 edge_ptr[j0] &= ~0x2;
+	 (*ctx->Driver.LineFunc)( ctx, j0, j1, pv );
       }
    }
    else {
@@ -325,124 +184,11 @@ static void unfilled_polygon( GLcontext *ctx,
       GLuint j0, i;
       j0 = vlist[0];
       for (i=2;i<n;i++) {
-         START_PROFILE
-#ifdef DEBUG
-         debug_triangle();
-#endif
          (*ctx->Driver.TriangleFunc)( ctx, j0, vlist[i-1], vlist[i], pv );
-         END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 1 )
       }
    }
 }
 
-
-/*
- * Compute signed area of the n-sided polgyon specified by vertices vb->Win[]
- * and vertex list vlist[].
- * A clockwise polygon will return a negative area.
- * A counter-clockwise polygon will return a positive area.
- */
-static GLfloat polygon_area( const struct vertex_buffer *vb,
-                             GLuint n, const GLuint vlist[] )
-{
-   GLfloat area = 0.0F;
-   GLuint i;
-   for (i=0;i<n;i++) {
-      /* area = sum of trapezoids */
-      GLuint j0 = vlist[i];
-      GLuint j1 = vlist[(i+1)%n];
-      GLfloat x0 = vb->Win[j0][0];
-      GLfloat y0 = vb->Win[j0][1];
-      GLfloat x1 = vb->Win[j1][0];
-      GLfloat y1 = vb->Win[j1][1];
-      GLfloat trapArea = (x0-x1)*(y0+y1);  /* Note: no divide by two here! */
-      area += trapArea;
-   }
-   return area * 0.5F;     /* divide by two now! */
-}
-
-
-/*
- * Render a polygon in which doesn't have to be clipped.
- * Input:  n - number of vertices
- *         vlist - list of vertices in the polygon.
- */
-static void render_polygon( GLcontext *ctx, GLuint n, GLuint vlist[] )
-{
-   struct vertex_buffer *VB = ctx->VB;
-   GLuint pv;
-
-   /* which vertex dictates the color when flat shading: */
-   pv = (ctx->Primitive==GL_POLYGON) ? vlist[0] : vlist[n-1];
-
-   /* Compute orientation of polygon, do cull test, offset, etc */
-   {
-      GLuint facing;   /* 0=front, 1=back */
-      GLfloat area = polygon_area( VB, n, vlist );
-
-      if (area==0.0F && !ctx->Polygon.Unfilled) {
-         /* polygon has zero area, don't draw it */
-         return;
-      }
-
-      facing = (area<0.0F) ^ (ctx->Polygon.FrontFace==GL_CW);
-
-      if ((facing+1) & ctx->Polygon.CullBits) {
-         return;   /* culled */
-      }
-
-      if (ctx->Polygon.OffsetAny) {
-         /* compute plane equation of polygon, apply offset */
-         GLuint j0 = vlist[0];
-         GLuint j1 = vlist[1];
-         GLuint j2 = vlist[2];
-         GLuint j3 = vlist[ (n==3) ? 0 : 3 ];
-         GLfloat ex = VB->Win[j1][0] - VB->Win[j3][0];
-         GLfloat ey = VB->Win[j1][1] - VB->Win[j3][1];
-         GLfloat ez = VB->Win[j1][2] - VB->Win[j3][2];
-         GLfloat fx = VB->Win[j2][0] - VB->Win[j0][0];
-         GLfloat fy = VB->Win[j2][1] - VB->Win[j0][1];
-         GLfloat fz = VB->Win[j2][2] - VB->Win[j0][2];
-         GLfloat a = ey*fz-ez*fy;
-         GLfloat b = ez*fx-ex*fz;
-         GLfloat c = ex*fy-ey*fx;
-         offset_polygon( ctx, a, b, c );
-      }
-
-      if (ctx->LightTwoSide) {
-         if (facing==1) {
-            /* use back color or index */
-            VB->Color = VB->Bcolor;
-            VB->Index = VB->Bindex;
-            VB->Specular = VB->Bspec;
-         }
-         else {
-            /* use front color or index */
-            VB->Color = VB->Fcolor;
-            VB->Index = VB->Findex;
-            VB->Specular = VB->Fspec;
-         }
-      }
-
-      /* Render the polygon! */
-      if (ctx->Polygon.Unfilled) {
-         unfilled_polygon( ctx, n, vlist, pv, facing );
-      }
-      else {
-         /* Draw filled polygon as a triangle fan */
-         GLuint i;
-         GLuint j0 = vlist[0];
-         for (i=2;i<n;i++) {
-            START_PROFILE
-#ifdef DEBUG
-            debug_triangle();
-#endif
-            (*ctx->Driver.TriangleFunc)( ctx, j0, vlist[i-1], vlist[i], pv );
-            END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 1 )
-         }
-      }
-   }
-}
 
 
 
@@ -452,197 +198,104 @@ static void render_polygon( GLcontext *ctx, GLuint n, GLuint vlist[] )
  *         vlist - list of vertices in the polygon.
  *                 CCW order = front facing.
  */
-static void render_clipped_polygon( GLcontext *ctx, GLuint n, GLuint vlist[] )
+void gl_render_clipped_triangle( GLcontext *ctx, GLuint n, GLuint vlist[], 
+				 GLuint pv )
 {
-   GLuint pv;
    struct vertex_buffer *VB = ctx->VB;
-   GLfloat (*win)[3] = VB->Win;
+   GLubyte mask = 0;
+   GLuint i;
 
-   /* which vertex dictates the color when flat shading: */
-   pv = (ctx->Primitive==GL_POLYGON) ? vlist[0] : vlist[n-1];
+   for (i = 0 ; i < n ; i++) 
+      mask |= VB->ClipMask[vlist[i]];
+   
+   n = (ctx->poly_clip_tab[VB->ClipPtr->size])( VB, n, vlist, mask );
 
-   /*
-    * Clipping may introduce new vertices.  New vertices will be stored
-    * in the vertex buffer arrays starting with location VB->Free.  After
-    * we've rendered the polygon, these extra vertices can be overwritten.
-    */
-   VB->Free = VB_MAX;
-
-   /* Clip against user clipping planes in eye coord space. */
-   if (ctx->Transform.AnyClip) {
-      GLfloat *proj = ctx->ProjectionMatrix;
-      GLuint i;
-      n = gl_userclip_polygon( ctx, n, vlist );
-      if (n<3)
-         return;
-      /* Transform vertices from eye to clip coordinates:  clip = Proj * eye */
-      for (i=0;i<n;i++) {
-         GLuint j = vlist[i];
-         TRANSFORM_POINT( VB->Clip[j], proj, VB->Eye[j] );
-      }
-   }
-
-   /* Clip against view volume in clip coord space */
-   n = gl_viewclip_polygon( ctx, n, vlist );
-   if (n<3)
-      return;
-
-   /* Transform new vertices from clip to ndc to window coords.    */
-   /* ndc = clip / W    window = viewport_mapping(ndc)             */
-   /* Note that window Z values are scaled to the range of integer */
-   /* depth buffer values.                                         */
-   {
-      GLfloat sx = ctx->Viewport.Sx;
-      GLfloat tx = ctx->Viewport.Tx;
-      GLfloat sy = ctx->Viewport.Sy;
-      GLfloat ty = ctx->Viewport.Ty;
-      GLfloat sz = ctx->Viewport.Sz;
-      GLfloat tz = ctx->Viewport.Tz;
-      GLuint i;
-      /* Only need to compute window coords for new vertices */
-      for (i=VB_MAX; i<VB->Free; i++) {
-         if (VB->Clip[i][3] != 0.0F) {
-            GLfloat wInv = 1.0F / VB->Clip[i][3];
-            win[i][0] = VB->Clip[i][0] * wInv * sx + tx;
-            win[i][1] = VB->Clip[i][1] * wInv * sy + ty;
-            win[i][2] = VB->Clip[i][2] * wInv * sz + tz;
-         }
-         else {
-            /* Can't divide by zero, so... */
-            win[i][0] = win[i][1] = win[i][2] = 0.0F;
-         }
-      }
-      if (ctx->Driver.RasterSetup && (VB->Free > VB_MAX)) {
-         /* Device driver raster setup for newly introduced vertices */
-         (*ctx->Driver.RasterSetup)(ctx, VB_MAX, VB->Free);
-      }
-
-#ifdef DEBUG
-      {
-         GLuint i, j;
-         for (i=0;i<n;i++) {
-            j = vlist[i];
-            if (VB->ClipMask[j]) {
-               /* Uh oh!  There should be no clip bits set in final polygon! */
-               GLuint k, l;
-               printf("CLIPMASK %d %d %02x\n", (int)i, (int)j, VB->ClipMask[j]);
-               printf("%f %f %f %f\n", VB->Eye[j][0], VB->Eye[j][1], 
-                      VB->Eye[j][2], VB->Eye[j][3]);
-               printf("%f %f %f %f\n", VB->Clip[j][0], VB->Clip[j][1], 
-                      VB->Clip[j][2], VB->Clip[j][3]);
-               for (k=0;k<n;k++) {
-                  l = vlist[k];
-                  printf("%d %d %02x\n", k, l, VB->ClipMask[l]);
-               }
-            }
-         }
-      }
-#endif
-   }
-
-   /* Compute orientation of polygon, do cull test, offset, etc */
-   {
-      GLuint facing;   /* 0=front, 1=back */
-      GLfloat area = polygon_area( VB, n, vlist );
-
-      if (area==0.0F && !ctx->Polygon.Unfilled) {
-         /* polygon has zero area, don't draw it */
-         return;
-      }
-
-      facing = (area<0.0F) ^ (ctx->Polygon.FrontFace==GL_CW);
-
-      if ((facing+1) & ctx->Polygon.CullBits) {
-         return;   /* culled */
-      }
-
-      if (ctx->Polygon.OffsetAny) {
-         /* compute plane equation of polygon, apply offset */
-         GLuint j0 = vlist[0];
-         GLuint j1 = vlist[1];
-         GLuint j2 = vlist[2];
-         GLuint j3 = vlist[ (n==3) ? 0 : 3 ];
-         GLfloat ex = win[j1][0] - win[j3][0];
-         GLfloat ey = win[j1][1] - win[j3][1];
-         GLfloat ez = win[j1][2] - win[j3][2];
-         GLfloat fx = win[j2][0] - win[j0][0];
-         GLfloat fy = win[j2][1] - win[j0][1];
-         GLfloat fz = win[j2][2] - win[j0][2];
-         GLfloat a = ey*fz-ez*fy;
-         GLfloat b = ez*fx-ex*fz;
-         GLfloat c = ex*fy-ey*fx;
-         offset_polygon( ctx, a, b, c );
-      }
-
-      if (ctx->LightTwoSide) {
-         if (facing==1) {
-            /* use back color or index */
-            VB->Color = VB->Bcolor;
-            VB->Index = VB->Bindex;
-            VB->Specular = VB->Bspec;
-         }
-         else {
-            /* use front color or index */
-            VB->Color = VB->Fcolor;
-            VB->Index = VB->Findex;
-            VB->Specular = VB->Fspec;
-         }
-      }
-
-      /* Render the polygon! */
-      if (ctx->Polygon.Unfilled) {
-         unfilled_polygon( ctx, n, vlist, pv, facing );
-      }
-      else {
-         /* Draw filled polygon as a triangle fan */
-         GLuint i;
-         GLuint j0 = vlist[0];
-         for (i=2;i<n;i++) {
-            START_PROFILE
-#ifdef DEBUG
-            debug_triangle();
-#endif
-            (*ctx->Driver.TriangleFunc)( ctx, j0, vlist[i-1], vlist[i], pv );
-            END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 1 )
-         }
-      }
-   }
+   for (i=2;i<n;i++) 
+      ctx->TriangleFunc( ctx, *vlist, vlist[i-1], vlist[i], pv ); 
 }
 
 
+static INLINE void gl_render_clipped_triangle2( GLcontext *ctx, 
+						GLuint v1, GLuint v2, GLuint v3,
+						GLuint pv )
+{
+   struct vertex_buffer *VB = ctx->VB;
+   GLubyte mask = (GLubyte) (VB->ClipMask[v1] | 
+			     VB->ClipMask[v2] | 
+			     VB->ClipMask[v3]);
+   GLuint vlist[VB_MAX_CLIPPED_VERTS];
+   GLuint i, n;
 
-/*
- * Render an un-clipped triangle.
- * v0, v1, v2 - vertex indexes.  CCW order = front facing
- * pv - provoking vertex
+   if (!mask) {
+      ctx->TriangleFunc( ctx, v1, v2, v3, pv ); 
+      return;
+   }
+
+   if (CLIP_ALL_BITS & VB->ClipMask[v1] & VB->ClipMask[v2] & VB->ClipMask[v3]) 
+      return;
+
+   ASSIGN_3V(vlist, v1, v2, v3 );
+   n = (ctx->poly_clip_tab[VB->ClipPtr->size])( VB, 3, vlist, mask );
+
+   for (i=2;i<n;i++) 
+      ctx->TriangleFunc( ctx, *vlist, vlist[i-1], vlist[i], pv ); 
+}
+
+
+static INLINE void gl_render_clipped_quad2( GLcontext *ctx, 
+					    GLuint v1, GLuint v2, GLuint v3,
+					    GLuint v4,
+					    GLuint pv )
+{
+   struct vertex_buffer *VB = ctx->VB;
+   GLubyte mask = (GLubyte) (VB->ClipMask[v1] | 
+			     VB->ClipMask[v2] | 
+			     VB->ClipMask[v3] |
+			     VB->ClipMask[v4]);
+   GLuint vlist[VB_MAX_CLIPPED_VERTS];
+   GLuint i, n;
+
+   if (!mask) {
+      ctx->QuadFunc( ctx, v1, v2, v3, v4, pv ); 
+      return;
+   }
+
+   if (CLIP_ALL_BITS & VB->ClipMask[v1] & 
+       VB->ClipMask[v2] & VB->ClipMask[v3] &
+       VB->ClipMask[v4]) 
+      return;
+
+   ASSIGN_4V(vlist, v1, v2, v3, v4 );
+   n = (ctx->poly_clip_tab[VB->ClipPtr->size])( VB, 4, vlist, mask );
+
+   for (i=2;i<n;i++) 
+      ctx->TriangleFunc( ctx, *vlist, vlist[i-1], vlist[i], pv ); 
+}
+
+
+/* Implements triangle_rendering when (IndirectTriangles & DD_SW_SETUP)
+ * is non-zero.
  */
 static void render_triangle( GLcontext *ctx,
                              GLuint v0, GLuint v1, GLuint v2, GLuint pv )
 {
    struct vertex_buffer *VB = ctx->VB;
-   GLfloat ex, ey, fx, fy, c;
-   GLuint facing;  /* 0=front, 1=back */
-   GLfloat (*win)[3] = VB->Win;
+   GLfloat (*win)[4] = VB->Win.data;
+   GLfloat ex = win[v1][0] - win[v0][0];
+   GLfloat ey = win[v1][1] - win[v0][1];
+   GLfloat fx = win[v2][0] - win[v0][0];
+   GLfloat fy = win[v2][1] - win[v0][1];
+   GLfloat c = ex*fy-ey*fx;
+   GLuint facing;
+   GLuint tricaps;
 
-   /* Compute orientation of triangle */
-   ex = win[v1][0] - win[v0][0];
-   ey = win[v1][1] - win[v0][1];
-   fx = win[v2][0] - win[v0][0];
-   fy = win[v2][1] - win[v0][1];
-   c = ex*fy-ey*fx;
-
-   if (c==0.0F && !ctx->Polygon.Unfilled) {
-      /* polygon is perpindicular to view plane, don't draw it */
+   if (c * ctx->backface_sign > 0)
       return;
-   }
 
    facing = (c<0.0F) ^ (ctx->Polygon.FrontFace==GL_CW);
-
-   if ((facing+1) & ctx->Polygon.CullBits) {
-      return;   /* culled */
-   }
-
-   if (ctx->Polygon.OffsetAny) {
+   tricaps = ctx->TriangleCaps;
+   
+   if (tricaps & DD_TRI_OFFSET) {
       /* finish computing plane equation of polygon, compute offset */
       GLfloat fz = win[v2][2] - win[v0][2];
       GLfloat ez = win[v1][2] - win[v0][2];
@@ -651,22 +304,13 @@ static void render_triangle( GLcontext *ctx,
       offset_polygon( ctx, a, b, c );
    }
 
-   if (ctx->LightTwoSide) {
-      if (facing==1) {
-         /* use back color or index */
-         VB->Color = VB->Bcolor;
-         VB->Index = VB->Bindex;
-         VB->Specular = VB->Bspec;
-      }
-      else {
-         /* use front color or index */
-         VB->Color = VB->Fcolor;
-         VB->Index = VB->Findex;
-         VB->Specular = VB->Fspec;
-      }
+   if (tricaps & DD_TRI_LIGHT_TWOSIDE) {
+      VB->Specular = VB->Spec[facing];
+      VB->ColorPtr = VB->Color[facing];
+      VB->IndexPtr = VB->Index[facing];
    }
 
-   if (ctx->Polygon.Unfilled) {
+   if (tricaps & DD_TRI_UNFILLED) {
       GLuint vlist[3];
       vlist[0] = v0;
       vlist[1] = v1;
@@ -674,50 +318,46 @@ static void render_triangle( GLcontext *ctx,
       unfilled_polygon( ctx, 3, vlist, pv, facing );
    }
    else {
-      START_PROFILE
-#ifdef DEBUG
-      debug_triangle();
-#endif
       (*ctx->Driver.TriangleFunc)( ctx, v0, v1, v2, pv );
-      END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 1 )
+   }
+
+   if (tricaps & DD_TRI_OFFSET) {
+      /* reset Z offsets now */
+      ctx->PointZoffset   = 0.0;
+      ctx->LineZoffset    = 0.0;
+      ctx->PolygonZoffset = 0.0;
    }
 }
 
 
+static void null_triangle( GLcontext *ctx,
+			   GLuint v0, GLuint v1, GLuint v2, GLuint pv )
+{
+}
 
-/*
- * Render an un-clipped quadrilateral.
- * v0, v1, v2, v3 : CCW order = front facing
- * pv - provoking vertex
+
+/* Implements triangle_rendering when (IndirectTriangles & DD_SW_SETUP)
+ * is non-zero.
  */
 static void render_quad( GLcontext *ctx, GLuint v0, GLuint v1,
                          GLuint v2, GLuint v3, GLuint pv )
 {
    struct vertex_buffer *VB = ctx->VB;
-   GLfloat ex, ey, fx, fy, c;
-   GLuint facing;  /* 0=front, 1=back */
-   GLfloat (*win)[3] = VB->Win;
+   GLfloat (*win)[4] = VB->Win.data;
+   GLfloat ex = win[v2][0] - win[v0][0];
+   GLfloat ey = win[v2][1] - win[v0][1];
+   GLfloat fx = win[v3][0] - win[v1][0];
+   GLfloat fy = win[v3][1] - win[v1][1];
+   GLfloat c = ex*fy-ey*fx;
+   GLuint facing;
+   GLuint tricaps = ctx->TriangleCaps;
 
-   /* Compute polygon orientation */
-   ex = win[v2][0] - win[v0][0];
-   ey = win[v2][1] - win[v0][1];
-   fx = win[v3][0] - win[v1][0];
-   fy = win[v3][1] - win[v1][1];
-   c = ex*fy-ey*fx;
-
-   if (c==0.0F && !ctx->Polygon.Unfilled) {
-      /* polygon is perpindicular to view plane, don't draw it */
+   if (c * ctx->backface_sign > 0)
       return;
-   }
 
    facing = (c<0.0F) ^ (ctx->Polygon.FrontFace==GL_CW);
 
-   if ((facing+1) & ctx->Polygon.CullBits) {
-      return;   /* culled */
-   }
-
-   if (ctx->Polygon.OffsetAny) {
-      /* finish computing plane equation of polygon, compute offset */
+   if (tricaps & DD_TRI_OFFSET) {
       GLfloat ez = win[v2][2] - win[v0][2];
       GLfloat fz = win[v3][2] - win[v1][2];
       GLfloat a = ey*fz-ez*fy;
@@ -725,23 +365,16 @@ static void render_quad( GLcontext *ctx, GLuint v0, GLuint v1,
       offset_polygon( ctx, a, b, c );
    }
 
-   if (ctx->LightTwoSide) {
-      if (facing==1) {
-         /* use back color or index */
-         VB->Color = VB->Bcolor;
-         VB->Index = VB->Bindex;
-         VB->Specular = VB->Bspec;
-      }
-      else {
-         /* use front color or index */
-         VB->Color = VB->Fcolor;
-         VB->Index = VB->Findex;
-         VB->Specular = VB->Fspec;
-      }
+
+   if (tricaps & DD_TRI_LIGHT_TWOSIDE) {
+      VB->Specular = VB->Spec[facing];
+      VB->ColorPtr = VB->Color[facing];
+      VB->IndexPtr = VB->Index[facing];
    }
 
+
    /* Render the quad! */
-   if (ctx->Polygon.Unfilled) {
+   if (tricaps & DD_TRI_UNFILLED) {
       GLuint vlist[4];
       vlist[0] = v0;
       vlist[1] = v1;
@@ -750,39 +383,27 @@ static void render_quad( GLcontext *ctx, GLuint v0, GLuint v1,
       unfilled_polygon( ctx, 4, vlist, pv, facing );
    }
    else {
-      START_PROFILE
       (*ctx->Driver.QuadFunc)( ctx, v0, v1, v2, v3, pv );
-      END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 2 )
+   }
+
+   if (tricaps & DD_TRI_OFFSET) {
+      /* reset Z offsets now */
+      ctx->PointZoffset   = 0.0;
+      ctx->LineZoffset    = 0.0;
+      ctx->PolygonZoffset = 0.0;
    }
 }
 
 
-
-/*
- * When the vertex buffer is full, we transform/render it.  Sometimes we
- * have to copy the last vertex (or two) to the front of the vertex list
- * to "continue" the primitive.  For example:  line or triangle strips.
- * This function is a helper for that.
- */
-static void copy_vertex( struct vertex_buffer *vb, GLuint dst, GLuint src )
+#if 0
+static void null_quad( GLcontext *ctx, GLuint v0, GLuint v1,
+		       GLuint v2, GLuint v3, GLuint pv )
 {
-   COPY_4V( vb->Clip[dst], vb->Clip[src] );
-   COPY_4V( vb->Eye[dst], vb->Eye[src] );
-   COPY_3V( vb->Win[dst], vb->Win[src] );
-   COPY_4V( vb->Fcolor[dst], vb->Fcolor[src] );
-   COPY_4V( vb->Bcolor[dst], vb->Bcolor[src] );
-   /* XXX Specular */
-   COPY_4V( vb->TexCoord[dst], vb->TexCoord[src] );
-   vb->Findex[dst] = vb->Findex[src];
-   vb->Bindex[dst] = vb->Bindex[src];
-   vb->Edgeflag[dst] = vb->Edgeflag[src];
-   vb->ClipMask[dst] = vb->ClipMask[src];
-   vb->MaterialMask[dst] = vb->MaterialMask[src];
-   vb->Material[dst][0] = vb->Material[src][0];
-   vb->Material[dst][1] = vb->Material[src][1];
 }
+#endif
 
 
+extern const char *gl_prim_name[];
 
 
 /*
@@ -791,597 +412,377 @@ static void copy_vertex( struct vertex_buffer *vb, GLuint dst, GLuint src )
  * buffer.
  *
  * This function won't be called if the device driver implements a
- * RenderVB() function.  If the device driver renders the vertex buffer
- * then the driver must also call gl_reset_vb()!
+ * RenderVB() function.
+ */
+
+#define NEED_EDGEFLAG_SETUP (ctx->TriangleCaps & DD_TRI_UNFILLED)
+
+#define EDGEFLAG_TRI( i2, i1, i, pv, parity)	\
+do {						\
+  eflag[i2] = eflag[i1] = 1; eflag[i] = 2;	\
+} while (0)
+
+#define EDGEFLAG_QUAD( i3, i2, i1, i, pv)		\
+do {							\
+  eflag[i3] = eflag[i2] = eflag[i1] = 1; eflag[i] = 2;	\
+} while (0)
+
+
+#define EDGEFLAG_POLY_TRI_PRE( i2, i1, i, pv)	\
+do {						\
+  eflag[i2] |= (eflag[i2] >> 2) & 1; 		\
+  eflag[i1] |= (eflag[i1] >> 2) & 1; 		\
+  eflag[i] |= (eflag[i] >> 2) & 2;		\
+} while (0)
+
+#define EDGEFLAG_POLY_TRI_POST( i2, i1, i, pv)	\
+do {						\
+  eflag[i2] &= ~(4|1); 		\
+  eflag[i1] &= ~(4|1); 		\
+  eflag[i] &= ~(8|2); 		\
+} while (0)
+
+
+
+/* Culled and possibly clipped primitives.
+ */
+#define RENDER_POINTS( start, count )			\
+   (void) cullmask;					\
+   (*ctx->Driver.PointsFunc)( ctx, start, count );
+
+
+#define RENDER_LINE( i1, i )			\
+do {						\
+   const GLubyte flags = cullmask[i];		\
+						\
+   if (!(flags & PRIM_NOT_CULLED))		\
+      continue;					\
+						\
+   if (flags & PRIM_ANY_CLIP)			\
+      gl_render_clipped_line( ctx, i1, i );	\
+   else						\
+      ctx->Driver.LineFunc( ctx, i1, i, i );	\
+} while (0)
+
+
+
+#define RENDER_TRI( i2, i1, i, pv, parity)		\
+do {							\
+   const GLubyte flags = cullmask[i];			\
+							\
+   if (!(flags & PRIM_NOT_CULLED))			\
+      continue;						\
+							\
+   if (flags & PRIM_ANY_CLIP) {				\
+      if (parity) {					\
+	 vlist[0] = i1;					\
+	 vlist[1] = i2;					\
+	 vlist[2] = i;					\
+      } else {						\
+	 vlist[0] = i2;					\
+	 vlist[1] = i1;					\
+	 vlist[2] = i;					\
+      }							\
+      gl_render_clipped_triangle( ctx, 3, vlist, pv );	\
+   } else if (parity) 					\
+      ctx->TriangleFunc( ctx, i1, i2, i, pv );		\
+   else							\
+      ctx->TriangleFunc( ctx, i2, i1, i, pv );		\
+							\
+} while (0)
+
+
+#define RENDER_QUAD( i3, i2, i1, i, pv)			\
+do {							\
+   const GLubyte flags = cullmask[i];			\
+							\
+   if (!(flags & PRIM_NOT_CULLED))			\
+      continue;						\
+							\
+   if (flags&PRIM_ANY_CLIP) {				\
+      vlist[0] = i3;					\
+      vlist[1] = i2;					\
+      vlist[2] = i1;					\
+      vlist[3] = i;					\
+      gl_render_clipped_triangle( ctx, 4, vlist, pv );	\
+   } else						\
+      ctx->QuadFunc( ctx, i3, i2, i1, i, pv );		\
+} while (0)
+
+
+#define LOCAL_VARS				\
+    GLcontext *ctx = VB->ctx;			\
+    const GLubyte *cullmask = VB->CullMask;	\
+    GLuint vlist[VB_SIZE];			\
+    GLubyte *eflag = VB->EdgeFlagPtr->data;    	\
+    GLuint *stipplecounter = &VB->ctx->StippleCounter; \
+    (void) vlist; (void) eflag; (void) stipplecounter;
+
+#define TAG(x) x##_cull
+#define INIT(x)  if (x == GL_POLYGON) FLUSH_POLY(x); else FLUSH_PRIM(x)
+#define RESET_STIPPLE *stipplecounter = 0
+#include "render_tmp.h"
+
+
+
+
+
+
+
+/* Direct, no clipping or culling.
+ */
+#define RENDER_POINTS( start, count ) \
+   (*ctx->Driver.PointsFunc)( ctx, start, count )
+
+#define RENDER_LINE( i1, i ) \
+   (*ctx->Driver.LineFunc)( ctx, i1, i, i )
+
+#define RENDER_TRI( i2, i1, i, pv, parity )	\
+do {						\
+   if (parity)					\
+      ctx->TriangleFunc( ctx, i1, i2, i, pv );	\
+   else						\
+      ctx->TriangleFunc( ctx, i2, i1, i, pv );	\
+} while (0)
+
+
+#define RENDER_QUAD( i3, i2, i1, i, pv )	\
+   ctx->QuadFunc( ctx, i3, i2, i1, i, i );
+
+#define TAG(x) x##_raw
+
+#define LOCAL_VARS  				\
+    GLcontext *ctx = VB->ctx;			\
+    GLubyte *eflag = VB->EdgeFlagPtr->data;	\
+    GLuint *stipplecounter = &VB->ctx->StippleCounter; \
+    (void) eflag; (void) stipplecounter;
+
+#define INIT(x)  if (x == GL_POLYGON) FLUSH_POLY(x); else FLUSH_PRIM(x)
+#define RESET_STIPPLE *stipplecounter = 0
+#include "render_tmp.h"
+
+
+
+
+/* Direct, with the possibility of clipping.
+ */ 
+#define RENDER_POINTS( start, count )			\
+   (*ctx->Driver.PointsFunc)( ctx, start, count )
+
+#define RENDER_LINE( i1, i )			\
+   gl_render_clipped_line2( ctx, i1, i )
+
+#define RENDER_TRI( i2, i1, i, pv, parity)	\
+do {						\
+  GLuint e2=i2, e1=i1;				\
+  if (parity) { GLuint t=e2; e2=e1; e1=t; }	\
+  gl_render_clipped_triangle2(ctx,e2,e1,i,pv);	\
+} while (0)
+
+#define RENDER_QUAD( i3, i2, i1, i, pv)		\
+do {						\
+  gl_render_clipped_quad2(ctx,i3,i2,i1,i,pv);	\
+} while (0)
+
+
+#define LOCAL_VARS  				\
+    GLcontext *ctx = VB->ctx;			\
+    GLubyte *eflag = VB->EdgeFlagPtr->data;	\
+    GLuint *stipplecounter = &VB->ctx->StippleCounter; \
+    (void) eflag; (void) stipplecounter;
+
+#define INIT(x)  if (x == GL_POLYGON) FLUSH_POLY(x); else FLUSH_PRIM(x)
+#define TAG(x) x##_clipped
+#define RESET_STIPPLE *stipplecounter = 0
+
+#include "render_tmp.h"
+
+/* Bits:
+ *    0x1 - draw this edge if it is first or second in a triangle.
+ *    0x2 - draw this edge if it is last in a triangle.
+ *    0x4 - placeholder for multipass rendering.
  *
- * Input:  allDone - GL_TRUE = caller is glEnd()
- *                   GL_FALSE = calling because buffer is full.
+ * Bits 0x1 and 0x2 are cleared after they are used.  Bit 0x4 is used
+ * to stop these values going to zero in multipass rendering. 
+ *
+ * Clipping introduces vertices on outgoing edges with edgeflag 0x1.
+ * Incoming edges retain the value of the clipped vertex, with the following 
+ * masks:
+ *    - If the incoming edge originates from the last vertex in the
+ *      clipped primitive (triangle or quad), the introduced vertex 
+ *      retains both bits (0x3) of the original flag.
+ *    - All other introduced vertices retain only bit 1 (0x1).
+ *
+ * In a horrible hack I've had to push tristrips, fans & quadstrip handling 
+ * into render_tmp.h...
+ *
+ * Keith. 
  */
-void gl_render_vb( GLcontext *ctx, GLboolean allDone )
+static void 
+setup_edgeflag( struct vertex_buffer *VB, 
+                GLenum prim, 
+                GLuint start, 
+                GLuint count,
+                GLuint parity )
 {
-   struct vertex_buffer *VB = ctx->VB;
-   GLuint vlist[VB_SIZE];
+   GLubyte *flag = VB->EdgeFlagPtr->data + start;
+   GLuint n = count - start;
+   GLuint i;
+   (void) parity;
 
-   switch (ctx->Primitive) {
-      case GL_POINTS:
-         ASSERT(ctx->Driver.PointsFunc);
-         START_PROFILE
-#ifdef DEBUG
-            debug_points();
-#endif
-         (*ctx->Driver.PointsFunc)( ctx, 0, VB->Count-1 );
-         END_PROFILE( ctx->PointTime, ctx->PointCount, VB->Count )
-	 break;
-
-      case GL_LINES:
-         ASSERT(ctx->Driver.LineFunc);
-         if (VB->ClipOrMask) {
-            GLuint i;
-            for (i=1;i<VB->Count;i+=2) {
-               if (VB->ClipMask[i-1] | VB->ClipMask[i]) {
-                  render_clipped_line( ctx, i-1, i );
-               }
-               else {
-                  START_PROFILE
-#ifdef DEBUG
-                  debug_line();
-#endif
-                  (*ctx->Driver.LineFunc)( ctx, i-1, i, i );
-                  END_PROFILE( ctx->LineTime, ctx->LineCount, 1 )
-               }
-               ctx->StippleCounter = 0;
-            }
-         }
-         else {
-            GLuint i;
-            for (i=1;i<VB->Count;i+=2) {
-               START_PROFILE
-#ifdef DEBUG
-               debug_line();
-#endif
-               (*ctx->Driver.LineFunc)( ctx, i-1, i, i );
-               END_PROFILE( ctx->LineTime, ctx->LineCount, 1 )
-               ctx->StippleCounter = 0;
-            }
-         }
-	 break;
-
-      case GL_LINE_STRIP:
-         ASSERT(ctx->Driver.LineFunc);
-         if (VB->ClipOrMask) {
-            GLuint i;
-	    for (i=1;i<VB->Count;i++) {
-               if (VB->ClipMask[i-1] | VB->ClipMask[i]) {
-                  render_clipped_line( ctx, i-1, i );
-               }
-               else {
-                  START_PROFILE
-#ifdef DEBUG
-                  debug_line();
-#endif
-                  (*ctx->Driver.LineFunc)( ctx, i-1, i, i );
-                  END_PROFILE( ctx->LineTime, ctx->LineCount, 1 )
-               }
-	    }
-         }
-         else {
-            /* no clipping needed */
-            GLuint i;
-	    for (i=1;i<VB->Count;i++) {
-               START_PROFILE
-#ifdef DEBUG
-               debug_line();
-#endif
-               (*ctx->Driver.LineFunc)( ctx, i-1, i, i );
-               END_PROFILE( ctx->LineTime, ctx->LineCount, 1 )
-            }
-         }
-         break;
-
-      case GL_LINE_LOOP:
-         ASSERT(ctx->Driver.LineFunc);
-         {
-            GLuint i;
-            if (VB->Start==0) {
-               i = 1;  /* start at 0th vertex */
-            }
-            else {
-               i = 2;  /* skip first vertex, we're saving it until glEnd */
-            }
-            while (i<VB->Count) {
-               if (VB->ClipMask[i-1] | VB->ClipMask[i]) {
-                  render_clipped_line( ctx, i-1, i );
-               }
-               else {
-                  START_PROFILE
-#ifdef DEBUG
-                  debug_line();
-#endif
-                  (*ctx->Driver.LineFunc)( ctx, i-1, i, i );
-                  END_PROFILE( ctx->LineTime, ctx->LineCount, 1 )
-               }
-               i++;
-            }
-         }
-         break;
-
-      case GL_TRIANGLES:
-         ASSERT(ctx->Driver.TriangleFunc);
-         if (VB->ClipOrMask) {
-            GLuint i;
-            for (i=2;i<VB->Count;i+=3) {
-               if (VB->ClipMask[i-2] & VB->ClipMask[i-1]
-                   & VB->ClipMask[i] & CLIP_ALL_BITS) {
-                  /* all points clipped by common plane */
-                  continue;
-               }
-               else if (VB->ClipMask[i-2] | VB->ClipMask[i-1] | VB->ClipMask[i]) {
-                  vlist[0] = i-2;
-                  vlist[1] = i-1;
-                  vlist[2] = i-0;
-                  render_clipped_polygon( ctx, 3, vlist );
-               }
-               else {
-                  if (ctx->DirectTriangles) {
-                     START_PROFILE
-#ifdef DEBUG
-                     debug_triangle();
-#endif
-                     (*ctx->Driver.TriangleFunc)( ctx, i-2, i-1, i, i );
-                     END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 1 )
-                  }
-                  else {
-                     render_triangle( ctx, i-2, i-1, i, i );
-                  }
-               }
-            }
-         }
-         else {
-            /* no clipping needed */
-            GLuint i;
-            if (ctx->DirectTriangles) {
-               for (i=2;i<VB->Count;i+=3) {
-                  START_PROFILE
-#ifdef DEBUG
-                  debug_triangle();
-#endif
-                  (*ctx->Driver.TriangleFunc)( ctx, i-2, i-1, i, i );
-                  END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 1 )
-               }
-            }
-            else {
-               for (i=2;i<VB->Count;i+=3) {
-                  render_triangle( ctx, i-2, i-1, i, i );
-               }
-            }
-         }
-	 break;
-
-      case GL_TRIANGLE_STRIP:
-         ASSERT(ctx->Driver.TriangleFunc);
-         if (VB->ClipOrMask) {
-            GLuint i;
-            for (i=2;i<VB->Count;i++) {
-               if (VB->ClipMask[i-2] & VB->ClipMask[i-1]
-                   & VB->ClipMask[i] & CLIP_ALL_BITS) {
-                  /* all points clipped by common plane */
-                  continue;
-               }
-               else if (VB->ClipMask[i-2] | VB->ClipMask[i-1] | VB->ClipMask[i]) {
-                  if (i&1) {
-                     /* reverse vertex order */
-                     vlist[0] = i-1;
-                     vlist[1] = i-2;
-                     vlist[2] = i-0;
-                     render_clipped_polygon( ctx, 3, vlist );
-                  }
-                  else {
-                     vlist[0] = i-2;
-                     vlist[1] = i-1;
-                     vlist[2] = i-0;
-                     render_clipped_polygon( ctx, 3, vlist );
-                  }
-               }
-               else {
-                  if (ctx->DirectTriangles) {
-                     START_PROFILE
-#ifdef DEBUG
-                     debug_triangle();
-#endif
-                     (*ctx->Driver.TriangleFunc)( ctx, i-2, i-1, i, i );
-                     END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 1 )
-                  }
-                  else {
-                     if (i&1)
-                        render_triangle( ctx, i, i-1, i-2, i );
-                     else
-                        render_triangle( ctx, i-2, i-1, i, i );
-                  }
-               }
-            }
-         }
-         else {
-            /* no vertices were clipped */
-            GLuint i;
-            if (ctx->DirectTriangles) {
-               for (i=2;i<VB->Count;i++) {
-                  START_PROFILE
-#ifdef DEBUG
-                  debug_triangle();
-#endif
-                  (*ctx->Driver.TriangleFunc)( ctx, i-2, i-1, i, i );
-                  END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 1 )
-               }
-            }
-            else {
-               for (i=2;i<VB->Count;i++) {
-                  if (i&1)
-                     render_triangle( ctx, i, i-1, i-2, i );
-                  else
-                     render_triangle( ctx, i-2, i-1, i, i );
-               }
-            }
-         }
-	 break;
-
-      case GL_TRIANGLE_FAN:
-         ASSERT(ctx->Driver.TriangleFunc);
-         if (VB->ClipOrMask) {
-            GLuint i;
-            for (i=2;i<VB->Count;i++) {
-               if (VB->ClipMask[0] & VB->ClipMask[i-1] & VB->ClipMask[i]
-                   & CLIP_ALL_BITS) {
-                  /* all points clipped by common plane */
-                  continue;
-               }
-               else if (VB->ClipMask[0] | VB->ClipMask[i-1] | VB->ClipMask[i]) {
-                  vlist[0] = 0;
-                  vlist[1] = i-1;
-                  vlist[2] = i;
-                  render_clipped_polygon( ctx, 3, vlist );
-               }
-               else {
-                  if (ctx->DirectTriangles) {
-                     START_PROFILE
-#ifdef DEBUG
-                     debug_triangle();
-#endif
-                     (*ctx->Driver.TriangleFunc)( ctx, 0, i-1, i, i );
-                     END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 1 )
-                  }
-                  else {
-                     render_triangle( ctx, 0, i-1, i, i );
-                  }
-               }
-            }
-         }
-         else {
-            /* no clipping needed */
-            GLuint i;
-            if (ctx->DirectTriangles) {
-               for (i=2;i<VB->Count;i++) {
-                  START_PROFILE
-#ifdef DEBUG
-                  debug_triangle();
-#endif
-                  (*ctx->Driver.TriangleFunc)( ctx, 0, i-1, i, i );
-                  END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 1 )
-               }
-            }
-            else {
-               for (i=2;i<VB->Count;i++) {
-                  render_triangle( ctx, 0, i-1, i, i );
-               }
-            }
-         }
-	 break;
-
-      case GL_QUADS:
-         ASSERT(ctx->Driver.TriangleFunc);
-         ASSERT(ctx->Driver.QuadFunc);
-         if (VB->ClipOrMask) {
-            GLuint i;
-            for (i=3;i<VB->Count;i+=4) {
-               if (VB->ClipMask[i-3] & VB->ClipMask[i-2]
-                   & VB->ClipMask[i-1] & VB->ClipMask[i] & CLIP_ALL_BITS) {
-                  /* all points clipped by common plane */
-                  continue;
-               }
-               else if (VB->ClipMask[i-3] | VB->ClipMask[i-2]
-                        | VB->ClipMask[i-1] | VB->ClipMask[i]) {
-                  vlist[0] = i-3;
-                  vlist[1] = i-2;
-                  vlist[2] = i-1;
-                  vlist[3] = i-0;
-                  render_clipped_polygon( ctx, 4, vlist );
-               }
-               else {
-                  if (ctx->DirectTriangles) {
-                     START_PROFILE
-                     (*ctx->Driver.QuadFunc)( ctx, i-3, i-2, i-1, i, i );
-                     END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 2 )
-                  }
-                  else {
-                     render_quad( ctx, i-3, i-2, i-1, i, i );
-                  }
-               }
-            }
-         }
-         else {
-            /* no vertices were clipped */
-            GLuint i;
-            if (ctx->DirectTriangles) {
-               for (i=3;i<VB->Count;i+=4) {
-                  START_PROFILE
-                  (*ctx->Driver.QuadFunc)( ctx, i-3, i-2, i-1, i, i );
-                  END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 2 )
-               }
-            }
-            else {
-               for (i=3;i<VB->Count;i+=4) {
-                  render_quad( ctx, i-3, i-2, i-1, i, i );
-               }
-            }
-         }
-	 break;
-
-      case GL_QUAD_STRIP:
-         ASSERT(ctx->Driver.TriangleFunc);
-         ASSERT(ctx->Driver.QuadFunc);
-         if (VB->ClipOrMask) {
-            GLuint i;
-            for (i=3;i<VB->Count;i+=2) {
-               if (VB->ClipMask[i-2] & VB->ClipMask[i-3]
-                   & VB->ClipMask[i-1] & VB->ClipMask[i] & CLIP_ALL_BITS) {
-                  /* all points clipped by common plane */
-                  continue;
-               }
-               else if (VB->ClipMask[i-2] | VB->ClipMask[i-3]
-                        | VB->ClipMask[i-1] | VB->ClipMask[i]) {
-                  vlist[0] = i-1;
-                  vlist[1] = i-3;
-                  vlist[2] = i-2;
-                  vlist[3] = i-0;
-                  render_clipped_polygon( ctx, 4, vlist );
-               }
-               else {
-                  if (ctx->DirectTriangles) {
-                     START_PROFILE
-                     (*ctx->Driver.QuadFunc)( ctx, i-3, i-2, i, i-1, i );
-                     END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 2 )
-                  }
-                  else {
-                     render_quad( ctx, i-3, i-2, i, i-1, i );
-                  }
-               }
-            }
-         }
-         else {
-            /* no clipping needed */
-            GLuint i;
-            if (ctx->DirectTriangles) {
-               for (i=3;i<VB->Count;i+=2) {
-                  START_PROFILE
-                  (*ctx->Driver.QuadFunc)( ctx, i-3, i-2, i, i-1, i );
-                  END_PROFILE( ctx->PolygonTime, ctx->PolygonCount, 2 )
-               }
-            }
-            else {
-               for (i=3;i<VB->Count;i+=2) {
-                  render_quad( ctx, i-3, i-2, i, i-1, i );
-               }
-            }
-         }
-	 break;
-
-      case GL_POLYGON:
-         ASSERT(ctx->Driver.TriangleFunc);
-         if (VB->Count>2) {
-            if (VB->ClipAndMask & CLIP_ALL_BITS) {
-               /* all points clipped by common plane, draw nothing */
-               break;
-            }
-            if (VB->ClipOrMask) {
-               /* need clipping */
-               GLuint i;
-               for (i=0;i<VB->Count;i++) {
-                  vlist[i] = i;
-               }
-               render_clipped_polygon( ctx, VB->Count, vlist );
-            }
-            else {
-               /* no clipping needed */
-               static GLuint const_vlist[VB_SIZE];
-               static GLboolean initFlag = GL_TRUE;
-               if (initFlag) {
-                  /* vertex list always the same, never changes */
-                  GLuint i;
-                  for (i=0;i<VB_SIZE;i++) {
-                     const_vlist[i] = i;
-                  }
-                  initFlag = GL_FALSE;
-               }
-               render_polygon( ctx, VB->Count, const_vlist );
-            }
-         }
-	 break;
-
-      default:
-         /* should never get here */
-         gl_problem( ctx, "invalid mode in gl_render_vb" );
+   switch (prim) {
+   case GL_TRIANGLES:
+      for (i = 0 ; i < n-2 ; i+=3) {
+	 if (flag[i])   flag[i]   = 0x1;
+	 if (flag[i+1]) flag[i+1] = 0x1;
+	 if (flag[i+2]) flag[i+2] = 0x3;
+      }
+      break;
+   case GL_QUADS:
+      for (i = 0 ; i < n-3 ; i+=4) {
+	 if (flag[i])   flag[i]   = 0x1;
+	 if (flag[i+1]) flag[i+1] = 0x1;
+	 if (flag[i+2]) flag[i+2] = 0x1;
+	 if (flag[i+3]) flag[i+3] = 0x3;
+      }
+      break;
+   case GL_POLYGON:
+      if (flag[0]) flag[0] = 0x1;
+      for (i = 1 ; i < n-1 ; i++) {
+	 if (flag[i]) flag[i] = 0x4;
+      }
+      if (flag[i]) flag[i] = 0x8;
+      break;
+   default:
+      break;
    }
-
-   gl_reset_vb( ctx, allDone );
 }
 
 
-#define CLIP_ALL_BITS    0x3f
 
-
-/*
- * After we've rendered the primitives in the vertex buffer we call
- * this function to reset the vertex buffer.  That is, we prepare it
- * for the next batch of vertices.
- * Input:  ctx - the context
- *         allDone - GL_TRUE = glEnd() was called
- *                   GL_FALSE = buffer was filled, more vertices to come
+/* Could eventually generalize to handle changes of rasterization
+ * state other than change-of-primitive.  An example might be 
+ * some bind-texture calls.
  */
-void gl_reset_vb( GLcontext *ctx, GLboolean allDone )
+void gl_render_vb( struct vertex_buffer *VB )
 {
-   struct vertex_buffer *VB = ctx->VB;
+   GLcontext *ctx = VB->ctx;
+   GLuint i, next, prim;
+   GLuint parity = VB->Parity;
+   render_func *tab;
+   GLuint count = VB->Count;
+   GLint p = 0;
 
-   /* save a few VB values for the end of this function */
-   int oldCount = VB->Count;
-   GLubyte clipOrMask = VB->ClipOrMask;
-   GLboolean monoMaterial = VB->MonoMaterial;
-   GLuint vertexSizeMask = VB->VertexSizeMask;
-
-   /* Special case for GL_LINE_LOOP */
-   if (ctx->Primitive==GL_LINE_LOOP && allDone) {
-      if (VB->ClipMask[VB->Count-1] | VB->ClipMask[0]) {
-         render_clipped_line( ctx, VB->Count-1, 0 );
-      }
-      else {
-         START_PROFILE
-#ifdef DEBUG
-         debug_line();
-#endif
-         (*ctx->Driver.LineFunc)( ctx, VB->Count-1, 0, 0 );
-         END_PROFILE( ctx->LineTime, ctx->LineCount, 1 )
-      }
+   if (VB->Indirect) { 
+/*        gl_render_vb_indirect( VB, VB );   */
+      return; 
+   } else if (VB->CullMode & CULL_MASK_ACTIVE) {
+      tab = ctx->Driver.RenderVBCulledTab;
+   } else if (VB->CullMode & CLIP_MASK_ACTIVE) {
+      tab = ctx->Driver.RenderVBClippedTab;
+   } else {
+      tab = ctx->Driver.RenderVBRawTab;
    }
 
-   if (allDone) {
-      /* glEnd() was called so reset Vertex Buffer to default, empty state */
-      VB->Start = VB->Count = 0;
-      VB->ClipOrMask = 0;
-      VB->ClipAndMask = CLIP_ALL_BITS;
-      VB->MonoMaterial = GL_TRUE;
-      VB->MonoNormal = GL_TRUE;
-      VB->MonoColor = GL_TRUE;
-      VB->VertexSizeMask = VERTEX3_BIT;
-      if (VB->TexCoordSize!=2) {
-         GLint i, n = VB->Count;
-         for (i=0;i<n;i++) {
-            VB->TexCoord[i][2] = 0.0F;
-            VB->TexCoord[i][3] = 1.0F;
-         }
-      }
-      if (ctx->Current.TexCoord[2]==0.0F && ctx->Current.TexCoord[3]==1.0F) {
-         VB->TexCoordSize = 2;
-      }
-      else {
-         VB->TexCoordSize = 4;
-      }
-   }
-   else {
-      /* The vertex buffer was filled but we didn't get a glEnd() call yet
-       * have to "re-cycle" the vertex buffer.
-       */
-      switch (ctx->Primitive) {
-         case GL_POINTS:
-            ASSERT(VB->Start==0);
-            VB->Start = VB->Count = 0;
-            VB->ClipOrMask = 0;
-            VB->ClipAndMask = CLIP_ALL_BITS;
-            VB->MonoMaterial = GL_TRUE;
-            VB->MonoNormal = GL_TRUE;
-            break;
-         case GL_LINES:
-            ASSERT(VB->Start==0);
-            VB->Start = VB->Count = 0;
-            VB->ClipOrMask = 0;
-            VB->ClipAndMask = CLIP_ALL_BITS;
-            VB->MonoMaterial = GL_TRUE;
-            VB->MonoNormal = GL_TRUE;
-            break;
-         case GL_LINE_STRIP:
-            copy_vertex( VB, 0, VB->Count-1 );  /* copy last vertex to front */
-            VB->Start = VB->Count = 1;
-            VB->ClipOrMask = VB->ClipMask[0];
-            VB->ClipAndMask = VB->ClipMask[0];
-            VB->MonoMaterial = VB->MaterialMask[0] ? GL_FALSE : GL_TRUE;
-            break;
-         case GL_LINE_LOOP:
-            ASSERT(VB->Count==VB_MAX);
-            copy_vertex( VB, 1, VB_MAX-1 );
-            VB->Start = VB->Count = 2;
-            VB->ClipOrMask = VB->ClipMask[0] | VB->ClipMask[1];
-            VB->ClipAndMask = VB->ClipMask[0] & VB->ClipMask[1];
-            VB->MonoMaterial = !(VB->MaterialMask[0] | VB->MaterialMask[1]);
-            break;
-         case GL_TRIANGLES:
-            ASSERT(VB->Start==0);
-            VB->Start = VB->Count = 0;
-            VB->ClipOrMask = 0;
-            VB->ClipAndMask = CLIP_ALL_BITS;
-            VB->MonoMaterial = GL_TRUE;
-            VB->MonoNormal = GL_TRUE;
-            break;
-         case GL_TRIANGLE_STRIP:
-            copy_vertex( VB, 0, VB_MAX-2 );
-            copy_vertex( VB, 1, VB_MAX-1 );
-            VB->Start = VB->Count = 2;
-            VB->ClipOrMask = VB->ClipMask[0] | VB->ClipMask[1];
-            VB->ClipAndMask = VB->ClipMask[0] & VB->ClipMask[1];
-            VB->MonoMaterial = !(VB->MaterialMask[0] | VB->MaterialMask[1]);
-            break;
-         case GL_TRIANGLE_FAN:
-            copy_vertex( VB, 1, VB_MAX-1 );
-            VB->Start = VB->Count = 2;
-            VB->ClipOrMask = VB->ClipMask[0] | VB->ClipMask[1];
-            VB->ClipAndMask = VB->ClipMask[0] & VB->ClipMask[1];
-            VB->MonoMaterial = !(VB->MaterialMask[0] | VB->MaterialMask[1]);
-            break;
-         case GL_QUADS:
-            ASSERT(VB->Start==0);
-            VB->Start = VB->Count = 0;
-            VB->ClipOrMask = 0;
-            VB->ClipAndMask = CLIP_ALL_BITS;
-            VB->MonoMaterial = GL_TRUE;
-            VB->MonoNormal = GL_TRUE;
-            break;
-         case GL_QUAD_STRIP:
-            copy_vertex( VB, 0, VB_MAX-2 );
-            copy_vertex( VB, 1, VB_MAX-1 );
-            VB->Start = VB->Count = 2;
-            VB->ClipOrMask = VB->ClipMask[0] | VB->ClipMask[1];
-            VB->ClipAndMask = VB->ClipMask[0] & VB->ClipMask[1];
-            VB->MonoMaterial = !(VB->MaterialMask[0] | VB->MaterialMask[1]);
-            break;
-         case GL_POLYGON:
-            copy_vertex( VB, 1, VB_MAX-1 );
-            VB->Start = VB->Count = 2;
-            VB->ClipOrMask = VB->ClipMask[0] | VB->ClipMask[1];
-            VB->ClipAndMask = VB->ClipMask[0] & VB->ClipMask[1];
-            VB->MonoMaterial = !(VB->MaterialMask[0] | VB->MaterialMask[1]);
-            break;
-         default:
-            /* should never get here */
-            gl_problem(ctx, "Bad primitive type in gl_reset_vb()");
-      }
-   }
+   if (!VB->CullDone)
+      gl_fast_copy_vb( VB );
 
-   if (clipOrMask) {
-      /* reset clip masks to zero */
-      MEMSET( VB->ClipMask + VB->Start, 0,
-              (oldCount - VB->Start) * sizeof(VB->ClipMask[0]) );
-   }
+   if (ctx->TriangleCaps & DD_TRI_UNFILLED)
+      gl_import_client_data( VB, VERT_EDGE, VEC_WRITABLE|VEC_GOOD_STRIDE );
 
-   if (!monoMaterial) {
-      /* reset material masks to zero */
-      MEMSET( VB->MaterialMask + VB->Start, 0,
-              (oldCount - VB->Start) * sizeof(VB->MaterialMask[0]) );
-      gl_update_lighting(ctx);
-   }
+   gl_import_client_data( VB, ctx->RenderFlags,
+			  (VB->ClipOrMask
+			   ? VEC_WRITABLE|VEC_GOOD_STRIDE
+			   : VEC_GOOD_STRIDE));
 
-   if (vertexSizeMask!=VERTEX3_BIT) {
-      /* reset object W coords to one */
-      GLint i, n;
-      GLfloat (*obj)[4] = VB->Obj + VB->Start;
-      n = oldCount - VB->Start;
-      for (i=0; i<n; i++) {
-         obj[i][3] = 1.0F;
+   if (/*  ctx->Current.Primitive == GL_POLYGON+1 &&  */
+      ctx->Driver.RenderStart)
+      ctx->Driver.RenderStart( ctx );
+
+   do
+   {      
+      for ( i= VB->CopyStart ; i < count ; parity = 0, i = next ) 
+      {
+	 prim = VB->Primitive[i];
+	 next = VB->NextPrimitive[i];
+
+	 if (ctx->TriangleCaps & DD_TRI_UNFILLED) 
+	    setup_edgeflag(VB, prim, i, next, parity);
+
+	 tab[prim]( VB, i, next, parity );
+
+	 if (ctx->TriangleCaps & DD_TRI_LIGHT_TWOSIDE) {
+	    VB->Specular = VB->Spec[0];
+	    VB->ColorPtr = VB->Color[0];
+	    VB->IndexPtr = VB->Index[0];
+	 }
+      }
+
+   } while (ctx->Driver.MultipassFunc &&
+	    ctx->Driver.MultipassFunc( VB, ++p ));
+
+   if (ctx->PB->count > 0) 
+      gl_flush_pb(ctx);
+
+   if (/*  ctx->Current.Primitive == GL_POLYGON+1 &&  */
+      ctx->Driver.RenderFinish)
+      ctx->Driver.RenderFinish( ctx );
+}
+
+
+void gl_reduced_prim_change( GLcontext *ctx, GLenum prim )
+{
+   if (ctx->PB->count > 0) 
+      gl_flush_pb(ctx);	
+
+   if (ctx->PB->primitive != prim) {
+      ctx->PB->primitive = prim;			
+
+      if (ctx->Driver.ReducedPrimitiveChange)
+	 ctx->Driver.ReducedPrimitiveChange( ctx, prim );
+   }
+}
+
+
+void gl_set_render_vb_function( GLcontext *ctx )
+{
+   if (ctx->Driver.RenderVBCulledTab == 0)
+      ctx->Driver.RenderVBCulledTab = render_tab_cull;
+
+   if (ctx->Driver.RenderVBClippedTab == 0)
+      ctx->Driver.RenderVBClippedTab = render_tab_clipped;
+
+   if (ctx->Driver.RenderVBRawTab == 0)
+      ctx->Driver.RenderVBRawTab = render_tab_raw;
+
+   ctx->TriangleFunc = ctx->Driver.TriangleFunc;
+   ctx->QuadFunc = ctx->Driver.QuadFunc;
+   ctx->ClippedTriangleFunc = ctx->TriangleFunc;
+
+   if (ctx->IndirectTriangles & DD_SW_SETUP) {
+
+      ctx->ClippedTriangleFunc = render_triangle;
+
+      if (ctx->IndirectTriangles & (DD_SW_SETUP & ~DD_TRI_CULL)) {
+	 if (ctx->IndirectTriangles & DD_TRI_CULL_FRONT_BACK) {
+	    ctx->TriangleFunc = null_triangle;
+	    ctx->QuadFunc = render_quad;
+	    ctx->ClippedTriangleFunc = null_triangle;
+	 } else {
+	    ctx->TriangleFunc = render_triangle;
+	    ctx->QuadFunc = render_quad;
+	 }
       }
    }
 }
+
+void gl_init_vbrender( void )
+{
+   render_init_raw();
+   render_init_cull();
+   render_init_clipped();
+}
+
+
+
+

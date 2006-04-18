@@ -2,54 +2,27 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:30  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.5  1998/09/16 02:25:53  brianp
- * removed some Amiga-specific stuff
- *
- * Revision 3.4  1998/06/22 03:16:15  brianp
- * added VB_MAX define and MITS test
- *
- * Revision 3.3  1998/06/07 22:18:52  brianp
- * implemented GL_EXT_multitexture extension
- *
- * Revision 3.2  1998/06/02 23:51:04  brianp
- * added CHAN_BITS and GLchan type (for the future)
- *
- * Revision 3.1  1998/02/20 04:53:37  brianp
- * implemented GL_SGIS_multitexture
- *
- * Revision 3.0  1998/01/31 20:48:53  brianp
- * initial rev
- *
- */
-
 
 
 /*
@@ -61,13 +34,14 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#ifdef HAVE_CONFIG_H
+#include "conf.h"
+#endif
+
 
 /*
- *
  * OpenGL implementation limits
- *
  */
-
 
 /* Maximum modelview matrix stack depth: */
 #define MAX_MODELVIEW_STACK_DEPTH 32
@@ -77,6 +51,9 @@
 
 /* Maximum texture matrix stack depth: */
 #define MAX_TEXTURE_STACK_DEPTH 10
+
+/* Maximum color matrix stack depth: */
+#define MAX_COLOR_STACK_DEPTH 4
 
 /* Maximum attribute stack depth: */
 #define MAX_ATTRIB_STACK_DEPTH 16
@@ -92,16 +69,6 @@
 
 /* Maximum user-defined clipping planes: */
 #define MAX_CLIP_PLANES 6
-
-/* Number of texture levels */
-#ifdef FX
-#define MAX_TEXTURE_LEVELS 9
-#else
-#define MAX_TEXTURE_LEVELS 11
-#endif
-
-/* Max texture size */
-#define MAX_TEXTURE_SIZE   (1 << (MAX_TEXTURE_LEVELS-1))
 
 /* Maximum pixel map lookup table size: */
 #define MAX_PIXEL_MAP_TABLE 256
@@ -127,35 +94,42 @@
 /* Min and Max line widths and granularity */
 #define MIN_LINE_WIDTH 1.0
 #define MAX_LINE_WIDTH 10.0
-#define LINE_WIDTH_GRANULARITY 1.0
+#define LINE_WIDTH_GRANULARITY 0.1
 
-/* Max texture palette size */
-#define MAX_TEXTURE_PALETTE_SIZE 256
+/* Max texture palette / color table size */
+#define MAX_COLOR_TABLE_SIZE 256
 
-/* Number of texture maps and environments - GL_EXT_multitexture */
-#define MAX_TEX_SETS 2
+/* Number of texture levels */
+#define MAX_TEXTURE_LEVELS 12
 
-/* Number of texture coordinate sets - GL_EXT_multitexture */
-#define MAX_TEX_COORD_SETS 2
+/* Number of texture units - GL_ARB_multitexture */
+#define MAX_TEXTURE_UNITS 2
 
-/* Maximum viewport size: */
-#define MAX_WIDTH 1600
-#define MAX_HEIGHT 1200
+/* Maximum viewport/image size: */
+#define MAX_WIDTH 2048
+#define MAX_HEIGHT 2048
 
+/* Maxmimum size for CVA.  May be overridden by the drivers.  */
+#define MAX_ARRAY_LOCK_SIZE 3000
+
+/* Subpixel precision for antialiasing, window coordinate snapping */
+#define SUB_PIXEL_BITS 4
+
+/* Size of histogram tables */
+#define HISTOGRAM_TABLE_SIZE 256
+
+/* Max convolution filter sizes */
+#define MAX_CONVOLUTION_WIDTH 5
+#define MAX_CONVOLUTION_HEIGHT 5
+
+/* GL_ARB_texture_compression */
+#define MAX_COMPRESSED_TEXTURE_FORMATS 25
 
 
 
 /*
- *
  * Mesa-specific parameters
- *
  */
-
-
-/*
- * Bits per color channel (must be 8 at this time!)
- */
-#define CHAN_BITS 8
 
 
 /*
@@ -165,19 +139,12 @@
 
 
 /*
- * Bits per depth buffer value:  16 or 32
+ * Bits per depth buffer value:  16 or 32 (GLushort or GLuint)
+ * gl_create_visual() can select any depth in [0, 32].
  */
-#define DEPTH_BITS 16
+#define DEFAULT_SOFTWARE_DEPTH_BITS 16
+#define DEFAULT_SOFTWARE_DEPTH_TYPE GLushort
 
-#if DEPTH_BITS==16
-#  define MAX_DEPTH 0xffff
-#  define DEPTH_SCALE 65535.0F
-#elif DEPTH_BITS==32
-#  define MAX_DEPTH 0x00ffffff
-#  define DEPTH_SCALE ((GLfloat) 0x00ffffff)
-#else
-   invalid value!
-#endif
 
 
 /*
@@ -185,6 +152,13 @@
  */
 #define STENCIL_BITS 8
 
+
+/*
+ * Bits per color channel (must be 8 at this time!)
+ */
+#define CHAN_BITS 8
+#define CHAN_MAX ((1 << CHAN_BITS) - 1)
+#define CHAN_MAXF ((GLfloat) CHAN_MAX)
 
 
 /*
@@ -198,29 +172,35 @@
 
 
 
-/*
- * Vertex buffer size.  Must be a multiple of 12.
+/* Vertex buffer size.  KW: no restrictions on the divisibility of
+ * this number, though things may go better for you if you choose a
+ * value of 12n + 3.  
  */
-#if defined(FX) && !defined(MITS)
-#  define VB_MAX 72   /* better performance */
-#else
-#  define VB_MAX 480
-#endif
+#define VB_START  3
+
+#define VB_MAX (216 + VB_START)
 
 
 
 /*
+ * Actual vertex buffer size.
  *
- * For X11 driver only:
- *
+ * Arrays must also accomodate new vertices from clipping, and
+ * potential overflow from primitives which don't fit into neatly into
+ * VB_MAX vertices.  (This only happens when mixed primitives are
+ * sharing the vb).  
  */
-
-/*
- * When defined, use 6x6x6 dithering instead of 5x9x5.
- * 5x9x5 better for general colors, 6x6x6 better for grayscale.
- */
-/*#define DITHER666*/
+#define VB_MAX_CLIPPED_VERTS ((2 * (6 + MAX_CLIP_PLANES))+1)
+#define VB_SIZE  (VB_MAX + VB_MAX_CLIPPED_VERTS)
 
 
+
+typedef struct gl_context GLcontext;
+
+extern void
+gl_read_config_file( struct gl_context *ctx );
+
+extern void
+gl_register_config_var(const char *name, void (*notify)( const char *, int ));
 
 #endif

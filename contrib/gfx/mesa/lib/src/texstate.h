@@ -2,47 +2,30 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * Version:  3.1
+ * 
+ * Copyright (C) 1999  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:32  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.3  1998/08/21 01:50:01  brianp
- * added gl_max_texture_coord_sets()
- *
- * Revision 3.2  1998/06/07 22:18:52  brianp
- * implemented GL_EXT_multitexture extension
- *
- * Revision 3.1  1998/02/20 04:53:37  brianp
- * implemented GL_SGIS_multitexture
- *
- * Revision 3.0  1998/01/31 21:04:38  brianp
- * initial rev
- *
- */
+
 
 
 #ifndef TEXSTATE_H
@@ -54,67 +37,111 @@
 
 /*** Called from API ***/
 
-extern void gl_GetTexEnvfv( GLcontext *ctx,
-                            GLenum target, GLenum pname, GLfloat *params );
+extern void
+_mesa_GetTexEnvfv( GLenum target, GLenum pname, GLfloat *params );
 
-extern void gl_GetTexEnviv( GLcontext *ctx,
-                            GLenum target, GLenum pname, GLint *params );
+extern void
+_mesa_GetTexEnviv( GLenum target, GLenum pname, GLint *params );
 
-extern void gl_GetTexGendv( GLcontext *ctx,
-                            GLenum coord, GLenum pname, GLdouble *params );
+extern void
+_mesa_GetTexGendv( GLenum coord, GLenum pname, GLdouble *params );
 
-extern void gl_GetTexGenfv( GLcontext *ctx,
-                            GLenum coord, GLenum pname, GLfloat *params );
+extern void
+_mesa_GetTexGenfv( GLenum coord, GLenum pname, GLfloat *params );
 
-extern void gl_GetTexGeniv( GLcontext *ctx,
-                            GLenum coord, GLenum pname, GLint *params );
+extern void
+_mesa_GetTexGeniv( GLenum coord, GLenum pname, GLint *params );
 
-extern void gl_GetTexLevelParameterfv( GLcontext *ctx,
-                                       GLenum target, GLint level,
-                                       GLenum pname, GLfloat *params );
+extern void
+_mesa_GetTexLevelParameterfv( GLenum target, GLint level,
+                              GLenum pname, GLfloat *params );
 
-extern void gl_GetTexLevelParameteriv( GLcontext *ctx,
-                                       GLenum target, GLint level,
-                                       GLenum pname, GLint *params );
+extern void
+_mesa_GetTexLevelParameteriv( GLenum target, GLint level,
+                              GLenum pname, GLint *params );
 
-extern void gl_GetTexParameterfv( GLcontext *ctx, GLenum target,
-                                  GLenum pname, GLfloat *params );
+extern void
+_mesa_GetTexParameterfv( GLenum target, GLenum pname, GLfloat *params );
 
-extern void gl_GetTexParameteriv( GLcontext *ctx,
-                                  GLenum target, GLenum pname, GLint *params );
-
-
-extern void gl_TexEnvfv( GLcontext *ctx,
-                         GLenum target, GLenum pname, const GLfloat *param );
+extern void
+_mesa_GetTexParameteriv( GLenum target, GLenum pname, GLint *params );
 
 
-extern void gl_TexParameterfv( GLcontext *ctx, GLenum target, GLenum pname,
-                               const GLfloat *params );
+extern void
+_mesa_TexEnvf( GLenum target, GLenum pname, GLfloat param );
+
+extern void
+_mesa_TexEnvfv( GLenum target, GLenum pname, const GLfloat *param );
+
+extern void
+_mesa_TexEnvi( GLenum target, GLenum pname, GLint param );
+
+extern void
+_mesa_TexEnviv( GLenum target, GLenum pname, const GLint *param );
 
 
-extern void gl_TexGenfv( GLcontext *ctx,
-                         GLenum coord, GLenum pname, const GLfloat *params );
+extern void
+_mesa_TexParameterfv( GLenum target, GLenum pname, const GLfloat *params );
+
+extern void
+_mesa_TexParameterf( GLenum target, GLenum pname, GLfloat param );
+
+
+extern void
+_mesa_TexParameteri( GLenum target, GLenum pname, GLint param );
+
+extern void
+_mesa_TexParameteriv( GLenum target, GLenum pname, const GLint *params );
+
+
+extern void
+_mesa_TexGend( GLenum coord, GLenum pname, GLdouble param );
+
+extern void
+_mesa_TexGendv( GLenum coord, GLenum pname, const GLdouble *params );
+
+extern void
+_mesa_TexGenf( GLenum coord, GLenum pname, GLfloat param );
+
+extern void
+_mesa_TexGenfv( GLenum coord, GLenum pname, const GLfloat *params );
+
+extern void
+_mesa_TexGeni( GLenum coord, GLenum pname, GLint param );
+
+extern void
+_mesa_TexGeniv( GLenum coord, GLenum pname, const GLint *params );
+
+
+
+extern void gl_SelectTextureTransform( GLcontext *ctx, GLenum target );
 
 
 /*
- * GL_SGIS_multitexture / GL_EXT_multitexture
+ * GL_ARB_multitexture
  */
+extern void
+_mesa_ActiveTextureARB( GLenum target );
 
-extern void gl_SelectTextureSGIS( GLcontext *ctx, GLenum target );
-
-extern void gl_SelectTexture( GLcontext *ctx, GLenum target );
-
-extern void gl_SelectTextureCoordSet( GLcontext *ctx, GLenum target );
-
-extern void gl_SelectTextureTransform( GLcontext *ctx, GLenum target );
+extern void
+_mesa_ClientActiveTextureARB( GLenum target );
 
 
 
 /*** Internal functions ***/
 
-extern void gl_update_texture_state( GLcontext *ctx );
+extern void 
+gl_put_texobj_on_dirty_list( GLcontext *ctx, struct gl_texture_object *t );
 
-extern GLint gl_max_texture_coord_sets( const GLcontext *ctx );
+#ifdef VMS
+#define gl_remove_texobj_from_dirty_list gl_remove_texobj_from_dirty_lis
+#endif
+extern void
+gl_remove_texobj_from_dirty_list( struct gl_shared_state *shared,
+                                  struct gl_texture_object *tObj );
+
+extern void
+gl_update_dirty_texobjs( GLcontext *ctx );
 
 
 #endif

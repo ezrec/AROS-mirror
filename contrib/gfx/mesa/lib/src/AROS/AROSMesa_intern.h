@@ -3,15 +3,11 @@
 
 /* Internal AROSMesa configuration options */
 
-#define ADISP_CYBERGFX
-#define ADISP_AGA
+#define ADISP_CYBERGFX  /* Enable TrueColor rasterizer */
+#define ADISP_AGA       /* Enable 8bit rasterizer */
 
 /* Disabled for now .. (nicja)
 #define AMESA_DOUBLEBUFFFAST
 */
-
-#if defined(DEBUG)
-#define DEBUGPRINT
-#endif
 
 #endif /* AROSMESA_INTERN_H */

@@ -2,43 +2,26 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:31  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.2  1998/05/31 23:50:36  brianp
- * cleaned up a few Solaris compiler warnings
- *
- * Revision 3.1  1998/03/27 04:17:31  brianp
- * fixed G++ warnings
- *
- * Revision 3.0  1998/01/31 21:02:06  brianp
- * initial rev
- *
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
@@ -50,8 +33,9 @@
 #ifdef PC_HEADER
 #include "all.h"
 #else
-#include "types.h"
+#include "glheader.h"
 #include "quads.h"
+#include "types.h"
 #endif
 
 
@@ -62,10 +46,12 @@
  * v0, v1, v2, v3 in CCW order = front facing.
  */
 static void basic_quad( GLcontext *ctx,
-                  GLuint v0, GLuint v1, GLuint v2, GLuint v3, GLuint pv )
+                        GLuint v0, GLuint v1, GLuint v2, GLuint v3, GLuint pv )
 {
-   (*ctx->Driver.TriangleFunc)( ctx, v0, v1, v3, pv );
-   (*ctx->Driver.TriangleFunc)( ctx, v1, v2, v3, pv );
+/*     (*ctx->Driver.TriangleFunc)( ctx, v0, v1, v3, pv ); */
+/*     (*ctx->Driver.TriangleFunc)( ctx, v1, v2, v3, pv ); */
+   (*ctx->Driver.TriangleFunc)( ctx, v0, v1, v2, pv );
+   (*ctx->Driver.TriangleFunc)( ctx, v0, v2, v3, pv );
 }
 
 
@@ -94,10 +80,11 @@ void gl_set_quad_function( GLcontext *ctx )
       }
       else if (ctx->Driver.QuadFunc) {
          /* Device driver will draw quads. */
+	 return;
       }
-      else {
+      else 
          ctx->Driver.QuadFunc = basic_quad;
-      }
+      
    }
    else {
       /* if in feedback or selection mode we can fall back to triangle code */

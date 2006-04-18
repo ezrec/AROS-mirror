@@ -21,5 +21,7 @@ GLboolean CheckError( const char *message )
    if (error) {
       char *err = (char *) gluErrorString( error );
       fprintf( stderr, "GL Error: %s at %s\n", err, message );
+      return GL_TRUE;
    }
+   return GL_FALSE;
 }

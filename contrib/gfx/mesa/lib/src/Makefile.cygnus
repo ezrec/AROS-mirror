@@ -1,9 +1,8 @@
-# Makefile.cyg
-# Stephane Rehel (rehel@worldnet.fr) April 13 1997
+# $Id$
 
 # Mesa 3-D graphics library
-# Version:  2.5
-# Copyright (C) 1995-1997  Brian Paul
+# Version:  3.3
+# Copyright (C) 1995-1998  Brian Paul
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Library General Public
@@ -20,7 +19,9 @@
 # Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
-# Makefile for core library
+# Makefile for core library for cygnus
+# Stephane Rehel (rehel@worldnet.fr) April 13 1997
+
 
 ##### MACROS #####
 
@@ -29,14 +30,83 @@ VPATH = RCS
 INCDIR = ../include
 LIBDIR = ../lib
 
-CORE_SOURCES = accum.c alpha.c alphabuf.c api1.c api2.c attrib.c bitmap.c \
-	blend.c clip.c colortab.c context.c copypix.c depth.c \
-	dlist.c drawpix.c enable.c eval.c feedback.c fog.c \
-	get.c hash.c image.c light.c lines.c logic.c masking.c matrix.c \
-	misc.c mmath.c pb.c pixel.c points.c pointers.c polygon.c \
-	quads.c rastpos.c readpix.c rect.c scissor.c shade.c span.c \
-	stencil.c teximage.c texobj.c texstate.c texture.c triangle.c \
-	varray.c winpos.c vb.c vbfill.c vbrender.c vbxform.c xform.c
+CORE_SOURCES = \
+	aatriangle.c \
+	accum.c \
+	alpha.c \
+	alphabuf.c \
+	attrib.c \
+	bbox.c \
+	bitmap.c \
+	blend.c \
+	buffers.c \
+	clip.c \
+	colortab.c \
+	config.c \
+	context.c \
+	copypix.c \
+	cva.c \
+	debug_xform.c \
+	depth.c \
+	dispatch.c \
+	dlist.c \
+	drawpix.c \
+	enable.c \
+	enums.c \
+	eval.c \
+	extensions.c \
+	feedback.c \
+	fog.c \
+	get.c \
+	glapi.c \
+	glapinoop.c \
+	glthread.c \
+	hash.c \
+	hint.c \
+	image.c \
+	imaging.c \
+	light.c \
+	lines.c \
+	logic.c \
+	masking.c \
+	matrix.c \
+	mem.c \
+	mmath.c \
+	pb.c \
+	pixel.c \
+	pixeltex.c \
+	pipeline.c \
+	points.c \
+	polygon.c \
+	quads.c \
+	rastpos.c \
+	readpix.c \
+	rect.c \
+	scissor.c \
+	shade.c \
+	span.c \
+	stages.c \
+	state.c \
+	stencil.c \
+	teximage.c \
+	texobj.c \
+	texstate.c \
+	texture.c \
+	texutil.c \
+	translate.c \
+	triangle.c \
+	varray.c \
+	vb.c \
+	vbcull.c \
+	vbfill.c \
+	vbindirect.c \
+	vbrender.c \
+	vbxform.c \
+	vector.c \
+	vertices.c \
+	winpos.c \
+	xform.c \
+	zoom.c
 
 DRIVER_SOURCES = wmesa.c mesa_extend.c osmesa.c fxwgl.c
 
@@ -80,7 +150,7 @@ $(LIBDIR)/wing32.a: $(WING_DLL)
 
 # Make the library
 $(LIBDIR)/$(GL_LIB): $(OBJECTS)
-	$(MAKELIB) $(GL_LIB) $(MAJOR) $(MINOR) $(OBJECTS)
+	$(MAKELIB) $(GL_LIB) $(MAJOR) $(MINOR) $(TINY) $(OBJECTS)
 	mv $(GL_LIB)* $(LIBDIR)
 
 include ../Make-config

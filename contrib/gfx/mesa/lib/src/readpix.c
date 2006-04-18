@@ -2,78 +2,44 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:32  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.8  1998/08/04 02:47:49  brianp
- * clipping in read_fast_rgba_pixels() off by one (Randy Frank)
- *
- * Revision 3.7  1998/07/18 03:34:24  brianp
- * GL_ALPHA format was missing
- *
- * Revision 3.6  1998/07/17 03:24:16  brianp
- * added Pixel.ScaleOrBiasRGBA field
- *
- * Revision 3.5  1998/03/27 04:17:52  brianp
- * fixed G++ warnings
- *
- * Revision 3.4  1998/03/15 18:50:25  brianp
- * added GL_EXT_abgr extension
- *
- * Revision 3.3  1998/02/08 20:22:14  brianp
- * LOTS of clean-up and rewriting
- *
- * Revision 3.2  1998/02/01 22:29:09  brianp
- * added support for packed pixel formats
- *
- * Revision 3.1  1998/02/01 20:47:42  brianp
- * added GL_BGR and GL_BGRA pixel formats
- *
- * Revision 3.0  1998/01/31 21:02:29  brianp
- * initial rev
- *
+ * Version:  3.4.1
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
 #ifdef PC_HEADER
 #include "all.h"
 #else
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
+#include "glheader.h"
+#include "alphabuf.h"
 #include "context.h"
 #include "depth.h"
 #include "feedback.h"
-#include "macros.h"
 #include "image.h"
+#include "macros.h"
+#include "mem.h"
 #include "pixel.h"
 #include "readpix.h"
 #include "span.h"
+#include "state.h"
 #include "stencil.h"
 #include "types.h"
 #endif
@@ -87,9 +53,10 @@
 static void read_index_pixels( GLcontext *ctx,
                                GLint x, GLint y,
 			       GLsizei width, GLsizei height,
-			       GLenum type, GLvoid *pixels )
+			       GLenum type, GLvoid *pixels,
+                               const struct gl_pixelstore_attrib *packing )
 {
-   GLint i, j;
+   GLint i, j, readWidth;
 
    /* error checking */
    if (ctx->Visual->RGBAflag) {
@@ -97,29 +64,34 @@ static void read_index_pixels( GLcontext *ctx,
       return;
    }
 
+   ASSERT(ctx->Driver.SetReadBuffer);
+   (*ctx->Driver.SetReadBuffer)(ctx, ctx->ReadBuffer, ctx->Pixel.DriverReadBuffer);
+
+   readWidth = (width > MAX_WIDTH) ? MAX_WIDTH : width;
+
    /* process image row by row */
    for (j=0;j<height;j++,y++) {
       GLuint index[MAX_WIDTH];
       GLvoid *dest;
 
-      (*ctx->Driver.ReadCI32Span)( ctx, width, x, y, index );
+      (*ctx->Driver.ReadCI32Span)( ctx, readWidth, x, y, index );
 
       if (ctx->Pixel.IndexShift!=0 || ctx->Pixel.IndexOffset!=0) {
-         gl_shift_and_offset_ci( ctx, width, index);
+         _mesa_shift_and_offset_ci( ctx, readWidth, index);
       }
 
       if (ctx->Pixel.MapColorFlag) {
-         gl_map_ci(ctx, width, index);
+         _mesa_map_ci(ctx, readWidth, index);
       }
 
-      dest = gl_pixel_addr_in_image(&ctx->Pack, pixels,
+      dest = _mesa_image_address(packing, pixels,
                          width, height, GL_COLOR_INDEX, type, 0, j, 0);
 
       switch (type) {
 	 case GL_UNSIGNED_BYTE:
 	    {
                GLubyte *dst = (GLubyte *) dest;
-	       for (i=0;i<width;i++) {
+	       for (i=0;i<readWidth;i++) {
 		  *dst++ = (GLubyte) index[i];
 	       }
 	    }
@@ -127,7 +99,7 @@ static void read_index_pixels( GLcontext *ctx,
 	 case GL_BYTE:
 	    {
                GLbyte *dst = (GLbyte *) dest;
-	       for (i=0;i<width;i++) {
+	       for (i=0;i<readWidth;i++) {
 		  dst[i] = (GLbyte) index[i];
 	       }
 	    }
@@ -135,62 +107,65 @@ static void read_index_pixels( GLcontext *ctx,
 	 case GL_UNSIGNED_SHORT:
 	    {
                GLushort *dst = (GLushort *) dest;
-	       for (i=0;i<width;i++) {
+	       for (i=0;i<readWidth;i++) {
 		  dst[i] = (GLushort) index[i];
 	       }
-	       if (ctx->Pack.SwapBytes) {
-		  gl_swap2( (GLushort *) dst, width );
+	       if (packing->SwapBytes) {
+		  _mesa_swap2( (GLushort *) dst, readWidth );
 	       }
 	    }
 	    break;
 	 case GL_SHORT:
 	    {
                GLshort *dst = (GLshort *) dest;
-	       for (i=0;i<width;i++) {
+	       for (i=0;i<readWidth;i++) {
 		  dst[i] = (GLshort) index[i];
 	       }
-	       if (ctx->Pack.SwapBytes) {
-		  gl_swap2( (GLushort *) dst, width );
+	       if (packing->SwapBytes) {
+		  _mesa_swap2( (GLushort *) dst, readWidth );
 	       }
 	    }
 	    break;
 	 case GL_UNSIGNED_INT:
 	    {
                GLuint *dst = (GLuint *) dest;
-	       for (i=0;i<width;i++) {
+	       for (i=0;i<readWidth;i++) {
 		  dst[i] = (GLuint) index[i];
 	       }
-	       if (ctx->Pack.SwapBytes) {
-		  gl_swap4( (GLuint *) dst, width );
+	       if (packing->SwapBytes) {
+		  _mesa_swap4( (GLuint *) dst, readWidth );
 	       }
 	    }
 	    break;
 	 case GL_INT:
 	    {
                GLint *dst = (GLint *) dest;
-	       for (i=0;i<width;i++) {
+	       for (i=0;i<readWidth;i++) {
 		  dst[i] = (GLint) index[i];
 	       }
-	       if (ctx->Pack.SwapBytes) {
-		  gl_swap4( (GLuint *) dst, width );
+	       if (packing->SwapBytes) {
+		  _mesa_swap4( (GLuint *) dst, readWidth );
 	       }
 	    }
 	    break;
 	 case GL_FLOAT:
 	    {
                GLfloat *dst = (GLfloat *) dest;
-	       for (i=0;i<width;i++) {
+	       for (i=0;i<readWidth;i++) {
 		  dst[i] = (GLfloat) index[i];
 	       }
-	       if (ctx->Pack.SwapBytes) {
-		  gl_swap4( (GLuint *) dst, width );
+	       if (packing->SwapBytes) {
+		  _mesa_swap4( (GLuint *) dst, readWidth );
 	       }
 	    }
 	    break;
          default:
             gl_error( ctx, GL_INVALID_ENUM, "glReadPixels(type)" );
+            j = height + 1; /* exit loop */
       }
    }
+
+   (*ctx->Driver.SetReadBuffer)(ctx, ctx->DrawBuffer, ctx->Color.DriverDrawBuffer);
 }
 
 
@@ -198,9 +173,10 @@ static void read_index_pixels( GLcontext *ctx,
 static void read_depth_pixels( GLcontext *ctx,
                                GLint x, GLint y,
 			       GLsizei width, GLsizei height,
-			       GLenum type, GLvoid *pixels )
+			       GLenum type, GLvoid *pixels,
+                               const struct gl_pixelstore_attrib *packing )
 {
-   GLint i, j;
+   GLint i, j, readWidth;
    GLboolean bias_or_scale;
 
    /* Error checking */
@@ -210,60 +186,67 @@ static void read_depth_pixels( GLcontext *ctx,
       return;
    }
 
+   readWidth = (width > MAX_WIDTH) ? MAX_WIDTH : width;
+
+   if (type != GL_BYTE &&
+       type != GL_UNSIGNED_BYTE &&
+       type != GL_SHORT &&
+       type != GL_UNSIGNED_SHORT &&
+       type != GL_INT &&
+       type != GL_UNSIGNED_INT &&
+       type != GL_FLOAT) {
+      gl_error( ctx, GL_INVALID_OPERATION, "glReadPixels(depth type)");
+      return;
+   }
+
    bias_or_scale = ctx->Pixel.DepthBias!=0.0 || ctx->Pixel.DepthScale!=1.0;
 
-   if (type==GL_UNSIGNED_SHORT && sizeof(GLdepth)==sizeof(GLushort)
-       && !bias_or_scale && !ctx->Pack.SwapBytes) {
+   if (type==GL_UNSIGNED_SHORT && ctx->Visual->DepthBits == 16
+       && !bias_or_scale && !packing->SwapBytes) {
       /* Special case: directly read 16-bit unsigned depth values. */
       for (j=0;j<height;j++,y++) {
-         GLushort *dst = (GLushort*) gl_pixel_addr_in_image(&ctx->Pack, pixels,
-                         width, height, GL_DEPTH_COMPONENT, type, 0, j, 0);
-         (*ctx->Driver.ReadDepthSpanInt)( ctx, width, x, y, (GLdepth*) dst);
+         GLdepth depth[MAX_WIDTH];
+         GLushort *dst = (GLushort*) _mesa_image_address( packing, pixels,
+                         width, height, GL_DEPTH_COMPONENT, type, 0, j, 0 );
+         GLint i;
+         _mesa_read_depth_span(ctx, width, x, y, depth);
+         for (i = 0; i < width; i++)
+            dst[i] = depth[i];
       }
    }
-   else if (type==GL_UNSIGNED_INT && sizeof(GLdepth)==sizeof(GLuint)
-            && !bias_or_scale && !ctx->Pack.SwapBytes) {
+   else if (type==GL_UNSIGNED_INT && ctx->Visual->DepthBits == 32
+            && !bias_or_scale && !packing->SwapBytes) {
       /* Special case: directly read 32-bit unsigned depth values. */
-      /* Compute shift value to scale depth values up to 32-bit uints. */
-      GLuint shift = 0;
-      GLuint max = MAX_DEPTH;
-      while ((max&0x80000000)==0) {
-         max = max << 1;
-         shift++;
-      }
       for (j=0;j<height;j++,y++) {
-         GLuint *dst = (GLuint *) gl_pixel_addr_in_image(&ctx->Pack, pixels,
-                         width, height, GL_DEPTH_COMPONENT, type, 0, j, 0);
-         (*ctx->Driver.ReadDepthSpanInt)( ctx, width, x, y, (GLdepth*) dst);
-         for (i=0;i<width;i++) {
-            dst[i] = dst[i] << shift;
-         }
+         GLdepth *dst = (GLdepth *) _mesa_image_address( packing, pixels,
+                         width, height, GL_DEPTH_COMPONENT, type, 0, j, 0 );
+         _mesa_read_depth_span(ctx, width, x, y, dst);
       }
    }
    else {
-      /* General case (slow) */
+      /* General case (slower) */
       for (j=0;j<height;j++,y++) {
          GLfloat depth[MAX_WIDTH];
          GLvoid *dest;
 
-         (*ctx->Driver.ReadDepthSpanFloat)( ctx, width, x, y, depth );
+         _mesa_read_depth_span_float(ctx, readWidth, x, y, depth);
 
          if (bias_or_scale) {
-            for (i=0;i<width;i++) {
+            for (i=0;i<readWidth;i++) {
                GLfloat d;
                d = depth[i] * ctx->Pixel.DepthScale + ctx->Pixel.DepthBias;
                depth[i] = CLAMP( d, 0.0F, 1.0F );
             }
          }
 
-         dest = gl_pixel_addr_in_image(&ctx->Pack, pixels,
+         dest = _mesa_image_address(packing, pixels,
                          width, height, GL_DEPTH_COMPONENT, type, 0, j, 0);
 
          switch (type) {
             case GL_UNSIGNED_BYTE:
                {
                   GLubyte *dst = (GLubyte *) dest;
-                  for (i=0;i<width;i++) {
+                  for (i=0;i<readWidth;i++) {
                      dst[i] = FLOAT_TO_UBYTE( depth[i] );
                   }
                }
@@ -271,7 +254,7 @@ static void read_depth_pixels( GLcontext *ctx,
             case GL_BYTE:
                {
                   GLbyte *dst = (GLbyte *) dest;
-                  for (i=0;i<width;i++) {
+                  for (i=0;i<readWidth;i++) {
                      dst[i] = FLOAT_TO_BYTE( depth[i] );
                   }
                }
@@ -279,55 +262,55 @@ static void read_depth_pixels( GLcontext *ctx,
             case GL_UNSIGNED_SHORT:
                {
                   GLushort *dst = (GLushort *) dest;
-                  for (i=0;i<width;i++) {
+                  for (i=0;i<readWidth;i++) {
                      dst[i] = FLOAT_TO_USHORT( depth[i] );
                   }
-                  if (ctx->Pack.SwapBytes) {
-                     gl_swap2( (GLushort *) dst, width );
+                  if (packing->SwapBytes) {
+                     _mesa_swap2( (GLushort *) dst, readWidth );
                   }
                }
                break;
             case GL_SHORT:
                {
                   GLshort *dst = (GLshort *) dest;
-                  for (i=0;i<width;i++) {
+                  for (i=0;i<readWidth;i++) {
                      dst[i] = FLOAT_TO_SHORT( depth[i] );
                   }
-                  if (ctx->Pack.SwapBytes) {
-                     gl_swap2( (GLushort *) dst, width );
+                  if (packing->SwapBytes) {
+                     _mesa_swap2( (GLushort *) dst, readWidth );
                   }
                }
                break;
             case GL_UNSIGNED_INT:
                {
                   GLuint *dst = (GLuint *) dest;
-                  for (i=0;i<width;i++) {
+                  for (i=0;i<readWidth;i++) {
                      dst[i] = FLOAT_TO_UINT( depth[i] );
                   }
-                  if (ctx->Pack.SwapBytes) {
-                     gl_swap4( (GLuint *) dst, width );
+                  if (packing->SwapBytes) {
+                     _mesa_swap4( (GLuint *) dst, readWidth );
                   }
                }
                break;
             case GL_INT:
                {
                   GLint *dst = (GLint *) dest;
-                  for (i=0;i<width;i++) {
+                  for (i=0;i<readWidth;i++) {
                      dst[i] = FLOAT_TO_INT( depth[i] );
                   }
-                  if (ctx->Pack.SwapBytes) {
-                     gl_swap4( (GLuint *) dst, width );
+                  if (packing->SwapBytes) {
+                     _mesa_swap4( (GLuint *) dst, readWidth );
                   }
                }
                break;
             case GL_FLOAT:
                {
                   GLfloat *dst = (GLfloat *) dest;
-                  for (i=0;i<width;i++) {
+                  for (i=0;i<readWidth;i++) {
                      dst[i] = depth[i];
                   }
-                  if (ctx->Pack.SwapBytes) {
-                     gl_swap4( (GLuint *) dst, width );
+                  if (packing->SwapBytes) {
+                     _mesa_swap4( (GLuint *) dst, readWidth );
                   }
                }
                break;
@@ -344,10 +327,25 @@ static void read_depth_pixels( GLcontext *ctx,
 static void read_stencil_pixels( GLcontext *ctx,
                                  GLint x, GLint y,
 				 GLsizei width, GLsizei height,
-				 GLenum type, GLvoid *pixels )
+				 GLenum type, GLvoid *pixels,
+                                 const struct gl_pixelstore_attrib *packing )
 {
    GLboolean shift_or_offset;
-   GLint i, j;
+   GLint i, j, readWidth;
+
+   if (type != GL_BYTE &&
+       type != GL_UNSIGNED_BYTE &&
+       type != GL_SHORT &&
+       type != GL_UNSIGNED_SHORT &&
+       type != GL_INT &&
+       type != GL_UNSIGNED_INT &&
+       type != GL_FLOAT &&
+       type != GL_BITMAP) {
+      gl_error( ctx, GL_INVALID_OPERATION, "glReadPixels(stencil type)");
+      return;
+   }
+
+   readWidth = (width > MAX_WIDTH) ? MAX_WIDTH : width;
 
    if (ctx->Visual->StencilBits<=0) {
       /* No stencil buffer */
@@ -360,83 +358,129 @@ static void read_stencil_pixels( GLcontext *ctx,
    /* process image row by row */
    for (j=0;j<height;j++,y++) {
       GLvoid *dest;
-      GLubyte stencil[MAX_WIDTH];
+      GLstencil stencil[MAX_WIDTH];
 
-      gl_read_stencil_span( ctx, width, x, y, stencil );
+      _mesa_read_stencil_span( ctx, readWidth, x, y, stencil );
 
       if (shift_or_offset) {
-         gl_shift_and_offset_stencil( ctx, width, stencil );
+         _mesa_shift_and_offset_stencil( ctx, readWidth, stencil );
       }
 
       if (ctx->Pixel.MapStencilFlag) {
-         gl_map_stencil( ctx, width, stencil );
+         _mesa_map_stencil( ctx, readWidth, stencil );
       }
 
-      dest = gl_pixel_addr_in_image(&ctx->Pack, pixels,
-                          width, height, GL_STENCIL_INDEX, type, 0, j, 0);
+      dest = _mesa_image_address( packing, pixels,
+                          width, height, GL_STENCIL_INDEX, type, 0, j, 0 );
 
       switch (type) {
 	 case GL_UNSIGNED_BYTE:
-            MEMCPY( dest, stencil, width );
+            if (sizeof(GLstencil) == 8) {
+               MEMCPY( dest, stencil, readWidth );
+            }
+            else {
+               GLubyte *dst = (GLubyte *) dest;
+	       for (i=0;i<readWidth;i++) {
+		  dst[i] = (GLubyte) stencil[i];
+	       }
+            }
 	    break;
 	 case GL_BYTE:
-            MEMCPY( dest, stencil, width );
+            if (sizeof(GLstencil) == 8) {
+               MEMCPY( dest, stencil, readWidth );
+            }
+            else {
+               GLbyte *dst = (GLbyte *) dest;
+	       for (i=0;i<readWidth;i++) {
+		  dst[i] = (GLbyte) stencil[i];
+	       }
+            }
 	    break;
 	 case GL_UNSIGNED_SHORT:
 	    {
                GLushort *dst = (GLushort *) dest;
-	       for (i=0;i<width;i++) {
+	       for (i=0;i<readWidth;i++) {
 		  dst[i] = (GLushort) stencil[i];
 	       }
-	       if (ctx->Pack.SwapBytes) {
-		  gl_swap2( (GLushort *) dst, width );
+	       if (packing->SwapBytes) {
+		  _mesa_swap2( (GLushort *) dst, readWidth );
 	       }
 	    }
 	    break;
 	 case GL_SHORT:
 	    {
                GLshort *dst = (GLshort *) dest;
-	       for (i=0;i<width;i++) {
+	       for (i=0;i<readWidth;i++) {
 		  dst[i] = (GLshort) stencil[i];
 	       }
-	       if (ctx->Pack.SwapBytes) {
-		  gl_swap2( (GLushort *) dst, width );
+	       if (packing->SwapBytes) {
+		  _mesa_swap2( (GLushort *) dst, readWidth );
 	       }
 	    }
 	    break;
 	 case GL_UNSIGNED_INT:
 	    {
                GLuint *dst = (GLuint *) dest;
-	       for (i=0;i<width;i++) {
+	       for (i=0;i<readWidth;i++) {
 		  dst[i] = (GLuint) stencil[i];
 	       }
-	       if (ctx->Pack.SwapBytes) {
-		  gl_swap4( (GLuint *) dst, width );
+	       if (packing->SwapBytes) {
+		  _mesa_swap4( (GLuint *) dst, readWidth );
 	       }
 	    }
 	    break;
 	 case GL_INT:
 	    {
                GLint *dst = (GLint *) dest;
-	       for (i=0;i<width;i++) {
+	       for (i=0;i<readWidth;i++) {
 		  *dst++ = (GLint) stencil[i];
 	       }
-	       if (ctx->Pack.SwapBytes) {
-		  gl_swap4( (GLuint *) dst, width );
+	       if (packing->SwapBytes) {
+		  _mesa_swap4( (GLuint *) dst, readWidth );
 	       }
 	    }
 	    break;
 	 case GL_FLOAT:
 	    {
                GLfloat *dst = (GLfloat *) dest;
-	       for (i=0;i<width;i++) {
+	       for (i=0;i<readWidth;i++) {
 		  dst[i] = (GLfloat) stencil[i];
 	       }
-	       if (ctx->Pack.SwapBytes) {
-		  gl_swap4( (GLuint *) dst, width );
+	       if (packing->SwapBytes) {
+		  _mesa_swap4( (GLuint *) dst, readWidth );
 	       }
 	    }
 	    break;
+         case GL_BITMAP:
+            if (packing->LsbFirst) {
+               GLubyte *dst = (GLubyte*) dest;
+               GLint shift = 0;
+               for (i = 0; i < readWidth; i++) {
+                  if (shift == 0)
+                     *dst = 0;
+                  *dst |= ((stencil != 0) << shift);
+                  shift++;
+                  if (shift == 8) {
+                     shift = 0;
+                     dst++;
+                  }
+               }
+            }
+            else {
+               GLubyte *dst = (GLubyte*) dest;
+               GLint shift = 7;
+               for (i = 0; i < readWidth; i++) {
+                  if (shift == 7)
+                     *dst = 0;
+                  *dst |= ((stencil != 0) << shift);
+                  shift--;
+                  if (shift < 0) {
+                     shift = 7;
+                     dst++;
+                  }
+               }
+            }
+            break;
          default:
             gl_error( ctx, GL_INVALID_ENUM, "glReadPixels(type)" );
       }
@@ -450,18 +494,31 @@ static void read_stencil_pixels( GLcontext *ctx,
  *   GL_UNSIGNED_BYTE, GL_RGBA
  * when pixel scaling, biasing and mapping are disabled.
  */
-static GLboolean read_fast_rgba_pixels( GLcontext *ctx,
-                                        GLint x, GLint y,
-                                        GLsizei width, GLsizei height,
-                                        GLenum format, GLenum type,
-                                        GLvoid *pixels )
+static GLboolean
+read_fast_rgba_pixels( GLcontext *ctx,
+                       GLint x, GLint y,
+                       GLsizei width, GLsizei height,
+                       GLenum format, GLenum type,
+                       GLvoid *pixels,
+                       const struct gl_pixelstore_attrib *packing )
 {
-   /* can't do scale, bias or mapping */
-   if (ctx->Pixel.ScaleOrBiasRGBA || ctx->Pixel.MapColorFlag)
+   GLboolean applyTransferOps;
+
+   applyTransferOps = ctx->Pixel.ScaleOrBiasRGBA ||
+                      ctx->Pixel.MapColorFlag ||
+                      ctx->ColorMatrix.type != MATRIX_IDENTITY ||
+                      ctx->Pixel.ScaleOrBiasRGBApcm ||
+                      ctx->Pixel.ColorTableEnabled ||
+                      ctx->Pixel.PostColorMatrixColorTableEnabled ||
+                      ctx->Pixel.MinMaxEnabled ||
+                      ctx->Pixel.HistogramEnabled;
+
+   /* can't do scale, bias, mapping, etc */
+   if (applyTransferOps)
        return GL_FALSE;
 
    /* can't do fancy pixel packing */
-   if (ctx->Pack.Alignment != 1 || ctx->Pack.SwapBytes || ctx->Pack.LsbFirst)
+   if (packing->Alignment != 1 || packing->SwapBytes || packing->LsbFirst)
       return GL_FALSE;
 
    {
@@ -469,51 +526,55 @@ static GLboolean read_fast_rgba_pixels( GLcontext *ctx,
       GLint srcY = y;
       GLint readWidth = width;           /* actual width read */
       GLint readHeight = height;         /* actual height read */
-      GLint skipPixels = ctx->Pack.SkipPixels;
-      GLint skipRows = ctx->Pack.SkipRows;
+      GLint skipPixels = packing->SkipPixels;
+      GLint skipRows = packing->SkipRows;
       GLint rowLength;
 
-      if (ctx->Pack.RowLength > 0)
-         rowLength = ctx->Pack.RowLength;
+      if (packing->RowLength > 0)
+         rowLength = packing->RowLength;
       else
          rowLength = width;
 
       /* horizontal clipping */
-      if (srcX < ctx->Buffer->Xmin) {
-         skipPixels += (ctx->Buffer->Xmin - srcX);
-         readWidth  -= (ctx->Buffer->Xmin - srcX);
-         srcX = ctx->Buffer->Xmin;
+      if (srcX < ctx->ReadBuffer->Xmin) {
+         skipPixels += (ctx->ReadBuffer->Xmin - srcX);
+         readWidth  -= (ctx->ReadBuffer->Xmin - srcX);
+         srcX = ctx->ReadBuffer->Xmin;
       }
-      if (srcX + readWidth > ctx->Buffer->Xmax)
-         readWidth -= (srcX + readWidth - ctx->Buffer->Xmax - 1);
+      if (srcX + readWidth > ctx->ReadBuffer->Xmax)
+         readWidth -= (srcX + readWidth - ctx->ReadBuffer->Xmax - 1);
       if (readWidth <= 0)
          return GL_TRUE;
 
       /* vertical clipping */
-      if (srcY < ctx->Buffer->Ymin) {
-         skipRows   += (ctx->Buffer->Ymin - srcY);
-         readHeight -= (ctx->Buffer->Ymin - srcY);
-         srcY = ctx->Buffer->Ymin;
+      if (srcY < ctx->ReadBuffer->Ymin) {
+         skipRows   += (ctx->ReadBuffer->Ymin - srcY);
+         readHeight -= (ctx->ReadBuffer->Ymin - srcY);
+         srcY = ctx->ReadBuffer->Ymin;
       }
-      if (srcY + readHeight > ctx->Buffer->Ymax)
-         readHeight -= (srcY + readHeight - ctx->Buffer->Ymax - 1);
+      if (srcY + readHeight > ctx->ReadBuffer->Ymax)
+         readHeight -= (srcY + readHeight - ctx->ReadBuffer->Ymax - 1);
       if (readHeight <= 0)
          return GL_TRUE;
 
       /*
        * Ready to read!
-       * The window region at (destX, destY) of size (drawWidth, drawHeight)
+       * The window region at (destX, destY) of size (readWidth, readHeight)
        * will be read back.
        * We'll write pixel data to buffer pointed to by "pixels" but we'll
        * skip "skipRows" rows and skip "skipPixels" pixels/row.
- */
+       */
       if (format==GL_RGBA && type==GL_UNSIGNED_BYTE) {
          GLubyte *dest = (GLubyte *) pixels
                          + (skipRows * rowLength + skipPixels) * 4;
          GLint row;
          for (row=0; row<readHeight; row++) {
             (*ctx->Driver.ReadRGBASpan)(ctx, readWidth, srcX, srcY,
-                                        (void *) dest);
+                                        (GLubyte (*)[4]) dest);
+            if (ctx->DrawBuffer->UseSoftwareAlphaBuffers) {
+               _mesa_read_alpha_span(ctx, readWidth, srcX, srcY,
+                                     (GLubyte (*)[4]) dest);
+            }
             dest += rowLength * 4;
             srcY++;
          }
@@ -522,7 +583,51 @@ static GLboolean read_fast_rgba_pixels( GLcontext *ctx,
       else {
          /* can't do this format/type combination */
          return GL_FALSE;
+      }
    }
+}
+
+
+/*
+ * This function converts an array of GLchan colors to GLfloat colors.
+ * Most importantly, it undoes the non-uniform quantization of pixel
+ * values introduced when we convert shallow (< 8 bit) pixel values
+ * to GLubytes in the ctx->Driver.ReadRGBASpan() functions.
+ * This fixes a number of OpenGL conformance failures when running on
+ * 16bpp displays, for example.
+ */
+static void
+ubyte_to_float_span(const GLcontext *ctx, GLuint n,
+                    CONST GLubyte rgba[][4], GLfloat rgbaf[][4])
+{
+   const GLuint rShift = 8 - ctx->Visual->RedBits;
+   const GLuint gShift = 8 - ctx->Visual->GreenBits;
+   const GLuint bShift = 8 - ctx->Visual->BlueBits;
+   GLuint aShift;
+   const GLfloat rScale = 1.0 / (GLfloat) ((1 << ctx->Visual->RedBits  ) - 1);
+   const GLfloat gScale = 1.0 / (GLfloat) ((1 << ctx->Visual->GreenBits) - 1);
+   const GLfloat bScale = 1.0 / (GLfloat) ((1 << ctx->Visual->BlueBits ) - 1);
+   GLfloat aScale;
+   GLuint i;
+
+   if (ctx->Visual->AlphaBits > 0) {
+      aShift = 8 - ctx->Visual->AlphaBits;
+      aScale = 1.0 / (GLfloat) ((1 << ctx->Visual->AlphaBits) - 1);
+   }
+   else {
+      aShift = 0;
+      aScale = 1.0F / 255.0F;
+   }
+
+   for (i = 0; i < n; i++) {
+      const GLint r = rgba[i][RCOMP] >> rShift;
+      const GLint g = rgba[i][GCOMP] >> gShift;
+      const GLint b = rgba[i][BCOMP] >> bShift;
+      const GLint a = rgba[i][ACOMP] >> aShift;
+      rgbaf[i][RCOMP] = (GLfloat) r * rScale;
+      rgbaf[i][GCOMP] = (GLfloat) g * gScale;
+      rgbaf[i][BCOMP] = (GLfloat) b * bScale;
+      rgbaf[i][ACOMP] = (GLfloat) a * aScale;
    }
 }
 
@@ -532,888 +637,153 @@ static GLboolean read_fast_rgba_pixels( GLcontext *ctx,
  * Read R, G, B, A, RGB, L, or LA pixels.
  */
 static void read_rgba_pixels( GLcontext *ctx,
-                               GLint x, GLint y,
-			       GLsizei width, GLsizei height,
-			       GLenum format, GLenum type, GLvoid *pixels )
+                              GLint x, GLint y,
+                              GLsizei width, GLsizei height,
+                              GLenum format, GLenum type, GLvoid *pixels,
+                              const struct gl_pixelstore_attrib *packing )
 {
-   GLint i, j, n, s;
-   DEFARRAY(GLfloat, red, MAX_WIDTH);
-   DEFARRAY(GLfloat, green, MAX_WIDTH);
-   DEFARRAY(GLfloat, blue, MAX_WIDTH);
-   DEFARRAY(GLfloat, alpha, MAX_WIDTH);
-   DEFARRAY(GLfloat, luminance, MAX_WIDTH);
+   GLint readWidth;
 
-   /* number of components */
-   n = gl_components_in_format(format);
-   if (n <= 0) {
-      gl_error(ctx, GL_INVALID_ENUM, "glReadPixels(format)");
-         UNDEFARRAY( red );
-         UNDEFARRAY( green );
-         UNDEFARRAY( blue );
-         UNDEFARRAY( alpha );
-         UNDEFARRAY( luminance );
+   (*ctx->Driver.SetReadBuffer)(ctx, ctx->ReadBuffer, ctx->Pixel.DriverReadBuffer);
+
+   /* Try optimized path first */
+   if (read_fast_rgba_pixels( ctx, x, y, width, height,
+                              format, type, pixels, packing )) {
+
+      (*ctx->Driver.SetReadBuffer)(ctx, ctx->DrawBuffer, ctx->Color.DriverDrawBuffer);
+      return; /* done! */
+   }
+
+   readWidth = (width > MAX_WIDTH) ? MAX_WIDTH : width;
+
+   /* do error checking on pixel type, format was already checked by caller */
+   switch (type) {
+      case GL_UNSIGNED_BYTE:
+      case GL_BYTE:
+      case GL_UNSIGNED_SHORT:
+      case GL_SHORT:
+      case GL_UNSIGNED_INT:
+      case GL_INT:
+      case GL_FLOAT:
+      case GL_UNSIGNED_BYTE_3_3_2:
+      case GL_UNSIGNED_BYTE_2_3_3_REV:
+      case GL_UNSIGNED_SHORT_5_6_5:
+      case GL_UNSIGNED_SHORT_5_6_5_REV:
+      case GL_UNSIGNED_SHORT_4_4_4_4:
+      case GL_UNSIGNED_SHORT_4_4_4_4_REV:
+      case GL_UNSIGNED_SHORT_5_5_5_1:
+      case GL_UNSIGNED_SHORT_1_5_5_5_REV:
+      case GL_UNSIGNED_INT_8_8_8_8:
+      case GL_UNSIGNED_INT_8_8_8_8_REV:
+      case GL_UNSIGNED_INT_10_10_10_2:
+      case GL_UNSIGNED_INT_2_10_10_10_REV:
+         /* valid pixel type */
+         break;
+      default:
+         gl_error( ctx, GL_INVALID_ENUM, "glReadPixels(type)" );
          return;
    }
 
-   /* Size of each component */
-   s = gl_sizeof_type( type );
-   if (s <= 0) {
-      gl_error( ctx, GL_INVALID_ENUM, "glReadPixels(type)" );
-      UNDEFARRAY( red );
-      UNDEFARRAY( green );
-      UNDEFARRAY( blue );
-      UNDEFARRAY( alpha );
-      UNDEFARRAY( luminance );
+   if (!_mesa_is_legal_format_and_type(format, type) ||
+       format == GL_INTENSITY) {
+      gl_error(ctx, GL_INVALID_OPERATION, "glReadPixels(format or type)");
       return;
    }
 
-   /* process image row by row */
-   for (j=0;j<height;j++,y++) {
-
-      /*
-       * Read the pixels from frame buffer
-       */
-      if (ctx->Visual->RGBAflag) {
+   if (ctx->Visual->RGBAflag) {
+      GLint j;
+      for (j=0;j<height;j++,y++) {
          GLubyte rgba[MAX_WIDTH][4];
-	 GLfloat rscale = (1.0F / 255.0F);
-	 GLfloat gscale = (1.0F / 255.0F);
-	 GLfloat bscale = (1.0F / 255.0F);
-	 GLfloat ascale = (1.0F / 255.0F);
+         GLvoid *dest;
 
-	 /* read colors and convert to floats */
-         gl_read_rgba_span(ctx, width, x, y, rgba );
-	 for (i=0;i<width;i++) {
-	    red[i]   = rgba[i][RCOMP] * rscale;
-	    green[i] = rgba[i][GCOMP] * gscale;
-	    blue[i]  = rgba[i][BCOMP] * bscale;
-	    alpha[i] = rgba[i][ACOMP] * ascale;
-	 }
+         gl_read_rgba_span( ctx, ctx->ReadBuffer, readWidth, x, y, rgba );
 
-	 if (ctx->Pixel.ScaleOrBiasRGBA) {
-	    gl_scale_and_bias_color( ctx, width, red, green, blue, alpha );
-	 }
-	 if (ctx->Pixel.MapColorFlag) {
-	    gl_map_color( ctx, width, red, green, blue, alpha );
-	 }
-      }
-      else {
-	 /* convert CI values to RGBA */
-	 GLuint index[MAX_WIDTH];
-	 (*ctx->Driver.ReadCI32Span)( ctx, width, x, y, index );
+         dest = _mesa_image_address( packing, pixels, width, height,
+                                     format, type, 0, j, 0);
 
-	 if (ctx->Pixel.IndexShift!=0 || ctx->Pixel.IndexOffset!=0) {
-            gl_map_ci( ctx, width, index );
-	 }
-
-         gl_map_ci_to_color(ctx, width, index, red, green, blue, alpha);
-      }
-
-      if (format==GL_LUMINANCE || format==GL_LUMINANCE_ALPHA) {
-         for (i=0;i<width;i++) {
-            GLfloat sum = red[i] + green[i] + blue[i];
-            luminance[i] = CLAMP( sum, 0.0F, 1.0F );
+         if (ctx->Visual->RedBits < 8 ||
+             ctx->Visual->GreenBits < 8 ||
+             ctx->Visual->BlueBits < 8) {
+            /* Requantize the color values into floating point and go from
+             * there.  This fixes conformance failures with 16-bit color
+             * buffers, for example.
+             */
+            GLfloat rgbaf[MAX_WIDTH][4];
+            ubyte_to_float_span(ctx, readWidth,
+                                (CONST GLubyte (*)[4]) rgba, rgbaf);
+            _mesa_pack_float_rgba_span(ctx, readWidth,
+                                       (CONST GLfloat (*)[4]) rgbaf,
+                                       format, type, dest, packing,
+                                       GL_TRUE);
+         }
+         else {
+            /* GLubytes are fine */
+            _mesa_pack_rgba_span(ctx, readWidth, (CONST GLchan (*)[4]) rgba,
+                                 format, type, dest, packing, GL_TRUE);
          }
       }
+   }
+   else {
+      /* Convert color index pixels to RGBA */
+      GLint j;
+      for (j=0;j<height;j++,y++) {
+         GLubyte rgba[MAX_WIDTH][4];
+	 GLuint index[MAX_WIDTH];
+         GLvoid *dest;
 
-      /*
-       * Pack/transfer/store the pixels
-       */
+	 (*ctx->Driver.ReadCI32Span)( ctx, readWidth, x, y, index );
 
-      /* XXX
-       * XXX rewrite this to use the new gl_pack_rgba_span function!!!
-       * XXX
-       */
+	 if (ctx->Pixel.IndexShift!=0 || ctx->Pixel.IndexOffset!=0) {
+            _mesa_map_ci( ctx, readWidth, index );
+	 }
 
-      switch (type) {
-	 case GL_UNSIGNED_BYTE:
-	    {
-               GLubyte *dst = (GLubyte *) gl_pixel_addr_in_image(&ctx->Pack,
-                              pixels, width, height, format, type, 0, j, 0);
-               switch (format) {
-                  case GL_RED:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_UBYTE(red[i]);
-                     break;
-                  case GL_GREEN:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_UBYTE(green[i]);
-                     break;
-                  case GL_BLUE:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_UBYTE(blue[i]);
-                     break;
-                  case GL_ALPHA:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_UBYTE(alpha[i]);
-                     break;
-                  case GL_LUMINANCE:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_UBYTE(luminance[i]);
-                     break;
-                  case GL_LUMINANCE_ALPHA:
-                     for (i=0;i<width;i++) {
-                        dst[i*2+0] = FLOAT_TO_UBYTE(luminance[i]);
-                        dst[i*2+1] = FLOAT_TO_UBYTE(alpha[i]);
-                     }
-                     break;
-                  case GL_RGB:
-                     for (i=0;i<width;i++) {
-                        dst[i*3+0] = FLOAT_TO_UBYTE(red[i]);
-                        dst[i*3+1] = FLOAT_TO_UBYTE(green[i]);
-                        dst[i*3+2] = FLOAT_TO_UBYTE(blue[i]);
-                     }
-                     break;
-                  case GL_RGBA:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_UBYTE(red[i]);
-                        dst[i*4+1] = FLOAT_TO_UBYTE(green[i]);
-                        dst[i*4+2] = FLOAT_TO_UBYTE(blue[i]);
-                        dst[i*4+3] = FLOAT_TO_UBYTE(alpha[i]);
-                     }
-                     break;
-                  case GL_BGR:
-	       for (i=0;i<width;i++) {
-                        dst[i*3+0] = FLOAT_TO_UBYTE(blue[i]);
-                        dst[i*3+1] = FLOAT_TO_UBYTE(green[i]);
-                        dst[i*3+2] = FLOAT_TO_UBYTE(red[i]);
-                     }
-                     break;
-                  case GL_BGRA:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_UBYTE(blue[i]);
-                        dst[i*4+1] = FLOAT_TO_UBYTE(green[i]);
-                        dst[i*4+2] = FLOAT_TO_UBYTE(red[i]);
-                        dst[i*4+3] = FLOAT_TO_UBYTE(alpha[i]);
-                     }
-                     break;
-                  case GL_ABGR_EXT:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_UBYTE(alpha[i]);
-                        dst[i*4+1] = FLOAT_TO_UBYTE(blue[i]);
-                        dst[i*4+2] = FLOAT_TO_UBYTE(green[i]);
-                        dst[i*4+3] = FLOAT_TO_UBYTE(red[i]);
-                     }
-                     break;
-                  default:
-                     gl_problem(ctx, "bad format in glReadPixels\n");
-	       }
-	    }
-	    break;
-	 case GL_BYTE:
-	    {
-               GLbyte *dst = (GLbyte *) gl_pixel_addr_in_image(&ctx->Pack,
-                             pixels, width, height, format, type, 0, j, 0);
-               switch (format) {
-                  case GL_RED:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_BYTE(red[i]);
-                     break;
-                  case GL_GREEN:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_BYTE(green[i]);
-                     break;
-                  case GL_BLUE:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_BYTE(blue[i]);
-                     break;
-                  case GL_ALPHA:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_BYTE(alpha[i]);
-                     break;
-                  case GL_LUMINANCE:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_BYTE(luminance[i]);
-                     break;
-                  case GL_LUMINANCE_ALPHA:
-                     for (i=0;i<width;i++) {
-                        dst[i*2+0] = FLOAT_TO_BYTE(luminance[i]);
-                        dst[i*2+1] = FLOAT_TO_BYTE(alpha[i]);
-                     }
-                     break;
-                  case GL_RGB:
-	       for (i=0;i<width;i++) {
-                        dst[i*3+0] = FLOAT_TO_BYTE(red[i]);
-                        dst[i*3+1] = FLOAT_TO_BYTE(green[i]);
-                        dst[i*3+2] = FLOAT_TO_BYTE(blue[i]);
-                     }
-                     break;
-                  case GL_RGBA:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_BYTE(red[i]);
-                        dst[i*4+1] = FLOAT_TO_BYTE(green[i]);
-                        dst[i*4+2] = FLOAT_TO_BYTE(blue[i]);
-                        dst[i*4+3] = FLOAT_TO_BYTE(alpha[i]);
-                     }
-                     break;
-                  case GL_BGR:
-                     for (i=0;i<width;i++) {
-                        dst[i*3+0] = FLOAT_TO_BYTE(blue[i]);
-                        dst[i*3+1] = FLOAT_TO_BYTE(green[i]);
-                        dst[i*3+2] = FLOAT_TO_BYTE(red[i]);
-                     }
-                     break;
-                  case GL_BGRA:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_BYTE(blue[i]);
-                        dst[i*4+1] = FLOAT_TO_BYTE(green[i]);
-                        dst[i*4+2] = FLOAT_TO_BYTE(red[i]);
-                        dst[i*4+3] = FLOAT_TO_BYTE(alpha[i]);
-                     }
-                  case GL_ABGR_EXT:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_BYTE(alpha[i]);
-                        dst[i*4+1] = FLOAT_TO_BYTE(blue[i]);
-                        dst[i*4+2] = FLOAT_TO_BYTE(green[i]);
-                        dst[i*4+3] = FLOAT_TO_BYTE(red[i]);
-                     }
-                     break;
-                  default:
-                     gl_problem(ctx, "bad format in glReadPixels\n");
-	       }
-	    }
-	    break;
-	 case GL_UNSIGNED_SHORT:
-	    {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               switch (format) {
-                  case GL_RED:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_USHORT(red[i]);
-                     break;
-                  case GL_GREEN:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_USHORT(green[i]);
-                     break;
-                  case GL_BLUE:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_USHORT(blue[i]);
-                     break;
-                  case GL_ALPHA:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_USHORT(alpha[i]);
-                     break;
-                  case GL_LUMINANCE:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_USHORT(luminance[i]);
-                     break;
-                  case GL_LUMINANCE_ALPHA:
-                     for (i=0;i<width;i++) {
-                        dst[i*2+0] = FLOAT_TO_USHORT(luminance[i]);
-                        dst[i*2+1] = FLOAT_TO_USHORT(alpha[i]);
-                     }
-                     break;
-                  case GL_RGB:
-                     for (i=0;i<width;i++) {
-                        dst[i*3+0] = FLOAT_TO_USHORT(red[i]);
-                        dst[i*3+1] = FLOAT_TO_USHORT(green[i]);
-                        dst[i*3+2] = FLOAT_TO_USHORT(blue[i]);
-                     }
-                     break;
-                  case GL_RGBA:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_USHORT(red[i]);
-                        dst[i*4+1] = FLOAT_TO_USHORT(green[i]);
-                        dst[i*4+2] = FLOAT_TO_USHORT(blue[i]);
-                        dst[i*4+3] = FLOAT_TO_USHORT(alpha[i]);
-                     }
-                     break;
-                  case GL_BGR:
-                     for (i=0;i<width;i++) {
-                        dst[i*3+0] = FLOAT_TO_USHORT(blue[i]);
-                        dst[i*3+1] = FLOAT_TO_USHORT(green[i]);
-                        dst[i*3+2] = FLOAT_TO_USHORT(red[i]);
-                     }
-                     break;
-                  case GL_BGRA:
-	       for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_USHORT(blue[i]);
-                        dst[i*4+1] = FLOAT_TO_USHORT(green[i]);
-                        dst[i*4+2] = FLOAT_TO_USHORT(red[i]);
-                        dst[i*4+3] = FLOAT_TO_USHORT(alpha[i]);
-	       }
-                     break;
-                  case GL_ABGR_EXT:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_USHORT(alpha[i]);
-                        dst[i*4+1] = FLOAT_TO_USHORT(blue[i]);
-                        dst[i*4+2] = FLOAT_TO_USHORT(green[i]);
-                        dst[i*4+3] = FLOAT_TO_USHORT(red[i]);
-                     }
-                     break;
-                  default:
-                     gl_problem(ctx, "bad format in glReadPixels\n");
-	    }
-	    if (ctx->Pack.SwapBytes) {
-                  gl_swap2( (GLushort *) dst, width*n );
-               }
-	    }
-	    break;
-	 case GL_SHORT:
-	    {
-               GLshort *dst = (GLshort *) gl_pixel_addr_in_image(&ctx->Pack,
-                              pixels, width, height, format, type, 0, j, 0);
-               switch (format) {
-                  case GL_RED:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_SHORT(red[i]);
-                     break;
-                  case GL_GREEN:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_SHORT(green[i]);
-                     break;
-                  case GL_BLUE:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_SHORT(blue[i]);
-                     break;
-                  case GL_ALPHA:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_SHORT(alpha[i]);
-                     break;
-                  case GL_LUMINANCE:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_SHORT(luminance[i]);
-                     break;
-                  case GL_LUMINANCE_ALPHA:
-	       for (i=0;i<width;i++) {
-                        dst[i*2+0] = FLOAT_TO_SHORT(luminance[i]);
-                        dst[i*2+1] = FLOAT_TO_SHORT(alpha[i]);
-                     }
-                     break;
-                  case GL_RGB:
-                     for (i=0;i<width;i++) {
-                        dst[i*3+0] = FLOAT_TO_SHORT(red[i]);
-                        dst[i*3+1] = FLOAT_TO_SHORT(green[i]);
-                        dst[i*3+2] = FLOAT_TO_SHORT(blue[i]);
-                     }
-                     break;
-                  case GL_RGBA:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_SHORT(red[i]);
-                        dst[i*4+1] = FLOAT_TO_SHORT(green[i]);
-                        dst[i*4+2] = FLOAT_TO_SHORT(blue[i]);
-                        dst[i*4+3] = FLOAT_TO_SHORT(alpha[i]);
-                     }
-                     break;
-                  case GL_BGR:
-                     for (i=0;i<width;i++) {
-                        dst[i*3+0] = FLOAT_TO_SHORT(blue[i]);
-                        dst[i*3+1] = FLOAT_TO_SHORT(green[i]);
-                        dst[i*3+2] = FLOAT_TO_SHORT(red[i]);
-                     }
-                     break;
-                  case GL_BGRA:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_SHORT(blue[i]);
-                        dst[i*4+1] = FLOAT_TO_SHORT(green[i]);
-                        dst[i*4+2] = FLOAT_TO_SHORT(red[i]);
-                        dst[i*4+3] = FLOAT_TO_SHORT(alpha[i]);
-                     }
-                  case GL_ABGR_EXT:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_SHORT(alpha[i]);
-                        dst[i*4+1] = FLOAT_TO_SHORT(blue[i]);
-                        dst[i*4+2] = FLOAT_TO_SHORT(green[i]);
-                        dst[i*4+3] = FLOAT_TO_SHORT(red[i]);
-                     }
-                     break;
-                  default:
-                     gl_problem(ctx, "bad format in glReadPixels\n");
-	       }
-	       if (ctx->Pack.SwapBytes) {
-                  gl_swap2( (GLushort *) dst, width*n );
-	       }
-	    }
-	    break;
-	 case GL_UNSIGNED_INT:
-	    {
-               GLuint *dst = (GLuint *) gl_pixel_addr_in_image(&ctx->Pack,
-                             pixels, width, height, format, type, 0, j, 0);
-               switch (format) {
-                  case GL_RED:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_UINT(red[i]);
-                     break;
-                  case GL_GREEN:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_UINT(green[i]);
-                     break;
-                  case GL_BLUE:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_UINT(blue[i]);
-                     break;
-                  case GL_ALPHA:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_UINT(alpha[i]);
-                     break;
-                  case GL_LUMINANCE:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_UINT(luminance[i]);
-                     break;
-                  case GL_LUMINANCE_ALPHA:
-	       for (i=0;i<width;i++) {
-                        dst[i*2+0] = FLOAT_TO_UINT(luminance[i]);
-                        dst[i*2+1] = FLOAT_TO_UINT(alpha[i]);
-                     }
-                     break;
-                  case GL_RGB:
-                     for (i=0;i<width;i++) {
-                        dst[i*3+0] = FLOAT_TO_UINT(red[i]);
-                        dst[i*3+1] = FLOAT_TO_UINT(green[i]);
-                        dst[i*3+2] = FLOAT_TO_UINT(blue[i]);
-                     }
-                     break;
-                  case GL_RGBA:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_UINT(red[i]);
-                        dst[i*4+1] = FLOAT_TO_UINT(green[i]);
-                        dst[i*4+2] = FLOAT_TO_UINT(blue[i]);
-                        dst[i*4+3] = FLOAT_TO_UINT(alpha[i]);
-                     }
-                     break;
-                  case GL_BGR:
-                     for (i=0;i<width;i++) {
-                        dst[i*3+0] = FLOAT_TO_UINT(blue[i]);
-                        dst[i*3+1] = FLOAT_TO_UINT(green[i]);
-                        dst[i*3+2] = FLOAT_TO_UINT(red[i]);
-                     }
-                     break;
-                  case GL_BGRA:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_UINT(blue[i]);
-                        dst[i*4+1] = FLOAT_TO_UINT(green[i]);
-                        dst[i*4+2] = FLOAT_TO_UINT(red[i]);
-                        dst[i*4+3] = FLOAT_TO_UINT(alpha[i]);
-                     }
-                     break;
-                  case GL_ABGR_EXT:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_UINT(alpha[i]);
-                        dst[i*4+1] = FLOAT_TO_UINT(blue[i]);
-                        dst[i*4+2] = FLOAT_TO_UINT(green[i]);
-                        dst[i*4+3] = FLOAT_TO_UINT(red[i]);
-                     }
-                     break;
-                  default:
-                     gl_problem(ctx, "bad format in glReadPixels\n");
-	       }
-	       if (ctx->Pack.SwapBytes) {
-                  gl_swap4( (GLuint *) dst, width*n );
-	       }
-	    }
-	    break;
-	 case GL_INT:
-	    {
-               GLint *dst = (GLint *) gl_pixel_addr_in_image(&ctx->Pack,
-                            pixels, width, height, format, type, 0, j, 0);
-               switch (format) {
-                  case GL_RED:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_INT(red[i]);
-                     break;
-                  case GL_GREEN:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_INT(green[i]);
-                     break;
-                  case GL_BLUE:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_INT(blue[i]);
-                     break;
-                  case GL_ALPHA:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_INT(alpha[i]);
-                     break;
-                  case GL_LUMINANCE:
-                     for (i=0;i<width;i++)
-                        dst[i] = FLOAT_TO_INT(luminance[i]);
-                     break;
-                  case GL_LUMINANCE_ALPHA:
-                     for (i=0;i<width;i++) {
-                        dst[i*2+0] = FLOAT_TO_INT(luminance[i]);
-                        dst[i*2+1] = FLOAT_TO_INT(alpha[i]);
-                     }
-                     break;
-                  case GL_RGB:
-                     for (i=0;i<width;i++) {
-                        dst[i*3+0] = FLOAT_TO_INT(red[i]);
-                        dst[i*3+1] = FLOAT_TO_INT(green[i]);
-                        dst[i*3+2] = FLOAT_TO_INT(blue[i]);
-                     }
-                     break;
-                  case GL_RGBA:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_INT(red[i]);
-                        dst[i*4+1] = FLOAT_TO_INT(green[i]);
-                        dst[i*4+2] = FLOAT_TO_INT(blue[i]);
-                        dst[i*4+3] = FLOAT_TO_INT(alpha[i]);
-                     }
-                     break;
-                  case GL_BGR:
-	       for (i=0;i<width;i++) {
-                        dst[i*3+0] = FLOAT_TO_INT(blue[i]);
-                        dst[i*3+1] = FLOAT_TO_INT(green[i]);
-                        dst[i*3+2] = FLOAT_TO_INT(red[i]);
-                     }
-                     break;
-                  case GL_BGRA:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_INT(blue[i]);
-                        dst[i*4+1] = FLOAT_TO_INT(green[i]);
-                        dst[i*4+2] = FLOAT_TO_INT(red[i]);
-                        dst[i*4+3] = FLOAT_TO_INT(alpha[i]);
-                     }
-                     break;
-                  case GL_ABGR_EXT:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = FLOAT_TO_INT(alpha[i]);
-                        dst[i*4+1] = FLOAT_TO_INT(blue[i]);
-                        dst[i*4+2] = FLOAT_TO_INT(green[i]);
-                        dst[i*4+3] = FLOAT_TO_INT(red[i]);
-                     }
-                     break;
-                  default:
-                     gl_problem(ctx, "bad format in glReadPixels\n");
-	       }
-	       if (ctx->Pack.SwapBytes) {
-		  gl_swap4( (GLuint *) dst, width*n );
-	       }
-	    }
-	    break;
-	 case GL_FLOAT:
-	    {
-               GLfloat *dst = (GLfloat *) gl_pixel_addr_in_image(&ctx->Pack,
-                              pixels, width, height, format, type, 0, j, 0);
-               switch (format) {
-                  case GL_RED:
-                     for (i=0;i<width;i++)
-                        dst[i] = red[i];
-                     break;
-                  case GL_GREEN:
-                     for (i=0;i<width;i++)
-                        dst[i] = green[i];
-                     break;
-                  case GL_BLUE:
-                     for (i=0;i<width;i++)
-                        dst[i] = blue[i];
-                     break;
-                  case GL_ALPHA:
-                     for (i=0;i<width;i++)
-                        dst[i] = alpha[i];
-                     break;
-                  case GL_LUMINANCE:
-                     for (i=0;i<width;i++)
-                        dst[i] = luminance[i];
-                     break;
-                  case GL_LUMINANCE_ALPHA:
-                     for (i=0;i<width;i++) {
-                        dst[i*2+0] = luminance[i];
-                        dst[i*2+1] = alpha[i];
-                     }
-                     break;
-                  case GL_RGB:
-                     for (i=0;i<width;i++) {
-                        dst[i*3+0] = red[i];
-                        dst[i*3+1] = green[i];
-                        dst[i*3+2] = blue[i];
-                     }
-                     break;
-                  case GL_RGBA:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = red[i];
-                        dst[i*4+1] = green[i];
-                        dst[i*4+2] = blue[i];
-                        dst[i*4+3] = alpha[i];
-                     }
-                     break;
-                  case GL_BGR:
-                     for (i=0;i<width;i++) {
-                        dst[i*3+0] = blue[i];
-                        dst[i*3+1] = green[i];
-                        dst[i*3+2] = red[i];
-                     }
-                     break;
-                  case GL_BGRA:
-                     for (i=0;i<width;i++) {
-                        dst[i*4+0] = blue[i];
-                        dst[i*4+1] = green[i];
-                        dst[i*4+2] = red[i];
-                        dst[i*4+3] = alpha[i];
-                     }
-                     break;
-                  case GL_ABGR_EXT:
-	       for (i=0;i<width;i++) {
-                        dst[i*4+0] = alpha[i];
-                        dst[i*4+1] = blue[i];
-                        dst[i*4+2] = green[i];
-                        dst[i*4+3] = red[i];
-                     }
-                     break;
-                  default:
-                     gl_problem(ctx, "bad format in glReadPixels\n");
-	       }
-	       if (ctx->Pack.SwapBytes) {
-		  gl_swap4( (GLuint *) dst, width*n );
-	       }
-	    }
-	    break;
-         case GL_UNSIGNED_BYTE_3_3_2:
-            if (format == GL_RGB) {
-               GLubyte *dst = (GLubyte *) gl_pixel_addr_in_image(&ctx->Pack,
-                              pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (red[i]   * 7.0F)) << 5)
-                         | (((GLint) (green[i] * 7.0F)) << 2)
-                         | (((GLint) (blue[i]  * 3.0F))     );
-               }
-            }
-            break;
-         case GL_UNSIGNED_BYTE_2_3_3_REV:
-            if (format == GL_RGB) {
-               GLubyte *dst = (GLubyte *) gl_pixel_addr_in_image(&ctx->Pack,
-                              pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (red[i]   * 7.0F))     )
-                         | (((GLint) (green[i] * 7.0F)) << 3)
-                         | (((GLint) (blue[i]  * 3.0F)) << 5);
-               }
-            }
-            break;
-         case GL_UNSIGNED_SHORT_5_6_5:
-            if (format == GL_RGB) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (red[i]   * 31.0F)) << 11)
-                         | (((GLint) (green[i] * 63.0F)) <<  5)
-                         | (((GLint) (blue[i]  * 31.0F))      );
-               }
-            }
-            break;
-         case GL_UNSIGNED_SHORT_5_6_5_REV:
-            if (format == GL_RGB) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (red[i]   * 31.0F))      )
-                         | (((GLint) (green[i] * 63.0F)) <<  5)
-                         | (((GLint) (blue[i]  * 31.0F)) << 11);
-               }
-            }
-            break;
-         case GL_UNSIGNED_SHORT_4_4_4_4:
-            if (format == GL_RGB) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (red[i]   * 15.0F)) << 12)
-                         | (((GLint) (green[i] * 15.0F)) <<  8)
-                         | (((GLint) (blue[i]  * 15.0F)) <<  4)
-                         | (((GLint) (alpha[i] * 15.0F))      );
-               }
-            }
-            break;
-         case GL_UNSIGNED_SHORT_4_4_4_4_REV:
-            if (format == GL_RGB) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (red[i]   * 15.0F))      )
-                         | (((GLint) (green[i] * 15.0F)) <<  4)
-                         | (((GLint) (blue[i]  * 15.0F)) <<  8)
-                         | (((GLint) (alpha[i] * 15.0F)) << 12);
-               }
-            }
-            break;
-         case GL_UNSIGNED_SHORT_5_5_5_1:
-            if (format == GL_RGB) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (red[i]   * 31.0F)) << 11)
-                         | (((GLint) (green[i] * 31.0F)) <<  6)
-                         | (((GLint) (blue[i]  * 31.0F)) <<  1)
-                         | (((GLint) (alpha[i] *  1.0F))      );
-               }
-            }
-            break;
-         case GL_UNSIGNED_SHORT_1_5_5_5_REV:
-            if (format == GL_RGB) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (red[i]   * 31.0F))      )
-                         | (((GLint) (green[i] * 31.0F)) <<  5)
-                         | (((GLint) (blue[i]  * 31.0F)) << 10)
-                         | (((GLint) (alpha[i] *  1.0F)) << 15);
-               }
-            }
-            break;
-         case GL_UNSIGNED_INT_8_8_8_8:
-            if (format == GL_RGBA) {
-               GLuint *dst = (GLuint *) gl_pixel_addr_in_image(&ctx->Pack,
-                             pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (red[i]   * 255.0F)) << 24)
-                         | (((GLint) (green[i] * 255.0F)) << 16)
-                         | (((GLint) (blue[i]  * 255.0F)) <<  8)
-                         | (((GLint) (alpha[i] * 255.0F))      );
-               }
-            }
-            else if (format == GL_BGRA) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (blue[i]  * 255.0F)) << 24)
-                         | (((GLint) (green[i] * 255.0F)) << 16)
-                         | (((GLint) (red[i]   * 255.0F)) <<  8)
-                         | (((GLint) (alpha[i] * 255.0F))      );
-               }
-            }
-            else if (format == GL_ABGR_EXT) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (alpha[i] * 255.0F)) << 24)
-                         | (((GLint) (blue[i]  * 255.0F)) << 16)
-                         | (((GLint) (green[i] * 255.0F)) <<  8)
-                         | (((GLint) (red[i]   * 255.0F))      );
-               }
-            }
-            break;
-         case GL_UNSIGNED_INT_8_8_8_8_REV:
-            if (format == GL_RGBA) {
-               GLuint *dst = (GLuint *) gl_pixel_addr_in_image(&ctx->Pack,
-                             pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (red[i]   * 255.0F))      )
-                         | (((GLint) (green[i] * 255.0F)) <<  8)
-                         | (((GLint) (blue[i]  * 255.0F)) << 16)
-                         | (((GLint) (alpha[i] * 255.0F)) << 24);
-               }
-            }
-            else if (format == GL_BGRA) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (blue[i]  * 255.0F))      )
-                         | (((GLint) (green[i] * 255.0F)) <<  8)
-                         | (((GLint) (red[i]   * 255.0F)) << 16)
-                         | (((GLint) (alpha[i] * 255.0F)) << 24);
-               }
-            }
-            else if (format == GL_ABGR_EXT) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (alpha[i] * 255.0F))      )
-                         | (((GLint) (blue[i]  * 255.0F)) <<  8)
-                         | (((GLint) (green[i] * 255.0F)) << 16)
-                         | (((GLint) (red[i]   * 255.0F)) << 24);
-               }
-            }
-            break;
-         case GL_UNSIGNED_INT_10_10_10_2:
-            if (format == GL_RGBA) {
-               GLuint *dst = (GLuint *) gl_pixel_addr_in_image(&ctx->Pack,
-                             pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (red[i]   * 1023.0F)) << 22)
-                         | (((GLint) (green[i] * 1023.0F)) << 12)
-                         | (((GLint) (blue[i]  * 1023.0F)) <<  2)
-                         | (((GLint) (alpha[i] *    3.0F))      );
-               }
-            }
-            else if (format == GL_BGRA) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (blue[i]  * 1023.0F)) << 22)
-                         | (((GLint) (green[i] * 1023.0F)) << 12)
-                         | (((GLint) (red[i]   * 1023.0F)) <<  2)
-                         | (((GLint) (alpha[i] *    3.0F))      );
-               }
-            }
-            else if (format == GL_ABGR_EXT) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (alpha[i] * 1023.0F)) << 22)
-                         | (((GLint) (blue[i]  * 1023.0F)) << 12)
-                         | (((GLint) (green[i] * 1023.0F)) <<  2)
-                         | (((GLint) (red[i]   *    3.0F))      );
-               }
-            }
-            break;
-         case GL_UNSIGNED_INT_2_10_10_10_REV:
-            if (format == GL_RGBA) {
-               GLuint *dst = (GLuint *) gl_pixel_addr_in_image(&ctx->Pack,
-                             pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (red[i]   * 1023.0F))      )
-                         | (((GLint) (green[i] * 1023.0F)) << 10)
-                         | (((GLint) (blue[i]  * 1023.0F)) << 20)
-                         | (((GLint) (alpha[i] *    3.0F)) << 30);
-               }
-            }
-            else if (format == GL_BGRA) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (blue[i]  * 1023.0F))      )
-                         | (((GLint) (green[i] * 1023.0F)) << 10)
-                         | (((GLint) (red[i]   * 1023.0F)) << 20)
-                         | (((GLint) (alpha[i] *    3.0F)) << 30);
-               }
-            }
-            else if (format == GL_ABGR_EXT) {
-               GLushort *dst = (GLushort *) gl_pixel_addr_in_image(&ctx->Pack,
-                               pixels, width, height, format, type, 0, j, 0);
-               for (i=0;i<width;i++) {
-                  dst[i] = (((GLint) (alpha[i] * 1023.0F))      )
-                         | (((GLint) (blue[i]  * 1023.0F)) << 10)
-                         | (((GLint) (green[i] * 1023.0F)) << 20)
-                         | (((GLint) (red[i]   *    3.0F)) << 30);
-	       }
-	    }
-	    break;
-         default:
-            gl_error( ctx, GL_INVALID_ENUM, "glReadPixels(type)" );
+         _mesa_map_ci_to_rgba_ubyte(ctx, readWidth, index, rgba );
+
+         dest = _mesa_image_address( packing, pixels, width, height,
+                                     format, type, 0, j, 0);
+
+         _mesa_pack_rgba_span( ctx, readWidth, (CONST GLubyte (*)[4]) rgba,
+                               format, type, dest, packing, GL_TRUE );
       }
    }
-   UNDEFARRAY( red );
-   UNDEFARRAY( green );
-   UNDEFARRAY( blue );
-   UNDEFARRAY( alpha );
-   UNDEFARRAY( luminance );
+
+   (*ctx->Driver.SetReadBuffer)( ctx, ctx->DrawBuffer, ctx->Color.DriverDrawBuffer );
 }
 
 
 
-void gl_ReadPixels( GLcontext *ctx,
-                    GLint x, GLint y, GLsizei width, GLsizei height,
-		    GLenum format, GLenum type, GLvoid *pixels )
+void
+_mesa_ReadPixels( GLint x, GLint y, GLsizei width, GLsizei height,
+		  GLenum format, GLenum type, GLvoid *pixels )
 {
-   if (INSIDE_BEGIN_END(ctx)) {
-      gl_error( ctx, GL_INVALID_OPERATION, "glReadPixels" );
-      return;
-   }
+   GET_CURRENT_CONTEXT(ctx);
+   ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH(ctx, "glReadPixels");
 
    if (!pixels) {
       gl_error( ctx, GL_INVALID_VALUE, "glReadPixels(pixels)" );
       return;
    }
 
-   (void) (*ctx->Driver.SetBuffer)( ctx, ctx->Pixel.ReadBuffer );
+   if (ctx->NewState) {
+      gl_update_state(ctx);
+   }
+
+   if (ctx->Driver.ReadPixels &&
+       (*ctx->Driver.ReadPixels)(ctx, x, y, width, height,
+                                 format, type, &ctx->Pack, pixels))
+      return;
+
+   RENDER_START(ctx);
 
    switch (format) {
       case GL_COLOR_INDEX:
-         read_index_pixels( ctx, x, y, width, height, type, pixels );
+         read_index_pixels(ctx, x, y, width, height, type, pixels, &ctx->Pack);
 	 break;
       case GL_STENCIL_INDEX:
-	 read_stencil_pixels( ctx, x, y, width, height, type, pixels );
+	 read_stencil_pixels(ctx, x,y, width,height, type, pixels, &ctx->Pack);
          break;
       case GL_DEPTH_COMPONENT:
-	 read_depth_pixels( ctx, x, y, width, height, type, pixels );
+	 read_depth_pixels(ctx, x, y, width, height, type, pixels, &ctx->Pack);
 	 break;
       case GL_RED:
       case GL_GREEN:
@@ -1426,13 +796,12 @@ void gl_ReadPixels( GLcontext *ctx,
       case GL_BGR:
       case GL_BGRA:
       case GL_ABGR_EXT:
-         if (!read_fast_rgba_pixels( ctx, x, y, width, height,
-                                     format, type, pixels))
-            read_rgba_pixels( ctx, x, y, width, height, format, type, pixels );
+         read_rgba_pixels(ctx, x, y, width, height,
+                          format, type, pixels, &ctx->Pack);
 	 break;
       default:
 	 gl_error( ctx, GL_INVALID_ENUM, "glReadPixels(format)" );
    }
 
-   (void) (*ctx->Driver.SetBuffer)( ctx, ctx->Color.DrawBuffer );
+   RENDER_FINISH(ctx);
 }

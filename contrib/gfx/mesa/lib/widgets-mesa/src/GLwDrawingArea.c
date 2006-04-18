@@ -277,6 +277,8 @@ generate_attrib_list (GLwDrawingAreaPart *p)
   p->attribList[i++] = GLX_ALPHA_SIZE;
   p->attribList[i++] = p->alphaSize;
   p->attribList[i++] = GLX_DEPTH_SIZE;
+  if (p->depthSize == 1)
+     p->depthSize = 16;
   p->attribList[i++] = p->depthSize;
   p->attribList[i++] = GLX_STENCIL_SIZE;
   p->attribList[i++] = p->stencilSize;

@@ -124,14 +124,19 @@ AC_ARG_WITH(motif,
   [  --with-motif            also compile the Motif widgets (untested)],
   [case x$withval in
     xno) MOTIF_OBJS=; MOTIF_DEMOS=;;
-    x*)  AC_CHECK_HEADER([Xm/Xm.h],
+    x*)
+	save_CPPFLAGS="$CPPFLAGS"
+	CPPFLAGS="$CPPFLAGS -I$x_includes"
+        AC_CHECK_HEADER([Xm/Xm.h],
            [MOTIF_OBJS="GLwMDrawingArea.o GLwCreateMDrawingArea.o dnl
                         MesaMDrawingArea.o GLwMMakeCurrent.o dnl
                         GLwDrawingAreaMakeCurrent.o GLwDrawingAreaSwapBuffers.o dnl
                         MesaMWorkstation.o";
             MOTIF_DEMOS="cube-m mcube-m ed-m tea-m";
             MOTIF_LIBS="libMesaGLwM.a"
-	]);;
+	])
+	CPPFLAGS="$save_CPPFLAGS"
+	;;
    esac],
   [MOTIF_OBJS=; MOTIF_DEMOS=; MOTIF_LIBS=])dnl
 AC_SUBST([MOTIF_OBJS])dnl

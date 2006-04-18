@@ -2,39 +2,27 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:31  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.0  1998/01/31 20:52:49  brianp
- * initial rev
- *
- */
-
 
 
 #ifndef FOG_H
@@ -44,22 +32,41 @@
 #include "types.h"
 
 
-extern void gl_Fogfv( GLcontext *ctx, GLenum pname, const GLfloat *params );
+extern struct gl_pipeline_stage gl_fog_coord_stage;
 
 
-extern void gl_fog_rgba_vertices( const GLcontext *ctx, GLuint n,
-                                   GLfloat v[][4], GLubyte color[][4] );
-
-extern void gl_fog_ci_vertices( const GLcontext *ctx, GLuint n,
-                                   GLfloat v[][4], GLuint indx[] );
+extern void
+_mesa_Fogf(GLenum pname, GLfloat param);
 
 
-extern void gl_fog_rgba_pixels( const GLcontext *ctx,
-                                 GLuint n, const GLdepth z[],
-                                GLubyte rgba[][4] );
+extern void
+_mesa_Fogi(GLenum pname, GLint param );
 
-extern void gl_fog_ci_pixels( const GLcontext *ctx,
-                                 GLuint n, const GLdepth z[], GLuint indx[] );
+
+extern void
+_mesa_Fogfv(GLenum pname, const GLfloat *params );
+
+
+extern void
+_mesa_Fogiv(GLenum pname, const GLint *params );
+
+
+
+extern void
+_mesa_fog_vertices( struct vertex_buffer *VB );
+
+extern void
+_mesa_fog_rgba_pixels( const GLcontext *ctx,
+                       GLuint n, const GLdepth z[],
+                       GLubyte rgba[][4] );
+
+extern void
+_mesa_fog_ci_pixels( const GLcontext *ctx,
+                     GLuint n, const GLdepth z[], GLuint indx[] );
+
+
+extern void
+_mesa_init_fog( void );
 
 
 #endif

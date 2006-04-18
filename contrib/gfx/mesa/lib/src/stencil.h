@@ -2,37 +2,26 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:32  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.0  1998/01/31 21:03:42  brianp
- * initial rev
- *
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
@@ -43,54 +32,49 @@
 #include "types.h"
 
 
-extern void gl_ClearStencil( GLcontext *ctx, GLint s );
+extern void
+_mesa_ClearStencil( GLint s );
 
 
-extern void gl_StencilFunc( GLcontext *ctx, GLenum func,
-                            GLint ref, GLuint mask );
+extern void
+_mesa_StencilFunc( GLenum func, GLint ref, GLuint mask );
 
 
-extern void gl_StencilMask( GLcontext *ctx, GLuint mask );
+extern void
+_mesa_StencilMask( GLuint mask );
 
 
-extern void gl_StencilOp( GLcontext *ctx, GLenum fail,
-                          GLenum zfail, GLenum zpass );
+extern void
+_mesa_StencilOp( GLenum fail, GLenum zfail, GLenum zpass );
 
 
 
-extern GLint gl_stencil_span( GLcontext *ctx,
-                              GLuint n, GLint x, GLint y, GLubyte mask[] );
+extern GLboolean
+_mesa_stencil_and_ztest_span( GLcontext *ctx, GLuint n, GLint x, GLint y,
+                              const GLdepth z[], GLubyte mask[] );
+
+extern GLboolean
+_mesa_stencil_and_ztest_pixels( GLcontext *ctx, GLuint n,
+                                const GLint x[], const GLint y[],
+                                const GLdepth z[], GLubyte mask[] );
 
 
-extern void gl_depth_stencil_span( GLcontext *ctx, GLuint n, GLint x, GLint y,
-				   const GLdepth z[], GLubyte mask[] );
+extern void
+_mesa_read_stencil_span( GLcontext *ctx, GLint n, GLint x, GLint y,
+                         GLstencil stencil[] );
 
 
-extern GLint gl_stencil_pixels( GLcontext *ctx,
-                                GLuint n, const GLint x[], const GLint y[],
-			        GLubyte mask[] );
+extern void
+_mesa_write_stencil_span( GLcontext *ctx, GLint n, GLint x, GLint y,
+                          const GLstencil stencil[] );
 
 
-extern void gl_depth_stencil_pixels( GLcontext *ctx,
-                                     GLuint n, const GLint x[],
-				     const GLint y[], const GLdepth z[],
-				     GLubyte mask[] );
+extern void
+_mesa_alloc_stencil_buffer( GLcontext *ctx );
 
 
-extern void gl_read_stencil_span( GLcontext *ctx,
-                                  GLuint n, GLint x, GLint y,
-				  GLubyte stencil[] );
-
-
-extern void gl_write_stencil_span( GLcontext *ctx,
-                                   GLuint n, GLint x, GLint y,
-				   const GLubyte stencil[] );
-
-
-extern void gl_alloc_stencil_buffer( GLcontext *ctx );
-
-
-extern void gl_clear_stencil_buffer( GLcontext *ctx );
+extern void
+_mesa_clear_stencil_buffer( GLcontext *ctx );
 
 
 #endif

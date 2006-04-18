@@ -2,50 +2,28 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:31  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.4  1998/04/01 02:58:52  brianp
- * applied Miklos Fazekas's 3-31-98 Macintosh changes
- *
- * Revision 3.3  1998/03/05 02:59:05  brianp
- * [RGBA]COMP wasn't being used in a few places
- *
- * Revision 3.2  1998/02/20 04:50:44  brianp
- * implemented GL_SGIS_multitexture
- *
- * Revision 3.1  1998/02/15 01:32:37  brianp
- * fixed a comment
- *
- * Revision 3.0  1998/01/31 21:00:28  brianp
- * initial rev
- *
- */
 
 
 /*
@@ -60,19 +38,17 @@
  */
 
 
-
 #ifdef PC_HEADER
 #include "all.h"
 #else
-#include <stdlib.h>
-#include <string.h>
+#include "glheader.h"
 #include "alpha.h"
 #include "alphabuf.h"
 #include "blend.h"
 #include "depth.h"
 #include "fog.h"
 #include "logic.h"
-#include "macros.h"
+#include "mem.h"
 #include "masking.h"
 #include "pb.h"
 #include "scissor.h"
@@ -89,21 +65,153 @@
 struct pixel_buffer *gl_alloc_pb(void)
 {
    struct pixel_buffer *pb;
-   pb = (struct pixel_buffer *) calloc(sizeof(struct pixel_buffer), 1);
+   pb = CALLOC_STRUCT(pixel_buffer);
    if (pb) {
-      int i;
+      int i, j;
       /* set non-zero fields */
       pb->primitive = GL_BITMAP;
+      pb->mono = GL_TRUE;
+
       /* Set all lambda values to 0.0 since we don't do mipmapping for
        * points or lines and want to use the level 0 texture image.
        */
-      for (i=0; i<PB_SIZE; i++) {
-         pb->lambda[i] = 0.0;
+      for (j=0;j<MAX_TEXTURE_UNITS;j++) {
+         for (i=0; i<PB_SIZE; i++) {
+            pb->lambda[j][i] = 0.0;
+         }
       }
    }
    return pb;
 }
 
+
+
+/*
+ * Draw to more than one color buffer (or none).
+ */
+static void multi_write_index_pixels( GLcontext *ctx, GLuint n,
+                                      const GLint x[], const GLint y[],
+                                      const GLuint indexes[],
+                                      const GLubyte mask[] )
+{
+   GLuint bufferBit;
+
+   if (ctx->Color.DrawBuffer == GL_NONE)
+      return;
+
+   /* loop over four possible dest color buffers */
+   for (bufferBit = 1; bufferBit <= 8; bufferBit = bufferBit << 1) {
+      if (bufferBit & ctx->Color.DrawDestMask) {
+         GLuint indexTmp[MAX_WIDTH];
+         ASSERT(n < MAX_WIDTH);
+
+         if (bufferBit == FRONT_LEFT_BIT)
+            (void) (*ctx->Driver.SetDrawBuffer)( ctx, GL_FRONT_LEFT);
+         else if (bufferBit == FRONT_RIGHT_BIT)
+            (void) (*ctx->Driver.SetDrawBuffer)( ctx, GL_FRONT_RIGHT);
+         else if (bufferBit == BACK_LEFT_BIT)
+            (void) (*ctx->Driver.SetDrawBuffer)( ctx, GL_BACK_LEFT);
+         else
+            (void) (*ctx->Driver.SetDrawBuffer)( ctx, GL_BACK_RIGHT);
+
+         /* make copy of incoming indexes */
+         MEMCPY( indexTmp, indexes, n * sizeof(GLuint) );
+         if (ctx->Color.SWLogicOpEnabled) {
+            _mesa_logicop_ci_pixels( ctx, n, x, y, indexTmp, mask );
+         }
+         if (ctx->Color.SWmasking) {
+            _mesa_mask_index_pixels( ctx, n, x, y, indexTmp, mask );
+         }
+         (*ctx->Driver.WriteCI32Pixels)( ctx, n, x, y, indexTmp, mask );
+      }
+   }
+
+   /* restore default dest buffer */
+   (void) (*ctx->Driver.SetDrawBuffer)( ctx, ctx->Color.DriverDrawBuffer);
+}
+
+
+
+/*
+ * Draw to more than one RGBA color buffer (or none).
+ */
+static void multi_write_rgba_pixels( GLcontext *ctx, GLuint n,
+                                     const GLint x[], const GLint y[],
+                                     CONST GLubyte rgba[][4],
+                                     const GLubyte mask[] )
+{
+   GLuint bufferBit;
+
+   if (ctx->Color.DrawBuffer == GL_NONE)
+      return;
+
+   /* loop over four possible dest color buffers */
+   for (bufferBit = 1; bufferBit <= 8; bufferBit = bufferBit << 1) {
+      if (bufferBit & ctx->Color.DrawDestMask) {
+         GLubyte rgbaTmp[MAX_WIDTH][4];
+         ASSERT(n < MAX_WIDTH);
+
+         if (bufferBit == FRONT_LEFT_BIT) {
+            (void) (*ctx->Driver.SetDrawBuffer)( ctx, GL_FRONT_LEFT);
+            ctx->DrawBuffer->Alpha = ctx->DrawBuffer->FrontLeftAlpha;
+         }
+         else if (bufferBit == FRONT_RIGHT_BIT) {
+            (void) (*ctx->Driver.SetDrawBuffer)( ctx, GL_FRONT_RIGHT);
+            ctx->DrawBuffer->Alpha = ctx->DrawBuffer->FrontRightAlpha;
+         }
+         else if (bufferBit == BACK_LEFT_BIT) {
+            (void) (*ctx->Driver.SetDrawBuffer)( ctx, GL_BACK_LEFT);
+            ctx->DrawBuffer->Alpha = ctx->DrawBuffer->BackLeftAlpha;
+         }
+         else {
+            (void) (*ctx->Driver.SetDrawBuffer)( ctx, GL_BACK_RIGHT);
+            ctx->DrawBuffer->Alpha = ctx->DrawBuffer->BackRightAlpha;
+         }
+
+         /* make copy of incoming colors */
+         MEMCPY( rgbaTmp, rgba, 4 * n * sizeof(GLubyte) );
+
+         if (ctx->Color.SWLogicOpEnabled) {
+            _mesa_logicop_rgba_pixels( ctx, n, x, y, rgbaTmp, mask );
+         }
+         else if (ctx->Color.BlendEnabled) {
+            _mesa_blend_pixels( ctx, n, x, y, rgbaTmp, mask );
+         }
+         if (ctx->Color.SWmasking) {
+            _mesa_mask_rgba_pixels( ctx, n, x, y, rgbaTmp, mask );
+         }
+
+         (*ctx->Driver.WriteRGBAPixels)( ctx, n, x, y, 
+					 (CONST GLubyte (*)[4])rgbaTmp, mask );
+         if (ctx->RasterMask & ALPHABUF_BIT) {
+            _mesa_write_alpha_pixels( ctx, n, x, y, 
+                                      (CONST GLubyte (*)[4])rgbaTmp, mask );
+         }
+      }
+   }
+
+   /* restore default dest buffer */
+   (void) (*ctx->Driver.SetDrawBuffer)( ctx, ctx->Color.DriverDrawBuffer);
+}
+
+
+
+/*
+ * Add specular color to primary color.  This is used only when
+ * GL_LIGHT_MODEL_COLOR_CONTROL = GL_SEPARATE_SPECULAR_COLOR.
+ */
+static void add_colors( GLuint n, GLubyte rgba[][4], CONST GLubyte spec[][3] )
+{
+   GLuint i;
+   for (i=0; i<n; i++) {
+      GLint r = rgba[i][RCOMP] + spec[i][RCOMP];
+      GLint g = rgba[i][GCOMP] + spec[i][GCOMP];
+      GLint b = rgba[i][BCOMP] + spec[i][BCOMP];
+      rgba[i][RCOMP] = MIN2(r, 255);
+      rgba[i][GCOMP] = MIN2(g, 255);
+      rgba[i][BCOMP] = MIN2(b, 255);
+   }
+}
 
 
 
@@ -115,19 +223,21 @@ struct pixel_buffer *gl_alloc_pb(void)
  */
 void gl_flush_pb( GLcontext *ctx )
 {
-   struct pixel_buffer* PB = ctx->PB;
-
+   /* Pixel colors may be changed if any of these raster ops enabled */
+   const GLuint modBits = FOG_BIT | TEXTURE_BIT | BLEND_BIT |
+                          MASKING_BIT | LOGIC_OP_BIT;
+   struct pixel_buffer *PB = ctx->PB;
    GLubyte mask[PB_SIZE];
-   GLubyte saved[PB_SIZE][4];
 
-   if (PB->count==0)  goto CleanUp;
+   if (PB->count == 0)
+      goto CleanUp;
 
    /* initialize mask array and clip pixels simultaneously */
    {
-      GLint xmin = ctx->Buffer->Xmin;
-      GLint xmax = ctx->Buffer->Xmax;
-      GLint ymin = ctx->Buffer->Ymin;
-      GLint ymax = ctx->Buffer->Ymax;
+      GLint xmin = ctx->DrawBuffer->Xmin;
+      GLint xmax = ctx->DrawBuffer->Xmax;
+      GLint ymin = ctx->DrawBuffer->Ymin;
+      GLint ymax = ctx->DrawBuffer->Ymax;
       GLint *x = PB->x;
       GLint *y = PB->y;
       GLuint i, n = PB->count;
@@ -137,105 +247,87 @@ void gl_flush_pb( GLcontext *ctx )
    }
 
    if (ctx->Visual->RGBAflag) {
-      /* RGBA COLOR PIXELS */
-      if (PB->mono && ctx->MutablePixels) {
-	 /* Copy flat color to all pixels */
-         GLuint i;
-         for (i=0; i<PB->count; i++) {
-            PB->rgba[i][RCOMP] = PB->color[RCOMP];
-            PB->rgba[i][GCOMP] = PB->color[GCOMP];
-            PB->rgba[i][BCOMP] = PB->color[BCOMP];
-            PB->rgba[i][ACOMP] = PB->color[ACOMP];
-         }
-      }
+      /*
+       * RGBA COLOR PIXELS
+       */
 
       /* If each pixel can be of a different color... */
-      if (ctx->MutablePixels || !PB->mono) {
+      if ((ctx->RasterMask & modBits) || !PB->mono) {
 
-	 if (ctx->Texture.Enabled) {
-	    gl_texture_pixels( ctx, 0,
-                               PB->count, PB->s, PB->t, PB->u, PB->lambda,
-                               PB->rgba);
+	 if (ctx->Texture.ReallyEnabled) {
+            GLubyte primary_rgba[PB_SIZE][4];
+            GLint texUnit;
+
+            /* must make a copy of primary colors since they may be modified */
+            MEMCPY(primary_rgba, PB->rgba, 4 * PB->count * sizeof(GLubyte));
+
+            for (texUnit=0;texUnit<MAX_TEXTURE_UNITS;texUnit++) {
+               gl_texture_pixels( ctx, texUnit,
+                                  PB->count, PB->s[texUnit], PB->t[texUnit],
+                                  PB->u[texUnit], PB->lambda[texUnit],
+                                  primary_rgba, PB->rgba );
+            }
 	 }
+
+         if (ctx->Light.Model.ColorControl == GL_SEPARATE_SPECULAR_COLOR
+             && ctx->Light.Enabled && ctx->Texture.ReallyEnabled) {
+            /* add specular color to primary color */
+            add_colors( PB->count, PB->rgba, (CONST GLubyte (*)[3]) PB->spec );
+         }
 
 	 if (ctx->Fog.Enabled
              && (ctx->Hint.Fog==GL_NICEST || PB->primitive==GL_BITMAP
-                 || ctx->Texture.Enabled)) {
-	    gl_fog_rgba_pixels( ctx, PB->count, PB->z, PB->rgba );
+                 || ctx->Texture.ReallyEnabled)) {
+	    _mesa_fog_rgba_pixels( ctx, PB->count, PB->z, PB->rgba );
 	 }
 
          /* Scissoring already done above */
 
 	 if (ctx->Color.AlphaEnabled) {
-	    if (gl_alpha_test( ctx, PB->count, PB->rgba, mask )==0) {
+	    if (_mesa_alpha_test( ctx, PB->count, 
+                                  (CONST GLubyte (*)[4]) PB->rgba, mask )==0) {
 	       goto CleanUp;
 	    }
 	 }
 
 	 if (ctx->Stencil.Enabled) {
 	    /* first stencil test */
-	    if (gl_stencil_pixels( ctx, PB->count, PB->x, PB->y, mask )==0) {
+	    if (_mesa_stencil_and_ztest_pixels(ctx, PB->count,
+                                       PB->x, PB->y, PB->z, mask) == 0) {
 	       goto CleanUp;
 	    }
-	    /* depth buffering w/ stencil */
-	    gl_depth_stencil_pixels( ctx, PB->count, PB->x, PB->y, PB->z, mask );
 	 }
 	 else if (ctx->Depth.Test) {
 	    /* regular depth testing */
-	    (*ctx->Driver.DepthTestPixels)( ctx, PB->count, PB->x, PB->y, PB->z, mask );
+	    _mesa_depth_test_pixels( ctx, PB->count, PB->x, PB->y, PB->z, mask );
 	 }
 
-         if (ctx->RasterMask & NO_DRAW_BIT) {
-            goto CleanUp;
+         
+         if (ctx->RasterMask & MULTI_DRAW_BIT) {
+            multi_write_rgba_pixels( ctx, PB->count, PB->x, PB->y,
+                                     (CONST GLubyte (*)[4])PB->rgba, mask );
          }
+         else {
+            /* normal case: write to exactly one buffer */
 
-         if (ctx->RasterMask & FRONT_AND_BACK_BIT) {
-            /* make a copy of the colors */
-            MEMCPY( saved, PB->rgba, PB->count * 4 * sizeof(GLubyte) );
-         }
-
-         if (ctx->Color.SWLogicOpEnabled) {
-            gl_logicop_rgba_pixels( ctx, PB->count, PB->x, PB->y,
-                                    PB->rgba, mask);
-         }
-         else if (ctx->Color.BlendEnabled) {
-            gl_blend_pixels( ctx, PB->count, PB->x, PB->y, PB->rgba, mask);
-         }
-
-         if (ctx->Color.SWmasking) {
-            gl_mask_rgba_pixels(ctx, PB->count, PB->x, PB->y, PB->rgba, mask);
-         }
-
-         /* write pixels */
-         (*ctx->Driver.WriteRGBAPixels)( ctx, PB->count, PB->x, PB->y,
-                                         PB->rgba, mask );
-         if (ctx->RasterMask & ALPHABUF_BIT) {
-            gl_write_alpha_pixels( ctx, PB->count, PB->x, PB->y, PB->rgba, mask );
-         }
-
-         if (ctx->RasterMask & FRONT_AND_BACK_BIT) {
-            /*** Also draw to back buffer ***/
-            (*ctx->Driver.SetBuffer)( ctx, GL_BACK );
             if (ctx->Color.SWLogicOpEnabled) {
-               gl_logicop_rgba_pixels( ctx, PB->count, PB->x, PB->y,
-                                       PB->rgba, mask);
+               _mesa_logicop_rgba_pixels( ctx, PB->count, PB->x, PB->y,
+                                          PB->rgba, mask);
             }
             else if (ctx->Color.BlendEnabled) {
-               gl_blend_pixels( ctx, PB->count, PB->x, PB->y, saved, mask );
+               _mesa_blend_pixels( ctx, PB->count, PB->x, PB->y, PB->rgba, mask);
             }
             if (ctx->Color.SWmasking) {
-               gl_mask_rgba_pixels(ctx, PB->count, PB->x, PB->y, saved, mask);
+               _mesa_mask_rgba_pixels(ctx, PB->count, PB->x, PB->y, PB->rgba, mask);
             }
+
             (*ctx->Driver.WriteRGBAPixels)( ctx, PB->count, PB->x, PB->y,
-                                            saved, mask);
+                                            (CONST GLubyte (*)[4]) PB->rgba,
+					    mask );
             if (ctx->RasterMask & ALPHABUF_BIT) {
-               ctx->Buffer->Alpha = ctx->Buffer->BackAlpha;
-               gl_write_alpha_pixels( ctx, PB->count, PB->x, PB->y,
-                                      saved, mask );
-               ctx->Buffer->Alpha = ctx->Buffer->FrontAlpha;
+               _mesa_write_alpha_pixels( ctx, PB->count, PB->x, PB->y, 
+				      (CONST GLubyte (*)[4]) PB->rgba, mask );
             }
-            (*ctx->Driver.SetBuffer)( ctx, GL_FRONT );
-            /*** ALL DONE ***/
          }
       }
       else {
@@ -244,131 +336,92 @@ void gl_flush_pb( GLcontext *ctx )
          /* Scissoring already done above */
 
 	 if (ctx->Color.AlphaEnabled) {
-	    if (gl_alpha_test( ctx, PB->count, PB->rgba, mask )==0) {
+	    if (_mesa_alpha_test( ctx, PB->count, 
+                                  (CONST GLubyte (*)[4]) PB->rgba, mask )==0) {
 	       goto CleanUp;
 	    }
 	 }
 
 	 if (ctx->Stencil.Enabled) {
 	    /* first stencil test */
-	    if (gl_stencil_pixels( ctx, PB->count, PB->x, PB->y, mask )==0) {
+	    if (_mesa_stencil_and_ztest_pixels(ctx, PB->count,
+                                       PB->x, PB->y, PB->z, mask) == 0) {
 	       goto CleanUp;
 	    }
-	    /* depth buffering w/ stencil */
-	    gl_depth_stencil_pixels( ctx, PB->count, PB->x, PB->y, PB->z, mask );
 	 }
 	 else if (ctx->Depth.Test) {
 	    /* regular depth testing */
-	    (*ctx->Driver.DepthTestPixels)( ctx, PB->count, PB->x, PB->y, PB->z, mask );
+	    _mesa_depth_test_pixels( ctx, PB->count, PB->x, PB->y, PB->z, mask );
 	 }
 
-         if (ctx->RasterMask & NO_DRAW_BIT) {
+         if (ctx->Color.DrawBuffer == GL_NONE) {
             goto CleanUp;
          }
 
-         /* write pixels */
-         {
-            GLubyte red, green, blue, alpha;
-            red   = PB->color[RCOMP];
-            green = PB->color[GCOMP];
-            blue  = PB->color[BCOMP];
-            alpha = PB->color[ACOMP];
+         if (ctx->RasterMask & MULTI_DRAW_BIT) {
+            /* Copy mono color to all pixels */
+            multi_write_rgba_pixels( ctx, PB->count, PB->x, PB->y,
+                                     (CONST GLubyte (*)[4]) PB->rgba, mask );
+         }
+         else {
+            /* normal case: write to exactly one buffer */
+            GLubyte red   = PB->currentColor[RCOMP];
+            GLubyte green = PB->currentColor[GCOMP];
+            GLubyte blue  = PB->currentColor[BCOMP];
+            GLubyte alpha = PB->currentColor[ACOMP];
 	    (*ctx->Driver.Color)( ctx, red, green, blue, alpha );
-         }
-         (*ctx->Driver.WriteMonoRGBAPixels)( ctx, PB->count, PB->x, PB->y, mask );
-         if (ctx->RasterMask & ALPHABUF_BIT) {
-            gl_write_mono_alpha_pixels( ctx, PB->count, PB->x, PB->y,
-                                        PB->color[ACOMP], mask );
-         }
 
-         if (ctx->RasterMask & FRONT_AND_BACK_BIT) {
-            /*** Also render to back buffer ***/
-            (*ctx->Driver.SetBuffer)( ctx, GL_BACK );
             (*ctx->Driver.WriteMonoRGBAPixels)( ctx, PB->count, PB->x, PB->y, mask );
             if (ctx->RasterMask & ALPHABUF_BIT) {
-               ctx->Buffer->Alpha = ctx->Buffer->BackAlpha;
-               gl_write_mono_alpha_pixels( ctx, PB->count, PB->x, PB->y,
-                                           PB->color[ACOMP], mask );
-               ctx->Buffer->Alpha = ctx->Buffer->FrontAlpha;
+               _mesa_write_mono_alpha_pixels( ctx, PB->count, PB->x, PB->y,
+                                              PB->currentColor[ACOMP], mask );
             }
-            (*ctx->Driver.SetBuffer)( ctx, GL_FRONT );
-	 }
+         }
          /*** ALL DONE ***/
       }
    }
    else {
-      /* COLOR INDEX PIXELS */
+      /*
+       * COLOR INDEX PIXELS
+       */
 
       /* If we may be writting pixels with different indexes... */
-      if (PB->mono && ctx->MutablePixels) {
-	 /* copy index to all pixels */
-         GLuint n = PB->count, indx = PB->index;
-         GLuint *pbindex = PB->i;
-         do {
-	    *pbindex++ = indx;
-            n--;
-	 } while (n);
-      }
-
-      if (ctx->MutablePixels || !PB->mono) {
-	 /* Pixel color index may be modified */
-         GLuint *isave = (GLuint*)saved;
+      if ((ctx->RasterMask & modBits) || !PB->mono) {
 
 	 if (ctx->Fog.Enabled
              && (ctx->Hint.Fog==GL_NICEST || PB->primitive==GL_BITMAP)) {
-	    gl_fog_ci_pixels( ctx, PB->count, PB->z, PB->i );
+	    _mesa_fog_ci_pixels( ctx, PB->count, PB->z, PB->index );
 	 }
 
          /* Scissoring already done above */
 
 	 if (ctx->Stencil.Enabled) {
 	    /* first stencil test */
-	    if (gl_stencil_pixels( ctx, PB->count, PB->x, PB->y, mask )==0) {
+	    if (_mesa_stencil_and_ztest_pixels(ctx, PB->count,
+                                       PB->x, PB->y, PB->z, mask) == 0) {
 	       goto CleanUp;
 	    }
-	    /* depth buffering w/ stencil */
-	    gl_depth_stencil_pixels( ctx, PB->count, PB->x, PB->y, PB->z, mask );
 	 }
 	 else if (ctx->Depth.Test) {
 	    /* regular depth testing */
-	    (*ctx->Driver.DepthTestPixels)( ctx, PB->count, PB->x, PB->y, PB->z, mask );
+	    _mesa_depth_test_pixels( ctx, PB->count, PB->x, PB->y, PB->z, mask );
 	 }
 
-         if (ctx->RasterMask & NO_DRAW_BIT) {
-            goto CleanUp;
+         if (ctx->RasterMask & MULTI_DRAW_BIT) {
+            multi_write_index_pixels( ctx, PB->count, PB->x, PB->y, PB->index, mask );
          }
+         else {
+            /* normal case: write to exactly one buffer */
 
-         if (ctx->RasterMask & FRONT_AND_BACK_BIT) {
-            /* make a copy of the indexes */
-            MEMCPY( isave, PB->i, PB->count * sizeof(GLuint) );
-         }
-
-         if (ctx->Color.SWLogicOpEnabled) {
-            gl_logicop_ci_pixels( ctx, PB->count, PB->x, PB->y, PB->i, mask );
-         }
-
-         if (ctx->Color.SWmasking) {
-            gl_mask_index_pixels( ctx, PB->count, PB->x, PB->y, PB->i, mask );
-         }
-
-         /* write pixels */
-         (*ctx->Driver.WriteCI32Pixels)( ctx, PB->count, PB->x, PB->y,
-                                          PB->i, mask );
-
-         if (ctx->RasterMask & FRONT_AND_BACK_BIT) {
-            /*** Also write to back buffer ***/
-            (*ctx->Driver.SetBuffer)( ctx, GL_BACK );
-            MEMCPY( PB->i, isave, PB->count * sizeof(GLuint) );
             if (ctx->Color.SWLogicOpEnabled) {
-               gl_logicop_ci_pixels( ctx, PB->count, PB->x, PB->y, PB->i, mask );
+               _mesa_logicop_ci_pixels( ctx, PB->count, PB->x, PB->y, PB->index, mask );
             }
             if (ctx->Color.SWmasking) {
-               gl_mask_index_pixels( ctx, PB->count, PB->x, PB->y,
-                                     PB->i, mask );
+               _mesa_mask_index_pixels( ctx, PB->count, PB->x, PB->y, PB->index, mask );
             }
+
             (*ctx->Driver.WriteCI32Pixels)( ctx, PB->count, PB->x, PB->y,
-                                             PB->i, mask );
-            (*ctx->Driver.SetBuffer)( ctx, GL_FRONT );
+                                            PB->index, mask );
          }
 
          /*** ALL DONE ***/
@@ -380,37 +433,31 @@ void gl_flush_pb( GLcontext *ctx )
 
 	 if (ctx->Stencil.Enabled) {
 	    /* first stencil test */
-	    if (gl_stencil_pixels( ctx, PB->count, PB->x, PB->y, mask )==0) {
+	    if (_mesa_stencil_and_ztest_pixels(ctx, PB->count,
+                                       PB->x, PB->y, PB->z, mask) == 0) {
 	       goto CleanUp;
 	    }
-	    /* depth buffering w/ stencil */
-	    gl_depth_stencil_pixels( ctx, PB->count, PB->x, PB->y, PB->z, mask );
 	 }
 	 else if (ctx->Depth.Test) {
 	    /* regular depth testing */
-	    (*ctx->Driver.DepthTestPixels)( ctx, PB->count, PB->x, PB->y, PB->z, mask );
+	    _mesa_depth_test_pixels( ctx, PB->count, PB->x, PB->y, PB->z, mask );
 	 }
          
-         if (ctx->RasterMask & NO_DRAW_BIT) {
-            goto CleanUp;
+         if (ctx->RasterMask & MULTI_DRAW_BIT) {
+            multi_write_index_pixels( ctx, PB->count, PB->x, PB->y, PB->index, mask );
          }
+         else {
+            /* normal case: write to exactly one buffer */
 
-         /* write pixels */
-         (*ctx->Driver.Index)( ctx, PB->index );
-         (*ctx->Driver.WriteMonoCIPixels)( ctx, PB->count, PB->x, PB->y, mask );
-
-         if (ctx->RasterMask & FRONT_AND_BACK_BIT) {
-            /*** Also write to back buffer ***/
-            (*ctx->Driver.SetBuffer)( ctx, GL_BACK );
+            (*ctx->Driver.Index)( ctx, PB->currentIndex );
             (*ctx->Driver.WriteMonoCIPixels)( ctx, PB->count, PB->x, PB->y, mask );
-            (*ctx->Driver.SetBuffer)( ctx, GL_FRONT );
          }
-         /*** ALL DONE ***/
       }
    }
 
 CleanUp:
    PB->count = 0;
+   PB->mono = GL_TRUE;
 }
 
 

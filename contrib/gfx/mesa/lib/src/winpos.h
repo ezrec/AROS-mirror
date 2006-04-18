@@ -2,80 +2,107 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:33  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.0  1998/01/31 21:07:51  brianp
- * initial rev
- *
- */
-
 
 
 #ifndef WINPOS_H
 #define WINPOS_H
 
 
-#include "types.h"
+#include "glheader.h"
 
 
-#ifndef GL_MESA_window_pos
+extern void
+_mesa_WindowPos2dMESA(GLdouble x, GLdouble y);
 
-extern void glWindowPos2iMESA( GLint x, GLint y );
-extern void glWindowPos2fMESA( GLfloat x, GLfloat y );
-extern void glWindowPos2dMESA( GLdouble x, GLdouble y );
+extern void
+_mesa_WindowPos2fMESA(GLfloat x, GLfloat y);
 
-extern void glWindowPos2ivMESA( const GLint *p );
-extern void glWindowPos2fvMESA( const GLfloat *p );
-extern void glWindowPos2dvMESA( const GLdouble *p );
+extern void
+_mesa_WindowPos2iMESA(GLint x, GLint y);
 
-extern void glWindowPos3iMESA( GLint x, GLint y, GLint z );
-extern void glWindowPos3fMESA( GLfloat x, GLfloat y, GLfloat z );
-extern void glWindowPos3dMESA( GLdouble x, GLdouble y, GLdouble z );
+extern void
+_mesa_WindowPos2sMESA(GLshort x, GLshort y);
 
-extern void glWindowPos3ivMESA( const GLint *p );
-extern void glWindowPos3fvMESA( const GLfloat *p );
-extern void glWindowPos3dvMESA( const GLdouble *p );
+extern void
+_mesa_WindowPos3dMESA(GLdouble x, GLdouble y, GLdouble z);
 
-extern void glWindowPos4iMESA( GLint x, GLint y, GLint z, GLint w );
-extern void glWindowPos4fMESA( GLfloat x, GLfloat y, GLfloat z, GLfloat w );
-extern void glWindowPos4dMESA( GLdouble x, GLdouble y, GLdouble z, GLdouble w);
+extern void
+_mesa_WindowPos3fMESA(GLfloat x, GLfloat y, GLfloat z);
 
-extern void glWindowPos4ivMESA( const GLint *p );
-extern void glWindowPos4fvMESA( const GLfloat *p );
-extern void glWindowPos4dvMESA( const GLdouble *p );
+extern void
+_mesa_WindowPos3iMESA(GLint x, GLint y, GLint z);
 
-#endif
+extern void
+_mesa_WindowPos3sMESA(GLshort x, GLshort y, GLshort z);
 
+extern void
+_mesa_WindowPos4dMESA(GLdouble x, GLdouble y, GLdouble z, GLdouble w);
 
+extern void
+_mesa_WindowPos4fMESA(GLfloat x, GLfloat y, GLfloat z, GLfloat w);
 
-extern void gl_WindowPos4fMESA( GLcontext *ctx,
-                                GLfloat x, GLfloat y, GLfloat z, GLfloat w );
+extern void
+_mesa_WindowPos4iMESA(GLint x, GLint y, GLint z, GLint w);
+
+extern void
+_mesa_WindowPos4sMESA(GLshort x, GLshort y, GLshort z, GLshort w);
+
+extern void
+_mesa_WindowPos2dvMESA(const GLdouble *v);
+
+extern void
+_mesa_WindowPos2fvMESA(const GLfloat *v);
+
+extern void
+_mesa_WindowPos2ivMESA(const GLint *v);
+
+extern void
+_mesa_WindowPos2svMESA(const GLshort *v);
+
+extern void
+_mesa_WindowPos3dvMESA(const GLdouble *v);
+
+extern void
+_mesa_WindowPos3fvMESA(const GLfloat *v);
+
+extern void
+_mesa_WindowPos3ivMESA(const GLint *v);
+
+extern void
+_mesa_WindowPos3svMESA(const GLshort *v);
+
+extern void
+_mesa_WindowPos4dvMESA(const GLdouble *v);
+
+extern void
+_mesa_WindowPos4fvMESA(const GLfloat *v);
+
+extern void
+_mesa_WindowPos4ivMESA(const GLint *v);
+
+extern void
+_mesa_WindowPos4svMESA(const GLshort *v);
 
 
 #endif

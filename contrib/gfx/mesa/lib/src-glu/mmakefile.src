@@ -13,11 +13,11 @@ LIBMESAGLU =  glu \
             nurbscrv \
             nurbssrf \
             nurbsutl \
+            polytest \
             project \
             quadric \
             tess \
-            tesselat \
-            polytest
+            tesselat
 
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -I$(MESAGLUSRCDIR) -I$(MESATKSRCDIR) -I$(MESAAUXSRCDIR) -Iamiga/misc
 USER_CFLAGS	:= -DNO_ERRNO_H

@@ -397,7 +397,7 @@ EXPORTS
     WMesaMakeCurrent
     WMesaPaletteChange
     WMesaSwapBuffers
-    OSMesaCreateContext
+	OSMesaCreateContext
     OSMesaDestroyContext
     OSMesaMakeCurrent
     OSMesaGetCurrentContext

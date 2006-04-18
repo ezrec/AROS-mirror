@@ -2,43 +2,26 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
+ * Version:  3.4
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * Copyright (C) 1999  Brian Paul   All Rights Reserved.
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:31  NicJA
- * AROSMesa 3.0
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.2  1998/03/27 04:42:06  brianp
- * added NO_CONST stuff
- *
- * Revision 3.1  1998/03/01 20:16:36  brianp
- * added braces to ASSIGN_*V macros
- *
- * Revision 3.0  1998/01/31 20:58:46  brianp
- * initial rev
- *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
@@ -51,15 +34,22 @@
 #define MACROS_H
 
 
-#include <math.h>
-#include <string.h>
+#include "glheader.h"
 
 
 #ifdef DEBUG
-#  include <assert.h>
 #  define ASSERT(X)   assert(X)
 #else
 #  define ASSERT(X)
+#endif
+
+
+#if defined(__GNUC__)
+#define INLINE __inline__
+#elif defined(__MSC__)
+#define INLINE __inline
+#else
+#define INLINE
 #endif
 
 
@@ -68,25 +58,306 @@
 #define MAX_GLUINT	0xffffffff
 
 
+/* Some compilers don't like some of Mesa's const usage */
+#ifdef NO_CONST
+#  define CONST
+#else
+#  define CONST const
+#endif
+
+
+/* Pi */
+#ifndef M_PI
+#define M_PI (3.1415926)
+#endif
+
+
+/* Degrees to radians conversion: */
+#define DEG2RAD (M_PI/180.0)
+
+
+#ifndef NULL
+#define NULL 0
+#endif
+
+
+
+/*
+ * Bitmask helpers
+ */
+#define SET_BITS(WORD, BITS)    (WORD) |= (BITS)
+#define CLEAR_BITS(WORD, BITS)  (WORD) &= ~(BITS)
+#define TEST_BITS(WORD, BITS)   ((WORD) & (BITS))
+
+
+/* Stepping a GLfloat pointer by a byte stride
+ */
+#define STRIDE_F(p, i)  (p = (GLfloat *)((GLubyte *)p + i))
+#define STRIDE_UI(p, i)  (p = (GLuint *)((GLubyte *)p + i))
+#define STRIDE_T(p, t, i)  (p = (t *)((GLubyte *)p + i))
+
+
+#define ZERO_2V( DST )	(DST)[0] = (DST)[1] = 0
+#define ZERO_3V( DST )	(DST)[0] = (DST)[1] = (DST)[2] = 0
+#define ZERO_4V( DST )	(DST)[0] = (DST)[1] = (DST)[2] = (DST)[3] = 0
+
 
 /* Copy short vectors: */
+#define COPY_2V( DST, SRC )			\
+do {						\
+   (DST)[0] = (SRC)[0];				\
+   (DST)[1] = (SRC)[1];				\
+} while (0)
 
-#define COPY_2V( DST, SRC )	DST[0] = SRC[0];	\
-				DST[1] = SRC[1];
 
-#define COPY_3V( DST, SRC )	DST[0] = SRC[0];	\
-				DST[1] = SRC[1];	\
-				DST[2] = SRC[2];
+#define COPY_3V( DST, SRC )			\
+do {						\
+   (DST)[0] = (SRC)[0];				\
+   (DST)[1] = (SRC)[1];				\
+   (DST)[2] = (SRC)[2];				\
+} while (0)
 
-#define COPY_4V( DST, SRC )	DST[0] = SRC[0];	\
-				DST[1] = SRC[1];	\
-				DST[2] = SRC[2];	\
-				DST[3] = SRC[3];
+#define COPY_4V( DST, SRC )			\
+do {						\
+   (DST)[0] = (SRC)[0];				\
+   (DST)[1] = (SRC)[1];				\
+   (DST)[2] = (SRC)[2];				\
+   (DST)[3] = (SRC)[3];				\
+} while (0)
+
+
+#define COPY_2FV( DST, SRC )			\
+do {						\
+   const GLfloat *_tmp = (SRC);			\
+   (DST)[0] = _tmp[0];				\
+   (DST)[1] = _tmp[1];				\
+} while (0)
+
+
+#define COPY_3FV( DST, SRC )			\
+do {						\
+   const GLfloat *_tmp = (SRC);			\
+   (DST)[0] = _tmp[0];				\
+   (DST)[1] = _tmp[1];				\
+   (DST)[2] = _tmp[2];				\
+} while (0)
+
+#define COPY_4FV( DST, SRC )			\
+do {						\
+   const GLfloat *_tmp = (SRC);			\
+   (DST)[0] = _tmp[0];				\
+   (DST)[1] = _tmp[1];				\
+   (DST)[2] = _tmp[2];				\
+   (DST)[3] = _tmp[3];				\
+} while (0)
+
+
+
+#define COPY_SZ_4V(DST, SZ, SRC) 		\
+do {						\
+   switch (SZ) {				\
+   case 4: (DST)[3] = (SRC)[3];			\
+   case 3: (DST)[2] = (SRC)[2];			\
+   case 2: (DST)[1] = (SRC)[1];			\
+   case 1: (DST)[0] = (SRC)[0];			\
+   }  						\
+} while(0)
+
+#define SUB_4V( DST, SRCA, SRCB )		\
+do {						\
+      (DST)[0] = (SRCA)[0] - (SRCB)[0];		\
+      (DST)[1] = (SRCA)[1] - (SRCB)[1];		\
+      (DST)[2] = (SRCA)[2] - (SRCB)[2];		\
+      (DST)[3] = (SRCA)[3] - (SRCB)[3];		\
+} while (0)
+
+#define ADD_4V( DST, SRCA, SRCB )		\
+do {						\
+      (DST)[0] = (SRCA)[0] + (SRCB)[0];		\
+      (DST)[1] = (SRCA)[1] + (SRCB)[1];		\
+      (DST)[2] = (SRCA)[2] + (SRCB)[2];		\
+      (DST)[3] = (SRCA)[3] + (SRCB)[3];		\
+} while (0)
+
+#define SCALE_4V( DST, SRCA, SRCB )		\
+do {						\
+      (DST)[0] = (SRCA)[0] * (SRCB)[0];		\
+      (DST)[1] = (SRCA)[1] * (SRCB)[1];		\
+      (DST)[2] = (SRCA)[2] * (SRCB)[2];		\
+      (DST)[3] = (SRCA)[3] * (SRCB)[3];		\
+} while (0)
+
+#define ACC_4V( DST, SRC )			\
+do {						\
+      (DST)[0] += (SRC)[0];			\
+      (DST)[1] += (SRC)[1];			\
+      (DST)[2] += (SRC)[2];			\
+      (DST)[3] += (SRC)[3];			\
+} while (0)
+
+#define ACC_SCALE_4V( DST, SRCA, SRCB )		\
+do {						\
+      (DST)[0] += (SRCA)[0] * (SRCB)[0];	\
+      (DST)[1] += (SRCA)[1] * (SRCB)[1];	\
+      (DST)[2] += (SRCA)[2] * (SRCB)[2];	\
+      (DST)[3] += (SRCA)[3] * (SRCB)[3];	\
+} while (0)
+
+#define ACC_SCALE_SCALAR_4V( DST, S, SRCB )	\
+do {						\
+      (DST)[0] += S * (SRCB)[0];		\
+      (DST)[1] += S * (SRCB)[1];		\
+      (DST)[2] += S * (SRCB)[2];		\
+      (DST)[3] += S * (SRCB)[3];		\
+} while (0)
+
+#define SCALE_SCALAR_4V( DST, S, SRCB )		\
+do {						\
+      (DST)[0] = S * (SRCB)[0];			\
+      (DST)[1] = S * (SRCB)[1];			\
+      (DST)[2] = S * (SRCB)[2];			\
+      (DST)[3] = S * (SRCB)[3];			\
+} while (0)
+
+
+#define SELF_SCALE_SCALAR_4V( DST, S )		\
+do {						\
+      (DST)[0] *= S;				\
+      (DST)[1] *= S;				\
+      (DST)[2] *= S;				\
+      (DST)[3] *= S;				\
+} while (0)
+
+
+/*
+ * Similarly for 3-vectors.
+ */
+#define SUB_3V( DST, SRCA, SRCB )		\
+do {						\
+      (DST)[0] = (SRCA)[0] - (SRCB)[0];		\
+      (DST)[1] = (SRCA)[1] - (SRCB)[1];		\
+      (DST)[2] = (SRCA)[2] - (SRCB)[2];		\
+} while (0)
+
+#define ADD_3V( DST, SRCA, SRCB )		\
+do {						\
+      (DST)[0] = (SRCA)[0] + (SRCB)[0];		\
+      (DST)[1] = (SRCA)[1] + (SRCB)[1];		\
+      (DST)[2] = (SRCA)[2] + (SRCB)[2];		\
+} while (0)
+
+#define SCALE_3V( DST, SRCA, SRCB )		\
+do {						\
+      (DST)[0] = (SRCA)[0] * (SRCB)[0];		\
+      (DST)[1] = (SRCA)[1] * (SRCB)[1];		\
+      (DST)[2] = (SRCA)[2] * (SRCB)[2];		\
+} while (0)
+
+#define ACC_3V( DST, SRC )			\
+do {						\
+      (DST)[0] += (SRC)[0];			\
+      (DST)[1] += (SRC)[1];			\
+      (DST)[2] += (SRC)[2];			\
+} while (0)
+
+#define ACC_SCALE_3V( DST, SRCA, SRCB )		\
+do {						\
+      (DST)[0] += (SRCA)[0] * (SRCB)[0];	\
+      (DST)[1] += (SRCA)[1] * (SRCB)[1];	\
+      (DST)[2] += (SRCA)[2] * (SRCB)[2];	\
+} while (0)
+
+#define SCALE_SCALAR_3V( DST, S, SRCB ) 	\
+do {						\
+      (DST)[0] = S * (SRCB)[0];			\
+      (DST)[1] = S * (SRCB)[1];			\
+      (DST)[2] = S * (SRCB)[2];			\
+} while (0)
+
+#define ACC_SCALE_SCALAR_3V( DST, S, SRCB )	\
+do {						\
+      (DST)[0] += S * (SRCB)[0];		\
+      (DST)[1] += S * (SRCB)[1];		\
+      (DST)[2] += S * (SRCB)[2];		\
+} while (0)
+
+#define SELF_SCALE_SCALAR_3V( DST, S )		\
+do {						\
+      (DST)[0] *= S;				\
+      (DST)[1] *= S;				\
+      (DST)[2] *= S;				\
+} while (0)
+
+#define ACC_SCALAR_3V( DST, S ) 		\
+do {						\
+      (DST)[0] += S;				\
+      (DST)[1] += S;				\
+      (DST)[2] += S;				\
+} while (0)
+
+/* And also for 2-vectors
+ */
+#define SUB_2V( DST, SRCA, SRCB )		\
+do {						\
+      (DST)[0] = (SRCA)[0] - (SRCB)[0];		\
+      (DST)[1] = (SRCA)[1] - (SRCB)[1];		\
+} while (0)
+
+#define ADD_2V( DST, SRCA, SRCB )		\
+do {						\
+      (DST)[0] = (SRCA)[0] + (SRCB)[0];		\
+      (DST)[1] = (SRCA)[1] + (SRCB)[1];		\
+} while (0)
+
+#define SCALE_2V( DST, SRCA, SRCB )		\
+do {						\
+      (DST)[0] = (SRCA)[0] * (SRCB)[0];		\
+      (DST)[1] = (SRCA)[1] * (SRCB)[1];		\
+} while (0)
+
+#define ACC_2V( DST, SRC )			\
+do {						\
+      (DST)[0] += (SRC)[0];			\
+      (DST)[1] += (SRC)[1];			\
+} while (0)
+
+#define ACC_SCALE_2V( DST, SRCA, SRCB )		\
+do {						\
+      (DST)[0] += (SRCA)[0] * (SRCB)[0];	\
+      (DST)[1] += (SRCA)[1] * (SRCB)[1];	\
+} while (0)
+
+#define SCALE_SCALAR_2V( DST, S, SRCB ) 	\
+do {						\
+      (DST)[0] = S * (SRCB)[0];			\
+      (DST)[1] = S * (SRCB)[1];			\
+} while (0)
+
+#define ACC_SCALE_SCALAR_2V( DST, S, SRCB )	\
+do {						\
+      (DST)[0] += S * (SRCB)[0];		\
+      (DST)[1] += S * (SRCB)[1];		\
+} while (0)
+
+#define SELF_SCALE_SCALAR_2V( DST, S )		\
+do {						\
+      (DST)[0] *= S;				\
+      (DST)[1] *= S;				\
+} while (0)
+
+#define ACC_SCALAR_2V( DST, S ) 		\
+do {						\
+      (DST)[0] += S;				\
+      (DST)[1] += S;				\
+} while (0)
+
+
 
 /*
  * Copy a vector of 4 GLubytes from SRC to DST.
  */
 #define COPY_4UBV(DST, SRC)			\
+do {						\
    if (sizeof(GLuint)==4*sizeof(GLubyte)) {	\
       *((GLuint*)(DST)) = *((GLuint*)(SRC));	\
    }						\
@@ -95,23 +366,25 @@
       (DST)[1] = (SRC)[1];			\
       (DST)[2] = (SRC)[2];			\
       (DST)[3] = (SRC)[3];			\
-   }
-
+   }						\
+} while (0)
 
 
 /* Assign scalers to short vectors: */
-#define ASSIGN_2V( V, V0, V1 )  { V[0] = V0;  V[1] = V1; }
+#define ASSIGN_2V( V, V0, V1 )  \
+do { V[0] = V0;  V[1] = V1; } while(0)
 
-#define ASSIGN_3V( V, V0, V1, V2 )  { V[0] = V0;  V[1] = V1;  V[2] = V2; }
+#define ASSIGN_3V( V, V0, V1, V2 )  \
+do { V[0] = V0;  V[1] = V1;  V[2] = V2; } while(0)
 
-#define ASSIGN_4V( V, V0, V1, V2, V3 ) { V[0] = V0;	\
-				        V[1] = V1;	\
-				        V[2] = V2;	\
-                                         V[3] = V3; }
+#define ASSIGN_4V( V, V0, V1, V2, V3 ) 		\
+do { 						\
+    V[0] = V0;					\
+    V[1] = V1;					\
+    V[2] = V2;					\
+    V[3] = V3; 					\
+} while(0)
 
-
-/* Test if we're inside a glBegin / glEnd pair: */
-#define INSIDE_BEGIN_END(CTX)  ((CTX)->Primitive!=GL_BITMAP)
 
 
 
@@ -133,6 +406,11 @@
 /* Clamp X to [MIN,MAX]: */
 #define CLAMP( X, MIN, MAX )  ( (X)<(MIN) ? (MIN) : ((X)>(MAX) ? (MAX) : (X)) )
 
+/* Assign X to CLAMP(X, MIN, MAX) */
+#define CLAMP_SELF(x, mn, mx)  \
+   ( (x)<(mn) ? ((x) = (mn)) : ((x)>(mx) ? ((x)=(mx)) : (x)) )
+
+
 
 /* Min of two values: */
 #define MIN2( A, B )   ( (A)<(B) ? (A) : (B) )
@@ -141,19 +419,37 @@
 /* MAX of two values: */
 #define MAX2( A, B )   ( (A)>(B) ? (A) : (B) )
 
+/* Dot product of two 2-element vectors */
+#define DOT2( a, b )  ( (a)[0]*(b)[0] + (a)[1]*(b)[1] )
 
 /* Dot product of two 3-element vectors */
-#define DOT3( a, b )  ( a[0]*b[0] + a[1]*b[1] + a[2]*b[2] )
+#define DOT3( a, b )  ( (a)[0]*(b)[0] + (a)[1]*(b)[1] + (a)[2]*(b)[2] )
 
 
 /* Dot product of two 4-element vectors */
-#define DOT4( a, b )  ( a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3] )
+#define DOT4( a, b )  ( (a)[0]*(b)[0] + (a)[1]*(b)[1] + \
+			(a)[2]*(b)[2] + (a)[3]*(b)[3] )
 
+#define DOT4V(v,a,b,c,d) (v[0]*a + v[1]*b + v[2]*c + v[3]*d)
+
+
+#define CROSS3(n, u, v) 			\
+do {						\
+   (n)[0] = (u)[1]*(v)[2] - (u)[2]*(v)[1]; 	\
+   (n)[1] = (u)[2]*(v)[0] - (u)[0]*(v)[2]; 	\
+   (n)[2] = (u)[0]*(v)[1] - (u)[1]*(v)[0];	\
+} while (0)
 
 
 /*
  * Integer / float conversion for colors, normals, etc.
  */
+
+#define BYTE_TO_UBYTE(b)   (b < 0 ? 0 : (GLubyte) b)
+#define SHORT_TO_UBYTE(s)  (s < 0 ? 0 : (GLubyte) (s >> 7))
+#define USHORT_TO_UBYTE(s)              (GLubyte) (s >> 8)
+#define INT_TO_UBYTE(i)    (i < 0 ? 0 : (GLubyte) (i >> 23))
+#define UINT_TO_UBYTE(i)                (GLubyte) (i >> 24)
 
 /* Convert GLubyte in [0,255] to GLfloat in [0.0,1.0] */
 #define UBYTE_TO_FLOAT(B)	((GLfloat) (B) * (1.0F / 255.0F))
@@ -202,64 +498,30 @@
 
 
 
-/* Memory copy: */
-#ifdef SUNOS4
-#define MEMCPY( DST, SRC, BYTES) \
-	memcpy( (char *) (DST), (char *) (SRC), (int) (BYTES) )
-#else
-#define MEMCPY( DST, SRC, BYTES) \
-	memcpy( (void *) (DST), (void *) (SRC), (size_t) (BYTES) )
-#endif
+/* Generic color packing macros
+ */
 
+#define PACK_COLOR_8888( a, b, c, d )					\
+   (((a) << 24) | ((b) << 16) | ((c) << 8) | (d))
 
-/* Memory set: */
-#ifdef SUNOS4
-#define MEMSET( DST, VAL, N ) \
-	memset( (char *) (DST), (int) (VAL), (int) (N) )
-#else
-#define MEMSET( DST, VAL, N ) \
-	memset( (void *) (DST), (int) (VAL), (size_t) (N) )
-#endif
+#define PACK_COLOR_888( a, b, c )					\
+   (((a) << 16) | ((b) << 8) | (c))
 
+#define PACK_COLOR_565( a, b, c )					\
+   ((((a) & 0xf8) << 8) | (((b) & 0xfc) << 3) | (((c) & 0xf8) >> 3))
 
-/* MACs and BeOS don't support static larger than 32kb, so... */
-#if defined(macintosh) && !defined(__MRC__)
-  extern char *AGLAlloc(int size);
-  extern void AGLFree(char* ptr);
-#  define DEFARRAY(TYPE,NAME,SIZE)  TYPE *NAME = (TYPE*)AGLAlloc(sizeof(TYPE)*(SIZE))
-#  define UNDEFARRAY(NAME)          AGLFree((char*)NAME)
-#elif defined(__BEOS__)
-#  define DEFARRAY(TYPE,NAME,SIZE)  TYPE *NAME = (TYPE*)malloc(sizeof(TYPE)*(SIZE))
-#  define UNDEFARRAY(NAME)          free(NAME)
-#else
-#  define DEFARRAY(TYPE,NAME,SIZE)  TYPE NAME[SIZE]
-#  define UNDEFARRAY(NAME)
-#endif
+#define PACK_COLOR_1555( a, b, c, d )					\
+   ((((b) & 0xf8) << 7) | (((c) & 0xf8) << 2) | (((d) & 0xf8) >> 3) |	\
+    ((a) ? 0x8000 : 0))
 
+#define PACK_COLOR_4444( a, b, c, d )					\
+   ((((a) & 0xf0) << 8) | (((b) & 0xf0) << 4) | ((c) & 0xf0) | ((d) >> 4))
 
-/* Some compilers don't like some of Mesa's const usage */
-#ifdef NO_CONST
-#  define CONST
-#else
-#  define CONST const
-#endif
+#define PACK_COLOR_88( a, b )						\
+   (((a) << 8) | (b))
 
-
-
-/* Pi */
-#ifndef M_PI
-#define M_PI (3.1415926)
-#endif
-
-
-/* Degrees to radians conversion: */
-#define DEG2RAD (M_PI/180.0)
-
-
-#ifndef NULL
-#define NULL 0
-#endif
-
+#define PACK_COLOR_332( a, b, c )					\
+   (((a) & 0xe0) | (((b) & 0xe0) >> 3) | (((c) & 0xc0) >> 6))
 
 
 #endif /*MACROS_H*/

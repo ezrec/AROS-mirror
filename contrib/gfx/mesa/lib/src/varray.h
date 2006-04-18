@@ -1,47 +1,26 @@
-/* $Id$ */
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:32  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.3  1998/06/07 22:18:52  brianp
- * implemented GL_EXT_multitexture extension
- *
- * Revision 3.2  1998/02/20 04:53:07  brianp
- * implemented GL_SGIS_multitexture
- *
- * Revision 3.1  1998/02/01 20:05:10  brianp
- * added glDrawRangeElements()
- *
- * Revision 3.0  1998/01/31 21:06:45  brianp
- * initial rev
- *
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
@@ -52,86 +31,116 @@
 #include "types.h"
 
 
-extern void gl_VertexPointer( GLcontext *ctx,
-                              GLint size, GLenum type, GLsizei stride,
-                              const GLvoid *ptr );
+extern void
+_mesa_VertexPointer(GLint size, GLenum type, GLsizei stride,
+                    const GLvoid *ptr);
 
 
-extern void gl_NormalPointer( GLcontext *ctx,
-                              GLenum type, GLsizei stride, const GLvoid *ptr );
+extern void
+_mesa_NormalPointer(GLenum type, GLsizei stride, const GLvoid *ptr);
 
 
-extern void gl_ColorPointer( GLcontext *ctx,
-                             GLint size, GLenum type, GLsizei stride,
-                             const GLvoid *ptr );
+extern void
+_mesa_ColorPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr);
 
 
-extern void gl_IndexPointer( GLcontext *ctx,
-                                GLenum type, GLsizei stride,
-                                const GLvoid *ptr );
+extern void
+_mesa_IndexPointer(GLenum type, GLsizei stride, const GLvoid *ptr);
 
 
-extern void gl_TexCoordPointer( GLcontext *ctx,
-                                GLint size, GLenum type, GLsizei stride,
-                                const GLvoid *ptr );
-
-/* GL_SGIS_multitexture */
-extern void gl_MultiTexCoordPointer( GLcontext *ctx, GLenum target,
-                                     GLint size, GLenum type, GLsizei stride,
-                                     const GLvoid *ptr );
+extern void
+_mesa_TexCoordPointer(GLint size, GLenum type, GLsizei stride,
+                      const GLvoid *ptr);
 
 
-/* GL_EXT_multitexture */
-extern void gl_InterleavedTextureCoordSets( GLcontext *ctx, GLint );
+extern void
+_mesa_EdgeFlagPointer(GLsizei stride, const GLvoid *ptr);
 
 
-extern void gl_EdgeFlagPointer( GLcontext *ctx,
-                                GLsizei stride, const GLboolean *ptr );
+extern void
+_mesa_VertexPointerEXT(GLint size, GLenum type, GLsizei stride,
+                       GLsizei count, const GLvoid *ptr);
 
 
-extern void gl_GetPointerv( GLcontext *ctx, GLenum pname, GLvoid **params );
+extern void
+_mesa_NormalPointerEXT(GLenum type, GLsizei stride, GLsizei count,
+                       const GLvoid *ptr);
 
 
-extern void gl_ArrayElement( GLcontext *ctx, GLint i );
-
-extern void gl_save_ArrayElement( GLcontext *ctx, GLint i );
-
-
-extern void gl_DrawArrays( GLcontext *ctx,
-                           GLenum mode, GLint first, GLsizei count );
-
-extern void gl_save_DrawArrays( GLcontext *ctx,
-                                GLenum mode, GLint first, GLsizei count );
+extern void
+_mesa_ColorPointerEXT(GLint size, GLenum type, GLsizei stride, GLsizei count,
+                      const GLvoid *ptr);
 
 
-extern void gl_DrawElements( GLcontext *ctx,
-                             GLenum mode, GLsizei count,
+extern void
+_mesa_IndexPointerEXT(GLenum type, GLsizei stride, GLsizei count,
+                      const GLvoid *ptr);
+
+
+extern void
+_mesa_TexCoordPointerEXT(GLint size, GLenum type, GLsizei stride,
+                         GLsizei count, const GLvoid *ptr);
+
+
+extern void
+_mesa_EdgeFlagPointerEXT(GLsizei stride, GLsizei count, const GLboolean *ptr);
+
+
+
+
+
+extern void
+_mesa_ArrayElement( GLint );
+
+
+extern void
+_mesa_DrawArrays(GLenum mode, GLint first, GLsizei count);
+
+
+extern void
+_mesa_save_DrawArrays(GLenum mode, GLint first, GLsizei count);
+
+
+extern void
+_mesa_DrawElements(GLenum mode, GLsizei count, GLenum type,
+                   const GLvoid *indices);
+
+
+extern void
+_mesa_save_DrawElements(GLenum mode, GLsizei count,
+                        GLenum type, const GLvoid *indices);
+
+
+extern void
+_mesa_InterleavedArrays(GLenum format, GLsizei stride, const GLvoid *pointer);
+
+extern void
+_mesa_save_InterleavedArrays(GLenum format, GLsizei stride,
+                             const GLvoid *pointer);
+
+
+extern void
+_mesa_DrawRangeElements(GLenum mode, GLuint start,
+                        GLuint end, GLsizei count, GLenum type,
+                        const GLvoid *indices);
+
+extern void
+_mesa_save_DrawRangeElements(GLenum mode,
+                             GLuint start, GLuint end, GLsizei count,
                              GLenum type, const GLvoid *indices );
 
-extern void gl_save_DrawElements( GLcontext *ctx,
-                                  GLenum mode, GLsizei count,
-                                  GLenum type, const GLvoid *indices );
+
+extern void gl_exec_array_elements( GLcontext *ctx, 
+				    struct immediate *IM,
+				    GLuint start, 
+				    GLuint end );
+
+extern void gl_update_client_state( GLcontext *ctx );
 
 
-extern void gl_InterleavedArrays( GLcontext *ctx,
-                                  GLenum format, GLsizei stride,
-                                  const GLvoid *pointer );
-
-extern void gl_save_InterleavedArrays( GLcontext *ctx,
-                                       GLenum format, GLsizei stride,
-                                       const GLvoid *pointer );
-
-
-extern void gl_DrawRangeElements( GLcontext *ctx, GLenum mode, GLuint start,
-                                  GLuint end, GLsizei count, GLenum type,
-                                  const GLvoid *indices );
-
-extern void gl_save_DrawRangeElements( GLcontext *ctx, GLenum mode,
-                                       GLuint start, GLuint end, GLsizei count,
-                                       GLenum type, const GLvoid *indices );
-
-
+#ifdef VAO
+struct gl_array_object *
+_mesa_alloc_vertex_array_object(GLcontext *ctx, GLuint name);
 #endif
 
-
-
+#endif

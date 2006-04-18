@@ -52,9 +52,9 @@ LIBS = @LIBS@
 CPPFLAGS = @CPPFLAGS@ -I$(mesa_srcdir)/include -I$(top_srcdir)/include
 DEFS = @DEFS@
 SYS_CFLAGS = @SYS_CFLAGS@
-SYS_LDFLAGS = @SYS_LDFLAGS@ -L$(mesa_srcdir)/lib
+SYS_LDFLAGS = @SYS_LDFLAGS@ -L$(mesa_srcdir)/src/.libs -L$(mesa_srcdir)/src-glu/.libs
 
-GL_LIBS = -lMesaGLU -lMesaGL
+GL_LIBS = -lGLU -lGL
 XAW_LIBS = @XAW_LIB@ @XMU_LIB@ -lXext -lXt
 MOTIF_LIBS = -lXm @XMU_LIB@ -lXext -lXt
 
@@ -265,7 +265,7 @@ mcube.o: \
   mcube.c \
   $(srcincdir)/MesaDrawingArea.h \
   $(srcincdir)/GLwDrawA.h
- 
+
 tea-m.o: \
   tea-m.c tea.c \
   $(srcincdir)/MesaWorkstation.h \

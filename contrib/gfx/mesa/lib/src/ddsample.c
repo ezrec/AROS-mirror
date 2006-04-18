@@ -2,42 +2,27 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:30  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.1  1998/06/02 01:33:51  brianp
- * updated for v3.0 device driver changes
- *
- * Revision 3.0  1998/01/31 20:50:03  brianp
- * initial rev
- *
- */
-
 
 
 /*
@@ -67,13 +52,24 @@
  * the core Mesa library.
  */
 
+/*
+ * XXX XXX
+ * THIS FILE IS VERY OUT OF DATE!  LOOK AT OSmesa/osmesa.c FOR A BETTER
+ * EXAMPLE DRIVER!
+ */
 
-#include <stdlib.h>
+
+
+#ifdef PC_HEADER
+#include "all.h"
+#else
+#include "glheader.h"
 #include "GL/FooMesa.h"
 #include "context.h"
 #include "matrix.h"
 #include "types.h"
 #include "vb.h"
+#endif
 
 
 
@@ -228,11 +224,11 @@ static GLboolean color_mask( GLcontext *ctx,
 
 
 /*
-    * OPTIONAL FUNCTION: 
-    * Implements glLogicOp if possible.  Return GL_TRUE if the device driver
-    * can perform the operation, otherwise return GL_FALSE.  If GL_FALSE
-    * is returned, the logic op will be done in software by Mesa.
-    */
+ * OPTIONAL FUNCTION: 
+ * Implements glLogicOp if possible.  Return GL_TRUE if the device driver
+ * can perform the operation, otherwise return GL_FALSE.  If GL_FALSE
+ * is returned, the logic op will be done in software by Mesa.
+ */
 static GLboolean logicop( GLcontext *ctx, GLenum op )
 {
    struct foo_mesa_context *foo = (struct foo_mesa_context *) ctx->DriverCtx;
@@ -252,10 +248,20 @@ static void dither( GLcontext *ctx, GLboolean enable )
 
 
 /*
- * Set the current drawing/reading buffer, return GL_TRUE or GL_FALSE
- * for success/failure.
+ * Set the current reading buffer.
  */
-static GLboolean set_buffer( GLcontext *ctx, GLenum mode )
+static void set_read_buffer( GLcontext *ctx, GLframebuffer *bufer,
+                             GLenum mode )
+{
+   struct foo_mesa_context *foo = (struct foo_mesa_context *) ctx->DriverCtx;
+   setup_DD_pointers( ctx );
+}
+
+
+/*
+ * Set the destination/draw buffer.
+ */
+static GLboolean set_draw_buffer( GLcontext *ctx, GLenum mode )
 {
    struct foo_mesa_context *foo = (struct foo_mesa_context *) ctx->DriverCtx;
    setup_DD_pointers( ctx );
@@ -320,28 +326,12 @@ static void fast_points_function( GLcontext *ctx, GLuint first, GLuint last )
    struct vertex_buffer *VB = ctx->VB;
    GLint i;
 
-   /* Render a number of points by some hardware/OS accerated method */
-   if (VB->MonoColor) {
-      /* draw all points using the current color (set_color) */
-      for (i=first;i<=last;i++) {
-         if (VB->ClipMask[i]==0) {
-            /* compute window coordinate */
-            int x, y;
-            x =       (GLint) VB->Win[i][0];
-            y = FLIP( (GLint) VB->Win[i][1] );
-            WriteRGBAPixel(x, y, foo->CurrentColor);
-         }
-      }
-   }
-   else {
-      /* each point is a different color */
-      for (i=first;i<=last;i++) {
-         if (VB->ClipMask[i]==0) {
-            int x, y;
-            x =       (GLint) VB->Win[i][0];
-            y = FLIP( (GLint) VB->Win[i][1] );
-            WriteRGBAPixel(x, y, foo->CurrentColor);
-         }
+   for (i=first;i<=last;i++) {
+      if (VB->ClipMask[i]==0) {
+         int x, y;
+         x =       (GLint) VB->Win.data[i][0];
+         y = FLIP( (GLint) VB->Win.data[i][1] );
+         WriteRGBAPixel( x, y, VB->ColorPtr->data[i] );
       }
    }
 }
@@ -358,17 +348,12 @@ static void fast_line_function( GLcontext *ctx, GLuint v0, GLuint v1, GLuint pv 
    int x0, y0, x1, y1;
    GLubyte *pixel;
 
-   if (VB->MonoColor) {
-      pixel = foo->CurrentColor;
-   }
-   else {
-      pixel = VB->Color[pv];
-   }
+   pixel = VB->ColorPtr->data[pv];
 
-   x0 =       (int) VB->Win[v0][0];
-   y0 = FLIP( (int) VB->Win[v0][1] );
-   x1 =       (int) VB->Win[v1][0];
-   y1 = FLIP( (int) VB->Win[v1][1] );
+   x0 =       (int) VB->Win.data[v0][0];
+   y0 = FLIP( (int) VB->Win.data[v0][1] );
+   x1 =       (int) VB->Win.data[v1][0];
+   y1 = FLIP( (int) VB->Win.data[v1][1] );
 
    /* Draw line from (x0,y0) to (x1,y1) with current pixel color/index */
 }
@@ -385,12 +370,7 @@ static void fast_triangle_function( GLcontext *ctx, GLuint v0,
    struct vertex_buffer *VB = ctx->VB;
    GLubyte *pixel;
 
-   if (VB->MonoColor) {
-      pixel = foo->CurrentColor;
-   }
-   else {
-      pixel = VB->Color[pv];
-   }
+   pixel = VB->ColorPtr->data[pv];
 
    /* Draw triangle with current pixel color/index */
 }
@@ -417,9 +397,9 @@ static void write_index8_span( const GLcontext *ctx,
 
 
 static void write_index32_span( const GLcontext *ctx,
-                              GLuint n, GLint x, GLint y,
-                              const GLuint index[],
-                              const GLubyte mask[] )
+                                GLuint n, GLint x, GLint y,
+                                const GLuint index[],
+                                const GLubyte mask[] )
 {
    GLint i;
    for (i=0;i<n;i++) {
@@ -556,9 +536,9 @@ static void write_index_pixels( const GLcontext *ctx,
 
 
 static void write_mono_index_pixels( const GLcontext *ctx,
-                                    GLuint n,
-                                    const GLint x[], const GLint y[],
-                                    const GLubyte mask[] )
+                                     GLuint n,
+                                     const GLint x[], const GLint y[],
+                                     const GLubyte mask[] )
 {
    struct foo_mesa_context *foo = (struct foo_mesa_context *) ctx->DriverCtx;
    GLint i;
@@ -572,7 +552,7 @@ static void write_mono_index_pixels( const GLcontext *ctx,
 
 
 static void write_rgba_pixels( const GLcontext *ctx,
-                                GLuint n, const GLint x[], const GLint y[],
+                               GLuint n, const GLint x[], const GLint y[],
                                const GLubyte rgba[][4], const GLubyte mask[] )
 {
    GLint i;
@@ -611,17 +591,17 @@ static void read_index_pixels( const GLcontext *ctx,
                                GLuint index[], const GLubyte mask[] )
 {
    GLint i;
-  for (i=0; i<n; i++) {
-     if (mask[i]) {
+   for (i=0; i<n; i++) {
+      if (mask[i]) {
          index[i] = ReadCIPixel( x[i], y[i] );
-     }
-  }
+      }
+   }
 }
 
 
 
 static void read_rgba_pixels( const GLcontext *ctx,
-                               GLuint n, const GLint x[], const GLint y[],
+                              GLuint n, const GLint x[], const GLint y[],
                               GLubyte rgba[][4], const GLubyte mask[] )
 {
    GLint i;
@@ -653,7 +633,8 @@ static void setup_DD_pointers( GLcontext *ctx )
    ctx->Driver.Index = set_index;
    ctx->Driver.Color = set_color;
 
-   ctx->Driver.SetBuffer = set_buffer;
+   ctx->Driver.SetDrawBuffer = set_draw_buffer;
+   ctx->Driver.SetReadBuffer = set_read_buffer;
    ctx->Driver.GetBufferSize = get_buffer_size;
 
    ctx->Driver.PointsFunc = fast_points_function;
@@ -768,7 +749,11 @@ FooMesaBuffer FooMesaCreateBuffer( FooMesaVisual visual,
       return NULL;
    }
 
-   b->gl_buffer = gl_create_framebuffer( visual->gl_visual );
+   b->gl_buffer = gl_create_framebuffer( visual->gl_visual,
+                                         visual->gl_visual->DepthBits > 0,
+                                         visual->gl_visual->StencilBits > 0,
+                                         visual->gl_visual->AccumBits > 0,
+                                         visual->gl_visual->AlphaBits > 0 );
    b->the_window = your_window_id;
 
    /* other stuff */
@@ -804,6 +789,11 @@ FooMesaContext FooMesaCreateContext( FooMesaVisual visual,
 
 
    /* you probably have to do a bunch of other initializations here. */
+
+
+   /* and then, finally let the context examine your initializations */
+   _mesa_initialize_context( c->gl_ctx );
+
 
    return c;
 }

@@ -2,66 +2,48 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:30  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.3  1998/07/29 04:02:30  brianp
- * fixed rounding error in computing integer alpha reference value
- *
- * Revision 3.2  1998/03/28 03:57:13  brianp
- * added CONST macro to fix IRIX compilation problems
- *
- * Revision 3.1  1998/02/13 03:23:04  brianp
- * AlphaRef is now a GLubyte
- *
- * Revision 3.0  1998/01/31 20:44:19  brianp
- * initial rev
- *
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
 #ifdef PC_HEADER
 #include "all.h"
 #else
+#include "glheader.h"
 #include "alpha.h"
 #include "context.h"
 #include "types.h"
 #include "macros.h"
+#include "mmath.h"
 #endif
 
 
 
-void gl_AlphaFunc( GLcontext* ctx, GLenum func, GLclampf ref )
+void
+_mesa_AlphaFunc( GLenum func, GLclampf ref )
 {
-   if (INSIDE_BEGIN_END(ctx)) {
-      gl_error( ctx, GL_INVALID_OPERATION, "glAlphaFunc" );
-      return;
-   }
+   GET_CURRENT_CONTEXT(ctx);
+   ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH(ctx, "glAlphaFunc");
+
    switch (func) {
       case GL_NEVER:
       case GL_LESS:
@@ -72,14 +54,21 @@ void gl_AlphaFunc( GLcontext* ctx, GLenum func, GLclampf ref )
       case GL_GEQUAL:
       case GL_ALWAYS:
          ctx->Color.AlphaFunc = func;
-         ctx->Color.AlphaRef = (GLubyte) (CLAMP(ref, 0.0F, 1.0F) * 255.0F + 0.5F);
+         if (ref <= 0.0)
+            ctx->Color.AlphaRef = (GLubyte) 0;
+         else if (ref >= 1.0)
+            ctx->Color.AlphaRef = (GLubyte) 255;
+         else
+            CLAMPED_FLOAT_COLOR_TO_UBYTE_COLOR(ctx->Color.AlphaRef, ref);
+         if (ctx->Driver.AlphaFunc) {
+            (*ctx->Driver.AlphaFunc)(ctx, func, ctx->Color.AlphaRef);
+         }
          break;
       default:
          gl_error( ctx, GL_INVALID_ENUM, "glAlphaFunc(func)" );
          break;
    }
 }
-
 
 
 
@@ -91,8 +80,9 @@ void gl_AlphaFunc( GLcontext* ctx, GLenum func, GLclampf ref )
  * Return:  0 = all pixels in the span failed the alpha test.
  *          1 = one or more pixels passed the alpha test.
  */
-GLint gl_alpha_test( const GLcontext* ctx,
-                     GLuint n, CONST GLubyte rgba[][4], GLubyte mask[] )
+GLint
+_mesa_alpha_test( const GLcontext *ctx,
+                  GLuint n, CONST GLubyte rgba[][4], GLubyte mask[] )
 {
    GLuint i;
    GLubyte ref = ctx->Color.AlphaRef;

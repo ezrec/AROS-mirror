@@ -2,8 +2,8 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  2.3
- * Copyright (C) 1995-1997  Brian Paul
+ * Version:  3.3
+ * Copyright (C) 1995-2000  Brian Paul
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -22,27 +22,6 @@
 
 
 /*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:29  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 1.3  1997/10/29 02:02:20  brianp
- * various MS Windows compiler changes (David Bucciarelli, v20 3dfx driver)
- *
- * Revision 1.2  1997/05/24 13:30:58  brianp
- * added TESS_H multi-inclusion prevention test
- *
- * Revision 1.1  1996/09/27 01:19:39  brianp
- * Initial revision
- *
- */
-
-
-/*
  * This file is part of the polygon tesselation code contributed by
  * Bogdan Sikorski
  */
@@ -54,66 +33,76 @@
 
 #include "gluP.h"
 
-#define EPSILON 1e-06 /* epsilon for double precision compares */
+#define EPSILON 1e-06		/* epsilon for double precision compares */
 
 typedef enum
 {
-	OXY,
-	OYZ,
-	OXZ
-} projection_type;
+   OXY,
+   OYZ,
+   OXZ
+}
+projection_type;
 
 typedef struct callbacks_str
 {
-	void (CALLBACK *begin)( GLenum mode );
-	void (CALLBACK *edgeFlag)( GLboolean flag );
-	void (CALLBACK *vertex)( GLvoid *v );
-	void (CALLBACK *end)( void );
-	void (CALLBACK *error)( GLenum err );
-} tess_callbacks;
+   void (GLCALLBACK * begin) (GLenum mode);
+   void (GLCALLBACK * edgeFlag) (GLboolean flag);
+   void (GLCALLBACK * vertex) (GLvoid * v);
+   void (GLCALLBACK * end) (void);
+   void (GLCALLBACK * error) (GLenum err);
+}
+tess_callbacks;
 
 typedef struct vertex_str
 {
-	void				*data;
-	GLdouble			location[3];
-	GLdouble			x,y;
-	GLboolean			edge_flag;
-	struct vertex_str	*shadow_vertex;
-	struct vertex_str	*next,*previous;
-} tess_vertex;
+   void *data;
+   GLdouble location[3];
+   GLdouble x, y;
+   GLboolean edge_flag;
+   struct vertex_str *shadow_vertex;
+   struct vertex_str *next, *previous;
+}
+tess_vertex;
 
 typedef struct contour_str
 {
-	GLenum				type;
-	GLuint				vertex_cnt;
-	GLdouble			area;
-	GLenum				orientation;
-	struct vertex_str	*vertices,*last_vertex;
-	struct contour_str	*next,*previous;
-} tess_contour;
+   GLenum type;
+   GLuint vertex_cnt;
+   GLdouble area;
+   GLenum orientation;
+   struct vertex_str *vertices, *last_vertex;
+   struct contour_str *next, *previous;
+}
+tess_contour;
 
 typedef struct polygon_str
 {
-	GLuint				vertex_cnt;
-	GLdouble			A,B,C,D;
-	GLdouble			area;
-	GLenum				orientation;
-	struct vertex_str	*vertices,*last_vertex;
-} tess_polygon;
+   GLuint vertex_cnt;
+   GLdouble A, B, C, D;
+   GLdouble area;
+   GLenum orientation;
+   struct vertex_str *vertices, *last_vertex;
+}
+tess_polygon;
 
 struct GLUtriangulatorObj
 {
-	tess_contour		*contours,*last_contour;
-	GLuint				contour_cnt;
-	tess_callbacks		callbacks;
-	tess_polygon		*current_polygon;
-	GLenum				error;
-	GLdouble			A,B,C,D;
-	projection_type		projection;
+   tess_contour *contours, *last_contour;
+   GLuint contour_cnt;
+   tess_callbacks callbacks;
+   tess_polygon *current_polygon;
+   GLenum error;
+   GLdouble A, B, C, D;
+   projection_type projection;
 };
 
 
-extern void tess_call_user_error(GLUtriangulatorObj *,GLenum);
+extern void tess_call_user_error(GLUtriangulatorObj *, GLenum);
+extern void tess_test_polygon(GLUtriangulatorObj *);
+extern void tess_find_contour_hierarchies(GLUtriangulatorObj *);
+extern void tess_handle_holes(GLUtriangulatorObj *);
+extern void tess_tesselate(GLUtriangulatorObj *);
+extern void tess_tesselate_with_edge_flag(GLUtriangulatorObj *);
 
 
 #endif

@@ -2,58 +2,40 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:31  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.3  1998/02/21 01:32:49  brianp
- * fixed bug in gl_InitNames()
- *
- * Revision 3.2  1998/02/08 20:18:20  brianp
- * removed unneeded headers
- *
- * Revision 3.1  1998/02/04 00:34:29  brianp
- * fixed a few cast problems for Amiga StormC compiler
- *
- * Revision 3.0  1998/01/31 20:52:30  brianp
- * initial rev
- *
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
 #ifdef PC_HEADER
 #include "all.h"
 #else
-#include <assert.h>
-#include <stdio.h>
+#include "glheader.h"
 #include "context.h"
+#include "enums.h"
 #include "feedback.h"
 #include "macros.h"
+#include "mmath.h"
 #include "types.h"
+#include "triangle.h"
 #endif
 
 
@@ -67,9 +49,12 @@
 
 
 void
-gl_FeedbackBuffer( GLcontext *ctx, GLsizei size, GLenum type, GLfloat *buffer )
+_mesa_FeedbackBuffer( GLsizei size, GLenum type, GLfloat *buffer )
 {
-   if (ctx->RenderMode==GL_FEEDBACK || INSIDE_BEGIN_END(ctx)) {
+   GET_CURRENT_CONTEXT(ctx);
+   ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH( ctx, "glFeedbackBuffer" );
+
+   if (ctx->RenderMode==GL_FEEDBACK) {
       gl_error( ctx, GL_INVALID_OPERATION, "glFeedbackBuffer" );
       return;
    }
@@ -122,12 +107,11 @@ gl_FeedbackBuffer( GLcontext *ctx, GLsizei size, GLenum type, GLfloat *buffer )
 
 
 
-void gl_PassThrough( GLcontext *ctx, GLfloat token )
+void
+_mesa_PassThrough( GLfloat token )
 {
-   if (INSIDE_BEGIN_END(ctx)) {
-      gl_error( ctx, GL_INVALID_OPERATION, "glPassThrough" );
-      return;
-   }
+   GET_CURRENT_CONTEXT(ctx);
+   ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH(ctx, "glPassThrough");
 
    if (ctx->RenderMode==GL_FEEDBACK) {
       FEEDBACK_TOKEN( ctx, (GLfloat) (GLint) GL_PASS_THROUGH_TOKEN );
@@ -141,20 +125,21 @@ void gl_PassThrough( GLcontext *ctx, GLfloat token )
  * Put a vertex into the feedback buffer.
  */
 void gl_feedback_vertex( GLcontext *ctx,
-                         GLfloat x, GLfloat y, GLfloat z, GLfloat w,
-			 const GLfloat color[4], GLfloat index,
+                         const GLfloat win[4],
+			 const GLfloat color[4], 
+			 GLuint index,
 			 const GLfloat texcoord[4] )
 {
-   FEEDBACK_TOKEN( ctx, x );
-   FEEDBACK_TOKEN( ctx, y );
+   FEEDBACK_TOKEN( ctx, win[0] );
+   FEEDBACK_TOKEN( ctx, win[1] );
    if (ctx->Feedback.Mask & FB_3D) {
-      FEEDBACK_TOKEN( ctx, z );
+      FEEDBACK_TOKEN( ctx, win[2] );
    }
    if (ctx->Feedback.Mask & FB_4D) {
-      FEEDBACK_TOKEN( ctx, w );
+      FEEDBACK_TOKEN( ctx, win[3] );
    }
    if (ctx->Feedback.Mask & FB_INDEX) {
-      FEEDBACK_TOKEN( ctx, index );
+      FEEDBACK_TOKEN( ctx, (GLfloat) index );
    }
    if (ctx->Feedback.Mask & FB_COLOR) {
       FEEDBACK_TOKEN( ctx, color[0] );
@@ -172,6 +157,100 @@ void gl_feedback_vertex( GLcontext *ctx,
 
 
 
+static void feedback_vertex( GLcontext *ctx, GLuint v, GLuint pv )
+{
+   GLfloat win[4];
+   GLfloat color[4];
+   GLfloat tc[4];
+   GLuint texUnit = ctx->Texture.CurrentTransformUnit;
+   const struct vertex_buffer *VB = ctx->VB;
+   GLuint index;
+
+   win[0] = VB->Win.data[v][0];
+   win[1] = VB->Win.data[v][1];
+   win[2] = VB->Win.data[v][2] / ctx->Visual->DepthMaxF;
+   win[3] = 1.0 / VB->Win.data[v][3];
+
+   if (ctx->Light.ShadeModel == GL_SMOOTH)
+      pv = v;
+
+   UBYTE_RGBA_TO_FLOAT_RGBA( color, VB->ColorPtr->data[pv] );
+
+   if (VB->TexCoordPtr[texUnit]->size == 4 &&     
+       VB->TexCoordPtr[texUnit]->data[v][3] != 0.0) {
+      GLfloat invq = 1.0F / VB->TexCoordPtr[texUnit]->data[v][3];
+      tc[0] = VB->TexCoordPtr[texUnit]->data[v][0] * invq;
+      tc[1] = VB->TexCoordPtr[texUnit]->data[v][1] * invq;
+      tc[2] = VB->TexCoordPtr[texUnit]->data[v][2] * invq;
+      tc[3] = VB->TexCoordPtr[texUnit]->data[v][3];
+   }
+   else {
+      ASSIGN_4V(tc, 0,0,0,1);
+      COPY_SZ_4V(tc, 
+		 VB->TexCoordPtr[texUnit]->size,
+		 VB->TexCoordPtr[texUnit]->data[v]);
+   }
+
+   if (VB->IndexPtr)
+      index = VB->IndexPtr->data[v];
+   else
+      index = 0;
+
+   gl_feedback_vertex( ctx, win, color, index, tc );
+}
+
+
+
+/*
+ * Put triangle in feedback buffer.
+ */
+void gl_feedback_triangle( GLcontext *ctx,
+			   GLuint v0, GLuint v1, GLuint v2, GLuint pv )
+{
+   if (gl_cull_triangle( ctx, v0, v1, v2, 0 )) {
+      FEEDBACK_TOKEN( ctx, (GLfloat) (GLint) GL_POLYGON_TOKEN );
+      FEEDBACK_TOKEN( ctx, (GLfloat) 3 );        /* three vertices */
+      
+      feedback_vertex( ctx, v0, pv );
+      feedback_vertex( ctx, v1, pv );
+      feedback_vertex( ctx, v2, pv );
+   }
+}
+
+
+void gl_feedback_line( GLcontext *ctx, GLuint v1, GLuint v2, GLuint pv )
+{
+   GLenum token = GL_LINE_TOKEN;
+
+   if (ctx->StippleCounter==0) 
+      token = GL_LINE_RESET_TOKEN;
+
+   FEEDBACK_TOKEN( ctx, (GLfloat) (GLint) token );
+
+   feedback_vertex( ctx, v1, pv );
+   feedback_vertex( ctx, v2, pv );
+
+   ctx->StippleCounter++;
+}
+
+
+void gl_feedback_points( GLcontext *ctx, GLuint first, GLuint last )
+{
+   const struct vertex_buffer *VB = ctx->VB;
+   GLuint i;
+
+   for (i=first;i<last;i++) {
+      if (VB->ClipMask[i]==0) {
+         FEEDBACK_TOKEN( ctx, (GLfloat) (GLint) GL_POINT_TOKEN );
+	 feedback_vertex( ctx, i, i );
+      }
+   }
+}
+
+
+
+
+
 /**********************************************************************/
 /*                              Selection                             */
 /**********************************************************************/
@@ -180,11 +259,11 @@ void gl_feedback_vertex( GLcontext *ctx,
 /*
  * NOTE: this function can't be put in a display list.
  */
-void gl_SelectBuffer( GLcontext *ctx, GLsizei size, GLuint *buffer )
+void
+_mesa_SelectBuffer( GLsizei size, GLuint *buffer )
 {
-   if (INSIDE_BEGIN_END(ctx)) {
-      gl_error( ctx, GL_INVALID_OPERATION, "glSelectBuffer" );
-   }
+   GET_CURRENT_CONTEXT(ctx);
+   ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH(ctx, "glSelectBuffer");
    if (ctx->RenderMode==GL_SELECT) {
       gl_error( ctx, GL_INVALID_OPERATION, "glSelectBuffer" );
    }
@@ -200,7 +279,7 @@ void gl_SelectBuffer( GLcontext *ctx, GLsizei size, GLuint *buffer )
 
 #define WRITE_RECORD( CTX, V )					\
 	if (CTX->Select.BufferCount < CTX->Select.BufferSize) {	\
-	   CTX->Select.Buffer[CTX->Select.BufferCount] = (V);		\
+	   CTX->Select.Buffer[CTX->Select.BufferCount] = (V);	\
 	}							\
 	CTX->Select.BufferCount++;
 
@@ -217,6 +296,42 @@ void gl_update_hitflag( GLcontext *ctx, GLfloat z )
    }
 }
 
+void gl_select_triangle( GLcontext *ctx,
+			 GLuint v0, GLuint v1, GLuint v2, GLuint pv )
+{
+   const struct vertex_buffer *VB = ctx->VB;
+
+   if (gl_cull_triangle( ctx, v0, v1, v2, 0 )) {
+      const GLfloat zs = 1.0F / ctx->Visual->DepthMaxF;
+      gl_update_hitflag( ctx, VB->Win.data[v0][2] * zs );
+      gl_update_hitflag( ctx, VB->Win.data[v1][2] * zs );
+      gl_update_hitflag( ctx, VB->Win.data[v2][2] * zs );
+   }
+}
+
+
+void gl_select_line( GLcontext *ctx,
+		     GLuint v0, GLuint v1, GLuint pv )
+{
+   const struct vertex_buffer *VB = ctx->VB;
+   const GLfloat zs = 1.0F / ctx->Visual->DepthMaxF;
+   gl_update_hitflag( ctx, VB->Win.data[v0][2] * zs );
+   gl_update_hitflag( ctx, VB->Win.data[v1][2] * zs );
+}
+
+
+void gl_select_points( GLcontext *ctx, GLuint first, GLuint last )
+{
+   struct vertex_buffer *VB = ctx->VB;
+   const GLfloat zs = 1.0F / ctx->Visual->DepthMaxF;
+   GLuint i;
+
+   for (i=first;i<=last;i++) {
+      if (VB->ClipMask[i]==0) {
+         gl_update_hitflag( ctx, VB->Win.data[i][2] * zs );
+      }
+   }
+}
 
 
 static void write_hit_record( GLcontext *ctx )
@@ -234,7 +349,7 @@ static void write_hit_record( GLcontext *ctx )
    WRITE_RECORD( ctx, ctx->Select.NameStackDepth );
    WRITE_RECORD( ctx, zmin );
    WRITE_RECORD( ctx, zmax );
-   for (i=0;i<ctx->Select.NameStackDepth;i++) {
+   for (i = 0; i < ctx->Select.NameStackDepth; i++) {
       WRITE_RECORD( ctx, ctx->Select.NameStack[i] );
    }
 
@@ -246,13 +361,13 @@ static void write_hit_record( GLcontext *ctx )
 
 
 
-void gl_InitNames( GLcontext *ctx )
+void
+_mesa_InitNames( void )
 {
-   if (INSIDE_BEGIN_END(ctx)) {
-      gl_error( ctx, GL_INVALID_OPERATION, "glInitNames" );
-   }
+   GET_CURRENT_CONTEXT(ctx);
+   ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH(ctx, "glInitNames");
    /* Record the hit before the HitFlag is wiped out again. */
-   if (ctx->RenderMode==GL_SELECT) {
+   if (ctx->RenderMode == GL_SELECT) {
       if (ctx->Select.HitFlag) {
          write_hit_record( ctx );
       }
@@ -265,23 +380,22 @@ void gl_InitNames( GLcontext *ctx )
 
 
 
-void gl_LoadName( GLcontext *ctx, GLuint name )
+void
+_mesa_LoadName( GLuint name )
 {
-   if (INSIDE_BEGIN_END(ctx)) {
-      gl_error( ctx, GL_INVALID_OPERATION, "glLoadName" );
+   GET_CURRENT_CONTEXT(ctx);
+   ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH(ctx, "glLoadName");
+   if (ctx->RenderMode != GL_SELECT) {
       return;
    }
-   if (ctx->RenderMode!=GL_SELECT) {
-      return;
-   }
-   if (ctx->Select.NameStackDepth==0) {
+   if (ctx->Select.NameStackDepth == 0) {
       gl_error( ctx, GL_INVALID_OPERATION, "glLoadName" );
       return;
    }
    if (ctx->Select.HitFlag) {
       write_hit_record( ctx );
    }
-   if (ctx->Select.NameStackDepth<MAX_NAME_STACK_DEPTH) {
+   if (ctx->Select.NameStackDepth < MAX_NAME_STACK_DEPTH) {
       ctx->Select.NameStack[ctx->Select.NameStackDepth-1] = name;
    }
    else {
@@ -290,19 +404,18 @@ void gl_LoadName( GLcontext *ctx, GLuint name )
 }
 
 
-void gl_PushName( GLcontext *ctx, GLuint name )
+void
+_mesa_PushName( GLuint name )
 {
-   if (INSIDE_BEGIN_END(ctx)) {
-      gl_error( ctx, GL_INVALID_OPERATION, "glPushName" );
-      return;
-   }
-   if (ctx->RenderMode!=GL_SELECT) {
+   GET_CURRENT_CONTEXT(ctx);
+   ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH(ctx, "glPushName");
+   if (ctx->RenderMode != GL_SELECT) {
       return;
    }
    if (ctx->Select.HitFlag) {
       write_hit_record( ctx );
    }
-   if (ctx->Select.NameStackDepth<MAX_NAME_STACK_DEPTH) {
+   if (ctx->Select.NameStackDepth < MAX_NAME_STACK_DEPTH) {
       ctx->Select.NameStack[ctx->Select.NameStackDepth++] = name;
    }
    else {
@@ -312,19 +425,18 @@ void gl_PushName( GLcontext *ctx, GLuint name )
 
 
 
-void gl_PopName( GLcontext *ctx )
+void
+_mesa_PopName( void )
 {
-   if (INSIDE_BEGIN_END(ctx)) {
-      gl_error( ctx, GL_INVALID_OPERATION, "glPopName" );
-      return;
-   }
-   if (ctx->RenderMode!=GL_SELECT) {
+   GET_CURRENT_CONTEXT(ctx);
+   ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH(ctx, "glPopName");
+   if (ctx->RenderMode != GL_SELECT) {
       return;
    }
    if (ctx->Select.HitFlag) {
       write_hit_record( ctx );
    }
-   if (ctx->Select.NameStackDepth>0) {
+   if (ctx->Select.NameStackDepth > 0) {
       ctx->Select.NameStackDepth--;
    }
    else {
@@ -343,13 +455,18 @@ void gl_PopName( GLcontext *ctx )
 /*
  * NOTE: this function can't be put in a display list.
  */
-GLint gl_RenderMode( GLcontext *ctx, GLenum mode )
+GLint
+_mesa_RenderMode( GLenum mode )
 {
+   GET_CURRENT_CONTEXT(ctx);
    GLint result;
 
-   if (INSIDE_BEGIN_END(ctx)) {
-      gl_error( ctx, GL_INVALID_OPERATION, "glRenderMode" );
-   }
+   ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH_WITH_RETVAL(ctx, "glRenderMode", 0);
+
+   if (MESA_VERBOSE & VERBOSE_API)
+      fprintf(stderr, "glRenderMode %s\n", gl_lookup_enum_by_nr(mode));
+
+   ctx->TriangleCaps &= ~(DD_FEEDBACK|DD_SELECT);
 
    switch (ctx->RenderMode) {
       case GL_RENDER:
@@ -392,12 +509,14 @@ GLint gl_RenderMode( GLcontext *ctx, GLenum mode )
       case GL_RENDER:
          break;
       case GL_SELECT:
+	 ctx->TriangleCaps |= DD_SELECT;
 	 if (ctx->Select.BufferSize==0) {
 	    /* haven't called glSelectBuffer yet */
 	    gl_error( ctx, GL_INVALID_OPERATION, "glRenderMode" );
 	 }
 	 break;
       case GL_FEEDBACK:
+	 ctx->TriangleCaps |= DD_FEEDBACK;
 	 if (ctx->Feedback.BufferSize==0) {
 	    /* haven't called glFeedbackBuffer yet */
 	    gl_error( ctx, GL_INVALID_OPERATION, "glRenderMode" );

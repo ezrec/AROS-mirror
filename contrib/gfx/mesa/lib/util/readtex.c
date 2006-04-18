@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h> 
 #include <string.h>
+#include "readtex.h"
 
 
 #ifndef SEEK_SET
@@ -266,6 +267,15 @@ static void FreeImage( TK_RGBImageRec *image )
  */
 GLboolean LoadRGBMipmaps( const char *imageFile, GLint intFormat )
 {
+   GLint w, h;
+   return LoadRGBMipmaps2( imageFile, GL_TEXTURE_2D, intFormat, &w, &h );
+}
+
+
+
+GLboolean LoadRGBMipmaps2( const char *imageFile, GLenum target,
+                           GLint intFormat, GLint *width, GLint *height )
+{
    GLint error;
    GLenum format;
    TK_RGBImageRec *image;
@@ -289,14 +299,18 @@ GLboolean LoadRGBMipmaps( const char *imageFile, GLint intFormat )
       return GL_FALSE;
    }
 
-   error = gluBuild2DMipmaps( GL_TEXTURE_2D,
+   error = gluBuild2DMipmaps( target,
                               intFormat,
                               image->sizeX, image->sizeY,
                               format,
                               GL_UNSIGNED_BYTE,
                               image->data );
 
+   *width = image->sizeX;
+   *height = image->sizeY;
+
    FreeImage(image);
+
    return error ? GL_FALSE : GL_TRUE;
 }
 

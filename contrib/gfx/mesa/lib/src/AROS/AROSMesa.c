@@ -19,112 +19,6 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-/*
-$Log$
-Revision 1.4  2005/01/13 08:59:01  NicJA
-fixed a couple more rendering issues, and corrected mouse coordinate passing from tk
-
-Revision 1.2  2005/01/12 11:11:40  NicJA
-removed extremely broken "FAST" double bufering routines for the time being - will be placed into seperate files later..
-
-Revision 1.1  2005/01/11 14:58:29  NicJA
-AROSMesa 3.0
-
-- Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
-- GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
-- Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
-
-Revision 1.16-a1.3  2004/06/29 00:32:39  NicJA
-A few build related fixes (remove windows line endings in make scripts - python doesnt like them).
-
-Revision 1.16-a1.2  2004/02/25 02:46:04  NicJA
-updates updates updates... now builds with the standard aros mmakefile.src system - use make contrib-mesa2 to build
-
-Revision 1.16-a1.1  2003/08/09 00:23:14  chodorowski
-Amiga Mesa 2.2 ported to AROS by Nic Andrews. Build with 'make aros'. Not built by default.
-
- * Revision 1.16  1997/06/25  19:16:56  StefanZ
- * New drawing routines:
- * - Now in separate files
- * - cyberGfx added.
- *
- * Revision 1.15  1996/10/13  20:54:59  StefanZ
- * A few nasty bugfixes.
- *
- * Revision 1.14  1996/10/07  00:11:07  StefanZ
- * Mesa 2.0 Fixed
- *
- * Revision 1.13  1996/10/06  20:31:50  StefanZ
- * Source Bump before Mesa 2.0
- *
- * Revision 1.12  1996/08/14  22:17:32  StefanZ
- * New API to amigacalls (uses taglist)
- * Made it more flexible to add gfx-card support.
- * Fast doublebuff routines
- * minor bugfixes
- *
- * Revision 1.10    1996/06/12  13:06:00  StefanZ
- * BugFix and encatments by Jorge Acereda (JAM)
- *
- * Revision 1.9  1996/06/11  15:53:02   StefanZ
- * Little speedup, VerryFast colorallocation by Stefan Burstöm
- *
- * Revision 1.8  1996/06/01  23:57:47   StefanZ
- * Started to use RCS to keep track of code.
- *
- * Revision 1.7  1996/05/21  23:08:42   StefanZ
- * A few bug and enforcer fixes
- *
- * Revision 1.6  1996/04/29  22:14:31   StefanZ
- * BugFixes reported by by Daniel Jönsson
- *
- * Revision 1.5  1996/03/14  23:54:33   StefanZ
- * Doublebuffer & Tmprastport seams to work (big speed improvment)
- * a fastpolydraw is also implemented
- *
- * Revision 1.4  1996/03/07  16:55:04   StefanZ
- * Much of the code works now (RGB mode is simulated) Doublebuffers... (didn't work)
- *
- * Revision 1.3  1996/02/29  02:12:45   StefanZ
- * First sight of colors (even the right ones) maglight.c works
- *
- * Revision 1.2  1996/02/25  13:11:16   StefanZ
- * First working version. Draws everything with the same color
- * (Colormaping is now urgent needed)
- *
- * Revision 1.1  1996/02/23  22:01:15   StefanZ
- * Made changes to match latest version of ddsample 1.5
- *
- * Revision 1.0  1996/02/21  11:01:15   StefanZ
- * File created from ddsample.c ver 1.3 and amesa.c ver 1.5
- * in a brave atempt to rebuild the amiga version
- *
- */
-
-/*
-TODO:
-Dynamic allocate the vectorbuffer for polydrawing. (memory improvment)
-implement shared list.
-fix resizing bug.
-some native asm routine
-fast asm line drawin in db mode
-fast asm clear       in db mode
-read buffer routines  in db-mode
-
-IDEAS:
- Make the gl a sharedlibrary. (Have ben started look in /amiga)
-*/
-
-/*
- * Note that you'll usually have to flip Y coordinates since Mesa's
- * window coordinates start at the bottom and increase upward.  Most
- * window system's Y-axis increases downward
- *
- * See dd.h for more device driver info.
- * See the other device driver implementations for ideas.
- *
- */
-
 #include "AROSMesa_intern.h"
 
 #include <exec/memory.h>
@@ -148,7 +42,7 @@ IDEAS:
 #include <proto/utility.h>
 #endif
 
-#include "AROSMesa_common.h"
+#include "AROSMesa_rast_common.h"
 
 #ifdef ADISP_CYBERGFX
 #ifdef __GNUC__
@@ -162,31 +56,47 @@ IDEAS:
 #include <GL/AROSMesa.h>
 
 #ifdef ADISP_CYBERGFX
-#include "AROSMesa_TC.h"
+#include "AROSMesa_rast_TC.h"
 #endif
 
 #ifdef ADISP_AGA
-#include "AROSMesa_8bit.h"
+#include "AROSMesa_rast_8bit.h"
+#endif
+
+#ifdef __GNUC__
+#include "../aros/misc/ht_colors_protos.h"
+#else
+#include "/aros/misc/ht_colors_protos.h"
 #endif
 
 #include <stdlib.h>
 #include <stdio.h>
+
+#ifdef PC_HEADER
+#include "all.h"
+#else
 #include <GL/gl.h>
+#include "glheader.h"
 #include "context.h"
+#include "depth.h"
+#include "mem.h"
+#include "matrix.h"
 #include "dd.h"
 #include "xform.h"
 #include "macros.h"
 #include "vb.h"
+#include "extensions.h"
+#endif
 
 /**********************************************************************/
-/*****                Internal Data                                         *****/
+/*****        Internal Data                     *****/
 /**********************************************************************/
 
-GLenum          LastError;                /* The last error generated*/
-struct Library *CyberGfxBase = NULL;      /* optional base address for cybergfx */
+GLenum         LastError;        /* The last error generated*/
+struct Library *CyberGfxBase = NULL;    /* optional base address for cybergfx */
 
 /**********************************************************************/
-/*****                  AROS/Mesa API Functions                  *****/
+/*****          AROS/Mesa API Functions          *****/
 /**********************************************************************/
 /*
  * Implement the client-visible AROS/Mesa interface functions defined
@@ -197,385 +107,588 @@ struct Library *CyberGfxBase = NULL;      /* optional base address for cybergfx 
  * Implement the public AROS/Mesa interface functions defined
  * in Mesa/include/GL/AROSMesa.h
  */
- 
-struct arosmesa_visual *
-AROSMesaCreateVisualTags(long Tag1, ...)
+
+//UBYTE Version[]="$VER: AROSMesa (linklib) 3.4.2";
+
+/**********************************************************************/
+/***** AROSMesaSetOneColor                     *****/
+/**********************************************************************/
+void GLAPIENTRY
+AROSMesaSetOneColor(AROSMesaContext amesa, int index, float r, float g, float b)
 {
-    return AROSMesaCreateVisual(&Tag1);
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA:TC] AROSMesaSetOneColor(amesa @ %x)\n", amesa));
+#endif
+  if (amesa->depth > 8)
+  {
+    amesa->penconv[index] = TC_ARGB((int)r * 255, (int)g * 255, (int)b * 255, 255);
+  } else {
+    amesa->penconv[index] = RGBA(amesa, r * 255, g * 255, b * 255, 255);
+  }
 }
 
-struct arosmesa_visual *
-AROSMesaCreateVisual(register struct TagItem *tagList)
+/* Main AROSMesa API Functions */
+
+
+AROSMesaVisual GLAPIENTRY
+AROSMesaCreateVisualTags(long Tag1, ...)
 {
-    struct arosmesa_visual *v=NULL;
-    int  index_bits, redbits, greenbits, bluebits, alphabits;
+  return AROSMesaCreateVisual((struct TagItem *)&Tag1);
+}
+
+AROSMesaVisual GLAPIENTRY
+AROSMesaCreateVisual(struct TagItem *tagList)
+{
+  AROSMesaVisual v = NULL;
+  int  index_bits, redbits, greenbits, bluebits, alphabits;
 
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaCreateVisual()\n"));
+D(bug("[AROSMESA] AROSMesaCreateVisual(taglist @ %x)\n", tagList));
 #endif
 
-    if (!(v = (struct arosmesa_visual *)AllocVec(sizeof(struct arosmesa_visual),MEMF_PUBLIC|MEMF_CLEAR))) return NULL;
+  AROSMesaContext amesa = (AROSMesaContext)GetTagData(AMA_Context, GL_FALSE, tagList);
 
-    struct arosmesa_context *c = GetTagData(AMA_Context,GL_FALSE,tagList);
+  if (amesa == GL_FALSE)
+  {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateVisual: ERROR - No Context\n"));
+#endif
+    return NULL;
+  }
 
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateVisual: amesa Context @ %x\n", amesa));
+#endif
+
+  if (!(amesa->rp))
+  {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateVisual: ERROR - Context has no RastPort\n"));
+#endif
+    return NULL;
+  }
+
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateVisual: Using RastPort @ %x\n", amesa->rp));
+#endif
+  if ((v = (AROSMesaVisual)AllocVec(sizeof(struct arosmesa_visual),MEMF_PUBLIC|MEMF_CLEAR)))
+  {
     v->rgb_flag = GL_FALSE;
-
     v->db_flag = GL_FALSE;
-    if (GetTagData(AMA_DoubleBuf,TRUE,tagList)==TRUE)
+    v->alpha_flag = GL_TRUE;
+
+    if (((BOOL)GetTagData(AMA_DoubleBuf, TRUE, tagList) == TRUE))
     	v->db_flag = GL_TRUE;
 
-    v->alpha_flag = GL_TRUE;
-    if (GetTagData(AMA_AlphaFlag,TRUE,tagList)==FALSE)
+    if (((BOOL)GetTagData(AMA_AlphaFlag, TRUE, tagList) == FALSE))
       v->alpha_flag = GL_FALSE;
 
     if (CyberGfxBase != NULL)
     {
-      c->depth = GetCyberMapAttr(c->rp->BitMap,CYBRMATTR_DEPTH);
+      amesa->depth = GetCyberMapAttr(amesa->rp->BitMap,CYBRMATTR_DEPTH);
     }
     else
     {
-      c->depth = GetBitMapAttr(c->rp->BitMap,BMA_DEPTH);
+      amesa->depth = GetBitMapAttr(amesa->rp->BitMap,BMA_DEPTH);
     }
 
-	 if (c > 8)
-	   v->rgb_flag = GL_TRUE;
-
-    if (v->rgb_flag) {
-        /* RGB(A) mode */
-        redbits = greenbits = bluebits = 8;
-        alphabits = 0;
-        index_bits = 0;
-    }
-    else {
-        /* color index mode */
-        redbits = greenbits = bluebits = alphabits = 0;
-        index_bits = 8;           /* @@@ TODO */
-    }
-    
-    /* Create core visual */
-    v->gl_visual = gl_create_visual( v->rgb_flag, 
-          v->alpha_flag,
-          v->db_flag,
-          GL_FALSE,                             /* stereo */
-          DEPTH_BITS,
-          STENCIL_BITS,
-          ACCUM_BITS,
-          index_bits,
-          redbits, greenbits,
-          bluebits, alphabits );
-
-    if (!(v->gl_visual)) return NULL;
-    return v;
-}
-
-void AROSMesaDestroyVisual( struct arosmesa_visual *v )
-{
-#ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaDestroyVisual()\n"));
-#endif
-
-    gl_destroy_visual( v->gl_visual );
-    FreeVec( v );
-}
-
-struct arosmesa_buffer *AROSMesaCreateBuffer( struct arosmesa_visual *visual,int windowid)
-{
-    struct arosmesa_buffer *b=NULL;
+    if (amesa->depth > 8)
+      v->rgb_flag = GL_TRUE;
 
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaCreateBuffer()\n"));
+D(bug("[AROSMESA] AROSMesaCreateVisual: RastPort.BitMap Depth = %d\n", amesa->depth));
 #endif
 
-    if (!(b = (struct arosmesa_buffer *) AllocVec(sizeof(struct arosmesa_buffer),MEMF_PUBLIC|MEMF_CLEAR))) return NULL;
-    
-    /* other stuff */
-
-    if (!(b->gl_buffer = gl_create_framebuffer( visual->gl_visual)))
+    if (v->rgb_flag)
     {
-        FreeVec(b);
-        return NULL;
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateVisual: Using RGB Mode\n"));
+#endif
+      redbits = 8;
+      greenbits = 8;
+      bluebits = 8;
+      alphabits = 8;
+      index_bits = 0;
+    } else {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateVisual: Using Indexed Color Mode\n"));
+#endif
+    /* color index mode */
+      redbits = 8;
+      greenbits = 8;
+      bluebits = 8;
+      alphabits = 8;
+      index_bits = 8;
     }
+  
+    /* Create core visual */
+
+    if (!(v->gl_visual = (APTR)gl_create_visual( v->rgb_flag, 
+                                              v->alpha_flag,
+                                              v->db_flag,
+                                              GL_FALSE,               /* stereo */
+                                              DEFAULT_SOFTWARE_DEPTH_BITS,
+                                              STENCIL_BITS,
+                                              v->rgb_flag ? ACCUM_BITS : 0,
+                                              index_bits,
+                                              redbits, greenbits, bluebits, alphabits)))
+    {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateVisual: ERROR - couldnt create gl_visual\n"));
+#endif
     
-    return b;
+      FreeVec(v);
+      return NULL;
+    }
+  }
+  return v;
 }
 
-void AROSMesaDestroyBuffer( struct arosmesa_buffer *b )
+void GLAPIENTRY
+AROSMesaDestroyVisual(AROSMesaVisual visual)
 {
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaDestroyBuffer()\n"));
+D(bug("[AROSMESA] AROSMesaDestroyVisual(visual @ %x)\n", visual));
 #endif
-    gl_destroy_framebuffer( b->gl_buffer );
-    FreeVec( b );
+
+  gl_destroy_visual( (GLvisual *)visual->gl_visual );
+  FreeVec( visual );
 }
 
-struct arosmesa_context *AROSMesaCreateContextTags(long Tag1, ...)
+AROSMesaBuffer GLAPIENTRY
+AROSMesaCreateBuffer(AROSMesaVisual visual, int windowid)
 {
-    return AROSMesaCreateContext(&Tag1);
+  AROSMesaBuffer b = NULL;
+
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateBuffer(visual @ %x)\n", visual));
+#endif
+
+  if ((b = (AROSMesaBuffer)AllocVec(sizeof(struct arosmesa_buffer), MEMF_PUBLIC|MEMF_CLEAR)))
+  {
+    /* other stuff */
+    if (!(b->gl_buffer = (APTR)gl_create_framebuffer( (GLvisual *)visual->gl_visual,
+                                                   (((GLvisual *)visual->gl_visual)->DepthBits) > 0,
+                                                   (((GLvisual *)visual->gl_visual)->StencilBits) > 0,
+                                                   (((GLvisual *)visual->gl_visual)->AccumRedBits) > 0,
+                                                   (((GLvisual *)visual->gl_visual)->AlphaBits) > 0)))
+    {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateBuffer: ERROR - Failed to create Mesa FrameBuffers\n"));
+#endif
+      FreeVec(b);
+      return NULL;
+    }
+    else
+    {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateBuffer: Context Buffers created\n"));
+#endif
+    }
+  }
+  else
+  {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateBuffer: ERROR - Failed to create internal buffer record\n"));
+#endif
+  }
+  return b;
 }
 
-struct arosmesa_context *
-AROSMesaCreateContext(register struct TagItem *tagList)
+void GLAPIENTRY
+AROSMesaDestroyBuffer(AROSMesaBuffer b)
 {
-    /* Create a new AROS/Mesa context */
-    /* Be sure to initialize the following in the core Mesa context: */
-    /* DrawBuffer, ReadBuffer */    /* @@@ IMPLEMENTERA ???*/
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaDestroyBuffer(buffer @ %x)\n", b));
+#endif
+  gl_destroy_framebuffer( (GLframebuffer *)b->gl_buffer );
+  FreeVec( b );
+}
+
+AROSMesaContext GLAPIENTRY
+AROSMesaCreateContextTags(long Tag1, ...)
+{
+  return AROSMesaCreateContext((struct TagItem *)&Tag1);
+}
+
+AROSMesaContext GLAPIENTRY
+AROSMesaCreateContext(struct TagItem *tagList)
+{
+  /* Create a new AROS/Mesa context */
+  /* Be sure to initialize the following in the core Mesa context: */
+  /* DrawBuffer, ReadBuffer */  /* @@@ IMPLEMENTERA ???*/
 
 /*  GLfloat redscale,greenscale,bluescale,alphascale; */
-/*  int         I; */
+/*  int     I; */
 /*	int drawMode; */
-    struct arosmesa_context *c = NULL;
+  AROSMesaContext amesa = NULL;
+  AROSMesaContext sharetmp = NULL;
+  LastError = 0;
 
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaCreateContext()\n"));
+D(bug("[AROSMESA] AROSMesaCreateContext(taglist @ %x)\n", tagList));
 #endif
 
-    /* try to open cybergraphics.library */
-    if (CyberGfxBase == NULL)
+  /* try to open cybergraphics.library */
+  if (CyberGfxBase == NULL)
+  {
+   if (!(CyberGfxBase = OpenLibrary((UBYTE*)"cybergraphics.library",0)))
+     return NULL;
+  }
+
+  if (!(amesa = (AROSMesaContext)GetTagData(AMA_Context, GL_FALSE, tagList)))
+  {
+
+    /* allocate arosmesa_context struct initialized to zeros */
+    if (!(amesa = (AROSMesaContext)AllocVec(sizeof(struct arosmesa_context), MEMF_PUBLIC|MEMF_CLEAR)))
     {
-        CyberGfxBase = OpenLibrary((UBYTE*)"cybergraphics.library",0);
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: Failed to allocate AROSMesaContext\n"));
+#endif
+      LastError = AMESA_OUT_OF_MEM;
+      return NULL;
     }
 
-	 if (!(c = GetTagData(AMA_Context,GL_FALSE,tagList)))
-	 {
 
-      /* allocate arosmesa_context struct initialized to zeros */
-      if (!(c = (struct arosmesa_context *) AllocVec(sizeof(struct arosmesa_context), MEMF_PUBLIC|MEMF_CLEAR)))
-      {
-        LastError = AMESA_OUT_OF_MEM;
-        return NULL;
-      }
+    if (!(amesa->gl_ctx = AllocVec(sizeof(GLcontext), MEMF_PUBLIC|MEMF_CLEAR)))
+    {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: Failed to allocate gl_ctx\n"));
+#endif
+      LastError = AMESA_OUT_OF_MEM;
+      FreeVec(amesa);
+      return NULL;
+    }
+
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: AROSMesaContext Allocated @ %x\n", amesa));
+D(bug("[AROSMESA] AROSMesaCreateContext:          gl_ctx Allocated @ %x\n", amesa->gl_ctx));
+#endif
 
 /* CHANGE TO WORK EXCLUSIVELY WITH RASTPORTS! */
-      c->Screen = (struct Screen *)GetTagData(AMA_Screen, 0, tagList);
-      c->window = (struct Window *)GetTagData(AMA_Window, 0, tagList);
-      c->rp = (struct RastPort *)GetTagData(AMA_RastPort, 0, tagList);
+    amesa->Screen = (struct Screen *)GetTagData(AMA_Screen, 0, tagList);
+    amesa->window = (struct Window *)GetTagData(AMA_Window, 0, tagList);
+    amesa->rp = (struct RastPort *)GetTagData(AMA_RastPort, 0, tagList);
 
-      if (c->Screen)
+    if (amesa->Screen)
+    {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: Screen @ %x\n", amesa->Screen));
+#endif
+      if (amesa->window)
       {
-D(bug("[AROSMESA] Screen @ %x\n", c->Screen));
-        if (c->window)
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: window @ %x\n", amesa->window));
+#endif
+        if (!(amesa->rp))
         {
-D(bug("[AROSMESA] window @ %x\n", c->window));
-          if (!(c->rp))
-          {
-            /* Use the windows rastport */
-            c->rp = c->window->RPort;
-D(bug("[AROSMESA] Windows RastPort @ %x\n", c->rp));
-          }
-        }
-        else
-        {
-          if (!(c->rp))
-          {
-            /* Use the screens rastport */
-            c->rp = &c->Screen->RastPort;
-D(bug("[AROSMESA] Screens RastPort @ %x\n", c->rp));
-          }
+          /* Use the windows rastport */
+          amesa->rp = amesa->window->RPort;
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: Windows RastPort @ %x\n", amesa->rp));
+#endif
         }
       }
       else
       {
-        /* Not passed a screen */
-        if (c->window)
+        if (!(amesa->rp))
         {
-D(bug("[AROSMESA] Window @ %x\n", c->window));
-            /* Use the windows Screen */
-            c->Screen = c->window->WScreen;
-D(bug("[AROSMESA] Windows Screen @ %x\n", c->Screen));
-            if (!(c->rp))
-            {
-              /* Use the windows rastport */
-              c->rp = c->window->RPort;
-D(bug("[AROSMESA] Windows RastPort @ %x\n", c->rp));
-            }
-        }
-        else
-        {
-        		/* Only Passed A Rastport */
-D(bug("[AROSMESA] Experimental: Using RastPort only!\n"));
+          /* Use the screens rastport */
+          amesa->rp = &amesa->Screen->RastPort;
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: Screens RastPort @ %x\n", amesa->rp));
+#endif
         }
       }
-
-      if(!(c->visual = (struct arosmesa_visual *)GetTagData(AMA_Visual, NULL, tagList)))
+    }
+    else
+    {
+    /* Not passed a screen */
+      if (amesa->window)
       {
-          if (!(c->visual = AROSMesaCreateVisualTags(AMA_Context, c, TAG_MORE, tagList, TAG_DONE)))
-          {
-              FreeVec( c );
-              LastError = AMESA_OUT_OF_MEM;
-              return NULL;
-          }
-          c->flags = c->flags||0x1;
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: Window @ %x\n", amesa->window));
+#endif
+        /* Use the windows Screen */
+        amesa->Screen = amesa->window->WScreen;
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: Windows Screen @ %x\n", amesa->Screen));
+#endif
+        if (!(amesa->rp))
+        {
+          /* Use the windows rastport */
+          amesa->rp = amesa->window->RPort;
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: Windows RastPort @ %x\n", amesa->rp));
+#endif
+        }
       }
-
-      c->share=(struct arosmesa_context *)GetTagData(AMA_ShareGLContext, NULL, tagList);
-      struct arosmesa_context *sharetmp = c->share;
-
-      c->gl_ctx = gl_create_context(  c->visual->gl_visual,
-          sharetmp ? sharetmp->gl_ctx : NULL,
-          (void *) c, GL_TRUE);
-
-      if (!(c->gl_ctx))
+      else
       {
-        FreeVec( c );
-        return NULL;
+    		/* Only Passed A Rastport */
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: Experimental: Using RastPort only!\n"));
+#endif
       }
+    }
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: Using RastPort @ %x\n", amesa->rp));
+#endif
 
-/*  drawMode=GetTagData(AMA_DrawMode,AMESA_AGA,tagList);  */
-/* Disabled for now .. (nicja)
-#ifdef AMESA_DOUBLEBUFFFAST
-    if(c->visual->db_flag==GL_TRUE)
+    if(!(amesa->visual = (AROSMesaVisual)GetTagData(AMA_Visual, 0, tagList)))
     {
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaCreateContext -> doublebuffered\n"));
+D(bug("[AROSMESA] AROSMesaCreateContext: Creating new AROSMesaVisual\n"));
 #endif
-        if (CyberGfxBase)
-        {
-            if (!(arosTC_Standard_init_db(c,tagList)))
-            {
-                goto amccontextclean;
-            }
-        }
-        else
-        {
-//          if (aros8bit_Standard_init_db(c,tagList))   Not realy finished/working
-            if (!(aros8bit_Standard_init(c,tagList)))
-            {
-                goto amccontextclean;
-            }
-        }
-    }
-    else  // allways fallback on AGA when unknown drawmode
-#endif*/
+      if (!(amesa->visual = AROSMesaCreateVisualTags(AMA_Context, amesa, TAG_MORE, tagList, TAG_DONE)))
       {
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaCreateContext -> unbuffered\n"));
+D(bug("[AROSMESA] AROSMesaCreateContext: ERROR -  failed to create AROSMesaVisual\n"));
 #endif
-          if ((CyberGfxBase)&&(c->visual->rgb_flag))
-          {
-              if (!(arosTC_Standard_init(c,tagList)))
-              {
-                  goto amccontextclean;
-              }
-          }
-          else
-          {
-              if (!(aros8bit_Standard_init(c,tagList)))
-              {
-                  goto amccontextclean;
-              }
-          }
+        FreeVec( amesa );
+        LastError = AMESA_OUT_OF_MEM;
+        return NULL;
       }
+      amesa->flags = amesa->flags|0x1;
+    }
+
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: [ASSERT] RastPort @ %x\n", amesa->rp));
+#endif
+
+    if ((amesa->share = (AROSMesaContext )GetTagData(AMA_ShareGLContext, 0, tagList)))
+      sharetmp = amesa->share;
+
+    if (!_mesa_initialize_context( (GLcontext *)amesa->gl_ctx,
+                                          (GLvisual *)amesa->visual->gl_visual,
+                                          sharetmp ? (GLcontext *)sharetmp->gl_ctx
+                                                   : (GLcontext *)NULL,
+                                          (void *) amesa, GL_TRUE))
+    {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: Mesa failed to initialize the context!\n"));
+#endif
+		AROSMesaDestroyVisual( amesa->visual );
+      FreeVec( amesa );
+      return NULL;
+    }
+
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: [ASSERT] RastPort @ %x\n", amesa->rp));
+#endif
+
+/*    _mesa_enable_extension(&(amesa->gl_ctx),"GL_HP_occlusion_test");
+    _mesa_enable_extension(&(amesa->gl_ctx),"GL_ARB_texture_cube_map");
+    _mesa_enable_extension(&(amesa->gl_ctx),"GL_EXT_texture_env_combine");
+    _mesa_enable_extension(&(amesa->gl_ctx),"GL_EXT_texture_env_dot3");*/
+
+/*  Disabled for now .. (nicja) */
+#ifdef AMESA_DOUBLEBUFFFAST
+/*    if(amesa->visual->db_flag == GL_TRUE)
+    { */
+#ifdef DEBUGPRINT
+/*D(bug("[AROSMESA] AROSMesaCreateContext: Using Buffered Rendering\n"));*/
+#endif
+/*
+      if (CyberGfxBase)
+      {
+        if ((arosTC_Standard_init_db(amesa,tagList)) == FALSE)
+        {
+          goto amccontextclean;
+        }
+      }
+      else
+      {
+        if ((aros8bit_Standard_init_db(amesa,tagList)) == FALSE)
+        {
+          goto amccontextclean;
+        }
+      }
+    }
+    else
+    {
+*/
+#endif
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: Using Direct Rendering on RastPort @ %x\n", amesa->rp));
+#endif
+      if ((CyberGfxBase)&&(amesa->visual->rgb_flag))
+      {
+        if ((arosTC_Standard_init(amesa, tagList)) == FALSE)
+        {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: TrueColor Raterizer Failed\n"));
+#endif
+          goto amccontextclean;
+        }
+      }
+      else
+      {
+        if ((aros8bit_Standard_init(amesa, tagList)) == FALSE)
+        {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: 8bit Raterizer Failed\n"));
+#endif
+          goto amccontextclean;
+        }
+      }
+#ifdef AMESA_DOUBLEBUFFFAST
+    }
+#endif
+
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: AROS Rasterizer initialised.\n"));
+#endif
   
-     if(!(c->buffer = (struct arosmesa_buffer *)GetTagData(AMA_Buffer,NULL,tagList)))
-     {
-        if(!(c->buffer = AROSMesaCreateBuffer( c->visual,GetTagData(AMA_WindowID,1,tagList))))
-        {
-            LastError=AMESA_OUT_OF_MEM;
-            goto amccontextclean;
-        }
-        c->flags=c->flags||0x2;
+    if(!(amesa->buffer = (AROSMesaBuffer)GetTagData(AMA_Buffer, 0, tagList)))
+    {
+      if(!(amesa->buffer = AROSMesaCreateBuffer(amesa->visual, (int)GetTagData(AMA_WindowID, 1, tagList))))
+      {
+        LastError = AMESA_OUT_OF_MEM;
+        goto amccontextclean;
+      }
+      amesa->flags = (amesa->flags|0x2);
     }
-
-    }
+  }
  
-    if (c->gl_ctx) c->gl_ctx->Driver.UpdateState = c->InitDD;
-    return c;
-    
+
+  if (amesa->InitDD)
+  {
+    ((GLcontext *)amesa->gl_ctx)->Driver.UpdateState = amesa->InitDD;
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: Context Created\n"));
+#endif
+    return amesa;
+  }
+  else
+  {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: ERROR - Driver functions table missing!!\n"));
+#endif
+  }
 amccontextclean:
-    gl_destroy_context( c->gl_ctx );
-    FreeVec( c );
-    return NULL;
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaCreateContext: ERROR - Failed to create Context!!!\n"));
+#endif
+  if (amesa->visual)
+    AROSMesaDestroyVisual(amesa->visual);
+
+  gl_free_context_data((GLcontext *)amesa->gl_ctx);
+  FreeVec(amesa->gl_ctx);
+  FreeVec(amesa);
+  return NULL;
 }
 
-void AROSMesaDestroyContext(register struct arosmesa_context *c )
+void GLAPIENTRY
+AROSMesaDestroyContext(AROSMesaContext amesa)
 {
-    /* destroy a AROS/Mesa context */
+  /* destroy a AROS/Mesa context */
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaDestroyContext()\n"));
+D(bug("[AROSMESA] AROSMesaDestroyContext(amesa @ %x)\n", amesa));
 #endif
-    (*c->Dispose)( c );
+  if (amesa->Dispose)
+    (*amesa->Dispose)(amesa);
 
-    if(c->flags&&0x1) AROSMesaDestroyVisual(c->visual);
-    if(c->flags&&0x2) AROSMesaDestroyBuffer(c->buffer);
-    
-    gl_destroy_context( c->gl_ctx );
-    FreeVec( c );
+  if(amesa->flags&0x1) AROSMesaDestroyVisual(amesa->visual);
+  if(amesa->flags&0x2) AROSMesaDestroyBuffer(amesa->buffer);
+  
+  gl_free_context_data((GLcontext *)amesa->gl_ctx);
+  FreeVec(amesa->gl_ctx);
+  FreeVec(amesa);
 }
 
-void AROSMesaMakeCurrent(register struct arosmesa_context *amesa,register struct arosmesa_buffer *b )
+void GLAPIENTRY
+AROSMesaMakeCurrent(AROSMesaContext amesa, AROSMesaBuffer b)
 {
-    /* Make the specified context the current one */
-    /* the order of operations here is very important! */
+  /* Make the specified context the current one */
+  /* the order of operations here is very important! */
 
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaMakeCurrent()\n"));
+D(bug("[AROSMESA] AROSMesaMakeCurrent(amesa @ %x, buffer @ %x)\n", amesa, b));
 #endif
 
-    if (amesa && b) {
-        gl_make_current( amesa->gl_ctx,b->gl_buffer );
-
-        (*amesa->InitDD)(amesa->gl_ctx);                            /* Call Driver_init_routine */
-
-        if (amesa->gl_ctx->Viewport.Width==0) {
+  if (amesa && b)
+  {
+    gl_make_current((GLcontext *)amesa->gl_ctx, (GLframebuffer *)b->gl_buffer);
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaMakeCurrent: call glViewport(0,0,%d,%d)\n", amesa->width, amesa->height));
+D(bug("[AROSMESA] AROSMesaMakeCurrent: set current mesa context/buffer\n"));
 #endif
-            glViewport( 0, 0, amesa->width, amesa->height );
-        }
-	     else
-        {
+
+    if (amesa->InitDD)
+        (*amesa->InitDD)((APTR)amesa->gl_ctx);              /* Call Driver_init_routine */
+    else
+    {
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaMakeCurrent: call gl_make)current()\n"));
+D(bug("[AROSMESA] AROSMesaMakeCurrent: ERROR - Missing Driver Function table!\n"));
 #endif
-            gl_make_current( NULL,NULL);
-        }
+      return;
     }
+
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaMakeCurrent: initialised rasterizer driver functions\n"));
+#endif
+
+    if (((GLcontext *)amesa->gl_ctx)->Viewport.Width == 0)
+    {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaMakeCurrent: call glViewport(0, 0, %d, %d)\n", amesa->width, amesa->height));
+#endif
+      glViewport(0, 0, amesa->width, amesa->height);
+    } else {
+#ifdef DEBUGPRINT
+D(bug("[AROSMESA] AROSMesaMakeCurrent: call gl_make_current()\n"));
+#endif
+      gl_make_current(NULL, NULL);
+    }
+  }
 }
 
-void AROSMesaSwapBuffers(register struct arosmesa_context *amesa)
-{                /* copy/swap back buffer to front if applicable */
+void GLAPIENTRY
+AROSMesaSwapBuffers(AROSMesaContext amesa)
+{        /* copy/swap back buffer to front if applicable */
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaSwapBuffers()\n"));
+D(bug("[AROSMESA] AROSMesaSwapBuffers(amesa @ %x)\n", amesa));
 #endif
+  if (amesa->SwapBuffer)
     (*amesa->SwapBuffer)( amesa );
 }
 
 /* This is on the drawingboard */
 /* Mostly for when future changes the library is still intact*/
 
-BOOL AROSMesaSetDefs(register struct TagItem *tagList)
+BOOL GLAPIENTRY
+AROSMesaSetDefs(struct TagItem *tagList)
 {
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaSetDefs()\n"));
+D(bug("[AROSMESA] AROSMesaSetDefs(taglist @ %x)\n", tagList));
 #endif
 /*
-    struct TagItem *tag=NULL;
-            
-    tagValue=AMA_DrawMode;
-    tag = FindTagItem(tagValue,tagList);
+  struct TagItem *tag=NULL;
+      
+  tagValue=AMA_DrawMode;
+  tag = FindTagItem(tagValue,tagList);
 #ifdef DEBUGPRINT
-    if (tag)
-D(bug("[AMESA] : AROSMesaSetDefs: Tag=0x%x, is 0x%x/n",tagValue,tag->ti_Data));
-    else
-D(bug("[AMESA] : AROSMesaSetDefs: Tag=0x%x is not specified/n",tagValue));
+  if (tag)
+D(bug("[AROSMESA] AROSMesaSetDefs: Tag=%x, is %x/n",tagValue,tag->ti_Data));
+  else
+D(bug("[AROSMESA] AROSMesaSetDefs: Tag=%x is not specified/n",tagValue));
 #endif
 */
-    return FALSE;
+  return FALSE;
 }
 
 /*
  Maybe a report error routine ??? like:
 */
 
-GLenum AROSMesaReportError(register struct arosmesa_context *c )
+GLenum GLAPIENTRY
+AROSMesaReportError(AROSMesaContext amesa)
 {
-    GLenum error;
+  GLenum error;
 #ifdef DEBUGPRINT
-D(bug("[AMESA] : AROSMesaReportError()\n"));
+D(bug("[AROSMESA] AROSMesaReportError(amesa @ %x)\n", amesa));
 #endif
-    error = LastError;
-    LastError = 0;
-    return(error);
+  error = LastError;
+  LastError = 0;
+  return(error);
 }
-
-#undef DEBUGPRINT

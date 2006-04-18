@@ -23,6 +23,7 @@
 
 #include <GL/GLwDrawAP.h>
 #include <GL/MesaDrawingArea.h>
+#include <GL/xmesa.h>
 
 typedef struct
   {
@@ -116,6 +117,12 @@ MesaDrawingAreaRec;
    (((__DRAWINGAREAWIDGET)_widget)->glwDrawingArea.stencilSize)
 #define MesaAccumRedSize(_widget) \
    (((__DRAWINGAREAWIDGET)_widget)->glwDrawingArea.accumRedSize)
+#define MesaAccumGreenSize(_widget) \
+   (((__DRAWINGAREAWIDGET)_widget)->glwDrawingArea.accumGreenSize)
+#define MesaAccumBlueSize(_widget) \
+   (((__DRAWINGAREAWIDGET)_widget)->glwDrawingArea.accumBlueSize)
+#define MesaAccumAlphaSize(_widget) \
+   (((__DRAWINGAREAWIDGET)_widget)->glwDrawingArea.accumAlphaSize)
 
 #ifdef __GLX_MOTIF
 #define MesaListsRoot \

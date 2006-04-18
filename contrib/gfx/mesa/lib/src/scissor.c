@@ -2,46 +2,33 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:32  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.1  1998/02/08 20:17:42  brianp
- * removed unneeded headers
- *
- * Revision 3.0  1998/01/31 21:03:42  brianp
- * initial rev
- *
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
 #ifdef PC_HEADER
 #include "all.h"
 #else
+#include "glheader.h"
 #include "context.h"
 #include "macros.h"
 #include "scissor.h"
@@ -49,26 +36,33 @@
 #endif
 
 
-void gl_Scissor( GLcontext *ctx,
-                 GLint x, GLint y, GLsizei width, GLsizei height )
+void
+_mesa_Scissor( GLint x, GLint y, GLsizei width, GLsizei height )
 {
-   if (width<0 || height<0) {
+   GET_CURRENT_CONTEXT(ctx);
+   ASSERT_OUTSIDE_BEGIN_END_AND_FLUSH(ctx, "glScissor");
+
+   if (width < 0 || height < 0) {
       gl_error( ctx, GL_INVALID_VALUE, "glScissor" );
       return;
    }
-   if (INSIDE_BEGIN_END(ctx)) {
-      gl_error( ctx, GL_INVALID_OPERATION, "glBegin" );
-      return;
+
+   if (MESA_VERBOSE & VERBOSE_API)
+      fprintf(stderr, "glScissor %d %d %d %d\n", x, y, width, height);
+
+   if (x != ctx->Scissor.X ||
+       y != ctx->Scissor.Y ||
+       width != ctx->Scissor.Width ||
+       height != ctx->Scissor.Height) {
+      ctx->Scissor.X = x;
+      ctx->Scissor.Y = y;
+      ctx->Scissor.Width = width;
+      ctx->Scissor.Height = height;
+      ctx->NewState |= NEW_RASTER_OPS;
    }
 
-   if (x!=ctx->Scissor.X || y!=ctx->Scissor.Y || 
-       width!=ctx->Scissor.Width || height!=ctx->Scissor.Height) {
-   ctx->Scissor.X = x;
-   ctx->Scissor.Y = y;
-   ctx->Scissor.Width = width;
-   ctx->Scissor.Height = height;
-   ctx->NewState |= NEW_ALL;  /* TODO: this is overkill */
-   }
+   if (ctx->Driver.Scissor)
+      ctx->Driver.Scissor( ctx, x, y, width, height );
 }
 
 
@@ -82,19 +76,21 @@ GLint gl_scissor_span( GLcontext *ctx,
                        GLuint n, GLint x, GLint y, GLubyte mask[] )
 {
    /* first check if whole span is outside the scissor box */
-   if (y<ctx->Buffer->Ymin || y>ctx->Buffer->Ymax
-       || x>ctx->Buffer->Xmax || x+(GLint)n-1<ctx->Buffer->Xmin) {
+   if (y < ctx->DrawBuffer->Ymin
+       || y > ctx->DrawBuffer->Ymax
+       || x > ctx->DrawBuffer->Xmax
+       || x + (GLint) n - 1 < ctx->DrawBuffer->Xmin) {
       return 0;
    }
    else {
+      const GLint xMin = ctx->DrawBuffer->Xmin;
+      const GLint xMax = ctx->DrawBuffer->Xmax;
       GLint i;
-      GLint xMin = ctx->Buffer->Xmin;
-      GLint xMax = ctx->Buffer->Xmax;
-      for (i=0; x+i < xMin; i++) {
+      for (i = 0; x + i < xMin; i++) {
          mask[i] = 0;
       }
-      for (i=(GLint)n-1; x+i > xMax; i--) {
-	   mask[i] = 0;
+      for (i = (GLint) n - 1; x + i > xMax; i--) {
+         mask[i] = 0;
       }
 
       return 1;
@@ -111,10 +107,10 @@ GLuint gl_scissor_pixels( GLcontext *ctx,
                           GLuint n, const GLint x[], const GLint y[],
                           GLubyte mask[] )
 {
-   GLint xmin = ctx->Buffer->Xmin;
-   GLint xmax = ctx->Buffer->Xmax;
-   GLint ymin = ctx->Buffer->Ymin;
-   GLint ymax = ctx->Buffer->Ymax;
+   const GLint xmin = ctx->DrawBuffer->Xmin;
+   const GLint xmax = ctx->DrawBuffer->Xmax;
+   const GLint ymin = ctx->DrawBuffer->Ymin;
+   const GLint ymax = ctx->DrawBuffer->Ymax;
    GLuint i;
 
    for (i=0;i<n;i++) {

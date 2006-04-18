@@ -2,53 +2,33 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:33  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.3  1998/03/28 03:57:13  brianp
- * added CONST macro to fix IRIX compilation problems
- *
- * Revision 3.2  1998/03/15 17:56:56  brianp
- * added a const in gl_write_zoomed_rgba_span()
- *
- * Revision 3.1  1998/02/08 20:22:40  brianp
- * added gl_write_zoomed_rgb_span()
- *
- * Revision 3.0  1998/02/01 22:13:55  brianp
- * initial rev
- *
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
 #ifdef PC_HEADER
 #include "all.h"
 #else
-#include <assert.h>
+#include "glheader.h"
 #include "macros.h"
 #include "span.h"
 #include "stencil.h"
@@ -76,7 +56,7 @@ gl_write_zoomed_rgba_span( GLcontext *ctx,
    GLint i, j, skipcol;
    GLubyte zrgba[MAX_WIDTH][4];  /* zoomed pixel colors */
    GLdepth zdepth[MAX_WIDTH];  /* zoomed depth values */
-   GLint maxwidth = MIN2( ctx->Buffer->Width, MAX_WIDTH );
+   GLint maxwidth = MIN2( ctx->DrawBuffer->Width, MAX_WIDTH );
    const GLuint *srcRGBA32 = (const GLuint *) rgba;
    GLuint *dstRGBA32 = (GLuint *) zrgba;
 
@@ -108,7 +88,7 @@ gl_write_zoomed_rgba_span( GLcontext *ctx,
       /* below window */
       return;
    }
-   if (r0>=ctx->Buffer->Height && r1>=ctx->Buffer->Height) {
+   if (r0>=ctx->DrawBuffer->Height && r1>=ctx->DrawBuffer->Height) {
       /* above window */
       return;
    }
@@ -141,7 +121,7 @@ gl_write_zoomed_rgba_span( GLcontext *ctx,
    else {
       GLfloat xscale = 1.0F / ctx->Pixel.ZoomX;
       for (j=0;j<m;j++) {
-         i = (j+skipcol) * xscale;
+         i = (GLint) ((j+skipcol) * xscale);
          if (i<0)  i = n + i - 1;
          dstRGBA32[j] = srcRGBA32[i];
          zdepth[j] = z[i];
@@ -166,7 +146,7 @@ gl_write_zoomed_rgb_span( GLcontext *ctx,
    GLint i, j, skipcol;
    GLubyte zrgba[MAX_WIDTH][4];  /* zoomed pixel colors */
    GLdepth zdepth[MAX_WIDTH];  /* zoomed depth values */
-   GLint maxwidth = MIN2( ctx->Buffer->Width, MAX_WIDTH );
+   GLint maxwidth = MIN2( ctx->DrawBuffer->Width, MAX_WIDTH );
 
    /* compute width of output row */
    m = (GLint) ABSF( n * ctx->Pixel.ZoomX );
@@ -196,7 +176,7 @@ gl_write_zoomed_rgb_span( GLcontext *ctx,
       /* below window */
       return;
    }
-   if (r0>=ctx->Buffer->Height && r1>=ctx->Buffer->Height) {
+   if (r0>=ctx->DrawBuffer->Height && r1>=ctx->DrawBuffer->Height) {
       /* above window */
       return;
    }
@@ -232,7 +212,7 @@ gl_write_zoomed_rgb_span( GLcontext *ctx,
    else {
       GLfloat xscale = 1.0F / ctx->Pixel.ZoomX;
       for (j=0;j<m;j++) {
-         i = (j+skipcol) * xscale;
+         i = (GLint) ((j+skipcol) * xscale);
          if (i<0)  i = n + i - 1;
          zrgba[j][0] = rgb[i][0];
          zrgba[j][1] = rgb[i][1];
@@ -263,7 +243,7 @@ gl_write_zoomed_index_span( GLcontext *ctx,
    GLint i, j, skipcol;
    GLuint zindexes[MAX_WIDTH];  /* zoomed color indexes */
    GLdepth zdepth[MAX_WIDTH];  /* zoomed depth values */
-   GLint maxwidth = MIN2( ctx->Buffer->Width, MAX_WIDTH );
+   GLint maxwidth = MIN2( ctx->DrawBuffer->Width, MAX_WIDTH );
 
    /* compute width of output row */
    m = (GLint) ABSF( n * ctx->Pixel.ZoomX );
@@ -293,7 +273,7 @@ gl_write_zoomed_index_span( GLcontext *ctx,
       /* below window */
       return;
    }
-   if (r0>=ctx->Buffer->Height && r1>=ctx->Buffer->Height) {
+   if (r0>=ctx->DrawBuffer->Height && r1>=ctx->DrawBuffer->Height) {
       /* above window */
       return;
    }
@@ -326,7 +306,7 @@ gl_write_zoomed_index_span( GLcontext *ctx,
    else {
       GLfloat xscale = 1.0F / ctx->Pixel.ZoomX;
       for (j=0;j<m;j++) {
-         i = (j+skipcol) * xscale;
+         i = (GLint) ((j+skipcol) * xscale);
          if (i<0)  i = n + i - 1;
          zindexes[j] = indexes[i];
          zdepth[j] = z[i];
@@ -347,13 +327,13 @@ gl_write_zoomed_index_span( GLcontext *ctx,
 void
 gl_write_zoomed_stencil_span( GLcontext *ctx,
                               GLuint n, GLint x, GLint y,
-                              const GLubyte stencil[], GLint y0 )
+                              const GLstencil stencil[], GLint y0 )
 {
    GLint m;
    GLint r0, r1, row, r;
    GLint i, j, skipcol;
-   GLubyte zstencil[MAX_WIDTH];  /* zoomed stencil values */
-   GLint maxwidth = MIN2( ctx->Buffer->Width, MAX_WIDTH );
+   GLstencil zstencil[MAX_WIDTH];  /* zoomed stencil values */
+   GLint maxwidth = MIN2( ctx->DrawBuffer->Width, MAX_WIDTH );
 
    /* compute width of output row */
    m = (GLint) ABSF( n * ctx->Pixel.ZoomX );
@@ -383,7 +363,7 @@ gl_write_zoomed_stencil_span( GLcontext *ctx,
       /* below window */
       return;
    }
-   if (r0>=ctx->Buffer->Height && r1>=ctx->Buffer->Height) {
+   if (r0>=ctx->DrawBuffer->Height && r1>=ctx->DrawBuffer->Height) {
       /* above window */
       return;
    }
@@ -415,7 +395,7 @@ gl_write_zoomed_stencil_span( GLcontext *ctx,
    else {
       GLfloat xscale = 1.0F / ctx->Pixel.ZoomX;
       for (j=0;j<m;j++) {
-         i = (j+skipcol) * xscale;
+         i = (GLint) ((j+skipcol) * xscale);
          if (i<0)  i = n + i - 1;
          zstencil[j] = stencil[i];
       }
@@ -423,6 +403,6 @@ gl_write_zoomed_stencil_span( GLcontext *ctx,
 
    /* write the span */
    for (r=r0; r<r1; r++) {
-      gl_write_stencil_span( ctx, m, x+skipcol, r, zstencil );
+      _mesa_write_stencil_span( ctx, m, x+skipcol, r, zstencil );
    }
 }

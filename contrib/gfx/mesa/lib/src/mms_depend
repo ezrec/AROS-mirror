@@ -6,13 +6,8 @@ alpha.obj : alpha.h types.h [-.include.gl]gl.h config.h fixed.h dd.h context.h
 alpha.obj : macros.h
 alphabuf.obj : alphabuf.h types.h [-.include.gl]gl.h config.h fixed.h dd.h
 alphabuf.obj : context.h macros.h
-api1.obj : api.h bitmap.h types.h [-.include.gl]gl.h config.h fixed.h dd.h
-api1.obj : context.h drawpix.h eval.h image.h macros.h matrix.h teximage.h vb.h
-api2.obj : api.h context.h types.h [-.include.gl]gl.h config.h fixed.h dd.h
-api2.obj : image.h macros.h matrix.h teximage.h vb.h
-apiext.obj : api.h context.h types.h [-.include.gl]gl.h config.h fixed.h dd.h
 attrib.obj : attrib.h types.h [-.include.gl]gl.h config.h fixed.h dd.h context.h
-attrib.obj : macros.h misc.h
+attrib.obj : macros.h
 bitmap.obj : bitmap.h types.h [-.include.gl]gl.h config.h fixed.h dd.h context.h
 bitmap.obj : feedback.h image.h macros.h pb.h pixel.h
 blend.obj : alphabuf.h types.h [-.include.gl]gl.h config.h fixed.h dd.h blend.h
@@ -23,7 +18,7 @@ colortab.obj : colortab.h types.h [-.include.gl]gl.h config.h fixed.h dd.h
 colortab.obj : context.h macros.h
 context.obj : accum.h types.h [-.include.gl]gl.h config.h fixed.h dd.h
 context.obj : alphabuf.h clip.h context.h depth.h eval.h hash.h light.h lines.h
-context.obj : dlist.h macros.h mmath.h pb.h points.h pointers.h quads.h
+context.obj : dlist.h macros.h mmath.h pb.h points.h quads.h
 context.obj : stencil.h triangle.h teximage.h texobj.h texstate.h vb.h vbfill.h
 copypix.obj : context.h types.h [-.include.gl]gl.h config.h fixed.h dd.h
 copypix.obj : copypix.h depth.h feedback.h macros.h pixel.h span.h stencil.h
@@ -33,7 +28,7 @@ depth.obj : macros.h
 dlist.obj : accum.h types.h [-.include.gl]gl.h config.h fixed.h dd.h alpha.h
 dlist.obj : attrib.h bitmap.h blend.h clip.h colortab.h context.h copypix.h
 dlist.obj : depth.h drawpix.h enable.h eval.h feedback.h fog.h hash.h image.h
-dlist.obj : light.h lines.h dlist.h logic.h macros.h masking.h matrix.h misc.h
+dlist.obj : light.h lines.h dlist.h logic.h macros.h masking.h matrix.h
 dlist.obj : pixel.h points.h polygon.h rastpos.h rect.h scissor.h stencil.h
 dlist.obj : texobj.h teximage.h texstate.h vb.h vbfill.h winpos.h
 drawpix.obj : context.h types.h [-.include.gl]gl.h config.h fixed.h dd.h
@@ -63,7 +58,7 @@ masking.obj : context.h macros.h masking.h pb.h span.h
 matrix.obj : context.h types.h [-.include.gl]gl.h config.h fixed.h dd.h macros.h
 matrix.obj : matrix.h mmath.h
 misc.obj : accum.h types.h [-.include.gl]gl.h config.h fixed.h dd.h alphabuf.h
-misc.obj : context.h depth.h macros.h masking.h misc.h stencil.h
+misc.obj : context.h depth.h macros.h masking.h stencil.h
 mmath.obj : [-.include.gl]gl.h mmath.h
 pb.obj : alpha.h types.h [-.include.gl]gl.h config.h fixed.h dd.h alphabuf.h
 pb.obj : blend.h depth.h fog.h logic.h macros.h masking.h pb.h scissor.h
@@ -72,13 +67,6 @@ pixel.obj : context.h types.h [-.include.gl]gl.h config.h fixed.h dd.h macros.h
 pixel.obj : pixel.h
 points.obj : context.h types.h [-.include.gl]gl.h config.h fixed.h dd.h
 points.obj : feedback.h macros.h pb.h span.h texstate.h vb.h mmath.h
-pointers.obj : accum.h types.h [-.include.gl]gl.h config.h fixed.h dd.h alpha.h
-pointers.obj : attrib.h bitmap.h blend.h clip.h context.h colortab.h copypix.h
-pointers.obj : depth.h drawpix.h enable.h eval.h feedback.h fog.h get.h light.h
-pointers.obj : lines.h dlist.h logic.h macros.h masking.h matrix.h misc.h
-pointers.obj : pixel.h points.h polygon.h rastpos.h readpix.h rect.h scissor.h
-pointers.obj : stencil.h teximage.h texobj.h texstate.h varray.h vbfill.h
-pointers.obj : winpos.h
 polygon.obj : context.h types.h [-.include.gl]gl.h config.h fixed.h dd.h
 polygon.obj : macros.h polygon.h
 quads.obj : types.h [-.include.gl]gl.h config.h fixed.h dd.h quads.h
@@ -116,22 +104,18 @@ vbfill.obj : context.h types.h [-.include.gl]gl.h config.h fixed.h dd.h light.h
 vbfill.obj : macros.h matrix.h mmath.h pb.h vb.h vbfill.h vbxform.h xform.h
 vbrender.obj : clip.h types.h [-.include.gl]gl.h config.h fixed.h dd.h context.h
 vbrender.obj : light.h macros.h matrix.h pb.h vb.h vbrender.h xform.h
-vbxform.obj : asm-386.h [-.include.gl]gl.h context.h types.h config.h fixed.h
+vbxform.obj : [-.include.gl]gl.h context.h types.h config.h fixed.h
 vbxform.obj : dd.h fog.h light.h macros.h matrix.h mmath.h shade.h texture.h
 vbxform.obj : vb.h vbrender.h vbxform.h xform.h
 xform.obj : mmath.h types.h [-.include.gl]gl.h config.h fixed.h dd.h xform.h
 zoom.obj : macros.h span.h types.h [-.include.gl]gl.h config.h fixed.h dd.h
 zoom.obj : stencil.h zoom.h
 [.x]glxapi.obj : [-.include.gl]glx.h [-.include.gl]gl.h [-.include.gl]xmesa.h
-[.x]glxapi.obj : [.x]fakeglx.h [.x]realglx.h
 [.x]fakeglx.obj : [-.include.gl]gl.h [-.include.gl]xmesa.h context.h types.h
-[.x]fakeglx.obj : config.h fixed.h dd.h [.x]fakeglx.h [-.include.gl]glx.h macros.h
+[.x]fakeglx.obj : config.h fixed.h dd.h [-.include.gl]glx.h macros.h
 [.x]fakeglx.obj : [.x]xmesaP.h
-[.x]realglx.obj : [.x]realglx.h [-.include.gl]glx.h [-.include.gl]gl.h
-[.x]realglx.obj : [-.include.gl]xmesa.h
 [.x]xfonts.obj : [-.include.gl]gl.h [-.include.gl]glx.h [-.include.gl]xmesa.h
 [.x]xfonts.obj : macros.h [.x]xmesaP.h types.h config.h fixed.h dd.h context.h
-[.x]xfonts.obj : [.x]fakeglx.h
 [.x]xmesa1.obj : [-.include.gl]xmesa.h [-.include.gl]gl.h [.x]xmesaP.h types.h
 [.x]xmesa1.obj : config.h fixed.h dd.h context.h macros.h matrix.h
 [.x]xmesa2.obj : [-.include.gl]xmesa.h [-.include.gl]gl.h context.h types.h

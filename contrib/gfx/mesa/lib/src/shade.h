@@ -2,41 +2,30 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
+ * Version:  3.1
  *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
+ * Copyright (C) 1999  Brian Paul   All Rights Reserved.
  *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:32  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.1  1998/02/02 03:09:34  brianp
- * added GL_LIGHT_MODEL_COLOR_CONTROL (separate specular color interpolation)
- *
- * Revision 3.0  1998/01/31 21:03:42  brianp
- * initial rev
- *
- */
+
 
 
 #ifndef SHADE_H
@@ -46,35 +35,22 @@
 #include "types.h"
 
 
-extern void gl_shade_rgba( GLcontext *ctx,
-                                     GLuint side,
-                                     GLuint n,
-                                     /*const*/ GLfloat vertex[][4],
-                                     /*const*/ GLfloat normal[][3],
-                                     GLubyte color[][4] );
+
+extern void gl_update_lighting_function( GLcontext *ctx );
+
+extern void gl_init_shade( void );
+
+extern gl_shade_func gl_shade_tab[0x10];
+extern gl_shade_func gl_shade_fast_tab[0x10];
+extern gl_shade_func gl_shade_fast_single_tab[0x10];
+extern gl_shade_func gl_shade_spec_tab[0x10];
+extern gl_shade_func gl_shade_ci_tab[0x10];
 
 
-extern void gl_shade_rgba_spec( GLcontext *ctx,
-                                GLuint side,
-                                GLuint n,
-                                /*const*/ GLfloat vertex[][4],
-                                /*const*/ GLfloat normal[][3],
-                                GLubyte baseColor[][4], GLubyte specColor[][4] );
-
-
-extern void gl_shade_rgba_fast( GLcontext *ctx,
-                                          GLuint side,
-                                          GLuint n,
-                                          /*const*/ GLfloat normal[][3],
-                                          GLubyte color[][4] );
-
-
-extern void gl_shade_ci( GLcontext *ctx,
-                                     GLuint side,
-                                     GLuint n,
-                                     GLfloat vertex[][4],
-                                     GLfloat normal[][3],
-                                     GLuint indexResult[] );
+void gl_shade_rastpos( GLcontext *ctx,
+		       GLfloat vertex[4],
+		       GLfloat normal[3],
+		       GLfloat Rcolor[4],
+		       GLuint *index );
 
 #endif
-

@@ -1,4 +1,4 @@
-LIBRARY MESAGLU
+LIBRARY GLU32
 DESCRIPTION 'GLU for Windows Mesa'
 EXETYPE WINDOWS
 CODE MOVEABLE DISCARDABLE
@@ -45,10 +45,18 @@ EXPORTS
     gluPwlCurve
     gluNurbsCallback
     gluNewTess
-    gluTessCallback
     gluDeleteTess
-    gluBeginPolygon
-    gluEndPolygon
-    gluNextContour
+;    gluTessBeginPolygon
+;    gluTessBeginContour
     gluTessVertex
+;    gluTessEndContour
+;    gluTessEndPolygon
+;    gluTessProperty
+;    gluTessNormal
+    gluTessCallback
+;    gluGetTessProperty
+    gluBeginPolygon
+    gluNextContour
+    gluEndPolygon
     gluGetString
+

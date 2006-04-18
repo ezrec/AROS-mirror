@@ -7,8 +7,16 @@ errcheck.c	- an OpenGL error check/report function
 glutskel.c	- handy skeleton for GLUT programs
 idproj.c	- setup an identity projection
 mwmborder.c	- remove Motif window decoration/border
-projshad.c	- generate a projective shadow matrix
 winpos.c	- set absolute window raster position
-readtex.c	- load textures from an .rgb file
+readtex.c	- load textures/mipmaps from an .rgb file
+showbuffer.[ch]	- show depth, alpha, or stencil buffer contents
+glstate.[ch]	- query/print GL state variables, for debugging, etc.
+sampleMakefile	- example Makefile for making OpenGL/Mesa apps on Unix
+dumpsate.c	- dump all OpenGL state, from Stephane Rehel
+imagesgi.cpp,.h - read SGI image files
+
 
 more to come...
+
+----------------------------------------------------------------------
+$Id$

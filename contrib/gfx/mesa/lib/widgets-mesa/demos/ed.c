@@ -462,7 +462,7 @@ static String fallback_resources[] =
 {
 #ifndef __GLX_MOTIF
   "*MesaWorkstation.debug: false",
-  "*MesaWorkstation.rgba: false",
+  "*MesaWorkstation.rgba: true",
   "*MesaWorkstation.installColormap: true",
   "*MesaWorkstation.doublebuffer: true",
   "*MesaWorkstation.ximage: false",
@@ -472,7 +472,7 @@ static String fallback_resources[] =
    <Key>space: Next()",
 #else /* __GLX_MOTIF */
   "*MesaMWorkstation.debug: false",
-  "*MesaMWorkstation.rgba: false",
+  "*MesaMWorkstation.rgba: true",
   "*MesaMWorkstation.installColormap: true",
   "*MesaMWorkstation.doublebuffer: true",
   "*MesaMWorkstation.ximage: false",

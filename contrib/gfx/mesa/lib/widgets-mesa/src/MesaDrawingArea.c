@@ -122,7 +122,12 @@ Realize (Widget w, XtValueMask *mask,
 		       MesaDepthSize(w),
 		       MesaStencilSize(w),
 		       MesaAccumRedSize(w),
-		       (GLint) 0 /* level */);
+		       MesaAccumGreenSize(w),
+		       MesaAccumBlueSize(w),
+		       MesaAccumAlphaSize(w),
+                       (GLint) 0, /* num_samples */
+                       (GLint) 0, /* level */
+                       GLX_NONE_EXT /* visualCaveat */);
   if (!MesaVisual (w))
     {
       printf ("Couldn't create Mesa/X visual!\n");

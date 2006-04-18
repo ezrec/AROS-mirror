@@ -2,40 +2,26 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.0
- * Copyright (C) 1995-1998  Brian Paul
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the Free
- * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- */
-
-
-/*
- * $Log$
- * Revision 1.1  2005/01/11 14:58:31  NicJA
- * AROSMesa 3.0
- *
- * - Based on the official mesa 3 code with major patches to the amigamesa driver code to get it working.
- * - GLUT not yet started (ive left the _old_ mesaaux, mesatk and demos in for this reason)
- * - Doesnt yet work - the _db functions seem to be writing the data incorrectly, and color picking also seems broken somewhat - giving most things a blue tinge (those that are currently working)
- *
- * Revision 3.1  1998/08/23 22:18:18  brianp
- * added Driver.Viewport and Driver.DepthRange function pointers
- *
- * Revision 3.0  1998/01/31 20:58:46  brianp
- * initial rev
- *
+ * Version:  3.3
+ * 
+ * Copyright (C) 1999  Brian Paul   All Rights Reserved.
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+ * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+ * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 
@@ -44,55 +30,130 @@
 
 
 #include "types.h"
+#include "config.h"
 
 
+typedef struct {
+   GLfloat *m;			/* 16-byte aligned */
+   GLfloat *inv;		/* optional, 16-byte aligned */
+   GLuint flags;
+   GLuint type;
+} GLmatrix;
 
-extern void gl_analyze_modelview_matrix( GLcontext *ctx );
 
-extern void gl_analyze_projection_matrix( GLcontext *ctx );
+#ifdef VMS
+#define gl_calculate_model_project_matrix gl_calculate_model_project_matr
+#endif
 
-extern void gl_analyze_texture_matrix( GLcontext *ctx );
 
+extern void gl_matrix_transposef( GLfloat to[16], const GLfloat from[16] );
+
+extern void gl_matrix_transposed( GLdouble to[16], const GLdouble from[16] );
 
 
 extern void gl_rotation_matrix( GLfloat angle, GLfloat x, GLfloat y, GLfloat z,
                                 GLfloat m[] );
 
 
+extern void gl_mat_mul_floats( GLmatrix *mat, const GLfloat *m, GLuint flags );
 
-extern void gl_Frustum( GLcontext *ctx,
-                        GLdouble left, GLdouble right,
-                        GLdouble bottom, GLdouble top,
-                        GLdouble nearval, GLdouble farval );
+extern void gl_mat_mul_mat( GLmatrix *mat, const GLmatrix *mat2 );
 
-extern void gl_Ortho( GLcontext *ctx,
-                      GLdouble left, GLdouble right,
-                      GLdouble bottom, GLdouble top,
-                      GLdouble nearval, GLdouble farval );
+extern void gl_calculate_model_project_matrix( GLcontext *ctx );
 
-extern void gl_PushMatrix( GLcontext *ctx );
+extern void gl_matrix_copy( GLmatrix *to, const GLmatrix *from );
 
-extern void gl_PopMatrix( GLcontext *ctx );
+extern void gl_matrix_ctr( GLmatrix *m );
 
-extern void gl_LoadIdentity( GLcontext *ctx );
+extern void gl_matrix_dtr( GLmatrix *m );
 
-extern void gl_LoadMatrixf( GLcontext *ctx, const GLfloat *m );
+extern void gl_matrix_alloc_inv( GLmatrix *m );
 
-extern void gl_MatrixMode( GLcontext *ctx, GLenum mode );
+extern void gl_matrix_mul( GLmatrix *dest, 
+			   const GLmatrix *a, 
+			   const GLmatrix *b );
 
-extern void gl_MultMatrixf( GLcontext *ctx, const GLfloat *m );
+extern void gl_matrix_analyze( GLmatrix *mat );
 
-extern void gl_Rotatef( GLcontext *ctx,
-                        GLfloat angle, GLfloat x, GLfloat y, GLfloat z );
+extern GLboolean gl_matrix_invert( GLmatrix *mat );
 
-extern void gl_Scalef( GLcontext *ctx, GLfloat x, GLfloat y, GLfloat z );
+extern void gl_print_matrix( const GLmatrix *m );
 
-extern void gl_Translatef( GLcontext *ctx, GLfloat x, GLfloat y, GLfloat z );
 
-extern void gl_Viewport( GLcontext *ctx,
-                         GLint x, GLint y, GLsizei width, GLsizei height );
 
-extern void gl_DepthRange( GLcontext* ctx, GLclampd nearval, GLclampd farval );
+extern void
+_mesa_Frustum( GLdouble left, GLdouble right,
+               GLdouble bottom, GLdouble top,
+               GLdouble nearval, GLdouble farval );
+
+extern void
+_mesa_Ortho( GLdouble left, GLdouble right,
+             GLdouble bottom, GLdouble top,
+             GLdouble nearval, GLdouble farval );
+
+extern void
+_mesa_PushMatrix( void );
+
+extern void
+_mesa_PopMatrix( void );
+
+extern void
+_mesa_LoadIdentity( void );
+
+extern void
+_mesa_LoadMatrixf( const GLfloat *m );
+
+extern void
+_mesa_LoadMatrixd( const GLdouble *m );
+
+extern void
+_mesa_MatrixMode( GLenum mode );
+
+extern void
+_mesa_MultMatrixf( const GLfloat *m );
+
+extern void
+_mesa_MultMatrixd( const GLdouble *m );
+
+extern void
+_mesa_Rotatef( GLfloat angle, GLfloat x, GLfloat y, GLfloat z );
+
+extern void
+_mesa_Rotated( GLdouble angle, GLdouble x, GLdouble y, GLdouble z );
+
+extern void
+_mesa_Scalef( GLfloat x, GLfloat y, GLfloat z );
+
+extern void
+_mesa_Scaled( GLdouble x, GLdouble y, GLdouble z );
+
+extern void
+_mesa_Translatef( GLfloat x, GLfloat y, GLfloat z );
+
+extern void
+_mesa_Translated( GLdouble x, GLdouble y, GLdouble z );
+
+extern void
+_mesa_LoadTransposeMatrixfARB( const GLfloat *m );
+
+extern void
+_mesa_LoadTransposeMatrixdARB( const GLdouble *m );
+
+extern void
+_mesa_MultTransposeMatrixfARB( const GLfloat *m );
+
+extern void
+_mesa_MultTransposeMatrixdARB( const GLdouble *m );
+
+extern void
+_mesa_Viewport( GLint x, GLint y, GLsizei width, GLsizei height );
+
+extern void
+gl_Viewport( GLcontext *ctx, GLint x, GLint y, GLsizei width, GLsizei height );
+
+extern void
+_mesa_DepthRange( GLclampd nearval, GLclampd farval );
+
 
 
 #endif
