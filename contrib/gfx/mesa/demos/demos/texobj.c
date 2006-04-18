@@ -13,6 +13,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
 #include "gltk.h"
 
 

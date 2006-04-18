@@ -457,10 +457,6 @@ D(bug("[AROSMESA:RAST] arosRasterizer_buffer_size:    amesa->depth      =%d\n", 
 #endif
 }
 
-/* The following 2 functions will be moved
-   shortly since theyre generic to both truecolor
-   and indexed rasterizers */
-
 void
 arosRasterizer_Standard_Dispose(AROSMesaContext amesa)
 {

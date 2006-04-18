@@ -73,19 +73,19 @@
 #include <stdio.h>
 
 #ifdef PC_HEADER
-#include "all.h"
+#include "../all.h"
 #else
 #include <GL/gl.h>
-#include "glheader.h"
-#include "context.h"
-#include "depth.h"
-#include "mem.h"
-#include "matrix.h"
-#include "dd.h"
-#include "xform.h"
-#include "macros.h"
-#include "vb.h"
-#include "extensions.h"
+#include "../glheader.h"
+#include "../context.h"
+#include "../depth.h"
+#include "../mem.h"
+#include "../matrix.h"
+#include "../dd.h"
+#include "../xform.h"
+#include "../macros.h"
+#include "../vb.h"
+#include "../extensions.h"
 #endif
 
 /**********************************************************************/
@@ -477,10 +477,10 @@ D(bug("[AROSMESA] AROSMesaCreateContext: Mesa failed to initialize the context!\
 D(bug("[AROSMESA] AROSMesaCreateContext: [ASSERT] RastPort @ %x\n", amesa->rp));
 #endif
 
-/*    _mesa_enable_extension(&(amesa->gl_ctx),"GL_HP_occlusion_test");
-    _mesa_enable_extension(&(amesa->gl_ctx),"GL_ARB_texture_cube_map");
-    _mesa_enable_extension(&(amesa->gl_ctx),"GL_EXT_texture_env_combine");
-    _mesa_enable_extension(&(amesa->gl_ctx),"GL_EXT_texture_env_dot3");*/
+    gl_extensions_enable((GLcontext *)amesa->gl_ctx, "GL_HP_occlusion_test");
+    gl_extensions_enable((GLcontext *)amesa->gl_ctx, "GL_ARB_texture_cube_map");
+    gl_extensions_enable((GLcontext *)amesa->gl_ctx, "GL_EXT_texture_env_combine");
+    gl_extensions_enable((GLcontext *)amesa->gl_ctx, "GL_EXT_texture_env_dot3");
 
 /*  Disabled for now .. (nicja) */
 #ifdef AMESA_DOUBLEBUFFFAST
@@ -610,6 +610,7 @@ D(bug("[AROSMESA] AROSMesaMakeCurrent(amesa @ %x, buffer @ %x)\n", amesa, b));
   if (amesa && b)
   {
     gl_make_current((GLcontext *)amesa->gl_ctx, (GLframebuffer *)b->gl_buffer);
+    amesa->buffer = b;
 #ifdef DEBUGPRINT
 D(bug("[AROSMESA] AROSMesaMakeCurrent: set current mesa context/buffer\n"));
 #endif
@@ -633,7 +634,9 @@ D(bug("[AROSMESA] AROSMesaMakeCurrent: initialised rasterizer driver functions\n
 #ifdef DEBUGPRINT
 D(bug("[AROSMESA] AROSMesaMakeCurrent: call glViewport(0, 0, %d, %d)\n", amesa->width, amesa->height));
 #endif
-      glViewport(0, 0, amesa->width, amesa->height);
+      _mesa_Viewport(0, 0, amesa->width, amesa->height);
+      ((GLcontext *)amesa->gl_ctx)->Scissor.Width = amesa->width;
+      ((GLcontext *)amesa->gl_ctx)->Scissor.Height = amesa->height;
     } else {
 #ifdef DEBUGPRINT
 D(bug("[AROSMESA] AROSMesaMakeCurrent: call gl_make_current()\n"));

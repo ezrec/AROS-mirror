@@ -45,7 +45,7 @@
 #define DEG2RAD (3.14159/180.0)
 
 
-#define TABLE_TEXTURE "1.rgb"
+#define TABLE_TEXTURE "/images/tile.rgb"
 
 
 #define MAX_OBJECTS 2

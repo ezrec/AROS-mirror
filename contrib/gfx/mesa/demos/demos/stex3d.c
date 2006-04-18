@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 /*#include "gltkmesa.h"*/
 #include "gltk.h"

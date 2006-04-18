@@ -30,6 +30,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
 #include "gltk.h"
 
 
@@ -40,7 +43,7 @@ GLboolean smooth = GL_TRUE;
 GLboolean lighting = GL_TRUE;
 
 #include "../../lib/util/readtex.c"   /* I know, this is a hack.  KW: me too. */
-#define TEXTURE_FILE "../images/reflect.rgb"
+#define TEXTURE_FILE "/images/reflect.rgb"
 
 #define LIT                 0x1
 #define UNLIT               0x2

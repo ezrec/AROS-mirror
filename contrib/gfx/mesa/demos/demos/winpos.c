@@ -11,6 +11,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
 #include "gltk.h"
 
 

@@ -10,6 +10,8 @@
 #include <unistd.h>
 #endif
 #include <stdlib.h>
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
 #include "gltk.h"
 
 

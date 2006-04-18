@@ -5,7 +5,7 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM contrib-mesa-demos-samples : contrib-mesa-demos-common
+#MM contrib-mesa-demos-samples : contrib-mesa-demos-images contrib-mesa-demos-common
 
 MESASAMPLES :=  accum \
             bitmap1 \

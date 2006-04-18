@@ -48,11 +48,11 @@ extern struct Library*  CyberGfxBase;
 #include <stdlib.h>
 #include <stdio.h>
 #include <GL/gl.h>
-#include "context.h"
-#include "dd.h"
-#include "xform.h"
-#include "macros.h"
-#include "vb.h"
+#include "../context.h"
+#include "../dd.h"
+#include "../xform.h"
+#include "../macros.h"
+#include "../vb.h"
 
 /**********************************************************************/
 /*****        Some Usefull code                   *****/
@@ -1267,7 +1267,8 @@ D(bug("[AROSMESA:TC] arosTC_Standard_init: Cloned RastPort @ %x\n", amesa->rp));
   amesa->width = GetTagData(AMA_Width, (amesa->RealWidth - amesa->left - amesa->right), tagList);
   amesa->height = GetTagData(AMA_Height, (amesa->RealHeight - amesa->top - amesa->bottom), tagList);
 
-  amesa->pixel = 0;   /* current drawing pen */
+  amesa->pixel = 0;        /* current drawing/clearing pens */
+  amesa->clearpixel = 0;   /* current drawing/clearing pens */
 
   if (amesa->window)
   {

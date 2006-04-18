@@ -23,13 +23,13 @@
 /*
 ** RGB Image Structure
 */
-
+#if !defined(GLTK_INCLUDED)
 typedef struct _TK_RGBImageRec {
    GLint sizeX, sizeY;
    GLint components;
    unsigned char *data;
 } TK_RGBImageRec;
-
+#endif
 
 
 /******************************************************************************/
@@ -227,7 +227,7 @@ static void RawImageGetData(rawImageRec *raw, TK_RGBImageRec *final)
    }
 }
 
-
+#if !defined(GLTK_INCLUDED)
 static TK_RGBImageRec *tkRGBImageLoad(const char *fileName)
 {
    rawImageRec *raw;
@@ -250,7 +250,7 @@ static TK_RGBImageRec *tkRGBImageLoad(const char *fileName)
    RawImageClose(raw);
    return final;
 }
-
+#endif
 
 static void FreeImage( TK_RGBImageRec *image )
 {

@@ -5,7 +5,7 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM contrib-mesa-demos-book : contrib-mesa-common
+#MM contrib-mesa-demos-book : contrib-mesa-common contrib-mesa-demos-images
 
 MESABOOKSRCDIR = book
 

@@ -226,8 +226,9 @@ extern float tkRGBMap[8][3];
 */
 
 typedef struct _TK_RGBImageRec {
-    GLint sizeX, sizeY;
-    unsigned char *data;
+   GLint sizeX, sizeY;
+   GLint components;
+   unsigned char *data;
 } TK_RGBImageRec;
 
 /*
