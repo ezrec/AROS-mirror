@@ -84,7 +84,7 @@ struct sana_softc *ssq = NULL;
 /* These are wire type dependant parameters of 
  * Sana-II Network Interface
  */
-extern struct wiretype_parameters wiretype_table[];
+//extern struct wiretype_parameters wiretype_table[];
 
 /* 
  * Local prototypes
