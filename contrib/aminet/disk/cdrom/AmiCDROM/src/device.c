@@ -10,7 +10,9 @@
  * non-commercial purposes, provided this notice is included.
  * ----------------------------------------------------------------------
  * History:
- *
+ * 09-Apr-06 sonic     fixed binary-compatible BCPL file name string handling
+ *                     - code style improved, removed many #ifdef's.
+ *                     - now works if compiled for binary-compatible flavour
  * 07-Jul-02 sheutlin  various changes/fixes when porting to AROS
  *                     - all global variables are now in the structure global
  *                     - changed types in lowercase to uppercase (ulong, ...)
@@ -1214,11 +1216,12 @@ int Check_For_Volume_Name_Prefix (char *p_pathname)
 
 void Fill_FileInfoBlock (FIB *p_fib, CDROM_INFO *p_info, VOLUME *p_volume) {
 char *src = p_info->name;
-#ifndef __AROS__
-char *dest = p_fib->fib_FileName+1;
-#endif
+char *dest = p_fib->fib_FileName;
 int len = p_info->name_length;
 
+#ifndef AROS_FAST_BPTR
+	dest++;
+#endif
 	if (p_info->symlink_f)
 		p_fib->fib_DirEntryType = ST_SOFTLINK;
 	else
@@ -1229,82 +1232,43 @@ int len = p_info->name_length;
 		/* root of file system: */
 		p_fib->fib_DirEntryType = ST_ROOT;
 		/* file name == volume name: */
-#ifdef __AROS__
-		AROS_BSTR_setstrlen(p_fib->fib_FileName, (short)global->g_vol_name[0]);
-		strncpy(AROS_BSTR_ADDR(p_fib->fib_FileName), global->g_vol_name+1, global->g_vol_name[0]);
-#else
-		CopyMem (global->g_vol_name, p_fib->fib_FileName, (char *)(global->g_vol_name[0])+1);
-#endif
+		len = global->g_vol_name[0];
+		strncpy(dest, global->g_vol_name+1, len);
 	}
 	else
 	{
 		/* copy file name: */
-		if (global->g_show_version_numbers)
+		if (!global->g_show_version_numbers)
 		{
-#ifdef __AROS__
-			AROS_BSTR_setstrlen(p_fib->fib_FileName, len);
-			while (--len>=0)
-				AROS_BSTR_putchar(p_fib->fib_FileName, len, src[len]);
-#else
-			p_fib->fib_FileName[0] = len;
-			for (; len; len--)
-				*dest++ = *src++;
-#endif
-		}
-		else
-		{
-			WORD i, real_len=len;
+			WORD i;
 			for (i=0; i<len; i++)
 			{
-				if (src[i] == ';')
-					real_len = i;
-#ifdef __AROS__
-				AROS_BSTR_putchar(p_fib->fib_FileName, i, src[i]);
-#else
-				dest[i] = src[i];
-#endif
+				if (src[i] == ';') {
+					len = i;
+					break;
+				}
 			}
-#ifdef __AROS__
-			AROS_BSTR_setstrlen(p_fib->fib_FileName, real_len);
-#else
-			p_fib->fib_FileName[0] = real_len;
-#endif
 		}
+		strncpy(dest, src, len);
 
-		if (
-				(global->g_map_to_lowercase && p_volume->protocol == PRO_ISO) ||
-				(global->g_maybe_map_to_lowercase && !p_volume->mixed_char_filenames)
-			)
+		if ((global->g_map_to_lowercase && p_volume->protocol == PRO_ISO) ||
+		    (global->g_maybe_map_to_lowercase && !p_volume->mixed_char_filenames))
 		{
 			/* convert ISO filename to lowercase: */
-#ifdef __AROS__
-			int i, len = AROS_BSTR_strlen(p_fib->fib_FileName);
-			char *cp = AROS_BSTR_ADDR(p_fib->fib_FileName);
-#else
-			int i, len = p_fib->fib_FileName[0];
-			char *cp = p_fib->fib_FileName + 1;
-#endif
+			int i;
+			char *cp = dest;
 			for (i=0; i<len; i++, cp++)
 				*cp = ToLower (*cp);
 		}
-
-		/* truncate to 30 characters and terminate with null: */
-		{
-#ifdef __AROS__
-			int len = AROS_BSTR_strlen(p_fib->fib_FileName);
-			if (len > 30)
-				AROS_BSTR_setstrlen(p_fib->fib_FileName, 30);
-#else
-			int len = p_fib->fib_FileName[0];
-			if (len > 30)
-				p_fib->fib_FileName[0] = len = 30;
-			p_fib->fib_FileName[len+1] = 0;
+	}
+	/* set string length */
+#ifndef AROS_FAST_BPTR
+	p_fib->fib_FileName[0] = len;
 #endif
-		}
-  }
-  /* I don't know exactly why I have to set fib_EntryType, but other
-   * handlers (e.g. DiskHandler by J Toebes et.al.) also do this.
-   */
+	dest[len] = 0;
+	/* I don't know exactly why I have to set fib_EntryType, but other
+	 * handlers (e.g. DiskHandler by J Toebes et.al.) also do this.
+	 */
    
 	p_fib->fib_EntryType = p_fib->fib_DirEntryType;
   
@@ -1313,20 +1277,15 @@ int len = p_info->name_length;
 	p_fib->fib_NumBlocks = p_info->file_length >> 11;
 	if (p_info->symlink_f)
 	{
-#ifdef __AROS__
-		AROS_BSTR_setstrlen(p_fib->fib_Comment, 0x0D);
-		strcpy(AROS_BSTR_ADDR(p_fib->fib_Comment), "Symbolic link");
+#ifdef AROS_FAST_BPTR
+		strcpy(p_fib->fib_Comment, "Symbolic link");
 #else
 		strcpy (p_fib->fib_Comment, "\x0DSymbolic link");
 #endif
 	}
 	else
 	{
-#ifdef __AROS__
-		AROS_BSTR_setstrlen(p_fib->fib_Comment, 0);
-#else
 		p_fib->fib_Comment[0] = 0;
-#endif
 	}
 
 	p_fib->fib_Date.ds_Days   = p_info->date / (24 * 60 * 60);
