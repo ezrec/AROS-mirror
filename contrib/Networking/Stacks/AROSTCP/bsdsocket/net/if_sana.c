@@ -455,34 +455,34 @@ sana_run(struct sana_softc *ssc, int requests, struct ifaddr *ifa)
       DoIO((struct IORequest*)req);
 
       if (req->ios2_Req.io_Error == 0 ||
-	       req->ios2_WireError == S2WERR_IS_CONFIGURED) {
-	     /* Mark us as running */
-	     ssc->ss_if.if_flags |= IFF_RUNNING;
-	     if (ssc->ss_cflags & SSF_TRACK) {
+          req->ios2_WireError == S2WERR_IS_CONFIGURED) {
+        /* Mark us as running */
+        ssc->ss_if.if_flags |= IFF_RUNNING;
+        if (ssc->ss_cflags & SSF_TRACK) {
 #ifdef INET
-	       /* Ask for packet type specific statistics */
-	       req->ios2_Req.io_Command = S2_TRACKTYPE;
-	       req->ios2_PacketType = ssc->ss_ip.type;
-	       DoIO((struct IORequest*)req);
-	       /* It is *not* safe to turn tracking off */
-	       if (req->ios2_Req.io_Error && 
-	           req->ios2_WireError != S2WERR_ALREADY_TRACKED) 
-	         sana2perror("S2_TRACKTYPE for IP", req);
-	       if (ssc->ss_arp.reqno) {
-	         req->ios2_Req.io_Command = S2_TRACKTYPE;
-	         req->ios2_PacketType = ssc->ss_arp.type;
-	         DoIO((struct IORequest*)req);
-	         if (req->ios2_Req.io_Error  && 
-		          req->ios2_WireError != S2WERR_ALREADY_TRACKED) 
-     	        sana2perror("S2_TRACKTYPE for ARP", req);
-	       }
-#endif	
-	     }
+          /* Ask for packet type specific statistics */
+          req->ios2_Req.io_Command = S2_TRACKTYPE;
+          req->ios2_PacketType = ssc->ss_ip.type;
+          DoIO((struct IORequest*)req);
+          /* It is *not* safe to turn tracking off */
+          if (req->ios2_Req.io_Error &&
+              req->ios2_WireError != S2WERR_ALREADY_TRACKED)
+            sana2perror("S2_TRACKTYPE for IP", req);
+          if (ssc->ss_arp.reqno) {
+            req->ios2_Req.io_Command = S2_TRACKTYPE;
+            req->ios2_PacketType = ssc->ss_arp.type;
+            DoIO((struct IORequest*)req);
+            if (req->ios2_Req.io_Error &&
+              req->ios2_WireError != S2WERR_ALREADY_TRACKED)
+            sana2perror("S2_TRACKTYPE for ARP", req);
+          }
+#endif
+        }
       }
       else
       {
-	     sana2perror("S2_CONFIGINTERFACE", req);
-	   }
+        sana2perror("S2_CONFIGINTERFACE", req);
+      }
       DeleteIOSana2Req(req);
     }
   }
