@@ -139,6 +139,8 @@ struct IRC_Channel_Priv
 		  IPTR					     chan_pageid;
         char                    *chan_name;
 
+		  ULONG                    chan_currentpen;
+
         struct List             chan_usergroup;     // List of Users in group
         struct List             chan_outitems;
         
@@ -198,8 +200,15 @@ struct AiRcOS_internal
    char           *Ai_tmp;
    int            Ai_reconnect;
 
+/* Internal Command Lists */
+   struct List    funcs_FunctionList;
+   struct List    funcs_ActionList;
+
 /* Zune GUI elements */
 
+   struct MUI_CustomClass *editor_mcc;
+   LONG            editor_cmap[8];
+   
    Object          *aircos_app;                    /* Main Application Object */
    Object          *aircos_clientwin;
    Object          *aircos_clientwin_menu;
@@ -248,15 +257,15 @@ struct AiRcOS_internal
 #define AiRcOS_MENUID (0x50505000)
 
 
-struct irccommand
+struct functionrecord
 {
    char     *command;                                                   /* Commands textual name */
 // ULONG    command_id;                                                 /* Commands numerical ID */
 /* Function to perform for recieved server command */
-   int      (*command_doFunction)(struct IRC_Connection_Private	*);
+   int      (*command_doFunction)(struct IRC_Connection_Private *);
    int      servArgCount;                                                   /* No. of args used by command */
-/* Function to perform for to send client command */
-   int      (*command_clientFunction)(struct IRC_Channel_Priv  *);
+/* Function to perform to send client command */
+   int      (*command_clientFunction)(struct IRC_Channel_Priv *);
    int      clientArgCount;                                                   /* No. of args used by command */
 };
 

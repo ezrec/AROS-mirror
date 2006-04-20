@@ -48,7 +48,7 @@ MSG_DEFAULT_CHAN
 #AROS
 ;
 MSG_USER_JOINED
-\0335*** %s a joint %s
+*** %s a joint %s\n
 ;
 MSG_ADMINS
 Admins
@@ -60,31 +60,31 @@ MSG_NORMAL
 Normaux
 ;
 MSG_SET_MODE
-\0335*** %s choisit le mode: %s %s
+*** %s choisit le mode: %s %s\n
 ;
 MSG_CHANGED_NICK
-\0335*** %s a changé son pseudo en %s
+*** %s a changé son pseudo en %s\n
 ;
 MSG_DO_NOTICE
-\0335-%s- %s
+-%s- %s\n
 ;
 MSG_HAS_LEFT
-\0335*** %s a quitté %s
+*** %s a quitté %s\n
 ;
 MSG_HANDLE_ACTION
-\033P[-3]*** %s %s
+*** %s %s\n
 ;
 MSG_HAS_QUIT
-\0335*** %s a quitté IRC ('%s')
+*** %s a quitté IRC ('%s')\n
 ;
 MSG_CHANGES_TOPIC
-\0335*** %s change le sujet en %s
+*** %s change le sujet en %s\n
 ;
 MSG_INITIAL_TOPIC
-\0335*** Sujet initial : %s
+*** Sujet initial : %s\n
 ;
 MSG_UNHANDLED_COMMAND
-*** # Commande non gérée '%s'
+*** # Commande non gérée '%s'\n
 ;
 MSG_SERVER_LOG
 Journal du Serveur

@@ -15,6 +15,7 @@
 #include    <proto/exec.h>
 #include    <proto/dos.h>
 #include    <proto/intuition.h>
+#include    <proto/graphics.h>
 #include    <proto/muimaster.h>
 
 #include    <dos/dos.h>
@@ -46,13 +47,15 @@
 #include "aircos_global.h"
 #include "locale.h"
 
-extern struct AiRcOS_internal *AiRcOS_Base;
+#include <MUI/TextEditor_mcc.h>
 
+extern struct AiRcOS_internal *AiRcOS_Base;
 
 extern struct IRC_Channel_Priv  *FindNamedChannel( struct IRC_Connection_Private *onThisConnection, char *findThisChan);
 extern Object	*aircos_showServerConnect();
-extern void aircos_showChanOutput(struct IRC_Channel_Priv *thisChanPriv, struct serv_Outline *sa);
-extern int aircos_sendline(struct IRC_Connection_Private *forConnection);
+extern void aircosApp_setChanPen(struct IRC_Channel_Priv *thisChanPriv, ULONG pen);
+extern void aircosApp_showChanOutput(struct IRC_Channel_Priv *thisChanPriv, struct serv_Outline *sa);
+extern int aircosApp_sendline(struct IRC_Connection_Private *forConnection);
 
 /******* DATA : INTERN PROTOS *******/
 
@@ -86,14 +89,14 @@ int aircos_IRC_nop(struct IRC_Connection_Private	*currentConnection)
 
 D(bug("[AiRcOS] ## IRC ## NOP('%s')\n",currentConnection->connection_serv_ARGS[0]));
 
-   if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( currentConnection->connection_unprocessed ) + 1, MEMF_CLEAR ) ))
+   if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( currentConnection->connection_unprocessed ) + 2, MEMF_CLEAR ) ))
 	{
       char *tmpline = (char *)&sa[1];
-		strcpy( tmpline, currentConnection->connection_unprocessed );
-		sa->so_name = (STRPTR)&sa[1];
+        sprintf( tmpline, "%s\n", currentConnection->connection_unprocessed );
+        sa->so_name = (STRPTR)&sa[1];
 
-      DoMethod( currentConnection->connected_server->serv_status_output, MUIM_NList_InsertSingle, sa->so_name, MUIV_NList_Insert_Bottom );
-      DoMethod( currentConnection->connected_server->serv_status_output, MUIM_NList_Jump, MUIV_List_Jump_Bottom);
+      DoMethod( currentConnection->connected_server->serv_status_output, MUIM_TextEditor_InsertText, sa->so_name, MUIV_TextEditor_InsertText_Bottom  );
+//      DoMethod( currentConnection->connected_server->serv_status_output, MUIM_NList_Jump, MUIV_List_Jump_Bottom);
 	}
 
    return 1;
@@ -133,7 +136,7 @@ D(bug("[AiRcOS](irc:DoJoin) Found internal channel record\n"));
 
 	      struct serv_Outline *sa;
 
-         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[2] ) + 20, MEMF_CLEAR ) ))
+         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[2] ) + strlen(_(MSG_USER_JOINED)) + 1, MEMF_CLEAR ) ))
 	      {
 D(bug("[AiRcOS](irc:DoJoin) Displaying Message\n"));
             char *tmpline = (char *)&sa[1];
@@ -141,7 +144,9 @@ D(bug("[AiRcOS](irc:DoJoin) Displaying Message\n"));
 		      sprintf( tmpline, _(MSG_USER_JOINED), username, currentConnection->connection_serv_ARGS[2] );
 		      sa->so_name = (STRPTR)&sa[1];
 
-            aircos_showChanOutput(thisChanPriv,sa);
+            aircosApp_setChanPen(thisChanPriv, 4);
+            aircosApp_showChanOutput(thisChanPriv, sa);
+            aircosApp_setChanPen(thisChanPriv, 0);
 	      }
 	      
 	      /* Add the user to the usergroup */
@@ -212,14 +217,16 @@ D(bug("{AiRcOS](irc;DoMode) CHANGE : removing old user record\n"));
                Remove(&change_ChanUser->group_node);
                struct serv_Outline *sa = NULL;
 
-               if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( currentConnection->connection_serv_ARGS[0] ) + strlen( currentConnection->connection_serv_ARGS[3] ) + strlen( currentConnection->connection_serv_ARGS[4] ) + 30, MEMF_CLEAR ) ))
+               if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( currentConnection->connection_serv_ARGS[0] ) + strlen( currentConnection->connection_serv_ARGS[3] ) + strlen( currentConnection->connection_serv_ARGS[4] ) + strlen(_(MSG_SET_MODE)) + 1, MEMF_CLEAR ) ))
                {
 D(bug("[AiRcOS](irc;DoMode) Displaying Message\n"));
                   sa->so_name = (STRPTR)&sa[1];
 
    		         sprintf( sa->so_name, _(MSG_SET_MODE), currentConnection->connection_serv_ARGS[0], currentConnection->connection_serv_ARGS[3], currentConnection->connection_serv_ARGS[4]);
 	
-                  aircos_showChanOutput(thisChanPriv,sa);
+					   aircosApp_setChanPen(thisChanPriv, 4);
+                  aircosApp_showChanOutput(thisChanPriv,sa);
+                  aircosApp_setChanPen(thisChanPriv, 0);
    	         }
 
                DoMethod( thisChanPriv->chan_users, MUIM_NListtree_Remove, MUIV_NListtree_Remove_ListNode_Root, change_ChanUser->user_obj );
@@ -278,15 +285,17 @@ D(bug("[AiRcOS](irc;DoNick) Searching For user record on '%s'\n",thisChanPriv->c
 D(bug("[AiRcOS](irc;DoNick) Users Record found - removing\n"));
             Remove(&rename_ChanUser->group_node);
             
-            if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( nicknamenew ) + 30, MEMF_CLEAR ) ))
+            if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( nicknamenew ) + strlen(_(MSG_CHANGED_NICK)) + 1, MEMF_CLEAR ) ))
             {
 D(bug("[AiRcOS](irc;DoNick) Displaying Message\n"));
                char *tmpline = (char *)&sa[1];
 
 		       sprintf( tmpline, _(MSG_CHANGED_NICK), username, nicknamenew );
 		       sa->so_name = (STRPTR)&sa[1];
-		
-               aircos_showChanOutput(thisChanPriv,sa);
+
+               aircosApp_setChanPen(thisChanPriv, 4);
+               aircosApp_showChanOutput(thisChanPriv,sa);
+               aircosApp_setChanPen(thisChanPriv, 0);
 	         }
 
             DoMethod( thisChanPriv->chan_users, MUIM_NListtree_Remove, MUIV_NListtree_Remove_ListNode_Root, rename_ChanUser->user_obj );
@@ -321,7 +330,7 @@ D(bug("[AiRcOS](irc;DoNotice.chan) Found internal channel record\n"));
 
 	      struct serv_Outline *sa;
 
-         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[3] ) + 4, MEMF_CLEAR ) ))
+         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[3] ) + strlen(_(MSG_DO_NOTICE)) + 1, MEMF_CLEAR ) ))
 	      {
 D(bug("[AiRcOS](irc;DoNotice.chan) Displaying Message\n"));
             char *tmpline = (char *)&sa[1];
@@ -329,7 +338,9 @@ D(bug("[AiRcOS](irc;DoNotice.chan) Displaying Message\n"));
 	   	   sprintf( tmpline, _(MSG_DO_NOTICE), username, currentConnection->connection_serv_ARGS[3] );
 	   	   sa->so_name = (STRPTR)&sa[1];
 
-            aircos_showChanOutput(thisChanPriv,sa);
+            aircosApp_setChanPen(thisChanPriv, 2);
+            aircosApp_showChanOutput(thisChanPriv,sa);
+            aircosApp_setChanPen(thisChanPriv, 0);
          }
       }	      
 	}
@@ -351,7 +362,7 @@ D(bug("[AiRcOS](irc;DoPart) Found internal channel record\n"));
 
 	   struct serv_Outline *sa;
 
-      if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[2] ) + 20, MEMF_CLEAR ) ))
+      if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[2] ) + strlen(_(MSG_HAS_LEFT)) + 1, MEMF_CLEAR ) ))
       {
 D(bug("[AiRcOS](irc;DoPart) Displaying Message\n"));
          char *tmpline = (char *)&sa[1];
@@ -359,7 +370,9 @@ D(bug("[AiRcOS](irc;DoPart) Displaying Message\n"));
          sprintf( tmpline, _(MSG_HAS_LEFT), username, currentConnection->connection_serv_ARGS[2] );
 		   sa->so_name = (STRPTR)&sa[1];
 
-         aircos_showChanOutput(thisChanPriv,sa);
+			aircosApp_setChanPen(thisChanPriv, 7);
+         aircosApp_showChanOutput(thisChanPriv,sa);
+         aircosApp_setChanPen(thisChanPriv, 0);
 	   }
 	   /* Find users usergroup record and remove */
       struct IRC_Channel_Group_SubGroup *current_Group=NULL;
@@ -420,14 +433,16 @@ D(bug("[AiRcOS](irc;handleAction) 'ACTION' : Found internal channel record\n"));
 	         struct serv_Outline *sa = NULL;
             char *username = currentConnection->connection_serv_ARGS[0]; 
 
-            if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( action_param ) + 10, MEMF_CLEAR ) ))
+            if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( action_param ) + strlen(_(MSG_HANDLE_ACTION)) + 1, MEMF_CLEAR ) ))
 	         {
 D(bug("[AiRcOS](irc;handleAction) 'ACTION' : Displaying Message\n"));
                sa->so_name = (STRPTR)&sa[1];
 
 		         sprintf( sa->so_name, _(MSG_HANDLE_ACTION), username, action_param );
 
-               aircos_showChanOutput(thisChanPriv,sa);
+               aircosApp_setChanPen(thisChanPriv, 8);
+               aircosApp_showChanOutput(thisChanPriv,sa);
+               aircosApp_setChanPen(thisChanPriv, 0);
 	        }
          }
          return 0;
@@ -491,14 +506,14 @@ D(bug("[AiRcOS](irc;DoPrivMsg.B) Found internal channel record\n"));
 
 	      struct serv_Outline *sa;
 
-         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[3] ) + 5, MEMF_CLEAR ) ))
+         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[3] ) + strlen("<%s> %s\n") + 1, MEMF_CLEAR ) ))
 	      {
 D(bug("[AiRcOS](irc;DoPrivMsg) B: Displaying Message\n"));
 		      sa->so_name = (STRPTR)&sa[1];
 
-		      sprintf( sa->so_name, "<%s> %s", username, currentConnection->connection_serv_ARGS[3] );
+		      sprintf( sa->so_name, "<%s> %s\n", username, currentConnection->connection_serv_ARGS[3] );
 
-            aircos_showChanOutput(thisChanPriv,sa);
+            aircosApp_showChanOutput(thisChanPriv,sa);
 	      }
       }
       }
@@ -529,15 +544,17 @@ D(bug("[AiRcOS](irc;DoPart) Searching For user record on '%s'\n",thisChanPriv->c
 D(bug("[AiRcOS](irc;DoQuit) Users Record found - removing\n"));
             Remove(&left_ChanUser->group_node);
             
-            if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[2] ) + 28, MEMF_CLEAR ) ))
+            if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[2] ) + strlen(_(MSG_HAS_QUIT)) + 1, MEMF_CLEAR ) ))
             {
 D(bug("[AiRcOS](irc;DoQuit) Displaying Message\n"));
                char *tmpline = (char *)&sa[1];
 
 		       sprintf( tmpline, _(MSG_HAS_QUIT), username, currentConnection->connection_serv_ARGS[2] );
 		       sa->so_name = (STRPTR)&sa[1];
-		
-               aircos_showChanOutput(thisChanPriv,sa);
+
+				   aircosApp_setChanPen(thisChanPriv, 7);
+               aircosApp_showChanOutput(thisChanPriv,sa);
+				   aircosApp_setChanPen(thisChanPriv, 0);
 	         }
 
             DoMethod( thisChanPriv->chan_users, MUIM_NListtree_Remove, MUIV_NListtree_Remove_ListNode_Root, left_ChanUser->user_obj );
@@ -575,7 +592,7 @@ D(bug("[AiRcOS](irc;DoTopic) Changing topic display\n"));
       char *username = currentConnection->connection_serv_ARGS[0]; 
 	   struct serv_Outline *sa;
 
-      if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[3] ) + 26, MEMF_CLEAR ) ))
+      if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[3] ) + strlen(_(MSG_CHANGES_TOPIC)) + 1, MEMF_CLEAR ) ))
 	   {
 D(bug("[AiRcOS](irc;DoTopic) Displaying Message in local channel\n"));
          char *tmpline = (char *)&sa[1];
@@ -583,7 +600,9 @@ D(bug("[AiRcOS](irc;DoTopic) Displaying Message in local channel\n"));
 		   sprintf( tmpline, _(MSG_CHANGES_TOPIC), username, currentConnection->connection_serv_ARGS[3] );
 		   sa->so_name = (STRPTR)&sa[1];
 		
-         aircos_showChanOutput(thisChanPriv,sa);
+         aircosApp_setChanPen(thisChanPriv, 4);
+         aircosApp_showChanOutput(thisChanPriv,sa);
+         aircosApp_setChanPen(thisChanPriv, 0);
 	   }
       
    }
@@ -632,7 +651,7 @@ D(bug("[AiRcOS](numeric;initialtopic) Changing topic display\n"));
 
 	      struct serv_Outline *sa;
 
-         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( currentConnection->connection_serv_ARGS[4] ) + 22, MEMF_CLEAR ) ))
+         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( currentConnection->connection_serv_ARGS[4] ) + (_(MSG_INITIAL_TOPIC)) + 1, MEMF_CLEAR ) ))
 	      {
 D(bug("[AiRcOS](numeric;initialtopic) Displaying Message in local channel\n"));
             char *tmpline = (char *)&sa[1];
@@ -640,7 +659,9 @@ D(bug("[AiRcOS](numeric;initialtopic) Displaying Message in local channel\n"));
 		      sprintf( tmpline, _(MSG_INITIAL_TOPIC), currentConnection->connection_serv_ARGS[4] );
 		      sa->so_name = (STRPTR)&sa[1];
 
-            aircos_showChanOutput(thisChanPriv,sa);
+            aircosApp_setChanPen(thisChanPriv, 4);
+            aircosApp_showChanOutput(thisChanPriv,sa);
+            aircosApp_setChanPen(thisChanPriv, 0);
 	      }
       
       }
@@ -759,13 +780,15 @@ static int aircos_CLIENT_nop(struct IRC_Channel_Priv  *sendOnThisChannel)
 
 D(bug("[AiRcOS] ## CLIENT ## NOP('%s')\n",sendOnThisChannel->chan_send_ARGS[0]));
 
-   if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( sendOnThisChannel->chan_send_ARGS[0] ) + 28, MEMF_CLEAR ) ))
+   if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( sendOnThisChannel->chan_send_ARGS[0] ) + strlen(_(MSG_UNHANDLED_COMMAND)) + 1, MEMF_CLEAR ) ))
 	{
       char *tmpline = (char *)&sa[1];
 		sprintf( tmpline, _(MSG_UNHANDLED_COMMAND), sendOnThisChannel->chan_send_ARGS[0] );
 		sa->so_name = (STRPTR)&sa[1];
 
-      aircos_showChanOutput(sendOnThisChannel,sa);
+      aircosApp_setChanPen(sendOnThisChannel, 8);
+      aircosApp_showChanOutput(sendOnThisChannel,sa);
+      aircosApp_setChanPen(sendOnThisChannel, 0);
 	}
 
    return 1;
@@ -789,7 +812,7 @@ D(bug("')\n"));
 
    sprintf(sendOnThisChannel->chan_serv->serv_connection->connection_buff_send, "%s %s\n\r", sendOnThisChannel->chan_send_ARGS[0], sendOnThisChannel->chan_send_ARGS[1]);
 
-   aircos_sendline(sendOnThisChannel->chan_serv->serv_connection);
+   aircosApp_sendline(sendOnThisChannel->chan_serv->serv_connection);
 
    return 1;
 }
@@ -812,24 +835,26 @@ D(bug("')\n"));
 
    sprintf(sendOnThisChannel->chan_serv->serv_connection->connection_buff_send, "PRIVMSG %s :\1ACTION %s\1\n\r", sendOnThisChannel->chan_name, sendOnThisChannel->chan_send_ARGS[1]);
 
-   aircos_sendline(sendOnThisChannel->chan_serv->serv_connection);
+   aircosApp_sendline(sendOnThisChannel->chan_serv->serv_connection);
 
 	struct serv_Outline *sa;
 
-   if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( sendOnThisChannel->chan_serv->serv_connection->connection_nick ) + strlen( sendOnThisChannel->chan_send_ARGS[1] ) + 10, MEMF_CLEAR ) ))
+   if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( sendOnThisChannel->chan_serv->serv_connection->connection_nick ) + strlen( sendOnThisChannel->chan_send_ARGS[1] ) + strlen("*** %s %s\n") + 1, MEMF_CLEAR ) ))
 	{
 D(bug("[AiRcOS](client;dome) Displaying local Message\n"));
       char *tmpline = (char *)&sa[1];
 
-		sprintf( tmpline, "\033P[-3]*** %s %s", sendOnThisChannel->chan_serv->serv_connection->connection_nick, sendOnThisChannel->chan_send_ARGS[1] );
+		sprintf( tmpline, "*** %s %s\n", sendOnThisChannel->chan_serv->serv_connection->connection_nick, sendOnThisChannel->chan_send_ARGS[1] );
 	   sa->so_name = (STRPTR)&sa[1];
 
-      aircos_showChanOutput(sendOnThisChannel,sa);
+      aircosApp_setChanPen(sendOnThisChannel, 8);
+      aircosApp_showChanOutput(sendOnThisChannel,sa);
+      aircosApp_setChanPen(sendOnThisChannel, 0);
 	}
    return 1;
 }
 
-struct irccommand commandList_array[]=
+struct functionrecord commandList_array[]=
 {
     {"ADMIN"    , aircos_IRC_nop,         15 , aircos_CLIENT_nop,         15 },
     {"AWAY"     , aircos_IRC_nop,         1  , aircos_CLIENT_nop,         15 },
@@ -1069,7 +1094,7 @@ struct IRC_Server_Priv  *aircos_add_server(char *addserv)
         D(bug("[AiRcOS](addserv) ## allocated private record for %s\n",new_ircServer->serv_name));
 
         // SERVER OUTPUT
-        Object * servout_tmp = NListviewObject,
+/*        Object * servout_tmp = NListviewObject,
                                     MUIA_Listview_List, (IPTR) (new_ircServer->serv_status_output = NListObject,
                                          ReadListFrame,
                                          MUIA_NList_ListBackground, MUII_SHINE,
@@ -1077,11 +1102,18 @@ struct IRC_Server_Priv  *aircos_add_server(char *addserv)
                                          MUIA_NList_MinLineHeight, 18,
                                     End),
                                End;
+        */
+        new_ircServer->serv_status_output = NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
+//                  MUIA_TextEditor_Slider, slider,
+                  MUIA_Background, MUII_SHINE,
+                  MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,
+                  MUIA_TextEditor_ReadOnly, TRUE,
+                  MUIA_CycleChain, TRUE);
 
-        if (!(servout_tmp)) goto newircs_err1;
+        if (!(new_ircServer->serv_status_output)) goto newircs_err1;
         
         new_ircServer->serv_statuspage = VGroup,
-                        Child, (IPTR) servout_tmp,
+                        Child, (IPTR) new_ircServer->serv_status_output,
                     End;
 
         if (!(new_ircServer->serv_statuspage)) goto newircs_err2;
@@ -1288,8 +1320,9 @@ AROS_UFH3(void, parseoutput_func,
    char                    *rawoutput = NULL;
    int pos, found = 0;
 
-   get( obj, MUIA_String_Contents, &rawoutput );
-D(bug("[AiRcOS](parseoutput_func) Parse output for channel '%s' ['%s']\n", sendOnThisChannel->chan_name, rawoutput));
+   rawoutput = DoMethod( obj, MUIM_TextEditor_ExportText );
+
+D(bug("[AiRcOS](parseoutput_func) Parse output for channel '%s' [%x:'%s']\n", sendOnThisChannel->chan_name, rawoutput, rawoutput));
 
    if (rawoutput == "") return;
 
@@ -1299,22 +1332,22 @@ D(bug("[AiRcOS](parseoutput_func) Parse output for channel '%s' ['%s']\n", sendO
 D(bug("[AiRcOS](parseoutput_func) Sending plain message ..\n"));
    	sprintf(sendOnThisChannel->chan_serv->serv_connection->connection_buff_send, "PRIVMSG %s :%s\n\r", sendOnThisChannel->chan_name, rawoutput);
 
-	  aircos_sendline(sendOnThisChannel->chan_serv->serv_connection);
+	  aircosApp_sendline(sendOnThisChannel->chan_serv->serv_connection);
 	  
 	  /* Display our sent message in our output window also.. */
 	  struct serv_Outline *sa;
 
-     if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( sendOnThisChannel->chan_serv->serv_connection->connection_nick ) + strlen( rawoutput ) + 5, MEMF_CLEAR ) ))
+     if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( sendOnThisChannel->chan_serv->serv_connection->connection_nick ) + strlen( rawoutput ) + strlen("<%s> %s\n") + 1, MEMF_CLEAR ) ))
 	  {
 D(bug("[AiRcOS](parseoutput_func) Displaying Message localy\n"));
          char *tmpline = (char *)&sa[1];
 
-		   sprintf( tmpline, "<%s> %s", sendOnThisChannel->chan_serv->serv_connection->connection_nick, rawoutput );
+		   sprintf( tmpline, "<%s> %s\n", sendOnThisChannel->chan_serv->serv_connection->connection_nick, rawoutput );
 		   sa->so_name = (STRPTR)&sa[1];
 
 //		   sa->flags = (UWORD)msg->UserData;
 		
-         aircos_showChanOutput(sendOnThisChannel,sa);
+         aircosApp_showChanOutput(sendOnThisChannel,sa);
 	   }
    }
    else
@@ -1357,9 +1390,11 @@ D(bug("[AiRcOS](parseoutput_func) Calling IRC funtion %d\n", pos-1));
 		}
    }
 
-   set( obj, MUIA_String_Contents, NULL);                               /* Clear the current buffer */
+   DoMethod(obj, MUIM_TextEditor_ClearText);                               /* Clear the current buffer */
 //	return( 0 );
-	
+
+D(bug("[AiRcOS](parseoutput_func) Freeing rawouput @ %x\n", rawoutput));	
+	FreeVec(rawoutput);
 	AROS_USERFUNC_EXIT
 };
 
@@ -1626,13 +1661,12 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
                                         Child, (IPTR) gad_close_irc_out,
                                     End,
         
-                                    Child, ( new_ircChannel->chan_output = NListviewObject, /* IRC OUTPUT */
-                                        MUIA_Listview_List, NListObject,
-                                            MUIA_NList_Columns,3,
-                                            MUIA_NList_ListBackground, MUII_SHINE,
-                                            ReadListFrame,
-                                        End,
-                                    End),
+                                    Child, ( new_ircChannel->chan_output = NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
+                                        MUIA_Background, MUII_SHINE,
+//                                        MUIA_TextEditor_Slider, slider,
+                                        MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,
+                                        MUIA_TextEditor_ReadOnly, TRUE,
+                                        MUIA_CycleChain, TRUE)),
         
                                     Child, (IPTR) BalanceObject,
                                     End,
@@ -1683,12 +1717,12 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
                                     Child, (IPTR) HGroup,
                                         MUIA_Group_SameWidth, FALSE,
                                         MUIA_Weight,0,
-                                        Child, (IPTR) ( new_ircChannel->chan_message = BetterStringObject,
-                                                ReadListFrame,
-                                                MUIA_BetterString_StayActive, TRUE,
-                                                MUIA_Background, MUII_SHINE,
-                                                MUIA_HorizWeight,100,
-                                        End),
+                                        Child, (IPTR) ( new_ircChannel->chan_message  = NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
+                                             MUIA_Background, MUII_SHINE,
+//                                             MUIA_TextEditor_Rows, 2,
+//                                        MUIA_TextEditor_Slider, slider,
+                                       		MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,
+                                        		MUIA_CycleChain, TRUE)),
                                         Child, (IPTR)  new_ircChannel->chan_send,
                                     End,
                                 End),
@@ -1779,6 +1813,45 @@ D(bug("[AiRcOS](addchan) Setting channel page notifications\n"));
 	     (
 	         new_ircChannel->chan_send, MUIM_Notify, MUIA_Pressed, FALSE,
 				(IPTR)new_ircChannel->chan_message, 3, MUIM_CallHook, &new_ircChannel->chan_hook, new_ircChannel
+	     );
+
+/* Handle Text Formatting Control */
+/* # Handle Input String setting Formatting */
+	DoMethod
+	     (
+				new_ircChannel->chan_message, MUIM_Notify, MUIA_TextEditor_StyleBold, MUIV_EveryTime,
+	         (IPTR)gad_font_bold, 3, MUIM_NoNotifySet, MUIA_Selected, MUIV_TriggerValue
+	     );
+
+	DoMethod
+	     (
+				new_ircChannel->chan_message, MUIM_Notify, MUIA_TextEditor_StyleItalic, MUIV_EveryTime,
+	         (IPTR)gad_font_ital, 3, MUIM_NoNotifySet, MUIA_Selected, MUIV_TriggerValue
+	     );
+
+	DoMethod
+	     (
+				new_ircChannel->chan_message, MUIM_Notify, MUIA_TextEditor_StyleUnderline, MUIV_EveryTime,
+	         (IPTR)gad_font_under, 3, MUIM_NoNotifySet, MUIA_Selected, MUIV_TriggerValue
+	     );
+
+/* # Handle Gadgets setting Formatting */
+	DoMethod
+	     (
+	         gad_font_bold, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+				(IPTR)new_ircChannel->chan_message, 3, MUIM_NoNotifySet, MUIA_TextEditor_StyleBold, MUIV_TriggerValue
+	     );
+
+	DoMethod
+	     (
+	         gad_font_ital, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+				(IPTR)new_ircChannel->chan_message, 3, MUIM_NoNotifySet, MUIA_TextEditor_StyleItalic, MUIV_TriggerValue
+	     );
+
+	DoMethod
+	     (
+	         gad_font_under, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+				(IPTR)new_ircChannel->chan_message, 3, MUIM_NoNotifySet, MUIA_TextEditor_StyleUnderline, MUIV_TriggerValue
 	     );
 
    set( AiRcOS_Base->aircos_clientwin, MUIA_Window_DefaultObject, new_ircChannel->chan_message);

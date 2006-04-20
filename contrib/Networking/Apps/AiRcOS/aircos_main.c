@@ -16,6 +16,7 @@
 #include    <proto/dos.h>
 #include    <proto/intuition.h>
 #include    <proto/muimaster.h>
+#include    <proto/graphics.h>
 
 #include    <dos/dos.h>
 #include    <intuition/gadgetclass.h>
@@ -45,6 +46,8 @@
 
 #include "aircos_global.h"
 #include "locale.h"
+
+#include <MUI/TextEditor_mcc.h>
 
 #define AiRcOS_MENUID_CONNECT          (AiRcOS_MENUID + 1)
 #define AiRcOS_MENUID_CLOSE            (AiRcOS_MENUID + 2)
@@ -81,12 +84,24 @@
 extern int aircos_IRC_donumeric(struct IRC_Connection_Private	*currentConnection, int num);
 extern int aircos_IRC_nop(struct IRC_Connection_Private	*currentConnection);
 extern struct IRC_Server_Priv  *aircos_add_server(char *addserv);
-extern struct irccommand commandList_array[];
+extern struct functionrecord commandList_array[];
+
+#define INTERNALFUNCID(functionID) (functionID + 1)
+
+struct intern_functionrecord
+{
+   struct Node           ifr_Node;
+   struct functionrecord ifr_command;
+};
+
+extern int aircos_IRCFuncs_RegisterFuncs(void);
+//extern int aircos_DCCFuncs_RegisterFuncs(void);
 
 struct AiRcOS_internal *AiRcOS_Base;
 
-BOOL aircos_OpenBSDSOCKET()
+BOOL aircosApp__OpenBSDSOCKET()
 {
+D(bug("[AiRcOS] aircosApp__OpenBSDSOCKET()\n"));
     if (AiRcOS_Base->Ai_SocketBase!=NULL) return TRUE;
 
     if ((AiRcOS_Base->Ai_SocketBase = OpenLibrary("bsdsocket.library",3)))
@@ -117,7 +132,116 @@ D(bug("[AiRcOS](openbsdsocket) Couldnt allocate sigbit_ProcessStack!\n"));
     return FALSE;
 }
 
-int aircos_sendline(struct IRC_Connection_Private *forConnection)
+BOOPSI_DISPATCHER(IPTR, TextEditor_Dispatcher, CLASS, self, message)
+{
+
+D(bug("[AiRcOS] TextEditor_Dispatcher()\n"));
+	switch(message->MethodID)
+	{
+		case MUIM_Show:
+		{
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_Show\n"));
+				struct ColorMap *cm = muiRenderInfo(self)->mri_Screen->ViewPort.ColorMap;
+
+			AiRcOS_Base->editor_cmap[0] = ObtainBestPenA(cm, 0x00<<24, 0x00<<24, 0x00<<24, NULL);
+			AiRcOS_Base->editor_cmap[1] = ObtainBestPenA(cm, 0xff<<24, 0xff<<24, 0xff<<24, NULL);
+			AiRcOS_Base->editor_cmap[2] = ObtainBestPenA(cm, 0xff<<24, 0x00<<24, 0x00<<24, NULL);
+			AiRcOS_Base->editor_cmap[3] = ObtainBestPenA(cm, 0x00<<24, 0x93<<24, 0x00<<24, NULL);
+			AiRcOS_Base->editor_cmap[4] = ObtainBestPenA(cm, 0x00<<24, 0xff<<24, 0xff<<24, NULL);
+			AiRcOS_Base->editor_cmap[5] = ObtainBestPenA(cm, 0xff<<24, 0xff<<24, 0x00<<24, NULL);
+			AiRcOS_Base->editor_cmap[6] = ObtainBestPenA(cm, 0x00<<24, 0x00<<24, 0x7f<<24, NULL);
+			AiRcOS_Base->editor_cmap[7] = ObtainBestPenA(cm, 0xff<<24, 0x00<<24, 0xff<<24, NULL);
+			break;
+		}
+
+		case MUIM_Hide:
+		{
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_Hide\n"));
+				struct ColorMap *cm = muiRenderInfo(self)->mri_Screen->ViewPort.ColorMap;
+				int c;
+
+			for(c = 0; c < 8; c++)
+			{
+				if(AiRcOS_Base->editor_cmap[c] >= 0)
+				{
+					ReleasePen(cm, AiRcOS_Base->editor_cmap[c]);
+				}
+			}
+			break;
+		}
+
+		case MUIM_DragQuery:
+		{
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_DragQuery\n"));
+			return(TRUE);
+		}
+
+		case MUIM_DragDrop:
+		{
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_DragDrop\n"));
+				struct MUIP_DragDrop *drop_msg = (struct MUIP_DragDrop *)message;
+				ULONG active;
+
+			if(GetAttr(MUIA_List_Active, drop_msg->obj, &active))
+			{
+				//DoMethod(obj, MUIM_TextEditor_InsertText, StdEntries[active]);
+			}
+			break;
+		}
+
+		case MUIM_TextEditor_HandleError:
+		{
+				char *errortxt = NULL;
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleError\n"));
+			switch((( struct MUIP_TextEditor_HandleError *)message)->errorcode)
+			{
+				case Error_ClipboardIsEmpty:
+					errortxt = "\33cThe clipboard is empty.";
+					break;
+				case Error_ClipboardIsNotFTXT:
+					errortxt = "\33cThe clipboard does not contain text.";
+					break;
+				case Error_MacroBufferIsFull:
+					break;
+				case Error_MemoryAllocationFailed:
+					break;
+				case Error_NoAreaMarked:
+					errortxt = "\33cNo area marked.";
+					break;
+				case Error_NoMacroDefined:
+					break;
+				case Error_NothingToRedo:
+					errortxt = "\33cNothing to redo.";
+					break;
+				case Error_NothingToUndo:
+					errortxt = "\33cNothing to undo.";
+					break;
+				case Error_NotEnoughUndoMem:
+					errortxt = "There is not enough memory\nto keep the undo buffer.\n\nThe undobuffer is lost.";
+					break;
+				case Error_StringNotFound:
+					break;
+				case Error_NoBookmarkInstalled:
+					errortxt = "There is no bookmark installed!";
+					break;
+				case Error_BookmarkHasBeenLost:
+					errortxt = "Your bookmark has unfortunately been lost.";
+					break;
+			}
+			if(errortxt)
+			{
+D(bug("[AiRcOS] TextEditor:Error %s\n", errortxt));
+//				MUI_Request(app, window, 0L, NULL, "Continue", errortxt);
+			}
+			break;
+		}
+	}
+  return(DoSuperMethodA(CLASS, self, message));
+
+}
+BOOPSI_DISPATCHER_END
+
+int aircosApp_sendline(struct IRC_Connection_Private *forConnection)
 {
     int count;
 
@@ -132,7 +256,7 @@ int aircos_sendline(struct IRC_Connection_Private *forConnection)
 struct IRC_Channel_Priv  *FindNamedChannel( struct IRC_Connection_Private *onThisConnection, char *findThisChan)
 {
    struct IRC_Channel_Priv  *foundChannel = NULL;
-D(bug("[AiRcOS] FindNamedChannel('%s')\n",findThisChan));
+D(bug("[AiRcOS] FindNamedChannel('%s' on '%s')\n", findThisChan, onThisConnection->connection_server));
 
    ForeachNode(&onThisConnection->connected_server->serv_chans, foundChannel)
    {
@@ -142,28 +266,128 @@ D(bug("[AiRcOS](FindNamedChannel) Checking against record for '%s'\n",foundChann
    return NULL;
 }
 
-void aircos_showChanOutput(struct IRC_Channel_Priv *thisChanPriv, struct serv_Outline *sa)
+void aircosApp_showChanOutput(struct IRC_Channel_Priv *thisChanPriv, struct serv_Outline *sa)
 {
-   if ( thisChanPriv->chan_displayedlines >= CHANOUT_MAXLINES)
-   {
+  if ( thisChanPriv->chan_displayedlines >= CHANOUT_MAXLINES)
+  {
 D(bug("[AiRcOS](showChanOutput) Freeing text at head of output ... \n"));
-   }
+  }
 
-   //if (aircos_PrefsStruct->prefs_LogDir)
-   //{
-      // Output Current line to log file for this channel... 
-   // 
-   //}
+// if (aircos_PrefsStruct->prefs_LogDir)
+// {
+//     Output Current line to log file for this channel... 
+// }
 
-   //And finally output the line ...
-   DoMethod( thisChanPriv->chan_output, MUIM_NList_InsertSingle, sa->so_name, MUIV_NList_Insert_Bottom );
-   DoMethod( thisChanPriv->chan_output, MUIM_NList_Jump, MUIV_List_Jump_Bottom);
-   thisChanPriv->chan_displayedlines++;
+  //And finally output the line ...
+  struct Rectangle crsr_output;
+
+  set(thisChanPriv->chan_output, MUIA_TextEditor_Quiet, TRUE);  
+  if (thisChanPriv->chan_currentpen != 0)
+  {
+    get(thisChanPriv->chan_output, MUIA_TextEditor_CursorX, &crsr_output.MinX);
+    get(thisChanPriv->chan_output, MUIA_TextEditor_CursorY, &crsr_output.MinY);
+  }
+  
+  DoMethod( thisChanPriv->chan_output, MUIM_TextEditor_InsertText, sa->so_name, MUIV_TextEditor_InsertText_Bottom );
+
+  if (thisChanPriv->chan_currentpen != 0)
+  {
+    get(thisChanPriv->chan_output, MUIA_TextEditor_CursorX, &crsr_output.MaxX);
+    get(thisChanPriv->chan_output, MUIA_TextEditor_CursorY, &crsr_output.MaxY);
+    DoMethod(thisChanPriv->chan_output, MUIM_TextEditor_MarkText,
+                                      crsr_output.MinX, crsr_output.MinY,
+                                      crsr_output.MaxX, crsr_output.MaxY);
+
+    DoMethod(thisChanPriv->chan_output, MUIM_Set, MUIA_TextEditor_Pen, thisChanPriv->chan_currentpen);
+
+    DoMethod(thisChanPriv->chan_output, MUIM_TextEditor_MarkText,
+                                      crsr_output.MaxX, crsr_output.MaxY,
+                                      crsr_output.MaxX, crsr_output.MaxY);
+    set(thisChanPriv->chan_output, MUIA_TextEditor_CursorX, crsr_output.MaxX);
+    set(thisChanPriv->chan_output, MUIA_TextEditor_CursorY, crsr_output.MaxY);
+  }
+  set(thisChanPriv->chan_output, MUIA_TextEditor_Quiet, FALSE);
+  thisChanPriv->chan_displayedlines++;
 }
 
+void aircosApp_setChanPen(struct IRC_Channel_Priv *thisChanPriv, ULONG pen)
+{
+  thisChanPriv->chan_currentpen = pen;
+}
 
+/****/
 
-int aircos_serverconnect(struct IRC_Connection_Private *makeThisConnection)
+int aircosApp_RegisterFunction(char *functionName, void *functionRcvCall, int functionRcvCallArgCnt, void *functionSendCall, int functionSendCallArgCnt)
+{
+D(bug("[AiRcOS] aircosApp_RegisterFunction(%s)\n", functionName));
+
+  struct intern_functionrecord *newRecord = AllocVec(sizeof(struct intern_functionrecord),MEMF_CLEAR);
+  newRecord->ifr_command.command = functionName;
+  newRecord->ifr_command.command_doFunction = functionRcvCall;
+  newRecord->ifr_command.servArgCount = functionRcvCallArgCnt;
+  newRecord->ifr_command.command_clientFunction = functionSendCall;
+  newRecord->ifr_command.clientArgCount = functionSendCallArgCnt;
+  AddTail(&AiRcOS_Base->funcs_FunctionList, &newRecord->ifr_Node);
+
+  return 1;
+}
+
+APTR aircosApp_FindFunction(char * functionName)
+{
+D(bug("[AiRcOS] aircosApp_FindFunction(%s)\n", functionName));
+  struct intern_functionrecord *foundFunction = NULL;
+
+  ForeachNode(&AiRcOS_Base->funcs_FunctionList, foundFunction)
+  {
+D(bug("[AiRcOS](aircosApp_FindFunction) Checking against record for '%s'\n",foundFunction->ifr_command.command));
+    if (strcasecmp(foundFunction->ifr_command.command, functionName)==0) return &foundFunction->ifr_command;
+  }
+  return NULL;
+}
+
+int aircosApp_RemoveFunction(char * functionName)
+{
+D(bug("[AiRcOS] aircosApp_RemoveFunction(%s)\n", functionName));
+
+  return 1;
+}
+
+int aircosApp_RegisterAction(char *actionName, void *actionRcvCall, int actionRcvCallArgCnt, void *actionSendCall, int actionSendCallArgCnt)
+{
+D(bug("[AiRcOS] aircosApp_RegisterAction(%s)\n", actionName));
+
+  struct intern_functionrecord *newRecord = AllocVec(sizeof(struct intern_functionrecord),MEMF_CLEAR);
+  newRecord->ifr_command.command = actionName;
+  newRecord->ifr_command.command_doFunction = actionRcvCall;
+  newRecord->ifr_command.servArgCount = actionRcvCallArgCnt;
+  newRecord->ifr_command.command_clientFunction = actionSendCall;
+  newRecord->ifr_command.clientArgCount = actionSendCallArgCnt;
+  AddTail(&AiRcOS_Base->funcs_FunctionList, &newRecord->ifr_Node);
+
+  return 1;
+}
+
+APTR aircosApp_FindAction(char * actionName)
+{
+D(bug("[AiRcOS] aircosApp_FindAction(%s)\n", actionName));
+  struct intern_functionrecord *foundAction = NULL;
+
+  ForeachNode(&AiRcOS_Base->funcs_ActionList, foundAction)
+  {
+D(bug("[AiRcOS](aircosApp_FindAction) Checking against record for '%s'\n",foundAction->ifr_command.command));
+    if (strcasecmp(foundAction->ifr_command.command, actionName)==0) return &foundAction->ifr_command;
+  }
+  return NULL;
+}
+
+int aircosApp_RemoveAction(char * actionName)
+{
+D(bug("[AiRcOS] aircosApp_RemoveAction(%s)\n", actionName));
+
+  return 1;
+}
+
+int aircosApp_serverconnect(struct IRC_Connection_Private *makeThisConnection)
 {
 D(bug("[AiRcOS] serverconnect(%s)\n",makeThisConnection->connection_server));
 
@@ -173,7 +397,7 @@ D(bug("[AiRcOS] serverconnect(%s)\n",makeThisConnection->connection_server));
 
     if (!(SocketBase))
     {
-        if (!(aircos_OpenBSDSOCKET()))
+        if (!(aircosApp__OpenBSDSOCKET()))
         {
 D(bug("[AiRcOS](serverconnect) No BSDSOCKET library!\n"));
         return -1;
@@ -231,17 +455,17 @@ D(bug("[AiRcOS](serverconnect) socket lvl connection established\n[AiRcOS](serve
 
                 sprintf(makeThisConnection->connection_buff_send, "USER %s * * :The POWER of AROS!\n",
                     makeThisConnection->connection_user);
-                aircos_sendline(makeThisConnection);
+                aircosApp_sendline(makeThisConnection);
 D(bug("[AiRcOS](serverconnect) Sent USER NAME ..\n"));
                 if (makeThisConnection->connection_pass != "")
                 {
                     sprintf(makeThisConnection->connection_buff_send, "PASS :%s\n", makeThisConnection->connection_pass);
-                    aircos_sendline(makeThisConnection);
+                    aircosApp_sendline(makeThisConnection);
 D(bug("[AiRcOS](serverconnect) Sent PASSWORD ..\n"));
                 }
 
                 sprintf(makeThisConnection->connection_buff_send, "NICK :%s\n", makeThisConnection->connection_nick);
-                aircos_sendline(makeThisConnection);
+                aircosApp_sendline(makeThisConnection);
 D(bug("[AiRcOS](serverconnect) Sent NICK ..\n"));
             }
         }
@@ -287,7 +511,7 @@ D(bug("[AiRcOS](serverconnect)   socket() : Unknown error allocating socket\n"))
     return makeThisConnection->connection_socket;
 }
 
-int aircos_processServerData(struct IRC_Connection_Private	*process_thisConnection, char *serverin_buffer)
+int aircosApp_processServerData(struct IRC_Connection_Private	*process_thisConnection, char *serverin_buffer)
 {
     int pos, found = 0;
 D(bug("[AiRcOS] processserverdata('%s')\n", serverin_buffer));
@@ -300,7 +524,7 @@ D(bug("[AiRcOS](processserverdata) Quick Reply to PING ..\n"));
         process_thisConnection->connection_buff_send[510] = '\0';
         process_thisConnection->connection_buff_send[1] = 'O'; /* Change pIng to pOng */
         strcat(process_thisConnection->connection_buff_send, "\n");
-        return aircos_sendline(process_thisConnection);
+        return aircosApp_sendline(process_thisConnection);
     }
 
     if (process_thisConnection->connection_unprocessed) FreeVec(process_thisConnection->connection_unprocessed);
@@ -399,7 +623,7 @@ D(bug("[AiRcOS](serverconnect_func) Failed to allocate connection record!!\n"));
         return;
     }
 
-   set(AiRcOS_Base->butt_connectServer,MUIA_Disabled,TRUE);
+   set(AiRcOS_Base->butt_connectServer, MUIA_Disabled, TRUE);
 
    char  *join_channel=NULL;
    IPTR  temp_servport=0;
@@ -415,6 +639,7 @@ D(bug("[AiRcOS](serverconnect_func) Failed to allocate connection record!!\n"));
    if (!(dtest_connection->connection_nick = (char *)AllocVec(strlen(str_connect_nick)+1,MEMF_CLEAR)))
    {
 D(bug("[AiRcOS](serverconnect_func) Failed to allocate nick buffer!!.\n"));
+      set(AiRcOS_Base->butt_connectServer, MUIA_Disabled, FALSE);
       return;
    }
 
@@ -427,7 +652,7 @@ D(bug("[AiRcOS](serverconnect_func) Attempting to connect to %s:%d, as %s\n", dt
 
 D(bug("[AiRcOS](serverconnect_func) Port : %d, Nick %s\n", dtest_connection->connection_port,dtest_connection->connection_nick));
 
-    int test_socket = aircos_serverconnect(dtest_connection);
+    int test_socket = aircosApp_serverconnect(dtest_connection);
     if (test_socket >= 0)
     {
         struct IRC_Server_Priv  *connected_server = NULL;
@@ -435,13 +660,15 @@ D(bug("[AiRcOS](serverconnect_func) Port : %d, Nick %s\n", dtest_connection->con
         if (!(connected_server = aircos_add_server(dtest_connection->connection_server)))
         {
 D(bug("[AiRcOS](serverconnect_func) Failed to create connection page!!.\n"));
+            set(AiRcOS_Base->butt_connectServer, MUIA_Disabled, FALSE);
             return;
         }
 
         connected_server->serv_connection = dtest_connection;
         dtest_connection->connected_server = connected_server;
 
-        set(AiRcOS_Base->aircos_quickconnectwin,MUIA_Window_Open,FALSE);
+        set(AiRcOS_Base->butt_connectServer, MUIA_Disabled, FALSE);
+        set(AiRcOS_Base->aircos_quickconnectwin, MUIA_Window_Open, FALSE);
       
 D(bug("[AiRcOS](serverconnect_func) Socket connection successfull\n"));
         if (join_channel != "")
@@ -449,7 +676,7 @@ D(bug("[AiRcOS](serverconnect_func) Socket connection successfull\n"));
 D(bug("[AiRcOS](serverconnect_func) Attempting to join channel %s ..\n", join_channel));
 
             sprintf(dtest_connection->connection_buff_send, "JOIN %s\n", join_channel);
-            aircos_sendline(dtest_connection);
+            aircosApp_sendline(dtest_connection);
         }
     }
     else
@@ -468,6 +695,7 @@ D(bug("[AiRcOS](serverconnect_func) Socket connection failed\n"));
         }
         FreeVec(dtest_connection);
         dtest_connection = NULL;
+        set(AiRcOS_Base->butt_connectServer, MUIA_Disabled, FALSE);
     }
 
     if (dtest_connection)
@@ -480,7 +708,7 @@ D(bug("[AiRcOS](serverconnect_func) Socket connection failed\n"));
 };
 
 
-void aircos_closeConnection(struct IRC_Connection_Private	*close_thisConnection)
+void aircosApp_closeConnection(struct IRC_Connection_Private	*close_thisConnection)
 {
     CloseSocket(close_thisConnection->connection_socket);
 
@@ -500,11 +728,11 @@ void aircos_closeConnection(struct IRC_Connection_Private	*close_thisConnection)
     close_thisConnection = NULL;
 }
 
-void  aircos_MainProcessLoop()
+void  aircosApp_MainProcessLoop()
 {
     ULONG sigs = 0;
 
-    D(bug("[AiRcOS] aircos_MainProcessLoop()\n"));
+    D(bug("[AiRcOS] aircosApp_MainProcessLoop()\n"));
     while (DoMethod(AiRcOS_Base->aircos_app, MUIM_Application_NewInput, (IPTR) &sigs) != MUIV_Application_ReturnID_Quit)
     {
         if (sigs)
@@ -565,7 +793,7 @@ void  aircos_MainProcessLoop()
                                             D(bug("\n[AiRcOS](MPL) Process server line (%d bytes)\n"));
                                             tmpbuff[tmpbuff_currpos] = '\0';
                                             processed = TRUE;
-                                            if (!aircos_processServerData(process_thisConnection, tmpbuff))
+                                            if (!aircosApp_processServerData(process_thisConnection, tmpbuff))
                                             {
                                                 D(bug("[AiRcOS](MPL) Response End/Error?\n"));
                                                 // return 0;
@@ -669,7 +897,7 @@ D(bug("[AiRcOS] menuprocess_func()\n"));
 
 int main(int argc, char **argv)
 {
-    IPTR                    argarray[TOTAL_ARGS] = {0};
+    IPTR                    argarray[TOTAL_ARGS] = { 0 };
     struct RDArgs           *args = NULL;
     
     BPTR                    lock = NULL;
@@ -678,7 +906,15 @@ int main(int argc, char **argv)
 //    struct IRC_Channel_Priv  *irc_channel_priv  = NULL;
 
     int                     error = RETURN_ERROR;
+	 struct MUI_CustomClass *custom_mcc = NULL;
+
 /**/
+    if (!(AiRcOS_Base = AllocMem(sizeof(struct AiRcOS_internal), MEMF_PUBLIC|MEMF_CLEAR)))
+    {
+      return error;
+    }
+D(bug("[AiRcOS](main) Allocated App Internal Base.\n"));
+
     if (!(DOSBase = (struct DosLibrary *)OpenLibrary("dos.library", 37)))
     {
         error = ERROR_INVALID_RESIDENT_LIBRARY;
@@ -686,378 +922,392 @@ int main(int argc, char **argv)
     }
 
     Locale_Initialize();
-
-    if (!(AiRcOS_Base = AllocMem(sizeof(struct AiRcOS_internal), MEMF_PUBLIC|MEMF_CLEAR)))
-    {
-      return error;
-    }
-
-    aircos_OpenBSDSOCKET();
-
-    args = ReadArgs( ARG_TEMPLATE, argarray, NULL);
+D(bug("[AiRcOS](main) Localisation Initialised.\n"));
 
     MUIMasterBase = (struct Library*)OpenLibrary("muimaster.library",0);
-    if(!(AiRcOS_Base->Ai_pool = CreatePool(MEMF_CLEAR,(256*1024),(16*1024))))
+
+    if ((custom_mcc = MUI_CreateCustomClass(NULL, "TextEditor.mcc", NULL, 0, TextEditor_Dispatcher)))
     {
+        AiRcOS_Base->editor_mcc = custom_mcc;
+D(bug("[AiRcOS](main) Created TextEditor Custom Class @ %x\n", AiRcOS_Base->editor_mcc));
+
+        aircosApp__OpenBSDSOCKET();
+    
+        args = ReadArgs( ARG_TEMPLATE, argarray, NULL);
+    
+        if(!(AiRcOS_Base->Ai_pool = CreatePool(MEMF_CLEAR,(256*1024),(16*1024))))
+        {
 D(bug("[AiRcOS](main) Failed to allocate pool!!\n"));
-    }
-
-    NewList((struct List *)&AiRcOS_Base->aircos_serverlist);
-    NewList((struct List *)&AiRcOS_Base->aircos_looseconnectionlist);
-
-    AiRcOS_Base->aircos_serv_no = 0;
-    struct NewMenu AiRcOs_Menus[] =
-{
-    {NM_TITLE, _(MENU_PROJECT)},
-        {NM_ITEM, _(MENU_CONNECT), _(MENU_CONNECT_SC), 2, 0L, (APTR)AiRcOS_MENUID_CONNECT},
-        {NM_ITEM, _(MENU_CLOSE), _(MENU_CLOSE_SC),     2, 0L, (APTR)AiRcOS_MENUID_CLOSE},
-        {NM_ITEM, _(MENU_QUIT), _(MENU_QUIT_SC),       2, 0L, (APTR)AiRcOS_MENUID_QUIT},
-    {NM_TITLE, _(MENU_SETTINGS)},
-        {NM_ITEM, _(MENU_APP_OPTIONS), _(MENU_APP_OPTIONS_SC ),      2, 0L, (APTR)AiRcOS_MENUID_PREFS},
-        {NM_ITEM, _(MENU_SERVER_MANAGER), _(MENU_SERVER_MANAGER_SC), 2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE},
-    {NM_TITLE, _(MENU_HELP)},
-        {NM_ITEM, _(MENU_APP_HELP), _(MENU_APP_HELP_SC),   2, 0L, (APTR)AiRcOS_MENUID_HELP},
-        {NM_ITEM, _(MENU_ABOUT), _(MENU_ABOUT_SC),         2, 0L, (APTR)AiRcOS_MENUID_ABOUT},
-    {NM_END}
-};
-/*
-static struct NewMenu AiRcOs_Group_Opp_CMenu[] =
-{
-    {NM_TITLE, "Project" },
-        {NM_ITEM, "Connect ..",             "Ctrl C",       2, 0L, (APTR)AiRcOS_MENUID_CONNECT},
-        {NM_ITEM, "Close connection",       "Ctrl X",       2, 0L, (APTR)AiRcOS_MENUID_CLOSE},
-        {NM_ITEM, "Quit",                  "Ctrl Q",        2, 0L, (APTR)AiRcOS_MENUID_QUIT},
-    {NM_TITLE, "Settings" },
-        {NM_ITEM, "Application Options",    "Ctrl P",       2, 0L, (APTR)AiRcOS_MENUID_PREFS},
-        {NM_ITEM, "Server Manager",    "Ctrl S",        2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE},
-    {NM_TITLE, "Help" },
-        {NM_ITEM, "Application Help",      "Ctrl H",        2, 0L, (APTR)AiRcOS_MENUID_HELP},
-        {NM_ITEM, "About AiRcOS",         "Ctrl A",         2, 0L, (APTR)AiRcOS_MENUID_ABOUT},
-    {NM_END}
-};
-
-static struct NewMenu AiRcOs_Group_Voice_CMenu[] =
-{
-    {NM_TITLE, "Project" },
-        {NM_ITEM, "Connect ..",             "Ctrl C",       2, 0L, (APTR)AiRcOS_MENUID_CONNECT},
-        {NM_ITEM, "Close connection",       "Ctrl X",       2, 0L, (APTR)AiRcOS_MENUID_CLOSE},
-        {NM_ITEM, "Quit",                  "Ctrl Q",        2, 0L, (APTR)AiRcOS_MENUID_QUIT},
-    {NM_TITLE, "Settings" },
-        {NM_ITEM, "Application Options",    "Ctrl P",       2, 0L, (APTR)AiRcOS_MENUID_PREFS},
-        {NM_ITEM, "Server Manager",    "Ctrl S",        2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE},
-    {NM_TITLE, "Help" },
-        {NM_ITEM, "Application Help",      "Ctrl H",        2, 0L, (APTR)AiRcOS_MENUID_HELP},
-        {NM_ITEM, "About AiRcOS",         "Ctrl A",         2, 0L, (APTR)AiRcOS_MENUID_ABOUT},
-    {NM_END}
-};
-
-static struct NewMenu AiRcOs_Group_Normal_CMenu[] =
-{
-    {NM_TITLE, "Project" },
-        {NM_ITEM, "Connect ..",             "Ctrl C",       2, 0L, (APTR)AiRcOS_MENUID_CONNECT},
-        {NM_ITEM, "Close connection",       "Ctrl X",       2, 0L, (APTR)AiRcOS_MENUID_CLOSE},
-        {NM_ITEM, "Quit",                  "Ctrl Q",        2, 0L, (APTR)AiRcOS_MENUID_QUIT},
-    {NM_TITLE, "Settings" },
-        {NM_ITEM, "Application Options",    "Ctrl P",       2, 0L, (APTR)AiRcOS_MENUID_PREFS},
-        {NM_ITEM, "Server Manager",    "Ctrl S",        2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE},
-    {NM_TITLE, "Help" },
-        {NM_ITEM, "Application Help",      "Ctrl H",        2, 0L, (APTR)AiRcOS_MENUID_HELP},
-        {NM_ITEM, "About AiRcOS",         "Ctrl A",         2, 0L, (APTR)AiRcOS_MENUID_ABOUT},
-    {NM_END}
-};
-*/
-/* Get the speech icon image */
+        }
     
-    lock = NULL;
-    if ((lock = Lock(SPEEKTYPE_IMAGE, ACCESS_READ)) != NULL)
+        NewList((struct List *)&AiRcOS_Base->aircos_serverlist);
+        NewList((struct List *)&AiRcOS_Base->aircos_looseconnectionlist);
+
+        NewList((struct List *)&AiRcOS_Base->funcs_FunctionList);
+        NewList((struct List *)&AiRcOS_Base->funcs_ActionList);
+
+        aircos_IRCFuncs_RegisterFuncs();
+//        aircos_DCCFuncs_RegisterFuncs(void)
+
+        AiRcOS_Base->aircos_serv_no = 0;
+        struct NewMenu AiRcOs_Menus[] =
+        {
+        {NM_TITLE, _(MENU_PROJECT)},
+            {NM_ITEM, _(MENU_CONNECT), _(MENU_CONNECT_SC), 2, 0L, (APTR)AiRcOS_MENUID_CONNECT},
+            {NM_ITEM, _(MENU_CLOSE), _(MENU_CLOSE_SC),     2, 0L, (APTR)AiRcOS_MENUID_CLOSE},
+            {NM_ITEM, _(MENU_QUIT), _(MENU_QUIT_SC),       2, 0L, (APTR)AiRcOS_MENUID_QUIT},
+        {NM_TITLE, _(MENU_SETTINGS)},
+            {NM_ITEM, _(MENU_APP_OPTIONS), _(MENU_APP_OPTIONS_SC ),      2, 0L, (APTR)AiRcOS_MENUID_PREFS},
+            {NM_ITEM, _(MENU_SERVER_MANAGER), _(MENU_SERVER_MANAGER_SC), 2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE},
+        {NM_TITLE, _(MENU_HELP)},
+            {NM_ITEM, _(MENU_APP_HELP), _(MENU_APP_HELP_SC),   2, 0L, (APTR)AiRcOS_MENUID_HELP},
+            {NM_ITEM, _(MENU_ABOUT), _(MENU_ABOUT_SC),         2, 0L, (APTR)AiRcOS_MENUID_ABOUT},
+        {NM_END}
+        };
+    /*
+    static struct NewMenu AiRcOs_Group_Opp_CMenu[] =
     {
-        AiRcOS_Base->aircos_got_speekimg = TRUE;
-
-        UnLock(lock);
-    }
-    else AiRcOS_Base->aircos_got_speekimg = FALSE;
+        {NM_TITLE, "Project" },
+            {NM_ITEM, "Connect ..",             "Ctrl C",       2, 0L, (APTR)AiRcOS_MENUID_CONNECT},
+            {NM_ITEM, "Close connection",       "Ctrl X",       2, 0L, (APTR)AiRcOS_MENUID_CLOSE},
+            {NM_ITEM, "Quit",                  "Ctrl Q",        2, 0L, (APTR)AiRcOS_MENUID_QUIT},
+        {NM_TITLE, "Settings" },
+            {NM_ITEM, "Application Options",    "Ctrl P",       2, 0L, (APTR)AiRcOS_MENUID_PREFS},
+            {NM_ITEM, "Server Manager",    "Ctrl S",        2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE},
+        {NM_TITLE, "Help" },
+            {NM_ITEM, "Application Help",      "Ctrl H",        2, 0L, (APTR)AiRcOS_MENUID_HELP},
+            {NM_ITEM, "About AiRcOS",         "Ctrl A",         2, 0L, (APTR)AiRcOS_MENUID_ABOUT},
+        {NM_END}
+    };
     
-/* Get the user icon image */
-    
-    lock = NULL;
-    if ((lock = Lock(USERTYPE_IMAGE, ACCESS_READ)) != NULL)
+    static struct NewMenu AiRcOs_Group_Voice_CMenu[] =
     {
-        AiRcOS_Base->aircos_got_userimg = TRUE;
-
-        UnLock(lock);
-    }
-    else AiRcOS_Base->aircos_got_userimg = FALSE;
-
-/* Get the font etc icons */
+        {NM_TITLE, "Project" },
+            {NM_ITEM, "Connect ..",             "Ctrl C",       2, 0L, (APTR)AiRcOS_MENUID_CONNECT},
+            {NM_ITEM, "Close connection",       "Ctrl X",       2, 0L, (APTR)AiRcOS_MENUID_CLOSE},
+            {NM_ITEM, "Quit",                  "Ctrl Q",        2, 0L, (APTR)AiRcOS_MENUID_QUIT},
+        {NM_TITLE, "Settings" },
+            {NM_ITEM, "Application Options",    "Ctrl P",       2, 0L, (APTR)AiRcOS_MENUID_PREFS},
+            {NM_ITEM, "Server Manager",    "Ctrl S",        2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE},
+        {NM_TITLE, "Help" },
+            {NM_ITEM, "Application Help",      "Ctrl H",        2, 0L, (APTR)AiRcOS_MENUID_HELP},
+            {NM_ITEM, "About AiRcOS",         "Ctrl A",         2, 0L, (APTR)AiRcOS_MENUID_ABOUT},
+        {NM_END}
+    };
     
-    lock = NULL;
-    if ((lock = Lock(FONT_BACK_IMAGE, ACCESS_READ)) != NULL)
+    static struct NewMenu AiRcOs_Group_Normal_CMenu[] =
     {
-        AiRcOS_Base->aircos_got_fontbaimg = TRUE;
-
-        UnLock(lock);
-    }
-    else AiRcOS_Base->aircos_got_fontbaimg = FALSE;
+        {NM_TITLE, "Project" },
+            {NM_ITEM, "Connect ..",             "Ctrl C",       2, 0L, (APTR)AiRcOS_MENUID_CONNECT},
+            {NM_ITEM, "Close connection",       "Ctrl X",       2, 0L, (APTR)AiRcOS_MENUID_CLOSE},
+            {NM_ITEM, "Quit",                  "Ctrl Q",        2, 0L, (APTR)AiRcOS_MENUID_QUIT},
+        {NM_TITLE, "Settings" },
+            {NM_ITEM, "Application Options",    "Ctrl P",       2, 0L, (APTR)AiRcOS_MENUID_PREFS},
+            {NM_ITEM, "Server Manager",    "Ctrl S",        2, 0L, (APTR)AiRcOS_MENUID_SERVERMANAGE},
+        {NM_TITLE, "Help" },
+            {NM_ITEM, "Application Help",      "Ctrl H",        2, 0L, (APTR)AiRcOS_MENUID_HELP},
+            {NM_ITEM, "About AiRcOS",         "Ctrl A",         2, 0L, (APTR)AiRcOS_MENUID_ABOUT},
+        {NM_END}
+    };
+    */
+    /* Get the speech icon image */
+        
+        lock = NULL;
+        if ((lock = Lock(SPEEKTYPE_IMAGE, ACCESS_READ)) != NULL)
+        {
+            AiRcOS_Base->aircos_got_speekimg = TRUE;
     
-    lock = NULL;
-    if ((lock = Lock(FONT_BOLD_IMAGE, ACCESS_READ)) != NULL)
-    {
-        AiRcOS_Base->aircos_got_fontboimg = TRUE;
-
-        UnLock(lock);
-    }
-    else AiRcOS_Base->aircos_got_fontboimg = FALSE;
+            UnLock(lock);
+        }
+        else AiRcOS_Base->aircos_got_speekimg = FALSE;
+        
+    /* Get the user icon image */
+        
+        lock = NULL;
+        if ((lock = Lock(USERTYPE_IMAGE, ACCESS_READ)) != NULL)
+        {
+            AiRcOS_Base->aircos_got_userimg = TRUE;
     
-    lock = NULL;
-    if ((lock = Lock(FONT_COLOR_IMAGE, ACCESS_READ)) != NULL)
-    {
-        AiRcOS_Base->aircos_got_fontcoimg = TRUE;
-
-        UnLock(lock);
-    }
-    else AiRcOS_Base->aircos_got_fontcoimg = FALSE;
+            UnLock(lock);
+        }
+        else AiRcOS_Base->aircos_got_userimg = FALSE;
     
-    lock = NULL;
-    if ((lock = Lock(FONT_DEF_IMAGE, ACCESS_READ)) != NULL)
-    {
-        AiRcOS_Base->aircos_got_fontdeimg = TRUE;
-
-        UnLock(lock);
-    }
-    else AiRcOS_Base->aircos_got_fontdeimg = FALSE;
+    /* Get the font etc icons */
+        
+        lock = NULL;
+        if ((lock = Lock(FONT_BACK_IMAGE, ACCESS_READ)) != NULL)
+        {
+            AiRcOS_Base->aircos_got_fontbaimg = TRUE;
     
-    lock = NULL;
-    if ((lock = Lock(FONT_ITAL_IMAGE, ACCESS_READ)) != NULL)
-    {
-        AiRcOS_Base->aircos_got_fontitimg = TRUE;
-
-        UnLock(lock);
-    }
-    else AiRcOS_Base->aircos_got_fontitimg = FALSE;
+            UnLock(lock);
+        }
+        else AiRcOS_Base->aircos_got_fontbaimg = FALSE;
+        
+        lock = NULL;
+        if ((lock = Lock(FONT_BOLD_IMAGE, ACCESS_READ)) != NULL)
+        {
+            AiRcOS_Base->aircos_got_fontboimg = TRUE;
     
-    lock = NULL;
-    if ((lock = Lock(FONT_LARGE_IMAGE, ACCESS_READ)) != NULL)
-    {
-        AiRcOS_Base->aircos_got_fontlaimg = TRUE;
-
-        UnLock(lock);
-    }
-    else AiRcOS_Base->aircos_got_fontlaimg = FALSE;
+            UnLock(lock);
+        }
+        else AiRcOS_Base->aircos_got_fontboimg = FALSE;
+        
+        lock = NULL;
+        if ((lock = Lock(FONT_COLOR_IMAGE, ACCESS_READ)) != NULL)
+        {
+            AiRcOS_Base->aircos_got_fontcoimg = TRUE;
     
-    lock = NULL;
-    if ((lock = Lock(FONT_SMALL_IMAGE, ACCESS_READ)) != NULL)
-    {
-        AiRcOS_Base->aircos_got_fontsmimg = TRUE;
-
-        UnLock(lock);
-    }
-    else AiRcOS_Base->aircos_got_fontsmimg = FALSE;
+            UnLock(lock);
+        }
+        else AiRcOS_Base->aircos_got_fontcoimg = FALSE;
+        
+        lock = NULL;
+        if ((lock = Lock(FONT_DEF_IMAGE, ACCESS_READ)) != NULL)
+        {
+            AiRcOS_Base->aircos_got_fontdeimg = TRUE;
     
-    lock = NULL;
-    if ((lock = Lock(FONT_UNDER_IMAGE, ACCESS_READ)) != NULL)
-    {
-        AiRcOS_Base->aircos_got_fontunimg = TRUE;
-
-        UnLock(lock);
-    }
-    else AiRcOS_Base->aircos_got_fontunimg = FALSE;
+            UnLock(lock);
+        }
+        else AiRcOS_Base->aircos_got_fontdeimg = FALSE;
+        
+        lock = NULL;
+        if ((lock = Lock(FONT_ITAL_IMAGE, ACCESS_READ)) != NULL)
+        {
+            AiRcOS_Base->aircos_got_fontitimg = TRUE;
     
-    lock = NULL;
-    if ((lock = Lock(POP_PIC_IMAGE, ACCESS_READ)) != NULL)
-    {
-        AiRcOS_Base->aircos_got_poppicimg = TRUE;
-
-        UnLock(lock);
-    }
-    else AiRcOS_Base->aircos_got_poppicimg = FALSE;
+            UnLock(lock);
+        }
+        else AiRcOS_Base->aircos_got_fontitimg = FALSE;
+        
+        lock = NULL;
+        if ((lock = Lock(FONT_LARGE_IMAGE, ACCESS_READ)) != NULL)
+        {
+            AiRcOS_Base->aircos_got_fontlaimg = TRUE;
     
-    lock = NULL;
-    if ((lock = Lock(POP_SMILEY_IMAGE, ACCESS_READ)) != NULL)
-    {
-        AiRcOS_Base->aircos_got_popsmiimg = TRUE;
-
-        UnLock(lock);
-    }
-    else AiRcOS_Base->aircos_got_popsmiimg = FALSE;
+            UnLock(lock);
+        }
+        else AiRcOS_Base->aircos_got_fontlaimg = FALSE;
+        
+        lock = NULL;
+        if ((lock = Lock(FONT_SMALL_IMAGE, ACCESS_READ)) != NULL)
+        {
+            AiRcOS_Base->aircos_got_fontsmimg = TRUE;
     
-    lock = NULL;
-    if ((lock = Lock(POP_URL_IMAGE, ACCESS_READ)) != NULL)
-    {
-        AiRcOS_Base->aircos_got_popurlimg = TRUE;
-
-        UnLock(lock);
-    }
-    else AiRcOS_Base->aircos_got_popurlimg = FALSE;
+            UnLock(lock);
+        }
+        else AiRcOS_Base->aircos_got_fontsmimg = FALSE;
+        
+        lock = NULL;
+        if ((lock = Lock(FONT_UNDER_IMAGE, ACCESS_READ)) != NULL)
+        {
+            AiRcOS_Base->aircos_got_fontunimg = TRUE;
     
-/**/
-
-    AiRcOS_Base->aircos_app = ApplicationObject,
-        MUIA_Application_Title,       __(MSG_TITLE),
-        MUIA_Application_Version,     (IPTR) "$VER: AiRcOS 0.3 (11.12.05) ©AROS Dev Team",
-        MUIA_Application_Copyright,   (IPTR) "Copyright © 2005, The AROS Development Team. All rights reserved.",
-        MUIA_Application_Author,      (IPTR) "Nic Andrews",
-        MUIA_Application_Description, __(MSG_DESCRIPTION),
-        MUIA_Application_Base,        (IPTR) "AIRCOS",
-
-        SubWindow, (IPTR) (AiRcOS_Base->aircos_clientwin = WindowObject,
-            MUIA_Window_Menustrip,(IPTR) ( AiRcOS_Base->aircos_clientwin_menu = MUI_MakeObject(MUIO_MenustripNM,
-                (IPTR)AiRcOs_Menus, (IPTR)NULL)),
-
-            MUIA_Window_Title, __(MSG_WIN_TITLE),
-            MUIA_Window_Activate, TRUE,
-            MUIA_Window_Width,600,
-            MUIA_Window_Height,400,
-     
-            WindowContents, (IPTR) HGroup,
-                Child, (IPTR) (AiRcOS_Base->aircos_window_content = VGroup,
-                    Child, (IPTR) (AiRcOS_Base->aircos_window_page = VGroup,
-                        InputListFrame,
-                        MUIA_Background, MUII_HSHADOWSHADOW,
-                        Child, RectangleObject,
-                        End,
+            UnLock(lock);
+        }
+        else AiRcOS_Base->aircos_got_fontunimg = FALSE;
+        
+        lock = NULL;
+        if ((lock = Lock(POP_PIC_IMAGE, ACCESS_READ)) != NULL)
+        {
+            AiRcOS_Base->aircos_got_poppicimg = TRUE;
+    
+            UnLock(lock);
+        }
+        else AiRcOS_Base->aircos_got_poppicimg = FALSE;
+        
+        lock = NULL;
+        if ((lock = Lock(POP_SMILEY_IMAGE, ACCESS_READ)) != NULL)
+        {
+            AiRcOS_Base->aircos_got_popsmiimg = TRUE;
+    
+            UnLock(lock);
+        }
+        else AiRcOS_Base->aircos_got_popsmiimg = FALSE;
+        
+        lock = NULL;
+        if ((lock = Lock(POP_URL_IMAGE, ACCESS_READ)) != NULL)
+        {
+            AiRcOS_Base->aircos_got_popurlimg = TRUE;
+    
+            UnLock(lock);
+        }
+        else AiRcOS_Base->aircos_got_popurlimg = FALSE;
+D(bug("[AiRcOS](main) Base gadget Images locked\n"));
+    /**/
+    
+        AiRcOS_Base->aircos_app = ApplicationObject,
+            MUIA_Application_Title,       __(MSG_TITLE),
+            MUIA_Application_Version,     (IPTR) "$VER: AiRcOS 0.5 (11.04.06) ©AROS Dev Team",
+            MUIA_Application_Copyright,   (IPTR) "Copyright © 2005-2006, The AROS Development Team. All rights reserved.",
+            MUIA_Application_Author,      (IPTR) "Nic Andrews",
+            MUIA_Application_Description, __(MSG_DESCRIPTION),
+            MUIA_Application_Base,        (IPTR) "AIRCOS",
+    
+            SubWindow, (IPTR) (AiRcOS_Base->aircos_clientwin = WindowObject,
+                MUIA_Window_Menustrip,(IPTR) ( AiRcOS_Base->aircos_clientwin_menu = MUI_MakeObject(MUIO_MenustripNM,
+                    (IPTR)AiRcOs_Menus, (IPTR)NULL)),
+    
+                MUIA_Window_Title, __(MSG_WIN_TITLE),
+                MUIA_Window_Activate, TRUE,
+                MUIA_Window_Width,600,
+                MUIA_Window_Height,400,
+         
+                WindowContents, (IPTR) HGroup,
+                    Child, (IPTR) (AiRcOS_Base->aircos_window_content = VGroup,
+                        Child, (IPTR) (AiRcOS_Base->aircos_window_page = VGroup,
+                            InputListFrame,
+                            MUIA_Background, MUII_HSHADOWSHADOW,
+                            Child, RectangleObject,
+                            End,
+                        End),
                     End),
-                End),
-            End,
-        End),
-
-        SubWindow, (IPTR) (AiRcOS_Base->aircos_quickconnectwin = WindowObject,
-            MUIA_Window_Title, _(MSG_SERVER_CONNECT),
-            MUIA_Window_Activate, TRUE,
-     
-            WindowContents, (IPTR) VGroup,
-                Child, (IPTR) VGroup, 
-                    GroupFrame,
-                    Child, (IPTR) ColGroup(2),
-                        Child, (IPTR) LLabel(_(MSG_SERVER_ADDRESS)),
-                            Child, (IPTR) (AiRcOS_Base->quickcon_servadd = StringObject,
-                                StringFrame,
-                                MUIA_CycleChain, 1,
-                                    MUIA_String_Format, MUIV_String_Format_Right,
-                            End ),
-                            Child, (IPTR) LLabel(_(MSG_SERVER_PORT)),
-                            Child, (IPTR) (AiRcOS_Base->quickcon_servport = StringObject,
-                                StringFrame,
-                                MUIA_CycleChain, 1,
-                                    MUIA_String_Format, MUIV_String_Format_Right,
-                                    MUIA_String_Accept, "0123456789",
-                                    MUIA_String_Integer, 0,
-                            End ),
-                            Child, (IPTR) LLabel(_(MSG_USERNAME)),
-                            Child, (IPTR) (AiRcOS_Base->quickcon_servuser = StringObject,
-                                StringFrame,
-                                MUIA_CycleChain, 1,
-                                    MUIA_String_Format, MUIV_String_Format_Left,
-                                End ),
-                            Child, (IPTR) LLabel(_(MSG_PASSWORD)),
-                            Child, (IPTR) (AiRcOS_Base->quickcon_servpass = StringObject,
-                                StringFrame,
-                                MUIA_CycleChain, 1,
-                                    MUIA_String_Format, MUIV_String_Format_Left,
-                                    MUIA_String_Secret, TRUE,
-                                End ),
-                    End,
                 End,
-                Child, (IPTR) VGroup,
-                    GroupFrame,
-                    Child, (IPTR) ColGroup(2),
-                            Child, (IPTR) LLabel(_(MSG_NICKNAME)),
-                            Child, (IPTR) (AiRcOS_Base->quickcon_nick = StringObject,
-                                StringFrame,
-                                MUIA_CycleChain, 1,
-                                    MUIA_String_Format, MUIV_String_Format_Left,
+            End),
+    
+            SubWindow, (IPTR) (AiRcOS_Base->aircos_quickconnectwin = WindowObject,
+                MUIA_Window_Title, _(MSG_SERVER_CONNECT),
+                MUIA_Window_Activate, TRUE,
+         
+                WindowContents, (IPTR) VGroup,
+                    Child, (IPTR) VGroup, 
+                        GroupFrame,
+                        Child, (IPTR) ColGroup(2),
+                            Child, (IPTR) LLabel(_(MSG_SERVER_ADDRESS)),
+                                Child, (IPTR) (AiRcOS_Base->quickcon_servadd = StringObject,
+                                    StringFrame,
+                                    MUIA_CycleChain, 1,
+                                        MUIA_String_Format, MUIV_String_Format_Right,
                                 End ),
-                            Child, (IPTR) LLabel(_(MSG_JOIN)),
-                            Child, (IPTR) (AiRcOS_Base->quickcon_channel = StringObject,
-                                StringFrame,
-                                MUIA_CycleChain, 1,
-                                    MUIA_String_Format, MUIV_String_Format_Left,
+                                Child, (IPTR) LLabel(_(MSG_SERVER_PORT)),
+                                Child, (IPTR) (AiRcOS_Base->quickcon_servport = StringObject,
+                                    StringFrame,
+                                    MUIA_CycleChain, 1,
+                                        MUIA_String_Format, MUIV_String_Format_Right,
+                                        MUIA_String_Accept, "0123456789",
+                                        MUIA_String_Integer, 0,
                                 End ),
+                                Child, (IPTR) LLabel(_(MSG_USERNAME)),
+                                Child, (IPTR) (AiRcOS_Base->quickcon_servuser = StringObject,
+                                    StringFrame,
+                                    MUIA_CycleChain, 1,
+                                        MUIA_String_Format, MUIV_String_Format_Left,
+                                    End ),
+                                Child, (IPTR) LLabel(_(MSG_PASSWORD)),
+                                Child, (IPTR) (AiRcOS_Base->quickcon_servpass = StringObject,
+                                    StringFrame,
+                                    MUIA_CycleChain, 1,
+                                        MUIA_String_Format, MUIV_String_Format_Left,
+                                        MUIA_String_Secret, TRUE,
+                                    End ),
+                        End,
                     End,
+                    Child, (IPTR) VGroup,
+                        GroupFrame,
+                        Child, (IPTR) ColGroup(2),
+                                Child, (IPTR) LLabel(_(MSG_NICKNAME)),
+                                Child, (IPTR) (AiRcOS_Base->quickcon_nick = StringObject,
+                                    StringFrame,
+                                    MUIA_CycleChain, 1,
+                                        MUIA_String_Format, MUIV_String_Format_Left,
+                                    End ),
+                                Child, (IPTR) LLabel(_(MSG_JOIN)),
+                                Child, (IPTR) (AiRcOS_Base->quickcon_channel = StringObject,
+                                    StringFrame,
+                                    MUIA_CycleChain, 1,
+                                        MUIA_String_Format, MUIV_String_Format_Left,
+                                    End ),
+                        End,
+                    End,
+                    Child, (IPTR) (AiRcOS_Base->butt_connectServer = SimpleButton(_(MSG_CONNECT))),
                 End,
-                Child, (IPTR) (AiRcOS_Base->butt_connectServer = SimpleButton(_(MSG_CONNECT))),
-            End,
-        End),
-    End;
+            End),
+        End;
 
-   if (AiRcOS_Base->aircos_app)
-   {
+       if (AiRcOS_Base->aircos_app)
+       {
 
-   AiRcOS_Base->aircos_menuhook.h_MinNode.mln_Succ = NULL;
-   AiRcOS_Base->aircos_menuhook.h_MinNode.mln_Pred = NULL;
-   AiRcOS_Base->aircos_menuhook.h_Entry = HookEntry;
-   AiRcOS_Base->aircos_menuhook.h_SubEntry = (void *)menuprocess_func;
-
-    DoMethod (
-        AiRcOS_Base->aircos_clientwin, MUIM_Notify, MUIA_Window_MenuAction, MUIV_EveryTime,
-        ( IPTR ) AiRcOS_Base->aircos_app, 3, MUIM_CallHook, ( IPTR )&AiRcOS_Base->aircos_menuhook, MUIV_EveryTime
-    );
-
-   set(AiRcOS_Base->butt_connectServer, MUIA_CycleChain, 1);
-
-   set( AiRcOS_Base->quickcon_servadd, MUIA_String_Contents, _(MSG_DEFAULT_SERVER));
-   set( AiRcOS_Base->quickcon_servport, MUIA_String_Integer, 6665);
-   set( AiRcOS_Base->quickcon_servuser, MUIA_String_Contents, _(MSG_DEFAULT_USERNAME));
-   set( AiRcOS_Base->quickcon_servpass, MUIA_String_Contents,"");
-   set( AiRcOS_Base->quickcon_nick, MUIA_String_Contents, _(MSG_DEFAULT_NICKNAME));
-   set( AiRcOS_Base->quickcon_channel, MUIA_String_Contents, _(MSG_DEFAULT_CHAN));
-
-
-D(bug("[AiRcOS] prepare connect hook\n"));
-
-   AiRcOS_Base->aircos_connect_hook.h_MinNode.mln_Succ = NULL;
-   AiRcOS_Base->aircos_connect_hook.h_MinNode.mln_Pred = NULL;
-   AiRcOS_Base->aircos_connect_hook.h_Entry = HookEntry;
-   AiRcOS_Base->aircos_connect_hook.h_SubEntry = (void *)serverconnect_func;
-//   aircos_connect_hook.h_Data = ;
-
-   
-    DoMethod
-    (
-        AiRcOS_Base->aircos_clientwin, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
-        (IPTR) AiRcOS_Base->aircos_app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit
-    );
-
-    DoMethod
-    (
-        AiRcOS_Base->butt_connectServer, MUIM_Notify, MUIA_Pressed, FALSE,
-            (IPTR) AiRcOS_Base->aircos_app, 3, MUIM_CallHook, &AiRcOS_Base->aircos_connect_hook, NULL
-    );
-
-  /* ********** WINDOW KEY NOTIFIES ********** */
-
-    DoMethod
-    (
-            AiRcOS_Base->aircos_clientwin, MUIM_Notify, MUIA_Window_InputEvent, "f2",
-            AiRcOS_Base->aircos_quickconnectwin, 3, MUIM_Set, MUIA_Window_Open, TRUE
-    );
-
-    set(AiRcOS_Base->aircos_clientwin,MUIA_Window_Open,TRUE);
-    set(AiRcOS_Base->aircos_quickconnectwin,MUIA_Window_Open,TRUE);
-
-      aircos_MainProcessLoop();
-    }
-    else
-    {
-        printf("Failed to intialize Zune GUI\n");
-    }
-
-/** CLOSE ALL OPEN SERVER CONNECTIONS! **/
-
-   struct IRC_Server_Priv *current_Server=NULL;
-   ForeachNode(&AiRcOS_Base->aircos_serverlist, current_Server)
-   {
-      if ((SocketBase)&&(current_Server->serv_connection))
-      {
-         aircos_closeConnection(current_Server->serv_connection);
-      }
-   
+D(bug("[AiRcOS](main) Zune Application Objects Created\n"));
+    
+       AiRcOS_Base->aircos_menuhook.h_MinNode.mln_Succ = NULL;
+       AiRcOS_Base->aircos_menuhook.h_MinNode.mln_Pred = NULL;
+       AiRcOS_Base->aircos_menuhook.h_Entry = HookEntry;
+       AiRcOS_Base->aircos_menuhook.h_SubEntry = (void *)menuprocess_func;
+    
+        DoMethod (
+            AiRcOS_Base->aircos_clientwin, MUIM_Notify, MUIA_Window_MenuAction, MUIV_EveryTime,
+            ( IPTR ) AiRcOS_Base->aircos_app, 3, MUIM_CallHook, ( IPTR )&AiRcOS_Base->aircos_menuhook, MUIV_EveryTime
+        );
+    
+       set( (IPTR)AiRcOS_Base->butt_connectServer, MUIA_CycleChain, 1);
+    
+       set( (IPTR)AiRcOS_Base->quickcon_servadd, MUIA_String_Contents, _(MSG_DEFAULT_SERVER));
+       set( (IPTR)AiRcOS_Base->quickcon_servport, MUIA_String_Integer, 6665);
+       set( (IPTR)AiRcOS_Base->quickcon_servuser, MUIA_String_Contents, _(MSG_DEFAULT_USERNAME));
+       set( (IPTR)AiRcOS_Base->quickcon_servpass, MUIA_String_Contents,"");
+       set( (IPTR)AiRcOS_Base->quickcon_nick, MUIA_String_Contents, _(MSG_DEFAULT_NICKNAME));
+       set( (IPTR)AiRcOS_Base->quickcon_channel, MUIA_String_Contents, _(MSG_DEFAULT_CHAN));
+    
+    
+    D(bug("[AiRcOS] prepare connect hook\n"));
+    
+       AiRcOS_Base->aircos_connect_hook.h_MinNode.mln_Succ = NULL;
+       AiRcOS_Base->aircos_connect_hook.h_MinNode.mln_Pred = NULL;
+       AiRcOS_Base->aircos_connect_hook.h_Entry = HookEntry;
+       AiRcOS_Base->aircos_connect_hook.h_SubEntry = (void *)serverconnect_func;
+    //   aircos_connect_hook.h_Data = ;
+    
+        DoMethod
+        (
+            AiRcOS_Base->aircos_clientwin, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
+            (IPTR) AiRcOS_Base->aircos_app, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit
+        );
+    
+        DoMethod
+        (
+            AiRcOS_Base->butt_connectServer, MUIM_Notify, MUIA_Pressed, FALSE,
+                (IPTR) AiRcOS_Base->aircos_app, 3, MUIM_CallHook, &AiRcOS_Base->aircos_connect_hook, NULL
+        );
+    
+      /* ********** WINDOW KEY NOTIFIES ********** */
+    
+        DoMethod
+        (
+                AiRcOS_Base->aircos_clientwin, MUIM_Notify, MUIA_Window_InputEvent, "f2",
+                AiRcOS_Base->aircos_quickconnectwin, 3, MUIM_Set, MUIA_Window_Open, TRUE
+        );
+    
+        set((IPTR)AiRcOS_Base->aircos_clientwin,MUIA_Window_Open,TRUE);
+        set((IPTR)AiRcOS_Base->aircos_quickconnectwin,MUIA_Window_Open,TRUE);
+    
+          aircosApp_MainProcessLoop();
+        }
+        else
+        {
+            printf("Failed to intialize Zune GUI\n");
+        }
+    
+    /** CLOSE ALL OPEN SERVER CONNECTIONS! **/
+    
+       struct IRC_Server_Priv *current_Server=NULL;
+       ForeachNode(&AiRcOS_Base->aircos_serverlist, current_Server)
+       {
+          if ((SocketBase)&&(current_Server->serv_connection))
+          {
+             aircosApp_closeConnection(current_Server->serv_connection);
+          }
+       
+       }
+    
+    /** CLOSE ALL LOOSE CONNECTIONS! **/
+       struct IRC_Connection_Private	*current_Connection=NULL;
+       ForeachNode(&AiRcOS_Base->aircos_looseconnectionlist, current_Connection)
+       {
+             aircosApp_closeConnection(current_Connection);
+       }
    }
-
-/** CLOSE ALL LOOSE CONNECTIONS! **/
-   struct IRC_Connection_Private	*current_Connection=NULL;
-   ForeachNode(&AiRcOS_Base->aircos_looseconnectionlist, current_Connection)
+   else
    {
-         aircos_closeConnection(current_Connection);
+D(bug("[AiRcOS](main) Failed to create TextEditor Custom Class!!\n"));
    }
 
     if (args) FreeArgs(args);
