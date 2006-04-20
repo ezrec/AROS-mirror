@@ -1268,6 +1268,8 @@ D(bug("[AiRcOS](findserver) checking '%s'\n", cur_server->serv_name));
 BOOL  aircos_rem_server(char *remserv)
 {
    struct IRC_Server_Priv  *rem_this_serv;
+
+D(bug("[AiRcOS] aircos_rem_server('%s')\n", remserv));
           
         if (!(rem_this_serv = aircos_find_server(remserv)))
         {
@@ -1425,9 +1427,11 @@ struct IRC_Channel_Priv  *aircos_add_channel(char *addtoserv,char *addchann)
         CopyMem(addchann,tmp_str,strlen(addchann));
         tmp_str[strlen(addchann)+1] = '\0';
 
+D(bug("[AiRcOS] aircos_add_channel('%s' to '%s')\n", addchann, addtoserv));
+
         if (!(new_ircChannel->chan_serv = aircos_find_server(addtoserv)))
         {
-D(bug("[AiRcOS] Failed to locate server record for '%s'..\n",addtoserv));
+D(bug("[AiRcOS] Failed to locate server record for '%s'..\n", addtoserv));
                 FreeVec(new_ircChannel);
                 return NULL;
         }
@@ -1636,6 +1640,8 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
 		sprintf(output_grp_label,_(MSG_FROM_TO), new_ircChannel->chan_serv->serv_name, new_ircChannel->chan_name);
 		sprintf(new_ircChannel->chan_topic,"%s",new_ircChannel->chan_name);
 
+		Object * tmp_ScrollBar = ScrollbarObject, End;
+
         new_ircChannel->chan_page = VGroup,
                             Child, (IPTR) HGroup,
                                 MUIA_Group_SameWidth, FALSE,
@@ -1660,14 +1666,18 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
                                         Child, HVSpace,
                                         Child, (IPTR) gad_close_irc_out,
                                     End,
+
+                                    Child, HGroup,
+                                        Child, ( new_ircChannel->chan_output = NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
+                                            MUIA_Background, MUII_SHINE,
+                                            MUIA_TextEditor_Slider, tmp_ScrollBar,
+                                            MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,
+                                            MUIA_TextEditor_ReadOnly, TRUE,
+                                            MUIA_CycleChain, TRUE)),
         
-                                    Child, ( new_ircChannel->chan_output = NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
-                                        MUIA_Background, MUII_SHINE,
-//                                        MUIA_TextEditor_Slider, slider,
-                                        MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,
-                                        MUIA_TextEditor_ReadOnly, TRUE,
-                                        MUIA_CycleChain, TRUE)),
-        
+                                        Child, (IPTR) tmp_ScrollBar,        
+                                    End,
+
                                     Child, (IPTR) BalanceObject,
                                     End,
         
@@ -1719,8 +1729,8 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
                                         MUIA_Weight,0,
                                         Child, (IPTR) ( new_ircChannel->chan_message  = NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
                                              MUIA_Background, MUII_SHINE,
-//                                             MUIA_TextEditor_Rows, 2,
-//                                        MUIA_TextEditor_Slider, slider,
+//                                           MUIA_TextEditor_Rows, 2,
+//                                           MUIA_TextEditor_Slider, slider,
                                        		MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,
                                         		MUIA_CycleChain, TRUE)),
                                         Child, (IPTR)  new_ircChannel->chan_send,
@@ -1861,8 +1871,9 @@ D(bug("[AiRcOS](addchan) Set NOTIFICATION for channel page '%s' [ID:%d]\n", new_
         return new_ircChannel;
 }
 
-BOOL  aircos_rem_channel(char *remfromserv,char *remchann)
+BOOL  aircos_rem_channel(char *remfromserv, char *remchann)
 {
+D(bug("[AiRcOS](addchan) aircos_rem_channel('%s' from '%s')\n", remchann, remfromserv));
         return FALSE;
 }
 

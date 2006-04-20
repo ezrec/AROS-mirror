@@ -780,6 +780,7 @@ void  aircosApp_MainProcessLoop()
                                 if(process_thisConnection->connection_rawdata)
                                 {
                                     FreeVec(process_thisConnection->connection_rawdata);
+                                    process_thisConnection->connection_rawdata = NULL;
                                     process_thisConnection->connection_rawdata_length = 0;
                                 }
 
@@ -1287,23 +1288,28 @@ D(bug("[AiRcOS](main) Zune Application Objects Created\n"));
         }
     
     /** CLOSE ALL OPEN SERVER CONNECTIONS! **/
-    
+D(bug("[AiRcOS](main) Closing Active connections\n"));
        struct IRC_Server_Priv *current_Server=NULL;
        ForeachNode(&AiRcOS_Base->aircos_serverlist, current_Server)
        {
           if ((SocketBase)&&(current_Server->serv_connection))
           {
+             Remove(&current_Server->serv_connection->connection_node);
+             Remove(&current_Server->serv_node);
              aircosApp_closeConnection(current_Server->serv_connection);
           }
        
        }
     
     /** CLOSE ALL LOOSE CONNECTIONS! **/
+D(bug("[AiRcOS](main) Closing Loose connections\n"));
        struct IRC_Connection_Private	*current_Connection=NULL;
        ForeachNode(&AiRcOS_Base->aircos_looseconnectionlist, current_Connection)
        {
+             Remove(&current_Connection->connection_node);
              aircosApp_closeConnection(current_Connection);
        }
+D(bug("[AiRcOS](main) Application finished ..\n"));
    }
    else
    {
