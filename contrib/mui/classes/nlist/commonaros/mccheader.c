@@ -275,7 +275,7 @@ AROS_LH0(LONG, LibNull,
 
 /****************************************************************************************/
 
-static const struct Resident ROMTag =
+static const struct Resident ROMTag __used =
 {
 	RTC_MATCHWORD,
 	&ROMTag,
