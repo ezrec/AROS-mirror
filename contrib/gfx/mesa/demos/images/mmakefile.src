@@ -1,0 +1,21 @@
+
+#   $Id: mmakefile.src 22692 2005-01-11 18:56:14Z NicJA $
+#
+#   Contrib/Mesa/Demos/Images
+#
+include $(TOP)/config/make.cfg
+
+#MM contrib-mesa-demos-images
+
+MESADEMOSIMAGEFILES := bw.rgb \
+                       girl.rgb \
+                       reflect.rgb \
+                       s128.rgb \
+                       tile.rgb \
+                       tree2.rgba \
+                       tree3.rgb
+
+contrib-mesa-demos-images : files-copy
+%copy_files_q files="$(MESADEMOSIMAGEFILES)" dst=$(CONTRIBDIR)/Gfx/Mesa/Images
+
+%common

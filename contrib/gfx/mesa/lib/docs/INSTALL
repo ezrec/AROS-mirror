@@ -176,20 +176,7 @@ steps if you want to use other directories.
 
 	make check
 	
-Builds all demos in the xdemos/, demos/, book/ and samples/ directories.
-Before running a demo you may have to set your LD_LIBRARY_PATH environment
-variable:
-
-	cd demos/
-
-	setenv LD_LIBRARY_PATH ../src/.libs:../src-glu/.libs
-	 -OR-
-	export LD_LIBRARY_PATH=../src/.libs:../src-glu/.libs
-
-	./gears
-
-
-Finally,
+Builds all demos.
 
 	make exec
 
@@ -246,4 +233,4 @@ Header and library files:
 
 
 ===============================================================================
-$Id: INSTALL,v 1.10.4.1 2001/02/07 23:51:05 brianp Exp $
+$Id: INSTALL,v 1.10 2000/04/04 23:29:37 brianp Exp $

@@ -2,7 +2,7 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.4
+ * Version:  3.5
  *
  * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
  *
@@ -84,7 +84,7 @@ extern "C" {
 
 #define GL_VERSION_1_1   1
 #define GL_VERSION_1_2   1
-
+#define GL_ARB_imaging   1
 
 
 /*
@@ -325,12 +325,12 @@ typedef double		GLclampd;	/* double precision float in [0,1] */
 #define GL_ONE					0x1
 #define GL_SRC_COLOR				0x0300
 #define GL_ONE_MINUS_SRC_COLOR			0x0301
-#define GL_DST_COLOR				0x0306
-#define GL_ONE_MINUS_DST_COLOR			0x0307
 #define GL_SRC_ALPHA				0x0302
 #define GL_ONE_MINUS_SRC_ALPHA			0x0303
 #define GL_DST_ALPHA				0x0304
 #define GL_ONE_MINUS_DST_ALPHA			0x0305
+#define GL_DST_COLOR				0x0306
+#define GL_ONE_MINUS_DST_COLOR			0x0307
 #define GL_SRC_ALPHA_SATURATE			0x0308
 #define GL_CONSTANT_COLOR			0x8001
 #define GL_ONE_MINUS_CONSTANT_COLOR		0x8002
@@ -745,7 +745,7 @@ typedef double		GLclampd;	/* double precision float in [0,1] */
 
 
 /*
- * OpenGL 1.2 imaging subset (NOT IMPLEMENTED BY MESA)
+ * OpenGL 1.2 imaging subset
  */
 /* GL_EXT_color_table */
 #define GL_COLOR_TABLE				0x80D0
@@ -852,7 +852,7 @@ typedef double		GLclampd;	/* double precision float in [0,1] */
 #define GL_CLIENT_PIXEL_STORE_BIT		0x00000001
 #define GL_CLIENT_VERTEX_ARRAY_BIT		0x00000002
 #define GL_ALL_CLIENT_ATTRIB_BITS 		0xFFFFFFFF
-
+#define GL_CLIENT_ALL_ATTRIB_BITS 		0xFFFFFFFF
 
 
 
@@ -1270,7 +1270,7 @@ GLAPI void GLAPIENTRY glTexCoordPointer( GLint size, GLenum type,
 
 GLAPI void GLAPIENTRY glEdgeFlagPointer( GLsizei stride, const GLvoid *ptr );
 
-GLAPI void GLAPIENTRY glGetPointerv( GLenum pname, void **params );
+GLAPI void GLAPIENTRY glGetPointerv( GLenum pname, GLvoid **params );
 
 GLAPI void GLAPIENTRY glArrayElement( GLint i );
 
@@ -1591,7 +1591,7 @@ GLAPI void GLAPIENTRY glDrawRangeElements( GLenum mode, GLuint start,
 	GLuint end, GLsizei count, GLenum type, const GLvoid *indices );
 
 GLAPI void GLAPIENTRY glTexImage3D( GLenum target, GLint level,
-                                      GLint internalFormat,
+                                      GLenum internalFormat,
                                       GLsizei width, GLsizei height,
                                       GLsizei depth, GLint border,
                                       GLenum format, GLenum type,
@@ -1971,7 +1971,7 @@ GLAPI void GLAPIENTRY glTexCoordPointerEXT( GLint size, GLenum type, GLsizei str
 
 GLAPI void GLAPIENTRY glEdgeFlagPointerEXT( GLsizei stride, GLsizei count, const GLboolean *ptr );
 
-GLAPI void GLAPIENTRY glGetPointervEXT( GLenum pname, void **params );
+GLAPI void GLAPIENTRY glGetPointervEXT( GLenum pname, GLvoid **params );
 
 GLAPI void GLAPIENTRY glArrayElementEXT( GLint i );
 
@@ -2247,6 +2247,64 @@ GLAPI void GLAPIENTRY glResizeBuffersMESA( void );
 
 #endif  /* GL_GLEXT_LEGACY */
 
+
+
+/*
+ * ???. GL_MESA_trace
+ * XXX this should go into glext.h at some point
+ */
+#ifndef GL_MESA_trace
+#define GL_MESA_trace 1
+
+#define GL_TRACE_ALL_BITS_MESA			0xFFFF
+#define GL_TRACE_OPERATIONS_BIT_MESA		0x0001
+#define GL_TRACE_PRIMITIVES_BIT_MESA		0x0002
+#define GL_TRACE_ARRAYS_BIT_MESA		0x0004
+#define GL_TRACE_TEXTURES_BIT_MESA		0x0008
+#define GL_TRACE_PIXELS_BIT_MESA		0x0010
+#define GL_TRACE_ERRORS_BIT_MESA		0x0020
+#define GL_TRACE_MASK_MESA			0x8755
+#define GL_TRACE_NAME_MESA			0x8756
+
+GLAPI void GLAPIENTRY glEnableTraceMESA( GLbitfield mask );
+GLAPI void GLAPIENTRY glDisableTraceMESA( GLbitfield mask );
+GLAPI void GLAPIENTRY glNewTraceMESA( GLbitfield mask, const GLubyte * traceName );
+GLAPI void GLAPIENTRY glEndTraceMESA( void );
+GLAPI void GLAPIENTRY glTraceAssertAttribMESA( GLbitfield attribMask );
+GLAPI void GLAPIENTRY glTraceCommentMESA( const GLubyte * comment );
+GLAPI void GLAPIENTRY glTraceTextureMESA( GLuint name, const GLubyte* comment );
+GLAPI void GLAPIENTRY glTraceListMESA( GLuint name, const GLubyte* comment );
+GLAPI void GLAPIENTRY glTracePointerMESA( GLvoid* pointer, const GLubyte* comment );
+GLAPI void GLAPIENTRY glTracePointerRangeMESA( const GLvoid* first, const GLvoid* last, const GLubyte* comment );
+
+#endif /* GL_MESA_trace */
+
+
+/*
+ * ???. GL_MESA_packed_depth_stencil
+ * XXX this will be in glext.h someday
+ */
+#ifndef GL_MESA_packed_depth_stencil
+#define GL_MESA_packed_depth_stencil 1
+
+#define GL_DEPTH_STENCIL_MESA			0x8750
+#define GL_UNSIGNED_INT_24_8_MESA		0x8751
+#define GL_UNSIGNED_INT_8_24_REV_MESA		0x8752
+#define GL_UNSIGNED_SHORT_15_1_MESA		0x8753
+#define GL_UNSIGNED_SHORT_1_15_REV_MESA		0x8754
+
+#endif /* GL_MESA_packed_depth_stencil */
+
+
+/*
+ * ??. GL_MESA_sprite_point
+ */
+#ifndef GL_MESA_sprite_point
+#define GL_MESA_sprite_point 1
+
+#define GL_SPRITE_POINT_MESA 0x8757  /* XXX not finalized! */
+
+#endif
 
 
 /**********************************************************************

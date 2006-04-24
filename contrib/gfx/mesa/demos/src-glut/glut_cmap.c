@@ -46,7 +46,7 @@ __glutAssociateNewColormap(XVisualInfo * vis)
   cmap = (GLUTcolormap *) malloc(sizeof(GLUTcolormap));
   if (!cmap)
     __glutFatalError("out of memory.");
-#if defined(WIN32)
+#if defined(WIN32) || defined(__AROS__)
   pixels[0] = 0;        /* avoid compilation warnings on win32 */
   cmap->visual = 0;
   cmap->size = 256;     /* always assume 256 on Win32 */
@@ -87,7 +87,7 @@ __glutAssociateNewColormap(XVisualInfo * vis)
        map_entries-1 pixels (that is, all but the transparent
        pixel.  */
 
-#if defined(WIN32)
+#if defined(WIN32) || defined(__AROS__)
     cmap->cmap = XCreateColormap(__glutDisplay,
       __glutRoot, 0, AllocNone);
 #else
@@ -105,7 +105,7 @@ __glutAssociateNewColormap(XVisualInfo * vis)
 static GLUTcolormap *
 associateColormap(XVisualInfo * vis)
 {
-#if !defined(WIN32)
+#if !defined(WIN32) && !defined(__AROS__)
   GLUTcolormap *cmap = __glutColormapList;
 
   while (cmap != NULL) {
@@ -133,6 +133,7 @@ __glutSetupColormap(XVisualInfo * vi, GLUTcolormap ** colormap, Colormap * cmap)
     *cmap = 0;
   }
 #else
+#if !defined(__AROS__)
   Status status;
   XStandardColormap *standardCmaps;
   int i, numCmaps;
@@ -263,9 +264,10 @@ __glutSetupColormap(XVisualInfo * vi, GLUTcolormap ** colormap, Colormap * cmap)
   }
   return;
 #endif
+#endif
 }
 
-#if !defined(WIN32)
+#if !defined(WIN32) && !defined(__AROS__)
 static int
 findColormaps(GLUTwindow * window,
   Window * winlist, Colormap * cmaplist, int num, int max)

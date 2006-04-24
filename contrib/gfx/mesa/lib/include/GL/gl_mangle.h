@@ -2,7 +2,7 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.4.x
+ * Version:  3.5
  * 
  * Copyright (C) 1999-2001  Brian Paul   All Rights Reserved.
  * 
@@ -658,5 +658,22 @@
 #define glMultTransposeMatrixdARB mglMultTransposeMatrixdARB 
 #define glLoadTransposeMatrixfARB mglLoadTransposeMatrixfARB 
 #define glLoadTransposeMatrixdARB mglLoadTransposeMatrixdARB 
+#define glSecondaryColor3fEXT mglSecondaryColor3fEXT
+#define glSecondaryColor3ubEXT mglSecondaryColor3ubEXT
+#define glSecondaryColor3uivEXT mglSecondaryColor3uivEXT
+#define glSecondaryColor3ubvEXT mglSecondaryColor3ubvEXT
+#define glSecondaryColor3svEXT mglSecondaryColor3svEXT
+#define glSecondaryColor3ivEXT mglSecondaryColor3ivEXT
+#define glSecondaryColor3fvEXT mglSecondaryColor3fvEXT
+#define glSecondaryColor3dvEXT mglSecondaryColor3dvEXT
+#define glSecondaryColor3bvEXT mglSecondaryColor3bvEXT
+#define glSecondaryColor3usvEXT mglSecondaryColor3usvEXT
+#define glSecondaryColorPointerEXT mglSecondaryColorPointerEXT
+#define glSecondaryColor3iEXT mglSecondaryColor3iEXT
+#define glSecondaryColor3dEXT mglSecondaryColor3dEXT
+#define glSecondaryColor3bEXT mglSecondaryColor3bEXT
+#define glSecondaryColor3uiEXT mglSecondaryColor3uiEXT
+#define glSecondaryColor3usEXT mglSecondaryColor3usEXT
+#define glSecondaryColor3sEXT mglSecondaryColor3sEXT
 
 #endif

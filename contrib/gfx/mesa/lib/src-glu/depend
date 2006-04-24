@@ -1,0 +1,22 @@
+# DO NOT DELETE
+
+glu.o: gluP.h ../include/GL/gl.h ../include/GL/glext.h ../include/GL/glu.h
+mipmap.o: gluP.h ../include/GL/gl.h ../include/GL/glext.h ../include/GL/glu.h
+nurbs.o: gluP.h ../include/GL/gl.h ../include/GL/glext.h ../include/GL/glu.h
+nurbs.o: nurbs.h
+nurbscrv.o: gluP.h ../include/GL/gl.h ../include/GL/glext.h
+nurbscrv.o: ../include/GL/glu.h nurbs.h
+nurbssrf.o: gluP.h ../include/GL/gl.h ../include/GL/glext.h
+nurbssrf.o: ../include/GL/glu.h nurbs.h
+nurbsutl.o: gluP.h ../include/GL/gl.h ../include/GL/glext.h
+nurbsutl.o: ../include/GL/glu.h nurbs.h
+polytest.o: gluP.h ../include/GL/gl.h ../include/GL/glext.h
+polytest.o: ../include/GL/glu.h tess.h
+project.o: gluP.h ../include/GL/gl.h ../include/GL/glext.h
+project.o: ../include/GL/glu.h
+quadric.o: gluP.h ../include/GL/gl.h ../include/GL/glext.h
+quadric.o: ../include/GL/glu.h
+tess.o: tess.h gluP.h ../include/GL/gl.h ../include/GL/glext.h
+tess.o: ../include/GL/glu.h
+tesselat.o: tess.h gluP.h ../include/GL/gl.h ../include/GL/glext.h
+tesselat.o: ../include/GL/glu.h

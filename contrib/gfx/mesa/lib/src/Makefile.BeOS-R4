@@ -1,9 +1,9 @@
-# $Id: Makefile.BeOS-R4,v 1.11.4.2 2001/01/24 04:49:53 brianp Exp $
+# $Id: Makefile.BeOS-R4,v 1.15 2001/06/18 17:26:08 brianp Exp $
 
 # Mesa 3-D graphics library
-# Version:  3.4
+# Version:  3.5
 # 
-# Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+# Copyright (C) 1999-2001  Brian Paul   All Rights Reserved.
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-# Makefile for Mese for BeOS R4/R5
+# Makefile for Mese for BeOS R4
 
 
 ##### MACROS #####
@@ -40,18 +40,16 @@ LIBDIR = ../lib
 CORE_SOURCES = \
 	aatriangle.c \
 	accum.c \
-	alpha.c \
 	alphabuf.c \
 	attrib.c \
 	bbox.c \
-	bitmap.c \
 	blend.c \
 	buffers.c \
 	clip.c \
 	colortab.c \
 	config.c \
 	context.c \
-	copypix.c \
+	convolve.c \
 	cva.c \
 	debug_xform.c \
 	depth.c \
@@ -66,30 +64,25 @@ CORE_SOURCES = \
 	fog.c \
 	get.c \
 	glapi.c \
-	glapinoop.c \
 	glthread.c \
 	hash.c \
 	hint.c \
 	image.c \
 	imaging.c \
+	imports.c \
 	light.c \
 	lines.c \
-	logic.c \
-	masking.c \
 	matrix.c \
 	mem.c \
 	mmath.c \
 	pb.c \
 	pixel.c \
-	pixeltex.c \
 	pipeline.c \
 	points.c \
 	polygon.c \
 	quads.c \
 	rastpos.c \
-	readpix.c \
 	rect.c \
-	scissor.c \
 	shade.c \
 	span.c \
 	stages.c \
@@ -98,7 +91,6 @@ CORE_SOURCES = \
 	teximage.c \
 	texobj.c \
 	texstate.c \
-	texture.c \
 	texutil.c \
 	translate.c \
 	triangle.c \
@@ -111,10 +103,8 @@ CORE_SOURCES = \
 	vbxform.c \
 	vector.c \
 	vertices.c \
-	winpos.c \
 	xform.c \
 	zoom.c
-
 
 DRIVER_SOURCES = OSmesa/osmesa.c BeOS/GLView.cpp
 

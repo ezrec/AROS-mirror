@@ -5,7 +5,7 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM linklibs-mesa2tk : includes
+#MM linklibs-mesatk : includes
 
 LIBMESATK =  Awindow \
             font \
@@ -15,7 +15,7 @@ LIBMESATK =  Awindow \
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -I$(MESAGLUSRCDIR) -I$(MESATKSRCDIR) -I$(MESAAUXSRCDIR) -Iamiga/misc
 USER_CFLAGS	:= -DNO_ERRNO_H
 
-%build_linklib mmake=linklibs-mesa2tk libname=Mesatk \
+%build_linklib mmake=linklibs-mesatk libname=Mesatk \
     files=$(LIBMESATK) objdir=$(GENDIR)/$(CURDIR)
 
 %common

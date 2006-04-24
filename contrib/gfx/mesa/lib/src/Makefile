@@ -1,5 +1,4 @@
-# Generated automatically from Makefile.in by configure.
-# Makefile.in generated automatically by automake 1.4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p2 from Makefile.am
 
 # Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -11,13 +10,14 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
-#AUTOMAKE_OPTIONS = no-dependencies
+
 
 
 SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ..
+
 prefix = /usr/local
 exec_prefix = ${prefix}
 
@@ -50,7 +50,7 @@ AUTOHEADER = autoheader
 INSTALL = /usr/bin/install -c
 INSTALL_PROGRAM = ${INSTALL} $(AM_INSTALL_PROGRAM_FLAGS)
 INSTALL_DATA = ${INSTALL} -m 644
-INSTALL_SCRIPT = ${INSTALL_PROGRAM}
+INSTALL_SCRIPT = ${INSTALL}
 transform = s,x,x,
 
 NORMAL_INSTALL = :
@@ -59,12 +59,15 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-host_alias = i686-pc-linux-gnu
+host_alias = @host_alias@
 host_triplet = i686-pc-linux-gnu
 AS = @AS@
 CC = gcc
 CPP = gcc -E
+CXX = g++
+DLLEXT = @DLLEXT@
 DLLTOOL = @DLLTOOL@
+ECHO = echo
 EXEEXT = 
 FX_CFLAGS = -I/usr/include/glide3 -I/usr/local/include/glide3
 FX_LIBS =  -lglide3x
@@ -72,40 +75,53 @@ GGI_CFLAGS =
 GGI_LIBS = 
 GLUT_CFLAGS = 
 GLUT_LIBS =  -lglut
-LIBGLUT_VERSION = 3:7:0
-LIBGLU_VERSION = 1:1:030402
-LIBGL_VERSION = 1:2:030402
+GLU_DIR = si-glu
+LIBGLUT_VERSION_INFO = 10:0:7
+LIBGLU_VERSION_INFO = 3:350:2
+LIBGL_VERSION_INFO = 3:350:2
+LIBMESA_VERSION_INFO = 8:350:5
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LN_S = ln -s
 MAKEINFO = makeinfo
+MESA_MD_FLAG = -MD
 OBJDUMP = @OBJDUMP@
 OBJEXT = o
 PACKAGE = Mesa
 RANLIB = ranlib
+SI_GLU_VERSION_INFO = 3:350:2
 STRIP = strip
 SVGA_CFLAGS = 
 SVGA_LIBS =  -lvga
 THREAD_LIBS =  -lpthread
-VERSION = 3.4.2
+VERSION = 3.5
 X_LIBADD =  -lXmu -lXext -lXi -lX11
+extra_includes = @extra_includes@
+extra_libraries = @extra_libraries@
 ggi_confdir = /usr/local/etc
 ggi_libdir = /usr/local/lib
+use_si_glu = yes
 
-INCLUDES = -I$(top_srcdir)/include
+AUTOMAKE_OPTIONS = 
+
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/src
 
 # Build a libtool library for installation in libdir.
 lib_LTLIBRARIES = libGL.la
 
 sysconf_DATA = mesa.conf
 
-EXTRA_DIST = ddsample.c mesa.conf
+EXTRA_DIST = tnl_dd mesa.conf descrip.mms
 
-libGL_la_LDFLAGS = -version-info $(LIBGL_VERSION)
-libGL_la_SOURCES =  	aatriangle.c 	aatriangle.h 	accum.c 	accum.h 	all.h 	alpha.c 	alpha.h 	alphabuf.c 	alphabuf.h 	attrib.c 	attrib.h 	bbox.c 	bbox.h 	bitmap.c 	bitmap.h 	blend.c 	blend.h 	buffers.c 	buffers.h 	clip.c 	clip.h 	clip_funcs.h 	clip_tmp.h 	colortab.c 	colortab.h 	config.c 	config.h 	context.c 	context.h 	copy_tmp.h 	copypix.c 	copypix.h 	cull_tmp.h 	cva.c 	cva.h 	dd.h 	debug_xform.c 	debug_xform.h 	depth.c 	depth.h 	dispatch.c 	dlist.c 	dlist.h 	dotprod_tmp.h 	drawpix.c 	drawpix.h 	enable.c 	enable.h 	enums.c 	enums.h 	eval.c 	eval.h 	extensions.c 	extensions.h 	feedback.c 	feedback.h 	fixed.h 	glapi.c 	glapi.h 	glapinoop.c 	glapinoop.h 	glapioffsets.h 	glapitable.h 	glapitemp.h 	glthread.c 	glthread.h 	fog.c 	fog.h 	fog_tmp.h 	general_clip.h 	get.c 	get.h 	glheader.h 	hash.c 	hash.h 	hint.c 	hint.h 	imaging.c 	imaging.h 	image.c 	image.h 	indirect_tmp.h 	interp_tmp.h 	light.c 	light.h 	lines.c 	lines.h 	linetemp.h 	lnaatemp.h 	logic.c 	logic.h 	macros.h 	masking.c 	masking.h 	matrix.c 	matrix.h 	mem.c 	mem.h 	mmath.c 	mmath.h 	norm_tmp.h 	pb.c 	pb.h 	pipeline.c 	pipeline.h 	pixel.c 	pixel.h 	pixeltex.c 	pixeltex.h 	points.c 	points.h 	polygon.c 	polygon.h 	quads.c 	quads.h 	rastpos.c 	rastpos.h 	readpix.c 	readpix.h 	rect.c 	rect.h 	render_tmp.h 	scissor.c 	scissor.h 	shade.c 	shade.h 	shade_tmp.h 	simple_list.h 	span.c 	span.h 	stages.c 	stages.h 	state.c 	state.h 	stencil.c 	stencil.h 	texformat.h 	texformat.c 	texgen_tmp.h 	teximage.c 	teximage.h 	texobj.c 	texobj.h 	texstate.c 	texstate.h 	texture.c 	texture.h 	texutil.c 	texutil.h 	trans_tmp.h 	translate.c 	translate.h 	triangle.c 	triangle.h 	tritemp.h 	types.h 	varray.c 	varray.h 	vb.c 	vb.h 	vbcull.c 	vbcull.h 	vbfill.c 	vbfill.h 	vbindirect.c 	vbindirect.h 	vbrender.c 	vbrender.h 	vbxform.c 	vbxform.h 	vector.c 	vector.h 	vertices.c 	vertices.h 	winpos.c 	winpos.h 	xform.c 	xform.h 	xform_tmp.h 	zoom.c 	zoom.h
+libGL_la_LDFLAGS = -version-info 3:350:2
+
+libGL_la_SOURCES =  	accum.c 	accum.h 	all.h 	api_arrayelt.c         api_arrayelt.h 	api_loopback.c 	api_loopback.h 	api_noop.c 	api_noop.h 	api_validate.c 	api_validate.h 	attrib.c 	attrib.h 	blend.c 	blend.h 	buffers.c 	buffers.h 	clip.c 	clip.h 	colormac.h 	colortab.c 	colortab.h 	config.c 	config.h 	context.c 	context.h 	convolve.c 	convolve.h 	dd.h 	debug.c 	debug.h 	depth.c 	depth.h 	dispatch.c 	dlist.c 	dlist.h 	drawpix.c 	drawpix.h 	enable.c 	enable.h 	enums.c 	enums.h 	eval.c 	eval.h 	extensions.c 	extensions.h 	feedback.c 	feedback.h 	fog.c 	fog.h 	get.c 	get.h 	glapi.c 	glapi.h 	glapioffsets.h 	glapitable.h 	glapitemp.h 	glheader.h 	glthread.c 	glthread.h 	hash.c 	hash.h 	highpc.c 	hint.c 	hint.h 	histogram.c 	histogram.h 	image.c 	image.h 	imports.c 	imports.h 	light.c 	light.h 	lines.c 	lines.h 	lowpc.c 	macros.h 	matrix.c 	matrix.h 	mem.c 	mem.h 	mmath.c 	mmath.h 	mtypes.h 	pixel.c 	pixel.h 	points.c 	points.h 	polygon.c 	polygon.h 	rastpos.c 	rastpos.h 	simple_list.h 	state.c 	state.h 	stencil.c 	stencil.h 	texformat.c 	texformat.h 	texformat_tmp.h 	teximage.c 	teximage.h 	texobj.c 	texobj.h 	texstate.c 	texstate.h 	texstore.c 	texstore.h 	texutil.c 	texutil.h 	varray.c 	varray.h 	vtxfmt.c 	vtxfmt.h
 
 
 DRV_X86 = X86/libMesaX86.la
 SUB_X86 = X86
+
+#DRV_SPARC = SPARC/libMesaSPARC.la
+#SUB_SPARC = SPARC
 
 DRV_FX = FX/libMesaFX.la
 SUB_FX = FX
@@ -120,12 +136,18 @@ SUB_OSMESA = OSmesa
 DRV_SVGA = SVGA/libMesaSVGA.la
 SUB_SVGA = SVGA
 
-DRV_X11 = X/libMesaX11.la
 SUB_X11 = X
+DRV_X11 = X/libMesaX11.la
 
-SUBDIRS = $(SUB_X86) $(SUB_FX) $(SUB_GGI) $(SUB_OSMESA) $(SUB_SVGA) $(SUB_X11)
+#DRV_TRACE = Trace/libMesaTrace.la
+#SUB_TRACE = Trace
 
-libGL_la_LIBADD = $(DRV_X86) $(DRV_FX) $(DRV_FX_X86) $(DRV_GGI) $(DRV_OSMESA) 	$(DRV_SVGA) $(DRV_X11) $(THREAD_LIBS)
+DIST_SUBDIRS = X86 SPARC math swrast swrast_setup Trace tnl FX GGI OSmesa 	SVGA X array_cache
+
+SUBDIRS = math swrast swrast_setup tnl array_cache $(SUB_X86) $(SUB_SPARC) 	$(SUB_TRACE) $(SUB_FX) $(SUB_GGI) $(SUB_OSMESA) $(SUB_SVGA) $(SUB_X11)
+
+
+libGL_la_LIBADD =  	math/libMesaMath.la 	swrast/libMesaSwrast.la 	swrast_setup/libMesaSwrast_setup.la 	tnl/libMesaTnl.la 	array_cache/libMesaAC.la 	$(DRV_X86) $(DRV_SPARC) $(DRV_TRACE) $(DRV_FX) $(DRV_FX_X86) $(DRV_GGI) 	$(DRV_OSMESA) $(DRV_SVGA) $(DRV_X11) $(THREAD_LIBS)
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../conf.h
@@ -134,253 +156,90 @@ LTLIBRARIES =  $(lib_LTLIBRARIES)
 
 
 DEFS = -DHAVE_CONFIG_H -I. -I$(srcdir) -I..
-CPPFLAGS = 
+CPPFLAGS =  -I./src/X86
 LDFLAGS = 
 LIBS = 
 X_CFLAGS =  -I/usr/X11R6/include
 X_LIBS =  -L/usr/X11R6/lib
 X_EXTRA_LIBS = 
 X_PRE_LIBS =  -lSM -lICE
-##libGL_la_DEPENDENCIES =  \
-##X86/libMesaX86.la \
-##FX/libMesaFX.la \
-##FX/X86/libMesaFX_X86.la \
-##GGI/libMesaGGI.la \
-##OSmesa/libMesaOS.la \
-##X/libMesaX11.la
-###libGL_la_DEPENDENCIES =  \
-###X86/libMesaX86.la \
-###FX/libMesaFX.la \
-###FX/X86/libMesaFX_X86.la
-#####libGL_la_DEPENDENCIES =  \
-#####FX/libMesaFX.la \
-#####GGI/libMesaGGI.la
-###libGL_la_DEPENDENCIES =  \
-###FX/libMesaFX.la \
-###OSmesa/libMesaOS.la
-###libGL_la_DEPENDENCIES =  \
-###SVGA/libMesaSVGA.la \
-###X/libMesaX11.la
-###libGL_la_DEPENDENCIES =  \
-###X86/libMesaX86.la \
-###GGI/libMesaGGI.la \
-###OSmesa/libMesaOS.la \
-###SVGA/libMesaSVGA.la
-###libGL_la_DEPENDENCIES =  \
-###X86/libMesaX86.la \
-###FX/libMesaFX.la \
-###FX/X86/libMesaFX_X86.la \
-###GGI/libMesaGGI.la \
-###X/libMesaX11.la
-#libGL_la_DEPENDENCIES =  \
-#X86/libMesaX86.la \
-#FX/libMesaFX.la \
-#FX/X86/libMesaFX_X86.la \
-#OSmesa/libMesaOS.la \
-#X/libMesaX11.la
-###libGL_la_DEPENDENCIES =  \
-###FX/libMesaFX.la \
-###GGI/libMesaGGI.la \
-###OSmesa/libMesaOS.la \
-###X/libMesaX11.la
 ####libGL_la_DEPENDENCIES =  \
-####X/libMesaX11.la
-####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
 ####X86/libMesaX86.la \
-####GGI/libMesaGGI.la \
-####X/libMesaX11.la
-##libGL_la_DEPENDENCIES =  \
-##X86/libMesaX86.la \
-##OSmesa/libMesaOS.la \
-##X/libMesaX11.la
-####libGL_la_DEPENDENCIES =  \
-####GGI/libMesaGGI.la \
-####OSmesa/libMesaOS.la \
-####X/libMesaX11.la
-##libGL_la_DEPENDENCIES =  \
-##FX/libMesaFX.la \
-##SVGA/libMesaSVGA.la \
-##X/libMesaX11.la
-##libGL_la_DEPENDENCIES =  \
-##FX/libMesaFX.la \
-##GGI/libMesaGGI.la \
-##OSmesa/libMesaOS.la \
-##SVGA/libMesaSVGA.la \
-##X/libMesaX11.la
-libGL_la_DEPENDENCIES =  \
-X86/libMesaX86.la \
-FX/libMesaFX.la \
-FX/X86/libMesaFX_X86.la \
-OSmesa/libMesaOS.la \
-SVGA/libMesaSVGA.la \
-X/libMesaX11.la
-##libGL_la_DEPENDENCIES =  \
-##X86/libMesaX86.la \
-##FX/libMesaFX.la \
-##FX/X86/libMesaFX_X86.la \
-##GGI/libMesaGGI.la \
-##SVGA/libMesaSVGA.la \
-##X/libMesaX11.la
-#####libGL_la_DEPENDENCIES =  \
-#####X86/libMesaX86.la \
-#####GGI/libMesaGGI.la
-###libGL_la_DEPENDENCIES =  \
-###X86/libMesaX86.la \
-###OSmesa/libMesaOS.la
-#####libGL_la_DEPENDENCIES =  \
-#####GGI/libMesaGGI.la \
-#####OSmesa/libMesaOS.la
-###libGL_la_DEPENDENCIES =  \
-###FX/libMesaFX.la \
-###SVGA/libMesaSVGA.la
-#libGL_la_DEPENDENCIES =  \
-#X86/libMesaX86.la \
-#FX/libMesaFX.la \
-#FX/X86/libMesaFX_X86.la \
-#SVGA/libMesaSVGA.la \
-#X/libMesaX11.la
-###libGL_la_DEPENDENCIES =  \
-###FX/libMesaFX.la \
-###GGI/libMesaGGI.la \
-###SVGA/libMesaSVGA.la \
-###X/libMesaX11.la
-#libGL_la_DEPENDENCIES =  \
-#FX/libMesaFX.la \
-#OSmesa/libMesaOS.la \
-#SVGA/libMesaSVGA.la \
-#X/libMesaX11.la
-###libGL_la_DEPENDENCIES =  \
-###X86/libMesaX86.la \
-###GGI/libMesaGGI.la \
-###OSmesa/libMesaOS.la \
-###X/libMesaX11.la
-####libGL_la_DEPENDENCIES =  \
-####FX/libMesaFX.la
-####libGL_la_DEPENDENCIES =  \
-####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
 ####FX/libMesaFX.la \
 ####FX/X86/libMesaFX_X86.la \
-####GGI/libMesaGGI.la
-##libGL_la_DEPENDENCIES =  \
-##X86/libMesaX86.la \
-##FX/libMesaFX.la \
-##FX/X86/libMesaFX_X86.la \
-##OSmesa/libMesaOS.la
-####libGL_la_DEPENDENCIES =  \
-####FX/libMesaFX.la \
-####GGI/libMesaGGI.la \
 ####OSmesa/libMesaOS.la
-##libGL_la_DEPENDENCIES =  \
-##X86/libMesaX86.la \
-##SVGA/libMesaSVGA.la \
-##X/libMesaX11.la
-####libGL_la_DEPENDENCIES =  \
-####GGI/libMesaGGI.la \
-####SVGA/libMesaSVGA.la \
-####X/libMesaX11.la
-##libGL_la_DEPENDENCIES =  \
-##OSmesa/libMesaOS.la \
-##SVGA/libMesaSVGA.la \
-##X/libMesaX11.la
-##libGL_la_DEPENDENCIES =  \
-##X86/libMesaX86.la \
-##GGI/libMesaGGI.la \
-##OSmesa/libMesaOS.la \
-##SVGA/libMesaSVGA.la \
-##X/libMesaX11.la
-###libGL_la_DEPENDENCIES =  \
-###FX/libMesaFX.la \
-###X/libMesaX11.la
-###libGL_la_DEPENDENCIES =  \
-###OSmesa/libMesaOS.la \
-###SVGA/libMesaSVGA.la
 #####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####FX/libMesaFX.la \
+#####GGI/libMesaGGI.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####Trace/libMesaTrace.la \
 #####GGI/libMesaGGI.la \
 #####SVGA/libMesaSVGA.la
-###libGL_la_DEPENDENCIES =  \
-###X86/libMesaX86.la \
-###SVGA/libMesaSVGA.la
-###libGL_la_DEPENDENCIES =  \
-###X86/libMesaX86.la \
-###GGI/libMesaGGI.la \
-###SVGA/libMesaSVGA.la \
-###X/libMesaX11.la
-#libGL_la_DEPENDENCIES =  \
-#X86/libMesaX86.la \
-#OSmesa/libMesaOS.la \
-#SVGA/libMesaSVGA.la \
-#X/libMesaX11.la
-###libGL_la_DEPENDENCIES =  \
-###GGI/libMesaGGI.la \
-###OSmesa/libMesaOS.la \
-###SVGA/libMesaSVGA.la \
-###X/libMesaX11.la
-###libGL_la_DEPENDENCIES =  \
-###X86/libMesaX86.la \
-###FX/libMesaFX.la \
-###FX/X86/libMesaFX_X86.la \
-###GGI/libMesaGGI.la \
-###OSmesa/libMesaOS.la
-####libGL_la_DEPENDENCIES =  \
-####OSmesa/libMesaOS.la
-######libGL_la_DEPENDENCIES =  \
-######GGI/libMesaGGI.la
-####libGL_la_DEPENDENCIES =  \
-####X86/libMesaX86.la
-##libGL_la_DEPENDENCIES =  \
-##FX/libMesaFX.la \
-##OSmesa/libMesaOS.la \
-##SVGA/libMesaSVGA.la
-####libGL_la_DEPENDENCIES =  \
-####FX/libMesaFX.la \
-####GGI/libMesaGGI.la \
-####SVGA/libMesaSVGA.la
-##libGL_la_DEPENDENCIES =  \
-##X86/libMesaX86.la \
-##FX/libMesaFX.la \
-##FX/X86/libMesaFX_X86.la \
-##SVGA/libMesaSVGA.la
-####libGL_la_DEPENDENCIES =  \
-####X86/libMesaX86.la \
-####GGI/libMesaGGI.la \
-####OSmesa/libMesaOS.la
-#####libGL_la_DEPENDENCIES = 
-##libGL_la_DEPENDENCIES =  \
-##X86/libMesaX86.la \
-##FX/libMesaFX.la \
-##FX/X86/libMesaFX_X86.la \
-##GGI/libMesaGGI.la \
-##OSmesa/libMesaOS.la \
-##SVGA/libMesaSVGA.la
-###libGL_la_DEPENDENCIES =  \
-###X86/libMesaX86.la \
-###X/libMesaX11.la
 #####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####FX/libMesaFX.la \
 #####GGI/libMesaGGI.la \
-#####X/libMesaX11.la
-###libGL_la_DEPENDENCIES =  \
-###OSmesa/libMesaOS.la \
-###X/libMesaX11.la
-###libGL_la_DEPENDENCIES =  \
-###FX/libMesaFX.la \
-###GGI/libMesaGGI.la \
-###OSmesa/libMesaOS.la \
-###SVGA/libMesaSVGA.la
+#####OSmesa/libMesaOS.la
 #libGL_la_DEPENDENCIES =  \
+#math/libMesaMath.la \
+#swrast/libMesaSwrast.la \
+#swrast_setup/libMesaSwrast_setup.la \
+#tnl/libMesaTnl.la \
+#array_cache/libMesaAC.la \
 #X86/libMesaX86.la \
 #FX/libMesaFX.la \
 #FX/X86/libMesaFX_X86.la \
-#OSmesa/libMesaOS.la \
-#SVGA/libMesaSVGA.la
+#SVGA/libMesaSVGA.la \
+#X/libMesaX11.la
 ###libGL_la_DEPENDENCIES =  \
-###X86/libMesaX86.la \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###Trace/libMesaTrace.la \
 ###FX/libMesaFX.la \
-###FX/X86/libMesaFX_X86.la \
-###GGI/libMesaGGI.la \
-###SVGA/libMesaSVGA.la
-####libGL_la_DEPENDENCIES =  \
-####SVGA/libMesaSVGA.la
+###OSmesa/libMesaOS.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####X/libMesaX11.la
 #libGL_la_DEPENDENCIES =  \
+#math/libMesaMath.la \
+#swrast/libMesaSwrast.la \
+#swrast_setup/libMesaSwrast_setup.la \
+#tnl/libMesaTnl.la \
+#array_cache/libMesaAC.la \
 #X86/libMesaX86.la \
 #FX/libMesaFX.la \
 #FX/X86/libMesaFX_X86.la \
@@ -388,43 +247,2555 @@ X/libMesaX11.la
 #OSmesa/libMesaOS.la \
 #SVGA/libMesaSVGA.la \
 #X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###GGI/libMesaGGI.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la \
+#####X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####GGI/libMesaGGI.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####Trace/libMesaTrace.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######X86/libMesaX86.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######GGI/libMesaGGI.la \
+######SVGA/libMesaSVGA.la
+libGL_la_DEPENDENCIES =  \
+math/libMesaMath.la \
+swrast/libMesaSwrast.la \
+swrast_setup/libMesaSwrast_setup.la \
+tnl/libMesaTnl.la \
+array_cache/libMesaAC.la \
+X86/libMesaX86.la \
+FX/libMesaFX.la \
+FX/X86/libMesaFX_X86.la \
+OSmesa/libMesaOS.la \
+SVGA/libMesaSVGA.la \
+X/libMesaX11.la
 ##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##SPARC/libMesaSPARC.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####OSmesa/libMesaOS.la \
+####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####Trace/libMesaTrace.la \
+#####OSmesa/libMesaOS.la
+#######libGL_la_DEPENDENCIES =  \
+#######math/libMesaMath.la \
+#######swrast/libMesaSwrast.la \
+#######swrast_setup/libMesaSwrast_setup.la \
+#######tnl/libMesaTnl.la \
+#######array_cache/libMesaAC.la \
+#######SPARC/libMesaSPARC.la \
+#######Trace/libMesaTrace.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####Trace/libMesaTrace.la \
+#####GGI/libMesaGGI.la \
+#####SVGA/libMesaSVGA.la \
+#####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###GGI/libMesaGGI.la \
+###X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######Trace/libMesaTrace.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###Trace/libMesaTrace.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####OSmesa/libMesaOS.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######FX/libMesaFX.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##OSmesa/libMesaOS.la \
+##X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####Trace/libMesaTrace.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##GGI/libMesaGGI.la \
+##OSmesa/libMesaOS.la \
+##X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la \
+####GGI/libMesaGGI.la \
+####X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######GGI/libMesaGGI.la \
+######SVGA/libMesaSVGA.la \
+######X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####GGI/libMesaGGI.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##Trace/libMesaTrace.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##GGI/libMesaGGI.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la \
+####GGI/libMesaGGI.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###Trace/libMesaTrace.la \
+###OSmesa/libMesaOS.la \
+###X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###SPARC/libMesaSPARC.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####FX/X86/libMesaFX_X86.la \
+#####GGI/libMesaGGI.la \
+#####SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la \
+#####X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######Trace/libMesaTrace.la \
+######GGI/libMesaGGI.la \
+######SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la \
+####GGI/libMesaGGI.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##FX/libMesaFX.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##Trace/libMesaTrace.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la \
+####SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####OSmesa/libMesaOS.la \
+####X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####GGI/libMesaGGI.la \
+#####X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####FX/X86/libMesaFX_X86.la \
+#####GGI/libMesaGGI.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###FX/libMesaFX.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####FX/libMesaFX.la \
+#####GGI/libMesaGGI.la \
+#####SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la \
+#####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####GGI/libMesaGGI.la \
+#####SVGA/libMesaSVGA.la \
+#####X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####Trace/libMesaTrace.la \
+####OSmesa/libMesaOS.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######X86/libMesaX86.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####FX/libMesaFX.la \
+####GGI/libMesaGGI.la \
+####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######X86/libMesaX86.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######FX/libMesaFX.la \
+######FX/X86/libMesaFX_X86.la \
+######GGI/libMesaGGI.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####FX/libMesaFX.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##Trace/libMesaTrace.la \
+##FX/libMesaFX.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####Trace/libMesaTrace.la \
+#####SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####OSmesa/libMesaOS.la \
+#####SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###OSmesa/libMesaOS.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####GGI/libMesaGGI.la \
+#####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###OSmesa/libMesaOS.la \
+###X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####SVGA/libMesaSVGA.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######GGI/libMesaGGI.la \
+######OSmesa/libMesaOS.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####Trace/libMesaTrace.la \
+####OSmesa/libMesaOS.la \
+####X/libMesaX11.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######FX/libMesaFX.la \
+######GGI/libMesaGGI.la \
+######X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####X/libMesaX11.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##GGI/libMesaGGI.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+#######libGL_la_DEPENDENCIES =  \
+#######math/libMesaMath.la \
+#######swrast/libMesaSwrast.la \
+#######swrast_setup/libMesaSwrast_setup.la \
+#######tnl/libMesaTnl.la \
+#######array_cache/libMesaAC.la \
+#######Trace/libMesaTrace.la \
+#######GGI/libMesaGGI.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###FX/libMesaFX.la \
+###X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####GGI/libMesaGGI.la \
+#####SVGA/libMesaSVGA.la
+#######libGL_la_DEPENDENCIES =  \
+#######math/libMesaMath.la \
+#######swrast/libMesaSwrast.la \
+#######swrast_setup/libMesaSwrast_setup.la \
+#######tnl/libMesaTnl.la \
+#######array_cache/libMesaAC.la \
+#######SPARC/libMesaSPARC.la \
+#######Trace/libMesaTrace.la \
+#######GGI/libMesaGGI.la \
+#######OSmesa/libMesaOS.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###SPARC/libMesaSPARC.la \
+###FX/libMesaFX.la \
+###OSmesa/libMesaOS.la \
+###X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###Trace/libMesaTrace.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####GGI/libMesaGGI.la \
+#####SVGA/libMesaSVGA.la \
+#####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###Trace/libMesaTrace.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######Trace/libMesaTrace.la \
+######FX/libMesaFX.la \
+######GGI/libMesaGGI.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####GGI/libMesaGGI.la \
+####X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##Trace/libMesaTrace.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####OSmesa/libMesaOS.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####GGI/libMesaGGI.la \
+#####SVGA/libMesaSVGA.la \
+#####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####Trace/libMesaTrace.la \
+#####GGI/libMesaGGI.la \
+#####X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####OSmesa/libMesaOS.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####Trace/libMesaTrace.la \
+####SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####FX/libMesaFX.la \
+####OSmesa/libMesaOS.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la \
+####GGI/libMesaGGI.la \
+####SVGA/libMesaSVGA.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######X86/libMesaX86.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######GGI/libMesaGGI.la \
+######X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####Trace/libMesaTrace.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###X/libMesaX11.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##SPARC/libMesaSPARC.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##GGI/libMesaGGI.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+#libGL_la_DEPENDENCIES =  \
+#math/libMesaMath.la \
+#swrast/libMesaSwrast.la \
+#swrast_setup/libMesaSwrast_setup.la \
+#tnl/libMesaTnl.la \
+#array_cache/libMesaAC.la \
+#X86/libMesaX86.la \
+#FX/libMesaFX.la \
+#FX/X86/libMesaFX_X86.la \
+#OSmesa/libMesaOS.la \
+#SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####OSmesa/libMesaOS.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###OSmesa/libMesaOS.la \
+###X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#libGL_la_DEPENDENCIES =  \
+#math/libMesaMath.la \
+#swrast/libMesaSwrast.la \
+#swrast_setup/libMesaSwrast_setup.la \
+#tnl/libMesaTnl.la \
+#array_cache/libMesaAC.la \
+#X86/libMesaX86.la \
+#Trace/libMesaTrace.la \
+#FX/libMesaFX.la \
+#FX/X86/libMesaFX_X86.la \
+#OSmesa/libMesaOS.la \
+#SVGA/libMesaSVGA.la \
+#X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######X86/libMesaX86.la \
+######Trace/libMesaTrace.la \
+######GGI/libMesaGGI.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######GGI/libMesaGGI.la \
+######SVGA/libMesaSVGA.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
 ##X86/libMesaX86.la \
 ##FX/libMesaFX.la \
 ##FX/X86/libMesaFX_X86.la \
 ##X/libMesaX11.la
 ####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####Trace/libMesaTrace.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####Trace/libMesaTrace.la \
 ####FX/libMesaFX.la \
+####GGI/libMesaGGI.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##SPARC/libMesaSPARC.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###SPARC/libMesaSPARC.la \
+###FX/libMesaFX.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#libGL_la_DEPENDENCIES =  \
+#math/libMesaMath.la \
+#swrast/libMesaSwrast.la \
+#swrast_setup/libMesaSwrast_setup.la \
+#tnl/libMesaTnl.la \
+#array_cache/libMesaAC.la \
+#FX/libMesaFX.la \
+#OSmesa/libMesaOS.la \
+#SVGA/libMesaSVGA.la \
+#X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####FX/libMesaFX.la \
+#####FX/X86/libMesaFX_X86.la \
+#####GGI/libMesaGGI.la
+#######libGL_la_DEPENDENCIES =  \
+#######math/libMesaMath.la \
+#######swrast/libMesaSwrast.la \
+#######swrast_setup/libMesaSwrast_setup.la \
+#######tnl/libMesaTnl.la \
+#######array_cache/libMesaAC.la \
+#######SPARC/libMesaSPARC.la \
+#######Trace/libMesaTrace.la \
+#######GGI/libMesaGGI.la \
+#######SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####Trace/libMesaTrace.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la \
+#####SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###SPARC/libMesaSPARC.la \
+###FX/libMesaFX.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####FX/X86/libMesaFX_X86.la \
+#####GGI/libMesaGGI.la \
+#####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######Trace/libMesaTrace.la \
+######GGI/libMesaGGI.la \
+######X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####OSmesa/libMesaOS.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##SPARC/libMesaSPARC.la \
+##FX/libMesaFX.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la \
+####X/libMesaX11.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##Trace/libMesaTrace.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##OSmesa/libMesaOS.la \
+##X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######GGI/libMesaGGI.la \
+######OSmesa/libMesaOS.la \
+######SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####Trace/libMesaTrace.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####FX/libMesaFX.la \
+#####GGI/libMesaGGI.la \
+#####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###FX/libMesaFX.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####OSmesa/libMesaOS.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####OSmesa/libMesaOS.la \
+####X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####FX/libMesaFX.la \
+####SVGA/libMesaSVGA.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##FX/libMesaFX.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####FX/libMesaFX.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####Trace/libMesaTrace.la \
+####GGI/libMesaGGI.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####Trace/libMesaTrace.la \
+#####X/libMesaX11.la
+#######libGL_la_DEPENDENCIES =  \
+#######math/libMesaMath.la \
+#######swrast/libMesaSwrast.la \
+#######swrast_setup/libMesaSwrast_setup.la \
+#######tnl/libMesaTnl.la \
+#######array_cache/libMesaAC.la \
+#######SPARC/libMesaSPARC.la \
+#######GGI/libMesaGGI.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####OSmesa/libMesaOS.la \
+#####X/libMesaX11.la
+#libGL_la_DEPENDENCIES =  \
+#math/libMesaMath.la \
+#swrast/libMesaSwrast.la \
+#swrast_setup/libMesaSwrast_setup.la \
+#tnl/libMesaTnl.la \
+#array_cache/libMesaAC.la \
+#X86/libMesaX86.la \
+#OSmesa/libMesaOS.la \
+#SVGA/libMesaSVGA.la \
+#X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######GGI/libMesaGGI.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la \
+#####SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######FX/libMesaFX.la \
+######GGI/libMesaGGI.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####FX/libMesaFX.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##SPARC/libMesaSPARC.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####GGI/libMesaGGI.la \
+#####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###X/libMesaX11.la
+#######libGL_la_DEPENDENCIES =  \
+#######math/libMesaMath.la \
+#######swrast/libMesaSwrast.la \
+#######swrast_setup/libMesaSwrast_setup.la \
+#######tnl/libMesaTnl.la \
+#######array_cache/libMesaAC.la \
+#######SPARC/libMesaSPARC.la \
+#######Trace/libMesaTrace.la \
+#######FX/libMesaFX.la \
+#######GGI/libMesaGGI.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###GGI/libMesaGGI.la \
+###SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###GGI/libMesaGGI.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######OSmesa/libMesaOS.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####SVGA/libMesaSVGA.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##Trace/libMesaTrace.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######FX/libMesaFX.la \
+######GGI/libMesaGGI.la \
+######OSmesa/libMesaOS.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la \
+####GGI/libMesaGGI.la \
+####SVGA/libMesaSVGA.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##GGI/libMesaGGI.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####FX/libMesaFX.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###FX/libMesaFX.la \
+###OSmesa/libMesaOS.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###FX/libMesaFX.la \
+###GGI/libMesaGGI.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###Trace/libMesaTrace.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####FX/libMesaFX.la
+#libGL_la_DEPENDENCIES =  \
+#math/libMesaMath.la \
+#swrast/libMesaSwrast.la \
+#swrast_setup/libMesaSwrast_setup.la \
+#tnl/libMesaTnl.la \
+#array_cache/libMesaAC.la \
+#X86/libMesaX86.la \
+#SPARC/libMesaSPARC.la \
+#FX/libMesaFX.la \
+#FX/X86/libMesaFX_X86.la \
+#OSmesa/libMesaOS.la \
+#SVGA/libMesaSVGA.la \
+#X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la \
+#####SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####Trace/libMesaTrace.la \
+####X/libMesaX11.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######X86/libMesaX86.la \
+######SPARC/libMesaSPARC.la \
+######GGI/libMesaGGI.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la \
 ####GGI/libMesaGGI.la \
 ####X/libMesaX11.la
 ##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##FX/libMesaFX.la \
+##GGI/libMesaGGI.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####FX/libMesaFX.la \
+####GGI/libMesaGGI.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####GGI/libMesaGGI.la \
+#####SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###Trace/libMesaTrace.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#libGL_la_DEPENDENCIES =  \
+#math/libMesaMath.la \
+#swrast/libMesaSwrast.la \
+#swrast_setup/libMesaSwrast_setup.la \
+#tnl/libMesaTnl.la \
+#array_cache/libMesaAC.la \
+#X86/libMesaX86.la \
+#FX/libMesaFX.la \
+#FX/X86/libMesaFX_X86.la \
+#OSmesa/libMesaOS.la \
+#X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####SVGA/libMesaSVGA.la \
+#####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la \
+#####SVGA/libMesaSVGA.la
+#######libGL_la_DEPENDENCIES =  \
+#######math/libMesaMath.la \
+#######swrast/libMesaSwrast.la \
+#######swrast_setup/libMesaSwrast_setup.la \
+#######tnl/libMesaTnl.la \
+#######array_cache/libMesaAC.la \
+#######X86/libMesaX86.la \
+#######SPARC/libMesaSPARC.la \
+#######Trace/libMesaTrace.la \
+#######GGI/libMesaGGI.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####Trace/libMesaTrace.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la \
+#####SVGA/libMesaSVGA.la \
+#####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###GGI/libMesaGGI.la \
+###OSmesa/libMesaOS.la \
+###X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######GGI/libMesaGGI.la \
+######X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####FX/libMesaFX.la \
+####GGI/libMesaGGI.la \
+####SVGA/libMesaSVGA.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##SPARC/libMesaSPARC.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##OSmesa/libMesaOS.la \
+##X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######X86/libMesaX86.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######GGI/libMesaGGI.la \
+######OSmesa/libMesaOS.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###OSmesa/libMesaOS.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##SPARC/libMesaSPARC.la \
+##Trace/libMesaTrace.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###GGI/libMesaGGI.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####Trace/libMesaTrace.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la \
+#####X/libMesaX11.la
+#######libGL_la_DEPENDENCIES =  \
+#######math/libMesaMath.la \
+#######swrast/libMesaSwrast.la \
+#######swrast_setup/libMesaSwrast_setup.la \
+#######tnl/libMesaTnl.la \
+#######array_cache/libMesaAC.la \
+#######SPARC/libMesaSPARC.la \
+#######Trace/libMesaTrace.la \
+#######GGI/libMesaGGI.la \
+#######X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####GGI/libMesaGGI.la \
+#####SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###SPARC/libMesaSPARC.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######SVGA/libMesaSVGA.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##FX/libMesaFX.la \
+##FX/X86/libMesaFX_X86.la \
+##OSmesa/libMesaOS.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####Trace/libMesaTrace.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
+##X86/libMesaX86.la \
+##GGI/libMesaGGI.la \
+##OSmesa/libMesaOS.la \
+##SVGA/libMesaSVGA.la \
+##X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######GGI/libMesaGGI.la \
+######OSmesa/libMesaOS.la \
+######X/libMesaX11.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####GGI/libMesaGGI.la \
+####SVGA/libMesaSVGA.la \
+####X/libMesaX11.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######SPARC/libMesaSPARC.la \
+######Trace/libMesaTrace.la \
+######FX/libMesaFX.la \
+######GGI/libMesaGGI.la \
+######SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####SVGA/libMesaSVGA.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###OSmesa/libMesaOS.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####SPARC/libMesaSPARC.la \
+#####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###FX/libMesaFX.la \
+###SVGA/libMesaSVGA.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X86/libMesaX86.la \
+####SPARC/libMesaSPARC.la \
+####Trace/libMesaTrace.la \
+####FX/libMesaFX.la \
+####FX/X86/libMesaFX_X86.la \
+####GGI/libMesaGGI.la \
+####OSmesa/libMesaOS.la \
+####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###SPARC/libMesaSPARC.la \
+###FX/libMesaFX.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####FX/X86/libMesaFX_X86.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###X86/libMesaX86.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###FX/X86/libMesaFX_X86.la \
+###OSmesa/libMesaOS.la
+####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####X/libMesaX11.la
+###libGL_la_DEPENDENCIES =  \
+###math/libMesaMath.la \
+###swrast/libMesaSwrast.la \
+###swrast_setup/libMesaSwrast_setup.la \
+###tnl/libMesaTnl.la \
+###array_cache/libMesaAC.la \
+###SPARC/libMesaSPARC.la \
+###Trace/libMesaTrace.la \
+###FX/libMesaFX.la \
+###OSmesa/libMesaOS.la \
+###SVGA/libMesaSVGA.la \
+###X/libMesaX11.la
+#####libGL_la_DEPENDENCIES =  \
+#####math/libMesaMath.la \
+#####swrast/libMesaSwrast.la \
+#####swrast_setup/libMesaSwrast_setup.la \
+#####tnl/libMesaTnl.la \
+#####array_cache/libMesaAC.la \
+#####X86/libMesaX86.la \
+#####SPARC/libMesaSPARC.la \
+#####Trace/libMesaTrace.la \
+#####FX/libMesaFX.la \
+#####FX/X86/libMesaFX_X86.la \
+#####GGI/libMesaGGI.la \
+#####OSmesa/libMesaOS.la
+##libGL_la_DEPENDENCIES =  \
+##math/libMesaMath.la \
+##swrast/libMesaSwrast.la \
+##swrast_setup/libMesaSwrast_setup.la \
+##tnl/libMesaTnl.la \
+##array_cache/libMesaAC.la \
 ##FX/libMesaFX.la \
 ##OSmesa/libMesaOS.la \
 ##X/libMesaX11.la
 ####libGL_la_DEPENDENCIES =  \
-####GGI/libMesaGGI.la \
-####OSmesa/libMesaOS.la \
-####SVGA/libMesaSVGA.la
-##libGL_la_DEPENDENCIES =  \
-##X86/libMesaX86.la \
-##OSmesa/libMesaOS.la \
-##SVGA/libMesaSVGA.la
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
+####SPARC/libMesaSPARC.la \
+####FX/libMesaFX.la \
+####X/libMesaX11.la
+########libGL_la_DEPENDENCIES =  \
+########math/libMesaMath.la \
+########swrast/libMesaSwrast.la \
+########swrast_setup/libMesaSwrast_setup.la \
+########tnl/libMesaTnl.la \
+########array_cache/libMesaAC.la \
+########SPARC/libMesaSPARC.la \
+########Trace/libMesaTrace.la \
+########GGI/libMesaGGI.la
+######libGL_la_DEPENDENCIES =  \
+######math/libMesaMath.la \
+######swrast/libMesaSwrast.la \
+######swrast_setup/libMesaSwrast_setup.la \
+######tnl/libMesaTnl.la \
+######array_cache/libMesaAC.la \
+######Trace/libMesaTrace.la \
+######GGI/libMesaGGI.la \
+######OSmesa/libMesaOS.la
 ####libGL_la_DEPENDENCIES =  \
+####math/libMesaMath.la \
+####swrast/libMesaSwrast.la \
+####swrast_setup/libMesaSwrast_setup.la \
+####tnl/libMesaTnl.la \
+####array_cache/libMesaAC.la \
 ####X86/libMesaX86.la \
 ####GGI/libMesaGGI.la \
 ####SVGA/libMesaSVGA.la
-libGL_la_OBJECTS =  aatriangle.lo accum.lo alpha.lo alphabuf.lo \
-attrib.lo bbox.lo bitmap.lo blend.lo buffers.lo clip.lo colortab.lo \
-config.lo context.lo copypix.lo cva.lo debug_xform.lo depth.lo \
-dispatch.lo dlist.lo drawpix.lo enable.lo enums.lo eval.lo \
-extensions.lo feedback.lo glapi.lo glapinoop.lo glthread.lo fog.lo \
-get.lo hash.lo hint.lo imaging.lo image.lo light.lo lines.lo logic.lo \
-masking.lo matrix.lo mem.lo mmath.lo pb.lo pipeline.lo pixel.lo \
-pixeltex.lo points.lo polygon.lo quads.lo rastpos.lo readpix.lo rect.lo \
-scissor.lo shade.lo span.lo stages.lo state.lo stencil.lo texformat.lo \
-teximage.lo texobj.lo texstate.lo texture.lo texutil.lo translate.lo \
-triangle.lo varray.lo vb.lo vbcull.lo vbfill.lo vbindirect.lo \
-vbrender.lo vbxform.lo vector.lo vertices.lo winpos.lo xform.lo zoom.lo
+libGL_la_OBJECTS =  accum.lo api_arrayelt.lo api_loopback.lo api_noop.lo \
+api_validate.lo attrib.lo blend.lo buffers.lo clip.lo colortab.lo \
+config.lo context.lo convolve.lo debug.lo depth.lo dispatch.lo dlist.lo \
+drawpix.lo enable.lo enums.lo eval.lo extensions.lo feedback.lo fog.lo \
+get.lo glapi.lo glthread.lo hash.lo highpc.lo hint.lo histogram.lo \
+image.lo imports.lo light.lo lines.lo lowpc.lo matrix.lo mem.lo \
+mmath.lo pixel.lo points.lo polygon.lo rastpos.lo state.lo stencil.lo \
+texformat.lo teximage.lo texobj.lo texstate.lo texstore.lo texutil.lo \
+varray.lo vtxfmt.lo
 CFLAGS = -g -O2 -Wall -fomit-frame-pointer -ffast-math -fexpensive-optimizations -fstrict-aliasing -malign-loops=2 -malign-jumps=2 -malign-functions=2 -D_REENTRANT -DPTHREADS
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -439,33 +2810,26 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = gtar
 GZIP_ENV = --best
-DIST_SUBDIRS =  X86 FX GGI OSmesa SVGA X
-DEP_FILES =  .deps/aatriangle.P .deps/accum.P .deps/alpha.P \
-.deps/alphabuf.P .deps/attrib.P .deps/bbox.P .deps/bitmap.P \
-.deps/blend.P .deps/buffers.P .deps/clip.P .deps/colortab.P \
-.deps/config.P .deps/context.P .deps/copypix.P .deps/cva.P \
-.deps/debug_xform.P .deps/depth.P .deps/dispatch.P .deps/dlist.P \
-.deps/drawpix.P .deps/enable.P .deps/enums.P .deps/eval.P \
-.deps/extensions.P .deps/feedback.P .deps/fog.P .deps/get.P \
-.deps/glapi.P .deps/glapinoop.P .deps/glthread.P .deps/hash.P \
-.deps/hint.P .deps/image.P .deps/imaging.P .deps/light.P .deps/lines.P \
-.deps/logic.P .deps/masking.P .deps/matrix.P .deps/mem.P .deps/mmath.P \
-.deps/pb.P .deps/pipeline.P .deps/pixel.P .deps/pixeltex.P \
-.deps/points.P .deps/polygon.P .deps/quads.P .deps/rastpos.P \
-.deps/readpix.P .deps/rect.P .deps/scissor.P .deps/shade.P .deps/span.P \
-.deps/stages.P .deps/state.P .deps/stencil.P .deps/texformat.P \
-.deps/teximage.P .deps/texobj.P .deps/texstate.P .deps/texture.P \
-.deps/texutil.P .deps/translate.P .deps/triangle.P .deps/varray.P \
-.deps/vb.P .deps/vbcull.P .deps/vbfill.P .deps/vbindirect.P \
-.deps/vbrender.P .deps/vbxform.P .deps/vector.P .deps/vertices.P \
-.deps/winpos.P .deps/xform.P .deps/zoom.P
+DEP_FILES =  .deps/accum.P .deps/api_arrayelt.P .deps/api_loopback.P \
+.deps/api_noop.P .deps/api_validate.P .deps/attrib.P .deps/blend.P \
+.deps/buffers.P .deps/clip.P .deps/colortab.P .deps/config.P \
+.deps/context.P .deps/convolve.P .deps/debug.P .deps/depth.P \
+.deps/dispatch.P .deps/dlist.P .deps/drawpix.P .deps/enable.P \
+.deps/enums.P .deps/eval.P .deps/extensions.P .deps/feedback.P \
+.deps/fog.P .deps/get.P .deps/glapi.P .deps/glthread.P .deps/hash.P \
+.deps/highpc.P .deps/hint.P .deps/histogram.P .deps/image.P \
+.deps/imports.P .deps/light.P .deps/lines.P .deps/lowpc.P \
+.deps/matrix.P .deps/mem.P .deps/mmath.P .deps/pixel.P .deps/points.P \
+.deps/polygon.P .deps/rastpos.P .deps/state.P .deps/stencil.P \
+.deps/texformat.P .deps/teximage.P .deps/texobj.P .deps/texstate.P \
+.deps/texstore.P .deps/texutil.P .deps/varray.P .deps/vtxfmt.P
 SOURCES = $(libGL_la_SOURCES)
 OBJECTS = $(libGL_la_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
 .SUFFIXES: .S .c .lo .o .obj .s
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) $(srcdir)/libGL_la_SOURCES $(top_srcdir)/common_rules.make
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu src/Makefile
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
@@ -799,6 +3163,41 @@ strip:
 		strip --strip-unneeded .libs/*.so; \
 		strip --strip-debug .libs/*.a; \
 	fi
+
+#%.o: %.c
+#	@echo '$(COMPILE) -c $<'; \
+#	$(COMPILE) -Wp,$(MESA_MD_FLAG),.deps/$(*F).pp -c $<
+#	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+#	tr ' ' '\012' < .deps/$(*F).pp \
+#	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+#	    >> .deps/$(*F).P; \
+#	rm .deps/$(*F).pp
+#%.lo: %.c
+#	@echo '$(LTCOMPILE) -c $<'; \
+#	$(LTCOMPILE) -Wp,$(MESA_MD_FLAG),.deps/$(*F).pp -c $<
+#	@-sed -e 's/^\([^:]*\)\.o[      ]*:/\1.lo \1.o :/' \
+#	  < .deps/$(*F).pp > .deps/$(*F).P; \
+#	tr ' ' '\012' < .deps/$(*F).pp \
+#	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+#	    >> .deps/$(*F).P; \
+#	rm -f .deps/$(*F).pp
+#%.o: %.cc
+#	@echo '$(CXXCOMPILE) -c $<'; \
+#	$(CXXCOMPILE) -Wp,$(MESA_MD_FLAG),.deps/$(*F).pp -c $<
+#	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+#	tr ' ' '\012' < .deps/$(*F).pp \
+#	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+#	    >> .deps/$(*F).P; \
+#	rm .deps/$(*F).pp
+#%.lo: %.cc
+#	@echo '$(LTCXXCOMPILE) -c $<'; \
+#	$(LTCXXCOMPILE) -Wp,$(MESA_MD_FLAG),.deps/$(*F).pp -c $<
+#	@-sed -e 's/^\([^:]*\)\.o[      ]*:/\1.lo \1.o :/' \
+#	  < .deps/$(*F).pp > .deps/$(*F).P; \
+#	tr ' ' '\012' < .deps/$(*F).pp \
+#	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+#	    >> .deps/$(*F).P; \
+#	rm -f .deps/$(*F).pp
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

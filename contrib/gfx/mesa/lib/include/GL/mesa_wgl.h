@@ -1,4 +1,4 @@
-/* $Id: mesa_wgl.h,v 1.5.4.1 2000/11/20 17:31:51 brianp Exp $ */
+/* $Id: mesa_wgl.h,v 1.6 2001/05/07 13:58:00 gareth Exp $ */
 
 /*
  * Mesa 3-D graphics library
@@ -28,11 +28,12 @@
 /* prototypes for the Mesa WGL functions */
 /* relocated here so that I could make GLUT get them properly */
 
+#define _mesa_wgl_h_
+
 #ifndef _mesa_wgl_h_
 #define _mesa_wgl_h_
 
 
-#include <windows.h>
 #include <gl/gl.h>
 
 #ifdef __cplusplus

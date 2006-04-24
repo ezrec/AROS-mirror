@@ -1,6 +1,6 @@
 
-                                Mesa 3.4.2
-                         (stable release version)
+                                 Mesa 3.5
+                         (new development version)
 
                      Copyright (C) 1995-2001  Brian Paul
 
@@ -91,32 +91,32 @@ Mesa is available in at least three archive formats:
 
 1. GNU zip/tar
 
-	Download MesaLib-3.4.2.tar.gz and optionally MesaDemos-3.4.2.tar.gz
+	Download MesaLib-3.5.tar.gz and optionally MesaDemos-3.5.tar.gz
 	Unpack with:
-		gzcat MesaLib-3.4.2.tar.gz | tar xf -
-		gzcat MesaDemos-3.4.2.tar.gz | tar xf -
+		gzcat MesaLib-3.5.tar.gz | tar xf -
+		gzcat MesaDemos-3.5.tar.gz | tar xf -
 	or
-		gunzip MesaLib-3.4.2.tar.gz ; tar xf MesaLib-3.4.2.tar
-		gunzip MesaDemos-3.4.2.tar.gz ; tar xf MesaLib-3.4.2.tar
+		gunzip MesaLib-3.5.tar.gz ; tar xf MesaLib-3.5.tar
+		gunzip MesaDemos-3.5.tar.gz ; tar xf MesaLib-3.5.tar
 	or
-		tar zxf MesaLib-3.4.2.tar.gz
-		tar zxf MesaDemos-3.4.2.tar.gz
+		tar zxf MesaLib-3.5.tar.gz
+		tar zxf MesaDemos-3.5.tar.gz
 
 	If you don't have gzcat try zcat instead.
 
 2. Unix compressed/tar
 
-	Download MesaLib-3.4.2.tar.Z and optionally MesaDemos-3.4.2.tar.Z
+	Download MesaLib-3.5.tar.Z and optionally MesaDemos-3.5.tar.Z
 	Unpack with:
-		zcat MesaLib-3.4.2.tar.Z | tar xf -
-		zcat MesaDemos-3.4.2.tar.Z | tar xf -
+		zcat MesaLib-3.5.tar.Z | tar xf -
+		zcat MesaDemos-3.5.tar.Z | tar xf -
 
 3. ZIP format
 
-	Download MesaLib-3.4.2.zip and optionally MesaDemos-3.4.2.zip
+	Download MesaLib-3.5.zip and optionally MesaDemos-3.5.zip
 	Unpack with:
-		unzip MesaLib-3.4.2.zip
-		unzip MesaDemos-3.4.2.zip
+		unzip MesaLib-3.5.zip
+		unzip MesaDemos-3.5.zip
 
 
 Note, there may be other package formats on the Mesa ftp/web site.
@@ -422,7 +422,7 @@ Mailing List
 ============
 
 Visit the Mesa web site at http://www.mesa3d.org to join the mailing
-lists.  There is a user's list and developer's list.
+lists.  There is a user's list, developer's list and announcement list.
 
 
 
@@ -444,8 +444,7 @@ If you think you've found a bug in Mesa:
 
 
 The following people have made contributions to the Mesa project
-and may be able to help with specific problems.  Some of these
-email addresses may be way out of date, however.
+and may be able to help with specific problems:
 
 Area			Contact
 ----------------------	-------------------------------------------
@@ -471,6 +470,7 @@ S3 Virge driver		rkoduri@s3.com or pcgamedev@s3.com
 Allegro DJGPP driver	Bernhard Tschirren  bernie-t@geocities.com
 Direct3D driver		Leigh McRae  leigh@altsoftware.com
 GGI driver		Jon Taylor  jtaylor@creaf.com
+Mailing list help	Pedro Vazquez  vazquez@iqm.unicamp.br
 
 None of the people on this list are under any obligation to respond to bug
 reports.  However, they have been pretty helpful so far.
@@ -510,4 +510,4 @@ If you're contribution code to the Mesa library itself:
 
 
 --------------------------------------------------------------------------
-$Id: README,v 3.28.2.4 2001/05/14 19:11:32 brianp Exp $
+$Id: README,v 3.29 2001/06/20 19:02:48 brianp Exp $

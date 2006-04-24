@@ -1,4 +1,4 @@
-$Id: VERSIONS,v 1.38.2.47 2001/05/18 22:01:38 brianp Exp $
+$Id: VERSIONS,v 1.60 2001/06/20 19:02:48 brianp Exp $
 
 
 Mesa Version History
@@ -802,6 +802,7 @@ Mesa Version History
     Known problems:
 	- NURBS or evaluator surfaces inside display lists don't always work
 
+
 3.4.2  May 17, 2001
     Bug fixes:
 	- deleting the currently bound texture could cause bad problems
@@ -827,3 +828,42 @@ Mesa Version History
     Changes:
 	- optimized writing mono-colored pixel spans to X pixmaps
 	- increased max viewport size to 2048 x 2048
+
+
+3.5  June 21, 2001
+    New:
+	- internals of Mesa divided into modular pieces (Keith Whitwell)
+	- 100% OpenGL 1.2 conformance (passes all conformance tests)
+	- new AA line algorithm
+	- GL_EXT_convolution extension
+	- GL_ARB_imaging subset
+	- OSMesaCreateContextExt() function
+	- GL_ARB_texture_env_add extension (same as GL_EXT_texture_env_add)
+	- GL_MAX_TEXTURE_UNITS_ARB now defaults to eight
+	- GL_EXT_fog_coord extension (Keith Whitwell)
+	- GL_EXT_secondary_color extension (Keith Whitwell)
+	- GL_ARB_texture_env_add extension (same as GL_EXT_texture_env_add)
+	- GL_SGIX_depth_texture extension
+	- GL_SGIX_shadow and GL_SGIX_shadow_ambient extensions
+	- demos/shadowtex.c demo of GL_SGIX_depth_texture and GL_SGIX_shadow
+	- GL_ARB_texture_env_combine extension
+	- GL_ARB_texture_env_dot3 extension
+	- GL_ARB_texture_border_clamp (aka GL_SGIS_texture_border_clamp)
+	- OSMesaCreateContextExt() function
+	- libOSMesa.so library, contains the OSMesa driver interface
+	- GL/glxext.h header file for GLX extensions
+	- somewhat faster software texturing, fogging, depth testing
+	- all color-index conformance tests now pass (only 8bpp tested)
+	- SPARC assembly language TCL optimizations (David Miller)
+	- GL_SGIS_generate_mipmap extension
+    Bug Fixes:
+	- fbiRev and tmuRev were unitialized when using Glide3
+	- fixed a few color index mode conformance failures; all pass now
+	- now appling antialiasing coverage to alpha after texturing
+	- colors weren't getting clamped to [0,1] before color table lookup
+	- fixed RISC alignment errors caused by COPY_4UBV macro
+	- drawing wide, flat-shaded lines could cause a segfault
+	- vertices now snapped to 1/16 pixel to fix rendering of tiny triangles
+    Changes:
+	- SGI's Sample Implementation (SI) 1.3 GLU library replaces Mesa GLU
+	- new libOSMesa.so library, contains the OSMesa driver interface

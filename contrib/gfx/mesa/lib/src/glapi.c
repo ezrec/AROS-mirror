@@ -1,10 +1,10 @@
-/* $Id: glapi.c,v 1.42.4.2 2000/11/05 21:24:00 brianp Exp $ */
+/* $Id: glapi.c,v 1.56 2001/06/06 22:55:28 davem69 Exp $ */
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.4
+ * Version:  3.5
  *
- * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * Copyright (C) 1999-2001  Brian Paul   All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -38,44 +38,149 @@
  * based libGL.so, and perhaps the SGI SI.
  *
  * There are no dependencies on Mesa in this code.
+ *
+ * Versions (API changes):
+ *   2000/02/23  - original version for Mesa 3.3 and XFree86 4.0
+ *   2001/01/16  - added dispatch override feature for Mesa 3.5
  */
 
 
 
 #include "glheader.h"
 #include "glapi.h"
-#include "glapinoop.h"
 #include "glapioffsets.h"
 #include "glapitable.h"
 #include "glthread.h"
 
+/***** BEGIN NO-OP DISPATCH *****/
 
-/* This is used when thread safety is disabled */
+static GLboolean WarnFlag = GL_FALSE;
+
+void
+_glapi_noop_enable_warnings(GLboolean enable)
+{
+   WarnFlag = enable;
+}
+
+static GLboolean
+warn(void)
+{
+   if (WarnFlag || getenv("MESA_DEBUG") || getenv("LIBGL_DEBUG"))
+      return GL_TRUE;
+   else
+      return GL_FALSE;
+}
+
+
+#define KEYWORD1 static
+#define KEYWORD2
+#define NAME(func)  NoOp##func
+
+#define F stderr
+
+#define DISPATCH(func, args, msg)			\
+   if (warn()) {					\
+      fprintf(stderr, "GL User Error: calling ");	\
+      fprintf msg;					\
+      fprintf(stderr, " without a current context\n");	\
+   }
+
+#define RETURN_DISPATCH(func, args, msg)		\
+   if (warn()) {					\
+      fprintf(stderr, "GL User Error: calling ");	\
+      fprintf msg;					\
+      fprintf(stderr, " without a current context\n");	\
+   }							\
+   return 0
+
+#define DISPATCH_TABLE_NAME __glapi_noop_table
+#define UNUSED_TABLE_NAME __usused_noop_functions
+
+#define TABLE_ENTRY(name) (void *) NoOp##name
+
+static int NoOpUnused(void)
+{
+   if (warn()) {
+      fprintf(stderr, "GL User Error: calling extension function without a current context\n");
+   }
+   return 0;
+}
+
+#include "glapitemp.h"
+
+/***** END NO-OP DISPATCH *****/
+
+
+
+/***** BEGIN THREAD-SAFE DISPATCH *****/
+/* if we support thread-safety, build a special dispatch table for use
+ * in thread-safety mode (ThreadSafe == GL_TRUE).  Each entry in the
+ * dispatch table will call _glthread_GetTSD() to get the actual dispatch
+ * table bound to the current thread, then jump through that table.
+ */
+
+#if defined(THREADS)
+
+static GLboolean ThreadSafe = GL_FALSE;  /* In thread-safe mode? */
+static _glthread_TSD DispatchTSD;        /* Per-thread dispatch pointer */
+static _glthread_TSD RealDispatchTSD;    /* only when using override */
+static _glthread_TSD ContextTSD;         /* Per-thread context pointer */
+
+
+#define KEYWORD1 static
+#define KEYWORD2 GLAPIENTRY
+#define NAME(func)  _ts_##func
+
+#define DISPATCH(FUNC, ARGS, MESSAGE)					\
+   struct _glapi_table *dispatch;					\
+   dispatch = (struct _glapi_table *) _glthread_GetTSD(&DispatchTSD);	\
+   if (!dispatch)							\
+      dispatch = (struct _glapi_table *) __glapi_noop_table;		\
+   (dispatch->FUNC) ARGS
+
+#define RETURN_DISPATCH(FUNC, ARGS, MESSAGE) 				\
+   struct _glapi_table *dispatch;					\
+   dispatch = (struct _glapi_table *) _glthread_GetTSD(&DispatchTSD);	\
+   if (!dispatch)							\
+      dispatch = (struct _glapi_table *) __glapi_noop_table;		\
+   return (dispatch->FUNC) ARGS
+
+#define DISPATCH_TABLE_NAME __glapi_threadsafe_table
+#define UNUSED_TABLE_NAME __usused_threadsafe_functions
+
+#define TABLE_ENTRY(name) (void *) _ts_##name
+
+static int _ts_Unused(void)
+{
+   return 0;
+}
+
+#include "glapitemp.h"
+
+#endif
+
+/***** END THREAD-SAFE DISPATCH *****/
+
+
+
 struct _glapi_table *_glapi_Dispatch = (struct _glapi_table *) __glapi_noop_table;
+struct _glapi_table *_glapi_RealDispatch = (struct _glapi_table *) __glapi_noop_table;
 
 /* Used when thread safety disabled */
 void *_glapi_Context = NULL;
 
 
-#if defined(THREADS)
-
-/* Flag to indicate whether thread-safe dispatch is enabled */
-static GLboolean ThreadSafe = GL_FALSE;
-
-static _glthread_TSD DispatchTSD;
-
-static _glthread_TSD ContextTSD;
-
-#endif
-
-
-
 static GLuint MaxDispatchOffset = sizeof(struct _glapi_table) / sizeof(void *) - 1;
 static GLboolean GetSizeCalled = GL_FALSE;
 
-/* strdup is actually not a standard ANSI C or POSIX routine
-   Irix will not define it if ANSI mode is in effect. */
-static char *str_dup(const char *str)
+static GLboolean DispatchOverride = GL_FALSE;
+
+
+/* strdup() is actually not a standard ANSI C or POSIX routine.
+ * Irix will not define it if ANSI mode is in effect.
+ */
+static char *
+str_dup(const char *str)
 {
    char *copy;
    copy = (char*) malloc(strlen(str) + 1);
@@ -178,14 +283,29 @@ _glapi_set_dispatch(struct _glapi_table *dispatch)
 #endif
 
 #if defined(THREADS)
-   _glthread_SetTSD(&DispatchTSD, (void*) dispatch);
-   if (ThreadSafe)
-      _glapi_Dispatch = NULL;
-   else
+   if (DispatchOverride) {
+      _glthread_SetTSD(&RealDispatchTSD, (void *) dispatch);
+      if (ThreadSafe)
+         _glapi_RealDispatch = (struct _glapi_table*) __glapi_threadsafe_table;
+      else
+         _glapi_RealDispatch = dispatch;
+   }
+   else {
+      /* normal operation */
+      _glthread_SetTSD(&DispatchTSD, (void *) dispatch);
+      if (ThreadSafe)
+         _glapi_Dispatch = (struct _glapi_table *) __glapi_threadsafe_table;
+      else
+         _glapi_Dispatch = dispatch;
+   }
+#else /*THREADS*/
+   if (DispatchOverride) {
+      _glapi_RealDispatch = dispatch;
+   }
+   else {
       _glapi_Dispatch = dispatch;
-#else
-   _glapi_Dispatch = dispatch;
-#endif
+   }
+#endif /*THREADS*/
 }
 
 
@@ -198,15 +318,107 @@ _glapi_get_dispatch(void)
 {
 #if defined(THREADS)
    if (ThreadSafe) {
-      return (struct _glapi_table *) _glthread_GetTSD(&DispatchTSD);
+      if (DispatchOverride) {
+         return (struct _glapi_table *) _glthread_GetTSD(&RealDispatchTSD);
+      }
+      else {
+         return (struct _glapi_table *) _glthread_GetTSD(&DispatchTSD);
+      }
    }
    else {
-      assert(_glapi_Dispatch);
-      return _glapi_Dispatch;
+      if (DispatchOverride) {
+         assert(_glapi_RealDispatch);
+         return _glapi_RealDispatch;
+      }
+      else {
+         assert(_glapi_Dispatch);
+         return _glapi_Dispatch;
+      }
    }
 #else
    return _glapi_Dispatch;
 #endif
+}
+
+
+/*
+ * Notes on dispatch overrride:
+ *
+ * Dispatch override allows an external agent to hook into the GL dispatch
+ * mechanism before execution goes into the core rendering library.  For
+ * example, a trace mechanism would insert itself as an overrider, print
+ * logging info for each GL function, then dispatch to the real GL function.
+ *
+ * libGLS (GL Stream library) is another agent that might use override.
+ *
+ * We don't allow more than one layer of overriding at this time.
+ * In the future we may allow nested/layered override.  In that case
+ * _glapi_begin_dispatch_override() will return an override layer,
+ * _glapi_end_dispatch_override(layer) will remove an override layer
+ * and _glapi_get_override_dispatch(layer) will return the dispatch
+ * table for a given override layer.  layer = 0 will be the "real"
+ * dispatch table.
+ */
+
+/*
+ * Return: dispatch override layer number.
+ */
+int
+_glapi_begin_dispatch_override(struct _glapi_table *override)
+{
+   struct _glapi_table *real = _glapi_get_dispatch();
+
+   assert(!DispatchOverride);  /* can't nest at this time */
+   DispatchOverride = GL_TRUE;
+
+   _glapi_set_dispatch(real);
+
+#if defined(THREADS)
+   _glthread_SetTSD(&DispatchTSD, (void *) override);
+   if (ThreadSafe)
+      _glapi_Dispatch = (struct _glapi_table *) __glapi_threadsafe_table;
+   else
+      _glapi_Dispatch = override;
+#else
+   _glapi_Dispatch = override;
+#endif
+   return 1;
+}
+
+
+void
+_glapi_end_dispatch_override(int layer)
+{
+   struct _glapi_table *real = _glapi_get_dispatch();
+   (void) layer;
+   DispatchOverride = GL_FALSE;
+   _glapi_set_dispatch(real);
+   /* the rest of this isn't needed, just play it safe */
+#if defined(THREADS)
+   _glthread_SetTSD(&RealDispatchTSD, NULL);
+#endif
+   _glapi_RealDispatch = NULL;
+}
+
+
+struct _glapi_table *
+_glapi_get_override_dispatch(int layer)
+{
+   if (layer == 0) {
+      return _glapi_get_dispatch();
+   }
+   else {
+      if (DispatchOverride) {
+#if defined(THREADS)
+         return (struct _glapi_table *) _glthread_GetTSD(&DispatchTSD);
+#else
+         return _glapi_Dispatch;
+#endif
+      }
+      else {
+         return NULL;
+      }
+   }
 }
 
 
@@ -231,7 +443,7 @@ _glapi_get_dispatch_table_size(void)
 const char *
 _glapi_get_version(void)
 {
-   return "20000223";  /* YYYYMMDD */
+   return "20010116";  /* YYYYMMDD */
 }
 
 
@@ -698,7 +910,6 @@ static struct name_address_offset static_functions[] = {
 #else
 #define NAME(X) (GLvoid *) NotImplemented
 #endif
-        { "glSamplePassARB", NAME(glSamplePassARB), _gloffset_SamplePassARB },
         { "glSampleCoverageARB", NAME(glSampleCoverageARB), _gloffset_SampleCoverageARB },
 #undef NAME
 
@@ -779,7 +990,7 @@ static struct name_address_offset static_functions[] = {
 	{ "glCopyTexSubImage1DEXT", NAME(glCopyTexSubImage1DEXT), _gloffset_CopyTexSubImage1D },
 	{ "glCopyTexSubImage2DEXT", NAME(glCopyTexSubImage2DEXT), _gloffset_CopyTexSubImage2D },
 #undef NAME
-                              
+
 	/* 11. GL_EXT_histogram */
 #ifdef GL_EXT_histogram
 #define NAME(X) (GLvoid *) X
@@ -818,7 +1029,7 @@ static struct name_address_offset static_functions[] = {
 	{ "glGetSeparableFilterEXT", NAME(glGetSeparableFilterEXT), _gloffset_GetSeparableFilterEXT },
 	{ "glSeparableFilter2DEXT", NAME(glSeparableFilter2DEXT), _gloffset_SeparableFilter2D },
 #undef NAME
-                    
+
 	/* 14. GL_SGI_color_table */
 #ifdef GL_SGI_color_table
 #define NAME(X) (GLvoid *) X
@@ -1185,6 +1396,7 @@ static struct name_address_offset static_functions[] = {
         { "glGetPixelTransformParameterivEXT", NAME(glGetPixelTransformParameterivEXT), _gloffset_GetPixelTransformParameterivEXT },
         { "glGetPixelTransformParameterfvEXT", NAME(glGetPixelTransformParameterfvEXT), _gloffset_GetPixelTransformParameterfvEXT },
 #undef NAME
+#endif
 
         /* 145. GL_EXT_secondary_color */
 #ifdef GL_EXT_secondary_color
@@ -1200,14 +1412,6 @@ static struct name_address_offset static_functions[] = {
         { "glSecondaryColor3ubEXT", NAME(glSecondaryColor3ubEXT), _gloffset_SecondaryColor3ubEXT },
         { "glSecondaryColor3uiEXT", NAME(glSecondaryColor3uiEXT), _gloffset_SecondaryColor3uiEXT },
         { "glSecondaryColor3usEXT", NAME(glSecondaryColor3usEXT), _gloffset_SecondaryColor3usEXT },
-        { "glSecondaryColor4bEXT", NAME(glSecondaryColor4bEXT), _gloffset_SecondaryColor4bEXT },
-        { "glSecondaryColor4dEXT", NAME(glSecondaryColor4dEXT), _gloffset_SecondaryColor4dEXT },
-        { "glSecondaryColor4fEXT", NAME(glSecondaryColor4fEXT), _gloffset_SecondaryColor4fEXT },
-        { "glSecondaryColor4iEXT", NAME(glSecondaryColor4iEXT), _gloffset_SecondaryColor4iEXT },
-        { "glSecondaryColor4sEXT", NAME(glSecondaryColor4sEXT), _gloffset_SecondaryColor4sEXT },
-        { "glSecondaryColor4ubEXT", NAME(glSecondaryColor4ubEXT), _gloffset_SecondaryColor4ubEXT },
-        { "glSecondaryColor4uiEXT", NAME(glSecondaryColor4uiEXT), _gloffset_SecondaryColor4uiEXT },
-        { "glSecondaryColor4usEXT", NAME(glSecondaryColor4usEXT), _gloffset_SecondaryColor4usEXT },
         { "glSecondaryColor3bvEXT", NAME(glSecondaryColor3bvEXT), _gloffset_SecondaryColor3bvEXT },
 	{ "glSecondaryColor3dvEXT", NAME(glSecondaryColor3dvEXT), _gloffset_SecondaryColor3dvEXT },
 	{ "glSecondaryColor3fvEXT", NAME(glSecondaryColor3fvEXT), _gloffset_SecondaryColor3fvEXT },
@@ -1216,18 +1420,11 @@ static struct name_address_offset static_functions[] = {
 	{ "glSecondaryColor3ubvEXT", NAME(glSecondaryColor3ubvEXT), _gloffset_SecondaryColor3ubvEXT },
 	{ "glSecondaryColor3uivEXT", NAME(glSecondaryColor3uivEXT), _gloffset_SecondaryColor3uivEXT },
 	{ "glSecondaryColor3usvEXT", NAME(glSecondaryColor3usvEXT), _gloffset_SecondaryColor3usvEXT },
-	{ "glSecondaryColor4bvEXT", NAME(glSecondaryColor4bvEXT), _gloffset_SecondaryColor4bvEXT },
-	{ "glSecondaryColor4dvEXT", NAME(glSecondaryColor4dvEXT), _gloffset_SecondaryColor4dvEXT },
-	{ "glSecondaryColor4fvEXT", NAME(glSecondaryColor4fvEXT), _gloffset_SecondaryColor4fvEXT },
-	{ "glSecondaryColor4ivEXT", NAME(glSecondaryColor4ivEXT), _gloffset_SecondaryColor4ivEXT },
-	{ "glSecondaryColor4svEXT", NAME(glSecondaryColor4svEXT), _gloffset_SecondaryColor4svEXT },
-	{ "glSecondaryColor4ubvEXT", NAME(glSecondaryColor4ubvEXT), _gloffset_SecondaryColor4ubvEXT },
-	{ "glSecondaryColor4uivEXT", NAME(glSecondaryColor4uivEXT), _gloffset_SecondaryColor4uivEXT },
-	{ "glSecondaryColor4usvEXT", NAME(glSecondaryColor4usvEXT), _gloffset_SecondaryColor4usvEXT },
 	{ "glSecondaryColorPointerEXT", NAME(glSecondaryColorPointerEXT), _gloffset_SecondaryColorPointerEXT },
 #undef NAME
 
 	/* 147. GL_EXT_texture_perturb_normal */
+#if 000
 #ifdef GL_EXT_texture_perturb_normal
 #define NAME(X) (GLvoid *) X
 #else
@@ -1235,8 +1432,10 @@ static struct name_address_offset static_functions[] = {
 #endif
 	{ "glTextureNormalEXT", NAME(glTextureNormalEXT), _gloffset_TextureNormalEXT },
 #undef NAME
+#endif
 
 	/* 148. GL_EXT_multi_draw_arrays */
+#if 000
 #ifdef GL_EXT_multi_draw_arrays
 #define NAME(X) (GLvoid *) X
 #else
@@ -1259,8 +1458,8 @@ static struct name_address_offset static_functions[] = {
 	{ "glFogCoordPointerEXT", NAME(glFogCoordPointerEXT), _gloffset_FogCoordPointerEXT },
 #undef NAME
 
-#if 000
 	/* 156. GL_EXT_coordinate_frame */
+#if 000
 #ifdef GL_EXT_coordinate_frame
 #define NAME(X) (GLvoid *) X
 #else
@@ -1289,8 +1488,10 @@ static struct name_address_offset static_functions[] = {
 	{ "glTangentPointerEXT", NAME(glTangentPointerEXT), _gloffset_TangentPointerEXT },
 	{ "glBinormalPointerEXT", NAME(glBinormalPointerEXT), _gloffset_BinormalPointerEXT },
 #undef NAME
+#endif
 
 	/* 164. GL_SUN_global_alpha */
+#if 000
 #ifdef GL_SUN_global_alpha
 #define NAME(X) (GLvoid *) X
 #else
@@ -1305,8 +1506,10 @@ static struct name_address_offset static_functions[] = {
 	{ "glGlobalAlphaFactorusSUN", NAME(glGlobalAlphaFactorusSUN), _gloffset_GlobalAlphaFactorusSUN },
 	{ "glGlobalAlphaFactoruiSUN", NAME(glGlobalAlphaFactoruiSUN), _gloffset_GlobalAlphaFactoruiSUN },
 #undef NAME
+#endif
 
 	/* 165. GL_SUN_triangle_list */
+#if 000
 #ifdef GL_SUN_triangle_list
 #define NAME(X) (GLvoid *) X
 #else
@@ -1320,8 +1523,10 @@ static struct name_address_offset static_functions[] = {
 	{ "glReplacementCodeubvSUN", NAME(glReplacementCodeubvSUN), _gloffset_ReplacementCodeubvSUN },
 	{ "glReplacementCodePointerSUN", NAME(glReplacementCodePointerSUN), _gloffset_ReplacementCodePointerSUN },
 #undef NAME
+#endif
 
 	/* 166. GL_SUN_vertex */
+#if 000
 #ifdef GL_SUN_vertex
 #define NAME(X) (GLvoid *) X
 #else
@@ -1500,7 +1705,9 @@ get_static_proc_address(const char *funcName)
 static struct name_address_offset ExtEntryTable[MAX_EXTENSION_FUNCS];
 static GLuint NumExtEntryPoints = 0;
 
-
+#ifdef USE_SPARC_ASM
+extern void __glapi_sparc_icache_flush(unsigned int *);
+#endif
 
 /*
  * Generate a dispatch function (entrypoint) which jumps through
@@ -1547,6 +1754,55 @@ generate_entrypoint(GLuint functionOffset)
       *(unsigned int *)(code + 0x16) = (unsigned int)functionOffset * 4;
    }
    return code;
+#elif defined(USE_SPARC_ASM)
+
+#ifdef __sparc_v9__
+   static const unsigned int insn_template[] = {
+	   0x05000000,	/* sethi	%uhi(_glapi_Dispatch), %g2	*/
+	   0x03000000,	/* sethi	%hi(_glapi_Dispatch), %g1	*/
+	   0x8410a000,	/* or		%g2, %ulo(_glapi_Dispatch), %g2	*/
+	   0x82106000,	/* or		%g1, %lo(_glapi_Dispatch), %g1	*/
+	   0x8528b020,	/* sllx		%g2, 32, %g2			*/
+	   0xc2584002,	/* ldx		[%g1 + %g2], %g1		*/
+	   0x05000000,	/* sethi	%hi(8 * glapioffset), %g2	*/
+	   0x8410a000,	/* or		%g2, %lo(8 * glapioffset), %g2	*/
+	   0xc6584002,	/* ldx		[%g1 + %g2], %g3		*/
+	   0x81c0c000,	/* jmpl		%g3, %g0			*/
+	   0x01000000	/*  nop						*/
+   };
+#else
+   static const unsigned int insn_template[] = {
+	   0x03000000,	/* sethi	%hi(_glapi_Dispatch), %g1	  */
+	   0xc2006000,	/* ld		[%g1 + %lo(_glapi_Dispatch)], %g1 */
+	   0xc6006000,	/* ld		[%g1 + %lo(4*glapioffset)], %g3	  */
+	   0x81c0c000,	/* jmpl		%g3, %g0			  */
+	   0x01000000	/*  nop						  */
+   };
+#endif
+   unsigned int *code = malloc(sizeof(insn_template));
+   unsigned long glapi_addr = (unsigned long) &_glapi_Dispatch;
+   if (code) {
+      memcpy(code, insn_template, sizeof(insn_template));
+
+#ifdef __sparc_v9__
+      code[0] |= (glapi_addr >> (32 + 10));
+      code[1] |= ((glapi_addr & 0xffffffff) >> 10);
+      __glapi_sparc_icache_flush(&code[0]);
+      code[2] |= ((glapi_addr >> 32) & ((1 << 10) - 1));
+      code[3] |= (glapi_addr & ((1 << 10) - 1));
+      __glapi_sparc_icache_flush(&code[2]);
+      code[6] |= ((functionOffset * 8) >> 10);
+      code[7] |= ((functionOffset * 8) & ((1 << 10) - 1));
+      __glapi_sparc_icache_flush(&code[6]);
+#else
+      code[0] |= (glapi_addr >> 10);
+      code[1] |= (glapi_addr & ((1 << 10) - 1));
+      __glapi_sparc_icache_flush(&code[0]);
+      code[2] |= (functionOffset * 4);
+      __glapi_sparc_icache_flush(&code[2]);
+#endif
+   }
+   return code;
 #else
    return NULL;
 #endif
@@ -1565,7 +1821,7 @@ _glapi_add_entrypoint(const char *funcName, GLuint offset)
    {
       GLint index = get_static_proc_offset(funcName);
       if (index >= 0) {
-         return (GLboolean) (index == (GLint) offset);  /* bad offset! */
+         return (GLboolean) ((GLuint) index == offset);  /* bad offset! */
       }
    }
 
@@ -1792,9 +2048,13 @@ _glapi_check_table(const struct _glapi_table *table)
       assert(istextureOffset == _gloffset_IsTextureEXT);
       assert(istextureOffset == offset);
    }
+   {
+      GLuint secondaryColor3fOffset = _glapi_get_proc_offset("glSecondaryColor3fEXT");
+      char *secondaryColor3fFunc = (char*) &table->SecondaryColor3fEXT;
+      GLuint offset = (secondaryColor3fFunc - (char *) table) / sizeof(void *);
+      assert(secondaryColor3fOffset == _gloffset_SecondaryColor3fEXT);
+      assert(secondaryColor3fOffset == offset);
+      assert(_glapi_get_proc_address("glSecondaryColor3fEXT") == (void *) &glSecondaryColor3fEXT);
+   }
 #endif
 }
-
-
-
-

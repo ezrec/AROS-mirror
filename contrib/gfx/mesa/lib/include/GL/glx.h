@@ -2,7 +2,7 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.4
+ * Version:  3.5
  * 
  * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
  * 
@@ -30,6 +30,7 @@
 
 
 #ifdef __VMS
+#include <GL/vms_x_fix.h>
 # ifdef __cplusplus
 /* VMS Xlib.h gives problems with C++.
  * this avoids a bunch of trivial warnings */
@@ -43,11 +44,11 @@
 #pragma message enable nosimpint
 #endif
 #endif
-#include "GL/gl.h"
+#include <GL/gl.h>
 
 
 #if defined(USE_MGL_NAMESPACE)
-#include "glx_mangle.h"
+#include <GL/glx_mangle.h>
 #endif
 
 
@@ -162,11 +163,11 @@ extern "C" {
 
 
 
-typedef void * GLXContext;
+typedef struct __GLXcontextRec *GLXContext;
 typedef XID GLXPixmap;
 typedef XID GLXDrawable;
 /* GLX 1.3 and later */
-typedef void * GLXFBConfig;
+typedef struct __GLXFBConfigRec *GLXFBConfig;
 typedef XID GLXFBConfigID;
 typedef XID GLXContextID;
 typedef XID GLXWindow;
@@ -279,11 +280,11 @@ extern void glXGetSelectedEvent( Display *dpy, GLXDrawable drawable,
 
 
 
-/*#ifndef GLX_GLXEXT_LEGACY*/
+#ifndef GLX_GLXEXT_LEGACY
 
-/*#include <GL/glxext.h>*/
+#include <GL/glxext.h>
 
-/*#else*/
+#else
 
 
 /*
@@ -413,7 +414,7 @@ extern Bool glXReleaseBuffersMESA( Display *dpy, GLXDrawable d );
 #define GLX_3DFX_WINDOW_MODE_MESA       0x1
 #define GLX_3DFX_FULLSCREEN_MODE_MESA   0x2
 
-extern GLboolean glXSet3DfxModeMESA( GLint mode );
+extern Bool glXSet3DfxModeMESA( int mode );
 
 #endif /* GLX_MESA_set_3dfx_mode */
 
@@ -431,7 +432,7 @@ extern void (*glXGetProcAddressARB(const GLubyte *procName))();
 
 
 
-/*#endif*/ /* GLX_GLXEXT_LEGACY */
+#endif /* GLX_GLXEXT_LEGACY */
 
 
 

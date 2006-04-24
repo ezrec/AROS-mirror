@@ -5,7 +5,7 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM linklibs-mesa2aux : includes
+#MM linklibs-mesaaux : includes
 
 LIBMESAAUX =  glaux \
             font \
@@ -18,7 +18,7 @@ LIBMESAAUX =  glaux \
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -I$(MESAGLUSRCDIR) -I$(MESATKSRCDIR) -I$(MESAAUXSRCDIR) -Iamiga/misc
 USER_CFLAGS	:= -DNO_ERRNO_H
 
-%build_linklib mmake=linklibs-mesa2aux libname=Mesaaux \
+%build_linklib mmake=linklibs-mesaaux libname=Mesaaux \
     files=$(LIBMESAAUX) objdir=$(GENDIR)/$(CURDIR)
 
 %common

@@ -1,0 +1,27 @@
+
+#   $Id: mmakefile.src 24333 2006-04-18 19:16:47Z NicJA $
+#
+#
+include $(TOP)/config/make.cfg
+
+#MM linklibs-siglu : includes includes-copy
+
+LIBSIGLU =  glu \
+            mipmap \
+            nurbs \
+            nurbscrv \
+            nurbssrf \
+            nurbsutl \
+            polytest \
+            project \
+            quadric \
+            tess \
+            tesselat
+
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -I$(MESAGLUSRCDIR) -I$(MESATKSRCDIR) -I$(MESAAUXSRCDIR) -Iamiga/misc
+USER_CFLAGS	:= -DNO_ERRNO_H
+
+%build_linklib mmake=linklibs-siglu libname=MesaGLU \
+    files=$(LIBSIGLU) objdir=$(GENDIR)/$(CURDIR)
+
+%common

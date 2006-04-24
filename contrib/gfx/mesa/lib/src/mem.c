@@ -1,10 +1,10 @@
-/* $Id: mem.c,v 1.2 2000/06/27 22:10:00 brianp Exp $ */
+/* $Id: mem.c,v 1.5 2001/03/12 00:48:38 gareth Exp $ */
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.3
+ * Version:  3.5
  *
- * Copyright (C) 1999  Brian Paul   All Rights Reserved.
+ * Copyright (C) 1999-2001  Brian Paul   All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -37,6 +37,7 @@
 #include "all.h"
 #else
 #include "glheader.h"
+#include "config.h"
 #include "macros.h"
 #include "mem.h"
 #endif
@@ -153,4 +154,15 @@ _mesa_align_free(void *ptr)
    void *realAddr = *cubbyHole;
    FREE(realAddr);
 #endif
+}
+
+
+/*
+ * Set a block of GLushorts to a particular value.
+ */
+void
+_mesa_memset16( GLushort *dst, GLushort val, size_t n )
+{
+   while (n-- > 0)
+      *dst++ = val;
 }

@@ -13,6 +13,7 @@ GLU_LIB = libMesaGLU.olb
 GLUT_LIB = libglut.olb
 .endif
 CC = cc
+CXX = cxx/define=(LIBRARYBUILD=1)/assume=(nostdnew,noglobal_array_new)
 CFLAGS1 =
 MAKELIB = library/create
 RANLIB = true

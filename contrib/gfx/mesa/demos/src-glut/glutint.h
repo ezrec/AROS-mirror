@@ -12,19 +12,19 @@
 #endif
 
 #if defined(WIN32)
-#include "glutwin32.h"
+# include "glutwin32.h"
 #else /* WIN32 */
-#ifdef __AROS__
-#include "glutaros.h"
-#else
-#ifdef __sgi
-#define SUPPORT_FORTRAN
-#endif
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <GL/glx.h>
-#include <GL/glut.h>
-#endif
+# if defined(__AROS__)
+#  include "glutaros.h"
+# else
+#  ifdef __sgi
+#   define SUPPORT_FORTRAN
+#  endif
+#  include <X11/Xlib.h>
+#  include <X11/Xutil.h>
+#  include <GL/glx.h>
+#  include <GL/glut.h>
+# endif
 #endif
 
 #ifdef __vms

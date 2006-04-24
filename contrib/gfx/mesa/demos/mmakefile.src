@@ -6,5 +6,6 @@
 include $(TOP)/config/make.cfg
 
 #MM- contrib-mesa-demos : contrib-mesa-demos-common contrib-mesa-demos-oldlibdemos contrib-mesa-demos-samples contrib-mesa-demos-book
-#MM- contrib-mesa-demos-common : contrib-mesa linklibs-mesa2aux linklibs-mesa2tk
+#MM- contrib-mesa-demos-common : contrib-mesa linklibs-mesaaux linklibs-mesatk
+##MM- contrib-mesa-demos-common : contrib-mesa linklibs-mesaaux linklibs-mesatk linklibs-mesaglut
 %common

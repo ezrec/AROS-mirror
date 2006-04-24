@@ -56,11 +56,29 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <GL/gl.h>
-#include "context.h"
-#include "dd.h"
-#include "xform.h"
-#include "macros.h"
-#include "vb.h"
+#include "../glheader.h"
+#include "../context.h"
+#include "../colormac.h"
+#include "../depth.h"
+#include "../extensions.h"
+#include "../macros.h"
+#include "../matrix.h"
+#include "../mem.h"
+#include "../mmath.h"
+#include "../mtypes.h"
+#include "../texformat.h"
+#include "../texstore.h"
+#include "../array_cache/acache.h"
+#include "../swrast/swrast.h"
+#include "../swrast_setup/swrast_setup.h"
+#include "../swrast/s_context.h"
+#include "../swrast/s_depth.h"
+#include "../swrast/s_lines.h"
+#include "../swrast/s_triangle.h"
+#include "../swrast/s_trispan.h"
+#include "../tnl/tnl.h"
+#include "../tnl/t_context.h"
+#include "../tnl/t_pipeline.h"
 
 struct RastPort *arosRasterizer_make_rastport( int width, int height, int depth, struct BitMap *friendbm );
 void arosRasterizer_destroy_rastport( struct RastPort *rp );
@@ -89,7 +107,6 @@ arosRasterizer_set_buffer( GLcontext *ctx, GLenum mode )
 D(bug("[AROSMESA:RAST] arosRasterizer_set_buffer() : TODO\n"));
 #endif
 	
-#warning "TODO: implement a set of buffers"
   if (mode == GL_FRONT)
   {
     return(GL_TRUE);
@@ -278,7 +295,7 @@ arosRasterizer_allocarea(struct RastPort *rp )
   BOOL            OK = TRUE;
   struct AreaInfo *areainfo = NULL;
   UWORD           *pattern = NULL;
-  APTR            vbuffer = NULL;
+  IPTR            vbuffer = NULL;
 
 #ifdef DEBUGPRINT
 D(bug("[AROSMESA:RAST] arosRasterizer_allocarea()\n"));
@@ -292,7 +309,7 @@ D(bug("[AROSMESA:RAST] arosRasterizer_allocarea()\n"));
     if(pattern != 0)
     {
       *pattern = 0xffff;    /*@@@ org: 0xffffffff*/
-      vbuffer = (APTR) AllocVec( MAX_POLYGON * 5 * sizeof(WORD),MEMF_ANY);
+      vbuffer = (IPTR) AllocVec( MAX_POLYGON * 5 * sizeof(WORD),MEMF_ANY);
       if(vbuffer != 0)
       {
         /* initialize */

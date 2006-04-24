@@ -2,20 +2,20 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.3
- * 
- * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
- * 
+ * Version:  3.5
+ *
+ * Copyright (C) 1999-2001  Brian Paul   All Rights Reserved.
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
  * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
@@ -77,7 +77,7 @@
 #define NUM_AUX_BUFFERS 0
 
 /* Maximum order (degree) of curves: */
-#if defined(AMIGA) && !defined(AROS)
+#ifdef AMIGA
 #   define MAX_EVAL_ORDER 12
 #else
 #   define MAX_EVAL_ORDER 30
@@ -99,11 +99,17 @@
 /* Max texture palette / color table size */
 #define MAX_COLOR_TABLE_SIZE 256
 
-/* Number of texture levels */
+/* Number of 1D/2D texture mipmap levels */
 #define MAX_TEXTURE_LEVELS 12
 
+/* Number of 3D texture mipmap levels */
+#define MAX_3D_TEXTURE_LEVELS 8
+
+/* Number of cube texture mipmap levels */
+#define MAX_CUBE_TEXTURE_LEVELS 12
+
 /* Number of texture units - GL_ARB_multitexture */
-#define MAX_TEXTURE_UNITS 2
+#define MAX_TEXTURE_UNITS 8
 
 /* Maximum viewport/image size: */
 #define MAX_WIDTH 2048
@@ -119,11 +125,14 @@
 #define HISTOGRAM_TABLE_SIZE 256
 
 /* Max convolution filter sizes */
-#define MAX_CONVOLUTION_WIDTH 5
-#define MAX_CONVOLUTION_HEIGHT 5
+#define MAX_CONVOLUTION_WIDTH 9
+#define MAX_CONVOLUTION_HEIGHT 9
 
 /* GL_ARB_texture_compression */
 #define MAX_COMPRESSED_TEXTURE_FORMATS 25
+
+/* GL_EXT_texture_filter_anisotropic */
+#define MAX_TEXTURE_MAX_ANISOTROPY 16.0
 
 
 
@@ -139,11 +148,16 @@
 
 
 /*
- * Bits per depth buffer value:  16 or 32 (GLushort or GLuint)
- * gl_create_visual() can select any depth in [0, 32].
+ * Bits per depth buffer value.  Any reasonable value up to 31 will
+ * work.  32 doesn't work because of integer overflow problems in the
+ * rasterizer code.
  */
 #define DEFAULT_SOFTWARE_DEPTH_BITS 16
+#if DEFAULT_SOFTWARE_DEPTH_BITS <= 16
 #define DEFAULT_SOFTWARE_DEPTH_TYPE GLushort
+#else
+#define DEFAULT_SOFTWARE_DEPTH_TYPE GLuint
+#endif
 
 
 
@@ -156,9 +170,9 @@
 /*
  * Bits per color channel (must be 8 at this time!)
  */
+#ifndef CHAN_BITS
 #define CHAN_BITS 8
-#define CHAN_MAX ((1 << CHAN_BITS) - 1)
-#define CHAN_MAXF ((GLfloat) CHAN_MAX)
+#endif
 
 
 /*
@@ -171,36 +185,4 @@
 #define ACOMP 3
 
 
-
-/* Vertex buffer size.  KW: no restrictions on the divisibility of
- * this number, though things may go better for you if you choose a
- * value of 12n + 3.  
- */
-#define VB_START  3
-
-#define VB_MAX (216 + VB_START)
-
-
-
-/*
- * Actual vertex buffer size.
- *
- * Arrays must also accomodate new vertices from clipping, and
- * potential overflow from primitives which don't fit into neatly into
- * VB_MAX vertices.  (This only happens when mixed primitives are
- * sharing the vb).  
- */
-#define VB_MAX_CLIPPED_VERTS ((2 * (6 + MAX_CLIP_PLANES))+1)
-#define VB_SIZE  (VB_MAX + VB_MAX_CLIPPED_VERTS)
-
-
-
-typedef struct gl_context GLcontext;
-
-extern void
-gl_read_config_file( struct gl_context *ctx );
-
-extern void
-gl_register_config_var(const char *name, void (*notify)( const char *, int ));
-
-#endif
+#endif /* CONFIG_H */

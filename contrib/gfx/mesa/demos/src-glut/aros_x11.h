@@ -17,14 +17,38 @@
 #include <proto/intuition.h>
 #include <proto/dos.h>
 
+enum AROSMesaGLUTCursors
+{
+  XC_arrow,		  /* GLUT_CURSOR_RIGHT_ARROW */
+  XC_top_left_arrow,	  /* GLUT_CURSOR_LEFT_ARROW */
+  XC_hand1,		  /* GLUT_CURSOR_INFO */
+  XC_pirate,		  /* GLUT_CURSOR_DESTROY */
+  XC_question_arrow,	  /* GLUT_CURSOR_HELP */
+  XC_exchange,		  /* GLUT_CURSOR_CYCLE */
+  XC_spraycan,		  /* GLUT_CURSOR_SPRAY */
+  XC_watch,		  /* GLUT_CURSOR_WAIT */
+  XC_xterm,		  /* GLUT_CURSOR_TEXT */
+  XC_crosshair,		  /* GLUT_CURSOR_CROSSHAIR */
+  XC_sb_v_double_arrow,	  /* GLUT_CURSOR_UP_DOWN */
+  XC_sb_h_double_arrow,	  /* GLUT_CURSOR_LEFT_RIGHT */
+  XC_top_side,		  /* GLUT_CURSOR_TOP_SIDE */
+  XC_bottom_side,	  /* GLUT_CURSOR_BOTTOM_SIDE */
+  XC_left_side,		  /* GLUT_CURSOR_LEFT_SIDE */
+  XC_right_side,	  /* GLUT_CURSOR_RIGHT_SIDE */
+  XC_top_left_corner,	  /* GLUT_CURSOR_TOP_LEFT_CORNER */
+  XC_top_right_corner,	  /* GLUT_CURSOR_TOP_RIGHT_CORNER */
+  XC_bottom_right_corner, /* GLUT_CURSOR_BOTTOM_RIGHT_CORNER */
+  XC_bottom_left_corner,  /* GLUT_CURSOR_BOTTOM_LEFT_CORNER */
+};
+
 /* Type definitions (conversions) [aros fake aros equivalent of X11 type's]*/
 typedef int							Visual;
-typedef struct Window				*Window;
+typedef struct Window			*Window;
 typedef IPTR						Colormap;
 typedef ULONG						XVisualInfo;
 typedef BOOL						Bool;
-typedef struct Message				*XEvent;
-typedef struct Screen				*Display;
+typedef struct Message			*XEvent;
+typedef struct Screen			*Display;
 typedef IPTR						Cursor;
 
 typedef int							Atom;				/* dummies */
@@ -195,14 +219,15 @@ typedef struct {
 
 /* Functions emulated by macros. */
 
-#define XFreeColormap(display, colormap) \
-  DeleteObject(colormap)
+#define XFreeColormap(display, colormap)
+//  DeleteObject(colormap)
 
 #define XCreateFontCursor(display, shape) \
-  LoadCursor(NULL, shape)
+    NULL
+//  LoadCursor(NULL, shape)
 
-#define XDefineCursor(display, window, cursor) \
-  SetCursor(cursor)
+#define XDefineCursor(display, window, cursor)
+//  SetCursor(cursor)
 
 #define XFlush(display) \
   /* Nothing. */

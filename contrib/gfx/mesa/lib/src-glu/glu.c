@@ -2,8 +2,8 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.4
- * Copyright (C) 1995-2000  Brian Paul
+ * Version:  3.5
+ * Copyright (C) 1995-2001  Brian Paul
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -43,7 +43,9 @@
 #endif
 #define EPS 0.00001
 
-
+#ifndef GLU_INCOMPATIBLE_GL_VERSION
+#define GLU_INCOMPATIBLE_GL_VERSION     100903
+#endif
 
 
 void GLAPIENTRY
@@ -137,6 +139,32 @@ gluOrtho2D(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top)
 
 
 
+static void
+frustum(GLdouble left, GLdouble right,
+        GLdouble bottom, GLdouble top, 
+        GLdouble nearval, GLdouble farval)
+{
+   GLdouble x, y, a, b, c, d;
+   GLdouble m[16];
+
+   x = (2.0 * nearval) / (right - left);
+   y = (2.0 * nearval) / (top - bottom);
+   a = (right + left) / (right - left);
+   b = (top + bottom) / (top - bottom);
+   c = -(farval + nearval) / ( farval - nearval);
+   d = -(2.0 * farval * nearval) / (farval - nearval);
+
+#define M(row,col)  m[col*4+row]
+   M(0,0) = x;     M(0,1) = 0.0F;  M(0,2) = a;      M(0,3) = 0.0F;
+   M(1,0) = 0.0F;  M(1,1) = y;     M(1,2) = b;      M(1,3) = 0.0F;
+   M(2,0) = 0.0F;  M(2,1) = 0.0F;  M(2,2) = c;      M(2,3) = d;
+   M(3,0) = 0.0F;  M(3,1) = 0.0F;  M(3,2) = -1.0F;  M(3,3) = 0.0F;
+#undef M
+
+   glMultMatrixd(m);
+}
+
+
 void GLAPIENTRY
 gluPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar)
 {
@@ -144,18 +172,18 @@ gluPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar)
 
    ymax = zNear * tan(fovy * M_PI / 360.0);
    ymin = -ymax;
-
    xmin = ymin * aspect;
    xmax = ymax * aspect;
 
-   glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
+   /* don't call glFrustum() because of error semantics (covglu) */
+   frustum(xmin, xmax, ymin, ymax, zNear, zFar);
 }
 
 
 
 void GLAPIENTRY
 gluPickMatrix(GLdouble x, GLdouble y,
-	      GLdouble width, GLdouble height, const GLint viewport[4])
+	      GLdouble width, GLdouble height, GLint viewport[4])
 {
    GLfloat m[16];
    GLfloat sx, sy;
@@ -302,7 +330,7 @@ const GLubyte *GLAPIENTRY
 gluGetString(GLenum name)
 {
    static char *extensions = "GL_EXT_abgr";
-   static char *version = "1.1 Mesa 3.4.2";
+   static char *version = "1.1 Mesa 3.5";
 
    switch (name) {
    case GLU_EXTENSIONS:
@@ -366,16 +394,16 @@ void (GLAPIENTRY * gluGetProcAddressEXT(const GLubyte * procName)) ()
  */
 #ifdef GLU_VERSION_1_3
 GLboolean GLAPIENTRY
-gluCheckExtension(const char *extName, const GLubyte * extString)
+gluCheckExtension(const GLubyte *extName, const GLubyte * extString)
 {
    assert(extName);
    assert(extString);
    {
-      const int len = strlen(extName);
+      const int len = strlen((const char *) extName);
       const char *start = (const char *) extString;
 
       while (1) {
-	 const char *c = strstr(start, extName);
+	 const char *c = strstr(start, (const char *) extName);
 	 if (!c)
 	    return GL_FALSE;
 

@@ -2,9 +2,9 @@
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.3
+ * Version:  3.5
  * 
- * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * Copyright (C) 1999-2001  Brian Paul   All Rights Reserved.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -58,7 +58,6 @@ and create a window, you must do the following to use the X/Mesa interface:
 
 8. Before exiting, call XMesaDestroyVisual and XMesaDestroyContext.
 
-See the demos/xdemo.c and xmesa1.c files for examples.
 */
 
 
@@ -67,11 +66,13 @@ See the demos/xdemo.c and xmesa1.c files for examples.
 #ifndef XMESA_H
 #define XMESA_H
 
+#ifdef __VMS
+#include <GL/vms_x_fix.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 #ifdef XFree86Server
 #include "xmesa_xf86.h"
@@ -89,7 +90,7 @@ extern struct Library *XLibBase;
 
 
 #define XMESA_MAJOR_VERSION 3
-#define XMESA_MINOR_VERSION 4
+#define XMESA_MINOR_VERSION 5
 
 
 

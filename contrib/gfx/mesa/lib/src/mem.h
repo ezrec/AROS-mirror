@@ -1,10 +1,10 @@
-/* $Id: mem.h,v 1.5 2000/06/27 22:10:00 brianp Exp $ */
+/* $Id: mem.h,v 1.10 2001/05/16 20:27:12 brianp Exp $ */
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.3
+ * Version:  3.5
  *
- * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * Copyright (C) 1999-2001  Brian Paul   All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -30,7 +30,8 @@
 
 
 #include "glheader.h"
-
+/* Do not reference mtypes.h from this file.
+ */
 
 /*
  * Memory allocation
@@ -91,6 +92,11 @@ extern void _mesa_align_free(void *ptr);
 	memset( (void *) (DST), (int) (VAL), (size_t) (N) )
 #endif
 
+extern void _mesa_memset16( GLushort *dst, GLushort val, size_t n );
+
+#define MEMSET16( DST, VAL, N ) \
+        _mesa_memset16( (GLushort *) (DST), (GLushort) (VAL), (size_t) (N) )
+
 
 /* On some systems we might want to use bzero() (but is bzero portable?) */
 #if defined(__FreeBSD__)
@@ -104,20 +110,24 @@ extern void _mesa_align_free(void *ptr);
 
 /* MACs and BeOS don't support static larger than 32kb, so... */
 #if defined(macintosh) && !defined(__MRC__)
-  extern char *AGLAlloc(int size);
-  extern void AGLFree(char* ptr);
-#  define DEFARRAY(TYPE,NAME,SIZE)  			TYPE *NAME = (TYPE*)AGLAlloc(sizeof(TYPE)*(SIZE))
-#  define DEFMARRAY(TYPE,NAME,SIZE1,SIZE2)		TYPE (*NAME)[SIZE2] = (TYPE(*)[SIZE2])AGLAlloc(sizeof(TYPE)*(SIZE1)*(SIZE2))
-#  define CHECKARRAY(NAME,CMD)				do {if (!(NAME)) {CMD;}} while (0) 
-#  define UNDEFARRAY(NAME)          			do {if ((NAME)) {AGLFree((char*)NAME);}  }while (0)
+/*extern char *AGLAlloc(int size);*/
+/*extern void AGLFree(char* ptr);*/
+#  define DEFARRAY(TYPE,NAME,SIZE)  			TYPE *NAME = (TYPE*)MALLOC(sizeof(TYPE)*(SIZE))
+#  define DEFMARRAY(TYPE,NAME,SIZE1,SIZE2)		TYPE (*NAME)[SIZE2] = (TYPE(*)[SIZE2])MALLOC(sizeof(TYPE)*(SIZE1)*(SIZE2))
+#  define DEFMNARRAY(TYPE,NAME,SIZE1,SIZE2,SIZE3)	TYPE (*NAME)[SIZE2][SIZE3] = (TYPE(*)[SIZE2][SIZE3])MALLOC(sizeof(TYPE)*(SIZE1)*(SIZE2)*(SIZE3)
+
+#  define CHECKARRAY(NAME,CMD)				do {if (!(NAME)) {CMD;}} while (0)
+#  define UNDEFARRAY(NAME)          			do {if ((NAME)) {FREE((char*)NAME);}  }while (0)
 #elif defined(__BEOS__)
 #  define DEFARRAY(TYPE,NAME,SIZE)  			TYPE *NAME = (TYPE*)malloc(sizeof(TYPE)*(SIZE))
 #  define DEFMARRAY(TYPE,NAME,SIZE1,SIZE2)  		TYPE (*NAME)[SIZE2] = (TYPE(*)[SIZE2])malloc(sizeof(TYPE)*(SIZE1)*(SIZE2))
+#  define DEFMNARRAY(TYPE,NAME,SIZE1,SIZE2,SIZE3)	TYPE (*NAME)[SIZE2][SIZE3] = (TYPE(*)[SIZE2][SIZE3])malloc(sizeof(TYPE)*(SIZE1)*(SIZE2)*(SIZE3)
 #  define CHECKARRAY(NAME,CMD)				do {if (!(NAME)) {CMD;}} while (0)
 #  define UNDEFARRAY(NAME)          			do {if ((NAME)) {free((char*)NAME);}  }while (0)
 #else
 #  define DEFARRAY(TYPE,NAME,SIZE)  			TYPE NAME[SIZE]
 #  define DEFMARRAY(TYPE,NAME,SIZE1,SIZE2)		TYPE NAME[SIZE1][SIZE2]
+#  define DEFMNARRAY(TYPE,NAME,SIZE1,SIZE2,SIZE3)	TYPE NAME[SIZE1][SIZE2][SIZE3]
 #  define CHECKARRAY(NAME,CMD)				do {} while(0)
 #  define UNDEFARRAY(NAME)
 #endif

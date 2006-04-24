@@ -13,7 +13,6 @@ MESADEMOSFILES := isosurf.dat
 MESADEMOS :=  bounce \
             gamma \
             gears \
-            isosurf \
             morph3d \
             osdemo \
             reflect \
@@ -21,6 +20,9 @@ MESADEMOS :=  bounce \
             test0 \
             texobj \
             winpos
+
+MESADEMOSBROKEN := isosurf
+
 
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -Iamiga/misc
 

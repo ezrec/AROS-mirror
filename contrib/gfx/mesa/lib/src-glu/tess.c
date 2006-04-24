@@ -80,7 +80,7 @@ gluNewTess(void)
    GLUtriangulatorObj *tobj;
 
    if ((tobj = (GLUtriangulatorObj *)
-	malloc(sizeof(struct GLUtriangulatorObj))) == NULL)
+	malloc(sizeof(struct GLUtesselator))) == NULL)
       return NULL;
    tobj->contours = tobj->last_contour = NULL;
    init_callbacks(&tobj->callbacks);

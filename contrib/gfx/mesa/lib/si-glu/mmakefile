@@ -1,0 +1,175 @@
+
+#   $Id: mmakefile.src 24333 2006-04-18 19:16:47Z NicJA $
+#
+#
+include $(TOP)/config/make.cfg
+
+#MM linklibs-siglu : includes includes-copy
+
+LIBSIGLU =  glu \
+            mipmap \
+            nurbs \
+            nurbscrv \
+            nurbssrf \
+            nurbsutl \
+            polytest \
+            project \
+            quadric \
+            tess \
+            tesselat
+
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -I$(MESAGLUSRCDIR) -I$(MESATKSRCDIR) -I$(MESAAUXSRCDIR) -Iamiga/misc
+USER_CFLAGS	:= -DNO_ERRNO_H
+
+
+BDID := $(BDID)_
+ifneq ($(filter $(TARGET),linklibs-siglu linklibs-siglu-clean),)
+BDTARGETID := $(BDID)
+endif
+
+# assign and generate the local variables used in this macro
+BD_LIBNAME$(BDID)    := MesaGLU
+OBJDIR               ?= $(GENDIR)/$(CURDIR)
+BD_OBJDIR$(BDID)     := $(GENDIR)/$(CURDIR)
+BD_LIBDIR$(BDID)     := $(LIBDIR)
+
+BD_FILES$(BDID)      := $(LIBSIGLU)
+BD_ASMFILES$(BDID)   := 
+BD_SRCS$(BDID)       := $(addsuffix .c,$(BD_FILES$(BDID)))
+BD_OBJS$(BDID)       := $(addsuffix .o,$(addprefix $(BD_OBJDIR$(BDID))/,$(notdir $(BD_FILES$(BDID)) $(BD_ASMFILES$(BDID)))))
+BD_DEPS$(BDID)       := $(patsubst %.o,%.d,$(BD_OBJS$(BDID)))
+
+BD_CFLAGS$(BDID)     := $(CFLAGS)
+ifeq (,)
+BD_DFLAGS$(BDID)     := $(BD_CFLAGS$(BDID))
+else
+BD_DFLAGS$(BDID)     := 
+endif
+BD_AFLAGS$(BDID)     := $(AFLAGS)
+
+BD_LINKLIB$(BDID)    := $(BD_LIBDIR$(BDID))/lib$(BD_LIBNAME$(BDID)).a
+
+.PHONY : linklibs-siglu linklibs-siglu-clean
+
+#MM
+linklibs-siglu : $(BD_LINKLIB$(BDID))
+
+#MM
+linklibs-siglu-clean ::
+	@$(RM) $(BD_OBJS$(BDID)) $(BD_DEPS$(BDID))
+
+ifeq ($(TARGET),linklibs-siglu)
+ifneq ($(dir $(BD_FILES$(BDID))),./)
+vpath %.c $(filter-out ./,$(dir $(BD_FILES$(BDID))))
+endif
+
+
+ifeq ($(BD_OBJDIR$(BDID)),)
+  TMP_TARGETBASE := %
+else
+  TMP_TARGETBASE := $(BD_OBJDIR$(BDID))/$(notdir %)
+endif
+
+ifeq ($(findstring target,host target),)
+  $(error unknown compiler target)
+endif
+ifeq (target,target)
+$(TMP_TARGETBASE).o : TMP_CMD:=$(TARGET_CC)
+$(TMP_TARGETBASE).d : TMP_CMD:=$(TARGET_CC)
+endif
+ifeq (target,host)
+$(TMP_TARGETBASE).o : TMP_CMD:=$(HOST_CC)
+$(TMP_TARGETBASE).d : TMP_CMD:=$(HOST_CC)
+endif
+
+$(TMP_TARGETBASE).o : %.c
+	@$(ECHO) "Compiling $(notdir $<)"
+	@$(IF) $(TMP_CMD) $(BD_CFLAGS$(BDID)) -c $< -o $@ > $(GENDIR)/cerrors 2>&1 ; then \
+	    $(IF) $(TEST) -s $(GENDIR)/cerrors ; then \
+		$(ECHO) "$<: $(TMP_CMD) $(BD_CFLAGS$(BDID)) -c $< -o $@" >> $(GENDIR)/errors ; \
+		tee < $(GENDIR)/cerrors -a $(GENDIR)/errors ; \
+	    else \
+		$(NOP) ; \
+	    fi ; \
+	else \
+	    $(ECHO) "Compile failed: $(TMP_CMD) $(BD_CFLAGS$(BDID)) -c $< -o $@" 1>&2 ; \
+	    tee < $(GENDIR)/cerrors -a $(GENDIR)/errors 1>&2 ; \
+	    exit 1 ; \
+	fi
+
+ifeq ($(BD_DFLAGS$(BDID)),)
+$(TMP_TARGETBASE).d : TMP_DFLAGS:=$(BD_CFLAGS$(BDID))
+else
+$(TMP_TARGETBASE).d : TMP_DFLAGS:=$(BD_DFLAGS$(BDID))
+endif
+$(TMP_TARGETBASE).d : %.c
+	@$(IF) $(TEST) ! -d $(dir $@) ; then $(MKDIR) $(dir $@) ; else $(NOP) ; fi
+	@$(ECHO) "Makedepend $(CURDIR)/$(notdir $<)..."
+	@AROS_CC="$(TMP_CMD)" $(MKDEPEND) $(TMP_DFLAGS) $< -o $@
+
+ifeq ($(BD_OBJDIR$(BDID)),)
+%.o : %.s
+	@$(ECHO) "Assembling $(notdir $<)..."
+	@$(IF) $(AS) $(BD_AFLAGS$(BDID)) -c $< -o $@ > $(GENDIR)/cerrors 2>&1 ; then \
+	    $(IF) $(TEST) -s $(GENDIR)/cerrors ; then \
+		$(ECHO) "$(notdir $<): $(AS) $(BD_AFLAGS$(BDID)) -c $< -o $@" >> $(GENDIR)/errors ; \
+		$(CAT) $(GENDIR)/cerrors >> $(GENDIR)/errors ; \
+	    else \
+		$(NOP) ; \
+	    fi ; \
+	else \
+	    $(ECHO) "Assemble failed: $(AS) $(BD_AFLAGS$(BDID)) -c $< -o $@" 1>&2 ; \
+	    tee < $(GENDIR)/cerrors -a $(GENDIR)/errors 1>&2 ; \
+	    exit 1 ; \
+	fi
+
+else
+$(BD_OBJDIR$(BDID))/$(notdir %).o : %.s
+	@$(ECHO) "Assembling $(notdir $<)..."
+	@$(IF) $(AS) $(BD_AFLAGS$(BDID)) -c $< -o $@ > $(GENDIR)/cerrors 2>&1 ; then \
+	    $(IF) $(TEST) -s $(GENDIR)/cerrors ; then \
+		$(ECHO) "$(notdir $<): $(AS) $(BD_AFLAGS$(BDID)) -c $< -o $@" >> $(GENDIR)/errors ; \
+		$(CAT) $(GENDIR)/cerrors >> $(GENDIR)/errors ; \
+	    else \
+		$(NOP) ; \
+	    fi ; \
+	else \
+	    $(ECHO) "Assemble failed: $(AS) $(BD_AFLAGS$(BDID)) -c $< -o $@" 1>&2 ; \
+	    tee < $(GENDIR)/cerrors -a $(GENDIR)/errors 1>&2 ; \
+	    exit 1 ; \
+	fi
+
+endif
+endif
+
+
+$(BD_LIBDIR$(BDID))/libMesaGLU.a : $(BD_OBJS$(BDID))
+	@$(ECHO) "Creating library $@..."
+	@$(AR) $@ $^
+	@$(RANLIB) $@
+
+ifneq ($(BD_DEPS$(BDID)),)
+  ifneq (linklibs-siglu,)
+    ifneq ($(findstring $(TARGET),linklibs-siglu),)
+      -include $(BD_DEPS$(BDID))
+    endif
+  else
+    ifeq (,$(filter clean% %clean %clean% setup% includes% %setup,$(TARGET)))
+      -include $(BD_DEPS$(BDID))
+    endif
+  endif
+endif
+
+$(BD_OBJS$(BDID)) $(BD_DEPS$(BDID)) : | $(BD_OBJDIR$(BDID))
+$(BD_LINKLIB$(BDID)) : | $(BD_LIBDIR$(BDID))
+GLOB_MKDIRS += $(BD_OBJDIR$(BDID)) $(BD_LIBDIR$(BDID))
+
+
+# Delete generated makefiles
+#MM
+clean ::
+	@$(RM) $(TOP)/$(CURDIR)/mmakefile $(TOP)/$(CURDIR)/mmakefile.bak
+
+include $(TOP)/config/make.tail
+
+BDID := $(BDTARGETID)

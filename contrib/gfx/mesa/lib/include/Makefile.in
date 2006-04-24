@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p2 from Makefile.am
 
 # Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -9,6 +9,7 @@
 # but WITHOUT ANY WARRANTY, to the extent permitted by law; without
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
+
 
 
 SHELL = @SHELL@
@@ -62,7 +63,10 @@ host_triplet = @host@
 AS = @AS@
 CC = @CC@
 CPP = @CPP@
+CXX = @CXX@
+DLLEXT = @DLLEXT@
 DLLTOOL = @DLLTOOL@
+ECHO = @ECHO@
 EXEEXT = @EXEEXT@
 FX_CFLAGS = @FX_CFLAGS@
 FX_LIBS = @FX_LIBS@
@@ -70,24 +74,32 @@ GGI_CFLAGS = @GGI_CFLAGS@
 GGI_LIBS = @GGI_LIBS@
 GLUT_CFLAGS = @GLUT_CFLAGS@
 GLUT_LIBS = @GLUT_LIBS@
-LIBGLUT_VERSION = @LIBGLUT_VERSION@
-LIBGLU_VERSION = @LIBGLU_VERSION@
-LIBGL_VERSION = @LIBGL_VERSION@
+GLU_DIR = @GLU_DIR@
+LIBGLUT_VERSION_INFO = @LIBGLUT_VERSION_INFO@
+LIBGLU_VERSION_INFO = @LIBGLU_VERSION_INFO@
+LIBGL_VERSION_INFO = @LIBGL_VERSION_INFO@
+LIBMESA_VERSION_INFO = @LIBMESA_VERSION_INFO@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
+MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+MESA_MD_FLAG = @MESA_MD_FLAG@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
+SI_GLU_VERSION_INFO = @SI_GLU_VERSION_INFO@
 STRIP = @STRIP@
 SVGA_CFLAGS = @SVGA_CFLAGS@
 SVGA_LIBS = @SVGA_LIBS@
 THREAD_LIBS = @THREAD_LIBS@
 VERSION = @VERSION@
 X_LIBADD = @X_LIBADD@
+extra_includes = @extra_includes@
+extra_libraries = @extra_libraries@
 ggi_confdir = @ggi_confdir@
 ggi_libdir = @ggi_libdir@
+use_si_glu = @use_si_glu@
 
 SUBDIRS = GL
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -102,7 +114,7 @@ TAR = gtar
 GZIP_ENV = --best
 all: all-redirect
 .SUFFIXES:
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) $(top_srcdir)/common_rules.make
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu include/Makefile
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
@@ -298,6 +310,41 @@ uninstall-am uninstall all-redirect all-am all installdirs-am \
 installdirs mostlyclean-generic distclean-generic clean-generic \
 maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
+
+@OVERRIDE_BUILD_RULES_TRUE@%.o: %.c
+@OVERRIDE_BUILD_RULES_TRUE@	@echo '$(COMPILE) -c $<'; \
+@OVERRIDE_BUILD_RULES_TRUE@	$(COMPILE) -Wp,$(MESA_MD_FLAG),.deps/$(*F).pp -c $<
+@OVERRIDE_BUILD_RULES_TRUE@	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+@OVERRIDE_BUILD_RULES_TRUE@	tr ' ' '\012' < .deps/$(*F).pp \
+@OVERRIDE_BUILD_RULES_TRUE@	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+@OVERRIDE_BUILD_RULES_TRUE@	    >> .deps/$(*F).P; \
+@OVERRIDE_BUILD_RULES_TRUE@	rm .deps/$(*F).pp
+@OVERRIDE_BUILD_RULES_TRUE@%.lo: %.c
+@OVERRIDE_BUILD_RULES_TRUE@	@echo '$(LTCOMPILE) -c $<'; \
+@OVERRIDE_BUILD_RULES_TRUE@	$(LTCOMPILE) -Wp,$(MESA_MD_FLAG),.deps/$(*F).pp -c $<
+@OVERRIDE_BUILD_RULES_TRUE@	@-sed -e 's/^\([^:]*\)\.o[      ]*:/\1.lo \1.o :/' \
+@OVERRIDE_BUILD_RULES_TRUE@	  < .deps/$(*F).pp > .deps/$(*F).P; \
+@OVERRIDE_BUILD_RULES_TRUE@	tr ' ' '\012' < .deps/$(*F).pp \
+@OVERRIDE_BUILD_RULES_TRUE@	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+@OVERRIDE_BUILD_RULES_TRUE@	    >> .deps/$(*F).P; \
+@OVERRIDE_BUILD_RULES_TRUE@	rm -f .deps/$(*F).pp
+@OVERRIDE_BUILD_RULES_TRUE@%.o: %.cc
+@OVERRIDE_BUILD_RULES_TRUE@	@echo '$(CXXCOMPILE) -c $<'; \
+@OVERRIDE_BUILD_RULES_TRUE@	$(CXXCOMPILE) -Wp,$(MESA_MD_FLAG),.deps/$(*F).pp -c $<
+@OVERRIDE_BUILD_RULES_TRUE@	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+@OVERRIDE_BUILD_RULES_TRUE@	tr ' ' '\012' < .deps/$(*F).pp \
+@OVERRIDE_BUILD_RULES_TRUE@	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+@OVERRIDE_BUILD_RULES_TRUE@	    >> .deps/$(*F).P; \
+@OVERRIDE_BUILD_RULES_TRUE@	rm .deps/$(*F).pp
+@OVERRIDE_BUILD_RULES_TRUE@%.lo: %.cc
+@OVERRIDE_BUILD_RULES_TRUE@	@echo '$(LTCXXCOMPILE) -c $<'; \
+@OVERRIDE_BUILD_RULES_TRUE@	$(LTCXXCOMPILE) -Wp,$(MESA_MD_FLAG),.deps/$(*F).pp -c $<
+@OVERRIDE_BUILD_RULES_TRUE@	@-sed -e 's/^\([^:]*\)\.o[      ]*:/\1.lo \1.o :/' \
+@OVERRIDE_BUILD_RULES_TRUE@	  < .deps/$(*F).pp > .deps/$(*F).P; \
+@OVERRIDE_BUILD_RULES_TRUE@	tr ' ' '\012' < .deps/$(*F).pp \
+@OVERRIDE_BUILD_RULES_TRUE@	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+@OVERRIDE_BUILD_RULES_TRUE@	    >> .deps/$(*F).P; \
+@OVERRIDE_BUILD_RULES_TRUE@	rm -f .deps/$(*F).pp
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

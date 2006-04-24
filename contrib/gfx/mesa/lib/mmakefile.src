@@ -5,7 +5,7 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM- contrib-mesa : setup-contrib-mesa-directories includes mesa-includes linklibs-mesaglmain linklibs-mesaglu linklibs-mesaglut
+#MM- contrib-mesa : setup-contrib-mesa-directories includes mesa-includes linklibs-mesaglmain linklibs-mesaglu
 #MM- contrib-mesa-all : contrib-mesa contrib-mesa-libdemos
 
 #MM linklibs-mesaglmain : includes
@@ -13,22 +13,19 @@ include $(TOP)/config/make.cfg
 AMIGASRCDIR = aros
 MESASRCDIR = src
 
-LIBMESAGLM = $(MESASRCDIR)/aatriangle \
+LIBMESAGLM = $(MESASRCDIR)/api_loopback \
+            $(MESASRCDIR)/api_noop \
+            $(MESASRCDIR)/api_validate \
             $(MESASRCDIR)/accum \
-            $(MESASRCDIR)/alpha \
-            $(MESASRCDIR)/alphabuf \
             $(MESASRCDIR)/attrib \
-            $(MESASRCDIR)/bbox \
-            $(MESASRCDIR)/bitmap \
             $(MESASRCDIR)/blend \
             $(MESASRCDIR)/buffers \
             $(MESASRCDIR)/clip \
             $(MESASRCDIR)/colortab \
             $(MESASRCDIR)/config \
             $(MESASRCDIR)/context \
-            $(MESASRCDIR)/copypix \
-            $(MESASRCDIR)/cva \
-            $(MESASRCDIR)/debug_xform \
+            $(MESASRCDIR)/convolve \
+            $(MESASRCDIR)/debug \
             $(MESASRCDIR)/depth \
             $(MESASRCDIR)/dispatch \
             $(MESASRCDIR)/dlist \
@@ -38,66 +35,115 @@ LIBMESAGLM = $(MESASRCDIR)/aatriangle \
             $(MESASRCDIR)/eval \
             $(MESASRCDIR)/extensions \
             $(MESASRCDIR)/feedback \
-            $(MESASRCDIR)/glapi \
-            $(MESASRCDIR)/glapinoop \
-            $(MESASRCDIR)/glthread \
             $(MESASRCDIR)/fog \
             $(MESASRCDIR)/get \
+            $(MESASRCDIR)/glapi \
+            $(MESASRCDIR)/glthread \
             $(MESASRCDIR)/hash \
             $(MESASRCDIR)/hint \
+            $(MESASRCDIR)/histogram \
             $(AMIGASRCDIR)/misc/ht_colors \
-            $(MESASRCDIR)/imaging \
             $(MESASRCDIR)/image \
+            $(MESASRCDIR)/imports \
             $(MESASRCDIR)/light \
             $(MESASRCDIR)/lines \
-            $(MESASRCDIR)/logic \
-            $(MESASRCDIR)/masking \
             $(MESASRCDIR)/matrix \
             $(MESASRCDIR)/mem \
             $(MESASRCDIR)/mmath \
-            $(MESASRCDIR)/OSmesa/osmesa \
-            $(MESASRCDIR)/pb \
-            $(MESASRCDIR)/pipeline \
             $(MESASRCDIR)/pixel \
-            $(MESASRCDIR)/pixeltex \
             $(MESASRCDIR)/points \
             $(MESASRCDIR)/polygon \
-            $(MESASRCDIR)/quads \
             $(MESASRCDIR)/rastpos \
-            $(MESASRCDIR)/readpix \
-            $(MESASRCDIR)/rect \
-            $(MESASRCDIR)/scissor \
-            $(MESASRCDIR)/shade \
-            $(MESASRCDIR)/span \
-            $(MESASRCDIR)/stages \
             $(MESASRCDIR)/state \
             $(MESASRCDIR)/stencil \
             $(MESASRCDIR)/texformat \
             $(MESASRCDIR)/teximage \
             $(MESASRCDIR)/texobj \
             $(MESASRCDIR)/texstate \
-            $(MESASRCDIR)/texture \
+            $(MESASRCDIR)/texstore \
             $(MESASRCDIR)/texutil \
-            $(MESASRCDIR)/translate \
-            $(MESASRCDIR)/triangle \
             $(MESASRCDIR)/varray \
-            $(MESASRCDIR)/vb \
-            $(MESASRCDIR)/vbcull \
-            $(MESASRCDIR)/vbfill \
-            $(MESASRCDIR)/vbindirect \
-            $(MESASRCDIR)/vbrender \
-            $(MESASRCDIR)/vbxform \
-            $(MESASRCDIR)/vector \
-            $(MESASRCDIR)/vertices \
-            $(MESASRCDIR)/winpos \
-            $(MESASRCDIR)/xform \
-            $(MESASRCDIR)/zoom \
+            $(MESASRCDIR)/vtxfmt \
+            $(MESASRCDIR)/math/m_debug_clip \
+            $(MESASRCDIR)/math/m_debug_norm \
+            $(MESASRCDIR)/math/m_debug_vertex \
+            $(MESASRCDIR)/math/m_debug_xform \
+            $(MESASRCDIR)/math/m_eval \
+            $(MESASRCDIR)/math/m_matrix \
+            $(MESASRCDIR)/math/m_translate \
+            $(MESASRCDIR)/math/m_vector \
+            $(MESASRCDIR)/math/m_vertices \
+            $(MESASRCDIR)/math/m_xform \
+            $(MESASRCDIR)/array_cache/ac_context \
+            $(MESASRCDIR)/array_cache/ac_import \
+            $(MESASRCDIR)/swrast/s_aaline \
+            $(MESASRCDIR)/swrast/s_aatriangle \
+            $(MESASRCDIR)/swrast/s_accum \
+            $(MESASRCDIR)/swrast/s_alpha \
+            $(MESASRCDIR)/swrast/s_alphabuf \
+            $(MESASRCDIR)/swrast/s_bitmap \
+            $(MESASRCDIR)/swrast/s_blend \
+            $(MESASRCDIR)/swrast/s_buffers \
+            $(MESASRCDIR)/swrast/s_copypix \
+            $(MESASRCDIR)/swrast/s_context \
+            $(MESASRCDIR)/swrast/s_depth \
+            $(MESASRCDIR)/swrast/s_drawpix \
+            $(MESASRCDIR)/swrast/s_feedback \
+            $(MESASRCDIR)/swrast/s_fog \
+            $(MESASRCDIR)/swrast/s_histogram \
+            $(MESASRCDIR)/swrast/s_imaging \
+            $(MESASRCDIR)/swrast/s_lines \
+            $(MESASRCDIR)/swrast/s_logic \
+            $(MESASRCDIR)/swrast/s_masking \
+            $(MESASRCDIR)/swrast/s_pb \
+            $(MESASRCDIR)/swrast/s_pixeltex \
+            $(MESASRCDIR)/swrast/s_points \
+            $(MESASRCDIR)/swrast/s_readpix \
+            $(MESASRCDIR)/swrast/s_scissor \
+            $(MESASRCDIR)/swrast/s_span \
+            $(MESASRCDIR)/swrast/s_stencil \
+            $(MESASRCDIR)/swrast/s_texture \
+            $(MESASRCDIR)/swrast/s_texstore \
+            $(MESASRCDIR)/swrast/s_triangle \
+            $(MESASRCDIR)/swrast/s_zoom \
+            $(MESASRCDIR)/swrast_setup/ss_context \
+            $(MESASRCDIR)/swrast_setup/ss_triangle \
+            $(MESASRCDIR)/swrast_setup/ss_vb \
+            $(MESASRCDIR)/swrast_setup/ss_interp \
+            $(MESASRCDIR)/tnl/t_array_api \
+            $(MESASRCDIR)/tnl/t_array_import \
+            $(MESASRCDIR)/tnl/t_context \
+            $(MESASRCDIR)/tnl/t_eval_api \
+            $(MESASRCDIR)/tnl/t_imm_alloc \
+            $(MESASRCDIR)/tnl/t_imm_api \
+            $(MESASRCDIR)/tnl/t_imm_debug \
+            $(MESASRCDIR)/tnl/t_imm_dlist \
+            $(MESASRCDIR)/tnl/t_imm_elt \
+            $(MESASRCDIR)/tnl/t_imm_eval \
+            $(MESASRCDIR)/tnl/t_imm_exec \
+            $(MESASRCDIR)/tnl/t_imm_fixup \
+            $(MESASRCDIR)/tnl/t_pipeline \
+            $(MESASRCDIR)/tnl/t_vb_fog \
+            $(MESASRCDIR)/tnl/t_vb_light \
+            $(MESASRCDIR)/tnl/t_vb_normals \
+            $(MESASRCDIR)/tnl/t_vb_points \
+            $(MESASRCDIR)/tnl/t_vb_render \
+            $(MESASRCDIR)/tnl/t_vb_texgen \
+            $(MESASRCDIR)/tnl/t_vb_texmat \
+            $(MESASRCDIR)/tnl/t_vb_vertex \
             $(MESASRCDIR)/AROS/AROSMesa \
             $(MESASRCDIR)/AROS/AROSMesa_rast_common \
             $(MESASRCDIR)/AROS/AROSMesa_rast_TC \
-            $(MESASRCDIR)/AROS/AROSMesa_rast_8bit
+            $(MESASRCDIR)/AROS/AROSMesa_rast_8bit \
+            $(MESASRCDIR)/OSmesa/osmesa
 
-USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR)/AROS -I$(MESASRCDIR) -Iamiga/misc
+LIBMESAGLMX86 = $(MESASRCDIR)/X86/x86 \
+            $(MESASRCDIR)/X86/common_x86 \
+            $(MESASRCDIR)/X86/3dnow \
+            $(MESASRCDIR)/X86/sse
+
+
+USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR)/AROS -I$(MESASRCDIR) -Iamiga/misc -I./
 USER_CFLAGS	:= -DNO_ERRNO_H
 
 %build_linklib mmake=linklibs-mesaglmain libname=MesaGL \

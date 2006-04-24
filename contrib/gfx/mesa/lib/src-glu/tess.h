@@ -85,7 +85,7 @@ typedef struct polygon_str
 }
 tess_polygon;
 
-struct GLUtriangulatorObj
+struct GLUtesselator
 {
    tess_contour *contours, *last_contour;
    GLuint contour_cnt;

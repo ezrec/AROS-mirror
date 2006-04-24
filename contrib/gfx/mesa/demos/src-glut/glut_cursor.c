@@ -8,11 +8,9 @@
 #include <GL/glut.h>
 #include "glutint.h"
 
-#if !defined(__AROS__)
-#if !defined(WIN32)
+#if !defined(WIN32) && !defined(__AROS__)
 #include <X11/Xatom.h>  /* For XA_CURSOR */
 #include <X11/cursorfont.h>
-#endif
 #endif
 
 typedef struct _CursorTable {
@@ -55,7 +53,7 @@ static Cursor fullCrosshairCusor = None;
 static Cursor
 getFullCrosshairCursor(void)
 {
-#if !defined(WIN32)
+#if !defined(WIN32) && !defined(__AROS__)
   Cursor cursor;
   Atom crosshairAtom, actualType;
   int rc, actualFormat;
@@ -79,17 +77,21 @@ getFullCrosshairCursor(void)
   }
   return XCreateFontCursor(__glutDisplay, XC_crosshair);
 #else
+#if !defined(__AROS__)
   /* we could kludge up an XGetWindowProperty, XInterAtom and
      XCreateFontCursor that worked for just this case, but I dunno if
      it is worth it, hence the #ifdefs instead. */
   return IDC_CROSS;
+#else
+  return NULL;
+#endif
 #endif /* !WIN32 */
 }
 
 static Cursor
 makeBlankCursor(void)
 {
-#if !defined(WIN32)
+#if !defined(WIN32) && !defined(__AROS__)
   static char data[1] =
   {0};
   Cursor cursor;
@@ -129,7 +131,7 @@ glutSetCursor(int cursor)
     /* Special cases. */
     switch (cursor) {
     case GLUT_CURSOR_INHERIT:
-#if defined(WIN32)
+#if defined(WIN32) && !defined(__AROS__)
       /* must be a parent - this bit of voodoo is brought to you by
 	 your friendly neighborhood Win32 API.  It allows the parent
 	 to override the setting of the child windows cursor (ACK!).

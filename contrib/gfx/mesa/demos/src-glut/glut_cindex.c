@@ -38,7 +38,7 @@ glutSetColor(int ndx, GLfloat red, GLfloat green, GLfloat blue)
     __glutWarning("glutSetColor: current window is RGBA");
     return;
   }
-#if defined(WIN32)
+#if defined(WIN32) || defined(__AROS__)
   if (ndx >= 256 ||     /* always assume 256 colors on Win32 */
 #else
   if (ndx >= vis->visual->map_entries ||
@@ -150,7 +150,7 @@ glutGetColor(int ndx, int comp)
     __glutWarning("glutGetColor: current window is RGBA");
     return -1.0;
   }
-#if defined(WIN32)
+#if defined(WIN32) || defined(__AROS__)
 #define OUT_OF_RANGE_NDX(ndx) (ndx >= 256 || ndx < 0)
 #else
 #define OUT_OF_RANGE_NDX(ndx) (ndx >= vis->visual->map_entries || ndx < 0)
@@ -197,7 +197,7 @@ glutCopyColormap(int winnum)
     /* Source and destination are the same; now copy needed. */
     return;
   }
-#if !defined(WIN32)
+#if !defined(WIN32) && !defined(__AROS__)
   /* Play safe: compare visual IDs, not Visual*'s. */
   if (newcmap->visual->visualid == oldcmap->visual->visualid) {
 #endif
@@ -213,7 +213,7 @@ glutCopyColormap(int winnum)
     }
     XSetWindowColormap(__glutDisplay, __glutCurrentWindow->renderWin,
       newcmap->cmap);
-#if !defined(WIN32)
+#if !defined(WIN32) && !defined(__AROS__)
     __glutPutOnWorkList(__glutToplevelOf(window), GLUT_COLORMAP_WORK);
   } else {
     GLUTcolormap *copycmap;

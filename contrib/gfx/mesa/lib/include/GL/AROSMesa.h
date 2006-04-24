@@ -46,7 +46,7 @@ enum AMesaError
 
 struct arosmesa_visual
 {
-   APTR							gl_visual;        /* GLvisual*                           */
+   IPTR							gl_visual;        /* GLvisual*                           */
    GLboolean               db_flag;          /* double buffered?                    */
    GLboolean               rgb_flag;         /* RGB mode?                           */
    GLboolean               alpha_flag;       /* Alphacolor?                         */
@@ -56,7 +56,7 @@ typedef struct arosmesa_visual *AROSMesaVisual;
 
 struct arosmesa_buffer
 {
-	APTR                    gl_buffer;        /* GLframebuffer* - The depth, stencil, accum, etc buffers */
+	IPTR                    gl_buffer;        /* GLframebuffer* - The depth, stencil, accum, etc buffers */
    /* your window handle, etc */
 };
 typedef struct arosmesa_buffer *AROSMesaBuffer;
@@ -73,7 +73,7 @@ typedef struct arosmesa_buffer *AROSMesaBuffer;
 
 struct arosmesa_context
 {
-   APTR                    gl_ctx;                 /* GLcontext* - the core library context */
+   IPTR                    gl_ctx;                 /* GLcontext* - the core library context */
    struct arosmesa_visual  *visual;                /* the visual context */
    struct arosmesa_buffer  *buffer;                /* the buffer context */
 
@@ -111,7 +111,7 @@ struct arosmesa_context
    GLuint                   *rgb_buffer;           /* back buffer when in RGBA mode OLD DElete?*/
 
 /* Internal Functions */
-   void (*InitDD)(APTR);                           /* keep track of witch drawing routines should be used */
+   void (*InitDD)(IPTR, GLuint); /* keep track of witch drawing routines should be used */
    void (*Dispose)(struct arosmesa_context *);     /* Use this when AROSMesaDestroyContext is called */
    void (*SwapBuffer)(struct arosmesa_context *);  /* Use this when AROSMesaSwapBuffers is called */
 };

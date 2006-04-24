@@ -1,0 +1,29 @@
+# $Id: mmakefile 22684 2005-01-11 14:58:34Z NicJA $
+include $(TOP)/config/make.cfg
+
+INCSUBDIRS := \
+    GL
+
+FILES := \
+    gltk.h \
+    glaux.h 
+
+INCLUDES      := $(foreach d,$(INCSUBDIRS),$(wildcard $(d)/*.h)) $(FILES)
+DEST_INCLUDES := $(foreach f,$(INCLUDES),$(AROS_INCLUDES)/$(f))
+
+#MM mesa-demos-includes : includes setup-mesa-demos-includes
+mesa-demos-includes : $(DEST_INCLUDES)
+	@$(NOP)
+
+$(AROS_INCLUDES)/%.h : %.h
+	$(CP) $< $@
+
+#MM
+setup-mesa-demos-includes :
+	@$(FOR) dir in $(AROS_INCLUDES) $(foreach f,$(INCSUBDIRS),$(AROS_INCLUDES)/$(f)) ; do \
+	   $(IF) $(TEST) ! -d "$$dir" ; then $(MKDIR) "$$dir" ; else true ; fi ;\
+	done
+
+#MM
+clean :
+	-$(RM) $(AROS_INCLUDES)

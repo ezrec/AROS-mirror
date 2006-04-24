@@ -1,10 +1,10 @@
-/* $Id: glheader.h,v 1.11.4.4 2000/12/13 00:54:57 brianp Exp $ */
+/* $Id: glheader.h,v 1.21 2001/06/15 15:22:07 brianp Exp $ */
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.4
+ * Version:  3.5
  *
- * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * Copyright (C) 1999-2001  Brian Paul   All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -61,7 +61,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#if defined(__linux__) && defined(__i386__) 
+#if defined(__linux__) && defined(__i386__)
 #include <fpu_control.h>
 #endif
 #endif
@@ -161,10 +161,21 @@ typedef struct tagPIXELFORMATDESCRIPTOR PIXELFORMATDESCRIPTOR, *PPIXELFORMATDESC
 #endif
 
 
+/* This is a macro on IRIX */
+#ifdef _P
+#undef _P
+#endif
+
 
 
 #include "GL/gl.h"
 #include "GL/glext.h"
+
+
+#ifndef CAPI
+#define CAPI
+#endif
+#include <GL/internal/glcore.h>
 
 
 
@@ -204,6 +215,41 @@ typedef struct tagPIXELFORMATDESCRIPTOR PIXELFORMATDESCRIPTOR, *PPIXELFORMATDESC
 #define _NORMAPIP *
 #endif
 
+
+/* Function inlining */
+#if defined(__GNUC__)
+#  define INLINE __inline__
+#elif defined(__MSC__)
+#  define INLINE __inline
+#else
+#  define INLINE
+#endif
+
+
+/* Some compilers don't like some of Mesa's const usage */
+#ifdef NO_CONST
+#  define CONST
+#else
+#  define CONST const
+#endif
+
+
+#ifdef DEBUG
+#  define ASSERT(X)   assert(X)
+#else
+#  define ASSERT(X)
+#endif
+
+
+/*
+ * Sometimes we treat GLfloats as GLints.  On x86 systems, moving a float
+ * as a int (thereby using integer registers instead of fp registers) is
+ * a performance win.  Typically, this can be done with ordinary casts.
+ * But with gcc's -fstrict-aliasing flag (which defaults to on in gcc 3.0)
+ * these casts generate warnings.
+ * The following union typedef is used to solve that.
+ */
+typedef union { GLfloat f; GLint i; } fi_type;
 
 
 #endif /* GLHEADER_H */

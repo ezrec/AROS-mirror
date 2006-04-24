@@ -5,8 +5,7 @@ INCSUBDIRS := \
     GL
 
 FILES := \
-    gltk.h \
-    glaux.h 
+    GLView.h
 
 INCLUDES      := $(foreach d,$(INCSUBDIRS),$(wildcard $(d)/*.h)) $(FILES)
 DEST_INCLUDES := $(foreach f,$(INCLUDES),$(AROS_INCLUDES)/$(f))

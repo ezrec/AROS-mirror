@@ -1,10 +1,10 @@
-/* $Id: enums.c,v 1.9.4.2 2001/01/06 22:43:00 gareth Exp $ */
+/* $Id: enums.c,v 1.20 2001/06/08 20:10:55 brianp Exp $ */
 
 /*
  * Mesa 3-D graphics library
- * Version:  3.3
+ * Version:  3.5
  *
- * Copyright (C) 1999-2000  Brian Paul   All Rights Reserved.
+ * Copyright (C) 1999-2001  Brian Paul   All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,6 +22,9 @@
  * BRIAN PAUL BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
  * AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Author:
+ *    Keith Whitwell <keithw@valinux.com>
  */
 
 
@@ -830,10 +833,19 @@ enum_elt all_enums[] =
    { "GL_PRIMARY_COLOR_EXT", 0x8577 },
    { "GL_PREVIOUS_EXT", 0x8578 },
 
+   /* GL_ARB_texture_env_combine */
+   { "GL_SUBTRACT_ARB", 0x84E7 },
+
    /* GL_EXT_texture_env_dot3 */
    { "GL_DOT3_RGB_EXT", 0x8740 },
    { "GL_DOT3_RGBA_EXT", 0x8741 },
 
+   /* GL_ARB_texture_env_dot3 */
+   { "GL_DOT3_RGB_EXT", 0x86ae },
+   { "GL_DOT3_RGBA_EXT", 0x86af },
+
+   /* GL_ARB_texture_border_clamp */
+   { "GL_CLAMP_TO_BORDER_ARB", 0x812D },
 };
 
 #define Elements(x) sizeof(x)/sizeof(*x)
@@ -863,6 +875,9 @@ static void sort_enums( void )
    index1 = (enum_elt **)MALLOC( Elements(all_enums) * sizeof(enum_elt *) );
    sorted = 1;
 
+   if (!index1)
+      return;  /* what else can we do? */
+
    qsort( all_enums, Elements(all_enums), sizeof(*all_enums),
 	  (cfunc) compar_name );
 
@@ -874,7 +889,7 @@ static void sort_enums( void )
 
 
 
-int gl_lookup_enum_by_name( const char *symbol )
+int _mesa_lookup_enum_by_name( const char *symbol )
 {
    enum_elt tmp;
    enum_elt *e;
@@ -893,7 +908,9 @@ int gl_lookup_enum_by_name( const char *symbol )
 }
 
 
-const char *gl_lookup_enum_by_nr( int nr )
+static char token_tmp[20];
+
+const char *_mesa_lookup_enum_by_nr( int nr )
 {
    enum_elt tmp, *e, **f;
 
@@ -906,24 +923,12 @@ const char *gl_lookup_enum_by_nr( int nr )
    f = (enum_elt **)bsearch( &e, index1, Elements(all_enums),
 			     sizeof(*index1), (cfunc) compar_nr );
 
-   return f ? (*f)->c : "(unknown)";
-}
-
-
-#if 0
-int main()
-{
-   int i;
-   static const char *test[] = {
-      "GL_POLYGON",
-      "GL_TRUE",
-      "GL_BANANA",
-      "GL_REFLECTION_MAP_NV",
-   };
-
-   for (i = 0 ; i < Elements(test) ; i++) {
-      int d = gl_lookup_enum_by_name( test[i] );
-      printf("%s --> %d --> %s\n", test[i], d, gl_lookup_enum_by_nr( d ));
+   if (f) {
+      return (*f)->c;
+   }
+   else {
+      /* this isn't re-entrant safe, no big deal here */
+      sprintf(token_tmp, "0x%x", nr);
+      return token_tmp;
    }
 }
-#endif

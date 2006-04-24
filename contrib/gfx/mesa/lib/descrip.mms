@@ -13,10 +13,10 @@ all :
 	if f$search("lib.dir") .eqs. "" then create/directory [.lib]
 	set default [.src]
 	$(MMS)$(MMSQUALIFIERS)
-	set default [-.src-glu]
-	$(MMS)$(MMSQUALIFIERS)
 # PIPE is avalailable on VMS7.0 and higher. For lower versions split the
 #command in two conditional command.   JJ
+	if f$search("SYS$SYSTEM:CXX$COMPILER.EXE") .nes. "" then pipe set default [-.si-glu] ; $(MMS)$(MMSQUALIFIERS)
+	if f$search("SYS$SYSTEM:CXX$COMPILER.EXE") .eqs. "" then pipe set default [-.src-glu] ; $(MMS)$(MMSQUALIFIERS)
 	if f$search("[-]SRC-GLUT.DIR") .nes. "" then pipe set default [-.src-glut] ; $(MMS)$(MMSQUALIFIERS)
 	if f$search("[-]DEMOS.DIR") .nes. "" then pipe set default [-.demos] ; $(MMS)$(MMSQUALIFIERS)
 

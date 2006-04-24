@@ -3,7 +3,7 @@
 /*
  * Mesa 3-D graphics library
  * Version:  3.3
- * Copyright (C) 1995-1999  Brian Paul
+ * Copyright (C) 1995-2001  Brian Paul
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -41,7 +41,7 @@ extern "C" {
 
 
 #define FXMESA_MAJOR_VERSION 3
-#define FXMESA_MINOR_VERSION 3
+#define FXMESA_MINOR_VERSION 5
 
 
 /*

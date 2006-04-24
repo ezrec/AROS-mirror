@@ -5,10 +5,9 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM linklibs-mesa2glut : includes includes-copy
+#MM linklibs-mesaglut : contrib-mesa mesa-demos-includes 
 
-LIBMESAGLUT =  \
-              glut_8x13 \
+LIBMESAGLUT = glut_8x13 \
               glut_9x15 \
               glut_bitmap \
               glut_bwidth \
@@ -53,7 +52,7 @@ LIBMESAGLUT =  \
 USER_INCLUDES	:= -Iinclude -I$(MESASRCDIR) -I$(MESAGLUSRCDIR) -I$(MESATKSRCDIR) -I$(MESAAUXSRCDIR) -Iamiga/misc
 USER_CFLAGS	:= -DNO_ERRNO_H
 
-%build_linklib mmake=linklibs-mesa2glut libname=MesaGLUT \
+%build_linklib mmake=linklibs-mesaglut libname=MesaGLUT \
     files=$(LIBMESAGLUT) objdir=$(GENDIR)/$(CURDIR)
 
 %common
