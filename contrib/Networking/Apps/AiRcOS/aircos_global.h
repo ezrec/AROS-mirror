@@ -207,7 +207,7 @@ struct AiRcOS_internal
 /* Zune GUI elements */
 
    struct MUI_CustomClass *editor_mcc;
-   LONG            editor_cmap[8];
+   LONG            editor_cmap[20];
    
    Object          *aircos_app;                    /* Main Application Object */
    Object          *aircos_clientwin;
@@ -256,7 +256,27 @@ struct AiRcOS_internal
 
 #define AiRcOS_MENUID (0x50505000)
 
+/* Definitions for internal prefs parsed networks/servers */
+struct aircos_networknode
+{
+  struct Node ann_Node;
+  char        *ann_Network;
+  ULONG       ann_ServerCount;
+};
 
+struct aircos_servernode
+{
+  struct Node               asn_Node;
+  struct aircos_networknode *asn_Network;
+  char                      *asn_Server;
+  ULONG                     asn_Port;
+  char                      *asn_User;
+  char                      *asn_Nick;
+  char                      *asn_Pass;
+  char                      *asn_Description;
+};
+
+/* Function/Action records for internal command processing */
 struct functionrecord
 {
    char     *command;                                                   /* Commands textual name */

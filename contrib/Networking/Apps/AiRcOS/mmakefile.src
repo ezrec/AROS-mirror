@@ -4,7 +4,7 @@
 
 include $(TOP)/config/make.cfg
 
-FILES  := locale aircos_main aircos_gui aircos_server_gui aircos_funcs_irc aircos_funcs_dcc
+FILES  := locale aircos_main aircos_gui aircos_server_gui aircos_funcs_irc aircos_prefs aircos_funcs_dcc
 
 EXEDIR := $(CONTRIBDIR)/Networking/Apps/AiRcOS
 

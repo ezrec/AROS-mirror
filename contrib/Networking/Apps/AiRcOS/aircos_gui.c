@@ -47,7 +47,10 @@
 #include "aircos_global.h"
 #include "locale.h"
 
+/* Texteditor + custom attributes */
 #include <MUI/TextEditor_mcc.h>
+#define MUIA_CustTextEditor_SendGadget     (TextEditor_Dummy + 0xf01)
+#define MUIA_CustTextEditor_UserList       (TextEditor_Dummy + 0xf02)
 
 extern struct AiRcOS_internal *AiRcOS_Base;
 
@@ -68,16 +71,272 @@ struct IRC_Channel_Group_User *aircos_Find_User( struct IRC_Channel_Priv  * sear
 
 /******* SOCKET FUNCS ******/
 
+/* The following 2 arrays MUST be in synch! */
+struct textformat_codes
+{
+   char *char_code;
+};
+
+struct textformat_codes texted_codes[] =
+{
+   {"\033p[0]"},            //Color : BLACK                  
+   {"\033p[1]"},            //Color : DARK BLUE              
+   {"\033p[2]"},            //Color : GREEN                  
+   {"\033p[3]"},            //Color : RED                    
+   {"\033p[4]"},            //Color : DARK RED               
+   {"\033p[5]"},            //Color : PURPLE                 
+   {"\033p[6]"},            //Color : BROWN/ORANGE           
+   {"\033p[7]"},            //Color : YELLOW                 
+   {"\033p[8]"},            //Color : LIGHT GREEN            
+   {"\033p[9]"},            //Color : AQUA                   
+   {"\033p[10]"},            //Color : LIGHT BLUE             
+   {"\033p[11]"},            //Color : BLUE                   
+   {"\033p[12]"},            //Color : VIOLET                 
+   {"\033p[13]"},            //Color : GREY                   
+   {"\033p[14]"},            //Color : LIGHT GRAY             
+   {"\033p[15]"},            //Color : WHITE                  
+   {"\033n"},              //Format : normal                 
+   {"\033b"},              //Format : bold                   
+   {"\033n"},              //Format : reverse
+   {"\033u"},               //Format : underline
+   {NULL}
+};
+
+struct textformat_codes ircmessage_codes[] =
+{
+   {"\00301"},            //Color : BLACK                  
+   {"\00302"},            //Color : DARK BLUE              
+   {"\00303"},            //Color : GREEN                  
+   {"\00304"},            //Color : RED                    
+   {"\00305"},            //Color : DARK RED               
+   {"\00306"},            //Color : PURPLE                 
+   {"\00307"},            //Color : BROWN/ORANGE           
+   {"\00308"},            //Color : YELLOW                 
+   {"\00309"},            //Color : LIGHT GREEN            
+   {"\00310"},            //Color : AQUA                   
+   {"\00311"},            //Color : LIGHT BLUE             
+   {"\00312"},            //Color : BLUE                   
+   {"\00313"},            //Color : VIOLET                 
+   {"\00314"},            //Color : GREY                   
+   {"\00315"},            //Color : LIGHT GRAY             
+   {"\00316"},            //Color : WHITE                  
+   {"\017"},              //Format : normal                 
+   {"\002"},              //Format : bold                   
+   {"\026"},              //Format : reverse
+   {"\037"},               //Format : underline
+   {NULL}
+};
+
 char *FormatToSend(char *unformatted_string)
 {
    /* Convert all Input notation formatting to IRC noatation */
+
    return unformatted_string;
 }
 
 char *FormatToDisplay(char *formatted_string)
 {
-   /* Convert all IRC notation formatting to our outputs format */
-   return formatted_string;
+  int    pos = 0, code = 0, swap_code = 0;
+  IPTR	buff_position = NULL;
+  BOOL   format_bold = FALSE, format_reverse = FALSE, format_underline = FALSE, format_cleared = FALSE;
+
+D(bug("[AiRcOS] formattodisplay( %d chars, '%s')\n", strlen(formatted_string), formatted_string));
+
+  if (!(formatted_string))
+  {
+D(bug("[AiRcOS] formattodisplay: ERROR - Called with NULL string pointer\n"));
+  }
+
+  if (strlen(formatted_string)==0)
+  {
+D(bug("[AiRcOS] formattodisplay: ERROR - Called with 0 length string\n"));
+  }
+
+  for (pos = 0; pos < strlen(formatted_string); pos++)
+  {
+     buff_position = formatted_string + pos;
+     for (code = 0; ircmessage_codes[code].char_code != NULL; code++)
+     {
+       ULONG src_code_len = strlen(ircmessage_codes[code].char_code);
+
+       if ((strncmp(buff_position, ircmessage_codes[code].char_code, src_code_len)==0))
+       {
+D(bug("[AiRcOS] formattodisplay: Matched IRC code %d @ %d\n", code, pos));
+         char *new_format = NULL;
+
+         switch (code)
+         {
+         case 17:
+         {
+           if (format_bold)
+           {
+D(bug("[AiRcOS] formattodisplay: BOLD OFF\n"));
+             format_bold = FALSE;
+             format_cleared = TRUE;
+             new_format = texted_codes[16].char_code;
+           }
+           else
+           { 
+D(bug("[AiRcOS] formattodisplay: BOLD ON\n"));
+             format_bold = TRUE;
+           }
+           break;
+         }
+         case 18:
+         {
+           if (format_reverse)
+           {
+D(bug("[AiRcOS] formattodisplay: REVERSE OFF\n"));
+             format_reverse = FALSE;
+             format_cleared = TRUE;
+             new_format = texted_codes[16].char_code;
+           }
+           else
+           {
+             format_reverse = TRUE;
+D(bug("[AiRcOS] formattodisplay: REVERSE ON\n"));
+           }
+           break;
+         }
+         case 19:
+         {
+           if (format_underline)
+           {
+D(bug("[AiRcOS] formattodisplay: UNDERLINE OFF\n"));
+             format_underline = FALSE;
+             format_cleared = TRUE;
+             new_format = texted_codes[16].char_code;
+           }
+           else
+           {
+D(bug("[AiRcOS] formattodisplay: UNDERLINE ON\n"));
+             format_underline = TRUE;
+           }
+           break;
+         }
+         default:
+           break;
+         }
+
+         if (!(new_format)) new_format = texted_codes[code].char_code;
+         ULONG dst_code_len = strlen(new_format);
+         ULONG fmt_code_len = dst_code_len;
+
+         if ((src_code_len) == (dst_code_len))
+         {
+D(bug("[AiRcOS] formattodisplay: Escape sequence substitution possible (equal length sequences)\n"));         
+forcecodeswap:
+
+           swap_code = 0;
+           char *format_line = buff_position;
+D(bug("[AiRcOS] formattodisplay: Substiting escape sequences\n"));
+           for (swap_code = 0; swap_code < strlen(new_format); swap_code++)
+           {
+             format_line[swap_code] = new_format[swap_code];
+           }
+         }
+         else if ((src_code_len) < (dst_code_len))
+         {
+           ULONG diff = dst_code_len - src_code_len;
+D(bug("[AiRcOS] formattodisplay: new Escape sequence is %d bytes longer!!\n", diff));
+           char * tmp_string = NULL;
+           if ((tmp_string = AllocVec(strlen(formatted_string) + diff + 1, MEMF_CLEAR|MEMF_PUBLIC)))
+           {
+             if (pos > 0)
+             {
+D(bug("[AiRcOS] formattodisplay: copied string start (%d bytes)\n", pos));
+               CopyMem(formatted_string, tmp_string, pos);
+             }
+
+             ULONG remaining_chars = strlen(formatted_string) - (pos + src_code_len);
+             if (remaining_chars > 0)
+             {
+D(bug("[AiRcOS] formattodisplay: copied string end(%d bytes)\n", remaining_chars));
+               CopyMem(buff_position + src_code_len, tmp_string + pos + dst_code_len, remaining_chars);
+             }
+
+             FreeVec(formatted_string);
+             formatted_string = tmp_string;
+             buff_position = formatted_string + pos;
+
+             goto forcecodeswap;
+           }
+         }
+         else
+         {
+           ULONG diff = src_code_len - dst_code_len;
+D(bug("[AiRcOS] formattodisplay: new Escape sequence is %d bytes shorter!!\n", diff));         
+         }
+
+         formatted_string[strlen(formatted_string)+1] = '\0';
+         pos = pos + fmt_code_len;
+D(bug("[AiRcOS] formattodisplay: new string %d chars, '%s'\n", strlen(formatted_string), formatted_string));
+
+         if (format_cleared)
+         {
+D(bug("[AiRcOS] formattodisplay: Format reset - checking if we need to inject enabled styles..\n"));
+           if (format_bold)
+           {
+             new_format = texted_codes[17].char_code;
+             int newstr_size = strlen(formatted_string) + strlen(new_format) + 1;
+             char * tmp_string = NULL;
+             if ((tmp_string = AllocVec(newstr_size, MEMF_CLEAR|MEMF_PUBLIC)))
+             {
+D(bug("[AiRcOS] formattodisplay:   injecting BOLD sequence (new buff %d bytes@ %x)\n", newstr_size, tmp_string));
+
+               if (pos > 0)
+               {
+D(bug("[AiRcOS] formattodisplay:   inject_bold: copied string start (%d bytes)\n", pos));
+                 CopyMem(formatted_string, tmp_string, pos);
+               }
+
+               char *format_line = tmp_string + pos;
+D(bug("[AiRcOS] formattodisplay:   inject_bold: inserting code ..)\n"));
+               for (swap_code = 0; swap_code < strlen(new_format); swap_code++)
+               {
+                 format_line[swap_code] = new_format[swap_code];
+               }
+
+               ULONG remaining_chars = strlen(formatted_string) - pos;
+               int cursrcpos = pos;
+               pos = pos + strlen(new_format);
+               if (remaining_chars > 0)
+               {
+D(bug("[AiRcOS] formattodisplay:   inject_bold: copied string end (%d bytes)\n", remaining_chars));
+                 CopyMem(formatted_string + cursrcpos, tmp_string + pos, remaining_chars);
+               }
+
+               FreeVec(formatted_string);
+               formatted_string = tmp_string;
+               formatted_string[strlen(formatted_string)+1] = '\0';
+               buff_position = formatted_string + pos;
+             }
+           }
+
+           if (format_reverse)
+           {
+D(bug("[AiRcOS] formattodisplay:   injecting REVERSE sequence\n"));           
+           }
+
+           if (format_underline)
+           {
+D(bug("[AiRcOS] formattodisplay:   injecting UNDERLINE sequence\n"));           
+           }
+           format_cleared = FALSE;
+
+#if defined(DEBUG)
+           if ((format_bold)||(format_reverse)||(format_underline))
+           {
+D(bug("[AiRcOS] formattodisplay: new string %d chars, '%s'\n", strlen(formatted_string), formatted_string));
+           }
+#endif
+         }
+         pos = pos -1;
+         break;
+       }
+     }
+  }
+  return formatted_string;
 }
 
 /* ************** IRC OPERATIONS !! ***************************** */
@@ -87,16 +346,16 @@ int aircos_IRC_nop(struct IRC_Connection_Private	*currentConnection)
 {
 	struct serv_Outline *sa;
 
-D(bug("[AiRcOS] ## IRC ## NOP('%s')\n",currentConnection->connection_serv_ARGS[0]));
+D(bug("[AiRcOS] ## IRC ## NOP('%s')\n",currentConnection->connection_unprocessed));
 
-   if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( currentConnection->connection_unprocessed ) + 2, MEMF_CLEAR ) ))
+   if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
 	{
-      char *tmpline = (char *)&sa[1];
-        sprintf( tmpline, "%s\n", currentConnection->connection_unprocessed );
-        sa->so_name = (STRPTR)&sa[1];
+        sa->so_name = AllocVec(strlen( currentConnection->connection_unprocessed ) + strlen("%s\n") + 1, MEMF_CLEAR|MEMF_PUBLIC);
+        sprintf( sa->so_name, "%s\n", currentConnection->connection_unprocessed );
 
-      DoMethod( currentConnection->connected_server->serv_status_output, MUIM_TextEditor_InsertText, sa->so_name, MUIV_TextEditor_InsertText_Bottom  );
-//      DoMethod( currentConnection->connected_server->serv_status_output, MUIM_NList_Jump, MUIV_List_Jump_Bottom);
+//        sa->so_name = FormatToDisplay(sa->so_name);
+
+        DoMethod( currentConnection->connected_server->serv_status_output, MUIM_TextEditor_InsertText, sa->so_name, MUIV_TextEditor_InsertText_Bottom  );
 	}
 
    return 1;
@@ -111,7 +370,7 @@ D(bug("[AiRcOS] ## IRC ## DoError()\n"));
 static int aircos_IRC_doinvite(struct IRC_Connection_Private	*currentConnection)
 {
 D(bug("[AiRcOS] ## IRC ## DoInvite()\n"));
-    return 0;
+    return 2;
 }
 
 static int aircos_IRC_dojoin(struct IRC_Connection_Private	*currentConnection)
@@ -136,13 +395,11 @@ D(bug("[AiRcOS](irc:DoJoin) Found internal channel record\n"));
 
 	      struct serv_Outline *sa;
 
-         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[2] ) + strlen(_(MSG_USER_JOINED)) + 1, MEMF_CLEAR ) ))
+         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
 	      {
 D(bug("[AiRcOS](irc:DoJoin) Displaying Message\n"));
-            char *tmpline = (char *)&sa[1];
-
-		      sprintf( tmpline, _(MSG_USER_JOINED), username, currentConnection->connection_serv_ARGS[2] );
-		      sa->so_name = (STRPTR)&sa[1];
+		      sa->so_name = AllocVec(strlen( username ) + strlen( currentConnection->connection_serv_ARGS[2] ) + strlen(_(MSG_USER_JOINED)) + 1, MEMF_CLEAR|MEMF_PUBLIC);
+		      sprintf( sa->so_name, _(MSG_USER_JOINED), username, currentConnection->connection_serv_ARGS[2] );
 
             aircosApp_setChanPen(thisChanPriv, 4);
             aircosApp_showChanOutput(thisChanPriv, sa);
@@ -156,7 +413,7 @@ D(bug("[AiRcOS](irc:DoJoin) Displaying Message\n"));
       }
 	}
 
-    return 0;
+    return 4;
 }
 
 static int aircos_IRC_dokick(struct IRC_Connection_Private	*currentConnection)
@@ -164,7 +421,7 @@ static int aircos_IRC_dokick(struct IRC_Connection_Private	*currentConnection)
 D(bug("[AiRcOS] ## IRC ## DoKick()\n"));
 //    printf("*** %s was kicked from %s by %s (%s)", currentConnection->connection_serv_ARGS[3], currentConnection->connection_serv_ARGS[2], currentConnection->connection_serv_ARGS[0], currentConnection->connection_serv_ARGS[4]);
 
-    return 0;
+    return 4;
 }
 
 static int aircos_IRC_dokill(struct IRC_Connection_Private	*currentConnection)
@@ -217,11 +474,10 @@ D(bug("{AiRcOS](irc;DoMode) CHANGE : removing old user record\n"));
                Remove(&change_ChanUser->group_node);
                struct serv_Outline *sa = NULL;
 
-               if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( currentConnection->connection_serv_ARGS[0] ) + strlen( currentConnection->connection_serv_ARGS[3] ) + strlen( currentConnection->connection_serv_ARGS[4] ) + strlen(_(MSG_SET_MODE)) + 1, MEMF_CLEAR ) ))
+               if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR )))
                {
 D(bug("[AiRcOS](irc;DoMode) Displaying Message\n"));
-                  sa->so_name = (STRPTR)&sa[1];
-
+                  sa->so_name = AllocVec(strlen( currentConnection->connection_serv_ARGS[0] ) + strlen( currentConnection->connection_serv_ARGS[3] ) + strlen( currentConnection->connection_serv_ARGS[4] ) + strlen(_(MSG_SET_MODE)) + 1, MEMF_CLEAR );
    		         sprintf( sa->so_name, _(MSG_SET_MODE), currentConnection->connection_serv_ARGS[0], currentConnection->connection_serv_ARGS[3], currentConnection->connection_serv_ARGS[4]);
 	
 					   aircosApp_setChanPen(thisChanPriv, 4);
@@ -285,13 +541,13 @@ D(bug("[AiRcOS](irc;DoNick) Searching For user record on '%s'\n",thisChanPriv->c
 D(bug("[AiRcOS](irc;DoNick) Users Record found - removing\n"));
             Remove(&rename_ChanUser->group_node);
             
-            if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( nicknamenew ) + strlen(_(MSG_CHANGED_NICK)) + 1, MEMF_CLEAR ) ))
+            if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
             {
 D(bug("[AiRcOS](irc;DoNick) Displaying Message\n"));
                char *tmpline = (char *)&sa[1];
 
-		       sprintf( tmpline, _(MSG_CHANGED_NICK), username, nicknamenew );
-		       sa->so_name = (STRPTR)&sa[1];
+		         sa->so_name = AllocVec(strlen( username ) + strlen( nicknamenew ) + strlen(_(MSG_CHANGED_NICK)) + 1,MEMF_CLEAR|MEMF_PUBLIC);
+		         sprintf( sa->so_name, _(MSG_CHANGED_NICK), username, nicknamenew );
 
                aircosApp_setChanPen(thisChanPriv, 4);
                aircosApp_showChanOutput(thisChanPriv,sa);
@@ -309,7 +565,7 @@ D(bug("[AiRcOS](irc;DoNick) Displaying Message\n"));
       }
    }
 
-    return 0;
+    return 2;
 }
 
 static int aircos_IRC_donotice(struct IRC_Connection_Private	*currentConnection)
@@ -330,13 +586,11 @@ D(bug("[AiRcOS](irc;DoNotice.chan) Found internal channel record\n"));
 
 	      struct serv_Outline *sa;
 
-         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[3] ) + strlen(_(MSG_DO_NOTICE)) + 1, MEMF_CLEAR ) ))
+         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
 	      {
 D(bug("[AiRcOS](irc;DoNotice.chan) Displaying Message\n"));
-            char *tmpline = (char *)&sa[1];
-
-	   	   sprintf( tmpline, _(MSG_DO_NOTICE), username, currentConnection->connection_serv_ARGS[3] );
-	   	   sa->so_name = (STRPTR)&sa[1];
+            sa->so_name = AllocVec(strlen( username ) + strlen( currentConnection->connection_serv_ARGS[3] ) + strlen(_(MSG_DO_NOTICE)) + 1,MEMF_CLEAR|MEMF_PUBLIC);
+	   	   sprintf( sa->so_name, _(MSG_DO_NOTICE), username, currentConnection->connection_serv_ARGS[3] );
 
             aircosApp_setChanPen(thisChanPriv, 2);
             aircosApp_showChanOutput(thisChanPriv,sa);
@@ -362,13 +616,11 @@ D(bug("[AiRcOS](irc;DoPart) Found internal channel record\n"));
 
 	   struct serv_Outline *sa;
 
-      if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[2] ) + strlen(_(MSG_HAS_LEFT)) + 1, MEMF_CLEAR ) ))
+      if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
       {
 D(bug("[AiRcOS](irc;DoPart) Displaying Message\n"));
-         char *tmpline = (char *)&sa[1];
-
-         sprintf( tmpline, _(MSG_HAS_LEFT), username, currentConnection->connection_serv_ARGS[2] );
-		   sa->so_name = (STRPTR)&sa[1];
+         sa->so_name = AllocVec(strlen( username ) + strlen( currentConnection->connection_serv_ARGS[2] ) + strlen(_(MSG_HAS_LEFT)) + 1,MEMF_CLEAR|MEMF_PUBLIC);
+         sprintf(sa->so_name, _(MSG_HAS_LEFT), username, currentConnection->connection_serv_ARGS[2] );
 
 			aircosApp_setChanPen(thisChanPriv, 7);
          aircosApp_showChanOutput(thisChanPriv,sa);
@@ -433,10 +685,10 @@ D(bug("[AiRcOS](irc;handleAction) 'ACTION' : Found internal channel record\n"));
 	         struct serv_Outline *sa = NULL;
             char *username = currentConnection->connection_serv_ARGS[0]; 
 
-            if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( action_param ) + strlen(_(MSG_HANDLE_ACTION)) + 1, MEMF_CLEAR ) ))
+            if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
 	         {
 D(bug("[AiRcOS](irc;handleAction) 'ACTION' : Displaying Message\n"));
-               sa->so_name = (STRPTR)&sa[1];
+               sa->so_name = AllocVec(strlen( username ) + strlen( action_param ) + strlen(_(MSG_HANDLE_ACTION)) + 1,MEMF_CLEAR|MEMF_PUBLIC);
 
 		         sprintf( sa->so_name, _(MSG_HANDLE_ACTION), username, action_param );
 
@@ -506,11 +758,10 @@ D(bug("[AiRcOS](irc;DoPrivMsg.B) Found internal channel record\n"));
 
 	      struct serv_Outline *sa;
 
-         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[3] ) + strlen("<%s> %s\n") + 1, MEMF_CLEAR ) ))
+         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
 	      {
 D(bug("[AiRcOS](irc;DoPrivMsg) B: Displaying Message\n"));
-		      sa->so_name = (STRPTR)&sa[1];
-
+            sa->so_name = AllocVec(strlen( username ) + strlen( currentConnection->connection_serv_ARGS[3] ) + strlen("<%s> %s\n") + 1,MEMF_CLEAR|MEMF_PUBLIC);
 		      sprintf( sa->so_name, "<%s> %s\n", username, currentConnection->connection_serv_ARGS[3] );
 
             aircosApp_showChanOutput(thisChanPriv,sa);
@@ -544,13 +795,11 @@ D(bug("[AiRcOS](irc;DoPart) Searching For user record on '%s'\n",thisChanPriv->c
 D(bug("[AiRcOS](irc;DoQuit) Users Record found - removing\n"));
             Remove(&left_ChanUser->group_node);
             
-            if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[2] ) + strlen(_(MSG_HAS_QUIT)) + 1, MEMF_CLEAR ) ))
+            if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
             {
 D(bug("[AiRcOS](irc;DoQuit) Displaying Message\n"));
-               char *tmpline = (char *)&sa[1];
-
-		       sprintf( tmpline, _(MSG_HAS_QUIT), username, currentConnection->connection_serv_ARGS[2] );
-		       sa->so_name = (STRPTR)&sa[1];
+               sa->so_name = AllocVec(strlen( username ) + strlen( currentConnection->connection_serv_ARGS[2] ) + strlen(_(MSG_HAS_QUIT)) + 1,MEMF_CLEAR|MEMF_PUBLIC);
+		         sprintf( sa->so_name, _(MSG_HAS_QUIT), username, currentConnection->connection_serv_ARGS[2] );
 
 				   aircosApp_setChanPen(thisChanPriv, 7);
                aircosApp_showChanOutput(thisChanPriv,sa);
@@ -566,7 +815,7 @@ D(bug("[AiRcOS](irc;DoQuit) Displaying Message\n"));
       }
    }
    
-   return 0;
+   return 2;
 }
 
 static int aircos_IRC_dotopic(struct IRC_Connection_Private	*currentConnection)
@@ -592,13 +841,11 @@ D(bug("[AiRcOS](irc;DoTopic) Changing topic display\n"));
       char *username = currentConnection->connection_serv_ARGS[0]; 
 	   struct serv_Outline *sa;
 
-      if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( username ) + strlen( currentConnection->connection_serv_ARGS[3] ) + strlen(_(MSG_CHANGES_TOPIC)) + 1, MEMF_CLEAR ) ))
+      if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
 	   {
 D(bug("[AiRcOS](irc;DoTopic) Displaying Message in local channel\n"));
-         char *tmpline = (char *)&sa[1];
-
-		   sprintf( tmpline, _(MSG_CHANGES_TOPIC), username, currentConnection->connection_serv_ARGS[3] );
-		   sa->so_name = (STRPTR)&sa[1];
+         sa->so_name = AllocVec(strlen( username ) + strlen( currentConnection->connection_serv_ARGS[3] ) + strlen(_(MSG_CHANGES_TOPIC)) + 1,MEMF_CLEAR|MEMF_PUBLIC);
+		   sprintf(sa->so_name, _(MSG_CHANGES_TOPIC), username, currentConnection->connection_serv_ARGS[3] );
 		
          aircosApp_setChanPen(thisChanPriv, 4);
          aircosApp_showChanOutput(thisChanPriv,sa);
@@ -606,7 +853,7 @@ D(bug("[AiRcOS](irc;DoTopic) Displaying Message in local channel\n"));
 	   }
       
    }
-   return 0;
+   return 3;
 }
 
 int aircos_IRC_donumeric(struct IRC_Connection_Private	*currentConnection, int num)
@@ -640,7 +887,7 @@ D(bug("[AiRcOS] ## IRC ## DoNumeric(%d)\n",num));
 
 D(bug("[AiRcOS](numeric;initialtopic) Changing topic display\n"));
 
-         char *tmptopic = AllocVec(strlen(currentConnection->connection_serv_ARGS[4]) + strlen(thisChanPriv->chan_name)+4,MEMF_CLEAR);
+         char *tmptopic = AllocVec(strlen(currentConnection->connection_serv_ARGS[4]) + strlen(thisChanPriv->chan_name)+4, MEMF_CLEAR);
       
          sprintf(tmptopic, "%s: %s", thisChanPriv->chan_name, currentConnection->connection_serv_ARGS[4]);
          set(thisChanPriv->chan_topic_obj, MUIA_Text_Contents, tmptopic);
@@ -651,13 +898,11 @@ D(bug("[AiRcOS](numeric;initialtopic) Changing topic display\n"));
 
 	      struct serv_Outline *sa;
 
-         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( currentConnection->connection_serv_ARGS[4] ) + (_(MSG_INITIAL_TOPIC)) + 1, MEMF_CLEAR ) ))
+         if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
 	      {
 D(bug("[AiRcOS](numeric;initialtopic) Displaying Message in local channel\n"));
-            char *tmpline = (char *)&sa[1];
-
-		      sprintf( tmpline, _(MSG_INITIAL_TOPIC), currentConnection->connection_serv_ARGS[4] );
-		      sa->so_name = (STRPTR)&sa[1];
+            sa->so_name = AllocVec(strlen( currentConnection->connection_serv_ARGS[4] ) + (_(MSG_INITIAL_TOPIC)) + 1, MEMF_CLEAR|MEMF_PUBLIC);
+		      sprintf( sa->so_name, _(MSG_INITIAL_TOPIC), currentConnection->connection_serv_ARGS[4] );
 
             aircosApp_setChanPen(thisChanPriv, 4);
             aircosApp_showChanOutput(thisChanPriv,sa);
@@ -665,7 +910,7 @@ D(bug("[AiRcOS](numeric;initialtopic) Displaying Message in local channel\n"));
 	      }
       
       }
-      return 0;
+		break;
    }
 
    case 375: /* RPL_MOTDSTART */
@@ -682,7 +927,7 @@ D(bug("[AiRcOS](numeric;initialtopic) Displaying Message in local channel\n"));
 
    case 351: /* RPL_WHOREPLY */
 // ## UNHANDLED NUMERIC FUNC
-      return 0;
+		break;
 	     
    case 352: /* RPL_WHOREPLY */
 // ## UNHANDLED NUMERIC FUNC
@@ -749,21 +994,21 @@ D(bug("[AiRcOS](numeric;userlist) Adding user  %d '%s' [start %d, end %d]\n",use
     case 329: /* ??? */
 // ## UNHANDLED NUMERIC FUNC
 //  Channel created info?
-		return 0;
+		break;
 
     case 333: /* ??? */
 // ## UNHANDLED NUMERIC FUNC
 //  Topic Set info?
-		return 0;
+		break;
 
     case 317: /* RPL_WHOISIDLE */
 // ## UNHANDLED NUMERIC FUNC
-		return 0;
+		break;
 
     case 432: /* ERR_ERRONEUSNICKNAME */
     case 433: /* ERR_NICKNAMEINUSE */
 // ## UNHANDLED NUMERIC FUNC
-		return 0;
+		break;
 
     default:
 		break;
@@ -780,11 +1025,10 @@ static int aircos_CLIENT_nop(struct IRC_Channel_Priv  *sendOnThisChannel)
 
 D(bug("[AiRcOS] ## CLIENT ## NOP('%s')\n",sendOnThisChannel->chan_send_ARGS[0]));
 
-   if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( sendOnThisChannel->chan_send_ARGS[0] ) + strlen(_(MSG_UNHANDLED_COMMAND)) + 1, MEMF_CLEAR ) ))
+   if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
 	{
-      char *tmpline = (char *)&sa[1];
-		sprintf( tmpline, _(MSG_UNHANDLED_COMMAND), sendOnThisChannel->chan_send_ARGS[0] );
-		sa->so_name = (STRPTR)&sa[1];
+      sa->so_name = AllocVec(strlen( sendOnThisChannel->chan_send_ARGS[0] ) + strlen(_(MSG_UNHANDLED_COMMAND)) + 1, MEMF_CLEAR|MEMF_PUBLIC);
+		sprintf( sa->so_name, _(MSG_UNHANDLED_COMMAND), sendOnThisChannel->chan_send_ARGS[0] );
 
       aircosApp_setChanPen(sendOnThisChannel, 8);
       aircosApp_showChanOutput(sendOnThisChannel,sa);
@@ -839,13 +1083,11 @@ D(bug("')\n"));
 
 	struct serv_Outline *sa;
 
-   if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( sendOnThisChannel->chan_serv->serv_connection->connection_nick ) + strlen( sendOnThisChannel->chan_send_ARGS[1] ) + strlen("*** %s %s\n") + 1, MEMF_CLEAR ) ))
+   if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
 	{
 D(bug("[AiRcOS](client;dome) Displaying local Message\n"));
-      char *tmpline = (char *)&sa[1];
-
-		sprintf( tmpline, "*** %s %s\n", sendOnThisChannel->chan_serv->serv_connection->connection_nick, sendOnThisChannel->chan_send_ARGS[1] );
-	   sa->so_name = (STRPTR)&sa[1];
+      sa->so_name = AllocVec(strlen( sendOnThisChannel->chan_serv->serv_connection->connection_nick ) + strlen( sendOnThisChannel->chan_send_ARGS[1] ) + strlen("*** %s %s\n") + 1, MEMF_CLEAR|MEMF_PUBLIC);
+		sprintf( sa->so_name, "*** %s %s\n", sendOnThisChannel->chan_serv->serv_connection->connection_nick, sendOnThisChannel->chan_send_ARGS[1] );
 
       aircosApp_setChanPen(sendOnThisChannel, 8);
       aircosApp_showChanOutput(sendOnThisChannel,sa);
@@ -883,7 +1125,7 @@ struct functionrecord commandList_array[]=
     {"NAMES"    , aircos_IRC_nop,         1  , aircos_CLIENT_nop,         15 },
     {"NICK"     , aircos_IRC_donick,      1  , aircos_CLIENT_doSingleArg, 15 },
     {"NOTE"     , aircos_IRC_nop,         2  , aircos_CLIENT_nop,         15 },
-    {"NOTICE"   , aircos_IRC_donotice,    2  , aircos_CLIENT_nop,         15 },
+    {"NOTICE"   , aircos_IRC_donotice,    3  , aircos_CLIENT_nop,         15 },
     {"OPER"     , aircos_IRC_nop,         15 , aircos_CLIENT_nop,         15 },
     {"PART"     , aircos_IRC_dopart,      15 , aircos_CLIENT_nop,         15 },
     {"PASS"     , aircos_IRC_nop,         1  , aircos_CLIENT_nop,         15 },
@@ -1103,18 +1345,48 @@ struct IRC_Server_Priv  *aircos_add_server(char *addserv)
                                     End),
                                End;
         */
+
+        Object * tmp_ScrollBar = ScrollbarObject, End;
+
         new_ircServer->serv_status_output = NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
-//                  MUIA_TextEditor_Slider, slider,
+                  MUIA_TextEditor_Slider, tmp_ScrollBar,
                   MUIA_Background, MUII_SHINE,
                   MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,
-                  MUIA_TextEditor_ReadOnly, TRUE,
-                  MUIA_CycleChain, TRUE);
+                  MUIA_TextEditor_ReadOnly, TRUE);
 
         if (!(new_ircServer->serv_status_output)) goto newircs_err1;
         
+        Object *tmp_ServerSendGad = HGroup,
+                             ButtonFrame,
+                             MUIA_InputMode, MUIV_InputMode_RelVerify,
+                             MUIA_Weight, 0,
+                             MUIA_Background, MUII_ButtonBack,
+                             Child, HSpace(0),
+                             Child, VGroup,
+                               Child, VSpace(0),
+                               Child, (IPTR) LLabel(_(MSG_SEND)),
+                               Child, VSpace(0),
+                             End,
+                             Child, HSpace(0),
+                          End;        
+        
         new_ircServer->serv_statuspage = VGroup,
-                        Child, (IPTR) new_ircServer->serv_status_output,
-                    End;
+                        Child, HGroup,
+                          Child, (IPTR)new_ircServer->serv_status_output,
+                          Child, (IPTR)tmp_ScrollBar,
+                        End,
+                        Child, (IPTR) HGroup,
+                          MUIA_Group_SameWidth, FALSE,
+                          MUIA_Weight,0,
+                          Child, (IPTR)( NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
+                             /* Texteditor + custom attributes */
+									  MUIA_CustTextEditor_SendGadget, (IPTR)tmp_ServerSendGad,
+                             MUIA_Background, MUII_SHINE,
+                             MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,
+                             MUIA_TextEditor_ReadOnly, FALSE)),
+                          Child, (IPTR)tmp_ServerSendGad,
+                        End,
+                      End;
 
         if (!(new_ircServer->serv_statuspage)) goto newircs_err2;
 
@@ -1339,13 +1611,11 @@ D(bug("[AiRcOS](parseoutput_func) Sending plain message ..\n"));
 	  /* Display our sent message in our output window also.. */
 	  struct serv_Outline *sa;
 
-     if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline) + strlen( sendOnThisChannel->chan_serv->serv_connection->connection_nick ) + strlen( rawoutput ) + strlen("<%s> %s\n") + 1, MEMF_CLEAR ) ))
+     if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
 	  {
 D(bug("[AiRcOS](parseoutput_func) Displaying Message localy\n"));
-         char *tmpline = (char *)&sa[1];
-
-		   sprintf( tmpline, "<%s> %s\n", sendOnThisChannel->chan_serv->serv_connection->connection_nick, rawoutput );
-		   sa->so_name = (STRPTR)&sa[1];
+         sa->so_name = AllocVec(strlen( sendOnThisChannel->chan_serv->serv_connection->connection_nick ) + strlen( rawoutput ) + strlen("<%s> %s\n") + 1, MEMF_CLEAR|MEMF_PUBLIC);
+		   sprintf( sa->so_name, "<%s> %s\n", sendOnThisChannel->chan_serv->serv_connection->connection_nick, rawoutput );
 
 //		   sa->flags = (UWORD)msg->UserData;
 		
@@ -1421,7 +1691,7 @@ struct IRC_Channel_Priv  *aircos_add_channel(char *addtoserv,char *addchann)
                                 *gad_close_userlist  = NULL;
 
         struct IRC_Channel_Priv  *new_ircChannel=NULL;
-        if (!(new_ircChannel = (struct IRC_Channel_Priv  *)AllocVec(sizeof(struct IRC_Channel_Priv)+strlen(addchann)+1, MEMF_CLEAR))) return NULL;
+        if (!(new_ircChannel = (struct IRC_Channel_Priv  *)AllocVec(sizeof(struct IRC_Channel_Priv) + strlen(addchann) + 1, MEMF_CLEAR))) return NULL;
 
         char    *tmp_str = (char *)&new_ircChannel[1];
         CopyMem(addchann,tmp_str,strlen(addchann));
@@ -1445,7 +1715,19 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
 
         /* Create the buttons */      
       
-        new_ircChannel->chan_send = HGroup, ButtonFrame, MUIA_Weight, 0, MUIA_Background, MUII_ButtonBack, Child, (IPTR) LLabel(_(MSG_SEND)), MUIA_InputMode, MUIV_InputMode_RelVerify, End;
+        new_ircChannel->chan_send = HGroup,
+                                      ButtonFrame,
+                                      MUIA_InputMode, MUIV_InputMode_RelVerify,
+                                      MUIA_Weight, 0,
+                                      MUIA_Background, MUII_ButtonBack,
+                                      Child, HSpace(0),
+                                        Child, VGroup,
+                                          Child, VSpace(0),
+                                          Child, (IPTR) LLabel(_(MSG_SEND)),
+                                          Child, VSpace(0),
+                                        End,
+                                      Child, HSpace(0),
+                                    End;
     
         gad_close_irc_out   = HGroup, MUIA_Weight, 0, Child, (IPTR) LLabel(_(MSG_CLOSE_IRC)), MUIA_InputMode, MUIV_InputMode_RelVerify, End;
         gad_close_userlist  = HGroup, MUIA_Weight, 0, Child, (IPTR) LLabel(_(MSG_CLOSE_USERLIST)), MUIA_InputMode, MUIV_InputMode_RelVerify, End;
@@ -1645,12 +1927,11 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
         new_ircChannel->chan_page = VGroup,
                             Child, (IPTR) HGroup,
                                 MUIA_Group_SameWidth, FALSE,
-                                MUIA_Weight,0,
                                 Child, (IPTR) LLabel(_(MSG_TOPIC)),
                                 Child, (IPTR) ( new_ircChannel->chan_topic_obj = TextObject,
                                     MUIA_Text_Contents, new_ircChannel->chan_topic,
                                 End),
-                                Child, HVSpace,
+                                Child, HSpace(0),
                             End,
                             Child, (IPTR) HGroup,
                                 Child, (IPTR) ( new_ircChannel->chan_output_grp = VGroup,
@@ -1729,27 +2010,29 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
                                         MUIA_Weight,0,
                                         Child, (IPTR) ( new_ircChannel->chan_message  = NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
                                              MUIA_Background, MUII_SHINE,
+															MUIA_CustTextEditor_SendGadget, (IPTR)new_ircChannel->chan_send,
+															MUIA_CustTextEditor_UserList, (IPTR)new_ircChannel->chan_users,
 //                                           MUIA_TextEditor_Rows, 2,
 //                                           MUIA_TextEditor_Slider, slider,
                                        		MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,
                                         		MUIA_CycleChain, TRUE)),
-                                        Child, (IPTR)  new_ircChannel->chan_send,
+                                        Child, (IPTR)new_ircChannel->chan_send,
                                     End,
                                 End),
-                                Child, (IPTR) BalanceObject,
+                                Child, (IPTR)BalanceObject,
                                 End,
-                                Child, (IPTR) ( new_ircChannel->chan_users_grp = VGroup,
+                                Child, (IPTR)( new_ircChannel->chan_users_grp = VGroup,
                                     MUIA_HorizWeight, 20,
                                     MUIA_Group_SameSize, FALSE,
                                     Child, HGroup,
                                         MUIA_Weight,0,
                                         MUIA_Background, MUII_FILL,
-                                        Child, (IPTR) img_user,
-                                        Child, (IPTR) LLabel(_(MSG_USERS)),
+                                        Child, (IPTR)img_user,
+                                        Child, (IPTR)LLabel(_(MSG_USERS)),
                                         Child, HVSpace,
-                                        Child, (IPTR) gad_close_userlist,
+                                        Child, (IPTR)gad_close_userlist,
                                     End,
-                                    Child, (IPTR) user_nodes,
+                                    Child, (IPTR)user_nodes,
                                 End),
                             End,
                         End;
@@ -1797,19 +2080,19 @@ D(bug("[AiRcOS](addchan) Setting channel page notifications\n"));
 
 	DoMethod
         (
-            gad_close_irc_out, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+            gad_close_irc_out, MUIM_Notify, MUIA_Selected, FALSE,
             (IPTR) new_ircChannel->chan_output_grp, 3, MUIM_Set, MUIA_ShowMe, FALSE
         );
 
 	DoMethod
         (
-            gad_close_userlist, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+            gad_close_userlist, MUIM_Notify, MUIA_Selected, FALSE,
             (IPTR) new_ircChannel->chan_users_grp, 3, MUIM_Set, MUIA_ShowMe, FALSE
         );
 
 	DoMethod
         (
-            new_butt, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
+            new_butt, MUIM_Notify, MUIA_Selected, FALSE,
 			(IPTR) new_ircChannel->chan_serv->serv_pagemd_grp, 3, MUIM_Set, MUIA_Group_ActivePage, new_ircChannel->chan_pageid
         );
 
