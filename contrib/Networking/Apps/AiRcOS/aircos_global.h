@@ -49,7 +49,7 @@
 
 /* End Network Includes */
 
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 
 #define isIRCChannel(x) (*x == '#' || *x == '&' || *x == '+')
@@ -125,6 +125,7 @@ struct IRC_Server_Priv
         Object          *serv_pagemd_grp;
         Object          *serv_statuspage;
         Object          *serv_status_output;
+        Object          *serv_send;
         ULONG           serv_displayedlines;
 
 		struct IRC_Connection_Private	*serv_connection;

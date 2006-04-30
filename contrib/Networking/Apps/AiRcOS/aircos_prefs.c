@@ -56,5 +56,6 @@ BOOL aircosApp_loadPrefs()
 
   /* Setup app defaults for missing prefs options .. */
   if (!(aircos_Prefs_DefUser)) aircos_Prefs_DefUser = _(MSG_DEFAULT_USERNAME);
-  if (!(aircos_Prefs_DefNick)) aircos_Prefs_DefNick = _(MSG_DEFAULT_NICKNAME);  
+  if (!(aircos_Prefs_DefNick)) aircos_Prefs_DefNick = _(MSG_DEFAULT_NICKNAME); 
+  return TRUE; 
 }

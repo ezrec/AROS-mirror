@@ -49,8 +49,8 @@
 
 /* Texteditor + custom attributes */
 #include <MUI/TextEditor_mcc.h>
-#define MUIA_CustTextEditor_SendGadget     (TextEditor_Dummy + 0xf01)
-#define MUIA_CustTextEditor_UserList       (TextEditor_Dummy + 0xf02)
+#define MUIA_CustTextEditor_ChannelPrivate (TextEditor_Dummy + 0xf01)
+#define MUIA_CustTextEditor_ServerPrivate  (TextEditor_Dummy + 0xf02)
 
 extern struct AiRcOS_internal *AiRcOS_Base;
 
@@ -1356,7 +1356,7 @@ struct IRC_Server_Priv  *aircos_add_server(char *addserv)
 
         if (!(new_ircServer->serv_status_output)) goto newircs_err1;
         
-        Object *tmp_ServerSendGad = HGroup,
+        new_ircServer->serv_send = HGroup,
                              ButtonFrame,
                              MUIA_InputMode, MUIV_InputMode_RelVerify,
                              MUIA_Weight, 0,
@@ -1379,12 +1379,11 @@ struct IRC_Server_Priv  *aircos_add_server(char *addserv)
                           MUIA_Group_SameWidth, FALSE,
                           MUIA_Weight,0,
                           Child, (IPTR)( NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
-                             /* Texteditor + custom attributes */
-									  MUIA_CustTextEditor_SendGadget, (IPTR)tmp_ServerSendGad,
+									  MUIA_CustTextEditor_ServerPrivate, (IPTR)new_ircServer,
                              MUIA_Background, MUII_SHINE,
                              MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,
                              MUIA_TextEditor_ReadOnly, FALSE)),
-                          Child, (IPTR)tmp_ServerSendGad,
+                          Child, (IPTR)new_ircServer->serv_send,
                         End,
                       End;
 
@@ -2010,8 +2009,7 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
                                         MUIA_Weight,0,
                                         Child, (IPTR) ( new_ircChannel->chan_message  = NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
                                              MUIA_Background, MUII_SHINE,
-															MUIA_CustTextEditor_SendGadget, (IPTR)new_ircChannel->chan_send,
-															MUIA_CustTextEditor_UserList, (IPTR)new_ircChannel->chan_users,
+															MUIA_CustTextEditor_ChannelPrivate, (IPTR)new_ircChannel,
 //                                           MUIA_TextEditor_Rows, 2,
 //                                           MUIA_TextEditor_Slider, slider,
                                        		MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,

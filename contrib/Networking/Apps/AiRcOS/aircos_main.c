@@ -50,8 +50,8 @@
 
 /* Texteditor + custom attributes */
 #include <MUI/TextEditor_mcc.h>
-#define MUIA_CustTextEditor_SendGadget     (TextEditor_Dummy + 0xf01)
-#define MUIA_CustTextEditor_UserList       (TextEditor_Dummy + 0xf02)
+#define MUIA_CustTextEditor_ChannelPrivate (TextEditor_Dummy + 0xf01)
+#define MUIA_CustTextEditor_ServerPrivate  (TextEditor_Dummy + 0xf02)
 
 /* Menu IDs */
 #define AiRcOS_MENUID_CONNECT          (AiRcOS_MENUID + 1)
@@ -154,9 +154,14 @@ D(bug("[AiRcOS](openbsdsocket) Couldnt allocate sigbit_ProcessStack!\n"));
 
 struct CustomTEInstData
 {
-  struct  MUI_EventHandlerNode ehnode;           /* Enable us to trap input events                      */
-  Object 						    *cte_Send;        /* Gadget to perform send action when enter is pressed */
-  Object 						    *cte_Users;       /* NList of Users for tab completion */
+  struct  MUI_EventHandlerNode   ehnode;           /* Enable us to trap input events                      */
+  struct IRC_Channel_Priv        *cte_ChanPriv;
+  struct IRC_Server_Priv         *cte_ServPriv;
+  char                           *partialNameToMatch;
+  char                           *currentNameMatch;
+  ULONG									partMatchY;
+  ULONG									partMatchMinX;
+  ULONG									partMatchMaxX;
 };
 
 
@@ -170,7 +175,7 @@ D(bug("[AiRcOS] TextEditor_Dispatcher(%x)\n", message->MethodID));
   {
 D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_Setup\n"));
     struct CustomTEInstData *data = INST_DATA(CLASS, self);
-    if (data->cte_Send)
+    if ((data->cte_ChanPriv)||(data->cte_ServPriv))
     {
       /* Only capture events in our input gadgets */
       data->ehnode.ehn_Priority = 0;
@@ -190,8 +195,8 @@ D(bug("[AiRcOS] TextEditor_Dispatcher: OM_NEW\n"));
     {
       struct CustomTEInstData *data = INST_DATA(CLASS, self);
 
-      data->cte_Send = (Object *)GetTagData (MUIA_CustTextEditor_SendGadget, (ULONG) NULL, ((struct opSet *)message)->ops_AttrList);;
-      data->cte_Users = (Object *)GetTagData (MUIA_CustTextEditor_UserList, (ULONG) NULL, ((struct opSet *)message)->ops_AttrList);;
+      data->cte_ChanPriv = (struct IRC_Channel_Priv *)GetTagData (MUIA_CustTextEditor_ChannelPrivate, (ULONG) NULL, ((struct opSet *)message)->ops_AttrList);;
+      data->cte_ServPriv = (struct IRC_Channel_Priv *)GetTagData (MUIA_CustTextEditor_ServerPrivate, (ULONG) NULL, ((struct opSet *)message)->ops_AttrList);;
       return self;
     }
     return FALSE;
@@ -206,7 +211,7 @@ D(bug("[AiRcOS] TextEditor_Dispatcher: OM_DISPOSE\n"));
   {
 D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_Cleanup\n"));
     struct CustomTEInstData *data = INST_DATA(CLASS, self);
-    if (data->cte_Send)
+    if ((data->cte_ChanPriv)||(data->cte_ServPriv))
     {
       DoMethod(_win(self), MUIM_Window_RemEventHandler, &data->ehnode);
     }
@@ -307,13 +312,162 @@ D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent\n"));
          if (imsg->Class == IDCMP_RAWKEY)
          {
 D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: RAWKEY Code %d\n", imsg->Code));
+           if (imsg->Code != 66)
+           {
+             if (data->partialNameToMatch)
+             {
+               FreeVec(data->partialNameToMatch);
+               data->partialNameToMatch = NULL;
+             }
+           }
+
            if (imsg->Code == 66)
            {
+             char *foundName = NULL;
+             struct Rectangle crsr_Ncomplete;
 D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: TAB Detected!\n"));
-             if (data->cte_Users)
+             if (!(data->partialNameToMatch))
              {
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Start new name match\n"));
+               if (data->cte_ChanPriv)
+               {
 D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Gadget has UserList - Try to perform name completion ..\n"));
+                 get(self, MUIA_TextEditor_CursorX, &crsr_Ncomplete.MaxX);
+                 get(self, MUIA_TextEditor_CursorY, &crsr_Ncomplete.MinY);
+
+                 if (crsr_Ncomplete.MaxX!=0)
+                 {
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Valid cursor X offset\n"));
+                   char *inputGadBuffer = NULL;
+                   crsr_Ncomplete.MinX = 0;
+                   crsr_Ncomplete.MaxY = crsr_Ncomplete.MinY;
+
+                   inputGadBuffer = DoMethod( self, MUIM_TextEditor_ExportText );                                      
+
+                   int curline = 0, cur_pos=0;
+                   while (curline <= crsr_Ncomplete.MinY)
+                   {
+                     if (curline == crsr_Ncomplete.MinY)
+                       break;
+
+                     if (inputGadBuffer[cur_pos]=='\n')
+                     {
+                       curline++;
+                     }
+                     cur_pos++;
+                   }
+
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: cursor line (Y) @ starts at pos %d\n", cur_pos));
+
+					    int start_char = 0;                   
+                   for (start_char = 0; start_char < crsr_Ncomplete.MaxX; start_char++)
+                   {
+                     if (inputGadBuffer[((cur_pos + crsr_Ncomplete.MaxX) - start_char)]==' ')
+                     {
+                       if (start_char != 0)
+                       start_char = start_char -1;
+                       break;
+                     }
+                   }
+                   start_char = crsr_Ncomplete.MaxX - start_char;
+
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: partname starts @ %d, ends at %d\n", start_char, crsr_Ncomplete.MaxX));
+
+                   if ((crsr_Ncomplete.MaxX - start_char) > 0)
+                   {
+                     if (data->partialNameToMatch = AllocVec(crsr_Ncomplete.MaxX - start_char, MEMF_CLEAR|MEMF_PUBLIC))
+                     {
+                       CopyMem(inputGadBuffer + cur_pos + start_char, data->partialNameToMatch, crsr_Ncomplete.MaxX - start_char);
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Attempt to match partialname '%s'\n", data->partialNameToMatch));
+                       struct IRC_Channel_Group_SubGroup *current_Group=NULL;
+                       struct IRC_Channel_Group_User *current_User=NULL;
+                       ForeachNode(&data->cte_ChanPriv->chan_usergroup, current_Group)
+                       {
+                         ForeachNode(&current_Group->group_usergroup, current_User)
+                         {
+                           if (strncasecmp(current_User->user_name, data->partialNameToMatch, strlen(data->partialNameToMatch))==0)
+                           {
+                             foundName = current_User->user_name;
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Possible Match found ...  '%s'\n", foundName));
+                             goto possiblefound;
+                           }
+                         }
+                       }
+possiblefound:         if (foundName)
+                       {
+                         data->partMatchY = crsr_Ncomplete.MinY;
+                         data->partMatchMinX = start_char;
+                         data->partMatchMaxX = crsr_Ncomplete.MaxX;
+                       }
+                     }
+                   }
+                   FreeVec(inputGadBuffer);
+                 }                
+               }
              }
+             else
+             {
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Already Active match for '%s'!\n", data->partialNameToMatch));
+               BOOL FoundCurrentMatch = FALSE;
+               struct IRC_Channel_Group_SubGroup *current_Group=NULL;
+               struct IRC_Channel_Group_User *current_User=NULL;
+
+               ForeachNode(&data->cte_ChanPriv->chan_usergroup, current_Group)
+               {
+                 ForeachNode(&current_Group->group_usergroup, current_User)
+                 {
+                   if (FoundCurrentMatch)
+                   {
+                     if (strncasecmp(current_User->user_name, data->partialNameToMatch, strlen(data->partialNameToMatch))==0)
+                     {
+                       foundName = current_User->user_name;
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Next Possible Match found ...  '%s'\n", foundName));
+                       goto possnextmatched;
+                     }
+                   }
+                   else
+                   {
+                     if (strcasecmp(current_User->user_name, data->currentNameMatch)==0)
+                     {
+                       FoundCurrentMatch = TRUE;
+                     }
+                   }
+                 }
+               }
+possnextmatched:
+             }
+
+             if (foundName)
+             {
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Inseting matched name in input gadget ..\n"));
+               crsr_Ncomplete.MinX = data->partMatchMinX;
+               crsr_Ncomplete.MinY = data->partMatchY;
+               crsr_Ncomplete.MaxX = data->partMatchMaxX;
+               crsr_Ncomplete.MaxY = data->partMatchY;
+               data->currentNameMatch = foundName;
+
+               set(self, MUIA_TextEditor_Quiet, TRUE);
+               DoMethod(self, MUIM_TextEditor_MarkText,
+                                    crsr_Ncomplete.MinX, crsr_Ncomplete.MinY,
+                                    crsr_Ncomplete.MaxX, crsr_Ncomplete.MaxY);
+
+               DoMethod(self, MUIM_TextEditor_Replace, data->currentNameMatch, 0);
+
+               crsr_Ncomplete.MaxX = crsr_Ncomplete.MinX + strlen(data->currentNameMatch);
+
+               DoMethod(self, MUIM_TextEditor_MarkText,
+                                      crsr_Ncomplete.MaxX, crsr_Ncomplete.MaxY,
+                                      crsr_Ncomplete.MaxX, crsr_Ncomplete.MaxY);
+               set(self, MUIA_TextEditor_CursorX, crsr_Ncomplete.MaxX);
+               set(self, MUIA_TextEditor_CursorY, crsr_Ncomplete.MaxY);
+
+               set(self, MUIA_TextEditor_Quiet, FALSE);                        
+             }
+             else
+             {
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: No Match Found\n"));             
+             }
+
              return(MUI_EventHandlerRC_Eat);
            } else if (imsg->Code == 68) {
              if(imsg->Qualifier & (IEQUALIFIER_LSHIFT | IEQUALIFIER_RSHIFT))
@@ -325,12 +479,16 @@ D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Shift + Ente
              }
 D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Enter Detected!\n"));
              // Cause a send for this object instead
-             if (data->cte_Send)
+             if (data->cte_ChanPriv)
              {
-D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Causing Send ..\n"));
-               DoMethod(data->cte_Send, MUIM_Set, MUIA_Pressed, TRUE);
-               DoMethod(data->cte_Send, MUIM_Set, MUIA_Pressed, FALSE);
-             }
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Causing Channel Send ..\n"));
+               DoMethod(data->cte_ChanPriv->chan_send, MUIM_Set, MUIA_Pressed, TRUE);
+               DoMethod(data->cte_ChanPriv->chan_send, MUIM_Set, MUIA_Pressed, FALSE);
+             } else if (data->cte_ServPriv) {
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Causing Server Send ..\n"));
+               DoMethod(data->cte_ServPriv->serv_send, MUIM_Set, MUIA_Pressed, TRUE);
+               DoMethod(data->cte_ServPriv->serv_send, MUIM_Set, MUIA_Pressed, FALSE);
+             }             
              return(MUI_EventHandlerRC_Eat);
            } else if ((imsg->Code == 0x4c)||(imsg->Code == 0x3e)) {
 D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Curs Up Detected!\n"));
