@@ -317,6 +317,7 @@ D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: RAWKEY Code 
              if (data->partialNameToMatch)
              {
                FreeVec(data->partialNameToMatch);
+               data->currentNameMatch = NULL;
                data->partialNameToMatch = NULL;
              }
            }
@@ -442,7 +443,14 @@ possnextmatched:
 D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Inseting matched name in input gadget ..\n"));
                crsr_Ncomplete.MinX = data->partMatchMinX;
                crsr_Ncomplete.MinY = data->partMatchY;
-               crsr_Ncomplete.MaxX = data->partMatchMaxX;
+               if (data->currentNameMatch)
+               {
+                 crsr_Ncomplete.MaxX = data->partMatchMinX + strlen(data->currentNameMatch);
+               {
+               else
+               {
+                 crsr_Ncomplete.MaxX = data->partMatchMaxX;
+               }
                crsr_Ncomplete.MaxY = data->partMatchY;
                data->currentNameMatch = foundName;
 
