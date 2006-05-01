@@ -34,7 +34,7 @@ WITH services PREFIX=S
 ;
 ; Static routes
 ;
-WITH static-routes PREFIX=R
+;WITH static-routes PREFIX=R
 ;
 ; Nameservers and local domains
 ;
