@@ -1,10 +1,6 @@
 Run <NIL: >NIL: AROSTCP
 WaitForPort AROSTCP
 If NOT Warn
-  ; configure loop-back device
-  ifconfig lo0 localhost
-  ; Configure first Ethernet device
-  ifconfig eth0 arosbox
   ; Add route to this host
   route add arosbox localhost
   ; Add route to the default gateway
