@@ -37,6 +37,11 @@
 #   IPv4 Address of the interface.
 #   (unimplemented) specifying DHCP for the address will cause th interface
 #   retrieve configuration information using the DHCP protocol.
+#   [
+#      N.B. - if this is not set, it will need to be manually configured later
+#      using the ifconfig command.
+#   ]
+#   
 # NETMASK/K
 #   Netmask the interface should use.
 # UP/S
@@ -71,22 +76,32 @@
 #    drivers automatically.  See file <netinclude/net/sana2tags.h> for the
 #    packet types used for these drivers.
 # 
-# Here are a few examples. To enable one of these entries, uncomment one of
-# the lines that begin with 'eth0'.
+# Here are a few examples.
+# * To enable an entry: uncomment the line which begins 'eth0',
+#   and correlates with the device driver for your network interface
+# * To add a second interface copy the line and replace eth0 with
+#   ethx (x being the next available interface number .. ie , 1, 2, and so on)
+# * For both of the above, you will most likely wish to alter the IP to
+#   the correct one for your interface, and optionally set the NETMASK also
+#   - which defaults to 255.255.255.0
 #
-# 3Com Ethernet cards
+# ..3Com Ethernet cards
 #
-#eth0 DEV=DEVS:networks/etherlink3.device UNIT=0 UP
+#eth0 DEV=DEVS:networks/etherlink3.device UNIT=0 IP=192.168.0.188 UP
 #
-# nForce Ethernet
+# ..PCNet32/VMWare Ethernet cards
 #
-#eth0 DEV=DEVS:networks/nforce.device UNIT=0 UP
+#eth0 DEV=DEVS:networks/nforce.device UNIT=0 IP=192.168.0.188 UP
 #
-# RTL8029 Ethernet cards
+# ..nForce Ethernet cards
 #
-#eth0 DEV=DEVS:networks/prm-rtl8029.device UNIT=0 NOTRACKING UP
+#eth0 DEV=DEVS:networks/nforce.device UNIT=0 IP=192.168.0.188 UP
 #
-# Prism II wireless cards
+# ..RTL8029 Ethernet cards
 #
-#eth0 DEV=DEVS:networks/prism2.device UNIT=0 UP
+#eth0 DEV=DEVS:networks/prm-rtl8029.device UNIT=0 NOTRACKING IP=192.168.0.188 UP
+#
+# ..Prism II wireless cards
+#
+#eth0 DEV=DEVS:networks/prism2.device UNIT=0 IP=192.168.0.188 UP
 # EOF
