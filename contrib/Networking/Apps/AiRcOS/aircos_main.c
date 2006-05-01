@@ -168,7 +168,7 @@ struct CustomTEInstData
 BOOPSI_DISPATCHER(IPTR, TextEditor_Dispatcher, CLASS, self, message)
 {
 
-D(bug("[AiRcOS] TextEditor_Dispatcher(%x)\n", message->MethodID));
+D(bug("[AiRcOS] TextEditor_Dispatcher(obj:%x, Method:%x)\n", self, message->MethodID));
   switch(message->MethodID)
   {
   case MUIM_Setup:
@@ -307,15 +307,26 @@ D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_DragDrop\n"));
       {
 D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent\n"));
          struct CustomTEInstData *data = INST_DATA(CLASS, self);
+         if ((!(data->cte_ChanPriv))&&(!(data->cte_ServPriv)))
+         {
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Gadget not handled by us\n"));
+           break;
+         }
+
          struct MUIP_HandleEvent *hevent_msg = (struct MUIP_HandleEvent *)message;
          struct IntuiMessage *imsg = hevent_msg->imsg;
          if (imsg->Class == IDCMP_RAWKEY)
          {
 D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: RAWKEY Code %d\n", imsg->Code));
-           if (imsg->Code != 66)
+           if ((imsg->Code != 66)&&(data->partialNameToMatch))
            {
-             if (data->partialNameToMatch)
+             ULONG cur_cursx = 0, cur_cursy = 0; 
+             get(self, MUIA_TextEditor_CursorX, &cur_cursx);
+             get(self, MUIA_TextEditor_CursorY, &cur_cursy);
+             if ((data->partMatchMaxX != cur_cursx)||(data->partMatchY != cur_cursy))
              {
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Freeing old name completion buffer\n"));
+D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: [ matchX %d != curX %d   ||   matchY %d != curY %d]\n", data->partMatchMaxX, cur_cursx, data->partMatchY, cur_cursy));
                FreeVec(data->partialNameToMatch);
                data->currentNameMatch = NULL;
                data->partialNameToMatch = NULL;
@@ -452,6 +463,7 @@ D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Inseting mat
                {
                  crsr_Ncomplete.MaxX = data->partMatchMaxX;
                }
+               data->partMatchMaxX = crsr_Ncomplete.MaxX;
 
                crsr_Ncomplete.MaxY = data->partMatchY;
                data->currentNameMatch = foundName;
@@ -464,14 +476,15 @@ D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Inseting mat
                DoMethod(self, MUIM_TextEditor_Replace, data->currentNameMatch, 0);
 
                crsr_Ncomplete.MaxX = crsr_Ncomplete.MinX + strlen(data->currentNameMatch);
+               data->partMatchMaxX = crsr_Ncomplete.MaxX;
 
                DoMethod(self, MUIM_TextEditor_MarkText,
                                       crsr_Ncomplete.MaxX, crsr_Ncomplete.MaxY,
                                       crsr_Ncomplete.MaxX, crsr_Ncomplete.MaxY);
+               set(self, MUIA_TextEditor_Quiet, FALSE);
+
                set(self, MUIA_TextEditor_CursorX, crsr_Ncomplete.MaxX);
                set(self, MUIA_TextEditor_CursorY, crsr_Ncomplete.MaxY);
-
-               set(self, MUIA_TextEditor_Quiet, FALSE);                        
              }
              else
              {
@@ -1047,7 +1060,8 @@ D(bug("[AiRcOS](serverconnect_func) Socket connection failed\n"));
     {
         AddTail((struct List *)&AiRcOS_Base->aircos_looseconnectionlist,(struct Node *) &dtest_connection->connection_node);
     }
-// AiRcOS_Base->temp_process_thisConnection = dtest_connection;   set(AiRcOS_Base->butt_connectServer,MUIA_Disabled,FALSE);
+// AiRcOS_Base->temp_process_thisConnection = dtest_connection;
+    set(AiRcOS_Base->butt_connectServer, MUIA_Disabled, FALSE);
 
     AROS_USERFUNC_EXIT
 };

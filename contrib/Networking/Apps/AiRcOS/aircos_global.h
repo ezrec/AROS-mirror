@@ -125,6 +125,7 @@ struct IRC_Server_Priv
         Object          *serv_pagemd_grp;
         Object          *serv_statuspage;
         Object          *serv_status_output;
+        Object          *serv_message;
         Object          *serv_send;
         ULONG           serv_displayedlines;
 

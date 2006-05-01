@@ -1340,7 +1340,6 @@ struct IRC_Server_Priv  *aircos_add_server(char *addserv)
                                     MUIA_Listview_List, (IPTR) (new_ircServer->serv_status_output = NListObject,
                                          ReadListFrame,
                                          MUIA_NList_ListBackground, MUII_SHINE,
-                                         MUIA_CycleChain, TRUE,
                                          MUIA_NList_MinLineHeight, 18,
                                     End),
                                End;
@@ -1378,11 +1377,10 @@ struct IRC_Server_Priv  *aircos_add_server(char *addserv)
                         Child, (IPTR) HGroup,
                           MUIA_Group_SameWidth, FALSE,
                           MUIA_Weight,0,
-                          Child, (IPTR)( NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
+                          Child, (IPTR)( new_ircServer->serv_message = NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
 									  MUIA_CustTextEditor_ServerPrivate, (IPTR)new_ircServer,
                              MUIA_Background, MUII_SHINE,
-                             MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,
-                             MUIA_TextEditor_ReadOnly, FALSE)),
+                             MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap)),
                           Child, (IPTR)new_ircServer->serv_send,
                         End,
                       End;
@@ -1484,6 +1482,19 @@ struct IRC_Server_Priv  *aircos_add_server(char *addserv)
             new_butt, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
 			(IPTR) AiRcOS_Base->aircos_window_pagemd_grp, 3, MUIM_Set, MUIA_Group_ActivePage, new_ircServer->serv_pageid
         );
+
+	   DoMethod
+        (
+           tmp_servlog, MUIM_Notify, MUIA_Selected, FALSE,
+			  (IPTR) AiRcOS_Base->aircos_clientwin, 3, MUIM_Set, MUIA_Window_DefaultObject, new_ircServer->serv_message
+        );
+
+	   DoMethod
+        (
+           tmp_servlog, MUIM_Notify, MUIA_Selected, FALSE,
+			  (IPTR) AiRcOS_Base->aircos_clientwin, 3, MUIM_Set, MUIA_Window_ActiveObject, new_ircServer->serv_message
+        );
+
 D(bug("[AiRcOS](addserv) Set NOTIFICATION for SERVER page '%s' [ID:%d]\n", new_ircServer->serv_name, new_ircServer->serv_pageid));
 		DoMethod
         (
@@ -1492,6 +1503,9 @@ D(bug("[AiRcOS](addserv) Set NOTIFICATION for SERVER page '%s' [ID:%d]\n", new_i
         );
 D(bug("[AiRcOS](addserv) Set NOTIFICATION for 'Server Log' button [ID:%d]\n", new_ircServer->serv_name, 0));
         AddTail((struct List *)&AiRcOS_Base->aircos_serverlist,(struct Node *) &new_ircServer->serv_node);
+
+        set( AiRcOS_Base->aircos_clientwin, MUIA_Window_DefaultObject, new_ircServer->serv_message);
+        set( AiRcOS_Base->aircos_clientwin, MUIA_Window_ActiveObject, new_ircServer->serv_message);
 
         return  new_ircServer;
 
@@ -1890,7 +1904,6 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
         new_ircChannel->chan_users = MUI_NewObject( MUIC_NListtree,
                         ReadListFrame,
                         MUIA_NList_ListBackground, MUII_SHINE,
-                        MUIA_CycleChain, TRUE,
                         MUIA_NList_MinLineHeight, 18,
                         MUIA_NListtree_ShowTree, FALSE,
                         MUIA_NListtree_NoRootTree, TRUE,
@@ -1952,9 +1965,7 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
                                             MUIA_Background, MUII_SHINE,
                                             MUIA_TextEditor_Slider, tmp_ScrollBar,
                                             MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,
-                                            MUIA_TextEditor_ReadOnly, TRUE,
-                                            MUIA_CycleChain, TRUE)),
-        
+                                            MUIA_TextEditor_ReadOnly, TRUE)),
                                         Child, (IPTR) tmp_ScrollBar,        
                                     End,
 
@@ -2010,10 +2021,7 @@ D(bug("[AiRcOS](addchannel) ## allocated private record for %s\n",new_ircChannel
                                         Child, (IPTR) ( new_ircChannel->chan_message  = NewObject(AiRcOS_Base->editor_mcc->mcc_Class, NULL,
                                              MUIA_Background, MUII_SHINE,
 															MUIA_CustTextEditor_ChannelPrivate, (IPTR)new_ircChannel,
-//                                           MUIA_TextEditor_Rows, 2,
-//                                           MUIA_TextEditor_Slider, slider,
-                                       		MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap,
-                                        		MUIA_CycleChain, TRUE)),
+                                       		MUIA_TextEditor_ColorMap, AiRcOS_Base->editor_cmap)),
                                         Child, (IPTR)new_ircChannel->chan_send,
                                     End,
                                 End),
@@ -2144,6 +2152,18 @@ D(bug("[AiRcOS](addchan) Setting channel page notifications\n"));
 	         gad_font_under, MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
 				(IPTR)new_ircChannel->chan_message, 3, MUIM_NoNotifySet, MUIA_TextEditor_StyleUnderline, MUIV_TriggerValue
 	     );
+
+	DoMethod
+      (
+         new_butt, MUIM_Notify, MUIA_Selected, FALSE,
+			(IPTR) AiRcOS_Base->aircos_clientwin, 3, MUIM_Set, MUIA_Window_DefaultObject, new_ircChannel->chan_message
+      );
+
+	DoMethod
+      (
+         new_butt, MUIM_Notify, MUIA_Selected, FALSE,
+			(IPTR) AiRcOS_Base->aircos_clientwin, 3, MUIM_Set, MUIA_Window_ActiveObject, new_ircChannel->chan_message
+      );
 
    set( AiRcOS_Base->aircos_clientwin, MUIA_Window_DefaultObject, new_ircChannel->chan_message);
    set( AiRcOS_Base->aircos_clientwin, MUIA_Window_ActiveObject, new_ircChannel->chan_message);
