@@ -11,14 +11,16 @@ ENVARC:SYS/Packages/AROSTCP
 ----------------------------
 The first thing to be aware of is the AROS package file.  It allows AROS to
 perform startup operations for software packages in a friendly manner.
-The main file is ENV-ARC:SYS/Packages/AROSTCP which points to the installed
+The main file is ENVARC:SYS/Packages/AROSTCP which points to the installed
 location of the AROSTCP package.
 
 During boot AROS will call the file s/Package-Startup in the directory pointed
 to by the AROSTCP package file to add its own path variables, etc.
 
 If you have AROSTCP installled to a different location than
-AROS:Extras/Networking/Stacks/AROSTCP you will need to alter this file.
+SYS:Extras/Networking/Stacks/AROSTCP you will need to alter this file.
+
+  SetEnv SAVE SYS/Packages/AROSTCP <Installed location>
 
 ENVARC:AROSTCP-CONFIG
 ----------------------
