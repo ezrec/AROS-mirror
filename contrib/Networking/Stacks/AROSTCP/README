@@ -97,3 +97,5 @@ ie.
    Execute s/startnet
 
 And AROSTCP will use your configuration on subsequent reboots (with no worry of it being overwritten during an update of your installation - unless ofcourse you reformat the partition ;P)
+
+You could also alter the s/Package-Startup file to automatically launch startnet, so the Stack would be instantly available on booting AROS.
