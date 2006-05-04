@@ -14,7 +14,6 @@ void NormalPointer(struct Globals *glob, struct Prefs *pref);
 LONG __stdargs Message(UBYTE *Msg,UBYTE *Options,...);
 LONG           MessageA(UBYTE *Msg,UBYTE *Options,APTR Args);
 LONG __stdargs AsyncMessage(struct Globals *glob, TaskFlag flg, UBYTE *Msg,UBYTE *Options,...);
-
                                /* timer.c */
 
 struct timerequest *OpenTimer(void);
@@ -39,6 +38,7 @@ void CloseLibs(void);
                                /* stubs.c */
 
 void __stdargs _XCEXIT(LONG lcode);
+#if defined(NO_INLINE_STDARG)
 struct MidiNode *CreateMidi(Tag tag, ...);
 BOOL SetMidiAttrs(struct MidiNode *mi, Tag tag, ...);
 struct MidiLink *AddMidiLink(struct MidiNode *mi, LONG type, Tag tag, ...);
@@ -48,6 +48,7 @@ APTR GetVisualInfo(struct Screen *screen,Tag tag, ...);
 struct Menu *CreateMenus(struct NewMenu *newmenu,Tag tag,...);
 BOOL LayoutMenus(struct Menu *menu,APTR vi,Tag tag,...);
 ULONG BestModeID(Tag tag,...);
+#endif
 
 #ifdef __AROS__
 #include <proto/arossupport.h>

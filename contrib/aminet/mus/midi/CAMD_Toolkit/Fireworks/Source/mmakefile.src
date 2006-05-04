@@ -6,7 +6,9 @@ include $(TOP)/config/make.cfg
 FILES := fireworks async message timer libopen stubs fwmodes linear parabolic
 
 EXEDIR := $(CONTRIBDIR)/aminet
-USER_CFLAGS := -O2 -Wunused -Wall -DNO_INLINE_STDARG
+USER_CFLAGS := -O2 -Wunused -Wall
+
+# -DNO_INLINE_STDARG
 
 #MM aminet-mus-midi-CAMD_Toolkit-Fireworks : setup-aminet-mus-midi-CAMD_Toolkit-Fireworks
 

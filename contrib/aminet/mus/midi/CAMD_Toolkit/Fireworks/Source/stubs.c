@@ -17,7 +17,7 @@ void __stdargs _XCEXIT(LONG lcode)
 /*-------------------*/
 /* CAM Library stubs */
 /*-------------------*/
-
+#if defined(NO_INLINE_STDARG)
 struct MidiNode *CreateMidi(Tag tag, ...)
 {
 	return CreateMidiA((struct TagItem *)&tag );
@@ -53,5 +53,5 @@ BOOL LayoutMenus(struct Menu *menu,APTR vi,Tag tag,...){
 ULONG BestModeID(Tag tag,...){
   return BestModeIDA((struct TagItem *)&tag);
 }
-
+#endif
 
