@@ -16,6 +16,8 @@
 #include "../main/main.h"
 #include "../main/prefs.h"
 
+#include <aros/macros.h>
+
 #define IO_BUFFER_SIZE (64*1024)
 
 static unsigned char *ampio_buffer = NULL;
@@ -208,7 +210,7 @@ unsigned short get_be16()
 
   ampio_fread((unsigned char *)&ret, 2);
 
-  return ret;
+  return AROS_BE2WORD(ret);
 }
 
 unsigned long get_be32()
@@ -217,7 +219,7 @@ unsigned long get_be32()
 
   ampio_fread((unsigned char *)&ret, 4);
 
-  return ret;
+  return AROS_BE2LONG(ret);
 }
 
 unsigned short get_le16()
@@ -226,7 +228,7 @@ unsigned short get_le16()
 
   ampio_fread((unsigned char *)&ret, 2);
 
-  ret = SWAP16(ret);
+  ret = AROS_LE2WORD(ret);
 
   return ret;
 }
@@ -237,7 +239,7 @@ unsigned long get_le32()
 
   ampio_fread((unsigned char *)&ret, 4);
 
-  ret = SWAP32(ret);
+  ret = AROS_LE2LONG(ret);
 
   return ret;
 }

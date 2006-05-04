@@ -2,13 +2,13 @@
 include $(TOP)/config/make.cfg
 
 #MM- 		contrib-mmedia-amp2-plugins : \
-#MM			contrib-mmedia-amp2-plug-MPEGV \
-#MM			contrib-mmedia-amp2-plug-MPEGVLO \
+#MM			contrib-mmedia-amp2-plug-MPEGVX \
+#MM			contrib-mmedia-amp2-plug-MPEGVXLO \
 #MM			contrib-mmedia-amp2-plug-CVID \
-#MM			contrib-mmedia-amp2-plug-H236 \
+#MM			contrib-mmedia-amp2-plug-H263 \
 #MM			contrib-mmedia-amp2-plug-TWOS \
 #MM			contrib-mmedia-amp2-plug-A52 \
-#MM			contrib-mmedia-amp2-plug-MPEGA \
+#MM			contrib-mmedia-amp2-plug-MPEGAX \
 #MM			contrib-mmedia-amp2-plug-PCM \
 #MM			contrib-mmedia-amp2-plug-MACE \
 #MM			contrib-mmedia-amp2-plug-IMA4 \
@@ -16,3 +16,4 @@ include $(TOP)/config/make.cfg
 #MM			contrib-mmedia-amp2-plug-SVQ1 \
 #MM			contrib-mmedia-amp2-plug-XANIM \
 #MM			contrib-mmedia-amp2-plug-REAL
+

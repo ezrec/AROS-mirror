@@ -143,51 +143,70 @@ void open_libraries()
   CGXVideoBase = OpenLibrary("cgxvideo.library", 41);
 }
 
-#define TEMPLATE "FILE/A,REQ/S,PAL/S,HIPAL/S,GRAY/S,HAM/S,HAMDEPTH/N,HAMWIDTH/N,HAMHQ/S," \
+#if !defined(__AROS__)
+#define TEMPLATE "FILE/A,REQ/S,PAL/S,HIPAL/S,GRAY/S," \
                  "HALF/S,GRAYDEPTH/N,LOWCOLOR/S,HIGHCOLOR/S,TRUECOLOR/S,WINDOW/S,DEBUG/S," \
-                 "VERBOSE/S,OVERLAY/S,STEREO/S,NOVIDEO/S,NOAUDIO/S,DEVICE/K,UNIT/N,AHI/S," \
+                 "VERBOSE/S,OVERLAY/S,STEREO/S,NOVIDEO/S,NOAUDIO/S,DEVICE/K,UNIT/N," \
+                 "TRIPLE/S,FILTER/S,READALL/S,DIVISOR/N,LORES/S,OSD/S,14BIT/S,CALIBRATION/K," \
+                 "56KHZ/S,SUBTITLE/K," \
+                 "SPEEDTEST/K," \
+                 "HAM/S,HAMDEPTH/N,HAMWIDTH/N,HAMHQ/S," \
+                 "AHI/S"
+#else
+#define TEMPLATE "FILE/A,REQ/S,PAL/S,HIPAL/S,GRAY/S," \
+                 "HALF/S,GRAYDEPTH/N,LOWCOLOR/S,HIGHCOLOR/S,TRUECOLOR/S,WINDOW/S,DEBUG/S," \
+                 "VERBOSE/S,OVERLAY/S,STEREO/S,NOVIDEO/S,NOAUDIO/S,DEVICE/K,UNIT/N," \
                  "TRIPLE/S,FILTER/S,READALL/S,DIVISOR/N,LORES/S,OSD/S,14BIT/S,CALIBRATION/K," \
                  "56KHZ/S,SUBTITLE/K," \
                  "SPEEDTEST/K"
+#endif
 
 #define OPT_FILE          0
 #define OPT_REQ           1
 #define OPT_PAL           2
 #define OPT_HIPAL         3
 #define OPT_GRAY          4
-#define OPT_HAM           5
-#define OPT_HAMDEPTH      6
-#define OPT_HAMWIDTH      7
-#define OPT_HAMHQ         8
-#define OPT_HALF          9
-#define OPT_GRAYDEPTH    10
-#define OPT_LOWCOLOR     11
-#define OPT_HIGHCOLOR    12
-#define OPT_TRUECOLOR    13
-#define OPT_WINDOW       14
-#define OPT_DEBUG        15
-#define OPT_VERBOSE      16
-#define OPT_OVERLAY      17
-#define OPT_STEREO       18
-#define OPT_NOVIDEO      19
-#define OPT_NOAUDIO      20
-#define OPT_DEVICE       21
-#define OPT_UNIT         22
-#define OPT_AHI          23
-#define OPT_TRIPLE       24
-#define OPT_FILTER       25
-#define OPT_READALL      26
-#define OPT_DIVISOR      27
-#define OPT_LORES        28
-#define OPT_OSD          29
-#define OPT_14BIT        30
-#define OPT_CALIBRATION  31
-#define OPT_56KHZ        32
-#define OPT_SUBTITLE     33
+#define OPT_HALF          5
+#define OPT_GRAYDEPTH     6
+#define OPT_LOWCOLOR      7
+#define OPT_HIGHCOLOR     8
+#define OPT_TRUECOLOR     9
+#define OPT_WINDOW       10
+#define OPT_DEBUG        11
+#define OPT_VERBOSE      12
+#define OPT_OVERLAY      13
+#define OPT_STEREO       14
+#define OPT_NOVIDEO      15
+#define OPT_NOAUDIO      16
+#define OPT_DEVICE       17
+#define OPT_UNIT         18
+#define OPT_TRIPLE       19
+#define OPT_FILTER       20
+#define OPT_READALL      21
+#define OPT_DIVISOR      22
+#define OPT_LORES        23
+#define OPT_OSD          24
+#define OPT_14BIT        25
+#define OPT_CALIBRATION  26
+#define OPT_56KHZ        27
+#define OPT_SUBTITLE     28
 
-#define OPT_SPEEDTEST    34
+#define OPT_SPEEDTEST    29
 
+#if !defined(__AROS__)
+#warning "TODO: AROS could probably support HAM?"
+#define OPT_HAM          30
+#define OPT_HAMDEPTH     31
+#define OPT_HAMWIDTH     32
+#define OPT_HAMHQ        33
+/* On AROS AHI is the only Audio option! */
+#define OPT_AHI          34  
 #define OPT_COUNT        35
+#else
+#define OPT_COUNT        30
+#endif
+
+
 
 long opts[OPT_COUNT];
 struct RDArgs *rdargs = NULL;
@@ -205,11 +224,15 @@ void handle_arguments(int argc, char *argv[])
     if (opts[OPT_REQ]) prefs.screenmode = PREFS_REQUESTER;
     if (opts[OPT_PAL]) prefs.screenmode = PREFS_PAL;
     if (opts[OPT_HIPAL]) prefs.screenmode = PREFS_HIPAL;
+
+#if !defined(__AROS__)
     if (opts[OPT_HAM]) prefs.colormode = PREFS_HAM;
-    if (opts[OPT_GRAY]) prefs.colormode = PREFS_GRAY;
     if (opts[OPT_HAMDEPTH]) prefs.ham_depth = *((unsigned long *)opts[OPT_HAMDEPTH]);
     if (opts[OPT_HAMWIDTH]) prefs.ham_width = *((unsigned long *)opts[OPT_HAMWIDTH]);
     if (opts[OPT_HAMHQ]) prefs.ham_quality = PREFS_HIGH;
+#endif
+
+    if (opts[OPT_GRAY]) prefs.colormode = PREFS_GRAY;
     if (opts[OPT_HALF]) prefs.half = PREFS_ON;
     if (opts[OPT_GRAYDEPTH]) prefs.gray_depth = *((unsigned long *)opts[OPT_GRAYDEPTH]);
     if (opts[OPT_LOWCOLOR]) prefs.cgfx_depth = PREFS_LOWCOLOR;
@@ -224,7 +247,12 @@ void handle_arguments(int argc, char *argv[])
     if (opts[OPT_NOAUDIO]) { prefs.no_audio = PREFS_ON; prefs.no_video = PREFS_OFF; }
     if (opts[OPT_DEVICE]) strcpy(prefs.device, (char *)opts[OPT_DEVICE]);
     if (opts[OPT_UNIT]) prefs.unit = *((int *)opts[OPT_UNIT]);
-    if (opts[OPT_AHI]) prefs.ahi = PREFS_ON;
+
+#if !defined(__AROS__)
+    if (opts[OPT_AHI])
+#endif
+      prefs.ahi = PREFS_ON;
+
     if (opts[OPT_TRIPLE]) prefs.triple = PREFS_ON;
     if (opts[OPT_FILTER]) prefs.filter = PREFS_ON;
     if (opts[OPT_READALL]) prefs.readall = PREFS_ON;
@@ -269,11 +297,14 @@ void handle_arguments(int argc, char *argv[])
     printf("HIPAL/S       : use PAL Hires Laced (def: BestMode).\n\n");
 
     printf("GRAY/S        : gray output (def: color).\n");
-    printf("HAM/S         : HAM output (def: color).\n\n");
 
+#if !defined(__AROS__)
+    printf("HAM/S         : HAM output (def: color).\n\n");
     printf("HAMDEPTH/N    : HAM depth (6 or 8 bitplanes, def: 8).\n");
     printf("HAMWIDTH/N    : HAM width (1, 2 or 4 HAM pixels per RGB pixel, def: 2).\n");
     printf("HAMHQ/S       : HAM high quality (def: normal quality).\n");
+#endif
+
     printf("HALF/S        : half height (PAL only) (def: off).\n\n");
 
     printf("GRAYDEPTH/N   : gray depth (4, 6 or 8 bitplanes, def: 8).\n");
@@ -294,7 +325,10 @@ void handle_arguments(int argc, char *argv[])
     printf("DEVICE/K      : device of the CD/DVD for VCD/CD-i/DVD playback (def: ata.device).\n");
     printf("UNIT/N        : unit of the CD/DVD for VCD/CD-i/DVD playback (def: 2).\n\n");
 
+#if !defined(__AROS__)
     printf("AHI/S         : use AHI instead of audio.device (def: on).\n");
+#endif
+
     printf("14BIT/S       : 14bit audio.device playback (def: 8bit).\n");
     printf("CALIBRATION/K : 14bit calibration file (def: no calibration).\n");
     printf("56KHZ/S       : allow up to 56khz audio.device playback (def: off).\n");
