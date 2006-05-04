@@ -18,7 +18,7 @@ Some fixes here and there to make it compile under AROS/gcc.
 
 =======================================================================*/
 
-#define NO_INLINE_STDARG
+//#define NO_INLINE_STDARG
 
 #include "playmf_includes.h"
 #include <aros/64bit.h>
@@ -532,13 +532,14 @@ extern ASM ULONG CalcFillClock(REG(d0) ULONG abstimeLO,
 			       REG(d1) ULONG abstimeHI,
 			       REG(d2) ULONG divisor);
 
-
+#if defined(NO_INLINE_STDARG)
 /* Compiler glue: stub functions for camd.library */
 struct MidiNode *CreateMidi(Tag tag, ...);
 BOOL SetMidiAttrs(struct MidiNode *mi, Tag tag, ...);
 struct MidiLink *AddMidiLink(struct MidiNode *mi, LONG type, Tag tag, ...);
 BOOL SetPlayerAttrs(struct Player *pi, Tag tag, ...);
 struct Player *CreatePlayer(Tag tag, ...);
+#endif
                               /* SPrintf.a */
 APTR __stdargs SPrintf(char *, const char *, ...);
 APTR __stdargs VSprintf(char *, const char *, va_list);
@@ -1905,7 +1906,7 @@ LONG __stdargs PrintDOSFault(LONG code, STRPTR header, UBYTE *Options)
 /* Stub funcitons */
 /*----------------*/
 
-
+#if defined(NO_INLINE_STDARG)
 /* Compiler glue: stub functions for camd.library */
 struct MidiNode *CreateMidi(Tag tag, ...)
 {
@@ -1922,7 +1923,6 @@ struct MidiLink *AddMidiLink(struct MidiNode *mi, LONG type, Tag tag, ...)
 	return AddMidiLinkA(mi, type, (struct TagItem *)&tag );
 }
 
-
 /* Compiler glue: stub functions for realtime.library */
 BOOL SetPlayerAttrs(struct Player *pi, Tag tag, ...)
 {
@@ -1933,7 +1933,7 @@ struct Player *CreatePlayer(Tag tag, ...)
 {
 	return CreatePlayerA( (struct TagItem *)&tag );
 }
-
+#endif
 
 
                             /* AsmSupport.a */
