@@ -33,6 +33,7 @@ The following software is required for compiling AROS:
 + GNU AWK (GAWK) - other awks may also be suitable
 + Python 2.2.1+
 + Bison
++ Flex
 + pngtopnm and ppmtoilbm (part of the netpbm package)
 + Autoconf
 + Automake
