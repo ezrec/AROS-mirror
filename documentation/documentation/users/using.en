@@ -3,7 +3,7 @@ AROS Users Guide
 ================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski 
-:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Copyright: Copyright © 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; only converted to reST. Needs heavy updating.
@@ -31,7 +31,7 @@ Who should read this guide
 --------------------------
 
 This guide will help you getting used with AROS. It is written for everybody 
-who is interested in AROS. AROS is now 76.95% finished, so keep in mind that 
+who is interested in AROS. Keep in mind that 
 you are actually using software that is BETA and in research. It is currently 
 mostly fun to play with and cool to program for and program in. So I expect 
 that your interest in AROS is explained by one of these reasons. If you came 
@@ -58,8 +58,8 @@ everyone.
 It is important to realize that this guide is meant for AROS, not Amiga. So 
 even if you owned an Amiga for years, you might need to read "Using AROS" too. 
 This is not an embarrassment: you will notice that using AROS is very slightly 
-different from using AmigaOS. (This is because our Workbench is not finished 
-:-). At the moment the whole system works through a AmigaDos shell (or Cli to 
+different from using AmigaOS. This is because our Workbench is not finished.
+At the moment the whole system works through a AmigaDos shell (or Cli to 
 older users), although we do have a Workbench, you can not navigate disks with 
 it yet. Old Amiga programmers should read "differences with Amiga programming" 
 from chapter 4 to get an overview of the differences. 
@@ -141,24 +141,15 @@ Using AROS on Linux and FreeBSD
 Once you got the binaries for your system, either by compiling or by 
 downloading pre-compiled binaries, you should go down into the 
 "bin/$TARGET/AROS" directory, where $TARGET is your system target (something 
-like "linux-i386"). What you should do then, depends on the age of your code. 
-If you have a file "arosshell" in the current directory, run it from within a 
-terminal ("./arosshell"). A window will open with nothing interesting on it, 
-and your terminal will have a strange new input prompt. If you do not have the 
-file "arosshell", but instead a file called "aros", you should run that one 
-instead ("./aros"). Now a window will open, and on that window you will see 
-painted an Amiga-like window (if you're new to them, this is what they look 
-like) with an input prompt on it.
+like "linux-i386"). Run the file "aros" ("./aros"). The Workbench replacement
+"Wanderer" will be started.
 
-In either way, you are faced by the already-infamous input prompt (sorry, we 
-don't have a "Workbench" - yet). Now you should type in commands, and the most 
+Because "Wanderer" is very limited you'll prefer to work with the Shell. You can
+start it from the menu "Wanderer/Shell". Now you should type in commands, and the most 
 important command is "dir": it will show you a directory's contents. The 
 directory named "C" contains all the commands, so it might be useful to display 
-its contents with "dir C". (Note: Old Amigans, please note that this shell is 
-case sensitive!) The shell behaves like an AmigaDOS shell, and the commands in 
-"C" behave like their AmigaDOS equivalents. So if you have problems 
-understanding the system, you should really take a look at the 
-`AmigaDOS Online Reference Manual`_. (Note to UNIX folks: to address the parent 
+its contents with "dir c:". The shell behaves like an AmigaDOS shell, and the commands in 
+"C" behave like their AmigaDOS equivalents. (Note to UNIX folks: to address the parent 
 directory, use "/" and not "..": this will look ugly because AROS thinks that 
 Linux's ".." is a normal directory. You shouldn't use "./" as a prefix to 
 address a command within the current directory either, but leave this away 
@@ -176,18 +167,15 @@ a "User" can do with AROS! But when any new important user code will be ready,
 it will be added to this guide, of course.
 
 If you think that I have not provided enough information here about compiling, 
-installing, CVS, the shell, etc., it might be good to know that I have reasons 
+installing, Subversion, the shell, etc., it might be good to know that I have reasons 
 for it. First, there is already much information available, and it would be 
 unnecessary as well as unfair just to copy that information in this document. 
 Second, we are talking about very particular information some of the readers 
 might be interested in compiling the source code, others might want to know all 
 about the Amiga shell. So to keep this guide readable, I only point to places 
 where you can find such information, instead of providing it here. You, the 
-reader, can then decide if this is of interest to you. And if you are new to 
-AROS and Amiga, you should really have followed the link to the 
-`AmigaDOS Online Reference Manual`_ . Believe me, it's good.
+reader, can then decide if this is of interest to you.
 
 
 .. _Linux: http://www.linux.org/
 .. _UAE:   http://www.freiburg.linux.de/~uae/
-.. _`AmigaDOS Online Reference Manual`: http://www.mentasm.com/~mramiga/dos1.shtml

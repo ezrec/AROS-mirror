@@ -55,9 +55,9 @@ reading:
 + `Quick reStructuredText Reference`__
 
 __ http://docutils.sourceforge.net/
-__ http://docutils.sourceforge.net/spec/rst/introduction.html
-__ http://docutils.sourceforge.net/docs/rst/quickstart.html
-__ http://docutils.sourceforge.net/docs/rst/quickref.html
+__ http://docutils.sourceforge.net/spec/ref/rst/introduction.html
+__ http://docutils.sourceforge.net/docs/user/rst/quickstart.html
+__ http://docutils.sourceforge.net/docs/user/rst/quickref.html
 
 The documentation archive
 -------------------------

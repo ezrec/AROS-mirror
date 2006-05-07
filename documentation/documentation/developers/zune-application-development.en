@@ -59,7 +59,7 @@ found here__. In this LHA archive, 2 documents are warmly recommended:
 + `PSI.c`, the sourcecode of an application demonstrating  all the modern
   MUI practices like object-oriented design and dynamic object creation.
 
-__ http://aminet.net/dev/mui/mui38dev.lha
+__ http://main.aminet.net/dev/mui/mui38dev.lha
 
 Additionally, this archive contains MUI autodocs, which are the reference
 documentations for all Zune classes.
