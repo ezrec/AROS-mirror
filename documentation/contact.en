@@ -37,9 +37,9 @@ mailings lists are available:
 
 + `AROS Developer`__
 
-  This is the developer mailing list, where discussions about the development of
-  AROS are held. Also, the CVS logs and nightly build status are posted daily to
-  this list. It is **highly** recommended for developers to join this list, as
+  This is the developer mailing list, where discussions about the development
+  of AROS are held. Also, the nightly build status is posted daily to this
+  list. It is **highly** recommended for developers to join this list, as
   it will otherwise be quite hard to keep up to date on current developments.
   Since there aren't *that* many AROS developers, the volume on this list is
   generally quite low, but it can become quite high if a heated discussion gets

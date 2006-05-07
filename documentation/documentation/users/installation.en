@@ -2,7 +2,7 @@
 AROS Installation Guide
 =======================
 
-:Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski 
+:Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey
 :Copyright: Copyright © 1995-2004, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
@@ -35,14 +35,15 @@ a larger amount of useful changes done to AROS since the last snapshot and
 someone feels motivated to create a new snapshot. In short, there is currently
 no regular release schedule. Even though they are made infrequently and that we
 try to pick times when AROS is particularly stable, there is no guarantee they
-won't contain bug-free or work on your particular machine. That said, we try to
+will be bug-free or work on your particular machine. That said, we try to
 test snapshots on a wider variety of machines, so in practice they should work
 relatively well.
 
 Nightly builds are done, as the name implies, automatically every night directly
-from the CVS tree and contain the latest code. However, they have not been
-tested in any way and can be horrible broken, extremely buggy and may even
-destroy your system if you're unlucky. Most of the time though, they work fine.
+from the Subversion tree and contain the latest code. However, they have not
+been tested in any way and can be horribly broken, extremely buggy and may even
+destroy your system if you're very unlucky. Most of the time though, they work
+fine.
 
 Please see the `download page`_ for more information on which snapshots and
 nightly builds are available and how to download them.
@@ -59,9 +60,9 @@ Requirements
 
 To run AROS/i386-linux or AROS/i386-freebsd you will need the following:
 
-+ A working FreeBSD or Linux installation (doesn't really matter which
++ A working FreeBSD 5.x or Linux installation (doesn't really matter which
   distribution you run, as long as it's relatively recent).
-+ A configured and working X server (for example XFree86).
++ A configured and working X server (for example X.Org or XFree86).
 
 That's it. 
 
@@ -91,19 +92,14 @@ After having extracted all files you can launch AROS like this::
 
 .. Note:: 
     
-    If you are running XFree86 4.0 or later, you might notice that the windows
-    containing AROS screens do not refresh properly (for example when
-    a different window passes over them). This is due to the fact that AROS uses
-    the "backingstore" functionality of X, which is turned off by default in
-    XFree86 4.0 and later. If you are starting X with the ``startx`` command,
-    you can enable it again by passing the ``+bs`` option::
-
-        > startx -- +bs
-
-    If you start X by some other means (eg. with XDM), you can instead add the
-    following line to the device section of your graphics card in the
-    X configuration file (commonly named ``/etc/X11/XF86Config`` or
-    ``/etc/X11/XF86Config-4``)::
+    Unless you are running XFree86 3.x or earlier, you may notice that the
+    AROS window does not refresh properly (for example when a different window
+    passes over it). This is due to the fact that AROS uses the "backingstore"
+    functionality of X, which is turned off by default in XFree86 4.0 and later.
+    To turn it on, add the following line to the device section of your
+    graphics card in the X configuration file (commonly named
+    ``/etc/X11/xorg.conf``, ``/etc/X11/XF86Config-4`` or
+    ``/etc/X11/XF86Config``)::
 
         Option "backingstore"
 
@@ -122,7 +118,7 @@ AROS/i386-pc
 
 .. Note:: 
     
-    We currently do not support installation of AROS/i386-pc onto a harddrive
+    We currently do not support installation of AROS/i386-pc on to a harddrive
     [#]_, so therefore this chapter will only tell you how to create the
     installation media and boot from it. 
 
@@ -131,14 +127,12 @@ Installation media
 """"""""""""""""""
 
 The recommended installation media for AROS/i386-pc is CDROM, since we can fit
-the whole system onto a single disk (and also all the contributed software).
+the whole system onto a single disc (and also all the contributed software).
 This also makes the installation easier, since you don't have to go through
 hoops transferring the software on several floppies.
 
 Since nobody currently sells AROS on CDROM (or any other media for that matter),
-you will need access to a CD burner to create the installation disk yourself. If
-you don't have access to a CD burner, then unfortunately your only option is to
-go for the floppies.
+you will need access to a CD burner to create the installation disk yourself.
 
 
 CDROM
@@ -155,18 +149,18 @@ Booting
 '''''''
 
 The easiest way to boot from the AROS installation CD is if you have a computer
-that support booting from CDROM. It might require some fiddling in the BIOS
+that supports booting from CDROM. It might require some fiddling in the BIOS
 setup to enable booting from CDROM, as it is quite often disabled by default.
 Simply insert the CD into the first CDROM drive and reboot the computer. The
 boot is fully automatic, and if everything works you should see a nice
 screen after a little while. 
 
 If your computer does not support booting directly from CDROM you can create
-a boot floppy_ and use it in together with the CDROM. Simply insert both the
+a boot floppy_ and use it together with the CDROM. Simply insert both the
 boot floppy and the CD into their respective drives and reboot. AROS will start
 booting from the floppy, but after the most important things have been loaded
 (including the CDROM filesystem handler) it will continue booting from the
-CDROM. 
+CDROM.
 
 
 Floppy
@@ -175,13 +169,13 @@ Floppy
 Writing
 '''''''
 
-To create the boot floppy, you will need to download the with disk images from
+To create the boot floppy, you will need to download the disk image from
 the `download page`_, extract the archive, and write the boot image to a floppy
 disk. If you are using a UNIX-like operating system (such as Linux or FreeBSD), 
 you can do this with the following command::
 
-    > cd AROS-i386-pc
-    > dd if=aros-boot.img of=/dev/fd0
+    > cd AROS-<version>-i386-pc-boot-floppy
+    > dd if=aros.bin of=/dev/fd0
 
 If you are using Windows, you will need to get rawrite_ to write the image to
 a floppy. Please see the documentation of rawrite_ for information on how to use

@@ -11,9 +11,9 @@ Reserved ranges
 
 + The range 0x90400000-0x904FFFFF is reserved by AROS.
 + The range 0x90420000-0x9042FFFF is reserved for core Zune classes, 
-  ie. internal classes in muimaster.library (CVS:workbench/libs/muimaster).
+  ie. internal classes in muimaster.library (Subversion:workbench/libs/muimaster).
 + The range 0x90470000-0x9047FFFF is reserved for core AROS classes,
-  ie. external classes (CVS:workbench/classes/zune).
+  ie. external classes (Subversion:workbench/classes/zune).
 
 For convenience, the following defines are available::
 

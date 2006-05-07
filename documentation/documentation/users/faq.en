@@ -48,9 +48,9 @@ screen dragging and the specific way menus work. Therefore we avoid implementing
 these features in exactly the same way. Header files on the other hand must be
 compatible but as different as possible from the orignal.
 
-To avoid any trouble we applied for an official ok from Amiga Inc. They are
-quite positive about the effort but they are very uneasy about the  legal
-implications. We suggest that you take that fact that Amiga Inc did not send us
+To avoid any trouble we applied for an official OK from Amiga Inc. They are
+quite positive about the effort but they are very uneasy about the legal
+implications. We suggest that you take the fact that Amiga Inc did not send us
 any cease and desist letters as a positive sign. Unfortunately, no legally sound
 agreement has been made yet, besides good intentions on both sides.
 
@@ -62,7 +62,7 @@ There have been discussions about writing an advanced OS with the features of
 the AmigaOS. This has been dropped for a good reason. First, everyone agrees
 that the current AmigaOS should be enhanced, but no one knows how to do that or
 even agrees on what has to be enhanced or what is important. For example, some
-want  memory protection, but don't want to pay the price (major rewrite of the
+want memory protection, but don't want to pay the price (major rewrite of the
 available software and speed decrease).
 
 In the end, the discussions ended in either flame wars or reiteration of the
@@ -93,8 +93,8 @@ feature is not built in right away. Our position is that AmigaOS, which AROS
 aims to implement, can do everything a modern OS should do. We see that there
 are areas where AmigaOS could be enhanced, but if we do that, who would write
 the rest of the OS? In the end, we would have lots of nice improvements to the
-original AmigaOS which would break most of the available software but worth
-nothing, because the rest of the OS would be missing. 
+original AmigaOS which would break most of the available software but be worth
+nothing, because the rest of the OS would be missing.
 
 Therefore, we decided to block every attempt to implement major new features in
 the OS until it is more or less completed. We are getting quite close to that
@@ -111,27 +111,25 @@ We will offer a preprocessor which you can use on your code which will change
 any code that might break with AROS and/or warn you about such code.
 
 Porting programs from AmigaOS to AROS is currently mostly a matter of a simple
-recompilation, with the occasional tweak here and there. There are of-course
+recompilation, with the occasional tweak here and there. There are of course
 programs for which this is not true, but it holds for most modern ones.
 
 
 What hardware architectures is AROS available for?
 --------------------------------------------------
 
-Currently AROS is available in a quite usable state as native and hosted (under
-Linux, FreeBSD and NetBSD) for the i386 architecture (ie. IBM PC AT compatible
-clones) and hosted (Linux and NetBSD) for the m68k architecture (eg. the Amiga,
-Atari and Macintosh). There are ports under way at varying degrees of
-completeness to SUN SPARC (hosted under Solaris) and Palm compatible handhelds
-(native). 
+Currently AROS is available in a quite usable state as native and hosted
+(under Linux, and FreeBSD) for the i386 architecture (ie. IBM PC AT
+compatible clones). There are ports under way at varying degrees of
+completeness to SUN SPARC (hosted under Solaris) and Palm compatible
+handhelds (native).
 
 
 Will there be a port of AROS to PPC? 
 ------------------------------------
 
-We are regularly asked if there will be a port of AROS to PPC. The
-answer has always been the same: many people ask for it, no one has
-applied to do the work. 
+There is currently an effort under way to port AROS to PPC, initially
+hosted under Linux.
 
 
 Why are you using Linux and X11?
@@ -146,17 +144,8 @@ need to use.
 The goal for AROS is of course to be independent of Linux and X11 (but it would
 still be able to run on them if people really wanted to), and that is slowly
 becoming a reality with the native versions of AROS. We still need to use Linux
-for development though, since good development tools haven't been ported to AROS
+for development though, since some development tools haven't been ported to AROS
 yet.
-
-
-Why does autorepeat stop working in X11 after running AROS?
------------------------------------------------------------
-
-This is a long-standing bug in AROS. Run the following command after having 
-quit AROS to enable autorepeat again::
-
-    > xset r on
 
 
 How do you intend to make AROS portable?
@@ -216,7 +205,7 @@ is not that the machine crashes, but rather:
 
 1. You have no good idea why it crashed. Basically, you end up having to poke 
    with a 100ft pole into a swamp with a thick fog. 
-2. You loose your work. Rebooting the machine is really no issue.
+2. You lose your work. Rebooting the machine is really no issue.
 
 What we could try to construct is a system which will at least alert if
 something dubious is happening and which can tell you in great detail what was
@@ -233,9 +222,10 @@ not have the highest priority right now. Very basic RT has been added, though.
 Can I become a beta tester?
 ---------------------------
 
-Sure, no problem. In fact, want as many beta testers as possible, so everyone is
-welcome! We don't keep a list of beta testers though, so all you have to do is
-to download AROS, test whatever you want and send us a report.
+Sure, no problem. In fact, we want as many beta testers as possible, so
+everyone is welcome! We don't keep a list of beta testers though, so all
+you have to do is to download AROS, test whatever you want and send us a
+report.
 
 
 What is the relation between AROS and UAE?
@@ -282,17 +272,17 @@ open source development works.
 What programming languages are available?
 -----------------------------------------
 
-Most development for AROS is done using ANSI C by crosscompiling the sources
-under a different OS, eg. Linux, FreeBSD or NetBSD. Fabio Alemagna has 
-completed an inital port of GCC to i386 native, however it is not currently on the 
-ISO or integrated into the build system.
+Most development for AROS is done using ANSI C by crosscompiling the
+sources under a different OS, eg. Linux or FreeBSD. Fabio Alemagna has
+completed an initial port of GCC to i386 native. However, it is not
+currently on the ISO or integrated into the build system.
 
 The languages that are available natively are Python_, Regina_ and False_:
 
 + Python is a scripting language which has become quite popular, because of 
-  it's nice design and features (object-oriented programming, module system,
+  its nice design and features (object-oriented programming, module system,
   many useful modules included, clean syntax, ...). A separate project has 
-  been started for the AROS port and can found at 
+  been started for the AROS port and can be found at 
   http://pyaros.sourceforge.net/.
 
 + Regina is a portable ANSI compliant REXX interpreter. The goal for the AROS
@@ -310,10 +300,10 @@ The languages that are available natively are Python_, Regina_ and False_:
 Why is there no m68k emulator in AROS?
 --------------------------------------
 
-To make old Amiga programs run on AROS, we have ported UAE_ to AROS. AROS'
+To make old Amiga programs run on AROS, we have ported UAE_ to AROS. AROS's
 version of UAE will probably be a bit faster than other versions UAE since AROS
 needs less resources than other operating systems (which means UAE will get more
-CPU time), and we'll try to patch the kickstart ROM in UAE to call AROS
+CPU time), and we'll try to patch the Kickstart ROM in UAE to call AROS
 functions which will give another small improvement. Of course, this only
 applies to the native flavors of AROS and not the hosted flavors.
 
@@ -337,10 +327,10 @@ other work needed to create a Kickstart ROM. Currently, no one has applied for
 the job. 
 
 
-How do I access AROS' disk images from UAE?
--------------------------------------------
+How do I access AROS's disk images from UAE?
+--------------------------------------------
 
-The disk disk image can be mounted as a hardfile and then used as a 1.4 MB
+The floppy disk image can be mounted as a hardfile and then used as a 1.4 MB
 harddisk within UAE. After you have put the files you want on the hardfile disk
 image (or whatever you wanted to do), you can write it to a floppy.
 
@@ -352,7 +342,7 @@ The geometry of the hardfile is as follows::
     Block Size = 90
 
 
-How do I access AROS' disk images from hosted flavors of AROS?
+How do I access AROS's disk images from hosted flavors of AROS?
 ---------------------------------------------------------------
 
 Copy the disk image to the DiskImages directory in AROS (SYS:DiskImages, eg.

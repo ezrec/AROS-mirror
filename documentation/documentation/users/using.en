@@ -167,10 +167,11 @@ a "User" can do with AROS! But when any new important user code will be ready,
 it will be added to this guide, of course.
 
 If you think that I have not provided enough information here about compiling, 
-installing, Subversion, the shell, etc., it might be good to know that I have reasons 
-for it. First, there is already much information available, and it would be 
-unnecessary as well as unfair just to copy that information in this document. 
-Second, we are talking about very particular information some of the readers 
+installing, Subversion, the shell, etc., it might be good to know that I have
+reasons for it. First, there is already much information available, and it
+would be unnecessary as well as unfair just to copy that information in this
+document. 
+Second, we are talking about very particular information. Some of the readers 
 might be interested in compiling the source code, others might want to know all 
 about the Amiga shell. So to keep this guide readable, I only point to places 
 where you can find such information, instead of providing it here. You, the 

@@ -61,10 +61,10 @@ someone answered "read the old mails" or "this is impossible to do, because ..."
 which was shortly followed by "you're wrong because ..." and so on. 
 
 In the winter of 1995, Aaron Digulla got fed up with this situation and posted 
-an RFC (request for comments) to the AOS mailing list in which I asked what the
+an RFC (request for comments) to the AOS mailing list in which he asked what the
 minimal common ground might be. Several options were given and the conclusion 
-was that almost everyone would like to see an open OS which is compatible to 
-AmigaOS 3.1 (kickstart 40.68) on which further discussions could be based upon 
+was that almost everyone would like to see an open OS which is compatible with
+AmigaOS 3.1 (Kickstart 40.68) on which further discussions could be based, 
 to see what is possible and what is not.
 
 So the work began and AROS was born.
