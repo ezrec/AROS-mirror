@@ -1,0 +1,223 @@
+Documentation for siamiga.lib 0.3
+=================================
+
+Siamiga extends Lua with some functions for handling of intuition
+windows, gadgets, menues and graphics functions.
+There are 3 Lua tables:
+* Siamiga: Windows, creating of gadgets and menues, message handling, drawing functions
+* Sigadget: setting and getting of gadget parameters
+* Sipicture: loading, grabbing and blitting of bitmaps.
+
+You can find some examples in the drawer 'amiga-ex'.
+
+Parameters in square brackets are optional.
+
+==========================================================================================
+                                Siamiga table
+------------------------------------------------------------------------------------------
+Siamiga.createwindow(title,  left,   top,  [width], [height], [sizeable], [smartrefresh])
+                     string  number number number    number      bool          bool
+
+Creates a new window but doesn't open it.
+When you omit width and height then the full screen size is used.
+sizable: window gets a size gadget
+smartrefresh: window refreshes automatically when overlapped by other windows.
+
+Returns window handle
+Example: win1 = Siamiga.createwindow("Main window", 30, 40, 200, 150, true, true)
+
+------------------------------------------------------------------------------------------
+Siamiga.openwindow(window)
+
+Opens a window which you have created with createwindow.
+Example: Siamiga.openwindow(win1) or
+         win1:openwindow() (You can always use the colon form when
+                            the first parameter is a window)
+
+------------------------------------------------------------------------------------------
+Siamiga.querywindow(window)
+Returns left, top, width, height, innerwidth and innerheight
+Example: l, t, w, h, iw, ih = win1:querywindow()
+
+------------------------------------------------------------------------------------------
+Siamiga.closewindow(window)
+Closes the given window. You can reopen it with openwindow. After closing a window you can
+add more gadgets and menues.
+Example: win1:closewindow()
+
+------------------------------------------------------------------------------------------
+Siamiga.pset(window, x,y)
+Draws a point in the actual color at x,y
+Example: win1:pset(90,80)
+
+------------------------------------------------------------------------------------------
+Siamiga.line(window, x1, y1 , [x2] , [y2])
+Draws a line from x1,y1 to x2,y2 or a line from to current point to x1, y2
+Examples:
+  win1:line(50, 60, 70, 80)
+  win1:line(90, 100)
+
+------------------------------------------------------------------------------------------
+Siamiga.box(window, [left], [top], [width], [height], filled)
+Draws a rect
+Example:
+  win1:box()              -> clears the window (fills it with color 0)
+  win1:box(50,40,10,10)   -> draws a frame
+  win1:box(5,4,8,9, true) -> draws a filled box
+
+------------------------------------------------------------------------------------------
+Siamiga.ellipse(window, x, y, rx, ry)
+Draws an ellipse at point x,y with radius rx and ry.
+Example: win1:ellipse(200,250, 19, 13)
+
+------------------------------------------------------------------------------------------
+Siamiga.text(window, x, y, txt)
+Prints the text at position x,y
+Example: win1:text(90,80, "Hello World")
+
+------------------------------------------------------------------------------------------
+Siamiga.querytext(window, text)
+Returns width, height, MinX, MinY, MaxX and MaxY for the given text string. (This are the
+contents of struct TextExtend)
+MinY is distance between baseline an top of string.
+Example: win1:querytext("I'm a text string")
+
+------------------------------------------------------------------------------------------
+Siamiga.createpen(red, green, blue)
+Creates a new pen. Red, Green and Blue must be between 0 and 255.
+It uses the Amiga function ObtainBestPen.
+Returns number of pen
+Example: p2 = Siamiga.createpen(200, 100, 90)
+
+------------------------------------------------------------------------------------------
+Siamiga.releasepen(number)
+Releases pen.
+Bug: the pens aren't freed by the garbage collector.
+Example: Siamiga.releasepen(p2)
+
+------------------------------------------------------------------------------------------
+Siamiga.setpen(window, number)
+Makes a pen the current drawing pen.
+Example: win1:setpen(p2)
+
+------------------------------------------------------------------------------------------
+Siamiga.waitmessage(win1, [...])
+Waits for a message signal for the given windows. The function is safe to use with
+closed windows.
+Returns how many of the given windows are open.
+Example:
+  win1:waitmessage()
+  win1:waitmessage(win2, win3)
+
+------------------------------------------------------------------------------------------
+Siamiga.getmessage(window)
+Returns the message parameters for the given window. The function is safe to use
+with closed windows. The returned values are: class, code, mousex and mousey
+Returned class:  Returned code:
+nil              nil                               (no more events)
+"size"           nil                               (Window has been resized by user)
+"refresh"        nil                               (Window needs to be redrawn)
+"mouse"          "ld", "lu", "md", "mu" "rd" "ru"  (A mouse button was pressed)
+                 You'll get no message for right mouse if the window has a menu bar.
+                 Mouse is the only event which returns mouse position.
+"close"          nil                               (User has clicked the close gadget)
+"key"            pressed key as string
+"menu"           code of selected menu
+"gadget"         code of gadget
+
+------------------------------------------------------------------------------------------
+Siamiga.filebox([title], [default dir])
+Opens a filerequester.
+Returns the name of the selected file, or nil if the requester has been cancelled.
+Example: file = Siamiga.filebox("Choose a file", "s:")
+
+------------------------------------------------------------------------------------------
+Siamiga.messagebox(window, title, text, buttons)
+Opens a dialog box (EasyRequest) with the given parameters. You can use \n for multiline text.
+You can separate buttons with the | sign.
+Warning: don't use %s, %d etc. for the text or the buttons.
+The window parameter can be nil. But in this case the colon form doesn't work.
+Return values are like EasyRequest: 0 for the right button, 1 for the left, 2 etc. for the following
+Example:
+  result = Siamiga.messagebox(win1, "Warning", "Mouse moved", "OK")
+  result = Siamiga.messagebox(win1, "", "line 1\nline2", "Ok|Cancel")
+
+------------------------------------------------------------------------------------------
+Siamiga.queryscreen()
+Returns width, height and depth of the default public screen.
+Example: print(Siamiga.queryscreen())
+
+------------------------------------------------------------------------------------------
+Siamiga.addmenu(window, code, type, label, [key])
+Adds a menu element to the given window. You can only add menus between createwindow and
+openwindow.
+Code ist returned in getmessage for menu events.
+Type can be "menu", "item" or "sub". The first entry must be "menu".
+Label ist the string shown when the menu is visible. If the label is "barlabel" then a
+line is drawn.
+Key is the shortcut. It can be used with the right Amiga key to select a menu per keyboard.
+Example: win1:addmenu(32, "menu", "File")
+         win1:addmenu(15, "item", "Open", "O")
+         win1:addmenu(0 , "item", "barlabel")
+
+------------------------------------------------------------------------------------------
+Siamiga.addgadget(window, code, type, left, top, width, height, label, [default], [min], [max])
+Type can be "button", "check", "integer", "string", "hslider" or "vslider". Gadgets can
+only be added between createwindow and openwindow. Code ist returned in button events.
+Except of buttons the label is printed left the gadget.
+Returns a gadget handle.
+Example: g1 = win1:addgadget(10, "button", 10, 20, 50, 15, "Cancel")
+         g2 = win1:addgadget(11, "check", 10, 20, 50, 15, "Cheese", true)
+         g3 = win1:addgadget(12, "integer", 10, 20, 50, 15, 99)
+         g4 = win1:addgadget(13, "string", 10, 20, 50, 15, "Name", "Haegar")
+         g5 = win1:addgadget(14, "hslider", 10, 20, 50, 15, "Volume", 33)
+
+------------------------------------------------------------------------------------------
+Siamiga.__gc
+The garbage collector closes the window and frees the RAM for gadgets and menus.
+
+
+==========================================================================================
+                               Sigadget table
+------------------------------------------------------------------------------------------
+Sigadget.set(gadget, value)
+Changes the value of the gadget except of button gadgets.
+Example: g2:set(false)
+
+------------------------------------------------------------------------------------------
+Sigadget.get(gadget)
+Returns the value of the gadget except of button gadgets.
+Example: print(g3.get())
+
+
+==========================================================================================
+                               Sipicture table
+------------------------------------------------------------------------------------------
+Sipicture.load(filename)
+Loads the picture with the help of the datatypes library. You can load any graphic format
+for which you have installed a datatype. Transparency is ignored.
+Returns picture handle.
+BUG: Doesn't work well with screen depth <=8 because the pens are released after loading.
+Example: pic = Sipicture.load("work:smily.gif")
+
+------------------------------------------------------------------------------------------
+Sipicture.put(picture, window, left, top)
+Blits a picture at position left,top to the window.
+Example: pic:put(win1, 15, 30)
+
+------------------------------------------------------------------------------------------
+Sipicture.get(window, left, top, width, height)
+Graps a picture from a window.
+Returns a picture handle.
+Example: pic = Sipicture.get(win1, 23, 54, 32, 32)
+
+------------------------------------------------------------------------------------------
+Sipicture.free(picture)
+Frees the RAM for a picture.
+Example: pic:free()
+
+------------------------------------------------------------------------------------------
+Sipicture.__gc
+The garbage collector just calls Sipicture.free().
+
+End of file.
