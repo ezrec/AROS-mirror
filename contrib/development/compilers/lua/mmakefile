@@ -1,5 +1,0 @@
-include $(TOP)/config/make.cfg
-
-#MM contrib-development-lua 
-contrib-development-lua :
-	$(MAKE) CC=$(AROS_CC)

@@ -730,6 +730,19 @@ union luai_Cast { double l_d; long l_l; };
 ** without modifying the main part of the file.
 */
 
+// defines for AROS
+#undef LUA_LDIR
+#undef LUA_CDIR
+#undef LUA_PATH_DEFAULT
+#undef LUA_CPATH_DEFAULT
+
+#define LUA_LDIR	"!/lua/"
+#define LUA_CDIR	"!/"
+#define LUA_PATH_DEFAULT  \
+		"./?.lua;"  LUA_LDIR"?.lua;"  LUA_LDIR"?/init.lua;" \
+		             LUA_CDIR"?.lua;"  LUA_CDIR"?/init.lua"
+#define LUA_CPATH_DEFAULT ""
+
 
 
 #endif

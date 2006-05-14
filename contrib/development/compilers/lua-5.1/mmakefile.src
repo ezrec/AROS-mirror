@@ -1,0 +1,8 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-development : contrib-development-lua
+
+%common
+

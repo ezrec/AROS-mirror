@@ -1,0 +1,43 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+COREFILES :=	lapi lcode ldebug ldo ldump lfunc lgc llex lmem \
+		lobject lopcodes lparser lstate lstring ltable ltm  \
+		lundump lvm lzio
+
+# files to build the linker lib 'lua'
+LIBFILES :=	lauxlib lbaselib ldblib liolib lmathlib loslib ltablib \
+		lstrlib loadlib linit $(COREFILES)
+
+# files to build the interpreter 'lua'
+LUAFILES :=	lua $(COREFILES)
+
+# files to build the precompiler 'luac'
+LUACFILES :=	luac print $(COREFILES)
+
+HEADERS :=	lua.h luaconf.h lualib.h lauxlib.h ../etc/lua.hpp
+
+EXEDIR :=	$(CONTRIBDIR)/Development/Lua
+
+#MM- contrib-development-lua : contrib-development-lua-lua \
+#MM  contrib-development-lua-luac \
+#MM  includes-copy
+
+#MM contrib-development-lua-lib :
+%build_linklib mmake=contrib-development-lua-lib libname=lua files=$(LIBFILES)
+
+#MM contrib-development-lua-lua : includes linklibs contrib-development-lua-lib
+%build_prog mmake=contrib-development-lua-lua progname=Lua files=$(LUAFILES) \
+    targetdir=$(EXEDIR) uselibs="arosc m lua"
+
+#MM contrib-development-lua-luac : includes linklibs contrib-development-lua-lib
+%build_prog mmake=contrib-development-lua-luac progname=Luac files=$(LUACFILES) \
+    targetdir=$(EXEDIR) uselibs="arosc m lua"
+
+#MM
+includes-copy :
+%copy_includes includes=$(HEADERS) path=lua dir=
+
+%common
+
