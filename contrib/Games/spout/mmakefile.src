@@ -1,10 +1,10 @@
 include $(TOP)/config/make.cfg
 
 #MM- contrib-games : contrib-games-spout
-#MM- lbreakout2 : contrib-games-spout-quick
+#MM- spout : contrib-games-spout-quick
 
 #MM- contrib-games-quick : contrib-games-spout-quick
-#MM- lbreakout2-quick : contrib-games-lbreakout2-quick
+#MM- spout-quick : contrib-games-spout-quick
 
 %build_with_configure mmake=contrib-games-spout nix=yes \
 	extraoptions="--disable-sdl-test" \
