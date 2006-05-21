@@ -2,7 +2,22 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-development : contrib-development-lua
+EXEDIR := $(CONTRIBDIR)/Development/Lua
+
+#MM- contrib-development : contrib-development-lua \
+#MM contrib-development-lua-icons \
+#MM contrib-development-lua-doc \
+#MM contrib-development-lua-test \
+#MM contrib-development-lua-test-amilua
+
+%copy_dir_recursive mmake=contrib-development-lua-doc \
+    src=doc dst=$(EXEDIR)/doc
+
+%copy_dir_recursive mmake=contrib-development-lua-test \
+    src=test dst=$(EXEDIR)/test
+
+%copy_dir_recursive mmake=contrib-development-lua-test-amilua \
+    src=test-amilua dst=$(EXEDIR)/test-amilua
 
 %common
 

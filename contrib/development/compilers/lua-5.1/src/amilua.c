@@ -18,6 +18,9 @@
 #include "lualib.h"
 #include "lsiamigalib.h"
 
+#include <proto/dos.h>
+#include <proto/asl.h>
+#include <workbench/startup.h>
 
 static lua_State *globalL = NULL;
 
@@ -251,6 +254,49 @@ static int handle_script (lua_State *L, char **argv, int n) {
   return report(L, status);
 }
 
+static int handle_wb_script (lua_State *L, char **argv)
+{
+  int status;
+  struct FileRequester *freq=NULL;
+  struct WBStartup *startup = (struct WBStartup *) argv;
+  BPTR olddir = (BPTR)-1;
+  BPTR parent = (BPTR)-1;
+  BPTR parentlock = (BPTR)-1;
+  char *fname = NULL;
+        
+  if (startup->sm_NumArgs == 1) {
+    freq = AllocAslRequestTags(ASL_FileRequest,
+              ASLFR_TitleText, "Open Lua script",
+              ASLFR_RejectIcons, TRUE, 
+              TAG_DONE);
+    if (freq) {
+      if (AslRequest(freq, NULL)) {
+        parentlock = Lock(freq->fr_Drawer, ACCESS_READ);
+        if (parentlock) {
+          olddir = CurrentDir(parentlock);
+          fname = freq->fr_File;
+        }
+      }
+    }
+  }
+  else {
+    parent = startup->sm_ArgList[1].wa_Lock;
+    fname = startup->sm_ArgList[1].wa_Name;
+    olddir = CurrentDir(parent);
+  }
+  if (fname) {
+    status = luaL_loadfile(L, fname);
+    if (status == 0)
+      status = docall(L, 0, 0);
+    else
+      lua_pop(L, 0);
+  }
+  if (olddir != (BPTR)-1) CurrentDir(olddir);
+  if (parentlock != (BPTR)-1) UnLock(parentlock);
+
+  FreeAslRequest(freq);
+  return report(L, status);
+}
 
 static int collectargs (char **argv, int *pi, int *pv, int *pe) {
   int i;
@@ -335,26 +381,33 @@ static int pmain (lua_State *L) {
   lua_gc(L, LUA_GCRESTART, 0);
   s->status = handle_luainit(L);
   if (s->status != 0) return 0;
-  script = collectargs(argv, &has_i, &has_v, &has_e);
-  if (script < 0) {  /* invalid args? */
-    print_usage();
-    s->status = 1;
-    return 0;
+  if (s->argc == 0) {
+    freopen("con:10/10/400/180/AmiLua output/auto/close", "r+", stdout);
+    freopen("con:10/100/400/180/AmiLua error/auto/close", "r+", stderr);
+    s->status = handle_wb_script(L, argv);
   }
-  if (has_v) print_version();
-  s->status = runargs(L, argv, (script > 0) ? script : s->argc);
-  if (s->status != 0) return 0;
-  if (script)
-    s->status = handle_script(L, argv, script);
-  if (s->status != 0) return 0;
-  if (has_i)
-    dotty(L);
-  else if (script == 0 && !has_e && !has_v) {
-    if (lua_stdin_is_tty()) {
-      print_version();
-      dotty(L);
+  else {  
+    script = collectargs(argv, &has_i, &has_v, &has_e);
+    if (script < 0) {  /* invalid args? */
+      print_usage();
+      s->status = 1;
+      return 0;
     }
-    else dofile(L, NULL);  /* executes stdin as a file */
+    if (has_v) print_version();
+    s->status = runargs(L, argv, (script > 0) ? script : s->argc);
+    if (s->status != 0) return 0;
+    if (script)
+      s->status = handle_script(L, argv, script);
+    if (s->status != 0) return 0;
+    if (has_i)
+      dotty(L);
+    else if (script == 0 && !has_e && !has_v) {
+      if (lua_stdin_is_tty()) {
+        print_version();
+        dotty(L);
+      }
+      else dofile(L, NULL);  /* executes stdin as a file */
+    }
   }
   return 0;
 }

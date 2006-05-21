@@ -4,7 +4,7 @@
 ** See Copyright Notice in lua.h
 */
 
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 
 #include <stdlib.h>
@@ -18,7 +18,6 @@
 #include <proto/datatypes.h>
 #include <proto/gadtools.h>
 
-#include <libraries/asl.h>
 #include <datatypes/pictureclass.h>
 #include <clib/alib_protos.h>
 
@@ -43,6 +42,7 @@ static struct TextAttr gadfont = { "topaz.font", 8, 0, 0 }; // default values, w
 #define SIAMIGA "Siamiga"
 #define SIGADGET "Sigadget"
 #define MAXMENUITEMS (60)
+#define MAXLABELS (15)
 
 typedef struct Sigadget
 {
@@ -50,6 +50,8 @@ typedef struct Sigadget
     struct Gadget *gad;
     ULONG type;
     char *txt;
+    STRPTR labels[MAXLABELS + 1]; // must be 0 terminated
+    int label_cnt;
     struct Window *win;
 } Sigadget;
 
@@ -93,12 +95,15 @@ static Siamiga *pushSiamiga(lua_State *L)
     return siam;
 }
 
+#if 0
+// disabled to get rid of warning, enable me when you need me
 static Sigadget *toSigadget(lua_State *L, int index)
 {
     Sigadget **psg = (Sigadget **)lua_touserdata(L, index);
     if (psg == NULL) luaL_typerror(L, index, SIGADGET);
     return *psg;
 }
+#endif
 
 static Sigadget *checkSigadget(lua_State *L, int index)
 {
@@ -168,8 +173,8 @@ static int siamiga_openwindow(lua_State *L)
             WA_Top, siam->top,
             siam->width  ? WA_Width : TAG_IGNORE, siam->width,
             siam->height ? WA_Height: TAG_IGNORE, siam->height,
-            siam->title  ? WA_Title : TAG_IGNORE, (ULONG)siam->title,
-            WA_PubScreen, (ULONG)screen,
+            siam->title  ? WA_Title : TAG_IGNORE, (IPTR)siam->title,
+            WA_PubScreen, (IPTR)screen,
             WA_DragBar, TRUE,
             WA_CloseGadget, TRUE,
             WA_DepthGadget, TRUE,
@@ -183,8 +188,8 @@ static int siamiga_openwindow(lua_State *L)
             WA_MaxWidth, ~0,
             WA_MaxHeight, ~0,
             WA_IDCMP, IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_MOUSEBUTTONS | IDCMP_NEWSIZE | IDCMP_REFRESHWINDOW |
-                BUTTONIDCMP | CHECKBOXIDCMP	| INTEGERIDCMP | SLIDERIDCMP | STRINGIDCMP | IDCMP_MENUPICK ,
-            WA_Gadgets, (ULONG)siam->glist,
+                BUTTONIDCMP | CHECKBOXIDCMP | INTEGERIDCMP | SLIDERIDCMP | MXIDCMP | CYCLEIDCMP | STRINGIDCMP | IDCMP_MENUPICK ,
+            WA_Gadgets, (IPTR)siam->glist,
             WA_NewLookMenus, TRUE,
             TAG_END);
 
@@ -412,13 +417,13 @@ static int siamiga_createpen(lua_State *L)
         struct ColorMap * cm = screen->ViewPort.ColorMap;
 
         int r = luaL_checknumber(L, 1);
-        luaL_argcheck(L, (r >= 0) || (r < 256), 1, "Parameter 'r' must be between 0 and 255");
+        luaL_argcheck(L, (r >= 0) && (r < 256), 1, "Parameter 'r' must be between 0 and 255");
 
         int g = luaL_checknumber(L, 2);
-        luaL_argcheck(L, (g >= 0) || (g < 256), 2, "Parameter 'g' must be between 0 and 255");
+        luaL_argcheck(L, (g >= 0) && (g < 256), 2, "Parameter 'g' must be between 0 and 255");
 
         int b = luaL_checknumber(L, 3);
-        luaL_argcheck(L, (b >= 0) || (b < 256), 3, "Parameter 'b' must be between 0 and 255");
+        luaL_argcheck(L, (b >= 0) && (b < 256), 3, "Parameter 'b' must be between 0 and 255");
 
         LONG pen = ObtainBestPen(cm, r * 0x01010101UL, g * 0x01010101UL, b * 0x01010101UL, TAG_END);
         if (pen < 0) luaL_error(L, "Can't create pen");
@@ -491,10 +496,12 @@ static int siamiga_getmessage(lua_State *L)
         struct IntuiMessage *message = GT_GetIMsg(win->UserPort);
         if (message)
         {
-            switch(message->Class)
+	    switch(message->Class)
             {
-                case IDCMP_GADGETUP:
-                    lua_pushliteral(L, "gadget");
+		case IDCMP_GADGETDOWN:
+		case IDCMP_GADGETUP:
+                    ((struct Gadget*)(message->IAddress))->UserData = (APTR)(LONG)message->Code;  // active cycle gadget entry
+		    lua_pushliteral(L, "gadget");
                     lua_pushnumber(L, ((struct Gadget*)message->IAddress)->GadgetID );
                     msg_cnt = 2;
                     break;
@@ -579,9 +586,9 @@ static int siamiga_filebox(lua_State *L)
     const char *dir = lua_tostring(L, 2);
 
     struct FileRequester *fr = AllocAslRequestTags(ASL_FileRequest,
-        title ? ASLFR_TitleText : TAG_IGNORE, (ULONG)title,
-        dir ? ASLFR_InitialDrawer : TAG_IGNORE, (ULONG)dir,
-        screen ? ASLFR_Screen : TAG_IGNORE, (ULONG)screen,
+        title ? ASLFR_TitleText : TAG_IGNORE, (IPTR)title,
+        dir ? ASLFR_InitialDrawer : TAG_IGNORE, (IPTR)dir,
+        screen ? ASLFR_Screen : TAG_IGNORE, (IPTR)screen,
         TAG_END);
 
     if (fr)
@@ -710,6 +717,23 @@ static int siamiga_addmenu(lua_State *L)
     return 0;
 }
 
+static void copylabels(lua_State *L, Sigadget *sig)
+{
+    int i;
+    int argcnt = lua_gettop(L);
+    if ((argcnt < 9) || (argcnt > MAXLABELS + 8)) luaL_error(L, "Wrong number of labels");
+    STRPTR *label_ptr = sig->labels;
+    for (i = 9; i <= argcnt; i++)
+    {
+        const char *newlabel = lua_tostring(L, i);
+        if (newlabel == NULL) luaL_error(L, "You can't use 'nil' for gadget label");
+        *label_ptr = strdup(newlabel);
+        if (*label_ptr == NULL) luaL_error(L, "Can't allocate RAM for label");
+        label_ptr++;
+        sig->label_cnt++;
+    }
+}
+
 static int siamiga_addgadget(lua_State *L)
 {
     Siamiga *siam = checkSiamiga(L, 1);
@@ -744,6 +768,7 @@ static int siamiga_addgadget(lua_State *L)
     ng.ng_GadgetText = sig->txt;
     ng.ng_GadgetID = id;
     ng.ng_Flags = 0;
+    ng.ng_UserData = NULL;
 
     if (strcmp(type, "button") == 0)
     {
@@ -767,7 +792,7 @@ static int siamiga_addgadget(lua_State *L)
     {
         const char *def = lua_tostring(L, 9); // can be NULL
         siam->gad = CreateGadget(STRING_KIND, siam->gad, &ng,
-            GTST_String, (ULONG)def, GA_TabCycle, TRUE, TAG_END);
+            GTST_String, (IPTR)def, GA_TabCycle, TRUE, TAG_END);
         sig->type = STRING_KIND;
     }
     else if (strcmp(type, "hslider") == 0)
@@ -799,6 +824,24 @@ static int siamiga_addgadget(lua_State *L)
             PGA_Freedom, LORIENT_VERT,
             TAG_END);
         sig->type = SLIDER_KIND;
+    }
+    else if (strcmp(type, "radio") == 0)
+    {
+        copylabels(L, sig);
+        siam->gad = CreateGadget(MX_KIND, siam->gad, &ng,
+            GTMX_Labels, sig->labels, 
+            GA_RelVerify, TRUE,
+            TAG_END);
+        sig->type = MX_KIND;
+    }
+    else if (strcmp(type, "cycle") == 0)
+    {
+        copylabels(L, sig);
+        siam->gad = CreateGadget(CYCLE_KIND, siam->gad, &ng,
+            GTCY_Labels, sig->labels, 
+            GA_RelVerify, TRUE,
+            TAG_END);
+        sig->type = CYCLE_KIND;
     }
     else
     {
@@ -862,6 +905,11 @@ static int siamiga_gc(lua_State *L)
         next = sig->next;
         free(sig->txt);
         free(sig);
+        for (i = 0; i < sig->label_cnt; i++)
+        {
+            D(bug("Free label %s\n", sig->labels[i]));
+            free(sig->labels[i]);
+        }
         sig = next;
     }
 
@@ -913,7 +961,19 @@ static int sigadget_set(lua_State *L)
             break;
         case STRING_KIND:
             strvalue = (char *)lua_tostring(L, 2);
-            GT_SetGadgetAttrs(sig->gad, win, NULL, GTST_String, (ULONG)strvalue, TAG_END);
+            GT_SetGadgetAttrs(sig->gad, win, NULL, GTST_String, (IPTR)strvalue, TAG_END);
+            break;
+        case MX_KIND:
+            value = lua_tonumber(L, 2) - 1; // Lua indices start with 1, gadtools with 0
+            luaL_argcheck(L, (value >= 0) && (value < sig->label_cnt), 2, "Parameter must be between 1 and label count");
+            sig->gad->UserData = (APTR)value;
+            GT_SetGadgetAttrs(sig->gad, win, NULL, GTMX_Active, value, TAG_END);
+            break;
+        case CYCLE_KIND:
+            value = lua_tonumber(L, 2) - 1;
+            luaL_argcheck(L, (value >= 0) && (value < sig->label_cnt), 2, "Parameter must be between 1 and label count");
+            sig->gad->UserData = (APTR)value;
+            GT_SetGadgetAttrs(sig->gad, win, NULL, GTCY_Active, value, TAG_END);
             break;
         default:
             luaL_error(L, "Wrong gadget type");
@@ -933,22 +993,30 @@ static int sigadget_get(lua_State *L)
     switch (sig->type)
     {
         case CHECKBOX_KIND:
-            changed = GT_GetGadgetAttrs(sig->gad, win, NULL, GTCB_Checked, (ULONG)&result, TAG_END);
+            changed = GT_GetGadgetAttrs(sig->gad, win, NULL, GTCB_Checked, (IPTR)&result, TAG_END);
             lua_pushboolean(L, result);
             break;
         case SLIDER_KIND:
-            changed = GT_GetGadgetAttrs(sig->gad, win, NULL, GTSL_Level, (ULONG)&result, TAG_END);
+            changed = GT_GetGadgetAttrs(sig->gad, win, NULL, GTSL_Level, (IPTR)&result, TAG_END);
             lua_pushnumber(L, result);
             break;
         case INTEGER_KIND:
-            changed = GT_GetGadgetAttrs(sig->gad, win, NULL, GTIN_Number, (ULONG)&result, TAG_END);
+            changed = GT_GetGadgetAttrs(sig->gad, win, NULL, GTIN_Number, (IPTR)&result, TAG_END);
             lua_pushnumber(L, result);
             break;
         case STRING_KIND:
             changed = GT_GetGadgetAttrs(sig->gad, win, NULL, GTST_String, (IPTR)&result, TAG_END);
             lua_pushstring(L, (char *)result);
             break;
-        default:
+        case MX_KIND:
+            changed = 1;
+	    lua_pushnumber(L, (int)sig->gad->UserData + 1); // Lua indices start with 1
+            break;
+        case CYCLE_KIND:
+            changed = 1;
+            lua_pushnumber(L, (int)sig->gad->UserData + 1);
+            break;
+	default:
             luaL_error(L, "Wrong gadget type");
     }
     if (changed != 1)
@@ -981,12 +1049,15 @@ typedef struct Picture
     int width, height, depth;
 } Picture;
 
+#if 0
+// disabled to get rid of warning, enable me when you need me
 static Picture *toPicture(lua_State *L, int index)
 {
     Picture *pi = (Picture *)lua_touserdata(L, index);
     if (pi == NULL) luaL_typerror(L, index, SIPICTURE);
     return pi;
 }
+#endif
 
 static Picture *checkPicture(lua_State *L, int index)
 {

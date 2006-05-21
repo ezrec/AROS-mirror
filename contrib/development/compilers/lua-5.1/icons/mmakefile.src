@@ -1,0 +1,13 @@
+# Copyright © 2006, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+EXEDIR := $(CONTRIBDIR)/Development/Lua
+
+ICONS := AmiLua
+
+%build_icons mmake=contrib-development-lua-icons icons=$(ICONS) \
+             dir=$(EXEDIR)
+
+%common

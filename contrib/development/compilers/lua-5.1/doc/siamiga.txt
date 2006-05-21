@@ -162,8 +162,8 @@ Example: win1:addmenu(32, "menu", "File")
 
 ------------------------------------------------------------------------------------------
 Siamiga.addgadget(window, code, type, left, top, width, height, label, [default], [min], [max])
-Type can be "button", "check", "integer", "string", "hslider" or "vslider". Gadgets can
-only be added between createwindow and openwindow. Code ist returned in button events.
+Type can be "button", "check", "integer", "string", "hslider", "vslider", "cycle" or "radio".
+Gadgets can only be added between createwindow and openwindow. Code ist returned in button events.
 Except of buttons the label is printed left the gadget.
 Returns a gadget handle.
 Example: g1 = win1:addgadget(10, "button", 10, 20, 50, 15, "Cancel")
@@ -171,6 +171,8 @@ Example: g1 = win1:addgadget(10, "button", 10, 20, 50, 15, "Cancel")
          g3 = win1:addgadget(12, "integer", 10, 20, 50, 15, 99)
          g4 = win1:addgadget(13, "string", 10, 20, 50, 15, "Name", "Haegar")
          g5 = win1:addgadget(14, "hslider", 10, 20, 50, 15, "Volume", 33)
+         g6 = win1:addgadget(15, "cycle", 10, 20, 50, 15, "Label1", "Label2", ...)
+         g7 = win1:addgadget(16, "radio", 10, 20, 50, 15, "Label1", "Label2", ...)
 
 ------------------------------------------------------------------------------------------
 Siamiga.__gc
@@ -181,7 +183,8 @@ The garbage collector closes the window and frees the RAM for gadgets and menus.
                                Sigadget table
 ------------------------------------------------------------------------------------------
 Sigadget.set(gadget, value)
-Changes the value of the gadget except of button gadgets.
+Changes the value of the gadget except of button gadgets. For radio and cycle gadgets the
+number of the active entry is changed. Indices start with 1.
 Example: g2:set(false)
 
 ------------------------------------------------------------------------------------------
