@@ -8,9 +8,12 @@ Status update
 New snapshot!
 -------------
 
-After some time of testing, a new snapshot of the Amiga Research Operating System has been released, based on Feb. 7 nightly build. We encourage you to download, try it and eventually report bugs. Minimum specs for native version of AROS is a standard PC with PS/2 mouse and keyboard (USB not supported), a VESA compatible video card, 64 MB of system RAM and 4x ATAPI CD-ROM drive. This release offers audio and network support, limited to comptabile chipsets and adaptors. New snapshot is available in this site's download page.
-
-
-
-
+After some time of testing, a new snapshot of the Amiga Research
+Operating System has been released, based on Feb. 7 nightly build. We
+encourage you to download, try it and eventually report bugs. Minimum
+specs for native version of AROS is a standard PC with PS/2 mouse and
+keyboard (USB not supported), a VESA compatible video card, 64 MB of
+system RAM and 4x ATAPI CD-ROM drive. This release offers audio and
+network support, limited to comptabile chipsets and adaptors. The new
+snapshot is available in this site's download page.
 

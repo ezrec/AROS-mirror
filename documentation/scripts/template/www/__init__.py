@@ -41,7 +41,7 @@ def makeTemplates():
         for option in config.options( 'misc' ):
             _M[option] = config.get( 'misc', option )
         
-        file( dst, 'w' ).write( makePage( _T, _N, _M, MIRRORS_DATA ) )
+        file( dst, 'w' ).write( makePage( _T, _N, _M, MIRRORS_DATA, language ) )
 
     for language in os.listdir( LANG_DIR ):
         if ignore( language ): continue 

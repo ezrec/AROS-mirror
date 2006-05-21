@@ -5,7 +5,7 @@ AROS Debuggausopas
 :Authors:   David Le Corfec
 :Copyright: Copyright © 2004, The AROS Development Team
 :Version:   $Revision: 20980 $
-:Date:      $Date: 2004-02-19 06:01:55 +0200 (to, 19 helmiÂ  2004) $
+:Date:      $Date$
 :Status:    Work in progress.
 
 Tämä manuaali selvittää AROS:in debuggaukselle oleelliset optiot.

@@ -5,7 +5,7 @@ AROS järjestelmän kehitysmanuaali
 :Authors:   Aaron Digulla, Bernardo Innocenti
 :Copyright: Copyright © 2001, The AROS Development Team
 :Version:   $Revision: 21277 $
-:Date:      $Date: 2004-03-18 09:48:09 +0200 (to, 18 maalis 2004) $
+:Date:      $Date$
 
 .. Warning::
 
@@ -72,8 +72,8 @@ alaisuudessa AROS:in juuripolkuun, täytyy seuraavien ehtojen toteutua:
       joka täyttää kohdan 2. ehdot on sallittu.
    b. Jos koodista valmistuu kirjasto, lisenssin täytyy sallia sen
       linkittämisen ilman ongelmia ohjelmiin ja kirjastoihin jotka käyttävät
-	  eri lisenssiä. Tämä tarkoittaa sitä että GPL:n alaisuudessa julkaistut
-	  kirjastot eivät ole sallittuja (toisin kuin LGPL:n alaiset).
+      eri lisenssiä. Tämä tarkoittaa sitä että GPL:n alaisuudessa julkaistut
+      kirjastot eivät ole sallittuja (toisin kuin LGPL:n alaiset).
 
 4. Lisenssi tulee ilmetä selvä sanaisesti tiedostossa ``LEGAL`` jonka tulee
    sijaita kyseessä olevan lähdekoodin juurihakemistossa.
@@ -503,7 +503,7 @@ Tämä osa kuvaa kuinka portata AROS uudenlaiselle raudalle.
 
 11. Siirry bin/$(ARCH)/AROS hakemistoon ja käynnistä "aros". Jos kaikki toimii
     niin kuin pitää, tulisi eteesi avautua AROS:in näyttö. Koska ei ole tapaa
-	jolla käyttöjärjestelmä voidaan sammuttaa "siististi", täytyy sinun
-	käyttää CTRL-C:tä terminaalissa josta AROS:in käynnistit sen toiminnan
-	keskeyttääksesi (tai klikata päänäytön sulkumerkkiä jos sillä sellainen
-	on).
+    jolla käyttöjärjestelmä voidaan sammuttaa "siististi", täytyy sinun
+    käyttää CTRL-C:tä terminaalissa josta AROS:in käynnistit sen toiminnan
+    keskeyttääksesi (tai klikata päänäytön sulkumerkkiä jos sillä sellainen
+    on).

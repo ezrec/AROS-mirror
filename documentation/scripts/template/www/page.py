@@ -1,85 +1,87 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2002, The AROS Development Team. All rights reserved.
+# Copyright © 2002-2006, The AROS Development Team. All rights reserved.
 # $Id$
+
+import os
 
 from html import *
 from components import *
 
-def makePage( _T, _N, _M, MIRRORS_DATA ):
+def makePage( _T, _N, _M, MIRRORS_DATA, lang ):
     navigation = Tree \
     ( [
-        A( 'Home', href='%(BASE)sindex.php' ),
+        A( 'Home', href=makeURL( '/', lang ) ),
         BR(),
-        A( _N['news'], href='%(BASE)snews/' ),
-        Tree ( A( _N['archive'], href='%(BASE)snews/archive/' ) ),
+        A( _N['news'], href=makeURL( 'news/', lang ) ),
+        Tree ( A( _N['archive'], href=makeURL( 'news/archive/', lang ) ) ),
         BR(),
-        A( _N['introduction'], href='%(BASE)sintroduction/' ),
+        A( _N['introduction'], href=makeURL( 'introduction/', lang ) ),
         Tree \
         ( [
-            #A( _N['status'], href='%(BASE)sintroduction/status/everything.html' ),
-            A( _N['screenshots'], href='%(BASE)spictures/screenshots/' ),
-            A( _N['ports'], href='%(BASE)sintroduction/ports.php' ),
+            #A( _N['status'], href=makeURL('introduction/status/everything.html' ),
+            A( _N['screenshots'], href=makeURL( 'pictures/screenshots/', lang) ),
+            A( _N['ports'], href=makeURL( 'introduction/ports', lang ) ),
             A( _N['license'], href='%(BASE)slicense.html' )
         ] ),
         BR(),
-        A( _N['download'], href='%(BASE)sdownload.php' ),
+        A( _N['download'], href=makeURL( 'download', lang ) ),
         BR(),
         _N['documentation'],
         Tree \
         ( [
-            A( _N['users'], href='%(BASE)sdocumentation/users/index.php' ),
+            A( _N['users'], href=makeURL( 'documentation/users/', lang ) ),
             Tree \
             ( [
-                A( _N['installation'], href='%(BASE)sdocumentation/users/installation.php' ),
-                A( _N['using'], href='%(BASE)sdocumentation/users/using.php' ),
-                A( _N['shell'], href='%(BASE)sdocumentation/users/shell/index.php' ),
-                A( _N['faq'], href='%(BASE)sdocumentation/users/faq.php' ),
+                A( _N['installation'], href=makeURL( 'documentation/users/installation', lang ) ),
+                A( _N['using'], href=makeURL( 'documentation/users/using', lang ) ),
+                A( _N['shell'], href=makeURL( 'documentation/users/shell/index', lang ) ),
+                A( _N['faq'], href=makeURL( 'documentation/users/faq', lang ) ),
                 #_N['ports'],
-                #A( _N['links'], href='%(BASE)sdocumentation/users/links.php' )
+                #A( _N['links'], href=makeURL( 'documentation/users/links', lang ) )
             ] ),
-            A( _N['developers'], href='%(BASE)sdocumentation/developers/index.php' ),
+            A( _N['developers'], href=makeURL( 'documentation/developers/index', lang ) ),
             Tree \
             ( [
-                A( _N['contribute'], href='%(BASE)sdocumentation/developers/contribute.php' ),
-                A( 'Roadmap', href='%(BASE)sdocumentation/developers/roadmap.php' ),
+                A( _N['contribute'], href=makeURL( 'documentation/developers/contribute', lang ) ),
+                A( 'Roadmap', href=makeURL( 'documentation/developers/roadmap', lang ) ),
                 A( _N['bug-tracker'], href='http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse' ),
-                A( _N['working-with-subversion'], href='%(BASE)sdocumentation/developers/svn.php' ),
-                A( _N['compiling'],  href='%(BASE)sdocumentation/developers/compiling.php' ),
-                A( _N['application-development-manual'], href='%(BASE)sdocumentation/developers/app-dev/index.php' ),
-                A( _N['zune-application-development-manual'], href='%(BASE)sdocumentation/developers/zune-application-development.php' ),
-                A( _N['system-development-manual'], href='%(BASE)sdocumentation/developers/system-development.php' ),
-                A( _N['debugging-manual'], href='%(BASE)sdocumentation/developers/debugging.php' ),
-                A( _N['reference'], href='%(BASE)sdocumentation/developers/autodocs/index.php' ),
-                A( _N['specifications'], href='%(BASE)sdocumentation/developers/specifications/' ),
-                A( _N['ui-style-guide'], href='%(BASE)sdocumentation/developers/ui.php' ),
-                A( _N['documenting'], href='%(BASE)sdocumentation/developers/documenting.php' ),
-                #A( _N['translating'], href='%(BASE)sdocumentation/developers/translating' ),
-                A( _N['summaries'], href='%(BASE)sdocumentation/developers/summaries/' ),
-                A( _N['links'], href='%(BASE)sdocumentation/developers/links.php' )
+                A( _N['working-with-subversion'], href=makeURL( 'documentation/developers/svn', lang ) ),
+                A( _N['compiling'],  href=makeURL( 'documentation/developers/compiling', lang ) ),
+                A( _N['application-development-manual'], href=makeURL( 'documentation/developers/app-dev/index', lang ) ),
+                A( _N['zune-application-development-manual'], href=makeURL( 'documentation/developers/zune-application-development', lang ) ),
+                A( _N['system-development-manual'], href=makeURL( 'documentation/developers/system-development', lang ) ),
+                A( _N['debugging-manual'], href=makeURL( 'documentation/developers/debugging', lang ) ),
+                A( _N['reference'], href=makeURL( 'documentation/developers/autodocs/index', lang ) ),
+                A( _N['specifications'], href=makeURL( 'documentation/developers/specifications/', lang ) ),
+                A( _N['ui-style-guide'], href=makeURL( 'documentation/developers/ui', lang ) ),
+                A( _N['documenting'], href=makeURL( 'documentation/developers/documenting', lang ) ),
+                #A( _N['translating'], href=makeURL( 'documentation/developers/translating', lang ) ),
+                A( _N['summaries'], href=makeURL( 'documentation/developers/summaries/', lang ) ),
+                A( _N['links'], href=makeURL( 'documentation/developers/links', lang ) )
             ] )
         ] ),
         BR(),
-        A( _N['contact'], href='%(BASE)scontact.php' ),
+        A( _N['contact'], href=makeURL( 'contact', lang ) ),
         Tree \
         ( [
-            A( _N['mailing-lists'], href='%(BASE)scontact.php#mailing-lists' ),
-            #A( _N['forums'], href='%(BASE)scontact.php#forums' ),
-            A( _N['irc-channels'], href='%(BASE)scontact.php#irc-channels' )
+            A( _N['mailing-lists'], href=makeURL( 'contact', lang, 'mailing-lists' ) ),
+            #A( _N['forums'], href=makeURL( 'contact', lang, 'forums' ) ),
+            A( _N['irc-channels'], href=makeURL( 'contact', lang, 'irc-channels' ) )
         ] ),
         BR(),
-        A( _N['credits'], href='%(BASE)scredits.php' ),
-        A( 'Acknowledgements', href='%(BASE)sacknowledgements.php' ),
+        A( _N['credits'], href=makeURL( 'credits', lang ) ),
+        A( 'Acknowledgements', href=makeURL( 'acknowledgements', lang ) ),
         BR(),
         _N['pictures'],
         Tree \
         ( [
-            A( _N['developers'], href='%(BASE)spictures/developers/' ),
-            A( _N['developers-together'], href='%(BASE)spictures/developers-together/' )
+            A( _N['developers'], href=makeURL( 'pictures/developers/', lang ) ),
+            A( _N['developers-together'], href=makeURL( 'pictures/developers-together/', lang ) )
         ] ),
         BR(),
-        A( _N['sponsors'],href='%(BASE)ssponsors.php' ),
-        A( _N['linking'], href='%(BASE)slinking.php' ),
-        A( _N['links'], href='%(BASE)slinks.php' )
+        A( _N['sponsors'],href=makeURL( 'sponsors', lang ) ),
+        A( _N['linking'], href=makeURL( 'linking', lang ) ),
+        A( _N['links'], href=makeURL( 'links', lang ) )
     ] )
 
     counter = Img(
@@ -332,3 +334,31 @@ def makePage( _T, _N, _M, MIRRORS_DATA ):
     ] )
 
     return str( page )
+
+
+def makeURL( file, lang, section='' ):
+
+    # If the target doesn't exist, default to the English version
+    #srcFile = './' + file
+    #if srcFile[-1] == '/':
+    #    srcFile += 'index'
+    #srcFile += '.' + lang
+    #if not os.path.exists( srcFile ):
+    #    lang = 'en'
+
+    # Create the URL
+    url = '%(BASE)s' + file
+    if file[-1] == '/':
+        if lang != 'en':
+            url += 'index.' + lang + '.php'
+    else:
+        if lang != 'en':
+            url += '.' + lang
+        url += '.php'
+
+    # Add the section, if any
+    if section != '':
+        url += '#' + section
+
+    return url
+
