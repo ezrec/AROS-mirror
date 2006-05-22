@@ -1,0 +1,75 @@
+=============
+Status update
+=============
+
+:Autore:   Paolo Besser
+:Data:     2006-05-23
+
+AROS varca i confini
+--------------------
+
+Grazie a Neil Cafferkey, Adam Chodorowsky, Daniel Holmen e Paolo Besser, 
+aros.org ha finalmente le sue controparti finlandesi e italiane. Le traduzioni 
+di questo sito sono disponibili ai seguenti indirizzi:
+
+`aros.org in finlandese`__: www.aros.org/index.fi.php
+`aros.org in italiano`__: www.aros.org/index.it.php 
+
+La traduzione in finlandese è pressoché completa, mentre quella in Italiano, 
+molto più giovane, è ancora in fase di lavorazione. Il supporto multilingue 
+di aros.org prevede anche la lingua tedesca, ma la relativa traduzione si 
+ferma ancora a poche pagine. Se volete contribuire anche voi alla localizzazione 
+di questo sito, non vi resta che iscrivervi alla mailing list degli sviluppatori.
+
+__ http://www.aros.org/index.fi.php
+__ http://www.aros.org/index.it.php
+
+
+AROS vuol dire arte!
+--------------------
+
+Hogne "M0ns00n" Titlestad ha pubblicato Lunapaint v0.2 per i386/AROS. 
+L'applicazione può aprire e salvare i file, creare immagini e animazioni. 
+I problemi iniziali di stabilità sulla versione hosted di AROS sono sati risolti 
+e Lunapaint funziona egregiamente anche sulla versione native. Potete vedere 
+delle foto `qui`__ e leggere un'intervista interessante allo sviluppatore su 
+`The Aros Show`__. Scaricate Lunapaint dagli `Archivi`__ di aros-exec!
+
+__ http://aros-exec.org/modules/xcgal/thumbnails.php?album=23
+__ http://arosshow.blogspot.com/2006/04/this-is-interview-with-aros-developer.html
+__ http://archives.aros-exec.org/share/graphics/edit/lunapaint_v02.tar.bz2
+
+
+Altre notizie
+-------------
+
+Mathias Roslund ha convertito il famoso emulatore di 8 bit Commodore, 
+VICE, per tutte le piattaforme Amiga, AROS incluso. Si noti per cortesia che 
+la versione per AROS è ancora largamente sperimentale. La trovate `qui`__.
+
+Tomasz Wiszkowski ha portato `FryingPan`__ e `CoFEE`__ su AROS. FryingPan 
+è un software di masterizzazione per CD/DVD, mentre CoFEE serve a copiarli. 
+Lavorano solo parzialmente su AROS perché manca il supporto ai comandi ATAPI 
+e SCSI. Per velocizzare la loro implementazione, TeamAROS ha messo una 
+`nuova taglia`__
+
+Randy Vice e Oliver Adams hanno rinnovato il sito di `TeamAROS`__, con 
+una grafica più pulita e un servizio nuovo di zecca: gli "abbonamenti alle 
+taglie". Ora "potete supportare TeamAROS con un abbonamento mensile di 5 o 10 
+dollari, e ciò vi conferisce un voto sulla mailing list dei benefattori di 
+TeamAROS. Si tratta del metodo più veloce per contribuire continuamente ai 
+progetti di AROS, visto che PayPal continua a prelevare automaticamente la 
+cifra pattuita dal vostro conto, fino a che la taglia non è assegnata a 
+qualcuno".
+
+Bernd Roesch e Georg Steger stanno correggendo gli errori di Zune e aggiungendo 
+nuove feature, mentre tutti gli altri sviluppatori di AROS sono impegnati a 
+fare altrettanto con il resto del sistema operativo. 
+
+__ http://www.amidog.com/amiga/vice/index.html
+__ http://www.tbs-software.com/fp/
+__ http://www.tbs-software.com/fp/files/060430/AROS.lha
+__ http://thenostromo.com/teamaros2/?number=38
+__ http://thenostromo.com/teamaros2/
+
+

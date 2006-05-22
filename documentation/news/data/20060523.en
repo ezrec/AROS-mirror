@@ -1,0 +1,72 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2006-05-23
+
+Internationally AROS
+--------------------
+
+Thanks to Neil Cafferkey, Adam Chodorowsky, Daniel Holmen and Paolo Besser, 
+aros.org has now its finnish and italian counterparts. Translations of 
+this website are now available at these nice new addresses:
+
+`Finnish aros.org`__: www.aros.org/index.fi.php
+`Italian aros.org`__: www.aros.org/index.it.php 
+
+Finnish translation is almost complete, while Italian one is still 
+a work in progress. Aros.org does support german translation too, but only 
+few pages are already available. If you wish to contribute localizations of 
+our web pages, well... please apply to the development mailing list.
+
+__ http://www.aros.org/index.fi.php
+__ http://www.aros.org/index.it.php
+
+
+AROS means art
+--------------
+
+Hogne "M0ns00n" Titlestad has released Lunapaint v0.2 for i386/AROS. 
+The app can save and open projects, make animations and export images. 
+Initial stability issues in hosted AROS has been resolved, and Lunapaint works fine 
+also on native. You can see screenshots `here`__ and read a nice interview 
+on `The Aros Show`__. Download it from the `Archives`__!
+
+__ http://aros-exec.org/modules/xcgal/thumbnails.php?album=23
+__ http://arosshow.blogspot.com/2006/04/this-is-interview-with-aros-developer.html
+__ http://archives.aros-exec.org/share/graphics/edit/lunapaint_v02.tar.bz2
+
+
+Other news
+----------
+
+Mathias Roslund has ported the famous Commodore 8-bit computers line emulator 
+VICE to all Amiga platforms, AROS included. Please notice that the AROS 
+version is still higly experimental. You may find it `here`__.
+
+Tomasz Wiszkowski has ported `FryingPan`__ and `CoFEE`__ to AROS. FryingPan 
+is a CD/DVD burner software, while CoFEE is a CD/DVD copy program. 
+They works partially on AROS due to lack of ATAPI and SCSI commands. 
+In order to speed up their implementation, TeamAROS has 
+started a `new bounty`__
+
+Randy Vice and Oliver Adams have completely renewed `TeamAROS`__ website, with 
+a more stylish graphics and a brand new service: Bounty Subscriptions. Now 
+"you can support TeamAROS by a monthly subscription of $5 USD or $10 USD and 
+that gives you a vote on TeamAROS-Benefactors ML on which bounty deserves that 
+month's cash donation. This is a painless method since PayPal will deduct the 
+money automatically each month. Set and forget, can't be made much easier 
+than that"
+
+Bernd Roesch and Georg Steger are fixing bugs and adding new feature to Zune, 
+while other AROS developer are still working hard on other issues of the 
+operating system. 
+
+__ http://www.amidog.com/amiga/vice/index.html
+__ http://www.tbs-software.com/fp/
+__ http://www.tbs-software.com/fp/files/060430/AROS.lha
+__ http://thenostromo.com/teamaros2/?number=38
+__ http://thenostromo.com/teamaros2/
+
+

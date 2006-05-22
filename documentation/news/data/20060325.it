@@ -8,7 +8,7 @@ Aggiornamento
 Radeon hidd
 -----------
 
-Michal Schulz ce l'ha fatta un'altra volta! Il giorno che tutti i fanatici di 
+Michal Schulz ce l'ha fatta un'altra volta! Il giorno che tutti gli utenti di schede  
 ATI stavano aspettando finalmente è arrivato: AROS ha un driver, pardon, un hidd 
 per schede video Radeon con il quale è possibile accedere direttamente a questo 
 tipo di schede video, senza più passare attraverso le modalità VESA. Evviva!
