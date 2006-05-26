@@ -7,8 +7,8 @@ AROS Application Development Manual
 :Copyright: Copyright © 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
-:Status:    Unfinished; integration started (looong way left to go).
-:ToDo:      Integrate the various parts. Update and revise. Complete...
+:Status:    Unfinished
+:ToDo:      Complete...
 
 `Index <index>`__
 
@@ -30,15 +30,15 @@ Development tools used by AROS
 AROS uses several development tools in it's building system. A short list of
 the most important ones is:
 
-+ GNU make: the GNU version of the make program. It is assumed that the AROS
-  programmers are familiar with this program. Also the GNU specific extension
-  are used heavily throughout the source code. The GNU info pages about the
-  make program are a good way to look at the sources.
-+ MetaMake: A make supervisor program. It can keep track of targets
-  available in makefiles available in subdirectories a certain root directory.
++ *GNU make*: the GNU version of the make program. It is assumed that the AROS
+  programmers are familiar with this program. Also the GNU specific extensions
+  are used heavily. The GNU info pages about the `make` program are a good way
+  to look at the sources.
++ *MetaMake*: A make supervisor program. It can keep track of targets
+  available in makefiles available in subdirectories of a certain root directory.
   A more in depth explanation is given below.
-+ genmf: (generate makefile) A macro language for makefiles. It allows to
-  combine several make rules into one macro which can simplify writing
++ *genmf*: (generate makefile) A macro language for makefiles. It allows to
+  combine several make rules into one macro. This can simplify writing
   makefiles.
 + Several AROS specific tools that will be explained more when appropriate
   during the rest of this documentation.
@@ -50,18 +50,18 @@ MetaMake
 Introduction
 """"""""""""
 
-MetaMake is a version of make which allows to recursively build targets in the
+`MetaMake` is a version of make which allows to recursively build targets in the
 various directories of a project or even another project. It searches
 a directory tree for makefiles and all makefiles it finds for "metatargets" and
 then tries to build all metatargets. You can also specify a program which
-converts "source" makefiles into makefiles before MetaMake will invoke make.
+converts "source" makefiles into makefiles before `MetaMake` will invoke `make`.
 
 Syntax of the makefile
 """"""""""""""""""""""
 
-MetaMake uses normal makefile syntax but gives a special meaning to a
-comment line that start with #MM. This line is used to define so called
-metatargets. The name of the makefile itself is defined in the MetaMake
+`MetaMake` uses normal makefile syntax but gives a special meaning to a
+comment line that starts with ``#MM``. This line is used to define so called
+metatargets. The name of the makefile itself is defined in the `MetaMake`
 config file that is discussed in one of the following sections.
 
 There exist three ways of defining a metatarget in a makefile:
@@ -74,15 +74,16 @@ There exist three ways of defining a metatarget in a makefile:
   be build as metatargets and afterwards the given metatarget.
 
   This form also indicates that in this makefile also a makefile target is
-  present with the same.
+  present with the same name. This makefile target has to be defined, yet.
 
-+ This is the same definition as in the previous paragraph only now no
++ This is the same definition as in the previous paragraph, but now no
   normal make target is present in the makefile with the same name as the
-  metatarget::
+  metatarget. Using this 'virtual' metatargets speeds up the build because
+  `make` isn't called with this target::
 
       #MM- metatarget : metaprerequisites
 
-+ This form indicates the the make target on the next line is also a
++ This form indicates that the make target on the next line is also a
   metatarget but the prerequisites are no metaprerequisites::
 
       #MM
@@ -95,34 +96,34 @@ if one end every line with the \\ character and start the next line with
 How MetaMake works
 """"""""""""""""""
 
-When MetaMake is run, a metamake target to build is specified on the command
+When `MetaMake` is run, a metamake target to build is specified on the command
 line.
 
-At first MetaMake will build up a tree of all the makefiles present in
+At first `MetaMake` will build up a tree of all the makefiles present in
 a root directory and all subdirectories. At the same time it will also build
 a tree of all the metatargets and their dependencies.
 
 Next it will build all the metaprerequisites needed for this metatarget and
 then finally the metatarget itself. Actually one can look at it that every
 metaprerequisite becomes a metatarget when it needs to be build. For each of
-these metatargets a walk through of all the directories is done and in every
+these metatargets a walk through of all the directories is done. In every
 makefile where the metatarget is defined by the first or third way from the
-previous section make is called with the name of the target as a make
+previous section `make` is called with the name of the target as a `make`
 target.
 
-When MetaMake calls normal make also two variables are defined. $(TOP) has
-the value of the rootdirectory and $(CURDIR) the path relative to this root
+When `MetaMake` calls normal `make` also two variables are defined. $(TOP) has
+the value of the root directory and $(CURDIR) the path relative to this root
 directory.
 
 Autogenerated makefiles
 """""""""""""""""""""""
 
-Another feature of MetaMake is automatic generating a makefile from a source
+Another feature of `MetaMake` is automatic generating a makefile from a source
 makefile. When the directory tree is scanned for all the makefiles in every
 directory it is checked if a makefile is present with a .src suffix added.
 If it is there and is newer then the makefile present in that directory a
 script will be called to regenerate the makefile from the source makefile.
-What script that has to be called is defined in the configuration file.
+What script has to be called is defined in the configuration file.
 
 Examples
 """"""""
@@ -136,10 +137,10 @@ Example 1: normal dependencies
 
     #MM contrib-regina-module : setup linklibs includes contrib-regina-includes
 
-This example says that in this makefile a contrib-regina-module is present
-that has to be build but before building this metatarget first the
-metatargets setup, linklibs, ... have to be build; e.g. that the includes
-linklibs etc. have to be present before that this module can be build.
+This example says that in this makefile a `contrib-regina-module` is present
+that has to be build. Before building this metatarget first the
+metatargets `setup`, `linklibs`, ... have to be build; this ensures that the includes,
+linklibs etc. have to be present before this module can be build.
 
 Example 2: metatarget consisting of submetatargets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -151,10 +152,10 @@ Example 2: metatarget consisting of submetatargets
    #MM      contrib-freetype-fonts \
    #MM      contrib-freetype-demos
 
-Here actually is said that the contrib-freetype metatarget consists of
-building linklib, graph, fonts and demos of freetype. If some extra work
+Here actually is said that the `contrib-freetype` metatarget requires building of
+`linklib`, `graph`, `fonts` and `demos` of `freetype`. If some extra work
 needs to be done in the makefile where this metatarget is, the definition can
-start with '#MM ' and a normal make target 'contrib-freetype' has to be
+start with ``#MM`` and a normal `make` target `contrib-freetype` has to be
 present in the makefile.
 
 Also the use of the line continuation for the metatarget definition is shown
@@ -169,12 +170,12 @@ Example 3: Quick building of a target
     #MM
     workbench-utilities-quick : workbench-utilities
 
-When a user executes MetaMake with as argument workbench-utilities make will
+When a user executes `MetaMake` with as argument `workbench-utilities` `make` will
 be called in all the directories where the metaprerequisites are present in
 the makefile. This can become quite annoying when debugging programs. When
-now the second metatarget workbench-utilities-quick is defined as shown
+now the second metatarget `workbench-utilities-quick` is defined as shown
 above only that target will be build in this directory. Of course the user
-has then to be sure that the metatargets on which workbench-utilities depend
+has then to be sure that the metatargets on which `workbench-utilities` depend
 are up-to-date.
 
 
@@ -183,17 +184,19 @@ Usage and configuration files
 
 ``Usage: mmake [options] [metatargets]``
 
-To build mmake, just compile ``mmake.c``. It doesn't need any other files.
+To build `mmake`, just compile ``mmake.c``. It doesn't need any other files.
 
-mmake looks for a config file ``mmake.config`` or ``.mmake.config`` in the
-current directory for a file in the environment variable ``$MMAKE_CONFIG``
-or a file ``.mmake.config`` in the directory ``$HOME``.
+`mmake` looks for a config file in this order:
+
++ in the current directory for ``mmake.config`` or ``.mmake.config``
++ in the environment variable ``$MMAKE_CONFIG``
++ ``.mmake.config`` in the directory ``$HOME``.
 
 This file can contain the following things:
 
     ``#``
         This must be the first character in a line and begins a comment.
-        Comments are completely ignored my mmake (as are empty lines).
+        Comments are completely ignored my `mmake` (as are empty lines).
 
     ``text="[<name>]"``
         This begins a config section for the project ``name``.
@@ -319,7 +322,7 @@ Genmf
 Introduction
 """"""""""""
 
-Genmf uses two files for generating a makefile. First is the macro definition
+`Genmf` uses two files for generating a makefile. First is the macro definition
 file and finally the source makefile where these macros can be used.
 
 Syntax
@@ -343,7 +346,7 @@ for the macro. These options can be used in the body of this template by
 typing %(option1). This will be replaced be the value of option1.
 
 The macro can be followed by a default value. If no default value is
-specified an empty string is taken. Normally no space are allowed in the
+specified an empty string is taken. Normally no spaces are allowed in the
 default value of an argument. If this is needed this can be done by
 surrounding the value with double quotes (``"``).
 
@@ -351,7 +354,7 @@ Also two switches can be given:
 
     ``\A``
         Is the switch to always need a value for this. When the macro is
-        instantiated always a value need to be assigned to this argument.
+        instantiated always a value needs to be assigned to this argument.
 
     ``\M``
         Is the switch to turn on multi words. This means that all the words
@@ -364,7 +367,7 @@ Macro instantiation
 ^^^^^^^^^^^^^^^^^^^
 
 The instantiation of the macro is done by using the '%' character followed
-by the name of the macro to instantiate (without a round brackets around it)::
+by the name of the macro to instantiate (without round brackets around it)::
 
     %macro_name [option1=]value [option2=]value
 
@@ -562,6 +565,79 @@ With the following arguments:
 
     ``detach=no``
         Wether the executable will run detached. Defaults to no.
+
+
+Building catalogs
+"""""""""""""""""
+
+The definition of the macro is as follows::
+
+    %define build_catalogs mmake=/A name=/A subdir=/A \
+      catalogs="$(basename $(wildcard *.ct))" source="../strings.h" \
+      description="$(basename $(wildcard *.cd))" dir=$(AROS_CATALOGS) \
+      sourcedescription="$(TOOLDIR)/C_h_orig"
+
+With the meaning of the arguments as follows:
+
+    ``mmake=/A``
+        This is the name of the mmaketarget that will build the catalogs.
+
+    ``name=/A``
+        This is the name of the destination catalog, without the .catalog suffix.
+
+    ``subdir=A``
+        This is the destination subdir of the catalogs.
+
+    ``catalogs``
+        This is the list of catalogs, without the .ct suffix (default \*.ct)
+
+    ``source``
+        This is the path to the generated source code file. The default value
+        creates the file `strings.h` in the parent directory.
+
+    ``description``
+        This is the catalog description file (.cd) (default \*.cd).
+
+    ``dir``
+        This is the base destination directory (default $(AROS_CATALOGS)).
+
+    ``sourcedescription``
+        This is the path to the FlexCat's source description file, without the .sd suffix.
+
+Example::
+
+    %build_catalogs mmake=workbench-system-wanderer-tools-info-catalogs \
+    name=Info subdir=System/System/Wanderer/Tools
+
+
+Build icons
+"""""""""""
+
+Creates icons. The tooltypes are read from the file (iconname).info.src. This file must
+contain the icon type (PROJECT, TOOL, DRAWER).
+
+The definition of the macro is as follows::
+
+    %define build_icons mmake=/A icons=/A dir=/A
+
+With the meaning of the arguments as follows:
+
+    ``mmake``
+        This is the mmaketarget.
+
+    ``icons``
+        This is a list of icon base names (ie. without the .info suffix).
+
+    ``dir``
+        This is the destination directory.
+
+Example::
+
+    %build_icons mmake=workbench-system-wanderer-tools-newdrawer-icons \
+    icons=newdrawer dir=$(AROS_WANDERER)/Tools
+
+The definition file has the name newdrawer.info.src.
+
 
 Building static linklibraries
 """""""""""""""""""""""""""""
