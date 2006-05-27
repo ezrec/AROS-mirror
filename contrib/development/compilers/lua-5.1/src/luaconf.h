@@ -736,11 +736,9 @@ union luai_Cast { double l_d; long l_l; };
 #undef LUA_PATH_DEFAULT
 #undef LUA_CPATH_DEFAULT
 
-#define LUA_LDIR	"!/lua/"
-#define LUA_CDIR	"!/"
-#define LUA_PATH_DEFAULT  \
-		"./?.lua;"  LUA_LDIR"?.lua;"  LUA_LDIR"?/init.lua;" \
-		             LUA_CDIR"?.lua;"  LUA_CDIR"?/init.lua"
+#define LUA_LDIR	    "lua:lib/"
+#define LUA_PATH_DEFAULT    "?.lua;"  LUA_LDIR"?.lua;"  LUA_LDIR"?/init.lua;"
+
 #define LUA_CPATH_DEFAULT ""
 
 
