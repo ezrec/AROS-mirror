@@ -475,7 +475,7 @@ Common
 
     %define common
 
-This adds some commen stuff like a `clean` target to the makefile. The `clean`
+This adds some common stuff like a `clean` target to the makefile. The `clean`
 target only deletes generated makefiles.
 
  
@@ -523,10 +523,10 @@ Example::
     name=Info subdir=System/System/Wanderer/Tools
 
 
-Build icons
-"""""""""""
+Building icons
+""""""""""""""
 
-Creates icons. The images must be in `png` format. The tooltypes are read from
+Creates icons. The images must be in `PNG` format. The tooltypes are read from
 the file (iconname).info.src. This file must contain the icon type (PROJECT, TOOL, DRAWER).
 
 FIXME: which graphics formats are allowed?
@@ -876,15 +876,15 @@ Here is a list of the arguments for this macro:
         By default the target compiler is used.
 
 
-The module configuration file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
 For the build_module_macro two files are used. First is the module
 configuration file (modname.conf or lib.conf) and second is the headers.tmpl
 file.
 
-+ The modules config file is file with a number of lines with the following
-  syntax:
+The module configuration file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The modules config file is a file with a number of lines with the following
+syntax:
 
     ``name <string>``
         Init the various fields with reasonable defaults. If <string> is XXX, then
@@ -937,31 +937,31 @@ file.
     ``option <string>...``
         Specify an option. Valid values for <string> are:
 
-	+ ``noexpunge``
+        + ``noexpunge``
 
           Once the library/device is loaded, it can't be removed from memory.
           Be careful with this option.
 
-    + ``rom``
+        + ``rom``
 
           For ROM based libraries. Implies noexpunge and unique.
 
-	+ ``unique``
+        + ``unique``
 
           Generate unique names for all external symbols.
 
-    + ``nolibheader``
+        + ``nolibheader``
 
           We don't want to use the LibHeader prefixed functions in the
           function table.
 
-    + ``hasrt``
+        + ``hasrt``
 
-	  This library has resource tracking.
+          This library has resource tracking.
 
         You can specify more than one option in a config file and
         more than one option per option line. Separate options by
-        space.
+        space!
 
 The header.tmpl file
 ^^^^^^^^^^^^^^^^^^^^
@@ -1112,3 +1112,7 @@ The file $(TOP)/config/make.cfg is usually included in all makefiles. It contain
 a lot of variables which are often used in this makefiles. The most important are
 the absolute paths for standard directories (e.g. `AROS_C`) and names for tools
 (e.g. MMAKE, GENMF).
+Platform depending definitions can be found in:
+
++ $(TOP)/bin/$(AROS_HOST_ARCH)-$(AROS_HOST_CPU)/gen/config/host.cfg
++ $(TOP)/bin/$(AROS_HOST_ARCH)-$(AROS_HOST_CPU)/gen/config/target.cfg
