@@ -50,7 +50,7 @@ MetaMake
 Introduction
 """"""""""""
 
-`MetaMake` is a version of make which allows to recursively build targets in the
+`MetaMake` is a version of `make` which allows to recursively build targets in the
 various directories of a project or even another project. It searches
 a directory tree for makefiles and all makefiles it finds for "metatargets". Then
 it tries to build all metatargets. You can also specify a program which
@@ -83,8 +83,8 @@ There exist three ways of defining a metatarget in a makefile:
 
       #MM- metatarget : metaprerequisites
 
-+ This form indicates that the make target on the next line is also a
-  metatarget but the prerequisites are no metaprerequisites::
++ This form defines both a metatarget and a `make` target with the same name.
+  The prerequisites are no metaprerequisites::
 
       #MM
       metatarget : prerequisites
@@ -95,6 +95,8 @@ if you end every line with the \\ character and start the next line with
 
 You can define a metatarget with the same name in several files. The metaprerequisites
 are then collected.
+
+If a metatarget is defined both with ``#MM`` and ``#MM-`` the ``#MM`` has priority. 
 
 
 How MetaMake works
@@ -281,9 +283,8 @@ by the name of the macro to instantiate (without round brackets around it)::
 Two ways are possible to specify value for arguments to a macro:
 
     ``value``
-        This will assign the value to the argument defined as the first
-        argument to this macro. The time this format is used it will be
-        assigned to the second argument and so on.
+        This will assign the first value to the first argument, the second value
+	to the second argument and so on.
 
     ``option1=value``
         This will assign the given value to the option with the specified
@@ -295,7 +296,7 @@ wants to include spaces in the values of the arguments.
 Macro instantiation may be used inside the body of a macro, even macros
 that will only be defined later on in the macro definition file.
 
-.. Note:: In the definition of the genmf rules sometimes mmake variables are
+.. Note:: In the definition of the genmf rules sometimes `MetaMake` variables are
           used as default variables for an argument (e.g. ``dflags=%(cflags)``).
           This is not really possible in the definition file but is done by
           using text that has the same effect.
@@ -492,7 +493,9 @@ The definition of the macro is as follows::
 With the meaning of the arguments as follows:
 
     ``mmake=/A``
-        This is the name of the metatarget that will build the catalogs.
+        This is the name of the metatarget that will build the catalogs. Also a
+        ``%(mmake)-clean`` metatarget will be defined.
+
 
     ``name=/A``
         This is the name of the destination catalog, without the .catalog suffix.
@@ -526,10 +529,9 @@ Example::
 Building icons
 """"""""""""""
 
-Creates icons. The images must be in `PNG` format. The tooltypes are read from
-the file (iconname).info.src. This file must contain the icon type (PROJECT, TOOL, DRAWER).
-
-FIXME: which graphics formats are allowed?
+Creates icons. The images must be in `PNG` or `ILBM` format. The icon is configured from
+an additional text file with the name %(iconname).info.src. You can find the documentation
+of this file in $(TOP)/tools/ilbmtoicon/README
 
 The definition of the macro is as follows::
 
@@ -538,7 +540,8 @@ The definition of the macro is as follows::
 With the meaning of the arguments as follows:
 
     ``mmake``
-        This is the metatarget.
+        This is the name of the metatarget. Also a
+        ``%(mmake)-clean`` metatarget will be defined.
 
     ``icons``
         This is a list of icon base names (without the .info suffix).
@@ -1099,6 +1102,8 @@ Examples
          files=boot \
          compiler=host
 
+The file $(TOP)/config/make.tmpl contains more macros. See the comments in that file
+for usage.
 
 Lower level mmakefile.src macros
 ---------------------------------
@@ -1111,7 +1116,8 @@ AROS portable makefile variables
 The file $(TOP)/config/make.cfg is usually included in all makefiles. It contains
 a lot of variables which are often used in this makefiles. The most important are
 the absolute paths for standard directories (e.g. `AROS_C`) and names for tools
-(e.g. MMAKE, GENMF).
+(e.g. `MMAKE`, `GENMF`).
+
 Platform depending definitions can be found in:
 
 + $(TOP)/bin/$(AROS_HOST_ARCH)-$(AROS_HOST_CPU)/gen/config/host.cfg
