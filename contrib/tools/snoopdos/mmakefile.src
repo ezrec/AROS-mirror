@@ -1,0 +1,31 @@
+# Copyright © 2006, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+EXEDIR := $(CONTRIBDIR)/Tools
+
+FILES  := \
+            buffer \
+            snoopdos \
+            language \
+            settings \
+            mainwin \
+            subwin \
+            miscwin \
+            hotkey \
+            patches \
+            patchcode
+
+#MM- contrib-tools-snoopdos : contrib-tools-snoopdos-bin
+
+#MM  contrib-tools-snoopdos-bin : includes linklibs contrib-tools-snoopdos-catalogs
+
+%build_prog mmake=contrib-tools-snoopdos-bin \
+    progname=SnoopDos targetdir=$(EXEDIR) \
+    files="$(FILES)" uselibs="arosc"
+
+%build_catalogs mmake=contrib-tools-snoopdos-catalogs \
+                name=SnoopDos subdir= source=snooptext.h
+
+%common

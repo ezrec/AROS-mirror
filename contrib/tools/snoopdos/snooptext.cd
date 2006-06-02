@@ -1,0 +1,1264 @@
+;
+;	SnoopDos 3.1 Locale Definition File			vi:ts=8
+;
+;	Copyright (c) Eddy Carroll, September 1994.
+;	Updated in January 2000 by Luca Longone and Massimo Tantignone.
+;
+;
+;	We start off with the gadget text. The key shortcut for each
+;	gadget is indicated by an underscore preceding the letter.
+;
+MSG_ZERO (//)
+(NULL-MSGID)
+;(we use message zero as a terminator)
+;
+MSG_PAUSE_GAD (//)
+_Pause
+;
+MSG_DISABLE_GAD (//)
+_Disable
+;
+MSG_HIDE_GAD (//)
+_Hide
+;
+MSG_QUIT_GAD (//)
+_Quit
+;
+MSG_OPENLOG_GAD (//)
+_Open Log...
+;
+MSG_APPENDLOG_GAD (//)
+Append L_og
+;
+MSG_STARTLOG_GAD (//)
+Start L_og
+;
+MSG_SERIALLOG_GAD (//)
+Serial L_og
+;
+MSG_CLOSELOG_GAD (//)
+_Close Log
+;
+MSG_SAVESET_GAD (//)
+S_ave Settings
+;
+MSG_FUNCTION_GAD (//)
+_Functions...
+;
+MSG_SETUP_GAD (//)
+_Setup...
+;
+MSG_STATUS_GAD (//)
+Status
+;
+MSG_USE_GAD (//)
+_Use
+;
+MSG_UNDO_GAD (//)
+U_ndo
+;
+MSG_CANCEL_GAD (//)
+_Cancel
+;
+;	Gadget labels for functions window
+;
+MSG_FUNCTION_TITLE (//)
+SnoopDos Functions
+;
+MSG_SHOWFAILS_GAD (//)
+Only show _fails
+;
+MSG_SHOWCLI_GAD (//)
+Show CL_I number
+;
+MSG_SHOWFULLPATHS_GAD (//)
+Show full _paths
+;
+MSG_USEDEVNAMES_GAD (//)
+Use _device names
+;
+MSG_MONPACKETS_GAD (//)
+Monitor pac_kets
+;
+MSG_MONALLPACKETS_GAD (//)
+Packet debu_gger
+;
+MSG_MONROMCALLS_GAD (//)
+Monitor R_OM calls
+;
+MSG_IGNOREWB_GAD (//)
+Ignore _Workbench/Shell
+;
+MSG_FINDPORT_GAD (//)
+FindPort
+;
+MSG_FINDRESIDENT_GAD (//)
+FindResident
+;
+MSG_FINDSEMAPHORE_GAD (//)
+FindSemaphore
+;
+MSG_FINDTASK_GAD (//)
+FindTask
+;
+MSG_LOCKSCREEN_GAD (//)
+LockScreen
+;
+MSG_OPENDEVICE_GAD (//)
+OpenDevice
+;
+MSG_OPENFONT_GAD (//)
+OpenFont
+;
+MSG_OPENLIBRARY_GAD (//)
+OpenLibrary
+;
+MSG_OPENRESOURCE_GAD (//)
+OpenResource
+;
+MSG_READTOOLTYPES_GAD (//)
+ReadToolTypes
+;
+MSG_SENDREXX_GAD (//)
+SendRexx
+;
+MSG_PACKET_NAME (//)
+DOS Packet Monitor
+;
+MSG_CHANGEDIR_GAD (//)
+ChangeDir
+;
+MSG_DELETE_GAD (//)
+Delete
+;
+MSG_EXECUTE_GAD (//)
+Execute
+;
+MSG_GETVAR_GAD (//)
+GetVar
+;
+MSG_LOADSEG_GAD (//)
+LoadSeg
+;
+MSG_LOCKFILE_GAD (//)
+Lock
+;
+MSG_MAKEDIR_GAD (//)
+MakeDir
+;
+MSG_MAKELINK_GAD (//)
+MakeLink
+;
+MSG_OPENFILE_GAD (//)
+Open
+;
+MSG_RENAME_GAD (//)
+Rename
+;
+MSG_RUNCOMMAND_GAD (//)
+RunCommand
+;
+MSG_SETVAR_GAD (//)
+SetVar
+;
+MSG_SYSTEM_GAD (//)
+System
+;
+MSG_SELSYSTEM_GAD (//)
+_System
+;
+MSG_SELDOS_GAD (//)
+_AmigaDOS
+;
+MSG_ALL_GAD (//)
+All
+;
+MSG_NONE_GAD (//)
+None
+;
+MSG_SELECTED_GAD (//)
+Selected
+;
+MSG_MATCHNAME_GAD (//)
+_Match name
+;
+MSG_SYSFUNCS_GAD (//)
+System Functions
+;
+MSG_DOSFUNCS_GAD (//)
+AmigaDOS Functions
+;
+;	Gadget labels for setup window
+;
+MSG_SETTINGS_TITLE (//)
+SnoopDos Settings
+;
+MSG_HIDEMETHOD_GAD (//)
+_Hide method
+;
+MSG_CYL_HIDE_GAD (//)
+Invisible
+;
+MSG_CYL_ICONIFY_GAD (//)
+Iconify
+;
+MSG_CYL_TOOLSMENU_GAD (//)
+Tools Menu
+;
+MSG_CYL_NONE_GAD (//)
+None
+;
+MSG_OPENON_GAD (//)
+Open _window on
+;
+MSG_CYL_DEFSCREEN_GAD (//)
+Default Screen
+;
+MSG_CYL_FRONTSCREEN_GAD (//)
+Front Screen
+;
+MSG_CYL_NAMEDSCREEN_GAD (//)
+Named Screen
+;
+MSG_LOGMODE_GAD (//)
+Log _mode
+;
+MSG_CYL_PROMPT_USER_GAD (//)
+Prompt User
+;
+MSG_CYL_APPEND_GAD (//)
+Append
+;
+MSG_CYL_OVERWRITE_GAD (//)
+Overwrite
+;
+MSG_CYL_SERIALPORT_GAD (//)
+Serial port
+;
+MSG_FILEIO_GAD (//)
+File _I/O
+;
+MSG_CYL_AUTOMATIC_GAD (//)
+Automatic
+;
+MSG_CYL_IMMEDIATE_GAD (//)
+Immediate
+;
+MSG_CYL_BUFFERED_GAD (//)
+Buffered
+;
+MSG_BUFFERSIZE_GAD (//)
+Scroll buffe_r (Kb)
+;
+MSG_BUFFORMAT_GAD (//)
+_Buffer format
+;
+MSG_LOGFORMAT_GAD (//)
+_Logfile format
+;
+MSG_HOTKEY_GAD (//)
+Hot_key
+;
+MSG_SCREENNAME_GAD (//)
+Screen n_ame
+;
+MSG_LOGFILE_GAD (//)
+L_og file
+;
+MSG_WINDOWFONT_GAD (//)
+Window _font
+;
+MSG_BUFFERFONT_GAD (//)
+Buffer fon_t
+;
+;	There are two versions of the copy label, one for proportional
+;	fonts and one for fixed fonts. The one for the proportional
+;	font is just Copy while the one for the fixed font has three
+;	spaces after it. This makes it exactly the same length as the
+;	"Edit..." string so they line up neatly (otherwise one looks
+;	completely off balance). Note that we make the third space
+;	explicit by saying \040 to stop them being stripped off by
+;	smart editors.
+;
+MSG_FORMATEDIT_GAD (//)
+_Edit...
+;
+MSG_FORMATCOPYP_GAD (//)
+Co_py
+;
+MSG_FORMATCOPYF_GAD (//)
+Co_py  \040
+;
+;	Gadget labels for Format Editor window
+;
+MSG_FORMAT_TITLE (//)
+SnoopDos Format Editor
+;
+MSG_AVAILABLE_GAD (//)
+Available Fields
+;
+MSG_CURFORMAT_GAD (//)
+Current Format
+;
+MSG_FIELDWIDTH_GAD (//)
+Field _width
+;
+;	Font requester stuff
+;
+MSG_GFONT_TITLE (//)
+Select a new gadget font
+;
+MSG_BFONT_TITLE (//)
+Select a new buffer font
+;
+;
+;	SnoopDos menus
+;
+;	For menu items, the first character is the shortcut key (or
+;	just space if there isn't one) and the second character must
+;	always be \0.
+;
+; --- Project menu ---
+;
+MSG_PROJECT_MENU (//)
+ \0Project
+;
+;
+MSG_PROJECT_OPENLOG (//)
+N\0Open log...
+;
+MSG_PROJECT_CLOSELOG (//)
+C\0Close log
+;
+MSG_PROJECT_PAUSE (//)
+P\0Pause
+;
+MSG_PROJECT_DISABLE (//)
+D\0Disable
+;
+MSG_PROJECT_STEP (//)
+V\0Single step
+;
+MSG_PROJECT_PRI (//)
+ \0Task priority
+;
+MSG_PROJECT_PRI_A (//)
+ \0-5
+;
+MSG_PROJECT_PRI_B (//)
+ \0-2
+;
+MSG_PROJECT_PRI_C (//)
+ \0-1
+;
+MSG_PROJECT_PRI_D (//)
+ \0 0
+;
+MSG_PROJECT_PRI_E (//)
+ \0+1
+;
+MSG_PROJECT_PRI_F (//)
+ \0+2
+;
+MSG_PROJECT_PRI_G (//)
+ \0+5
+;
+MSG_PROJECT_HELP (//)
+?\0Help...
+;
+MSG_PROJECT_ABOUT (//)
+!\0About...
+;
+MSG_PROJECT_HIDE (//)
+H\0Hide
+;
+MSG_PROJECT_QUIT (//)
+Q\0Quit
+;
+;
+; --- Windows menu ---
+;
+MSG_WINDOWS_MENU (//)
+ \0Windows
+;
+MSG_WINDOWS_SETUP (//)
+E\0Show setup...
+;
+MSG_WINDOWS_FUNCTION (//)
+U\0Show functions...
+;
+MSG_WINDOWS_FORMAT (//)
+M\0Show format...
+;
+MSG_WINDOWS_WIDTH (//)
+ \0Change window width
+;
+MSG_WINDOWS_WIDTH_1 (//)
+*\0Best fit
+;
+MSG_WINDOWS_WIDTH_2 (//)
+7\0 78 columns
+;
+MSG_WINDOWS_WIDTH_3 (//)
+9\0 79 columns
+;
+MSG_WINDOWS_WIDTH_4 (//)
+8\0 80 columns
+;
+MSG_WINDOWS_WIDTH_5 (//)
+3\000130 columns
+;
+MSG_WINDOWS_ROW_QUAL (//)
+ \0Row selection key
+;
+MSG_WINDOWS_ROW_ANY (//)
+ \0Ignore
+;
+MSG_WINDOWS_ROW_NONE (//)
+ \0None
+;
+MSG_WINDOWS_ROW_SHIFT (//)
+ \0Shift
+;
+MSG_WINDOWS_ROW_ALT (//)
+ \0Alt
+;
+MSG_WINDOWS_ROW_CTRL (//)
+ \0Ctrl
+;
+MSG_WINDOWS_ROW_ALL (//)
+ \0All
+;
+MSG_WINDOWS_SPACING (//)
+ \0Text spacing
+;
+MSG_WINDOWS_SPACING_NONE (//)
+0\0None
+;
+MSG_WINDOWS_SPACING_1P (//)
+1\0001 pixel
+;
+MSG_WINDOWS_SPACING_2P (//)
+2\0002 pixels
+;
+MSG_WINDOWS_REFRESH (//)
+ \0Window type
+;
+MSG_WINDOWS_REF_SIMPLE (//)
+ \0Simple refresh
+;
+MSG_WINDOWS_REF_SMART (//)
+ \0Smart refresh
+;
+MSG_WINDOWS_ALIGN (//)
+ \0Target name
+;
+MSG_WINDOWS_ALIGN_LEFT (//)
+[\0Left aligned
+;
+MSG_WINDOWS_ALIGN_RIGHT (//)
+]\0Right aligned
+;
+MSG_WINDOWS_SHOWSTATUS (//)
+T\0Show status line?
+;
+MSG_WINDOWS_SHOWGADGETS (//)
+G\0Show gadgets?
+;
+MSG_WINDOWS_AUTO_OPEN (//)
+K\0Auto-open on output?
+;
+MSG_WINDOWS_DISABLE_HIDDEN (//)
+ \0Disable when hidden?
+;
+;
+; --- Settings menu ---
+;
+MSG_SETTINGS_MENU (//)
+ \0Settings
+;
+MSG_SETTINGS_LOAD (//)
+O\0Load...
+;
+MSG_SETTINGS_SAVE (//)
+S\0Save
+;
+MSG_SETTINGS_SAVEAS (//)
+A\0Save as...
+;
+MSG_SETTINGS_RESETDEFAULTS (//)
+F\0Reset to defaults
+;
+MSG_SETTINGS_LASTSAVED (//)
+L\0Last saved
+;
+MSG_SETTINGS_RESTORE (//)
+R\0Restore
+;
+MSG_SETTINGS_CREATEICONS (//)
+I\0Create icons?
+;
+; --- Buffer menu ---
+;
+MSG_BUFFER_MENU (//)
+ \0Buffer
+;
+MSG_BUFFER_COPYWIN (//)
+X\0Copy window to clip
+;
+MSG_BUFFER_COPYBUF (//)
+Y\0Copy buffer to clip
+;
+MSG_BUFFER_SAVEWIN (//)
+W\0Save window...
+;
+MSG_BUFFER_SAVEBUF (//)
+B\0Save buffer...
+;
+MSG_BUFFER_CLEARBUF (//)
+Z\0Clear buffer
+;
+;	Available column headings for SnoopDos output
+;
+MSG_CALL_COL (//)
+CallAddr
+;
+MSG_DATE_COL (//)
+Date
+;
+MSG_HUNK_COL (//)
+Hunk:Offset
+;
+MSG_PROCESSID_COL (//)
+Task ID
+;
+MSG_SEGNAME_COL (//)
+Segment Name
+;
+MSG_TIME_COL (//)
+Time
+;
+MSG_COUNT_COL (//)
+Count
+;
+MSG_PROCNAME_COL (//)
+Process Name
+;
+MSG_ACTION_COL (//)
+Action
+;
+MSG_FILENAME_COL (//)
+Target Name
+;
+MSG_OPTIONS_COL (//)
+Options
+;
+MSG_RESULT_COL (//)
+Res.
+;
+;	Here are the various action strings, printed for each function
+;	Please keep these strings to 10 chars or less if possible.
+;
+;	Note that the items beginning with an * (POPEN, PLOCK, etc.) are
+;	the packet versions of normal DOS functions like OPEN and LOCK.
+;	These are used by things like Gnu C/ixemul.library and other software
+;	that bypasses dos.library and talks directly to devices.
+;
+MSG_ACT_FINDPORT (//)
+FindPort
+;
+MSG_ACT_FINDRESIDENT (//)
+FindRes
+;
+MSG_ACT_FINDSEM (//)
+FindSem
+;
+MSG_ACT_FINDTASK (//)
+FindTask
+;
+MSG_ACT_LOCKSCREEN (//)
+LockScreen
+;
+MSG_ACT_OPENDEV (//)
+OpenDev
+;
+MSG_ACT_OPENFONT (//)
+OpenFont
+;
+MSG_ACT_OPENLIB (//)
+OpenLib
+;
+MSG_ACT_OPENRES (//)
+OpenRes
+;
+MSG_ACT_FINDTOOL (//)
+ToolType
+;
+MSG_ACT_MATCHTOOL (//)
+ToolValue
+;
+MSG_ACT_SENDREXX (//)
+SendRexx
+;
+MSG_ACT_CHANGEDIR (//)
+ChangeDir
+;
+MSG_ACT_DELETE (//)
+Delete
+;
+MSG_ACT_PDELETE (//)
+*Delete
+;
+MSG_ACT_EXECUTE (//)
+Execute
+;
+MSG_ACT_GETVAR (//)
+GetVar
+;
+MSG_ACT_FINDVAR (//)
+FindVar
+;
+MSG_ACT_LOCK (//)
+Lock
+;
+MSG_ACT_PLOCK (//)
+*Lock
+;
+MSG_ACT_LOADSEG (//)
+Load
+;
+MSG_ACT_NEWLOADSEG (//)
+NewLoad
+;
+MSG_ACT_MAKEDIR (//)
+MakeDir
+;
+MSG_ACT_PMAKEDIR (//)
+*MakeDir
+;
+MSG_ACT_MAKELINK (//)
+MakeLink
+;
+MSG_ACT_PMAKELINK (//)
+*MakeLink
+;
+MSG_ACT_OPEN (//)
+Open
+;
+MSG_ACT_POPEN (//)
+*Open
+;
+MSG_ACT_RENAME (//)
+Rename
+;
+MSG_ACT_PRENAME (//)
+*Rename
+;
+MSG_ACT_RENAME2 (//)
+to -->
+;
+MSG_ACT_PRENAME2 (//)
+*to -->
+;
+MSG_ACT_RUNCOMMAND (//)
+RunCommand
+;
+MSG_ACT_SETVAR (//)
+SetVar
+;
+MSG_ACT_KILLVAR (//)
+KillVar
+;
+MSG_ACT_SYSTEM (//)
+System
+;
+;	Next, a big list of all the names we use for raw packet monitoring.
+;	These are simply abbreviated versions of the names found in the
+;	dos/dosextens.h include file.
+;
+;	We show all packets in capitals and prefixed with a # to make
+;	them stand out in our output
+;
+MSG_ACT_STARTUP (//)
+#STARTUP
+;
+MSG_ACT_GET_BLOCK (//)
+#GET_BLOCK
+;
+MSG_ACT_SET_MAP (//)
+#SET_MAP
+;
+MSG_ACT_DIE (//)
+#DIE
+;
+MSG_ACT_EVENT (//)
+#EVENT
+;
+MSG_ACT_CURRENT_VOLUME (//)
+#CUR_VOLUME
+;
+MSG_ACT_LOCATE_OBJECT (//)
+#LOC_OBJECT
+;
+MSG_ACT_RENAME_DISK (//)
+#REN_DISK
+;
+MSG_ACT_FREE_LOCK (//)
+#FREE_LOCK
+;
+MSG_ACT_DELETE_OBJECT (//)
+#DEL_OBJECT
+;
+MSG_ACT_RENAME_OBJECT (//)
+#REN_OBJECT
+;
+MSG_ACT_MORE_CACHE (//)
+#MORE_CACHE
+;
+MSG_ACT_COPY_DIR (//)
+#COPY_DIR
+;
+MSG_ACT_WAIT_CHAR (//)
+#WAIT_CHAR
+;
+MSG_ACT_SET_PROTECT (//)
+#SET_PROTECT
+;
+MSG_ACT_CREATE_DIR (//)
+#CREATE_DIR
+;
+MSG_ACT_EXAMINE_OBJECT (//)
+#EXAM_OBJECT
+;
+MSG_ACT_EXAMINE_NEXT (//)
+#EXAM_NEXT
+;
+MSG_ACT_DISK_INFO (//)
+#DISK_INFO
+;
+MSG_ACT_INFO (//)
+#INFO
+;
+MSG_ACT_FLUSH (//)
+#FLUSH
+;
+MSG_ACT_SET_COMMENT (//)
+#SET_COMMENT
+;
+MSG_ACT_PARENT (//)
+#PARENT
+;
+MSG_ACT_TIMER (//)
+#TIMER
+;
+MSG_ACT_INHIBIT (//)
+#INHIBIT
+;
+MSG_ACT_DISK_TYPE (//)
+#DISK_TYPE
+;
+MSG_ACT_DISK_CHANGE (//)
+#DISK_CHANGE
+;
+MSG_ACT_SET_DATE (//)
+#SET_DATE
+;
+MSG_ACT_SAME_LOCK (//)
+#SAME_LOCK
+;
+MSG_ACT_READ (//)
+#READ
+;
+MSG_ACT_WRITE (//)
+#WRITE
+;
+MSG_ACT_SCREEN_MODE (//)
+#SCREEN_MODE
+;
+MSG_ACT_CHANGE_SIGNAL (//)
+#CHANGE_SIG
+;
+MSG_ACT_READ_RETURN (//)
+#READ_RET
+;
+MSG_ACT_WRITE_RETURN (//)
+#WRITE_RET
+;
+MSG_ACT_FINDUPDATE (//)
+#FINDUPDATE
+;
+MSG_ACT_FINDINPUT (//)
+#FINDINPUT
+;
+MSG_ACT_FINDOUTPUT (//)
+#FINDOUTPUT
+;
+MSG_ACT_END (//)
+#END
+;
+MSG_ACT_SEEK (//)
+#SEEK
+;
+MSG_ACT_FORMAT (//)
+#FORMAT
+;
+MSG_ACT_MAKE_LINK (//)
+#MAKE_LINK
+;
+MSG_ACT_SET_FILE_SIZE (//)
+#SET_FILE_SIZE
+;
+MSG_ACT_WRITE_PROTECT (//)
+#WRITE_PROTECT
+;
+MSG_ACT_READ_LINK (//)
+#READ_LINK
+;
+MSG_ACT_FH_FROM_LOCK (//)
+#FH_FROM_LOCK
+;
+MSG_ACT_IS_FILESYSTEM (//)
+#IS_FILESYSTEM
+;
+MSG_ACT_CHANGE_MODE (//)
+#CHANGE_MODE
+;
+MSG_ACT_COPY_DIR_FH (//)
+#COPY_DIR_FH
+;
+MSG_ACT_PARENT_FH (//)
+#PARENT_FH
+;
+MSG_ACT_EXAMINE_ALL (//)
+#EXAM_ALL
+;
+MSG_ACT_EXAMINE_FH (//)
+#EXAM_FH
+;
+MSG_ACT_EXAMINE_ALL_END (//)
+#EXAM_ALL_END
+;
+MSG_ACT_SET_OWNER (//)
+#SET_OWNER
+;
+MSG_ACT_DOUBLE (//)
+#DOUBLE
+;
+MSG_ACT_FORCE (//)
+#FORCE
+;
+MSG_ACT_STACK (//)
+#STACK
+;
+MSG_ACT_QUEUE (//)
+#QUEUE
+;
+MSG_ACT_DROP (//)
+#DROP
+;
+MSG_ACT_LOCK_RECORD (//)
+#LOCK_RECORD
+;
+MSG_ACT_FREE_RECORD (//)
+#FREE_RECORD
+;
+MSG_ACT_ADD_NOTIFY (//)
+#ADD_NOTIFY
+;
+MSG_ACT_REMOVE_NOTIFY (//)
+#REMOVE_NOTIFY
+;
+MSG_ACT_SERIALIZE_DISK (//)
+#SERIALISE_DISK
+;
+MSG_ACT_GET_DISK_FSSM (//)
+#GET_DISK_FSSM
+;
+MSG_ACT_FREE_DISK_FSSM (//)
+#FREE_DISK_FSSM
+;
+MSG_ACT_RAWPACKET (//)
+#(%ld)
+;
+;	Now the various fixed strings we output to the display window
+;
+;	Please try and keep result strings to 4 chars or less and
+;	option strings to 7 chars or less if possible. Also, for
+;	several different options associated with a single function,
+;	it is a good idea to make each option a different length since
+;	this will make it easier to distinguish between multiple
+;	events of the same type in the output display.
+;
+MSG_RES_OKAY (//)
+OK
+;
+MSG_RES_FAIL (//)
+Fail
+;
+MSG_RES_PAUSE (//)
+WAIT
+;
+MSG_RES_MISSED (//)
+Missed
+;
+;
+;	The null string is used for certain functions that
+;	can have a NULL string passed to them (whether by
+;	accident or design)
+;
+MSG_NULLSTR (//)
+<NULL>
+;
+;	Now the various option fields
+;
+MSG_OPT_UNKNOWN (//)
+Unknown
+;
+MSG_OPT_READ (//)
+Read
+;
+MSG_OPT_WRITE (//)
+Write
+;
+MSG_OPT_READBAD (//)
+Read???
+;
+MSG_OPT_MODIFY (//)
+Modify
+;
+MSG_OPT_LIBVER (//)
+Ver %ld
+;
+MSG_OPT_DEVUNIT (//)
+Unit %ld
+;
+MSG_OPT_FONTSIZE (//)
+Size %ld
+;
+MSG_OPT_SOFTLINK (//)
+Soft
+;
+MSG_OPT_HARDLINK (//)
+Hard
+;
+MSG_OPT_LOCAL (//)
+Local
+;
+MSG_OPT_ALIAS (//)
+Alias
+;
+MSG_OPT_GLOBAL (//)
+Global
+;
+MSG_OPT_ANY (//)
+Any
+;
+MSG_OPT_EXECSINGLE (//)
+Single
+;
+MSG_OPT_EXECBATCH (//)
+Batch
+;
+MSG_SEG_MODULE_NOT_FOUND (//)
+Module not found
+;
+;
+;	Now some ASL requester window messages
+;
+MSG_ASL_LOADCONFIG (//)
+Load settings file
+;
+MSG_ASL_SAVECONFIG (//)
+Save settings file
+;
+MSG_ASL_DEFLOGNAME (//)
+Select default log file or device
+;
+MSG_ASL_NEWLOGNAME (//)
+Select new log file or device
+;
+MSG_ASL_SAVEWINDOW (//)
+Save window contents as...
+;
+MSG_ASL_SAVEBUFFER (//)
+Save buffer contents as...
+;
+;	Next, some common error messages
+;
+MSG_ERROR_OPENSET (//)
+Error opening Settings window!
+;
+MSG_ERROR_OPENFUNC (//)
+Error opening Functions window!
+;
+MSG_ERROR_OPENMAIN (//)
+Error opening main window!
+;
+MSG_ERROR_NOBUFMEM (//)
+Couldn't allocate %ldK\n\
+of memory for new buffer\n\
+(this is impossible!)
+;
+MSG_ERROR_INITPATCHES (//)
+Fatal error: couldn't install system patches.
+;
+MSG_ERROR_OPENFORMAT (//)
+Error opening format editor window!
+;
+MSG_ERROR_CREATEMENUS (//)
+Error creating menus!
+;
+MSG_ERROR_INITGUI (//)
+Error initialising user interface!
+;
+MSG_ERROR_RESIZE (//)
+Error recreating gadgets after resize!
+;
+MSG_ERROR_OPENFONT (//)
+Error opening font requester!
+;
+MSG_ERROR_OPENFILEREQ (//)
+Error opening file requester!
+;
+MSG_ERROR_SAVING_SETTINGS (//)
+Error saving settings\n\
+file %s
+;
+MSG_ERROR_LOADING_SETTINGS (//)
+File %s is not a valid\n\
+SnoopDos settings file.
+;
+MSG_ERROR_SAVING_BUFFER (//)
+Error saving buffer contents to\n\
+file %s!
+;
+MSG_ERROR_SAVING_WINDOW (//)
+Error saving window contents to\n\
+file %s!
+;
+MSG_ERROR_UNPATCH (//)
+Warning: another application is still executing\n\
+the \"%s\" system function. I won't be able\n\
+to fully quit until that application exits, but\n\
+I won't bother you with any more requesters.
+;
+MSG_ERROR_NO_DISKFONT (//)
+Error opening diskfont.library!\n\
+\n\
+File and font requesters will be\n\
+unavailable until diskfont.library\n\
+is installed.
+;
+MSG_ERROR_NO_ASL (//)
+Error opening asl.library!\n\
+\n\
+File and font requesters will be\n\
+unavailable until asl.library is\n\
+installed.
+;
+MSG_ERROR_OKAY (//)
+Okay
+;
+MSG_ERROR_CANCEL (//)
+Cancel
+;
+MSG_ERROR_STARTLOG (//)
+Error opening log file\n\
+%s
+;
+MSG_ERROR_NO_SCREEN (//)
+Can't find a screen for SnoopDos to open on!
+;
+MSG_ERROR_FONT_PROPORTIONAL (//)
+Only fixed width fonts may be\n\
+chosen for the buffer display.
+;
+MSG_ERROR_COPY_WIN_TO_CLIP (//)
+Error copying window to clipboard!
+;
+MSG_ERROR_COPY_ALL_TO_CLIP (//)
+Error copying buffer to clipboard!
+;
+MSG_REQ_FILE_EXISTS (//)
+Warning: File %s already exists.
+;
+MSG_REQ_APPEND_OVERWRITE_CANCEL (//)
+Append|Overwrite|Cancel
+;
+MSG_ERROR_CLI_NOPARAM (//)
+%s: Command requires a parameter.\n
+;
+MSG_ERROR_CLI_FAILED (//)
+%s: Command failed.\n
+;
+MSG_ERROR_CLI_UNKNOWN (//)
+%s: Unknown SnoopDos command.\n
+;
+MSG_CLI_USAGE (//)
+%s. Monitors DOS and System activity.\n\
+Usage: %s [SETTINGS=filename] [LANGUAGE=filename] [HELP] commands ...\n
+;
+MSG_CLI_HELPBANNER (//)
+SnoopDos understands the following commands. Those marked * need a parameter.\n\
+Most other commands can be prefixed by the word NO to reverse their effect.\n\
+For additional AmigaGuide help on any command, type SNOOPDOS HELP <cmdname>.\n\n
+;
+;	Settings erros
+;
+MSG_CMD_UNKNOWN (//)
+Unknown command: %s\n
+;
+MSG_CMD_FAIL (//)
+Command failed: %s\n
+;
+MSG_CMD_NOPARAM (//)
+Missing parameter: %s\n
+;
+MSG_CMD_HEADER (//)
+Enter SnoopDos command, EXIT to exit, or '?' for a command list.\n
+;
+MSG_CMD_PROMPT (//)
+SnoopDos>\040
+;
+;
+;
+;	Now a few status line messages
+;
+MSG_STATUS_NORMAL (//)
+Monitoring system activity
+;
+MSG_STATUS_PAUSED (//)
+Paused at %ld:%02ld %s
+;
+MSG_STATUS_DISABLED (//)
+Disabled at %ld:%02ld %s
+;
+MSG_STATUS_LOGFILE (//)
+Logging to file %s
+;
+MSG_STATUS_LOGDEVICE (//)
+Logging to device %s
+;
+MSG_STATUS_LOGDEBUG (//)
+Logging to serial port debugger
+;
+MSG_STATUS_SAVESET (//)
+Saving settings to %s
+;
+MSG_STATUS_LOADSET (//)
+Loading settings from %s
+;
+;	These messages are output to the logfile
+;
+MSG_LOG_START (//)
+\nSnoopDos logging started on %s, %s at %s\n\n
+;
+MSG_LOG_STOP (//)
+\nClosed SnoopDos log at %s\n
+;
+;	For these two log messages, try and ensure the %s's are visually
+;	lined up if possible; it makes things look better in the output
+;	file, since they almost always occur in pairs.
+;
+MSG_LOG_DISABLED (//)
+SnoopDos disabled at %s\n
+;
+MSG_LOG_ENABLED (//)
+SnoopDos enabled  at %s\n
+;
+;
+;	AmigaGuide stuff
+;
+MSG_ERROR_NO_AMIGAGUIDE (//)
+Can't open amigaguide.library v34.\n\
+Thus, no help is available.
+;
+MSG_ERROR_CREATE_AMIGAGUIDE (//)
+Unexpected error while accessing AmigaGuide.\n\
+No help is available at this time.
+;
+MSG_ERROR_AGUIDE_GENERIC (//)
+AmigaGuide error:\n\
+%s
+;
+MSG_ERROR_AGUIDE_CANT_OPEN (//)
+Can't open help file %s. If you\n\
+want online help to be available, copy that\n\
+file to the directory HELP:ENGLISH.
+;
+;	Now we have the name of the helpfile itself, followed by
+;	the various links. Note that the LINK keyword should not
+;	be modified, though the name of the target can be.
+;
+MSG_HELPFILE_NAME (//)
+SnoopDos.guide
+;
+MSG_LINK_MAIN (//)
+LINK MAIN
+;
+MSG_LINK_MAINWIN (//)
+LINK MainWindow
+;
+MSG_LINK_FUNCWIN (//)
+LINK FunctionWindow
+;
+MSG_LINK_SETUPWIN (//)
+LINK SettingsWindow
+;
+MSG_LINK_FORMATWIN (//)
+LINK FormatEditor
+;
+MSG_LINK_MENU_PROJECT (//)
+LINK Menu_Project
+;
+MSG_LINK_MENU_WINDOW (//)
+LINK Menu_Windows
+;
+MSG_LINK_MENU_SETTINGS (//)
+LINK Menu_Settings
+;
+MSG_LINK_MENU_BUFFER (//)
+LINK Menu_Buffer
+;
+;	This is the description string for the Commodities Exchange
+;
+MSG_COMMODITY_DESC (//)
+AmigaDOS and System monitor
+;
+;
+;	This is displayed in the titlebar when the hotkey is invalid
+;	or completely disabled.
+;
+MSG_INVALID_HOTKEY (//)
+invalid
+;
+;	This is the entry in the Tools menu for SnoopDos when hidden
+;
+MSG_APPMENU_NAME (//)
+Show SnoopDos
+;
+;	And finally...
+;
+MSG_ABOUT_SNOOPDOS (//)
+%s\n\
+\n\
+Author: Eddy Carroll (ecarroll@iol.ie)\n\
+\n\
+AmigaOS4 port by Stefan Burström (f94sbu@efd.lth.se)\n\
+\n\
+ARexx port name: %s\n\
+\n\
+This release of SnoopDos may be freely distributed.\n\
+It may not be commercially distributed without the\n\
+explicit permission of the author. See the docs for\n\
+more details.\n\
+\n\
+Full source code is available from any Aminet site\n\
+as /pub/aminet/util/moni/snoopdos31_src.lha.\n\
+(PPC version pending)
+;
+;
+;	Now the final message -- please ensure this label is ALWAYS last
+;
+NUM_OF_MSGS (//)
+(end)

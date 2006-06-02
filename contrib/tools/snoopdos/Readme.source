@@ -1,0 +1,212 @@
+
+                        SnoopDos 3.8 -- Source Code Release
+
+           Copyright © Eddy Carroll, September 1994. Freely distributable.
+
+           Updated by Luca Longone and Massimo Tantignone in January 2000.
+
+	   Updated by Grzegorz Chmie and Thomas Richter in March 2000.
+
+	   Updated again in August 2000 by Thomas Richter. 
+
+	   Updated yet again in February 2001 by Thomas Richter.
+
+	   Updated to 3.7 in March/April 2001 by Thomas Richter.
+
+	   Updated to 3.8 in May 2003 by Oliver Roberts.
+
+
+NOTE ABOUT THE 3.8 UPDATE
+
+    The 3.8 release contains some minor fixes and improvements. The
+    RunCommand() patch could not handle a NULL argptr, which caused hits,
+    so this is now fixed. In relation to that any NULL pointers in the
+    filename field of SnoopDos will now be reported as such so it is
+    possible to differentiate between empty string and NULL pointers in
+    logs.  The source code was also cleaned up a little so it's compilable
+    with the v45 includes. The "Match Name" pattern match code has also
+    been tweaked a little so that it's faster when using a leading not
+    (e.g. "~(ARexx|dnetc#?)") and removed the ParsePatternNoCase()
+    workaround when running on V39 or higher (was a bug in dos, but was
+    fixed in V39).
+
+
+NOTE ABOUT THE 3.7 UPDATE
+
+    The 3.7 release fixes mainly some cosmetic issues. First of all, the
+    semaphore arbitration time changed from 3.6 to 3.7 and was chosen much
+    smaller, and was made dependent on task priorities. Even though the 3.6
+    should not have deadlocked ever, it might have happened that the System
+    appeared frozen for half a minute due to lots of semaphore timeouts.
+    Furthermore, the 3.7 adds Forbid()/Permit() around FindTask() and FindPort();
+    they are not really required as the corresponding tasks and ports cannot
+    go away in any event, but PatchWork complained about it with a warning.
+
+
+NOTE ABOUT THE 3.6 UPDATE
+
+    Note that there's no 3.5 update, it was an internal release that never
+    made it to the public.
+    The 3.6 update fixes two major bugs. The first bug is that the LoadSeg()
+    patch did not kept care about overlayed files and therefore might have
+    trashed overlayed programs. Note that LoadSeg() takes actually three
+    arguments and not one!
+    The second bug is even more severe, and is only partially fixed by this
+    release. SnoopDos semaphore handling was and still is extremly fragile.
+    SnoopDos 3.4 and before could have run into a race condition caused by
+    a cycling semaphore lock-up of three partners the patch code did not and
+    cannot check for. SnoopDos, workbench and input device hung then
+    simultaneously.
+    There are other race conditions of this kind, and all of them could only
+    be fixed if the patch code of SnoopDos would be completely re-designed,
+    a job I currently cannot and will not do.
+    Therefore, SnoopDos 3.6 contains a workaround and uses now a semaphore
+    mechanism which may "time out". The net effect is that at least the most
+    common semaphore deadlock should be avoidable now, but at the price that
+    the SnoopDos main window cannot be guaranteed to be 100% accurately up-
+    dated. Hence, in case the main window seems to have forgotten to update
+    its snoop list, or the result codes of some snoop entries are missing, or
+    some reports seem to be missing at all, don't worry! The alternative in 
+    these cases would have been to deadlock your system. As a side effect,
+    the ugly layers semaphore check was disabled now as it is no longer
+    needed, and in fact never really worked as it was unable to detect a
+    cyclic deadlock of three or more partners.
+
+
+NOTE ABOUT THE 3.4 UPDATE
+
+    This update fixes one feature, and one bug. The feature is that the
+    stack swap code was removed from SnoopDos 3.2 and up, and since people
+    tend not to read the instructions, SnoopDos crashed on some machines due
+    to stack overflow. The 3.4 release checks therefore for its stack size
+    and will increase it to the minimal recommended size.
+    The bug is that a possible race condition when closing the main window
+    was overlooked. The 3.3 and earlier releases could have caused some
+    "hits" in case the main window was closed while some other program run
+    in the patch routines.
+
+
+NOTE ABOUT THE 3.3 UPDATE
+
+    This update fixes a flaw of the 3.2 release that somehow was unnoticed.
+    The 3.2 release could not be run from Workbench, due to an unexpected
+    re-define of the WBenchMsg variable to _WBenchMsg in some of the SAS/C
+    headers which broke the new startup code. I really did not expect 
+    this, sorry. Except the version number, and a slightly different compiler
+    option, nothing changed.
+
+NOTE ABOUT THE 3.2 UPDATE
+
+    This new update fixes one frequent hit I got when SnoopDos logged some
+    system calls while a second task was working on the layers. The
+    problem is that some graphics.library and rtg calls NULL the Rastport->
+    Layer field temporarely, and SnoopDos did not check before using this
+    pointer.
+    Additionally, the SnoopDos iconfication code did not work with "newicons"
+    which store their image data in an unorthogonal way. This was fixed by
+    Grzegorz Chmie, I used his code almost unchanged. Thanks!
+
+    The file snoopdos.h has been enhanced to contain all exported functions
+    completely, to allow a clean recompile using the registerized parameters
+    model of SAS/C.
+
+    Two obsolete amiga.lib calls, CreateExtIO() and DeleteExtIO() have been
+    replaced by their exec.library equivalence for orthogonality.
+    
+    All changes in the code have been marked by "THOR" so you may easely
+    identify my changes and additions.
+
+    You can find the archive with the executable compiled from this source
+    code on Aminet (util/moni/snoopdos32.lha).
+
+    For further questions, contact me at:
+
+    thor@math.tu-berlin.de	(Thomas Richter)
+
+
+NOTE ABOUT THE 3.1 UPDATE
+
+    This update removes an Enforcer hit which can happen with version 3.0
+    when a program is launched from ToolManager's dock and SnoopDos is
+    running with its "SendRexx" patch turned on. Said hit doesn't seem to
+    cause any harm, however it can be an annoyance for people which have
+    Enforcer running all the time.
+    The hit is apparently due to the way ToolManager sets up its message
+    port and only happens when SnoopDos 3.0 is running. Since we can't fix
+    ToolManager right now, we made SnoopDos able to avoid the hit, by adding
+    a safety check on the memory type at line 4466 in the "patches.c" module.
+
+    The following files have been updated for this release:
+
+    snooptext.h           snooptext.ct           snooptext.cd
+    SnoopDos.Roadmap      snoopdos.c             patches.c
+
+    All files other than "patches.c" have been changed just to update the
+    version information; no changes were made to the actual code.
+
+    You can find the archive with the executable compiled from this source
+    code on Aminet (util/moni/snoopdos31.lha).
+
+    Note: references to PGP in the documentation aren't valid anymore for
+    SnoopDos versions greater than 3.0. If you need authentication, please
+    write to one of the following e-mail addresses:
+
+    llong@tin.it, hexaae@tiscalinet.it (Luca Longone)
+    tanti@intercom.it (Massimo Tantignone)
+    ecarroll@iol.ie (Eddy Carroll)
+    thor@math.tu-berlin.de (Thomas Richter)
+
+    The rest of this file is unchanged from the original Readme.source file
+    as found in the SnoopDos 3.0 source code distribution.
+
+
+INTRODUCTION
+
+    SnoopDos patches a variety of AmigaDOS library functions that
+    are commonly called by other programs and allows you to monitor
+    the activities carried out by those programs.
+
+    The source code allows you to examine how SnoopDos operates. You
+    may find it useful as example code if you are interested in any
+    of the following:
+
+      - patching system library functions
+      - creating font-sensitive gadtools or BOOPSI GUI interfaces
+        without the help of a third party GUI library
+      - accessing AmigaGuide help
+      - copying text to the clipboard
+      - allowing localisation of all program text strings
+      - supporting drag & drop operations
+      - seeing how a medium sized Amiga application is constructed
+
+    I don't claim that this code is perfect but it does have the advantage
+    of actually working, so it's a useful starting point.
+
+    You will probably also want to obtain the companion binary archive
+    snoopdos30.lha, available in the /pub/aminet/util/moni directory on
+    AmiNet. This contains the SnoopDos executable, and also an extensive
+    AmigaGuide help file which should prove useful while browsing the
+    source code.
+
+    See the file SnoopDos.Roadmap inside the source directory for information
+    about how the source code is organised.
+
+
+DISTRIBUTION CONDITIONS
+
+    You may freely use portions of the SnoopDos source code in your
+    own programs if you wish. However, if you use two or more complete
+    functions from the SnoopDos code, you must acknowledge the origin
+    of those functions in your documentation and source code.
+
+    You may modify the SnoopDos source code to create new versions of
+    SnoopDos for your own use only. You may not redistribute such new
+    versions without my explicit permission.
+
+
+AUTHOR
+
+    You can contact the author at:
+
+        ecarroll@maths.tcd.ie
+        ecarroll@cix.compulink.co.uk

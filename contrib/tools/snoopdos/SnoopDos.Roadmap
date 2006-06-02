@@ -1,0 +1,458 @@
+
+                        SnoopDos 3.2 -- Source Code Roadmap
+
+           Copyright © Eddy Carroll, September 1994. Freely distributable.
+
+           Updated by Luca Longone and Massimo Tantignone in January 2000.
+
+	   Updated again by Grzegorz Chmie and Thomas Richter in March 2000.
+
+
+NOTE ABOUT THE 3.1 UPDATE
+
+           References to PGP in the following text are not applicable to
+           SnoopDos versions greater than 3.0. If you need authentication,
+           please write to one of the following e-mail addresses:
+
+           llong@tin.it, hexaae@tiscalinet.it (Luca Longone)
+           tanti@intercom.it (Massimo Tantignone)
+           ecarroll@iol.ie (Eddy Carroll)
+
+           What follows is the original roadmap text for SnoopDos 3.0,
+           which is also valid for the 3.1 update.
+
+NOTE ABOUT THE 3.2 UPDATE
+
+	   The SnoopDos 3.1 release has been reworked again, you may
+	   contact thor@math.tu-berlin.de (Thomas Richter) for additional 
+	   informations or authentication.
+	   
+	   The SnoopDos AppIcon fix was proposed by Grzegorz Chmiel 
+	   <gchmiel@pnet.pl> and has been integrated into the sources.
+	   Thanks!
+	   
+	   Thank goes to Eddy Carroll for allowing me to redistribute the
+	   program.
+
+
+3.2 UPDATE NOTES FOR THE PROGRAMMER
+
+	   The sources remained greatly unmodified except some minor fixes.
+
+	   - The patch codes check now explicitly whether the main window
+	   layer is available as some gfx calls temporarely set 
+	   RastPort->Layer to NULL before proceeding. This caused some
+	   frequent enforcer hits in the past.
+
+	   - The AppIcon code copied the gadget data manually from the
+	   disk icon to a temporarly dummy icon. This does not work for
+	   "newicons" because they store the image in the tooltypes.
+	   (Wierd stuff anyhow...) Thanks, Grzegorz!
+
+	   - DeleteExtIO() and CreateExtIO() have been replaced by
+	   DeleteIORequest() and CreateIORequest().
+
+	   - The header snoopdos.h was enhanced to include all the prototypes
+	   of functions exported amongst modules. This was necessary for
+	   the next step.
+
+	   - The program was recompiled using SAS/C 6.58, and using
+	   registerized parameters, making the binary shorter and decreasing
+	   stack usage.
+
+	   - I decided to replace the SAS/C startup code by my own code
+	   which is a bit smarter and shorter. The makefile still includes
+	   the old LIB:c.o startup, though. It should be possible to 
+	   compile the program right away with the new makefile, just
+	   setup an assign "SD:" for a backup directory where the final
+	   files should be copied to.
+	
+	   - Replaced one bogus call to KPrintf() by the DB() macro.
+
+	   - Linking with amiga.lib and debug.lib is no longer required for
+	   the final clean version.
+
+	   - Added a "make clean" rule for the makefile.
+
+	   - Added a "Project-Startup" file which will build a project
+	   directory, copy the file from a backup location to a working 
+	   directory and sets up all the assigns used in the makefile.
+
+INTRODUCTION
+
+    SnoopDos was written using SAS/C 6.51. The Amiga programming community
+    owe a large debt of thanks to Doug Walker, Steve Krueger, Jim Cooper,
+    and everyone else at SAS Institute for providing such a useful and
+    stable development environment. Without SAS/C, development of SnoopDos
+    would have taken significantly longer.
+
+    If you have SAS/C, then you should be able to recompile SnoopDos with
+    no problems by simply typing "smake" in this directory. You might want
+    to turn off optimisation in the SCOPTIONS file if you are experimenting;
+    otherwise, prepare for a long wait.
+
+    If you are using DICE or another compiler, you will need to ensure that
+    you are using similar compiler options to those listed in SCOPTIONS. You
+    will also need to change the function prototypes in patches.h and perhaps
+    in patches.c. A future release may detect DICE automatically and do the
+    right thing.
+
+    In general, most files have an initialisation function and all have a
+    cleanup function. The initialisation function should be called at the
+    beginning of the code and the cleanup function at the end. All cleanup
+    functions are safe to call multiple times if necessary.
+
+    Note that all the source code has been formatted with a tab setting of
+    4 spaces. If your editor uses tabs set to some other width, then it is
+    strongly recommended that you run the code through Detab or a similar
+    utility, otherwise it will look a mess.
+
+
+MODULE OVERVIEW
+---------------
+Here's a summary of the different files and what they are used for:
+
+       system.h   Master include file for all system headers
+       system.c   Includes system.h -- used to create the GST file
+     snoopdos.h   Defines all program globals, structures, constants, protos
+     snoopdos.c   Top level module. Initialises and cleans up other modules
+       buffer.c   Allocates and formats events in the event buffer
+     language.c   Makes localised text strings available to other modules
+    snooptext.h   Master message include file used by all modules
+      patches.c   All the patch code inserted into system libraries
+      patches.h   Header file that prototypes all the patched functions
+    patchcode.s   Low-level assembly code used by patch mechanism
+     settings.c   Handles the command line interface to SnoopDos
+          gui.h   Constants which define the exact appearance of the GUI
+      mainwin.c   All functions relating to the main window
+       subwin.c   All functions relating to the other three windows
+      miscwin.c   Miscellaneous window and screen functions used everywhere
+       hotkey.c   Handles commodity interface + Workbench AppIcon/Toolmenu
+         icon.h   Image data for custom SnoopDos icon (from IconEdit)
+    snooptext.cd  SnoopDos catalog description file, for localisation
+    snooptext.ct  Example SnoopDos translation file, for localisation
+    testcalls.c   Separate utility to stress test the SnoopDos patch code.
+
+
+MODULE GUIDE
+------------
+Here's a more detailed look at the contents of each module. See the module
+itself for full details.
+
+
+SYSTEM.H
+SYSTEM.C
+
+    System.h is the master include file for all Amiga system includes. Any
+    system include used by any module is placed in here. The entire set of
+    includes is then precompiled into a SAS/C GST file, which greatly speeds
+    up compilation.
+
+   System.c is the file used to generate the GST -- it simply includes
+   the System.h header file.
+
+
+SNOOPDOS.H
+
+    SnoopDos.h is included by all other modules. It defines all the global
+    variables, structures, and prototypes used by SnoopDos. It also includes
+    the default program settings. Global variables with initial values are
+    defined when this file is included by SnoopDos.c, and declared when it's
+    included by other modules. Thus, if you change the initial value of
+    any global variables, SnoopDos.c must be recompiled (the makefile does
+    this automatically).
+
+
+SNOOPDOS.C
+
+    SnoopDos.c is the top level module. It opens all the necessary libraries,
+    and calls the initialisation routines of most of the other modules. It is
+    also responsible for keeping the global program settings up to date. The
+    most important functions are:
+
+              Cleanup()  Calls cleanup function of each module and exits
+             OpenLibs()  Opens all libraries needed by SnoopDos
+            mysprintf()  Re-entrant version of sprintf() library function
+      InstallSettings()  Updates subset of global settings with new values
+             MainLoop()  Waits for incoming events and dispatches them
+                 main()  Entry point for whole program.
+
+
+BUFFER.C
+
+    Buffer.c contains all the functions that deal directly with the SnoopDos
+    event buffer. An "event" contains all the information needed to create a
+    single line of output in the SnoopDos window. Here are the most important
+    functions:
+
+              InitBuffer()  Must be called at start of program
+          CleanupBuffers()  Called when program exits
+      SetTotalBufferSize()  Changes buffer size (allocating one if needed)
+             ClearBuffer()  Empties buffer contents
+             GetNewEvent()  Allocates space for a new event
+       ParseFormatString()  Converts "%d %s %p" into an internal format
+       BuildFormatString()  Converts internal format back to ascii string
+             FormatEvent()  Creates a formatted output line from an event
+         UnderlineTitles()  Creates an underline string for current titles
+         CheckSegTracker()  Called regularly to see if SegTracker is loaded
+
+
+LANGUAGE.C
+SNOOPTEXT.H
+
+    Language.c deals with all the text strings used by SnoopDos. Specifically,
+    it identifies the users locale and decides whether to use the strings
+    hard-coded in the executable, or to read them from an external catalog
+    file instead. The main functions are:
+
+        InitTextTable()  Called first. Creates default (english) string table
+           InitLocale()  Checks for external catalog files
+        CleanupLocale()  Frees any resources used by localisation
+
+    Snooptext.h is generated automatically from SnoopText.cd by Commodore's
+    CATCOMP utility. It defines a unique numeric identifier for each string,
+    and (when included by language.c) the strings themselves. It should never
+    be edited by hand. It's included in the archive for the convenience of
+    those who don't have CatComp.
+
+
+PATCHES.C
+PATCHES.H
+PATCHCODE.S
+
+    Patches.c is the backbone of SnoopDos -- it contains all the patch
+    routines that intercept calls made by other programs to various system
+    functions. Most of the functions in this file must be completely
+    re-entrant, since they can be called by many processes simultaneously.
+    The most important functions are:
+
+            InitPatches()  Initialises the memory-resident patch code
+          UpdatePatches()  Attempts to install or remove all patches as needed
+       LoadFuncSettings()  Updates patches to reflect function settings
+         CleanupPatches()  Removes all patches (waiting until it's safe)
+       UpdateDeviceList()  Builds list of currently mounted DOS devices
+        InitRamLibPatch()  Fixes a bug in ramlib that can crash SnoopDos
+     BackgroundProcCode()  Background task for pattern matching/name expansion
+             SetPattern()  Parses the current AmigaDOS task match pattern
+       CreateEvent()  Creates a new event, filling in various fields
+      HandlePaused()  Puts a task to sleep when Pause is enabled
+      JumpOrigFunc()  A macro that exits by calling the original function
+
+    Patches.h contains the prototypes for all the functions that are patched.
+    Each prototype defines the registers passed, along with a base register
+    in A6. The LVO offsets for each function are also defined here.
+
+    Patchcode.s contains the low-level assembly language patch code which is
+    used for each function. The same piece of code is copied multiple times
+    to create a unique patch for each function. Whenever any changes are
+    made to this code, or to the Patch structure which contains the code and
+    associated data, then the corresponding structure in Patches.c must be
+    updated. In addition, if the stack alignment on entry to the C patches
+    changes, the JumpOrigFunc() and MarkCallAddr macros must be adjusted.
+
+
+SETTINGS.C
+
+    Settings.c controls all the program settings. This includes loading and
+    saving settings files to disk, parsing the Workbench and CLI startup
+    options, and handling the ARexx interface. The important functions are:
+
+         InitSettings()  Initialises command name table
+         ParseCommand()  Syntax checks a SnoopDos command line
+          ExecCommand()  Executes a SnoopDos command line
+           SaveConfig()  Writes current settings to a command file
+           LoadConfig()  Executes all the commands in a command file
+           SendRemote()  Sends a command to a background copy of SnoopDos
+         ShowCommands()  Prints a formatted list of SnoopDos commands
+     ParseStartupOpts()  Parses Workbench and CLI startup options
+
+         InitRexxPort()  Initialises ARexx port
+      CleanupRexxPort()  Frees ARexx port
+       HandleRexxMsgs()  Handles incoming ARexx messages
+
+
+GUI.H
+
+    Gui.h file defines constants which relate to the SnoopDos GUI. These
+    are mainly used to finetune the gadget layout but also include a few
+    keyboard-related definitions. This file is included by MAINWIN.C,
+    SUBWIN.C and MISCWIN.C
+
+
+MAINWIN.C
+
+    Mainwin.c handles everything associated with the main window. It has
+    grown too large and should really be subdivided (again). Here are the
+    most important functions in the file:
+
+          CheckForScreen()  Locates current screen (locking if necessary)
+            ShowSnoopDos()  Opens SnoopDos window on the current screen
+            HideSnoopDos()  Closes main window, help and any other windows
+          OpenMainWindow()  Opens main window
+     CreateScrollGadgets()  Creates BOOPSI scroll gadgets for main window
+       CreateMainGadgets()  Creates gadtools gadgets for main window
+         CloseMainWindow()  Closes main window
+       CleanupMainWindow()  Frees all resources for main window
+        ReOpenMainWindow()  Closes and then opens main window
+       RecordWindowSizes()  Records sizes of all open windows
+        SetMainHideState()  Enables/disables Hide gadget and window title
+
+               InitMenus()  Initialises shortcut keys for localised menus
+          SetMenuOptions()  Updates boolean menu options with current settings
+          HandleMainMsgs()  Handles menu, gadget and keypress input
+         HandleNewEvents()  Outputs any new events to the main window
+          SetMonitorMode()  Sets monitor mode to normal, Paused or Disabled
+
+        RedrawMainWindow()  Draws everything in main window except gadgets
+          DrawHeaderLine()  Draws headerline at top of screen
+              ShowBuffer()  Redraws the main window buffer
+        DrawSelectedLine()  Highlights a single line in the buffer
+       ClearWindowBuffer()  Erases window buffer display
+        ScrollHorizontal()  Efficiently scrolls window contents to left/right
+       UpdateMainHScroll()  Updates horizontal scroll gadget to current offset
+       UpdateMainVScroll()  Updates vertical scroll gadget to current position
+              ShowStatus()  Displays a message in the status bar
+            UpdateStatus()  Displays status message reflecting current state
+
+                 OpenLog()  Opens a new logfile
+                WriteLog()  Writes some text to the logfile
+                CloseLog()  Closes the current logfile
+              SaveBuffer()  Saves current buffer contents to file/clipboard
+            SetLogGadget()  Selects appropriate wording for log gadget
+
+SUBWIN.C
+
+    Subwin.c contains all the functions needed to manage the format editor,
+    settings window and function window. The most important functions are:
+
+          CleanupSubWindow()  Closes all currently open windows
+
+        OpenSettingsWindow()  Opens settings window
+       CloseSettingsWindow()  Closes the settings window
+     CreateSettingsGadgets()  Creates font-sensitive gadgets for window
+        HandleSettingsMsgs()  Handles keyboard and gadget input
+
+        OpenFunctionWindow()  Opens function window and creates gagdets
+     CreateFunctionGadgets()  Creates font-sensitive gadgets for window
+       CloseFunctionWindow()  Closes the functions window
+            HandleFuncMsgs()  Handles keyboard and gadget input
+       ResetFuncToSelected()  Handles the "All/None/Selected" function gadgets
+              ShowFuncOpts()  Updates display of current function settings
+               GetFuncName()  Returns a name matching a function ID
+
+          OpenFormatWindow()  Creates the format editor window and gadgets
+         CloseFormatWindow()  Closes the format editor window
+       CreateFormatGadgets()  Creates font-sensitive gadgets for window
+          HandleFormatMsgs()  Handles gadget and keyboard input
+     InstallNewFormat()  Updates all windows to reflect a new format
+            CreateBob()  Creates a new BOB (Blitter OBject)
+         FreeBob()  Frees a BOB created earlier
+                 PickupBob()  Copies a text line into a BOB for Drag & Drop
+         DropBob()  Drops the text line in a new position
+       UpdateBob()  Moves BOB to a new osition
+
+MISCWIN.C
+
+    Miscwin.c contains a variety of functions related to the GUI that don't
+    conveniently fit anywhere else. As well as general screen and window
+    functions, it also handles the AmigaGuide interface, and creates the
+    custom images used for the file/font gadgets in the settings window.
+
+                InitFonts()  Initialises fonts according to system preferences
+              SetupScreen()  Locates a screen for SnoopDos to open on
+            CleanupScreen()  Frees misc info related to current screen
+                ShowError()  Displays an error requester
+              GetResponse()  Displays a requester with multiple choices
+               SelectFont()  Displays ASL font requester to get a font
+               SelectFile()  Displays ASL file requester to get a file name
+           AddKeyShortcut()  Update keyboard shortcuts array for a window
+               MyOpenFont()  Tries to open a font, from disk or from ROM
+        ConvertIMsgToChar()  Converts an IntuiMsg RAWKEY event to ascii
+
+               ShowAGuide()  Loads AmigaGuide and displays a help page
+            CleanupAGuide()  Shuts down AmigaGuide
+         HandleAGuideMsgs()  Handles incoming messages from AmigaGuide
+
+        CreateCustomImage()  Creates a new scaled file or font image
+          FreeCustomImage()  Frees an image allocated earlier
+               ShowGadget()  Presses or releases a button gadget
+
+
+HOTKEY.C
+ICON.H
+
+    Hotkey.c contains functions to handle commodity support, and interfacing
+    with Workbench (for AppIcon and ToolMenu support). It also deals with
+    icons. The important functions are:
+
+           InstallHotKey()  Installs commodity hotkey, initialising if needed
+           CleanupHotKey()  Shuts down commodity exchange support
+        HandleHotKeyMsgs()  Handles incoming msgs from commodity exchange
+
+          GetProgramIcon()  Finds (or creates) the SnoopDos program icon
+               WriteIcon()  Writes current icon to disk
+            CleanupIcons()  Frees any icons allocated earlier
+
+         AddProgramToWorkbench()  Creates an AppIcon or Tools menu entry
+    RemoveProgramFromWorkbench()  Removes any outstanding appicons/menu items
+           HandleWorkbenchMsgs()  Handles incoming msgs from Workbench
+
+    Icon.h contains the image data for the image used when writing icons to
+    disk if no icon could be found for the SnoopDos executable. This is
+    generated directly from IconEdit (set the SRC=YES tooltype), and has a
+    30 line header that does a few #define's to isolate IconEdit-dependent
+    variable names from the rest of the program.
+
+
+SNOOPTEXT.CD
+SNOOPTEXT.CT
+
+    SnoopText.cd is the localisation file for SnoopDos. It contains all the
+    messages used throughout the program. This file is compiled by Commodore's
+    CatComp utility to provide SNOOPTEXT.H which is then included by all
+    other modules. Thus, modifying SnoopText.cd requires that everything be
+    recompiled from scratch.
+
+    SnoopText.ct is a ready-to-go translation file which can be used with
+    CatComp to produce an external catalog file for use with SnoopDos. It
+    was generated automatically from SnoopText.cd using CatEdit by Rafael
+    D'Halleweyn and is included for the convenience of those who don't have
+    CatEdit to hand.
+
+
+TESTCALLS.C
+
+    This is a completely separate program. It was written to provide a means
+    of stress testing SnoopDos. It is not complete, hence it is not part
+    of the main SnoopDos program archive. Currently, it supports all of the
+    system functions and a few DOS functions.
+
+    It can be instructed to continuously call one or more of the functions
+    monitored by SnoopDos. Many subtle bugs were uncovered by running this
+    multiple times simultaneously.
+
+
+DISTRIBUTION CONDITIONS
+-----------------------
+
+You may freely use portions of the SnoopDos source code in your own programs
+if you wish. However, if you use two or more complete functions from the
+SnoopDos code, you must acknowledge the origin of those functions in your
+documentation and source code.
+
+You may modify the SnoopDos source code to create new versions of SnoopDos
+for your own use only. You may not redistribute such new versions without my
+explicit permission.
+
+
+FURTHER INFORMATION
+-------------------
+For additional information about the source code or algorithms used, you
+can contact me at:
+
+    ecarroll@maths.tcd.ie
+    ecarroll@cix.compulink.co.uk
+
+To obtain a copy of my PGP public key (used to authenticate distribution
+copies of SnoopDos 3.0 and above) send a message to ecarroll@maths.tcd.ie
+with the subject line "PGPKEY".

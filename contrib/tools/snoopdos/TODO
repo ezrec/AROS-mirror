@@ -1,0 +1,52 @@
+Some assorted design issues and ideas worth considering in future releases.
+To begin with, the first couple was brought by Eddy.
+
+---------------------------------------------------------------------------
+
+[Eddy]
+
+1. re the Semaphore problems that have been discussed in the
+   comp.sys.amiga forums. I had a quick review of the old 3.0 code to
+   remind myself how it all worked, and in retrospect the core problem
+   was fairly easy to spot - the code responsible for updating the main
+   display area leaves the buffer semaphore locked for the duration of
+   the update. Since any attempt to draw into the display area may itself
+   block if the system is busy elsewhere, you have the potential for deadlock.
+
+   A simple solution which should eliminate this is to handle any screen
+   updates as follows: lock the buffer semaphore, make a local copy of any
+   portion of the buffer that will be needed for the screen update, unlock
+   the buffer semaphore, then perform the screen update from the copy.
+
+
+[Thomas Richter]
+
+2. Thomas has also pointed out some other areas that need attention: some of
+   the patches call functions (like ObtainSemaphore) that may block, but may
+   not be expected to block by the caller; and some patches can call DOS
+   functions like MatchPattern in contexts where a full DOS process structure
+   may not be readily avaialble. These are probably a bit trickier to handle
+   properly. For the blocking issue, I believe there's already a semaphore
+   timeout mechanism in recent releases will would probably suffice.
+
+   For DOS process issues, a message could be sent to the background pattern
+   matcher to perform the operation on the caller's behalf (though it would
+   probably be good to identify specific instances that might cause problems
+   first, before trying to come up with a final solution).
+
+
+[Robin Cloutman]
+
+Some ideas for the future:
+
+3. Scripted patching, so you can have config files for each library, with
+   what and how - so people can choose what they actually want to snoop
+   anyone remember Snoopy?) - but better designed so you can group things
+   together like "File access" and "Task creation" etc...
+
+4. Remembering the task list, so you can have it only watch "new" tasks
+   (ie, you want to see what this new prog xyz from aminet actually does...)
+
+5. Maybe subtasking the patch stuff entirely out of the gui, so it's more
+   like kprintf output to sashimi.
+
