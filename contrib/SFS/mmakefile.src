@@ -2,6 +2,8 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- contrib-complete : contrib-sfs
+
 FILES := 	adminspaces \
 			bitmap \
 			btreenodes \
