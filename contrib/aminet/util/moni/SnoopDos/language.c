@@ -82,7 +82,7 @@ void InitLocale(char *langname)
 	}
 	
 	for (i = 0; i < NUM_OF_MSGS; i++)
-		TextTable[i] = GetCatalogStr(SnoopDosCat, i, TextTable[i]);
+		TextTable[i] = (char *)GetCatalogStr(SnoopDosCat, i, TextTable[i]);
 }
 
 /*
@@ -93,5 +93,5 @@ void InitLocale(char *langname)
 void CleanupLocale(void)
 {
 	if (SnoopDosCat)		CloseCatalog(SnoopDosCat),	SnoopDosCat = NULL;
-	if (LocaleBase)			CloseLibrary(LocaleBase),	LocaleBase	= NULL;
+	if (LocaleBase)			CloseLibrary((struct Library *)LocaleBase),	LocaleBase	= NULL;
 }

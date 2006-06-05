@@ -168,21 +168,21 @@ struct {
         struct TextAttr *gadgetfa;
         struct TextAttr *bufferfa;
 } MainWindowFontList[] = {
-        &WindowFontAttr,        &BufferFontAttr,
-        &SystemFontAttr,        &BufferFontAttr,
-        &WindowFontAttr,        &SystemFontAttr,
-        &SystemFontAttr,        &SystemFontAttr,
-        &TopazFontAttr,         &SystemFontAttr,
-        &TopazFontAttr,         &TopazFontAttr,
-        NULL,                           NULL
+	{&WindowFontAttr,        &BufferFontAttr},
+	{&SystemFontAttr,        &BufferFontAttr},
+	{&WindowFontAttr,        &SystemFontAttr},
+	{&SystemFontAttr,        &SystemFontAttr},
+	{&TopazFontAttr,         &SystemFontAttr},
+	{&TopazFontAttr,         &TopazFontAttr},
+	{NULL,                           NULL}
 };
 
 /*
  *              This is used by the boopsi proportional gadgets
  */
 static struct TagItem RZ_MapTags[] = {
-        PGA_Top, ICSPECIAL_CODE,
-        TAG_END
+	{PGA_Top, ICSPECIAL_CODE},
+	{TAG_END}
 };
 
 /*
@@ -205,10 +205,10 @@ struct ScrollData {
         LONG    heightoffset;           /* Offset applied to offset                             */
         LONG    borderpos;                      /* Tag for border containing gadget             */
 } ScrollArrows[] = {
-        GID_LEFTARROW,  LEFTIMAGE,      -2, -17,        -1, 1,          GA_BottomBorder,
-        GID_RIGHTARROW, RIGHTIMAGE,     -1, -17,        -1, 1,          GA_BottomBorder,
-        GID_UPARROW,    UPIMAGE,        -1, 1,          -2, -9,         GA_RightBorder,
-        GID_DOWNARROW,  DOWNIMAGE,      -1, 1,          -1, -9,         GA_RightBorder
+	{GID_LEFTARROW,  LEFTIMAGE,      -2, -17,        -1, 1,          GA_BottomBorder},
+	{GID_RIGHTARROW, RIGHTIMAGE,     -1, -17,        -1, 1,          GA_BottomBorder},
+	{GID_UPARROW,    UPIMAGE,        -1, 1,          -2, -9,         GA_RightBorder},
+	{GID_DOWNARROW,  DOWNIMAGE,      -1, 1,          -1, -9,         GA_RightBorder}
 };
         
 /*
@@ -228,20 +228,20 @@ struct MainGadgets {
 
 
 struct MainGadgets MainGadgs[] = {
- GID_HIDE,              MSG_HIDE_GAD,           0, 2,    0,     1,      0,      4,      MAIN_NARROW,
- GID_QUIT,              MSG_QUIT_GAD,           1, 2,    1,     1,      1,      5,      MAIN_NARROW,
- GID_PAUSE,             MSG_PAUSE_GAD,          0, 1,    2,     1,      2,      6,      MAIN_NARROW_TOGGLE,
- GID_DISABLE,   MSG_DISABLE_GAD,        1, 1,    3,     1,      3,      7,      MAIN_NARROW_TOGGLE,
- GID_OPENLOG,   MSG_OPENLOG_GAD,        2, 1,    4, 0,  4,      8,  MAIN_WIDE,
- GID_APPENDLOG, MSG_APPENDLOG_GAD,      2, 1,    4,     0,      4,      8,      MAIN_WIDE_INVIS,
- GID_STARTLOG,  MSG_STARTLOG_GAD,       2, 1,    4,     0,      4,      8,      MAIN_WIDE_INVIS,
- GID_SERIALLOG, MSG_SERIALLOG_GAD,      2, 1,    4, 0,  4,  8,  MAIN_WIDE_INVIS,
- GID_CLOSELOG,  MSG_CLOSELOG_GAD,       2, 1,    4, 0,  4,      8,  MAIN_WIDE_INVIS,
- GID_SETUP,             MSG_SETUP_GAD,          3, 1,    5,     0,      6,      10,     MAIN_WIDE,
- GID_SAVESET,   MSG_SAVESET_GAD,        2, 2,    4,     1,      5,      9,      MAIN_WIDE,
- GID_FUNCTION,  MSG_FUNCTION_GAD,       3, 2,    5,     1,      7,      11,     MAIN_WIDE,
- GID_STATUS,    MSG_STATUS_GAD,         0, 0,    0,     0,      0,      0,      MAIN_STATUS,
-  0, 0, 0, 0, 0, 0, 0, 0, 0
+	{GID_HIDE,              MSG_HIDE_GAD,           0, 2,    0,     1,      0,      4,      MAIN_NARROW},
+	{GID_QUIT,              MSG_QUIT_GAD,           1, 2,    1,     1,      1,      5,      MAIN_NARROW},
+	{GID_PAUSE,             MSG_PAUSE_GAD,          0, 1,    2,     1,      2,      6,      MAIN_NARROW_TOGGLE},
+	{GID_DISABLE,   MSG_DISABLE_GAD,        1, 1,    3,     1,      3,      7,      MAIN_NARROW_TOGGLE},
+	{GID_OPENLOG,   MSG_OPENLOG_GAD,        2, 1,    4, 0,  4,      8,  MAIN_WIDE},
+	{GID_APPENDLOG, MSG_APPENDLOG_GAD,      2, 1,    4,     0,      4,      8,      MAIN_WIDE_INVIS},
+	{GID_STARTLOG,  MSG_STARTLOG_GAD,       2, 1,    4,     0,      4,      8,      MAIN_WIDE_INVIS},
+	{GID_SERIALLOG, MSG_SERIALLOG_GAD,      2, 1,    4, 0,  4,  8,  MAIN_WIDE_INVIS},
+	{GID_CLOSELOG,  MSG_CLOSELOG_GAD,       2, 1,    4, 0,  4,      8,  MAIN_WIDE_INVIS},
+	{GID_SETUP,             MSG_SETUP_GAD,          3, 1,    5,     0,      6,      10,     MAIN_WIDE},
+	{GID_SAVESET,   MSG_SAVESET_GAD,        2, 2,    4,     1,      5,      9,      MAIN_WIDE},
+	{GID_FUNCTION,  MSG_FUNCTION_GAD,       3, 2,    5,     1,      7,      11,     MAIN_WIDE},
+	{GID_STATUS,    MSG_STATUS_GAD,         0, 0,    0,     0,      0,      0,      MAIN_STATUS},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
 
@@ -292,7 +292,7 @@ int MainWidthRightText[] = {
         type,   (UBYTE *)(title_id), 0, flags, 0, (APTR)(mid)
 
 #define MX(type,title_id,flags,ex,mid) \
-        type,   (UBYTE *)(title_id), 0, flags, ex,(APTR)(mid)
+{type,   (UBYTE *)(title_id), 0, flags, ex,(APTR)(mid)}
 
 struct NewMenu MainMenu[] = {
 
@@ -2553,7 +2553,7 @@ BOOL OpenMainWindow(void)
         if (!CheckForScreen())
                 goto open_main_failed;
 
-        for (i = 0; gadgetfa = MainWindowFontList[i].gadgetfa; i++) {
+        for (i = 0; (gadgetfa = MainWindowFontList[i].gadgetfa); i++) {
                 bufferfa = MainWindowFontList[i].bufferfa;
 
                 if (CalcMinMainSize(gadgetfa, bufferfa, &minx, &miny))
@@ -3953,11 +3953,11 @@ void HandleMainMsgs(void)
                                 changedvert  = 0;
                                 updateslider = 0;
 
-                                GetAttr(PGA_Top, Gadget[GID_HSCROLLER], &newval);
+                                GetAttr(PGA_Top, (Object *)Gadget[GID_HSCROLLER], &newval);
                                 if (newval != LeftCol)
                                         ScrollHorizontal(newval - LeftCol);
 
-                                GetAttr(PGA_Top, Gadget[GID_VSCROLLER], &newval);
+                                GetAttr(PGA_Top, (Object *)Gadget[GID_VSCROLLER], &newval);
                                 if (newval != (TopSeq - FirstSeq)) {
                                         ShowBuffer(FirstSeq + newval, DISPLAY_QUICK);
                                         CheckForDirtyMainWindow();

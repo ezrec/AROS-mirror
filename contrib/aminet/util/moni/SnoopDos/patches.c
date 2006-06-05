@@ -1451,7 +1451,7 @@ void GetVolName(BPTR lock, char *buf, int maxlen)
          *              the same task address as this volume.
          */
         dl = LockDosList(LDF_DEVICES | LDF_READ);
-        while (dl = NextDosEntry(dl, LDF_DEVICES)) {
+        while ((dl = NextDosEntry(dl, LDF_DEVICES))) {
 #warning Add AROS specific code for DosList access
 #if 0
                 if (dl->dol_Task == vol->dl_Task) {
@@ -1551,7 +1551,7 @@ char *MyNameFromLock(BPTR lock, char *filename, char *buf, int maxlen)
                         return (buf);
                 }
                 for (p = filename; *p; p++) {
-                        if (*p == ':')                  /* If absolute path name, leave it alone */
+                        if ((*p == ':'))                  /* If absolute path name, leave it alone */
                                 return (filename);
                 }
         } else {
@@ -1740,7 +1740,7 @@ char *AsyncNameFromLock(char *volname, BPTR lock, char *filename,
         lmsg.msg.mn_Node.ln_Name = NULL;
 
         SetSignal(0, SIGF_SINGLE);              /* Ensure signal is clear first         */
-        PutMsg(&BackgroundPort, &lmsg); /* Send request to background task      */
+        PutMsg(&BackgroundPort, (struct Message *)&lmsg); /* Send request to background task      */
         Wait(SIGF_SINGLE);                              /* Wait for acknowledgement                     */
         return (lmsg.newbuf);
 }
@@ -1924,7 +1924,7 @@ struct Event *CreateEvent(ULONG calladdr, LONG *seqnum, ULONG actionid,
                          *              Expand filename to full path using background process
                          *              and the lock specified in expandname.
                          */
-                        BPTR lock = *(ULONG *)(&expandname+1);
+                        BPTR lock = (BPTR)(*(ULONG *)(&expandname+1));
 
                         filename = AsyncNameFromLock((char *)expandname, lock, filename,
                                                                              pathbuf, MAX_STR_LEN);
@@ -3817,7 +3817,7 @@ ULONG ASMCALL New_MakeLink(reg_d1 char *name, reg_d2 LONG dest, reg_d3 LONG soft
                         strncat(namestr, (char *)dest, MAX_STR_LEN - len - 1);
                         namestr[MAX_STR_LEN] = 0;
                 } else {
-                        strcat(namestr, MyNameFromLock(dest, NULL, namestr+len+1,
+                        strcat(namestr, MyNameFromLock((BPTR)dest, NULL, namestr+len+1,
                                                                                                  MAX_STR_LEN-len-1));
                 }
         }
@@ -4342,48 +4342,48 @@ void HandleSimplePacket(ULONG calladdr, struct DosPacket *dp,
                 case ACTION_FINDINPUT:
                         gadid   = GID_OPENFILE;
                         actid   = MSG_ACT_POPEN;
-                        lock    = dp->dp_Arg2;
-                        name    = dp->dp_Arg3;
+                        lock    = (BPTR)dp->dp_Arg2;
+                        name    = (BSTR)dp->dp_Arg3;
                         optstr  = MSG(MSG_OPT_READ);
                         break;
 
                 case ACTION_FINDOUTPUT:
                         gadid   = GID_OPENFILE;
                         actid   = MSG_ACT_POPEN;
-                        lock    = dp->dp_Arg2;
-                        name    = dp->dp_Arg3;
+                        lock    = (BPTR)dp->dp_Arg2;
+                        name    = (BSTR)dp->dp_Arg3;
                         optstr  = MSG(MSG_OPT_WRITE);
                         break;
 
                 case ACTION_FINDUPDATE:
                         gadid   = GID_OPENFILE;
                         actid   = MSG_ACT_POPEN;
-                        lock    = dp->dp_Arg2;
-                        name    = dp->dp_Arg3;
+                        lock    = (BPTR)dp->dp_Arg2;
+                        name    = (BSTR)dp->dp_Arg3;
                         optstr  = MSG(MSG_OPT_MODIFY);
                         break;
 
                 case ACTION_DELETE_OBJECT:
                         gadid   = GID_DELETE;
                         actid   = MSG_ACT_PDELETE;
-                        lock    = dp->dp_Arg1;
-                        name    = dp->dp_Arg2;
+                        lock    = (BPTR)dp->dp_Arg1;
+                        name    = (BSTR)dp->dp_Arg2;
                         optstr  = NULL;
                         break;
 
                 case ACTION_CREATE_DIR:
                         gadid   = GID_MAKEDIR;
                         actid   = MSG_ACT_PMAKEDIR;
-                        lock    = dp->dp_Arg1;
-                        name    = dp->dp_Arg2;
+                        lock    = (BPTR)dp->dp_Arg1;
+                        name    = (BSTR)dp->dp_Arg2;
                         optstr  = NULL;
                         break;
 
                 case ACTION_LOCATE_OBJECT:
                         gadid   = GID_LOCKFILE;
                         actid   = MSG_ACT_PLOCK;
-                        lock    = dp->dp_Arg1;
-                        name    = dp->dp_Arg2;
+                        lock    = (BPTR)dp->dp_Arg1;
+                        name    = (BSTR)dp->dp_Arg2;
                         switch (dp->dp_Arg3) {
                                 case ACCESS_READ:       optstr = MSG(MSG_OPT_READ);             break;
                                 case ACCESS_WRITE:      optstr = MSG(MSG_OPT_WRITE);    break;
@@ -4398,7 +4398,7 @@ void HandleSimplePacket(ULONG calladdr, struct DosPacket *dp,
 
                         gadid   = GID_MAKELINK;
                         actid   = MSG_ACT_PMAKELINK;
-                        lock    = dp->dp_Arg1;
+                        lock    = (BPTR)dp->dp_Arg1;
                         cname   = BTOC(dp->dp_Arg2);
 
                         /*
@@ -4432,7 +4432,7 @@ void HandleSimplePacket(ULONG calladdr, struct DosPacket *dp,
                                          *              Hard link: interpret dp->dp_Arg3 as the lock
                                          *              being linked to
                                          */
-                                        strcat(namebuf, AsyncNameFromLock(volname, dp->dp_Arg3,
+                                        strcat(namebuf, AsyncNameFromLock(volname, (BPTR)dp->dp_Arg3,
                                                                                                           NULL, namebuf+len+1,
                                                                                                           MAX_STR_LEN-len-1));
                                         optstr = MSG(MSG_OPT_HARDLINK);
@@ -4452,8 +4452,8 @@ void HandleSimplePacket(ULONG calladdr, struct DosPacket *dp,
                 }
 
                 case ACTION_RENAME_OBJECT:
-                        lock    = dp->dp_Arg1;
-                        name    = dp->dp_Arg2;
+                        lock    = (BPTR)dp->dp_Arg1;
+                        name    = (BSTR)dp->dp_Arg2;
                         optstr  = NULL;
 
                         /*
@@ -4466,11 +4466,11 @@ void HandleSimplePacket(ULONG calladdr, struct DosPacket *dp,
                         if (CurSettings.Func.Opts[GID_RENAME]) {
                                 char *cname = BTOC(name);
 
-                                lock            = dp->dp_Arg3;
-                                name            = dp->dp_Arg4;
+                                lock            = (BPTR)dp->dp_Arg3;
+                                name            = (BSTR)dp->dp_Arg4;
                                 if (*cname) {
                                         memcpy(namebuf, cname+1, *cname);
-                                        namebuf[*cname] = '\0';
+                                        namebuf[(int)*cname] = '\0';
                                 } else {
                                         /*
                                          *              If we have an empty string, we replace it with ""
@@ -4513,7 +4513,7 @@ void HandleSimplePacket(ULONG calladdr, struct DosPacket *dp,
                         namebuf[0] = '\0';
                         if (*cname) {
                                 memcpy(namebuf, cname+1, *cname);
-                                namebuf[*cname] = '\0';
+                                namebuf[(int)*cname] = '\0';
                         } else {
                                 /*
                                  *              If we have an empty string, we replace it with ""

@@ -757,10 +757,10 @@ int SetupScreen(void)
 	cm = scr->ViewPort.ColorMap;
 	if (cm) {
 		struct TagItem ti[] = {
-			VTAG_VIEWPORTEXTRA_GET,	NULL,
-			VTAG_END_CM,			NULL
+			{VTAG_VIEWPORTEXTRA_GET,	NULL},
+			{VTAG_END_CM,			NULL}
 		};
-		if (VideoControl(cm, ti) == NULL) {
+		if (VideoControl(cm, ti) == 0) {
 			struct ViewPortExtra *vpe = (struct ViewPortExtra *)ti[0].ti_Data;
 			struct Rectangle *rect = &vpe->DisplayClip;
 

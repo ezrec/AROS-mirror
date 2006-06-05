@@ -137,7 +137,7 @@ int InstallHotKey(char *hotkey)
 filter_error:
         DeleteCxObjAll(Filter);
         Filter = NULL;
-        return (NULL);
+        return 0;
 }
 
 /*
@@ -228,7 +228,7 @@ char *GetCommandName(void)
                 return (WBenchMsg->sm_ArgList->wa_Name);
         
         memcpy(name, cmdname+1, *cmdname);
-        name[*cmdname] = '\0';
+        name[(int)*cmdname] = '\0';
         return (name);
 }
  
@@ -495,7 +495,7 @@ void HandleWorkbenchMsgs(void)
         
         while ((msg = (void *)GetMsg(WorkbenchPort)) != NULL) {
                 show = 1;
-                ReplyMsg(msg);
+                ReplyMsg((struct Message*)msg);
         }
         if (show)
                 ShowSnoopDos();

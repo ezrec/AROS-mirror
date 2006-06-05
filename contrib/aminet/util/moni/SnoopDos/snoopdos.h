@@ -231,7 +231,7 @@ typedef enum {
         GID_RENAME,                     
         GID_RUNCOMMAND,         
         GID_SETVAR,                     
-        GID_SYSTEM,
+        GID_SSYSTEM,
 
 #define LAST_DOS_GADGET         GID_SYSTEM
 #define NUM_DOS_GADGETS         (LAST_DOS_GADGET - FIRST_DOS_GADGET + 1)

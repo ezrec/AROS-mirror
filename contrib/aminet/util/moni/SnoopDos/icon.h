@@ -86,7 +86,7 @@ struct DiskObject SnoopDos_Project =
 	(APTR)&SnoopDos_ProjectI1,	/* Render Image */
 	NULL,			/* Select Image */
 	NULL,			/* Gadget Text */
-	NULL,			/* Mutual Exclude */
+	0,				/* Mutual Exclude */
 	NULL,			/* Special Info */
 	0,			/* Gadget ID */
 	(APTR) 0x0001,		/* User Data (Revision) */

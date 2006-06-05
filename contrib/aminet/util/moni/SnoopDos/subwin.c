@@ -163,47 +163,47 @@ struct FuncGadgets FuncGadgs[] = {
         /*
          *              General controls
          */
-        GID_ONLYFAILS,          MSG_SHOWFAILS_GAD,              0, 0,
-        GID_SHOWCLINUM,         MSG_SHOWCLI_GAD,                0, 1,
-        GID_SHOWPATHS,          MSG_SHOWFULLPATHS_GAD,  0, 2,
-        GID_USEDEVNAMES,        MSG_USEDEVNAMES_GAD,    0, 3,
-        GID_MONPACKETS,         MSG_MONPACKETS_GAD,             0, 4,
-        GID_MONALLPACKETS,      MSG_MONALLPACKETS_GAD,  0, 5,
-        GID_MONROMCALLS,        MSG_MONROMCALLS_GAD,    0, 6,
-        GID_IGNOREWB,           MSG_IGNOREWB_GAD,               0, 7,
+	{GID_ONLYFAILS,          MSG_SHOWFAILS_GAD,              0, 0},
+	{GID_SHOWCLINUM,         MSG_SHOWCLI_GAD,                0, 1},
+	{GID_SHOWPATHS,          MSG_SHOWFULLPATHS_GAD,  0, 2},
+	{GID_USEDEVNAMES,        MSG_USEDEVNAMES_GAD,    0, 3},
+	{GID_MONPACKETS,         MSG_MONPACKETS_GAD,             0, 4},
+	{GID_MONALLPACKETS,      MSG_MONALLPACKETS_GAD,  0, 5},
+	{GID_MONROMCALLS,        MSG_MONROMCALLS_GAD,    0, 6},
+	{GID_IGNOREWB,           MSG_IGNOREWB_GAD,               0, 7},
         /*
          *              System functions
          */
-        GID_FINDPORT,           MSG_FINDPORT_GAD,               1, 0,
-        GID_FINDRESIDENT,       MSG_FINDRESIDENT_GAD,   1, 1,
-        GID_FINDSEMAPHORE,      MSG_FINDSEMAPHORE_GAD,  1, 2,
-        GID_FINDTASK,           MSG_FINDTASK_GAD,               1, 3,
-        GID_LOCKSCREEN,         MSG_LOCKSCREEN_GAD,             1, 4,
-        GID_OPENDEVICE,         MSG_OPENDEVICE_GAD,             1, 5,
-        GID_OPENFONT,           MSG_OPENFONT_GAD,               1, 6,
-        GID_OPENLIBRARY,        MSG_OPENLIBRARY_GAD,    1, 7,
-        GID_OPENRESOURCE,       MSG_OPENRESOURCE_GAD,   1, 8,
-        GID_READTOOLTYPES,      MSG_READTOOLTYPES_GAD,  1, 9,
-        GID_SENDREXX,           MSG_SENDREXX_GAD,               1, 10,
+	{GID_FINDPORT,           MSG_FINDPORT_GAD,               1, 0},
+	{GID_FINDRESIDENT,       MSG_FINDRESIDENT_GAD,   1, 1},
+	{GID_FINDSEMAPHORE,      MSG_FINDSEMAPHORE_GAD,  1, 2},
+	{GID_FINDTASK,           MSG_FINDTASK_GAD,               1, 3},
+	{GID_LOCKSCREEN,         MSG_LOCKSCREEN_GAD,             1, 4},
+	{GID_OPENDEVICE,         MSG_OPENDEVICE_GAD,             1, 5},
+	{GID_OPENFONT,           MSG_OPENFONT_GAD,               1, 6},
+	{GID_OPENLIBRARY,        MSG_OPENLIBRARY_GAD,    1, 7},
+	{GID_OPENRESOURCE,       MSG_OPENRESOURCE_GAD,   1, 8},
+	{GID_READTOOLTYPES,      MSG_READTOOLTYPES_GAD,  1, 9},
+	{GID_SENDREXX,           MSG_SENDREXX_GAD,               1, 10},
 
         /*
          *              AmigaDOS Functions
          */
-        GID_CHANGEDIR,          MSG_CHANGEDIR_GAD,              2, 0,
-        GID_DELETE,                     MSG_DELETE_GAD,                 2, 1,
-        GID_EXECUTE,            MSG_EXECUTE_GAD,                2, 2,
-        GID_GETVAR,                     MSG_GETVAR_GAD,                 2, 3,
-        GID_LOADSEG,            MSG_LOADSEG_GAD,                2, 4,
-        GID_LOCKFILE,           MSG_LOCKFILE_GAD,               2, 5,
-        GID_MAKEDIR,            MSG_MAKEDIR_GAD,                2, 6,
-        GID_MAKELINK,           MSG_MAKELINK_GAD,               2, 7,
-        GID_OPENFILE,           MSG_OPENFILE_GAD,               2, 8,
-        GID_RENAME,                     MSG_RENAME_GAD,                 2, 9,
-        GID_RUNCOMMAND,         MSG_RUNCOMMAND_GAD,             2, 10,
-        GID_SETVAR,                     MSG_SETVAR_GAD,                 2, 11,
-        GID_SYSTEM,                     MSG_SYSTEM_GAD,                 2, 12,
+	{GID_CHANGEDIR,          MSG_CHANGEDIR_GAD,              2, 0},
+	{GID_DELETE,                     MSG_DELETE_GAD,                 2, 1},
+	{GID_EXECUTE,            MSG_EXECUTE_GAD,                2, 2},
+	{GID_GETVAR,                     MSG_GETVAR_GAD,                 2, 3},
+	{GID_LOADSEG,            MSG_LOADSEG_GAD,                2, 4},
+	{GID_LOCKFILE,           MSG_LOCKFILE_GAD,               2, 5},
+	{GID_MAKEDIR,            MSG_MAKEDIR_GAD,                2, 6},
+	{GID_MAKELINK,           MSG_MAKELINK_GAD,               2, 7},
+	{GID_OPENFILE,           MSG_OPENFILE_GAD,               2, 8},
+	{GID_RENAME,                     MSG_RENAME_GAD,                 2, 9},
+	{GID_RUNCOMMAND,         MSG_RUNCOMMAND_GAD,             2, 10},
+	{GID_SETVAR,                     MSG_SETVAR_GAD,                 2, 11},
+	{GID_SSYSTEM,                     MSG_SYSTEM_GAD,                 2, 12},
 
-        0,                                      0,                                              0, 0
+	{0,                                      0,                                              0, 0}
 };
 
 /*
@@ -828,7 +828,7 @@ int OpenFunctionWindow(void)
                  */
                 int i;
 
-                for (i = 0; fontattr = SubWindowFontList[i]; i++) {
+                for (i = 0; (fontattr = SubWindowFontList[i]); i++) {
                         if (CreateFunctionGadgets(fontattr, TRUE, &width, &height))
                                 break;
                 }
@@ -1280,7 +1280,7 @@ int OpenSettingsWindow(void)
                  */
                 int i;
 
-                for (i = 0; fontattr = SubWindowFontList[i]; i++) {
+                for (i = 0; (fontattr = SubWindowFontList[i]); i++) {
                         if (CreateSettingsGadgets(fontattr, TRUE, &width, &height))
                                 break;
                 }
@@ -2823,7 +2823,7 @@ int OpenFormatWindow(void)
          *              Now try all combinations of gadget and buffer font until we
          *              find a font combination that fits on our screen
          */
-        for (i = 0; gadgetfa = MainWindowFontList[i].gadgetfa; i++) {
+        for (i = 0; (gadgetfa = MainWindowFontList[i].gadgetfa); i++) {
                 bufferfa = MainWindowFontList[i].bufferfa;
                 if (CreateFormatGadgets(gadgetfa, bufferfa, TRUE, &width, &height))
                         break;

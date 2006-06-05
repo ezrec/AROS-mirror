@@ -80,6 +80,7 @@
 #include <ctype.h>
 #ifdef __AROS__
 	extern struct WBStartup * WBenchMsg;
+#include <aros/libcall.h>
 #else
 	/* for WBenchMsg */
 	#include <dos.h>

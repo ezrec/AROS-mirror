@@ -1379,7 +1379,7 @@ void CleanupRexxPort(void)
 		RemPort(SnoopPort);
 		while ((msg = (struct RexxMsg *)GetMsg(SnoopPort)) != NULL) {
 			msg->rm_Result1 = RC_FATAL;
-			msg->rm_Result2 = NULL;
+			msg->rm_Result2 = 0;
 			ReplyMsg((struct Message *)msg);
 		}
 		Permit();
@@ -1405,7 +1405,7 @@ void HandleRexxMsgs(void)
 	UpdateFlags = 0;
 	while ((msg = (struct RexxMsg *)GetMsg(SnoopPort)) != NULL) {
 		msg->rm_Result1 = RC_OK;
-		msg->rm_Result2 = NULL;
+		msg->rm_Result2 = 0;
 		if ((msg->rm_Action & RXCODEMASK) == RXCOMM) {
 			/*
 			 *		Got a valid ARexx message, now process it
@@ -1420,7 +1420,7 @@ void HandleRexxMsgs(void)
 				case EXEC_UNKNOWN:	msg->rm_Result1 = 30; break;
 			}
 		}
-		ReplyMsg(msg);
+		ReplyMsg((struct Message *)msg);
 	}
 	InstallSettings(&newsettings, UpdateFlags);
 }
@@ -1489,7 +1489,7 @@ void SendRemote(char *cmdline, int mode)
 		msg.rm_Args[0]			 = cmdline;
 		msg.rm_Node.mn_ReplyPort = RemoteReplyPort;
 
-		PutMsg(ourport, &msg);
+		PutMsg(ourport, (struct Message *)&msg);
 		WaitPort(RemoteReplyPort);
 		GetMsg(RemoteReplyPort);
 		Permit();
@@ -1806,7 +1806,7 @@ int ParseStartupOpts(int argc, char **argv)
 			if (dobj) {
 				char **tooltypes;
 
-				for (tooltypes = dobj->do_ToolTypes; *tooltypes; tooltypes++) {
+				for (tooltypes = (char **)dobj->do_ToolTypes; *tooltypes; tooltypes++) {
 					if (SnoopPort)
 						ExecCommand(*tooltypes, MODE_TOOLTYPE, &newset);
 					else
