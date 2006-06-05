@@ -74,8 +74,8 @@ extern volatile void writel(ULONG val, APTR base);
 
 static ULONG usec2tick(ULONG usec)
 {
-    ULONG ret;
-    asm volatile("movl $0,%%eax; divl %2":"=a"(ret):"d"(usec),"m"(TIMER_RPROK));
+    ULONG ret, timer_rpr = TIMER_RPROK;
+    asm volatile("movl $0,%%eax; divl %2":"=a"(ret):"d"(usec),"m"(timer_rpr));
     return ret;
 }
 
