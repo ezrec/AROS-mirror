@@ -179,7 +179,7 @@ extern ULONG mNL_DropEntryDrawErase(struct IClass *cl,Object *obj,struct MUIP_NL
 /* NList_func3.c */
 
 extern ULONG MyCallHookPkt(Object *obj,BOOL hdata,struct Hook *hook,APTR object,APTR message);
-extern ULONG STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...);
+extern ULONG STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...) __stackparm;
 extern LONG DeadKeyConvert(struct NLData *data,struct IntuiMessage *msg,UBYTE *buf,LONG bufsize,struct KeyMap *kmap);
 extern char *ltoa(ULONG val, char *buffer, int len);
 

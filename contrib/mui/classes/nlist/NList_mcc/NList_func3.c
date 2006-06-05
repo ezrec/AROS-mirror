@@ -61,7 +61,7 @@ ULONG STDARGS VARARGS68K MyCallHookPktA(Object *obj, struct Hook *hook, ...)
   ret = MyCallHookPkt(obj, FALSE, hook, obj, va->overflow_arg_area);
   #else
   va_start(va, hook);
-  ret = MyCallHookPkt(obj, FALSE, hook, obj, va);
+  ret = MyCallHookPkt(obj, FALSE, hook, obj, ((IPTR *)&hook)+1);
   #endif
 
   va_end(va);
