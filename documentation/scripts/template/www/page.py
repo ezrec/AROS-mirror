@@ -10,7 +10,13 @@ from components import *
 def makePage( _T, _N, _M, MIRRORS_DATA, lang ):
     navigation = Tree \
     ( [
-        A( 'Home', href=makeURL( '/', lang ) ),
+        A( _N['home'], href=makeURL( '/', lang ) ),
+        Tree \
+        ( [
+            A( 'English', href='%(BASE)s/' ),
+            A( 'Italiano', href='%(BASE)sindex.it.php' ),
+            A( 'Suomi', href='%(BASE)sindex.fi.php' )
+        ] ),
         BR(),
         A( _N['news'], href=makeURL( 'news/', lang ) ),
         Tree ( A( _N['archive'], href=makeURL( 'news/archive/', lang ) ) ),
@@ -335,6 +341,10 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang ):
 
     return str( page )
 
+
+# makeURL
+# -------
+# Create an internal link.
 
 def makeURL( file, lang, section='' ):
 
