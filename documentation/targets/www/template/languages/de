@@ -15,7 +15,7 @@ introduction:     Einleitung
 status:           Status
 screenshots:      Screenshots
 ports:            Portierungen
-license:          Lizenz
+license:          Lizens
 download:         Download
 documentation:    Dokumentation
 users:            Benutzer
@@ -26,9 +26,8 @@ faq:              FAQ
 developers:       Entwickler
 contribute:       Mitwirken
 working-with-subversion: Arbeiten mit Subversion
-bug-tracker:      Bug Tracker
-# FIXME: above
-compiling:        Übersetzen
+bug-tracker:      Fehlermeldung
+compiling:        Kompilierung
 application-development-manual: Anwendungs-Entwicklungs Handbuch
 zune-application-development-manual: Zune Anwendungs-Entwicklungs Handbuch
 system-development-manual:      System-Entwicklungs Handbuch
@@ -43,12 +42,12 @@ links:            Links
 contact:          Kontakt
 mailing-lists:    Mailinglisten
 forums:           Foren
-irc-channels:     IRC Channels
+irc-channels:     IRC-Kanäle
 credits:          Danksagung
 pictures:         Bilder
 developers-together: Entwicklertreffen
 sponsors:         Sponsoren
-linking:          **linking
+linking:          Verlinkung
 
 
 [misc]

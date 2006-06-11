@@ -86,10 +86,16 @@ It is recommended that you create a file 'index.en' in the new directories.
 Internationalisation
 --------------------
 
-The build system is prepared to support I18n. You have to append a
+The build system supports I18n for the 'www' target. You have to append a
 language shortcut to the document file name (e.g. commands.en).
-Currently there is only support for English (.en). When you create
-a link to a document you have to omit the shortcut (e.g \`Commands <user/commands>\`_).
+Currently there is support for English (.en), German (.de), Finnish (.fi)
+and Italian (.it).
+
+When you create a link to a document you have to omit the shortcut
+(e.g \`Commands <user/commands>\`_). But if you use the 'include' directive
+for translated documents you must keep the shortcut.
+
+The build system uses the English version when no translated page is available.
 
 Sample code
 -----------

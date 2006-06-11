@@ -14,7 +14,8 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang ):
         Tree \
         ( [
             A( 'English', href='%(BASE)s/' ),
-            A( 'Italiano', href='%(BASE)sindex.it.php' ),
+            A( 'Deutsch', href='%(BASE)sindex.de.php' ),
+            A( 'Italiano', href='%(BASE)sindex.it.php' ),            
             A( 'Suomi', href='%(BASE)sindex.fi.php' )
         ] ),
         BR(),

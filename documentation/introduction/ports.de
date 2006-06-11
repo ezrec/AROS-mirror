@@ -1,0 +1,148 @@
+============
+Portierungen
+============
+
+:Authors:   Adam Chodorowski 
+:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Done.
+
+.. Contents::
+
+
+Einführung
+==========
+
+Da AROS ein portables Beriebsystem ist, existiert es für verschiedene
+Plattformen. Eine "Portierung" is, wie der Name schon sagt, eine Version
+von AROS für eine bestimmte Plattform.
+
+
+Entwicklungslinien
+------------------
+
+Portierungen werden in zwei Hauptgruppen eingeteilt, nämlich "einheimisch" (native)
+und "bewirtet" (hosted).
+
+"Einheimische" Portierungen laufen direkt auf der Hardware und haben volle
+Kontrolle über den Computer. Sie werden zukünftig die empfohlene Weise werden,
+AROS laufen zu lassen, da sie überragende Geschwindigkeit und Effizienz ermöglichen.
+Momentan sind sie noch zu beschränkt, um verwendbar zu sein (zumindest für
+Software-Entwicklung).
+
+"Bewirtete" Portierungen laufen unter einem anderen Betriebssystem und greifen
+nicht direkt auf die Hardware zu, stattdessen benutzen sie die Möglichkeiten
+des Wirtsbetriebssystems. Der Vorteil der bewirteten Portierungen ist, dass sie
+leichter zu Erstellen sind, da es nicht erforderlich ist, hardware-nahe Treiber
+zu programmieren. Zusätzlich beschleunigt es die Entwicklung, da wir die
+Entwicklungsumgebung und AROS parallel laufen lassen können, ohne ständig
+Zeit mit Neustarts zu verschwenden.
+
+
+Benennung
+---------
+
+Die verschiedenen AROS-Portierungen haben die Form <cpu>-<platform>, wobei <cpu>
+die Prozessorarchitektur und <platform> ein symbolischer Name der Plattform ist.
+Die Plattform einer Portierung kann entweder eine Hardware für eine eimheimische
+Portierung sein (z.B. "pc" oder "amiga"). Oder es handelt sich um ein Betriebssystem
+für eine bewirtete Portierung wie "linux" oder "freebsd". Wenn nicht klar ist,
+dass es sich um das Thema AROS handelt, ist es üblich, "AROS/" voranzustellen,
+z. B. "AROS/i386-pc".
+
+
+Beweglichkeit
+-------------
+
+AROS-Programme für eine bestimmte CPU sind "beweglich" für alle Portierungen,
+die diese CPU verwenden. Das heißt, dass Programme, die für "i386-pc" erstellt
+wurden, auch auf "i386-linux" und "i386-freebsd" laufen.
+
+
+Vorhandene Portierungen
+=======================
+
+Es folgen alle Portierungen, die betriebsfähig sind und/oder aktiv entwickelt
+werden. Nicht alle können heruntergeladen werden, da sie nicht vollständig
+genug sind oder Kompilierungsanforderungen haben, die wir auf Grund beschränkter
+Resourcen nicht immer erfüllen können.
+
+
+AROS/i386-pc
+------------
+
+:Entwicklungslinie: "einheimisch"
+:Status:            betriebsfähig, unvollständige Treiber
+:Betreut:           Ja
+
+AROS/i386-pc ist die "einheimische" Portierung von AROS für IBM PC AT
+Computer und kompatible mit X86-Prozessoren. Der Name ist etwas irreführend,
+da AROS/i386-pc mindestens eine 486-CPU erfordert.
+
+Diese Portierung funktioniert recht gut, aber wir haben nur wenige Treiber.
+Eine der größten Einschränkungen ist, dass wir Unterstützung
+für beschleunigte Grafik nur für nVidia- und ATI-Grafik-Hardware haben.
+Andere Grafikkarten müssen mit unbeschleunigten VGA- und VGE-Grafiktreibern
+auskommen. Es wird an weiteren Grafiktreibern gearbeitet, aber die Entwicklung
+ist ziemlich langsam, da wir nur etwa 2,5 Hardwarehacker haben. Diese
+Portierung kann heruntergeladen werden.
+
+
+AROS/m68k-pp
+------------
+
+:Entwicklungslinie: "einheimisch" 
+:Status:            teilweise betriebsfähig (emuliert), unvollständige Treiber
+:Betreut:           Ja
+
+AROS/m68k-pp ist die "einheimische" Portierung von AROS auf Palm-Computer und
+kompatible (pp steht für "Palm Pilot", das ist der Name der ersten Geräte dieser
+Linie). Das heißt, dass Du AROS zukünftig beim Reisen in Deiner Tasche mitnehmen
+kannst...
+
+Diese Portierung ist noch sehr grob. Sie arbeitet größtenteils (in einem Emulator,
+da niemand seine teure Hardware zerstören möchte), aber es gibt noch viel zu tun.
+Es gibt einen Grafiktreiber, aber noch nicht mit Eingabe. Diese Portierung
+ist momentan nicht zum Herunterladen verfügbar.
+
+
+AROS/i386-linux
+---------------
+
+:Entwicklungslinie: "bewirtet"
+:Status:            betriebsfäig
+:Maintained:        Ja
+
+AROS/i386-linux ist die "bewirtete" Portierung von AROS für das Linux-Betriebssystem [#]_
+für X86-Prozessoren.
+
+Dies ist die vollständigste Portierung, da die meisten Entwickler momentan Linux
+verwenden, wenn sie an AROS arbeiten, und es sind wesentlich weniger Treiber
+zu erstellen. Diese Portierung kann heruntergeladen werden.
+
+
+AROS/i386-freebsd
+-----------------
+
+:Entwicklungslinie: "bewirtet"
+:Status:            betriebsfähig
+:Betreut:           Ja (5.x)
+
+AROS/i386-freebsd ist die "bewirtete" Portierung von AROS auf das FreeBSD-
+Betriebssystem auf X86-Prozessoren.
+
+Diese Portierung is relativ vollständig, da sie den meisten Kode mit AROS/i386-linux
+teilt. Da aber nur wenig Entwickler FreeBSD verwenden, liegt sie etwas zurück.
+Wir versuchen, AROS/i386-freebsd zu kompilieren, wenn wir "Schnappschüsse" erstellen.
+Das ist nicht immer möglich, deshalb ist sie nicht immer zum Herunterladen vorhanden.
+
+
+Fußnoten
+========
+
+.. [#] Ja, wir wissen, dass Linux ein Kernel und kein Betriebssystem ist, aber
+       so ist es kürzer zu schreiben als "Betriebssystem basierend auf dem Linux Kernel,
+       einige der allgemeinen GNU Werkzeuge und dem X-Window-System".
+       Der Nachteil dieser Größenoptimierung ist, dass man diese Erklärung für
+       pedantische Leser schreiben muss, aber was soll's.
