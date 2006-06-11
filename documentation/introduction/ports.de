@@ -2,7 +2,7 @@
 Portierungen
 ============
 
-:Authors:   Adam Chodorowski 
+:Authors:   Adam Chodorowski, Matthias Rustler
 :Copyright: Copyright © 1995-2002, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
@@ -15,7 +15,7 @@ Einführung
 ==========
 
 Da AROS ein portables Beriebsystem ist, existiert es für verschiedene
-Plattformen. Eine "Portierung" is, wie der Name schon sagt, eine Version
+Plattformen. Eine "Portierung" ist, wie der Name schon sagt, eine Version
 von AROS für eine bestimmte Plattform.
 
 
@@ -34,7 +34,7 @@ Software-Entwicklung).
 "Bewirtete" Portierungen laufen unter einem anderen Betriebssystem und greifen
 nicht direkt auf die Hardware zu, stattdessen benutzen sie die Möglichkeiten
 des Wirtsbetriebssystems. Der Vorteil der bewirteten Portierungen ist, dass sie
-leichter zu Erstellen sind, da es nicht erforderlich ist, hardware-nahe Treiber
+leichter zu erstellen sind, da es nicht erforderlich ist, hardware-nahe Treiber
 zu programmieren. Zusätzlich beschleunigt es die Entwicklung, da wir die
 Entwicklungsumgebung und AROS parallel laufen lassen können, ohne ständig
 Zeit mit Neustarts zu verschwenden.
@@ -66,7 +66,7 @@ Vorhandene Portierungen
 Es folgen alle Portierungen, die betriebsfähig sind und/oder aktiv entwickelt
 werden. Nicht alle können heruntergeladen werden, da sie nicht vollständig
 genug sind oder Kompilierungsanforderungen haben, die wir auf Grund beschränkter
-Resourcen nicht immer erfüllen können.
+Ressourcen nicht immer erfüllen können.
 
 
 AROS/i386-pc

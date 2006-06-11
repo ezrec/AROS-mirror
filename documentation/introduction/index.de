@@ -1,6 +1,6 @@
-==========================
-Short introduction to AROS
-==========================
+========================
+Kurze Einführung in AROS
+========================
 
 :Authors:   Aaron Digulla, Stefan Rieken, Matt Parsons, Adam Chodorowski 
 :Copyright: Copyright © 1995-2006, The AROS Development Team
@@ -55,8 +55,8 @@ Aber was genau war ein Fehler? Und wie sollten die Fehler behoben werden?
 Was sind die Eigenschaften, die ein modernes Betriebssystem haben muss?
 Und auf welche Weise sollten sie in das AmigaOS integriert werden?
 
-Zwei Jahre diskutierten die Leute immer noch darüber, und keine einzige Zeile
-Kode war geschrieben worden (zumindest hat niemand diesen Kode gesehen).
+Zwei Jahre später diskutierten die Leute immer noch darüber, und keine einzige
+Zeile Kode war geschrieben worden (zumindest hat niemand diesen Kode gesehen).
 Diskussionen verliefen immer noch nach dem Schema "wir brauchen unbedingt ..."
 und jemand anders antwortete "lies die alten Mails" oder "dies ist unmöglich, weil",
 kurz darauf folgte "das stimmt nicht, weil ..." und so weiter.
