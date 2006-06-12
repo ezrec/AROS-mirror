@@ -14,6 +14,8 @@ EXEDIR := $(DOPUSDIR)
 
 #MM- DirOpus : dopus-library workbench-libs-rexxsyslib
 
+USER_CFLAGS := -I$(DOPUSDIR)/Development/include
+
 %build_prog mmake=DirOpus \
     progname=DirectoryOpus targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="rexxsyslib amiga arosc m"

@@ -31,12 +31,14 @@ the existing commercial status of Directory Opus 5.
 #include "dopuslib.h"
 #include "ushort.h"
 
+#ifndef __AROS__
 struct ExecBase *SysBase;
-struct DOpusBase *DOpusBase;
 struct IntuitionBase *IntuitionBase;
 struct GfxBase *GfxBase;
 struct DosLibrary *DOSBase;
 struct Library *LayersBase;
+#endif
+struct DOpusBase *DOpusBase;
 
 
 /* AROS : We make this arrays of UBYTE instead to avoid endianess problems */

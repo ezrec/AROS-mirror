@@ -8,6 +8,8 @@ FILES := main main1 main2 main3 main4 main5 \
 
 #MM- ConfigOpus : dopus-library
 
+USER_CFLAGS := -I$(DOPUSDIR)/Development/include
+
 %build_prog mmake=ConfigOpus \
     progname=ConfigOpus targetdir=$(DOPUSDIR) \
     files=$(FILES) uselibs="amiga arosc m"

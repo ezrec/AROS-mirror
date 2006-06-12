@@ -26,11 +26,9 @@ FUNCTIONS	:= \
 
 #MM- dopus-library : setup includes linklibs
 
-%build_module_macro mmake=dopus-library \
-    modname=dopus modtype=library dir=$(DOPUSDIR)/Libs \
-    funcs=$(FUNCTIONS) files=$(FILES) \
-    conffile=lib.conf \
+USER_CFLAGS := -D__DOPUS_NOLIBBASE__ -I$(DOPUSDIR)/Development/include
+
+%build_module mmake=dopus-library \
+    modname=dopus modtype=library prefix=$(DOPUSDIR) \
+    files="dopus_init $(FUNCTIONS) $(FILES)" \
     uselibs=rom
-
-%common
-
