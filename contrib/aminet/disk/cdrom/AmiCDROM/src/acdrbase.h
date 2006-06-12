@@ -33,7 +33,5 @@ struct ProcNode {
 	void *data;           /* data of the process (globals) */
 };
 
-#define expunge() AROS_LC0(BPTR, expunge, struct ACDRBase *, acdrbase, 3, acdr)
-
 #endif /* ACDRBASE_H */
 

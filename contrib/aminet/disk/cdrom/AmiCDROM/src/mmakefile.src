@@ -20,10 +20,9 @@ FILES := \
 
 USER_CFLAGS := -DAROS_KERNEL -DNDEBUG -DDEBUG=0
 
-%build_module_macro mmake=aminet-disk-cdrom-amicdrom \
-  modname=cdrom modtype=handler \
-  initfile=arosdevice files=$(FILES) \
-  uselibs="arossupport arosc m"
+%build_module mmake=aminet-disk-cdrom-amicdrom \
+    modname=cdrom modtype=device modsuffix=handler \
+    files="arosdevice $(FILES)" \
+    uselibs="arossupport rom"
 
-%common
 

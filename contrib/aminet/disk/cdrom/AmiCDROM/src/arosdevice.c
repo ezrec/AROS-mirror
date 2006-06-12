@@ -1,5 +1,6 @@
 #include <proto/exec.h>
 #include <aros/libcall.h>
+#include <aros/symbolsets.h>
 #include <dos/filesystem.h>
 #include <exec/errors.h>
 #include <exec/memory.h>
@@ -9,79 +10,18 @@
 #include "cdrom.h"
 #include "devsupp.h"
 
-extern const char amicdrom_name[];
-extern const char amicdrom_version[];
-extern const APTR amicdrom_inittab[4];
-extern void *const acdrfunctable[];
-extern const UBYTE acdrdatatable;
-extern struct ACDRBase *AROS_SLIB_ENTRY(init,acdrdev)();
-extern void AROS_SLIB_ENTRY(open,acdrdev)();
-extern BPTR AROS_SLIB_ENTRY(close,acdrdev)();
-extern BPTR AROS_SLIB_ENTRY(expunge,acdrdev)();
-extern int AROS_SLIB_ENTRY(null,acdrdev)();
-extern void AROS_SLIB_ENTRY(beginio,acdrdev)();
-extern LONG AROS_SLIB_ENTRY(abortio,acdrdev)();
-extern const char acdrhandlerend;
+#include LC_LIBDEFS_FILE
 
 void ACDR_work(struct ACDRBase *);
 void *ACDR_GetData(struct ACDRBase *);
 
-int ACDR_entry(void)
+AROS_SET_LIBFUNC(GM_UNIQUENAME(Init), LIBBASETYPE, acdrbase)
 {
-	/* If the device was executed by accident return error code. */
-	return -1;
-}
-
-const struct Resident ACDR_resident=
-{
-	RTC_MATCHWORD,
-	(struct Resident *)&ACDR_resident,
-	(APTR)&acdrhandlerend,
-	RTF_COLDSTART | RTF_AFTERDOS | RTF_AUTOINIT,
-	41,
-	NT_DEVICE,
-	-122,
-	(char *)amicdrom_name,
-	(char *)&amicdrom_version[6],
-	(ULONG *)amicdrom_inittab
-};
-
-const char amicdrom_name[]="cdrom.handler";
-const char amicdrom_version[]="$VER: " HANDLER_VERSION;
-
-const APTR amicdrom_inittab[4]=
-{
-	(APTR)sizeof(struct ACDRBase),
-	(APTR)acdrfunctable,
-	(APTR)&acdrdatatable,
-	&AROS_SLIB_ENTRY(init,acdrdev)
-};
-
-void *const acdrfunctable[]=
-{
-	&AROS_SLIB_ENTRY(open,acdrdev),
-	&AROS_SLIB_ENTRY(close,acdrdev),
-	&AROS_SLIB_ENTRY(expunge,acdrdev),
-	&AROS_SLIB_ENTRY(null,acdrdev),
-	&AROS_SLIB_ENTRY(beginio,acdrdev),
-	&AROS_SLIB_ENTRY(abortio,acdrdev),
-	(void *)-1
-};
-
-const UBYTE acdrdatatable = 0;
-
-AROS_LH2(struct ACDRBase *, init,
- AROS_LHA(struct ACDRBase *, acdrbase, D0),
- AROS_LHA(BPTR,             segList, A0),
-      struct ExecBase *, SysBase, 0, acdrdev)
-{
-	AROS_LIBFUNC_INIT
+	AROS_SET_LIBFUNC_INIT
 
 	struct Task *task;
 	APTR stack;
 
-	acdrbase->seglist = segList;
-	acdrbase->SysBase = SysBase;
 	acdrbase->DOSBase = (struct DOSBase *)OpenLibrary("dos.library",41);
 	if (acdrbase->DOSBase)
 	{
@@ -125,15 +65,15 @@ AROS_LH2(struct ACDRBase *, init,
 				NEWLIST(&acdrbase->process_list);
 				acdrbase->GetData=ACDR_GetData;
 				if (NewAddTask(task,ACDR_work,NULL,tags) != NULL)
-					return acdrbase;
+					return TRUE;
 				FreeMem(stack, AROS_STACKSIZE);
 			}
 			FreeMem(task, sizeof(struct Task));
 		}
 		CloseLibrary((struct Library *)acdrbase->DOSBase);
 	}
-	return NULL;
-	AROS_LIBFUNC_EXIT
+	return FALSE;
+	AROS_SET_LIBFUNC_EXIT
 }
 
 #ifdef SysBase
@@ -141,16 +81,16 @@ AROS_LH2(struct ACDRBase *, init,
 #endif
 #define SysBase acdrbase->SysBase
 
-AROS_LH3(void, open,
- AROS_LHA(struct IOFileSys *, iofs, A1),
- AROS_LHA(ULONG,              unitnum, D0),
- AROS_LHA(ULONG,              flags, D1),
-           struct ACDRBase *, acdrbase, 1,acdrdev)
+AROS_SET_OPENDEVFUNC(GM_UNIQUENAME(Open),
+		     LIBBASETYPE, acdrbase,
+		     struct IOFileSys, iofs,
+		     unitnum,
+		     flags
+)
 {
-	AROS_LIBFUNC_INIT
+	AROS_SET_DEVFUNC_INIT
 
 	unitnum = flags = 0;
-	acdrbase->device.dd_Library.lib_OpenCnt++;
 	acdrbase->rport.mp_SigTask=FindTask(NULL);
 
 	iofs->IOFS.io_Command = -1;
@@ -160,13 +100,12 @@ AROS_LH3(void, open,
 	if (iofs->io_DosError == NULL)
 	{
 		iofs->IOFS.io_Device = &acdrbase->device;
-		acdrbase->device.dd_Library.lib_Flags &= ~LIBF_DELEXP;
 		iofs->IOFS.io_Error = 0;
-		return;
+		return TRUE;
 	}
-	acdrbase->device.dd_Library.lib_OpenCnt--;
 	iofs->IOFS.io_Error = IOERR_OPENFAIL;
-	AROS_LIBFUNC_EXIT	
+	return FALSE;
+	AROS_SET_DEVFUNC_EXIT	
 }
 
 #ifdef DOSBase
@@ -174,38 +113,25 @@ AROS_LH3(void, open,
 #endif
 #define DOSBase acdrbase->DOSBase
 
-AROS_LH0(BPTR, expunge, struct ACDRBase *, acdrbase, 3, acdrdev)
+AROS_SET_LIBFUNC(GM_UNIQUENAME(Expunge), LIBBASETYPE, acdrbase)
 {
-	AROS_LIBFUNC_INIT
+	AROS_SET_LIBFUNC_INIT
 
-	BPTR retval;
-
-	if (acdrbase->device.dd_Library.lib_OpenCnt) {
-		acdrbase->device.dd_Library.lib_Flags |= LIBF_DELEXP;
-		return 0;
-	}
 	RemTask(acdrbase->port.mp_SigTask);
 	FreeMem(((struct Task *)acdrbase->port.mp_SigTask)->tc_SPLower,AROS_STACKSIZE);
 	FreeMem(acdrbase->port.mp_SigTask, sizeof(struct Task));
 	CloseLibrary((struct Library *)DOSBase);
-	Remove(&acdrbase->device.dd_Library.lib_Node);
-	retval=acdrbase->seglist;
-	FreeMem
-	(
-		(char *)acdrbase-acdrbase->device.dd_Library.lib_NegSize,
-			acdrbase->device.dd_Library.lib_NegSize+
-			acdrbase->device.dd_Library.lib_PosSize
-	);
-	return retval;
+	return TRUE;
 
-	AROS_LIBFUNC_EXIT
+	AROS_SET_LIBFUNC_EXIT
 }
 
-AROS_LH1(BPTR, close,
- AROS_LHA(struct IOFileSys *, iofs, A1),
-      struct ACDRBase *, acdrbase, 2, acdrdev)
+AROS_SET_CLOSEDEVFUNC(GM_UNIQUENAME(Close),
+		      LIBBASETYPE, acdrbase,
+		      struct IOFileSys, iofs
+)
 {
-	AROS_LIBFUNC_INIT
+	AROS_SET_DEVFUNC_INIT
 
 	acdrbase->rport.mp_SigTask=FindTask(NULL);
 	iofs->IOFS.io_Command = -2;
@@ -213,27 +139,16 @@ AROS_LH1(BPTR, close,
 	WaitPort(&acdrbase->rport);
 	(void)GetMsg(&acdrbase->rport);
 	if (iofs->io_DosError)
-		return 0;				// there is still something to do on this volume
+		return FALSE;				// there is still something to do on this volume
 	iofs->IOFS.io_Device=(struct Device *)-1;
-	if (!--acdrbase->device.dd_Library.lib_OpenCnt)
-	{
-		/* Delayed expunge pending? */
-		if (acdrbase->device.dd_Library.lib_Flags & LIBF_DELEXP)
-		{
-			/* Then expunge the device */
-			return expunge();
-		}
-	}
-	return 0;
-	AROS_LIBFUNC_EXIT
+	return TRUE;
+	AROS_SET_DEVFUNC_EXIT
 }
 
-AROS_LH0I(int, null, struct acdrbase *, acdrbase, 4, acdrdev)
-{
-	AROS_LIBFUNC_INIT
-	return 0;
-	AROS_LIBFUNC_EXIT
-}
+ADD2INITLIB(GM_UNIQUENAME(Init),0)
+ADD2OPENDEV(GM_UNIQUENAME(Open),0)
+ADD2CLOSEDEV(GM_UNIQUENAME(Close),0)
+ADD2EXPUNGELIB(GM_UNIQUENAME(Expunge),0)
 
 AROS_LH1(void, beginio,
  AROS_LHA(struct IOFileSys *, iofs, A1),
@@ -257,5 +172,3 @@ AROS_LH1(LONG, abortio,
 	return 0;
 	AROS_LIBFUNC_EXIT
 }
-
-const char acdrhandlerend = 0;
