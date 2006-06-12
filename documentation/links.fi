@@ -4,7 +4,7 @@ Linkkejä
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
 :Copyright: Copyright © 1995-2002, The AROS Development Team
-:Version:   $Revision: 19766 $
+:Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
 
@@ -105,16 +105,8 @@ Sekalaista
 
   TeamAROS on AROS:in ruohonjuuritason tukiryhmä.
 
-+ `Back to the Roots`__
-
-  .. Image:: images/bttr.jpeg
-
-  Mainio nostalginen sivusto jolta löytyy lisensoituja ja vapaita Amigan
-  pelejä.
-
 
 __ http://phinixi.com/
 __ http://www.thenostromo.com/teamaros/
-__ http://www.back2roots.org/
 
 .. _ota yhteyttä: contact
