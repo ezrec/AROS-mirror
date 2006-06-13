@@ -1,0 +1,112 @@
+==================
+Kontaktinformation
+==================
+
+:Authors:   Adam Chodorowski, Matthias Rustler 
+:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Done.
+
+.. Contents::
+
+
+Ansprechpartner
+===============
+
+Der Leiter des AROS-Entwicklungsteams ist Aaron "Optimizer" Digulla. Er ist der
+Ansprechpartner, wenn Du das Team als Ganzes ansprechen willst, z. B. für ein
+Sponsorenabkommen oder andere Formen der Zusammenarbeit. Du kannst ihn per E-Mail
+an `digulla@aros.org`__ erreichen.
+
+__ mailto:digulla@aros.org
+
+
+Mailinglisten
+=============
+
+Es gibt ein paar AROS-bezogene Mailinglisten, welche die Hauptinformationskanäle
+für AROS-Entwickler darstellen. Folgende Mailinglisten sind vorhanden:
+
++ `AROS Announce`__
+  
+  Dies ist eine wenig frequentierte Liste für Neuigkeiten und wichtige Ankündigungen.
+  Sie enthält die Informationen aus dem 'News'-Teil der Webseite. Normales
+  posten ist nicht erlaubt.
+
++ `AROS Developer`__
+
+  .. Note:: Abonnement-Anfragen für diese Liste werden nicht automatisch gehandhabt,
+            sondern jede Anfrage wird vom Listenverwalter geprüft. Deshalb kann
+            es einige Verzögerung geben zwischen der Anfrage und der Erteilung der
+            Mitgliedschaft.
+
+
++ `AROS Bugs`__
+
+  Dies ist eine Mailingliste, von der nur gelesen werden kann. Sie enthält Ergänzungen
+  und Änderungen der `Fehlerdatenbank`_. Entwicklern wird *empfohlen* sich dieser
+  Liste anzuschließen, so dass alle über die Fehler informiert sind. Das Volumen der
+  Liste ist niedrig.
+
++ `AROS CVS`__
+
+  Von dieser Liste mit Subversion-Protokollen kann nur gelesen werden. Im Gegensatz
+  zu den an die AROS-Developer-Liste geposteten Protokollen, wo die tägliche
+  Aktivität zusammengefasst wird, werden hier einzelne Mails unmittelbar nach jeder
+  Aktivität gesendet. Wenn Du ein annäherndes Echtzeit-Feedback des Subversion-Servers
+  möchtest, ist dies die richtige Liste für Dich. Das Volumen der Liste kann recht
+  groß werden.
+  
++ `AROS Website`__
+
+  Das Skript, das die Webseite erstellt, sendet Mails an diese Liste. Diejenigen,
+  die Änderungen an der Dokumentation vornehmen oder helfen können, wenn etwas
+  nicht funktioniert, sollten diese Liste abonnieren.
+
++ `AROS Bootlogs`__
+    
+  Diese Mailingliste ist für den Empfang von AROS-Bootprotokollen eingerichtet.
+  Dies wird uns beim Diagnostizieren und Verbessern der "einheimischen" Portierungen helfen.
+  Normale Diskussionen sind hier **nicht** erlaubt. Wenn Du ein Bootprotokoll sendest,
+  schließe bitte eine detaillierte Beschreibung Deiner Hardwarekonfiguration mit ein.
+
+Folge den Links auf die Verwaltungsseiten, um Informationen über Anmeldung, Abmeldung,
+Zugang zu den Archiven und weitern nützlichen Funktionen zu bekommen.
+
+__ http://mail.aros.org/mailman/listinfo/aros-announce/
+__ http://mail.aros.org/mailman/listinfo/aros-dev/
+__ http://lists.sourceforge.net/mailman/listinfo/aros-bugs
+__ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
+__ http://lists.sourceforge.net/mailman/listinfo/aros-website
+__ http://lists.sourceforge.net/mailman/listinfo/aros-bootlogs
+
+.. _`Fehlerdatenbank`: http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+
+
+Foren
+=====
+
+AROS-Exec__ ist das offizielle Community-Portal für AROS. Hier kannst Du die aktuellsten
+Neuigkeiten, Diskussionsforen, Bildergalerien und vieles weitere finden.
+Dies ist der perfekte Treffpunkt für AROS-Benutzer aus der ganzen Welt.
+
+__ http://aros-exec.org/
+
+
+IRC-Kanäle
+==========
+
+Es gibt einen offiziellen IRC-Kanal für AROS im FreeNode__-Netzwerk, der erwartungsgemäß
+den Namen `#aros`__ hat. Verbinde bitte mit `irc.freenode.net`__, dies wird Dich an
+einen Server in Deiner Nähe weiterleiten. Diskutiert wird über alles was mit AROS
+zu tun hat, einschließlich Entwicklung und wie die Welt übernommen werden kann. In
+seltenen Fällen, wenn der Hauptkanal zu geschwätzig ist, finden entwicklungsbezogene
+Diskussionen in `#aros.dev`__ statt.
+
+__ http://www.freenode.net/
+__ irc://irc.freenode.net/aros
+__ irc://irc.freenode.net/
+__ irc://irc.freenode.net/aros.dev
+
+.. The links have an other order than the English version.

@@ -1,0 +1,50 @@
+========
+Download
+========
+
+.. Contents::
+
+.. Note::
+
+   Zum Herunterladen von 'Nightly Builds' brauchst Du einen Downloadmanager,
+   der einen unterbrochenen Download fortsetzen kann, oder ein Shellprogramm
+   wie wget (Du kannst mit "wget -c" den Rest einer von einem anderen Programm
+   nur teilweise heruntergeladen Datei anfordern)
+
+Snapshots
+=========
+
+'Snapshots' werden öfter als Vollausgaben, aber nicht so oft wie 'Nightly Builds'
+veröffentlicht. Sie sind, im Gegensatz zu 'Nightly Builds', auf verschiedenen
+Maschinen getestet worden, so dass sie etwas stabiler sind. Andererseits enthalten
+sie nicht den neusten Kode.
+
+Melde bitte Fehler, die Du beim Benutzen der 'Snapshots' entdeckst, an den 
+`bug tracker`__. Für andere Anforderungen bitte die Foren von `AROS-Exec`__ verwenden.
+
+.. raw:: html
+
+   <?php virtual( "/cgi-bin/files?snapshots" ); ?>
+
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+__ http://aros-exec.org/
+
+
+Nightly builds
+==============
+
+'Nightly Builds' werden, wie der Name schon sagt, automatische jede Nacht
+aus dem Subversion-Baum erstellt. Sie enthalten den neusten Kode. Jedoch wurden
+sie nicht getestet und können unbrauchbar und fehlerhaft sein, wenn Du Pech hast.
+Jedoch funktionieren sie meistens ganz gut.
+
+Melde bitte Fehler, die Du beim Benutzen der 'Nightly Builds' entdeckst, an den 
+`bug tracker`__. Für andere Anforderungen bitte die Foren von `AROS-Exec`__ verwenden.
+
+.. raw:: html
+
+   <?php virtual( "/cgi-bin/files?nightly" ); ?>
+
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+__ http://aros-exec.org/
+
