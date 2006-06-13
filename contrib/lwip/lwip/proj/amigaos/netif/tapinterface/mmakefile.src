@@ -9,10 +9,9 @@ FUNCS	:= \
 
 #MM- lwip-tapinterface-kobj : includes linklibs
 
-OS_INCLUDES := -I$(SYS_INCLUDES) -I$(GENINCDIR)
+USER_CFLAGS := -I$(SYS_INCLUDES) -I$(GENINCDIR)
 
-%build_module_macro mmake=lwip-tapinterface modname=tapinterface \
-  modtype=library funcs=$(FUNCS) \
-  conffile=lib.conf compiler=host
-
-%common
+%build_module mmake=lwip-tapinterface \
+    modname=tapinterface modtype=library \
+    files=$(FUNCS) uselibs=autoinit usehostlibs=c \
+    compiler=host
