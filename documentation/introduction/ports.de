@@ -138,6 +138,23 @@ Wir versuchen, AROS/i386-freebsd zu kompilieren, wenn wir "Schnappschüsse" erste
 Das ist nicht immer möglich, deshalb ist sie nicht immer zum Herunterladen vorhanden.
 
 
+AROS/ppc-linux
+---------------
+
+:Entwicklungslinie: "bewirtet"
+:Status:            betriebsfähig
+:Betreut:           Ja
+
+AROS/ppc-linux ist die "bewirtete" Portierung von AROS auf das Linux-Betriebssystem
+für PPC-Prozessoren.
+
+Eine vorkompilierte Version kann von `Sourceforge`__ heruntergeladen werden.
+Neuerstellung erfordert einen gepatchten gcc3.4.3. Die diff-Datei befindet sich in
+contrib/gnu/gcc.
+
+__ http://sourceforge.net/project/showfiles.php?group_id=43586&package_id=194077
+
+
 Fußnoten
 ========
 

@@ -2,8 +2,8 @@
 Ports
 =====
 
-:Authors:   Adam Chodorowski 
-:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Authors:   Adam Chodorowski, Matthias Rustler 
+:Copyright: Copyright © 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -136,6 +136,21 @@ AROS/i386-linux, but since there aren't many developers that use FreeBSD it is
 lagging a little bit behind. We try to compile AROS/i386-freebsd when doing
 snapshots, but it is not always possible, so it might not always be available
 for download.
+
+AROS/ppc-linux
+---------------
+
+:Flavour:    Hosted
+:Status:     Working
+:Maintained: Yes
+
+AROS/ppc-linux is the hosted port of AROS to the Linux operating system
+running on the PPC family of processors.
+
+A precompiled version can be downloaded from `Sourceforge`__.
+Rebuilding requires a patched gcc3.4.3. The diff file can be found in contrib/gnu/gcc.
+
+__ http://sourceforge.net/project/showfiles.php?group_id=43586&package_id=194077
 
 
 Footnotes
