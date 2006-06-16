@@ -32,7 +32,7 @@ HAVE_ASMIO      = @HAVE_ASMIO@
 
 .PHONY:		all clean distclean maintainer-clean bindist
 
-SUBDIRS		= Device Filesave
+SUBDIRS		= Device Filesave Void
 
 
 ifneq ($(strip $(HAVE_ASMIO)),)
