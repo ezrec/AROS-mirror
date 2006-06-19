@@ -4,7 +4,7 @@ Porting
 
 :Authors:   Adam Chodorowski, Paolo Besser
 :Copyright: Copyright © 1995-2002, The AROS Development Team
-:Version:   $Revision: 24222 $
+:Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
 
@@ -139,6 +139,23 @@ Questo porting è relativamente completo, in quanto condivide la maggior parte
 del codice sorgente con la versione AROS/i386-linux, purtroppo, però, ci sono 
 pochi sviluppatori che usano questo sistema operativo e la programmazione 
 prosegue a rilento. Non sempre i sorgenti sono disponibili per il download.
+
+
+AROS/ppc-linux
+---------------
+
+:Flavour:    Hosted
+:Status:     Funziona
+:Maintained: Sì
+
+AROS/ppc-linux è la versione hosted di AROS per Linux che funziona 
+sui processori PPC.
+
+Una versione pre-compilata è disponibile sul sito di `Sourceforge`__.
+Per ricompilarla serve una versione patchata di gcc3.4.3. 
+I file diff sono disponibili nella directory contrib/gnu/gcc.
+
+__ http://sourceforge.net/project/showfiles.php?group_id=43586&package_id=194077
 
 
 Nota 
