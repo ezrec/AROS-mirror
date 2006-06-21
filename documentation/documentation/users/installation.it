@@ -1,0 +1,208 @@
+===============================
+Guida all'installazione di AROS
+===============================
+
+:Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Giuseppe Puglisi
+:Copyright: Copyright © 1995-2004, The AROS Development Team
+:Version:   $Revision: 24430 $
+:Date:      $Date: 2006-05-08 01:01:22 +0200 (lun, 08 mag 2006) $
+:Status:    Done. 
+:Abstract:
+    Questa guida vi accompagnerà attraverso i passi necessari per installare 
+    AROS. 
+
+    .. Attenzione:: 
+    
+        AROS è ancora un software in stadio alpha. Questo significa che al momento 
+        ci si diverte di più giocandoci e sviluppandoci sopra. Se siete venuti 
+	qui perchè pensavate che AROS fosse completo e pienamente utilizzabile 
+	come sistema operativo, resterete abbastanza delusi. AROS non è ancora 
+	a questo punto, ma ci stiamo lentamente muovendo nella giusta direzione.
+
+
+.. Contenuti::
+
+
+Downloading
+===========
+
+AROS è attualmente sotto intenso sviluppo. Ciò significa che dovrete scegliere 
+tra stabilità e features. Attualmente ci sono due tipi di package disponibili 
+per il download: le snapshots e le nightly builds.
+
+Le snapshots vengono realizzate saltuariamente, solitamente quando si accumula 
+una quantità consistente di modifiche di AROS dall'ultima snapshot e qualcuno 
+si sente motivato per crearne una nuova. In poche parole, al momento non esiste 
+una programmazione regolare delle uscite. Anche se realizzate saltuariamente, 
+e noi cerchiamo di produrle quando AROS è particolarmente stabile, non vi garantiamo 
+che la snapshots saranno esenti da bug o perfettamente funzionanti sulla vostra 
+macchina specifica. Detto questo, cerchiamo di testare le snapshots su più 
+macchine possibili, quindi in pratica dovrebbero funzionare relativamente bene.
+
+Le Nightly builds vengono realizzate, come la parola inglese suggerisce, 
+automaticamente ogni notte direttamente dall'albero Subversion, e contengono 
+il codice più recente.
+In ogni caso, non vengono testate in alcun modo, possono contenere bug e causare 
+grossi problemi al vostro sistema, nel caso peggiore addirittura distruggerlo 
+se siete davvero sfortunati. Comunque nella maggior parte dei casi, funzionano bene.
+
+Visitate la `pagina download`_ per ulteriori informazioni su quali tipi di snapshots 
+e nightly builds sono disponibili e su come scaricarle.
+
+
+Installazione
+=============
+
+AROS/i386-linux and AROS/i386-freebsd
+-------------------------------------
+
+Requisiti
+"""""""""
+
+Per lanciare AROS/i386-linux o AROS/i386-freebsd avrete bisogno di:
+
++ Un'installazione funzionante di FreeBSD 5.x o Linux (non importa il tipo di 
+  distribuzione che utilizzate, basta che sia abbastanza recente)
++ Un server X, configurato e funzionante (ad esempio X.Org o XFree86)
+
+Tutto qui. 
+
+
+Estrazione
+""""""""""
+
+Dato che AROS/i386-linux e AROS/i386-freebsd sono versioni hosted di AROS, 
+l'installazione è facile. Semplicemente prendete i giusti archivi per la vostra 
+piattaforma dalla `pagina download`_ ed estraeteli dove preferite::
+
+    > tar -vxjf AROS-<version>-i386-<platform>-system.tar.bz2
+
+Se avete scaricato l'archivio contrib, potreste volerlo estrarre pure:
+
+    > tar -vxjf AROS-<version>-i386-all-contrib.tar.bz2
+
+
+Avvio
+"""""
+
+Dopo aver estratto tutti i files, potrete lanciare AROS digitando:
+
+    > cd AROS
+    > ./aros
+
+
+.. Note:: 
+    
+    A meno che stiate utilizzando XFree86 3.x o superiore, potreste notare che 
+    la finestra di AROS non si aggiorni correttamente (per esempio quando 
+    un'altra finestra gli passa sopra). Questo è dovuto al fatto che AROS 
+    usa la funzionalità "backinstore" di X, che è disabilitata per default 
+    in XFree86 4.0 e seguenti. Per abilitarla, aggiungete la seguente riga alla 
+    sezione device della vostra scheda video, nel file di configurazione di X 
+    (che si chiama solitamente ``/etc/X11/xorg.conf``, ``/etc/X11/XF86Config-4`` 
+    o ``/etc/X11/XF86Config``)::
+
+        Option "backingstore"
+
+    Una sezione device completa potrebbe essere strutturata come segue::
+
+        Section "Device"
+            Identifier      "Matrox G450"
+            Driver          "mga"
+            BusID           "PCI:1:0:0"
+            Option          "backingstore"
+        EndSection
+
+
+AROS/i386-pc
+------------
+
+.. Note:: 
+    
+    Attualmente non forniamo supporto per installare AROS/i386-pc su un hard disk 
+    [#]_, pertanto in questo capitolo vi verrà spiegato solo come creare un supporto 
+    di installazione ed avviare da esso. 
+
+
+Supporto di installazione
+"""""""""""""""""""""""""
+
+Il supporto consigliato per installare AROS/i386-pc è il CDROM, dato che possiamo 
+inserire l'intero sistema su un singolo disco (e anche tutto il software aggiuntivo). 
+Questo facilita l'installazione, in quanto non sarete costretti a trasferire tutto il 
+software su svariati floppy disk.
+
+Dato che nessuno al momento vende AROS su CDROM (o altri supporti), avrete 
+bisogno di un masterizzatore per crearvi il disco di installazione.
+
+
+CDROM
+^^^^^
+
+Scrittura
+'''''''''
+
+Semplicemente scaricate l'immagine ISO dalla `pagina download`_ e masterizzatela 
+su un cd, usando il vostro programma di masterizzazione preferito.
+
+
+Avvio
+'''''
+
+Il modo più facile per lanciare AROS dal CD di installazione, lo si può applicare 
+se si ha un computer che supporti l'avvio da CDROM. Se così, l'unica cosa richiesta 
+potrebbe essere la modifica di un'opzione all'interno del setup del BIOS, 
+che abiliti l'avvio da CDROM, spesso disabilitato per default.
+Inserite il CD nel drive principale e riavviate il computer. L'avvio è del tutto 
+automatico e se il tutto andrà a buon fine, vedrete una bella schermata dopo una 
+breve attesa.
+
+Se il vostro computer non supporta l'avvio diretto da CDROM, potete creare 
+un floppy disk di avvio_ e usarlo insieme al CD. Semplicemente inserite 
+entrambi il floppy e il CD nei loro rispettivi drive e riavviate. AROS si 
+avvierà dal floppy, ma dopo che le cose più importanti verranno caricate 
+(incluso anche l'handler del filesystem per il CDROM), proseguirà l'avvio 
+dal CDROM.
+
+
+Floppy
+^^^^^^
+
+Scrittura
+'''''''''
+
+Per creare il floppy di avvio, dovrete scaricare l'immagine disco dalla 
+`pagina download`_, estrarre l'archivio, e scrivere l'immagine di boot su 
+un floppy disk. Se state usando un sistema operativo UNIX o simile (come Linux 
+o FreeBSD), potete farlo digitando i seguenti comandi::
+
+    > cd AROS-<version>-i386-pc-boot-floppy
+    > dd if=aros.bin of=/dev/fd0
+
+Se state usando Windows, dovrete scaricare rawrite_ per scrivere l'immagine su 
+un floppy. Date un'occhiata alla documentazione di rawrite_ per le informazioni 
+su come usarlo.
+
+
+Avvio
+'''''
+
+Semplicemente inserite il floppy di avvio dentro il drive e riavviate il computer. 
+L'avvio è del tutto automatico e se il tutto andrà a buon fine, vedrete una bella 
+schermata dopo una breve attesa.
+
+
+Note a margine
+==============
+
+.. [#] In verità è possibile installare AROS/i386-pc su un hard disk, ma la 
+       procedura è lontana dall'essere automatica e user friendly e i tool 
+       necessari sono ancora in pieno sviluppo e non esenti da bug. 
+       Pertanto al momento ufficialmente non supportiamo l'installazione su 
+       hard disk.
+
+
+.. _`pagina download`: ../../download
+
+.. _rawrite: http://uranus.it.swin.edu.au/~jn/linux/rawwrite.htm
+
