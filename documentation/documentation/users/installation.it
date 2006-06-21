@@ -158,7 +158,7 @@ automatico e se il tutto andrà a buon fine, vedrete una bella schermata dopo una
 breve attesa.
 
 Se il vostro computer non supporta l'avvio diretto da CDROM, potete creare 
-un floppy disk di avvio_ e usarlo insieme al CD. Semplicemente inserite 
+un floppy disk di avvio e usarlo insieme al CD. Semplicemente inserite 
 entrambi il floppy e il CD nei loro rispettivi drive e riavviate. AROS si 
 avvierà dal floppy, ma dopo che le cose più importanti verranno caricate 
 (incluso anche l'handler del filesystem per il CDROM), proseguirà l'avvio 
