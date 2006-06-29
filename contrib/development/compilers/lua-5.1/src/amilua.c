@@ -1,6 +1,6 @@
 /*
 ** $Id$
-** Lua stand-alone interpreter with Siamiga extension
+** Lua stand-alone interpreter with Siamiga and MUI extension
 ** See Copyright Notice in lua.h
 */
 
@@ -17,6 +17,7 @@
 #include "lauxlib.h"
 #include "lualib.h"
 #include "lsiamigalib.h"
+#include "lmuilib.h"
 
 #include <proto/dos.h>
 #include <proto/asl.h>
@@ -378,6 +379,7 @@ static int pmain (lua_State *L) {
   lua_gc(L, LUA_GCSTOP, 0);  /* stop collector during initialization */
   luaL_openlibs(L);  /* open libraries */
   luaopen_siamigalib(L);
+  luaopen_muilib(L);
   lua_gc(L, LUA_GCRESTART, 0);
   s->status = handle_luainit(L);
   if (s->status != 0) return 0;

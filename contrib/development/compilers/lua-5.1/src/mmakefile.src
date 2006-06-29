@@ -11,7 +11,10 @@ LIBFILES :=	lauxlib lbaselib ldblib liolib lmathlib loslib ltablib \
 		lstrlib loadlib linit $(COREFILES)
 
 # files to build the linker lib 'luasiamiga'
-SIAMLIBFILES := $(LIBFILES) lsiamigalib
+SIAMLIBFILES := lsiamigalib
+
+# files to build the linker lib 'luamui'
+MUILIBFILES := lmuilib
 
 # files to build the interpreter 'lua'
 LUAFILES :=	lua $(COREFILES)
@@ -22,7 +25,7 @@ LUACFILES :=	luac print $(COREFILES)
 # files to build the interpreter 'amilua'
 AMILUAFILES :=	amilua $(COREFILES)
 
-HEADERS :=	lua.h luaconf.h lualib.h lauxlib.h lsiamgalib.h
+HEADERS :=	lua.h luaconf.h lualib.h lauxlib.h lsiamgalib.h lmuilib.h
 
 EXEDIR :=	$(CONTRIBDIR)/Development/Lua
 
@@ -37,13 +40,16 @@ EXEDIR :=	$(CONTRIBDIR)/Development/Lua
 #MM contrib-development-luasiamiga-lib :
 %build_linklib mmake=contrib-development-luasiamiga-lib libname=luasiamiga files=$(SIAMLIBFILES)
 
+#MM contrib-development-luamui-lib :
+%build_linklib mmake=contrib-development-luamui-lib libname=luamui files=$(MUILIBFILES)
+
 #MM contrib-development-lua-lua : includes linklibs contrib-development-lua-lib
 %build_prog mmake=contrib-development-lua-lua progname=Lua files=$(LUAFILES) \
     targetdir=$(EXEDIR) uselibs="arosc m lua"
 
-#MM contrib-development-lua-amilua : includes linklibs contrib-development-luasiamiga-lib
+#MM contrib-development-lua-amilua : includes linklibs contrib-development-luasiamiga-lib contrib-development-luamui-lib
 %build_prog mmake=contrib-development-lua-amilua progname=AmiLua files=$(AMILUAFILES) \
-    targetdir=$(EXEDIR) uselibs="arosc m luasiamiga"
+    targetdir=$(EXEDIR) uselibs="arosc m lua luasiamiga luamui mui"
 
 #MM contrib-development-lua-luac : includes linklibs contrib-development-lua-lib
 %build_prog mmake=contrib-development-lua-luac progname=Luac files=$(LUACFILES) \

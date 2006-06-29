@@ -6,9 +6,14 @@ EXEDIR := $(CONTRIBDIR)/Development/Lua
 
 #MM- contrib-development : contrib-development-lua \
 #MM contrib-development-lua-icons \
+#MM contrib-development-lua-lualibs \
 #MM contrib-development-lua-doc \
 #MM contrib-development-lua-test \
-#MM contrib-development-lua-test-amilua
+#MM contrib-development-lua-test-amilua \
+#MM contrib-development-lua-test-mui
+
+%copy_dir_recursive mmake=contrib-development-lua-lualibs \
+    src=lualibs dst=$(EXEDIR)/lualibs
 
 %copy_dir_recursive mmake=contrib-development-lua-doc \
     src=doc dst=$(EXEDIR)/doc
@@ -18,6 +23,9 @@ EXEDIR := $(CONTRIBDIR)/Development/Lua
 
 %copy_dir_recursive mmake=contrib-development-lua-test-amilua \
     src=test-amilua dst=$(EXEDIR)/test-amilua
+
+%copy_dir_recursive mmake=contrib-development-lua-test-mui \
+    src=test-mui dst=$(EXEDIR)/test-mui
 
 %common
 
