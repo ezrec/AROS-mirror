@@ -1,0 +1,218 @@
+Zulu - A MUI(Zune)-Lua binding
+==============================
+
+Introduction
+------------
+
+Zulu allows you to create MUI applications from Lua scripts. This is an alpha release without
+support for callback hook functions.
+
+If MUI is new to you, it is highly recommended that you download mui38dev.lha from
+Aminet and study the documentation.
+
+If you have already written MUI applications in C you will find many similarities. The biggest
+difference is that Zulu uses real functions instead of preprocessor macros, so don't get
+confused with the commas.
+
+
+Installation
+------------
+
+Zulu is available in current AROS releases. In Extras/Development/Lua you can find
+a binary 'AmiLua'. It is compiled with the linker lib luamui.a and the older luasiamiga.a.
+You need an assign "lua" to the path "sys:extras/development/lua".
+
+
+Hint
+-----
+
+An important thing before we go into details:
+There is a difference between C and Lua which can make big trouble if you don't care about it:
+When you write in C someting like 'x=function("aaa")' then the string is stored in a static
+area. This means the string exists as long your program is in RAM.
+But when you do the same in Lua then the string is created dynamically. Because the string has
+no binding after the function call it will be deleted by the garbage collector.
+So whenever the MUI documentation says that something must exist as long the object exists
+you have to define it as global variable at the beginning of your program (e.g. str="aaa") 
+and you aren't allowed to change or delete this variable.
+
+
+Linker lib luamui.a
+-------------------
+The linker lib luamui.a defines two function tables: mui and strarray.
+
+
+Functions in the mui table
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+object = mui.new(class, tag1, value1, tag2, value2 , ...)
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+This is a wrapper for the muimaster function 'MUI_NewObject'. It creates new MUI objects.
+The first argument is a string which defines a class (e.g. "String.mui"). This class strings
+are defined as variables in muidefs.lua (e.g. MUIC_String). The following parameters are pairs
+of tags and values. The final 'TAG_DONE' is added by the function.
+
+Example:
+
+text = mui.new(mui.MUIC_Text(mui.MUIA_Text_Contents, "Hello world!"))
+
+object = mui.make(class, param1, param2 , ... )
+''''''''''''''''''''''''''''''''''''''''''''''''
+
+This is a wrapper for the muimaster function 'MUI_MakeObject'. This is more are replacment
+for some C defines and is in most cases too limited to be really usefull. The first parameter is
+a number. The available numbers are defined in muidefs.lua (e.g. MUIO_Cycle). The meaning
+of the following parameters depend on the class.
+
+Example:
+
+obj = mui.make(mui.MUIO_Checkmark, label)
+
+mui.set(object, tag, value)
+'''''''''''''''''''''''''''
+
+This is a wrapper for the intuition function 'SetAttrs'. This is for changing attributes of
+objects. The first parameter is an object returned from mui.new or mui.make.
+
+Example:
+
+mui.set(window, mui.MUIA_Window_Open, true) or window:set(mui.MUIA_Window_Open, true)
+
+intval = mui.getint(object, tag)
+''''''''''''''''''''''''''''''''
+
+This is a wrapper for the intuition function 'GetAttr'. This is for querying of attributes
+of objects. The result is returned as integer. Use this when the type of the attribute is
+LONG, ULONG, BOOL etc.
+
+Example:
+
+count = slider:get(mui.MUIA_Numeric_Value)
+
+strval = mui.getstr(object, tag)
+''''''''''''''''''''''''''''''''
+
+Same as above, but returns a string. Use this when the type of the attribute is STRPTR, char * etc.
+
+ptrval = mui.getptr(object, tag)
+''''''''''''''''''''''''''''''''
+
+Same as above, but returns a light userdata. Use this when the type of the attribute is a pointer.
+
+intval = mui.doint(object, method, ...)
+'''''''''''''''''''''''''''''''''''''''
+
+This is a wrapper for the intuition function 'DoMethod'. The result is returned as integer.
+
+Example:
+window:doint(mui.MUIM_Notify, mui.MUIA_Window_CloseRequest, true,
+    app, 2, mui.MUIM_Application_ReturnID, mui.MUIV_Application_ReturnID_Quit)
+
+strval = mui.dostr(object, method, ...)
+'''''''''''''''''''''''''''''''''''''''
+
+Same as above, but returns the result of 'DoMethod' as string. Only use this
+function when the type of the attribute is a string.
+
+ptrval = mui.doptr(object, method, ...)
+''''''''''''''''''''''''''''''''''''''''
+
+Same as above, but returns the result of 'DoMethod' as light userdata. Use this when the
+type of the attribute is a pointer.
+
+id, signals = mui.input(app)
+''''''''''''''''''''''''''''
+
+Calls the method MUIM_Application_Input and returns the return ID.
+The second return value are the signals to use with mui.wait().
+
+mui.wait(signals)
+'''''''''''''''''
+
+Lets the application sleep until a signals arrives.
+
+Example for a message loop:
+
+running = true
+while running do
+  id, signals = app:input()
+  if id == mui.MUIV_Application_ReturnID_Quit then
+    running = false
+  elseif id == ok_id then
+    app:request(window, 0, "Hint", "OK", "OK gadget has been clicked")
+  elseif id == cancel_id then
+    app:request(window, 0, "Hint", "OK", "Cancel gadget has been clicked")
+  end
+  if running then mui.wait(signals) end
+end
+
+
+retval = mui.request(app, win, flags, title, gadgets, text)
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Wrapper for MUI_Request. Shows a requester.
+app:     application object, can be nil
+window:  window object, can be nil
+gadgets: if you need more than one button separate them with '|' 
+text:    you can use \n to separate lines. You must not use placeholdes like %d, %s,
+         use string.format instead
+retval:  1, 2, 3, ... 0 depending on the number of gadgets
+
+Example:
+
+result = app:request(window, 0, "Important hint", "OK|Cancel", "Lua rulez")
+
+id = mui.makeid(4 digit string)
+'''''''''''''''''''''''''''''''
+
+Creates an ID value.
+
+Example: 
+
+id = mui.makeid("FKWN")
+
+
+Functions in the strarray table
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The strarray table allows you to create NULL terminated string arrays. This is something what
+you define in C like: 'char *names[] = {"Foo", "Bar", NULL};'. Some MUI classes like Cycle gadgets
+need this.
+
+object = strarray.new( string1, string2 , ...)
+''''''''''''''''''''''''''''''''''''''''''''''
+
+Creates a new string array from the strings which you give as parameters. The strings are copied.
+The terminating NULL is added by this function.
+
+Example:
+
+names = strarray.new("Foo", "Bar")
+
+
+muidefs.lua
+-----------
+This Lua library is placed in lua:lualib. You have to load it with 'require "muidefs". It adds a
+lot of variables to the mui table.
+Variables starting with 
+* MUIC are class descriptors to use as first parameter for mui.new
+* MUIO are class descriptors to use as first parameter for mui.make
+* MUIM are methods for mui.doint, mui.dostr and mui.doptr
+* MUIA are attributes
+* MUIV are values
+
+
+muifuncs.lua
+------------
+This Lua library defines some functions which make the creation and modifying of objects easier.
+E.g. You can use mui.TextObject(...) instead of mui.new(mui.MUIC_TextObject, ...)
+
+
+Known problems
+--------------
+* Even when you can see your Zulu application in Exchange you can't disable or quit it from Exchange.
+  The reason is that the real application name is AmiLua.
+
+* Some attributes need pointers to structures like fonts, screens etc. You can't use them as long
+  there aren't functions to create them.

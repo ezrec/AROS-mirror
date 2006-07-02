@@ -1,8 +1,27 @@
-/*
-** $Id$
-** Lua stand-alone interpreter with Siamiga and MUI extension
-** See Copyright Notice in lua.h
-*/
+/******************************************************************************
+* $Id$
+*
+* Copyright (C) 2006 Matthias Rustler.  All rights reserved.
+*
+* Permission is hereby granted, free of charge, to any person obtaining
+* a copy of this software and associated documentation files (the
+* "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish,
+* distribute, sublicense, and/or sell copies of the Software, and to
+* permit persons to whom the Software is furnished to do so, subject to
+* the following conditions:
+*
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+******************************************************************************/
 
 
 #include <signal.h>
@@ -384,8 +403,8 @@ static int pmain (lua_State *L) {
   s->status = handle_luainit(L);
   if (s->status != 0) return 0;
   if (s->argc == 0) {
-    freopen("con:10/10/400/180/AmiLua output/auto/close", "r+", stdout);
-    freopen("con:10/100/400/180/AmiLua error/auto/close", "r+", stderr);
+    freopen("con:10/10/400/180/AmiLua output/auto/close/wait", "r+", stdout);
+    freopen("con:10/100/400/180/AmiLua error/auto/close/wait", "r+", stderr);
     s->status = handle_wb_script(L, argv);
   }
   else {  

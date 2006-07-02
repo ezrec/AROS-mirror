@@ -1,8 +1,31 @@
-/*
- * $Id$
- */
+/******************************************************************************
+* $Id$
+*
+* Copyright (C) 2006 Matthias Rustler.  All rights reserved.
+*
+* Permission is hereby granted, free of charge, to any person obtaining
+* a copy of this software and associated documentation files (the
+* "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish,
+* distribute, sublicense, and/or sell copies of the Software, and to
+* permit persons to whom the Software is furnished to do so, subject to
+* the following conditions:
+*
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+******************************************************************************/
+
 
 #include <stdio.h>
+#include <string.h>
 
 #define MUIMASTER_YES_INLINE_STDARG
 #define DEBUG 1
@@ -210,6 +233,9 @@ static struct TagItem *createTagArray(lua_State *L, int start)
       case LUA_TUSERDATA:
         ti[i].ti_Data = *(IPTR *)lua_touserdata(L, param);
         break;
+      case LUA_TLIGHTUSERDATA:
+        ti[i].ti_Data = (IPTR)lua_touserdata(L, param);
+        break;
       case LUA_TNUMBER:
         ti[i].ti_Data = lua_tointeger(L, param);
         break;
@@ -267,6 +293,9 @@ static int Muiobj_make (lua_State *L)
       case LUA_TUSERDATA:
         ip[i] = *(IPTR *)lua_touserdata(L, i + 2);
         break;
+      case LUA_TLIGHTUSERDATA:
+        ip[i] = (IPTR)lua_touserdata(L, i + 2);
+        break;
       case LUA_TNUMBER:
         ip[i] = lua_tointeger(L, i + 2);
         break;
@@ -287,8 +316,9 @@ static int Muiobj_make (lua_State *L)
 
 //------------------------------------------------------------------------------
 
-static int Muiobj_domethod (lua_State *L)
+static IPTR Muiobj_domethod_intern (lua_State *L)
 {
+  IPTR result = 0;
   int i;
   Muiobj mo = checkMui(L, 1);
   int args = lua_gettop(L) - 1;
@@ -310,6 +340,9 @@ static int Muiobj_domethod (lua_State *L)
       case LUA_TUSERDATA:
         ip[i] = *(IPTR *)lua_touserdata(L, i + 2);
         break;
+      case LUA_TLIGHTUSERDATA:
+        ip[i] = (IPTR)lua_touserdata(L, i + 2);
+        break;
       case LUA_TNUMBER:
         ip[i] = lua_tointeger(L, i + 2);
         break;
@@ -322,9 +355,33 @@ static int Muiobj_domethod (lua_State *L)
     }
   }
 
-  DoMethodA(mo, (Msg)ip);
+  result = DoMethodA(mo, (Msg)ip);
   FreeVec(ip);
-  return 0;
+  return result;
+}
+
+//------------------------------------------------------------------------------
+
+static int Muiobj_domethod_integer(lua_State *L)
+{
+  lua_pushinteger(L, Muiobj_domethod_intern(L));
+  return 1;
+}
+
+//------------------------------------------------------------------------------
+
+static int Muiobj_domethod_string(lua_State *L)
+{
+  lua_pushstring(L, (char *)Muiobj_domethod_intern(L));
+  return 1;
+}
+
+//------------------------------------------------------------------------------
+
+static int Muiobj_domethod_ptr(lua_State *L)
+{
+  lua_pushlightuserdata(L, (void *)Muiobj_domethod_intern(L));
+  return 1;
 }
 
 //------------------------------------------------------------------------------
@@ -355,9 +412,7 @@ static int Muiobj_set (lua_State *L)
         luaL_error(L, "Muiobj_set: wrong type");
         break;
   }
-  /*ULONG result = */SetAttrs(mo, tag, value, TAG_DONE);
-//  if (result != 1)
-//    luaL_error(L, "Muiobj_set: SetAttrs failed");
+  SetAttrs(mo, tag, value, TAG_DONE);
   return 0;
 }
 
@@ -390,10 +445,18 @@ static int Muiobj_get_string(lua_State *L)
 
 //------------------------------------------------------------------------------
 
+static int Muiobj_get_ptr(lua_State *L)
+{
+  lua_pushlightuserdata(L, (void *)Muiobj_get_intern(L));
+  return 1;
+}
+
+//------------------------------------------------------------------------------
+
 static int Muiobj_request(lua_State *L)
 {
-  int i;
-  int cnt = lua_gettop(L);
+  if (lua_gettop(L) != 6)
+    luaL_error(L, "Muiobj_request: number of parameters must be 6");
   APTR app = NULL;
   if (lua_isuserdata(L, 1));
       app = toMui(L, 1);
@@ -404,30 +467,7 @@ static int Muiobj_request(lua_State *L)
   const char *title = lua_tostring(L, 4);
   const char *gadgets = luaL_checkstring(L, 5);
   const char *format = luaL_checkstring(L, 6);
-  IPTR *params = NULL;
-  if (cnt > 6)
-  {
-    params = AllocVec(sizeof(IPTR) * (cnt - 6), MEMF_ANY | MEMF_CLEAR);
-    if ( ! params)
-      luaL_error(L, "Muiobj_request: can't allocate RAM");
-    for (i = 0; i < cnt - 6; i++)
-    {
-      switch (lua_type(L, i + 7))
-      {
-        case LUA_TNUMBER:
-          params[i] = luaL_checknumber(L, i + 7);
-          break;
-        case LUA_TSTRING:
-          params[i] = (IPTR)luaL_checkstring(L, i + 7);
-          break;
-        default:
-          luaL_error(L, "Muiobj_request: wrong type for parameter");
-          break;
-      }
-    }
-  }
-  lua_pushinteger(L, MUI_RequestA(app, win, flags, title, gadgets, format, params ));
-  FreeVec(params);
+  lua_pushinteger(L, MUI_RequestA(app, win, flags, title, gadgets, format, NULL ));
   return 1;
 }
 
@@ -443,15 +483,54 @@ static int Muiobj_dispose (lua_State *L)
 
 //------------------------------------------------------------------------------
 
+static int Muiobj_input (lua_State *L)
+{
+  ULONG sigs;
+  Muiobj mo = checkMui(L, 1); // must be application object
+  LONG id = DoMethod(mo, MUIM_Application_Input, &sigs);
+  lua_pushinteger(L, id);
+  lua_pushinteger(L, sigs);
+  return 2;
+}
+
+//------------------------------------------------------------------------------
+
+static int Muiobj_wait (lua_State *L)
+{
+  ULONG sigs = luaL_checkinteger(L, 1);
+  if (sigs)
+    Wait(sigs | SIGBREAKF_CTRL_C);
+  return 0;
+}
+
+//------------------------------------------------------------------------------
+
+static int Muiobj_make_id(lua_State *L)
+{
+  const char *str = luaL_checkstring(L, 1);
+  if (strlen(str) != 4)
+    luaL_error(L, "Muiobj_make_id: string length must be 4");
+  lua_pushinteger(L, (LONG)MAKE_ID(str[0], str[1], str[2], str[3]));
+  return 1;
+}
+
+//------------------------------------------------------------------------------
+
 static const luaL_reg Mui_methods[] = {
   {"new",      Muiobj_new},
   {"make",     Muiobj_make},
-  {"domethod", Muiobj_domethod},
+  {"doint",    Muiobj_domethod_integer},
+  {"dostr",    Muiobj_domethod_string},
+  {"doptr",    Muiobj_domethod_ptr},
   {"set",      Muiobj_set},
   {"getint",   Muiobj_get_integer},
   {"getstr",   Muiobj_get_string},
+  {"getptr",   Muiobj_get_ptr},
   {"dispose",  Muiobj_dispose},
+  {"input",    Muiobj_input},
+  {"wait",     Muiobj_wait},
   {"request",  Muiobj_request},
+  {"makeid",   Muiobj_make_id},
   {0,0}
 };
 
@@ -465,17 +544,8 @@ static int Mui_gc (lua_State *L)
 
 //------------------------------------------------------------------------------
 
-static int Mui_tostring (lua_State *L)
-{
-  lua_pushfstring(L, "Object: %p", lua_touserdata(L, 1));
-  return 1;
-}
-
-//------------------------------------------------------------------------------
-
 static const luaL_reg Mui_meta[] = {
   {"__gc",       Mui_gc},
-  {"__tostring", Mui_tostring},
   {0, 0}
 };
 

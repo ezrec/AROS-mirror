@@ -15,16 +15,16 @@ function creategui()
     mui.MUIA_Application_Window, window
   )
   assert(app, "Cant create applicaton")
-  window:domethod(mui.MUIM_Notify, mui.MUIA_Window_CloseRequest, true,
+  window:doint(mui.MUIM_Notify, mui.MUIA_Window_CloseRequest, true,
     app, 2, mui.MUIM_Application_ReturnID, mui.MUIV_Application_ReturnID_Quit)
-  button:domethod(mui.MUIM_Notify, mui.MUIA_Pressed, false,
+  button:doint(mui.MUIM_Notify, mui.MUIA_Pressed, false,
     app, 2, mui.MUIM_Application_ReturnID, mui.MUIV_Application_ReturnID_Quit)
   window:set(mui.MUIA_Window_Open, true)
 end
 
 function main()
   creategui()
-  app:domethod(mui.MUIM_Application_Execute)
+  app:doint(mui.MUIM_Application_Execute)
 end
 
 _, err = pcall(main)
