@@ -32,7 +32,6 @@ typedef enum BinOpr {
   OPR_NOBINOPR
 } BinOpr;
 
-#define binopistest(op)	((op) >= OPR_NE)
 
 typedef enum UnOpr { OPR_MINUS, OPR_NOT, OPR_LEN, OPR_NOUNOPR } UnOpr;
 

@@ -60,6 +60,18 @@
 
 
 /*
+@@ LUA_PATH and LUA_CPATH are the names of the environment variables that
+@* Lua check to set its paths.
+@@ LUA_INIT is the name of the environment variable that Lua
+@* checks for initialization code.
+** CHANGE them if you want different names.
+*/
+#define LUA_PATH        "LUA_PATH"
+#define LUA_CPATH       "LUA_CPATH"
+#define LUA_INIT	"LUA_INIT"
+
+
+/*
 @@ LUA_PATH_DEFAULT is the default path that Lua uses to look for
 @* Lua libraries.
 @@ LUA_CPATH_DEFAULT is the default path that Lua uses to look for
@@ -543,10 +555,24 @@
 /* On a Pentium, resort to a trick */
 #if defined(LUA_NUMBER_DOUBLE) && !defined(LUA_ANSI) && !defined(__SSE2__) && \
     (defined(__i386) || defined (_M_IX86) || defined(__i386__))
+
+/* On a Microsoft compiler, use assembler */
+#if defined(_MSC_VER)
+
+#define lua_number2int(i,d)   __asm fld d   __asm fistp i
+#define lua_number2integer(i,n)		lua_number2int(i, n)
+
+/* the next trick should work on any Pentium, but sometimes clashes
+   with a DirectX idiosyncrasy */
+#else
+
 union luai_Cast { double l_d; long l_l; };
 #define lua_number2int(i,d) \
   { volatile union luai_Cast u; u.l_d = (d) + 6755399441055744.0; (i) = u.l_l; }
 #define lua_number2integer(i,n)		lua_number2int(i, n)
+
+#endif
+
 
 /* this option always works, but may be slow */
 #else
@@ -729,19 +755,14 @@ union luai_Cast { double l_d; long l_l; };
 ** Local configuration. You can use this space to add your redefinitions
 ** without modifying the main part of the file.
 */
-
 // defines for AROS
 #undef LUA_LDIR
 #undef LUA_CDIR
 #undef LUA_PATH_DEFAULT
 #undef LUA_CPATH_DEFAULT
-
 #define LUA_LDIR	    "lua:lualibs/"
 #define LUA_PATH_DEFAULT    "?.lua;"  LUA_LDIR"?.lua;"  LUA_LDIR"?/init.lua;"
-
 #define LUA_CPATH_DEFAULT ""
-
-
 
 #endif
 

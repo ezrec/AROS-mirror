@@ -703,6 +703,10 @@ static void addquoted (lua_State *L, luaL_Buffer *b, int arg) {
         luaL_addchar(b, *s);
         break;
       }
+      case '\r': {
+        luaL_addlstring(b, "\\r", 2);
+        break;
+      }
       case '\0': {
         luaL_addlstring(b, "\\000", 4);
         break;
@@ -805,7 +809,8 @@ static int str_format (lua_State *L) {
           }
         }
         default: {  /* also treat cases `pnLlh' */
-          return luaL_error(L, "invalid option to " LUA_QL("format"));
+          return luaL_error(L, "invalid option " LUA_QL("%%%c") " to "
+                               LUA_QL("format"), *(strfrmt - 1));
         }
       }
       luaL_addlstring(&b, buff, strlen(buff));

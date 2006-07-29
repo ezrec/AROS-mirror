@@ -9,7 +9,6 @@
 
 #include "llimits.h"
 #include "lobject.h"
-#include "ltable.h"
 #include "lzio.h"
 
 

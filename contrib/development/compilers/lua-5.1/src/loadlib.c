@@ -22,10 +22,6 @@
 #include "lualib.h"
 
 
-/* environment variables that hold the search path for packages */
-#define LUA_PATH	"LUA_PATH"
-#define LUA_CPATH	"LUA_CPATH"
-
 /* prefix for open functions in C libraries */
 #define LUA_POF		"luaopen_"
 

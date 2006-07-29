@@ -376,6 +376,7 @@ void luaV_execute (lua_State *L, int nexeccalls) {
   TValue *k;
   const Instruction *pc;
  reentry:  /* entry point */
+  lua_assert(isLua(L->ci));
   pc = L->savedpc;
   cl = &clvalue(L->ci->func)->l;
   base = L->base;
