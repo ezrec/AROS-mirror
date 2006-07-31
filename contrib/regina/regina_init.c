@@ -30,7 +30,6 @@ AROS_SET_LIBFUNC(InitLib, LIBBASETYPE, LIBBASE)
     
     D(bug("Inside Init func of regina.library\n"));
 
-    SysBase = LIBBASE->lh_SysBase;
     if (!(DOSBase = (struct DosLibrary *)OpenLibrary("dos.library",0))) return FALSE;
 
     if (!(aroscbase = OpenLibrary("arosc.library",41)))
