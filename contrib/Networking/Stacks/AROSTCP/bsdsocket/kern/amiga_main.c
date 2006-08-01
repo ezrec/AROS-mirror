@@ -179,11 +179,11 @@ D(bug("[AROSTCP](amiga_main.c) main: Directory tree root: %s\n", interfaces_path
   AddPart(inetdconf_path, _PATH_INETDCONF, FILENAME_MAX);*/
 
 /* NicJA : Allow user specified config location (from Env: variable) */
-	if (GetVar("AROSTCP-CONFIG", tmpconfigpath, 1024, GVF_GLOBAL_ONLY) != -1)
+	if (GetVar("AROSTCP/Config", tmpconfigpath, 1024, GVF_GLOBAL_ONLY) != -1)
 	{
    	db_path_lock = NULL;
 #if defined(__AROS__)
-D(bug("[AROSTCP](amiga_main.c) main: Env: Var AROSTCP-CONFIG set.\n"));
+D(bug("[AROSTCP](amiga_main.c) main: Env: Var AROSTCP/Config set.\n"));
 D(bug("[AROSTCP](amiga_main.c) main: Attempting to use '%s' for config location..\n", tmpconfigpath));
 #endif
 	  if (db_path_lock = Lock(tmpconfigpath, ACCESS_READ))
