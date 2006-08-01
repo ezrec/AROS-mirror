@@ -18,7 +18,6 @@
 #include <aros/symbolsets.h>
 #include LC_LIBDEFS_FILE
 
-struct ExecBase* SysBase;
 struct DosLibrary* DOSBase;
 struct Library* aroscbase;
 struct MinList *__regina_tsdlist = NULL;
