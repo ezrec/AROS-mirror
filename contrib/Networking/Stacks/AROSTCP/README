@@ -22,9 +22,14 @@ SYS:Extras/Networking/Stacks/AROSTCP you will need to alter this file.
 
   SetEnv SAVE SYS/Packages/AROSTCP <Installed location>
 
-ENVARC:AROSTCP-CONFIG
+ENVARC:AROSTCP/AutoRun
 ----------------------
-If The ENV Variable "AROSTCP-CONFIG" is specified - it is used to find
+
+Set to "True" to enable AROSTCP to launch during boot - i.e when its Package-Startup script is executed.
+
+ENVARC:AROSTCP/Config
+----------------------
+If The ENV Variable "AROSTCP/Config" is specified - it is used to find
 the location of the database files that will configure AROSTCP.  If not
 specified AROSTCP will default to it's 'db' subdirectory. From here
 on this dir will be refered to as the AROSTCP-CONFIG dir.
@@ -80,7 +85,7 @@ where N is the process number.
 ### 
 If you have configured your db files in a differing location to the default (ie not the /db/ subfolder) then use
 
-   SetEnv AROSTCP-CONFIG <path to modified files>
+   SetEnv AROSTCP/Config <path to modified files>
    
 to enable AROSTCP to use it.  Please note that this must be done before launching AROSTCP.
 
@@ -88,7 +93,7 @@ ie.
 
    CD SYS:Extras/Networking/Stacks/AROSTCP
    Copy db SYS:NetConfig ALL
-   SetEnv SAVE AROSTCP-CONFIG SYS:NetConfig/
+   SetEnv SAVE AROSTCP/Config SYS:NetConfig/
  
  ..
  edit the files in SYS:NetConfig/ to suit your network
