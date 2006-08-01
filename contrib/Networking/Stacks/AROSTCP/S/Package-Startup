@@ -1,1 +1,7 @@
+; $VER: AROSTCP-PackageStartup 1.0 (01/08/06)
+; AROSTCP-PackageStartup (c) The AROS Dev Team.
+;
 Path "C" "S" ADD QUIET
+if $AROSTCP/AutoRun eq "True"
+  C:execute S/startnet
+EndIf

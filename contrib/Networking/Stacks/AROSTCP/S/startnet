@@ -1,10 +1,13 @@
+; $VER: AROSTCP-startnet 1.0 (01/08/06)
+; AROSTCP-startnet (c) The AROS Dev Team.
+;
 Run <NIL: >NIL: AROSTCP
 WaitForPort AROSTCP
 If NOT Warn
   ; Add route to this host
-  route add arosbox localhost
+  run >NIL: route add arosbox localhost
   ; Add route to the default gateway
-  route add default gateway
+  run >NIL: route add default gateway
 Else
-   echo "Wait for Stack Failed"
+  ; echo "Wait for Stack Failed"
 EndIf
