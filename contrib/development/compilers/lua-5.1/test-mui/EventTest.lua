@@ -21,7 +21,7 @@ function creategui()
   app = mui.ApplicationObject(
     mui.MUIA_Application_Window, window
   )
-  assert(app, "Cant create applicaton")
+  assert(app:check(), "Cant create application")
   window:doint(mui.MUIM_Notify, mui.MUIA_Window_CloseRequest, true,
     app, 2, mui.MUIM_Application_ReturnID, mui.MUIV_Application_ReturnID_Quit)
 

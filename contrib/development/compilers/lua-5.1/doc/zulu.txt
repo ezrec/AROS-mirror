@@ -39,7 +39,8 @@ and you aren't allowed to change or delete this variable.
 
 Linker lib luamui.a
 -------------------
-The linker lib luamui.a defines two function tables: mui and strarray.
+The linker lib luamui.a defines two function tables: mui and strarray. The functions are implemented
+in such a way that 'nil' as argument is always an error (except 'request' function).
 
 
 Functions in the mui table
@@ -48,19 +49,19 @@ Functions in the mui table
 object = mui.new(class, tag1, value1, tag2, value2 , ...)
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-This is a wrapper for the muimaster function 'MUI_NewObject'. It creates new MUI objects.
+This is a wrapper for the muimaster library function 'MUI_NewObject'. It creates new MUI objects.
 The first argument is a string which defines a class (e.g. "String.mui"). This class strings
 are defined as variables in muidefs.lua (e.g. MUIC_String). The following parameters are pairs
 of tags and values. The final 'TAG_DONE' is added by the function.
 
 Example:
 
-text = mui.new(mui.MUIC_Text(mui.MUIA_Text_Contents, "Hello world!"))
+text = mui.new(mui.MUIC_Text, mui.MUIA_Text_Contents, "Hello world!")
 
 object = mui.make(class, param1, param2 , ... )
 ''''''''''''''''''''''''''''''''''''''''''''''''
 
-This is a wrapper for the muimaster function 'MUI_MakeObject'. This is more are replacment
+This is a wrapper for the muimaster library function 'MUI_MakeObject'. This is more are replacment
 for some C defines and is in most cases too limited to be really usefull. The first parameter is
 a number. The available numbers are defined in muidefs.lua (e.g. MUIO_Cycle). The meaning
 of the following parameters depend on the class.
@@ -69,10 +70,10 @@ Example:
 
 obj = mui.make(mui.MUIO_Checkmark, label)
 
-mui.set(object, tag, value)
-'''''''''''''''''''''''''''
+mui.set(object, tag1, value1, ...)
+''''''''''''''''''''''''''''''''''
 
-This is a wrapper for the intuition function 'SetAttrs'. This is for changing attributes of
+This is a wrapper for the intuition library function 'SetAttrs'. This is for changing attributes of
 objects. The first parameter is an object returned from mui.new or mui.make.
 
 Example:
@@ -82,7 +83,7 @@ mui.set(window, mui.MUIA_Window_Open, true) or window:set(mui.MUIA_Window_Open, 
 intval = mui.getint(object, tag)
 ''''''''''''''''''''''''''''''''
 
-This is a wrapper for the intuition function 'GetAttr'. This is for querying of attributes
+This is a wrapper for the intuition library function 'GetAttr'. This is for querying of attributes
 of objects. The result is returned as integer. Use this when the type of the attribute is
 LONG, ULONG, BOOL etc.
 
@@ -103,9 +104,10 @@ Same as above, but returns a light userdata. Use this when the type of the attri
 intval = mui.doint(object, method, ...)
 '''''''''''''''''''''''''''''''''''''''
 
-This is a wrapper for the intuition function 'DoMethod'. The result is returned as integer.
+This is a wrapper for the intuition library function 'DoMethod'. The result is returned as integer.
 
 Example:
+
 window:doint(mui.MUIM_Notify, mui.MUIA_Window_CloseRequest, true,
     app, 2, mui.MUIM_Application_ReturnID, mui.MUIV_Application_ReturnID_Quit)
 
@@ -113,13 +115,23 @@ strval = mui.dostr(object, method, ...)
 '''''''''''''''''''''''''''''''''''''''
 
 Same as above, but returns the result of 'DoMethod' as string. Only use this
-function when the type of the attribute is a string.
+function when the type of the return value is a string.
 
 ptrval = mui.doptr(object, method, ...)
 ''''''''''''''''''''''''''''''''''''''''
 
 Same as above, but returns the result of 'DoMethod' as light userdata. Use this when the
-type of the attribute is a pointer.
+type of the return value is a pointer.
+
+mui.dispose(object)
+'''''''''''''''''''
+
+Calls MUI_DisposeObject from the muimaster library. This frees the given object and all connected
+sub objects.
+
+Example:
+
+app:dispose()
 
 id, signals = mui.input(app)
 ''''''''''''''''''''''''''''
@@ -130,7 +142,7 @@ The second return value are the signals to use with mui.wait().
 mui.wait(signals)
 '''''''''''''''''
 
-Lets the application sleep until a signals arrives.
+Lets the application sleep until a signal arrives.
 
 Example for a message loop:
 
@@ -154,6 +166,7 @@ retval = mui.request(app, win, flags, title, gadgets, text)
 Wrapper for MUI_Request. Shows a requester.
 app:     application object, can be nil
 window:  window object, can be nil
+flags:   has currently always set to 0
 gadgets: if you need more than one button separate them with '|' 
 text:    you can use \n to separate lines. You must not use placeholdes like %d, %s,
          use string.format instead
@@ -171,6 +184,28 @@ Creates an ID value.
 Example: 
 
 id = mui.makeid("FKWN")
+
+path = mui.filerequest(tag1, value1, ...)
+'''''''''''''''''''''''''''''''''''''''''
+
+Creates a file requester with the help of the muimaster library functions MUI_AllocAslRequest and
+MUI_AslRequest. See the documentation of the asl library in order to get information about the possible
+values for the tag/value pairs.
+
+path: is the selected path or 'nil' when the cancel button has been clicked.
+
+Example:
+
+path = mui.filerequest(mui.ASLFR_TitleText, "A file requester")
+
+bool = mui.check(object)
+''''''''''''''''''''''''
+
+Tests whether the pointer which is stored within an object variable is non null.
+
+Example:
+
+assert(app:check(), "Can't create application object")
 
 
 Functions in the strarray table
@@ -190,10 +225,30 @@ Example:
 
 names = strarray.new("Foo", "Bar")
 
+strarray.dispose(object)
+''''''''''''''''''''''''
+
+This frees the strings and the array itself. Please note, that the strarray table doesn't have a
+garbage collector. The reason is to avoid that the garbage collector removes the strings while
+they are still used by a MUI gadget.
+
+Example:
+
+names:dispose()
+
+str = strarray.get(object, index)
+'''''''''''''''''''''''''''''''''
+
+Returns the n-th string from the strarray gadget. The result is 'nil' when index is greater than the number
+of strings in the array.
+
+Example:
+secondstring = names:get(2)
+
 
 muidefs.lua
 -----------
-This Lua library is placed in lua:lualib. You have to load it with 'require "muidefs". It adds a
+This Lua library is placed in lua:lualib. You have to load it with 'require "muidefs"'. It adds a
 lot of variables to the mui table.
 Variables starting with 
 * MUIC are class descriptors to use as first parameter for mui.new
@@ -208,6 +263,12 @@ muifuncs.lua
 This Lua library defines some functions which make the creation and modifying of objects easier.
 E.g. You can use mui.TextObject(...) instead of mui.new(mui.MUIC_TextObject, ...)
 
+    
+muiasl.lua
+----------
+This adds some tags and parameters to use with mui.filerequester(). Include it with 'require "muiasl"'
+whenever you want to create a file requester.
+
 
 Known problems
 --------------
@@ -216,3 +277,6 @@ Known problems
 
 * Some attributes need pointers to structures like fonts, screens etc. You can't use them as long
   there aren't functions to create them.
+
+* There is no support for callback hooks. This limits the us of some advanced MUI classes like lists.
+

@@ -109,21 +109,20 @@ function main()
 
   app = mui.ApplicationObject(
     mui.MUIA_Application_Title      , "BalanceDemo",
-    mui.MUIA_Application_Version    , "$VER: BalanceDemo 0.1 (1.7.2006)",
+    mui.MUIA_Application_Version    , "$VER: BalanceDemo 0.2 (1.8.2006)",
     mui.MUIA_Application_Author     , "Stefan Stuntz, Matthias Rustler",
     mui.MUIA_Application_Description, "Show balancing groups",
     mui.MUIA_Application_Base       , "BALANCEDEMO",
     mui.SubWindow, window
   )
 
-  assert(app, "Failed to create Application.")
+  assert(app:check(), "Failed to create Application.")
 
   window:doint(mui.MUIM_Notify, mui.MUIA_Window_CloseRequest, true,
     app, 2, mui.MUIM_Application_ReturnID, mui.MUIV_Application_ReturnID_Quit)
-  collectgarbage("collect")
+
   window:set(mui.MUIA_Window_Open, true)
   app:doint(mui.MUIM_Application_Execute)
-  window:set(mui.MUIA_Window_Open, false)
 end
 
 _, err = pcall(main)

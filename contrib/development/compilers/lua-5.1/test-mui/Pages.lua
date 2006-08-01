@@ -69,14 +69,14 @@ function main()
 
   app = mui.ApplicationObject(
     mui.MUIA_Application_Title      , "Pages-Demo",
-    mui.MUIA_Application_Version    , "$VER: Pages-Demo 0.1 (1.7.2006)",
+    mui.MUIA_Application_Version    , "$VER: Pages-Demo 0.2 (1.8.2006)",
     mui.MUIA_Application_Author     , "Stefan Stuntz, Matthias Rustler",
     mui.MUIA_Application_Description, "Show MUIs Page Groups",
     mui.MUIA_Application_Base       , "PAGESDEMO",
     mui.SubWindow, window
   )
 
-  assert(app, "Failed to create Application.")
+  assert(app:check(), "Failed to create Application.")
 
   collectgarbage("collect")
   window:doint(mui.MUIM_Notify, mui.MUIA_Window_CloseRequest, true,
@@ -84,12 +84,14 @@ function main()
 
   window:set(mui.MUIA_Window_Open, true)
   app:doint(mui.MUIM_Application_Execute)
-  window:set(mui.MUIA_Window_Open, false);
 end
 
-main()
---_, err = pcall(main)
+--main()
+_, err = pcall(main)
 if err then print("Error: " .. err) end
 if app then app:dispose() end
-
+Sex:dispose()
+Pages:dispose()
+Races:dispose()
+Classes:dispose()
 

@@ -475,77 +475,76 @@ function mui.FreeCLabel2(label)
 end
 
 -- The same as above + keys
--- FIXME: convert key to integer
 function mui.KeyLabel(label,key)
-  return mui.make(mui.MUIO_Label, label, key)
+  return mui.make(mui.MUIO_Label, label, string.byte(key))
 end
 
 function mui.KeyLabel1(label,key)
-  return mui.make(mui.MUIO_Label, (label), mui.MUIO_Label_SingleFrame + key)
+  return mui.make(mui.MUIO_Label, (label), mui.MUIO_Label_SingleFrame + string.byte(key))
 end
 
 function mui.KeyLabel2(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_DoubleFrame + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_DoubleFrame + string.byte(key))
 end
 
 function mui.KeyLLabel(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_LeftAligned + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_LeftAligned + string.byte(key))
 end
 
 function mui.KeyLLabel1(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_LeftAligned + mui.MUIO_Label_SingleFrame + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_LeftAligned + mui.MUIO_Label_SingleFrame + string.byte(key))
 end
 
 function mui.KeyLLabel2(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_LeftAligned + mui.MUIO_Label_DoubleFrame + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_LeftAligned + mui.MUIO_Label_DoubleFrame + string.byte(key))
 end
 
 function mui.KeyCLabel(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_Centered + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_Centered + string.byte(key))
 end
 
 function mui.KeyCLabel1(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_Centered + mui.MUIO_Label_SingleFrame + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_Centered + mui.MUIO_Label_SingleFrame + string.byte(key))
 end
 
 function mui.KeyCLabel2(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_Centered + mui.MUIO_Label_DoubleFrame + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_Centered + mui.MUIO_Label_DoubleFrame + string.byte(key))
 end
 
 function mui.FreeKeyLabel(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + string.byte(key))
 end
 
 function mui.FreeKeyLabel1(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_SingleFrame + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_SingleFrame + string.byte(key))
 end
 
 function mui.FreeKeyLabel2(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_DoubleFrame + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_DoubleFrame + string.byte(key))
 end
 
 function mui.FreeKeyLLabel(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_LeftAligned + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_LeftAligned + string.byte(key))
 end
 
 function mui.FreeKeyLLabel1(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_LeftAligned + mui.MUIO_Label_SingleFrame + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_LeftAligned + mui.MUIO_Label_SingleFrame + string.byte(key))
 end
 
 function mui.FreeKeyLLabel2(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_LeftAligned + mui.MUIO_Label_DoubleFrame + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_LeftAligned + mui.MUIO_Label_DoubleFrame + string.byte(key))
 end
 
 function mui.FreeKeyCLabel(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_Centered + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_Centered + string.byte(key))
 end
 
 function mui.FreeKeyCLabel1(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_Centered + mui.MUIO_Label_SingleFrame + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_Centered + mui.MUIO_Label_SingleFrame + string.byte(key))
 end
 
 function mui.FreeKeyCLabel2(label,key)
-  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_Centered + mui.MUIO_Label_DoubleFrame + key)
+  return mui.make(mui.MUIO_Label, label, mui.MUIO_Label_FreeVert + mui.MUIO_Label_Centered + mui.MUIO_Label_DoubleFrame + string.byte(key))
 end
 
 -- Misc

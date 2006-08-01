@@ -32,9 +32,11 @@
 
 #include <aros/debug.h>
 #include <libraries/mui.h>
+#include <libraries/asl.h>
 #include <proto/muimaster.h>
 #include <proto/intuition.h>
 #include <proto/exec.h>
+#include <proto/dos.h>
 #include <proto/alib.h>
 
 #include "lua.h"
@@ -130,14 +132,7 @@ static int Strarray_new (lua_State *L)
 
 //------------------------------------------------------------------------------
 
-static const luaL_reg Strarray_methods[] = {
-  {"new", Strarray_new},
-  {0,0}
-};
-
-//------------------------------------------------------------------------------
-
-static int Strarray_gc (lua_State *L)
+static int Strarray_dispose (lua_State *L)
 {
   STRPTR * str = toStrarray(L, 1);
   int i = 0;
@@ -145,20 +140,56 @@ static int Strarray_gc (lua_State *L)
   {
     while (str[i])
     {
-      D(bug("String %s freed\n", str[i]));
       FreeVec(str[i]);
       i++;
     }
     FreeVec(str);
+    *((Strarray*)lua_touserdata(L, 1)) = NULL;
   }
-  D(bug("Strarray gargabe collector\n"));
+  else
+  {
+      D(bug("Strarray is already NULL\n"));
+  }
   return 0;
 }
 
 //------------------------------------------------------------------------------
 
+static int Strarray_get (lua_State *L)
+{
+  STRPTR * str = checkStrarray(L, 1);
+  int index = luaL_checkinteger(L, 2) - 1;
+  if (index < 0)
+      luaL_error(L, "Strarray_get: index must be greater than 0");
+
+  int i = 0;
+  while (str[i])
+  {
+    if (index == i)
+    {
+      lua_pushstring(L, str[i]);
+      return 1;
+    }
+    i++;
+  }
+  
+  lua_pushnil(L);
+  return 1;  // result is 'nil' when index is too large
+}
+
+//------------------------------------------------------------------------------
+
+static const luaL_reg Strarray_methods[] = {
+  {"new", Strarray_new},
+  {"dispose", Strarray_dispose},
+  {"get", Strarray_get},
+  {0,0}
+};
+
+//------------------------------------------------------------------------------
+
 static const luaL_reg Strarray_meta[] = {
-  {"__gc", Strarray_gc},
+  //{"__gc", Strarray_gc},
   {0, 0}
 };
 
@@ -208,24 +239,24 @@ static struct TagItem *createTagArray(lua_State *L, int start)
 {
   int i;
   if (start < 1)
-    luaL_error(L, "start must be at least '1'");
+    luaL_error(L, "createTagArray: start must be at least '1'");
   int pairs = (lua_gettop(L) - start + 1) / 2;
-  D(bug("top %d pairs %d\n", lua_gettop(L), pairs));
+  //D(bug("top %d pairs %d\n", lua_gettop(L), pairs));
   if (pairs < 1)
     return 0;
   int param = start;
   struct TagItem *ti = AllocVec(sizeof(struct TagItem) * (pairs + 1), MEMF_ANY | MEMF_CLEAR);
   if (ti == NULL)
-    luaL_error(L, "can't allocate RAM for TagItem");
+    luaL_error(L, "createTagArray: can't allocate RAM for TagItem");
   for (i=0; i < pairs; i++)
   {
     ti[i].ti_Tag = luaL_checkint(L, param);
     param++;
-    D(bug("type %d\n", lua_type(L, param)));
+    //D(bug("type %d\n", lua_type(L, param)));
     switch (lua_type(L, param))
     {
       case LUA_TNIL:
-        luaL_error(L, "parameter must not be 'nil'");
+        luaL_error(L, "createTagArray: parameter must not be 'nil'");
         break;
       case LUA_TBOOLEAN:
         ti[i].ti_Data = lua_toboolean(L, param) ? TRUE : FALSE;
@@ -243,11 +274,11 @@ static struct TagItem *createTagArray(lua_State *L, int start)
         ti[i].ti_Data = (IPTR)lua_tostring(L, param);
         break;
       default:
-        luaL_error(L, "wrong type");
+        luaL_error(L, "createTagArray: wrong type");
         break;
     }
     param++;
-    D(bug("Tag %x Data %x\n", ti[i].ti_Tag, ti[i].ti_Data));
+    //D(bug("Tag %x Data %x\n", ti[i].ti_Tag, ti[i].ti_Data));
   }
   ti[pairs].ti_Tag = TAG_DONE;
   return ti;
@@ -389,30 +420,9 @@ static int Muiobj_domethod_ptr(lua_State *L)
 static int Muiobj_set (lua_State *L)
 {
   Muiobj mo = checkMui(L, 1);
-  IPTR tag = luaL_checkint(L, 2);
-  IPTR value = 0;
-  switch (lua_type(L, 3))
-  {
-      case LUA_TNIL:
-        luaL_error(L, "Muiobj_set: parameter must not be 'nil'");
-        break;
-      case LUA_TBOOLEAN:
-        value = lua_toboolean(L, 3) ? TRUE : FALSE;
-        break;
-      case LUA_TUSERDATA:
-        value = (IPTR)checkMui(L, 3);
-        break;
-      case LUA_TNUMBER:
-        value = lua_tointeger(L, 3);
-        break;
-      case LUA_TSTRING:
-        value = (IPTR)lua_tostring(L, 3);
-        break;
-      default:
-        luaL_error(L, "Muiobj_set: wrong type");
-        break;
-  }
-  SetAttrs(mo, tag, value, TAG_DONE);
+  struct TagItem * ti = createTagArray(L, 2);
+  SetAttrsA(mo, ti);
+  FreeVec(ti);
   return 0;
 }
 
@@ -516,21 +526,72 @@ static int Muiobj_make_id(lua_State *L)
 
 //------------------------------------------------------------------------------
 
+static int Muiobj_check(lua_State *L)
+{
+  Muiobj mo = checkMui(L, 1);
+  lua_pushboolean(L, (int)mo);
+  return 1;
+}
+
+//------------------------------------------------------------------------------
+
+static int Muiobj_filerequest(lua_State *L)
+{
+  struct TagItem * ti = createTagArray(L, 1);
+  STRPTR path = NULL;
+
+  struct FileRequester *fr = (struct FileRequester *)MUI_AllocAslRequest(ASL_FileRequest, ti);
+  if (fr)
+  {
+    if (MUI_AslRequest(fr, NULL))
+    {
+      ULONG bufsize = strlen(fr->rf_Dir) + strlen(fr->rf_File) + 10;
+      path = AllocVec(bufsize, MEMF_ANY);
+      if (path)
+      {
+	strcpy(path, fr->rf_Dir);
+	if (AddPart(path, fr->rf_File, bufsize))
+	{
+	  lua_pushstring(L, path);
+	}
+	else
+	{
+	  FreeVec(path);
+	  MUI_FreeAslRequest(fr);
+	  luaL_error(L, "Muiobj_filerequest: AddPath failed");
+	}
+      }
+    }
+    else
+    {
+      lua_pushnil(L);  //requester cancelled
+    }
+    MUI_FreeAslRequest(fr);
+  }
+  FreeVec(path);
+  return 1;
+}
+
+
+//------------------------------------------------------------------------------
+
 static const luaL_reg Mui_methods[] = {
-  {"new",      Muiobj_new},
-  {"make",     Muiobj_make},
-  {"doint",    Muiobj_domethod_integer},
-  {"dostr",    Muiobj_domethod_string},
-  {"doptr",    Muiobj_domethod_ptr},
-  {"set",      Muiobj_set},
-  {"getint",   Muiobj_get_integer},
-  {"getstr",   Muiobj_get_string},
-  {"getptr",   Muiobj_get_ptr},
-  {"dispose",  Muiobj_dispose},
-  {"input",    Muiobj_input},
-  {"wait",     Muiobj_wait},
-  {"request",  Muiobj_request},
-  {"makeid",   Muiobj_make_id},
+  {"new",         Muiobj_new},
+  {"make",        Muiobj_make},
+  {"doint",       Muiobj_domethod_integer},
+  {"dostr",       Muiobj_domethod_string},
+  {"doptr",       Muiobj_domethod_ptr},
+  {"set",         Muiobj_set},
+  {"getint",      Muiobj_get_integer},
+  {"getstr",      Muiobj_get_string},
+  {"getptr",      Muiobj_get_ptr},
+  {"dispose",     Muiobj_dispose},
+  {"input",       Muiobj_input},
+  {"wait",        Muiobj_wait},
+  {"request",     Muiobj_request},
+  {"makeid",      Muiobj_make_id},
+  {"check",       Muiobj_check},
+  {"filerequest", Muiobj_filerequest},
   {0,0}
 };
 
