@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 DESTDIR := $(CONTRIBDIR)/aminet/Catalogs
 
-CATALOGS 	:= deutsch français nederlands norsk suomi svenska
+CATALOGS 	:= $(basename $(wildcard *.ct))
 CATDESC 	:= FileX
 CATSUBDIR	:= 
 CATNAME 	:= FileX
