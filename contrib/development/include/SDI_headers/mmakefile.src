@@ -1,0 +1,13 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+HEADERS:= SDI_compiler.h SDI_hook.h SDI_interrupt.h SDI_lib.h SDI_misc.h SDI_stdarg.h
+
+#MM- contrib-development-headers-sdi : includes-copy
+
+#MM
+includes-copy :
+%copy_includes includes=$(HEADERS) path=SDI dir=
+
+%common
