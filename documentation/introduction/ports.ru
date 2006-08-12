@@ -182,6 +182,11 @@ Rebuilding requires a patched gcc3.4.3. The diff file can be found in contrib/gn
 
 __ http://sourceforge.net/project/showfiles.php?group_id=43586&package_id=194077
 
+От переводчика
+Ещё известные мне порты
+AROS/x86-windows - порт был прекращен разработчиком. Статус неизвестен.
+AROS/68k-native (aka AfA, Aros for Amiga) - порт в разработке, работоспособен (?), требует MMU.
+
 
 Заметки
 =========
