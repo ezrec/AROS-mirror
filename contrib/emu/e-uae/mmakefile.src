@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-##MM- contrib-complete : contrib-euae
+#MM- contrib-complete : contrib-euae
 
 PROGDIR := $(CONTRIBDIR)/Emu/E-UAE
 PACKAGE := e-uae
