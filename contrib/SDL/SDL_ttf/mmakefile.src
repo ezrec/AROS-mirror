@@ -1,12 +1,26 @@
-# Copyright © 2004, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2006, The AROS Development Team. All rights reserved.
 # $Id$
 
--include $(TOP)/config/make.cfg
+include $(TOP)/config/make.cfg
 
-##MM- contrib-sdl-sdl-ttf : development-SDL_ttf
+USER_INCLUDES:=-I$(AROS_INCLUDES)/SDL
 
-##MM- development-SDL_ttf : linklibs-SDL
+LIBFILES:=SDL_ttf
+FILES:=showfont
+HEADERS:=SDL_ttf
 
-#%fetch_and_build_gnu_development package=SDL_ttf version=2.0.6 patch=yes \
-#    package_repo=http://www.libsdl.org/projects/SDL_ttf/release/
+#MM- contrib-sdl-sdl-ttf : development-sdl-ttf-test
 
+#MM development-sdl-ttf-test : development-sdl-ttf
+%build_prog mmake=development-sdl-ttf-test progname=sdl_ttf_showfont files=$(FILES) \
+    targetdir=$(AROS_TESTS) uselibs="SDL SDL_ttf freetype2"
+
+#MM development-sdl-ttf :
+%build_linklib mmake=development-sdl-ttf libname=SDL_ttf files=$(LIBFILES)
+
+
+#MM
+includes-copy :
+%copy_includes includes=$(HEADERS) path=SDL dir=
+
+%common
