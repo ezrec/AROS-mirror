@@ -72,10 +72,10 @@ In order to change or write documentation you need a checkout of the
 + ...
 
 .. Note::
-    
+
     Both the subversion archive and the directory with the user and developer
-    manuals have the name 'documentation'. Don't mix them.
-    
+    manuals have the name 'documentation'. Don't mix them up.
+
 Subdirectories
 --------------
 
@@ -87,13 +87,13 @@ Internationalisation
 --------------------
 
 The build system supports I18n for the 'www' target. You have to append a
-language shortcut to the document file name (e.g. commands.en).
+language suffix to the document file name (e.g. commands.en).
 Currently there is support for English (.en), German (.de), Finnish (.fi)
 and Italian (.it).
 
-When you create a link to a document you have to omit the shortcut
+When you create a link to a document you have to omit the suffix
 (e.g \`Commands <user/commands>\`_). But if you use the 'include' directive
-for translated documents you must keep the shortcut.
+for translated documents you must keep the suffix.
 
 The build system uses the English version when no translated page is available.
 
@@ -244,12 +244,12 @@ If you want to build the standalone HTML documentation::
     > ./build html
 
 The generated files will be put in ``../bin/documentation/<target-name>``, eg.
-``../bin/documentation/www`` for the ``www`` target. Additionally, there is also
+``../bin/documentation/www`` for the ``www`` target. Additionally, there is
 a ``clean`` target, which will delete the entire ``../bin/documentation``
 directory.
 
 .. Note::
-    
+
     There are currently quite many intermediate files generated in the source
     directories, so you cannot put it on a read-only filesystem. If you have
     checked out the sources from SVN there's no need to worry: the generated

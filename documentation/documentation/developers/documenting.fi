@@ -4,7 +4,7 @@ AROS Dokumentointiopas
 
 :Authors:   Adam Chodorowski 
 :Copyright: Copyright © 1995-2002, The AROS Development Team
-:Version:   $Revision: 21208 $
+:Version:   $Revision$
 :Date:      $Date$
 :Status:    Work in progress.
 
@@ -79,16 +79,9 @@ mutta t‰ll‰ hetkell‰ niiden on parasta antaa olla sellaisenaan.
 Koot
 ----
 
-<<<<<<< .mine
 Tiedostot ``aros.size`` ja ``contrib.size`` sis‰lt‰v‰t AROS:in p‰‰asiallisen
 ja "contrib" l‰hdekoodin koot Subversion varastossa. Koot otetaan ajoittain ja
 lis‰t‰‰n n‰ihin tietokantoihin, joita k‰ytet‰‰n luomaan joitain graafeja.
-=======
-The files ``aros.size`` and ``contrib.size`` contain size measurements of the
-main AROS and contrib sources in SVN, respectively. The sizes are sampled
-periodically and added to these databases, which are then used to generate some
-nice graphs.
->>>>>>> .r23376
 
 Jokainen rivi jakautuu kolmeen tyhj‰ll‰ merkill‰/merkeill‰ rajoitettuun
 kentt‰‰n: p‰iv‰ys, koko kilotavuina ja hakemisto (t‰ss‰ j‰rjestyksess‰).

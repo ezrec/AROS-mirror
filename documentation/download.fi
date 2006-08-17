@@ -8,14 +8,14 @@ Lataus
 Snapshotit
 ==========
 
-Tilannekuvia (nk. snapshotteja) julkaistaan tiheÃ¤mmin kuin tÃ¤ysiÃ¤ versioita,
-mutta harvemmin kuin Ã¶isiÃ¤ kÃ¤Ã¤nnÃ¶ksiÃ¤. Toisin kuin Ã¶isiÃ¤ kÃ¤Ã¤nnÃ¶ksiÃ¤, on nÃ¤itÃ¤
-testattu ainakin ohimennen muutamissa ympÃ¤ristÃ¶issÃ¤, joten yleisesti ottaen
-nÃ¤iden tulisi olla vakaampia. Mutta toisaalta, mukana ei ole viimeisintÃ¤
+Tilannekuvia (nk. snapshotteja) julkaistaan tiheämmin kuin täysiä versioita,
+mutta harvemmin kuin öisiä käännöksiä. Toisin kuin öisiä käännöksiä, on näitä
+testattu ainakin ohimennen muutamissa ympäristöissä, joten yleisesti ottaen
+näiden tulisi olla vakaampia. Mutta toisaalta, mukana ei ole viimeisintä
 koodia.
 
-Raportoi nÃ¤itÃ¤ kÃ¤yttÃ¤essÃ¤si lÃ¶ytÃ¤mÃ¤si viat `vikaseurannan`__ kautta. Muissa
-tarpeissa ota meihin yhteyttÃ¤ `AROS-Exec`__:in kautta.
+Raportoi näitä käyttäessäsi löytämäsi viat `vikaseurannan`__ kautta. Muissa
+tarpeissa ota meihin yhteyttä `AROS-Exec`__:in kautta.
 
 .. raw:: html
 
@@ -25,17 +25,17 @@ __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
 
 
-Ã–iset kÃ¤Ã¤nnÃ¶kset
+Öiset käännökset
 ================
 
-Ã–iset kÃ¤Ã¤nnÃ¶kset tehdÃ¤Ã¤n, kuten nimestÃ¤ nÃ¤kyy, automaattisesti joka yÃ¶ suoraan
-Subversion-puusta ja ne sisÃ¤ltÃ¤vÃ¤t uusinta koodia. Koska nÃ¤itÃ¤ ei ole
-kuitenkaan testattu missÃ¤Ã¤n muodossa, saattavat Ã¶iset kÃ¤Ã¤nnÃ¶kset huonolla
-tuurilla sisÃ¤ltÃ¤Ã¤ toimimatonta ja/tai erittÃ¤in bugista koodia. Suurimman osan
+Öiset käännökset tehdään, kuten nimestä näkyy, automaattisesti joka yö suoraan
+Subversion-puusta ja ne sisältävät uusinta koodia. Koska näitä ei ole
+kuitenkaan testattu missään muodossa, saattavat öiset käännökset huonolla
+tuurilla sisältää toimimatonta ja/tai erittäin bugista koodia. Suurimman osan
 ajasta ne kuitenkin toimivat moitteetta.
 
-Raportoi nÃ¤itÃ¤ kÃ¤yttÃ¤essÃ¤si lÃ¶ytÃ¤mÃ¤si viat `vianseurannan`__ vÃ¤lityksellÃ¤.
-Muissa tarpeissa ota meihin yhteyttÃ¤ `AROS-Exec`__:in kautta.
+Raportoi näitä käyttäessäsi löytämäsi viat `vianseurannan`__ välityksellä.
+Muissa tarpeissa ota meihin yhteyttä `AROS-Exec`__:in kautta.
 
 .. raw:: html
 
