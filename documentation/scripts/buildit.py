@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2002-2006, The AROS Development Team. All rights reserved.
+# Copyright é 2002-2006, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os, sys, shutil, glob
@@ -28,7 +28,7 @@ TEMPLATE_DATA = {}
 
 # Languages not supported by docutils yet (but that we have files written in):
 # 'no'
-LANGUAGES  = [ 'en', 'de', 'fi', 'it' ]
+LANGUAGES  = [ 'en', 'de', 'fi', 'it', 'ru' ]
 
 # FIXME: Move this somewhere else...
 if (not os.path.exists( 'credits.en' ) ) \
@@ -86,7 +86,7 @@ def processPicture( src, depth ):
 
     # Create the thumbnail.
     if newer( [ src_abs ], tn_dst_abs ):
-        print '» Thumbnailing', src
+        print '+ Thumbnailing', src
         makeThumbnail( src_abs, tn_dst_abs, (200, 200) )
 
 
