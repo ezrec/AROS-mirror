@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2002-2006, The AROS Development Team. All rights reserved.
+# Copyright È 2002-2006, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os
@@ -17,6 +17,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang ):
             A( 'Deutsch', href='%(BASE)sindex.de.php' ),
             A( 'Italiano', href='%(BASE)sindex.it.php' ),            
             A( 'Suomi', href='%(BASE)sindex.fi.php' )
+            A( 'Ðóññêèé', href='%(BASE)sindex.ru.php' )
         ] ),
         BR(),
         A( _N['news'], href=makeURL( 'news/', lang ) ),
@@ -174,16 +175,16 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang ):
     )
 
     statsPHP = '''
-	    <?php
-		    //define("_BBC_PAGE_NAME", "my page title");
-		    define("_BBCLONE_DIR", "%(ROOT)smybbclone/");
-		    define("COUNTER", _BBCLONE_DIR."index.php");
-		    if (file_exists(COUNTER)) include_once(COUNTER);
-		?>
-	'''
+        <?php
+            //define("_BBC_PAGE_NAME", "my page title");
+            define("_BBCLONE_DIR", "%(ROOT)smybbclone/");
+            define("COUNTER", _BBCLONE_DIR."index.php");
+            if (file_exists(COUNTER)) include_once(COUNTER);
+        ?>
+    '''
     page = HTML( [
         Head( [
-            Title( 'AROS: Amiga® Research Operating System' ),
+            Title( 'AROS: AmigaÍ Research Operating System' ),
             Link( href = '%(ROOT)saros.css', type = 'text/css', rel = 'stylesheet' ),
             Meta(
                 name    = 'keywords',
