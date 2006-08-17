@@ -902,7 +902,7 @@ syntax:
         Variables will only be changed if they have not yet been specified.
 
     ``libname <string>``
-        Set libname to <string>. This is the name of the library (i. e. you can
+        Set libname to <string>. This is the name of the library (i.e. you can
         open it with <string>.library). It will show up in the version string, too.
 
     ``basename <string>``
@@ -916,11 +916,11 @@ syntax:
         If libbasetype is not set, then it is set to <string>, too.
 
     ``libbasetype <string>``
-        The type of libbase (with struct), i. e. struct ExecBase, struct DosLibrary,
+        The type of libbase (with struct), i.e. struct ExecBase, struct DosLibrary,
         struct IconBase, etc).
 
     ``libbasetypeptr <string>``
-        Type of a pointer to the libbase. (e. g. ``struct ExecBase *``).
+        Type of a pointer to the libbase. (e.g. ``struct ExecBase *``).
 
     ``version <version>.<revision>``
         Specifies the version and revision of the library. 41.0103 means version 41
@@ -931,7 +931,7 @@ syntax:
 
     ``define <string>``
         The define to use to protect the resulting file	against double inclusion
-        (i. e. #ifndef <string>...). The default is _LIBDEFS_H.
+        (i.e. #ifndef <string>...). The default is _LIBDEFS_H.
 
     ``type <string>``
         What kind of library is this ? Valid values for <string> are: device, library,

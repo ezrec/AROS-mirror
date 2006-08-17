@@ -182,7 +182,7 @@ You don't have to remember all of these, as they will be discussed
 later in detail.
 
 + `exec.library` is the most important library. It is responsible for handling
-  the most basic things like managing `tasks` (i. e. programs), `memory`,
+  the most basic things like managing `tasks` (i.e. programs), `memory`,
   `libraries` and many other  things.
 
 + `utility.library` implements very important mechanisms for "talking" to
@@ -223,7 +223,7 @@ name
     this can also be a complete (absolute or relative) path to the library.
 
     .. Note:: Paths do not work with kernel-based libraries
-              (i. e. libraries that are included in the kernel).
+              (i.e. libraries that are included in the kernel).
               Use absolute path only, if you know exactly, what you
               are doing!
 
@@ -241,7 +241,7 @@ version
 The following procedure is used to load the library to open:
 
 1. First, the name of the library is searched in the list of already loaded
-   libraries. If this library was loaded into memory before (e. g. by a different
+   libraries. If this library was loaded into memory before (e.g. by a different
    program) and still is there, everything is fine and `OpenLibrary()` returns
    now.
 
@@ -264,7 +264,7 @@ The following procedure is used to load the library to open:
 library (`struct Library *` defined in ``exec/libraries.h``) or `NULL`,
 meaning that opening the library failed for some reason. The resulting pointer
 has to be stored for the compiler's use. Normally it is stored in a variable in
-the form: `<libraryname>Base`, e. g. `IntuitionBase` for the pointer to
+the form: `<libraryname>Base`, e.g. `IntuitionBase` for the pointer to
 *intuition.library*.
 
 After opening the library, you can use its functions by just calling them like
