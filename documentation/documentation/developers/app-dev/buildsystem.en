@@ -390,7 +390,7 @@ With the following arguments:
         this if you know what you are doing.
 
     ``detach=no``
-        Wether the executables will run detached. Defaults to no.
+        Whether the executables will run detached. Defaults to no.
 
 %build_prog
 ^^^^^^^^^^^
@@ -468,7 +468,7 @@ With the following arguments:
         this if you know what you are doing.
 
     ``detach=no``
-        Wether the executable will run detached. Defaults to no.
+        Whether the executable will run detached. Defaults to no.
 
 
 Common
@@ -688,7 +688,7 @@ Here is a list of the arguments for this macro:
 The module configuration file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The module configuration file is subdived in several sections. A section is
+The module configuration file is subdivided in several sections. A section is
 defined with the following lines::
 
     ## begin sectionname
@@ -902,7 +902,7 @@ syntax:
         Variables will only be changed if they have not yet been specified.
 
     ``libname <string>``
-        Set libname to <string>. This is the name of the library (ie. you can
+        Set libname to <string>. This is the name of the library (i. e. you can
         open it with <string>.library). It will show up in the version string, too.
 
     ``basename <string>``
@@ -912,15 +912,15 @@ syntax:
         libbase will become xXxBase and libbasetype will become	xXxBase.
 
     ``libbase <string>``
-        Defines the name of the library base (ie. SysBase, DOSBase, IconBase, etc).
+        Defines the name of the library base (i.e. SysBase, DOSBase, IconBase, etc).
         If libbasetype is not set, then it is set to <string>, too.
 
     ``libbasetype <string>``
-        The type of libbase (with struct), ie. struct ExecBase, struct DosLibrary,
+        The type of libbase (with struct), i. e. struct ExecBase, struct DosLibrary,
         struct IconBase, etc).
 
     ``libbasetypeptr <string>``
-        Type of a pointer to the libbase. (eg. ``struct ExecBase *``).
+        Type of a pointer to the libbase. (e. g. ``struct ExecBase *``).
 
     ``version <version>.<revision>``
         Specifies the version and revision of the library. 41.0103 means version 41
@@ -931,7 +931,7 @@ syntax:
 
     ``define <string>``
         The define to use to protect the resulting file	against double inclusion
-        (ie. #ifndef <string>...). The default is _LIBDEFS_H.
+        (i. e. #ifndef <string>...). The default is _LIBDEFS_H.
 
     ``type <string>``
         What kind of library is this ? Valid values for <string> are: device, library,
@@ -1007,7 +1007,7 @@ And the explanation of the argument to this macro:
 
     ``mainmmake=/A``
         The mmake of the module from which someone wants to replace files or to
-        wich to add additional files.
+        which to add additional files.
 
     ``maindir=/A``
         The directory where the object files of the main module are stored.
