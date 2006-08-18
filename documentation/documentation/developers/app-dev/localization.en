@@ -1,0 +1,252 @@
+=================
+AROS, Localize it
+=================
+
+:Authors:   Olivier Adam, Matthias Rustler
+:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Work in progress.
+
+.. Contents::
+
+
+Introduction
+''''''''''''
+
+The *locale.library* provides us tools to localize applications. Localized strings are stored in separate 
+languages catalogs files, under Catalogs directories.
+AROS Development Environment macros can build the required files.
+This document gives you a work-flow to localize applications or localize existing applications
+or create catalogs files for existing localized applications.
+
+
+Prepare your application for localization
+'''''''''''''''''''''''''''''''''''''''''
+
+Locale.library
+~~~~~~~~~~~~~~
+
+The most important functions of locale.library for localizing are `OpenCatalog`, `GetCatalogStr`
+and `CloseCatalog`. AROS applications often have the files `locale.c` and `locale.h` with some
+wrapper functions. ` "_" (yes, the underline is the function name) returns the
+string for a given message ID. It is written in such a way that it falls back to the build-in
+language when a catalog can't be opened. "__" additionally casts the string to an IPTR. This is
+useful for many Zune applications.
+
+locale.c::
+
+    #include <exec/types.h>
+    #include <proto/locale.h>
+
+    #define CATCOMP_ARRAY
+    #include "strings.h"
+
+    #define CATALOG_NAME     "myapp.catalog"
+    #define CATALOG_VERSION  0
+
+    struct Catalog *catalog;
+
+
+    CONST_STRPTR _(ULONG id)
+    {
+        if (LocaleBase != NULL && catalog != NULL)
+        {
+            return GetCatalogStr(catalog, id, CatCompArray[id].cca_Str);
+        } 
+        else 
+        {
+            return CatCompArray[id].cca_Str;
+        }
+    }
+
+    VOID Locale_Initialize(VOID)
+    {
+        if (LocaleBase != NULL)
+        {
+            catalog = OpenCatalog(NULL, CATALOG_NAME, OC_Version, CATALOG_VERSION, TAG_DONE);
+        }
+        else
+        {
+            catalog = NULL;
+        }
+    }
+
+    VOID Locale_Deinitialize(VOID)
+    {
+        if(LocaleBase != NULL && catalog != NULL) CloseCatalog(catalog);
+    }
+
+
+locale.h::
+
+    #ifndef _LOCALE_H_
+    #define _LOCALE_H_
+
+    #include <exec/types.h>
+
+    #define CATCOMP_NUMBERS
+    #include "strings.h"
+
+    CONST_STRPTR _(ULONG ID);       /* Get a message, as a STRPTR */
+    #define __(id) ((IPTR) _(id))   /* Get a message, as an IPTR */
+
+    VOID Locale_Initialize(VOID);
+    VOID Locale_Deinitialize(VOID);
+
+    #endif /* _LOCALE_H_ */
+
+
+Modify the code of you application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Replace all strings which should be translate-able by a call of the "_" function with
+a message identifier as parameter.
+
+e.g. ``puts("Hello world");`` becomes ``puts(_(MSG_HelloWorld));``
+
+This IDs must be unique and should give the translator a hint how they are used.
+
+e.g.: MSG_ERR_Application, MSG_MEN_Open, MSG_GAD_Cancel
+
+Include `locale.h` with ``#include "locale.h"`` in all source files which contain
+translated strings.
+
+Call the functions `Locale_Initialize` and `Locale_Deinitialize` in the init/cleanup area
+of your application.
+
+
+Catalog description file
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The next step is to create a catalog description file. Create a subdirectory with the
+name `catalogs`. Put in this directory a file with the name `myapp`.cd.
+
+The format of this file is::
+
+    message ID (ID number/min. string length/max. string length)
+    native string
+
+In most cases, you don't need the attributes within the round brackets and can simply
+write `(//)`. No empty lines are allowed and comments start with ";".
+
+Example::
+
+    MSG_HelloWorld (//)
+    Hello World
+    ;
+    MSG_ERR_Application (//)
+    Can't create application
+    ;
+    MSG_GAD_Cancel (//)
+    Cancel
+    
+
+Build system
+~~~~~~~~~~~~
+
+The locale library searches the catalogs in two places: `PROGDIR:Catalogs` and
+`LOCALE:Catalogs`. We must make a decission where our catalogs should be placed
+an then we have to create a metamake file (mmakefile.src) in the `catalogs`
+directory with the right path.
+
+Example for catalogs in `LOCALE:Catalogs`. This should only be used for AROS
+system applications::
+
+    include $(TOP)/config/make.cfg
+
+    %build_catalogs mmake=workbench-utilities-myapp \
+                name=myapp subdir=System/Utilities
+
+
+Example for catalogs in `PROGDIR:Catalogs`. The directory must be a subdirectory
+of you applicaton::
+
+    include $(TOP)/config/make.cfg
+
+    CATDIR := $(CONTRIBDIR)/Utilities/myapp/Catalogs
+
+    #MM contrib-utilities-myapp-catalogs
+
+    %build_catalogs mmake=contrib-utilities-myapp-catalogs \
+                name=myapp subdir= dir=$(CATDIR)
+
+
+The metamake file for the application has to take the metamake target
+for the catalogs as prerequisite. This ensures that the header with
+the strings is rebuild when the catalog description has changed.
+
+It is now a good idea to test if the application builds. Call `make` in the AROS
+directory.
+
+If everything works well you should now have the file ``strings.h`` in the directory
+of your application.
+
+
+Localizing
+''''''''''
+
+Catalog translation file
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Bevor we can start translation we have to look if our language is already
+supported by AROS. Look in *LOCALE:Languages/*. 
+
+Now we can finally translate our application into another languages. Enter the
+`catalogs` subdirectory an create a language translation file with the FlexCat
+tool. FlexCat must be in the search path. The file name must be same name as in
+`LOCALE:Languages` without the `language` suffix.  
+
+e.g.::
+
+    FlexCat myapp.cd NEWCTFILE=deutsch.ct
+    FlexCat myapp.cd NEWCTFILE=français.ct
+
+The result file will look like this::
+
+    ## version $VER: XX.catalog XX.XX ($TODAY)
+    ## language X
+    ## codeset 0
+    ;
+    ;
+    MSG_HelloWorld
+    
+    ; Hello World
+    ;
+    MSG_ERR_Application
+    
+    ; Can't open application
+    ;
+    MSG_GAD_Cancel
+    
+    ; Cancel
+
+Replace the 'X' with valid information and fill the empty lines with the translated strings::
+
+    ## version $VER: myapp.catalog 0.1 (18.04.2006)
+    ## language deutsch
+    ## codeset 0
+    ;
+    ;
+    MSG_HelloWorld
+    Hallo Welt
+    ; Hello World
+    ;
+    MSG_ERR_Application
+    Kann Applikation nicht erzeugen
+    ; Can't create application
+    ;
+    MSG_GAD_Cancel
+    Abbrechen
+    ; Cancel
+
+Now you can call again `make` to test if the catalogs are created.
+
+
+Updating
+~~~~~~~~
+
+One of the strengths of FlexCat is that it can update catalogs without deleting
+existing strings::
+
+    FlexCat myapp.cd deutsch.ct NEWCTFILE=deutsch.ct

@@ -28,6 +28,7 @@ Table of Contents
 + `Intuition library`__
 + `Resource tracking`__
 + `Multitasking`__
++ `Localization`__
 + `Appendix`__
 
 __ introduction
@@ -37,5 +38,6 @@ __ dos-library
 __ intuition-library
 __ resource-tracking
 __ multitasking
+__ localization
 __ appendix
 
