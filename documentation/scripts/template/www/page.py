@@ -16,7 +16,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang ):
             A( 'English', href='%(BASE)s/' ),
             A( 'Deutsch', href='%(BASE)sindex.de.php' ),
             A( 'Italiano', href='%(BASE)sindex.it.php' ),            
-            A( 'Suomi', href='%(BASE)sindex.fi.php' )
+            A( 'Suomi', href='%(BASE)sindex.fi.php' ),
             A( 'Русский', href='%(BASE)sindex.ru.php' )
         ] ),
         BR(),
