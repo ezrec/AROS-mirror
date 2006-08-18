@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright È 2002-2006, The AROS Development Team. All rights reserved.
+# Copyright © 2002-2006, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os
@@ -184,7 +184,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang ):
     '''
     page = HTML( [
         Head( [
-            Title( 'AROS: AmigaÍ Research Operating System' ),
+            Title( 'AROS: Amiga® Research Operating System' ),
             Link( href = '%(ROOT)saros.css', type = 'text/css', rel = 'stylesheet' ),
             Meta(
                 name    = 'keywords',
