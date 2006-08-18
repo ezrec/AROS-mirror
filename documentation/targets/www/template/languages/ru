@@ -1,0 +1,58 @@
+[titles]
+
+mirrors:          Mirrors
+contents:         Contents
+search:           Search
+visitors:         Visitors
+sponsors:         Sponsors
+
+[navigation]
+
+home:             Home
+news:             News
+archive:          Archive
+introduction:     Introduction
+status:           Status
+screenshots:      Screenshots
+ports:            Ports
+license:          License
+download:         Download
+documentation:    Documentation
+users:            Users
+installation:     Installation
+using:            Using
+shell:            Shell commands
+faq:              FAQ
+developers:       Developers
+contribute:       Contribute
+bug-tracker:      Bug Tracker
+working-with-subversion: Working with Subversion
+compiling:        Compiling
+application-development-manual: Application Development Manual
+zune-application-development-manual: Zune Application Development Manual
+system-development-manual:      System Development Manual
+debugging-manual: Debugging Manual
+reference:        Reference
+specifications:   Specifications
+ui-style-guide:   UI Style Guide
+documenting:      Documenting
+translating:      Translating
+summaries:        Summaries
+links:            Links
+contact:          Contact
+mailing-lists:    Mailing lists
+forums:           Forums
+irc-channels:     IRC channels
+credits:          Credits
+pictures:         Pictures
+developers-together: Developers en Masse
+sponsors:         Sponsors
+linking:          Linking
+
+[misc]
+
+go:               Go
+search:           Search
+copyright:        Copyright © 1995-2006, The AROS Development Team. All rights reserved.
+trademarks:       Amiga®, AmigaOS®, Workbench and Intuition are trademarks of Amiga Inc. All other trademarks belong to their respective owners.
+read-more:        Read more...
