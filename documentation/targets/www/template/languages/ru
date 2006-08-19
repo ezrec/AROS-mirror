@@ -1,58 +1,58 @@
 [titles]
 
-mirrors:          Mirrors
-contents:         Contents
-search:           Search
-visitors:         Visitors
-sponsors:         Sponsors
+mirrors:          Зеркала
+contents:         Содержание
+search:           Поиск
+visitors:         Посетители
+sponsors:         Спонсоры
 
 [navigation]
 
-home:             Home
-news:             News
-archive:          Archive
-introduction:     Introduction
-status:           Status
-screenshots:      Screenshots
-ports:            Ports
-license:          License
+home:             Начало
+news:             Новости
+archive:          Архив
+introduction:     Введение
+status:           Состояние
+screenshots:      Снимки экрана
+ports:            Порты
+license:          Лицензия
 download:         Download
-documentation:    Documentation
-users:            Users
-installation:     Installation
-using:            Using
-shell:            Shell commands
-faq:              FAQ
-developers:       Developers
-contribute:       Contribute
-bug-tracker:      Bug Tracker
-working-with-subversion: Working with Subversion
-compiling:        Compiling
-application-development-manual: Application Development Manual
-zune-application-development-manual: Zune Application Development Manual
-system-development-manual:      System Development Manual
-debugging-manual: Debugging Manual
-reference:        Reference
-specifications:   Specifications
-ui-style-guide:   UI Style Guide
-documenting:      Documenting
-translating:      Translating
-summaries:        Summaries
-links:            Links
+documentation:    Документация
+users:            Пользователям
+installation:     Установка
+using:            Использование
+shell:            Команды CLI-shell
+faq:              ЧАВО(FAQ)
+developers:       Разработчики
+contribute:       Участие
+bug-tracker:      Поймай багу!
+working-with-subversion: Работа с Subversion
+compiling:        Сборка
+application-development-manual: Руководство по разработке приложений
+zune-application-development-manual: Руководство по разработке приложений Zune
+system-development-manual:      Руководство по системной разработке
+debugging-manual: Руководство по отладке
+reference:        Справочная информация
+specifications:   Определения
+ui-style-guide:   Руководство по интерфейсу (UI Style)
+documenting:      Документирование
+translating:      Перевод
+summaries:        Заметки
+links:            Ссылки
 contact:          Contact
-mailing-lists:    Mailing lists
-forums:           Forums
-irc-channels:     IRC channels
-credits:          Credits
-pictures:         Pictures
-developers-together: Developers en Masse
-sponsors:         Sponsors
-linking:          Linking
+mailing-lists:    Списки рассылки
+forums:           Форумы
+irc-channels:     Каналы IRC
+credits:          Участники проекта
+pictures:         Изображения
+developers-together: Разработчки вместе
+sponsors:         Спонсоры
+linking:          Упоминание
 
 [misc]
 
-go:               Go
-search:           Search
-copyright:        Copyright © 1995-2006, The AROS Development Team. All rights reserved.
-trademarks:       Amiga®, AmigaOS®, Workbench and Intuition are trademarks of Amiga Inc. All other trademarks belong to their respective owners.
-read-more:        Read more...
+go:               Перейти
+search:           Поиск
+copyright:        Copyright И 1995-2006, The AROS Development Team. Все права защищены.
+trademarks:       AmigaН, AmigaOSН, Workbench and Intuition являются торгговыми знаками Amiga Inc. Все прочие торговые знаки принадлежат их собственникам.
+read-more:        Подробнее...
