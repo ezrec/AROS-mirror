@@ -87,10 +87,8 @@ AROS_UFH3(void, Enumerator,
     AROS_USERFUNC_EXIT
 }
 
-AROS_SET_LIBFUNC(GM_UNIQUENAME(Init), LIBBASETYPE, LIBBASE)
+static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR LIBBASE)
 {
-    AROS_SET_LIBFUNC_INIT
-
     D(bug("[nforce] Init()\n"));
 
     if (FindTask(NFORCE_TASK_NAME) != NULL)
@@ -151,14 +149,10 @@ AROS_SET_LIBFUNC(GM_UNIQUENAME(Init), LIBBASETYPE, LIBBASE)
     }
 
     return FALSE;
-
-    AROS_SET_LIBFUNC_EXIT
 }
 
-AROS_SET_LIBFUNC(GM_UNIQUENAME(Expunge), LIBBASETYPE, LIBBASE)
+static int GM_UNIQUENAME(Expunge)(LIBBASETYPEPTR LIBBASE)
 {
-    AROS_SET_LIBFUNC_INIT
-
     D(bug("[nforce] Expunge\n"));
 
     if (LIBBASE->nf_unit)
@@ -182,8 +176,6 @@ AROS_SET_LIBFUNC(GM_UNIQUENAME(Expunge), LIBBASETYPE, LIBBASE)
         CloseLibrary(LIBBASE->nf_UtilityBase);
 
     return TRUE;
-
-    AROS_SET_LIBFUNC_EXIT
 }
 
 static const ULONG rx_tags[] = {
@@ -203,10 +195,14 @@ static const ULONG tx_tags[] = {
  * It could change in future if only multiple phy support works in forcedeth.c
  * linux driver.
  */
-AROS_SET_OPENDEVFUNC(GM_UNIQUENAME(Open),
-    LIBBASETYPE, LIBBASE, struct IOSana2Req, req, unitnum, flags)
+static int GM_UNIQUENAME(Open)
+(
+    LIBBASETYPEPTR LIBBASE,
+    struct IOSana2Req *req,
+    ULONG unitnum,
+    ULONG flags
+)
 {
-    AROS_SET_DEVFUNC_INIT
     struct TagItem *tags;
     struct NFUnit *unit = LIBBASE->nf_unit;
     struct Opener *opener;
@@ -286,14 +282,14 @@ AROS_SET_OPENDEVFUNC(GM_UNIQUENAME(Open),
     req->ios2_Req.io_Error = error;
 
     return (error !=0) ? FALSE : TRUE;
-
-    AROS_SET_DEVFUNC_EXIT
 }
 
-AROS_SET_CLOSEDEVFUNC(GM_UNIQUENAME(Close),
-    LIBBASETYPE, LIBBASE, struct IOSana2Req, req)
+static int GM_UNIQUENAME(Close)
+(
+    LIBBASETYPEPTR LIBBASE,
+    struct IOSana2Req *req
+)
 {
-    AROS_SET_DEVFUNC_INIT
     struct NFUnit *unit = LIBBASE->nf_unit;
     struct Opener *opener;
 
@@ -311,8 +307,6 @@ AROS_SET_CLOSEDEVFUNC(GM_UNIQUENAME(Close),
     }
 
     return TRUE;
-
-    AROS_SET_DEVFUNC_EXIT
 }
 
 

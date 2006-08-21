@@ -78,10 +78,8 @@ D(bug("[pcnet32] PCNet32 NIC I/O MEM @ %08x\n", unit->pcnu_BaseMem));
     AROS_USERFUNC_EXIT
 }
 
-AROS_SET_LIBFUNC(GM_UNIQUENAME(Init), LIBBASETYPE, LIBBASE)
+static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR LIBBASE)
 {
-    AROS_SET_LIBFUNC_INIT
-
 D(bug("[pcnet32] init.Init()\n"));
 
     if (FindTask(PCNET32_TASK_NAME) != NULL)
@@ -142,14 +140,10 @@ D(bug("[pcnet32] init.Init()\n"));
     }
 
     return FALSE;
-
-    AROS_SET_LIBFUNC_EXIT
 }
 
-AROS_SET_LIBFUNC(GM_UNIQUENAME(Expunge), LIBBASETYPE, LIBBASE)
+static int GM_UNIQUENAME(Expunge)(LIBBASETYPEPTR LIBBASE)
 {
-    AROS_SET_LIBFUNC_INIT
-
 D(bug("[pcnet32] init.Expunge\n"));
 
     if (LIBBASE->pcnb_unit)
@@ -173,8 +167,6 @@ D(bug("[pcnet32] init.Expunge\n"));
         CloseLibrary(LIBBASE->pcnb_UtilityBase);
 
     return TRUE;
-
-    AROS_SET_LIBFUNC_EXIT
 }
 
 static const ULONG rx_tags[] = {

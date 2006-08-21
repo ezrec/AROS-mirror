@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2006, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Regina code for initialization during opening and closing of the library
@@ -23,10 +23,8 @@ struct Library* aroscbase;
 struct MinList *__regina_tsdlist = NULL;
 
 
-AROS_SET_LIBFUNC(InitLib, LIBBASETYPE, LIBBASE)
+static int InitLib(LIBBASETYPEPTR LIBBASE)
 {
-    AROS_SET_LIBFUNC_INIT;
-    
     D(bug("Inside Init func of regina.library\n"));
 
     if (!(DOSBase = (struct DosLibrary *)OpenLibrary("dos.library",0))) return FALSE;
@@ -43,23 +41,17 @@ AROS_SET_LIBFUNC(InitLib, LIBBASETYPE, LIBBASE)
     NewList((struct List *)__regina_tsdlist);
     
     return TRUE;
-
-    AROS_SET_LIBFUNC_EXIT;
 }
 
-AROS_SET_LIBFUNC(ExpungeLib, LIBBASETYPE, LIBBASE)
+static int ExpungeLib(LIBBASETYPEPTR LIBBASE)
 {
-    AROS_SET_LIBFUNC_INIT;
-    
     D(bug("Inside Expunge func of regina.library\n"));
 
     DeletePool(__regina_semaphorepool);
     CloseLibrary(aroscbase);
     CloseLibrary((struct Library *)DOSBase);
-    
+
     return TRUE;
-    
-    AROS_SET_LIBFUNC_EXIT;
 }
 
 ADD2INITLIB(InitLib, 0);

@@ -221,25 +221,17 @@ void LIBENT GGFX_Exit(void)
 #include <aros/symbolsets.h>
 #include LC_LIBDEFS_FILE
 
-AROS_SET_LIBFUNC(GGFX_Init, LIBBASETYPE, LIBBASE)
+static int GGFX_Init(LIBBASETYPEPTR LIBBASE)
 {
-    AROS_SET_LIBFUNC_INIT
-
     return InitVars();
-    
-    AROS_SET_LIBFUNC_EXIT
 }
 
-AROS_SET_LIBFUNC(GGFX_Exit, LIBBASETYPE, LIBBASE)
+static int GGFX_Exit(LIBBASETYPEPTR LIBBASE)
 {
-    AROS_SET_LIBFUNC_INIT
-
     return CleanUpVars();
-    
-    AROS_SET_LIBFUNC_EXIT
 }
 
-ADD2INITLIB(GGFX_Init, 0);
+ADD2INIT(GGFX_Init, 0);
 ADD2EXPUNGELIB(GGFX_Exit, 0);
 #endif
 

@@ -17,31 +17,22 @@
 #include <aros/symbolsets.h>
 #include LC_LIBDEFS_FILE
 
-AROS_SET_LIBFUNC(InitMem, LIBBASETYPE, LIBBASE)
+static int InitMem(LIBBASETYPEPTR LIBBASE)
 {
-    AROS_SET_LIBFUNC_INIT
-    
     mainpool = CreatePool(MEMF_ANY, 4096, 4096);
     InitSemaphore(&memsemaphore);
     
     return mainpool != NULL;
-    
-    AROS_SET_LIBFUNC_EXIT
 }
 
-AROS_SET_LIBFUNC(CleanUpMem, LIBBASETYPE, LIBBASE)
+static int CleanUpMem(LIBBASETYPEPTR LIBBASE)
 {
-    AROS_SET_LIBFUNC_INIT
-
     if (mainpool != NULL)
     {
 	DeletePool(mainpool);
 	mainpool = NULL;
     }
-    
     return TRUE;
-    
-    AROS_SET_LIBFUNC_EXIT
 }
 
 ADD2INITLIB(InitMem, 0);

@@ -33,10 +33,8 @@ void set_global_dopusbase(struct DOpusBase *base)
 	DOpusBase = base;
 }
 
-AROS_SET_LIBFUNC(GM_UNIQUENAME(Init), LIBBASETYPE, LIBBASE)
+static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR LIBBASE)
 {
-    AROS_SET_LIBFUNC_INIT
-
     /* This function is single-threaded by exec by calling Forbid. */
 
     /* We have to use a function to set the global var DOpusBase
@@ -67,7 +65,6 @@ kprintf("DOPUS_INIT: ct: %p, cb: %p\n"
 
     /* You would return NULL here if the init failed. */
     return TRUE;
-    AROS_SET_LIBFUNC_EXIT
 }
 
 ADD2INITLIB(GM_UNIQUENAME(Init), 0)

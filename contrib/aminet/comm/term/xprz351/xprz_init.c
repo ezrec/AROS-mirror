@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2006, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Init of xprzmodem.library
@@ -13,27 +13,20 @@
 extern int  __UserLibInit (LIBBASETYPE *);
 extern void __UserLibCleanup (LIBBASETYPE *);
 
-AROS_SET_LIBFUNC(Init, LIBBASETYPE, lh)
+static int Init(LIBBASETYPEPTR lh)
 {
-        AROS_SET_LIBFUNC_INIT;
-    
 	if (RETURN_OK == __UserLibInit(lh)) {
 		return TRUE;
 	} else {
 		return FALSE;
 	}
-    
-        AROS_SET_LIBFUNC_EXIT;
 }
 
-AROS_SET_LIBFUNC(Expunge, LIBBASETYPE, lh)
+static int Expunge(LIBBASETYPEPTR lh)
 {
-        AROS_SET_LIBFUNC_INIT;
-    
 	__UserLibCleanup(lh);
-    
-        AROS_SET_LIBFUNC_EXIT;
+	return TRUE;
 }
-
+    
 ADD2INITLIB(Init, 0);
 ADD2EXPUNGELIB(Expunge, 0);

@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2003, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2006, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: bsdsocket initialization code.
@@ -24,7 +24,7 @@
 
 /****************************************************************************************/
 
-AROS_SET_LIBFUNC(Init, LIBBASETYPE, LIBBASE)
+static int Init(LIBBASETYPEPTR LIBBASE)
 {
     D(bug(NAME_STRING ": Inside libinit func \n"));
 
@@ -33,7 +33,7 @@ AROS_SET_LIBFUNC(Init, LIBBASETYPE, LIBBASE)
 
 /****************************************************************************************/
 
-AROS_SET_LIBFUNC(Open, LIBBASETYPE, LIBBASE)
+static int Open(LIBBASETYPEPTR LIBBASE)
 {
     /*
       This function is single-threaded by exec by calling Forbid.
@@ -47,7 +47,7 @@ AROS_SET_LIBFUNC(Open, LIBBASETYPE, LIBBASE)
 
 /****************************************************************************************/
 
-AROS_SET_LIBFUNC(Expunge, LIBBASETYPE, LIBBASE)
+static int Expunge(LIBBASETYPEPTR LIBBASE)
 {
     /*
 	This function is single-threaded by exec by calling Forbid.
@@ -62,7 +62,7 @@ AROS_SET_LIBFUNC(Expunge, LIBBASETYPE, LIBBASE)
 
 /****************************************************************************************/
 
-AROS_SET_LIBFUNC(Close, LIBBASETYPE, LIBBASE)
+static void Close(LIBBASETYPEPTR LIBBASE)
 {
     /*
 	This function is single-threaded by exec by calling Forbid.

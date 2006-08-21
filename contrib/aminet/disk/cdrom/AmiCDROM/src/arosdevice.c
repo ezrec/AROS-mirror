@@ -15,10 +15,8 @@
 void ACDR_work(struct ACDRBase *);
 void *ACDR_GetData(struct ACDRBase *);
 
-AROS_SET_LIBFUNC(GM_UNIQUENAME(Init), LIBBASETYPE, acdrbase)
+static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR acdrbase)
 {
-	AROS_SET_LIBFUNC_INIT
-
 	struct Task *task;
 	APTR stack;
 
@@ -73,7 +71,6 @@ AROS_SET_LIBFUNC(GM_UNIQUENAME(Init), LIBBASETYPE, acdrbase)
 		CloseLibrary((struct Library *)acdrbase->DOSBase);
 	}
 	return FALSE;
-	AROS_SET_LIBFUNC_EXIT
 }
 
 #ifdef SysBase
@@ -81,15 +78,14 @@ AROS_SET_LIBFUNC(GM_UNIQUENAME(Init), LIBBASETYPE, acdrbase)
 #endif
 #define SysBase acdrbase->SysBase
 
-AROS_SET_OPENDEVFUNC(GM_UNIQUENAME(Open),
-		     LIBBASETYPE, acdrbase,
-		     struct IOFileSys, iofs,
-		     unitnum,
-		     flags
+static int GM_UNIQUENAME(Open)
+(
+    LIBBASETYPEPTR acdrbase,
+    struct IOFileSys *iofs,
+    ULONG unitnum,
+    ULONG flags
 )
 {
-	AROS_SET_DEVFUNC_INIT
-
 	unitnum = flags = 0;
 	acdrbase->rport.mp_SigTask=FindTask(NULL);
 
@@ -105,7 +101,6 @@ AROS_SET_OPENDEVFUNC(GM_UNIQUENAME(Open),
 	}
 	iofs->IOFS.io_Error = IOERR_OPENFAIL;
 	return FALSE;
-	AROS_SET_DEVFUNC_EXIT	
 }
 
 #ifdef DOSBase
@@ -113,26 +108,21 @@ AROS_SET_OPENDEVFUNC(GM_UNIQUENAME(Open),
 #endif
 #define DOSBase acdrbase->DOSBase
 
-AROS_SET_LIBFUNC(GM_UNIQUENAME(Expunge), LIBBASETYPE, acdrbase)
+static int GM_UNIQUENAME(Expunge)(LIBBASETYPEPTR acdrbase)
 {
-	AROS_SET_LIBFUNC_INIT
-
 	RemTask(acdrbase->port.mp_SigTask);
 	FreeMem(((struct Task *)acdrbase->port.mp_SigTask)->tc_SPLower,AROS_STACKSIZE);
 	FreeMem(acdrbase->port.mp_SigTask, sizeof(struct Task));
 	CloseLibrary((struct Library *)DOSBase);
 	return TRUE;
-
-	AROS_SET_LIBFUNC_EXIT
 }
 
-AROS_SET_CLOSEDEVFUNC(GM_UNIQUENAME(Close),
-		      LIBBASETYPE, acdrbase,
-		      struct IOFileSys, iofs
+static int GM_UNIQUENAME(Close)
+(
+    LIBBASETYPEPTR acdrbase,
+    struct IOFileSys *iofs
 )
 {
-	AROS_SET_DEVFUNC_INIT
-
 	acdrbase->rport.mp_SigTask=FindTask(NULL);
 	iofs->IOFS.io_Command = -2;
 	PutMsg(&acdrbase->port, &iofs->IOFS.io_Message);
@@ -142,7 +132,6 @@ AROS_SET_CLOSEDEVFUNC(GM_UNIQUENAME(Close),
 		return FALSE;				// there is still something to do on this volume
 	iofs->IOFS.io_Device=(struct Device *)-1;
 	return TRUE;
-	AROS_SET_DEVFUNC_EXIT
 }
 
 ADD2INITLIB(GM_UNIQUENAME(Init),0)
