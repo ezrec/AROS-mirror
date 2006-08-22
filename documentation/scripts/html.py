@@ -119,6 +119,17 @@ class Meta( StandardEmpty ):
     def __init__( self, **attributes ):
         StandardEmpty.__init__( self, 'meta', attributes )
 
+class Charset( StandardEmpty ):
+    def __init__( self, charset ):
+        self.charset = charset
+
+    def __str__( self ):
+        result  = '<' + 'meta'
+        result += ' http-equiv="Content-Type"'
+        result += ' content="text/html; charset=' + self.charset + '">'
+
+        return result
+
 class Link( StandardEmpty ):
     def __init__( self, **attributes ):
         StandardEmpty.__init__( self, 'link', attributes )

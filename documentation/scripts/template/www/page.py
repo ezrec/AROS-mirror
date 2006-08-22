@@ -7,7 +7,7 @@ import os
 from html import *
 from components import *
 
-def makePage( _T, _N, _M, MIRRORS_DATA, lang ):
+def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     navigation = Tree \
     ( [
         A( _N['home'], href=makeURL( '/', lang ) ),
@@ -17,7 +17,8 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang ):
             A( 'Deutsch', href='%(BASE)sindex.de.php' ),
             A( 'Italiano', href='%(BASE)sindex.it.php' ),            
             A( 'Suomi', href='%(BASE)sindex.fi.php' ),
-            A( 'Ðóññêèé', href='%(BASE)sindex.ru.php' )
+            A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sindex.ru.php' )
+            #A( 'Ðóññêèé', href='%(BASE)sindex.ru.php' )
         ] ),
         BR(),
         A( _N['news'], href=makeURL( 'news/', lang ) ),
@@ -184,6 +185,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang ):
     '''
     page = HTML( [
         Head( [
+            Charset( charset ),
             Title( 'AROS: Amiga® Research Operating System' ),
             Link( href = '%(ROOT)saros.css', type = 'text/css', rel = 'stylesheet' ),
             Meta(

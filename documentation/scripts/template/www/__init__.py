@@ -29,6 +29,8 @@ def makeTemplates():
         config = ConfigParser()
         config.read( os.path.join( LANG_DIR, language ) )
 
+        charset = config.get( 'meta', 'charset' )
+
         _T = {}
         for option in config.options( 'titles' ):
             _T[option] = config.get( 'titles', option )
@@ -41,7 +43,7 @@ def makeTemplates():
         for option in config.options( 'misc' ):
             _M[option] = config.get( 'misc', option )
         
-        file( dst, 'w' ).write( makePage( _T, _N, _M, MIRRORS_DATA, language ) )
+        file( dst, 'w' ).write( makePage( _T, _N, _M, MIRRORS_DATA, language, charset ) )
 
     for language in os.listdir( LANG_DIR ):
         if ignore( language ): continue 
