@@ -318,6 +318,7 @@ def processHTML( src, depth ):
             '--output-encoding=iso-8859-15',
             '--target-suffix=html',
             '--stylesheet=' + '../' * depth + 'aros.css',
+            '--link-stylesheet',
             src_abs, dst_abs
         ]
 
@@ -476,7 +477,7 @@ def buildHTML():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'html' )
 
     if not os.path.exists( 'news/index.en' ):
-        os.mknod( 'news/index.en' )
+        file( 'news/index.en', 'w' ).write( '' )
     recurse( processHTML )
 
     copyImages()
