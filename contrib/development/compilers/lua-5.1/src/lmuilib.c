@@ -44,29 +44,7 @@
 #include "lualib.h"
 #include "lmuilib.h"
 
-//==============================================================================
-
-#if 0
-static void* luaL_toudata (lua_State* L, int ud, const char* tname)
-{
-   void* p = lua_touserdata(L, ud);
-   if (p)
-   {
-      lua_getfield(L, LUA_REGISTRYINDEX, tname);
-      if (!lua_getmetatable(L, ud))
-      {
-         lua_pop(L, 1);
-         return NULL;
-      }
-      else if (!lua_rawequal(L, -1, -2))
-         p = NULL;
-
-      lua_pop(L, 2);
-   }
-
-   return p;
-}
-#endif
+#define BUFSIZE (500)
 
 //==============================================================================
 
@@ -537,39 +515,62 @@ static int Muiobj_check(lua_State *L)
 
 static int Muiobj_filerequest(lua_State *L)
 {
-  struct TagItem * ti = createTagArray(L, 1);
-  STRPTR path = NULL;
+    struct TagItem * ti = createTagArray(L, 1);
+    STRPTR path = NULL;
+    struct WBArg *frargs;
+    int x;
+    int rescnt = 0;
 
-  struct FileRequester *fr = (struct FileRequester *)MUI_AllocAslRequest(ASL_FileRequest, ti);
-  if (fr)
-  {
-    if (MUI_AslRequest(fr, NULL))
+    struct FileRequester *fr = (struct FileRequester *)MUI_AllocAslRequest(ASL_FileRequest, ti);
+    if (fr)
     {
-      ULONG bufsize = strlen(fr->rf_Dir) + strlen(fr->rf_File) + 10;
-      path = AllocVec(bufsize, MEMF_ANY);
-      if (path)
-      {
-	strcpy(path, fr->rf_Dir);
-	if (AddPart(path, fr->rf_File, bufsize))
+	if (MUI_AslRequest(fr, NULL))
 	{
-	  lua_pushstring(L, path);
+	    path = AllocVec( BUFSIZE, MEMF_ANY);
+	    if (fr->rf_NumArgs > 0) // multi selection
+	    {
+		frargs = fr->rf_ArgList;
+		for ( x=0;  x < fr->rf_NumArgs;  x++ )
+		{
+		    strcpy(path, fr->rf_Dir);
+		    if (AddPart(path, frargs[x].wa_Name, BUFSIZE))
+		    {
+			lua_pushstring(L, path);
+			rescnt++;
+		    }
+		    else
+		    {
+			FreeVec(path);
+			MUI_FreeAslRequest(fr);
+			luaL_error(L, "Muiobj_filerequest: AddPath failed");
+		    }
+		}
+	    }
+	    else
+	    {
+		strcpy(path, fr->rf_Dir);
+		if (AddPart(path, fr->rf_File, BUFSIZE))
+		{
+		    lua_pushstring(L, path);
+		    rescnt = 1;
+		}
+		else
+		{
+		    FreeVec(path);
+		    MUI_FreeAslRequest(fr);
+		    luaL_error(L, "Muiobj_filerequest: AddPath failed");
+		}
+	    }
 	}
 	else
 	{
-	  FreeVec(path);
-	  MUI_FreeAslRequest(fr);
-	  luaL_error(L, "Muiobj_filerequest: AddPath failed");
+	    lua_pushnil(L);  //requester cancelled
+	    rescnt = 1;
 	}
-      }
+	MUI_FreeAslRequest(fr);
     }
-    else
-    {
-      lua_pushnil(L);  //requester cancelled
-    }
-    MUI_FreeAslRequest(fr);
-  }
-  FreeVec(path);
-  return 1;
+    FreeVec(path);
+    return rescnt;
 }
 
 

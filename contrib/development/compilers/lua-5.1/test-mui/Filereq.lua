@@ -14,6 +14,24 @@ file = mui.filerequest(
 
 print(file)
 
+
+-- Multi select
+-- note the curly brackets
+files = {mui.filerequest(
+  mui.ASLFR_TitleText,       "File requester with multi selection",
+  mui.ASLFR_InitialHeight,   400,
+  mui.ASLFR_InitialWidth,    320,
+  mui.ASLFR_DoMultiSelect,   true
+)}
+
+count = #files
+print ("Number of selected files " .. count)
+for i = 1, count do
+    print(files[i])
+end
+
+
+-- Save requester
 file = mui.filerequest(
   mui.ASLFR_TitleText,       "Save file requester example",
   mui.ASLFR_DoSaveMode,      true,
@@ -22,3 +40,4 @@ file = mui.filerequest(
 )
 
 print(file)
+
