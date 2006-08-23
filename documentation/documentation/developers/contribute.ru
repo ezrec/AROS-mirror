@@ -5,7 +5,7 @@
 :Authors:   Adam Chodorowski 
 :Copyright: Copyright Љ 1995-2002, The AROS Development Team
 :Version:   $Revision: 24047 $
-:Date:      $Date: 2006-02-03 01:20:47 +0400 (а†б™, 03 б‡аЕаВ 2006) $
+:Date:      $Date: 2006-23-08 01:20:47 +0400 (а†б™, 03 б‡аЕаВ 2006) $
 :Status:    Done. 
 
 .. Contents::
@@ -37,8 +37,7 @@
  
   - AROS/i386-pc:
     
-    + Драйверы определенных графических адаптеров (сейчас доступны лишь общие,
-    не слишком оптимизированные и ускоренные). Например, вкратце, такие:
+    + Драйверы определенных графических адаптеров (сейчас доступны лишь общие, не слишком оптимизированные и ускоренные). Например, вкратце, такие:
       
       - nVidia TNT/TNT2/GeForce (начато, но не закончено) 
       - S3 Virge
@@ -76,19 +75,18 @@
   - WBPattern
   - Workbench 
  
-+ Improving the C link library
++ Доработка билиотеки ссылок C (C link library)
 
-  This means implementing missing ANSI (and some POSIX) functions in the clib,
-  to make it easier to port UNIX software (eg. GCC, make and binutils). The 
-  biggest thing missing is support for POSIX style signaling, but there's some 
-  other functions too.
+  Подразумевается введение отсутствующих ANSI (и некоторых POSIX) функций в clib
+  для облегчения переноса UNIX-софта (например, GCC, make и binutils). Важнейшей
+  недоработкой является отсутствие поддержки для POSIX - сигналов, впрочем, 
+  как и многих других функций.
+  
++ Разработка новых типов данных (datatypes) и доработка уже имеющихся
 
-+ Implementing more datatypes and improve existing ones
-
-  The number of datatypes available in AROS is quite small. Some examples of
-  datatypes that need improvement to become usable or need implementing from 
-  scratch:
-
+  Типов данных в AROS довольно мало. Например, некоторые требуют доработок, 
+  прежде чем станут полезны, или требуют переделки "с нуля":
+  
   - amigaguide.datatype
   - sound.datatype
     
@@ -100,91 +98,85 @@
     + cdxl.datatype
     
   
-+ Porting third party programs:
++ Перенос сторонних программ:
 
-  - Text editors like ViM and Emacs.
-  - The development tool chain, which includes GCC, make, binutils and other
-    GNU development tools.
+  - Текстовые редакторы типа ViM and Emacs (уже портированы ViM и microEmacs).
+  - Ряд утилит для разработки, включая GCC, make, binutils and и прочих
+    инструментов GNU (работа ведется, но сил не хватает).
   
 
 Документация
 ------------
 
-+ Writing user documentation. This consists of writing an general User's 
-  Guide for novices and experts, and also reference documentation for all 
-  standard AROS programs.
++ Написание пользовательской документации. Включает написание общего руководства
+  для новичков и "продвинутых", а также соответствующей документации ко всем
+  стандартным программам, входящим в AROS.
 
-+ Writing developer documentation. Although this is in a bit better state
-  than user documentation, there is still a lot of work to do. For example,
-  there is really no good tutorial for novice programmers yet. The equivalent
-  of the ROM Kernel Manuals for AROS would be really nice to have.
-
++ Написание документации для разработчиков. Несмотря на несколько более хорошее
+  состояние этой документации по сравнению с пользовательской, работы все равно   много. К примеру, до сих пор нет хорошего руководства с примерами для       
+  начинающих программистов. Очень не хватает аналога RKM (ROM Kernel Manuals)
+  для AROS.
 
 Перевод
 -------
 
-+ Translating AROS itself to more languages. Currently, only the following 
-  languages are more or less completely supported:
++ Перевод самой системы на различные языки. В настоящее время, лишь несколько 
+  из них более-менее поддерживаются:
 
   - English
   - Deutsch
   - Svenska
   - Norsk
   - Italiano
+  - Русский (помощь приветствуется! А также приветствуется перевод на языки 
+    бывшего СНГ, болгарский итп.)
 
-+ Translating the documentation and website to more languages. Currently, it 
-  is only completely available in English. Parts have been translated to 
-  Norsk, but there is still much work to do.
++ Перевод документации и материалов сайта на различные языки. В настоящее   
+  время, самой полной версией является только английская. Частично доступен   
+  перевод на норвежский, итальянский, немецкий, а также и русский языки, помощь 
+  в переводе на которые весьма приветствуется.
 
 
 Прочее
 ------
 
-+ Coordinating GUI design for AROS programs, such as prefs program,
-  tools and utilities.
++ Руководство разработкой GUI для программ AROS, таких как настройки,
+  инструменты и утилиты.
 
+Как присоединиться?
+===================
 
-Joining the Team
-================
+Желаете пополнить ряды разработчиков ? Здорово! Сперва подпишитесь на `списки
+рассылки для разработчиков`__ которые вам интересны (по крайней мере, *очень* 
+рекомендуется подписаться на главный список рассылки) и запросите доступ к 
+дереву Субверсии (Subversion repository).
+Собственно, всё :)
 
-Want to join the development effort? Great! Then join the `development mailing
-lists`__ you are interested in (at least joining the main development list is
-*highly* recommended) and request access to the Subversion repository.
-That's it. :)
-
-Writing a short mail to the development list containing an introduction about
-yourself and what you want to help out with is encouraged. If you have any
-problems, please don't hesitate to send a mail to the list or ask around on the
-`IRC channels`__. Also, before starting to work on something specific, please
-write a mail to the list stating what you are about to do or update the task
-database. This way we can make sure people don't work on the same thing by
-mistake...
+Приветствуется написание краткого письма в список рассылки разработчиков с 
+рассказом о том, кто вы и чем хотите помочь. Столкнувшись с проблемами, пожалуйста, не пренебрегайте написать в рассылку или спросить на `IRC-каналах`__. Также, начав работать над чем-то конкретным, напишите в рассылку о том, что собираетесь сделать, или обновите список с задачами. Это позволит другим не начать работать над тем же самым по ошибке...
 
 __ ../../contact#mailing-lists
 __ ../../contact#irc-channels
 
 
-The Subversion repository
--------------------------
+Репозиторий Субверсии (Subversion repository)
+---------------------------------------------
 
-The AROS repository is running with password protected Subversion server, which means
-that you need to request access to it to be able to collaborate in the
-development. The passwords are in encrypted form, which you can generate with
-our `online password encryption tool`__.
+Репозиторий AROS находится на защищенном паролем сервере Субверсии, а значит, 
+для участия в разработке необходимо запросить доступ к нему. Пароли шифруются специальным `онлайн-шифровщиком паролей`__.
 
-Please mail the encrypted password together with your preferred username and
-your real name to `Aaron Digulla`__ and wait for a reply. To facilitate a quick
-response, please set the subject to "Access to the AROS SVN server" and the body
-to "Please add <username> <password>", eg.::
+Далее вышлите зашифрованный пароль вместе с выбранным логином и Вашим реальным
+именем на адрес `Aaron Digulla`__ и ожидайте ответа. Чтобы ответ был скорым, 
+убедитесь, что тема вашего письма содержит "Access to the AROS SVN server", а
+в тексте письма написано: "Please add <username> <password>", например::
 
     Please add digulla xx1LtbDbOY4/E
 
-It might take a couple of days as Aaron is quite busy, so please be patient. 
+Это может занять несколько дней, так как Aaron крайне занят, так что наберитесь терпения.
 
-For information on how to use the AROS SVN server, please read "`Working with
-SVN`__". Even if you already know how to use SVN it is useful to look it through,
-as it contains information and tips specific to the AROS repository (such as how
-to log into it).
+Чтобы научиться пользоваться SVN-сервером AROS, пожалуйста, прочтите раздел
+документации "`Работа с SVN`__". Даже если вы уже умеете пользоваться подобной системй, тем не менее это будет полезно, поскольку содержит информацию и конкретные советы по работе, специфичные для репозитория AROS (например, 
+по подключению к нему).
 
 __ http://aros.sourceforge.net/tools/password.html 
 __ mailto:digulla@aros.org?subject=[Access%20to%20the%20AROS%20SVN%20server]

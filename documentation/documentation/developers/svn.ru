@@ -8,38 +8,34 @@
 :Date:      $Date$
 :Status:    Done.
 :Abstract: 
-    Subversion (or SVN for short) is a version control tool which maintains a
-    database of the files in a project. With SVN, it is possible to inspect and
-    control the changes applied to any specific file: what changes were made
-    and when, who did those changes, what the purpose of some change was (as
-    long as there is a log entry), possibly reverting bad changes made, merging
-    changes from several different people and much more. 
+    Субверсия (Subversion или, кратко, SVN) - это инструмент контроля версий 
+    файлов, входящих в проект. SVN позволяет отслеживать и управлять 
+    изменениями каждого отдельного файла: какие и когда были сделаны изменения, 
+    кто их внес, каковы были цели (благодаря наличию лога), отменять ошибочные 
+    изменения, объединять код нескольких разных разработчиков и многое 
+    другое.
     
-    In essence, it makes it *much* easier for a group of people to collaborate
-    on a common project by allowing everyone to know what is happening to the
-    files, making sure that people do not trash each others changes by mistake
-    and providing the means to do this over the Internet. Naturally, we use it
-    to collaborate on AROS.
-
-
+    В сущности, всё это позволяет *существенно* упростить работу большой группы
+    разработчиков в общих рамках проекта, позволяя каждому быть в курсе изменний
+    файлов проекта, исключая возможность ошибочной порчи работы одних людей 
+    другими и предоставляя доступ к этим возможностям по сетям Интернет. 
+    Разумеется, мы используем SVN в работе над AROS.
+    
 .. Contents::
 
 
 Введение
 ========
-...в разработке...
-The server maintains a central "repository", which is the main database 
-containing the published common codebase of the project. Individual developers 
-have their own "working copies", which are local copies of the database from
-a specific time together with local changes that the developer hasn't uploaded
-to the server. When a developer wants to share his changes with the rest of 
-the team he simply "commits" his changes to the server using the client 
-program, which takes care of uploading them and merging them with changes done
-by other developers.
 
+На сервере хранится главный "репозиторий", представлющий собой основную базу 
+публикуемых данных проекта. Каждый из разработчиков имеет свою "рабочую копию",
+то есть, локальную копию базы с изменниями с некоторого времени и изменениями, внесенными самим разработчиком, но ещё не переданными в базу на сервере. Если
+разработчик решает внести результат своей работы в "общий котёл", он  вносит 
+(commit) свои изменения на сервер с помощью клиентской программы SVN, которая берет на себя заботы по загрузке данных на сервер и объединению их с изменениями от других разработчиков.
+в разработке...
 
-The software
-============
+Программное обеспечение
+=======================
 
 UNIX
 ----
@@ -63,8 +59,8 @@ on AmiNET__ (search for "subversion").
 
 __ http://main.aminet.net/
 
-Logging into the server
-=======================
+Доступ к серверу
+================
 
 Unlike CVS, you don't need to login into the server. Instead, SVN will
 ask when it needs to know your login and password.
@@ -79,8 +75,8 @@ ask when it needs to know your login and password.
 __ contribute#joining-the-team
 
 
-Getting the AROS sources
-========================
+Получение исходников AROS 
+=========================
 
 To get a copy of the AROS sources you use the "checkout" command, like this::
 
@@ -99,8 +95,8 @@ You have to checkout it in order to build all AROS flavours::
     After the checkout, SVN will remember where the source came from.
 
 
-Getting the extra sources
-=========================
+Получение дополнительного исходного кода
+========================================
 
 Apart from the AROS main sources which we checked out in the previous section,
 there is also other things on the SVN server not directly related to the core
@@ -112,8 +108,8 @@ You can get a list of the available modules with::
 
     > svn ls https://svn.aros.org:8080/svn/aros/trunk/
 
-Updating the sources
-====================
+Обновление исходников
+======================
 
 After having checked out the sources, you might want to periodically update 
 them to get the latest changes the other developers have committed. For this
@@ -140,7 +136,7 @@ and resolve the conflict manually.
     it still makes sense.
 
 
-Committing changes
+Внесение изменений
 ==================
 
 If you have made some changes and feel that you want to share your work with 
@@ -164,9 +160,8 @@ working on them. In case that happens, you need to resolve any problems before
 committing. Also please make sure you have tested your changes before committing
 them; at least so that they do not break the build.
 
-
-Adding new files and directories
-================================
+Добавление новых файлов и директорий
+====================================
 
 To add new files and directories to the repository, use the "add" command::
 
@@ -178,8 +173,8 @@ contents; you have to do that yourself. After having added the file, you need
 to use the "commit" command to actually add them to the repository. 
 
 
-Importing
-=========
+Импорт
+======
 
 When you want to add a larger collection of files, eg. the source code of some
 existing software, "svn add" quickly becomes tiresome. For this you should use 
@@ -217,8 +212,8 @@ in the SVN manual is quite poorly written, so an example is in order:
       > svn import -m "Initial import of SVN 1.11.12" 
       \ https://svn.aros.org:8080/svn/aros/trunk/contrib/development/versioning/svn
 
-Further reading
-===============
+Дополнительная документация
+===========================
 
 More detailed information about SVN can of course be found in the manual pages
 and info files distributed with SVN itself, and there are also numerous sites
