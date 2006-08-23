@@ -1,10 +1,10 @@
 
-.. Include:: introduction/index-abstract.en
+.. Include:: introduction/index-abstract.ru
 
 `Подробнее... <introduction/index>`__
 
-.. Include:: documentation/developers/contribute-abstract.en
+.. Include:: documentation/developers/contribute-abstract.ru
 
 `Подробнее... <documentation/developers/contribute>`__
 
-.. Include:: news/index.en
+.. Include:: news/index.ru

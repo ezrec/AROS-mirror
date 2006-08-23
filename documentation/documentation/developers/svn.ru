@@ -1,9 +1,9 @@
-=======================
-Работа с SVN
-=======================
+=========================
+Работа с Subversion (SVN)
+=========================
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
-:Copyright: Copyright й 1995-2002, The AROS Development Team
+:Copyright: Copyright щ 1995-2002, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -25,9 +25,9 @@
 .. Contents::
 
 
-Introduction
-============
-
+Введение
+========
+...в разработке...
 The server maintains a central "repository", which is the main database 
 containing the published common codebase of the project. Individual developers 
 have their own "working copies", which are local copies of the database from

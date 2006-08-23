@@ -1,6 +1,6 @@
-=============
-Status update
-=============
+============
+Обновление !
+============
 
 :Author:   Paolo Besser
 :Date:     2006-06-20
@@ -14,14 +14,14 @@ __ http://www.aros.org/index.de.php
 
 
 Новый PPC snapshot!
------------------
+-------------------
 
-Появился новый снимок hosted AROS-PPC! Just go to Sourceforge 
-website and `download it`__! Here's the release notes: "This release depends 
-on glibc 2.3.2 or newer. You need to give AROS some more RAM than the default 
-allocation of 16 MB (leaves about 4 MB for applications). Start it using: 
-./aros -m 64 This will allocate 64 MB. As with all X11 hosted AROS versions 
-you need to add Option "BackingStore" to the Device section of xorg.conf"
-
+Появился новый снимок hosted AROS-PPC! 
+Приглашаем заглянуть на страничку на Sourceforge и `скачать его`__! Заметки к выпуску:
+"Этому релизу необходима glibc 2.3.2 или новее. AROS нужно предоставить памяти больше  
+стандартных 16 МБ (для приложений остаётся 4 МБ). Команда для запуска примерно такова:
+./aros -m 64 , что позволяет занять, например, 64 Мб. Как и для всех X11 hosted 
+версий AROS, необходимо добавить опцию "BackingStore" в секцию Device вашего файла
+xorg.conf".
 
 __ http://sourceforge.net/project/shownotes.php?group_id=43586&release_id=425583
