@@ -20,16 +20,16 @@ status:           Состояние
 screenshots:      Снимки экрана
 ports:            Порты
 license:          Лицензия
-download:         Download
+download:         Загрузка (Download)
 documentation:    Документация
 users:            Пользователям
 installation:     Установка
 using:            Использование
 shell:            Команды CLI-shell
 faq:              ЧАВО(FAQ)
-developers:       Разработчики
+developers:       Разработчикам
 contribute:       Участие
-bug-tracker:      Поймай багу!
+bug-tracker:      Поймал багу!
 working-with-subversion: Работа с Subversion
 compiling:        Сборка
 application-development-manual: Руководство по разработке приложений
@@ -58,5 +58,5 @@ linking:          Упоминание
 go:               Перейти
 search:           Поиск
 copyright:        Copyright © 1995-2006, The AROS Development Team. Все права защищены.
-trademarks:       Amiga©, AmigaOS©, Workbench and Intuition являются торгговыми знаками Amiga Inc. Все прочие торговые знаки принадлежат их собственникам.
+trademarks:       Amiga©, AmigaOS©, Workbench and Intuition являются торговыми знаками Amiga Inc. Все прочие торговые знаки принадлежат их собственникам.
 read-more:        Подробнее...

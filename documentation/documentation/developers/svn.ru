@@ -2,7 +2,7 @@
 Работа с Subversion (SVN)
 =========================
 
-:Authors:   Aaron Digulla, Adam Chodorowski 
+:Authors:   Aaron Digulla, Adam Chodorowski, Sergey Mineychev 
 :Copyright: Copyright щ 1995-2002, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
@@ -40,15 +40,13 @@
 UNIX
 ----
 
-If you are running Linux, FreeBSD or any other modern UNIX clone then you 
-simply need to install the official SVN software, version 1.0 or higher, for 
-your OS. All common Linux distributions come with SVN packaged.
+Если вы работаете в Linux, FreeBSD или другой современной UNIX-системе, тогда 
+достаточно просто установить официальное ПО для SVN, версии 1.0 или выше, для вашей ОС. Большинство дистрибутивов Linux уже содержат его.
 
-.. Note:: The server runs Subversion 1.1 which can be accessed by a
-          client with the version 1.0, 1.1 or 1.2.
+.. Note:: На сервере работает Subversion 1.1, можгут бытьиспользованы
+          клиенты версий 1.0, 1.1 или 1.2.
 
-SVN doesn't work with UTF-8 localisation. You have to switch the locale to ISO8859
-before any SVN action.
+SVN не поддерживает UTF-8 локализацию. Нужно переключить локаль на ISO8859 перед каждым действием с SVN.
 
 AmigaOS
 -------
@@ -58,6 +56,13 @@ installed. One option is the Amiga port by Olaf Barthel which can be found
 on AmiNET__ (search for "subversion").
 
 __ http://main.aminet.net/
+                         
+Windows
+-------
+
+При работе в Microsoft Windows (TM) можно рекомендовать SVN-клиент TortoiseSVN__, который особенно понравится тем, кто привык работать с Проводником. Программа переведена на русский и содержит довольно подробную документацию (пока не русскую).
+
+__ http://tortoisesvn.sourceforge.net
 
 Доступ к серверу
 ================
