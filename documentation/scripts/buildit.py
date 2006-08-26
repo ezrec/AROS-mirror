@@ -172,6 +172,7 @@ def makeNews():
     news     = {}
     archives = {}
 
+    # Get list of news and archive items for each language
     for lang in LANGUAGES:
         news[lang] = []
         archives[lang] = {}
@@ -189,6 +190,7 @@ def makeNews():
 
                 archives[lang][year].append( os.path.join( NEWS_SRC_DIR, lang_filename ) )
 
+    # Generate news and archive ReST files
     for lang in LANGUAGES:
         news[lang].sort()
         news[lang].reverse()
@@ -405,8 +407,12 @@ def buildWWW():
     global DSTROOT ; DSTROOT = os.path.join( DSTROOT, 'www' )
 
     # Hack to get around dependency problems
-    remove( os.path.join( DSTROOT, 'index.php' ) )
-    remove( os.path.join( DSTROOT, 'news', 'archive', '2006.php' ) ) # necessary?
+    for lang in LANGUAGES:
+        if lang == 'en':
+            ext = '.php'
+        else:
+            ext = '.' + lang + '.php'
+        remove( os.path.join( DSTROOT, 'index' + ext ) )
 
     makeNews()
     makeTemplates()
