@@ -1,5 +1,5 @@
 ﻿# Author: Tomasz Paul
-# Contact: grubert@users.sourceforge.net
+# Contact: tpaul@wp.pl
 # Revision: $Revision: 24659 $
 # Date: $Date: 2006-08-27 19:45:24 +0200 (Śr, 27 sie 2006) $
 # Copyright: This module has been placed in the public domain.
