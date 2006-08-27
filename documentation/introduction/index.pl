@@ -4,8 +4,8 @@ Krótkie wprowadzenie do AROSa
 
 :Autorzy:   Aaron Digulla, Stefan Rieken, Matt Parsons, Adam Chodorowski 
 :Prawa autorskie: Copyright © 1995-2002, The AROS Development Team
-:Wersja:   $Revision: 24430 $
-:Data:      $Date: 2006-05-08 04:01:22 +0500 (ÐŸÐ½, 08 Ð¼Ð°Ð¹ 2006) $
+:Wersja:   $Revision$
+:Data:      $Date$
 :Status:    Prawie skoñczony, jak s¹dzê...
 
 
