@@ -65,10 +65,10 @@ The documentation archive
 In order to change or write documentation you need a checkout of the
 `subversion archive <svn>`_ 'documentation'. The archive contains:
 
-+ some common documents like contact.en, credits.en, links.en etc.
++ some common documents like contact.en, links.en etc.
 + a directory 'documentation' with user and developer documentation
-+ a directory 'scripts' with the scripts which are used to build
-  the HTML and WWW targets
++ a directory 'scripts' with the scripts used to build the HTML and WWW
+  targets
 + ...
 
 .. Note::
@@ -80,16 +80,17 @@ Subdirectories
 --------------
 
 You can create additional directories in 'documentation/users' and
-'documentation/developers'. The build system scans recursivly the subdirectories.
-It is recommended that you create a file 'index.en' in the new directories. 
+'documentation/developers'. The build system recursivly scans the
+subdirectories. It is recommended that you create a file 'index.en' in the
+new directories. 
 
 Internationalisation
 --------------------
 
 The build system supports I18n for the 'www' target. You have to append a
 language suffix to the document file name (e.g. commands.en).
-Currently there is support for English (.en), German (.de), Finnish (.fi)
-and Italian (.it).
+Currently there is support for English (.en), German (.de), Finnish (.fi),
+Italian (.it), and Russian (.ru).
 
 When you create a link to a document you have to omit the suffix
 (e.g \`Commands <user/commands>\`_). But if you use the 'include' directive
@@ -139,7 +140,7 @@ credits
 
 This is a list of people which have contributed to AROS. The build system first
 creates the file 'credits.en'. This file is used for both WWW and HTML
-target. Please note, that you also have to change the file
+targets. Please note that you also have to change the file
 workbench/system/AboutAROS/db/credits in the AROS repository.
 
 
