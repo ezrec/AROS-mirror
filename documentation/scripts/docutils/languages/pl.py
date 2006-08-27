@@ -1,6 +1,6 @@
 ﻿# Authors:   Tomasz Paul
 # Contact:   tpaul@wp.pl
-# Revision:  $Revision: 1 $
+# Revision:  $Revision: 24676 $
 # Date:      $Date: 2006-08-27 19:45:24 +0200 (Śr, 27 sie 2006) $
 # Copyright: This module has been placed in the public domain.
 
