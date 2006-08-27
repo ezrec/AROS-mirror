@@ -90,7 +90,7 @@ Internationalisation
 The build system supports I18n for the 'www' target. You have to append a
 language suffix to the document file name (e.g. commands.en).
 Currently there is support for English (.en), German (.de), Finnish (.fi),
-Italian (.it), and Russian (.ru).
+Italian (.it) and Russian (.ru).
 
 When you create a link to a document you have to omit the suffix
 (e.g \`Commands <user/commands>\`_). But if you use the 'include' directive
