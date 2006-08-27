@@ -1,7 +1,7 @@
-﻿# Authors:   Tomasz Paul
+# Authors:   Tomasz Paul
 # Contact:   tpaul@wp.pl
-# Revision:  $Revision: 24676 $
-# Date:      $Date: 2006-08-27 19:45:24 +0200 (Śr, 27 sie 2006) $
+# Revision:  $Revision$
+# Date:      $Date$
 # Copyright: This module has been placed in the public domain.
 
 # New language mappings are welcome.  Before doing a new translation, please
@@ -16,43 +16,43 @@ Polish language mappings for language-dependent features of Docutils.
 __docformat__ = 'reStructuredText'
 
 labels = {
-    'author': 'autor',
-    'authors': 'autorzy',
-    'organization': 'organizacja',
-    'address': 'adres',
-    'contact': 'kontakt',
-    'version': 'wersja',
-    'revision': 'rewizja',
-    'status': 'status',
-    'date': 'data',
-    'dedication': 'dedykacja',
-    'copyright': 'prawa autorskie',
-    'abstract': 'streszczenie',
-    'attention': 'uwaga!',
-    'caution': 'ostrzeżenie!',
-    'danger': 'niebezpieczeństwo!',
-    'error': 'błąd',
-    'hint': 'wzmianka',
-    'important': 'ważne',
-    'note': 'przypis',
-    'tip': 'wskazówka',
-    'warning': 'ostrzeżenie',
-    'contents': 'zawartość'}
+    u'author': u'autor',
+    u'authors': u'autorzy',
+    u'organization': u'organizacja',
+    u'address': u'adres',
+    u'contact': u'kontakt',
+    u'version': u'wersja',
+    u'revision': u'rewizja',
+    u'status': u'status',
+    u'date': u'data',
+    u'dedication': u'dedykacja',
+    u'copyright': u'prawa autorskie',
+    u'abstract': u'streszczenie',
+    u'attention': u'uwaga!',
+    u'caution': u'ostrzeżenie!',
+    u'danger': u'niebezpieczeństwo!',
+    u'error': u'błąd',
+    u'hint': u'wzmianka',
+    u'important': u'ważne',
+    u'note': u'przypis',
+    u'tip': u'wskazówka',
+    u'warning': u'ostrzeżenie',
+    u'contents': u'zawartość'}
 """Mapping of node class name to label text."""
 
 bibliographic_fields = {
-    'autor': 'author',
-    'autorzy': 'authors',
-    'organizacja': 'organization',
-    'adres': 'address',
-    'kontakt': 'contact',
-    'wersja': 'version',
-    'rewizja': 'revision',
-    'status': 'status',
-    'data': 'date',
-    'prawa autorskie': 'copyright',
-    'dedykacja': 'dedication',
-    'streszczenie': 'abstract'}
+    u'autor': u'author',
+    u'autorzy': u'authors',
+    u'organizacja': u'organization',
+    u'adres': u'address',
+    u'kontakt': u'contact',
+    u'wersja': u'version',
+    u'rewizja': u'revision',
+    u'status': u'status',
+    u'data': u'date',
+    u'prawa autorskie': u'copyright',
+    u'dedykacja': u'dedication',
+    u'streszczenie': u'abstract'}
 """Polish (lowcased) to canonical name mapping for bibliographic fields."""
 
 author_separators = [';', ',']
