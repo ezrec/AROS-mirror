@@ -1,7 +1,7 @@
 # Author: Tomasz Paul
 # Contact: tpaul@wp.pl
-# Revision: $Revision: 24659 $
-# Date: $Date: 2006-08-27 19:45:24 +0200 (\u0139\u009ar, 27 sie 2006) $
+# Revision: $Revision$
+# Date: $Date$
 # Copyright: This module has been placed in the public domain.
 
 # New language mappings are welcome.  Before doing a new translation, please
