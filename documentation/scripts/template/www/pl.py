@@ -1,1 +1,1 @@
-largeImage = 'Large version...'
+largeImage = 'Powiêkszenie...'
