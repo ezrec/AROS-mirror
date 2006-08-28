@@ -1,7 +1,7 @@
-﻿# Author: Tomasz Paul
+# Author: Tomasz Paul
 # Contact: tpaul@wp.pl
 # Revision: $Revision: 24659 $
-# Date: $Date: 2006-08-27 19:45:24 +0200 (Śr, 27 sie 2006) $
+# Date: $Date: 2006-08-27 19:45:24 +0200 (\u0139\u009ar, 27 sie 2006) $
 # Copyright: This module has been placed in the public domain.
 
 # New language mappings are welcome.  Before doing a new translation, please
@@ -19,14 +19,14 @@ __docformat__ = 'reStructuredText'
 
 directives = {
       'uwaga': 'attention',
-      'ostrzeżenie': 'caution',
-      'niebezpieczeństwo': 'danger',
-      'błąd': 'error',
+      'ostrze\u0139\u017aenie': 'caution',
+      'niebezpiecze\u0139\u0084stwo': 'danger',
+      'b\u0139\u0082\u00c4\u0085d': 'error',
       'wzmianka': 'hint',
-      'ważne': 'important',
+      'wa\u0139\u017ane': 'important',
       'przypis': 'note',
-      'wskazówka': 'tip',
-      'ostrzeżenie': 'warning',
+      'wskaz\u0102\u0142wka': 'tip',
+      'ostrze\u0139\u017aenie': 'warning',
       'przestroga': 'admonition',
       'sidebar (translation required)': 'sidebar',
       'sidebar (translation required)': 'sidebar',
@@ -50,17 +50,17 @@ directives = {
       'figure (translation required)': 'figure',
       u'raw (translation required)': 'raw',
       u'raw (translation required)': 'raw',
-      'dołącz': 'include',
+      'do\u0139\u0082\u00c4\u0085cz': 'include',
       'zamiana': 'replace',
-      'zamienić': 'replace',
-      'zamień': 'replace',
+      'zamieni\u00c4\u0087': 'replace',
+      'zamie\u0139\u0084': 'replace',
       'unicode': 'unicode',
       'data': 'date',
       'klasa': 'class',
       'role (translation required)': 'role',
       u'default-role (translation required)': 'default-role',
       u'title (translation required)': 'title',
-      'zawartość': 'contents',
+      'zawarto\u0139\u009b\u00c4\u0087': 'contents',
       'numeracja sekcji': 'sectnum',
       'sectnum (translation required)': 'sectnum',
       u'target-notes (translation required)': 'target-notes',
@@ -77,7 +77,7 @@ roles = {
       'akronim': 'acronym',
       'index': 'index',
       'indeks dolny': 'subscript',
-      'indeks górny': 'superscript',
+      'indeks g\u0102\u0142rny': 'superscript',
       'title-reference': 'title-reference',
       'pep-reference (translation required)': 'pep-reference',
       'rfc-reference (translation required)': 'rfc-reference',

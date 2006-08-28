@@ -28,7 +28,7 @@ TEMPLATE_DATA = {}
 
 # Languages not supported by docutils yet (but that we have files written in):
 # 'no'
-LANGUAGES  = [ 'en', 'de', 'fi', 'it', 'ru' ]
+LANGUAGES  = [ 'en', 'de', 'fi', 'it', 'pl', 'ru' ]
 
 # FIXME: Move this somewhere else...
 if (not os.path.exists( 'credits.en' ) ) \
@@ -231,7 +231,9 @@ def convertWWW( src, language, options=None ):
     else:
         suffix = language + '.php'
 
-    if language == 'ru':
+    if language == 'pl':
+        encoding = 'iso-8859-2'
+    elif language == 'ru':
         encoding = 'windows-1251'
     else:
         encoding = 'iso-8859-15'
