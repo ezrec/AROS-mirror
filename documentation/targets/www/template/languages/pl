@@ -4,34 +4,34 @@ charset:          iso-8859-2
 
 [titles]
 
-mirrors:          Mirrors
-contents:         Contents
-search:           Search
-visitors:         Visitors
-sponsors:         Sponsors
+mirrors:          Mirrory
+contents:         Na stronach
+search:           Szukaj
+visitors:         Odwiedzaj¹cy
+sponsors:         Sponsorzy
 
 [navigation]
 
-home:             Home
-news:             News
-archive:          Archive
-introduction:     Introduction
+home:             Strona g³ówna
+news:             Newsy
+archive:          Archiwum
+introduction:     Wprowadzenie
 status:           Status
-screenshots:      Screenshots
-ports:            Ports
-license:          License
+screenshots:      Zrzuty ekranu
+ports:            Porty
+license:          Licencja
 download:         Download
-documentation:    Documentation
-users:            Users
-installation:     Installation
-using:            Using
-shell:            Shell commands
+documentation:    Dokumentacja
+users:            U¿ytkownicy
+installation:     Instalacja
+using:            U¿ytkowanie
+shell:            Komendy shella
 faq:              FAQ
-developers:       Developers
+developers:       Programiœci
 contribute:       Contribute
 bug-tracker:      Bug Tracker
-working-with-subversion: Working with Subversion
-compiling:        Compiling
+working-with-subversion: Praca z Subversion
+compiling:        Kompilacja
 application-development-manual: Application Development Manual
 zune-application-development-manual: Zune Application Development Manual
 system-development-manual:      System Development Manual
@@ -40,13 +40,13 @@ reference:        Reference
 specifications:   Specifications
 ui-style-guide:   UI Style Guide
 documenting:      Documenting
-translating:      Translating
+translating:      T³umaczenie
 summaries:        Summaries
-links:            Links
-contact:          Contact
-mailing-lists:    Mailing lists
-forums:           Forums
-irc-channels:     IRC channels
+links:            Linki
+contact:          Kontakt
+mailing-lists:    Listy dyskusyjne
+forums:           Forum
+irc-channels:     Kana³y IRC
 credits:          Credits
 pictures:         Pictures
 developers-together: Developers en Masse
@@ -56,7 +56,7 @@ linking:          Linking
 [misc]
 
 go:               Go
-search:           Search
-copyright:        Copyright © 1995-2006, The AROS Development Team. All rights reserved.
-trademarks:       Amiga®, AmigaOS®, Workbench and Intuition are trademarks of Amiga Inc. All other trademarks belong to their respective owners.
-read-more:        Read more...
+search:           Szukaj
+copyright:        Copyright © 1995-2006, The AROS Development Team. Wszystkie prawa zastrze¿one.
+trademarks:       Amiga®, AmigaOS®, Workbench i Intuition are znakami towarowymi Amiga Inc. Wszystkie inne znaki towarowe nale¿¹ do ich prawnych w³aœcicieli.
+read-more:        Czytaj wiêcej...
