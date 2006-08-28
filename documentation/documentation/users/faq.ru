@@ -16,7 +16,7 @@
 
 Об этом читайте во введении_.
 
-.. _introduction: ../../introduction/index
+.. _введении: ../../introduction/index
 
 
 Каково официальное положение AROS?
@@ -33,16 +33,13 @@
 
 Во избежание проблем, мы затребовали официальное подтверждение от Amiga Inc. Однако, несмотря на их весьма положительное отношение к самой идее, с ними нелегко относительно законности. Остается принять факт, что Amiga Inc не прислала нам ни подтверждения, ни отказа, как хороший знак. К сожалению, пока что никакого официального заключения сделано не было, несмотря на добрые намерения с обеих сторон.
 
-Почему ваша цель - совместимость лишь с  AmigaOS 3.1?
------------------------------------------------------
+Почему ваша цель - совместимость только с AmigaOS 3.1?
+------------------------------------------------------
 
-There have been discussions about writing an advanced OS with the features of
-the AmigaOS. This has been dropped for a good reason. First, everyone agrees
-that the current AmigaOS should be enhanced, but no one knows how to do that or
-even agrees on what has to be enhanced or what is important. For example, some
-want memory protection, but don't want to pay the price (major rewrite of the
-available software and speed decrease).
+Когда-то обсуждалось создание улучшенной ОС с возможностями AmigaOS, однако,
+исходя из лучших побуждений, от этого отказались. Во-первых, все были согласны, что AmigaOS требовала доработки, но никто не знал, как этого добиться, не было даже общего согласия, что именно требует доработки, что важно. К примеру, некоторые разработчики хотели защиту памяти, но не такой ценой (полное переписание имеющегося ПО и снижение производительности).
 
+В конце концов, обсуждение перетекало в флэймовые войны или зацикливалось на одних и тех же аргументах. Так что, мы решили начать с того, что нам знакомо. Затем, обретя опыт и знание что возможно, а что нет, можно подумать и об улучшениях.
 In the end, the discussions ended in either flame wars or reiteration of the
 same old arguments over and over again. So we decided to start with something we
 know how to handle. Then, when we have the experience to see what is possible or
