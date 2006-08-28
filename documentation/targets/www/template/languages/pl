@@ -4,10 +4,10 @@ charset:          iso-8859-2
 
 [titles]
 
-mirrors:          Mirrory
+mirrors:          Serwery lustrzane
 contents:         Na stronach
 search:           Szukaj
-visitors:         Odwiedzaj¹cy
+visitors:         Odwiedzaj±cy
 sponsors:         Sponsorzy
 
 [navigation]
@@ -27,7 +27,7 @@ installation:     Instalacja
 using:            U¿ytkowanie
 shell:            Komendy shella
 faq:              FAQ
-developers:       Programiœci
+developers:       Programi¶ci
 contribute:       Contribute
 bug-tracker:      Bug Tracker
 working-with-subversion: Praca z Subversion
@@ -57,6 +57,6 @@ linking:          Linking
 
 go:               Go
 search:           Szukaj
-copyright:        Copyright © 1995-2006, The AROS Development Team. Wszystkie prawa zastrze¿one.
-trademarks:       Amiga®, AmigaOS®, Workbench i Intuition are znakami towarowymi Amiga Inc. Wszystkie inne znaki towarowe nale¿¹ do ich prawnych w³aœcicieli.
+copyright:        Copyright (C) 1995-2006, The AROS Development Team. Wszystkie prawa zastrze¿one.
+trademarks:       Amiga(R), AmigaOS(R), Workbench i Intuition are znakami towarowymi Amiga Inc. Wszystkie inne znaki towarowe nale¿± do ich prawnych w³a¶cicieli.
 read-more:        Czytaj wiêcej...
