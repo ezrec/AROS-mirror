@@ -4,7 +4,7 @@
 Komendy konsoli CLI
 ===================
 
-`Wprowadzenie <wprowadzenie>`_
+`Wprowadzenie <introduction>`_
 
 `AddBuffers`__
 `Alias`__
