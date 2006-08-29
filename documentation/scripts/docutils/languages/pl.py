@@ -37,7 +37,7 @@ labels = {
     u'note': u'przypis',
     u'tip': u'wskaz\u0102\u0142wka',
     u'warning': u'ostrze\u0139\u017aenie',
-    u'contents': u'zawarto\u0139\u009b\u00c4\u0087'}
+    u'contents': u'spis tre\u0139\u009bci'}
 """Mapping of node class name to label text."""
 
 bibliographic_fields = {
