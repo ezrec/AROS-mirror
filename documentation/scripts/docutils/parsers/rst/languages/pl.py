@@ -60,7 +60,7 @@ directives = {
       'role (translation required)': 'role',
       u'default-role (translation required)': 'default-role',
       u'title (translation required)': 'title',
-      'zawarto\u0139\u009b\u00c4\u0087': 'contents',
+      'spis tre\u0139\u009bci': 'contents',
       'numeracja sekcji': 'sectnum',
       'sectnum (translation required)': 'sectnum',
       u'target-notes (translation required)': 'target-notes',
