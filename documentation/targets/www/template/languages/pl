@@ -28,10 +28,10 @@ using:            U¿ytkowanie
 shell:            Komendy shella
 faq:              FAQ
 developers:       Programi¶ci
-contribute:       Contribute
+contribute:       Wspó³praca
 bug-tracker:      Bug Tracker
-working-with-subversion: Praca z Subversion
-compiling:        Kompilacja
+working-with-subversion: Praca z SVN
+compiling:        Kompilowanie
 application-development-manual: Application Development Manual
 zune-application-development-manual: Zune Application Development Manual
 system-development-manual:      System Development Manual
@@ -48,10 +48,10 @@ mailing-lists:    Listy dyskusyjne
 forums:           Forum
 irc-channels:     Kana³y IRC
 credits:          Credits
-pictures:         Pictures
+pictures:         Obrazy
 developers-together: Developers en Masse
-sponsors:         Sponsors
-linking:          Linking
+sponsors:         Sponsorzy
+linking:          Linkowanie
 
 [misc]
 
