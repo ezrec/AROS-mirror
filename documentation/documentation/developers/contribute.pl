@@ -10,7 +10,7 @@ Contribute
 
 .. Contents::
 
-.. Include:: contribute-abstract.en
+.. Include:: contribute-abstract.pl
 
 
 Dostêpne zdania
@@ -143,8 +143,8 @@ Inne
 + Kierowanie projektami GUI dla programów AROSa, takich jak prefs,
   tools i utilities.
 
-Do³±czanie do Zespo³u
-=====================
+Do³±cz do zespo³u
+=================
 
 Chcesz siê przy³±czyæ do developerów? Wspaniale! Do³±cz zatem do `listy 
 dyskusyjnej`__, która Ciê interesuje (przynajmniej zapisanie siê na 
