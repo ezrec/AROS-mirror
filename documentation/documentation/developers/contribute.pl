@@ -1,5 +1,5 @@
 ==========
-Contribute
+Wspó³praca
 ==========
 
 :Authors:   Adam Chodorowski 
