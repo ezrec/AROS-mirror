@@ -29,15 +29,15 @@ labels = {
     u'copyright': u'prawa autorskie',
     u'abstract': u'streszczenie',
     u'attention': u'uwaga!',
-    u'caution': u'ostrze\u0139\u017aenie!',
-    u'danger': u'niebezpiecze\u0139\u0084stwo!',
-    u'error': u'b\u0139\u0082\u00c4\u0085d',
+    u'caution': u'ostrze\u017cenie!',
+    u'danger': u'niebezpiecze\u0144stwo!',
+    u'error': u'b\u0142\u0105d',
     u'hint': u'wzmianka',
-    u'important': u'wa\u0139\u017ane',
+    u'important': u'wa\u017cne',
     u'note': u'przypis',
-    u'tip': u'wskaz\u0102\u0142wka',
-    u'warning': u'ostrze\u0139\u017aenie',
-    u'contents': u'spis tre\u0139\u009bci'}
+    u'tip': u'wskaz\u00f3wka',
+    u'warning': u'ostrze\u017cenie',
+    u'contents': u'spis tre\u015bci'}
 """Mapping of node class name to label text."""
 
 bibliographic_fields = {
