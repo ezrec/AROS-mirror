@@ -4,8 +4,8 @@ Wprowadzenie do komend AROS'a
 
 :Authors:   Matthias Rustler 
 :Copyright: Copyright © 2006, The AROS Development Team
-:Version:   $Revision: 23961 $
-:Date:      $Date: 2006-01-08 10:15:43 -0500 (Sun, 08 Jan 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Draft
 
 -----------------

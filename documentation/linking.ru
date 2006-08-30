@@ -4,8 +4,8 @@
 
 :Author:    Adam Chodorowski
 :Copyright: Copyright � 2001, The AROS Development Team
-:Version:   $Revision: 15472 $
-:Date:      $Date: 2002-09-26 11:58:07 +0500 (Чт, 26 сен 2002) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 A great way to show your support for AROS, and one that we actively encourage,
