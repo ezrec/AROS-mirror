@@ -43,7 +43,7 @@ UNIX
 Если вы работаете в Linux, FreeBSD или другой современной UNIX-системе, тогда 
 достаточно просто установить официальное ПО для SVN, версии 1.0 или выше, для вашей ОС. Большинство дистрибутивов Linux уже содержат его.
 
-.. Note:: На сервере работает Subversion 1.1, можгут бытьиспользованы
+.. Note:: На сервере работает Subversion 1.1, могут быть использованы
           клиенты версий 1.0, 1.1 или 1.2.
 
 SVN не поддерживает UTF-8 локализацию. Нужно переключить локаль на ISO8859 перед каждым действием с SVN.
@@ -51,31 +51,30 @@ SVN не поддерживает UTF-8 локализацию. Нужно переключить локаль на ISO8859 перед
 AmigaOS
 -------
 
-If you are running AmigaOS, you will need a TCP/IP stack and some SVN port
-installed. One option is the Amiga port by Olaf Barthel which can be found
-on AmiNET__ (search for "subversion").
+Работая в AmigaOS, вам понадобится установить TCP/IP стэк и любой порт SVN.
+Как вариант, можно использовать порт для Amiga от Olaf Barthel, который
+можно найти на AmiNET__ (надо искать "subversion").
 
 __ http://main.aminet.net/
                          
 Windows
 -------
 
-При работе в Microsoft Windows (TM) можно рекомендовать SVN-клиент TortoiseSVN__, который особенно понравится тем, кто привык работать с Проводником. Программа переведена на русский и содержит довольно подробную документацию (пока не русскую).
+При работе в Microsoft Windows (TM) можно рекомендовать SVN-клиент TortoiseSVN__, который особенно понравится тем, кто привык работать с Проводником. Программа переведена на русский и содержит довольно подробную документацию (пока не русскую). Отправляя ваши файлы, проверьте, установлено ли свойство eol-style: native, если нет - все ваши файлы должны иметь концы строк в стандарте UNIX (только LF), если да - это не имеет значения. Концы строк UNIX также должны быть во всех ваших новых файлах. Чтобы их получить, можно рекомендовать следующие бесплатные программы: редактор TigerPAD__ (сохранять как текст UNIX), DOS Navigator (в свойствах редактора проставить LF), утилиту dos2unix (конвертор).
 
 __ http://tortoisesvn.sourceforge.net
+__ http://tigerpad.narod.ru
 
 Доступ к серверу
 ================
 
-Unlike CVS, you don't need to login into the server. Instead, SVN will
-ask when it needs to know your login and password.
+В отличие от CVS, не требуется логиниться на сервер. Вместо этого, SVN запросит ваш логин и пароль по мере надобности.
 
 .. Note:: 
 
-    The AROS repository is running on a password protected SVN server, which
-    means that you need to `apply for access to it`__ to be able to collaborate
-    in the development. At the request of Amiga Inc., anonymous read-only access
-    to the repository has been disabled.
+    Репозиторий AROS находится на защищенном паролем сервере SVN, что означает,     что необходима `регистрация для доступа к серверу`__ для возможности участия
+    в разработке. По требованию Amiga Inc., анонимный доступ только-на-чтение   
+    был отключен.
           
 __ contribute#joining-the-team
 
@@ -83,42 +82,38 @@ __ contribute#joining-the-team
 Получение исходников AROS 
 =========================
 
-To get a copy of the AROS sources you use the "checkout" command, like this::
+Чтобы получить рабочую копию кода и документации AROS необходимо использовать команду "checkout" (сверка), например::
 
     > svn checkout https://svn.aros.org:8080/svn/aros/trunk/AROS
 
-This will create a directory called AROS and populate it with all the sources,
-which might take quite some time if you have a slow network connection.
-The "contrib" module contains third party programs that have been ported to AROS.
-You have to checkout it in order to build all AROS flavours::
+Эта команда создаст директорию с именем AROS и наполнит её всеми исходниками
+системы, что может занять значительное время, если ваша сеть медленная. Раздел "contrib" содержит сторонние программы, портированные на AROS. Его нужно сверять, чтобы собирать все виды AROS::
 
     > cd AROS
     > svn checkout https://svn.aros.org:8080/svn/aros/trunk/contrib
 
 .. Tip:: 
 
+    После сверки (checkout), SVN запомнит источник кода.
     After the checkout, SVN will remember where the source came from.
 
 
 Получение дополнительного исходного кода
 ========================================
 
-Apart from the AROS main sources which we checked out in the previous section,
-there is also other things on the SVN server not directly related to the core
-of the operating system. For example, the "binaries" module which
-contains images like screenshots, backdrops and similar, and the
-"documentation" module which contains the sources to the website.
+Отдельно от основных исходников AROS, которые мы сверяле в предыдущем абзаце,
+на SVN сервере есть другое содержимое, не связанное прямо с кодом ОС. Например, 
+раздел "binaries", содержащий изображения, например, скриншоты, бэкдропы и
+и т.п., и раздел "documentation", содержащий исходники для построения содержимого сайта.
 
-You can get a list of the available modules with::
+Список имеющихся разделов можно получить с помощью следующей команды::
 
     > svn ls https://svn.aros.org:8080/svn/aros/trunk/
 
 Обновление исходников
 ======================
 
-After having checked out the sources, you might want to periodically update 
-them to get the latest changes the other developers have committed. For this
-you use the "update" command::
+После сверки исходников, естественным желанием будет периодическое их обновление для получения последних внесенных изменений. Для этого используется команда "update"::
 
     > cd AROS
     > svn update

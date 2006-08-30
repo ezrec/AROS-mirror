@@ -32,15 +32,12 @@ __ http://aros-exec.org/
 Ќочные сборки
 =============
 
-Nightly builds are done, as the name implies, automatically every night
-directly from the Subversion tree and contain the latest code. However,
-they have not been tested in any way and can be horribly broken and
-extremely buggy if you are unlucky. Most of the time though, they work
-just fine.
+Ќочные сборки, соответственно имени, генерируютс€ автоматически каждую ночь 
+пр€мо из исходников в Subversion и содержат все последние изменени€ в коде. ќднако, они никоим образом не тестируютс€, и при особом невезении могут быть нерабочими или ужасно глючными. ѕравда, как правило, они работают совершенно нормально.
 
-Please report bugs you may discover while using these builds through the
-`bug tracker`__. For any other necessity, please feel free to contact us
-through the `AROS-Exec`__ forums.
+≈сли вы обнаружили баг при использовании ночных сборок, сообщите, пожалуйста
+о нЄм использу€ `bug tracker`__. ƒл€ прочих вопросов, напишите в форум на 
+`AROS-Exec`__.
 
 .. raw:: html
 

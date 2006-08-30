@@ -40,64 +40,37 @@
 исходя из лучших побуждений, от этого отказались. Во-первых, все были согласны, что AmigaOS требовала доработки, но никто не знал, как этого добиться, не было даже общего согласия, что именно требует доработки, что важно. К примеру, некоторые разработчики хотели защиту памяти, но не такой ценой (полное переписание имеющегося ПО и снижение производительности).
 
 В конце концов, обсуждение перетекало в флэймовые войны или зацикливалось на одних и тех же аргументах. Так что, мы решили начать с того, что нам знакомо. Затем, обретя опыт и знание что возможно, а что нет, можно подумать и об улучшениях.
-In the end, the discussions ended in either flame wars or reiteration of the
-same old arguments over and over again. So we decided to start with something we
-know how to handle. Then, when we have the experience to see what is possible or
-not, we decide on improvements.
 
-We also want to be binary compatible with the original AmigaOS on Amiga. The
-reason for this is just that a new OS without any programs which run on it has
-no chance to survive. Therefore we try to make the shift from the original OS to
-our new one as painless as possible (but not to the extent that we can't improve
-AROS afterwards). As usual, everything has its price and we try to decide
-carefully what that price might be and if we and everyone else will be willing
-to pay it.
+Также планировалась совместимость на бинарном уровне с оригинально AmigaOS на Амиге. Это имело очень простое объяснение - новая ОС без програм, идущих на ней, не имеет шансов на выживание. Поэтому мы старались сделать переход от оригинальной к новой ОС как можно более безболезненным (но не настолько, чтобы лишить AROS возможности к совершенствованию). Как всегда, за всё приходится платить и каждый раз приходится взвешивать, чем придётся расплатиться, и хотелось бы нам этого или нет.
 
 
-Можно ли сделать фичу XYZ?
---------------------------
+Можно ли ввести возможность XYZ?
+--------------------------------
 
-No, because: 
+Нет, потому что: 
 
-a) If it was really important, it would be in the original OS. :-) 
-b) Why don't you do it yourself and send a patch to us?
+а) Если бы это было так важно, это уже было бы :-) (в оригинальной ОС)
+b) Почему бы вам самим не сделать и не прислать нам патч?
 
-The reason for this attitude is that there are plenty of people around who think
-that their feature is the most important and that AROS has no future if that
-feature is not built in right away. Our position is that AmigaOS, which AROS
-aims to implement, can do everything a modern OS should do. We see that there
-are areas where AmigaOS could be enhanced, but if we do that, who would write
-the rest of the OS? In the end, we would have lots of nice improvements to the
-original AmigaOS which would break most of the available software but be worth
-nothing, because the rest of the OS would be missing.
+Причина такого подхода в том, что большинство считают нужную им возможность самой важной и что AROS обречена, если не применить её правильным образом. Наша же позиция - в том, что AmigaOS, которую AROS старается воплотить, способна всё то же, на что способны все современные ОС. Мы замечаем, что есть области, где AmigaOS можно доработать, но если это сделать, кто будет дописывать всё остальное ? К тому же, это привело бы к появлению множества мелких доработок над оригинальной AmigaOS, которые бы мешали нормальной работе всех приложений, но при этом в целом ничего бы не стоили, так как остальные функции были бы утеряны.
 
-Therefore, we decided to block every attempt to implement major new features in
-the OS until it is more or less completed. We are getting quite close to that
-goal now, and there have been a couple of innovations implemented in AROS that
-aren't available in AmigaOS.
+Так что мы решили предотвращать все попытки внедрения кардинальных возможностей в ОС до тех пор, пока она не будет более-менее закончена. Мы уже близки к цели, и был введен ряд инноваций, которых не было в оригинальной AmigaOS.
 
 
 Насколько AROS совместима с AmigaOS?
 ------------------------------------
 
-Very compatible. We expect that AROS will run existing software on the Amiga
-without problems. On other hardware, the existing software must be recompiled.
-We will offer a preprocessor which you can use on your code which will change
-any code that might break with AROS and/or warn you about such code.
+Весьма совместима. Мы ожидаем, что под AROS для Амиги без проблем будут работать имеющиеся программы для Амиги. На других платформах эти программы 
+должны быть перекомпилированы. Мы добавим препроцессор, который при проверке вашего кода либо изменит его несовместимые части, либо предупредит о них.
 
-Porting programs from AmigaOS to AROS is currently mostly a matter of a simple
-recompilation, with the occasional tweak here and there. There are of course
-programs for which this is not true, but it holds for most modern ones.
+Перенос программ с AmigaOS на AROS в настоящее время, скорее, задача простой 
+рекомпиляции, и, возможо, изменения кода в некоторых местах. Разумеестся, есть исключения из сказанного, но это применимо для многих современных программ.
 
 
 Для каких процессорных платформ достуна AROS ?
 ----------------------------------------------
 
-Currently AROS is available in a quite usable state as native and hosted
-(under Linux, and FreeBSD) for the i386 architecture (ie. IBM PC AT
-compatible clones). There are ports under way at varying degrees of
-completeness to SUN SPARC (hosted under Solaris) and Palm compatible
-handhelds (native).
+Сейчас AROS доступна в более-менее пригодном состоянии в native- и hosted-виде (на Linux и FreeBSD) для архитектуры i386 ( то есть IBM PC-AT совместимых компьютеров). Также в разработке находятся порты  различных степенях готовности на SUN SPARC (hosted под Solaris) и Palm-совместимых PDA (native).
 
 
 Будет ли AROS портирована на PPC? 
@@ -109,56 +82,46 @@ handhelds (native).
 Почему Вы используете Linux и X11?
 ----------------------------------
 
-We use Linux and X11 to speed up development. For example, if you implement
-a new function to open a window you can simply write that single function and
-don't have to write hundreds of other functions in layers.library,
-graphics.library, a slew of device drivers and the rest that that function might
-need to use. 
+Мы применяем Linux и X11 для ускорения разработки. Например, если требуется простая новая функция открытия окна, можно написать одну эту функцию, не вводя множество других функций в layers.library, graphics.library, ряд драйверов и другое, что ещё этой функции потребуется.
 
-The goal for AROS is of course to be independent of Linux and X11 (but it would
-still be able to run on them if people really wanted to), and that is slowly
-becoming a reality with the native versions of AROS. We still need to use Linux
-for development though, since some development tools haven't been ported to AROS
-yet.
+Задача AROS, тем не менее, всё же быть независимой от Linux и X11 (но она всё же будет способна, при надобности, работать с ними), и это становится реальностью благодаря native-версиям AROS. Тем не менее, Linux всё ещё нужен при разработке, поскольку ещё не все требуемые инструменты разработки перенесены на AROS.
 
 
 Как же вы собираетесь добиться переносимости AROS?
 --------------------------------------------------
 
-One of the major new features in AROS compared to AmigaOS is the HIDD (Hardware
-Independent Device Drivers) system, which will allow us to port AROS to
-different hardware quite easily. Basically, the core OS libraries do not hit the
-hardware directly but instead go through the HIDDs, which are coded using an
-object oriented system that makes it easy to replace HIDDs and reuse code.
+Одим из самых значительных отличий AROS от AmigaOS является применение системы 
+HIDD (Hardware Independent Device Drivers), позволяющей с лёгкостью портировать 
+AROS на различные платформы. Вкратце, базовые библиотеки ОС обращаются к оборудованию
+не напрямую, а через HIDDы, которые написаны с применением объектно-ориентированного
+подхода, позволяющего легко заменять HIDDы, и использовать код повторно.
 
 
 Вы верите в успех AROS? 
 -----------------------
 
-We hear all the day from a lot of people that AROS won't make it. Most of them
-either don't know what we are doing or they think the Amiga is already dead.
-After we explained what we do to the former, most agree that it is possible. The
-latter make more problems. Well, is Amiga dead right now? Those who are still
-using their Amigas will probably tell you that it isn't. Did your A500 or A4000
-blow up when Commodore went bankrupt? Did it blow up when Amiga Technologies
-did?
+Каждый день мы слвышим от многих, что у AROS ничего не выйдет. Большинство из них
+либо не знают, что именно мы делаем, либо считают, что Амига давно мертва. После того,
+как первым объяснили, в чём наша задача, большинство из них согласилось, что это 
+возможно. Со вторыми хлопот больше. Ладно, Амига уже мертва  ? Те, кто используют
+их до сих пор определенно с ними не согласятся. Разве их A500 или A4000 взорвались,
+когда Commodore объявили банкротом ? А когда та же участь постигла Amiga Technologies ?
 
-The fact is that there is quite little new software developed for the Amiga
-(although Aminet still chugs along quite nicely) and that hardware is also
-developed at a lower speed (but the most amazing gadgets seem appear right now).
-The Amiga community (which is still alive) seems to be sitting and waiting. And
-if someone releases a product which is a bit like the Amiga back in 1984, then
-that machine will boom again. And who knows, maybe you will get a CD along with
-the machine labeled "AROS". :-)
+Однако фактом является малое количество новых программ для Амиги (что не мешает
+Aminet жить и здравствовать) и межленность разработки оборудования (впрочем, как 
+раз начали появляться интересные гаджеты). Сообщество Amiga, живое до сих пор,
+замерло в ожидании. И если появится продукт, достойный Amiga, какой она была в 1984,
+его вновь ждёт успех. Как знать, быть может, к машине будет прилагаться диск с надписью
+"AROS"? :-)
 
 
-Что же мне делать, если AROS не компилируется?
-----------------------------------------------
+Что мне делать, если не удаётся скомпилировать AROS?
+----------------------------------------------------
 
-Please post a message with details (for example, the error messages you
-get) on the Help forum at `AROS-Exec`__ or become a developer and
-subscribe to the AROS Developer list and post it there, and someone will
-try to help you.
+Пожалуйста, отправьте подробное сообщение (например, с сообщениями об ошибках, которые
+вы получили) в раздел Help `форума AROS-Exec`__, илизапишитесь в разработчики и
+подпишитесь на список рассылки разработчиков AROS, и опубликуйте его там, где
+кто-нибудь попробует вам помочь.
 
 __ http://aros-exec.org/
 
@@ -166,92 +129,84 @@ __ http://aros-exec.org/
 Будет ли в AROS защита памяти, SVM, RT, ...?
 --------------------------------------------
 
-Several hundred Amiga experts (that's what they thought of themselves at least)
-tried for three years to find a way to implement memory protection (MP) for
-AmigaOS. They failed. You should take it as a fact that the normal AmigaOS will
-never have MP like Unix or Windows NT.
+Несколько сотен экспертов Amiga (по крайней мере, считающих себя таковыми)
+в течение трёх лет пытались найти способ внедрить защиту памяти (MP) в AmigaOS.
+Их ждала неудача. Так что приходится принимать как факт, что обычная AmigaOS никогда
+не будет иметь MP, подобно Unix или Windows NT.
 
-But all is not lost. There are plans to integrate a variant of MP into AROS
-which will allows protection of at least new programs which know about it. Some
-efforts in this area look really promising. Also, is it really a problem if your
-machine crashes? Let me explain, before you nail me to a tree. :-) The problem
-is not that the machine crashes, but rather: 
+Но не всё потеряно. Есть планы ввести подвид MP в AROS, предоставляющий защиту
+по меньшей мере новым программам, учитывающим эту возможность. Некоторые из попыток
+внедрения выглядят весьма многообещающе. К тому же, насколько страшен отказ вашей
+системы ? Не спешите казнить, дайте объяснить :-) Проблема - не в отказе самой системы,
+а в следующем:
 
-1. You have no good idea why it crashed. Basically, you end up having to poke 
-   with a 100ft pole into a swamp with a thick fog. 
-2. You lose your work. Rebooting the machine is really no issue.
+1. Вы не имеете особого представления почему произошёл сбой. Попросту попытки выяснения
+   подобны копанию 100-метровой палкой в болоте при густом тумане.
+2. Вы потеряли ваши данные. Перезагрузка, разумеется, не решает проблемы. 
 
-What we could try to construct is a system which will at least alert if
-something dubious is happening and which can tell you in great detail what was
-happening when the machine crashed and which will allow you to save your work
-and *then* crash. There will also be a means to check what has been saved so you
-can be sure that you don't continue with corrupted data.
+Что можно попробовать сделать, это разработать систему, которая, по крайней мере,
+будет предупреждать о сомнительных действиях, и способную детально описать сбой 
+системы, которая сможет позволить сохранить данные *перед* сбоем. Также должно быть
+средство выяснить, что именно сохранилось, что позволит быть уверенным, что данные
+остались в целости и можно продолжить работу.
 
-The same thing goes for SVM (swappable virtual memory), RT (resource tracking)
-and SMP (symmetric multiprocessing). We are currently planning how to implement
-them, making sure that adding these features will be painless. However, they do
-not have the highest priority right now. Very basic RT has been added, though.
+То же самое относится и к SVM (swappable virtual memory, выгружаемой виртуальной памяти)
+RT (resource tracking, отслеживание ресурсов), и SMP (symmetric multiprocessing). В настоящее время, мы прикидываем, как внедрить их
+таким образом, чтобы доставить меньше всего хлопот. Тем не менее, сейчас они не 
+считаются приоритетными. Очень простое RT уже было введено.
 
 
 Можно ли стать бета-тестером?
 -----------------------------
 
-Sure, no problem. In fact, we want as many beta testers as possible, so
-everyone is welcome! We don't keep a list of beta testers though, so all
-you have to do is to download AROS, test whatever you want and send us a
-report.
+Конечно, без проблем. В действительности, чем больше бета-тестеров, тем
+лучше, так что приглашаются все! Мы не ведем списка бета-тестеров, так что 
+всё, что вам надо сделать - это скачать AROS, опробовать всё что вы захотите, и
+прислать нам отчёт.
 
 
 Какова связь между AROS и UAE?
 ------------------------------
 
-UAE is an Amiga emulator, and as such has somewhat different goals than AROS.
-UAE wants to be binary compatible even for games and hardware hitting code,
-while AROS wants to have native applications. Therefore AROS is much faster than
-UAE, but you can run more software under UAE.
+UAE - это эмулятор Amiga, и поэтому имеет другие цели, нежели AROS. UAE старается
+быть бинарно-совместимым даже для игр и программ, работающих с аппаратной частью,
+в то время, как AROS предпочитает иметь свои приложения. Поэтому AROS значительно
+быстрее UAE, но программ под UAE значительно больше.
 
-We are in loose contact with the author of UAE and there is a good chance that
-code for UAE will appear in AROS and vice versa. For example, the UAE developers
-are interested in the source for the OS because UAE could run some applications
-much faster if some or all OS functions could be replaced with native code. On
-the other hand, AROS could benefit from having an integrated Amiga emulation.
+Мы поддерживаем контакт с автором UAE и поэтому есть хорошие шансы, что поддержка
+UAE будет введена в AROS, и наооборот (в настоящее время, UAE портирован, но не 
+интегрирован). Например, разработчики UAE зинтересованы в исходниках AROS, поскольку
+UAE может работать намного быстрее, если некоторые (или все) функции OS заменить
+на "родной" код. С своей стороны, AROS может выиграть от встроенной эмуляции
+Amiga.
 
-Since most programs won't be available on AROS from the start, Fabio Alemagna
-has ported UAE to AROS so you can run old programs at least in an emulation box.
+Поскольку большинство програм не будут доступны под AROS с самого начала, Fabio 
+Alemagna портировал UAE на AROS с тем, чтобы можно было запускать старые программы, по крайней мере, в окне эмуляции.
 
 
 Какова связь между AROS и Haage & Partner?
 ------------------------------------------
 
-Haage & Partner used parts of AROS in AmigaOS 3.5 and 3.9, for example the
-colorwheel and gradientslider gadgets and the SetENV command. This means that in
-a way, AROS has become part of the official AmigaOS. This does not imply that
-there is any formal relation between AROS and Haage & Partner. AROS is an open
-source project, and anyone can use our code in their own projects provided they
-follow the license.
+Haage & Partner использовали фрагменты AROS в AmigaOS 3.5 и 3.9, например, такие
+элементы как colorwheel и gradientslider и команда SetENV. Это означает, что по
+ходу своего развития, AROS пополнила AmigaOS, став её частью. Но это не означает, что имели место какие-то официальные отношения между AROS и Haage & Partner. AROS - проект с открытым исходным кодом, и любой может использовать наш
+код в своих проектах, если будет использовать его в рамках нашей лицензии.
 
 
 Какова связь между AROS и MorphOS?
 ----------------------------------
 
-The relationship between AROS and MorphOS is basically the same as between AROS
-and Haage & Partner. MorphOS uses parts of AROS to speed up their development
-effort; under the terms of our license. As with Haage & Partner, this is good
-for both the teams, since the MorphOS team gets a boost to their development
-from AROS and AROS gets good improvements to our source code from the MorphOS
-team. There is no formal relation between AROS and MorphOS; this is simply how
-open source development works.
+Отношения между AROS и MorphOS практически те же, что и между AROS и Haage & Partner. MorphOS использует части AROS для ускорения собственных разработок, в рамках нашей лицензии. Как и в случае с Haage & Partner, от этого выигрывают
+обе стороны, поскольку MorphOS получает дополнительный стимул к ускорению разработок, а AROS - дополнения к коду, разработанные для MorphOS. Никаких официальных отношений не существует, такова разработка open source - проектов.
 
 
 Какие есть языки программирования?
 ----------------------------------
 
-Most development for AROS is done using ANSI C by crosscompiling the
-sources under a different OS, eg. Linux or FreeBSD. Fabio Alemagna has
-completed an initial port of GCC to i386 native. However, it is not
-currently on the ISO or integrated into the build system.
+Большинство кода для AROS написано для ANSI C с помощью кросс-компилирования под другими ОС, такими, как Linux и FreeBSD. Fabio Alemagna завершил первоначальный порт GCC на i386-native. Однако, пока он не присутствует на 
+образах дисков и не встроен в сборочную систему.
 
-The languages that are available natively are Python_, Regina_ and False_:
+Доступные сейчас нативно языки - это Python_, Regina_ и False_:
 
 + Python is a scripting language which has become quite popular, because of 
   its nice design and features (object-oriented programming, module system,
@@ -296,9 +251,7 @@ of bytes in RAM are encoded.
 Будет ли в AROS Kickstart ROM? 
 ------------------------------
 
-There might be, if someone creates a native Amiga port of AROS and does all the
-other work needed to create a Kickstart ROM. Currently, no one has applied for
-the job. 
+Такое возможно, если кто-либо сделает native-порт AROS на Amiga и сделает всю прочую работу для создания Kickstart ROM. Пока что, никто не взялся за это.
 
 
 Как прочесть диски AROS под UAE?
