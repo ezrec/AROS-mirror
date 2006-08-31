@@ -208,18 +208,16 @@ Haage & Partner использовали фрагменты AROS в AmigaOS 3.5 и 3.9, например, такие
 
 Доступные сейчас нативно языки - это Python_, Regina_ и False_:
 
-+ Python is a scripting language which has become quite popular, because of 
-  its nice design and features (object-oriented programming, module system,
-  many useful modules included, clean syntax, ...). A separate project has 
-  been started for the AROS port and can be found at 
-  http://pyaros.sourceforge.net/.
++ Python - скриптовый язык, набирающий популярность благодаря удобному дизайну и
+  возможностям (объектно-ориентированное программирование, система модулей, 
+  имеется множество полезных модулей, чёткий синтаксис, ...). Был оформлен 
+  отдельным проектом, расположенным по `адресу`__
+__ http://pyaros.sourceforge.net/.
 
-+ Regina is a portable ANSI compliant REXX interpreter. The goal for the AROS
-  port is to be compatible with the ARexx interpreter for the classic
-  AmigaOS.
++ Regina - переносимый ANSI - совместимый интерпретатор REXX. Задача порта для 
+  AROS - получение совместимого с ARexx для классической AmigaOS интерпретатора.
 
-+ False can be classified as an exotic language, so it will most likely not be 
-  used for serious development, although it can be lots of fun. :-) 
++ False можно воспринимать как экзотический язык, и он, скорее всего, не будет    использоваться в серьёзных проектах, однако порой он весьма забавен. :-)
 
 .. _Python: http://www.python.org/
 .. _Regina: http://regina-rexx.sourceforge.net/
@@ -272,9 +270,9 @@ The geometry of the hardfile is as follows::
 Как прочесть образы дисков AROS под hosted-видами AROS?
 -------------------------------------------------------
 
-Copy the disk image to the DiskImages directory in AROS (SYS:DiskImages, eg.
-bin/linux-i386/AROS/DiskImages) and rename it to "Unit0". After starting AROS,
-you can mount the disk image with::
+Скопируйте образ диска в директорию DiskImages (SYS:DiskImages, пр.
+bin/linux-i386/AROS/DiskImages) и переименуйте его в "Unit0". После запуска 
+AROS образ диска можно присоединить командой::
 
     > mount AFD0: 
 
