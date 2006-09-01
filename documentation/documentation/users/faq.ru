@@ -212,7 +212,7 @@ Haage & Partner использовали фрагменты AROS в AmigaOS 3.5 и 3.9, например, такие
   возможностям (объектно-ориентированное программирование, система модулей, 
   имеется множество полезных модулей, чёткий синтаксис, ...). Был оформлен 
   отдельным проектом, расположенным по `адресу`__
-__ http://pyaros.sourceforge.net/.
+  __ http://pyaros.sourceforge.net/.
 
 + Regina - переносимый ANSI - совместимый интерпретатор REXX. Задача порта для 
   AROS - получение совместимого с ARexx для классической AmigaOS интерпретатора.
@@ -224,24 +224,25 @@ __ http://pyaros.sourceforge.net/.
 .. _False:  http://wouter.fov120.com/false/
 
 
-Почему в AROS не встроен  эмулятор m68k?
+Почему в AROS не встроен эмулятор m68k?
 ----------------------------------------
 
-To make old Amiga programs run on AROS, we have ported UAE_ to AROS. AROS's
-version of UAE will probably be a bit faster than other versions UAE since AROS
-needs less resources than other operating systems (which means UAE will get more
-CPU time), and we'll try to patch the Kickstart ROM in UAE to call AROS
-functions which will give another small improvement. Of course, this only
-applies to the native flavors of AROS and not the hosted flavors.
+Чтобы сделать возможным запуск старых программ Amiga на AROS, был портирован UAE_.
+Эта версия, возможно, окажется несколько быстрее остальных версий UAE, поскольку
+AROS требует меньше ресурсов, чем прочие системы (что значит, что UAE может получить
+больше процессорного времени), и мы пытаемся пропатчить Kickstart ROM в UAE для
+обращения к функциям AROS, что может дать дополнительный прирост скорости. 
+Разумеется, сказанное касается native-видов AROS, но не hosted.
 
-But why don't we simply implement a virtual m68k CPU to run software directly on
-AROS? Well, the problem here is that m68k software expects the data to be in big
-endian format while AROS also runs on little endian CPUs. The problem here is
-that the little endian routines in the AROS core would have to work with the big
-endian data in the emulation. Automatic conversion seems to be impossible (just
-an example: there is a field in a structure in the AmigaOS which sometimes
-contains one ULONG and sometimes two WORDs) because we cannot tell how a couple
-of bytes in RAM are encoded.
+Но почему же мы попросту не введем виртуальный процессор m68k, что бы такие 
+программы можно было запускать напрямую ? Главная проблема здесь - в том, что 
+программам для m68k нужны данные в формате big endian, в то время, как AROS
+работает также и на little endian -процессорах. Сама проблема состоит в
+обеспечении работы little endian - подпрограмм в ядре AROS с big endian - данными
+эмуляции. Автоматическое их преобразование не представляется возможным (в 
+качестве примера - есть поле одной из структур в AmigaOS, которое иногда состоит
+из одного ULONG - значения, а иногда - из двух WORD), поскольку нельзя сказать
+точно, каков именно формат байт информации в памяти.
 
 .. _UAE: http://www.freiburg.linux.de/~uae/
 
@@ -255,11 +256,11 @@ of bytes in RAM are encoded.
 Как прочесть диски AROS под UAE?
 --------------------------------
 
-The floppy disk image can be mounted as a hardfile and then used as a 1.4 MB
-harddisk within UAE. After you have put the files you want on the hardfile disk
-image (or whatever you wanted to do), you can write it to a floppy.
+Образ дискеты можно смонтировать как hardfile и затем использовать как жёсткий
+диск на 1.4 МБ в UAE. После того, как вы скопировали все необходимые файлы на
+образ диска (или сделали прочие нужные вам действия), его можно записать на дискету.
 
-The geometry of the hardfile is as follows::
+Геометрия hardfile имеет следующий вид::
 
     Sectors    = 32
     Surfaces   = 1
@@ -280,10 +281,10 @@ AROS образ диска можно присоединить командой::
 Что такое Zune?
 ---------------
 
-In case you read on this site about Zune, it's simply an open-source
-reimplementation of MUI, which is a powerful (as in user- and
-developer-friendly) object-oriented shareware GUI toolkit and de-facto
-standard on AmigaOS. Zune is the preferred GUI toolkit to develop
-native AROS applications. As for the name itself, it means nothing,
-but sounds good.
+Если вы прочитали на этом сайте о Zune, то знайте, что это просто
+реинкарнация MUI в открытом исходном коде (MUI - это мощный, удобный и для
+пользователей, и для разработчиков объектно-ориентированный пакет разработки
+GUI с shareware-лицензией, стандарт де-факто в AmigaOS). Zune -основной пакет 
+разработки GUI-приложений AROS. Само имя ничего особенного не означает, но
+звучит прикольно. =)
 
