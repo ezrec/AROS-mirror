@@ -16,76 +16,72 @@ AROS CLI commands
 
 Introduction
 ============
-.. Include:: documentation/users/shell/introduction.en
+.. Include:: introduction.en
 
 ==============
 Shell commands
 ==============
 
 
-.. Include:: documentation/users/shell/addbuffers.en
-.. Include:: documentation/users/shell/alias.en
-.. Include:: documentation/users/shell/ask.en
-.. Include:: documentation/users/shell/assign.en
-.. Include:: documentation/users/shell/avail.en
-.. Include:: documentation/users/shell/beep.en
-.. Include:: documentation/users/shell/break.en
-.. Include:: documentation/users/shell/cd.en
-.. Include:: documentation/users/shell/changetaskpri.en
-.. Include:: documentation/users/shell/copy.en
-.. Include:: documentation/users/shell/date.en
-.. Include:: documentation/users/shell/delete.en
-.. Include:: documentation/users/shell/dir.en
-.. Include:: documentation/users/shell/echo.en
-.. Include:: documentation/users/shell/else.en
-.. Include:: documentation/users/shell/endcli.en
-.. Include:: documentation/users/shell/endif.en
-.. Include:: documentation/users/shell/endskip.en
-.. Include:: documentation/users/shell/eval.en
-.. Include:: documentation/users/shell/execute.en
-.. Include:: documentation/users/shell/failat.en
-.. Include:: documentation/users/shell/fault.en
-.. Include:: documentation/users/shell/filenote.en
-.. Include:: documentation/users/shell/get.en
-.. Include:: documentation/users/shell/getenv.en
-.. Include:: documentation/users/shell/if.en
-.. Include:: documentation/users/shell/info.en
-.. Include:: documentation/users/shell/join.en
-.. Include:: documentation/users/shell/lab.en
-.. Include:: documentation/users/shell/list.en
-.. Include:: documentation/users/shell/lock.en
-.. Include:: documentation/users/shell/makedir.en
-.. Include:: documentation/users/shell/makelink.en
-.. Include:: documentation/users/shell/newshell.en
-.. Include:: documentation/users/shell/path.en
-.. Include:: documentation/users/shell/prompt.en
-.. Include:: documentation/users/shell/protect.en
-.. Include:: documentation/users/shell/quit.en
-.. Include:: documentation/users/shell/relabel.en
-.. Include:: documentation/users/shell/rename.en
-.. Include:: documentation/users/shell/requestchoice.en
-.. Include:: documentation/users/shell/requestfile.en
-.. Include:: documentation/users/shell/run.en
-.. Include:: documentation/users/shell/search.en
-.. Include:: documentation/users/shell/set.en
-.. Include:: documentation/users/shell/setclock.en
-.. Include:: documentation/users/shell/setdefaultfont.en
-.. Include:: documentation/users/shell/setenv.en
-.. Include:: documentation/users/shell/setkeyboard.en
-.. Include:: documentation/users/shell/shell.en
-.. Include:: documentation/users/shell/skip.en
-.. Include:: documentation/users/shell/sort.en
-.. Include:: documentation/users/shell/stack.en
-.. Include:: documentation/users/shell/status.en
-.. Include:: documentation/users/shell/type.en
-.. Include:: documentation/users/shell/unalias.en
-.. Include:: documentation/users/shell/unset.en
-.. Include:: documentation/users/shell/unsetenv.en
-.. Include:: documentation/users/shell/version.en
-.. Include:: documentation/users/shell/wait.en
-.. Include:: documentation/users/shell/which.en
-.. Include:: documentation/users/shell/why.en
-
-
-
-
+.. Include:: addbuffers.en
+.. Include:: alias.en
+.. Include:: ask.en
+.. Include:: assign.en
+.. Include:: avail.en
+.. Include:: beep.en
+.. Include:: break.en
+.. Include:: cd.en
+.. Include:: changetaskpri.en
+.. Include:: copy.en
+.. Include:: date.en
+.. Include:: delete.en
+.. Include:: dir.en
+.. Include:: echo.en
+.. Include:: else.en
+.. Include:: endcli.en
+.. Include:: endif.en
+.. Include:: endskip.en
+.. Include:: eval.en
+.. Include:: execute.en
+.. Include:: failat.en
+.. Include:: fault.en
+.. Include:: filenote.en
+.. Include:: get.en
+.. Include:: getenv.en
+.. Include:: if.en
+.. Include:: info.en
+.. Include:: join.en
+.. Include:: lab.en
+.. Include:: list.en
+.. Include:: lock.en
+.. Include:: makedir.en
+.. Include:: makelink.en
+.. Include:: newshell.en
+.. Include:: path.en
+.. Include:: prompt.en
+.. Include:: protect.en
+.. Include:: quit.en
+.. Include:: relabel.en
+.. Include:: rename.en
+.. Include:: requestchoice.en
+.. Include:: requestfile.en
+.. Include:: run.en
+.. Include:: search.en
+.. Include:: set.en
+.. Include:: setclock.en
+.. Include:: setdefaultfont.en
+.. Include:: setenv.en
+.. Include:: setkeyboard.en
+.. Include:: shell.en
+.. Include:: skip.en
+.. Include:: sort.en
+.. Include:: stack.en
+.. Include:: status.en
+.. Include:: type.en
+.. Include:: unalias.en
+.. Include:: unset.en
+.. Include:: unsetenv.en
+.. Include:: version.en
+.. Include:: wait.en
+.. Include:: which.en
+.. Include:: why.en
