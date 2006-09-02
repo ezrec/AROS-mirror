@@ -5,7 +5,6 @@ Shell commands
 ==============
 
 `Introduction <introduction>`_
-`All commands <allcommands>`_
 
 `AddBuffers`__
 `Alias`__
@@ -70,7 +69,6 @@ Shell commands
 `Which`__
 `Why`__
 
-__ allcommands
 __ addbuffers
 __ alias
 __ ask
@@ -133,3 +131,4 @@ __ version
 __ wait
 __ which
 __ why
+
