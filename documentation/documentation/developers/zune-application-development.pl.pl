@@ -10,7 +10,7 @@ Zune - podrêcznik programowania
 :ToDo:      All
 
 
-.. Zawarto¶æ::
+.. Contents::
 
 
 ------------
