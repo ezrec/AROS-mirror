@@ -44,10 +44,10 @@ Pomoce
 ======
 
 Pewna wiedza o OO ( zorientowanym-obiektowo ) programowaniu, jest wiêcej, ni¿ mile widziana.
-Je¶li nie, to Google mo¿e pomóc Ci znale¼æ dobry wstêp na klasycznym polu.
+Je¶li nie, to Google mo¿e pomóc Ci znale¼æ informacje z tego zakresu.
 
 Znajomo¶æ AROS'a ( lub AmigaOS ) API i koncepcji jak listy Tag oraz BOOPSI
-jest niezbêdna. Posiadanie Amiga Reference Manual ( RKM - podrêcznik Amigi ) jest bardzo podrêczna.
+jest niezbêdna. Posiadanie Amiga Reference Manual ( RKM - podrêcznik Amigi ) jest bardzo przydatna.
 
 Jako, ¿e Zune jest klonem MUI, ca³a dokumentacja dotycz±ca MUI, dotyczy
 tak¿e Zune. W szczególno¶ci ostatni dostêpny pakiet programistyczny, który
@@ -209,7 +209,7 @@ Witaj ¦wiecie
 
 .. Figure:: zune/images/hello.png
 
-    Proste rzeczy najpierw! Wiem, ¿e bêdzie Was to krêci³o.
+    Proste rzeczy najpierw! Wiem, ¿e to siê Wam spodoba.
 
 
 ¬ród³o
@@ -289,7 +289,7 @@ Uwagi
 Ogólne
 ------
 
-Nie bêdziemy rêcznie otwieraæ bibliotek, to jest automatycznie zrobione za nas.
+Nie bêdziemy rêcznie otwieraæ bibliotek, to jest automatycznie robione za nas.
 
 Tworzenie GUI
 -------------
