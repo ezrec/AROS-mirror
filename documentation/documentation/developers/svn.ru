@@ -118,13 +118,9 @@ __ contribute#joining-the-team
     > cd AROS
     > svn update
     
-This will merge any changes that other developers have made into your sources 
-and also check out new directories and files that have been added. If someone
-committed changes to a file that you also have changed locally, SVN will try 
-to merge the changes automatically. If both of you changed the same lines SVN
-might fail in merging the sources. When this happens, SVN will complain and put
-**both** versions in the file separated by ``<<<<`` You need to edit the file
-and resolve the conflict manually.
+При этом в вашу копию будут внесены изменения, внесенные другими разработчиками
+и сверены новые, добавленные директории и файлы. Если кто-то внес изменения в файл, который вы редактируете локально, SVN попытается автоматически совместить файлы. Если были изменены одни и теже строки, SVN скорее всего, не сможет закончить совмещение кода. Если такое случается, SVN выдаст сообщение ок конфликте и сохранит **обе** версии файла разделенные ``<<<<`` You need to edit the file and resolve the conflict manually (Придётся редактировать файл и разрешать конфликт вручную).
+
 
 .. Warning:: 
 
