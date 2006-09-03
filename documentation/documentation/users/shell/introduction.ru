@@ -4,8 +4,8 @@
 
 :Authors:   Matthias Rustler 
 :Copyright: Copyright К 2006, The AROS Development Team
-:Version:   $Revision: 23961 $
-:Date:      $Date: 2006-01-08 19:15:43 +0400 (росЕ, 08 сдр═р┬ 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Draft
 
 -------------

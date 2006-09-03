@@ -3,8 +3,8 @@
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
 :Copyright: Copyright К 1995-2002, The AROS Development Team
-:Version:   $Revision: 20691 $
-:Date:      $Date: 2004-01-21 18:21:00 +0400 (рисХ, 21 сдр═р┬ 2004) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 
