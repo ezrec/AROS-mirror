@@ -55,6 +55,11 @@ mui.MUIO_MenustripNM_CommandKeyCheck= 1 		--  check for 'localized' menu items s
 mui.MUIO_CoolButton_CoolImageID= 1
 
 -- ==================================================================
+-- BOOPSI methods
+mui.OM_ADDMEMBER= 265 
+mui.OM_REMMEMBER= 266 
+
+-- ==================================================================
 mui.MUIC_Aboutmui= "Aboutmui.mui"
 
 mui.MUIA_Aboutmui_Application= -2143148765 		--  V11 i.. Object *
@@ -119,7 +124,7 @@ mui.MUIA_Application_WindowList= -2143118658 		--  MUI: V13 ..g struct List *
 mui.MUIA_Application_Configdata= -1874722560 		--  Zune 20030407 .s. Object *
 mui.MUIA_Application_Version_Number= -1874722559 		-- [I-G] CONST_STRPTR Examples: 1.5, 2.37.4b
 mui.MUIA_Application_Version_Date= -1874722558 		-- [I-G] CONST_STRPTR YYYY-MM-DD
-mui.MUIA_Application_Version_Extra= -1874722557 		-- [I-G] CONST_STRPTR [I-G] CONST_STRPTR Example: nightly build
+mui.MUIA_Application_Version_Extra= -1874722557 		-- [I-G] CONST_STRPTR Example: nightly build
 
 mui.MUIV_Application_Save_ENV= 0
 mui.MUIV_Application_Save_ENVARC= -1
