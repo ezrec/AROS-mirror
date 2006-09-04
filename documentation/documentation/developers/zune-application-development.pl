@@ -18,7 +18,7 @@ Wprowadzenie
 ------------
 
 Czym jest Zune?
-==============
+===============
 
 Zune jest zorientowanym obiektowo zestawem narzêdzi GUI ( Graficznego Interfejsu U¿ytkownika ).
 Jest klonem ( w API, i wygl±dzie ) MUI, bardzo dobrze znanym shereware'owym produktem Stenan'a Stuntz'a.
