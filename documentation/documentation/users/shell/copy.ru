@@ -59,7 +59,7 @@ Copy
      COMMENT   --  копировать комментарии файлов
      NOREQ     --  не выводить запросы
 
-     PATTERN   --  a pattern the filenames must match
+     PATTERN   --  маска (pattern), которой должны соответствовать имена файлов
      DIRECT    --  только копирование, никаких тестов и проверок
      VERBOSE   --  выводить больше информации
      ERRWARN   --  при ошибке копирования одного фала прекращать копирования
@@ -79,7 +79,7 @@ Copy
 
  FROM:
  Исходные файл(ы). При обработке директорий все файлы в них считаются исходными.
- May have standard patterns.
+ Могут иметь стандартные маски (patterns).
 
  TO:
  Файл назначения, или, при нескольких исходных файлах, директория назначения.
@@ -98,8 +98,8 @@ Copy
  нельзя.
 
  PAT=PATTERN:
- PATTERN позволяет задать dos pattern, all file have to match.
- Полезна вместе с опцией ALL.
+ PATTERN позволяет задать маску (pattern) dos, которой все файлы должны 
+ соответствовать. Полезна вместе с опцией ALL.
 
  Пример:
  Если надо удалить все файлы .info files во всех каталогах, можно задать опции:
@@ -168,28 +168,26 @@ Copy
  ссылки на директории.
  
  SOFT=SOFTLINK:
- Instead of copying directories, a soft link is created. These links are
- useable between different devices also. Soft links are only created for
- directories. Files are skipped here. Option FORCELINK is therefor always
- set to true.
- NOTE: Softlinks are not official supported by OS and may be dangerous.
- I suggest not to use this option! See description below.
-
+ Вместо копирования директорий, создаётся soft link. Такие ссылки можно 
+ использовать и между различными устройствами. Они создаются только для 
+ директорий, при этом файлы пропускаются. Таким образом, опция FORCELINK в этом 
+ случае установлена в true.
+ ЗАМЕЧАНИЕ: Softlinkи официально не поддерживаются ОС, и могут быть опасны в 
+ использовании. Рекомендуется не использовать эту опцию! См. описание ниже.
+ 
  FOLNK=FORCELINK:
- When linking of directories should be possible, this option is needed. See
- section "About links" for possible problems.
-
+ Когда требуется создание ссылок на директории, необходима эта опция. См. 
+ раздел "О ссылках" с описаниями возможных проблем.
+ 
  FODEL=FORCEDELETE:
- When this option is enabled, files are deleted also, when they are delete
- protected.
-
+ Если эта опция включена, файлы удаляются и тогда, когда они защищены.
+ 
  FOOVR=FORCEOVERWRITE:
- When this option is enabled, files are overwritten also, when they are
- protected.
-
+ Если эта опция включена, файлы перезаписываются и тогда, когда они защищены.
+ 
  DONTOVR=DONTOVERWRITE:
- This option prevents overwriting of destination files.
-
+ Эта опция позволяет избежать перезаписи конечных файлов.
+ 
 
 
 См. также
