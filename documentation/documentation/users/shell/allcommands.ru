@@ -5,8 +5,8 @@ AROS CLI commands
 :Authors:   Sergey Mineychev
 :Copyright: Copyright ä 1995-2006, The AROS Development Team
 :Version:   $Revision: 24430 $
-:Date:      $Date: 2006-01-09 04:01:22 +0500 (‡Ü‡Õ, 08 ‡Ã‡¿‡… 2006) $
-:Status:    Just copied all the commands in single list to make it downloadable.
+:Date:      $Date: 2006-09-01 04:01:22 +0500 (‡Ü‡Õ, 08 ‡Ã‡¿‡… 2006) $
+:Status:    Just copied all the commands in single list to make it downloadable
 
 .. Warning::
 
@@ -16,6 +16,7 @@ AROS CLI commands
 
 Introduction
 ============
+
 .. Include:: introduction.en
 
 ==============

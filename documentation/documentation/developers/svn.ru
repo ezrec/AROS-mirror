@@ -8,7 +8,7 @@
 :Date:      $Date$
 :Status:    Done.
 :Abstract: 
-    Субверсия (Subversion или, кратко, SVN) - это инструмент контроля версий 
+    Subversion (кратко, SVN) - это инструмент контроля версий 
     файлов, входящих в проект. SVN позволяет отслеживать и управлять 
     изменениями каждого отдельного файла: какие и когда были сделаны изменения, 
     кто их внес, каковы были цели (благодаря наличию лога), отменять ошибочные 
@@ -32,7 +32,7 @@
 то есть, локальную копию базы с изменниями с некоторого времени и изменениями, внесенными самим разработчиком, но ещё не переданными в базу на сервере. Если
 разработчик решает внести результат своей работы в "общий котёл", он  вносит 
 (commit) свои изменения на сервер с помощью клиентской программы SVN, которая берет на себя заботы по загрузке данных на сервер и объединению их с изменениями от других разработчиков.
-в разработке...
+
 
 Программное обеспечение
 =======================
@@ -60,7 +60,7 @@ __ http://main.aminet.net/
 Windows
 -------
 
-При работе в Microsoft Windows (TM) можно рекомендовать SVN-клиент TortoiseSVN__, который особенно понравится тем, кто привык работать с Проводником. Программа переведена на русский и содержит довольно подробную документацию (пока не русскую). Отправляя ваши файлы, проверьте, установлено ли свойство eol-style: native, если нет - все ваши файлы должны иметь концы строк в стандарте UNIX (только LF), если да - это не имеет значения. Концы строк UNIX также должны быть во всех ваших новых файлах. Чтобы их получить, можно рекомендовать следующие бесплатные программы: редактор TigerPAD__ (сохранять как текст UNIX), DOS Navigator (в свойствах редактора проставить LF), утилиту dos2unix (конвертор).
+При работе в Microsoft Windows (TM) можно рекомендовать SVN-клиент TortoiseSVN__, который особенно понравится тем, кто привык работать с Проводником. Программа переведена на русский и содержит довольно подробную документацию (пока не русскую). Команды TortoiseSVN в целом, соответствуют своим аналогам в оригинальной SVN. Отправляя ваши файлы, проверьте, установлено ли свойство eol-style: native, если нет - все ваши файлы должны иметь концы строк в стандарте UNIX (только LF), если да - это не имеет значения. Концы строк UNIX также должны быть во всех ваших новых файлах. Чтобы их получить, можно рекомендовать следующие бесплатные программы: редактор TigerPAD__ (сохранять как текст UNIX), DOS Navigator (в свойствах редактора проставить LF), утилиту dos2unix (конвертор).
 
 __ http://tortoisesvn.sourceforge.net
 __ http://tigerpad.narod.ru
@@ -123,50 +123,43 @@ __ contribute#joining-the-team
 
 
 .. Warning:: 
-
-    Just because SVN successfully merged the other developers changes with your
-    doesn't mean everything is fine. SVN only cares about the *textual* content;
-    there could still be *logical* conflicts after the merge (eg. the other
-    developer might have changed the semantics of some function that you use in
-    your changes). You should always inspect files that were merged and see if
-    it still makes sense.
+    
+    Один лишь факт, что SVN успешно объединила изменения, внесенные остальными
+    в ваш код, отнюдь не значит, что всё в порядке. Заботой SVN является 
+    *текстовое* содержание, и после слияния могут оставаться *логические* 
+    конфликты (например, если кто-то изменил семантику использования функции,
+    которую вы применяете в своём коде). Следует всегда просматривать 
+    объединенные файлы и проверять, имеет ли смысл написанное в них.
 
 
 Внесение изменений
 ==================
 
-If you have made some changes and feel that you want to share your work with 
-the other developers, you should use the "commit" command::
+Если вы считаете, что внесенные вами изменения достойны того, чтобы поделиться
+ими с остальными, следует использовать команду "commit"::
 
     > svn commit
 
-You can specify a list of files to commit; otherwise SVN will recurse down from 
-the current directory and find all files you have changed and commit them. 
-Before sending your changes to the server for incorporation, SVN will ask you 
-to input a log message. This log message should contain a brief description of
-what you have changed and in certain cases a rationale for them. Well written 
-log messages are very important, since they make it much easier for the other 
-developers quickly can see what you have done and perhaps why. The log messages
-are collected and then sent in a daily mail to the development mailing list so
-everyone can keep up with developments to the code base.
 
-Before committing your changes in a directory, you should first do an update
-there to see if anyone else has changed the files in the meantime you've been
-working on them. In case that happens, you need to resolve any problems before
-committing. Also please make sure you have tested your changes before committing
-them; at least so that they do not break the build.
+Также можно задать список вносимых фалов, иначе SVN рекурсивно просматривает
+все подкаталоги текущего каталога, находит измененные вами файлы и вносит их.
+Перед посылкой файлов на сервер SVN запросит у вас комментарий для данной посылки. Обычно эти комментарии содержат краткое описание изменений, а иногда,
+и их объяснение. Хорошо написанные комментарии очень важны, поскольку они помогают остальным разработчикам видеть ваши изменения, и, возможно, понимать,
+зачем они внесены. Комментарии накапливаются и затем посылаются ежедневным дайджестом в список рассылки разработчиков (и SVN ml) с тем, чтобы все желающие были в курсе разработок, ведущихся в базе.
+
+Перед внесением ваших изменений в базу, следует сперва сделать обновление вашей локальной копии, чтобы проверить, изменялись ли те файлы, над которыми вы работали. Если файлы были изменены, перед внесением изменений следует разрешить 
+все конфликты. Также, убедитесь, что вы проверили ваши изменения перед внесением, по крайней мере, на предмет того, не нарушат ли они сборку системы.
+
 
 Добавление новых файлов и директорий
 ====================================
 
-To add new files and directories to the repository, use the "add" command::
+Для добавления новых файлов и директорий в репозиторий, используйте команду "add"::
 
     > svn add file.c
     > svn add dir
 
-SVN will not automatically recurse into newly added directories and add the 
-contents; you have to do that yourself. After having added the file, you need
-to use the "commit" command to actually add them to the repository. 
+SVN не станет автоматически заглядывать в новосозданные директории и добавлять их содержимое (в отличие, например, от TortoiseSVN), это следует сделать вручную. После добавления файла, следует использовать команду "commit" для их действительного добавления.
 
 
 Импорт
@@ -211,10 +204,9 @@ in the SVN manual is quite poorly written, so an example is in order:
 Дополнительная документация
 ===========================
 
-More detailed information about SVN can of course be found in the manual pages
-and info files distributed with SVN itself, and there are also numerous sites
-containing useful tutorials and guides which might be more easy to read.
-The following pages are highly recommended:
+Более подробная информация про SVN разумеетсяс, может быть найдена в страницах
+руководства (manual pages) и прочей документации, прилагающихся к самой SVN, а также есть несколько сайтов, содержащих полезные учебники и руководства, которые
+могут оказать проще для чтения. Очень рекомендуются следующие страницы:
 
 + `Version Control with Subversion`_
 + `Subversion Home`_

@@ -2,14 +2,16 @@
 Frequently Asked Questions
 ==========================
 
-:Authors:   Aaron Digulla, Adam Chodorowski
-:Copyright: Copyright © 1995-2004, The AROS Development Team
+:Authors:   Aaron Digulla, Adam Chodorowski, Sergey Mineychev, AROS-Exec.org
+:Copyright: Copyright Š 1995-2004, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
 
 .. Contents::
 
+Common questions
+================
 
 What is AROS all about? 
 -----------------------
@@ -361,4 +363,14 @@ developer-friendly) object-oriented shareware GUI toolkit and de-facto
 standard on AmigaOS. Zune is the preferred GUI toolkit to develop
 native AROS applications. As for the name itself, it means nothing,
 but sounds good.
+
+Software questions
+==================
+
+To be filled soon.
+
+Hardware questions
+==================
+
+To be filled soon.
 

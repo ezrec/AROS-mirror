@@ -6,6 +6,7 @@
 
 `¬ведение <introduction>`_
 
+`All_commands`__
 `AddBuffers`__
 `Alias`__
 `Ask`__
@@ -69,6 +70,7 @@
 `Which`__
 `Why`__
 
+__ allcommands
 __ addbuffers
 __ alias
 __ ask
