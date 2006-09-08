@@ -27,43 +27,43 @@ i386-pc и i386-linux (позже упоминаемых, как "об€зательные порты"). ¬се прочие п
 
 “ребовани€
 ----------
-
-1.  AmigaOS 3.1 API compatibility, excluding parts which are deemed to be
-    non-portable or obsolete and not worth the effort. 
+1.  —овместимость с AmigaOS 3.1 API, за исключением частей, сочтенных не     
+    переносимыми или устаревшими, либо не сто€щих прилагаемых усилий.
     
-    To mark something as obsolete even though it is possible to implement in a
-    portable way should require good reasons; for example if it is very rarely
-    used by applications and the effort required to implement it is
-    substantial.
-
-    Details to follow...
-
-
-2.  Partial AmigaOS 3.5 and 3.9 API compatibility. We choose the parts that 
-    we feel are useful and worthwhile to have, and ditch the rest. 
+    „тобы счесть что-либо устаревшим, даже несмотр€ на возможность внедрени€ в
+    рамках портируемости, необходимы достаточно веские основани€; например, 
+    если эта возможность крайне редко используетс€ приложени€ми и дл€ еЄ 
+    внедрени€ потребуютс€ значительные усили€.
     
-    For example, it seems *very* unlikely that we want ReAction compatibility
-    since we have already chosen to standardize on Zune for the GUI toolkit
-    (and implementing the ReAction API is not a trivial undertaking). Of
-    course, this will have to be discussed properly before a detailed list is
-    agreed upon.
+    ƒальнейшие подробности...
+
+
+2.  „астична€ совместимость с AmigaOS 3.5 и 3.9 API. ћы должны выбрать части, 
+    которые сочтЄм полезными и сто€щими внедрени€, отбросив остальное.
     
-    Details to follow...    
-
-
-3.  Completed GUI toolkit. This means Zune must have complete MUI API
-    compatability and a finished preferences program.
+    Ќапример, *весьма* вр€д ли нам нужна совместимость с ReAction, поскольку мы 
+    уже выбрали Zune в качестве стандарта дл€ разработки GUI ( к тому же, 
+    внедрение ReAction API €вл€етс€ весьма нетривиальной задачей). –азумеетс€,
+    все предложени€ должны быть основательно рассмотрены прежде чем утверждЄн 
+    их окончательный список.
     
-    Details to follow...
+    ƒальнейшие подробности...
 
 
-4.  Standard applications comparable to those which come with AmigaOS 3.1.
+3.  √отовый инструментарий разработки GUI. —ледовательно, Zune должна иметь 
+    полную совместимость с MUI API и законченную программу редактировани€ 
+    настроек.
     
-    This does *not* mean that we have to have the exact same applications which
-    work exactly the same as in AmigaOS, but the functionality available to the
-    user should be roughly equivalent.
+    ƒальнейшие подробности...
 
-    Details to follow...
+
+4.  —тандартные приложени€, сравнимые с аналогами, идущими с AmigaOS 3.1.
+
+    Ёто *не* означает, что у нас должны быть приложени€, работающие в точности 
+    так же, как и их аналоги в AmigaOS, но доступные пользователю функции должны
+    быть примерно эквивалентны.
+    
+    ƒальнейшие подробности...
 
     
 5.  Sound support, meaning API compatibility and basic applications. There 
