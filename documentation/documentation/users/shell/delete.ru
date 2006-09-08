@@ -32,28 +32,27 @@ Delete
 ~~~~~~~
 ::
 
-
- Deletes files and directories. You may delete several files and directories
- by listing them separately or by using wildcards. To abort a multiple
- delete, press CTRL-C. Delete will notify the user of which files it
- weren't able to delete.
-     Delete cannot delete directories which are not empty unless the
- ALL option is used. To suppresss file and directory names from being
- printed while deleted use the QUIET option. If the 'd' protection bit
- is cleared for a file or directory, it may not be deleted unless the
- FORCE option is used.
-
+ 
+ Удаляет файлы и директории. Можно удалить несколько файлов и директорий, 
+ перечислив их отдельно, или с помощью использования обобщений(wildcards). 
+ Для остановки множественного удаления нажмите press CTRL-C. Delete уведомляет
+ пользователя о файлах, которые не сможет удалить. 
+      Delete не сможет удалить не пустые директории, пока не используется опция 
+ ALL. Для того, чтобы избежать вывода имен файлов и директорий, используется
+ опция QUIET. Если у файла или директории защитный атрибут 'd' убран, они не 
+ будут удалены, пока не используется опция FORCE.
+      
 
 Ввод
 ~~~~
 ::
 
 
- FILE/M/A  --  files or directories to delete (may contain patterns)
- ALL/S     --  recursively delete dirctories
- QUIET/S   --  don't print which files/directories were deleted
- FORCE/S   --  delete files/directories even if they are protected from
-               deletion
+ FILE/M/A  --  удаляемые файлы или директории (могут использоваться маски
+               (patterns)
+ ALL/S     --  удалять каталоги рекурсивно
+ QUIET/S   --  не печатать, какие файлы/директории удаляются
+ FORCE/S   --  удалять даже защищенные от удаления файлы/директории
 
 
 Примеры
@@ -62,9 +61,6 @@ Delete
 
 
  Delete RAM:T/#? ALL FORCE
-
- Deletes all directories and files recursively in the directory RAM:T
- even if they are protected from deletion.
-
-
-
+ 
+ Рекурсивно удаляет все директории и файлы в директории RAM:T, даже если они
+ защищены от удаления.

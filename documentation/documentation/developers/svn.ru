@@ -165,37 +165,35 @@ SVN не станет автоматически заглядывать в новосозданные директории и добавлять и
 Импорт
 ======
 
-When you want to add a larger collection of files, eg. the source code of some
-existing software, "svn add" quickly becomes tiresome. For this you should use 
-the "svn import" command. Unfortunately, the section about the import command 
-in the SVN manual is quite poorly written, so an example is in order:
+Если необходимо добавить большое количество файлов, такие, как исходный код
+уже имеющейся программы, команды "svn add" быстро становятся утомляющими. В таких случаях следует использовать команду "svn import". К сожалению, раздел руководства по SVN, посвященный этой команде, написан из рук вон плохо, так что следует привести некоторые примеры:
 
-1. Put the files and directories you want to import wherever you like, as long
-   as it is **not** inside your working copy. Running the "import" command on
-   a directory situated inside an existing SVN working copy can lead to very
-   strange results, so it's best to avoid that.
+1. Добавьте файлы и директории, подлежащие импорту в любое удобное место, но 
+   только **не пределах** вашей рабочей копии. Запуск команды "import" для 
+   директории, расположенной в пределах рабочей копии, может привести к весьма 
+   странным результатам, поэтому, этого лучше избегать.
 
-2. Change to the directory containing the files you wish to import::
+2. Смените текущую директорию на директорию с файлами для импорта::
 
        > cd name-1.2.3
 
-3. Import the files with the "svn import" command::
+3. Импортируйте файлы командой "svn import"::
 
-       > svn import -m <logMessage> <destinationPath>
-
-   This will recursively import all files from the current directory and below
-   into the repository, into the destination path and with the log message 
-   you've specified. Actually, not *all* files will be added: SVN will ignore
-   filenames that are common for backup and hidden files, like ``#?.bak``,
-   ``.#?`` and ``#?~``.
-
-   Nontheless, you should remove all files which you don't want to end up
-   in the repository before you start the import. Don't try to interrupt
-   SVN during the import when you see a file being added that you don't want,
-   though. Just make a note and then delete the file afterwards.
+       > svn import -m <комментарий> <путь назначения>
    
-   For example, say that you wanted to import the SVN 1.1.3 sources into 
-   the "contrib/development/versioning/svn" directory::
+   При этом все файлы будут рекурсивно импортированы в репозиторий из текущей 
+   директории и ниже, по указанному пути и с заданным комментарием. На самом 
+   деле, будут добавлены не *все* файлы: SVN игнорирует имена файлов, 
+   характерные для резервных и скрытых файлов, такие как ``#?.bak``, ``.#?`` 
+   и ``#?~``.
+   
+   Несмотря на это, все файлы, которые не должны попасть в репозиторий, должны 
+   быть удалены перед импортом. Не пытайтесь остановить SVN в процессе импорта, 
+   если будет добавлен какой-то лишний файл. Лучше зделайте себе заметку, и 
+   удалите его сразу после окончания импорта.
+   
+   Например, если нужно импортировать исходники SVN 1.1.3 в директорию 
+   "contrib/development/versioning/svn"::
 
       > cd subversion-1.1.3
       > svn import -m "Initial import of SVN 1.11.12" 

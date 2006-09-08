@@ -16,18 +16,18 @@ home:             Начало
 news:             Новости
 archive:          Архив
 introduction:     Введение
-status:           Состояние
+status:           Текущее состояние
 screenshots:      Снимки экрана
 ports:            Порты
 license:          Лицензия
 download:         Загрузка (Download)
 documentation:    Документация
-users:            Пользователям
+users:            Пользователи
 installation:     Установка
 using:            Использование
 shell:            Команды CLI-shell
 faq:              ЧАВО(FAQ)
-developers:       Разработчикам
+developers:       Разработчики
 contribute:       Участие
 bug-tracker:      Поймал багу!
 working-with-subversion: Работа с Subversion
