@@ -23,7 +23,7 @@
 
 .. raw:: html
 
-   <?php virtual( "/cgi-bin/files?snapshots" ); ?>
+   <?php virtual( "/cgi-bin/files?type=snapshots&lang=ru" ); ?>
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
@@ -41,7 +41,7 @@ __ http://aros-exec.org/
 
 .. raw:: html
 
-   <?php virtual( "/cgi-bin/files?nightly" ); ?>
+   <?php virtual( "/cgi-bin/files?type=nightly&lang=ru" ); ?>
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/

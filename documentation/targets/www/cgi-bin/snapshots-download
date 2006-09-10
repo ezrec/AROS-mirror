@@ -7,14 +7,14 @@ try:
     ip    = os.environ['REMOTE_ADDR']
     date = '%d.%02d.%02d'   % time.localtime( time.time() )[0:3]
     time = '%02d:%02d:%02d' % time.localtime( time.time() )[3:6]
-#    file = open( 'logs/nightly', 'ar+')
+#    file = open( 'logs/snapshots', 'ar+')
 #    file.write( '[' + date + '][' + time + '][' + ip + '] ' + query + '\n' )
 #    file.close()
 except Exception, error:
     print 'Content-type: text/html\n\n'
     print 'Fatal Error:', error
 else:
-    print 'Location: http://aros.sourceforge.net/downloads/nightly/' + query + '\n\n'
+    print 'Location: http://aros.sourceforge.net/downloads/snapshots/' + query + '\n\n'
 
 
 

@@ -226,11 +226,6 @@ def makeNews():
 # Converts a source file into an HTML string.
 
 def convertWWW( src, language, options=None ):
-    if language == 'en':
-        suffix = 'php'
-    else:
-        suffix = language + '.php'
-
     if language == 'pl':
         encoding = 'iso-8859-2'
     elif language == 'ru':
@@ -243,7 +238,7 @@ def convertWWW( src, language, options=None ):
         '--no-source-link', '--no-datestamp',
         '--input-encoding=' + encoding,
         '--output-encoding=' + encoding,
-        '--target-suffix=' + suffix,
+        '--target-suffix=' + 'php',
         src, '' ]
 
     if options:
@@ -279,8 +274,10 @@ def processWWW( src, depth ):
     for lang in LANGUAGES:
         if lang == 'en':
             dst = prefix + '.php'
+            dst_depth = depth
         else:
-            dst = prefix + '.' + lang + '.php'
+            dst = lang + '/' + prefix + '.php'
+            dst_depth = depth + 1
         src = altLang( prefix + '.en', lang )
         dst_abs = os.path.normpath( os.path.join( DSTROOT, dst ) )
         src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
@@ -291,8 +288,8 @@ def processWWW( src, depth ):
         if newer( [ TEMPLATE + suffix, src_abs ], dst_abs ):
             reportBuilding( dst )
             strings = {
-                'ROOT'    : '../' * depth,
-                'BASE'    : '../' * depth,
+                'ROOT'    : '../' * dst_depth,
+                'BASE'    : '../' * dst_depth,
                 'CONTENT' : convertWWW( src_abs, lang )
             }
             file( dst_abs, 'w').write( TEMPLATE_DATA[lang] % strings )
@@ -463,8 +460,13 @@ def buildWWW():
 
     dbpath = os.path.join( DSTROOT, 'db' )
     makedir( dbpath )
-
     copy( 'db/quotes', dbpath )
+
+    makedir( os.path.join( dbpath, 'download-descriptions' ) )
+    for lang in LANGUAGES:
+        desc_file = os.path.join( 'db/download-descriptions', lang )
+        if os.path.exists( desc_file ):
+            copy( desc_file, os.path.join( dbpath, 'download-descriptions' ) )
 
     toolpath = os.path.join( DSTROOT, 'tools' )
     makedir( toolpath )

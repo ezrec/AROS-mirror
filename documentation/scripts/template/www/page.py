@@ -14,12 +14,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         Tree \
         ( [
             A( 'English', href='%(BASE)s/' ),
-            A( 'Deutsch', href='%(BASE)sindex.de.php' ),
-            A( 'Italiano', href='%(BASE)sindex.it.php' ),            
-            A( 'Polski', href='%(BASE)sindex.pl.php' ),
-            A( 'Suomi', href='%(BASE)sindex.fi.php' ),
-            A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sindex.ru.php' )
-            #A( 'Русский', href='%(BASE)sindex.ru.php' )
+            A( 'Deutsch', href='%(BASE)sde/' ),
+            A( 'Italiano', href='%(BASE)sit/' ),            
+            A( 'Polski', href='%(BASE)spl/' ),
+            A( 'Suomi', href='%(BASE)sfi/' ),
+            A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sru/' )
         ] ),
         BR(),
         A( _N['news'], href=makeURL( 'news/', lang ) ),
@@ -353,22 +352,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
 
 def makeURL( file, lang, section='' ):
 
-    # If the target doesn't exist, default to the English version
-    #srcFile = './' + file
-    #if srcFile[-1] == '/':
-    #    srcFile += 'index'
-    #srcFile += '.' + lang
-    #if not os.path.exists( srcFile ):
-    #    lang = 'en'
-
     # Create the URL
+    if lang != 'en':
+        file = lang + '/' + file
     url = '%(BASE)s' + file
-    if file[-1] == '/':
-        if lang != 'en':
-            url += 'index.' + lang + '.php'
-    else:
-        if lang != 'en':
-            url += '.' + lang
+    if file[-1] != '/':
         url += '.php'
 
     # Add the section, if any

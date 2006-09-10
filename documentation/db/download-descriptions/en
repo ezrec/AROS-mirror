@@ -1,0 +1,47 @@
+[descriptions]
+
+ChangeLog-AROS:
+    ChangeLog for the AROS core sources.
+ChangeLog-contrib:
+    ChangeLog for the contributed programs' sources.
+ChangeLog-docs:
+    ChangeLog for the documentation.
+source:
+    Core AROS sources.
+docs-source:
+    Documentation sources.
+contrib-source:
+    Contributed programs' sources.
+docs-html:
+    Documentation in HTML format. Contains everything available
+    on the website, but adapted for offline reading.
+i386-freebsd5-system:
+    The hosted version for FreeBSD/i386 5.x. Note that it
+    will not work on FreeBSD 4.x systems.
+i386-freebsd-system:
+    The hosted version for FreeBSD/i386 5.x. Note that it
+    will not work on FreeBSD 4.x systems.
+i386-linux-system:
+    The hosted version for Linux/i386. This is the most
+    complete and mature port, which means that you can run
+    all included programs and demos with it. This archive
+    contains all AROS system binaries compiled from the CVS
+    tree.
+i386-pc-boot-floppy:
+    The native version for i386-based PC AT computers and
+    compatibles. This archive contains the boot
+    disk floppy image which you can quickly write to a disk
+    and boot AROS with.
+i386-pc-boot-iso:
+    The native version for i386-based PC AT computers and
+    compatibles. This is the bootable CDROM ISO image, which
+    contains all AROS system and contributed programs.
+i386-all-contrib:
+    This archive contains all the contributed programs
+    compiled for the i386 architecture. They will work in
+    both the appropriate hosted (eg. i386-linux) and native
+    (i386-pc) version.
+i386-all-sdk:
+    Set of files and tools to build your own AROS programs
+    on your preferred machine. You'll need also gcc and the
+    binutils configured to produce i386-elf executables.

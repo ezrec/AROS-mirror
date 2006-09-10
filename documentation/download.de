@@ -24,7 +24,7 @@ Melde bitte Fehler, die Du beim Benutzen der 'Snapshots' entdeckst, an den
 
 .. raw:: html
 
-   <?php virtual( "/cgi-bin/files?snapshots" ); ?>
+   <?php virtual( "/cgi-bin/files?type=snapshots&lang=de" ); ?>
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
@@ -43,7 +43,7 @@ Melde bitte Fehler, die Du beim Benutzen der 'Nightly Builds' entdeckst, an den
 
 .. raw:: html
 
-   <?php virtual( "/cgi-bin/files?nightly" ); ?>
+   <?php virtual( "/cgi-bin/files?type=nightly&lang=de" ); ?>
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/

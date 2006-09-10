@@ -1,0 +1,214 @@
+#!/usr/bin/python
+
+import os, os.path, re, glob, stat, string, cgi
+from color import *
+from ConfigParser import ConfigParser
+
+DESCRIPTIONS_DIR = '../htdocs/db/download-descriptions'
+
+print '''Content-Type: text/html\n\n'''
+
+## Parse arguments ###########################################################
+
+args = cgi.FieldStorage()
+
+if args.has_key( 'type' ):
+    dltype = args['type'].value
+else:
+    dltype = 'nightly'
+
+if args.has_key( 'lang' ):
+    language = args['lang'].value
+else:
+    language = 'en'
+
+## Configuration #############################################################
+## Colors
+#
+
+if dltype == "nightly":
+    colorTH      = Color( 0xFF, 0xE0, 0xA0 )  # Table headers
+elif dltype == "snapshots":
+    colorTH      = Color( 0xA0, 0xE0, 0xFF )  # Table headers
+
+colorBG      = Color( 0xEE, 0xEE, 0xEE )  # Background of page
+colorTD      = colorBG                    # Table cells
+colorFileDL  = Color( 0x99, 0xDD, 0x99 )  # File download available cell
+colorFileNA  = Color( 0xDC, 0x99, 0x99 )  # File download not available cell
+colorFrame   = Color( 0x00, 0x00, 0x00 )  # Table separator lines
+colorGhosted = Color( 0x99, 0x77, 0x77 )  # File download not available text
+
+## Package descriptions
+#
+descriptions = ConfigParser()
+if not os.path.exists( os.path.join( DESCRIPTIONS_DIR, language ) ):
+    language = 'en'
+descriptions.read( os.path.join( DESCRIPTIONS_DIR, language ) )
+
+root  = '../htdocs/downloads/' + dltype
+
+## Functions #################################################################
+
+def formatSize( size ):
+    size  = float( size )
+    units = ( 'B', 'kB', 'MB', 'GB' )
+
+    for unit in units:
+        if size <= 1000:
+           return '%.2f %s' % (size, unit )
+        else:
+	   size = size / 1000
+
+## Process files #############################################################
+
+oldcwd = os.getcwd()
+os.chdir( root )
+dates = glob.glob( '[0-9]*' )
+dates.sort()
+dates.reverse()
+os.chdir( oldcwd )
+
+groups = {}
+
+for date in dates:
+    for group in os.listdir( os.path.join( root, date ) ):
+        # Is this file a directory? If it is, then it means
+	# This file's name is the name of a group, except if it's named
+	# "logs", in which case we don't consider it.
+        if group != 'logs' and stat.S_ISDIR( os.stat( os.path.join( root, date, group ) )[0] ):
+            if not groups.has_key( group ):
+	        groups[group] = {}
+
+	    for package in os.listdir( os.path.join( root, date, group ) ):
+                # Skip MD5 checksum files.
+                if package[-4:] == '.md5': continue
+
+                if package[-4:] == '.php':
+		    package = package[14:][:-4]
+                elif package[-8:] == '.tar.bz2':
+	            # Remove the 'AROS-YYYYMMDD-' prefix and '.tar.bz2' suffix.
+                    package = package[14:][:-8]
+                elif package[-4:] == '.zip':
+	            # Remove the 'AROS-YYYYMMDD-' prefix and '.zip' suffix.
+                    package = package[14:][:-4]
+                else:
+                    continue
+
+
+		if not groups[group].has_key( package ):
+		    groups[group][package] = []
+
+		groups[group][package].append( date )
+
+## Output HTML ###############################################################
+
+span = len( dates )
+
+print '''
+    <p><table class="layout" border="0" cellpadding="2" cellspacing="1" bgcolor="%(colorFrame)s">
+        <tr class="layout" bgcolor="%(colorTH)s">
+            <td class="layout" width="35%%" rowspan="2"><b>Package</b></td>
+            <td class="layout" align="center" colspan="%(span)d"><b>Date</b></td>
+        </tr>
+        <tr class="layout" bgcolor="%(colorTH)s">
+''' % vars()
+
+column = span
+for date in dates:
+    color = Color.blend( colorFileDL, colorBG, span, column )
+    year  = date[:4]
+    month = date[4:6]
+    day   = date[6:8]
+
+    if dltype == "nightly":
+        print '''
+                    <td class="layout" align="center" bgcolor="%(color)s">
+                        <b>%(year)s-%(month)s-%(day)s</b><br>
+                        [<a href="http://aros.sourceforge.net/downloads/nightly/%(date)s/logs">build logs</a>]
+                    </td>
+        ''' % vars()
+    elif dltype == "snapshots":
+        print '''
+                    <td class="layout" align="center" bgcolor="%(color)s">
+                        <b>%(year)s-%(month)s-%(day)s</b>
+                    </td>
+        ''' % vars()
+
+    column = column - 1
+
+print '''         </tr>'''
+
+for group in groups.keys():
+    groupSpan    = span + 1
+    group_spaced = string.replace(group, '_', ' ')
+
+    print '''
+            <tr class="layout" bgcolor="%(colorTH)s">
+                <td class="layout" align="left" colspan="%(groupSpan)s"><b>%(group_spaced)s</b></td>
+            </tr>    ''' % vars()
+
+    for package in groups[group].keys():
+        description = descriptions.get( 'descriptions', package, '' )
+
+        print '''
+                <tr class="layout" valign="middle" bgcolor="%(colorTD)s">
+                    <td class="layout" valign="top">
+                        <p><i>%(package)s</i></p>
+                        <p><font size="-1">%(description)s</font></p>
+                    </td>
+        ''' % vars()
+
+        column = span
+
+        for date in dates:
+            if date in groups[group][package]:
+                colorBlended = Color.blend( colorFileDL, colorBG, span, column )
+            else:
+                colorBlended = Color.blend( colorFileNA, colorBG, span, column )
+
+            print '''
+                        <td class="layout" align="center" bgcolor="%(colorBlended)s">
+            ''' % vars()
+
+            if date in groups[group][package]:
+                file = 'AROS-' + date + '-' + package
+		path = os.path.join( root, date, group, file )
+                
+		if os.access(path + '.tar.bz2', os.F_OK):
+		    path = path + '.tar.bz2'
+		    file = file + '.tar.bz2'
+		elif os.access(path + '.zip', os.F_OK):
+		    path = path + '.zip'
+		    file = file + '.zip'
+		else:
+		    path = path + '.php'
+		    file = file + '.php'
+		
+		if dltype == "nightly":
+		    url  = 'http://aros.sourceforge.net/cgi-bin/%s-download?%s/%s/%s' % (dltype, date, group, file)
+		else:
+		    url  = 'http://prdownloads.sourceforge.net/aros/%s?download' % (file)
+                size = formatSize( os.path.getsize( path ) )
+                print '''
+                <table class="layout" border="0" cellspacing="0" cellpadding="0">
+                <tr class="layout">
+                 <td class="layout" rowspan="2"><a href="%(url)s"><img border="0" src="images/disk.png"></a></td>
+                 <td class="layout"><a href="%(url)s">Download</a>&nbsp;</td>
+                </tr>
+                <tr class="layout">
+                 <td class="layout">%(size)s</td></tr>
+                </tr></table>
+                ''' % vars()
+            else:
+                print '''
+                <font color="%(colorGhosted)s">not available</font>
+                ''' % vars()
+            print '''</td>'''
+
+            column = column - 1
+
+        print '''        </tr>'''
+
+print '''
+    </table></p>
+'''
