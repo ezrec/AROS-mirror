@@ -1,0 +1,69 @@
+[headings]
+
+package: Pacchetto
+documentation: Documentazione
+sources: Sorgenti
+binaries: Binari
+development-tools: Strumenti di sviluppo
+Date
+
+[links]
+
+build-logs: build log
+download: Download
+
+[units]
+
+byte-unit: B
+kilobyte-unit: kB
+megabyte-unit: MB
+gigabyte-unit: GB
+decimal-point: ,
+
+[descriptions]
+
+ChangeLog-AROS:
+    Modifiche ai sorgenti principali di AROS.
+ChangeLog-contrib:
+    Modifiche ai programmi scritti da terzi (contrib).
+ChangeLog-docs:
+    Modifiche alla documentazione.
+source:
+    Sorgenti principali di AROS.
+docs-source:
+    Sorgenti della documentazione.
+contrib-source:
+    Sorgenti dei programmi scritti da terzi.
+docs-html:
+    Documentazione in HTML. Contiene tutto quello che c'è
+    scritto nel sito, ma adattato per la lettura offline.
+i386-freebsd5-system:
+    Versione hosted per FreeBSD/i386 5.x. Non funziona
+    su sistemi FreeBSD 4.x.
+i386-freebsd-system:
+    Versione hosted per FreeBSD/i386 5.x. Non funziona
+    su sistemi FreeBSD 4.x.
+i386-linux-system:
+    La versione hosted per Linux/i386. È la versione
+    più matura e completa, quindi potrete eseguire su di
+    essa tutti i programmi inclusi. Questo archivio
+    contiene tutti i file di sistema compilati
+    dall'albero di SVN.
+i386-pc-boot-floppy:
+    La versione nativa per PC con processori i386 e
+    compatibili. Questo archivio contiene l'immagine
+    del floppy di avvio, con cui potrete realizzare un
+    disco per caricare AROS.
+i386-pc-boot-iso:
+    La versione nativa per PC con processori i386 e
+    compatibili. Questo archivio contiene l'immagine
+    di un CDROM di avvio, senza software aggiuntivo.
+i386-all-contrib:
+    Questo archivio contiene tutto il software scritto da
+    terzi e compilato per architettura i386. funziona
+    su entrambe le versioni appropriate (es. i386-linux, 
+    i386-pc), siano essere hosted o native.
+i386-all-sdk:
+    Set di strumenti per compilare i vostri programmi per
+    AROS, sulla macchina che preferite. Avrete bisogno di gcc
+    e di binutils configurati per produrre eseguibili i386-elf.
