@@ -3,8 +3,8 @@
 =======
 :Authors:   Mineychev Sergey
 :Copyright: Copyright ä 2006, The AROS Development Team
-:Version:   $Revision: 23374 $
-:Date:      $Date: 2006-09-07 13:41:00 +0500 (‡Ü·ô, 17 ‡»·≠‡Õ 2005) $
+:Version:   $Revision$
+:Date:      $Date$
 
 .. Warning::
 

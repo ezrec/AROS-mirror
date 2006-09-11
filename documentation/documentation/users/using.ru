@@ -4,8 +4,8 @@
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski 
 :Copyright: Copyright ä 1995-2006, The AROS Development Team
-:Version:   $Revision: 24430 $
-:Date:      $Date: 2006-05-08 04:01:22 +0500 (‡Ü‡Õ, 08 ‡Ã‡¿‡… 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Unfinished; only converted to reST. Needs heavy updating.
 
 .. Warning::

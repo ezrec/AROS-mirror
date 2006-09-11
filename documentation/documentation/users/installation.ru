@@ -4,8 +4,8 @@
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey
 :Copyright: Copyright К 1995-2004, The AROS Development Team
-:Version:   $Revision: 24430 $
-:Date:      $Date: 2006-05-08 04:01:22 +0500 (аЖаЌ, 08 аћаја… 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done. 
 :Abstract:
     ƒанное руководство посв€тит вас в необходимые шаги дл€ установки AROS.

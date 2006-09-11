@@ -4,8 +4,8 @@
 
 :Authors:   Adam Chodorowski
 :Copyright: Copyright ä 2003, The AROS Development Team
-:Version:   $Revision: 22461 $
-:Date:      $Date: 2004-10-18 03:05:43 +0500 (‡Ü‡Õ, 18 ‡Œ‡ ·ô 2004) $
+:Version:   $Revision$
+:Date:      $Date$
 
 :Abstract:  
     
