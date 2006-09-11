@@ -138,10 +138,10 @@ Tryb gadatliwy, dodatkowe informacje o kopiowaniu s± podawane.
 
 ERRWARN:
 COPY rozpoznaje trzy rodzaje kodów b³êdu:
-5   WARN	Ostrze¿enie, komenda pomija plik i kontynuuje kopiowanie.
-10  ERROR	B³±d, tworzenie obiektu siê nie powiod³o.
-20  FAIL	Powa¿ny b³±d, brak pamiêci, uszkodzenie systemu, komenda 
-		przerywa swoje dzia³anie.
+5   WARN    Ostrze¿enie, komenda pomija plik i kontynuuje kopiowanie.
+10  ERROR   B³±d, tworzenie obiektu siê nie powiod³o.
+20  FAIL    Powa¿ny b³±d, brak pamiêci, uszkodzenie systemu, komenda
+            przerywa swoje dzia³anie.
 
 Gdy opcja ERRWARN jest u¿ywana, wtedy Ostrze¿enie (WARN) otrzymuje stopieñ B³êdu
 (ERROR). Wiêc dzia³anie w ka¿dym z tych przypadków jest zakañczane.
@@ -167,8 +167,8 @@ Podczas kopiowania katalogów, po³±czenie miêkkie jest tworzone. Te linki mog±
 byæ u¿ywane tak¿e pomiêdzy dwoma ró¿nymi dyskami. Miêkkie po³±czenia mog± byæ
 tworzone tylko dla katalogów, pliki s± pomijane. Opcja FORCELINK jest zawsze
 ustawiona jako prawda (true).
-OPIS:	Po³±czenia miêkkie nie s± wspierane przez system i mog± byæ
-		niebezpieczne. Sugerujê ich nie u¿ywaæ!
+OPIS:   Po³±czenia miêkkie nie s± wspierane przez system i mog± byæ
+        niebezpieczne. Sugerujê ich nie u¿ywaæ!
 
 FOLNK=FORCELINK:
 Gdy po³±czenie powinno byæ mo¿liwe, to ta opcja jest wymagana. Zobacz sekcjê

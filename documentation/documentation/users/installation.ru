@@ -154,7 +154,7 @@ boot is fully automatic, and if everything works you should see a nice
 screen after a little while. 
 
 If your computer does not support booting directly from CDROM you can create
-a boot floppy_ and use it together with the CDROM. Simply insert both the
+a boot Дискета_ and use it together with the CDROM. Simply insert both the
 boot floppy and the CD into their respective drives and reboot. AROS will start
 booting from the floppy, but after the most important things have been loaded
 (including the CDROM filesystem handler) it will continue booting from the
