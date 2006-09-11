@@ -3,13 +3,13 @@
 package: Пакет
 documentation: Документация
 sources: Исходники
-binaries: Binaries
-development-tools: Development Tools
+binaries: Исполняемые файлы
+development-tools: Средства разработки
 date: Дата
 
 [links]
 
-build-logs: build logs
+build-logs: Логи сборки
 download: Скачать
 
 [units]
