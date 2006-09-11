@@ -3,8 +3,8 @@ Sponsors
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
 :Copyright: Copyright � 1995-2002, The AROS Development Team
-:Version:   $Revision: 20691 $
-:Date:      $Date: 2004-01-21 18:21:00 +0400 (Ср, 21 янв 2004) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 

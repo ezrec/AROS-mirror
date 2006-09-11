@@ -4,12 +4,12 @@ Liens
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Matthias Rustler 
 :Copyright: Copyright � 1995-2006, The AROS Development Team
-:Version:   $Revision: 24530 $
-:Date:      $Date: 2006-06-12 21:48:04 +0500 (Пн, 12 июн 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 
-.. Contenu::
+.. Contents::
 
 
 Articles � propos d'AROS
@@ -136,4 +136,4 @@ __ http://www.aros.bbs.pl/
 __ http://www.frappr.com/arosusers
 __ http://amidevcpp.amiga-world.de/afa_binarie_upload.php
 
-.. _contact: contact
+.. _contactez-nous: contact

@@ -4,11 +4,11 @@ Ports
 
 :Authors:   Adam Chodorowski, Matthias Rustler 
 :Copyright: Copyright © 1995-2006, The AROS Development Team
-:Version:   $Revision: 24547 $
-:Date:      $Date: 2006-06-15 20:41:03 +0500 (Ð§Ñ‚, 15 Ð¸ÑŽÐ½ 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
-.. Contenu::
+.. Contents::
 
 
 Introduction
@@ -164,7 +164,7 @@ __ http://sourceforge.net/project/showfiles.php?group_id=43586&package_id=194077
 Notes
 =========
 
-.. [#] Oui, nous svons que Linux n'est qu'un noyau et pas un système d'exploitation
+.. [#] Oui, nous savons que Linux n'est qu'un noyau et pas un système d'exploitation
        complet, mais c'est plus facile que d'écrire "système d'exploitation basé
        sur le noyau de Linux, certains outils GNU communs et le système X windowing".
        Ce raccourci étant bien entendu inutile puisque ce détail a été explicité ici

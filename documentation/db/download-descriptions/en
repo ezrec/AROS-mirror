@@ -5,7 +5,7 @@ documentation: Documentation
 sources: Sources
 binaries: Binaries
 development-tools: Development Tools
-Date
+date: Date
 
 [links]
 
@@ -47,7 +47,7 @@ i386-linux-system:
     The hosted version for Linux/i386. This is the most
     complete and mature port, which means that you can run
     all included programs and demos with it. This archive
-    contains all AROS system binaries compiled from the CVS
+    contains all AROS system binaries compiled from the Subversion
     tree.
 i386-pc-boot-floppy:
     The native version for i386-based PC AT computers and
