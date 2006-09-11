@@ -1,0 +1,75 @@
+===========
+Mise à jour
+===========
+
+:Author:   Paolo Besser
+:Date:     2006-05-23
+
+AROS Internationnal
+-------------------
+
+Grace à Neil Cafferkey, Adam Chodorowski, Daniel Holmen and Paolo Besser, 
+aros.org a désormais ses parties Finlandaise et Italienne. Les traductions
+du site web sont désormais disponibles à cette nouvelle adresse:
+
+`aros.org Finois`__: www.aros.org/index.fi.php
+`aros.org Italien`__: www.aros.org/index.it.php 
+
+La traduction Finoise est presque complète, alors que l'italienne est toujours
+en cours de développement. Aros.org supporte également la traduction Allemande
+mais seulement quelques pages sont disponibles. Si vous souhaitez contribuer
+aux traductions de nos pages web... inscrivez-vous aux mailing lists de
+développement.
+
+__ http://www.aros.org/index.fi.php
+__ http://www.aros.org/index.it.php
+
+
+AROS artistique
+---------------
+
+Hogne "M0ns00n" Titlestad a fait parvenir Lunapaint v0.2 pour i386/AROS.
+L'application peut ouvrir et sauver des projets, créer des animations et
+exporter des images. Les problèmes de stabilité en finctionnant sous AROS hôte
+ont été résolus et Lunapaint fonctionne bien également en version native.
+Vous pouvez consulter les captures d'écran `ici`__ et lire une belle interview
+sur `The Aros Show`__. Téléchargez-le à partir des `Archives`__!
+
+__ http://aros-exec.org/modules/xcgal/thumbnails.php?album=23
+__ http://arosshow.blogspot.com/2006/04/this-is-interview-with-aros-developer.html
+__ http://archives.aros-exec.org/share/graphics/edit/lunapaint_v02.tar.bz2
+
+
+Autres news
+-----------
+
+Mathias Roslund a porté le célèbre émulateur en ligne de commande de
+Commodore 8-bit "VICE" sur toutes les plateformes Amiga, y compris AROS. Veuillez
+noter que la version AROS est encore très expérimentale. Vous pouvez le trouver
+`ici`__.
+
+Tomasz Wiszkowski a porté `FryingPan`__ et `CoFEE`__ à AROS. FryingPan 
+est un logiciel de gravure de CD/DVD, et CoFEE est un logiciel de copie de CD/DVD.
+Ils fonctionnent partiellement sous AROS, car il manque quelques commandes
+ATAPI et SCSI. Afin d'améliorer leurs implémentations, TeamAROS a lancé une 
+`nouvelle collecte`__.
+
+Randy Vice et Oliver Adams ont complètement renouvelé le site web de `TeamAROS`__
+avec plus de graphismes stylés, et avec un nouveau service: le don régulier
+(Bounty Subscriptions) "you can support TeamAROS by a monthly subscription of
+$5 USD or $10 USD and that gives you a vote on TeamAROS-Benefactors ML on which
+bounty deserves that month's cash donation. This is a painless method since PayPal
+will deduct the money automatically each month. Set and forget, can't be made much
+easier than that".
+
+Bernd Roesch et Georg Steger ont fixé des bugs et ajouté de nouvelles fonctions à Zune,
+tandis que d'autres développeurs d'AROS travaillent d'arrache pied sur les problèmes du
+système d'exploitation.
+
+__ http://www.amidog.com/amiga/vice/index.html
+__ http://www.tbs-software.com/fp/
+__ http://www.tbs-software.com/fp/files/060430/AROS.lha
+__ http://thenostromo.com/teamaros2/?number=38
+__ http://thenostromo.com/teamaros2/
+
+

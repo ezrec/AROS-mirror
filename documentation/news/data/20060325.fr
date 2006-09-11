@@ -1,0 +1,24 @@
+===========
+Mise à jour
+===========
+
+:Author:   Paolo Besser
+:Date:     2006-03-25
+
+Radeon hidd
+-----------
+
+Michal Schulz l'a fait: le jour que chaque fan d'ATI attendait est finalement
+arrivé! AROS a son pilote Radeon - pardon - hidd, il est dont à présent
+possible d'accéder directement aux cartes graphiques et abandonner les vieux
+modes VESA. Chaque possesseur de Radeon est encouragé à télécharger le dernier
+nightly build et à le tester.
+
+AROS-EXEC.org down
+------------------
+
+Suite à un changement d'adresse IP, le site web de notre communauté est
+temporairement inaccessible. Nous nous excusons pour cela. Le site web, le
+forum et les services seront de retour vers le 29 mars, plus puissant
+qu'auparavant.
+

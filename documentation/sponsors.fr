@@ -1,0 +1,67 @@
+Sponsors
+========
+
+:Authors:   Aaron Digulla, Adam Chodorowski 
+:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Version:   $Revision: 20691 $
+:Date:      $Date: 2004-01-21 18:21:00 +0400 (–°—Ä, 21 —è–Ω–≤ 2004) $
+:Status:    Done.
+
+
+Les compagines suivantes, organisations et individus ont contribuÈ:
+
++ Trustec__
+   
+  .. RAW:: html
+     
+     <a href="http://www.trustsec.de/"><img border="0" src="images/trustec.png"></a>
+    
+  Les personnes sympa de Trustec donnent l'espace et la bande passante nÈcessaire
+  au serveur d'AROS, au serveur CVS, au serveur FTP et aux nombreuses mailing lists.
+  Si vous avez besoin d'un dÈveloppement sous Java en Allemagne, contactez-les !
+
++ Genesi__
+
+  .. RAW:: html
+  
+     <a href="http://www.pegasosppc.com/"><img border="0" src="images/genesi.gif"></a>
+
+  Genesi a gÈnÈreusement donÈ une carte mËre PegasOS, dans un effort de fournir
+  AROS ‡ cette plateforme. Merci !
+
++ SourceForge__
+
+  .. RAW:: html
+  
+     <a href="http://www.sourceforge.net/"><img border="0" src="images/sourceforge.png"></a>
+
+  Sourceforge fournit plusieurs services tels qu'un serveur web avec des
+  extensions de scripts et des bases de donnÈes SQL, des mailing lists,
+  une base de donnÈe des bugs, et un system de distribution de fichiers.
+
++ Yann Vernier
++ Randal Vice
+
+
+Les organisations suivantes et individus ont sponsorisÈ le dÈveloppement:
+
++ `Team AROS`__
++ `Norsk Amigaforening`__
++ Timothy Rue
++ Jakob Eriksson
++ Serge Guillaume
++ David Ferguson
++ Nils-Erik Reklev Skilnand
++ Jonny Johansson
++ Johan Grip
++ Marcus Karlsson
++ Rune Jensen
++ Joshua Dolan
++ Matthew Parsons
++ Jean-Pierre RiviËre
+
+__ http://www.trustsec.de/
+__ http://www.pegasosppc.com/
+__ http://www.sourceforge.net/
+__ http://www.thenostromo.com/teamaros/
+__ http://www.naf.as/

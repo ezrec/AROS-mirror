@@ -1,0 +1,15 @@
+======
+Divers
+======
+
+:Author: Aaron Digulla
+:Date:   2000-01-26
+
+Nous sommes en train de travailler sur Intuition (bugfix, meilleure
+intégration, menus fonctionnels), les pilotes matériels pour AROS
+natif/x86 (vga.hidd et scsi.device/hidd), commodities, datatypes et
+AROS Natif/PPC.
+Surtout pour le dernier, nous avons besoin de personnes connaissant
+WarpUp et PowerUp. Mais aussi des personnes sachant écrire des pilotes
+pour un PC (principalement comment effectuer des Exec handle PCs' IRQs
+un pilote pour le IDE chipset).

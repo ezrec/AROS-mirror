@@ -1,0 +1,12 @@
+======
+Divers
+======
+
+:Author: Aaron Digulla
+:Date:   2000-01-24
+
+Des tests de vitesse ont montré que nous avons atteint 80% de la
+vitesse native du matériel (Quake atteint 60FPS en 320x200 avec
+Linux/x86 et 50FPS avec AROS sous Linux/x86). Ainsi, nos problèmes
+graphiques semblent résolu. Les liens et la section 'statut' ont
+été mis à jour.

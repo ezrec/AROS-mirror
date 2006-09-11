@@ -1,0 +1,29 @@
+===========
+Mise à jour
+===========
+
+:Author:   Paolo Besser
+:Date:     2006-06-20
+
+Grâce à Matthias Rustler, nous avons également un `German aros.org`__ situé 
+à www.aros.org/index.de.php. Cependant, vous n'avez pas à retenir les adresses
+de chaque page d'accueil: nous avons ajouté un joli menu internationnal à gauche
+Sélectionnez simplement votre langage préféré et bookmarquez le à votre aise.
+
+__ http://www.aros.org/index.de.php
+
+
+
+Nouveau PPC snapshot!
+---------------------
+
+Il y a un nouveau snapshot binaire pour la version hôte d'AROS-PPC! Allez au site
+web de Sourceforge et `téléchargez le`__! Voici les notes de cette version: 
+"Cette version dépend de glibc 2.3.2 où plus récent. Vous avez besoin de fournir
+à AROS plus de RAM que les 16MB par défault (laissez environ 4MB pour les applications).
+Vous pouvez l'utiliser en tapant: ./aros -m 64 Ceci permet d'allouer 64MB. Tout comme
+avec les version d'AROS sous X11, vous aurez besoin d'ajouter l'option "BackingStore"
+dans la section Device de xorg.conf"
+
+
+__ http://sourceforge.net/project/shownotes.php?group_id=43586&release_id=425583

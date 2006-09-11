@@ -1,0 +1,19 @@
+=============
+Référencement 
+=============
+
+:Author:    Adam Chodorowski
+:Copyright: Copyright © 2001, The AROS Development Team
+:Version:   $Revision: 15472 $
+:Date:      $Date: 2002-09-26 11:58:07 +0500 (Ğ§Ñ‚, 26 ÑĞµĞ½ 2002) $
+:Status:    Done.
+
+Une façon d'encourager le développement d'AROS que nous recommandons
+particulièrement est de référencer ce site web à partir du votre. Vous
+pouvez utiliser les jolies bannières suivantes, réalisées par Cyb0rg / Resistance:
+
+    .. Image:: images/aros-banner.gif
+
+Veuillez référencer directement http://www.aros.org/ et non les sites mirroirs
+qui peuvent changer au cours du temps. Pensez également à effectuer une copie
+locale de l'image de la bannière pour réduire l'utilisation de la bande passante.

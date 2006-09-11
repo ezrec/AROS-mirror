@@ -1,0 +1,13 @@
+======
+Divers
+======
+
+:Author: Aaron Digulla
+:Date:   2000-02-01
+
+AROS va devenir l'aile de développement de OAF (Open Amiga Foundation).
+OAF va maintenir les relations publiques et le contact avec Amiga,
+ils seront chargés de collecter et de compiler les informations et de nous
+tenir au courant sur les principaux évênements afin que nous puissions nous
+concentrer sur le développement. Ils s'occuperont également de la trésorerie
+ainsi que des problèmes légaux ce qui nous soulage véritablement.

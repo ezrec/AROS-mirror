@@ -1,0 +1,55 @@
+==============
+Téléchargement
+==============
+
+.. Contents::
+
+.. Note::
+
+   Lorsque vous téléchargez les nighty builds, vous devez utiliser un
+   logiciel de téléchargement qui perment de continuer un téléchargement
+   interrpomu ou un utilitaire de commande de ligne comme wget (vous
+   pouvez utiliser "wget -c" pour obtenir le reste du fichier partiellement
+   téléchargé par un autre programme).
+
+Snapshots
+=========
+
+Les Snapshots sont mis en ligne plus souvent que les versions complètes,
+mais moins souvent que les nighty builds. Contrairement aux bighty builds,
+ils sont testés birèvement sur quelques machines, et devraient donc être
+généralement plus stables. D'un autre côté elles ne contiennent pas le
+dernier code en date.
+
+Veuillez reporter les bugs que vous pouvez découvrir lors de l'utilisation
+des Snapshots via le `bug tracker`__. Pour toute autre chose, veuillez vous
+adresser aux forums `AROS-Exec`__.
+
+.. raw:: html
+
+   <?php virtual( "/cgi-bin/files?snapshots" ); ?>
+
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+__ http://aros-exec.org/
+
+
+Nightly builds
+==============
+
+Les nighty builds sont réalisés chaque nuit directement à partir du
+répertoire de Subversion et contient les dernier codes en date. Toutefois,
+ils n'ont pas été testé et peuvent être complètement non fonctionnels ou
+très buggés si vous êtes malchanceux. La plupart du temps, ils fonctionnent
+relativement bien.
+
+Veuillez reporter les bugs que vous pouvez découvrir lors de l'utilisation
+des Snapshots via le `bug tracker`__. Pour toute autre chose, veuillez vous
+adresser aux forums `AROS-Exec`__.
+
+.. raw:: html
+
+   <?php virtual( "/cgi-bin/files?nightly" ); ?>
+
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+__ http://aros-exec.org/
+
