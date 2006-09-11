@@ -1,0 +1,70 @@
+[headings]
+
+package: Package
+documentation: Документация
+sources: Исходники
+binaries: Binaries
+development-tools: Development Tools
+Date
+
+[links]
+
+build-logs: build logs
+download: Download
+
+[units]
+
+byte-unit: B
+kilobyte-unit: кБ
+megabyte-unit: МБ
+gigabyte-unit: Гб
+decimal-point: .
+
+[descriptions]
+
+ChangeLog-AROS:
+    ChangeLog for the AROS core sources.
+ChangeLog-contrib:
+    ChangeLog for the contributed programs' sources.
+ChangeLog-docs:
+    ChangeLog документации.
+source:
+    Core AROS sources.
+docs-source:
+    Исходники документации.
+contrib-source:
+    Contributed programs' sources.
+docs-html:
+    Документация в формате HTML. Содержит всё доступное содержимое
+    сайта (пока только англоязычное), но приспособленнное для
+    чтения в оффлайне.    
+i386-freebsd5-system:
+    The hosted version for FreeBSD/i386 5.x. Note that it
+    will not work on FreeBSD 4.x systems.
+i386-freebsd-system:
+    The hosted version for FreeBSD/i386 5.x. Note that it
+    will not work on FreeBSD 4.x systems.
+i386-linux-system:
+    The hosted version for Linux/i386. This is the most
+    complete and mature port, which means that you can run
+    all included programs and demos with it. This archive
+    contains all AROS system binaries compiled from the CVS
+    tree.
+i386-pc-boot-floppy:
+    The native version for i386-based PC AT computers and
+    compatibles. This archive contains the boot
+    disk floppy image which you can quickly write to a disk
+    and boot AROS with.
+i386-pc-boot-iso:
+    Native-версия для компьютеров на базе i386-PC AT и совместимых.
+    Это загрузочный образ CDROM ISO, содержащий систему AROS и
+    все дополнительные программы.
+i386-all-contrib:
+    This archive contains all the contributed programs
+    compiled for the i386 architecture. They will work in
+    both the appropriate hosted (eg. i386-linux) and native
+    (i386-pc) version.
+i386-all-sdk:
+    Set of files and tools to build your own AROS programs
+    on your preferred machine. You'll need also gcc and the
+    binutils configured to produce i386-elf executables.
