@@ -1,3 +1,25 @@
+[headings]
+
+package: Package
+documentation: Documentation
+sources: Sources
+binaries: Binaries
+development-tools: Development Tools
+Date
+
+[links]
+
+build-logs: build logs
+download: Download
+
+[units]
+
+byte-unit: B
+kilobyte-unit: kB
+megabyte-unit: MB
+gigabyte-unit: GB
+decimal-point: .
+
 [descriptions]
 
 ChangeLog-AROS:
