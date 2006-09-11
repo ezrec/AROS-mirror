@@ -1,70 +1,66 @@
 [headings]
 
-package: Package
+package: Пакет
 documentation: Документация
 sources: Исходники
 binaries: Binaries
 development-tools: Development Tools
-date: Date
+date: Дата
 
 [links]
 
 build-logs: build logs
-download: Download
+download: Скачать
 
 [units]
 
-byte-unit: B
+byte-unit: Б
 kilobyte-unit: кБ
 megabyte-unit: МБ
-gigabyte-unit: Гб
+gigabyte-unit: ГБ
 decimal-point: .
 
 [descriptions]
 
 ChangeLog-AROS:
-    ChangeLog for the AROS core sources.
+    Список изменений базовых исходников AROS.
 ChangeLog-contrib:
-    ChangeLog for the contributed programs' sources.
+    Список изменений исходников дополнительных программ.
 ChangeLog-docs:
-    ChangeLog документации.
+    Список изменений в документации.
 source:
-    Core AROS sources.
+    Базовые исходники AROS.
 docs-source:
     Исходники документации.
 contrib-source:
-    Contributed programs' sources.
+    Исходники дополнительных программ.
 docs-html:
     Документация в формате HTML. Содержит всё доступное содержимое
     сайта (пока только англоязычное), но приспособленнное для
     чтения в оффлайне.    
 i386-freebsd5-system:
-    The hosted version for FreeBSD/i386 5.x. Note that it
-    will not work on FreeBSD 4.x systems.
+    Hosted-версия для FreeBSD/i386 5.x. Учтите, что она не сможет
+    работать на FreeBSD 4.x.
 i386-freebsd-system:
-    The hosted version for FreeBSD/i386 5.x. Note that it
-    will not work on FreeBSD 4.x systems.
+    Hosted-версия для FreeBSD/i386 5.x. Учтите, что она не сможет
+    работать на FreeBSD 4.x.
 i386-linux-system:
-    The hosted version for Linux/i386. This is the most
-    complete and mature port, which means that you can run
-    all included programs and demos with it. This archive
-    contains all AROS system binaries compiled from the CVS
-    tree.
+    Hosted-версия для Linux/i386. Это наиболе законченный и зрелый порт,
+    что означает, что на нём идут все прилагаемые программы и демо. В этом 
+    архиве содержатся все бинарные файлы, собранные из SVN.
 i386-pc-boot-floppy:
-    The native version for i386-based PC AT computers and
-    compatibles. This archive contains the boot
-    disk floppy image which you can quickly write to a disk
-    and boot AROS with.
+    Native-версия для i386-PC AT компьютеров и совместимых с ними. В архиве
+    находится образ загрузочной дискеты, который можно быстро записать
+    на диск и загрузить AROS с него.
 i386-pc-boot-iso:
-    Native-версия для компьютеров на базе i386-PC AT и совместимых.
+    Native-версия для компьютеров на базе i386-PC AT и совместимых с ними.
     Это загрузочный образ CDROM ISO, содержащий систему AROS и
     все дополнительные программы.
 i386-all-contrib:
-    This archive contains all the contributed programs
-    compiled for the i386 architecture. They will work in
-    both the appropriate hosted (eg. i386-linux) and native
-    (i386-pc) version.
+    В этом архиве содержатся все дополнительные программы, собранные для 
+    архитектуры i386. Они также будут работать и на соответствующих hosted-
+    (например, i386-linux) and native(i386-pc)- версиях.
 i386-all-sdk:
-    Set of files and tools to build your own AROS programs
-    on your preferred machine. You'll need also gcc and the
-    binutils configured to produce i386-elf executables.
+    Набор файлов и инструментов для сборки ваших собственных программ AROS для 
+    избранной платформы. Для этого также понадобятся gcc и binutils, 
+    настроенные на компиляцию исполняемых файлов i386-elf.
