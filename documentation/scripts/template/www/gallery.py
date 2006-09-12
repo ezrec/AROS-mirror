@@ -4,19 +4,18 @@
 
 import os
 from html import *
+from ConfigParser import ConfigParser
 
-def makePicture( path, description, languages ):
-    root = '../../'
+def makePicture( path, description, language ):
+    LANG_DIR   = 'targets/www/template/languages'
 
-    got_it = False
-    for lang in languages:
-        if os.path.exists( os.getcwd()+'/scripts/template/www/'+lang+'.py' ):
-            gallery = __import__( lang, globals(), locals())
-            got_it = True
-            break
-    if not got_it:
-        print 'Error - no gallery language file found?!'
-        raise KeyError()
+    if language == 'en':
+        root = '../../'
+    else:
+        root = '../../../'
+
+    config = ConfigParser()
+    config.read( os.path.join( LANG_DIR, language ) )
 
     filename  = os.path.basename( path )
     directory = os.path.dirname( path )
@@ -34,8 +33,12 @@ def makePicture( path, description, languages ):
                 width = '*', contents =
                 [ 
                     description, BR(), '&nbsp;&nbsp;&nbsp;&nbsp;', 
-                    A( href = path, contents = gallery.largeImage ) 
-                ] 
+                    A \
+                    (
+                        href = path,
+                        contents = config.get( 'misc', 'large-image' )
+                    )
+                ]
             )
         ] )
     )

@@ -115,8 +115,8 @@ def makePictures():
             names = os.listdir( root )
             names.sort()
             if root == 'pictures/screenshots':
-                names.reverse() 
-        
+                names.reverse()
+
             for name in names:
                 path = os.path.join( root, name )
                 if name == '.svn' or not os.path.isdir( path ): continue
@@ -127,29 +127,39 @@ def makePictures():
                 for pictureName in os.listdir( path ):
                     picturePath = os.path.join( path, pictureName )
                     pictureFormat = os.path.splitext( pictureName )[1][1:]
-                    if pictureName == '.svn' or os.path.isdir( picturePath ): continue 
+                    if pictureName == '.svn' or os.path.isdir( picturePath ): continue
                     if pictureFormat not in [ 'jpg', 'jpeg', 'png' ]: continue
-                
+
                     output += makePicture( 
                         picturePath,
                         convertWWW( altLang(os.path.splitext( picturePath )[0] + '.en', lang), lang, options ),
-                        LANGUAGES
+                        lang
                     )
 
                 output += '</a>'
 
-            strings = {
-                'ROOT'    : '../../',
-                'BASE'    : '../../',
-                'CONTENT' : output
-            }
-
             if lang == 'en':
-                filename = 'index.php'
+                strings = {
+                    'ROOT'    : '../../',
+                    'BASE'    : '../../',
+                    'CONTENT' : output
+                }
             else:
-                filename = 'index.' + lang + '.php'
-            file( 
-                os.path.join( DSTROOT, root, filename ), 'w'
+                strings = {
+                    'ROOT'    : '../../../',
+                    'BASE'    : '../../../',
+                    'CONTENT' : output
+                }
+
+            filename = 'index.php'
+            if lang == 'en':
+                dst = os.path.join( DSTROOT, root )
+            else:
+                dst = os.path.join( DSTROOT, lang, root )
+            if not os.path.exists( dst ):
+                makedir( dst )
+            file(
+                os.path.join( dst, filename ), 'w'
             ).write( TEMPLATE_DATA[lang] % strings )
 
 
