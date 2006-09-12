@@ -360,7 +360,7 @@ def makeURL( file, lang, section='' ):
     if file != '' and file[-1] != '/':
         url += '.php'
     if url == '':
-        url = '/':
+        url = '/'
 
     # Add the section, if any
     if section != '':
