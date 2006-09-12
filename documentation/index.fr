@@ -1,10 +1,10 @@
 
 .. Include:: introduction/index-abstract.fr
 
-`Read more... <introduction/index>`__
+`En savoir plus... <introduction/index>`__
 
 .. Include:: documentation/developers/contribute-abstract.en
 
-`Read more... <documentation/developers/contribute>`__
+`En savoir plus... <documentation/developers/contribute>`__
 
 .. Include:: news/index.en
