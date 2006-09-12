@@ -15,7 +15,7 @@ Courte introduction à AROS
 Objectifs
 =========
 
-Les objectifs du projet AROS est de créer un OS qui:
+Les objectifs du projet AROS sont de créer un OS qui:
 
 1. est compatible autant que possible avec AmigaOS 3.1.
 

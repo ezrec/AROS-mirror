@@ -1,5 +1,5 @@
 
-.. Include:: introduction/index-abstract.en
+.. Include:: introduction/index-abstract.fr
 
 `Read more... <introduction/index>`__
 
