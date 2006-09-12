@@ -10,10 +10,10 @@ from components import *
 def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     navigation = Tree \
     ( [
-        A( _N['home'], href=makeURL( '/', lang ) ),
+        A( _N['home'], href=makeURL( '', lang ) ),
         Tree \
         ( [
-            A( 'English', href='%(BASE)s/' ),
+            A( 'English', href='%(BASE)s' ),
             A( 'Deutsch', href='%(BASE)sde/' ),
             A( 'Fran&#231;ais', href='%(BASE)sfr/' ),
             A( 'Italiano', href='%(BASE)sit/' ),            
@@ -357,8 +357,10 @@ def makeURL( file, lang, section='' ):
     if lang != 'en':
         file = lang + '/' + file
     url = '%(BASE)s' + file
-    if file[-1] != '/':
+    if file != '' and file[-1] != '/':
         url += '.php'
+    if url == '':
+        url = '/':
 
     # Add the section, if any
     if section != '':
