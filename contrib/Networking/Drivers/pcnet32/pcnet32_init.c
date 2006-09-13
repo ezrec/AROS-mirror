@@ -183,10 +183,14 @@ static const ULONG tx_tags[] = {
 /*
  * Open device handles currently only one pcnet32 unit.
  */
-AROS_SET_OPENDEVFUNC(GM_UNIQUENAME(Open),
-    LIBBASETYPE, LIBBASE, struct IOSana2Req, req, unitnum, flags)
+static int GM_UNIQUENAME(Open)
+(
+    LIBBASETYPEPTR LIBBASE,
+    struct IOSana2Req* req,
+    ULONG unitnum,
+    ULONG flags
+)
 {
-    AROS_SET_DEVFUNC_INIT
     struct TagItem *tags;
     struct PCN32Unit *unit = LIBBASE->pcnb_unit;
     struct Opener *opener;
@@ -194,9 +198,6 @@ AROS_SET_OPENDEVFUNC(GM_UNIQUENAME(Open),
     int i;
 
 D(bug("[pcnet32] init.OpenDevice\n"));
-
-    LIBBASE->pcnb_Device.dd_Library.lib_OpenCnt++;
-    LIBBASE->pcnb_Device.dd_Library.lib_Flags &= ~LIBF_DELEXP;
 
     req->ios2_Req.io_Unit = NULL;
     tags = req->ios2_BufferManagement;
@@ -266,14 +267,14 @@ D(bug("[pcnet32] init.OpenDevice\n"));
     req->ios2_Req.io_Error = error;
 
     return (error !=0) ? FALSE : TRUE;
-
-    AROS_SET_DEVFUNC_EXIT
 }
 
-AROS_SET_CLOSEDEVFUNC(GM_UNIQUENAME(Close),
-    LIBBASETYPE, LIBBASE, struct IOSana2Req, req)
+static int GM_UNIQUENAME(Close)
+(
+    LIBBASETYPEPTR LIBBASE,
+    struct IOSana2Req* req
+)
 {
-    AROS_SET_DEVFUNC_INIT
     struct PCN32Unit *unit = LIBBASE->pcnb_unit;
     struct Opener *opener;
 
@@ -291,8 +292,6 @@ D(bug("[pcnet32] init.CloseDevice\n"));
     }
 
     return TRUE;
-
-    AROS_SET_DEVFUNC_EXIT
 }
 
 
