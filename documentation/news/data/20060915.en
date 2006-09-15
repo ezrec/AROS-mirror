@@ -28,14 +28,16 @@ Software
 --------
 
 New 1.20 version of the famous Commodore 8-bit computers line emulator 
-VICE is available for all Amiga platforms, AROS included. You may find it `here`__.
-WinAros is a preinstalled AROS environment installed on a HD image, compatible 
+*VICE* is available for all Amiga platforms, AROS included. You may find it `here`__.
+
+*WinAros* is a preinstalled AROS environment installed on a HD image, compatible 
 with famous virtual machines QEMU and Microsoft VirtualPC, both freely available on 
 the net. You may download `QEMU Winaros here`__ and `VirtualPC one here`__. Heinz-Raphael 
 Reinke has also written a complete `AROS installation on hard disk`__ in PDF format. 
 If you prefer, there is also a `german version`__. You need Adobe Acrobat Reader,
 or FoxIt Reader, or aPDF/xPDF to read them. 
-Installation Kit for AROS (IKAROS) - set of virtual disk images for
+
+*Installation Kit for AROS (IKAROS)* - set of virtual disk images for
 different virtualisers, including QEMU and VmWare, already partitioned, 
 formatted, and ready to install AROS on. Benefits is small size of archive, as
 it not include large amount of files, and possbility to install fresh
