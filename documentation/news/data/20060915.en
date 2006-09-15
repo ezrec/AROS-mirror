@@ -33,11 +33,21 @@ WinAros is a preinstalled AROS environment installed on a HD image, compatible
 with famous virtual machines QEMU and Microsoft VirtualPC, both freely available on 
 the net. You may download `QEMU Winaros here`__ and `VirtualPC one here`__. Heinz-Raphael 
 Reinke has also written a complete `AROS installation on hard disk`__ in PDF format. 
-If you prefer, there is also a `german version`__. You need Adobe Acrobat Reader 
-to read them. 
+If you prefer, there is also a `german version`__. You need Adobe Acrobat Reader,
+or FoxIt Reader, or aPDF/xPDF to read them. 
+Installation Kit for AROS (IKAROS) - set of virtual disk images for
+different virtualisers, including QEMU and VmWare, already partitioned, 
+formatted, and ready to install AROS on. Benefits is small size of archive, as
+it not include large amount of files, and possbility to install fresh
+AROS versions, which make it useful for testing the nightly builds.
+It`s allowing easy istallation of new versions without messing with partitions
+setup. Installation instructions included. Please check `Aros-Exec`__
+for recent updates.
+
 
 __ http://www.viceteam.org/amigaos.html
 __ http://amidevcpp.amiga-world.de/WinAros/WinAros_Light_QEMU.zip
 __ http://amidevcpp.amiga-world.de/WinAros/WinAros_Light_VPC.zip
 __ http://amidevcpp.amiga-world.de/WinAros/Aros_HD_Install_English.pdf
 __ http://amidevcpp.amiga-world.de/WinAros/Aros_HD_Installation.pdf
+__ http://archives.aros-exec.org/?function=showfile&file=emulation/misc/arosik02.zip
