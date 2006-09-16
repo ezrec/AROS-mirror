@@ -15,7 +15,7 @@
         AROS в данный момент имеет статус альфа-версии. Ёто означает, что в 
         данной стадии она в хороша основном, дл€ экспериментов и разработки. 
         ≈сли вы пришли сюда в надежде, что это законченна€ и полностью рабоча€ 
-        система, вас ждЄт горькое разочарование. AROS далека от этого, но 
+        система, вас ждЄт горькое разочарование. AROS далека от этого, хот€ 
         медленно и верно двигаетс€ к этой цели.
         
 
@@ -27,14 +27,10 @@
 
 ¬ насто€щее врем€ AROS находитс€ в активной разработке. ¬ результате, ¬ам предстоит выбор между стабильностью и возможност€ми. ¬ насто€щее врем€ существует 2 типа бинарных пакетов (и исходников), доступных дл€ скачивани€: снимки и ночные сборки.
 
-Snapshots are done manually quite infrequently, mostly when there have been
-a larger amount of useful changes done to AROS since the last snapshot and
-someone feels motivated to create a new snapshot. In short, there is currently
-no regular release schedule. Even though they are made infrequently and that we
-try to pick times when AROS is particularly stable, there is no guarantee they
-will be bug-free or work on your particular machine. That said, we try to
-test snapshots on a wider variety of machines, so in practice they should work
-relatively well.
+—нимки делаютс€ довольно редко, в основном, когда вноситс€ значительное количество полезных изменений в код AROS со времени последнего снимка и кто-
+либо чувствует потребность в новом снимке. ¬кратце, сейчас не существует 
+какого-либо графика создани€ снимков. ƒаже несмотр€ на то, что они делаютс€ нечасто, и мы стараемс€ выбрать стабильнейшие состо€ни€ AROS, всЄ же нет гарантии, что они будут свободными от ошибок или работать конкретно на вашей
+машине. ќднако, мы стараемс€ тестировать снимки на широком спектре  различных машин, так что на практике они работают сравнительно хорошо.
 
 Nightly builds are done, as the name implies, automatically every night directly
 from the Subversion tree and contain the latest code. However, they have not

@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright Š 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done. 
@@ -120,7 +120,10 @@ AROS/i386-pc
     
     We currently do not support installation of AROS/i386-pc on to a harddrive
     [#]_, so therefore this chapter will only tell you how to create the
-    installation media and boot from it. 
+    installation media and boot from it. But you definitely would need to     
+    install AROS to test some of features so workarounds may be advised. Please 
+    note, that you **should not** use install on your working machine, contains 
+    precious data !
 
 
 Installation media
@@ -188,6 +191,65 @@ Booting
 Simply insert the boot floppy into the drive and reboot the computer. The boot
 is fully automatic, and if everything works you should see a nice screen after
 a while.
+
+*Installing to harddrive*
+"""""""""""""""""""""""""
+
+Well, note that you have been warned that installation is quite incomplete 
+now and is **dangerous** to any data, so make sure, that HD you`re using 
+contains not any useful data. Using of various virtual machines is recommended,
+as it minimises any possible risk and allows to use and test AROS build on working machine. There`s many free available VM`s now, for example, QEMU and
+VMWare.
+
+Setting up the HD
+'''''''''''''''''
+
+Depending on used HD (real or any virtual image), set it for work. First might 
+require plugging it to machine and setting up in BIOS. Second must be maitaned 
+in virtualiser and requires almost the same things. Check the HD to be the dedicated one for installation !
+
+Another step will be cleaning HD from any existing partitions, to remove
+anything that can prevent our partition creating from fail. Installing alonfg with other OS is possible, but will require more skills and can be described later. At the momemnt we will learn, how to install AROS as the only system on HD.
+
+Partitioning
+''''''''''''
+
+This chapter will be a bit tricky, as this feature is incomplete. 
+First, remember a common rule for this process - *reboot* after any  significant
+change made to filesystem, and we will note where it will be needed. 
+Rebooting means that you`re closing HDToolbox window and restart computer or VM.
+
+First, find a tool in AROS CD called HDToolBox located in Tools drawer. This is 
+your HD tormentor for a while. When you run it, you will see the window with 
+devices type selector. For example (here and after) we are usin real or virtual IDE harddrive. so, clicking on ata.device entry will show Devices:1 in the left window. So, here our HD is. By clicking on this entry we will enter to the available HD list.
+
+So here we should see our HD listed. If it`s virtual HD, we will see something like QEMU Harddisk or same VMWare one. If your HD is real you should see the name of it. If this isn`t true, you must make sure you`ve correctly prepared HD.
+Clicking on HD name will give us information:
+
+Size: <Size of HD>
+Partition Table: <type of current PT, must be unknown after cleanup>
+Partitions: <count of partitions on HD. must be 0 as we cleared it>
+
+Well, now we must create new partition table. Here, for PC we must create PC-MBR
+type of table. To do this please press Create Table button and and choose PC-MBR
+from window. 
+
+Then we must write changes to disk. To do this, click on HD name and press 
+Save Changes. Close HDToolbox window and reboot the system from Live CD.
+
+
+
+Formatting
+''''''''''
+
+Copying the system
+''''''''''''''''''
+
+Installing the bootloader
+'''''''''''''''''''''''''
+
+Preparing to boot
+'''''''''''''''''
 
 
 Footnotes
