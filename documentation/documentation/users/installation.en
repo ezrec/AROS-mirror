@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey
-:Copyright: Copyright Š 1995-2006, The AROS Development Team
+:Copyright: Copyright ¦ 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done. 
@@ -119,11 +119,9 @@ AROS/i386-pc
 .. Note:: 
     
     We currently do not support installation of AROS/i386-pc on to a harddrive
-    [#]_, so therefore this chapter will only tell you how to create the
-    installation media and boot from it. But you definitely would need to     
-    install AROS to test some of features so workarounds may be advised. Please 
-    note, that you **should not** use install on your working machine, contains 
-    precious data !
+    [#]_. But you definitely would need to install AROS to test some of 
+    features so workarounds may be advised. Please note, that you **should 
+    not** use install on your working machine, which HD contains precious data!
 
 
 Installation media
@@ -192,8 +190,8 @@ Simply insert the boot floppy into the drive and reboot the computer. The boot
 is fully automatic, and if everything works you should see a nice screen after
 a while.
 
-*Installing to harddrive*
-"""""""""""""""""""""""""
+Installing to harddrive
+"""""""""""""""""""""""
 
 Well, note that you have been warned that installation is quite incomplete 
 now and is **dangerous** to any data, so make sure, that HD you`re using 
@@ -202,7 +200,7 @@ as it minimises any possible risk and allows to use and test AROS build on worki
 VMWare.
 
 Setting up the HD
-'''''''''''''''''
+^^^^^^^^^^^^^^^^^
 
 Depending on used HD (real or any virtual image), set it for work. First might 
 require plugging it to machine and setting up in BIOS. Second must be maitaned 
@@ -212,7 +210,7 @@ Another step will be cleaning HD from any existing partitions, to remove
 anything that can prevent our partition creating from fail. Installing alonfg with other OS is possible, but will require more skills and can be described later. At the momemnt we will learn, how to install AROS as the only system on HD.
 
 Partitioning
-''''''''''''
+^^^^^^^^^^^^
 
 This chapter will be a bit tricky, as this feature is incomplete. 
 First, remember a common rule for this process - *reboot* after any  significant
@@ -221,36 +219,105 @@ Rebooting means that you`re closing HDToolbox window and restart computer or VM.
 
 First, find a tool in AROS CD called HDToolBox located in Tools drawer. This is 
 your HD tormentor for a while. When you run it, you will see the window with 
-devices type selector. For example (here and after) we are usin real or virtual IDE harddrive. so, clicking on ata.device entry will show Devices:1 in the left window. So, here our HD is. By clicking on this entry we will enter to the available HD list.
+devices type selector. For example (here and after) we are using real or virtual IDE harddrive. So, clicking on ata.device entry will show Devices:1 in the left window. So, here our HD is. By clicking on this entry we will enter to the available HD list.
 
-So here we should see our HD listed. If it`s virtual HD, we will see something like QEMU Harddisk or same VMWare one. If your HD is real you should see the name of it. If this isn`t true, you must make sure you`ve correctly prepared HD.
-Clicking on HD name will give us information:
+So here we should see our HD listed. If it`s virtual HD, we will see something like QEMU Harddisk or same VMWare one. If your HD is real you should see the its name. If this wasn`t happened, you must make sure you`ve correctly prepared HD.
+Clicking on HD name will give us information::
 
-Size: <Size of HD>
-Partition Table: <type of current PT, must be unknown after cleanup>
-Partitions: <count of partitions on HD. must be 0 as we cleared it>
+    Size: <Size of HD>
+    Partition Table: <type of current PT, must be unknown after cleanup>
+    Partitions: <count of partitions on HD. must be 0 as we cleared it>
 
 Well, now we must create new partition table. Here, for PC we must create PC-MBR
-type of table. To do this please press Create Table button and and choose PC-MBR
-from window. 
+type of table. To do this, please press Create Table button and choose PC-MBR from list. Click Ok.
 
 Then we must write changes to disk. To do this, click on HD name and press 
-Save Changes. Close HDToolbox window and reboot the system from Live CD.
+Save Changes. Answer Yes in confirmation dialog. Close HDToolbox window and reboot the system from Live CD.
 
+After system boots up, run HDToolbox again. Now, entering the entry ata.device
+we must see info Partition table: PC-MBR, Partitions:0 . That`s ok, we set no partitions yet. Let`s do it now. 
+Click on HD name, so we go now to the partitions list. List is empty now.
+Click on Create Entry button, choose all the space by clicking on unselected 
+empty space and click Ok. Now in the list you must see Partition 0 entry. Choose it by clicking to get information::
 
+    Size: <Partition size. Almost equal to HD size>
+    Partition table: Unknown <Not created yet>
+    Partition type: AROS RDB Partition table <That`s ok>
+    Active:No 
+    Bootable:No <Not bootable>
+    Automount:No <Will not mount on system startup>
+
+Now, click on Create Table button, select RDB table and click Ok.  
+To save changes go one level up by clicking Parent button, select
+HD Name again and click Save Changes button. Answer Yes in confirmation dialog twice. Exit from HDToolbox and reboot the machine.  
+
+After booting up, run HDToolbox (you`ve guessed that). Now info for our
+Partition 0 shows all the same but Partition table: RDB. This partition must be set to Active. To do this, click on Switches button, select Active checkbox, click Ok. Now what ? Yes, saving the changes by going the level up and clicking the button. Exiting and rebooting. 
+
+Why are we rebooting so much ? Well, HDToolbox and system libraries are still unfinished and quite buggy, so rebooting after every step helps to reset them to initial state. 
+
+After boot up, HDToolbox must show us that Partition 0 has become active. That`s good, now we must create our disk to install AROS on. Go one level down by clicking on Partition 0 entry. Now what ? Yes, clicking Add entry button and 
+choose all the empty space. Now you see DH0 entry there, which is our disk. 
+Clicking on it shows information::
+
+    Size:<well...>
+    Partition Table: Unknown (it`s ok)
+    Partition Type: Fast Filesystem Intl <ok>
+    Active:No <ok>
+    Bootable:No <we must switch it to Yes>
+    Automount:No <we must switch it to Yes>
+
+Now, go *2 levels up* to the HD name, click Save Changes, confirm, exit and reboot. After booting up (pretty boring, isn`t it ?) what should we do ?
+Yes, we must set switches to the DH0 in HDToolbox. We go to the DH0 entry and set Switches by relevant button and checkboxes: Bootable:yes and Automount:Yes.
+Save changes 2 levels up again, confirm`n`reboot.
+
+How long it`s left to go ? Well, we`re on the halfway to sucess. After booting up and checking all the settings for DH0 we must see it`s ok now. So now we can
+exit HDToolbox with no hesitation left. Now it`s time for some CLI magic.
 
 Formatting
-''''''''''
+^^^^^^^^^^
+
+We must format our created DH0 to make it usable. We were set it to FFS, because
+our bootloader (GRUB) is not yet supporting SFS. So now open the CLI window (right click on upper menu and select Shell). At the prompt enter the info command. You must see our DH0 in list listed as DH0: Not a valid DOS disk.
+Now we will format it with the command::
+
+    format DRIVE=DH0: NAME=AROS
+
+    About to format drive DH0:. This will destroy all data on the drive. Are 
+    you sure ? (y/N)
+
+Enter y and wait a second. You should see the string : 
+Formatting...done displayed. If you got an error, check for all partitions parameters in HDToolbox, as you can be missing something, and repeat.
+
+Now info command should show::
+
+    DH0:    <size>  <used> <free> <full 0%> <errors> <r/w state> <FFS> <AROS>
+
+That`s it. Time for pre-installation reboot.
+
+.. Note:: If this all seems to be so boring and you can`t stand it, there`s 
+          some reliefs if you intend to use AROS only in virtual machine. 
+          First, you can get any pre-Installed pack, such as WinAROS/WinAROS 
+          Lite - this system is already installed, but can be outdated. Second, 
+          you can look at `AROS Archives`_ for Installation Kit which contains 
+          ready-made virtual HD`s that`s already made and ready for install, so 
+          you can skip previous procedure and install fresh version of AROS. 
+
 
 Copying the system
-''''''''''''''''''
+^^^^^^^^^^^^^^^^^^
+
+Later ...    
 
 Installing the bootloader
-'''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Later ...    
 
 Preparing to boot
-'''''''''''''''''
+^^^^^^^^^^^^^^^^^
 
+Later ...    
 
 Footnotes
 =========
@@ -266,3 +333,4 @@ Footnotes
 
 .. _rawrite: http://uranus.it.swin.edu.au/~jn/linux/rawwrite.htm
 
+.. _`AROS Archives`: http://archives.aros-exec.org
