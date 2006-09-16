@@ -26,7 +26,7 @@
 
 #include <aros/libcall.h>
 #include <aros/macros.h>
-#include <asm/io.h>
+#include <aros/io.h>
 
 #include <oop/oop.h>
 
@@ -84,15 +84,15 @@ void udelay(LONG usec)
     int oldtick, tick;
     usec = usec2tick(usec);
 
-    outb(0x80, 0x43);
-    oldtick = inb(0x42);
-    oldtick += inb(0x42) << 8;
+    BYTEOUT(0x43, 0x80);
+    oldtick = BYTEIN(0x42);
+    oldtick += BYTEIN(0x42) << 8;
 
     while (usec > 0)
     {
-        outb(0x80, 0x43);
-        tick = inb(0x42);
-        tick += inb(0x42) << 8;
+        BYTEOUT(0x43, 0x80);
+        tick = BYTEIN(0x42);
+        tick += BYTEIN(0x42) << 8;
 
         usec -= (oldtick - tick);
         if (tick > oldtick) usec -= 0x10000;

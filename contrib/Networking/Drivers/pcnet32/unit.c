@@ -25,7 +25,7 @@
 #include <exec/ports.h>
 #include <exec/errors.h>
 
-#include <asm/io.h>
+#include <aros/io.h>
 
 #include <devices/sana2.h>
 #include <devices/sana2specialstats.h>
@@ -52,21 +52,21 @@
 /* BYTE IO */
 volatile UBYTE readb(APTR base)
 {
-    return inb(base);
+    return BYTEIN(base);
 }
 volatile void writeb(UBYTE val, APTR base)
 {
-    outb(val,base);
+    BYTEOUT(base, val);
 }
 
 /* WORD IO */
 volatile UWORD readw(APTR base)
 {
-    return inw(base);
+    return WORDIN(base);
 }
 volatile void writew(UWORD val, APTR base)
 {
-    outw(val,base);
+    WORDOUT(base, val);
 }
 
 /* LONG IO */

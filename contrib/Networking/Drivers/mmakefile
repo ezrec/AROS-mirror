@@ -2,5 +2,6 @@
 #MM     contrib-networking-drivers-etherlink3 \
 #MM     contrib-networking-drivers-intelpro100 \
 #MM     contrib-networking-drivers-nforce \
+#MM     contrib-networking-drivers-pcnet32 \
 #MM     contrib-networking-drivers-prism2 \
 #MM     contrib-networking-drivers-rtl8029
