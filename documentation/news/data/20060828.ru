@@ -17,7 +17,7 @@
 Дополнение от 7 сентября 2006г: Шрифты (включающие новые возможности v50) были любезно предоставлены Михаилом Малышевым, и будут включены в сборки как можно скорее. Также добавлены ttf-шрифты DejaVU.
 
 
-__ http://www.aros.org/index.ru.php
-__ http://www.aros.org/index.pl.php
+__ http://www.aros.org/ru/index.php
+__ http://www.aros.org/pl/index.php
 __ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=1595&forum=21
 __ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=1603&forum=21

@@ -11,16 +11,16 @@
 Благодаря Neil Cafferkey, Adam Chodorowski, Daniel Holmen и Paolo Besser, 
 сайт aros.org получил финский и итальянский переводы, которые доступны по адресам:
 
-`Финский aros.org`__: www.aros.org/index.fi.php
-`Итальянский aros.org`__: www.aros.org/index.it.php 
+`Финский aros.org`__: www.aros.org/fi/index.php
+`Итальянский aros.org`__: www.aros.org/it/index.php 
 
 Финский перевод практически завершён, над итальянским работа продолжается.
 Также поддерживается немецкий перевод, но пока мало документов переведено. Если
 Вы желаете поучаствовать в переводе нашего сайта, пожалуйста, напишите в 
 список рассылки для разраработчиков.
 
-__ http://www.aros.org/index.fi.php
-__ http://www.aros.org/index.it.php
+__ http://www.aros.org/fi/index.php
+__ http://www.aros.org/it/index.php
 
 
 AROS = искусство

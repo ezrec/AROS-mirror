@@ -12,8 +12,8 @@ Grace à Neil Cafferkey, Adam Chodorowski, Daniel Holmen and Paolo Besser,
 aros.org a désormais ses parties Finlandaise et Italienne. Les traductions
 du site web sont désormais disponibles à cette nouvelle adresse:
 
-`aros.org Finois`__: www.aros.org/index.fi.php
-`aros.org Italien`__: www.aros.org/index.it.php 
+`aros.org Finois`__: www.aros.org/fi/index.php
+`aros.org Italien`__: www.aros.org/it/index.php 
 
 La traduction Finoise est presque complète, alors que l'italienne est toujours
 en cours de développement. Aros.org supporte également la traduction Allemande

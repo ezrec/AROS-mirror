@@ -4,7 +4,7 @@ import os, os.path, re, glob, stat, string, cgi
 from color import *
 from ConfigParser import ConfigParser
 
-DESCRIPTIONS_DIR = '../htdocs/db/download-descriptions'
+DESCRIPTIONS_DIR = '../db/download-descriptions'
 
 print '''Content-Type: text/html\n\n'''
 
@@ -45,7 +45,7 @@ if not os.path.exists( os.path.join( DESCRIPTIONS_DIR, language ) ):
     language = 'en'
 descriptions.read( os.path.join( DESCRIPTIONS_DIR, language ) )
 
-root  = '../htdocs/downloads/' + dltype
+root  = '../downloads/' + dltype
 
 ## Functions #################################################################
 
@@ -192,7 +192,7 @@ for group in groups.keys():
                 print '''
                 <table class="layout" border="0" cellspacing="0" cellpadding="0">
                 <tr class="layout">
-                 <td class="layout" rowspan="2"><a href="%(url)s"><img border="0" src="images/disk.png"></a></td>
+                 <td class="layout" rowspan="2"><a href="%(url)s"><img border="0" src="/images/disk.png"></a></td>
                  <td class="layout"><a href="%(url)s">Download</a>&nbsp;</td>
                 </tr>
                 <tr class="layout">

@@ -4,8 +4,8 @@ Working with Subversion
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
 :Copyright: Copyright é 1995-2002, The AROS Development Team
-:Version:   $Revision: 22660 $
-:Date:      $Date: 2006-08-30 23:28:35 +0100 (Do, 06 Jan 2005) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 :Abstract: 
     Subversion (or SVN for short) is a version control tool which maintains a

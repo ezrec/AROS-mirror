@@ -5,22 +5,25 @@ Status update
 :Author:   Paolo Besser
 :Date:     2006-09-15
 
-La localizzazione di Aros.org continua. Samuel Atlan lo sta `traducendo in francese`__. 
-Ci vorrà un po' di tempo perché l'opera sia completa, ma le prime pagine sono già  
-disponibili dal menu in alto. Già che ci siamo, è giusto segnalare una novità che riguarda 
-le pagine internazionali: da oggi è possibile raggiungerle aggiungendo il \prefisso del 
-vostro paese all'url tradizionale. Per esempio è possibile raggiungere l'home page 
-italiana con *www.aros.org/it*, quella russa con *www.aros.org/ru* e così via.
+La localizzazione di Aros.org continua. Samuel Atlan lo sta `traducendo
+in francese`__.  Ci vorrà un po' di tempo perché l'opera sia completa,
+ma le prime pagine sono già disponibili dal menu in alto. Già che ci
+siamo, è giusto segnalare una novità che riguarda le pagine
+internazionali: da oggi è possibile raggiungerle aggiungendo il
+\prefisso del vostro paese all'url tradizionale. Per esempio è possibile
+raggiungere l'home page italiana con *www.aros.org/it*, quella russa con
+*www.aros.org/ru* e così via.
 
 __ http://www.aros.org/fr
 
 AROS sul web
 ------------
 
-Per cortesia, leggete questa bella `recensione`__ che Dmitar Butrovski ha scritto su 
-`OSnews.com`__. È sicuramente uno degli articoli più completi su AROS, capace di 
-analizzarlo sotto ogni punto di vista. Se non avete ancora provato il nostro sistema 
-operativo e volete sapere com'è, potete farvi un'idea precisa leggendolo.
+Per cortesia, leggete questa bella `recensione`__ che Dmitar Butrovski
+ha scritto su `OSnews.com`__. È sicuramente uno degli articoli più
+completi su AROS, capace di analizzarlo sotto ogni punto di vista. Se
+non avete ancora provato il nostro sistema operativo e volete sapere
+com'è, potete farvi un'idea precisa leggendolo.
 
 __ http://osnews.com/story.php?news_id=15819
 __ http://osnews.com
@@ -28,15 +31,16 @@ __ http://osnews.com
 Software
 --------
 
-La nuova versione 1.20 di VICE, il famoso emulatore delle piattaforme a 8 bit di 
-casa Commodore, è disponibile per tutti i sistemi Amiga, AROS incluso (X86 e PPC!). 
-Potete scaricarla `qui`__.
-WinAros è un ambiente AROS completo, preinstallato sull'immagine di un disco fisso 
-compatibile con le famose macchine virtuali QEMU e Microsoft VirtualPC, entrambe 
-scaricabili liberamente su Internet. Potete scaricare `Winaros per QEMU qui`__ e 
-`quello per VirtualPC qui`__. Heinz-Raphael Reinke, inoltre, ha realizzato una guida 
-completa all'installazione di AROS in formato PDF (`in inglese`__), traducendola 
-anche `in tedesco`__. Per leggerla serve Adobe Acrobat Reader.
+La nuova versione 1.20 di VICE, il famoso emulatore delle piattaforme a
+8 bit di casa Commodore, è disponibile per tutti i sistemi Amiga, AROS
+incluso (X86 e PPC!).  Potete scaricarla `qui`__. WinAros è un ambiente
+AROS completo, preinstallato sull'immagine di un disco fisso compatibile
+con le famose macchine virtuali QEMU e Microsoft VirtualPC, entrambe
+scaricabili liberamente su Internet. Potete scaricare `Winaros per QEMU
+qui`__ e `quello per VirtualPC qui`__. Heinz-Raphael Reinke, inoltre, ha
+realizzato una guida completa all'installazione di AROS in formato PDF
+(`in inglese`__), traducendola anche `in tedesco`__. Per leggerla serve
+Adobe Acrobat Reader.
 
 __ http://www.viceteam.org/amigaos.html
 __ http://amidevcpp.amiga-world.de/WinAros/WinAros_Light_QEMU.zip

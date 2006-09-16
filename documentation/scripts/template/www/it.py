@@ -1,1 +1,0 @@
-largeImage = 'Dimensioni originali...'

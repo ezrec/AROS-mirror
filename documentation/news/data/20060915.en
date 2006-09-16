@@ -5,21 +5,24 @@ Status update
 :Author:   Paolo Besser
 :Date:     2006-09-15
 
-Aros.org localization continues. Samuel Atlan is working on his `french translation`__ 
-of our website. It will take some time to complete, but first pages are already available 
-from top left menu. Please notice also a new feature of aros.org: now you can reach 
-localized pages adding your national /prefix to standard url. For istance, you may find 
-italian home page using *www.aros.org/it*, the russian one with *www.aros.org/ru* and so on.
+Aros.org localization continues. Samuel Atlan is working on his `French
+translation`__ of our website. It will take some time to complete, but
+first pages are already available from the top left menu. Please notice also
+a new feature of aros.org: now you can reach localized pages by adding your
+national prefix to standard url. For instance, you may find the Italian home
+page using *www.aros.org/it*, the russian one with *www.aros.org/ru* and
+so on.
 
-__ http://www.aros.org/fr
+__ http://www.aros.org/fr/
 
 AROS in the news
 ----------------
 
-Please read this nice `review`__ Dmitar Butrovski has written on `OSnews.com`__. It's 
-clearly one of the most complete articles about AROS, covering every feature and 
-each side of our nice operating system. If you don't already know exactly how AROS is, 
-you may get a bright idea.
+Please read this nice `review`__ Dmitar Butrovski has written on
+`OSnews.com`__. It's clearly one of the most complete articles about
+AROS, covering every feature and each side of our nice operating system.
+If you don't already know exactly what AROS is, you may get a good
+idea.
 
 __ http://osnews.com/story.php?news_id=15819
 __ http://osnews.com
@@ -27,24 +30,26 @@ __ http://osnews.com
 Software
 --------
 
-New 1.20 version of the famous Commodore 8-bit computers line emulator 
-*VICE* is available for all Amiga platforms, AROS included. You may find it `here`__.
+The new 1.20 version of the famous Commodore 8-bit computers line
+emulator *VICE* is available for all Amiga platforms, AROS included. You
+may find it `here`__.
 
-*WinAros* is a preinstalled AROS environment installed on a HD image, compatible 
-with famous virtual machines QEMU and Microsoft VirtualPC, both freely available on 
-the net. You may download `QEMU Winaros here`__ and `VirtualPC one here`__. Heinz-Raphael 
-Reinke has also written a complete `AROS installation on hard disk`__ in PDF format. 
-If you prefer, there is also a `german version`__. You need Adobe Acrobat Reader,
-or FoxIt Reader, or aPDF/xPDF to read them. 
+*WinAros* is a preinstalled AROS environment installed on a HD image,
+compatible with famous virtual machines QEMU and Microsoft VirtualPC,
+both freely available on the net. You may download `QEMU Winaros here`__
+and the `VirtualPC one here`__. Heinz-Raphael Reinke has also written a
+complete `AROS installation on hard disk`__ guide in PDF format.  If you
+prefer, there is also a `German version`__. You need Adobe Acrobat
+Reader, FoxIt Reader or aPDF/xPDF to read them. 
 
-*Installation Kit for AROS (IKAROS)* - set of virtual disk images for
-different virtualisers, including QEMU and VmWare, already partitioned, 
-formatted, and ready to install AROS on. Benefits is small size of archive, as
-it not include large amount of files, and possbility to install fresh
-AROS versions, which make it useful for testing the nightly builds.
-It`s allowing easy istallation of new versions without messing with partitions
-setup. Installation instructions included. Please check `Aros-Exec`__
-for recent updates.
+*Installation Kit for AROS (IKAROS)* is a set of virtual disk images for
+different virtualisers, including QEMU and VMware, already partitioned,
+formatted, and ready to install AROS on. Its benefits are its small archive
+size, as it doesn't include large amount of files, and the possbility to
+install fresh AROS versions, which make it useful for testing the
+nightly builds. It allows easy installation of new versions without
+messing with partition setup. Installation instructions included.
+Please check `Aros-Exec`__ for recent updates.
 
 
 __ http://www.viceteam.org/amigaos.html
