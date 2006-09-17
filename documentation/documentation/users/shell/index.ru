@@ -6,7 +6,7 @@
 
 `¬ведение <introduction>`_
 
-`All_commands <allcommands.ru>`__
+`All_commands <allcommands>`__
 
 `AddBuffers`__
 `Alias`__

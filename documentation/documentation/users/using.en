@@ -3,7 +3,7 @@ AROS Users Guide
 ================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski 
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright Š 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; only converted to reST. Needs heavy updating.
@@ -156,6 +156,15 @@ address a command within the current directory either, but leave this away
 instead.) Once you are used to it, try to execute a few programs (especially 
 the "Demos" and "Games") to get an impression of AROS capabilities.
 
+Setting up the Locale
+---------------------
+
+Later...        
+
+Customising installed AROS
+--------------------------
+
+Later...
 
 Is that all the User's Information in this guide?
 -------------------------------------------------

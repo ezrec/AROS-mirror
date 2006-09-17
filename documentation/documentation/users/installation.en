@@ -3,10 +3,10 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey
-:Copyright: Copyright ¦ 1995-2006, The AROS Development Team
+:Copyright: Copyright ² 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
-:Status:    Done. 
+:Status:    In works. 
 :Abstract:
     This manual will guide you through the necessary steps for installing 
     AROS.
@@ -193,7 +193,7 @@ a while.
 Installing to harddrive
 """""""""""""""""""""""
 
-Well, note that you have been warned that installation is quite incomplete 
+Well, note that you have been **WARNED** that installation is quite incomplete 
 now and is **dangerous** to any data, so make sure, that HD you`re using 
 contains not any useful data. Using of various virtual machines is recommended,
 as it minimises any possible risk and allows to use and test AROS build on working machine. There`s many free available VM`s now, for example, QEMU and
@@ -226,10 +226,9 @@ Clicking on HD name will give us information::
 
     Size: <Size of HD>
     Partition Table: <type of current PT, must be unknown after cleanup>
-    Partitions: <count of partitions on HD. must be 0 as we cleared it>
+    Partitions: <count of partitions on HD. must be 0 as we just started>
 
-Well, now we must create new partition table. Here, for PC we must create PC-MBR
-type of table. To do this, please press Create Table button and choose PC-MBR from list. Click Ok.
+Well, now we must create new partition table. Here, for PC we must create *PC-MBR* type of table. To do this, please press Create Table button and choose PC-MBR from list. Click Ok.
 
 Then we must write changes to disk. To do this, click on HD name and press 
 Save Changes. Answer Yes in confirmation dialog. Close HDToolbox window and reboot the system from Live CD.
@@ -247,7 +246,7 @@ empty space and click Ok. Now in the list you must see Partition 0 entry. Choose
     Bootable:No <Not bootable>
     Automount:No <Will not mount on system startup>
 
-Now, click on Create Table button, select RDB table and click Ok.  
+Now, click on Create Table button, select *RDB table* and click Ok.  
 To save changes go one level up by clicking Parent button, select
 HD Name again and click Save Changes button. Answer Yes in confirmation dialog twice. Exit from HDToolbox and reboot the machine.  
 
@@ -268,30 +267,27 @@ Clicking on it shows information::
     Automount:No <we must switch it to Yes>
 
 Now, go *2 levels up* to the HD name, click Save Changes, confirm, exit and reboot. After booting up (pretty boring, isn`t it ?) what should we do ?
-Yes, we must set switches to the DH0 in HDToolbox. We go to the DH0 entry and set Switches by relevant button and checkboxes: Bootable:yes and Automount:Yes.
-Save changes 2 levels up again, confirm`n`reboot.
+Yes, we must set switches to the DH0 in HDToolbox. We go to the DH0 entry and set Switches by relevant button and checkboxes: *Bootable:Yes* and *Automount:Yes*. Save changes going 2 levels up again, confirm`n`reboot.
 
-How long it`s left to go ? Well, we`re on the halfway to sucess. After booting up and checking all the settings for DH0 we must see it`s ok now. So now we can
-exit HDToolbox with no hesitation left. Now it`s time for some CLI magic.
+*How long is it left to go?* Well, we`re nearer than the halfway to sucess. After booting up and checking all the settings for DH0 we must see it`s ok now. So now we can exit HDToolbox with no hesitation left. Now it`s time for some CLI magic.
 
 Formatting
 ^^^^^^^^^^
 
 We must format our created DH0 to make it usable. We were set it to FFS, because
-our bootloader (GRUB) is not yet supporting SFS. So now open the CLI window (right click on upper menu and select Shell). At the prompt enter the info command. You must see our DH0 in list listed as DH0: Not a valid DOS disk.
+our bootloader (GRUB) is not yet supporting SFS. So now open the CLI window (right click on upper menu and select Shell). At the prompt enter the info command. You must see our DH0 in list as DH0: Not a valid DOS disk.
 Now we will format it with the command::
 
-    format DRIVE=DH0: NAME=AROS
-
+    >format DRIVE=DH0: NAME=AROS
     About to format drive DH0:. This will destroy all data on the drive. Are 
     you sure ? (y/N)
 
-Enter y and wait a second. You should see the string : 
-Formatting...done displayed. If you got an error, check for all partitions parameters in HDToolbox, as you can be missing something, and repeat.
+Enter y, press Enter and wait a second. You should see the string : 
+*Formatting...done* displayed. If you got an error, check for all partitions parameters in HDToolbox, as you can be missing something, and repeat.
 
 Now info command should show::
 
-    DH0:    <size>  <used> <free> <full 0%> <errors> <r/w state> <FFS> <AROS>
+    >DH0: <size>  <used> <free> <full 0%> <errors> <r/w state> <FFS> <AROS>
 
 That`s it. Time for pre-installation reboot.
 
@@ -307,17 +303,73 @@ That`s it. Time for pre-installation reboot.
 Copying the system
 ^^^^^^^^^^^^^^^^^^
 
-Later ...    
+After reboot you can notice that you can see our AROS HD is on the desktop now,
+and it`s empty. Now we need to fill it with files. 
+
+There`s a installer in AROS, as incomplete as HDToolbox is, but it can be used.
+At least, we can try. So, here`s the first way to install.
+
+1.Run InstallAROS in Tools drawer. You will see the welcome screen telling you the same I did - we`re using the pre-alpha version. Let`s get juice out of it ;)
+There`s Proceed button for you to click. Next, you will see the AROS Public License, and you`re should accept it to go further. Now you will see the install options window (if I say we don`t need that, uncheck the relevant box) ::
+
+    Show Partitioning Options...    []
+        <we don`t need that. As we`re done that already>
+    Format Partitions               []
+        <No. We have done this already>
+    Choose Language Options         []
+        <we dont need this. It`s better to do that later>
+    Install AROS Core System        [V]
+        <sure, we need it. We`re here to do that>
+    Install Extra Software [V] 
+        <we need it. Uncheck only if you want lite installation>
+    Install Development Software    []
+        <No, we don`t need this. and we haven`t yet>
+    Show Bootloader Options         [V]
+        <Yes, it`s always good to check options>
+    
+After you`re selected and unselected everything we need, click Proceed.
+Next window shows us installing destinations::
+
+    Destination Drive
+    [default:DH0]
+    
+    DH0  <that`s correct>
+    
+    Use 'Work' Partition                        [] 
+        <uncheck it, we`re installing all-on-one>
+    Copy Extras and Developer Files to Work?    [] 
+        <same as above>
+    Work drive ... <skipped>
+    
+Now after we uncheck it, click Proceed. The window, showing bootloader options appears. Here we only can check, is GRUB to be installed to DH0 and on which device. Click Proceed again.
+
+Now the window says we`re ready to install. Click Proceed once again. Do you like this pretty button ? ;)
+
+After that the copying progress will appear as files are copied. Wait a while until the process finishes. After that you will get finishing screen and Reboot checkbox. Leave this checked and click Proceed. No, that`s isn`t all yet, 
+wait till the last step remaining. Now our machine reboots with the same settings as before, from Live CD.
 
 Installing the bootloader
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Later ...    
+Now we`re still see our AROS disk, and all files are there. What are we missing?
+There`s a bugs in GRUB, preventing it to install correctly. But, if we reinstall it now, it usually helps to solve it. So, now we need InstallAROS once
+again. Repeat all the previous steps from point 1, but uncheck every checkbox.
+After last proceed you`ll get GRUB reinstalling, and window will appear, asking you to confirm that write. Answer yes as many times as it will be needed.   
+Now, on the last page uncheck Reboot checkbox, close Install and power off the machine. 
 
 Preparing to boot
 ^^^^^^^^^^^^^^^^^
 
-Later ...    
+We have just done our firstinstallation alchemy course, and AROS must be ready now. We must remove CD from CD tray (or disable booting from CD in VM) and check it up. Hear the drum roll ? ;)
+
+If something goes wrong, there can be some answers...
+
+Troubleshooting
+^^^^^^^^^^^^^^^
+
+Laters ...
+
+
 
 Footnotes
 =========
