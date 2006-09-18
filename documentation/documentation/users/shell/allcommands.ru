@@ -4,8 +4,8 @@
 
 :Authors:   Sergey Mineychev
 :Copyright: Copyright � 2006, The AROS Development Team
-:Version:   $Revision: 24737 $
-:Date:      $Date: 2006-09-03 18:56:55 +0500 (Вс, 03 сен 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Draft
 
 .. Contents::
