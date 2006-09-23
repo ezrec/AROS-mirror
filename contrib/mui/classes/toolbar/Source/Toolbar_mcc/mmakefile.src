@@ -22,5 +22,5 @@ FILES := Dispatcher \
 
 #MM includes-copy
 
-INCLUDE_FILES := $(TOP)/$(CURDIR)/Toolbar_mcc.h
-%copy_includes path=MUI dir=$(TOP)/$(CURDIR)
+INCLUDE_FILES := Toolbar_mcc.h
+%copy_includes path=MUI

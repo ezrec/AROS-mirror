@@ -37,7 +37,7 @@ USER_INCLUDES := -I. -Iarch/amigaos -I$(AROS_INCLUDES)/freetype1
 
 INCLUDE_FILES = freetype.h fterrid.h ftnameid.h
 
-%copy_includes mmake=contrib-freetype1-includes includes=$(INCLUDE_FILES) dir= path=freetype1/freetype
+%copy_includes mmake=contrib-freetype1-includes includes=$(INCLUDE_FILES) path=freetype1/freetype
 
 %common
 

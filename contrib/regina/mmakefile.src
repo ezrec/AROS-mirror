@@ -61,6 +61,6 @@ FILES := $(OFILES) \
     files=$(FILES) uselibs="amiga arosc arosm" \
     objdir=$(GENDIR)/$(CURDIR)/shared linklibname=regina_shared
 
-%copy_includes includes=rexxsaa.h dir=
+%copy_includes includes=rexxsaa.h
 
 %common

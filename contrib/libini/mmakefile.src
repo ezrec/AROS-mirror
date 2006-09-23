@@ -53,5 +53,5 @@ USER_CFLAGS := -I./ -I./include
     modtype=library files="$(INILBFILES) $(FUNCS)" \
     uselibs="amiga arosc rom m"
 
-%copy_includes includes=include/ini.h path=inifile 
+%copy_includes includes=include/ini.h path=inifile dir=include
 %common

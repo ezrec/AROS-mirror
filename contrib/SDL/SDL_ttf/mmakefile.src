@@ -21,6 +21,6 @@ HEADERS:=SDL_ttf
 
 #MM
 includes-copy :
-%copy_includes includes=$(HEADERS) path=SDL dir=
+%copy_includes includes=$(HEADERS) path=SDL
 
 %common

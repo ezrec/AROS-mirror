@@ -11,7 +11,7 @@ INCLUDE_FILES	:= gobject.h \
 	gvaluecollector.h \
 
 		   
-%copy_includes path=glib/gobject dir= includes=$(INCLUDE_FILES)
+%copy_includes path=glib/gobject includes=$(INCLUDE_FILES)
 
 %common
 

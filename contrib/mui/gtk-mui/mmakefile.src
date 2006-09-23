@@ -78,7 +78,7 @@ FILES := debug \
 
 
 
-%copy_includes path=gtk dir=$(TOP)/$(CURDIR)/gtk includes=*.h
+%copy_includes path=gtk includes="$(wildcard *.h)"
 
 %build_linklib mmake=linklibs-gtk-mui libname=gtk-mui files=$(FILES)
 

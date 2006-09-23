@@ -13,5 +13,5 @@ USER_INCLUDES = -I../commonaros
 
 #MM includes-copy
 
-INCLUDE_FILES := $(TOP)/$(CURDIR)/NListviews_mcp.h
-%copy_includes path=MUI dir=$(TOP)/$(CURDIR)
+INCLUDE_FILES := NListviews_mcp.h
+%copy_includes path=MUI

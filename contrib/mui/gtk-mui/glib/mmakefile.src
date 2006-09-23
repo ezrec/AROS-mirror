@@ -15,7 +15,7 @@ INCLUDE_FILES	:= config.h \
 	mem.h \
 
 
-%copy_includes path=glib dir= includes=$(INCLUDE_FILES)
+%copy_includes path=glib includes=$(INCLUDE_FILES)
 
 %common
 

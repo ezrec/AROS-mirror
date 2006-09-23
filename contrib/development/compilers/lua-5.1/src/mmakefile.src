@@ -57,7 +57,7 @@ EXEDIR :=	$(CONTRIBDIR)/Development/Lua
 
 #MM
 includes-copy :
-%copy_includes includes=$(HEADERS) path=lua dir=
+%copy_includes includes=$(HEADERS) path=lua
 
 %common
 

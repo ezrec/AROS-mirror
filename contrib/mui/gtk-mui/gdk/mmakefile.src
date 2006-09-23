@@ -15,7 +15,7 @@ INCLUDE_FILES	:= gdk.h \
 	gdkvisual.h \
 	gdkwindow.h \
 		   
-%copy_includes path=gdk dir= includes=$(INCLUDE_FILES)
+%copy_includes path=gdk includes=$(INCLUDE_FILES)
 
 %common
 

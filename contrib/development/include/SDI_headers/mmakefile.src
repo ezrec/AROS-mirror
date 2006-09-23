@@ -8,6 +8,6 @@ HEADERS:= SDI_compiler.h SDI_hook.h SDI_interrupt.h SDI_lib.h SDI_misc.h SDI_std
 
 #MM
 includes-copy :
-%copy_includes includes=$(HEADERS) path=SDI dir=
+%copy_includes includes=$(HEADERS) path=SDI
 
 %common

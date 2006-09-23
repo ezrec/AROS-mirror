@@ -36,7 +36,7 @@ INCLUDE_FILES	:= SDL.h    	    \
 		   begin_code.h     \
 		   close_code.h 
 		   
-%copy_includes path=SDL dir= includes=$(INCLUDE_FILES)
+%copy_includes path=SDL includes=$(INCLUDE_FILES)
 
 FILES :=    SDL_error 	    	\
     	    SDL_fatal       	\
