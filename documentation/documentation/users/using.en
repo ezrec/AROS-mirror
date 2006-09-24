@@ -2,11 +2,11 @@
 AROS Users Guide
 ================
 
-:Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski 
-:Copyright: Copyright Š 1995-2006, The AROS Development Team
+:Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Sergey Mineychev
+:Copyright: Copyright ¦ 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
-:Status:    Unfinished; only converted to reST. Needs heavy updating.
+:Status:    Unfinished; only converted to reST. Needs heavy updating. In works!
 
 .. Warning::
 
@@ -156,13 +156,87 @@ address a command within the current directory either, but leave this away
 instead.) Once you are used to it, try to execute a few programs (especially 
 the "Demos" and "Games") to get an impression of AROS capabilities.
 
+AROS Zune GUI Basics
+--------------------
+
+GUI abbreviation stands for Graphical User Interface, meaning all the means 
+used by OS to interact with user other than plain command-line interface (CLI).
+For those who never used any OS from Amiga branch, it will be useful to give some GUI basics to help them in use of our system. Some of it, however, will be AROS-specific. 
+
+An Amiga systems use definitely and common principles, as you can already note.
+First, any menu options of any application`s window isn`t attached to that window - it moved to upper strip, where it can be easily acessed. To do this, select window you`re need, and move mouse pointer to upper side of a screen. Then, if you press right mouse button there, you can see the pull-down menu, representing our application`s options. Yes, it looks like MacOS somehow.
+Also you can enable the menu to appear on any place of the screen, where you press left mouse button. To do so ...
+For example, if no application window is selected, you can see the Wanderer`s menu then. 
+
+Now, let`s consider our desktop - as you probably already know, it`s called Wanderer. What is this ? Well, Wanderer is an application, just like all others.
+It`s AROS file manager, allowing you to choose and operate files (the functionality isn`t complete yet), launch programs, get some system information, launch CLI (shell window) and other functions. Usually it opens on wide screen and acts like your desktop (icons on this desktiop represents the volumes and disks you can work with). It can be set aside by unselecting Backdrop option, which can be found in Wanderer`s menu (remember paragraph above?). After that Wanderer becomes just another window you can move, resize
+etc. So, you can see it isn`t like a Windows or other`s systems desktop, fixed to it`s place. Of course, you can even not use the Wanderer at all and use your preferred file manager (like Directory Opus).
+
+But how do the applications behave then, where will they`re open? There`s a screen term - screen is the place where your window is meant to be open. If it`s said that application going to open on Wanderer screen, it will look like it`s usually happens in other OS - your app will appear as window on desktop.
+Also window usually can be open on it`s own screen  - it looks like it captures the whole screen. But you can switch the screens with a gadget in top right corner fo the screen (this is also applicable to the windows). So you can switch between Wanderer, Directory Opus and any other apps opening on it`s own screen. This behaviour also comes from Amiga`s history.
+                                                  
+Well, the time has come to say something about windows itself. Aros window usually has controls to manupalte with it. This control buttons are called 
+gadgets (which can be translated as interactive kind of graphical element).
+First one in the top left corner of a window allows to close it. Next, in the right part allows to minimise/maximise window. And the last used to put window to front or to back just like we switch sreens. Windows can have no gadgets at all (look at the Kitty demo - it`s doesn`t even have a borders and has well-curved shape) or have different set of them. 
+
+The window`s contents consists from some usual elements could be seen in any GUI - buttons, lists, strings of text, any other kind of gadgets. If application is intended to change any preferences of a system or an application it`s usual shortly called *Pref* and has a set of buttons to operate. Usually this buttons are: TEST (applies all the changes made by Pref but doesn`t save and do not the changes but close the window), SAVE (saves the changes and close the window), USE (applies the changes and close the window, but do not saves them), CANCEL (discard all the changes and close the window).
+
+Also, derived from Amiga`s history file placement unit is often called drawer instead of folder/directory in other systems, but it`s meaning remains the same. Translate it as a directory if you`re unsure.
+
+Another unknown name you can encounter in AROS is Zune. What`s that ? Zune is 
+GUI toolkit developed in replacement and best traditions of MUI (Magic User Interface), widely used on Amiga`s. But is there an application called Zune? 
+You can find Zune Pref and it allows you to set settings for Zune-based applications altogether or in particular. For example, to set Zune prefs for Wanderer you can select GUI prefs from it`s menu, or to set Zune prefs for other apps you can use it as the CLI command Zune.
+
+Later...
+
+
+AROS CLI (Command Line Interface)
+---------------------------------
+
+CLI commands abstract and comparision, TAB completion...
+Later...
+
+AROS System programs
+--------------------
+
+We have mentioned the applications, it`s good to give a description of their
+functions. So, there`s groups the AROS system applications collected in separate directories::
+
+    *C* - the place for all the system commands
+    *Classes*
+    *Devs* - where the device-related files (drivers, keymaps) and 
+    datatypes are placed
+    *Fonts* - here you can find all of the system fonts. Any additional fonts 
+    must be appended (assigned) to this dir.
+    *Libs* - where the system libraries are located
+    *Locale* - holds catalog files of various AROS apps translations
+    *Prefs* - has a number of preferences-editind programs
+    *S* - contains some system launch-time scripts
+    *System* - the place for some system controls
+    *Tools* -  the place for some commonly used system apps
+    *Utilities* - the place for some not-so-commonly used but useful apps
+
+Later...
+
 Setting up the Locale
 ---------------------
 
+AROS is becoming a really international system this days, being translated to many languages. Translating isn`t very difficult, and number of the AROS translators is still increasing. If unicode support will be implemented it can be translated in every language people use. If you feel you can give AROS to your country, both OS and documentation, do not hesitate to contact us and offer your help.
+
+So about the language. First, depending on fonts used you must set fonts by launching SYS:Prefs/Fonts and designating Fonts to different system text: Icons (used for icons labels), Screen (used on common screen) and System (used in CLI window). If your language uses different set than ISO (for example, cyrillyc CP-1251) there`s *must* be the fonts in correct codepage. Aros currently can use two kinds of fonts - the Amiga bitmap fonts (which can be used directly) and TrueType (via FreeType 2 manager, which still has some issues with non-ISO codepages). Bitmap fonts are in any particular codepage, and TTF can be unicode.
+
+How can you change the AROS locale ? To do this you need to launch a Locale pref in SYS:Prefs. You can see a list of supported locales there and select your preferred ones. On the second page of this Pref you can select the country used (it gives correct currency and date/time format). And the last tab allows you to change timezone to that used in your location. 
+
+After you`ve made changes to fonts reboot the system, and you must be able to see all the translated content.
+
+So now we can read, but can we write also in our language? To do this, you must change the keyboard layout.
+
+Keyboard pref...Also this pref allows to save presets - just like any application it`s got a menu, and you can save your preferences to file with the given name and keep different settings of locales. We can use it later to switch our keyboard layouts.
+
 Later...        
 
-Customising installed AROS
---------------------------
+Customising the installed AROS
+------------------------------
 
 Later...
 
