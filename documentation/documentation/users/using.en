@@ -3,7 +3,7 @@ AROS Users Guide
 ================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Sergey Mineychev
-:Copyright: Copyright ¦ 1995-2006, The AROS Development Team
+:Copyright: Copyright ² 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; only converted to reST. Needs heavy updating. In works!
@@ -59,22 +59,19 @@ It is important to realize that this guide is meant for AROS, not Amiga. So
 even if you owned an Amiga for years, you might need to read "Using AROS" too. 
 This is not an embarrassment: you will notice that using AROS is very slightly 
 different from using AmigaOS. This is because our Workbench is not finished.
-At the moment the whole system works through a AmigaDos shell (or Cli to 
-older users), although we do have a Workbench, you can not navigate disks with 
-it yet. Old Amiga programmers should read "differences with Amiga programming" 
-from chapter 4 to get an overview of the differences. 
+At the moment the system mostly works through a AmigaDos shell - replacement (or Cli to older users), although we do have a Workbench and you can navigate disks and launch the applications with it, but file operations is not yet complete. Old Amiga programmers should read "differences with Amiga programming" from chapter 4 to get an overview of the differences. 
 
 Using AROS
 ==========
 
-An Operating System in an Operating System?
--------------------------------------------
+AROS-hosted: An Operating System in an Operating System?
+-----------------------------------------------------------
 
 AROS is originally developed on Linux_ running on an Intel-based computer. It 
 runs on many more machines and Operating Systems, though. This may sound 
 strange: an OS running on top of an other OS, that's emulation, right?
 
-A nice term for what AROS does is "API emulation". API is a three-letter 
+A nice term for what AROS-hosted does is "API emulation". API is a three-letter 
 acronym for Application Programmer's Interface. In plain English: an API 
 provides (C Language) functions that a programmer can use. The AmigaOS API 
 consists of a load of library calls that an Amiga programmer can use to make 
@@ -83,7 +80,7 @@ library calls as AmigaOS. An Amiga emulator, such as UAE_; emulates the Amiga
 *computer*: the processor, the connected hardware, everything. This has its 
 advantages, like being able to play binary Amiga games on different hardware, 
 and its disadvantages, like not being able to use the emulator as a "real" OS, 
-on a "real" processor. AROS runs on the "real" processor. But it isn't a 
+on a "real" processor. AROS-hosted runs on the "real" processor. But it isn't a 
 "real" OS, *unless* you run in such a way that it doesn't require Linux. This 
 is called "native" AROS.
 
@@ -92,14 +89,10 @@ as it runs on Linux. AROS library functions are made to run under Linux first,
 internally using Linux kernel and library calls. This way a programmer has got 
 the opportunity to bother about the implementation of the whole system first, 
 and to bother about the technical details in a later stadium. People are 
-currently working on making the "native" AROS more impressive. The results are
-very impressive and it is perfectly possible to use AROS as a real (and only)
-Operating system on an IBM PC compatible machine.
+currently working on making the "native" AROS more usable. The results are
+very impressive and it is perfectly possible to use AROS-native as a real (and only) Operating system on an IBM PC compatible machine.
 
-Of course, AROS is not *only* an API emulator. It also tries to provide all the 
-AmigaOS3.1 system software, and you will also find a few demos and games being 
-shipped with AROS, just to show that they work - we might just be at
-77% of the whole system, but we already have Quake running!
+Of course, AROS is not *only* an API emulator. It also tries to provide replacements to all the AmigaOS3.1 system software, and you will also find a few demos and games being shipped with AROS, just to show that they work - we might just be at 77% of the whole system, but we already have Quake running!
 
 
 Using "native" AROS on i386 and m68k
@@ -114,29 +107,22 @@ platform you use. Because "native" is still in great development, the *results*
 from installing native AROS can also vary depending on the age of the code that 
 you use.
 
-On an Amiga, you can place the native code somewhere on you harddisk, 
+On an Amiga (m68k), you can place the native code somewhere on your harddisk, 
 double-click the "boot" icon, do a reset and enjoy a complete Amiga system. 
 This is because it is not *really* native. The boot program just temporarily 
 replaces a few AmigaOS libraries with AROS libraries. For testing purposes this 
 is of course good, but in the end you still run good ol' AmigaOS and not plain 
-native AROS. This will change as we build a more complete 68k AROS system.
+native AROS. This will change as we build a more complete 68k AROS system. This system is often called AfA (AROS for Amigas).
 
-On i386, you should write a boot image to a floppy and the contrib 
-(Contribution disk, containing games, demos and utilities) images to another 
-two floppy disks. If you downloaded binary code, there should be instructions 
-in the archive for you. Once you have written your floppies, you can reboot the
-system. After the floppy is booted, you will find yourself in AROS (looking 
-very much like AmigaOS). You can fool around with the "AmigaDOS Shell"; or play 
-some games/demos found on the contrib disks (included in the archive) until you 
-get bored. AROS can detect disk changes so you can insert one of the contrib 
-disks in the floppy drive and explore them, running games and demos on the way. 
-For now this is all, but keep in touch, because hard work is currently being 
-done here. Soon we should have a Workbench which will allow graphical 
-navigation of your Hard and Floppy disks.
+OLD !
+
+On i386 there`s a different booting media available. First and most useful binaries set is an AROS LiveCD which you can get in the Downloads section. It is can be either a snapshot or a nightly build (first is more stable but outdated, last has latest changes made but can be unstable in rare cases). Second is the AROS boot floppy, which is intended to boot systems that unable to boot from CD. It`s have a minimal set of features but thus have small size also. If you have no CD drive it still can show some part of an AROS to you.
+
+So, after you download the AROS LiveCD archive unpack it and write ISO image to the CD-R(W). If you intent to use AROS in virtual machine, you can use ISO as-is. Once the disc is ready, you can reboot your PC with the LiveCD. If your system does not support booting from CD, also download and write an AROS boot floppy to disk (with Rawrite or Winimage program, for example) and boot from it, leaving CD in drive. After the CD is booted you will find yourself in AROS (it is looks stunningly close to AmigaOS). You can fool around LiveCD with the Wanderer (or with Shell), play some games/demos included in contributed programs on the CD, look at system basics until you get bored. Also it`s possible to add files to ISO image and get some extra software written for AROS, and rewrite the LiveCD. For now here end simple part of using an AROS-native. To test all other features it`s required to install the system to the hard disk (real or virtual). This process can`t be called easy, and must be treated as experimental. It has beed desribed in Installation Doc. Anyway, remeber that work continues and soon you can get more from native AROS - keep in touch!  
 
 
-Using AROS on Linux and FreeBSD
--------------------------------
+Using AROS hosted on Linux or FreeBSD
+-------------------------------------
 
 Once you got the binaries for your system, either by compiling or by 
 downloading pre-compiled binaries, you should go down into the 
@@ -156,12 +142,13 @@ address a command within the current directory either, but leave this away
 instead.) Once you are used to it, try to execute a few programs (especially 
 the "Demos" and "Games") to get an impression of AROS capabilities.
 
+AROS Basics
+===========
+
 AROS Zune GUI Basics
 --------------------
 
-GUI abbreviation stands for Graphical User Interface, meaning all the means 
-used by OS to interact with user other than plain command-line interface (CLI).
-For those who never used any OS from Amiga branch, it will be useful to give some GUI basics to help them in use of our system. Some of it, however, will be AROS-specific. 
+GUI abbreviation stands for Graphical User Interface, and is applied to all the means used by OS to interact with user other than plain command-line interface (CLI). For those who never have used any OS from Amiga branch, it will be useful to give some GUI basics to help them in use of our system. Some of it, however, will be AROS-specific. 
 
 An Amiga systems use definitely and common principles, as you can already note.
 First, any menu options of any application`s window isn`t attached to that window - it moved to upper strip, where it can be easily acessed. To do this, select window you`re need, and move mouse pointer to upper side of a screen. Then, if you press right mouse button there, you can see the pull-down menu, representing our application`s options. Yes, it looks like MacOS somehow.
@@ -169,19 +156,19 @@ Also you can enable the menu to appear on any place of the screen, where you pre
 For example, if no application window is selected, you can see the Wanderer`s menu then. 
 
 Now, let`s consider our desktop - as you probably already know, it`s called Wanderer. What is this ? Well, Wanderer is an application, just like all others.
-It`s AROS file manager, allowing you to choose and operate files (the functionality isn`t complete yet), launch programs, get some system information, launch CLI (shell window) and other functions. Usually it opens on wide screen and acts like your desktop (icons on this desktiop represents the volumes and disks you can work with). It can be set aside by unselecting Backdrop option, which can be found in Wanderer`s menu (remember paragraph above?). After that Wanderer becomes just another window you can move, resize
-etc. So, you can see it isn`t like a Windows or other`s systems desktop, fixed to it`s place. Of course, you can even not use the Wanderer at all and use your preferred file manager (like Directory Opus).
+In fact, it is an AROS file manager, allowing you to choose and operate files (the functionality isn`t complete yet), launch programs, get some system information, launch CLI (shell window) and other functions. Usually it opens on wide screen and acts like your desktop (icons on this desktiop represents the volumes and disks you can work with). It can be set aside by unselecting Backdrop option, which can be found in Wanderer`s menu (remember paragraph above?). After that a Wanderer becomes just another window you can move, resize
+etc. So, you can see it isn`t like a Windows or another system`s desktop, fixed to it`s place. Of course, you can even not use the Wanderer at all and use your preferred file manager (e.g. Directory Opus).
 
-But how do the applications behave then, where will they`re open? There`s a screen term - screen is the place where your window is meant to be open. If it`s said that application going to open on Wanderer screen, it will look like it`s usually happens in other OS - your app will appear as window on desktop.
+But how do the applications behave then, where will they`re open? There`s a `screen` term - screen is the place where your window is meant to be open. If it`s said that application going to open on Wanderer screen, it will look like it`s usually happens in other OS - your app will appear as window on desktop.
 Also window usually can be open on it`s own screen  - it looks like it captures the whole screen. But you can switch the screens with a gadget in top right corner fo the screen (this is also applicable to the windows). So you can switch between Wanderer, Directory Opus and any other apps opening on it`s own screen. This behaviour also comes from Amiga`s history.
                                                   
 Well, the time has come to say something about windows itself. Aros window usually has controls to manupalte with it. This control buttons are called 
 gadgets (which can be translated as interactive kind of graphical element).
-First one in the top left corner of a window allows to close it. Next, in the right part allows to minimise/maximise window. And the last used to put window to front or to back just like we switch sreens. Windows can have no gadgets at all (look at the Kitty demo - it`s doesn`t even have a borders and has well-curved shape) or have different set of them. 
+First one in the top left corner of a window allows to close it. Next, in the right part allows to minimise/maximise window. And the last used to put window to front or to back just like we switch sreens. Windows can have no gadgets at all (look at the Kitty demo - it`s doesn`t even have a borders and yet has well-curved shape) or have a different set of them. 
 
 The window`s contents consists from some usual elements could be seen in any GUI - buttons, lists, strings of text, any other kind of gadgets. If application is intended to change any preferences of a system or an application it`s usual shortly called *Pref* and has a set of buttons to operate. Usually this buttons are: TEST (applies all the changes made by Pref but doesn`t save and do not the changes but close the window), SAVE (saves the changes and close the window), USE (applies the changes and close the window, but do not saves them), CANCEL (discard all the changes and close the window).
 
-Also, derived from Amiga`s history file placement unit is often called drawer instead of folder/directory in other systems, but it`s meaning remains the same. Translate it as a directory if you`re unsure.
+Also, from Amiga`s history the file placement unit is often called a drawer instead of a folder/directory in other systems, but it`s meaning remains the same. Translate it as a directory if you`re unsure.
 
 Another unknown name you can encounter in AROS is Zune. What`s that ? Zune is 
 GUI toolkit developed in replacement and best traditions of MUI (Magic User Interface), widely used on Amiga`s. But is there an application called Zune? 
@@ -200,23 +187,29 @@ AROS System programs
 --------------------
 
 We have mentioned the applications, it`s good to give a description of their
-functions. So, there`s groups the AROS system applications collected in separate directories::
+functions. So, there`s a groups of the AROS system applications collected in the separate directories:
 
-    *C* - the place for all the system commands
-    *Classes*
-    *Devs* - where the device-related files (drivers, keymaps) and 
-    datatypes are placed
-    *Fonts* - here you can find all of the system fonts. Any additional fonts 
-    must be appended (assigned) to this dir.
-    *Libs* - where the system libraries are located
-    *Locale* - holds catalog files of various AROS apps translations
-    *Prefs* - has a number of preferences-editind programs
-    *S* - contains some system launch-time scripts
-    *System* - the place for some system controls
-    *Tools* -  the place for some commonly used system apps
-    *Utilities* - the place for some not-so-commonly used but useful apps
+    + C - the place for all the system commands
+    + Classes - 
+    + Devs - where the device-related files (drivers, keymaps) and 
+      datatypes are placed  
+    + Extras - where all the contributed programs reside
+    + Fonts - here you can find all of the system fonts. Any additional fonts 
+      must be appended (assigned) to this dir.
+    + Libs - where the system libraries are located.
+    + Locale - holds catalog files of various AROS apps translations
+    + Prefs - has a number of preferences-editing programs
+    + S - contains some system launch-time scripts
+    + System - the place for some system controls
+    + Tools -  the place for some commonly used system apps
+    + Utilities - the place for some not-so-commonly used but useful apps
+
+Instead of applications, there`s more permanent running programs called *tasks*.
 
 Later...
+
+Customising the installed AROS
+==============================
 
 Setting up the Locale
 ---------------------
@@ -235,8 +228,7 @@ Keyboard pref...Also this pref allows to save presets - just like any applicatio
 
 Later...        
 
-Customising the installed AROS
-------------------------------
+
 
 Later...
 
