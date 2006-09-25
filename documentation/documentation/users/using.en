@@ -3,16 +3,16 @@ AROS Users Guide
 ================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Sergey Mineychev
-:Copyright: Copyright ² 1995-2006, The AROS Development Team
+:Copyright: Copyright Â 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; only converted to reST. Needs heavy updating. In works!
 
 .. Warning::
 
-   This document is not finished! It is highly likely that many parts are
-   out-of-date, contain incorrect information or are simply missing 
-   altogether. If you want to help rectify this, please contact us.
+   This document is in progress! It is highly likely that some parts 
+   contain incorrect information or are simply missing altogether. 
+   If you want to help rectify this, please contact us.
 
 .. Contents::
 
@@ -114,8 +114,6 @@ replaces a few AmigaOS libraries with AROS libraries. For testing purposes this
 is of course good, but in the end you still run good ol' AmigaOS and not plain 
 native AROS. This will change as we build a more complete 68k AROS system. This system is often called AfA (AROS for Amigas).
 
-OLD !
-
 On i386 there`s a different booting media available. First and most useful binaries set is an AROS LiveCD which you can get in the Downloads section. It is can be either a snapshot or a nightly build (first is more stable but outdated, last has latest changes made but can be unstable in rare cases). Second is the AROS boot floppy, which is intended to boot systems that unable to boot from CD. It`s have a minimal set of features but thus have small size also. If you have no CD drive it still can show some part of an AROS to you.
 
 So, after you download the AROS LiveCD archive unpack it and write ISO image to the CD-R(W). If you intent to use AROS in virtual machine, you can use ISO as-is. Once the disc is ready, you can reboot your PC with the LiveCD. If your system does not support booting from CD, also download and write an AROS boot floppy to disk (with Rawrite or Winimage program, for example) and boot from it, leaving CD in drive. After the CD is booted you will find yourself in AROS (it is looks stunningly close to AmigaOS). You can fool around LiveCD with the Wanderer (or with Shell), play some games/demos included in contributed programs on the CD, look at system basics until you get bored. Also it`s possible to add files to ISO image and get some extra software written for AROS, and rewrite the LiveCD. For now here end simple part of using an AROS-native. To test all other features it`s required to install the system to the hard disk (real or virtual). This process can`t be called easy, and must be treated as experimental. It has beed desribed in Installation Doc. Anyway, remeber that work continues and soon you can get more from native AROS - keep in touch!  
@@ -129,6 +127,10 @@ downloading pre-compiled binaries, you should go down into the
 "bin/$TARGET/AROS" directory, where $TARGET is your system target (something 
 like "linux-i386"). Run the file "aros" ("./aros"). The Workbench replacement
 "Wanderer" will be started.
+
+There`s some command line options for aros executable that could be used.
+::
+    Laters ...
 
 Because "Wanderer" is very limited you'll prefer to work with the Shell. You can
 start it from the menu "Wanderer/Shell". Now you should type in commands, and the most 
@@ -228,12 +230,16 @@ Keyboard pref...Also this pref allows to save presets - just like any applicatio
 
 Later...        
 
+Setting up the Network
+----------------------
 
+Later...  
 
-Later...
+Installing the software
+-----------------------   
 
 Is that all the User's Information in this guide?
--------------------------------------------------
+=================================================
 
 This chapter should have told you how to get, install and use AROS. After 
 having tried running every program in the directories C, Demos, Utilities, 
