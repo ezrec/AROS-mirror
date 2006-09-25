@@ -1,7 +1,7 @@
 Introduction
 ============
 
-AROS est un logiciel d'exploitation d'ordinateur portable et libre visant à
-être compatible avec AmigaOS 3.1, tout en l'améliorant dans diverses branches.
+AROS est un système d'exploitation portable et libre visant à être compatible
+avec AmigaOS 3.1, tout en l'améliorant dans diverses branches.
 Le code source est disponible sous licence libre, ce qui permet à n'importe qui
 de l'améliorer librement.
