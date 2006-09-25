@@ -3,7 +3,7 @@ AROS Users Guide
 ================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Sergey Mineychev
-:Copyright: Copyright Â 1995-2006, The AROS Development Team
+:Copyright: Copyright Ò 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; only converted to reST. Needs heavy updating. In works!
@@ -129,8 +129,8 @@ like "linux-i386"). Run the file "aros" ("./aros"). The Workbench replacement
 "Wanderer" will be started.
 
 There`s some command line options for aros executable that could be used.
-::
-    Laters ...
+You can get this list with ./aros -h option given.
+Laters ...
 
 Because "Wanderer" is very limited you'll prefer to work with the Shell. You can
 start it from the menu "Wanderer/Shell". Now you should type in commands, and the most 
