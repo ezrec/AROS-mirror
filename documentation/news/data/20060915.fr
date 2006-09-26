@@ -1,0 +1,62 @@
+===========
+Mise à jour
+===========
+
+:Author:   Paolo Besser
+:Date:     2006-09-15
+
+La localisation du site Aros.org continue. Samuel Atlan travaille sur la
+`traduction Française`__ du site. Cela prendra un certain temps, mais les
+premières pages sont d'ores et déjà disponibles à partir du menu en haut à
+gauche Notez également une petite nouveauté sur aros.org : vous pouvez
+désormais consulter votre site localisé en ajoutant le préfixe national à
+l'adresse url standard. PAr exemple, l'adresse du site en italien est
+*www.aros.org/it*, celle en russe *www.aros.org/ru* etc.
+
+__ http://www.aros.org/fr/
+
+AROS dans les news
+------------------
+
+Vous pouvez lire une jolie `review`__ écrite par Dmitar Butrovski sur
+`OSnews.com`__. Il s'agit de l'un des articles les plus complets  sur
+AROS, couvrant la majorité des composants du système d'exploitation.
+Si vous ne savez pas encore exactement ce qu'est AROS, vous pourrez
+vous en faire une bonne idée.
+
+__ http://osnews.com/story.php?news_id=15819
+__ http://osnews.com
+
+Logiciel
+--------
+
+LA nouvelle version 1.20 du célèbre émulateur Commodore 8-bit *VICE*
+est disponible pour toutes les plateformes Amiga, AROS inclus. Vous
+pouvez le trouver `ici`__.
+
+*WinAros* est un environnement AROS préinstallé sur une image HD,
+compatible avec la célèbre machine virtuelle QEMU et Microsoft VirtualPC,
+les deux sont disponibles gratuitement sur internet. Vous pouvez télécharger
+`QEMU Winaros ici`__ et `VirtualPC one ici`__. Heinz-Raphael Reinke a
+également écrit un guide d'installation complet `AROS installation on hard disk`__ 
+en PDF. Si vous préférez, il y a également une `version Allemande`__.
+Vous aurez besoin d'Adobe Acrobat Reader, FoxIt Reader ou aPDF/xPDF
+pour les lire. 
+
+*Installation Kit for AROS (IKAROS)* est un set d'images de disque virtuels
+disponibles pour différentes machines virtuelles dont QEMU et VMware, déjà
+partitionnés, formatés, et utilisables pour installer AROS. Ses bénéfices
+sont la taille réduite du package et le faible nombre de fichiers, ainsi que
+la possibilité d'installer des nouvelles versions d'AROS ce qui le rend utile
+pour tester les nighty builds. Il permet également une installation facile
+des nouvelles versions sans devoir passer par le partitionnement des disques.
+Les instructions d'installation sont incluses.
+Veuillez consulter `Aros-Exec`__ pour des mises à jour récentes.
+
+
+__ http://www.viceteam.org/amigaos.html
+__ http://amidevcpp.amiga-world.de/WinAros/WinAros_Light_QEMU.zip
+__ http://amidevcpp.amiga-world.de/WinAros/WinAros_Light_VPC.zip
+__ http://amidevcpp.amiga-world.de/WinAros/Aros_HD_Install_English.pdf
+__ http://amidevcpp.amiga-world.de/WinAros/Aros_HD_Installation.pdf
+__ http://archives.aros-exec.org/?function=showfile&file=emulation/misc/arosik02.zip

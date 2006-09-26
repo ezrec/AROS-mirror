@@ -1,0 +1,16 @@
+===========
+Mise à jour
+===========
+
+:Author:   Paolo Besser
+:Date:     2006-08-28
+
+Le site Aros.org est doté de deux nouveaux langages: grâce à Sergey Mineychew
+notre site est désormais `traduit en Russe`__, Tomasz Paul travaille
+actuellementis sur la `traduction polonaise`__. Il suffit de cliquer en haut
+à gauche pour consulter ces pages.
+Sergey travaille également sur les localisations d'applications AROS.
+
+__ http://www.aros.org/ru/index.php
+__ http://www.aros.org/pl/index.php
+
