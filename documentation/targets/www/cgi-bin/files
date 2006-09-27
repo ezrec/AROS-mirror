@@ -38,12 +38,20 @@ colorFileNA  = Color( 0xDC, 0x99, 0x99 )  # File download not available cell
 colorFrame   = Color( 0x00, 0x00, 0x00 )  # Table separator lines
 colorGhosted = Color( 0x99, 0x77, 0x77 )  # File download not available text
 
-## Package descriptions
+## Package descriptions and other strings
 #
 descriptions = ConfigParser()
 if not os.path.exists( os.path.join( DESCRIPTIONS_DIR, language ) ):
     language = 'en'
 descriptions.read( os.path.join( DESCRIPTIONS_DIR, language ) )
+
+## Get size units
+#
+byteUnit = descriptions.get( 'units', 'byte-unit', '' )
+kilobyteUnit = descriptions.get( 'units', 'kilobyte-unit', '' )
+megabyteUnit = descriptions.get( 'units', 'megabyte-unit', '' )
+gigabyteUnit = descriptions.get( 'units', 'gigabyte-unit', '' )
+units = ( byteUnit, kilobyteUnit, megabyteUnit, gigabyteUnit )
 
 root  = '../downloads/' + dltype
 
@@ -51,7 +59,6 @@ root  = '../downloads/' + dltype
 
 def formatSize( size ):
     size  = float( size )
-    units = ( 'B', 'kB', 'MB', 'GB' )
 
     for unit in units:
         if size <= 1000:
@@ -73,8 +80,8 @@ groups = {}
 for date in dates:
     for group in os.listdir( os.path.join( root, date ) ):
         # Is this file a directory? If it is, then it means
-	# This file's name is the name of a group, except if it's named
-	# "logs", in which case we don't consider it.
+        # this file's name is the name of a group, except if it's named
+        # "logs", in which case we don't consider it.
         if group != 'logs' and stat.S_ISDIR( os.stat( os.path.join( root, date, group ) )[0] ):
             if not groups.has_key( group ):
 	        groups[group] = {}
@@ -104,11 +111,17 @@ for date in dates:
 
 span = len( dates )
 
+packageHeading = descriptions.get( 'headings', 'package', '' )
+dateHeading = descriptions.get( 'headings', 'date', '' )
+
+logsLabel = descriptions.get( 'links', 'build-logs', '' )
+downloadLabel = descriptions.get( 'links', 'download', '' )
+
 print '''
     <p><table class="layout" border="0" cellpadding="2" cellspacing="1" bgcolor="%(colorFrame)s">
         <tr class="layout" bgcolor="%(colorTH)s">
-            <td class="layout" width="35%%" rowspan="2"><b>Package</b></td>
-            <td class="layout" align="center" colspan="%(span)d"><b>Date</b></td>
+            <td class="layout" width="35%%" rowspan="2"><b>%(packageHeading)s</b></td>
+            <td class="layout" align="center" colspan="%(span)d"><b>%(dateHeading)s</b></td>
         </tr>
         <tr class="layout" bgcolor="%(colorTH)s">
 ''' % vars()
@@ -124,7 +137,7 @@ for date in dates:
         print '''
                     <td class="layout" align="center" bgcolor="%(color)s">
                         <b>%(year)s-%(month)s-%(day)s</b><br>
-                        [<a href="http://aros.sourceforge.net/downloads/nightly/%(date)s/logs">build logs</a>]
+                        [<a href="http://aros.sourceforge.net/downloads/nightly/%(date)s/logs">%(logsLabel)s</a>]
                     </td>
         ''' % vars()
     elif dltype == "snapshots":
@@ -140,11 +153,12 @@ print '''         </tr>'''
 
 for group in groups.keys():
     groupSpan    = span + 1
-    group_spaced = string.replace(group, '_', ' ')
+    groupKey = string.replace(group, '_', '-').lower()
+    groupHeading = descriptions.get( 'headings', groupKey, '' )
 
     print '''
             <tr class="layout" bgcolor="%(colorTH)s">
-                <td class="layout" align="left" colspan="%(groupSpan)s"><b>%(group_spaced)s</b></td>
+                <td class="layout" align="left" colspan="%(groupSpan)s"><b>%(groupHeading)s</b></td>
             </tr>    ''' % vars()
 
     for package in groups[group].keys():
@@ -193,7 +207,7 @@ for group in groups.keys():
                 <table class="layout" border="0" cellspacing="0" cellpadding="0">
                 <tr class="layout">
                  <td class="layout" rowspan="2"><a href="%(url)s"><img border="0" src="/images/disk.png"></a></td>
-                 <td class="layout"><a href="%(url)s">Download</a>&nbsp;</td>
+                 <td class="layout"><a href="%(url)s">%(downloadLabel)s</a>&nbsp;</td>
                 </tr>
                 <tr class="layout">
                  <td class="layout">%(size)s</td></tr>
