@@ -478,7 +478,10 @@ def buildWWW():
         if os.path.exists( desc_file ):
             copy( desc_file, os.path.join( dbpath, 'download-descriptions' ) )
 
-    shutil.copytree( 'targets/www/cgi-bin', os.path.join( DSTROOT, 'cgi-bin' ) )
+    cgi_dest = os.path.join( DSTROOT, 'cgi-bin' )
+    if os.path.exists( cgi_dest ):
+        shutil.rmtree( cgi_dest )
+    shutil.copytree( 'targets/www/cgi-bin', cgi_dest )
 
     toolpath = os.path.join( DSTROOT, 'tools' )
     makedir( toolpath )
