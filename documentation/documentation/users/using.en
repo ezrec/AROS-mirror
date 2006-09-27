@@ -3,7 +3,7 @@ AROS Users Guide
 ================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Sergey Mineychev
-:Copyright: Copyright Ò 1995-2006, The AROS Development Team
+:Copyright: Copyright â 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; only converted to reST. Needs heavy updating. In works!
@@ -150,11 +150,12 @@ Shell), play some games/demos included in contributed programs on the
 CD, look at system basics until you get bored. Also it`s possible to add
 files to ISO image and get some extra software written for AROS, and
 rewrite the LiveCD. For now here end simple part of using an
-AROS-native. To test all other features it`s required to install the
+AROS-native. To test all other features it`s required to install_ the
 system to the hard disk (real or virtual). This process can`t be called
 easy, and must be treated as experimental. It has beed desribed in
 Installation Doc. Anyway, remeber that work continues and soon you can
 get more from native AROS - keep in touch! 
+
 
 
 Using AROS hosted on Linux or FreeBSD
@@ -256,6 +257,10 @@ Also, from Amiga`s history the file placement unit is often called a
 drawer instead of a folder/directory in other systems, but it`s meaning
 remains the same. Translate it as a directory if you`re unsure.
 
+There`s a special keys in AROS, just like on original Amiga, used to make
+quick commands with it. Left and Right WinKey (on PC keyboard) replaces the 
+original Amiga Keys and is used in different combinations to launch commands.
+
 Another unknown name you can encounter in AROS is Zune. What`s that ?
 Zune is GUI toolkit developed in replacement and best traditions of MUI
 (Magic User Interface), widely used on Amiga`s. But is there an
@@ -263,7 +268,9 @@ application called Zune?  You can find Zune Pref and it allows you to
 set settings for Zune-based applications altogether or in particular.
 For example, to set Zune prefs for Wanderer you can select GUI prefs
 from it`s menu, or to set Zune prefs for other apps you can use it as
-the CLI command Zune.
+the CLI command Zune <app filename>.
+
+
 
 Later...
 
@@ -281,7 +288,7 @@ We have mentioned the applications, it`s good to give a description of
 their functions. So, there`s a groups of the AROS system applications
 collected in the separate directories:
 
-    + C - the place for all the system commands
+    + C - the place for all the system commands used in CLI
     + Classes - 
     + Devs - where the device-related files (drivers, keymaps) and 
       datatypes are placed  
@@ -298,6 +305,14 @@ collected in the separate directories:
 
 Instead of applications, there`s more permanent running programs called
 *tasks*.
+
+Another kind of AROS applications is the *Commodities*. This is applications which can help you make your system more comfortable. For example, AROS windows
+doesn`t set to the top of others when you click on it, and you can find it 
+uncommodable. You can use the AROS commodity ClickToFront to fix it. It can be 
+found beneath other commodities in SYS:Tools/Commodities directory. When you double click on it, window will become to the top of others if double clicked.
+Another example is Opaque commodity - it allows you to move windows with their
+contents. There`s also an Exchange commodity which allows you to manipulate 
+launched commodities and get information about them. Usually commodities do not open any windows. 
 
 Later...
 
@@ -347,6 +362,9 @@ Later...
 Setting up the Network
 ----------------------
 
+To communicate with other computers on network, AROS uses a TCP Stack, AROSTCP, 
+which is a port of AmiTCP. 
+
 Later...  
 
 Installing the software
@@ -376,3 +394,4 @@ here. You, the reader, can then decide if this is of interest to you.
 
 .. _Linux: http://www.linux.org/
 .. _UAE:   http://www.freiburg.linux.de/~uae/
+.. _install: installation
