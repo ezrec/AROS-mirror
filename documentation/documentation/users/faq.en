@@ -3,7 +3,7 @@ Frequently Asked Questions
 ==========================
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Sergey Mineychev, AROS-Exec.org
-:Copyright: Copyright Š 1995-2004, The AROS Development Team
+:Copyright: Copyright ¦ 1995-2004, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -448,7 +448,7 @@ networking.
 Hardware questions
 ==================
 
-Where can I view an AROS Hardware Compatibility List?                   
+Where can I find an AROS Hardware Compatibility List?                   
 -----------------------------------------------------
 
 You can find one on the `AROS Wiki <http://en.wikibooks.org/wiki/Aros/Platforms/x86_support>`__ page. There can be
@@ -460,3 +460,9 @@ Why Aros can`t boot from my drive set as the SLAVE on IDE channel?
 Well, AROS should boot if the drive is SLAVE but ONLY if there`s a drive also 
 on MASTER. That`s appeared to be a correct connection respecting to the IDE 
 specification, and AROS follows it.
+
+My system hangs with red cursor on screen
+-----------------------------------------
+
+One reason for this can be use of the serial mouse (these is not supported yet).
+You must use PS/2 mouse with AROS at the moment. Another can be if you`ve chosen an video mode unsupported by your hardware, in boot menu. Reboot and try a different one.
