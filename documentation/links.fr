@@ -9,7 +9,7 @@ Liens
 :Status:    Done.
 
 
-.. Contents::
+.. Contenu::
 
 
 Articles à propos d'AROS
