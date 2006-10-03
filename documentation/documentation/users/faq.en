@@ -3,7 +3,7 @@ Frequently Asked Questions
 ==========================
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Sergey Mineychev, AROS-Exec.org
-:Copyright: Copyright ¦ 1995-2004, The AROS Development Team
+:Copyright: Copyright ² 1995-2004, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -336,6 +336,9 @@ other work needed to create a Kickstart ROM. Currently, no one has applied for
 the job. 
 
 
+Software questions
+==================
+
 How do I access AROS's disk images from UAE?
 --------------------------------------------
 
@@ -370,9 +373,6 @@ developer-friendly) object-oriented shareware GUI toolkit and de-facto
 standard on AmigaOS. Zune is the preferred GUI toolkit to develop
 native AROS applications. As for the name itself, it means nothing,
 but sounds good.
-
-Software questions
-==================
 
 How can I restore my Prefs to defaults?
 ---------------------------------------

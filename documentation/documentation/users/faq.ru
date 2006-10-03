@@ -16,8 +16,9 @@
 Могу ли я задать вопрос?
 ------------------------
 
-Определенно! Для этого зарегистрируйтесь в форуме на aros-exec.org и задайте
-свой вопрос в его соответствующей ветке.
+Определенно! Для этого зарегистрируйтесь на
+`форуме Aros-Exec <http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=1636&start=0>`
+и задайте свой вопрос в его соответствующей ветке.
 
 Что вообще такое AROS ? 
 -----------------------
@@ -258,6 +259,10 @@ AROS требует меньше ресурсов, чем прочие системы (что значит, что UAE может полу
 Такое возможно, если кто-либо сделает native-порт AROS на Amiga и сделает всю прочую работу для создания Kickstart ROM. Пока что, никто не взялся за это.
 
 
+
+"Программные" вопросы (software)
+================================
+
 Как прочесть диски AROS под UAE?
 --------------------------------
 
@@ -293,12 +298,96 @@ GUI с shareware-лицензией, стандарт де-факто в AmigaOS. Zune - основной пакет
 разработки GUI-приложений AROS. Само имя ничего особенного не означает, но
 звучит прикольно. =)
 
-"Программные" вопросы (software)
-================================
+How can I restore my Prefs to defaults?
+---------------------------------------
 
-Пока пусто.
+In AROS, open CLI shell, go to Envarc: and delete relevant files for the 
+pref you want to restore.
+
+What is the Graphical mem and other memory in Wanderer?
+-------------------------------------------------------
+
+This memory division is mostly a relic from Amiga past, when graphical memory was application memory before you added some other, called FAST RAM, memory where applications ended, when graphics, sounds and some system structures were still in graphic memory.
+
+In AROS-hosted, there isn't such kind of memory as FAST, but only GFX, when on Native AROS, GFX can have a max of 16MB, although it wouldn't reflect the state of the graphic adapter memory...  It has no relation to the amount of memory on your graphics card.
+
+*The longwinded answer*
+Graphics memory in i386-native signifies the lower 16MB of memory in the system. That lower 16MB is the area where ISA cards can do DMA. Allocating memory with MEMF_DMA or MEMF_CHIP will end up there, the rest in the fast 
+memory.
+
+Use C:Avail HUMAN command for memory info.
+
+What do the Wanderer Snapshot <all/window> action actually do? 
+--------------------------------------------------------------
+
+This conmmand must remember icon`s placement of all (or one) windows.
+
+How do I change the screensaver/background?
+-------------------------------------------
+
+At the moment the only way to change screensaver is to write your one.
+Blanker commodity could be tuned with Exchange, but it able to do only "starfield" with given amount of stars.
+Background of Wanderer is set by Pref tool Prefs/Wanderer.
+Background of Zune Windows is set by Zune prefs Prefs/Zune. You can also set 
+your chosen application preferences by using the Zune <application> command.
+
+I`ve launch AROS-hosted but it`s failed
+---------------------------------------
+
+This could be probably fixed by creating a WBStartup directory in the AROS 
+directory. If you are root and AROS crashes at launch, do "xhost +" before 
+"sudo && ./aros -m 20". You must also give it some memory with -m option as 
+shown. Also don`t forget about BackingStore option in section Device of your 
+xorg.conf.
+
+What are the command line options for AROS-hosted executable?
+-------------------------------------------------------------
+
+You can get a list of them by rinning ./aros -h command.
+
+What are the AROS-native kernel options used in GRUB line?
+----------------------------------------------------------
+
+Here`s some::
+
+    nofdc - Disables the floppy driver completely.
+    noclick - Disabled the floppy disk change detection (and clicking)
+    ATA=32bit - Enables 32-bit I/O in the hdd driver (safe)
+    forcedma - Forces DMA to be active in the hdd driver (should be safe, but       might not be)
+    gfx=<hidd name> - Use the named hidd as the gfx driver
+    lib=<name> - Load and init the named library/hidd
+
+Please note that they are case-sensitive.
+
+How can I transfer files to virtual machine with AROS?
+------------------------------------------------------
+
+First and simpliest way is to put files to the ISO image and and connect it to VM. There`s alot of programs able to edit ISO`s like UltraISO, WinImage, 
+or mkisofs. Second, you can set up the network in AROS and FTP server on your 
+host machine. Then, you can use FTP client for AROS to transfer files. This is 
+tricky enough to stop at this point. User documentation must contain chapter on 
+networking.
 
 "Железные" вопросы (hardware)
 =============================
 
-Пока пусто.
+
+Where can I find an AROS Hardware Compatibility List?                   
+-----------------------------------------------------
+
+You can find one on the `AROS Wiki <http://en.wikibooks.org/wiki/Aros/Platforms/x86_support>`__ page. There can be
+another lists made by the AROS users.
+
+Why Aros can`t boot from my drive set as the SLAVE on IDE channel?
+------------------------------------------------------------------
+
+Well, AROS should boot if the drive is SLAVE but ONLY if there`s a drive also 
+on MASTER. That`s appeared to be a correct connection respecting to the IDE 
+specification, and AROS follows it.
+
+My system hangs with red cursor on screen
+-----------------------------------------
+
+One reason for this can be use of the serial mouse (these is not supported yet).
+You must use PS/2 mouse with AROS at the moment. Another can be if you`ve chosen 
+an video mode unsupported by your hardware, in boot menu. Reboot and try a different one.
