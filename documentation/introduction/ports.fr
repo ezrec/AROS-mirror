@@ -14,7 +14,7 @@ Ports
 Introduction
 ============
 
-Puisqu'AROS est un logiciel d'exploitation portable, il est disponible pour
+Puisqu'AROS est un système d'exploitation portable, il est disponible pour
 plusieurs plateformes. Un « port » d'AROS est exactement ce qu'implique le nom,
 ie. une version d'AROS portée sur une plateforme spécifique. 
 
