@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 FILES := handler unit pcnet32
 
-%build_module mmake=contrib-networking-drivers-pcnet32 \
+%build_module mmake=contrib-networking-drivers-pcnet32-i386 \
     modname=pcnet32 modtype=device \
     files="pcnet32_init $(FILES)" \
     moduledir=Devs/Networks uselibs="rom amiga hiddstubs"
