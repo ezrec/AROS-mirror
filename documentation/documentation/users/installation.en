@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright ² 1995-2006, The AROS Development Team
+:Copyright: Copyright Â 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. Can be translated.
@@ -135,8 +135,8 @@ In trouble check the FAQ if it contains any information on your kind of hardware
     [#]_. But you definitely would need to install AROS to test some of 
     it`s features and workarounds must be advised. Please note that you **should 
     not** use install on your working machine, which HD contains precious data!
-	We`re taking no responsibility for any data loss occured during the installation. 
-	Any bug reports on istallation is welcome, though.
+    We`re taking no responsibility for any data loss occured during the installation. 
+    Any bug reports on istallation is welcome, though.
 
 Installation media
 """"""""""""""""""
@@ -480,7 +480,7 @@ Footnotes
        the procedure is far from being automated and user-friendly and the
        necessary tools are still being heavily developed and might be quite
        buggy. Therefore we officially do not recommend harddisk installation for
-	   very unexperienced users at the moment so this note was done. 
+       unexperienced users at the moment so this note was written. 
 
 
 .. _`download page`: ../../download

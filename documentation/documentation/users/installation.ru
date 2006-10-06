@@ -57,7 +57,7 @@ AROS/i386-linux и AROS/i386-freebsd
 
 
 + Рабочая инсталляция FreeBSD 5.x или Linux (не имеет особого значения, какой дистрибутив
-	вы используете, если он относительно свежий)
+    вы используете, если он относительно свежий)
 
 + Настроенный и функционирующий X-сервер (например, X.Org или XFree86).
 
@@ -129,8 +129,8 @@ In trouble check the FAQ if it contains any information on your kind of hardware
     [#]_. But you definitely would need to install AROS to test some of 
     it`s features and workarounds must be advised. Please note that you **should 
     not** use install on your working machine, which HD contains precious data!
-	We`re taking no responsibility for any data loss occured during the installation. 
-	Any bug reports on istallation is welcome, though.
+    We`re taking no responsibility for any data loss occured during the installation. 
+    Any bug reports on istallation is welcome, though.
 
 Installation media
 """"""""""""""""""
@@ -473,7 +473,7 @@ Footnotes
        the procedure is far from being automated and user-friendly and the
        necessary tools are still being heavily developed and might be quite
        buggy. Therefore we officially do not recommend harddisk installation for
-	   very unexperienced users at the moment so this note was done. 
+       very unexperienced users at the moment so this note was done. 
 
 
 .. _`страницу закачек`: ../../download
