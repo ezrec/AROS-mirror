@@ -44,7 +44,9 @@
 /*                                                                            */
 /******************************************************************************/
 
-#if defined(__PPC__)
+#if defined(__AROS__)
+ #include "private.h"
+#elif defined(__PPC__)
  #pragma pack(2)
  #include "private.h"
  #pragma pack()

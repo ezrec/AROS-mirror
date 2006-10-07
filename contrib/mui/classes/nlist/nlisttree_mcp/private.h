@@ -28,7 +28,9 @@
   #include "mui.h"
 #endif
 
-#if defined(__PPC__)
+#if defined(__AROS__)
+  #include "../nlisttree_mcc/private.h"
+#elif defined(__PPC__)
   #pragma pack(2)
   #include "../nlisttree_mcc/private.h"
   #pragma pack()

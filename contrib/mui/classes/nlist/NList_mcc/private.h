@@ -63,7 +63,9 @@
 #include <clib/alib_protos.h>
 
 #include "NList_grp.h"
-#if defined(__PPC__)
+#if defined(__AROS__)
+  #include "NList_mcc.h"
+#elif defined(__PPC__)
   #pragma pack(2)
   #include "NList_mcc.h"
   #pragma pack()

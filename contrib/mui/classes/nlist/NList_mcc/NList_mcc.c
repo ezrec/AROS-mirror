@@ -302,6 +302,9 @@ static LONG Calc_Stack(Object *obj,struct NLData *data)
 }
 
 #ifdef __AROS__
+#if defined(__PPC__)
+IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
+#endif
 IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
   AROS_SLOWSTACKMETHODS_PRE(tag1)

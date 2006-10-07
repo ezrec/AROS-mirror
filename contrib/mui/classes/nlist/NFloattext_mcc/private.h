@@ -32,7 +32,9 @@
 #include "mui.h"
 #endif
 
-#if defined(__PPC__)
+#if defined(__AROS__)
+  #include "NFloattext_mcc.h"
+#elif defined(__PPC__)
   #pragma pack(2)
   #include "NFloattext_mcc.h"
   #pragma pack()

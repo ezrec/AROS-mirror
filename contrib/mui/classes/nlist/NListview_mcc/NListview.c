@@ -58,7 +58,9 @@
 #include "rev.h"
 
 #ifdef __GNUC__
-  #if defined(__PPC__)
+  #if defined(__AROS__)
+    #include "../NListviews_mcp/NListviews_mcp.h"
+  #elif defined(__PPC__)
     #pragma pack(2)
     #include "../NListviews_mcp/NListviews_mcp.h"
     #pragma pack()
@@ -319,6 +321,9 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
 }
 
 #ifdef __AROS__
+#if defined(__PPC__)
+IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
+#endif
 IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
   AROS_SLOWSTACKMETHODS_PRE(tag1)

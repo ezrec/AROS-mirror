@@ -157,6 +157,9 @@ AROS_UFH2S(void, putchfunc,
     AROS_USERFUNC_EXIT
 }
 
+#if defined(__PPC__)
+int MySPrintf(char *buf, char *fmt, ...) __stackparm;
+#endif
 int MySPrintf(char *buf, char *fmt, ...)
 {
 	va_list args;
@@ -254,6 +257,9 @@ LONG xget(Object *obj, ULONG attribute)
 }
 
 #ifdef __AROS__
+#if defined(__PPC__)
+IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
+#endif
 IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
   AROS_SLOWSTACKMETHODS_PRE(tag1)
@@ -874,6 +880,16 @@ INLINE ASM ULONG MyCallHookA(REG(a0, struct Hook *hook), REG(a2, struct NListtre
 }
 
 #ifdef __AROS__
+#if defined(__PPC__)
+/* weissms: don't ask me why but it has to be done like this, there is a similar
+   thing in nlist class
+*/
+static IPTR MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...) __stackparm;
+static IPTR MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
+{
+    return CallHookPkt(hook, data->Obj, ((IPTR *) &data)+1);
+}
+#else
 static IPTR MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
 {
     IPTR    retval;
@@ -887,6 +903,7 @@ static IPTR MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
 
     return retval;
 }
+#endif
 #else
 static ULONG STDARGS VARARGS68K MyCallHook(struct Hook *hook, struct NListtree_Data *data, ...)
 {
