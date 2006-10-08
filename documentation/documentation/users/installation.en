@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright Â 1995-2006, The AROS Development Team
+:Copyright: Copyright Ò 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. Can be translated.
@@ -136,7 +136,7 @@ In trouble check the FAQ if it contains any information on your kind of hardware
     it`s features and workarounds must be advised. Please note that you **should 
     not** use install on your working machine, which HD contains precious data!
     We`re taking no responsibility for any data loss occured during the installation. 
-    Any bug reports on istallation is welcome, though.
+    Any bug reports on installation is welcome.
 
 Installation media
 """"""""""""""""""
@@ -359,9 +359,9 @@ That's it. Time for the pre-installation reboot.
 
 .. Note:: If this all seems to be so boring that you can't stand it, there's 
           some relief if you intend to use AROS only in virtual machine. 
-          First, you can get a pre-installed pack, such asWinAROS/WinAROS
-          Lite - this system is already installed, but can be outdated. Second, 
-          you can look at `AROS Archives`_ for Installation Kit that contains 
+          First, you can get a pre-installed pack, such as *WinAROS/WinAROS
+          Lite* - this system is already installed, but can be outdated. Second, 
+          you can look at `AROS Archives`_ for *Installation Kit* that contains 
           ready-made virtual HD's that are already made and ready for install,
           so you can skip the previous procedure and install a fresh
           version of AROS. 
@@ -376,12 +376,12 @@ now, and it's empty. Now we need to fill it with files.
 There's an installer in AROS, as incomplete as HDToolbox is, but it can
 be used. At least, we can try. So, here's the first way to install.
 
-1. Run InstallAROS in the Tools drawer. You will see the welcome screen
-telling you the same I did - we're using the pre-alpha version. Let's
-get juice out of it ;) There's a Proceed button for you to click. Next,
+1. Run *InstallAROS* in the Tools drawer. You will see the welcome screen
+telling you the same I did - we're using the alpha version. Let's
+get juice out of it ;) There's a *Proceed* button for you to click. Next,
 you will see the AROS Public License, and you should accept it to go
 further. Now you will see the install options window (if it`s said No,
-just uncheck the relevant box) ::
+just *uncheck* the relevant box) ::
 
     Show Partitioning Options...    []
         <No. As we've done that already>
@@ -398,9 +398,9 @@ just uncheck the relevant box) ::
     Show Bootloader Options         [V]
         <Yes, bootloader will not be installed otherwise>
 
-Let me note that *Show Partitioning Options* can be unselectable in case 
-if installer is unable found any suitable partition.
-After you've selected or unselected everything we need, click Proceed.
+Let me note that *Show Partitioning Options* can be unselectable and greyed out
+in case if installer is unable to find any suitable partition.
+After you've selected or unselected everything we need, click *Proceed*.
 The next window shows us possible installation destinations::
 
     Destination Drive
@@ -415,7 +415,7 @@ The next window shows us possible installation destinations::
     Work drive ... <skipped>
     
 Now after we uncheck it, click *Proceed*. The window showing bootloader
-options appears. Here we only can check, if GRUB, the GRand Unified Bootloader,
+options appears. Here we only can check, if GRUB, the *GRand Unified Bootloader*,
 is to be installed to DH0 and on which device. Click *Proceed* again.
 
 Now the window says we're ready to install. Click *Proceed* once again. Do
@@ -453,7 +453,7 @@ If something goes wrong, there can be some answers...
 Troubleshooting
 ^^^^^^^^^^^^^^^
 
-Installation process is the one of most frequently asked about on forums,
+Installation process is the one of most frequently ones asked about on forums,
 mostly by newbees. You can check the FAQ if there an answer to your questions.
 Any additions ? ...
 
@@ -465,13 +465,45 @@ Requirements
 
 To be written by someone.
 
-AROS/m68k-native aka AfA
-------------------------
+AROS/m68k-backport aka AfA
+--------------------------
+
+This is not usual native/hosted flavour of AROS, but a thing that can be called
+a *backport*. Actually, it`s a set of libraries and binaries to enhance 
+the capabilities of original AmigaOS. AfA stands for AROS for Amigas. 
 
 Requirements
 """"""""""""
 
 To be written by someone.
+
+Installation
+""""""""""""
+
+Installation:
+
++ copy the directory AfA_OS_Libs to your sys: Amigadrive Bootpartition.
+  If you dont like it here you can copy it elsewhere and assign AfA_OS: 
+  to the directory where the AfA_OS_Libs are located
+  copy Libs:freetype2.library in your sys:libs directory
++ copy C:AfA_OS_Loader to your sys:fonts directory
++ copy Fonts: to your sys:fonts directory. If you want to have more 
+  fonts, use the Fonts from AROS or MOS
++ copy prefs: to your sys:prefs directory
+
+To start it on boot time, insert AfA_OS_Loader in your S:startup-sequence, 
+short before IPrefs. It must be inserted after patching tools like MCP 
+or picasso96/cgx, because they patch the AfA_OS Functions back.
+
+If you start it with the parameter MOUSESTART (must uppercase written), 
+you must hold the left mousebutton during boot time to load the modules, 
+instead of skipping them.
+
+To see if all works well, start the "TextBench" program found in this archive.
+TTF antialiased speed is currently not a text render winner, it is not optimized,
+see aatext source code, but I hope it is fast enough to be usable even on a 
+060/50MHz.
+
 
 Footnotes
 =========
