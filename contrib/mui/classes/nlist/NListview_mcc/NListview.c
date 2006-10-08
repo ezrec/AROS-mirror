@@ -321,9 +321,7 @@ static void NLV_Scrollers(Object *obj,struct NLVData *data,LONG vert,LONG horiz)
 }
 
 #ifdef __AROS__
-#if defined(__PPC__)
 IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
-#endif
 IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
   AROS_SLOWSTACKMETHODS_PRE(tag1)

@@ -157,9 +157,7 @@ AROS_UFH2S(void, putchfunc,
     AROS_USERFUNC_EXIT
 }
 
-#if defined(__PPC__)
 int MySPrintf(char *buf, char *fmt, ...) __stackparm;
-#endif
 int MySPrintf(char *buf, char *fmt, ...)
 {
 	va_list args;
@@ -257,9 +255,7 @@ LONG xget(Object *obj, ULONG attribute)
 }
 
 #ifdef __AROS__
-#if defined(__PPC__)
 IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
-#endif
 IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
   AROS_SLOWSTACKMETHODS_PRE(tag1)
