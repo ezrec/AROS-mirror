@@ -1,5 +1,8 @@
 amiga.rom_path     = System:Extras/Emu/E-UAE/shared/rom
 amiga.use_dither   = false
+cpu_type           = 68020
+chipset            = ecs
+chipmem_size       = 4
 cachesize          = 4096
 fastmem_size       = 8
 filesystem2        = rw,DH0:System:System:Extras/Emu/E-UAE/shared/dir/System,1

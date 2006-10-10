@@ -1,16 +1,96 @@
-diff -Nur e-uae-0.8.27/configure e-uae-0.8.27-aros/configure
---- e-uae-0.8.27/configure	2005-01-07 05:11:05.000000000 +0100
-+++ e-uae-0.8.27-aros/configure	2005-05-11 21:45:26.599354464 +0200
-@@ -19204,5 +19204,5 @@
+diff -Nur e-uae-0.8.28/configure e-uae-0.8.28-aros/configure
+--- e-uae-0.8.28/configure	2005-09-20 16:58:45.000000000 +0200
++++ e-uae-0.8.28-aros/configure	2006-10-10 17:12:22.000000000 +0200
+@@ -19843,5 +19843,5 @@
    export CC=$CC_FOR_BUILD
    export CFLAGS=$CFLAGS_FOR_BUILD
    mkdir -p src/tools
 -  cd  src/tools && ../../"$srcdir"/src/tools/configure --cache-file=/dev/null --host=$build --target=$host
 +  cd  src/tools && "$srcdir"/src/tools/configure --cache-file=/dev/null --host=$build --target=$host
  fi
+diff -Nur e-uae-0.8.28/src/fpp.c e-uae-0.8.28-aros/src/fpp.c
+--- e-uae-0.8.28/src/fpp.c	2005-05-10 09:03:16.000000000 +0200
++++ e-uae-0.8.28-aros/src/fpp.c	2006-10-10 17:12:22.000000000 +0200
+@@ -93,6 +93,42 @@
+     return (regs->fpsr >> 4) & 3;
+ }
+ 
++#if defined(uae_s64) && defined(__AROS__) && defined(__PPC__)
++
++/*
++weissms: toint converts an fptype (double) to uae_s64 (long long) which
++	 results in an implicit call to __fixdfdi from libgcc generated
++	 by the faked cross compiler used with aros. This in turn calls
++	 __fxunsdfdi which is only reachable via R_PPC_PLTREL24
++	 relocations that are currently not supported by the ppc elf
++	 loader and probably never will be. So below is a reimplementation
++	 of said conversion functions from libgcc. Another solution would
++	 be to use a real cross compiler.
++*/
++
++#define WORD_SIZE (sizeof (uint32_t) * 8)
++#define HIGH_WORD_COEFF (((tointtype) 1) << WORD_SIZE)
++
++STATIC_INLINE tointtype __fxunsdfDI (fptype a)
++{
++    const uint32_t hi = a / HIGH_WORD_COEFF;
++    const uint32_t lo = a - (double)hi * HIGH_WORD_COEFF;
++    return ((tointtype) hi << WORD_SIZE) | lo;
++}
++
++STATIC_INLINE tointtype __fxdfdi (fptype a)
++{
++  if (a < 0)
++    return - __fxunsdfDI (-a);
++  return __fxunsdfDI (a);
++}
++#else
++STATIC_INLINE fptype __fxdfdi (fptype a)
++{
++  return a;
++}
++#endif
++
+ STATIC_INLINE tointtype toint (fpp_rounding_mode mode, fptype src)
+ {
+     switch (mode) {
+@@ -100,14 +136,14 @@
+ #if USE_X86_FPUCW
+ 	    return (tointtype) (src);
+ #else
+-	    return (tointtype) (src + 0.5);
++	    return (tointtype) __fxdfdi((src + 0.5));
+ #endif
+ 	case FPP_ROUND_TO_ZERO:
+-	    return (tointtype) src;
++	    return (tointtype) __fxdfdi(src);
+ 	case FPP_ROUND_DOWN:
+-	    return (tointtype) floor (src);
++	    return (tointtype) __fxdfdi(floor (src));
+ 	case FPP_ROUND_UP:
+-	    return (tointtype) ceil (src);
++	    return (tointtype) __fxdfdi(ceil (src));
+     }
+ }
+ 
+diff -Nur e-uae-0.8.28/src/gfx-amigaos/ami-win.c e-uae-0.8.28-aros/src/gfx-amigaos/ami-win.c
+--- e-uae-0.8.28/src/gfx-amigaos/ami-win.c	2005-09-12 07:55:51.000000000 +0200
++++ e-uae-0.8.28-aros/src/gfx-amigaos/ami-win.c	2006-10-10 17:50:41.818350688 +0200
+@@ -594,6 +594,11 @@
+ 	    redbits  = 8; greenbits  = 8;  bluebits  = 8;
+ 	    redshift = 8; greenshift = 16; blueshift = 24;
+ 	    break;
++	/* weissms: backport from cvs*/
++	case PIXFMT_ARGB32:
++	    redbits  = 8; greenbits  = 8;  bluebits  = 8;
++	    redshift = 16; greenshift = 8; blueshift = 0;
++	    break;
+ 	case PIXFMT_BGR24:
+ 	    redbits  = 8; greenbits  = 8; bluebits  = 8;
+ 	    redshift = 0; greenshift = 8; blueshift = 16;
 diff -Nur e-uae-0.8.28/src/sd-amigaos/sound.c e-uae-0.8.28-aros/src/sd-amigaos/sound.c
 --- e-uae-0.8.28/src/sd-amigaos/sound.c	2004-12-03 02:50:44.000000000 +0100
-+++ e-uae-0.8.28-aros/src/sd-amigaos/sound.c	2005-12-20 18:43:13.000000000 +0100
++++ e-uae-0.8.28-aros/src/sd-amigaos/sound.c	2006-10-10 17:12:22.000000000 +0200
 @@ -128,8 +128,8 @@
  int sndbufsize;
  int bufidx, devopen, ahiopen;
