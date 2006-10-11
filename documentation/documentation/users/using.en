@@ -3,7 +3,7 @@ AROS Users Guide
 ================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Sergey Mineychev
-:Copyright: Copyright â 1995-2006, The AROS Development Team
+:Copyright: Copyright ò 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; only converted to reST. Needs heavy updating. In works!
@@ -306,13 +306,16 @@ collected in the separate directories:
 Instead of applications, there`s more permanent running programs called
 *tasks*.
 
-Another kind of AROS applications is the *Commodities*. This is applications which can help you make your system more comfortable. For example, AROS windows
+Another kind of AROS applications is the *Commodities*. This is applications 
+which can help you make your system more comfortable. For example, AROS windows
 doesn`t set to the top of others when you click on it, and you can find it 
 uncommodable. You can use the AROS commodity ClickToFront to fix it. It can be 
-found beneath other commodities in SYS:Tools/Commodities directory. When you double click on it, window will become to the top of others if double clicked.
+found beneath other commodities in SYS:Tools/Commodities directory. When you 
+double click on it, window will become to the top of others if double clicked.
 Another example is Opaque commodity - it allows you to move windows with their
 contents. There`s also an Exchange commodity which allows you to manipulate 
-launched commodities and get information about them. Usually commodities do not open any windows. 
+launched commodities and get information about them. Usually commodities do not 
+open any windows. 
 
 Later...
 
@@ -352,10 +355,13 @@ able to see all the translated content.
 So now we can read, but can we write also in our language? To do this,
 you must change the keyboard layout.
 
-Keyboard pref...Also this pref allows to save presets - just like any
+Keyboard pref...Also this pref allows you to save presets - just like any
 application it`s got a menu, and you can save your preferences to file
 with the given name and keep different settings of locales. We can use
-it later to switch our keyboard layouts.
+it later to switch our keyboard layouts. Choose your layout from list and 
+make a left click to open the context menu. 
+
+
 
 Later...        
 
@@ -363,7 +369,98 @@ Setting up the Network
 ----------------------
 
 To communicate with other computers on network, AROS uses a TCP Stack, AROSTCP, 
-which is a port of AmiTCP. 
+which is a port of AmiTCP. This software is located in /Extras/Networking/Stacks/AROSTCP
+directory. Setting up is not easy but some kind of GUI tool is in development. 
+
+First you need is to setup your machine side of network. This part can differ 
+depending on your hardware. On a real machine you need to install the supported
+network interface card (NIC) and plug the cable to it. On a virtual machine
+you must set up it`s NIC implementation and check if it`s supported by AROS
+(QEMU and VMWare ones is). On Windows version of QEMU you will need to specify 
+-net nic -net user switches in it`s command line. 
+On linux system some steps needs to be done to make it working.
+The tun (tunnel) module must be loaded::
+
+    #> modprobe tun
+
+Then, the kernel must become a router::
+
+    #> echo 1 > /proc/sys/net/ipv4/ip_forward
+
+Then, a rule must be added to the firewall::
+
+    #> iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+Finally, still being root, start Qemu with::
+
+    #> qemu -cdrom aros.iso -m 48
+
+After this is enabled we can go to the next point.
+
+Second part is setting AROSTCP in AROS to work. 
+
+The Linux tun module, by default, creates a gateway for the fake network at 
+172.20.0.0/16 with a gateway at 172.20.0.1.
+Say our Qemu hosted machine is at 172.20.0.10.
+Say your usual LAN is 192.168.0.0/24 with a DNS at 192.168.0.1 
+(or anywhere on the Internet, for that matter).
+
+You have to edit 3 files in the AROSTCP/db: hosts, interfaces, netdb-myhost
+In hosts remove any entries. Hosts will be in netdb-myhost for now.
+In interfaces Uncomment the prm-rtl8129.device line, because Qemu is emulating 
+this NIC, edit it::
+
+    eth0 DEV=DEVS:networks/prm-rtl8029.device UNIT=0 NOTRACKING IP=172.20.0.10 UP
+
+In netdb-myhost, add the various local known hosts, 
+your local domain name, the gateway::
+
+    HOST 172.20.0.10 arosbox.lan arosbox
+    HOST 172.20.0.1 gateway
+    DOMAIN lan
+    NAMESERVER 192.168.0.1
+
+The db directory can itself reside anywhere, you set its path in the 
+ENVARC:AROSTCP/Config file, I advice you to copy the db files in the (created) 
+ENVARC:AROSTCP/db directory, that way the Config file could be::
+
+ENV:AROSTCP/db
+
+Now make AROSTCP start at boot with the word "True" in ENVARC:AROSTCP/Autorun
+Edit the Sys:extras/Networking/Stacks/AROSTCP/S/Package-Startup::
+
+    ; $VER: AROSTCP-PackageStartup 1.0 (01/08/06)
+    ; AROSTCP-PackageStartup (c) The AROS Dev Team.
+    ;
+    Path "C" "S" ADD QUIET
+
+    If not exists T:Syslog
+        makedir T:Syslog
+    Endif
+
+    If not exists EMU:
+        if $AROSTCP/AutoRun eq "True"
+        C:execute S/startnet
+        EndIf
+    EndIf
+
+The Sys:extras/Networking/Stacks/AROSTCP/S/Startnet file should be something like::
+
+    ; $VER: AROSTCP-startnet 1.0 (01/08/06)
+    ; AROSTCP-startnet (c) The AROS Dev Team.
+    ;
+    Run <NIL: >NIL: AROSTCP
+    WaitForPort AROSTCP
+    If NOT Warn
+        run >NIL: route add default gateway
+    Else
+    ; echo "Wait for Stack Failed"
+    EndIf
+
+Next boot, test it with:
+
+ifconfig -a
+ping voila.fr
 
 Later...  
 

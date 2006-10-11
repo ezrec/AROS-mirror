@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright Ò 1995-2006, The AROS Development Team
+:Copyright: Copyright â 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. Can be translated.
@@ -198,7 +198,7 @@ you can do this with the following command::
 
 If you are using Windows, you will need to get rawrite_ to write the image to
 a floppy. Please see the documentation of rawrite_ for information on how to use
-it.
+it. There`s also an GUI version called rawwritewin.
 
 
 Booting
