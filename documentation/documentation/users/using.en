@@ -108,8 +108,8 @@ they work - we might just be at 77% of the whole system, but we already
 have Quake running!
 
 
-Using "native" AROS on i386 and m68k
-------------------------------------
+Using "native" AROS on i386 
+---------------------------
 
 Native AROS is currently under heavy development. If you want to see
 cool tricks, try AROS on Linux. But if you're (also) interested in what
@@ -119,15 +119,6 @@ The instructions for installing native AROS are varying depending on
 which platform you use. Because "native" is still in great development,
 the *results* from installing native AROS can also vary depending on the
 age of the code that you use.
-
-On an Amiga (m68k), you can place the native code somewhere on your
-harddisk, double-click the "boot" icon, do a reset and enjoy a complete
-Amiga system.  This is because it is not *really* native. The boot
-program just temporarily replaces a few AmigaOS libraries with AROS
-libraries. For testing purposes this is of course good, but in the end
-you still run good ol' AmigaOS and not plain native AROS. This will
-change as we build a more complete 68k AROS system. This system is often
-called AfA (AROS for Amigas).
 
 On i386 there`s a different booting media available. First and most
 useful binaries set is an AROS LiveCD which you can get in the Downloads
@@ -156,6 +147,62 @@ easy, and must be treated as experimental. It has beed desribed in
 Installation Doc. Anyway, remeber that work continues and soon you can
 get more from native AROS - keep in touch! 
 
+Using "native" AROS i386 in Virtual Machines
+--------------------------------------------
+
+Currently the *Virtualization* technologies is developed to a almost complete
+real machine replacement, have been burned-on by the increasing CPU speeds.
+You can make a "virtual" machine inside of your system ("host") and launch AROS on it,
+without being worried about any failures and relaunching the "guest" system quickly 
+if something has happened. There`s a number of free virtual machine packages,
+most knowingly is QEMU (Free, Open Source), VMWare Player (Free. There`s also
+a full VMWare server for free that require a free serial) and Microsoft VPC (Free).
+You can get a version for your "host" system that suits your needs. We will
+describe some tips on launching AROS for different VM`s. 
+
+Instead of having almost the same AROS setup inside the VM`s, there`s a 
+difference in setting the VM itself. 
+
+QEMU on Linux is quite easy to setup. All you need is to apt-get the package
+on Debian/Ubuntu/Knoppix/DSL or use any other package manager for other 
+distributions or download and unpack the archive manually. You can get the
+archive from the `QEMU Website <http://fabrice.bellard.free.fr/qemu/>`__. 
+
+QEMU on Windows is almost the same thing. The difference is in networking
+and some other issues. You can find useful information and packages on 
+`QEMU On Windows page <http://www.h7.dion.ne.jp/~qemu-win/>`__ . 
+Also there`s nice GUI for QEMU called QEMU Manager, including the QEMU package.
+There`s also some GUI`s for QEMU for some systems can be found in links.
+
+QEMU must be launched as a console application with some parameters given. 
+We will review some options in other sections, meaning you must append
+these to your launch string (or a script). 
+
+QEMU is fast virtualiser, but it`s speed can be increased by installing 
+the KQEMU kernel module (and appending the -kernel-kqemu option if in Windows).
+But remember that KQEMU can make guest system unstable.
+
+Also if you considered to try installing AROS to HD, you can create the 
+virtual HDD for QUMU using the qemu-img program (replace <size> 
+with needed size in bytes, M or G for mega- or giga-) with a command like::
+    
+    qemu-img create -f qcow aros.img <size>
+
+Applying to `VMWare <http://vmware.com>`__ or VPC it`s even easier to setup. 
+All you need is to install some virtual hardware like network and sound card 
+and create an virtual HDD. Everything managed by a simple GUI.
+
+Using the AfA on m68k
+---------------------
+
+On an Amiga (m68k), you can place the native code somewhere on your
+harddisk, double-click the "boot" icon, do a reset and enjoy a complete
+Amiga system.  This is because it is not *really* native. The boot
+program just temporarily replaces a few AmigaOS libraries with AROS
+libraries. For testing purposes this is of course good, but in the end
+you still run good ol' AmigaOS and not plain native AROS. This will
+change as we build a more complete 68k AROS system. This system is often
+called AfA (AROS for Amigas).
 
 
 Using AROS hosted on Linux or FreeBSD
@@ -169,7 +216,8 @@ Workbench replacement "Wanderer" will be started.
 
 There`s some command line options for aros executable that could be used.
 You can get this list with ./aros -h option given.
-Laters ...
+
+To be appended ...
 
 Because "Wanderer" is very limited you'll prefer to work with the Shell.
 You can start it from the menu "Wanderer/Shell". Now you should type in
@@ -188,12 +236,8 @@ AROS capabilities.
 Using AROS-hosted on PPC
 ------------------------
 
-To be filled by someone...
+To be filled by someone... 
 
-Using the AfA on m68k
----------------------
-
-To be filled by someone...
 
 AROS Basics
 ===========
@@ -232,7 +276,7 @@ can see it isn`t like a Windows or another system`s desktop, fixed to
 it`s place. Of course, you can even not use the Wanderer at all and use
 your preferred file manager (e.g. Directory Opus).
 
-But how do the applications behave then, where will they`re open?
+But how do the applications behave then, where will the windows be open?
 There`s a `screen` term - screen is the place where your window is meant
 to be open. If it`s said that application going to open on Wanderer
 screen, it will look like it`s usually happens in other OS - your app
@@ -286,12 +330,16 @@ To be finished...
 AROS CLI (Command Line Interface)
 ---------------------------------
 
-CLI commands abstract and comparision, TAB completion...
+ToDO - CLI commands abstract and comparision ...
 
 AROS has it`s CLI, the Command Line Interface, greatly expanding the 
 capabilities of OS. Those who had used the AmigaOS can note that it looks
 Pretty close to the AmigaDOS. There`s some CLI basics described in 
 `introduction </users/introduction>`__ to CLI commands. 
+
+Currently you don`t need to type all the commands to the end - now there`s
+a neat Tab completion similar to that on Linux consoles. This allows you 
+also to append the filenames or choose them from the list.
 
 To be finished...
 
@@ -378,14 +426,53 @@ able to see all the translated content.
 So now we can read, but can we write also in our language? To do this,
 you must change the keyboard layout.
 
-Keyboard pref...Also this pref allows you to save presets - just like any
-application it`s got a menu, and you can save your preferences to file
-with the given name and keep different settings of locales. We can use
-it later to switch our keyboard layouts. Choose your layout from list and 
-make a left click to open the context menu. 
+Keyboard and mouse settings are managed by the Input pref. You can change 
+the layout and click *Use* but we can do even better. This tool
+allows you also to save presets - just like any application it`s got a menu, 
+allows you to save your preferences to the file with the given name and keep 
+different settings of locales. We will use it later to switch our keyboard 
+layouts. Choose your locale`s keyboard layout 
+from the list and make a left click to open the context menu. Then enter 
+the name of your preset to File string, say, *locale1* and click Ok to save it to 
+SYS:Prefs/Presets directory. Now choose an American (PC) layout and repeat 
+the saving presets, say, with name *english*. This presets can be used later
+to switch the layouts. Click *Cancel* to exit.
 
+There`s an FKey commodity which allows you to make actions assigned to
+some combinations of keys. Now let`s launch it and assign the locale switching. 
+After you double-click on FKey icon, launch the Exchange, choose the
+FKey from list and click the *Show* button. This will invoke the FKey window.
+You can see the ALT TAB in list assigned to window switching. Now enter the 
+first key comination, say, *ALT Z* and go to the right panel. Choose *Launch the
+program* from pulldown menu and enter SYS:Prefs/Input as an argument. Append the 
+USE switch and *english* preset name to the string as shown::
 
-To be finished...        
+    SYS:Prefs/Input USE SYS:Prefs/Presets/english
+
+Click on the *New* Button to add the another combination. Now set the combination
+for your locale as shown above, replacing *english* name with your preset name.
+Click *New* button again and then *Save Settings*. Now you can use defined 
+combinations to switch the layouts.  
+
+Installing the software
+-----------------------    
+
+Actually there`s no installer system in AROS. Installing the application
+usually mean that you must extract it to some directory on a harddrive or
+ramdisk. Then some probrams require you to make some directory assignments which
+is done in CLI with the Assign command and some start script additions. 
+For example, Lunapaint needs the Lunapaint: to be assigned to the directory
+it was extracted to to work properly. You can do this with the command 
+Assign Lunapaint: Disk:Path/Lunapaint . But if you don`t want to type this 
+command after reboot to launch it again, you must put it to Startup-Sequence
+script. To do this, type this command in CLI prompt::
+
+    :> edit SYS:S/Startup-Sequence
+    
+Then insert the Lunapaint (or other program) assign after all assign lines 
+in the beginning of the file. Save the changes and you`ll have that fixed.
+Such a procedure can be used for any program needs it.
+
 
 Setting up the Network
 ----------------------
@@ -403,15 +490,16 @@ network interface card (NIC) and plug the cable to it. On a virtual machine
 you must set up it`s NIC implementation and check if it`s supported by AROS
 (at least, QEMU and VMWare ones is supported). 
 
-Net on the real PC
-""""""""""""""""""
-
-To be.
-
 Net on QEMU/Linux
 """""""""""""""""
 
-On linux system some steps needs to be done to make it working.
+Read tips for launching AROS on Linux QEMU above.
+
+After this is enabled we can go to the next point.
+
+Second part is setting AROSTCP in AROS to work. 
+
+On linux system some steps needs to be done to make the network in VM working.
 
 The tun (tunnel) module must be loaded::
 
@@ -429,15 +517,15 @@ Finally, still being root, start Qemu with::
 
     #> qemu -cdrom aros.iso -m 48
 
-After this is enabled we can go to the next point.
-
-Second part is setting AROSTCP in AROS to work. 
-
 The Linux tun module, by default, creates a gateway for the fake network at 
 172.20.0.0/16 with a gateway at 172.20.0.1.
 Say our Qemu hosted machine is at 172.20.0.10.
 Say your usual LAN is 192.168.0.0/24 with a DNS at 192.168.0.1 
 (or anywhere on the Internet, for that matter).
+
+For QEMU on Windows in user mode networking you must replace it with 10.0.2.16 
+for host and 10.0.2.2 for gateway. Remember to set up your firewall in way 
+it can pass the QEMU packets.
 
 You have to edit 3 files in the AROSTCP/db: hosts, interfaces, netdb-myhost
 In hosts remove any entries. Hosts will be in netdb-myhost for now.
@@ -492,51 +580,81 @@ something like::
     ; echo "Wait for Stack Failed"
     EndIf
 
-Next boot, test it with:
+Next boot, test it with::
 
-ifconfig -a
-ping www.aros.org
+    ifconfig -a
+
+You must see the output something like this::
+    
+    lo0: flags=8<LOOPBACK> mtu 1536
+            inet 0.0.0.0 netmask 0x0
+    eth0: flags=863<UP,BROADCAST,NOTRAILERS,RUNNING,SIMPLEX> mtu 1500
+            address: 52:54:00:12:34:56
+            inet 172.20.0.10 netmask 0xff000000 broadcast 10.255.255.255
+
+If you can see that eth0 string then your interface is up. You can test it by 
+launching those commands::
+
+    >ping 172.20.0.1
+    PING 172.20.0.1 (172.20.0.1): 56 data bytes
+    64 bytes from 172.20.0.1: icmp_seq=0 ttl=255 time=xx ms
+    64 bytes from 172.20.0.1: icmp_seq=1 ttl=255 time=xx ms
+    64 bytes from 172.20.0.1: icmp_seq=2 ttl=255 time=xx ms
+    
+    --- 172.20.0.1 ping statistics ---
+    3 packets transmitted, 3 packets received, 0% packets loss
+    round trip min/avg/max = x/xx/xx ms
+
+Output like this means that our interface packet`s reached the gateway with
+10.0.2.2 address. If you got Host unreachable earrors check your AROSTcp 
+settings and VM options.
+
+You can test it even further by pinging other hosts and try using some 
+networking applications which you can find on Archives.aros-exec.org, like
+ftp and AIRCos. If you use an FTP program with your FTP server, remember 
+it can work only with passive ftp servers, and set up your server to this mode.
+
 
 Net on QEMU/Windows
 """""""""""""""""""
 
 Setting QEMU to run on Windows is relatively harder to that of Linux. First,
 make sure you have turn your Firewall to learning mode (or prepare it to
-receive new rules) or completely disable it. Firewall can block transfers to VM
+receive new rules) or completely disable it. Firewall can block transfers to VM.
 
-On Windows version of QEMU you will need to specify 
--net nic -net user switches in it`s command line. There`s also an option to use 
-the tap interfaces. There`s some guides describing how to setup QEMU in Windows.
+There`s two ways to use network with QEMU on Windows. First is to use
+a user-mode networking stackm which is launched by default (or using the 
+"-net nic -net user" switches).
+
+The second option is to use the tap interface. 
+There`s some guides describing how to setup QEMU networking in Windows:
+
+    + For `VLan <http://www.h7.dion.ne.jp/~qemu-win/HowToNetwork-en.html>`__
+    + For `Tap <http://www.h7.dion.ne.jp/~qemu-win/TapWin32-en.html>`__
 
 Setting the AROS side is similar to that of Linux use, but you will need to use
-the following IP addresses to setup: 10.0.2.15 for ArROS machine IP, 
-10.0.2.2 for gateway.
+the following IP addresses to setup and test: 10.0.2.15 for AROS machine IP 
+(instead of 172.20.0.10), 10.0.2.2 for gateway (instead of 172.20.0.1).
 
 Net on VMWare
 """"""""""""" 
 
-VMWare`s side network is relatively easy to set up. 
+VMWare`s side network is relatively easy to set up...
 
-Later...  
+Net on the real PC
+""""""""""""""""""
 
-Installing the software
------------------------    
+On a real PC you will need to do all you can do for any OS - prepare the
+hardware to connect to AROS box - cables, hub and other. Then you must setup the 
+AROS side similar to shown above, replacing the IP addresses to those
+acceptable in your LAN for AROS-box IP, gateway and DNS.
 
-Actually there`s no installer system in AROS. Installing the application
-usually mean that you must extract it to some directory on a harddrive or
-ramdisk. Then some probrams require you to make some directory assignments which
-is done in CLI with the Assign command and some start script additions. 
-For example, Lunapaint needs the Lunapaint: to be assigned to the directory
-it was extracted to to work properly. You can do this with the command 
-Assign Lunapaint: Disk:Path/Lunapaint . But if you don`t want to type this 
-command after reboot to launch it again, you must put it to Startup-Sequence
-script. To do this, type this command in CLI prompt::
+To be finished...  
 
-    :> edit SYS:S/Startup-Sequence
-    
-Then insert the Lunapaint (or other program) assign after all assign lines 
-in the beginning of the file. Save the changes and you`ll have that fixed.
-Such a procedure can be used for any program needs it.
+Setting Up The Sound
+--------------------
+
+To be written by someone...
 
 Is that all the User's Information in this guide?
 =================================================
