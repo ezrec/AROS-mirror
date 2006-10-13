@@ -609,7 +609,7 @@ launching those commands::
     round trip min/avg/max = x/xx/xx ms
 
 Output like this means that our interface packet`s reached the gateway with
-10.0.2.2 address. If you got Host unreachable earrors check your AROSTcp 
+172.20.0.1 address. If you got Host unreachable earrors check your AROSTcp
 settings and VM options.
 
 You can test it even further by pinging other hosts and try using some 
