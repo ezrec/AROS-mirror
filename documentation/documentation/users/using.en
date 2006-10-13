@@ -3,7 +3,7 @@ AROS Users Guide
 ================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Sergey Mineychev
-:Copyright: Copyright  1995-2006, The AROS Development Team
+:Copyright: Copyright 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; only converted to reST. Needs heavy updating. In works!
@@ -457,21 +457,24 @@ combinations to switch the layouts.
 Installing the software
 -----------------------    
 
-Actually there`s no installer system in AROS. Installing the application
-usually mean that you must extract it to some directory on a harddrive or
-ramdisk. Then some probrams require you to make some directory assignments which
+Actually there`s no installer system in AROS. Installing an application
+usually means you have to extract it to some directory on a harddrive or
+ramdisk. Then some programs require you to make assignments which
 is done in CLI with the Assign command and some start script additions. 
 For example, Lunapaint needs the Lunapaint: to be assigned to the directory
 it was extracted to to work properly. You can do this with the command 
-Assign Lunapaint: Disk:Path/Lunapaint . But if you don`t want to type this 
-command after reboot to launch it again, you must put it to Startup-Sequence
-script. To do this, type this command in CLI prompt::
 
-    :> edit SYS:S/Startup-Sequence
+    Assign Lunapaint: Disk:Path/Lunapaint
+
+But if you don`t want to type this command after reboot to launch it again, 
+you must put it to S:User-Startup script. 
+To do this, type this command in CLI prompt::
+
+    :> edit SYS:S/User-Startup
     
-Then insert the Lunapaint (or other program) assign after all assign lines 
-in the beginning of the file. Save the changes and you`ll have that fixed.
-Such a procedure can be used for any program needs it.
+Then insert the Lunapaint (or other program) assign at the end of file.
+Save the changes and you`ll have that fixed.
+Such a procedure can be used for any program that needs it.
 
 
 Setting up the Network
