@@ -1,6 +1,0 @@
-FailAt 21
-Delete Floattext_mui/objects FORCE ALL QUIET
-Delete NFloattext_mcc/objects FORCE ALL QUIET
-Delete NListview_mcc/objects FORCE ALL QUIET
-Delete NListviews_mcp/objects FORCE ALL QUIET
-Delete NList_mcc/objects FORCE ALL QUIET
