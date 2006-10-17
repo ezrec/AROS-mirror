@@ -1,4 +1,0 @@
-; make wavetools.audio
-; snma must be set to link
-snma wavetools_audio.s OBJ AHI/wavetools.audio
-
