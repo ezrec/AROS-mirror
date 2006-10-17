@@ -598,7 +598,7 @@ You must see the output something like this::
 If you can see that eth0 string then your interface is up. You can test it by 
 launching those commands::
 
-    >ping 172.20.0.1
+    AROS:>ping 172.20.0.1
     PING 172.20.0.1 (172.20.0.1): 56 data bytes
     64 bytes from 172.20.0.1: icmp_seq=0 ttl=255 time=xx ms
     64 bytes from 172.20.0.1: icmp_seq=1 ttl=255 time=xx ms
@@ -626,18 +626,30 @@ make sure you have turn your Firewall to learning mode (or prepare it to
 receive new rules) or completely disable it. Firewall can block transfers to VM.
 
 There`s two ways to use network with QEMU on Windows. First is to use
-a user-mode networking stackm which is launched by default (or using the 
-"-net nic -net user" switches).
+a user-mode networking stack which is launched by default (or using the 
+"-net nic -net user" switches, which is default now). Options given is
+for 0.8 or newer QEMU version. Setting the AROS side is similar to that
+of Linux use, but you will need to use
+the following IP addresses to setup and test: 10.0.2.15 for AROS machine IP 
+(instead of 172.20.0.10), 10.0.2.2 for gateway (instead of 172.20.0.1).
 
-The second option is to use the tap interface. 
-There`s some guides describing how to setup QEMU networking in Windows:
+The second option is to use the tap interface. To use it you must download
+the `OpenVPN 2.0<http://openvpn.net>`__ package for Windows (Only 2k/XP). 
+After you install it, you will get an extra network connection in disconnected
+state. Rename it to, say, eth0. Then go to the eth0 connection properties and 
+set an IP address in the properties of TCP-IP protocol. You must set:
+IP address *in other* subnet than your base IP (If you have 192.168.0.x one,
+then set, say, 192.168.200.1) and 255.255.255.0 netmask. *Reboot*.Then replace 
+in QEMU
+starting line options (or add if there`s were not) -net nic -net tap,ifname=eth0.
+Then set an AROS side as it was described, using the following parameters:
+192.168.200.2 for AROS machine`s IP (instead of 172.20.0.10), 192.168.200.1 
+for gateway (instead of 172.20.0.1).
+
+There`s also some guides describing how to setup QEMU networking in Windows:
 
     + For `VLan <http://www.h7.dion.ne.jp/~qemu-win/HowToNetwork-en.html>`__
     + For `Tap <http://www.h7.dion.ne.jp/~qemu-win/TapWin32-en.html>`__
-
-Setting the AROS side is similar to that of Linux use, but you will need to use
-the following IP addresses to setup and test: 10.0.2.15 for AROS machine IP 
-(instead of 172.20.0.10), 10.0.2.2 for gateway (instead of 172.20.0.1).
 
 Net on VMWare
 """"""""""""" 
@@ -656,6 +668,11 @@ To be finished...
 
 Setting Up The Sound
 --------------------
+
+Currently there`s not much to sound in AROS. First, at the moment there`s no 
+working drivers for virtual machine`s implemented sound cards (usually sb16/es)
+so the only way to try to get sound is use AROS-native on pc with a real 
+SB Live/Audigy card. Also the AC97-copliant codecs are supported. 
 
 To be written by someone...
 
