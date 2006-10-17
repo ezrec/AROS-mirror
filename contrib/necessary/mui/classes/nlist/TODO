@@ -1,0 +1,27 @@
+
+* Stack check can be activated again
+
+see NList_func.h for STACK_CHECK and STACK_ALERT macros
+    NList_mcc.c for Calc_Stack
+
+* quick&dirty hacks can be changed with proper solutions
+
+MyCallHookPktA in NList_func3.c
+DoSuperNew() call in NList_mcc.c
+MUI_MakeObject() in nlistviews.mcp
+
+* move.c (replacement functions for memory copying)
+
+change them with memmove, etc
+
+* porting of other parts
+
+nlist_demo (in demo/ dir) and other test apps and rarely used
+classes (in misc/ dir) can be ported too.
+
+* cleaning up warnings
+
+there are many pointer to int without cast warnings.
+they are mostly harmless...
+
+* anything else? :)

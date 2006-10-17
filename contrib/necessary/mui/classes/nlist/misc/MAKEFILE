@@ -1,0 +1,382 @@
+#
+#       makefile for GNU Make
+#
+# to find Enforcer Hit, compile with -g -gstabs option, make an hit
+# then use :  GccFindHit <nom_prog> <offsets>
+#
+
+CC = gcc
+
+#LDFLAGS =
+#LDFLAGS2 = -Wl,"-chip"
+
+
+#CFLAGS = -m68000 -noixemul -g -gstabs
+##CFLAGS = -m68000 -noixemul -g
+CFLAGS = -O2 -m68000 -noixemul -s
+##CFLAGS = -O2 -m68020 -noixemul -s
+##CFLAGS = -O2 -m68040 -noixemul -s
+
+#CFLAGS2 = -m68000 -g -gstabs
+##CFLAGS2 = -m68000 -g
+CFLAGS2 = -O2 -m68000 -s
+##CFLAGS2 = -O2 -m68020 -s
+##CFLAGS2 = -O2 -m68040 -s
+
+#CFLAGS3 = -m68000 -g -gstabs
+##CFLAGS3 = -m68000 -g
+CFLAGS3 = -O2 -m68000 -s
+##CFLAGS3 = -O2 -m68020 -s
+##CFLAGS3 = -O2 -m68040 -s
+
+#CFLAGS4 = -m68000 -g -gstabs
+CFLAGS4 = -O2 -m68000 -s
+
+
+
+all: /include/MUI/NList_mcc.h /include/MUI/NListview_mcc.h /include/MUI/NListviews_mcp.h /include/MUI/NFloattext_mcc.h /include/MUI/NDirlist_mcc.h NListviews.mcp NList.mcc NListview.mcc NFloattext.mcc Floattext.mui NList-Demo test0
+#all: /include/MUI/NList_mcc.h /include/MUI/NListview_mcc.h /include/MUI/NListviews_mcp.h /include/MUI/NFloattext_mcc.h /include/MUI/NDirlist_mcc.h NListviews.mcp NList.mcc NListview.mcc NFloattext.mcc NDirlist.mcc List.mcc Listview.mcc Floattext.mcc Floattext.mui NList-Demo mcctest DragnDrop InputHandler test0 test1 test2 test3 demo2 test4 test5
+#	c:wait 1
+#	c:avail flush
+
+
+/include/MUI/NList_mcc.h: NList_mcc.h
+	cp NList_mcc.h include:MUI/NList_mcc.h
+
+/include/MUI/NListview_mcc.h: NListview_mcc.h
+	cp NListview_mcc.h include:MUI/NListview_mcc.h
+
+/include/MUI/NListviews_mcp.h: NListviews_mcp.h
+	cp NListviews_mcp.h include:MUI/NListviews_mcp.h
+
+/include/MUI/NFloattext_mcc.h: NFloattext_mcc.h
+	cp NFloattext_mcc.h include:MUI/NFloattext_mcc.h
+
+/include/MUI/NDirlist_mcc.h: NDirlist_mcc.h
+	cp NDirlist_mcc.h include:MUI/NDirlist_mcc.h
+
+
+
+inc:
+	cp NList_mcc.h include:MUI/NList_mcc.h
+	cp NListview_mcc.h include:MUI/NListview_mcc.h
+	cp NListviews_mcp.h include:MUI/NListviews_mcp.h
+	cp NFloattext_mcc.h include:MUI/NFloattext_mcc.h
+	cp NDirlist_mcc.h include:MUI/NDirlist_mcc.h
+
+
+
+mcctest: mcctest.c
+	gcc $(CFLAGS) $^ -o $@
+
+
+
+
+DragnDrop: DragnDrop.c demo.h
+	gcc $(CFLAGS) DragnDrop.c -o $@  -ldebug
+
+
+InputHandler: InputHandler.c demo.h
+	gcc $(CFLAGS) InputHandler.c -o $@  -ldebug
+
+
+test3: test3.c
+	gcc $(CFLAGS) $^ -o $@  -ldebug
+
+
+
+test4: test4.c
+	gcc $(CFLAGS) $^ -o $@  -ldebug
+
+
+
+test5: test5.c
+	gcc $(CFLAGS) $^ -o $@  -ldebug
+
+
+
+test2: test2.c
+	gcc $(CFLAGS) $^ -o $@  -ldebug
+
+
+
+test1: test1.c
+	gcc $(CFLAGS) $^ -o $@  -ldebug
+
+
+
+test0: test0.c
+	gcc $(CFLAGS) $^ -o $@  -ldebug
+
+
+
+demo2: demo2.c
+	gcc $(CFLAGS) $^ -o $@  -ldebug
+
+
+
+NList-Demo: NList-Demo.o NList-Demo2.o NList-Demo3.o
+	gcc -s $(CFLAGS) $^ -o $@
+
+NList-Demo.o: NList-Demo.c
+	gcc $(CFLAGS) NList-Demo.c -c
+
+NList-Demo2.o: NList-Demo2.c
+	gcc $(CFLAGS) NList-Demo2.c -c
+
+NList-Demo3.o: NList-Demo3.c
+	gcc $(CFLAGS) NList-Demo3.c -c
+
+
+
+
+NList.mcc: NList_mcc_lib.o NList_grp.o NList_mcc.o NList_mcc0.o NList_mcc1.o NList_mcc2.o NList_mcc3.o NList_mcc4.o NList_mcc5.o NList_mcc6.o NList_func.o NList_func2.o NList_func3.o NList_func4.o cbio.o Move.o
+#	gcc -nostdlib $(CFLAGS3) $^ gg:lib/libnix/libnix.a -lamiga -o $@
+#	gcc -nostdlib $(CFLAGS3) $^ gg:lib/libpool.a gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+	gcc -nostdlib $(CFLAGS3) $^ gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+
+NList_mcc_lib.o: NList_mcc_lib.c NList_priv_mcc.h NList_mcc.h NList_mcc.rev.h
+	gcc -nostdlib $(CFLAGS3) NList_mcc_lib.c -c
+
+NList_grp.o: NList_grp.c NList_grp.h
+	gcc -nostdlib $(CFLAGS3) NList_grp.c -c
+
+NList_mcc.o: NList_mcc.c NList_grp.h NList_priv_mcc.h NList_mcc.h NList_func.h NListviews_mcp.h NListview_mcc.h mcc_debug.h NList_mcc.rev.h
+	gcc -nostdlib $(CFLAGS3) NList_mcc.c -c
+
+NList_mcc0.o: NList_mcc0.c NList_grp.h NList_priv_mcc.h NList_mcc.h NList_func.h NListviews_mcp.h NListview_mcc.h mcc_debug.h NList_mcc.rev.h
+	gcc -nostdlib $(CFLAGS3) NList_mcc0.c -c
+
+NList_mcc1.o: NList_mcc1.c NList_grp.h NList_priv_mcc.h NList_mcc.h NList_func.h NListviews_mcp.h NListview_mcc.h mcc_debug.h NList_mcc.rev.h
+	gcc -nostdlib $(CFLAGS3) NList_mcc1.c -c
+
+NList_mcc2.o: NList_mcc2.c NList_priv_mcc.h NList_mcc.h NList_func.h NListviews_mcp.h NListview_mcc.h mcc_debug.h
+	gcc -nostdlib $(CFLAGS3) NList_mcc2.c -c
+
+NList_mcc3.o: NList_mcc3.c NList_priv_mcc.h NList_mcc.h NList_func.h NListviews_mcp.h NListview_mcc.h mcc_debug.h
+	gcc -nostdlib $(CFLAGS3) NList_mcc3.c -c
+
+NList_mcc4.o: NList_mcc4.c NList_priv_mcc.h NList_mcc.h NList_func.h NListviews_mcp.h NListview_mcc.h mcc_debug.h
+	gcc -nostdlib $(CFLAGS3) NList_mcc4.c -c
+
+NList_mcc5.o: NList_mcc5.c NList_priv_mcc.h NList_mcc.h NList_func.h NListviews_mcp.h NListview_mcc.h mcc_debug.h
+	gcc -nostdlib $(CFLAGS3) NList_mcc5.c -c
+
+NList_mcc6.o: NList_mcc6.c NList_priv_mcc.h NList_mcc.h NList_func.h NListviews_mcp.h NListview_mcc.h mcc_debug.h
+	gcc -nostdlib $(CFLAGS3) NList_mcc6.c -c
+
+NList_func.o: NList_func.c NList_func.h NList_priv_mcc.h NList_mcc.h mcc_debug.h
+	gcc -nostdlib $(CFLAGS3) NList_func.c -c
+
+NList_func2.o: NList_func2.c NList_func.h NList_priv_mcc.h NList_mcc.h mcc_debug.h
+	gcc -nostdlib $(CFLAGS3) NList_func2.c -c
+
+NList_func3.o: NList_func3.c NList_func.h NList_priv_mcc.h NList_mcc.h cbio.h mcc_debug.h
+	gcc -nostdlib $(CFLAGS3) NList_func3.c -c
+
+NList_func4.o: NList_func4.c NList_func.h NList_priv_mcc.h NList_mcc.h cbio.h mcc_debug.h
+	gcc -nostdlib $(CFLAGS3) NList_func4.c -c
+
+cbio.o: cbio.c cbio.h
+	gcc -nostdlib $(CFLAGS3) cbio.c -c
+
+Move.o: Move.s
+	gcc -nostdlib $(CFLAGS3) Move.s -c
+
+
+NListview.mcc: NListview_mcc_lib.o NListview_mcc.o
+#	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libpool.a  gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+
+NListview_mcc_lib.o: NListview_mcc_lib.c NListview_priv_mcc.h NListview_mcc.h NListview_mcc.rev.h
+	gcc -nostdlib $(CFLAGS2) NListview_mcc_lib.c -c
+
+NListview_mcc.o: NListview_mcc.c NListviews_mcp.h NListview_priv_mcc.h NListview_mcc.h NList_mcc.h mcc_debug.h NListview_mcc.rev.h
+	gcc -nostdlib $(CFLAGS2) NListview_mcc.c -c
+
+
+
+
+NFloattext.mcc: NFloattext_mcc_lib.o NFloattext_mcc.o
+#	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libpool.a  gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+
+NFloattext_mcc_lib.o: NFloattext_mcc_lib.c NFloattext_priv_mcc.h NFloattext_mcc.h NFloattext_mcc.rev.h
+	gcc -nostdlib $(CFLAGS2) NFloattext_mcc_lib.c -c
+
+NFloattext_mcc.o: NFloattext_mcc.c NListviews_mcp.h NFloattext_priv_mcc.h NFloattext_mcc.h NList_mcc.h mcc_debug.h NFloattext_mcc.rev.h
+	gcc -nostdlib $(CFLAGS2) NFloattext_mcc.c -c
+
+
+
+
+NDirlist.mcc: NDirlist_mcc_lib.o NDirlist_mcc.o
+#	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libpool.a  gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+
+NDirlist_mcc_lib.o: NDirlist_mcc_lib.c NDirlist_priv_mcc.h NDirlist_mcc.h NDirlist_mcc.rev.h
+	gcc -nostdlib $(CFLAGS2) NDirlist_mcc_lib.c -c
+
+NDirlist_mcc.o: NDirlist_mcc.c NListviews_mcp.h NDirlist_priv_mcc.h NDirlist_mcc.h NList_mcc.h mcc_debug.h NDirlist_mcc.rev.h
+	gcc -nostdlib $(CFLAGS2) NDirlist_mcc.c -c
+
+
+
+
+NListviews.mcp: NListviews_mcp_lib.o NListviews_mcp.o
+#	gcc -nostdlib $(CFLAGS4) $^ gg:lib/libpool.a  gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+	gcc -nostdlib $(CFLAGS4) $^ gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+
+NListviews_mcp_lib.o: NListviews_mcp_lib.c NListviews_mcp.h NListviews_priv_mcp.h list.bh NListviews_mcp.rev.h
+	gcc -nostdlib $(CFLAGS4) NListviews_mcp_lib.c -c
+
+NListviews_mcp.o: NListviews_mcp.c NListviews_mcp.h NListviews_priv_mcp.h mcc_debug.h NListviews_mcp.rev.h
+	gcc -nostdlib $(CFLAGS4) NListviews_mcp.c -c
+
+
+
+Listview.mcc: Listview_mcc_lib.o Listview_mcc.o
+#	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libpool.a  gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+
+Listview_mcc_lib.o: Listview_mcc_lib.c Listview_priv_mcc.h Listview_mcc.h Listview_mcc.rev.h
+	gcc -nostdlib $(CFLAGS2) Listview_mcc_lib.c -c
+
+Listview_mcc.o: Listview_mcc.c Listview_priv_mcc.h Listview_mcc.h mcc_debug.h Listview_mcc.rev.h
+	gcc -nostdlib $(CFLAGS2) Listview_mcc.c -c
+
+
+
+
+List.mcc: List_mcc_lib.o List_mcc.o
+#	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libpool.a  gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+
+List_mcc_lib.o: List_mcc_lib.c List_priv_mcc.h List_mcc.h List_mcc.rev.h
+	gcc -nostdlib $(CFLAGS2) List_mcc_lib.c -c
+
+List_mcc.o: List_mcc.c List_priv_mcc.h List_mcc.h mcc_debug.h List_mcc.rev.h
+	gcc -nostdlib $(CFLAGS2) List_mcc.c -c
+
+
+
+
+Floattext.mcc: Floattext_mcc_lib.o Floattext_mcc.o
+#	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libpool.a  gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+
+Floattext_mcc_lib.o: Floattext_mcc_lib.c Floattext_priv_mcc.h Floattext_mcc.h Floattext_mcc.rev.h
+	gcc -nostdlib $(CFLAGS2) Floattext_mcc_lib.c -c
+
+Floattext_mcc.o: Floattext_mcc.c Floattext_priv_mcc.h Floattext_mcc.h mcc_debug.h Floattext_mcc.rev.h
+	gcc -nostdlib $(CFLAGS2) Floattext_mcc.c -c
+
+
+
+
+Floattext.mui: Floattext_mui_lib.o Floattext_mui.o
+#	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libpool.a  gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+	gcc -nostdlib $(CFLAGS2) $^ gg:lib/libnix/libnix.a -ldebug -lamiga -o $@
+
+Floattext_mui_lib.o: Floattext_mui_lib.c Floattext_priv_mui.h Floattext_mui.h Floattext_mui.rev.h
+	gcc -nostdlib $(CFLAGS2) Floattext_mui_lib.c -c
+
+Floattext_mui.o: Floattext_mui.c Floattext_priv_mui.h Floattext_mui.h mcc_debug.h Floattext_mui.rev.h
+	gcc -nostdlib $(CFLAGS2) Floattext_mui.c -c
+
+
+
+
+
+install: all
+	cp NListviews.mcp MUI:libs/MUI/NListviews.mcp
+	cp NList.mcc MUI:libs/MUI/NList.mcc
+	cp NListview.mcc MUI:libs/MUI/NListview.mcc
+	cp NFloattext.mcc MUI:libs/MUI/NFloattext.mcc
+	cp Floattext.mui MUI:libs/MUI/Floattext.mui
+#	cp NDirlist.mcc MUI:libs/MUI/NDirlist.mcc
+#	cp List.mcc MUI:libs/MUI/List.mcc
+#	cp Listview.mcc MUI:libs/MUI/Listview.mcc
+#	cp Floattext.mcc MUI:libs/MUI/Floattext.mcc
+#	c:wait 1
+#	c:avail flush
+
+
+
+clean:
+	rm -f MUI:libs/MUI/NListviews.mcp
+	rm -f MUI:libs/MUI/NList.mcc
+	rm -f MUI:libs/MUI/NListview.mcc
+	rm -f MUI:libs/MUI/NFloattext.mcc
+	rm -f MUI:libs/MUI/NDirlist.mcc
+	rm -f MUI:libs/MUI/List.mcc
+	rm -f MUI:libs/MUI/Listview.mcc
+	rm -f MUI:libs/MUI/Floattext.mcc
+#	c:wait 1
+#	c:avail flush
+
+cleanall:
+	rm -f test
+	rm -f NList-Demo
+	rm -f *.o
+	rm -f NListviews.mcp
+	rm -f MUI:libs/MUI/NListviews.mcp
+	rm -f NList.mcc
+	rm -f MUI:libs/MUI/NList.mcc
+	rm -f NListview.mcc
+	rm -f MUI:libs/MUI/NListview.mcc
+	rm -f NFloattext.mcc
+	rm -f MUI:libs/MUI/NFloattext.mcc
+	rm -f NDirlist.mcc
+	rm -f MUI:libs/MUI/NDirlist.mcc
+	rm -f List.mcc
+	rm -f Listview.mcc
+	rm -f Floattext.mcc
+	rm -f include:MUI/NList_mcc.h
+	rm -f include:MUI/NListview_mcc.h
+	rm -f include:MUI/NListviews_mcp.h
+	rm -f include:MUI/NFloattext_mcc.h
+	rm -f include:MUI/NDirlist_mcc.h
+#	rm -f MUI:libs/MUI/List.mcc
+#	rm -f MUI:libs/MUI/Listview.mcc
+#	rm -f MUI:libs/MUI/Floattext.mcc
+#	c:wait 1
+#	c:avail flush
+
+flush:
+	c:avail flush
+
+arc:
+	rm -f MCC_NList_src/*
+	cp *.c                MCC_NList_src/
+	cp *.h                MCC_NList_src/
+	cp *.bh               MCC_NList_src/
+	cp *.doc              MCC_NList_src/
+	cp include:MUI/MUI.h  MCC_NList_src/
+	cp makefile           MCC_NList_src/
+	cp makefile_pub       MCC_NList_src/
+	cp *.mui              MCC_NList/Libs/MUI/
+	cp *.mcc              MCC_NList/Libs/MUI/
+	cp *.mcp              MCC_NList/Libs/MUI/
+	cp MCC_NList.readme   MCC_NList/
+	cp Install            MCC_NList/
+	cp NList_mcc.doc      MCC_NList/Docs/english/
+	cp MCC_NList.doc      MCC_NList/Developer/AutoDocs/
+	cp MCC_NListview.doc  MCC_NList/Developer/AutoDocs/
+	cp MCC_NFloattext.doc MCC_NList/Developer/AutoDocs/
+	cp NFloattext_mcc.h   MCC_NList/Developer/C/Include/MUI/
+	cp NListview_mcc.h    MCC_NList/Developer/C/Include/MUI/
+	cp NList_mcc.h        MCC_NList/Developer/C/Include/MUI/
+	cp NList-Demo.c       MCC_NList/Developer/C/Examples/
+	cp NList-Demo2.h      MCC_NList/Developer/C/Examples/
+	cp NList-Demo2.c      MCC_NList/Developer/C/Examples/
+	cp NList-Demo3.h      MCC_NList/Developer/C/Examples/
+	cp NList-Demo3.c      MCC_NList/Developer/C/Examples/
+	cp makefile_pub       MCC_NList/Developer/C/Examples/makefile
+	cp smakefile          MCC_NList/Developer/C/Examples/smakefile
+	cp NList-Demo         MCC_NList/Demos/NList-Demo
+	cp NList-Demo         MUI:Demos/NList-Demo
+	cp MCC_NList.doc      autodoc:MCC_NList.doc
+	cp MCC_NListview.doc  autodoc:MCC_NListview.doc
+	cp MCC_NFloattext.doc autodoc:MCC_NFloattext.doc
+

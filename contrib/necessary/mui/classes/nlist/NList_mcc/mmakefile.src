@@ -1,0 +1,35 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+#MM contrib-zune-classes-nlist-class  : includes linklibs
+
+FILES := NList_mcc  	\
+         NList_mcc0 	\
+         NList_mcc1 	\
+         NList_mcc2 	\
+         NList_mcc3 	\
+         NList_mcc4 	\
+         NList_mcc5 	\
+         NList_mcc6 	\
+	 move	    	\
+	 cbio	    	\
+	 NList_func 	\
+	 NList_func2 	\
+	 NList_func3 	\
+	 NList_func4 	\
+	 NList_grp  	\
+	 NList_img  	\
+	 NList_img2 	
+	 
+USER_INCLUDES := -I../commonaros
+
+%build_module_simple mmake=contrib-zune-classes-nlist-class \
+  modname=NList modtype=mcc moduledir=$(CONTRIBDIR)/MCC_NList/Classes/Zune \
+  files="library $(FILES)" \
+  uselibs="amiga mui rom m"
+
+
+#MM includes-copy
+
+INCLUDE_FILES := NList_mcc.h
+%copy_includes path=MUI

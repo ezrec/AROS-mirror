@@ -1,0 +1,190 @@
+#############################################################################
+##	Configurable Parameters
+
+PROJECT	= NList
+
+OBJECTS1	= objects
+OBJECTS	= $(OBJECTS1)/
+
+CLASS		= NList.mcc
+OBJS		=	$(OBJECTS)library.o $(OBJECTS)NList_mcc.o $(OBJECTS)NList_mcc0.o \
+				$(OBJECTS)NList_mcc1.o $(OBJECTS)NList_mcc2.o $(OBJECTS)NList_mcc3.o \
+				$(OBJECTS)NList_mcc4.o $(OBJECTS)NList_mcc5.o $(OBJECTS)NList_mcc6.o \
+				$(OBJECTS)move.o $(OBJECTS)cbio.o $(OBJECTS)NList_func.o \
+				$(OBJECTS)NList_func2.o $(OBJECTS)NList_func3.o \
+				$(OBJECTS)NList_func4.o $(OBJECTS)NList_grp.o $(OBJECTS)NList_img.o \
+				$(OBJECTS)NList_img2.o
+
+$(OBJECTS)library.o: library.c
+$(OBJECTS)NList_mcc.o: NList_mcc.c
+$(OBJECTS)NList_mcc0.o: NList_mcc0.c
+$(OBJECTS)NList_mcc1.o: NList_mcc1.c
+$(OBJECTS)NList_mcc2.o: NList_mcc2.c
+$(OBJECTS)NList_mcc3.o: NList_mcc3.c
+$(OBJECTS)NList_mcc4.o: NList_mcc4.c
+$(OBJECTS)NList_mcc5.o: NList_mcc5.c
+$(OBJECTS)NList_mcc6.o: NList_mcc6.c
+$(OBJECTS)move.o: move.c
+$(OBJECTS)cbio.o: cbio.c
+$(OBJECTS)NList_func.o: NList_func.c
+$(OBJECTS)NList_func2.o: NList_func2.c
+$(OBJECTS)NList_func3.o: NList_func3.c
+$(OBJECTS)NList_func4.o: NList_func4.c
+$(OBJECTS)NList_grp.o: NList_grp.c
+$(OBJECTS)NList_img.o: NList_img.c
+$(OBJECTS)NList_img2.o: NList_img2.c
+
+#
+
+CC			= sc
+CCTO		= OBJNAME
+AC			= asm
+LD			= slink
+
+#
+
+OPTFLAGS	= OPTIMIZERINLINELOCAL OPTIMIZERTIME NOOPTIMIZE
+CFLAGS		= CODE=FAR IDLEN=65 NOSTACKCHECK STRINGMERGE UNSIGNEDCHARS NOCHECKABORT COMMENTNEST\
+ NOMULTIPLEINCLUDES STRUCTUREEQUIVALENCE SMALLCODE SMALLDATA NOVERSION NOICONS NOERRORLISTING\
+ INCLUDEDIR=/common/ DEF=__USE_SYSBASE CPU=68040
+
+AFLAGS		= -d
+
+#LDFLAGS		= SC SD NOICONS
+LDFLAGS		= SC SD NOICONS NODEBUG
+
+#DEBUGFLAGS	= DEBUG=FULL DEFINE WITH_DEBUG
+#DEBUGFLAGS	= DEBUG=FULL
+DEBUGFLAGS	=
+
+#
+
+STARTUP		= LIB:c.o
+LIB			= LIB:sc.lib LIB:amiga.lib
+DEBUG_LIB	= LIB:debug.lib
+
+
+#############################################################################
+##	RULEZ
+
+.c.o:
+#		 @echo "*e[32m*e[1m$(CLASS): *e[22m*e[33mCompiling *e[32m$@*e[0m"
+		$(CC) $(CFLAGS) $(OPTFLAGS) $(DEBUGFLAGS) $*.c $(CCTO) $@
+
+.cpp.o:
+		@echo "*e[32m*e[1m$(CLASS): *e[22m*e[33mCompiling *e[32m$@*e[0m"
+		$(CC) $(CFLAGS) $(OPTFLAGS) $(DEBUGFLAGS) $*.cpp $(CCTO) $@
+
+.s.o:
+		@echo "*e[32m*e[1m$(CLASS): *e[22m*e[33mCompiling *e[32m$@*e[0m"
+		$(AC) $(AFLAGS) $*.s
+
+#############################################################################
+##	COMMAND LINE OPTIONS
+
+
+#############################################################################
+##	Main program
+
+
+all: dirs $(CLASS)
+
+dirs:
+  execute <<
+    if not exists $(OBJECTS1)
+      makedir $(OBJECTS1)
+    endif
+<
+
+
+$(CLASS): $(OBJS)
+	@echo "*e[32m*e[1m$(CLASS): *e[22m*e[33mLinking *e[32m$@*e[0m"
+	$(LD) FROM $(OBJS) TO $@ LIB $(LIB) $(DEBUG_LIB) $(LDFLAGS)
+
+
+#############################################################################
+##
+##
+
+install:
+	@echo "*e[32mInstalling class $(CLASS) locally...*e[0m"
+	@copy clone $(CLASS) MUI:Libs/mui
+  @avail flush
+
+uninstall:
+	@echo "*e[32mDeleting class $(CLASS) locally...*e[0m"
+	@delete >nil: MUI:Libs/MUI/$(CLASS)
+
+clean:
+#	@echo "*e[32m*e[1m$(CLASS): *e[22m*e[33mDeleting trash of $(CLASS)...*e[0m"
+#	@echo "Trash" >Trash.o
+#	@echo "Trash" >$(OBJECTS)Trash.o
+#	@list pat (#?.(o|oPPC|obj|lnk|mcc|mcp|elf)) lformat "delete %p%n" >pipe:$(PROJECT)_delete
+#	@list pat ($(OBJECTS)#?.(o|oPPC|obj|lnk|mcc|mcp|elf)) lformat "delete %p%n" >>pipe:$(PROJECT)_delete
+#	@execute pipe:$(PROJECT)_delete
+	@echo "\#?.(o|oPPC|obj|lnk|mcc|mcp|elf)"
+	-delete $(OBJECTS)\#?.(o|oPPC|obj|lnk|mcc|mcp|elf)
+	-delete \#?.(o|oPPC|obj|lnk|mcc|mcp|elf|lib)
+# It doesn't work here !?
+#	@list pat (\$(OBJECTS)#?.(o|oPPC)|\$(OBJECTS)#?.oPPC|\#?.o|\#?.oPPC|\#?.obj|\#?.bak|\#?.lnk|$(PROJECT).mcc|$(PROJECT).mcp|$(PROJECT)\#?.elf) lformat "delete %p%n" >pipe:$(PROJECT)_delete
+#	@execute pipe:$(PROJECT)_delete
+
+
+zune: nlist.mcc.lib
+
+nlist.mcc.lib: NList_mcc.o NList_mcc0.o NList_mcc1.o NList_mcc2.o NList_mcc3.o NList_mcc4.o NList_mcc5.o NList_mcc6.o move.o cbio.o NList_func.o NList_func2.o NList_func3.o NList_func4.o NList_grp.o NList_img.o NList_img2.o
+  -delete nlist.mcc.lib
+  oml nlist.mcc.lib A NList_mcc.o NList_mcc0.o NList_mcc1.o NList_mcc2.o NList_mcc3.o NList_mcc4.o NList_mcc5.o NList_mcc6.o move.o cbio.o NList_func.o NList_func2.o NList_func3.o NList_func4.o NList_grp.o NList_img.o NList_img2.o
+
+NList_mcc.o: NList_mcc.c
+  sc NList_mcc.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc0.o: NList_mcc0.c
+  sc NList_mcc0.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc1.o: NList_mcc1.c
+  sc NList_mcc1.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc2.o: NList_mcc2.c
+  sc NList_mcc2.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc3.o: NList_mcc3.c
+  sc NList_mcc3.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc4.o: NList_mcc4.c
+  sc NList_mcc4.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc5.o: NList_mcc5.c
+  sc NList_mcc5.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_mcc6.o: NList_mcc6.c
+  sc NList_mcc6.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+move.o: move.c
+  sc move.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+cbio.o: cbio.c
+  sc cbio.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_func.o: NList_func.c
+  sc NList_func.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_func2.o: NList_func2.c
+  sc NList_func2.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_func3.o: NList_func3.c
+  sc NList_func3.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_func4.o: NList_func4.c
+  sc NList_func4.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_grp.o: NList_grp.c
+  sc NList_grp.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_img.o: NList_img.c
+  sc NList_img.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+NList_img2.o: NList_img2.c
+  sc NList_img2.c DEF=USE_ZUNE IDIR=///libs/muimaster
+
+

@@ -1,0 +1,101 @@
+
+2000-12-17  Gürer <madcat@linuxfan.com>
+
+    * initial cvs commit
+    * mui classes moved to their own directories
+    * ppc makefiles added
+    * stack check disabled (wasn't compatible with morphos)
+    * nlist, nlistview, nlistviews, nfloattext ported to morphos
+      (varius hook, vararg, etc patches)
+
+2001-02-18  aphaso <cs@aphaso.de>
+
+    * Re-added makefiles for m68k ;)
+    * Added method MUIM_NList_SelectChange
+    * Automatic conversion of NList_mcc.h in
+      NList_mcc/makefile.ppc
+    * Bumped version to 19.98
+
+2001-02-27  aphaso <cs@aphaso.de>
+
+	* Moved Floattext to own directory and added MorphOS changes
+
+2001-06-14  aphaso <cs@aphaso.de>
+
+	* Tracked back the floattext wrap bug and fixed it (*_mcc4.c).
+      All important lines which were changed between 0.89 and 0.89+
+      by Gilles and caused the wrap bug are marked with $$$WRAP for
+      future reference.
+
+2001-06-16  aphaso <cs@aphaso.de>
+
+    * Reworked entry manangement to use pointers insted of full
+      structures. This makes NList much faster (factor 3-4) in
+      some cases, but slows down a bit when inserting entries at
+      the bottom. Not much...
+
+2001-06-18  aphaso <cs@aphaso.de>
+
+    * Added experimental value MUIV_NList_Redraw_ColsVisible for
+      width calc of only the visible lines.
+
+2001-06-20  aphaso <cs@aphaso.de>
+
+    * Enforcer hit on dispose removed.
+    * Now omits column width calculation code if numcols == 1.
+      With only one column, NList is now faster than List. Yeahh!
+    * Shrink of entries array is now omitted. Same as List does i
+      think.
+
+2001-06-23  aphaso <cs@aphaso.de>
+
+    * Added MorphOS DoSuperMethod() to NFloattext.c
+    * Added common/mcc_debug.h for better debugging ;)
+    * Changed common/mcc_debug.c
+    * Changed common/mcc_common.h to support GNU/SAS...
+    * Changed some internal handling and added tree class support
+      in NList ;-)
+    * Changed version strings to NList#?.mcc ...
+    * Bumped version of NList.mcc to 19.101
+    * Fixed wrong MorphOS hooks...
+
+2001-06-27  sensei <sensei@box43.gnet.pl>
+
+    * Changed memory handling routines in NList_func3.c and NList_mcc.c
+    * Changed common/mccheader.h to support SAS/C.
+    * Changed NList_mcc/NList_mcc.c OM_NEW attributes handling, minor speedup.
+    * Fixed every library.c of each MCC, first function of library based
+      executable MUST do nothing and return 0.  Executing old MCC causes
+      unexpected crashes.
+    * Fixed and cleanuped OM_GET method of NList.mcc getting
+      MUIA_NList_DragColOnly attribute could cause unexpected results!
+    * Fixed library id string. It's not equal to version string!
+    * Added missed names of authors in id string.
+    * Bumped version of NList.mcc to 19.102
+
+2001-07-01  sensei <sensei@box43.gnet.pl>
+
+    * Added new methods MUIM_NList_Construct and MUIM_NList_Destruct.  Now
+      every internal method is calling these methods instead of playing
+      with hooks directly.  In NList subclass you can override them to your
+      own version.
+    * Fixed IdStrings again...  MUI dislikes MCC which haven't $VER:  at
+      the beggining of IdString and AboutMUI wasn't showing such MCC (but
+      MCC is working correctly!) in the list...
+    * Fixed global and local SMakefiles (dependency tree was broken (by me)
+      and "sometimes" project wasn't rebuilded...) In global smakefile
+      'all' was missing and it cauesed some troubles with objects/
+      directories (this's not my fault).
+    * Added useful scripts to make and clean objects/ directories.
+    * Bumped version of NList.mcc to 20.103
+
+2001-24-12 Sebastian Bauer <sebauer@t-online.de>
+
+    * Merged aphaso and sensei changes and commited all files to the
+      cvs (only tried the SAS compile)
+    * small smakefile changes
+
+2002-03-05 Sebastian Bauer <sebauer@t-online.de>
+
+    * Added a define MUIV_NList_UseImage_All for MUIM_NList_UseImage
+      which stands now for -1
