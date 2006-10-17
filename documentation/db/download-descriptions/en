@@ -49,6 +49,9 @@ i386-linux-system:
     all included programs and demos with it. This archive
     contains all AROS system binaries compiled from the Subversion
     tree.
+ppc-linux-system:
+    The hosted version for Linux/PowerPC. This archive contains all AROS
+    system binaries compiled from the Subversion tree.
 i386-pc-boot-floppy:
     The native version for i386-based PC AT computers and
     compatibles. This archive contains the boot
@@ -63,6 +66,10 @@ i386-all-contrib:
     compiled for the i386 architecture. They will work in
     both the appropriate hosted (eg. i386-linux) and native
     (i386-pc) version.
+ppc-all-contrib:
+    This archive contains all the contributed programs
+    compiled for the PowerPC architecture, for use with the
+    Linux/PowerPC port.
 i386-all-sdk:
     Set of files and tools to build your own AROS programs
     on your preferred machine. You'll need also gcc and the

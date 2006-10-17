@@ -48,6 +48,9 @@ i386-linux-system:
     complète, ce qui signifie que vous pouvez démarrer tous les
     programmes et démos inclus avec. Cette archive contient tous
     les fichiers binaires compilés depuis SVN.
+ppc-linux-system:
+    La version hôste pour Linux/PowerPC. Cette archive contient tous
+    les fichiers binaires compilés depuis SVN.
 i386-pc-boot-floppy:
     La version native pour PC avec processeur i386 et
     compatibles. Cette archive contient l'image d'une disquette
@@ -60,6 +63,9 @@ i386-all-contrib:
     Cette archive contient tous les programmes de contribution
     compilés pour l'architecture i386. Ils fonctionneront à la fois
     dans les versions hôtes et natives.
+ppc-all-contrib:
+    Cette archive contient tous les programmes de contribution
+    compilés pour l'architecture PowerPC.
 i386-all-sdk:
     Jeu de fichiers et d'outils visant à développer vos programmes
     pour AROS avec votre machine préférée. Vous aurez également
