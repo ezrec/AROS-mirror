@@ -1,0 +1,318 @@
+## version $VER: Mailtext_mcp.ct 3.2 ($TODAY)
+## language srpski
+## codeset 0
+;
+## chunk AUTH Serbian translation by Ljubomir Jankovic <lurch@afrodita.rcub.bg.ac.yu>
+;
+; Mailtext - An MUI Custom Class for eMessage display
+; Copyright (C) 1996-2001 by Olaf Peters
+; Copyright (C) 2002-2006 by Mailtext Open Source Team
+;
+; GCC & OS4 Portage by Alexandre Balaban
+;
+; This library is free software; you can redistribute it and/or
+; modify it under the terms of the GNU Lesser General Public
+; License as published by the Free Software Foundation; either
+; version 2.1 of the License, or (at your option) any later version.
+;
+; This library is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+; Lesser General Public License for more details.
+;
+; You should have received a copy of the GNU Lesser General Public
+; License along with this library; if not, write to the Free Software
+; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+;
+; Mailtext OpenSource project :  http://sourceforge.net/projects/mailtext/
+;
+; $VER: Mailtext_mcp.catalog 3.2 (21.4.2006)
+;
+; $HISTORY:
+;
+;  21.4.06  3.2   : Mailtext v3.2 OpenSource Release
+;  20.6.97  3.1   : Mailtext release 3.1
+;   4.2.97  3.0   : Mailtext v3.0 Public Release
+;  22.1.97  2.0   : Mailtext v3.0 Beta Releases
+;  8.11.96  1.4   : - changed identifiers again (from 'loc' to 'MSG_')
+;                   - changed text for MSG_AttributesDistanceHelp
+;  1.11.96  1.3   : identifiers now start with 'loc'
+;   9.5.96  1.2   : renamed from Mailtext.catalog to Mailtext_mcp.catalog
+;  29.4.96  1.1   : minor changes
+;  24.4.96  1.0   : initial
+;
+; ----------------------------------------------------------------------------------------
+;
+; *** Sampletext
+;
+MSG_Sample
+Primer
+; Sample
+MSG_SampleHelp
+Mailtext primer na koji direktno\nutiŸu promene koje vrçite ispod.
+; Mailtext sample that is directly being influenced\n\
+; by the changes you are making below.
+MSG_SampleText
+Test tekst za Mailtext kastom klasu\n\n*Podebljana* /Pisana/ _PodvuŸena_ #Obojena# _/*Kombinacija*/_\n\nCitiran tekst:\n\n1>2>3>4>5> *Podebljana* /Pisana/ _PodvuŸena_ #Obojena#\n\nURL-ovi: http://home.pages.de/~Mailtext/\n\nDa malo uprostimo stvari: (neka + bude *, /, _ ili #)\n\n   +Tekst+\n   ^     ^\n   |     |\n   |     +- zavrçni karakter\n   +- uvodni karakter\n\n-- \nolf@gmx.de
+; Testtext for Mailtext CustomClass\n\
+; \n\
+; *Bold* /Italics/ _Underline_ #Coloured# _/*Combination*/_\n\
+; \n\
+; \n\
+; Quoted Text:\n\
+; \n\
+; 1>2>3>4>5> *Bold* /Italics/ _Underline_ #Coloured#\n\
+; \n\
+; URLs: http://home.pages.de/~Mailtext/\n\
+; \n\
+; To clear things up a bit: (let + be *, /, _ or #)\n\
+; \n\
+;    +Text+\n\
+;    ^    ^\n\
+;    |    |\n\
+;    |    +- the terminating char\n\
+;    |\n\
+;    +- the introducing char\n\
+; \n\
+; -- \n\
+; olf@magicolf.de
+;
+; *** Pages
+;
+MSG_Preferences
+Podeçavanja
+; Preferences
+;
+; *** Distances page
+;
+MSG_Distances
+Rastojanja
+; Distances
+MSG_AttributesDistance
+_Atributi
+; _Attributes
+MSG_AttributesDistanceHelp
+Maksimalan broj karaktera koji †e\nbiti prikazani sa ovim atributom.
+; Maximum number of chars to be displayed\n\
+; with given attribute.
+MSG_QuoteDistance
+_Citati
+; Q_uotes
+MSG_QuoteDistanceHelp
+OdreÐuje koliko †e karaktera na poŸetku\nlinije biti ispitano da li su znaci citata.
+; Determines how many chars in the beginning of a\n\
+; line should be examined for being quotechars.
+;
+; *** Patterns page
+;
+MSG_Patterns
+Paterni
+; Patterns
+MSG_DisablePattern
+_IskljuŸi
+; _Disable
+MSG_DisablePatternHelp
+TumaŸenje atributa bi†e iskljuŸeno\nako linija sadr§i ovaj patern.
+; Attribute parsing will be disabled if a line\n\
+; matches this pattern.
+MSG_EnablePattern
+_UkljuŸi
+; _Enable
+MSG_EnablePatternHelp
+TumaŸenje atributa bi†e ponovo ukljuŸeno\nako linija sadr§i ovaj patern.
+; Attribute parsing will be reenabled if a line\n\
+; matches this pattern.
+MSG_SigSepPattern
+
+; _Sig. Separator
+MSG_SigSepPatternHelp
+
+; The line will be replaced by a horizontal rule,\n\
+; if it matches this pattern. This can be used to\n\
+; optically separate signature from the rest of the\n\
+; message.
+;
+; *** Characters page
+;
+MSG_Chars
+Karakteri
+; Characters
+MSG_NonintroducingChars
+_Ne uvode†i
+; _Nonintroducing
+MSG_NonintroducingCharsHelp
+Karakteri koji ne smeju da se pojave\n iza uvodnog karaktera atributa.
+; Characters that are not allowed to occur behind\n\
+; the introducing attributechar.
+MSG_TerminatingChars
+_Zavrçni
+; _Terminating
+MSG_TerminatingCharsHelp
+Karakteri koji smeju da se pojave\n iza zavrçnog karaktera atributa.
+; Characters that are allowed to occur behind the\n\
+; terminating attributechar.
+MSG_WhitespaceChars
+_Bela praznina
+; _Whitespace
+MSG_WhitespaceCharsHelp
+Karakteri koji se samtraju belim prazninama i samim\ntim se mogu pojaviti ispred uvodnog karaktera citata.
+; Characters that are considered whitespace thus\n\
+; being allowed to occur in front of the introducing\n\
+; attributechar.
+MSG_QuoteChars
+_Karakteri citata
+; _Quotechars
+MSG_QuoteCharsHelp
+Karakteri koji se smatraju\nkao uvodni karakteri za citate.
+; Characters that are considered as introducers for\n\
+; quoted textpassages.
+MSG_QuoteCharsCheckHelp
+Kada je ovo ukljuŸeno mailtext klasa †e uvek\nkoristiti ove karaktere bez obzira na podeçavanja\nkoja program prosledi klasi.
+; When checked the Mailtext-class will always use\n\
+; these quotechars regardless which settings a\n\
+; program handles to the class.
+;
+; *** Colors page
+;
+MSG_Colors
+Boje
+; Colors
+MSG_Quotelevel
+Nivo citata:
+; Quotelevel:
+MSG_QuoteLevel1Color
+Boja nivoa 1
+; Level 1 Color
+MSG_QuoteLevel2Color
+Boja nivoa 2
+; Level 2 Color
+MSG_QuoteLevel3Color
+Boja nivoa 3
+; Level 3 Color
+MSG_QuoteLevel4Color
+Boja nivoa 4
+; Level 4 Color
+MSG_QuoteLevel5Color
+Boja nivoa 5
+; Level 5 Color
+MSG_QuoteLevelHelp
+Citati odgovaraju†eg nivoa\nbi†e obele§eni ovom bojom.
+; Quotes of the corresponding level\n\
+; will be marked with this color.
+MSG_ColoredText
+_Obojeni tekst
+; _Colored text
+MSG_ColoredTextWinTitle
+Obojeni tekst
+; Colored text
+MSG_ColoredTextHelp
+Boja kojom †e biti ispisan tekst sa '#' atributom.
+; The color, text enclosed by the\n\
+; attribute '#' will be displayed with.
+MSG_ColoredURL
+Boja _URL-ova:
+; _URL color
+MSG_ColoredURLWinTitle
+Boja URL-a
+; URL color
+MSG_ColoredURLHelp
+Boja kojom †e Jedinstveni Lokator Resursa (URL),\nnpr. http://www.abc.xyz/, biti ispisan.
+; The color a Uniform Resource Locator (URL),\n\
+; i.e. http://www.abc.xyz/, will be displayed with.
+;
+; *** URLs page
+;
+MSG_URLs
+URL-ovi
+; URLs
+MSG_URLAction
+_Akcija
+; _Action
+MSG_URLActionHelp
+Komanda koja †e biti izvrçena kada se dva puta klikne na URL.\nString %s u komandnoj liniji bi†e zamenjen kiknutim URL-om.
+; The command that is executed when an URL is doubleclicked.\n\
+; A %s in the commandstring will be replaced by the clicked URL.
+MSG_URLActionBeep
+P_içti posle akcije
+; _Beep after action
+MSG_URLActionBeepHelp
+Ako je ovo ukljuŸeno, Ÿu†e se piçtanje kada\nURL komanda bude pozvana, kao znak da je komanda\naktivirana.
+; If checked, the display will be beeped after the\n\
+; URL action command has been called, to give some\n\
+; feedback that the action has been triggered.
+MSG_URLUnderline
+_Podvuci URL-ove
+; _Underline URLs
+MSG_URLUnderlineHelp
+Da li da se URL-ovi prikazuju podvuŸeni?
+; Should URLs be displayed underlined?
+MSG_URLStackSize
+VeliŸina _steka
+; _Stacksize
+MSG_URLStackSizeHelp
+VeliŸina steka za komandu akcije.
+; The stacksize for the action command.
+MSG_URLStackSlider
+%ld kByte
+; %ld kByte
+;
+; *** Misc. page
+;
+MSG_Misc
+Razno
+; Misc.
+MSG_ShowAttributes
+_Prika§i karatere atributa
+; _Show attributechars
+MSG_ShowAttributesHelp
+Prika§i karaktere atributa, iako su stilovi ve† podeçeni?
+; Display the attribute characters even if the style\n\
+; has been set?
+MSG_UseContextMenu
+Koristi kontekstni _meni
+; Use context _menu
+MSG_UseContextMenuHelp
+Da li da svaki Mailtext objekat ima kontekstni meni?
+; Should every Mailtext object have a contextmenu?
+MSG_SigSeparator
+_Separator potpisa
+; S_ignature separator
+MSG_SigSeparatorHelp
+Da li da potpis [.signature] (koji poŸinje sa\n'-- ', '--' ili '---') bude odvojen od teksta poruke\nhorizontalnom linijom.
+; Should a signature (introduced by a '-- ',\n\
+; '--' or '---') be separated from the\n\
+; messagetext by a horizontal line?
+MSG_Wordwrap
+_Wordwrap
+; _Wordwrap
+MSG_WordwrapHelp
+Ako je wordwrap iskljuŸen, duge linije ne†e biti\nprebacivane u slede†i red, ve† †e biti prikazan\nhorizontalni skroler (mogu†e samo sa NListview-ima).
+; If wordwrap is switched off, long lines will\n\
+; not be wrapped, but a horizontal scrollbar will\n\
+; be shown instead (only possible with NListviews).
+MSG_Font
+
+; _Font:
+MSG_FontHelp
+
+; The font to be used by the Mailtext object.
+;
+; *** Copyright Info
+;
+MSG_InfoGiftware
+\ebMailtext je OpenSource\e\n\n\
+Visit the Mailtext OpenSource project at:
+; \ebMailtext is OpenSource\en\n\n\
+; Visit the Mailtext OpenSource project at:
+MSG_InfoDeveloper
+Za programerske informacije piçite na:
+; For developer's info contact:
+MSG_InfoTranslators
+Serbian translation done by:\n\
+Ljubomir Jankovi†\n\
+;English translation done by:\n\
+;Olaf Peters\n\
+;
+; English translation done by:\n\
+; Olaf Peters\n\
+; 

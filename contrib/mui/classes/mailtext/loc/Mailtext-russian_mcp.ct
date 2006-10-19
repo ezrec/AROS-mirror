@@ -1,0 +1,362 @@
+## version $VER: Mailtext_mcp.catalog 3.2 ($TODAY)
+## language russian
+## codeset 0
+;
+## chunk AUTH Russian translation by Oleg Sergeev <bigblack@neworder.spb.ru>
+;
+; Mailtext - An MUI Custom Class for eMessage display
+; Copyright (C) 1996-2001 by Olaf Peters
+; Copyright (C) 2002-2006 by Mailtext Open Source Team
+;
+; GCC & OS4 Portage by Alexandre Balaban
+;
+; This library is free software; you can redistribute it and/or
+; modify it under the terms of the GNU Lesser General Public
+; License as published by the Free Software Foundation; either
+; version 2.1 of the License, or (at your option) any later version.
+;
+; This library is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+; Lesser General Public License for more details.
+;
+; You should have received a copy of the GNU Lesser General Public
+; License along with this library; if not, write to the Free Software
+; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+;
+; Mailtext OpenSource project :  http://sourceforge.net/projects/mailtext/
+;
+; $VER: Mailtext_mcp.catalog 3.2 (21.4.2006)
+;
+; $HISTORY:
+;
+;  21.4.06  3.2   : Mailtext v3.2 OpenSource Release
+;  20.6.97  3.1   : Mailtext release 3.1
+;   4.2.97  3.0   : Mailtext v3.0 Public Release
+;  22.1.97  2.0   : Mailtext v3.0 Beta Releases
+;  8.11.96  1.4   : - changed identifiers again (from 'loc' to 'MSG_')
+;                   - changed text for MSG_AttributesDistanceHelp
+;  1.11.96  1.3   : identifiers now start with 'loc'
+;   9.5.96  1.2   : renamed from Mailtext.catalog to Mailtext_mcp.catalog
+;  29.4.96  1.1   : minor changes
+;  24.4.96  1.0   : initial
+;
+; ----------------------------------------------------------------------------------------
+;
+; *** Sampletext
+;
+MSG_Sample
+Опзлдп
+; Sample
+MSG_SampleHelp
+Опзлдп онцснбнвн сдйрсa, йнснпъи бъ лнедсд\n\
+зжлдмюсы мзедопзбдгЅммълз рпдгрсбaлз.
+; Mailtext sample that is directly being influenced\n\
+; by the changes you are making below.
+MSG_SampleText
+Сдрснбъи сдйрс, кзцмнвн йкaррa "Mailtext"\n\
+\n\
+*Езпмъи* /Мaйкнммъи/ _ОнгцЅпймтсъи_ #Нйпaшдммъи# _/*Йнлазмзпнбaммъи*/_\n\
+\n\
+\n\
+Хзсзптдлъи сдйрс:\n\
+\n\
+1>2>3>4>5> *Езпмъи* /Мaйкнммъи/ _ОнгцЅпймтсъи_ #Нйпaшдммъи#\n\
+\n\
+URLs: http://home.pages.de/~Mailtext/\n\
+\n\
+Гкю бъгдкдмзю опзлдмюисд лaпйдпъ: (блдрсн + зронкыжтисд *, /, _ зкз #)\n\
+\n\
+   +Сдйрс+\n\
+   ^    ^\n\
+   |    |\n\
+   |    +- Нйнмдцмъи лaпйдп\n\
+   |\n\
+   +- Рсaпснбъи лaпйдп\n\
+\n\
+-- \n\
+olf@gmx.de
+; Testtext for Mailtext CustomClass\n\
+; \n\
+; *Bold* /Italics/ _Underline_ #Coloured# _/*Combination*/_\n\
+; \n\
+; \n\
+; Quoted Text:\n\
+; \n\
+; 1>2>3>4>5> *Bold* /Italics/ _Underline_ #Coloured#\n\
+; \n\
+; URLs: http://home.pages.de/~Mailtext/\n\
+; \n\
+; To clear things up a bit: (let + be *, /, _ or #)\n\
+; \n\
+;    +Text+\n\
+;    ^    ^\n\
+;    |    |\n\
+;    |    +- the terminating char\n\
+;    |\n\
+;    +- the introducing char\n\
+; \n\
+; -- \n\
+; olf@magicolf.de
+;
+; *** Pages
+;
+MSG_Preferences
+Опдгтрсaмнбйз
+; Preferences
+;
+; *** Distances page
+;
+MSG_Distances
+Опнлдетсйз
+; Distances
+MSG_AttributesDistance
+_Aспзатсъ
+; _Attributes
+MSG_AttributesDistanceHelp
+Лaйрзлaкымнд йнкзцдрсбн рзлбнкнб,\n\
+онйaжъбaдлъф р гaммъл aспзатснл.
+; Maximum number of chars to be displayed\n\
+; with given attribute.
+MSG_QuoteDistance
+_Хзсaсъ
+; Q_uotes
+MSG_QuoteDistanceHelp
+Йнкзцдрсбн рзлбнкнб б мaцaкд рспнйз,\n\
+йнснпъд атгтс опнбдпдмъ мa мaцaкн хзсaсъ.
+; Determines how many chars in the beginning of a\n\
+; line should be examined for being quotechars.
+;
+; *** Patterns page
+;
+MSG_Patterns
+Шaакнмъ
+; Patterns
+MSG_DisablePattern
+_Нсйкэцдмзд
+; _Disable
+MSG_DisablePatternHelp
+Пaжанп aспзатснб атгдс нсйкэцЅм,\n\
+дркз б рспнйд брспдсзсрю ьснс шaакнм.
+; Attribute parsing will be disabled if a line\n\
+; matches this pattern.
+MSG_EnablePattern
+_Бйкэцдмзд
+; _Enable
+MSG_EnablePatternHelp
+Пaжанп aспзатснб атгдс бнжнамнбкЅм,\n\
+дркз б рспнйд брспдсзсрю ьснс шaакнм.
+; Attribute parsing will be reenabled if a line\n\
+; matches this pattern.
+MSG_SigSepPattern
+Опзжмaй Рзвмaстпъ
+; _Sig. Separator
+MSG_SigSepPatternHelp
+Ьсa рспнйa атгдс жaлдмдмa внпзжнмсaкымни кзмзди\n\
+опз рнбоaгдмзз р шaакнмнл. Лнедс аъсы зронкыжнбaмн\n\
+гкю бзжтaкымнвн нсвпaмзцдмзю рзвмaстпъ нс нрсaкымнвн\n\
+сдйрсa рннащдмзю.
+; The line will be replaced by a horizontal rule,\n\
+; if it matches this pattern. This can be used to\n\
+; optically separate signature from the rest of the\n\
+; message.
+;
+; *** Characters page
+;
+MSG_Chars
+Рзлбнкъ
+; Characters
+MSG_NonintroducingChars
+_Брстокдмзд
+; _Nonintroducing
+MSG_NonintroducingCharsHelp
+Рзлбнкъ, йнснпъд мдгнрстомъ\n\
+онркд рсaпснбнвн лaпйдпa.
+; Characters that are not allowed to occur behind\n\
+; the introducing attributechar.
+MSG_TerminatingChars
+_Нвпaмзцзсдкы
+; _Terminating
+MSG_TerminatingCharsHelp
+Рзлбнкъ, йнснпъд гнрстомъ\n\
+онркд нйнмдцмнвн лaпйдпa.
+; Characters that are allowed to occur behind the\n\
+; terminating attributechar.
+MSG_WhitespaceChars
+_Опнотрйз
+; _Whitespace
+MSG_WhitespaceCharsHelp
+Рзлбнкъ, йнснпъд рцзсaэсрю опнадкaлз,\n\
+онйa нмз гнрстомъ одпдг рсaпснбъл лaпйдпнл.
+; Characters that are considered whitespace thus\n\
+; being allowed to occur in front of the introducing\n\
+; attributechar.
+MSG_QuoteChars
+_Лaпйдп хзсaсъ
+; _Quotechars
+MSG_QuoteCharsHelp
+Рзлбнкъ, йнснпъд пaррлaспзбaэсрю\n\
+йaй лaпйдп сдйрсa хзсaсъ.
+; Characters that are considered as introducers for\n\
+; quoted textpassages.
+MSG_QuoteCharsCheckHelp
+Опз мaкзцзз вaкнцйз "Mailtext" йкaрр атгдс брдвгa\n\
+зронкыжнбaсы рзлбнкъ лaпйдпa хзсaсъ мджaбзрзлн\n\
+нс трсaмнбнй опнвпaллъ, зронкыжтэщди ьснс йкaрр.
+; When checked the Mailtext-class will always use\n\
+; these quotechars regardless which settings a\n\
+; program handles to the class.
+;
+; *** Colors page
+;
+MSG_Colors
+Хбдсa
+; Colors
+MSG_Quotelevel
+Тпнбдмы хзсaсъ:
+; Quotelevel:
+MSG_QuoteLevel1Color
+Хбдс 1-нвн бкнедмзю
+; Level 1 Color
+MSG_QuoteLevel2Color
+Хбдс 2-нвн бкнедмзю
+; Level 2 Color
+MSG_QuoteLevel3Color
+Хбдс 3-двн бкнедмзю
+; Level 3 Color
+MSG_QuoteLevel4Color
+Хбдс 4-нвн бкнедмзю
+; Level 4 Color
+MSG_QuoteLevel5Color
+Хбдс 5-нвн бкнедмзю
+; Level 5 Color
+MSG_QuoteLevelHelp
+Ьсзл хбдснл атгдс бъгдкдмa\n\
+хзсaсa тйaжaммнвн тпнбмю бкнедмзю.
+; Quotes of the corresponding level\n\
+; will be marked with this color.
+MSG_ColoredText
+Хбдснб_ъгдкдмзд сдйрсa
+; _Colored text
+MSG_ColoredTextWinTitle
+Хбдс нйпaшдммнвн сдйрсa
+; Colored text
+MSG_ColoredTextHelp
+Хбдс нйпaрйз сдйрсa,\n\
+жaйкэцЅммнвн aспзатснл '#'.
+; The color, text enclosed by the\n\
+; attribute '#' will be displayed with.
+MSG_ColoredURL
+_URL-хбдс
+; _URL color
+MSG_ColoredURLWinTitle
+Хбдс URL
+; URL color
+MSG_ColoredURLHelp
+Хбдс гкю бъгдкдмзю URL, мaопзлдп\n\
+http://www.abc.xyz/.
+; The color a Uniform Resource Locator (URL),\n\
+; i.e. http://www.abc.xyz/, will be displayed with.
+;
+; *** URLs page
+;
+MSG_URLs
+URL-ъ
+; URLs
+MSG_URLAction
+_Гдирсбзд
+; _Action
+MSG_URLActionHelp
+Ьсa йнлaмгa атгдс зронкмдмa опз щдкцйд лъшыэ он URL.\n\
+Оaпaлдсп %s б йнлaмгмни рспнйд атгдс жaлдмЅм рннсбдсрсбтэщзл URL.
+; The command that is executed when an URL is doubleclicked.\n\
+; A %s in the commandstring will be replaced by the clicked URL.
+MSG_URLActionBeep
+_Онгaцa рзвмaкa онркд зронкмдмзю
+; _Beep after action
+MSG_URLActionBeepHelp
+Опз трсaмнбкдммни вaкнцйд онркд жaотрйa URL-йнлaмгъ\n\
+атгдс опнзжбдгдмa змгзйaхзю лзвaмздл ьйпaмa.
+; If checked, the display will be beeped after the\n\
+; URL action command has been called, to give some\n\
+; feedback that the action has been triggered.
+MSG_URLUnderline
+Онг_цдпй URL-нб
+; _Underline URLs
+MSG_URLUnderlineHelp
+Мднафнгзлн-кз онгцЅпйзбaсы URL-ъ?
+; Should URLs be displayed underlined?
+MSG_URLStackSize
+_Пaжлдп рсдйa
+; _Stacksize
+MSG_URLStackSizeHelp
+Пaжлдп рсдйa гкю зронкмюдлни йнлaмгъ
+; The stacksize for the action command.
+MSG_URLStackSlider
+%ld ЙАaис
+; %ld kByte
+;
+; *** Misc. page
+;
+MSG_Misc
+Пaжмнд
+; Misc.
+MSG_ShowAttributes
+_Онйaж лaпйдпнб aспзатснб
+; _Show attributechars
+MSG_ShowAttributesHelp
+Онйaжъбaсы лaпйдпъ гaед б рктцaд\n\
+зф зронкыжнбaмзю б рсзкд сдйрсa?
+; Display the attribute characters even if the style\n\
+; has been set?
+MSG_UseContextMenu
+Зронкыжнбaсы йнмсдйрс-_лдмэ
+; Use context _menu
+MSG_UseContextMenuHelp
+Гнкедм-кз йaегъи наядйс йкaррa "Mailtext"\n\
+злдсы йнмсдйрсмнд лдмэ?
+; Should every Mailtext object have a contextmenu?
+MSG_SigSeparator
+_Пaжгдкзсдкы рзвмaстпъ
+; S_ignature separator
+MSG_SigSeparatorHelp
+Мднафнгзлн-кз нсгдкюсы рзвмaстпт\n\
+(мaцзмaэщтэрю р '-- ', зкз '---')\n\
+нс сдйрсa рннащдмзю внпзжнмсaкымни кзмзди?
+; Should a signature (introduced by a '-- ',\n\
+; '--' or '---') be separated from the\n\
+; messagetext by a horizontal line?
+MSG_Wordwrap
+_Aбснодпдмнр
+; _Wordwrap
+MSG_WordwrapHelp
+Опз бъйкэцдммнл aбснодпдмнрд, гкзммъд рспнйз\n\
+мд атгтс пaжазбaсырю. Блдрсн ьснвн атгдс опзлдмЅм\n\
+внпзжнмсaкымъи онкжтмнй (снкыйн опз мaкзцзз NListviews).
+; If wordwrap is switched off, long lines will\n\
+; not be wrapped, but a horizontal scrollbar will\n\
+; be shown instead (only possible with NListviews).
+MSG_Font
+
+; _Font:
+MSG_FontHelp
+
+; The font to be used by the Mailtext object.
+;
+; *** Copyright Info
+;
+MSG_InfoGiftware
+\ebЙкaрр "Mailtext" пaропнрспaмюдсрю йaй OpenSource\en\n\n\
+Visit the Mailtext OpenSource project at:
+; \ebMailtext is OpenSource\en\n\n\
+; Visit the Mailtext OpenSource project at:
+MSG_InfoDeveloper
+Гкю онктцдмзю опнвпaллзрсрйни змунплaхзз:
+; For developer's info contact:
+MSG_InfoTranslators
+Aмвкзирйзи одпдбнг нртщдрсбкЅм:\n\
+Нкaунл Одсдпрнл\n\
+
+; English translation done by:\n\
+; Olaf Peters\n\
+;

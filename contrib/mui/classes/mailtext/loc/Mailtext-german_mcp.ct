@@ -1,0 +1,353 @@
+## version $VER: Mailtext_mcp.catalog 3.2 ($TODAY)
+## language deutsch
+## codeset 0
+;
+## chunk AUTH German translation by Olaf Peters <olf@gmx.de> & Carsten Stach <Carsten.Stach@dueren.soco.de>
+;
+; Mailtext - An MUI Custom Class for eMessage display
+; Copyright (C) 1996-2001 by Olaf Peters
+; Copyright (C) 2002-2006 by Mailtext Open Source Team
+;
+; GCC & OS4 Portage by Alexandre Balaban
+;
+; This library is free software; you can redistribute it and/or
+; modify it under the terms of the GNU Lesser General Public
+; License as published by the Free Software Foundation; either
+; version 2.1 of the License, or (at your option) any later version.
+;
+; This library is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+; Lesser General Public License for more details.
+;
+; You should have received a copy of the GNU Lesser General Public
+; License along with this library; if not, write to the Free Software
+; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+;
+; Mailtext OpenSource project :  http://sourceforge.net/projects/mailtext/
+;
+; $VER: Mailtext_mcp.catalog 3.2 (21.4.2006)
+;
+; $HISTORY:
+;
+;  21.4.06  3.2   : Mailtext v3.2 OpenSource Release
+;  20.6.97  3.1   : Mailtext release 3.1
+;   4.2.97  3.0   : Mailtext v3.0 Public Release
+;  22.1.97  2.0   : Mailtext v3.0 Beta Releases
+;  8.11.96  1.4   : - changed identifiers again (from 'loc' to 'MSG_')
+;                   - changed text for MSG_AttributesDistanceHelp
+;  1.11.96  1.3   : identifiers now start with 'loc'
+;   9.5.96  1.2   : renamed from Mailtext.catalog to Mailtext_mcp.catalog
+;  29.4.96  1.1   : minor changes
+;  24.4.96  1.0   : initial
+;
+; ----------------------------------------------------------------------------------------
+;
+; *** Sampletext
+;
+MSG_Sample
+Beispiel
+; Sample
+MSG_SampleHelp
+Mailtext Beispiel, das direkt von den Einstellungen,\ndie Du in diesem Dialog machst, beeinflußt wird.
+; Mailtext sample that is directly being influenced\n\
+; by the changes you are making below.
+MSG_SampleText
+Testtext für die Mailtext CustomClass\n\
+\n\
+*Fett* /Kursiv/ _Unterstrichen_ #Farbig# _/*Kombination*/_\n\
+\n\
+\n\
+Zitierter Text:\n\
+\n\
+1>2>3>4>5> *Fett* /Kursiv/ _Unterstrichen_ #Farbig#\n\
+\n\
+URLs: http://home.pages.de/~Mailtext/\n\
+\n\
+Etwas Licht ins Dunkel gebracht: (sei + entweder *, /, _ oder #)\n\
+\n\
+   +Text+\n\
+   ^    ^\n\
+   |    |\n\
+   |    +- das abschließende Attributzeichen\n\
+   |\n\
+   +- das einführende Attributzeichen\n\
+\n\
+-- \n\
+olf@gmx.de
+; Testtext for Mailtext CustomClass\n\
+; \n\
+; *Bold* /Italics/ _Underline_ #Coloured# _/*Combination*/_\n\
+; \n\
+; \n\
+; Quoted Text:\n\
+; \n\
+; 1>2>3>4>5> *Bold* /Italics/ _Underline_ #Coloured#\n\
+; \n\
+; URLs: http://home.pages.de/~Mailtext/\n\
+; \n\
+; To clear things up a bit: (let + be *, /, _ or #)\n\
+; \n\
+;    +Text+\n\
+;    ^    ^\n\
+;    |    |\n\
+;    |    +- the terminating char\n\
+;    |\n\
+;    +- the introducing char\n\
+; \n\
+; -- \n\
+; olf@magicolf.de
+;
+; *** Pages
+;
+MSG_Preferences
+Voreinstellungen
+; Preferences
+;
+; *** Distances page
+;
+MSG_Distances
+Abstände
+; Distances
+MSG_AttributesDistance
+_Attribute
+; _Attributes
+MSG_AttributesDistanceHelp
+Maximale Anzahl von Zeichen, die mit dem entsprechenden\nAttribut ausgegeben werden.
+; Maximum number of chars to be displayed\n\
+; with given attribute.
+MSG_QuoteDistance
+Z_itat
+; Q_uotes
+MSG_QuoteDistanceHelp
+Legt fest, wieviele Zeichen am Anfang einer Zeile\n\
+untersucht werden, um festzustellen, ob es sich um\n\
+eine Zitatzeile handelt.
+; Determines how many chars in the beginning of a\n\
+; line should be examined for being quotechars.
+;
+; *** Patterns page
+;
+MSG_Patterns
+Muster
+; Patterns
+MSG_DisablePattern
+A_usschalten
+; _Disable
+MSG_DisablePatternHelp
+Die Attributersetzung wird ausgeschaltet, wenn\n\
+eine Zeile auf dieses Muster paßt.
+; Attribute parsing will be disabled if a line\n\
+; matches this pattern.
+MSG_EnablePattern
+_Einschalten
+; _Enable
+MSG_EnablePatternHelp
+Die Attributersetzung wird wieder\n\
+eingeschaltet, wenn eine Zeile auf\n\
+dieses Muster paßt.
+; Attribute parsing will be reenabled if a line\n\
+; matches this pattern.
+MSG_SigSepPattern
+_Sig. Trenner
+; _Sig. Separator
+MSG_SigSepPatternHelp
+Eine Zeile wird durch eine horizontale Linie\n\
+ersetzt, wenn sie auf dieses Muster paßt.\n\
+Auf diese Weise kann eine Signatur optisch \n\
+vom Nachrichtentext abgesetzt werden.
+; The line will be replaced by a horizontal rule,\n\
+; if it matches this pattern. This can be used to\n\
+; optically separate signature from the rest of the\n\
+; message.
+;
+; *** Characters page
+;
+MSG_Chars
+Zeichen
+; Characters
+MSG_NonintroducingChars
+_Nicht einführend
+; _Nonintroducing
+MSG_NonintroducingCharsHelp
+Zeichen, die nicht hinter dem einführenden\nAttributzeichen stehen dürfen.
+; Characters that are not allowed to occur behind\n\
+; the introducing attributechar.
+MSG_TerminatingChars
+A_bschließend
+; _Terminating
+MSG_TerminatingCharsHelp
+Zeichen, die hinter dem abschließenden\nAttributzeichen stehen dürfen.
+; Characters that are allowed to occur behind the\n\
+; terminating attributechar.
+MSG_WhitespaceChars
+_Leerzeichen
+; _Whitespace
+MSG_WhitespaceCharsHelp
+Zeichen, die als Leerzeichen angesehen werden und\nsomit vor dem einführenden Attributzeichen erlaubt\nsind.
+; Characters that are considered whitespace thus\n\
+; being allowed to occur in front of the introducing\n\
+; attributechar.
+MSG_QuoteChars
+Zi_tatzeichen
+; _Quotechars
+MSG_QuoteCharsHelp
+Zeichen, die zur Einführung einer Zitatzeile\nbenutzt werden.
+; Characters that are considered as introducers for\n\
+; quoted textpassages.
+MSG_QuoteCharsCheckHelp
+Wenn dieses Feld abgehakt ist, wird die\nMailtext-Klasse immer diese Zitatzeichen benutzen,\negal welche Einstellungen ein Programm der Klasse\nübergibt.
+; When checked the Mailtext-class will always use\n\
+; these quotechars regardless which settings a\n\
+; program handles to the class.
+;
+; *** Colors page
+;
+MSG_Colors
+Farben
+; Colors
+MSG_Quotelevel
+Zitatebenen:
+; Quotelevel:
+MSG_QuoteLevel1Color
+Farbe für Ebene 1
+; Level 1 Color
+MSG_QuoteLevel2Color
+Farbe für Ebene 2
+; Level 2 Color
+MSG_QuoteLevel3Color
+Farbe für Ebene 3
+; Level 3 Color
+MSG_QuoteLevel4Color
+Farbe für Ebene 4
+; Level 4 Color
+MSG_QuoteLevel5Color
+Farbe für Ebene 5
+; Level 5 Color
+MSG_QuoteLevelHelp
+Zitate der entsprechenden Ebene\nwerden mit dieser Farbe angezeigt.
+; Quotes of the corresponding level\n\
+; will be marked with this color.
+MSG_ColoredText
+_Farbiger Text:
+; _Colored text
+MSG_ColoredTextWinTitle
+Farbiger Text
+; Colored text
+MSG_ColoredTextHelp
+Text, der vom Attribut '#' eingeschlossen\nwird, wird in dieser Farbe angezeigt.
+; The color, text enclosed by the\n\
+; attribute '#' will be displayed with.
+MSG_ColoredURL
+_URL Farbe:
+; _URL color
+MSG_ColoredURLWinTitle
+URL Farbe
+; URL color
+MSG_ColoredURLHelp
+Die Farbe, in der ein "Uniform Resource Locator (URL)",\n\
+z.B. http://www.abc.xyz/ angezeigt wird.
+; The color a Uniform Resource Locator (URL),\n\
+; i.e. http://www.abc.xyz/, will be displayed with.
+;
+; *** URLs page
+;
+MSG_URLs
+URLs
+; URLs
+MSG_URLAction
+_Aktion:
+; _Action
+MSG_URLActionHelp
+Der Befehl, der ausgeführt wird, wenn auf eine URL\n\
+doppelt geklickt wurde. Ein %s in der Befehlszeile\n\
+wird durch die angeklickte URL ersetzt.
+; The command that is executed when an URL is doubleclicked.\n\
+; A %s in the commandstring will be replaced by the clicked URL.
+MSG_URLActionBeep
+Nach Aktion _piepsen
+; _Beep after action
+MSG_URLActionBeepHelp
+Nach dem Aufruf des Aktionskommandos ertönt\n\
+zur Kontrolle ein piepsen.
+; If checked, the display will be beeped after the\n\
+; URL action command has been called, to give some\n\
+; feedback that the action has been triggered.
+MSG_URLUnderline
+URLs _unterstreichen
+; _Underline URLs
+MSG_URLUnderlineHelp
+Sollen URLs unterstrichen dargestellt werden?
+; Should URLs be displayed underlined?
+MSG_URLStackSize
+_Stackgröße:
+; _Stacksize
+MSG_URLStackSizeHelp
+Die Stackgröße für den Aktionsbefehl.
+; The stacksize for the action command.
+MSG_URLStackSlider
+%ld kByte
+; %ld kByte
+;
+; *** Misc. page
+;
+MSG_Misc
+Sonstiges
+; Misc.
+MSG_ShowAttributes
+Attributzeichen an_zeigen
+; _Show attributechars
+MSG_ShowAttributesHelp
+Sollen die Attributzeichen angezeigt werden, auch\nwenn der Schriftstil gesetzt wurde?
+; Display the attribute characters even if the style\n\
+; has been set?
+MSG_UseContextMenu
+Kontext_menü benutzen
+; Use context _menu
+MSG_UseContextMenuHelp
+Soll jedes Mailtext-Objekt ein Kontextmenü haben?
+; Should every Mailtext object have a contextmenu?
+MSG_SigSeparator
+Signatur _abteilen
+; S_ignature separator
+MSG_SigSeparatorHelp
+Soll eine Signatur (eingeleitet durch '-- ',\n\
+'--' oder '---') durch eine horizontale Linie\n\
+vom Nachrichtentext abgeteilt werden?
+; Should a signature (introduced by a '-- ',\n\
+; '--' or '---') be separated from the\n\
+; messagetext by a horizontal line?
+MSG_Wordwrap
+_Zeilenumbruch
+; _Wordwrap
+MSG_WordwrapHelp
+Wenn der Zeilenumbruch ausgeschaltet ist,\n\
+werden lange Zeilen nicht umgebrochen, sondern\n\
+stattdessen wird ein horizontaler Rollbalken\n\
+angezeigt (nur möglich mit NListviews).
+; If wordwrap is switched off, long lines will\n\
+; not be wrapped, but a horizontal scrollbar will\n\
+; be shown instead (only possible with NListviews).
+MSG_Font
+_Font:
+; _Font:
+MSG_FontHelp
+Der Font, den das Mailtext-Objekt benutzt.
+; The font to be used by the Mailtext object.
+;
+; *** Copyright Info
+;
+MSG_InfoGiftware
+\ebMailtext ist "OpenSource"\en\n\n\
+Visit the Mailtext OpenSource project at:
+; \ebMailtext is OpenSource\en\n\n\
+; Visit the Mailtext OpenSource project at:
+MSG_InfoDeveloper
+Entwicklerunterlagen sind erhältlich unter:
+; For developer's info contact:
+MSG_InfoTranslators
+Deutsche Übersetzung von:\n\
+Olaf Peters & Carsten Stach\n
+; English translation done by:\n\
+; Olaf Peters\n\
+;

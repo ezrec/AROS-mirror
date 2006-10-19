@@ -1,0 +1,692 @@
+\input amigatexinfo
+\input texinfo @c -*- Texinfo -*-
+
+@ignore
+
+---------------------------------------------------------------------------
+
+ This is the documentation-source for the Mailtext MUI-CustomClass package
+                            in TexInfo format.
+
+ Mailtext - An MUI Custom Class for eMessage display
+ Copyright (C) 1996-2001 by Olaf Peters
+ Copyright (C) 2002-2006 by Mailtext Open Source Team
+
+ GCC & OS4 Portage by Alexandre Balaban
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ Mailtext OpenSource project :  http://sourceforge.net/projects/mailtext/
+
+ $Id: MailtextD.texi,v 1.9 2006/08/21 15:42:14 paraxenic Exp $
+
+---------------------------------------------------------------------------
+
+@end ignore
+
+@c %**start of header
+@setfilename Mailtext.doc
+@setchapternewpage on
+
+@include rev/MailtextVersions.texi
+
+@iftex
+@afourpaper
+@end iftex
+@c %**end of header
+
+@c /// "TexInfo-Header stuff"
+@set xrefstring siehe
+@set Xrefstring Siehe
+@set Footnotestring Fußnoten
+@set Chapterstring Kapitel
+@set Appendixstring Anhang
+@set Sectionstring Abschnitt
+@set sectionstring Abschnitt
+@set pagestring Seite
+
+@titlepage
+@title Mailtext
+@subtitle Ein MUI Customclass Paket zum Anzeigen von elektronischen Nachrichten
+@subtitle
+@subtitle Version @value{VER}.@value{REV} (@value{DATE})
+@author von Olaf Peters
+@page
+@vskip 0pt plus 1filll
+
+Copyright @copyright{} 1996-2001 Olaf Peters.
+Copyright @copyright{} 2002-2006 by Mailtext Open Source Team
+
+Für detaillierte Informationen zum Copyright, siehe @ref{Copyright}
+
+@end titlepage
+@c \\\
+
+@ifinfo
+@c /// "Top"
+@node Top
+@top
+
+@center Mailtext @value{VER}.@value{REV} (@value{DATE})
+
+@center von Olaf Peters
+
+@center Ein MUI Customclass Paket zum Anzeigen von elektronischen Nachrichten
+
+
+@menu
+
+* Übersicht::          Was ist Mailtext und welche Features hat es?
+
+* Copyright::          Legaler Krams...
+* Autor::              Wie man den Autor erreicht
+
+* Installation::       Installation von Mailtext.
+* Konfiguration::      Konfiguration von Mailtext
+* FAQ::                Häufig gestellte Fragen
+
+* Entwickler::         Eine Anmerkung für Entwickler, die Mailtext in
+                        eigenen Projekten benutzen wollen.
+
+* Anwendungen::        Referenzanwendungen die Mailtext nutzen.
+
+* Danke::              Der Autor möchte danken @dots{}
+* Geschichte::         Was ist neu an dieser Version?
+* Zukunft::            Was ist für weitere Versionen geplant?
+* MUI::                Über das MagicUserInterface
+
+* Index::
+
+@end menu
+
+@c \\\
+@end ifinfo
+
+@c /// "Übersicht"
+@node Übersicht,,Top,Top
+@chapter Übersicht
+@cindex Übersicht
+Was ist Mailtext?
+
+Mailtext ist eine Customclass für das Magic User Interface (MUI) von Stefan
+Stuntz.
+
+Sie ist als Ersatz für MUIs Floattext-Klasse gedacht, wenn es darum geht,
+elektronische Nachrichten (eMail, News) anzuzeigen.
+
+In e-Nachrichten findet man oft Worte oder Sätze, die von z.B. '*' oder '_'
+eingeschlossen sind, wie *fett*, _unterstrichen_. Wenn nun Mailtext statt
+MUIs Floattext-Klasse benutzt wird, wird der Text, der von diesen
+Attributzeichen eingeschlossen wurde mit dem entsprechenden Attribut ausgegeben, also wird
+
+@itemize @bullet
+
+@item *text* fett dargestellt,
+
+@item /text/ kursiv dargestellt,
+
+@item _text_ unterstrichen dargestellt,
+
+@item #text# andersfarbig dargstellt. Die Farbe kann in MUI-Prefs/Mailtext beliebig konfiguriert werden
+
+@end itemize
+
+Die Attributersetzung wird eingestellt, wenn Mailtext uu-codierte Dateien,
+Signaturen, PGP-Signaturen, -Schlüssel oder -Nachrichten erkennt.
+
+Aber das ist ist noch längst nicht alles @dots{}
+
+Mailtext kann auch zitierte Texte hervorheben -- mit verschiedenen Farben
+für bis zu fünf unterschiedliche Zitatebenen.
+
+"Uniformat Resource Locators" (URL), wie sie aus dem World Wide Web bekannt
+sind, werden von Mailtext erkannt und Sie können eine Aktion einstellen,
+die immer dann ausgelöst wird, wenn sie auf eine URL doppelklicken. So kann
+z.B. eine AmigaDOS-Kommando oder ein ARexx-Skript gestartet werden, das die
+URL an einen Webbrowser weiterleitet.
+
+Signaturzeichen, z.B. '@minus{}@minus{} ', können durch eine horizontale Linie
+ersetzt werde, so daß die Signatur auch optisch vom eigentlichen Text abgehoben wird.
+
+Die meisten Features von Mailtext können von Ihnen
+@ref{Konfiguration,konfiguriert} und an Ihre Bedürfnisse angepaßt werden.
+
+@c \\\
+@c /// "Copyright"
+@node Copyright,,,Top
+@chapter Copyright
+@cindex Copyright
+
+Mailtext ist Copyright @copyright{} 1996-2001 by Olaf Peters.
+
+Mailtext ist Copyright @copyright{} 2002-2006 by the Mailtext Open Source Team.
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+Mailtext OpenSource project: http://sourceforge.net/projects/mailtext/
+
+Deutsch:
+
+Diese Übersetzung wird mit der Absicht angeboten, das Verständnis
+der GNU Lesser General Public License (GNU LGPL) zu erleichtern.
+Es handelt sich jedoch nicht um eine offizielle oder im rechtlichen
+Sinne anerkannte Übersetzung.
+
+Bibliothek ist freie Software; Sie dürfen sie unter den Bedingungen der
+GNU Lesser General Public License, wie von der Free Software Foundation
+veröffentlicht, weiterverteilen und/oder modifizieren; entweder gemäß
+Version 2.1 der Lizenz oder (nach Ihrer Option) jeder späteren Version.
+
+Diese Bibliothek wird in der Hoffnung weiterverbreitet, daß sie nützlich
+sein wird, jedoch OHNE IRGENDEINE GARANTIE, auch ohne die implizierte
+Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK.
+Mehr Details finden Sie in der GNU Lesser General Public License.
+
+Sie sollten eine Kopie der GNU Lesser General Public License zusammen mit
+dieser Bibliothek erhalten haben; falls nicht, schreiben Sie an die Free
+Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA.
+@c \\\
+@c /// "Autor"
+@node Autor,,,Top
+@section Autor
+@cindex Autor
+@cindex Addresse
+@cindex Bugreports
+@cindex WWW
+@cindex WorldWideWeb
+@cindex eMail
+@cindex Mail
+
+Geschenke, Bugreports, Featurerequests etc. pp. sollten an diese Adressen
+gesendet werden:
+
+@itemize @bullet
+@item Gelbe Post:
+
+@example
+Members of the Mailtext Open Source Team listed on the
+Members page at http://sourceforge.net/projects/mailtext.
+@end example
+
+@item E-Mail:
+
+@example
+Members of the Mailtext Open Source Team listed on the
+Members page at http://sourceforge.net/projects/mailtext.
+@end example
+
+@item World Wide Web:
+
+@example
+http://sourceforge.net/projects/mailtext
+@end example
+
+@item Die Mailtext Homepage:
+
+@example
+http://mailtext.sourceforge.net
+@end example
+
+@end itemize
+
+@c \\\
+
+@c /// "Installation"
+@node Installation,,,Top
+@chapter Installation
+@cindex Installation
+@cindex Systemvoraussetzungen
+
+Was zur Benutzung des Mailtext Pakets benötigt wird:
+
+@itemize @bullet
+@item mindestens Kickstart und Workbench 2.04
+@item mindestens MUI 3.6
+@item NList.mcc, NListview.mcc und NListviews.mcp von Gilles Masson.
+@item Crawling.mcc von Klaus Melchior für Mailtext.mcp (wird nicht
+unbedingt benötigt, Mailtext.mcp kommt auch ohne aus.)
+@end itemize
+
+Zur Installation des Pakets sollte das beiliegende Installationsscript
+benutzt werden, das Ihr System auf die Benutzung von Mailtext vorbereitet.
+
+@c \\\
+@c /// "Konfiguration"
+@node Konfiguration,,,Top
+@chapter Konfiguration
+@cindex Konfiguration
+@cindex Zeichen-Seite
+@cindex Abstände-Seite
+@cindex URLs-Seite
+
+Die meisten Features von Mailtext können auf der Mailtext Seite in
+MUI-Prefs an Ihre Bedürfnisse angepaßt werden. Alle Elemente dort
+benutzen MUIs Bubblehelp System, so daß hier nur ein paar wesentliche
+Anmerkungen zu finden sind.
+
+@menu
+* Zeichen-Seite ::    Spezielle Zeichen
+* Abstände-Seite ::   Attribut- und Zitatabstand
+* URLs-Seite ::       "Uniform Resource Locators"
+@end menu
+
+@c /// "Zeichen-Seite"
+@node Zeichen-Seite,,,Konfiguration
+@section Zeichen-Seite
+@cindex einführendes Zeichen
+@cindex Zeichen, einführendes
+@cindex abschließendes Zeichen
+@cindex Zeichen, abschließendes
+
+Bei der Konfiguration von Mailtext ist es wichtig zu wissen, was mit den
+Begriffen "einführendes (Attribut-)zeichen" und "abschließendem
+(Attribut-)zeichen" gemeint ist. Zur Verdeutlichung dient das folgende
+Beispiel ('+' sei hierbei eines der Attributzeichen '*', '/', '_' oder
+'#'):
+
+@example
+   +Text+
+   ^    ^
+   |    |
+   |    +- das abschließende Attributzeichen
+   |
+   +- das einführende Attributzeichen
+@end example
+
+Wenn Sie das im Hinterkopf behalten, sollte es recht einfach sein, Mailtext
+an Ihre Bedürfnisse anzupassen.
+
+@c \\\
+@c /// "Abstände-Seite"
+@node Abstände-Seite,,,Konfiguration
+@section Abstände-Seite
+@cindex Zitatabstand
+@cindex Abstand, Zitat-
+@cindex Zitatebenen
+
+Mit dem Zitatabstand kann Mailtexts Erkennung von zitierten Textpassagen
+eingestellt werden.
+
+Das kann bei mehreren Zitatebenen recht knifflig werden, schauen Sie sich
+also bitte folgendes Beispiel an:
+
+@example
+XYZ> ABC> Zitierter Text
+   ^    ^
+123412345
+@end example
+
+Mit einem Zitatabstand <= 3 würde der Text nicht als Zitat markiert, da das
+erste Zitatzeichen an vierter Stelle in der Zeile auftaucht.
+
+Mit einem Zitatabstand von 4 würde der gesamte Text mit der Farbe für Ebene
+1 markiert, die zweite Zitatebene würde nicht erkannt.
+
+Mit einem Zitatabstand >= 5 würde auch die zweite Zitatebene erkannt, da
+das zweite Zitatzeichen das fünfte Zeichen hinter dem ersten Zitatzeichen
+ist.
+
+Zu kompliziert? Och nööö @dots{} ;-)
+
+@c \\\
+@c /// "URLs-Seite"
+@node URLs-Seite,,,Konfiguration
+@section URLs-Seite
+@cindex WWW
+@cindex World Wide Web
+@cindex AmigaDOS Kommando
+@cindex URL Aktionskommando
+@cindex ARexx
+@cindex Kommando, URL-Aktion
+@cindex Kommando, AmigaDOS
+
+Die URL Aktion ist ein normale AmigaDOS-Kommando wie es z.B. in einem
+Shellfenster eingegeben wird. ARexx-Skripte müssen daher mit dem 'rx'
+Kommando gestartet werden.
+
+Das erste Vorkommen von @samp{%s} in dem URL Aktionskommando wird durch die
+URL ersetzt, auf die doppeltgeklickt wurde.
+
+Mailtext erkennt die folgenden URL-Typen, wie sie in RFC 1738 definiert
+werden:
+
+@itemize @asis
+@item @samp{file://} -- Host-spezifische Dateinamen
+@item @samp{ftp://} -- File Transfer Protokoll
+@item @samp{gopher://} -- Das Gopher Protokoll
+@item @samp{http://} -- Hypertext Transfer Protocol (World Wide Web)
+@item @samp{mailto:} -- e-Mail Adresse
+@item @samp{news:} -- USENET News
+@item @samp{nntp://} -- USENET News unter Benutzung von NNTP Zugriff
+@item @samp{prospero://} -- Prospero Directory Service
+@item @samp{telnet://} -- Referenz auf interaktive Sitzung
+@item @samp{wais://} -- Wide Area Information Servers
+@end itemize
+
+Es ist jedoch nicht möglich für jeden dieser URL-Typen eine eigenes
+Aktionskommando einzustellen; das sollte von einem geeigneten ARexx-Skript
+erledigt werden.
+
+@c \\\
+
+@c \\\
+
+@c /// "FAQ"
+@node FAQ,,,Top
+@chapter Häufig gestellte Fragen
+@cindex FAQ
+@cindex Mauszeiger
+@cindex Kontextmenü
+@cindex Signaturen
+@cindex Mehrfachattribute
+
+@samp{Frage}: Ich habe in MUI-Prefs/Mailtext auf der @samp{Sonstiges}-Seite
+"Signatur abteilen" (Separate Signatures) ausgewählt, aber das scheint
+nicht zu funktionieren. Warum?
+
+@samp{Antwort}: Höchstwahrscheinlich sind die Signaturtrenner '@minus{}@minus{}
+', '@minus{}@minus{}' oder '@minus{}@minus{}@minus{}' im
+"Ausschalten"-Muster (siehe @samp{Muster}-Seite) enthalten. Entfernen Sie
+sie aus dem Muster, so wird auch das Abteilen der Signatur funktionieren.
+In Mailtext Versionen vor 3.0 waren die Signaturtrenner '@minus{}@minus{} '
+und '@minus{}@minus{}@minus{}' per Vorgabe im "Ausschalten"-Muster
+enthalten.
+
+@center @samp{* * *}
+
+@samp{Frage}: Mehrfachattribute, z.B. _*/Dies hier/*_, scheinen nicht zu
+funktionieren. Warum?
+
+@samp{Antwort}: Ich tippe mal, daß Sie (wieder) eine Mailtext Version vor
+3.0 benutzt haben? Sie sollten die Zeichen *_#/ bei den Leerzeichen
+("Whitespace") und abschließenden Zeichen ("Terminating") einfügen und aus
+den nicht einführenden Zeichen ("Nonintroducing") entfernen (siehe
+@samp{Zeichen}-Seite in MUI-Prefs/Mailtext).
+
+@center @samp{* * *}
+
+@samp{Frage}: Wenn der Mauszeiger über dem Mailtext-Objekt steht kann ich
+nicht mehr auf die Menüshortcuts der Anwendunge zugreifen. Wenn ich die
+Maus dann aus dem Bereich des Mailtext-Objekts bewege geht's wieder. Was
+ist das?
+
+@samp{Antwort}: Das ist ein MUI Problem/Feature. Wenn ein Objekt ein
+Kontextmenü besitzt und der Mauszeiger über diesem Objekt steht kann nicht
+auf das Menü der Anwendung zugegriffen werden. Vielleicht wird das mit
+einem zukünftigen MUI mal möglich sein, MUI 3.8 -- das gerade aktuell ist,
+als dieser Text geschrieben wird -- zeigt immer noch dieses Verhalten. Das
+ist übrigens auch der Grund, warum Mailtexts Kontextmenü in
+MUI-Prefs/Mailtext auf der @samp{Sonstiges}-Seite ausgeschaltet werden
+kann.
+
+@c \\\
+
+@c /// "Entwickler"
+@node Entwickler,,,Top
+@chapter Entwickler
+@cindex Entwickler
+
+Wenn Sie in Betracht ziehen, Mailtext in einem Ihrer eigenen Programme zu
+benutzen, lesen Sie bitte zunächst die @ref{Copyright}-Notiz.
+
+Ich würde es sehr begrüßen, wenn sie Mailtext in Ihren eigenen Projekten
+verwenden würden, die benötigten Headerdateien für C, Oberon und Modula-2
+sind jedoch @strong{nur} auf Nachfrage erhältlich, da ich schon gerne
+wissen möchte, welche Anwendungen diese Klasse benutzen.
+
+Um das Entwicklerpaket zu erhalten, sollten Sie sich das Kapitel
+@ref{Autor} ansehen, um zu sehen auf welchen Wegen ich erreicht werden
+kann.
+
+@c \\\
+@c /// "Anwendungen"
+@node Anwendungen,,,Top
+@chapter Anwendungen
+@cindex IntuiNews
+@cindex GoodNews
+@cindex MUIReaderX
+
+Die folgenden öffentlich verfügbaren Anwendungen benutzen zur Zeit
+Mailtext:
+
+@table @samp
+
+@item IntuiNews v1.4a
+
+von Matthias Scheler und Markus Stipp (Freeware).
+
+Ein Newsreader für das Universal Message System (UMS). Erhältlich auf
+Aminet in comm/ums.
+
+@item GoodNews v1.5
+
+von Jean-Marc Xiume' und Jerome Fleury (Freeware).
+
+Ein weiterer Newsreader für das Universal Message System (UMS). GoodNews
+basiert auf den Quelltexten von IntuiNews v1.4. Erhältlich auf Aminet in
+comm/ums.
+
+@item MUIReaderX v0.45
+
+von Robin Vermaat (Freeware).
+
+Ein Offlinereader für Xenolink BBS Systeme. MUIReaderX ist eine grafische
+Benutzungsoberfläche für Xenolinks Messagebase und ist vergleichbar mit
+Programmen wie Spot und Foozle. Erhältlich auf Aminet in comm/xeno.
+
+@end table
+
+Ein aktuelle Liste von Mailtextanwendungen befindet sich auf der Mailtext
+Homepage http://home.pages.de/~Mailtext/.
+
+Sollten Sie auch Ihre Anwendung gerne in dieser Liste sehen, so schreiben
+sie doch dem @ref{Autor}, Olaf Peters, eine kurze Nachricht und erzählen
+ihm von Ihrer Anwendung.
+
+@c \\\
+
+@c /// "Danke"
+@node Danke,,,Top
+@chapter Danke
+@cindex Danke
+Der Autor möchte den folgenden Personen danken:
+
+@table @samp
+
+@item Stefan Stuntz
+für das wundervolle "Magic User Interface" (@ref{MUI}).
+
+@item Gilles Masson
+für NList.mcc, NListview.mcc und NListviews.mcp, weil diese Klassen erst
+die vielen neuen Features in v3.0 möglich machten.
+
+@item Kai Hofmann
+für das tolle MCC-Install Installerskript.
+
+@item Matthias Scheler
+für die Bugreports und dafür, daß er Mailtext sofort in IntuiNews, einem
+klasse Newsreader für das Universal Message System (UMS), eingebaut hat.
+
+@item Klaus 'kmel' Melchior
+für die Hilfe mit MUI Customclasses und Crawling.mcc.
+
+@item Andreas Baum
+für die Inspirationen und das Jagen von Bugs!
+
+@item Frank Duerring
+für das Oberon Interface
+
+@item Ole Friis
+für die dänische Katalogübersetzung für Mailtext v1.0 und die Bugreports
+
+@item Allen, die an der Übersetzung von Mailtext beteiligt waren:
+  @table @strong
+
+  @item Mailtext v1.0 Übersetzer
+Peter Eriksson (Schwedisch),
+Francis Labrie (Französisch),
+Paolo Menichetti (Italienisch),
+Petter E. Stokke (Norwegisch).
+
+  @item ATO Übersetzer
+Daniel Widerström (Schwedisch),
+Francis Labrie (Französisch),
+Frederico Borges (Portugiesisch),
+Lars Svoldgaard (Dänisch),
+Ljubomir Jankovic (Serbisch),
+Marcin Orlowski (Polnisch),
+Marko Honkanen (Finnisch),
+Oleg Sergeev (Russisch),
+Pascal Eeftinck (Holländisch),
+Samuel Aguilera (Spanisch),
+Simone Polacci (Italienisch) und
+Vit Sindlar (Tschechisch).
+
+  @item ATO Korrektoren
+Alexandre Gabriel (Portugiesisch),
+Carsten Stach (Deutsch),
+Ciro Scognamiglio (Italienisch),
+Fredrik Rambris (Schwedisch),
+Jérôme Fleury (Französisch),
+Leon Woestenberg (Holländisch),
+Martin Clausen (Dänisch),
+Mika Lundell (Finnisch) und
+Radim Demel (Tschechisch).
+
+  @item ATO Projektkoordinator
+Mika Lundell
+
+  @end table
+
+@item alle registrierten Mailtext-Entwickler,
+z.Z.
+Bodo Schulz,
+David Rydh,
+Jason Weber,
+Jerome Fleury,
+Johnny Tevessen,
+Klaus Melchior,
+Magnus Heino,
+Marcel Beck,
+Mathias Mischler,
+Michael Leun,
+Petter E. Stokke,
+Robin Vermaat,
+Thorsten Stocksmeier,
+Timo Jakob,
+Troels Walsted Hansen
+für ihr Interesse an diesem Paket.
+
+@item alle anderen Betatester
+
+@end table
+
+@c \\\
+@c /// "Geschichte"
+@node Geschichte,,,Top
+@appendix Geschichte
+@cindex Geschichte
+@cindex Entwicklugsgeschichte
+
+Och nöö, die übersetze ich nicht auch noch ;-)
+
+@include HistoryE.texi
+
+@c \\\
+@c /// "Zukunft"
+@node Zukunft,,,Top
+@appendix Zukunft
+@cindex Zukunft
+
+Die folgenden Features stehen auf meiner "ToDo"-Liste für Mailtext, obwohl
+es natürlich keine Garantie dafür gibt, daß sie je eingebaut werden. Aber
+es gibt da wohl ein kleines Hintertürchen, um den Autor zu beeinflußen
+<pssst> @ref{Copyright,Giftware} <pssst> :-)
+
+@itemize @bullet
+
+@item Text, der uu-kodierte Daten enthält, wird durch ein einstellbares Bild
+ersetzt und nach Möglichkeit auf dekodiert.
+
+@item Textsuche.
+
+@item Doppelklicks auf e-Mail Adressen (ohne mailto:) erkennen und eine
+Aktion auslösen, genau wie bei URLs.
+
+@end itemize
+
+Sollten Ihnen noch ein paar Features einfallen, die Sie gerne in Mailtext
+eingebaut sehen möchten, so zögern Sie bitte nicht, mit dem Autor Kontakt
+aufzunehmen.
+
+@c \\\
+@c /// "MUI"
+@node MUI,,,Top
+@appendix MUI
+@cindex MUI
+@cindex MagicUserInterface
+@center This application uses
+
+@center MUI - MagicUserInterface
+
+
+@center (c) Copyright 1993-98 by Stefan Stuntz
+
+
+MUI is a system to generate and maintain graphical user interfaces. With
+the  aid  of  a  preferences program, the user of an application has the
+ability to customize the outfit according to his personal taste.
+
+MUI is distributed as shareware. To obtain a complete package containing
+lots of examples and more information about registration please look for
+a  file  called  "muiXXusr.lha"  (XX means the latest version number) on
+your local bulletin boards or on public domain disks.
+
+@center If you want to register directly, feel free to send
+
+
+@center DM 30.-  or  US$ 20.-
+
+@center to
+
+@center Stefan Stuntz
+@center Eduard-Spranger-Straße 7
+@center 80935 München
+@center GERMANY
+
+@c \\\
+
+@node Index,,,Top
+@unnumbered Concept index
+@printindex cp
+
+@contents
+
+@bye
+
+========================================================
+

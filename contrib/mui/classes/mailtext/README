@@ -1,0 +1,49 @@
+MCC Mailtext - README
+
+  As of June 11,2006 Olaf Peters has given his approval to the
+  Mailtext Open Source Team to change the Mailtext licensing to
+  LGPL (GNU Lesser General Public License).
+
+Original Readme by Olaf Peters releasing Mailtext under GPL:
+
+  This is the sourcecode for the MUI Custom Class Mailtext. I'm
+  releasing it to the OpenSource community, because I don't have the
+  time (and resources = Amiga) to actively support it any longer, in
+  fact MCC Mailtext has been unsupported for almost 3 years now...
+
+  Should somebody decide to take up the project and further develop it,
+  I would appreciate if SourceForge (http://sf.net/) would be used as a
+  supportive means to allow more developers to get involved into the
+  project.
+
+  Of course you may contact me with any questions concerning the
+  package and I will happily try to answer them.
+
+  Olaf Peters, July 2001
+  olf@magicolf.de
+
+LICENSE NOTICE
+
+  The documentation/readmes contained in the Sourcecode archive still
+  state a somewhat restricted license. As MCC Mailtext is now under GPL,
+  these notes are now obsolete, e.g. you don't need a commercial license
+  to use MCC Mailtext in commercial products. The documentation must be
+  changed before the next final release to reflect the migration to the
+  GPL.
+
+CREDITS
+
+  MCC Mailtext was written by Olaf Peters <olf@magicolf.de>
+
+  Parts of the software are based upon code written by:
+
+    - Matthias Scheler <matthias@scheler.de> (DynStr.c/h)
+    - Kai Hofmann (MCC-Install-Script)
+
+  MCC Mailtext depends on software written by:
+
+    Stefan Stuntz <stefan@sasg.com> (Magic User Interface)
+    Gilles Masson (NList.mcc, NListview.mcc, NListviews.mcp)
+
+  For more credits see the documentation (*.texi) included in the
+  archive.

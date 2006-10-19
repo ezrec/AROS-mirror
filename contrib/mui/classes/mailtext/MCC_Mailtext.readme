@@ -1,0 +1,99 @@
+Short:        Custom Class for Messagetexts (v3.2)
+Kurz:         Customclass für Nachrichtentexte (v3.2)
+Uploader:     Mailtext Open Source Team
+Author:       Olaf Peters <olf@gmx.de> + Mailtext Open Source Team
+Version:      3.2 (10.5.06)
+Type:         dev/mui
+Needs:        mui38usr.lha, mcc_nlist-0.97.lha
+Replaces:     dev/mui/MCC_Mailtext.lha
+Distribution: This program is free software; you can redistribute it and/or
+              modify  it under the terms of the GNU Lesser General Public
+              License as published by  the Free Software Foundation; either
+              version 2.1 of the License, or (at your option) any later
+              version.
+
+
+The Mailtext MUI custom class package is especially designed to display
+electronic messages. Its main features cover:
+
+- handling of font attributes: *bold*, /italics/, _underline_ and
+    #coloured#. The text between the attribute characters '*', '/', '_' and
+    '#' will be printed with the repective style. To accomplish this,
+    Mailtext has a powerful analysis engine that handles many special cases
+    to obtain best results. Also, processing can be switched off for
+    certain passages of text, i.e. uuencoded binaries, signatures, PGP
+    messages.
+
+- highlighting of quoted textpasses: Mailtext is able to display up to five
+    levels of quoted text in different colours. Quote are recognised by
+    specifying the quote characters that may be used to introduce a quoted
+    textpassage. The most common quote character is '>'. be introduced by a
+    given set of quote characters, the most common is '>'.
+
+- highlighting and handling of URLs: Uniform Resource Locators (URLs) may
+    be highlighted. Also, an AmigaDOS command can be triggered whenever an
+    URL is double clicked with the clicked URL as an argument. By using an
+    ARexx script you could handle http:// URLs to your web, mailto: URLs
+    back to your Mailer and ftp:// URLs to your FTP client. Mailtext
+    supports all URL types specified in RFC 1738 "Uniform Resource
+    Locators", Section 3.
+
+As of NList, Mailtext also supports
+
+- mark & copy to clipboard: use the mouse to mark text and have it copied
+    to the clipboard.
+
+Mailtext v3.2 needs MUI v3.6+ (muimaster.library v17+) and the NList
+package to work.
+
+NListview.mcc, NList.mcc, NListviews.mcp are © 1996-1998 by Gilles Masson.
+
+=============
+Release Notes
+=============
+
+* v3.2 (10.5.06, Mailtext.mcc v19.9, Mailtext.mcp v19.9)
+
+- Sources converted to compile with GCC compiler.
+
+- OS4 PPC Native binaries included in distribution archive.
+
+- No changes in the operation of Mailtext.
+
+- Status changed to free open source software under the terms of
+  the GNU Lesser General Public License.
+
+NOTE: most catalogs have not been updated. However there are only a few
+strings affected. The .ct files are included, feel free to make any
+necessary changes yourself and please e-Mail us the results.
+
+/***************************************************************************
+
+ Mailtext - An MUI Custom Class for eMessage display
+ Copyright (C) 1996-2001 by Olaf Peters
+ Copyright (C) 2002-2006 by Mailtext Open Source Team
+
+ GCC & OS4 Portage by Alexandre Balaban
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+ Mailtext OpenSource project :  http://sourceforge.net/projects/mailtext/
+
+ $Id: MCC_Mailtext.readme,v 1.6 2006/06/18 01:03:58 xenic! Exp $
+
+ Distribution readme file.
+
+***************************************************************************/
+

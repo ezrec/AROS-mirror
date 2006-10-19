@@ -1,0 +1,335 @@
+## version $VER: Mailtext_mcp.catalog 3.2 ($TODAY)
+## language svenska
+## codeset 0
+;
+## chunk AUTH Swedish translation by Daniel Widerström <daniel.widerstrom@karlsborg.mail.telia.com> & Fredrik Rambris <boost@bigfoot.com>
+;
+; Mailtext - An MUI Custom Class for eMessage display
+; Copyright (C) 1996-2001 by Olaf Peters
+; Copyright (C) 2002-2006 by Mailtext Open Source Team
+;
+; GCC & OS4 Portage by Alexandre Balaban
+;
+; This library is free software; you can redistribute it and/or
+; modify it under the terms of the GNU Lesser General Public
+; License as published by the Free Software Foundation; either
+; version 2.1 of the License, or (at your option) any later version.
+;
+; This library is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+; Lesser General Public License for more details.
+;
+; You should have received a copy of the GNU Lesser General Public
+; License along with this library; if not, write to the Free Software
+; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+;
+; Mailtext OpenSource project :  http://sourceforge.net/projects/mailtext/
+;
+; $VER: Mailtext_mcp.catalog 3.2 (21.4.2006)
+;
+; $HISTORY:
+;
+;  21.4.06  3.2   : Mailtext v3.2 OpenSource Release
+;  20.6.97  3.1   : Mailtext release 3.1
+;   4.2.97  3.0   : Mailtext v3.0 Public Release
+;  22.1.97  2.0   : Mailtext v3.0 Beta Releases
+;  8.11.96  1.4   : - changed identifiers again (from 'loc' to 'MSG_')
+;                   - changed text for MSG_AttributesDistanceHelp
+;  1.11.96  1.3   : identifiers now start with 'loc'
+;   9.5.96  1.2   : renamed from Mailtext.catalog to Mailtext_mcp.catalog
+;  29.4.96  1.1   : minor changes
+;  24.4.96  1.0   : initial
+;
+; ----------------------------------------------------------------------------------------
+;
+; *** Sampletext
+;
+MSG_Sample
+Prov
+; Sample
+MSG_SampleHelp
+Mailtextprov som direkt påverkas av ändringarna\ndu gör i inställningarna.
+; Mailtext sample that is directly being influenced\n\
+; by the changes you are making below.
+MSG_SampleText
+Testtext för Mailtext \n\
+\n\
+*Fetstil* /Kursiv/ _Understruken_ #Färgad# _/*Kombinerad*/_\n\
+\n\
+\n\
+Citerad Text:\n\
+\n\
+1>2>3>4>5> *Fet* /Kursiv/ _Understruket_ #Färgad#\n\
+\n\
+URLer: http://home.pages.de/~Mailtext/\n\
+\n\
+För att klarlägga lite: (tillåta + bli *, /, _ or #)\n\
+\n\
+   +Text+\n\
+   ^    ^\n\
+   |    |\n\
+   |    +- Avslutnings tecknet\n\
+   |\n\
+   +- Introducerings teckenet\n\
+\n\
+-- \n\
+olf@gmx.de
+; Testtext for Mailtext CustomClass\n\
+; \n\
+; *Bold* /Italics/ _Underline_ #Coloured# _/*Combination*/_\n\
+; \n\
+; \n\
+; Quoted Text:\n\
+; \n\
+; 1>2>3>4>5> *Bold* /Italics/ _Underline_ #Coloured#\n\
+; \n\
+; URLs: http://home.pages.de/~Mailtext/\n\
+; \n\
+; To clear things up a bit: (let + be *, /, _ or #)\n\
+; \n\
+;    +Text+\n\
+;    ^    ^\n\
+;    |    |\n\
+;    |    +- the terminating char\n\
+;    |\n\
+;    +- the introducing char\n\
+; \n\
+; -- \n\
+; olf@magicolf.de
+;
+; *** Pages
+;
+MSG_Preferences
+Inställningar
+; Preferences
+;
+; *** Distances page
+;
+MSG_Distances
+Avstånd
+; Distances
+MSG_AttributesDistance
+_Egenskaper
+; _Attributes
+MSG_AttributesDistanceHelp
+Det högsta antal tecken att visas\nmed given egenskap.
+; Maximum number of chars to be displayed\n\
+; with given attribute.
+MSG_QuoteDistance
+_Citat
+; Q_uotes
+MSG_QuoteDistanceHelp
+Bestämmer hur många inledande tecken per rad\nsom skall undersökas hurvida de är\ncitattecken eller inte.
+; Determines how many chars in the beginning of a\n\
+; line should be examined for being quotechars.
+;
+; *** Patterns page
+;
+MSG_Patterns
+Mönster
+; Patterns
+MSG_DisablePattern
+_Slå av
+; _Disable
+MSG_DisablePatternHelp
+Attributsökningen slås av om en rad\nmatchar detta mönster.
+; Attribute parsing will be disabled if a line\n\
+; matches this pattern.
+MSG_EnablePattern
+S_lå på
+; _Enable
+MSG_EnablePatternHelp
+Attributsökningen kommer åter att slås på om\nen rad matchar detta mönster.
+; Attribute parsing will be reenabled if a line\n\
+; matches this pattern.
+MSG_SigSepPattern
+
+; _Sig. Separator
+MSG_SigSepPatternHelp
+
+; The line will be replaced by a horizontal rule,\n\
+; if it matches this pattern. This can be used to\n\
+; optically separate signature from the rest of the\n\
+; message.
+;
+; *** Characters page
+;
+MSG_Chars
+Tecken
+; Characters
+MSG_NonintroducingChars
+_Icke-introducerande
+; _Nonintroducing
+MSG_NonintroducingCharsHelp
+Tecken som inte är tillåtna att förekomma bakom\ndet inledande attributtecknet.
+; Characters that are not allowed to occur behind\n\
+; the introducing attributechar.
+MSG_TerminatingChars
+_Avslutande
+; _Terminating
+MSG_TerminatingCharsHelp
+Tecken som är tillåtna att förekomma bakom det\navslutande attributtecknet.
+; Characters that are allowed to occur behind the\n\
+; terminating attributechar.
+MSG_WhitespaceChars
+_Tom yta
+; _Whitespace
+MSG_WhitespaceCharsHelp
+Tecken som uppfattas som tomma och således\ntillåts förekomma före inledande attributtecken.
+; Characters that are considered whitespace thus\n\
+; being allowed to occur in front of the introducing\n\
+; attributechar.
+MSG_QuoteChars
+_Citattecken
+; _Quotechars
+MSG_QuoteCharsHelp
+Tecken som uppfattas som introduktion till\nciterade textmassor.
+; Characters that are considered as introducers for\n\
+; quoted textpassages.
+MSG_QuoteCharsCheckHelp
+Får Mailtextklassen att alltid använda dessa\ncitattecken oavsett vilka inställningar som\nprogrammen använder för klassen.
+; When checked the Mailtext-class will always use\n\
+; these quotechars regardless which settings a\n\
+; program handles to the class.
+;
+; *** Colors page
+;
+MSG_Colors
+Färger
+; Colors
+MSG_Quotelevel
+Citatnivå
+; Quotelevel:
+MSG_QuoteLevel1Color
+Nivå 1 färg
+; Level 1 Color
+MSG_QuoteLevel2Color
+Nivå 2 färg
+; Level 2 Color
+MSG_QuoteLevel3Color
+Nivå 3 färg
+; Level 3 Color
+MSG_QuoteLevel4Color
+Nivå 4 färg
+; Level 4 Color
+MSG_QuoteLevel5Color
+Nivå 5 färg
+; Level 5 Color
+MSG_QuoteLevelHelp
+Citat av motsvarande nivå\nkommer bli markerad med denna färg.
+; Quotes of the corresponding level\n\
+; will be marked with this color.
+MSG_ColoredText
+_Färgad text
+; _Colored text
+MSG_ColoredTextWinTitle
+Färgad text
+; Colored text
+MSG_ColoredTextHelp
+Färgen som texten omslut av\nattributet '#' kommer visas med.
+; The color, text enclosed by the\n\
+; attribute '#' will be displayed with.
+MSG_ColoredURL
+_URL färg:
+; _URL color
+MSG_ColoredURLWinTitle
+URL färg
+; URL color
+MSG_ColoredURLHelp
+Färgen en 'Uniform Resource Locator' (URL),\n t.ex. http://www.abc.xyz/, kommer visas med.
+; The color a Uniform Resource Locator (URL),\n\
+; i.e. http://www.abc.xyz/, will be displayed with.
+;
+; *** URLs page
+;
+MSG_URLs
+URLer
+; URLs
+MSG_URLAction
+H_andling
+; _Action
+MSG_URLActionHelp
+Kommandot som kommer utföras när en URL dubbelklickas.\nEn %s kommandosträngen kommer att bli ersatt av klickad URL.
+; The command that is executed when an URL is doubleclicked.\n\
+; A %s in the commandstring will be replaced by the clicked URL.
+MSG_URLActionBeep
+Pipa efter handling
+; _Beep after action
+MSG_URLActionBeepHelp
+Om kryssad kommer skärmen att pipa efter\nhandlingskommandot för URLen har blivit kallad, för att ge något\nsvar att handling har blivit startat.
+; If checked, the display will be beeped after the\n\
+; URL action command has been called, to give some\n\
+; feedback that the action has been triggered.
+MSG_URLUnderline
+_Understrukna URLer
+; _Underline URLs
+MSG_URLUnderlineHelp
+Skall URLer bli visade understrukna?
+; Should URLs be displayed underlined?
+MSG_URLStackSize
+_Stackstorlek
+; _Stacksize
+MSG_URLStackSizeHelp
+Stackstorleken för handlingskommandot.
+; The stacksize for the action command.
+MSG_URLStackSlider
+%ld kByte
+; %ld kByte
+;
+; *** Misc. page
+;
+MSG_Misc
+Blandat
+; Misc.
+MSG_ShowAttributes
+_Visa attributtecken
+; _Show attributechars
+MSG_ShowAttributesHelp
+Visa attributtecknen även om stilen\ninte är inställd?
+; Display the attribute characters even if the style\n\
+; has been set?
+MSG_UseContextMenu
+Använd kontext_meny
+; Use context _menu
+MSG_UseContextMenuHelp
+Skall alla Mailtext objekt ha en kontextmeny?
+; Should every Mailtext object have a contextmenu?
+MSG_SigSeparator
+Signatur avdelare
+; S_ignature separator
+MSG_SigSeparatorHelp
+Skall en signatur (med ett inledande '-- ',\n'--' eller '---') bli separerad från\n meddelandetexten av en horisontal linje?
+; Should a signature (introduced by a '-- ',\n\
+; '--' or '---') be separated from the\n\
+; messagetext by a horizontal line?
+MSG_Wordwrap
+_Ordbrytning
+; _Wordwrap
+MSG_WordwrapHelp
+Om ordbrytning är avslagen, kommer långa linjer\ninte bli avskilda utan en horisontell rullbalk kommer\nvisas istället (Endast möjlig med NListviews).
+; If wordwrap is switched off, long lines will\n\
+; not be wrapped, but a horizontal scrollbar will\n\
+; be shown instead (only possible with NListviews).
+MSG_Font
+
+; _Font:
+MSG_FontHelp
+
+; The font to be used by the Mailtext object.
+;
+; *** Copyright Info
+;
+MSG_InfoGiftware
+\033bMailtext är OpenSource\033n\n\n\
+Visit the Mailtext OpenSource project at:
+; \ebMailtext is OpenSource\en\n\n
+; Visit the Mailtext OpenSource project at:
+MSG_InfoDeveloper
+För utvecklingsinformation skriv till:
+; For developer's info contact:
+MSG_InfoTranslators
+Svensk översättning gjord av:\nDaniel Widerström och Fredrik Rambris\n\n
+; English translation done by:\n\
+; Olaf Peters\n\
+;

@@ -1,0 +1,355 @@
+## version $VER: Mailtext_mcp.catalog 3.2 ($TODAY)
+## language suomi
+## codeset 0
+;
+## chunk AUTH Finnish translation by Marko Honkanen <Marko.Honkanen@mail.suomi.net> & Mika Lundell <c71829@uwasa.fi>
+;
+; Mailtext - An MUI Custom Class for eMessage display
+; Copyright (C) 1996-2001 by Olaf Peters
+; Copyright (C) 2002-2006 by Mailtext Open Source Team
+;
+; GCC & OS4 Portage by Alexandre Balaban
+;
+; This library is free software; you can redistribute it and/or
+; modify it under the terms of the GNU Lesser General Public
+; License as published by the Free Software Foundation; either
+; version 2.1 of the License, or (at your option) any later version.
+;
+; This library is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+; Lesser General Public License for more details.
+;
+; You should have received a copy of the GNU Lesser General Public
+; License along with this library; if not, write to the Free Software
+; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+;
+; Mailtext OpenSource project :  http://sourceforge.net/projects/mailtext/
+;
+; $VER: Mailtext_mcp.catalog 3.2 (21.4.2006)
+;
+; $HISTORY:
+;
+;  21.4.06  3.2   : Mailtext v3.2 OpenSource Release
+;  20.6.97  3.1   : Mailtext release 3.1
+;   4.2.97  3.0   : Mailtext v3.0 Public Release
+;  22.1.97  2.0   : Mailtext v3.0 Beta Releases
+;  8.11.96  1.4   : - changed identifiers again (from 'loc' to 'MSG_')
+;                   - changed text for MSG_AttributesDistanceHelp
+;  1.11.96  1.3   : identifiers now start with 'loc'
+;   9.5.96  1.2   : renamed from Mailtext.catalog to Mailtext_mcp.catalog
+;  29.4.96  1.1   : minor changes
+;  24.4.96  1.0   : initial
+;
+; ----------------------------------------------------------------------------------------
+;
+; *** Sampletext
+;
+MSG_Sample
+N‰yte
+; Sample
+MSG_SampleHelp
+Mailtext-n‰yte, joka muokkautuu heti alla tekemiesi valintojen mukaan.
+; Mailtext sample that is directly being influenced\n\
+; by the changes you are making below.
+MSG_SampleText
+Koeteksti Mailtextin erikoisluokkaa varten\n\
+\n\
+*Lihavoitu* /Kursiivi/ _Alleviivattu_ #V‰ritetty# _/*Yhdistelm‰*/_\n\
+\n\
+\n\
+Lainattu teksti:\n\
+\n\
+1>2>3>4>5> *Lihavoitu* /Kursiivi/ _Alleviivattu_ #V‰ritetty#\n\
+\n\
+URLt: http://home.pages.de/~Mailtext/\n\
+\n\
+Asioiden selvent‰miseksi: (+ voi olla *, /, _ tai #)\n\
+\n\
+   +Teksti+\n\
+   ^      ^\n\
+   |      |\n\
+   |      +- Lopettava merkki\n\
+   |\n\
+   +- Aloittava merkki\n\
+\n\
+-- \n\
+olf@gmx.de
+; Testtext for Mailtext CustomClass\n\
+; \n\
+; *Bold* /Italics/ _Underline_ #Coloured# _/*Combination*/_\n\
+; \n\
+; \n\
+; Quoted Text:\n\
+; \n\
+; 1>2>3>4>5> *Bold* /Italics/ _Underline_ #Coloured#\n\
+; \n\
+; URLs: http://home.pages.de/~Mailtext/\n\
+; \n\
+; To clear things up a bit: (let + be *, /, _ or #)\n\
+; \n\
+;    +Text+\n\
+;    ^    ^\n\
+;    |    |\n\
+;    |    +- the terminating char\n\
+;    |\n\
+;    +- the introducing char\n\
+; \n\
+; -- \n\
+; olf@magicolf.de
+;
+; *** Pages
+;
+MSG_Preferences
+Asetukset
+; Preferences
+;
+; *** Distances page
+;
+MSG_Distances
+Et‰isyydet
+; Distances
+MSG_AttributesDistance
+_Ominaisuudet
+; _Attributes
+MSG_AttributesDistanceHelp
+Maksimim‰‰r‰ merkkej‰, jotka n‰ytet‰‰n\n\
+annetulla ominaisuudella.
+; Maximum number of chars to be displayed\n\
+; with given attribute.
+MSG_QuoteDistance
+_Lainaukset
+; Q_uotes
+MSG_QuoteDistanceHelp
+M‰‰ritt‰‰, montako merkki‰ rivin alusta\n\
+tutkitaan lainausmerkkien etsinn‰ss‰.
+; Determines how many chars in the beginning of a\n\
+; line should be examined for being quotechars.
+;
+; *** Patterns page
+;
+MSG_Patterns
+Mallit
+; Patterns
+MSG_DisablePattern
+_Poiskytke
+; _Disable
+MSG_DisablePatternHelp
+Ominaisuuksien erittely lopetetaan,\n\
+jos rivi vastaa t‰t‰ mallia.
+; Attribute parsing will be disabled if a line\n\
+; matches this pattern.
+MSG_EnablePattern
+P‰‰ll_ekytke
+; _Enable
+MSG_EnablePatternHelp
+Ominaisuuksien erittely aloitetaan uudelleen,\n\
+jos rivi vastaa t‰t‰ mallia.
+; Attribute parsing will be reenabled if a line\n\
+; matches this pattern.
+MSG_SigSepPattern
+
+; _Sig. Separator
+MSG_SigSepPatternHelp
+
+; The line will be replaced by a horizontal rule,\n\
+; if it matches this pattern. This can be used to\n\
+; optically separate signature from the rest of the\n\
+; message.
+;
+; *** Characters page
+;
+MSG_Chars
+Merkit
+; Characters
+MSG_NonintroducingChars
+_Ei-esittelev‰
+; _Nonintroducing
+MSG_NonintroducingCharsHelp
+Merkit, joiden ei sallita esiinty‰ aloittavan\n\
+ominaisuusmerkin j‰lkeen.
+; Characters that are not allowed to occur behind\n\
+; the introducing attributechar.
+MSG_TerminatingChars
+_Lopettava
+; _Terminating
+MSG_TerminatingCharsHelp
+Merkit, joiden sallitaan esiinty‰ lopettavan\n\
+ominaisuusmerkin j‰lkeen.
+; Characters that are allowed to occur behind the\n\
+; terminating attributechar.
+MSG_WhitespaceChars
+_Tyhj‰ merkki
+; _Whitespace
+MSG_WhitespaceCharsHelp
+Merkit, jotka tulkitaan tyhj‰ksi tilaksi ja n‰in ollen\n\
+saavat esiinty‰ ennen aloittavaa ominaisuusmerkki‰.
+; Characters that are considered whitespace thus\n\
+; being allowed to occur in front of the introducing\n\
+; attributechar.
+MSG_QuoteChars
+L_ainausmerkit
+; _Quotechars
+MSG_QuoteCharsHelp
+Merkit, joiden tulkitaan aloittavan lainatun tekstin.
+; Characters that are considered as introducers for\n\
+; quoted textpassages.
+MSG_QuoteCharsCheckHelp
+Kun merkitty, Mailtext-luokka k‰ytt‰‰ aina n‰it‰\n\
+lainausmerkkej‰ riippumatta siit‰, mitk‰ asetukset\n\
+ohjelma luokalle antaa.
+; When checked the Mailtext-class will always use\n\
+; these quotechars regardless which settings a\n\
+; program handles to the class.
+;
+; *** Colors page
+;
+MSG_Colors
+V‰rit
+; Colors
+MSG_Quotelevel
+Lainaustaso:
+; Quotelevel:
+MSG_QuoteLevel1Color
+Tason 1 v‰ri
+; Level 1 Color
+MSG_QuoteLevel2Color
+Tason 2 v‰ri
+; Level 2 Color
+MSG_QuoteLevel3Color
+Tason 3 v‰ri
+; Level 3 Color
+MSG_QuoteLevel4Color
+Tason 4 v‰ri
+; Level 4 Color
+MSG_QuoteLevel5Color
+Tason 5 v‰ri
+; Level 5 Color
+MSG_QuoteLevelHelp
+Vastaavan tason lainaus n‰ytet‰‰n\n\
+t‰ll‰ v‰rill‰.
+; Quotes of the corresponding level\n\
+; will be marked with this color.
+MSG_ColoredText
+_V‰rillinen teksti:
+; _Colored text
+MSG_ColoredTextWinTitle
+V‰rillinen teksti
+; Colored text
+MSG_ColoredTextHelp
+V‰ri, jolla '#'-ominaisuuden sis‰‰n\n\
+suljettu teksti n‰ytet‰‰n.
+; The color, text enclosed by the\n\
+; attribute '#' will be displayed with.
+MSG_ColoredURL
+_URL-v‰ri:
+; _URL color
+MSG_ColoredURLWinTitle
+URL-v‰ri
+; URL color
+MSG_ColoredURLHelp
+V‰ri, jolla Uniform Resource Locator (URL),\n\
+esim. http://www.abc.xyz/ n‰ytet‰‰n.
+; The color a Uniform Resource Locator (URL),\n\
+; i.e. http://www.abc.xyz/, will be displayed with.
+;
+; *** URLs page
+;
+MSG_URLs
+URLt
+; URLs
+MSG_URLAction
+_Toiminta
+; _Action
+MSG_URLActionHelp
+Komento, joka suoritetaan, kun URL‰‰ kaksoisosoitetaan.\n\
+Merkint‰ %s komentojonossa korvataan osoitetulla URL-osoitteella.
+; The command that is executed when an URL is doubleclicked.\n\
+; A %s in the commandstring will be replaced by the clicked URL.
+MSG_URLActionBeep
+_H‰lyt‰ toiminnan j‰lkeen
+; _Beep after action
+MSG_URLActionBeepHelp
+Jos merkitty, n‰yttˆ‰ v‰l‰ytet‰‰n URL-toiminnon\n\
+suorituksen j‰lkeen, jotta k‰ytt‰j‰ saa tiedon\n\
+toiminnon k‰ynnistymisest‰.
+; If checked, the display will be beeped after the\n\
+; URL action command has been called, to give some\n\
+; feedback that the action has been triggered.
+MSG_URLUnderline
+_Alleviivaa URL-osoitteet
+; _Underline URLs
+MSG_URLUnderlineHelp
+N‰ytet‰‰nkˆ URL-osoitteet alleviivattuina?
+; Should URLs be displayed underlined?
+MSG_URLStackSize
+_Pinon koko
+; _Stacksize
+MSG_URLStackSizeHelp
+Pinon koko toimintakomentoa varten.
+; The stacksize for the action command.
+MSG_URLStackSlider
+%ld kByte
+; %ld kByte
+;
+; *** Misc. page
+;
+MSG_Misc
+Sekal.
+; Misc.
+MSG_ShowAttributes
+_N‰yt‰ ominaisuusmerkit
+; _Show attributechars
+MSG_ShowAttributesHelp
+N‰yt‰ ominaisuusmerkit vaikka tyyli on asetettu?
+; Display the attribute characters even if the style\n\
+; has been set?
+MSG_UseContextMenu
+K‰yt‰ koho_valikkoa
+; Use context _menu
+MSG_UseContextMenuHelp
+Pit‰isikˆ jokaisella Mailtext-kohteella olla kohovalikko?
+; Should every Mailtext object have a contextmenu?
+MSG_SigSeparator
+_Signature-erotin
+; S_ignature separator
+MSG_SigSeparatorHelp
+Tuleeko signaturen (joka alkaa merkeill‰ '-- ',\n\
+'--' tai '---') olla erotettu viestist‰\n\
+vaakasuoralla viivalla?
+; Should a signature (introduced by a '-- ',\n\
+; '--' or '---') be separated from the\n\
+; messagetext by a horizontal line?
+MSG_Wordwrap
+_Rivitys
+; _Wordwrap
+MSG_WordwrapHelp
+Jos rivitys on pois p‰‰lt‰, pitk‰t rivit eiv‰t\n\
+rivity, mutta vaakavieritinpalkki tulee n‰kyviin\n\
+sen sijasta (mahdollista vain NListviewin avulla).
+; If wordwrap is switched off, long lines will\n\
+; not be wrapped, but a horizontal scrollbar will\n\
+; be shown instead (only possible with NListviews).
+MSG_Font
+
+; _Font:
+MSG_FontHelp
+
+; The font to be used by the Mailtext object.
+;
+; *** Copyright Info
+;
+MSG_InfoGiftware
+\ebMailtext on OpenSource\en\n\n\
+Visit the Mailtext OpenSource project at:
+; \ebMailtext is OpenSource\en\n\n\
+; Visit the Mailtext OpenSource project at:
+MSG_InfoDeveloper
+Kehitt‰jien tietoa saa kirjoittamalla osoitteeseen:
+; For developer's info contact:
+MSG_InfoTranslators
+Suomenkielinen k‰‰nnˆs:\n\
+Marko Honkanen\n
+; English translation done by:\n\
+; Olaf Peters\n\
+;

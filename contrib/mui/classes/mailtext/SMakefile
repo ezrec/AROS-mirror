@@ -1,0 +1,669 @@
+
+# **************************************************************************
+#
+# Mailtext - An MUI Custom Class for eMessage display
+# Copyright (C) 1996-2001 by Olaf Peters
+# Copyright (C) 2002-2006 by Mailtext Open Source Team
+#
+# GCC & OS4 Portage by Alexandre Balaban
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# Mailtext OpenSource project :  http://sourceforge.net/projects/mailtext/
+#
+# $Id$
+#
+# Makefile for MCC_Mailtext
+#
+# *************************************************************************
+
+
+RELEASEDIR = dev:Packages/MCC_Mailtext
+
+GST = gst/Mailtext.gst
+SCOPTS = GST=$(GST)
+FCCATOPTS = FILL
+
+OPTOPTS = NOERRORREXX OPTIMIZE OPTTIME
+OPTOPTS020 = $(OPTOPTS) CPU 68020
+
+LINKERLIBS  = lib:sc.lib lib:amiga.lib
+LINKERFLAGS = SC SD BATCH NOICONS
+
+# -----------------------------------------------------------------------------
+
+UTILS     = bin/show_mailtext
+CLASSES   = bin/Mailtext.mcc bin/Mailtext.mcp
+CLASSES_O = bin/Mailtext.mccO bin/Mailtext.mcpO
+CLASSES20 = bin/Mailtext020.mcc bin/Mailtext.mcpO
+
+# /// "Rules" -----------------------------------------------------------------
+
+.c.o:
+	sc $*.c $(SCOPTS) DEBUG=SF IGNORE=92 OBJNAME=$@
+
+.c.oo:
+	sc $*.c $(SCOPTS) $(OPTOPTS) OBJNAME=$@
+
+.c.o2:
+	sc $*.c $(SCOPTS) $(OPTOPTS020) OBJNAME=$@
+
+.c.op:
+	sc $*.c $(SCOPTS) IGNORE=92 OBJNAME=$@ PROFILE
+
+MCC_OBJS =      obj/AttributesEngine.o \
+		obj/Bitfield.o \
+		obj/DynStr.o \
+		obj/Mailtext.o \
+		loc/Mailtext_mcc.o \
+		obj/URLs.o
+
+MCC_OOBJS =     obj/AttributesEngine.oo \
+		obj/Bitfield.oo \
+		obj/DynStr.oo \
+		obj/Mailtext.oo \
+		loc/Mailtext_mcc.oo \
+		obj/URLs.oo
+
+MCC_2OBJS =     obj/AttributesEngine.o2 \
+		obj/Bitfield.o2 \
+		obj/DynStr.o2 \
+		obj/Mailtext.o2 \
+		loc/Mailtext_mcc.oo \
+		obj/URLs.o2
+
+MCP_OBJS =      obj/MailtextP.o \
+		loc/Mailtext_mcp.o
+
+MCP_OOBJS =     obj/MailtextP.oo \
+		loc/Mailtext_mcp.oo
+
+AEDEMO_OBJS =   obj/AEDemo.o \
+		obj/AttributesEngine.o \
+		obj/Bitfield.o \
+		obj/DynStr.o \
+		obj/URLs.o
+
+AEDEMO_POBJS =  obj/AEDemo.oo \
+		obj/AttributesEngine.op \
+		obj/Bitfield.op \
+		obj/DynStr.oo \
+		obj/URLs.op
+
+HEADERS = AttributesEngine.h \
+	  Bitfield.h \
+	  DynStr.h \
+	  Mailtext_private.h \
+	  loc/Mailtext_mcp.h \
+	  loc/Mailtext_mcc.h \
+	  URLs.h
+
+CATALOGS = loc/czech/Mailtext_mcc.catalog \
+	   loc/czech/Mailtext_mcp.catalog \
+	   loc/danish/Mailtext_mcc.catalog \
+	   loc/danish/Mailtext_mcp.catalog \
+	   loc/dutch/Mailtext_mcc.catalog \
+	   loc/dutch/Mailtext_mcp.catalog \
+	   loc/finnish/Mailtext_mcc.catalog \
+	   loc/finnish/Mailtext_mcp.catalog \
+	   loc/french/Mailtext_mcc.catalog \
+	   loc/french/Mailtext_mcp.catalog \
+	   loc/german/Mailtext_mcp.catalog \
+	   loc/german/Mailtext_mcc.catalog \
+	   loc/italian/Mailtext_mcc.catalog \
+	   loc/italian/Mailtext_mcp.catalog \
+	   loc/norwegian/Mailtext_mcc.catalog \
+	   loc/norwegian/Mailtext_mcp.catalog \
+	   loc/polish/Mailtext_mcp.catalog \
+	   loc/polish/Mailtext_mcc.catalog \
+	   loc/portuguese/Mailtext_mcc.catalog \
+	   loc/portuguese/Mailtext_mcp.catalog \
+	   loc/russian/Mailtext_mcp.catalog \
+	   loc/russian/Mailtext_mcc.catalog \
+	   loc/serbian/Mailtext_mcp.catalog \
+	   loc/serbian/Mailtext_mcc.catalog \
+	   loc/spanish/Mailtext_mcc.catalog \
+	   loc/spanish/Mailtext_mcp.catalog \
+	   loc/swedish/Mailtext_mcc.catalog \
+	   loc/swedish/Mailtext_mcp.catalog
+
+TRANSLATIONS = loc/Mailtext-czech_mcc.ct \
+	       loc/Mailtext-czech_mcp.ct \
+	       loc/Mailtext-danish_mcc.ct \
+	       loc/Mailtext-danish_mcp.ct \
+	       loc/Mailtext-dutch_mcc.ct \
+	       loc/Mailtext-dutch_mcp.ct \
+	       loc/Mailtext-finnish_mcc.ct \
+	       loc/Mailtext-finnish_mcp.ct \
+	       loc/Mailtext-french_mcc.ct \
+	       loc/Mailtext-french_mcp.ct \
+	       loc/Mailtext-german_mcc.ct \
+	       loc/Mailtext-german_mcp.ct \
+	       loc/Mailtext-italian_mcc.ct \
+	       loc/Mailtext-italian_mcp.ct \
+	       loc/Mailtext-norwegian_mcc.ct \
+	       loc/Mailtext-norwegian_mcp.ct \
+	       loc/Mailtext-polish_mcc.ct \
+	       loc/Mailtext-polish_mcp.ct \
+	       loc/Mailtext-portuguese_mcc.ct \
+	       loc/Mailtext-portuguese_mcp.ct \
+	       loc/Mailtext-russian_mcc.ct \
+	       loc/Mailtext-russian_mcp.ct \
+	       loc/Mailtext-serbian_mcc.ct \
+	       loc/Mailtext-serbian_mcp.ct \
+	       loc/Mailtext-spanish_mcc.ct \
+	       loc/Mailtext-spanish_mcp.ct \
+	       loc/Mailtext-swedish_mcc.ct \
+	       loc/Mailtext-swedish_mcp.ct
+
+GUIDES = $(RELEASEDIR)/Docs/english/Mailtext_mcc.guide \
+	 $(RELEASEDIR)/Docs/deutsch/Mailtext_mcc.guide
+
+DOCS = docrev \
+       $(GUIDES) \
+       $(RELEASEDIR)/Docs/english/Mailtext_mcc.doc \
+       $(RELEASEDIR)/Docs/deutsch/Mailtext_mcc.doc \
+       $(RELEASEDIR)/Developer/Autodocs/MCC_Mailtext.doc
+
+# \\\
+# /// "Targets" ---------------------------------------------------------------
+
+all: packetrev $(UTILS) $(CLASSES) $(CLASSES_O) $(CLASSES20)
+	@avail flush
+
+install:
+	@copy bin/Mailtext.mcc mui:libs/mui/
+	@copy bin/Mailtext.mcp mui:libs/mui/
+	@avail flush
+
+installO:
+	@copy bin/Mailtext020.mcc mui:libs/mui/Mailtext.mcc
+	@copy bin/Mailtext.mcpO   mui:libs/mui/Mailtext.mcp
+	@avail flush
+
+final: $(CLASSES20)
+
+debug: mcc mcp
+
+release: all $(DOCS) $(CATALOGS)
+	@copy bin/Mailtext.mccO mui:libs/mui/Mailtext.mcc
+	@copy bin/Mailtext.mccO $(RELEASEDIR)/Libs/MUI/Mailtext.mcc
+	@copy bin/Mailtext.mcpO mui:libs/mui/Mailtext.mcp
+	@copy bin/Mailtext.mcpO $(RELEASEDIR)/Libs/MUI/Mailtext.mcp
+	@copy bin/Mailtext020.mc? $(RELEASEDIR)/Libs/MUI/
+	@copy bin/show_mailtext $(RELEASEDIR)/Demos/
+	@copy show_mailtext.c $(RELEASEDIR)/Developer/C/Example
+	@c:ged MCC_Mailtext.readme
+	@copy MCC_Mailtext.readme $(RELEASEDIR)/MCC_Mailtext.readme
+	@-protect $(RELEASEDIR)/MCC_Mailtext.readme SUB e QUIET
+	@-protect $(RELEASEDIR)/Developer/Autodocs/MCC_Mailtext.doc SUB e QUIET
+	@-protect $(RELEASEDIR)/Locale/Catalogs/\#?/\#? SUB e QUIET
+	@-protect $(RELEASEDIR)/Docs/\#?/\#? SUB e QUIET
+	@-protect $(RELEASEDIR)/Developer/C/Include/MUI/Mailtext_mcc.h SUB e QUIET
+	@-protect $(RELEASEDIR)/Developer/Modula/\#?/\#? SUB e QUIET
+	@-protect $(RELEASEDIR)/Developer/Oberon/\#?/\#? SUB e QUIET
+	@-protect $(RELEASEDIR)/\#? SUB a ALL QUIET
+	@-filenote $(RELEASEDIR)/\#? "" all quiet
+	@echo "*e[32mREMEMBER to update the headerfiles!*e[0m"
+
+mcc: bin/Mailtext.mcc
+	@copy $*.mcc mui:libs/mui/
+	@avail flush
+
+mcp: bin/Mailtext.mcp
+	@copy $*.mcp mui:libs/mui/
+	@avail flush
+
+mcc020: bin/Mailtext020.mcc
+	@copy $*.mcc mui:libs/mui/Mailtext.mcc
+	@avail flush
+
+backupall:
+	@lha a Backups:Sources/MailtextC-`GenTMP`-ALL \#?
+
+backup:
+	@lha -sS a Backups:Sources/MailtextC-`GenTMP` \#?
+
+docs: $(DOCS)
+
+guides: $(GUIDES)
+
+catalogs: $(CATALOGS)
+	@copy loc/german/Mailtext_mcp.catalog MUI:Locale/Catalogs/Deutsch/
+	@copy loc/german/Mailtext_mcc.catalog MUI:Locale/Catalogs/Deutsch/
+
+translations: $(TRANSLATIONS)
+
+show_mailtext: bin/show_mailtext
+show_mailtextD: bin/show_mailtextD
+
+AEDemo:  bin/AEDemo
+
+AEDemoP: bin/AEDemoP
+
+clean:
+	@echo "*e[32mClean up...*e[0m"
+	@-delete obj/*.o* obj/mui/*.o* loc/*.o* $(CLASSES) $(UTILS)
+
+$(GST): MailtextHeaders.h $(HEADERS)
+	sc $*.h NOOBJNAME MAKEGST=$@
+
+# \\\
+# /// "Docs" ------------------------------------------------------------------
+
+autodoc: $(RELEASEDIR)/Developer/Autodocs/MCC_Mailtext.doc
+
+$(RELEASEDIR)/Developer/Autodocs/MCC_Mailtext.doc: Mailtext_private.h
+	autodoc -C -I $*.h > $@
+
+$(RELEASEDIR)/Docs/english/Mailtext_mcc.guide: MailtextE.texi HistoryE.texi rev/MailtextVersions.texi
+	@makeinfo --amiga-39    -o $@ $*.texi
+
+$(RELEASEDIR)/Docs/english/Mailtext_mcc.doc:   MailtextE.texi HistoryE.texi rev/MailtextVersions.texi
+	@-makeinfo --no-headers -o $@ $*.texi
+
+$(RELEASEDIR)/Docs/deutsch/Mailtext_mcc.guide: MailtextD.texi rev/MailtextVersions.texi
+	@makeinfo --amiga-39    -o $@ $*.texi
+
+$(RELEASEDIR)/Docs/deutsch/Mailtext_mcc.doc:   MailtextD.texi rev/MailtextVersions.texi
+	@-makeinfo --no-headers -o $@ $*.texi
+
+# \\\
+# /// "Locale" ----------------------------------------------------------------
+
+# == sources
+
+copycts:
+	@c:copy loc/Mailtext-czech_mcc.ct      dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/ÃeÓtina/Mailtext_mcc.ct
+	@c:copy loc/Mailtext-czech_mcp.ct      dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/ÃeÓtina/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-danish_mcc.ct     dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/dansk/Mailtext_mcc.ct
+	@c:copy loc/Mailtext-danish_mcp.ct     dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/dansk/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-dutch_mcc.ct      dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/nederlands/Mailtext_mcc.ct
+	@c:copy loc/Mailtext-dutch_mcp.ct      dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/nederlands/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-finnish_mcc.ct    dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/suomi/Mailtext_mcc.ct
+	@c:copy loc/Mailtext-finnish_mcp.ct    dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/suomi/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-french_mcc.ct     dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/français/Mailtext_mcc.ct
+	@c:copy loc/Mailtext-french_mcp.ct     dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/français/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-german_mcc.ct     dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/deutsch/Mailtext_mcc.ct
+	@c:copy loc/Mailtext-german_mcp.ct     dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/deutsch/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-italian_mcc.ct    dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/italiano/Mailtext_mcc.ct
+	@c:copy loc/Mailtext-italian_mcp.ct    dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/italiano/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-norwegian_mcc.ct  dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/norsk/Mailtext_mcc.ct
+	@c:copy loc/Mailtext-norwegian_mcp.ct  dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/norsk/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-polish_mcc.ct     dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/polski/Mailtext_mcc.ct
+	@c:copy loc/Mailtext-polish_mcp.ct     dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/polski/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-portuguese_mcc.ct dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/português/Mailtext_mcc.ct
+	@c:copy loc/Mailtext-portuguese_mcp.ct dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/português/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-russian_mcc.ct    dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/russian/Mailtext_mcc.ct
+	@c:copy loc/Mailtext-russian_mcp.ct    dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/russian/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-serbian_mcc.ct    dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/srpski/Mailtext_mcc.ct
+	@c:copy loc/Mailtext-serbian_mcp.ct    dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/srpski/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-spanish_mcc.ct    dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/español/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-spanish_mcp.ct    dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/español/Mailtext_mcp.ct
+	@c:copy loc/Mailtext-swedish_mcc.ct    dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/svenska/Mailtext_mcc.ct
+	@c:copy loc/Mailtext-swedish_mcp.ct    dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/svenska/Mailtext_mcp.ct
+	@c:copy loc/Mailtext_mc?.c?            dev:Packages/MCC_Mailtext/Developer/Locale/Catalogs/
+
+loc/Mailtext_mcp.h: loc/Mailtext_mcp.cd
+	@echo "*e[32mMaking locale source*e[0m"
+	-flexcat $(FCCATOPTS) $*.cd $@=coding:flexcat/lib/C_h_Library.sd loc/Mailtext_mcp.c=coding:flexcat/lib/C_c_Library.sd
+
+loc/Mailtext_mcc.h: loc/Mailtext_mcc.cd
+	@echo "*e[32mMaking locale source*e[0m"
+	-flexcat $(FCCATOPTS) $*.cd $@=coding:flexcat/lib/C_h_Library.sd loc/Mailtext_mcc.c=coding:flexcat/lib/C_c_Library.sd
+
+loc/Mailtext_mcc.ct:    loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/Mailtext_mcp.ct:    loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+# /// "== czech"
+
+loc/Mailtext-czech_mcc.ct:    loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/czech/Mailtext_mcc.catalog:    loc/Mailtext-czech_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+loc/Mailtext-czech_mcp.ct:    loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/czech/Mailtext_mcp.catalog:    loc/Mailtext-czech_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+# \\\
+# /// "== danish"
+
+loc/Mailtext-danish_mcc.ct:    loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/danish/Mailtext_mcc.catalog:    loc/Mailtext-danish_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+loc/Mailtext-danish_mcp.ct:    loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/danish/Mailtext_mcp.catalog:    loc/Mailtext-danish_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+
+# \\\
+# /// "== dutch"
+
+loc/Mailtext-dutch_mcc.ct:    loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/dutch/Mailtext_mcc.catalog:    loc/Mailtext-dutch_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+loc/Mailtext-dutch_mcp.ct:    loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/dutch/Mailtext_mcp.catalog:    loc/Mailtext-dutch_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+
+# \\\
+# /// "== finnish"
+
+loc/Mailtext-finnish_mcc.ct:    loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/finnish/Mailtext_mcc.catalog:    loc/Mailtext-finnish_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+loc/Mailtext-finnish_mcp.ct:    loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/finnish/Mailtext_mcp.catalog:    loc/Mailtext-finnish_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+
+# \\\
+# /// "== french"
+
+loc/Mailtext-french_mcc.ct:    loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/french/Mailtext_mcc.catalog:    loc/Mailtext-french_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+loc/Mailtext-french_mcp.ct:    loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/french/Mailtext_mcp.catalog:    loc/Mailtext-french_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+
+# \\\
+# /// "== german"
+
+loc/Mailtext-german_mcp.ct:    loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/Mailtext-german_mcc.ct:    loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/german/Mailtext_mcp.catalog:     loc/Mailtext-german_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+
+loc/german/Mailtext_mcc.catalog:     loc/Mailtext-german_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+# \\\
+# /// "== italian"
+
+loc/Mailtext-italian_mcc.ct:   loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/italian/Mailtext_mcc.catalog:   loc/Mailtext-italian_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+loc/Mailtext-italian_mcp.ct:   loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/italian/Mailtext_mcp.catalog:   loc/Mailtext-italian_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+
+# \\\
+# /// "== norwegian"
+
+loc/Mailtext-norwegian_mcc.ct: loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/norwegian/Mailtext_mcc.catalog: loc/Mailtext-norwegian_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+loc/Mailtext-norwegian_mcp.ct: loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/norwegian/Mailtext_mcp.catalog: loc/Mailtext-norwegian_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+
+# \\\
+# /// "== polish"
+
+loc/Mailtext-polish_mcc.ct:    loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/polish/Mailtext_mcc.catalog:    loc/Mailtext-polish_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+loc/Mailtext-polish_mcp.ct:    loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/polish/Mailtext_mcp.catalog:    loc/Mailtext-polish_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+
+# \\\
+# /// "== portuguese"
+
+loc/Mailtext-portuguese_mcc.ct:    loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/portuguese/Mailtext_mcc.catalog:    loc/Mailtext-portuguese_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+loc/Mailtext-portuguese_mcp.ct:    loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/portuguese/Mailtext_mcp.catalog:    loc/Mailtext-portuguese_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+
+# \\\
+# /// "== russian"
+
+loc/Mailtext-russian_mcc.ct:   loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/russian/Mailtext_mcc.catalog:   loc/Mailtext-russian_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+loc/Mailtext-russian_mcp.ct:   loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/russian/Mailtext_mcp.catalog:   loc/Mailtext-russian_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+
+# \\\
+# /// "== serbian"
+
+loc/Mailtext-serbian_mcc.ct:   loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/serbian/Mailtext_mcc.catalog:   loc/Mailtext-serbian_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+loc/Mailtext-serbian_mcp.ct:   loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/serbian/Mailtext_mcp.catalog:   loc/Mailtext-serbian_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+
+# \\\
+# /// "== spanish"
+
+loc/Mailtext-spanish_mcc.ct:   loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/spanish/Mailtext_mcc.catalog:   loc/Mailtext-spanish_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+loc/Mailtext-spanish_mcp.ct:   loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/spanish/Mailtext_mcp.catalog:   loc/Mailtext-spanish_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+# \\\
+# /// "== swedish"
+
+loc/Mailtext-swedish_mcc.ct:   loc/Mailtext_mcc.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/swedish/Mailtext_mcc.catalog:   loc/Mailtext-swedish_mcc.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcc.cd $*.ct CATALOG $@
+
+loc/Mailtext-swedish_mcp.ct:   loc/Mailtext_mcp.cd
+	-flexcat $(FCCATOPTS) $*.cd $@ NEWCTFILE $@
+
+loc/swedish/Mailtext_mcp.catalog:   loc/Mailtext-swedish_mcp.ct
+	-flexcat $(FCCATOPTS) loc/Mailtext_mcp.cd $*.ct CATALOG $@
+# \\\
+
+# \\\
+# /// "Binaries" --------------------------------------------------------------
+
+bin/Mailtext.mcc: rev_mcc $(MCC_OBJS)
+	@slink to $@ from $(MCC_OBJS)  lib LIB:debug.lib $(LINKERLIBS) $(LINKERFLAGS) ADDSYM
+
+bin/Mailtext.mccO: rev_mcc $(MCC_OOBJS)
+	@slink to $@ from $(MCC_OOBJS) lib $(LINKERLIBS) $(LINKERFLAGS)
+
+bin/Mailtext.mccP: rev_mcc $(MCC_POBJS)
+	@slink to $@ from $(MCC_POBJS)  lib $(LINKERLIBS) $(LINKERFLAGS)
+
+bin/Mailtext.mcp: rev_mcp $(MCP_OBJS)
+	@slink to $@ from $(MCP_OBJS)  lib LIB:debug.lib $(LINKERLIBS) $(LINKERFLAGS) ADDSYM
+
+bin/Mailtext.mcpO: rev_mcp $(MCP_OOBJS)
+	@slink to $@ from $(MCP_OOBJS) lib $(LINKERLIBS) $(LINKERFLAGS)
+
+bin/Mailtext020.mcc: rev_mcc $(MCC_2OBJS)
+	@slink to $@ from $(MCC_2OBJS) lib $(LINKERLIBS) $(LINKERFLAGS)
+
+bin/show_mailtext: show_mailtext.c
+	sc $(CFLAGS) $*.c OBJNAME obj/$*.o
+	slink to $@ from lib:c.o obj/$*.o lib $(LINKERLIBS) $(LINKERFLAGS)
+
+bin/show_mailtextD: show_mailtext.c
+	sc $(CFLAGS) DEBUG=SF $*.c OBJNAME obj/$*.o
+	slink to $@ from lib:c.o obj/$*.o lib $(LINKERLIBS) $(LINKERFLAGS)
+
+bin/AEDemo: $(AEDEMO_OBJS)
+	@slink to $@ from lib:c.o $(AEDEMO_OBJS) lib LIB:debug.lib lib $(LINKERLIBS) $(LINKERFLAGS) ADDSYM
+
+bin/AEDemoP: $(AEDEMO_POBJS)
+	@slink to $@ from lib:c.o $(AEDEMO_POBJS) lib $(LINKERLIBS) $(LINKERFLAGS)
+
+# \\\
+# /// "Revisions" -------------------------------------------------------------
+
+ivboth: ivmcc ivmcp
+
+irboth: irmcc irmcp
+
+rev_mcc:
+	@flexrev rev/Mailtext.mcc.rev
+	@flexrev >NIL: rev/Mailtext.mcc.rev rev/MCCVersion.h rev/MCCVersion.hp
+
+irmcc:
+	@flexrev rev/Mailtext.mcc.rev IR
+	@flexrev >NIL: rev/Mailtext.mcc.rev rev/MCCVersion.h rev/MCCVersion.hp
+
+ivmcc:
+	@flexrev rev/Mailtext.mcc.rev IV
+	@flexrev >NIL: rev/Mailtext.mcc.rev rev/MCCVersion.h rev/MCCVersion.hp
+
+rev_mcp:
+	@flexrev rev/Mailtext.mcp.rev
+	@flexrev >NIL: rev/Mailtext.mcp.rev rev/MCPVersion.h rev/MCPVersion.hp
+
+irmcp:
+	@flexrev rev/Mailtext.mcp.rev IR
+	@flexrev >NIL: rev/Mailtext.mcp.rev rev/MCPVersion.h rev/MCPVersion.hp
+
+ivmcp:
+	@flexrev rev/Mailtext.mcp.rev IV
+	@flexrev >NIL: rev/Mailtext.mcp.rev rev/MCPVersion.h rev/MCPVersion.hp
+
+ivdist: ivmcc ivmcp
+	@flexrev rev/Mailtext.dist.rev IV
+	@flexrev rev/Mailtext.dist.rev doc/ReadmeHead doc/ReadmeHead.proto
+
+irdist: ivmcc ivmcp
+	@flexrev rev/Mailtext.dist.rev IR
+	@flexrev rev/Mailtext.dist.rev doc/ReadmeHead doc/ReadmeHead.proto
+
+rev_dist:
+	@flexrev rev/Mailtext.dist.rev
+	@flexrev rev/Mailtext.dist.rev doc/ReadmeHead doc/ReadmeHead.proto
+
+packetrev: rev_mcc rev_mcp
+	@flexrev rev/Mailtext.dist.rev
+
+docrev:
+	flexrev >NIL: rev/Mailtext.mcp.rev  rev/MCPVersion.texi       rev/MCPVersion.texip
+	flexrev >NIL: rev/Mailtext.mcc.rev  rev/MCCVersion.texi       rev/MCCVersion.texip
+	flexrev >NIL: rev/Mailtext.dist.rev rev/MailtextVersions.texi rev/MailtextVersions.texip
+
+# \\\
+# /// "Objects" ---------------------------------------------------------------
+
+obj/AEDemo.o:  AEDemo.c $(GST)
+obj/AEDemo.oo: AEDemo.c $(GST)
+obj/AEDemo.op: AEDemo.c $(GST)
+
+obj/AttributesEngine.o:  AttributesEngine.c $(GST)
+obj/AttributesEngine.oo: AttributesEngine.c $(GST)
+obj/AttributesEngine.o2: AttributesEngine.c $(GST)
+obj/AttributesEngine.op: AttributesEngine.c $(GST)
+
+obj/Bitfield.o:  Bitfield.c $(GST)
+obj/Bitfield.oo: Bitfield.c $(GST)
+obj/Bitfield.o2: Bitfield.c $(GST)
+obj/Bitfield.op: Bitfield.c $(GST)
+
+obj/DynStr.o:  DynStr.c $(GST)
+obj/DynStr.oo: DynStr.c $(GST)
+obj/DynStr.o2: DynStr.c $(GST)
+obj/DynStr.op: DynStr.c $(GST)
+
+obj/Mailtext.o:  Mailtext.c rev/Mailtext.mcc.h loc/Mailtext_mcc.h $(GST)
+obj/Mailtext.oo: Mailtext.c rev/Mailtext.mcc.h loc/Mailtext_mcc.h $(GST)
+obj/Mailtext.o2: Mailtext.c rev/Mailtext.mcc.h loc/Mailtext_mcc.h $(GST)
+obj/Mailtext.op: Mailtext.c rev/Mailtext.mcc.h loc/Mailtext_mcc.h $(GST)
+
+obj/MailtextP.o:  MailtextP.c mui/PrefsImage.c rev/Mailtext.mcp.h loc/Mailtext_mcp.h rev/MailtextVersions.h loc/Mailtext_mcp.cd $(GST)
+obj/MailtextP.oo: MailtextP.c mui/PrefsImage.c rev/Mailtext.mcp.h loc/Mailtext_mcp.h rev/MailtextVersions.h loc/Mailtext_mcp.cd $(GST)
+
+obj/Mailtext_mcc.o:  loc/Mailtext_mcc.c $(GST)
+obj/Mailtext_mcc.oo: loc/Mailtext_mcc.c $(GST)
+
+obj/Mailtext_mcp.o:  loc/Mailtext_mcp.c $(GST)
+obj/Mailtext_mcp.oo: loc/Mailtext_mcp.c $(GST)
+
+obj/URLs.o:  URLs.c $(GST)
+obj/URLs.oo: URLs.c $(GST)
+obj/URLs.o2: URLs.c $(GST)
+obj/URLs.op: URLs.c $(GST)
+
+# \\\
+

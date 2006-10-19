@@ -1,0 +1,251 @@
+
+@ignore
+
+---------------------------------------------------------------------------
+
+ This is the history-source for the Mailtext MUI-CustomClass package
+                            in TexInfo format.
+
+ Mailtext - An MUI Custom Class for eMessage display
+ Copyright (C) 1996-2001 by Olaf Peters
+ Copyright (C) 2002-2006 by Mailtext Open Source Team
+
+ GCC & OS4 Portage by Alexandre Balaban
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+
+ Mailtext OpenSource project :  http://sourceforge.net/projects/mailtext/
+
+ $Id: HistoryE.texi,v 1.6 2006/06/18 01:03:58 xenic! Exp $
+
+---------------------------------------------------------------------------
+
+@end ignore
+
+@menu
+* Mailtext v3.2 ::
+* Mailtext v3.1 ::
+* Mailtext v3.0 ::
+* Mailtext v2.2 ::
+* Mailtext v2.1 ::
+* Mailtext v2.0 ::
+* Mailtext v1.0 ::
+@end menu
+
+@c /// "Mailtext v1.0"
+
+@node Mailtext v1.0,,,
+@section Mailtext v1.0 (5.6.96)
+@cindex v1.0
+
+@itemize @asis
+  Mailtext.mcc v10.196, Mailtext.mcp v14.2
+
+  @itemize @bullet
+  @item first public release.
+  @end itemize
+
+@end itemize
+
+@c \\\
+@c /// "Mailtext v2.0"
+
+@node Mailtext v2.0,,,
+@section Mailtext v2.0 (2.11.96)
+@cindex v2.0
+
+@itemize @asis
+  Mailtext.mcc v17.41, Mailtext.mcp v17.28
+
+  @itemize @bullet
+  @item ported Mailtext from Modula-2 to C:
+
+    @itemize @minus
+    @item Mailtext now completely complies with the guidelines for MUI Custom Classes
+    @item now needs MUI 3.6, support for older MUI versions has been dropped.
+    @item the classes are app. 50% smaller.
+    @item compiled with SAS/C 6.56.
+    @end itemize
+  @item API did @emph{not} change. No need to request a new developer package.
+  @end itemize
+
+@end itemize
+
+@c \\\
+@c /// "Mailtext v2.1"
+
+@node Mailtext v2.1,,,
+@section Mailtext v2.1 (10.11.96)
+@cindex v2.1
+
+@itemize @asis
+  Mailtext.mcc v17.58, Mailtext.mcp v17.40
+
+  @itemize @bullet
+  @item when attribute parsing has been disabled (by matching the disable pattern), no text was copied at all, resulting in i.e. lost signatures.
+  @item now using MCC-Install 43.4
+  @item compiled with SAS/C 6.57
+  @item polish catalog, thanks to Marcin Orlowski
+  @end itemize
+
+@end itemize
+
+@c \\\
+@c /// "Mailtext v2.2"
+
+@node Mailtext v2.2,,,
+@section Mailtext v2.2 (19.11.96)
+@cindex v2.2
+
+@itemize @asis
+  Mailtext.mcc v17.71, Mailtext.mcp v17.55
+
+  @itemize @bullet
+  @item should handle i.e. Unix paths (i.e. /home/users/olf/) in messages a little smarter now. With previous versions, that example would have been printed in italics, now no attribute will be set.
+  @item switched from mccheader.c to MCCLib.c (thanks to Kai Hofmann, great work!)
+  @item version for MC68020 (and above) included.
+  @item fixed some bugs in Mailtext.mcp that could occur in low-memory situations.
+  @end itemize
+
+@end itemize
+
+@c \\\
+@c /// "Mailtext v3.0"
+@node Mailtext v3.0,,,
+@section Mailtext v3.0 (4.3.97)
+@cindex v3.0
+
+@itemize @asis
+  Mailtext.mcc v18.12, Mailtext.mcp v18.4
+
+  @itemize @bullet
+
+    @item Mailtext is now derived from NList.mcc, so it takes advantage of some neat features of NList, making the new features below possible. Thanks to Gilles Masson for the NList package!
+
+    @item It is now possible to mark text with the mouse and copy it to the clipboard (NList feature).
+
+    @item Each mailtext object can now have a contextmenu with the following entries:
+
+      @itemize @minus
+      @item copy selected text to clipboard.
+      @item display the raw text instead of the processed.
+      @item switch wordwrapping
+      @end itemize
+
+    @item Colors can now be configured for up to 5 different levels of quoted text and also for the '#' attribute.
+
+    @item Multiple attributes (like i.e. _*/Text/*_) are supported correctly now. Therefore, you have to add the characters *_#/ to the whitespace- and terminating-chars and remove them from the nonintroducing-chars.
+
+    @item URLs may be highlighted. It is also possible to configure an action --- i.e. start a webbrowser --- that will be triggered when an URL in the text is doubleclicked. Mailtext recognizes all URL types specified in RFC 1738 "Uniform Resource Locators", Section 3.
+
+    @item signature marks ('@minus{}@minus{}', '@minus{}@minus{} ' and '@minus{}@minus{}@minus{}') will now optionally be replaced by a horizontal line.
+
+    @item Wordwrapping for long lines can optionally be switched off: if the Mailtext object is contained in an NListview, a horizontal scrollbar will be display instead. With MUI's Listview this is of course not possible.
+
+    @item Removed '@minus{}@minus{} ' and '@minus{}@minus{}@minus{} ' from the default disable pattern, so you will see i.e. URLs in signatures and enable the signature separation feature.
+
+    @item The state of the checkmarks in the .mcp was not saved correctly. Fixed.
+
+    @item some bugfixes.
+
+    @item API changes (refer to Autodoc):
+
+      @itemize @minus
+      @item the behaviour of MUIA_Mailtext_IncPercent changed slightly.
+      @item new: MUIA_Mailtext_ActionURL         [..G]
+      @item new: MUIA_Mailtext_DisplayRaw        [.SG]
+      @item new: MUIA_Mailtext_ForbidContextMenu [I..]
+      @item new: MUIA_Mailtext_Wordwrap          [.SG]
+      @end itemize
+
+  @end itemize
+
+@end itemize
+
+@c \\\
+@c /// "Mailtext v3.1"
+@node Mailtext v3.1,,,
+@section Mailtext v3.1 (26.7.98)
+@cindex v3.1
+
+@itemize @asis
+  Mailtext.mcc v19.8, Mailtext.mcp v19.8
+
+
+
+  @itemize @bullet
+
+    @item mailto:-URLs are no longer triggered as URLs but as email-addresses (without the mailto: part of course).
+
+    @item added support for THOR tags <sb> and <tsb> (horizontal line with optionally centered text). They will only be recognized at the beginning of a line.
+
+    @item lines starting with "actions" -- i.e. <grin> -- should no longer be considered as quote-lines.
+
+    @item lines considered as signature separators (i.e. '-- ') can now be configured via an AmigaDOS-pattern on the Patterns page of the .mcp.
+
+    @item it is now possible to set the Font for the Mailtext object (see Misc page in prefs). This only works with NList 0.76+.
+
+    @item the context menu's wordwrap checkmark state would sometimes have a wrong state.
+
+    @item removed a workaround for an old (fixed) NList bug. The workaround caused a little incompatibility with recent NList versions and also with Mailtext usage in virtual groups.
+
+    @item if MUI v20 (or higher) is detected, each configuration item in the .mcp now has an own contextmenu (like all the MUI items do have).
+
+    @item API: implemented MUIA_Mailtext_ActionEMail. This notification will be triggered whenever the user doubleclicks an email address. You can use this to automatically open a "send mail to" dialog. See also show_mailtext.c in the developer archive.
+
+    @item added a "Programming Guidelines" section to the autodocs.
+
+    @item minor changes to show_mailtext
+
+    @item now using MCCLib 12.4 by Kai Hofmann.
+
+    @item recompiled with SAS/C 6.58.
+
+  @end itemize
+
+@end itemize
+
+@c \\\
+@c /// "Mailtext v3.2"
+
+@node Mailtext v3.2,,,
+@section Mailtext v@value{VER}.@value{REV} (@value{DATE})
+@cindex v3.2
+
+@itemize @asis
+  Mailtext.mcc v@value{MCCREV}, Mailtext.mcp v@value{MCPREV}
+
+  @itemize @bullet
+
+  @item sourcecode & makefiles modified to compile with GCC compiler.
+
+  @item makefiles rewritten to produce OS4 and 68k binaries.
+
+  @item replaced MCCLib with custom header file with OS4 lib functions.
+
+  @item OS4 PPC native binaries now included in distribution archive.
+
+  @item now free software and open source.
+
+  @item licensed under the terms of the GNU Lesser General Public License.
+
+  @item no changes in the operation of Mailtext.
+
+  @end itemize
+
+@end itemize
+
+@c \\\
+

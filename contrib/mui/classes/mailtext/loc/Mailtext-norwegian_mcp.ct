@@ -1,0 +1,314 @@
+## version $VER: Mailtext_mcp.catalog 3.2 ($TODAY)
+## language norsk
+## codeset 0
+;
+;
+; Mailtext - An MUI Custom Class for eMessage display
+; Copyright (C) 1996-2001 by Olaf Peters
+; Copyright (C) 2002-2006 by Mailtext Open Source Team
+;
+; GCC & OS4 Portage by Alexandre Balaban
+;
+; This library is free software; you can redistribute it and/or
+; modify it under the terms of the GNU Lesser General Public
+; License as published by the Free Software Foundation; either
+; version 2.1 of the License, or (at your option) any later version.
+;
+; This library is distributed in the hope that it will be useful,
+; but WITHOUT ANY WARRANTY; without even the implied warranty of
+; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+; Lesser General Public License for more details.
+;
+; You should have received a copy of the GNU Lesser General Public
+; License along with this library; if not, write to the Free Software
+; Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+;
+; Mailtext OpenSource project :  http://sourceforge.net/projects/mailtext/
+;
+; $VER: Mailtext_mcp.catalog 3.2 (21.4.2006)
+;
+; $HISTORY:
+;
+;  21.4.06  3.2   : Mailtext v3.2 OpenSource Release
+;  20.6.97  3.1   : Mailtext release 3.1
+;   4.2.97  3.0   : Mailtext v3.0 Public Release
+;  22.1.97  2.0   : Mailtext v3.0 Beta Releases
+;  8.11.96  1.4   : - changed identifiers again (from 'loc' to 'MSG_')
+;                   - changed text for MSG_AttributesDistanceHelp
+;  1.11.96  1.3   : identifiers now start with 'loc'
+;   9.5.96  1.2   : renamed from Mailtext.catalog to Mailtext_mcp.catalog
+;  29.4.96  1.1   : minor changes
+;  24.4.96  1.0   : initial
+;
+; ----------------------------------------------------------------------------------------
+;
+; *** Sampletext
+;
+MSG_Sample
+Prøve
+; Sample
+MSG_SampleHelp
+Et eksempel på Mailtekst som blir direkte påvirket\nav endringene du utfører nedenfor.
+; Mailtext sample that is directly being influenced\n\
+; by the changes you are making below.
+MSG_SampleText
+
+; Testtext for Mailtext CustomClass\n\
+; \n\
+; *Bold* /Italics/ _Underline_ #Coloured# _/*Combination*/_\n\
+; \n\
+; \n\
+; Quoted Text:\n\
+; \n\
+; 1>2>3>4>5> *Bold* /Italics/ _Underline_ #Coloured#\n\
+; \n\
+; URLs: http://home.pages.de/~Mailtext/\n\
+; \n\
+; To clear things up a bit: (let + be *, /, _ or #)\n\
+; \n\
+;    +Text+\n\
+;    ^    ^\n\
+;    |    |\n\
+;    |    +- the terminating char\n\
+;    |\n\
+;    +- the introducing char\n\
+; \n\
+; -- \n\
+; olf@magicolf.de
+;
+; *** Pages
+;
+MSG_Preferences
+
+; Preferences
+;
+; *** Distances page
+;
+MSG_Distances
+Avstander
+; Distances
+MSG_AttributesDistance
+_Egenskaper
+; _Attributes
+MSG_AttributesDistanceHelp
+Det største antall tegn tillatt mellom\mdet introduserende og det avsluttende\ntegnet.
+; Maximum number of chars to be displayed\n\
+; with given attribute.
+MSG_QuoteDistance
+Si_tater
+; Q_uotes
+MSG_QuoteDistanceHelp
+Bestemmer hvor mange tegn inn i en linje det siste\nintroduksjonstegnet for sitater får være.
+; Determines how many chars in the beginning of a\n\
+; line should be examined for being quotechars.
+;
+; *** Patterns page
+;
+MSG_Patterns
+Mønster
+; Patterns
+MSG_DisablePattern
+_Slå av
+; _Disable
+MSG_DisablePatternHelp
+Egenskapstolkning vil bli slått av hvis en\nlinje passer med dette mønsteret.
+; Attribute parsing will be disabled if a line\n\
+; matches this pattern.
+MSG_EnablePattern
+_Slå på
+; _Enable
+MSG_EnablePatternHelp
+Egenskapstolkning vil bli slått på igjen hvis\nen linje passer med dette mønsteret.
+; Attribute parsing will be reenabled if a line\n\
+; matches this pattern.
+MSG_SigSepPattern
+
+; _Sig. Separator
+MSG_SigSepPatternHelp
+
+; The line will be replaced by a horizontal rule,\n\
+; if it matches this pattern. This can be used to\n\
+; optically separate signature from the rest of the\n\
+; message.
+;
+; *** Characters page
+;
+MSG_Chars
+Tegn
+; Characters
+MSG_NonintroducingChars
+_Ikke-introduserende
+; _Nonintroducing
+MSG_NonintroducingCharsHelp
+Tegn som ikke får forekomme bak\net introduksjonstegn.
+; Characters that are not allowed to occur behind\n\
+; the introducing attributechar.
+MSG_TerminatingChars
+_Avsluttende
+; _Terminating
+MSG_TerminatingCharsHelp
+Tegn som får forekomme etter det\navsluttende egenskapstegnet.
+; Characters that are allowed to occur behind the\n\
+; terminating attributechar.
+MSG_WhitespaceChars
+_Tomrom
+; _Whitespace
+MSG_WhitespaceCharsHelp
+Tegn som oppfattes som tomrom og som derfor får\nbefinne seg foran det introduserende egenskapstegnet.
+; Characters that are considered whitespace thus\n\
+; being allowed to occur in front of the introducing\n\
+; attributechar.
+MSG_QuoteChars
+_Sitat-tegn
+; _Quotechars
+MSG_QuoteCharsHelp
+Tegn som tolkes som introduksjon\ntil siterte linjer.
+; Characters that are considered as introducers for\n\
+; quoted textpassages.
+MSG_QuoteCharsCheckHelp
+Låser disse instillingene for Mailtext-feltet\nuavhengig av hvilke innstillinger et program\nber om.
+; When checked the Mailtext-class will always use\n\
+; these quotechars regardless which settings a\n\
+; program handles to the class.
+;
+; *** Colors page
+;
+MSG_Colors
+
+; Colors
+MSG_Quotelevel
+
+; Quotelevel:
+MSG_QuoteLevel1Color
+
+; Level 1 Color
+MSG_QuoteLevel2Color
+
+; Level 2 Color
+MSG_QuoteLevel3Color
+
+; Level 3 Color
+MSG_QuoteLevel4Color
+
+; Level 4 Color
+MSG_QuoteLevel5Color
+
+; Level 5 Color
+MSG_QuoteLevelHelp
+
+; Quotes of the corresponding level\n\
+; will be marked with this color.
+MSG_ColoredText
+
+; _Colored text
+MSG_ColoredTextWinTitle
+
+; Colored text
+MSG_ColoredTextHelp
+
+; The color, text enclosed by the\n\
+; attribute '#' will be displayed with.
+MSG_ColoredURL
+
+; _URL color
+MSG_ColoredURLWinTitle
+
+; URL color
+MSG_ColoredURLHelp
+
+; The color a Uniform Resource Locator (URL),\n\
+; i.e. http://www.abc.xyz/, will be displayed with.
+;
+; *** URLs page
+;
+MSG_URLs
+
+; URLs
+MSG_URLAction
+
+; _Action
+MSG_URLActionHelp
+
+; The command that is executed when an URL is doubleclicked.\n\
+; A %s in the commandstring will be replaced by the clicked URL.
+MSG_URLActionBeep
+
+; _Beep after action
+MSG_URLActionBeepHelp
+
+; If checked, the display will be beeped after the\n\
+; URL action command has been called, to give some\n\
+; feedback that the action has been triggered.
+MSG_URLUnderline
+
+; _Underline URLs
+MSG_URLUnderlineHelp
+
+; Should URLs be displayed underlined?
+MSG_URLStackSize
+
+; _Stacksize
+MSG_URLStackSizeHelp
+
+; The stacksize for the action command.
+MSG_URLStackSlider
+%ld kByte
+; %ld kByte
+;
+; *** Misc. page
+;
+MSG_Misc
+
+; Misc.
+MSG_ShowAttributes
+_Vis egenskapstegn
+; _Show attributechars
+MSG_ShowAttributesHelp
+Skal egenskapstegnene vises selv om egenskapen\ner satt?
+; Display the attribute characters even if the style\n\
+; has been set?
+MSG_UseContextMenu
+
+; Use context _menu
+MSG_UseContextMenuHelp
+
+; Should every Mailtext object have a contextmenu?
+MSG_SigSeparator
+
+; S_ignature separator
+MSG_SigSeparatorHelp
+
+; Should a signature (introduced by a '-- ',\n\
+; '--' or '---') be separated from the\n\
+; messagetext by a horizontal line?
+MSG_Wordwrap
+
+; _Wordwrap
+MSG_WordwrapHelp
+
+; If wordwrap is switched off, long lines will\n\
+; not be wrapped, but a horizontal scrollbar will\n\
+; be shown instead (only possible with NListviews).
+MSG_Font
+
+; _Font:
+MSG_FontHelp
+
+; The font to be used by the Mailtext object.
+;
+; *** Copyright Info
+;
+MSG_InfoGiftware
+\ebMailtext is OpenSource\en\n\n\
+Visit the Mailtext OpenSource project at:
+; \ebMailtext is OpenSource\en\n\n\
+; Visit the Mailtext OpenSource project at:
+MSG_InfoDeveloper
+For developer's info contact:
+; For developer's info contact:
+MSG_InfoTranslators
+English translation done by:\n\
+Olaf Peters\n\
+; English translation done by:\n\
+; Olaf Peters\n\
+;
