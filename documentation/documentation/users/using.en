@@ -476,6 +476,11 @@ Then insert the Lunapaint (or other program) assign at the end of file.
 Save the changes and you`ll have that fixed.
 Such a procedure can be used for any program that needs it.
 
+Another way is using the ENVARC:SYS/Packages directory. All you need here
+is create a text file with the name of your application and put
+a path to application to that file. Then create a S directory in the
+program`s directory and put the package-startup file there.
+
 
 Setting up the Network
 ----------------------
@@ -630,21 +635,20 @@ a user-mode networking stack which is launched by default (or using the
 "-net nic -net user" switches, which is default now). Options given is
 for 0.8 or newer QEMU version. Setting the AROS side is similar to that
 of Linux use, but you will need to use
-the following IP addresses to setup and test: 10.0.2.15 for AROS machine IP 
-(instead of 172.20.0.10), 10.0.2.2 for gateway (instead of 172.20.0.1).
+the following IP addresses to setup and test: 10.0.2.16 for AROS machine IP 
+(instead of 172.20.0.10), 10.0.2.2 for gateway (instead of 172.20.0.1). 
+This mode can work even without administrating privileges given to user.
 
 The second option is to use the tap interface. To use it you must download
-the `OpenVPN 2.0<http://openvpn.net>`__ package for Windows (Only 2k/XP). 
+the `OpenVPN 2.0 <http://openvpn.net>`__ package for Windows (Only 2k/XP). 
 After you install it, you will get an extra network connection in disconnected
 state. Rename it to, say, eth0. Then go to the eth0 connection properties and 
 set an IP address in the properties of TCP-IP protocol. You must set:
 IP address *in other* subnet than your base IP (If you have 192.168.0.x one,
-then set, say, 192.168.200.1) and 255.255.255.0 netmask. *Reboot*.Then replace 
-in QEMU
-starting line options (or add if there`s were not) -net nic -net tap,ifname=eth0.
-Then set an AROS side as it was described, using the following parameters:
-192.168.200.2 for AROS machine`s IP (instead of 172.20.0.10), 192.168.200.1 
-for gateway (instead of 172.20.0.1).
+then set, say, the same 10.0.2.2) and 255.255.255.0 netmask. *Reboot*. Then replace 
+starting line options in QEMU (or add if there`s were not) -net nic -net tap,ifname=eth0.
+Then set an AROS side as it was described above for user mode networking.
+Note that you will need the administrator privileges to install OpenVPN TAP adaptor.
 
 There`s also some guides describing how to setup QEMU networking in Windows:
 
@@ -672,7 +676,9 @@ Setting Up The Sound
 Currently there`s not much to sound in AROS. First, at the moment there`s no 
 working drivers for virtual machine`s implemented sound cards (usually sb16/es)
 so the only way to try to get sound is use AROS-native on pc with a real 
-SB Live/Audigy card. Also the AC97-copliant codecs are supported. 
+SB Live/Audigy card. Also the AC97-compliant codecs are supported. 
+
+AHI sound in AROS supports also no sound (VOID) and disk writing options.
 
 To be written by someone...
 

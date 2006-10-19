@@ -70,36 +70,40 @@ from chapter 4 to get an overview of the differences.
 ќперационна€ система в операционной системе ?
 ---------------------------------------------
 
-AROS is originally developed on Linux_ running on an Intel-based computer. It 
-runs on many more machines and Operating Systems, though. This may sound 
-strange: an OS running on top of an other OS, that's emulation, right?
+AROS is originally developed on Linux_ running on an Intel-based
+computer. It runs on many more machines and Operating Systems, though.
+This may sound strange: an OS running on top of an other OS, that's
+emulation, right?
 
-A nice term for what AROS does is "API emulation". API is a three-letter 
-acronym for Application Programmer's Interface. In plain English: an API 
-provides (C Language) functions that a programmer can use. The AmigaOS API 
-consists of a load of library calls that an Amiga programmer can use to make 
-an Amiga program. AROS emulates the AmigaOS API: it tries to provide the same 
-library calls as AmigaOS. An Amiga emulator, such as UAE_; emulates the Amiga 
-*computer*: the processor, the connected hardware, everything. This has its 
-advantages, like being able to play binary Amiga games on different hardware, 
-and its disadvantages, like not being able to use the emulator as a "real" OS, 
-on a "real" processor. AROS runs on the "real" processor. But it isn't a 
-"real" OS, *unless* you run in such a way that it doesn't require Linux. This 
-is called "native" AROS.
+A nice term for what AROS-hosted does is "API emulation". API is a
+three-letter acronym for Application Programmer's Interface. In plain
+English: an API provides (C Language) functions that a programmer can
+use. The AmigaOS API consists of a load of library calls that an Amiga
+programmer can use to make an Amiga program. AROS emulates the AmigaOS
+API: it tries to provide the same library calls as AmigaOS. An Amiga
+emulator, such as UAE_; emulates the Amiga *computer*: the processor,
+the connected hardware, everything. This has its advantages, like being
+able to play binary Amiga games on different hardware, and its
+disadvantages, like not being able to use the emulator as a "real" OS,
+on a "real" processor. AROS-hosted runs on the "real" processor. But it
+isn't a "real" OS, *unless* you run in such a way that it doesn't
+require Linux. This is called "native" AROS.
 
-AROS can run natively on the Intel and Amiga computers, but not quite as good 
-as it runs on Linux. AROS library functions are made to run under Linux first, 
-internally using Linux kernel and library calls. This way a programmer has got 
-the opportunity to bother about the implementation of the whole system first, 
-and to bother about the technical details in a later stadium. People are 
-currently working on making the "native" AROS more impressive. The results are
-very impressive and it is perfectly possible to use AROS as a real (and only)
-Operating system on an IBM PC compatible machine.
+AROS can run natively on the Intel and Amiga computers, but not quite as
+good as it runs on Linux. AROS library functions are made to run under
+Linux first, internally using Linux kernel and library calls. This way a
+programmer has got the opportunity to bother about the implementation of
+the whole system first, and to bother about the technical details in a
+later stadium. People are currently working on making the "native" AROS
+more usable. The results are very impressive and it is perfectly
+possible to use AROS-native as a real (and only) Operating system on an
+IBM PC compatible machine.
 
-Of course, AROS is not *only* an API emulator. It also tries to provide all the 
-AmigaOS3.1 system software, and you will also find a few demos and games being 
-shipped with AROS, just to show that they work - we might just be at
-77% of the whole system, but we already have Quake running!
+Of course, AROS is not *only* an API emulator. It also tries to provide
+replacements to all the AmigaOS3.1 system software, and you will also
+find a few demos and games being shipped with AROS, just to show that
+they work - we might just be at 77% of the whole system, but we already
+have Quake running!
 
 
 Using "native" AROS on i386 
@@ -451,21 +455,29 @@ combinations to switch the layouts.
 Installing the software
 -----------------------    
 
-Actually there`s no installer system in AROS. Installing the application
-usually mean that you must extract it to some directory on a harddrive or
-ramdisk. Then some probrams require you to make some directory assignments which
+Actually there`s no installer system in AROS. Installing an application
+usually means you have to extract it to some directory on a harddrive or
+ramdisk. Then some programs require you to make assignments which
 is done in CLI with the Assign command and some start script additions. 
 For example, Lunapaint needs the Lunapaint: to be assigned to the directory
 it was extracted to to work properly. You can do this with the command 
-Assign Lunapaint: Disk:Path/Lunapaint . But if you don`t want to type this 
-command after reboot to launch it again, you must put it to Startup-Sequence
-script. To do this, type this command in CLI prompt::
 
-    :> edit SYS:S/Startup-Sequence
+    Assign Lunapaint: Disk:Path/Lunapaint
+
+But if you don`t want to type this command after reboot to launch it again, 
+you must put it to S:User-Startup script. 
+To do this, type this command in CLI prompt::
+
+    :> edit SYS:S/User-Startup
     
-Then insert the Lunapaint (or other program) assign after all assign lines 
-in the beginning of the file. Save the changes and you`ll have that fixed.
-Such a procedure can be used for any program needs it.
+Then insert the Lunapaint (or other program) assign at the end of file.
+Save the changes and you`ll have that fixed.
+Such a procedure can be used for any program that needs it.
+
+Another way is using the ENVARC:SYS/Packages directory. All you need here
+is create a text file with the name of your application and put
+a path to application to that file. Then create a S directory in the
+program`s directory and put the package-startup file there.
 
 
 Setting up the Network
@@ -589,7 +601,7 @@ You must see the output something like this::
 If you can see that eth0 string then your interface is up. You can test it by 
 launching those commands::
 
-    >ping 172.20.0.1
+    AROS:>ping 172.20.0.1
     PING 172.20.0.1 (172.20.0.1): 56 data bytes
     64 bytes from 172.20.0.1: icmp_seq=0 ttl=255 time=xx ms
     64 bytes from 172.20.0.1: icmp_seq=1 ttl=255 time=xx ms
@@ -600,7 +612,7 @@ launching those commands::
     round trip min/avg/max = x/xx/xx ms
 
 Output like this means that our interface packet`s reached the gateway with
-10.0.2.2 address. If you got Host unreachable earrors check your AROSTcp 
+172.20.0.1 address. If you got Host unreachable earrors check your AROSTcp
 settings and VM options.
 
 You can test it even further by pinging other hosts and try using some 
@@ -617,18 +629,29 @@ make sure you have turn your Firewall to learning mode (or prepare it to
 receive new rules) or completely disable it. Firewall can block transfers to VM.
 
 There`s two ways to use network with QEMU on Windows. First is to use
-a user-mode networking stackm which is launched by default (or using the 
-"-net nic -net user" switches).
+a user-mode networking stack which is launched by default (or using the 
+"-net nic -net user" switches, which is default now). Options given is
+for 0.8 or newer QEMU version. Setting the AROS side is similar to that
+of Linux use, but you will need to use
+the following IP addresses to setup and test: 10.0.2.16 for AROS machine IP 
+(instead of 172.20.0.10), 10.0.2.2 for gateway (instead of 172.20.0.1). 
+This mode can work even without administrating privileges given to user.
 
-The second option is to use the tap interface. 
-There`s some guides describing how to setup QEMU networking in Windows:
+The second option is to use the tap interface. To use it you must download
+the `OpenVPN 2.0 <http://openvpn.net>`__ package for Windows (Only 2k/XP). 
+After you install it, you will get an extra network connection in disconnected
+state. Rename it to, say, eth0. Then go to the eth0 connection properties and 
+set an IP address in the properties of TCP-IP protocol. You must set:
+IP address *in other* subnet than your base IP (If you have 192.168.0.x one,
+then set, say, the same 10.0.2.2) and 255.255.255.0 netmask. *Reboot*. Then replace 
+starting line options in QEMU (or add if there`s were not) -net nic -net tap,ifname=eth0.
+Then set an AROS side as it was described above for user mode networking.
+Note that you will need the administrator privileges to install OpenVPN TAP adaptor.
+
+There`s also some guides describing how to setup QEMU networking in Windows:
 
     + For `VLan <http://www.h7.dion.ne.jp/~qemu-win/HowToNetwork-en.html>`__
     + For `Tap <http://www.h7.dion.ne.jp/~qemu-win/TapWin32-en.html>`__
-
-Setting the AROS side is similar to that of Linux use, but you will need to use
-the following IP addresses to setup and test: 10.0.2.15 for AROS machine IP 
-(instead of 172.20.0.10), 10.0.2.2 for gateway (instead of 172.20.0.1).
 
 Net on VMWare
 """"""""""""" 
@@ -647,6 +670,13 @@ To be finished...
 
 Setting Up The Sound
 --------------------
+
+Currently there`s not much to sound in AROS. First, at the moment there`s no 
+working drivers for virtual machine`s implemented sound cards (usually sb16/es)
+so the only way to try to get sound is use AROS-native on pc with a real 
+SB Live/Audigy card. Also the AC97-compliant codecs are supported. 
+
+AHI sound in AROS supports also no sound (VOID) and disk writing options.
 
 To be written by someone...
 
