@@ -476,8 +476,9 @@ Such a procedure can be used for any program that needs it.
 
 Another way is using the ENVARC:SYS/Packages directory. All you need here
 is create a text file with the name of your application and put
-a path to application to that file. Then create a S directory in the
-program`s directory and put the package-startup file there.
+a path to application in that file. Then create a directory named S in the
+program`s directory and put the package-startup file there. This way is more
+safer, but can be not so Amiga-styled to you.
 
 
 Setting up the Network
@@ -529,9 +530,9 @@ Say our Qemu hosted machine is at 172.20.0.10.
 Say your usual LAN is 192.168.0.0/24 with a DNS at 192.168.0.1 
 (or anywhere on the Internet, for that matter).
 
-For QEMU on Windows in user mode networking you must replace it with 10.0.2.16 
-for host and 10.0.2.2 for gateway. Remember to set up your firewall in way 
-it can pass the QEMU packets.
+*For QEMU on Windows in user mode networking you must replace it with 10.0.2.16 
+for host and 10.0.2.2 for gateway, or use TAP adapter, which is better.
+Remember to set up your firewall in way it can pass the QEMU packets.*
 
 You have to edit 3 files in the AROSTCP/db: hosts, interfaces, netdb-myhost
 In hosts remove any entries. Hosts will be in netdb-myhost for now.
@@ -596,7 +597,7 @@ You must see the output something like this::
             inet 0.0.0.0 netmask 0x0
     eth0: flags=863<UP,BROADCAST,NOTRAILERS,RUNNING,SIMPLEX> mtu 1500
             address: 52:54:00:12:34:56
-            inet 172.20.0.10 netmask 0xff000000 broadcast 10.255.255.255
+            inet 172.20.0.10 netmask 0xff000000 broadcast 172.255.255.255
 
 If you can see that eth0 string then your interface is up. You can test it by 
 launching those commands::
@@ -635,10 +636,11 @@ for 0.8 or newer QEMU version. Setting the AROS side is similar to that
 of Linux use, but you will need to use
 the following IP addresses to setup and test: 10.0.2.16 for AROS machine IP 
 (instead of 172.20.0.10), 10.0.2.2 for gateway (instead of 172.20.0.1). 
-This mode can work even without administrating privileges given to user.
+This mode can work even without administrating privileges given to user, but
+can *make some applications on AROS refuse to work properly (such as FTP-client)*.
 
 The second option is to use the tap interface. To use it you must download
-the `OpenVPN 2.0 <http://openvpn.net>`__ package for Windows (Only 2k/XP). 
+the `OpenVPN <http://openvpn.net>`__ 2.0 package for Windows (Windows 2k/XP only). 
 After you install it, you will get an extra network connection in disconnected
 state. Rename it to, say, eth0. Then go to the eth0 connection properties and 
 set an IP address in the properties of TCP-IP protocol. You must set:
@@ -648,7 +650,7 @@ starting line options in QEMU (or add if there`s were not) -net nic -net tap,ifn
 Then set an AROS side as it was described above for user mode networking.
 Note that you will need the administrator privileges to install OpenVPN TAP adaptor.
 
-There`s also some guides describing how to setup QEMU networking in Windows:
+There`s some guides available on how to setup the QEMU networking in Windows:
 
     + For `VLan <http://www.h7.dion.ne.jp/~qemu-win/HowToNetwork-en.html>`__
     + For `Tap <http://www.h7.dion.ne.jp/~qemu-win/TapWin32-en.html>`__
@@ -656,7 +658,13 @@ There`s also some guides describing how to setup QEMU networking in Windows:
 Net on VMWare
 """"""""""""" 
 
-VMWare`s side network is relatively easy to set up...
+VMWare`s side network is relatively easy to set up. All you need is to add
+the NIC to configuration of your VM and assign the IP to new network connection,
+associated with that card. Other using notes is the same as with QEMU above, 
+except for the adapter type in SYS:Extras/Networking/Stacks/AROSTCP/db/interfaces 
+file ::
+
+    eth0 DEV=DEVS:networks/pcnet.device UNIT=0 IP=10.0.2.2 UP
 
 Net on the real PC
 """"""""""""""""""
