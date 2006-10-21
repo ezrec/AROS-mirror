@@ -1,0 +1,65 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+# mmakefile.src for MUI custom class 'Mailtext'
+
+#MM- contrib-zune-classes-mailtext : contrib-zune-classes-mailtext-mcc contrib-zune-classes-mailtext-mcp
+
+#MM  contrib-zune-classes-mailtext-demo : includes linklibs contrib-zune-classes-mailtext-mcc
+
+#MM  contrib-zune-classes-mailtext-mcc : includes linklibs contrib-zune-classes-nlist-class \
+#MM    contrib-zune-classes-mailtext-catalogs-mcc
+
+MCCFILES := AttributesEngine \
+	 Bitfield \
+	 DynStr \
+	 Mailtext \
+	 URLs \
+	 Mailtext_mcc_locale
+	 
+%build_module mmake=contrib-zune-classes-mailtext-mcc \
+  modname=Mailtext modtype=mcc files=$(MCCFILES) \
+  conffile=Mailtext_mcc.conf objdir=$(OBJDIR)/mcc uselibs="amiga mui rom m"
+
+
+#MM  contrib-zune-classes-mailtext-mcp : includes linklibs contrib-zune-classes-nlist-class \
+#MM    contrib-zune-classes-mailtext-catalogs-mcp
+
+MCPFILES := MailtextP \
+	 Mailtext_mcp_locale
+	 
+%build_module mmake=contrib-zune-classes-mailtext-mcp \
+  modname=Mailtext modtype=mcp files=$(MCPFILES) \
+  conffile=Mailtext_mcp.conf objdir=$(OBJDIR)/mcp uselibs="amiga mui rom m"
+
+  
+%build_prog mmake=contrib-zune-classes-mailtext-demo progname=Show_Mailtext files=show_mailtext \
+    targetdir=$(AROSDIR)/Tests/Zune \
+    uselibs="amiga mui m"
+
+
+#MM includes-copy
+
+INCLUDE_FILES := mui/Mailtext_mcc.h
+%copy_includes path=MUI dir=mui
+
+#MM- contrib-zune-classes-mailtext-catalogs : contrib-zune-classes-mailtext-mcc-catalogs
+
+#MM contrib-zune-classes-mailtext-catalogs-mcc :
+contrib-zune-classes-mailtext-catalogs-mcc : Mailtext_mcc_locale.c loc/Mailtext_mcc.h
+
+loc/Mailtext_mcc.h : Mailtext_mcc_locale.c
+Mailtext_mcc_locale.c : loc/Mailtext_mcc.cd loc/C_h.sd loc/C_c.sd
+	@$(ECHO) "Generating locale file $@..."
+	@$(FLEXCAT) loc/Mailtext_mcc.cd loc/Mailtext_mcc.h=loc/C_h.sd Mailtext_mcc_locale.c=loc/C_c.sd
+
+#MM contrib-zune-classes-mailtext-catalogs-mcp :
+contrib-zune-classes-mailtext-catalogs-mcp : Mailtext_mcp_locale.c loc/Mailtext_mcp.h
+
+loc/Mailtext_mcp.h : Mailtext_mcp_locale.c
+Mailtext_mcp_locale.c : loc/Mailtext_mcp.cd loc/C_h.sd loc/C_c.sd
+	@$(ECHO) "Generating locale file $@..."
+	@$(FLEXCAT) loc/Mailtext_mcp.cd loc/Mailtext_mcp.h=loc/C_h.sd Mailtext_mcp_locale.c=loc/C_c.sd
+
+%common
+

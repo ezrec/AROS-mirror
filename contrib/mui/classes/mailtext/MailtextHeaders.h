@@ -31,7 +31,9 @@
 ***************************************************************************/
 
 #include <clib/alib_protos.h>
+#ifndef __AROS__
 #include <clib/alib_stdio_protos.h>
+#endif
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/graphics.h>

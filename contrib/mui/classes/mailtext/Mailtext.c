@@ -32,12 +32,13 @@
 
 #include <clib/alib_protos.h>
 
-#ifdef __amigaos4__
+#if defined(__amigaos4__) || defined(__AROS__)
  #include <stdio.h>
 #else
  #include <clib/alib_stdio_protos.h>
 #endif /* __amigaos4__ */
 
+#include <proto/exec.h>
 #include <proto/diskfont.h>
 #include <proto/dos.h>
 #include <proto/graphics.h>
@@ -57,12 +58,19 @@
 #include "loc/Mailtext_mcc.h"
 #include "URLs.h"
 
+#ifdef __AROS__
+#include <MUI/NList_mcc.h>
+#else
 #include <mui/NList_mcc.h>
+#endif
 
 #define CLASS         MUIC_Mailtext
 #define SUPERCLASS    MUIC_NList
 #define MUIMINVERSION 17
 
+#ifdef __AROS__
+#include "aros/Mailtext_mcc_private.h"
+#else
 struct Data
 {
     STRPTR          ptext ;
@@ -104,9 +112,17 @@ struct Data
 
     struct Catalog  *catalog ;
 };
+#endif
 
+#ifdef __AROS__
+#include "aros/MailtextVersionsAROS.h"
+#else
 #include "rev/Mailtext.mcc.h"
+#endif
+
+#ifndef __AROS__
 #include <mui/mccbase.c>
+#endif
 
 struct Library *LocaleBase;
 struct Library *DiskfontBase;
@@ -263,7 +279,11 @@ WORD FindMailStart(char *entry, WORD pos, struct Data *data)
 
 /*/// "static ULONG New(struct IClass *cl, Object *obj, struct opSet *msg)" */
 
+#ifdef __AROS__
+IPTR Mailtext__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
+#else
 static ULONG New(struct IClass *cl, Object *obj, struct opSet *msg)
+#endif
 {
     struct Data *data;
     STRPTR thetext ;
@@ -407,7 +427,11 @@ static ULONG New(struct IClass *cl, Object *obj, struct opSet *msg)
 /*\\\*/
 /*/// "static ULONG Dispose(struct IClass *cl, Object *obj, Msg msg)" */
 
+#ifdef __AROS__
+IPTR Mailtext__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
+#else
 static ULONG Dispose(struct IClass *cl, Object *obj, Msg msg)
+#endif
 {
     struct Data *data = INST_DATA(cl, obj) ;
 
@@ -448,7 +472,11 @@ static ULONG Dispose(struct IClass *cl, Object *obj, Msg msg)
 
 /*/// "static ULONG Set(struct IClass *cl, Object *obj, struct opSet *msg)" */
 
+#if __AROS__
+IPTR Mailtext__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
+#else
 static ULONG Set(struct IClass *cl, Object *obj, struct opSet *msg)
+#endif
 {
     struct Data *data = INST_DATA(cl, obj);
     struct TagItem *tags,*tag;
@@ -725,7 +753,11 @@ static ULONG Set(struct IClass *cl, Object *obj, struct opSet *msg)
 /*\\\*/
 /*/// "static ULONG Get(struct IClass *cl, Object *obj, struct opGet *msg)" */
 
+#if __AROS__
+IPTR Mailtext__OM_GET(struct IClass *cl, Object *obj, struct opGet *msg)
+#else
 static ULONG Get(struct IClass *cl, Object *obj, struct opGet *msg)
+#endif
 {
     struct Data *data = INST_DATA(cl, obj);
     ULONG *store = msg->opg_Storage;
@@ -751,7 +783,11 @@ static ULONG Get(struct IClass *cl, Object *obj, struct opGet *msg)
 
 /*/// "static ULONG Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)" */
 
+#ifdef __AROS__
+IPTR Mailtext__MUIM_Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
+#else
 static ULONG Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
+#endif
 {
     struct Data *data = INST_DATA(cl, obj);
     LONG *item ;
@@ -1134,7 +1170,11 @@ static ULONG Setup(struct IClass *cl, Object *obj, struct MUIP_Setup *msg)
 /*\\\*/
 /*/// "static ULONG Cleanup(struct IClass *cl, Object *obj, struct MUIP_Cleanup *msg)" */
 
+#ifdef __AROS__
+IPTR Mailtext__MUIM_Cleanup(struct IClass *cl, Object *obj, struct MUIP_Cleanup *msg)
+#else
 static ULONG Cleanup(struct IClass *cl, Object *obj, struct MUIP_Cleanup *msg)
+#endif
 {
     struct Data *data = INST_DATA(cl, obj);
 
@@ -1160,7 +1200,11 @@ static ULONG Cleanup(struct IClass *cl, Object *obj, struct MUIP_Cleanup *msg)
 
 /*/// "static ULONG CopyToClip(struct IClass *cl, Object *obj, Msg msg)" */
 
+#ifdef __AROS__
+IPTR Mailtext__MUIM_Mailtext_CopyToClip(struct IClass *cl, Object *obj, Msg msg)
+#else
 static ULONG CopyToClip(struct IClass *cl, Object *obj, Msg msg)
+#endif
 {
     DoSuperMethod(cl, obj, MUIM_NList_CopyToClip, MUIV_NList_CopyToClip_Selected, 0, NULL, NULL, TAG_DONE) ;
     DoSuperMethod(cl, obj, MUIM_NList_Select, 0, MUIV_NList_Select_Off, NULL, TAG_DONE) ;
@@ -1171,7 +1215,11 @@ static ULONG CopyToClip(struct IClass *cl, Object *obj, Msg msg)
 /*\\\*/
 /*/// "static ULONG CallAction(struct IClass *cl, Object *obj, Msg msg)" */
 
+#ifdef __AROS__
+IPTR Mailtext__MUIM_Mailtext_CallAction(struct IClass *cl, Object *obj, Msg msg)
+#else
 static ULONG CallAction(struct IClass *cl, Object *obj, Msg msg)
+#endif
 {
     struct Data *data = INST_DATA(cl, obj);
     struct MUI_NList_TestPos_Result res ;
@@ -1302,6 +1350,8 @@ static ULONG CallAction(struct IClass *cl, Object *obj, Msg msg)
     return (ULONG)(NULL) ;
 }
 
+#ifndef __AROS__
+
 /*\\\*/
 /*/// "static ULONG SAVEDS_ASM Dispatcher(REG(a0) struct IClass *cl, REG(a2) Object *obj, REG(a1) Msg msg)" */
 
@@ -1385,3 +1435,4 @@ static VOID ClassExitFunc(const struct Library *const base)
 
 /*\\\*/
 
+#endif

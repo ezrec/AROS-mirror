@@ -34,7 +34,11 @@
 #define DYNSTR_H
 
 #include <dos/dos.h>
+#ifdef __AROS__
+#define REGARGS
+#else
 #include <SDI_compiler.h>
+#endif
 
 typedef struct StringStruct
  {

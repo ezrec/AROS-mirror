@@ -40,15 +40,26 @@
 #include <libraries/locale.h>
 #include <utility/tagitem.h>
 #include <string.h>
+#ifdef __AROS__
+#include <MUI/NListview_mcc.h>
+#else
 #include <mui/NListview_mcc.h>
+#endif
 
 #include "Mailtext_private.h"
 #include "loc/Mailtext_mcp.h"
+#ifdef __AROS__
+#include "aros/MailtextVersionsAROS.h"
+#else
 #include "rev/MailtextVersions.h"
+#endif
 
 #define CLASS         MUIC_MailtextP
 #define MUIMINVERSION 17
 
+#ifdef __AROS__
+#include "aros/Mailtext_mcp_private.h"
+#else
 struct Data
 {
             char    *regTitles[7] ;
@@ -81,6 +92,7 @@ struct Data
 
     struct  Catalog *catalog;
 };
+#endif
 
 struct Library *LocaleBase;
 #if defined(__amigaos4__)
@@ -91,8 +103,11 @@ struct LocaleIFace  * ILocale     = NULL;
 //struct Library *UtilityBase;
 #endif
 
+#ifdef __AROS__
+#else
 #include "rev/Mailtext.mcp.h"
 #include "rev/Mailtext.dist.h"
+#endif
 
 #ifndef MUII_PopFont
 #define MUII_PopFont 42
@@ -105,7 +120,9 @@ struct LocaleIFace  * ILocale     = NULL;
 #define USE_PREFSIMAGE_BODY
 #include "mui/PrefsImage.c"
 
+#ifndef __AROS__
 #include <mui/mccbase.c>
+#endif
 
 /* --- Support-Functions */
 
@@ -132,7 +149,11 @@ static LONG GetControlChar(char *string)
 
 /*/// "static ULONG New(struct IClass *cl, Object *obj, Msg msg)" */
 
+#ifdef __AROS__
+IPTR MailtextP__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
+#else
 static ULONG New(struct IClass *cl, Object *obj, Msg msg)
+#endif
 {
     struct Data *data;
 
@@ -206,7 +227,7 @@ static ULONG New(struct IClass *cl, Object *obj, Msg msg)
         crawl = TextObject,
                     MUIA_Text_Contents, __DCOPYRIGHT,
                     MUIA_Text_PreParse,  MUIX_C,
-                End,
+                End;
 
         SetAttrs(crawl, MUIA_Frame, MUIV_Frame_Text,
                         MUIA_Background, MUII_TextBack,
@@ -706,7 +727,11 @@ static ULONG New(struct IClass *cl, Object *obj, Msg msg)
 /*\\\*/
 /*/// "static ULONG Dispose(struct IClass *cl, Object *obj, Msg msg)" */
 
+#ifdef __AROS__
+IPTR MailtextP__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
+#else
 static ULONG Dispose(struct IClass *cl, Object *obj, Msg msg)
+#endif
 {
     struct Data *data = INST_DATA(cl, obj);
 
@@ -718,7 +743,11 @@ static ULONG Dispose(struct IClass *cl, Object *obj, Msg msg)
 /*\\\*/
 /*/// "static ULONG Get(struct IClass *cl, Object *obj, Msg msg)" */
 
+#ifdef __AROS__
+IPTR MailtextP__OM_GET(struct IClass *cl, Object *obj, Msg msg)
+#else
 static ULONG Get(struct IClass *cl, Object *obj, Msg msg)
+#endif
 {
     ULONG *store = ((struct opGet *)msg)->opg_Storage;
 
@@ -735,7 +764,11 @@ static ULONG Get(struct IClass *cl, Object *obj, Msg msg)
 
 /*/// "static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_ConfigToGadgets *msg)" */
 
+#ifdef __AROS__
+IPTR MailtextP__MUIM_Settingsgroup_ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_ConfigToGadgets *msg)
+#else
 static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_ConfigToGadgets *msg)
+#endif
 {
     struct Data *data = INST_DATA(cl, obj);
     ULONG item ;
@@ -993,7 +1026,11 @@ static ULONG ConfigToGadgets(struct IClass *cl, Object *obj, struct MUIP_Setting
 /*\\\*/
 /*/// "static ULONG GadgetsToConfig(struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_GadgetsToConfig *msg)" */
 
+#ifdef __AROS__
+IPTR MailtextP__MUIM_Settingsgroup_GadgetsToConfig(struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_GadgetsToConfig *msg)
+#else
 static ULONG GadgetsToConfig(struct IClass *cl, Object *obj, struct MUIP_Settingsgroup_GadgetsToConfig *msg)
+#endif
 {
     struct Data *data = INST_DATA(cl, obj);
     ULONG item ;
@@ -1153,6 +1190,8 @@ static ULONG GadgetsToConfig(struct IClass *cl, Object *obj, struct MUIP_Setting
     return(0);
 }
 
+#ifndef __AROS__
+
 /*\\\*/
 /*/// "static ULONG SAVEDS_ASM Dispatcher(REG(d0) struct IClass *const cl, REG(a2) Object *const obj, REG(a1) const Msg msg)" */
 
@@ -1218,4 +1257,6 @@ static VOID ClassExitFunc(const struct Library *const base)
 }
 
 /*\\\*/
+
+#endif
 

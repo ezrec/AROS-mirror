@@ -213,7 +213,7 @@
 #endif // MCCDEBUG
 
 // Compatability for broken GCC libamiga->SetSuperAttrs
-#ifdef __amigaos4__
+#if defined(__amigaos4__) || defined(__AROS__)
     #define DoSuperSet SetSuperAttrs
 #else
     ULONG __stdargs DoSuperSet(struct IClass *cl,Object *obj,ULONG tag1,...)
@@ -221,7 +221,6 @@
         return DoSuperMethod(cl,obj,OM_SET,&tag1,NULL);
     }
 #endif
-
                                                                                /***/
 #endif /* MAILTEXT_MCC_H */                                                    /***/
 

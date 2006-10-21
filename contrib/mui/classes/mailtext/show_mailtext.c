@@ -36,11 +36,11 @@
 #define ID_ActionURL   1
 #define ID_ActionEMail 2
 
-#include <mui/demo.h>
+#include "mui/demo.h"
 #include <exec/memory.h>
 
-#include <mui/Mailtext_mcc.h>
-#include <mui/NListview_mcc.h>
+#include <MUI/Mailtext_mcc.h>
+#include <MUI/NListview_mcc.h>
 
 #include <dos/rdargs.h>
 
