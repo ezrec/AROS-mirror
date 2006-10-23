@@ -334,7 +334,7 @@ ToDO - CLI commands abstract and comparision ...
 
 AROS has it`s CLI, the Command Line Interface, greatly expanding the 
 capabilities of OS. Those who had used the AmigaOS can note that it looks
-Pretty close to the AmigaDOS. There`s some CLI basics described in 
+pretty close to the AmigaDOS. There`s some CLI basics described in 
 `introduction </users/introduction>`__ to CLI commands. 
 
 Currently you don`t need to type all the commands to the end - now there`s
@@ -363,7 +363,7 @@ collected in the separate directories:
     + S - contains some system launch-time scripts
     + System - the place for some system controls
     + Tools -  the place for some commonly used system apps
-    + Utilities - the place for some not-so-commonly used but useful apps
+    + Utilities - the place for some not-so-commonly used but yet useful apps
 
 Instead of applications, there`s more permanent running programs called
 *tasks*. 
