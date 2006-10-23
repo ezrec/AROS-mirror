@@ -1,0 +1,1063 @@
+## version $VER: FileX.catalog 2.0 (XX.XX.XX) by xxxx xxxx
+## codeset 0
+## language <name>
+;
+MSG_MENU_PROJECT
+Проект
+; Project
+;
+MSG_MENU_PROJECT_NEW
+*\000Новый
+; *\000New
+;
+MSG_MENU_PROJECT_OPEN
+O\000Открыть
+; O\000Open...
+;
+MSG_MENU_PROJECT_OPENPREVIOUSLOADED
+=\000Открыть предыдущий
+; =\000Open previous loaded...
+;
+MSG_MENU_PROJECT_SAVE
+С\000Сохранить
+; S\000Save
+;
+MSG_MENU_PROJECT_SAVEAS
+
+; A\000Save as...
+;
+MSG_MENU_PROJECT_GRABMEMORY
+Перехват памяти
+; G\000Grab memory...
+;
+MSG_MENU_PROJECT_PRINT
+P\000Печать
+; P\000Print
+;
+MSG_MENU_PROJECT_ICONIFY
+Y\000В иконку
+; Y\000Iconify
+;
+MSG_MENU_PROJECT_ABOUT
+?\000О программе...
+; ?\000About...
+;
+MSG_MENU_PROJECT_QUIT
+!\000Выход
+; !\000Quit...
+;
+MSG_MENU_EDIT
+Правка
+; Edit
+;
+MSG_MENU_EDIT_MARKBLOCK
+Отметить блок
+; M\000Mark Block
+;
+MSG_MENU_EDIT_CUT
+X\000Вырезать
+; X\000Cut
+;
+MSG_MENU_EDIT_COPY
+C\000Скопировать
+; C\000Copy
+;
+MSG_MENU_EDIT_FILL
+^\000Заполнить ...
+; ^\000Fill...
+;
+MSG_MENU_EDIT_PASTE
+V\000Вставить
+; V\000Paste
+;
+MSG_MENU_EDIT_INSERT
+Вставить блок
+; I\000Insert
+;
+MSG_MENU_EDIT_APPEND
+Добавить к
+; $\000Append
+;
+MSG_MENU_EDIT_PRINT
+Печать
+; #\000Print
+;
+MSG_MENU_EDIT_LOADBLOCK
+Загрузить блок...
+; \\\000Load block...
+;
+MSG_MENU_EDIT_SAVEBLOCK
+Сохранить блок...
+; |\000Save block...
+;
+MSG_MENU_EDIT_UNDO
+Отменить
+; Z\000Undo
+;
+MSG_MENU_EDIT_REDO
+Повторить
+; T\000Redo
+;
+MSG_MENU_EDIT_SWITCH
+Сменить сторону
+; :\000Switch
+;
+MSG_MENU_SEARCH
+Поиск и замена
+; Search and replace
+;
+MSG_MENU_SEARCH_SEARCH
+Поиск...
+; F\000Search...
+;
+MSG_MENU_SEARCH_REPLACE
+Поиск и замена...
+; R\000Search and replace...
+;
+MSG_MENU_SEARCH_REPLACENEXT
+Найти (и заменить) следующий
+; N\000Search(and replace) next
+;
+MSG_MENU_SEARCH_REPLACEPREVIOUS
+Найти (и заменить) предыдущий
+; B\000Search(and replace) previous
+;
+MSG_MENU_SETTING
+Установки
+; Settings
+;
+MSG_MENU_SETTINGS_ADJUSTWINDOW
+Изменить размер окна
+; W\000Adjust window size
+;
+MSG_MENU_SETTINGS_DISPLAY
+Показывать
+; Display
+;
+MSG_MENU_SETTINGS_DISPLAY_CHARACTERS
+Символы
+; Characters
+;
+MSG_MENU_SETTINGS_DISPLAY_ASCII
+Все AscII ($20-$7F)
+; Ascii ($20-$7F)
+;
+MSG_MENU_SETTINGS_DISPLAY_ALL
+Все
+; All
+;
+MSG_MENU_SETTINGS_DISPLAY_USERDEFINED
+Заданные пользователем
+; User defined
+;
+MSG_MENU_SETTINGS_DISPLAY_LOAD
+Загрузить...
+; Load...
+;
+MSG_MENU_SETTINGS_FONT
+Шрифт...
+; Font...
+;
+MSG_MENU_SETTINGS_SCREEN
+Экран
+; Screen
+;
+MSG_MENU_SETTINGS_SCREEN_DEFAULTPUBLIC
+Основной общий
+; Default public
+;
+MSG_MENU_SETTINGS_SCREEN_WORKBENCH
+Workbench
+; Workbench
+;
+MSG_MENU_SETTINGS_SCREEN_PUBLIC
+Общий...
+; Public...
+;
+MSG_MENU_SETTINGS_SCREEN_OWNPUBLIC
+Отдельный общий...
+; Own public...
+;
+MSG_MENU_SETTINGS_PALETTE
+Палитра...
+; Palette...
+;
+MSG_MENU_SETTINGS_MISCELLANEOUS
+Разное...
+; U\000Miscellaneous...
+;
+MSG_MENU_SETTINGS_LOADSETTINGS
+Загрузить настройки...
+; Load settings...
+;
+MSG_MENU_SETTINGS_SAVESETTINGS
+Сохранить настройки
+; Save settings
+;
+MSG_MENU_SETTINGS_SAVESETTINGSAS
+Сохранить настройки как...
+; Save settings as...
+;
+MSG_MENU_MOVE
+Переход
+; Move
+;
+MSG_MENU_MOVE_JUMPTOBYTE
+Прыжок к байту...
+; J\000Jump to byte...
+;
+MSG_MENU_MOVE_MARKLOCATION
+Пометить положение
+; K\000Mark location...
+;
+MSG_MENU_MOVE_JUMPTOMARK
+Прыжок к пометке...
+; L\000Jump to mark...
+;
+MSG_MENU_AREXX
+ARexx
+; ARexx
+;
+MSG_MENU_AREXX_COMMANDSHELL
+Командная оболочка...
+; H\000Command shell...
+;
+MSG_MENU_AREXX_EXECUTECOMMAND
+Выполнить команду...
+; ~\000Execute command...
+;
+MSG_MENU_AREXX_ASSIGNCOMMAND
+Назначиьт команду...
+; `\000Assign command...
+;
+MSG_MENU_AREXX_LOADCOMMANDS
+Загрузить команды...
+; Load commands...
+;
+MSG_MENU_AREXX_SAVECOMMANDS
+Сохранить команды...
+; Save commands
+;
+MSG_MENU_AREXX_SAVECOMMANDSAS
+Сохранить команды как...
+; Save commands as...
+;
+MSG_MENU_AREXX_EMPTYCOMMANDX
+Без команды #%ld
+; Empty command #%ld
+;
+MSG_MENU_MISC
+Другое
+; Misc
+;
+MSG_MENU_MISC_OPENCALC
+Открыть калькулятор...
+; (\000Open calculator...
+;
+MSG_MENU_MISC_OPENCLIPCONV
+Открыть конвертер буфера...
+; )\000Open clipboard converter...
+;
+MSG_MENU_VIEW
+Просмотр
+; View
+;
+MSG_MENU_VIEW_NEW
+Новый
+; E\000New
+;
+MSG_MENU_VIEW_CLOSE
+Закрыть...
+; Q\000Close...
+;
+MSG_MENU_VIEW_SAVE_AND_CLOSE
+Сохранить и закрыть
+; Save and close
+;
+MSG_MENU_VIEW_NEXT
+Следующий
+; .\000Next
+;
+MSG_MENU_VIEW_PREVIOUS
+Предыдущий
+; ,\000Previous
+;
+MSG_MENU_VIEW_EXPAND
+Развернуть
+; +\000Expand
+;
+MSG_MENU_VIEW_GROW
+Увеличить
+; -\000Grow
+;
+MSG_MENU_VIEW_SHRINK
+Уменьшить
+; _\000Shrink
+;
+MSG_MENU_VIEW_SPLIT
+Разделить
+; D\000Split
+;
+MSG_MENU_WINDOW
+Окно
+; Window
+;
+MSG_MENU_WINDOW_NEW
+Новое
+; New
+;
+MSG_MENU_WINDOW_CLOSE
+Закрыть...
+; Close...
+;
+MSG_MENU_WINDOW_NEXT
+Следующее
+; >\000Next
+;
+MSG_MENU_WINDOW_PREVIOUS
+Предыдущее
+; <\000Previous
+;
+MSG_MENU_WINDOW_SPLIT
+Отделить
+; Split to
+;
+MSG_WINDOWTITLE_INFO
+Запрос
+; Request
+;
+MSG_WINDOWTITLE_JUMPTOBYTE
+Прыжок к смещению
+; Jump to byte
+;
+MSG_WINDOWTITLE_LOCATIONNUMBER
+Номер метки
+; Location number?
+;
+MSG_WINDOWTITLE_GRAB
+Захват памяти
+; Grab memory
+;
+MSG_WINDOWTITLE_SELECTCOMMAND
+Выберите команду
+; Select command
+;
+MSG_WINDOWTITLE_SELECTDISPLAYFILE
+Выберите файл символов
+; Select display file
+;
+MSG_WINDOWTITLE_GRABMODE
+Поз: %9s Захат памяти с %9s до %9s
+; Pos: %9s Grabbing memory %9s to %9s
+;
+MSG_WINDOWTITLE_FILEMODE
+Поз: %9s Длина: %9s Имя: %s
+; Pos: %9s Length: %9s Name: %s
+;
+MSG_WINDOWTITLE_SAVEFILEAS
+Сохранить файл как
+; Save file as
+;
+MSG_WINDOWTITLE_PALETTE
+Выбор палитры
+; Change palette
+;
+MSG_WINDOWTITLE_SEARCH
+Поиск и замена
+; Search and replace
+;
+MSG_WINDOWTITLE_FILL
+Заполнение
+; Fill
+;
+MSG_WINDOWTITLE_LOADBLOCK
+Загрузка блока
+; Load block
+;
+MSG_WINDOWTITLE_SAVEBLOCK
+Сохранение блока
+; Save block
+;
+MSG_WINDOWTITLE_LOADSETTINGS
+Загрузка настроек
+; Load settings
+;
+MSG_WINDOWTITLE_SAVESETTINGS
+Сохранение настроек
+; Save settings
+;
+MSG_WINDOWTITLE_LOADCOMMANDS
+Загрузка настроек
+; Load commands
+;
+MSG_WINDOWTITLE_SAVECOMMANDS
+Сохранение команд
+; Save commands
+;
+MSG_WINDOWTITLE_MISC
+Разное
+; Miscellaneous
+;
+MSG_WINDOWTITLE_PUBLICSCREENLIST
+Выберите общий экран
+; Select public screen
+;
+MSG_WINDOWTITLE_SELECTFONT
+Выберите шрифт
+; Select font
+;
+MSG_WINDOWTITLE_SCREENMODE
+Выберите режим экрана
+; Select screenmode
+;
+MSG_WINDOWTITLE_ENTERCOMMANDNUMBER
+Введите номер команды
+; Enter command number
+;
+MSG_WINDOWTITLE_SELECTCOMMANDNAME
+Выберите имя команды
+; Select command name
+;
+MSG_WINDOWTITLE_OPENFILE
+Открытие файла
+; Open file
+;
+MSG_WINDOWTITLE_CALCULATOR
+Калькулятор
+; Calculator
+;
+MSG_WINDOWTITLE_CLIPCONV
+Конвертер буфера обмена
+; Clipboard Converter
+;
+MSG_WINDOWTITLE_PREVIOUSFILES
+Загрузить предыдущий файл
+; Select previous loaded file
+;
+MSG_GADGET_OK
+_Ok
+; _Ok
+;
+MSG_GADGET_CANCEL
+_Отмена
+; _Cancel
+;
+MSG_GADGET_STOPPRINTING
+Стоп!
+; Stop!
+;
+MSG_GADGET_CONTINUE
+Продолжить
+; Continue
+;
+MSG_GADGET_YESNO
+_Да|_Нет
+; _Yes|_No
+;
+MSG_GADGET_CHANGES
+_Ok|_Отмена
+; _Ok|_Cancel
+;
+MSG_GADGET_REPLACE
+_Да|_Все|_Последний|_Выход|_Нет
+; _Yes|_All|_Last|_Quit|_No
+;
+MSG_GADGET_ABOUT1
+Ещё|Выход из справки
+; More|Leave about
+;
+MSG_GADGET_ABOUT2
+Ещё|Выход из справки
+; More|Leave about
+;
+MSG_GADGET_REGISTERED
+!\\_ц/!
+; !\\_ц/!
+;
+MSG_GADGET_GRAB_START
+_Начало
+; _Start
+;
+MSG_GADGET_GRAB_END
+_Конец
+; _End
+;
+MSG_GADGET_MISC_ALTJUMP
+_Altjump
+; _Altjump
+;
+MSG_GADGET_MISC_SCROLLBORDER
+_Scroll border
+; _Scroll border
+;
+MSG_GADGET_MISC_MAXUNDOLEVEL
+Количество шагов _отмены
+; Max undo _level
+;
+MSG_GADGET_MISC_MAXUNDOMEM
+_Размер буфера отмены(КБ)
+; _Max undo mem(KB)
+;
+MSG_GADGET_MISC_CLIPBOARDUNIT
+Единица _буфера
+; Clipboard _unit
+;
+MSG_GADGET_MISC_PROGRAMPRIORITY
+_Приоритет программы
+; _Program priority
+;
+MSG_GADGET_MISC_USEASLLIBRARY
+Использовать asl_.library
+; Use asl_.library
+;
+MSG_GADGET_MISC_OVERWRITE
+П_ереписать
+; O_verwrite
+;
+MSG_GADGET_MISC_COMMANDSHELLWINDOW
+Окно командной оболочки
+; Command s_hell window
+;
+MSG_GADGET_MISC_COMMANDWINDOW
+Командное _окно
+; Command _window
+;
+MSG_GADGET_MISC_DISPLAY
+_Экран
+; _Display
+;
+MSG_GADGET_MISC_SPACE
+Пробе_лы
+; Spac_es
+;
+MSG_GADGET_MISC_HEX
+Hex
+; Hex
+;
+MSG_GADGET_MISC_ASCII
+Ascii
+; Ascii
+;
+MSG_GADGET_MISC_HEXANDASCII
+Hex и ascii
+; Hex and ascii
+;
+MSG_GADGET_MISC_LONG
+Long
+; Long
+;
+MSG_GADGET_MISC_WORD
+Word
+; Word
+;
+MSG_GADGET_MISC_BYTE
+Byte
+; Byte
+;
+MSG_GADGET_MISC_NO
+Нет
+; No
+;
+MSG_GADGET_SEARCH_CASESENSITIV
+Чувствит. к регистру
+; C_ase sensitiv
+;
+MSG_GADGET_SEARCH_WILDCARDS
+Маски
+; _Wildcards
+;
+MSG_GADGET_SEARCH_STRINGSEARCH
+Поиск с_троки
+; S_tring search
+;
+MSG_GADGET_SEARCH_REPLACEMODE
+З_амена
+; R_eplace
+;
+MSG_GADGET_SEARCH_SEARCHSTRING
+_Найти
+; _Find
+;
+MSG_GADGET_SEARCH_REPLACESTRING
+_Заменить
+; _Replace
+;
+MSG_GADGET_FILL_STRING
+_Заполнить
+; _Fill
+;
+MSG_GADGET_SEARCH_NEXT
+_Следующий
+; _Next
+;
+MSG_GADGET_SEARCH_PREVIOUS
+Предыдущий (_b)
+; Previous (_b)
+;
+MSG_GADGET_FILL_STRINGFILL
+З_аполнить строку
+; S_tring fill
+;
+MSG_GADGET_FILL_FILL
+_Заполнить
+; _Fill
+;
+MSG_GADGET_PUBLICSCREENLIST_PUBLICSCREENLIST
+_Список общих экранов
+; _Public screen list
+;
+MSG_GADGET_JUMPTO_NUMBER
+_Позиция Hex
+; _Hex position
+;
+MSG_GADGET_NUMBER_NUMBER
+_Число
+; _Number
+;
+MSG_GADGET_STRING_STRING
+_Строка
+; _String
+;
+MSG_GADGET_CLIPCONV_CONVERT
+Преобразовать
+; Convert
+;
+MSG_GADGET_CLIPCONV_CYCLE_TEXT
+Текст
+; Text
+;
+MSG_GADGET_CLIPCONV_CYCLE_RAW
+Код(Raw)
+; Raw
+;
+MSG_GADGET_CLIPCONV_CYCLE_BIN
+Код(Bin)
+; Bin
+;
+MSG_GADGET_CLIPCONV_CYCLE_DEC
+Dec
+; Dec
+;
+MSG_GADGET_CLIPCONV_CYCLE_HEX
+Hex
+; Hex
+;
+MSG_GADGET_CLIPCONV_CYCLE_OCT
+Oct
+; Oct
+;
+MSG_GADGET_CALC_CYCLE_BIN
+Bin
+; Bin
+;
+MSG_GADGET_CALC_CYCLE_DEC
+Dec
+; Dec
+;
+MSG_GADGET_CALC_CYCLE_HEX
+Hex
+; Hex
+;
+MSG_GADGET_CALC_CYCLE_OCT
+Oct
+; Oct
+;
+MSG_INFO_GLOBAL_NOSCREENMODEREQ
+Для диалога выбора режима \nтребуется OS 2.1(или выше) или reqtoolslibrary
+; OS 2.1(or higher) or reqtoolslibrary\nrequired for screenmode requester!
+;
+MSG_INFO_GLOBAL_ICONIFYFAILED
+Не удалось свернуть в иконку!
+; Failed to iconify!
+;
+MSG_INFO_GLOBAL_CANTOPENFONT
+Не могу отрыть шрифт \"%s\" размера %ld!
+; Can't open font \"%s\" size %ld!
+;
+MSG_INFO_PRINT_NOTHINGTOPRINT
+Печатать нечего!
+; Nothing to print!
+;
+MSG_INFO_PRINT_PRINTERNOTREADY
+Принтер не готов!
+; Printer not ready!
+;
+MSG_INFO_PRINT_PRINTING
+Печать...
+; Printing...
+;
+MSG_INFO_GRAB_ENDBEFORESTART
+Конец не может быть раньше начала
+; End before start!
+;
+MSG_INFO_GRAB_STARTEQUALTOEND
+Начало совпадает с концом
+; Start equal to end!
+;
+MSG_INFO_GLOBAL_ILLEGALCHARACTERS
+Hex-строка \n\"%s\"\nсодержит недопустимые символы!
+; Hex string\n\"%s\"\ncontains illegal characters!
+;
+MSG_INFO_GLOBAL_CANTOPENWINDOW
+Не могу открыть окно (%ld)!
+; Can't open window (%ld)!
+;
+MSG_INFO_GLOBAL_FAILEDTOCREATEPROCESS
+НЕ могу создать новый процесс!
+; Failed to create new process!
+;
+MSG_INFO_GLOBAL_CANTOPENFILE
+Не могу открыть файл \"%s\"!
+; Can't open file \"%s\"!
+;
+MSG_INFO_GLOBAL_CANTALLOCMEM
+Не могу занять %ld байт!
+; Can't allocate %ld bytes!
+;
+MSG_INFO_GLOBAL_CANTALLOCSOMEMEM
+Не могу занять память!
+; Can't allocate mem!
+;
+MSG_INFO_GLOBAL_FILEALREADYEXISTS
+Файл \"%s\" уже существует! Переписать?
+; File \"%s\" already exists! Overwrite?
+;
+MSG_INFO_GLOBAL_CANTSAVEFILE
+Не могу сохранить \"%s\"!
+; Can't save \"%s\"!
+;
+MSG_INFO_GLOBAL_CHANGESTOFILES
+Всего %ld изменений было внесено в %ld файлов!\nВсе они будут потеряны 
+; Totally %ld changes have been made to %ld files!\nThey will all be lost. 
+;
+MSG_INFO_GLOBAL_CHANGESTOFILE
+%ld изменений было сделано в \"%s\"!\nВсе они будут потеряны
+; %ld changes have been made to \"%s\"!\nThey will all be lost. 
+;
+MSG_INFO_GLOBAL_WANTTOQUIT
+Вы действительно хотите выйти из FileX?
+; Do you really want to quit FileX?
+;
+MSG_INFO_GLOBAL_WANTTOCLOSEVIEW
+Вы действительно хотите закрыть просмотр?
+; Do you really want to close the view?
+;
+MSG_INFO_GLOBAL_WANTTOCLOSEWINDOW
+Вы действительно хотите закрыть окно ?
+; Do you really want to close the window?
+;
+MSG_INFO_GLOBAL_WANTTOCLEAR
+Вы действительно хотите очистить просмотр?
+; Do you really want to clear the view?
+;
+MSG_INFO_GLOBAL_WANTTOGRAB
+Вы действительно хотите делать снимок памяти?
+; Do you really want to grab memory?
+;
+MSG_INFO_GLOBAL_WANTTOOPEN
+Вы действительно хотите создать новый файл?
+; Do you really want to open a new file?
+;
+MSG_INFO_GLOBAL_CANTALLOCFILEREQ
+Не могу создать диалог запроса файла!
+; Can't alloc file requester!
+;
+MSG_INFO_GLOBAL_CANTALLOCFONTREQ
+Не могу создать диалог запроса шрифта!
+; Can't alloc font requester!
+;
+MSG_INFO_GLOBAL_CANTALLOCSCREENMODEREQ
+Не могу создать диалог запроса режима экрана!
+; Can't alloc screenmode requester!
+;
+MSG_INFO_GLOBAL_CANTCREATEMSGPORT
+Не могу создать msgport!
+; Can't create msgport!
+;
+MSG_INFO_GLOBAL_CANTOPENLIBRARY
+Не могу открыть \"%s\" (V%ld)!
+; Can't open \"%s\" (V%ld)!
+;
+MSG_INFO_GLOBAL_HEXSTRINGNICHTBYTEALIGNED
+Hex-строка\n\"%s\"\nне выстроена по байтам!
+; Hex string\n\"%s\"\nnot byte-aligned!
+;
+MSG_INFO_GLOBAL_BLOCKDOESNTFIT
+Блок не умещается. %ld Байт лишних.\nЧто, так и вставлять?
+; Block doesn't fit. %ld Byte(s) too long.\nDo you really want to paste?
+;
+MSG_INFO_GLOBAL_BUFFEREMPTY
+Буфер блоков пуст!
+; Blockbuffer empty!
+;
+MSG_INFO_GLOBAL_CANTLOADSETTINGS
+Не могу загрузить настройки \"%s\"!
+; Can't load settings \"%s\"!
+;
+MSG_INFO_GLOBAL_UNKNOWNVERSIONCANTLOADSETTINGS
+Неизвестная версия!\nНе могу загрузить настройки \"%s\"!
+; Unknown version!\nCan't load settings \"%s\"!
+;
+MSG_INFO_GLOBAL_CANTSAVESETTINGS
+Не могу сохранить настройки \"%s\"!
+; Can't save settings \"%s\"!
+;
+MSG_INFO_GLOBAL_CANTSETUPSCREEN
+Не могу настроить экран (%ld)!
+; Can't setup screen (%ld)!
+;
+MSG_INFO_GLOBAL_SCREENUSED
+Нужно закрыть все окна монитора\nперед закрытием экрана FileX!
+; You must close all visitor windows\nbefore closing the FileX screen!
+;
+MSG_INFO_GLOBAL_NONOTPRIVATEPUBLICSCREENSFOUND
+Не найдено not private общих экранов!
+; No not private public screens found!
+;
+MSG_INFO_GLOBAL_CANTOPENINFOFILE
+
+; Can't open \"%s.info\"!
+;
+MSG_INFO_GLOBAL_NERVREQUESTER
+
+;    FileX V2.0 (9.6.94) Shareware 20 DM or 15 US-Dollar,      \
+;            Copyright © 1993-1994 by Klaas Hermanns,          \
+;                   все права защищены.                        \
+;                                                              \
+;   Для того, чтобы связаться со мной, используйте адреса:     \
+;                                                              \
+;   Электронная почта: dalton@cocuni.GUN.de                    \
+;                                                              \
+;   Обычная почта:   Klaas Hermanns                            \
+;                    Weberstrasse 42                           \
+;                    47533 Kleve                               \
+;                    Germany                                   \
+;                                                              \
+;   спасибо тем немногим, кто зарегистрировал FileX V1.1:      \
+;***************************************************************
+;NOTE:
+;Each line has to be 62 chars long, there are exactly 14 lines.
+;
+MSG_INFO_GLOBAL_ABOUTTEXT1
+
+;FileX %s Version %s (%s)\n\
+;Copyright © 1993-1994 by Klaas Hermanns\n\
+;Shareware 20 DM or 15 US-Dollar,\n\
+;all rights reserved.\n\
+;\n\
+;To contact me write to one of the following addresses:\n\
+;\n\
+;Electronic mail:\n\
+;dalton@cocuni.GUN.de\n\
+;\n\
+;Standard mail:\n\
+;Klaas Hermanns,Weberstrasse 42, 47533 Kleve, Germany
+;
+MSG_INFO_GLOBAL_ABOUTTEXT2
+
+;Special thanks in no order to:\n\
+;\n\
+;Robert Gorthmanns,Thomas Hornik,\n\
+;Benjamin Schцrner, Jцrg Groenewald,\n\
+;Thomas Hertz for betatesting.\n\
+;\n\
+;Michael Balzer for his `ARexxBox'\n\
+;which was used to create the basis\n\
+;of the arexx port.
+;
+MSG_INFO_GLOBAL_REGISTERED
+Лицензия No. %04ld , зарегистрированная на `%s'!
+; This is No. %04ld registered to `%s'!
+;
+MSG_INFO_GLOBAL_NOTREGISTERED
+Незарегистрированная версия.\n*Пожалуйста*(!), зарегистрируйтесь, и будет вам счастье:-)
+;
+;
+MSG_INFO_GLOBAL_PATCHED
+Извините, но ключ уже был введен!
+; Sorry, someone patched the key!
+;
+MSG_INFO_GLOBAL_NOTHINGTOUNDO
+Отменять нечего!
+; Nothing to undo!
+;
+MSG_INFO_GLOBAL_NOTHINGTOREDO
+Повторять нечего!
+; Nothing to redo!
+;
+MSG_INFO_GLOBAL_CUTTINGNOTPOSSIBLEINGRABMODE
+Вырезание недоступно при захвате памяти!
+; Cutting not possible while grabbing memory!
+;
+MSG_INFO_GLOBAL_INSERTINGNOTPOSSIBLEINGRABMODE
+Вставка недоступна при захвате памяти!
+; Inserting not possible while grabbing memory!
+;
+MSG_INFO_GLOBAL_APPENDINGNOTPOSSIBLEINGRABMODE
+Дополнение недоступно при захвате памяти!
+; Appending not possible while grabbing memory!
+;
+MSG_INFO_GLOBAL_NOBLOCKMARKED
+Блок не выделен!
+; No block marked!
+;
+MSG_INFO_GLOBAL_REQTOOLSLIBRARYREQUIRED
+Необходима `reqtools.library'!
+; `reqtools.library' required!
+;
+MSG_INFO_GLOBAL_UNNAMED
+<Без_имени>
+; <unnamed>
+;
+MSG_INFO_AREXX_CANTSETUPAREXXHOST
+Не могу настроить host AREXX!
+; Can't setup arexx host!
+;
+MSG_INFO_AREXX_NOTIFY
+Уведомление Arexx!
+; Arexx notify!
+;
+MSG_INFO_AREXX_VARHASTOBEANUMBER
+VAR должно быть числом!
+; VAR has to be a number!
+;
+MSG_INFO_AREXX_VARHASTOBETRUEORFALSE
+VAR должно быть TRUE или FALSE
+; VAR has to be TRUE or FALSE!
+;
+MSG_INFO_AREXX_FIELDISREADONLY
+Поле используется только для чтения!
+; Field is read-only!
+;
+MSG_INFO_AREXX_OBJECTNOTFOUND
+Объект не найден!
+; Object not found!
+;
+MSG_INFO_AREXX_FIELDNOTFOUND
+Поле не найдено!
+; Field not found!
+;
+MSG_INFO_AREXX_FROMSTEMNOTPOSSIBLEINCOMMANDSHELL
+FROMSTEM недоступно в командной строке!
+; FROMSTEM not possible in command shell!
+;
+MSG_INFO_AREXX_FROMVARREQUIRED
+Необходимо значение FROMVAR!
+; FROMVAR required!
+;
+MSG_INFO_AREXX_FROMVARANDFIELDREQUIRED
+Необходимы значения FROMVAR и FIELD !
+; FROMVAR and FIELD required!
+;
+MSG_INFO_AREXX_CANTGETVAR
+Не могу принять var!
+; Can't get var!
+;
+MSG_INFO_AREXX_FROMSTEMORFIELDREQUIRED
+Необходимы значения FROMSTEM или FIELD !
+; FROMSTEM or FIELD required!
+;
+MSG_INFO_AREXX_FROMVARORFROMSTEMREQUIRED
+Необходимы значения FROMSTEM or FIELD !
+; FROMVAR or FROMSTEM required!
+;
+MSG_INFO_AREXX_CANTSETVAR
+Не могу задать var!
+; Can't set var!
+;
+MSG_INFO_AREXX_FAULTFAILED
+Не удалось выполнить FAULT!
+; FAULT failed!
+;
+MSG_INFO_AREXX_UNKNOWNCOMMAND
+Неизвестная команда!
+; Unknown command!
+;
+MSG_INFO_AREXX_RXCANTOPENWINDOW
+RX не может открыть окно.
+; RX can't open window!
+;
+MSG_INFO_AREXX_RXCANTSENDAREXXCOMMAND
+RX не может послать команду ARexx!
+; RX can't send ARexx command!
+;
+MSG_INFO_AREXX_BLOCKTOOLONG
+Блок слишком велик!
+; Block too long!
+;
+MSG_INFO_AREXX_BLOCKCONTAINSILLEGALCHARACTERS
+Блок содержит недопустимые символы!
+; Block contains illegal characters!
+;
+MSG_INFO_AREXX_NUMBERTOOHIGH
+Число слишком велико!
+; Number too high!
+;
+MSG_INFO_AREXX_HEXSTRINGTOOLONG
+Строка Hex слишком велика!
+; Hex string too long!
+;
+MSG_INFO_AREXX_HEXSTRINGCONTAINSILLEGALCHARACTERS
+Строка Hex содержит недопустимые символы!
+; Hex string contains illegal characters!
+;
+MSG_INFO_AREXX_INVALID_ID
+Неверный ID!
+; Invalid ID!
+;
+MSG_INFO_AREXX_CANT_LOCK_GUI
+Не могу занять GUI!
+; Can't lock gui!
+;
+MSG_INFO_SEARCH_BYTESNOTEQUAL
+Число искомых и заменяемых байт различно!
+; Search and replace number of bytes differ!
+;
+MSG_INFO_SEARCH_CHARSNOTEQUAL
+Число искомых и заменяемых символов различно!
+; Search and replace number of characters differ!
+;
+MSG_INFO_SEARCH_FOUNDTOREPLACE
+Найдено \"%s\". Заменить на \"%s\"?
+; Found \"%s\". Replace with \"%s\"?
+;
+MSG_INFO_SEARCH_STRINGNOTFOUND
+Не найдено \"%s\"!
+; \"%s\" not found!
+;
+MSG_INFO_CALC_CLIPCONTENTSNOTANUMBER
+В буфере обмена - не число!
+; Clipboard contents is not a number!
+;
+MSG_INFO_CALC_DIVISONBYZERO
+Деление на ноль!
+; Divison by zero!
+;
+MSG_INFO_CALC_OVERFLOW
+Переполнение!
+; Overflow!
+;
+MSG_INFO_SEARCH_SEARCHING
+Поиск...
+; Searching...
+;
+MSG_INFO_CLIPCONV_NOTVALID
+Неверно!
+; Not valid!
+;
+MSG_INFO_CLIPCONV_EMPTY
+<пусто>
+; <empty>
+;
+MSG_INFO_CLIPCONV_NOTCONVERTIBLE
+Невозможно превратить!
+; Not convertible!
+;
+MSG_SCREENTITLE
+FileX й 1993-1994 by Klaas Hermanns. Publicscreenname = \"%s\".
+; FileX © 1993-1994 by Klaas Hermanns. Publicscreenname = \"%s\".
+;
+MSG_APPICONNAME
+FileX
+; FileX
+;

@@ -91,7 +91,7 @@
 #
 # ..PCNet32/VMWare Ethernet cards
 #
-#eth0 DEV=DEVS:networks/nforce.device UNIT=0 IP=192.168.0.188 UP
+#eth0 DEV=DEVS:networks/pcnet.device UNIT=0 IP=192.168.0.188 UP
 #
 # ..nForce Ethernet cards
 #
