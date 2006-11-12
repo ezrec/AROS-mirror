@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright â 1995-2006, The AROS Development Team
+:Copyright: Copyright ò 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. Can be translated.
@@ -440,6 +440,12 @@ be reinstalled, and a window will appear asking you to confirm that
 write. Answer yes as many times as needed. Now, on the last page,
 uncheck the Reboot checkbox, close the Install program and power off the
 machine. 
+
+Alternatively, GRUB can be installed from shell with this command::
+
+    c:install-i386-pc device ata.device unit 0 grub dh0:boot/grub kernel dh0:boot/aros-i386.gz
+
+
 
 Preparing to boot
 ^^^^^^^^^^^^^^^^^

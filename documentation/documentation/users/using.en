@@ -280,22 +280,22 @@ But how do the applications behave then, where will the windows be open?
 There`s a `screen` term - screen is the place where your window is meant
 to be open. If it`s said that application going to open on Wanderer
 screen, it will look like it`s usually happens in other OS - your app
-will appear as window on desktop. Also window usually can be open on
+will appear as window on desktop. On another hand, window can be open on
 it`s own screen - it looks like it captures the whole screen. But you
-can switch the screens with a gadget in top right corner fo the screen
-(this is also applicable to the windows). So you can switch between
+can switch the screens with a gadget in top right corner of the screen
+(this is also applicable to the simple windows). So you can switch between
 Wanderer, Directory Opus and any other apps opening on it`s own screen.
 This behaviour also comes from Amiga`s history.
                                                   
-Well, the time has come to say something about windows itself. Aros
-window usually has controls to manupalte with it. This control buttons
-are called gadgets (which can be translated as interactive kind of
+Well, the time has come to say something about windows itself. AROS
+window usually has control buttons to manupalte with it,
+called gadgets (which can be translated as interactive kind of
 graphical element). First one in the top left corner of a window allows
 to close it. Next, in the right part allows to minimise/maximise window.
 And the last used to put window to front or to back just like we switch
 sreens. Windows can have no gadgets at all (look at the Kitty demo -
 it`s doesn`t even have a borders and yet has well-curved shape) or have
-a different set of them. 
+a different set of it. 
 
 The window`s contents consists from some usual elements could be seen in
 any GUI - buttons, lists, strings of text, any other kind of gadgets. If

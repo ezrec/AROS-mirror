@@ -112,8 +112,8 @@ AROS на различные платформы. Вкратце, базовые библиотеки ОС обращаются к оборудо
 Каждый день мы слышим от многих, что у AROS ничего не выйдет. Большинство из них
 либо не знают, что именно мы делаем, либо считают, что Амига давно мертва. После того,
 как первым объяснили, в чём наша задача, большинство из них согласилось, что это 
-возможно. Со вторыми хлопот больше. Ладно, Амига уже мертва  ? Те, кто используют
-их до сих пор определенно с ними не согласятся. Разве их A500 или A4000 взорвались,
+возможно. Со вторыми хлопот больше. Ладно, Амига уже мертва ? Пользователи Амиги
+определенно с ними не согласятся. Разве их A500 или A4000 взорвались,
 когда Commodore объявили банкротом ? А когда та же участь постигла Amiga Technologies ?
 
 Однако фактом является малое количество новых программ для Амиги (что не мешает
@@ -298,29 +298,40 @@ GUI с shareware-лицензией, стандарт де-факто в AmigaOS. Zune - основной пакет
 разработки GUI-приложений AROS. Само имя ничего особенного не означает, но
 звучит прикольно. =)
 
-How can I restore my Prefs to defaults?
----------------------------------------
+Как восстановить Настройки по умолчанию?
+----------------------------------------
 
-In AROS, open CLI shell, go to Envarc: and delete relevant files for the 
-pref you want to restore.
+Загрузив AROS, откройте окно CLI, перейдите в Envarc: (командой cd) 
+и удалите файлы, соответствующие настройке, которую необходимо восстановить.
 
-What is the Graphical mem and other memory in Wanderer?
--------------------------------------------------------
-
-This memory division is mostly a relic from Amiga past, when graphical memory was application memory before you added some other, called FAST RAM, memory where applications ended, when graphics, sounds and some system structures were still in graphic memory.
-
-In AROS-hosted, there isn't such kind of memory as FAST, but only GFX, when on Native AROS, GFX can have a max of 16MB, although it wouldn't reflect the state of the graphic adapter memory...  It has no relation to the amount of memory on your graphics card.
-
-*The longwinded answer*
-Graphics memory in i386-native signifies the lower 16MB of memory in the system. That lower 16MB is the area where ISA cards can do DMA. Allocating memory with MEMF_DMA or MEMF_CHIP will end up there, the rest in the fast 
-memory.
-
-Use C:Avail HUMAN command for memory info.
-
-What do the Wanderer Snapshot <all/window> action actually do? 
+Какова разница между Графической и обычной памятью в Wanderer?
 --------------------------------------------------------------
 
-This conmmand must remember icon`s placement of all (or one) windows.
+Это разделение памяти, в основном, является лишь отголоском прошлого Амиги,
+когда графическая память была основной памятью, доступной приложениям,
+пока не добавлялась другая память, называвшаяся FAST RAM, где и располагались
+приложения. При этом графика, звуки и некторые системные структуры оставались
+в графической памяти. 
+
+В AROS-hosted не существует такой памяти, как FAST, есть только графическая.
+В Native AROS максимальный размер этой памяти не превышает 16МБ, но при этом
+никак не отображает размер памяти графического адаптера. Фактически, 
+этот параметр не имеет никакого отношения к памяти графического адаптера.
+
+*Развернутый ответ*
+Графическая память в i386-native относится к нижним 16МБ системной памяти.
+В пределах этой области карты шины ISA могут использовать DMA. Выделение 
+памяти при помощи функций MEMF_DMA и MEMF_CHIP возможно только в её пределах,
+остальных - в прочей памяти, аналоге FAST.
+
+Чобы получить подробные сведения о доступной памяти используйте команду
+C:Avail HUMAN.
+
+Для чего служит команда Wanderer Запомнить <окно/все>? 
+------------------------------------------------------
+
+Эта команда запоминает расположение иконок одного или всех окон.
+
 
 How do I change the screensaver/background?
 -------------------------------------------
@@ -353,7 +364,8 @@ Here`s some::
     nofdc - Disables the floppy driver completely.
     noclick - Disabled the floppy disk change detection (and clicking)
     ATA=32bit - Enables 32-bit I/O in the hdd driver (safe)
-    forcedma - Forces DMA to be active in the hdd driver (should be safe, but       might not be)
+    forcedma - Forces DMA to be active in the hdd driver (should be safe, but       
+    might not be)
     gfx=<hidd name> - Use the named hidd as the gfx driver
     lib=<name> - Load and init the named library/hidd
 
@@ -372,8 +384,8 @@ networking.
 =============================
 
 
-Where can I find an AROS Hardware Compatibility List?                   
------------------------------------------------------
+Где найти список совместимого оборудования для AROS?                   
+----------------------------------------------------
 
 You can find one on the `AROS Wiki <http://en.wikibooks.org/wiki/Aros/Platforms/x86_support>`__ page. There can be
 another lists made by the AROS users.

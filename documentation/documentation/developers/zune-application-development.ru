@@ -1,0 +1,518 @@
+========================================
+Руководство разработчика приложений Zune
+========================================
+
+:Authors:   David Le Corfec
+:Copyright: Copyright Љ 2004, The AROS Development Team
+:Version:   $Revision: 24429 $
+:Date:      $Date: 2006-05-07 22:24:40 +0500 (а®б…, 07 аМаАаЙ 2006) $
+:Status:    Unfinished;
+:ToDo:      All
+
+
+.. Contents::
+
+
+------------
+Предисловие
+------------
+
+Что такое Zune?
+===============
+
+Zune является объектно-ориентированным набором для разработки приложений с 
+графическим интерфейсом пользователя (GUI).  
+Это практически полный аналог MUI (Magic User Interface), как на уровне API, так 
+и на уровне Look&Feel, самого популярного на Amiga shareware-интерфейса Стефана Штунтца. 
+Таким образом, разработчики знающие MUI, почувствуют себя здесь "как дома", 
+а остальные смогут изучить понятия и особенности, общие для обоих средств. 
+Постулируется, что:
+
++ Программист может затратить намного меньше времени при проектировании 
+  интерфейса: в Zune нет привязки элементов интерфейса к абсолютным значениям, 
+  среда чувствительна к кеглям шрифтов и сама адаптирует размеры и расположение 
+  любых окон в зависимости от шрифтов пользователя. Zune предоставляет 
+  семантический доступ к элементам проектируемого интерфейса, а его свойства 
+  (такие, как отступ элемента от края окна в пикселях) регулируются автоматически.
+
++ Пользователю намного легче контролировать вид и поведение интерфейса, 
+  спроектированного программистом, он получает возможность специфической 
+  настройки параметров окружения Zune. 
+
+
+Zune основан на системе BOOPSI (Basic Object Oriented Programming System for Intuition), 
+унаследованной от AmigaOS и используемой в 
+объектно-ориентированном программировании на Си. Классы Zune не являются 
+дочерними по отношению к существующим для элементов интерфейса классам BOOPSI 
+(т.е., не являются простым расширением их возможностей). Напротив, базовым классом 
+(в иерархии Zune) является класс Notify — дочерний относительно корневого 
+класса BOOPSI.
+
+
+Предпосылки 
+===========
+
+Для понимания концепции Zune, более чем приветствуется знание парадигмы 
+объектно-ориентированного программирования (ООП). Вы можете воспользоваться 
+Google для поиска и изучения образовательных материалов, посвящённых ООП.
+
+Также, желательно, владение такими ключевыми понятиями AROS (и AmigaOS), как 
+список тегов (taglist) и система BOOPSI. Хорошим подспорьем здесь, безусловно, 
+является руководство "Amiga Reference Kernel Manuals" (известное как RKM).
+
+Поскольку Zune является аналогом MUI, вся документация, имеющая отношение к MUI, 
+применима и к Zune. В частности, последняя версия инструментария для разработчиков 
+интерфейсов MUI доступна здесь__. Среди прочих, в этом LHA-архиве есть 2 документа 
+особенно рекомендуемых к прочтению:
+
+
++ `MUIdev.guide`, документация MUI-программиста.
++ `PSI.c`, исходный код приложения, демонстрирующего все современные методы 
+   проектирования и создания динамических объектов интерфейсов MUI. 
+   
+__ http://main.aminet.net/dev/mui/mui38dev.lha
+
+Также этот архив содержит документацию (MUI autodocs), которая является 
+описанием и для всех существующих классов Zune. 
+
+-----------------
+Реализация BOOPSI
+-----------------
+
+Концепции
+=========
+
+BOOPSI
+
+Класс
+-----
+
+Класс (class), по сути, является лишь описанием структуры, связывающей воедино
+составляющие класса (объекты, переменные и методы) и задаётся 
+именем, родительским классом и диспетчером (dispatcher). Описание вводится 
+путем указания типа и свойств класса.
+
++ имя: в случае, если класс является общим (public) - это строка, характеризующая 
+  название класса и его область видимости, что делает его доступным любому приложению 
+  в системе. В случае, если класс является локальным (private) - отсутствует, и 
+  такой класс не может использоваться нигде, кроме одного-единственного приложения. 
+
++ родительский класс: все классы BOOPSI формируются в иерархическом порядке, 
+  и являются дочерними по отношению к корневому классу rootclass. Это позволяет 
+  каждому подклассу иметь собственную версию операции, производную от 
+  родительской, либо ту же самую, что и у родителя. Класс, 
+  содержащий подклассы, также называют базовым (base class) или суперклассом (super class). 
+
++ диспетчер: предоставляет доступ ко всем операциям класса, которые называют 
+  методами. Гарантирует, что каждая операция будет 
+  обеспечена исполнением соответствующего ей кода или будет передана 
+  родителю данного класса (суперклассу). 
+
+В BOOPSI типом класса является ``Class *`` или ``IClass``.
+
+Объект
+------
+
+Объект является структурной единицей (реализацией) класса. Каждый объект обладает своими 
+свойствами, но все объекты одного класса ведут себя похожим образом. Объект 
+относится к нескольким классам, если исчислять их от него самого (один из существующих 
+классов) до корневого класса rootclass. 
+
+Для объекта типом BOOPSI является ``Object *``. Он не содержит доступных 
+напрямую полей.
+
+Атрибут
+-------
+
+Атрибут находится в связи с структурой данных каждого объекта:  
+изменять эти данные непосредственно вы не можете. Возможно только установить или получить 
+значения атрибутов объекта (также называемых свойствами) для изменения его 
+внутреннего состояния. Атрибуты объекта (со стороны системы) ассоциированы 
+с тегами (Tag) (со стороны программиста) (это значения, имеющие тип ``ULONG`` 
+и связанные с ``TAG_USER``).
+
+Для изменения атрибутов объектов используются функции ``GetAttr()`` и ``SetAttrs()``.
+
+Атрибуты (один или несколько) могут быть следующих видов:
+
++ Назначаемый при установке (Initialization-settable) (``I``) : Атрибут может 
+    быть передан как параметр лишь при создании объекта. 
++ Доступный для изменения (Settable) (``S``) : Можно установить значение этого атрибута в 
+    любое время (не только при создании объекта). 
++ Доступный для чтения (Gettable)(``G``) : Вы можете лишь получить значение атрибута. 
+
+Метод 
+-----
+
+Методом в BOOPSI называется функция, которой в виде параметров передаются 
+имя объекта, его класс и сообщение:
+
++ объект: имя объекта, над которым производится действие. 
++ класс: класс, соответствующий объекту.
++ сообщение: содержит идентификатор (ID) метода, определяющий функцию, 
+  вызываемую диспетчером и передаваемые ей параметры
+
+Для отправки сообщения объекту используется функция ``DoMethod()``. Сначала метод 
+будет применён к указанному классу. Если в классе определен этот метод, то 
+сообщение будет обработано. В противном случае, будут перебираться родительские 
+классы до тех пор, пока сообщение не будет обработано одним из них, или не будет 
+достигнут rootclass (в этом случае так и не определённое сообщение будет 
+молча отвергнуто). 
+
+Примеры
+=======
+
+Рассмотрим основные приёмы объектно-ориентированного программирования с BOOPSI:
+
+Получение атрибута 
+------------------
+Попробуем запросить данные объекта MUI String::
+
+    void f(Object *string)
+    {
+        IPTR result;
+        
+        GetAttr(string, MUIA_String_Contents, &result);
+        printf("String content is: %s\n", (STRPTR)result);
+    }
+
+
+Здесь string - объект, MUIA_String_Contents - получаемый атрибут, &result -
+указатель на строку с результатом этой операции. К тому же:
+
++ ``Object *`` является типом объектов BOOPSI.
++ Для типизации возвращаемого значения должен использоваться тип ``IPTR``,
+   поэтому это значение может быть целым числом либо указателем. IPTR всегда
+   сохраняется в памяти, и использование более ограниченного типа привело бы
+   порче её содержимого!
++ Когда мы запрашиваем атрибуты объекта MUI String: ``MUIA_String_Contents``, 
+    как и любой другой атрибут, имеет тип ``ULONG`` (это тег).
+
+В приложениях Zune вместо указанных функций часто используются макросы ``get()`` 
+и `XGET()``. Например::
+
+    get(string, MUIA_String_Contents, &result);
+    
+    result = XGET(string, MUIA_String_Contents);
+
+
+Установка атрибута 
+------------------
+
+Слегка изменим приведенную выше строку::
+
+    SetAttrs(string, MUIA_String_Contents, (IPTR)"hello", TAG_DONE);
+
++ Указатели, передаваемые в качестве аргументов должны иметь тип `IPTR` 
+    (указатель на целую переменную, может содержать адрес значений типа int) 
+    иначе компилятор будет выдавать предупреждения.
++ Вслед за атрибутом, функции `SetAttrs` передаётся список тегов, поэтому
+    перечисление должно заканчиваться на `TAG_DONE`.
+
+Вам наверняка покажется полезным макрос ``set()``::
+
+    set(string, MUIA_String_Contents, (IPTR)"hello");
+
+Однако, только с помощью SetAttrs() вы сможете установить несколько атрибутов 
+за один раз::
+
+    SetAttrs(string,
+             MUIA_Disabled, TRUE,
+             MUIA_String_Contents, (IPTR)"hmmm...",
+             TAG_DONE);
+
+
+Вызов метода 
+------------
+
+Рассмотрим наиболее часто применяемый в программах Zune метод, метод 
+обработки событий, вызываемый в основном цикле программы::
+
+    result = DoMethod(obj, MUIM_Application_NewInput, (IPTR)&sigs);
+
++ Параметры функций метода не являются списком тегов, и не должны заканчиваться с 
+    ``TAG_DONE``
++ Указатели приходится типизировать как ``IPTR`` чтобы избежать предупреждений,
+    от чего смысл их применения не меняется
+
+-----------
+Hello world
+-----------
+
+.. Figure:: zune/images/hello.png
+
+    С начала, так с начала. Эта программа никогда не разочаровывает новичков.
+  
+
+Исходный код 
+============
+
+Рассмотрим наш первый реальный пример::
+
+    // gcc hello.c -lmui
+    #include <exec/types.h>
+    #include <libraries/mui.h>
+    
+    #include <proto/exec.h>
+    #include <proto/intuition.h>
+    #include <proto/muimaster.h>
+    #include <clib/alib_protos.h>
+    
+    int main(void)
+    {
+        Object *wnd, *app, *but;
+    
+        // Создание GUI: окна wnd, текста Hello world! и кнопки Ok
+        app = ApplicationObject,
+            SubWindow, wnd = WindowObject,
+            MUIA_Window_Title, "Hello world!",
+            WindowContents, VGroup,
+                Child, TextObject,
+                MUIA_Text_Contents, "\33cHello world!\nHow are you?",
+                End,
+                Child, but = SimpleButton("_Ok"),
+                End,
+            End,
+            End;
+    
+        if (app != NULL)
+        {
+            ULONG sigs = 0;
+    
+            // Реакция на элемент закрытия окна и выход по клавише Escape
+            DoMethod(wnd, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
+                     (IPTR)app, 2,
+                     MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+    
+            // Реакция на нажатие кнопки выхода
+            DoMethod(but, MUIM_Notify, MUIA_Pressed, FALSE,
+                     (IPTR)app, 2,
+                     MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+    
+            // Открываем окно wnd
+            set(wnd, MUIA_Window_Open, TRUE);
+
+            // Проверяем, что окно wnd действительно было открыто
+            if (XGET(wnd, MUIA_Window_Open))
+            {
+                // Основной цикл приложения Zune
+            while((LONG)DoMethod(app, MUIM_Application_NewInput, (IPTR)&sigs)
+                  != MUIV_Application_ReturnID_Quit)
+            {
+                if (sigs)
+                {
+                sigs = Wait(sigs | SIGBREAKF_CTRL_C);
+                if (sigs & SIGBREAKF_CTRL_C)
+                    break;
+                }
+            }
+            }
+        // Уничтожаем наше приложение со всеми его объектами
+            MUI_DisposeObject(app);
+        }
+        
+        return 0;
+    }
+
+
+Комментарии
+===========
+
+Замечание 
+---------
+
+Мы не открываем библиотеки вручную т.к. это делается за нас автоматически.
+
+Создание GUI интерфейса 
+-----------------------
+
+Мы использовали макросы для облегчения программирования интерфейса программы.
+Приложение Zune всегда имеет 1 (и только 1) объект Приложения (ApplicationObject)::
+
+    :    app = ApplicationObject,
+
+Приложение может иметь 0,1 или более объектов окон WindowObject. Чаще всего окно -
+одно единственное::
+
+    :        SubWindow, wnd = WindowObject,
+
+Будет хорошо, если заголовок окна будет содержать название приложения::
+
+
+    :        MUIA_Window_Title, "Hello world!",
+
+Окно может иметь 1 (и только 1) дочерний объект (Child), обычно это группа (group). 
+Наша группа будет вертикальной (VGroup), это означает, что все входящие в неё 
+дочерние объекты (children) будут группироваться по вертикали:
+
+
+    :        WindowContents, VGroup,
+
+Группа должна иметь, как минимум 1 дочерний объект. В нашем случае, это будет 
+обыкновенный текст (TextObject)::
+
+
+    :            Child, TextObject,
+
+В Zune поддерживаются различные escape-коды (ниже, через \33c производится 
+центрирование текста) и перевод каретки ( \n )::
+
+
+    :            MUIA_Text_Contents, "\33cHello world!\nHow are you?",
+
+Макрос ``End`` должен завершать описание любого макроса вида ``xxxObject`` (в 
+нашем случае, TextObject)::
+
+
+    :            End,
+
+Теперь добавим в нашу группу второй дочерний объект, кнопку! Помимо мыши, она 
+будет откликаться на комбинацию клавиш RAmiga + O (укажем на это символом 
+подчёркивания до буквы "O")::
+
+    :            Child, but = SimpleButton("_Ok"),
+
+Завершаем описание группы::
+
+    :            End,  
+
+Завершаем описание окна::
+
+    :        End,
+
+Завершаем описание программы::
+
+    :        End;
+
+И что, вы всё ещё нуждаете в графических инструментах для создания GUI ? :-)
+
+
+Обработка ошибок 
+----------------
+
+Если окажется невозможным создание любого из объектов в структуре описанной 
+нами выше, Zune уничтожит все объекты (включая те, которые удалось создать) 
+и возвратит код ошибки. В обратном случае, вы получите полностью рабочий 
+Zune интерфейс приложения::
+
+    :    if (app != NULL)
+    :    {
+    :        ...
+
+
+Если работа приложения завершается, вызывается метод ``MUI_DisposeObject()`` 
+с передачей указателя на созданный объект приложения. Это необходимо для 
+уничтожения всех созданных объектов и освобождения всех использованных ресурсов::
+
+
+    :       ...
+    :        MUI_DisposeObject(app);
+    :    }
+
+
+Обработка сообщений 
+-------------------
+
+Обработка сообщений значительно упрощает задание реакции программы на 
+возникающие события (такие как, нажатие кнопки). Принцип: мы получаем сообщение, 
+когда определённый атрибут определённого объекта примет 
+определённое значение::
+
+
+    :        DoMethod(wnd, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
+
+Здесь мы ожидаем, когда атрибут ``MUIA_Window_CloseRequest`` объекта 
+нашего окна (wnd) будет установлен в ``TRUE`` (пользователь нажал кнопку),
+В этом случае объект приложения получит сообщение, предписывающее ему
+вернуть код ``MUIV_Application_ReturnID_Quit`` на следующей же итерации цикла
+обработки событий::
+
+    :                 (IPTR)app, 2,
+    :                 MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+
+Поскольку в этом списке могут быть указаны любые параметры, необходимо указать число 
+дополнительных параметров, передаваемых MUIM_Notify: в этом случае, 2 параметра.
+
+For the button, we listen to its ``MUIA_Pressed`` attribute: it's set to ``FALSE``
+whenever the button is being *released* (reacting when it's pressed is bad
+practice, you may want to release the mouse outside of the button to cancel
+your action - plus we want to see how it looks when it's pressed). The action
+is the same as the previous, send a message to the application::
+
+    :        DoMethod(but, MUIM_Notify, MUIA_Pressed, FALSE,
+    :                 (IPTR)app, 2,
+    :                 MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
+
+
+Открытие окна 
+-------------
+
+Windows aren't open until you ask them to::
+
+    :        set(wnd, MUIA_Window_Open, TRUE);
+
+If all goes well, your window should be displayed at this point. But it can
+fail! So don't forget to check by querying the attribute, which should be TRUE::
+
+    :        if (XGET(wnd, MUIA_Window_Open))
+
+
+Цикл приложения
+---------------
+
+Let me introduce you my lil' friend, the ideal Zune event loop::
+
+    :        ULONG sigs = 0;
+
+Don't forget to initialize the signals to 0 ... The test of the loop
+is the MUIM_Application_NewInput method::
+
+    :        ...
+    :        while((LONG) DoMethod(app, MUIM_Application_NewInput, (IPTR)&sigs)
+    :              != MUIV_Application_ReturnID_Quit)
+
+It takes as input the signals
+of the events it has to process (result from ``Wait()``, or 0),
+will modify this value to place the signals Zune is waiting for (for the
+next ``Wait()``) and will return a value. This return value mechanism
+was historically the only way to react on events, but it was ugly and
+has been deprecated in favor of custom classes and object-oriented design.
+
+The body of the loop is quite empty, we only wait for signals and handle
+Ctrl-C to break out of the loop::
+
+    :        {
+    :            if (sigs)
+    :            {
+    :                sigs = Wait(sigs | SIGBREAKF_CTRL_C);
+    :                if (sigs & SIGBREAKF_CTRL_C)
+    :                    break;
+    :            }
+    :        }
+
+
+Заключение
+----------
+
+This program gets you started with Zune, and allows you to toy with
+GUI design, but not more.
+
+
+------------------
+Реакция на события 
+------------------
+
+As seen in hello.c, you use MUIM_Notify to call a method if a certain condition
+happens.
+If you want your application to react in a specific way to events, you can use
+one of these schemes:
+
++ MUIM_Application_ReturnID: you can ask your application to return an
+  arbitrary ID on the next loop iteration, and check for the value in
+  the loop. This is the dirty old way of doing things.
++ MUIM_CallHook, to call a standard Amiga callback hook: this is an average
+  choice, not object-oriented but not that ugly either.
++ custom method: the method belongs to one of your custom class. It is the
+  best solution as it supports object-oriented design in applications.
+  It needs you to create custom classes so it may not be the easiest for
+  beginners or people in a hurry.
