@@ -7,6 +7,6 @@
 
 #MM- development-SDL_gfx : linklibs-SDL
 
-%fetch_and_build_gnu_development package=SDL_gfx version=2.0.13 patch=no \
+%fetch_and_build_gnu_development package=SDL_gfx version=2.0.13 patch=yes \
     package_repo=http://www.ferzkopp.net/Software/SDL_gfx-2.0/
 
