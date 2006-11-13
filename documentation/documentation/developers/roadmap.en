@@ -2,8 +2,8 @@
 AROS 1.0 roadmap
 ================
 
-:Authors:   Adam Chodorowski
-:Copyright: Copyright © 2003, The AROS Development Team
+:Authors:   Adam Chodorowski, Sergey Mineychev
+:Copyright: Copyright Š 2003, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 
@@ -29,15 +29,20 @@ down.
 Requirements
 ------------
 
+As the current status can`t be objectively estimated in percents, we can try
+to give only the qualitative estimation for these points. Also the further
+recomendations can be highlited.
+
 1.  AmigaOS 3.1 API compatibility, excluding parts which are deemed to be
     non-portable or obsolete and not worth the effort. 
     
     To mark something as obsolete even though it is possible to implement in a
     portable way should require good reasons; for example if it is very rarely
     used by applications and the effort required to implement it is
-    substantial.
-
-    Details to follow...
+    substantial.  
+    
+    Current status: The most of AmigaOS 3.1 API was implemented, and even superceeded
+    in some parts. Although, it needs a good bugfixing work done.
 
 
 2.  Partial AmigaOS 3.5 and 3.9 API compatibility. We choose the parts that 
@@ -49,13 +54,13 @@ Requirements
     course, this will have to be discussed properly before a detailed list is
     agreed upon.
     
-    Details to follow...    
-
+    Current status: <?>
+    
 
 3.  Completed GUI toolkit. This means Zune must have complete MUI API
     compatability and a finished preferences program.
     
-    Details to follow...
+    Current status: <?>
 
 
 4.  Standard applications comparable to those which come with AmigaOS 3.1.
@@ -64,13 +69,14 @@ Requirements
     work exactly the same as in AmigaOS, but the functionality available to the
     user should be roughly equivalent.
 
-    Details to follow...
+    Current status: Most of that basic applications have been developed. 
 
     
 5.  Sound support, meaning API compatibility and basic applications. There 
     should be at least one driver for each mandatory port. 
     
-    Details to follow...
+    Current status: Currently AHI is ported, and there`s some drivers (a few)
+    for i386-port. Applications is in development.
     
     
 6.  Networking support. This includes a TCP/IP-stack and some basic
@@ -81,7 +87,10 @@ Requirements
     possible to at least browse the web in some way (even if it is only in text
     mode).
     
-    Details to follow...
+    Current status: AROSTCP we got now is ancient but working implementation of
+    AmiTCP stack. Some applications was developed (i.e. the FTP and telnet client,
+    IRC-client) but it isn`t a part of the system itself. Other applications
+    including some possible browser implementations is in works.
     
     
 7.  Self-hosted development environment and SDK for developers. Specifically,
@@ -92,7 +101,9 @@ Requirements
     finalized before 1.0. Once 1.0 is released, the ABI should be stable for a
     considerable time.
    
-    Details to follow...
+    Current status: AROS got a full gcc port, allowing to compile applications
+    but some GNU tools are still missing, so the self-compiling isn`t possible
+    at the moment.
     
     
 8.  Comprehensive documentation for developers. This includes complete reference
@@ -100,13 +111,15 @@ Requirements
     guides and tutorials to introduce whole subsystems and give an overview.
     Also, a migration/porting guide should be available.
     
-    Details to follow...
+    Current status: <?>
 
     
 9.  Comprehensive documentation for users. This includes a complete command 
     reference, tutorials and installation-, configuration- and other guides.
     
-    Details to follow...
+    Current status: Documentation exists and extensively translated to
+    different languages. Still needs the tutorials and guides, and the help
+    system to be complete.
 
 
 10. Substantial testing and bug hunting complete. The 1.0 release should be
@@ -120,4 +133,6 @@ Requirements
     player" does not qualify, but "the text editor should have a 'save' menu
     option" does.
 
-    Details to follow...
+    Current status: Currently no freeze can be done as features isn`t complete
+    yet. There`s still lot of unfixed bugs, but increasing number of users give some hope
+    in this. Bug hunting and accounting procedures and services are wanted.

@@ -3,7 +3,7 @@ Frequently Asked Questions
 ==========================
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Sergey Mineychev, AROS-Exec.org
-:Copyright: Copyright Â 1995-2004, The AROS Development Team
+:Copyright: Copyright Ò 1995-2004, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -380,8 +380,8 @@ How can I restore my Prefs to defaults?
 In AROS, open CLI shell, go to Envarc: and delete relevant files for the 
 pref you want to restore.
 
-What is the Graphical mem and other memory in Wanderer?
--------------------------------------------------------
+What is the Graphical and other memory in Wanderer?
+---------------------------------------------------
 
 This memory division is mostly a relic from Amiga past, when graphical memory 
 was application memory before you added some other, called FAST RAM, a memory where 
@@ -429,6 +429,14 @@ What are the command line options for AROS-hosted executable?
 -------------------------------------------------------------
 
 You can get a list of them by rinning ./aros -h command.
+
+How can I make windows refresh from black on AROS-hosted?
+---------------------------------------------------------
+
+You must supply the following string (as is!) to your /etc/X11/xorg.conf
+(or XFree.conf)::
+    
+    Option  "BackingStore"
 
 What are the AROS-native kernel options used in GRUB line?
 ----------------------------------------------------------

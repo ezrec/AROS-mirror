@@ -3,7 +3,7 @@ AROS Documentation Manual
 =========================
 
 :Authors:   Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright Š 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Work in progress.
@@ -29,7 +29,16 @@ follow when writing documentation for AROS.
 Introduction
 ============
 
-FIXME: Write.
+Documentation is vitable for the any project, making it *useful*. Usually, 
+in project with such a limited developers efforts as ours, documentation is
+significantly delayed or just absent. Also, most of programmers isn`t that good 
+in writing documentation, so that what was already written usually isn`t very 
+readable. So it`s needed to combine the developers and users efforts in 
+documentating and reach the goal: "AROS Ultimate Documentary". So if you know the 
+user that can help you, just let him ! =)
+
+
+*FIXME: Write more?*
 
 
 Writing documentation

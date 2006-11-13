@@ -356,6 +356,14 @@ What are the command line options for AROS-hosted executable?
 
 You can get a list of them by rinning ./aros -h command.
 
+How can I make windows refresh from black on AROS-hosted?
+---------------------------------------------------------
+
+You must supply the following string (as is!) to your /etc/X11/xorg.conf
+(or XFree.conf)::
+    
+    Option  "BackingStore"
+
 What are the AROS-native kernel options used in GRUB line?
 ----------------------------------------------------------
 
