@@ -1,12 +1,21 @@
 diff -urN ed-0.2/buf.c ed-0.2-aros/buf.c
 --- ed-0.2/buf.c	1994-11-19 13:37:59.000000000 +0100
 +++ ed-0.2-aros/buf.c	2004-08-26 17:36:22.000000000 +0200
-@@ -25,7 +25,7 @@
+@@ -25,5 +25,5 @@
  
  #include "ed.h"
  
 -#include <sys/file.h>
 +//#include <sys/file.h>
  #include <sys/stat.h>
- 
- 
+--- ed-0.2/ed.h		1994-11-19 13:56:24.000000000 +0100
++++ ed-0.2-aros/ed.h	2006-11-13 20:48:00.000000000 +0100
+@@ -46,8 +46,4 @@
+ #ifdef STDC_HEADERS
+ #include <stdlib.h>
+ #else
+-char *getenv ();
+-char *malloc ();
+-char *realloc ();
+-long strtol ();
+ #endif
