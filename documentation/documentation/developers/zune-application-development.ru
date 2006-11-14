@@ -239,10 +239,10 @@ BOOPSI
 Hello world
 -----------
 
-.. Figure:: http://aros.sourceforge.net/documentation/developers/zune/images/hello.png
+.. Figure:: zune/images/hello.png
 
 
-С начала, так с начала. Эта программа никогда не разочаровывает новичков.
+Сначала, так сначала. Эта программа не разочарует новичка.
   
 
 Исходный код 
