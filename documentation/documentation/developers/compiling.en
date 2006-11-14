@@ -8,7 +8,7 @@ Compiling AROS
             + Lennard voor den Dag
             + Aaron Digulla
             + Adam Chodorowski
-:Copyright: Copyright Š 2001-2003, The AROS Development Team
+:Copyright: Copyright ¦ 2001-2003, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -164,100 +164,6 @@ finished. Additionally, you can create a bootable ISO image by running::
 
 The ISO image can be found at ``bin/pc-i386/gen/rom/boot/aros.iso``.
 
-Compiling guides
-================
-
-This step-by-step guide will describe how to prepare the development environment
-and compile on Ubuntu Linux 6.10 "Edgy Eft". Let`s assume you have a 
-CD image (iso) from ubuntu sites and have installed the system from it. 
-Also you should tune it to make it acessing the Internet. 
-      
-Getting needed packages
------------------------
-
-Because the Live CD misses needed packages we have to get them from internet::
-
-        sudo apt-get install subversion gcc-3.4 gawk bison flex netpbm autoconf automake1.4 libx11-dev
-
-You will need to enter your user password at the prompt.
-
-
-Setting the ISO8859 locale
---------------------------
-
-We will need to set the locale to use AROS sources and compile them
-Just find the en_US iso 8859-1 string in list provided by the
-following applications and choose it)::
-
-     sudo apt-get install localeconf
-     sudo dpkg-reconfigure localeconf
-
-Then we will set the console`s locale::
-
-     sudo locale-gen "en_US"
-     sudo dpkg-reconfigure locales
-     export LANG="en_US.ISO-8859-1"
-
-
-
-Installing make v. 3.80
------------------------
-
-To install version of make we`re need, the additional Ubuntu
-repositories must be added. Launch the console and run::
-
-     sudo nano /etc/apt/sources.list
-
-Add those two lines:
-
-    deb http://us.archive.ubuntu.com/ubuntu breezy main restricted
-    deb http://us.archive.ubuntu.com/ubuntu dapper main restricted
-    (save and exit nano via "ctrl-x")
-
-Now get the list of available programs updated::
-
-     sudo apt-get update
-
-Now we will use the Synaptic package manager. Go launch it in menu::
-
-    system > administration > synaptic package manager
-
-After that search for "make" package, choose "make" in the 
-right window and set version by ''package>force version..'' "3.80 (breezy)".
-
-
-
-Get the sources 
----------------
-
-To find out more instruction on How to use our SVN Repository
-please refer to `Working with Subversion <svn.php>`__
-
-In brief, the commands you must use is like the following::
-
-   svn checkout https://svn.aros.org:8080/svn/aros/trunk/AROS
-   cd AROS
-   svn checkout https://svn.aros.org:8080/svn/aros/trunk/contrib
-
-
-Configure and compile AROS sources
-----------------------------------
-
-First we will set parameters and configure::
-
-      export CC="gcc-3.4"
-      ./configure
-
-You might need to reopen console when ./confugure encounters problems with c
-compiler.
-
-Finally, type::
-
-         make
-
-This shall take a while  :) 
-After that you will get AROS compiled.
-
 Appendix
 ========
 
@@ -280,3 +186,94 @@ CPU. Eg., to build AROS/i386-pc you would run::
 
 If you are building several ports that use the same CPU, you only have to 
 specify ``AROS_TARGET_ARCH`` as the CPU will stay the same. 
+
+Compiling HowTo`s
+-----------------
+
+This step-by-step guide will describe how to prepare the development environment
+and compile AROS on Ubuntu Linux 6.10 "Edgy Eft". Let`s assume you have a 
+CD image (iso) from ubuntu sites and have installed the system from it. 
+Also you should tune it to make it acessing the Internet. 
+      
+Getting the needed packages
+"""""""""""""""""""""""""""
+
+Because the Live CD misses needed packages we have to get them from internet::
+
+    > sudo apt-get install subversion gcc-3.4 gawk bison flex netpbm autoconf automake1.4 libx11-dev
+
+You will need to enter your user password at the prompt.
+
+Setting the locale to ISO8859 
+"""""""""""""""""""""""""""""
+
+We will need to set the locale to use AROS sources and compile them
+Just find the en_US iso 8859-1 string in list provided by the
+following applications and choose it)::
+
+     > sudo apt-get install localeconf
+     > sudo dpkg-reconfigure localeconf
+
+Then we will set the console`s locale::
+
+     > sudo locale-gen "en_US"
+     > sudo dpkg-reconfigure locales
+     > export LANG="en_US.ISO-8859-1"
+
+Installing make v. 3.80
+"""""""""""""""""""""""
+
+To install version of make we`re need, the additional Ubuntu
+repositories must be added. Launch the console and run::
+
+     > sudo nano /etc/apt/sources.list
+
+Add those two lines there::
+
+    deb http://us.archive.ubuntu.com/ubuntu breezy main restricted
+    deb http://us.archive.ubuntu.com/ubuntu dapper main restricted
+    (save and exit nano via "ctrl-x")
+
+Now get the list of available programs updated::
+
+     > sudo apt-get update
+
+Now we will use the Synaptic package manager. Go launch it in menu::
+
+    System > Administration > Synaptic package manager
+
+After that search for "make" package, choose "make" in the 
+right window and set version by ''package>force version..'' "3.80 (breezy)".
+
+
+
+Get the sources 
+"""""""""""""""
+
+To find out more instruction on How to use our SVN Repository
+please refer to `Working with Subversion <svn.php>`__
+
+In brief, the commands you must use is like the following::
+
+   > svn checkout https://svn.aros.org:8080/svn/aros/trunk/AROS
+   > cd AROS
+   > svn checkout https://svn.aros.org:8080/svn/aros/trunk/contrib
+
+
+Configure and compile AROS sources
+""""""""""""""""""""""""""""""""""
+
+First we will set parameters and configure::
+
+      > export CC="gcc-3.4"
+      > ./configure
+
+You might need to reopen console when ./confugure encounters problems with c
+compiler.
+
+Finally, type::
+
+      > make
+
+This shall take a while (some hours) :) 
+After that you will get AROS-hosted compiled.

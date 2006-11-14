@@ -239,7 +239,8 @@ BOOPSI
 Hello world
 -----------
 
-.. Figure:: zune/images/hello.png
+.. Figure:: http://aros.sourceforge.net/documentation/developers/zune/images/hello.png
+
 
 С начала, так с начала. Эта программа никогда не разочаровывает новичков.
   
@@ -433,11 +434,11 @@ Zune интерфейс приложения::
 Поскольку в этом списке могут быть указаны любые параметры, необходимо указать число 
 дополнительных параметров, передаваемых MUIM_Notify: в этом случае, 2 параметра.
 
-В случае кнопки "Ok", мы ожидаем, когда атрибут `MUIA_Pressed`` окажется установленным 
+В случае c кнопкой "Ok" мы ожидаем, когда атрибут `MUIA_Pressed`` окажется установленным 
 в ``FALSE``, что будет означать нажатую и *отпущенную* пользователем кнопку "Ok" 
 (реакция на простое нажатие кнопки является плохой практикой, т.к. вы можете 
 захотеть отпустить кнопку мыши вне кнопки, и таким образом отказаться 
-от действия. К тому же, мы можем просто захотеть увидеть, как она выглядит 
+от действия. К тому же, мы можем и просто захотеть увидеть, как она выглядит 
 в нажатом состоянии). В остальном, всё аналогично предыдущему примеру
 (посылается сообщение)::
 
@@ -450,18 +451,14 @@ Zune интерфейс приложения::
 Открытие окна 
 -------------
 
-Окно не будет открыто, пока вы не "попросите" Zune об этом:
-Windows aren't open until you ask them to::
+Окно не будет открыто, пока вы не "попросите" Zune об этом::
 
     :        set(wnd, MUIA_Window_Open, TRUE);
 
 Если объекты описанной нами выше структуры были созданы удачно, вы уже должны
 увидеть окно. Но и эта операция может завершиться с ошибкой! Таким образом, 
 мы не должны забывать о проверке атрибута объекта окна, который должен быть 
-установлен в TRUE:
-
-If all goes well, your window should be displayed at this point. But it can
-fail! So don't forget to check by querying the attribute, which should be TRUE::
+установлен в TRUE::
 
     :        if (XGET(wnd, MUIA_Window_Open))
 
@@ -469,26 +466,31 @@ fail! So don't forget to check by querying the attribute, which should be TRUE::
 Цикл приложения
 ---------------
 
-Let me introduce you my lil' friend, the ideal Zune event loop::
+Дорогие друзья, позвольте представить вам идеальный цикл интерфейса Zune::
 
     :        ULONG sigs = 0;
 
-Don't forget to initialize the signals to 0 ... The test of the loop
-is the MUIM_Application_NewInput method::
+Не забывайте обнулять сигналы (sigs) ...  далее показан тестовый цикл приложения с 
+использованием метода MUIM_Application_NewInput::
 
     :        ...
     :        while((LONG) DoMethod(app, MUIM_Application_NewInput, (IPTR)&sigs)
     :              != MUIV_Application_ReturnID_Quit)
 
-It takes as input the signals
-of the events it has to process (result from ``Wait()``, or 0),
-will modify this value to place the signals Zune is waiting for (for the
-next ``Wait()``) and will return a value. This return value mechanism
-was historically the only way to react on events, but it was ugly and
-has been deprecated in favor of custom classes and object-oriented design.
 
-The body of the loop is quite empty, we only wait for signals and handle
-Ctrl-C to break out of the loop::
+Этому методу передаются сигналы событий, которые он должен обработать (сообщения
+от ``Wait()``, или 0), значение указателя sigs будет изменяться, принимая 
+значения ожидаемых Zune сигналов (очередных сообщений от ``Wait()`) и в результате
+это значение будет возвращено. Поэтому обнуление sigs в цикле необходимо. Этот 
+механизм возврата значений исторически 
+был единственным способом реакции на события. Однако, поскольку он был слишком 
+"неудобоварим", впоследствии от него стали отказываться в 
+пользу создания отдельных классов и объектно-ориентированной структуры 
+приложения.
+
+Тело самого цикла приложения весьма простое. Здесь мы видим лишь ожидание сигналов и 
+обработку нажатия Ctrl + С для обеспечения принудительного выхода из цикла::
+
 
     :        {
     :            if (sigs)
@@ -503,25 +505,27 @@ Ctrl-C to break out of the loop::
 Заключение
 ----------
 
-This program gets you started with Zune, and allows you to toy with
-GUI design, but not more.
+Эта программа позволила вам начать изучение Zune и немного поработать
+на дизайном GUI приложения, но не более того.
 
 
 ------------------
 Реакция на события 
 ------------------
 
-As seen in hello.c, you use MUIM_Notify to call a method if a certain condition
-happens.
-If you want your application to react in a specific way to events, you can use
-one of these schemes:
+Согласно комментариям к hello.c, приведенным выше, вы должны использовать 
+MUIM_Notify для вызова метода при возникновении ожидаемого вами события. 
+Если же требуется описать более специфичную реакцию программы на события, 
+необходимо воспользоваться одним из следующих алгоритмов: 
 
-+ MUIM_Application_ReturnID: you can ask your application to return an
-  arbitrary ID on the next loop iteration, and check for the value in
-  the loop. This is the dirty old way of doing things.
-+ MUIM_CallHook, to call a standard Amiga callback hook: this is an average
-  choice, not object-oriented but not that ugly either.
-+ custom method: the method belongs to one of your custom class. It is the
-  best solution as it supports object-oriented design in applications.
-  It needs you to create custom classes so it may not be the easiest for
-  beginners or people in a hurry.
++ MUIM_Application_ReturnID: можно возвращать некий идентификатор ID на последующих
+  шагах цикла, и проверять это значение в цикле. Можно задать несколько таких 
+  идентификаторов и в зависимости от возвращаемого значения вызывать разные 
+  методы. Старый и дурацкий способ обхода цикла. 
++ MUIM_CallHook: использование стандартного для Amiga механизма вызова (callback) 
+  пользовательских функий при возникновении событий, управляемого структурой Hook. 
+  Способ, не имеющий ничего общего с ООП, но вполне допустимый. 
++ Использование ООП: вызов из тела цикла метода, принадлежащего одному из созданных 
+  вами ранее классов. Это лучшее решение с точки зрения объектно-ориентированной 
+  структуры программы, однако, оно мало подходит для новичков в ООП и 
+  программистов, не привыкших тратить много времени на "изящества".
