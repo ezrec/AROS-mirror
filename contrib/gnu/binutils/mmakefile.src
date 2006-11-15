@@ -6,4 +6,4 @@
 ##MM- contrib-gnu : contrib-gnu-binutils
 ##MM- contrib-gnu-binutils : development-binutils
 
-%fetch_and_build_gnu_development package=binutils version=2.15
+%fetch_and_build_gnu_development package=binutils version=2.16.1
