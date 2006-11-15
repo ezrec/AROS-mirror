@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright Ú 1995-2006, The AROS Development Team
+:Copyright: Copyright ê 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. Can be translated.
@@ -462,6 +462,20 @@ Troubleshooting
 Installation process is the one of most frequently ones asked about on forums,
 mostly by newbees. You can check the FAQ if there an answer to your questions.
 Any additions ? ...
+
+Installing AROS along with the other systems
+""""""""""""""""""""""""""""""""""""""""""""
+
+In the steps described before we had installed AROS as the *only* system on HD.
+But can it be installed to multiboot with other systems on HDD? Yes. But 
+again this task will be difficult. 
+
+Lets consider the situation when you want to have 3 systems on your HDD -
+Windows, Linux and AROS.  
+
+Preparing the HDD
+^^^^^^^^^^^^^^^^^
+To be continued ...
 
 AROS/i386-PPC-hosted
 --------------------
