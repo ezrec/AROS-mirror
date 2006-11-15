@@ -1,0 +1,63 @@
+[meta]
+
+charset:          iso-8859-15
+
+[titles]
+
+mirrors:          Mirrors
+contents:         Contents
+search:           Zoeken
+visitors:         Bezoekers
+sponsors:         Sponsors
+
+[navigation]
+
+home:             Home
+news:             Nieuws
+archive:          Archief
+introduction:     Introductie
+status:           Status
+screenshots:      Screenshots
+ports:            Ports
+license:          Licentie
+download:         Downloads
+documentation:    Documentation
+users:            Users
+installation:     Installation
+using:            Using
+shell:            Shell commands
+faq:              FAQ
+developers:       Developers
+contribute:       Contribute
+bug-tracker:      Bug Tracker
+working-with-subversion: Working with Subversion
+compiling:        Compiling
+application-development-manual: Application Development Manual
+zune-application-development-manual: Zune Application Development Manual
+system-development-manual:      System Development Manual
+debugging-manual: Debugging Manual
+reference:        Reference
+specifications:   Specifications
+ui-style-guide:   UI Style Guide
+documenting:      Documenting
+translating:      Translating
+summaries:        Summaries
+links:            Links
+contact:          Contact
+mailing-lists:    Mailing lijsten
+forums:           Forums
+irc-channels:     IRC kanalen
+credits:          Colofon
+pictures:         Pictures
+developers-together: Developers en Masse
+sponsors:         Sponsors
+linking:          Linken
+
+[misc]
+
+go:               Ga
+search:           Zoek
+copyright:        Copyright © 1995-2006, Het AROS Development Team. Alle rechten voorbehouden.
+trademarks:       Amiga®, AmigaOS®, Workbench en Intuition zijn eigendommen van Amiga Inc. Alle andere merknamen behoren tot hun respectievelijke eigenaren.
+read-more:        Lees meer...
+large-image:      Grote afbeelding...
