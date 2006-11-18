@@ -2,7 +2,11 @@
 Nieuws archief
 ==============
 
-Hier kunt u de oude nieuws berichten vinden die op deze website gepubliceert zijn.  Nieuwsberichten van dit jaar en de volgende jaren zijn beschikbaar. (noot: deze berichten zijn alle Engelstalig. Nederlandse nieuwsberichtgeving is pas in 2007 begonnen.)
+Hier kunt u oude nieuws berichten vinden die op deze website gepubliceerd zijn, zowel van dit jaar als de vorige jaren. 
+
+.. Note::
+
+Alleen berichten van 2006 en later zijn in het Nederlands vertaald, alle oudere berichtgeving is Engelstalig.
 
 + `2006 <2006>`__
 + `2005 <2005>`__

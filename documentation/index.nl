@@ -7,4 +7,4 @@
 
 `Read more... <documentation/developers/contribute>`__
 
-.. Include:: news/index.en
+.. Include:: news/index.nl
