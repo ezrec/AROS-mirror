@@ -11,9 +11,15 @@ Downloads
 Snapshots
 =========
 
-Snapshots worden vaker vrijgegeven dan volledige releases, maar minder vaak dan nightly builds. Ze zijn, in tegenstelling tot de nightly builds, kort getest op een aantal verschillende machines wat ze in de regel wat stabieler maakt. Aan de andere kant bevatten snapshots weer niet de nieuwste code. 
+Snapshots worden vaker vrijgegeven dan volledige releases, maar minder
+vaak dan nightly builds. Ze zijn, in tegenstelling tot de nightly
+builds, kort getest op een aantal verschillende machines wat ze in de
+regel wat stabieler maakt. Aan de andere kant bevatten snapshots weer
+niet de nieuwste code. 
 
-We horen graag over bugs/fouten die u ontdekt terwijl u deze snapshots gebruikt. Dit kunt u doen via de 'bug tracker'__. Voor andere vragen/opmerkingen kunt u contact opnemen via het 'AROS-Exec'__ forum.
+We horen graag over bugs/fouten die u ontdekt terwijl u deze snapshots
+gebruikt. Dit kunt u doen via de 'bug tracker'__. Voor andere
+vragen/opmerkingen kunt u contact opnemen via het 'AROS-Exec'__ forum.
 
 .. raw:: html
 
