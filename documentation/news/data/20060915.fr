@@ -30,7 +30,7 @@ __ http://osnews.com
 Logiciel
 --------
 
-LA nouvelle version 1.20 du célèbre émulateur Commodore 8-bit *VICE*
+La nouvelle version 1.20 du célèbre émulateur Commodore 8-bit *VICE*
 est disponible pour toutes les plateformes Amiga, AROS inclus. Vous
 pouvez le trouver `ici`__.
 

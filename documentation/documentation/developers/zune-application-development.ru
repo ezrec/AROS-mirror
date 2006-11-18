@@ -4,8 +4,8 @@
 
 :Authors:   David Le Corfec
 :Copyright: Copyright ä 2004, The AROS Development Team
-:Version:   $Revision: 24429 $
-:Date:      $Date: 2006-05-07 22:24:40 +0500 (‡Æ·Ö, 07 ‡Ã‡¿‡… 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Unfinished;
 :ToDo:      All
 
