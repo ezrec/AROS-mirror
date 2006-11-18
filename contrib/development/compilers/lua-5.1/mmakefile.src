@@ -10,7 +10,8 @@ EXEDIR := $(CONTRIBDIR)/Development/Lua
 #MM contrib-development-lua-doc \
 #MM contrib-development-lua-test \
 #MM contrib-development-lua-test-amilua \
-#MM contrib-development-lua-test-mui
+#MM contrib-development-lua-test-mui \
+#MM contrib-development-lua-packages
 
 %copy_dir_recursive mmake=contrib-development-lua-lualibs \
     src=lualibs dst=$(EXEDIR)/lualibs
@@ -26,6 +27,9 @@ EXEDIR := $(CONTRIBDIR)/Development/Lua
 
 %copy_dir_recursive mmake=contrib-development-lua-test-mui \
     src=test-mui dst=$(EXEDIR)/test-mui
+
+%copy_dir_recursive mmake=contrib-development-lua-packages \
+    src=S dst=$(EXEDIR)/S
 
 %common
 
