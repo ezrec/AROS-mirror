@@ -44,7 +44,7 @@ The "Hello, World!" program
 ----------------------------
 
 Below is a program that shows a "Hello, World!" message - a programmer's
-tradition since ages::
+tradition since ages. The file `helloworld.c` has the following contents::
 
   #include <stdio.h>
 
@@ -53,6 +53,38 @@ tradition since ages::
     puts("Hello World");      
     return 0;
   }
+
+
+Compiling in the AROS source tree with the build system
+-------------------------------------------------------
+
+If you have your own source tree of AROS and compiled AROS there, you can use the
+AROS build system to compile programs for AROS. You do this by putting your
+program source code somewhere in the AROS tree. The 'local' directory in main AROS
+source directory can be used to put the code in. Let's first make a directory
+there, assuming you are in the top AROS source directory::
+
+  % mkdir local/helloworld
+
+Put the helloworld.c file there and an additional file for the build
+instructions named `mmakefile.src` with the following contents::
+
+  include $(TOP)/config/make.cfg
+  
+  %build_prog mmake=local-helloworld files=helloworld progname=HelloWorld
+
+In the top AROS source directory you can now build the helloworld program
+with the following command::
+
+  % make local-helloworld
+
+You will find now in the binary tree of AROS the compiled program as
+`local/helloworld/HelloWorld`.
+
+The AROS build system is meant to ease your live when building binaries with
+not-trivial dependencies. It is explained in a `separate chapter`__
+
+__ buildsystem
 
 
 Compiling on Linux with GCC
@@ -73,7 +105,10 @@ of AROS (i386-linux-system) or you compile the source yourself:
   Linux paths.
   
 In both cases the name of the C compiler is i386-linux-aros-gcc. You have to
-start it from the Linux side.
+start it from the Linux side. You can compile the program with the following
+command::
+
+  % i386-linux-aros-gcc -o helloworld helloworld.c
 
 You will find additional tools in the path of the AROS C compiler:
 AROS versions of ld, ranlib, the catalog compiler Flexcat, etc.
@@ -81,7 +116,7 @@ AROS versions of ld, ranlib, the catalog compiler Flexcat, etc.
 .. Note:: If you are using i386-linux-aros-strip you have to add the parameters
    `--strip-unneeded --remove-section .comment`. Otherwise strip will create 
    corrupt binaries.
- 
+
 
 Compiling for native-i386
 -------------------------
@@ -97,77 +132,15 @@ Include files
 
 AROS comes with a variety of include files. They are placed in `sys:Development/include`.
 The subdirectory `proto` contains include files with function prototypes for the
-system libraries. In `libraries` are headers with structures and defines.
+shared libraries. In `libraries` are headers with structures and defines.
 Some of the bigger libraries like `Intuition` have their own directory
 with headers.
 
-
-How AROS libraries work
------------------------
-
-The term `library` usually refers to an object whose purpose is to collect in a
-single place functions that programs may want to use more often than others,
-and usually such functions all serve one common purpose, so that there can be
-libraries to parse configuration files, to handle localization, and other kind
-of tasks which a program might want to perform.
-
-There are generally are 2 kinds of libraries: link-time libraries, and run-time
-libraries. The link time libraries, as the name suggests, are used only at
-program linking stage: the linker simply takes note of which functions the main
-program references and tries to take them from the provided libraries. The
-run-time ones, instead, are only used when the program is run, that is the
-operating system, the program itself or even a link-time library.
-Whilst link-time libraries are handled more or less the same way across all
-operating systems, since they're independent from the OS itself, run-time
-libraries may be handled differently by different OSs.
-
-AROS `shared` libraries are collections of functions indexed in the library by
-a `function vectors table`. This table is simply an array of pointers [#]_ to
-the library's functions, and user programs access these functions by knowing
-their address' index in the table. Every function in the library gets passed a
-parameter [#]_ which points to a zone of memory that both holds the function
-vectors and the library's own data [#]_. Such memory area is named `library
-base`, and libraries are free to choose, trough a particular implementation of
-some of their mandatory functions, whether the library base is to be shared
-among various instances of the library or if it's to be used by all of its
-instances. User programs are generally not invited to access this area
-directly, but rather trough the use of accessor functions, but again this is
-not a mandatory policy, rather it's up to the library to decide how to do
-certain things.
-
-Libraries can of course `open` other libraries and use their functions and data
-the way described above, but since the main program is not a library, libraries
-have no means to access the program's data and functions other than the program
-itself telling the interested library how to do so, in a way that is
-library-dependent. 
-
-Currently, in AROS, when a shared
-object would be needed, a special wrapper around a shared library is built -
-and certain tools used by the AROS build system can do this automatically - so
-that programs can transparently use the shared version of what they think are
-link-time, or `static` libraries. This approach only works in part, since it
-doesn't replicate all functionalities of the shared objects, but it's
-sufficient in many cases.
-
-.. [#] In reality, on certain flavours, this table may hold more than just
-       function pointers. On AROS for 68k, in fact, where binary compatibility
-       with AmigaOS (TM) is an issue, every entry in the table contains a JMP
-       instruction followed by the function address (which is thus part of the
-       JMP opcode), and the user programs don't jump to the address in the
-       vector, they jump to the vector itself, and then the JMP instruction
-       redirects the program's flow to the right function.
-
-.. [#] Such a parameter may be explicit or implicit, depending on the ABI
-       chosen for a particular AROS flavour.
-
-.. [#] If you know C++, you might think of the vectors table as the `VTable`
-       used for virtual methods, and the library base pointer as the `this`
-       pointer.
-
-
+AROS shared libraries
+---------------------
 
 Shared libraries are the magic that make AROS work. Every library is
-a collection of functions that fulfill a certain purpose. Normally functions
+a collection of functions that fulfil a certain purpose. Normally functions
 with a similar purpose are contained in one library. For example all the basic
 memory handling functions are contained in `exec.library`.
 
@@ -176,6 +149,9 @@ other places. Some important libraries are not stored as a separate file, but
 are contained in the kernel. Note that this the kernel libraries are different
 from installation to installation, so don't depend on a specific library being
 part of the kernel.
+
+AROS core libraries overview
+............................
 
 Here is a list of some important libraries and their function.
 You don't have to remember all of these, as they will be discussed
@@ -195,20 +171,134 @@ later in detail.
 + `intuition.library` handles `graphical user interfaces (GUIs)`. With Intuition
   you can create `windows` and `gadgets` and handle them accordingly. There are
   other libraries, which work on top of intuition and provide more sophisticated
-  and more specialized GUI functions. Examples are `gadtools.library`, which
+  and more specialised GUI functions. Examples are `gadtools.library`, which
   implements some more complicated gadgets and `asl.library`, which provides
   file- and other `requesters`.
 
+FIXME: add zune, graphics, ...
 
-Usage of libraries
-------------------
+How AROS libraries work
+.......................
 
-To use the functions of a library, you have to open the library
-first. The only library that doesn't have to be opened first is
-`exec.library`. Exec is always open and your compiler
-knows how to access it. Your compiler may additionally open some
-libraries for you, so you don't have to open them manually. Read your
-compiler's manual to learn about such features.
+The term `library` usually refers to an object whose purpose is to collect in a
+single place functions that programs may want to use more often than others,
+and usually such functions all serve one common purpose, so that there can be
+libraries to parse configuration files, to handle localization, and other kind
+of tasks which a program might want to perform.
+
+There are generally are 2 kinds of libraries: link-time libraries, and run-time
+libraries. The link-time libraries, as the name suggests, are used only at
+program linking stage: the linker collects all functions from the provided
+libraries that are needed by the program and links them into one executable.
+Run-time ones, instead, are made available to programs when they are run or
+during their execution by special request of the program. In most systems the
+run-time libraries are shared between running programs so they only take up
+memory for one instance of the library. In such cases the object of 
+often called a `shared library`.
+Whilst link-time libraries are handled more or less the same way across all
+operating systems, since they're independent from the OS itself, run-time
+libraries may be handled differently by different OSs.
+
+Before a library can be used in a program it has to be `opened`. This is
+done by the exec function called ``OpenLibrary``. When a library is
+successfully opened a pointer to the so called `library base` is return. The
+library base is a zone of memory that both holds the function vectors and
+the library's own data [#]_. When libraries are opened they are free to choose
+whether it's base will be the same for all instances or that a new one will be
+allocated each time. When a function of the library is called most of the
+time the library base is passed to the function so the data in-there can be
+used inside the library [#]_. A library can make part or whole of the data
+in the library base public by defining a type for the base. If this is the
+case you find the type in the include file `proto/libname.h`. Some older
+libraries used this mechanism but more recent libraries don't make anything
+public and the only way to change the internal state of the library is to
+use the available functions.
+
+.. [#] If you know C++, you might think of the vectors table as the `VTable`
+       used for virtual methods, and the library base pointer as the `this`
+       pointer.
+
+.. [#] The passing of the library base may be explicit or implicit, depending
+       on the convention used by the library. Also several mechanism may be
+       used for the implicit passing of the base: C preprocessor macros,
+       inline functions, global variables, ...
+
+How to use AROS shared libraries
+................................
+
+As already explained in previous section libraries have to be opened before
+it's functions may be used. The only library that doesn't have to be opened
+first is `exec.library`. Exec is always open and your compiler
+knows how to access it. Additionally you have to include a header to make the
+prototype of the functions known to the code. This include file is in the
+proto directory so if you want to use functions of `dos.library` you have to
+use the following line::
+
+  #include <proto/dos.h>
+
+Your compiler or build environment may additionally open some libraries
+for you, so you don't have to open them manually. Read
+your compiler's manual to learn about such feature. In the coming paragraphs
+the way it is done by the AROS tools and how to open libraries manually will
+be explained.
+
+Auto-opening by gcc from the AROS SDK
+'''''''''''''''''''''''''''''''''''''
+
+The gcc compiler from the AROS SDK auto-opens the following core libraries:
+
+- aros.library
+- asl.library
+- commodities.library
+- cybergraphics.library
+- datatypes.library
+- diskfont.library
+- dos.library
+- expansion.library
+- gadtools.library
+- graphics.library
+- icon.library
+- iffparse.library
+- intuition.library
+- keymap.library
+- layers.library
+- locale.library
+- muimaster.library (which is provided by Zune on AROS)
+- partition.library
+- realtime.library
+- utility.library
+- workbench.library
+
+You can disable the auto-opening of these library by providing the
+``-nostdlibs`` flag to the gcc compiler. For the other libraries provided by
+AROS you can use the corresponding link-time library that will take care of
+opening the library. So if your programs uses reqtools.library you add
+``-lreqtools`` to the gcc command.
+
+.. Note:: To summarise: when using the AROS gcc compiler the usage of shared
+   libraries becomes very easy and can be done in two steps:
+   
+   + Use an include statement to declare the functions of the library::
+     
+       #include <proto/reqtools.h>
+       
+   + Add an extra link library if the library is not auto-opened by gcc::
+   
+       % i386-linux-aros-gcc ... -lreqtools
+       
+Auto-opening by the AROS' build system
+''''''''''''''''''''''''''''''''''''''
+
+Auto-opening libraries by the build system is very similar to using the AROS
+gcc compiler. Analog to specifying a ``-l`` option you specify the libs you
+use in the ``uselibs`` parameter to the ``%build_prog`` and the
+``%build_module`` macro. More information can be found in `build system
+tutorial`__.
+
+__ buildsystem#build-system-tutorial
+
+Manually open libraries
+'''''''''''''''''''''''
 
 To open a library you have to use a function of `exec.library`::
 
@@ -334,6 +424,212 @@ Example usage of libraries::
 Try to compile and run this program. It should present you a
 handsome hello-world requester.
 
+Versioning of libraries
+.......................
+
+Shared libraries may evolve over time and new features may be introduced.
+When now a program uses a feature of a more recent and it is run on a machine
+that has an older version of the library this will most likely lead to a
+crash. Therefor versioning of libraries is introduced so programs can check if
+the version of a library and quit gracefully or reduce the functionality
+accordingly. On AROS and amiga-like systems the version is determined by a
+major number an a minor number (also resp. called version and revision).
+A new major number indicates the introduction of new features and an
+increase of the minor number just indicates some optimizations and/or
+bug fixes but with compatibility. A version of a library is often presented
+as major.minor [#]_ and can be retrieved with the version dos command::
+
+  5.System:> version dos.library
+  dos.library 41.7
+  
+When opening a library you can provide a version number and the opening will
+fail if the version of the library is lower then this value::
+
+  mylibbase = OpenLibrary("my.library", 2);
+  
+This will return NULL is only version 1 of my.library is installed. If you
+use auto-opening of libraries the library will be opened with the version of
+the library used during link time. This version can be overloaded with a
+variable named libbasename_version. At the moment the version of dos.library
+is 41 and this means that programs compiled will only run on other systems
+that have version 41 of dos.library. If you are sure to only use feature up
+to version 36 you can let your program on these systems with the following
+statement somewhere in your code::
+
+  const LONG DOSBase_version = 36;
+  
+The consequence for libraries is that they always have to be backwards
+compatible: if the version of your library is 41 but the program was
+compiled for version 36 it still need to run without problem. Therefor a
+function at a certain place in the lookup table always has to perform the
+exact same function even for newer version of the library.
+
+If you really want to change the behaviour of the function with a certain
+name you could do that by putting it at another place in the lookup table.
+At the old location you put then a compatibility function that is still
+compatible with the behaviour in older library versions. This was for
+example done for the exec function `OpenLibrary`, in the first version of
+AmigaOS it did not have a version parameter and was put at location 68. In
+a later version an `OpenLibrary` function was introduced that included a
+version parameter and put at location 92. The function at position 68 was
+renamed to `OldOpenLibrary`.
+
+.. [#] Contrary to what some people think the major.minor version is not a
+       numeric value: the revision coming after 1.9 is 1.10 and 1.09 is not
+       a valid version number on AmigaOS.
+
+Difference with other run-time library systems
+..............................................
+
+The AROS shared libraries have an unique architecture with it's advantanges
+and disadvantages. Some aspects will be further discussed in this chapter.
+As reference most of the time Windows and UNIX(-like) systems will be taken.
+
+Loading of the shared libraries
+'''''''''''''''''''''''''''''''
+
+On AROS the dynamic link libraries are relocatable ELF objects. The first
+time a library is opened it is loaded from disk and relocated with the start
+address it was loaded to. AROS and amiga like systems share one big memory
+region between all code running on the system. This means all programs can
+use the library loaded at the memory it wad loaded to.
+
+Other systems, including Windows and UNIX, have a different virtual address
+space for each process. Here also the OS tries to load the shared library
+only once and then try to map the same library in the address space of each
+of the processes using the library. The library may thus be located at
+different addresses in the different spaces and the OS has to handle this
+situation.
+
+On Windows one tries to locate the shared library at a certain
+location in memory and tries to map it to the same memory in each process
+that uses the library. If this is not possible the library will be duplicated
+in memory. On most UNIX systems this problem is avoided by letting the compiler
+generate position independent code, e.g. code that works at any position in
+memory without having to relocate the code. Depending on the architecture this
+type of code may have less or more impact on the speed of the generated code.
+
+Dynamic linking of functions
+''''''''''''''''''''''''''''
+
+Programmers that use a higher level languages for accessing the functions in
+a shared library will use the name of the function it wants to use. When a
+microprocessor executes a program it uses memory addresses to jump to a
+certain function. At one point the name used by the programmer has to be
+translated into a memory address.
+
+On amiga the translation happens when the code is compiled or when a program
+or module is linked. Every libbase of an AROS library contains a lookup
+table for the functions of the library. During compilation (or linking) the
+name of a function is translated into a position in this table where the
+address of the function can be found [#]_. Functions in an AROS shared
+library are thus accessed with one level of indirection. Depending on the
+CPU architecture this level of indirection may have more or less influence
+on the speed of the code. Luckily similar type of indirection is used for
+calling virtual functions of C++ classes and this most modern CPUs are
+optimized to handle the indirection without (big) impact on the speed.
+As the lookup table is attached to the libbase it needs to be duplicated for
+libraries that use a per-opener base.
+
+On Windows and UNIX-like systems the translation of the name of a function
+to an address is done when the program is loaded and linked at run-time with
+shared library [#]_. When the program is linked at compile time a list of 
+libraries is put in the executable together with a list of the functions to
+be used. These lists are ASCII strings. When the program is then loaded it
+will convert the functions names to it's addresses (or to a pointer in a
+lookup table). First are the libraries in the library list opened,
+afterwards each of the functions is looked up in the libraries. Different
+mechanism are used for the lookup of the function names. For example on
+Windows the functions available ar put in a sorted array so a binary search
+can be performed and on Linux hashes are used to speed up the lookup.
+
+Global and static variables in libraries
+''''''''''''''''''''''''''''''''''''''''
+
+As said in a previous paragraph AROS shared libraries are only loaded into
+memory and initialised once. This has also impact on the way global and
+static variables are handled. You can declare a global variable in the source
+code of your library in the following way::
+
+  int globvar;
+  
+This will create a global variable that is accessible in all parts of the
+library. Once the shared library is loaded into memory your variable
+will also be located in the memory taken by the library and will always stay
+at the same location until the library is unloaded from memory. Static
+variables defined in a function are handled in an analog way. This also
+means that the code in the library accessing a global variable will always go
+to the same location no matter how many times the library is opened or which
+program called the library code. Currently the only way to have a variable
+that has a different value per opener of the library is to have a library
+with a per-opener base and store the library in this base. At the moment also
+global variables are not exported from AROS shared libraries. They can only be
+accessed inside the library itself, program using a library can not access the
+library's global variables directly. In this respect variables in AROS shared
+libraries are handled differently then variables in link-time libraries. A global
+variable defined in a link-time library is also accessible by the program to which
+the library is linked and every program linked with the same link-time
+library will have it's own version of the global variable.
+
+On UNIX, shared libraries were introduced after the link-time libraries were
+already used heavily. One of the design goals was then to make the
+behaviour of the shared libraries the same as link-time libraries.
+Therefor a copy is made of the variables every time a program opens a shared
+library. In this way every program that has opened a shared library will
+have it's own set of the global variables. Also the global variables of a
+shared library are automatically exported from that library so they can also
+be accessed direclty in the program using that library.
+
+On Windows one can choose the behaviour of global variables to be like the AROS
+way or the UNIX way but by default it is handled as is done on UNIX.
+
+For porting shared libraries to AROS or amiga this different handling of
+variables has to be taken into account. Some libraries depend on how
+variables are handled in UNIX and Windows shared libraries and may be
+difficult to port to AROS.
+
+.. Note::
+   The explanation in this paragraph describes how the
+   handling of data in shared libraries worked when the text was written.
+   At that time there was also discussion of how to extend this to also
+   allow handling similar to the handling done by other library types.
+
+Libraries using other libraries
+'''''''''''''''''''''''''''''''
+
+A library can open another library. When a library opens another library it
+will get a libbase for that library. This means that a library that has
+a per-opener base will return a unique libbase to another library.
+When a program opens a library with a per-opener base it will get a libbase
+back. When now the program opens a second library that again also opens the
+first library then a different libbase will be used in the second library
+then in the program. Programmers of libraries with a per-opener libbase have
+to take this into account.
+
+As was already discussed before on UNIX and Windows everything is based on
+processes. When a program is loaded a new process is created, every shared
+library used in that process will only be dynamically linked once into the
+process. This means that a program and shared library that both access a
+second shared library will use the same instance of that shared library.
+Again this different behavior may make porting shared libraries from
+UNIX/Windows difficult.
+
+.. Note::
+   Again, the explanation in this paragraph describes how the
+   handling of opening shared libraries from a library worked when the text
+   was written.
+   At that time there was also discussion of how to extend this to also
+   allow handling similar to the handling done by other library types.
+
+.. [#] In reality, on certain flavours, this table may hold more than just
+       function pointers. On AROS for 68k, in fact, where binary compatibility
+       with AmigaOS (TM) is an issue, every entry in the table contains a JMP
+       instruction followed by the function address (which is thus part of the
+       JMP opcode), and the user programs don't jump to the address in the
+       vector, they jump to the vector itself, and then the JMP instruction
+       redirects the program's flow to the right function.
+
+.. [#] FIXME: a.out shared libraries, cardinal on Windows, ...
 
 Giving additional arguments with taglists
 -----------------------------------------

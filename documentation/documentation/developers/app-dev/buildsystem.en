@@ -12,37 +12,675 @@ AROS Application Development Manual
 
 `Index <index>`__
 
+.. Contents::
+
 .. Warning::
 
-   This document is not finished! It is highly likely that many parts are
-   out-of-date, contain incorrect information or are simply missing
-   altogether. If you want to help rectify this, please contact us.
-
-.. Contents::
+   This guide has it's last major revision begin November 2006. Changes
+   to the build system after this date will not be reflected in this guide.
 
 ---------------------
 The AROS build system
 ---------------------
 
-Development tools used by AROS
-==============================
+Introduction
+============
 
-AROS uses several development tools in its building system. A short list of
-the most important ones is:
+Purpose of the AROS build system
+--------------------------------
 
-+ *GNU make*: the GNU version of the make program. It is assumed that the AROS
-  programmers are familiar with this program. Also the GNU specific extensions
-  are used heavily. The GNU info pages about the `make` program are a good
-  documentation.
-+ *MetaMake*: A make supervisor program. It can keep track of targets
-  available in makefiles which exist in subdirectories of a certain root directory.
+One may wonder why AROS needs a build system. The answer is that it
+simplifies the building of more complex binaries and takes away a lot of the
+manual work otherwise needed to compile, link and copy the files.
+Additionally this system builds a dependency tree over a big source code
+tree and will build the binaries in the right order so that all dependencies
+are fulfilled when a certain binary is built. This system also makes the
+source code tree modular: you can add or remove certain directories and the
+build system will take up these changes (of course one always has to take
+care one does not delete code other parts are still depending on).
+
+Components of the build system
+------------------------------
+
+AROS uses several development tools in it's build system. A short list of
+the most important components is:
+
++ *GNU make*: the GNU version of the make program.
+  The task of this program is to regenerate an output file from its
+  dependencies using a user defined program like a compiler, a text processor,
+  etc. The main advantage over a normal list of commands is that it will check
+  if anything has changed in the source files and save time by not redoing the
+  command not necessary.
+  
+  Familiarity with GNU make and it's input file syntax is not strictly necessary
+  when a developer's need is covered by the high level macros discussed further
+  in this paragraph.
+  If this is not the case one can use GNU's makefile syntax directly. The usage of the
+  GNU make program won't be discussed in these pages but the GNU info pages
+  about the `make` program are a good source for documentation.
++ *MetaMake*: A make supervisor program. It can keep an overview of all
+  makefiles which exist in subdirectories of a certain root directory.
   A more in depth explanation is given below.
-+ *genmf*: (generate makefile) A macro language for makefiles. It allows to
-  combine several make rules into one macro. This can simplify writing
-  makefiles.
-+ Several AROS specific tools that will be explained more when appropriate
-  during the rest of this documentation.
++ *genmf*: (generate makefile) A macro language for makefiles. It simplifies
+  the writing of the makefiles by providing high level macros for easy
+  building of binary files for AROS.
++ Several other tools will be used by the build instructions. These contain
+  AROS and non-AROS specific tools. More explanation of these tools will be
+  given when appropriate.
 
+To illustrate how these tools interact which each other we will explain what
+happens under the hood when you compile the HelloWorld program given in the 
+`previous chapter`__.
+
+If you followed the tutorial for the building the program with the build
+system you first added the `local/helloworld` directory with some source
+files; afterwards you called ``make local-helloworld`` in the top make
+directory. During the execution of this command the following steps were
+taken:
+
++ The make program calls the MetaMake program with the following command
+  ``mmake AROS.local-helloworld``. This instructs the MetaMake program to
+  build the local-helloworld meta-target of the AROS project. If you build
+  from the regular AROS source tree, AROS is the one and only project known
+  to MetaMake.
+
++ The first thing MetaMake does when it is started, is go over the source
+  tree to see if there are directories added or deleted.
+
++ During the scanning of the directory tree MetaMake will also see if there
+  are mmakefiles to be (re)generated. The program allows to generate a
+  mmakefile from a mmakefile.src file. This feature is used by AROS to
+  implement high level macros. In the helloworld example the ``%build_prog``
+  macro was used. If you have followed the helloworld example you can have a
+  look at the resulting build instructions in `local/helloworld/mmakefile`.
+  MetaMake also detects it if a mmakefile.src is newer then the existing mmakefile
+  and will regenerate it.
+
++ A last thing MetaMake does when scanning the source tree is collect the
+  metamake targets from all available `mmakefile` files and the dependency
+  between the metamake targets. In the helloworld example the
+  meta-target was defined as ``local-helloworld`` by passing the argument
+  ``mmake=local-helloworld`` to the ``%build_prog`` macro.
+  If you look in the mmakefile you can see several lines starting with
+  ``#MM``; these are the lines defining the meta-targets and the dependency
+  between them. It is not necessary to understand the exact meaning of 
+  these statements to be able to use the high level build macros provided
+  by AROS.
+  
++ When MetaMake has gone through the source tree and collected all the
+  information about the meta-targets it will (try to) build the specified
+  meta-target. In the previous step the program has built a dependency tree of
+  the meta-targets. Before building the specified meta-target it will first
+  build the meta-targets it depends on. In our example there is not a
+  dependency and it will directly build the program from `local/helloworld`
+  by calling the GNU make program in that directory.
+  
+__ introduction#the-hello-world-program
+
+
+Build system tutorial
+=====================
+
+In this section a description is given of the most important macros for AROS
+application development. The purpose is not to give an in-depth discussion
+but enough information to be able to perform most of the application
+development needs. An in-depth discussion of the build tools is given in the
+reference section in this manual.
+
+Basic file syntax and setup
+---------------------------
+
+As was seen in the helloworld example above you use the build system by putting
+a `mmakefile.src` file in the directory containing your source files. For the
+AROS build system to notice your file the directory containing it has to be
+below the AROS main source directory (the name of this top directory is most
+likely `AROS`). So for the moment you need to get hold
+of the AROS source code to be able to use the build system which is
+discussed in `another chapter`__. A good place to put your own source code is below
+the `AROS/local` directory as was done for the helloworld example.
+An AROS `mmakefile` has to start with the following line::
+
+  include $(TOP)/config/make.cfg
+  
+  ...
+  
+The start line will set the environment in the makefile for AROS
+compilation. It has to be included because this environment is used by the metamake
+macros.
+
+After this first line most of the time one or more calls to a ``genmf`` macro
+will follow. Such a macro has the following syntax::
+
+  %macro param1=... param2=... ...
+
+When the `mmakefile.src` file is translated into a `mmakefile` file  the line
+above will be replaced with make commands defined by the macro. A macro is
+called by it's name followed by zero or more parameters with an optional
+value assigned to the parameter. The order of the parameters is not important
+and not all parameters defined by a macro have to get values; a default value will
+be used when a parameter is not provided. Some parameters may be mandatory
+and an error message will be generated when it is left out.
+
+One macro call can be spread over several lines by ending a line with a
+backslash and continue the macro on the next line. So the example macro call
+could have been written also as::
+
+  %macro \
+      param1=... \
+      param2=... \
+      ...
+
+Normally no spaces are allowed in the values given to a parameter, if that
+is needed one has to enclose the list by double quotes (").
+
+In the following chapters the most important high level commands will be discussed.
+Only the most important parameters for the macros will be discussed, a list
+and description of all parameters of a macro will be given in the reference
+section.
+
+__ ../compiling
+
+Building an AROS program
+------------------------
+
+You can build a program by using the following macro in your mmakefile.src
+file::
+
+  %build_prog mmake=MetaTarget progname=Prog files=SourceFiles
+  
+This will build a program named `Prog` from the list of `SourceFiles`. By
+giving the ``mmake`` argument the `MetaMake` program will see that this program
+can be built by `MetaTarget`; e.g. doing ``make MetaTarget`` in the top AROS
+source directory will build the program. When typing this command also the
+dependencies will be built every time you want to recompile this module.
+Additionally a `MetaTarget-quick` meta-target will be defined that allows to
+build the program without that the dependencies will be rebuilt, this can
+save time when you are changing the source code of a program and want to
+rebuild it often.
+
+The list of files `SourceFiles` are the name of the C input files without the
+.c suffix. As explained above this list has to be enclosed by double quotes if
+it contains more then one file.
+
+By default the program will be put in the AROS binary tree in the same
+subdirectory from the top directory as the subdirectory relative where the
+source files are put into the source code tree. You can change this
+directory by specifying the ``targetdir=...`` argument. The latter
+argument has to contain a full path so most of the time it will start with
+``$(AROSDIR)/`` to put the program somewhere in the binary AROS tree. So if
+you want to put the program in the Extras directory you can do it this way::
+
+  %build_prog ... targetdir=$(AROSDIR)/Extras
+  
+As explained above the argument to a macro has to be enclosed by quotation
+marks if it contains more then one file. Currently the list can't be
+split over more then one line and often make variables are used to pass the
+list of files to build. The next three examples do the same only with
+different syntax. First the in-line list version::
+
+  %build_prog \
+      mmake=myprog progname=MyProg \
+      files="file1 file2 file3"
+
+Now with using a make variable::
+
+  FILES := file1 file2 file3
+  
+  %build_prog \
+      mmake=myprog progname=MyProg \
+      files=$(FILES)
+
+Or with using the make line continuation::
+
+  FILES := \
+      file1 \
+      file2 \
+      file3
+  
+  %build_prog \
+      mmake=myprog progname=MyProg \
+      files=$(FILES)
+
+Building an AROS library
+------------------------
+
+Another type of binary often built for AROS is a shared library. First a basic
+skeleton will be given of how to build a library then some handy extensions
+are given.
+
+Basic library skeleton
+""""""""""""""""""""""
+
+A shared library is built with the ``%build_module`` macro with a line like this::
+
+  %build_module mmake=MetaTarget modname=mylib modtype=library files=SourceFiles
+  
+This macro can build different AROS module types like devices, Zune classes,
+HIDDs, ... but we'll focus here on a shared library and therefor we assume
+that you specify the ``modtype=library`` parameter.
+
+The ``mmake`` and the ``files`` parameter act the same as for the
+``%build_prog`` macro. Additionally to the meta-target `MetaTarget` and
+`MetaTarget-quick`, also meta-targets `MetaTarget-includes`,
+`MetaTarget-includes-quick` and `MetaTarget-linklib` are defined. This
+allows to only build a subset of all the files normally generated. They will
+most of the time be used to specify dependencies.
+
+For building a shared library more information is necessary then given in
+the ``%build_module`` macro. This information is stored in another file that
+by default is called `mylib.conf` when ``modname=mylib`` is
+specified. This file can contain a lot of information but we'll give here a
+minimal example. More information can be found in the `reference section`__ of
+the ``%build_module`` macro. Here is an example .conf file::
+
+  ##begin config
+  version 1.0
+  ##end config
+  
+  ##begin functionlist
+  void func1(LONG a, LONG b)
+  int func2(char *s, ULONG a)
+  ##end functionlist
+
+As you can see this is a file with two sections, each section starting with
+``##begin sectionname`` and ending with ``##end sectionname``. The section 
+``config`` is for providing the information needed by AROS when it wants to use
+the shared library about the library and for giving options to influence the
+type of module that will be build. In-depth discussion can be found in the `reference
+section`__. The ``functionlist`` section gives a list of functions that will be
+included in the library and the list consist of the function prototypes.
+The order of the list is important because it will determine the place of the
+function in the lookup table. Also empty lines are important because an empty
+line in the functionlist will cause an empty slot in the table. Comment
+lines start with one '#' character and these lines will be ignored and do not
+give rise to an empty slot in the library's table.
+
+If all this information is present and you then execute the command ``make
+MetaTarget`` the following file will be generated ($(AROSDIR) corresponds
+with the directory for the binary tree):
+
++ `$(AROSDIR)/Libs/mylib.library`: the module itself
++ several include files in `$(AROSDIR)/Development/include` with the main
+  include file `proto/mylib.h`. The latter file can be included in code using
+  the library for the function prototypes.
++ `$(AROSDIR)/Development/lib/libmylib.a`: a static link library that can be
+  linked to other code and that can take care of auto-opening the library
+  and contains stub functions. When these functions are called it will redirect
+  to the code in the library using the lookup table in the libbase.
+
+__ buildsystem#build-system-reference
+__ buildsystem#build-system-reference
+
+Using non-standard types
+""""""""""""""""""""""""
+
+In the example given above standard C variable type or standard exec types
+were used for the arguments of the function. If you want to use your own
+types or types defined in other include files you will need to take extra
+steps. This can be done in the ``cdef`` section as shown in the next example
+where another include file is used::
+
+  ##begin config
+  ...
+  ##end config
+  
+  ##begin cdef
+  #include <exec/semaphores.h>
+  ##end cdef
+  
+  ##begin functionlist
+  ...
+  BOOL func3(struct SignalSemaphore *sig)
+  ##end functionlist
+
+The lines in the cdef structures are normal C code and they will be part of
+the generated include files before the library's function prototypes. You could also
+define your own structure like this::
+
+  ##begin cdef
+  struct MyStruct
+  {
+      ...
+  };
+  ##end cdef
+  
+  ##begin functionlist
+  ...
+  int func4(struct MyStruct *sig)
+  ##end functionlist
+
+When doing it this way the structure definition will be part of the
+generated include files. The recommended way to do it in AROS is to do the
+definition in a separate header file and then include that header file. One
+way to do it is to define your own file named `libraries/mylib.h` with the
+following contents::
+
+  #ifndef __LIBRARIES_MYLIB_H
+  #define __LIBRARIES_MYLIB_H
+  
+  struct MyStruct
+  {
+      ...
+  };
+  
+  ...
+  
+  #endif /* __LIBRARIES_MYLIB_H */
+
+This file is then copied as explained in `another paragraph`__ and then simply
+included by the cdef section::
+
+  ##begin cdef
+  #include <libraries/mylib.h>
+  ##end cdef
+
+__ buildsystem#copying-include-files
+
+Functions with m68k register passing
+""""""""""""""""""""""""""""""""""""
+
+The functions put into the library vector table up to now were regular C
+functions. In the amiga m68k days the parameters for library functions most
+of the time were passed in registers and not on the stack. For backwards
+compatibility you can also define functions where the arguments are passed in
+m68k registers. When your library is compiled for m68k it will use the
+specified registers, on other architectures own conventions will be used by
+either using registers available on that CPU or using stack based argument passing.
+Defining a function with m68k registers has to be done by adding the
+registers to the line in the function list and use macros for the header of
+the function in the source code. The line in the functionlist looks as
+follows::
+
+  ##begin functionlist
+  ...
+  ULONG func5(ULONG a, STRPTR b) (D0,A0)
+  ...
+  ##end functionlist
+
+And the function in the source code is defined as follows::
+
+  AROS_LH2(ULONG, func5,
+      AROS_LHA(ULONG, a, D0),
+      AROS_LHA(STRPTR, b, A0),
+      struct Library *, MylibBase, 9, Mylib
+  )
+  {
+        AROS_LIBFUNC_INIT
+      
+      ...
+      
+      AROS_LIBFUNC_EXIT
+  }
+
+This macro has the name AROS_LHn with n the number of arguments passed to the
+function. The macros has the following arguments:
+
++ The function return type
++ The name of the function
++ The list of function arguments using the AROS_LHA(vartype, varname,
+  register) macro. vartype is the type of the argument, varname is the name of
+  the argument and register the m68k register to use. The register is
+  specified as D0-D7 for numeric arguments and A0-A5 for pointer arguments (A6
+  and A7 are reserved for other use).
++ The library base type. When you have not defined your own libbase type as
+  explained in `this paragraph`__
++ The variable for the libbase, this can be used in the function for
+  accessing the libbase
++ The number of the vector in the vector table. For libraries the first
+  function in the functionlist has number 5, the next 6 and so on. Although
+  this information is not necessary because the functionlist in the .conf
+  already determines this number it still has to be given for legacy reasons.
++ The base name of the library. If this is not overridden in the config
+  section of the .conf file it is equal to the name given to the ``modname``
+  parameter with the first letter capitalized.
+
+__ buildsystem#using-an-extended-libbase
+
+Using an extended libbase
+"""""""""""""""""""""""""
+
+On AROS and other amiga-like systems every shared library has a library base.
+The base of a library contains the vector table and some data about the
+library used by the OS. It can also be extended with user defined data.
+This can be done by providing your own C struct for the type of the libbase.
+There are two config options that let you decide the type of the libbase::
+
+  ##begin config
+  ...
+  libbasetype struct MyLibIntBase
+  libbasetypeextern struct MyLibBase
+  ...
+  ##end config
+
+``libbasetype`` is the type used internal in the library code, this type
+also decides how much memory is allocated for the libbase. If this type is
+not given ``struct Library`` is taken as default. ``libbasetypeextern`` is
+the type by external programs using your library. If not given also here
+``struct Library`` is used as the type. Both the internal and the external
+type have to start with a ``struct Library`` structure. If the external type
+is given the first part of the internal type has to be the same as the
+external type.
+
+For keeping your library backwards compatible one can not change the
+external type of a library. You can only extend it once you have released a version
+of your library into the public. The internal type can be changed at will
+when all internal code of your library is adapted to the changes of the
+internal library structure.
+
+The external type also has be exported to the users of your library. This
+is the same as `the usage of other non-standard types`__. On the contrary,
+the internal type oftentimes is not meant to be exported to the users, for
+this reason a cdefprivate section can be put in the config file. This way
+the library initialization code has all the information about your internal
+type without having the internal structure publicly exported. A common
+convention is to declare your internal structures in `mylib_intern.h` and
+then include this in the ``cdefprivate`` section. The `mylib_intern.h` would
+then include the following code::
+
+  struct MyLibIntBase
+  {
+      struct Library base;
+      
+      ...
+  };
+  
+And the config file the following section::
+
+  ...
+  ##begin cdefprivate
+  #include "mylib_intern.h"
+  ##end cdefprivate
+  ...
+
+__ buildsystem#using-non-standard-types
+
+Using a per-opener libbase
+""""""""""""""""""""""""""
+
+Up to now only one libbase would be created for a library. All users who
+open the library get a pointer to the same library base. Sometimes one wants
+to have data that is different per opener of the library. This can be done
+by using a special option in the ``config`` section::
+
+  ##begin config
+  ...
+  options peropenerbase
+  ##end config
+
+The use of a base per opener of the library does not make much sense when
+not using `an extended libbase`__. At the moment also the only way to pass the
+libbase to the functions of the library is by using `m68k register passing`__.
+(Development is underway to also be able to get the libbase in library
+functions using the normal C argument passing). You could also add the
+libbase as an explicit argument to the function but this is not encouraged.
+
+.. Note:: On AROS the need for extended libbases is much less then on classic
+          AmigaOS. On classic AmigaOS it was discouraged to use global
+	  variables in the library and to use the libbase for storing variables.
+	  On AROS global variables are handled fine so the `use of an extended
+	  libbase`__ is only needed for using a per-opener libbase.
+	 
+__ buildsystem#using-an-extended-libbase
+__ buildsystem#functions-with-m68k-register-passing
+__ buildsystem#using-an-extended-libbase
+
+Library initialization
+""""""""""""""""""""""
+
+Sometimes you want to perform initialization when your library is loaded or
+when it is opened. You can use the same mechanism as for programs through
+the ADD2INIT and ADD2EXIT as in the next example::
+
+  static int InitFunc(void)
+  {
+      ...
+  }
+  
+  static void ExitFunc(void)
+  {
+      ...
+  }
+  
+  ADD2INIT(InitFunc, 0);
+  ADD2EXIT(ExitFunc, 0);
+  
+When you add this code in one of your source files the code in InitFunc will
+be executed when the library is initialized and the code in ExitFunc when
+the library is expunged. The return value of InitFunc indicates succes or
+failure, when it returns a zero (== FALSE) value it indicates a failure to
+initialize and the library will be unloaded again and not be usable. The
+ExitFunc may not fail and thus has no return value.
+
+Often one wants to initialize part of the libbase and therefor the methods
+discussed above are not appropriate. For libraries additional ways are
+available for adding initialization or clean-up code::
+
+  static int InitFunc(struct Library *lh);
+  ADD2INITLIB(InitFunc, 0);
+  
+  static int ExpungeFunc(struct Library *lh);
+  ADD2EXPUNGELIB(ExpungeFunc, 0);
+  
+  static int OpenFunc(struct Library *lh);
+  ADD2OPENLIB(OpenFunc, 0);
+  
+  static void CloseFunc(struct Library *lh);
+  ADD2CLOSELIB(CloseFunc, 0);
+
+The ``InitFunc`` function will be called once during initialization and the
+``ExpungeFunc`` once during expunge of the module. ``OpenFunc`` and
+``CloseFunc`` functions are called resp. everytime the modules is opened or
+closed. ``InitFunc``, ``ExpungeFunc`` and ``OpenFunc`` return a value
+indicating the success of the function. If InitFunc fails the module will be
+expunged, if ``OpenFunc`` fails the opening of the library will fail and if
+``ExpungeFunc`` fails expunging the library will be delayed. If the latter
+happens the next time the expunge will be tried all registered functions for
+expunge will be called again. This means that if more then one function is
+registered and the second function returns 0, the first function will be
+called a second time the next time AROS tries to expunge the module. If you
+implement an ``ExpungeFunc`` that can return a 0 you also have to be sure that
+other ``ExpungeFunc``\s may be called more then once.
+
+If you look at the ADD2...LIB macros above you can also see that next to the
+function name there is an extra number. This number indicates the priority
+to call the function. ``InitFunc`` and ``OpenFunc`` with a higher number will
+be called after the ones with a lower number. For ``CloseFunc`` and
+``ExpungeFunc`` the opposite order is used, e.g. higher numbers are called
+before lower numbers. The number is a signed byte, which means it has to have
+a value from -127 to 128. Most often this value can be kept at 0.
+
+If a `per-opener base`__ is used a copy will be made of your libbase
+every time the module is opened. ``InitFunc``\s will be called before the copy
+so initialization of values in the libbase will be seen by all the openers.
+``OpenFunc``\s are called after the copy of the libbase and changes made to
+libbase are thus private to the opener.
+
+__ buildsystem#using-a-per-opener-libbase
+
+Copying include files
+---------------------
+
+Often when writing a library extra includes have to be provided that can be
+included by the programs using your library by using ``#include <...>`` in
+the code. For this purpose a ``copy_includes`` macro is available. In the following
+line the arguments are given for the macro with the default values::
+
+  %copy_includes mmake=includes-copy includes=$(INCLUDE_FILES) path=. dir=
+
+Here follows an explanation of the arguments and after that some
+examples will be given:
+
++ Similar to the macros earlier in this document, the ``mmake`` argument
+  indicates the meta-target that will copy the includes. The default value 
+  is ``includes-copy`` so if the argument is not specified the includes
+  will be copied by this meta-target.
+  
++ ``includes``: these are the files to be copied in the system include
+  directory. It may be a list that contains files in subdirectories. By
+  default ``$(INCLUDE_FILES)`` is used. This means that you can put the
+  list of the files to copy in the INCLUDE_FILES make variable.
+  
++ ``path``: this argument allows you to copy the includes in a subdirectory of
+  the system include directory. This name is added in front of the include
+  files before they are copied so that the path is added in the include
+  statement e.g. ``#include <path/...>``
+
++ ``dir``: this argument allows to strip a directory from the include files
+  list before they are copied to the system include directory. This is often
+  used to put the include files in a subdirectory called `include`. By then
+  specifying the argument ``dir=include`` the include files are copied from
+  this subdirectory but to a path in the system directory not containing the
+  `include` directory.
+
+Some examples to make this more clear:
+
++ Example 1: copy the \*.h files from the current directory to the system include
+  directory::
+  
+    INCLUDE_FILES := $(wildcard *.h)
+    %copy_includes mmake=MyIncludes
+    
++ Example 2: copy the mylib.h file to the ``libraries`` directory::
+
+    %copy_includes mmake=MyLib-includes includes=mylib.h path=libraries
+    
+  The programs can then use ``#include <libraries/mylib.h>`` to access your
+  include file.
+  
++ Example 3: copy files from the `include` subdirectory to the system include
+  directory::
+  
+    INCLUDE_FILES := $(wildcard include/*.h)
+    %copy_includes mmake=MyIncludes dir=include
+    
+  If then a file `include/myinclude.h` is available the programs may not
+  use ``#include <include/myinclude.h>`` but ``#include <myinclude.h>``
+  instead.
+
+Using non-core libraries in programs or libraries
+-------------------------------------------------
+
+Before programs or other libraries can use another library that is not part
+of the core AROS libraries they have to add it to the list of libraries to use
+by using the ``uselibs`` argument for the ``%build_prog`` or the
+``build_module`` macro. So if you want your program to use the mylib library
+you have to do it like this::
+
+  %build_prog ... uselibs=mylib
+  
+For a library it looks the same::
+
+  %build_module ... uselibs=mylib
+
+Build system reference
+======================
+
+.. Warning::
+
+   This reference manual is out of date and things have changed considerably.
+   Please consult config/make.tmpl in the source code tree to see the
+   current implementation.
+   If you want to help updating this section, please contact us.
 
 MetaMake
 --------
@@ -302,8 +940,8 @@ that will only be defined later on in the macro definition file.
           using text that has the same effect.
 
 
-AROS usage of the build tool
-============================
+AROS application development macros reference
+=============================================
 
 High level mmakefile.src macros
 -------------------------------
@@ -318,6 +956,16 @@ The following metatargets are often used as prerequisite:
 
 FIXME: complete
 
+.. Note::
+   
+   These mega metamake targets were introduced in the beginning of the
+   project. The usage of these metatargets is now considered as deprecated
+   and should be avoided.
+   
+   One should try to use more specific targets for dependencies, e.g. if a
+   certain program uses a certain library one should specify this library as
+   a dependency of this program not all the linklibs by using the ``linklibs``
+   metatarget.
 
 Building programs
 """""""""""""""""
@@ -765,225 +1413,6 @@ statement is different for every section. The following sections are defined:
   line in in the list::
 
       foo(D0,A0)
-
-
-Building modules (the legacy way)
-"""""""""""""""""""""""""""""""""
-
-Before the %build_module macro was developed already a lot of code was
-written. There a mixture of macros was used in the mmakefile and they were
-quite complicated. To clean up these mmakefiles without needing to rewrite
-too much of the code itself a second genmf macro was created to build
-modules that were written using the older methodology. This macro is called
-build_module_macro. For writing new modules people should consider this
-macro as deprecated and only use this macro when the %build_module doesn't
-support the module yet they want to create.
-
-The mmakefile.src macro
-^^^^^^^^^^^^^^^^^^^^^^^
-
-This is the definition header of the build_module_macro macro::
-
-    %define build_module_macro mmake=/A modname=/A modtype=/A \
-      conffile=%(modname).conf initfile=%(modname)_init \
-      funcs= files= linklibfiles= cflags=$(CFLAGS) dflags=%(cflags) \
-      objdir=$(OBJDIR) linklibname=%(modname) uselibs= usehostlibs= \
-      genfunctable= genincludes= compiler=target
-
-Here is a list of the arguments for this macro:
-
-    ``mmake=/A``
-        This is the name of the metatarget that will build the module. It will
-        define that metatarget but won't include any metaprerequisites. If you
-        need these you can add by yourself with an extra
-        ``#MM metatargets : ...`` line. Also a ``%(mmake)-quick`` and
-        ``%(mmake)-clean`` metatarget will be defined.
-
-    ``modname=/A``
-        This is the name of the module without the suffix.
-
-    ``modtype=/A``
-        This is the type of the module and corresponds with the suffix of the
-        module. It can be one of the following : library gadget datatype
-        handler device resource mui mcc hidd.
-
-    ``conffile=%(modname).conf``
-        The name of the configuration file. Default is modname.conf.
-
-    ``funcs=``
-        A list of all the source files with the .c suffix that contain the
-        code for the function of a module. Only one function per C file is
-        allowed and the function has to be defined using the AROS_LHA
-        macros.
-
-    ``files=``
-        A list of all the extra files with the .c suffix that contain the
-        extra code for this module.
-
-    ``initfile=%(modname)_init``
-        The file with the init code of the module.
-
-    ``cflags=$(CFLAGS)``
-        The flags to add when compiling the .c files. By default the standard
-        AROS cflags (the ``$(CFLAGS)`` make variables are taken. This also
-        means that some flags can be added by assigning these to the
-        USER_CFLAGS and USER_INCLUDES make variables before using this macro.
-
-    ``dflags=%(cflags)``
-        The flags to add when doing the dependency check. Default is the same
-        as the ``cflags``.
-
-    ``objdir=$(OBJDIR)``
-        The directory where to generate all the intermediate files. The
-        default value is ``$(OBJDIR)`` which in itself is by default equal to
-        ``$(GENDIR)/$(CURDIR)``.
-
-    ``linklibname=%(modname)``
-        The name to be used for the static link library that contains the
-        library autoinit code and the stubs converting C stack calling
-        convention to a call off the function from the library functable with
-        the appropriate calling mechanism. These stubs are normally not needed
-        when the AROS defines for module function are not disabled.
-
-        There will always be a file generated with the name
-        ``$(LIBDIR)/lib%(linklibname).a`` and by default linklibname will be
-        the same as modname.
-
-    ``uselibs=``
-        A list of static libraries to add when linking the module. This is the
-        name of the library without the `lib` prefix or the `.a` suffix and
-        without the `-l` prefix for the use in the flags for the C compiler.
-
-        By default no libraries are used when linking the module.
-
-    ``usehostlibs=``
-        A list of static libraries of the host to add when linking the module. This
-        is the name of the library without the `lib` prefix or the `.a` suffix
-        and without the `-l`  prefix for the use in the flags for the C compiler.
-
-        By default no libraries are used when linking the module.
-
-    ``genfunctable=``
-        Bool that has to have a value of yes or no or left empty. This
-        indicates if the functable needs to be generated. If empty the
-        functable will only be generated when funcs is not empty.
-
-    ``genincludes=``
-        Bool that has to have a value of yes or no or left empty. This
-        indicates if the includes needs to be generated. If empty the
-        includes will only be generated for a library, a gadget or a device.
-
-    ``compiler=target``
-        Indicates which compiler to use during compilation. Can be either
-        target or host to use the target compiler or the host compiler.
-        By default the target compiler is used.
-
-
-For the build_module_macro two files are used. First is the module
-configuration file (modname.conf or lib.conf) and second is the headers.tmpl
-file.
-
-The module configuration file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The modules config file is a file with a number of lines with the following
-syntax:
-
-    ``name <string>``
-        Init the various fields with reasonable defaults. If <string> is XXX, then
-        this is the result::
-
-            libname         xxx
-            basename        Xxx
-            libbase         XxxBase
-            libbasetype     XxxBase
-            libbasetypeptr  XxxBase *
-
-        Variables will only be changed if they have not yet been specified.
-
-    ``libname <string>``
-        Set libname to <string>. This is the name of the library (i.e. you can
-        open it with <string>.library). It will show up in the version string, too.
-
-    ``basename <string>``
-        Set basename to <string>. The basename is used in the AROS-LHx macros in the
-        location part (last parameter) and to specify defaults for libbase and
-        libbasetype in case they have no value yet. If <string> is xXx, then
-        libbase will become xXxBase and libbasetype will become	xXxBase.
-
-    ``libbase <string>``
-        Defines the name of the library base (i.e. SysBase, DOSBase, IconBase, etc).
-        If libbasetype is not set, then it is set to <string>, too.
-
-    ``libbasetype <string>``
-        The type of libbase (with struct), i.e. struct ExecBase, struct DosLibrary,
-        struct IconBase, etc).
-
-    ``libbasetypeptr <string>``
-        Type of a pointer to the libbase. (e.g. ``struct ExecBase *``).
-
-    ``version <version>.<revision>``
-        Specifies the version and revision of the library. 41.0103 means version 41
-        and revision 103.
-
-    ``copyright <string>``
-        Copyright string.
-
-    ``define <string>``
-        The define to use to protect the resulting file	against double inclusion
-        (i.e. #ifndef <string>...). The default is _LIBDEFS_H.
-
-    ``type <string>``
-        What kind of library is this ? Valid values for <string> are: device, library,
-        resource and hidd.
-
-    ``option <string>...``
-        Specify an option. Valid values for <string> are:
-
-        + ``noexpunge``
-
-          Once the library/device is loaded, it can't be removed from memory.
-          Be careful with this option.
-
-        + ``rom``
-
-          For ROM based libraries. Implies noexpunge and unique.
-
-        + ``unique``
-
-          Generate unique names for all external symbols.
-
-        + ``nolibheader``
-
-          We don't want to use the LibHeader prefixed functions in the
-          function table.
-
-        + ``hasrt``
-
-          This library has resource tracking.
-
-        You can specify more than one option in a config file and
-        more than one option per option line. Separate options by
-        space!
-
-The header.tmpl file
-^^^^^^^^^^^^^^^^^^^^
-
-Contrary to the %build_module macro for %build_module_macro the C header
-information is not included in the configuration file but an additional
-files is used with the name headers.tmpl. This file has different section
-where each of the sections will be copied in a certain include file that is
-generated when the module is build. A section has a structure as follows::
-
-    ##begin sectionname
-    ...
-    ##end sectionname
-
-With sectionname one of the following choices:
-
-+ defines
-+ clib
-+ proto
 
 
 Compiling arch and/or CPU specific files
