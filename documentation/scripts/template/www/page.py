@@ -19,6 +19,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             A( 'Italiano', href='%(BASE)sit/' ),            
             A( 'Polski', href='%(BASE)spl/' ),
             A( 'Suomi', href='%(BASE)sfi/' ),
+	    A( 'Svenska', href='%(BASE)ssv/' ),
             A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sru/' )
         ] ),
         BR(),

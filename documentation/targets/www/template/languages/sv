@@ -20,8 +20,7 @@ status:           Status
 screenshots:      Skärmdumpar
 ports:            Portningar
 license:          Licens
-download:         Download
-# FIXME: above
+download:         Nerladdning
 documentation:    Dokumentation
 users:            Användare
 installation:     Installation
@@ -50,7 +49,7 @@ links:            Länkar
 contact:          Kontakt
 mailing-lists:    Mailing listor
 forums:           Forum
-irc-channels:     IRC kanaler
+irc-channels:     IRC-kanaler
 credits:          Medverkande
 pictures:         Bilder
 developers-together: Utvecklare en Masse
@@ -61,7 +60,7 @@ linking:          Länkning
 
 go:               Gå
 search:           Sök
-copyright:        Copyright © 1995-2003, The AROS Development Team. Alla rättigheter förbehålles.
+copyright:        Copyright © 1995-2006, The AROS Development Team. Alla rättigheter förbehålles.
 trademarks:       Amiga®, AmigaOS®, Workbench och Intuition är varumärken som tillhör Amiga Inc. Alla andra varumärken tillhör sina respektive ägare.
 read-more:        Läs mer...
-large-image:      Large version...
+large-image:      Större bild...
