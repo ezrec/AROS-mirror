@@ -16,7 +16,9 @@ De volgende bedrijven, organisaties en individuen hebben meegeholpen of gedoneer
      
      <a href="http://www.trustsec.de/"><img border="0" src="images/trustec.png"></a>
 
-De vriendelijke mensen van Trustec doneren ons ruimte en bandbreedte voor de AROS webserver, CVS server, FTP server en verschillende mailing lijsten. Als je JAVA ontwikkelaars of lessen nodig hebt in Duitsland, contacteer hun!  
+De vriendelijke mensen van Trustec doneren ons ruimte en bandbreedte voor de 
+AROS webserver, CVS server, FTP server en verschillende mailing lijsten. 
+Als u JAVA ontwikkelaars of lessen nodig hebt in Duitsland, contacteer hen!  
 
 + Genesi__
 
@@ -24,7 +26,8 @@ De vriendelijke mensen van Trustec doneren ons ruimte en bandbreedte voor de ARO
   
      <a href="http://www.pegasosppc.com/"><img border="0" src="images/genesi.gif"></a>
 
-	Genesis is zo vriendelijk geweest om een Pegasos moederbord te doneren met het doel AROS ook naar dit platform over te brengen. Bedankt!
+	Genesis is zo vriendelijk geweest om een Pegasos moederbord te doneren met 
+	het doel AROS ook naar dit platform over te brengen. Bedankt!
   
 + SourceForge__
 
@@ -32,7 +35,9 @@ De vriendelijke mensen van Trustec doneren ons ruimte en bandbreedte voor de ARO
   
      <a href="http://www.sourceforge.net/"><img border="0" src="images/sourceforge.png"></a>
 
-SourceForge voorziet ons van verschillende diensten, waaronder een webserver met scripting extensies en SQL database, mailing lijsten, 'bug' database en een gedistribueerd systeem voor het aanbieden van bestanden.
+SourceForge voorziet ons van verschillende diensten, waaronder een webserver 
+met scripting extensies en SQL database, mailing lijsten, 'bug' database en 
+een gedistribueerd systeem voor het aanbieden van bestanden.
 
 + Yann Vernier
 + Randal Vice

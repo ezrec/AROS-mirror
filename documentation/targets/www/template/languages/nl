@@ -21,14 +21,14 @@ screenshots:      Screenshots
 ports:            Ports
 license:          Licentie
 download:         Downloads
-documentation:    Documentation
+documentation:    Documentatie
 users:            Users
 installation:     Installation
 using:            Using
 shell:            Shell commands
 faq:              FAQ
 developers:       Developers
-contribute:       Contribute
+contribute:       Meehelpen
 bug-tracker:      Bug Tracker
 working-with-subversion: Working with Subversion
 compiling:        Compiling
@@ -48,8 +48,8 @@ mailing-lists:    Mailing lijsten
 forums:           Forums
 irc-channels:     IRC kanalen
 credits:          Colofon
-pictures:         Pictures
-developers-together: Developers en Masse
+pictures:         Afbeeldingen
+developers-together: Ontwikkelaars en Masse
 sponsors:         Sponsors
 linking:          Linken
 

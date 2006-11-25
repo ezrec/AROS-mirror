@@ -5,34 +5,33 @@ Status update
 :Author:   Paolo Besser
 :Date:     2006-01-30
 
-This is the first status update of 2006, and we wish to thank all AROS
-users, sponsors and enthusiasts for their support: at the beginning of
-2005 `AROS-Exec`__ had about 250 members, now this number has doubled
-with more than 500 (and growing). During these months AROS has achieved
-some key goals such as network support, CVS to Subversion migration and
-PPC porting. More and more applications had been ported or added, lots
-of bugs have been fixed, and there's also a flavour of AROS running on
-top of classic AmigaOS, in order to modernize it. We're all sure that
-2006 will be a very interesting year for AROS. And now, let's go with
-our fresh news...
+Dit is de eerste status update van 2006. Om te beginnen willen we alle
+AROS gebruikers, sponsors en enthousiastelingen bedanken voor hun steun
+en inzet! Aan het begin van 2005 had `AROS-Exec`__ ongeveer 250 leden,
+dat is inmiddels verdubbeld naar meer dan 500 (wat nog altijd groeit).
+Gedurende deze maanden heeft AROS enkele hoofddoelen bereikt zoals
+netwerk ondersteuning, CVS naar Subversion migratie en een PPC port.
+Meer en meer applicaties zijn geport of toegevoegd en veel bugs zijn 
+verholpen. Ook is er nu een AROS smaak die boven op het klassieke 
+AmigaOS draait, in een poging deze te moderniseren. We zijn er in ieder geval erg
+zeker van dat 2006 een zeer interessant jaar gaat worden voor AROS. Maar
+genoeg nu, tijd voor het laatste nieuws...
 
-Georg Steger has fixed input preferences for mouse, in order to improve
-mice tracking and pointer precision on the screen.
+Georg Steger heeft aanpassingen gemaakt aan de input instellingen voor de
+muis, wat de muis tracking en aanwijzer precisie heeft verbeterd.
 
-Matthias Rustler has updated documentation for users and developers,
-adding some nice hints and removing obsolete informations. You'll find
-signs of his work throughout this site. Matthias has also commited
-ExecuteStartup, a little tool that executes whatever application you'll
-copy in the SYS:WBstartup drawer.
+Matthias Rustler heeft de documentatie bijgewerkt voor gebruikers en 
+ontwikkelaars, waarbij handige tips zijn toegevoegd en oude overbodige 
+informatie is weggehaald. U zult de resultaten van zijn werk overal op
+de website vinden. Matthias heeft ook ExecuteStartup ingestuurd, een 
+kleine tool die applicaties start die zich in de SYS:WBstartup map bevinden.
 
 __ http://aros-exec.org
 
 Netwerk voorzieningen
 ---------------------
 
-Dan
-
-Thanks to Nick Andrews and Jack Patton AROS has got IRC and Telnet
-clients. In order to enable networking on hosted version of AROS,
-Michal Schulz has commited a .tap interface hidd for all Unix targets.
-
+Dankzij Nick Andrews en Jack Patton heeft AROS nu ook IRC en Telnet 
+cliënten. Om het netwerken op de hosted versie van AROS mogelijk te 
+maken, heeft Michal Schulz een .tap interface hidd ingebouwd voor 
+alle Unix doelen. 

@@ -69,8 +69,8 @@ Mocht u artikelen kennen over AROS die niet genoemd worden in deze lijst, neem d
 dank.
 
 
-Thuispagina's van ontwikkelaars
-===============================
+Homepages van ontwikkelaars
+===========================
 
 + `Aaron Digulla`__
 + `Adam Chodorowski`__
@@ -105,7 +105,7 @@ Overigen
 
   .. Image:: images/phoenix.jpeg
   
-  Het Phoenix Ontwikkelaars Consortium ondersteund de ontwikkeling van alternatieve computer platformen door samen te werken met 'kern' ontwikkelaars en derden, daarnaast hun ook de middelen biedend voor de ontwikkeling. 
+  Het Phoenix Ontwikkelaars Consortium ondersteund de ontwikkeling van alternatieve computer platformen door samen te werken met 'kern' ontwikkelaars en derden, hun o.a. de middelen biedend voor de ontwikkeling. 
 
 + `Team AROS`__ 
 
@@ -123,7 +123,7 @@ Overigen
 
 + `AROS voor Amiga`__
   
-  AfA OS vervangt AmigaOS core libraries met hun hun meer geadvanceerde AROS tegenhangers.
+  AfA OS vervangt AmigaOS core libraries met hun hun meer geavanceerde AROS tegenhangers.
 
 
 __ http://phinixi.com/
