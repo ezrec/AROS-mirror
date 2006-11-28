@@ -181,6 +181,8 @@ these to your launch string (or a script).
 QEMU is fast virtualiser, but it`s speed can be increased by installing 
 the KQEMU kernel module (and appending the -kernel-kqemu option if in Windows).
 But remember that KQEMU can make guest system unstable.
+Please don`t use ALT+Tab combination to free the keyboard lock, use CTRL+Alt,
+otherwise Tab key may remain pressed and can damage currently edited file.
 
 Also if you considered to try installing AROS to HD, you can create the 
 virtual HDD for QUMU using the qemu-img program (replace <size> 
@@ -536,14 +538,15 @@ Say your usual LAN is 192.168.0.0/24 with a DNS at 192.168.0.1
 for host and 10.0.2.2 for gateway, or use TAP adapter, which is better.
 Remember to set up your firewall in way it can pass the QEMU packets.*
 
-You have to edit 3 files in the AROSTCP/db: hosts, interfaces, netdb-myhost
-In hosts remove any entries. Hosts will be in netdb-myhost for now.
-In interfaces Uncomment the prm-rtl8129.device line, because Qemu is emulating 
-this NIC, edit it::
+You have to edit 3 files in the SYS:extras/Networking/stacks/AROSTCP/db drawer: 
+hosts, interfaces and netdb-myhost.
+In *hosts* remove or comment out any entries. Hosts will be in netdb-myhost for now.
+In *interfaces* uncomment the prm-rtl8129.device line (For QEMU is emulating 
+this NIC, use pcnet32 for VMWare), edit it(change an IP=to which was above)::
 
     eth0 DEV=DEVS:networks/prm-rtl8029.device UNIT=0 NOTRACKING IP=172.20.0.10 UP
 
-In netdb-myhost, add the various local known hosts, 
+In *netdb-myhost*, add the various local known hosts, 
 your local domain name, the gateway::
 
     HOST 172.20.0.10 arosbox.lan arosbox
@@ -558,6 +561,8 @@ ENVARC:AROSTCP/db directory, that way the Config file could be::
     ENV:AROSTCP/db
 
 Now make AROSTCP start at boot with the word "True" in ENVARC:AROSTCP/Autorun
+(Create the file if not exists in CLI window with a command 
+echo "True" >sys:AROSTCP/Autorun)
 Edit the Sys:extras/Networking/Stacks/AROSTCP/S/Package-Startup::
 
     ; $VER: AROSTCP-PackageStartup 1.0 (01/08/06)
@@ -615,8 +620,11 @@ launching those commands::
     round trip min/avg/max = x/xx/xx ms
 
 Output like this means that our interface packet`s reached the gateway with
-172.20.0.1 address. If you got Host unreachable earrors check your AROSTcp
+172.20.0.1 address. If you got Host unreachable errors, then check your AROSTCP
 settings and VM options.
+
+To make external network accessible to VM you must setup routing from
+our virtual net to a real one, such as make a host system a router.
 
 You can test it even further by pinging other hosts and try using some 
 networking applications which you can find on Archives.aros-exec.org, like
@@ -631,17 +639,8 @@ Setting QEMU to run on Windows is relatively harder to that of Linux. First,
 make sure you have turn your Firewall to learning mode (or prepare it to
 receive new rules) or completely disable it. Firewall can block transfers to VM.
 
-There`s two ways to use network with QEMU on Windows. First is to use
-a user-mode networking stack which is launched by default (or using the 
-"-net nic -net user" switches, which is default now). Options given is
-for 0.8 or newer QEMU version. Setting the AROS side is similar to that
-of Linux use, but you will need to use
-the following IP addresses to setup and test: 10.0.2.16 for AROS machine IP 
-(instead of 172.20.0.10), 10.0.2.2 for gateway (instead of 172.20.0.1). 
-This mode can work even without administrating privileges given to user, but
-can *make some applications on AROS refuse to work properly (such as FTP-client)*.
-
-The second option is to use the tap interface. To use it you must download
+There`s two ways to use network with QEMU on Windows. First and the 
+more proven is to use the tap interface. To use it you must download
 the `OpenVPN <http://openvpn.net>`__ 2.0 package for Windows (Windows 2k/XP only). 
 After you install it, you will get an extra network connection in disconnected
 state. Rename it to, say, eth0. Then go to the eth0 connection properties and 
@@ -651,6 +650,15 @@ then set, say, the same 10.0.2.2) and 255.255.255.0 netmask. *Reboot*. Then repl
 starting line options in QEMU (or add if there`s were not) -net nic -net tap,ifname=eth0.
 Then set an AROS side as it was described above for user mode networking.
 Note that you will need the administrator privileges to install OpenVPN TAP adaptor.
+
+The second option is to use a user-mode networking stack which is launched by 
+default (or using the "-net nic -net user" switches, which is default now). 
+Options given is for 0.8 or newer QEMU version. Setting the AROS side is 
+similar to that of Linux use, but you will need to use
+the following IP addresses to setup and test: 10.0.2.16 for AROS machine IP 
+(instead of 172.20.0.10), 10.0.2.2 for gateway (instead of 172.20.0.1). 
+This mode can work even without administrating privileges given to user, but
+can *make some applications on AROS refuse to work properly (such as FTP-client)*.
 
 There`s some guides available on how to setup the QEMU networking in Windows:
 

@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright ê 1995-2006, The AROS Development Team
+:Copyright: Copyright © 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. Can be translated.
@@ -432,8 +432,15 @@ Installing the bootloader
 
 Now we still see our AROS disk, and all files are there. Haven`t we
 already installed the bootloader in previous steps, what are we
-missing? There's a bug in GRUB, preventing it from installing correctly.
-But, if we reinstall it now, it usually helps to solve it. So, now we
+missing? 
+Well, if you use fresh nightly build then GRUB must be already installed
+and working, you can skip this step. If not, please read.
+
+For older versions (before nov. 2006)
+there were a bug in GRUB, preventing it from installing correctly from the
+first try. So if you can`t boot now and get messages like GRUB GRUB FRUB etc
+please read the following.
+The reinstallation on the second try usually helps to solve it. So, now we
 need InstallAROS once again. Repeat all the previous steps from point 1,
 but uncheck every checkbox. After the last click on Proceed, GRUB will
 be reinstalled, and a window will appear asking you to confirm that
