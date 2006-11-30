@@ -23,7 +23,7 @@ vragen/opmerkingen kunt u contact opnemen via het `AROS-Exec`__ forum.
 
 .. raw:: html
 
-   <?php virtual( "/cgi-bin/files?type=snapshots&lang=en" ); ?>
+   <?php virtual( "/cgi-bin/files?type=snapshots&lang=nl" ); ?>
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
@@ -38,7 +38,7 @@ We horen graag over bugs/fouten die u ontdekt terwijl u deze versies gebruikt. D
 
 .. raw:: html
 
-   <?php virtual( "/cgi-bin/files?type=nightly&lang=en" ); ?>
+   <?php virtual( "/cgi-bin/files?type=nightly&lang=nl" ); ?>
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/

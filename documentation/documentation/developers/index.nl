@@ -1,20 +1,23 @@
-====================
-Developers Resources
-====================
+========================
+Ontwikkelaars Informatie
+========================
+
+.. Note:: Bij gebrek aan een Nederlandse vertaling verwijzen
+             deze links door naar Engelstalige pagina's.
 
 + `Hoe mee te helpen`__
-+ `SVN access and usage`__
-+ `How to compile`__
-+ `Applications development manual`__
-+ `Zune Applications development manual`__
-+ `System development manual`__
-+ `PCI subsystem manual`__
-+ `Debugging manual`__
-+ `Reference`__
-+ `Specifications`__
-+ `Documenting`__
-+ `Summaries`__
-+ `Useful links`__
++ `SVN toegang en gebruik (Engels)`__
++ `Hoe te compileren (Engels)`__
++ `Applicatie ontwikkelings handleiding (Engels)`__
++ `Zune Applicatie ontwikkelings handleiding (Engels)`__
++ `Systeem ontwikkelings handleiding (Engels)`__
++ `PCI subsysteem handleiding (Engels)`__
++ `Debugging handleiding (Engels)`__
++ `Referentie (Engels)`__
++ `Specificatie (Engels)`__
++ `Documentatie (Engels)`__
++ `Samenvattingen (Engels)`__
++ `Handige links (Engels)`__
 
 __ contribute
 __ svn
