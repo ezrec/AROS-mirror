@@ -16,11 +16,12 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             A( 'English', href='%(BASE)s' ),
             A( 'Deutsch', href='%(BASE)sde/' ),
             A( 'Fran&#231;ais', href='%(BASE)sfr/' ),
-            A( 'Italiano', href='%(BASE)sit/' ),            
+            A( 'Italiano', href='%(BASE)sit/' ),
+            A( 'Nederlands', href='%(BASE)snl/' ),
             A( 'Polski', href='%(BASE)spl/' ),
+            A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sru/' ),
             A( 'Suomi', href='%(BASE)sfi/' ),
-	    A( 'Svenska', href='%(BASE)ssv/' ),
-            A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sru/' )
+            A( 'Svenska', href='%(BASE)ssv/' )
         ] ),
         BR(),
         A( _N['news'], href=makeURL( 'news/', lang ) ),

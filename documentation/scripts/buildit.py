@@ -28,7 +28,7 @@ TEMPLATE_DATA = {}
 
 # Languages not supported by docutils yet (but that we have files written in):
 # 'no'
-LANGUAGES  = [ 'en', 'de', 'fi', 'fr', 'it', 'pl', 'ru', 'sv' ]
+LANGUAGES  = [ 'en', 'de', 'fi', 'fr', 'it', 'nl', 'pl', 'ru', 'sv' ]
 
 # FIXME: Move this somewhere else...
 if (not os.path.exists( 'credits.en' ) ) \
