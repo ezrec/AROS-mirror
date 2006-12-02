@@ -74,6 +74,23 @@ include TigerPad (free enhanced notepad), DOS Navigator, and maybe much more.
 
 __ http://tortoisesvn.sourceforge.net
 
+MacOS X
+-------
+
+If you run MacOS X you can use one of several SVN ports available such as Martin Ott's 
+`Subversion port`__. After doing so you may also want to install an additional 
+SVN GUI client such as `svnX`__. svnX is the most up-to-date SVN client for OS X and
+also supports integration with, among others, the freeware `Textwrangler`__ texteditor (former BBedit Lite). 
+Note that when using Textwrangler or other Mac text-editors, you will need to change 
+the character encoding from 'Macos roman' to 'ISO latin 1' (ISO8859) for your documents 
+(change this in preferences). For TW all other settings are correct by default. 
+All named applications are freeware and available as Universal Binary for PPC and Intel Macs.
+
+__ http://www.codingmonkeys.de/mbo/
+__ http://www.lachoseinteractive.net/en/community/subversion/svnx/
+__ http://www.barebones.com/products/textwrangler/
+
+
 Logging into the server
 =======================
 
@@ -242,3 +259,6 @@ The following pages are highly recommended:
 .. _`Version Control with Subversion`: http://svnbook.red-bean.com/
 .. _`Subversion Home`:               http://subversion.tigris.org/
 
+Local Variables:
+coding: ISO-8859-1;
+End:
