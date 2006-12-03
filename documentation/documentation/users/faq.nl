@@ -8,6 +8,8 @@ Veel gestelde vragen (FAQ)
 :Date:      $Date$
 :Status:    Done.
 
+.. Note:: De Nederlandse vertaling van deze pagina is momentaal onder constructie
+
 .. Contents::
 
 Algemene vragen
@@ -15,8 +17,8 @@ Algemene vragen
 
 Mag ik een vraag stellen?
 -------------------------
-Natuurlijk kunt u dat. Gaat u a.u.b. naar de `Aros-Exec forum <http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=1636&start=0>`__
-, lees het topic en vraag alles wat u wilt (liefst in het Engels). Deze FAQ zal geupdate worden met meer
+Natuurlijk kunt u dat. Gaat u a.u.b. naar het `Aros-Exec forum <http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=1636&start=0>`__
+, lees het betreffende topic en vraag alles wat u wilt (liefst in het Engels). Deze FAQ zal geupdate worden met meer
 gebruikers vragen, maar het forum is en blijft de meest up-to-date plek.
 
 
@@ -127,14 +129,14 @@ recompilation, with the occasional tweak here and there. There are of course
 programs for which this is not true, but it holds for most modern ones.
 
 
-What hardware architectures is AROS available for?
---------------------------------------------------
+Voor welke hardware architecturen is AROS op moment beschikbaar?
+----------------------------------------------------------------
 
-Currently AROS is available in a quite usable state as native and hosted
-(under Linux, and FreeBSD) for the i386 architecture (ie. IBM PC AT
-compatible clones). There are ports under way at varying degrees of
-completeness to SUN SPARC (hosted under Solaris) and Palm compatible
-handhelds (native).
+Op moment is AROS beschikbaar in een vrij bruikbare staat als native
+en hosted versie (onder Linux en FreeBSD) voor de i386 architectuur (bijv. IBM
+PC AT compatibele klonen). Er zijn ports in de maak voor meer systemen,
+elk in een verschillende mate van compleetheid. Hiertoe behoren een port naar 
+de SUN SPARC (gehost onder Solaris) en Palm compatibele handhelds (native).
 
 
 Zal er AROS port komen voor de PPC? 
@@ -144,14 +146,14 @@ Er wordt momenteel werk ondernomen om AROS te porten naar PPC,
 initieel als een gehoste versie onder Linux.
 
 
-Why are you using Linux and X11?
---------------------------------
+Waarom gebruiken jullie Linux en X11?
+-------------------------------------
 
-We use Linux and X11 to speed up development. For example, if you implement
-a new function to open a window you can simply write that single function and
-don't have to write hundreds of other functions in layers.library,
-graphics.library, a slew of device drivers and the rest that that function might
-need to use. 
+We gebruiken Linux en X11 om de ontwikkeling te versnellen. Ter voorbeeld: het 
+implementeren van een nieuwe functie om een venster te openen kan simpelweg via
+één enkele functie worden gedaan, zonder het schrijven van honderden functies 
+in de layers.library, graphics.library en een reeks van
+andere device drivers die deze functie misschien zou moeten gebruiken. 
 
 The goal for AROS is of course to be independent of Linux and X11 (but it would
 still be able to run on them if people really wanted to), and that is slowly
@@ -170,33 +172,35 @@ hardware directly but instead go through the HIDDs, which are coded using an
 object oriented system that makes it easy to replace HIDDs and reuse code.
 
 
-Why do you think AROS will make it? 
------------------------------------
+Waarom denken jullie dat AROS het zal maken?
+--------------------------------------------
 
-We hear all the day from a lot of people that AROS won't make it. Most of them
-either don't know what we are doing or they think the Amiga is already dead.
-After we explained what we do to the former, most agree that it is possible. The
-latter make more problems. Well, is Amiga dead right now? Those who are still
-using their Amigas will probably tell you that it isn't. Did your A500 or A4000
-blow up when Commodore went bankrupt? Did it blow up when Amiga Technologies
-did?
+We horen bijna dagelijks van mensen dat AROS het niet zal maken. De meeste
+van hen weten om te beginnen al niet wat we doen, of denken dat de Amiga al 'dood' is. 
+Nadat we eerstgenoemde verduidelijken denken de meesten dat ons werk toch nog haalbaar 
+is. Maar het laatstgenoemde is lastiger uit te leggen: is de Amiga nu dood? 
+Degenen die hun Amiga nog gebruiken zullen je waarschijnlijk vertellen van niet. 
+En kritisch gezegd: ging je A500 of A4000 kapot toen Commodore bankroet ging? 
+Gebeurde dit toen Amiga Technologies ten onder ging?
 
-The fact is that there is quite little new software developed for the Amiga
-(although Aminet still chugs along quite nicely) and that hardware is also
-developed at a lower speed (but the most amazing gadgets seem appear right now).
-The Amiga community (which is still alive) seems to be sitting and waiting. And
-if someone releases a product which is a bit like the Amiga back in 1984, then
-that machine will boom again. And who knows, maybe you will get a CD along with
-the machine labeled "AROS". :-)
+Het feit dat er nog altijd een klein beetje nieuwe software ontwikkeld wordt 
+voor de Amiga (al weet Aminet nog altijd zeer veel te zien) en dat de hardware
+nog altijd met een vertraagd tempo ontwikkeld word (de meest indrukwekkende dingen 
+verschijnen deze dagen).
+De Amiga gemeenschap (die nog altijd levend is) lijkt af te wachten. En als iemand
+een product uit zou geven dat een beetje is zoals de Amiga was terug in 1984, dan 
+zal die machine ongetwijfeld weer populairiteit genieten. En wie weet: 
+misschien krijgt u bij die machine ook wel een CD gelabeld "AROS". :-)
 
 
-What do I do if AROS won't compile?
------------------------------------
+Wat te doen als het compileren van AROS niet lukt?
+--------------------------------------------------
 
-Please post a message with details (for example, the error messages you
-get) on the Help forum at `AROS-Exec`__ or become a developer and
-subscribe to the AROS Developer list and post it there, and someone will
-try to help you.
+Plaatst u a.u.b. een bericht met aanvullende details (bijvoorbeeld
+de error boodschap(pen) die u krijgt) in het Help forum op `Aros-Exec`__.
+U kunt ook ontwikkelaar worden en uzelf abonneren op de AROS ontwikkelaars lijst 
+en daar het tegengekomen probleem posten. In beiden gevallen zal iemand u proberen
+te helpen.
 
 __ http://aros-exec.org/
 
@@ -231,125 +235,132 @@ them, making sure that adding these features will be painless. However, they do
 not have the highest priority right now. Very basic RT has been added, though.
 
 
-Can I become a beta tester?
----------------------------
+Kan ik een beta tester worden?
+------------------------------
 
-Sure, no problem. In fact, we want as many beta testers as possible, so
-everyone is welcome! We don't keep a list of beta testers though, so all
-you have to do is to download AROS, test whatever you want and send us a
-report.
+Natuurlijk, geen probleem. Beter nog, we willen zoveel mogelijk beta testers
+als mogelijk, dus iedereen is welkom! We houden overigens geen lijst van beta
+testers bij: u hoeft alleen AROS te downloaden, testen wat u wilt
+en ons daarna een rapport sturen.
 
 
 What is the relation between AROS and UAE?
 ------------------------------------------
 
-UAE is an Amiga emulator, and as such has somewhat different goals than AROS.
-UAE wants to be binary compatible even for games and hardware hitting code,
-while AROS wants to have native applications. Therefore AROS is much faster than
-UAE, but you can run more software under UAE.
+UAE is een Amiga emulator en heeft daardoor andere doelstellingen dan AROS.
+UAE streeft ernaar óók binair compitable te zijn voor spellen en hardware aansprekende
+code, terwijl AROS ten doel heeft eigen native applicaties te hebben. Daardoor
+is AROS sneller dan UAE, maar kan er aan de andere kant weer meer software 
+gedraaid worden onder UAE.
 
-We are in loose contact with the author of UAE and there is a good chance that
-code for UAE will appear in AROS and vice versa. For example, the UAE developers
-are interested in the source for the OS because UAE could run some applications
-much faster if some or all OS functions could be replaced with native code. On
-the other hand, AROS could benefit from having an integrated Amiga emulation.
+We hebben los contact met de maker van UAE, wat de kans groot maakt dat er
+code van UAE in AROS zal verschijnen en visa versa. Ter voorbeeld: de UAE ontwikkelaars
+zijn geïnteresseerd in de broncode van het OS omdat UAE sommige applicaties veel
+sneller zou kunnen draaien als sommige of alle OS functies vervangen konden worden
+met native code. AROS op haar beurt kan profijt trekken van een geïntegreerde
+Amiga emulatie.
 
-Since most programs won't be available on AROS from the start, Fabio Alemagna
-has ported UAE to AROS so you can run old programs at least in an emulation box.
+Gezien de meeste programma's vanaf de start niet beschikbaar waren voor AROS, heeft
+Fabio Alemagna een port van UAE gemaakt naar AROS zodat u al uw oude programma's
+op zijn minst in een emulatie box kan draaien.
 
 
 What is the relation between AROS and Haage & Partner?
 ------------------------------------------------------
 
-Haage & Partner used parts of AROS in AmigaOS 3.5 and 3.9, for example the
-colorwheel and gradientslider gadgets and the SetENV command. This means that in
-a way, AROS has become part of the official AmigaOS. This does not imply that
-there is any formal relation between AROS and Haage & Partner. AROS is an open
-source project, and anyone can use our code in their own projects provided they
-follow the license.
+Haage & Partner hebben delen van AROS gebruikt in AmigaOS 3.5 en 3.9, waaronder
+het kleurenwiel, de kleurverloop-slider gadgets en het SetENV commando. Dit betekend
+dat AROS, op een manier, deel is geworden van het officiele AmigaOS. Het wil 
+echter niet zeggen dat er een formele relatie is tussen AROS en Haage & Partner.
+AROS is een open source project, waarvan iedereen de code in eigen projecten mag
+gebruiken -indien- zij de de licentie volgen. 
 
 
-What is the relation between AROS and MorphOS?
-----------------------------------------------
-
-The relationship between AROS and MorphOS is basically the same as between AROS
-and Haage & Partner. MorphOS uses parts of AROS to speed up their development
-effort; under the terms of our license. As with Haage & Partner, this is good
-for both the teams, since the MorphOS team gets a boost to their development
-from AROS and AROS gets good improvements to our source code from the MorphOS
-team. There is no formal relation between AROS and MorphOS; this is simply how
-open source development works.
-
-
-What programming languages are available?
+Wat is de relatie tussen AROS en MorphOS?
 -----------------------------------------
 
-Most development for AROS is done using ANSI C by crosscompiling the
-sources under a different OS, eg. Linux or FreeBSD. Fabio Alemagna has
-completed an initial port of GCC to i386 native. However, it is not
-currently on the ISO or integrated into the build system.
+De relatie tussen AROS en Morphos is eigenlijk dezelfde als tussen AROS en 
+Haage & Partner. MorphOS gebruikt delen van AROS om hun ontwikkeling te versnellen;
+onder de regels van onze licentie. Zoals met Haage & Partner heeft dit
+voordeel voor beide teams: het MorphOS team krijgt zo een versnelling in
+hun ontwikkeling dankzij AROS, terwijl het AROS team de goede verbeteringen 
+mag overnemen van het MorphOS team. Er is dus geen formele relatie tussen 
+AROS en MorphOS; dit is simpelweg hoe open source ontwikkeling werkt.
 
+
+Welke programmeer talen zijn beschikbaar?
+-----------------------------------------
+
+Het grootste deel van de ontwikkeling voor AROS gebeurd met ANSI C, door
+de bronnen te crosscompilen onder verschillende besturingssystemen zoals
+Linux of FreeBSD. Fabio Alemagna heeft een vroege GCC port gemaakt voor
+i386 native. Deze is echter nog niet bijgevoegd op de ISO of geïntegreerd in het
+build systeem.
+
+Tot de talen die native beschikbaar zijn behoren Python_, Regina_ en False_:
 The languages that are available natively are Python_, Regina_ and False_:
 
-+ Python is a scripting language which has become quite popular, because of 
-  its nice design and features (object-oriented programming, module system,
-  many useful modules included, clean syntax, ...). A separate project has 
-  been started for the AROS port and can be found at 
++ Python is een scripting taal die erg populair geworden is, o.a. vanwege het goede
+  ontwerp en de features (object-georiënteerd programmeren, module systeem, 
+  veel bijgesloten en handige modules, opgeruimde syntax, ...). Een apart
+  project is inmiddels gestart voor de AROS port en kan gevonden worden op 
   http://pyaros.sourceforge.net/.
 
-+ Regina is a portable ANSI compliant REXX interpreter. The goal for the AROS
-  port is to be compatible with the ARexx interpreter for the classic
-  AmigaOS.
++ Regina is een overzetbare ANSI compliant REXX interpreter.
+  Het doel van de AROS port is om compitable te zijn met de ARexx interpreter van
+  het klassieke AmigaOS.
 
-+ False can be classified as an exotic language, so it will most likely not be 
-  used for serious development, although it can be lots of fun. :-) 
++ False kan geclassificeerd worden als een exotische taal, waardoor deze niet
+  direct in aanmerking komt voor serieuze ontwikkelings werk, al kan het werken
+  met deze taal erg leuk zijn. :-) 
 
 .. _Python: http://www.python.org/
 .. _Regina: http://regina-rexx.sourceforge.net/
 .. _False:  http://wouter.fov120.com/false/
 
+Waarom zit er geen m68k emulator in AROS?
+-----------------------------------------
 
-Why is there no m68k emulator in AROS?
---------------------------------------
+Om oude Amiga programma's te draaien hebben we UAE_ geport naar AROS. AROS's
+versie van UAE zal zelfs nog iets sneller draaien dan andere versies, gezien
+AROS minder middelen verbruikt dan andere besturings systemen (wat betekend dat
+UAE meer processor tijd krijgt). Wel willen we proberen om de Kickstart ROM
+te patchen in UAE, zodat deze AROS functies aanspreekt wat een kleine prestatie
+verbetering zal geven. Uiteraard gaan genoemde zaken alleen op voor de native 
+versies van AROS en niet de hosted varianten.
 
-To make old Amiga programs run on AROS, we have ported UAE_ to AROS. AROS's
-version of UAE will probably be a bit faster than other versions UAE since AROS
-needs less resources than other operating systems (which means UAE will get more
-CPU time), and we'll try to patch the Kickstart ROM in UAE to call AROS
-functions which will give another small improvement. Of course, this only
-applies to the native flavors of AROS and not the hosted flavors.
-
-But why don't we simply implement a virtual m68k CPU to run software directly on
-AROS? Well, the problem here is that m68k software expects the data to be in big
-endian format while AROS also runs on little endian CPUs. The problem here is
-that the little endian routines in the AROS core would have to work with the big
-endian data in the emulation. Automatic conversion seems to be impossible (just
-an example: there is a field in a structure in the AmigaOS which sometimes
-contains one ULONG and sometimes two WORDs) because we cannot tell how a couple
-of bytes in RAM are encoded.
+Maar waarom implementeren we niet gewoon een m68k CPU virtualiser? Wel, het probleem
+is dat de m68k software verwacht dat alle data in het zogeheten 'big endian' formaat komt,
+terwijl AROS ook op 'little endian' CPU's draait. Het probleem onstaat dan dat de 
+little endian routines in de AROS core ook met grote endian routines zouden moeten 
+werken tijdens de emulatie. Automatische conversie lijkt onmogelijk (ter voorbeeld:
+er is een veld in een structuur van het AmigaOS dat de ene keer een enkele ULONG bevat
+en de andere keer twee WORDs), omdat we niet kunnen weten hoe een paar bytes in
+het ram gecodeerd worden.
 
 .. _UAE: http://www.freiburg.linux.de/~uae/
 
 
-Will there be an AROS Kickstart ROM? 
+Zal er een AROS Kickstart ROM komen?
 ------------------------------------
 
-There might be, if someone creates a native Amiga port of AROS and does all the
-other work needed to create a Kickstart ROM. Currently, no one has applied for
-the job. 
+Heel misschien, als iemand een native Amiga port van AROS maakt en al het werk
+uitvoert om een Kickstart ROM te maken. Tot zover heeft echter nog niemand zich
+opgegeven voor deze taak.
 
 
 Software questions
 ==================
 
-How do I access AROS's disk images from UAE?
---------------------------------------------
+Hoe krijg ik toegang tot AROS' disk images vanuit UAE?
+------------------------------------------------------
 
-The floppy disk image can be mounted as a hardfile and then used as a 1.4 MB
-harddisk within UAE. After you have put the files you want on the hardfile disk
-image (or whatever you wanted to do), you can write it to a floppy.
+De floppy disk image kan als hardfile gemount worden en dan als een 1.4 MB
+harddisk gebruikt worden binnen UAE. Nadat u de bestanden naar de hardfile
+disk image gekopieert hebt (of iets anders dat u wilde doen), kan deze naar een floppy
+geschreven worden.
 
-The geometry of the hardfile is as follows::
+De geometrie van de hardfile is als volgt::
 
     Sectors    = 32
     Surfaces   = 1
@@ -357,25 +368,26 @@ The geometry of the hardfile is as follows::
     Block Size = 90
 
 
-How do I access AROS's disk images from hosted flavors of AROS?
----------------------------------------------------------------
+Hoe benader ik AROS's disk images vanuit hosted versies van AROS?
+-----------------------------------------------------------------
 
-Copy the disk image to the DiskImages directory in AROS (SYS:DiskImages, eg.
-bin/linux-i386/AROS/DiskImages) and rename it to "Unit0". After starting AROS,
-you can mount the disk image with::
+Kopieer de disk image naar de DiskImages map in AROS (SYS:DiskImages, bijv: 
+bin/linux-i386/AROS/DiskImages) en hernoem deze naar "Unit0". Na het starten van
+AROS kan deze disk gemount worden met::
 
     > mount AFD0: 
 
 
-What is Zune?
--------------
+Wat is Zune?
+------------
 
-In case you read on this site about Zune, it's simply an open-source
-reimplementation of MUI, which is a powerful (as in user- and
-developer-friendly) object-oriented shareware GUI toolkit and de-facto
-standard on AmigaOS. Zune is the preferred GUI toolkit to develop
-native AROS applications. As for the name itself, it means nothing,
-but sounds good.
+In geval je op deze site de naam Zune gelezen hebt: het is een open source
+implementatie van MUI, wat een krachtige (als in gebruikers- en ontwikkelaars-
+vriendelijk) object-georiënteerd shareware GUI toolkit is, tevens de-facto standaard
+onder AmigaOS. Zune is de geprefereerde GUI toolkit voor de ontwikkeling van 
+native AROS applicaties. En betreft de naam zelf, het betekend niets, maar klinkt
+goed.
+
 
 How can I restore my Prefs to defaults?
 ---------------------------------------
@@ -442,19 +454,20 @@ You must supply the following string (as is!) to your /etc/X11/xorg.conf
     Option  "BackingStore"
 
 What are the AROS-native kernel options used in GRUB line?
-----------------------------------------------------------
+Wat zijn de AROS-native kernal opties voor de GRUB CLI?
+-------------------------------------------------------
 
-Here`s some::
+Dit zijn er enkele::
 
-    nofdc - Disables the floppy driver completely.
-    noclick - Disabled the floppy disk change detection (and clicking)
-    ATA=32bit - Enables 32-bit I/O in the hdd driver (safe)
-    forcedma - Forces DMA to be active in the hdd driver (should be safe, but       
-    might not be)
-    gfx=<hidd name> - Use the named hidd as the gfx driver
-    lib=<name> - Load and init the named library/hidd
+    nofdc - Schakelt de floppy driver uit.
+    noclick - Schakelt de floppy disk verandering detectie uit (en het klikken)
+    ATA=32bit - Schakelt 32-bit I/O aan in de hdd driver (veilig)
+    forcedma - Forceerd DMA om actief te zijn in de hdd driver (zou veilig moeten zijn, 
+    maar niet gegarandeerd)
+    gfx=<hidd name> - Gebruik de genoemde hidd als gfx driver
+    lib=<name> - Laad en init de genoemde library/hidd
 
-Please note that they are case-sensitive.
+Deze zijn hoofdletter gevoelig. 
 
 How can I transfer files to virtual machine with AROS?
 ------------------------------------------------------
@@ -467,25 +480,26 @@ host machine. Then you can use FTP client for AROS to transfer files
 documentation contains a chapter about networking, go for it.
 
 
-Hardware questions
-==================
+Hardware vragen
+===============
 
-Where can I find an AROS Hardware Compatibility List?                   
------------------------------------------------------
+Waar kan ik een AROS Hardware Compatibiliteits lijst vinden?
+------------------------------------------------------------
 
-You can find one on the `AROS Wiki <http://en.wikibooks.org/wiki/Aros/Platforms/x86_support>`__ 
-page. There can be another lists made by the AROS users.
+U kunt er één vinden op de `AROS Wiki <http://en.wikibooks.org/wiki/Aros/Platforms/x86_support>`__ 
+pagina. Er kunnen ook andere lijsten zijn gemaakt door AROS gebruikers (meer informatie volgt).
 
-Why Aros can`t boot from my drive set as the SLAVE on IDE channel?
-------------------------------------------------------------------
+Waarom kan AROS niet van een IDE harddrive in SLAVE mode starten? 
+-----------------------------------------------------------------
 
-Well, AROS should boot if the drive is SLAVE but ONLY if there`s a drive also 
-on MASTER. That`s appeared to be a correct connection respecting to the IDE 
-specification, and AROS follows it.
+Well, AROS zou moeten booten als de drive in SLAVE mode draait MITS er ook
+een drive als MASTER aangesloten is. Dit blijkt de correctie verbindingmethode 
+te zijn volgens de IDE specificatie, welke AROS volgt.
 
-My system hangs with red cursor on screen or a blank screen
+Mijn systeem hangt met een rode cursor op een (leeg) scherm
 -----------------------------------------------------------
 
-One reason for this can be use of the serial mouse (these is not supported yet).
-You must use PS/2 mouse with AROS at the moment. Another can be if you`ve chosen
-a video mode unsupported by your hardware in boot menu. Reboot and try a different one.
+Één reden hiervoor kan het gebruik van een seriele muis zijn (deze worden nog 
+niet ondersteund). U moet voorlopig nog een PS/2 muis gebruiken met AROS. Een andere
+reden kan zijn dat u in het bootmenu een video modus hebt gekozen die niet 
+ondersteund wordt door uw hardware. Reboot en probeer een andere modus.
