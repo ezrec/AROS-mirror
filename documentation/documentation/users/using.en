@@ -154,21 +154,31 @@ Currently the *Virtualization* technologies is developed to a almost complete
 real machine replacement, have been burned-on by the increasing CPU speeds.
 You can make a "virtual" machine inside of your system ("host") and launch AROS on it,
 without being worried about any failures and relaunching the "guest" system quickly 
-if something has happened. There`s a number of free virtual machine packages,
-most knowingly is QEMU (Free, Open Source), VMWare Player (Free. There`s also
-a full VMWare server for free that require a free serial) and Microsoft VPC (Free).
+if something has happened. 
+
+There`s a number of free virtual machine packages,
+most knowingly is QEMU (Free, Open Source, for many host systems), VMWare Player 
+(Free. There`s also a full VMWare server for free that require a free serial) and Microsoft VPC (Free).
 You can get a version for your "host" system that suits your needs. We will
 describe some tips on launching AROS for different VM`s. 
 
 Instead of having almost the same AROS setup inside the VM`s, there`s a 
 difference in setting the VM itself. 
 
+VM for Linux/FreeBSD
+""""""""""""""""""""
+
 QEMU on Linux is quite easy to setup. All you need is to apt-get the package
 on Debian/Ubuntu/Knoppix/DSL or use any other package manager for other 
 distributions or download and unpack the archive manually. You can get the
 archive from the `QEMU Website <http://fabrice.bellard.free.fr/qemu/>`__. 
 
-QEMU on Windows is almost the same thing. The difference is in networking
+Also there`s an VMware VM available for Linux. Check the `VMWare website <www>`__.
+
+VM for Windows
+""""""""""""""
+
+QEMU on Windows is almost the same thing as on Linux. The difference is in networking
 and some other issues. You can find useful information and packages on 
 `QEMU On Windows page <http://www.h7.dion.ne.jp/~qemu-win/>`__ . 
 Also there`s nice GUI for QEMU called QEMU Manager, including the QEMU package.
@@ -178,21 +188,69 @@ QEMU must be launched as a console application with some parameters given.
 We will review some options in other sections, meaning you must append
 these to your launch string (or a script). 
 
-QEMU is fast virtualiser, but it`s speed can be increased by installing 
-the KQEMU kernel module (and appending the -kernel-kqemu option if in Windows).
-But remember that KQEMU can make guest system unstable.
-Please don`t use ALT+Tab combination to free the keyboard lock, use CTRL+Alt,
-otherwise Tab key may remain pressed and can damage currently edited file.
+.. Note::  
 
-Also if you considered to try installing AROS to HD, you can create the 
-virtual HDD for QUMU using the qemu-img program (replace <size> 
+    QEMU is fast virtualiser, but it`s speed can be increased by installing 
+    the KQEMU kernel module (and appending the -kernel-kqemu option if in Windows).
+    But remember that KQEMU can make guest system unstable.
+    Please don`t use ALT+Tab combination to free the keyboard lock, use CTRL+Alt,
+    otherwise Tab key may remain pressed and can damage currently edited file.
+    
+Applying to `VMWare <http://vmware.com>`__ or VPC it`s even easier to setup. 
+All you need is to install some virtual hardware like network and sound card 
+and create an virtual HDD. Everything managed by a simple GUI.
+
+VM for MacOS
+""""""""""""
+
+For PPC macs running OS 9 or 10.x only 
+`Virtual PC <http://www.microsoft.com/mac/products/virtualpc/virtualpc.aspx?pid=virtualpc>`__, 
+an i386 emulator, is 
+available. It does however not support Intel Macs. VPC is also an expensive 
+commercial product. The alternative method to get it is purchasing Office 2004 
+which comes with a free copy of the latest version (VPC 7). Note that the Mac 
+VPC is essentially an emulator, with a limited speed and it is demanding a 
+reasonable fast PPC machine (see the website for more details).
+
+For Intel macs (OS X) Qemu has been ported and sequentally renamed as
+`Q <http://www.kju-app.org/kju/>`__ . It comes as a Intel 
+Binary and is freeware. Q does not support direct virtualisation yet (or the 
+i386 kernel accerelation module), making it achieve only part of the 
+possible speed at the moment. 
+
+Another choice for VM on Intel Macs is the commercial Parallels virtualiser. 
+It offers better performance trough virtualisation, but like VPC 
+is a commercial product, though at a far lesser cost. You may try a 60 day 
+trial version. Also please note that at least PC Parallels Workstation 2.1
+was failed to run AROS at all, and the same can happen with Mac version
+(please test it if you can).
+
+Virtual Disk Images
+"""""""""""""""""""
+
+If you considered to try installing AROS to a virtual machine`s HD, you can 
+create the virtual HDD for QEMU using the qemu-img program (replace <size> 
 with needed size in bytes, M or G for mega- or giga-) with a command like::
     
     qemu-img create -f qcow aros.img <size>
 
-Applying to `VMWare <http://vmware.com>`__ or VPC it`s even easier to setup. 
-All you need is to install some virtual hardware like network and sound card 
-and create an virtual HDD. Everything managed by a simple GUI.
+A set of pre-installed or empty diskimages is available to make running AROS under 
+VM a bit easier. WinAros is a preinstalled AROS environment installed on a HD image, 
+compatible with famous virtual machines QEMU and Microsoft VirtualPC, both 
+freely available on the net. You may download both Winaros versons on a
+`website <http://amidevcpp.amiga-world.de/afa_binarie_upload.php>`__.
+QEMU Winaros is `here <http://amidevcpp.amiga-world.de/WinAros/WinAros_Light_QEMU.zip>`__ 
+and VirtualPC one `here <http://amidevcpp.amiga-world.de/WinAros/WinAros_Light_VPC.zip>`__ .
+
+Installation Kit for AROS (IKAROS) is a set of virtual disk images for 
+different virtualisers, including QEMU and VMware, already partitioned, 
+formatted, and ready to install AROS on. Its benefits are its small archive 
+size, as it doesn't include large amount of files, and the possbility to 
+install fresh AROS versions, which make it useful for testing the nightly 
+builds. It allows easy installation of new versions without messing with 
+partition setup. Installation instructions included. Please check 
+`Aros-Exec Archives <http://archives.aros-exec.org/index.php?function=browse&cat=emulation/misc>`__ 
+in (emu/misc) section for the recent updates.
 
 Using the AfA on m68k
 ---------------------
@@ -542,7 +600,7 @@ You have to edit 3 files in the SYS:extras/Networking/stacks/AROSTCP/db drawer:
 hosts, interfaces and netdb-myhost.
 In *hosts* remove or comment out any entries. Hosts will be in netdb-myhost for now.
 In *interfaces* uncomment the prm-rtl8129.device line (For QEMU is emulating 
-this NIC, use pcnet32 for VMWare), edit it(change an IP=to which was above)::
+this NIC, use pcnet for VMWare), edit it(change an IP=to which was above)::
 
     eth0 DEV=DEVS:networks/prm-rtl8029.device UNIT=0 NOTRACKING IP=172.20.0.10 UP
 
@@ -623,8 +681,9 @@ Output like this means that our interface packet`s reached the gateway with
 172.20.0.1 address. If you got Host unreachable errors, then check your AROSTCP
 settings and VM options.
 
-To make external network accessible to VM you must setup routing from
-our virtual net to a real one, such as make a host system a router.
+On Windows:To make external network accessible to VM you must setup routing from
+our virtual net to a real one, such as make a host system a router. For Linux this
+have been done already.
 
 You can test it even further by pinging other hosts and try using some 
 networking applications which you can find on Archives.aros-exec.org, like
