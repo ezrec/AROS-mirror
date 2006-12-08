@@ -29,14 +29,13 @@ follow when writing documentation for AROS.
 Introduction
 ============
 
-Documentation is vitable for the any project, making it *useful*. Usually, 
-in project with such a limited developers efforts as ours, documentation is
-significantly delayed or just absent. Also, most of programmers isn`t that good 
-in writing documentation, so that what was already written usually isn`t very 
-readable. So it`s needed to combine the developers and users efforts in 
-documentating and reach the goal: "AROS Ultimate Documentary". So if you know the 
-user that can help you, just let him ! =)
-
+Documentation is vital for the any project, making it *useful*. Usually, 
+in a project with such a limited developer efforts as ours, documentation is
+significantly delayed or just absent. Also, most of programmers aren't that good 
+in writing documentation, so that what was already written usually isn't very 
+readable. It is needed to combine the developers and users efforts in 
+documenting to reach the goal of an "AROS Ultimate Documentary". 
+So if you know any users that can help us, just let him! =)
 
 *FIXME: Write more?*
 
@@ -89,23 +88,27 @@ Subdirectories
 --------------
 
 You can create additional directories in 'documentation/users' and
-'documentation/developers'. The build system recursivly scans the
+'documentation/developers'. The build system recursively scans the
 subdirectories. It is recommended that you create a file 'index.en' in the
 new directories. 
 
-Internationalisation
+Internationalization
 --------------------
 
 The build system supports I18n for the 'www' target. You have to append a
 language suffix to the document file name (e.g. commands.en).
 Currently there is support for English (.en), German (.de), Finnish (.fi),
-Italian (.it) and Russian (.ru).
+Italian (.it), Russian (.ru), Swedish (.sv) and Dutch (.nl). If you wish to
+translate documentation into more languages then please contact us via 
+the `website mailing list`__. 
 
 When you create a link to a document you have to omit the suffix
 (e.g \`Commands <user/commands>\`_). But if you use the 'include' directive
 for translated documents you must keep the suffix.
 
 The build system uses the English version when no translated page is available.
+
+__ http://aros.sourceforge.net/contact.php#mailing-lists
 
 Sample code
 -----------
@@ -195,9 +198,17 @@ To build the website you will additionally need:
 
 + The `Python Imaging Library`__ 1.1.3
 
+MacOS X comes with Python pre-installed, but to build the website
+you will need:
+
++ The `Darwinports`__ package 
+
++ The `Darwinports Python Imaging Library`__ 1.1.3
+
 __ http://www.python.org/
 __ http://www.pythonware.com/products/pil/
-
+__ http://darwinports.opendarwin.org/
+__ http://py-pil.darwinports.com/
 
 Setting up
 ~~~~~~~~~~
@@ -236,8 +247,8 @@ There are currently two targets supported:
   
   This target generates standalone HTML from the documentation, suitable for
   offline viewing and inclusion into documentation packages. 
-
-
+  
+  
 Procedure
 ~~~~~~~~~
 
@@ -253,8 +264,20 @@ If you want to build the standalone HTML documentation::
     > cd AROS/documentation
     > ./build html
 
-The generated files will be put in ``../bin/documentation/<target-name>``, eg.
-``../bin/documentation/www`` for the ``www`` target. Additionally, there is
+Tip: adding a language suffix (e.g. en, du or it) after the target name generates 
+only pages for that given language. All missing or non-translated pages are off course
+still substituted with their English counterparts. This results in strongly
+decreased compile times. ::
+
+    > cd AROS/documentation
+    > ./build www du
+
+
+The generated files will be put in ``../bin/documentation/<target-name>``, e.g..
+``../bin/documentation/www`` for the ``www`` target. Specific language 
+files are put into ``../bin/documentation/<target-name>/<language-name>``.
+
+Additionally, there is
 a ``clean`` target, which will delete the entire ``../bin/documentation``
 directory.
 
