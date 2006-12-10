@@ -139,7 +139,7 @@ getvalue(struct CSource *args, UBYTE **errstrp, struct CSource *res)
   UBYTE Buffer[KEYWORDLEN];
   WORD var, index;
   LONG vlen;
-  UBYTE *value = NULL;
+  STRPTR value = NULL;
 
   Buffer[0] = '\0';
 
