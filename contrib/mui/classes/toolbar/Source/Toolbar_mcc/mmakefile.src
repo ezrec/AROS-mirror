@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-zune-classes-toolbar-class : includes linklibs
 
-USER_INCLUDES = -I../../../nlist/commonaros
+USER_INCLUDES = -I../../../../../necessary/mui/classes/nlist/commonaros
 
 FILES := Dispatcher \
 	 Draw \
