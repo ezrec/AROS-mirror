@@ -11,10 +11,8 @@ i pollici: dozzine di piccoli e grandi miglioramenti sono stati
 apportati a diverse componenti del sistema operativo, in modo da 
 renderlo migliore.
 
-Le nightly builds della versione PPC-hosted di AROS sono finalmente disponibili nella nostra pagina dei `download`__. Dato che abbiamo 
-ricevuto qualche lamentela circa la disponibilità delle nightly, 
-ricordiamo che non sempre la loro compilazione automatica ha 
-successo, e per tanto qualche giorno potrebbero mancare.
+Le nightly builds della versione PPC-hosted di AROS sono finalmente
+disponibili nella nostra pagina dei `download`__.
 
 Christoph Szczecina ha aggiunto un supporto iniziale alla copia dei 
 file per mezzo del drag'n'drop, rendendo Wanderer un filino più 
@@ -47,7 +45,8 @@ ri-generazione di vecchi sistemi operativi, prendendo come esempio le
 due piattaforme AMIGA e OS/2. Una delle soluzioni contemplate è 
 proprio AROS.
 
-The AROS Show ha intervistato il nostro project-leader Aaron Digulla. Cliccate `qui`__ per leggere l'intervista.
+The AROS Show ha intervistato il nostro project-leader Aaron Digulla.
+Cliccate `qui`__ per leggere l'intervista.
 
 __ http://www.osnews.com/story.php/16543
 __ http://arosshow.blogspot.com/2006/12/interview-with-aaron-digulla-who.html
@@ -66,7 +65,7 @@ screenshots `qui`__ e `qui`__, mentre il file binario è `qui`__.
 *Murks!* è un ambiente di sviluppo integrato (IDE) per AROS. Murks! 
 usa lo stesso Project File Format di AmiDevCpp e per tanto 
 l'interscambio dei dati è assicurato. Per usare Murks!, dovete avere 
-gcc per Aros native installato sul sistema. Gli utenti di Windows 
+gcc per AROS native installato sul sistema. Gli utenti di Windows 
 possono provare Murks! grazie all'ultima versione di WinAros 
 che già contiene gcc. Tutti i link del caso si trovano su `AROS-
 EXEC`__.
