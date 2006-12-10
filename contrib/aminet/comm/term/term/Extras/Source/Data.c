@@ -600,7 +600,7 @@ UBYTE			 BaudBuffer[80],BaudCount;
 
 struct FlowInfo		 FlowInfo;
 
-UBYTE			*DataHold;
+STRPTR			 DataHold;
 LONG			 DataSize;
 
 	/* Transfer data. */
