@@ -1,0 +1,69 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2006-12-10
+
+Our latest status update is about three months old, but in the  meanwhile we didn't sit somewhere doing nothing. Lots of improvements 
+and bugfixes had been made to several compoments of AROS, in order 
+to make it work better.
+
+Nightly builds for PPC-hosted flavor of AROS are finally available 
+in our `download page`__. As someone has complained he could not 
+find a nightly on that page, just remember that nightly builds can 
+be available only when they actually compile successfully. And this 
+does not happen every night...
+
+Christoph Szczecina added initial support for drag'n'drop file 
+copying to Wanderer, allowing a smarter approach to file management. 
+This initial commit allows to copy only a single file from a 
+directory to another, but it's a beginning. Beta tester may find 
+this new feature in the latest nightly builds. Other developers 
+added window position saving and icon listing support.
+
+Staf Verhaegen is updating developers documentation. Lots of things 
+have chnaged in the last 24 months and our manual pages were just a 
+little outdated. Thanks to Staf, new AROS developers may find 
+useful informations on this website.
+
+Thanks to Bernd Roesch and Georg Steger, all important features 
+needed to replace MUI in most Amiga programs have been added to 
+Zune. Michal Schulz added write support to PNG datatype, making icon 
+and image editing easier on AROS.
+
+__ http://aros.sourceforge.net/download.php
+
+AROS in the news
+----------------
+
+OSNews has published an `article`__ about some of the issues 
+surrounding OS-recreation projects. Further on, it examines two 
+platforms and the related re-creation OSes, one of those being AROS 
+itself.
+
+The AROS Show has interviewed our project leader Aaron Digulla. Just click `here`__ to read it.
+
+__ http://www.osnews.com/story.php/16543
+__ http://arosshow.blogspot.com/2006/12/interview-with-aaron-digulla-who.html
+
+Software
+--------
+
+*AutoDocReader*, a software to read developers documentation in autodoc 
+format, has been ported to AROS. *AmiGG* 0.44.3 has been ported too, by 
+Marcin Kielesinski. This is the first Instant Messenger program for 
+AROS and it supports two protocols popular in Poland: Gadu-Gadu and Tlen. AmiGG also supports mail notifications. You may find two 
+screenshots `here`__ and `here`__, while binaries are `here`__.
+
+*Murks!* is an Integrated Development Environment for AROS. Murks! uses 
+the same Project File Format that AmiDevCpp uses so data exchange is 
+possible. To use Murks!, you need the Aros native gcc installed on 
+your system, Windows users can try Murks! using the latest WinAros 
+Version which contains the native gcc. Full story on `AROS-EXEC`__.
+
+__ http://ministerq.integradesign.org/31.PNG
+__ http://ministerq.integradesign.org/32.PNG
+__ http://amigg.integradesign.org/amigg_beta.lha
+__ http://aros-exec.org/modules/news/article.php?storyid=185
+

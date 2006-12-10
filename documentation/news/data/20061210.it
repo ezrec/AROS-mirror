@@ -1,0 +1,78 @@
+=============
+Status update
+=============
+
+:Author:   Paolo Besser
+:Date:     2006-12-10
+
+L'ultimo aggiornamento del sito risale ormai a tre mesi fa, ma nel 
+frattempo non siamo stati di certo seduti da qualche parte a girarci 
+i pollici: dozzine di piccoli e grandi miglioramenti sono stati 
+apportati a diverse componenti del sistema operativo, in modo da 
+renderlo migliore.
+
+Le nightly builds della versione PPC-hosted di AROS sono finalmente disponibili nella nostra pagina dei `download`__. Dato che abbiamo 
+ricevuto qualche lamentela circa la disponibilità delle nightly, 
+ricordiamo che non sempre la loro compilazione automatica ha 
+successo, e per tanto qualche giorno potrebbero mancare.
+
+Christoph Szczecina ha aggiunto un supporto iniziale alla copia dei 
+file per mezzo del drag'n'drop, rendendo Wanderer un filino più 
+usabile. Questa aggiunta è del tutto preliminare e permette di 
+copiare un singolo file per volta tra due directory, ma è già un
+importante passo avanti. Chi vuole sperimentare questa aggiunta
+può farlo scaricando una delle ultime nightly build. Altri 
+programmatori hanno poi aggiunto la possibilità di vedere le icone 
+come elenco e di salvare la posizione delle finestre.
+
+Staf Verhaegen sta aggiornando la documentazione per i programmatori. 
+Molte cose sono cambiate negli ultimi ventiquattro mesi, e la nostra 
+manualistica cominciava a essere un po' obsoleta. Ma, grazie a Staf, 
+chi vuole avvicinarsi alla programmazione di/su AROS può contare su 
+strumenti migliori, a partire da questo sito.
+
+Grazie a Bernd Roesch e Georg Steger, tutte le funzioni necessarie 
+per sostituire MUI nella maggior parte dei programmi Amiga sono state 
+inserite nel framework Zune. Michal Schulz ha aggiunto la funzione di 
+scrittura al datatype per le immagini PNG, aiutando in questo modo 
+la creazione di disegni e icone direttamente su AROS.
+
+__ http://aros.sourceforge.net/download.php
+
+AROS in the news
+----------------
+
+OSNews ha pubblicato un `articolo`__ sui problemi che circondano la 
+ri-generazione di vecchi sistemi operativi, prendendo come esempio le 
+due piattaforme AMIGA e OS/2. Una delle soluzioni contemplate è 
+proprio AROS.
+
+The AROS Show ha intervistato il nostro project-leader Aaron Digulla. Cliccate `qui`__ per leggere l'intervista.
+
+__ http://www.osnews.com/story.php/16543
+__ http://arosshow.blogspot.com/2006/12/interview-with-aaron-digulla-who.html
+
+Software
+--------
+
+*AutoDocReader*, un software per la lettura di documentazione in 
+formato autodoc è stato portato su AROS. Anche *AmiGG* 0.44.3 è stato 
+convertito, da Marcin Kielesinski. Si tratta del primo Instant 
+Messenger per AROS, e supporta due protocolli molto famosi in 
+Polonia: Gadu-Gadu e Tlen. AmiGG può anche notificare la presenza di 
+nuovi messaggi nella casella di posta elettronica. Potete trovare due 
+screenshots `qui`__ e `qui`__, mentre il file binario è `qui`__.
+
+*Murks!* è un ambiente di sviluppo integrato (IDE) per AROS. Murks! 
+usa lo stesso Project File Format di AmiDevCpp e per tanto 
+l'interscambio dei dati è assicurato. Per usare Murks!, dovete avere 
+gcc per Aros native installato sul sistema. Gli utenti di Windows 
+possono provare Murks! grazie all'ultima versione di WinAros 
+che già contiene gcc. Tutti i link del caso si trovano su `AROS-
+EXEC`__.
+
+__ http://ministerq.integradesign.org/31.PNG
+__ http://ministerq.integradesign.org/32.PNG
+__ http://amigg.integradesign.org/amigg_beta.lha
+__ http://aros-exec.org/modules/news/article.php?storyid=185
+
