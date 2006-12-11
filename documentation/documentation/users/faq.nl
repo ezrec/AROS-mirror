@@ -46,7 +46,7 @@ je anderen niet vertellen wat je geleerd hebt. Een boek getiteld "Windows van bi
 is daarom illegaal en heeft op zijn minst een dubieuze legale status.  
 
 Gezien we disambleer technieken vermijden en gewoon algemeen beschikbare kennis
-gebruiken (waaronder programeer handleidingen), welke onder geen NDA 
+gebruiken (waaronder programmeer handleidingen), welke onder geen NDA 
 (geheimhoudingsverklaring) vallen, heeft het bovenstaande niet direct betrekking op AROS. 
 Wat hier telt is de intentie van de wet: het is legaal om software te schrijven 
 welke compatibel is met een ander stuk software. 
@@ -69,64 +69,68 @@ Dan nog zijn er helaas geen rigide legale afspraken gemaakt, ondanks goede inten
 van beiden partijen.
 
 
-Why are you only aiming for compatibility with 3.1?
----------------------------------------------------
+Waarom doelen jullie alleen op compatibiliteit met 3.1?
+-------------------------------------------------------
 
-There have been discussions about writing an advanced OS with the features of
-the AmigaOS. This has been dropped for a good reason. First, everyone agrees
-that the current AmigaOS should be enhanced, but no one knows how to do that or
-even agrees on what has to be enhanced or what is important. For example, some
-want memory protection, but don't want to pay the price (major rewrite of the
-available software and speed decrease).
+Er zijn discussies gevoerd over het schrijven van een geavanceerd OS met de 
+features van AmigaOS. Dit hebben we echter niet gedaan om goede redenen. Ten eerste:
+iedereen is het eens dat het huidige AmigaOS verbeterd zou moeten worden,
+maar niemand weet hoe, laat staan wat er verbeterd moet worden. 
+We willen bijvoorbeeld graag geheugen bescherming, maar weten niet wat de prijs
+daarvoor zal zijn (het herschrijven van alle software en bijkomende snelheid vertraging).
 
-In the end, the discussions ended in either flame wars or reiteration of the
-same old arguments over and over again. So we decided to start with something we
-know how to handle. Then, when we have the experience to see what is possible or
-not, we decide on improvements.
+Uiteindelijk eindigden de discussies ofwel in flame wars of een het
+eindeloos herhalen van dezelfde argumenten. Dus besloten we om te beginnen
+met iets waarvan we wisten hoe we ermee om moesten gaan. Om daarna, 
+als we de ervaring hadden om te oordelen wat wel of niet mogelijk was, 
+te beslissen over de verbeteringen.
 
-We also want to be binary compatible with the original AmigaOS on Amiga. The
-reason for this is just that a new OS without any programs which run on it has
-no chance to survive. Therefore we try to make the shift from the original OS to
-our new one as painless as possible (but not to the extent that we can't improve
-AROS afterwards). As usual, everything has its price and we try to decide
-carefully what that price might be and if we and everyone else will be willing
-to pay it.
-
-
-Can't you implement feature XYZ?
---------------------------------
-
-No, because: 
-
-a) If it was really important, it would be in the original OS. :-) 
-b) Why don't you do it yourself and send a patch to us?
-
-The reason for this attitude is that there are plenty of people around who think
-that their feature is the most important and that AROS has no future if that
-feature is not built in right away. Our position is that AmigaOS, which AROS
-aims to implement, can do everything a modern OS should do. We see that there
-are areas where AmigaOS could be enhanced, but if we do that, who would write
-the rest of the OS? In the end, we would have lots of nice improvements to the
-original AmigaOS which would break most of the available software but be worth
-nothing, because the rest of the OS would be missing.
-
-Therefore, we decided to block every attempt to implement major new features in
-the OS until it is more or less completed. We are getting quite close to that
-goal now, and there have been a couple of innovations implemented in AROS that
-aren't available in AmigaOS.
+Ook willen we AROS binair compatibel houden met het originele AmigaOS op de Amiga. 
+De reden hiervoor is dat een nieuw OS zonder enig programma om erop te draaien 
+gewoonweg geen overlevingskans heeft. Daarom proberen we de overstap van het 
+originele OS naar het nieuwe zo pijnloos mogelijk te maken (echter niet in dermate dat 
+we AROS later niet kunnen verbeteren). Zoals gewoonlijk heeft elk ding zijn prijs 
+ofwel "elk voordeel heeft zijn nadeel". We proberen daarom voorzichtig in te 
+schatten wat de eventuele nadelen zijn en of iedereen die acceptabel vind.
 
 
-How compatible is AROS with AmigaOS?
-------------------------------------
+Kunnen jullie feature XYX implementeren?
+----------------------------------------
 
-Very compatible. We expect that AROS will run existing software on the Amiga
-without problems. On other hardware, the existing software must be recompiled.
-We will offer a preprocessor which you can use on your code which will change
-any code that might break with AROS and/or warn you about such code.
+Nee, omdat:
 
-Porting programs from AmigaOS to AROS is currently mostly a matter of a simple
-recompilation, with the occasional tweak here and there. There are of course
-programs for which this is not true, but it holds for most modern ones.
+a) Als het echt belangrijk was, had het ook in het originele OS gezeten. :-)
+b) Waarom doet u dit zelf niet en stuurt u de patch naar ons?
+
+De reden voor deze attitude is dat er veel mensen zijn die denken dat hun 
+toepassing de meest belangrijke is en dat AROS zonder het inbouwen daarvan 
+geen toekomst zou hebben. Onze houding is dat het AmigaOS, 
+dat AROS probeert te implementeren, alles
+kan doen wat een modern OS kan doen. We weten dat er gebieden zijn waar het AmigaOS
+verbeterd kan worden, maar als we die eerst zouden maken, wie schrijft dan de rest van 
+het OS? Uiteindelijk zouden we een hoop mooie verbeteringen hebben in het originele
+AmigaOS, die vervolgens de ondersteuning van alle beschikbare software zouden breken 
+en deze waardeloos maken, gezien de rest van het OS ontbreekt.
+
+Daarom hebben we ervoor gekozen alle pogingen te blokkeren om grote nieuwe features 
+in het OS te bouwen, tot het tijdstip waarop deze min of meer compleet zal zijn. 
+We zijn nu bijna bij dat punt, terwijl er inmiddels ook alweer een paar nieuwe 
+innovaties in AROS zijn ingebouwd waarover het originele OS niet beschikte.
+
+
+Hoe compatibel is AROS met AmigaOS?
+-----------------------------------
+
+Zeer compatibel. We verwachten dat AROS zonder problemen bestaande software op 
+een Amiga zal draaien. Voor andere hardware zal de bestaande software echter 
+gehercompileerd moeten worden. We zullen een pre-processor aanbieden die je kan
+gebruiken met je eigen code, welke code zal veranderen die AROS kan laten
+vastlopen of op zijn minst waarschuwt voor deze code.
+
+Overzetten van programma's van AmigaOS naar AROS is op moment vooral een kwestie
+van simpel hercompileren, met een enkele aanpassing aan de code. Er zijn 
+natuurlijk programma's waarvoor dit niet opgaat, maar het geld wel voor de 
+meeste moderne software. 
 
 
 Voor welke hardware architecturen is AROS op moment beschikbaar?
@@ -151,25 +155,26 @@ Waarom gebruiken jullie Linux en X11?
 
 We gebruiken Linux en X11 om de ontwikkeling te versnellen. Ter voorbeeld: het 
 implementeren van een nieuwe functie om een venster te openen kan simpelweg via
-één enkele functie worden gedaan, zonder het schrijven van honderden functies 
+één enkele functie worden gedaan, zonder het moeten schrijven van honderden functies 
 in de layers.library, graphics.library en een reeks van
-andere device drivers die deze functie misschien zou moeten gebruiken. 
+andere device drivers die deze functie misschien zou aanroepen. 
 
-The goal for AROS is of course to be independent of Linux and X11 (but it would
-still be able to run on them if people really wanted to), and that is slowly
-becoming a reality with the native versions of AROS. We still need to use Linux
-for development though, since some development tools haven't been ported to AROS
-yet.
+Het doel van AROS is natuurlijk om onafhankelijk te draaien van Linux en X11 
+(maar het zou er nog steeds op kunnen draaien als mensen dit echt wilden), wat
+nu langzaam realiteit wordt met de native versies van AROS. Voorlopig is 
+Linux nog wel nodig voor de ontwikkeling, gezien sommige ontwikkelaars
+tools nog niet geport zijn naar AROS.
 
 
-How do you intend to make AROS portable?
-----------------------------------------
+Hoe willen jullie AROS overdraagbaar maken?
+-------------------------------------------
 
-One of the major new features in AROS compared to AmigaOS is the HIDD (Hardware
-Independent Device Drivers) system, which will allow us to port AROS to
-different hardware quite easily. Basically, the core OS libraries do not hit the
-hardware directly but instead go through the HIDDs, which are coded using an
-object oriented system that makes it easy to replace HIDDs and reuse code.
+Een van de grote nieuwe features in AROS in vergelijking met AmigaOS is de
+HIDD (Hardware Onafhankelijke Device Drivers) systeem, dat ons toestaat AROS
+vrij makkelijk naar andere hardware over te zetten. In essentie roepen de kern
+OS libraries niet meer rechtstreeks de hardware aan, maar doen dit via de
+HIDDs. Deze zijn geprogrammeerd volgens een object georiënteerd systeem dat het 
+makkelijk maakt HIDDs te vervangen en code te hergebruiken.
 
 
 Waarom denken jullie dat AROS het zal maken?
@@ -189,7 +194,7 @@ nog altijd met een vertraagd tempo ontwikkeld word (de meest indrukwekkende ding
 verschijnen deze dagen).
 De Amiga gemeenschap (die nog altijd levend is) lijkt af te wachten. En als iemand
 een product uit zou geven dat een beetje is zoals de Amiga was terug in 1984, dan 
-zal die machine ongetwijfeld weer populairiteit genieten. En wie weet: 
+zal die machine ongetwijfeld weer populariteit genieten. En wie weet: 
 misschien krijgt u bij die machine ook wel een CD gelabeld "AROS". :-)
 
 
@@ -244,11 +249,11 @@ testers bij: u hoeft alleen AROS te downloaden, testen wat u wilt
 en ons daarna een rapport sturen.
 
 
-What is the relation between AROS and UAE?
-------------------------------------------
+Wat is de relatie tussen AROS en UAE?
+-------------------------------------
 
 UAE is een Amiga emulator en heeft daardoor andere doelstellingen dan AROS.
-UAE streeft ernaar óók binair compitable te zijn voor spellen en hardware aansprekende
+UAE streeft ernaar óók binair compatibel te zijn voor spellen en hardware aansprekende
 code, terwijl AROS ten doel heeft eigen native applicaties te hebben. Daardoor
 is AROS sneller dan UAE, maar kan er aan de andere kant weer meer software 
 gedraaid worden onder UAE.
@@ -265,12 +270,12 @@ Fabio Alemagna een port van UAE gemaakt naar AROS zodat u al uw oude programma's
 op zijn minst in een emulatie box kan draaien.
 
 
-What is the relation between AROS and Haage & Partner?
-------------------------------------------------------
+Wat is de relatie tussen AROS en Haage & Partner?
+-------------------------------------------------
 
 Haage & Partner hebben delen van AROS gebruikt in AmigaOS 3.5 en 3.9, waaronder
 het kleurenwiel, de kleurverloop-slider gadgets en het SetENV commando. Dit betekend
-dat AROS, op een manier, deel is geworden van het officiele AmigaOS. Het wil 
+dat AROS, op een manier, deel is geworden van het officiële AmigaOS. Het wil 
 echter niet zeggen dat er een formele relatie is tussen AROS en Haage & Partner.
 AROS is een open source project, waarvan iedereen de code in eigen projecten mag
 gebruiken -indien- zij de de licentie volgen. 
@@ -298,7 +303,6 @@ i386 native. Deze is echter nog niet bijgevoegd op de ISO of geïntegreerd in het
 build systeem.
 
 Tot de talen die native beschikbaar zijn behoren Python_, Regina_ en False_:
-The languages that are available natively are Python_, Regina_ and False_:
 
 + Python is een scripting taal die erg populair geworden is, o.a. vanwege het goede
   ontwerp en de features (object-georiënteerd programmeren, module systeem, 
@@ -306,12 +310,12 @@ The languages that are available natively are Python_, Regina_ and False_:
   project is inmiddels gestart voor de AROS port en kan gevonden worden op 
   http://pyaros.sourceforge.net/.
 
-+ Regina is een overzetbare ANSI compliant REXX interpreter.
-  Het doel van de AROS port is om compitable te zijn met de ARexx interpreter van
++ Regina is een overzet bare ANSI compliant REXX interpreter.
+  Het doel van de AROS port is om compatibel te zijn met de ARexx interpreter van
   het klassieke AmigaOS.
 
 + False kan geclassificeerd worden als een exotische taal, waardoor deze niet
-  direct in aanmerking komt voor serieuze ontwikkelings werk, al kan het werken
+  direct in aanmerking komt voor serieuze ontwikkeling werk, al kan het werken
   met deze taal erg leuk zijn. :-) 
 
 .. _Python: http://www.python.org/
@@ -323,7 +327,7 @@ Waarom zit er geen m68k emulator in AROS?
 
 Om oude Amiga programma's te draaien hebben we UAE_ geport naar AROS. AROS's
 versie van UAE zal zelfs nog iets sneller draaien dan andere versies, gezien
-AROS minder middelen verbruikt dan andere besturings systemen (wat betekend dat
+AROS minder middelen verbruikt dan andere besturing systemen (wat betekend dat
 UAE meer processor tijd krijgt). Wel willen we proberen om de Kickstart ROM
 te patchen in UAE, zodat deze AROS functies aanspreekt wat een kleine prestatie
 verbetering zal geven. Uiteraard gaan genoemde zaken alleen op voor de native 
@@ -331,7 +335,7 @@ versies van AROS en niet de hosted varianten.
 
 Maar waarom implementeren we niet gewoon een m68k CPU virtualiser? Wel, het probleem
 is dat de m68k software verwacht dat alle data in het zogeheten 'big endian' formaat komt,
-terwijl AROS ook op 'little endian' CPU's draait. Het probleem onstaat dan dat de 
+terwijl AROS ook op 'little endian' CPU's draait. Het probleem ontstaat dan dat de 
 little endian routines in de AROS core ook met grote endian routines zouden moeten 
 werken tijdens de emulatie. Automatische conversie lijkt onmogelijk (ter voorbeeld:
 er is een veld in een structuur van het AmigaOS dat de ene keer een enkele ULONG bevat
@@ -349,15 +353,15 @@ uitvoert om een Kickstart ROM te maken. Tot zover heeft echter nog niemand zich
 opgegeven voor deze taak.
 
 
-Software questions
-==================
+Software vragen
+===============
 
 Hoe krijg ik toegang tot AROS' disk images vanuit UAE?
 ------------------------------------------------------
 
 De floppy disk image kan als hardfile gemount worden en dan als een 1.4 MB
 harddisk gebruikt worden binnen UAE. Nadat u de bestanden naar de hardfile
-disk image gekopieert hebt (of iets anders dat u wilde doen), kan deze naar een floppy
+disk image gekopieerd hebt (of iets anders dat u wilde doen), kan deze naar een floppy
 geschreven worden.
 
 De geometrie van de hardfile is als volgt::
@@ -453,7 +457,6 @@ You must supply the following string (as is!) to your /etc/X11/xorg.conf
     
     Option  "BackingStore"
 
-What are the AROS-native kernel options used in GRUB line?
 Wat zijn de AROS-native kernal opties voor de GRUB CLI?
 -------------------------------------------------------
 
