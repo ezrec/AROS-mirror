@@ -1,0 +1,75 @@
+===========
+Mise à jour
+===========
+
+:Author:   Paolo Besser
+:Date:     2006-12-10
+
+Notre dernière mise à jour date d'il y a 3 mois déjà, toutefois
+beaucoup d'améliorations ont été réalisées en plus des bugs fixés.
+
+
+Les Nightly builds pour la flaveur PPC-hôte d'AROS sont dorénavant
+disponibles sur la `page de téléchargement`__.
+
+Christoph Szczecina a ajouté la fonctionnalité de copie des
+fichiers par drag'n'drop, permettant une approche simplifiée dans
+la gestion des fichiers.
+Cet ajout permet pour le moment de copier un seul fichier d'un
+répertoire à un autre. Les bêtatesteurs trouveront cette
+fonctionnalité dans la dernière nightly build. D'autres
+développeurs ont ajouté la sauvegarde de la position des fenêtres
+ainsi que la vue des icônes selon une liste.
+
+Staf Verhaegen met à jour la documentation des développeurs.
+Beaucoup de choses ont changé ces derniers 24 mois, et les manuels
+s'en trouvaient quelque peu désuets. Grâce à Staf, les nouveaux
+développeurs sur AROS trouveront les informations utiles sur ce
+site.
+
+Grâce à Bernd Roesch et Georg Steger, les principaux changements
+pour remplacer MUI dans la plupart des programmes Amiga ont été
+implémentés dans Zune. Michal Schulz a ajouté la fonction d'écriture
+du datatype PNG, afin de rendre plus simple l'édition d'icônes et
+l'édition d'images sur AROS.
+
+__ http://aros.sourceforge.net/download.php
+
+AROS dans les news
+------------------
+
+OSNews a publié un `article`__ concernant les problèmes rencontrés
+autout des projets de recréation d'OS. De plus, il examine deux
+plateformes et les OS recrées, l'un d'eux étant AROS.
+
+L'AROS Show a interviewé le porteur du projet Aaron Digulla. Vous
+pouvez `le lire ici`.
+
+__ http://www.osnews.com/story.php/16543
+__ http://arosshow.blogspot.com/2006/12/interview-with-aaron-digulla-who.html
+
+Logiciel
+--------
+
+*AutoDocReader*, le logiciel pour lire les documentations de
+développeurs dans le format AutoDoc a été porté sur AROS.
+
+*AmiGG* 0.44.3 a également été porté par Marcin Kielesinski. Il
+s'agit de la première messagerie instantanée pour AROS et supporte
+deux protocoles populaires en pologne : Gadu-Gadu et Tlen. AmiGG
+prévient également des nouveaux mails entrant. Il y a 2 screenshots
+`ici`__ et `là`__, les fichiers se trouvent `ici`__.
+
+*Murks!* est un Environnement de Développement Intégré pour AROS.
+Murks! utilise le même format de projet qu'AmiDevCpp, ainsi les
+échanges de données sont possibles. Pour utiliser Murks!, vous
+aurez besoin d'une version native d'AROS installée avec gcc. Les
+utilisateurs Windows peuvent essayer Murks! en utilisant la dernière
+version de WinAros contenant gcc. Les détails complets sont sur
+`AROS-EXEC`__.
+
+__ http://ministerq.integradesign.org/31.PNG
+__ http://ministerq.integradesign.org/32.PNG
+__ http://amigg.integradesign.org/amigg_beta.lha
+__ http://aros-exec.org/modules/news/article.php?storyid=185
+
