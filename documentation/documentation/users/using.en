@@ -196,7 +196,7 @@ these to your launch string (or a script).
     Please don`t use ALT+Tab combination to free the keyboard lock, use CTRL+Alt,
     otherwise Tab key may remain pressed and can damage currently edited file.
     
-Applying to `VMWare <http://vmware.com>`__ or VPC it`s even easier to setup. 
+Applying to `VMWare <hhttp://www.vmware.com/products/free_virtualization.html>`__ or VPC it`s even easier to setup. 
 All you need is to install some virtual hardware like network and sound card 
 and create an virtual HDD. Everything managed by a simple GUI.
 
