@@ -43,7 +43,7 @@ autout des projets de recréation d'OS. De plus, il examine deux
 plateformes et les OS recrées, l'un d'eux étant AROS.
 
 L'AROS Show a interviewé le porteur du projet Aaron Digulla. Vous
-pouvez `le lire ici`.
+pouvez `le lire ici`__.
 
 __ http://www.osnews.com/story.php/16543
 __ http://arosshow.blogspot.com/2006/12/interview-with-aaron-digulla-who.html
