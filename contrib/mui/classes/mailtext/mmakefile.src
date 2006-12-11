@@ -3,6 +3,8 @@ include $(TOP)/config/make.cfg
 
 # mmakefile.src for MUI custom class 'Mailtext'
 
+#MM- contrib : contrib-zune-classes-mailtext
+
 #MM- contrib-zune-classes-mailtext : contrib-zune-classes-mailtext-mcc contrib-zune-classes-mailtext-mcp
 
 #MM  contrib-zune-classes-mailtext-demo : includes linklibs contrib-zune-classes-mailtext-mcc
