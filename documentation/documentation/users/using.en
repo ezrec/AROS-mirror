@@ -212,18 +212,30 @@ which comes with a free copy of the latest version (VPC 7). Note that the Mac
 VPC is essentially an emulator, with a limited speed and it is demanding a 
 reasonable fast PPC machine (see the website for more details).
 
-For Intel macs (OS X) Qemu has been ported and sequentally renamed as
+For Intel macs (OS X) Qemu has been ported and sequentially renamed as
 `Q <http://www.kju-app.org/kju/>`__ . It comes as a Intel 
 Binary and is freeware. Q does not support direct virtualisation yet (or the 
 i386 kernel accerelation module), making it achieve only part of the 
 possible speed at the moment. 
 
-Another choice for VM on Intel Macs is the commercial Parallels virtualiser. 
-It offers better performance trough virtualisation, but like VPC 
-is a commercial product, though at a far lesser cost. You may try a 60 day 
-trial version. Also please note that at least PC Parallels Workstation 2.1
-was failed to run AROS at all, and the same can happen with Mac version
-(please test it if you can).
+Another (upcoming) choice for VM on Intel Macs will be the `VMware Fusion`__ virtualiser, 
+expected for release early 2007. Beta version 33141 already supports booting the AROS liveCD, 
+on condition that floppydrive support is disabled in the GRUB boot parameters (To do this 
+press E on preferred screenmode in GRUB, press E again, add 'nofcd' to parameters, press enter
+and boot with B). 
+
+__ http://www.vmware.com/whatsnew/macsignupform.html
+
+Yet another Intel Mac VM product is Parallels, a commercial product, though at a far lesser cost than VPC. 
+Please note however that it yet fails to boot AROS. The same applies to at least PC Parallels 
+Workstation 2.1.
+
+..  Note:: Users of (early) Mac Intel notebooks whose machines run relatively hot
+            may benefit from using the `SMC fan control utility`__.
+            It allows adjustment of fan speeds to increase ventilation of your machine, keeping 
+            temperatures low during heavy workloads. While it considered safe to use, still consider the risks involved!
+
+__ http://81.169.182.62/~eidac/software/page5/page5.html
 
 Virtual Disk Images
 """""""""""""""""""
