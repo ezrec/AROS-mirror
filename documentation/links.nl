@@ -101,21 +101,11 @@ __ http://www.in-berlin.de/User/jroger/index.html
 Overigen
 ========
 
-+ `Phoenix Developer Consortium`__
-
-  .. Image:: images/phoenix.jpeg
-  
-  Het Phoenix Ontwikkelaars Consortium ondersteund de ontwikkeling van alternatieve computer platformen door samen te werken met 'kern' ontwikkelaars en derden, hun o.a. de middelen biedend voor de ontwikkeling. 
-
 + `Team AROS`__ 
 
   TeamAROS is een support groep voor AROS.
 
 + `AROS software archief`__
-
-+ `AROS Max`__
-
-  AROS Max is een vooringestelde 'live' bootbare CD image.
 
 + `AROS Polska`__
 
@@ -126,10 +116,8 @@ Overigen
   AfA OS vervangt AmigaOS core libraries met hun hun meer geavanceerde AROS tegenhangers.
 
 
-__ http://phinixi.com/
 __ http://www.thenostromo.com/teamaros/
 __ http://archives.aros-exec.org/
-__ http://www.aros-max.co.uk/
 __ http://www.aros.bbs.pl/
 __ http://www.frappr.com/arosusers
 __ http://amidevcpp.amiga-world.de/afa_binarie_upload.php

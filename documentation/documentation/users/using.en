@@ -203,7 +203,7 @@ and create an virtual HDD. Everything managed by a simple GUI.
 VM for MacOS
 """"""""""""
 
-For PPC macs running OS 9 or 10.x only 
+For PPC Macs running OS 9 or 10.x only 
 `Virtual PC <http://www.microsoft.com/mac/products/virtualpc/virtualpc.aspx?pid=virtualpc>`__, 
 an i386 emulator, is 
 available. It does however not support Intel Macs. VPC is also an expensive 
@@ -212,17 +212,18 @@ which comes with a free copy of the latest version (VPC 7). Note that the Mac
 VPC is essentially an emulator, with a limited speed and it is demanding a 
 reasonable fast PPC machine (see the website for more details).
 
-For Intel macs (OS X) Qemu has been ported and sequentially renamed as
+For Intel Macs (OS X) Qemu has been ported and sequentially renamed as
 `Q <http://www.kju-app.org/kju/>`__ . It comes as a Intel 
 Binary and is freeware. Q does not support direct virtualisation yet (or the 
 i386 kernel accerelation module), making it achieve only part of the 
 possible speed at the moment. 
 
-Another (upcoming) choice for VM on Intel Macs will be the `VMware Fusion`__ virtualiser, 
+Another (upcoming) choice for VM on Intel will be the `VMware Fusion`__ virtualiser, 
 expected for release early 2007. Beta version 33141 already supports booting the AROS liveCD, 
-on condition that floppydrive support is disabled in the GRUB boot parameters (To do this 
-press E on preferred screenmode in GRUB, press E again, add 'nofcd' to parameters, press enter
-and boot with B). 
+on condition that floppydrive support is disabled in the GRUB boot parameters (Just highlight your
+selection on the GRUB menu, press e twice, add nofdc to the command line,
+press return, then b. If you've installed to HD, you can change this 
+permanently in the menu.lst file). 
 
 __ http://www.vmware.com/whatsnew/macsignupform.html
 
@@ -232,8 +233,8 @@ Workstation 2.1.
 
 ..  Note:: Users of (early) Mac Intel notebooks whose machines run relatively hot
             may benefit from using the `SMC fan control utility`__.
-            It allows adjustment of fan speeds to increase ventilation of your machine, keeping 
-            temperatures low during heavy workloads. While it considered safe to use, still consider the risks involved!
+            It allows adjustment of fan speeds for increased ventilation of your machine, keeping 
+            temperatures low during heavy workloads. While it is considered safe to use, still consider the risks involved!
 
 __ http://81.169.182.62/~eidac/software/page5/page5.html
 

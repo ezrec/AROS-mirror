@@ -8,8 +8,6 @@ Veel gestelde vragen (FAQ)
 :Date:      $Date$
 :Status:    Done.
 
-.. Note:: De Nederlandse vertaling van deze pagina is momentaal onder constructie
-
 .. Contents::
 
 Algemene vragen
@@ -143,11 +141,11 @@ elk in een verschillende mate van compleetheid. Hiertoe behoren een port naar
 de SUN SPARC (gehost onder Solaris) en Palm compatibele handhelds (native).
 
 
-Zal er AROS port komen voor de PPC? 
------------------------------------
+Zal er een AROS port komen voor de PPC? 
+---------------------------------------
 
-Er wordt momenteel werk ondernomen om AROS te porten naar PPC,
-initieel als een gehoste versie onder Linux.
+Er wordt momenteel gewerkt aan een AROS port voor PPC,
+voorlopig dan alleen nog als gehoste versie onder Linux.
 
 
 Waarom gebruiken jullie Linux en X11?
@@ -210,34 +208,36 @@ te helpen.
 __ http://aros-exec.org/
 
 
-Will AROS have memory protection, SVM, RT, ...?
+Krijgt AROS geheugen bescherming, SVM, RT, ...?
 -----------------------------------------------
 
-Several hundred Amiga experts (that's what they thought of themselves at least)
-tried for three years to find a way to implement memory protection (MP) for
-AmigaOS. They failed. You should take it as a fact that the normal AmigaOS will
-never have MP like Unix or Windows NT.
+Vele honderden Amiga experts (tenminste, dat dachten ze van zichzelf)
+hebben drie jaar lang geprobeerd een methode te ontwikkelen om geheugen bescherming
+(MP) in AmigaOS toe te passen. Het lukte ze niet. U zult het gewoon als feit moeten 
+accepteren dat het gewone AmigaOS nooit MP zal krijgen zoals Unix of Windows NT.
 
-But all is not lost. There are plans to integrate a variant of MP into AROS
-which will allows protection of at least new programs which know about it. Some
-efforts in this area look really promising. Also, is it really a problem if your
-machine crashes? Let me explain, before you nail me to a tree. :-) The problem
-is not that the machine crashes, but rather: 
+Maar niet alles is verloren. Er zijn plannen om een variant van MP in AROS
+te integreren, die bescherming toestaat aan nieuwe programma's die hierop berekend
+zijn. Enkele van de ontwikkelingen in dit gebied lijken veelbelovend. Toch, kritisch
+bekeken, is het eigenlijk wel een probleem als uw machine vastloopt? Laat ons uitleggen,
+voordat u geïrriteerd raakt. :-) Het probleem is eigenlijk niet dat de machine 
+vastloopt, maar dat:
 
-1. You have no good idea why it crashed. Basically, you end up having to poke 
-   with a 100ft pole into a swamp with a thick fog. 
-2. You lose your work. Rebooting the machine is really no issue.
+1. U heeft geen idee waarom deze vastliep. Kortgezegde komt dit erop neer
+   dat u met een naald in een hooiberg zoekt.
+2. U verliest uw werk. De machine herstarten is in verhouding een klein probleem.
 
-What we could try to construct is a system which will at least alert if
-something dubious is happening and which can tell you in great detail what was
-happening when the machine crashed and which will allow you to save your work
-and *then* crash. There will also be a means to check what has been saved so you
-can be sure that you don't continue with corrupted data.
+Wat we wel kunnen proberen is een systeem te maken dat op zijn minst waarschuwt
+als iets dubieus aan de hand is, wat u daarna verteld wat er gebeurde toen de
+machine vastliep én u tevens toestaat uw werk op te slaan om *daarna* te crashen. 
+Er zal ook een mogelijk komen om hetgeen u opgeslagen hebt te controleren 
+zodat u verder kunt werken zonder kapotte data.
 
-The same thing goes for SVM (swappable virtual memory), RT (resource tracking)
-and SMP (symmetric multiprocessing). We are currently planning how to implement
-them, making sure that adding these features will be painless. However, they do
-not have the highest priority right now. Very basic RT has been added, though.
+Hetzelfde geld voor SVM (swappable virtual memory), RT (resource tracking) en
+SMP (symmetric multiprocessing). We plannen op moment hoe we deze willen 
+implementeren, zodat het toevoegen van deze features uiteindelijk vlekkeloos zal
+verlopen. Desondanks hebben deze nu niet de hoogste prioriteit. Een simpele
+variant van RT is desondanks al geïmplementeerd. 
 
 
 Kan ik een beta tester worden?
@@ -376,7 +376,7 @@ Hoe benader ik AROS's disk images vanuit hosted versies van AROS?
 -----------------------------------------------------------------
 
 Kopieer de disk image naar de DiskImages map in AROS (SYS:DiskImages, bijv: 
-bin/linux-i386/AROS/DiskImages) en hernoem deze naar "Unit0". Na het starten van
+bin/linux-i386/AROS/DiskImages) en hernaam deze naar "Unit0". Na het starten van
 AROS kan deze disk gemount worden met::
 
     > mount AFD0: 
@@ -393,71 +393,74 @@ native AROS applicaties. En betreft de naam zelf, het betekend niets, maar klink
 goed.
 
 
-How can I restore my Prefs to defaults?
----------------------------------------
+Hoe kan ik de Prefs naar standaard herstellen? 
+-----------------------------------------------
 
-In AROS, open CLI shell, go to Envarc: and delete relevant files for the 
-pref you want to restore.
+Open in AROS de CLI shell, ga naar Envarc: en wis de relevante bestanden
+voor de pref die u naar de standaard instellingen wilt herstellen.
 
-What is the Graphical and other memory in Wanderer?
----------------------------------------------------
+Wat is Grafisch en ander geheugen in Wanderer?
+----------------------------------------------
 
-This memory division is mostly a relic from Amiga past, when graphical memory 
-was application memory before you added some other, called FAST RAM, a memory where 
-applications ended, while the graphics, sounds and some system structures were 
-still in graphic memory.
+Deze geheugen verdeling is vooral een reliek uit het Amiga verleden, toen
+grafisch geheugen het primaire geheugen was totdat je ander geheugen toevoegde,
+dat als FAST RAM werd betiteld. Het FAST RAM was daarna het geheugen dat de 
+applicaties gebruikten, terwijl grafische objecten, geluiden en enkele systeem 
+structuren in het grafisch geheugen bleven.
 
-In AROS-hosted, there isn't such kind of memory as Other (FAST), but only GFX, when on 
-Native AROS, GFX can have a max of 16MB, although it wouldn't reflect the state 
-of the graphic adapter memory...  It has no relation to the amount of memory 
-on your graphics card.
+In AROS-hosted bestaat er geen ander geheugen dan Anders (FAST), maar alleen GFX,
+terwijl AROS-native een GFX maximum hanteert van 16MB. Weet wel dat dit geen 
+enkele reflectie bevat op de geheugenstaat van uw grafische adapter, laat staan
+de hoeveel geheugen die uw video adapter heeft. 
 
-*The longwinded answer*
-Graphics memory in i386-native signifies the lower 16MB of memory 
-in the system. That lower 16MB is the area where ISA cards can do DMA. Allocating 
-memory with MEMF_DMA or MEMF_CHIP will end up there, the rest in the other (fast)
-memory.
+*Het langdradige antwoord*
 
-Use C:Avail HUMAN command for memory info.
+Grafisch geheugen in i386-native duid de lagere 16MB van het systeemgeheugen aan.
+Deze 'lagere' 16MB is de ruimte waar ISA kaarten hun DMA regelen. Het alloceren
+van geheugen met MEMF_DMA of MEMF_CHIP zal hierbij gevoegd worden, de rest bij
+het overige (FAST) geheugen.
 
-What do the Wanderer Snapshot <all/window> action actually do? 
---------------------------------------------------------------
+Gebruik het C:Avail HUMAN CLI commando voor meer geheugen informatie. 
 
-This conmmand remembers icon`s placement of all (or one) windows.
+Wat doet de Wanderer Snapshot <all/window> actie eigenlijk? 
+-----------------------------------------------------------
 
-How do I change the screensaver/background?
+Dit commando onthoud de icoon positie voor alle (of één) vensters.
+
+Hoe verander ik de screensaver/achtergrond?
 -------------------------------------------
 
-At the moment the only way to change screensaver is to write your one.
-Blanker commodity could be tuned with Exchange, but it is able to do only 
-"starfield" with given amount of stars.
-Background of Wanderer is set by Pref tool Prefs/Wanderer.
-Background of Zune Windows is set by Zune prefs Prefs/Zune. You can also set 
-your chosen application preferences by using the Zune <application> command.
+De enigste methode om de screensaver te veranderen -op moment- is door er zelf 
+één te schrijven. De Blanker commodity kan getuned worden met Exchange, maar het
+kan alleen maar een "sterrenveld" tonen met een gegeven aantal sterren.
+De achtergrond in Wanderer wordt ingesteld via de Pref tool Prefs/Wanderer.
+De achtergrond van Zune Windows wordt ingesteld via de Zune prefs Prefs/Zune. U
+kunt ook specifieke applicatie instellingen vastleggen via het Zune <applicatie> 
+commando.
 
-I`ve launch AROS-hosted but it`s failed
----------------------------------------
+Ik heb AROS-hosted gelanceerd maar deze faalde
+----------------------------------------------
 
-This could be probably fixed by creating a WBStartup directory in the AROS 
-directory. If you are root and AROS crashes at launch, do "xhost +" before 
-"sudo && ./aros -m 20". You must also give it some memory with -m option as 
-shown. Also don`t forget about BackingStore option in section Device of your 
-xorg.conf.
+Dit kan waarschijnlijk verholpen worden door een WBStartup directory te maken
+in de AROS directory. Als u als root werkt en AROS crashed bij het opstarten,
+doe "xhost +" alvorens "sudo && ./aros -m 20". U moet ook geheugen toewijzen
+met de -m optie zoals getoond. Vergeet tot slot ook niet de BackingStore optie
+toe te voegen in de sectie Device van uw xorg.conf.
 
-What are the command line options for AROS-hosted executable?
+Wat zijn de command line opties voor de AROS-hosted executable?
+---------------------------------------------------------------
+
+U kunt hiervan een lijst krijgen door het runnen van ./aros -h command.
+
+Hoe kan ik een window refresh van zwart maken in AROS-hosted?
 -------------------------------------------------------------
 
-You can get a list of them by rinning ./aros -h command.
-
-How can I make windows refresh from black on AROS-hosted?
----------------------------------------------------------
-
-You must supply the following string (as is!) to your /etc/X11/xorg.conf
-(or XFree.conf)::
+U moet de volgende string (zoals weergegeven!) toevoegen aan uw
+/etc/X11/xorg.conf (of Xfree.conf)::
     
     Option  "BackingStore"
 
-Wat zijn de AROS-native kernal opties voor de GRUB CLI?
+Wat zijn de AROS-native kernel opties voor de GRUB CLI?
 -------------------------------------------------------
 
 Dit zijn er enkele::
@@ -465,29 +468,31 @@ Dit zijn er enkele::
     nofdc - Schakelt de floppy driver uit.
     noclick - Schakelt de floppy disk verandering detectie uit (en het klikken)
     ATA=32bit - Schakelt 32-bit I/O aan in de hdd driver (veilig)
-    forcedma - Forceerd DMA om actief te zijn in de hdd driver (zou veilig moeten zijn, 
+    forcedma - Forceert DMA om actief te zijn in de hdd driver (zou veilig moeten zijn, 
     maar niet gegarandeerd)
     gfx=<hidd name> - Gebruik de genoemde hidd als gfx driver
     lib=<name> - Laad en init de genoemde library/hidd
 
 Deze zijn hoofdletter gevoelig. 
 
-How can I transfer files to virtual machine with AROS?
-------------------------------------------------------
+Hoe kan ik bestanden kopiëren naar een virtuele machine met AROS?
+-----------------------------------------------------------------
 
-First and simpliest way is to put files to the ISO image and and connect it to VM. 
-There`s a lot of programs able to create/edit ISO`s like UltraISO, WinImage, 
-or mkisofs. Second, you can set up the network in AROS and FTP server on your 
-host machine. Then you can use FTP client for AROS to transfer files
-(look for MarranoFTP). This is tricky enough to stop at this point. User 
-documentation contains a chapter about networking, go for it.
+De eerste en simpelste manier om de bestanden op een ISO image te zetten en
+deze met de VM te mounten. Er zijn veel programma's die het maken/aanpassen van
+ISO's toestaan, om enkele te noemen: UltraISO, WinImage of mkisofs. Tweede methode
+is om een netwerk tussen AROS en een FTP server op te zetten op uw hosted machine.
+U kunt dan de FTP client voor AROS gebruiken om bestanden over te zetten (zoek
+naar MarannoFTP). Dit is echter complex genoeg om hier nu te stoppen; 
+de gebruikers documentatie bevat een hoofdstuk over netwerken, 
+beter dat u daar kijkt.
 
 
 Hardware vragen
 ===============
 
-Waar kan ik een AROS Hardware Compatibiliteits lijst vinden?
-------------------------------------------------------------
+Waar kan ik een AROS Hardware Compatibiliteit lijst vinden?
+-----------------------------------------------------------
 
 U kunt er één vinden op de `AROS Wiki <http://en.wikibooks.org/wiki/Aros/Platforms/x86_support>`__ 
 pagina. Er kunnen ook andere lijsten zijn gemaakt door AROS gebruikers (meer informatie volgt).
@@ -495,14 +500,14 @@ pagina. Er kunnen ook andere lijsten zijn gemaakt door AROS gebruikers (meer inf
 Waarom kan AROS niet van een IDE harddrive in SLAVE mode starten? 
 -----------------------------------------------------------------
 
-Well, AROS zou moeten booten als de drive in SLAVE mode draait MITS er ook
-een drive als MASTER aangesloten is. Dit blijkt de correctie verbindingmethode 
+Wel, AROS zou moeten booten als de drive in SLAVE mode draait MITS er ook
+een drive als MASTER aangesloten is. Dit blijkt de correctie verbindingsmethode 
 te zijn volgens de IDE specificatie, welke AROS volgt.
 
 Mijn systeem hangt met een rode cursor op een (leeg) scherm
 -----------------------------------------------------------
 
-Één reden hiervoor kan het gebruik van een seriele muis zijn (deze worden nog 
+Één reden hiervoor kan het gebruik van een seriële muis zijn (deze worden nog 
 niet ondersteund). U moet voorlopig nog een PS/2 muis gebruiken met AROS. Een andere
 reden kan zijn dat u in het bootmenu een video modus hebt gekozen die niet 
 ondersteund wordt door uw hardware. Reboot en probeer een andere modus.
