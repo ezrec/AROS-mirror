@@ -67,6 +67,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 A( _N['specifications'], href=makeURL( 'documentation/developers/specifications/', lang ) ),
                 A( _N['ui-style-guide'], href=makeURL( 'documentation/developers/ui', lang ) ),
                 A( _N['documenting'], href=makeURL( 'documentation/developers/documenting', lang ) ),
+                A( _N['porting'], href=makeURL( 'documentation/developers/porting', lang ) ),
                 #A( _N['translating'], href=makeURL( 'documentation/developers/translating', lang ) ),
                 A( _N['summaries'], href=makeURL( 'documentation/developers/summaries/', lang ) ),
                 A( _N['links'], href=makeURL( 'documentation/developers/links', lang ) )

@@ -13,6 +13,7 @@ Developers Resources
 + `Reference`__
 + `Specifications`__
 + `Documenting`__
++ `Porting`__
 + `Summaries`__
 + `Useful links`__
 
@@ -28,5 +29,6 @@ __ autodocs/index
 __ specifications/index
 __ documenting
 __ summaries/index
+__ porting
 __ links
 
