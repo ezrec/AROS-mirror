@@ -22,6 +22,8 @@ static const struct {
     { 0x8086, 0x2485, "Intel ICH3"	},
     { 0x8086, 0x24c5, "Intel ICH4"	},
     { 0x8086, 0x24d5, "Intel ICH5"	},
+    { 0x8086, 0x266e, "Intel ICH6"	},
+    { 0x8086, 0x27de, "Intel ICH7"	},
     { 0x8086, 0x7195, "Intel 440MX"	},
     { 0x1039, 0x7012, "SIS 7012"	},
     { 0x10de, 0x01b1, "NVIDIA nForce"	},
