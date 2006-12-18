@@ -1,0 +1,3 @@
+Een empirisch experiment dat onderzoekt hoeveel programma's er op 
+een AROS screenshot gepropt kunnen worden. Het zijn er best
+veel zoals u ziet...

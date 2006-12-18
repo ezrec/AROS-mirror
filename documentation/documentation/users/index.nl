@@ -8,7 +8,7 @@ Gebruikers informatie
 + `Hoe te installeren (Engels)`__
 + `Hoe te gebruiken (Engels)`__
 + `Shell commando's (Engels)`__
-+ `FAQ`__
++ `Veel gestelde vragen / FAQ`__
 
 __ installation  
 __ using  

@@ -22,12 +22,12 @@ ports:            Ports
 license:          Licentie
 download:         Downloads
 documentation:    Documentatie
-users:            Users
+users:            Gebruikers
 installation:     Installation
 using:            Using
 shell:            Shell commands
 faq:              FAQ
-developers:       Developers
+developers:       Ontwikkelaars
 contribute:       Meehelpen
 bug-tracker:      Bug Tracker
 working-with-subversion: Working with Subversion
@@ -50,7 +50,7 @@ forums:           Forums
 irc-channels:     IRC kanalen
 credits:          Colofon
 pictures:         Afbeeldingen
-developers-together: Ontwikkelaars en Masse
+developers-together: Ontwikkelaars samen
 sponsors:         Sponsors
 linking:          Linken
 
