@@ -97,16 +97,20 @@ of AROS (i386-linux-system) or you compile the source yourself:
 + i386-linux-system
 
   You have to download the package `i386-all-sdk`. Unpack it, cd into the
-  created directory and start the script `AROS-SDK-Install`. Follow the instructions.
+  created directory and start the included script as root (e.g. ``sudo AROS-SDK-Install``.
+  The script asks some questions but you can use the default values. The next step
+  is to add a path. It depends on the shell you are using how this can be done.
+  Assuming you're using the Bash and you have kept the default values for the paths:
+  open the file /home/*user*/.bashrc and add the line ``PATH=/usr/local/aros-sdk/bin:"${PATH}"``
+  at the end of the file. Type ``i386-aros-gcc -v`` in a new shell for a quick test.
 
 + self-compiled
 
-  The AROS compiler has the path `AROS/bin/linux-i386/tools`. Add this path to your
-  Linux paths.
+  The AROS compiler has the path `AROS/bin/linux-i386/tools`. Add this path as shown above.
+  The name if the compiler is `i386-linux-aros-gcc`.
   
-In both cases the name of the C compiler is i386-linux-aros-gcc. You have to
-start it from the Linux side. You can compile the program with the following
-command::
+You can compile the program with the following
+command from a Linux shell::
 
   % i386-linux-aros-gcc -o helloworld helloworld.c
 
@@ -121,7 +125,9 @@ AROS versions of ld, ranlib, the catalog compiler Flexcat, etc.
 Compiling for native-i386
 -------------------------
 
-A native version of the compiler GCC is included.
+You can download a version of GCC which runs natively under AROS from
+`Sourceforge <http://sourceforge.net/project/showfiles.php?group_id=43586&package_id=127743>`_.
+You need at least the binutils and the core.
 
 
 Concepts

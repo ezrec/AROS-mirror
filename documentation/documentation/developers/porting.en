@@ -7,15 +7,19 @@ PORTING GUIDE
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished
-:ToDo:      Adopt to AROS
+:ToDo:      Some real world examples
 
 
 .. Contents::
 
-.. Warning::
 
-   This document is a modified copy of Johan Samuelsson's "SPOT'S PORTING FOR DUMMIES 1.5".
-   It has yet to be adopted to AROS.
+Introduction
+============
+
+This guide is about porting of software which comes with configure or make scripts to AROS.
+This is true for the most open source software from the Linux world. It is based on a
+`document <http://utilitybase.com/article?action=show&id=210>`_
+which was written by Johan Samuellson for AmigaOS4. 
 
 
 Quick reference 
@@ -26,39 +30,41 @@ wade through the guide to find them all the time, if you are new to this
 guide, just skip this chapter for now::
 
     ./configure CC=i386-aros-gcc CFLAGS=-nix \
+    --prefix=/progdir \
     --build=local --host=i686-aros --target=i686-aros \
     --disable-nls --without-x --without-pic --disable-shared
     
 
-Why should I read this? I can't code!
-=====================================
+What to port?
+=============
 
-Well, the sad fact is that, neither can I! :) I am just a stubborn geezer!
-And look at me now... 10+ uploads to http://archives.aros-exec.org compiling 
-multiplatform stuff for AROS isn't THAT hard, c'mon! If I can do it,
-you can do it too! You'll jump up and down screaming when you managed to
-compile your first SDL app, I did! To my defence I have to say that I had
-to figure out a lot of the process the hard way! :P
+* The best supported programming language is C. C++ lacks some features.
+
+* Look what additional packages are required for the software you want to port.
+  You cannot simply port when GUI toolkits like GTK or QT are required.
+  Only software which runs under a console can be ported directly.
+
+* When you want to port games, look if they use `libSDL <http://www.libsdl.org>`_.
+  But avoid software which requires OpenGL.
 
 
 Getting the SDK up to date
 ==========================
 
-Download the SDK (i386-all-sdk) from http://aros.sourceforge.net/download.php,
-depack it and run the included script as root (``./AROS-SDK-Install``).
-Next thing you have to do is adding the path to your path variable. Open the
-file */home/user/.bashrc* with an editor and add a line like
-``PATH=/usr/local/aros-sdk/bin:"${PATH}"``. Type ``i386-aros-gcc -v`` in a new
-terminal for a quick test.
+The most easy way to port to AROS is from a Linux box, because it
+usually has all the needed development tools. Look in the `Development Guide`__
+for some information on how about to install the SDK.
+
+__ app-dev/introduction.php#compiling-on-linux-with-gcc
 
 
 The basics
 ==========
 
 The first thing you do is to check how to build your project.
-If there is a file called *configure* in the root dir of the archive, it means 
-you'll have to configure it for your platform.
-Start a terminal, and configure it. See the next chapter for a description
+If there is a file called *configure* in the root directory of the archive,
+it means you'll have to configure it for your platform.
+Start a terminal, and configure. See the next chapter for a description
 on how to do that.
 
 After the project is properly configured it's time to roll out the compiler. 
@@ -68,11 +74,10 @@ However, if there was no file called *configure*, look for a file called
 *Makefile*. Edit it to suit AROS and build the project with ``make``.
 
 If everything compiled and linked you are ready to test your port. A very common
-problem is that it won't find it's datafiles, and crash. Fix the path's as 
+problem is that it won't find its datafiles, and crash. Fix the paths as 
 described in the path-fixing chapter, and try to run it again. 
 
-If you've compiled a link library a ``make install`` is recommended, as it will 
-copy all neeeded files to the right places.
+Type ``make install`` in order to copy all needed files to the right places.
 
 OK, you're done now, upload it to http://archives.aros-exec.org and aminet!
 
@@ -80,35 +85,31 @@ OK, you're done now, upload it to http://archives.aros-exec.org and aminet!
 How to configure
 ================
 
-
 What makes configuring for AROS more difficult than e.g. for AmigaOS4 is the fact that
 we are using a cross compiler.
 
 You can type ``./configure --help`` to see what options are available. If configuring fails
 we can try to disable some features.
 
+Here is an explanation of the options we have used in the `Quick reference`_ above.
 
-.. Warning::
+CC=i386-aros-gcc
+    We want to use the AROS compiler. Otherwise we'd get a Linux binary.
 
-  The following is not true for AROS!!!
+CFLAGS="-nix"
+    This enables Linux semantics for paths. Linux applications often use absolute paths to
+    their data files. But an absolute Linux path like /usr/local/app means for AROS: go one
+    level up, then go into the *usr* directory.
 
+--prefix=/progdir/
+    Prefixes all paths with */progdir/*. Together with the *-nix* option this allows to use
+    Linux paths during compiling and AROS paths during running.
 
-TRICKY CONFIGURES
-Some configure scripts just don't want to do what you want them to, here's some real world examples,
-from when I have had to tweak a configure script by issuing some flags;
+--build=local --host=i686-aros --target=i686-aros
+    Tells the configure script to cross-compile to i686-aros.
 
-Xmoto configured without Automake (notice the amigaos path fix at the end);
-  ./configure CFLAGS=-DMINIGL CXXFLAGS=-DMINIGL SDL_CFLAGS=-DMINIGL CC=g++ CXX=g++ LIBS="-lGL -lGLU -llua -lode -lSDL_image -lSDL_mixer -lsmpeg -lvorbisfile -lvorbisenc -lvorbis -logg -lft2 -lpng -ljpeg -lz -lSDL -lpthread -lunix -lcurl -lauto" --with-sdl-prefix=/sdk/local/clib2/ --disable-dependency-tracking --srcdir=/Bob/Coding/xmoto-0.2.0 --prefix=/PROGDIR/ --datadir=data
-
-And some manual changes to the Xmoto Makefile;
-  remove: $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) ... from LINK
-  remove: $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) ... from CXXLINK
-
-libXML:
-./configure --disable-dependency-tracking --bindir=/SDK/Local/C --prefix=/SDK/Local --libdir=/SDK/Local/clib2/lib CFLAGS=-mcrt=clib2 CPPFLAGS="-mcrt=clib2 -DMINIGL -DLIBXML_DOTTED_VERSION=2.6.26 -DLIBXML_TEST_VERSION=20626 -DLIBXML_VERSION=20626 -DLIBXML_VERSION_STRING=20626" CXXFLAGS=-mcrt=clib2 LIBS=-lunix LDFLAGS=-mcrt=clib2
-
-GNGEO: Notice the UNIX path fix at the end (pkgdatadir=/PROGDIR/data)
-./configure --disable-dependency-tracking --bindir=/SDK/Local/C --prefix=/SDK/Local --libdir=/SDK/Local/clib2/lib CFLAGS=-mcrt=clib2 CPPFLAGS="-mcrt=clib2 -DMINIGL -D__USE_INLINE__" CXXFLAGS=-mcrt=clib2 LIBS="-lauto -lunix" LDFLAGS=-mcrt=clib2 pkgdatadir=/PROGDIR/data
+--disable-nls --without-x --without-pic --disable-shared
+    Disables some features which aren't supported by AROS.
 
 
 Common errors that can occur when configuring
@@ -127,59 +128,44 @@ I get errors like this:
 
 Solution:
   We are linking with static libraries, and we need to be tell exactly what
-  to link in. Locate this line in the configure script;
+  to link in. Locate this line in the configure script::
 
-LIBS="-lSDL_image $LIBS"
+    LIBS="-lSDL_image $LIBS"
 
-SDL_image depends on some more libraries to function correctly,
-add them like this;
+  SDL_image depends on some more libraries to function correctly,
+  add them like this::
 
-LIBS="-lSDL_image -lpng -ljpeg -lz $LIBS"
+    LIBS="-lSDL_image -lpng -ljpeg -lz $LIBS"
 
 
-I get errors like this;
+I get errors like this:
   checking for Mix_OpenAudio in -lSDL_mixer... no
 
 Solution:
   We are linking with static libraries, and we need to tell exactly what
-  to link in. Locate this line in the configure script;
+  to link in. Locate this line in the configure script::
 
-LIBS="-lSDL_mixer $LIBS"
+    LIBS="-lSDL_mixer $LIBS"
 
   SDL_mixer depends on some more libraries to function correctly,
-  add them like this;
+  add them like this::
 
-LIBS="-lSDL_mixer -lvorbisfile -lvorbis -logg $LIBS"
+    LIBS="-lSDL_mixer -lvorbisfile -lvorbis -logg $LIBS"
 
 
 The same thing also often happens when configure is searching for 
 SDL_ttf, and you know why by now. We need to specify some more libs that 
 SDL_ttf depends on. It needs -lfreetype and -lz. I will leave the 
-rest to you as an excersize.
+rest to you as an exercise.
 
 If you have added the needed dependencies to the configure script, and 
-it still doesn't work it can be due missing files in the SDK.
-freetype-config and smpeg-config are missing in the archives available
-on http://www.os4depot.net. I compiled my libs by myself to get the 
-missing files, but hopefully the authors of the AmigaOS 4.0 versions
-will notice and fix these issues.
-
-Another common problem are wrong paths in the .la files found in
-SDK:Local/newlib/lib or SDK:Local/clib2/lib. 
-Check your .la files to see if they are configured correctly, locate
-the following lines;
-
-# Directory that this library needs to be installed in:
-libdir='/SDK/Local/newlib/lib'
-
-This one is set up correctly, notice libdir='/SDK/Local...'
-if it's set to '/USR/Local...' it's wrong. 
+it still doesn't work it can be due missing files in the SDK. E.g. the
+SDL libs aren't included. 
 
 If it still doesn't work, and you are sure that you have the library
 installed, try to remove the whole section where it checks 
 for the failing library in the configure file.
 This is not recommended, but if there is no other way...
-
 
 Now you should be ready to build your project. When porting unix apps 
 always type ``make``.
@@ -189,33 +175,32 @@ always type ``make``.
 Converting unix paths to AROS paths
 ===================================
 
-How do I convert UNIX paths into AmigaDOS paths?
+How do I convert UNIX paths into AROS paths? Exchange *getenv("HOME");* by *"/PROGDIR/"*
 
-Exchange getenv("HOME"); to "/PROGDIR/"
+Examples::
 
-Examples;
-org: strcpy(path, getenv("HOME"));
-new: strcpy(path, "/PROGDIR/");
+    old: strcpy(path, getenv("HOME"));
+    new: strcpy(path, "/PROGDIR/");
 
-org: strcpy(home,getenv("HOME"));
-new: strcpy(home,"/PROGDIR/");
+    old: strcpy(home,getenv("HOME"));
+    new: strcpy(home,"/PROGDIR/");
 
-old: sprintf(rc_dir, "%s/.gngeo/romrc.d", getenv("HOME"));
-new: sprintf(rc_dir, "%sgngeo/romrc.d", "/PROGDIR/");
+    old: sprintf(rc_dir, "%s/.gngeo/romrc.d", getenv("HOME"));
+    new: sprintf(rc_dir, "%sgngeo/romrc.d", "/PROGDIR/");
 
 Notice that I removed "/." in the last example.
 
 Paths to datadirs are often set during the configure process by issuing 
--DDATADIR= if this is the case set it to -DDATADIR=/PROGDIR/
-It's also common that the datadir are set in the makefiles. Locate DATADIR=
-and change it to DATADIR=/PROGDIR/
+*-DDATADIR=* if this is the case set it to *-DDATADIR=/PROGDIR/*
+It's also common that the datadir are set in the makefiles. Locate *DATADIR=*
+and change it to *DATADIR=/PROGDIR/*
 
 
 Defines
 =======
 
-Defines are often set in config.h, if something is configured wrongly, you can
-often change it here by using #DEFINE and #UNDEF.
+Defines are often set in *config.h*, if something is configured wrongly, you can
+often change it here by using *#define* and *#undef*.
 
 A define example that considers all AmigaOS flavours::
 
@@ -247,93 +232,85 @@ An example of a more complex #ifdef::
 	char *gngeo_dir=get_gngeo_dir();
   #endif
 
+Some open source packages are already adopted to Amiga-like operating systems.
+If you find something like *#ifdef __AMIGA__* in the source you can try to add
+the define to the config options (e.g. CFLAGS="-nix -D__AMIGA__").
+
 
 Understanding error messages
 ============================
 
-Error:
-No return statement in function returning non-void 
+Error: No return statement in function returning non-void 
+  There is no *return* in a function that needs a return.
 
-  What does it really mean?
-  There is no return in a function that needs a return.
+Error: Control reaches end of non-void function
+  It is reaching the end of a function that needs to return a value, but there is no return.
 
-Error:
-Control reaches end of non-void function
-
-  What does it really mean?
-  it is reaching the end of a function that needs a return, but there is no return.
-
-Error:
-May be used uninitialized in this function
-
-  What does it really mean?
+Error: May be used uninitialized in this function
   The variable is not initialized. 
 
-Error:
 Warning: implicit declaration of function 'blah blah'
-
-  What does it really mean?
   You need to include a header.
 
 
 Common errors
 =============
 
-warning: incompatible implicit declaration of built-in function 'exit'
-warning: incompatible implicit declaration of built-in function 'abort'
-solution: #include <stdlib.h>
+warning: incompatible implicit declaration of built-in function 'exit';
+warning: incompatible implicit declaration of built-in function 'abort'::
+  
+    solution: #include <stdlib.h>
 
-warning: implicit declaration of function 'strlen'
-warning: incompatible implicit declaration of built-in function 'strlen'
-solution: #include <string.h>
+warning: implicit declaration of function 'strlen';
+warning: incompatible implicit declaration of built-in function 'strlen'::
 
-warning: implicit declaration of function 'memcpy'
-warning: incompatible implicit declaration of built-in function 'memcpy'
-solution: #include <string.h>
+    solution: #include <string.h>
 
-error: memory.h: No such file or directory
-solution: #include <string.h>
+warning: implicit declaration of function 'memcpy';
+warning: incompatible implicit declaration of built-in function 'memcpy'::
 
-error: malloc.h: No such file or directory
-solution: #include <stdlib.h>
+    solution: #include <string.h>
 
-warning: incompatible implicit declaration of built-in function 'printf'
-solution: #include <stdio.h>
+error: memory.h: No such file or directory::
 
-warning: implicit declaration of function 'srandom'
-warning: implicit declaration of function 'random'
+    solution: #include <string.h>
 
-solution:
-We don't have random() and srandom() in neither clib2 or newlib.
-You "could" use rand() and srand() instead they are not totally compatible,
-but it should work.
+error: malloc.h: No such file or directory::
 
-One way to do it is to manually edit the sources and replac srandom and random
-with srand and rand. Another way to do it is to; #define srandom srand in the
-source.
+    solution: #include <stdlib.h>
 
-warning: implicit declaration of function 'MyRemove'
-solution: #define MyRemove Remove
+warning: incompatible implicit declaration of built-in function 'printf'::
+
+    solution: #include <stdio.h>
+
+warning: implicit declaration of function 'MyRemove'::
+
+    solution: #define MyRemove Remove
 
 
 Tips and tricks
 ===============
 
 How do I search for text strings using GREP?
+
+::
+
   grep -R "I am looking for this" *
 
-
 How do I make a DIFF file with my changes?
-  diff originalfile.cpp mychangedfile.cpp >./originalfile.patch
+
+::
+
+  diff originalfile.c mychangedfile.c >./originalfile.patch
 
 My executeable is crashing, how do I debug it?
-  Look in `Debugging manual <debugging>`_.
-
-How do I use Python?
-  Assign python: to your python dir, and then add it to your path from
-  abc-shell: PATH=$PATH:/python
+  Look in `Debugging manual <debugging>`_. You can use sys:utilities/snoopy to find out
+  what your application tries to do.
 
 How do I redirect GCC warnings and errors to a text file?
+
+::
+
   make 2>warnings.txt
 
 
@@ -348,18 +325,29 @@ Usually you only need to modify an existing makefile, change the name of the C c
 
 Here's an explanation of what the flags do.
  
-+ CC      - the name of the C compiler executeable 
-+ RM      - the name of the delete command
-+ STRIP   - the name of the strip command (used to remove debug data from exe files)
-+ CFLAGS  - tells the compiler where to find the includes and what clib to use etc.
-            specify -mcrt=newlib or -mcrt=clib2 here.
-+ LDFLAGS - tells the compiler what link libraries to include etc. 
-            specify -mcrt=newlib or -mcrt=clib2 here too, aswell as the other needed
-            linklibs depending on what you are compiling.
-+ OBJS    - The compiler (GCC/G++) compiles object files (#?.o) from your .C or .CPP
-            files that are later linked together to become an executable file.
-            Specify the object file names here.
-+ OUTPUT  - The name of the final executable file.
+CC
+    The name of the C compiler executeable.
+
+RM
+    The name of the delete command.
+
+STRIP
+    The name of the strip command (used to remove debug data from exe files).
+
+CFLAGS
+    Tells the compiler where to find the includes (-I) etc.
+
+LDFLAGS
+    Tells the linker what libraries to include (-l) and were
+    to find them (-L). 
+
+OBJS
+    The compiler (GCC/G++) compiles object files (#?.o) from your .c
+    files that are later linked together to become an executable file.
+    Specify the object file names here.
+
+OUTPUT
+    The name of the final executable file.
 
 ::
 
@@ -367,16 +355,22 @@ Here's an explanation of what the flags do.
   RM      = rm
   STRIP   = i386-aros-strip --strip-unneeded --remove-section .comment
   CFLAGS  = -Wall -O2 
-  LDFLAGS = -lsmpeg -lSDL_gfx -lSDL_net -lSDL_image -lpng -ljpeg -lz -lSDL_mixer \
+  LDFLAGS = -nix -lsmpeg -lSDL_gfx -lSDL_net -lSDL_image -lpng -ljpeg -lz -lSDL_mixer \
             -lvorbisfile -lvorbis -logg -lSDL_ttf -lfreetype -lz -lsdl -lauto -lpthread -lm
   OBJS    = a.o b.o c.o
   OUTPUT  = test.exe
 
   all: $(OBJS)
-		$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $(OUTPUT) 
+          $(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $(OUTPUT) 
 
   main.o: main.cpp main.h 
-		$(CC) $(CFLAGS) -c main.cpp
+          $(CC) $(CFLAGS) -c main.cpp
+
+  strip:
+          $(STRIP) $(OUTPUT)
+        
+  clean:
+          $(RM) -f $(OBJS) $(OUTPUT)
 
 Remember that you have to use tabulator chars before the command.
 
@@ -384,9 +378,11 @@ Remember that you have to use tabulator chars before the command.
 Using the build system
 ======================
 
-The build system contains some scripts for configure packages:
+The build system contains some scripts for configuring of packages. The big advantage
+when using the build system is that you can easily port to different AROS flavours.
+
 + %build_with_configure
 + %fetch_and_build
 + %fetch_and_build_gnu_development
 
-You can use them in your metamakefiles.
+Look in the file $(TOP)/config/make.tmpl for an explanation of the arguments.
