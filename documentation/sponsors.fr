@@ -14,7 +14,7 @@ Les compagines suivantes, organisations et individus ont contribué:
    
   .. RAW:: html
      
-     <a href="http://www.trustsec.de/"><img border="0" src="images/trustec.png"></a>
+     <a href="http://www.trustsec.de/"><img border="0" src="/images/trustec.png"></a>
     
   Les personnes sympa de Trustec donnent l'espace et la bande passante nécessaire
   au serveur d'AROS, au serveur CVS, au serveur FTP et aux nombreuses mailing lists.
@@ -24,7 +24,7 @@ Les compagines suivantes, organisations et individus ont contribué:
 
   .. RAW:: html
   
-     <a href="http://www.pegasosppc.com/"><img border="0" src="images/genesi.gif"></a>
+     <a href="http://www.pegasosppc.com/"><img border="0" src="/images/genesi.gif"></a>
 
   Genesi a généreusement doné une carte mère PegasOS, dans un effort de fournir
   AROS à cette plateforme. Merci !
@@ -33,7 +33,7 @@ Les compagines suivantes, organisations et individus ont contribué:
 
   .. RAW:: html
   
-     <a href="http://www.sourceforge.net/"><img border="0" src="images/sourceforge.png"></a>
+     <a href="http://www.sourceforge.net/"><img border="0" src="/images/sourceforge.png"></a>
 
   Sourceforge fournit plusieurs services tels qu'un serveur web avec des
   extensions de scripts et des bases de données SQL, des mailing lists,

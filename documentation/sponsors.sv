@@ -14,7 +14,7 @@ Följande företag, organisationer och individer har donerat resurser:
    
   .. RAW:: html
      
-     <a href="http://www.trustsec.de/"><img border="0" src="images/trustec.png"></a>
+     <a href="http://www.trustsec.de/"><img border="0" src="/images/trustec.png"></a>
     
   De snälla personerna på Trustec donerar utrymme och bandbredd till AROS
   webbserver, SVN-server, FTP-server och flera mailinglistor. Om du är i behov
@@ -24,7 +24,7 @@ Följande företag, organisationer och individer har donerat resurser:
 
   .. RAW:: html
   
-     <a href="http://www.pegasosppc.com/"><img border="0" src="images/genesi.gif"></a>
+     <a href="http://www.pegasosppc.com/"><img border="0" src="/images/genesi.gif"></a>
 
   Genesi har varit generösa och donerat ett Pegasos moderkort för att möjliggöra ett
   försök att porta AROS till den plattforman, tack!
@@ -33,7 +33,7 @@ Följande företag, organisationer och individer har donerat resurser:
 
   .. RAW:: html
   
-     <a href="http://www.sourceforge.net/"><img border="0" src="images/sourceforge.png"></a>
+     <a href="http://www.sourceforge.net/"><img border="0" src="/images/sourceforge.png"></a>
 
   SourceForge försörjer oss med flera tjänster, såsom webbserver med möjligheter
   att köra skript, SQL-databas, mailinglistor, buggdatabas och ett distribuerat

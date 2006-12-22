@@ -12,7 +12,7 @@ Une façon d'encourager le développement d'AROS que nous recommandons
 particulièrement est de référencer ce site web à partir du votre. Vous
 pouvez utiliser les jolies bannières suivantes, réalisées par Cyb0rg / Resistance:
 
-    .. Image:: images/aros-banner.gif
+    .. Image:: /images/aros-banner.gif
 
 Veuillez référencer directement http://www.aros.org/ et non les sites mirroirs
 qui peuvent changer au cours du temps. Pensez également à effectuer une copie

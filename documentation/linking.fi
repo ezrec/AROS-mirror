@@ -4,7 +4,7 @@ Linkitys toisaalta
 
 :Author:    Adam Chodorowski
 :Copyright: Copyright © 2001, The AROS Development Team
-:Version:   $Revision: 15472 $
+:Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
 
@@ -12,7 +12,7 @@ Mainio tapa n‰ytt‰‰ tukevasi AROS:ia, ja tapa jota suosimme, on asettaa omalta
 sivustoltasi linkki t‰nne. Voit k‰ytt‰‰ t‰h‰n tarkoitukseen CybOrg /
 Resistance:n tekem‰‰ hienoa banneria:
 
-    .. Image:: images/aros-banner.gif
+    .. Image:: /images/aros-banner.gif
 
 Tee linkki suoraan sivustolle http://www.aros.org/, eik‰ sivustoa peilaaville
 palvelimille sill‰ ne voivat muuttua ajan saatossa. Tee yll‰ olevasta kuvasta

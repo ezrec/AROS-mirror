@@ -3,7 +3,7 @@ Sponsors
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Paolo Besser
 :Copyright: Copyright © 1995-2002, The AROS Development Team
-:Version:   $Revision: 20691 $
+:Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
 
@@ -14,7 +14,7 @@ Le seguenti compagnie, organizzazioni e singole persone hanno donato risorse:
    
   .. RAW:: html
      
-     <a href="http://www.trustsec.de/"><img border="0" src="images/trustec.png"></a>
+     <a href="http://www.trustsec.de/"><img border="0" src="/images/trustec.png"></a>
     
   I simpatici ragazzi di Trustec hanno donato spazio e banda al server web di AROS 
   al server CVS, all'FTP e a diverse mailing list. Se avete bisogno di sviluppare  
@@ -24,7 +24,7 @@ Le seguenti compagnie, organizzazioni e singole persone hanno donato risorse:
 
   .. RAW:: html
   
-     <a href="http://www.pegasosppc.com/"><img border="0" src="images/genesi.gif"></a>
+     <a href="http://www.pegasosppc.com/"><img border="0" src="/images/genesi.gif"></a>
 
   Genesi ha generosamente donato una scheda madre, allo scopo di rendere più facile
   un porting di AROS sulla loro piattaforma. Grazie!
@@ -33,7 +33,7 @@ Le seguenti compagnie, organizzazioni e singole persone hanno donato risorse:
 
   .. RAW:: html
   
-     <a href="http://www.sourceforge.net/"><img border="0" src="images/sourceforge.png"></a>
+     <a href="http://www.sourceforge.net/"><img border="0" src="/images/sourceforge.png"></a>
 
   SourceForge ci offre diversi servizi fra cui un server web con estensioni 
   per gli script e un database SQL, mailing list, bug database e rilascio  

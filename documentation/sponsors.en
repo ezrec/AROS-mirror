@@ -14,7 +14,7 @@ The following companies, organizations and individuals have donated resources:
    
   .. RAW:: html
      
-     <a href="http://www.trustsec.de/"><img border="0" src="images/trustec.png"></a>
+     <a href="http://www.trustsec.de/"><img border="0" src="/images/trustec.png"></a>
     
   The nice people at Trustec donate space and bandwidth for the AROS 
   webserver, CVS server, FTP server and several mailing lists. If you need 
@@ -24,7 +24,7 @@ The following companies, organizations and individuals have donated resources:
 
   .. RAW:: html
   
-     <a href="http://www.pegasosppc.com/"><img border="0" src="images/genesi.gif"></a>
+     <a href="http://www.pegasosppc.com/"><img border="0" src="/images/genesi.gif"></a>
 
   Genesi have generously donated a Pegasos motherboard, in an effort to bring
   AROS to that hardware platform. Thanks!
@@ -33,7 +33,7 @@ The following companies, organizations and individuals have donated resources:
 
   .. RAW:: html
   
-     <a href="http://www.sourceforge.net/"><img border="0" src="images/sourceforge.png"></a>
+     <a href="http://www.sourceforge.net/"><img border="0" src="/images/sourceforge.png"></a>
 
   SourceForge provides us with several services like a web server with 
   scripting extensions and SQL database, mailing lists, bug database and 

@@ -3,7 +3,7 @@ Tukijat
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
 :Copyright: Copyright © 1995-2002, The AROS Development Team
-:Version:   $Revision: 20691 $
+:Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
 
@@ -15,7 +15,7 @@ resursseja:
    
   .. RAW:: html
      
-     <a href="http://www.trustsec.de/"><img border="0" src="images/trustec.png"></a>
+     <a href="http://www.trustsec.de/"><img border="0" src="/images/trustec.png"></a>
   
   Trustec:in mukavat ihmiset ovat lahjoittaneet tilaa ja kaistaa AROS:in
   web-, CVS- ja FTP-palvelimille, sek‰ useille postituslistoille. Jos tarvitset
@@ -25,7 +25,7 @@ resursseja:
 
   .. RAW:: html
   
-     <a href="http://www.pegasosppc.com/"><img border="0" src="images/genesi.gif"></a>
+     <a href="http://www.pegasosppc.com/"><img border="0" src="/images/genesi.gif"></a>
 
   Genesi anteliaasti lahjoitti Pegasos emolevyn saadakseen AROS:in kyseiselle
   raudalle. Kiitos!
@@ -34,7 +34,7 @@ resursseja:
 
   .. RAW:: html
   
-     <a href="http://www.sourceforge.net/"><img border="0" src="images/sourceforge.png"></a>
+     <a href="http://www.sourceforge.net/"><img border="0" src="/images/sourceforge.png"></a>
 
   SourceForge pit‰‰ huolen useista palveluistamme, kuten skriptausta tukevasta
   web-palvelimesta, SQL tietokannasta, postituslistoista, vikatietokannasta ja

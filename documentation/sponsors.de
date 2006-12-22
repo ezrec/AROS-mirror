@@ -14,7 +14,7 @@ Die folgenden Firmen, Organisationen und Personen haben Ressourcen beigesteuert:
    
   .. RAW:: html
      
-     <a href="http://www.trustsec.de/"><img border="0" src="images/trustec.png"></a>
+     <a href="http://www.trustsec.de/"><img border="0" src="/images/trustec.png"></a>
     
   Die netten Leute von 'Trustec' haben Speicherplatz und Bandbreite für den
   AROS-Webserver, CVS-Server, FTP-Server und verschiedene Mailinglisten zur
@@ -25,7 +25,7 @@ Die folgenden Firmen, Organisationen und Personen haben Ressourcen beigesteuert:
 
   .. RAW:: html
   
-     <a href="http://www.pegasosppc.com/"><img border="0" src="images/genesi.gif"></a>
+     <a href="http://www.pegasosppc.com/"><img border="0" src="/images/genesi.gif"></a>
 
   'Genesi' hat freundlicherweise ein Pegasos-Motherboard gespendet, um eine Portierung
   von AROS auf diese Plattform zu ermöglichen. Danke!
@@ -34,7 +34,7 @@ Die folgenden Firmen, Organisationen und Personen haben Ressourcen beigesteuert:
 
   .. RAW:: html
   
-     <a href="http://www.sourceforge.net/"><img border="0" src="images/sourceforge.png"></a>
+     <a href="http://www.sourceforge.net/"><img border="0" src="/images/sourceforge.png"></a>
 
   'Sourceforge' unterstützt uns mit verschiedenen Diensten wie Webserver mit
   Skripterweiterungen und SQL-Datenbank, Mailinglisten, Fehlerdatenbank und
