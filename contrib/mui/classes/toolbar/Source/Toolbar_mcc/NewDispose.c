@@ -33,6 +33,7 @@
 #include "InstanceData.h"
 
 #ifdef __AROS__
+IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...) __stackparm;
 IPTR DoSuperNew(Class *cl, Object *obj, Tag tag1, ...)
 {
   AROS_SLOWSTACKMETHODS_PRE(tag1)

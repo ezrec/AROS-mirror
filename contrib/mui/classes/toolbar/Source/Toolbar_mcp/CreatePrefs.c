@@ -49,6 +49,7 @@ AROS_UFH2S(void, putchfunc,
     AROS_USERFUNC_EXIT
 }
 
+int MySPrintf(char *buf, char *fmt, ...) __stackparm;
 int MySPrintf(char *buf, char *fmt, ...)
 {
 	va_list args;
