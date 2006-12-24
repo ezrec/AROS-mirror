@@ -15,7 +15,7 @@
    
   .. RAW:: html
      
-     <a href="http://www.trustsec.de/"><img border="0" src="images/trustec.png"></a>
+     <a href="http://www.trustsec.de/"><img border="0" src="/images/trustec.png"></a>
     
   Замечательные ребята из Trustec выделили место и траффик для веб-сервера AROS,
   а также для CVS-сервера, FTP-сервера и нескольких списков рассылки. Если вам 
