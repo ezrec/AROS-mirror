@@ -27,7 +27,7 @@ Device drivers development
   [...] Lets take a little journey through the various chapters of the USB 2.0 specification
   and briefly introduce the key points."
 
-__ http://www.usb.org/developers/docs/usb_20_05052006.zip
+__ http://www.usb.org/developers/docs/
 __ http://www.beyondlogic.org/usbnutshell/usb1.htm
 
 Executable file formats
@@ -52,7 +52,7 @@ Executable file formats
   time; but it *does* contain some interesting ideas. Definately something
   we would like to see in AROS.
 
-__ http://x86.ddj.com/ftp/manuals/tools/elf.pdf
+__ http://refspecs.freestandards.org/elf/elf.pdf
 __ http://www.cs.ucdavis.edu/~haungs/paper/node10.html
 __ http://greywire.8m.com/greywire/amigasde.htm
 

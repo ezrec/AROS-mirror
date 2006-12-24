@@ -53,8 +53,8 @@ Software
 format, has been ported to AROS. *AmiGG* 0.44.3 has been ported too, by
 Marcin Kielesinski. This is the first Instant Messenger program for AROS
 and it supports two protocols popular in Poland: Gadu-Gadu and Tlen.
-AmiGG also supports mail notifications. You may find two screenshots
-`here`__ and `here`__, while binaries are `here`__.
+AmiGG also supports mail notifications. You may find a screenshot
+`here`__, while binaries are `here`__.
 
 *Murks!* is an Integrated Development Environment for AROS. Murks! uses 
 the same Project File Format that AmiDevCpp uses, so data exchange is 
@@ -63,7 +63,6 @@ your system; Windows users can try Murks! using the latest WinAros
 version containing the native gcc. Full story on `AROS-EXEC`__.
 
 __ http://ministerq.integradesign.org/31.PNG
-__ http://ministerq.integradesign.org/32.PNG
 __ http://amigg.integradesign.org/amigg_beta.lha
 __ http://aros-exec.org/modules/news/article.php?storyid=185
 

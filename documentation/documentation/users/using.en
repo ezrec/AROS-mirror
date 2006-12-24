@@ -173,7 +173,7 @@ on Debian/Ubuntu/Knoppix/DSL or use any other package manager for other
 distributions or download and unpack the archive manually. You can get the
 archive from the `QEMU Website <http://fabrice.bellard.free.fr/qemu/>`__. 
 
-Also there`s an VMware VM available for Linux. Check the `VMWare website <www>`__.
+Also there`s an VMware VM available for Linux. Check the `VMWare website <http://www.vmware.com>`__.
 
 VM for Windows
 """"""""""""""
@@ -196,7 +196,8 @@ these to your launch string (or a script).
     Please don`t use ALT+Tab combination to free the keyboard lock, use CTRL+Alt,
     otherwise Tab key may remain pressed and can damage currently edited file.
     
-Applying to `VMWare <hhttp://www.vmware.com/products/free_virtualization.html>`__ or VPC it`s even easier to setup. 
+Applying to `VMWare <http://www.vmware.com/products/free_virtualization.html>`__
+or VPC it`s even easier to setup. 
 All you need is to install some virtual hardware like network and sound card 
 and create an virtual HDD. Everything managed by a simple GUI.
 
@@ -408,7 +409,7 @@ ToDO - CLI commands abstract and comparision ...
 AROS has it`s CLI, the Command Line Interface, greatly expanding the 
 capabilities of OS. Those who had used the AmigaOS can note that it looks
 pretty close to the AmigaDOS. There`s some CLI basics described in 
-`introduction </users/introduction>`__ to CLI commands. 
+`introduction <shell/introduction>`__ to CLI commands. 
 
 Currently you don`t need to type all the commands to the end - now there`s
 a neat Tab completion similar to that on Linux consoles. This allows you 

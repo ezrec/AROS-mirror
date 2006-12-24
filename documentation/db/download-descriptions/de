@@ -1,0 +1,73 @@
+[headings]
+
+package: Paket
+documentation: Dokumentation
+sources: Quellcodes
+binaries: Binärdateien
+development-tools: Entwicklungswerkzeuge
+date: Datum
+
+[links]
+
+build-logs: build logs
+download: Download
+
+[units]
+
+byte-unit: B
+kilobyte-unit: kB
+megabyte-unit: MB
+gigabyte-unit: GB
+decimal-point: ,
+
+[descriptions]
+
+ChangeLog-AROS:
+    Änderungsprotokolldatei für die AROS-Kern-Quellcodedateien.
+ChangeLog-contrib:
+    Änderungsprotokolldatei für die Quellcodes der beigestellten Programme.
+ChangeLog-docs:
+    Änderungsprotokolldatei für die Dokumentation.    
+source:
+    AROS-Kern-Quellcodedateien.
+docs-source:
+    Dokumentation Quelldateien.
+contrib-source:
+    Quellcode der beigestellten Programme.
+docs-html:
+    Dokumentation im HTML-Format. Enthält alles, was auf der Webseite
+    vorhanden ist, aufbereitet zum Offline-Lesen.
+i386-freebsd5-system:
+    Die gehostete Version für FreeBSD/i386 5.x. Beachte, dass
+    sie nicht auf FreeBSD 4.x-Systemen läuft.
+i386-freebsd-system:
+    Die gehostete Version für FreeBSD/i386 5.x. Beachte, dass
+    sie nicht auf FreeBSD 4.x-Systemen läuft.
+i386-linux-system:
+    Die gehostete Version für Linux/i386. Dies ist die vollständigste
+    und ausgereifste Portierung, d.h. dass Du alle mitgelieferten
+    Programme und Demos laufen lassen kannst. Dieses Archiv enthällt
+    alle AROS-System-Binärdateien aus dem Subversion-Archiv.
+ppc-linux-system:
+    Die gehostete Version für Linux/PowerPC. Dieses Archiv enthält alle
+    AROS-System-Binärdateien aus dem Subversion-Archiv.
+i386-pc-boot-floppy:
+    Die native Version für i386-PC-AT-Computer und Kompatible.
+    Dieses Archiv enthält das Boot-Diskettenimage, welches Du schnell
+    auf eine Diskette schreiben kannst um AROS davon zu Booten.
+i386-pc-boot-iso:
+    Die native Version für i386-PC-AT-Computer und Kompatible.
+    Dies ist das boot-fähige CDROM-ISO-Image, welches alle AROS-
+    System und beigestellten Programme enthält.
+i386-all-contrib:
+    Dieses Archiv enthält alle beigesteuerten Programme für die
+    i386-Architektur. Sie funktionieren sowohl für hosted (z.B. i386-linux)
+    als auch für native (i386-pc).
+ppc-all-contrib:
+    Dieses Archiv enthält alle beigesteuerten Programme für die
+    PowerPC-Architektur für die Linux/PowerPC-Portierung.
+i386-all-sdk:
+    Dateien und Werkzeuge um Deine eigenen AROS-Programme
+    auf Deiner Maschine zu erstellen. Gcc und die Binutils
+    müssen so konfiguriert sein, dass sie Programme im
+    i386-elf-Format erzeugen.
