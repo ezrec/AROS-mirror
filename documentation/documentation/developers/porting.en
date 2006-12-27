@@ -2,11 +2,11 @@
 PORTING GUIDE
 =============
 
-:Authors:   SpotUP, HNL_DK, NICOMEN, ITIX, ZEROHERO, BLACKY_STARDUST, Matthias Rustler
+:Authors:   Johann Samuellson, Matthias Rustler
 :Copyright: Copyright © 2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
-:Status:    Unfinished
+:Status:    Beta
 :ToDo:      Some real world examples
 
 
@@ -18,38 +18,26 @@ Introduction
 
 This guide is about porting of software which comes with configure or make scripts to AROS.
 This is true for the most open source software from the Linux world. It is based on a
-`document <http://utilitybase.com/article?action=show&id=210>`_
-which was written by Johan Samuellson for AmigaOS4. 
+`document`__ which was written by Johan Samuellson for AmigaOS4. 
 
-
-Quick reference 
-===============
-
-For lazy geezers like me, I use these lines a lot and I don't want to 
-wade through the guide to find them all the time, if you are new to this 
-guide, just skip this chapter for now::
-
-    ./configure CC=i386-aros-gcc CFLAGS=-nix \
-    --prefix=/progdir \
-    --build=local --host=i686-aros --target=i686-aros \
-    --disable-nls --without-x --without-pic --disable-shared
-    
+__ http://utilitybase.com/article?action=show&id=210
 
 What to port?
-=============
+-------------
 
 * The best supported programming language is C. C++ lacks some features.
 
 * Look what additional packages are required for the software you want to port.
-  You cannot simply port when GUI toolkits like GTK or QT are required.
+  You cannot simply port when GUI toolkits like GTK or QT are needed.
   Only software which runs under a console can be ported directly.
 
-* When you want to port games, look if they use `libSDL <http://www.libsdl.org>`_.
+* When you want to port games, look if they use `libSDL`__.
   But avoid software which requires OpenGL.
 
+__ http://www.libsdl.org
 
 Getting the SDK up to date
-==========================
+--------------------------
 
 The most easy way to port to AROS is from a Linux box, because it
 usually has all the needed development tools. Look in the `Development Guide`__
@@ -59,13 +47,12 @@ __ app-dev/introduction.php#compiling-on-linux-with-gcc
 
 
 The basics
-==========
+----------
 
 The first thing you do is to check how to build your project.
 If there is a file called *configure* in the root directory of the archive,
-it means you'll have to configure it for your platform.
-Start a terminal, and configure. See the next chapter for a description
-on how to do that.
+it means you'll have to configure it for your platform. See the next chapter
+for a description on how to do that.
 
 After the project is properly configured it's time to roll out the compiler. 
 Start building your project by typing ``make``. 
@@ -77,49 +64,138 @@ If everything compiled and linked you are ready to test your port. A very common
 problem is that it won't find its datafiles, and crash. Fix the paths as 
 described in the path-fixing chapter, and try to run it again. 
 
-Type ``make install`` in order to copy all needed files to the right places.
+Strip the binaries in order to remove debugging information and making them smaller.
 
-OK, you're done now, upload it to http://archives.aros-exec.org and aminet!
+OK, you're done now, upload it to http://archives.aros-exec.org and http://www.aminet.net!
 
 
 How to configure
 ================
 
+On Linux, packages with a configure script are usually installed in 3 steps::
+
+    ./configure
+    make
+    sudo make install
+
 What makes configuring for AROS more difficult than e.g. for AmigaOS4 is the fact that
 we are using a cross compiler.
 
-You can type ``./configure --help`` to see what options are available. If configuring fails
+Type ``./configure --help`` to see what options are available. If configuring fails
 we can try to disable some features.
 
-Here is an explanation of the options we have used in the `Quick reference`_ above.
 
-CC=i386-aros-gcc
+Simple example
+--------------
+
+::
+
+    ./configure CC=i386-aros-gcc \
+    --build=local --host=i686-aros
+    --disable-nls --without-x --without-pic --disable-shared
+
+.. Hint::
+
+    It makes sense to write the configure statement to a text file. This way we
+    can easily re-run it like ``sh build.sh``. But before we re-run the script
+    we have to do ``rm -f config.cache`` in order to reset the configuration process.
+
+
+Here is an explanation of the options we have used above:
+
+``CC=i386-aros-gcc``
     We want to use the AROS compiler. Otherwise we'd get a Linux binary.
 
-CFLAGS="-nix"
-    This enables Linux semantics for paths. Linux applications often use absolute paths to
-    their data files. But an absolute Linux path like /usr/local/app means for AROS: go one
-    level up, then go into the *usr* directory.
-
---prefix=/progdir/
-    Prefixes all paths with */progdir/*. Together with the *-nix* option this allows to use
-    Linux paths during compiling and AROS paths during running.
-
---build=local --host=i686-aros --target=i686-aros
+``--build=local --host=i686-aros``
     Tells the configure script to cross-compile to i686-aros.
 
---disable-nls --without-x --without-pic --disable-shared
+``--disable-nls --without-x --without-pic --disable-shared``
     Disables some features which aren't supported by AROS.
 
 
+.. Warning::
+
+    Don't do ``sudo make install`` because this would install your application in Linux paths
+    like */usr/local*.
+
+
+SDL example (manual installation)
+----------------------------------
+
+The following example is for `Ltris`__, but it should be similar for other SDL applications::
+
+    ./configure CC=i386-aros-gcc  LDFLAGS="-nix" \
+    --prefix=/PROGDIR \
+    --build=local --host=i686-aros \
+    --disable-nls --without-x --without-pic --disable-shared \
+    --with-sdl-prefix=/usr/local/aros-sdk/i386-aros
+
+``LDLAGS="-nix"``
+    This enables Linux semantics for paths. Linux applications often use absolute paths to
+    their data files. But an absolute Linux path like */usr/local/app* means for AROS: go one
+    level up, then go into the *usr* directory.
+
+``--prefix=/PROGDIR``
+    Prefixes all paths with */PROGDIR*. Together with the *-nix* option this allows to use
+    Linux paths during compiling and AROS paths during running.
+
+``--with-sdl-prefix=/usr/local/aros-sdk/i386-aros``
+    The configure script calls *sdl_config* to find out the required CFLAGS and LDFLAGS for SDL
+    applications. Without this option it would call the Linux version of *sdl_config*, which
+    would give wrong results.
+
+After a successful run of the configure script and *make* we have to copy the ltris binary and
+the data files in such a way that the binary finds the data files::
+
+    ltris
+        ltris (binary)
+        share
+	    ltris
+	        gfx
+		sounds
+
+
+__ http://lgames.sourceforge.net/index.php?project=LTris
+
+
+SDL example (half automatic installation)
+-----------------------------------------
+
+We can use nearly the same options as above::
+
+    ./configure CC=i386-aros-gcc  LDFLAGS="-nix" \
+    --prefix=/PROGDIR --bindir=/PROGDIR \
+    --build=local --host=i686-aros \
+    --disable-nls --without-x --without-pic --disable-shared \
+    --with-sdl-prefix=/usr/local/aros-sdk/i386-aros
+
+``--bindir=/PROGDIR`` 
+    Avoids that a subdirectory *bin* will be created.
+
+Don't forget the *--prefix* option or it will install AROS files in some Linux paths.
+
+Now you can rebuild your project (``make distclean``, run the configure script, ``make``).
+We could now call ``sudo make install``. But it is better to do first the following steps:
+
++ sudo mkdir /PROGDIR
++ sudo chmod a+rwx /PROGDIR
+
+This has the advantage that we can access */PROGDIR* without root rights. Now we can finally do
+``make install`` which should install the game in */PROGDIR*. As this isn't a good place we
+have to copy it to a place were AROS can reach it (e.g. cp -r /PROGDIR ~/AROS/games/ltris).
+
+Remember to do ``rm -rf /PROGDIR/*`` before you build another project.
+
+
 Common errors that can occur when configuring
-=============================================
+---------------------------------------------
 
 I get errors like target or host i686-aros isn't available.
 
-Solution;
-  The *config.sub* script is probably old or doesn't exist, download autoconf_ and copy the file
-  *config.sub* into the root directory of your package.
+Solution:
+  The *config.sub* script is probably old or doesn't exist. Run ``autoconf`` in the root
+  directory of the package. If this doesn't help, copy an actual version of the file *config.sub*
+  from e.g. */usr/share/automake*.
 
 .. _autoconf: http://ftp.gnu.org/gnu/autoconf/
 
@@ -169,150 +245,6 @@ This is not recommended, but if there is no other way...
 
 Now you should be ready to build your project. When porting unix apps 
 always type ``make``.
-
-
-
-Converting unix paths to AROS paths
-===================================
-
-How do I convert UNIX paths into AROS paths? Exchange *getenv("HOME");* by *"/PROGDIR/"*
-
-Examples::
-
-    old: strcpy(path, getenv("HOME"));
-    new: strcpy(path, "/PROGDIR/");
-
-    old: strcpy(home,getenv("HOME"));
-    new: strcpy(home,"/PROGDIR/");
-
-    old: sprintf(rc_dir, "%s/.gngeo/romrc.d", getenv("HOME"));
-    new: sprintf(rc_dir, "%sgngeo/romrc.d", "/PROGDIR/");
-
-Notice that I removed "/." in the last example.
-
-Paths to datadirs are often set during the configure process by issuing 
-*-DDATADIR=* if this is the case set it to *-DDATADIR=/PROGDIR/*
-It's also common that the datadir are set in the makefiles. Locate *DATADIR=*
-and change it to *DATADIR=/PROGDIR/*
-
-
-Defines
-=======
-
-Defines are often set in *config.h*, if something is configured wrongly, you can
-often change it here by using *#define* and *#undef*.
-
-A define example that considers all AmigaOS flavours::
-
-  #ifdef __AMIGA__
-	  blah blah blah
-  #else 
-          blah blah blah
-  #endif
-
-A define example that only considers AROS::
-
-  #ifdef __AROS__
-	  blah blah blah
-  #else 
-          blah blah blah
-  #endif
-
-A define example, that considers BeOS and AROS::
-
-  #if !defined(__BEOS__) && !defined(__AROS__)
-
-An example of a more complex #ifdef::
-
-  #ifdef GP2X
-	char *gngeo_dir="save/";
-  #elif defined __AROS__
-	char *gngeo_dir="/PROGDIR/save/";
-  #else
-	char *gngeo_dir=get_gngeo_dir();
-  #endif
-
-Some open source packages are already adopted to Amiga-like operating systems.
-If you find something like *#ifdef __AMIGA__* in the source you can try to add
-the define to the config options (e.g. CFLAGS="-nix -D__AMIGA__").
-
-
-Understanding error messages
-============================
-
-Error: No return statement in function returning non-void 
-  There is no *return* in a function that needs a return.
-
-Error: Control reaches end of non-void function
-  It is reaching the end of a function that needs to return a value, but there is no return.
-
-Error: May be used uninitialized in this function
-  The variable is not initialized. 
-
-Warning: implicit declaration of function 'blah blah'
-  You need to include a header.
-
-
-Common errors
-=============
-
-warning: incompatible implicit declaration of built-in function 'exit';
-warning: incompatible implicit declaration of built-in function 'abort'::
-  
-    solution: #include <stdlib.h>
-
-warning: implicit declaration of function 'strlen';
-warning: incompatible implicit declaration of built-in function 'strlen'::
-
-    solution: #include <string.h>
-
-warning: implicit declaration of function 'memcpy';
-warning: incompatible implicit declaration of built-in function 'memcpy'::
-
-    solution: #include <string.h>
-
-error: memory.h: No such file or directory::
-
-    solution: #include <string.h>
-
-error: malloc.h: No such file or directory::
-
-    solution: #include <stdlib.h>
-
-warning: incompatible implicit declaration of built-in function 'printf'::
-
-    solution: #include <stdio.h>
-
-warning: implicit declaration of function 'MyRemove'::
-
-    solution: #define MyRemove Remove
-
-
-Tips and tricks
-===============
-
-How do I search for text strings using GREP?
-
-::
-
-  grep -R "I am looking for this" *
-
-How do I make a DIFF file with my changes?
-
-::
-
-  diff originalfile.c mychangedfile.c >./originalfile.patch
-
-My executeable is crashing, how do I debug it?
-  Look in `Debugging manual <debugging>`_. You can use sys:utilities/snoopy to find out
-  what your application tries to do.
-
-How do I redirect GCC warnings and errors to a text file?
-
-::
-
-  make 2>warnings.txt
-
 
 
 Creating a makefile by hand
@@ -385,4 +317,151 @@ when using the build system is that you can easily port to different AROS flavou
 + %fetch_and_build
 + %fetch_and_build_gnu_development
 
-Look in the file $(TOP)/config/make.tmpl for an explanation of the arguments.
+Look in the file $(TOP)/config/make.tmpl for an explanation of the arguments. In
+*$(TOP)/contrib/gnu* you can already find a lot of GNU packages.
+
+
+Misc
+====
+
+Converting unix paths to AROS paths
+-----------------------------------
+
+How do I convert UNIX paths into AROS paths? Exchange *getenv("HOME")* by *"/PROGDIR/"*
+
+Examples::
+
+    old: strcpy(path, getenv("HOME"));
+    new: strcpy(path, "/PROGDIR/");
+
+    old: strcpy(home,getenv("HOME"));
+    new: strcpy(home,"/PROGDIR/");
+
+    old: sprintf(rc_dir, "%s/.gngeo/romrc.d", getenv("HOME"));
+    new: sprintf(rc_dir, "%sgngeo/romrc.d", "/PROGDIR/");
+
+Notice that I removed "/." in the last example.
+
+Paths to datadirs are often set during the configure process by issuing 
+*-DDATADIR=*. If this is the case set it to *-DDATADIR=/PROGDIR/*
+It's also common that the datadir are set in the makefiles. Locate *DATADIR=*
+and change it to *DATADIR=/PROGDIR/*
+
+
+Defines
+-------
+
+Defines are often set in *config.h*, if something is configured wrongly, you can
+often change it here by using *#define* and *#undef*.
+
+A define example that considers all AmigaOS flavours::
+
+  #ifdef __AMIGA__
+	  blah blah blah
+  #else 
+          blah blah blah
+  #endif
+
+A define example that only considers AROS::
+
+  #ifdef __AROS__
+	  blah blah blah
+  #else 
+          blah blah blah
+  #endif
+
+A define example, that considers BeOS and AROS::
+
+  #if !defined(__BEOS__) && !defined(__AROS__)
+
+An example of a more complex #ifdef::
+
+  #ifdef GP2X
+	char *gngeo_dir="save/";
+  #elif defined __AROS__
+	char *gngeo_dir="/PROGDIR/save/";
+  #else
+	char *gngeo_dir=get_gngeo_dir();
+  #endif
+
+Some open source packages are already adopted to Amiga-like operating systems.
+If you find something like *#ifdef __AMIGA__* in the source you can try to add
+the define to the config options (e.g. CFLAGS="-nix -D__AMIGA__").
+
+
+Understanding error messages
+----------------------------
+
+Error: No return statement in function returning non-void 
+  There is no *return* in a function that needs a return.
+
+Error: Control reaches end of non-void function
+  It is reaching the end of a function that needs to return a value, but there is no return.
+
+Error: May be used uninitialized in this function
+  The variable is not initialized. 
+
+Warning: implicit declaration of function 'blah blah'
+  You need to include a header.
+
+
+Common errors
+-------------
+
+warning: incompatible implicit declaration of built-in function 'exit';
+warning: incompatible implicit declaration of built-in function 'abort'::
+  
+    solution: #include <stdlib.h>
+
+warning: implicit declaration of function 'strlen';
+warning: incompatible implicit declaration of built-in function 'strlen'::
+
+    solution: #include <string.h>
+
+warning: implicit declaration of function 'memcpy';
+warning: incompatible implicit declaration of built-in function 'memcpy'::
+
+    solution: #include <string.h>
+
+error: memory.h: No such file or directory::
+
+    solution: #include <string.h>
+
+error: malloc.h: No such file or directory::
+
+    solution: #include <stdlib.h>
+
+warning: incompatible implicit declaration of built-in function 'printf'::
+
+    solution: #include <stdio.h>
+
+warning: implicit declaration of function 'MyRemove'::
+
+    solution: #define MyRemove Remove
+
+
+Tips and tricks
+---------------
+
+How do I search for text strings using GREP?
+
+::
+
+  grep -R "I am looking for this" *
+
+How do I make a DIFF file with my changes?
+
+::
+
+  diff originalfile.c mychangedfile.c >./originalfile.patch
+
+My executeable is crashing, how do I debug it?
+  Look in `Debugging manual <debugging>`_. You can use sys:utilities/snoopy to find out
+  what your application tries to do.
+
+How do I redirect GCC warnings and errors to a text file?
+
+::
+
+  make 2>warnings.txt
+
