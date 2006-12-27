@@ -139,8 +139,7 @@ VOID DrawButton(struct TB_Element *tool, struct Toolbar_Data *data, Object *obj,
     RectFill(rport,  x+1, y+1, x+data->ButtonWidth-1, y+data->ButtonHeight-1);
   } else if (data->BorderType == BORDERTYPE_OFF) {
     get(obj, MUIA_Parent, &par);
-    if (par) {
-      get(par, MUIA_Background, &back);
+    if (par && get(par, MUIA_Background, &back)) {
       set(obj, MUIA_Background, back);
     }
     DoMethod(obj, MUIM_DrawBackground, x,   y, data->ButtonWidth, data->ButtonHeight, x, y);
@@ -279,8 +278,7 @@ VOID DrawButtons(struct Toolbar_Data *data, Object *obj, BOOL complete)
   ULONG back;
 
   get(obj, MUIA_Parent, &par);
-  if (par) {
-    get(par, MUIA_Background, &back);
+  if (par && get(par, MUIA_Background, &back)) {
     set(obj, MUIA_Background, back);
   }
 
