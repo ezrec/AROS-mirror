@@ -1,0 +1,6 @@
+-- in toplevel --
+
+2006-12-24 Markus Weiss <weissms@aros.org>
+
+	* bfd/config.bfd:   handle powerpc-*-aros*
+	* ld/configure.tgt: likewise

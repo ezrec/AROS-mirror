@@ -1,0 +1,24 @@
+diff -Nur binutils-2.16.1/bfd/config.bfd binutils-2.16.1-aros/bfd/config.bfd
+--- binutils-2.16.1/bfd/config.bfd	2005-01-31 18:18:47.000000000 +0100
++++ binutils-2.16.1-aros/bfd/config.bfd	2006-12-24 12:20:07.000000000 +0100
+@@ -1004,6 +1004,9 @@
+     targ_selvecs="bfd_elf64_powerpc_vec bfd_elf32_powerpcle_vec bfd_elf32_powerpc_vec rs6000coff_vec rs6000coff64_vec"
+     ;;
+ #endif
++  powerpc-*-aros*)
++    targ_defvec=bfd_elf32_powerpc_vec
++    ;;
+   powerpc-*-*bsd* | powerpc-*-elf* | powerpc-*-sysv4* | powerpc-*-eabi* | \
+   powerpc-*-solaris2* | powerpc-*-linux-gnu* | powerpc-*-rtems* | \
+   powerpc-*-chorus* | powerpc-*-vxworks* | powerpc-*-windiss*)
+diff -Nur binutils-2.16.1/ld/configure.tgt binutils-2.16.1-aros/ld/configure.tgt
+--- binutils-2.16.1/ld/configure.tgt	2005-02-08 20:54:27.000000000 +0100
++++ binutils-2.16.1-aros/ld/configure.tgt	2006-12-24 12:18:51.000000000 +0100
+@@ -485,6 +485,7 @@
+ pdp11-*-*)		targ_emul=pdp11 ;;
+ pjl*-*-*)	        targ_emul=pjlelf ; targ_extra_emuls="elf_i386" ;;
+ pj*-*-*)	        targ_emul=pjelf ;;
++powerpc-*-aros*)	targ_emul=elf32ppc ;;
+ powerpc-*-freebsd* | powerpc-*-kfreebsd*-gnu)
+ 			targ_emul=elf32ppc_fbsd;
+ 			targ_extra_emuls="elf32ppc elf32ppcsim";
