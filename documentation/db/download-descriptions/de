@@ -71,3 +71,8 @@ i386-all-sdk:
     auf Deiner Maschine zu erstellen. Gcc und die Binutils
     müssen so konfiguriert sein, dass sie Programme im
     i386-elf-Format erzeugen.
+ppc-all-sdk:
+    Dateien und Werkzeuge um Deine eigenen AROS-Programme
+    auf Deiner Maschine zu erstellen. Gcc und die Binutils
+    müssen so konfiguriert sein, dass sie Programme im
+    ppc-elf-Format erzeugen.

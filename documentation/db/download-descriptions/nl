@@ -25,32 +25,54 @@ decimal-point: .
 ChangeLog-AROS:
     Wijzigingen log (ChangeLog) voor de AROS core broncode.
 ChangeLog-contrib:
-    Wijzigingen log (ChangeLog) voor de broncode van gecontributeerde programma's.
+    Wijzigingen log (ChangeLog) voor de broncode van gecontributeerde
+    programma's.
 ChangeLog-docs:
-	Wijzigingen log (ChangeLog) voor de documentatie
+    Wijzigingen log (ChangeLog) voor de documentatie
 source:
-	Broncode AROS core.
+    Broncode AROS core.
 docs-source:
     Broncode (Engelstalig) documentatie.
 contrib-source:
     Broncode gecontributeerde programma's.
 docs-html:
-    Engelstalig documentatie in HTML formaat. Bevat alle documentatie die op 	de website staat, maar nu aangepast voor het offline lezen.
+    Engelstalig documentatie in HTML formaat. Bevat alle documentatie
+    die op de website staat, maar nu aangepast voor het offline lezen.
 i386-freebsd5-system:
-	De gehoste versie voor FreeBSD/i386 5.x. Deze werkt overigens niet onder FreeBSD 4.x systemen.
+    De gehoste versie voor FreeBSD/i386 5.x. Deze werkt overigens
+    niet onder FreeBSD 4.x systemen.
 i386-freebsd-system:
-	De gehoste versie voor FreeBSD/i386 5.x. Deze werkt niet onder FreeBSD 4.x systemen.
+    De gehoste versie voor FreeBSD/i386 5.x. Deze werkt niet onder
+    FreeBSD 4.x systemen.
 i386-linux-system:
-	De gehoste versie voor Linux/i386. Dit is de meest complete en capabele versie, wat betekend dat je hiermee alle bijgesloten programma's en demo's  kunt draaien. Dit archief bevat ook alle AROS systeem binaries gecompileerd vanuit de Subversion tak. 
+    De gehoste versie voor Linux/i386. Dit is de meest complete en
+    capabele versie, wat betekend dat je hiermee alle bijgesloten
+    programma's en demo's kunt draaien. Dit archief bevat ook alle AROS
+    systeem binaries gecompileerd vanuit de Subversion tak. 
 ppc-linux-system:
-    De gehoste versie voor Linux/PowerPC. Dit archief bevat alle AROS systeem binaries gecompileerd vanuit de Subversion tak.
+    De gehoste versie voor Linux/PowerPC. Dit archief bevat alle AROS
+    systeem binaries gecompileerd vanuit de Subversion tak.
 i386-pc-boot-floppy:
-	De native versie voor i368-gebaseerde PC AT compatibele computers. Dit archief bevat de boot floppy disk image, welke naar een schijf te schrijven is om AROS mee te starten. 
+    De native versie voor i368-gebaseerde PC AT compatibele
+    computers. Dit archief bevat de boot floppy disk image, welke naar een
+    schijf te schrijven is om AROS mee te starten. 
 i386-pc-boot-iso:
-	De native versie voor i386-gebaseerde PC AT compatibele computers. Dit is een opstartbaar CDROM ISO bestand, dat alle AROS systeem en gecontribueerde programma's bevat.
+    De native versie voor i386-gebaseerde PC AT compatibele computers.
+    Dit is een opstartbaar CDROM ISO bestand, dat alle AROS systeem en
+    gecontribueerde programma's bevat.
 i386-all-contrib:
-	Dit archief bevat alle gecontribueerde programma's gecompileerd voor de i386 architectuur. Deze werken zowel in de gehoste (bijv. i386-linux) als native (i386-pc) versies.  
+    Dit archief bevat alle gecontribueerde programma's gecompileerd voor
+    de i386 architectuur. Deze werken zowel in de gehoste (bijv. i386-linux)
+    als native (i386-pc) versies. 
 ppc-all-contrib:
-	Dit archief bevat alle gecontribueerde programma's gecompileerd voor de PowerPC architectuur, voor gebruik met Linux/PowerPC port.
+    Dit archief bevat alle gecontribueerde programma's gecompileerd voor
+    de PowerPC architectuur, voor gebruik met Linux/PowerPC port.
 i386-all-sdk:
-	Een set van bestanden en tools waarmee u eigen AROS programma's kunt bouwen op een machine naar uw keuze. Benodigd zijn ook gcc en binutils, beiden geconfigureerd voor het produceren van i386-elf executables.
+    Een set van bestanden en tools waarmee u eigen AROS programma's kunt
+    bouwen op een machine naar uw keuze. Benodigd zijn ook gcc en binutils,
+    beiden geconfigureerd voor het produceren van i386-elf executables.
+ppc-all-sdk:
+    Een set van bestanden en tools waarmee u eigen AROS programma's kunt
+    bouwen op een machine naar uw keuze. Benodigd zijn ook gcc en binutils,
+    beiden geconfigureerd voor het produceren van ppc-elf executables.
+

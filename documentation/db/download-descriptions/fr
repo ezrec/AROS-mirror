@@ -71,3 +71,9 @@ i386-all-sdk:
     pour AROS avec votre machine préférée. Vous aurez également
     besoin de gcc et des binutils configurés pour produire des
     exécutables i386-elf.
+ppc-all-sdk:
+    Jeu de fichiers et d'outils visant à développer vos programmes
+    pour AROS avec votre machine préférée. Vous aurez également
+    besoin de gcc et des binutils configurés pour produire des
+    exécutables ppc-elf.
+
