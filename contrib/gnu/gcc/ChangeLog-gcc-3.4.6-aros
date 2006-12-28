@@ -1,0 +1,50 @@
+-- in toplevel/gcc --
+
+2003-05-30  Fabio Alemagna <falemagn@aros.org>, Michal Schulz <schulz@aros.org>
+
+	* config/rs6000/rs6000.c: handle new function attribute stackparm:
+				  passes all function parameters on the stack.
+				  handle new function parameter attribute regparm:
+				  pass parameter in specified register.
+	* config/rs6000/rs6000.h: likewise
+	
+2005-01-20  Fabio Alemagna <falemagn@aros.org>
+
+	* config.gcc:         handle *-*-aros* and i[3456]86-*-aros*.
+	* c-incpath.c:        (INO_T_EQ) [__AROS__]: return 0.
+	* config/aros.h:      new file.
+	* config/t-aros:      new file.
+	* config/i386/aros.h: new file.
+	
+2005-06-21  Markus Weiss <weissms@aros.org>
+
+	* config.gcc:           handle powerpc-*-aros*.
+	* config/rs6000/aros.h: new file.
+     
+-- in toplevel/libiberty --
+
+2005-01-20  Fabio Alemagna <falemagn@aros.org>
+
+	* pex-aros.c:   new file.
+	* Makefile.in:  handle pex-aros.c.
+	* configure.ac: handle *-*-aros*.
+	* configure:    likewise
+
+-- in toplevel/libstdc++-v3 --
+
+2006-12-02  Markus Weiss  <weissms@aros.org>
+
+	* config/os/aros/ctype_base.h:      new file.
+	* config/os/aros/ctype_noninline.h: new file (copy from config/os/gnu-linux).
+	* config/os/aros/ctype_inline.h:    new file (copy from config/os/gnu-linux).
+	* config/os/aros/os_defines.h:      new file.
+	* configure.host:                   handle *aros.
+	* crossconfig.m4:                   handle *-aros*.
+	* reapplied auto tools.
+
+-- in toplevel --
+
+2005-01-20  Fabio Alemagna <falemagn@aros.org>
+
+	* configure.in: handle *-*-aros*.
+	* configure:    handle *-*-aros*.
