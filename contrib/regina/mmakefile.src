@@ -6,7 +6,8 @@ include $(TOP)/config/make.cfg
 
 #MM- AROS : contrib-regina
 
-#MM- contrib-regina : contrib-regina-exes contrib-regina-module
+#MM- contrib-regina : contrib-regina-exes contrib-regina-module \
+#MM      contrib-regina-test
 #MM- contrib-regina-quick : contrib-regina-exes-quick contrib-regina-module-quick
 
 #MM- contrib-regina-exes : contrib-regina-module \
@@ -63,4 +64,9 @@ FILES := $(OFILES) \
 
 %copy_includes includes=rexxsaa.h
 
-%common
+TEST_FILES := addsupport typepkt forbid1 forbid2 ptrarith ados
+TESTS := $(addsuffix .rexx,$(TEST_FILES))
+
+#MM contrib-regina-test:
+%copy_files_q files=$(TESTS) src=arexx_test dst=$(EXEDIR)/arexx_test \
+    maketarget=contrib-regina-test
