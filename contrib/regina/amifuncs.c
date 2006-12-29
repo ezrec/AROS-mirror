@@ -224,14 +224,22 @@ void ReginaHandleMessages(void)
 	    }
 	    else
 	    {
-	      value = getvalue( TSD, name, 0 );
+	      value = isvariable( TSD, name );
 	      Free_stringTSD( name );
-	      
-	      if ( atsd->value != NULL) DeleteArgstring( (UBYTE *)atsd->value );
-	      atsd->value = CreateArgstring( (STRPTR)value->value, value->len );
 
-	      msg->rm_Result1 = RC_OK;
-	      msg->rm_Result2 = (IPTR)atsd->value;
+	      if ( value != NULL )
+	      {
+		if ( atsd->value != NULL) DeleteArgstring( (UBYTE *)atsd->value );
+		atsd->value = CreateArgstring( (STRPTR)value->value, value->len );
+
+		msg->rm_Result1 = RC_OK;
+		msg->rm_Result2 = (IPTR)atsd->value;
+	      }
+	      else
+	      {
+		msg->rm_Result1 = RC_ERROR;
+		msg->rm_Result2 = (IPTR)ERR10_039;
+	      }
 	    }
 	  }
 	}
@@ -666,10 +674,13 @@ streng *try_func_amiga( tsd_t *TSD, const streng *name, cparamboxptr parms, char
   msg->rm_Action = RXFUNC | RXFF_RESULT;
   msg->rm_Args[0] = (IPTR)CreateArgstring( (char *)name->value, name->len );
 
-  for (parmit = parms, parmcount = 0; parmit != NULL; parmit = parmit->next, parmcount++)
+  for (parmit = parms, parmcount = 0; parmit != NULL; parmit = parmit->next)
   {
     if ( parmit->value != NULL && parmit->value->len > 0 )
-      msg->rm_Args[1+parmcount] = (IPTR)CreateArgstring( parmit->value->value, parmit->value->len );
+    {
+      parmcount++;
+      msg->rm_Args[parmcount] = (IPTR)CreateArgstring( parmit->value->value, parmit->value->len );
+    }
   }
   msg->rm_Action |= parmcount;
   msg->rm_Stdin = Input( );
