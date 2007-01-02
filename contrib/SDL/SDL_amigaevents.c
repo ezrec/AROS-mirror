@@ -44,7 +44,7 @@ static char rcsid =
 
 /* The translation tables from an Amiga keysym to a SDL keysym */
 static SDLKey MISC_keymap[256];
-SDL_keysym *amiga_TranslateKey(int code, SDL_keysym *keysym);
+SDL_keysym *amiga_TranslateKey(int code, UWORD qualifier, SDL_keysym *keysym);
 struct IOStdReq *ConReq=NULL;
 struct MsgPort *ConPort=NULL;
 
@@ -202,7 +202,7 @@ static int amiga_DispatchEvent(_THIS,struct IntuiMessage *msg)
 		    {
 				SDL_keysym keysym;
 				posted = SDL_PrivateKeyboard(SDL_PRESSED,
-					amiga_TranslateKey(code, &keysym));
+					amiga_TranslateKey(code, msg->Qualifier, &keysym));
 		    }
 		    else
 		    {
@@ -215,7 +215,7 @@ static int amiga_DispatchEvent(_THIS,struct IntuiMessage *msg)
 /*			if ( ! X11_KeyRepeat(SDL_Display, &xevent) )  */
 
 				posted = SDL_PrivateKeyboard(SDL_RELEASED,
-					amiga_TranslateKey(code, &keysym));
+					amiga_TranslateKey(code, msg->Qualifier, &keysym));
 		    }
 		    break;
 	    /* Have we been iconified? */
@@ -430,8 +430,12 @@ void amiga_InitKeymap(void)
 	MISC_keymap[95] = SDLK_HELP;
 }
 
-SDL_keysym *amiga_TranslateKey(int code, SDL_keysym *keysym)
+SDL_keysym *amiga_TranslateKey(int code, UWORD qualifier, SDL_keysym *keysym)
 {
+	struct InputEvent event;
+	long actual;
+	char buffer[5];
+
 	#ifdef STORMC4_WOS
 	static struct Library *KeymapBase=NULL; /* Linking failed in WOS version if ConsoleDevice was used */
 	#else
@@ -445,49 +449,44 @@ SDL_keysym *amiga_TranslateKey(int code, SDL_keysym *keysym)
 #ifdef DEBUG_KEYS
 	fprintf(stderr, "Translating key 0x%.4x (%d)\n", xsym, xkey->keycode);
 #endif
+	#ifdef STORMC4_WOS
+	if(!KeymapBase)
+	#else
+	if(!ConsoleDevice)
+	#endif
+	{
+		#ifdef STORMC4_WOS
+		KeymapBase=OpenLibrary("keymap.library", 0L);
+		#else
+		if((ConPort=CreateMsgPort()))
+		{
+			if((ConReq=CreateIORequest(ConPort,sizeof(struct IOStdReq))))
+			{
+				if(!OpenDevice("console.device",-1,(struct IORequest *)ConReq,0))
+					ConsoleDevice=(struct Library *)ConReq->io_Device;
+				else
+				{
+					DeleteIORequest(ConReq);
+					ConReq=NULL;
+				}
+			}
+			else
+			{
+				DeleteMsgPort(ConPort);
+				ConPort=NULL;
+			}
+		}
+		#endif
+	}
 	/* Get the translated SDL virtual keysym */
 	if ( keysym->sym==SDLK_UNKNOWN )
 	{
-		#ifdef STORMC4_WOS
-		if(!KeymapBase)
-		#else
-		if(!ConsoleDevice)
-		#endif
-		{
-			#ifdef STORMC4_WOS
-			KeymapBase=OpenLibrary("keymap.library", 0L);
-			#else
-			if((ConPort=CreateMsgPort()))
-			{
-				if((ConReq=CreateIORequest(ConPort,sizeof(struct IOStdReq))))
-				{
-					if(!OpenDevice("console.device",-1,(struct IORequest *)ConReq,0))
-						ConsoleDevice=(struct Library *)ConReq->io_Device;
-					else
-					{
-						DeleteIORequest(ConReq);
-						ConReq=NULL;
-					}
-				}
-				else
-				{
-					DeleteMsgPort(ConPort);
-					ConPort=NULL;
-				}
-			}
-			#endif
-		}
-
 		#ifdef STORMC4_WOS
 		if(KeymapBase)
 		#else
 		if(ConsoleDevice)
 		#endif
 		{
-			struct InputEvent event;
-			long actual;
-			char buffer[5];
-
 			event.ie_Qualifier=0;
 			event.ie_Class=IECLASS_RAWKEY;
 			event.ie_SubClass=0L;
@@ -511,7 +510,7 @@ SDL_keysym *amiga_TranslateKey(int code, SDL_keysym *keysym)
 				{
 					keysym->sym=*buffer;
 					D(bug("Converted rawcode %ld to <%lc>\n",code,*buffer));
-// Bufferizzo x le successive chiamate!
+					// Bufferizzo x le successive chiamate!
 					MISC_keymap[code]=*buffer;
 				}
 			}
@@ -523,12 +522,20 @@ SDL_keysym *amiga_TranslateKey(int code, SDL_keysym *keysym)
 	/* If UNICODE is on, get the UNICODE value for the key */
 	keysym->unicode = 0;
 	if ( SDL_TranslateUNICODE ) {
+		event.ie_Class = IECLASS_RAWKEY;
+		event.ie_SubClass = 0;
+		event.ie_Code  = code & ~(IECODE_UP_PREFIX);
+		event.ie_Qualifier = qualifier;
+		event.ie_EventAddress = NULL;
+
+		actual = RawKeyConvert(&event, buffer, 5, 0);
+		if (actual == 1) keysym->unicode = buffer[0];
 #if 0
 		static XComposeStatus state;
 		/* Until we handle the IM protocol, use XLookupString() */
 		unsigned char keybuf[32];
 		if ( XLookupString(xkey, (char *)keybuf, sizeof(keybuf),
-							NULL, &state) ) {
+					NULL, &state) ) {
 			keysym->unicode = keybuf[0];
 		}
 #endif
