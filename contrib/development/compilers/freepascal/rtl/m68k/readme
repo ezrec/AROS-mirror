@@ -1,7 +1,0 @@
-This directory contains only RTL parts specific
-to the processor M68K family.
-
-
-Missing units are :
-  strings.pp (you can  the strings unit in the template directory)
-  getopts.pp

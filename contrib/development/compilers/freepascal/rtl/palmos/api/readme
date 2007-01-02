@@ -1,6 +1,0 @@
-This directory contains the interface units for the PalmOS.
-
-Renaming scheme (because of the 8.3 DOS limitation):
----------------------------------------------------
-systemmgr  --> sysmgr
-fontselect --> fontsel

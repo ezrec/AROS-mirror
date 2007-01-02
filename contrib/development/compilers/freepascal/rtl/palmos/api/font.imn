@@ -1,5 +1,0 @@
-  function FntIsAppDefined(fnt : FontID) : boolean;
-
-    begin
-       FntIsAppDefined:=longint(fnt)>=longint(fntAppFontCustomBase);
-    end;
