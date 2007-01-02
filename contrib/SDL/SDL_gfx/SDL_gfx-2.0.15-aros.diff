@@ -1,21 +1,20 @@
-diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
---- SDL_gfx-2.0.13/config.sub	2004-11-29 15:39:38.000000000 +0100
-+++ SDL_gfx-2.0.13-aros/config.sub	2006-11-12 19:20:54.000000000 +0100
-@@ -1,9 +1,10 @@
+diff -ur SDL_gfx-2.0.15/config.sub SDL_gfx-2.0.15-aros/config.sub
+--- SDL_gfx-2.0.15/config.sub	2006-12-22 13:36:10.000000000 +0100
++++ SDL_gfx-2.0.15-aros/config.sub	2005-07-19 11:23:36.000000000 +0200
+@@ -1,9 +1,9 @@
  #! /bin/sh
  # Configuration validation subroutine script.
 -#   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 -#   Free Software Foundation, Inc.
 +#   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
-+#   2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation,
-+#   Inc.
++#   2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
  
 -timestamp='2001-01-12'
-+timestamp='2006-11-07'
++timestamp='2005-07-08'
  
  # This file is (in principle) common to ALL GNU software.
  # The presence of a machine in this file suggests that SOME GNU software
-@@ -21,15 +22,17 @@
+@@ -21,15 +21,17 @@
  #
  # You should have received a copy of the GNU General Public License
  # along with this program; if not, write to the Free Software
@@ -37,7 +36,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  #
  # Configuration subroutine to validate and canonicalize a configuration type.
  # Supply the specified configuration type as an argument.
-@@ -69,7 +72,7 @@
+@@ -69,7 +71,7 @@
  version="\
  GNU config.sub ($timestamp)
  
@@ -46,7 +45,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  Free Software Foundation, Inc.
  
  This is free software; see the source for copying conditions.  There is NO
-@@ -82,11 +85,11 @@
+@@ -82,11 +84,11 @@
  while test $# -gt 0 ; do
    case $1 in
      --time-stamp | --time* | -t )
@@ -61,7 +60,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
      -- )     # Stop option processing
         shift; break ;;
      - )	# Use stdin as input.
-@@ -98,7 +101,7 @@
+@@ -98,7 +100,7 @@
      *local*)
         # First pass through any local machine types.
         echo $1
@@ -70,18 +69,17 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  
      * )
         break ;;
-@@ -117,7 +120,9 @@
+@@ -117,7 +119,8 @@
  # Here we must recognize all the valid KERNEL-OS combinations.
  maybe_os=`echo $1 | sed 's/^\(.*\)-\([^-]*-[^-]*\)$/\2/'`
  case $maybe_os in
 -  nto-qnx* | linux-gnu* | storm-chaos* | os2-emx*)
-+  nto-qnx* | linux-gnu* | linux-dietlibc | linux-newlib* | linux-uclibc* | \
-+  uclinux-uclibc* | uclinux-gnu* | kfreebsd*-gnu* | knetbsd*-gnu* | netbsd*-gnu* | \
-+  storm-chaos* | os2-emx* | rtmk-nova*)
++  nto-qnx* | linux-gnu* | linux-dietlibc | linux-uclibc* | uclinux-uclibc* | uclinux-gnu* | \
++  kfreebsd*-gnu* | knetbsd*-gnu* | netbsd*-gnu* | storm-chaos* | os2-emx* | rtmk-nova*)
      os=-$maybe_os
      basic_machine=`echo $1 | sed 's/^\(.*\)-\([^-]*-[^-]*\)$/\1/'`
      ;;
-@@ -143,7 +148,7 @@
+@@ -143,7 +146,7 @@
  	-convergent* | -ncr* | -news | -32* | -3600* | -3100* | -hitachi* |\
  	-c[123]* | -convex* | -sun | -crds | -omron* | -dg | -ultra | -tti* | \
  	-harris | -dolphin | -highlevel | -gould | -cbm | -ns | -masscomp | \
@@ -90,7 +88,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  		os=
  		basic_machine=$1
  		;;
-@@ -157,9 +162,21 @@
+@@ -157,6 +160,14 @@
  		os=-vxworks
  		basic_machine=$1
  		;;
@@ -105,25 +103,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	-hiux*)
  		os=-hiuxwe2
  		;;
-+	-sco6)
-+		os=-sco5v6
-+		basic_machine=`echo $1 | sed -e 's/86-.*/86-pc/'`
-+		;;
- 	-sco5)
- 		os=-sco3.2v5
- 		basic_machine=`echo $1 | sed -e 's/86-.*/86-pc/'`
-@@ -176,6 +193,10 @@
- 		# Don't forget version if it is 3.2v4 or newer.
- 		basic_machine=`echo $1 | sed -e 's/86-.*/86-pc/'`
- 		;;
-+	-sco5v6*)
-+		# Don't forget version if it is 3.2v4 or newer.
-+		basic_machine=`echo $1 | sed -e 's/86-.*/86-pc/'`
-+		;;
- 	-sco*)
- 		os=-sco3.2v2
- 		basic_machine=`echo $1 | sed -e 's/86-.*/86-pc/'`
-@@ -215,24 +236,57 @@
+@@ -215,24 +226,57 @@
  case $basic_machine in
  	# Recognize the basic CPU types without company name.
  	# Some are omitted here because they have special meanings below.
@@ -150,7 +130,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
 +	| alpha | alphaev[4-8] | alphaev56 | alphaev6[78] | alphapca5[67] \
 +	| alpha64 | alpha64ev[4-8] | alpha64ev56 | alpha64ev6[78] | alpha64pca5[67] \
 +	| am33_2.0 \
-+	| arc | arm | arm[bl]e | arme[lb] | armv[2345] | armv[345][lb] | avr | avr32 \
++	| arc | arm | arm[bl]e | arme[lb] | armv[2345] | armv[345][lb] | avr \
 +	| bfin \
 +	| c4x | clipper \
 +	| d10v | d30v | dlx | dsp16xx \
@@ -158,8 +138,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
 +	| h8300 | h8500 | hppa | hppa1.[01] | hppa2.0 | hppa2.0[nw] | hppa64 \
 +	| i370 | i860 | i960 | ia64 \
 +	| ip2k | iq2000 \
-+	| m32c | m32r | m32rle | m68000 | m68k | m88k \
-+	| maxq | mb | microblaze | mcore \
++	| m32r | m32rle | m68000 | m68k | m88k | maxq | mcore \
 +	| mips | mipsbe | mipseb | mipsel | mipsle \
 +	| mips16 \
 +	| mips64 | mips64el \
@@ -177,37 +156,35 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
 +	| mipsisa64sr71k | mipsisa64sr71kel \
 +	| mipstx39 | mipstx39el \
 +	| mn10200 | mn10300 \
-+	| mt \
++	| ms1 \
 +	| msp430 \
-+	| nios | nios2 \
 +	| ns16k | ns32k \
 +	| or32 \
 +	| pdp10 | pdp11 | pj | pjl \
 +	| powerpc | powerpc64 | powerpc64le | powerpcle | ppcbe \
 +	| pyramid \
-+	| score \
-+	| sh | sh[1234] | sh[24]a | sh[23]e | sh[34]eb | sheb | shbe | shle | sh[1234]le | sh3ele \
++	| sh | sh[1234] | sh[24]a | sh[23]e | sh[34]eb | shbe | shle | sh[1234]le | sh3ele \
 +	| sh64 | sh64le \
-+	| sparc | sparc64 | sparc64b | sparc64v | sparc86x | sparclet | sparclite \
-+	| sparcv8 | sparcv9 | sparcv9b | sparcv9v \
-+	| spu | strongarm \
++	| sparc | sparc64 | sparc64b | sparc86x | sparclet | sparclite \
++	| sparcv8 | sparcv9 | sparcv9b \
++	| strongarm \
 +	| tahoe | thumb | tic4x | tic80 | tron \
 +	| v850 | v850e \
 +	| we32k \
-+	| x86 | xc16x | xscale | xscalee[bl] | xstormy16 | xtensa \
++	| x86 | xscale | xscalee[bl] | xstormy16 | xtensa \
 +	| z8k)
++		basic_machine=$basic_machine-unknown
++		;;
++	m32c)
  		basic_machine=$basic_machine-unknown
  		;;
  	m6811 | m68hc11 | m6812 | m68hc12)
-@@ -240,13 +294,16 @@
+@@ -240,13 +284,13 @@
  		basic_machine=$basic_machine-unknown
  		os=-none
  		;;
 -	m88110 | m680[12346]0 | m683?2 | m68360 | m5200 | z8k | v70 | h8500 | w65 | pj | pjl)
 +	m88110 | m680[12346]0 | m683?2 | m68360 | m5200 | v70 | w65 | z8k)
-+		;;
-+	ms1)
-+		basic_machine=mt-unknown
  		;;
  
  	# We use `pc' rather than `unknown'
@@ -218,7 +195,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	  basic_machine=$basic_machine-pc
  	  ;;
  	# Object if more than one company name word.
-@@ -255,29 +312,66 @@
+@@ -255,29 +299,67 @@
  		exit 1
  		;;
  	# Recognize the basic CPU types with company name.
@@ -251,7 +228,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
 +	| alpha64-* | alpha64ev[4-8]-* | alpha64ev56-* | alpha64ev6[78]-* \
 +	| alphapca5[67]-* | alpha64pca5[67]-* | arc-* \
 +	| arm-*  | armbe-* | armle-* | armeb-* | armv*-* \
-+	| avr-* | avr32-* \
++	| avr-* \
 +	| bfin-* | bs2000-* \
 +	| c[123]* | c30-* | [cjt]90-* | c4x-* | c54x-* | c55x-* | c6x-* \
 +	| clipper-* | craynv-* | cydra-* \
@@ -262,7 +239,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
 +	| hppa-* | hppa1.[01]-* | hppa2.0-* | hppa2.0[nw]-* | hppa64-* \
 +	| i*86-* | i860-* | i960-* | ia64-* \
 +	| ip2k-* | iq2000-* \
-+	| m32c-* | m32r-* | m32rle-* \
++	| m32r-* | m32rle-* \
 +	| m68000-* | m680[012346]0-* | m68360-* | m683?2-* | m68k-* \
 +	| m88110-* | m88k-* | maxq-* | mcore-* \
 +	| mips-* | mipsbe-* | mipseb-* | mipsel-* | mipsle-* \
@@ -282,33 +259,34 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
 +	| mipsisa64sr71k-* | mipsisa64sr71kel-* \
 +	| mipstx39-* | mipstx39el-* \
 +	| mmix-* \
-+	| mt-* \
++	| ms1-* \
 +	| msp430-* \
-+	| nios-* | nios2-* \
 +	| none-* | np1-* | ns16k-* | ns32k-* \
 +	| orion-* \
 +	| pdp10-* | pdp11-* | pj-* | pjl-* | pn-* | power-* \
 +	| powerpc-* | powerpc64-* | powerpc64le-* | powerpcle-* | ppcbe-* \
 +	| pyramid-* \
 +	| romp-* | rs6000-* \
-+	| sh-* | sh[1234]-* | sh[24]a-* | sh[23]e-* | sh[34]eb-* | sheb-* | shbe-* \
++	| sh-* | sh[1234]-* | sh[24]a-* | sh[23]e-* | sh[34]eb-* | shbe-* \
 +	| shle-* | sh[1234]le-* | sh3ele-* | sh64-* | sh64le-* \
-+	| sparc-* | sparc64-* | sparc64b-* | sparc64v-* | sparc86x-* | sparclet-* \
++	| sparc-* | sparc64-* | sparc64b-* | sparc86x-* | sparclet-* \
 +	| sparclite-* \
-+	| sparcv8-* | sparcv9-* | sparcv9b-* | sparcv9v-* | strongarm-* | sv1-* | sx?-* \
++	| sparcv8-* | sparcv9-* | sparcv9b-* | strongarm-* | sv1-* | sx?-* \
 +	| tahoe-* | thumb-* \
 +	| tic30-* | tic4x-* | tic54x-* | tic55x-* | tic6x-* | tic80-* \
 +	| tron-* \
 +	| v850-* | v850e-* | vax-* \
 +	| we32k-* \
-+	| x86-* | x86_64-* | xc16x-* | xps100-* | xscale-* | xscalee[bl]-* \
++	| x86-* | x86_64-* | xps100-* | xscale-* | xscalee[bl]-* \
 +	| xstormy16-* | xtensa-* \
 +	| ymp-* \
 +	| z8k-*)
++		;;
++	m32c-*)
  		;;
  	# Recognize the various machine names and aliases which stand
  	# for a CPU type and a company and sometimes even an OS.
-@@ -295,6 +389,9 @@
+@@ -295,6 +377,9 @@
  		basic_machine=a29k-amd
  		os=-udi
  		;;
@@ -318,7 +296,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	adobe68k)
  		basic_machine=m68010-adobe
  		os=-scout
-@@ -309,6 +406,12 @@
+@@ -309,6 +394,12 @@
  		basic_machine=a29k-none
  		os=-bsd
  		;;
@@ -331,7 +309,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	amdahl)
  		basic_machine=580-amdahl
  		os=-sysv
-@@ -340,6 +443,10 @@
+@@ -340,6 +431,10 @@
  		basic_machine=ns32k-sequent
  		os=-dynix
  		;;
@@ -342,7 +320,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	convex-c1)
  		basic_machine=c1-convex
  		os=-bsd
-@@ -360,30 +467,45 @@
+@@ -360,30 +455,45 @@
  		basic_machine=c38-convex
  		os=-bsd
  		;;
@@ -396,7 +374,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	delta | 3300 | motorola-3300 | motorola-delta \
  	      | 3300-motorola | delta-motorola)
  		basic_machine=m68k-motorola
-@@ -392,6 +514,10 @@
+@@ -392,6 +502,10 @@
  		basic_machine=m88k-motorola
  		os=-sysv3
  		;;
@@ -407,7 +385,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	dpx20 | dpx20-*)
  		basic_machine=rs6000-bull
  		os=-bosx
-@@ -425,6 +551,10 @@
+@@ -425,6 +539,10 @@
  		basic_machine=tron-gmicro
  		os=-sysv
  		;;
@@ -418,7 +396,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	h3050r* | hiux*)
  		basic_machine=hppa1.1-hitachi
  		os=-hiuxwe2
-@@ -500,19 +630,19 @@
+@@ -500,19 +618,19 @@
  		basic_machine=i370-ibm
  		;;
  # I'm not sure what "Sysv32" means.  Should this be sysv3.2?
@@ -442,7 +420,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  		basic_machine=`echo $1 | sed -e 's/86.*/86-pc/'`
  		os=-solaris2
  		;;
-@@ -524,18 +654,6 @@
+@@ -524,18 +642,6 @@
  		basic_machine=i386-unknown
  		os=-vsta
  		;;
@@ -461,7 +439,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	iris | iris4d)
  		basic_machine=mips-sgi
  		case $os in
-@@ -561,6 +679,10 @@
+@@ -561,6 +667,10 @@
  		basic_machine=ns32k-utek
  		os=-sysv
  		;;
@@ -472,7 +450,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	miniframe)
  		basic_machine=m68000-convergent
  		;;
-@@ -568,32 +690,27 @@
+@@ -568,30 +678,22 @@
  		basic_machine=m68k-atari
  		os=-mint
  		;;
@@ -507,13 +485,8 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
 +		basic_machine=i386-pc
  		os=-msdos
  		;;
-+	ms1-*)
-+		basic_machine=`echo $basic_machine | sed -e 's/ms1-/mt-/'`
-+		;;
  	mvs)
- 		basic_machine=i370-ibm
- 		os=-mvs
-@@ -669,6 +786,13 @@
+@@ -669,6 +771,13 @@
  		basic_machine=hppa1.1-oki
  		os=-proelf
  		;;
@@ -527,7 +500,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	OSE68000 | ose68000)
  		basic_machine=m68000-ericsson
  		os=-ose
-@@ -691,45 +815,75 @@
+@@ -691,45 +800,65 @@
  	pbb)
  		basic_machine=m68k-tti
  		;;
@@ -536,12 +509,6 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  		basic_machine=ns32k-pc532
  		;;
 -	pentium | p5 | k5 | k6 | nexgen)
-+	pc98)
-+		basic_machine=i386-pc
-+		;;
-+	pc98-*)
-+		basic_machine=i386-`echo $basic_machine | sed 's/^[^-]*-//'`
-+		;;
 +	pentium | p5 | k5 | k6 | nexgen | viac3)
  		basic_machine=i586-pc
  		;;
@@ -604,14 +571,10 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
 +		basic_machine=i586-unknown
 +		os=-pw32
 +		;;
-+	rdos)
-+		basic_machine=i386-pc
-+		os=-rdos
-+		;;
  	rom68k)
  		basic_machine=m68k-rom68k
  		os=-coff
-@@ -740,10 +894,30 @@
+@@ -740,10 +869,26 @@
  	rtpc | rtpc-*)
  		basic_machine=romp-ibm
  		;;
@@ -631,10 +594,6 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
 +	sb1el)
 +		basic_machine=mipsisa64sb1el-unknown
 +		;;
-+	sde)
-+		basic_machine=mipsisa32-sde
-+		os=-elf
-+		;;
 +	sei)
 +		basic_machine=mips-sei
 +		os=-seiux
@@ -642,14 +601,11 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	sequent)
  		basic_machine=i386-sequent
  		;;
-@@ -751,7 +925,13 @@
+@@ -751,7 +896,10 @@
  		basic_machine=sh-hitachi
  		os=-hms
  		;;
 -	sparclite-wrs)
-+	sh5el)
-+		basic_machine=sh5le-unknown
-+		;;
 +	sh64)
 +		basic_machine=sh64-unknown
 +		;;
@@ -657,7 +613,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  		basic_machine=sparclite-wrs
  		os=-vxworks
  		;;
-@@ -818,22 +998,42 @@
+@@ -818,22 +966,42 @@
  		os=-dynix
  		;;
  	t3e)
@@ -701,7 +657,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	udi29k)
  		basic_machine=a29k-amd
  		os=-udi
-@@ -855,8 +1055,8 @@
+@@ -855,8 +1023,8 @@
  		os=-vms
  		;;
  	vpp*|vx|vx-*)
@@ -712,7 +668,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	vxworks960)
  		basic_machine=i960-wrs
  		os=-vxworks
-@@ -877,13 +1077,17 @@
+@@ -877,13 +1045,17 @@
  		basic_machine=hppa1.1-winbond
  		os=-proelf
  		;;
@@ -734,7 +690,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	z8k-*-coff)
  		basic_machine=z8k-unknown
  		os=-sim
-@@ -904,16 +1108,12 @@
+@@ -904,16 +1076,12 @@
  	op60c)
  		basic_machine=hppa1.1-oki
  		;;
@@ -754,7 +710,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	rs6000)
  		basic_machine=rs6000-ibm
  		;;
-@@ -930,13 +1130,13 @@
+@@ -930,13 +1098,13 @@
  	we32k)
  		basic_machine=we32k-att
  		;;
@@ -763,7 +719,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  		basic_machine=sh-unknown
  		;;
 -	sparc | sparcv9)
-+	sparc | sparcv8 | sparcv9 | sparcv9b | sparcv9v)
++	sparc | sparcv8 | sparcv9 | sparcv9b)
  		basic_machine=sparc-sun
  		;;
 -        cydra)
@@ -771,7 +727,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  		basic_machine=cydra-cydrome
  		;;
  	orion)
-@@ -951,9 +1151,8 @@
+@@ -951,9 +1119,8 @@
  	pmac | pmac-mpw)
  		basic_machine=powerpc-apple
  		;;
@@ -783,14 +739,13 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  		;;
  	*)
  		echo Invalid configuration \`$1\': machine \`$basic_machine\' not recognized 1>&2
-@@ -1007,36 +1206,49 @@
+@@ -1007,36 +1174,47 @@
  	      | -aos* \
  	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
  	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
 -	      | -hiux* | -386bsd* | -netbsd* | -openbsd* | -freebsd* | -riscix* \
 -	      | -lynxos* | -bosx* | -nextstep* | -cxux* | -aout* | -elf* | -oabi* \
-+	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* \
-+	      | -openbsd* | -solidbsd* \
++	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* | -openbsd* \
 +	      | -ekkobsd* | -kfreebsd* | -freebsd* | -riscix* | -lynxos* \
 +	      | -bosx* | -nextstep* | -cxux* | -aout* | -elf* | -oabi* \
  	      | -ptx* | -coff* | -ecoff* | -winnt* | -domain* | -vsta* \
@@ -799,8 +754,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	      | -cygwin* | -pe* | -psos* | -moss* | -proelf* | -rtems* \
 -	      | -mingw32* | -linux-gnu* | -uxpv* | -beos* | -mpeix* | -udk* \
 -	      | -interix* | -uwin* | -rhapsody* | -darwin* | -opened* \
-+	      | -mingw32* | -linux-gnu* | -linux-newlib* | -linux-uclibc* \
-+	      | -uxpv* | -beos* | -mpeix* | -udk* \
++	      | -mingw32* | -linux-gnu* | -linux-uclibc* | -uxpv* | -beos* | -mpeix* | -udk* \
 +	      | -interix* | -uwin* | -mks* | -rhapsody* | -darwin* | -opened* \
  	      | -openstep* | -oskit* | -conix* | -pw32* | -nonstopux* \
 -	      | -storm-chaos* | -tops10* | -tenex* | -tops20* | -its* | -os2*)
@@ -808,7 +762,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
 +	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
 +	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
 +	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly* \
-+	      | -skyos* | -haiku* | -rdos* | -toppers*)
++	      | -skyos* | -haiku*)
  	# Remember, each alternative MUST END IN *, to match a version number.
  		;;
  	-qnx*)
@@ -841,7 +795,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	-linux*)
  		os=`echo $os | sed -e 's|linux|linux-gnu|'`
  		;;
-@@ -1049,6 +1261,9 @@
+@@ -1049,6 +1227,9 @@
  	-opened*)
  		os=-openedition
  		;;
@@ -851,7 +805,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	-wince*)
  		os=-wince
  		;;
-@@ -1067,14 +1282,23 @@
+@@ -1067,14 +1248,23 @@
  	-acis*)
  		os=-aos
  		;;
@@ -876,7 +830,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  		;;
  	-nsk*)
  		os=-nsk
-@@ -1086,6 +1310,9 @@
+@@ -1086,6 +1276,9 @@
  	-sinix*)
  		os=-sysv4
  		;;
@@ -886,7 +840,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	-triton*)
  		os=-sysv3
  		;;
-@@ -1113,8 +1340,17 @@
+@@ -1113,8 +1306,17 @@
  	-xenix)
  		os=-xenix
  		;;
@@ -906,26 +860,13 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  		;;
  	-none)
  		;;
-@@ -1138,6 +1374,12 @@
- # system, and we'll never get to this point.
- 
- case $basic_machine in
-+        score-*)
-+		os=-elf
-+		;;
-+        spu-*)
-+		os=-elf
-+		;;
- 	*-acorn)
- 		os=-riscix1.2
- 		;;
-@@ -1147,10 +1389,14 @@
+@@ -1147,10 +1349,14 @@
  	arm*-semi)
  		os=-aout
  		;;
-+        c4x-* | tic4x-*)
-+        	os=-coff
-+		;;
++    c4x-* | tic4x-*)
++        os=-coff
++        ;;
 +	# This must come before the *-dec entry.
  	pdp10-*)
  		os=-tops20
@@ -935,7 +876,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  		os=-none
  		;;
  	*-dec | vax-*)
-@@ -1177,6 +1423,9 @@
+@@ -1177,6 +1383,9 @@
  	mips*-*)
  		os=-elf
  		;;
@@ -945,7 +886,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	*-tti)	# must be before sparc entry or we get the wrong os.
  		os=-sysv3
  		;;
-@@ -1186,9 +1435,15 @@
+@@ -1186,9 +1395,15 @@
  	*-be)
  		os=-beos
  		;;
@@ -961,7 +902,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  	*-wec)
  		os=-proelf
  		;;
-@@ -1240,19 +1495,19 @@
+@@ -1240,19 +1455,19 @@
  	*-next)
  		os=-nextstep3
  		;;
@@ -985,7 +926,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  		os=-sysv4
  		;;
  	*-masscomp)
-@@ -1321,10 +1576,16 @@
+@@ -1321,10 +1536,16 @@
  			-mvs* | -opened*)
  				vendor=ibm
  				;;
@@ -1003,7 +944,7 @@ diff -ru SDL_gfx-2.0.13/config.sub SDL_gfx-2.0.13-aros/config.sub
  				vendor=wrs
  				;;
  			-aux*)
-@@ -1339,13 +1600,16 @@
+@@ -1339,13 +1560,16 @@
  			-*mint | -mint[0-9]* | -*MiNT | -MiNT[0-9]*)
  				vendor=atari
  				;;
