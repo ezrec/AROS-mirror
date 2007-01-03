@@ -4,7 +4,7 @@ AROS Application Development Manual
 
 :Authors:   Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
             Adam Chodorowski, Fabio Alemagna, Matthias Rustler
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright Š 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; integration started (looong way left to go).
@@ -127,7 +127,15 @@ Compiling for native-i386
 
 You can download a version of GCC which runs natively under AROS from
 `Sourceforge <http://sourceforge.net/project/showfiles.php?group_id=43586&package_id=127743>`_.
-You need at least the binutils and the core.
+You need at least the binutils and the core. Also you`ll need an AROS SDK.
+Unpack them to the same place (for example, sys:ADE). Copy the includes and libs 
+from the SDK to sys:ADE
+
+Then you`d need to use the following commands::
+
+    path sys:ade/bin add
+    assign Development: sys:ade
+
 
 
 Concepts
