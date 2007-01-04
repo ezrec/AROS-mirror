@@ -104,4 +104,8 @@
 # ..Prism II wireless cards
 #
 #eth0 DEV=DEVS:networks/prism2.device UNIT=0 IP=192.168.0.188 UP
+#
+#  ..Intel PRO 100 Series cards
+#
+#eth0 DEV=DEVS:networks/intelpro100.device UNIT=0 IP=192.168.0.188 UP
 # EOF
