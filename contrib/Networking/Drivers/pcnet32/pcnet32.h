@@ -193,7 +193,7 @@ struct PCN32Unit {
 
     struct Process          *pcnu_Process;
 
-    struct PCNet32Base     *pcnu_device;
+    struct PCN32Base     *pcnu_device;
     HIDDT_IRQ_Handler       *pcnu_irqhandler;
     HIDDT_IRQ_Handler       *pcnu_touthandler;
     IPTR	                  pcnu_DeviceID;
