@@ -596,7 +596,7 @@ Then, a rule must be added to the firewall::
 
     #> iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
-Finally, still being root, start Qemu with::
+Finally, while still being root, start Qemu with::
 
     #> qemu -cdrom aros.iso -m 48
 
@@ -613,8 +613,9 @@ Remember to set up your firewall in way it can pass the QEMU packets.*
 You have to edit 3 files in the SYS:extras/Networking/stacks/AROSTCP/db drawer: 
 hosts, interfaces and netdb-myhost.
 In *hosts* remove or comment out any entries. Hosts will be in netdb-myhost for now.
-In *interfaces* uncomment the prm-rtl8129.device line (For QEMU is emulating 
-this NIC, use pcnet for VMWare), edit it(change an IP=to which was above)::
+In *interfaces* uncomment the prm-rtl8029.device line (QEMU is emulating 
+this NIC among others, you can use pcnet32.device for VMWare), edit it
+(change an *IP=* string to which was above)::
 
     eth0 DEV=DEVS:networks/prm-rtl8029.device UNIT=0 NOTRACKING IP=172.20.0.10 UP
 
@@ -626,7 +627,7 @@ your local domain name, the gateway::
     DOMAIN lan
     NAMESERVER 192.168.0.1
 
-The db directory can itself reside anywhere, you set its path in the 
+The db directory itself can reside anywhere, you set its path in the 
 ENVARC:AROSTCP/Config file, I advice you to copy the db files in the (created) 
 ENVARC:AROSTCP/db directory, that way the Config file could be::
 
@@ -747,7 +748,7 @@ associated with that card. Other using notes is the same as with QEMU above,
 except for the adapter type in SYS:Extras/Networking/Stacks/AROSTCP/db/interfaces 
 file ::
 
-    eth0 DEV=DEVS:networks/pcnet.device UNIT=0 IP=10.0.2.2 UP
+    eth0 DEV=DEVS:networks/pcnet32.device UNIT=0 IP=10.0.2.2 UP
 
 Net on the real PC
 """"""""""""""""""
@@ -755,7 +756,8 @@ Net on the real PC
 On a real PC you will need to do all you can do for any OS - prepare the
 hardware to connect to AROS box - cables, hub and other. Then you must setup the 
 AROS side similar to shown above, replacing the IP addresses to those
-acceptable in your LAN for AROS-box IP, gateway and DNS.
+acceptable in your LAN for AROS-box IP, gateway and DNS. Set up the networing 
+card in *interfaces* file by uncommenting the string corresponding to your card.
 
 To be finished...  
 
