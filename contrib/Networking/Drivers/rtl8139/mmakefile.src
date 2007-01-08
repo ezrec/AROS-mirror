@@ -1,0 +1,11 @@
+#   $Id: mmakefile.src 24846 2006-10-06 09:42:11Z weissms $
+include $(TOP)/config/make.cfg
+
+FILES := handler unit rtl8139
+
+%build_module mmake=contrib-networking-drivers-rtl8139-i386 \
+    modname=rtl8139 modtype=device \
+    files="rtl8139_init $(FILES)" \
+    moduledir=Devs/Networks uselibs="rom amiga hiddstubs"
+
+%common
