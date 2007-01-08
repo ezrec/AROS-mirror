@@ -1,0 +1,11 @@
+#   $Id: mmakefile.src 24846 2006-10-06 09:42:11Z weissms $
+include $(TOP)/config/make.cfg
+
+FILES := handler unit via-rhine
+
+%build_module mmake=contrib-networking-drivers-viarhine-i386 \
+    modname=viarhine modtype=device \
+    files="via-rhine_init $(FILES)" \
+    moduledir=Devs/Networks uselibs="rom amiga hiddstubs"
+
+%common
