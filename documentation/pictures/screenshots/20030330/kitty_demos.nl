@@ -1,0 +1,1 @@
+AROS native met demo's die de VESA.hidd gebruiken voor hun graphics.
