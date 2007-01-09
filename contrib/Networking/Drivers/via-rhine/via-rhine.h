@@ -2,7 +2,7 @@
 #define _VIA_RHINE_H
 
 /*
- * $Id: via-rhine.h 24063 2006-02-07 23:00:07Z neil $
+ * $Id$
  */
 
 /*
