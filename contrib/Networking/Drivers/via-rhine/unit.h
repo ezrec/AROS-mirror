@@ -41,7 +41,6 @@
 #include "via-rhine.h"
 #include LC_LIBDEFS_FILE
 
-IPTR VIAR_AllocLONGAligned(struct VIARHINEUnit *, IPTR *, int);
 struct VIARHINEUnit *CreateUnit(LIBBASETYPEPTR, OOP_Object *, ULONG, char *);
 void DeleteUnit(struct VIARHINEBase *, struct VIARHINEUnit *);
 void FlushUnit(LIBBASETYPEPTR, struct VIARHINEUnit *, UBYTE, BYTE);

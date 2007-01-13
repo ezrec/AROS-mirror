@@ -50,25 +50,6 @@
 #include "unit.h"
 #include LC_LIBDEFS_FILE
 
-IPTR VIAR_AllocLONGAligned(struct VIARHINEUnit *dev, IPTR *allocbase, int allocsize)
-{
-	IPTR aligned_pointer;
-
-		*allocbase = HIDD_PCIDriver_AllocPCIMem(
-                        dev->rhineu_PCIDriver,
-                        allocsize + 4);
-
-	if (*allocbase != NULL)
-	{
-		aligned_pointer = *allocbase & ~0x03;
-		if (aligned_pointer < *allocbase)
-			aligned_pointer += 4;
-
-		return aligned_pointer;
-	}
-	return NULL;
-}
-
 /*
  * Report incoming events to all hyphotetical event receivers
  */
@@ -340,8 +321,23 @@ D(bug("%s: VIARHINE_TX_IntF()\n", unit->rhineu_name));
         /* Still no error and there are packets to be sent? */
         while(proceed && (!IsMsgPortEmpty(port)))
         {
+rhine_nexttx:
+			if (try_count >= (TX_BUFFERS * 3))
+			{
+#warning "TODO: We should probably report that we couldnt send the packet here.."
+D(bug("%s: VIARHINE_TX_IntF: Send FAILED! no free Tx buffer(s)\n", unit->rhineu_name));
+				break;
+			}
+
             nr = np->tx_current % TX_BUFFERS;
 			np->tx_current++;
+
+			if (np->tx_desc[nr].tx_status & DescOwn)
+			{
+D(bug("%s: VIARHINE_TX_IntF: Buffer %d in use!\n", unit->rhineu_name, nr));
+				try_count++;
+				goto rhine_nexttx;
+			}
 
 		   request = (APTR)port->mp_MsgList.lh_Head;
 		   data_size = packet_size = request->ios2_DataLength;
@@ -813,12 +809,15 @@ D(bug("%s CreateUnit:   INT:%d, base1:%x, base0:%x, size0:%d\n", unit->rhineu_na
 
 D(bug("%s CreateUnit:   PCI_BaseMem @ %x\n", unit->rhineu_name, unit->rhineu_BaseMem));
 			
-            unit->rhineu_fe_priv = VIAR_AllocLONGAligned(unit, &unit->rhineu_fe_privbase, sizeof(struct fe_priv));
+            unit->rhineu_fe_priv = 	HIDD_PCIDriver_AllocPCIMem(
+                        unit->rhineu_PCIDriver,
+                        sizeof(struct fe_priv));
+
             viarhinenic_get_functions(unit);
 
             if (unit->rhineu_fe_priv)
             {
-D(bug("%s CreateUnit:   NIC Private Data Area @ %x, start @ %x\n", unit->rhineu_name, unit->rhineu_fe_privbase, unit->rhineu_fe_priv));
+D(bug("%s CreateUnit:   NIC Private Data Area @ %x, start @ %x\n", unit->rhineu_name, unit->rhineu_fe_priv));
 				
                 unit->rhineu_fe_priv->pci_dev = unit;
                 InitSemaphore(&unit->rhineu_fe_priv->lock);

@@ -303,15 +303,28 @@ int viarhinenic_rx_setmode(struct net_device *dev)
 	UBYTE *base = get_hwbase(dev);
 	unsigned long mc_filter[2];         //Multicast hash filter.
 	unsigned int rx_mode;
-	
-#warning "TODO: Fix set_rxmode.. temp Running in promiscuous mode for now .."
-	rx_mode = 0x1c;
-//	mc_filter[1] = mc_filter[0] = 0xffffffff;
 
-//	LONGOUT(base + VIAR_MulticastFilter0, mc_filter[0]);
-	LONGOUT(base + VIAR_MulticastFilter0, 0x00);
-//	LONGOUT(base + VIAR_MulticastFilter1, mc_filter[1]);
-	LONGOUT(base + VIAR_MulticastFilter1, 0x00);
+	mc_filter[1] = mc_filter[0] = 0x0;
+	
+	if (dev->rhineu_flags & IFF_PROMISC)
+	{
+D(bug("%s: viarhinenic_rx_setmode: PROMISCUOUS Mode\n", dev->rhineu_name));
+		rx_mode = 0x1c;
+	}
+	else if (dev->rhineu_flags & IFF_ALLMULTI)
+	{
+D(bug("%s: viarhinenic_rx_setmode: ALL MULTICAST Enabled\n", dev->rhineu_name));
+		rx_mode = 0x0c;
+		mc_filter[1] = mc_filter[0] = 0xffffffff;
+	}
+	else
+	{
+D(bug("%s: viarhinenic_rx_setmode: Default Rx Mode (no Multi or Promisc)\n", dev->rhineu_name));
+		rx_mode = 0x1a;
+	}
+	
+	LONGOUT(base + VIAR_MulticastFilter0, mc_filter[0]);
+	LONGOUT(base + VIAR_MulticastFilter1, mc_filter[1]);
 	BYTEOUT(base + VIAR_RxConfig, np->rx_thresh | rx_mode);
 	
 	return 0;
@@ -344,7 +357,9 @@ static int viarhinenic_open(struct net_device *dev)
 	if (ret)
 		goto out_drain;
 
-    np->tx_buffer = VIAR_AllocLONGAligned(dev, &np->tx_bufferbase, txb_size);
+    np->tx_buffer = HIDD_PCIDriver_AllocPCIMem(
+                        dev->rhineu_PCIDriver,
+                        txb_size);
 
     if (np->tx_buffer == NULL)
     {
@@ -352,7 +367,7 @@ static int viarhinenic_open(struct net_device *dev)
     }
     else
     {	
-D(bug("%s: viarhinenic_open: Tx Ring Base %x\n", dev->rhineu_name, np->tx_bufferbase));
+D(bug("%s: viarhinenic_open: Tx Ring buffers allocated @ %x\n", dev->rhineu_name, np->tx_buffer));
 		for (i=0; i< TX_BUFFERS; i++)
 		{
 			np->tx_desc[i].tx_status = 0;
@@ -365,7 +380,9 @@ D(bug("%s: viarhinenic_open: Tx Ring %d @ %x, Buffer = %x\n",dev->rhineu_name,
 		np->tx_desc[i-1].next = &np->tx_desc[0];
 	}
 
-    np->rx_buffer = VIAR_AllocLONGAligned(dev, &np->rx_bufferbase, rxb_size);
+    np->rx_buffer = HIDD_PCIDriver_AllocPCIMem(
+                        dev->rhineu_PCIDriver,
+                        rxb_size);
 
 	if (np->rx_buffer == NULL)
 	{
@@ -373,7 +390,7 @@ D(bug("%s: viarhinenic_open: Tx Ring %d @ %x, Buffer = %x\n",dev->rhineu_name,
 	}
 	else
 	{
-D(bug("%s: viarhinenic_open: Rx Ring Base %x\n", dev->rhineu_name, np->rx_bufferbase));
+D(bug("%s: viarhinenic_open: Rx Ring buffers allocated @ %x\n", dev->rhineu_name, np->rx_buffer));
 		for (i=0; i< RX_BUFFERS; i++)
 		{
 			np->rx_desc[i].rx_status = DescOwn;
