@@ -279,6 +279,7 @@ D(bug("%s: VIARHINE_RX_IntF: packet copied to orphan queue\n", unit->rhineu_name
                 }
             }
 			np->rx_desc[i].rx_status =  DescOwn;
+			np->rx_desc[i].rx_status =  MAX_FRAME_SIZE;
 
             /* Update remaining statistics */
 
@@ -453,6 +454,7 @@ static void VIARHINE_TimeoutHandlerF(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *h
 static void VIARHINE_IntHandlerF(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
 {
     struct VIARHINEUnit *dev = (struct VIARHINEUnit *) irq->h_Data;
+    struct VIARHINEBase *VIARHINEDeviceBase = dev->rhineu_device;
     struct fe_priv *np = dev->rhineu_fe_priv;
     UBYTE *base = (UBYTE*) dev->rhineu_BaseMem;
     ULONG events;
@@ -478,17 +480,21 @@ D(bug("%s: VIARHINE_IntHandlerF: Packet Reception Attempt detected!\n", dev->rhi
 		{
 D(bug("%s: VIARHINE_IntHandlerF: Packet Reception Problem detected!\n", dev->rhineu_name));
 			WORDOUT(base, CmdRxDemand | np->cmd);
+			ReportEvents(LIBBASE, dev, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
+			dev->rhineu_stats.BadData++;
 		}
 
 		if ( status & IntrTxDone ) // Chipset has Sent packet(s)
 		{
 D(bug("%s: VIARHINE_IntHandlerF: Packet Transmision detected!\n", dev->rhineu_name));
+			dev->rhineu_stats.PacketsSent++;
 		}
 
 		if ( status & IntrTxAbort ) // Chipset has Aborted Packet Transmition
 		{
 D(bug("%s: VIARHINE_IntHandlerF: Chipset has Aborted Packet Transmition!\n", dev->rhineu_name));
 			WORDOUT(base, CmdTxDemand | np->cmd);
+			ReportEvents(LIBBASE, dev, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_TX);
 		}
 		
 		if ( status & IntrTxUnderrun ) // Chipset Reports Tx Underrun
@@ -496,6 +502,7 @@ D(bug("%s: VIARHINE_IntHandlerF: Chipset has Aborted Packet Transmition!\n", dev
 D(bug("%s: VIARHINE_IntHandlerF: Chipset Reports Tx Underrun!\n", dev->rhineu_name));
 			if (np->tx_thresh < 0xe0) BYTEOUT(base + VIAR_TxConfig, np->tx_thresh += 0x20);
 			WORDOUT(base, CmdTxDemand | np->cmd);
+			ReportEvents(LIBBASE, dev, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_TX);
 		}
 		
 		if (--interrupt_work < 0)
