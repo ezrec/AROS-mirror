@@ -278,8 +278,8 @@ D(bug("%s: VIARHINE_RX_IntF: copy packet for opener ..\n", unit->rhineu_name));
 D(bug("%s: VIARHINE_RX_IntF: packet copied to orphan queue\n", unit->rhineu_name));
                 }
             }
+			np->rx_desc[i].desc_length =  MAX_FRAME_SIZE; //Set the buffer size back to max (before enabling it)
 			np->rx_desc[i].rx_status =  DescOwn;
-			np->rx_desc[i].rx_status =  MAX_FRAME_SIZE;
 
             /* Update remaining statistics */
 
