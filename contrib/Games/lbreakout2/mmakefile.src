@@ -1,19 +1,14 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-# FIXME: installation doesn't work
-
-#http://mesh.dl.sourceforge.net/sourceforge/lgames/lbreakout2-2.6beta.tar.gz
-
-##MM- contrib-games : contrib-games-lbreakout2
+#MM- contrib-games : contrib-games-lbreakout2
 #MM- lbreakout2 : contrib-games-lbreakout2
 
 #MM- contrib-games-quick : contrib-games-lbreakout2-quick
 #MM- lbreakout2-quick : contrib-games-lbreakout2-quick
 
-%fetch_and_build mmake=contrib-games-lbreakout2 package=lbreakout2 \
-    package_repo=sf://lgames \
-    version=2.6beta suffixes="tar.gz" patch=no \
-    prefix=$(AROS_CONTRIB)/Games/lbreakout2 \
-    extraoptions="--disable-audio --disable-sdltest --disable-network --with-docdir='$$(PROGDIR)doc'" \
-    nix=yes nix_dir_layout=no
+%build_with_configure mmake=contrib-games-lbreakout2 nix=yes \
+    extraoptions="--with-highscore-path='$$(PROGDIR)data' --with-inst-path='$$(PROGDIR)data' \
+    --disable-audio --disable-sdltest --disable-network --with-doc-path='$$(PROGDIR)docs'" \
+    prefix=$(CONTRIBDIR)/Games/lbreakout2 nix_dir_layout=no
+    
