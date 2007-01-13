@@ -357,7 +357,7 @@ D(bug("%s: viarhinenic_open: Tx Ring Base %x\n", dev->rhineu_name, np->tx_buffer
 		{
 			np->tx_desc[i].tx_status = 0;
 			np->tx_desc[i].desc_length = 0;
-			np->tx_desc[i].addr = (IIPTR)(np->tx_buffer + (i * BUFFER_SIZE));
+			np->tx_desc[i].addr = (IPTR)(np->tx_buffer + (i * BUFFER_SIZE));
 			np->tx_desc[i].next = &np->tx_desc[i + 1];
 D(bug("%s: viarhinenic_open: Tx Ring %d @ %x, Buffer = %x\n",dev->rhineu_name,
                         i, &np->tx_desc[i], np->tx_desc[i].addr));

@@ -61,7 +61,7 @@ IPTR VIAR_AllocLONGAligned(struct VIARHINEUnit *dev, IPTR *allocbase, int allocs
 	if (*allocbase != NULL)
 	{
 		aligned_pointer = *allocbase & ~0x03;
-		if (aligned_pointer < allocbase)
+		if (aligned_pointer < *allocbase)
 			aligned_pointer += 4;
 
 		return aligned_pointer;
@@ -207,7 +207,6 @@ D(bug("%s: VIARHINE_RX_IntF: packet owned by chipset\n", unit->rhineu_name));
         }
 
 D(bug("%s: VIARHINE_RX_IntF: packet %d @ %x is for us\n", unit->rhineu_name, i, np->rx_desc[i].addr));
-D(bug("%s: VIARHINE_RX_IntF: AROS_LE2LONG = %x\n", unit->rhineu_name, AROS_LE2LONG(np->rx_desc[i].addr)));
         /* the packet is for us - get it */
 
         /* got a valid packet - forward it to the network core */
@@ -231,6 +230,8 @@ D(bug("%s: VIARHINE_RX_IntF: AROS_LE2LONG = %x\n", unit->rhineu_name, AROS_LE2LO
         if(AddressFilter(LIBBASE, unit, frame->eth_packet_dest))
         {
             /* Packet is addressed to this driver */
+			len = (np->rx_desc[i].rx_status >> 16) -4;
+
             packet_type = AROS_BE2WORD(frame->eth_packet_type);
 D(bug("%s: VIARHINE_RX_IntF: Packet IP accepted with type = %d\n", unit->rhineu_name, packet_type));
 
@@ -369,7 +370,6 @@ D(bug("%s: VIARHINE_TX_IntF()\n", unit->rhineu_name));
 
 		   /* Now the packet is already in TX buffer, update flags for NIC */
 D(bug("%s: VIARHINE_TX_IntF: packet %d  @ %x [type = %d] queued for transmission.", unit->rhineu_name, nr, np->tx_desc[nr].addr, ((struct eth_frame *)np->tx_desc[nr].addr)->eth_packet_type));
-D(bug("%s: VIARHINE_TX_IntF: LE2LONG = %x\n", unit->rhineu_name, AROS_LE2LONG(np->tx_desc[nr].addr)));
 			  Disable();
 			  /* DEBUG? Dump frame if so */
 #ifdef DEBUG
@@ -771,7 +771,7 @@ D(bug("[VIA-RHINE] CreateUnit: Unit allocated @ %x\n", unit));
         unit->rhineu_PCIDriver  = driver;
 		unit->rhineu_UnitNum = VIARHINEDeviceBase->rhineb_UnitCount++;
         
-		int unitname_len = 11 + ((unit->rhineu_UnitNum/10)+1);
+		int unitname_len = 12 + ((unit->rhineu_UnitNum/10)+1);
 
 		unit->rhineu_name = AllocVec(unitname_len, MEMF_CLEAR|MEMF_PUBLIC);
 D(bug("[VIA-RHINE] CreateUnit: Allocated %d bytes for Unit %d's Name @ %x\n", unitname_len, unit->rhineu_UnitNum, unit->rhineu_name));
