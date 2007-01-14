@@ -127,26 +127,6 @@ struct AddressRange
     UWORD upper_bound_right;
 };
 
-/* Big endian: should work, but is untested */
-
-struct rx_ring_desc
-{
-    IPTR    PacketBuffer;
-    UWORD   BufferLength;
-    UWORD   BufferStatus;
-    ULONG   BufferMsgLength;
-    ULONG   Reserved;
-};
-
-struct tx_ring_desc
-{
-    IPTR    PacketBuffer;
-    UWORD   BufferLength;
-    UWORD   BufferStatus;
-    ULONG   Misc;
-    ULONG   Reserved;
-};
-
 #define STAT_COUNT 3
 
 struct VIARHINEUnit {
@@ -227,7 +207,6 @@ struct VIARHINEUnit {
     APTR                    rhineu_mc_list;
     UBYTE                   rhineu_dev_addr[6];
     UBYTE                   rhineu_org_addr[6];
-    IPTR                          rhineu_fe_privbase;
     struct fe_priv          *rhineu_fe_priv;
 };
 
@@ -417,12 +396,10 @@ struct fe_priv {
 	viarhine_rx_desc      rx_desc[RX_BUFFERS];  /* RX Frame Descriptors */
 	viarhine_tx_desc       tx_desc[TX_BUFFERS];  /* TX Frame Descriptors */
 
-    IPTR                         rx_bufferbase;
     struct   eth_frame   *rx_buffer;
 	UBYTE                      rx_thresh;
 	UBYTE                      rx_current;
 
-	IPTR                          tx_bufferbase;
     struct   eth_frame    *tx_buffer;
 	UBYTE					    tx_thresh;
 	UBYTE                      tx_current;

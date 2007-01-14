@@ -123,7 +123,7 @@ D(bug("%s unit.FlushUnit\n", unit->rhineu_name));
         }
     }
 
-    opener = (APTR)unit->rhineu_Openers.mlh_Head;
+    opener = (APTR)&unit->rhineu_Openers.mlh_Head;
     tail = (APTR)unit->rhineu_Openers.mlh_Tail;
 
     /* Flush every opener's read queue */
@@ -164,17 +164,19 @@ AROS_UFH3(void, VIARHINE_RX_IntF,
     struct IOSana2Req *request, *request_tail;
     BOOL accepted, is_orphan;
 
+    UBYTE *base = (UBYTE*) unit->rhineu_BaseMem;
+	
+	int count = 0;
+	
 D(bug("%s: VIARHINE_RX_IntF() !!!!\n", unit->rhineu_name));
-    np->cur_rx = 0;
 
     /* Endless loop, with break from inside */
     for(;;)
     {
-        int i;
-        UWORD len=0;
+        int i, len=0;
         struct eth_frame *frame;
 
-        if (np->cur_rx >= RX_RING_SIZE)
+        if (count >= RX_RING_SIZE)
             break;	/* we scanned the whole ring - do not continue */
 
         /* Get the in-queue number */
@@ -183,11 +185,29 @@ D(bug("%s: VIARHINE_RX_IntF() !!!!\n", unit->rhineu_name));
         /* Do we own the packet or the chipset? */
         if (np->rx_desc[i].rx_status & DescOwn)
         {
-D(bug("%s: VIARHINE_RX_IntF: packet owned by chipset\n", unit->rhineu_name));
-            goto next_pkt;	 /* still owned by hardware, */
+//D(bug("%s: VIARHINE_RX_IntF: buffer %d owned by chipset\n", unit->rhineu_name, i));
+            //goto next_pkt;	 // still owned by hardware,
+			break;
         }
 
-D(bug("%s: VIARHINE_RX_IntF: packet %d @ %x is for us\n", unit->rhineu_name, i, np->rx_desc[i].addr));
+		if (np->rx_desc[i].rx_status & RxErr)
+        {
+D(bug("%s: VIARHINE_RX_IntF: buffer %d has recieve error! skipping..\n", unit->rhineu_name, i));
+            goto next_pkt;	 // still owned by hardware,
+        }
+
+		if (!(np->rx_desc[i].rx_status & RxWholePkt))
+        {
+D(bug("%s: VIARHINE_RX_IntF: buffer %d has recieved oversized packet! skipping..\n", unit->rhineu_name, i));
+            goto next_pkt;	 // still owned by hardware,
+        }
+
+		if (np->rx_desc[i].rx_status & RxOK)
+        {
+D(bug("%s: VIARHINE_RX_IntF: packet in buffer %d was successfully recieved.\n", unit->rhineu_name, i));
+        }
+		
+D(bug("%s: VIARHINE_RX_IntF: buffer %d @ %x is for us\n", unit->rhineu_name, i, np->rx_desc[i].addr));
         /* the packet is for us - get it */
 
         /* got a valid packet - forward it to the network core */
@@ -211,10 +231,10 @@ D(bug("%s: VIARHINE_RX_IntF: packet %d @ %x is for us\n", unit->rhineu_name, i, 
         if(AddressFilter(LIBBASE, unit, frame->eth_packet_dest))
         {
             /* Packet is addressed to this driver */
-			len = (np->rx_desc[i].rx_status >> 16) -4;
+			len = (np->rx_desc[i].rx_status >> 16)-4;
 
             packet_type = AROS_BE2WORD(frame->eth_packet_type);
-D(bug("%s: VIARHINE_RX_IntF: Packet IP accepted with type = %d\n", unit->rhineu_name, packet_type));
+D(bug("%s: VIARHINE_RX_IntF: Packet IP accepted with type = %d, len = %d, desc_length = %d\n", unit->rhineu_name, packet_type, len, np->rx_desc[i].desc_length));
 
             opener = (APTR)unit->rhineu_Openers.mlh_Head;
             opener_tail = (APTR)&unit->rhineu_Openers.mlh_Tail;
@@ -262,6 +282,8 @@ D(bug("%s: VIARHINE_RX_IntF: packet copied to orphan queue\n", unit->rhineu_name
 			np->rx_desc[i].desc_length =  MAX_FRAME_SIZE; //Set the buffer size back to max (before enabling it)
 			np->rx_desc[i].rx_status =  DescOwn;
 
+			WORDOUT(base, CmdRxDemand | np->cmd);
+
             /* Update remaining statistics */
 
             tracker =
@@ -279,6 +301,7 @@ D(bug("%s: VIARHINE_RX_IntF: packet copied to orphan queue\n", unit->rhineu_name
 
 next_pkt:
         np->cur_rx++;
+		count++;
     }
 
     AROS_USERFUNC_EXIT
@@ -305,7 +328,6 @@ D(bug("%s: VIARHINE_TX_IntF()\n", unit->rhineu_name));
     if (!netif_queue_stopped(unit))
     {
         UWORD packet_size, data_size;
-        struct VIARHINEBase *base;
         struct IOSana2Req *request;
         struct Opener *opener;
         UBYTE *buffer;
@@ -315,7 +337,7 @@ D(bug("%s: VIARHINE_TX_IntF()\n", unit->rhineu_name));
         struct TypeStats *tracker;
 
         proceed = TRUE; /* Success by default */
-        base = unit->rhineu_device;
+		UBYTE *base = (UBYTE*) unit->rhineu_BaseMem;
         port = unit->rhineu_request_ports[WRITE_QUEUE];
 
         /* Still no error and there are packets to be sent? */
@@ -464,14 +486,13 @@ D(bug("%s: VIARHINE_IntHandlerF()!!!!!!!\n", dev->rhineu_name));
     {
 		int status = WORDIN(base + VIAR_IntrStatus);
 		WORDOUT(base + VIAR_IntrStatus, status & 0xffff); // Aknowledge All Interrupt SOurces ASAP.
-		
-		if ( status & IntrRxDone ) // Chipset has Recieved packet(s)
-		{
-D(bug("%s: VIARHINE_IntHandlerF: Packet Reception Attempt detected!\n", dev->rhineu_name));
-			Cause(&dev->rhineu_rx_int);
-			WORDOUT(base, CmdRxDemand | np->cmd);
-		}
 
+		if (!(status & (IntrRxDone | IntrRxErr | IntrRxEmpty | IntrRxOverflow| IntrRxDropped | IntrTxDone | IntrTxAbort | IntrTxUnderrun | IntrPCIErr | IntrStatsMax | IntrLinkChange | IntrMIIChange)))
+		{
+D(bug("%s: VIARHINE_IntHandlerF: No Signals for us!\n", dev->rhineu_name));
+			break;
+		}
+		
 		if ( status & (IntrRxErr | IntrRxDropped | IntrRxWakeUp | IntrRxEmpty | IntrRxNoBuf )) // Chipset has Reported a Recieve problem
 		{
 D(bug("%s: VIARHINE_IntHandlerF: Packet Reception Problem detected!\n", dev->rhineu_name));
@@ -479,11 +500,10 @@ D(bug("%s: VIARHINE_IntHandlerF: Packet Reception Problem detected!\n", dev->rhi
 			ReportEvents(LIBBASE, dev, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
 			dev->rhineu_stats.BadData++;
 		}
-
-		if ( status & IntrTxDone ) // Chipset has Sent packet(s)
+		else if ( status & IntrRxDone ) // Chipset has Recieved packet(s)
 		{
-D(bug("%s: VIARHINE_IntHandlerF: Packet Transmision detected!\n", dev->rhineu_name));
-			dev->rhineu_stats.PacketsSent++;
+D(bug("%s: VIARHINE_IntHandlerF: Packet Reception Attempt detected!\n", dev->rhineu_name));
+			Cause(&dev->rhineu_rx_int);
 		}
 
 		if ( status & IntrTxAbort ) // Chipset has Aborted Packet Transmition
@@ -499,6 +519,12 @@ D(bug("%s: VIARHINE_IntHandlerF: Chipset Reports Tx Underrun!\n", dev->rhineu_na
 			if (np->tx_thresh < 0xe0) BYTEOUT(base + VIAR_TxConfig, np->tx_thresh += 0x20);
 			WORDOUT(base, CmdTxDemand | np->cmd);
 			ReportEvents(LIBBASE, dev, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_TX);
+		}
+
+		if ( status & IntrTxDone ) // Chipset has Sent packet(s)
+		{
+D(bug("%s: VIARHINE_IntHandlerF: Packet Transmision detected!\n", dev->rhineu_name));
+			dev->rhineu_stats.PacketsSent++;
 		}
 		
 		if (--interrupt_work < 0)
