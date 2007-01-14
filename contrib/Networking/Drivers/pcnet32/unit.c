@@ -475,7 +475,6 @@ D(bug("%s: PCN32_TX_Int()\n", unit->pcnu_name));
     if (!netif_queue_stopped(unit))
     {
         UWORD packet_size, data_size;
-        struct PCN32Base *base;
         struct IOSana2Req *request;
         struct Opener *opener;
         UBYTE *buffer;
@@ -485,7 +484,6 @@ D(bug("%s: PCN32_TX_Int()\n", unit->pcnu_name));
         struct TypeStats *tracker;
 
         proceed = TRUE; /* Success by default */
-        base = unit->pcnu_device;
         port = unit->pcnu_request_ports[WRITE_QUEUE];
 
         /* Still no error and there are packets to be sent? */
