@@ -50,25 +50,6 @@
 #include "unit.h"
 #include LC_LIBDEFS_FILE
 
-IPTR RTL_AllocLONGAligned(struct RTL8139Unit *dev, IPTR *allocbase, int allocsize)
-{
-	IPTR aligned_pointer;
-
-		*allocbase = HIDD_PCIDriver_AllocPCIMem(
-                        dev->rtl8139u_PCIDriver,
-                        allocsize + 4);
-
-	if (*allocbase != NULL)
-	{
-		aligned_pointer = *allocbase & ~0x03;
-		if (aligned_pointer < allocbase)
-			aligned_pointer += 4;
-
-		return aligned_pointer;
-	}
-	return NULL;
-}
-
 /*
  * Report incoming events to all hyphotetical event receivers
  */
@@ -366,7 +347,6 @@ D(bug("%s: RTL8139_TX_IntF()\n", unit->rtl8139u_name));
     if (!netif_queue_stopped(unit))
     {
         UWORD packet_size, data_size;
-        struct RTL8139Base *base;
         struct IOSana2Req *request;
         struct Opener *opener;
         UBYTE *buffer;
@@ -376,7 +356,7 @@ D(bug("%s: RTL8139_TX_IntF()\n", unit->rtl8139u_name));
         struct TypeStats *tracker;
 
         proceed = TRUE; /* Success by default */
-        base = unit->rtl8139u_device;
+		UBYTE *base = (UBYTE*) unit->rtl8139u_BaseMem;
         port = unit->rtl8139u_request_ports[WRITE_QUEUE];
 
         /* Still no error and there are packets to be sent? */

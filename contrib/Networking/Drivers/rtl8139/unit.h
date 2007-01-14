@@ -41,7 +41,6 @@
 #include "rtl8139.h"
 #include LC_LIBDEFS_FILE
 
-IPTR RTL_AllocLONGAligned(struct RTL8139Unit *, IPTR *, int);
 struct RTL8139Unit *CreateUnit(LIBBASETYPEPTR, OOP_Object *, ULONG, char *, char *);
 void DeleteUnit(struct RTL8139Base *, struct RTL8139Unit *);
 void FlushUnit(LIBBASETYPEPTR, struct RTL8139Unit *, UBYTE, BYTE);

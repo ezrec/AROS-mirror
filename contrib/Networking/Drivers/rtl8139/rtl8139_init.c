@@ -80,9 +80,18 @@ D(bug("[RTL8139] init.PCI_Enumerator()\n"));
 	            (DeviceID == 0x8139)))
     {
 		FoundCompatNIC = TRUE;
-		CardCapabilities =   RTLc_HAS_CHIP_XCVR | RTLc_HAS_LNK_CHNG;
-        CardName = "RealTek RTL8139";
-		CardChipName = "RTL8139";
+		if ((DeviceID == 0x8139) && (RevisionID >= 0x20))
+		{
+			CardCapabilities =   RTLc_HAS_CHIP_XCVR | RTLc_HAS_LNK_CHNG | RTLc_HAS_DESC;
+			CardName = "RealTek RTL8139C";
+			CardChipName = "RTL8139C";
+		}
+		else
+		{
+			CardCapabilities =   RTLc_HAS_CHIP_XCVR | RTLc_HAS_LNK_CHNG;
+			CardName = "RealTek RTL8139";
+			CardChipName = "RTL8139";
+		}
     }
     else if ((VendorID == 0x1113)    &&
         (DeviceID == 0x1211))

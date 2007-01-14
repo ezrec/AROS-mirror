@@ -255,11 +255,7 @@ D(bug("%s: rtl8139nic_set_multicast()\n", dev->rtl8139u_name));
 
 static void rtl8139nic_deinitialize(struct net_device *dev)
 {
-//    dev->write_csr(dev->rtl8139u_BaseMem, 0, (1 << 2)); /* Stop the PCnet32 by setting the stop bit.. */
-D(bug("%s: PCnet32 chipset STOPPED\n", dev->rtl8139u_name));
 
-//    dev->write_bcr(dev->rtl8139u_BaseMem, 20, 4); /* Set pcnet32 into 16bit mode */
-D(bug("%s: Chipset put into 16bit mode\n", dev->rtl8139u_name));
 }
 
 static void rtl8139nic_initialize(struct net_device *dev)
@@ -442,10 +438,12 @@ static int rtl8139nic_open(struct net_device *dev)
    {
 		np->rx_buf_len = 8192 << rx_buf_len_idx;
 		
-		np->rx_buffer = RTL_AllocLONGAligned(dev, &np->rtl_buffbase, (np->rx_buf_len + 16 + (TX_BUF_SIZE * NUM_TX_DESC)));
+		np->rx_buffer = HIDD_PCIDriver_AllocPCIMem(
+                        dev->rtl8139u_PCIDriver,
+                        (np->rx_buf_len + 16 + (TX_BUF_SIZE * NUM_TX_DESC)));
+
 		if (np->rx_buffer != NULL)
 		{
-D(bug("%s: rtl8139nic_open: Buffer base @ %x\n",dev->rtl8139u_name, np->rtl_buffbase));
 			np->tx_buffer = (struct eth_frame *) (np->rx_buffer + np->rx_buf_len + 16);
 		}
    } while (np->rx_buffer == NULL && (--rx_buf_len_idx >= 0));

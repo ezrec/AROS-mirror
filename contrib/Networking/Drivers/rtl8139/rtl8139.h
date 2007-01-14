@@ -417,8 +417,6 @@ struct fe_priv {
 	char                       mii_phys[4]; //MII device address
 	unsigned short    advertising;  //NWay media advertising
 
-    IPTR                          rtl_buffbase;
-	
 	unsigned int          rx_config;
     struct   eth_frame   *rx_buffer;
 	unsigned int          rx_buf_len;
