@@ -39,7 +39,7 @@ int gui_init (void)
     application = EmulatorObject, End;
     if (!application)
     {
-        __showerror("Could not create the application.");
+        __showerror("Could not create the application.", NULL);
         return -2;
     }
 

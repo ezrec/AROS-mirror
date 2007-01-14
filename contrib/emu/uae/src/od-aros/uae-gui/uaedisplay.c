@@ -204,7 +204,7 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
 	 if (!GetCyberMapAttr(_screen(self)->RastPort.BitMap, CYBRMATTR_ISCYBERGFX))
 	 {
-	     __showerror("UAEDisplay: CyberGfx is required");
+	     __showerror("UAEDisplay: CyberGfx is required", NULL);
 	     return FALSE;
 	 }
 
@@ -219,7 +219,7 @@ ZUNE_CUSTOMCLASS_INLINE_10
 
          if(data->bitdepth <= 8)
          {
-             __showerror("UAEDisplay: Unsupported bith depth %ld", data->bitdepth);
+             __showerror("UAEDisplay: Unsupported bith depth %ld", (const IPTR []){data->bitdepth});
 	     goto error;
          }
 

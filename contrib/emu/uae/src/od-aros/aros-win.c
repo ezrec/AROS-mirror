@@ -145,7 +145,7 @@ int graphics_init(void)
         )
     )
     {
-        __showerror("Failed to SetAttrs() on uaedisplay(%lp - %lp)", uaedisplay, &uaedisplay);
+        __showerror("Failed to SetAttrs() on uaedisplay(%lp - %lp)", (const IPTR []){(IPTR)uaedisplay, (IPTR)&uaedisplay});
         return 0;
     }
     
