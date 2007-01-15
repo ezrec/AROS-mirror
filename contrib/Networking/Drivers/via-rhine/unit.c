@@ -123,8 +123,8 @@ D(bug("%s unit.FlushUnit\n", unit->rhineu_name));
         }
     }
 
-    opener = (APTR)&unit->rhineu_Openers.mlh_Head;
-    tail = (APTR)unit->rhineu_Openers.mlh_Tail;
+    opener = (APTR)unit->rhineu_Openers.mlh_Head;
+    tail = (APTR)&unit->rhineu_Openers.mlh_Tail;
 
     /* Flush every opener's read queue */
 
