@@ -3,7 +3,7 @@ Working with Subversion
 =======================
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
-:Copyright: Copyright é 1995-2002, The AROS Development Team
+:Copyright: Copyright ù 1995-2002, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -48,6 +48,11 @@ If you are running Linux, FreeBSD or any other modern UNIX clone then you
 simply need to install the official SVN software, version 1.0 or higher, for 
 your OS. All common Linux distributions come with SVN packaged.
 
+There`s also an crossplatformed QT GUI frontend to svn called 
+`eSVN <http://esvn.umputun.com/>`__,
+available for Unixes(GNU/Linux distributions, FreeBSD, Sun Solaris and others), 
+Mac OS X and Windows. 
+
 .. Note:: The server runs Subversion 1.1 which can be accessed by a
           client with the version 1.0, 1.1 or 1.2.
 
@@ -69,8 +74,11 @@ Windows
 If you run Microsoft Windows (TM) you can use TortoiseSVN__ SVN client, especially if you like using Windows Explorer. This program is Open Source and free, feature rich and good supported. Please make sure also that files you 
 submitting has UNIX-style line ends, otherwise you can *break* code generation.
 If files you`re changing has eol-style:native SVN property set (not new files
-anyway) then you can forget about it, and line ends will be automatically converted. Examples of editors known to be able to save such EOL
-include TigerPad (free enhanced notepad), DOS Navigator, and maybe much more.
+anyway) then you can forget about it, and line ends (EOL) will be automatically converted.
+Examples of editors known to be able to save such EOL
+include `Notepad++ <http://notepad-plus.sourceforge.net>`__, TigerPad (free 
+enhanced notepad), `DOS Navigator OSP <http://dnosp.com/>`__, and much more.
+Also eSvn client available, as noted above.
 
 __ http://tortoisesvn.sourceforge.net
 
@@ -85,6 +93,7 @@ Note that when using Textwrangler or other Mac text-editors, you will need to ch
 the character encoding from 'Macos roman' to 'ISO latin 1' (ISO8859) for your documents 
 (change this in preferences). For TW all other settings are correct by default. 
 All named applications are freeware and available as Universal Binary for PPC and Intel Macs.
+Also eSvn client available, as noted above.
 
 __ http://www.codingmonkeys.de/mbo/
 __ http://www.lachoseinteractive.net/en/community/subversion/svnx/
