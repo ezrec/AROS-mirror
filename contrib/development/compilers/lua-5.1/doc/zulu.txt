@@ -1,3 +1,5 @@
+$Id$
+
 Zulu - A MUI(Zune)-Lua binding
 ==============================
 
@@ -32,9 +34,11 @@ When you write in C someting like 'x=function("aaa")' then the string is stored 
 area. This means the string exists as long your program is in RAM.
 But when you do the same in Lua then the string is created dynamically. Because the string has
 no binding after the function call it will be deleted by the garbage collector.
-So whenever the MUI documentation says that something must exist as long the object exists
-you have to define it as global variable at the beginning of your program (e.g. str="aaa") 
-and you aren't allowed to change or delete this variable.
+Unfortunately, the MUI documentation doesn't say when a string is copied or not. Some strings
+like the content of StringObjects and labels are copied, others like MUIA_String_Accept aren't.
+When in doubt you have to define the string as global variable at the beginning of your program
+(e.g. str="aaa") and you aren't allowed to change or delete this variable. Another possibility
+is to store the strings in StrArray objects.
 
 
 Linker lib luamui.a
@@ -85,7 +89,7 @@ intval = mui.getint(object, tag)
 
 This is a wrapper for the intuition library function 'GetAttr'. This is for querying of attributes
 of objects. The result is returned as integer. Use this when the type of the attribute is
-LONG, ULONG, BOOL etc.
+LONG, ULONG etc.
 
 Example:
 
@@ -100,6 +104,13 @@ ptrval = mui.getptr(object, tag)
 ''''''''''''''''''''''''''''''''
 
 Same as above, but returns a light userdata. Use this when the type of the attribute is a pointer.
+
+boolval = mui.getbool(object, tag)
+''''''''''''''''''''''''''''''''
+
+Same as above, but returns a boolean value (true or false). Use this when the type of the attribute
+is BOOL.
+
 
 intval = mui.doint(object, method, ...)
 '''''''''''''''''''''''''''''''''''''''
@@ -122,6 +133,12 @@ ptrval = mui.doptr(object, method, ...)
 
 Same as above, but returns the result of 'DoMethod' as light userdata. Use this when the
 type of the return value is a pointer.
+
+boolval = mui.dobool(object, method, ...)
+''''''''''''''''''''''''''''''''''''''''
+
+Same as above, but returns the result of 'DoMethod' as boolean value. Use this when the
+type of the return value is BOOL.
 
 mui.dispose(object)
 '''''''''''''''''''
@@ -166,7 +183,7 @@ retval = mui.request(app, win, flags, title, gadgets, text)
 Wrapper for MUI_Request. Shows a requester.
 app:     application object, can be nil
 window:  window object, can be nil
-flags:   has currently always set to 0
+flags:   has currently always be set to 0
 gadgets: if you need more than one button separate them with '|' 
 text:    you can use \n to separate lines. You must not use placeholdes like %d, %s,
          use string.format instead
@@ -253,7 +270,7 @@ lot of variables to the mui table.
 Variables starting with 
 * MUIC are class descriptors to use as first parameter for mui.new
 * MUIO are class descriptors to use as first parameter for mui.make
-* MUIM are methods for mui.doint, mui.dostr and mui.doptr
+* MUIM are methods for mui.doint, mui.dostr, mui.dobool and mui.doptr
 * MUIA are attributes
 * MUIV are values
 

@@ -395,6 +395,14 @@ static int Muiobj_domethod_ptr(lua_State *L)
 
 //------------------------------------------------------------------------------
 
+static int Muiobj_domethod_bool(lua_State *L)
+{
+  lua_pushboolean(L, Muiobj_domethod_intern(L));
+  return 1;
+}
+
+//------------------------------------------------------------------------------
+
 static int Muiobj_set (lua_State *L)
 {
   Muiobj mo = checkMui(L, 1);
@@ -436,6 +444,14 @@ static int Muiobj_get_string(lua_State *L)
 static int Muiobj_get_ptr(lua_State *L)
 {
   lua_pushlightuserdata(L, (void *)Muiobj_get_intern(L));
+  return 1;
+}
+
+//------------------------------------------------------------------------------
+
+static int Muiobj_get_bool(lua_State *L)
+{
+  lua_pushboolean(L, Muiobj_get_intern(L));
   return 1;
 }
 
@@ -582,10 +598,12 @@ static const luaL_reg Mui_methods[] = {
   {"doint",       Muiobj_domethod_integer},
   {"dostr",       Muiobj_domethod_string},
   {"doptr",       Muiobj_domethod_ptr},
+  {"dobool",      Muiobj_domethod_bool},
   {"set",         Muiobj_set},
   {"getint",      Muiobj_get_integer},
   {"getstr",      Muiobj_get_string},
   {"getptr",      Muiobj_get_ptr},
+  {"getbool",     Muiobj_get_bool},
   {"dispose",     Muiobj_dispose},
   {"input",       Muiobj_input},
   {"wait",        Muiobj_wait},
