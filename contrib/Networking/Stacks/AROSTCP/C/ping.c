@@ -388,7 +388,7 @@ clean_timer(void)
 }
 #endif
 
-main(argc, argv)
+int main(argc, argv)
 	int argc;
 	char **argv;
 {
@@ -601,8 +601,14 @@ main(argc, argv)
     CleanUpExit(1);
   }
 
-  if (notopen = OpenDevice("timer.device", UNIT_MICROHZ,
-		 (struct IORequest *)timermsg, 0)) {
+  if (notopen = OpenDevice("timer.device",
+#if (AROS_FLAVOUR & AROS_FLAVOUR_EMULATION)
+            // UNIT_MICROHZ isn't available on AROS/hosted
+            UNIT_VBLANK,
+#else
+            UNIT_MICROHZ,
+#endif
+            (struct IORequest *)timermsg, 0)) {
     (void)fprintf(stderr, "ping: could not open timer device.\n");
     CleanUpExit(1);
   }
@@ -723,6 +729,7 @@ main(argc, argv)
   }
   finish();
   /* NOTREACHED */
+  return 0;
 }
 
 /*
