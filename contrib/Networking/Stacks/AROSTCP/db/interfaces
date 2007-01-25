@@ -105,7 +105,12 @@
 #
 #eth0 DEV=DEVS:networks/prism2.device UNIT=0 IP=192.168.0.188 UP
 #
-#  ..Intel PRO 100 Series cards
+# ..Intel PRO 100 Series cards
 #
 #eth0 DEV=DEVS:networks/intelpro100.device UNIT=0 IP=192.168.0.188 UP
+#
+# .. Linux-hosted AROS (using the TUN/TAP driver)
+#
+#eth0 DEV=DEVS:networks/tap.device UNIT=0 IP=192.16.0.188 UP
+#
 # EOF
