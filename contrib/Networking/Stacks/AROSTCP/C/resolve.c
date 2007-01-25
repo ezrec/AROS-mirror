@@ -46,15 +46,18 @@ int main(void)
 {
   int retval = 128;
   struct DosLibrary *DOSBase;
-  struct ExecBase *SysBase;
   struct Library *SocketBase;
 
+#if ! (AROS_FLAVOUR & AROS_FLAVOUR_EMULATION)
+  struct ExecBase *SysBase;
   SysBase = *(struct ExecBase**)4;
+#endif
+
   DOSBase = (struct DosLibrary *)OpenLibrary("dos.library", 37L);
   SocketBase = OpenLibrary(SOCKETNAME, SOCKETVERSION);
   
   if (DOSBase && SocketBase) {
-    const char *template = "HOST";
+    const char *template = "HOST/A";
     struct {
       STRPTR a_ipaddr;
     } args[1] = { 0 };
@@ -90,6 +93,11 @@ int main(void)
 	retval = 1;
       }
       FreeArgs(rdargs);
+    }
+
+    else {
+        Printf("usage: resolve host\n");
+        retval = 1;
     }
   }
 
