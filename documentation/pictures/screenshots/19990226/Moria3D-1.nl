@@ -1,0 +1,1 @@
+Een gang met een ring

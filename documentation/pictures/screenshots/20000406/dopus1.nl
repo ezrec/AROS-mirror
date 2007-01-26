@@ -1,0 +1,1 @@
+Linux Desktop met een AROS Workbench scherm en ConfigOpus draaiend op zijn eigen scherm.

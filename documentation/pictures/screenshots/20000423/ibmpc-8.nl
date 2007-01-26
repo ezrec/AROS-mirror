@@ -1,0 +1,1 @@
+Native draaiend op een IBM compatibele computer.

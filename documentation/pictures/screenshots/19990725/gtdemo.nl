@@ -1,0 +1,1 @@
+Alle GadTools gadgets die AROS nu ondersteund.
