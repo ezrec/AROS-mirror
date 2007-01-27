@@ -901,7 +901,7 @@ D(bug("[AiRcOS](numeric;initialtopic) Changing topic display\n"));
          if (( sa = (struct serv_Outline *)AllocVec( sizeof( struct serv_Outline), MEMF_CLEAR ) ))
 	      {
 D(bug("[AiRcOS](numeric;initialtopic) Displaying Message in local channel\n"));
-            sa->so_name = AllocVec(strlen( currentConnection->connection_serv_ARGS[4] ) + (_(MSG_INITIAL_TOPIC)) + 1, MEMF_CLEAR|MEMF_PUBLIC);
+              sa->so_name = AllocVec(strlen( currentConnection->connection_serv_ARGS[4] ) + strlen(_(MSG_INITIAL_TOPIC)) + 1, MEMF_CLEAR|MEMF_PUBLIC);
 		      sprintf( sa->so_name, _(MSG_INITIAL_TOPIC), currentConnection->connection_serv_ARGS[4] );
 
             aircosApp_setChanPen(thisChanPriv, 4);
@@ -1327,7 +1327,7 @@ struct IRC_Server_Priv  *aircos_add_server(char *addserv)
         if (!(new_ircServer = AllocVec(sizeof(struct IRC_Server_Priv)+strlen(addserv)+1, MEMF_CLEAR))) return NULL;
         char    *tmp_str = (char *)&new_ircServer[1];
         CopyMem(addserv,tmp_str,strlen(addserv));
-        tmp_str[strlen(addserv)+1] = '\0';
+        tmp_str[strlen(addserv)] = '\0';
 
         NewList((struct List *)&new_ircServer->serv_chans);
 
@@ -1708,7 +1708,7 @@ struct IRC_Channel_Priv  *aircos_add_channel(char *addtoserv,char *addchann)
 
         char    *tmp_str = (char *)&new_ircChannel[1];
         CopyMem(addchann,tmp_str,strlen(addchann));
-        tmp_str[strlen(addchann)+1] = '\0';
+        tmp_str[strlen(addchann)] = '\0';
 
 D(bug("[AiRcOS] aircos_add_channel('%s' to '%s')\n", addchann, addtoserv));
 
