@@ -911,12 +911,14 @@ D(bug("\n"));
             *AiRcOS_Base->Ai_tmp = '\0';
     }
     
-    if ((pos = atoi(process_thisConnection->connection_serv_ARGS[1])))
+#warning "CHECKME: added NULL check for connection_serv_ARGS[1]"
+    if (process_thisConnection->connection_serv_ARGS[1] && (pos = atoi(process_thisConnection->connection_serv_ARGS[1])))
     {
 D(bug("[AiRcOS](processserverdata) Calling IRC DoNumeric funtion for %d\n", pos));
         pos = aircos_IRC_donumeric(process_thisConnection, pos);
     }
-    else
+#warning "CHECKME: added NULL check for connection_serv_ARGS[1]"
+    else if (process_thisConnection->connection_serv_ARGS[1])
     {
 D(bug("[AiRcOS](processserverdata) Text Command recieved '%s'\n",process_thisConnection->connection_serv_ARGS[1]));
             for (pos = 0; commandList_array[pos].command!=NULL && !found; pos++) found =
@@ -935,7 +937,8 @@ D(bug("[AiRcOS](processserverdata) Calling IRC NOP funtion\n"));
     }
 D(bug("[AiRcOS](processserverdata) Returned from IRC funtion\n"));
     
-    if (strncmp(process_thisConnection->connection_serv_ARGS[1], "Closing", 7) == 0)
+#warning "CHECKME: added NULL check for connection_serv_ARGS[1]"
+    if (process_thisConnection->connection_serv_ARGS[1] && strncmp(process_thisConnection->connection_serv_ARGS[1], "Closing", 7) == 0)
     {
     return (AiRcOS_Base->Ai_reconnect = 0);
     }
@@ -1012,6 +1015,7 @@ D(bug("[AiRcOS](serverconnect_func) Failed to allocate nick buffer!!.\n"));
     }
 
     int test_socket = aircosApp_serverconnect(dtest_connection);
+
     if (test_socket >= 0)
     {
         struct IRC_Server_Priv  *connected_server = NULL;
