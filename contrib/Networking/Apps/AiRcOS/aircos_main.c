@@ -447,6 +447,7 @@ D(bug("[AiRcOS] TextEditor_Dispatcher: MUIM_TextEditor_HandleEvent: Next Possibl
                  }
                }
 possnextmatched:
+             ;
              }
 
              if (foundName)
