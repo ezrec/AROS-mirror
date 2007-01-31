@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright Š 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. Can be translated.
@@ -157,7 +157,10 @@ Writing
 '''''''
 
 Simply download the ISO image from the `download page`_ and burn it to a CD
-using your favorite CD burning program. 
+using your favorite CD burning program. There`s a number of freeware 
+cd burning programs for any system, and we can point Windows users to the 
+`InfraRecorder <http://infrarecorder.sourceforge.net>`__ - it`s free, 
+it`s small and fast, and it`s just Nero-killing simple. 
 
 
 Booting
