@@ -33,16 +33,17 @@ News from the Archives
 Latest uploads on the Archives include: 
 
 - `Lunapaint`__ gets better and better! Version 0.3.1 is now 
-available, with some new nice tools and features.
+  available, with some new nice tools and features.
 
-- `Martin's Server Suite`__, a port for AROS and other operating systems of Snug HTTP server and Yet Another FTP Server. You may find a `screenshot`__ of them working on an AROS installation. 
+- `Martin's Server Suite`__, a port for AROS and other operating systems of Snug HTTP server and Yet Another FTP Server.
+  You may find a `screenshot`__ of them working on an AROS installation. 
 
 - `Jhead`__ is a command line driven program for manipulating the 
-non-image parts of Exif flavour JPEG files that most digital cameras 
-produce. 
+  non-image parts of Exif flavour JPEG files that most digital cameras 
+  produce. 
 
 - `Potrace`__ is a utility for tracing a bitmap, which means 
-transforming a bitmap into a smooth, scalable vector image. 
+  transforming a bitmap into a smooth, scalable vector image. 
 
 __ http://archives.aros-exec.org/share/video/aros-dnd.avi
 __ http://www.aros.org/nl
