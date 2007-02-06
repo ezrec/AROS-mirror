@@ -1,0 +1,61 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-02-06
+
+Il 2007 non poteva cominciare meglio. Ci sono infatti due grandi 
+novità riguardo AROS e siamo veramente molto felici di potervele 
+comunicare.
+
+In primo luogo, il drag & drop finalmente funziona! Ora è possibile 
+sia usare Wanderer per copiare i file da una cartella all'altra, 
+sia trascinare le icone sulle applicazioni per aprire i documenti. 
+Il "miracolo" è avvenuto grazie a Christoph Szczecina e Darius 
+Brewka. Alcuni problemi di stabilità nella versione native di AROS 
+sono sotto osservazione e verranno probabilmente risolti nei prossimi 
+giorni. C'è anche un `breve video`__ girato con VMware che lo 
+dimostra.
+
+Robert Norris ha poi introdotto il supporto di rete per la versione 
+hosted di AROS. L'interfaccia virtuale tap funziona e sarà 
+disponibile nelle prossime nigtly build. 
+
+William Ouwenhand ha realizzato una `versione del sito per i Paesi 
+Bassi`__ e, per tutti coloro che stessero cercando di farlo, una 
+`guida alla compilazione di AROS`__ su Ubuntu Linux. 
+
+Nic Andrews ha dato il suo contributo con una versione iniziale dei 
+driver per gli adattatori di rete RTL 8139 e VIA Rhine. Sono ancora 
+in fase di lavorazione, ma forse sarà presto possibile usarli.
+
+
+Novità dagli Archivi
+--------------------
+
+Le ultime novità dagli Archivi comprendono:
+
+- `Lunapaint`__ migliora sempre di più. E ora è disponibile la 
+versione 0.3.1 con un sacco di novità!
+
+- `Martin's Server Suite`__ è un port per AROS e per altri sistemi 
+operativi di Snug HTTP server e Yet Another FTP Server. C'è una 
+`foto`__ di entrambi che lavorano su un'installazione di AROS.
+
+- `Jhead`__ è un programma su riga di comando per manipolare le parti 
+dei file dei file JPEG di tipo Exif che non riguardano l'immagine, 
+tipicamente prodotti dalle fotocamere digitali.
+
+- `Potrace`__ è un'utility per contornare le bitmap, il che significa 
+trasformare una mappa di pixel in un'immagine vettoriale facile da 
+scalare. 
+
+__ http://archives.aros-exec.org/share/video/aros-dnd.avi
+__ http://www.aros.org/nl
+__ http://snipurl.com/19hjr
+__ http://www.sub-ether.org/lunapaint/
+__ http://xelectrox.homeip.net/files/MSS.AROS-i386.zip
+__ http://snipurl.com/19hk8
+__ http://archives.aros-exec.org/share/graphics/misc/jhead.i386-aros.zip
+__ http://archives.aros-exec.org/share/graphics/convert/potrace.i386-aros.zip

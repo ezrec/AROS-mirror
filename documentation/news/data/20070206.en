@@ -1,0 +1,54 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-02-06
+
+A new year of AROS development has begun, and probably it wouldn't 
+start in a better way. There are two big news for all AROS users.
+
+First of all, drag & drow is now working! This means you may 
+use Wanderer both to copy a file from a drawer to another, and 
+to open a file by dropping its icon on applications. This 
+"miracle" has been made by Christoph Szczecina and Darius 
+Brewka. Some stability problems on AROS native are under 
+investigation and should be resolved in the next days. There is 
+a `small VMware video`__ that shows AROS with drag & drop!
+
+Robert Norris has completed network support for linux hosted AROS. 
+Tap interface is working [link to screenshot] and you may find it 
+in latest nightly builds.
+
+William Ouwenhand has created a `dutch version of Aros.org`__ 
+and an `AROS compilation guide`__ on Ubuntu Linux. 
+
+Nic Andrews has made inital commits for RTL 8139 and VIA Rhine 
+network adapters drivers. They're still a work in progress, but 
+probably it won't took too much time to be completed.
+
+News from the Archives
+----------------------
+
+Latest uploads on the Archives include: 
+
+- `Lunapaint`__ gets better and better! Version 0.3.1 is now 
+available, with some new nice tools and features.
+
+- `Martin's Server Suite`__, a port for AROS and other operating systems of Snug HTTP server and Yet Another FTP Server. You may find a `screenshot`__ of them working on an AROS installation. 
+
+- `Jhead`__ is a command line driven program for manipulating the 
+non-image parts of Exif flavour JPEG files that most digital cameras 
+produce. 
+
+- `Potrace`__ is a utility for tracing a bitmap, which means 
+transforming a bitmap into a smooth, scalable vector image. 
+
+__ http://archives.aros-exec.org/share/video/aros-dnd.avi
+__ http://www.aros.org/nl
+__ http://snipurl.com/19hjr
+__ http://www.sub-ether.org/lunapaint/
+__ http://xelectrox.homeip.net/files/MSS.AROS-i386.zip
+__ http://snipurl.com/19hk8
+__ http://archives.aros-exec.org/share/graphics/misc/jhead.i386-aros.zip
+__ http://archives.aros-exec.org/share/graphics/convert/potrace.i386-aros.zip
