@@ -8,7 +8,7 @@ Status Update
 A new year of AROS development has begun, and probably it wouldn't 
 start in a better way. There are two big news for all AROS users.
 
-First of all, drag & drow is now working! This means you may 
+First of all, drag & drop is now working! This means you may 
 use Wanderer both to copy a file from a drawer to another, and 
 to open a file by dropping its icon on applications. This 
 "miracle" has been made by Christoph Szczecina and Darius 
@@ -20,8 +20,8 @@ Robert Norris has completed network support for linux hosted AROS.
 Tap interface is working [link to screenshot] and you may find it 
 in latest nightly builds.
 
-William Ouwenhand has created a `dutch version of Aros.org`__ 
-and an `AROS compilation guide`__ on Ubuntu Linux. 
+William Ouwehand has created a `dutch version of Aros.org`__.
+An `AROS compilation guide`__ on Ubuntu Linux was also added. 
 
 Nic Andrews has made inital commits for RTL 8139 and VIA Rhine 
 network adapters drivers. They're still a work in progress, but 
