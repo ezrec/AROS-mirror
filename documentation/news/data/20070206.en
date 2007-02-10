@@ -12,20 +12,24 @@ First of all, drag & drop is now working! This means you may
 use Wanderer both to copy a file from a drawer to another, and 
 to open a file by dropping its icon on applications. This 
 "miracle" has been made by Christoph Szczecina and Darius 
-Brewka. Some stability problems on AROS native are under 
-investigation and should be resolved in the next days. There is 
-a `small VMware video`__ that shows AROS with drag & drop!
+Brewka. There is a `small VMware video`__ that shows AROS with drag & drop!
+
+Some stability problems on AROS native are under 
+investigation and should be resolved in the next days. 
 
 Robert Norris has completed network support for linux hosted AROS. 
-Tap interface is working [link to screenshot] and you may find it 
-in latest nightly builds.
+Tap interface is working 
+`[link to screenshot] <http://aros-exec.org/modules/xcgal/displayimage.php?pid=208&album=lastup&cat=&pos=4>`__ 
+and you may find it in latest nightly builds.
 
 William Ouwehand has created a `dutch version of Aros.org`__.
-An `AROS compilation guide`__ on Ubuntu Linux was also added. 
+`AROS compilation guide`__ by Ñhristoph Szczecina for Ubuntu Linux 
+also have been added.
 
 Nic Andrews has made inital commits for RTL 8139 and VIA Rhine 
 network adapters drivers. They're still a work in progress, but 
-probably it won't took too much time to be completed.
+probably it won't took too much time to be completed. TeamAROS website
+has a bounty for VIA Rhine driver.
 
 News from the Archives
 ----------------------
