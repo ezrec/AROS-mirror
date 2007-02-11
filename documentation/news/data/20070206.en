@@ -18,8 +18,7 @@ Some stability problems on AROS native are under
 investigation and should be resolved in the next days. 
 
 Robert Norris has completed network support for linux hosted AROS. 
-Tap interface is working [link to screenshot] 
-and you may find it in latest nightly builds.
+Tap interface is working and you may find it in latest nightly builds.
 
 William Ouwehand has created a `dutch version of Aros.org`__.
 `AROS compilation guide`__ by Ñhristoph Szczecina for Ubuntu Linux 
