@@ -23,12 +23,15 @@ hosted di AROS. L'interfaccia virtuale tap funziona e sarà
 disponibile nelle prossime nigtly build. 
 
 William Ouwenhand ha realizzato una `versione del sito per i Paesi 
-Bassi`__ e, per tutti coloro che stessero cercando di farlo, una 
-`guida alla compilazione di AROS`__ su Ubuntu Linux. 
+Bassi`__ e, per tutti coloro che stessero cercando di farlo, 
+Christoph Szczecina ha realizzato una `guida alla compilazione di 
+AROS`__ su Ubuntu Linux. 
 
 Nic Andrews ha dato il suo contributo con una versione iniziale dei 
 driver per gli adattatori di rete RTL 8139 e VIA Rhine. Sono ancora 
-in fase di lavorazione, ma forse sarà presto possibile usarli.
+in fase di lavorazione, ma forse sarà presto possibile usarli. Il sito 
+TeamAROS ha istituito una taglia per il completamento del driver per 
+VIA Rhine.
 
 
 Novità dagli Archivi
