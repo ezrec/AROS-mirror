@@ -1,0 +1,16 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-02-11
+
+Just a little status update to announce that initial drag'n'drop 
+issues in AROS native have been fixed. Wanderer is now almost 
+fully functional and doesn't crash anymore when copying files 
+from a window to another. A progress window, to keep track of 
+operations, has been added too.
+
+All of new features are already available in latest nightly 
+builds (but not in current snapshot), so we suggest everyone 
+interested in trying AROS to download last night's build.
