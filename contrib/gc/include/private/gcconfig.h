@@ -213,6 +213,10 @@
 #   define I386
 #   define mach_type_known
 # endif
+# if defined(__AROS__) && (defined(__ppc__) || defined(__powerpc__))
+#   define POWERPC
+#   define mach_type_known
+# endif
 # if defined(_AMIGA) && !defined(AMIGA)
 #   define AMIGA
 # endif
@@ -689,6 +693,14 @@
 #     undef STACK_GRAN
 #     define STACK_GRAN 0x10000000
 #     define HEURISTIC1
+#   endif
+#   ifdef __AROS__
+#	define OS_TYPE "AMIGA"
+ 	    	/* STACKBOTTOM and DATASTART handled specially	*/
+ 	    	/* in os_dep.c					*/
+#     define ALIGNMENT 4
+# 	define DATAEND	/* not needed */
+#	define GETPAGESIZE() 4096
 #   endif
 # endif
 
