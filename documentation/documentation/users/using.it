@@ -8,7 +8,7 @@ Guida Utente AROS
 :Date:      $Date: 2007-01-04 22:21:43 +0100 (gio, 04 gen 2007) $
 :Status:    Unfinished; only converted to reST. Needs heavy updating. In works!
 
-.. Attenzione::
+.. Warning::
 
    Avvertenza: Questo documento è ancora in fase di sviluppo. E' altamente
    probabile che alcune parti contengano informazioni non corrette o
@@ -180,7 +180,7 @@ QEMU su Linux è molto semplice da far funzionare. Tutto ciò che vi
 serve è scaricare il pacchetto su Debian/Ubuntu/Knoppix/DSL o usare
 qualunque altro gestore di pacchetti per altre distribuzioni o scaricare
 e decomprimere l'archivio manualmente. Potete scaricare l'archivio dal
-`Sito di QEMY <http://fabrice.bellard.free.fr/qemu/>`__. 
+`Sito di QEMU <http://fabrice.bellard.free.fr/qemu/>`__. 
 
 C'è anche un VMWare disponibile su Linux. Controllate il
 `Sito di VMWare <http://www.vmware.com>`__.
@@ -517,7 +517,7 @@ l'OS che la documentazione, non esitate a contattarci e a offrire il
 vostro aiuto.
 
 Quindi per quanto riguarda la lingua. Prima di tutto, a seconda dei font
- usati dovete settare i font lanciando SYS:Prefs/Fonts e designare i
+usati dovete settare i font lanciando SYS:Prefs/Fonts e designare i
 Font ai diversi testi di sistema: Icone (usato per le label delle icone)
 Screen (usato sugli schermi comuni) e System (usato nelle finestre CLI).
 Se la vostra lingua usa un set diverso dall' ISO (per esempio, cyrillyc
@@ -666,7 +666,7 @@ Dovete modificare 3 file nella directory SYS:extras/Networking/stacks/AROSTCP/db
 hosts, interfaces e netdb-myhost. In *hosts* rimuovete o commentate le
 voci.Gli host saranno in netdb-myhost per ora. In *interfaces*
 scommentate la linea prm-rtl8029.device (QEMU emula questa scheda di rete
-potete usare pcnet32.device per VMWare), modificala (cambia un *IP*= la
+potete usare pcnet32.device per VMWare), modificala (cambia un *IP* = la
 stringa di prima)::
 
     eth0 DEV=DEVS:networks/prm-rtl8029.device UNIT=0 NOTRACKING IP=172.20.0.10 UP
