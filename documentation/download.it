@@ -22,7 +22,7 @@ AROS sta crescendo molto velocemente e le Snapshot purtroppo finivano
 sempre per contenere codice estremamente vecchio, anzi, obsoleto.
 Riteniamo inoltre che le nightly build siano molto più utili per il 
 beta testing del sistema operativo. Per cortesia, se trovate errori 
-segnalateceli attraverso lo strumento apposito, il `bug tracker`__. 
+segnalateceli attraverso lo strumento apposito, il `bug tracker`__.
 
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
