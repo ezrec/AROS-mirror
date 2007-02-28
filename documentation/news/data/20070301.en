@@ -1,0 +1,21 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-03-01
+
+Starting from today, AROS snapshots won't be available 
+anymore. We'd incourage everyone who would try AROS to download the 
+latest nightly build instead. AROS is growing really fast, and 
+Snapshots often contained obsolete code. We also think nightly 
+builds are more useful from a beta-testing point of view, as they 
+contain the latest features: please use the `bug tracker`__ to report 
+bugs.
+
+Due to an update of Sourceforge's servers, latest nightly builds 
+were not available. Now that this work is over, everything should be 
+back to normality.
+
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+

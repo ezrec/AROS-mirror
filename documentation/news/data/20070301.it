@@ -1,0 +1,24 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-03-01
+
+A partire dalla data di oggi, le versioni snapshot di AROS non 
+sono più disponibili per il download. Consigliamo a tutti coloro che 
+volessero provare AROS di scaricare la nightly build più recente. 
+AROS sta crescendo a ritmi serrati e le Snapshot purtroppo finivano 
+sempre per contenere codice estremamente vecchio, anzi, obsoleto.
+Riteniamo inoltre che le nightly build siano molto più utili per il 
+beta testing del sistema operativo, vito che contengono le novità 
+più recenti. Per cortesia, se trovate errori segnalateceli attraverso 
+lo strumento apposito, il `bug tracker`__.
+
+A causa di un aggiornamento dei server di Sourceforge, le ultime 
+nightly build non erano disponibili. Ci scusiamo per l'inconveniente, 
+ma adesso che i lavori sono terminati tutto dovrebbe tornare alla 
+normalità.
+
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+
