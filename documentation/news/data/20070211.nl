@@ -13,4 +13,4 @@ overzicht van de voortgang is nu ook aanwezig.
 
 Al deze nieuwe features zijn beschikbaar in de nightly
 built van gisteren (maar nog niet in de huidige snapshots). We raden geïnteresseerden
-in AROS aan de meest recentste nightly build te downloaden. 
+in AROS aan de meest recentste nightly build te downloaden.
