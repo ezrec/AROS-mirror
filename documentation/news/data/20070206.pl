@@ -38,7 +38,7 @@ Z wa¿niejszych Ostatnio dodanych archiwów nale¿y wymieniæ:
 
 - `Martin's Server Suite`__, port dla AROS-a i innych systemów operacyjnych
   serwerów Snug HTTP server i Yet Another FTP Server.
-  Mo¿esz obejrzeæ `zrzut ekranu`__ pokazuj¹cy serwery pracuj±ce w systemie AROS. 
+  Mo¿esz obejrzeæ `zrzut ekranu`__ pokazuj±cy serwery pracuj±ce w systemie AROS. 
 
 - `Jhead`__ jest komend± do obróbki tagów Exif, "niegraficznej" czê¶ci plików JPEG,
   które tworzy wiêkszo¶æ aparatów cyfrowych.
