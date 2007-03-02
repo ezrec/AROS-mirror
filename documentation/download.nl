@@ -11,22 +11,11 @@ Downloads
 Snapshots
 =========
 
-Snapshots worden vaker vrijgegeven dan volledige releases, maar minder
-vaak dan nightly builds. Ze zijn, in tegenstelling tot de nightly
-builds, kort getest op een aantal verschillende machines wat ze in de
-regel stabieler maakt. Aan de andere kant bevatten snapshots weer
-niet de nieuwste code. 
-
-We horen graag over bugs/fouten die u ontdekt terwijl u deze snapshots
-gebruikt. Dit kunt u doen via de `bug tracker`__. Voor andere
-vragen/opmerkingen kunt u contact opnemen via het `AROS-Exec`__ forum.
-
-.. raw:: html
-
-   <?php virtual( "/cgi-bin/files?type=snapshots&lang=nl" ); ?>
+Met ingang van 1 maart 2007 zijn de Snapshots van AROS niet meer beschikbaar.
+We willen iedereen nu aanmoedigen om AROS uit te proberen via de recentste
+nightly builds. AROS groeit zeer snel op moment, waardoor de Snapshots soms oude en overbodige software bevatten. Ook denken we dat de Nightly Builds handiger zijn met het oog op beta-testen. Gebruik uiteraard de `bug tracker`__ om eventuele bugs (fouten) door te geven.  
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
-__ http://aros-exec.org/
 
 
 Nightly builds
