@@ -22,42 +22,42 @@ graphics
 `ClearEOL`_                             `ClearRectRegion`_                      `ClearRectRegionND`_                    `ClearRegion`_                          
 `ClearRegionRegion`_                    `ClearRegionRegionND`_                  `ClearScreen`_                          `ClipBlit`_                             
 `CloneRastPort`_                        `CloseFont`_                            `CloseMonitor`_                         `CoerceMode`_                           
-`CopyRegion`_                           `CopySBitMap`_                          `CreateRastPort`_                       `DeinitRastPort`_                       
-`DisownBlitter`_                        `DisposeRegion`_                        `DoCollision`_                          `Draw`_                                 
-`DrawEllipse`_                          `DrawGList`_                            `EraseRect`_                            `ExtendFont`_                           
-`FindColor`_                            `FindDisplayInfo`_                      `Flood`_                                `FontExtent`_                           
-`FreeBitMap`_                           `FreeColorMap`_                         `FreeCopList`_                          `FreeCprList`_                          
-`FreeDBufInfo`_                         `FreeGBuffers`_                         `FreeRastPort`_                         `FreeRaster`_                           
-`FreeSprite`_                           `FreeSpriteData`_                       `FreeVPortCopLists`_                    `GetAPen`_                              
-`GetBPen`_                              `GetBitMapAttr`_                        `GetColorMap`_                          `GetDrMd`_                              
-`GetExtSpriteA`_                        `GetGBuffers`_                          `GetOutlinePen`_                        `GetRGB32`_                             
-`GetRGB4`_                              `GetRPAttrsA`_                          `GetSprite`_                            `GetVPModeID`_                          
-`GfxAssociate`_                         `GfxFree`_                              `GfxLookUp`_                            `GfxNew`_                               
-`InitArea`_                             `InitBitMap`_                           `InitGMasks`_                           `InitGels`_                             
-`InitGfxHidd`_                          `InitMasks`_                            `InitRastPort`_                         `InitTmpRas`_                           
-`InitVPort`_                            `InitView`_                             `IsPointInRegion`_                      `LateGfxInit`_                          
-`LoadRGB32`_                            `LoadRGB4`_                             `LoadView`_                             `LockLayerRom`_                         
-`MakeVPort`_                            `ModeNotAvailable`_                     `MouseCoordsRelative`_                  `Move`_                                 
-`MoveSprite`_                           `MrgCop`_                               `NewRectRegion`_                        `NewRegion`_                            
-`NextDisplayInfo`_                      `ObtainBestPenA`_                       `ObtainPen`_                            `OpenFont`_                             
-`OpenMonitor`_                          `OrRectRegion`_                         `OrRectRegionND`_                       `OrRegionRegion`_                       
-`OrRegionRegionND`_                     `OwnBlitter`_                           `PolyDraw`_                             `QBSBlit`_                              
-`QBlit`_                                `ReadPixel`_                            `ReadPixelArray8`_                      `ReadPixelLine8`_                       
-`RectFill`_                             `ReleasePen`_                           `RemFont`_                              `RemIBob`_                              
-`RemVSprite`_                           `ScalerDiv`_                            `ScrollRaster`_                         `ScrollRasterBF`_                       
-`ScrollRegion`_                         `ScrollVPort`_                          `SetABPenDrMd`_                         `SetAPen`_                              
-`SetBPen`_                              `SetChipRev`_                           `SetCollision`_                         `SetDrMd`_                              
-`SetFont`_                              `SetFrontBitMap`_                       `SetMaxPen`_                            `SetOutlinePen`_                        
-`SetPointerPos`_                        `SetPointerShape`_                      `SetRGB32`_                             `SetRGB32CM`_                           
-`SetRGB4`_                              `SetRGB4CM`_                            `SetRPAttrsA`_                          `SetRast`_                              
-`SetRegion`_                            `SetSoftStyle`_                         `SetWriteMask`_                         `ShowImminentReset`_                    
-`SortGList`_                            `StripFont`_                            `SwapRegions`_                          `SyncSBitMap`_                          
-`Text`_                                 `TextExtent`_                           `TextFit`_                              `TextLength`_                           
-`UCopperListInit`_                      `UnlockLayerRom`_                       `VBeamPos`_                             `VideoControl`_                         
-`WaitBOVP`_                             `WaitBlit`_                             `WaitTOF`_                              `WeighTAMatch`_                         
-`WriteChunkyPixels`_                    `WritePixel`_                           `WritePixelArray8`_                     `WritePixelLine8`_                      
-`XorRectRegion`_                        `XorRectRegionND`_                      `XorRegionRegion`_                      `XorRegionRegionND`_                    
-
+`ConvertPixelsA`_                       `CopyRegion`_                           `CopySBitMap`_                          `CreateRastPort`_                       
+`DeinitRastPort`_                       `DisownBlitter`_                        `DisposeRegion`_                        `DoCollision`_                          
+`Draw`_                                 `DrawEllipse`_                          `DrawGList`_                            `EraseRect`_                            
+`ExtendFont`_                           `FindColor`_                            `FindDisplayInfo`_                      `Flood`_                                
+`FontExtent`_                           `FreeBitMap`_                           `FreeColorMap`_                         `FreeCopList`_                          
+`FreeCprList`_                          `FreeDBufInfo`_                         `FreeGBuffers`_                         `FreeRastPort`_                         
+`FreeRaster`_                           `FreeSprite`_                           `FreeSpriteData`_                       `FreeVPortCopLists`_                    
+`GetAPen`_                              `GetBPen`_                              `GetBitMapAttr`_                        `GetColorMap`_                          
+`GetDrMd`_                              `GetExtSpriteA`_                        `GetGBuffers`_                          `GetOutlinePen`_                        
+`GetRGB32`_                             `GetRGB4`_                              `GetRPAttrsA`_                          `GetSprite`_                            
+`GetVPModeID`_                          `GfxAssociate`_                         `GfxFree`_                              `GfxLookUp`_                            
+`GfxNew`_                               `InitArea`_                             `InitBitMap`_                           `InitGMasks`_                           
+`InitGels`_                             `InitGfxHidd`_                          `InitMasks`_                            `InitRastPort`_                         
+`InitTmpRas`_                           `InitVPort`_                            `InitView`_                             `IsPointInRegion`_                      
+`LateGfxInit`_                          `LoadRGB32`_                            `LoadRGB4`_                             `LoadView`_                             
+`LockLayerRom`_                         `MakeVPort`_                            `ModeNotAvailable`_                     `MouseCoordsRelative`_                  
+`Move`_                                 `MoveSprite`_                           `MrgCop`_                               `NewRectRegion`_                        
+`NewRegion`_                            `NextDisplayInfo`_                      `ObtainBestPenA`_                       `ObtainPen`_                            
+`OpenFont`_                             `OpenMonitor`_                          `OrRectRegion`_                         `OrRectRegionND`_                       
+`OrRegionRegion`_                       `OrRegionRegionND`_                     `OwnBlitter`_                           `PolyDraw`_                             
+`QBSBlit`_                              `QBlit`_                                `ReadPixel`_                            `ReadPixelArray8`_                      
+`ReadPixelLine8`_                       `RectFill`_                             `ReleasePen`_                           `RemFont`_                              
+`RemIBob`_                              `RemVSprite`_                           `ScalerDiv`_                            `ScrollRaster`_                         
+`ScrollRasterBF`_                       `ScrollRegion`_                         `ScrollVPort`_                          `SetABPenDrMd`_                         
+`SetAPen`_                              `SetBPen`_                              `SetChipRev`_                           `SetCollision`_                         
+`SetDrMd`_                              `SetFont`_                              `SetFrontBitMap`_                       `SetMaxPen`_                            
+`SetOutlinePen`_                        `SetPointerPos`_                        `SetPointerShape`_                      `SetRGB32`_                             
+`SetRGB32CM`_                           `SetRGB4`_                              `SetRGB4CM`_                            `SetRGBConversionFunctionA`_            
+`SetRPAttrsA`_                          `SetRast`_                              `SetRegion`_                            `SetSoftStyle`_                         
+`SetWriteMask`_                         `ShowImminentReset`_                    `SortGList`_                            `StripFont`_                            
+`SwapRegions`_                          `SyncSBitMap`_                          `Text`_                                 `TextExtent`_                           
+`TextFit`_                              `TextLength`_                           `UCopperListInit`_                      `UnlockLayerRom`_                       
+`VBeamPos`_                             `VideoControl`_                         `WaitBOVP`_                             `WaitBlit`_                             
+`WaitTOF`_                              `WeighTAMatch`_                         `WriteChunkyPixels`_                    `WritePixel`_                           
+`WritePixelArray8`_                     `WritePixelLine8`_                      `XorRectRegion`_                        `XorRectRegionND`_                      
+`XorRegionRegion`_                      `XorRegionRegionND`_                    
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -2219,6 +2219,58 @@ Result
 
      ID - ID of best mode to coerce to, or INVALID_ID if could not coerce
 
+
+
+ConvertPixelsA
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG ConvertPixelsA(
+          APTR srcPixels,
+          ULONG srcMod,
+          ULONG srcPixFmt,
+          APTR dstPixels,
+          ULONG dstMod,
+          ULONG dstPixFmt,
+          ULONG width,
+          ULONG height,
+          struct TagItem * tags );
+
+Function
+~~~~~~~~
+::
+
+     Convert pixels in pixel buffer srcPixels from srcPixFmt to
+     dstPixFmt putting result into pixel buffer dstPixels.
+     
+
+Inputs
+~~~~~~
+::
+
+     srcPixels, dstPixels - Pointer to source/dest pixel buffer
+     srcPixFmt, dstPixFmt - One of the truecolor vHidd_StdPixFmt_#?
+     srcMod, dstMod - Modulo for src/dest pixel buffer
+     width, height - size of area to convert
+     tags - none defined yet
+     
+
+Result
+~~~~~~
+::
+
+     0 on failure (bad pixfmts), 1 on success.
+     
+
+See also
+~~~~~~~~
+::
+
+     <hidd/graphics.h>
+     
 
 
 CopyRegion
@@ -6094,6 +6146,68 @@ See also
 
      GetColorMap() SetRGB4() GetRGB4() graphics/view.h
 
+
+
+SetRGBConversionFunctionA
+=========================
+
+Synopsis
+~~~~~~~~
+::
+
+ APTR SetRGBConversionFunctionA(
+          ULONG srcPixFmt,
+          ULONG dstPixFmt,
+          APTR function,
+          struct TagItem * tags );
+
+Function
+~~~~~~~~
+::
+
+     Replace RGB pixel conversion routine used for converting from
+     srcPixFmt to dstPixFmt.
+     
+
+Inputs
+~~~~~~
+::
+
+     srcPixFmt, dstPixFmt - One of the truecolor vHidd_StdPixFmt_#?
+     function - function of type HIDDT_RGBConversionFunction
+     tags - none defined yet
+     
+
+Result
+~~~~~~
+::
+
+     Previous conversion routine or (APTR)-1 on failure (bad value
+     for srcPixFmt and/or dstPixFmt)
+     
+
+Example
+~~~~~~~
+::
+
+     See AROS/test/patchrgbconv.c
+     
+
+Notes
+~~~~~
+::
+
+     The conversion function must return 1 if it did the conversion,
+     or 0 if for whatever reason it did not do it or want to do it.
+     Then the fallback pixel conversion routine will be used.
+     
+
+See also
+~~~~~~~~
+::
+
+     <hidd/graphics.h>
+     
 
 
 SetRPAttrsA

@@ -43,11 +43,11 @@ dos
 `SetFileDate`_                          `SetFileSize`_                          `SetFileSysTask`_                       `SetIoErr`_                             
 `SetMode`_                              `SetOwner`_                             `SetProgramDir`_                        `SetProgramName`_                       
 `SetPrompt`_                            `SetProtection`_                        `SetVBuf`_                              `SetVar`_                               
-`SplitName`_                            `StartNotify`_                          `StrToDate`_                            `StrToLong`_                            
-`SystemTagList`_                        `UnGetC`_                               `UnLoadSeg`_                            `UnLockDosList`_                        
-`UnLockRecord`_                         `UnLockRecords`_                        `VFPrintf`_                             `VFWritef`_                             
-`VPrintf`_                              `WaitForChar`_                          `WaitPkt`_                              `Write`_                                
-`WriteChars`_                           
+`SplitName`_                            `StartNotify`_                          `StrToDate`_                            `StrToDate`_                            
+`StrToLong`_                            `SystemTagList`_                        `UnGetC`_                               `UnLoadSeg`_                            
+`UnLockDosList`_                        `UnLockRecord`_                         `UnLockRecords`_                        `VFPrintf`_                             
+`VFWritef`_                             `VPrintf`_                              `WaitForChar`_                          `WaitPkt`_                              
+`Write`_                                `WriteChars`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -6006,6 +6006,89 @@ See also
 
 
  EndNotify(), <dos/notify.h>
+
+
+
+StrToDate
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL StrToDate(
+          struct DateTime * datetime );
+
+Function
+~~~~~~~~
+::
+
+     Converts a human readable ASCII string into an AmigaDOS
+     DateStamp.
+
+
+Inputs
+~~~~~~
+::
+
+     DateTime - a pointer to an initialized DateTime structure.
+             The structure should be initialized as follows:
+
+             dat_Stamp: The converted date will be written here
+
+             dat_Format: How to convert the datestamp into
+                 dat_StrDate. Can be any of the following:
+
+                 FORMAT_DOS: AmigaDOS format (dd-mmm-yy). This
+                         is the default if you specify something other
+                         than any entry in this list.
+
+                 FORMAT_INT: International format (yy-mmm-dd).
+
+                 FORMAT_USA: American format (mm-dd-yy).
+
+                 FORMAT_CDN: Canadian format (dd-mm-yy).
+
+                 FORMAT_DEF: default format for locale.
+
+
+             dat_Flags: Modifies dat_Format. The only flag
+                     used by this function is DTF_FUTURE. If set, then
+                     a string like "Monday" refers to the next monday.
+                     Otherwise it refers to the last monday.
+
+             dat_StrDay: Ignored.
+
+             dat_StrDate: Pointer to valid string representing the
+                     date. This can be a "DTF_SUBST" style string such
+                     as "Today" "Tomorrow" "Monday", or it may be a
+                     string as specified by the dat_Format byte. This
+                     will be converted to the ds_Days portion of the
+                     DateStamp. If this pointer is NULL,
+                     DateStamp->ds_Days will not be affected.
+
+             dat_StrTime: Pointer to a buffer which contains the
+                     time in the ASCII format hh:mm:ss. This will be
+                     converted to the ds_Minutes and ds_Ticks portions
+                     of the DateStamp.  If this pointer is NULL,
+                     ds_Minutes and ds_Ticks will be unchanged.
+
+
+
+Result
+~~~~~~
+::
+
+     A zero return indicates that a conversion could not be performed. A
+     non-zero return indicates that the DateTime.dat_Stamp variable
+     contains the converted values.
+
+
+See also
+~~~~~~~~
+::
+
+     DateStamp(), DateToStr()
 
 
 

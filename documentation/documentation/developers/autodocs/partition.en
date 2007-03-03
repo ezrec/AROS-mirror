@@ -320,7 +320,7 @@ Synopsis
 ::
 
  struct PartitionHandle * OpenRootPartition(
-          STRPTR Device,
+          CONST_STRPTR Device,
           LONG Unit );
 
 Function

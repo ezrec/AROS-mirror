@@ -12,9 +12,9 @@ icon
 `AddFreeList`_                          `BumpRevision`_                         `ChangeToSelectedIconColor`_            `DeleteDiskObject`_                     
 `DrawIconStateA`_                       `DupDiskObjectA`_                       `FindToolType`_                         `FreeDiskObject`_                       
 `FreeFreeList`_                         `GetDefDiskObject`_                     `GetDiskObject`_                        `GetDiskObjectNew`_                     
-`GetIconRectangleA`_                    `GetIconTagList`_                       `IconControlA`_                         `LIBBASETYPE`_                          
-`LayoutIconA`_                          `MatchToolValue`_                       `NewDiskObject`_                        `PutDefDiskObject`_                     
-`PutDiskObject`_                        `PutIconTagList`_                       
+`GetIconRectangleA`_                    `GetIconTagList`_                       `IconControlA`_                         `LayoutIconA`_                          
+`MatchToolValue`_                       `NewDiskObject`_                        `PutDefDiskObject`_                     `PutDiskObject`_                        
+`PutIconTagList`_                       
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -416,16 +416,6 @@ Synopsis
  ULONG IconControlA(
           struct DiskObject * icon,
           struct TagItem * tags );
-
-
-LIBBASETYPE
-===========
-
-Synopsis
-~~~~~~~~
-::
-
- Expunge LIBBASETYPE();
 
 
 LayoutIconA

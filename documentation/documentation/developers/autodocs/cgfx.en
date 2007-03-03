@@ -92,9 +92,9 @@ Synopsis
 ::
 
  void DoCDrawMethodTagList(
-          struct Hook     * ,
-          struct RastPort * ,
-          struct TagItem  *  );
+          struct Hook     * hook,
+          struct RastPort * rp,
+          struct TagItem  * tags );
 
 
 ExtractColor

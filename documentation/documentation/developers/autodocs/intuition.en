@@ -18,12 +18,12 @@ intuition
 `DisplayAlert`_                         `DisplayBeep`_                          `DisposeObject`_                        `DoGadgetMethodA`_                      
 `DoubleClick`_                          `DrawBorder`_                           `DrawImage`_                            `DrawImageState`_                       
 `DumpIntuiState`_                       `EasyRequestArgs`_                      `EndRefresh`_                           `EndRequest`_                           
-`EraseImage`_                           `FindClass`_                            `FreeClass`_                            `FreeIntuiMessage`_                     
-`FreeRemember`_                         `FreeScreenBuffer`_                     `FreeScreenDrawInfo`_                   `FreeSysRequest`_                       
-`GadgetMouse`_                          `GetAttr`_                              `GetDefPrefs`_                          `GetDefaultPubScreen`_                  
-`GetPrefs`_                             `GetScreenData`_                        `GetScreenDrawInfo`_                    `HelpControl`_                          
-`HideWindow`_                           `InitRequester`_                        `IntuiTextLength`_                      `IsWindowVisible`_                      
-`ItemAddress`_                          `LIBBASETYPE`_                          `LateIntuiInit`_                        `LendMenus`_                            
+`EndScreenNotify`_                      `EraseImage`_                           `FindClass`_                            `FreeClass`_                            
+`FreeIntuiMessage`_                     `FreeRemember`_                         `FreeScreenBuffer`_                     `FreeScreenDrawInfo`_                   
+`FreeSysRequest`_                       `GadgetMouse`_                          `GetAttr`_                              `GetDefPrefs`_                          
+`GetDefaultPubScreen`_                  `GetPrefs`_                             `GetScreenData`_                        `GetScreenDrawInfo`_                    
+`HelpControl`_                          `HideWindow`_                           `InitRequester`_                        `IntuiTextLength`_                      
+`IsWindowVisible`_                      `ItemAddress`_                          `LateIntuiInit`_                        `LendMenus`_                            
 `LockIBase`_                            `LockPubScreen`_                        `LockPubScreenList`_                    `MakeClass`_                            
 `MakeScreen`_                           `ModifyIDCMP`_                          `ModifyProp`_                           `MoveScreen`_                           
 `MoveWindow`_                           `MoveWindowInFrontOf`_                  `NewModifyProp`_                        `NewObjectA`_                           
@@ -39,11 +39,11 @@ intuition
 `SetDefaultScreenFont`_                 `SetEditHook`_                          `SetGadgetAttrsA`_                      `SetIPrefs`_                            
 `SetMenuStrip`_                         `SetMouseQueue`_                        `SetPointer`_                           `SetPrefs`_                             
 `SetPubScreenModes`_                    `SetWindowPointerA`_                    `SetWindowTitles`_                      `ShowTitle`_                            
-`ShowWindow`_                           `SizeWindow`_                           `SysReqHandler`_                        `TimedDisplayAlert`_                    
-`UnlockIBase`_                          `UnlockPubScreen`_                      `UnlockPubScreenList`_                  `ViewAddress`_                          
-`ViewPortAddress`_                      `WBenchToBack`_                         `WBenchToFront`_                        `WindowLimits`_                         
-`WindowToBack`_                         `WindowToFront`_                        `ZipWindow`_                            `lockPubClass`_                         
-`unlockPubClass`_                       
+`ShowWindow`_                           `SizeWindow`_                           `StartScreenNotifyTagList`_             `SysReqHandler`_                        
+`TimedDisplayAlert`_                    `UnlockIBase`_                          `UnlockPubScreen`_                      `UnlockPubScreenList`_                  
+`ViewAddress`_                          `ViewPortAddress`_                      `WBenchToBack`_                         `WBenchToFront`_                        
+`WindowLimits`_                         `WindowToBack`_                         `WindowToFront`_                        `ZipWindow`_                            
+`lockPubClass`_                         `unlockPubClass`_                       
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -1492,6 +1492,44 @@ See also
 
 
 
+EndScreenNotify
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL EndScreenNotify(
+          IPTR notify );
+
+Function
+~~~~~~~~
+::
+
+ Remove a Screen Notifications from Intuitionn.
+
+
+Inputs
+~~~~~~
+::
+
+ notify - notification returned from StartScreenNotifyTagList() 
+
+
+Result
+~~~~~~
+::
+
+ BOOL - if false Notification is in use and cannot be removed, try later
+
+
+See also
+~~~~~~~~
+::
+
+ StartScreenNotifyTagList() 
+
+
 EraseImage
 ==========
 
@@ -2378,16 +2416,6 @@ Result
 
 
 
-LIBBASETYPE
-===========
-
-Synopsis
-~~~~~~~~
-::
-
- InitRootClass LIBBASETYPE();
-
-
 LateIntuiInit
 =============
 
@@ -2549,7 +2577,7 @@ Function
  window is ready.
 
  If you try to lock the Workbench screen or the default public screen
- and there isn't any, the Workbench screen will be automatically opened
+ and there isn'tany, the Workbench screen will be automatically opened
  and locked.
 
 
@@ -5231,6 +5259,44 @@ Notes
  The resize of the window may be delayed. If you depend on the
  information that is has changed size, wait for IDCMP_NEWSIZE.
 
+
+
+StartScreenNotifyTagList
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+ IPTR StartScreenNotifyTagList(
+          struct TagItem * tags );
+
+Function
+~~~~~~~~
+::
+
+ Add Notifications to Intuitionn.
+
+
+Inputs
+~~~~~~
+::
+
+ taglist - A OS4 Styled Taglist for 
+
+
+Result
+~~~~~~
+::
+
+ the value is private only a test against ZERO is allowed and means Failure
+
+
+See also
+~~~~~~~~
+::
+
+ EndScreenNotify() 
 
 
 SysReqHandler
