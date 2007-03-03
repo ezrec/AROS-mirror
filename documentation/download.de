@@ -14,20 +14,14 @@ Download
 Snapshots
 =========
 
-'Snapshots' werden öfter als Vollausgaben, aber nicht so oft wie 'Nightly Builds'
-veröffentlicht. Sie sind, im Gegensatz zu 'Nightly Builds', auf verschiedenen
-Maschinen getestet worden, so dass sie etwas stabiler sind. Andererseits enthalten
-sie nicht den neusten Kode.
-
-Melde bitte Fehler, die Du beim Benutzen der 'Snapshots' entdeckst, an den 
-`bug tracker`__. Für andere Anforderungen bitte die Foren von `AROS-Exec`__ verwenden.
-
-.. raw:: html
-
-   <?php virtual( "/cgi-bin/files?type=snapshots&lang=de" ); ?>
+Seit dem 1. März 2007 gibt es keine 'Snapshots' mehr. Wer AROS ausprobieren will, sollte
+stattdessen die 'Nightly Builds' herunterladen.
+AROS wächst sehr schnell, dadurch enthielten die 'Snapshots' oft veralteten Kode. Außerdem
+glauben wir, dass die 'Nightly Builds' besser zum Beta-Testen geeignet sind:
+verwende bitte den `bug tracker`__, um Fehler zu melden.
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
-__ http://aros-exec.org/
+
 
 
 Nightly builds
