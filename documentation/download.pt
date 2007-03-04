@@ -1,0 +1,46 @@
+===========
+Descarregar
+===========
+
+.. Conteúdos::
+
+.. Nota::
+
+   Quando descarregar construções nocturnas (nightly builds), terá que usar um gestor de descargas
+   que possa continuar uma descarga interrompida, ou um utilitário de linha de comando como
+   wget (poderá usar "wget -c" para obter o resto de um ficheiro parcialmente
+   descarregado por outro programa).
+
+Snapshots
+=========
+
+A partir do 1º de Março de 2007, Snapshots do AROS não estarão mais disponíveis.
+Nós gostariamos de encorajar todos os que gostariam de experimentar O AROS a descarregar a
+última construção nocturna (nightly build). AROS está a crescer realmente rápido, e 
+Snapshots regularmente contém código obsuleto. Nós achamos que as construções nocturnas 
+(nightly builds) são mais úteis do ponto de vista do teste à versão experimental (Beta): por favor
+use o `bug tracker`__ para reportar erros.
+
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+
+
+
+Construções Nocturnas (Nightly builds)
+======================================
+
+Construções Nocturnas são feitas, como o nome indica, automáticamente todas as noites 
+directamente da árvore do Subversion e contém os últimos códigos. Contudo, 
+estes não foram testados sobe qualquer forma e poderão conter erros. Na maior parte 
+do tempo eles funcionam muito bem.
+
+Por favor informe erros que possa encontrar enquanto usa estas construções pelo
+`bug tracker`__. Para qualquer outra necessidade, por favor sinta-se livre para nos contactar
+ pelos foruns `AROS-Exec`__ .
+
+.. Amostra:: html
+
+   <?php virtual( "/cgi-bin/files?type=nightly&lang=en" ); ?>
+
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+__ http://aros-exec.org/
+
