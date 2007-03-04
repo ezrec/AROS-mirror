@@ -1,0 +1,166 @@
+============================
+Introduzione alla shell AROS
+============================
+
+:Authors:   Matthias Rustler 
+:Copyright: Copyright © 2006, The AROS Development Team
+:Version:   $Revision: 24812 $
+:Date:      $Date: 2006-09-16 15:04:56 +0200 (sab, 16 set 2006) $
+:Status:    Draft
+
+-------------
+
+`Index <index>`_
+
+-------------
+
+AROS ha un'interfaccia a riga di comando, la 'Shell'.
+Potete avviarla dal menu Wanderer>Shell. Verrà aperta una finestra con il
+percorso della finestra AROS corrente. Il prompt, normalmente, visualizza il
+numero della Shell e il path corrente.
+
+La Shell ha la sua storia dei comandi. Potete accedervi con i tasti freccia su
+e giù.
+
+C'è una funzione di completamente. Se scrivete le prime lettere di un comando
+o di un nome di file e premete il tasto tab, la Shell cerca il nome
+corrispondente. Se ci sono più possibilità si aprirà una finestra dove potete
+selezionare una voce.
+
+I comandi e i nomi di file di AROS sono case insensitive. Potete usare case
+misti.
+
+AROS cerca i comandi nella directory corrente e nel percorso (path) di ricerca.
+Potete visualizzare e modificare il path di ricerca con il comando `path <path>`_.
+
+Alcuni comandi importanti
+-------------------------
++ `CD <cd>`_ -- cambia directory
++ `DIR <dir>`_ -- visualizza la directory corrente
++ `COPY <copy>`_ -- copia file e directory
++ `DELETE <delete>`_ -- cancella file e directory
++ `INFO <info>`_ -- mostra i drive disponibili
++ `MAKEDIR <makedir>`_ -- crea una directory
++ `RENAME <rename>`_ -- rinomina file e directory
++ `TYPE <type>`_ -- mostra il contenuto di un file di testo
+
+Percorsi (path)
+---------------
+I path assoluti iniziano con il nome del drive e un due punti (:),
+le directory sono separate con uno slash (/).
+I nomi dei drive possono essere nomi di dispositivi (dh0:), un nome di volume
+(workbench:) o un drive logico (vedere il comando `assign <assign>`_)
+
+::
+  
+  Esempio: dh0:dir1/dir2/file.dat
+
+Se vi serve il path corrente come argomento per un comando, potete
+semplicemente scrivere "".
+
+::
+
+  Esempio: copy from ram:x to ""
+  
+Un due punti da solo significa la directory di base del path corrente.
+Quando un percorso inizia con un due punti, allora è relativo alla directory di
+base del path specificato.
+
+Uno slash all'inizio del path significa: vai al livello superiore. Due slash
+significano vai sopra di due livelli e così via.
+
+Quando un path contiene spazi deve essere scritto tra virgolette.
+
+::
+
+  Esempio: type "nome con spazi"
+
+Template dei comandi
+--------------------
+Un punto interrogativo dopo il comando visualizza il template dei parametri del
+comando. Il comando passa quindi in una modalità in cui attende che scriviate i
+parametri.
+
+::
+
+  Esempio: copy ?
+  FROM/M,TO/A,ALL/S,QUIET/S,BUF=BUFFER/K/N,CLONE/S,DATES/S,NOPRO/S,COM/S,NOREQ/S
+
+Le parole chiave possono avere le seguenti opzioni::
+
+  /A -- l'argomento è obbligatorio
+  /K -- la parola chiave deve essere scritta quando si usa quest'argomento
+  /S -- switch; scrivete semplicemente la parola chiave per accedere allo switch
+  /N -- argomento numerico
+  /M -- è possibile specificare più di un argomento
+  /F -- resto della riga di comando
+  =  -- abbreviazione; potete opzionamente usare l'abbreviazione
+
+Quando si chiama un comando, si può usare '=' per distinguere gli assegnamenti
+tra parola chiave e valore::
+
+  Esempio: copy from=a.dat to=b.dat
+  
+Patterns
+--------
+Alcuni comandi ammettono i pattern per i parametri nomi di file::
+
+  ?  -- un carattere arbitrario
+  #? -- zero o più caratteri arbitrari
+  #x -- zero o più x
+  ~  -- negazione
+  |  -- or
+  () -- raggruppa
+  [] -- intervallo
+
+Esempi::
+
+  dir #?.info
+  dir #?~(.info)
+  dir a(b|c)d
+  dir [a-c]e
+
+Ridirezione
+-----------
+
+::
+
+  > redirige l'output a un file o un dispositivo
+  >> redirige l'output e lo accoda al file
+  < redirige l'input da un file o un dispositivo
+  Esempio: dir >ram:a 
+
+Pipe
+----
+Se volete inoltrare l'output di un comando a un altro comando potete usare il
+pipe. Dovete collegare i comandi con un carattere \|. Ci deve essere almeno uno
+spazio prima e dopo il \|::
+
+  Esempio: dir | altrocomando
+  
+Ma come fare se il secondo comando vuole leggere l'input da un file? La
+soluzione è quella di usare il dispositivo fittizio 'in:'::
+
+  Esempio: dir | more in:  
+
+Dispositivi speciali
+--------------------
++ ram: potete usare il ram disk come un hard disk. Ma dopo un reset il suo
+  contenuto viene perso.
++ nil: se non volete che i messaggi di un comando siano visualizzati nella
+  finestra, potete usare il dispositivo 'nil:'. Esempio: delete #? >nil:
+
+Girare in background
+--------------------
+Normalmente, un comando blocca la Shell fino a quando non termina. Potete
+lanciare comandi in background con il comando `run <run>`_.
+
+::
+
+  Esempio: run delete #?
+
+File info
+---------
+I file con estensione '.info' giocano un ruolo importante in Wanderer.
+Contengono le immagini delle icone e altre informazioni aggiuntive. Quando
+lavorate con i comandi di shell dovete tenere conto dei file Info.
