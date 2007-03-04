@@ -2,9 +2,9 @@
 Descarregar
 ===========
 
-.. Conteúdos::
+.. Contents::
 
-.. Nota::
+.. Note::
 
    Quando descarregar construções nocturnas (nightly builds), terá que usar um gestor de descargas
    que possa continuar uma descarga interrompida, ou um utilitário de linha de comando como
@@ -35,9 +35,9 @@ do tempo eles funcionam muito bem.
 
 Por favor informe erros que possa encontrar enquanto usa estas construções pelo
 `bug tracker`__. Para qualquer outra necessidade, por favor sinta-se livre para nos contactar
- pelos foruns `AROS-Exec`__ .
+pelos foruns `AROS-Exec`__ .
 
-.. Amostra:: html
+.. raw:: html
 
    <?php virtual( "/cgi-bin/files?type=nightly&lang=en" ); ?>
 
