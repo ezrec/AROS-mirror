@@ -23,7 +23,7 @@ Compilando o AROS
 
 
 Requirementos
-============
+=============
 
 Os seguintes programas são requeridos para compilar AROS:
 
@@ -46,7 +46,7 @@ que se segue é também requerido:
 
 
 Fontes
-=======
+======
 
 Pode descarregar as fontes AROS quer pelo `portal de descarga`__ ou pelo
 uso do serviço de Subversão (SVN) (Que requer que `aplique para aceder`__ ). No caso
@@ -188,7 +188,7 @@ Se está a construir vários portos que usem o mesmo processador, só terá que espe
 ``AROS_TARGET_ARCH`` que o processadoras permanecerá o mesmo. 
 
 Compilando 'Como fazer...' (HowTo`s)
--------------------------------
+------------------------------------
 
 Este guia passo a passo irá descrever como preparar o ambiente de desenvolvimento
 e compilar AROS em Ubuntu Linux 6.10 "Edgy Eft". Vamos assumir que tem uma imagem (ISO)
