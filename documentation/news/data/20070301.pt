@@ -1,0 +1,21 @@
+======================
+Estado de actualização
+======================
+
+:Autor:   Paolo Besser
+:Data:     2007-03-01
+
+A partir de hoje, AROS snapshots deixaram de estar disponíveis.
+Encorajamos em contrapartida a todos os que gostariam de experimentar
+o AROS a descarregar as últimas construções nocturnas. AROS está a
+cresecer realmente rápido, e os Snapshots frequentemente contém código
+obsuleto. Tmabém pensamos que as construções nocturnas são mais úteis
+do ponto de vista do teste-beta, como contém as últimas caracteristicas:
+use por favor o `bug tracker`__ para reportar erros.
+
+Devido a uma actualização dos servidores da Sourceforge, as últimas construções
+nocturnas não estiveram disponíveis. Agora que este trabalho está terminado,
+tudo deverá voltar à normalidade.
+
+__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+
