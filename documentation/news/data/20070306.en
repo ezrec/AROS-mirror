@@ -1,0 +1,51 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-03-06
+
+Habemus DOSpackets!
+-------------------
+
+Robert Norris has made the initial commit 
+of the AROS packet system in our repository, with a read 
+only FAT filesystem handler too. Here's what he said:
+
+"packet.handler is a "proxy" AROS-style filesystem that is primarily 
+responsible for taking FSA/IOFileSys, converting them to DosPackets and 
+sending them on to the packet-based handler.
+
+The important thing to note about packet.handler is that its been 
+designed to mimic the AmigaOS handler environment as closely as 
+possible, to minimise the amount of work necessary to port a  filesystem.
+
+fat.handler is a FAT12/16/32 handler. Read-only, and still 
+has a few bugs, but it proves the concept. There's still plenty of work to be done before I consider the bounty finished. Comments very 
+welcome."
+
+DOSPackets and FAT read-only support should be available in the next 
+nightly builds.
+
+Other news
+----------
+
+Pavel Fedin has added VESA v1.2 support, allowing more (old) video 
+boards to be compatible with AROS. He as also added VESA mode 
+switching to the bootstrap, making the hidd less dependent from
+custom GRUB.
+
+Neil Cafferkey has fixed 64-bit disk support. Boot partition can now 
+be beyond 4GB.
+
+Hogne Titlestad has released version 0.3.2 of his stunning paint 
+program `Lunapaint`__, with a working text tool. You may find a new 
+`screenshot here`__.
+
+Tomasz Pawlak's `KGB Archiver`__ has been ported to AROS by FOrest. 
+You'll find it in the `Archives`__
+
+__ http://www.sub-ether.org/lunapaint/
+__ http://www.sub-ether.org/lunapaint/upload/032.jpg
+__ http://www.aros.ppa.pl/images/photoalbum/48.jpg
+__ http://archives.aros-exec.org
