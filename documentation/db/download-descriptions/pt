@@ -1,0 +1,80 @@
+[headings]
+
+package: Pacote
+documentation: Documentação
+sources: Fontes
+binaries: Binarios
+development-tools: Ferramentas de Desenvolvimento
+date: Data
+
+[links]
+
+build-logs: Construir registo
+download: Descarregar
+
+[units]
+
+byte-unit: B
+kilobyte-unit: KB
+megabyte-unit: MB
+gigabyte-unit: GB
+decimal-point: ,
+
+[descriptions]
+
+ChangeLog-AROS:
+    Alteração de registo para o núcleo de fontes AROS.
+ChangeLog-contrib:
+    Alteração de registo para os programas fonte contribuídos.
+ChangeLog-docs:
+    Alteração de registo para a documentação.
+source:
+    Núcleo de fontes AROS.
+docs-source:
+    Fontes de documentação.
+contrib-source:
+    Fontes de programas contribuídos.
+docs-html:
+    Documentação em formato HTML. Contém o que está disponível
+     no Portal, mas adaptado para leitura sem ligação.
+i386-freebsd5-system:
+    A versão hospedada para FreeBSD/i386 5.x. Note que não
+    irá funcionar em sistemas FreeBSD 4.x.
+i386-freebsd-system:
+    A versão hospedada para FreeBSD/i386 5.x. Note que não
+    irá funcionar em sistemas FreeBSD 4.x.
+i386-linux-system:
+    A versão hospedada para Linux/i386. Este é o mais
+    completo e maturo porto, que significa que pode correr
+    todos os programas incluídos e demos com ele. Este arquivo
+    contém todo o sistema de binários AROS compilados a partir da
+    árvore de Subversão.
+ppc-linux-system:
+    A versão hospedada para Linux/PowerPC. Este arquivo contém todo
+    o sistema de binários AROS compilados a partir da árvore de Subversão.
+i386-pc-boot-floppy:
+    A versão nativa para Computadores PC-AT baseadas em i386 e
+    compativeis. Este arquivo contém o a imagem de arranque para
+    disquete no qual poderá escrever rápidamente para o disco e
+    Arrancar o AROS.
+i386-pc-boot-iso:
+    A versão nativa para Computadores PC-AT baseados em i386 e
+    compativeis. Este é a imagem ISO para arranque em CD-ROM, que
+    contém todo o sistema AROS e programas contribuídos.
+i386-all-contrib:
+    Este arquivo contém todo o programa contribuído
+    compilado para a arquitectura i386. Eles irão funcionar em
+    ambos os apropriados hospedeiros (eg. i386-linux) e versão
+    nativo (i386-pc).
+ppc-all-contrib:
+    Este arquivo contém todo o programa contribuído
+    compilado para a arquitectura PowerPC, para uso com o porto
+    Linux/PowerPC.
+i386-all-sdk:
+    Conjunto de ficheiros e ferramentas para construir os seus
+    programas AROS na sua maquina preferida. Irá precisar também do gcc e o
+    binutils configurados para produzir executáveis i386-elf.
+ppc-all-sdk:
+    Conjunto de ficheiros e ferramentas para construir os seus
+    programas AROS na sua maquina preferida. Irá precisar também do gcc e o
+    binutils configurados para produzir executaveis ppc-elf.

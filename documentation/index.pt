@@ -1,10 +1,10 @@
 
-.. Inclui:: introduction/index-abstract.en
+.. Include:: introduction/index-abstract.en
 
 `Leia mais... <introduction/index>`__
 
-.. Inclui:: documentation/developers/contribute-abstract.en
+.. Include:: documentation/developers/contribute-abstract.en
 
 `Leia mais... <documentation/developers/contribute>`__
 
-.. Inclui:: news/index.en
+.. Include:: news/index.en
