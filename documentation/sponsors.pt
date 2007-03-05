@@ -1,0 +1,67 @@
+Patrocínios
+===========
+
+:Autor:			Aaron Digulla, Adam Chodorowski 
+:Direito de Cópia:	Copyright © 1995-2002, A equipa de desenvolvimento AROS 
+:Versão:		$Revision$
+:Data:			$Date$
+:Estado:		Feito.
+
+
+As seguintes companhias, organizações e indivíduos têm doado recursos:
+
++ Trustec__
+   
+  .. RAW:: html
+     
+     <a href="http://www.trustsec.de/"><img border="0" src="/images/trustec.png"></a>
+    
+  As pessoas simpaticas na Trustec doáram espaço e largura de banda para o servidor WEB AROS 
+  , servidor CVS, servidor de FTP e várias listas de eCorreio. Se precisar de desenvolvimentos
+  em Java ou cursos na Alemanha, contacte-os!
+
++ Genesi__
+
+  .. RAW:: html
+  
+     <a href="http://www.pegasosppc.com/"><img border="0" src="/images/genesi.gif"></a>
+
+  A Genesi tem generosamente doádo a placa mãe Pegasos, num esforço de levar o AROS
+  para aquela plataforma de equipamento. Obrigado!
+
++ SourceForge__
+
+  .. RAW:: html
+  
+     <a href="http://www.sourceforge.net/"><img border="0" src="/images/sourceforge.png"></a>
+
+  A SourceForge providênciou-nos com diversos serviços como servidores WEB com extensões de guionismo
+  e base de dados SQL, lista de eCorreio, base de dados de erros e o sistema Distributed File Release.
+
+
++ Yann Vernier
++ Randal Vice
+
+
+As seguintes organizações e individuos têm patrocinado o trabalho de desenvolvimento:
+
++ `TeamAROS`__
++ `Norsk Amigaforening`__
++ Timothy Rue
++ Jakob Eriksson
++ Serge Guillaume
++ David Ferguson
++ Nils-Erik Reklev Skilnand
++ Jonny Johansson
++ Johan Grip
++ Marcus Karlsson
++ Rune Jensen
++ Joshua Dolan
++ Matthew Parsons
++ Jean-Pierre Rivière
+
+__ http://www.trustsec.de/
+__ http://www.pegasosppc.com/
+__ http://www.sourceforge.net/
+__ http://www.thenostromo.com/teamaros/
+__ http://www.naf.as/
