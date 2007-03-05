@@ -18,14 +18,6 @@
 #include "generic.h"
 
 #ifdef __AROS__
-struct FileLock
-{
-    BPTR             fl_Link;   /* (struct FileLock *) Pointer to next lock. */
-    LONG             fl_Key;
-    LONG             fl_Access;
-    struct MsgPort * fl_Task;
-    BPTR             fl_Volume; /* (struct DeviceList * - see below) */
-};
 
 struct ACDRDeviceInfo {
 	struct MsgPort *taskmp;
