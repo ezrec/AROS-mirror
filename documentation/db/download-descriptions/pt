@@ -3,7 +3,7 @@
 package: Pacote
 documentation: Documentação
 sources: Fontes
-binaries: Binarios
+binaries: Binários
 development-tools: Ferramentas de Desenvolvimento
 date: Data
 
@@ -72,9 +72,9 @@ ppc-all-contrib:
     Linux/PowerPC.
 i386-all-sdk:
     Conjunto de ficheiros e ferramentas para construir os seus
-    programas AROS na sua maquina preferida. Irá precisar também do gcc e o
+    programas AROS na sua máquina preferida. Irá precisar também do gcc e o
     binutils configurados para produzir executáveis i386-elf.
 ppc-all-sdk:
     Conjunto de ficheiros e ferramentas para construir os seus
-    programas AROS na sua maquina preferida. Irá precisar também do gcc e o
-    binutils configurados para produzir executaveis ppc-elf.
+    programas AROS na sua máquina preferida. Irá precisar também do gcc e o
+    binutils configurados para produzir executáveis ppc-elf.
