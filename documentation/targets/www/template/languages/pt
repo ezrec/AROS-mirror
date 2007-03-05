@@ -4,61 +4,61 @@ charset:          iso-8859-15
 
 [titles]
 
-mirrors:          Mirrors
-contents:         Contents
-search:           Search
-visitors:         Visitors
-sponsors:         Sponsors
+mirrors:          Servidores espelho (Mirrors)
+contents:         Conteúdos
+search:           Procurar
+visitors:         Visitantes
+sponsors:         Patrocínios
 
 [navigation]
 
-home:             Home
-news:             News
-archive:          Archive
-introduction:     Introduction
-status:           Status
-screenshots:      Screenshots
-ports:            Ports
-license:          License
-download:         Download
-documentation:    Documentation
-users:            Users
-installation:     Installation
-using:            Using
-shell:            Shell commands
-faq:              FAQ
-developers:       Developers
-contribute:       Contribute
-bug-tracker:      Bug Tracker
-working-with-subversion: Working with Subversion
-compiling:        Compiling
-application-development-manual: Application Development Manual
-zune-application-development-manual: Zune Application Development Manual
-system-development-manual:      System Development Manual
-debugging-manual: Debugging Manual
-reference:        Reference
-specifications:   Specifications
-ui-style-guide:   UI Style Guide
-documenting:      Documenting
-porting:          Porting
-translating:      Translating
-summaries:        Summaries
-links:            Links
-contact:          Contact
-mailing-lists:    Mailing lists
+home:             Ínicio
+news:             Novidades
+archive:          Arquivo
+introduction:     Introdução
+status:           Estado
+screenshots:      Imagens
+ports:            Portos
+license:          Licença
+download:         Descarregar
+documentation:    Documentação
+users:            Utilizadores
+installation:     Instalação
+using:            Utilizando
+shell:            Comandos de Shell
+faq:              F. A. Q.
+developers:       Desenvolvidores
+contribute:       Contribuintes
+bug-tracker:      À procura de erros...
+working-with-subversion: Trabalhando com Subversão
+compiling:        Compilando
+application-development-manual: Manual do desenvolvidor de Aplicação
+zune-application-development-manual: Manual do desenvolvidor de Aplicação Zune
+system-development-manual:      Manual do desenvolvidor de sistema
+debugging-manual: Manual de Correcção de erros
+reference:        Referencia
+specifications:   Especificações
+ui-style-guide:   Guia de estilos I. U.
+documenting:      Documentando
+porting:          Portando
+translating:      Tranduzindo
+summaries:        Sumários
+links:            Ligações
+contact:          Contactos
+mailing-lists:    Listas de eCorreio
 forums:           Forums
-irc-channels:     IRC channels
-credits:          Credits
-pictures:         Pictures
-developers-together: Developers en Masse
-sponsors:         Sponsors
-linking:          Linking
+irc-channels:     Canais de IRC
+credits:          Creditos
+pictures:         Fotografias
+developers-together: Massa de desenvolvidores
+sponsors:         Patrocínios
+linking:          Ligando
 
 [misc]
 
-go:               Go
-search:           Search
+go:               Ir
+search:           Procurar
 copyright:        Copyright © 1995-2007, The AROS Development Team. All rights reserved.
-trademarks:       Amiga®, AmigaOS®, Workbench and Intuition are trademarks of Amiga Inc. All other trademarks belong to their respective owners.
-read-more:        Read more...
-large-image:      Large version...
+trademarks:       Amiga®, AmigaOS®, Workbench e Intuition são marcas registadas de Amiga Inc. Todas as outras marcas comerciais pertencem aos seus respectivos proprietários.
+read-more:        Leia mais...
+large-image:      Imagem maior...
