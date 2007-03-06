@@ -23,26 +23,26 @@ license:          Licentie
 download:         Downloads
 documentation:    Documentatie
 users:            Gebruikers
-installation:     Installation
-using:            Using
-shell:            Shell commands
-faq:              FAQ
+installation:     Installatie
+using:            Gebruik
+shell:            Shell commando's
+faq:              Veel gestelde vragen (FAQ)
 developers:       Ontwikkelaars
 contribute:       Meehelpen
-bug-tracker:      Bug Tracker
-working-with-subversion: Working with Subversion
-compiling:        Compiling
-application-development-manual: Application Development Manual
-zune-application-development-manual: Zune Application Development Manual
-system-development-manual:      System Development Manual
-debugging-manual: Debugging Manual
-reference:        Reference
-specifications:   Specifications
-ui-style-guide:   UI Style Guide
-documenting:      Documenting
-porting:          Porting
-translating:      Translating
-summaries:        Summaries
+bug-tracker:      Fouten melden
+working-with-subversion: Werken met Subversion
+compiling:        Compileren
+application-development-manual: Applicatie Ontwikkeling Gids
+zune-application-development-manual: Zune Applicatie Ontwikkeling Gids
+system-development-manual:      Systeem Ontwikkeling Gids
+debugging-manual: Debugging Gids
+reference:        Referenties
+specifications:   Specificaties
+ui-style-guide:   UI Stijl Gids
+documenting:      Documenteren
+porting:          Overzetten
+translating:      Vertalen
+summaries:        Samenvattingen
 links:            Links
 contact:          Contact
 mailing-lists:    Mailing lijsten
