@@ -21,8 +21,8 @@ designed to mimic the AmigaOS handler environment as closely as
 possible, to minimise the amount of work necessary to port a  filesystem.
 
 fat.handler is a FAT12/16/32 handler. Read-only, and still 
-has a few bugs, but it proves the concept. There's still plenty of work to be done before I consider the bounty finished. Comments very 
-welcome."
+has a few bugs, but it proves the concept. There's still plenty of work to be 
+done before I consider the bounty finished. Comments are very welcome."
 
 DOSPackets and FAT read-only support should be available in the next 
 nightly builds.
@@ -43,7 +43,7 @@ program `Lunapaint`__, with a working text tool. You may find a new
 `screenshot here`__.
 
 Tomasz Pawlak's `KGB Archiver`__ has been ported to AROS by FOrest. 
-You'll find it in the `Archives`__
+You'll find it in the `Archives`__. Please note that it hasn`t been tested much yet.
 
 __ http://www.sub-ether.org/lunapaint/
 __ http://www.sub-ether.org/lunapaint/upload/032.jpg

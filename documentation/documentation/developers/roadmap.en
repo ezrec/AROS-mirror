@@ -3,7 +3,7 @@ AROS 1.0 roadmap
 ================
 
 :Authors:   Adam Chodorowski, Sergey Mineychev
-:Copyright: Copyright Š 2003, The AROS Development Team
+:Copyright: Copyright ¦ 2007, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 
@@ -41,8 +41,10 @@ recomendations can be highlited.
     used by applications and the effort required to implement it is
     substantial.  
     
-    Current status: The most of AmigaOS 3.1 API was implemented, and even superceeded
-    in some parts. Although, it needs a good bugfixing work done.
+    Current status: The most of AmigaOS 3.1 API was implemented (missing 
+    hardware Amiga parts like lowlevel.lib, card.device, gameport, audio.device 
+    which are not implemented or was replaced), and even superceeded in some 
+    parts. Although, it needs a good bugfixing work done.
 
 
 2.  Partial AmigaOS 3.5 and 3.9 API compatibility. We choose the parts that 
@@ -60,7 +62,7 @@ recomendations can be highlited.
 3.  Completed GUI toolkit. This means Zune must have complete MUI API
     compatability and a finished preferences program.
     
-    Current status: <?>
+    Current status: Almost done. Preferences editor misses some functions.
 
 
 4.  Standard applications comparable to those which come with AmigaOS 3.1.
@@ -71,14 +73,24 @@ recomendations can be highlited.
 
     Current status: Most of that basic applications have been developed. 
 
-    
++ Missing are: 
+
+  - Overscan(FIXME:not really needed)
+  - Palette (FIXME:not really needed)
+  - Pointer 
+  - Printer (absent)
+  - Sound (it`s different - we have AHI prefs)
+  - WBPattern (we have Wanderer prefs, which is in works)
+  - Workbench (we have Wanderer prefs, which is in works)
+                  
 5.  Sound support, meaning API compatibility and basic applications. There 
     should be at least one driver for each mandatory port. 
     
     Current status: Currently AHI is ported, and there`s some drivers (a few)
-    for i386-port. Applications is in development.
-    
-    
+    for i386-port. Applications is in development, madahi and mp3 player are 
+    available). (to clear out - must those applications code be included to 
+    the system or just available, or that isn`t necessary).
+        
 6.  Networking support. This includes a TCP/IP-stack and some basic
     applications like email and SSH clients, and also a *simple* web browser.
     There should be at least one NIC driver for each mandatory port. 
@@ -104,7 +116,17 @@ recomendations can be highlited.
     Current status: AROS got a full gcc port, allowing to compile applications
     but some GNU tools are still missing, so the self-compiling isn`t possible
     at the moment.
-    
+
++ Missing are: (Fixme)
+
+    - GNU AWK (GAWK) or other awks
+    - Python 2.2.1+ (an old port of python is available though)
+    - Bison
+    - Flex
+    - pngtopnm and ppmtoilbm (part of the netpbm package)
+    - Autoconf
+    - Automake
+    - Common unix utilities like cp, mv, sort, uniq, head, ...
     
 8.  Comprehensive documentation for developers. This includes complete reference
     manuals over all libraries, devices, classes and development tools and also
@@ -134,5 +156,11 @@ recomendations can be highlited.
     option" does.
 
     Current status: Currently no freeze can be done as features isn`t complete
-    yet. There`s still lot of unfixed bugs, but increasing number of users give some hope
-    in this. Bug hunting and accounting procedures and services are wanted.
+    yet. There`s still lot of unfixed bugs, but increasing users activity looks 
+    promising. Bug hunting and accounting procedures and services are wanted.
+    
+Overall Status 
+<to be done>
+
+Recomendations
+<to be done>
