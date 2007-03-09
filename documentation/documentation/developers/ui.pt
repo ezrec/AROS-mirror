@@ -9,12 +9,12 @@ Guia de Estilos do Interface do Utilizador
 
 .. ARRANJE-ME: Introdução aqui...
 
-.. Atenção::
+.. Warning::
 
    Este documento não está terminado! Se quiser ajudar a rectificar isto, por favor
    Contacte-nos.
 
-.. Conteúdos::
+.. Contents::
 
 
 -------
@@ -27,12 +27,12 @@ Preferencias
 Janelas de preferencias são similares a janelas de dialogo, nelas existe
 uma linha de botões e não existe ferramenta de fecho na barra de titulo. 
 
-.. Figura:: ui/images/windows-prefs-titlebar.png
+.. Figure:: ui/images/windows-prefs-titlebar.png
 
    Exemplo de uma barra de titulo de uma janela de preferencias. Note a ausencia da
    ferramenta de fecho.
 
-.. Tópico:: Racional
+.. Topic:: Racional
 
    Não existe ferramenta de fecho porque a sua semantica poderia ser ambigua.
    Por outras palavras, poderia não ser claro ao utilizador exactamente qual o
@@ -63,7 +63,7 @@ ao longo do fundo da janela (na seguinte ordem, da esquerda para a direita):
         Restaura as definições na janela para o estado aquando da sua abertura
         e aplica-as imediatamente. Fecha a janela.
 
-.. Tópico:: Disposição
+.. Topic:: Disposição
 
    Os botões estão divididos em dois grupos, Com o Teste (Test) e Reverter (Revert) num
    Salvar (Save), Usar (Use) e Cancelar (Cancel) noutro onde o grupo formado está alinhado
@@ -72,7 +72,7 @@ ao longo do fundo da janela (na seguinte ordem, da esquerda para a direita):
    pequena possivel (quando redimensinando, só o espaço entre os grupos deverá crescer
    e não os botões).
         
-.. Figura:: ui/images/windows-prefs-buttons.png
+.. Figure:: ui/images/windows-prefs-buttons.png
 
    Exemplos da linha de botões numa janela de preferencias.
 
