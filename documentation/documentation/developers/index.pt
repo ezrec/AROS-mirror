@@ -1,0 +1,34 @@
+============================
+Recursos dos Desenvolvidores
+============================
+
++ `Como contribuir`__
++ `Acesso e uso do SVN`__
++ `Como compilar`__
++ `Manual de desenvolvimento de aplicações`__
++ `Manual de desenvolvimento de aplicações Zune`__
++ `Manual de desenvolvimento do sistema`__
++ `Manual do subsistema PCI`__
++ `Manual de correção de erros (Debug)`__
++ `Referencia`__
++ `Especificações`__
++ `Documentando`__
++ `Aportar`__
++ `Sumários`__
++ `Ligações úteil`__
+
+__ contribute
+__ svn
+__ compiling
+__ app-dev/index
+__ zune-application-development
+__ system-development
+__ hardware/pci
+__ debugging
+__ autodocs/index
+__ specifications/index
+__ documenting
+__ porting
+__ summaries/index
+__ links
+
