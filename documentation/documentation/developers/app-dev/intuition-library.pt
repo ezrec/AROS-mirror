@@ -1,0 +1,93 @@
+===========================================
+Manual de Desenvolvimento de Aplicaçõe AROS
+===========================================
+
+:Authores:		Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
+			Adam Chodorowski, Fabio Alemagna, Matthias Rustler
+:Direitos de Cópia:	Copyright © 1995-2006, A equipa de Desenvolvimento AROS
+:Versão:		$Revision: 24812 $
+:Data:      		$Date: 2006-09-16 13:04:56 +0000 (Sábado, 16 Setembro 2006) $
+:Estado:		Por acabar; Integração iniciada (Um cominho loooong a percorrer).
+:A fazer:		Integrar as várias partes. Actualizar e rever. Complete...
+
+`Indice <index>`__
+
+.. Warning::
+
+   Este documento não está terminado! É muito provavel que muitas partes
+   estejam desactualisadas, contenham informação incorrecta ou simplesmente
+   em falta. Se quiser ajudar a rectificar isto, por favor contacte-nos.
+
+.. Contents::
+
+---------------------------------------------------------------
+Interface Gráfico do Utilizador (Graphic User Interface - GUIs)
+---------------------------------------------------------------
+
+Janelas
+-------
+
+ARRANJE-ME
+
+
+Requerentes
+-----------
+
+Requerentes são um tipo especial de janelas_. Elas quer confrontam o utilizador
+com informação ou requerem informação. Requerentes interrompem sempre o fluxo
+normal de trabalho do utilizador, pelo que deveram ser somente utilizadas quer
+para informar-lo de algum evento importante ou requerer informação, sem o qual
+a aplicação não pode trabalhar. Este tipo de requesição é chamado requesição modal.
+
+Exemplos de requesitores de informação são requesitores que reportam erros (como
+falhas na abertura de um ficheiro) ou sobre requesitores, que mostram informação
+sobre o programa, quando requeridos pelo utilizador.
+
+Como o nome indica, requesitores podem também requerer informação do utilizador,
+como um nome de ficheiro (usando os requesitores de ficheiros), o seu nome ou uma
+simples decisão sim/não ("Abandonar aplicação?" ("Really quit application?")).
+
+REquesitores deverão somente aparecer, se uma aplicação não conseguir prosseguir
+sem saber o que utilizador aprendeu sobre um determinado facto ou sem obter um
+certo tipo de informação. Razão pela qual, a maioria dos requesitores irão bloquear
+a aplicação. Isso significa que não irão atender a qualquer entrada, excepto à que
+está a no requesitor. Uma excepção são requasitores que são explicitamente requeridos
+pelo utilizador, como os requesitore de ficheiros (file-requesters) ou os
+requesitores de informação sobre (about-requesters). Normalmente, estes não deverão
+bloquear a aplicação.
+
+
+Rquesitores fáceis
+""""""""""""""""""
+
+Os então chamados requesitores fáceis são requesitores simples. Podem ser usados
+para quer fornecer uma informação ou para pedir uma escolha. O números de escolhas
+é limitado a 256, mas é geralmente uma má ideia ter mais de cinco escolhas diferentes.
+Tem de ter em conta que o comprimento do ecrã é limitado.
+
+ARRANJE-ME: EasyRequestArgs(), BuildEasyRequest()
+
+
+Requesitores Complexos
+""""""""""""""""""""""
+
+ARRANJE-ME
+
+
+Requesitores Asl (Font-, File- e Screenmode-)
+"""""""""""""""""""""""""""""""""""""""""""""
+
+ARRANJE-ME
+
+
+Ecrãs
+-----
+
+ARRANJE-ME
+
+
+Ferramentas
+-----------
+
+ARRANJE-ME
+
