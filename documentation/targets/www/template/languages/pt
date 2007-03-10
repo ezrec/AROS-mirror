@@ -25,20 +25,20 @@ documentation:    Documentação
 users:            Utilizadores
 installation:     Instalação
 using:            Utilizando
-shell:            Comandos de Shell
+shell:            Comandos de 'Shell'
 faq:              F. A. Q.
 developers:       Desenvolvidores
 contribute:       Contribuintes
 bug-tracker:      À procura de erros...
 working-with-subversion: Trabalhando com Subversão
 compiling:        Compilando
-application-development-manual: Manual do desenvolvidor de Aplicação
-zune-application-development-manual: Manual do desenvolvidor de Aplicação Zune
-system-development-manual:      Manual do desenvolvidor de sistema
+application-development-manual: Manual de Desenvolvimento de Aplicações
+zune-application-development-manual: Manual de Desenvolvimento de Aplicações Zune
+system-development-manual:      Manual de Desenvolvimento do sistema
 debugging-manual: Manual de Correcção de erros
-reference:        Referencia
+reference:        Referência
 specifications:   Especificações
-ui-style-guide:   Guia de estilos I. U.
+ui-style-guide:   Guia de Estilos I. U.
 documenting:      Documentando
 porting:          Portando
 translating:      Tranduzindo
@@ -48,7 +48,8 @@ contact:          Contactos
 mailing-lists:    Listas de eCorreio
 forums:           Forums
 irc-channels:     Canais de IRC
-credits:          Creditos
+credits:          Créditos
+acknowledgements: A saber...
 pictures:         Fotografias
 developers-together: Massa de desenvolvidores
 sponsors:         Patrocínios
@@ -58,7 +59,7 @@ linking:          Ligando
 
 go:               Ir
 search:           Procurar
-copyright:        Copyright © 1995-2007, The AROS Development Team. All rights reserved.
+copyright:        Direitos de Cópia © 1995-2007, A Equipa de Desenvolvimento AROS. Todos Os Direitos Reservados.
 trademarks:       Amiga®, AmigaOS®, Workbench e Intuition são marcas registadas de Amiga Inc. Todas as outras marcas comerciais pertencem aos seus respectivos proprietários.
 read-more:        Leia mais...
 large-image:      Imagem maior...
