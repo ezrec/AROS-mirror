@@ -2,7 +2,7 @@
 Mise à jour
 ===========
 
-:Author:   Paolo Besser
+:Auteur:   Paolo Besser
 :Date:     2006-12-10
 
 Notre dernière mise à jour date d'il y a 3 mois déjà, toutefois

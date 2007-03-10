@@ -2,8 +2,8 @@
 Status Update
 =============
 
-:Author:   Paolo Besser
-:Date:     2007-02-06
+:Auteur:   Paolo Besser
+:Datum:     2007-02-06
 
 Een nieuw jaar van AROS ontwikkeling is begonnen, en het kon
 waarschijnlijk niet op een nog betere manier dan nu. Er zijn zo twee

@@ -2,8 +2,8 @@
 Status update
 =============
 
-:Author:   Paolo Besser
-:Date:     2006-01-30
+:Auteur:   Paolo Besser
+:Datum:     2006-01-30
 
 Dit is de eerste status update van 2006. Om te beginnen willen we alle
 AROS gebruikers, sponsors en enthousiastelingen bedanken voor hun steun

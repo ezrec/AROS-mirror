@@ -2,8 +2,8 @@
 Kerst update
 ============
 
-:Author:   Paolo Besser
-:Date:     2006-12-23
+:Auteur:   Paolo Besser
+:Datum:     2006-12-23
 
 We wensen u Prettige Kerstdagen en een Gelukkig Nieuwjaar! Het is een
 belangrijk jaar geweest voor de ontwikkeling van AROS. We willen tevens

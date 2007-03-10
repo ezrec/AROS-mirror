@@ -2,7 +2,7 @@
 Divers
 ======
 
-:Author: Aaron Digulla
+:Auteur: Aaron Digulla
 :Date:   2000-01-24
 
 Des tests de vitesse ont montré que nous avons atteint 80% de la

@@ -2,7 +2,7 @@
 Mise à jour de Noël
 ===================
 
-:Author:   Paolo Besser
+:Auteur:   Paolo Besser
 :Date:     2006-12-23
 
 Joyeux Noël et bonne année à tous ! catte année a été importante

@@ -2,7 +2,7 @@
 Mise à jour
 ===========
 
-:Author:   Paolo Besser
+:Auteur:   Paolo Besser
 :Date:     2006-09-15
 
 La localisation du site Aros.org continue. Samuel Atlan travaille sur la

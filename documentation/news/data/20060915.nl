@@ -2,8 +2,8 @@
 Status update
 =============
 
-:Author:   Paolo Besser
-:Date:     2006-09-15
+:Auteur:   Paolo Besser
+:Datum:     2006-09-15
 
 De lokalisatie van Aros.org gaat door. Samuel Atlan is bezig met zijn 
 `Franse vertaling`__ van onze website. Het zal nog even duren voordat deze 

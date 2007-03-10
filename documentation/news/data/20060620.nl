@@ -2,8 +2,8 @@
 Status update
 =============
 
-:Author:   Paolo Besser
-:Date:     2006-06-20
+:Auteur:   Paolo Besser
+:Datum:     2006-06-20
 
 
 Dankzij Matthias Rustler hebben we nu ook een `Duitstalige aros.org`__ te vinden

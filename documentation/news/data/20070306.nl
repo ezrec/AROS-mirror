@@ -2,8 +2,8 @@
 Status Update
 =============
 
-:Author:   Paolo Besser
-:Date:     2007-03-06
+:Auteur:   Paolo Besser
+:Datum:     2007-03-06
 
 Habemus DOSpackets!
 -------------------

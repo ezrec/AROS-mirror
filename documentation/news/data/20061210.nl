@@ -2,8 +2,8 @@
 Status update
 =============
 
-:Author:   Paolo Besser
-:Date:     2006-12-10
+:Auteur:   Paolo Besser
+:Datum:     2006-12-10
 
 Onze laatste status update is alweer drie maanden oud, toch hebben we in de 
 tussenliggende periode niet niets zitten doen. Er zijn zo veel verbeteringen 

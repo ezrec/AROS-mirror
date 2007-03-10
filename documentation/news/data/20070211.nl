@@ -2,8 +2,8 @@
 Status Update
 =============
 
-:Author:   Paolo Besser
-:Date:     2007-02-11
+:Auteur:   Paolo Besser
+:Datum:     2007-02-11
 
 Een kleine status update: de drag'n'drop problemen in AROS
 native zijn verholpen. Wanderer functioneert nu bijna

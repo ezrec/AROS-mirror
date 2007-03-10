@@ -2,8 +2,8 @@
 Status update
 =============
 
-:Author:   Paolo Besser
-:Date:     2006-05-23
+:Auteur:   Paolo Besser
+:Datum:     2006-05-23
 
 AROS Internationaal
 -------------------

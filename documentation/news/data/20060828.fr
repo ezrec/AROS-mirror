@@ -2,7 +2,7 @@
 Mise à jour
 ===========
 
-:Author:   Paolo Besser
+:Auteur:   Paolo Besser
 :Date:     2006-08-28
 
 Le site Aros.org est doté de deux nouveaux langages: grâce à Sergey Mineychew

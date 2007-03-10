@@ -2,7 +2,7 @@
 Mise à jour
 ===========
 
-:Author:   Paolo Besser
+:Auteur:   Paolo Besser
 :Date:     2006-06-20
 
 Grâce à Matthias Rustler, nous avons également un `German aros.org`__ situé 

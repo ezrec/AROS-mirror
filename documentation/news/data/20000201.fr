@@ -2,7 +2,7 @@
 Divers
 ======
 
-:Author: Aaron Digulla
+:Auteur: Aaron Digulla
 :Date:   2000-02-01
 
 AROS va devenir l'aile de développement de OAF (Open Amiga Foundation).

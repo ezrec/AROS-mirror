@@ -2,8 +2,8 @@
 Status update
 =============
 
-:Author:   Paolo Besser
-:Date:     2006-08-28
+:Auteur:   Paolo Besser
+:Datum:     2006-08-28
 
 De Aros.org pagina's zijn voortaan beschikbaar in twee nieuwe talen: dankzij 
 Sergey Mineychew spreekt onze website ook `Russisch`__, terwijl Tomasz Paul nog 

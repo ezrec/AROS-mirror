@@ -2,8 +2,8 @@
 Status Update
 =============
 
-:Author:   Paolo Besser
-:Date:     2007-03-01
+:Auteur:   Paolo Besser
+:Datum:     2007-03-01
 
 
 Met ingang van vandaag zijn de AROS Snapshots niet meer beschikbaar.
