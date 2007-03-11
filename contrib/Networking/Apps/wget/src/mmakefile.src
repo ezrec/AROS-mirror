@@ -1,0 +1,26 @@
+# Metamake file for wget (AROS)
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-networking-apps-wget-bin : includes linklibs contrib-networking-stacks-arostcp
+
+EXE := wget
+TARGETDIR := $(AROS_CONTRIB)/Networking/Apps/Wget
+
+USER_CFLAGS := -DHAVE_CONFIG_H -DAMIGA -D__amigaos__ -D__BUILDER="\"AROS Dev Team\""
+USER_INCLUDES := -I. -I../aros \
+		 -isystem $(TOP)/contrib/Networking/Stacks/AROSTCP/netinclude \
+		 -isystem $(TOP)/contrib/Networking/Stacks/AROSTCP/bsdsocket/ 
+
+FILES := cmpt connect convert cookies \
+      ftp ftp-basic ftp-ls ftp-opie getopt hash \
+      host html-parse html-url http init \
+      log main gen-md5 gnu-md5 netrc progress ptimer recur \
+      res retr safe-ctype snprintf url \
+      utils version xmalloc
+
+%build_prog mmake=contrib-networking-apps-wget-bin progname=$(EXE) files=$(FILES) \
+    targetdir=$(TARGETDIR) uselibs="arosc m" nix=false
+
+%common
+

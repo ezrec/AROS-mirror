@@ -29,6 +29,10 @@ so, delete this exception statement from your version.  */
 
 #include <config.h>
 
+#ifdef __AROS__
+#include <proto/socket.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>

@@ -1,0 +1,13 @@
+GNU Wget is a free software package for retrieving files using HTTP, HTTPS and FTP,
+the most widely-used Internet protocols. It is a non-interactive commandline tool,
+so it may easily be called from scripts, cron jobs, terminals without X-Windows support, etc.
+
+The AROS port is based on an CVS snapshot (2007-02-15) of Diego Cassoran's AMIGA port
+http://amiga.cvs.sourceforge.net/amiga/wget/
+
+When you start wget the first time it will complain that it misses the file env:wgetcfg.
+You can either create an empty file (echo "" >env:config) or better copy the file sample.wgetrc
+(copy sample.wgetrc env:wgetcfg and copy sample.wgetrc envarc:wgetcfg).
+
+Type wget --help for a short help. The file wget.info contains documentation.
+

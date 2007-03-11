@@ -1,0 +1,22 @@
+# Metamake file for wget (AROS)
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib : contrib-networking-apps-wget
+#MM- contrib-networking-apps-wget : contrib-networking-apps-wget-bin contrib-networking-apps-wget-cpy
+
+TARGETDIR := $(AROS_CONTRIB)/Networking/Apps/Wget
+
+CPYFILES := AUTHORS ChangeLog ChangeLog.Amiga COPYING NEWS README README.AROS TODO
+DOCFILES := wget.info sample.wgetrc
+
+#MM contrib-networking-apps-wget-cpy
+
+%copy_files_q files=$(CPYFILES) \
+    src=. dst=$(TARGETDIR) maketarget=contrib-networking-apps-wget-cpy
+
+%copy_files_q files=$(DOCFILES) \
+    src=doc dst=$(TARGETDIR)/doc maketarget=contrib-networking-apps-wget-cpy
+
+%common
+
