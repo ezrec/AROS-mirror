@@ -44,7 +44,7 @@ Boston, MA 02111-1307, USA.  */
 static const char *undoc;
 
  /* orig andy static  char *sys_siglist[NSIG]; */
-static	const char *const sys_siglist[NSIG];
+static	const char * sys_siglist[NSIG];
 
 
 /* Table of abbreviations for signals.	Note:  A given number can
