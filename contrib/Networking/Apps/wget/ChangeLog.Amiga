@@ -1,0 +1,32 @@
+$Id: ChangeLog.Amiga,v 1.1.1.1 2005/10/29 10:53:28 diegocr Exp $
+
+2005-10-20  Wget v1.10.2
+	
+	* Just a rebuild of this new version applying latest changes 
+	  from Wget 1.9.x
+	
+2004-05-30  Wget v1.9.1 - Revision #3
+
+	* Applyed dotfiles patch:
+	  http://www.unixwiz.net/patches/wget-1.9.1-dotfiles-patch.txt
+	* Fixed a trouble by using 'long long', changed to ULONG.
+	* Added 'amiga' and 'amiga-strict' to supported OS's when using
+	  --restrict-file-names, to avoid ":/*" and ":;/|*?"(>][<)`~#%$"
+	  respectively. (By default: 'amiga')
+	* Added option --max-filename-length, useful when using wget on 
+	  FFS partitions. (When the max length is reached, a CRC16 
+	  checksum of the full URL will be appended to the filename to 
+	  ensure futher problems do not happens)...
+	* Added option --no-file-comments
+	* Compiled with gcc v3.3.3
+	
+2003-12-15  Wget v1.9.1 - Revision #2
+
+	* Made it Native, (without ixemul)
+	* default config file "~/.wgetrc" is now loaded as/from "env:wgetcfg"
+	* Added avility to set file comments.
+
+2003-11-15  Wget v1.9.1
+
+	* Just a IXemul compilation
+
