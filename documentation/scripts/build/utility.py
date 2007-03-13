@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2002, The AROS Development Team. All rights reserved.
+# Copyright © 2002-2007, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os, shutil
@@ -29,8 +29,9 @@ def newer( src, dst ):
 
 def ignore( path ):
     path = os.path.normpath( path )
-    
-    if os.path.split( path )[1] in IGNORE_ALL or path in IGNORE_ABS:
+    filename = os.path.split( path )[1]
+
+    if filename in IGNORE_ALL or filename[0] == '.' or path in IGNORE_ABS:
         return True
     else:
         return False
