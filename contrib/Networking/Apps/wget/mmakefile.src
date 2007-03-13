@@ -18,5 +18,6 @@ DOCFILES := wget.info sample.wgetrc
 %copy_files_q files=$(DOCFILES) \
     src=doc dst=$(TARGETDIR)/doc maketarget=contrib-networking-apps-wget-cpy
 
-%common
+%copy_dir_recursive mmake=contrib-networking-apps-wget-cpy src=S dst=$(TARGETDIR)/S
 
+%common
