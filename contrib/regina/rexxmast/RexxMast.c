@@ -207,10 +207,40 @@ static void StartFileSlave(struct RexxMsg *msg)
     PRXSTRING instore = NULL;
     USHORT rc;
 
+    /* Set input/output to the task that sent the message */
+    if (!(msg->rm_Action & RXFF_NOIO))
+    {
+        lock = NULL;
+        oldlock = NULL;
+	if (process->pr_Task.tc_Node.ln_Type == NT_PROCESS)
+	{
+	    input = process->pr_CIS;
+	    output = process->pr_COS;
+	    error = process->pr_CES;
+	    lock = DupLock(process->pr_CurrentDir);
+	    if (lock != NULL)
+	    {
+	        lock = CurrentDir(lock);
+	        oldlock = DupLock(lock);
+	        UnLock(lock);
+	    }
+	}
+	if (msg->rm_Stdin != NULL)
+	    input = msg->rm_Stdin;
+	if (msg->rm_Stdout != NULL)
+	    output = msg->rm_Stdout;
+
+	input = SelectInput(input);
+	output = SelectOutput(output);
+        error = SelectError(error);
+	updatestdio();
+    }
+
     if ((msg->rm_Action & RXFF_STRING))
     {
         void *t;
 
+        progname = strdup("intern");
         instore = malloc(2*sizeof(RXSTRING));
         t = malloc(commlen);
         memcpy(t, comm, commlen);
@@ -249,17 +279,24 @@ static void StartFileSlave(struct RexxMsg *msg)
 	    /* For a function whole ARG0 is the progname */
 	    len = LengthArgstring((UBYTE *)msg->rm_Args[0]);
         }
-        extlen = msg->rm_FileExt==NULL ? 5 : strlen(msg->rm_FileExt);
 
+        extlen = msg->rm_FileExt==NULL ? 5 : strlen(msg->rm_FileExt);
         progname = malloc(len + 6 + extlen);
+
         memcpy(progname, (char *)msg->rm_Args[0], len);
         progname[len] = 0;
-        if (strchr(progname, ':') == NULL)
+        lock = Lock(progname, ACCESS_READ);
+        if (lock == NULL)
+        {
+	    strcat(progname, msg->rm_FileExt==NULL ? ".rexx" : (const char *)msg->rm_FileExt);
+	    lock = Lock(progname, ACCESS_READ);
+        }
+        if (lock == NULL && strchr(progname, ':') == NULL)
         {
 	    strcpy(progname, "REXX:");
 	    strncat(progname, (char *)msg->rm_Args[0], len);
+            lock = Lock(progname, ACCESS_READ);
         }
-        lock = Lock(progname, ACCESS_READ);
         if (lock == NULL)
         {
 	    strcat(progname, msg->rm_FileExt==NULL ? ".rexx" : (const char *)msg->rm_FileExt);
@@ -270,6 +307,8 @@ static void StartFileSlave(struct RexxMsg *msg)
 	    msg->rm_Result1 = 5;
 	    msg->rm_Result2 = 1;
 	    free(progname);
+            if (oldlock != NULL)
+                UnLock(CurrentDir(oldlock));
 	    return;
         }
         UnLock(lock);
@@ -318,35 +357,6 @@ static void StartFileSlave(struct RexxMsg *msg)
 		    MAKERXSTRING(rxargs[argcount], argstr, LengthArgstring(argstr));
 	    }
 	}
-    }
-
-    /* Set input/output to the task that sent the message */
-    if (!(msg->rm_Action & RXFF_NOIO))
-    {
-        lock = NULL;
-        oldlock = NULL;
-	if (process->pr_Task.tc_Node.ln_Type == NT_PROCESS)
-	{
-	    input = process->pr_CIS;
-	    output = process->pr_COS;
-	    error = process->pr_CES;
-	    lock = DupLock(process->pr_CurrentDir);
-	    if (lock != NULL)
-	    {
-	        lock = CurrentDir(lock);
-	        oldlock = DupLock(lock);
-	        UnLock(lock);
-	    }
-	}
-	if (msg->rm_Stdin != NULL)
-	    input = msg->rm_Stdin;
-	if (msg->rm_Stdout != NULL)
-	    output = msg->rm_Stdout;
-
-	input = SelectInput(input);
-	output = SelectOutput(output);
-        error = SelectError(error);
-	updatestdio();
     }
 
     MAKERXSTRING(rxresult, NULL, 0);
