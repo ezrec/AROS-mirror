@@ -10,17 +10,17 @@
 /*****************************************************************************
 
     NAME */
-	AROS_LH8(BOOL, MiamiPanelInit,
+	AROS_LH8(LONG, MiamiPanelInit,
 
 /*  SYNOPSIS */
-	AROS_LHA(IPTR, callback1, A0),
-	AROS_LHA(IPTR, callback2, A1),
-	AROS_LHA(ULONG, showflags, D0),
-	AROS_LHA(ULONG, font, D1),
-	AROS_LHA(ULONG, unknown, D2),
-	AROS_LHA(ULONG, panelx, D3),
-	AROS_LHA(ULONG, panely, D4),
-	AROS_LHA(ULONG, guimask, D5),
+	AROS_LHA(IPTR, synccb, A0),
+	AROS_LHA(IPTR, asynccb, A1),
+	AROS_LHA(LONG, flags, D0),
+	AROS_LHA(STRPTR, font, A2),
+	AROS_LHA(STRPTR, screen, A3),
+	AROS_LHA(LONG, xo, D1),
+	AROS_LHA(LONG, yo, D2),
+	AROS_LHA(ULONG, sigbit, A4),
 
 /*  LOCATION */
 	struct Library *, MiamiPanelBase, 5, MiamiPanel)
@@ -94,11 +94,11 @@
 	AROS_LH5(void, MiamiPanelAddInterface,
 
 /*  SYNOPSIS */
-	AROS_LHA(ULONG, if_index, D0),
-	AROS_LHA(char *, ifname, A0),
-	AROS_LHA(ULONG, ifstate, D1),
-	AROS_LHA(ULONG, secs, D2),
-	AROS_LHA(ULONG, ifspeed, D3),
+	AROS_LHA(LONG, unit, D0),
+	AROS_LHA(STRPTR, name, A0),
+	AROS_LHA(LONG, state, D1),
+	AROS_LHA(LONG, ontime, D2),
+	AROS_LHA(STRPTR, speed, A1),
 	
 /*  LOCATION */
 	struct Library *, MiamiPanelBase, 7, MiamiPanel)
@@ -131,11 +131,10 @@
 /*****************************************************************************
 
     NAME */
-	AROS_LH2(void, MiamiPanelDelInterface,
+	AROS_LH1(void, MiamiPanelDelInterface,
 
 /*  SYNOPSIS */
-	AROS_LHA(ULONG, imageid, D0),
-	AROS_LHA(struct TagItem *, tags, A0),
+	AROS_LHA(LONG, unit, D0),
 
 /*  LOCATION */
 	struct Library *, MiamiPanelBase, 8, MiamiPanel)
@@ -171,9 +170,9 @@
 	AROS_LH3(void, MiamiPanelSetInterfaceState,
 
 /*  SYNOPSIS */
-	AROS_LHA(ULONG, if_index, D0),
-	AROS_LHA(ULONG, state, D1),
-	AROS_LHA(ULONG, secs, D2),
+	AROS_LHA(LONG, unit, D0),
+	AROS_LHA(LONG, state, D1),
+	AROS_LHA(LONG, ontime, D2),
 
 /*  LOCATION */
 	struct Library *, MiamiPanelBase, 9, MiamiPanel)
@@ -209,8 +208,8 @@
 	AROS_LH2(void, MiamiPanelSetInterfaceSpeed,
 
 /*  SYNOPSIS */
-	AROS_LHA(ULONG, if_index, D0),
-	AROS_LHA(ULONG, ifspeed, D1),
+	AROS_LHA(LONG, unit, D0),
+	AROS_LHA(UBYTE *, speed, A0),
 
 /*  LOCATION */
 	struct Library *, MiamiPanelBase, 10, MiamiPanel)
@@ -243,12 +242,15 @@
 /*****************************************************************************
 
     NAME */
-	AROS_LH2(void, MiamiPanelInterfaceReport,
+	AROS_LH5(void, MiamiPanelInterfaceReport,
 
 /*  SYNOPSIS */
-	AROS_LHA(ULONG, imageid, D0),
-	AROS_LHA(struct TagItem *, tags, A0),
-
+	AROS_LHA(LONG, unit, D0),
+	AROS_LHA(LONG, rate, D1),
+	AROS_LHA(LONG, now, D2),
+	AROS_LHA(LONG, totalhi, D3),
+	AROS_LHA(ULONG, totallo, D4),
+		
 /*  LOCATION */
 	struct Library *, MiamiPanelBase, 11, MiamiPanel)
 
@@ -280,11 +282,9 @@
 /*****************************************************************************
 
     NAME */
-	AROS_LH2(void, MiamiPanelToFront,
+	AROS_LH0(void, MiamiPanelToFront,
 
 /*  SYNOPSIS */
-	AROS_LHA(ULONG, imageid, D0),
-	AROS_LHA(struct TagItem *, tags, A0),
 
 /*  LOCATION */
 	struct Library *, MiamiPanelBase, 12, MiamiPanel)
@@ -320,7 +320,7 @@
 	AROS_LH1(void, MiamiPanelInhibitRefresh,
 
 /*  SYNOPSIS */
-	AROS_LHA(BOOL, inihbit, D0),
+	AROS_LHA(LONG, val, D0),
 
 /*  LOCATION */
 	struct Library *, MiamiPanelBase, 13, MiamiPanel)
@@ -356,8 +356,8 @@
 	AROS_LH2(void, MiamiPanelGetCoord,
 
 /*  SYNOPSIS */
-	AROS_LHA(ULONG, imageid, D0),
-	AROS_LHA(struct TagItem *, tags, A0),
+	AROS_LHA(LONG *, xp, A0),
+	AROS_LHA(LONG *, yp, A1),
 
 /*  LOCATION */
 	struct Library *, MiamiPanelBase, 14, MiamiPanel)
@@ -393,7 +393,7 @@
 	AROS_LH1(void, MiamiPanelEvent,
 
 /*  SYNOPSIS */
-	AROS_LHA(ULONG, signal, D0),
+	AROS_LHA(ULONG, sigs, D0),
 
 /*  LOCATION */
 	struct Library *, MiamiPanelBase, 15, MiamiPanel)
@@ -429,8 +429,8 @@
 	AROS_LH2(void, MiamiPanelRefreshName,
 
 /*  SYNOPSIS */
-	AROS_LHA(ULONG, imageid, D0),
-	AROS_LHA(struct TagItem *, tags, A0),
+	AROS_LHA(LONG, unit, D0),
+	AROS_LHA(UBYTE *, name, A0),
 
 /*  LOCATION */
 	struct Library *, MiamiPanelBase, 16, MiamiPanel)
@@ -463,7 +463,7 @@
 /*****************************************************************************
 
     NAME */
-	AROS_LH0(ULONG, MiamiPanelGetVersion,
+	AROS_LH0(LONG, MiamiPanelGetVersion,
 
 /*  SYNOPSIS */
 
@@ -500,11 +500,9 @@
 /*****************************************************************************
 
     NAME */
-	AROS_LH2(void, MiamiPanelKill,
+	AROS_LH0(ULONG, MiamiPanelKill,
 
 /*  SYNOPSIS */
-	AROS_LHA(ULONG, imageid, D0),
-	AROS_LHA(struct TagItem *, tags, A0),
 
 /*  LOCATION */
 	struct Library *, MiamiPanelBase, 26, MiamiPanel)
