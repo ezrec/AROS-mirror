@@ -259,6 +259,12 @@ D(bug("[AROSTCP](res_query.c) res_search: resolver not initialised/failed to ini
 #endif
 		return (-1);
 	}
+	else
+	{
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_query.c) res_search: resolver initialised.  base @ %x\n", &_res));
+#endif		
+	}
 
 	if ((_res.dbserial != ndb_Serial) && res_update_db(&_res) == -1)
 	{
@@ -266,6 +272,12 @@ D(bug("[AROSTCP](res_query.c) res_search: resolver not initialised/failed to ini
 D(bug("[AROSTCP](res_query.c) res_search: resolver failed to update\n"));
 #endif
 		return (-1);
+	}
+	else
+	{
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_query.c) res_search: resolver db updated\n"));
+#endif		
 	}
 
 	writeErrnoValue(libPtr, 0);
@@ -290,9 +302,25 @@ D(bug("[AROSTCP](res_query.c) res_search: returning hostalias response\n"));
 	 *	- there is at least one dot, there is no trailing dot,
 	 *	  and RES_DNSRCH is set.
 	 */
+#if defined(__AROS__) && defined(DEBUG)
+D(bug("[AROSTCP](res_query.c) res_search: n =%d\n", n));
+	if (_res.options & RES_DEFNAMES)
+	{
+D(bug("[AROSTCP](res_query.c) res_search: OPTION:Search local domain\n"));
+	}
+	
+	if (_res.options & RES_DNSRCH)
+	{
+D(bug("[AROSTCP](res_query.c) res_search: OPTION:Search using DNS\n"));
+	}
+#endif
+	
 	if ((n == 0 && _res.options & RES_DEFNAMES) ||
 	   (n != 0 && *--cp != '.' && _res.options & RES_DNSRCH))
 	{
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_query.c) res_search: Querying DNS servers .. \n"));
+#endif
 		for (domain = _res.dnsrch; *domain; domain++)
 		{
 #if defined(__AROS__)
@@ -353,6 +381,7 @@ D(bug("[AROSTCP](res_query.c) res_search: resolver got response\n"));
 		 * about a top-level domain (for servers, SOA, etc) will not use
 		 * res_search.
 		 */
+		
 		if (n && (ret = res_querydomain(libPtr, name, (char *)NULL,
 						class, type, answer, anslen)) > 0)
 	   {
@@ -362,7 +391,9 @@ D(bug("[AROSTCP](res_query.c) res_search: returning querydomain.2 result\n"));
 			return (ret);
 		}
 	}
-
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_query.c) res_search: finished search.\n"));
+#endif
 	if (got_nodata) h_errno = NO_DATA;
 
 	return (-1);
@@ -414,10 +445,13 @@ D(bug("[AROSTCP](res_query.c) res_querydomain: failed to allocate buffer\n"));
 		} else
 			longname = name;
 	} else {
-		ptr = strncpy(nbuf, name, MAXDNAME);
-		ptr += strlen(name);
+		strncpy(nbuf, name, MAXDNAME);
+		ptr = nbuf + strlen(name);
 		*ptr++ = '.';
 		(void)strncpy(ptr, domain, MAXDNAME);
+#if defined(__AROS__)
+D(bug("[AROSTCP](res_query.c) res_querydomain: '%s'\n", nbuf));
+#endif
 	}
 
 #if defined(__AROS__)
