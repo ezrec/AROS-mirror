@@ -46,7 +46,18 @@
 #endif
 #endif
 
-
+/*
+ * For m68k,AmigaOS4 and AROS we build Roadshow-compatible version
+ */
+#ifdef __mc68000
+#define COMPAT_ROADSHOW
+#endif
+#ifdef __AMIGAOS4__
+#define COMPAT_ROADSHOW
+#endif
+#if defined(__AROS__)
+#define COMPAT_ROADSHOW
+#endif
 /* 
  * Include first configuration information
  *
@@ -63,6 +74,12 @@
 #ifndef _STRING_H
 #include <string.h>
 #endif
+#endif
+
+#ifdef __MORPHOS__
+#define VA68K __attribute((varargs68k))
+#else
+#define VA68K
 #endif
 
 /*
@@ -134,20 +151,18 @@ extern struct ExecBase *SysBase;
 
 #include <sys/time.h>
 #include "sys/uio.h"
-/* #include <sys/systm.h>  commented because of inline functions*/
 
 #include <sys/errno.h>
 #include <sys/ioctl.h>
 #include <sys/kernel.h>
-/* #include <sys/malloc.h> */
 #include <sys/mbuf.h>
 #include "sys/queue2.h"
 #include <sys/domain.h>
 #include <sys/socket.h>
 #include <sys/socketvar.h>
 #include <sys/protosw.h>   /* Was just before socket.h. NC */
-/* #include <sys/synch.h> */
 #include <sys/syslog.h>
+#include <sys/queue.h>
 
 #include <net/route.h>
 #include <net/if.h>
@@ -155,8 +170,6 @@ extern struct ExecBase *SysBase;
 #include <net/if_types.h>
 #include <net/raw_cb.h>
 #include <net/radix.h>
-/*#include <net/sana2config.h> NC */
-/* #include <net/sana2request.h> */
 
 #include <netinet/in_systm.h>
 #include <netinet/in.h>
@@ -187,14 +200,10 @@ extern struct ExecBase *SysBase;
 #include <netinet/udp_var.h>
 
 #include <api/amiga_raf.h>
-/* #include <api/amiga_api.h> */
-/* #include <api/amiga_libcallentry.h> */
 #include <kern/amiga_log.h>
 #include <kern/amiga_subr.h> /* NC */
-/* #include <kern/amiga_time.h> */
 
 #include <ctype.h>
-/*#include <signal.h>*/ /* NC */
 #include <stdarg.h>
 #include <limits.h>
 #include <stddef.h>
@@ -249,6 +258,31 @@ extern struct ExecBase *SysBase;
 #else
 #define DOPTERR(x)
 #endif
+#ifdef DEBUG_IFCONFIG
+#define DIFCONF(x) x
+#else
+#define DIFCONF(x)
+#endif
+#ifdef DEBUG_GUI
+#define DGUI(x) x
+#else
+#define DGUI(x)
+#endif
+#ifdef DEBUG_PF
+#define DPF(x) x
+#else
+#define DPF(x)
+#endif
+#ifdef DEBUG_ROUTE
+#define DROUTE(x) x
+#else
+#define DROUTE(x)
+#endif
+#ifdef DEBUG_DHCP
+#define DDHCP(x) x
+#else
+#define DDHCP(x)
+#endif
 
 #if 0
 GLOBAL struct IntuitionBase *IntuitionBase;
@@ -264,11 +298,14 @@ GLOBAL struct UtilityBase *UtilityBase;
 GLOBAL struct RxsLib *RexxSysBase;
 #endif
 
-#define ENABLE_TTCP_SHUTUP
+#define ENABLE_PACKET_FILTER
+
+/* This option is now obsolete
+#define ENABLE_TTCP_SHUTUP */
 
 /* Global define to enable Debug output for AROS */
 #if defined(__AROS__)
-#define DEBUG 0
+#define DEBUG 1
 #include <aros/debug.h>
 #endif
 

@@ -72,29 +72,11 @@
 /*
  * TCP/IP protocol family: IP, ICMP, UDP, TCP.
  */
-#ifdef AMITCP
 #include <netinet/tcp.h>
 #include <netinet/ip_icmp_protos.h>
 #include <netinet/ip_input_protos.h>
 #include <netinet/ip_output_protos.h>
 #include <netinet/raw_ip_protos.h>
-#include <netinet/tcp_input_protos.h>
-#include <netinet/tcp_subr_protos.h>
-#include <netinet/tcp_timer_protos.h>
-#include <netinet/tcp_usrreq_protos.h>
-#include <netinet/udp_usrreq_protos.h>
-#else
-int	ip_output(),ip_ctloutput();
-int	ip_init(),ip_slowtimo(),ip_drain();
-int	icmp_input();
-int	udp_input(),udp_ctlinput();
-int	udp_usrreq();
-int	udp_init();
-int	tcp_input(),tcp_ctlinput();
-int	tcp_usrreq(),tcp_ctloutput();
-int	tcp_init(),tcp_fasttimo(),tcp_slowtimo(),tcp_drain();
-int	rip_input(),rip_output(),rip_ctloutput(), rip_usrreq();
-#endif
 
 /*
  * IMP protocol family: raw interface.
@@ -131,7 +113,7 @@ struct protosw inetsw[] = {
   udp_usrreq,
   udp_init,	NULL,		NULL,		NULL,
 },
-{ SOCK_STREAM,	&inetdomain,	IPPROTO_TCP,	PR_CONNREQUIRED|PR_WANTRCVD,
+{ SOCK_STREAM,	&inetdomain,	IPPROTO_TCP,	PR_CONNREQUIRED|PR_IMPLOPCL|PR_WANTRCVD,
   tcp_input,	NULL,		tcp_ctlinput,	tcp_ctloutput,
   tcp_usrreq,
   tcp_init,	tcp_fasttimo,	tcp_slowtimo,	tcp_drain,

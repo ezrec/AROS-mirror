@@ -2,7 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -30,7 +30,7 @@
 /*
  * Do diagnostic tests which are not necessary in production version
  */
-#define DIAGNOSTIC 1
+#define DIAGNOSTIC 0
 
 /*
  * Be compatible with BSD 4.2. Affects only checksumming of UDP data. If true

@@ -1,54 +1,7 @@
 /*
- * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
- *                    Helsinki University of Technology, Finland.
- *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Library General Public License
- * version 2 as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this file; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
- */
-
-/* 
- * Mach Operating System
- * Copyright (c) 1992 Carnegie Mellon University
- * All Rights Reserved.
- * 
- * Permission to use, copy, modify and distribute this software and its
- * documentation is hereby granted, provided that both the copyright
- * notice and this permission notice appear in all copies of the
- * software, derivative works or modified versions, and any portions
- * thereof, and that both notices appear in supporting documentation.
- * 
- * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"
- * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR
- * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.
- * 
- * Carnegie Mellon requests users of this software to return to
- * 
- *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU
- *  School of Computer Science
- *  Carnegie Mellon University
- *  Pittsburgh PA 15213-3890
- * 
- * any improvements or extensions that they make and grant Carnegie Mellon 
- * the rights to redistribute these changes.
- */
-
-/*
- * Copyright (c) 1980, 1986 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1980, 1986, 1993
+ *	The Regents of the University of California.  All rights reserved.
+ * Copyright (c) 2006 Pavel Fedin
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -78,18 +31,16 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)route.h	7.13 (Berkeley) 4/25/91
+ *	@(#)route.h	8.3 (Berkeley) 4/19/94
+ * $Id$
  */
 
-#ifndef NET_ROUTE_H
-#define NET_ROUTE_H
-
-#include <sys/socket.h>
-#include <sys/types.h>
+#ifndef _NET_ROUTE_H_
+#define _NET_ROUTE_H_
 
 /*
  * Kernel resident routing tables.
- * 
+ *
  * The routing tables are initialized when interface addresses
  * are set by making entries for all directly connected interfaces.
  */
@@ -118,6 +69,8 @@ struct rt_metrics {
 	u_long	rmx_ssthresh;	/* outbound gateway buffer limit */
 	u_long	rmx_rtt;	/* estimated round trip time */
 	u_long	rmx_rttvar;	/* estimated rtt variance */
+	u_long	rmx_pksent;	/* packets sent using this route */
+	u_long	rmx_filler[4];	/* will be used for T/TCP later */
 };
 
 /*
@@ -129,6 +82,11 @@ struct rt_metrics {
 #define	RTTTOPRHZ(r)	((r) / (RTM_RTTUNIT / PR_SLOWHZ))
 
 /*
+ * XXX kernel function pointer `rt_output' is visible to applications.
+ */
+struct mbuf;
+
+/*
  * We distinguish between routes to hosts and routes to networks,
  * preferring the former if available.  For each route we infer
  * the interface to use from the gateway address supplied when
@@ -136,7 +94,6 @@ struct rt_metrics {
  * gateways are marked so that the output routines know to address the
  * gateway rather than the ultimate destination.
  */
-/*#ifdef KERNEL*/
 #ifndef RNF_NORMAL
 #include <net/radix.h>
 #endif
@@ -145,17 +102,21 @@ struct rtentry {
 #define	rt_key(r)	((struct sockaddr *)((r)->rt_nodes->rn_key))
 #define	rt_mask(r)	((struct sockaddr *)((r)->rt_nodes->rn_mask))
 	struct	sockaddr *rt_gateway;	/* value */
-	short	rt_flags;		/* up/down?, host/net */
+	short	rt_filler;		/* was short flags field */
 	short	rt_refcnt;		/* # held references */
-	u_long	rt_use;			/* raw # packets forwarded */
+	u_long	rt_flags;		/* up/down?, host/net */
 	struct	ifnet *rt_ifp;		/* the answer: interface to use */
 	struct	ifaddr *rt_ifa;		/* the answer: interface to use */
 	struct	sockaddr *rt_genmask;	/* for generation of cloned routes */
 	caddr_t	rt_llinfo;		/* pointer to link level info cache */
 	struct	rt_metrics rt_rmx;	/* metrics used by rx'ing protocols */
-	short	rt_idle;		/* easy to tell llayer still live */
+	struct	rtentry *rt_gwroute;	/* implied entry for gatewayed routes */
+	int	(*rt_output) __P((struct rtentry *, struct mbuf *,
+				  struct sockaddr *, int));
+					/* output routine for this (rt,if) */
+	struct	rtentry *rt_parent; 	/* cloning parent of this route */
+	void	*rt_filler2;		/* more filler */
 };
-/*#endif*/ /* KERNEL */
 
 /*
  * Following structure necessary for 4.3 compatibility;
@@ -171,7 +132,9 @@ struct ortentry {
 	struct	ifnet *rt_ifp;		/* the answer: interface to use */
 };
 
-#define	RTF_UP		0x1		/* route useable */
+#define rt_use rt_rmx.rmx_pksent
+
+#define	RTF_UP		0x1		/* route usable */
 #define	RTF_GATEWAY	0x2		/* destination is a gateway */
 #define	RTF_HOST	0x4		/* host entry (net otherwise) */
 #define	RTF_REJECT	0x8		/* host or net unreachable */
@@ -182,9 +145,17 @@ struct ortentry {
 #define RTF_CLONING	0x100		/* generate new routes on use */
 #define RTF_XRESOLVE	0x200		/* external daemon resolves name */
 #define RTF_LLINFO	0x400		/* generated by ARP or ESIS */
+#define RTF_STATIC	0x800		/* manually added */
+#define RTF_BLACKHOLE	0x1000		/* just discard pkts (during updates) */
 #define RTF_PROTO2	0x4000		/* protocol specific routing flag */
 #define RTF_PROTO1	0x8000		/* protocol specific routing flag */
 
+#define RTF_PRCLONING	0x10000		/* protocol requires cloning */
+#define RTF_WASCLONED	0x20000		/* route generated through cloning */
+#define RTF_PROTO3	0x40000		/* protocol specific routing flag */
+#define RTF_CHAINDELETE	0x80000		/* chain is being deleted (internal) */
+#define RTF_PINNED	0x100000	/* future use */
+					/* 0x200000 and up unassigned */
 
 /*
  * Routing statistics.
@@ -201,26 +172,20 @@ struct	rtstat {
  */
 struct rt_msghdr {
 	u_short	rtm_msglen;	/* to skip over non-understood messages */
-	u_char	rtm_version;	/* future binary compatability */
+	u_char	rtm_version;	/* future binary compatibility */
 	u_char	rtm_type;	/* message type */
 	u_short	rtm_index;	/* index for associated ifp */
-	pid_t	rtm_pid;	/* identify sender */
+	int	rtm_flags;	/* flags, incl. kern & message, e.g. DONE */
 	int	rtm_addrs;	/* bitmask identifying sockaddrs in msg */
+	pid_t	rtm_pid;	/* identify sender */
 	int	rtm_seq;	/* for sender to identify action */
 	int	rtm_errno;	/* why failed */
-	int	rtm_flags;	/* flags, incl. kern & message, e.g. DONE */
 	int	rtm_use;	/* from rtentry */
 	u_long	rtm_inits;	/* which metrics we are initializing */
 	struct	rt_metrics rtm_rmx; /* metrics themselves */
 };
 
-struct route_cb {
-	int	ip_count;
-	int	ns_count;
-	int	iso_count;
-	int	any_count;
-};
-#define RTM_VERSION	2	/* Up the ante and ignore older versions */
+#define RTM_VERSION	5	/* Up the ante and ignore older versions */
 
 #define RTM_ADD		0x1	/* Add Route */
 #define RTM_DELETE	0x2	/* Delete Route */
@@ -233,6 +198,9 @@ struct route_cb {
 #define RTM_OLDADD	0x9	/* caused by SIOCADDRT */
 #define RTM_OLDDEL	0xa	/* caused by SIOCDELRT */
 #define RTM_RESOLVE	0xb	/* req to resolve dst to LL addr */
+#define RTM_NEWADDR	0xc	/* address being added to iface */
+#define RTM_DELADDR	0xd	/* address being removed from iface */
+#define RTM_IFINFO	0xe	/* iface going up/down etc. */
 
 #define RTV_MTU		0x1	/* init or lock _mtu */
 #define RTV_HOPCOUNT	0x2	/* init or lock _hopcount */
@@ -243,6 +211,9 @@ struct route_cb {
 #define RTV_RTT		0x40	/* init or lock _rtt */
 #define RTV_RTTVAR	0x80	/* init or lock _rttvar */
 
+/*
+ * Bitmask values for rtm_addr.
+ */
 #define RTA_DST		0x1	/* destination sockaddr present */
 #define RTA_GATEWAY	0x2	/* gateway sockaddr present */
 #define RTA_NETMASK	0x4	/* netmask sockaddr present */
@@ -250,34 +221,40 @@ struct route_cb {
 #define RTA_IFP		0x10	/* interface name sockaddr present */
 #define RTA_IFA		0x20	/* interface addr sockaddr present */
 #define RTA_AUTHOR	0x40	/* sockaddr for author of redirect */
+#define RTA_BRD		0x80	/* for NEWADDR, broadcast or p-p dest addr */
+
+/*
+ * Index offsets for sockaddr array for alternate internal encoding.
+ */
+#define RTAX_DST	0	/* destination sockaddr present */
+#define RTAX_GATEWAY	1	/* gateway sockaddr present */
+#define RTAX_NETMASK	2	/* netmask sockaddr present */
+#define RTAX_GENMASK	3	/* cloning mask sockaddr present */
+#define RTAX_IFP	4	/* interface name sockaddr present */
+#define RTAX_IFA	5	/* interface addr sockaddr present */
+#define RTAX_AUTHOR	6	/* sockaddr for author of redirect */
+#define RTAX_BRD	7	/* for NEWADDR, broadcast or p-p dest addr */
+#define RTAX_MAX	8	/* size of array to allocate */
+
+struct rt_addrinfo {
+	int	rti_addrs;
+	struct	sockaddr *rti_info[RTAX_MAX];
+};
+
+struct route_cb {
+	int	ip_count;
+	int	ns_count;
+	int	iso_count;
+	int	any_count;
+};
 
 #ifdef KERNEL
-extern struct route_cb route_cb;
-
 #define	RTFREE(rt) \
 	if ((rt)->rt_refcnt <= 1) \
 		rtfree(rt); \
 	else \
 		(rt)->rt_refcnt--;
 
-extern struct	rtstat	rtstat;
+#endif
+#endif
 
-void rtinitheads(void);
-void rtalloc(struct route * ro);
-struct rtentry * rtalloc1(struct sockaddr * dst, int report);
-void rtfree(struct rtentry * rt);
-void rtredirect(struct sockaddr * dst, struct sockaddr * gateway,
-               struct sockaddr * netmask, int flags,
-               struct sockaddr * src, struct rtentry ** rtp);
-int rtioctl(int req, caddr_t data);
-struct ifaddr * ifa_ifwithroute(int flags, struct sockaddr * dst,
-                                struct sockaddr * gateway);
-int rtrequest(int req, struct sockaddr * dst, struct sockaddr * gateway,
-              struct sockaddr * netmask, int flags, struct rtentry ** ret_nrt);
-void rt_maskedcopy(struct sockaddr * src, struct sockaddr * dst,
-                  struct sockaddr * netmask);
-int rtinit(struct ifaddr * ifa, int cmd, int flags);
-
-#endif /* KERNEL */
-
-#endif /* !NET_ROUTE_H */

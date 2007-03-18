@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1982, 1986 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1982, 1986, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,11 +30,12 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)tcp_debug.h	7.4 (Berkeley) 6/28/90
+ *	@(#)tcp_debug.h	8.1 (Berkeley) 6/10/93
+ * $Id$
  */
 
-#ifndef TCP_DEBUG_H
-#define TCP_DEBUG_H
+#ifndef _NETINET_TCP_DEBUG_H_
+#define _NETINET_TCP_DEBUG_H_
 
 struct	tcp_debug {
 	n_time	td_time;
@@ -52,16 +53,13 @@ struct	tcp_debug {
 #define	TA_RESPOND	3
 #define	TA_DROP		4
 
-/*
- * Data definitions moved to tcp_debug.c
- */
-
 #ifdef TANAMES
-extern char	*tanames[];
+char	*tanames[] =
+    { "input", "output", "user", "respond", "drop" };
 #endif
 
-#define	TCP_NDEBUG 10
-extern struct	tcp_debug tcp_debug[TCP_NDEBUG];
-extern int	tcp_debx;
+#define	TCP_NDEBUG 100
+struct	tcp_debug tcp_debug[TCP_NDEBUG];
+int	tcp_debx;
 
-#endif /* !TCP_DEBUG_H */
+#endif

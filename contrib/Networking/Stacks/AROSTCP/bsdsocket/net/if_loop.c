@@ -2,7 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -120,7 +120,7 @@ void loconfig()
 	struct ifreq ifr = {0};
 	ifr.ifr_addr.sa_len = sizeof(struct sockaddr_in);
 	ifr.ifr_addr.sa_family = AF_INET;
-	((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr.s_addr = 0x7f000001;
+	((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr.s_addr = 0x7F000001;
 	in_control(NULL, SIOCSIFADDR, &ifr, &loif);
 }
 
@@ -141,6 +141,7 @@ looutput(ifp, m, dst, rt)
 
 	if (rt && rt->rt_flags & RTF_REJECT) {
 		m_freem(m);
+		DROUTE(log(LOG_DEBUG,"lo0: packet rejected");)
 		return (rt->rt_flags & RTF_HOST ? EHOSTUNREACH : ENETUNREACH);
 	}
 	ifp->if_opackets++;

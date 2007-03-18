@@ -1,7 +1,7 @@
 /*-
  * Copyright (c) 1985, 1990 Regents of the University of California.
  * All rights reserved.
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -246,11 +246,11 @@ p_rr(cp, msg, libPtr)
 			bcopy(cp, (char *)&inaddr, sizeof(inaddr));
 			if (dlen == 4) {
 				Printf("\tinternet address = %s\n",
-					__inet_ntoa(inaddr.s_addr, libPtr));
+					__Inet_NtoA(inaddr.s_addr, libPtr));
 				cp += dlen;
 			} else if (dlen == 7) {
 				Printf("\tinternet address = %s",
-					__inet_ntoa(inaddr.s_addr, libPtr));
+					__Inet_NtoA(inaddr.s_addr, libPtr));
 				Printf(", protocol = %d", cp[4]);
 				Printf(", port = %d\n",
 					(cp[5] << 8) + cp[6]);
@@ -349,7 +349,7 @@ p_rr(cp, msg, libPtr)
 		bcopy(cp, (char *)&inaddr, sizeof(inaddr));
 		cp += sizeof(u_long);
 		Printf("\tinternet address = %s, protocol = %d\n\t",
-			__inet_ntoa(inaddr.s_addr, libPtr), *cp++);
+			__Inet_NtoA(inaddr.s_addr, libPtr), *cp++);
 		n = 0;
 		while (cp < cp1 + dlen) {
 			c = *cp++;

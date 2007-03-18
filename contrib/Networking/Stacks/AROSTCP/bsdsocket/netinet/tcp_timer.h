@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1982, 1986 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1982, 1986, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,11 +30,12 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)tcp_timer.h	7.8 (Berkeley) 6/28/90
+ *	@(#)tcp_timer.h	8.1 (Berkeley) 6/10/93
+ * $Id$
  */
 
-#ifndef TCP_TIMER_H
-#define TCP_TIMER_H
+#ifndef _NETINET_TCP_TIMER_H_
+#define _NETINET_TCP_TIMER_H_
 
 /*
  * Definitions of the TCP timers.  These timers are counted
@@ -83,7 +84,6 @@
  * amount of time probing, then we drop the connection.
  */
 
-#define	TCP_TTL		60		/* default time to live for TCP segs */
 /*
  * Time constants.
  */
@@ -103,12 +103,15 @@
 #define	TCPTV_MIN	(  1*PR_SLOWHZ)		/* minimum allowable value */
 #define	TCPTV_REXMTMAX	( 64*PR_SLOWHZ)		/* max allowable REXMT value */
 
+#define TCPTV_TWTRUNC	8			/* RTO factor to truncate TW */
+
 #define	TCP_LINGERTIME	120			/* linger at most 2 minutes */
 
 #define	TCP_MAXRXTSHIFT	12			/* maximum retransmits */
 
 #ifdef	TCPTIMERS
-extern char *tcptimers[];
+char *tcptimers[] =
+    { "REXMT", "PERSIST", "KEEP", "2MSL" };
 #endif
 
 /*
@@ -116,18 +119,18 @@ extern char *tcptimers[];
  */
 #define	TCPT_RANGESET(tv, value, tvmin, tvmax) { \
 	(tv) = (value); \
-	if ((tv) < (tvmin)) \
+	if ((u_long)(tv) < (u_long)(tvmin)) \
 		(tv) = (tvmin); \
-	else if ((tv) > (tvmax)) \
+	else if ((u_long)(tv) > (u_long)(tvmax)) \
 		(tv) = (tvmax); \
 }
 
 #ifdef KERNEL
-extern int tcp_keepidle;	/* time before keepalive probes begin */
-extern int tcp_keepintvl;	/* time between keepalive probes */
-extern int tcp_maxidle;		/* time to drop after starting probes */
-extern int tcp_ttl;		/* time to live for TCP segs */
+extern int tcp_keepidle;		/* time before keepalive probes begin */
+extern int tcp_keepintvl;		/* time between keepalive probes */
+extern int tcp_maxidle;			/* time to drop after starting probes */
+extern int tcp_ttl;			/* time to live for TCP segs */
 extern int tcp_backoff[];
 #endif
 
-#endif /* !TCP_TIMER_H */
+#endif

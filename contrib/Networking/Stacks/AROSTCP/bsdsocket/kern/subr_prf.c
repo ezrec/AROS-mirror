@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -20,6 +19,8 @@
  * MA 02111-1307, USA.
  *
  */
+
+#define USE_INLINE_STDARG
 
 #include <conf.h>
 
@@ -135,10 +136,10 @@ panic(const char *fmt,...)
    * Inform user (if log system has failed...)
    * by opening a requester to the default public screen.
    *
-   * Open a local IntuitionBase for the EasyRequestArgs()
+   * Open a local IntuitionBase for the EasyRequest()
    */
   if ((IntuitionBase = OpenLibrary("intuition.library", 37L)) != NULL) {
-    EasyRequestArgs(NULL, &panicES, NULL, (char *)&buffer);
+    EasyRequest(NULL, &panicES, NULL, (ULONG)buffer);
     CloseLibrary(IntuitionBase);
     IntuitionBase = NULL;
   }
@@ -221,7 +222,9 @@ vlog(unsigned long level, const char *tag, const char *fmt, va_list ap)
 {
   struct SysLogPacket *msg;
   struct timeval now;
-  if (msg = (struct SysLogPacket *)GetLogMsg(&logReplyPort)) {
+
+  msg = (struct SysLogPacket *)GetLogMsg(&logReplyPort);
+  if (msg) {
     ULONG ret;
     struct CSource cs;
     if (tag) {
@@ -303,8 +306,7 @@ printf(const char *fmt, ...)
   struct SysLogPacket *msg;
   struct timeval now;
 
-  msg = GetLogMsg(&logReplyPort);
-  if (msg) {	 /* Get next free message */
+  if (msg = GetLogMsg(&logReplyPort)) {	 /* Get next free message */
     struct CSource cs;
 
     GetSysTime(&now);

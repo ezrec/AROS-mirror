@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -121,13 +120,10 @@ D(bug("[AROSTCP](kern_synch.c) tsleep_send_timeout()\n"));
     SetSignal(0, 1 << p->timerPort->mp_SigBit);
 #endif
   }
-
   /*
    * send timeout request if necessary
    */
-  if (time_out)
-  {
-//DTSLEEP(log(LOG_DEBUG,"tsleep_send_timeout()\n");)
+  if (time_out) {
     /*
      * set the timeout
      */
@@ -150,9 +146,7 @@ tsleep_abort_timeout(struct SocketBase *p,
 #if defined(__AROS__)
 D(bug("[AROSTCP](kern_synch.c) tsleep_abort_timeout()\n"));
 #endif
-  if (time_out)
-  {
-//DTSLEEP(log(LOG_DEBUG,"tsleep_abort_timeout()\n");)
+  if (time_out) {
     /* do not signal us any more */
     p->timerPort->mp_Flags = PA_IGNORE;
   }
@@ -251,7 +245,7 @@ D(bug("[AROSTCP](kern_synch.c) tsleep_main()\n"));
     /*
      * check if we got the timer reply signal and message
      */
-  if (bmask & timermask &&
+    if (bmask & timermask &&
 	(timerReply = (struct timerequest *)GetMsg(p->timerPort)) && 
 	timerReply == p->tsleep_timer) { /* sanity check */
       /*
@@ -260,7 +254,7 @@ D(bug("[AROSTCP](kern_synch.c) tsleep_main()\n"));
        * Set the node type to NT_UNKNOWN to mark that it is referenced only by
        * the p->tsleep_timer.
        */
-    timerReply->tr_node.io_Message.mn_Node.ln_Type = NT_UNKNOWN;
+      timerReply->tr_node.io_Message.mn_Node.ln_Type = NT_UNKNOWN;
 
       result = EWOULDBLOCK;
       break;

@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -41,8 +40,10 @@
 #endif
 
 #include <kern/amiga_includes.h>
+#include <libraries/miamipanel.h>
 
 #include <proto/dos.h>
+//#include <proto/miamipanel.h>
 
 #include <kern/amiga_time.h>
 #include <kern/amiga_log.h>
@@ -51,10 +52,11 @@ ULONG sana_init(void);
 void sana_deinit(void);
 BOOL sana_poll(void);
 
-
 #include <kern/amiga_main_protos.h>
 #include <kern/amiga_config.h>
+#include <kern/amiga_gui.h>
 #include <kern/amiga_netdb.h>
+#include <kern/amiga_rc.h>
 #include <kern/amiga_log.h>
 #include <kern/kern_malloc_protos.h>
 #include <api/amiga_api.h>
@@ -67,8 +69,6 @@ BOOL sana_poll(void);
 /*
  * The main module of the AMITCP/IP.
  */
-
-#include <proto/dos.h>
 
 /*
  * Global variable so AMITCP/IP task information can be utilized.
@@ -93,6 +93,7 @@ TEXT netdb_path[FILENAME_MAX];
 TEXT db_path[FILENAME_MAX];
 TEXT config_path[FILENAME_MAX];
 UBYTE logfiledefname[FILENAME_MAX];
+UBYTE dhclient_path[FILENAME_MAX];
 
 /*
 TEXT hequiv_path[FILENAME_MAX];
@@ -117,14 +118,14 @@ D(bug("[AROSTCP](amiga_main.c) main()\n"));
   TestSocketBase = OpenLibrary("bsdsocket.library",0);
   if (TestSocketBase) {
 	CloseLibrary(TestSocketBase);
-	Printf("Another TCP/IP stack is running, please quit it first.\n");
+	error_request("Another TCP/IP stack is running, please quit it first.");
 	return 21;
   }
 
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_main.c) main: Kernel launching ...\n"));
 #else
-  D(Printf(STACK_NAME " kernel starting\n");)
+  D(Printf(STACK_NAME " kernel started\n");)
 #endif
 
   /*
@@ -168,6 +169,7 @@ D(bug("[AROSTCP](amiga_main.c) main: Directory tree root: %s\n", interfaces_path
   strcpy(config_path, interfaces_path);
   strcpy(logfiledefname, "T:");             /* NicJA: Default to storing logs in Temp for launching
                                                from read only media                          */
+  strcpy(dhclient_path, interfaces_path);
 /*strcpy(hequiv_path, interfaces_path);
   strcpy(inetdconf_path, interfaces_path);*/
   AddPart(interfaces_path, _PATH_DB, FILENAME_MAX);
@@ -175,6 +177,7 @@ D(bug("[AROSTCP](amiga_main.c) main: Directory tree root: %s\n", interfaces_path
   AddPart(db_path, _PATH_DB, FILENAME_MAX);
   AddPart(config_path, _PATH_DB, FILENAME_MAX);
   AddPart(logfiledefname, _PATH_SYSLOG, FILENAME_MAX);
+  AddPart(dhclient_path, _PATH_DHCLIENT, FILENAME_MAX);
 /*AddPart(hequiv_path, _PATH_HEQUIV, FILENAME_MAX);
   AddPart(inetdconf_path, _PATH_INETDCONF, FILENAME_MAX);*/
 
@@ -389,6 +392,12 @@ D(bug("[AROSTCP](amiga_main.c) init_all()\n"));
    */
   domaininit();
   D(Printf("domaininit() complete\n");)
+
+  pfil_init();
+  D(Printf("pfil_init() complete\n");)
+
+  loconfig();
+  D(Printf("loconfig() complete\n");)
 	    
   /*
    * Initialize NetDataBase
@@ -409,6 +418,9 @@ D(bug("[AROSTCP](amiga_main.c) init_all()\n"));
     Signal(Nettrace_Task, SIGBREAKF_CTRL_F);
   } else
     return FALSE;
+
+  rc_start();
+  D(Printf("rc_start() complete, initialization finished\n");)
 
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_main.c) init_all: Initialisation successfull.\n"));

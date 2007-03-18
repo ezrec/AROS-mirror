@@ -2,7 +2,9 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
+ *
+ * Includes changes (c) 2005 - 2006 Neil Cafferkey and Pavel Fedin
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as

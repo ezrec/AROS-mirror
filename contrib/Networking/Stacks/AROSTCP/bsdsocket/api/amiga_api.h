@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -59,13 +58,35 @@
 #include <proto/exec.h>
 #include <kern/amiga_config.h>
 
-enum apistate {	API_SCRATCH, /* api not initialized */
+enum apistate {
+	API_SCRATCH,                /* api not initialized */
 	API_INITIALIZED,            /* librarybase created */
 	API_SHOWN,                  /* librarybase made visible */
 	API_HIDDEN,                 /* librarybase hidden */
 	API_FUNCTIONPATCHED         /* Api functions set to return -1 */
 };
 extern enum apistate api_state;
+
+#ifdef __MORPHOS__
+#pragma pack(2)
+#endif
+
+struct LibInitTable {
+  UBYTE byte1; UBYTE offset1; UBYTE ln_type; UBYTE pad0;
+  UBYTE byte2; UBYTE offset2; UBYTE lib_flags; UBYTE pad1;
+  UBYTE long3; UBYTE offset3; ULONG ln_Name;
+  UBYTE word4; UBYTE offset4; UWORD lib_Version;
+  UBYTE word5; UBYTE offset5; UWORD lib_Revision;
+  UBYTE long6; UBYTE offset6; ULONG lib_IdString;
+  UBYTE end7;
+};
+
+#ifdef __MORPHOS__
+#pragma pack()
+#endif
+
+extern struct LibInitTable Miami_initTable;
+extern struct Library *MasterMiamiBase;
 
 struct newselbuf;
 
@@ -135,8 +156,9 @@ struct SocketBase {
   struct MinList	EventList;
 /* -- buffer for string returns -- */
   UBYTE			result_str[REPLYBUFLEN + 1];
-/* -- state of NetDB lock for external netdb manipulation functions-- */
-  LONG			NetDB_State;
+/* -- NetDB pointers for getXXXent() and friends -- */
+  struct HostentNode *HostentNode;
+  struct ProtoentNode *ProtoentNode;
 };
 
 /* 
@@ -180,7 +202,7 @@ static inline void ObtainSyscallSemaphore(struct SocketBase *libPtr)
 
   ObtainSemaphore(&syscall_semaphore);
   libPtr->myPri = SetTaskPri(libPtr->thisTask,
-			     libPtr->libCallPri = AROSTCP_Task->tc_Node.ln_Pri);
+  libPtr->libCallPri = AROSTCP_Task->tc_Node.ln_Pri);
 }
 
 static inline void ReleaseSyscallSemaphore(struct SocketBase *libPtr)

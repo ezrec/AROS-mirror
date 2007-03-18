@@ -1,28 +1,8 @@
 /*
- * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
- *                    Helsinki University of Technology, Finland.
- *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
- */
-
-/*
- * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1982, 1986, 1988, 1990, 1993
+ *	The Regents of the University of California.  All rights reserved.
+ * Copyright (c) 2006
+ *	Pavel Fedin
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -52,11 +32,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)tcp_timer.c	7.18 (Berkeley) 6/28/90
+ *	@(#)tcp_timer.c	8.1 (Berkeley) 6/10/93
+ * $Id$
  */
 
-#include <conf.h>
-
+#ifndef TUBA_INCLUDE
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/malloc.h>
@@ -65,10 +45,11 @@
 #include <sys/socketvar.h>
 #include <sys/protosw.h>
 #include <sys/errno.h>
+#include <sys/queue.h>
 #include <sys/synch.h>
 
-#include <net/if.h>
 #include <net/route.h>
+#include <net/if.h>
 
 #include <netinet/in.h>
 #include <netinet/in_systm.h>
@@ -82,15 +63,10 @@
 #include <netinet/tcp_var.h>
 #include <netinet/tcpip.h>
 
-#include <netinet/tcp_timer_protos.h>
-#include <netinet/tcp_subr_protos.h>
-#include <netinet/tcp_output_protos.h>
-#include <netinet/tcp_usrreq_protos.h>
-#include <netinet/in_pcb_protos.h>
-
 int	tcp_keepidle = TCPTV_KEEP_IDLE;
 int	tcp_keepintvl = TCPTV_KEEPINTVL;
-int	tcp_maxidle = 0;
+int	tcp_maxidle;
+#endif /* TUBA_INCLUDE */
 /*
  * Fast timeout routine for processing delayed acks
  */
@@ -99,11 +75,11 @@ tcp_fasttimo()
 {
 	register struct inpcb *inp;
 	register struct tcpcb *tp;
-	spl_t s = splnet();
+	int s;
 
-	inp = tcb.inp_next;
-	if (inp)
-	for (; inp != &tcb; inp = inp->inp_next)
+	s = splnet();
+
+	for (inp = tcb.lh_first; inp != NULL; inp = inp->inp_list.le_next) {
 		if ((tp = (struct tcpcb *)inp->inp_ppcb) &&
 		    (tp->t_flags & TF_DELACK)) {
 			tp->t_flags &= ~TF_DELACK;
@@ -111,6 +87,7 @@ tcp_fasttimo()
 			tcpstat.tcps_delack++;
 			(void) tcp_output(tp);
 		}
+	}
 	splx(s);
 }
 
@@ -124,45 +101,50 @@ tcp_slowtimo()
 {
 	register struct inpcb *ip, *ipnxt;
 	register struct tcpcb *tp;
-	spl_t s = splnet();
 	register int i;
+	int s;
+
+	s = splnet();
 
 	tcp_maxidle = TCPTV_KEEPCNT * tcp_keepintvl;
-	/*
-	 * Search through tcb's and update active timers.
-	 */
-	ip = tcb.inp_next;
-	if (ip == 0) {
+
+	ip = tcb.lh_first;
+	if (ip == NULL) {
 		splx(s);
 		return;
 	}
-	for (; ip != &tcb; ip = ipnxt) {
-		ipnxt = ip->inp_next;
+	/*
+	 * Search through tcb's and update active timers.
+	 */
+	for (; ip != NULL; ip = ipnxt) {
+		ipnxt = ip->inp_list.le_next;
 		tp = intotcpcb(ip);
 		if (tp == 0)
 			continue;
 		for (i = 0; i < TCPT_NTIMERS; i++) {
 			if (tp->t_timer[i] && --tp->t_timer[i] == 0) {
-				(void) tcp_usrreq(tp->t_inpcb->inp_socket,
+				if (tcp_usrreq(tp->t_inpcb->inp_socket,
 				    PRU_SLOWTIMO, (struct mbuf *)0,
-				    (struct mbuf *)i, (struct mbuf *)0);
-				if (ipnxt->inp_prev != ip)
+				    (struct mbuf *)i, (struct mbuf *)0) == NULL)
 					goto tpgone;
 			}
 		}
 		tp->t_idle++;
+		tp->t_duration++;
 		if (tp->t_rtt)
 			tp->t_rtt++;
 tpgone:
 		;
 	}
 	tcp_iss += TCP_ISSINCR/PR_SLOWHZ;		/* increment iss */
-#if TCP_COMPAT_42
+#ifdef TCP_COMPAT_42
 	if ((int)tcp_iss < 0)
 		tcp_iss = 0;				/* XXX */
 #endif
+	tcp_now++;					/* for timestamps */
 	splx(s);
 }
+#ifndef TUBA_INCLUDE
 
 /*
  * Cancel all timers for TCP tp.
@@ -239,6 +221,10 @@ tcp_timers(tp, timer)
 		}
 		tp->snd_nxt = tp->snd_una;
 		/*
+		 * Force a segment to be sent.
+		 */
+		tp->t_flags |= TF_ACKNOW;
+		/*
 		 * If timing a segment in this window, stop the timer.
 		 */
 		tp->t_rtt = 0;
@@ -255,7 +241,7 @@ tcp_timers(tp, timer)
 		 * size increase exponentially with time.  If the
 		 * window is larger than the path can handle, this
 		 * exponential growth results in dropped packet(s)
-		 * almost immediately.  To get more time between 
+		 * almost immediately.  To get more time between
 		 * drops but still "push" the network to take advantage
 		 * of improving conditions, we switch from exponential
 		 * to linear window opening at some threshhold size.
@@ -314,7 +300,7 @@ tcp_timers(tp, timer)
 			 * correspondent TCP to respond.
 			 */
 			tcpstat.tcps_keepprobe++;
-#if TCP_COMPAT_42
+#ifdef TCP_COMPAT_42
 			/*
 			 * The keepalive packet must have nonzero length
 			 * to get a 4.2 host to respond.
@@ -336,3 +322,4 @@ tcp_timers(tp, timer)
 	}
 	return (tp);
 }
+#endif /* TUBA_INCLUDE */

@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -48,6 +47,7 @@ D(bug("[AROSTCP](res_init.c) res_cleanup_db()\n"));
 	}
 	if (state->nsaddr_list)
 		bsd_free(state->nsaddr_list, NULL);
+	state->options = NULL;
 }
 
 int res_update_db(struct state *state)
@@ -64,7 +64,6 @@ D(bug("[AROSTCP](res_init.c) res_update_db()\n"));
 
   opts = state->options;
   res_cleanup_db(state);
-
   LOCK_R_NDB(NDB);
   /* Count number of domain names in the NetDB */
   for (domain = (struct DomainentNode *)NDB->ndb_Domains.mlh_Head;
@@ -79,7 +78,6 @@ D(bug("[AROSTCP](res_init.c) res_update_db: %d Domains in NetDB\n", n-1));
 #endif
 
   ObtainSemaphoreShared(&DynDB.dyn_Lock);
-
   /* Add domain names from dynamic entries list */
   for (domain = (struct DomainentNode *)DynDB.dyn_Domains.mlh_Head;
        domain->dn_Node.mln_Succ;
@@ -94,7 +92,6 @@ D(bug("[AROSTCP](res_init.c) res_update_db: %d Domains in DynDB\n", n-tmp_n-1));
 
   /* Allocate space for the array */
   state->dnsrch = bsd_malloc(n*sizeof(char *), NULL, NULL);
-
   if (!state->dnsrch) {
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_init.c) res_update_db: Failed to allocate array for dnsrch pointers\n"));  
@@ -103,30 +100,25 @@ D(bug("[AROSTCP](res_init.c) res_update_db: Failed to allocate array for dnsrch 
     ReleaseSemaphore(&DynDB.dyn_Lock);
     return -1;
   }
-
   /* Copy entries themselves, fill in the array */
   n = 0;
   for (domain = (struct DomainentNode *)NDB->ndb_Domains.mlh_Head;
      domain->dn_Node.mln_Succ;
-     domain = (struct DomainentNode *)domain->dn_Node.mln_Succ)
-  {
-    l = strlen(domain->dn_Ent.d_name)+1;
-    state->dnsrch[n] = bsd_malloc(l, NULL, NULL);
-    if (!state->dnsrch[n]) {
+     domain = (struct DomainentNode *)domain->dn_Node.mln_Succ) {
+        l = strlen(domain->dn_Ent.d_name)+1;
+        state->dnsrch[n] = bsd_malloc(l, NULL, NULL);
+        if (!state->dnsrch[n]) {
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_init.c) res_update_db: Failed to allocate space for entry %d from NetDB entry '%s' name\n", n,
  domain->dn_Ent.d_name));
 #endif
       UNLOCK_NDB(NDB);
       ReleaseSemaphore(&DynDB.dyn_Lock);
-
       res_cleanup_db(state);
-
       return -1;
     }
     strcpy(state->dnsrch[n++], domain->dn_Ent.d_name);
   }
-
   for (domain = (struct DomainentNode *)DynDB.dyn_Domains.mlh_Head;
      domain->dn_Node.mln_Succ;
      domain = (struct DomainentNode *)domain->dn_Node.mln_Succ) {
@@ -192,7 +184,7 @@ D(bug("[AROSTCP](res_init.c) res_update_db: Failed to allocate array for nsaddr_
        ns->nsn_Node.mln_Succ;
        ns = (struct NameserventNode *)ns->nsn_Node.mln_Succ)
   {
-    ((struct in_addr *)state->nsaddr_list)[n++].s_addr = ns->nsn_Ent.ns_addr.s_addr;
+    state->nsaddr_list[n++].s_addr = ns->nsn_Ent.ns_addr.s_addr;
   }
   UNLOCK_NDB(NDB);
 
@@ -200,12 +192,11 @@ D(bug("[AROSTCP](res_init.c) res_update_db: Failed to allocate array for nsaddr_
        ns->nsn_Node.mln_Succ;
        ns = (struct NameserventNode *)ns->nsn_Node.mln_Succ)
   {
-    ((struct in_addr *)state->nsaddr_list)[n++].s_addr = ns->nsn_Ent.ns_addr.s_addr;
+    state->nsaddr_list[n++].s_addr = ns->nsn_Ent.ns_addr.s_addr;
   }
   ReleaseSemaphore(&DynDB.dyn_Lock);
-
   /* Terminale the array */
-  ((struct in_addr *)state->nsaddr_list)[n].s_addr = NULL;
+  state->nsaddr_list[n].s_addr = NULL;
   /* Remember NetDB update count */
   state->dbserial = ndb_Serial;
   state->options = opts;
@@ -224,3 +215,4 @@ res_init(struct state *state)
   state->options = RES_DEFAULT;
   return 0;
 }
+

@@ -57,6 +57,7 @@
 
 #include <conf.h>
 
+#include <libraries/miami.h>
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/malloc.h>
@@ -65,12 +66,12 @@
 #include <sys/protosw.h>
 #include <sys/socket.h>
 #include <sys/errno.h>
-/*#include <sys/time.h>*/
 #include <sys/kernel.h>
 #include <sys/synch.h>
 
 #include <net/if.h>
 #include <net/route.h>
+#include <net/pfil.h>
 
 #include <netinet/in.h>
 #include <netinet/in_systm.h>
@@ -80,7 +81,6 @@
 #include <netinet/ip_var.h>
 #include <netinet/ip_icmp.h>
 
-#include <net/if_protos.h>
 #include <netinet/ip_input_protos.h>
 #include <netinet/ip_output_protos.h>
 #include <netinet/ip_icmp_protos.h>
@@ -264,6 +264,11 @@ next:
 		} else
 			m_adj(m, ip->ip_len - m->m_pkthdr.len);
 	}
+
+	/*
+	 * Run through list of hooks.
+	 */
+        pfil_run_hooks(m, m->m_pkthdr.rcvif, MIAMIPFBPT_IP);
 
 	/*
 	 * Process options and, if not destined for us,

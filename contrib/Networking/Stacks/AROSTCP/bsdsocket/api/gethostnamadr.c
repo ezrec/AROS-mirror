@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -84,8 +83,9 @@ static char sccsid[] = "@(#)gethostnamadr.c	6.45 (Berkeley) 2/24/91";
 
 #include <api/gethtbynamadr.h>     /* prototypes (NO MORE BUGS HERE) */
 #include <api/apicalls.h>
-     
-     
+
+#include <proto/bsdsocket.h>
+
 #define	MAXALIASES	35
 #define	MAXADDRS	35
 
@@ -369,14 +369,8 @@ int isipaddr(const char *name)
 	return (i == 3);
 }
 
-/*struct hostent * SAVEDS gethostbyname(
-   REG(a0, const char * name),
-   REG(a6, struct SocketBase * libPtr))*/
-AROS_LH1(struct hostent *, gethostbyname,
-   AROS_LHA(char *, name, A0),
-   struct SocketBase *, libPtr, 30, UL)
+struct hostent *__gethostbyname(const char *name, struct SocketBase *libPtr)
 {
-  AROS_LIBFUNC_INIT
   querybuf *buf;
   int n;
   char * ptr;
@@ -392,9 +386,7 @@ D(bug("[AROSTCP](gethostnameadr.c) gethostbyname('%s')\n", name));
   /*
    * check if name consists of only dots and digits.
    */
-  if (isipaddr(name))
-  {
-
+  if (isipaddr(name)) {
     struct in_addr inaddr;
     u_long * lptr;
 
@@ -402,7 +394,7 @@ D(bug("[AROSTCP](gethostnameadr.c) gethostbyname('%s')\n", name));
 D(bug("[AROSTCP](gethostnameadr.c) gethostbyname: name IS an IP address\n"));
 #endif
 
-    if (!inet_aton(name, &inaddr)) {
+    if (!__inet_aton(name, &inaddr)) {
       writeErrnoValue(libPtr, EINVAL);
       h_errno = 0;
       return NULL;
@@ -495,10 +487,19 @@ D(bug("[AROSTCP](gethostnameadr.c) gethostbyname: finished search\n"));
 
   if (HS)
     bsd_free(HS, M_TEMP);
-
   return anshost;
+}
+
+AROS_LH1(struct hostent *, gethostbyname,
+   AROS_LHA(char *, name, A0),
+   struct SocketBase *, libPtr, 30, UL)
+{
+  AROS_LIBFUNC_INIT
+  return __gethostbyname(name, libPtr);
   AROS_LIBFUNC_EXIT
 }
+
+
 
 struct hostent * __gethostbyaddr(UBYTE *addr, int len, int type, struct SocketBase * libPtr)
 {
@@ -685,7 +686,7 @@ size_t host_namelen = 0;
 *****************************************************************************
 *
 */
-int SAVEDS sethostname(REG(a0, const char * name), REG(d0, size_t namelen))
+int sethostname(const char *name, size_t namelen)
 {
 #if defined(__AROS__)
 D(bug("[AROSTCP](gethostnameadr.c) sethostname()\n"));

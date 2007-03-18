@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -29,6 +28,7 @@
 
 #include <conf.h>
 
+#include <libraries/miami.h>
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/malloc.h>
@@ -44,6 +44,7 @@
 #include <net/if.h>
 #include <net/if_types.h>
 #include <net/if_protos.h>
+#include <net/pfil.h>
 #include <netinet/in.h>
 #include <netinet/in_systm.h>
 #include <netinet/in_var.h>
@@ -471,7 +472,7 @@ arpinput(struct sana_softc *ssc,
     goto out;
   }
 #endif
-
+  pfil_run_hooks(m, &ssc->ss_if, MIAMIPFBPT_ARP);
   proto = ntohs(ar->ar_pro);
 
   if (proto == ssc->ss_ip.type) {
@@ -629,6 +630,7 @@ in_arpinput(register struct sana_softc *ssc,
 
     m->m_flags &= ~(M_BCAST|M_MCAST);
 
+    pfil_run_hooks(m, &ssc->ss_if, MIAMIPFBPT_ARP);
     (*ssc->ss_if.if_output)(&ssc->ss_if, m, (struct sockaddr *)&ss2, 
 			    (struct rtentry *)0);
     return;

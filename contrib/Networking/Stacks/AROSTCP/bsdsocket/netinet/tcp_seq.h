@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1982, 1986 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1982, 1986, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,12 +30,12 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)tcp_seq.h	7.4 (Berkeley) 6/28/90
+ *	@(#)tcp_seq.h	8.1 (Berkeley) 6/10/93
+ * $Id$
  */
 
-#ifndef TCP_SEQ_H
-#define TCP_SEQ_H
-
+#ifndef _NETINET_TCP_SEQ_H_
+#define _NETINET_TCP_SEQ_H_
 /*
  * TCP sequence numbers are 32 bit integers operated
  * on with modular arithmetic.  These macros can be
@@ -45,6 +45,23 @@
 #define	SEQ_LEQ(a,b)	((int)((a)-(b)) <= 0)
 #define	SEQ_GT(a,b)	((int)((a)-(b)) > 0)
 #define	SEQ_GEQ(a,b)	((int)((a)-(b)) >= 0)
+
+/* for modulo comparisons of timestamps */
+#define TSTMP_LT(a,b)	((int)((a)-(b)) < 0)
+#define TSTMP_GEQ(a,b)	((int)((a)-(b)) >= 0)
+
+/*
+ * TCP connection counts are 32 bit integers operated
+ * on with modular arithmetic.  These macros can be
+ * used to compare such integers.
+ */
+#define	CC_LT(a,b)	((int)((a)-(b)) < 0)
+#define	CC_LEQ(a,b)	((int)((a)-(b)) <= 0)
+#define	CC_GT(a,b)	((int)((a)-(b)) > 0)
+#define	CC_GEQ(a,b)	((int)((a)-(b)) >= 0)
+
+/* Macro to increment a CC: skip 0 which has a special meaning */
+#define CC_INC(c)	(++(c) == 0 ? ++(c) : (c))
 
 /*
  * Macros to initialize tcp sequence numbers for
@@ -60,8 +77,11 @@
 
 #define	TCP_ISSINCR	(125*1024)	/* increment for tcp_iss each second */
 
-#ifdef KERNEL
-extern tcp_seq	tcp_iss;		/* tcp initial send seq # */
-#endif
+#define TCP_PAWS_IDLE	(24 * 24 * 60 * 60 * PR_SLOWHZ)
+					/* timestamp wrap-around time */
 
-#endif /* !TCP_SEQ_H */
+#ifdef KERNEL
+extern int	tcp_iss;		/* tcp initial send seq # */
+extern int	tcp_ccgen;		/* global connection count */
+#endif
+#endif

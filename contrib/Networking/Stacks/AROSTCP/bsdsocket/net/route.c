@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -110,9 +109,13 @@
 
 #include <net/rtsock_protos.h>
 #include <net/radix_protos.h>
+#include <net/route_protos.h>
 #include <netinet/in_protos.h>
 
 #define	SA(p) ((struct sockaddr *)(p))
+
+extern struct	rtstat	rtstat;
+
 
 /* --- commons from route.h --- */
 struct route_cb route_cb = {0};
@@ -170,6 +173,8 @@ rtalloc1(dst, report)
 
 	for (rnh = radix_node_head; rnh && (dst->sa_family != rnh->rnh_af); )
 		rnh = rnh->rnh_next;
+	DROUTE(log(LOG_DEBUG,"Found radix node head: 0x%08lx", rnh);)
+	DROUTE(log(LOG_DEBUG,"rnh_treetop = 0x%08lx", rnh->rnh_treetop);)
 	if (rnh && rnh->rnh_treetop &&
 	    (rn = rn_match((caddr_t)dst, rnh->rnh_treetop)) &&
 	    ((rn->rn_flags & RNF_ROOT) == 0)) {
@@ -183,6 +188,7 @@ rtalloc1(dst, report)
 		} else
 			rt->rt_refcnt++;
 	} else {
+		DROUTE(log(LOG_DEBUG,"Route lookup failure, rn = 0x%08lx", rn);)
 		rtstat.rts_unreach++;
 	miss:	if (report)
 			rt_missmsg(msgtype, dst, SA(0), SA(0), SA(0), 0, err);

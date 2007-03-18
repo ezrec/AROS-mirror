@@ -79,7 +79,7 @@
 
 #include <ctype.h>
 
-extern struct MsgPort *ExtLogPort;
+#include <proto/bsdsocket.h>
 
 /*
  * Functions which are defined in link library in unix systems
@@ -90,7 +90,7 @@ extern struct MsgPort *ExtLogPort;
  * Convert network-format internet address
  * to base 256 d.d.d.d representation.
  */
-char * __inet_ntoa(ULONG s_addr, struct SocketBase *libPtr)
+char * __Inet_NtoA(ULONG s_addr, struct SocketBase *libPtr)
 {
   NTOHL(s_addr);
 
@@ -109,7 +109,7 @@ AROS_LH1(char *, Inet_NtoA,
 {
   AROS_LIBFUNC_INIT
   D(log(LOG_DEBUG,"Inet_NtoA(0x%08lx) called",s_addr);)
-  return __inet_ntoa(s_addr, libPtr);
+  return __Inet_NtoA(s_addr, libPtr);
   AROS_LIBFUNC_EXIT
 }
 
@@ -122,11 +122,7 @@ AROS_LH1(char *, Inet_NtoA,
  * cannot distinguish between failure and a local broadcast address.
  */
 
-/*int
-inet_aton(register const char *cp, struct in_addr *addr)*/
-int SAVEDS inet_aton(
-   REG(a0, const char *cp),
-   REG(a1, struct in_addr *addr))
+LONG __inet_aton(STRPTR cp,  struct in_addr * addr)
 {
 	register u_long val, base, n;
 	register char c;
@@ -210,6 +206,19 @@ int SAVEDS inet_aton(
 	return (1);
 }
 
+AROS_LH2(LONG, inet_aton,
+   AROS_LHA(STRPTR, cp, A0),
+   AROS_LHA(struct in_addr *, addr, A1),
+   struct SocketBase *, libPtr, 95, UL)
+{
+	AROS_LIBFUNC_INIT
+
+	return __inet_aton(cp,  addr);
+
+	AROS_LIBFUNC_EXIT
+
+}
+
 /*
  * Ascii internet address interpretation routine.
  * The value returned is in network order.
@@ -225,7 +234,7 @@ AROS_LH1(ULONG, inet_addr,
         AROS_LIBFUNC_INIT
 	struct in_addr val;
 
-	if (inet_aton(cp, &val))
+	if (__inet_aton(cp, &val))
 		return (val.s_addr);
 	return (INADDR_NONE);
         AROS_LIBFUNC_EXIT
@@ -290,21 +299,21 @@ AROS_LH1(ULONG, Inet_NetOf,
    REG(d1, ULONG host),
    REG(a6, struct SocketBase *libPtr))*/
 AROS_LH2(ULONG, Inet_MakeAddr,
-   AROS_LHA(int, net, D0),
-   AROS_LHA(int, host, D1),
+   AROS_LHA(ULONG, net, D0),
+   AROS_LHA(ULONG, host, D1),
    struct SocketBase *, libPtr, 34, UL)
 {
 	AROS_LIBFUNC_INIT
 	u_long addr;
 
-	if ((ULONG)net < 128)
-		addr = ((ULONG)net << IN_CLASSA_NSHIFT) | ((ULONG)host & IN_CLASSA_HOST);
+	if (net < 128)
+		addr = (net << IN_CLASSA_NSHIFT) | (host & IN_CLASSA_HOST);
 	else if (net < 65536)
-		addr = ((ULONG)net << IN_CLASSB_NSHIFT) | ((ULONG)host & IN_CLASSB_HOST);
+		addr = (net << IN_CLASSB_NSHIFT) | (host & IN_CLASSB_HOST);
 	else if (net < 16777216L)
-		addr = ((ULONG)net << IN_CLASSC_NSHIFT) | ((ULONG)host & IN_CLASSC_HOST);
+		addr = (net << IN_CLASSC_NSHIFT) | (host & IN_CLASSC_HOST);
 	else
-		addr = (ULONG)net | (ULONG)host;
+		addr = net | host;
 
 	return htonl(addr);
 	AROS_LIBFUNC_EXIT
@@ -365,35 +374,6 @@ again:
 		val |= parts[i] & 0xff;
 	}
 	return (val);
-	AROS_LIBFUNC_EXIT
-}
-
-void SAVEDS SetSysLogPort()
-{
-	ExtLogPort = FindPort("SysLog");
-}
-
-#warning "TODO: NicJA - Do we really need these NEW functions? EZTCP_free"
-AROS_LH1(ULONG, EZTCP_free,
-   AROS_LHA(void *, addr, A0),
-   struct SocketBase *, libPtr, 80, UL)
-{
-	AROS_LIBFUNC_INIT
-
-	bsd_free(addr, NULL);
-
-	AROS_LIBFUNC_EXIT
-}
-
-#warning "TODO: NicJA - Do we really need these NEW functions? EZTCP_malloc"
-AROS_LH1(ULONG, EZTCP_malloc,
-   AROS_LHA(unsigned long, size, D0),
-   struct SocketBase *, libPtr, 81, UL)
-{
-	AROS_LIBFUNC_INIT
-
-	return bsd_malloc(size, NULL, NULL);
-
 	AROS_LIBFUNC_EXIT
 }
 

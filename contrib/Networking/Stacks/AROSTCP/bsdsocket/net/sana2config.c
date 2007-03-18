@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -62,6 +61,7 @@ ssconfig_parse(struct RDArgs *rdargs)
 D(bug("[AROSTCP] ssconfig_parse()\n"));
 
   if (config != NULL) {
+    
     if (ReadArgs(template, (LONG *)config->args, rdargs)) {
       config->rdargs = rdargs;
       config->flags |= SSCF_RDARGS;

@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -36,9 +35,9 @@
 #include <sys/syslog.h>
 
 #include <kern/amiga_includes.h>
+#include <kern/amiga_gui.h>
 
 #include <sys/synch.h>
-/*#include <sys/time.h>*/
 
 #include <net/if.h>
 #include <net/netisr.h>
@@ -66,10 +65,9 @@
 #include <net/sana2request.h>
 #include <net/sana2errno.h>
 
+#include <libraries/bsdsocket.h>
+#include <libraries/miamipanel.h>
 #include <proto/dos.h>
-
-#include <net/if_protos.h>
-#include <net/if_loop_protos.h>
 
 #define ARP_MTU (sizeof(struct s2_arppkt))
 
@@ -101,6 +99,7 @@ static void sana_ip_read(struct sana_softc *ssc, struct IOIPReq *req);
 static void sana_arp_read(struct sana_softc *ssc, struct IOIPReq *req);
 static void sana_online(struct sana_softc *ssc, struct IOIPReq *req);
 static void free_written_packet(struct sana_softc *ssc, struct IOIPReq *req);
+static long sana_query(struct sana_softc *ssc, struct TagItem *tag);
 
 /*
  * Initialize Sana-II interface
@@ -291,28 +290,6 @@ aiface_find(char *name, long unit)
 }
 #endif
 
-/*
- * This function strategically plugs into ifunit(), and it is called
- * on a non-existant interface.  We try to look it up, and if successful
- * initialize a descriptor and call if_attach() with it.
- *
- * Name is Unix kernel device name,
- * we convert it to Exec device and unit.
- */
-/*
-struct ifnet *
-iface_find(char *name, short unit)
-{
-  struct ssconfig *ifc = ssconfig_make(SSC_ALIAS, name, unit);
-  
-  if (ifc) {
-    struct ifnet *ifp = iface_make(ifc);
-    ssconfig_free(ifc);
-    return ifp;
-  }
-  return NULL;
-} */
-
 struct ifnet *
 iface_make(struct ssconfig *ifc)
 {
@@ -379,6 +356,7 @@ iface_make(struct ssconfig *ifc)
 	    /* These might be different on different hwtypes */
 	    ssc->ss_if.if_output = sana_output;
 	    ssc->ss_if.if_ioctl  = sana_ioctl;
+	    ssc->ss_if.if_query  = sana_query;
 
 	    /* Map SANA-II hardware types to RFC1573 standard */
 	    switch (ssc->ss_hwtype) {
@@ -455,10 +433,10 @@ sana_run(struct sana_softc *ssc, int requests, struct ifaddr *ifa)
       DoIO((struct IORequest*)req);
 
       if (req->ios2_Req.io_Error == 0 ||
-          req->ios2_WireError == S2WERR_IS_CONFIGURED) {
-        /* Mark us as running */
-        ssc->ss_if.if_flags |= IFF_RUNNING;
-        if (ssc->ss_cflags & SSF_TRACK) {
+	  req->ios2_WireError == S2WERR_IS_CONFIGURED) {
+	    /* Mark us as running */
+	    ssc->ss_if.if_flags |= IFF_RUNNING;
+	    if (ssc->ss_cflags & SSF_TRACK) {
 #ifdef INET
           /* Ask for packet type specific statistics */
           req->ios2_Req.io_Command = S2_TRACKTYPE;
@@ -489,8 +467,7 @@ sana_run(struct sana_softc *ssc, int requests, struct ifaddr *ifa)
 
   if ((ssc->ss_if.if_flags & IFF_RUNNING)) {
     /* Initialize ioRequests, add them into free queue */
-    for (i = 0; i < requests ; i++)
-    {
+    for (i = 0; i < requests ; i++) {
       if (!(req = CreateIORequest(SanaPort, sizeof(*req)))) break;
       req->ioip_s2.ios2_Req.io_Device    = ssc->ss_dev;    
       req->ioip_s2.ios2_Req.io_Unit      = ssc->ss_unit;   
@@ -577,8 +554,7 @@ D(bug("[ATCP-SANA] sana_ioctl: SIOCSIFADDR - Set Interface Address\n"));
 D(bug("[ATCP-SANA] sana_ioctl: SIFADDR set interface as running .. \n"));
       sana_run(ssc, ssc->ss_reqno, ifa);
     }
-    if ((ssc->ss_if.if_flags & IFF_RUNNING) && !(ssc->ss_if.if_flags & IFF_UP))
-    {
+    if ((ssc->ss_if.if_flags & IFF_RUNNING) && !(ssc->ss_if.if_flags & IFF_UP)) {
       if (ssc->ss_if.if_flags & IFF_NOUP)
       {
 D(bug("[ATCP-SANA] sana_ioctl: SIFADDR Clearing interface NOUP flag .. \n"));
@@ -671,8 +647,7 @@ D(bug("[ATCP-SANA] sana_restore('%s%d')\n", ssc->ss_if.if_name, ssc->ss_if.if_un
   ssc->ss_if.if_data.ifi_aros_ontime.tv_secs = now.tv_secs;
   ssc->ss_if.if_data.ifi_aros_ontime.tv_micro = now.tv_micro;
   ssc->ss_if.if_data.ifi_aros_lasttotal = ssc->ss_if.if_ibytes + ssc->ss_if.if_obytes;
-  //gui_set_interface_state(&ssc->ss_if, MIAMIPANELV_AddInterface_State_Online);
-
+  gui_set_interface_state(&ssc->ss_if, MIAMIPANELV_AddInterface_State_Online);
   /* Send read requests to device driver */
 #if	INET
   /* IP */
@@ -700,6 +675,7 @@ D(bug("[ATCP-SANA] sana_restore('%s%d')\n", ssc->ss_if.if_name, ssc->ss_if.if_un
   splx(s);
   return;
 }
+
 /*
  * sana_up():
  * send read requests
@@ -708,10 +684,10 @@ static void
 sana_up(struct sana_softc *ssc)
 {
   struct IOSana2Req *req;
-DSANA(log(LOG_DEBUG,"sana_up(%s%d) called", ssc->ss_if.if_name, ssc->ss_if.if_unit);)
+  DSANA(log(LOG_DEBUG,"sana_up(%s%d) called", ssc->ss_if.if_name, ssc->ss_if.if_unit);)
 D(bug("[ATCP-SANA] sana_up('%s%d')\n", ssc->ss_if.if_name, ssc->ss_if.if_unit));
 
-//gui_set_interface_state(&ssc->ss_if, MIAMIPANELV_AddInterface_State_GoingOnline);
+  gui_set_interface_state(&ssc->ss_if, MIAMIPANELV_AddInterface_State_GoingOnline);
 
   if (req = CreateIOSana2Req(ssc))
   {
@@ -722,7 +698,7 @@ D(bug("[ATCP-SANA] sana_up('%s%d')\n", ssc->ss_if.if_name, ssc->ss_if.if_unit));
 
     if ((req->ios2_Req.io_Error) && (req->ios2_WireError != S2WERR_UNIT_ONLINE)) {
       sana2perror("S2_ONLINE", req);
-      //gui_set_interface_state(&ssc->ss_if, MIAMIPANELV_AddInterface_State_Offline);
+      gui_set_interface_state,(&ssc->ss_if, MIAMIPANELV_AddInterface_State_Offline);
     } else {
       log(LOG_NOTICE, "%s%d is now online.", ssc->ss_name, ssc->ss_if.if_unit);
       sana_restore(ssc);
@@ -763,13 +739,7 @@ sana_down(struct sana_softc *ssc)
   BOOL success;
 
   DSANA(log(LOG_DEBUG,"sana_down(%s%d) called", ssc->ss_if.if_name, ssc->ss_if.if_unit);)
-
-  if (!(ssc->ss_if.if_flags & IFF_UP))
-  {
-D(bug("[ATCP-SANA] sana_down: '%s%d' is already DOWN ..\n", ssc->ss_if.if_name, ssc->ss_if.if_unit));
-      return;
-  }
-
+  gui_set_interface_state(&ssc->ss_if, MIAMIPANELV_AddInterface_State_GoingOffline);
   /* Completed, Remove()'d requests are not aborted */
   while (req) {
     if (!CheckIO((struct IORequest*)req)) {
@@ -777,16 +747,26 @@ D(bug("[ATCP-SANA] sana_down: '%s%d' is already DOWN ..\n", ssc->ss_if.if_name, 
     }
     req = req->ioip_next;
   }
-  if (sreq = CreateIOSana2Req(ssc)) {
-      sreq->ios2_Req.io_Command = S2_OFFLINE;
+  if (ssc->ss_dev->dd_Library.lib_OpenCnt == 1) {
+    if (sreq = CreateIOSana2Req(ssc)) {
+        sreq->ios2_Req.io_Command = S2_OFFLINE;
 
-      DoIO((struct IORequest*)sreq);
-      if (sreq->ios2_Req.io_Error)
-	sana2perror("S2_OFFLINE", sreq);
-      else
-	log(LOG_NOTICE, "%s%d is now offline.", ssc->ss_name, ssc->ss_if.if_unit);
-      DeleteIOSana2Req(sreq);
-  }
+        DoIO((struct IORequest*)sreq);
+        if (sreq->ios2_Req.io_Error) {
+	  sana2perror("S2_OFFLINE", sreq);
+	  success = FALSE;
+        }
+	else
+	  success = TRUE;
+        DeleteIOSana2Req(sreq);
+    }
+  } else
+    success = TRUE;
+  if (success) {
+    log(LOG_NOTICE, "%s%d is now offline.", ssc->ss_name, ssc->ss_if.if_unit);
+    gui_set_interface_state(&ssc->ss_if, MIAMIPANELV_AddInterface_State_Offline);
+  } else
+    gui_set_interface_state(&ssc->ss_if, MIAMIPANELV_AddInterface_State_Online);
 
   splx(s);
 
@@ -838,6 +818,7 @@ sana_read(struct sana_softc *ssc, struct IOIPReq *req,
       BeginIO(req);
       req = NULL;
       ssc->ss_if.if_flags &= ~IFF_UP;
+      gui_set_interface_state(&ssc->ss_if, MIAMIPANELV_AddInterface_State_Offline);
     }
     m_freem(m);
     m = NULL;
@@ -938,7 +919,7 @@ sana_online(struct sana_softc *ssc, struct IOIPReq *req)
     req->ioip_dispatch = NULL;
     AddHead((struct List*)&ssc->ss_freereq, (struct Node*)req);
     log(LOG_NOTICE, "%s is online again.", ssc->ss_name);
-    sana_up(ssc);
+    sana_restore(ssc);
     return;
   }
 
@@ -1125,3 +1106,67 @@ free_written_packet(struct sana_softc *ssc, struct IOIPReq *req)
   AddHead((struct List*)&ssc->ss_freereq, (struct Node*)req);
   splx(s);
 }
+
+/*
+ * SANA-II-dependent part of QueryInterfaceTagList()
+ */
+long sana_query(struct sana_softc *ssc, struct TagItem *tag)
+{
+	switch (tag->ti_Tag)
+	{
+	case IFQ_DeviceName:
+		*((STRPTR *)tag->ti_Data) = ssc->ss_execname;
+		break;
+	case IFQ_DeviceUnit:
+		*((ULONG *)tag->ti_Data) = ssc->ss_execunit;
+		break;
+	case IFQ_HardwareAddress: /* Temporary, we should extract it from if_addrlist instead */
+		memcpy((void *)tag->ti_Data, ssc->ss_hwaddr, ssc->ss_if.if_addrlen);
+		break;
+	case IFQ_HardwareType:
+		*((ULONG *)tag->ti_Data) = ssc->ss_hwtype;
+		break;
+        case IFQ_NumReadRequests:
+		log(LOG_CRIT, "IFQ_NumReadRequests is not implemented");
+		return -1;
+/*		*((LONG *)tag->ti_Data) = *** TODO ***
+		break;*/
+	case IFQ_MaxReadRequests:
+		log(LOG_CRIT, "IFQ_MaxReadRequests is not implemented");
+		return -1;
+/*		*((LONG *)tag->ti_Data) =
+		break;*/
+	case IFQ_NumWriteRequests:
+		log(LOG_CRIT, "IFQ_NumWriteRequests is not implemented");
+		return -1;
+/*		*((LONG *)tag->ti_Data) =
+		break;*/
+	case IFQ_MaxWriteRequests:
+		log(LOG_CRIT, "IFQ_MaxWriteRequests is not implemented");
+		return -1;
+/*		*((LONG *)tag->ti_Data) =
+		break;*/
+	case IFQ_GetDebugMode:
+		*((LONG *)tag->ti_Data) = debug_sana;
+		break;
+  	case IFQ_GetSANA2CopyStats:
+		log(LOG_CRIT, "IFQ_GetSANA2CopyStats is not implemented");
+		return -1;
+/*	        (struct Sana2CopyStats *)tag->ti_Data
+		break;*/
+	case IFQ_NumReadRequestsPending:
+		log(LOG_CRIT, "IFQ_NumReadRequestsPending is not implemented");
+		return -1;
+/*		*((LONG *)tag->ti_Data =
+		break;*/
+	case IFQ_NumWriteRequestsPending:
+		log(LOG_CRIT, "IFQ_NumWriteRequestsPending is not implemented");
+		return -1;
+/*		*((LONG *)tag->ti_Data =
+		break;*/
+	default:
+		return -1;
+	}
+	return 0;
+}
+

@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -30,21 +29,25 @@
 #include <sys/malloc.h>
 #include <sys/mbuf.h>
 
+#include <api/amiga_api.h>
+#include <kern/amiga_gui.h>
 #include <kern/amiga_includes.h>
 #include <kern/amiga_config.h>
 #include <kern/amiga_netdb.h>
 #include <kern/accesscontrol.h>
 
 #include "net/netdbpaths.h"
+#include <net/sana2config.h>
+#include <net/route.h>
 #include <netinet/in.h>
+#include <protos/net/if_protos.h>
 
 #include <dos/dos.h>
 #include <dos/rdargs.h>
 
 #include <proto/dos.h>
-#include <api/amiga_api.h>
+#include <proto/bsdsocket.h>
 
-int inet_aton(register const char *cp, struct in_addr *addr);
 extern struct ifnet *iface_make(struct ssconfig *ifc);
 
 LONG read_netdb(struct NetDataBase *ndb, UBYTE *fname,
@@ -79,10 +82,10 @@ STRPTR netdbname = netdb_path;
  * Templates for Arexx commands and DB files
  */
 STRPTR NETDBENTRY = 
-  "WITH,I=INTERFACE,H=HOST,N=NET,S=SERVICE,P=PROTOCOL,R=ROUTE,NS=NAMESERVER,DO=DOMAIN,ACC=ACCESS";
+  "WITH,I=INTERFACE,H=HOST,N=NET,S=SERVICE,P=PROTOCOL,R=ROUTE,NS=NAMESERVER,DO=DOMAIN,RC,ACC=ACCESS";
 
-enum ndbtype { KNDB_WITH, KNDB_IFACE, KNDB_HOST, KNDB_NET, KNDB_SERV, KNDB_PROTO, 
-	       KNDB_RT, KNDB_DNS, KNDB_DOM, KNDB_ACC };
+enum ndbtype { KNDB_WITH, KNDB_IFACE, KNDB_HOST, KNDB_NET, KNDB_SERV, KNDB_PROTO,
+	       KNDB_RT, KNDB_DNS, KNDB_DOM, KNDB_RC, KNDB_ACC };
 
 STRPTR NETDBTEMPLATE = 
   "$NAME$/A,$ENTRY$/A,$ALIAS$/M";
@@ -116,7 +119,7 @@ enum witharg { WITH_FILE, WITH_PREFIX };
 LONG addwith(struct NetDataBase *ndb,
 	     struct RDArgs *rdargs, UBYTE **errstrp, struct CSource *res, ULONG flags);
 LONG addifent(struct NetDataBase *ndb,
-	     struct RDArgs *rdargs, UBYTE **errstrp, struct CSource *res, ULONG flags);
+		struct RDArgs *rdargs, UBYTE **errstrp, struct CSource *res, ULONG flags);
 LONG addhostent(struct NetDataBase *ndb,
 		struct RDArgs *rdargs, UBYTE **errstrp, struct CSource *res, ULONG flags);
 LONG addnetent(struct NetDataBase *ndb,
@@ -126,15 +129,17 @@ LONG addservent(struct NetDataBase *ndb,
 LONG addprotoent(struct NetDataBase *ndb,
 		 struct RDArgs *rdargs, UBYTE **errstrp, struct CSource *res, ULONG flags);
 LONG addrtent(struct NetDataBase *ndb,
-	     struct RDArgs *rdargs, UBYTE **errstrp, struct CSource *res, ULONG flags);
+		struct RDArgs *rdargs, UBYTE **errstrp, struct CSource *res, ULONG flags);
 LONG addnameservent(struct NetDataBase *ndb,
 		    struct RDArgs *rdargs, UBYTE **errstrp, struct CSource *res, ULONG flags);
 LONG adddomainent(struct NetDataBase *ndb,
 		  struct RDArgs *rdargs, UBYTE **errstrp, struct CSource *res, ULONG flags);
+LONG addrcent(struct NetDataBase *ndb,
+		    struct RDArgs *rdargs, UBYTE **errstrp, struct CSource *res, ULONG flags);
 LONG addaccessent(struct NetDataBase *ndb,
 		  struct RDArgs *rdargs, const UBYTE **errstrp, struct CSource *res, ULONG flags);
 LONG addndbent(struct NetDataBase *ndb,
-	       struct RDArgs *rdargs, UBYTE **errstrp, struct CSource *res, ULONG flags);
+	       struct RDArgs *rdargs, UBYTE **errstrp, struct CSource *res, ULONG ifflags);
 
 typedef LONG (*ndb_parse_f)(struct NetDataBase *ndb,
 	    struct RDArgs *rdargs, UBYTE **errstrp, struct CSource *res, ULONG flags);
@@ -152,6 +157,7 @@ ndb_parse_f ndb_parse_funs[] = {
   addrtent,
   addnameservent,
   adddomainent,
+  addrcent,
   addaccessent
 };
 
@@ -300,7 +306,7 @@ addwith(struct NetDataBase *ndb,
 	UBYTE **errstrp, struct CSource *res, ULONG flags)
 {
   UBYTE result[REPLYBUFLEN + 1];
-//  struct CSource res;
+//struct CSource res;
   LONG retval = RETURN_OK;
   LONG Args[WITHARGS] = { 0 };
   int which;
@@ -340,7 +346,7 @@ int inline setaddr(struct sockaddr_in *sa, char *addr, u_short af)
 {
   sa->sin_len = sizeof(struct sockaddr_in);
   sa->sin_family = af;
-  return inet_aton(addr, &sa->sin_addr);
+  return __inet_aton(addr, &sa->sin_addr);
 }
 
 /*
@@ -356,73 +362,75 @@ addifent(struct NetDataBase *ndb,
   struct ifaliasreq ifr;
   char *cp, *ep;
   LONG retval = RETURN_OK;
-  
+
   if (flags & (NETDB_IFF_MODIFYOLD|NETDB_IFF_ADDNEW)) {
-    ssc = ssconfig_parse(rdargs);
-    if (ssc) {
-      ifp = ifunit(ssc->args->a_name);
-      if ((!(ifp)) && (flags & NETDB_IFF_ADDNEW)) {
-        cp = strncpy(ssc->name, ssc->args->a_name, IFNAMSIZ);
-        ssc->name[IFNAMSIZ-1] = '\0';
-        
-        for (; *cp; cp++)
-          if (*cp >= '0' && *cp <= '9')
-            break;
+	ssc = ssconfig_parse(rdargs);
+	if (ssc) {
+		ifp = ifunit(ssc->args->a_name);
+		if ((!ifp) && (flags & NETDB_IFF_ADDNEW)) {
+			DIFCONF(Printf("Adding new interface %s\n", ssc->args->a_name);)
+			cp = strncpy(ssc->name, ssc->args->a_name, IFNAMSIZ);
+			ssc->name[IFNAMSIZ-1] = '\0';
 
-        ep = cp;
-        for (ssc->unit = 0; *cp >= '0' && *cp <= '9'; )
-          ssc->unit = ssc->unit * 10 + *cp++ - '0';
-        *ep = 0;
-        ifp = iface_make(ssc);
-        if (!(ifp)) {
-          *errstrp = ERR_MEMORY;
-          retval = RETURN_FAIL;
-        }
-      }
-
-      if (ifp) {
-        memset(&ifr, 0, sizeof(ifr));
-        if (ssc->args->a_ip) {
-          if (!(ssc->args->a_up)) {
-            ifp->if_flags |= IFF_NOUP;
-          }
-          
-          if (stricmp(ssc->args->a_ip, "DHCP")) {
-            ifp->if_data.ifi_aros_usedhcp = 0;
-            if (setaddr((struct sockaddr_in *)&ifr.ifra_addr, ssc->args->a_ip, AF_INET)) {
-              if (ssc->args->a_netmask) {
-                if (!(setaddr((struct sockaddr_in *)&ifr.ifra_mask, ssc->args->a_netmask, AF_UNSPEC))) {
-                  *errstrp = ERR_SYNTAX;
-                  retval = RETURN_WARN;
-                }
-              }
-              in_control(NULL, SIOCAIFADDR, &ifr, ifp);
-            } else {
-              *errstrp = ERR_SYNTAX;
-              retval = RETURN_WARN;
-            }
-          } else {
-D(bug("[AROSTCP] Using DHCP to config interface : UNSUPPORTED!\n"));
-            ifp->if_data.ifi_aros_usedhcp = 1;
-            if (ssc->args->a_up) {
-              if (api_state == API_SHOWN)
-              {
-                //run_dhclient(ifp);
-              } else
-                ifp->if_flags |= IFF_DELAYUP;
-            }
-          }
-        }
-      }
-      ssconfig_free(ssc);
-    } else {
-      *errstrp = ERR_SYNTAX;
-      retval = RETURN_WARN;
-    }
+			for (; *cp; cp++)
+				if (*cp >= '0' && *cp <= '9')
+					break;
+			ep = cp;
+			for (ssc->unit = 0; *cp >= '0' && *cp <= '9'; )
+				ssc->unit = ssc->unit * 10 + *cp++ - '0';
+			*ep = 0;
+			ifp = iface_make(ssc);
+			if (!ifp) {
+				*errstrp = ERR_MEMORY;
+				retval = RETURN_FAIL;
+			}
+		}
+		if (ifp) {
+			DIFCONF(Printf("Setting up interface %s\n", ssc->args->a_name);)
+			memset (&ifr, 0, sizeof (ifr));
+			if (ssc->args->a_ip) {
+				if (!ssc->args->a_up) {
+					DIFCONF(Printf("> No auto-online\n");)
+					ifp->if_flags |= IFF_NOUP;
+				}
+				DIFCONF(Printf("> IP address: %s\n", ssc->args->a_ip);)
+				if (stricmp(ssc->args->a_ip, "DHCP")) {
+					ifp->if_data.ifi_aros_usedhcp = 0;
+					if (setaddr ((struct sockaddr_in *)&ifr.ifra_addr, ssc->args->a_ip, AF_INET)) {
+						if (ssc->args->a_netmask) {
+							DIFCONF(Printf("> Netmask: %s\n". ssc->args->a_netmask);)
+							if (!setaddr ((struct sockaddr_in *)&ifr.ifra_mask, ssc->args->a_netmask, AF_UNSPEC)) {
+								*errstrp = ERR_SYNTAX;
+								retval = RETURN_WARN;
+							}
+						}
+						in_control(NULL, SIOCAIFADDR, &ifr, ifp);
+					} else {
+						*errstrp = ERR_SYNTAX;
+						retval = RETURN_WARN;
+					}
+				} else {
+					DIFCONF(Printf("> Using DHCP\n");)
+					ifp->if_data.ifi_aros_usedhcp = 1;
+					if (ssc->args->a_up) {
+						if (api_state == API_SHOWN)
+							run_dhclient(ifp);
+						else
+							ifp->if_flags |= IFF_DELAYUP;
+					}
+				}
+			}
+		}
+		ssconfig_free(ssc);
+	} else {
+		*errstrp = ERR_SYNTAX;
+		retval = RETURN_WARN;
+	}
   }
   return retval;
 }
- 
+
+
 /*
  * Parse a service entry.
  */
@@ -499,7 +507,7 @@ D(bug("[AROSTCP](amiga_netdb.c) addhostent()\n"));
 
   if (rdargs = ReadArgs(NETDBTEMPLATE, Args, rdargs)) {
     /* convert ip address */
-    if (inet_aton((char*)Args[KNDB_NAME], &addr)) {
+    if (__inet_aton((char*)Args[KNDB_NAME], &addr)) {
       hn = node_alloc(sizeof (*hn) + 2*sizeof (&addr) + sizeof (addr),
 		      (UBYTE*)Args[KNDB_DATA], 
 		      (UBYTE **)Args[KNDB_ALIAS], &aliases);
@@ -557,7 +565,7 @@ D(bug("[AROSTCP](amiga_netdb.c) addnetent()\n"));
 
   if (rdargs = ReadArgs(NETDBTEMPLATE, Args, rdargs)) {
     /* convert ip address */
-    if (inet_aton((char*)Args[KNDB_DATA], &addr)) {
+    if (__inet_aton((char*)Args[KNDB_DATA], &addr)) {
       nn = node_alloc(sizeof (*nn),
 		      (UBYTE*)Args[KNDB_NAME], 
 		      (UBYTE **)Args[KNDB_ALIAS], &aliases);
@@ -647,7 +655,7 @@ addrtent(struct NetDataBase *ndb,
   LONG retval;
   LONG Args[RTARGS] = { 0 };
   struct ortentry route;
-  
+
   if (rdargs = ReadArgs(ROUTE_TEMPLATE, Args, rdargs)) {
     if (!(strcmp(strupr(Args[KRT_DEST]), "DEFAULT"))){
       ((struct sockaddr_in *)&route.rt_dst)->sin_addr.s_addr = 0;
@@ -703,7 +711,7 @@ D(bug("[AROSTCP](amiga_netdb.c) addnameservent: Error in syntax\n"));
     *errstrp = ERR_SYNTAX; 
     return RETURN_WARN;
   }
-  if (!inet_aton(Buffer, &ns_addr)) {
+  if (!__inet_aton(Buffer, &ns_addr)) {
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_netdb.c) addnameservent: error with address\n"));
 #endif
@@ -768,6 +776,38 @@ D(bug("[AROSTCP](amiga_netdb.c) adddomainent()\n"));
   AddTail((struct List*)&ndb->ndb_Domains, (struct Node*)dn);
   return RETURN_OK;
 }
+
+/*
+ * Parse an RC script entry
+ */
+LONG
+addrcent(struct NetDataBase *ndb,
+	       struct RDArgs *rdargs,
+	       UBYTE **errstrp, struct CSource *res, ULONG flags)
+{
+  UBYTE Buffer[REPLYBUFLEN];
+  LONG  BufLen = sizeof (Buffer);
+  struct RcentNode *dn;
+  short  nodesize;
+
+  if (ReadItem(Buffer, BufLen, &rdargs->RDA_Source) <= 0) {
+    *errstrp = ERR_SYNTAX;
+    return RETURN_WARN;
+  }
+  nodesize = sizeof (*dn) + strlen(Buffer) + 1;
+  if ((dn = bsd_malloc(nodesize, M_NETDB, M_WAITOK)) == NULL) {
+    *errstrp = ERR_MEMORY;
+    return RETURN_FAIL;
+  }
+  dn->rn_EntSize = nodesize - sizeof (struct GenentNode);
+  dn->rn_Ent = (char *)(dn + 1);
+
+  strcpy((char *)(dn + 1), Buffer);
+
+  AddTail((struct List*)&ndb->ndb_Rc, (struct Node*)dn);
+  return RETURN_OK;
+}
+
 
 /*
  * Parse a access control entry.. after reading the whole netdatabase
@@ -843,7 +883,7 @@ D(bug("[AROSTCP](amiga_netdb.c) addaccessent()\n"));
 
       if (hm[i] == '/') {
 	hm[i++] = '\0';
-	if (inet_aton(&hm[i], (struct in_addr *)&mask) == 0) {
+	if (__inet_aton(&hm[i], (struct in_addr *)&mask) == 0) {
 	  *errstrp = "Illegal mask value\n";
 	  goto exit;
 	}
@@ -853,7 +893,7 @@ D(bug("[AROSTCP](amiga_netdb.c) addaccessent()\n"));
 
       mask &= zmask;
       
-      if (inet_aton(hm, (struct in_addr *)&host) == 0) {
+      if (__inet_aton(hm, (struct in_addr *)&host) == 0) {
 	*errstrp = "Illegal host value\n";
 	goto exit;
       }
@@ -909,15 +949,18 @@ D(bug("[AROSTCP](amiga_netdb.c) addndbent()\n"));
     if (item == 0)
       return RETURN_OK;		/* empty line */
     if (item < 0) {
+      DNETDB(Printf("addndbent: syntax error\n");)
       *errstrp = ERR_SYNTAX;
       return RETURN_WARN;
     }
     if ((which = FindArg(NETDBENTRY, Buffer)) < 0) {
+      DNETDB(Printf("Unknown keyword\n");)
       *errstrp = ERR_UNKNOWN;
       return RETURN_WARN;
     } 
 
-	 which = ndb_parse_funs[which](ndb, rdargs, errstrp, res, flags);
+    DNETDB(Printf("Keyword number: %ld\n", which);)
+    which =  ndb_parse_funs[which](ndb, rdargs, errstrp, res, flags);
     return which;
 
   } else {
@@ -959,7 +1002,6 @@ D(bug("[AROSTCP](amiga_netdb.c) read_netdb: Too many files included\n"));
 #endif
     return RETURN_ERROR;
   }
-  
   if (buf) {
 
     /* CD to netdb directory */
@@ -986,11 +1028,9 @@ D(bug("[AROSTCP](amiga_netdb.c) read_netdb: Too many files included\n"));
 	  /* pass by white space */
 	  for (p = buf; *p == ' ' || *p == '\t' || *p == '\r'; p++)
 	    ;
-
 	  rdargs->RDA_Source.CS_CurChr = p - buf;
 	  if (*p == '#' || *p == ';' || *p == '\n') /* only a comment line */
 	    continue;
-
 	  /* remove comments & calc length */
 	  for (; *p; p++) { 
 	    if (*p == '#' || *p == ';') {
@@ -1014,13 +1054,15 @@ D(bug("[AROSTCP](amiga_netdb.c) read_netdb: parsing line: %s, prefixindex=%ld\n"
 	  retval = parser(ndb, rdargs, errstrp, res, flags);
 	  if (retval == RETURN_OK)
 	    continue;
-/*	    Printf("NetDB(%s) line %d: %s before col %ld\n",
-		fname, line, *errstrp, rdargs->RDA_Source.CS_CurChr);*/
-	  if (retval != RETURN_WARN) /* severe error */
+	  if (retval != RETURN_WARN) { /* severe error */
+	    error_request("Fatal error in NetDB file %s at line %ld, col %ld\n%s\nAROSTCP will quit",
+		fname, line, rdargs->RDA_Source.CS_CurChr, *errstrp);
 	    break;
-	  
+	  }
 	  /* Log the error */
-	  log(LOG_NOTICE, "NetDB(%s) line %ld: %s before col %ld\n",
+	  error_request("Error in NetDB file %s at line %ld, col %ld\n%s",
+		fname, line, rdargs->RDA_Source.CS_CurChr, *errstrp);
+	  log(LOG_WARNING, "NetDB(%s) line %ld: %s before col %ld\n",
 	      fname, line, *errstrp, rdargs->RDA_Source.CS_CurChr);
 
 	  warnval = retval;
@@ -1043,6 +1085,8 @@ D(bug("[AROSTCP](amiga_netdb.c) read_netdb: ioerror\n"));
       *errstrp = res->CS_Buffer;
       retval = RETURN_ERROR;
     }
+    if ((!fh) && (ndb_Lock.ss_NestCount == 1))
+	error_request("Unable to open NetDB file %s\n%s", fname, *errstrp);
     
     /* return old current directory */
     if (lock) {
@@ -1090,6 +1134,7 @@ D(bug("[AROSTCP](amiga_netdb.c) do_netdb()\n"));
     LOCK_W_NDB(NDB);
 
     retval = addndbent(NDB, rdargs, errstrp, res, 0);
+#warning TODO: set flags here
 
     UNLOCK_NDB(NDB);
     
@@ -1176,6 +1221,7 @@ D(bug("[AROSTCP](amiga_netdb.c) reset_netdb()\n"));
   }
 
   retval = read_netdb(newnetdb, netdbname, errstrp, res, -1, 0);
+#warning TODO: set flags here
 
   if (retval == RETURN_OK) {
     setup_accesscontroltable(newnetdb);

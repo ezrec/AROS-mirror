@@ -57,9 +57,11 @@ typedef	_PID_T pid_t;			/* process id */
 typedef _MODE_T mode_t;
 #endif
 
+#ifndef __AROS_TIME_T_DECLARED
 #ifndef _TIME_T
 #define _TIME_T long
 typedef _TIME_T time_t;
+#endif
 #endif
 
 #ifndef NULL

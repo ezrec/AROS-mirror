@@ -45,6 +45,8 @@
 #include <kern/uipc_socket_protos.h>
 #include <kern/uipc_socket2_protos.h>
   
+#include <sys/uio.h>
+  
 static LONG sendit(struct SocketBase * p,
 		   LONG	s,
 		   struct msghdr * mp,

@@ -1,28 +1,6 @@
 /*
- * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
- *                    Helsinki University of Technology, Finland.
- *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
- */
-
-/*
- * Copyright (c) 1982, 1986, 1988 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1982, 1986, 1988, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -52,28 +30,34 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)tcp_usrreq.c	7.15 (Berkeley) 6/28/90
+ *	From: @(#)tcp_usrreq.c	8.2 (Berkeley) 1/3/94
+ *	$Id$
  */
-
-#include <conf.h>
 
 #include <sys/param.h>
 #include <sys/systm.h>
+#include <sys/kernel.h>
 #include <sys/malloc.h>
 #include <sys/mbuf.h>
 #include <sys/socket.h>
 #include <sys/socketvar.h>
 #include <sys/protosw.h>
 #include <sys/errno.h>
+#include <sys/stat.h>
+#include <sys/queue.h>
 #include <sys/synch.h>
+#ifdef ENABLE_SYSCTL
+#include <sys/sysctl.h>
+#endif
 
-#include <net/if.h>
 #include <net/route.h>
+#include <net/if.h>
 
 #include <netinet/in.h>
 #include <netinet/in_systm.h>
 #include <netinet/ip.h>
 #include <netinet/in_pcb.h>
+#include <netinet/in_var.h>
 #include <netinet/ip_var.h>
 #include <netinet/tcp.h>
 #include <netinet/tcp_fsm.h>
@@ -81,41 +65,21 @@
 #include <netinet/tcp_timer.h>
 #include <netinet/tcp_var.h>
 #include <netinet/tcpip.h>
+#ifdef TCPDEBUG
 #include <netinet/tcp_debug.h>
-
-#include <netinet/tcp_usrreq_protos.h>
-#include <netinet/tcp_output_protos.h>
-#include <netinet/tcp_subr_protos.h>
-#include <netinet/tcp_timer_protos.h>
-#include <netinet/in_protos.h>
-#include <netinet/in_pcb_protos.h>
-#include <kern/uipc_socket2_protos.h>
-#include <netinet/tcp_debug_protos.h>
-#include <netinet/ip_output_protos.h>
-
-struct	inpcb tcb = { 0 };		/* head of queue of active tcpcb's */
-struct	tcpstat tcpstat = { 0 };	/* tcp statistics */
-tcp_seq	tcp_iss = { 0 };		/* tcp initial send seq # */
-#ifdef KPROF
-int	tcp_acounts[TCP_NSTATES][PRU_NREQ] = { 0 };
 #endif
-/* 
- * Configurable variables
- */
-u_long	tcp_sendspace = 8 * 1024;
-u_long	tcp_recvspace = 8 * 1024;
 
 /*
  * TCP protocol interface to socket abstraction.
  */
 extern	char *tcpstates[];
-struct	tcpcb *tcp_newtcpcb();
 
 /*
  * Process a TCP user request for TCP tb.  If this is a send request
  * then m is the mbuf chain of send data.  If this is a timer expiration
  * (called from the software clock routine), then timertype tells which timer.
  */
+/*ARGSUSED*/
 int
 tcp_usrreq(so, req, m, nam, control)
 	struct socket *so;
@@ -123,10 +87,13 @@ tcp_usrreq(so, req, m, nam, control)
 	struct mbuf *m, *nam, *control;
 {
 	register struct inpcb *inp;
-	register struct tcpcb *tp;
-	spl_t s;
+	register struct tcpcb *tp = 0;
+	struct sockaddr_in *sinp;
+	int s;
 	int error = 0;
+#ifdef TCPDEBUG
 	int ostate;
+#endif
 
 	if (req == PRU_CONTROL)
 		return (in_control(so, (int)m, (caddr_t)nam,
@@ -155,9 +122,14 @@ tcp_usrreq(so, req, m, nam, control)
 #ifdef KPROF
 		tcp_acounts[tp->t_state][req]++;
 #endif
+#ifdef TCPDEBUG
 		ostate = tp->t_state;
 	} else
 		ostate = 0;
+#else /* TCPDEBUG */
+	}
+#endif /* TCPDEBUG */
+
 	switch (req) {
 
 	/*
@@ -195,6 +167,16 @@ tcp_usrreq(so, req, m, nam, control)
 	 * Give the socket an address.
 	 */
 	case PRU_BIND:
+		/*
+		 * Must check for multicast addresses and disallow binding
+		 * to them.
+		 */
+		sinp = mtod(nam, struct sockaddr_in *);
+		if (sinp->sin_family == AF_INET &&
+		    IN_MULTICAST(ntohl(sinp->sin_addr.s_addr))) {
+			error = EAFNOSUPPORT;
+			break;
+		}
 		error = in_pcbbind(inp, nam);
 		if (error)
 			break;
@@ -205,7 +187,7 @@ tcp_usrreq(so, req, m, nam, control)
 	 */
 	case PRU_LISTEN:
 		if (inp->inp_lport == 0)
-			error = in_pcbbind(inp, (struct mbuf *)0);
+			error = in_pcbbind(inp, NULL);
 		if (error == 0)
 			tp->t_state = TCPS_LISTEN;
 		break;
@@ -218,26 +200,18 @@ tcp_usrreq(so, req, m, nam, control)
 	 * Send initial segment on connection.
 	 */
 	case PRU_CONNECT:
-		if (inp->inp_lport == 0) {
-			error = in_pcbbind(inp, (struct mbuf *)0);
-			if (error)
-				break;
-		}
-		error = in_pcbconnect(inp, nam);
-		if (error)
-			break;
-		tp->t_template = tcp_template(tp);
-		if (tp->t_template == 0) {
-			in_pcbdisconnect(inp);
-			error = ENOBUFS;
+		/*
+		 * Must disallow TCP ``connections'' to multicast addresses.
+		 */
+		sinp = mtod(nam, struct sockaddr_in *);
+		if (sinp->sin_family == AF_INET
+		    && IN_MULTICAST(ntohl(sinp->sin_addr.s_addr))) {
+			error = EAFNOSUPPORT;
 			break;
 		}
-		soisconnecting(so);
-		tcpstat.tcps_connattempt++;
-		tp->t_state = TCPS_SYN_SENT;
-		tp->t_timer[TCPT_KEEP] = TCPTV_KEEP_INIT;
-		tp->iss = tcp_iss; tcp_iss += TCP_ISSINCR/2;
-		tcp_sendseqinit(tp);
+
+		if ((error = tcp_connect(tp, nam)) != 0)
+			break;
 		error = tcp_output(tp);
 		break;
 
@@ -268,16 +242,9 @@ tcp_usrreq(so, req, m, nam, control)
 	 * done at higher levels; just return the address
 	 * of the peer, storing through addr.
 	 */
-	case PRU_ACCEPT: {
-		struct sockaddr_in *sin = mtod(nam, struct sockaddr_in *);
-
-		nam->m_len = sizeof (struct sockaddr_in);
-		sin->sin_family = AF_INET;
-		sin->sin_len = sizeof(*sin);
-		sin->sin_port = inp->inp_fport;
-		sin->sin_addr = inp->inp_faddr;
+	case PRU_ACCEPT:
+		in_setpeeraddr(inp, nam);
 		break;
-		}
 
 	/*
 	 * Mark the connection as being incapable of further output.
@@ -300,9 +267,33 @@ tcp_usrreq(so, req, m, nam, control)
 	 * Do a send by putting data in output queue and updating urgent
 	 * marker if URG set.  Possibly send more data.
 	 */
+	case PRU_SEND_EOF:
 	case PRU_SEND:
 		sbappend(&so->so_snd, m);
-		error = tcp_output(tp);
+		if (nam && tp->t_state < TCPS_SYN_SENT) {
+			/*
+			 * Do implied connect if not yet connected,
+			 * initialize window to default value, and
+			 * initialize maxseg/maxopd using peer's cached
+			 * MSS.
+			 */
+			error = tcp_connect(tp, nam);
+			if (error)
+				break;
+			tp->snd_wnd = TTCP_CLIENT_SND_WND;
+			tcp_mss(tp, -1);
+		}
+
+		if (req == PRU_SEND_EOF) {
+			/*
+			 * Close the send side of the connection after
+			 * the data is sent.
+			 */
+			socantsendmore(so);
+			tp = tcp_usrclosed(tp);
+		}
+		if (tp != NULL)
+			error = tcp_output(tp);
 		break;
 
 	/*
@@ -313,15 +304,10 @@ tcp_usrreq(so, req, m, nam, control)
 		break;
 
 	case PRU_SENSE:
-#ifdef AMITCP
-				/* stat not supported in AMITCP */
-		error = EOPNOTSUPP;
-		break;
-#else
 		((struct stat *) m)->st_blksize = so->so_snd.sb_hiwat;
 		(void) splx(s);
 		return (0);
-#endif
+
 	case PRU_RCVOOB:
 		if ((so->so_oobmark == 0 &&
 		    (so->so_state & SS_RCVATMARK) == 0) ||
@@ -375,16 +361,98 @@ tcp_usrreq(so, req, m, nam, control)
 	 */
 	case PRU_SLOWTIMO:
 		tp = tcp_timers(tp, (int)nam);
+#ifdef TCPDEBUG
 		req |= (int)nam << 8;		/* for debug's sake */
+#endif
 		break;
 
 	default:
 		panic("tcp_usrreq");
 	}
+#ifdef TCPDEBUG
 	if (tp && (so->so_options & SO_DEBUG))
 		tcp_trace(TA_USER, ostate, tp, (struct tcpiphdr *)0, req);
+#endif
 	splx(s);
 	return (error);
+}
+
+/*
+ * Common subroutine to open a TCP connection to remote host specified
+ * by struct sockaddr_in in mbuf *nam.  Call in_pcbbind to assign a local
+ * port number if needed.  Call in_pcbladdr to do the routing and to choose
+ * a local host address (interface).  If there is an existing incarnation
+ * of the same connection in TIME-WAIT state and if the remote host was
+ * sending CC options and if the connection duration was < MSL, then
+ * truncate the previous TIME-WAIT state and proceed.
+ * Initialize connection parameters and enter SYN-SENT state.
+ */
+int
+tcp_connect(tp, nam)
+	register struct tcpcb *tp;
+	struct mbuf *nam;
+{
+	struct inpcb *inp = tp->t_inpcb, *oinp;
+	struct socket *so = inp->inp_socket;
+	struct tcpcb *otp;
+	struct sockaddr_in *sin = mtod(nam, struct sockaddr_in *);
+	struct sockaddr_in *ifaddr;
+	int error;
+
+	if (inp->inp_lport == 0) {
+		error = in_pcbbind(inp, NULL);
+		if (error)
+			return error;
+	}
+
+	/*
+	 * Cannot simply call in_pcbconnect, because there might be an
+	 * earlier incarnation of this same connection still in
+	 * TIME_WAIT state, creating an ADDRINUSE error.
+	 */
+	error = in_pcbladdr(inp, nam, &ifaddr);
+	if (error)
+		return error;
+	oinp = in_pcblookup(inp->inp_pcbinfo->listhead,
+	    sin->sin_addr, sin->sin_port,
+	    inp->inp_laddr.s_addr != INADDR_ANY ? inp->inp_laddr
+						: ifaddr->sin_addr,
+	    inp->inp_lport,  0);
+	if (oinp) {
+		if (oinp != inp && (otp = intotcpcb(oinp)) != NULL &&
+		otp->t_state == TCPS_TIME_WAIT &&
+		    otp->t_duration < TCPTV_MSL &&
+		    (otp->t_flags & TF_RCVD_CC))
+			otp = tcp_close(otp);
+		else
+			return EADDRINUSE;
+	}
+	if (inp->inp_laddr.s_addr == INADDR_ANY)
+		inp->inp_laddr = ifaddr->sin_addr;
+	inp->inp_faddr = sin->sin_addr;
+	inp->inp_fport = sin->sin_port;
+	in_pcbrehash(inp);
+
+	tp->t_template = tcp_template(tp);
+	if (tp->t_template == 0) {
+		in_pcbdisconnect(inp);
+		return ENOBUFS;
+	}
+
+	/* Compute window scaling to request.  */
+	while (tp->request_r_scale < TCP_MAX_WINSHIFT &&
+	    (TCP_MAXWIN << tp->request_r_scale) < so->so_rcv.sb_hiwat)
+		tp->request_r_scale++;
+
+	soisconnecting(so);
+	tcpstat.tcps_connattempt++;
+	tp->t_state = TCPS_SYN_SENT;
+	tp->t_timer[TCPT_KEEP] = TCPTV_KEEP_INIT;
+	tp->iss = tcp_iss; tcp_iss += TCP_ISSINCR/2;
+	tcp_sendseqinit(tp);
+	tp->cc_send = CC_INC(tcp_ccgen);
+
+	return 0;
 }
 
 int
@@ -394,13 +462,26 @@ tcp_ctloutput(op, so, level, optname, mp)
 	int level, optname;
 	struct mbuf **mp;
 {
-	int error = 0;
-	struct inpcb *inp = sotoinpcb(so);
-	register struct tcpcb *tp = intotcpcb(inp);
+	int error = 0, s;
+	struct inpcb *inp;
+	register struct tcpcb *tp;
 	register struct mbuf *m;
+	register int i;
 
-	if (level != IPPROTO_TCP)
-		return (ip_ctloutput(op, so, level, optname, mp));
+	s = splnet();
+	inp = sotoinpcb(so);
+	if (inp == NULL) {
+		splx(s);
+		if (op == PRCO_SETOPT && *mp)
+			(void) m_free(*mp);
+		return (ECONNRESET);
+	}
+	if (level != IPPROTO_TCP) {
+		error = ip_ctloutput(op, so, level, optname, mp);
+		splx(s);
+		return (error);
+	}
+	tp = intotcpcb(inp);
 
 	switch (op) {
 
@@ -416,7 +497,23 @@ tcp_ctloutput(op, so, level, optname, mp)
 			else
 				tp->t_flags &= ~TF_NODELAY;
 			break;
-#ifdef ENABLE_TTCP
+
+		case TCP_MAXSEG:
+			if (m && (i = *mtod(m, int *)) > 0 && i <= tp->t_maxseg)
+				tp->t_maxseg = i;
+			else
+				error = EINVAL;
+			break;
+
+		case TCP_NOOPT:
+			if (m == NULL || m->m_len < sizeof (int))
+				error = EINVAL;
+			else if (*mtod(m, int *))
+				tp->t_flags |= TF_NOOPT;
+			else
+				tp->t_flags &= ~TF_NOOPT;
+			break;
+
 		case TCP_NOPUSH:
 			if (m == NULL || m->m_len < sizeof (int))
 				error = EINVAL;
@@ -425,8 +522,7 @@ tcp_ctloutput(op, so, level, optname, mp)
 			else
 				tp->t_flags &= ~TF_NOPUSH;
 			break;
-#endif
-		case TCP_MAXSEG:	/* not yet */
+
 		default:
 			error = ENOPROTOOPT;
 			break;
@@ -446,19 +542,29 @@ tcp_ctloutput(op, so, level, optname, mp)
 		case TCP_MAXSEG:
 			*mtod(m, int *) = tp->t_maxseg;
 			break;
-#ifdef ENABLE_TTCP
-		case TCP_NOPUSH:
-			*mtod(m, int *)	= tp->t_flags & TF_NOPUSH;
+		case TCP_NOOPT:
+			*mtod(m, int *) = tp->t_flags & TF_NOOPT;
 			break;
-#endif
+		case TCP_NOPUSH:
+			*mtod(m, int *) = tp->t_flags & TF_NOPUSH;
+			break;
 		default:
 			error = ENOPROTOOPT;
 			break;
 		}
 		break;
 	}
+	splx(s);
 	return (error);
 }
+
+/*
+ * tcp_sendspace and tcp_recvspace are the default send and receive window
+ * sizes, respectively.  These are obsolescent (this information should
+ * be set by the route).
+ */
+u_long	tcp_sendspace = 1024*16;
+u_long	tcp_recvspace = 1024*16;
 
 /*
  * Attach TCP protocol to socket, allocating
@@ -478,7 +584,7 @@ tcp_attach(so)
 		if (error)
 			return (error);
 	}
-	error = in_pcballoc(so, &tcb);
+	error = in_pcballoc(so, &tcbinfo);
 	if (error)
 		return (error);
 	inp = sotoinpcb(so);
@@ -542,12 +648,15 @@ tcp_usrclosed(tp)
 
 	case TCPS_CLOSED:
 	case TCPS_LISTEN:
-	case TCPS_SYN_SENT:
 		tp->t_state = TCPS_CLOSED;
 		tp = tcp_close(tp);
 		break;
 
+	case TCPS_SYN_SENT:
 	case TCPS_SYN_RECEIVED:
+		tp->t_flags |= TF_NEEDFIN;
+		break;
+
 	case TCPS_ESTABLISHED:
 		tp->t_state = TCPS_FIN_WAIT_1;
 		break;
@@ -560,3 +669,55 @@ tcp_usrclosed(tp)
 		soisdisconnected(tp->t_inpcb->inp_socket);
 	return (tp);
 }
+
+#ifdef ENABLE_SYSCTL
+/*
+ * Sysctl for tcp variables.
+ */
+int
+tcp_sysctl(name, namelen, oldp, oldlenp, newp, newlen)
+	int *name;
+	u_int namelen;
+	void *oldp;
+	size_t *oldlenp;
+	void *newp;
+	size_t newlen;
+{
+	/* All sysctl names at this level are terminal. */
+	if (namelen != 1)
+		return (ENOTDIR);
+
+	switch (name[0]) {
+	case TCPCTL_DO_RFC1323:
+		return (sysctl_int(oldp, oldlenp, newp, newlen,
+		    &tcp_do_rfc1323));
+	case TCPCTL_DO_RFC1644:
+		return (sysctl_int(oldp, oldlenp, newp, newlen,
+		    &tcp_do_rfc1644));
+	case TCPCTL_MSSDFLT:
+		return (sysctl_int(oldp, oldlenp, newp, newlen,
+		    &tcp_mssdflt));
+	case TCPCTL_STATS:
+		return (sysctl_rdstruct(oldp, oldlenp, newp, &tcpstat,
+					sizeof tcpstat));
+	case TCPCTL_RTTDFLT:
+		return (sysctl_int(oldp, oldlenp, newp, newlen, &tcp_rttdflt));
+	case TCPCTL_KEEPIDLE:
+		return (sysctl_int(oldp, oldlenp, newp, newlen,
+				   &tcp_keepidle));
+	case TCPCTL_KEEPINTVL:
+		return (sysctl_int(oldp, oldlenp, newp, newlen,
+				   &tcp_keepintvl));
+	case TCPCTL_SENDSPACE:
+		return (sysctl_int(oldp, oldlenp, newp, newlen,
+				   (int *)&tcp_sendspace)); /* XXX */
+	case TCPCTL_RECVSPACE:
+		return (sysctl_int(oldp, oldlenp, newp, newlen,
+				   (int *)&tcp_recvspace)); /* XXX */
+	default:
+		return (ENOPROTOOPT);
+	}
+	/* NOTREACHED */
+}
+#endif
+

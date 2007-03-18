@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -47,18 +46,18 @@ f_void ExecLibraryList_funcTable[] = {
   (f_void)FUNCARRAY_32BIT_NATIVE,
 #endif
   AROS_SLIB_ENTRY(Open, ELL),
-#warning "TODO: NicJA - ELL_Null??"
+#warning "TODO: NicJA - LIB_Null??"
 #if defined(__AROS__)
    NULL,
 #else
-  AROS_SLIB_ENTRY(Null, ELL),	     /* ELL_Close() is never called */
+  AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Close() is never called */
 #endif
   AROS_SLIB_ENTRY(Expunge, ELL),
-#warning "TODO: NicJA - ELL_Null??"
+#warning "TODO: NicJA - LIB_Null??"
 #if defined(__AROS__)
    NULL,
 #else
-  AROS_SLIB_ENTRY(Null, LL),       /* ELL_Reserved() */
+  AROS_SLIB_ENTRY(Null, LIB),       /* ELL_Reserved() */
 #endif
   (f_void)-1
 };
@@ -126,17 +125,50 @@ extern VOID AROS_SLIB_ENTRY(SocketBaseTagList, UL)();
 /* bsdsocket.library 4 extensions */
 extern VOID AROS_SLIB_ENTRY(GetSocketEvents, UL)();
 
-/* private ezTCP extensions */
-extern REGARGFUN VOID inet_aton();
-extern REGARGFUN VOID SetSysLogPort();
-extern REGARGFUN VOID FindKernelVar();
-extern REGARGFUN VOID EZTCP_free();
-extern REGARGFUN VOID EZTCP_malloc();
-extern REGARGFUN VOID sethostname();
+/* Roadshow extensions */
+extern VOID AROS_SLIB_ENTRY(bpf_open, UL)();
+extern VOID AROS_SLIB_ENTRY(bpf_close, UL)();
+extern VOID AROS_SLIB_ENTRY(bpf_read, UL)();
+extern VOID AROS_SLIB_ENTRY(bpf_write, UL)();
+extern VOID AROS_SLIB_ENTRY(bpf_set_notify_mask, UL)();
+extern VOID AROS_SLIB_ENTRY(bpf_set_interrupt_mask, UL)();
+extern VOID AROS_SLIB_ENTRY(bpf_ioctl, UL)();
+extern VOID AROS_SLIB_ENTRY(bpf_data_waiting, UL)();
+extern VOID AROS_SLIB_ENTRY(AddRouteTagList, UL)();
+extern VOID AROS_SLIB_ENTRY(DeleteRouteTagList, UL)();
+extern VOID AROS_SLIB_ENTRY(ChangeRouteTagList, UL)();
+extern VOID AROS_SLIB_ENTRY(FreeRouteInfo, UL)();
+extern VOID AROS_SLIB_ENTRY(GetRouteInfo, UL)();
+extern VOID AROS_SLIB_ENTRY(AddInterfaceTagList, UL)();
+extern VOID AROS_SLIB_ENTRY(ConfigureInterfaceTagList, UL)();
+extern VOID AROS_SLIB_ENTRY(ReleaseInterfaceList, UL)();
+extern VOID AROS_SLIB_ENTRY(ObtainInterfaceList, UL)();
+extern VOID AROS_SLIB_ENTRY(QueryInterfaceTagList, UL)();
+extern VOID AROS_SLIB_ENTRY(CreateAddrAllocMessageA, UL)();
+extern VOID AROS_SLIB_ENTRY(DeleteAddrAllocMessage, UL)();
+extern VOID AROS_SLIB_ENTRY(BeginInterfaceConfig, UL)();
+extern VOID AROS_SLIB_ENTRY(AbortInterfaceConfig, UL)();
+extern VOID AROS_SLIB_ENTRY(AddNetMonitorHookTagList, UL)();
+extern VOID AROS_SLIB_ENTRY(RemoveNetMonitorHook, UL)();
+extern VOID AROS_SLIB_ENTRY(GetNetworkStatistics, UL)();
+extern VOID AROS_SLIB_ENTRY(AddDomainNameServer, UL)();
+extern VOID AROS_SLIB_ENTRY(RemoveDomainNameServer, UL)();
+extern VOID AROS_SLIB_ENTRY(ReleaseDomainNameServerList, UL)();
+extern VOID AROS_SLIB_ENTRY(ObtainDomainNameServerList, UL)();
+extern VOID AROS_SLIB_ENTRY(setnetent, UL)();
+extern VOID AROS_SLIB_ENTRY(endnetent, UL)();
+extern VOID AROS_SLIB_ENTRY(getnetent, UL)();
+extern VOID AROS_SLIB_ENTRY(setprotoent, UL)();
+extern VOID AROS_SLIB_ENTRY(endprotoent, UL)();
+extern VOID AROS_SLIB_ENTRY(getprotoent, UL)();
+extern VOID AROS_SLIB_ENTRY(setservent, UL)();
+extern VOID AROS_SLIB_ENTRY(endservent, UL)();
+extern VOID AROS_SLIB_ENTRY(getservent, UL)();
+extern VOID AROS_SLIB_ENTRY(inet_aton, UL)();
+/* TODO: following functions are not implemented yet */
 
 f_void UserLibrary_funcTable[] = {
 #ifdef __MORPHOS__
-  (f_void)FUNCARRAY_BEGIN,
   (f_void)FUNCARRAY_32BIT_NATIVE,
 #endif
 #warning "TODO: NicJA - LIB_Null??"
@@ -216,21 +248,108 @@ f_void UserLibrary_funcTable[] = {
   /* bsdsocket.library 4 extensions */
   AROS_SLIB_ENTRY(GetSocketEvents, UL),
   
-  /* private ezTCP extensions */
-#ifdef __MORPHOS__
-  (f_void)-1,
-  (f_void)FUNCARRAY_32BIT_SYSTEMV,
+  /* Roadshow extensions  */
+#warning "TODO: NicJA - LIB_Null??"
+#if defined(__AROS__)
+   NULL,
+#else
+  AROS_SLIB_ENTRY(Null, LIB),	    /* Reserved1()  */
 #endif
-  inet_aton,
-  SetSysLogPort,
-#if !defined(__AROS__)
-  FindKernelVar,
-  EZTCP_free,
-  EZTCP_malloc,
+#warning "TODO: NicJA - LIB_Null??"
+#if defined(__AROS__)
+   NULL,
+#else
+  AROS_SLIB_ENTRY(Null, LIB),	    /* Reserved2()  */
 #endif
-  sethostname,
+#warning "TODO: NicJA - LIB_Null??"
+#if defined(__AROS__)
+   NULL,
+#else
+  AROS_SLIB_ENTRY(Null, LIB),	    /* Reserved3()  */
+#endif
+#warning "TODO: NicJA - LIB_Null??"
+#if defined(__AROS__)
+   NULL,
+#else
+  AROS_SLIB_ENTRY(Null, LIB),	    /* Reserved4()  */
+#endif
+#warning "TODO: NicJA - LIB_Null??"
+#if defined(__AROS__)
+   NULL,
+#else
+  AROS_SLIB_ENTRY(Null, LIB),	    /* Reserved5()  */
+#endif
+#warning "TODO: NicJA - LIB_Null??"
+#if defined(__AROS__)
+   NULL,
+#else
+  AROS_SLIB_ENTRY(Null, LIB),	    /* Reserved6()  */
+#endif
+#warning "TODO: NicJA - LIB_Null??"
+#if defined(__AROS__)
+   NULL,
+#else
+  AROS_SLIB_ENTRY(Null, LIB),	    /* Reserved7()  */
+#endif
+#warning "TODO: NicJA - LIB_Null??"
+#if defined(__AROS__)
+   NULL,
+#else
+  AROS_SLIB_ENTRY(Null, LIB),	    /* Reserved8()  */
+#endif
+#warning "TODO: NicJA - LIB_Null??"
+#if defined(__AROS__)
+   NULL,
+#else
+  AROS_SLIB_ENTRY(Null, LIB),	    /* Reserved9()  */
+#endif
+#warning "TODO: NicJA - LIB_Null??"
+#if defined(__AROS__)
+   NULL,
+#else
+  AROS_SLIB_ENTRY(Null, LIB),	    /* Reserved10() */
+#endif
+  AROS_SLIB_ENTRY(bpf_open, UL),
+  AROS_SLIB_ENTRY(bpf_close, UL),
+  AROS_SLIB_ENTRY(bpf_read, UL),
+  AROS_SLIB_ENTRY(bpf_write, UL),
+  AROS_SLIB_ENTRY(bpf_set_notify_mask, UL),
+  AROS_SLIB_ENTRY(bpf_set_interrupt_mask, UL),
+  AROS_SLIB_ENTRY(bpf_ioctl, UL),
+  AROS_SLIB_ENTRY(bpf_data_waiting, UL),
+  AROS_SLIB_ENTRY(AddRouteTagList, UL),
+  AROS_SLIB_ENTRY(DeleteRouteTagList, UL),
+  AROS_SLIB_ENTRY(ChangeRouteTagList, UL),
+  AROS_SLIB_ENTRY(FreeRouteInfo, UL),
+  AROS_SLIB_ENTRY(GetRouteInfo, UL),
+  AROS_SLIB_ENTRY(AddInterfaceTagList, UL),
+  AROS_SLIB_ENTRY(ConfigureInterfaceTagList, UL),
+  AROS_SLIB_ENTRY(ReleaseInterfaceList, UL),
+  AROS_SLIB_ENTRY(ObtainInterfaceList, UL),
+  AROS_SLIB_ENTRY(QueryInterfaceTagList, UL),
+  AROS_SLIB_ENTRY(CreateAddrAllocMessageA, UL),
+  AROS_SLIB_ENTRY(DeleteAddrAllocMessage, UL),
+  AROS_SLIB_ENTRY(BeginInterfaceConfig, UL),
+  AROS_SLIB_ENTRY(AbortInterfaceConfig, UL),
+  AROS_SLIB_ENTRY(AddNetMonitorHookTagList, UL),
+  AROS_SLIB_ENTRY(RemoveNetMonitorHook, UL),
+  AROS_SLIB_ENTRY(GetNetworkStatistics, UL),
+  AROS_SLIB_ENTRY(AddDomainNameServer, UL),
+  AROS_SLIB_ENTRY(RemoveDomainNameServer, UL),
+  AROS_SLIB_ENTRY(ReleaseDomainNameServerList, UL),
+  AROS_SLIB_ENTRY(ObtainDomainNameServerList, UL),
+  AROS_SLIB_ENTRY(setnetent, UL),
+  AROS_SLIB_ENTRY(endnetent, UL),
+  AROS_SLIB_ENTRY(getnetent, UL),
+  AROS_SLIB_ENTRY(setprotoent, UL),
+  AROS_SLIB_ENTRY(endprotoent, UL),
+  AROS_SLIB_ENTRY(getprotoent, UL),
+  AROS_SLIB_ENTRY(setservent, UL),
+  AROS_SLIB_ENTRY(endservent, UL),
+  AROS_SLIB_ENTRY(getservent, UL),
+  AROS_SLIB_ENTRY(inet_aton, UL),
+  /* TODO: Following functions are not implemented yet */
+
   (f_void)-1
-#ifdef __MORPHOS__
-  ,(f_void)FUNCARRAY_END
-#endif
 };
+

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1985, 1989 Regents of the University of California.
  * All rights reserved.
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -116,14 +116,13 @@ D(bug("[AROSTCP](res_send.c) res_send: using socket %d\n", res_sock));
 	/*
 	 * Send request, RETRY times, or until successful
 	 */
-	for (try = 0; try < _res.retry; try++)
-   {
+	for (try = 0; try < _res.retry; try++) {
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_send.c) res_send: Attempt %d\n", try));
 #endif
 	  nscount = 0;
 	  DRES(Printf("Retry #%ld\n",try);)
-	  for (ns = _res.nsaddr_list; ns->s_addr ; ns++) {
+	  for (ns = _res.nsaddr_list; ns->s_addr; ns++) {
 	    nscount++;
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_send.c) res_send: Querying server #%ld address = %s\n", nscount,
@@ -132,9 +131,8 @@ D(bug("[AROSTCP](res_send.c) res_send: Querying server #%ld address = %s\n", nsc
 
 #ifdef RES_DEBUG
 			Printf("Querying server #%ld address = %s\n", nscount,
-			      __inet_ntoa(ns->s_addr, libPtr));
+			      __Inet_NtoA(ns->s_addr, libPtr));
 #endif /* RES_DEBUG */
-
 	    host.sin_len = sizeof(host);
 	    host.sin_family = AF_INET;
 	    host.sin_port = htons(NAMESERVER_PORT);
@@ -153,7 +151,6 @@ D(bug("[AROSTCP](res_send.c) res_send: Using v_circuit\n"));
 			 */
 			try = _res.retry;
 			if (res_sock < 0) {
-			
 				res_sock = __socket(AF_INET, SOCK_STREAM, 0, libPtr);
 				if (res_sock < 0) {
 #if defined(__AROS__)
@@ -238,11 +235,10 @@ D(bug("[AROSTCP](res_send.c) res_send: Failed recieving response\n"));
 				}
 				continue;
 			}
-
 			cp = answer;
 			if ((resplen = ntohs(*(u_short *)cp)) > anslen) {
 #if defined(__AROS__)
-D(bug("[AROSTCP](res_send.c) res_send: Trancated response\n"));
+D(bug("[AROSTCP](res_send.c) res_send: Truncated response\n"));
 #endif
 #ifdef RES_DEBUG
 				       Printf("response truncated\n");
@@ -251,11 +247,9 @@ D(bug("[AROSTCP](res_send.c) res_send: Trancated response\n"));
 				truncated = 1;
 			} else
 				len = resplen;
-
 			while (len != 0 &&
 			   (n = __recv(res_sock,
-				     (char *)cp, (int)len, 0, libPtr)) > 0)
-         {
+				     (char *)cp, (int)len, 0, libPtr)) > 0) {
 				cp += n;
 				len -= n;
 			}
@@ -487,7 +481,6 @@ D(bug("[AROSTCP](res_send.c) res_send: Recieved answer\n"));
 		 * or if we haven't been asked to keep a socket open,
 		 * close the socket.
 		 */
-
 		if ((v_circuit &&
 		    ((_res.options & RES_USEVC) == 0 || ns->s_addr != 0)) ||
 		    (_res.options & RES_STAYOPEN) == 0) {
@@ -500,7 +493,6 @@ D(bug("[AROSTCP](res_send.c) res_send: Closing socket\n"));
 		return (resplen);
 	   }
 	}
-
 	if (res_sock >= 0) {
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_send.c) res_send: Closing open socket\n"));

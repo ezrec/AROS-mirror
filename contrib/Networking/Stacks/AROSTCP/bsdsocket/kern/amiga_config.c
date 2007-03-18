@@ -4,8 +4,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Oopyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -34,6 +33,7 @@
 
 #include <netdb.h>		/* pathnames */
 
+#include <kern/amiga_gui.h>
 #include <kern/amiga_includes.h>
 #include <kern/amiga_config.h>
 #include <kern/amiga_netdb.h>
@@ -58,7 +58,6 @@
 #include <netinet/udp_var.h>
 
 /* External functions */
-int inet_aton(register const char *cp, struct in_addr *addr);
 int ultoa(unsigned long ul,char *buffer);
 
 extern struct Task *AROSTCP_Task; /* referenced by sendbreak() */
@@ -139,7 +138,7 @@ getvalue(struct CSource *args, UBYTE **errstrp, struct CSource *res)
   UBYTE Buffer[KEYWORDLEN];
   WORD var, index;
   LONG vlen;
-  STRPTR value = NULL;
+  UBYTE *value = NULL;
 
   Buffer[0] = '\0';
 
@@ -336,7 +335,7 @@ setvalue(struct CSource *args, UBYTE **errstrp, struct CSource *res)
 	/* Currently, nameservice cannot be used */
 	if (ReadItem(Buffer, BufLen, args) <= 0)
 	  goto reterr;
-	if (!inet_aton(Buffer, (struct in_addr *)dp))
+	if (!__inet_aton(Buffer, (struct in_addr *)dp))
 	  goto reterr;
 	break;
       case VAR_ENUM:
@@ -435,6 +434,7 @@ D(bug("[AROSTCP](amiga_config.c) parsefile('%s')\n",name));
         if (retval == RETURN_OK)
           continue;
         if (retval != RETURN_WARN) { /* severe error */
+          error_request("Fatal configuration error in file %s at line %ld, col %ld\n%s\nAROSTCP will quit", name, line, arg.CS_CurChr, *errstrp);
           break;
         }
 
@@ -443,9 +443,8 @@ D(bug("[AROSTCP](amiga_config.c) parsefile('%s')\n",name));
 D(bug("[AROSTCP](amiga_config.c) parsefile: %s: line %ld, col %ld: %s",
 	       name, line, arg.CS_CurChr, *errstrp));
 #endif
-        Printf("%s: line %ld, col %ld: %s",
-           name, line, arg.CS_CurChr, *errstrp);
-        retval = RETURN_OK;
+	    error_request("Configuration error in file %s at line %ld, col %ld\n%s", name, line, arg.CS_CurChr, *errstrp);
+	    retval = RETURN_OK;
       }
       /* Check file error */ 
       ioerr = IoErr();
@@ -460,6 +459,9 @@ D(bug("[AROSTCP](amiga_config.c) parsefile: %s: line %ld, col %ld: %s",
       *errstrp = res->CS_Buffer;
       retval = RETURN_ERROR;
     }
+    if (!fh)
+      error_request("Unable to open configuration file\n%s", *errstrp);
+
     FreeMem(buf, CONFIGLINELEN);
   } else {
     *errstrp = ERR_MEMORY;

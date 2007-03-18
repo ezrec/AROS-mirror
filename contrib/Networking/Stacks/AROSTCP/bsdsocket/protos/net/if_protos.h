@@ -32,6 +32,8 @@ int ifioctl(struct socket * so,
             int cmd,
             caddr_t data);
 
+void ifupdown(struct ifnet *ifp, int up);
+
 int ifconf(int cmd,
            caddr_t data);
 

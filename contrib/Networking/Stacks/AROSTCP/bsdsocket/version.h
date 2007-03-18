@@ -16,10 +16,15 @@
 #define STR(A) _STR(A)
 #endif
 #define VERSION         4
-#define REVISION        0
-#define DATE    "1.1.2006"
-#define VERS    "bsdsocket.library 4.0"
+#define REVISION        51
+#define DATE    "17.3.2007"
+#define VERS    "bsdsocket.library 4.51"
 #define VSTRING "bsdsocket.library" STR(VERSION) "." STR(REVISION) "(" DATE ")"
-#define VERSTAG "\0$VER: bsdsocket.library 4.0 (" DATE ")"
-#define STACK_RELEASE "AROSTCP kernel v0.17 " CPU_TYPE " (" DATE ")"
+#define VERSTAG "\0$VER: bsdsocket.library 4.51 (" DATE ")"
+
+#define MIAMI_VERSION 13
+#define MIAMI_REVISION 3
+#define MIAMI_VSTRING  "miami.library" STR(MIAMI_VERSION) "." STR(MIAMI_REVISION) "(" DATE ")"
+
+#define STACK_RELEASE "AROSTCP kernel v0.20 " CPU_TYPE " (" DATE ")"
 

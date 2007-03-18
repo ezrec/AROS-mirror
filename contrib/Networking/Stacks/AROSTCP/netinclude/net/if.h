@@ -1,31 +1,10 @@
 #ifndef _NET_IF_H_
 #define _NET_IF_H_
 /*
- * Copyright (C) 1993,1994 AmiTCP/IP Group, <amitcp-group@hut.fi>
- *                         Helsinki University of Technology, Finland.
- *                         All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (c) 2005 Pavel Fedin
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Library General Public License
- * version 2 as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this file; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
- */
-
-/*
  * Copyright (c) 1982, 1986, 1989, 1993
  *	The Regents of the University of California.  All rights reserved.
+ * Copyright (c) 2005 - 2006
+ *	Pavel Fedin
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -82,13 +61,10 @@
  * routing and gateway routines maintaining information used to locate
  * interfaces.  These routines live in the files if.c and route.c
  */
-
-#include <sys/types.h>
+#include <utility/tagitem.h>
 #ifndef _TIME_ /*  XXX fast fix for SNMP, going away soon */
 #include <sys/time.h>
 #endif
-
-#include <sys/socket.h>
 
 #ifndef KERNEL
 #ifdef __STDC__
@@ -167,6 +143,8 @@ struct ifnet {
 		__P((int));		/* new autoconfig will permit removal */
 	int	(*if_watchdog)		/* timer routine */
 		__P((int));
+	int	(*if_query)
+		__P((struct ifnet *, struct TagItem *));
 	struct	ifqueue {
 		struct	mbuf *ifq_head;
 		struct	mbuf *ifq_tail;
@@ -353,6 +331,11 @@ struct	ifconf {
 	} ifc_ifcu;
 #define	ifc_buf	ifc_ifcu.ifcu_buf	/* buffer address */
 #define	ifc_req	ifc_ifcu.ifcu_req	/* array of structures returned */
+};
+
+struct if_nameindex {
+	unsigned long	if_index;
+	char 			*if_name;
 };
 
 #include <net/if_arp.h>

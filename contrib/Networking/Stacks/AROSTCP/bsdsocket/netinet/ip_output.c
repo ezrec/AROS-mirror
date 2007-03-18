@@ -1,29 +1,7 @@
 /*
- * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
- *                    Helsinki University of Technology, Finland.
- *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (c) 2005 Pavel Fedin
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
- */
-
-/*
  * Copyright (c) 1982, 1986, 1988, 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
+ * Copyright (c) 2005 - 2006 Pavel Fedin
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,7 +33,9 @@
  *
  *	@(#)ip_output.c	8.3 (Berkeley) 1/21/94
  */
+#include <conf.h>
 
+#include <libraries/miami.h>
 #include <sys/param.h>
 #include <sys/malloc.h>
 #include <sys/mbuf.h>
@@ -64,9 +44,11 @@
 #include <sys/socketvar.h>
 #include <sys/protosw.h>
 #include <sys/synch.h>
+#include <sys/syslog.h>
 
 #include <net/route.h>
 #include <net/if.h>
+#include <net/pfil.h>
 
 #include <netinet/in.h>
 #include <netinet/in_systm.h>
@@ -77,11 +59,6 @@
 
 #include <kern/amiga_subr.h>
 
-#include <net/if_protos.h>
-#include <netinet/in_protos.h>
-#include <netinet/in_cksum_protos.h>
-#include <netinet/ip_output_protos.h>
-
 #ifdef vax
 #include <machine/mtpr.h>
 #endif
@@ -90,7 +67,7 @@
 #define IP_RAWOUTPUT 0
 #endif
 
-struct mbuf *ip_insertoptions __P((struct mbuf *, struct mbuf *, int *));
+static struct mbuf *ip_insertoptions __P((struct mbuf *, struct mbuf *, int *));
 #ifdef ENABLE_MULTICAST
 static void ip_mloopback
 	__P((struct ifnet *, struct mbuf *, struct sockaddr_in *));
@@ -189,6 +166,7 @@ int ip_output(m0, opt, ro, flags)
 		if (ro->ro_rt == 0) {
 			ipstat.ips_noroute++;
 			error = EHOSTUNREACH;
+			DROUTE(log(LOG_DEBUG,"ip_output(): packet dropped\n");)
 			goto bad;
 		}
 		ia = ifatoia(ro->ro_rt->rt_ifa);
@@ -326,6 +304,9 @@ int ip_output(m0, opt, ro, flags)
 		m->m_flags &= ~M_BCAST;
 
 sendit:
+	/* Run through list of hooks */
+        pfil_run_hooks(m, ifp, MIAMIPFBPT_IP);
+
 	/*
 	 * If small enough for interface, can just send directly.
 	 */
@@ -441,7 +422,7 @@ bad:
  * Adjust IP destination as required for IP source routing,
  * as indicated by a non-zero in_addr at the start of the options.
  */
-struct mbuf *
+static struct mbuf *
 ip_insertoptions(m, opt, phlen)
 	register struct mbuf *m;
 	struct mbuf *opt;

@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * COPYRIGHT (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -104,18 +103,8 @@ static inline int ffs(register long mask)
  * Ioctl system call
  */
 
-/*LONG SAVEDS IoctlSocket(
-		 REG(d0, LONG fdes),
-		 REG(d1, ULONG cmd),
-		 REG(a0, caddr_t data),
-		 REG(a6, struct SocketBase *libPtr))*/
-AROS_LH3(LONG, IoctlSocket,
-	AROS_LHA(LONG, fdes, D0),
-        AROS_LHA(ULONG, cmd, D1),
-        AROS_LHA(caddr_t, data, A0),
-        struct SocketBase *, libPtr, 18, UL)
+LONG __IoctlSocket(LONG fdes, ULONG cmd, caddr_t data, struct SocketBase *libPtr)
 {
-  AROS_LIBFUNC_INIT
   register int error;
   register u_int size;
   struct socket *so;
@@ -216,8 +205,19 @@ AROS_LH3(LONG, IoctlSocket,
   ReleaseSyscallSemaphore(libPtr);
   DOPTERR(if (error) log(LOG_ERR,"IoctlSocket(): error %ld on command 0x%08lx", error, cmd);)
   API_STD_RETURN(error, 0);
+}
+
+AROS_LH3(LONG, IoctlSocket,
+	AROS_LHA(LONG, fdes, D0),
+        AROS_LHA(ULONG, cmd, D1),
+        AROS_LHA(caddr_t, data, A0),
+        struct SocketBase *, libPtr, 18, UL)
+{
+  AROS_LIBFUNC_INIT
+  return __IoctlSocket(fdes, cmd, data, libPtr);
   AROS_LIBFUNC_EXIT
 }
+
 
 
 /*
@@ -734,18 +734,16 @@ LONG __CloseSocket(LONG fd, struct SocketBase *libPtr)
    * Decrease the reference count of a socket (AmiTCP addition) and return if
    * not zero.
    */
-  if (--so->so_refcnt <= 0)
-  {
+  if (--so->so_refcnt <= 0) {
     error = soclose(so);
     /* Remove all events associated with this socket */
     ObtainSemaphore(&libPtr->EventLock);
     for (se = (struct soevent *)libPtr->EventList.mlh_Head; se->node.mln_Succ; se = (struct soevent *)se->node.mln_Succ)
     {
-      if (se->socket == so)
-      {
-        Remove((struct Node *)se);
-        bsd_free(se, NULL);
-      }
+	if (se->socket == so) {
+	  Remove((struct Node *)se);
+	  bsd_free(se, NULL);
+	}
     }
     ReleaseSemaphore(&libPtr->EventLock);
   }
@@ -807,7 +805,7 @@ static LONG makeId(LONG id)
 {
   static LONG uniqueId = FIRSTUNIQUEID;
 
-  if (id == UNIQUE_ID) {
+  if (id == -1) {
     do {
       uniqueId += sizeof (void *);
       if (uniqueId < 0)

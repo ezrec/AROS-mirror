@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -103,6 +102,8 @@
 #include <kern/uipc_socket2_protos.h>
 #include <kern/uipc_domain_protos.h>
 #include <kern/amiga_select_protos.h>
+
+#include <sys/uio.h>
 
 /*
  * Socket operation routines.
@@ -563,7 +564,16 @@ nopages:
 			    so->so_options |= SO_DONTROUTE;
 		    s = splnet();				/* XXX */
 		    error = (*so->so_proto->pr_usrreq)(so,
-			(flags & MSG_OOB) ? PRU_SENDOOB : PRU_SEND,
+			(flags & MSG_OOB) ? PRU_SENDOOB : //PRU_SEND,
+			/*
+			 * If the user set MSG_EOF, the protocol
+			 * understands this flag and nothing left to
+			 * send then use PRU_SEND_EOF instead of PRU_SEND.
+			 */
+			((flags & MSG_EOF) &&
+			 (so->so_proto->pr_flags & PR_IMPLOPCL) &&
+			 (resid <= 0)) ?
+				PRU_SEND_EOF : PRU_SEND,
 			top, addr, control);
 		    splx(s);
 		    if (dontroute)
@@ -1040,6 +1050,7 @@ sosetopt(so, level, optname, m0)
 		case SO_USELOOPBACK:
 		case SO_BROADCAST:
 		case SO_REUSEADDR:
+		case SO_REUSEPORT:
 		case SO_OOBINLINE:
 			if (m == NULL || m->m_len < sizeof (int)) {
 				error = EINVAL;
@@ -1162,6 +1173,7 @@ sogetopt(so, level, optname, mp)
 		case SO_DEBUG:
 		case SO_KEEPALIVE:
 		case SO_REUSEADDR:
+		case SO_REUSEPORT:
 		case SO_BROADCAST:
 		case SO_OOBINLINE:
 			*mtod(m, int *) = so->so_options & optname;

@@ -124,6 +124,7 @@ struct protosw {
 #define	PR_CONNREQUIRED	0x04		/* connection required by protocol */
 #define	PR_WANTRCVD	0x08		/* want PRU_RCVD calls */
 #define	PR_RIGHTS	0x10		/* passes capabilities */
+#define PR_IMPLOPCL	0x20		/* implied open/close */
 
 /*
  * The arguments to usrreq are:
@@ -160,8 +161,9 @@ struct protosw {
 #define	PRU_SLOWTIMO		19	/* 500ms timeout */
 #define	PRU_PROTORCV		20	/* receive from below */
 #define	PRU_PROTOSEND		21	/* send to below */
+#define PRU_SEND_EOF		22	/* send and close */
 
-#define	PRU_NREQ		21
+#define	PRU_NREQ		22
 
 /*
  * moved prurequests array definition to netinet/tcp_debug.c

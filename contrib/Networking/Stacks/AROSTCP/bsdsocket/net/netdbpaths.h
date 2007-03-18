@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -31,6 +30,7 @@
 #define _FILE_CONFIG        "general.config"
 #define _PATH_NETDB         "db/netdb"
 #define _FILE_NETDB         "netdb"
+#define _PATH_DHCLIENT	    "C/dhclient"
 /*
 #define	_PATH_HEQUIV        "db/hosts.equiv"
 #define	_PATH_INETDCONF	    "db/inetd.conf"

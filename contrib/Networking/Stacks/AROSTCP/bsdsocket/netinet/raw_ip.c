@@ -78,7 +78,6 @@
 #include <netinet/ip_var.h>
 #include <netinet/in_pcb.h>
 
-#include <net/if_protos.h>
 #include <netinet/raw_ip_protos.h>
 #include <netinet/ip_output_protos.h>
 #include <net/raw_usrreq_protos.h>

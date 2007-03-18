@@ -2,7 +2,7 @@
  * Copyright (C) 1994 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -50,7 +50,7 @@ struct ssc_args {
   LONG  *a_unit;
   UBYTE *a_ip;
   UBYTE *a_netmask;
-  LONG  a_up;
+  LONG   a_up;
   LONG  *a_iptype;
   LONG  *a_arptype;
   LONG  *a_ipno;
@@ -82,7 +82,7 @@ struct ssconfig {
 
 void ssconfig_free(struct ssconfig *config);
 struct ssconfig *ssconfig_parse(struct RDArgs *rdargs);
-//struct ssconfig *ssconfig_make(int how, char *name, long unit);
+struct ssconfig *ssconfig_make(int how, char *name, long unit);
 void ssconfig(struct sana_softc *ifp, struct ssconfig *sscp);
 
 #endif /* !NET_SANA2CONFIG_H */

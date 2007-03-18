@@ -53,7 +53,6 @@
 #else
 #include <proto/exec.h>
 #include <dos/dos.h>
-#define syslog vsyslog
 struct Library *SocketBase;
 #endif
 

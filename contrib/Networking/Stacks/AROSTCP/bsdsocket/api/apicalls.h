@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -56,14 +55,14 @@ extern LONG __recv(LONG, char *, LONG, LONG, struct SocketBase *);
 extern LONG __send(LONG, char *, LONG, LONG, struct SocketBase *);
 extern LONG __sendto(LONG, char *, LONG, LONG, struct sockaddr *, LONG, struct SocketBase *);
 extern LONG __socket(LONG, LONG, LONG, struct SocketBase *);
+extern LONG __IoctlSocket(LONG fdes, ULONG cmd, caddr_t data, struct SocketBase *libPtr);
 extern LONG __WaitSelect(ULONG, fd_set *, fd_set *, fd_set *, struct timeval *, ULONG *, struct SocketBase *);
 extern struct hostent * __gethostbyaddr(UBYTE *, int, int, struct SocketBase *);
 extern LONG __gethostname(STRPTR, LONG, struct SocketBase *);
 extern LONG __SetErrnoPtr(VOID *, UBYTE, struct SocketBase *);
-extern char * __inet_ntoa(ULONG, struct SocketBase *);
-extern REGARGFUN int inet_aton(
-   REG(a0, const char *),
-   REG(a1, struct in_addr *));
+extern LONG __inet_aton(STRPTR cp,  struct in_addr * addr);
+extern char * __Inet_NtoA(ULONG, struct SocketBase *);
+#define __inet_ntoa __Inet_NtoA
 extern REGARGFUN void SetSysLogPort(void);
 extern REGARGFUN void endndbent(struct SocketBase *);
 

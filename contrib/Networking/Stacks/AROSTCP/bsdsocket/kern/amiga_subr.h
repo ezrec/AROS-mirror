@@ -76,7 +76,7 @@ imax(int a, int b)
   return (a > b ? a : b);
 }
 
-#if 1
+#if 0
 static inline unsigned int
 min(unsigned int a, unsigned int b)
 {

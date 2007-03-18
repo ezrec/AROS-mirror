@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -41,6 +40,7 @@
 struct log_cnf {
   u_long log_bufs;
   u_long log_buf_len;
+  u_long log_filter;
 }; 
 extern struct log_cnf log_cnf;
 
@@ -53,17 +53,26 @@ extern struct log_cnf log_cnf;
 #define LOG_PORTCLOSE 0xfb000000
 #define LOG_CONGIF 0xff000000
 
+/*
+ * Magic value in Level field of SysLogPacket
+ */
+#define LOG_GUIMSG  0xfe000000
+#define LOG_CMDMASK 0xffff0000
+
 extern struct Task *Nettrace_Task;
 extern struct Process *logProc;
 extern BOOL log_init(void);
 extern void log_deinit(void);
 extern struct SysLogPacket *GetLogMsg(struct MsgPort *);
+extern void log_msg(struct SysLogPacket *msg);
 
 extern struct MsgPort logReplyPort;
 extern struct MsgPort *logPort;
 extern struct SysLogPacket *log_message;
 extern STRPTR consolename, logfilename;
 extern struct log_cnf log_cnf;
+
+extern struct MsgPort *ExtLogPort;
 
 /* extern void stuffchar(...);*/
 

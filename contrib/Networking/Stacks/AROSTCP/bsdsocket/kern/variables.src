@@ -2,7 +2,7 @@
 # Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
 #                    Helsinki University of Technology, Finland.
 #                    All rights reserved.
-# Copyright (C) 2005 Neil Cafferkey
+# Copyright (C) 2005 - 2007 The AROS Dev Team
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 2 as
@@ -218,11 +218,30 @@ CS=CLUSTERSIZE ;2 ;	Size of an mbuf cluster.
 #
 # LOG configuration
 #
-LOG ;	1 ;	Logging system configuration.
+LOG ;	     1 ;     Logging system configuration.
 extern LONG log_cnf;
 { VAR_LONG, VF_TABLE|VF_RCONF,   KW_LOG, &log_cnf, NULL }
-COUNT ;	2 ;	Number of log messages to use.
-LEN ;	2 ;	Maximum length of a log message.
+COUNT ;	     2 ;     Number of log messages to use.
+LEN ;	     2 ;     Maximum length of a log message.
+FILTERFILE ; 2 ;     Log level filter
+#
+# GUI configuration
+GUI ;		1 ; GUI system configuration
+extern LONG gui_cnf;
+{ VAR_STRP, VF_TABLE|VF_RCONF,   KW_GUI, &gui_cnf, NULL }
+PANEL ;		2 ; Panel name
+FONT ;		2 ; Font name for the panel
+#
+SHOW;		1 ; What to show in the panel
+extern LONG gui_show[];
+{ VAR_ENUM, VF_TABLE|VF_RCONF,   KW_SHOW, gui_show, boolean_enum }
+SPEED ;		2 ; Interace speed
+RATE ;		2 ; Transfer rate
+UPTIME ;	2 ; Uptime
+BYTES ;		2 ; Transferred bytes counter
+IFCONTROL ;	2 ; Interface control buttons
+GUICONTROL ;	2 ; Panel control buttons
+#
 #
 # Single variables
 #
@@ -283,3 +302,12 @@ extern STRPTR consolename ;	 int logname_changed(void *pt, LONG new);
 LOGF=LOGFILENAME ;	1 ;	Filename for the log file.
 extern STRPTR logfilename;
 { VAR_STRP, VF_RW, NULL, &logfilename, logname_changed }
+#
+OPENGUI ; 1 ; Boolean to open GUI on startup
+extern LONG OpenGUIOnStartup;
+{ VAR_ENUM, VF_RCONF, NULL, &OpenGUIOnStartup, boolean_enum }
+#
+REFRESH ; 1 ; GUI refresh period in seconds
+extern ULONG gui_refresh;
+{ VAR_LONG, VF_RCONF, NULL, &gui_refresh, NULL }
+

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1982, 1986 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1982, 1986, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,11 +30,12 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)tcp_fsm.h	7.4 (Berkeley) 6/28/90
+ *	@(#)tcp_fsm.h	8.1 (Berkeley) 6/10/93
+ * $Id$
  */
 
-#ifndef TCP_FSM_H
-#define TCP_FSM_H
+#ifndef _NETINET_TCP_FSM_H_
+#define _NETINET_TCP_FSM_H_
 
 /*
  * TCP FSM state definitions.
@@ -59,6 +60,7 @@
 #define	TCPS_TIME_WAIT		10	/* in 2*msl quiet wait after close */
 
 #define	TCPS_HAVERCVDSYN(s)	((s) >= TCPS_SYN_RECEIVED)
+#define TCPS_HAVEESTABLISHED(s)	((s) >= TCPS_ESTABLISHED)
 #define	TCPS_HAVERCVDFIN(s)	((s) >= TCPS_TIME_WAIT)
 
 #ifdef	TCPOUTFLAGS
@@ -67,21 +69,24 @@
  * Basic flags (TH_RST,TH_ACK,TH_SYN,TH_FIN) are totally
  * determined by state, with the proviso that TH_FIN is sent only
  * if all data queued for output is included in the segment.
- *
- * definition moved to tcp_output.c
  */
-extern u_char	tcp_outflags[TCP_NSTATES];
+u_char	tcp_outflags[TCP_NSTATES] = {
+    TH_RST|TH_ACK, 0, TH_SYN, TH_SYN|TH_ACK,
+    TH_ACK, TH_ACK,
+    TH_FIN|TH_ACK, TH_FIN|TH_ACK, TH_FIN|TH_ACK, TH_ACK, TH_ACK,
+};
 #endif
 
-/*
- * tcp_acounts definition moved to tcp_usrreq.c
- */
 #ifdef KPROF
-extern int	tcp_acounts[TCP_NSTATES][PRU_NREQ];
+int	tcp_acounts[TCP_NSTATES][PRU_NREQ];
 #endif
 
 #ifdef	TCPSTATES
-extern char *tcpstates[];	/* definition moved to tcp_debug.c */
+char *tcpstates[] = {
+	"CLOSED",	"LISTEN",	"SYN_SENT",	"SYN_RCVD",
+	"ESTABLISHED",	"CLOSE_WAIT",	"FIN_WAIT_1",	"CLOSING",
+	"LAST_ACK",	"FIN_WAIT_2",	"TIME_WAIT",
+};
 #endif
 
-#endif /* !TCP_FSM_H */
+#endif

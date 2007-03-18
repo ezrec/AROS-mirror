@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -130,8 +129,8 @@ D(bug("[AROSTCP](kern_malloc.c) bsd_free: Attempt to free non-allocated memory a
  * last freed block for obvious reasons
  *
  * This function is only called from one place, and there
- * doesn't appear to be any need to copy data from
- * the old buffer in that particular case, so we don't.
+ * it is used to shorten the allocated block. Only this particular
+ * behaviour is implemented
  */
 
 void *

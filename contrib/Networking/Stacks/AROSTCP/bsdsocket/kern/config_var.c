@@ -5,10 +5,10 @@
  */
 
 #include <sys/param.h>
-#include <sys/socket.h>
 #include <netinet/in.h>
 #include <kern/amiga_includes.h>
 #include <kern/amiga_config.h>
+#include <sys/socket.h>
 
 /* Variables related to Internet Message Control Protocol. */
 #define KW_ICMP \
@@ -55,16 +55,24 @@
 
 /* Logging system configuration. */
 #define KW_LOG \
- "COUNT,LEN"
+ "COUNT,LEN,FILTERFILE"
+
+/* GUI system configuration */
+#define KW_GUI \
+ "PANEL,FONT"
+
+/* What to show in the panel */
+#define KW_SHOW \
+ "SPEED,RATE,UPTIME,BYTES,IFCONTROL,GUICONTROL"
 
 /* Level 1 variables */
 STRPTR KW_VARS =
   "WITH,IC=ICMP,ICH=ICMPHIST,IP,T=TCP,U=UDP,CONNECTIONS,HOSTNAME,ROUTES,"
-  "MBS=MBUF_STAT,MBTS=MBUF_TYPE_STATS,MBC=MBUF_CONF,LOG,TASKNAME,"
-  "NTH=NTHBASE,DBSANA=DEBUGSANA,DBICMP=DEBUGICMP,DBIP=DEBUGIP,"
-  "GTW=GATEWAY,REDIR=IPSENDREDIRECTS,USENS=USENAMESERVER,"
-  "ULO=USELOOPBACK,TCPSND=TCP_SENDSPACE,TCPRCV=TCP_RECVSPACE,"
-  "CON=CONSOLENAME,LOGF=LOGFILENAME";
+  "MBS=MBUF_STAT,MBTS=MBUF_TYPE_STATS,MBC=MBUF_CONF,LOG,GUI,SHOW,"
+  "TASKNAME,NTH=NTHBASE,DBSANA=DEBUGSANA,DBICMP=DEBUGICMP,"
+  "DBIP=DEBUGIP,GTW=GATEWAY,REDIR=IPSENDREDIRECTS,"
+  "USENS=USENAMESERVER,ULO=USELOOPBACK,TCPSND=TCP_SENDSPACE,"
+  "TCPRCV=TCP_RECVSPACE,CON=CONSOLENAME,LOGF=LOGFILENAME,OPENGUI,REFRESH";
 
 /* extern declarations */
 
@@ -81,6 +89,8 @@ extern struct mbstat mbstat;
 extern LONG mb_read_stats(struct CSource *args, UBYTE **errstrp, struct CSource *res);
 extern struct mbconf mbconf; int mb_check_conf(void *pt, LONG new);
 extern LONG log_cnf;
+extern LONG gui_cnf;
+extern LONG gui_show[];
 extern STRPTR taskname; int taskname_changed(void *pt, LONG new);
 extern LONG nthLibrary;
 extern LONG debug_sana;
@@ -94,6 +104,8 @@ extern ULONG tcp_sendspace;
 extern ULONG tcp_recvspace;
 extern STRPTR consolename ;	 int logname_changed(void *pt, LONG new);
 extern STRPTR logfilename;
+extern LONG OpenGUIOnStartup;
+extern ULONG gui_refresh;
 
 /* Global variables */
 STRPTR KW_Protocols = KW_ROUTES;
@@ -112,6 +124,8 @@ struct cfg_variable variables[] = {
 { VAR_FUNC, VF_READ, NULL, (notify_f)mb_read_stats, NULL },
 { VAR_LONG, VF_TABLE|VF_RCONF,   KW_MBUF_CONF, &mbconf, mb_check_conf },
 { VAR_LONG, VF_TABLE|VF_RCONF,   KW_LOG, &log_cnf, NULL },
+{ VAR_STRP, VF_TABLE|VF_RCONF,   KW_GUI, &gui_cnf, NULL },
+{ VAR_ENUM, VF_TABLE|VF_RCONF,   KW_SHOW, gui_show, boolean_enum },
 { VAR_STRP, VF_RCONF, NULL, &taskname, taskname_changed },
 { VAR_LONG, VF_RW, NULL, &nthLibrary,  NULL },
 { VAR_ENUM, VF_RW, NULL, &debug_sana, boolean_enum },
@@ -124,5 +138,7 @@ struct cfg_variable variables[] = {
 { VAR_LONG, VF_RW, NULL, (LONG*)&tcp_sendspace, NULL },
 { VAR_LONG, VF_RW, NULL, (LONG*)&tcp_recvspace, NULL },
 { VAR_STRP, VF_RW, NULL, &consolename, logname_changed },
-{ VAR_STRP, VF_RW, NULL, &logfilename, logname_changed }
+{ VAR_STRP, VF_RW, NULL, &logfilename, logname_changed },
+{ VAR_ENUM, VF_RCONF, NULL, &OpenGUIOnStartup, boolean_enum },
+{ VAR_LONG, VF_RCONF, NULL, &gui_refresh, NULL }
 };

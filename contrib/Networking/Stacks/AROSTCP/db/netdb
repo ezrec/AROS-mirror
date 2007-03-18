@@ -4,11 +4,11 @@
 ; Copyright © 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
 ;                  Helsinki University of Technology, Finland.
 ;                  All rights reserved.
-; Copyright © 2005 Pavel Fedin
+; Copyright © 2005 - 2006 Pavel Fedin
 ;
-; Include information from local networking environment
-; (File created by installer)
-
+; This is a main file controlling loading of other files containing network
+; information (hosts, services, access list, etc). Do not change it unless you
+; really know what you are doing.
 ;
 ; interfaces
 ;
@@ -17,12 +17,10 @@ WITH interfaces PREFIX=I
 ; hosts
 ;
 WITH hosts PREFIX=H
-H 127.0.0.1	localhost
 ;
-; Local networks
+; Networks
 ;
-;WITH networks PREFIX=N
-N loopback-net	127		software-loopback-net
+WITH networks PREFIX=N
 ;
 ; Protocols
 ; 
@@ -34,7 +32,7 @@ WITH services PREFIX=S
 ;
 ; Static routes
 ;
-;WITH static-routes PREFIX=R
+WITH static-routes PREFIX=R
 ;
 ; Nameservers and local domains
 ;
@@ -43,4 +41,9 @@ WITH netdb-myhost
 ; Access control list for incoming connections.
 ;
 WITH inet.access PREFIX=ACCESS
+;
+; Startup/shutdown scripts, uncomment to enable this sample.
+;
+;RC rc.d/rc.sample
 ;;;; EOF
+

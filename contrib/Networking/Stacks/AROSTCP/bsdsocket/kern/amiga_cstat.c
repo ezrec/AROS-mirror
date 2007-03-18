@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -166,13 +165,16 @@ getsockets(struct CSource *args, UBYTE **errstrp, struct CSource *res)
 {
   int i, count = 0;
   struct inpcb *pcb;
+
   struct printsocket *pps, *mem;
   spl_t s = splnet();		/* Critical section starts here */
 
   /* Count number of connections */
-  for(pcb = udb.inp_next; pcb != &udb ; pcb = pcb->inp_next)
+//for(pcb = udb.inp_next; pcb != &udb ; pcb = pcb->inp_next)
+  for(pcb = udb.lh_first; pcb != NULL; pcb = pcb->inp_list.le_next)
     ++count;
-  for(pcb = tcb.inp_next; pcb != &tcb ; pcb = pcb->inp_next)
+//for(pcb = tcb.inp_next; pcb != &tcb ; pcb = pcb->inp_next)
+  for(pcb = tcb.lh_first; pcb != NULL; pcb = pcb->inp_list.le_next)
     ++count;
 
   if (count == 0) {		/* return now if nothing to print */
@@ -202,7 +204,8 @@ getsockets(struct CSource *args, UBYTE **errstrp, struct CSource *res)
   }
 
   /* Copy information, TCP first.. */
-  for(pcb = tcb.inp_next, pps = mem; pcb != &tcb; pcb = pcb->inp_next, ++pps){
+//for(pcb = tcb.inp_next, pps = mem; pcb != &tcb; pcb = pcb->inp_next, ++pps){
+  for(pcb = tcb.lh_first, pps = mem; pcb != NULL; pcb = pcb->inp_list.le_next){
     pps->inp_faddr = pcb->inp_faddr;
     pps->inp_fport = pcb->inp_fport;
     pps->inp_laddr = pcb->inp_laddr;
@@ -213,7 +216,8 @@ getsockets(struct CSource *args, UBYTE **errstrp, struct CSource *res)
     pps->inp_ppcb_t_state = ((struct tcpcb *)(pcb->inp_ppcb))->t_state;
   }
   /* ...then UDP */
-  for(pcb = udb.inp_next; pcb != &udb; pcb = pcb->inp_next, ++pps){
+//for(pcb = udb.inp_next; pcb != &udb; pcb = pcb->inp_next, ++pps){
+  for(pcb = udb.lh_first; pcb != NULL; pcb = pcb->inp_list.le_next){
     pps->inp_faddr = pcb->inp_faddr;
     pps->inp_fport = pcb->inp_fport;
     pps->inp_laddr = pcb->inp_laddr;

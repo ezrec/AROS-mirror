@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1982, 1986 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1982, 1986, 1993
+ *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,11 +30,12 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)tcpip.h	7.4 (Berkeley) 6/28/90
+ *	@(#)tcpip.h	8.1 (Berkeley) 6/10/93
+ * $Id$
  */
 
-#ifndef TCPIP_H
-#define TCPIP_H
+#ifndef _NETINET_TCPIP_H_
+#define _NETINET_TCPIP_H_
 
 /*
  * Tcp+ip header, after ip options removed.
@@ -43,6 +44,16 @@ struct tcpiphdr {
 	struct 	ipovly ti_i;		/* overlaid ip structure */
 	struct	tcphdr ti_t;		/* tcp header */
 };
+#ifdef notyet
+/*
+ * Tcp+ip header, after ip options removed but including TCP options.
+ */
+struct full_tcpiphdr {
+	struct 	ipovly ti_i;		/* overlaid ip structure */
+	struct	tcphdr ti_t;		/* tcp header */
+	char	ti_o[TCP_MAXOLEN];	/* space for tcp options */
+};
+#endif /* notyet */
 #define	ti_next		ti_i.ih_next
 #define	ti_prev		ti_i.ih_prev
 #define	ti_x1		ti_i.ih_x1
@@ -61,4 +72,4 @@ struct tcpiphdr {
 #define	ti_sum		ti_t.th_sum
 #define	ti_urp		ti_t.th_urp
 
-#endif /* !TCPIP_H */
+#endif

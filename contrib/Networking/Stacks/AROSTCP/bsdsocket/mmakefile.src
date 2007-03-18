@@ -51,7 +51,7 @@ PROTOS_H= \
 # network interfaces, input queue scheduling, 
 # raw sockets, routing
 NET_C= \
-	net/if net/if_loop \
+	net/if net/if_loop net/pfil \
 	net/raw_cb net/raw_usrreq \
 	net/route net/rtsock net/radix \
 	net/if_sana net/netisr net/sana2config \
@@ -84,53 +84,54 @@ NETINET_H= \
 # logging and netstat rexx interface 
 KERN_C= \
 	kern/amiga_main kern/amiga_time kern/amiga_config \
-	kern/amiga_netdb \
+	kern/amiga_netdb kern/amiga_gui kern/amiga_cx \
+	kern/amiga_dhcp kern/amiga_rc kern/kern_subr \
 	kern/kern_synch kern/kern_malloc kern/uipc_mbuf \
 	kern/uipc_domain kern/uipc_socket kern/uipc_socket2 \
 	kern/amiga_log kern/amiga_cstat kern/amiga_rexx \
-	kern/subr_prf kern/accesscontrol
+	kern/subr_prf kern/accesscontrol kern/config_var
 
 KERN_H= \
 	kern/amiga_includes.h kern/amiga_time.h kern/amiga_config.h \
-	kern/amiga_netdb.h kern/amiga_log.h kern/amiga_rexx.h \
-	kern/amiga_subr.h kern/accesscontrol.h
+	kern/amiga_netdb.h kern/amiga_gui.h kern/amiga_log.h \
+	kern/amiga_cx.h kern/amiga_dhcp.h kern/amiga_rc.h \
+        kern/amiga_rexx.h kern/amiga_subr.h kern/accesscontrol.h
 
 # Application interface sources
 # Amiga "struct Library" interface, API functions,
 API_C=\
 	api/amiga_api api/amiga_libtables api/amiga_syscalls \
 	api/amiga_sendrecv api/amiga_generic api/amiga_generic2 \
-	api/amiga_libcalls api/amiga_errlists \
+	api/amiga_libcalls api/amiga_errlists api/amiga_kernvars \
+        api/amiga_ndbent api/amiga_netstat \
 	api/getxbyy api/gethostnamadr api/allocdatabuffer \
 	api/res_comp api/res_debug api/res_init \
 	api/res_mkquery api/res_query api/res_send  \
-	api/auto_extras api/auto_inetaddr api/auto_netdb \
-	api/auto_nonsocket api/auto_protocols api/auto_socket 
-	#api/gethna_nores
+	api/amiga_roadshow api/miami_api api/miami_functable \
+        api/if_indextoname api/if_nametoindex api/if_nameindex \
+        api/getifaddrs
 
 API_H=\
 	api/amiga_raf.h api/amiga_api.h api/amiga_libcallentry.h \
 	api/allocdatabuffer.h api/gethtbynamadr.h \
 	api/resolv.h api/sockargs.h \
-	api/apicalls.h
+	api/apicalls.h api/miami_api.h
 
 #
 # Misc headers
 #
 MISC_H=\
 	conf/conf.h
-# 	clib/exec_protos.h 
 
 #
 # Misc sources
 #
 MISC= \
-	kern/variables.src kern/config_var.awk kern/config_var.c
-#	sys/mbuf.i netinet/in_cksum.asm
+	kern/variables.src kern/config_var.awk
 
-NET_O=      $(NET_C:.c=)
-NETINET_O=  $(NETINET_C:.c=)
-KERN_O=     $(KERN_C:.c=.o) kern/config_var.o
+NET_O=      $(NET_C:.c=.o)
+NETINET_O=  $(NETINET_C:.c=.o)
+KERN_O=     $(KERN_C:.c=.o)
 API_O=     $(API_C:.c=.o)
 CSRCS=	$(API_C) $(KERN_C) $(NET_C) $(NETINET_C)
 OBJS= 	$(API_O) $(KERN_O) $(NET_O) $(NETINET_O) 
@@ -166,7 +167,7 @@ USER_CFLAGS := \
 #MM- contrib-networking-stacks-arostcp : contrib-networking-stacks-arostcp-bsdsocket
 %build_prog mmake=contrib-networking-stacks-arostcp-bsdsocket \
     progname=$(STACK_NAME) \
-    files="$(NET_C) $(NETINET_C) $(KERN_C) $(API_C) kern/config_var" \
+    files="$(NET_C) $(NETINET_C) $(KERN_C) $(API_C)" \
     targetdir=$(CONTRIBDIR)/Networking/Stacks/$(STACK_NAME)/C
 
 %common

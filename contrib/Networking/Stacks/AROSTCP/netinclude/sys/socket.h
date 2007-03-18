@@ -1,15 +1,7 @@
-#ifndef SYS_SOCKET_H
-#define SYS_SOCKET_H \
-       "$Id$"
-/*
- *      Definitions related to sockets: types, address families, options
- *
- *      Copyright © 1994 AmiTCP/IP Group,
- *                       Network Solutions Development, Inc.
- *                       All rights reserved.
- */
+#ifndef _SYS_SOCKET_H_
+#define	_SYS_SOCKET_H_
 
-#ifndef SYS_TYPES_H
+#ifndef _SYS_TYPES_H_
 #include <sys/types.h>
 #endif
 
@@ -24,10 +16,10 @@
 #define FD_ERROR	 0x020	/* asynchronous error on socket */
 #define FD_CLOSE	 0x040	/* connection closed (graceful or not) */
 
+
 /*
- * Definition for Release(CopyOf)Socket unique id
+ * Definitions related to sockets: types, address families, options.
  */
-#define UNIQUE_ID	(-1)
 
 /*
  * Types
@@ -50,6 +42,7 @@
 #define	SO_USELOOPBACK	0x0040		/* bypass hardware when possible */
 #define	SO_LINGER	0x0080		/* linger on close if data present */
 #define	SO_OOBINLINE	0x0100		/* leave received OOB data in line */
+#define	SO_REUSEPORT	0x0200		/* allow local address & port reuse */
 
 /*
  * Additional options, not kept in so_options.
@@ -63,18 +56,14 @@
 #define	SO_ERROR	0x1007		/* get error status and clear */
 #define	SO_TYPE		0x1008		/* get socket type */
 
-/*
- * AmiTCP/IP specific socket options
- */
-#define SO_EVENTMASK	0x2001		/* socket event mask,     */
-					/* defaults to no events (0) */
+#define SO_EVENTMASK	0x2001
 
 /*
  * Structure used for manipulating linger option.
  */
 struct	linger {
-	int	l_onoff;		/* option on/off */
-	int	l_linger;		/* linger time */
+	long	l_onoff;		/* option on/off */
+	long	l_linger;		/* linger time */
 };
 
 /*
@@ -86,7 +75,8 @@ struct	linger {
  * Address families.
  */
 #define	AF_UNSPEC	0		/* unspecified */
-#define	AF_UNIX		1		/* local to host (pipes, portals) */
+#define	AF_LOCAL	1		/* local to host (pipes, portals) */
+#define	AF_UNIX		AF_LOCAL	/* backward compatibility */
 #define	AF_INET		2		/* internetwork: UDP, TCP, etc. */
 #define	AF_IMPLINK	3		/* arpanet imp addresses */
 #define	AF_PUP		4		/* pup protocols: e.g. BSP */
@@ -106,8 +96,18 @@ struct	linger {
 #define	AF_ROUTE	17		/* Internal Routing Protocol */
 #define	AF_LINK		18		/* Link layer interface */
 #define	pseudo_AF_XTP	19		/* eXpress Transfer Protocol (no AF) */
+#define	AF_COIP		20		/* connection-oriented IP, aka ST II */
+#define	AF_CNT		21		/* Computer Network Technology */
+#define pseudo_AF_RTIP	22		/* Help Identify RTIP packets */
+#define	AF_IPX		23		/* Novell Internet Protocol */
+#define	AF_SIP		24		/* Simple Internet Protocol */
+#define	pseudo_AF_PIP	25		/* Help Identify PIP packets */
+#define	AF_ISDN		26		/* Integrated Services Digital Network*/
+#define	AF_E164		AF_ISDN		/* CCITT E.164 recommendation */
+#define	pseudo_AF_KEY	27		/* Internal key-management function */
+#define	AF_INET6	28		/* IPv6 */
 
-#define	AF_MAX		20
+#define	AF_MAX		29
 
 /*
  * Structure used by kernel to store most
@@ -132,7 +132,8 @@ struct sockproto {
  * Protocol families, same as address families for now.
  */
 #define	PF_UNSPEC	AF_UNSPEC
-#define	PF_UNIX		AF_UNIX
+#define	PF_LOCAL	AF_LOCAL
+#define	PF_UNIX		PF_LOCAL	/* backward compatibility */
 #define	PF_INET		AF_INET
 #define	PF_IMPLINK	AF_IMPLINK
 #define	PF_PUP		AF_PUP
@@ -152,23 +153,84 @@ struct sockproto {
 #define	PF_ROUTE	AF_ROUTE
 #define	PF_LINK		AF_LINK
 #define	PF_XTP		pseudo_AF_XTP	/* really just proto family, no AF */
+#define	PF_COIP		AF_COIP
+#define	PF_CNT		AF_CNT
+#define	PF_SIP		AF_SIP
+#define	PF_IPX		AF_IPX		/* same format as AF_NS */
+#define PF_RTIP		pseudo_AF_FTIP	/* same format as AF_INET */
+#define PF_PIP		pseudo_AF_PIP
+#define	PF_ISDN		AF_ISDN
 
 #define	PF_MAX		AF_MAX
 
 /*
+ * Definitions for network related sysctl, CTL_NET.
+ *
+ * Second level is protocol family.
+ * Third level is protocol number.
+ *
+ * Further levels are defined by the individual families below.
+ */
+#define NET_MAXID	AF_MAX
+
+#define CTL_NET_NAMES { \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ "inet", CTLTYPE_NODE }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ "route", CTLTYPE_NODE }, \
+	{ "link_layer", CTLTYPE_NODE }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+	{ 0, 0 }, \
+}
+
+/*
+ * PF_ROUTE - Routing table
+ *
+ * Three additional levels are defined:
+ *	Fourth: address family, 0 is wildcard
+ *	Fifth: type of info, defined below
+ *	Sixth: flag(s) to mask with for NET_RT_FLAGS
+ */
+#define NET_RT_DUMP	1		/* dump; may limit to a.f. */
+#define NET_RT_FLAGS	2		/* by flags, e.g. RESOLVING */
+#define NET_RT_IFLIST	3		/* survey interface list */
+#define	NET_RT_MAXID	4
+
+#define CTL_NET_RT_NAMES { \
+	{ 0, 0 }, \
+	{ "dump", CTLTYPE_STRUCT }, \
+	{ "flags", CTLTYPE_STRUCT }, \
+	{ "iflist", CTLTYPE_STRUCT }, \
+}
+
+/*
  * Maximum queue length specifiable by listen.
  */
-#define	SOMAXCONN	5
+#define	SOMAXCONN	128
 
 /*
  * Message header for recvmsg and sendmsg calls.
  * Used value-result for recvmsg, value only for sendmsg.
  */
-struct iovec {
-	caddr_t	iov_base;
-	int	iov_len;
-};
-
 struct msghdr {
 	caddr_t	msg_name;		/* optional address */
 	u_int	msg_namelen;		/* size of address */
@@ -176,7 +238,7 @@ struct msghdr {
 	u_int	msg_iovlen;		/* # elements in msg_iov */
 	caddr_t	msg_control;		/* ancillary data, see below */
 	u_int	msg_controllen;		/* ancillary data buffer len */
-	int	msg_flags;		/* flags on received message */
+	long	msg_flags;		/* flags on received message */
 };
 
 #define	MSG_OOB		0x1		/* process out-of-band data */
@@ -186,6 +248,9 @@ struct msghdr {
 #define	MSG_TRUNC	0x10		/* data discarded before delivery */
 #define	MSG_CTRUNC	0x20		/* control data lost before delivery */
 #define	MSG_WAITALL	0x40		/* wait for full request or error */
+#define	MSG_DONTWAIT	0x80		/* this message should be nonblocking */
+#define	MSG_EOF		0x100		/* data completes connection */
+#define MSG_COMPAT      0x8000		/* used in sendit() */
 
 /*
  * Header for ancillary data objects in msg_control buffer.
@@ -195,15 +260,15 @@ struct msghdr {
  */
 struct cmsghdr {
 	u_int	cmsg_len;		/* data byte count, including hdr */
-	int	cmsg_level;		/* originating protocol */
-	int	cmsg_type;		/* protocol-specific type */
+	long	cmsg_level;		/* originating protocol */
+	long	cmsg_type;		/* protocol-specific type */
 /* followed by	u_char  cmsg_data[]; */
 };
 
-/* given pointer to struct adatahdr, return pointer to data */
+/* given pointer to struct cmsghdr, return pointer to data */
 #define	CMSG_DATA(cmsg)		((u_char *)((cmsg) + 1))
 
-/* given pointer to struct adatahdr, return pointer to next adatahdr */
+/* given pointer to struct cmsghdr, return pointer to next cmsghdr */
 #define	CMSG_NXTHDR(mhdr, cmsg)	\
 	(((caddr_t)(cmsg) + (cmsg)->cmsg_len + sizeof(struct cmsghdr) > \
 	    (mhdr)->msg_control + (mhdr)->msg_controllen) ? \
@@ -228,21 +293,17 @@ struct osockaddr {
  */
 struct omsghdr {
 	caddr_t	msg_name;		/* optional address */
-	int	msg_namelen;		/* size of address */
+	long	msg_namelen;		/* size of address */
 	struct	iovec *msg_iov;		/* scatter/gather array */
-	int	msg_iovlen;		/* # elements in msg_iov */
+	long	msg_iovlen;		/* # elements in msg_iov */
 	caddr_t	msg_accrights;		/* access rights sent/received */
-	int	msg_accrightslen;
+	long	msg_accrightslen;
 };
 
-#if !defined(KERNEL) && !defined(__AROS__)
-/*
- * Include socket protos/inlines/pragmas
- */
-#if !defined(BSDSOCKET_H) && !defined(CLIB_SOCKET_PROTOS_H)
-#include <bsdsocket.h>
+#ifndef	SHUT_RD			/* these three Posix.1g names are quite new */
+#define	SHUT_RD		0	/* shutdown for reading */
+#define	SHUT_WR		1	/* shutdown for writing */
+#define	SHUT_RDWR	2	/* shutdown for reading and writing */
 #endif
 
-#endif /* !defined(KERNEL) && !defined(__AROS__) */
-
-#endif /* !SYS_SOCKET_H */
+#endif /* !_SYS_SOCKET_H_ */

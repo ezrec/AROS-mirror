@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -53,7 +52,8 @@
 #error AmiTCP/IP currently depends on fd_mask and longword size of 32 bits.
 #endif
 
-#define SOCLIBNAME "bsdsocket.library\0\0" /* space for ".n" at the end */
+#define SOCLIBNAME   "bsdsocket.library"
+#define MIAMILIBNAME "miami.library"
 
 /*
  *  Semaphore to prevent simultaneous access to library functions.
@@ -64,6 +64,7 @@ struct SignalSemaphore syscall_semaphore = { {0} };
  *  some globals.
  */
 struct Library *MasterSocketBase = NULL;
+struct Library *MasterMiamiBase = NULL;
 struct List	socketBaseList;	     /* list of opened socket library bases */
 struct List	garbageSocketBaseList; /* list of libray bases not active
 				      anymore (NOT YET IMPLEMENTED) */
@@ -104,31 +105,25 @@ const char wrongTaskErrorFmt[] =
 #define id_word 0x90
 #define id_long 0x80
 
-#ifdef __MORPHOS__
-#pragma pack(2)
-#endif
-struct {
-  UBYTE byte1; UBYTE offset1; UBYTE ln_type; UBYTE pad0;
-  UBYTE byte2; UBYTE offset2; UBYTE lib_flags; UBYTE pad1;
-  UBYTE long3; UBYTE offset3; ULONG ln_Name;
-  UBYTE word4; UBYTE offset4; UWORD lib_Version;
-  UBYTE word5; UBYTE offset5; UWORD lib_Revision;
-  UBYTE long6; UBYTE offset6; ULONG lib_IdString;
-  UBYTE end7;
-  } Library_initTable = {
-    id_byte, OFFSET(Node, ln_Type), NT_LIBRARY, 0,
-    id_byte, OFFSET(Library, lib_Flags), (LIBF_SUMUSED|LIBF_CHANGED), 0,
-    id_long, OFFSET(Node, ln_Name), (ULONG)SOCLIBNAME,
-    id_word, OFFSET(Library, lib_Version), VERSION,
-/*    id_word, OFFSET(Library, lib_Revision), REVISION,*/
-    id_word, OFFSET(Library, lib_Revision), 50,
-    id_long, OFFSET(Library, lib_IdString), (ULONG)RELEASESTRING VSTRING,
-    0x00
-    };
-#ifdef __MORPHOS__
-#pragma pack()
-#endif
+struct LibInitTable Library_initTable = {
+  id_byte, OFFSET(Node, ln_Type), NT_LIBRARY, 0,
+  id_byte, OFFSET(Library, lib_Flags), (LIBF_SUMUSED|LIBF_CHANGED), 0,
+  id_long, OFFSET(Node, ln_Name), (ULONG)SOCLIBNAME,
+  id_word, OFFSET(Library, lib_Version), VERSION,
+  id_word, OFFSET(Library, lib_Revision), REVISION,
+  id_long, OFFSET(Library, lib_IdString), (ULONG)RELEASESTRING VSTRING,
+  0x00
+};
 
+struct LibInitTable Miami_initTable = {
+  id_byte, OFFSET(Node, ln_Type), NT_LIBRARY, 0,
+  id_byte, OFFSET(Library, lib_Flags), (LIBF_SUMUSED|LIBF_CHANGED), 0,
+  id_long, OFFSET(Node, ln_Name), (ULONG)MIAMILIBNAME,
+  id_word, OFFSET(Library, lib_Version), MIAMI_VERSION,
+  id_word, OFFSET(Library, lib_Revision), MIAMI_REVISION,
+  id_long, OFFSET(Library, lib_IdString), (ULONG)RELEASESTRING MIAMI_VSTRING,
+  0x00
+};
 #undef id_byte
 #undef id_word
 #undef id_long
@@ -247,7 +242,7 @@ D(bug("[AROSTCP](amiga_api.c) ELL_Open: Created user library base @ %08lx\n", ne
       /*
        * Disable signalling for now
        */
-//    newBase->timerPort->mp_Flags = PA_IGNORE;
+      newBase->timerPort->mp_Flags = PA_IGNORE;
       /*
        * allocate and initialize the timerequest
        */
@@ -301,10 +296,7 @@ D(bug("[AROSTCP](amiga_api.c) __ELL_Expunge()\n"));
     freestart = (void *)((ULONG)libPtr - (ULONG)libPtr->lib_NegSize);
     size = libPtr->lib_NegSize + libPtr->lib_PosSize;
     FreeMem(freestart, size);
-    MasterSocketBase = NULL; 
 
-    SB_Expunged = TRUE;
-    Signal(AROSTCP_Task, SIGBREAKF_CTRL_F);
     return NULL; /* no AmigaDos seglist there (for system use) */
   }
   /*
@@ -434,6 +426,7 @@ BOOL api_init()
 {
   extern void select_init(void);
   extern f_void ExecLibraryList_funcTable[];
+  extern ULONG Miami_InitFuncTable[];
 
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_api.c) api_init()\n"));
@@ -454,6 +447,15 @@ D(bug("[AROSTCP](amiga_api.c) api_init: Created master library base: %08lx\n", M
 #endif
   D(Printf("Created master library base: %08lx\n", MasterSocketBase);)
   if (MasterSocketBase == NULL)
+    return FALSE;
+
+  MasterMiamiBase = MakeLibrary(Miami_InitFuncTable,
+				(UWORD *)&Miami_initTable,
+				NULL,
+				sizeof(struct Library),
+				NULL);
+  D(Printf("Created master miami.library base: 0x%08lx\n", MasterMiamiBase);)
+  if (MasterMiamiBase == NULL)
     return FALSE;
 
   InitSemaphore(&syscall_semaphore);
@@ -512,6 +514,7 @@ D(bug("[AROSTCP](amiga_api.c) api_show()\n"));
   }
 #endif
   AddLibrary(MasterSocketBase);
+  AddLibrary(MasterMiamiBase);
   api_state = API_SHOWN;
 
   return TRUE;
@@ -542,15 +545,17 @@ D(bug("[AROSTCP](amiga_api.c) api_setfunctions()\n"));
   
   if (api_state == API_SCRATCH)
     return;
-  Forbid();
-  if (api_state == API_SHOWN)
+  if (api_state == API_SHOWN) {
     /* unlink Master SocketBase from System Library list */
+    Forbid();
+    Remove((struct Node*)MasterMiamiBase);
     Remove((struct Node*)MasterSocketBase);	
+    Permit();
+  }
 
   /* here SetFunction()s to patch libray calls (forbid()/permit()) */
   /*  while(node2move = RemHead(&socketBaseList))
       AddTail(&garbageSocketBaseList, node2move); */
-  Permit();
   api_state = API_FUNCTIONPATCHED;
 }
 
@@ -597,8 +602,18 @@ D(bug("[AROSTCP](amiga_api.c) api_deinit: The calling task of api_deinit() was n
     return;
 
   Forbid();
-  AmiTCP_lets_you_do_expunge = TRUE;
-  __ELL_Expunge(MasterSocketBase);
+  if (MasterMiamiBase) {
+#warning "TODO: Replace __ELL_EXPUNGE with a generic version or fix for closing miami.."
+	  //ExpungeLibrary(MasterMiamiBase);
+    MasterMiamiBase = NULL;
+  }
+  if (MasterSocketBase) {
+    AmiTCP_lets_you_do_expunge = TRUE;
+    __ELL_Expunge(MasterSocketBase);
+    MasterSocketBase = NULL;
+    SB_Expunged = TRUE;
+    Signal(AROSTCP_Task, SIGBREAKF_CTRL_F);
+  }
   Permit();
 
   /*

@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -77,7 +76,6 @@ static char sccsid[] = "@(#)res_query.c	5.11 (Berkeley) 3/6/91";
 #include <api/amiga_api.h>
 #include <kern/amiga_netdb.h>
 
-    
 #if PACKETSZ > 1024
 #define MAXPACKET	PACKETSZ
 #else
@@ -194,42 +192,21 @@ D(bug("[AROSTCP](res_query.c) res_query: [res_send] Error: Host not found!\n"));
 #endif
 				h_errno = HOST_NOT_FOUND;
 				break;
-				
 			case SERVFAIL:
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_query.c) res_query: [res_send] Error: Server Fail!\n"));
 #endif
 				h_errno = TRY_AGAIN;
 				break;
-				
 			case NOERROR:
 #if defined(__AROS__)
-D(bug("[AROSTCP](res_query.c) res_query: [res_send] Error: Impossible case???!\n"));
+D(bug("[AROSTCP](res_query.c) res_query: [res_send] Error: !IMPOSSIBLE CASE!\n"));
 #endif
 				h_errno = NO_DATA;
 				break;
-				
 			case FORMERR:
-#if defined(__AROS__)
-D(bug("[AROSTCP](res_query.c) res_query: [res_send] Error: Former Error!\n"));
-#endif
-				h_errno = NO_RECOVERY;
-				break;
-				
 			case NOTIMP:
-#if defined(__AROS__)
-D(bug("[AROSTCP](res_query.c) res_query: [res_send] Error: Not Implemented!\n"));
-#endif
-				h_errno = NO_RECOVERY;
-				break;
-				
 			case REFUSED:
-#if defined(__AROS__)
-D(bug("[AROSTCP](res_query.c) res_query: [res_send] Error: Refused!\n"));
-#endif
-				h_errno = NO_RECOVERY;
-				break;
-				
 			default:
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_query.c) res_query: [res_send] Error: Unknown!\n"));
@@ -275,7 +252,6 @@ D(bug("[AROSTCP](res_query.c) res_search('%s')\n", name));
 #ifndef AMICTP
 	char *__hostalias();
 #endif /* ! AMITCP */	
-
 	if ((_res.options & RES_INIT) == 0 && res_init(&_res) == -1)
 	{
 #if defined(__AROS__)
@@ -297,7 +273,7 @@ D(bug("[AROSTCP](res_query.c) res_search: resolver failed to update\n"));
 	for (cp = name, n = 0; *cp; cp++)
 		if (*cp == '.')
 			n++;
-			
+
 #ifndef AMITCP
 	if (n == 0 && (cp = __hostalias(name)))
 	{
@@ -316,96 +292,80 @@ D(bug("[AROSTCP](res_query.c) res_search: returning hostalias response\n"));
 	 */
 	if ((n == 0 && _res.options & RES_DEFNAMES) ||
 	   (n != 0 && *--cp != '.' && _res.options & RES_DNSRCH))
-
-	  for (domain = _res.dnsrch; *domain; domain++)
-	  {
+	{
+		for (domain = _res.dnsrch; *domain; domain++)
+		{
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_query.c) res_search: resolver querying domain '%s'\n", *domain));
 #endif
-	    ret = res_querydomain(libPtr, name, *domain,
+			ret = res_querydomain(libPtr, name, *domain,
 				  class, type, answer, anslen);
-
-		if (ret > 0)
-      {
+			if (ret > 0)
+			{
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_query.c) res_search: returning querydomain response\n"));
 #endif
-			return (ret);
-		}
-		/*
-		 * If no server present, give up.
-		 * If name isn't found in this domain,
-		 * keep trying higher domains in the search list
-		 * (if that's enabled).
-		 * On a NO_DATA error, keep trying, otherwise
-		 * a wildcard entry of another type could keep us
-		 * from finding this entry higher in the domain.
-		 * If we get some other error (negative answer or
-		 * server failure), then stop searching up,
-		 * but try the input name below in case it's fully-qualified.
-		 */
-		tmp_errno = readErrnoValue(libPtr);
+				return (ret);
+			}
+			/*
+			 * If no server present, give up.
+			 * If name isn't found in this domain,
+			 * keep trying higher domains in the search list
+			 * (if that's enabled).
+			 * On a NO_DATA error, keep trying, otherwise
+			 * a wildcard entry of another type could keep us
+			 * from finding this entry higher in the domain.
+			 * If we get some other error (negative answer or
+			 * server failure), then stop searching up,
+			 * but try the input name below in case it's fully-qualified.
+			 */
+			tmp_errno = readErrnoValue(libPtr);
+			if ((tmp_errno == ECONNREFUSED) || (tmp_errno == ETIMEDOUT) || (tmp_errno == EINTR)) {
+				h_errno = TRY_AGAIN;
 
-		if ((tmp_errno == ECONNREFUSED) || (tmp_errno == ETIMEDOUT) || (tmp_errno == EINTR)) {
-			h_errno = TRY_AGAIN;
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_query.c) res_search: resolver failed to connect, setting retry\n"));
 #endif
-			return (-1);
-		}
+				return (-1);
+			}
 
-		if (h_errno == NO_DATA)
-		{
+			if (h_errno == NO_DATA)
+			{
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_query.c) res_search: resolver got no response\n"));
 #endif
-			got_nodata++;
-		}
+				got_nodata++;
+			}
 
-		if ((h_errno != HOST_NOT_FOUND && h_errno != NO_DATA) ||
-		    (_res.options & RES_DNSRCH) == 0)
-      {
+			if ((h_errno != HOST_NOT_FOUND && h_errno != NO_DATA) ||
+				(_res.options & RES_DNSRCH) == 0)
+			{
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_query.c) res_search: resolver got response\n"));
 #endif
-			break;
-	   }
-	}
-	/*
-	 * If the search/default failed, try the name as fully-qualified,
-	 * but only if it contained at least one dot (even trailing).
-	 * This is purely a heuristic; we assume that any reasonable query
-	 * about a top-level domain (for servers, SOA, etc) will not use
-	 * res_search.
-	 */
-	if (n && (ret = res_querydomain(libPtr, name, (char *)NULL,
-					class, type, answer, anslen)) > 0)
-   {
+				break;
+			}
+		}
+		/*
+		 * If the search/default failed, try the name as fully-qualified,
+		 * but only if it contained at least one dot (even trailing).
+		 * This is purely a heuristic; we assume that any reasonable query
+		 * about a top-level domain (for servers, SOA, etc) will not use
+		 * res_search.
+		 */
+		if (n && (ret = res_querydomain(libPtr, name, (char *)NULL,
+						class, type, answer, anslen)) > 0)
+	   {
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_query.c) res_search: returning querydomain.2 result\n"));
 #endif
-		return (ret);
+			return (ret);
+		}
 	}
 
 	if (got_nodata) h_errno = NO_DATA;
 
 	return (-1);
-}
-
-/*
- * stpncpy() works as strncpy() but returns a + strlen(a)
- */
-static char *stpncpy(char *a, const char *b, int n)
-{
-  while(n) {
-    *a = *b;
-    if (*b == '\0')
-      break;
-    a++;
-    b++;
-    n--;
-  }
-  return a;
 }
 
 /*
@@ -454,7 +414,8 @@ D(bug("[AROSTCP](res_query.c) res_querydomain: failed to allocate buffer\n"));
 		} else
 			longname = name;
 	} else {
-		ptr = stpncpy(nbuf, name, MAXDNAME);
+		ptr = strncpy(nbuf, name, MAXDNAME);
+		ptr += strlen(name);
 		*ptr++ = '.';
 		(void)strncpy(ptr, domain, MAXDNAME);
 	}
@@ -464,7 +425,6 @@ D(bug("[AROSTCP](res_query.c) res_querydomain: using name '%s'\n", longname));
 #endif
 	n = res_query(libPtr, longname, class, type, answer, anslen);
 	bsd_free(nbuf, M_TEMP);
-
 	return n;
 }
 

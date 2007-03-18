@@ -1,28 +1,7 @@
 /*
- * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
- *                    Helsinki University of Technology, Finland.
- *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
- */
-
-/*
- * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1982, 1986, 1988, 1990, 1993
+ *	The Regents of the University of California.  All rights reserved.
+ * Copyright (c) 2006 Pavel Fedin
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -52,10 +31,9 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)tcp_subr.c	7.20 (Berkeley) 12/1/90
+ *	@(#)tcp_subr.c	8.1 (Berkeley) 6/10/93
+ * $Id$
  */
-
-#include <conf.h>
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -65,6 +43,7 @@
 #include <sys/socketvar.h>
 #include <sys/protosw.h>
 #include <sys/errno.h>
+#include <sys/queue.h>
 
 #include <net/route.h>
 #include <net/if.h>
@@ -73,6 +52,7 @@
 #include <netinet/in_systm.h>
 #include <netinet/ip.h>
 #include <netinet/in_pcb.h>
+#include <netinet/in_var.h>
 #include <netinet/ip_var.h>
 #include <netinet/ip_icmp.h>
 #include <netinet/tcp.h>
@@ -81,21 +61,30 @@
 #include <netinet/tcp_timer.h>
 #include <netinet/tcp_var.h>
 #include <netinet/tcpip.h>
+#ifdef TCPDEBUG
+#include <netinet/tcp_debug.h>
+#endif
 
-#include <netinet/tcp_subr_protos.h>
-#include <netinet/tcp_output_protos.h>
-#include <netinet/ip_output_protos.h>
-#include <netinet/in_cksum_protos.h>
-#include <netinet/in_pcb_protos.h>
-#include <kern/uipc_socket2_protos.h>
-#include <kern/kern_synch_protos.h>
+#include <kern/kern_subr_protos.h>
 
 /* patchable/settable parameters for tcp */
-int	tcp_ttl = TCP_TTL;
+int	ip_defttl = 60;				  /* default time to live for TCP segs */
 int 	tcp_mssdflt = TCP_MSS;
 int 	tcp_rttdflt = TCPTV_SRTTDFLT / PR_SLOWHZ;
+int	tcp_do_rfc1323 = 1;
+int	tcp_do_rfc1644 = 1;
+static	void tcp_cleartaocache(void);
 
-extern	struct inpcb *tcp_last_inpcb;
+extern u_char inetctlerrmap[];
+extern struct in_addr zeroin_addr;
+
+/*
+ * Target size of TCP PCB hash table. Will be rounded down to a prime
+ * number.
+ */
+#ifndef TCBHASHSIZE
+#define TCBHASHSIZE	128
+#endif
 
 /*
  * Tcp initialization
@@ -105,7 +94,11 @@ tcp_init()
 {
 
 	tcp_iss = 1;		/* wrong */
-	tcb.inp_next = tcb.inp_prev = &tcb;
+	tcp_ccgen = 1;
+	tcp_cleartaocache();
+	LIST_INIT(&tcb);
+	tcbinfo.listhead = &tcb;
+	tcbinfo.hashbase = phashinit(TCBHASHSIZE, M_PCB, &tcbinfo.hashsize);
 	if (max_protohdr < sizeof(struct tcpiphdr))
 		max_protohdr = sizeof(struct tcpiphdr);
 	if (max_linkhdr + sizeof(struct tcpiphdr) > MHLEN)
@@ -185,7 +178,7 @@ tcp_respond(tp, ti, m, ack, seq, flags)
 		m = m_gethdr(M_DONTWAIT, MT_HEADER);
 		if (m == NULL)
 			return;
-#if TCP_COMPAT_42
+#ifdef TCP_COMPAT_42
 		tlen = 1;
 #else
 		tlen = 0;
@@ -217,12 +210,24 @@ tcp_respond(tp, ti, m, ack, seq, flags)
 	ti->ti_x2 = 0;
 	ti->ti_off = sizeof (struct tcphdr) >> 2;
 	ti->ti_flags = flags;
-	ti->ti_win = htons((u_short)win);
+	if (tp)
+		ti->ti_win = htons((u_short) (win >> tp->rcv_scale));
+	else
+		ti->ti_win = htons((u_short)win);
 	ti->ti_urp = 0;
+	ti->ti_sum = 0;
 	ti->ti_sum = in_cksum(m, tlen);
 	((struct ip *)ti)->ip_len = tlen;
-	((struct ip *)ti)->ip_ttl = tcp_ttl;
-	(void) ip_output(m, (struct mbuf *)0, ro, 0);
+	((struct ip *)ti)->ip_ttl = ip_defttl;
+#ifdef TCPDEBUG
+	if (tp == NULL || (tp->t_inpcb->inp_socket->so_options & SO_DEBUG))
+		tcp_trace(TA_OUTPUT, 0, tp, ti, 0);
+#endif
+#ifdef ENABLE_MULTICAST
+	(void) ip_output(m, NULL, ro, 0, NULL);
+#else
+	(void) ip_output(m, NULL, ro, 0);
+#endif
 }
 
 /*
@@ -234,16 +239,19 @@ struct tcpcb *
 tcp_newtcpcb(inp)
 	struct inpcb *inp;
 {
-	struct mbuf *m = m_getclr(M_DONTWAIT, MT_PCB);
 	register struct tcpcb *tp;
 
-	if (m == NULL)
+	tp = bsd_malloc(sizeof(*tp), M_PCB, M_NOWAIT);
+	if (tp == NULL)
 		return ((struct tcpcb *)0);
-	tp = mtod(m, struct tcpcb *);
+	bzero((char *) tp, sizeof(struct tcpcb));
 	tp->seg_next = tp->seg_prev = (struct tcpiphdr *)tp;
-	tp->t_maxseg = tcp_mssdflt;
+	tp->t_maxseg = tp->t_maxopd = tcp_mssdflt;
 
-	tp->t_flags = 0;		/* sends options! */
+	if (tcp_do_rfc1323)
+		tp->t_flags = (TF_REQ_SCALE|TF_REQ_TSTMP);
+	if (tcp_do_rfc1644)
+		tp->t_flags |= TF_REQ_CC;
 	tp->t_inpcb = inp;
 	/*
 	 * Init srtt to TCPTV_SRTTBASE (0), so we can tell that we have no
@@ -253,12 +261,12 @@ tcp_newtcpcb(inp)
 	tp->t_srtt = TCPTV_SRTTBASE;
 	tp->t_rttvar = tcp_rttdflt * PR_SLOWHZ << 2;
 	tp->t_rttmin = TCPTV_MIN;
-	TCPT_RANGESET(tp->t_rxtcur, 
+	TCPT_RANGESET(tp->t_rxtcur,
 	    ((TCPTV_SRTTBASE >> 2) + (TCPTV_SRTTDFLT << 2)) >> 1,
 	    TCPTV_MIN, TCPTV_REXMTMAX);
-	tp->snd_cwnd = TCP_MAXWIN;
-	tp->snd_ssthresh = TCP_MAXWIN;
-	inp->inp_ip.ip_ttl = tcp_ttl;
+	tp->snd_cwnd = TCP_MAXWIN << TCP_MAX_WINSHIFT;
+	tp->snd_ssthresh = TCP_MAXWIN << TCP_MAX_WINSHIFT;
+	inp->inp_ip.ip_ttl = ip_defttl;
 	inp->inp_ppcb = (caddr_t)tp;
 	return (tp);
 }
@@ -268,11 +276,10 @@ tcp_newtcpcb(inp)
  * the specified error.  If connection is synchronized,
  * then send a RST to peer.
  */
-/*struct tcpcb *tcp_drop(struct tcpcb *tp, int errno)*/
 struct tcpcb *
-tcp_drop(tp, error)
+tcp_drop(tp, _errno)
 	register struct tcpcb *tp;
-	int error;
+	int _errno;
 {
 	struct socket *so = tp->t_inpcb->inp_socket;
 
@@ -282,9 +289,9 @@ tcp_drop(tp, error)
 		tcpstat.tcps_drops++;
 	} else
 		tcpstat.tcps_conndrops++;
-	if (error == ETIMEDOUT && tp->t_softerror)
-		error = tp->t_softerror;
-	so->so_error = error;
+	if (_errno == ETIMEDOUT && tp->t_softerror)
+		errno = tp->t_softerror;
+	so->so_error = _errno;
 	return (tcp_close(tp));
 }
 
@@ -307,7 +314,7 @@ tcp_close(tp)
 
 	/*
 	 * If we sent enough data to get some meaningful characteristics,
-	 * save them in the routing entry.  'Enough' is arbitrarily 
+	 * save them in the routing entry.  'Enough' is arbitrarily
 	 * defined as the sendpipesize (default 4K) * 16.  This would
 	 * give us 16 rtt samples assuming we only get one sample per
 	 * window (the usual case on a long haul net).  16 samples is
@@ -320,7 +327,7 @@ tcp_close(tp)
 	if (SEQ_LT(tp->iss + so->so_snd.sb_hiwat * 16, tp->snd_max) &&
 	    (rt = inp->inp_route.ro_rt) &&
 	    ((struct sockaddr_in *)rt_key(rt))->sin_addr.s_addr != INADDR_ANY) {
-		register u_long i;
+		register u_long i = 0;
 
 		if ((rt->rt_rmx.rmx_locks & RTV_RTT) == 0) {
 			i = tp->t_srtt *
@@ -354,7 +361,7 @@ tcp_close(tp)
 		 * and bad news.
 		 */
 		if (((rt->rt_rmx.rmx_locks & RTV_SSTHRESH) == 0 &&
-		    (i = tp->snd_ssthresh) && rt->rt_rmx.rmx_ssthresh) ||
+		    ((i = tp->snd_ssthresh) != 0) && rt->rt_rmx.rmx_ssthresh) ||
 		    i < (rt->rt_rmx.rmx_sendpipe / 2)) {
 			/*
 			 * convert the limit from user data bytes to
@@ -382,12 +389,9 @@ tcp_close(tp)
 	}
 	if (tp->t_template)
 		(void) m_free(dtom(tp->t_template));
-	(void) m_free(dtom(tp));
+	bsd_free(tp, M_PCB);
 	inp->inp_ppcb = 0;
 	soisdisconnected(so);
-	/* clobber input pcb cache if we're closing the cached connection */
-	if (inp == tcp_last_inpcb)
-		tcp_last_inpcb = &tcb;
 	in_pcbdetach(inp);
 	tcpstat.tcps_closed++;
 	return ((struct tcpcb *)0);
@@ -406,15 +410,31 @@ tcp_drain()
  */
 void
 tcp_notify(inp, error)
-	register struct inpcb *inp;
+	struct inpcb *inp;
 	int error;
 {
+	register struct tcpcb *tp = (struct tcpcb *)inp->inp_ppcb;
+	register struct socket *so = inp->inp_socket;
 
-	((struct tcpcb *)inp->inp_ppcb)->t_softerror = error;
-	wakeup((caddr_t) &inp->inp_socket->so_timeo);
-	sowakeup(inp->inp_socket, &inp->inp_socket->so_rcv);
-	sowakeup(inp->inp_socket, &inp->inp_socket->so_snd);
-	soevent(inp->inp_socket, FD_ERROR);
+	/*
+	 * Ignore some errors if we are hooked up.
+	 * If connection hasn't completed, has retransmitted several times,
+	 * and receives a second error, give up now.  This is better
+	 * than waiting a long time to establish a connection that
+	 * can never complete.
+	 */
+	if (tp->t_state == TCPS_ESTABLISHED &&
+	     (error == EHOSTUNREACH || error == ENETUNREACH ||
+	      error == EHOSTDOWN)) {
+		return;
+	} else if (tp->t_state < TCPS_ESTABLISHED && tp->t_rxtshift > 3 &&
+	    tp->t_softerror)
+		so->so_error = error;
+	else
+		tp->t_softerror = error;
+	wakeup((caddr_t) &so->so_timeo);
+	sorwakeup(so);
+	sowwakeup(so);
 }
 
 void
@@ -424,13 +444,12 @@ tcp_ctlinput(cmd, sa, ip)
 	register struct ip *ip;
 {
 	register struct tcphdr *th;
-	extern struct in_addr zeroin_addr;
-	extern u_char inetctlerrmap[];
-	void (*notify)(register struct inpcb * inp, int error) = tcp_notify;
+	void (*notify) __P((struct inpcb *, int)) = tcp_notify;
 
 	if (cmd == PRC_QUENCH)
 		notify = tcp_quench;
-	else if ((unsigned)cmd > PRC_NCMDS || inetctlerrmap[cmd] == 0)
+	else if (!PRC_IS_REDIRECT(cmd) &&
+		 ((unsigned)cmd > PRC_NCMDS || inetctlerrmap[cmd] == 0))
 		return;
 	if (ip) {
 		th = (struct tcphdr *)((caddr_t)ip + (ip->ip_hl << 2));
@@ -445,9 +464,9 @@ tcp_ctlinput(cmd, sa, ip)
  * to one segment.  We will gradually open it again as we proceed.
  */
 void
-tcp_quench(inp, error)
-     struct inpcb *inp;
-     int error;
+tcp_quench(inp, _errno)
+	struct inpcb *inp;
+	int _errno;
 {
 	struct tcpcb *tp = intotcpcb(inp);
 
@@ -455,4 +474,62 @@ tcp_quench(inp, error)
 		tp->snd_cwnd = tp->t_maxseg;
 }
 
+/*
+ * Look-up the routing entry to the peer of this inpcb.  If no route
+ * is found and it cannot be allocated the return NULL.  This routine
+ * is called by TCP routines that access the rmx structure and by tcp_mss
+ * to get the interface MTU.
+ */
+struct rtentry *
+tcp_rtlookup(inp)
+	struct inpcb *inp;
+{
+	struct route *ro;
+	struct rtentry *rt;
 
+	ro = &inp->inp_route;
+	rt = ro->ro_rt;
+	if (rt == NULL || !(rt->rt_flags & RTF_UP)) {
+		/* No route yet, so try to acquire one */
+		if (inp->inp_faddr.s_addr != INADDR_ANY) {
+			ro->ro_dst.sa_family = AF_INET;
+			ro->ro_dst.sa_len = sizeof(ro->ro_dst);
+			((struct sockaddr_in *) &ro->ro_dst)->sin_addr =
+				inp->inp_faddr;
+			rtalloc(ro);
+			rt = ro->ro_rt;
+		}
+	}
+	return rt;
+}
+
+/*
+ * Return a pointer to the cached information about the remote host.
+ * The cached information is stored in the protocol specific part of
+ * the route metrics.
+ */
+struct rmxp_tao *
+tcp_gettaocache(inp)
+	struct inpcb *inp;
+{
+	struct rtentry *rt = tcp_rtlookup(inp);
+
+	/* Make sure this is a host route and is up. */
+	if (rt == NULL ||
+	    (rt->rt_flags & (RTF_UP|RTF_HOST)) != (RTF_UP|RTF_HOST))
+		return NULL;
+
+	return rmx_taop(rt->rt_rmx);
+}
+
+/*
+ * Clear all the TAO cache entries, called from tcp_init.
+ *
+ * XXX
+ * This routine is just an empty one, because we assume that the routing
+ * routing tables are initialized at the same time when TCP, so there is
+ * nothing in the cache left over.
+ */
+static void
+tcp_cleartaocache(void)
+{ }

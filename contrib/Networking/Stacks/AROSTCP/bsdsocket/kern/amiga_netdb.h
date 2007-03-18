@@ -28,16 +28,19 @@
 #include <netdb.h>
 #endif
 
-#if !defined(__AROS__)
-#include <libraries/eztcp_private.h>
-#else
-#include <kern/amiga_netdb_resolver.h>
-#endif
 #include "net/netdbpaths.h"
 
 #ifndef IN_H
 #include <netinet/in.h>
 #endif
+
+/* Access control table item */
+struct AccessItem {
+  UWORD	ai_flags;
+  UWORD	ai_port;
+  ULONG	ai_host;
+  ULONG ai_mask;
+};
 
 /* Access control flags */
 #define ACF_ALLOW	0x01
@@ -47,6 +50,19 @@
 
 /* AC table temporary buffer size */
 #define TMPACTSIZE	0x4000 
+
+/* NetDataBase */
+struct NetDataBase {
+  struct MinList         ndb_Hosts;
+  struct MinList         ndb_Networks;
+  struct MinList         ndb_Services;
+  struct MinList         ndb_Protocols;
+  struct MinList         ndb_NameServers;
+  struct MinList	 ndb_Rc;
+  struct MinList         ndb_Domains;
+  LONG			 ndb_AccessCount; /* tmp var, but reduces code size */
+  struct AccessItem *	 ndb_AccessTable;
+};
 
 extern struct NetDataBase *NDB;
 extern struct SignalSemaphore ndb_Lock;
@@ -58,6 +74,72 @@ extern ULONG ndb_Serial;
 #define LOCK_R_NDB(ndb) (ObtainSemaphoreShared(&ndb_Lock))
 #define UNLOCK_NDB(ndb) (ReleaseSemaphore(&ndb_Lock))
 #define ATTEMPT_NDB(ndb) (AttemptSemaphore(&ndb_Lock))
+
+/* Dynamic part of the NetDB */
+struct DynDataBase {
+  struct SignalSemaphore dyn_Lock;
+  struct MinList	 dyn_NameServers;
+  struct MinList	 dyn_Domains;
+};
+
+/*
+ * GenEnt has the common part of all NetDataBase Nodes
+ */
+struct GenentNode {
+  struct MinNode gn_Node;
+  short          gn_EntSize;
+  struct {
+    char *dummy[0];
+  }              gn_Ent;
+};
+
+/* NetDatabase nodes */
+struct NameserventNode {
+  struct MinNode  nsn_Node;
+  short           nsn_EntSize;
+  struct nameservent {
+    struct in_addr ns_addr;
+  } nsn_Ent;
+};
+
+struct DomainentNode {
+  struct MinNode  dn_Node;
+  short           dn_EntSize;
+  struct domainent {
+    char *d_name;
+  } dn_Ent;
+};
+
+/* NetDataBase Nodes */
+struct HostentNode {
+  struct MinNode hn_Node;
+  short          hn_EntSize;
+  struct hostent hn_Ent;
+};
+
+struct NetentNode {
+  struct MinNode nn_Node;
+  short          nn_EntSize;
+  struct netent  nn_Ent;
+};
+
+struct ServentNode {
+  struct MinNode  sn_Node;
+  short           sn_EntSize;
+  struct servent  sn_Ent;
+};
+
+struct ProtoentNode {
+  struct MinNode  pn_Node;
+  short           pn_EntSize;
+  struct protoent pn_Ent;
+};
+
+struct RcentNode {
+  struct MinNode  rn_Node;
+  short		  rn_EntSize;
+  char *	  rn_Ent;
+};
 
 /*
  * netdatabase calls for some AmiTCP/IP functions

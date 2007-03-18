@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -34,15 +33,17 @@
 
 #include <kern/amiga_includes.h>
 #include <syslog.h>
+#include <kern/amiga_cx.h>
+#include <kern/amiga_dhcp.h>
+#include <kern/amiga_gui.h>
 #include <kern/amiga_log.h>
 #include <kern/amiga_rexx.h>
+#include <libraries/miamipanel.h>
 #include <utility/date.h>
 
 #include <proto/dos.h>
+#include <proto/miamipanel.h>
 #include <proto/utility.h>
-
-#include <api/apicalls.h>
-
 #define DOSBase logDOSBase
 #define UtilityBase logUtilityBase
 #undef DOSBase
@@ -50,8 +51,8 @@
 struct MsgPort *logPort;
 struct MsgPort *ExtLogPort;
 
-static struct Library *logDOSBase = NULL;
-static struct Library *logUtilityBase = NULL;
+struct Library *logDOSBase = NULL;
+struct Library *logUtilityBase = NULL;
 
 extern struct Task *AROSTCP_Task;
 extern struct DosLibrary *DOSBase;
@@ -75,8 +76,9 @@ extern UBYTE logfiledefname[];
 STRPTR logfilename = logfiledefname;
 STRPTR consolename = consoledefname;
 
+struct log_cnf log_cnf = { LOG_BUFS, LOG_BUF_LEN, LOG_INFO};
 
-struct log_cnf log_cnf = { LOG_BUFS, LOG_BUF_LEN };
+LONG OpenGUIOnStartup = 1;
 
 #define SOCKET_VERSION 3
 
@@ -112,10 +114,7 @@ D(bug("[AROSTCP](amiga_log.c) log_init()\n"));
     if (log_buffers = AllocMem(log_buffers_mem_size, MEMF_CLEAR|MEMF_PUBLIC)) {
         logPort = NULL; /* NETTRACE will set this on success */
         GetLogMsgFail = 0;
-//#warning "TODO: NicJA - Where does SetSysLogPort() come from?"
-//#if !defined(__AROS__)
         SetSysLogPort();
-//#endif
 	logReplyPort.mp_Flags = PA_SIGNAL;
 	logReplyPort.mp_SigBit = SIGBREAKB_CTRL_E;
 	logReplyPort.mp_SigTask = FindTask(NULL);
@@ -129,7 +128,7 @@ D(Printf("Creating NETTRACE process...");)
 	if (CreateNewProcTags(NP_Entry, (LONG)&log_task,
 			      NP_Name, (LONG)LOG_TASK_NAME,
 			      NP_Priority, LOG_TASK_PRI,
-               NP_CodeType,CODETYPE_PPC,
+                  NP_CodeType,CODETYPE_PPC,
 			      TAG_DONE, NULL))
 #else
 	if (CreateNewProcTags(NP_Entry, (LONG)&log_task,
@@ -276,7 +275,7 @@ static void SAVEDS
 log_task(void)
 {
   struct SysLogPacket *initmsg = NULL;
-  ULONG rexxmask = 0, logmask = 0, sigmask = 0;
+  ULONG rexxmask = 0, logmask = 0, sigmask = 0, cxmask = 0;
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_log.c) log_task()\n"));
 #endif
@@ -309,6 +308,12 @@ D(bug("[AROSTCP](amiga_log.c) log_task()\n"));
     goto fail;
 
   /*
+   * Initialize Commodities Exchange subsystem
+   */
+  if (!(cxmask = cx_init()))
+    goto fail;
+
+  /*
    * Syncronize with AmiTCP/IP
    */
   DNETTRACE(KPrintF("NETTRACE initialization complete, sending message...");)
@@ -325,7 +330,7 @@ D(bug("[AROSTCP](amiga_log.c) log_task()\n"));
   FreeMem(initmsg, sizeof(struct SysLogPacket));
   initmsg = NULL;
 
-  sigmask = logmask | rexxmask | SIGBREAKF_CTRL_F | SIGBREAKF_CTRL_C;
+  sigmask = logmask | rexxmask | cxmask | SIGBREAKF_CTRL_F | SIGBREAKF_CTRL_C;
   
   /* 
    * Main loop of the NETTRACE
@@ -334,7 +339,7 @@ D(bug("[AROSTCP](amiga_log.c) log_task()\n"));
     ULONG sig;
     struct SysLogPacket *msg;
 
-    sig = Wait(sigmask);	/* Wait for signals */
+    sig = Wait(sigmask | guimask);	  /* Wait for signals */
     DNETTRACE(KPrintF("NETTRACE: got some signal...");)
     do {
 				/* Signal from the AmiTCP/IP: API ready */
@@ -353,6 +358,19 @@ D(bug("[AROSTCP](amiga_log.c) log_task()\n"));
 	   * Make our ARexx port public
 	   */
 	  rexx_show();
+	  /*
+	   * Make our Commodities Exchange object public
+	   */
+	  cx_show();
+	  /*
+	   * Execute delayed DHCP startup
+	   */
+	  run_dhcp();
+	  /*
+	   * Open control panel
+	   */
+	  if (OpenGUIOnStartup)
+	    gui_open();
 	  sigmask &= ~SIGBREAKF_CTRL_F;
 	}
       }
@@ -384,6 +402,20 @@ D(bug("[AROSTCP](amiga_log.c) log_task()\n"));
 	} else
 	  sig &= ~rexxmask;
       }
+
+      if (sig & cxmask) {	  /* One Exchange message at time */
+	DNETTRACE(KPrintF(" CX message\n");)
+	if (!cx_poll())
+	  sig &= ~cxmask;
+      }
+
+      if (sig & guimask) {
+	DNETTRACE(KPrintF(" GUI signal\n");)
+	if (GUI_Running)
+	  MiamiPanelEvent(sig & guimask);
+	sig &= ~guimask;
+      }
+
       sig |= SetSignal(0L, sigmask) & sigmask; /* Signals left? */
     } while (sig);
   }
@@ -426,45 +458,29 @@ static char *levels =
   "info \0"
   "debug";
 
-/* 
- * Process all pending log messages 
- */
-static
-struct SysLogPacket *log_poll()
-{     
-  struct SysLogPacket *msg;
-  LONG i;
-  int chars;
-  struct ClockData clockdata;
-#if defined(__AROS__)
-D(bug("[AROSTCP](amiga_log.c) log_poll()\n"));
-#endif
+void log_msg(struct SysLogPacket *msg)
+{
+      LONG i;
+      int chars;
+      struct ClockData clockdata;
+      struct CSource cs;
 
-  /* 28 for date, 14 for level */
+      /* 28 for date, 14 for level */
 # define LEVELBUF 28+14
 
-  UBYTE buffer[LEVELBUF];
-  static ULONG TotalFail;
+      UBYTE buffer[LEVELBUF];
 
-  /* Process all messages */
-  while (msg = (struct SysLogPacket *)GetMsg(logPort)) { 
-    struct CSource cs;
+      cs.CS_Buffer = buffer;
+      cs.CS_Length = LEVELBUF;
+      cs.CS_CurChr = 0;
 
-    if (msg->Level == LOG_CLOSE) {
-      return (msg);
-    }
+      Amiga2Date(msg->Time, &clockdata);
 
-    cs.CS_Buffer = buffer;
-    cs.CS_Length = LEVELBUF;
-    cs.CS_CurChr = 0;
-
-    Amiga2Date(msg->Time, &clockdata);
-
-    csprintf(&cs, 
+      csprintf(&cs,
 #ifdef HAVE_TIMEZONES
-	     "%s %s %02d %02d:%02d:%02d %s %4d [%s]: ", 
+	     "%s %s %02d %02d:%02d:%02d %s %4d [%s]: ",
 #else
-	     "%s %s %02d %02d:%02d:%02d %4d [%s]: ", 
+	     "%s %s %02d %02d:%02d:%02d %4d [%s]: ",
 #endif
 	     wdays + 4 * clockdata.wday,
 	     months + 4 * (clockdata.month - 1),
@@ -478,33 +494,33 @@ D(bug("[AROSTCP](amiga_log.c) log_poll()\n"));
 	     clockdata.year,
 	     levels + 6 * ((msg->Level <= LOG_DEBUG) ? msg->Level : LOG_DEBUG)
 	     );
-    chars = strlen(msg->String) - 1;
-    /* Remove last newline */
-    if (msg->String[chars] == '\n') {
-      msg->String[chars] = '\0';
-    }
+      chars = strlen(msg->String) - 1;
+      /* Remove last newline */
+      if (msg->String[chars] == '\n') {
+ 	msg->String[chars] = '\0';
+      }
 
-    /* Replace all control chars with space */
-    for (i = 0; msg->String[i]; ++i) {
-      if ((msg->String)[i] < ' ')
-	(msg->String)[i] = ' ';
-    }
+      /* Replace all control chars with space */
+      for (i = 0; msg->String[i]; ++i) {
+       if ((msg->String)[i] < ' ')
+	 (msg->String)[i] = ' ';
+      }
 #ifdef CONSOLE_SYSLOG
-    /* If console is not open, open it */
-    while (confile == NULL) {
+      /* If console is not open, open it */
+      while (confile == NULL) {
 	if ((confile = logOpen(consolename)) == NULL) {
 	  if (!conopenfail) /* log only once */
 	    log(LOG_ERR,"Opening console log '%s' failed", consolename);
 	  if (consolename == consoledefname) {
-	    conopenfail = TRUE;	    
+	    conopenfail = TRUE;
 	    break;
 	  }
 	  /* try again with the default name */
 	  consolename = consoledefname;
 	  conopenfail = conwritefail = FALSE;
 	}
-    }
-    if (confile != NULL) {
+      }
+      if (confile != NULL) {
 	int error = FPuts(confile, buffer) == -1;
 	if ((!error) && msg->Tag)
 	  error = FPrintf(confile, "%s: ", msg->Tag) == -1;
@@ -516,45 +532,74 @@ D(bug("[AROSTCP](amiga_log.c) log_poll()\n"));
 	  conwritefail = TRUE;
 	  log(LOG_ERR, "log: Write failed to console '%s'", consolename);
 	}
-    }
+      }
 #endif
-    /* If log file is not open, open it */
-    while (logfile == NULL) {
-	if ((logfile = logOpen(logfilename)) == NULL) {
-	  if (!fileopenfail) /* log only once */
-	    log(LOG_ERR,"Opening log file '%s' failed", logfilename);
-	  if (logfilename == logfiledefname) {
-	    fileopenfail = TRUE;	    
-	    break;
-	  }
-	  /* try again with the default name */
-	  logfilename = logfiledefname;
-	  fileopenfail = filewritefail = FALSE;
-	}
-    }
-    if (logfile != NULL) {
-	int error = FPuts(logfile, buffer) == -1;
-	if ((!error) && msg->Tag)
-	  error = FPrintf(logfile, "%s: ", msg->Tag) == -1;
-	error = error ||
-	    FPuts(logfile, msg->String) == -1 ||
-	      FPutC(logfile, '\n') == -1;
-	Flush(logfile);
-	if (error && !filewritefail) {	/* To avoid loops */
-	  filewritefail = TRUE;
-	  log(LOG_ERR, "log: Write failed to file '%s'", logfilename);
-	}
-    }
-    if (ExtLogPort)
-	PutMsg(ExtLogPort, (struct Message *)msg);
-    else
-	ReplyMsg((struct Message *)msg);
-    if (GetLogMsgFail != TotalFail) {
-      int t = GetLogMsgFail;	/* Check if we have lost messages */
+      if (LOG_PRI(msg->Level) <= log_cnf.log_filter) {
+      /* If log file is not open, open it */
+  	while (logfile == NULL) {
+  	  if ((logfile = logOpen(logfilename)) == NULL) {
+  	    if (!fileopenfail) /* log only once */
+  	      log(LOG_ERR,"Opening log file '%s' failed", logfilename);
+  	    if (logfilename == logfiledefname) {
+  	      fileopenfail = TRUE;
+  	      break;
+  	    }
+  	    /* try again with the default name */
+  	    logfilename = logfiledefname;
+  	    fileopenfail = filewritefail = FALSE;
+  	  }
+  	}
+  	if (logfile != NULL) {
+  	  int error = FPuts(logfile, buffer) == -1;
+  	  if ((!error) && msg->Tag)
+  	    error = FPrintf(logfile, "%s: ", msg->Tag) == -1;
+  	  error = error ||
+  	      FPuts(logfile, msg->String) == -1 ||
+  		FPutC(logfile, '\n') == -1;
+  	  Flush(logfile);
+  	  if (error && !filewritefail) {  /* To avoid loops */
+  	    filewritefail = TRUE;
+  	    log(LOG_ERR, "log: Write failed to file '%s'", logfilename);
+  	  }
+  	}
+      }
+}
+/* 
+ * Process all pending log messages 
+ */
+static
+struct SysLogPacket *log_poll()
+{     
+  struct SysLogPacket *msg;
+  static ULONG TotalFail;
 
-      log(LOG_WARNING,"%ld log messages lost (total %ld lost)\n",
-	  t - TotalFail, TotalFail);
-      TotalFail = t;
+  /* Process all messages */
+  while (msg = (struct SysLogPacket *)GetMsg(logPort)) {
+
+    if (msg == gui_timerio)
+	gui_process_refresh();
+    else {
+      DNETTRACE(KPrintF("Message level = 0x%08lx\n", msg->Level);)
+      if (msg->Level == LOG_CLOSE) {
+	return (msg);
+      }
+      if ((msg->Level & LOG_CMDMASK) == LOG_GUIMSG) {
+	gui_process_msg(msg);
+        ReplyMsg((struct Message *)msg);
+      } else {
+        log_msg(msg);
+        if (ExtLogPort)
+	  PutMsg(ExtLogPort, (struct Message *)msg);
+        else
+  	  ReplyMsg((struct Message *)msg);
+  	if (GetLogMsgFail != TotalFail) {
+  	  int t = GetLogMsgFail;    /* Check if we have lost messages */
+
+  	  log(LOG_WARNING,"%ld log messages lost (total %ld lost)\n",
+  	    t - TotalFail, TotalFail);
+  	  TotalFail = t;
+  	}
+      }
     }
   }
   return(NULL);
@@ -567,6 +612,8 @@ void log_close(struct SysLogPacket *msg)
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_log.c) log_close()\n"));
 #endif
+  gui_close();
+  cx_deinit();
   rexx_deinit();
   DNETTRACE(KPrintF("rexx_deinit() completed\n");)
 #ifdef CONSOLE_SYSLOG

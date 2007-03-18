@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -126,9 +125,18 @@ AROS_LH3(VOID, Syslog,
   CHECK_TASK_VOID();
 
   /* check for invalid bits or no priority set */
-  if (!LOG_PRI(pri) || (pri &~ (LOG_PRIMASK|LOG_FACMASK)) ||
-      !(LOG_MASK(pri) & libPtr->LogMask))
+  if (!LOG_PRI(pri)) {
+    DSYSLOG(KPrintF("Priority is zero\n");)
     return;
+  }
+  if (pri &~ (LOG_PRIMASK|LOG_FACMASK)) {
+    DSYSLOG(KPrintF("Bad bits in priority/facility value 0x%08lx\n", pri);)
+    return;
+  }
+  if (!(LOG_MASK(LOG_PRI(pri)) & libPtr->LogMask)) {
+    DSYSLOG(KPrintF("Priority value %lu is masked out\n", LOG_PRI(pri));)
+    return;
+  }
 
   saved_errno = readErrnoValue(libPtr);
   if (saved_errno >= __sys_nerr)
@@ -739,10 +747,6 @@ AROS_LH1(ULONG, SocketBaseTagList,
       
       case (SBTC_RELEASESTRPTR << SBTB_CODE): /* get */
 	*tagData = (ULONG)&version[6];
-	break;
-
-      case (SBTC_PRIVATE_RES_STATE << SBTB_CODE): /* get */
-	*tagData = (ULONG)&libPtr->res_state;
 	break;
 
 #ifdef notyet

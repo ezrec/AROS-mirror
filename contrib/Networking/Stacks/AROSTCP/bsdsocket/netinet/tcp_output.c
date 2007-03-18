@@ -1,28 +1,7 @@
 /*
- * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
- *                    Helsinki University of Technology, Finland.
- *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
- */
-
-/*
- * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.
- * All rights reserved.
+ * Copyright (c) 1982, 1986, 1988, 1990, 1993
+ *	The Regents of the University of California.  All rights reserved.
+ * Copyright (c) 2006 Pavel Fedin
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -52,19 +31,19 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)tcp_output.c	7.22 (Berkeley) 8/31/90
+ *	@(#)tcp_output.c	8.3 (Berkeley) 12/30/93
+ * $Id$
  */
-
-#include <conf.h>
 
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/malloc.h>
 #include <sys/mbuf.h>
-#include <sys/protosw.h>
 #include <sys/socket.h>
 #include <sys/socketvar.h>
+#include <sys/protosw.h>
 #include <sys/errno.h>
+#include <sys/queue.h>
 #include <sys/synch.h>
 
 #include <net/route.h>
@@ -81,39 +60,14 @@
 #include <netinet/tcp_timer.h>
 #include <netinet/tcp_var.h>
 #include <netinet/tcpip.h>
+#ifdef TCPDEBUG
 #include <netinet/tcp_debug.h>
-
-#include <netinet/tcp_output_protos.h>
-#include <netinet/tcp_input_protos.h>
-#include <netinet/tcp_debug_protos.h>
-#include <netinet/tcp_subr_protos.h>
-#include <netinet/ip_output_protos.h>
-#include <netinet/in_cksum_protos.h>
+#endif
 
 #ifdef notyet
 extern struct mbuf *m_copypack();
 #endif
 
-/* --- start moved from tcp_fsm.h --- */
-#ifdef	TCPOUTFLAGS
-/*
- * Flags used when sending segments in tcp_output.
- * Basic flags (TH_RST,TH_ACK,TH_SYN,TH_FIN) are totally
- * determined by state, with the proviso that TH_FIN is sent only
- * if all data queued for output is included in the segment.
- */
-u_char	tcp_outflags[TCP_NSTATES] = {
-    TH_RST|TH_ACK, 0, TH_SYN, TH_SYN|TH_ACK,
-    TH_ACK, TH_ACK,
-    TH_FIN|TH_ACK, TH_FIN|TH_ACK, TH_FIN|TH_ACK, TH_ACK, TH_ACK,
-};
-#endif
-/* --- end moved from tcp_fsm.h --- */
-
-/*
- * Initial options.
- */
-ALIGNED u_char	tcp_initopt[4] = { TCPOPT_MAXSEG, 4, 0x0, 0x0, };
 
 /*
  * Tcp output routine: figure out what should be sent and send it.
@@ -127,9 +81,11 @@ tcp_output(tp)
 	int off, flags, error;
 	register struct mbuf *m;
 	register struct tcpiphdr *ti;
-	u_char *opt;
+	u_char opt[TCP_MAXOLEN];
 	unsigned optlen, hdrlen;
 	int idle, sendalot;
+	struct rmxp_tao *taop;
+	struct rmxp_tao tao_noncached;
 
 	/*
 	 * Determine length of data that should be transmitted,
@@ -150,6 +106,16 @@ again:
 	off = tp->snd_nxt - tp->snd_una;
 	win = min(tp->snd_wnd, tp->snd_cwnd);
 
+	flags = tcp_outflags[tp->t_state];
+	/*
+	 * Get standard flags, and add SYN or FIN if requested by 'hidden'
+	 * state flags.
+	 */
+	if (tp->t_flags & TF_NEEDFIN)
+		flags |= TH_FIN;
+	if (tp->t_flags & TF_NEEDSYN)
+		flags |= TH_SYN;
+
 	/*
 	 * If in persist timeout with window of 0, send 1 byte.
 	 * Otherwise, if window is small but nonzero
@@ -157,16 +123,51 @@ again:
 	 * and go to transmit state.
 	 */
 	if (tp->t_force) {
-		if (win == 0)
+		if (win == 0) {
+			/*
+			 * If we still have some data to send, then
+			 * clear the FIN bit.  Usually this would
+			 * happen below when it realizes that we
+			 * aren't sending all the data.  However,
+			 * if we have exactly 1 byte of unset data,
+			 * then it won't clear the FIN bit below,
+			 * and if we are in persist state, we wind
+			 * up sending the packet without recording
+			 * that we sent the FIN bit.
+			 *
+			 * We can't just blindly clear the FIN bit,
+			 * because if we don't have any more data
+			 * to send then the probe will be the FIN
+			 * itself.
+			 */
+			if (off < so->so_snd.sb_cc)
+				flags &= ~TH_FIN;
 			win = 1;
-		else {
+		} else {
 			tp->t_timer[TCPT_PERSIST] = 0;
 			tp->t_rxtshift = 0;
 		}
 	}
 
-	flags = tcp_outflags[tp->t_state];
 	len = min(so->so_snd.sb_cc, win) - off;
+
+	if ((taop = tcp_gettaocache(tp->t_inpcb)) == NULL) {
+		taop = &tao_noncached;
+		bzero(taop, sizeof(*taop));
+	}
+
+	/*
+	 * Lop off SYN bit if it has already been sent.  However, if this
+	 * is SYN-SENT state and if segment contains data and if we don't
+	 * know that foreign host supports TAO, suppress sending segment.
+	 */
+	if ((flags & TH_SYN) && SEQ_GT(tp->snd_nxt, tp->snd_una)) {
+		flags &= ~TH_SYN;
+		off--, len++;
+		if (len > 0 && tp->t_state == TCPS_SYN_SENT &&
+		    taop->tao_ccsent == 0)
+			return 0;
+	}
 
 	if (len < 0) {
 		/*
@@ -208,11 +209,12 @@ again:
 		if (len == tp->t_maxseg)
 			goto send;
 		if ((idle || tp->t_flags & TF_NODELAY) &&
+		    (tp->t_flags & TF_NOPUSH) == 0 &&
 		    len + off >= so->so_snd.sb_cc)
 			goto send;
 		if (tp->t_force)
 			goto send;
-		if (len >= tp->max_sndwnd / 2)
+		if (len >= tp->max_sndwnd / 2 && tp->max_sndwnd > 0)
 			goto send;
 		if (SEQ_LT(tp->snd_nxt, tp->snd_max))
 			goto send;
@@ -226,7 +228,13 @@ again:
 	 * window, then want to send a window update to peer.
 	 */
 	if (win > 0) {
-		long adv = win - (tp->rcv_adv - tp->rcv_nxt);
+		/*
+		 * "adv" is the amount we can increase the window,
+		 * taking into account that we are limited by
+		 * TCP_MAXWIN << tp->rcv_scale.
+		 */
+		long adv = min(win, (long)TCP_MAXWIN << tp->rcv_scale) -
+			(tp->rcv_adv - tp->rcv_nxt);
 
 		if (adv >= (long) (2 * tp->t_maxseg))
 			goto send;
@@ -239,7 +247,8 @@ again:
 	 */
 	if (tp->t_flags & TF_ACKNOW)
 		goto send;
-	if (flags & (TH_SYN|TH_RST))
+	if ((flags & TH_RST) ||
+	    ((flags & TH_SYN) && (tp->t_flags & TF_NEEDSYN) == 0))
 		goto send;
 	if (SEQ_GT(tp->snd_up, tp->snd_una))
 		goto send;
@@ -296,16 +305,148 @@ send:
 	 */
 	optlen = 0;
 	hdrlen = sizeof (struct tcpiphdr);
-	if (flags & TH_SYN && (tp->t_flags & TF_NOOPT) == 0) {
-		opt = tcp_initopt;
-		optlen = sizeof (tcp_initopt);
-		hdrlen += sizeof (tcp_initopt);
-		*(u_short *)(opt + 2) = htons((u_short) tcp_mss(tp, 0));
-#if DIAGNOSTIC
-	 	if (max_linkhdr + hdrlen > MHLEN)
-			panic("tcphdr too big");
-#endif
+	if (flags & TH_SYN) {
+		tp->snd_nxt = tp->iss;
+		if ((tp->t_flags & TF_NOOPT) == 0) {
+			u_short mss;
+
+			opt[0] = TCPOPT_MAXSEG;
+			opt[1] = TCPOLEN_MAXSEG;
+			mss = htons((u_short) tcp_mssopt(tp));
+			(void)memcpy(opt + 2, &mss, sizeof(mss));
+			optlen = TCPOLEN_MAXSEG;
+
+			if ((tp->t_flags & TF_REQ_SCALE) &&
+			    ((flags & TH_ACK) == 0 ||
+			    (tp->t_flags & TF_RCVD_SCALE))) {
+				*((u_long *) (opt + optlen)) = htonl(
+					TCPOPT_NOP << 24 |
+					TCPOPT_WINDOW << 16 |
+					TCPOLEN_WINDOW << 8 |
+					tp->request_r_scale);
+				optlen += 4;
+			}
+		}
+ 	}
+
+ 	/*
+	 * Send a timestamp and echo-reply if this is a SYN and our side
+	 * wants to use timestamps (TF_REQ_TSTMP is set) or both our side
+	 * and our peer have sent timestamps in our SYN's.
+ 	 */
+ 	if ((tp->t_flags & (TF_REQ_TSTMP|TF_NOOPT)) == TF_REQ_TSTMP &&
+ 	    (flags & TH_RST) == 0 &&
+	    ((flags & TH_ACK) == 0 ||
+	     (tp->t_flags & TF_RCVD_TSTMP))) {
+		u_long *lp = (u_long *)(opt + optlen);
+
+ 		/* Form timestamp option as shown in appendix A of RFC 1323. */
+ 		*lp++ = htonl(TCPOPT_TSTAMP_HDR);
+ 		*lp++ = htonl(tcp_now);
+ 		*lp   = htonl(tp->ts_recent);
+ 		optlen += TCPOLEN_TSTAMP_APPA;
+ 	}
+
+ 	/*
+	 * Send `CC-family' options if our side wants to use them (TF_REQ_CC),
+	 * options are allowed (!TF_NOOPT) and it's not a RST.
+ 	 */
+ 	if ((tp->t_flags & (TF_REQ_CC|TF_NOOPT)) == TF_REQ_CC &&
+ 	     (flags & TH_RST) == 0) {
+		switch (flags & (TH_SYN|TH_ACK)) {
+		/*
+		 * This is a normal ACK, send CC if we received CC before
+		 * from our peer.
+		 */
+		case TH_ACK:
+			if (!(tp->t_flags & TF_RCVD_CC))
+				break;
+			/*FALLTHROUGH*/
+
+		/*
+		 * We can only get here in T/TCP's SYN_SENT* state, when
+		 * we're a sending a non-SYN segment without waiting for
+		 * the ACK of our SYN.  A check above assures that we only
+		 * do this if our peer understands T/TCP.
+		 */
+		case 0:
+			opt[optlen++] = TCPOPT_NOP;
+			opt[optlen++] = TCPOPT_NOP;
+			opt[optlen++] = TCPOPT_CC;
+			opt[optlen++] = TCPOLEN_CC;
+			*(u_int32_t *)&opt[optlen] = htonl(tp->cc_send);
+
+			optlen += 4;
+			break;
+
+		/*
+		 * This is our initial SYN, check whether we have to use
+		 * CC or CC.new.
+		 */
+		case TH_SYN:
+			opt[optlen++] = TCPOPT_NOP;
+			opt[optlen++] = TCPOPT_NOP;
+
+			if (taop->tao_ccsent != 0 &&
+			    CC_GEQ(tp->cc_send, taop->tao_ccsent)) {
+				opt[optlen++] = TCPOPT_CC;
+				taop->tao_ccsent = tp->cc_send;
+			} else {
+				opt[optlen++] = TCPOPT_CCNEW;
+				taop->tao_ccsent = 0;
+			}
+			opt[optlen++] = TCPOLEN_CC;
+			*(u_int32_t *)&opt[optlen] = htonl(tp->cc_send);
+ 			optlen += 4;
+			break;
+
+		/*
+		 * This is a SYN,ACK; send CC and CC.echo if we received
+		 * CC from our peer.
+		 */
+		case (TH_SYN|TH_ACK):
+			if (tp->t_flags & TF_RCVD_CC) {
+				opt[optlen++] = TCPOPT_NOP;
+				opt[optlen++] = TCPOPT_NOP;
+				opt[optlen++] = TCPOPT_CC;
+				opt[optlen++] = TCPOLEN_CC;
+				*(u_int32_t *)&opt[optlen] =
+					htonl(tp->cc_send);
+				optlen += 4;
+				opt[optlen++] = TCPOPT_NOP;
+				opt[optlen++] = TCPOPT_NOP;
+				opt[optlen++] = TCPOPT_CCECHO;
+				opt[optlen++] = TCPOLEN_CC;
+				*(u_int32_t *)&opt[optlen] =
+					htonl(tp->cc_recv);
+				optlen += 4;
+			}
+			break;
+		}
+ 	}
+
+ 	hdrlen += optlen;
+
+	/*
+	 * Adjust data length if insertion of options will
+	 * bump the packet length beyond the t_maxopd length.
+	 * Clear the FIN bit because we cut off the tail of
+	 * the segment.
+	 */
+	 if (len + optlen > tp->t_maxopd) {
+		/*
+		 * If there is still more to send, don't close the connection.
+		 */
+		flags &= ~TH_FIN;
+
+		len = tp->t_maxopd - optlen;
+		sendalot = 1;
 	}
+
+/*#ifdef DIAGNOSTIC*/
+ 	if (max_linkhdr + hdrlen > MHLEN)
+		panic("tcphdr too big");
+/*#endif*/
 
 	/*
 	 * Grab a header mbuf, attaching a copy of data to
@@ -381,19 +522,36 @@ send:
 	ti = mtod(m, struct tcpiphdr *);
 	if (tp->t_template == 0)
 		panic("tcp_output");
-	*ti = *tp->t_template;
+	(void)memcpy(ti, tp->t_template, sizeof (struct tcpiphdr));
+
 	/*
 	 * Fill in fields, remembering maximum advertised
 	 * window for use in delaying messages about window sizes.
 	 * If resending a FIN, be sure not to use a new sequence number.
 	 */
-	if (flags & TH_FIN && tp->t_flags & TF_SENTFIN && 
+	if (flags & TH_FIN && tp->t_flags & TF_SENTFIN &&
 	    tp->snd_nxt == tp->snd_max)
 		tp->snd_nxt--;
-	ti->ti_seq = htonl(tp->snd_nxt);
+	/*
+	 * If we are doing retransmissions, then snd_nxt will
+	 * not reflect the first unsent octet.  For ACK only
+	 * packets, we do not want the sequence number of the
+	 * retransmitted packet, we want the sequence number
+	 * of the next unsent octet.  So, if there is no data
+	 * (and no SYN or FIN), use snd_max instead of snd_nxt
+	 * when filling in ti_seq.  But if we are in persist
+	 * state, snd_max might reflect one byte beyond the
+	 * right edge of the window, so use snd_nxt in that
+	 * case, since we know we aren't doing a retransmission.
+	 * (retransmit and persist are mutually exclusive...)
+	 */
+	if (len || (flags & (TH_SYN|TH_FIN)) || tp->t_timer[TCPT_PERSIST])
+		ti->ti_seq = htonl(tp->snd_nxt);
+	else
+		ti->ti_seq = htonl(tp->snd_max);
 	ti->ti_ack = htonl(tp->rcv_nxt);
 	if (optlen) {
-		aligned_bcopy((caddr_t)opt, (caddr_t)(ti + 1), optlen);
+		(void)memcpy(ti + 1, opt, optlen);
 		ti->ti_off = (sizeof (struct tcphdr) + optlen) >> 2;
 	}
 	ti->ti_flags = flags;
@@ -403,11 +561,11 @@ send:
 	 */
 	if (win < (long)(so->so_rcv.sb_hiwat / 4) && win < (long)tp->t_maxseg)
 		win = 0;
-	if (win > TCP_MAXWIN)
-		win = TCP_MAXWIN;
+	if (win > (long)TCP_MAXWIN << tp->rcv_scale)
+		win = (long)TCP_MAXWIN << tp->rcv_scale;
 	if (win < (long)(tp->rcv_adv - tp->rcv_nxt))
 		win = (long)(tp->rcv_adv - tp->rcv_nxt);
-	ti->ti_win = htons((u_short)win);
+	ti->ti_win = htons((u_short) (win>>tp->rcv_scale));
 	if (SEQ_GT(tp->snd_up, tp->snd_nxt)) {
 		ti->ti_urp = htons((u_short)(tp->snd_up - tp->snd_nxt));
 		ti->ti_flags |= TH_URG;
@@ -481,11 +639,13 @@ send:
 		if (SEQ_GT(tp->snd_nxt + len, tp->snd_max))
 			tp->snd_max = tp->snd_nxt + len;
 
+#ifdef TCPDEBUG
 	/*
 	 * Trace.
 	 */
 	if (so->so_options & SO_DEBUG)
 		tcp_trace(TA_OUTPUT, tp->t_state, tp, ti, 0);
+#endif
 
 	/*
 	 * Fill in IP length and desired time to live and
@@ -494,16 +654,23 @@ send:
 	 * the template, but need a way to checksum without them.
 	 */
 	m->m_pkthdr.len = hdrlen + len;
+#ifdef TUBA
+	if (tp->t_tuba_pcb)
+		error = tuba_output(m, tp);
+	else
+#endif
+    {
 	((struct ip *)ti)->ip_len = m->m_pkthdr.len;
 	((struct ip *)ti)->ip_ttl = tp->t_inpcb->inp_ip.ip_ttl;	/* XXX */
 	((struct ip *)ti)->ip_tos = tp->t_inpcb->inp_ip.ip_tos;	/* XXX */
 #if BSD >= 43
 	error = ip_output(m, tp->t_inpcb->inp_options, &tp->t_inpcb->inp_route,
-	    so->so_options & SO_DONTROUTE);
+	    so->so_options & SO_DONTROUTE, 0);
 #else
-	error = ip_output(m, (struct mbuf *)0, &tp->t_inpcb->inp_route, 
+	error = ip_output(m, (struct mbuf *)0, &tp->t_inpcb->inp_route,
 	    so->so_options & SO_DONTROUTE);
 #endif
+    }
 	if (error) {
 out:
 		if (error == ENOBUFS) {
@@ -527,6 +694,7 @@ out:
 	 */
 	if (win > 0 && SEQ_GT(tp->rcv_nxt+win, tp->rcv_adv))
 		tp->rcv_adv = tp->rcv_nxt + win;
+	tp->last_ack_sent = tp->rcv_nxt;
 	tp->t_flags &= ~(TF_ACKNOW|TF_DELACK);
 	if (sendalot)
 		goto again;
@@ -550,5 +718,3 @@ tcp_setpersist(tp)
 	if (tp->t_rxtshift < TCP_MAXRXTSHIFT)
 		tp->t_rxtshift++;
 }
-
-

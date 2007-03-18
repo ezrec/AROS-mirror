@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -105,10 +104,11 @@ D(bug("[AROSTCP](amiga_timer.c) timer_init()\n"));
     /*
      * allocate and initialize the template message structure
      */
-    timerIORequest = (struct timerequest *)CreateIORequest(timerport, sizeof(struct timerequest));
-    
+    timerIORequest = (struct timerequest *)
+      CreateIORequest(timerport, sizeof(struct timerequest));
     if (timerIORequest != NULL) {
-      error = OpenDevice(TIMERNAME, UNIT_VBLANK, (struct IORequest *)timerIORequest, 0);
+      error = OpenDevice(TIMERNAME, UNIT_VBLANK, 
+			 (struct IORequest *)timerIORequest, 0);
       if (error == 0) {
 	/*
 	 * Make sure that we got at least V36 timer, since we use some

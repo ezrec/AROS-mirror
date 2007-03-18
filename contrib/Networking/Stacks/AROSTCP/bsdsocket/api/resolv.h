@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1983, 1987, 1989 The Regents of the University of California.
  * All rights reserved.
- * Copyright (c) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * Redistribution and use in source and binary forms are permitted
  * provided that: (1) source distributions retain this entire copyright
@@ -23,18 +23,14 @@
 #ifndef API_RESOLV_H
 #define API_RESOLV_H
 
-#if !defined(__AROS__)
-#include <libraries/eztcp_private.h>
-#else
-#include <kern/amiga_netdb_resolver.h>
-#endif
 #include <arpa/nameser.h>
 
 /*
  * Global defines and variables for resolver stub. (INSIDE AmiTCP/IP)
  */
 #define	MAXDFLSRCH	3		    /* # default domain levels to try */
-#define	LOCALDOMAINPARTS 2    /* min levels in name that is "local"*/
+#define	LOCALDOMAINPARTS 2		/* min levels in name that is "local"*/
+
 #define	RES_TIMEOUT	5		    /* min. seconds between retries */
 
 /*
@@ -61,6 +57,19 @@
 #define RES_DNSRCH	0x0200		/* search up local domain tree */
 
 #define RES_DEFAULT	(RES_RECURSE | RES_DEFNAMES | RES_INIT)
+
+#define AROSTCP_RES_DISABLED 0x8000       /* Implements MiamiDisallowDNS() */
+
+/* Resolver state */
+struct state {
+	int	retrans;	 	/* retransmition time interval */
+	int	retry;			/* number of times to retransmit */
+	long	options;		/* option flags - see below. */
+	u_short	id;			/* current packet id */
+	ULONG   dbserial;
+        char **dnsrch;
+        struct in_addr *nsaddr_list;
+};
 
 #ifndef AMITCP /* AmiTCP has this in the SocketBase */ 
 extern struct state _res;

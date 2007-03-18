@@ -2,8 +2,7 @@
  * Copyright (C) 1993 AmiTCP/IP Group, <amitcp-group@hut.fi>
  *                    Helsinki University of Technology, Finland.
  *                    All rights reserved.
- * Copyright (C) 2005 Neil Cafferkey
- * Copyright (C) 2005 Pavel Fedin
+ * Copyright (C) 2005 - 2007 The AROS Dev Team
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -480,8 +479,7 @@ if_slowtimo()
  * interface structure pointer.
  */
 struct ifnet *
-ifunit(name)
-	register char *name;
+ifunit(char *name)
 {
 	register struct ifnet *ifp;
 	register char *cp;
@@ -627,6 +625,29 @@ ifioctl(so, cmd, data)
 						   (struct mbuf *)ifp));
 	}
 	return (0);
+}
+
+/*
+ * A helper routine for internal interface control
+ * Here we do the same as SIOCSIFFLAGS processing code from net/if.c
+ */
+
+void ifupdown(struct ifnet *ifp, int up) {
+	struct ifreq ifr;
+
+	if (up) {
+		ifr.ifr_flags = ifp->if_flags & ~IFF_UP;
+		if (ifp->if_flags & IFF_UP) {
+			spl_t s = splimp();
+			if_down(ifp);
+			splx(s);
+		}
+	} else {
+		ifr.ifr_flags = ifp->if_flags | IFF_UP;
+	}
+	if (ifp->if_ioctl)
+		(void) (*ifp->if_ioctl)(ifp, SIOCSIFFLAGS, (caddr_t)&ifr);
+	ifp->if_flags = ifr.ifr_flags;
 }
 
 /*
