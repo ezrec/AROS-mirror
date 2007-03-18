@@ -2,8 +2,7 @@
 #define PROTO_SOCKET_H
 
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
-    $Id: socket.h 12757 2001-12-08 22:23:57Z chodorowski $
+    Copyright © 1995-2007, The AROS Development Team. All rights reserved.
 
     Desc: Wrapper for naming anomaly bsdsocket.library <-> socket.h
     Lang: English

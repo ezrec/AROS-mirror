@@ -21,6 +21,8 @@
 #   include <utility/utility.h>
 #endif
 
+#define DEBUG 1
+#include <aros/debug.h>
 
 
 /****************************************************************************************/

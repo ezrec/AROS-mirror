@@ -31,6 +31,11 @@
  * SUCH DAMAGE.
  */
 
+static const char copyright[] =
+"$VER: logger v1.0"
+"Copyright (c) 1983, 1993 The Regents of the University of California.  All rights reserved.\n"
+"Copygigjt (c) 2005 - 2006 Pavel Fedin";
+
 #include <sys/cdefs.h>
 
 #include <sys/types.h>
@@ -48,23 +53,17 @@
 #include <unistd.h>
 
 #include <proto/socket.h>
-#if !defined(__AROS__)
 #include <proto/miami.h>
-#else
+
 #include <proto/exec.h>
 #include <dos/dos.h>
 struct Library *SocketBase;
-#endif
+struct Library *MiamiBase;
 
 #define	SYSLOG_NAMES
 #include <syslog.h>
 
-static const char copyright[] =
-"$VER: logger v1.0"
-"Copyright (c) 1983, 1993 The Regents of the University of California.  All rights reserved.\n"
-"Copygigjt (c) 2005 Pavel Fedin";
-#define SOCKET_VERSION 3
-const TEXT socket_name[] = "bsdsocket.library";
+#define D(x)
 
 int	decode(char *, CODE *);
 int	pencode(char *);
@@ -96,10 +95,16 @@ main(int argc, char *argv[])
 	int ch, logflags, pri;
 	char *tag, *host, buf[1024];
 
-   if (!(SocketBase = OpenLibrary(socket_name, SOCKET_VERSION)))
+#if defined(__AROS__)	
+   if (!(SocketBase = OpenLibrary("bsdsocket.library", 3)))
    {
       return RETURN_FAIL;   
    }
+   if (!(SocketBase = OpenLibrary("miami.library", 0)))
+   {
+      return RETURN_FAIL;   
+   }
+#endif
 
 	tag = NULL;
 	host = NULL;
@@ -125,7 +130,7 @@ main(int argc, char *argv[])
 #if !defined(__AROS__)
 				err(1, "%s", optarg);
 #else
-            return RETURN_FAIL;
+            //return RETURN_FAIL;
 #endif
          }
 			break;
@@ -155,7 +160,8 @@ main(int argc, char *argv[])
 #warning "TODO: NicJA - openlog() & getlogin()??"
 #if !defined(__AROS__)
 	openlog(tag ? tag : getlogin(), logflags, 0);
-
+#else
+	//openlog(tag, logflags, 0);
 #endif
 	(void) fclose(stdout);
 
@@ -200,6 +206,7 @@ logmessage(int pri, char *host, char *buf)
 	int maxs, len, sock, error, i, lsent;
 
 	if (host == NULL) {
+		D(fprintf(stderr, "Logging text: %s\n", buf);)
 		syslog(pri, "%s", buf);
 		return;
 	}
@@ -209,20 +216,17 @@ logmessage(int pri, char *host, char *buf)
 		memset(&hints, 0, sizeof(hints));
 		hints.ai_family = family;
 		hints.ai_socktype = SOCK_DGRAM;
-#warning "TODO: NicJA - We dont have getaddrinfo()"
-#if !defined(__AROS__)
 		error = getaddrinfo(host, "syslog", &hints, &res);
-#endif
 		if (error == EAI_SERVICE) {
-#warning "TODO: NicJA - We dont have warnx() or getaddrinfo()"
+#warning "TODO: NicJA - We dont have warnx()"
 #if !defined(__AROS__)
 			warnx("syslog/udp: unknown service");	/* not fatal */
-			error = getaddrinfo(host, "514", &hints, &res);
 #endif
+			error = getaddrinfo(host, "514", &hints, &res);
 		}
 		if (error)
       {
-#warning "TODO: NicJA - We dont have errx() or gai_strerror()"
+#warning "TODO: NicJA - We dont have errx()"
 #if !defined(__AROS__)
 			errx(1, "%s: %s", gai_strerror(error), host);
 #endif
@@ -247,10 +251,7 @@ logmessage(int pri, char *host, char *buf)
 			socks[nsock].addrlen = r->ai_addrlen;
 			socks[nsock++].sock = sock;
 		}
-#warning "TODO: NicJA - We dont have freeaddrinfo()"
-#if !defined(__AROS__)
 		freeaddrinfo(res);
-#endif
 		if (nsock <= 0)
 		{
 #warning "TODO: NicJA - We dont have errx()"

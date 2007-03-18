@@ -46,6 +46,8 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelInit()\n"));
+	
 	return TRUE;
 	
     AROS_LIBFUNC_EXIT
@@ -84,6 +86,8 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelCleanup()\n"));
+	
     AROS_LIBFUNC_EXIT
 
 } /* MiamiPanelCleanup */
@@ -124,6 +128,8 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelAddInterface()\n"));
+	
     AROS_LIBFUNC_EXIT
 
 } /* MiamiPanelAddInterface */
@@ -160,6 +166,8 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelDelInterface()\n"));
+	
     AROS_LIBFUNC_EXIT
 
 } /* MiamiPanelDelInterface */
@@ -198,6 +206,8 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelSetInterfaceState()\n"));
+	
     AROS_LIBFUNC_EXIT
 
 } /* MiamiPanelSetInterfaceState */
@@ -235,6 +245,8 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelSetInterfaceSpeed()\n"));
+	
     AROS_LIBFUNC_EXIT
 
 } /* MiamiPanelSetInterfaceSpeed */
@@ -275,6 +287,8 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelInterfaceReport()\n"));
+	
     AROS_LIBFUNC_EXIT
 
 } /* MiamiPanelInterfaceReport */
@@ -310,6 +324,8 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelToFront()\n"));
+	
     AROS_LIBFUNC_EXIT
 
 } /* MiamiPanelToFront */
@@ -346,6 +362,8 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelInhibitRefresh()\n"));
+	
     AROS_LIBFUNC_EXIT
 
 } /* MiamiPanelInhibitRefresh */
@@ -383,6 +401,8 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelGetCoord()\n"));
+	
     AROS_LIBFUNC_EXIT
 
 } /* MiamiPanelGetCoord */
@@ -419,6 +439,8 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelEvent()\n"));
+	
     AROS_LIBFUNC_EXIT
 
 } /* MiamiPanelEvent */
@@ -456,6 +478,8 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelRefreshName()\n"));
+	
     AROS_LIBFUNC_EXIT
 
 } /* MiamiPanelRefreshName */
@@ -491,6 +515,8 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelGetVersion()\n"));
+	
 	return 1;
 	
     AROS_LIBFUNC_EXIT
@@ -528,6 +554,10 @@
     AROS_LIBFUNC_INIT
     AROS_LIBBASE_EXT_DECL(struct Library *,MiamiPanelBase)
 
+D(bug("[MiamiPanel] MiamiPanelKill()\n"));
+
+	return TRUE;
+	
     AROS_LIBFUNC_EXIT
 
 } /* MiamiPanelKill */

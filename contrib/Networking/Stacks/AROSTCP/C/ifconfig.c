@@ -67,7 +67,9 @@
 
 #include <net/if.h>
 #include <net/if_dl.h>
-
+#ifdef ENABLE_MEDIA_IOCTL
+#include <net/if_media.h>
+#endif
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #ifdef ENABLE_APPLETALK
@@ -377,7 +379,6 @@ main(argc, argv)
 				if (argc < 2)
 					errx(1, "'%s' requires argument",
 					    p->c_name);
-
 				(*p->c_func)(argv[1], 0);
 				argc--, argv++;
 			} else
@@ -649,8 +650,8 @@ setifflags(vname, value)
 	} else
 		flags |= value;
 	ifr.ifr_flags = flags;
-	if (IoctlSocket(s, SIOCSIFFLAGS, (caddr_t)&ifr) < 0)
-		err(1, "SIOCSIFFLAGS");
+/*	if (IoctlSocket(s, SIOCSIFFLAGS, (caddr_t)&ifr) < 0)
+		err(1, "SIOCSIFFLAGS");*/
 
 	reset_if_flags = 1;
 }
@@ -1566,7 +1567,7 @@ usage()
 #if !defined(__AROS__)
 	fprintf(stderr,
 	    "usage: ifconfig [ -m ] interface\n%s%s%s%s%s%s%s%s%s%s%s",
-		"\t[ af [ address [ dest_addr ] ] [ up ] [ down ] ",
+		"\t[ af [alias | -alias | delete] [ address [ dest_addr ] ] [ up ] [ down ] ",
 		"[ netmask mask ] ]\n",
 		"\t[ metric n ]\n",
 		"\t[ mtu n ]\n",
@@ -1575,6 +1576,8 @@ usage()
 		"\t[ media mtype ]\n",
 		"\t[ mediaopt mopts ]\n",
 		"\t[ -mediaopt mopts ]\n",
+#else
+		"","","",
 #endif
 		"\t[ link0 | -link0 ] [ link1 | -link1 ] [ link2 | -link2 ]\n",
 		"       ifconfig -a [ -m ] [ -d ] [ -u ] [ af ]\n",

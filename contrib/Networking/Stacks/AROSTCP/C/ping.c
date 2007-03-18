@@ -608,7 +608,7 @@ int main(argc, argv)
 #else
             UNIT_MICROHZ,
 #endif
-            (struct IORequest *)timermsg, 0)) {
+		 (struct IORequest *)timermsg, 0)) {
     (void)fprintf(stderr, "ping: could not open timer device.\n");
     CleanUpExit(1);
   }

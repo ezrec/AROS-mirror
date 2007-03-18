@@ -22,7 +22,7 @@
 
 static int Init(LIBBASETYPEPTR LIBBASE)
 {
-    D(bug("Inside Init func of MiamiPanel.library\n"));
+D(bug("[MiamiPanel] Init()\n"));
     
     return TRUE;
 }
@@ -31,7 +31,7 @@ static int Init(LIBBASETYPEPTR LIBBASE)
 
 static int Expunge(LIBBASETYPEPTR LIBBASE)
 {
-    D(bug("Inside Expunge func of MiamiPanel.library\n"));
+D(bug("[MiamiPanel] Expunge()\n"));
     
     return TRUE;
 }

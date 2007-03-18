@@ -2,7 +2,7 @@
 #define PROTO_BSDSOCKET_H
 
 /*
-    Copyright © 1995-2005, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2007, The AROS Development Team. All rights reserved.
 */
 
 #include <exec/types.h>

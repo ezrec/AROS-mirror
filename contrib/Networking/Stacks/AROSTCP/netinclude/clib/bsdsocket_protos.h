@@ -2,7 +2,7 @@
 #define CLIB_BSDSOCKET_PROTOS_H
 
 /*
-    Copyright © 1995-2005, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2007, The AROS Development Team. All rights reserved.
 */
 
 #include <aros/libcall.h>

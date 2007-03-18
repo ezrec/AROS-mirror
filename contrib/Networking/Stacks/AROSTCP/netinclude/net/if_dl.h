@@ -56,6 +56,8 @@
 /*
  * Structure of a Link-Level sockaddr:
  */
+#include <sys/types.h>
+ 
 struct sockaddr_dl {
 	u_char	sdl_len;	/* Total length of sockaddr */
 	u_char	sdl_family;	/* AF_DLI */

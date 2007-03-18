@@ -35,7 +35,11 @@
 #include <net/if_dl.h>
 #include <sys/cdefs.h>
 #include <sys/param.h>
-#include <err.h>
+#if !defined(__AROS__)
+# include <err.h>
+#else
+# warning "TODO: We dont have <err.h>"
+#endif
 #include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,6 +49,13 @@
 
 void usage(void);
 
+#if defined(__AROS__)
+#include <dos/dos.h>
+#include <proto/exec.h>
+struct Library *SocketBase;
+struct Library *MiamiBase;
+#endif
+
 const char version[] = "$VER: hostname 1.1 (22.12.2005)";
 
 int
@@ -53,6 +64,15 @@ main(int argc, char *argv[])
 	int ch, sflag;
 	char *p, hostname[MAXHOSTNAMELEN];
 
+   if (!(SocketBase = OpenLibrary("bsdsocket.library", 3)))
+   {
+      return RETURN_FAIL;   
+   }
+   if (!(MiamiBase = OpenLibrary("miami.library", 0)))
+   {
+      return RETURN_FAIL;   
+   }
+	
 	sflag = 0;
 	while ((ch = getopt(argc, argv, "s")) != -1)
 		switch (ch) {
@@ -75,11 +95,19 @@ main(int argc, char *argv[])
 #ifdef ENABLE_SETHOSTNAME
 	if (*argv) {
 		if (sethostname(*argv, (int)strlen(*argv)))
+		{
+#if !defined(__AROS__)
 			err(1, "sethostname");
+#endif
+		}
 	} else {
 #endif
 		if (gethostname(hostname, (int)sizeof(hostname)))
+		{
+#if !defined(__AROS__)
 			err(1, "gethostname");
+#endif
+		}
 		if (sflag) {
 			p = strchr(hostname, '.');
 			if (p != NULL)
