@@ -892,7 +892,7 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_pullup()\n"));
 	}
 	space = &m->m_dat[MLEN] - (m->m_data + m->m_len);
 	do {
-		count = min(min(max(len, max_protohdr), space), n->m_len);
+		count = MIN(MIN(MAX(len, max_protohdr), space), n->m_len);
 		bcopy(mtod(n, caddr_t), mtod(m, caddr_t) + m->m_len,
 		  (unsigned)count);
 		len -= count;

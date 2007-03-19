@@ -442,13 +442,13 @@ m_copyback(m0, off, len, cp)
 			n = m_getclr(M_DONTWAIT, m->m_type);
 			if (n == 0)
 				goto out;
-			n->m_len = min(MLEN, len + off);
+			n->m_len = MIN(MLEN, len + off);
 			m->m_next = n;
 		}
 		m = m->m_next;
 	}
 	while (len > 0) {
-		mlen = min (m->m_len - off, len);
+		mlen = MIN(m->m_len - off, len);
 		bcopy(cp, off + mtod(m, caddr_t), (unsigned)mlen);
 		cp += mlen;
 		len -= mlen;
@@ -461,7 +461,7 @@ m_copyback(m0, off, len, cp)
 			n = m_get(M_DONTWAIT, m->m_type);
 			if (n == 0)
 				break;
-			n->m_len = min(MLEN, len);
+			n->m_len = MIN(MLEN, len);
 			m->m_next = n;
 		}
 		m = m->m_next;
@@ -494,7 +494,7 @@ int error;
 	m = m_gethdr(M_DONTWAIT, MT_DATA);
 	if (m == 0)
 		return;
-	m->m_pkthdr.len = m->m_len = min(len, MHLEN);
+	m->m_pkthdr.len = m->m_len = MIN(len, MHLEN);
 	m->m_pkthdr.rcvif = 0;
 	rtm = mtod(m, struct rt_msghdr *);
 	aligned_bzero_const((caddr_t)rtm, sizeof(*rtm)); /*XXX assumes sizeof(*rtm) < MHLEN*/

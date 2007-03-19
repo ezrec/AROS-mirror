@@ -540,7 +540,7 @@ sbreserve(sb, cc)
 	if (cc > sb_max * mbconf.mclbytes / (MSIZE + mbconf.mclbytes))
 		return (0);
 	sb->sb_hiwat = cc;
-	sb->sb_mbmax = min(cc * 2, sb_max);
+	sb->sb_mbmax = MIN(cc * 2, sb_max);
 	if (sb->sb_lowat > sb->sb_hiwat)
 		sb->sb_lowat = sb->sb_hiwat;
 	return (1);

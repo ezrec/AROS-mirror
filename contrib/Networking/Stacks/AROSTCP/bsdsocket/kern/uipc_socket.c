@@ -187,7 +187,7 @@ solisten(so, backlog)
 		so->so_options |= SO_ACCEPTCONN;
 	if (backlog < 0)
 		backlog = 0;
-	so->so_qlimit = min(backlog, SOMAXCONN);
+	so->so_qlimit = MIN(backlog, SOMAXCONN);
 	splx(s);
 	return (0);
 }
@@ -517,19 +517,19 @@ restart:
 					goto nopages;
 				mlen = mbconf.mclbytes;
 #ifdef	MAPPED_MBUFS
-				len = min(mbconf.mclbytes, resid);
+				len = MIN(mbconf.mclbytes, resid);
 #else
 				if (top == 0) {
-					len = min(mbconf.mclbytes - max_hdr, resid);
+					len = MIN(mbconf.mclbytes - max_hdr, resid);
 					m->m_data += max_hdr;
 				} else
-					len = min(mbconf.mclbytes, resid);
+					len = MIN(mbconf.mclbytes, resid);
 #endif
 				space -= mbconf.mclbytes;
 			} else
 			  {
 nopages:
-				len = min(min(mlen, resid), space);
+				len = MIN(MIN(mlen, resid), space);
 				space -= len;
 				/*
 				 * For datagram protocols, leave room
@@ -683,7 +683,7 @@ soreceive(so, paddr, uio, mp0, controlp, flagsp)
 
 		do {
 			uiowrite(mtod(m, caddr_t),
-			    (int) min(uio->uio_resid, m->m_len), uio);
+			    (int) MIN(uio->uio_resid, m->m_len), uio);
 			m = m_free(m);
 		} while (uio->uio_resid && error == 0 && m);
 

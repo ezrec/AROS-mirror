@@ -594,7 +594,7 @@ findpcb:
 	win = sbspace(&so->so_rcv);
 	if (win < 0)
 		win = 0;
-	tp->rcv_wnd = max(win, (int)(tp->rcv_adv - tp->rcv_nxt));
+	tp->rcv_wnd = MAX(win, (int)(tp->rcv_adv - tp->rcv_nxt));
 	}
 
 	switch (tp->t_state) {
@@ -1241,7 +1241,7 @@ trimthenstep6:
 				else if (++tp->t_dupacks == tcprexmtthresh) {
 					tcp_seq onxt = tp->snd_nxt;
 					u_int win =
-					    min(tp->snd_wnd, tp->snd_cwnd) / 2 /
+					    MIN(tp->snd_wnd, tp->snd_cwnd) / 2 /
 						tp->t_maxseg;
 
 					if (win < 2)
@@ -1344,7 +1344,7 @@ process_ACK:
 
 		if (cw > tp->snd_ssthresh)
 			incr = incr * incr / cw;
-		tp->snd_cwnd = min(cw + incr, TCP_MAXWIN<<tp->snd_scale);
+		tp->snd_cwnd = MIN(cw + incr, TCP_MAXWIN<<tp->snd_scale);
 		}
 		if (acked > so->so_snd.sb_cc) {
 			tp->snd_wnd -= so->so_snd.sb_cc;
@@ -1714,7 +1714,7 @@ tcp_dooptions(tp, cp, cnt, ti, to)
 			if (!(ti->ti_flags & TH_SYN))
 				continue;
 			tp->t_flags |= TF_RCVD_SCALE;
-			tp->requested_s_scale = min(cp[2], TCP_MAX_WINSHIFT);
+			tp->requested_s_scale = MIN(cp[2], TCP_MAX_WINSHIFT);
 			break;
 
 		case TCPOPT_TIMESTAMP:
@@ -1960,7 +1960,7 @@ tcp_mss(tp, offer)
 		 * all the option space is used (40bytes).  Otherwise
 		 * funny things may happen in tcp_output.
 		 */
-		offer = max(offer, 64);
+		offer = MAX(offer, 64);
 	taop->tao_mssopt = offer;
 
 #ifdef RTV_MTU	/* if route characteristics exist ... */
@@ -1998,9 +1998,9 @@ tcp_mss(tp, offer)
 	{
 		mss = ifp->if_mtu - sizeof(struct tcpiphdr);
 		if (!in_localaddr(inp->inp_faddr))
-			mss = min(mss, tcp_mssdflt);
+			mss = MIN(mss, tcp_mssdflt);
 	}
-	mss = min(mss, offer);
+	mss = MIN(mss, offer);
 	/*
 	 * maxopd stores the maximum length of data AND options
 	 * in a segment; maxseg is the amount of data in a normal
@@ -2079,7 +2079,7 @@ tcp_mss(tp, offer)
 		 * the slow start threshhold, but set the
 		 * threshold to no less than 2*mss.
 		 */
-		tp->snd_ssthresh = max(2 * mss, rt->rt_rmx.rmx_ssthresh);
+		tp->snd_ssthresh = MAX(2 * mss, rt->rt_rmx.rmx_ssthresh);
 	}
 #endif
 }

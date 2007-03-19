@@ -211,7 +211,7 @@ on1:
 			 * rn_search_m here instead of always
 			 * copying and masking.
 			 */
-			off = min(t->rn_off, matched_off);
+			off = MIN(t->rn_off, matched_off);
 			mstart = maskedKey + off;
 			do {
 				cp2 = mstart;
