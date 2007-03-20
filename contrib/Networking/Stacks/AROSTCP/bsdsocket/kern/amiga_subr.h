@@ -28,24 +28,11 @@
 #endif
 
 #if __SASC
-#warning "TODO: SASC!!!"
 #define _ANSI_SOURCE /* NC */
 /*#if 1*/ /* NC */
 /*
  * Using builtin functions (string.h included in kern/amiga_includes.h)
  */
-
-#if defined(__AROS__)
-#include <sys/param.h>
-
-#define imin(a,b) MIN(a,b)
-#define lmin(a,b) MIN(a,b)
-#define ulmin(a,b) MIN(a,b)
-
-#define imax(a,b) MAX(a,b)
-#define lmax(a,b) MAX(a,b)
-#define ulmax(a,b) MAX(a,b)
-#else
 #define imin(a,b) min(a,b)
 #define MIN(a,b) min(a,b)
 #define lmin(a,b) min(a,b)
@@ -55,7 +42,6 @@
 #define MAX(a,b) max(a,b)
 #define lmax(a,b) max(a,b)
 #define ulmax(a,b) max(a,b)
-#endif
 /*
  * bcopy(), bcmp() and bzero() are defined in string.h
  *
@@ -67,7 +53,6 @@
 #define ovbcopy(a,b,c) memmove(b,a,c)
 
 #else
-#warning "TODO: NOT SASC!!!"
 #ifndef SYS_CDEFS_H
 #include <sys/cdefs.h>
 #endif

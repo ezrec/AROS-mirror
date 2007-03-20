@@ -1,7 +1,7 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-#MM contrib-networking-stacks-arostcp : arostcp-libs-miamipanel
+#MM contrib-networking-stacks-arostcp : arostcp-includes arostcp-libs-miamipanel
 
 contrib-networking-stacks-arostcp : files-copy
 %copy_files_q files="README" \

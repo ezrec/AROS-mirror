@@ -1,30 +1,33 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-INCSUBDIRS :=	arpa \
-		bsdsocket \
-		libraries \
-		net \
-		netinet \
-		sys
+INCLUDES	:= $(wildcard *.h arpa/*.h bsdsocket/*.h clib/*.h defines/*.h libraries/*.h net/*.h netinet/*.h proto/*.h sys/*.h)
+DEST_INCLUDES	:= $(foreach f,$(INCLUDES),$(AROSDIR)/Development/netinclude/$(f))
+DIRS            := $(AROSDIR)/Development/netinclude \
+                   $(AROSDIR)/Development/netinclude/arpa \
+                   $(AROSDIR)/Development/netinclude/bsdsocket \
+                   $(AROSDIR)/Development/netinclude/clib \
+                   $(AROSDIR)/Development/netinclude/defines \
+                   $(AROSDIR)/Development/netinclude/libraries \
+                   $(AROSDIR)/Development/netinclude/net \
+                   $(AROSDIR)/Development/netinclude/netinet \
+                   $(AROSDIR)/Development/netinclude/proto \
+                   $(AROSDIR)/Development/netinclude/sys
 
-INCFILES :=  netdb.h \
-          syslog.h
+#MM- arostcp-includes : arostcp-includes-setup includes-copy
 
-INCLUDES      := $(foreach d,$(INCSUBDIRS),$(wildcard $(d)/*.h)) $(INCFILES)
-DEST_INCLUDES := $(foreach f,$(INCLUDES),$(AROS_INCLUDES)/$(f))
-GEN_INCLUDES  := $(foreach f,$(INCLUDES),$(GENINCDIR)/$(f))
-INCL_DIRS     := $(foreach dir,$(INCSUBDIRS),$(AROS_INCLUDES)/$(dir)) \
-                 $(foreach dir,$(INCSUBDIRS),$(GENINCDIR)/$(dir))
+#MM includes-copy : arostcp-includes
+includes-copy : setup $(DEST_INCLUDES)
+	@$(NOP)
 
-###MM-
-includes-copy : $(DEST_INCLUDES) $(GEN_INCLUDES)
+#MM
+arostcp-includes-setup : $(DIRS)
 
-$(AROS_INCLUDES)/%.h : %.h | $(INCL_DIRS)
+$(DIRS):
+	$(IF) $(TEST) ! -d "$@" ; then $(MKDIR) "$@" ; else $(NOP) ; fi
+
+$(AROSDIR)/Development/netinclude/%.h : %.h
 	@$(CP) $< $@
 
-$(GENINCDIR)/%.h : %.h | $(INCL_DIRS)
+$(AROSDIR)/Development/netinclude/%.def : %.def
 	@$(CP) $< $@
-
-rule_makedirs dirs=$(INCL_DIRS)
-
