@@ -206,7 +206,7 @@ Inputs
 ::
 
      vs = pointer to VSprite to be linked into gel list
-     rp = pointer to RastPort that has an initilized GelsInfo linked
+     rp = pointer to RastPort that has an initialized GelsInfo linked
           to it (see InitGels()).
 
 
@@ -296,9 +296,9 @@ Notes
 
      When allocating using a friend_bitmap bitmap, it is not safe to assume
      anything about the structure of the bitmap data if that friend_bitmap
-     BitMap might not be a standard amiga bitmap (for instance, if the
-     workbench is running on a non-amiga display device, its
-     Screen->RastPort->BitMap won't be in standard amiga format. The
+     BitMap might not be a standard Amiga bitmap (for instance, if the
+     workbench is running on a non-Amiga display device, its
+     Screen->RastPort->BitMap won't be in standard Amiga format. The
      only safe operations to perform on a non-standard BitMap are:
 
          blitting it to another bitmap, which must be either a
@@ -653,7 +653,7 @@ Result
 ~~~~~~
 ::
 
-     TRUE if the operation was succesful, else FALSE
+     TRUE if the operation was successful, else FALSE
      (out of memory)
 
 
@@ -731,7 +731,7 @@ Function
          sequence to whatever these routines cause
 
  INPUT
-     anKey = address of a pointer to the firts AnimOb in the list
+     anKey = address of a pointer to the first AnimOb in the list
              (same address that was passed to AddAnimOb!)
      rp    = pointer to a valid RastPort structure
 
@@ -809,7 +809,7 @@ Inputs
 ::
 
      rp - pointer to a valid RastPort structure with a pointer to
-          the previously initilized AreaInfo structure.
+          the previously initialized AreaInfo structure.
      x  - x-coordinate of the point in the raster
      y  - y-coordinate of the point in the raster
 
@@ -857,9 +857,9 @@ Inputs
 ::
 
      rp - pointer to a valid RastPort structure with a pointer to
-          the previously initilized AreaInfo structure.
-     cx - x coordinate of the centerpoint relative to rastport
-     cy - y coordinate of the centerpoint relative to rastport
+          the previously initialized AreaInfo structure.
+     cx - x coordinate of the center point relative to rastport
+     cy - y coordinate of the center point relative to rastport
      a  - horizontal radius of the ellipse (> 0)
      b  - vertical radius of the ellipse (> 0)
 
@@ -895,7 +895,7 @@ Function
 ::
 
      Process the filled vector buffer. 
-     After the operation the buffer is reinitilized for
+     After the operation the buffer is reinitialized for
      processing of further Area functions.
      Makes use of the raster given by the TmpRas structure that
      is linked to the rastport.
@@ -906,7 +906,7 @@ Inputs
 ::
 
      rp - pointer to a valid RastPort structure with a pointer to
-          the previously initilized AreaInfo structure.
+          the previously initialized AreaInfo structure.
 
 
 
@@ -926,7 +926,7 @@ Bugs
      pixels are missing. This could be due to the way lines are 
      drawn. All lines should be drawn from lower
      y coordinates to higher y coordinates since this is the
-     way the alogrithm calculates lines here. For example, it
+     way the algorithm calculates lines here. For example, it
      might make a difference whether a line is drawn from lower
      to higher y coordinates. Examples for two same lines with
      different layout:
@@ -971,7 +971,7 @@ Inputs
 ::
 
      rp - pointer to a valid RastPort structure with a pointer to
-          the previously initilized AreaInfo structure.
+          the previously initialized AreaInfo structure.
      x  - x-coordinate of the starting-point in the raster
      y  - y-coordinate of the starting-point in the raster
 
@@ -1086,7 +1086,7 @@ Function
 
      Allocates a PalExtra structure and attaches it to the
      given ColorMap. This function must be called prior to palette
-     sharing. The PalExtra structure will be freed bt FreeColorMap().
+     sharing. The PalExtra structure will be freed by FreeColorMap().
 
 
 Inputs
@@ -1206,7 +1206,7 @@ Inputs
 ~~~~~~
 ::
 
-     Pass a BitScaleArgs structure filled with the following args
+     Pass a BitScaleArgs structure filled with the following arguments
      to this function:
        bsa_SrcX, bsa_SrcY - upper left coordinate in source bitmap
        bsa_SrcWidth, bsa_SrcHeight - Width and Height or source bitmap
@@ -1321,7 +1321,7 @@ Inputs
      tempA - If the copy overlaps exactly to the left or right (i.e. the
              scan line addresses overlap), and tempA is non-zero, it
              points to enough chip accessible memory to hold a line of a
-             source for the blit (ie. CHIP RAM). BltBitMap will allocate
+             source for the blit (i.e. CHIP RAM). BltBitMap will allocate
              (and free) the needed TempA if none is provided and one is
              needed.  Blit overlap is determined from the relation of
              the first non-masked planes in the source and destination
@@ -1371,6 +1371,49 @@ Synopsis
           LONG xSize,
           LONG ySize,
           ULONG minterm );
+
+Function
+~~~~~~~~
+::
+
+     Moves a part of a bitmap around or into another bitmaps.
+
+
+Inputs
+~~~~~~
+::
+
+     srcBitMap - Copy from this bitmap.
+     xSrc, ySrc - This is the upper left corner of the area to copy.
+     destRP - Destination RastPort.
+     xDest, yDest - Upper left corner where to place the copy
+     xSize, ySize - The size of the area to copy
+     minterm - How to copy. See BltBitMap() for an explanation.
+
+
+
+Result
+~~~~~~
+::
+
+     TRUE.
+
+
+
+Notes
+~~~~~
+::
+
+     If a special hardware is available, this function will use it.
+
+
+
+See also
+~~~~~~~~
+::
+
+     ClipBlit()
+
 
 
 BltClear
@@ -1443,6 +1486,42 @@ Synopsis
           ULONG minterm,
           PLANEPTR bltMask );
 
+Function
+~~~~~~~~
+::
+
+     Copies a part of a bitmap to another bitmap with using a mask.
+
+
+Inputs
+~~~~~~
+::
+
+     srcBitMap - Copy from this bitmap.
+     xSrc, ySrc - This is the upper left corner of the area to copy.
+     destRP - Destination RastPort.
+     xDest, yDest - Upper left corner where to place the copy
+     xSize, ySize - The size of the area to copy
+     minterm - How to copy. See BltBitMap() for an explanation.
+     bltMask - The mask bitplane must be of the same size as the source bitmap.
+
+
+
+Result
+~~~~~~
+::
+
+     TRUE.
+
+
+
+See also
+~~~~~~~~
+::
+
+     ClipBlit()
+
+
 
 BltPattern
 ==========
@@ -1459,6 +1538,24 @@ Synopsis
           LONG xMax,
           LONG yMax,
           ULONG byteCnt );
+
+Function
+~~~~~~~~
+::
+
+     Blit using drawmode, areafill pattern and mask.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - destination RastPort for blit.
+     mask - Mask bitplane. Set this to NULL for a rectangle.
+     xMin, yMin - upper left corner.
+     xMax, yMax - lower right corner.
+     byteCnt - BytesPerRow for mask.
+
 
 
 BltRastPortBitMap
@@ -1483,9 +1580,28 @@ Function
 ~~~~~~~~
 ::
 
-
      Copies the content of the rast port into the bitmap.
      Takes cliprects into consideration.
+
+
+Inputs
+~~~~~~
+::
+
+     srcRastPort - Copy from this RastPort.
+     xSrc, ySrc - This is the upper left corner of the area to copy.
+     destBitMap - Destination BitMap.
+     xDest, yDest - Upper left corner where to place the copy
+     xSize, ySize - The size of the area to copy
+     minterm - How to copy. See BltBitMap() for an explanation.
+
+
+Notes
+~~~~~
+::
+
+     This functions isn't part of AmigaOS3.1
+
 
 
 BltTemplate
@@ -1504,6 +1620,26 @@ Synopsis
           LONG yDest,
           LONG xSize,
           LONG ySize );
+
+Function
+~~~~~~~~
+::
+
+     Draws the image in the template into the
+     RastPort in the current color and drawing mode.
+
+
+Inputs
+~~~~~~
+::
+
+     source - template bitplane. Should be Word aligned.
+     xSrc - x offset in source plane (0...15).
+     srcMod - BytesPerRow in template mask.
+     destRP - destination RastPort.
+     xDest,yDest - upper left corner of destination.
+     xSize,ySize - size of destination.
+
 
 
 CBump
@@ -1642,6 +1778,13 @@ Synopsis
  UWORD CalcIVG(
           struct View * View,
           struct ViewPort * ViewPort );
+
+Function
+~~~~~~~~
+::
+
+     Calculate the number of blank lines above a ViewPort.
+
 
 Inputs
 ~~~~~~
@@ -2154,6 +2297,20 @@ Synopsis
  void CloseFont(
           struct TextFont * textFont );
 
+Function
+~~~~~~~~
+::
+
+     Close a font.
+
+
+Inputs
+~~~~~~
+::
+
+     font - font pointer from OpenFont() or OpenDiskFont()
+
+
 
 CloseMonitor
 ============
@@ -2200,6 +2357,13 @@ Synopsis
           struct ViewPort * RealViewPort,
           ULONG MonitorID,
           ULONG Flags );
+
+Function
+~~~~~~~~
+::
+
+     Determine the best mode in the MonitorID to coerce RealViewPort to.
+
 
 Inputs
 ~~~~~~
@@ -2351,7 +2515,7 @@ Result
 ::
 
      The layer will show the true contents of the superbitmap that is
-     attatched to it
+     attached to it
 
 
 See also
@@ -2525,6 +2689,15 @@ Synopsis
  void DoCollision(
           struct RastPort * rp );
 
+Function
+~~~~~~~~
+::
+
+     Tests each gel in gel list for boundary and gel-to-gel collisions.
+     If a collision happens the collision handling routine is called.
+     The gel list must be sorted by y,x order.
+
+
 Inputs
 ~~~~~~
 ::
@@ -2544,6 +2717,21 @@ Synopsis
           struct RastPort * rp,
           LONG x,
           LONG y );
+
+Function
+~~~~~~~~
+::
+
+     Draw a line from the current pen position to the given coordinate.
+
+
+Inputs
+~~~~~~
+::
+
+     rp  - destination RastPort.
+     x,y - line end coordinate.
+
 
 Notes
 ~~~~~
@@ -2573,6 +2761,23 @@ Synopsis
           LONG a,
           LONG b );
 
+Function
+~~~~~~~~
+::
+
+     Draw an ellipse
+
+
+Inputs
+~~~~~~
+::
+
+     rp              - destination RastPort
+     xCenter,yCenter - coordinate of centerpoint
+     a               - radius in x direction
+     b               - radius in y direction
+
+
 
 DrawGList
 =========
@@ -2584,6 +2789,21 @@ Synopsis
  void DrawGList(
           struct RastPort * rp,
           struct ViewPort * vp );
+
+Function
+~~~~~~~~
+::
+
+     Process the gel list, draw VSprites and Bobs.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - RastPort where Bobs will be drawn
+     vp - ViewPort for VSprites
+
 
 
 EraseRect
@@ -2599,6 +2819,24 @@ Synopsis
           LONG yMin,
           LONG xMax,
           LONG yMax );
+
+Function
+~~~~~~~~
+::
+
+     Fill a rectangular area with the current BackFill hook.
+     If layered the BackFill hook is used.
+     If non-layered the region is cleared.
+
+
+Inputs
+~~~~~~
+::
+
+     rp        - destination RastPort
+     xMin,yMin - upper left corner
+     xMax,YMax - lower right corner
+
 
 
 ExtendFont
@@ -2626,8 +2864,8 @@ Inputs
 ::
 
      font            - font to check for an extension.
-     fontTags        - tags to buil the TextFontExtesion from if it doesn't exist.
-                       If a NULL pointer is given, ExtendFont will alocate default tags.
+     fontTags        - tags to build the TextFontExtension from if it doesn't exist.
+                       If a NULL pointer is given, ExtendFont will allocate default tags.
 
 Result
 ~~~~~~
@@ -2697,6 +2935,13 @@ Synopsis
  DisplayInfoHandle FindDisplayInfo(
           ULONG ID );
 
+Function
+~~~~~~~~
+::
+
+     Search for a DisplayInfo which matches the ID key.
+
+
 Inputs
 ~~~~~~
 ::
@@ -2732,6 +2977,31 @@ Synopsis
           ULONG mode,
           LONG x,
           LONG y );
+
+Function
+~~~~~~~~
+::
+
+     Flood fill a RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     rp   - destination RastPort
+     mode - 0: fill adjacent pixels which don't have color of OPen.
+            1: fill adjacent pixels which have the same pen as of coordinate x,y.
+     x,y  - coordinate to start filling.
+
+
+Notes
+~~~~~
+::
+
+     The RastPort must have a TmpRas raster whose size is as large as of
+     that of the RastPort.
+
 
 
 FontExtent
@@ -2845,7 +3115,7 @@ Function
 ~~~~~~~~
 ::
 
-     Corretly frees a ColorMap structure and associated structures
+     Correctly frees a ColorMap structure and associated structures
      that have previously been allocated via GetColorMap().
 
 
@@ -2853,7 +3123,7 @@ Inputs
 ~~~~~~
 ::
 
-     colormap - pointer to the ColorMap strcuture previously
+     colormap - pointer to the ColorMap structure previously
                 allocated via GetColorMap().
 
 
@@ -2988,7 +3258,7 @@ Function
 ~~~~~~~~
 ::
 
-     DeAllocate all buffers for a whole AnimOb. In particular this
+     Deallocate all buffers for a whole AnimOb. In particular this
      means getting buffers for
      - BorderLine
      - SaveBuffer
@@ -3168,6 +3438,13 @@ Synopsis
  void FreeSpriteData(
           struct ExtSprite * extsp );
 
+Function
+~~~~~~~~
+::
+
+     Free sprite data allocated by AllocSpriteData().
+
+
 Inputs
 ~~~~~~
 ::
@@ -3221,6 +3498,20 @@ Synopsis
  ULONG GetAPen(
           struct RastPort * rp );
 
+Function
+~~~~~~~~
+::
+
+     Return the current value of the A pen for the rastport.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - RastPort.
+
+
 
 GetBPen
 =======
@@ -3231,6 +3522,20 @@ Synopsis
 
  ULONG GetBPen(
           struct RastPort * rp );
+
+Function
+~~~~~~~~
+::
+
+     Return the current value of the B pen for the rastport.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - RastPort.
+
 
 
 GetBitMapAttr
@@ -3291,7 +3596,7 @@ Function
 ~~~~~~~~
 ::
 
-     Allocates, initilizes a ColorMap structure and passes back the
+     Allocates, initializes a ColorMap structure and passes back the
      pointer. This enables you to do calls to SetRGB4() and LoadRGB4()
      to load colors for a view port.
      The ColorTable pointer in the ColorMap structure points to a hardware
@@ -3311,7 +3616,7 @@ Result
 
      NULL  - not enough memory could be allocated for the necessary
              data structures
-     other - pointer to a initilized ColorMap structure that may be
+     other - pointer to a initialized ColorMap structure that may be
              stored into the ViewPort.ColorMap pointer.
 
 
@@ -3332,6 +3637,20 @@ Synopsis
 
  ULONG GetDrMd(
           struct RastPort * rp );
+
+Function
+~~~~~~~~
+::
+
+     Get drawmode value of RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - RastPort
+
 
 
 GetExtSpriteA
@@ -3433,6 +3752,20 @@ Synopsis
 
  ULONG GetOutlinePen(
           struct RastPort * rp );
+
+Function
+~~~~~~~~
+::
+
+     Get the outline pen value for a RastPort.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - RastPort.
+
 
 
 GetRGB32
@@ -3563,8 +3896,8 @@ Function
              RPTAG_DrMd              Drawing mode (graphics/rastport.h)
              RPTAG_OutlinePen        Area Outline pen
              RPTAG_WriteMask         Bit Mask for writing
-             RPTAG_MaxPen            Maximum oen to render (see SetMaxPen())
-             RPTAG_DrawBounds        Determine the area that will be redered
+             RPTAG_MaxPen            Maximum pen to render (see SetMaxPen())
+             RPTAG_DrawBounds        Determine the area that will be rendered
                                      into by rendering commands. Can be used
                                      to optimize window refresh. Pass a pointer
                                      to a rectangle in the ti_Data field. On
@@ -3663,7 +3996,7 @@ Result
           no further sprites are available (pick was -1). -1 will
           also be found in the SimpleSprite structure.
      0-7: The sprite number of your allocated sprite. The number will
-          also be foung in the SimpleSprite structure.
+          also be found in the SimpleSprite structure.
 
 
 Bugs
@@ -3739,8 +4072,8 @@ Function
 
    Associate a special graphics extended data structure with another
    structure via the other structure's pointer. Later, when you call
-   GfxLookUp() with the other structure's pointer you may recieve
-   the pointer to this special graphics extended data strcuture, if it
+   GfxLookUp() with the other structure's pointer you may receive
+   the pointer to this special graphics extended data structure, if it
    is available
 
 
@@ -3749,7 +4082,7 @@ Inputs
 ::
 
    pointer = a pointer to a data structure
-   node = an ExtendedNode strcuture to associate with the pointer
+   node = an ExtendedNode structure to associate with the pointer
 
 
 Result
@@ -3834,7 +4167,7 @@ Function
 ::
 
    Finds a special graphics extended data structure (if an) associated
-   with the pointer to a data structure (eg: ViewExtra associated with
+   with the pointer to a data structure (e.g.: ViewExtra associated with
    a View structure).
 
 
@@ -3884,7 +4217,7 @@ Inputs
 ~~~~~~
 ::
 
-   node_type = the type of garphics extended data structure to allocate.
+   node_type = the type of graphics extended data structure to allocate.
                (see gfxnodes.h for identifier definitions.)
 
 
@@ -3920,7 +4253,7 @@ Function
 ~~~~~~~~
 ::
 
-     This function initilizes an areainfo structure. The size of the
+     This function initializes an areainfo structure. The size of the
      passed pointer to the buffer should be 5 times as large as
      maxvectors (in bytes).
 
@@ -3929,7 +4262,7 @@ Inputs
 ~~~~~~
 ::
 
-     areainfo   - pointer to AreaInfo strcuture to be initilized
+     areainfo   - pointer to AreaInfo structure to be initialized
      buffer     - pointer to free memory to collect vectors
      maxvectors - maximum number of vectors the buffer can hold.
 
@@ -3938,7 +4271,7 @@ Result
 ~~~~~~
 ::
 
-     Areainfo structure initilized such that it will hold the vectors
+     Areainfo structure initialized such that it will hold the vectors
      created by AreaMove, AreaDraw and AreaEllipse (AreaCircle).
 
 
@@ -4014,7 +4347,7 @@ Function
 ~~~~~~~~
 ::
 
-     For every component's sequence initilize the Masks by calling
+     For every component's sequence initialize the Masks by calling
      InitMasks()
 
 
@@ -4051,7 +4384,7 @@ Function
 
      Makes the two VSprites head and tail of the gel list that is connected
      to the GelsInfo structure. The two VSprites are linked together and
-     their x and y coordinates are initilized such that the serve as the
+     their x and y coordinates are initialized such that the serve as the
      keystones of the list.
 
 
@@ -4061,7 +4394,7 @@ Inputs
 
      head  - pointer to the VSprite structure to be used as head of the gel list
      tail  - pointer to the VSprite structure to be used as tail of the gel list
-     GInfo - pointer to the GelsInfo structure to be initilized
+     GInfo - pointer to the GelsInfo structure to be initialized
 
 
 See also
@@ -4173,7 +4506,7 @@ Result
 ~~~~~~
 ::
 
-     TRUE if the RastPort was successfuly initialized and FALSE
+     TRUE if the RastPort was successfully initialized and FALSE
      otherwise.
 
 
@@ -4204,7 +4537,7 @@ Function
 ~~~~~~~~
 ::
 
-     Initializes a TmpRas structure. The user has to conect the
+     Initializes a TmpRas structure. The user has to connect the
      TmpRas structure to the rastport.
      Some routines need extra memory in order to be able to operate
      properly.
@@ -4223,7 +4556,7 @@ Result
 ~~~~~~
 ::
 
-     Properly initilized TmpRas struture to link to RastPort structure
+     Properly initialized TmpRas structure to link to RastPort structure
      for use with functions like Flood(), Text() and AreaEnd().
 
 
@@ -4329,8 +4662,8 @@ Inputs
 ::
 
      region1 - pointer to a region structure
-     x       - The point's 'x' coord
-     y       - The point's 'y' coord
+     x       - The point's 'x' coordinate
+     y       - The point's 'y' coordinate
 
 
 Result
@@ -4338,6 +4671,13 @@ Result
 ::
 
      TRUE if the point is contained, FALSE otherwise
+
+
+Notes
+~~~~~
+::
+
+     This function isn't available in AmigaOS.
 
 
 See also
@@ -4362,10 +4702,10 @@ Function
 ~~~~~~~~
 ::
 
-     This function permits late initalization
-     of gfx (After dos but *before* graphics is used, ie.
+     This function permits late initialization
+     of Graphics (After DOS but *before* Graphics is used, i.e.
      before the first view/screen has been set up).
-     Can be used to load gfx hidds from disk and initializing it.
+     Can be used to load Graphics HIDDs from disk and initializing it.
      The function only passes the data through to the
      driver.
 
@@ -4403,6 +4743,32 @@ Synopsis
           struct ViewPort * vp,
           const ULONG     * table );
 
+Function
+~~~~~~~~
+::
+
+     Load RGB color values from table.
+
+
+Inputs
+~~~~~~
+::
+
+     vp    - ViewPort
+     table - pointer to table of records
+             1 Word with the number of colors to load
+             1 Word with the first color to be loaded.
+             3 Longwords representing a left justified 32 bit RGB triplet.
+             The list is terminated by a count value of 0.
+
+Example
+~~~~~~~
+::
+
+     ULONG table[] = { 1l << 16 + 0 , 0xffffffff , 0 , 0 , 0}
+     ULONG table[] = { 256l << 16 + 0 , r1 , g1 , b1 , r2 , g2 , b2 , ..... 0}
+
+
 
 LoadRGB4
 ========
@@ -4415,6 +4781,33 @@ Synopsis
           struct ViewPort * vp,
           UWORD           * colors,
           LONG count );
+
+Function
+~~~~~~~~
+::
+
+     Load RGB color values from table.
+
+
+Inputs
+~~~~~~
+::
+
+     vp     - ViewPort
+     colors - pointer to table of RGB values (0...15)
+                     background--  0x0RGB
+                     color1    --  0x0RGB
+                     color2    --  0x0RGB
+                     ...
+     count   - number of UWORDs in the table
+     
+
+See also
+~~~~~~~~
+::
+
+     LoadRGB32()
+
 
 
 LoadView
@@ -4566,7 +4959,7 @@ Function
 ::
 
      Tells whether mouse coordinates gotten from the below system are
-     relative or absolut.
+     relative or absolute.
 
 
 Result
@@ -4588,7 +4981,7 @@ Bugs
 ::
 
      There should not be need for such a function.
-     All coords gotten shoul be relative.
+     All coordinates gotten should be relative.
      This is however difficult to do
      with HIDDs base on window systems and
      we use one window per screen.
@@ -4605,6 +4998,21 @@ Synopsis
           struct RastPort * rp,
           WORD x,
           WORD y );
+
+Function
+~~~~~~~~
+::
+
+     Move the drawing pen to (x,y).
+
+
+Inputs
+~~~~~~
+::
+
+     rp  - RastPort
+     x,y - target coordinate
+
 
 
 MoveSprite
@@ -4750,6 +5158,13 @@ Synopsis
  ULONG NextDisplayInfo(
           ULONG last_ID );
 
+Function
+~~~~~~~~
+::
+
+     Go to next entry in the DisplayInfo database.
+
+
 Inputs
 ~~~~~~
 ::
@@ -4787,6 +5202,43 @@ Synopsis
           ULONG g,
           ULONG b,
           struct TagItem * tags );
+
+Function
+~~~~~~~~
+::
+
+     Try to find a pen which matches the given parameters.
+
+
+Inputs
+~~~~~~
+::
+
+     cm   - colormap
+     r    - red value (32 bit left justified fraction)
+     g    - green value (32 bit left justified fraction)
+     b    - blue value (32 bit left justified fraction)
+     tags - tagarray
+            OBP_Precision - PRECISION_GUI, PRECISION_ICON, PRECISION_IMAGE or PRECISION_EXACT.
+                            Defaults to PRECISION_IMAGE.
+
+            OBP_FailIfBad - if TRUE ObtainBestPen returns an error when there
+                            is no color in the given tolerance.
+
+
+Result
+~~~~~~
+::
+
+     A pen value or -1 if no pen could be found.
+
+
+Notes
+~~~~~
+::
+
+     You must call ReleasePen() when you're done with the pen.
+
 
 
 ObtainPen
@@ -4826,7 +5278,7 @@ Inputs
      flags - PEN_EXCLUSIVE - for exclusive access to a color register;
                            default is shared access
                            
-             PEN_NO_SETCOLOR - will not change the rgb values
+             PEN_NO_SETCOLOR - will not change the RGB values
                                for the selected pen.
 
 
@@ -4834,7 +5286,7 @@ Result
 ~~~~~~
 ::
 
-     n  = allocted pen number, -1 for failure
+     n  = allocated pen number, -1 for failure
 
 
 Notes
@@ -4842,7 +5294,7 @@ Notes
 ::
 
      Shared palette entries should not be changed (via SetRGB??())
-     since other aapplications might use the same color.
+     since other applications might use the same color.
      A PaletteExtra structure must have been attached to the 
      ColorMap prior to calling this function (AttachPalExtra()). 
 
@@ -4857,6 +5309,34 @@ Synopsis
 
  struct TextFont * OpenFont(
           struct TextAttr * textAttr );
+
+Function
+~~~~~~~~
+::
+
+     Searches for a text font which best matches the specified attributes.
+
+
+Inputs
+~~~~~~
+::
+
+     textAttr - pointer to a TextAttr or TTextAttr font description.
+
+
+Result
+~~~~~~
+::
+
+     Returns NULL if the font can't be found.
+
+
+See also
+~~~~~~~~
+::
+
+     CloseFont() SetFont() diskfont.library/OpenDiskFont()
+
 
 
 OpenMonitor
@@ -4925,7 +5405,7 @@ Result
 ~~~~~~
 ::
 
-     TRUE if the operation was succesful, else FALSE
+     TRUE if the operation was successful, else FALSE
      (out of memory)
 
 
@@ -5019,7 +5499,7 @@ Result
 ~~~~~~
 ::
 
-     TRUE if the operation was succesful, else FALSE
+     TRUE if the operation was successful, else FALSE
      (out of memory)
 
 
@@ -5085,8 +5565,8 @@ Function
 ~~~~~~~~
 ::
 
-     The blitter is allocated for excludive use by the calling task.
-     This function returns immediatedly if no other task is using
+     The blitter is allocated for exclusive use by the calling task.
+     This function returns immediately if no other task is using
      the blitter right now or if no blits are in the queues (QBlit(),
      QBSBlit()). Otherwise the function will block until the blitter
      can be accessed.
@@ -5115,6 +5595,23 @@ Synopsis
           LONG count,
           WORD            * polyTable );
 
+Function
+~~~~~~~~
+::
+
+     Draw connected lines from an array. The first line is drawn
+     from the current pen position to the first entry in the array.
+
+
+Inputs
+~~~~~~
+::
+
+     rp        - RastPort
+     count     - number of x,y pairs
+     polyTable - array of x,y pairs
+
+
 
 QBSBlit
 =======
@@ -5130,7 +5627,7 @@ Function
 ~~~~~~~~
 ::
 
-     Queus a request for a beam-synchronized  blit.
+     Queues a request for a beam-synchronized  blit.
 
 
 Inputs
@@ -5186,7 +5683,7 @@ Function
 ~~~~~~~~
 ::
 
-     Queus a request for a blit. This request is queued at the end
+     Queues a request for a blit. This request is queued at the end
      of the list.
 
 
@@ -5241,6 +5738,21 @@ Synopsis
           LONG x,
           LONG y );
 
+Function
+~~~~~~~~
+::
+
+     Read the pen number of the given x,y coordinate.
+
+
+Inputs
+~~~~~~
+::
+
+     rp  - RastPort
+     x,y - Coordinate
+
+
 
 ReadPixelArray8
 ===============
@@ -5258,6 +5770,44 @@ Synopsis
           UBYTE * array,
           struct RastPort * temprp );
 
+Function
+~~~~~~~~
+::
+
+     Read the pen numbers of a rectangular area into an array.
+
+
+Inputs
+~~~~~~
+::
+
+     rp            - RastPort
+     xstart,ystart - starting point
+     xstop,ystop   - stopping point
+     array         - array where pens are stored. Allocate at least
+                     (((width+15)>>4)<<4)*(ystop-ystart+1) bytes.
+     temprp        - temporary RastPort; copy of rp with
+                     - Layers == NULL
+                     - temprp->BitMap with Rows set to 1,
+                     - temprp->BytesPerRow set to (((width+15)>>4)<<1),
+                       and temporary memory allocated for 
+                       temprp->BitMap->Planes[])
+
+
+Result
+~~~~~~
+::
+
+     The number of pixels read.
+
+
+Notes
+~~~~~
+::
+
+     This function doesn't make sense on true-/hicolor rastports.
+
+
 
 ReadPixelLine8
 ==============
@@ -5274,6 +5824,39 @@ Synopsis
           UBYTE           * array,
           struct RastPort * tempRP );
 
+Function
+~~~~~~~~
+::
+
+     Read the pen numbers of a horizontal line into an array.
+
+
+Inputs
+~~~~~~
+::
+
+     rp            - RastPort
+     xstart,ystart - coordinate
+     width         - count of pixels to read (must be positive).
+     array         - array for storing of the pen numbers. Size must be
+                     at least ((width+15)>>4)<<4 bytes.
+     tempRP        - see ReadPixelArray8().
+
+
+Result
+~~~~~~
+::
+
+     Number of pixels read.
+
+
+Notes
+~~~~~
+::
+
+     This function doesn't make sense on true-/hicolor rastports.
+
+
 
 RectFill
 ========
@@ -5288,6 +5871,24 @@ Synopsis
           LONG yMin,
           LONG xMax,
           LONG yMax );
+
+Function
+~~~~~~~~
+::
+
+     Fills a rectangular area with the current pens, drawing mode
+     and areafill pattern. If no areafill pattern is defined fill
+     with foreground pen.
+
+
+Inputs
+~~~~~~
+::
+
+     rp - RastPort
+     xMin,yMin - upper left corner
+     xMax,yMax - lower right corner
+
 
 
 ReleasePen
@@ -5381,6 +5982,23 @@ Synopsis
           struct Bob * bob,
           struct RastPort * rp,
           struct ViewPort * vp );
+
+Function
+~~~~~~~~
+::
+
+     Remove a Bob immediately from RastPort and gel list.
+
+
+
+Inputs
+~~~~~~
+::
+
+     bob - Bob
+     rp  - RastPort
+     vp  - ViewPort
+
 
 
 RemVSprite
@@ -5665,6 +6283,21 @@ Synopsis
           struct RastPort * rp,
           ULONG pen );
 
+Function
+~~~~~~~~
+::
+
+     Set primary pen for rastport
+
+
+Inputs
+~~~~~~
+::
+
+     rp  - RastPort
+     pen - pen number (0...255)
+
+
 
 SetBPen
 =======
@@ -5676,6 +6309,21 @@ Synopsis
  void SetBPen(
           struct RastPort * rp,
           ULONG pen );
+
+Function
+~~~~~~~~
+::
+
+     Set secondary pen for rastport.
+
+
+Inputs
+~~~~~~
+::
+
+     rp  - RastPort
+     pen - pen number (0...255)
+
 
 
 SetChipRev
@@ -5728,7 +6376,7 @@ Inputs
 ~~~~~~
 ::
 
-     num     = number of collsion vector
+     num     = number of collision vector
      routine = pointer to user's collision routine
      GInfo   = pointer to a GelsInfo structure
 
@@ -5751,6 +6399,21 @@ Synopsis
  void SetDrMd(
           struct RastPort * rp,
           ULONG drawMode );
+
+Function
+~~~~~~~~
+::
+
+     Set the drawing mode for lines, fills and text.
+
+
+Inputs
+~~~~~~
+::
+
+     rp       - RastPort
+     drawMode - see graphics/rastport.h for possible flags.
+
 
 
 SetFont
@@ -5802,7 +6465,7 @@ Function
 ~~~~~~~~
 ::
 
-     Sets the supplied screen as the frontmost, eg. shows it in the display.
+     Sets the supplied screen as the frontmost, e.g. shows it in the display.
 
 
 Inputs
@@ -5820,7 +6483,7 @@ Result
 ~~~~~~
 ::
 
-     success - TRUE if successfull, FALSE otherwize.
+     success - TRUE if successful, FALSE otherwise.
 
 
 Notes
@@ -5882,6 +6545,28 @@ Synopsis
  ULONG SetOutlinePen(
           struct RastPort * rp,
           ULONG pen );
+
+Function
+~~~~~~~~
+::
+
+     Set the outline pen and turn on area outline mode.
+
+
+Inputs
+~~~~~~
+::
+
+     rp  - RastPort
+     pen - pen
+
+
+Result
+~~~~~~
+::
+
+     Previous outline pen.
+
 
 
 SetPointerPos
@@ -6031,7 +6716,7 @@ Result
 ::
 
      Store the (r,g,b) triplet at index n in the ColorMap structure.
-     The chnages will not be immediately displayed. Use this function
+     The changes will not be immediately displayed. Use this function
      before linking the ColorMap to a ViewPort. Do not access the entries
      in the ColorTable yourself, as the ColorTable is subject to change.
 
@@ -6136,7 +6821,7 @@ Result
 ::
 
      Store the (r,g,b) triplet at index n in the ColorMap structure.
-     The chnages will not be immediately displayed. Use this function
+     The changes will not be immediately displayed. Use this function
      before linking the ColorMap to a ViewPort.
 
 
@@ -6220,6 +6905,38 @@ Synopsis
  void SetRPAttrsA(
           struct RastPort * rp,
           struct TagItem  * tags );
+
+Function
+~~~~~~~~
+::
+
+     Modify rastport with values from a taglist.
+
+
+Inputs
+~~~~~~
+::
+
+     rp   - RastPort
+     tags - tagarray
+            - RPTAG_Font:       text font
+            - RPTAG_APen:       primary pen
+            - RPTAG_BPen:       secondary pen
+            - RPTAG_DrMd:       draw mode
+            - RPTAG_OutlinePen: outline pen
+            - RPTAG_WriteMask:  bit mask
+            - RPTAG_MaxPen:     see SetMaxPen()
+            
+            AROS extensions
+            - RPTAG_DrawBounds: 
+            - RPTAG_FgColor:
+            - RPTAG_BgColor:
+            - RPTAG_PatternOriginX:
+            - RPTAG_PatternOriginY:
+            - RPTAG_ClipRectangle:       (struct Rectangle *)
+            - RPTAG_ClipRectangleFlags:  RPCRF_RELRIGHT | RPCRF_RELBOTTOM
+            - RPTAG_RemapColorFonts:     (BOOL)
+
 
 
 SetRast
@@ -6529,7 +7246,7 @@ Result
 ::
 
      The superbitmap will be synchronized with the visible part. The
-     superbitmap attatched to the layer will be up-to-date with what's
+     superbitmap attached to the layer will be up-to-date with what's
      really in the layer.
 
 
@@ -6553,6 +7270,23 @@ Synopsis
           CONST_STRPTR string,
           ULONG count );
 
+Function
+~~~~~~~~
+::
+
+     Write text to the rastport at the current position.
+     The current position is updated to a position after the text.
+
+
+Inputs
+~~~~~~
+::
+
+     rp     - RastPort
+     string - string to print
+     count  - number of characters to print
+
+
 
 TextExtent
 ==========
@@ -6566,6 +7300,39 @@ Synopsis
           CONST_STRPTR string,
           ULONG count,
           struct TextExtent * textExtent );
+
+Function
+~~~~~~~~
+::
+
+     This function determines the metric of the space
+     that a text string would render into.
+
+
+Inputs
+~~~~~~
+::
+
+     rp -     RastPort
+     string - address of string
+     count -  number of characters
+     textExtent - storing place for the result
+                  te_Width  - same as TextLength() result: the rp_cp_x
+                              advance that rendering this text would cause.
+                  te_Height - same as tf_YSize.  The height of the
+                              font.
+                  te_Extent.MinX - the offset to the left side of the
+                                   rectangle this would render into.  Often zero.
+                  te_Extent.MinY - same as -tf_Baseline.  The offset
+                                   from the baseline to the top of the rectangle
+                                   this would render into.
+                  te_Extent.MaxX - the offset of the left side of the
+                                   rectangle this would render into.  Often the
+                                   same as te_Width-1.
+                  te_Extent.MaxY - same as tf_YSize-tf_Baseline-1.
+                                   The offset from the baseline to the bottom of
+                                   the rectangle this would render into.
+
 
 
 TextFit
@@ -6597,7 +7364,7 @@ Inputs
 ~~~~~~
 ::
 
-     rp - Use the settings in this RastPort (eg. Font)
+     rp - Use the settings in this RastPort (e.g. Font)
      string - Use this string
      strLen - The length of the string
      textExtent - The size actually occupied will be returned here
@@ -6641,6 +7408,43 @@ Synopsis
           struct RastPort * rp,
           CONST_STRPTR string,
           ULONG count );
+
+Function
+~~~~~~~~
+::
+
+     Determines the length of a string in pixels.
+     
+
+Inputs
+~~~~~~
+::
+
+     rp     - RastPort
+     string - address of string
+     count  - number of characters of string
+
+
+Result
+~~~~~~
+::
+
+     Length of string in pixels.
+
+
+Notes
+~~~~~
+::
+
+     Use the newer TextExtent() to get more information.
+
+
+See also
+~~~~~~~~
+::
+
+     Text() TextExtend()
+
 
 
 UCopperListInit
@@ -6702,7 +7506,7 @@ Function
 ~~~~~~~~
 ::
 
-     Unlocks a prevously locked layer for access by other applications
+     Unlocks a previously locked layer for access by other applications
      or intuition itself.
      If a task has locked a layer multiple times it must unlock it
      as many times as well as locks nest.
@@ -6927,6 +7731,26 @@ Synopsis
           UBYTE           * array,
           LONG bytesperrow );
 
+Function
+~~~~~~~~
+::
+
+     Write a rectangular region of pen values into a rastport.
+
+
+Inputs
+~~~~~~
+::
+
+     rp            - destination RastPort
+     xstart,ystart - starting point
+     xstop,ystop   - stopping point
+     array         - array with pen values
+     bytesperrow   - The number of bytes per row in the source array.
+                     This should be at least as large as the number of pixels
+                     being written per line.
+
+
 
 WritePixel
 ==========
@@ -6939,6 +7763,30 @@ Synopsis
           struct RastPort * rp,
           LONG x,
           LONG y );
+
+Function
+~~~~~~~~
+::
+
+     Change pen number of a pixel at given coordinate.
+     The pixel is drawn with the primary (A) pen.
+
+
+Inputs
+~~~~~~
+::
+
+     rp  - destination RastPort
+     x,y - coordinate
+
+
+Result
+~~~~~~
+::
+
+      0: pixel could be written
+     -1: coordinate was outside rastport
+
 
 
 WritePixelArray8
@@ -6957,6 +7805,38 @@ Synopsis
           UBYTE           * array,
           struct RastPort * temprp );
 
+Function
+~~~~~~~~
+::
+
+     Write an array of pens into a rectangular area.
+
+
+Inputs
+~~~~~~
+::
+
+     rp            - destination RastPort
+     xstart,ystart - starting point
+     xstop,ystop   - stopping point
+     array         - array of pen values. Size must be at least
+                     (((width+15)>>4)<<4)*(ystop-ystart+1) bytes.
+     temprp        - temporary rastport
+                     (copy of rp with Layer set to NULL,
+                     temporary memory allocated for
+                     temprp->BitMap with Rows set to 1,
+                     temprp->BitMap with BytesPerRow set to ((width+15)>>4)<<1,
+                     and temporary memory allocated for
+                     temprp->BitMap->Planes[])
+
+
+Result
+~~~~~~
+::
+
+     Number of plotted pixels.
+
+
 
 WritePixelLine8
 ===============
@@ -6972,6 +7852,38 @@ Synopsis
           ULONG width,
           UBYTE * array,
           struct RastPort * tempRP );
+
+Function
+~~~~~~~~
+::
+
+     Draw a horizontal line from an array of pens.
+
+
+Inputs
+~~~~~~
+::
+
+     rp            - destination RastPort
+     xstart,ystart - start coordinate of line
+     width         - count of pixels to write (must be positive)
+     array         - array of pen values. Allocate at least
+                     ((width+15)>>4)<<4 bytes.
+     tempRP        - temporary rastport
+                     (copy of rp with Layer set to NULL,
+                     temporary memory allocated for
+                     temprp->BitMap with Rows set to 1,
+                     temprp->BitMap BytesPerRow == ((width+15)>>4)<<1,
+                     and temporary memory allocated for
+                     temprp->BitMap->Planes[])
+
+
+Result
+~~~~~~
+::
+
+     Number of plotted pixels.
+
 
 
 XorRectRegion
@@ -7005,7 +7917,7 @@ Result
 ~~~~~~
 ::
 
-     TRUE if the operation was succesful, else FALSE
+     TRUE if the operation was successful, else FALSE
      (out of memory)
 
 
@@ -7106,7 +8018,7 @@ Result
 ~~~~~~
 ::
 
-     TRUE if the operation was succesful,
+     TRUE if the operation was successful,
      FALSE otherwise (out of memory)
 
 
