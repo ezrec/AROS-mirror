@@ -41,10 +41,9 @@ recomendations can be highlited.
     used by applications and the effort required to implement it is
     substantial.  
     
-    Current status: The most of AmigaOS 3.1 API was implemented (missing 
-    hardware Amiga parts like lowlevel.lib, card.device, gameport, audio.device 
-    which are not implemented or was replaced), and even superceeded in some 
-    parts. Although, it needs a good bugfixing work done.
+    Current status: Most of the AmigaOS 3.1 API was implemented and even superceeded in some 
+    parts. (Not that missing hardware Amiga parts like lowlevel.lib, card.device, gameport, audio.device 
+    have not been implemented or been replaced). Although, it needs a good bugfixing work done.
 
 
 2.  Partial AmigaOS 3.5 and 3.9 API compatibility. We choose the parts that 
@@ -75,7 +74,7 @@ recomendations can be highlited.
 
 + Missing are: 
 
-  - Overscan(FIXME:not really needed)
+  - Overscan (FIXME:not really needed)
   - Palette (FIXME:not really needed)
   - Pointer 
   - Printer (absent)
@@ -87,9 +86,9 @@ recomendations can be highlited.
     should be at least one driver for each mandatory port. 
     
     Current status: Currently AHI is ported, and there`s some drivers (a few)
-    for i386-port. Applications is in development, madahi and mp3 player are 
-    available). (to clear out - must those applications code be included to 
-    the system or just available, or that isn`t necessary).
+    for i386-port. Applications are in development; Madahi and MP3 player are 
+    available). (FIXME: to clear out - must those applications code be included to 
+    the system or just made available, or isn`t that necessary?).
         
 6.  Networking support. This includes a TCP/IP-stack and some basic
     applications like email and SSH clients, and also a *simple* web browser.
@@ -117,16 +116,16 @@ recomendations can be highlited.
     but some GNU tools are still missing, so the self-compiling isn`t possible
     at the moment.
 
-+ Missing are: (Fixme)
-
-    - GNU AWK (GAWK) or other awks
-    - Python 2.2.1+ (an old port of python is available though)
-    - Bison
-    - Flex
-    - pngtopnm and ppmtoilbm (part of the netpbm package)
-    - Autoconf
-    - Automake
-    - Common unix utilities like cp, mv, sort, uniq, head, ...
++ Missing are: (Fixme) 
+ 
+  - GNU AWK (GAWK) or other awks
+  - Python 2.2.1+ (an old port of python is available though)
+  - Bison
+  - Flex
+  - pngtopnm and ppmtoilbm (part of the netpbm package)
+  - Autoconf
+  - Automake
+  - Common unix utilities like cp, mv, sort, uniq, head, ...
     
 8.  Comprehensive documentation for developers. This includes complete reference
     manuals over all libraries, devices, classes and development tools and also
@@ -159,7 +158,7 @@ recomendations can be highlited.
     yet. There`s still lot of unfixed bugs, but increasing users activity looks 
     promising. Bug hunting and accounting procedures and services are wanted.
     
-Overall Status 
+Overall Status
 <to be done>
 
 Recomendations

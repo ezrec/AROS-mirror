@@ -2,19 +2,18 @@
 AROS 1.0 roadmap
 ================
 
-:Authors:   Adam Chodorowski, Sergey Mineychev
+:Authors:   Adam Chodorowski, Sergey Mineychev, William Ouwehand (NL)
 :Copyright: Copyright Š 2003, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 
 :Abstract:  
-    This is a roadmap intended to outline the requirements that need to be
-    fullfilled before AROS 1.0 can be released. It is *not* meant to force
-    developers to work on certain things (since it's not possible in an open
-    source project anyway) but should rather be seen as a recommendation
-    where we would like people to focus their efforts. Hopefully, this will
-    help organize the development effort and make us all work more in the
-    same direction. 
+    Deze roadmap bevat de eisen waaraan een AROS versie 1.0 moet voldoen voordat
+    deze mag worden vrijgegeven. Deze is *niet* bedoeld om ontwikkelaars te dwingen aan
+    bepaalde delen te werken (wat eigenlijk al niet mogelijk is in een open source 
+    project), en moet zodoende gezien worden als een advies wat kan helpen ons 
+    werk enige richting te geven. Hopelijk zal dit de ontwikkeling tot zekere hoogte
+    organiseren zodat we allemaal in dezelfde richting werken.
 
 
 Versies
@@ -40,7 +39,8 @@ Ook mogen de verdere aanbevelingen onderstreept worden.
     maar zelden gebruikt wordt door applicaties, terwijl de moeite om dit te implementeren substantieel is.
     
     Huidige status: Het grootste deel van AmigaOS 3.1 API is geïmplementeerd, op sommige
-    plekken zelfs voorbijgestreefd. Desondanks zijn er nog veel fouten te verhelpen.
+    plekken zelfs voorbijgestreefd. Wel zijn sommige delen overgeslagen of vervangen, waaronder
+    lowlevel.lib, card.device, gameport en audio.device.
 
 
 2.  Gedeeltelijke AmigaOS 3.5 en 3.9 API comptabiliteit. We kozen de delen waarvan wij vonden 
@@ -57,7 +57,7 @@ Ook mogen de verdere aanbevelingen onderstreept worden.
 3.  Volledige GUI toolkit. Dit betekend dat Zune compleet MUI API
      compatibel moet zijn mét een afgemaakt preferenties programma.
     
-     Huidige status: <?>
+     Huidige status: Bijna klaar. De Preferences editor mist nog wat functies.
 
 
 4.  Standaard applicaties gelijk die met AmigaOS 3.1 geleverd worden.
@@ -68,12 +68,21 @@ Ook mogen de verdere aanbevelingen onderstreept worden.
 
     Huidige status: De meeste basic applicaties zijn ontwikkeld voor AROS. 
 
++ Ontbrekend zijn: 
+
+  - Overscan(NOOT:niet echt nodig)
+  - Palette (NOOT:niet echt nodig)
+  - Pointer 
+  - Printer (absent)
+  - Sound (anders - we hebben AHI prefs)
+  - WBPattern (we hebben Wanderer prefs, waaraan gewerkt wordt)
+  - Workbench (we hebben Wanderer prefs, waaraan gewerkt wordt)
     
 5.  Geluids ondersteuning, ofwel API compatibiliteit en basis applicaties. Er 
     moet op zijn minst één driver zijn voor de vereiste AROS soorten. 
     
-    Huidige status: Op moment is AHI overgezet, ook zijn er enkele drivers (een paar)
-    voor de i386-port. Applicaties worden ontwikkeld.
+    Huidige status: Op moment is AHI overgebracht, ook zijn er enkele drivers (een paar)
+    voor de i386-port. Applicaties worden ontwikkeld; Madahi en MP3 player zijn beschikbaar. 
     
     
 6.  Netwerk ondersteuning. Hieronder vallen een TCP/IP-stack en enkele basis-applicaties
@@ -102,6 +111,17 @@ Ook mogen de verdere aanbevelingen onderstreept worden.
     Huidige status: AROS heeft een complete gcc port, wat toestaat applicaties te
     compileren. Enkele GNU tools ontbreken nog, zodat zelf-compilatie niet
     mogelijk is.
+    
++ Ontbrekend zijn: 
+
+  - GNU AWK (GAWK) en andere awks
+  - Python 2.2.1+ (een oude port van python is overigens beschikbaar)
+  - Bison
+  - Flex
+  - pngtopnm en ppmtoilbm (onderdeel van de netpbm package)
+  - Autoconf
+  - Automake
+  - Algemene unix utilities zoals cp, mv, sort, uniq, head, ...
     
     
 8.  Uitgebreide documentatie voor ontwikkelaars. Dit omvat een complete
@@ -135,3 +155,9 @@ Ook mogen de verdere aanbevelingen onderstreept worden.
     niet compleet zijn. Ook moeten er nog vele foutencorrecties gemaakt worden, maar een groeiend
     aantal gebruikers brengt hoop met zich mee. Het zoeken van fouten, deze doorgeven en/of verhelpen 
     zijn nodig.
+    
+Algemene status 
+<volgt nog>
+
+Recommandaties
+<volgt nog>
