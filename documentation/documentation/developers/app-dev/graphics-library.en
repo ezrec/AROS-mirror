@@ -1,0 +1,455 @@
+===================================
+AROS Application Development Manual
+===================================
+
+:Authors:   Matthias Rustler
+:Copyright: Copyright © 2007, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Unfinished
+:ToDo:      Write introductions and examples
+
+`Index <index>`_
+
+.. Warning::
+
+   This document is not finished! It is highly likely that many parts are
+   out-of-date, contain incorrect information or are simply missing
+   altogether. If you want to help rectify this, please contact us.
+
+   
+----------------
+graphics.library
+----------------
+
+.. Contents::
+
+
+Bitmaps
+-------
+- `AllocBitMap()`_
+- `AllocRaster()`_
+- `AllocScreenBitMap()`_
+- `CopySBitMap()`_
+- `FreeBitMap()`_
+- `FreeRaster()`_
+- `GetBitMapAttr()`_
+- `InitBitMap()`_
+- `SetFrontBitMap()`_
+- `SyncSBitMap()`_
+
+RastPort
+--------
+- `CloneRastPort()`_
+- `CreateRastPort()`_
+- `DeinitRastPort()`_
+- `FreeRastPort()`_
+- `GetAPen()`_
+- `GetBPen()`_
+- `GetDrMd()`_
+- `GetOutlinePen()`_
+- `GetRPAttrsA()`_
+- `InitMasks()`_
+- `InitRastPort()`_
+- `InitTmpRas()`_
+- `SetABPenDrMd()`_
+- `SetAPen()`_
+- `SetBPen()`_
+- `SetDrMd()`_
+- `SetOutlinePen()`_
+- `SetRPAttrsA()`_
+- `SetWriteMask()`_
+
+Drawing functions
+-----------------
+- `Draw()`_
+- `DrawEllipse()`_
+- `EraseRect()`_
+- `Flood()`_
+- `Move()`_
+- `PolyDraw()`_
+- `ReadPixel()`_
+- `ReadPixelArray8()`_
+- `ReadPixelLine8()`_
+- `RectFill()`_
+- `SetRast()`_
+- `WriteChunkyPixels()`_
+- `WritePixel()`_
+- `WritePixelArray8()`_
+- `WritePixelLine8()`_
+
+Data moving
+-----------
+- `BitMapScale()`_
+- `BltBitMap()`_
+- `BltBitMapRastPort()`_
+- `BltClear()`_
+- `BltMaskBitMapRastPort()`_
+- `BltPattern()`_
+- `BltRastPortBitMap()`_
+- `BltTemplate()`_
+- `ClipBlit()`_
+- `ScalerDiv()`_
+- `ScrollRaster()`_
+- `ScrollRasterBF()`_
+- `ScrollVPort()`_
+
+
+Area functions
+--------------
+- `AreaDraw()`_
+- `AreaEllipse()`_
+- `AreaEnd()`_
+- `AreaMove()`_
+- `InitArea()`_
+
+Text
+----
+- `AddFont()`_
+- `AskFont()`_
+- `AskSoftStyle()`_
+- `ClearEOL()`_
+- `ClearScreen()`_
+- `CloseFont()`_
+- `ExtendFont()`_
+- `FontExtent()`_
+- `OpenFont()`_
+- `RemFont()`_
+- `SetFont()`_
+- `SetSoftStyle()`_
+- `StripFont()`_
+- `Text()`_
+- `TextExtent()`_
+- `TextFit()`_
+- `TextLength()`_
+- `WeighTAMatch()`_
+
+Color
+-----
+- `AttachPalExtra()`_
+- `FindColor()`_
+- `FreeColorMap()`_
+- `GetColorMap()`_
+- `GetRGB32()`_
+- `GetRGB4()`_
+- `LoadRGB32()`_
+- `LoadRGB4()`_
+- `ObtainBestPenA()`_
+- `ObtainPen()`_
+- `ReleasePen()`_
+- `SetMaxPen()`_
+- `SetRGB32()`_
+- `SetRGB32CM()`_
+- `SetRGB4()`_
+- `SetRGB4CM()`_
+
+Animation
+---------
+- `AddAnimOb()`_
+- `AddBob()`_
+- `AddVSprite()`_
+- `AllocDBufInfo()`_
+- `AllocSpriteDataA()`_
+- `Animate()`_
+- `ChangeExtSpriteA()`_
+- `ChangeSprite()`_
+- `ChangeVPBitMap()`_
+- `DoCollision()`_
+- `DrawGList()`_
+- `FreeDBufInfo()`_
+- `FreeGBuffers()`_
+- `FreeSprite()`_
+- `FreeSpriteData()`_
+- `GetExtSpriteA()`_
+- `GetGBuffers()`_
+- `GetSprite()`_
+- `InitGMasks()`_
+- `InitGels()`_
+- `MoveSprite()`_
+- `RemIBob()`_
+- `RemVSprite()`_
+- `SetCollision()`_
+- `SortGList()`_
+
+Layers
+------
+- `AndRectRect()`_
+- `AndRectRegion()`_
+- `AndRectRegionND()`_
+- `AndRegionRegion()`_
+- `AndRegionRegionND()`_
+- `AreRegionsEqual()`_
+- `AttemptLockLayerRom()`_
+- `ClearRectRegion()`_
+- `ClearRectRegionND()`_
+- `ClearRegion()`_
+- `ClearRegionRegion()`_
+- `ClearRegionRegionND()`_
+- `CopyRegion()`_
+- `DisposeRegion()`_
+- `IsPointInRegion()`_
+- `NewRectRegion()`_
+- `NewRegion()`_
+- `OrRectRegion()`_
+- `OrRectRegionND()`_
+- `OrRegionRegion()`_
+- `OrRegionRegionND()`_
+- `ScrollRegion()`_
+- `SetRegion()`_
+- `SwapRegions()`_
+- `XorRectRegion()`_
+- `XorRectRegionND()`_
+- `XorRegionRegion()`_
+- `XorRegionRegionND()`_
+
+Display database
+----------------
+- `BestModeIDA()`_
+- `CloseMonitor()`_
+- `CoerceMode()`_
+- `FindDisplayInfo()`_
+- `ModeNotAvailable()`_
+- `NextDisplayInfo()`_
+- `OpenMonitor()`_
+
+Blitter
+-------
+- `DisownBlitter()`_
+- `OwnBlitter()`_
+- `QBSBlit()`_
+- `QBlit()`_
+- `WaitBlit()`_
+
+Copper
+------
+- `CBump()`_
+- `CMove()`_
+- `CWait()`_
+- `FreeCopList()`_
+- `FreeCprList()`_
+- `FreeVPortCopLists()`_
+- `MrgCop()`_
+- `UCopperListInit()`_
+
+Misc
+----
+- `CalcIVG()`_
+- `ConvertPixelsA()`_
+- `GetVPModeID()`_
+- `GfxAssociate()`_
+- `GfxFree()`_
+- `GfxLookUp()`_
+- `GfxNew()`_
+- `InitGfxHidd()`_
+- `InitVPort()`_
+- `InitView()`_
+- `LateGfxInit()`_
+- `LoadView()`_
+- `LockLayerRom()`_
+- `MakeVPort()`_
+- `MouseCoordsRelative()`_
+- `SetChipRev()`_
+- `SetPointerPos()`_
+- `SetPointerShape()`_
+- `SetRGBConversionFunctionA()`_
+- `ShowImminentReset()`_
+- `UnlockLayerRom()`_
+- `VBeamPos()`_
+- `VideoControl()`_
+- `WaitBOVP()`_
+- `WaitTOF()`_
+
+.. _AddAnimOb(): ../autodocs/graphics#AddAnimOb
+.. _AddBob(): ../autodocs/graphics#AddBob
+.. _AddFont(): ../autodocs/graphics#AddFont
+.. _AddVSprite(): ../autodocs/graphics#AddVSprite
+.. _AllocBitMap(): ../autodocs/graphics#AllocBitMap
+.. _AllocDBufInfo(): ../autodocs/graphics#AllocDBufInfo
+.. _AllocRaster(): ../autodocs/graphics#AllocRaster
+.. _AllocScreenBitMap(): ../autodocs/graphics#AllocScreenBitMap
+.. _AllocSpriteDataA(): ../autodocs/graphics#AllocSpriteDataA
+.. _AndRectRect(): ../autodocs/graphics#AndRectRect
+.. _AndRectRegion(): ../autodocs/graphics#AndRectRegion
+.. _AndRectRegionND(): ../autodocs/graphics#AndRectRegionND
+.. _AndRegionRegion(): ../autodocs/graphics#AndRegionRegion
+.. _AndRegionRegionND(): ../autodocs/graphics#AndRegionRegionND
+.. _Animate(): ../autodocs/graphics#Animate
+.. _AreRegionsEqual(): ../autodocs/graphics#AreRegionsEqual
+.. _AreaDraw(): ../autodocs/graphics#AreaDraw
+.. _AreaEllipse(): ../autodocs/graphics#AreaEllipse
+.. _AreaEnd(): ../autodocs/graphics#AreaEnd
+.. _AreaMove(): ../autodocs/graphics#AreaMove
+.. _AskFont(): ../autodocs/graphics#AskFont
+.. _AskSoftStyle(): ../autodocs/graphics#AskSoftStyle
+.. _AttachPalExtra(): ../autodocs/graphics#AttachPalExtra
+.. _AttemptLockLayerRom(): ../autodocs/graphics#AttemptLockLayerRom
+.. _BestModeIDA(): ../autodocs/graphics#BestModeIDA
+.. _BitMapScale(): ../autodocs/graphics#BitMapScale
+.. _BltBitMap(): ../autodocs/graphics#BltBitMap
+.. _BltBitMapRastPort(): ../autodocs/graphics#BltBitMapRastPort
+.. _BltClear(): ../autodocs/graphics#BltClear
+.. _BltMaskBitMapRastPort(): ../autodocs/graphics#BltMaskBitMapRastPort
+.. _BltPattern(): ../autodocs/graphics#BltPattern
+.. _BltRastPortBitMap(): ../autodocs/graphics#BltRastPortBitMap
+.. _BltTemplate(): ../autodocs/graphics#BltTemplate
+.. _CBump(): ../autodocs/graphics#CBump
+.. _CMove(): ../autodocs/graphics#CMove
+.. _CWait(): ../autodocs/graphics#CWait
+.. _CalcIVG(): ../autodocs/graphics#CalcIVG
+.. _ChangeExtSpriteA(): ../autodocs/graphics#ChangeExtSpriteA
+.. _ChangeSprite(): ../autodocs/graphics#ChangeSprite
+.. _ChangeVPBitMap(): ../autodocs/graphics#ChangeVPBitMap
+.. _ClearEOL(): ../autodocs/graphics#ClearEOL
+.. _ClearRectRegion(): ../autodocs/graphics#ClearRectRegion
+.. _ClearRectRegionND(): ../autodocs/graphics#ClearRectRegionND
+.. _ClearRegion(): ../autodocs/graphics#ClearRegion
+.. _ClearRegionRegion(): ../autodocs/graphics#ClearRegionRegion
+.. _ClearRegionRegionND(): ../autodocs/graphics#ClearRegionRegionND
+.. _ClearScreen(): ../autodocs/graphics#ClearScreen
+.. _ClipBlit(): ../autodocs/graphics#ClipBlit
+.. _CloneRastPort(): ../autodocs/graphics#CloneRastPort
+.. _CloseFont(): ../autodocs/graphics#CloseFont
+.. _CloseMonitor(): ../autodocs/graphics#CloseMonitor
+.. _CoerceMode(): ../autodocs/graphics#CoerceMode
+.. _ConvertPixelsA(): ../autodocs/graphics#ConvertPixelsA
+.. _CopyRegion(): ../autodocs/graphics#CopyRegion
+.. _CopySBitMap(): ../autodocs/graphics#CopySBitMap
+.. _CreateRastPort(): ../autodocs/graphics#CreateRastPort
+.. _DeinitRastPort(): ../autodocs/graphics#DeinitRastPort
+.. _DisownBlitter(): ../autodocs/graphics#DisownBlitter
+.. _DisposeRegion(): ../autodocs/graphics#DisposeRegion
+.. _DoCollision(): ../autodocs/graphics#DoCollision
+.. _Draw(): ../autodocs/graphics#Draw
+.. _DrawEllipse(): ../autodocs/graphics#DrawEllipse
+.. _DrawGList(): ../autodocs/graphics#DrawGList
+.. _EraseRect(): ../autodocs/graphics#EraseRect
+.. _ExtendFont(): ../autodocs/graphics#ExtendFont
+.. _FindColor(): ../autodocs/graphics#FindColor
+.. _FindDisplayInfo(): ../autodocs/graphics#FindDisplayInfo
+.. _Flood(): ../autodocs/graphics#Flood
+.. _FontExtent(): ../autodocs/graphics#FontExtent
+.. _FreeBitMap(): ../autodocs/graphics#FreeBitMap
+.. _FreeColorMap(): ../autodocs/graphics#FreeColorMap
+.. _FreeCopList(): ../autodocs/graphics#FreeCopList
+.. _FreeCprList(): ../autodocs/graphics#FreeCprList
+.. _FreeDBufInfo(): ../autodocs/graphics#FreeDBufInfo
+.. _FreeGBuffers(): ../autodocs/graphics#FreeGBuffers
+.. _FreeRastPort(): ../autodocs/graphics#FreeRastPort
+.. _FreeRaster(): ../autodocs/graphics#FreeRaster
+.. _FreeSprite(): ../autodocs/graphics#FreeSprite
+.. _FreeSpriteData(): ../autodocs/graphics#FreeSpriteData
+.. _FreeVPortCopLists(): ../autodocs/graphics#FreeVPortCopLists
+.. _GetAPen(): ../autodocs/graphics#GetAPen
+.. _GetBPen(): ../autodocs/graphics#GetBPen
+.. _GetBitMapAttr(): ../autodocs/graphics#GetBitMapAttr
+.. _GetColorMap(): ../autodocs/graphics#GetColorMap
+.. _GetDrMd(): ../autodocs/graphics#GetDrMd
+.. _GetExtSpriteA(): ../autodocs/graphics#GetExtSpriteA
+.. _GetGBuffers(): ../autodocs/graphics#GetGBuffers
+.. _GetOutlinePen(): ../autodocs/graphics#GetOutlinePen
+.. _GetRGB32(): ../autodocs/graphics#GetRGB32
+.. _GetRGB4(): ../autodocs/graphics#GetRGB4
+.. _GetRPAttrsA(): ../autodocs/graphics#GetRPAttrsA
+.. _GetSprite(): ../autodocs/graphics#GetSprite
+.. _GetVPModeID(): ../autodocs/graphics#GetVPModeID
+.. _GfxAssociate(): ../autodocs/graphics#GfxAssociate
+.. _GfxFree(): ../autodocs/graphics#GfxFree
+.. _GfxLookUp(): ../autodocs/graphics#GfxLookUp
+.. _GfxNew(): ../autodocs/graphics#GfxNew
+.. _InitArea(): ../autodocs/graphics#InitArea
+.. _InitBitMap(): ../autodocs/graphics#InitBitMap
+.. _InitGMasks(): ../autodocs/graphics#InitGMasks
+.. _InitGels(): ../autodocs/graphics#InitGels
+.. _InitGfxHidd(): ../autodocs/graphics#InitGfxHidd
+.. _InitMasks(): ../autodocs/graphics#InitMasks
+.. _InitRastPort(): ../autodocs/graphics#InitRastPort
+.. _InitTmpRas(): ../autodocs/graphics#InitTmpRas
+.. _InitVPort(): ../autodocs/graphics#InitVPort
+.. _InitView(): ../autodocs/graphics#InitView
+.. _IsPointInRegion(): ../autodocs/graphics#IsPointInRegion
+.. _LateGfxInit(): ../autodocs/graphics#LateGfxInit
+.. _LoadRGB32(): ../autodocs/graphics#LoadRGB32
+.. _LoadRGB4(): ../autodocs/graphics#LoadRGB4
+.. _LoadView(): ../autodocs/graphics#LoadView
+.. _LockLayerRom(): ../autodocs/graphics#LockLayerRom
+.. _MakeVPort(): ../autodocs/graphics#MakeVPort
+.. _ModeNotAvailable(): ../autodocs/graphics#ModeNotAvailable
+.. _MouseCoordsRelative(): ../autodocs/graphics#MouseCoordsRelative
+.. _Move(): ../autodocs/graphics#Move
+.. _MoveSprite(): ../autodocs/graphics#MoveSprite
+.. _MrgCop(): ../autodocs/graphics#MrgCop
+.. _NewRectRegion(): ../autodocs/graphics#NewRectRegion
+.. _NewRegion(): ../autodocs/graphics#NewRegion
+.. _NextDisplayInfo(): ../autodocs/graphics#NextDisplayInfo
+.. _ObtainBestPenA(): ../autodocs/graphics#ObtainBestPenA
+.. _ObtainPen(): ../autodocs/graphics#ObtainPen
+.. _OpenFont(): ../autodocs/graphics#OpenFont
+.. _OpenMonitor(): ../autodocs/graphics#OpenMonitor
+.. _OrRectRegion(): ../autodocs/graphics#OrRectRegion
+.. _OrRectRegionND(): ../autodocs/graphics#OrRectRegionND
+.. _OrRegionRegion(): ../autodocs/graphics#OrRegionRegion
+.. _OrRegionRegionND(): ../autodocs/graphics#OrRegionRegionND
+.. _OwnBlitter(): ../autodocs/graphics#OwnBlitter
+.. _PolyDraw(): ../autodocs/graphics#PolyDraw
+.. _QBSBlit(): ../autodocs/graphics#QBSBlit
+.. _QBlit(): ../autodocs/graphics#QBlit
+.. _ReadPixel(): ../autodocs/graphics#ReadPixel
+.. _ReadPixelArray8(): ../autodocs/graphics#ReadPixelArray8
+.. _ReadPixelLine8(): ../autodocs/graphics#ReadPixelLine8
+.. _RectFill(): ../autodocs/graphics#RectFill
+.. _ReleasePen(): ../autodocs/graphics#ReleasePen
+.. _RemFont(): ../autodocs/graphics#RemFont
+.. _RemIBob(): ../autodocs/graphics#RemIBob
+.. _RemVSprite(): ../autodocs/graphics#RemVSprite
+.. _ScalerDiv(): ../autodocs/graphics#ScalerDiv
+.. _ScrollRaster(): ../autodocs/graphics#ScrollRaster
+.. _ScrollRasterBF(): ../autodocs/graphics#ScrollRasterBF
+.. _ScrollRegion(): ../autodocs/graphics#ScrollRegion
+.. _ScrollVPort(): ../autodocs/graphics#ScrollVPort
+.. _SetABPenDrMd(): ../autodocs/graphics#SetABPenDrMd
+.. _SetAPen(): ../autodocs/graphics#SetAPen
+.. _SetBPen(): ../autodocs/graphics#SetBPen
+.. _SetChipRev(): ../autodocs/graphics#SetChipRev
+.. _SetCollision(): ../autodocs/graphics#SetCollision
+.. _SetDrMd(): ../autodocs/graphics#SetDrMd
+.. _SetFont(): ../autodocs/graphics#SetFont
+.. _SetFrontBitMap(): ../autodocs/graphics#SetFrontBitMap
+.. _SetMaxPen(): ../autodocs/graphics#SetMaxPen
+.. _SetOutlinePen(): ../autodocs/graphics#SetOutlinePen
+.. _SetPointerPos(): ../autodocs/graphics#SetPointerPos
+.. _SetPointerShape(): ../autodocs/graphics#SetPointerShape
+.. _SetRGB32(): ../autodocs/graphics#SetRGB32
+.. _SetRGB32CM(): ../autodocs/graphics#SetRGB32CM
+.. _SetRGB4(): ../autodocs/graphics#SetRGB4
+.. _SetRGB4CM(): ../autodocs/graphics#SetRGB4CM
+.. _SetRGBConversionFunctionA(): ../autodocs/graphics#SetRGBConversionFunctionA
+.. _SetRPAttrsA(): ../autodocs/graphics#SetRPAttrsA
+.. _SetRast(): ../autodocs/graphics#SetRast
+.. _SetRegion(): ../autodocs/graphics#SetRegion
+.. _SetSoftStyle(): ../autodocs/graphics#SetSoftStyle
+.. _SetWriteMask(): ../autodocs/graphics#SetWriteMask
+.. _ShowImminentReset(): ../autodocs/graphics#ShowImminentReset
+.. _SortGList(): ../autodocs/graphics#SortGList
+.. _StripFont(): ../autodocs/graphics#StripFont
+.. _SwapRegions(): ../autodocs/graphics#SwapRegions
+.. _SyncSBitMap(): ../autodocs/graphics#SyncSBitMap
+.. _Text(): ../autodocs/graphics#Text
+.. _TextExtent(): ../autodocs/graphics#TextExtent
+.. _TextFit(): ../autodocs/graphics#TextFit
+.. _TextLength(): ../autodocs/graphics#TextLength
+.. _UCopperListInit(): ../autodocs/graphics#UCopperListInit
+.. _UnlockLayerRom(): ../autodocs/graphics#UnlockLayerRom
+.. _VBeamPos(): ../autodocs/graphics#VBeamPos
+.. _VideoControl(): ../autodocs/graphics#VideoControl
+.. _WaitBOVP(): ../autodocs/graphics#WaitBOVP
+.. _WaitBlit(): ../autodocs/graphics#WaitBlit
+.. _WaitTOF(): ../autodocs/graphics#WaitTOF
+.. _WeighTAMatch(): ../autodocs/graphics#WeighTAMatch
+.. _WriteChunkyPixels(): ../autodocs/graphics#WriteChunkyPixels
+.. _WritePixel(): ../autodocs/graphics#WritePixel
+.. _WritePixelArray8(): ../autodocs/graphics#WritePixelArray8
+.. _WritePixelLine8(): ../autodocs/graphics#WritePixelLine8
+.. _XorRectRegion(): ../autodocs/graphics#XorRectRegion
+.. _XorRectRegionND(): ../autodocs/graphics#XorRectRegionND
+.. _XorRegionRegion(): ../autodocs/graphics#XorRegionRegion
+.. _XorRegionRegionND(): ../autodocs/graphics#XorRegionRegionND
