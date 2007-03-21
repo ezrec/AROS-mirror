@@ -8,7 +8,7 @@ Status Update
 USB initial support
 -------------------
 
-Dr Michal Schultz has made an initial commit of the AROS USB stack, 
+Dr Michal Schulz has made an initial commit of the AROS USB stack, 
 enabling the use of USB mice and creating the foundations to add 
 support, subsequently, also for other devices. Please notice this 
 is pre-alpha stage software, this means only USB 1.1 UHCI 

@@ -8,7 +8,7 @@ Ultime notizie
 AROS supporta USB!
 ------------------
 
-Michal Schultz, da poco laureatosi, ha aggiunto il supporto per le 
+Michal Schulz, da poco laureatosi, ha aggiunto il supporto per le 
 porte USB, permettendo l'uso di mouse compatibili e creando 
 le fondamenta per poter aggiungere, in futuro, anche altri tipi di 
 dispositivi, come tastiere e memorie di massa rimovibili. Lo stack 
