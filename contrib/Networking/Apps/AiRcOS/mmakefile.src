@@ -15,6 +15,8 @@ USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -I $(TOP)/contrib/Networking/
 #MM aros-tcpip-apps-aircos-gadgets \
 #MM themes-gorilla-icons-aircos
 
+#MM- contrib : aros-tcpip-apps-aircos
+
 %build_prog mmake=aros-tcpip-apps-aircos \
     progname=AiRcOS targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="mui arossupport amiga arosc"
