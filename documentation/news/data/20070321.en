@@ -1,0 +1,38 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-03-21
+
+USB initial support
+-------------------
+
+Dr Michal Schultz has made an initial commit of the AROS USB stack, 
+enabling the use of USB mice and creating the foundations to add 
+support, subsequently, also for other devices. Please notice this 
+is pre-alpha stage software, this means only USB 1.1 is supported 
+for now, and maybe it won't work correctly on your motherboard. 
+In order to improve functionality and compatibility, huge beta 
+testing is required. So we'd encourage everyone brave enough to 
+help us, to download next days' nightly builds and report any 
+encountered problem. In order to activate the whole stack on UHCI 
+machines, the command is:
+
+C:Loadresource DRIVERS:uhci.hidd
+
+
+Other news
+----------
+
+Nic Andrews has slightly improved AROSTCP, giving us a better 
+network stack. Working VIA Rhine driver and test RTL8139 one have 
+been added as well.
+
+Pavel Fedin is still working on improved VESA modes: "Cleaned up 
+VESA mode switch code. Static palette removed, it's not necessary. 
+Mousepointer colors on 256- and 16-color screens are fixed". He 
+also merged back from MorphOS Trackdisk device. A brand new 
+Trackdisk pref program allow 'no-click' mode of the floppy disk 
+drive without adding arguments to the kernel command line in GRUB.
+

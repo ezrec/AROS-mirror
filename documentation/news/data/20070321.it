@@ -1,0 +1,44 @@
+==============
+Ultime notizie
+==============
+
+:Author:   Paolo Besser
+:Date:     2007-03-21
+
+AROS supporta USB!
+------------------
+
+Michal Schultz, da poco laureatosi, ha aggiunto il supporto per le 
+porte USB, permettendo l'uso di mouse compatibili e creando 
+le fondamenta per poter aggiungere, in futuro, anche altri tipi di 
+dispositivi, come tastiere e memorie di massa rimovibili. Lo stack 
+è ancora in uno stadio iniziale, questo significa che solo le 
+porte USB 1.1 sono supportate per adesso (e le 2.0 a velocità 
+ridotta), e che sulla vostra scheda madre potrebbero anche non 
+funzionare correttamente. Per poter migliorare la situazione 
+occorre un grande lavoro di beta testing e, per tanto, vorremmo 
+incoraggiare chiunque si senta abbastanza coraggioso a scaricare 
+una delle prossime nightly build e segnalarci eventuali errori. 
+Per attivare il supporto USB, il comando è questo:
+
+C:Loadresource DRIVERS:uhci.hidd
+
+
+Altre news
+----------
+
+Nic Andrews ha migliorato sensibilmente lo stack AROSTCP, 
+rendendolo più robusto e moderno. Sono poi a disposizione un driver 
+funzionante per interfacce di rete VIA Rhine e un driver ancora 
+sperimentale per schede basate su RTL8139.
+
+Pavel Fedin sta ancora lavorando sulle modalità VESA: "Ho ripulito 
+il codice per il passaggio alla modalità VESA, ho rimosso la 
+palette statica dei colori perché non era necessaria, e ho anche 
+corretto i colori impiegati dal puntatore del mouse nelle modalità 
+a 16 e 256 colori". Pavel ha anche aggiornato il codice del device 
+Trackdisk partendo dalle ultime versioni per MorphOS. Una nuova
+applicazione nella directory Pref permette anche di configurare 
+facilmente la modalità 'no-click' del disk drive, rendendo 
+obsoleta e non più necessaria la pratica di inserire un parametro 
+nel caricamento del kernel. 
