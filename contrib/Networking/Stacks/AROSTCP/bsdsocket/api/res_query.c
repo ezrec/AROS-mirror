@@ -374,6 +374,7 @@ D(bug("[AROSTCP](res_query.c) res_search: resolver got response\n"));
 				break;
 			}
 		}
+	}
 		/*
 		 * If the search/default failed, try the name as fully-qualified,
 		 * but only if it contained at least one dot (even trailing).
@@ -382,14 +383,13 @@ D(bug("[AROSTCP](res_query.c) res_search: resolver got response\n"));
 		 * res_search.
 		 */
 		
-		if (n && (ret = res_querydomain(libPtr, name, (char *)NULL,
-						class, type, answer, anslen)) > 0)
-	   {
+	if (n && (ret = res_querydomain(libPtr, name, (char *)NULL,
+					class, type, answer, anslen)) > 0)
+   {
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_query.c) res_search: returning querydomain.2 result\n"));
 #endif
-			return (ret);
-		}
+		return (ret);
 	}
 #if defined(__AROS__)
 D(bug("[AROSTCP](res_query.c) res_search: finished search.\n"));
