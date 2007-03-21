@@ -1,0 +1,4 @@
+# $Id$
+
+#MM- hidd-usb-drivers: hidd-usb-drivers-dummy hidd-usb-drivers-ohci hidd-usb-drivers-uhci
+
