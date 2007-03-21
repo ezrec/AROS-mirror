@@ -11,8 +11,9 @@ USB initial support
 Dr Michal Schultz has made an initial commit of the AROS USB stack, 
 enabling the use of USB mice and creating the foundations to add 
 support, subsequently, also for other devices. Please notice this 
-is pre-alpha stage software, this means only USB 1.1 is supported 
-for now, and maybe it won't work correctly on your motherboard. 
+is pre-alpha stage software, this means only USB 1.1 UHCI 
+controllers are supported for now, and maybe it won't work 
+correctly on your motherboard. 
 In order to improve functionality and compatibility, huge beta 
 testing is required. So we'd encourage everyone brave enough to 
 help us, to download next days' nightly builds and report any 
