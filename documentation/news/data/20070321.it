@@ -13,13 +13,13 @@ porte USB, permettendo l'uso di mouse compatibili e creando
 le fondamenta per poter aggiungere, in futuro, anche altri tipi di 
 dispositivi, come tastiere e memorie di massa rimovibili. Lo stack 
 è ancora in uno stadio iniziale, questo significa che solo le 
-porte USB 1.1 sono supportate per adesso (e le 2.0 a velocità 
-ridotta), e che sulla vostra scheda madre potrebbero anche non 
-funzionare correttamente. Per poter migliorare la situazione 
-occorre un grande lavoro di beta testing e, per tanto, vorremmo 
-incoraggiare chiunque si senta abbastanza coraggioso a scaricare 
-una delle prossime nightly build e segnalarci eventuali errori. 
-Per attivare il supporto USB, il comando è questo:
+porte USB 1.1 controllate da dispositivi UCHI sono supportate per adesso (e le 2.0 a velocità ridotta), e che sulla vostra scheda 
+madre potrebbero anche non funzionare correttamente. 
+Per poter migliorare la situazione occorre un grande lavoro di beta 
+testing e, per tanto, vorremmo incoraggiare chiunque si senta 
+abbastanza coraggioso a scaricare una delle prossime nightly build e 
+segnalarci eventuali errori. Per attivare il supporto USB, il comando 
+è questo:
 
 C:Loadresource DRIVERS:uhci.hidd
 
