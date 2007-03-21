@@ -1,0 +1,6 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+#MM- hidd-usb:  linklibs hidd-usb-stack hidd-usb-drivers hidd-usb-classes
+
+%common
