@@ -8,7 +8,7 @@ Compiling AROS
             + Lennard voor den Dag
             + Aaron Digulla
             + Adam Chodorowski
-:Copyright: Copyright ¦ 2001-2003, The AROS Development Team
+:Copyright: Copyright ² 2001-2003, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -187,6 +187,9 @@ CPU. Eg., to build AROS/i386-pc you would run::
 If you are building several ports that use the same CPU, you only have to 
 specify ``AROS_TARGET_ARCH`` as the CPU will stay the same. 
 
+After you`ve made "make" once, and some changes were made to the files, you 
+can use quick compilation of changes using make <target-name>-quick command. 
+
 Compiling HowTo`s
 -----------------
 
@@ -275,5 +278,7 @@ Finally, type::
 
       > make
 
-This shall take a while (some hours) :) 
-After that you will get AROS-hosted compiled.
+This shall take a while (up to some hours on slow machines) :) 
+After that you will get AROS-hosted compiled. 
+Please also note that you might need an internet access during the progress,
+used to download latest EUAE sources. 
