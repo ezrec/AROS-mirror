@@ -128,7 +128,7 @@ panic(const char *fmt,...)
     vcsprintf(&cs, fmt, ap);
     va_end(ap);
     
-    log(LOG_EMERG, "panic: %s", buffer); /* Write to log */
+    __log(LOG_EMERG, "panic: %s", buffer); /* Write to log */
   }
   in_panic--;
 	
@@ -208,7 +208,7 @@ panic(const char *fmt,...)
 */
 
 void
-log(unsigned long level, const char *fmt, ...)
+__log(unsigned long level, const char *fmt, ...)
 {
   va_list ap;
 

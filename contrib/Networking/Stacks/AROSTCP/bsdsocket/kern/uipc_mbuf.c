@@ -239,7 +239,7 @@ D(bug("[AROSTCP](uipc_mbuf.c) mbinit()\n"));
 #if defined(__AROS__)
 D(bug("[AROSTCP](uipc_mbuf.c) mbinit: Failed to allocate memory!\n"));
 #endif
-    log(LOG_ERR, "mbinit: Failed to allocate memory.");
+    __log(LOG_ERR, "mbinit: Failed to allocate memory.");
     mbdeinit();
   }
   return (initialized);
@@ -307,7 +307,7 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_alloc()\n"));
 D(bug("[AROSTCP](uipc_mbuf.c) m_alloc: max amount of memory already used (%ld bytes).\n",
 	mbstat.m_memused));
 #endif
-    log(LOG_ERR, "m_alloc: max amount of memory already used (%ld bytes).",
+    __log(LOG_ERR, "m_alloc: max amount of memory already used (%ld bytes).",
 	mbstat.m_memused);
     return FALSE;
   }
@@ -317,7 +317,7 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_alloc: max amount of memory already used (%ld by
 #if defined(__AROS__)
 D(bug("[AROSTCP](uipc_mbuf.c) m_alloc: Cannot allocate memory for mbufs\n"));
 #endif
-    log(LOG_ERR, "m_alloc: Cannot allocate memory for mbufs.");
+    __log(LOG_ERR, "m_alloc: Cannot allocate memory for mbufs.");
     return FALSE;
   }
 
@@ -381,7 +381,7 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_clalloc()\n"));
 D(bug("[AROSTCP](uipc_mbuf.c) m_clalloc: max amount of memory already used (%ld bytes).\n",
 	mbstat.m_memused));
 #endif
-    log(LOG_ERR, "m_clalloc: max amount of memory already used (%ld bytes).",
+    __log(LOG_ERR, "m_clalloc: max amount of memory already used (%ld bytes).",
 	mbstat.m_memused);
     return FALSE;
   }
@@ -391,7 +391,7 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_clalloc: max amount of memory already used (%ld 
 #if defined(__AROS__)
 D(bug("[AROSTCP](uipc_mbuf.c) m_clalloc: Cannot allocate memory for mbuf clusters\n"));
 #endif
-    log(LOG_ERR, "m_clalloc: Cannot allocate memory for mbuf clusters");
+    __log(LOG_ERR, "m_clalloc: Cannot allocate memory for mbuf clusters");
     return FALSE;
   }
   /*
@@ -612,7 +612,7 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_copym(0x%08x, len = %d)\n", m, len));
 #if defined(__AROS__)
 D(bug("[AROSTCP](uipc_mbuf.c) m_copym: bad args\n"));
 #endif
-	  log(LOG_ERR, "m_copym: Bad arguments");
+	  __log(LOG_ERR, "m_copym: Bad arguments");
 	  goto nospace;
 	}
 	if (off == 0 && m->m_flags & M_PKTHDR)
@@ -625,7 +625,7 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_copym: bad args\n"));
 #if defined(__AROS__)
 D(bug("[AROSTCP](uipc_mbuf.c) m_copym: short mbuf chain!\n"));
 #endif
-		  log(LOG_ERR, "m_copym: short mbuf chain");
+		  __log(LOG_ERR, "m_copym: short mbuf chain");
 		  goto nospace;
 		}
 		if (off < m->m_len)
@@ -640,7 +640,7 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_copym: short mbuf chain!\n"));
 #if defined(__AROS__)
 D(bug("[AROSTCP](uipc_mbuf.c) m_copym: short mbuf chain!!\n"));
 #endif
-			  log(LOG_ERR, "m_copym: short mbuf chain");
+			  __log(LOG_ERR, "m_copym: short mbuf chain");
 			  goto nospace;
 			}
 			break;
@@ -702,7 +702,7 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_copydata(0x%08x, len = %d)\n", m, len));
 #if defined(__AROS__)
 D(bug("[AROSTCP](uipc_mbuf.c) m_copydata: bad arguments!\n"));
 #endif
-	  log(LOG_ERR, "m_copydata: bad arguments");
+	  __log(LOG_ERR, "m_copydata: bad arguments");
 	  return;
 	}
 	while (off > 0) {
@@ -710,7 +710,7 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_copydata: bad arguments!\n"));
 #if defined(__AROS__)
 D(bug("[AROSTCP](uipc_mbuf.c) m_copydata: short mbuf chain to copy from!\n"));
 #endif
-		  log(LOG_ERR, "m_copydata: short mbuf chain to copy from");
+		  __log(LOG_ERR, "m_copydata: short mbuf chain to copy from");
 		  return;
 		}
 		if (off < m->m_len)
@@ -723,7 +723,7 @@ D(bug("[AROSTCP](uipc_mbuf.c) m_copydata: short mbuf chain to copy from!\n"));
 #if defined(__AROS__)
 D(bug("[AROSTCP](uipc_mbuf.c) m_copydata: short mbuf chain to copy from!!\n"));
 #endif
-		  log(LOG_ERR, "m_copydata: short mbuf chain to copy from");
+		  __log(LOG_ERR, "m_copydata: short mbuf chain to copy from");
 		  return;
 		}
 		count = MIN(m->m_len - off, len);

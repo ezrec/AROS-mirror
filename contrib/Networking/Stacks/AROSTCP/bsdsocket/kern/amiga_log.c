@@ -510,7 +510,7 @@ void log_msg(struct SysLogPacket *msg)
       while (confile == NULL) {
 	if ((confile = logOpen(consolename)) == NULL) {
 	  if (!conopenfail) /* log only once */
-	    log(LOG_ERR,"Opening console log '%s' failed", consolename);
+	    __log(LOG_ERR,"Opening console log '%s' failed", consolename);
 	  if (consolename == consoledefname) {
 	    conopenfail = TRUE;
 	    break;
@@ -530,7 +530,7 @@ void log_msg(struct SysLogPacket *msg)
 	Flush(confile);
 	if (error && !conwritefail) {	/* To avoid loops */
 	  conwritefail = TRUE;
-	  log(LOG_ERR, "log: Write failed to console '%s'", consolename);
+	  __log(LOG_ERR, "log: Write failed to console '%s'", consolename);
 	}
       }
 #endif
@@ -539,7 +539,7 @@ void log_msg(struct SysLogPacket *msg)
   	while (logfile == NULL) {
   	  if ((logfile = logOpen(logfilename)) == NULL) {
   	    if (!fileopenfail) /* log only once */
-  	      log(LOG_ERR,"Opening log file '%s' failed", logfilename);
+  	      __log(LOG_ERR,"Opening log file '%s' failed", logfilename);
   	    if (logfilename == logfiledefname) {
   	      fileopenfail = TRUE;
   	      break;
@@ -559,7 +559,7 @@ void log_msg(struct SysLogPacket *msg)
   	  Flush(logfile);
   	  if (error && !filewritefail) {  /* To avoid loops */
   	    filewritefail = TRUE;
-  	    log(LOG_ERR, "log: Write failed to file '%s'", logfilename);
+  	    __log(LOG_ERR, "log: Write failed to file '%s'", logfilename);
   	  }
   	}
       }
@@ -595,7 +595,7 @@ struct SysLogPacket *log_poll()
   	if (GetLogMsgFail != TotalFail) {
   	  int t = GetLogMsgFail;    /* Check if we have lost messages */
 
-  	  log(LOG_WARNING,"%ld log messages lost (total %ld lost)\n",
+  	  __log(LOG_WARNING,"%ld log messages lost (total %ld lost)\n",
   	    t - TotalFail, TotalFail);
   	  TotalFail = t;
   	}

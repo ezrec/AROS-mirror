@@ -51,11 +51,11 @@
 #ifdef DEBUG_SYSCALLS
 void dump_sockaddr_in (struct sockaddr_in *name, struct SocketBase *libPtr)
 {
-  log(LOG_DEBUG,"sockaddr_in contents:");
-  log(LOG_DEBUG,"sin_len: %u", name->sin_len);
-  log(LOG_DEBUG,"sin_family: %u", name->sin_family);
-  log(LOG_DEBUG,"sin_port: %u", name->sin_port);
-  log(LOG_DEBUG,"sin_addr: %s", __Inet_NtoA(name->sin_addr.s_addr, libPtr));
+  __log(LOG_DEBUG,"sockaddr_in contents:");
+  __log(LOG_DEBUG,"sin_len: %u", name->sin_len);
+  __log(LOG_DEBUG,"sin_family: %u", name->sin_family);
+  __log(LOG_DEBUG,"sin_port: %u", name->sin_port);
+  __log(LOG_DEBUG,"sin_addr: %s", __Inet_NtoA(name->sin_addr.s_addr, libPtr));
 }
 #endif
 
@@ -93,7 +93,7 @@ D(bug("[AROSTCP](amiga_syscalls.c) __socket()\n"));
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_syscalls.c) __socket: created socket 0x%08lx fd = %ld libPtr = 0x%08lx\n", so, fd, libPtr));
 #endif
-      DEVENTS(log(LOG_DEBUG,"socket(): created socket 0x%08lx fd = %ld libPtr = 0x%08lx", so, fd, libPtr);)
+      DEVENTS(__log(LOG_DEBUG,"socket(): created socket 0x%08lx fd = %ld libPtr = 0x%08lx", so, fd, libPtr);)
     }
   }
   
@@ -112,7 +112,7 @@ AROS_LH3(LONG, socket,
 D(bug("[AROSTCP](amiga_syscalls.c) UL_socket(%ld, %ld, %ld)\n", domain, type, protocol));
 #endif
   
-  DSYSCALLS(log(LOG_DEBUG,"socket(%ld, %ld, %ld) called", domain, type, protocol);)
+  DSYSCALLS(__log(LOG_DEBUG,"socket(%ld, %ld, %ld) called", domain, type, protocol);)
   return __socket(domain, type, protocol, libPtr);
   AROS_LIBFUNC_EXIT
 }
@@ -139,7 +139,7 @@ D(bug("[AROSTCP](amiga_syscalls.c) UL_bind(%ld, sockaddr_in, %ld)\n", s, namelen
 #endif
 
   CHECK_TASK();
-  DSYSCALLS(log(LOG_DEBUG,"bind(%ld, sockaddr_in, %ld) called", s, namelen);)
+  DSYSCALLS(__log(LOG_DEBUG,"bind(%ld, sockaddr_in, %ld) called", s, namelen);)
   DSYSCALLS(dump_sockaddr_in((struct sockaddr_in *)name, libPtr);)
   ObtainSyscallSemaphore(libPtr);
   
@@ -174,7 +174,7 @@ D(bug("[AROSTCP](amiga_syscalls.c) UL_Listen(%ld, %ld)\n", s, backlog));
 #endif
   
   CHECK_TASK();
-  DSYSCALLS(log("listen(%ld, %ld) called ", s, backlog);)
+  DSYSCALLS(__log("listen(%ld, %ld) called ", s, backlog);)
   ObtainSyscallSemaphore(libPtr);
   
   if (error = getSock(libPtr, s, &so))
@@ -210,7 +210,7 @@ D(bug("[AROSTCP](amiga_syscalls.c) UL_accept(%ld)\n", s));
 #endif
 
   CHECK_TASK();
-  DSYSCALLS(log("accept(%ld) called", s);)
+  DSYSCALLS(__log("accept(%ld) called", s);)
   ObtainSyscallSemaphore(libPtr);
 
   if (error = getSock(libPtr, s, &so))
@@ -279,7 +279,7 @@ D(bug("[AROSTCP](amiga_syscalls.c) UL_accept(%ld)\n", s));
 
  Return:
   ReleaseSyscallSemaphore(libPtr);
-  DSYSCALLS(log(LOG_DEBUG,"accept() executed");)
+  DSYSCALLS(__log(LOG_DEBUG,"accept() executed");)
   DSYSCALLS(dump_sockaddr_in((struct sockaddr_in *)name, libPtr);)
   API_STD_RETURN(error, fd);
   AROS_LIBFUNC_EXIT
@@ -347,7 +347,7 @@ AROS_LH3(LONG, connect,
 D(bug("[AROSTCP](amiga_syscalls.c) UL_connect(%ld, sockaddr_in, %ld)\n", s, namelen));
 #endif
   
-  DSYSCALLS(log(LOG_DEBUG, "connect(%ld, sockaddr_in, %ld) called", s, namelen);)
+  DSYSCALLS(__log(LOG_DEBUG, "connect(%ld, sockaddr_in, %ld) called", s, namelen);)
   DSYSCALLS(dump_sockaddr_in((struct sockaddr_in *)s, libPtr);)
   return __connect(s, name, namelen, libPtr);
   AROS_LIBFUNC_EXIT
@@ -371,7 +371,7 @@ D(bug("[AROSTCP](amiga_syscalls.c) UL_shutdown(%ld, %ld)\n", s, how));
 #endif
 
   CHECK_TASK();
-  DSYSCALLS(log(LOG_DEBUG,"shutdown(%ld, %ld) called", s, how);)
+  DSYSCALLS(__log(LOG_DEBUG,"shutdown(%ld, %ld) called", s, how);)
   ObtainSyscallSemaphore(libPtr);
 
   if (error = getSock(libPtr, s, &so))
@@ -410,7 +410,7 @@ D(bug("[AROSTCP](amiga_syscalls.c) UL_setsockopt(%ld, 0x%08lx, 0x%08lx, %lu, %lu
 #endif
 
   CHECK_TASK();
-  DSYSCALLS(log(LOG_DEBUG,"setsockopt(%ld, 0x%08lx, 0x%08lx, %lu, %lu) called", s, level, name, *(ULONG *)val , valsize);)
+  DSYSCALLS(__log(LOG_DEBUG,"setsockopt(%ld, 0x%08lx, 0x%08lx, %lu, %lu) called", s, level, name, *(ULONG *)val , valsize);)
   ObtainSyscallSemaphore(libPtr);
 
   if (error = getSock(libPtr, s, &so))
@@ -432,7 +432,7 @@ D(bug("[AROSTCP](amiga_syscalls.c) UL_setsockopt(%ld, 0x%08lx, 0x%08lx, %lu, %lu
 
  Return:
   ReleaseSyscallSemaphore(libPtr);
-  DOPTERR (if (error) log(LOG_ERR,"setsockopt(): error %ld on option 0x%08lx, level 0x%08lx", error, name, level);)
+  DOPTERR (if (error) __log(LOG_ERR,"setsockopt(): error %ld on option 0x%08lx, level 0x%08lx", error, name, level);)
   API_STD_RETURN(error, 0);
   AROS_LIBFUNC_EXIT
 }
@@ -463,7 +463,7 @@ D(bug("[AROSTCP](amiga_syscalls.c) UL_getsockopt(%ld, 0x%08lx, 0x%08lx)\n", s, l
 #endif
 
   CHECK_TASK();
-  DSYSCALLS(log(LOG_DEBUG,"getsockopt(%ld, 0x%08lx, 0x%08lx) called", s, level, name);)
+  DSYSCALLS(__log(LOG_DEBUG,"getsockopt(%ld, 0x%08lx, 0x%08lx) called", s, level, name);)
   ObtainSyscallSemaphore(libPtr);
 
   if (error = getSock(libPtr, s, &so))
@@ -486,7 +486,7 @@ D(bug("[AROSTCP](amiga_syscalls.c) UL_getsockopt(%ld, 0x%08lx, 0x%08lx)\n", s, l
 
  Return:
   ReleaseSyscallSemaphore(libPtr);
-  DOPTERR(if (error) log(LOG_ERR,"setsockopt(): error %ld on option 0x%08lx, level 0x%08lx", error, name, level);)
+  DOPTERR(if (error) __log(LOG_ERR,"setsockopt(): error %ld on option 0x%08lx, level 0x%08lx", error, name, level);)
   API_STD_RETURN(error, 0);
   AROS_LIBFUNC_EXIT
 }
@@ -513,7 +513,7 @@ D(bug("[AROSTCP](amiga_syscalls.c) UL_getsockname(%ld)\n", fdes));
 #endif
 
   CHECK_TASK();
-  DSYSCALLS(log(LOG_DEBUG,"getsockname(%ld) called", fdes);)
+  DSYSCALLS(__log(LOG_DEBUG,"getsockname(%ld) called", fdes);)
   ObtainSyscallSemaphore(libPtr);
 
   if (error = getSock(libPtr, fdes, &so))
@@ -560,7 +560,7 @@ D(bug("[AROSTCP](amiga_syscalls.c) UL_getpeername(%ld)\n", fdes));
 #endif
 
   CHECK_TASK();
-  DSYSCALLS(log(LOG_DEBUG,"getpeername(%ld) called", fdes);)
+  DSYSCALLS(__log(LOG_DEBUG,"getpeername(%ld) called", fdes);)
   ObtainSyscallSemaphore(libPtr);
 
   if (error = getSock(libPtr, fdes, &so))

@@ -75,7 +75,7 @@ struct MiamiBase* MiamiLIB_Open(struct Library *MasterBase)
     MiamiBase->Lib.lib_OpenCnt = 1;
     SocketBase = OpenLibrary("bsdsocket.library", VERSION);
     if (SocketBase) {
-	D(log(LOG_DEBUG,"miami.library opened: SocketBase = 0x%08lx, MiamiBase = 0x%08lx", (ULONG)SocketBase, (ULONG)MiamiBase);)
+	D(__log(LOG_DEBUG,"miami.library opened: SocketBase = 0x%08lx, MiamiBase = 0x%08lx", (ULONG)SocketBase, (ULONG)MiamiBase);)
 	return(MiamiBase);
     }
     D(else kprintf("Unable to open bsdsocket.library\n");)
@@ -105,13 +105,13 @@ ULONG  size;
 
 long MiamiSysCtl(void)
 {
-//	log(LOG_CRIT,"MiamiSysCtl() is not implemented");
+	__log(LOG_CRIT,"MiamiSysCtl() is not implemented");
 	return ENOSYS;
 }
 
 void MiamiDisallowDNS(long value, struct MiamiBase *MiamiBase)
 {
-	DSYSCALLS(log(LOG_DEBUG,"MiamiDisallowDNS(%ld) called",value);)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiDisallowDNS(%ld) called",value);)
 	if (value)
 		SocketBase->res_state.options |= AROSTCP_RES_DISABLED;
 	else
@@ -129,10 +129,10 @@ APTR MiamiPFAddHook(	struct Hook *hook, UBYTE *interface, struct TagItem *taglis
 	struct ifnet *ifp;
 
 #ifdef ENABLE_PACKET_FILTER
-	DPF(log(LOG_DEBUG,"MiamiPFAddHook(0x%08lx, %s) called", hook, interface);)
+	DPF(__log(LOG_DEBUG,"MiamiPFAddHook(0x%08lx, %s) called", hook, interface);)
 
 	ifp = ifunit(interface);
-	DPF(log(LOG_DEBUG,"ifp = 0x%08lxn");)
+	DPF(__log(LOG_DEBUG,"ifp = 0x%08lxn");)
 	if (ifp) {
 		pf = bsd_malloc(sizeof(struct packet_filter_hook), NULL, NULL);
 		DPF(syslog(LOG_DEBUG,"Handle = 0x%08lx", pf);)
@@ -143,13 +143,13 @@ APTR MiamiPFAddHook(	struct Hook *hook, UBYTE *interface, struct TagItem *taglis
 			ObtainSemaphore(&pfil_list_lock);
 			AddTail((struct List *)&pfil_list, (struct Node *)pf);
 			ReleaseSemaphore(&pfil_list_lock);
-			DPF(log(LOG_DEBUG,"Added packet filter hook:");)
-			DPF(log(LOG_DEBUG,"Function: 0x%08lx", hook->h_Entry);)
-			DPF(log(LOG_DEBUG,"CPU type: %lu", pf->pfil_hooktype);)
+			DPF(__log(LOG_DEBUG,"Added packet filter hook:");)
+			DPF(__log(LOG_DEBUG,"Function: 0x%08lx", hook->h_Entry);)
+			DPF(__log(LOG_DEBUG,"CPU type: %lu", pf->pfil_hooktype);)
 		}
 	}
 #else
-	//log(LOG_CRIT,"Miami packet filter disabled", NULL);
+	__log(LOG_CRIT,"Miami packet filter disabled", NULL);
 #endif
 	return pf;
 }
@@ -168,7 +168,7 @@ void MiamiPFRemoveHook(struct Node *handle)
 
 long MiamiGetHardwareLen(void)
 {
-//	log(LOG_CRIT,"MiamiGetHardwareLen() is not implemented");
+	__log(LOG_CRIT,"MiamiGetHardwareLen() is not implemented");
 	return NULL;
 }
 
@@ -183,7 +183,7 @@ void MiamiCloseSSL(void)
 
 long MiamiSetSocksConn(void)
 {
-//	log(LOG_CRIT,"MiamiSetSocksConn() is not implemented");
+	__log(LOG_CRIT,"MiamiSetSocksConn() is not implemented");
 	return FALSE;
 }
 
@@ -192,21 +192,21 @@ long MiamiIsOnline(char *name)
 	struct ifnet *ifp;
 	long online = FALSE;
 
-	DSYSCALLS(log(LOG_DEBUG,"MiamiIsOnline(%s) called", (ULONG)(name ? name : "<NULL>"));)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiIsOnline(%s) called", (ULONG)(name ? name : "<NULL>"));)
 	if (name && strcmp(name,"mi0")) {
 		ifp = ifunit(name);
 		if (ifp)
 			online = (ifp->if_flags & IFF_UP) ? TRUE : FALSE;
 	} else {
 		for (ifp = ifnet; ifp; ifp = ifp->if_next) {
-			DSYSCALLS(log(LOG_DEBUG,"Checking interface %s%u",ifp->if_name, ifp->if_unit);)
+			DSYSCALLS(__log(LOG_DEBUG,"Checking interface %s%u",ifp->if_name, ifp->if_unit);)
 			if ((ifp->if_flags & (IFF_UP | IFF_LOOPBACK)) == IFF_UP) {
 				online = TRUE;
 				break;
 			}
 		}
 	}
-	DSYSCALLS(log(LOG_DEBUG,"MiamiIsOnline() result: %ld", online);)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiIsOnline() result: %ld", online);)
 	return online;
 }
 
@@ -221,13 +221,13 @@ void MiamiOnOffline(char *name, int online, struct MiamiBase *MiamiBase)
 
 char *inet_ntop(long family, char *addrptr, char *strptr, long len)
 {
-	DSYSCALLS(log(LOG_DEBUG,"inet_ntop(%ld) called",family);)
+	DSYSCALLS(__log(LOG_DEBUG,"inet_ntop(%ld) called",family);)
 	if (family == AF_INET)
 	{
 		sprintf(strptr, "%u.%u.%u.%u", addrptr[0], addrptr[1], addrptr[2], addrptr[3]);
 		return addrptr;
 	} else {
-		log(LOG_CRIT,"inet_ntop(): address family %ld is not implemented", family);
+		__log(LOG_CRIT,"inet_ntop(): address family %ld is not implemented", family);
 		return NULL;
 	}
 }
@@ -240,18 +240,18 @@ long Miami_inet_aton(char *strptr, struct in_addr *addrptr, struct MiamiBase *Mi
 
 long inet_pton(long family, char *strptr, struct in_addr *addrptr, struct MiamiBase *MiamiBase)
 {
-	DSYSCALLS(log(LOG_DEBUG,"inet_pton(%ld, %s) called", family, (ULONG)strptr);)
+	DSYSCALLS(__log(LOG_DEBUG,"inet_pton(%ld, %s) called", family, (ULONG)strptr);)
 	if (family == AF_INET)
 		return __inet_aton(strptr, addrptr);
 	else {
-		log(LOG_CRIT,"inet_pton(): address family %ld is not implemented", family);
+		__log(LOG_CRIT,"inet_pton(): address family %ld is not implemented", family);
 		return 0;
 	}
 }
 
 struct hostent *gethostbyname2(char *name, long family, struct MiamiBase *MiamiBase)
 {
-	DSYSCALLS(log(LOG_DEBUG,"gethostbyname2(%s, %ld) called", (ULONG)name, family);)
+	DSYSCALLS(__log(LOG_DEBUG,"gethostbyname2(%s, %ld) called", (ULONG)name, family);)
 	if (family == AF_INET)
 		return __gethostbyname(name, SocketBase);
 	else {
@@ -278,7 +278,7 @@ char *ai_errors[] = {
 
 char *gai_strerror(unsigned long error )
 {
-	DSYSCALLS(log(LOG_DEBUG,"gai_strerror(%ld) called", error);)
+	DSYSCALLS(__log(LOG_DEBUG,"gai_strerror(%ld) called", error);)
 	if (error > 12)
 		error = 12;
 	return ai_errors[error];
@@ -290,44 +290,44 @@ void freeaddrinfo(void)
 
 long getaddrinfo(struct MiamiBase *MiamiBase)
 {
-	log(LOG_CRIT,"getaddrinfo() is not implemented");
+	__log(LOG_CRIT,"getaddrinfo() is not implemented");
 	writeErrnoValue(SocketBase, ENOSYS);
 	return EAI_SYSTEM;
 }
 
 long getnameinfo(void)
 {
-	log(LOG_CRIT,"getnameinfo() is not implemented");
+	__log(LOG_CRIT,"getnameinfo() is not implemented");
 	return ENOSYS;
 }
 
 long MiamiSupportsIPV6(void)
 {
-	DSYSCALLS(log(LOG_DEBUG,"MiamiSupportsIPV6() called");)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiSupportsIPV6() called");)
 	return FALSE;
 }
 
 long MiamiResGetOptions(struct MiamiBase *MiamiBase)
 {
-	DSYSCALLS(log(LOG_DEBUG,"MiamiResGetOptions() called, result: 0x%08lx", SocketBase.res_state.options);)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiResGetOptions() called, result: 0x%08lx", SocketBase.res_state.options);)
 	return SocketBase->res_state.options;
 }
 
 void MiamiResSetOptions(long options, struct MiamiBase *MiamiBase)
 {
-	DSYSCALLS(log(LOG_DEBUG,"MiamiResSetOptions(0x%08lx) called", options);)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiResSetOptions(0x%08lx) called", options);)
 	SocketBase->res_state.options = options;
 }
 
 long sockatmark(void)
 {
-	log(LOG_CRIT,"sockatmark() is not implemented");
+	__log(LOG_CRIT,"sockatmark() is not implemented");
 	return 0;
 }
 
 void MiamiSupportedCPUs(unsigned long *apis, unsigned long *callbacks, unsigned long *kernel)
 {
-	DSYSCALLS(log(LOG_DEBUG,"MiamiSupportedCPUs() called");)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiSupportedCPUs() called");)
 	*apis = MIAMICPU_M68KREG;
 	*callbacks = MIAMICPU_M68KREG;
 	*kernel = MIAMICPU_PPCV4;
@@ -336,13 +336,13 @@ void MiamiSupportedCPUs(unsigned long *apis, unsigned long *callbacks, unsigned 
 long MiamiGetFdCallback(fdCallback_t *cbptr, struct MiamiBase *MiamiBase)
 {
 	*cbptr = SocketBase->fdCallback;
-	DSYSCALLS(log(LOG_DEBUG,"MiamiGetFdCallback() called, *cbptr = 0x%08lx", (ULONG)*cbptr);)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiGetFdCallback() called, *cbptr = 0x%08lx", (ULONG)*cbptr);)
 	return *cbptr ? MIAMICPU_M68KREG : 0;
 }
 
 long MiamiSetFdCallback(fdCallback_t cbptr, long cputype, struct MiamiBase *MiamiBase)
 {
-	DSYSCALLS(log(LOG_DEBUG,"MiamiSetFdCallback(0x%08lx, %ld) called", (ULONG)cbptr, cputype);)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiSetFdCallback(0x%08lx, %ld) called", (ULONG)cbptr, cputype);)
 	if (cputype == MIAMICPU_M68KREG) {
 		SocketBase->fdCallback = cbptr;
 		return TRUE;
@@ -352,7 +352,7 @@ long MiamiSetFdCallback(fdCallback_t cbptr, long cputype, struct MiamiBase *Miam
 
 void SetSysLogPort(void)
 {	 
-	DSYSCALLS(log(LOG_DEBUG,"SetSysLogPort() called");)
+	DSYSCALLS(__log(LOG_DEBUG,"SetSysLogPort() called");)
 	ExtLogPort = FindPort("SysLog");
 }
 
@@ -372,7 +372,7 @@ struct UserGroupCredentials *MiamiGetCredentials(struct MiamiBase *MiamiBase)
         if (!UserGroupBase)
 			UserGroupBase = OpenLibrary("usergroup.library",4);
 
-	DSYSCALLS(log(LOG_DEBUG,"MiamiGetCredentials(): UserGroupBase = 0x%08lx", (ULONG)UserGroupBase);)
+	DSYSCALLS(__log(LOG_DEBUG,"MiamiGetCredentials(): UserGroupBase = 0x%08lx", (ULONG)UserGroupBase);)
 #warning "TODO: uncomment the following lines once we have a working usergroups.library implemenetation"
 //		if (UserGroupBase)
 //		return getcredentials(NULL);

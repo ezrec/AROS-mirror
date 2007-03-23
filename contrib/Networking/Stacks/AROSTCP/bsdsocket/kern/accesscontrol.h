@@ -43,19 +43,19 @@ static inline void setup_accesscontroltable(struct NetDataBase * ndb)
   {
     ndb->ndb_AccessTable = new_AccessTable;
 #ifdef DEBUG_NETDB
-    log(7, "Reallocated accesscontroltable to 0x%08x:", new_AccessTable);
+    __log(7, "Reallocated accesscontroltable to 0x%08x:", new_AccessTable);
     {
       int i;
 #define host ndb->ndb_AccessTable[i].ai_host
 #define mask ndb->ndb_AccessTable[i].ai_mask
       for (i = 0; i < ndb->ndb_AccessCount; i++)
-        log(7, "%ld %ld.%ld.%ld.%ld/%ld.%ld.%ld.%ld %lx",
+        __log(7, "%ld %ld.%ld.%ld.%ld/%ld.%ld.%ld.%ld %lx",
 	  ndb->ndb_AccessTable[i].ai_port, 
 	  host>>24 & 0xff, host>>16 & 0xff, host>>8 & 0xff, host & 0xff,
 	  mask>>24 & 0xff, mask>>16 & 0xff, mask>>8 & 0xff, mask & 0xff,
 	  ndb->ndb_AccessTable[i].ai_flags);
     
-      log(7, "%ld %ld", ndb->ndb_AccessTable[i].ai_flags,
+      __log(7, "%ld %ld", ndb->ndb_AccessTable[i].ai_flags,
 	/*                 */ ndb->ndb_AccessTable[i].ai_port);
 #undef mask
 #undef host    
@@ -63,7 +63,7 @@ static inline void setup_accesscontroltable(struct NetDataBase * ndb)
 #endif
   }
   else
-    log(LOG_EMERG, "Memory exhausted while reallocating access control table");
+    __log(LOG_EMERG, "Memory exhausted while reallocating access control table");
 }
 #endif /* ACCESSCONTROL_H */
 

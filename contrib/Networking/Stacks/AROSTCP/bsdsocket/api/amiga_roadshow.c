@@ -18,7 +18,7 @@ AROS_LH1(long, bpf_open,
 	struct SocketBase *, libPtr, 57, UL)
 {
 	AROS_LIBFUNC_INIT
-	//log(LOG_CRIT,"bpf_open() is not implemented");
+	__log(LOG_CRIT,"bpf_open() is not implemented");
 	writeErrnoValue(libPtr, ENOSYS);
 	return -1;
 	AROS_LIBFUNC_EXIT
@@ -107,7 +107,7 @@ AROS_LH1(long, AddRouteTagList,
 	struct SocketBase *, libPtr, 65, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT,"AddRouteTagList() is not implemented");
+	__log(LOG_CRIT,"AddRouteTagList() is not implemented");
 	writeErrnoValue(libPtr, ENOSYS);
 	return -1;
 	AROS_LIBFUNC_EXIT
@@ -118,7 +118,7 @@ AROS_LH1(long, DeleteRouteTagList,
 	struct SocketBase *, libPtr, 66, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT,"DeleteRouteTagList() is not implemented");
+	__log(LOG_CRIT,"DeleteRouteTagList() is not implemented");
 	writeErrnoValue(libPtr, ENOSYS);
 	return -1;
 	AROS_LIBFUNC_EXIT
@@ -129,7 +129,7 @@ AROS_LH1(long, ChangeRouteTagList,
 	struct SocketBase *, libPtr, 67, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT,"ChangeRouteTagList() is not implemented");
+	__log(LOG_CRIT,"ChangeRouteTagList() is not implemented");
 	writeErrnoValue(libPtr, ENOSYS);
 	return -1;
 	AROS_LIBFUNC_EXIT
@@ -149,7 +149,7 @@ AROS_LH2(struct rt_msghdr *, GetRouteInfo,
 	struct SocketBase *, libPtr, 69, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT,"GetRouteInfo() is not implemented\n");
+	__log(LOG_CRIT,"GetRouteInfo() is not implemented\n");
 	writeErrnoValue(libPtr, ENOSYS);
 	return NULL;
 	AROS_LIBFUNC_EXIT
@@ -163,7 +163,7 @@ AROS_LH4(long, AddInterfaceTagList,
 	struct SocketBase *, libPtr, 70, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT,"AddInterfaceTagList() is not implemented\n");
+	__log(LOG_CRIT,"AddInterfaceTagList() is not implemented\n");
 	writeErrnoValue(libPtr, ENOSYS);
 	return -1;
 	AROS_LIBFUNC_EXIT
@@ -175,7 +175,7 @@ AROS_LH2(long, ConfigureInterfaceTagList,
 	struct SocketBase *, libPtr, 71, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT,"ConfigureInterfaceTagList() is not implemented\n");
+	__log(LOG_CRIT,"ConfigureInterfaceTagList() is not implemented\n");
 	writeErrnoValue(libPtr, ENOSYS);
 	return -1;
 	AROS_LIBFUNC_EXIT
@@ -193,7 +193,7 @@ AROS_LH0I(struct List *, ObtainInterfaceList,
 	struct SocketBase *, libPtr, 73, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT,"ObtainInterfaceList() is not implemented");
+	__log(LOG_CRIT,"ObtainInterfaceList() is not implemented");
 	return NULL;
 	AROS_LIBFUNC_EXIT
 }
@@ -207,7 +207,7 @@ AROS_LH5I(LONG, CreateAddrAllocMessageA,
 	struct SocketBase *, libPtr, 75, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT,"CreateAddrAllocMessageA() is not implemented\n");
+	__log(LOG_CRIT,"CreateAddrAllocMessageA() is not implemented\n");
 	return 0;
 	AROS_LIBFUNC_EXIT
 }
@@ -243,7 +243,7 @@ AROS_LH3(long, AddNetMonitorHookTagList,
 	struct SocketBase *, libPtr, 79, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT,"AddNetMonitorHookTagList() is not implemented");
+	__log(LOG_CRIT,"AddNetMonitorHookTagList() is not implemented");
 	writeErrnoValue(libPtr, ENOSYS);
 	return -1;
 	AROS_LIBFUNC_EXIT
@@ -265,7 +265,7 @@ AROS_LH4(LONG, GetNetworkStatistics,
 	struct SocketBase *, libPtr, 81, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT,"GetNetworkStatistics() is not implemented");
+	__log(LOG_CRIT,"GetNetworkStatistics() is not implemented");
 	writeErrnoValue(libPtr, ENOSYS);
 	return -1;
 	AROS_LIBFUNC_EXIT
@@ -276,7 +276,7 @@ AROS_LH1(LONG, AddDomainNameServer,
 	struct SocketBase *, libPtr, 82, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT, "AddDomainNameServer() is not implemented");
+	__log(LOG_CRIT, "AddDomainNameServer() is not implemented");
 	writeErrnoValue(libPtr, ENOSYS);
 	return -1;
 	AROS_LIBFUNC_EXIT
@@ -287,7 +287,7 @@ AROS_LH1(LONG, RemoveDomainNameServer,
 	struct SocketBase *, libPtr, 83, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT, "RemoveDomainNameServer() is not implemented");
+	__log(LOG_CRIT, "RemoveDomainNameServer() is not implemented");
 	writeErrnoValue(libPtr, ENOSYS);
 	return -1;
 	AROS_LIBFUNC_EXIT
@@ -305,7 +305,7 @@ AROS_LH0I(struct List *, ObtainDomainNameServerList,
 	struct SocketBase *, libPtr, 85, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT, "ObtainDomainNameServerList() is not implemented");
+	__log(LOG_CRIT, "ObtainDomainNameServerList() is not implemented");
 	return NULL;
 	AROS_LIBFUNC_EXIT
 }
@@ -315,7 +315,7 @@ AROS_LH1I(void, setnetent,
 	struct SocketBase *, libPtr, 86, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT, "setnetent() is not implemented");
+	__log(LOG_CRIT, "setnetent() is not implemented");
 	return NULL;
 	AROS_LIBFUNC_EXIT
 }
@@ -331,7 +331,7 @@ AROS_LH0I(struct netent *, getnetent,
 	struct SocketBase *, libPtr, 88, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT, "getnetent() is not implemented");
+	__log(LOG_CRIT, "getnetent() is not implemented");
 	return NULL;
 	AROS_LIBFUNC_EXIT
 }
@@ -341,7 +341,7 @@ AROS_LH1I(void, setprotoent,
 	struct SocketBase *, libPtr, 89, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT, "setprotoent() is not implemented");
+	__log(LOG_CRIT, "setprotoent() is not implemented");
 	return NULL;
 	AROS_LIBFUNC_EXIT
 }
@@ -352,7 +352,7 @@ AROS_LH1I(void, setservent,
 	struct SocketBase *, libPtr, 92, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT, "setservent() is not implemented");
+	__log(LOG_CRIT, "setservent() is not implemented");
 	return NULL;
 	AROS_LIBFUNC_EXIT
 }
@@ -368,7 +368,7 @@ AROS_LH0I(struct servent *, getservent,
 	struct SocketBase *, libPtr, 94, UL)
 {
 	AROS_LIBFUNC_INIT
-//	log(LOG_CRIT, "getservent() is not implemented");
+	__log(LOG_CRIT, "getservent() is not implemented");
 	return NULL;
 	AROS_LIBFUNC_EXIT
 }

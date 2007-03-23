@@ -108,7 +108,7 @@ AROS_LH1(char *, Inet_NtoA,
    struct SocketBase *, libPtr, 30, UL)
 {
   AROS_LIBFUNC_INIT
-  D(log(LOG_DEBUG,"Inet_NtoA(0x%08lx) called",s_addr);)
+  D(__log(LOG_DEBUG,"Inet_NtoA(0x%08lx) called",s_addr);)
   return __Inet_NtoA(s_addr, libPtr);
   AROS_LIBFUNC_EXIT
 }

@@ -131,7 +131,7 @@ alloc_arptable(struct sana_softc* ssc, int to_allocate)
   } else {
     if (atab) bsd_free(atab, M_ARPENT);
     if (at) bsd_free(at, M_ARPENT);
-    log(LOG_ERR, "Could not allocate ARP table for %s\n", ssc->ss_name);
+    __log(LOG_ERR, "Could not allocate ARP table for %s\n", ssc->ss_name);
   }
 
   ssc->ss_arp.table = atab;
@@ -381,7 +381,7 @@ arpresolve(register struct sana_softc *ssc,
 
   if (ssc->ss_if.if_flags & IFF_NOARP) {
     /* No arp */
-    log(LOG_ERR, 
+    __log(LOG_ERR, 
 	"arpresolve: can't resolve address for if %s/%ld\n", 
 	ssc->ss_if.if_name, ssc->ss_if.if_unit);
     *error = ENETUNREACH;
@@ -393,7 +393,7 @@ arpresolve(register struct sana_softc *ssc,
   if (!(atb = ssc->ss_arp.table)) {
     alloc_arptable(ssc, 0);
     if (!(atb = ssc->ss_arp.table)) {
-      log(LOG_ERR, "arpresolve: memory exhausted");
+      __log(LOG_ERR, "arpresolve: memory exhausted");
       *error = ENOBUFS; 
       m_free(m); 
       return 0;
@@ -408,7 +408,7 @@ arpresolve(register struct sana_softc *ssc,
       at->at_hold = m;
       arpwhohas(ssc, destip);
     } else {
-      log(LOG_ERR, "arpresolve: no free entry");
+      __log(LOG_ERR, "arpresolve: no free entry");
       *error = ENETUNREACH;
       m_free(m); 
     } 
@@ -465,9 +465,9 @@ arpinput(struct sana_softc *ssc,
 #ifdef paranoid_arp_mode
   /* Sanity check */
   if (bcmp(srcaddr, (UBYTE*)ar + sizeof(*ar), ar->ar_hln)) {
-    log(LOG_ERR, "An ARP packet sent as %s", 
+    __log(LOG_ERR, "An ARP packet sent as %s", 
 	sana_sprintf(srcaddr, ar->ar_hln));
-    log(LOG_ERR, " from address: %s!!\n", 
+    __log(LOG_ERR, " from address: %s!!\n", 
 	sana_sprintf((UBYTE*)ar + sizeof(*ar), ar->ar_hln));
     goto out;
   }
@@ -531,7 +531,7 @@ in_arpinput(register struct sana_softc *ssc,
   }
 #ifndef AMITCP
   if (!bcmp(sha, (caddr_t)etherbroadcastaddr, ac->ac_if.if_addrlen)) {
-    log(LOG_ERR,
+    __log(LOG_ERR,
 	"arp: ether address is broadcast for IP address %lx!\n",
 	ntohl(isaddr.s_addr));
     goto out;
@@ -540,7 +540,7 @@ in_arpinput(register struct sana_softc *ssc,
 
   /* Check for duplicate IP addresses */
   if (isaddr.s_addr == myaddr.s_addr) {
-    log(LOG_ERR,
+    __log(LOG_ERR,
 	"duplicate IP address %lx!! sent from hardware address: %s\n",
 	ntohl(isaddr.s_addr), 
 	sana_sprintf(sha, len));

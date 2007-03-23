@@ -180,7 +180,7 @@ D(bug("[AROSTCP](amiga_api.c) ELL_Open()\n[AROSTCP](amiga_api.c) ELL_Open: versi
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_api.c) ELL_Open: Created user library base @ %08lx\n", newBase));
 #endif
-  D(log(LOG_DEBUG,"Created user library base: %08lx\n", newBase);)
+  D(__log(LOG_DEBUG,"Created user library base: %08lx\n", newBase);)
   if (newBase == NULL)
     return NULL;
 
@@ -346,7 +346,7 @@ ULONG *__UL_Close(struct SocketBase *libPtr)
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_api.c) __UL_Close: Closing proc 0x%lx base 0x%lx\n", libPtr->thisTask, libPtr));
 #endif
-  log(LOG_DEBUG, "Closing proc 0x%lx base 0x%lx\n", 
+  __log(LOG_DEBUG, "Closing proc 0x%lx base 0x%lx\n", 
       libPtr->thisTask, libPtr);
 #endif
 
@@ -592,7 +592,7 @@ D(bug("[AROSTCP](amiga_api.c) api_deinit()\n"));
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_api.c) api_deinit: The calling task of api_deinit() was not bsdsocket.library's"));
 #endif
-    log(LOG_ERR,
+    __log(LOG_ERR,
       "The calling task of api_deinit() was not bsdsocket.library's");
   }
 #endif

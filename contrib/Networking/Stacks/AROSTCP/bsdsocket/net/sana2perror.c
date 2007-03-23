@@ -57,9 +57,9 @@ sana2perror(const char *banner, struct IOSana2Req *ios2)
   }
 
   if (werr == 0 || werr >= sana2wire_nerr) {
-    log(LOG_ERR, "%s: %s\n", banner, errstr);
+    __log(LOG_ERR, "%s: %s\n", banner, errstr);
   } else {
-    log(LOG_ERR, "%s: %s (%s)\n", banner, errstr, sana2wire_errlist[werr]);
+    __log(LOG_ERR, "%s: %s (%s)\n", banner, errstr, sana2wire_errlist[werr]);
   }
 }
 

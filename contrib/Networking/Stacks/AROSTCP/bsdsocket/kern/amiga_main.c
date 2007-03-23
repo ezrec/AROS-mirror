@@ -294,7 +294,7 @@ D(bug("[AROSTCP](amiga_main.c) main: Got CTRL-C while %ld %s still open.\n",
 	             (MasterSocketBase->lib_OpenCnt == 2) ? "library" : "libraries"));
 #endif
 
-          log(LOG_ERR, "Got CTRL-C while %ld %s still open.\n",
+          __log(LOG_ERR, "Got CTRL-C while %ld %s still open.\n",
 	       MasterSocketBase->lib_OpenCnt - 1,
 	             (MasterSocketBase->lib_OpenCnt == 2) ? "library" : "libraries");
 

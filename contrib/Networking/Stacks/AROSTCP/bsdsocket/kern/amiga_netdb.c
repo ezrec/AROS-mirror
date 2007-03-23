@@ -191,7 +191,7 @@ D(bug("[AROSTCP](amiga_netdb.c) alloc_netdb()\n"));
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_netdb.c) alloc_netdb: Allocated ndb = 0x%08x, ndb_AccessTable = 0x%08x\n", ndb, ndb->ndb_AccessTable));
 #endif
-  DNETDB(else log(LOG_DEBUG,"Allocated ndb = 0x%08x, ndb_AccessTable = 0x%08x", ndb, ndb->ndb_AccessTable);)
+  DNETDB(else __log(LOG_DEBUG,"Allocated ndb = 0x%08x, ndb_AccessTable = 0x%08x", ndb, ndb->ndb_AccessTable);)
   return ndb;
 }
 
@@ -246,7 +246,7 @@ D(bug("[AROSTCP](amiga_netdb.c) aliascopy()\n"));
 
 #ifdef DEBUG
   if (cto != zap + zap_size) {
-    log(LOG_ERR, "%s: mismatch in size %ld != expected %ld\n",
+    __log(LOG_ERR, "%s: mismatch in size %ld != expected %ld\n",
 	logname, cto - (UBYTE *)zap, zap_size);
   }
 #endif
@@ -736,7 +736,7 @@ D(bug("[AROSTCP](amiga_netdb.c) addnameservent: couldnt allocate entry\n"));
 #if defined(__AROS__)
 D(bug("[AROSTCP](amiga_netdb.c) addnameservent: Added nameserver %s (0x%08lx) to netdb = 0x%08lx\n",Buffer, nsn->nsn_Ent.ns_addr.s_addr, ndb));
 #endif
-  DNETDB(log(LOG_DEBUG,"Added nameserver %s (0x%08lx) to netdb = 0x%08lx\n",Buffer, nsn->nsn_Ent.ns_addr.s_addr, ndb);)
+  DNETDB(__log(LOG_DEBUG,"Added nameserver %s (0x%08lx) to netdb = 0x%08lx\n",Buffer, nsn->nsn_Ent.ns_addr.s_addr, ndb);)
 
   AddTail((struct List*)&ndb->ndb_NameServers, (struct Node*)nsn);
   return RETURN_OK;
@@ -1062,7 +1062,7 @@ D(bug("[AROSTCP](amiga_netdb.c) read_netdb: parsing line: %s, prefixindex=%ld\n"
 	  /* Log the error */
 	  error_request("Error in NetDB file %s at line %ld, col %ld\n%s",
 		fname, line, rdargs->RDA_Source.CS_CurChr, *errstrp);
-	  log(LOG_WARNING, "NetDB(%s) line %ld: %s before col %ld\n",
+	  __log(LOG_WARNING, "NetDB(%s) line %ld: %s before col %ld\n",
 	      fname, line, *errstrp, rdargs->RDA_Source.CS_CurChr);
 
 	  warnval = retval;
@@ -1180,7 +1180,7 @@ D(bug("[AROSTCP](amiga_netdb.c) init_netdb()\n"));
   retval = read_netdb(NDB, netdbname, &errstr, &res, -1, NETDB_IFF_ADDNEW);
 /*  if (retval) {
     Printf("init_netdb: file %s: %s\n", netdbname, errstr);
-    log(LOG_WARNING, "init_netdb: file %s: %s", netdbname, errstr);
+    __log(LOG_WARNING, "init_netdb: file %s: %s", netdbname, errstr);
   } else */
   if (retval == RETURN_WARN)
     retval = RETURN_OK;

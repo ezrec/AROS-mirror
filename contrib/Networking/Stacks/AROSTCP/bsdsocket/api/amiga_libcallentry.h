@@ -50,7 +50,7 @@ extern const char wrongTaskErrorFmt[];
 #define CHECK_TASK()					\
   if (libPtr->thisTask != SysBase->ThisTask) {		\
     struct Task * wTask = SysBase->ThisTask;		\
-    log(LOG_CRIT, wrongTaskErrorFmt, wTask,		\
+    __log(LOG_CRIT, wrongTaskErrorFmt, wTask,		\
 	wTask->tc_Node.ln_Name,	libPtr->thisTask,	\
 	libPtr->thisTask->tc_Node.ln_Name);		\
     return -1;						\
@@ -59,7 +59,7 @@ extern const char wrongTaskErrorFmt[];
 #define CHECK_TASK_NULL()				\
   if (libPtr->thisTask != SysBase->ThisTask) {		\
     struct Task * wTask = SysBase->ThisTask;		\
-    log(LOG_CRIT, wrongTaskErrorFmt, wTask,		\
+    __log(LOG_CRIT, wrongTaskErrorFmt, wTask,		\
 	wTask->tc_Node.ln_Name,	libPtr->thisTask,	\
 	libPtr->thisTask->tc_Node.ln_Name);		\
     return NULL;					\
@@ -70,7 +70,7 @@ extern const char wrongTaskErrorFmt[];
 #define CHECK_TASK_VOID()				\
   if (libPtr->thisTask != SysBase->ThisTask) {		\
     struct Task * wTask = SysBase->ThisTask;		\
-    log(LOG_CRIT, wrongTaskErrorFmt, wTask,		\
+    __log(LOG_CRIT, wrongTaskErrorFmt, wTask,		\
 	wTask->tc_Node.ln_Name,	libPtr->thisTask,	\
 	libPtr->thisTask->tc_Node.ln_Name);		\
     return;						\
