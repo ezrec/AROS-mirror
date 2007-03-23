@@ -30,6 +30,4 @@
 ; - if nameserver is down, you can access computers only with its IP
 ;  number if it is not in your hosts file.
 
-192.168.0.1   gateway
-
 ; EOF
