@@ -4,10 +4,7 @@
 Run <NIL: >NIL: AROSTCP
 WaitForPort AROSTCP
 If NOT Warn
-  ; Add route to this host
-  run >NIL: route add arosbox localhost
-  ; Add route to the default gateway
-  run >NIL: route add default gateway
+  ; echo "Stack online"
 Else
   ; echo "Wait for Stack Failed"
 EndIf
