@@ -2,7 +2,149 @@
 Translating
 ===========
 
-.. Warning::
+:Authors:   William Ouwehand, 
+:Copyright: Copyright © 1995-2007, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Work in progress.
 
-   This document is not finished! If you want to help rectify this, please 
-   contact us.
+.. Warning:: 
+    
+    Page not yet finished.Website part is OK, the OS part less. Grammar
+    corrections are welcome.
+
+
+.. Contents::
+
+
+Introduction
+------------
+Translating the website or AROS into other languages helps us reach more people internationally. 
+Making estimates is impossible, but one will easily agree that there is a potentially huge user 
+and developer base who are unable to speak, read or write English. Reaching out to those people can
+have positive effects. Besides, using AROS in your native language is also just plain nice, not?
+
+Can you help?
+-------------
+Off course! AROS has relatively little translators and still a lot of translation (and general writing) 
+work still to do. Any aid can seriously speed up translating, or even bring AROS to new countries and 
+people! On another side-note, most of our translators are also (core) developers; taking
+over their tasks will allow them to maximize their efforts on coding. As such, there's always need
+for help here. If interested, feel free to `contact us`__.
+
+__ http://aros.sourceforge.net/contact.php#mailing-lists
+
+Where to start
+--------------
+Translating is as basic as it implicates. All you need here is a suitable text-editor, 
+access to the AROS website or OS sources and a feel for your language and grammar. The latter is 
+up-to you, information about the first two can be found here on the `SVN pages <svn>`_. 
+
+The translating jobs divide into the website and the AR(OS) operating system. 
+The website has a slightly higher priority as AROS is still under heavily development; 
+it can as such attract needed developers and users alike, possibly speeding up the development process. 
+
+
+Translating the website
+=======================
+The website is AROS' official online presence. It carries AROS news, general information, 
+OS downloads and the user and developer guides. The site has an important role in informing visitors 
+about AROS, showing some degree of the progress of the OS (news), and housing important resources 
+for users and developers. Even a simply translation here of the introductions and news can help 
+us inform more people about AROS. 
+
+What to translate
+~~~~~~~~~~~~~~~~~
+For your own ease, limit yourself to the level 1 pages first, e.g. the introduction, contribute, 
+news pages. User and developer docs are still under heavy development and are changed 
+frequently or outdated, making translations not yet worthwhile. Same applies to other 'deeper' pages.
+
+Procedure
+~~~~~~~~~
+After you've familiarized yourself with `SVN here <svn>`_, perform a checkout 
+of the website sources via:: 
+
+  https://svn.aros.org:8080/svn/aros/trunk/documentation/
+
+In the local repository you will notice the different language extensions. Each 
+extension corresponds to a specific language, and as you can guess the same needs to be done 
+for your pages. Simply pick an existing page (English preferred), duplicate (typically drag+press control) 
+it into the same drawer with the correct extension, e.g. contribute.en (english) -> 
+contribute.nl (dutch). Next translate the page and commit it to the repository. 
+Please use typical logmessages like "German translations" and try to bundle as many files into 
+1 commit. 
+
+Checking your work
+~~~~~~~~~~~~~~~~~~
+Checking is needed on two points: spelling and markup errors. 
+Spellchecks should be considered obligatory, optionally also re-reading texts can help. 
+Both should catch 99% of spelling and grammar errors. We won't complain, 
+but it does add to the representativeness of the site. And some users *do* consider these details.
+
+Markup errors are mistakes in tags or links of the document source, creating a broken page
+filled with (ugly) error messages. If you just commit these to the server, the errors will be reported
+and generally fixed in a day or so by other translators. To save them some work, we encourage that 
+you build the documentation locally first and correct any problems. For a how-to
+refer to the `documenting page <documenting>`_, section building. If no errors are shown you 
+can commit your files.
+
+Localizing AROS
+===============
+(FIXME: beta ~ haven't gotten to translating the OS yet, so no experience here...)
+Localizing the OS and it's applications adds much to the experience
+of non-English speaking users, or just making AROS usable for them in the first place.
+The procedure for localizing the OS is different in some details. 
+
+What to translate
+~~~~~~~~~~~~~~~~~
+You should typically start with the Wanderer (/workbench) first, eventually progressing to the
+including applications and contributed files (if you feel to it). Having Wanderer and the pref apps 
+translated is a good start in any case. 
+
+Procedure
+~~~~~~~~~
+The catalog files for AROS are part of the OS and located within the main code 
+repository. This makes quite a large checkout, taking time and space (around 200MB). The SVN URL is::
+
+  https://svn.aros.org:8080/svn/aros/trunk/AROS
+
+Do not get intimidated by the mere size of the repository: you only need to focus on a 
+fraction of these files, luckily ;-).
+
+Now check (for example the workbench/prefs drawer. You'll recognize the AROS preference apps here, 
+and see 'locale' drawers. Each of these contain the language files called .ct or catalog files for
+that given application. Different from the site however the default .EN files go by different 
+names, e.g. the English catalog file for the Installer is called "installer.cd", while 
+other language files follow the <language name> + <.ct extension> rule. If confused, just check the contents. 
+Once you've got your source file, the process is essentially the same as the website: copy, rename, 
+translate and commit.
+
+Checking your work
+~~~~~~~~~~~~~~~~~~
+Again, perform spellchecks and re-read texts with some time interval.
+
+The used text strings for the OS are relatively short and simple, so don't expect any big tag errors
+here. If you do want to check (again encouraged), the process is slightly more complex this time. 
+You can go by this three ways: (1) commit your files and wait for the next nightly build and check, (2) build 
+the OS locally and check, or (3) make and try the files 'live' under AROS. Options 1 and 2 are straightforward 
+(if you can build AROS, see `here <compiling>`_). 
+
+Option 3 is perhaps most simple but require some changes to the filenames and a running Linux, native or VM
+install of AROS. First, browse the locale/catalogs drawer to familiarize yourself with the way AmigaOS/AROS 
+handles locale files. As you can see, this differs from the (SVN) source method. The hierarchical 
+structure differs, as does the filename and extension! All-in this methods requires some more coordination 
+but also is the most straightforward way for translating the OS.
+
+(FIXME: what do you guys advice? Please mind this won't be the most tech-savvy people.)
+
+Maintenance
+-----------
+As with everything, data is frequently updated, requiring subsequent syncronisation of all language versions. 
+It's not a thankful job (except from a endusers POV), but one necessary. Mind there 
+are no obligations in the first place; don't fear we will ask you for updates, or that you're stuck after 
+having translated something once ;-). However, keeping around in order tp maintain your translation is highly 
+encouraged... and needed. The frequency of that is up to you. 
+
+Tracking changes is made easy by the SVN changelogs (available trough your SVN client) where all changes 
+to the repository are stored. Syncronising changed documents can be a somewhat cumbersome task. 
+The better text-editors support simultaneous scrolling of two windows, making this work a lot easier.
