@@ -75,7 +75,7 @@ maintainer-clean: distclean
 install:	all
 	$(INSTALL) -d $(PREFIX)/Prefs
 	$(INSTALL_PROGRAM) AHI_MUI $(PREFIX)/Prefs/AHI
-	$(INSTALL_DATA) ${srcdir}/AHI.info $(PREFIX)/Prefs/AHI.info
+#	$(INSTALL_DATA) ${srcdir}/AHI.info $(PREFIX)/Prefs/AHI.info
 	for i in $(LANGUAGES); do \
 	  $(INSTALL) -d $(PREFIX)/Locale/Catalogs/$$i; \
 	  $(INSTALL_DATA) $$i.catalog $(PREFIX)/Locale/Catalogs/$$i/ahiprefs.catalog; \
