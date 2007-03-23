@@ -44,8 +44,7 @@ There are a number of files in the AROSTCP-CONFIG that need to
 be changed using a text editor (eg. 'Editor', found in AROS's Tools
 directory):
 
-* hosts: At the end of the file, there is an entry for a computer/device
-called "gateway". Change the IP address at the start of this line to
+* static-routes: Change the IP address for "DEFAULT GATEWAY" to
 that of your actual gateway, eg. your router.
 
 * netdb-myhost: In the 'HOST' line, change the IP address to the real
@@ -59,6 +58,9 @@ for different network cards. Enable the entry for your network card by
 removing the '#' from the start of one of the lines that begin with
 "#eth0".  You will need to alter the IP address to the correct one for
 your card, and optionaly specify a NETMASK.
+
+ N.B. - You must specify different names if you network has more than one
+        NIC - ie eth0, eth1, etc.
 
 If you're using a home network, and you don't know what values to use in
 the 'hosts' and 'netdb-myhost' files, try running AROSTCP without
