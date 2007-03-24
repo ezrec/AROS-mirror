@@ -379,21 +379,33 @@ D(bug("[AROSTCP](amiga_netdb.c) addifent()\n"));
 			for (; *cp; cp++)
 				if (*cp >= '0' && *cp <= '9')
 					break;
+
 			ep = cp;
 			for (ssc->unit = 0; *cp >= '0' && *cp <= '9'; )
 				ssc->unit = ssc->unit * 10 + *cp++ - '0';
+
 			*ep = 0;
 			ifp = iface_make(ssc);
 			if (!ifp) {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addifent: failed to create interface '%s'\n", ssc->args->a_name));
+#endif
 				*errstrp = ERR_MEMORY;
 				retval = RETURN_FAIL;
 			}
 			else
 			{
-				flags &= NETDB_IFF_MODIFYOLD;
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addifent: created new interface '%s'\n", ssc->args->a_name));
+#endif
+				flags |= NETDB_IFF_MODIFYOLD;
 			}
 		}
-		if ((ifp) && (flags & NETDB_IFF_MODIFYOLD)) {
+		if ((ifp) && (flags & NETDB_IFF_MODIFYOLD))
+		{
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addifent: configuring interface '%s'\n", ssc->args->a_name));
+#endif
 			DIFCONF(Printf("Setting up interface %s\n", ssc->args->a_name);)
 			memset (&ifr, 0, sizeof (ifr));
 			if (ssc->args->a_ip) {
@@ -431,7 +443,9 @@ D(bug("[AROSTCP](amiga_netdb.c) addifent()\n"));
 		}
 		else
 		{
-D(bug("Interface named '%s' already exists..", ssc->args->a_name));
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addifent: Interface named '%s' already exists..\n", ssc->args->a_name));
+#endif
 		}
 		ssconfig_free(ssc);
 	} else {
