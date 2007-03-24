@@ -1,0 +1,363 @@
+## chunk AUTH Dósa Márton (dm_@freemail.hu)
+## language magyar
+## version $VER: bwin.ct 20.2 (01.01.03)
+MCCMSG_BWin
+BWin
+;#DEF BWin
+;#SET (1//)
+MCCMSG_ToFront
+Elõre
+;#DEF Bring to front
+;#SET (//)
+MCCMSG_ToBack
+Hátra
+;#DEF Send to back
+;#SET (//)
+MCCMSG_HideWin
+Elrejt
+;#DEF Hide
+;#SET (//)
+MCCMSG_CloseWin
+Bezár
+;#DEF Close
+;#SET (//)
+MCCMSG_DragBarTop
+Húzómezõ felül
+;#DEF DragBar at top
+;#SET (//)
+MCCMSG_AutoShow
+Auto
+;#DEF Auto
+;#SET (//)
+MCCMSG_Close
+Bezár
+;#DEF Close
+;#SET (//)
+MCCMSG_DragBar
+Húzómezõ
+;#DEF DragBar
+;#SET (//)
+MCCMSG_Size
+Méretezõ
+;#DEF Size
+;#SET (//)
+MCCMSG_Snapshot
+Rögzít
+;#DEF Snapshot
+;#SET (//)
+MCCMSG_Unsnapshot
+Felold
+;#DEF Unsnapshot
+;#SET (//)
+MCCMSG_Settings
+MUI beállítások...
+;#DEF MUI settings...
+;#SET (//)
+MCCMSG_User
+Felhasználó...
+;#DEF User...
+;#SET (//)
+MCPMSG_Title_Window
+Ablak
+;#DEF Window
+;#SET (100//)
+MCPMSG_WinShinePen
+Fényes
+;#DEF Shine
+;#SET (//)
+MCPMSG_WinShinePen_Title
+Fényes pen
+;#DEF Shine pen
+;#SET (//)
+MCPMSG_WinShinePen_Help
+Beállítja az ablakkeret\nfényes pen-jét.
+;#DEF Adjust the window\nframe shine pen.
+;#SET (//)
+MCPMSG_WinShadowPen
+Árnyék
+;#DEF Shadow
+;#SET (//)
+MCPMSG_WinShadowPen_Title
+Árnyék pen
+;#DEF Shadow pen
+;#SET (//)
+MCPMSG_WinShadowPen_Help
+Beállítja az ablakkeret\nárnyék pen-jét.
+;#DEF Adjust the window\nframe shadow pen.
+;#SET (//)
+MCPMSG_WinForegroundPen
+Elõtér
+;#DEF Foreground
+;#SET (//)
+MCPMSG_WinForegroundPen_Title
+Elõtér pen
+;#DEF Foreground pen
+;#SET (//)
+MCPMSG_WinForegroundPen_Help
+Beállítja az ablakkeret\nelõtér pen-jét.
+;#DEF Adjust the window frame\nforeground pen.
+;#SET (//)
+MCPMSG_Title_DragBar
+Húzómezõ
+;#DEF DragBar
+;#SET (//)
+MCPMSG_DragBarShinePen
+Fényes
+;#DEF Shine
+;#SET (//)
+MCPMSG_DragBarShinePen_Title
+Fényes pen
+;#DEF Shine pen
+;#SET (//)
+MCPMSG_DragBarShinePen_Help
+Beállítja a húzómezõ\nfényes pen-jét.
+;#DEF Adjust the DragBar\ngadget shine pen.
+;#SET (//)
+MCPMSG_DragBarShadowPen
+Árnyék
+;#DEF Shadow
+;#SET (//)
+MCPMSG_DragBarShadowPen_Title
+Árnyék pen
+;#DEF Shadow pen
+;#SET (//)
+MCPMSG_DragBarShadowPen_Help
+Beállítja a húzómezõ\nárnyék pen-jét.
+;#DEF Adjust the DragBar\ngadget shadow pen.
+;#SET (//)
+MCPMSG_DragBarBack
+Háttér
+;#DEF Background
+;#SET (//)
+MCPMSG_DragBarBack_Title
+Húzómezõ háttér
+;#DEF DragBar background
+;#SET (//)
+MCPMSG_DragBarBack_Help
+Beállítja a húzómezõ\nhátterét.
+;#DEF Adjust the DragBar\ngadget background.
+;#SET (//)
+MCPMSG_UseDragBarBack
+Használd
+;#DEF Use
+;#SET (//)
+MCPMSG_UseDragBarBack_Help
+Válaszd ki a háttér\nhasználatához.
+;#DEF Choose if to use\nthe background.
+;#SET (//)
+MCPMSG_DragBarType
+Típus
+;#DEF Type
+;#SET (//)
+MCPMSG_DragBarType_Help
+Válaszd ki a húzómezõ\ntípusát.
+;#DEF Select how to render\nthe DragBar gadget.
+;#SET (//)
+MCPMSG_Title_Size
+Méret
+;#DEF Size
+;#SET (//)
+MCPMSG_SizeShinePen
+Fényes
+;#DEF Shine
+;#SET (//)
+MCPMSG_SizeShinePen_Title
+Fényes pen
+;#DEF Shine pen
+;#SET (//)
+MCPMSG_SizeShinePen_Help
+Beállítja a méretezõ\nfényes pen-jét.
+;#DEF Adjust the Size\ngadget shine pen.
+;#SET (//)
+MCPMSG_SizeShadowPen
+Árnyék
+;#DEF Shadow
+;#SET (//)
+MCPMSG_SizeShadowPen_Title
+Árnyék pen
+;#DEF Shadow pen
+;#SET (//)
+MCPMSG_SizeShadowPen_Help
+Beállítja a méretezõ\nárnyék pen-jét.
+;#DEF Adjust the Size\ngadget shadow pen.
+;#SET (//)
+MCPMSG_SizeForegroundPen
+Elõtér
+;#DEF Foreground
+;#SET (//)
+MCPMSG_SizeForegroundPen_Title
+Elõtér pen
+;#DEF Foreground pen
+;#SET (//)
+MCPMSG_SizeForegroundPen_Help
+Beállítja a méretezõ\nelõtér pen-jét.
+;#DEF Adjust the Size gadget\nforeground pen.
+;#SET (//)
+MCPMSG_UseSizeForegroundPen
+Használd
+;#DEF Use
+;#SET (//)
+MCPMSG_UseSizeForegroundPen_Help
+Válaszd ki, ha használni\nakarod az elõtér pen-t.
+;#DEF Choose if to use the\nforeground pen.
+;#SET (//)
+MCPMSG_SizeType
+Típus
+;#DEF Type
+;#SET (//)
+MCPMSG_SizeType_Help
+Válaszd ki a méretezõ\ntípusát.
+;#DEF Select how to render\nthe Size gadget.
+;#SET (//)
+MCPMSG_Title_Close
+Bezárás
+;#DEF Close
+;#SET (//)
+MCPMSG_CloseShinePen
+Fényes
+;#DEF Shine
+;#SET (//)
+MCPMSG_CloseShinePen_Title
+Fényes pen
+;#DEF Shine pen
+;#SET (//)
+MCPMSG_CloseShinePen_Help
+Beállítja a bezáró\nfényes pen-jét.
+;#DEF Adjust the Close\ngadget shine pen.
+;#SET (//)
+MCPMSG_CloseShadowPen
+Árnyék
+;#DEF Shadow
+;#SET (//)
+MCPMSG_CloseShadowPen_Title
+Árnyék pen
+;#DEF Shadow pen
+;#SET (//)
+MCPMSG_CloseShadowPen_Help
+Beállítja a bezáró\nárnyék pen-jét.
+;#DEF Adjust the Close\ngadget shadow pen.
+;#SET (//)
+MCPMSG_CloseBack
+Háttér
+;#DEF Background
+;#SET (//)
+MCPMSG_CloseBack_Title
+Bezáró háttere
+;#DEF Close background
+;#SET (//)
+MCPMSG_CloseBack_Help
+Beállítja a bezáró\nhátterét.
+;#DEF Adjust the Close\ngadget background.
+;#SET (//)
+MCPMSG_UseCloseBack
+Használd
+;#DEF Use
+;#SET (//)
+MCPMSG_UseCloseBack_Help
+Válaszd ki, ha használni\nakarod a hátteret.
+;#DEF Choose if to use\nthe background.
+;#SET (//)
+MCPMSG_CloseType
+Típus
+;#DEF Type
+;#SET (//)
+MCPMSG_CloseType_Help
+Válaszd ki a bezáró\ntípusát.
+;#DEF Select how to render\nthe Close gadget.
+;#SET (//)
+MCPMSG_Title_Spacing
+Térköz
+;#DEF Spacing
+;#SET (//)
+MCPMSG_LeftSpacing
+Bal
+;#DEF Left
+;#SET (//)
+MCPMSG_LeftSpacing_Help
+Beállítja az ablak bal térközét.
+;#DEF Adjust the window left spacing.
+;#SET (//)
+MCPMSG_TopSpacing
+Felsõ
+;#DEF Top
+;#SET (//)
+MCPMSG_TopSpacing_Help
+Beállítja az ablak felsõ térközét.
+;#DEF Adjust the window top spacing.
+;#SET (//)
+MCPMSG_RightSpacing
+Jobb
+;#DEF Right
+;#SET (//)
+MCPMSG_RightSpacing_Help
+Beállítja az ablak jobb térközét.
+;#DEF Adjust the window right spacing.
+;#SET (//)
+MCPMSG_BottomSpacing
+Alsó
+;#DEF Bottom
+;#SET (//)
+MCPMSG_BottomSpacing_Help
+Beállítja az ablak alsó térközét.
+;#DEF Adjust the window spacing.
+;#SET (//)
+MCPMSG_Shape_None
+Nincs
+;#DEF None
+;#SET (200//)
+MCPMSG_Shape_Original
+Eredeti
+;#DEF Original
+;#SET (//)
+MCPMSG_Shape_Line
+Vonal
+;#DEF Line
+;#SET (//)
+MCPMSG_Shape_Solid
+Szolíd
+;#DEF Solid
+;#SET (//)
+MCPMSG_MenuTitle_BWin
+BWin
+;#DEF BWin
+;#SET (250//)
+MCPMSG_Item_Defaults
+Alapértelemzett visszaállítása
+;#DEF Reset to defaults
+;#SET (//)
+MCPMSG_Item_Alfie_Defaults
+Alfie alapbeálítása
+;#DEF alfie's defaults
+;#SET (//)
+MCPMSG_Info_First
+%s\nCopyright 2002 Alfonso Ranieri.
+;#DEF %s\nCopyright 2002 by Alfonso Ranieri.
+;#SET (400//)
+MCPMSG_Info_Reserved
+Minden jog fenntartva.
+;#DEF All rights reserved.
+;#SET (//)
+MCPMSG_Info_Rest
+Kérlek írj a következõ címre a fejlesztõi\ndokumentációért és a licencért: <alforan@tin.it>.
+;#DEF Please write to <alforan@tin.it> for\ndevelopers docs and licensing terms.
+;#SET (//)
+MCPMSG_Info_Translator
+Fordította: Dósa Márton (dm_@freemail.hu)
+;#DEF 
+;#SET (//)
+MCPMSG_DragBarActive
+Aktív
+;#DEF Active
+;#SET (//)
+MCPMSG_DragBarNonActive
+Inaktív
+;#DEF Non active
+;#SET (//)
+MCPMSG_DragBarOver
+Húzómezõ felül
+;#DEF DragBar over
+;#SET (//)
+MCPMSG_DragBarOver_Help
+Válaszd ki, ha azt szeretnéd, hogy\na húzómezõ az ablak kerete felett legyen.
+;#DEF Choose if to draw the DragBar\nover the window edges.
+;#SET (//)

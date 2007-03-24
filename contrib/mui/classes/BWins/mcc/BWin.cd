@@ -1,0 +1,46 @@
+;
+; CATCOMP BWin.cd CFILE loc.h
+; CATCOMP BWin.cd CTFILE BWin.ct
+;
+MCCMSG_BWin (1//)
+BWin
+;
+MCCMSG_ToFront (//)
+Bring to front
+;
+MCCMSG_ToBack (//)
+Send to back
+;
+MCCMSG_HideWin (//)
+Hide
+;
+MCCMSG_CloseWin (//)
+Close
+;
+MCCMSG_DragBarTop (//)
+DragBar at top
+;
+MCCMSG_AutoShow (//)
+Auto
+;
+MCCMSG_Close (//)
+Close
+;
+MCCMSG_DragBar (//)
+DragBar
+;
+MCCMSG_Size (//)
+Size
+;
+MCCMSG_Snapshot (//)
+Snapshot
+;
+MCCMSG_Unsnapshot (//)
+Unsnapshot
+;
+MCCMSG_Settings (//)
+MUI settings...
+;
+MCCMSG_User (//)
+User
+;

@@ -1,0 +1,10 @@
+
+    SECTION TEXT,CODE
+
+    XDEF    ENDCODE
+
+    SECTION TEXT,CODE
+
+ENDCODE:
+
+    END

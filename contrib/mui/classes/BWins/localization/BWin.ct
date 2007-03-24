@@ -1,0 +1,364 @@
+## version $VER: XX.catalog XX.XX (XX.XX.XX)
+## codeset X
+## language X
+;
+MCCMSG_BWin
+
+; BWin
+;
+MCCMSG_ToFront
+
+; Bring to front
+;
+MCCMSG_ToBack
+
+; Send to back
+;
+MCCMSG_HideWin
+
+; Hide
+;
+MCCMSG_CloseWin
+
+; Close
+;
+MCCMSG_DragBarTop
+
+; DragBar at top
+;
+MCCMSG_AutoShow
+
+; Auto
+;
+MCCMSG_Close
+
+; Close
+;
+MCCMSG_DragBar
+
+; DragBar
+;
+MCCMSG_Size
+
+; Size
+;
+MCCMSG_Snapshot
+
+; Snapshot
+;
+MCCMSG_Unsnapshot
+
+; Unsnapshot
+;
+MCCMSG_Settings
+
+; MUI settings...
+;
+MCCMSG_User
+
+; User
+;
+MCPMSG_Title_Window
+
+; Window
+;
+MCPMSG_WinShinePen
+
+; Shine
+;
+MCPMSG_WinShinePen_Title
+
+; Shine pen
+;
+MCPMSG_WinShinePen_Help
+
+; Adjust the window\nframe shine pen.
+;
+MCPMSG_WinShadowPen
+
+; Shadow
+;
+MCPMSG_WinShadowPen_Title
+
+; Shadow pen
+;
+MCPMSG_WinShadowPen_Help
+
+; Adjust the window\nframe shadow pen.
+;
+MCPMSG_WinForegroundPen
+
+; Foreground
+;
+MCPMSG_WinForegroundPen_Title
+
+; Foreground pen
+;
+MCPMSG_WinForegroundPen_Help
+
+; Adjust the window frame\nforeground pen.
+;
+MCPMSG_Title_DragBar
+
+; DragBar
+;
+MCPMSG_DragBarShinePen
+
+; Shine
+;
+MCPMSG_DragBarShinePen_Title
+
+; Shine pen
+;
+MCPMSG_DragBarShinePen_Help
+
+; Adjust the DragBar\ngadget shine pen.
+;
+MCPMSG_DragBarShadowPen
+
+; Shadow
+;
+MCPMSG_DragBarShadowPen_Title
+
+; Shadow pen
+;
+MCPMSG_DragBarShadowPen_Help
+
+; Adjust the DragBar\ngadget shadow pen.
+;
+MCPMSG_DragBarBack
+
+; Background
+;
+MCPMSG_DragBarBack_Title
+
+; DragBar background
+;
+MCPMSG_DragBarBack_Help
+
+; Adjust the DragBar\ngadget background.
+;
+MCPMSG_UseDragBarBack
+
+; Use
+;
+MCPMSG_UseDragBarBack_Help
+
+; Choose if to use\nthe background.
+;
+MCPMSG_DragBarType
+
+; Type
+;
+MCPMSG_DragBarType_Help
+
+; Select how to render\nthe DragBar gadget.
+;
+MCPMSG_Title_Size
+
+; Size
+;
+MCPMSG_SizeShinePen
+
+; Shine
+;
+MCPMSG_SizeShinePen_Title
+
+; Shine pen
+;
+MCPMSG_SizeShinePen_Help
+
+; Adjust the Size\ngadget shine pen.
+;
+MCPMSG_SizeShadowPen
+
+; Shadow
+;
+MCPMSG_SizeShadowPen_Title
+
+; Shadow pen
+;
+MCPMSG_SizeShadowPen_Help
+
+; Adjust the Size\ngadget shadow pen.
+;
+MCPMSG_SizeForegroundPen
+
+; Foreground
+;
+MCPMSG_SizeForegroundPen_Title
+
+; Foreground pen
+;
+MCPMSG_SizeForegroundPen_Help
+
+; Adjust the Size gadget\nforeground pen.
+;
+MCPMSG_UseSizeForegroundPen
+
+; Use
+;
+MCPMSG_UseSizeForegroundPen_Help
+
+; Choose if to use the\nforeground pen.
+;
+MCPMSG_SizeType
+
+; Type
+;
+MCPMSG_SizeType_Help
+
+; Select how to render\nthe Size gadget.
+;
+MCPMSG_Title_Close
+
+; Close
+;
+MCPMSG_CloseShinePen
+
+; Shine
+;
+MCPMSG_CloseShinePen_Title
+
+; Shine pen
+;
+MCPMSG_CloseShinePen_Help
+
+; Adjust the Close\ngadget shine pen.
+;
+MCPMSG_CloseShadowPen
+
+; Shadow
+;
+MCPMSG_CloseShadowPen_Title
+
+; Shadow pen
+;
+MCPMSG_CloseShadowPen_Help
+
+; Adjust the Close\ngadget shadow pen.
+;
+MCPMSG_CloseBack
+
+; Background
+;
+MCPMSG_CloseBack_Title
+
+; Close background
+;
+MCPMSG_CloseBack_Help
+
+; Adjust the Close\ngadget background.
+;
+MCPMSG_UseCloseBack
+
+; Use
+;
+MCPMSG_UseCloseBack_Help
+
+; Choose if to use\nthe background.
+;
+MCPMSG_CloseType
+
+; Type
+;
+MCPMSG_CloseType_Help
+
+; Select how to render\nthe Close gadget.
+;
+MCPMSG_Title_Spacing
+
+; Spacing
+;
+MCPMSG_LeftSpacing
+
+; Left
+;
+MCPMSG_LeftSpacing_Help
+
+; Adjust the window left spacing.
+;
+MCPMSG_TopSpacing
+
+; Top
+;
+MCPMSG_TopSpacing_Help
+
+; Adjust the window top spacing.
+;
+MCPMSG_RightSpacing
+
+; Right
+;
+MCPMSG_RightSpacing_Help
+
+; Adjust the window right spacing.
+;
+MCPMSG_BottomSpacing
+
+; Bottom
+;
+MCPMSG_BottomSpacing_Help
+
+; Adjust the window spacing.
+;
+MCPMSG_Shape_None
+
+; None
+;
+MCPMSG_Shape_Original
+
+; Original
+;
+MCPMSG_Shape_Line
+
+; Line
+;
+MCPMSG_Shape_Solid
+
+; Solid
+;
+MCPMSG_MenuTitle_BWin
+
+; BWin
+;
+MCPMSG_Item_Defaults
+
+; Reset to defaults
+;
+MCPMSG_Item_Alfie_Defaults
+
+; alfie's defaults
+;
+MCPMSG_Info_First
+
+; %s\nCopyright 2002-2003 by Alfonso Ranieri.
+;
+MCPMSG_Info_Reserved
+
+; All rights reserved.
+;
+MCPMSG_Info_Rest
+
+; Please write to <alforan@tin.it> for\ndevelopers docs and licensing terms.
+;
+MCPMSG_Info_Translator
+
+;
+;
+MCPMSG_DragBarActive
+
+; Active
+;
+MCPMSG_DragBarNonActive
+
+; Non active
+;
+MCPMSG_DragBarOver
+
+; DragBar over
+;
+MCPMSG_DragBarOver_Help
+
+; Choose if to draw the DragBar\nover the window edges.
+;

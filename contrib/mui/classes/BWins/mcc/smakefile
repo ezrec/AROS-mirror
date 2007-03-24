@@ -1,0 +1,63 @@
+# BWin.mcc smake file
+
+# Target
+TARGET = MUI:LIBS/MUI/BWin.mcc
+
+# C Compiler
+C_COMPILER = sc
+C_COMPILER_OPTS = NOSTACKCHECK STRINGMERGE NOCHECKABORT COMMENTNEST\
+OPTIMIZE OPTIMIZERINLINELOCAL OPTIMIZERSCHEDULER OPTIMIZERTIME\
+IDentifierLENgth=128 IGNORE=315 IGNORE=317 INCLUDEDIR=/include
+
+# Assembler
+ASSEMBLER = a68k
+ASSEMBLER_OPTS = -iainc:
+
+# Linker
+LINKER = slink
+LINKER_OPTS = NOICONS SC SD ND
+
+# Objects
+OBJECTS = libent.o libinit.o endcode.o init.o utils.o loc.o sgad.o boopsi.o\
+contents.o class.o
+
+# Linker libs
+LIBS = LIB:amiga.lib LIB:sc.lib
+
+# Built file
+$(TARGET): $(OBJECTS) $(LIBS)
+
+        $(LINKER) <with <
+FROM $(OBJECTS) TO $(TARGET) LIB $(LIBS) $(LINKER_OPTS)
+<
+
+# Rules
+.c.o:
+      $(C_COMPILER) $(C_COMPILER_OPTS) $*.c
+
+.asm.o:
+      $(ASSEMBLER) $(ASSEMBLER_OPTS) $*.asm
+
+# Dependences
+
+libent.o:   libent.asm BWin.mcc_rev.i
+
+libinit.o:  libinit.c base.h macros.h BWin.mcc_rev.h
+
+endcode.o:  endcode.asm
+
+init.o:     init.c class.h base.h loc.h class_protos.h macros.h BWin.mcc_rev.h
+
+utils.o:    utils.c class.h base.h loc.h class_protos.h macros.h BWin.mcc_rev.h
+
+loc.o:      loc.c class.h base.h loc.h class_protos.h macros.h BWin.mcc_rev.h
+
+sgad.o:     sgad.c class.h base.h loc.h class_protos.h macros.h BWin.mcc_rev.h
+
+boopsi.o:   boopsi.c class.h base.h loc.h class_protos.h macros.h\
+            BWin.mcc_rev.h
+
+contents.o: contents.c class.h base.h loc.h class_protos.h macros.h\
+            BWin.mcc_rev.h
+
+class.o:    class.c class.h base.h loc.h class_protos.h macros.h BWin.mcc_rev.h

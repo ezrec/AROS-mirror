@@ -1,0 +1,19 @@
+Short:    MUI public borderless window class
+Uploader: alforan@tin.it (Alfonso Ranieri)
+Author:   alforan@tin.it (Alfonso Ranieri)
+Type:     dev/mui
+
+BWin.mcc sources.
+
+These sources are destributed under the terms of the
+GNU Public Licence version 2. See COPYING.
+
+Exceptions to the above are:
+
+- usage of the Tag value 0xFEC9XXXX is forbidded
+
+- if you use them in your software I want to receive
+  a registered copy of it
+
+You may find last version of BWin.mcc at
+http://alfie.monrif.net

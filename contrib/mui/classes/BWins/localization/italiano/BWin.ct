@@ -1,0 +1,382 @@
+## version $VER: BWin.catalog 20.5 (7.5.2003)
+## codeset 0
+## language italiano
+;
+;
+MCCMSG_BWin
+BWin
+; BWin
+;
+MCCMSG_ToFront
+Porta avanti
+; Bring to front
+;
+MCCMSG_ToBack
+Porta indietro
+; Send to back
+;
+MCCMSG_HideWin
+Nascondi
+; Hide
+;
+MCCMSG_CloseWin
+Chiudi
+; Close
+;
+MCCMSG_DragBarTop
+DragBar sopra
+; DragBar at top
+;
+MCCMSG_AutoShow
+Auto
+; Auto
+;
+MCCMSG_Close
+Chiudi
+; Close
+;
+MCCMSG_DragBar
+DragBar
+; DragBar
+;
+MCCMSG_Size
+Size
+; Size
+;
+MCCMSG_Snapshot
+Fissa
+; Snapshot
+;
+MCCMSG_Unsnapshot
+Libera
+; Unsnapshot
+;
+MCCMSG_Settings
+MUI...
+; MUI settings...
+;
+MCCMSG_User
+Utente
+; User
+;
+MCPMSG_Title_Window
+Finestra
+; Window
+;
+MCPMSG_WinShinePen
+Luce
+; Shine
+;
+MCPMSG_WinShinePen_Title
+Penna luce
+; Shine pen
+;
+MCPMSG_WinShinePen_Help
+Seleziona la penna luce per\n\
+il bordo della finestra.
+; Adjust the window\nframe shine pen.
+;
+MCPMSG_WinShadowPen
+Ombra
+; Shadow
+;
+MCPMSG_WinShadowPen_Title
+Penna ombra
+; Shadow pen
+;
+MCPMSG_WinShadowPen_Help
+Seleziona la penna ombra per\n\
+il bordo della finestra.
+; Adjust the window\nframe shadow pen.
+;
+MCPMSG_WinForegroundPen
+Sfondo
+; Foreground
+;
+MCPMSG_WinForegroundPen_Title
+Penna sfondo
+; Foreground pen
+;
+MCPMSG_WinForegroundPen_Help
+Seleziona la penna sfondo per\n\
+il bordo della finestra.
+; Adjust the window frame\nforeground pen.
+;
+MCPMSG_Title_DragBar
+DragBar
+; DragBar
+;
+MCPMSG_DragBarShinePen
+Luce
+; Shine
+;
+MCPMSG_DragBarShinePen_Title
+Penna luce
+; Shine pen
+;
+MCPMSG_DragBarShinePen_Help
+Seleziona la penna luce\n\
+per il gadget DragBar.
+; Adjust the DragBar\ngadget shine pen.
+;
+MCPMSG_DragBarShadowPen
+Ombra
+; Shadow
+;
+MCPMSG_DragBarShadowPen_Title
+Penna ombra
+; Shadow pen
+;
+MCPMSG_DragBarShadowPen_Help
+Seleziona la penna ombra\n\
+per il gadget DragBar.
+; Adjust the DragBar\ngadget shadow pen.
+;
+MCPMSG_DragBarBack
+Sfondo
+; Background
+;
+MCPMSG_DragBarBack_Title
+Sfondo DragBar
+; DragBar
+;
+MCPMSG_DragBarBack_Help
+Seleziona lo sfondo\n\
+del gadget DragBar.
+; Adjust the DragBar\ngadget background.
+;
+MCPMSG_UseDragBarBack
+Usa
+; Use
+;
+MCPMSG_UseDragBarBack_Help
+Scegli se usare lo sfondo.
+; Choose if to use\n\the background.
+;
+MCPMSG_DragBarType
+Tipo
+; Type
+;
+MCPMSG_DragBarType_Help
+Seleziona come visualizzare\n\
+il gadget DragBar.
+; Adjut the type\nof the DragBar gadget.
+;
+MCPMSG_Title_Size
+Size
+; Size
+;
+MCPMSG_SizeShinePen
+Luce
+; Shine
+;
+MCPMSG_SizeShinePen_Title
+Penna luce
+; Shine pen
+;
+MCPMSG_SizeShinePen_Help
+Seleziona la penna luce\n\
+per il gadget Size.
+; Adjust the Size\ngadget shine pen.
+;
+MCPMSG_SizeShadowPen
+Ombra
+; Shadow
+;
+MCPMSG_SizeShadowPen_Title
+Penna ombra
+; Shadow pen
+;
+MCPMSG_SizeShadowPen_Help
+Seleziona la penna ombra\n\
+per il gadget Size.
+; Adjust the Size\ngadget shadow pen.
+;
+MCPMSG_SizeForegroundPen
+Sfondo
+; Foreground
+;
+MCPMSG_SizeForegroundPen_Title
+Penna sfondo
+; Foreground pen
+;
+MCPMSG_SizeForegroundPen_Help
+Seleziona la penna sfondo\n\
+per il gadget Size.
+; Adjust the Size\ngadget foreground pen.
+;
+MCPMSG_UseSizeForegroundPen
+Usa
+; Use
+;
+MCPMSG_UseSizeForegroundPen_Help
+Scegli se usare\n\
+la penna sfondo.
+; Choose if to use the\nforeground pen.
+;
+MCPMSG_SizeType
+Tipo
+; Type
+;
+MCPMSG_SizeType_Help
+Seleziona come visualizzare\n\
+il gadget Size.
+; Adjut the type\nof the Size gadget.
+;
+MCPMSG_Title_Close
+Close
+; Close
+;
+MCPMSG_CloseShinePen
+Luce
+; Shine
+;
+MCPMSG_CloseShinePen_Title
+Penna luce
+; Shine pen
+;
+MCPMSG_CloseShinePen_Help
+Seleziona la penna luce\n\
+per il gadget Close.
+; Adjust the Close\ngadget shine pen.
+;
+MCPMSG_CloseShadowPen
+Ombra
+; Shadow
+;
+MCPMSG_CloseShadowPen_Title
+Penna ombra
+; Shadow pen
+;
+MCPMSG_CloseShadowPen_Help
+Seleziona la penna ombra\n\
+per il gadget Close.
+; Adjust the Close\ngadget shadow pen.
+;
+MCPMSG_CloseBack
+Sfondo
+; Close
+;
+MCPMSG_CloseBack_Title
+Sfondo Close
+; Close background
+;
+MCPMSG_CloseBack_Help
+Seleziona lo sfondo\n\
+il gadget Close.
+; Adjust the Close\ngadget background.
+;
+MCPMSG_UseCloseBack
+Usa
+; Use
+;
+MCPMSG_UseCloseBack_Help
+Scegli se usare lo sfondo.
+; Choose if to use\nthe background.
+;
+MCPMSG_CloseType
+Tipo
+; Type
+;
+MCPMSG_CloseType_Help
+Seleziona come visualizzare\n\
+il gadget Close.
+; Adjut the type\nof the Close gadget.
+;
+MCPMSG_Title_Spacing
+Spaziatura
+; Spacing
+;
+MCPMSG_LeftSpacing
+Sinistra
+; Left
+;
+MCPMSG_LeftSpacing_Help
+Seleziona la spaziatura sinistra.
+; Adjust the window left spacing.
+;
+MCPMSG_TopSpacing
+Superiore
+; Top
+;
+MCPMSG_TopSpacing_Help
+Seleziona la spaziatura superiore.
+; Adjust the window top spacing.
+;
+MCPMSG_RightSpacing
+Destra
+; Right
+;
+MCPMSG_RightSpacing_Help
+Seleziona la spaziatura destra.
+; Adjust the window right spacing.
+;
+MCPMSG_BottomSpacing
+Inferiore
+; Bottom
+;
+MCPMSG_BottomSpacing_Help
+Seleziona la spaziatura inferiore.
+; Adjust the window spacing.
+;
+MCPMSG_Shape_None
+Nessuna
+; None
+;
+MCPMSG_Shape_Original
+Originale
+; Original
+;
+MCPMSG_Shape_Line
+Linea
+; Line
+;
+MCPMSG_Shape_Solid
+Solida
+; Solid
+;
+MCPMSG_MenuTitle_BWin
+BWin
+; BWin
+;
+MCPMSG_Item_Defaults
+Valori predefiniti
+; Reset to defaults
+;
+MCPMSG_Item_Alfie_Defaults
+Come piace ad alfie
+; alfie's defaults
+;
+MCPMSG_Info_First
+%s\n\
+Copyright 2002-2003 Alfonso Ranieri.
+; %s\nCopyright 2002-2003 by Alfonso Ranieri.
+;
+MCPMSG_Info_Reserved
+Diritti riservati.
+; All rights reserved.
+;
+MCPMSG_Info_Rest
+Scrivi ad <alforan@tin.it> per informazioni\n\
+riguardanti la programmazione ed i termini d'uso.
+; Please write to <alforan@tin.it> for\ndevelopers docs and licensing terms.
+;
+MCPMSG_Info_Translator
+
+;
+;
+MCPMSG_DragBarActive
+Attiva
+; Active
+;
+MCPMSG_DragBarNonActive
+Non attiva
+; Non active
+;
+MCPMSG_DragBarOver
+DragBar sopra
+;
+MCPMSG_DragBarOver_Help
+Scegli se disegnare la DragBar\n\
+sopra i bordi della finestra.
+;
