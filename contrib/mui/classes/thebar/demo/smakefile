@@ -1,0 +1,55 @@
+#
+# smakefiel for SpeedBar demos
+#
+
+FILES = demo1 demo2 demo3 demo4 demo5 demo6 demo7 demo8 demo9
+
+CFLAGS = IDLEN 128
+LFLAGS = LIB LIB:amiga.lib LIB:sc.lib NOICONS
+
+all: $(FILES)
+
+demo1: demo1.c
+    sc $(CFLAGS) demo1.c
+    slink LIB:c.o demo1.o $(LFLAGS)
+    delete demo1.o
+
+demo2: demo2.c
+    sc $(CFLAGS) demo2.c
+    slink LIB:c.o demo2.o $(LFLAGS)
+    delete demo2.o
+
+demo3: demo3.c
+    sc $(CFLAGS) demo3.c
+    slink LIB:c.o demo3.o $(LFLAGS)
+    delete demo3.o
+
+demo4: demo4.c
+    sc $(CFLAGS) demo4.c
+    slink LIB:c.o demo4.o $(LFLAGS)
+    delete demo4.o
+
+demo5: demo5.c
+    sc $(CFLAGS) demo5.c
+    slink LIB:c.o demo5.o $(LFLAGS)
+    delete demo5.o
+
+demo6: demo6.c
+    sc $(CFLAGS) demo6.c
+    slink LIB:c.o demo6.o $(LFLAGS)
+    delete demo6.o
+
+demo7: demo7.c
+    sc $(CFLAGS) demo7.c
+    slink LIB:c.o demo7.o $(LFLAGS)
+    delete demo7.o
+
+demo8: demo8.c
+    sc $(CFLAGS) demo8.c
+    slink LIB:c.o demo8.o $(LFLAGS)
+    delete demo8.o
+
+demo9: demo9.c
+    sc $(CFLAGS) demo9.c
+    slink LIB:c.o demo9.o $(LFLAGS)
+    delete demo9.o

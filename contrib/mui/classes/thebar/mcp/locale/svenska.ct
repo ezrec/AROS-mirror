@@ -1,0 +1,795 @@
+## chunk AUTH Pär Boberg
+## language svenska
+## version $VER: TheBar_mcp.ct 21.3 (07.03.07)
+Msg_Reg_Colors
+Färger
+;#DEF Colors
+;#SET (1//)
+Msg_Reg_Appearance
+Utseende
+;#DEF Appearance
+;#SET (//)
+Msg_Reg_Spacing
+Mellanrum
+;#DEF Spacing
+;#SET (//)
+Msg_Reg_Options
+Valmöjligheter
+;#DEF Options
+;#SET (//)
+Msg_Title_Backgrounds
+Bakgrunder
+;#DEF Backgrounds
+;#SET (100//)
+Msg_GroupBackground
+Rad
+;#DEF Bar
+;#SET (//)
+Msg_GroupBackground_Help
+Bakgrund för rad.
+;#DEF Bar background.
+;#SET (//)
+Msg_GroupBackground_Title
+Bakgrund - rad
+;#DEF Bar background
+;#SET (//)
+Msg_UseGroupBackground
+Aktiv
+;#DEF Active
+;#SET (//)
+Msg_UseGroupBackground_Help
+Om vald, får raden din\nföredragna bakgrund,\nannars får den sin\nföregångna bakgrund.
+;#DEF If selected, the bar gets\nyour preferred background,\notherwise it gets its\nparent background.
+;#SET (//)
+Msg_ButtonBackground
+Knappar
+;#DEF Buttons
+;#SET (//)
+Msg_ButtonBackground_Help
+Bakgrund för aktiva knappar.
+;#DEF Active buttons background.
+;#SET (//)
+Msg_ButtonBackground_Title
+Bakgrund - aktiva knappar
+;#DEF Active buttons background
+;#SET (//)
+Msg_UseButtonBackground
+Aktiv
+;#DEF Active
+;#SET (//)
+Msg_UseButtonBackground_Help
+Om vald, får knapparna din\nföredragna bakgrund,\nannars får de sin\nföregångna bakgrund.
+;#DEF If selected, the buttons get\nyour preferred background,\notherwise they get their\nparent background.
+;#SET (//)
+Msg_Title_Frame
+Knappram
+;#DEF Buttons frame
+;#SET (//)
+Msg_FrameShinePen
+Sken
+;#DEF Shine
+;#SET (//)
+Msg_FrameShinePen_Help
+Sken penna för aktiva knappars ram.
+;#DEF Active buttons frame shine pen.
+;#SET (//)
+Msg_FrameShinePen_Title
+Sken penna - ram
+;#DEF Frame shine pen
+;#SET (//)
+Msg_FrameShadowPen
+Skugga
+;#DEF Shadow
+;#SET (//)
+Msg_FrameShadowPen_Help
+Skugg penna för aktiva knappars ram.
+;#DEF Active buttons frame shadow pen.
+;#SET (//)
+Msg_FrameShadowPen_Title
+Skugg penna - ram
+;#DEF Frame shadow pen
+;#SET (//)
+Msg_FrameStyle_Recessed
+Fördjupad
+;#DEF Recessed
+;#SET (//)
+Msg_FrameStyle_Normal
+Normal
+;#DEF Normal
+;#SET (//)
+Msg_FrameStyle
+Stil
+;#DEF Style
+;#SET (//)
+Msg_FrameStyle_Help
+Ram stil för aktiva knappar.
+;#DEF Active buttons frame style.
+;#SET (//)
+Msg_Title_Disabled
+Avaktiverade knappar
+;#DEF Disabled buttons
+;#SET (//)
+Msg_DisabledBody
+Kropp
+;#DEF Body
+;#SET (//)
+Msg_DisabledBody_Help
+Kropp penna för avaktiverade knappar. Den\nanvänds som huvudpenna för avaktiverade\nknappar i Form läge och som rut penna\nför avaktiverade knappar i Rutnät läge.
+;#DEF Disabled buttons body pen. It is used as\nmain pen for disabled buttons in Shape\nmode and as grid pen for disabled\nbuttons in Grid modes.
+;#SET (//)
+Msg_DisabledBody_Title
+Kropp penna
+;#DEF Body pen
+;#SET (//)
+Msg_DisabledShadow
+Skugga
+;#DEF Shadow
+;#SET (//)
+Msg_DisabledShadow_Help
+Skugg penna för avaktiverade knappar. Den\nanvänds som andra penna för avaktiverade\nknappar i Form läge och som text penna\nför avaktiverade knappar i Rutnät läge.
+;#DEF Disabled buttons shadow pen. It is used as\nsecondary pen for disabled buttons in Shape\nmode and as text pen for disabled buttons\nin Grid modes.
+;#SET (//)
+Msg_DisabledShadow_Title
+Skugg penna
+;#DEF Shadow pen
+;#SET (//)
+Msg_Title_BarSpacer
+Radavskiljare
+;#DEF Bar spacer
+;#SET (//)
+Msg_BarSpacerShinePen
+Sken
+;#DEF Shine
+;#SET (//)
+Msg_BarSpacerShinePen_Help
+Sken penna för radavskiljare.
+;#DEF Bar spacer shine pen.
+;#SET (//)
+Msg_BarSpacerShinePen_Title
+Sken penna - avskiljare
+;#DEF Spacer shine pen
+;#SET (//)
+Msg_BarSpacerShadowPen
+Skugga
+;#DEF Shadow
+;#SET (//)
+Msg_BarSpacerShadowPen_Help
+Skugg penna för radavskiljare.
+;#DEF Bar spacer shadow pen.
+;#SET (//)
+Msg_BarSpacerShadowPen_Title
+Skugg penna - radavskiljare
+;#DEF Spacer shadow pen
+;#SET (//)
+Msg_Title_BarFrame
+Rad ram
+;#DEF Bar frame
+;#SET (//)
+Msg_BarFrameShine
+Sken
+;#DEF Shine
+;#SET (//)
+Msg_BarFrameShine_Help
+Sken penna för radens ram.
+;#DEF Bar frame shine pen.
+;#SET (//)
+Msg_BarFrameShine_Title
+Sken penna - ram
+;#DEF Frame shine pen
+;#SET (//)
+Msg_BarFrameShadow
+Skugga
+;#DEF Shadow
+;#SET (//)
+Msg_BarFrameShadow_Help
+Skugg penna för radens ram.
+;#DEF Bar frame shadow pen.
+;#SET (//)
+Msg_BarFrameShadow_Title
+Skugg penna - ram
+;#DEF Frame shadow pen
+;#SET (//)
+Msg_Title_DragBar
+Draghandtag
+;#DEF DragBar
+;#SET (//)
+Msg_DragBarShine
+Sken
+;#DEF Shine
+;#SET (//)
+Msg_DragBarShine_Help
+Sken penna för draghandtag.
+;#DEF DragBar shine pen.
+;#SET (//)
+Msg_DragBarShine_Title
+Sken penna - draghandtag
+;#DEF DragBar shine pen
+;#SET (//)
+Msg_DragBarShadow
+Skugga
+;#DEF Shadow
+;#SET (//)
+Msg_DragBarShadow_Help
+Skugg penna för draghandtag.
+;#DEF DragBar shadow pen.
+;#SET (//)
+Msg_DragBarShadow_Title
+Skugg penna - draghandtag
+;#DEF DragBar shadow pen
+;#SET (//)
+Msg_DragBarFill
+Fyll
+;#DEF Fill
+;#SET (//)
+Msg_DragBarFill_Help
+Fyll penna för draghandtag.
+;#DEF DragBar fill pen.
+;#SET (//)
+Msg_DragBarFill_Title
+Fyll penna - draghandtag
+;#DEF DragBar fill pen
+;#SET (//)
+Msg_UseDragBarFill
+Använd
+;#DEF Use
+;#SET (//)
+Msg_UseDragBarFill_Help
+Om vald, så används fyll\npenna för draghandtag.
+;#DEF If selected, the dragbar fill\npen is used.
+;#SET (//)
+Msg_Frame
+Ram
+;#DEF Frame
+;#SET (//)
+Msg_Frame_Help
+Ram för rad.
+;#DEF Bar frame
+;#SET (//)
+Msg_Frame_Title
+Ram - rad
+;#DEF Bar frame
+;#SET (//)
+Msg_TextFont
+Text
+;#DEF Text
+;#SET (200//)
+Msg_TextFont_Help
+Typsnitt för textknappar.
+;#DEF Text only buttons font.
+;#SET (//)
+Msg_TextGfxFont
+TextGrafik
+;#DEF TextGfx
+;#SET (//)
+Msg_TextGfxFont_Help
+Typsnitt för text och bildknappar.
+;#DEF Text and image buttons font.
+;#SET (//)
+Msg_ViewMode
+Visningsläge
+;#DEF View mode
+;#SET (//)
+Msg_ViewMode_Help
+Justera knapparnas utseende.
+;#DEF Adjust the appearance of the buttons.
+;#SET (//)
+Msg_Appearance_Text
+Valen nedan används av TheBar endast om objektet\nfrågade efter det vid uppstart. Det betyder att om\nprogrammeraren inte bestämde annorlunda så\nignoreras de bara.
+;#DEF The options below are used by TheBar if and only if the\nobject requested for it at creation time. It means that\nif the programmer didn't decide otherwise, they are simply\nignored.
+;#SET (//)
+Msg_TextGfx
+Ikoner och text
+;#DEF Icons and text
+;#SET (//)
+Msg_Gfx
+Endast ikoner
+;#DEF Icons only
+;#SET (//)
+Msg_Text
+Endast text
+;#DEF Text only
+;#SET (//)
+Msg_Borderless
+Ramlös
+;#DEF Borderless
+;#SET (//)
+Msg_Borderless_Help
+Om vald, så har knapparna ingen ram.
+;#DEF If selected, buttons are borderless.
+;#SET (//)
+Msg_Sunny
+Framhäv
+;#DEF Highlight
+;#SET (//)
+Msg_Sunny_Help
+Om vald, knappar, normalt i svart\noch vitt, blir färgade när muspekaren\när över dem.
+;#DEF If selected, buttons, normally in black\nand white, are colored when the\nmouse is over them.
+;#SET (//)
+Msg_Raised
+Upphöjd
+;#DEF Raised
+;#SET (//)
+Msg_Raised_Help
+Om vald, knappar, normalt ramlösa,\nfår en ram när muspekaren är över dem.
+;#DEF If selected, buttons, normally frameless,\nare framed when the mouse is over them.
+;#SET (//)
+Msg_Scaled
+Skala
+;#DEF Scaled
+;#SET (//)
+Msg_Scaled_Help
+Om vald, så skalas knapparna.
+;#DEF If selected, buttons are scaled.
+;#SET (//)
+Msg_BarSpacer
+Radavskiljare
+;#DEF Bar spacer
+;#SET (//)
+Msg_BarSpacer_Help
+Om vald, så används en radavskiljare\nsom knapp separatör.
+;#DEF If selected, a bar spacer is used\nas buttons separator.
+;#SET (//)
+Msg_EnableKeys
+Aktivera snabbtangenter
+;#DEF Enable keys
+;#SET (//)
+Msg_EnableKeys_Help
+Om vald, så aktiveras knappgenvägar.
+;#DEF If selected, buttons short cuts\nare active.
+;#SET (//)
+Msg_LabelPos
+Etikett position
+;#DEF Labels at
+;#SET (//)
+Msg_LabelPos_Help
+Justera textposition i ikoner\noch text knappar.
+;#DEF Adjust the position of text in\nIcons and text buttons.
+;#SET (//)
+Msg_LabelPos_Bottom
+Nederst
+;#DEF Bottom
+;#SET (//)
+Msg_LabelPos_Top
+Överst
+;#DEF Top
+;#SET (//)
+Msg_LabelPos_Right
+Höger
+;#DEF Right
+;#SET (//)
+Msg_LabelPos_Left
+Vänster
+;#DEF Left
+;#SET (//)
+Msg_Title_GroupSpacing
+Rad
+;#DEF Bar
+;#SET (300//)
+Msg_HorizGroupSpacing
+Horis
+;#DEF Horiz
+;#SET (//)
+Msg_HorizGroupSpacing_Help
+Pixlar mellan två knappar i en rad.
+;#DEF Pixels between two buttons in a bar row.
+;#SET (//)
+Msg_VertGroupSpacing
+Vert
+;#DEF Vert
+;#SET (//)
+Msg_VertGroupSpacing_Help
+Pixlar mellan två rader.
+;#DEF Pixels between two bar rows.
+;#SET (//)
+Msg_BarSpacerSpacing
+Rad
+;#DEF Bar
+;#SET (//)
+Msg_BarSpacerSpacing_Help
+Pixlar mellan en radavskiljare\noch föregående/nästa objekt.
+;#DEF Pixels between a Bar spacer\nand the previous/next object.
+;#SET (//)
+Msg_Title_InnerSpacing
+Knappar
+;#DEF Buttons
+;#SET (//)
+Msg_HorizInnerSpacing
+Horis
+;#DEF Horiz
+;#SET (//)
+Msg_HorizInnerSpacing_Help
+Pixlar mellan vänster/höger ramgräns\noch knappinnehållet.
+;#DEF Pixels between the left/right frame\nborder and the button contents.
+;#SET (//)
+Msg_TopInnerSpacing
+Överst
+;#DEF Top
+;#SET (//)
+Msg_TopInnerSpacing_Help
+Pixlar mellan översta ramgränsen\noch knappinnehållet.
+;#DEF Pixels between the top frame border\nand the button contents.
+;#SET (//)
+Msg_BottomInnerSpacing
+Nederst
+;#DEF Bottom
+;#SET (//)
+Msg_BottomInnerSpacing_Help
+Pixlar mellan nedersta ramgränsen\noch knappinnehållet.
+;#DEF Pixels between the bottom frame border\nand the button contents.
+;#SET (//)
+Msg_Title_BarFrameSpacing
+Rad ram
+;#DEF Bar frame
+;#SET (//)
+Msg_LeftBarFrameSpacing
+Vänster
+;#DEF Left
+;#SET (//)
+Msg_LeftBarFrameSpacing_Help
+Pixlar mellan vänster ramgräns och\nrad innehållet.
+;#DEF Pixels between the left frame border\nand the bar contents.
+;#SET (//)
+Msg_RightBarFrameSpacing
+Höger
+;#DEF Right
+;#SET (//)
+Msg_RightBarFrameSpacing_Help
+Pixlar mellan höger ramgräns och\nrad innehållet.
+;#DEF Pixels between the right frame border\nand the bar contents.
+;#SET (//)
+Msg_TopBarFrameSpacing
+Överst
+;#DEF Top
+;#SET (//)
+Msg_TopBarFrameSpacing_Help
+Pixlar mellan översta ramgränsen och\nrad innehållet.
+;#DEF Pixels between the top frame border\nand the bar contents.
+;#SET (//)
+Msg_BottomBarFrameSpacing
+Nederst
+;#DEF Bottom
+;#SET (//)
+Msg_BottomBarFrameSpacing_Help
+Pixlar mellan nedersta ramgränsen och\nrad innehållet.
+;#DEF Pixels between the bottom frame border\nand the bar contents.
+;#SET (//)
+Msg_Title_TextGfxSpacing
+Text/Grafik
+;#DEF Text/Gfx
+;#SET (//)
+Msg_HorizTextGfxSpacing
+Horis
+;#DEF Horiz
+;#SET (//)
+Msg_HorizTextGfxSpacing_Help
+Pixlar mellan en bild och dess\nvänster/höger placerade märkning.
+;#DEF Pixels between an image and\nits left/right placed label.
+;#SET (//)
+Msg_VertTextGfxSpacing
+Vert
+;#DEF Vert
+;#SET (//)
+Msg_VertTextGfxSpacing_Help
+Pixlar mellan en bild och dess\nnederst/överst placerade märkning.
+;#DEF Pixels between an image and\nits bottom/top placed label.
+;#SET (//)
+Msg_Precision_Gui
+Gui
+;#DEF Bad
+;#SET (400//)
+Msg_Precision_Icon
+Ikon
+;#DEF Poor
+;#SET (//)
+Msg_Precision_Image
+Bild
+;#DEF Good
+;#SET (//)
+Msg_Precision_Exact
+Exakt
+;#DEF Best
+;#SET (//)
+Msg_Precision
+Kvalité
+;#DEF Quality
+;#SET (//)
+Msg_Precision_Help
+Precision att använda vid hämtning av pennor.
+;#DEF Precision to use when obtaining pens.
+;#SET (//)
+Msg_Event_IntuiTicks
+IntuiTicks
+;#DEF IntuiTicks
+;#SET (//)
+Msg_Event_MouseMove
+Musflyttning
+;#DEF MouseMove
+;#SET (//)
+Msg_Event
+Händelse
+;#DEF Event
+;#SET (//)
+Msg_Event_Help
+Hur vi verifierar om muspekaren är över en knapp:\n- IntuiTicks: verifieras periodvis\n- Musflyttning: verifieras vid varje musflyttning\n- Musobjekt: verifieras när muspekaren är över ett nytt objekt
+;#DEF How to verify if the mouse is over a button:\n- IntuiTicks: it is verified periodically\n- MouseMove: it is verified at every mouse move\n- MouseObject, it is verified at when the mouse\nover a new object
+;#SET (//)
+Msg_Scale
+Skala
+;#DEF Scale
+;#SET (//)
+Msg_Scale_Help
+Skalningsfaktor för skalade bilder.
+;#DEF Scale factor for scaled images.
+;#SET (//)
+Msg_SpecialSelect
+Specialvälj
+;#DEF Special select
+;#SET (//)
+Msg_SpecialSelect_Help
+Om vald, så flyttas knapparnas innehåll\nnär de väljs eller är aktiva.
+;#DEF If selected, buttons contents is moved\nwhen they are selected or active.
+;#SET (//)
+Msg_TextOverUseShine
+Specialtext
+;#DEF Special text
+;#SET (//)
+Msg_TextOverUseShine_Help
+Om vald, så ritas aktiva knappars\netikett med sken pennan.
+;#DEF If selected, active buttons labels\nare drawn with the shine pen.
+;#SET (//)
+Msg_IgnoreSelImages
+Ignorera valda bilder
+;#DEF Ignore selected images
+;#SET (//)
+Msg_IgnoreSelImages_Help
+Om vald, så ignoreras\nvalda bilder.
+;#DEF If selected, selected images\nare ignored.
+;#SET (//)
+Msg_IgnoreDisImages
+Ignorera icke valda bilder
+;#DEF Ignore disabled images
+;#SET (//)
+Msg_IgnoreDisImages_Help
+Om vald, så ignoreras\nicke valda bilder.
+;#DEF If selected, disabled images\nare ignored.
+;#SET (//)
+Msg_DisMode_Shape
+Form
+;#DEF Shape
+;#SET (//)
+Msg_DisMode_Grid
+Rutnät
+;#DEF Grid
+;#SET (//)
+Msg_DisMode_FullGrid
+Fullt rutnät
+;#DEF Full grid
+;#SET (//)
+Msg_DisMode
+Icke vald
+;#DEF Disable
+;#SET (//)
+Msg_DisMode_Help
+Hur icke valda knappar renderas.
+;#DEF How to render disabled buttons.
+;#SET (//)
+Msg_DontMove
+Flytta inte
+;#DEF Don't move
+;#SET (//)
+Msg_DontMove_Help
+Om vald, så flyttas inte knapparnas innehåll\nnär de är aktiva.
+;#DEF If selected, the contents of the buttons\nis not moved when they are active.
+;#SET (//)
+Msg_DisMode_Sunny
+Grå
+;#DEF Grey
+;#SET (//)
+Msg_NtRaiseActive
+Upphöj inte aktiva knappar
+;#DEF Don't raise active buttons
+;#SET (//)
+Msg_NtRaiseActive_Help
+Om vald, så upphöjs inte aktiva knappar.
+;#DEF If selected, active buttons are not raised.
+;#SET (//)
+Msg_SpacersSize
+Storlek avskiljare
+;#DEF Spacers size
+;#SET (//)
+Msg_SpacersSize_Help
+Storlek på avskiljare.
+;#DEF Size of spacers.
+;#SET (//)
+Msg_SpacersSize_Quarter
+En kvarts knapp
+;#DEF Quarter of a button
+;#SET (//)
+Msg_SpacersSize_Half
+En halv knapp
+;#DEF Half of a button
+;#SET (//)
+Msg_SpacersSize_One
+En hel knapp
+;#DEF As a button
+;#SET (//)
+Msg_Event_MouseObject
+Musobjekt
+;#DEF MouseObject
+;#SET (//)
+Msg_Item_Defaults
+Återställ till förval
+;#DEF Reset to defaults
+;#SET (500//)
+Msg_NoMUI20Event_Help
+Hur vi verifierar att muspekaren är över en knapp:\n- IntuiTicks: verifieras periodiskt\n- Musflyttning: verifieras vid varje musflyttning
+;#DEF How to verify if the mouse is over a button:\n- IntuiTicks: it is verified periodically\n- MouseMove: it is verified at every mouse move
+;#SET (502//)
+Msg_Info_Translator
+Svenska av: Pär Boberg
+;#DEF 
+;#SET (603//)
+Msg_Item_Globals
+Återställ till globala
+;#DEF Reset to global
+;#SET (//)
+Msg_Item_LastSaved
+Senast sparade
+;#DEF Last saved
+;#SET (//)
+Msg_Item_Restore
+Återställ
+;#DEF Restore
+;#SET (//)
+Msg_Pop_OK
+OK
+;#DEF OK
+;#SET (700//)
+Msg_Pop_OK_Help
+Acceptera ändringar.
+;#DEF Accept changes.
+;#SET (//)
+Msg_Pop_Cancel
+Avbryt
+;#DEF Cancel
+;#SET (//)
+Msg_Pop_Cancel_Help
+Avbryt utan att ändra.
+;#DEF Exit without changing.
+;#SET (//)
+Msg_Popback_Pattern
+Mönster
+;#DEF Pattern
+;#SET (710//)
+Msg_Popback_Color
+Färg
+;#DEF Color
+;#SET (//)
+Msg_Popback_Bitmap
+Bitmap
+;#DEF Bitmap
+;#SET (//)
+Msg_Popback_Gradient
+Gradient
+;#DEF Gradient
+;#SET (//)
+Msg_Popback_HorizGradient
+Horisontell
+;#DEF Horizontal
+;#SET (//)
+Msg_Popback_HorizGradientHelp
+Om vald, så får du en\nhorisontell gradient.
+;#DEF If selected, you get a\nhorizontal gradient.
+;#SET (//)
+Msg_Popback_VertGradient
+Vertikal
+;#DEF Vertical
+;#SET (//)
+Msg_Popback_VertGradientHelp
+Om vald, så får du en\nvertikal gradient.
+;#DEF If selected, you get a\nvertical gradient.
+;#SET (//)
+Msg_Popback_From
+Från färg
+;#DEF From color
+;#SET (//)
+Msg_Popback_To
+Till färg
+;#DEF To color
+;#SET (//)
+Msg_Popback_Swap
+Växla
+;#DEF Swap
+;#SET (//)
+Msg_Popback_SwapHelp
+Växla från/till färger.
+;#DEF Swaps from/to colors.
+;#SET (//)
+Msg_Poppen_MUI
+MUI
+;#DEF MUI
+;#SET (800//)
+Msg_Poppen_Colormap
+Färgkarta
+;#DEF Colormap
+;#SET (//)
+Msg_Poppen_RGB
+RGB
+;#DEF RGB
+;#SET (//)
+Msg_Poppen_Shine
+Sken
+;#DEF Shine
+;#SET (//)
+Msg_Poppen_Halfshine
+Halvsken
+;#DEF Halfshine
+;#SET (//)
+Msg_Poppen_Background
+Bakgrund
+;#DEF Background
+;#SET (//)
+Msg_Poppen_Halfshadow
+Halvskugga
+;#DEF Halfshadow
+;#SET (//)
+Msg_Poppen_Shadow
+Skugga
+;#DEF Shadow
+;#SET (//)
+Msg_Poppen_Text
+Text
+;#DEF Text
+;#SET (//)
+Msg_Poppen_Fill
+Fyll
+;#DEF Fill
+;#SET (//)
+Msg_Poppen_Mark
+Markera
+;#DEF Mark
+;#SET (//)
+Msg_Poppen_ColorMapHelp
+Välj en skärmfärgspost.
+;#DEF Select a screen color entry.
+;#SET (//)
+Msg_ColoradjustRed
+Röd
+;#DEF Red
+;#SET (900//)
+Msg_Coloradjust_RedHelp
+Röd färgkomponent.
+;#DEF The red component of the color.
+;#SET (//)
+Msg_ColoradjustGreen
+Grön
+;#DEF Green
+;#SET (//)
+Msg_Coloradjust_GreenHelp
+Grön färgkomponent.
+;#DEF The green component of the color.
+;#SET (//)
+Msg_ColoradjustBlue
+Blå
+;#DEF Blue
+;#SET (//)
+Msg_Coloradjust_BlueHelp
+Blå färgkomponent.
+;#DEF The blue component of the color.
+;#SET (//)
+Msg_Coloradjust_WheelAbbr
+GCBMRY
+;#DEF GCBMRY
+;#SET (//)
+Msg_Coloradjust_WheelHelp
+Flytta muspekaren för att välja en färg.
+;#DEF Move the mouse to select a color.
+;#SET (//)
+Msg_Coloradjust_GradientHelp
+Färgens ljushet.
+;#DEF The brightness of the color.
+;#SET (//)
+Msg_PrefsShortHelp
+Nästa generations verktygsradsklass.
+;#DEF Next generation tool bar class.
+;#SET (1000//)

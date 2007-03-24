@@ -1,0 +1,194 @@
+--------------------------------
+MUI TheBar MCC class - ChangeLog
+--------------------------------
+
+$Id: ChangeLog 63 2007-03-23 05:31:45Z thboeckel $
+$URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/ChangeLog $
+
+2007-03-23  Thore Böckelmann <tboeckel@gmx.de>
+
+  * #?/Debug.c: fixed wrong final output of debug classes and flags.
+
+2007-03-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * #?/Debug.c: disabling a debug flag was not possible due to a check for the
+    '!' at a wrong index.
+
+2007-03-10  Pär Boberg <pbobbenb@spray.se>
+
+  * mcp/locale: Added swedish translation. (forgot the .ct file)
+
+#### v21.3 RELEASE ############################################################
+
+2007-03-06  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcp/locale: added french and german catalog translation kindly provided
+    by the authors of these translations.
+
+2007-02-28  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcp/class.c: fixed a stupid illegal memory access where the ocheck()
+    function was used with a NULL pointer, which in fact caused the tr()
+    function to bail out.
+
+#### v21.2 RELEASE ############################################################
+
+2007-02-27  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/class.c: The MUIA_TheBar_SelImages/DisImages attribute wasn't
+    correctly read during OM_NEW and therefore didn't work at all.
+
+2007-02-19  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/Debug.c, mcc/button/utils.c: added "GUI" as debugging flag and
+    cleaned up source a little bit.
+  * mcc/button/library.c: IDatatypes was obtained twice, but IDiskfont was
+    never obtained, hence all attempts to load a font via OpenDiskFont() did
+    crash. This fixes bug #1662653.
+
+2007-01-31  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/class.c: MUIA_TheBar_DisImages and MUIA_TheBar_SelImages is now also
+    OM_GET-able as documented in the autodocs.
+  * mcc/class.c: the BASEFLG_MORPHOS flag wasn't set which may have caused
+    that the PDTM_READPIXELARRAY operation while loading an image via the
+    datatypes system failed or caused to show the images distorted on
+    MorphOS. This should hopefully fix bug #1641342.
+
+2007-01-28  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcp: renamed the GetStr() locale translation function to the much shorter
+    tr() naming and also fixed bug #1640924 where we did use the wrong 
+    catalog file naming.
+
+2007-01-27  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcp/utils.c: our own static stch_l() function is not required for a MOS
+    build as well.
+  * mcc/button/utils.c: our own static stcd_l() function is not required for
+    a MorphOS build and can therebefore conditionally removed.
+  * Makefile: removed all target specific (os4,os3,mos) makefiles and replaced
+    them with a single 'Makefile' for all our sub-projects. This new makefile
+    includes methods to automatically identify the HOST and TARGET opererating
+    system and compiles the sources for the found target OS. In addition, that
+    Makefile can be used to also compile for all supported targets via
+    'make OS=XXX' where XXX is the abbreviation for the operating system.
+
+#### v21.1 RELEASE ############################################################
+
+2007-01-20  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: cleaned up certain areas of the sources according to found
+    incompatibilities to the revised docuementation.
+  * doc/MCC_TheBar.doc: updated autodocs to latest changed to the API
+    of TheBar.mcc.
+
+2007-01-16  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/button: changed the window event handler to also always catch
+    IDCMP_MOUSEBUTTONS to make it possible to catch the qualifier state in
+    HandleEvent(). This should fix a bug where it might have happened that
+    the wrong qualifier spec was active at the time a user pressed on a
+    toolbar button.
+
+2007-01-15  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcp/library.c: forgot to define the mcp prefs image.
+  * mcc: for being able to directly use a TheBar object for setting a new
+    notify on a certain attribute change, new MUIM_TheBar_Notify and
+    MUIM_TheBar_KillNotify wrapper methods were added. However both, the old
+    way of first receiving the button object via GetObject and the new more
+    direct and nicer way are supported equally.
+  * button: reworked the overloaded MUIM_Notify method to catch all notifies by
+    signaling the super class to always send all registered notifies to the
+    button object instead of sending it to the destination directly. This
+    allowed to introduce a new private SendNotify method which will generate
+    a proper destination message where a user can now use a new variable
+    (MUIV_TheBar_Qualifier) in their notifies which will automatically be
+    replaced by the currently active qualifiers value when the notify was
+    emitted. This should finally allow to receive key qualifier information
+    with every notify message received. To complete the feature new
+    MUIM_KillNotify and MUIM_KillNotifyObj overloading method were added.
+  * mcc,button: significantly improved the internal button list management to
+    correctly take care of freeing the whole list including their membery
+    during the normal OM_DISPOSE phase of a TheBar object.
+  * misc: bumped VERSION to 21 because of the huge API change.
+  * misc: replaced all copymem() macro uses by direct memcpy() ones.
+    The c-library should be the one to trust here.
+
+2007-01-11  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: fixed all "Appareance" typos to use "Appearance" instead.
+
+2007-01-02  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: updated all copyright notices to 2007.
+
+2006-12-05  Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mui/muiundoc.h: added the general muiundoc.h and distributed it's
+    use to all our code instead of having to specify some of the yet undocumented
+    MUI defines throughout our own sources.
+  * mcp: ported the preferences class source code also to our generalized MCC
+    framework and make it compile for all our major three platforms. So now all
+    source code of TheBar should be portable accross all major Amiga platforms
+    and hopefully running there as well :)
+
+2006-12-03  Jens Langner <Jens.Langner@light-speed.de>
+
+  * button: reworked the whole sources to also fit into the new general MCC
+    framework. Added makefiles for all three major platforms and make the sources
+    compile for all of them. Finally TheButton.mcc seems to work as well.
+  * mcc/Makefile.#?: reworked all makefiles to also compile the TheBarVirt.mcc
+    class on a normal make operation.
+  * mcc, mccv: removed the 'mccv' directory and its whole sources as they were
+    completly identical to the one of the mcc instead of the "#ifdef VIRTUAL"
+    statements. However, there were no real reason to keep two identical copies
+    of the same sources. So they are now unified and the 'mccv' directory
+    completly removed.
+
+2006-12-02  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc: the source do compile for OS3 and MOS again. Also the test application
+    seems to work fine for the moment. So lets see how the MCC behaves with all
+    the demo's included. But we seem to get quite fare for now.
+  * mcc/TheBar-Test.c:  fixed the test application to not crash upon exit and
+    also set the PicsDir so that the images are loaded correctly if executed
+    within the respository hierarchy.
+  * mcc: added debugging output to all involved functions so that our further
+    work gets a bit more easier when developing on TheBar.mcc
+
+2006-12-01  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc: some more general cleanup of definitions and used files.
+  * mcc: removed all "register" definitions as there is really no reason
+    to set all kind of variables explicitly as register. The compiler should
+    decide which value to directly put on a register and which not. Just
+    defining every variable "register" doesn't help at all.
+
+2006-11-30  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/TheBar-Test.c: added new testing application which should allow to
+    directly run tests on TheBar.mcc without having to update the library,
+    reboot and run the tests. Now the testing application will directly
+    link against all MCC modules and as such acts as a standalone application.
+    That might come really handy at some point.
+
+2006-11-29  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc, include: ported MCC sources to the generalized mccheader.c
+    framework and added GNU makefiles for all three mainly supported
+    targets (OS3/OS4/MOS). SAS/C compilation should now be considered
+    obsolete as we want to concentrate on getting everything running
+    with GCC instead. However, please note that the MCC sources just
+    compile and link now. The porting is still largly untested but
+    should soonish end up in a usable state hopefully.
+  * misc: applied latest changes supplied by Alfonso.
+
+2006-11-12  Jens Langner <Jens.Langner@light-speed.de>
+
+  * converted old CVS repository to sf.net based SVN
+
+2005-11-30  Alfonso Ranieri <alforan@tin.it>
+
+  * released sources under LGPL at sf.net

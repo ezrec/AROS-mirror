@@ -1,0 +1,35 @@
+# b2chunky smake file
+
+# Target
+TARGET = b2chunky
+
+# Compiler
+C_COMPILER = sc
+C_COMPILER_OPTS = NOSTACKCHECK STRINGMERGE NOCHECKABORT COMMENTNEST NOICONS\
+OPTIMIZE OPTIMIZERINLINELOCAL OPTIMIZERSCHEDULER OPTIMIZERTIME\
+IDentifierLENgth=128 IGNORE=315 IGNORE=317 INCLUDEDIR=/include
+
+# Linker
+LINKER = slink
+LINKER_OPTS = SC SD ND
+
+# Objects
+OBJECTS = brc1.o b2chunky.o
+
+# Libs
+LIBS = LIB:scm.lib LIB:sc.lib
+
+# Built file
+$(TARGET): $(OBJECTS) $(LIBS)
+
+        $(LINKER) <with <
+FROM lib:c.o $(OBJECTS) TO $(TARGET) LIB $(LIBS) $(LINKER_OPTS)
+<
+
+# Rules
+.c.o:
+      $(C_COMPILER) $*.c $(C_COMPILER_OPTS)
+
+# Dependences
+brc1.o:     brc1.c
+b2chunky.o: b2chunky.c b2chunky_rev.h

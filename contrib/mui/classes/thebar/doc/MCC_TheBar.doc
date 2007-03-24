@@ -1,0 +1,2238 @@
+TABLE OF CONTENTS
+
+TheBar.mcc/TheBar.mcc
+TheBar.mcc/MUIA_TheBar_Active
+TheBar.mcc/MUIA_TheBar_Appearance
+TheBar.mcc/MUIA_TheBar_BarPos
+TheBar.mcc/MUIA_TheBar_BarSpacer
+TheBar.mcc/MUIA_TheBar_BarSpacerSpacing
+TheBar.mcc/MUIA_TheBar_Borderless
+TheBar.mcc/MUIA_TheBar_BottomBarFrameSpacing
+TheBar.mcc/MUIA_TheBar_BottomInnerSpacing
+TheBar.mcc/MUIA_TheBar_Buttons
+TheBar.mcc/MUIA_TheBar_Columns
+TheBar.mcc/MUIA_TheBar_DisMode
+TheBar.mcc/MUIA_TheBar_DisImages
+TheBar.mcc/MUIA_TheBar_DisPics
+TheBar.mcc/MUIA_TheBar_DisStrip
+TheBar.mcc/MUIA_TheBar_DisStripBrush
+TheBar.mcc/MUIA_TheBar_DontMove
+TheBar.mcc/MUIA_TheBar_DragBar
+TheBar.mcc/MUIA_TheBar_EnableKeys
+TheBar.mcc/MUIA_TheBar_Frame
+TheBar.mcc/MUIA_TheBar_Free
+TheBar.mcc/MUIA_TheBar_FreeHoriz
+TheBar.mcc/MUIA_TheBar_FreeVert
+TheBar.mcc/MUIA_TheBar_HorizSpacing
+TheBar.mcc/MUIA_TheBar_HorizTextGfxSpacing
+TheBar.mcc/MUIA_TheBar_IgnoreAppearance
+TheBar.mcc/MUIA_TheBar_IgnoreDisImages
+TheBar.mcc/MUIA_TheBar_IgnoreSelImages
+TheBar.mcc/MUIA_TheBar_Images
+TheBar.mcc/MUIA_TheBar_LabelPos
+TheBar.mcc/MUIA_TheBar_LeftBarFrameSpacing
+TheBar.mcc/MUIA_TheBar_LeftInnerSpacing
+TheBar.mcc/MUIA_TheBar_Limbo
+TheBar.mcc/MUIA_TheBar_MinVer
+TheBar.mcc/MUIA_TheBar_MouseOver
+TheBar.mcc/MUIA_TheBar_NtRaiseActive
+TheBar.mcc/MUIA_TheBar_Pics
+TheBar.mcc/MUIA_TheBar_PicsDrawer
+TheBar.mcc/MUIA_TheBar_Precision
+TheBar.mcc/MUIA_TheBar_Raised
+TheBar.mcc/MUIA_TheBar_RemoveSpacers
+TheBar.mcc/MUIA_TheBar_RightBarFrameSpacing
+TheBar.mcc/MUIA_TheBar_Rows
+TheBar.mcc/MUIA_TheBar_Scale
+TheBar.mcc/MUIA_TheBar_Scaled
+TheBar.mcc/MUIA_TheBar_SelImages
+TheBar.mcc/MUIA_TheBar_SelPics
+TheBar.mcc/MUIA_TheBar_SelStrip
+TheBar.mcc/MUIA_TheBar_SelStripBrush
+TheBar.mcc/MUIA_TheBar_SpacerIndex
+TheBar.mcc/MUIA_TheBar_SpacersSize
+TheBar.mcc/MUIA_TheBar_SpecialSelect
+TheBar.mcc/MUIA_TheBar_Strip
+TheBar.mcc/MUIA_TheBar_StripBrush
+TheBar.mcc/MUIA_TheBar_StripCols
+TheBar.mcc/MUIA_TheBar_StripHSpace
+TheBar.mcc/MUIA_TheBar_StripRows
+TheBar.mcc/MUIA_TheBar_StripVSpace
+TheBar.mcc/MUIA_TheBar_Sunny
+TheBar.mcc/MUIA_TheBar_TextOnly
+TheBar.mcc/MUIA_TheBar_TextOverUseShine
+TheBar.mcc/MUIA_TheBar_TopBarFrameSpacing
+TheBar.mcc/MUIA_TheBar_TopInnerSpacing
+TheBar.mcc/MUIA_TheBar_VertSpacing
+TheBar.mcc/MUIA_TheBar_VertTextGfxSpacing
+TheBar.mcc/MUIA_TheBar_ViewMode
+TheBar.mcc/MUIM_TheBar_AddButton
+TheBar.mcc/MUIM_TheBar_Clear
+TheBar.mcc/MUIM_TheBar_DoOnButton
+TheBar.mcc/MUIM_TheBar_GetAttr
+TheBar.mcc/MUIM_TheBar_GetDragImage
+TheBar.mcc/MUIM_TheBar_GetObject
+TheBar.mcc/MUIM_TheBar_KillNotify
+TheBar.mcc/MUIM_TheBar_Notify
+TheBar.mcc/MUIM_TheBar_Remove
+TheBar.mcc/MUIM_TheBar_SetAttr
+TheBar.mcc/MUIM_TheBar_Sort
+
+TheBar.mcc/TheBar.mcc
+
+    *******************************************************************
+    Copyright (c) 2006-2007 by TheBar.mcc Open Source Team
+    $Id: MCC_TheBar.doc 32 2007-01-20 15:34:32Z damato $
+    $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/doc/MCC_TheBar.doc $
+
+    TheBar.mcc is a MUI custom class which provides facilities to
+    generate a dynamic graphical toolbar for MUI applications. Beside
+    standard toolbar-like functionality it allows to remove/add
+    buttons dynamically as well as hiding/disabling them on the fly.
+
+    In addition, TheBar allows to load all kind of images, even images
+    with 32bit alpha-channel information via the standard AmigaOS
+    datatype system.
+
+    It is released and distributed under the terms of the GNU Lesser
+    General Public License (LGPL) and available free of charge.
+
+    Please visit http://www.sf.net/projects/thebar/ for
+    the very latest version and information regarding TheBar.mcc
+    *******************************************************************
+
+    For some short introduction on how to use TheBar.mcc and its
+    associated sub-classes, the following pharagraph should provide a
+    good summary. What you usually want to do with TheBar is, to
+    enable your MUI application to display a toolbar with embedded
+    images and allow the user to press a gadget.
+
+    However, before we start going in detail, please read the following
+    important notes on what you should definitly avoid in your
+    application:
+
+    1) NEVER cache single button object pointers:
+
+       That means, even if you are able to receive each point of
+       a single toolbar button via MUIM_TheBar_GetObject, you should
+       *never* cache them in your application to directly access them
+       later on. So something like the following is NOT allowed at all:
+
+       set(button, MUIA_Disabled, TRUE);
+
+    2) NEVER remove/add a toolbar button yourself:
+
+       The reason is, that only TheBar should maintain the internals
+       of the buttons. So in case you want to remove a button from
+       your toolbar, use e.g. MUIM_TheBar_Remove instead of
+       directly trying to remove/adding a button via OM_REMMEMBER.
+
+    3) NEVER use MUI's own attributes like MUIA_ShowMe:
+
+       If you want to hide, remove or get a button to sleep please
+       use the method TheBar provides and don't try to use e.g.
+       MUIA_ShowMe directly on a button object. That really isn't
+       supported and should be avoided.
+
+    4) If you use TheBar in a virtual group (Virtgroup), use
+       TheBarVirt.mcc instead.
+
+    To summarize, please read the following documentation carefully
+    and don't try to be smarter than what this documentation suggests.
+    Especially if the included header files may contain attributes or
+    methods that are marked with /* PRIVATE */, please take it
+    seriously and don't try to use them in your own applications.
+    They may automatically vanish without a further notice. They are
+    only for internal use of TheBar itself.
+
+TheBar.mcc/MUIA_TheBar_Active
+
+    NAME
+     MUIA_TheBar_Active -- ULONG, [ISGN], v11
+
+
+    FUNCTION
+     This attributes can be used to query or set the ID of the
+     currently active button in the toolbar with mutual
+     excluding buttons involved.
+
+     Note that you may have many mutual exclude groups: this
+     attribute will always contain the ID of the last selected
+     button.
+
+    EXAMPLE
+     To get the ID of the currently active button:
+
+     -- cut here --
+     ULONG id=0;
+
+     get(toolbar, MUIA_TheBar_Active, &id);
+     -- cut here --
+
+    SEE ALSO
+
+TheBar.mcc/MUIA_TheBar_Appearance
+
+    NAME
+     MUIA_TheBar_Appearance -- struct MUIS_TheBar_Appearance, [..G.]
+
+
+    FUNCTION
+     Since version 19, the user is able to change the appearance
+     of the object in the MUI preference. If you want to get the
+     actual appearance you may use this attribute.
+
+     It returns a pointer to the structure:
+
+     struct MUIS_TheBar_Appearance
+     {
+       ULONG viewMode;
+       ULONG flags;
+       ULONG labelPos;
+       ULONG dummy[2];
+     };
+
+     - viewMode contains MUIA_TheBar_ViewMode value
+
+     - labelPos contains MUIA_TheBar_LabelPos value
+
+     - flags is a combination of:
+
+       MUIV_TheBar_Appearance_Borderless
+       MUIV_TheBar_Appearance_Raised
+       MUIV_TheBar_Appearance_Sunny
+       MUIV_TheBar_Appearance_Scaled
+       MUIV_TheBar_Appearance_BarSpacer
+       MUIV_TheBar_Appearance_EnableKeys
+
+    EXAMPLE
+     To get the currently set TheBar appearance:
+
+     -- cut here --
+     struct MUIS_TheBar_Appearance appearance;
+
+     get(toolbar, MUIA_TheBar_Appearance, &appearance);
+     -- cut here --
+
+    SEE ALSO
+     MUIA_TheBar_IgnoreAppearance
+     MUIA_TheBar_ViewMode
+     MUIA_TheBar_LabelPos
+
+TheBar.mcc/MUIA_TheBar_BarPos
+
+    NAME
+     MUIA_TheBar_BarPos -- ULONG, [ISGN], v11
+
+
+    FUNCTION
+     This attributes defines the alignment of the buttons in a
+     bar, one of:
+
+     - MUIV_TheBar_BarPos_Left
+     - MUIV_TheBar_BarPos_Center
+     - MUIV_TheBar_BarPos_Right
+
+     Default: MUIV_TheBar_BarPos_Left
+
+    EXAMPLE
+     To set a toolbar to position it's button centered:
+
+     -- cut here --
+     set(toolbar, MUIA_TheBar_Pos, MUIV_TheBar_BarPos_Center);
+
+TheBar.mcc/MUIA_TheBar_BarSpacer
+
+    NAME
+     MUIA_TheBar_BarSpacer -- BOOL, [ISGN], v11
+
+
+    FUNCTION
+     If this attribute is TRUE, any space spacer
+     (MUIV_TheBar_ButtonSpacer) becomes a bar spacer
+     (MUIV_TheBar_BarSpacer).
+
+     Default: FALSE
+
+    SEE ALSO
+     MUIA_TheBar_BarSpacerSpacing
+
+TheBar.mcc/MUIA_TheBar_BarSpacerSpacing
+
+    NAME
+     MUIA_TheBar_BarSpacerSpacing -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Defines the pixels between a bar spacer and the buttons
+     at its left/right.
+
+     Accepted range is 0<=x<=16
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+    SEE ALSO
+     MUIA_TheBar_BarSpacer
+
+TheBar.mcc/MUIA_TheBar_Borderless
+
+    NAME
+     MUIA_TheBar_Borderless -- BOOL, [ISGN], v11
+
+
+    FUNCTION
+     If this attribute is TRUE, you get borderless
+     buttons.
+
+     Default: FALSE
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIA_TheBar_BottomBarFrameSpacing
+
+    NAME
+     MUIA_TheBar_BottomBarFrameSpacing -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Define the pixels between the bar and the bottom frame.
+
+     Accepted range is 0<x<=16
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+    SEE ALSO
+     MUIA_TheBar_BottomBarInnerSpacing
+
+TheBar.mcc/MUIA_TheBar_BottomInnerSpacing
+
+    NAME
+     MUIA_TheBar_BottomInnerSpacing -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Define the pixels between a button contents and its bottom
+     frame.
+
+     Accepted range is 0<x<=16
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+    SEE ALSO
+     MUIA_TheBar_BottomBarFrameSpacing
+
+TheBar.mcc/MUIA_TheBar_Buttons
+
+    NAME
+     MUIA_TheBar_Buttons -- struct MUIS_TheBar_Button *, [I...]
+
+
+    FUNCTION
+     Can be specified on creation time of the toolbar. It defines
+     the initially set up toolbar buttons and their options.
+
+     Takes an array of MUIS_TheBar_Button structures whereas the
+     structure is definied as:
+
+     struct MUIS_TheBar_Button
+     {
+       ULONG           img;
+       ULONG           ID;
+       STRPTR          text;
+       STRPTR          help;
+       ULONG           flags;
+       ULONG           exclude;
+       struct IClass   *class;
+       Object          *obj;
+     };
+
+     Where the fields meanings are:
+
+       ULONG img
+         The index of the brush image used by the button (0,...)
+         or one of the special values:
+
+         * MUIV_TheBar_End
+           Ends a MUIS_TheBar_Button array. Must always be
+           present at the end of the array.
+
+         * MUIV_TheBar_BarSpacer
+           Add a bar spacer
+
+         * MUIV_TheBar_ButtonSpacer
+           Add a spacer between two buttons
+
+         * MUIV_TheBar_ImageSpacer
+           Add a spacer with the image specified in
+           MUIA_TheBar_SpacerIndex; if no spacer index was
+           specified, a bar spacer is used.
+
+       ULONG ID
+         The id of the object; any value may be used, but if the
+         button is in a mutual exclude group, it must be 1<<x,
+         where x = 0,...,23. That also means that you may have up
+         to 24 total mutual exclude buttons in a single bar.
+
+       STRPTR text
+         The button label, max 32 chars long; it is copied!
+
+       STRPTR help
+         The button short-help (for bubble help); it is *NOT*
+         copied!
+
+       ULONG flags
+         Can be used to set the type of button you need; a
+         combination of:
+
+         * MUIV_TheBar_ButtonFlag_NoClick
+           The button doesn't react to user inputs
+
+         * MUIV_TheBar_ButtonFlag_Immediate
+           The button is an immediate one
+
+         * MUIV_TheBar_ButtonFlag_Toggle
+           The button is a toggle one
+
+         * MUIV_TheBar_ButtonFlag_Disabled
+           The button is disabled per default.
+
+         * MUIV_TheBar_ButtonFlag_Selected
+           The button is selected. Use MUIA_Selected to un/select
+           the button, but if the button is in a mutual exclude
+           group, you SHOULD use MUIA_TheBar_Active!
+
+         * MUIV_TheBar_ButtonFlag_Sleep
+           The button is not created at all. See
+           MUIM_TheBar_SetAttr
+
+         * MUIV_TheBar_ButtonFlag_Hide
+           The button is created, but it is not shown. NEVER use
+           MUIA_ShowMe on buttons! See MUIM_TheBar_SetAttr
+
+       ULONG exclude
+         Allows to specify a mutual exlusive mask to link up to 24
+         button together. The mask must be specified as a bit
+         operation of the type 1<<x where x = 0,...,23
+
+       struct IClass *class
+         If you want to subclass TheButton.mcc to add drag'n'drop
+         or what else, place the pointer to your class here: TheBar
+         will know how to recreate your buttons correctly.
+         Otherwise leave it NULL!
+
+       Object *obj
+         This will be filled after the creation of the bar with a
+         pointer to the button. Remember not to cache it. Just
+         get it and use it.
+
+       To create a 2 buttons mutual exclude group:
+       ...
+       {5, 4, "_Matches", "Matches page.", MUIV_TheBar_ButtonFlag_Immediate|MUIV_TheBar_ButtonFlag_Selected, 1<<6},
+       {6, 5, "_Edit", "Edit page.", MUIV_TheBar_ButtonFlag_Immediate, 1<<5},
+       ...
+
+    EXAMPLE
+     The following code will create a toolbar with two mutual
+     exclusive toolbar buttons.
+
+     -- cut here --
+     struct MUIS_TheBar_Button buttons[] =
+     {
+       ...
+       { 5, 4, "_Matches", "Matches page.", MUIV_TheBar_ButtonFlag_Selected,  1<<6 },
+       { 6, 5, "_Edit",    "Edit page.",    MUIV_TheBar_ButtonFlag_Immediate, 1<<5 },
+       ...
+       { MUIV_TheBar_End, -1, NULL, NULL, 0, 0, NULL, NULL },
+     };
+
+     Object *toolbar = TheBarObject,
+                         ...
+                         MUIA_TheBar_Buttons, buttons,
+                         ...
+                       End;
+     -- cut here --
+
+    SEE ALSO
+     MUIA_TheBar_Pics
+     MUIA_TheBar_DisPics
+     MUIA_TheBar_DisStrip
+     MUIA_TheBar_DisStripBrush
+     MUIA_TheBar_Images
+     MUIA_TheBar_PicDrawer
+     MUIA_TheBar_SelPics
+     MUIA_TheBar_SelStrip
+     MUIA_TheBar_SelStripBrush
+     MUIA_TheBar_Strip
+     MUIA_TheBar_StripBrush
+     MUIA_TheBar_StripButtons
+
+TheBar.mcc/MUIA_TheBar_Columns
+
+    NAME
+     MUIA_TheBar_Columns -- ULONG, [ISGN], v11
+
+
+    FUNCTION
+     This attributes defines the number of the columns of the
+     bar. Setting this attribute to a value greater than 0, makes
+     the bar act in a so called "columns mode".
+
+     Default: 0.
+
+
+    SEE ALSO
+     MUIA_TheBar_Rows
+
+TheBar.mcc/MUIA_TheBar_DisMode
+
+    NAME
+     MUIA_TheBar_DisMode -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Allows to define how disabled buttons should be rendered
+     in case no own image set is available for it.
+
+     One of the following values:
+
+       MUIV_TheBar_DisMode_Shape
+         Draws only a B/W shape to show the disabled status
+
+       MUIV_TheBar_DisMode_Grid
+         Draw a light grid in front of the image
+
+       MUIV_TheBar_DisMode_FullGrid
+         Draw a full grid
+
+       MUIV_TheBar_DisMode_Sunny
+         Converts the image into a greyscale image and
+         displays it
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+    SEE ALSO
+     MUIA_TheBar_DisPics
+
+TheBar.mcc/MUIA_TheBar_DisImages
+
+    NAME
+     MUIA_TheBar_DisImages -- struct MUIS_TheBar_Brush **, [I.G.], v12
+
+
+    FUNCTION
+     Specify the images which should be used for the 'disabled'
+     state by using a brush structure.
+
+
+    NOTE
+      As there are multiple ways of specifying images for the
+      toolbar, the following list is the order of preference
+      for TheBar:
+
+       1) MUIA_TheBar_DisImages
+       2) MUIA_TheBar_DisStripBrush
+       3) MUIA_TheBar_DisStrip
+       4) MUIA_TheBar_DisPics
+
+
+    SEE ALSO
+     MUIA_TheBar_Images
+     MUIA_TheBar_SelImages
+
+
+TheBar.mcc/MUIA_TheBar_DisPics
+
+    NAME
+     MUIA_TheBar_DisPics -- STRPTR *, [I...], v12
+
+    FUNCTION
+     Specify the disabled images as an array of string pointers
+     which will be used by the buttons of the bar. It is only used
+     if MUIA_TheBar_Pics is used.
+
+    NOTE
+      As there are multiple ways of specifying images for the
+      toolbar, the following list is the order of preference
+      for TheBar:
+
+       1) MUIA_TheBar_DisImages
+       2) MUIA_TheBar_DisStripBrush
+       3) MUIA_TheBar_DisStrip
+       4) MUIA_TheBar_DisPics
+
+    SEE ALSO
+     MUIA_TheBar_Pics
+     MUIA_TheBar_SelPics
+
+TheBar.mcc/MUIA_TheBar_DisStrip
+
+    NAME
+     MUIA_TheBar_DisStrip -- STRPTR, [I...], v12
+
+    FUNCTION
+     Specify the disabled images as a strip. It is only used if
+     MUIA_TheBar_Strip is used.
+
+    SEE ALSO
+     MUIA_TheBar_DisMode
+     MUIA_TheBar_DisPics
+     MUIA_TheBar_DisStripBrush
+     MUIA_TheBar_Images
+     MUIA_TheBar_Pics
+     MUIA_TheBar_PicDrawer
+     MUIA_TheBar_SelPics
+     MUIA_TheBar_SelStrip
+     MUIA_TheBar_SelStripBrush
+     MUIA_TheBar_Strip
+     MUIA_TheBar_StripBrush
+     MUIA_TheBar_StripButtons
+
+TheBar.mcc/MUIA_TheBar_DisStripBrush
+
+    NAME
+     MUIA_TheBar_DisStripBrush -- struct MUIS_TheBar_Brush *, [I...], v12
+
+    FUNCTION
+     Specify the disabled images as a strip brush. It is only used
+     if MUIA_TheBar_StripBrush is used.
+
+    SEE ALSO
+     MUIA_TheBar_DisMode
+     MUIA_TheBar_DisPics
+     MUIA_TheBar_DisStrip
+     MUIA_TheBar_Images
+     MUIA_TheBar_Pics
+     MUIA_TheBar_PicDrawer
+     MUIA_TheBar_SelPics
+     MUIA_TheBar_SelStrip
+     MUIA_TheBar_SelStripBrush
+     MUIA_TheBar_Strip
+     MUIA_TheBar_StripBrush
+     MUIA_TheBar_StripButtons
+
+TheBar.mcc/MUIA_TheBar_DontMove
+
+    NAME
+     MUIA_TheBar_DontMove -- BOOL, [I...], v15
+
+
+    FUNCTION
+     If this attribute is TRUE, the content of the buttons is
+     not moved when they are active.
+
+     Default: FALSE
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+
+TheBar.mcc/MUIA_TheBar_DragBar
+
+    NAME
+     MUIA_TheBar_DragBar -- BOOL, [ISGN], v11
+
+
+    FUNCTION
+     If this attribute is TRUE, a special drag gadget is added at
+     the left (top) of the bar so that it may be moved around. Of
+     course, D&D implementation is up to you!
+
+     Default: FALSE
+
+TheBar.mcc/MUIA_TheBar_EnableKeys
+
+    NAME
+     MUIA_TheBar_EnableKeys -- BOOL, [ISGN], v11
+
+
+    FUNCTION
+     If this attribute is TRUE, the key short cuts are enabled.
+     Key short cuts are defined prepending the key with a _ in
+     the button text.
+
+     Default: TRUE
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIA_TheBar_Frame
+
+    NAME
+     MUIA_TheBar_Frame -- BOOL, [ISGN], v12
+
+
+    FUNCTION
+     If this attribute is TRUE, a frame is drawn around the bar.
+
+     Default: FALSE
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+    WARNING
+     Note that till version 20, this attribute is only valid
+     for 68k version of TheBar.mcc and TheBarVirt.mcc; MorphOS
+     versions simply ignores it!!!
+
+TheBar.mcc/MUIA_TheBar_Free
+
+    NAME
+     MUIA_TheBar_Free -- BOOL, [ISGN], v11
+
+
+    FUNCTION
+     If this attribute is TRUE, the bar is allowed to grow
+     freely in both, vertical and horizontal direction.
+
+     The default is:
+
+     - If MUIA_Group_Horiz is TRUE the bar can freely grow
+       in horizontal direction, but is limited vertically.
+
+     - If MUIA_Group_Horiz is FALSE the can freely grow
+       in vertical direction, but is limited horizontal.
+
+    NOTE
+     The setting of MUIA_Group_Horiz changes the
+     max size of the bar.
+
+
+    SEE ALSO
+     MUIA_TheBar_FreeHoriz
+     MUIA_TheBar_FreeVert
+
+TheBar.mcc/MUIA_TheBar_FreeHoriz
+
+    NAME
+     MUIA_TheBar_FreeHoriz -- BOOL, [ISGN], v11
+
+
+    FUNCTION
+     If this attribute is TRUE, the bar can freely grow
+     in horizontal direction.
+
+     The default is:
+
+     - If MUIA_Group_Horiz is TRUE the bar can freely grow
+       in horizontal direction, but is limited vertically.
+
+     - If MUIA_Group_Horiz is FALSE the can freely grow
+       in vertical direction, but is limited horizontal.
+
+    NOTE
+     The setting of MUIA_Group_Horiz changes the
+     max size of the bar.
+
+
+    SEE ALSO
+     MUIA_TheBar_Free
+     MUIA_TheBar_FreeVert
+
+TheBar.mcc/MUIA_TheBar_FreeVert
+
+    NAME
+     MUIA_TheBar_FreeVert -- BOOL, [ISGN], v11
+
+
+    FUNCTION
+     If this attribute is TRUE, the bar can freely grow
+     in vertical direction.
+
+     The default is:
+
+     - If MUIA_Group_Horiz is TRUE the bar can freely grow
+       in horizontal direction, but is limited vertically.
+
+     - If MUIA_Group_Horiz is FALSE the can freely grow
+       in vertical direction, but is limited horizontal.
+
+    NOTE
+     The setting of MUIA_Group_Horiz changes the
+     max size of the bar.
+
+    SEE ALSO
+     MUIA_TheBar_Free
+     MUIA_TheBar_FreeHoriz
+
+TheBar.mcc/MUIA_TheBar_HorizInnerSpacing
+
+    NAME
+     MUIA_TheBar_HorizInnerSpacing -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Define the pixels between a button contents and its left and
+     right frames.
+
+     Accepted range is 0 < x <= 16
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+    SEE ALSO
+     MUIA_TheBar_HorizSpacing
+     MUIA_TheBar_HorizTextGfxSpacing
+
+TheBar.mcc/MUIA_TheBar_HorizSpacing
+
+    NAME
+     MUIA_TheBar_HorizSpacing -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Define the pixels between two bar columns.
+
+     Accepted range is 0 <= x <= 16
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+    SEE ALSO
+     MUIA_TheBar_HorizInnerSpacing
+     MUIA_TheBar_HorizTextGfxSpacing
+
+TheBar.mcc/MUIA_TheBar_HorizTextGfxSpacing
+
+    NAME
+     MUIA_TheBar_HorizTextGfxSpacing -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Define the pixels between the image and the Left/Right label
+     in Text/Gfx buttons.
+
+     Accepted range is 0 < x <= 16
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+    SEE ALSO
+     MUIA_TheBar_HorizSpacing
+     MUIA_TheBar_HorizInnerSpacing
+
+TheBar.mcc/MUIA_TheBar_IgnoreAppearance
+
+    NAME
+     MUIA_TheBar_IgnoreAppearance -- BOOL, [ISGN], v19
+
+
+    FUNCTION
+     Since version 19, the user is able to change the general
+     appearance of the object in the MUI preferences.
+
+     If this attribute is TRUE, MCP appearance preferences are
+     ignored. If this attribute is FALSE, MCP appearance
+     preferences are used.
+
+     Default: FALSE
+
+    NOTE
+     Since version 21, this flags was changed to default to
+     FALSE. The reason for that is, that the general user
+     preferences for the appearance of a MUI object should
+     always be preferred. So please, keep that rule in your
+     own application and only override the default if it is
+     really necessary.
+
+
+TheBar.mcc/MUIA_TheBar_IgnoreDisImages
+
+    NAME
+     MUIA_TheBar_IgnoreDisImages -- BOOL, [I...], v12
+
+
+    FUNCTION
+     If TRUE, images for the 'Disabled' state are generally
+     ignored, even if explicitly specified.
+
+     Default: FALSE
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+    SEE ALSO
+     MUIA_TheBar_DisPics
+     MUIA_TheBar_DisImages
+
+
+TheBar.mcc/MUIA_TheBar_IgnoreSelImages
+
+    NAME
+     MUIA_TheBar_IgnoreSelImages -- BOOL, [I...], v12
+
+
+    FUNCTION
+     If TRUE, images for the 'Selected' state are generally
+     ignored, even if explicitly specified.
+
+     Default: FALSE
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+    SEE ALSO
+     MUIA_TheBar_SelPics
+     MUIA_TheBar_SelImages
+
+
+TheBar.mcc/MUIA_TheBar_Images
+
+    NAME
+     MUIA_TheBar_Images -- struct MUIS_TheBar_Brush **, [I.G.], v11
+
+
+    FUNCTION
+     Specify the images which will be used by the buttons of the
+     bar.
+
+     You must supply a NULL terminated array of pointers to
+
+     struct MUIS_TheBar_Brush
+     {
+       APTR  data;
+       UWORD dataWidth;
+       UWORD dataHeight;
+       UWORD dataTotalWidth;
+       UWORD left;
+       UWORD top;
+       UWORD width;
+       UWORD height;
+       ULONG *colors;
+       ULONG numColors;
+       ULONG trColor;
+       ULONG compressedSize;
+       ULONG flags;
+       ULONG reserved[4];
+     };
+
+     The fields are:
+
+      APTR data
+       The image data, actually can be one of the following:
+
+       * an UBYTE array of pens numbers, if BRFLG_ARGB is not
+         specified in flags
+
+       * an UBYTE array of true color data in the ARGB format, if
+         BRFLG_ARGB is specified in flags; if you use the alpha
+         channel A, specify BRFLG_AlphaMask in flags, otherwise
+         it is ignored.
+
+      UWORD dataWidth
+       The width of the source image in pixels.
+
+      UWORD dataHeight
+       The rows of the source image.
+
+      UWORD dataTotalWidth
+       Total width of data in UBYTE.
+
+      UWORD left
+       The left offset of this pic in data in pixel; usually 0.
+
+      UWORD top
+       The top offset of this pic in data in pixels; usually 0.
+
+      UWORD width
+       The width of this pic in pixels; usually same as
+       dataWidth.
+
+      UWORD height
+       The height of this pic in pixel; usually same as
+       dataHeight.
+
+      ULONG *colors
+       The colors palette, actually can be one of the following:
+
+       * an array of ULONG r,g,b left shifted triplettes, if
+         BRFLG_ColorRGB is not specified in flags;
+
+       * an array of ULONG 0x00rrggbb triplettes if
+         BRFLG_ColorRGB is specified in flags;
+
+       This is ignored if BRFLG_ARGB is specified in flags.
+
+      ULONG numColors
+       The number of the colors contained in colors, ignored if
+       BRFLG_ARGB is specified in flags.
+
+      ULONG trColor
+       The transparent color, actually:
+
+       * the pen index in colors, if BRFLG_ARGB is not specified
+         in flags;
+
+       * the 0x00rrggbb transparent color, if BRFLG_ARGB is not
+         specified in flags.
+
+       This is ignored id BRFLG_ARGB & BRFLG_AlphaMask are
+       specified in flags.
+
+      ULONG compressedSize
+       If not 0, data contains byte run 1 compressed UBYTE, which
+       are uncompressed on the fly and it is the size of the
+       compressed data. Note that true color data are very bad
+       compressed by byte run 1 compression.
+
+      ULONG flags
+       An bit mask with the following flags availabl:
+
+       * BRFLG_ARGB
+         Data are in ARGB format. See data;
+
+       * BRFLG_AlphaMask
+         Alpha channel in ARGB data is used. See trColor;
+
+       * BRFLG_RGB8
+         colors is in 0x00rrggbb format. See colors;
+
+
+     If a pointer in the array equals to  MUIV_TheBar_SkipPic,
+     it is skipped.
+
+    NOTE
+      As there are multiple ways of specifying images for the
+      toolbar, the following list is the order of preference
+      for TheBar:
+
+       1) MUIA_TheBar_Images
+       2) MUIA_TheBar_StripBrush
+       3) MUIA_TheBar_Strip
+       4) MUIA_TheBar_Pics
+
+    SEE ALSO
+     MUIA_TheBar_DisPics
+     MUIA_TheBar_DisStrip
+     MUIA_TheBar_DisStripBrush
+     MUIA_TheBar_Pics
+     MUIA_TheBar_PicDrawer
+     MUIA_TheBar_SelPics
+     MUIA_TheBar_SelStrip
+     MUIA_TheBar_SelStripBrush
+     MUIA_TheBar_Strip
+     MUIA_TheBar_StripBrush
+     MUIA_TheBar_StripButtons
+
+TheBar.mcc/MUIA_TheBar_LabelPos
+
+    NAME
+     MUIA_TheBar_LabelPos -- ULONG, [ISGN], v11
+
+
+    FUNCTION
+     Controls the position of the text in a Text/Gfx toolbar.
+     Can be one of the following:
+
+      MUIV_TheBar_LabelPos_Bottom
+      MUIV_TheBar_LabelPos_Top
+      MUIV_TheBar_LabelPos_Right
+      MUIV_TheBar_LabelPos_Left
+
+     Default: MUIV_TheBar_LabelPos_Bottom
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIA_TheBar_LeftBarFrameSpacing
+
+    NAME
+     MUIA_TheBar_LeftBarFrameSpacing -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Define the pixels between the bar and it's left frame.
+
+     Accepted range is 0 < x <= 16
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIA_TheBar_Limbo
+
+    NAME
+     MUIA_TheBar_Limbo -- BOOL, [.S..], v11
+
+
+    FUNCTION
+     That is a very strange one. You should use it with care and
+     only if you really know what you are doing.
+
+     Usually, it should be set to TRUE before the bar comes in
+     InitChange and set to FALSE after the bar ExitChange.
+
+     If it is TRUE and the bar gets a MUIM_Setup all the gfx
+     stuff are not created, if the bar gets a MUIM_Cleanup the
+     gfx stuff are not released.
+
+     Very useful to drag the bar, to change its orientation and
+     so on, without recreating all the gfx stuff (e.g. remapping
+     the bitmaps).
+
+    EXAMPLE
+
+     Always do something like:
+
+     -- cut here --
+     set(bar,MUIA_TheBar_Limbo,TRUE);
+     DoMethod(group,MUIM_Group_InitChange);
+     ...
+     ...
+     ...
+     DoMethod(group,MUIM_Group_ExitChange);
+     set(bar,MUIA_TheBar_Limbo,FASE);
+     -- cut here --
+
+TheBar.mcc/MUIA_TheBar_MinVer
+
+    NAME
+     MUIA_TheBar_MinVer -- ULONG, [I...], v11
+
+
+    FUNCTION
+     Define the mininum wanted version of TheBar.mcc. If on
+     creation of the object the minimum version wasn't found
+     NULL will be returned.
+
+TheBar.mcc/MUIA_TheBar_MouseOver
+
+    NAME
+     MUIA_TheBar_MouseOver -- ULONG, [ISGN], v18
+     
+    FUNCTION
+     If MUIA_TheBar_Raised or MUIA_TheBar_Sunny is TRUE,
+     this attribute contains the id of the last button
+     where the mouse was over.
+
+TheBar.mcc/MUIA_TheBar_NtRaiseActive
+
+    NAME
+     MUIA_TheBar_NtRaiseActive -- BOOL, [ISGN], v18
+     
+    FUNCTION
+     If FALSE, a frame is drawn around borderless and 
+     sunny or raised buttons. If TRUE, no frame is
+     used.
+     
+     Useful to active a button when the mouse is over 
+     and so change page in a page-mode group.
+
+     Default: FALSE
+
+TheBar.mcc/MUIA_TheBar_Pics
+
+    NAME
+     MUIA_TheBar_Pics -- STRPTR *, [I...], v11
+
+    FUNCTION
+     Specify the images that will be used by the buttons of the
+     bar.
+
+     While with MUIA_TheBar_Images you specify an array of struct
+     MUIS_TheBar_Brush ** , with this attribute you specify a NULL
+     terminated array made of the names of the pics the bar will
+     use.
+
+     The pics will be loaded at the toolbar init time by using
+     datatypes.library.
+
+     If one picture/image can't be load for any reason, the whole
+     toolbar is forced to text-only mode and MUIA_TheBar_TextOnly
+     is set to TRUE.
+
+    EXAMPLE
+     Define a toolbar with two button images which are located
+     in 'PROGDIR:images':
+
+     -- cut here --
+     static const char *images[] =
+     {
+       "Abook_Save",      // Save
+       "Abook_Find",      // Find
+       NULL
+     };
+
+     Object *toolbar = TheBarObject,
+                         ...
+                         MUIA_TheBar_PicsDrawer, "PROGDIR:images",
+                         MUIA_TheBar_Pics,       images,
+                         ...
+                       End;
+     -- cut here --
+
+    NOTE
+      As there are multiple ways of specifying images for the
+      toolbar, the following list is the order of preference
+      for TheBar:
+
+       1) MUIA_TheBar_Images
+       2) MUIA_TheBar_StripBrush
+       3) MUIA_TheBar_Strip
+       4) MUIA_TheBar_Pics
+
+    SEE ALSO
+     MUIA_TheBar_DisPics
+     MUIA_TheBar_DisStrip
+     MUIA_TheBar_DisStripBrush
+     MUIA_TheBar_Images
+     MUIA_TheBar_PicsDrawer
+     MUIA_TheBar_SelPics
+     MUIA_TheBar_SelStrip
+     MUIA_TheBar_SelStripBrush
+     MUIA_TheBar_Strip
+     MUIA_TheBar_StripBrush
+     MUIA_TheBar_StripButtons
+
+TheBar.mcc/MUIA_TheBar_PicsDrawer
+
+    NAME
+     MUIA_TheBar_PicsDrawer -- STRPTR, [I...], v11
+
+
+    FUNCTION
+     Specify the parent drawer for the image filenames which
+     might be specified with MUIA_TheBar_DisPics,
+     MUIA_TheBar_DisStrip, MUIA_TheBar_SelPics
+     MUIA_TheBar_SelStrip and MUIA_TheBar_Strip.
+
+
+    SEE ALSO
+     MUIA_TheBar_Pics
+     MUIA_TheBar_DisPics
+     MUIA_TheBar_DisStrip
+     MUIA_TheBar_DisStripBrush
+     MUIA_TheBar_Images
+     MUIA_TheBar_SelPics
+     MUIA_TheBar_SelStrip
+     MUIA_TheBar_SelStripBrush
+     MUIA_TheBar_Strip
+     MUIA_TheBar_StripBrush
+     MUIA_TheBar_StripButtons
+
+TheBar.mcc/MUIA_TheBar_Precision
+
+    NAME
+     MUIA_TheBar_Precision -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Define the precision to use when to obtain pens.
+
+     One of the following:
+
+       MUIV_TheBar_Precision_GUI
+       MUIV_TheBar_Precision_Icon
+       MUIV_TheBar_Precision_Image
+       MUIV_TheBar_Precision_Exact
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIA_TheBar_Raised
+
+    NAME
+     MUIA_TheBar_Raised -- BOOL, [ISGN], v11
+
+
+    FUNCTION
+     If TRUE, a frame is drawn around a borderless button when
+     the mouse is over it.
+
+     It should be set to FALSE when MUIA_TheBar_Borderless is
+     FALSE.
+
+     Default: FALSE
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIA_TheBar_RemoveSpacers
+
+    NAME
+     MUIA_TheBar_RemoveSpacers -- ULONG, [ISGN], v11
+
+
+    FUNCTION
+     With this attribute, you may remove spacers on the fly.
+     That is very useful when you enter the columns/rows mode.
+
+     The allowed values are the following and can be
+     combined as binary flags:
+
+      MUIV_TheBar_Remove_BarSpacers
+        Remove bar spacers
+
+      MUIV_TheBar_Remove_ButtonSpacers
+        Remove buttons spacers
+
+      MUIV_TheBar_Remove_ImageSpacers
+        Remove image spacers
+
+      MUIV_TheBar_Remove_All
+        Remove all spacers
+
+
+    SEE ALSO
+     MUIA_TheBar_Buttons
+     MUIA_TheBar_Columns
+     MUIA_TheBar_Rows
+
+TheBar.mcc/MUIA_TheBar_RightBarFrameSpacing
+
+    NAME
+     MUIA_TheBar_RightBarFrameSpacing -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Define the pixels between the bar and its right frame.
+
+     Accepted range is 0 < x <= 16
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIA_TheBar_Rows
+
+    NAME
+     MUIA_TheBar_Rows -- ULONG, [ISGN], v11
+
+
+    FUNCTION
+     This attributes defines the number of rows of the toolbar
+     should be layouted with. Setting this attribute to a value
+     greater than 0 make the toolbar running in a so-called
+     Rows mode. It will the act as vertically unlimited.
+
+     Default: 0
+
+
+    SEE ALSO
+     MUIA_TheBar_Columns
+
+TheBar.mcc/MUIA_TheBar_Scale
+
+    NAME
+     MUIA_TheBar_Scale -- ULONG, [IGSN], v12
+
+
+    FUNCTION
+     Define the scale ratio for scaled buttons.
+
+     Accepted range is 50 <= x <= 200
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+    SEE ALSO
+     MUIA_TheBar_Scaled
+
+TheBar.mcc/MUIA_TheBar_Scaled
+
+    NAME
+     MUIA_TheBar_Scaled -- BOOL, [ISGN], v11
+
+
+    FUNCTION
+     If TRUE, all buttons will be scaled down according to
+     defined scale ratio.
+
+     Default: FALSE
+
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+    SEE ALSO
+     MUIA_TheBar_Scale
+
+TheBar.mcc/MUIA_TheBar_SelImages
+
+    NAME
+     MUIA_TheBar_SelImages -- struct MUIS_TheBar_Brush **, [I.G.], v12
+
+
+    FUNCTION
+     Specify the images which should be used for the 'selected'
+     state by using a brush structure.
+
+
+    NOTE
+      As there are multiple ways of specifying images for the
+      toolbar, the following list is the order of preference
+      for TheBar:
+
+       1) MUIA_TheBar_SelImages
+       2) MUIA_TheBar_SelStripBrush
+       3) MUIA_TheBar_SelStrip
+       4) MUIA_TheBar_SelPics
+
+
+    SEE ALSO
+     MUIA_TheBar_Images
+     MUIA_TheBar_DisImages
+
+TheBar.mcc/MUIA_TheBar_SelPics
+
+    NAME
+     MUIA_TheBar_SelPics -- STRPTR *, [I...], v12
+
+
+    FUNCTION
+     Specify the 'selected' images as an array of string pointers
+     which will be used by the buttons of the bar. It is only used
+     if MUIA_TheBar_Pics is used.
+
+    NOTE
+      As there are multiple ways of specifying images for the
+      toolbar, the following list is the order of preference
+      for TheBar:
+
+       1) MUIA_TheBar_SelImages
+       2) MUIA_TheBar_SelStripBrush
+       3) MUIA_TheBar_SelStrip
+       4) MUIA_TheBar_SelPics
+
+    SEE ALSO
+     MUIA_TheBar_Pics
+     MUIA_TheBar_DisPics
+
+
+TheBar.mcc/MUIA_TheBar_SelStrip
+
+    NAME
+     MUIA_TheBar_SelStrip -- STRPTR, [I...], v12
+
+
+    FUNCTION
+     Specify the images strip for the 'selected' state of the
+     buttons. It is only used if MUIA_TheBar_Strip is used.
+
+    SEE ALSO
+     MUIA_TheBar_Strip
+     MUIA_TheBar_DisStrip
+     MUIA_TheBar_PicsDrawer
+
+TheBar.mcc/MUIA_TheBar_SelStripBrush
+
+    NAME
+     MUIA_TheBar_SelStripBrush -- struct MUIS_TheBar_Brush *, [I...], v12
+
+
+    FUNCTION
+     Specify the selected images strip brush. It is only used if
+     MUIA_TheBar_StripBrush is used.
+
+    SEE ALSO
+     MUIA_TheBar_StripBrush
+     MUIA_TheBar_DisStripBrush
+
+TheBar.mcc/MUIA_TheBar_SpacerIndex
+
+    NAME
+     MUIA_TheBar_SpacerIndex -- ULONG, [I.G.], v11
+
+
+    FUNCTION
+     Define the image number to use when an image spacer
+     (MUIV_TheBar_ImageSpacer) is to be created.
+
+     Default no spacer pic: image spacers are bar spacers.
+
+
+    SEE ALSO
+     MUIA_TheBar_Images
+     MUIA_TheBar_BarSpacer
+
+TheBar.mcc/MUIA_TheBar_SpacersSize
+
+    NAME
+     MUIA_TheBar_SpacersSize -- ULONG, [ISGN], v18
+
+
+    FUNCTION
+     Defines the used size of spacers relative to the size of
+     a button. One of the following values:
+
+      MUIV_TheBar_SpacersSize_Quarter (Default)
+      MUIV_TheBar_SpacersSize_Half
+      MUIV_TheBar_SpacersSize_One
+
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+
+    SEE ALSO
+     MUIA_TheBar_SpacerIndex
+
+
+TheBar.mcc/MUIA_TheBar_SpecialSelect
+
+    NAME
+     MUIA_TheBar_SpecialSelect -- BOOL, [I...], v12
+
+
+    FUNCTION
+     If TRUE, the buttons contents is moved to the right/bottom
+     when the mouse is over it.
+
+     Default: FALSE
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIA_TheBar_Strip
+
+    NAME
+     MUIA_TheBar_Strip -- STRPTR, [I...], v11
+
+
+    FUNCTION
+     Here you can define a filename which should be used for loading
+     the button images. It must contain ALL images of ALL defined
+     buttons. If for any reason the file can't be loaded, the whole
+     toolbar is forced to text only and MUIA_TheBar_TextOnly is set
+     to TRUE. MUIA_TheBar_PicsDrawer is also respected when loading.
+
+     The number of the contained images in the strip is derived
+     from:
+
+     1. the value specified in MUIA_TheBar_StripButtons; this
+        lets you add buttons later.
+
+     2. the number of the buttons specified in
+        MUIA_TheBar_Buttons (if supplied), spacers not included
+
+    NOTE
+      As there are multiple ways of specifying images for the
+      toolbar, the following list is the order of preference
+      for TheBar:
+
+       1) MUIA_TheBar_Images
+       2) MUIA_TheBar_StripBrush
+       3) MUIA_TheBar_Strip
+       4) MUIA_TheBar_Pics
+
+    SEE ALSO
+     MUIA_TheBar_DisPics
+     MUIA_TheBar_DisStrip
+     MUIA_TheBar_DisStripBrush
+     MUIA_TheBar_Images
+     MUIA_TheBar_Pics
+     MUIA_TheBar_PicDrawer
+     MUIA_TheBar_SelStripBrush
+     MUIA_TheBar_StripBrush
+     MUIA_TheBar_StripButtons
+
+TheBar.mcc/MUIA_TheBar_StripBrush
+
+    NAME
+     MUIA_TheBar_StripBrush -- struct MUIS_TheBar_Brush *, [I...], v11
+
+
+    FUNCTION
+     Allows to define the toolbar images as a strip by obtaining
+     the data from a brush structure defined earlier. The strip image
+     must contain ALL images of ALL defined buttons. If for any reason
+     the file can't be loaded, the whole toolbar is forced to text
+     only and MUIA_TheBar_TextOnly is set to TRUE.
+
+     The number of the contained images in the strip is derived
+     from:
+
+     1. the value specified in MUIA_TheBar_StripButtons; this
+        lets you add buttons later.
+
+     2. the number of the buttons specified in
+        MUIA_TheBar_Buttons (if supplied), spacers not included
+
+
+    NOTE
+      As there are multiple ways of specifying images for the
+      toolbar, the following list is the order of preference
+      for TheBar:
+
+       1) MUIA_TheBar_Images
+       2) MUIA_TheBar_StripBrush
+       3) MUIA_TheBar_Strip
+       4) MUIA_TheBar_Pics
+
+    SEE ALSO
+     MUIA_TheBar_DisPics
+     MUIA_TheBar_DisStrip
+     MUIA_TheBar_DisStripBrush
+     MUIA_TheBar_Images
+     MUIA_TheBar_Pics
+     MUIA_TheBar_PicDrawer
+     MUIA_TheBar_SelPics
+     MUIA_TheBar_SelStrip
+     MUIA_TheBar_SelStripBrush
+     MUIA_TheBar_Strip
+     MUIA_TheBar_StripButtons
+
+TheBar.mcc/MUIA_TheBar_StripCols
+
+    NAME
+     MUIA_TheBar_StripCols -- ULONG [I...], v12
+
+
+    FUNCTION
+     Defines the number of columns the image strip contains.
+
+     Default: the number of the buttons defined in
+              MUIA_TheBar_Buttons if >0, 1 otherwise.
+
+    SEE ALSO
+     MUIA_TheBar_DisPics
+     MUIA_TheBar_DisStrip
+     MUIA_TheBar_DisStripBrush
+     MUIA_TheBar_Images
+     MUIA_TheBar_Pics
+     MUIA_TheBar_PicDrawer
+     MUIA_TheBar_SelPics
+     MUIA_TheBar_SelStrip
+     MUIA_TheBar_SelStripBrush
+     MUIA_TheBar_Strip
+     MUIA_TheBar_StripBrush
+
+TheBar.mcc/MUIA_TheBar_StripHSpace
+
+    NAME
+     MUIA_TheBar_StripHSpace -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Allows to define the number of pixels between two columns
+     in an image strip.
+
+     Default: 1
+
+    SEE ALSO
+     MUIA_TheBar_DisPics
+     MUIA_TheBar_DisStrip
+     MUIA_TheBar_DisStripBrush
+     MUIA_TheBar_Images
+     MUIA_TheBar_Pics
+     MUIA_TheBar_PicDrawer
+     MUIA_TheBar_SelPics
+     MUIA_TheBar_SelStrip
+     MUIA_TheBar_SelStripBrush
+     MUIA_TheBar_Strip
+     MUIA_TheBar_StripBrush
+
+TheBar.mcc/MUIA_TheBar_StripRows
+
+    NAME
+     MUIA_TheBar_StripRows -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Allows to define the number of rows in an image strip.
+
+     Default: 1
+
+    SEE ALSO
+     MUIA_TheBar_DisPics
+     MUIA_TheBar_DisStrip
+     MUIA_TheBar_DisStripBrush
+     MUIA_TheBar_Images
+     MUIA_TheBar_Pics
+     MUIA_TheBar_PicDrawer
+     MUIA_TheBar_SelPics
+     MUIA_TheBar_SelStrip
+     MUIA_TheBar_SelStripBrush
+     MUIA_TheBar_Strip
+     MUIA_TheBar_StripBrush
+
+TheBar.mcc/MUIA_TheBar_StripVSpace
+
+    NAME
+     MUIA_TheBar_StripVSpace -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Allows to define the number of pixels between two rows
+     in an image strip.
+
+     Default: 1
+
+    SEE ALSO
+     MUIA_TheBar_DisPics
+     MUIA_TheBar_DisStrip
+     MUIA_TheBar_DisStripBrush
+     MUIA_TheBar_Images
+     MUIA_TheBar_Pics
+     MUIA_TheBar_PicDrawer
+     MUIA_TheBar_SelPics
+     MUIA_TheBar_SelStrip
+     MUIA_TheBar_SelStripBrush
+     MUIA_TheBar_Strip
+     MUIA_TheBar_StripBrush
+
+TheBar.mcc/MUIA_TheBar_Sunny
+
+    NAME
+     MUIA_TheBar_Sunny -- BOOL, [ISGN], v11
+
+
+    FUNCTION
+     If TRUE, buttons are rendered in black/white, but when the
+     mouse is over them they are rendered colored.
+
+     Default: FALSE
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIA_TheBar_TextOnly
+
+    NAME
+     MUIA_TheBar_TextOnly -- BOOL, [..G.], v11
+
+
+    FUNCTION
+     If one of the normal pics specified can't be load for any
+     reason, the bar is forced to text-only and this attribute
+     is TRUE.
+
+TheBar.mcc/MUIA_TheBar_TextOverUseShine
+
+    NAME
+     MUIA_TheBar_TextOverUseShine -- BOOL, [I...], v12
+
+
+    FUNCTION
+     If TRUE, buttons labels are rendered with the shine rather
+     that the text pen, when the mouse is over them.
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIA_TheBar_TopBarFrameSpacing
+
+    NAME
+     MUIA_TheBar_TopBarFrameSpacing -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Defines the pixels between the bar and it's top frame.
+
+     Accepted range is 0 < x <= 16
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIA_TheBar_TopInnerSpacing
+
+    NAME
+     MUIA_TheBar_TopInnerSpacing -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Define the pixels between a button contents and its top
+     frame.
+
+     Accepted range is 0 < x <= 16
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIA_TheBar_ViewMode
+
+    NAME
+     MUIA_TheBar_ViewMode -- UWORD, [ISGN], v11
+
+
+    FUNCTION
+     Sets the style of the toolbar.
+
+     The available values are:
+
+       MUIV_TheBar_ViewMode_TextGfx
+       MUIV_TheBar_ViewMode_Gfx
+       MUIV_TheBar_ViewMode_Text
+
+     Default: MUIV_TheBar_ViewMode_TextGfx .
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+
+    SEE ALSO
+     MUIA_TheBar_TextOnly
+
+TheBar.mcc/MUIA_TheBar_VertSpacing
+
+    NAME
+     MUIA_TheBar_VertSpacing -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Defines the pixels between two bar rows.
+
+     Accepted range is 0 < x <= 16
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIA_TheBar_VertTextGfxSpacing
+
+    NAME
+     MUIA_TheBar_VertTextGfxSpacing -- ULONG, [I...], v12
+
+
+    FUNCTION
+     Defines the pixels between the image and the Top/Bottom
+     placed label in Text/Gfx buttons.
+
+     Accepted range is 0 < x <= 16
+
+    NOTE
+     This overwrites the user preferences and so must be used
+     wisely. If in doubt, don't use it.
+
+TheBar.mcc/MUIM_TheBar_AddButton
+
+    NAME
+     MUIM_TheBar_AddButton, v11
+
+
+    SYNOPSIS
+     Object *o = DoMethod(obj, MUIM_TheBar_AddButton, struct MUIS_TheBar_Button *button);
+
+
+    FUNCTION
+     Takes a pointer to a new button structure, generates a button object
+     and adds it to the toolbar.
+
+     The method itself takes care of required InitChange/ExitChange states
+     so that you don't have to care of that yourself.
+
+
+    INPUTS
+     button - the button to add
+
+
+    RESULT
+     o - the created button object
+
+
+    NOTE
+     Please don't cache the returned button object in any way. It
+     may be automatically freed/removed or reused by TheBar.mcc
+     itself without any notice. Please always directly use the
+     supplied methods of TheBar itself.
+
+TheBar.mcc/MUIM_TheBar_Clear
+
+    NAME
+     MUIM_TheBar_Clear, v11
+
+
+    SYNOPSIS
+     DoMethod(obj, MUIM_TheBar_Clear);
+
+
+    FUNCTION
+     Clears the complete toolbar. That means it will remove all buttons,
+     free their objects and notifications and immediately relayout the
+     toolbar.
+
+     The method itself takes care of required InitChange/ExitChange states
+     so that you don't have to care of that yourself.
+
+TheBar.mcc/MUIM_TheBar_DoOnButton
+
+    NAME
+     MUIM_TheBar_DoOnButton, v11
+
+
+    SYNOPSIS
+     ULONG res = DoMethod(obj, MUIM_TheBar_DoOnButton, ULONG ID, ULONG method, ...);
+
+
+    FUNCTION
+     Allows to perform a specific method directly on a button
+     object by specifying its identifier (ID).
+
+     This method should generally preferred to perform actions
+     on a button object. And you should NEVER cache a button
+     object directly in your own applications.
+
+
+    INPUTS
+     ID     - ID of the object to invoke the method on
+     method - method ID to invoke
+     ...    - parameters for method
+
+
+    INPUTS
+     res - result from the method, 0 if the button couldn't be found
+
+
+    EXAMPLE
+     The following example allows to set a button to "selected" state
+     via DoOnButton. However, please note that the same operations
+     can be done via MUIM_TheBar_SetAttr and should be in fact be done
+     so instead.
+
+     -- cut here --
+     DoMethod(toolbar, MUIM_TheBar_DoOnButton, 1, MUIM_Set, MUIA_Selected, FALSE);
+     -- cut here --
+
+    SEE ALSO
+     MUIM_TheBar_SetAttr
+
+TheBar.mcc/MUIM_TheBar_GetAttr
+
+    NAME
+     MUIM_TheBar_GetAttr, v11
+
+
+    SYNOPSIS
+     res = DoMethod(bar, MUIM_TheBar_GetAttr, ULONG ID, Tag attr, ULONG *storage);
+
+
+    FUNCTION
+     Allows to retrieve the state of one of the following
+     allowed attributes for a specified button with the
+     identifier (ID):
+
+      MUIA_TheBar_Attr_Hide
+      MUIA_TheBar_Attr_Sleep
+      MUIA_TheBar_Attr_Disabled
+      MUIA_TheBar_Attr_Selected
+
+     Use this function rather that reading the attribute directly
+     on the object via GetAttr(), especially for Hide, Sleep and
+     Selected attributes.
+
+
+    INPUTS
+     ID - the ID of the object to read the attribute of
+     attr - the attribute to read
+     storage - where to store the value of attr
+
+
+    RESULT
+     res - a boolean
+
+
+    SEE ALSO
+     MUIM_TheBar_SetAttr
+
+TheBar.mcc/MUIM_TheBar_GetDragImage
+
+    NAME
+     MUIM_TheBar_GetDragImage, v11
+
+
+    SYNOPSIS
+     struct MUIS_TheBar_DragImage *di = DoMethod(bar, MUIM_TheBar_GetDragImage, ULONG horiz, ULONG flags);
+
+
+    FUNCTION
+     Returns a pointer to a struct MUIS_TheBar_DragImage, if the
+     toolbar is being dragged, NULL otherwise.
+
+     At the moment the struct just contains the dimensions of the
+     shape of the bar depending on its orientation (horiz); so if
+     you want to have the dimensions of the bar as it was horiz,
+     set horiz to TRUE, to FALSE otherwise. Leave flags 0.
+
+
+    INPUTS
+     horiz - orientation of the bar you want dimension of
+     flags - leave 0
+
+
+    RESULT
+     di - the bar dimension structure pointer
+
+
+    SEE ALSO
+     MUIA_TheBar_DragBar
+
+TheBar.mcc/MUIM_TheBar_GetObject
+
+    NAME
+     MUIM_TheBar_GetObject, v11
+
+
+    SYNOPSIS
+     Object *obj = DoMethod(bar, MUIM_TheBar_GetObject, ULONG ID);
+
+
+    FUNCTION
+     Returns a pointer to the object of the button
+     with the specified ID.
+
+
+    WARNING
+     Never intend to cache or save the object pointer
+     for a later use because TheBar might remove or recreate
+     the button without any notice. So please use TheBar's own
+     methods for performing actions on the buttons instead of
+     caching the button object somewhere in your own applications
+
+    INPUTS
+     ID - the ID of the object you need
+
+
+    RESULT
+     obj - the object pointer or NULL
+
+
+    SEE ALSO
+     MUIM_TheBar_DoOnButton
+
+TheBar.mcc/MUIM_TheBar_KillNotify
+
+    NAME
+     MUIM_TheBar_KillNotify, v21
+
+
+    SYNOPSIS
+     res = DoMethod(bar, MUIM_TheBar_KillNotify, ULONG ID, Tag attr, Object *dest);
+
+
+    FUNCTION
+     Kills all notifies for a specific button with the identifier 'ID',
+     the attribute 'attr' and the optional destination object 'dest'.
+
+     If called with dest set to NULL it will kill all notifies for the
+     specified attribute. If dest != NULL it will only kill the notify
+     designated for the specified destination object as well.
+
+
+    INPUTS
+     ULONG ID     - the numerical identifier of the button
+
+     Tag attr     - the attribute of the notification to kill
+
+     Object *dest - pointer to the object which will normally
+                    receive the notification. Might be NULL as well
+                    to delete all notifications for a specific
+                    attribute/button combination.
+
+    RESULT
+     res - a boolean
+
+
+    SEE ALSO
+     MUIM_TheBar_Notify
+
+TheBar.mcc/MUIM_TheBar_Notify
+
+    NAME
+     MUIM_TheBar_Notify, v21
+
+
+    SYNOPSIS
+     res = DoMethod(bar, MUIM_TheBar_Notify, ULONG ID,
+                                             Tag attr,
+                                             ULONG value,
+                                             Object *dest,
+                                             ULONG followParams, ...);
+
+
+    FUNCTION
+     This is a method that works with the internal notification system
+     for the toolbar. It works just like the normal MUI system for
+     notifications, but handles an extra argument - ULONG ID.
+     This is neccesary if you want to be able to give each button its
+     own set of notification events.
+
+
+    INPUTS
+     ULONG ID     - the numerical button identifier
+
+     Tag attr     - the MUI attribute to trigger the notify on. This may
+                    be all kind of attributes allowed to the button, including
+                    attributes such as MUIA_Pressed, MUIA_Selected,
+                    and so on.
+
+     ULONG value  - the value that triggers the notification. E.g. for
+                    MUIA_Pressed that would be TRUE/FALSE. However, also
+                    the special values like MUIV_EveryTime are supported.
+
+     Object *dest - Object that should be notified. Special values like
+                    MUIV_Notify_Self, MUIV_Notify_Window and
+                    MUIV_Notify_Application are allowed as well.
+
+     ULONG follow - the number of further paramters following this
+                    one
+
+     ...          - The following parameters. Here you can also use
+                    the special value MUIV_TheBar_Qualifer if you need
+                    to receive the key qualifiers being active at the
+                    time when the notifies was triggered. In addition,
+                    special values like MUIV_TriggerValue and
+                    MUIV_NotTriggerValue are supported as well.
+
+
+    RESULT
+     In most cases this method will return TRUE. It is only the lack of
+     memory that might cause a negative result.
+
+
+    NOTE
+     Even if it was possible to achieve the very same behaviour
+     with directly applying MUIM_Notify on a button object, this
+     method should generally be preferred to set a notification.
+
+
+    EXAMPLE
+     Sets a notify for MUIA_Pressed, which in fact is the action
+     when a user clicked/activated the button.
+
+     -- cut here --
+     DoMethod(bar, MUIM_TheBar_Notify, 1, MUIA_Pressed, FALSE, MUIV_Notify_Application,
+                                          MUIM_CallHook, &buttonHook, MUIV_TheBar_Qualifier);
+     -- cut here --
+
+     As soon as the button is clicked, the application object will
+     receive a MUIM_CallHook method which instructs it to call the 'buttonHook'
+     with the actual qualifier flags being placed in its arguments.
+
+
+    SEE ALSO
+     MUIM_TheBar_KillNotify
+
+TheBar.mcc/MUIM_TheBar_Remove
+
+    NAME
+     MUIM_TheBar_Remove, v11
+
+
+    SYNOPSIS
+     ULONG res = DoMethod(bar, MUIM_TheBar_Remove, ULONG ID);
+
+
+    FUNCTION
+     Removes and disposes the button object of the toolbar
+     button with the specified identifier (ID).
+
+
+    INPUTS
+     ID - the ID of the button to remove
+
+
+    RESULT
+     ULONG res - TRUE on success, FALSE if button couldn't
+                 be found
+
+
+    SEE ALSO
+     MUIA_TheBar_RemoveSpacers
+
+TheBar.mcc/MUIM_TheBar_SetAttr
+
+    NAME
+     MUIM_TheBar_SetAttr, v11
+
+
+    SYNOPSIS
+     res = DoMethod(bar, MUIM_TheBar_SetAttr, ULONG ID, Tag attr, ULONG value);
+
+
+    FUNCTION
+     Allows to set the state of one of the following
+     allowed attributes for a specified button with the
+     identifier (ID):
+
+      MUIA_TheBar_Attr_Hide
+      MUIA_TheBar_Attr_Sleep
+      MUIA_TheBar_Attr_Disabled
+      MUIA_TheBar_Attr_Selected
+
+     Use this function rather that setting the attribute directly
+     on the object via SetAttrs(), especially for Hide, Sleep and
+     Selected attributes.
+
+
+    INPUTS
+     ID - the ID of the object to set the attribute of
+     attr - the attribute to set
+     storage - the value to set attr to
+
+
+    RESULT
+     res - a boolean
+
+
+    SEE ALSO
+     MUIM_TheBar_GetAttr
+
+TheBar.mcc/MUIM_TheBar_Sort
+
+    NAME
+     MUIM_TheBar_Sort, v11
+
+
+    SYNOPSIS
+     ULONG res = DoMethod(bar, MUIM_TheBar_Sort, LONG obj[1]);
+
+
+    FUNCTION
+     Allows to rearrange the order of toolbar buttons on the fly
+     by specifying the new order of the button by their IDs.
+
+
+    NOTE
+     You don't need to supply all the buttons IDs, but just the
+     the section you want to re-arrange.
+
+
+    INPUTS
+     obj[1] - the IDs of the buttons to order, -1 terminated
+
+
+    RESULT
+     ULONG res - TRUE on success, FALSE if some button couldn't
+                 be found
+
+
+    EXAMPLE
+      If you have a toolbar with 8 buttons, IDs (0,1,2,3,4,5,6,7),
+      you can execute the following method and see button 5,1,3
+      rearranged accordingly:
+
+      -- cut here --
+      DoMethod(bar, MUIM_TheBar_Sort, 5,1,3, -1);
+      -- cut here --
+
+      Afterwards the new order will be (by IDs) (5,1,3,0,2,4,6,7)
+
