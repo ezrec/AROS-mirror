@@ -2,6 +2,7 @@
 include $(TOP)/config/make.cfg
 
 #MM contrib-zune-classes-thebar-class : includes linklibs
+#MM- contrib-zune-classes-thebar-class-includes : includes includes-copy
 
 USER_INCLUDES = -I../../../../../necessary/mui/classes/nlist/commonaros
 
