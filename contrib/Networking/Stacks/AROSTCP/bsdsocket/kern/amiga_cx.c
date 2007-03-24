@@ -8,7 +8,7 @@
 #include <kern/amiga_gui.h>
 
 extern UBYTE *REXX_PORT_NAME;
-extern struct Task *AmiTCP_Task;
+extern struct Task *AROSTCP_Task;
 extern struct Library *SocketBase;
 
 struct Library *CxBase = NULL;
@@ -17,7 +17,7 @@ static CxObj *Broker = NULL;
 struct NewBroker nb = {
 	NB_VERSION,
 	NULL,
-	"MOSNet",
+	"AROSTCP",
 	"The opensource TCP/IP stack",
 	0,
 	COF_SHOW_HIDE,
@@ -108,7 +108,7 @@ BOOL cx_poll(void)
 	    break;
 	case CXCMD_KILL:
 	    /* user clicked Remove button, let's quit */
-	    Signal(AmiTCP_Task, SIGBREAKF_CTRL_C);
+	    Signal(AROSTCP_Task, SIGBREAKF_CTRL_C);
 	    break;
 	}
       }
