@@ -1,4 +1,5 @@
 #include "conf.h"
+#include "version.h"
 
 #include <exec/libraries.h>
 #include <libraries/commodities.h>
@@ -17,7 +18,7 @@ static CxObj *Broker = NULL;
 struct NewBroker nb = {
 	NB_VERSION,
 	NULL,
-	"AROSTCP",
+	STACK_RELEASE,
 	"The opensource TCP/IP stack",
 	0,
 	COF_SHOW_HIDE,
