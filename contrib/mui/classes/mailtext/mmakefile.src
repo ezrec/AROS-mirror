@@ -5,12 +5,12 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib : contrib-zune-classes-mailtext
 
-#MM- contrib-zune-classes-mailtext : contrib-zune-classes-mailtext-mcc contrib-zune-classes-mailtext-mcp
-
 #MM  contrib-zune-classes-mailtext-demo : includes linklibs contrib-zune-classes-mailtext-mcc
 
 #MM  contrib-zune-classes-mailtext-mcc : includes linklibs contrib-zune-classes-nlist-class \
 #MM    contrib-zune-classes-mailtext-catalogs-mcc
+
+#MM- contrib-zune-classes-mailtext : contrib-zune-classes-mailtext-mcc contrib-zune-classes-mailtext-mcp contrib-zune-classes-mailtext-demo
 
 MCCFILES := AttributesEngine \
 	 Bitfield \
@@ -20,9 +20,9 @@ MCCFILES := AttributesEngine \
 	 Mailtext_mcc_locale
 	 
 %build_module mmake=contrib-zune-classes-mailtext-mcc \
-  modname=Mailtext modtype=mcc files=$(MCCFILES) \
-  conffile=Mailtext_mcc.conf objdir=$(OBJDIR)/mcc uselibs="amiga mui rom m"
-
+  modname=Mailtext modtype=mcc conffile=Mailtext_mcc.conf \
+  files="$(MCCFILES)" objdir=$(OBJDIR)/mcc moduledir=Extras/Zune/MCC_Mailtext/Classes/Zune \
+  uselibs="amiga mui rom m"
 
 #MM  contrib-zune-classes-mailtext-mcp : includes linklibs contrib-zune-classes-nlist-class \
 #MM    contrib-zune-classes-mailtext-catalogs-mcp
@@ -31,12 +31,13 @@ MCPFILES := MailtextP \
 	 Mailtext_mcp_locale
 	 
 %build_module mmake=contrib-zune-classes-mailtext-mcp \
-  modname=Mailtext modtype=mcp files=$(MCPFILES) \
-  conffile=Mailtext_mcp.conf objdir=$(OBJDIR)/mcp uselibs="amiga mui rom m"
+  modname=Mailtext modtype=mcp conffile=Mailtext_mcp.conf \
+  files=$(MCPFILES) objdir=$(OBJDIR)/mcp moduledir=Extras/Zune/MCC_Mailtext/Classes/Zune \
+  uselibs="amiga mui rom m"
 
   
 %build_prog mmake=contrib-zune-classes-mailtext-demo progname=Show_Mailtext files=show_mailtext \
-    targetdir=$(AROSDIR)/Tests/Zune \
+    targetdir=$(CONTRIBDIR)/Zune/MCC_Mailtext/Demos \
     uselibs="amiga mui m"
 
 

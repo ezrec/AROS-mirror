@@ -1,0 +1,12 @@
+#   $Id: mmakefile.src 22084 2004-08-23 06:44:53Z NicJA $
+include $(TOP)/config/make.cfg
+
+FILES := Package-Startup Package-Shutdown
+
+#MM contrib-zune-classes-mailtext-startup :
+
+#MM- contrib-zune-classes-mailtext-class      : contrib-zune-classes-mailtext-startup
+#MM- contrib-zune-classes-mailtext-mcp      : contrib-zune-classes-mailtext-startup
+
+%copy_files_q dst=$(CONTRIBDIR)/Zune/MCC_Mailtext/S maketarget=contrib-zune-classes-mailtext-startup
+
