@@ -1,0 +1,41 @@
+# Urltext.mcp smake file
+
+TARGET = MUI:LIBS/MUI/Urltext.mcp
+
+C_COMPILER = sc
+C_COMPILER_OPTS = NOSTACKCHECK STRINGMERGE NOCHECKABORT COMMENTNEST\
+OPTIMIZE DATAMEMORY=FAST SMALLCODE SMALLDATA STRIPDEBUG OPTIMIZERSCHEDULER\
+OPTIMIZERINLINELOCAL NOICONS OPTIMIZERTIME IGNORE=147 IDLEN=127
+
+ASSEMBLER = a68k
+ASSEMBLER_OPTS = -iainc:
+
+LINKER = slink
+LINKER_OPTS = NOICONS SC SD ND
+
+C_SOURCES = libinit.c init.c utils.c loc.c class.c
+ASM_SOURCES = libent.asm endcode.asm
+OBJECTS = libent.o libinit.o endcode.o init.o utils.o loc.o class.o
+LIBS = LIB:amiga.lib LIB:sc.lib
+
+# built file
+$(TARGET): $(OBJECTS) $(LIBS)
+        $(LINKER) <with <
+FROM $(OBJECTS) TO $(TARGET) LIB $(LIBS) $(LINKER_OPTS)
+<
+
+# rules
+.c.o:
+        $(C_COMPILER) $(C_COMPILER_OPTS) $*.c
+
+.asm.o:
+        $(ASSEMBLER) $(ASSEMBLER_OPTS) $*.asm
+
+# dependences
+libent.o:   libent.asm Urltext.mcp_rev.i
+libinit.o:  libinit.c base.h macros.h Urltext.mcp_rev.h
+endcode.o:  endcode.asm
+init.o:     init.c class.h link_iff.h Urltext_mcc_private.h msg.h base.h class_protos.h macros.h Urltext.mcp_rev.h
+utils.o:    utils.c class.h Urltext_mcc_private.h msg.h base.h class_protos.h macros.h Urltext.mcp_rev.h
+loc.o:      loc.c class.h Urltext_mcc_private.h msg.h base.h class_protos.h macros.h Urltext.mcp_rev.h
+class.o:    class.c class.h Urltext_mcc_private.h msg.h base.h class_protos.h macros.h Urltext.mcp_rev.h

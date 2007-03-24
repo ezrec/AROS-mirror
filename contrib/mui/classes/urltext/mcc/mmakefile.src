@@ -1,0 +1,26 @@
+#   $Id: mmakefile.src 25066 2006-12-10 20:38:45Z mazze $
+include $(TOP)/config/make.cfg
+
+#MM contrib-zune-classes-urltext-class : includes linklibs
+
+USER_INCLUDES = -I../../../../../necessary/mui/classes/nlist/commonaros
+
+FILES := Dispatcher \
+	 Draw \
+	 HandleEvent \
+	 NewDispose \
+	 Notify \
+	 SetGet \
+	 SetupCleanup \
+	 ShowHide
+	 
+%build_module_simple mmake=contrib-zune-classes-urltext-class \
+  modname=URLText modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_URLText/Classes/Zune \
+  files="library $(FILES)" \
+  uselibs="amiga mui rom m"
+
+
+#MM includes-copy
+
+INCLUDE_FILES := Toolbar_mcc.h
+%copy_includes path=MUI

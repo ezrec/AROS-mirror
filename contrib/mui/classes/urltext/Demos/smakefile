@@ -1,0 +1,9 @@
+CFLAGS = IDLEN 128 NOSTACKCHECK
+LFLAGS = NOICONS
+
+FILES = Urltext
+
+all: $(FILES)
+
+Urltext: Urltext.c
+    sc $(CFLAGS) LINK Urltext.c $(LFLAGS)
