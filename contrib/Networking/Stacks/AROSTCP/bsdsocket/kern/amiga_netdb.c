@@ -363,6 +363,10 @@ addifent(struct NetDataBase *ndb,
   char *cp, *ep;
   LONG retval = RETURN_OK;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addifent()\n"));
+#endif
+  
   if (flags & (NETDB_IFF_MODIFYOLD|NETDB_IFF_ADDNEW)) {
 	ssc = ssconfig_parse(rdargs);
 	if (ssc) {
@@ -384,8 +388,12 @@ addifent(struct NetDataBase *ndb,
 				*errstrp = ERR_MEMORY;
 				retval = RETURN_FAIL;
 			}
+			else
+			{
+				flags &= NETDB_IFF_MODIFYOLD;
+			}
 		}
-		if (ifp) {
+		if ((ifp) && (flags & NETDB_IFF_MODIFYOLD)) {
 			DIFCONF(Printf("Setting up interface %s\n", ssc->args->a_name);)
 			memset (&ifr, 0, sizeof (ifr));
 			if (ssc->args->a_ip) {
@@ -420,6 +428,10 @@ addifent(struct NetDataBase *ndb,
 					}
 				}
 			}
+		}
+		else
+		{
+D(bug("Interface named '%s' already exists..", ssc->args->a_name));
 		}
 		ssconfig_free(ssc);
 	} else {
@@ -656,6 +668,10 @@ addrtent(struct NetDataBase *ndb,
   LONG Args[RTARGS] = { 0 };
   struct ortentry route;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addrtent()\n"));
+#endif
+  
   if (rdargs = ReadArgs(ROUTE_TEMPLATE, Args, rdargs)) {
     if (!(strcmp(strupr(Args[KRT_DEST]), "DEFAULT"))){
       ((struct sockaddr_in *)&route.rt_dst)->sin_addr.s_addr = 0;
@@ -789,6 +805,10 @@ addrcent(struct NetDataBase *ndb,
   LONG  BufLen = sizeof (Buffer);
   struct RcentNode *dn;
   short  nodesize;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_netdb.c) addrcent()\n"));
+#endif
 
   if (ReadItem(Buffer, BufLen, &rdargs->RDA_Source) <= 0) {
     *errstrp = ERR_SYNTAX;

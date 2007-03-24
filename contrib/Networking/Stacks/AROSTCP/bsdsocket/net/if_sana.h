@@ -69,17 +69,17 @@ struct sockaddr_sana2 {
  *	our own business.
  */
 struct sana_softc {
-  struct ifnet    ss_if;	      /* network-visible interface */
-  struct in_addr  ss_ipaddr;	      /* copy of ip address */
-  ULONG           ss_hwtype;	      /* wiretype */
-  UBYTE           ss_hwaddr[MAXADDRSANA]; /* General hardware address */
-  struct Device  *ss_dev;	      /* pointer to device */
-  struct Unit    *ss_unit;	      /* pointer to unit */
-  VOID           *ss_bufmgnt;	      /* magic cookie for buffer management */
-  UWORD		  ss_reqno;	      /* # of requests to allocate */
-  UWORD           ss_cflags;	      /* configuration flags */
-  struct IOIPReq *ss_reqs;	      /* allocated requests */
-  struct MinList  ss_freereq;	      /* free requests */
+  struct ifnet       ss_if;	      /* network-visible interface */
+  struct in_addr     ss_ipaddr;	      /* copy of ip address */
+  ULONG              ss_hwtype;	      /* wiretype */
+  UBYTE              ss_hwaddr[MAXADDRSANA]; /* General hardware address */
+  struct Device      *ss_dev;	      /* pointer to device */
+  struct Unit        *ss_unit;	      /* pointer to unit */
+  VOID               *ss_bufmgnt;	      /* magic cookie for buffer management */
+  UWORD		         ss_reqno;	      /* # of requests to allocate */
+  UWORD              ss_cflags;	      /* configuration flags */
+  struct IOIPReq     *ss_reqs;	      /* allocated requests */
+  struct MinList     ss_freereq;	      /* free requests */
 #if	INET
   struct {
     UWORD reqno;	      /* for listening ip packets */

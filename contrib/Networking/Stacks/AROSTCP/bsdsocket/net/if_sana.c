@@ -293,117 +293,166 @@ aiface_find(char *name, long unit)
 struct ifnet *
 iface_make(struct ssconfig *ifc)
 {
-  register struct sana_softc *ssc = NULL;
-  register struct IOSana2Req *req;
-  struct Sana2DeviceQuery devicequery;
+	register struct sana_softc *ssc = NULL;
+	register struct IOSana2Req *req;
+	struct Sana2DeviceQuery devicequery;
 
-  /* Allocate the request for opening the device */
-  if ((req = CreateIOSana2Req(NULL)) == NULL) 
-    __log(LOG_ERR, "iface_find(): CreateIOSana2Req failed\n");
-  else {
-    req->ios2_BufferManagement = buffermanagement;
-
-    DSANA(__log(LOG_DEBUG,"Opening device %s unit %ld", ifc->args->a_dev, *ifc->args->a_unit);)
-    if (OpenDevice(ifc->args->a_dev, *ifc->args->a_unit, 
-		   (struct IORequest *)req, 0L)) {
-      sana2perror("OpenDevice", req);
-    } else {
-      /* Ask for our type, address length, MTU
-       * Obl. bitch: nobody tells, WHO is supplying
-       * DevQueryFormat and DeviceLevel
-       */
-      req->ios2_Req.io_Command   = S2_DEVICEQUERY;
-      req->ios2_StatData         = &devicequery;
-      devicequery.SizeAvailable  = sizeof(devicequery);
-      devicequery.DevQueryFormat = 0L;
-
-      DoIO((struct IORequest *)req);
-      if (req->ios2_Req.io_Error)
-	sana2perror("S2_DEVICEQUERY", req);
-      else {
-	/* Get Our Station address */
-	req->ios2_StatData = NULL;
-	req->ios2_Req.io_Command = S2_GETSTATIONADDRESS;
-	DoIO((struct IORequest *)req);
-	
-	if (req->ios2_Req.io_Error)
-	  sana2perror("S2_GETSTATIONADDRESS", req);
-	else {
-	  req->ios2_Req.io_Command = 0;
-	  
-	  /* Allocate the interface structure */
-	  ssc = (struct sana_softc *)
-	    bsd_malloc(sizeof(*ssc) + strlen(ifc->args->a_dev) + 1,
-		       M_IFNET, M_WAITOK);
-	  if (!ssc)
-	    __log(LOG_ERR, "iface_find: out of memory\n");
-	  else {
-	    aligned_bzero_const(ssc, sizeof(*ssc));
-	    
-	    /* Save request pointers */
-	    ssc->ss_dev     = req->ios2_Req.io_Device;
-	    ssc->ss_unit    = req->ios2_Req.io_Unit;
-	    ssc->ss_bufmgnt = req->ios2_BufferManagement;
-	    
-	    /* Address must be full bytes */
-	    ssc->ss_if.if_addrlen  = (devicequery.AddrFieldSize + 7) >> 3;
-	    bcopy(req->ios2_DstAddr, ssc->ss_hwaddr, ssc->ss_if.if_addrlen);
-	    ssc->ss_if.if_mtu      = devicequery.MTU;
-	    ssc->ss_maxmtu         = devicequery.MTU;
-	    ssc->ss_if.if_baudrate = devicequery.BPS;
-	    ssc->ss_hwtype         = devicequery.HardwareType;	
-	    
-	    /* These might be different on different hwtypes */
-	    ssc->ss_if.if_output = sana_output;
-	    ssc->ss_if.if_ioctl  = sana_ioctl;
-	    ssc->ss_if.if_query  = sana_query;
-
-	    /* Map SANA-II hardware types to RFC1573 standard */
-	    switch (ssc->ss_hwtype) {
-	    case S2WireType_Ethernet:
-	      ssc->ss_if.if_type = IFT_ETHER;
-	      break;
-	    case S2WireType_IEEE802:
-	      ssc->ss_if.if_type = IFT_IEEE80211;
-	      break;
-	    case S2WireType_Arcnet:
-	      ssc->ss_if.if_type = IFT_ARCNET;
-	      break;
-	    case S2WireType_LocalTalk:
-	      ssc->ss_if.if_type = IFT_LOCALTALK;
-	      break;
-	    case S2WireType_PPP:
-	      ssc->ss_if.if_type = IFT_PPP;
-	      break;
-	    case S2WireType_SLIP:
-	    case S2WireType_CSLIP:
-	      ssc->ss_if.if_type = IFT_SLIP;
-	      break;
-	    case S2WireType_PLIP:
-	      ssc->ss_if.if_type = IFT_PARA;
-	      break;
-	    default:
-	      ssc->ss_if.if_type = IFT_OTHER;
-	    }
-
-	    /* Initialize */ 
-	    ssconfig(ssc, ifc);
-	    
-	    NewList((struct List*)&ssc->ss_freereq);
-
-	    if_attach((struct ifnet*)ssc);
-	    ifinit();
-	    
-	    ssc->ss_next = ssq;
-	    ssq = ssc;
-	  }
+	/* Allocate the request for opening the device */
+	if ((req = CreateIOSana2Req(NULL)) == NULL) 
+	{
+		__log(LOG_ERR, "iface_find(): CreateIOSana2Req failed\n");
 	}
-      }
-      if (!ssc)
-	CloseDevice((struct IORequest *)req);
-    }    
-    DeleteIOSana2Req(req);
-  }
+	else
+	{
+		req->ios2_BufferManagement = buffermanagement;
+
+		DSANA(__log(LOG_DEBUG,"Opening device %s unit %ld", ifc->args->a_dev, *ifc->args->a_unit);)
+		if (OpenDevice(ifc->args->a_dev, *ifc->args->a_unit, 
+			(struct IORequest *)req, 0L))
+		{
+			sana2perror("OpenDevice", req);
+			
+			/* Allocate the interface structure */
+			ssc = (struct sana_softc *)
+			bsd_malloc(sizeof(*ssc) + strlen(ifc->args->a_dev) + 1,
+							M_IFNET, M_WAITOK);
+  
+			if (!ssc)
+			{
+				__log(LOG_ERR, "iface_find: out of memory\n");
+			}
+			else
+			{
+				aligned_bzero_const(ssc, sizeof(*ssc));
+			
+				/* Save request pointers */
+				ssc->ss_dev     = req->ios2_Req.io_Device;
+				ssc->ss_unit    = req->ios2_Req.io_Unit;
+
+				ssc->ss_if.if_type = IFT_OTHER;
+				ssc->ss_if.if_flags &= ~(IFF_RUNNING|IFF_UP);
+
+				/* Initialize */ 
+				ssconfig(ssc, ifc);
+	
+				NewList((struct List*)&ssc->ss_freereq);
+
+				if_attach((struct ifnet*)ssc);
+				ifinit();
+	
+				ssc->ss_next = ssq;
+				ssq = ssc;
+			}
+		}
+		else
+		{
+			/* Ask for our type, address length, MTU
+			* Obl. bitch: nobody tells, WHO is supplying
+			* DevQueryFormat and DeviceLevel
+			*/
+			req->ios2_Req.io_Command   = S2_DEVICEQUERY;
+			req->ios2_StatData         = &devicequery;
+			devicequery.SizeAvailable  = sizeof(devicequery);
+			devicequery.DevQueryFormat = 0L;
+
+			DoIO((struct IORequest *)req);
+			if (req->ios2_Req.io_Error)
+			{
+				sana2perror("S2_DEVICEQUERY", req);
+			}
+			else
+			{
+				/* Get Our Station address */
+				req->ios2_StatData = NULL;
+				req->ios2_Req.io_Command = S2_GETSTATIONADDRESS;
+				DoIO((struct IORequest *)req);
+		
+				if (req->ios2_Req.io_Error)
+				{
+					sana2perror("S2_GETSTATIONADDRESS", req);
+				}
+				else
+				{
+					req->ios2_Req.io_Command = 0;
+		  
+					/* Allocate the interface structure */
+					ssc = (struct sana_softc *)
+					bsd_malloc(sizeof(*ssc) + strlen(ifc->args->a_dev) + 1,
+									M_IFNET, M_WAITOK);
+		  
+					if (!ssc)
+					{
+						__log(LOG_ERR, "iface_find: out of memory\n");
+					}
+					else
+					{
+						aligned_bzero_const(ssc, sizeof(*ssc));
+			
+						/* Save request pointers */
+						ssc->ss_dev     = req->ios2_Req.io_Device;
+						ssc->ss_unit    = req->ios2_Req.io_Unit;
+						ssc->ss_bufmgnt = req->ios2_BufferManagement;
+						
+						/* Address must be full bytes */
+						ssc->ss_if.if_addrlen  = (devicequery.AddrFieldSize + 7) >> 3;
+						bcopy(req->ios2_DstAddr, ssc->ss_hwaddr, ssc->ss_if.if_addrlen);
+						ssc->ss_if.if_mtu      = devicequery.MTU;
+						ssc->ss_maxmtu         = devicequery.MTU;
+						ssc->ss_if.if_baudrate = devicequery.BPS;
+						ssc->ss_hwtype         = devicequery.HardwareType;	
+						
+						/* These might be different on different hwtypes */
+						ssc->ss_if.if_output = sana_output;
+						ssc->ss_if.if_ioctl  = sana_ioctl;
+						ssc->ss_if.if_query  = sana_query;
+
+						/* Map SANA-II hardware types to RFC1573 standard */
+						switch (ssc->ss_hwtype) 
+						{
+						case S2WireType_Ethernet:
+							ssc->ss_if.if_type = IFT_ETHER;
+							break;
+						case S2WireType_IEEE802:
+							ssc->ss_if.if_type = IFT_IEEE80211;
+							break;
+						case S2WireType_Arcnet:
+							ssc->ss_if.if_type = IFT_ARCNET;
+							break;
+						case S2WireType_LocalTalk:
+							ssc->ss_if.if_type = IFT_LOCALTALK;
+							break;
+						case S2WireType_PPP:
+							ssc->ss_if.if_type = IFT_PPP;
+							break;
+						case S2WireType_SLIP:
+						case S2WireType_CSLIP:
+							ssc->ss_if.if_type = IFT_SLIP;
+							break;
+						case S2WireType_PLIP:
+							ssc->ss_if.if_type = IFT_PARA;
+							break;
+						default:
+							ssc->ss_if.if_type = IFT_OTHER;
+						}
+
+						/* Initialize */ 
+						ssconfig(ssc, ifc);
+			
+						NewList((struct List*)&ssc->ss_freereq);
+
+						if_attach((struct ifnet*)ssc);
+						ifinit();
+			
+						ssc->ss_next = ssq;
+						ssq = ssc;
+					}
+				}
+			}
+			if (!ssc)
+				CloseDevice((struct IORequest *)req);
+		}    
+		DeleteIOSana2Req(req);
+	}
 
   return (struct ifnet *)ssc;
 }
