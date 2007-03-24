@@ -1,0 +1,21 @@
+FILES = demo1 demo2 demo3
+
+CFLAGS = IDLEN 128
+LFLAGS = LIB LIB:sc.lib LIB:amiga.lib NOICONS
+
+all: $(FILES)
+
+demo1: demo1.c
+    sc $(CFLAGS) demo1.c
+    slink LIB:c.o demo1.o $(LFLAGS)
+    delete demo1.o
+
+demo2: demo2.c
+    sc $(CFLAGS) demo2.c
+    slink LIB:c.o demo2.o $(LFLAGS)
+    delete demo2.o
+
+demo3: demo3.c
+    sc $(CFLAGS) demo3.c
+    slink LIB:c.o demo3.o $(LFLAGS)
+    delete demo3.o

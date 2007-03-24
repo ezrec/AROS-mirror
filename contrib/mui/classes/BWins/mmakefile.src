@@ -1,0 +1,7 @@
+#   $Id: mmakefile.src 25072 2006-12-11 19:23:54Z mazze $
+include $(TOP)/config/make.cfg
+
+#MM- contrib : contrib-zune-classes-bwin
+
+#MM- contrib-zune-classes-bwin :  contrib-zune-classes-bwin-mcc  contrib-zune-classes-bwin-mcp contrib-zune-classes-bwin-demos
+
