@@ -15,12 +15,12 @@ FILES := Dispatcher \
 	 ShowHide
 	 
 %build_module_simple mmake=contrib-zune-classes-urltext-class \
-  modname=URLText modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_URLText/Classes/Zune \
+  modname=Urltext modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_Urltext/Classes/Zune \
   files="library $(FILES)" \
   uselibs="amiga mui rom m"
 
 
 #MM includes-copy
 
-INCLUDE_FILES := Toolbar_mcc.h
-%copy_includes path=MUI
+INCLUDE_FILES := ../Include/MUI/Urltext_mcc.h
+%copy_includes path=MUI dir=../Include/MUI
