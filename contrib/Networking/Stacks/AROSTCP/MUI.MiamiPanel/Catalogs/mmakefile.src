@@ -1,0 +1,7 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 24025 2006-01-31 16:54:50Z olivieradam $
+
+include $(TOP)/config/make.cfg
+
+%build_catalogs mmake=arostcp-libs-muimiamipanel-catalogs \
+                name=MUI.MiamiPanel subdir=System/System
