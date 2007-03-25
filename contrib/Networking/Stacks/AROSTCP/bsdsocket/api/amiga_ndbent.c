@@ -258,14 +258,29 @@ LONG AddDynDomain(STRPTR entry, struct MiamiBase *MiamiBase)
   return NULL;
 }
 
-struct hostent *Miami_gethostent(struct MiamiBase *MiamiBase)
+AROS_LH0(struct hostent *, Miami_gethostent,
+   struct MiamiBase *, MiamiBase, 10, Miami)
 {
+	AROS_LIBFUNC_INIT
+#if defined(__AROS__)
+D(bug("[AROSTCP.MIAMI] amiga_ndbent.c: Miami_gethostent()\n"));
+#endif
+
 	return gethtent(MiamiBase->_SocketBase);
+
+	AROS_LIBFUNC_EXIT
 }
 
-void Miami_endhostent(struct MiamiBase *MiamiBase)
+
+AROS_LH0(void, Miami_endhostent,
+   struct MiamiBase *, MiamiBase, 12, Miami)
 {
+	AROS_LIBFUNC_INIT
+#if defined(__AROS__)
+D(bug("[AROSTCP.MIAMI] amiga_ndbent.c: Miami_endhostent()\n"));
+#endif
+
 	endhostent(MiamiBase->_SocketBase);
+
+	AROS_LIBFUNC_EXIT
 }
-
-

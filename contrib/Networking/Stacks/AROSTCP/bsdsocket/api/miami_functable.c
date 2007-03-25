@@ -91,10 +91,10 @@ extern void sockatmark(void);
 extern void MiamiSupportedCPUs(void);
 extern void MiamiGetFdCallback(void);
 extern void MiamiSetFdCallback(void);
-extern void MiamiGetCredentials(void);
+extern VOID AROS_SLIB_ENTRY(MiamiGetCredentials, Miami)();
 extern void SetSysLogPort(void);
-extern void Miami_gethostent(void);
-extern void Miami_endhostent(void);
+extern VOID AROS_SLIB_ENTRY(Miami_gethostent, Miami)();
+extern VOID AROS_SLIB_ENTRY(Miami_endhostent, Miami)();
 extern void Miami_getprotoent(void);
 extern void Miami_endprotoent(void);
 extern void ClearDynNameServ(void);
@@ -143,9 +143,9 @@ f_void	Miami_UserFuncTable[] =
   AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Reserved2() is never called */
 #endif
 	ClearDynNameServ,
-	Miami_gethostent,
+	AROS_SLIB_ENTRY(Miami_gethostent, Miami),
 	MiamiDisallowDNS,
-	Miami_endhostent,
+	AROS_SLIB_ENTRY(Miami_endhostent, Miami),
 	MiamiGetPid,
 	Miami_getprotoent,
 	Miami_endprotoent,
@@ -236,7 +236,7 @@ f_void	Miami_UserFuncTable[] =
 #else
   AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Close() is never called */
 #endif
-	MiamiGetCredentials,
+	AROS_SLIB_ENTRY(MiamiGetCredentials, Miami),
 #ifdef __MORPHOS__
 	-1,
 	FUNCARRAY_32BIT_SYSTEMV,

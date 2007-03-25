@@ -13,6 +13,10 @@ long __QueryInterfaceTagList(STRPTR name, struct TagItem *tags, struct SocketBas
 	struct TagItem *tag;
 	struct ifnet *ifp;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP] amiga_netstat.c: __QueryInterfaceTagList()\n"));
+#endif
+
 	ifp = ifunit(name);
 	if (ifp) {
 		while (tag = NextTagItem(&tags)) {
@@ -152,7 +156,10 @@ AROS_LH2(long, QueryInterfaceTagList,
    struct SocketBase *, libPtr, 74, UL)
 {
 	AROS_LIBFUNC_INIT
-
+#if defined(__AROS__)
+D(bug("[AROSTCP.RS] amiga_netstat.c: QueryInterfaceTagList()\n"));
+#endif
+	
 	return  __QueryInterfaceTagList(name, tags, libPtr);
 
 	AROS_LIBFUNC_EXIT
