@@ -15,13 +15,13 @@
 
 #define __MiamiSysCtl_WB(__MiamiBase) \
         AROS_LC7(void, MiamiSysCtl, \
-                  AROS_LCA(LONG, (__arg1), A0), \
-                  AROS_LCA(LONG, (__arg2), D0), \
-                  AROS_LCA(LONG, (__arg3), A1), \
-                  AROS_LCA(LONG, (__arg4), A2), \
-                  AROS_LCA(LONG, (__arg5), A3), \
+                  AROS_LCA(LONG *, (__arg1), A0), \
+                  AROS_LCA(ULONG, (__arg2), D0), \
+                  AROS_LCA(void *, (__arg3), A1), \
+                  AROS_LCA(LONG *, (__arg4), A2), \
+                  AROS_LCA(void *, (__arg5), A3), \
                   AROS_LCA(LONG, (__arg6), D1), \
-                  AROS_LCA(LONG, (__arg7), D2), \
+                  AROS_LCA(int, (__arg7), D2), \
         struct Library *, (__MiamiBase), 5, Miami)
 
 #define MiamiSysCtl(arg1, arg2, arg3, arg4, arg5, arg6, arg7) \
