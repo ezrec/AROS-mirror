@@ -149,6 +149,11 @@ void gui_open()
 	long ifstate;
   	char ifspeed[7];
 	char i;
+
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_gui.c) gui_open()\n"));
+#endif
+
 	if (GUI_Running) {
 		DGUI(KPrintF("GUI is already opened\n");)
 		return;
@@ -160,11 +165,14 @@ void gui_open()
 	gui_timerio = CreateIORequest(logPort, sizeof(struct timerequest));
 	if (gui_timerio) {
 	  if (!OpenDevice("timer.device", UNIT_VBLANK, (struct IORequest *)gui_timerio, 0)) {
-	      NameFromLock(GetProgramDir(), panel_path, FILENAME_MAX);
-	      AddPart(panel_path,"Panels", FILENAME_MAX);
+//	      NameFromLock(GetProgramDir(), panel_path, FILENAME_MAX);
+	      AddPart(panel_path,"LIBS:", FILENAME_MAX);
 	      AddPart(panel_path,gui_cnf.PanelName, FILENAME_MAX);
 	      strcat(panel_path, ".MiamiPanel");
 	      DGUI(KPrintF("Opening GUI: %s...\n", panel_path);)
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_gui.c) gui_open: Attempting to use '%s'\n", panel_path));
+#endif
 	      MiamiPanelBase = OpenLibrary(panel_path, 0);
 	      DGUI(KPrintF("Panel library opened, base = 0x%08lx\n", MiamiPanelBase);)
 	      if (MiamiPanelBase) {
@@ -217,6 +225,9 @@ void gui_open()
 
 void gui_close()
 {
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_gui.c) gui_close()\n"));
+#endif
 	DGUI(KPrintF("Closing GUI...\n");)
 	if (gui_timerio) {
 	    if (MiamiPanelBase) {
@@ -240,7 +251,10 @@ void gui_close()
 
 void gui_snapshot()
 {
-/* TODO */
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_gui.c) gui_snapshot()\n"));
+#endif
+	/* TODO */
 }
 
 void gui_process_refresh()
@@ -256,6 +270,10 @@ void gui_process_refresh()
 		} l;
 	} total;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_gui.c) gui_process_refresh()\n"));
+#endif
+	
 	if (GUI_Running) {
 		WaitIO ((struct IORequest *)gui_timerio);
 		GetSysTime(&now);
@@ -281,6 +299,10 @@ void gui_process_msg(struct SysLogPacket *msg)
 	long state;
   	char ifspeed[7];
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_gui.c) gui_process_msg()\n"));
+#endif
+	
 	if (GUI_Running) {
 		switch (msg->Level & GUICMD_MASK) {
 		case GUICMD_SET_INTERFACE_STATE:
@@ -319,6 +341,10 @@ void gui_set_interface_state(struct ifnet *ifp, long state)
 {
 	struct SysLogPacket *msg;
 
+#if defined(__AROS__)
+D(bug("[AROSTCP](amiga_gui.c) gui_set_interface_state()\n"));
+#endif
+	
 	if (GUI_Running) {
 		if (msg = (struct SysLogPacket *)GetLogMsg(&logReplyPort)) {
 			msg->Level = LOG_GUIMSG | GUICMD_SET_INTERFACE_STATE;
