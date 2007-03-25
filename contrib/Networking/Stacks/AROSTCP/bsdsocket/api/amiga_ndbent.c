@@ -95,10 +95,10 @@ void endhostent(struct SocketBase *libPtr)
 	return;
 }
 
-AROS_LH0(struct protoent *, getprotoent, struct SocketBase *, libPtr, 91, UL)
-{
-	AROS_LIBFUNC_INIT
+/* **** GETPROTOENT */
 
+struct protoent *__getprotoent(struct SocketBase *libPtr)
+{
 	struct ProtoentNode *pn;
 
 	DSYSCALLS(log(LOG_DEBUG,"getprotoent() called");)
@@ -113,22 +113,51 @@ AROS_LH0(struct protoent *, getprotoent, struct SocketBase *, libPtr, 91, UL)
 		return &pn->pn_Ent;
 	} else
 		return NULL;
+}
+
+AROS_LH0(struct protoent *,  getprotoent,
+                struct SocketBase *, libPtr, 91, UL)
+{
+	AROS_LIBFUNC_INIT
+
+	return __getprotoent(libPtr);
 
 	AROS_LIBFUNC_EXIT
 }
 
-AROS_LH0(void, endprotoent, struct SocketBase *, libPtr, 90, UL)
+struct protoent *Miami_getprotoent(struct MiamiBase *MiamiBase)
 {
-	AROS_LIBFUNC_INIT
+	return __getprotoent(MiamiBase->_SocketBase);
+}
 
+/* **** ENDPROTOENT */
+
+void __endprotoent(struct SocketBase *libPtr)
+{
 	DSYSCALLS(log(LOG_DEBUG,"endprotoent() called");)
 	libPtr->ProtoentNode = NULL;
 	ReleaseSemaphore (&ndb_Lock);
 
-	AROS_LIBFUNC_EXIT
-
 	return;
 }
+
+AROS_LH0(void, endprotoent,
+                 struct SocketBase *, libPtr, 90, UL)
+{
+	AROS_LIBFUNC_INIT
+
+	__endprotoent(libPtr);
+
+	AROS_LIBFUNC_EXIT
+}
+
+void Miami_endprotoent(struct MiamiBase *MiamiBase)
+{
+	DSYSCALLS(log(LOG_DEBUG,"endprotoent() called");)
+	__endprotoent(MiamiBase->_SocketBase);
+}
+
+/* **** */
 
 void ClearDynDomain(struct MiamiBase *MiamiBase)
 {
@@ -239,14 +268,4 @@ void Miami_endhostent(struct MiamiBase *MiamiBase)
 	endhostent(MiamiBase->_SocketBase);
 }
 
-struct protoent *Miami_getprotoent(struct MiamiBase *MiamiBase)
-{
-	getprotoent();
-}
-
-void Miami_endprotoent(struct MiamiBase *MiamiBase)
-{
-	DSYSCALLS(log(LOG_DEBUG,"endprotoent() called");)
-	endprotoent();
-}
 

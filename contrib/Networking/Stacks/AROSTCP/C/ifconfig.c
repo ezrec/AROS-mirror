@@ -105,13 +105,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#if !defined(__AROS__)
 #include <proto/miami.h>
-#endif
 #include <proto/socket.h>
 
 #if defined(__AROS__)
 struct Library *SocketBase;
+struct Library *MiamiBase;
 #endif
 
 #define SOCKET_VERSION 3
@@ -273,10 +272,16 @@ main(argc, argv)
 {
 	int ch, aflag;
 
+#if defined(__AROS__)
    if (!(SocketBase = OpenLibrary(socket_name, SOCKET_VERSION)))
    {
       return RETURN_FAIL;   
    }
+   if (!(MiamiBase = OpenLibrary("miami.library", 0)))
+   {
+      return RETURN_FAIL;   
+   }
+#endif
 
 	/* Parse command-line options */
 	aflag = mflag = 0;
