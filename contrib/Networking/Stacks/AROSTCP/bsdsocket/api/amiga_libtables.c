@@ -125,6 +125,7 @@ extern VOID AROS_SLIB_ENTRY(SocketBaseTagList, UL)();
 /* bsdsocket.library 4 extensions */
 extern VOID AROS_SLIB_ENTRY(GetSocketEvents, UL)();
 
+#if defined(__CONFIG_ROADSHOW__)
 /* Roadshow extensions */
 extern VOID AROS_SLIB_ENTRY(bpf_open, UL)();
 extern VOID AROS_SLIB_ENTRY(bpf_close, UL)();
@@ -165,6 +166,7 @@ extern VOID AROS_SLIB_ENTRY(setservent, UL)();
 extern VOID AROS_SLIB_ENTRY(endservent, UL)();
 extern VOID AROS_SLIB_ENTRY(getservent, UL)();
 extern VOID AROS_SLIB_ENTRY(inet_aton, UL)();
+#endif
 /* TODO: following functions are not implemented yet */
 
 f_void UserLibrary_funcTable[] = {
@@ -247,7 +249,8 @@ f_void UserLibrary_funcTable[] = {
   
   /* bsdsocket.library 4 extensions */
   AROS_SLIB_ENTRY(GetSocketEvents, UL),
-  
+
+#if defined(__CONFIG_ROADSHOW__)
   /* Roadshow extensions  */
 #warning "TODO: NicJA - LIB_Null??"
 #if defined(__AROS__)
@@ -348,6 +351,7 @@ f_void UserLibrary_funcTable[] = {
   AROS_SLIB_ENTRY(endservent, UL),
   AROS_SLIB_ENTRY(getservent, UL),
   AROS_SLIB_ENTRY(inet_aton, UL),
+#endif
   /* TODO: Following functions are not implemented yet */
 
   (f_void)-1

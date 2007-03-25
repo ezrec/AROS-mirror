@@ -363,7 +363,7 @@ int Miami_sethostname(const char *name, size_t namelen)
 
 LONG Miami_QueryInterfaceTagList(STRPTR interface_name, struct TagItem *tags, struct MiamiBase *MiamiBase)
 {
-	return QueryInterfaceTagList(interface_name, tags);
+	return __QueryInterfaceTagList(interface_name, tags, SocketBase);
 }
 
 struct UserGroupCredentials *MiamiGetCredentials(struct MiamiBase *MiamiBase)

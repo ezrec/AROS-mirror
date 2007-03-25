@@ -8,13 +8,8 @@
 #include <net/if_protos.h>
 #include <netinet/in.h>
 
-AROS_LH2(long, QueryInterfaceTagList,
-   AROS_LHA(STRPTR, name, A0),
-   AROS_LHA(struct TagItem *, tags, A1),
-   struct SocketBase *, libPtr, 74, UL)
+long __QueryInterfaceTagList(STRPTR name, struct TagItem *tags, struct SocketBase * libPtr)
 {
-	AROS_LIBFUNC_INIT
-
 	struct TagItem *tag;
 	struct ifnet *ifp;
 
@@ -149,5 +144,16 @@ AROS_LH2(long, QueryInterfaceTagList,
 		writeErrnoValue(libPtr, ENXIO);
 		return -1;
 	}
+}
+
+AROS_LH2(long, QueryInterfaceTagList,
+   AROS_LHA(STRPTR, name, A0),
+   AROS_LHA(struct TagItem *, tags, A1),
+   struct SocketBase *, libPtr, 74, UL)
+{
+	AROS_LIBFUNC_INIT
+
+	return  __QueryInterfaceTagList(name, tags, libPtr);
+
 	AROS_LIBFUNC_EXIT
 }

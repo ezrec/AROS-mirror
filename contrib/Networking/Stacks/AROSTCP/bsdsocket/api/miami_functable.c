@@ -51,7 +51,7 @@ f_void Miami_InitFuncTable[]=
 #if defined(__AROS__)
    NULL,
 #else
-  AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Close() is never called */
+  AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Reserved() is never called */
 #endif
   (f_void)-1
 };
@@ -118,20 +118,20 @@ f_void	Miami_UserFuncTable[] =
 #if defined(__AROS__)
    NULL,
 #else
-  AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Close() is never called */
+  AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Open() is never called */
 #endif
 	MiamiLIB_Close,
 #warning "TODO: NicJA - LIB_Null??"
 #if defined(__AROS__)
    NULL,
 #else
-  AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Close() is never called */
+  AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Expunge() is never called */
 #endif
 #warning "TODO: NicJA - LIB_Null??"
 #if defined(__AROS__)
    NULL,
 #else
-  AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Close() is never called */
+  AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Reserved() is never called */
 #endif
 	MiamiSysCtl,
 	SetSysLogPort,
@@ -140,7 +140,7 @@ f_void	Miami_UserFuncTable[] =
 #if defined(__AROS__)
    NULL,
 #else
-  AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Close() is never called */
+  AROS_SLIB_ENTRY(Null, LIB),	     /* ELL_Reserved2() is never called */
 #endif
 	ClearDynNameServ,
 	Miami_gethostent,
