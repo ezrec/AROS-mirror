@@ -259,7 +259,7 @@ AROS_LP1(LONG, GetSocketEvents,
 );
 
 /* RoadShow Extensions .. */
-
+#if defined(__CONFIG_ROADSHOW__)
 AROS_LP1(long, bpf_open,
          AROS_LPA(long, channel, D0),
          LIBBASETYPEPTR, SocketBase, 57, BSDSocket
@@ -432,4 +432,5 @@ AROS_LP2(LONG, inet_aton,
          AROS_LPA(struct in_addr *, addr, A1),
          LIBBASETYPEPTR, SocketBase, 95, BSDSocket
 );
+#endif /* __CONFIG_ROADSHOW__ */
 #endif /* CLIB_BSDSOCKET_PROTOS_H */
