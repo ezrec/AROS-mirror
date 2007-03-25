@@ -14,7 +14,7 @@
 #include <aros/preprocessor/variadic/cast2iptr.hpp>
 
 #define __MiamiSysCtl_WB(__MiamiBase) \
-        AROS_LC0(void, MiamiSysCtl, \
+        AROS_LC7(void, MiamiSysCtl, \
                   AROS_LCA(LONG, (__arg1), A0), \
                   AROS_LCA(LONG, (__arg2), D0), \
                   AROS_LCA(LONG, (__arg3), A1), \
@@ -35,7 +35,7 @@
     __SetSysLogPort_WB(MiamiBase)
 
 #define __QueryInterfaceTagList_WB(__MiamiBase) \
-        AROS_LC0(void, QueryInterfaceTagList, \
+        AROS_LC2(void, QueryInterfaceTagList, \
                   AROS_LCA(STRPTR, (__arg1), A0), \
                   AROS_LCA(struct TagItem *, (__arg2), A1), \
         struct Library *, (__MiamiBase), 7, Miami)

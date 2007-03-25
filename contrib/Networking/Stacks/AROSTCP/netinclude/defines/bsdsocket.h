@@ -471,6 +471,7 @@
 #define GetSocketEvents(arg1) \
     __GetSocketEvents_WB(SocketBase, (arg1))
 
+#if defined(__CONFIG_ROADSHOW__)
 /* RoadShow Extensions .. */
 
 /*
@@ -665,5 +666,5 @@
 
 #define inet_aton(arg1, arg2) \
     __inet_aton_WB(SocketBase, (arg1), (arg2))
-
+#endif /* __CONFIG_ROADSHOW__ */
 #endif /* DEFINES_BSDSOCKET_PROTOS_H*/
