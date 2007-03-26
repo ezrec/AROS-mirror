@@ -27,72 +27,162 @@ graphics.library
 
 Bitmaps
 -------
-- `AllocBitMap()`_
-- `AllocRaster()`_
-- `AllocScreenBitMap()`_
-- `CopySBitMap()`_
-- `FreeBitMap()`_
-- `FreeRaster()`_
-- `GetBitMapAttr()`_
-- `InitBitMap()`_
-- `SetFrontBitMap()`_
-- `SyncSBitMap()`_
+Bitmaps are the drawing sheets of AROS. They are coordinate systems with the zero point in
+the upper left corner. The X axis goes from left to right, y axis from top to bottom.
+The number of possible colors depends on the depth of the bitmap:
+
+===== ==========
+Depth Colors
+===== ==========
+1     2
+2     4
+3     8
+4     16
+5     32
+6     64
+7     128
+8     256
+15    32,768
+16    65,536
+24    16,777,216
+===== ==========
+
+The depths from 1 to 8 are LUT (look-up-table) modes. This means the red, green and blue (RGB) value for each
+color is stored in a table. The index will then be stored as pen number in the bitmap.
+
+The depths 15 and 16 are called high color, 24 is called true color. Unlike LUT mode the RGB value
+is stored directly in the bitmap.
+
+The graphics library has only a limited support for high-/true color modes. Some of the drawing functions work
+only with LUT modes. For a full access you need the functions from the cybergraphics library.
+
+======================== ===========================================================================
+`GetBitMapAttr()`_       query bitmap attributes. Use this instead of peeking in bitmap structure
+`AllocBitMap()`_         allocate and initialize bitmap
+`AllocScreenBitMap()`_   (private AROS function)
+`SetFrontBitMap()`_      (private AROS function)
+`InitBitMap()`_          initialize bitmap
+`FreeBitMap()`_          free resources allocated by a bitmap
+`AllocRaster()`_         allocate a single bitplane
+`FreeRaster()`_          free a single bitplane
+`CopySBitMap()`_         syncronize super-bitmap (see Intuition)
+`SyncSBitMap()`_         syncronize super-bitmap
+======================== ===========================================================================
+
 
 RastPort
 --------
-- `CloneRastPort()`_
-- `CreateRastPort()`_
-- `DeinitRastPort()`_
-- `FreeRastPort()`_
-- `GetAPen()`_
-- `GetBPen()`_
-- `GetDrMd()`_
-- `GetOutlinePen()`_
-- `GetRPAttrsA()`_
-- `InitMasks()`_
-- `InitRastPort()`_
-- `InitTmpRas()`_
-- `SetABPenDrMd()`_
-- `SetAPen()`_
-- `SetBPen()`_
-- `SetDrMd()`_
-- `SetOutlinePen()`_
-- `SetRPAttrsA()`_
-- `SetWriteMask()`_
+The connection between the bitmaps and most drawing functions is done by a rastport. The rastport contains information
+about drawing pens, line and area patterns, drawing mode and text font.
+
+You can connect more than one rastport to a bitmap. This allows a fast switch between different drawing
+configurations. But in AROS you aren't allowed to just copy a rastport, you have to use the function `CloneRastPort()`_.
+
+Some Intuition elements like screens and windows already have a RastPort element. You can immediately use
+it for your drawing operations.
+
+====== ============= ========
+Object Structure     RastPort
+====== ============= ========
+screen struct Screen RastPort
+window struct Window \*RPort
+====== ============= ========
+
+If you create a bitmap and want to draw into it you have to create the rastport by yourself. Warning: this
+example is simplified and lacks checks of return values::
+
+    struct BitMap *bm = AllocBitMap(400, 300, 8, BMF_CLEAR, NULL);
+    struct RastPort *rp = CreateRastPort();
+    InitRastPort(rp);
+    rp->BitMap = bm;
+    ...
+    WritePixel(rp, 50, 30);
+    ...
+    DeinitRastPort(rp);
+    FreeRastPort(rp);
+    FreeBitMap(bm);
+
+Pens
+~~~~
+A rastport contains 3 pens. The A (foreground, primary) pen, B (background, secondary) pen and the O (area
+outline) pen. The latter is used by the area fill and flood fill functions.
+
+Drawing modes
+~~~~~~~~~~~~~
+- JAM1: draw only with A pen.
+- JAM2: draw bit 1 in a pattern with A pen, bit 0 with B pen
+- COMPLEMENT: for each set bit the state in the target is reversed
+- INVERSVID: is used for text rendering
+    - JAM1|INVERSVID: text appears as transparent letter surrounded by foreground color
+    - JAM2|INVERSVID: like previos, but letter is drawn with background color.
+
+TODO: check whether the drawing modes are really available.
+
+===================== ======================================================================
+`CloneRastPort()`_    copy rastport
+`CreateRastPort()`_   create rastport
+`InitRastPort()`_     initialize rastport
+`DeinitRastPort()`_   deinitialize rastport
+`FreeRastPort()`_     free rastport
+`SetAPen()`_          set primary pen
+`GetAPen()`_          get primary pen
+`SetBPen()`_          set secondary pen
+`GetBPen()`_          get secondary pen
+`SetOutlinePen()`_    set area outline pen
+`GetOutlinePen()`_    get area outline pen
+`SetDrMd()`_          set drawing mode
+`GetDrMd()`_          get drawing mode
+`SetABPenDrMd()`_     set primary pen, secondary pen and drawing mode in one step
+`SetRPAttrsA()`_      set misc. drawing attributes
+`GetRPAttrsA()`_      get misc. drawing attributes
+`InitTmpRas()`_       initialize a TmpRas structure.
+`SetWriteMask()`_     set write mask
+===================== ======================================================================
 
 Drawing functions
 -----------------
-- `Draw()`_
-- `DrawEllipse()`_
-- `EraseRect()`_
-- `Flood()`_
-- `Move()`_
-- `PolyDraw()`_
-- `ReadPixel()`_
-- `ReadPixelArray8()`_
-- `ReadPixelLine8()`_
-- `RectFill()`_
-- `SetRast()`_
-- `WriteChunkyPixels()`_
-- `WritePixel()`_
-- `WritePixelArray8()`_
-- `WritePixelLine8()`_
+
+A line is drawn by setting the pen position with `Move()`_ to the start and with `Draw()`_ to the end
+position.
+
+======================= =============================================================================
+`Move()`_               change pen position
+`Draw()`_               draw a line from current pen position to given coordinate
+`DrawEllipse()`_        draw an ellipse
+`PolyDraw()`_           draw connected lines from an array of points
+`WritePixel()`_         write a single pixel
+`ReadPixel()`_          read the pen value of a pixel
+`EraseRect()`_          fill rectangular area with current backfill hook (TODO: what's this?)
+`SetRast()`_            fill entire drawing area with given pen
+`RectFill()`_           fill a rectangular area with the current rastport settings
+`Flood()`_              flood fill an arbitrary shape
+======================= =============================================================================
+
 
 Data moving
 -----------
-- `BitMapScale()`_
-- `BltBitMap()`_
-- `BltBitMapRastPort()`_
-- `BltClear()`_
-- `BltMaskBitMapRastPort()`_
-- `BltPattern()`_
-- `BltRastPortBitMap()`_
-- `BltTemplate()`_
-- `ClipBlit()`_
-- `ScalerDiv()`_
-- `ScrollRaster()`_
-- `ScrollRasterBF()`_
-- `ScrollVPort()`_
+
+========================== ===========================================================================
+`BltBitMap()`_             copy rectangular area
+`BltBitMapRastPort()`_     copy rectangular area
+`BltRastPortBitMap()`_     copy rectangular area (AROS extension)
+`ClipBlit()`_              copy rectangular area with layers and clip rects. Use this if you want
+                           to blit into a window
+`BltClear()`_              set a memory block to zero. On classic Amigas this block must be in
+                           chip ram.
+`BltMaskBitMapRastPort()`_ copy rectangular area with using a mask
+`BltPattern()`_            draw a rectangular pattern into a bitmap
+`BltTemplate()`_           draw a rectangular pattern into a bitmap
+`BitMapScale()`_           copy a rectangular area and change its size
+`ScalerDiv()`_             helper function for `BitMapScale()`_
+`ScrollRaster()`_          move rectangular area within a bitmap
+`ScrollRasterBF()`_        move rectangular area, fill free space with `EraseRect()`_
+`WriteChunkyPixels()`_     write rectangular area from an array with pen values
+`WritePixelArray8()`_      write rectangular area from an array with pen values
+`ReadPixelArray8()`_       read rectangular area into memory
+`WritePixelLine8()`_       write horiz. line from an array with pen values
+`ReadPixelLine8()`_        read horiz. line from into memory
+========================== ===========================================================================
 
 
 Area functions
@@ -165,6 +255,7 @@ Animation
 - `GetSprite()`_
 - `InitGMasks()`_
 - `InitGels()`_
+- `InitMasks()`_
 - `MoveSprite()`_
 - `RemIBob()`_
 - `RemVSprite()`_
@@ -208,6 +299,11 @@ Display database
 - `CloseMonitor()`_
 - `CoerceMode()`_
 - `FindDisplayInfo()`_
+- `GetVPModeID()`_
+- `GfxAssociate()`_
+- `GfxFree()`_
+- `GfxLookUp()`_
+- `GfxNew()`_
 - `ModeNotAvailable()`_
 - `NextDisplayInfo()`_
 - `OpenMonitor()`_
@@ -235,11 +331,6 @@ Misc
 ----
 - `CalcIVG()`_
 - `ConvertPixelsA()`_
-- `GetVPModeID()`_
-- `GfxAssociate()`_
-- `GfxFree()`_
-- `GfxLookUp()`_
-- `GfxNew()`_
 - `InitGfxHidd()`_
 - `InitVPort()`_
 - `InitView()`_
@@ -248,6 +339,7 @@ Misc
 - `LockLayerRom()`_
 - `MakeVPort()`_
 - `MouseCoordsRelative()`_
+- `ScrollVPort()`_
 - `SetChipRev()`_
 - `SetPointerPos()`_
 - `SetPointerShape()`_
