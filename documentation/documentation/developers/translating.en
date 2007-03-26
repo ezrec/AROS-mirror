@@ -126,16 +126,7 @@ Again, perform spellchecks and re-read texts with some time interval.
 The used text strings for the OS are relatively short and simple, so don't expect any big tag errors
 here. If you do want to check (again encouraged), the process is slightly more complex this time. 
 You can go by this three ways: (1) commit your files and wait for the next nightly build and check, (2) build 
-the OS locally and check, or (3) make and try the files 'live' under AROS. Options 1 and 2 are straightforward 
-(if you can build AROS, see `here <compiling>`_). 
-
-Option 3 is perhaps most simple but require some changes to the filenames and a running Linux, native or VM
-install of AROS. First, browse the locale/catalogs drawer to familiarize yourself with the way AmigaOS/AROS 
-handles locale files. As you can see, this differs from the (SVN) source method. The hierarchical 
-structure differs, as does the filename and extension! All-in this methods requires some more coordination 
-but also is the most straightforward way for translating the OS.
-
-(FIXME: what do you guys advice? Please mind this won't be the most tech-savvy people.)
+the OS locally and check (if you can build AROS, see `here <compiling>`_ for instructions). 
 
 Maintenance
 -----------
