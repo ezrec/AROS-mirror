@@ -295,7 +295,7 @@ def processWWW( src, depth ):
 
         makedir( dst_dir )
 
-        if newer( [ TEMPLATE + suffix, src_abs ], dst_abs ):
+        if newer( [ TEMPLATE + lang, src_abs ], dst_abs ):
             reportBuilding( dst )
             strings = {
                 'ROOT'    : '../' * dst_depth,
