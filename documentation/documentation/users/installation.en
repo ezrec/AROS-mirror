@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright Š 1995-2006, The AROS Development Team
+:Copyright: Copyright ¦ 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. Can be translated.
@@ -246,6 +246,7 @@ Single partition install
 Here he will learn how to install AROS as the only system on PC and
 being placed on a single partition.
 This is an easier case to install.
+
 This chapter can be found a bit tricky, as install feature is incomplete. 
 First, remember a *common rule* for this process - *reboot* after any
 significant change made to the filesystem (we will note where it is
@@ -294,13 +295,24 @@ unselected empty space and click *OK*. Now in the list you should see a
     Bootable: No <Not bootable>
     Automount: No <Will not mount on system startup>
 
+Here can be some difference - make a partition in RDB table or as usual PC-MBR
+partition. RDB (Rigid Disk Block) is the choice of compatibility and was used 
+in Amiga HDD`s partitioning, and we can use it too. Although, AROS supports 
+FFS partitions created within a common PC-MBR table, like an usual PC partitions
+like FAT/NTFS/etc. Second way can be considered somewhat more modern and more 
+compatible to some new AROS programs. Let`s consider both.
+
+*FFS in RDB*
 Now, click on *Create Table* button, select *RDB table* and click OK. To
 save changes, go *one level* up by clicking the *Parent* button, select the
 HD name again and click the *Save Changes* button. Answer *Yes* in the
 confirmation dialog twice. Exit from HDToolbox and reboot the machine. 
 
+*FFS in MBR*
+...to be added
+
 After booting up, run HDToolbox (you`ve guessed that). Now the info for our
-Partition 0 is the same except that the partition table is now RDB. This
+Partition 0 is the same except that the partition table is now RDB (or not). This
 partition must be set to Active. To do this, click on the *Switches*
 button, select the *Active* checkbox and click *OK*. Now what? Yes, save the
 changes by going a level up and clicking the button. Exit and reboot.
@@ -353,6 +365,12 @@ Enter y, press Enter and wait a second. You should see the string
 ``Formatting...done`` displayed. If you got an error, check for all
 partition parameters in HDToolbox, as you may be missing something, and
 repeat.
+
+If you`re experiencing problems with format (such as ERROR messages, especially
+when using partitions in RDB) then you can try a good old Amiga utility::
+
+    >extras/aminet/format64 DRIVE DH0: Name AROS FFS INTL
+
 
 Now the Info command should show::
 
@@ -453,7 +471,10 @@ machine.
 
 Alternatively, GRUB can be installed from shell with this command::
 
-    c:install-i386-pc device ata.device unit 0 grub dh0:boot/grub kernel dh0:boot/aros-i386.gz
+    c:install-i386-pc device ata.device unit 0 PARTITIONNUMBER=PN grub dh0:boot/grub kernel dh0:boot/aros-i386.gz
+
+where PARTITIONNUMBER=<PN> is the number of partition where GRUB bootloader
+will be installed.
 
 
 
@@ -479,6 +500,13 @@ Installing AROS along with the other systems
 In the steps described before we had installed AROS as the *only* system on HD.
 But can it be installed to multiboot with other systems on HDD? Yes. But 
 again this task will be difficult. 
+
+AROS and Windows
+
+Let`s consider the situation when you have only Windows(tm) XP installed and 
+want to put AROS to this HDD.
+
+AROS and Linux (and other OS uses GRUB)
 
 Lets consider the situation when you want to have 3 systems on your HDD -
 Windows, Linux and AROS.  
