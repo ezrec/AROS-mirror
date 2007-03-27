@@ -45,9 +45,23 @@ void METHOD(USBMouse, Hidd_USBHID, ParseReport)
 {
     MouseData *mouse = OOP_INST_DATA(cl, o);
     
-    mouse->data = msg->report;
-    if (mouse->mouse_task)
-        Signal(mouse->mouse_task, SIGBREAKF_CTRL_F);
+    int x=0,y=0,z=0,buttons=0;
+    int i;
+      
+    x = hid_get_data(msg->report, &mouse->loc_x);
+    y = hid_get_data(msg->report, &mouse->loc_y);
+    z = hid_get_data(msg->report, &mouse->loc_wheel);
+    
+    for (i=0; i < mouse->loc_btncnt; i++)
+        if (hid_get_data(msg->report, &mouse->loc_btn[i]))
+            buttons |= (1 << i);
+    
+    if (x!=0 || y!=0 || z!=0 || buttons!=mouse->buttonstate)
+    {
+        mouse->data = msg->report;
+        if (mouse->mouse_task)
+            Signal(mouse->mouse_task, SIGBREAKF_CTRL_F);
+    }
 }
 
 OOP_Object *METHOD(USBMouse, Root, New)
@@ -111,7 +125,7 @@ OOP_Object *METHOD(USBMouse, Root, New)
         struct TagItem tags[] = {
                 { NP_Entry,     (intptr_t)mouse_process },
                 { NP_UserData,  (intptr_t)mouse },                
-                { NP_Priority,  19 },
+                { NP_Priority,  50 },
                 { NP_Name,      (intptr_t)"HID Mouse" },
                 { TAG_DONE,     0UL },
         };
@@ -148,7 +162,7 @@ static void mouse_process()
     
     struct MsgPort *port = CreateMsgPort();
     struct IOStdReq *req = (struct IOStdReq *)CreateIORequest(port, sizeof(struct IOStdReq));
-    struct InputEvent ie;
+    struct InputEvent ie[10];
     struct Device *InputBase;
     
     if (OpenDevice("input.device", 0, (struct IORequest *)req, 0))
@@ -182,6 +196,7 @@ static void mouse_process()
         {
             int x=0,y=0,z=0,buttons=0,b_down=0,b_up=0;
             int i;
+            int iec = 0;
               
             x = hid_get_data(mouse->data, &mouse->loc_x);
             y = hid_get_data(mouse->data, &mouse->loc_y);
@@ -194,118 +209,120 @@ static void mouse_process()
             b_down = (buttons^mouse->buttonstate) & buttons;
             b_up = (buttons^mouse->buttonstate) & ~buttons;
 
+            UWORD qual = PeekQualifier() & ~(IEQUALIFIER_MIDBUTTON | IEQUALIFIER_RBUTTON | IEQUALIFIER_LEFTBUTTON);
+            
+            qual |= IEQUALIFIER_RELATIVEMOUSE;
+            
+            /* Update the initial qualifier according to the buttonstate */
+            
+            if ((buttons & ~b_down) & 1)
+                qual |= IEQUALIFIER_LEFTBUTTON;
+
+            if ((buttons & ~b_down) & 2)
+                qual |= IEQUALIFIER_RBUTTON;
+            
+            if ((buttons & ~b_down) & 4)
+                qual |= IEQUALIFIER_MIDBUTTON;
+            
             if (x!=0 || y!=0)
             {
-                ie.ie_Class = IECLASS_RAWMOUSE;
-                ie.ie_Code = IECODE_NOBUTTON;
-                ie.ie_Qualifier = PeekQualifier() | IEQUALIFIER_RELATIVEMOUSE;
-                ie.ie_SubClass = 0;
-                ie.ie_X = x;
-                ie.ie_Y = y;
+                ie[iec].ie_Class = IECLASS_RAWMOUSE;
+                ie[iec].ie_Code = IECODE_NOBUTTON;
+                ie[iec].ie_Qualifier = qual;
+                ie[iec].ie_SubClass = 0;
+                ie[iec].ie_X = x;
+                ie[iec].ie_Y = y;
                 
-                req->io_Data = &ie;
-                req->io_Length = sizeof(ie);
-                req->io_Command = IND_WRITEEVENT;
-                
-                DoIO(req);
+                iec++;
             }
-            
-            if (z!=0)
-            {
-            }
-            
+                       
             if (buttons!=mouse->buttonstate) 
             {
                 if (b_up & 1)
                 {
-                    ie.ie_Class = IECLASS_RAWMOUSE;
-                    ie.ie_Code = IECODE_LBUTTON | IECODE_UP_PREFIX;
-                    ie.ie_Qualifier = PeekQualifier() | IEQUALIFIER_RELATIVEMOUSE;
-                    ie.ie_SubClass = 0;
-                    ie.ie_X = x;
-                    ie.ie_Y = y;
+                    ie[iec].ie_Class = IECLASS_RAWMOUSE;
+                    ie[iec].ie_Code = IECODE_LBUTTON | IECODE_UP_PREFIX;
+                    ie[iec].ie_Qualifier = qual;
+                    ie[iec].ie_SubClass = 0;
+                    ie[iec].ie_X = 0;
+                    ie[iec].ie_Y = 0;
                     
-                    req->io_Data = &ie;
-                    req->io_Length = sizeof(ie);
-                    req->io_Command = IND_WRITEEVENT;
-                    
-                    DoIO(req);
+                    iec++;
                 }
                 if (b_down & 1)
                 {
-                    ie.ie_Class = IECLASS_RAWMOUSE;
-                    ie.ie_Code = IECODE_LBUTTON;
-                    ie.ie_Qualifier = PeekQualifier() | IEQUALIFIER_RELATIVEMOUSE;
-                    ie.ie_SubClass = 0;
-                    ie.ie_X = x;
-                    ie.ie_Y = y;
+                    qual |= IEQUALIFIER_LEFTBUTTON;
                     
-                    req->io_Data = &ie;
-                    req->io_Length = sizeof(ie);
-                    req->io_Command = IND_WRITEEVENT;
-                    
-                    DoIO(req);
+                    ie[iec].ie_Class = IECLASS_RAWMOUSE;
+                    ie[iec].ie_Code = IECODE_LBUTTON;
+                    ie[iec].ie_Qualifier = qual;
+                    ie[iec].ie_SubClass = 0;
+                    ie[iec].ie_X = 0;
+                    ie[iec].ie_Y = 0;
+
+                    iec++;
                 }
                 if (b_up & 2)
                 {
-                    ie.ie_Class = IECLASS_RAWMOUSE;
-                    ie.ie_Code = IECODE_RBUTTON | IECODE_UP_PREFIX;
-                    ie.ie_Qualifier = PeekQualifier() | IEQUALIFIER_RELATIVEMOUSE;
-                    ie.ie_SubClass = 0;
-                    ie.ie_X = x;
-                    ie.ie_Y = y;
+                    ie[iec].ie_Class = IECLASS_RAWMOUSE;
+                    ie[iec].ie_Code = IECODE_RBUTTON | IECODE_UP_PREFIX;
+                    ie[iec].ie_Qualifier = qual;
+                    ie[iec].ie_SubClass = 0;
+                    ie[iec].ie_X = 0;
+                    ie[iec].ie_Y = 0;
                     
-                    req->io_Data = &ie;
-                    req->io_Length = sizeof(ie);
-                    req->io_Command = IND_WRITEEVENT;
-                    
-                    DoIO(req);
+                    iec++;
                 }
                 if (b_down & 2)
                 {
-                    ie.ie_Class = IECLASS_RAWMOUSE;
-                    ie.ie_Code = IECODE_RBUTTON;
-                    ie.ie_Qualifier = PeekQualifier() | IEQUALIFIER_RELATIVEMOUSE;
-                    ie.ie_SubClass = 0;
-                    ie.ie_X = x;
-                    ie.ie_Y = y;
+                    qual |= IEQUALIFIER_RBUTTON;
+
+                    ie[iec].ie_Class = IECLASS_RAWMOUSE;
+                    ie[iec].ie_Code = IECODE_RBUTTON;
+                    ie[iec].ie_Qualifier = qual;
+                    ie[iec].ie_SubClass = 0;
+                    ie[iec].ie_X = 0;
+                    ie[iec].ie_Y = 0;
                     
-                    req->io_Data = &ie;
-                    req->io_Length = sizeof(ie);
-                    req->io_Command = IND_WRITEEVENT;
-                    
-                    DoIO(req);
+                    iec++;
                 }
                 if (b_up & 4)
                 {
-                    ie.ie_Class = IECLASS_RAWMOUSE;
-                    ie.ie_Code = IECODE_MBUTTON | IECODE_UP_PREFIX;
-                    ie.ie_Qualifier = PeekQualifier() | IEQUALIFIER_RELATIVEMOUSE;
-                    ie.ie_SubClass = 0;
-                    ie.ie_X = x;
-                    ie.ie_Y = y;
+                    ie[iec].ie_Class = IECLASS_RAWMOUSE;
+                    ie[iec].ie_Code = IECODE_MBUTTON | IECODE_UP_PREFIX;
+                    ie[iec].ie_Qualifier = qual;
+                    ie[iec].ie_SubClass = 0;
+                    ie[iec].ie_X = 0;
+                    ie[iec].ie_Y = 0;
                     
-                    req->io_Data = &ie;
-                    req->io_Length = sizeof(ie);
-                    req->io_Command = IND_WRITEEVENT;
-                    
-                    DoIO(req);
+                    iec++;
                 }
                 if (b_down & 4)
                 {
-                    ie.ie_Class = IECLASS_RAWMOUSE;
-                    ie.ie_Code = IECODE_MBUTTON;
-                    ie.ie_Qualifier = PeekQualifier() | IEQUALIFIER_RELATIVEMOUSE;
-                    ie.ie_SubClass = 0;
-                    ie.ie_X = x;
-                    ie.ie_Y = y;
+                    qual |= IEQUALIFIER_MIDBUTTON;
+
+                    ie[iec].ie_Class = IECLASS_RAWMOUSE;
+                    ie[iec].ie_Code = IECODE_MBUTTON;
+                    ie[iec].ie_Qualifier = qual;
+                    ie[iec].ie_SubClass = 0;
+                    ie[iec].ie_X = 0;
+                    ie[iec].ie_Y = 0;
                     
-                    req->io_Data = &ie;
-                    req->io_Length = sizeof(ie);
-                    req->io_Command = IND_WRITEEVENT;
-                    
-                    DoIO(req);
+                    iec++;
                 }
+            }
+
+            if (iec)
+            {
+                req->io_Data = &ie[0];
+                req->io_Length = iec * sizeof(struct InputEvent);
+                req->io_Command = IND_ADDEVENT;
+                
+                DoIO(req);
+            }
+
+            if (z!=0)
+            {
             }
             
             mouse->buttonstate = buttons;
