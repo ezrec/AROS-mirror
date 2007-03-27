@@ -185,56 +185,110 @@ Data moving
 ========================== ===========================================================================
 
 
-Area functions
---------------
-- `AreaDraw()`_
-- `AreaEllipse()`_
-- `AreaEnd()`_
-- `AreaMove()`_
-- `InitArea()`_
+Area operations
+---------------
+
+The area functions allow a fast drawing of filled polygons and ellipses.
+
+In order to use this functions you need a struct AreaInfo which must be
+connected to the rastport. The area buffer must be WORD-aligned (it must have an even address).
+You need five bytes per vertex::
+
+    #define AREA_SIZE 200
+    WORD areaBuffer[AREA_SIZE];
+    struct AreaInfo areaInfo = {0};
+    memset(areabuffer, 0, sizeof(areabuffer));
+    InitArea(&areaInfo, areaBuffer, (AREA_SIZE*2)/5);
+    rastPort->AreaInfo = &areaInfo;
+
+Additionally, you need a TmpRas structure. It should have the same width and height as the bitmap
+you want to draw into::
+
+    #define WIDTH 400
+    #define HEIGHT 300
+    PLANEPTR AllocRaster(WIDTH, HEIGHT);
+    struct TmpRas tmpRas = {0};
+    InitTmpRas(&tmpRas, rasPlane, WIDTH * HEIGHT);
+    rastPort->TmpRas = &tmpRas;
+
+================== =============================================================================
+`InitArea()`_      initalizes the AreaInfo
+`AreaMove()`_      closes open polygon and sets start point for a new polygon. You don't have to
+                   connect the end point to the start point.
+`AreaDraw()`_      add point to vector buffer
+`AreaEllipse()`_   add filled ellipse to vector buffer
+`AreaEnd()`_       start filling operation
+================== =============================================================================
+
+TODO: BNDRYOFF??
+
 
 Text
 ----
-- `AddFont()`_
-- `AskFont()`_
-- `AskSoftStyle()`_
-- `ClearEOL()`_
-- `ClearScreen()`_
-- `CloseFont()`_
-- `ExtendFont()`_
-- `FontExtent()`_
-- `OpenFont()`_
-- `RemFont()`_
-- `SetFont()`_
-- `SetSoftStyle()`_
-- `StripFont()`_
-- `Text()`_
-- `TextExtent()`_
-- `TextFit()`_
-- `TextLength()`_
-- `WeighTAMatch()`_
+
+==================  =============================================================================
+`OpenFont()`_       open a font which is in the system font list. Better use OpenDiskFont()
+                    from the diskfont library.
+`CloseFont()`_      close font, which had been opened by `OpenFont()`_ or OpenDiskFont()
+`AddFont()`_        add font to the system list
+`RemFont()`_        remove font from system list
+`SetFont()`_        set current font of rastport
+`AskFont()`_        get TextAttr for current rastport font
+`SetSoftStyle()`_   set soft style bits of current font
+`AskSoftStyle()`_   get soft style bits of current font
+`Text()`_           render text at current pen position
+`ClearEOL()`_       clear from current position to end of line
+`ClearScreen()`_    clear from current position to end of rastport
+`ExtendFont()`_     extend struct TextFont by a struct ExtendFont
+`StripFont()`_      remove tf_Extension from a font
+`TextLength()`_     calculate the width of a string in pixels. You can use `TextExtend()`_
+                    if you need more detailed information
+`TextExtent()`_     fill TextExtend structure with information about current font
+`FontExtent()`_     fill TextExtend structure with information about given font
+`TextFit()`_        count the number of characters which will fit into given bounds
+`WeighTAMatch()`_   checks how well two different fonts match
+==================  =============================================================================
+
 
 Color
 -----
-- `AttachPalExtra()`_
-- `FindColor()`_
-- `FreeColorMap()`_
-- `GetColorMap()`_
-- `GetRGB32()`_
-- `GetRGB4()`_
-- `LoadRGB32()`_
-- `LoadRGB4()`_
-- `ObtainBestPenA()`_
-- `ObtainPen()`_
-- `ReleasePen()`_
-- `SetMaxPen()`_
-- `SetRGB32()`_
-- `SetRGB32CM()`_
-- `SetRGB4()`_
-- `SetRGB4CM()`_
+
+So far we have only used the SetXPen() functions to select the drawing pens. Now we look how we
+can change the red, green blue values of the pens.
+
+We have to differ two cases:
+  The colormap belongs us.
+    We can change the colors as we like with the LoadRGB..., SetRGB... functions. We'll get a
+    private colormap when we open a private screen.
+
+  We want draw into a window on a public Screen.
+    We have to query a shared pen with the `ObtainBestPen()`_ function. Otherwise we would change
+    the colors used by other applications.
+
+
+=================== =============================================================================
+`GetColorMap()`_    allocate and initialize colormap
+`FreeColorMap()`_   free colormap
+`AttachPalExtra()`_ allocate and attach palette sharing structure to a colormap
+`FindColor()`_      find closest matching color
+`ObtainBestPenA()`_ search for closest color match or allocate a new pen
+`ObtainPen()`_      obtain a free palette entry
+`ReleasePen()`_     frees a pen created with `ObtainPen()`_ or `ObtainBestPen()`_
+`GetRGB32()`_       read a series of RGB values from a colormap
+`GetRGB4()`_        reads RGB value of a single color register (deprecated)
+`LoadRGB32()`_      set a series of RGB values for this viewport
+`LoadRGB4()`_       set RGB color values from an array (deprecated)
+`SetMaxPen()`_      set maximum pen value for a rastport
+`SetRGB32()`_       set one color register for a viewport
+`SetRGB32CM()`_     set one color register for a colormap
+`SetRGB4()`_        set one color register for a viewport (deprecated)
+`SetRGB4CM()`_      set one color register for a colormap (deprecated)
+=================== =============================================================================
+
 
 Animation
 ---------
+
 - `AddAnimOb()`_
 - `AddBob()`_
 - `AddVSprite()`_
@@ -262,8 +316,10 @@ Animation
 - `SetCollision()`_
 - `SortGList()`_
 
+
 Layers
 ------
+
 - `AndRectRect()`_
 - `AndRectRegion()`_
 - `AndRectRegionND()`_
@@ -293,8 +349,10 @@ Layers
 - `XorRegionRegion()`_
 - `XorRegionRegionND()`_
 
+
 Display database
 ----------------
+
 - `BestModeIDA()`_
 - `CloseMonitor()`_
 - `CoerceMode()`_
@@ -308,16 +366,20 @@ Display database
 - `NextDisplayInfo()`_
 - `OpenMonitor()`_
 
+
 Blitter
 -------
+
 - `DisownBlitter()`_
 - `OwnBlitter()`_
 - `QBSBlit()`_
 - `QBlit()`_
 - `WaitBlit()`_
 
+
 Copper
 ------
+
 - `CBump()`_
 - `CMove()`_
 - `CWait()`_
@@ -327,8 +389,10 @@ Copper
 - `MrgCop()`_
 - `UCopperListInit()`_
 
+
 Misc
 ----
+
 - `CalcIVG()`_
 - `ConvertPixelsA()`_
 - `InitGfxHidd()`_
