@@ -23,6 +23,8 @@
 #include <exec/types.h>
 #include <oop/oop.h>
 
+#include <asm/io.h>
+
 #include <hidd/hidd.h>
 #include <hidd/pci.h>
 
@@ -41,6 +43,65 @@ OOP_AttrBase HiddUSBDeviceAttrBase;
 OOP_AttrBase HiddUSBHubAttrBase;
 OOP_AttrBase HiddUSBDrvAttrBase;
 OOP_AttrBase HiddAttrBase;
+
+/*
+ * usb_delay() stops waits for specified amount of miliseconds. It uses the timerequest
+ * of specified USB device. No pre-allocation of signals is required.
+ */
+static void USBDelay(struct timerequest *tr, uint32_t msec)
+{
+    /* Allocate a signal within this task context */
+    tr->tr_node.io_Message.mn_ReplyPort->mp_SigBit = AllocSignal(-1);
+    tr->tr_node.io_Message.mn_ReplyPort->mp_SigTask = FindTask(NULL);
+    
+    /* Specify the request */
+    tr->tr_node.io_Command = TR_ADDREQUEST;
+    tr->tr_time.tv_secs = msec / 1000;
+    tr->tr_time.tv_micro = 1000 * (msec % 1000);
+
+    /* Wait */
+    DoIO((struct IORequest *)tr);
+    
+    /* The signal is not needed anymore */
+    FreeSignal(tr->tr_node.io_Message.mn_ReplyPort->mp_SigBit);
+    tr->tr_node.io_Message.mn_ReplyPort->mp_SigTask = NULL;
+}
+
+
+struct timerequest *USBCreateTimer()
+{
+    struct timerequest *tr = NULL;
+    struct MsgPort *mp = NULL;
+    
+    mp = CreateMsgPort();
+    if (mp)
+    {        
+        tr = (struct timerequest *)CreateIORequest(mp, sizeof(struct timerequest));
+        if (tr)
+        {
+            FreeSignal(mp->mp_SigBit);
+            if (!OpenDevice((STRPTR)"timer.device", UNIT_MICROHZ, (struct IORequest *)tr, 0))
+                return tr;
+            
+            DeleteIORequest((struct IORequest *)tr);
+            mp->mp_SigBit = AllocSignal(-1);
+        }
+        DeleteMsgPort(mp);
+    }
+    
+    return NULL;
+}
+
+void USBDeleteTimer(struct timerequest *tr)
+{
+    if (tr)
+    {
+        tr->tr_node.io_Message.mn_ReplyPort->mp_SigBit = AllocSignal(-1);
+        CloseDevice(tr);
+        DeleteMsgPort(tr->tr_node.io_Message.mn_ReplyPort);
+        DeleteIORequest((struct IORequest *)tr);
+    }
+}
 
 AROS_UFH3(void, Enumerator,
         AROS_UFHA(struct Hook *,        hook,           A0),
@@ -69,6 +130,24 @@ AROS_UFH3(void, Enumerator,
 
     D(bug("[UHCI]   Device %d @ %08x with IO @ %08x\n", counter, pciDevice, LIBBASE->sd.iobase[counter]));
 
+    struct pHidd_PCIDevice_WriteConfigWord wcw = {
+            OOP_GetMethodID(CLID_Hidd_PCIDevice, moHidd_PCIDevice_WriteConfigWord), PCI_LEGSUP, 0x8f00
+    };
+    
+    D(bug("[UHCI]   Performing full reset. Hopefull legacy USB will do it'S handoff at this time.\n"));
+    OOP_DoMethod(pciDevice, &wcw.mID);
+    
+    outw(UHCI_CMD_HCRESET, LIBBASE->sd.iobase[counter] + UHCI_CMD);
+    struct timerequest *tr = USBCreateTimer();
+    USBDelay(tr, 10);
+    USBDeleteTimer(tr);
+    if (inw(LIBBASE->sd.iobase[counter] + UHCI_CMD) & UHCI_CMD_HCRESET)
+        D(bug("[UHCI]   Wrrr. Reset not yet completed\n"));
+    
+    outw(0, LIBBASE->sd.iobase[counter] + UHCI_INTR);  
+    outw(0, LIBBASE->sd.iobase[counter] + UHCI_CMD);
+    
+    
     D({
         struct pHidd_PCIDevice_ReadConfigWord __msg = {
                 OOP_GetMethodID(CLID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigWord), 0xc0
