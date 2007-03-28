@@ -54,7 +54,8 @@ The depths 15 and 16 are called high color, 24 is called true color. Unlike LUT 
 is stored directly in the bitmap.
 
 The graphics library has only a limited support for high-/true color modes. Some of the drawing functions work
-only with LUT modes. For a full access you need the functions from the cybergraphics library.
+only with LUT modes. For a full access you need the functions from the
+`cybergraphics library <../autodocs/cgfx>`__.
 
 ======================== ===========================================================================
 `GetBitMapAttr()`_       query bitmap attributes. Use this instead of peeking in bitmap structure
@@ -93,12 +94,10 @@ example is simplified and lacks checks of return values::
 
     struct BitMap *bm = AllocBitMap(400, 300, 8, BMF_CLEAR, NULL);
     struct RastPort *rp = CreateRastPort();
-    InitRastPort(rp);
     rp->BitMap = bm;
     ...
     WritePixel(rp, 50, 30);
     ...
-    DeinitRastPort(rp);
     FreeRastPort(rp);
     FreeBitMap(bm);
 
@@ -118,6 +117,32 @@ Drawing modes
 
 TODO: check whether the drawing modes are really available.
 
+Pattern
+~~~~~~~
+The line pattern can be set with the macro `SetDrPt()`.  The second paramter is a 16 bit pattern::
+
+    SetDrPt(&rastPort, 0xCCCC);
+
+The pattern can be reset with::
+
+    SetDrPt(&rastPort, ~0);
+
+For area patterns exists the macro `SetAfPt()`. The width is 16 bit, the height a power of two
+(2, 4, 8, 16, ...). The third parameter is the n in 2^n=height::
+
+    UWORD areaPattern[] =
+    {
+        0x5555, 0xAAAA
+    };
+    SetAfPt(&rastPort, areaPattern, 1);
+
+Colored patterns are possible with a negative value for the height. There must be the same number
+of bitplanes in the pattern as in the target bitmap.
+
+Reset of area pattern::
+
+    SetAfPt(&rastPort, NULL, 0);
+
 ===================== ======================================================================
 `CloneRastPort()`_    copy rastport
 `CreateRastPort()`_   create rastport
@@ -128,10 +153,14 @@ TODO: check whether the drawing modes are really available.
 `GetAPen()`_          get primary pen
 `SetBPen()`_          set secondary pen
 `GetBPen()`_          get secondary pen
+SetOPen()             set area outline pen and switch on outline mode (macro in graphics/gfxmacros.h)
 `SetOutlinePen()`_    set area outline pen
 `GetOutlinePen()`_    get area outline pen
+BNDRYOFF()            switch off area outline mode (macro in graphics/gfxmacros.h)
 `SetDrMd()`_          set drawing mode
 `GetDrMd()`_          get drawing mode
+SetDrPt()             set line pattern (macro in graphics/gfxmacros.h)
+SetAfPt()             set area pattern (macro in graphics/gfxmacros.h)
 `SetABPenDrMd()`_     set primary pen, secondary pen and drawing mode in one step
 `SetRPAttrsA()`_      set misc. drawing attributes
 `GetRPAttrsA()`_      get misc. drawing attributes
@@ -139,16 +168,21 @@ TODO: check whether the drawing modes are really available.
 `SetWriteMask()`_     set write mask
 ===================== ======================================================================
 
+
 Drawing functions
 -----------------
 
 A line is drawn by setting the pen position with `Move()`_ to the start and with `Draw()`_ to the end
 position.
 
+For the `Flood()`_ function you have to attach a TmpRas to the rastport as
+explained unter `Area operations`_.
+
 ======================= =============================================================================
 `Move()`_               change pen position
 `Draw()`_               draw a line from current pen position to given coordinate
 `DrawEllipse()`_        draw an ellipse
+DrawCircle()            draw a circle (macro in graphics/gfxmacros.h)
 `PolyDraw()`_           draw connected lines from an array of points
 `WritePixel()`_         write a single pixel
 `ReadPixel()`_          read the pen value of a pixel
@@ -198,7 +232,7 @@ You need five bytes per vertex::
     WORD areaBuffer[AREA_SIZE];
     struct AreaInfo areaInfo = {0};
     memset(areabuffer, 0, sizeof(areabuffer));
-    InitArea(&areaInfo, areaBuffer, (AREA_SIZE*2)/5);
+    InitArea(&areaInfo, areaBuffer, sizeof(areaBuffer)/5);
     rastPort->AreaInfo = &areaInfo;
 
 Additionally, you need a TmpRas structure. It should have the same width and height as the bitmap
@@ -206,7 +240,7 @@ you want to draw into::
 
     #define WIDTH 400
     #define HEIGHT 300
-    PLANEPTR AllocRaster(WIDTH, HEIGHT);
+    PLANEPTR rasplane = AllocRaster(WIDTH, HEIGHT);
     struct TmpRas tmpRas = {0};
     InitTmpRas(&tmpRas, rasPlane, WIDTH * HEIGHT);
     rastPort->TmpRas = &tmpRas;
@@ -219,8 +253,6 @@ you want to draw into::
 `AreaEllipse()`_   add filled ellipse to vector buffer
 `AreaEnd()`_       start filling operation
 ================== =============================================================================
-
-TODO: BNDRYOFF??
 
 
 Text
@@ -241,13 +273,38 @@ Text
 `ClearScreen()`_    clear from current position to end of rastport
 `ExtendFont()`_     extend struct TextFont by a struct ExtendFont
 `StripFont()`_      remove tf_Extension from a font
-`TextLength()`_     calculate the width of a string in pixels. You can use `TextExtend()`_
+`TextLength()`_     calculate the width of a string in pixels. You can use `TextExtent()`_
                     if you need more detailed information
 `TextExtent()`_     fill TextExtend structure with information about current font
 `FontExtent()`_     fill TextExtend structure with information about given font
 `TextFit()`_        count the number of characters which will fit into given bounds
 `WeighTAMatch()`_   checks how well two different fonts match
 ==================  =============================================================================
+
+
+Clipping
+--------
+
+Bitmaps which you have created with `AllocBitMap()`_ don't have a clipping rectangle. This means that
+you trash memory when you draw outside the bitmap. You can either take care about your drawing operations
+or you can install a clipping rectangle. There are two possibilities:
+
+- Using the tag RPTAG_ClipRectangle in `SetRPAttrsA()`_::
+
+    struct Rectangle rect = {0, 0, 399, 299};
+    SetRPAttrs(&rastPort, RPTAG_ClipRectangle, &rect, TAG_DONE);
+
+- Installing a layer::
+
+    li = NewLayerInfo())
+    rastPort.Layer = CreateUpfrontLayer(li, rastPort->BitMap, 0, 0, width - 1, height - 1, 0, NULL))
+
+    ...
+
+    DeleteLayer(0,rastPort.Layer)
+    DisposeLayerInfo(li)
+
+The latter is compatible with AmigaOS.
 
 
 Color
@@ -262,7 +319,7 @@ We have to differ two cases:
     private colormap when we open a private screen.
 
   We want draw into a window on a public Screen.
-    We have to query a shared pen with the `ObtainBestPen()`_ function. Otherwise we would change
+    We have to query a shared pen with the `ObtainBestPenA()`_ function. Otherwise we would change
     the colors used by other applications.
 
 
@@ -273,7 +330,7 @@ We have to differ two cases:
 `FindColor()`_      find closest matching color
 `ObtainBestPenA()`_ search for closest color match or allocate a new pen
 `ObtainPen()`_      obtain a free palette entry
-`ReleasePen()`_     frees a pen created with `ObtainPen()`_ or `ObtainBestPen()`_
+`ReleasePen()`_     frees a pen created with `ObtainPen()`_ or `ObtainBestPenA()`_
 `GetRGB32()`_       read a series of RGB values from a colormap
 `GetRGB4()`_        reads RGB value of a single color register (deprecated)
 `LoadRGB32()`_      set a series of RGB values for this viewport
