@@ -63,11 +63,13 @@ static AROS_UFH3(void, HubInterrupt,
     uint8_t sts = 0;
     struct Interrupt *intr;
     
-    if (inw(uhci->iobase + UHCI_PORTSC1) & UHCI_PORTSC_CSC)
+    if (inw(uhci->iobase + UHCI_PORTSC1) & (UHCI_PORTSC_CSC|UHCI_PORTSC_OCIC))
         sts |= 1;
-    if (inw(uhci->iobase + UHCI_PORTSC2) & UHCI_PORTSC_CSC)
+    if (inw(uhci->iobase + UHCI_PORTSC2) & (UHCI_PORTSC_CSC|UHCI_PORTSC_OCIC))
         sts |= 2;
 
+    D(bug("[UHCI.%04x] Status on port: 1=%04x, 2=%04x\n", uhci->iobase, inw(uhci->iobase + UHCI_PORTSC1), inw(uhci->iobase + UHCI_PORTSC2)));
+    
     if (sts & 1)
         (bug("[UHCI] Status change on port 1\n"));
     if (sts & 2)
@@ -75,19 +77,16 @@ static AROS_UFH3(void, HubInterrupt,
 
     if (sts && uhci->running)
     {
-        (bug("Causing interrupts from list %p\n", &uhci->intList));
+        D(bug("Causing interrupts from list %p\n", &uhci->intList));
         ForeachNode(&uhci->intList, intr)
         {
             Cause(intr);
         }
     }
     
-    //outw(URWMASK(inw(uhci->iobase + UHCI_PORTSC1)) | UHCI_PORTSC_CSC, uhci->iobase + UHCI_PORTSC1);
-    //outw(URWMASK(inw(uhci->iobase + UHCI_PORTSC2)) | UHCI_PORTSC_CSC, uhci->iobase + UHCI_PORTSC2);
- 
     uhci->timereq->tr_node.io_Command = TR_ADDREQUEST;
-    uhci->timereq->tr_time.tv_secs = 1;
-    uhci->timereq->tr_time.tv_micro = 0;
+    uhci->timereq->tr_time.tv_secs = 0;
+    uhci->timereq->tr_time.tv_micro = 255000;
     SendIO((struct IORequest *)uhci->timereq);
     
     AROS_USERFUNC_EXIT
@@ -106,6 +105,8 @@ static void uhci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     uint16_t cmd = inw(uhci->iobase + UHCI_CMD);
     uint16_t sof = inb(uhci->iobase + UHCI_SOF);
 
+    outw(status, uhci->iobase + UHCI_STS);
+    
     D(bug("[UHCI] INTR Cmd=%04x, SOF=%04x, Status = %04x, Frame=%04x, PortSC1=%04x, PortSC2=%04x\n",
             cmd, sof, status, frame, port1, port2));
 
@@ -121,14 +122,27 @@ static void uhci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
             {
                 struct UHCI_Interrupt *intr;
                 
-                /* Reactivate the transfer descriptor */
-                p->p_FirstTD->td_Status |= UHCI_TD_ACTIVE;
-                D(bug("[UHCI] Interrupt!!! pipe %p, vlink=%p, FirstTD=%p\n", p, p->p_Queue->qh_VLink, p->p_FirstTD));
-                ForeachNode(&p->p_Intr, intr)
+                if (!(p->p_FirstTD->td_Status & UHCI_TD_NAK))
                 {
-                    D(bug("[UHCI] Issuing interrupt %p\n", intr));
-                    Cause(intr->i_intr);
+                    D(bug("[UHCI] Interrupt!!! pipe %p, vlink=%p, FirstTD=%p\n", p, p->p_Queue->qh_VLink, p->p_FirstTD));
+                    ForeachNode(&p->p_Intr, intr)
+                    {
+                        D(bug("[UHCI] Issuing interrupt %p\n", intr));
+                        Cause(intr->i_intr);
+                    }
                 }
+                
+                /* Reactivate the transfer descriptor */
+                p->p_FirstTD->td_Status = UHCI_TD_ZERO_ACTLEN(UHCI_TD_SET_ERRCNT(3) 
+                                                              | UHCI_TD_ACTIVE
+                                                              | UHCI_TD_IOC);
+                
+                p->p_FirstTD->td_Token ^= 1 << 19;
+                
+                if (p->p_FullSpeed)
+                    p->p_FirstTD->td_Status |= UHCI_TD_SPD;
+                else
+                    p->p_FirstTD->td_Status |= UHCI_TD_LS | UHCI_TD_SPD;
                 
                 /* Link the first TD to the Queue header */
                 p->p_Queue->qh_VLink = (uint32_t)p->p_FirstTD | UHCI_PTR_TD;
@@ -313,6 +327,62 @@ OOP_Object *METHOD(UHCI, Root, New)
         uhci->device = (OOP_Object *)GetTagData(aHidd_UHCI_PCIDevice, 0, msg->attrList);
         uhci->pciDriver = (OOP_Object *)GetTagData(aHidd_UHCI_PCIDriver, 0, msg->attrList);
 
+        ({
+            uint32_t base = inw(uhci->iobase + UHCI_FLBASEADDR);
+            uint16_t status = inw(uhci->iobase + UHCI_STS);
+            uint16_t frame = inw(uhci->iobase + UHCI_FRNUM);
+            uint16_t port1 = inw(uhci->iobase + UHCI_PORTSC1);
+            uint16_t port2 = inw(uhci->iobase + UHCI_PORTSC2);
+            uint16_t cmd = inw(uhci->iobase + UHCI_CMD);
+            uint8_t sof = inb(uhci->iobase + UHCI_SOF);
+            int i;
+            
+            bug("[UHCI] Initial state: Base=%08x Cmd=%04x SOF=%02x Status=%04x Frame=%04x PortSC1=%04x PortSC2=%04x\n",
+                    base, cmd, sof, status, frame, port1, port2);
+
+            /* Windows-like BIOS detach procedure */
+            bug("[UHCI] Stopping UHCI\n");
+            
+            /* 
+             * Clearing RS bit will stop the controller. Clearing CF bit will tell potential
+             * legacy USB BIOS that AROS takes over
+             */
+            outw(inw(uhci->iobase + UHCI_CMD) & ~(UHCI_CMD_RS | UHCI_CMD_CF), uhci->iobase + UHCI_CMD);
+            
+            for (i=0; i < 10; i++)
+            {
+                uhci_sleep(cl, o, 1);
+                if (inw(uhci->iobase + UHCI_STS) & UHCI_STS_HCH)
+                {
+                    bug("[UHCI] Host controller halted\n");
+                    break;
+                }
+            }
+            
+            struct pHidd_PCIDevice_WriteConfigWord wcw;
+            struct pHidd_PCIDevice_ReadConfigWord rcw;
+            
+            wcw.mID = OOP_GetMethodID((STRPTR)IID_Hidd_PCIDevice, moHidd_PCIDevice_WriteConfigWord);
+            wcw.reg = PCI_LEGSUP;
+            rcw.mID = OOP_GetMethodID((STRPTR)IID_Hidd_PCIDevice, moHidd_PCIDevice_ReadConfigWord);
+            rcw.reg = PCI_LEGSUP;
+            
+            uint16_t reg = OOP_DoMethod(uhci->device, (OOP_Msg)&rcw.mID);
+            bug("[UHCI] PCI_LEGSUP=%04x -> ", reg);
+            reg &= 0xffef;
+            wcw.val = reg;
+            bug("%04x\n", reg);
+            OOP_DoMethod(uhci->device, (OOP_Msg)&wcw.mID);
+            reg = OOP_DoMethod(uhci->device, (OOP_Msg)&rcw.mID);
+            bug("[UHCI] PCI_LEGSUP=%04x\n", reg);
+            wcw.val = 0x2000;
+            OOP_DoMethod(uhci->device, (OOP_Msg)&wcw.mID);
+            reg = OOP_DoMethod(uhci->device, (OOP_Msg)&rcw.mID);
+            bug("[UHCI] PCI_LEGSUP=%04x\n", reg);
+        });
+        
+        
+        
         OOP_GetAttr(uhci->device, aHidd_PCIDevice_INTLine, &uhci->irq);
 
         D(bug("[UHCI]   New driver with IOBase=%x, IRQ=%d, PCI device=%08x, PCI driver=%08x\n", 
@@ -407,7 +477,7 @@ OOP_Object *METHOD(UHCI, Root, New)
         outw(0, uhci->iobase + UHCI_FRNUM);
         outl((uint32_t)uhci->Frame, uhci->iobase + UHCI_FLBASEADDR);
 
-        outw(UHCI_CMD_MAXP, uhci->iobase + UHCI_CMD);
+        outw(UHCI_CMD_MAXP | UHCI_CMD_CF, uhci->iobase + UHCI_CMD);
 
         outw(UHCI_INTR_SPIE | UHCI_INTR_IOCE | UHCI_INTR_RIE | UHCI_INTR_TOCRCIE,
                 uhci->iobase + UHCI_INTR );
@@ -731,9 +801,11 @@ BOOL METHOD(UHCI, Hidd_USBHub, OnOff)
 
 BOOL METHOD(UHCI, Hidd_USBHub, PortReset)
 {
+    UHCIData *uhci = OOP_INST_DATA(cl, o);
     BOOL retval;
     D(bug("[UHCI] USBHub::PortReset(%d)\n", msg->portNummer));
     retval = uhci_PortReset(cl, o, msg->portNummer);
+    uhci->reset |= (1 << (msg->portNummer - 1));
     uhci_sleep(cl, o, 100);
     return retval;
 }
