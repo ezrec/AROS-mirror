@@ -458,14 +458,14 @@ static void hub_explore(OOP_Class *cl, OOP_Object *o)
                 
         if (change & UPS_C_PORT_ENABLED)
         {
-            //D(bug("[USBHub Process]   C_PORT_ENABLED\n"));
+            D(bug("[USBHub Process]   C_PORT_ENABLED\n"));
             HIDD_USBHub_ClearPortFeature(o, port, UHF_C_PORT_ENABLE);
 #warning: TODO: Extend
         }
         
         if (!(change & UPS_C_CONNECT_STATUS))
         {
-            //D(bug("[USBHub Process]   !C_CONNECT_STATUS\n"));
+            D(bug("[USBHub Process]   !C_CONNECT_STATUS\n"));
             continue;
         }
                 
@@ -480,7 +480,7 @@ static void hub_explore(OOP_Class *cl, OOP_Object *o)
 
         if (!(status & UPS_CURRENT_CONNECT_STATUS))
         {
-            //D(bug("[USBHub Process]   !CURRENT_CONNECT_STATUS\n"));
+            D(bug("[USBHub Process]   !CURRENT_CONNECT_STATUS\n"));
             continue;
         }
 
@@ -504,7 +504,7 @@ static void hub_explore(OOP_Class *cl, OOP_Object *o)
         status = AROS_LE2WORD(port_status.wPortStatus);
         change = AROS_LE2WORD(port_status.wPortChange);
         
-        //D(bug("[USBHub Process]   Port %d, status %04x, change %04x\n", port, status, change));
+        D(bug("[USBHub Process]   Port %d, status %04x, change %04x\n", port, status, change));
         
         if (!(status & UPS_CURRENT_CONNECT_STATUS))
         {
