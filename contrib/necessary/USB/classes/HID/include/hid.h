@@ -33,6 +33,7 @@
 enum {
     moHidd_USBHID_GetReportDescriptor,
     moHidd_USBHID_GetHidDescriptor,
+    moHidd_USBHID_SetIdle,
     moHidd_USBHID_ParseReport,
 
     NUM_HIDD_USBHID_METHODS
@@ -46,6 +47,12 @@ struct pHidd_USBHID_GetReportDescriptor {
 
 struct pHidd_USBHID_GetHidDescriptor {
     OOP_MethodID        mID;
+};
+
+struct pHidd_USBHID_SetIdle {
+    OOP_MethodID        mID;
+    uint8_t             duration;
+    uint8_t             id;
 };
 
 struct pHidd_USBHID_ParseReport {
@@ -212,6 +219,7 @@ typedef struct usb_hid_descriptor {
 #define HIO_BUFBYTES    0x100
 
 BOOL HIDD_USBHID_GetReportDescriptor(OOP_Object *obj, uint16_t length, void *buffer);
+BOOL HIDD_USBHID_SetIdle(OOP_Object *obj, uint8_t duration, uint8_t id);
 usb_hid_descriptor_t *HIDD_USBHID_GetHidDescriptor(OOP_Object *obj);
 void HIDD_USBHID_ParseReport(OOP_Object *obj, void *report);
 

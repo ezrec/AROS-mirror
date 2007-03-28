@@ -92,8 +92,35 @@ BOOL METHOD(HID, Hidd_USBHID, GetReportDescriptor)
     return HIDD_USBDevice_ControlMessage(o, NULL, &req, msg->buffer, msg->length); 
 }
 
+BOOL METHOD(HID, Hidd_USBHID, SetIdle)
+{
+    USBDevice_Request req;
+    intptr_t iface;
+    
+    D(bug("[HID] HID::SetIdle(%d, %d)\n", msg->duration, msg->id));
+    
+    OOP_GetAttr(o, aHidd_USBDevice_Interface, &iface);
+
+    req.bmRequestType = UT_WRITE_CLASS_INTERFACE;
+    req.bRequest = UR_SET_IDLE;
+    req.wValue = AROS_WORD2LE(msg->duration << 8| msg->id);
+    req.wIndex = AROS_WORD2LE(iface);
+    req.wLength = AROS_WORD2LE(0);
+
+    return HIDD_USBDevice_ControlMessage(o, NULL, &req, NULL, 0); 
+}
+
 void METHOD(HID, Hidd_USBHID, ParseReport)
 {
+    HidData *hid = OOP_INST_DATA(cl, o);
+    int i;
+    
+    D(bug("[HID] Unknown report:"));
+    
+    for (i=0; i < hid->buflen; i++)
+        D(bug("%02x ", hid->buffer[i]));
+    
+    D(bug("\n"));
 }
 
 usb_hid_descriptor_t *METHOD(HID, Hidd_USBHID, GetHidDescriptor)
@@ -155,6 +182,8 @@ OOP_Object *METHOD(HID, Root, New)
         D(bug("[HID::New()] Getting device and config descriptors...\n"));
         HIDD_USBDevice_GetDeviceDescriptor(o, &hid->ddesc);
         HIDD_USBDevice_GetConfigDescriptor(o, 0, &cdesc);
+
+        HIDD_USBHID_SetIdle(o, 0, 0);
         
         if (AROS_LE2WORD(cdesc.wTotalLength))
             hid->cdesc = AllocVecPooled(SD(cl)->MemPool, AROS_LE2WORD(cdesc.wTotalLength));
@@ -280,7 +309,8 @@ AROS_LH3(void *, MatchCLID,
                     
                 default:
                     D(bug("[HID] Protocol unknown, using default class\n"));
-                    clid = CLID_Hidd_USBHID;                        
+                    clid = CLID_Hidd_USBHID;
+                    break;
             }
         }
     }

@@ -60,6 +60,21 @@ usb_hid_descriptor_t *HIDD_USBHID_GetHidDescriptor(OOP_Object *obj)
     return (usb_hid_descriptor_t *)OOP_DoMethod(obj, &p.mID);
 }
 
+BOOL HIDD_USBHID_SetIdle(OOP_Object *obj, uint8_t duration, uint8_t id)
+{
+    STATIC_MID;
+
+    struct pHidd_USBHID_SetIdle p;
+
+    if (!mid) mid = OOP_GetMethodID((STRPTR)IID_Hidd_USBHID, moHidd_USBHID_SetIdle);
+
+    p.mID = mid;
+    p.duration = duration;
+    p.id = id;
+
+    return OOP_DoMethod(obj, &p.mID);
+}
+
 void HIDD_USBHID_ParseReport(OOP_Object *obj, void *report)
 {
     STATIC_MID;
