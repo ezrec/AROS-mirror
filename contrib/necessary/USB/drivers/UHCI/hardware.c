@@ -561,7 +561,7 @@ void uhci_QueuedTransfer(OOP_Class *cl, OOP_Object *o, UHCI_Pipe *pipe, VOID *bu
         if (pipe->p_FullSpeed)
             td->td_Status |= UHCI_TD_SPD;
         else
-            td->td_Status |= UHCI_TD_LS;
+            td->td_Status |= UHCI_TD_LS | UHCI_TD_SPD;
 
         dt ^= 1;
         ptr += len;
