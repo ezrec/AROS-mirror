@@ -55,6 +55,7 @@ struct hid_staticdata
     void                    *MemPool;
     OOP_Class               *hidClass;
     OOP_Class               *mouseClass;
+    OOP_Class               *kbdClass;
 };
 
 struct hidbase
@@ -83,6 +84,11 @@ typedef struct HidData {
     uint16_t                    buflen;
 } HidData;
 
+typedef struct {
+    int16_t     dx, dy, dz;
+    uint16_t    btn;
+} report_t;
+
 typedef struct MouseData {
     struct hid_staticdata       *sd;
     OOP_Object                  *o;
@@ -92,7 +98,6 @@ typedef struct MouseData {
     uint16_t                    reportLength;
 
     struct Process              *mouse_task;
-    void                        *data;
     
     uint8_t                     rel_x, rel_y, rel_z;
     uint8_t                     buttonstate;
@@ -105,7 +110,22 @@ typedef struct MouseData {
     struct hid_location         loc_wheel;
     struct hid_location         loc_btn[MAX_BTN];
     uint8_t                     loc_btncnt;
+#define RING_SIZE       8
+    report_t report_ring[RING_SIZE];
+    uint8_t head,tail;
 } MouseData;
+
+typedef struct KbdData {
+    struct hid_staticdata       *sd;
+    OOP_Object                  *o;
+    
+    usb_hid_descriptor_t        *hd;
+    char                        *report;
+    uint16_t                    reportLength;
+
+    struct Process              *kbd_task;
+    void                        *data;
+} KbdData;
 
 enum hid_kind {
     hid_input,
