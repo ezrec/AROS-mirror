@@ -150,6 +150,7 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
     usb_device_descriptor_t descriptor;
     usb_config_descriptor_t config;
     void *cdesc;
+    uint8_t address;
     
     USBDevice_Request request = {
             bmRequestType:      UT_READ_DEVICE,
@@ -170,6 +171,29 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
         pipe = HIDD_USBDrv_CreatePipe(bus, PIPE_Control, msg->fast, 0, 0, 0, 8, 100);
         
         HIDD_USBDrv_ControlTransfer(bus, pipe, &request, &descriptor, 8);
+        
+        if ((address = HIDD_USB_AllocAddress(o, bus)))
+        {
+            USBDevice_Request req = {
+                    bmRequestType:  UT_WRITE_DEVICE,
+                    bRequest:       UR_SET_ADDRESS,
+                    wValue:         address,
+                    wIndex:         0,
+                    wLength:        0
+            };
+            
+            HIDD_USBDrv_ControlTransfer(bus, pipe, &req, NULL, 0);
+
+            HIDD_USBDrv_DeletePipe(bus, pipe);
+
+            pipe = HIDD_USBDrv_CreatePipe(bus, PIPE_Control, msg->fast, address, 0, 0, descriptor.bMaxPacketSize, 100);
+            
+            if (!pipe)
+            {
+                bug("[USB] Could not set device address\n");
+                return NULL;
+            }
+        }
         
         request.wValue = UDESC_CONFIG << 8;
         request.wLength = USB_CONFIG_DESCRIPTOR_SIZE;
@@ -192,7 +216,7 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
     
         struct TagItem tags[] = {
                 { aHidd_USBDevice_Interface,        0 },
-                { aHidd_USBDevice_Address,          0 },
+                { aHidd_USBDevice_Address,          address },
                 { aHidd_USBDevice_Next,             0 },
                 { aHidd_USBDevice_Hub,              (uintptr_t)msg->hub },
                 { aHidd_USBDevice_Fast,             msg->fast },
@@ -210,13 +234,11 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
             default:
             {
                 int i;
-                int addr = 0;
                 
                 /* Try a match for every interface */
                 for (i = config.bNumInterface; i > 0; i--)
                 {
                     tags[0].ti_Data = i - 1;
-                    tags[1].ti_Data = addr;
                     
                     ForeachNode(&SD(cl)->extClassList, ec)
                     {
@@ -241,9 +263,6 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
                             
                                 if (new_device)
                                 {
-                                    intptr_t a;
-                                    OOP_GetAttr(new_device, aHidd_USBDevice_Address, &a);
-                                    addr = a;
                                     tags[2].ti_Data = (intptr_t)new_device;
                                 }
                             }
