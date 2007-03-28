@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-FILES := hid_init hidclass hid mouseclass
+FILES := hid_init hidclass hid mouseclass kbdclass
 STUBS := hid_stubs
 
 %build_module mmake=hidd-usb			\
