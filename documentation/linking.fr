@@ -14,6 +14,22 @@ pouvez utiliser les jolies bannières suivantes, réalisées par Cyb0rg / Resistanc
 
     .. Image:: /images/aros-banner.gif
 
+|
+
+S33k_100:
+
+	.. Image:: /images/aros-banner2.png
+	
+|
+
+	.. Image:: /images/aros-sigbar-user.png
+
+|
+
+	.. Image:: /images/aros-sigbar-coder.png
+
+|
+
 Veuillez référencer directement http://www.aros.org/ et non les sites mirroirs
 qui peuvent changer au cours du temps. Pensez également à effectuer une copie
 locale de l'image de la bannière pour réduire l'utilisation de la bande passante.

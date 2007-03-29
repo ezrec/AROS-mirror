@@ -9,10 +9,27 @@ Linking
 :Status:    Done.
 
 A great way to show your support for AROS, and one that we actively encourage,
-is to link to this website from your own. You can use the following nice banner
-for this purpose, drawn by Cyb0rg / Resistance:
+is to link to this website from your own. You can one of the following nice banners
+for this purpose, such as the original drawn by Cyb0rg / Resistance:
+
 
     .. Image:: /images/aros-banner.gif
+
+|
+
+Or one of the new (sig)banners by S33k_100:
+
+	.. Image:: /images/aros-banner2.png
+	
+|
+
+	.. Image:: /images/aros-sigbar-user.png
+
+|
+
+	.. Image:: /images/aros-sigbar-coder.png
+	
+|
 
 Please link directly to http://www.aros.org/ and not any of the mirrors, as they
 might change over time. Also, please make a local copy of the image to reduce
