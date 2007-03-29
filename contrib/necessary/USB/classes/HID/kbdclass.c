@@ -45,7 +45,7 @@ void METHOD(USBKbd, Hidd_USBHID, ParseReport)
 {
     KbdData *kbd = OOP_INST_DATA(cl, o);
     
-    OOP_DoSuperMethod(cl, o);
+    OOP_DoSuperMethod(cl, o, msg);
 }
 
 OOP_Object *METHOD(USBKbd, Root, New)
