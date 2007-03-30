@@ -5,9 +5,12 @@
 
 #include <proto/exec.h>
 #include <proto/intuition.h>
+#include <proto/alib.h>
+
 #include <stdarg.h>
 
 #include "muimiamipanel_intern.h"
+#include "muimiamipanel_message.h"
 
 ULONG
 MiamiPanelFun(struct MiamiPanelBase_intern *MiamiPanelBaseIntern, ULONG id, ...)
@@ -119,7 +122,7 @@ void DoCommand(struct MiamiPanelBase_intern *MiamiPanelBaseIntern, ULONG id,...)
         return;
     }
 
-/*    if (!(msg = createMsg(size)))
+    if (!(msg = createMsg(size, MiamiPanelBaseIntern)))
     {
         // We break the rules here: Cleanup must be got
         if (id==MPV_Msg_Type_Cleanup)
@@ -129,7 +132,7 @@ void DoCommand(struct MiamiPanelBase_intern *MiamiPanelBaseIntern, ULONG id,...)
 
         ReleaseSemaphore(&MiamiPanelBaseIntern->mpb_libSem);
         return;
-    }*/
+    }
 
     istoreply = 0;
 
@@ -274,13 +277,13 @@ void DoCommand(struct MiamiPanelBase_intern *MiamiPanelBaseIntern, ULONG id,...)
     {
         if ((sig = AllocSignal(-1))<0)
         {
- //           freeMsg(msg);
+            freeMsg(msg, MiamiPanelBaseIntern);
             ReleaseSemaphore(&MiamiPanelBaseIntern->mpb_libSem);
             return;
         }
 
-//        INITPORT(&reply, sig);
-//        INITMESSAGE(msg, &reply,size);
+        INITPORT(&reply, sig);
+        INITMESSAGE(msg, &reply,size);
         msg->flags |= MPV_Msg_Flags_Reply;
     }
 
@@ -291,7 +294,7 @@ void DoCommand(struct MiamiPanelBase_intern *MiamiPanelBaseIntern, ULONG id,...)
     if (istoreply)
     {
         WaitPort(&reply);
-//        freeMsg(msg);
+        freeMsg(msg, MiamiPanelBaseIntern);
         FreeSignal(sig);
     }
 

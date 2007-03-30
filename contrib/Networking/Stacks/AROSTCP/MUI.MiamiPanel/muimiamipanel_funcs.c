@@ -9,8 +9,11 @@
 
 #include <dos/dostags.h>
 
+#include <proto/alib.h>
+
 #include "muimiamipanel_intern.h"
 #include "muimiamipanel_commands.h"
+#include "muimiamipanel_message.h"
 
 extern void MiamiPanelProc(STRPTR argPtr, ULONG argSize);
 extern void DoCommand(struct MiamiPanelBase_intern *MiamiPanelBaseIntern, ULONG id,...);
@@ -102,8 +105,8 @@ D(bug("[MiamiPanel] MiamiPanelInit()\n"));
     {
         struct MPS_AppMsg msg;
 
-//        INITPORT(&reply,sig);
-//        INITMESSAGE(&msg,&reply,sizeof(msg));
+        INITPORT(&reply,sig);
+        INITMESSAGE(&msg, &reply, sizeof(msg));
         msg.flags = flags;
 
         MiamiPanelBaseIntern->mpb_synccb  = synccb;
@@ -113,7 +116,7 @@ D(bug("[MiamiPanel] MiamiPanelInit()\n"));
         MiamiPanelBaseIntern->mpb_use++;
         Permit();
 
-        PutMsg(&proc->pr_MsgPort,(struct Message *)&msg);
+        PutMsg(&proc->pr_MsgPort, (struct Message *)&msg);
         WaitPort(&reply);
 
 //        *sigbit = 0;

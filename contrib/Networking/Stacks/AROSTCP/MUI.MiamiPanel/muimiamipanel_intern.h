@@ -110,5 +110,23 @@ enum
 #define LocaleBase     	(MUIPB(MiamiPanelBaseIntern)->mpb_LocaleBase)
 
 /****************************************************************************************/
+#undef MESSAGE
+#define MESSAGE(m) ((struct Message *)(m))
+
+#undef PORT
+#define PORT(port) ((struct MsgPort *)(port))
+
+#undef INITPORT
+#define INITPORT(p,s) (PORT(p)->mp_Flags = PA_SIGNAL, \
+                       PORT(p)->mp_SigBit = (UBYTE)(s), \
+                       PORT(p)->mp_SigTask = FindTask(NULL), \
+                       NewList(&(PORT(p)->mp_MsgList)))
+
+#undef INITMESSAGE
+#define INITMESSAGE(m,p,l) (MESSAGE(m)->mn_Node.ln_Type = NT_MESSAGE, \
+                            MESSAGE(m)->mn_ReplyPort = PORT(p), \
+                            MESSAGE(m)->mn_Length = ((UWORD)l))
+
+/****************************************************************************************/
 
 #endif /* _MIAMIPANEL_INTERN_H */
