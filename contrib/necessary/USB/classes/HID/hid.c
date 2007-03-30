@@ -161,12 +161,12 @@ int hid_get_item(struct hid_data *s, struct hid_item *h)
                 dval = 0;
                 break;
             case 1:
-                dval = /*(int8_t)*/ *data++;
+                dval = (int8_t) *data++;
                 break;
             case 2:
                 dval = *data++;
                 dval |= *data++ << 8;
-                dval = /*(int16_t)*/ dval;
+                dval = (int16_t) dval;
                 break;
             case 4:
                 dval = *data++;
@@ -382,7 +382,7 @@ int hid_report_size(void *buf, int len, enum hid_kind k, uint8_t id)
 }
 
 int hid_locate(void *desc, int size, uint32_t u, uint8_t id, enum hid_kind k,
-               struct hid_location *loc, uint32_t *flags)
+               struct hid_location *loc, uint32_t *flags, struct hid_range *range)
 {
     struct hid_data *d;
     struct hid_item h;
@@ -398,6 +398,11 @@ int hid_locate(void *desc, int size, uint32_t u, uint8_t id, enum hid_kind k,
                 *loc = h.loc;
             if (flags != NULL)
                 *flags = h.flags;
+            if (range != NULL)
+            {
+                range->minimum = h.logical_minimum;
+                range->maximum = h.logical_maximum;
+            }
             hid_end_parse(d);
             return (1);
         }

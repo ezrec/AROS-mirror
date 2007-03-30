@@ -49,6 +49,11 @@ struct hid_location {
     uint32_t pos;
 };
 
+struct hid_range {
+    int32_t minimum;
+    int32_t maximum;
+};
+
 struct hid_staticdata
 {
     struct SignalSemaphore  Lock;
@@ -85,7 +90,7 @@ typedef struct HidData {
 } HidData;
 
 typedef struct {
-    int16_t     dx, dy, dz;
+    int32_t     dx, dy, dz;
     uint16_t    btn;
 } report_t;
 
@@ -105,11 +110,14 @@ typedef struct MouseData {
     int32_t                     last_x, last_y, max_x, max_y;
     uint8_t                     tablet;
     
+    struct hid_range            range_x;
+    struct hid_range            range_y;
     struct hid_location         loc_x;
     struct hid_location         loc_y;
     struct hid_location         loc_wheel;
     struct hid_location         loc_btn[MAX_BTN];
     uint8_t                     loc_btncnt;
+    
 #define RING_SIZE       8
     report_t report_ring[RING_SIZE];
     uint8_t head,tail;
@@ -173,7 +181,7 @@ void hid_end_parse(struct hid_data *s);
 int hid_get_item(struct hid_data *s, struct hid_item *h);
 int hid_report_size(void *buf, int len, enum hid_kind k, uint8_t id);
 int hid_locate(void *desc, int size, uint32_t usage, uint8_t id,
-               enum hid_kind kind, struct hid_location *loc, uint32_t *flags);
+               enum hid_kind kind, struct hid_location *loc, uint32_t *flags, struct hid_range *range);
 uint32_t hid_get_data(unsigned char *buf, struct hid_location *loc);
 int hid_is_collection(void *desc, int size, uint8_t id, uint32_t usage);
 
