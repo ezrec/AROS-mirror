@@ -614,7 +614,7 @@ MUIPC_IfGroup_ClassInit(struct MiamiPanelBase_intern *MiamiPanelBase)
             Close(file);
         }
 
-        scaleFmt = _(MSG_IFGroup_CItem_ScaleFmt);
+        scaleFmt = __(MSG_IFGroup_CItem_ScaleFmt);
 
         for (i = 0, t = scales; t->ti_Tag!=TAG_DONE; i++, t++)
             snprintf(scaleStrings[i],sizeof(scaleStrings[i]),scaleFmt,t->ti_Data/1000);
@@ -623,7 +623,7 @@ MUIPC_IfGroup_ClassInit(struct MiamiPanelBase_intern *MiamiPanelBase)
             if (nm->nm_Label!=NM_BARLABEL)
                 if (((ULONG)nm->nm_UserData>TAG_SCALE) && ((ULONG)nm->nm_UserData<TAG_SCALE_LAST))
                     nm->nm_Label = scaleStrings[(ULONG)nm->nm_UserData-TAG_SCALE-1];
-                else nm->nm_Label = _(*ids++);
+                else nm->nm_Label = __(*ids++);
 
         return TRUE;
     }

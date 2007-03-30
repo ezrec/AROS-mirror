@@ -6,7 +6,7 @@
 #include "muimiamipanel_misc.h"
 
 ULONG
-saveIFFPrefs(UBYTE *file,struct MPS_Prefs *prefs)
+saveIFFPrefs(UBYTE *file,struct MPS_Prefs *prefs, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
     register struct IFFHandle *iffh;
     register ULONG             res = FALSE;

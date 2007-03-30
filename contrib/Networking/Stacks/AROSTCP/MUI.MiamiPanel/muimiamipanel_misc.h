@@ -18,17 +18,17 @@ ULONG STDARGS DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...);
 Object *ovfixspace(void);
 Object *ohfixspace(void);
 Object *otextitem(void);
-Object *obartitle(ULONG id);
+Object *obartitle(ULONG id, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
 Object *owspace(ULONG weight);
-Object *olabel(ULONG id);
-Object *olabel1(ULONG id);
-Object *ollabel1(ULONG id);
-Object *olabel2(ULONG id);
-Object *obutton(ULONG label,ULONG help);
-Object *ourlText(UBYTE *url,UBYTE *text);
-Object *ocheck(ULONG key,ULONG help);
-Object *ocycle(ULONG key,UBYTE **entries,ULONG help);
-ULONG openWindow(Object *app,Object *win);
+Object *olabel(ULONG id, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
+Object *olabel1(ULONG id, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
+Object *ollabel1(ULONG id, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
+Object *olabel2(ULONG id, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
+Object *obutton(ULONG label,ULONG help, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
+Object *ourlText(UBYTE *url,UBYTE *text, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
+Object *ocheck(ULONG key,ULONG help, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
+Object *ocycle(ULONG key,UBYTE **entries,ULONG help, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
+ULONG openWindow(Object *app,Object *win, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
 void grouping(UBYTE *source, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
 #if !defined(__AROS__)
 void sprintf(UBYTE *to,UBYTE *fmt,...);
@@ -44,7 +44,7 @@ static void ASM snprintfStuff(REG(d0,UBYTE c),REG(a3,struct stream *s));
 int STDARGS snprintf(UBYTE *buf,int size,UBYTE *fmt,...);
 #endif
 
-ULONG IDToValue(Tag tag);
+ULONG IDToValue(Tag tag, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
 Tag valueToID(ULONG val);
 struct ifnode *createIFNode(struct MPS_Prefs *prefs,UBYTE *name,ULONG scale, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
 struct ifnode *findIFNode(struct MPS_Prefs *prefs,UBYTE *name);

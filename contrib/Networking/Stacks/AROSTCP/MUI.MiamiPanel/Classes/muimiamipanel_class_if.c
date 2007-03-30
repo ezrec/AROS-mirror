@@ -93,14 +93,14 @@ MUIPC_If__OM_NEW(struct IClass *CLASS,Object *self,struct opSet *message)
                     MUIA_FixWidthTxt,   "XXXXXXXX",
                 End,
 
-                //Child, temp.slabel = olabel1(MSG_IF_Title_State),
+                //Child, temp.slabel = olabel1(MSG_IF_Title_State, MiamiPanelBaseIntern),
 
                 Child, temp.state = TextObject,
                     //MUIA_Frame,      MUIV_Frame_Text,
                     //MUIA_Background, MUII_TextBack,
                 End,
 
-                lbutton ? Child : TAG_IGNORE, lbutton ? (temp.lbutton = NewObject(MiamiPanelBaseIntern->mpb_lbuttonClass->mcc_Class,NULL,TAG_DONE)) : NULL,
+                lbutton ? Child : TAG_IGNORE, lbutton ? (temp.lbutton = NewObject(MiamiPanelBaseIntern->mpb_lbuttonClass->mcc_Class, NULL, TAG_DONE)) : NULL,
             End,
 
             /*some ? Child : TAG_IGNORE, some ? HGroup,
@@ -113,16 +113,16 @@ MUIPC_If__OM_NEW(struct IClass *CLASS,Object *self,struct opSet *message)
             some ? Child : TAG_IGNORE, some ? VSpace(4) : 0,
 
             some ? Child : TAG_IGNORE, some ? ColGroup(2),
-                ontime  ? Child : TAG_IGNORE, ontime  ? olabel(MSG_IF_Title_OnTime)  : NULL,
+                ontime  ? Child : TAG_IGNORE, ontime  ? olabel(MSG_IF_Title_OnTime, MiamiPanelBaseIntern)  : NULL,
                 ontime  ? Child : TAG_IGNORE, ontime  ? (temp.ontime  = NewObject(MiamiPanelBaseIntern->mpb_timeTextClass->mcc_Class, NULL, TAG_DONE))                  : NULL,
 
-                traffic ? Child : TAG_IGNORE, traffic ? olabel(MSG_IF_Title_Traffic) : NULL,
+                traffic ? Child : TAG_IGNORE, traffic ? olabel(MSG_IF_Title_Traffic, MiamiPanelBaseIntern) : NULL,
                 traffic ? Child : TAG_IGNORE, traffic ? (temp.traffic = NewObject(MiamiPanelBaseIntern->mpb_trafficClass->mcc_Class, NULL, MPA_Prefs, prefs, TAG_DONE)) : NULL,
 
-                rate    ? Child : TAG_IGNORE, rate    ? olabel(MSG_IF_Title_Rate)    : NULL,
+                rate    ? Child : TAG_IGNORE, rate    ? olabel(MSG_IF_Title_Rate, MiamiPanelBaseIntern)    : NULL,
                 rate    ? Child : TAG_IGNORE, rate    ? (temp.rate = NewObject(MiamiPanelBaseIntern->mpb_rateClass->mcc_Class, NULL, MPA_Prefs, prefs, TAG_DONE))       : NULL,
 
-                speed   ? Child : TAG_IGNORE, speed   ? olabel(MSG_IF_Title_Speed)   : NULL,
+                speed   ? Child : TAG_IGNORE, speed   ? olabel(MSG_IF_Title_Speed, MiamiPanelBaseIntern)   : NULL,
                 speed   ? Child : TAG_IGNORE, speed   ? (temp.speed = TextObject, End)                        : NULL,
             End : 0,
 
@@ -211,7 +211,7 @@ changeState(Object *self,struct MiamiPanelIfClass_DATA *data,ULONG state)
     data->statev = state;
 
     if (data->lbutton) set(data->lbutton,MPA_LButton_State,state);
-    set(data->state,MUIA_Text_Contents,_(sstring));
+    set(data->state,MUIA_Text_Contents, __(sstring));
 
     if ((data->flags & FLG_UseBusyBar) && !BOOLSAME(data->flags & FLG_BusyBarInUse,busy))
         showBar(self,data,busy);
@@ -396,7 +396,7 @@ MUIPC_If__MUIM_ContextMenuChoice(struct IClass *CLASS,Object *self,struct MUIP_C
         case TAG_SCALE_7: case TAG_SCALE_8:
             if (data->rate)
             {
-                data->scale = IDToValue((ULONG)item);
+                data->scale = IDToValue((ULONG)item, MiamiPanelBaseIntern);
                 set(data->rate,MUIA_Gauge_Max,data->scale);
             }
             break;

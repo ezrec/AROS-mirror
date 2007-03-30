@@ -12,5 +12,5 @@
 
 /**************************************************************************/
 
-ULONG saveIFFPrefs(UBYTE *file,struct MPS_Prefs *prefs);
+ULONG saveIFFPrefs(UBYTE *file,struct MPS_Prefs *prefs, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);
 ULONG loadIFFPrefs(ULONG where,struct MPS_Prefs *prefs, struct MiamiPanelBase_intern *MiamiPanelBaseIntern);

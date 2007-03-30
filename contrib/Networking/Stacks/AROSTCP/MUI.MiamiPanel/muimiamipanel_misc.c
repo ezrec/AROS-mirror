@@ -14,9 +14,9 @@
 
 #if !defined(__MORPHOS____) && !defined(__AROS__)
 ULONG STDARGS
-DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
+DoSuperNew(struct IClass *cl, Object *obj, ULONG tag1,...)
 {
-    return DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL);
+    return DoSuperMethod(cl, obj, OM_NEW, &tag1, NULL);
 }
 #endif
 
@@ -54,9 +54,9 @@ otextitem(void)
 /****************************************************************************/
 
 Object *
-obartitle(ULONG id)
+obartitle(ULONG id, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
-    return MUI_MakeObject(MUIO_BarTitle,(ULONG)_(id));
+    return MUI_MakeObject(MUIO_BarTitle, __(id));
 }
 
 /****************************************************************************/
@@ -72,45 +72,45 @@ owspace(ULONG weight)
 /****************************************************************************/
 
 Object *
-olabel(ULONG id)
+olabel(ULONG id, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
-    return Label((ULONG)_(id));
+    return Label(__(id));
 }
 
 /****************************************************************************/
 
 Object *
-olabel1(ULONG id)
+olabel1(ULONG id, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
-    return Label1((ULONG)_(id));
+    return Label1(__(id));
 }
 
 /****************************************************************************/
 
 Object *
-ollabel1(ULONG id)
+ollabel1(ULONG id, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
-    return LLabel1((ULONG)_(id));
+    return LLabel1(__(id));
 }
 
 /***********************************************************************/
 
 Object *
-olabel2(ULONG id)
+olabel2(ULONG id, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
-    return Label2((ULONG)_(id));
+    return Label2(__(id));
 }
 
 /***********************************************************************/
 
 Object *
-obutton(ULONG label,ULONG help)
+obutton(ULONG label, ULONG help, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
     register Object *obj;
 
-    if (obj = MUI_MakeObject(MUIO_Button,(ULONG)_(label)))
-        SetAttrs(obj,MUIA_CycleChain, TRUE,
-                     MUIA_ShortHelp,  (ULONG)_(help),
+    if (obj = MUI_MakeObject(MUIO_Button, __(label)))
+        SetAttrs(obj, MUIA_CycleChain, TRUE,
+                     MUIA_ShortHelp,  __(help),
                      TAG_DONE);
 
     return obj;
@@ -119,7 +119,7 @@ obutton(ULONG label,ULONG help)
 /***********************************************************************/
 
 Object *
-ourlText(UBYTE *url,UBYTE *text)
+ourlText(UBYTE *url, UBYTE *text, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
     return UrltextObject,
         MUIA_Urltext_Text,   text,
@@ -131,12 +131,12 @@ ourlText(UBYTE *url,UBYTE *text)
 /***********************************************************************/
 
 Object *
-ocheck(ULONG key,ULONG help)
+ocheck(ULONG key, ULONG help, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
     register Object *obj;
 
-    if (obj = MUI_MakeObject(MUIO_Checkmark,(ULONG)_(key)))
-        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)_(help),TAG_DONE);
+    if (obj = MUI_MakeObject(MUIO_Checkmark, __(key)))
+        SetAttrs(obj, MUIA_CycleChain, TRUE, MUIA_ShortHelp, __(help), TAG_DONE);
 
     return obj;
 }
@@ -144,12 +144,12 @@ ocheck(ULONG key,ULONG help)
 /***********************************************************************/
 
 Object *
-ocycle(ULONG key,UBYTE **entries,ULONG help)
+ocycle(ULONG key, UBYTE **entries, ULONG help, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
     register Object *obj;
 
-    if (obj = MUI_MakeObject(MUIO_Cycle,(ULONG)_(key),(ULONG)entries))
-        SetAttrs(obj,MUIA_CycleChain,TRUE,MUIA_ShortHelp,(ULONG)_(help),TAG_DONE);
+    if (obj = MUI_MakeObject(MUIO_Cycle, __(key), (ULONG)entries))
+        SetAttrs(obj, MUIA_CycleChain, TRUE, MUIA_ShortHelp,__(help), TAG_DONE);
 
     return obj;
 }
@@ -157,15 +157,15 @@ ocycle(ULONG key,UBYTE **entries,ULONG help)
 /***********************************************************************/
 
 ULONG
-openWindow(Object *app,Object *win)
+openWindow(Object *app, Object *win, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
     ULONG v;
 
     if (win)
     {
-        set(win,MUIA_Window_Open,TRUE);
-        get(win,MUIA_Window_Open,&v);
-        if (!v) get(app,MUIA_Application_Iconified,&v);
+        set(win, MUIA_Window_Open, TRUE);
+        get(win, MUIA_Window_Open, &v);
+        if (!v) get(app, MUIA_Application_Iconified, &v);
     }
     else v = FALSE;
 
@@ -204,21 +204,21 @@ grouping(UBYTE *source, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 #if !defined(__AROS__)
 #ifdef __MORPHOS__
 void
-sprintf(UBYTE *to,UBYTE *fmt,...)
+sprintf(UBYTE *to, UBYTE *fmt,...)
 {
   va_list args;
 
-  va_start(args,fmt);
-  VNewRawDoFmt(fmt,(APTR)0,to,args);
+  va_start(args, fmt);
+  VNewRawDoFmt(fmt, (APTR)0, to, args);
   va_end(args);
 }
 #else
 static UWORD fmtfunc[] = { 0x16c0, 0x4e75 };
 
 void
-sprintf(UBYTE *to,UBYTE *fmt,...)
+sprintf(UBYTE *to, UBYTE *fmt,...)
 {
-    RawDoFmt(fmt,&fmt+1,(APTR)fmtfunc,to);
+    RawDoFmt(fmt, &fmt+1, (APTR)fmtfunc, to);
 }
 #endif
 #endif /* !__AROS__ */
@@ -234,7 +234,7 @@ snprintfStuff(void)
     register UBYTE         c  = (UBYTE)REG_D0;
 #else
 static void ASM
-snprintfStuff(REG(d0,UBYTE c),REG(a3,struct stream *s))
+snprintfStuff(REG(d0, UBYTE c), REG(a3, struct stream *s))
 {
 #endif
 
@@ -250,12 +250,12 @@ snprintfStuff(REG(d0,UBYTE c),REG(a3,struct stream *s))
 }
 
 #ifdef __MORPHOS__
-static struct EmulLibEntry snprintfStuffTrap = {TRAP_LIB,0,(void *)&snprintfStuff};
+static struct EmulLibEntry snprintfStuffTrap = {TRAP_LIB, 0, (void *)&snprintfStuff};
 #endif
 
 
 int STDARGS
-snprintf(UBYTE *buf,int size,UBYTE *fmt,...)
+snprintf(UBYTE *buf, int size, UBYTE *fmt,...)
 {
     struct stream s;
     #ifdef __MORPHOS__
@@ -270,10 +270,10 @@ snprintf(UBYTE *buf,int size,UBYTE *fmt,...)
     s.stop    = 0;
 
     #ifdef __MORPHOS__
-    RawDoFmt(fmt,va->overflow_arg_area,(APTR)&snprintfStuffTrap,&s);
+    RawDoFmt(fmt, va->overflow_arg_area, (APTR)&snprintfStuffTrap, &s);
     va_end(va);
     #else
-    RawDoFmt(fmt,&fmt+1,(APTR)snprintfStuff,&s);
+    RawDoFmt(fmt, &fmt+1, (APTR)snprintfStuff, &s);
     #endif
 
     return s.counter-1;
@@ -287,7 +287,7 @@ snprintf(UBYTE *buf,int size,UBYTE *fmt,...)
 */
 
 ULONG
-IDToValue(Tag tag)
+IDToValue(Tag tag, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
     return GetTagData(tag, 0, scales);
 }
@@ -312,12 +312,12 @@ createIFNode(struct MPS_Prefs *prefs,UBYTE *name,ULONG scale, struct MiamiPanelB
 
     ObtainSemaphore(&MiamiPanelBaseIntern->mpb_memSem);
 
-    if (ifnode = AllocPooled(MiamiPanelBaseIntern->mpb_pool,sizeof(struct ifnode)))
+    if (ifnode = AllocPooled(MiamiPanelBaseIntern->mpb_pool, sizeof(struct ifnode)))
     {
-        stccpy(ifnode->name,name,sizeof(ifnode->name));
+        stccpy(ifnode->name,name, sizeof(ifnode->name));
         ifnode->scale = scale;
 
-        AddHead((struct List *)&prefs->iflist,(struct Node *)ifnode);
+        AddHead((struct List *)&prefs->iflist, (struct Node *)ifnode);
     }
 
     ReleaseSemaphore(&MiamiPanelBaseIntern->mpb_memSem);
@@ -348,7 +348,7 @@ freeIFList(struct MPS_Prefs *prefs, struct MiamiPanelBase_intern *MiamiPanelBase
     ObtainSemaphore(&MiamiPanelBaseIntern->mpb_memSem);
 
     while (node = RemHead((struct List *)&prefs->iflist))
-        FreePooled(MiamiPanelBaseIntern->mpb_pool,node,sizeof(struct ifnode));
+        FreePooled(MiamiPanelBaseIntern->mpb_pool, node, sizeof(struct ifnode));
 
     ReleaseSemaphore(&MiamiPanelBaseIntern->mpb_memSem);
 }
@@ -360,7 +360,7 @@ moveMinList(struct MinList *to,struct MinList *from, struct MiamiPanelBase_inter
 {
     register struct Node *node;
 
-    while (node = RemTail((struct List *)from)) AddTail((struct List *)to,node);
+    while (node = RemTail((struct List *)from)) AddTail((struct List *)to, node);
 }
 
 /****************************************************************************/
@@ -369,7 +369,7 @@ moveMinList(struct MinList *to,struct MinList *from, struct MiamiPanelBase_inter
 void *
 memcpy(void *to,const void *from,size_t len)
 {
-    CopyMem((APTR)from,(APTR)to,len);
+    CopyMem((APTR)from, (APTR)to, len);
 
     return to;
 }

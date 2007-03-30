@@ -129,28 +129,28 @@ IPTR MUIPC_App__OM_NEW
             MUIA_Application_Title,          DEF_Base,
             MUIA_Application_Author,         DEF_Author,
             /* MUIA_Application_Version,        lib_vers, */
-            MUIA_Application_Copyright,      _(MSG_Copyright),
-            MUIA_Application_Description,    _(MSG_Description),
+            MUIA_Application_Copyright,      __(MSG_Copyright),
+            MUIA_Application_Description,    __(MSG_Description),
             MUIA_Application_Base,           DEF_Base,
             MUIA_Application_HelpFile,       DEF_Guide,
             MUIA_Application_UseCommodities, FALSE,
             MUIA_Application_SingleTask,     TRUE,
-            MUIA_Application_Menustrip,      strip = MUI_MakeObject(MUIO_MenustripNM,(ULONG)appMenu,MUIO_MenustripNM_CommandKeyCheck),
+            MUIA_Application_Menustrip,      strip = MUI_MakeObject(MUIO_MenustripNM, (ULONG)appMenu, MUIO_MenustripNM_CommandKeyCheck),
             MUIA_Application_UsedClasses,    usedClasses,
 
             SubWindow, temp.win = (temp.prefs.flags & MPV_Flags_BWin) ?
                 (BWinObject,
                     MUIA_ObjectID,     MAKE_ID('M','A','I','N'),
                     MUIA_Window_ID,    MAKE_ID('M','A','I','N'),
-                    MUIA_Window_Title, _(MSG_Window_Title),
+                    MUIA_Window_Title, __(MSG_Window_Title),
                     MUIA_HelpNode,     "GUI",
                     MUIA_BWin_Save,    MUIV_BWin_Save_All,
                     MUIA_BWin_Borders, temp.prefs.flags & MPV_Flags_BWinBorders,
                     WindowContents, temp.root = VGroup,
                         InnerSpacing(0,0),
-                        Child, (IPTR)NewObject(MiamiPanelBaseIntern->mpb_mgroupClass->mcc_Class,NULL ,
+                        Child, (IPTR)NewObject(MiamiPanelBaseIntern->mpb_mgroupClass->mcc_Class, NULL ,
                             MPA_Prefs, &temp.prefs,
-                            MPA_Show,  GetTagData(MPA_Show,0,message->ops_AttrList),
+                            MPA_Show,  GetTagData(MPA_Show, 0, message->ops_AttrList),
                         TAG_DONE),
                     End,
                  End) :
@@ -158,7 +158,7 @@ IPTR MUIPC_App__OM_NEW
                     MUIA_ObjectID,                      MAKE_ID('M','A','I','N'),
                     MUIA_Window_ID,                     MAKE_ID('M','A','I','N'),
                     MUIA_HelpNode,                      "GUI",
-                    MUIA_Window_Title,                  _(MSG_Window_Title),
+                    MUIA_Window_Title,                  __(MSG_Window_Title),
                     MUIA_Window_UseRightBorderScroller, TRUE,
                     MUIA_Window_SizeRight,              TRUE,
                     //MUIA_Window_Backdrop,               TRUE,
@@ -167,7 +167,7 @@ IPTR MUIPC_App__OM_NEW
                         InnerSpacing(0,0),
                         Child, (IPTR)NewObject(MiamiPanelBaseIntern->mpb_mgroupClass->mcc_Class, NULL,
                             MPA_Prefs, &temp.prefs,
-                            MPA_Show,  GetTagData(MPA_Show,0,message->ops_AttrList),
+                            MPA_Show,  GetTagData(MPA_Show, 0, message->ops_AttrList),
                         TAG_DONE),
                     End,
                  End),
@@ -236,9 +236,9 @@ IPTR MUIPC_App__OM_NEW
         set(data->root,MPA_Prefs,&temp.prefs);
 
         /* Try to open win */
-        if (!openWindow(self,temp.win))
+        if (!openWindow(self, temp.win, MiamiPanelBaseIntern))
         {
-            CoerceMethod(CLASS,self,OM_DISPOSE);
+            CoerceMethod(CLASS, self, OM_DISPOSE);
             self = NULL;
         }
     }
@@ -378,7 +378,7 @@ static ULONG MUIPC_App__MUIM_Application_AboutMUI
                 MUIM_Application_PushMethod,(ULONG)self,2,MPM_DisposeWin,(ULONG)data->aboutMUI);
     }
 
-    openWindow(self,data->aboutMUI);
+    openWindow(self, data->aboutMUI, MiamiPanelBaseIntern);
 
 	SetSuperAttrs(CLASS, self, MUIA_Application_Sleep, FALSE, TAG_DONE);
 	
@@ -422,7 +422,7 @@ static ULONG MUIPC_App__MPM_Rebuild
         nwin = BWinObject,
             MUIA_ObjectID,     MAKE_ID('M','A','I','N'),
             MUIA_Window_ID,    MAKE_ID('M','A','I','N'),
-            MUIA_Window_Title, _(MSG_Window_Title),
+            MUIA_Window_Title, __(MSG_Window_Title),
             MUIA_HelpNode,     "GUI",
             MUIA_BWin_Save,    MUIV_BWin_Save_All,
             MUIA_BWin_Borders, data->prefs.flags & MPV_Flags_BWinBorders,
@@ -432,7 +432,7 @@ static ULONG MUIPC_App__MPM_Rebuild
             MUIA_ObjectID,                      MAKE_ID('M','A','I','N'),
             MUIA_Window_ID,                     MAKE_ID('M','A','I','N'),
             MUIA_HelpNode,                      "GUI",
-            MUIA_Window_Title,                  _(MSG_Window_Title),
+            MUIA_Window_Title,                  __(MSG_Window_Title),
             MUIA_Window_UseRightBorderScroller, TRUE,
             MUIA_Window_SizeRight,              TRUE,
             WindowContents,                     sp = HSpace(0),
@@ -462,7 +462,7 @@ static ULONG MUIPC_App__MPM_Rebuild
 
     set(data->win,WindowContents,data->root);
 
-    if (!openWindow(self,data->win)) DoSuperMethod(CLASS,self,MUIM_Application_PushMethod,(ULONG)self,1,MPM_Quit);
+    if (!openWindow(self, data->win, MiamiPanelBaseIntern)) DoSuperMethod(CLASS,self,MUIM_Application_PushMethod,(ULONG)self,1,MPM_Quit);
 	SetSuperAttrs(CLASS, self, MUIA_Application_Sleep, FALSE, TAG_DONE);
 
     return res;
@@ -538,7 +538,7 @@ static ULONG MUIPC_App__MPM_About
         ReleaseSemaphore(&MiamiPanelBaseIntern->mpb_libSem);
     }
 
-    openWindow(self,data->about);
+    openWindow(self, data->about, MiamiPanelBaseIntern);
 
 	SetSuperAttrs(CLASS, self, MUIA_Application_Sleep, FALSE, TAG_DONE);
 
@@ -572,7 +572,7 @@ static ULONG MUIPC_App__MPM_Prefs
         ReleaseSemaphore(&MiamiPanelBaseIntern->mpb_libSem);
     }
 
-    openWindow(self,data->wprefs);
+    openWindow(self, data->wprefs, MiamiPanelBaseIntern);
 
 	SetSuperAttrs(CLASS, self, MUIA_Application_Sleep, FALSE, TAG_DONE);
 
@@ -590,11 +590,11 @@ MUIPC_App__MPM_Save(struct IClass *CLASS,Object *self,struct MPP_Save *message)
 
     if (message->save)
     {
-        saveIFFPrefs(DEF_ENVARCFILE,&data->prefs);
+        saveIFFPrefs(DEF_ENVARCFILE, &data->prefs, MiamiPanelBaseIntern);
         DoSuperMethod(CLASS,self,MUIM_Application_Save,(ULONG)MUIV_Application_Save_ENVARC);
     }
 
-    saveIFFPrefs(DEF_ENVFILE,&data->prefs);
+    saveIFFPrefs(DEF_ENVFILE, &data->prefs, MiamiPanelBaseIntern);
     DoSuperMethod(CLASS,self,MUIM_Application_Save,(ULONG)MUIV_Application_Save_ENV);
 
     DoMethod(data->win,MUIM_Window_Snapshot,1);

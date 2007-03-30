@@ -42,15 +42,15 @@
         MUIA_Text_HiCharIdx, '_',\
         MUIA_Text_SetMax,    TRUE
 
-#define ThirdPart(stuff,author,url)\
+#define ThirdPart(stuff, author, url)\
 Child, ohfixspace(),\
 Child, otextitem(),\
 Child, ohfixspace(),\
 Child, HGroup,\
     MUIA_Group_HorizSpacing,0,\
-    Child, olabel(stuff),\
+    Child, olabel(stuff, MiamiPanelBaseIntern),\
     Child, ohfixspace(),\
-    Child, ourlText(url,author),\
+    Child, ourlText(url, author, MiamiPanelBaseIntern),\
     Child, HSpace(0),\
 End
 
@@ -61,7 +61,7 @@ Child, ohfixspace(),\
 Child, HGroup,\
     MUIA_Group_HorizSpacing,0,\
     Child, mui = MUIButton, End,\
-    Child, olabel(MSG_About_OfCourse),\
+    Child, olabel(MSG_About_OfCourse, MiamiPanelBaseIntern),\
     Child, HSpace(0),\
 End
 
@@ -83,7 +83,7 @@ IPTR MUIPC_About__OM_NEW
 
 			MUIA_HelpNode,              "WRID",
             MUIA_Window_ID,             MAKE_ID('A','B','O','T'),
-            MUIA_Window_Title,          _(MSG_About_WinTitle),
+            MUIA_Window_Title,          __(MSG_About_WinTitle),
             MUIA_Window_IconifyGadget,  FALSE,
             MUIA_Window_MenuGadget,     FALSE,
             MUIA_Window_SnapshotGadget, FALSE,
@@ -98,30 +98,30 @@ IPTR MUIPC_About__OM_NEW
                 End,
 
                 Child, TextObject,
-                    MUIA_Text_Contents, _(MSG_Copyright),
+                    MUIA_Text_Contents, __(MSG_Copyright),
                     MUIA_Text_PreParse, MUIX_C MUIX_B,
                 End,
 
                 Child, ovfixspace(),
 
-                Child, obartitle(MSG_About_Information),
+                Child, obartitle(MSG_About_Information, MiamiPanelBaseIntern),
 
                 Child, HGroup,
                     Child, HSpace(0),
                     Child, ColGroup(2),
                         /*Child, olabel(MSG_About_Version),
                         Child, LLabel((ULONG)lib_vers),*/
-                        Child, olabel(MSG_About_Author),
-                        Child, ourlText("mailto:"DEF_EMail, DEF_Author),
-                        Child, olabel(MSG_About_Support),
-                        Child, ourlText(DEF_HomePage, NULL),
+                        Child, olabel(MSG_About_Author, MiamiPanelBaseIntern),
+                        Child, ourlText("mailto:"DEF_EMail, DEF_Author, MiamiPanelBaseIntern),
+                        Child, olabel(MSG_About_Support, MiamiPanelBaseIntern),
+                        Child, ourlText(DEF_HomePage, NULL, MiamiPanelBaseIntern),
                     End,
                     Child, HSpace(0),
                 End,
 
                 Child, ovfixspace(),
 
-                Child, obartitle(MSG_About_ThirdParts),
+                Child, obartitle(MSG_About_ThirdParts, MiamiPanelBaseIntern),
 
                 Child, g = VGroup,
                     MUIA_Group_HorizSpacing, 0,
@@ -136,7 +136,7 @@ IPTR MUIPC_About__OM_NEW
         Object *app, *space;
         UBYTE  *tn;
 
-        if ((tn = _(MSG_About_Translation)) && *tn)
+        if ((tn = __(MSG_About_Translation)) && *tn)
         {
             Object *sp1, *tti, *sp2 = NULL, *tg; // gcc
 

@@ -89,7 +89,7 @@ MUIPC_MGroup__OM_NEW(struct IClass *CLASS,Object *self,struct opSet *message)
 
             MUIA_Group_Horiz, !(prefs->layout & MPV_Layout_Horiz),
             Child, ifGroup = ScrollgroupObject,
-                MUIA_ShortHelp,                _(MSG_IFGroup_Help),
+                MUIA_ShortHelp,                __(MSG_IFGroup_Help),
                 MUIA_CycleChain,               TRUE,
                 MUIA_Scrollgroup_FreeHoriz,    FALSE,
                 MUIA_Scrollgroup_UseWinBorder, TRUE,

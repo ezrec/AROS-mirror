@@ -148,8 +148,8 @@ MUIPC_LButton_ClassInit(struct MiamiPanelBase_intern *MiamiPanelBase)
 	MiamiPanelBaseIntern = MiamiPanelBase;
     if (MiamiPanelBaseIntern->mpb_lbuttonClass = MUI_CreateCustomClass(NULL, MUIC_Group, NULL, sizeof(struct MiamiPanelLButtonClass_DATA), MUIPC_LButton_Dispatcher))
     {
-        ons  = _(MSG_IF_Button_Online);
-        offs = _(MSG_IF_Button_Offline);
+        ons  = __(MSG_IF_Button_Online);
+        offs = __(MSG_IF_Button_Offline);
 
         if (strlen(ons)>strlen(offs)) btFixWidthTxt = ons;
         else btFixWidthTxt = offs;

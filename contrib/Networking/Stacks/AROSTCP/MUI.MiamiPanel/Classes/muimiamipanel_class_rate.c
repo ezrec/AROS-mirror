@@ -162,9 +162,9 @@ MUIPC_Rate_ClassInit(struct MiamiPanelBase_intern *MiamiPanelBase)
 	MiamiPanelBaseIntern = MiamiPanelBase;
     if (MiamiPanelBaseIntern->mpb_rateClass = MUI_CreateCustomClass(NULL,MUIC_Gauge,NULL,sizeof(struct MiamiPanelRateClass_DATA), MUIPC_Rate_Dispatcher))
     {
-        bpss = _(MSG_Rate_Bs);
-        Kbss = _(MSG_Rate_KBs);
-        Mbss = _(MSG_Rate_MBs);
+        bpss = __(MSG_Rate_Bs);
+        Kbss = __(MSG_Rate_KBs);
+        Mbss = __(MSG_Rate_MBs);
 
         return TRUE;
     }

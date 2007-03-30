@@ -12,20 +12,18 @@
 #define CATALOG_NAME     "System/MUI.miamipanel.catalog"
 #define CATALOG_VERSION  0
 
-#include <MUI/TheBar_mcc.h>
 #include <libraries/gadtools.h>
+#include <MUI/TheBar_mcc.h>
 
-/*** Variables **************************************************************/
-struct Catalog *catalog;
-
+#include "muimiamipanel_intern.h"
 
 /*** Functions **************************************************************/
 /* Main *********************************************************************/
-CONST_STRPTR _(ULONG id)
+CONST_STRPTR _(ULONG id, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
-    if (LocaleBase != NULL && catalog != NULL)
+    if (LocaleBase != NULL && MiamiPanelBaseIntern->mpb_cat != NULL)
     {
-	return GetCatalogStr(catalog, id, CatCompArray[id].cca_Str);
+	return GetCatalogStr(MiamiPanelBaseIntern->mpb_cat, id, CatCompArray[id].cca_Str);
     } 
     else 
     {
@@ -34,11 +32,11 @@ CONST_STRPTR _(ULONG id)
 }
 
 void
-localizeArray(UBYTE **strings,ULONG *ids)
+localizeArray(UBYTE **strings,ULONG *ids, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
     for (;;)
     {
-        if (*ids) *strings++ = _(*ids++);
+        if (*ids) *strings++ = _(*ids++, MiamiPanelBaseIntern);
         else
         {
             *strings = NULL;
@@ -50,14 +48,14 @@ localizeArray(UBYTE **strings,ULONG *ids)
 /***********************************************************************/
 
 void
-localizeMenus(struct NewMenu *menu,ULONG *ids)
+localizeMenus(struct NewMenu *menu,ULONG *ids, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
     while (menu->nm_Type!=NM_END)
     {
         register ULONG id = *ids++;
 
         if (id && menu->nm_Label!=NM_BARLABEL)
-            menu->nm_Label = _(id);
+            menu->nm_Label = _(id, MiamiPanelBaseIntern);
 
         menu++;
     }
@@ -66,38 +64,42 @@ localizeMenus(struct NewMenu *menu,ULONG *ids)
 /***********************************************************************/
 
 void
-localizeButtonsBar(struct MUIS_TheBar_Button *buttons,ULONG *ids)
+localizeButtonsBar(struct MUIS_TheBar_Button *buttons,ULONG *ids, struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
     while (buttons->img!=MUIV_TheBar_End)
     {
         register ULONG t = *ids++;
         register ULONG h = *ids++;
 
-        if (t) buttons->text = _(t);
-        if (h) buttons->help = _(h);
+        if (t) buttons->text = _(t, MiamiPanelBaseIntern);
+        if (h) buttons->help = _(h, MiamiPanelBaseIntern);
 
         buttons++;
     }
 }
 
 /* Setup ********************************************************************/
-/*VOID Locale_Initialize(VOID)
+VOID Locale_Initialize(struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
     if (LocaleBase != NULL)
     {
-        catalog = OpenCatalog
+        MiamiPanelBaseIntern->mpb_cat = OpenCatalog
         ( 
             NULL, CATALOG_NAME, OC_Version, CATALOG_VERSION, TAG_DONE 
         );
     }
     else
     {
-        catalog = NULL;
+        MiamiPanelBaseIntern->mpb_cat = NULL;
     }
 }
 
-VOID Locale_Deinitialize(VOID)
+VOID Locale_Deinitialize(struct MiamiPanelBase_intern *MiamiPanelBaseIntern)
 {
-    if(LocaleBase != NULL && catalog != NULL) CloseCatalog(catalog);
-}*/
+    if(LocaleBase != NULL && MiamiPanelBaseIntern->mpb_cat != NULL)
+	{
+		CloseCatalog(MiamiPanelBaseIntern->mpb_cat);
+		MiamiPanelBaseIntern->mpb_cat = NULL;
+	}
+}
 

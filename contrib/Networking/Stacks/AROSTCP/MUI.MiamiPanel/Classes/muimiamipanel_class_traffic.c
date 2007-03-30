@@ -178,8 +178,8 @@ MUIPC_Traffic_ClassInit(struct MiamiPanelBase_intern *MiamiPanelBase)
 	MiamiPanelBaseIntern = MiamiPanelBase;
     if (MiamiPanelBaseIntern->mpb_trafficClass = MUI_CreateCustomClass(NULL, MUIC_Text, NULL, sizeof(struct MiamiPanelTrafficClass_DATA), MUIPC_Traffic_Dispatcher))
     {
-        Kbs = _(MSG_Traffic_KB);
-        Mbs = _(MSG_Traffic_MB);
+        Kbs = __(MSG_Traffic_KB);
+        Mbs = __(MSG_Traffic_MB);
 
         return TRUE;
     }
