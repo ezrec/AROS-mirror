@@ -136,8 +136,8 @@ OOP_Object *METHOD(USBMouse, Root, New)
 
         if (!hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_Z),
                    0, hid_input, &mouse->loc_wheel, &flags, NULL))
-            if (!hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_WHEEL),
-                       0, hid_input, &mouse->loc_wheel, &flags, NULL))
+            hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_WHEEL),
+                       0, hid_input, &mouse->loc_wheel, &flags, NULL);
         
         if (mouse->loc_wheel.size) {
             mouse->rel_z = flags & HIO_RELATIVE; 
