@@ -12,7 +12,11 @@
 #include <proto/locale.h>
 #include <proto/utility.h>
 #include <clib/alib_protos.h>
-//#include <exec/rawfmt.h>
+#if defined(__AROS__)
+#include <stdio.h>
+#else
+#include <exec/rawfmt.h>
+#endif
 #include <dos/dos.h>
 #include <string.h>
 #include <syslog.h>
@@ -177,10 +181,17 @@ AROS_UFH3(
 		case LOG_DEBUG:    id = d->VerbosePen;    break;
         }
 
-//	NewRawDoFmt("\33P[%ld]%s", RAWFMTFUNC_STRING, time, id, sle->Time);
-//	NewRawDoFmt("\33P[%ld]%s", RAWFMTFUNC_STRING, level, id, levels[LOG_PRI(sle->Level)]);
-//	NewRawDoFmt("\33P[%ld]%s", RAWFMTFUNC_STRING, appname, id, sle->ProcessName);
-//	NewRawDoFmt("\33P[%ld]%s", RAWFMTFUNC_STRING, event, id, sle->EventDescription);
+#if defined(__AROS__)
+		sprintf(time, "\33P[%ld]%s", id, sle->Time);
+		sprintf(level, "\33P[%ld]%s", id, levels[LOG_PRI(sle->Level)]);
+		sprintf(appname, "\33P[%ld]%s", id, sle->ProcessName);
+		sprintf(event, "\33P[%ld]%s", id, sle->EventDescription);
+#else
+	NewRawDoFmt("\33P[%ld]%s", RAWFMTFUNC_STRING, time, id, sle->Time);
+	NewRawDoFmt("\33P[%ld]%s", RAWFMTFUNC_STRING, level, id, levels[LOG_PRI(sle->Level)]);
+	NewRawDoFmt("\33P[%ld]%s", RAWFMTFUNC_STRING, appname, id, sle->ProcessName);
+	NewRawDoFmt("\33P[%ld]%s", RAWFMTFUNC_STRING, event, id, sle->EventDescription);
+#endif
 
         msg2->strings[0] = time;
 	msg2->strings[1] = level;

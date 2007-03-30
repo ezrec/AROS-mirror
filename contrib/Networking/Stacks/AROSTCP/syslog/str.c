@@ -1,7 +1,12 @@
 #define __NOLIBBASE__
 
 #include <proto/exec.h>
-//#include <exec/rawfmt.h>
+#if defined(__AROS__)
+#include <stdio.h>
+#include <string.h>
+#else
+#include <exec/rawfmt.h>
+#endif
 
 #include <stdarg.h>
 
@@ -40,11 +45,21 @@ STRPTR vfmtnew(APTR pool, STRPTR fmt, va_list args)
 	va_list copy;
 
 	__va_copy(copy, args);
-//	VNewRawDoFmt(fmt, (APTR(*)(APTR, UBYTE))RAWFMTFUNC_COUNT, (STRPTR)&l, args);
+#if defined(__AROS__)
+	static UBYTE strng_tmp[1024];
+	sprintf((STRPTR)strng_tmp, fmt, args);
+	l = strlen(strng_tmp);
+#else
+	VNewRawDoFmt(fmt, (APTR(*)(APTR, UBYTE))RAWFMTFUNC_COUNT, (STRPTR)&l, args);
+#endif
 
 	if (s = AllocVecPooled(pool, l + 1))
 	{
-//		VNewRawDoFmt(fmt, RAWFMTFUNC_STRING, s, copy);
+#if defined(__AROS__)
+		sprintf(s, fmt, copy);
+#else
+		VNewRawDoFmt(fmt, RAWFMTFUNC_STRING, s, copy);
+#endif
 	}
 	return s;
 }
