@@ -82,8 +82,6 @@ void METHOD(USBMouse, Hidd_USBHID, ParseReport)
     mouse->report_ring[mouse->head].btn = buttons;
     mouse->head = (mouse->head+1) % RING_SIZE;
 
-    D(bug("[Mouse] x=%04d y=%04d z=%04d btn=%02x fill=%3d head=%3d tail=%3d\n", x, y, z, buttons, fill, mouse->head, mouse->tail));
-
     Enable();
 
     /* 
@@ -120,23 +118,26 @@ OOP_Object *METHOD(USBMouse, Root, New)
         HIDD_USBHID_GetReportDescriptor(o, mouse->reportLength, mouse->report);
 
         if (hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_X),
-                   0, hid_input, &mouse->loc_x, &flags))
+                   0, hid_input, &mouse->loc_x, &flags, &mouse->range_x))
         {
             mouse->rel_x = flags & HIO_RELATIVE;
-            D(bug("[USBMouse::New()] Has %s X\n", mouse->rel_x?"relative":"absolute"));
+
+            D(bug("[USBMouse::New()] Has %s X ranging from %d to %d\n", mouse->rel_x?"relative":"absolute",
+                    mouse->range_x.minimum, mouse->range_x.maximum));
         }
         
         if (hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_Y),
-                   0, hid_input, &mouse->loc_y, &flags))
+                   0, hid_input, &mouse->loc_y, &flags, &mouse->range_y))
         {
             mouse->rel_y = flags & HIO_RELATIVE;
-            D(bug("[USBMouse::New()] Has %s Y\n", mouse->rel_y?"relative":"absolute"));            
+            D(bug("[USBMouse::New()] Has %s Y ranging from %d to %d\n", mouse->rel_y?"relative":"absolute",
+                    mouse->range_y.minimum, mouse->range_y.maximum));            
         }
 
         if (!hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_Z),
-                   0, hid_input, &mouse->loc_wheel, &flags))
+                   0, hid_input, &mouse->loc_wheel, &flags, NULL))
             if (!hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_GENERIC_DESKTOP, HUG_WHEEL),
-                       0, hid_input, &mouse->loc_wheel, &flags))
+                       0, hid_input, &mouse->loc_wheel, &flags, NULL))
         
         if (mouse->loc_wheel.size) {
             mouse->rel_z = flags & HIO_RELATIVE; 
@@ -146,7 +147,7 @@ OOP_Object *METHOD(USBMouse, Root, New)
         for (mouse->loc_btncnt = 1; mouse->loc_btncnt <= MAX_BTN; mouse->loc_btncnt++)
         {
             if (!hid_locate(mouse->report, mouse->reportLength, HID_USAGE2(HUP_BUTTON, mouse->loc_btncnt),
-                       0, hid_input, &mouse->loc_btn[mouse->loc_btncnt-1], &flags)) {
+                       0, hid_input, &mouse->loc_btn[mouse->loc_btncnt-1], &flags, NULL)) {
                 
                 mouse->loc_btncnt--;
                 break;
@@ -194,6 +195,7 @@ static void mouse_process()
     struct IOStdReq *req = (struct IOStdReq *)CreateIORequest(port, sizeof(struct IOStdReq));
     struct InputEvent ie[10];
     struct Device *InputBase;
+    struct IENewTablet          iet;
     
     if (OpenDevice("input.device", 0, (struct IORequest *)req, 0))
     {
@@ -258,8 +260,30 @@ static void mouse_process()
                 
                 if ((buttons & ~b_down) & 4)
                     qual |= IEQUALIFIER_MIDBUTTON;
+
+                if (!mouse->rel_x || !mouse->rel_y)
+                {
+                    iet.ient_TabletX = x;
+                    iet.ient_TabletY = y;
+                    iet.ient_RangeX = 1 + mouse->range_x.maximum - mouse->range_x.minimum;
+                    iet.ient_RangeY = 1 + mouse->range_y.maximum - mouse->range_y.minimum;
+
+                    ie[iec].ie_Class = IECLASS_NEWPOINTERPOS;
+                    ie[iec].ie_Code = IECODE_NOBUTTON;
+                    ie[iec].ie_Qualifier = qual & ~IEQUALIFIER_RELATIVEMOUSE;
+                    ie[iec].ie_SubClass = IESUBCLASS_NEWTABLET;
+                    ie[iec].ie_X = 0;
+                    ie[iec].ie_Y = 0;
+                    ie[iec].ie_EventAddress = &iet;
+                    
+                    req->io_Data = &ie[iec];
+                    req->io_Length = sizeof(struct InputEvent);
+                    req->io_Command = IND_WRITEEVENT;
+                    
+                    DoIO(req);                        
+                }
                 
-                if (x!=0 || y!=0)
+                else if (x!=0 || y!=0)
                 {
                     ie[iec].ie_Class = IECLASS_RAWMOUSE;
                     ie[iec].ie_Code = IECODE_NOBUTTON;
