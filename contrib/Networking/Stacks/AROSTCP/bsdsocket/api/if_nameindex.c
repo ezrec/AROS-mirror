@@ -82,9 +82,12 @@
  *    if_nameindex().
  */
 
-struct if_nameindex *
-if_nameindex(struct MiamiBase *MiamiBase)
+AROS_LH0(struct if_nameindex *, if_nameindex,
+         struct MiamiBase *, MiamiBase, 48, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	struct ifaddrs *ifaddrs, *ifa;
 	unsigned int ni;
 	int nbytes;
@@ -144,10 +147,18 @@ if_nameindex(struct MiamiBase *MiamiBase)
 out:
 	freeifaddrs(ifaddrs);
 	return(ifni);
+
+	AROS_LIBFUNC_EXIT
 }
 
-void
-if_freenameindex(struct if_nameindex *ptr)
+AROS_LH1(void, if_freenameindex,
+         AROS_LHA(struct if_nameindex *, *ptr, D0),
+         struct MiamiBase *, MiamiBase, 49, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	bsd_free(ptr, NULL);
+
+	AROS_LIBFUNC_EXIT
 }

@@ -116,18 +116,34 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiLIB_Close()\n"));
   return(0);
 }
 
-long MiamiSysCtl(void)
+AROS_LH7(int, MiamiSysCtl,
+         AROS_LHA(LONG *, name, A0),
+         AROS_LHA(ULONG, namelen, D0),
+         AROS_LHA(void *, oldp, A1),
+         AROS_LHA(LONG *, oldlenp, A2),
+         AROS_LHA(void *, newp, A3),
+         AROS_LHA(LONG, newlen, D1),
+         AROS_LHA(int, len, D2),
+         struct MiamiBase *, MiamiBase, 5, Miami
+)
 {
+	AROS_LIBFUNC_INIT
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiSysCtl()\n"));
 #endif
 	
 	__log(LOG_CRIT,"MiamiSysCtl() is not implemented");
 	return ENOSYS;
+	AROS_LIBFUNC_EXIT
 }
 
-void MiamiDisallowDNS(long value, struct MiamiBase *MiamiBase)
+AROS_LH1(void, MiamiDisallowDNS,
+         AROS_LHA(LONG, value, D0),
+         struct MiamiBase *, MiamiBase, 11, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiDisallowDNS()\n"));
 #endif
@@ -137,19 +153,34 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiDisallowDNS()\n"));
 		SocketBase->res_state.options |= AROSTCP_RES_DISABLED;
 	else
 		SocketBase->res_state.options &= ~AROSTCP_RES_DISABLED;
+
+	AROS_LIBFUNC_EXIT
 }
 
-void *MiamiGetPid(void)
+AROS_LH0(void *, MiamiGetPid,
+         struct MiamiBase *, MiamiBase, 13, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiGetPid()\n"));
 #endif
 	
 	return FindTask(NULL);
+
+	AROS_LIBFUNC_EXIT
 }
 
-APTR MiamiPFAddHook(	struct Hook *hook, UBYTE *interface, struct TagItem *taglist)
+AROS_LH3(APTR, MiamiPFAddHook,
+         AROS_LHA(struct Hook *, hook, A0),
+         AROS_LHA(UBYTE *, interface, A1),
+         AROS_LHA(struct TagItem *, taglist, A2),
+         struct MiamiBase *, MiamiBase, 16, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	struct packet_filter_hook *pf = NULL;
 	struct ifnet *ifp;
 
@@ -181,10 +212,17 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiPFAddHook()\n"));
 	__log(LOG_CRIT,"Miami packet filter disabled", NULL);
 #endif
 	return pf;
+
+	AROS_LIBFUNC_EXIT
 }
 
-void MiamiPFRemoveHook(struct Node *handle)
+AROS_LH1(void, MiamiPFRemoveHook,
+         AROS_LHA(APTR, handle, A0),
+         struct MiamiBase *, MiamiBase, 17, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiPFRemoveHook()\n"));
 #endif
@@ -196,44 +234,79 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiPFRemoveHook()\n"));
 		ReleaseSemaphore(&pfil_list_lock);
 		bsd_free(handle, NULL);
 	}
+
+	AROS_LIBFUNC_EXIT
 }
 
-long MiamiGetHardwareLen(void)
+AROS_LH1(int, MiamiGetHardwareLen,
+         AROS_LHA(char *, name, A0),
+         struct MiamiBase *, MiamiBase, 18, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiGetHardwareLen()\n"));
 #endif
 
 	__log(LOG_CRIT,"MiamiGetHardwareLen() is not implemented");
 	return NULL;
+
+	AROS_LIBFUNC_EXIT
 }
 
-struct Library *MiamiOpenSSL(void)
+AROS_LH1(struct Library *, MiamiOpenSSL,
+         AROS_LHA(struct TagItem *, taglist, A0),
+         struct MiamiBase *, MiamiBase, 25, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiOpenSSL()\n"));
 #endif
 	return NULL;
+
+	AROS_LIBFUNC_EXIT
 }
 
-void MiamiCloseSSL(void)
+AROS_LH0(void, MiamiCloseSSL,
+         struct MiamiBase *, MiamiBase, 26, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiCloseSSL()\n"));
 #endif
+
+	AROS_LIBFUNC_EXIT
 }
 
-long MiamiSetSocksConn(void)
+AROS_LH2(int, MiamiSetSocksConn,
+         AROS_LHA(struct sockaddr *, sa, A0),
+         AROS_LHA(int, len, D0),
+         struct MiamiBase *, MiamiBase, 33, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiSetSocksConn()\n"));
 #endif
 	__log(LOG_CRIT,"MiamiSetSocksConn() is not implemented");
 	return FALSE;
+
+	AROS_LIBFUNC_EXIT
 }
 
-long MiamiIsOnline(char *name)
+AROS_LH1(int, MiamiIsOnline,
+         AROS_LHA(char *, name, A0),
+         struct MiamiBase *, MiamiBase, 35, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	struct ifnet *ifp;
 	long online = FALSE;
 
@@ -257,10 +330,18 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiIsOnline()\n"));
 	}
 	DSYSCALLS(__log(LOG_DEBUG,"MiamiIsOnline() result: %ld", online);)
 	return online;
+
+	AROS_LIBFUNC_EXIT
 }
 
-void MiamiOnOffline(char *name, int online, struct MiamiBase *MiamiBase)
+AROS_LH2(void, MiamiOnOffline,
+         AROS_LHA(char *, name, A0),
+         AROS_LHA(int, online, D0),
+         struct MiamiBase *, MiamiBase, 36, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	struct ifnet *ifp;
 
 #if defined(__AROS__)
@@ -270,10 +351,20 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiOnOffline()\n"));
 	ifp = ifunit(name);
 	if (ifp)
 		ifupdown(ifp, online);
+
+	AROS_LIBFUNC_EXIT
 }
 
-char *inet_ntop(long family, char *addrptr, char *strptr, long len)
+AROS_LH4(STRPTR, inet_ntop,
+         AROS_LHA(LONG, family, D0),
+         AROS_LHA(char *, addrptr, A0),
+         AROS_LHA(char *, strptr, A1),
+         AROS_LHA(LONG, len, D1),
+         struct MiamiBase *, MiamiBase, 38, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: inet_ntop()\n"));
 #endif
@@ -287,20 +378,37 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: inet_ntop()\n"));
 		__log(LOG_CRIT,"inet_ntop(): address family %ld is not implemented", family);
 		return NULL;
 	}
+
+	AROS_LIBFUNC_EXIT
 }
 
-long Miami_inet_aton(char *strptr, struct in_addr *addrptr, struct MiamiBase *MiamiBase)
+AROS_LH2(int, Miami_inet_aton,
+         AROS_LHA(char *, strptr, A0),
+         AROS_LHA(void *, addrptr, A2),
+         struct MiamiBase *, MiamiBase, 39, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: Miami_inet_aton()\n"));
 #endif
 
 	DSYSCALLS(syslog(LOG_DEBUG,"inet_aton(%s) called", (ULONG)strptr);)
 	return __inet_aton(strptr, addrptr);
+
+	AROS_LIBFUNC_EXIT
 }
 
-long inet_pton(long family, char *strptr, struct in_addr *addrptr, struct MiamiBase *MiamiBase)
+AROS_LH3(int, inet_pton,
+         AROS_LHA(LONG, family, D0),
+         AROS_LHA(char *, strptr, A0),
+         AROS_LHA(void *, addrptr, A1),
+         struct MiamiBase *, MiamiBase, 40, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: inet_pton()\n"));
 #endif
@@ -312,10 +420,18 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: inet_pton()\n"));
 		__log(LOG_CRIT,"inet_pton(): address family %ld is not implemented", family);
 		return 0;
 	}
+
+	AROS_LIBFUNC_EXIT
 }
 
-struct hostent *gethostbyname2(char *name, long family, struct MiamiBase *MiamiBase)
+AROS_LH2(struct hostent *, gethostbyname2,
+         AROS_LHA(char *, name, A0),
+         AROS_LHA(LONG, family, D0),
+         struct MiamiBase *, MiamiBase, 41, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: gethostbyname2()\n"));
 #endif
@@ -327,6 +443,8 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: gethostbyname2()\n"));
 		syslog(LOG_CRIT,"gethostbyname2(): address family %ld is not implemented", family);
 		return NULL;
 	}
+
+	AROS_LIBFUNC_EXIT
 }
 
 char *ai_errors[] = {
@@ -345,8 +463,13 @@ char *ai_errors[] = {
 	"Unknown error"
 };
 
-char *gai_strerror(unsigned long error )
+AROS_LH1(char *, gai_strerror,
+         AROS_LHA(LONG, error, D0),
+         struct MiamiBase *, MiamiBase, 42, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: gai_strerror()\n"));
 #endif
@@ -355,17 +478,34 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: gai_strerror()\n"));
 	if (error > 12)
 		error = 12;
 	return ai_errors[error];
+
+	AROS_LIBFUNC_EXIT
 }
 
-void freeaddrinfo(void)
+AROS_LH1(void, freeaddrinfo,
+         AROS_LHA(struct addrinfo *, addrinfo, A0),
+         struct MiamiBase *, MiamiBase, 43, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: freeaddrinfo()\n"));
 #endif
+
+	AROS_LIBFUNC_EXIT
 }
 
-long getaddrinfo(struct MiamiBase *MiamiBase)
+AROS_LH4(LONG, getaddrinfo,
+         AROS_LHA(char *, hostname, A0),
+         AROS_LHA(char *, servicename, A1),
+         AROS_LHA(struct addrinfo *, hintsp, A2),
+         AROS_LHA(struct addrinfo **, result, A3),
+         struct MiamiBase *, MiamiBase, 44, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: getaddrinfo()\n"));
 #endif
@@ -373,60 +513,108 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: getaddrinfo()\n"));
 	__log(LOG_CRIT,"getaddrinfo() is not implemented");
 	writeErrnoValue(SocketBase, ENOSYS);
 	return EAI_SYSTEM;
+
+	AROS_LIBFUNC_EXIT
 }
 
-long getnameinfo(void)
+AROS_LH7(LONG, getnameinfo,
+         AROS_LHA(struct sockaddr *, sockaddr, A0),
+         AROS_LHA(LONG, addrlen, D0),
+         AROS_LHA(char *, hostname, A1),
+         AROS_LHA(LONG, hostlen, D1),
+         AROS_LHA(char *, servicename, A2),
+         AROS_LHA(LONG, servicelen, D2),
+         AROS_LHA(LONG, flags, D3),
+         struct MiamiBase *, MiamiBase, 45, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: getnameinfo()\n"));
 #endif
 
 	__log(LOG_CRIT,"getnameinfo() is not implemented");
 	return ENOSYS;
+
+	AROS_LIBFUNC_EXIT
 }
 
-long MiamiSupportsIPV6(void)
+AROS_LH0(LONG, MiamiSupportsIPV6,
+         struct MiamiBase *, MiamiBase, 50, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiSupportsIPV6()\n"));
 #endif
 
 	DSYSCALLS(__log(LOG_DEBUG,"MiamiSupportsIPV6() called");)
 	return FALSE;
+
+	AROS_LIBFUNC_EXIT
 }
 
-long MiamiResGetOptions(struct MiamiBase *MiamiBase)
+AROS_LH0(LONG, MiamiGetResOptions,
+         struct MiamiBase *, MiamiBase, 51, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiResGetOptions()\n"));
 #endif
 
 	DSYSCALLS(__log(LOG_DEBUG,"MiamiResGetOptions() called, result: 0x%08lx", SocketBase.res_state.options);)
 	return SocketBase->res_state.options;
+
+	AROS_LIBFUNC_EXIT
 }
 
-void MiamiResSetOptions(long options, struct MiamiBase *MiamiBase)
+AROS_LH1(void, MiamiSetResOptions,
+         AROS_LHA(LONG, options, D0),
+         struct MiamiBase *, MiamiBase, 52, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiResSetOptions()\n"));
 #endif
 
 	DSYSCALLS(__log(LOG_DEBUG,"MiamiResSetOptions(0x%08lx) called", options);)
 	SocketBase->res_state.options = options;
+
+	AROS_LIBFUNC_EXIT
 }
 
-long sockatmark(void)
+AROS_LH1(LONG, sockatmark,
+         AROS_LHA(LONG, sockfd, D0),
+         struct MiamiBase *, MiamiBase, 53, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: sockatmark()\n"));
 #endif
 
 	__log(LOG_CRIT,"sockatmark() is not implemented");
 	return 0;
+
+	AROS_LIBFUNC_EXIT
 }
 
-void MiamiSupportedCPUs(unsigned long *apis, unsigned long *callbacks, unsigned long *kernel)
+AROS_LH3(void, MiamiSupportedCPUs,
+         AROS_LHA(ULONG *, apis, A0),
+         AROS_LHA(ULONG *, callbacks, A1),
+         AROS_LHA(ULONG *, kernel, A2),
+         struct MiamiBase *, MiamiBase, 54, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiSupportedCPUs()\n"));
 #endif
@@ -435,10 +623,17 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiSupportedCPUs()\n"));
 	*apis = MIAMICPU_M68KREG;
 	*callbacks = MIAMICPU_M68KREG;
 	*kernel = MIAMICPU_PPCV4;
+
+	AROS_LIBFUNC_EXIT
 }
 
-long MiamiGetFdCallback(fdCallback_t *cbptr, struct MiamiBase *MiamiBase)
+AROS_LH1(LONG, MiamiGetFdCallback,
+         AROS_LHA(fdCallback_t *, cbptr, A0),
+         struct MiamiBase *, MiamiBase, 55, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiGetFdCallback()\n"));
 #endif
@@ -446,10 +641,18 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiGetFdCallback()\n"));
 	*cbptr = SocketBase->fdCallback;
 	DSYSCALLS(__log(LOG_DEBUG,"MiamiGetFdCallback() called, *cbptr = 0x%08lx", (ULONG)*cbptr);)
 	return *cbptr ? MIAMICPU_M68KREG : 0;
+
+	AROS_LIBFUNC_EXIT
 }
 
-long MiamiSetFdCallback(fdCallback_t cbptr, long cputype, struct MiamiBase *MiamiBase)
+AROS_LH2(LONG, MiamiSetFdCallback,
+         AROS_LHA(fdCallback_t, cbptr, A0),
+         AROS_LHA(LONG, cputype, D0),
+         struct MiamiBase *, MiamiBase, 56, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiSetFdCallback()\n"));
 #endif
@@ -460,40 +663,65 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiSetFdCallback()\n"));
 		return TRUE;
 	} else
 		return FALSE;
+
+	AROS_LIBFUNC_EXIT
 }
 
-void SetSysLogPort(void)
+AROS_LH0(void, SetSysLogPort,
+         struct MiamiBase *, MiamiBase, 6, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: SetSysLogPort()\n"));
 #endif
 
 	DSYSCALLS(__log(LOG_DEBUG,"SetSysLogPort() called");)
 	ExtLogPort = FindPort("SysLog");
+
+	AROS_LIBFUNC_EXIT
 }
 
-int Miami_sethostname(const char *name, size_t namelen)
+AROS_LH2(int, Miami_sethostname,
+         AROS_LHA(const char *, name, A0),
+         AROS_LHA(size_t, namelen, D0),
+         struct MiamiBase *, MiamiBase, 23, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: Miami_sethostname()\n"));
 #endif
 
 	return sethostname(name, namelen);
+
+	AROS_LIBFUNC_EXIT
 }
 
-LONG Miami_QueryInterfaceTagList(STRPTR interface_name, struct TagItem *tags, struct MiamiBase *MiamiBase)
+AROS_LH2(void, Miami_QueryInterfaceTagList,
+         AROS_LHA(STRPTR, interface_name, A0),
+         AROS_LHA(struct TagItem *, tags, A1),
+         struct MiamiBase *, MiamiBase, 7, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: Miami_QueryInterfaceTagList()\n"));
 #endif
 
 	return __QueryInterfaceTagList(interface_name, tags, SocketBase);
+
+	AROS_LIBFUNC_EXIT
 }
 
 AROS_LH0(struct UserGroupCredentials *, MiamiGetCredentials,
-   struct MiamiBase *, MiamiBase, 58, Miami)
+         struct MiamiBase *, MiamiBase, 58, Miami)
 {
 	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiGetCredentials()\n"));
 #endif

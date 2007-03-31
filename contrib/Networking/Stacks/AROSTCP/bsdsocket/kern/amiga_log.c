@@ -41,6 +41,8 @@
 #include <libraries/miamipanel.h>
 #include <utility/date.h>
 
+#include <proto/miami.h>
+
 #include <proto/dos.h>
 #include <proto/miamipanel.h>
 #include <proto/utility.h>
@@ -114,7 +116,13 @@ D(bug("[AROSTCP](amiga_log.c) log_init()\n"));
     if (log_buffers = AllocMem(log_buffers_mem_size, MEMF_CLEAR|MEMF_PUBLIC)) {
         logPort = NULL; /* NETTRACE will set this on success */
         GetLogMsgFail = 0;
+		
+#if defined(__AROS__)
+		DSYSCALLS(__log(LOG_DEBUG,"Set initial SysLogPort");)
+		ExtLogPort = FindPort("SysLog");
+#else
         SetSysLogPort();
+#endif
 	logReplyPort.mp_Flags = PA_SIGNAL;
 	logReplyPort.mp_SigBit = SIGBREAKB_CTRL_E;
 	logReplyPort.mp_SigTask = FindTask(NULL);

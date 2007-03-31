@@ -125,9 +125,15 @@ AROS_LH0(struct protoent *,  getprotoent,
 	AROS_LIBFUNC_EXIT
 }
 
-struct protoent *Miami_getprotoent(struct MiamiBase *MiamiBase)
+AROS_LH0(struct protoent *, Miami_getprotoent,
+         struct MiamiBase *, MiamiBase, 14, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	return __getprotoent(MiamiBase->_SocketBase);
+
+	AROS_LIBFUNC_EXIT
 }
 
 /* **** ENDPROTOENT */
@@ -151,16 +157,26 @@ AROS_LH0(void, endprotoent,
 	AROS_LIBFUNC_EXIT
 }
 
-void Miami_endprotoent(struct MiamiBase *MiamiBase)
+AROS_LH0(void, Miami_endprotoent,
+         struct MiamiBase *, MiamiBase, 15, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	DSYSCALLS(log(LOG_DEBUG,"endprotoent() called");)
 	__endprotoent(MiamiBase->_SocketBase);
+
+	AROS_LIBFUNC_EXIT
 }
 
 /* **** */
 
-void ClearDynDomain(struct MiamiBase *MiamiBase)
+AROS_LH0(void, ClearDynDomain,
+         struct MiamiBase *, MiamiBase, 24, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	struct MinNode *node, *nnode;
 
 	if (MiamiBase->DynDomain_Locked) {
@@ -173,10 +189,16 @@ void ClearDynDomain(struct MiamiBase *MiamiBase)
 		node = nnode;
 	}
 	NewList((struct List *)&DynDB.dyn_Domains);
+
+	AROS_LIBFUNC_EXIT
 }
 
-void ClearDynNameServ(struct MiamiBase *MiamiBase)
+AROS_LH0(void, ClearDynNameServ,
+         struct MiamiBase *, MiamiBase, 9, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	struct MinNode *node, *nnode;
 
 	if (MiamiBase->DynNameServ_Locked) {
@@ -189,30 +211,49 @@ void ClearDynNameServ(struct MiamiBase *MiamiBase)
 		node = nnode;
 	}
 	NewList((struct List *)&DynDB.dyn_NameServers);
+
+	AROS_LIBFUNC_EXIT
 }
 
-void EndDynDomain(struct MiamiBase *MiamiBase)
+AROS_LH0(void, EndDynDomain,
+         struct MiamiBase *, MiamiBase, 19, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	if (MiamiBase->DynDomain_Locked) {
 		ReleaseSemaphore (&DynDB.dyn_Lock);
 		MiamiBase->DynDomain_Locked = 0;
 		if (!MiamiBase->DynNameServ_Locked)
 			ndb_Serial++;
 	}
+
+	AROS_LIBFUNC_EXIT
 }
 
-void EndDynNameServ (struct MiamiBase *MiamiBase)
+AROS_LH0(void, EndDynNameServ,
+         struct MiamiBase *, MiamiBase, 20, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	if (MiamiBase->DynNameServ_Locked) {
 		ReleaseSemaphore (&DynDB.dyn_Lock);
 		MiamiBase->DynNameServ_Locked = 0;
 		if (!MiamiBase->DynDomain_Locked)
 			ndb_Serial++;
 	}
+
+	AROS_LIBFUNC_EXIT
 }
 
-LONG AddDynNameServ(struct sockaddr_in *entry,struct MiamiBase *MiamiBase)
+AROS_LH1(LONG, AddDynNameServ,
+         AROS_LHA(struct sockaddr_in *, entry, A0),
+         struct MiamiBase *, MiamiBase, 21, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
   struct NameserventNode *nsn;
 
   if (entry->sin_family != AF_INET)
@@ -232,10 +273,17 @@ LONG AddDynNameServ(struct sockaddr_in *entry,struct MiamiBase *MiamiBase)
 
   AddTail((struct List *)&DynDB.dyn_NameServers, (struct Node*)nsn);
   return NULL;
+
+	AROS_LIBFUNC_EXIT
 }
 
-LONG AddDynDomain(STRPTR entry, struct MiamiBase *MiamiBase)
+AROS_LH1(LONG, AddDynDomain,
+         AROS_LHA(STRPTR, entry, A0),
+         struct MiamiBase *, MiamiBase, 22, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
   struct DomainentNode *dn;
   short  nodesize;
 
@@ -256,12 +304,15 @@ LONG AddDynDomain(STRPTR entry, struct MiamiBase *MiamiBase)
 
   AddTail((struct List *)&DynDB.dyn_Domains, (struct Node*)dn);
   return NULL;
+
+	AROS_LIBFUNC_EXIT
 }
 
 AROS_LH0(struct hostent *, Miami_gethostent,
-   struct MiamiBase *, MiamiBase, 10, Miami)
+         struct MiamiBase *, MiamiBase, 10, Miami)
 {
 	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] amiga_ndbent.c: Miami_gethostent()\n"));
 #endif
@@ -273,9 +324,10 @@ D(bug("[AROSTCP.MIAMI] amiga_ndbent.c: Miami_gethostent()\n"));
 
 
 AROS_LH0(void, Miami_endhostent,
-   struct MiamiBase *, MiamiBase, 12, Miami)
+         struct MiamiBase *, MiamiBase, 12, Miami)
 {
 	AROS_LIBFUNC_INIT
+
 #if defined(__AROS__)
 D(bug("[AROSTCP.MIAMI] amiga_ndbent.c: Miami_endhostent()\n"));
 #endif

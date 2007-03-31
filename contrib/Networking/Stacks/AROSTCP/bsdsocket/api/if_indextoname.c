@@ -66,9 +66,14 @@
  * NULL and errno would be set to the proper value (e.g., ENOMEM).
  */
 
-char *
-if_indextoname(unsigned int ifindex, char *ifname, struct MiamiBase *MiamiBase)
+AROS_LH2(char *, if_indextoname,
+         AROS_LHA(LONG, ifindex, D0),
+         AROS_LHA(char *, ifname, A0),
+         struct MiamiBase *, MiamiBase, 47, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	struct ifaddrs *ifaddrs, *ifa;
 	int error = 0;
 
@@ -93,5 +98,7 @@ if_indextoname(unsigned int ifindex, char *ifname, struct MiamiBase *MiamiBase)
 
 	writeErrnoValue(MiamiBase->_SocketBase, error);
 	return(ifname);
+
+	AROS_LIBFUNC_EXIT
 }
 

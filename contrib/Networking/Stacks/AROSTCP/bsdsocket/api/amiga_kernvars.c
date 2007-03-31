@@ -34,13 +34,20 @@ struct kernel_var kvars[] = {
 	{ NULL , NULL }
 };
 
-void * SAVEDS FindKernelVar(REG(a0, STRPTR name))
+AROS_LH1(void *, FindKernelVar,
+         AROS_LHA(STRPTR, name, A0),
+         struct MiamiBase *, MiamiBase, 59, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	struct kernel_var *kvar;
 
 	for (kvar = kvars; kvar->v_name; kvar++)
 		if (!strcmp(name, kvar->v_name))
 			return kvar->v_addr;
 	return NULL;
+
+	AROS_LIBFUNC_EXIT
 }
 

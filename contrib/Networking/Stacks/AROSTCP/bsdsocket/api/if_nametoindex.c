@@ -97,8 +97,15 @@ __if_nametoindex(char *ifname, struct SocketBase *SocketBase)
 	return(ni);
 }
 
-unsigned int if_nametoindex(	char *ifname, struct MiamiBase *MiamiBase)
+AROS_LH1(LONG, if_nametoindex,
+         AROS_LHA(char *, ifname, A0),
+         struct MiamiBase *, MiamiBase, 46, Miami
+)
 {
+	AROS_LIBFUNC_INIT
+
 	return __if_nametoindex(ifname, MiamiBase->_SocketBase);
+
+	AROS_LIBFUNC_EXIT
 }
 
