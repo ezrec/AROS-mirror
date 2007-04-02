@@ -195,10 +195,11 @@ static void mouse_process()
     
     struct MsgPort *port = CreateMsgPort();
     struct IOStdReq *req = (struct IOStdReq *)CreateIORequest(port, sizeof(struct IOStdReq));
-    struct InputEvent ie[10];
     struct Device *InputBase;
     struct IENewTablet          iet;
-    
+
+    struct InputEvent *ie = AllocVec(10 * sizeof(struct InputEvent), MEMF_PUBLIC | MEMF_CLEAR);
+
     if (OpenDevice("input.device", 0, (struct IORequest *)req, 0))
     {
         DeleteIORequest((struct IORequest *)req);
@@ -223,6 +224,7 @@ static void mouse_process()
             CloseDevice((struct IORequest *)req);
             DeleteIORequest((struct IORequest *)req);
             DeleteMsgPort(port);
+            FreeVec(ie);
             return;
         }
         
