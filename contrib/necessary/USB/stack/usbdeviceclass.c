@@ -655,6 +655,14 @@ void METHOD(USBDevice, Root, Get)
                 *msg->storage = (intptr_t)dev->next;
                 break;
 
+            case aoHidd_USBDevice_Interface:
+                *msg->storage = (intptr_t)dev->iface;
+                break;
+            
+            case aoHidd_USBDevice_InterfaceNumber:
+                *msg->storage = dev->interfaces[dev->iface].interface->bInterfaceNumber;
+                break;
+                
             default:
                 OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
                 break;
