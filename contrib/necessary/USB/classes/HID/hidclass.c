@@ -71,7 +71,7 @@ static AROS_UFH3(void, HidInterrupt,
     
     HidData *hid = interruptData;
 
-    HIDD_USBHID_ParseReport(hid->o, hid->buffer);
+    HIDD_USBHID_ParseReport(hid->o, hid->buffer, hid->buflen);
 
     AROS_USERFUNC_EXIT
 }
@@ -79,14 +79,14 @@ static AROS_UFH3(void, HidInterrupt,
 BOOL METHOD(HID, Hidd_USBHID, GetReportDescriptor)
 {
     USBDevice_Request req;
-    intptr_t iface;
+    intptr_t ifnr;
     
-    OOP_GetAttr(o, aHidd_USBDevice_Interface, &iface);
+    OOP_GetAttr(o, aHidd_USBDevice_InterfaceNumber, &ifnr);
 
     req.bmRequestType = UT_READ_INTERFACE;
     req.bRequest = UR_GET_DESCRIPTOR;
     req.wValue = AROS_WORD2LE(UDESC_REPORT << 8 | 0);
-    req.wIndex = AROS_WORD2LE(iface);
+    req.wIndex = AROS_WORD2LE(ifnr);
     req.wLength = AROS_WORD2LE(msg->length);
 
     return HIDD_USBDevice_ControlMessage(o, NULL, &req, msg->buffer, msg->length); 
@@ -95,16 +95,34 @@ BOOL METHOD(HID, Hidd_USBHID, GetReportDescriptor)
 BOOL METHOD(HID, Hidd_USBHID, SetIdle)
 {
     USBDevice_Request req;
-    intptr_t iface;
+    intptr_t ifnr;
     
     D(bug("[HID] HID::SetIdle(%d, %d)\n", msg->duration, msg->id));
     
-    OOP_GetAttr(o, aHidd_USBDevice_Interface, &iface);
+    OOP_GetAttr(o, aHidd_USBDevice_InterfaceNumber, &ifnr);
 
     req.bmRequestType = UT_WRITE_CLASS_INTERFACE;
     req.bRequest = UR_SET_IDLE;
     req.wValue = AROS_WORD2LE(msg->duration << 8| msg->id);
-    req.wIndex = AROS_WORD2LE(iface);
+    req.wIndex = AROS_WORD2LE(ifnr);
+    req.wLength = AROS_WORD2LE(0);
+
+    return HIDD_USBDevice_ControlMessage(o, NULL, &req, NULL, 0); 
+}
+
+BOOL METHOD(HID, Hidd_USBHID, SetProtocol)
+{
+    USBDevice_Request req;
+    intptr_t ifnr;
+    
+    D(bug("[HID] HID::SetProtocol(%s)\n", msg->protocol ? "Report":"Boot"));
+    
+    OOP_GetAttr(o, aHidd_USBDevice_InterfaceNumber, &ifnr);
+
+    req.bmRequestType = UT_WRITE_CLASS_INTERFACE;
+    req.bRequest = UR_SET_PROTOCOL;
+    req.wValue = AROS_WORD2LE(msg->protocol);
+    req.wIndex = AROS_WORD2LE(ifnr);
     req.wLength = AROS_WORD2LE(0);
 
     return HIDD_USBDevice_ControlMessage(o, NULL, &req, NULL, 0); 
@@ -212,7 +230,7 @@ OOP_Object *METHOD(HID, Root, New)
             
             usb_endpoint_descriptor_t *ep = HIDD_USBDevice_GetEndpoint(o, iface, 0);
             
-            D(bug("[HID::New()] Endpoint descriptor %p\n", ep));
+            D(bug("[HID::New()] Endpoint descriptor %p addr %02x\n", ep, ep->bEndpointAddress));
             
             if (ep)
             {
