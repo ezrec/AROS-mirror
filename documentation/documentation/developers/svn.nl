@@ -131,7 +131,7 @@ op de volgende manier::
 Dit zal een map met de naam AROS creëren en deze vullen met alle sources. Dit kan
 enige tijd duren als u een langzame netwerk verbinding heeft.
 De aparte "contrib" module bevat programma's van derden die naar AROS overgezet zijn.
-U moet ook hier een checkout op toepassen mocht u alle AROS soorten willen bouwen.
+U moet ook hier een checkout toepassen mocht u alle AROS soorten willen bouwen::
 
     > cd AROS
     > svn checkout https://svn.aros.org:8080/svn/aros/trunk/contrib
@@ -239,7 +239,7 @@ plaats:
 
        > cd map-1.2.3
 
-3. Importeer de bestanden met het "svn import" commando::back-ups
+3. Importeer de bestanden met het "svn import" commando::
 
        > svn import -m <logMessage> <destinationPath>
        > svn import -m <logboodschap> <doelpad>

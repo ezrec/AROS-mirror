@@ -46,7 +46,7 @@ De laatste uploads voor de Archieven bevatten:
   niet-afbeelding delen van Exif type JPEG files die de meeste digitale camera's produceren. 
 
 - `Potrace`__ is een utility voor het traceren van bitmaps, wat bitmap afbeeldingen kan 
-   transformeren naar gladde vector afbeeldingen. 
+  transformeren naar gladde vector afbeeldingen. 
 
 __ http://archives.aros-exec.org/share/video/aros-dnd.avi
 __ http://www.aros.org/nl
