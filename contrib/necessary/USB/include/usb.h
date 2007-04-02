@@ -126,6 +126,7 @@ enum {
     aoHidd_USBDevice_ProductID,
     aoHidd_USBDevice_VendorID,
     aoHidd_USBDevice_Interface,
+    aoHidd_USBDevice_InterfaceNumber,
 
     aoHidd_USBDevice_ProductName,
     aoHidd_USBDevice_ManufacturerName,
@@ -145,6 +146,7 @@ enum {
 #define aHidd_USBDevice_ProductID           (HiddUSBDeviceAttrBase + aoHidd_USBDevice_ProductID)
 #define aHidd_USBDevice_VendorID            (HiddUSBDeviceAttrBase + aoHidd_USBDevice_VendorID)
 #define aHidd_USBDevice_Interface           (HiddUSBDeviceAttrBase + aoHidd_USBDevice_Interface)
+#define aHidd_USBDevice_InterfaceNumber     (HiddUSBDeviceAttrBase + aoHidd_USBDevice_InterfaceNumber)
 #define aHidd_USBDevice_ProductName         (HiddUSBDeviceAttrBase + aoHidd_USBDevice_ProductName)
 #define aHidd_USBDevice_ManufacturerName    (HiddUSBDeviceAttrBase + aoHidd_USBDevice_ManufacturerName)
 #define aHidd_USBDevice_SerialNumber        (HiddUSBDeviceAttrBase + aoHidd_USBDevice_SerialNumber)
