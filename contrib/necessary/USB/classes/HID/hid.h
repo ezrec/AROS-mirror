@@ -132,7 +132,15 @@ typedef struct KbdData {
     uint16_t                    reportLength;
 
     struct Process              *kbd_task;
-    void                        *data;
+
+    uint8_t                     *prev_code;
+    uint8_t                     *code;
+    
+    struct hid_location         loc_mod[8];
+    struct hid_location         loc_keycode;
+    uint8_t                     loc_modcnt;
+    uint8_t                     loc_keycnt;
+    
 } KbdData;
 
 enum hid_kind {
