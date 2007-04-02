@@ -107,6 +107,8 @@ OOP_Object *METHOD(USBMouse, Root, New)
 
         mouse->head = mouse->tail = 0;
         
+        HIDD_USBHID_SetProtocol(o, 1);
+        
         D(bug("[USBMouse::New()] Hid descriptor @ %p\n", mouse->hd));
         D(bug("[USBMouse::New()] Number of Report descriptors: %d\n", mouse->hd->bNumDescriptors));
         
