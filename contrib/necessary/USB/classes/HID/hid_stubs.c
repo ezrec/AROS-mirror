@@ -75,7 +75,21 @@ BOOL HIDD_USBHID_SetIdle(OOP_Object *obj, uint8_t duration, uint8_t id)
     return OOP_DoMethod(obj, &p.mID);
 }
 
-void HIDD_USBHID_ParseReport(OOP_Object *obj, void *report)
+BOOL HIDD_USBHID_SetProtocol(OOP_Object *obj, uint8_t protocol)
+{
+    STATIC_MID;
+
+    struct pHidd_USBHID_SetProtocol p;
+
+    if (!mid) mid = OOP_GetMethodID((STRPTR)IID_Hidd_USBHID, moHidd_USBHID_SetProtocol);
+
+    p.mID = mid;
+    p.protocol = protocol;
+
+    return OOP_DoMethod(obj, &p.mID);
+}
+
+void HIDD_USBHID_ParseReport(OOP_Object *obj, void *report, uint32_t report_length)
 {
     STATIC_MID;
     struct pHidd_USBHID_ParseReport p;
@@ -84,6 +98,7 @@ void HIDD_USBHID_ParseReport(OOP_Object *obj, void *report)
 
     p.mID = mid;
     p.report = report;
+    p.report_length = report_length;
 
     OOP_DoMethod(obj, &p.mID);
 }
