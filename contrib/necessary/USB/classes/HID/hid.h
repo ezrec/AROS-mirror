@@ -123,6 +123,11 @@ typedef struct MouseData {
     uint8_t head,tail;
 } MouseData;
 
+struct key_mod {
+    struct hid_location loc;
+    uint8_t             key;
+};
+
 typedef struct KbdData {
     struct hid_staticdata       *sd;
     OOP_Object                  *o;
@@ -133,10 +138,15 @@ typedef struct KbdData {
 
     struct Process              *kbd_task;
 
+    uint16_t                    prev_key;
+    uint16_t                    prev_prev_key;
+    uint16_t                    prev_qual;
+    uint16_t                    prev_prev_qual;
+    
     uint8_t                     *prev_code;
     uint8_t                     *code;
     
-    struct hid_location         loc_mod[8];
+    struct key_mod              loc_mod[8];
     struct hid_location         loc_keycode;
     uint8_t                     loc_modcnt;
     uint8_t                     loc_keycnt;
