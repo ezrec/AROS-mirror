@@ -1,0 +1,30 @@
+# $Id: mmakefile.src 24535 2006-06-12 20:26:01Z verhaegs $
+include $(TOP)/config/make.cfg
+
+#MM- contrib-cdvdfs: includes linklibs contrib-cdvdfs-module
+#MM- contrib-cdvdfs-quick: contrib-cdvdfs-module
+
+FILES := \
+	arosmain \
+	cdrom \
+	clib_stuff \
+	device \
+	devsupp \
+	generic \
+	hfs \
+	iso9660 \
+	intui \
+	path \
+	rock \
+	volumes \
+	joliet \
+	prefs \
+	charset
+
+USER_CFLAGS := -DAROS_KERNEL -DNDEBUG -DDEBUG=0
+
+%build_module mmake=contrib-cdvdfs \
+    modname=cdrom modtype=device modsuffix=handler \
+    files="arosdevice $(FILES)" \
+    uselibs="arossupport rom"
+

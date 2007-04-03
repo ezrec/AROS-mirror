@@ -1,0 +1,12 @@
+/* CDVDFS filesystem */
+
+ Handler    = L:cdrom-handler
+ Stacksize  = 10000
+ Priority   = 10
+ GlobVec    = -1
+ Mount      = 1
+ Device     = ide.device
+ Unit       = 3
+ BufMemType = 0
+ DosType    = 0x43444653
+ Control    = "ML R J"
