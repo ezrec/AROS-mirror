@@ -150,7 +150,10 @@ typedef struct KbdData {
     struct hid_location         loc_keycode;
     uint8_t                     loc_modcnt;
     uint8_t                     loc_keycnt;
-    
+#define LED_CAPSLOCK    1
+#define LED_NUMLOCK     2
+#define LED_SCROLLLOCK  4
+    uint8_t                     leds;
 } KbdData;
 
 enum hid_kind {

@@ -233,6 +233,37 @@ static inline ie_send(struct IOStdReq *req, struct InputEvent *ie, int iec)
     }
 }
 
+static uint16_t code2qual(uint16_t code)
+{
+    uint16_t qual = 0;
+    switch(code)
+    {
+        case 0xE0:
+        case 0xE4:
+            qual = IEQUALIFIER_CONTROL;
+            break;
+        case 0xE1:
+            qual = IEQUALIFIER_LSHIFT;
+            break;
+        case 0xE2:
+            qual = IEQUALIFIER_LALT;
+            break;
+        case 0xE3:
+            qual = IEQUALIFIER_LCOMMAND;
+            break;
+        case 0xE5:
+            qual = IEQUALIFIER_RSHIFT;
+            break;
+        case 0xE6:
+            qual = IEQUALIFIER_RALT;
+            break;
+        case 0xE7:
+            qual = IEQUALIFIER_RCOMMAND;
+            break;
+    }
+    return qual;
+}
+
 #define IE_NEXT \
     do {                                \
         iec++;                          \
@@ -291,106 +322,192 @@ static void kbd_process()
             
             iec = 0;
             uint16_t qual = PeekQualifier() & ~(0x1f);
-            
-            /* Process qualifiers */
-            
-            
-            /* Check all new keycode buffers */
-            for (i=0; i < kbd->loc_keycnt; i++)
-            {
-                int j;
-                
-                /* Code == 0? Ignore */
-                if (!kbd->code[i+1])
-                    continue;
-                
-                /* In case of failure assume that the previous report is the current one too
-                 * and do nothing else. */
-                if (kbd->code[i+1] == 1)
-                {
-                    CopyMem(kbd->prev_code, kbd->code, kbd->loc_keycnt + 1);
-                    bug("[USBKbd] ERROR! Too many keys pressed at once?\n");
-                    return;
-                }
-                
-                /* Check whether this code exists in previous buffer */
-                for (j=0; j < kbd->loc_keycnt; j++)
-                    if (kbd->code[i+1] == kbd->prev_code[j+1])
-                        break;
-                
-                /* Not in previous buffer. KeyDown event */
-                if (j >= kbd->loc_keycnt && keyconv[kbd->code[i+1]] != 0xff)
-                {            
-                    ie[iec].ie_Class            = IECLASS_RAWKEY;
-                    ie[iec].ie_SubClass         = 0;
-                    if (kbd->code[i+1] < sizeof(keyconv))
-                        ie[iec].ie_Code         = keyconv[kbd->code[i+1]];
-                    else
-                        ie[iec].ie_Code         = 0;
-                    ie[iec].ie_Qualifier        = qual;
-                    if (kbd->code[i+1] >= 0x54 &&  kbd->code[i+1] <= 0x63)
-                        ie[iec].ie_Qualifier    |= IEQUALIFIER_NUMERICPAD;
-                    
-                    ie[iec].ie_position.ie_dead.ie_prev1DownCode = kbd->prev_key;
-                    ie[iec].ie_position.ie_dead.ie_prev1DownQual = kbd->prev_qual;
-                    
-                    ie[iec].ie_position.ie_dead.ie_prev2DownCode = kbd->prev_prev_key;
-                    ie[iec].ie_position.ie_dead.ie_prev2DownQual = kbd->prev_prev_qual;
-                    
-                    IE_NEXT
-                    
-                    kbd->prev_prev_key = kbd->prev_key;
-                    kbd->prev_prev_qual = kbd->prev_qual;
-                    
-                    kbd->prev_key = ie[iec].ie_Code;
-                    kbd->prev_qual = ie[iec].ie_Qualifier;
-                    
-                    D(bug("[Kbd] KeyDown event for key %02x->%02x\n", kbd->code[i+1], ie[iec].ie_Code));
-                }
-            }
-            
-            /* check all old keycode buffers */
-            for (i=0; i < kbd->loc_keycnt; i++)
-            {
-                int j;
-                
-                /* Code == 0? Ignore */
-                if (!kbd->prev_code[i+1])
-                    continue;
-               
-                /* Check whether this code exists in previous buffer */
-                for (j=0; j < kbd->loc_keycnt; j++)
-                    if (kbd->prev_code[i+1] == kbd->code[j+1])
-                        break;
-                
-                /* Not in previous buffer. KeyDown event */
-                if (j >= kbd->loc_keycnt && keyconv[kbd->prev_code[i+1]] != 0xff)
-                {
-                    ie[iec].ie_Class            = IECLASS_RAWKEY;
-                    ie[iec].ie_SubClass         = 0;
-                    if (kbd->prev_code[i+1] < sizeof(keyconv))
-                        ie[iec].ie_Code         = keyconv[kbd->prev_code[i+1]];
-                    else
-                        ie[iec].ie_Code         = 0;
-                    ie[iec].ie_Qualifier        = qual;
-                    if (kbd->prev_code[i+1] >= 0x54 &&  kbd->prev_code[i+1] <= 0x63)
-                        ie[iec].ie_Qualifier    |= IEQUALIFIER_NUMERICPAD;
-                    
-                    ie[iec].ie_Code |= IECODE_UP_PREFIX;
+            uint8_t mod_up, mod_down;
 
-                    ie[iec].ie_position.ie_dead.ie_prev1DownCode = kbd->prev_key;
-                    ie[iec].ie_position.ie_dead.ie_prev1DownQual = kbd->prev_qual;
-                    
-                    ie[iec].ie_position.ie_dead.ie_prev2DownCode = kbd->prev_prev_key;
-                    ie[iec].ie_position.ie_dead.ie_prev2DownQual = kbd->prev_prev_qual;
-
-                    IE_NEXT
-                    
-                    D(bug("[Kbd] KeyUp event for key %02x->%02x\n", kbd->prev_code[i+1], ie[iec].ie_Code));
-                }
+            /* In case of failure assume that the previous report is the current one too
+             * and do nothing else. */
+            if (kbd->code[1] == 1)
+            {
+                CopyMem(kbd->prev_code, kbd->code, kbd->loc_keycnt + 1);
+                bug("[USBKbd] ERROR! Too many keys pressed at once?\n");
             }
-            
-            ie_send(req, ie, iec);
+            else
+            {
+                /* 
+                 * Process qualifiers from previous event. They will be adapted 
+                 * to the new state later 
+                 */
+                for (i=0; i < kbd->loc_modcnt; i++)
+                {
+                    if (kbd->prev_code[0] & (1 << i))
+                    {
+                        qual |= code2qual(kbd->loc_mod[i].key);
+                    }
+                }
+                
+                if (kbd->leds & LED_CAPSLOCK)
+                    qual |= IEQUALIFIER_CAPSLOCK;
+                
+                mod_up = (kbd->code[0]^kbd->prev_code[0]) & ~kbd->code[0];
+                mod_down = (kbd->code[0]^kbd->prev_code[0]) & kbd->code[0];
+                
+                D(bug("[Kbd] down:%02x up:%02x buff:%02x", mod_down, mod_up, kbd->code[0]));
+                for (i=0; i < kbd->loc_keycode.count; i++)
+                    D(bug(" %02x", kbd->code[i+1]));
+                
+                D(bug("  oldbuff:%02x", kbd->prev_code[0]));
+                for (i=0; i < kbd->loc_keycode.count; i++)
+                    D(bug(" %02x", kbd->prev_code[i+1]));
+    
+                D(bug("\n"));
+                
+                /* Process key up qualifiers */
+                for (i=0; i < kbd->loc_modcnt; i++)
+                {
+                    if (mod_up & (1 << i))
+                    {
+                        qual &= ~code2qual(kbd->loc_mod[i].key);
+                        
+                        ie[iec].ie_Class            = IECLASS_RAWKEY;
+                        ie[iec].ie_SubClass         = 0;
+                        ie[iec].ie_Code             = keyconv[kbd->loc_mod[i].key];
+                        ie[iec].ie_Qualifier        = qual;
+                        
+                        ie[iec].ie_Code |= IECODE_UP_PREFIX;
+    
+                        ie[iec].ie_position.ie_dead.ie_prev1DownCode = kbd->prev_key;
+                        ie[iec].ie_position.ie_dead.ie_prev1DownQual = kbd->prev_qual;
+                        
+                        ie[iec].ie_position.ie_dead.ie_prev2DownCode = kbd->prev_prev_key;
+                        ie[iec].ie_position.ie_dead.ie_prev2DownQual = kbd->prev_prev_qual;
+    
+                        D(bug("[Kbd] KeyUp event for key %02x->%02x\n", kbd->loc_mod[i].key, ie[iec].ie_Code));
+    
+                        IE_NEXT
+                    }
+                }
+    
+                /* Process key down qualifiers */
+                for (i=0; i < kbd->loc_modcnt; i++)
+                {
+                    if (mod_down & (1 << i))
+                    {
+                        qual |= code2qual(kbd->loc_mod[i].key);
+                        
+                        ie[iec].ie_Class            = IECLASS_RAWKEY;
+                        ie[iec].ie_SubClass         = 0;
+                        ie[iec].ie_Code             = keyconv[kbd->loc_mod[i].key];
+                        ie[iec].ie_Qualifier        = qual;
+    
+                        ie[iec].ie_position.ie_dead.ie_prev1DownCode = kbd->prev_key;
+                        ie[iec].ie_position.ie_dead.ie_prev1DownQual = kbd->prev_qual;
+                        
+                        ie[iec].ie_position.ie_dead.ie_prev2DownCode = kbd->prev_prev_key;
+                        ie[iec].ie_position.ie_dead.ie_prev2DownQual = kbd->prev_prev_qual;
+    
+                        D(bug("[Kbd] KeyDown event for key %02x->%02x\n", kbd->loc_mod[i].key, ie[iec].ie_Code));
+    
+                        kbd->prev_prev_key = kbd->prev_key;
+                        kbd->prev_prev_qual = kbd->prev_qual;
+                        
+                        kbd->prev_key = ie[iec].ie_Code;
+                        kbd->prev_qual = ie[iec].ie_Qualifier;
+    
+                        IE_NEXT
+                    }
+                }
+    
+                if (kbd->leds & LED_CAPSLOCK)
+                    qual |= IEQUALIFIER_CAPSLOCK;
+                
+                /* Check all new keycode buffers */
+                for (i=0; i < kbd->loc_keycnt; i++)
+                {
+                    int j;
+                    
+                    /* Code == 0? Ignore */
+                    if (!kbd->code[i+1])
+                        continue;
+                                    
+                    /* Check whether this code exists in previous buffer */
+                    for (j=0; j < kbd->loc_keycnt; j++)
+                        if (kbd->code[i+1] == kbd->prev_code[j+1])
+                            break;
+                    
+                    /* Not in previous buffer. KeyDown event */
+                    if (j >= kbd->loc_keycnt && keyconv[kbd->code[i+1]] != 0xff)
+                    {            
+                        ie[iec].ie_Class            = IECLASS_RAWKEY;
+                        ie[iec].ie_SubClass         = 0;
+                        if (kbd->code[i+1] < sizeof(keyconv))
+                            ie[iec].ie_Code         = keyconv[kbd->code[i+1]];
+                        else
+                            ie[iec].ie_Code         = 0;
+                        ie[iec].ie_Qualifier        = qual;
+                        if (kbd->code[i+1] >= 0x54 &&  kbd->code[i+1] <= 0x63)
+                            ie[iec].ie_Qualifier    |= IEQUALIFIER_NUMERICPAD;
+                        
+                        ie[iec].ie_position.ie_dead.ie_prev1DownCode = kbd->prev_key;
+                        ie[iec].ie_position.ie_dead.ie_prev1DownQual = kbd->prev_qual;
+                        
+                        ie[iec].ie_position.ie_dead.ie_prev2DownCode = kbd->prev_prev_key;
+                        ie[iec].ie_position.ie_dead.ie_prev2DownQual = kbd->prev_prev_qual;
+                        
+                        D(bug("[Kbd] KeyDown event for key %02x->%02x\n", kbd->code[i+1], ie[iec].ie_Code));
+                        
+                        kbd->prev_prev_key = kbd->prev_key;
+                        kbd->prev_prev_qual = kbd->prev_qual;
+                        
+                        kbd->prev_key = ie[iec].ie_Code;
+                        kbd->prev_qual = ie[iec].ie_Qualifier;
+    
+                        IE_NEXT
+                    }
+                }
+                
+                /* check all old keycode buffers */
+                for (i=0; i < kbd->loc_keycnt; i++)
+                {
+                    int j;
+                    
+                    /* Code == 0? Ignore */
+                    if (!kbd->prev_code[i+1])
+                        continue;
+                   
+                    /* Check whether this code exists in previous buffer */
+                    for (j=0; j < kbd->loc_keycnt; j++)
+                        if (kbd->prev_code[i+1] == kbd->code[j+1])
+                            break;
+                    
+                    /* Not in previous buffer. KeyDown event */
+                    if (j >= kbd->loc_keycnt && keyconv[kbd->prev_code[i+1]] != 0xff)
+                    {
+                        ie[iec].ie_Class            = IECLASS_RAWKEY;
+                        ie[iec].ie_SubClass         = 0;
+                        if (kbd->prev_code[i+1] < sizeof(keyconv))
+                            ie[iec].ie_Code         = keyconv[kbd->prev_code[i+1]];
+                        else
+                            ie[iec].ie_Code         = 0;
+                        ie[iec].ie_Qualifier        = qual;
+                        if (kbd->prev_code[i+1] >= 0x54 &&  kbd->prev_code[i+1] <= 0x63)
+                            ie[iec].ie_Qualifier    |= IEQUALIFIER_NUMERICPAD;
+                        
+                        ie[iec].ie_Code |= IECODE_UP_PREFIX;
+    
+                        ie[iec].ie_position.ie_dead.ie_prev1DownCode = kbd->prev_key;
+                        ie[iec].ie_position.ie_dead.ie_prev1DownQual = kbd->prev_qual;
+                        
+                        ie[iec].ie_position.ie_dead.ie_prev2DownCode = kbd->prev_prev_key;
+                        ie[iec].ie_position.ie_dead.ie_prev2DownQual = kbd->prev_prev_qual;
+                        
+                        D(bug("[Kbd] KeyUp event for key %02x->%02x\n", kbd->prev_code[i+1], ie[iec].ie_Code));
+    
+                        IE_NEXT
+                    }
+                }
+                
+                ie_send(req, ie, iec);
+            }
         }
     }    
 }
