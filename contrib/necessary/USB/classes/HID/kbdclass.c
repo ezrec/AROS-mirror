@@ -102,6 +102,9 @@ void METHOD(USBKbd, Hidd_USBHID, ParseReport)
     
     CopyMem(kbd->code, kbd->prev_code, kbd->loc_keycnt + 1);
 
+    /* Clear the modifier code */
+    kbd->code[0] = 0;
+
     for (i=0; i < kbd->loc_modcnt; i++)
     {
         if (hid_get_data(msg->report, &kbd->loc_mod[i].loc))
