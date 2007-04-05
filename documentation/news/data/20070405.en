@@ -11,7 +11,7 @@ Skinnable Wanderer
 Another important step in AROS customization has been done. Darius 
 Brewka and Georg Steger have added a new decor system to Wanderer, 
 allowing user to edit and change themes. Damir Sijakovic's ICE theme 
-has been used as an example and it is now the dafault theme for AROS 
+has been used as an example and it is now the default theme for AROS 
 nightly builds. Please look at this screenshot (`full version`__):
 
 .. image:: /images/20070405.jpeg
@@ -21,7 +21,7 @@ nightly builds. Please look at this screenshot (`full version`__):
 Isn't it nice? Anyway, we're trying to make AROS more stylish and 
 nice to see. So any kind of artistry contribution (themes, icons, 
 wallpapers, gadgets and so on) is very well accepted. Please look 
-at `aros-exec`__ for further informations.
+at `AROS-Exec`__ for further informations.
 
 
 Incredible news
@@ -41,15 +41,15 @@ change its type to SFS and give this shell command:
 
   FORMAT DRIVE=DH1: NAME=MyVolume
 
-Please notice that AROS can't boot from SFS yet. So you have to 
-create a little FFS partition to put kernel and boot files to let 
-GRUB make its job.
+Please notice that GRUB can't boot AROS from SFS yet. So you have to 
+create a little FFS (or EXT3, or FAT) partition to put kernel and boot files 
+and let GRUB make its job.
 
 Pavel is also working on a new CD filesystem called CDVDFS, which 
 currently supports CD and DVD with joliet extensions. It will be 
 put into nightlies as soon as some bugs are fixed.
 
-Matthias Rustler has updated AROS LUA to version 5.1.2. `here`__ 
+Matthias Rustler has updated AROS LUA to version 5.1.2. `Here`__ 
 is a list of fixed bugs. Matthias has also created a new 
 DepthMenu commodity. When the user right-clicks on the depth 
 gadget, it opens a popup menu with all open windows, allowing 
