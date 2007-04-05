@@ -45,7 +45,7 @@ ha aggiornato il comando format per gestire filesystem diversi.
 Per formattare una partizione SFS, occorre prima generarla con 
 HDToolBox e poi formattarla con questo comando:
 
-FORMAT DRIVE=DH1: NAME=MyVolume
+  FORMAT DRIVE=DH1: NAME=MyVolume
 
 Per cortesia si noti che AROS non può ancora eseguire il boot da 
 una partizione SFS, per cui occorre sempre creare una piccola 

@@ -39,7 +39,7 @@ updated format command to handle different filesystems. In order
 to format a SFS partition, you should create it with HDToolBox, 
 change its type to SFS and give this shell command:
 
-FORMAT DRIVE=DH1: NAME=MyVolume
+  FORMAT DRIVE=DH1: NAME=MyVolume
 
 Please notice that AROS can't boot from SFS yet. So you have to 
 create a little FFS partition to put kernel and boot files to let 
