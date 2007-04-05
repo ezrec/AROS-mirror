@@ -1,0 +1,80 @@
+=============
+Aggiornamento
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-04-05
+
+Wanderer cambia pelle!
+----------------------
+
+Darius Brewka e Georg Steger hanno fatto compiere ad AROS un 
+deciso balzo in avanti sul fronte della personalizzazione, grazie 
+a un nuovo sistema di decorazioni che consente di usare temi 
+grafici diversi. Allo scopo di mostrare la potenza e la flessibilità 
+del nuovo decor system, le nightly build di AROS montano come tema 
+predefinito ICE di Damir Sijakovic's. Ma dato che un'immagine vale 
+più di mille parole, guardate un po' questa foto (la versione 
+completa è disponibile `qui`__):
+
+.. image:: /images/20070405.jpeg
+   :alt: AROS decorated desktop
+   :align: center
+
+Non è meravigliosa? In ogni caso, stiamo cercando di rendere AROS 
+molto più bello da vedere. Quindi qualsiasi tipo di contributo 
+artistico (dalle icone ai temi, passando per gli sfondi, i gadget 
+e tutto il resto) è davvero ben accetto. Per cortesia, fate 
+riferimento a `questa discussione su Aros-Exec`__ per ulteriori 
+informazioni. 
+
+Incredibili notizie
+-------------------
+
+Michal Schulz sta lavorando su un driver per tastiere USB 
+compatibile con il suo stack. Ha realizzato una versione iniziale 
+che dovrebbe funzionare piuttosto bene (rileva correttamente 
+i tasti, ma i LED ancora non funzionano). Vi rammentiamo che, per 
+il momento, AROS è compatibile solo con sistemi dotati di 
+controller USB di tipo UHCI.
+
+Il filesystem SFS fa ora parte ufficialmente delle build notturne. 
+Questo dovrebbe consentire agli utenti di montare e usare le 
+partizioni SFS con maggiore facilità e sicurezza. Pavel Fedin 
+ha aggiornato il comando format per gestire filesystem diversi. 
+Per formattare una partizione SFS, occorre prima generarla con 
+HDToolBox e poi formattarla con questo comando:
+
+FORMAT DRIVE=DH1: NAME=MyVolume
+
+Per cortesia si noti che AROS non può ancora eseguire il boot da 
+una partizione SFS, per cui occorre sempre creare una piccola 
+partizione FFS in cui piazzare il kernel e i file di boot, 
+altrimenti GRUB non può fare il suo lavoro.
+
+Pavel sta anche lavorando su un nuovo filesystem per CD chiamato 
+CDVDFS, in grado di supportare CD e DVD con estensioni joliet (i 
+nomi lunghi di Windows). Sarà inserito nelle nightly build non 
+appena alcuni bug che ne impediscono il funzionamento saranno 
+corretti.
+
+Matthias Rustler ha aggiornato LUA alla versione 5.1.2. `Qui`__ 
+potete leggere una lista dei bug corretti. Matthias ha inoltre
+aggiunto ad AROS una nuova commodity chiamata DepthMenu, che 
+permette di scegliere quale finestra attivare semplicemente 
+facendo clic con il tasto destro del mouse sul gadget di 
+profondità di qualsiasi finestra. 
+
+Staf Verhaegen ha migliorato il supporto per gli scritp di 
+ARexx/Regina. Ora AROS ha un simpaticissimo comando RX che 
+permette di avviare da Wanderer i vostri script preferiti.
+
+Grazie a Bernd Roesch, ZUNE può usare le immagini MUI4 (.mim). 
+Pavel Fedin ha corretto alcuni crash nella classe pendisplay, 
+quando non ci sono pen disponibili sullo schermo. Paolo Besser, 
+infine, ha aggiunto alcune icone che mancavano, rivedendone 
+altre.
+
+__ http://aros-exec.org/modules/xcgal/displayimage.php?pid=239
+__ http://aros-exec.org/modules/news/article.php?storyid=227
+__ http://www.lua.org/bugs.html#5.1.1

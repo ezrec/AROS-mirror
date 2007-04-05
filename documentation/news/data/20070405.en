@@ -1,0 +1,70 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-04-05
+
+Skinnable Wanderer
+------------------
+
+Another important step in AROS customization has been done. Darius 
+Brewka and Georg Steger have added a new decor system to Wanderer, 
+allowing user to edit and change themes. Damir Sijakovic's ICE theme 
+has been used as an example and it is now the dafault theme for AROS 
+nightly builds. Please look at this screenshot (`full version`__):
+
+.. image:: /images/20070405.jpeg
+   :alt: AROS decorated desktop
+   :align: center
+
+Isn't it nice? Anyway, we're trying to make AROS more stylish and 
+nice to see. So any kind of artistry contribution (themes, icons, 
+wallpapers, gadgets and so on) is very well accepted. Please look 
+at `aros-exec`__ for further informations.
+
+
+Incredible news
+---------------
+
+Michal Schulz is working on a keyboard driver for his USB stack. 
+He has commited an initial version that should work almost well 
+(should handle keys correctly, but LEDs won't work). Please 
+remember that AROS is still only compatible to UHCI USB 
+controllers at this stage. 
+
+SFS filesystem now builds automatically. This allow users to mount 
+and use SFS partitions in a safer and easier way. Pavel Fedin has 
+updated format command to handle different filesystems. In order 
+to format a SFS partition, you should create it with HDToolBox, 
+change its type to SFS and give this shell command:
+
+FORMAT DRIVE=DH1: NAME=MyVolume
+
+Please notice that AROS can't boot from SFS yet. So you have to 
+create a little FFS partition to put kernel and boot files to let 
+GRUB make its job.
+
+Pavel is also working on a new CD filesystem called CDVDFS, which 
+currently supports CD and DVD with joliet extensions. It will be 
+put into nightlies as soon as some bugs are fixed.
+
+Matthias Rustler has updated AROS LUA to version 5.1.2. `here`__ 
+is a list of fixed bugs. Matthias has also created a new 
+DepthMenu commodity. When the user right-clicks on the depth 
+gadget, it opens a popup menu with all open windows, allowing 
+a faster selection.
+
+Staf Verhaegen has improved support for ARexx/Regina scripts. 
+There is a new rx command in AROS, waiting to execute all your 
+ARexx scripts.
+
+Thanks to Bernd Roesch, ZUNE can now use MUI4 images (.mim files). 
+Pavel Fedin has fixed crash in pendisplay class when there's no 
+free pens on the screen. Some new Gorilla Icons had been added 
+by Paolo Besser.
+
+
+__ http://aros-exec.org/modules/xcgal/displayimage.php?pid=239
+__ http://aros-exec.org/modules/news/article.php?storyid=227
+__ http://www.lua.org/bugs.html#5.1.1
