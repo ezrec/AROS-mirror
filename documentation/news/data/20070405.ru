@@ -47,24 +47,24 @@ Michal Schulz работает над драйвером клавиатур для своего USB-стэка.
 раздела SFS. Поэтому придётся создать небольшой раздел FFS (EXT3/FAT) для
 файлов ядра и загрузчика, чтобы GRUB смог работать с ними.
 
-Pavel is also working on a new CD filesystem called CDVDFS, which 
-currently supports CD and DVD with joliet extensions. It will be 
-put into nightlies as soon as some bugs are fixed.
+Павел также разрабатывает новую файловую систему для CD под названием CDVDFS,
+поддерживающую CD и DVD с расширениями Joliet. После того, как найденные ошибки 
+будут исправлены, она будет введена в состав ночных сборок.
 
-Matthias Rustler has updated AROS LUA to version 5.1.2. `here`__ 
-is a list of fixed bugs. Matthias has also created a new 
-DepthMenu commodity. When the user right-clicks on the depth 
-gadget, it opens a popup menu with all open windows, allowing 
-a faster selection.
 
-Staf Verhaegen has improved support for ARexx/Regina scripts. 
-There is a new rx command in AROS, waiting to execute all your 
-ARexx scripts.
+Matthias Rustler обновил интерпретатор языка AROS LUA до текущей версии 5.1.2.
+Список исправленных ошибок можно просмотреть `здесь`__. Также он представил 
+новое Удобство - DepthMenu. Если пользователь нажмёт правую кнопку мыши на 
+элементе смены уровня окна (крайнем справа), открывается всплывающее меню
+со списком открытых окон, позволяя быстро переключаться между ними.
 
-Thanks to Bernd Roesch, ZUNE can now use MUI4 images (.mim files). 
-Pavel Fedin has fixed crash in pendisplay class when there's no 
-free pens on the screen. Some new Gorilla Icons had been added 
-by Paolo Besser.
+Staf Verhaegen улучшил поддержку скриптов ARexx/Regina. Теперь доступна новая
+команда rx, позволяющая исполнять ваши скрипты в окне CLI.
+
+Благодаря Bernd Roesch, ZUNE теперь может использовать изображения формата MUI4
+(файлы .mim). Павел Федин исправил падение системы из-за ошибки в классе 
+pendisplay в случае, если для экрана нет свободных перьев. Несколько новых
+иконок из темы Gorilla были добавлены Paolo Besser.
 
 
 __ http://aros-exec.org/modules/xcgal/displayimage.php?pid=239

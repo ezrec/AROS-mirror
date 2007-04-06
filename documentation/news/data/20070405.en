@@ -46,17 +46,17 @@ create a little FFS (or EXT3, or FAT) partition to put kernel and boot files
 and let GRUB make its job.
 
 Pavel is also working on a new CD filesystem called CDVDFS, which 
-currently supports CD and DVD with joliet extensions. It will be 
+currently supports CD and DVD with Joliet extensions. It will be 
 put into nightlies as soon as some bugs are fixed.
 
 Matthias Rustler has updated AROS LUA to version 5.1.2. `Here`__ 
 is a list of fixed bugs. Matthias has also created a new 
 DepthMenu commodity. When the user right-clicks on the depth 
-gadget, it opens a popup menu with all open windows, allowing 
-a faster selection.
+gadget (window`s right-edge gadget), it opens a popup menu with all open windows, 
+allowing a faster selection.
 
 Staf Verhaegen has improved support for ARexx/Regina scripts. 
-There is a new rx command in AROS, waiting to execute all your 
+There is a new rx command in AROS, waiting in CLI to execute all your 
 ARexx scripts.
 
 Thanks to Bernd Roesch, ZUNE can now use MUI4 images (.mim files). 

@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright ¦ 1995-2006, The AROS Development Team
+:Copyright: Copyright ² 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. Can be translated.
@@ -349,15 +349,19 @@ time for some CLI magic.
 Formatting
 ^^^^^^^^^^
 
-We must format our created DH0 drive to make it usable. We set it to
-FFS, because our bootloader (GRUB) is not yet supporting SFS. Also please 
-note that you can get problems using some ported software with SFS (such as gcc).
-So now open the CLI window (right click on upper menu and select Shell from the
-first Wanderer menu). At the prompt, enter the Info command (type
-``info`` and press Enter). You should see our DH0 in the list as ``DH0:
-Not a valid DOS disk``. Now we will format it with the command::
+We must format our created DH0 drive to make it usable. Currently AROS have
+a choice of two filesystems - Fast FileSystem(FFS) and Smart FileSystem(SFS). 
+FFS is known to be somewhat more stable and compatible to most programs,
+SFS is more fail-proof and advanced, but yet have some issues with some programs.
+Currently we must set it to FFS, because GRUB bootloader is not supporting SFS
+(GRUB2 will). Also please note that you can get problems using some ported 
+software with SFS (such as gcc). So now open the CLI window (right click on 
+upper menu and select Shell from the first Wanderer menu). At the prompt, enter 
+the Info command (type ``info`` and press Enter). You should see our DH0 in 
+the list as ``DH0: Not a valid DOS disk``. Now we will format it with the 
+command::
 
-    >format DRIVE=DH0: NAME=AROS
+    >format DRIVE=DH0: NAME=AROS FFS INTL
     About to format drive DH0:. This will destroy all data on the drive. Are 
     you sure ? (y/N)
 
@@ -367,7 +371,8 @@ partition parameters in HDToolbox, as you may be missing something, and
 repeat.
 
 If you`re experiencing problems with format (such as ERROR messages, especially
-when using partitions in RDB) then you can try a good old Amiga utility::
+when using partitions in RDB), which is unlikely, then you can try a good old 
+Amiga FORMAT64 utility::
 
     >extras/aminet/format64 DRIVE DH0: Name AROS FFS INTL
 
@@ -393,6 +398,11 @@ Copying the system
 
 After reboot, you may notice that you can see our AROS HD on the desktop
 now, and it's empty. Now we need to fill it with files.
+
+Now after the Drag`n`Drop support developed in AROS the whole system can be 
+easily copyed from LiveCD by just dragging files to DH0: drawer. It`s only
+left to replace the file dh0:boot/grub/menu.lst with dh0:boot/grub/menu_dh.lst.DH0
+then.
 
 There's an installer in AROS, as incomplete as HDToolbox is, but it can
 be used. At least, we can try. So, here's the first way to install.
@@ -454,7 +464,8 @@ Installing the bootloader
 Now we still see our AROS disk, and all files are there. Haven`t we
 already installed the bootloader in previous steps, what are we
 missing? 
-Well, if you use fresh nightly build then GRUB must be already installed
+Well, if you use fresh nightly build then 'GRUB <http://en.wikipedia.org/wiki/GRUB>'__ 
+must be already installed
 and working, you can skip this step. If not, please read.
 
 For older versions (before nov. 2006)
@@ -471,11 +482,10 @@ machine.
 
 Alternatively, GRUB can be installed from shell with this command::
 
-    c:install-i386-pc device ata.device unit 0 PARTITIONNUMBER=PN grub dh0:boot/grub kernel dh0:boot/aros-i386.gz
+    c:install-i386-pc device ata.device unit 0 PN <pn> grub dh0:boot/grub kernel dh0:boot/aros-i386.gz
 
-where PARTITIONNUMBER=<PN> is the number of partition where GRUB bootloader
-will be installed.
-
+where PN <pn> (or PARTITIONNUMBER <pn>) is the number of partition where GRUB 
+bootloader will be installed.
 
 
 Preparing to boot
@@ -505,8 +515,10 @@ AROS and Windows
 
 Let`s consider the situation when you have only Windows(tm) XP installed and 
 want to put AROS to this HDD.
+Windows NT systems can be installed on both FAT and NTFS filesystems. 
+While NTFS is way more secure and robust, it`s not supported by GRUB (unfortunately)
 
-AROS and Linux (and other OS uses GRUB)
+AROS and Linux (and other OS which uses GRUB bootloader)
 
 Lets consider the situation when you want to have 3 systems on your HDD -
 Windows, Linux and AROS.  
