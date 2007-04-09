@@ -11,6 +11,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 08-Apr-07 sonic   - removed redundant "TRACKDISK" option
  * 31-Mar-07 sonic   - added Joliet support.
  *                   - removed static buffer in Get_Directory_Record().
  * 20-Aug-94   fmu   Uses function Find_Last_Session() before the traversal
@@ -104,7 +105,7 @@ t_ulong *buf;
 		If Data_Tracks() returns -1, then the drive probably doesn't support
 		the SCSI-2 READ TOC command.
 	*/
-	if (p_cdrom->use_trackdisk || (len = Data_Tracks(p_cdrom, &buf)) < 0)
+	if ((len = Data_Tracks(p_cdrom, &buf)) < 0)
 	{
 		*p_offset = 0;
 		if (!Read_Sector(p_cdrom, 16))

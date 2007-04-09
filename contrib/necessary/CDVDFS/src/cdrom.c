@@ -10,6 +10,9 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 08-Apr-07 sonic     - Removed redundant TRACKDISK option.
+ *                     - Added trackdisk64 support.
+ *                     - Removed unneeded dealing with block length.
  * 07-Jul-02 sheutlin  various changes when porting to AROS
  *                     - global variables are now in a struct Globals *global
  * 02-Sep-94   fmu   Display READ TOC for Apple CD 150 drives.
@@ -44,9 +47,14 @@
 #include <proto/alib.h>
 #include <proto/exec.h>
 #include <devices/trackdisk.h>
+
+#ifndef TD_READ64
+#include <devices/newstyle.h>
+#define TD_READ64 NSCMD_TD_READ64
+#endif
+
 #include <limits.h>
 #include <string.h>
-
 #include <stdio.h>
 
 #include "cdrom.h"
@@ -93,7 +101,6 @@ CDROM *Open_CDROM
 	(
 		char *p_device,
 		int p_scsi_id,
-		int p_use_trackdisk,
 		unsigned long p_memory_type,
 		int p_std_buffers,
 		int p_file_buffers
@@ -180,13 +187,9 @@ int bufs = p_std_buffers + p_file_buffers + 1;
 	for (i=0; i<bufs; i++)
 		cd->current_sectors[i] = -1;
 
-	if (p_use_trackdisk)
-	{
-		cd->scsireq->io_Command = CMD_CLEAR;
-		DoIO ((struct IORequest *) cd->scsireq);
-	}
+	cd->scsireq->io_Command = CMD_CLEAR;
+	DoIO ((struct IORequest *) cd->scsireq);
 
-	cd->use_trackdisk = p_use_trackdisk;
 	cd->t_changeint = -1;
 	cd->t_changeint2 = -2;
 
@@ -200,34 +203,6 @@ int bufs = p_std_buffers + p_file_buffers + 1;
 
 	Determine_Drive_Type(cd);
 
-	if (global->g_ignore_blocklength)
-	{
-		cd->block_length = 0;
-		cd->blocking_factor = 0;
-	}
-	else
-	{
-		cd->block_length = Block_Length(cd);
-		switch (cd->block_length)
-		{
-		case 2048:
-			cd->blocking_factor = 0;
-			break;
-		case 1024:
-			cd->blocking_factor = 1;
-			break;
-		case 512:
-			cd->blocking_factor = 2;
-			break;
-		case 0:
-			cd->blocking_factor = 0;
-			break;
-		default:
-			global->g_cdrom_errno = CDROMERR_BLOCKSIZE;
-			Cleanup_CDROM(cd);
-			return NULL;
-		}
-	}
 	return cd;
 }
 
@@ -279,39 +254,24 @@ int Read_From_Drive
 		int p_number_of_sectors
 	)
 {
-static unsigned char cmd[10] = { 0x28, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 int bufs = p_cd->std_buffers + p_cd->file_buffers + 1;
 
-	if (p_cd->use_trackdisk)
-	{
-		p_cd->scsireq->io_Length   = 2048 * p_number_of_sectors;
-		p_cd->scsireq->io_Data     = (APTR) p_buf;
-		p_cd->scsireq->io_Offset   = (ULONG) p_sector * 2048;
-		p_cd->scsireq->io_Command  = CMD_READ;
+	p_cd->scsireq->io_Length   = 2048 * p_number_of_sectors;
+	p_cd->scsireq->io_Data     = (APTR) p_buf;
+	p_cd->scsireq->io_Offset   = (ULONG) p_sector << 11;
+	p_cd->scsireq->io_Actual   = (ULONG) p_sector >> 21;
+	p_cd->scsireq->io_Command  = p_cd->scsireq->io_Actual ? TD_READ64 : CMD_READ;
 
-		DoIO ((struct IORequest *) p_cd->scsireq);
-		if (p_cd->scsireq->io_Error)
-		{
-		int i;
-			for (i=0; i<bufs; i++)
-				p_cd->current_sectors[i] = -1;
-			return 0;
-		}
-		else
-			return 1;
+	DoIO ((struct IORequest *) p_cd->scsireq);
+	if (p_cd->scsireq->io_Error)
+	{
+	int i;
+		for (i=0; i<bufs; i++)
+			p_cd->current_sectors[i] = -1;
+		return 0;
 	}
 	else
-	{
-	long sector = p_sector << p_cd->blocking_factor;
-		cmd[5] = sector & 0xff;
-		cmd[4] = (sector >> 8) & 0xff;
-		cmd[3] = (sector >> 16) & 0x1f;
-
-		cmd[8] = p_number_of_sectors << p_cd->blocking_factor;
-
-		return Do_SCSI_Command
-					(p_cd, p_buf, p_buf_length, cmd, sizeof (cmd), SCSIF_READ);
-	}
+		return 1;
 }
 
 /* Read one sector from the CDROM drive.
@@ -413,31 +373,19 @@ int Read_Contiguous_Sectors
 }
 
 int Test_Unit_Ready(CDROM *p_cd) {
-
-	if (p_cd->use_trackdisk)
+	p_cd->scsireq->io_Command = TD_CHANGENUM;
+	if (!DoIO ((struct IORequest *) p_cd->scsireq))
 	{
-		p_cd->scsireq->io_Command = TD_CHANGENUM;
-		if (!DoIO ((struct IORequest *) p_cd->scsireq))
-		{
-			if (p_cd->scsireq->io_Error==0)
-				p_cd->t_changeint = p_cd->scsireq->io_Actual;
-		}
-		p_cd->scsireq->io_Command = TD_CHANGESTATE;
-		if (!DoIO ((struct IORequest *) p_cd->scsireq))
-		{
-			if (p_cd->scsireq->io_Error==0 && p_cd->scsireq->io_Actual==0)
-				return TRUE;
-		}
-		return FALSE;
+		if (p_cd->scsireq->io_Error==0)
+			p_cd->t_changeint = p_cd->scsireq->io_Actual;
 	}
-	else
+	p_cd->scsireq->io_Command = TD_CHANGESTATE;
+	if (!DoIO ((struct IORequest *) p_cd->scsireq))
 	{
-	int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
-	static unsigned char cmd[6] = { 0, 0, 0, 0, 0, 0 };
-
-		return Do_SCSI_Command
-					(p_cd,p_cd->buffers[dummy_buf],SCSI_BUFSIZE, cmd, 6, SCSIF_READ);
+		if (p_cd->scsireq->io_Error==0 && p_cd->scsireq->io_Actual==0)
+			return TRUE;
 	}
+	return FALSE;
 }
 
 int Is_XA_Mode_Disk(CDROM *p_cd) {
@@ -461,23 +409,6 @@ static unsigned char mode[12] =
 	{ 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0 };
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
 
-	if (p_cd->use_trackdisk)
-		return FALSE;
-
-	p_cd->block_length = p_block_length;
-	switch (p_cd->block_length)
-	{
-	case 2048:
-		p_cd->blocking_factor = 0;
-		break;
-	case 1024:
-		p_cd->blocking_factor = 1;
-		break;
-	case 512:
-		p_cd->blocking_factor = 2;
-		break;
-	}
-
 	mode[4] = p_mode;
 	mode[9] = p_block_length >> 16;
 	mode[10] = (p_block_length >> 8) & 0xff;
@@ -492,9 +423,7 @@ int Inquire (CDROM *p_cd, t_inquiry_data *p_data)
 {
 static unsigned char cmd[6] = { 0x12, 0, 0, 0, 96, 0 };
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
-  
-	if (p_cd->use_trackdisk)
-		return FALSE;
+
 	if (!Do_SCSI_Command(p_cd,p_cd->buffers[dummy_buf],96,cmd,6,SCSIF_READ))
 		return FALSE;
 
@@ -513,9 +442,6 @@ t_toc_data *Read_TOC
 static unsigned char cmd[10] =
 	{ 0x43, 0, 0, 0, 0, 0, 0, TOC_SIZE >> 8, TOC_SIZE & 0xff, 0 };
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
-
-	if (p_cd->use_trackdisk)
-		return NULL;
 
 	if (p_cd->model == MODEL_CDU_8002) /* READ TOC not supported by this drive */
 		return NULL;
@@ -608,12 +534,6 @@ t_toc_header hdr;
 t_toc_data *toc;
 int i, len;
 
-	if (p_cd->use_trackdisk)
-	        return FALSE;
-
-	if (p_cd->model == MODEL_CDU_8002)
-		cmd[0] = 0xC9;
-
         toc = Read_TOC (p_cd, &hdr);
 	if (!toc)
 		return FALSE;
@@ -646,27 +566,7 @@ int Stop_Play_Audio(CDROM *p_cd) {
 static unsigned char cmd[6] = { 0x1B, 0, 0, 0, 0, 0 };
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
 
-	if (p_cd->use_trackdisk)
-	return FALSE;
-
 	return Do_SCSI_Command(p_cd,p_cd->buffers[dummy_buf],0,cmd,6,SCSIF_WRITE);
-}
-
-int Block_Length(CDROM *p_cd) {
-static unsigned char cmd[6] = { 0x1A, 0, 1, 0, 100, 0 };
-int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
-unsigned char *buf = p_cd->buffers[dummy_buf];
-
-	if (p_cd->use_trackdisk)
-		return 0;
-
-	if (!Do_SCSI_Command(p_cd,buf,100,cmd,6,SCSIF_READ))
-		return 0;
-
-	if (buf[3] == 0)
-		return 0;
-
-	return (buf[9]<<16) + (buf[10]<<8) + buf[11];
 }
 
 void Cleanup_CDROM (CDROM *p_cd) {
@@ -711,9 +611,6 @@ static unsigned char cmd[10] = { 0xC7, 3, 0, 0, 0, 0, 0, 0, 0, 0 };
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
 unsigned char *buf = p_cd->buffers[dummy_buf];
 int min, sec, frame;
-
-	if (p_cd->use_trackdisk)
-		return FALSE;
 
 	if (p_cd->model != MODEL_TOSHIBA_3401)
 		return FALSE;

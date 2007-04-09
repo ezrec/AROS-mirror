@@ -2,7 +2,7 @@
  *
  * Support routines for the device handler.
  * - debugging
- * - Mountlist "Startup" field parsing
+ * - Mountlist parsing
  *
  * ----------------------------------------------------------------------
  * This code is (C) Copyright 1993,1994 by Frank Munkert.
@@ -12,6 +12,7 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 08-Apr-07 sonic     - removed redundant "TRACKDISK" option
  * 31-Mar-07 sonic     - merged together 2 versions of Get_Startup(), changed
  *		         startup mechanism under AmigaOS/MorphOS
  *                     - fixed warnings
@@ -85,7 +86,6 @@ int OpenCDRom() {
 		(
 			global->g_device,
 			global->g_unit,
-			global->g_trackdisk,
 			global->g_memory_type,
 			global->g_std_buffers,
 			global->g_file_buffers
@@ -147,7 +147,6 @@ int Get_Startup(struct FileSysStartupMsg *fssm) {
           ARG_MAYBELOWERCASE,
           ARG_ROCKRIDGE,
 	  ARG_JOLIET,
-          ARG_TRACKDISK,
           ARG_MACTOISO,
           ARG_CONVERTSPACES,
           ARG_SHOWVERSION,
@@ -188,7 +187,6 @@ int Get_Startup(struct FileSysStartupMsg *fssm) {
 			global->g_maybe_map_to_lowercase = TRUE;
 			global->g_use_rock_ridge = TRUE;
 			global->g_use_joliet = TRUE;
-			global->g_trackdisk = FALSE;
 			global->g_show_version_numbers = FALSE;
 			global->g_hfs_first = FALSE;
 			strcpy(global->g_data_fork_extension, "dfork");
@@ -262,7 +260,7 @@ int Get_Startup(struct FileSysStartupMsg *fssm) {
 			    /* Read the arguments. */
 			    if (ReadArgs ((UBYTE *)
 					  "RETRY/S,L=LOWERCASE/S,ML=MAYBELOWERCASE/S,"
-					  "R=ROCKRIDGE/S,J=JOLIET/S,T=TRACKDISK/S,"
+					  "R=ROCKRIDGE/S,J=JOLIET/S,"
 					  "MI=MACTOISO/S,CS=CONVERTSPACES/S,"
 					  "SV=SHOWVERSION/S,HF=HFSFIRST/S,"
 					  "FB=FILEBUFFERS/K/N,"
@@ -284,7 +282,6 @@ int Get_Startup(struct FileSysStartupMsg *fssm) {
 
 			      global->g_use_rock_ridge = (Args[ARG_ROCKRIDGE] != NULL);
 			      global->g_use_joliet = (Args[ARG_JOLIET] != NULL);
-			      global->g_trackdisk = (Args[ARG_TRACKDISK] != NULL);
 			      global->g_show_version_numbers = (Args[ARG_SHOWVERSION] != NULL);
 			      global->g_hfs_first = (Args[ARG_HFSFIRST] != NULL);
 

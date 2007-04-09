@@ -7,6 +7,7 @@
  Mount      = 1
  Device     = ide.device
  Unit       = 3
+ Buffers    = 20
  BufMemType = 0
  DosType    = 0x43444653
  Control    = "ML R J"

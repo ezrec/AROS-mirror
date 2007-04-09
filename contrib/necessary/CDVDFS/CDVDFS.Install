@@ -2,8 +2,8 @@
 ;(C) 1994 Thomas Kessler
 ;(C) 2005-2007 Pavel Fedin
 
-(set #amicdrom-version "1.0")
-(set #amicdrom-date "(01-Apr-07)")
+(set #amicdrom-version "1.1")
+(set #amicdrom-date "(08-Apr-07)")
 (set #install-version "1.0")
 
 (set old-level @user-level)
@@ -228,11 +228,6 @@
 		(help "\n"
 			"ROCKRIDGE=R: Use Rock Ridge file names, if possible.\n\n"
 			"JOLIET=J: Use Joliet file names, if possible.\n\n"
-			"TRACKDISK=T: Use trackdisk-device calls instead of SCSI-direct calls. "
-			"(Some SCSI boards do not support Commodore's HD_SCSICMD "
-			"command. If you set the 'T' option, only the normal "
-			"CMD_READ is used, which will be translated by the SCSI driver "
-			"into the corresponding SCSI commands.)\n\n"
 			"SHOWVERSION=SV: Show version numbers.\n\n"
 			"RETRY: Do not report an error if the CDROM drive is switched off while "
 			"mounting the filesystem. The \"C:Mount\" program will hang until "
@@ -254,9 +249,8 @@
 (set startstr "")
 (if (IN other-options 0) (set startstr (cat startstr #space "ROCKRIDGE")))
 (if (IN other-options 1) (set startstr (cat startstr #space "JOLIET")))
-(if (IN other-options 2) (set startstr (cat startstr #space "TRACKDISK")))
-(if (IN other-options 3) (set startstr (cat startstr #space "SHOWVERSION")))
-(if (IN other-options 4) (set startstr (cat startstr #space "RETRY")))
+(if (IN other-options 2) (set startstr (cat startstr #space "SHOWVERSION")))
+(if (IN other-options 3) (set startstr (cat startstr #space "RETRY")))
 
 (user 2)
 (set case-options

@@ -11,6 +11,8 @@
  * non-commercial purposes, provided this notice is included.
  * ----------------------------------------------------------------------
  * History:
+ *
+ * 08-Apr-07 sonic     - removed redundant "TRACKDISK" option
  * 01-Apr-07 sonic     - seglist unloading is much more safe
  *		       - removed unneeded search in Remove_Volume_Node()
  * 31-Mar-07 sonic     - ACTION_SAME_LOCK now returns 100% correct values
@@ -1558,61 +1560,29 @@ int i;
 ULONG l1, l2;
 
 	BUG(dbprintf ("Checking Disk... ");)
-	if (global->g_cd->use_trackdisk)
+	i = (Test_Unit_Ready (global->g_cd) || Test_Unit_Ready (global->g_cd));
+	l1 = global->g_cd->t_changeint;
+	l2 = global->g_cd->t_changeint2;
+	BUG(if (l1==l2 && i) dbprintf ("no disk change (T %ld)", l1);)
+	if (l1!=l2 && i)
 	{
-		i = (Test_Unit_Ready (global->g_cd) || Test_Unit_Ready (global->g_cd));
-		l1 = global->g_cd->t_changeint;
-		l2 = global->g_cd->t_changeint2;
-		BUG(if (l1==l2 && i) dbprintf ("no disk change (T %ld)", l1);)
-		if (l1!=l2 && i)
-		{
-			global->g_disk_inserted = TRUE;
-			BUG(dbprintf ("disk has been inserted (T %ld)", l1);)
-			if (global->DevList)
-				Unmount ();
-			Delay (50);
-			Clear_Sector_Buffers (global->g_cd);
-			Mount ();
-		}
-		BUG(if (l1==l2 && !i) dbprintf ("no disk in drive (T %ld)", l1);)
- 		if (l1!=l2 && !i)
-		{
-			global->g_disk_inserted = FALSE;
-			BUG(dbprintf ("disk has been removed (T %ld)", l1);)
-			global->playing = FALSE;
-			if (global->DevList)
-				Unmount ();
-			global->g_cd->t_changeint2 = global->g_cd->t_changeint;
-		}
+		global->g_disk_inserted = TRUE;
+		BUG(dbprintf ("disk has been inserted (T %ld)", l1);)
+		if (global->DevList)
+			Unmount ();
+		Delay (50);
+		Clear_Sector_Buffers (global->g_cd);
+		Mount ();
 	}
-	else
+	BUG(if (l1==l2 && !i) dbprintf ("no disk in drive (T %ld)", l1);)
+	if (l1!=l2 && !i)
 	{
-		if (global->g_disk_inserted)
-		{
-			if (Test_Unit_Ready (global->g_cd))
-			{
-				BUG(dbprintf ("no disk change"));
-			}
-			else
-			{
-				global->g_disk_inserted = FALSE;
-				BUG(dbprintf ("disk has been removed");)
-				global->playing = FALSE;
-				if (global->DevList)
-					Unmount ();
-				Hide_CDDA_Icon ();
-			}
-		}
-		if (!global->g_disk_inserted)
-		{
-			if (Test_Unit_Ready (global->g_cd) || Test_Unit_Ready (global->g_cd))
-			{
-				global->g_disk_inserted = TRUE;
-				BUG(dbprintf ("disk has been inserted");)
-				Clear_Sector_Buffers (global->g_cd);
-				Mount ();
-			}
-		}
+		global->g_disk_inserted = FALSE;
+		BUG(dbprintf ("disk has been removed (T %ld)", l1);)
+		global->playing = FALSE;
+		if (global->DevList)
+			Unmount ();
+		global->g_cd->t_changeint2 = global->g_cd->t_changeint;
 	}
 	BUG(dbprintf ("\n");)
 }

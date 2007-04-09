@@ -50,7 +50,6 @@ struct Globals {
 	WORD	g_use_joliet;		  /* Use Joliet flag 'J'			*/
 	WORD	g_maybe_map_to_lowercase; /* Conditional map to lower case flag 'ML'	*/
 	WORD	g_map_to_lowercase;       /* Map to lower case flag 'L'			*/
-	int	g_trackdisk;              /* Use trackdisk calls instead of SCSI-direct */
 	int	g_std_buffers;            /* Number of buffers for standard SCSI access */
 	int	g_file_buffers;           /* Number of buffers for contiguous reads	*/
 	t_bool	g_show_version_numbers;   /* Show version numbers			*/

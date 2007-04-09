@@ -11,6 +11,8 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 08-Apr-07 sonic     - Removed "TRACKDISK" option.
+ *                     - Removed dealing with block length.
  * 31-Mar-07 sonic     Added support for Joliet and character set translation
  */
 
@@ -480,12 +482,11 @@ int main (int argc, char *argv[])
     exit (1);
   }
 
-  global->g_ignore_blocklength = TRUE;
   InitUnicodeTable();
   if (global->g_unicodetable_name[0])
     ReadUnicodeTable(global->g_unicodetable_name);
 
-  global->g_cd = Open_CDROM (global->g_device, global->g_unit, 1, global->g_memory_type,
+  global->g_cd = Open_CDROM (global->g_device, global->g_unit, global->g_memory_type,
   		   STD_BUFFERS, FILE_BUFFERS);
   if (!global->g_cd) {
     fprintf (stderr, "cannot open CDROM, error code = %d\n", global->g_cdrom_errno);

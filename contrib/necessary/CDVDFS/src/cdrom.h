@@ -24,7 +24,6 @@ typedef struct CDROM {
   unsigned char 	*buffer_data;
   unsigned char		sense[20];
   t_model		model;
-  short			use_trackdisk;
   short			lun;
   short			std_buffers;
   short			file_buffers;
@@ -36,8 +35,6 @@ typedef struct CDROM {
   struct MsgPort 	*port;
   struct IOStdReq	*scsireq;
   struct SCSICmd	cmd;
-  unsigned short	block_length;
-  unsigned short	blocking_factor;
   short			device_open;
 } CDROM;
 
@@ -72,7 +69,6 @@ CDROM *Open_CDROM
 	(
 		char *p_device,
 		int p_scsi_id,
-		int p_use_trackdisk,
 		unsigned long p_memory_type,
 		int p_std_buffers,
 		int p_file_buffers

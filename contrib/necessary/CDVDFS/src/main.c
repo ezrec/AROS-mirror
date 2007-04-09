@@ -10,7 +10,9 @@
  * non-commercial purposes, provided this notice is included.
  * ----------------------------------------------------------------------
  * History:
- * 
+ *
+ * 08-Mar-07  sonic  - Removed redundant "TRACKDISK" option.
+ *            sonic  - Removed unneeded dealing with block length.
  * 31-Mar-07  sonic  Added support for Joliet and character set translation
  * 17-Feb-94   fmu   Fixed typo.
  * 28-Nov-93   fmu   Improved "cdrom d" command.
@@ -733,12 +735,6 @@ int Get_Device_And_Unit (void)
   }
   buf[len] = 0;
   global->g_unit = atoi (buf);
-  
-  if (GetVar ((UBYTE *) "CDROM_TRACKDISK", (UBYTE *) buf,
-      sizeof (buf), 0) > 0) {
-    fprintf (stderr, "using trackdisk\n");
-    global->g_trackdisk = 1;
-  }
 
   if (GetVar ((UBYTE *) "CDROM_FASTMEM", (UBYTE *) buf,
       sizeof (buf), 0) > 0) {
@@ -768,7 +764,6 @@ void Select_Mode (CDROM *p_cd, int p_mode, int p_block_length)
 void Show_Drive_Information (CDROM *p_cd)
 {
   t_inquiry_data data;
-  int block_length;
   
   if (!Inquire (p_cd, &data)) {
     fprintf (stderr, "cannot access CDROM drive\n");
@@ -790,12 +785,6 @@ void Show_Drive_Information (CDROM *p_cd)
   fwrite (data.revision, sizeof (data.revision), 1, stdout);
   putchar ('\n');
   printf ("Conforms to : SCSI-%d\n", (int) (data.version & 0x7));
-  block_length = Block_Length (p_cd);
-  printf ("Block length: ");
-  if (block_length)
-    printf ("%d\n", block_length);
-  else
-    printf ("unknown\n");
 }
 
 void Show_Table_Of_Contents (CDROM *p_cd)
@@ -978,7 +967,6 @@ void Test_Trackdisk_Device (CDROM *p_cd)
 int main (int argc, char *argv[])
 {
   global->g_cd = NULL;
-  global->g_trackdisk = 0;
   global->g_memory_type = MEMF_CHIP;
   global->SysBase = SysBase;
   atexit (Cleanup);
@@ -1001,8 +989,6 @@ int main (int argc, char *argv[])
       "e.g.\n"
       "  setenv CDROM_DEVICE scsi.device\n"
       "  setenv CDROM_UNIT 2\n"
-      "Set the variable CDROM_TRACKDISK to any value if you\n"
-      "want to use trackdisk calls instead of SCSI-direct calls\n"
       "Set the variable CDROM_FASTMEM to any value if you\n"
       "want to use fast memory for SCSI buffers (does not work\n"
       "with all SCSI devices!)\n"
@@ -1016,19 +1002,7 @@ int main (int argc, char *argv[])
   if (global->g_unicodetable_name[0])
     ReadUnicodeTable(global->g_unicodetable_name);
 
-  /* the following commands do not depend on the block length of
-   * the CDROM drive:
-   */
-  switch (argv[1][0]) {
-  case 'a':
-  case 'b':
-  case 'j':
-  case 'x':
-  case 'z':
-    global->g_ignore_blocklength = TRUE;
-  }
-
-  global->g_cd = Open_CDROM (global->g_device, global->g_unit, global->g_trackdisk, global->g_memory_type,
+  global->g_cd = Open_CDROM (global->g_device, global->g_unit, global->g_memory_type,
   		   STD_BUFFERS, FILE_BUFFERS);
   if (!global->g_cd) {
     fprintf (stderr, "cannot open CDROM, error code = %d\n", global->g_cdrom_errno);

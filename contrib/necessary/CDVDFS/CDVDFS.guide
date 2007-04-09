@@ -5,7 +5,7 @@
 CDVDFS - a CD/DVD filesystem for Amiga family of operaing systems
 -----------------------------------------------------------------
 
-Version 1.0    31-Mar-07   (C) 2007 Pavel Fedin
+Version 1.1    08-Apr-07   (C) 2007 Pavel Fedin
 			   (sonic_amiga@rambler.ru)
 
 Based on AmiCDROM 1.15     (C) 1993,1994 by Frank Munkert
@@ -95,10 +95,6 @@ Table of Contents:
 
   The running handler requires about 60K of memory (with default parameter
   settings).
-  
-  Problems have been reported with GVP controllers, Evolution and
-  ICD Advantage. If you have one of these controllers, try the TRACKDISK
-  option!
 
   If you are using a GVP controller, you probably will have to disable
   the "disconnect/reconnect" feature; see your SCSI controller manual.
@@ -166,7 +162,7 @@ Table of Contents:
    * Amiga ???? + Oktagon 2008 + Teac CD-50 / Pioneer DRM600 / DRM602 +
         AmiCDROM 1.10
    * Pegasos-II + Samsung SM-352N CDRW+DVD-R combo drive + MorphOS 1.4.5 +
-	CDVDFS 1.0
+	CDVDFS 1.1
  
 The following hardware setups have been reported not to work:
 
@@ -190,7 +186,7 @@ The following hardware setups have been reported to work for some users
 and not to work for other users:
 
    * Amiga 2000 + Evolution-Controller (V3.x) + Toshiba 3401 +
-         AmiCDROM 1.6/1.7 (probably works only in Trackdisk mode)
+	 AmiCDROM 1.6/1.7
 @endnode
 
 @node INSTALLATION "Installing CDVDFS"
@@ -289,7 +285,7 @@ and not to work for other users:
   template:
 
     RETRY/S,L=LOWERCASE/S,ML=MAYBELOWERCASE/S,
-    R=ROCKRIDGE/S,J=JOLIET/S,T=TRACKDISK/S,MI=MACTOISO/S,CS=CONVERTSPACES/S,
+    R=ROCKRIDGE/S,J=JOLIET/S,MI=MACTOISO/S,CS=CONVERTSPACES/S,
     SV=SHOWVERSION/S,HF=HFSFIRST/S,FB=FILEBUFFERS/K/N,
     DE=DATAEXT/K,RE=RESOURCEEXT/K,SI=SCANINTERVAL/K/N,PC=PLAYCDDA/K,
     X=XPOS/K/N,Y=YPOS/K/N,UT=UNICODETABLE/K
@@ -309,12 +305,6 @@ and not to work for other users:
 
   J            Use Joliet file names, if possible.
   JOLIET
-       
-  T            Use trackdisk-device calls instead of SCSI-direct calls.
-  TRACKDISK    (Some SCSI boards do not support Commodore's HD_SCSICMD
-	       command. If you set the 'T' option, only the normal
-	       CMD_READ is used, which will be translated by the SCSI driver
-	       into the corresponding SCSI commands.)
 
   MI           Convert Mac characters into ISO-Latin-1 (Amiga) characters.
   MACTOISO     (The conversion applies only to the filenames, not to
@@ -570,10 +560,9 @@ and not to work for other users:
   for the default icon name ("CD-DA"). An example icon can be found in the
   drawer "icons" in the CDVDFS distribution.
 
-  You can use this feature only if the TRACKDISK option is not
-  enabled, and if your CDROM drive supports audio commands. If you only
-  have a SCSI-1 CDROM drive, you probably also won't be able to use
-  this feature (use "cdrom a" to test whether or not you have a SCSI-1
+  You can use this feature only if your CDROM drive supports audio commands.
+  If you only have a SCSI-1 CDROM drive, you probably also won't be able to
+  use this feature (use "cdrom a" to test whether or not you have a SCSI-1
   drive).
 
 @endnode
@@ -585,8 +574,7 @@ and not to work for other users:
   can read multiple sessions, then CDVDFS will show you always the
   latest session.
 
-  You can use this feature only if the TRACKDISK option is not used.
-  If you only have a SCSI-1 CDROM drive, you probably also won't be able
+  If you only have a SCSI-1 CDROM drive, you probably won't be able
   to use this feature (use "cdrom a" to test whether or not you have a SCSI-1
   drive).
 
@@ -652,9 +640,6 @@ and not to work for other users:
      
      CDROM_UNIT         SCSI-ID of your CDROM drive, e.g. "2"
 
-     CDROM_TRACKDISK    Has to be set to any value if you want to use
-		        trackdisk commands only.
-
      CDROM_FASTMEM      Has to be set to any value if you want to use
 		        fast memory instead of chip memory for buffers.
 
@@ -686,9 +671,8 @@ and not to work for other users:
 @node CHECKCD "The 'CHECKCD' Program"
 
   Checkcd performs some consistency checks on an ISO 9660 disk.
-  Set the options CDROM_DEVICE, CDROM_TRACKDISK, CDROM_FASTMEM and
-  CDROM_UNICODETABLE as described in the previous section and invoke
-  "checkcd" without arguments.
+  Set the options CDROM_DEVICE, CDROM_FASTMEM and CDROM_UNICODETABLE as
+  described in the previous section and invoke "checkcd" without arguments.
   The test may take up to 20 minutes, depending on the complexity of
   your CD.
 
@@ -718,9 +702,8 @@ and not to work for other users:
 
   Q: My Amiga crashes if I mount the CD0 device.
   A: Possibly your SCSI driver does not support the selected
-     access method. Play around with the options "TRACKDISK",
-     "CHIP", "FAST", "DMA" and "ANY"; there should be a setting
-     which also works for you.
+     access method. Play around with the options "CHIP", "FAST", "DMA" and
+     "ANY"; there should be a setting which also works for you.
 
   Q: If I use many screens or many colors, my Amiga runs slower
      and slower.
@@ -880,6 +863,13 @@ Original to-do from Frank Murket:
 @endnode
 
 @node HISTORY "History of CDVDFS"
+
+Changes in V1.1:
+
+* Removed redundant TRACKDISK option, standard trackdisk commands are used
+  for reading data and SCSI-2 commands for other operations.
+* Added support for trackdisk64 standard, now will really work with DVD disks,
+  even double-layered.
 
 Changes in V1.0:
 

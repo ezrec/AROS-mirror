@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 08-Apr-07 sonic     Removed DEBUG definition
  * 31-Mar-03 sonic     - fixed warnings
  * 07-Jul-02 sheutlin  various changes when porting to AROS
  *                     - global variables are now in a struct Globals *global
@@ -33,8 +34,6 @@
 #include <workbench/startup.h>
 #include <stdarg.h>
 #include <stdio.h>
-
-#define DEBUG 1
 
 #include "debug.h"
 #include "intui.h"
@@ -299,3 +298,4 @@ struct Message *msg;
 	global->g_app_sigbit = 0;
 	global->g_app_icon = NULL;
 }
+
