@@ -110,6 +110,32 @@ BOOL METHOD(HID, Hidd_USBHID, SetIdle)
     return HIDD_USBDevice_ControlMessage(o, NULL, &req, NULL, 0); 
 }
 
+BOOL METHOD(HID, Hidd_USBHID, SetReport)
+{
+    USBDevice_Request req;
+    intptr_t ifnr;
+    
+    D({
+        uint8_t *b = msg->report;
+        int i;
+        
+        bug("[HID] HID::SetReport(%d, %d, \"", msg->type, msg->id);
+        for (i=0; i < msg->length; i++)
+            bug("%02x", b[i]);
+        bug("\")\n");
+    });
+          
+    OOP_GetAttr(o, aHidd_USBDevice_InterfaceNumber, &ifnr);
+
+    req.bmRequestType = UT_WRITE_CLASS_INTERFACE;
+    req.bRequest = UR_SET_REPORT;
+    req.wValue = AROS_WORD2LE(msg->type << 8| msg->id);
+    req.wIndex = AROS_WORD2LE(ifnr);
+    req.wLength = AROS_WORD2LE(msg->length);
+
+    return HIDD_USBDevice_ControlMessage(o, NULL, &req, msg->report, msg->length); 
+}
+
 BOOL METHOD(HID, Hidd_USBHID, SetProtocol)
 {
     USBDevice_Request req;

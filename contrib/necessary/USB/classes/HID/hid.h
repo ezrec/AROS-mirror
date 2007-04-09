@@ -146,13 +146,17 @@ typedef struct KbdData {
     uint8_t                     *prev_code;
     uint8_t                     *code;
     
+    struct hid_location         loc_scrollock;
+    struct hid_location         loc_numlock;
+    struct hid_location         loc_capslock;
+    
     struct key_mod              loc_mod[8];
     struct hid_location         loc_keycode;
     uint8_t                     loc_modcnt;
     uint8_t                     loc_keycnt;
 #define LED_CAPSLOCK    1
 #define LED_NUMLOCK     2
-#define LED_SCROLLLOCK  4
+#define LED_SCROLLOCK   4
     uint8_t                     leds;
 } KbdData;
 

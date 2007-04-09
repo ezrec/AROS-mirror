@@ -35,6 +35,7 @@ enum {
     moHidd_USBHID_GetHidDescriptor,
     moHidd_USBHID_SetIdle,
     moHidd_USBHID_SetProtocol,
+    moHidd_USBHID_SetReport,
     moHidd_USBHID_ParseReport,
 
     NUM_HIDD_USBHID_METHODS
@@ -65,6 +66,14 @@ struct pHidd_USBHID_ParseReport {
 struct pHidd_USBHID_SetProtocol {
     OOP_MethodID        mID;
     uint8_t             protocol;
+};
+
+struct pHidd_USBHID_SetReport {
+    OOP_MethodID        mID;
+    uint8_t             type;
+    uint8_t             id;
+    void                *report;
+    uint16_t            length;
 };
 
 #define CLID_Hidd_USBMouse "Bus::USB::Hid::Mouse"
@@ -228,6 +237,7 @@ typedef struct usb_hid_descriptor {
 BOOL HIDD_USBHID_GetReportDescriptor(OOP_Object *obj, uint16_t length, void *buffer);
 BOOL HIDD_USBHID_SetIdle(OOP_Object *obj, uint8_t duration, uint8_t id);
 BOOL HIDD_USBHID_SetProtocol(OOP_Object *obj, uint8_t protocol);
+BOOL HIDD_USBHID_SetReport(OOP_Object *obj, uint8_t type, uint8_t id, void *report, uint16_t length);
 usb_hid_descriptor_t *HIDD_USBHID_GetHidDescriptor(OOP_Object *obj);
 void HIDD_USBHID_ParseReport(OOP_Object *obj, void *report, uint32_t report_length);
 
