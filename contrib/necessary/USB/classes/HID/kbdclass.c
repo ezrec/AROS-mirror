@@ -45,6 +45,8 @@ static void kbd_process();
 #define __(a) RAWKEY_##a
 #define _(a) __(a)
 
+static void update_leds(KbdData *kbd);
+
 /* 
  * Unusual convertions:
  *   PrintScreen -> Help 
@@ -185,6 +187,13 @@ OOP_Object *METHOD(USBKbd, Root, New)
         kbd->prev_code = AllocVecPooled(SD(cl)->MemPool, kbd->loc_keycnt + 1);
         kbd->code = AllocVecPooled(SD(cl)->MemPool, kbd->loc_keycnt + 1);
         
+        hid_locate(kbd->report, kbd->reportLength, HID_USAGE2(HUP_LEDS, HUD_LED_NUM_LOCK),
+                   0, hid_output, &kbd->loc_numlock, NULL, NULL);
+        hid_locate(kbd->report, kbd->reportLength, HID_USAGE2(HUP_LEDS, HUD_LED_CAPS_LOCK),
+                   0, hid_output, &kbd->loc_capslock, NULL, NULL);
+        hid_locate(kbd->report, kbd->reportLength, HID_USAGE2(HUP_LEDS, HUD_LED_SCROLL_LOCK),
+                   0, hid_output, &kbd->loc_scrollock, NULL, NULL);
+
         struct TagItem tags[] = {
                 { NP_Entry,     (intptr_t)kbd_process },
                 { NP_UserData,  (intptr_t)kbd },                
@@ -234,6 +243,20 @@ static inline ie_send(struct IOStdReq *req, struct InputEvent *ie, int iec)
     
         DoIO(req);
     }
+}
+
+static void update_leds(KbdData *kbd)
+{
+    uint8_t reg = 0;
+    
+    if ((kbd->leds & LED_CAPSLOCK) && kbd->loc_capslock.size == 1)
+        reg |= 1 << kbd->loc_capslock.pos;
+    if ((kbd->leds & LED_NUMLOCK) && kbd->loc_numlock.size == 1)
+        reg |= 1 << kbd->loc_numlock.pos;
+    if ((kbd->leds & LED_SCROLLOCK) && kbd->loc_scrollock.size == 1)
+        reg |= 1 << kbd->loc_scrollock.pos;
+        
+    HIDD_USBHID_SetReport(kbd->o, UHID_OUTPUT_REPORT, 0, &reg, 1);
 }
 
 static uint16_t code2qual(uint16_t code)
@@ -420,9 +443,6 @@ static void kbd_process()
                     }
                 }
     
-                if (kbd->leds & LED_CAPSLOCK)
-                    qual |= IEQUALIFIER_CAPSLOCK;
-                
                 /* Check all new keycode buffers */
                 for (i=0; i < kbd->loc_keycnt; i++)
                 {
@@ -439,7 +459,17 @@ static void kbd_process()
                     
                     /* Not in previous buffer. KeyDown event */
                     if (j >= kbd->loc_keycnt && keyconv[kbd->code[i+1]] != 0xff)
-                    {            
+                    {
+                        if (kbd->code[i+1] == 0x39)
+                        {
+                            kbd->leds ^= LED_CAPSLOCK;
+                            qual ^= IEQUALIFIER_CAPSLOCK;
+                        }
+                        if (kbd->code[i+1] == 0x53)
+                            kbd->leds ^= LED_NUMLOCK;
+
+                        update_leds(kbd);
+                            
                         ie[iec].ie_Class            = IECLASS_RAWKEY;
                         ie[iec].ie_SubClass         = 0;
                         if (kbd->code[i+1] < sizeof(keyconv))
@@ -482,7 +512,7 @@ static void kbd_process()
                         if (kbd->prev_code[i+1] == kbd->code[j+1])
                             break;
                     
-                    /* Not in previous buffer. KeyDown event */
+                    /* Not in previous buffer. KeyUp event */
                     if (j >= kbd->loc_keycnt && keyconv[kbd->prev_code[i+1]] != 0xff)
                     {
                         ie[iec].ie_Class            = IECLASS_RAWKEY;
