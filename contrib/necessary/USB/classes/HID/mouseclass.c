@@ -387,6 +387,17 @@ static void mouse_process()
                     ie[iec].ie_Y = 0;
                     
                     iec++;                
+
+                    ie[iec].ie_Class = IECLASS_RAWKEY;
+                    ie[iec].ie_Code = ((z > 0) ? RAWKEY_NM_WHEEL_UP : RAWKEY_NM_WHEEL_DOWN) |
+                        IECODE_UP_PREFIX;
+                    ie[iec].ie_Qualifier = qual;
+                    ie[iec].ie_SubClass = 0;
+                    ie[iec].ie_X = 0;
+                    ie[iec].ie_Y = 0;
+                    
+                    iec++;                
+
                 }
     
                 if (iec)
