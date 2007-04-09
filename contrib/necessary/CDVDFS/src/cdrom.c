@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 09-Apr-07 sonic     - Disabled DirectSCSI on AROS.
  * 08-Apr-07 sonic     - Removed redundant TRACKDISK option.
  *                     - Added trackdisk64 support.
  *                     - Removed unneeded dealing with block length.
@@ -216,6 +217,10 @@ int Do_SCSI_Command
 		int p_direction
 	)
 {
+/* FIXME: DirectSCSI requests cause ata.device lockup in AROS. The driver needs to be fixed. */
+#ifdef __AROS__
+    	return 0;
+#else
 int bufs = p_cd->std_buffers + p_cd->file_buffers + 1;
 
 	p_cd->scsireq->io_Length   = sizeof (struct SCSICmd);
@@ -243,6 +248,7 @@ int bufs = p_cd->std_buffers + p_cd->file_buffers + 1;
 	}
 	else
 		return 1;
+#endif
 }
 
 int Read_From_Drive
