@@ -38,12 +38,7 @@
 #include "hid.h"
 #include LC_LIBDEFS_FILE
 
-OOP_AttrBase HiddUSBAttrBase;
-OOP_AttrBase HiddUSBDeviceAttrBase;
-OOP_AttrBase HiddUSBHubAttrBase;
-OOP_AttrBase HiddUSBHIDAttrBase;
-OOP_AttrBase HiddUSBDrvAttrBase;
-OOP_AttrBase HiddAttrBase;
+#define SD(x) (&LIBBASE->sd)
 
 static int HID_Init(LIBBASETYPEPTR LIBBASE)
 {
@@ -67,6 +62,11 @@ static int HID_Init(LIBBASETYPEPTR LIBBASE)
         {
             D(bug("[HID] Init done.\n"));
 
+            OOP_Object *usb = OOP_NewObject(NULL, CLID_Hidd_USB, NULL);
+            if (usb)
+                HIDD_USB_AddClass(usb, MOD_NAME_STRING);
+            OOP_DisposeObject(usb);
+            
             return TRUE;
         }
         

@@ -43,6 +43,22 @@
 
 #include LC_LIBDEFS_FILE
 
+#undef HiddPCIDeviceAttrBase
+#undef HiddUSBDeviceAttrBase
+#undef HiddUSBHubAttrBase
+#undef HiddUSBDrvAttrBase
+#undef HiddUSBAttrBase
+#undef HiddUSBHIDAttrBase
+#undef HiddAttrBase
+
+#define HiddPCIDeviceAttrBase (SD(cl)->HiddPCIDeviceAB) 
+#define HiddUSBDeviceAttrBase (SD(cl)->HiddUSBDeviceAB) 
+#define HiddUSBHubAttrBase (SD(cl)->HiddUSBHubAB) 
+#define HiddUSBDrvAttrBase (SD(cl)->HiddUSBDrvAB) 
+#define HiddAttrBase (SD(cl)->HiddAB) 
+#define HiddUSBAttrBase (SD(cl)->HiddUSBAB) 
+#define HiddUSBHIDAttrBase (SD(cl)->HiddUSBHIDAB) 
+
 struct hid_location {
     uint32_t size;
     uint32_t count;
@@ -61,6 +77,14 @@ struct hid_staticdata
     OOP_Class               *hidClass;
     OOP_Class               *mouseClass;
     OOP_Class               *kbdClass;
+    
+    OOP_AttrBase            HiddPCIDeviceAB;
+    OOP_AttrBase            HiddUSBDeviceAB;
+    OOP_AttrBase            HiddUSBHubAB;
+    OOP_AttrBase            HiddUSBDrvAB;
+    OOP_AttrBase            HiddUSBAB;
+    OOP_AttrBase            HiddUSBHIDAB;
+    OOP_AttrBase            HiddAB;
 };
 
 struct hidbase
