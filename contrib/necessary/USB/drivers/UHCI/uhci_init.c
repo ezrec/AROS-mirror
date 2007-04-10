@@ -38,11 +38,7 @@
 
 #include "uhci.h"
 
-OOP_AttrBase HiddPCIDeviceAttrBase;
-OOP_AttrBase HiddUSBDeviceAttrBase;
-OOP_AttrBase HiddUSBHubAttrBase;
-OOP_AttrBase HiddUSBDrvAttrBase;
-OOP_AttrBase HiddAttrBase;
+#define SD(x) (&LIBBASE->sd)
 
 /*
  * usb_delay() stops waits for specified amount of miliseconds. It uses the timerequest
@@ -68,7 +64,7 @@ static void USBDelay(struct timerequest *tr, uint32_t msec)
 }
 
 
-struct timerequest *USBCreateTimer()
+static struct timerequest *USBCreateTimer()
 {
     struct timerequest *tr = NULL;
     struct MsgPort *mp = NULL;
@@ -92,7 +88,7 @@ struct timerequest *USBCreateTimer()
     return NULL;
 }
 
-void USBDeleteTimer(struct timerequest *tr)
+static void USBDeleteTimer(struct timerequest *tr)
 {
     if (tr)
     {
@@ -103,6 +99,7 @@ void USBDeleteTimer(struct timerequest *tr)
     }
 }
 
+static
 AROS_UFH3(void, Enumerator,
         AROS_UFHA(struct Hook *,        hook,           A0),
         AROS_UFHA(OOP_Object *,         pciDevice,      A2),

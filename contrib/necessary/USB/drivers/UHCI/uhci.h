@@ -51,6 +51,18 @@
 #define CLID_Drv_USB_UHCI "Bus::Drv::UHCI"
 #define IID_Drv_USB_UHCI  "Bus::Drv::UHCI"
 
+#undef HiddPCIDeviceAttrBase
+#undef HiddUSBDeviceAttrBase
+#undef HiddUSBHubAttrBase
+#undef HiddUSBDrvAttrBase
+#undef HiddAttrBase
+
+#define HiddPCIDeviceAttrBase (SD(cl)->HiddPCIDeviceAB)
+#define HiddUSBDeviceAttrBase (SD(cl)->HiddUSBDeviceAB)
+#define HiddUSBHubAttrBase (SD(cl)->HiddUSBHubAB)
+#define HiddUSBDrvAttrBase (SD(cl)->HiddUSBDrvAB)
+#define HiddAttrBase (SD(cl)->HiddAB)
+
 typedef struct {
     uint32_t    qh_HLink;
     uint32_t    qh_VLink;
@@ -87,6 +99,12 @@ struct uhci_staticdata
 
     struct SignalSemaphore	td_lock;
     struct List				td_list;
+    
+    OOP_AttrBase        HiddPCIDeviceAB;
+    OOP_AttrBase        HiddUSBDeviceAB;
+    OOP_AttrBase        HiddUSBHubAB;
+    OOP_AttrBase        HiddUSBDrvAB;
+    OOP_AttrBase        HiddAB;
 };
 
 struct TDNode {

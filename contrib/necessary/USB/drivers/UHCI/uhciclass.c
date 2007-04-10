@@ -1085,9 +1085,10 @@ void METHOD(UHCI, Hidd_USBDevice, DeletePipe)
 {
 }
 
-extern OOP_AttrBase HiddAttrBase;
-
 /* Class initialization and destruction */
+
+#undef SD
+#define SD(x) (&LIBBASE->sd)
 
 static int UHCI_InitClass(LIBBASETYPEPTR LIBBASE)
 {
