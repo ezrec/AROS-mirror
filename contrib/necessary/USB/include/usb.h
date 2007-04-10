@@ -54,6 +54,7 @@ extern OOP_AttrBase HiddUSBAttrBase;
 enum {
     moHidd_USB_AttachDriver,
     moHidd_USB_DetachDriver,
+    moHidd_USB_AddClass,
     moHidd_USB_AllocAddress,
     moHidd_USB_FreeAddress,
     moHidd_USB_NewDevice,		// Internal call used to attach new USB devices to the system
@@ -68,8 +69,13 @@ struct pHidd_USB_AttachDriver {
 };
 
 struct pHidd_USB_DetachDriver {
-    OOP_MethodID    mID;
+    OOP_MethodID        mID;
     OOP_Object		*driverObject;
+};
+
+struct pHidd_USB_AddClass {
+    OOP_MethodID        mID;
+    const char          *className;
 };
 
 struct pHidd_USB_AllocAddress {
@@ -400,6 +406,7 @@ struct pHidd_USBDrv_RemInterrupt {
 /* USB stubs */
 BOOL HIDD_USB_AttachDriver(OOP_Object *obj, OOP_Object *driver);
 BOOL HIDD_USB_DetachDriver(OOP_Object *obj, OOP_Object *driver);
+void HIDD_USB_AddClass(OOP_Object *obj, const char *className);
 uint8_t HIDD_USB_AllocAddress(OOP_Object *obj, OOP_Object *driver);
 void HIDD_USB_FreeAddress(OOP_Object *obj, OOP_Object *driver, uint8_t address);
 OOP_Object *HIDD_USB_NewDevice(OOP_Object *obj, OOP_Object *hub, BOOL fast);

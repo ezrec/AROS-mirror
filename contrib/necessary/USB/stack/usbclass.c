@@ -107,6 +107,36 @@ BOOL METHOD(USB, Hidd_USB, DetachDriver)
     return FALSE;	
 }
 
+void METHOD(USB, Hidd_USB, AddClass)
+{
+    struct usb_ExtClass *ec = NULL;
+    int found = 0;
+    
+    D(bug("[USB] USB::AddClass(\"%s\")\n", msg->className));
+    
+    ForeachNode(&SD(cl)->extClassList, ec)
+    {
+        if (!strcmp(msg->className, ec->ec_ShortName))
+        {
+            found = 1;
+            break;
+        }
+    }
+    
+    if (!found)
+    {
+        D(bug("[USB] Class not on the list. Adding it.\n"));
+        
+        ec = AllocVecPooled(SD(cl)->MemPool, sizeof(struct usb_ExtClass));
+        
+        ec->ec_Node.ln_Name = AllocVecPooled(SD(cl)->MemPool, strlen(msg->className)+1);
+        CopyMem(msg->className, ec->ec_Node.ln_Name, strlen(msg->className)+1);
+        ec->ec_ShortName = AllocVecPooled(SD(cl)->MemPool, strlen(msg->className)+1);
+        CopyMem(msg->className, ec->ec_ShortName, strlen(msg->className)+1);
+        AddTail(&SD(cl)->extClassList, ec);
+    }
+}
+
 uint8_t METHOD(USB, Hidd_USB, AllocAddress)
 {
     struct usb_driver *drv = NULL;

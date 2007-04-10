@@ -60,6 +60,19 @@ BOOL HIDD_USB_DetachDriver(OOP_Object *obj, OOP_Object *driver)
     return OOP_DoMethod(obj, &p.mID);
 }
 
+void HIDD_USB_AddClass(OOP_Object *obj, const char *className)
+{
+    STATIC_MID;
+    struct pHidd_USB_AddClass p;
+
+    if (!mid) mid = OOP_GetMethodID((STRPTR)IID_Hidd_USB, moHidd_USB_AddClass);
+
+    p.mID = mid;
+    p.className = className;
+
+    return OOP_DoMethod(obj, &p.mID);
+}
+
 uint8_t HIDD_USB_AllocAddress(OOP_Object *obj, OOP_Object *driver)
 {
     STATIC_MID;

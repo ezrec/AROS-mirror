@@ -56,6 +56,7 @@ struct usb_driver {
 
 struct usb_ExtClass {
     struct Node         ec_Node;
+    const char *        ec_ShortName;
     struct Library      *ec_LibBase;
 };
 
