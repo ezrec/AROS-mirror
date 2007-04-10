@@ -663,13 +663,14 @@ D(bug("[asfs] the next one\n"));
                 break;
 
             case FSA_RENAME:
+D(bug("[SFS] FSA_RENAME %s %s\n", iofs->io_Union.io_RENAME.io_Filename, iofs->io_Union.io_RENAME.io_NewName));                
                 packet.dp_Type = ACTION_RENAME_OBJECT;
                 packet.dp_Arg1 =
                     (asfshandle ==  &asfshandle->device->rootfh) ?
                     0 :
                     (IPTR)MKBADDR(asfshandle->handle);
                 packet.dp_Arg2 =(IPTR)MKBADDR(iofs->io_Union.io_RENAME.io_Filename);
-                packet.dp_Arg3 = 0;
+                packet.dp_Arg3 = packet.dp_Arg1;
 #warning "VERY FIXME: RENAME missing parameter"
                 packet.dp_Arg4 = (IPTR)MKBADDR(iofs->io_Union.io_RENAME.io_NewName);
                 sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
