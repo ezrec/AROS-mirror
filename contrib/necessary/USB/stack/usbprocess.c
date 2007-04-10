@@ -109,30 +109,43 @@ static void ScanDirectory(struct usb_staticdata *sd, STRPTR dir)
     {
         if (ap.ap_Info.fib_EntryType < 0)
         {
+            struct usb_ExtClass *ec = NULL;
+            int found = 0;
+
             D(bug("[USB] found USB class file \"%s\"\n",
                     ap.ap_Info.fib_FileName));
             
             snprintf(match, sizeof(match)-1, "%s/%s", dir, ap.ap_Info.fib_FileName);
-            
-            if (!FindName(&sd->extClassList, match))
+
+            ForeachNode(&sd->extClassList, ec)
             {
-                struct usb_ExtClass *ec;
+                if (!strcmp(ap.ap_Info.fib_FileName, ec->ec_ShortName))
+                {
+                    found = 1;
+                    break;
+                }
+            }
+            
+            if (!found)
+            {
 
                 ec = AllocVecPooled(sd->MemPool, sizeof(struct usb_ExtClass));
 
-                D(bug("[USB] external class \"%s\" not yet in the list. Trying to initialize it\n", match));
+                D(bug("[USB] external class \"%s\" not yet in the list. Adding it\n", match));
 
                 if (ec)
                 {
-                    ec->ec_LibBase = OpenLibrary(match, 0);
-                    if (!ec->ec_LibBase)
-                    {
-                        FreeVecPooled(sd->MemPool, ec);
-                    }
-                    else
+//                    ec->ec_LibBase = OpenLibrary(match, 0);
+//                    if (!ec->ec_LibBase)
+//                    {
+//                        FreeVecPooled(sd->MemPool, ec);
+//                    }
+//                    else
                     {
                         ec->ec_Node.ln_Name = AllocVecPooled(sd->MemPool, strlen(match)+1);
                         CopyMem(match, ec->ec_Node.ln_Name, strlen(match)+1);
+                        ec->ec_ShortName = AllocVecPooled(sd->MemPool, strlen(ap.ap_Info.fib_FileName)+1);
+                        CopyMem(ap.ap_Info.fib_FileName, ec->ec_ShortName, strlen(ap.ap_Info.fib_FileName)+1);
                         AddTail(&sd->extClassList, ec);
                     }
                 }
@@ -186,6 +199,7 @@ static void CleanupProcess()
 void usb_process()
 {
     struct usb_staticdata *sd = (struct usb_staticdata *)(FindTask(NULL)->tc_UserData);
+    struct Process *usbProcess = (struct Process *)FindTask(NULL);
     struct usbEvent *ev = NULL;	
     struct MsgPort *port;
     struct timerequest *tr;
@@ -205,8 +219,8 @@ void usb_process()
 
     for(;;)
     {
-        Wait(1 << sd->usbProcess->pr_MsgPort.mp_SigBit |
-             1 << port->mp_SigBit);
+        Wait((1 << usbProcess->pr_MsgPort.mp_SigBit) |
+             (1 << port->mp_SigBit));
         
         if (GetMsg(port))
         {            
@@ -218,7 +232,7 @@ void usb_process()
             SendIO(tr);
         }
         
-        while ((ev = (struct usbEvent *)GetMsg(&sd->usbProcess->pr_MsgPort)) != NULL)
+        while ((ev = (struct usbEvent *)GetMsg(&usbProcess->pr_MsgPort)) != NULL)
         {
             switch (ev->ev_Type)
             {
