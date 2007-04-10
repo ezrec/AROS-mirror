@@ -1,4 +1,5 @@
 # $Id$
 
-#MM- hidd-usb-drivers: hidd-usb-drivers-dummy hidd-usb-drivers-ohci hidd-usb-drivers-uhci
+#MM- hidd-usb-drivers: hidd-usb-drivers-ohci hidd-usb-drivers-uhci
 
+#MM- hidd-usb-drivers-kobj: hidd-usb-drivers-ohci-kobj hidd-usb-drivers-uhci-kobj
