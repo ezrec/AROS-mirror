@@ -249,7 +249,10 @@ void ASFS_work(struct ASFSBase *asfsbase)
             case FSA_OPEN:
                 {
                 struct ASFSHandle *new;
-D(bug("[asfs] open: %s\n", iofs->io_Union.io_OPEN_FILE.io_Filename));
+D(bug("[asfs] open: lock %08x (%s) %s\n",
+      asfshandle->handle,
+      (asfshandle == &asfshandle->device->rootfh) ? "root" : (asfshandle->flags & AHF_IS_LOCK) ? "lock" : "handle", 
+      iofs->io_Union.io_OPEN_FILE.io_Filename));
 
                     new = AllocMem(sizeof(struct ASFSHandle), MEMF_PUBLIC | MEMF_CLEAR);
                     if (new)
@@ -257,28 +260,37 @@ D(bug("[asfs] open: %s\n", iofs->io_Union.io_OPEN_FILE.io_Filename));
 		    	struct ExtFileLock dummyfl;
 		    	void *handle;
 			
-		    	if (!(asfshandle->flags & AHF_IS_LOCK))
-			{
-			    dummyfl.link = asfshandle->handle;
-			    handle = &dummyfl;
-			}
-			else
+//		    	if (!(asfshandle->flags & AHF_IS_LOCK))
+//			{
+//			    dummyfl.link = asfshandle->handle;
+//			    handle = &dummyfl;
+//			}
+//			else
 			{
 			    handle = asfshandle->handle;
 			}
-                        packet.dp_Type = ACTION_LOCATE_OBJECT;
+		    	
                         packet.dp_Arg1 =
                             (asfshandle ==  &asfshandle->device->rootfh) ?
                             0 :
                             (IPTR)MKBADDR(handle);
-                        packet.dp_Arg2 =(IPTR)iofs->io_Union.io_OPEN_FILE.io_Filename;
-                        packet.dp_Arg3 = 
-                            (iofs->io_Union.io_OPEN.io_FileMode == FMF_LOCK) ?
-                            EXCLUSIVE_LOCK :
-                            SHARED_LOCK;
 
+                        if (iofs->io_Union.io_OPEN_FILE.io_Filename[0] == '\0')
+                        {
+                            packet.dp_Type = ACTION_COPY_DIR;
+D(bug("[asfs] open: ACTION_COPY_DIR %x result in ", packet.dp_Arg1));
+                        }
+                        else
+                        {
+                            packet.dp_Type = ACTION_LOCATE_OBJECT;
+                            packet.dp_Arg2 =(IPTR)iofs->io_Union.io_OPEN_FILE.io_Filename;
+                            packet.dp_Arg3 = 
+                                (iofs->io_Union.io_OPEN.io_FileMode == FMF_LOCK) ?
+                                EXCLUSIVE_LOCK :
+                                SHARED_LOCK;
+                            
 D(bug("[asfs] open: ACTION_LOCATE_OBJECT %x %x %x result in ", packet.dp_Arg1, packet.dp_Arg2, packet.dp_Arg3));
-
+                        }
                         sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                         error = packet.dp_Res2;
 D(bug(" %d\n", error));
