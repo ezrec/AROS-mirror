@@ -519,6 +519,7 @@ static void hub_explore(OOP_Class *cl, OOP_Object *o)
 static void hub_process()
 {
     HubData *hub = (HubData *)(FindTask(NULL)->tc_UserData);
+    struct Process *hub_task = (struct Process *)FindTask(NULL);
     struct usb_staticdata *sd = hub->sd;
     OOP_Object *o = NULL;
     OOP_Class *cl = sd->hubClass;
@@ -533,7 +534,7 @@ static void hub_process()
     {
         D(bug("[USBHub Process] YAWN...\n"));
 
-        sigset = Wait( (1 << hub->hub_task->pr_MsgPort.mp_SigBit) |
+        sigset = Wait( (1 << hub_task->pr_MsgPort.mp_SigBit) |
                        (1 << hub->sigInterrupt)
                      );
         D(bug("[USBHub Process] signals rcvd: %p\n", sigset));
@@ -548,7 +549,7 @@ static void hub_process()
         }
         
         /* handle messages */
-        while ((ev = (struct usbEvent *)GetMsg(&hub->hub_task->pr_MsgPort)) != NULL)
+        while ((ev = (struct usbEvent *)GetMsg(&hub_task->pr_MsgPort)) != NULL)
         {
             BOOL reply = TRUE;
 
