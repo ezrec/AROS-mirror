@@ -671,7 +671,6 @@ D(bug("[SFS] FSA_RENAME %s %s\n", iofs->io_Union.io_RENAME.io_Filename, iofs->io
                     (IPTR)MKBADDR(asfshandle->handle);
                 packet.dp_Arg2 =(IPTR)MKBADDR(iofs->io_Union.io_RENAME.io_Filename);
                 packet.dp_Arg3 = packet.dp_Arg1;
-#warning "VERY FIXME: RENAME missing parameter"
                 packet.dp_Arg4 = (IPTR)MKBADDR(iofs->io_Union.io_RENAME.io_NewName);
                 sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                 if (packet.dp_Res1)
