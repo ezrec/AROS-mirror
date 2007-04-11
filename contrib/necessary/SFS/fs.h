@@ -18,7 +18,7 @@
 
 // #define CHECKCHECKSUMSALWAYS
 
- #define DEBUGCODE
+// #define DEBUGCODE
 // #define DEBUGKPRINTF  /* If defined and DEBUGCODE is defined then uses kprintf as output */
 // #define DEBUG115200
 
