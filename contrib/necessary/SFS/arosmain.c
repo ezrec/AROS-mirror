@@ -329,8 +329,18 @@ D(bug("[asfs] openfile: %s, %lx, %lx\n", iofs->io_Union.io_OPEN_FILE.io_Filename
                         packet.dp_Type = ACTION_FINDOUTPUT;
                     else
                     {
-                        error = ERROR_BAD_NUMBER;
-                        break; /* switch statement */
+                        /* Only write */
+                        if ((mode & (FMF_WRITE|FMF_READ)) == FMF_WRITE)
+                            packet.dp_Type = ACTION_FINDOUTPUT;
+                        /* Read/Write */
+                        else if (mode & FMF_WRITE)
+                            packet.dp_Type = ACTION_FINDUPDATE;
+                        /* Read only */
+                        else
+                            packet.dp_Type = ACTION_FINDINPUT;
+
+//                        error = ERROR_BAD_NUMBER;
+//                        break; /* switch statement */
                     }
                     new = AllocMem(sizeof(struct ASFSHandle), MEMF_PUBLIC | MEMF_CLEAR);
                     if (new)
@@ -457,6 +467,11 @@ D(bug("[asfs] close: handle=%p\n", asfshandle->handle));
                 sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
                 break;
 
+            case FSA_IS_INTERACTIVE:
+                iofs->io_Union.io_IS_INTERACTIVE.io_IsInteractive = FALSE;
+                error = 0;
+                break;
+                
             case FSA_IS_FILESYSTEM:
                 packet.dp_Type = ACTION_IS_FILESYSTEM;
                 sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
