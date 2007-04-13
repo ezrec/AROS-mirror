@@ -484,6 +484,9 @@ OOP_Object *METHOD(UHCI, Root, New)
     }
 
 
+    if (o)
+        BASE(cl->UserData)->LibNode.lib_OpenCnt++;
+    
     D(bug("[UHCI] UHCI::New() = %p\n",o));
 
     return o;
@@ -519,7 +522,8 @@ void METHOD(UHCI, Root, Dispose)
     port->mp_SigBit = AllocSignal(-1);
     DeleteMsgPort(port);
 
-
+    BASE(cl->UserData)->LibNode.lib_OpenCnt--;
+    
     OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 }
 
