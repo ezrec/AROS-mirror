@@ -43,6 +43,8 @@ OOP_Object *METHOD(USB, Root, New)
 {
     D(bug("[USB] USB::New()\n"));
 
+    BASE(cl->UserData)->LibNode.lib_OpenCnt++;
+    
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg) msg);
     if (o)
     {
@@ -50,6 +52,9 @@ OOP_Object *METHOD(USB, Root, New)
     }    
 
     D(bug("[USB] USB::New() = %p\n", o));
+
+    if (!o)
+        BASE(cl->UserData)->LibNode.lib_OpenCnt--;
 
     return o;
 }
@@ -60,9 +65,13 @@ struct pRoot_Dispose {
 
 void METHOD(USB, Root, Dispose)
 {
+    struct Library *base = &BASE(cl->UserData)->LibNode;
+    
     D(bug("[USB] USB::Dispose\n"));
 
     OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+    
+    base->lib_OpenCnt--;
 }
 
 BOOL METHOD(USB, Hidd_USB, AttachDriver)

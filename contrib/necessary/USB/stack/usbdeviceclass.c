@@ -128,6 +128,8 @@ OOP_Object *METHOD(USBDevice, Root, New)
 {
     D(bug("[USB] USBDevice::New()\n"));
 
+    BASE(cl->UserData)->LibNode.lib_OpenCnt++;
+
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg) msg);
     if (o)
     {
@@ -237,6 +239,9 @@ OOP_Object *METHOD(USBDevice, Root, New)
     }    
 
     D(bug("[USB] USBDevice::New() = %p\n",o));
+
+    if (!o)
+        BASE(cl->UserData)->LibNode.lib_OpenCnt--;
 
     return o;
 }
@@ -576,7 +581,8 @@ struct pRoot_Dispose {
 void METHOD(USBDevice, Root, Dispose)
 {
     DeviceData *dev = OOP_INST_DATA(cl, o);
-
+    struct Library *base = &BASE(cl->UserData)->LibNode;
+    
     D(bug("[USB] USBDevice::Dispose\n"));
 
     if (dev->next)
@@ -600,6 +606,8 @@ void METHOD(USBDevice, Root, Dispose)
     USBDeleteTimer(dev->tr);
     
     OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+    
+    base->lib_OpenCnt--;
 }
 
 void METHOD(USBDevice, Root, Get)
