@@ -287,6 +287,8 @@ OOP_Object *METHOD(UHCI, Root, New)
 {
     D(bug("[UHCI] UHCI::New()\n"));
 
+    BASE(cl->UserData)->LibNode.lib_OpenCnt++;
+
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg) msg);
     if (o)
     {
@@ -483,11 +485,11 @@ OOP_Object *METHOD(UHCI, Root, New)
                 uhci->iobase + UHCI_INTR );
     }
 
-
-    if (o)
-        BASE(cl->UserData)->LibNode.lib_OpenCnt++;
     
     D(bug("[UHCI] UHCI::New() = %p\n",o));
+
+    if (!o)
+        BASE(cl->UserData)->LibNode.lib_OpenCnt--;
 
     return o;
 }
@@ -499,7 +501,8 @@ struct pRoot_Dispose {
 void METHOD(UHCI, Root, Dispose)
 {
     UHCIData *uhci = OOP_INST_DATA(cl, o);
-
+    struct uhcibase *base = BASE(cl->UserData);
+    
     D(bug("[UHCI] UHCI::Dispose\n"));
 
     D(bug("[UHCI]   Stopping USB transfer\n"));
@@ -522,9 +525,9 @@ void METHOD(UHCI, Root, Dispose)
     port->mp_SigBit = AllocSignal(-1);
     DeleteMsgPort(port);
 
-    BASE(cl->UserData)->LibNode.lib_OpenCnt--;
-    
     OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+
+    base->LibNode.lib_OpenCnt--;
 }
 
 void METHOD(UHCI, Root, Get)
