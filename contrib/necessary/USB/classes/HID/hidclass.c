@@ -206,6 +206,8 @@ OOP_Object *METHOD(HID, Root, New)
 {
     D(bug("[HID] HID::New()\n"));
 
+    BASE(cl->UserData)->LibNode.lib_OpenCnt++;
+    
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg) msg);
     if (o)
     {
@@ -285,6 +287,9 @@ OOP_Object *METHOD(HID, Root, New)
 
     D(bug("[HID] HID::New() = %p\n", o));
 
+    if (!o)
+        BASE(cl->UserData)->LibNode.lib_OpenCnt--;
+
     return o;
 }
 
@@ -296,6 +301,8 @@ void METHOD(HID, Root, Dispose)
 {
     HidData *hid = OOP_INST_DATA(cl, o);
     OOP_Object *drv = NULL;
+    struct Library *base = &BASE(cl->UserData)->LibNode;
+    
     OOP_GetAttr(o, aHidd_USBDevice_Bus, (intptr_t *)&drv);
       
     HIDD_USBDrv_RemInterrupt(drv, hid->intr_pipe, &hid->interrupt);
@@ -309,6 +316,8 @@ void METHOD(HID, Root, Dispose)
         FreeVecPooled(SD(cl)->MemPool, hid->buffer);
     
     OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+    
+    base->lib_OpenCnt--;
 }
 
 /*
