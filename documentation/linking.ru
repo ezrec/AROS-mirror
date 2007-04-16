@@ -10,27 +10,28 @@
 
 Ћучший способ оказать поддержку AROS, который мы вс€чески приветствуем, это
 сделать ссылку на наш сайт на вашем. ƒл€ этой цели можно использовать, например,
-этот прелестный баннер, сделанный Cyb0rg / Resistance:
+эти змечательные баннеры, созданные Cyb0rg / Resistance и S33k_100:
 
 
-	.. Image:: /images/aros-banner.gif
-		:align: center
-		:class: bannerimage
-		
-	.. Image:: /images/aros-banner2.png
-		:align: center
-		:class: bannerimage
+    .. Image:: /images/aros-banner.gif
+        :align: center
+        :class: bannerimage
+        
+    .. Image:: /images/aros-banner2.png
+        :align: center
+        :class: bannerimage
 
-Forum "sigbanners" (S33k_100):
+“акже есть небольшие баннеры, удобные дл€ подписей на форумах (автор S33k_100):
 
-	.. Image:: /images/aros-sigbar-user.png
-		:align: center
-		:class: bannerimage
+    .. Image:: /images/aros-sigbar-user.png
+        :align: center
+        :class: bannerimage
 
-	.. Image:: /images/aros-sigbar-coder.png
-		:align: center
-		:class: bannerimage
+    .. Image:: /images/aros-sigbar-coder.png
+        :align: center
+        :class: bannerimage
 
-ѕожалуйста, делайте ссылку пр€мо на http://www.aros.org/, но не на какие-либо зеркала, поскольку со временем они могут изменитьс€. “акже, сделайте локальную
+ѕожалуйста, делайте ссылку пр€мо на http://www.aros.org/, но не на какие-либо 
+зеркала, поскольку со временем они могут изменитьс€. “акже, сделайте локальную
 копию изображени€ баннера на вашем сервере дл€ снижени€ нагрузки на сайт.
 
