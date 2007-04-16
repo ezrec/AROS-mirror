@@ -100,7 +100,20 @@ BOOL METHOD(OHCI, Hidd_USBHub, SetHubFeature)
 
 BOOL METHOD(OHCI, Hidd_USBHub, GetPortStatus)
 {
-    return FALSE;
+    OHCIData *ohci = OOP_INST_DATA(cl, o);
+    BOOL retval = FALSE;
+    
+    if (msg->port >= 1 && msg->port <= ohci->hubDescr.bNbrPorts)
+    {
+        uint32_t val = mmio(ohci->regs->HcRhPortStatus[msg->port-1]);
+        msg->status->wPortStatus = val;
+        msg->status->wPortChange = val >> 16;
+        retval = TRUE;
+    }
+    
+    D(bug("[OHCI] GetPortStatus: sts=%04x chg=%04x\n", msg->status->wPortStatus, msg->status->wPortChange));
+    
+    return retval;
 }
 
 BOOL METHOD(OHCI, Hidd_USBHub, ClearPortFeature)

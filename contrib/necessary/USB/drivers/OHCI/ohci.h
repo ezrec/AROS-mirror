@@ -194,13 +194,17 @@ typedef struct OHCIData {
     volatile ohci_registers_t   *regs;
     ohci_hcca_t                 *hcca;
     usb_hub_descriptor_t        hubDescr;
+    
     struct List                 intList;
     struct Interrupt            *tmp;
     
     struct MsgPort              timerPort;
     struct Interrupt            timerInt;
     struct timerequest          *timerReq;
-
+    
+    OOP_Object                  *pciDriver;
+    OOP_Object                  *pciDevice;
+    
 } OHCIData;
 
 #define BASE(lib)((struct ohcibase*)(lib))

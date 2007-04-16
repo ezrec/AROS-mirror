@@ -76,6 +76,18 @@ OOP_Object *METHOD(OHCI, Root, New)
         
         CopyMem(&hub_descriptor, &ohci->hubDescr, sizeof(usb_hub_descriptor_t));
         
+        ohci->hubDescr.bNbrPorts = GetTagData(aHidd_USBHub_NumPorts, 0, msg->attrList);
+        ohci->regs = (ohci_registers_t *)GetTagData(aHidd_OHCI_MemBase, 0, msg->attrList);
+        ohci->pciDriver = (OOP_Object *)GetTagData(aHidd_OHCI_PCIDriver, 0, msg->attrList);
+        ohci->pciDevice = (OOP_Object *)GetTagData(aHidd_OHCI_PCIDevice, 0, msg->attrList);
+        ohci->hcca = HIDD_PCIDriver_AllocPCIMem(ohci->pciDriver, 4096);
+
+        D(bug("[OHCI] New(): o=%p, ports=%d, regs=%p, drv=%p, dev=%p, hcca=%p\n", o,
+              ohci->hubDescr.bNbrPorts, ohci->regs, ohci->pciDriver, ohci->pciDevice,
+              ohci->hcca));
+        
+        ohci->sd = SD(cl);
+        
         if (ohci->tmp)
             AddTail(&ohci->intList, &ohci->tmp->is_Node);
         
