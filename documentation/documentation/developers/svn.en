@@ -214,6 +214,31 @@ SVN will not automatically recurse into newly added directories and add the
 contents; you have to do that yourself. After having added the file, you need
 to use the "commit" command to actually add them to the repository. 
 
+.. Note::
+
+    Don't add generated files (usually *mmakefile*, *strings.h*) to the repository.
+    Otherwise these files won't be updated when the source file has changed.
+
+    
+Setting properties
+==================
+
+Operating systems differ in which codes are used for line endings. To ensure that 
+text files which aren't generated/modified on Linux have the right line ending it
+is necessary to do::
+
+    svn propset svn:eol-style native <source.c>
+
+Subversion can substitute special keywords in source files. To enable this you need
+to do::
+
+    svn propset svn:keywords Author Date Id Revision <main.c>
+
+.. Note::
+
+    You can configure Subversion so that it sets automatically the properties for
+    certain file types. Please consult your Subversion documentation.
+
 
 Importing
 =========
@@ -268,6 +293,3 @@ The following pages are highly recommended:
 .. _`Version Control with Subversion`: http://svnbook.red-bean.com/
 .. _`Subversion Home`:               http://subversion.tigris.org/
 
-Local Variables:
-coding: ISO-8859-1;
-End:
