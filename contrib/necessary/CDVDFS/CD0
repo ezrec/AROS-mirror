@@ -15,4 +15,3 @@
  BufMemType     = 0
  DosType        = 0x43444653
  Control        = "ML R J"
- Activate       = 1
