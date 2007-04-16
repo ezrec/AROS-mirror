@@ -63,6 +63,9 @@ static AROS_UFH3(void, HubInterrupt,
     uint8_t sts = 0;
     struct Interrupt *intr;
     
+    /* Remove itself from msg list */
+    GetMsg(&uhci->mport);
+    
     if (inw(uhci->iobase + UHCI_PORTSC1) & (UHCI_PORTSC_CSC|UHCI_PORTSC_OCIC))
         sts |= 1;
     if (inw(uhci->iobase + UHCI_PORTSC2) & (UHCI_PORTSC_CSC|UHCI_PORTSC_OCIC))
@@ -755,6 +758,8 @@ BOOL METHOD(UHCI, Hidd_USBDrv, ControlTransfer)
             p->p_Queue->qh_VLink = UHCI_PTR_T;
             UHCI_TransferDesc *td = p->p_FirstTD;
 
+            GetMsg(p->p_Timeout->tr_node.io_Message.mn_ReplyPort);
+            
             while ((uint32_t)td != UHCI_PTR_T)
             {
                 bug("[UHCI]     TD=%p (%08x %08x %08x %08x)\n", td,
@@ -770,7 +775,10 @@ BOOL METHOD(UHCI, Hidd_USBDrv, ControlTransfer)
         }
         else
         {
-            AbortIO((struct IORequest *)p->p_Timeout);
+            if (!CheckIO((struct IORequest *)p->p_Timeout))
+                AbortIO((struct IORequest *)p->p_Timeout);
+            WaitIO((struct IORequest *)p->p_Timeout);
+            
             if (p->p_ErrorCode)
                 retval = FALSE;
         }
@@ -785,17 +793,18 @@ BOOL METHOD(UHCI, Hidd_USBHub, OnOff)
     UHCIData *uhci = OOP_INST_DATA(cl, o);
     BOOL retval;
     D(bug("[UHCI] USBHub::OnOff(%d)\n", msg->on));
+
+    if (!CheckIO((struct IORequest *)uhci->timereq))
+        AbortIO((struct IORequest *)uhci->timereq);
+    GetMsg(&uhci->mport);
     
     if (msg->on)
     {
-        AbortIO((struct IORequest *)uhci->timereq);
         uhci->timereq->tr_node.io_Command = TR_ADDREQUEST;
         uhci->timereq->tr_time.tv_secs = 1;
         uhci->timereq->tr_time.tv_micro = 0;
         SendIO((struct IORequest *)uhci->timereq);
     }
-    else
-        AbortIO((struct IORequest *)uhci->timereq);
     
     OOP_DoSuperMethod(cl,o,(OOP_Msg)msg);
     retval = uhci_run(cl, o, msg->on);
