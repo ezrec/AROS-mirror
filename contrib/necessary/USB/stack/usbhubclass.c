@@ -87,6 +87,13 @@ OOP_Object *METHOD(USBHub, Root, New)
         HIDD_USBHub_GetHubDescriptor(o, &hub->descriptor);
         DumpDescriptor(&hub->descriptor);
 
+        if (hub->descriptor.bNbrPorts == 0)
+        {
+            intptr_t nports;
+            D(bug("[USBHub] Hub report descriptor says about 0 ports. Getting the value from the attrList.\n"));
+            hub->descriptor.bNbrPorts = GetTagData(aHidd_USBHub_NumPorts, 1, msg->attrList);
+        }
+        
         D(bug("[USBHub] %s hub with %d ports\n",
                 hub->root ? "Root" : "A", hub->descriptor.bNbrPorts));
 
@@ -576,6 +583,7 @@ static void hub_process()
                 case evt_Cleanup:
                     D(bug("[USBHub Process] Cleanup MSG\n"));
                     USBDeleteTimer(hub->tr);
+                    ReplyMsg(&ev->ev_Message);
                     return;
 
                 case evt_OnOff:
