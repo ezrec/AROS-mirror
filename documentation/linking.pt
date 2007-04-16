@@ -13,24 +13,24 @@ Uma grande forma de mostrar o seu suporte para com AROS, e algo que activamente 
 para este proposito, desenhado por Cyb0rg / Resistance:
 
 
-    .. Image:: /images/aros-banner.gif
-
-|
-
-S33k_100:
-
+	.. Image:: /images/aros-banner.gif
+		:align: center
+		:class: bannerimage
+		
 	.. Image:: /images/aros-banner2.png
-	
-|
+		:align: center
+		:class: bannerimage
+
+Forum sigbanners (S33k_100):
 
 	.. Image:: /images/aros-sigbar-user.png
-
-|
+		:align: center
+		:class: bannerimage
 
 	.. Image:: /images/aros-sigbar-coder.png
-
-|
-
+		:align: center
+		:class: bannerimage
+		
 Por favor ligue directamente para http://www.aros.org/ e a nenhum dos espelhos (mirror site/servers), por eles
 poderem alterar com o tempo. Também, se não for incomodo façam uma copia local da imagem para reduzir
 uso na largura de banda.

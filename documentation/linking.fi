@@ -13,23 +13,23 @@ sivustoltasi linkki t‰nne. Voit k‰ytt‰‰ t‰h‰n tarkoitukseen CybOrg /
 Resistance:n tekem‰‰ hienoa banneria:
 
 
-    .. Image:: /images/aros-banner.gif
-
-|
-
-S33k_100:
-
+	.. Image:: /images/aros-banner.gif
+		:align: center
+		:class: bannerimage
+		
 	.. Image:: /images/aros-banner2.png
-	
-|
+		:align: center
+		:class: bannerimage
+
+Keskusteluryhm‰t "sigbanners" (S33k_100):
 
 	.. Image:: /images/aros-sigbar-user.png
-
-|
+		:align: center
+		:class: bannerimage
 
 	.. Image:: /images/aros-sigbar-coder.png
-
-|
+		:align: center
+		:class: bannerimage
 
 Tee linkki suoraan sivustolle http://www.aros.org/, eik‰ sivustoa peilaaville
 palvelimille sill‰ ne voivat muuttua ajan saatossa. Tee yll‰ olevasta kuvasta

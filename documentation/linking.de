@@ -10,25 +10,25 @@ Verlinkung
 
 Um Deine Unterstützung für AROS zu zeigen, kannst Du diese Webseite von Deiner
 eigenen verlinken. Du kannst das folgende Banner dafür verwenden, welches von
-'Cyb0rg / Resistance' erstellt wurde:
+'Cyb0rg / Resistance' und 'S33k_100' erstellt wurde:
 
-    .. Image:: /images/aros-banner.gif
-
-|
-
-Oder das (sig)Banners von S33k_100:
-
+	.. Image:: /images/aros-banner.gif
+		:align: center
+		:class: bannerimage
+		
 	.. Image:: /images/aros-banner2.png
-	
-|
+		:align: center
+		:class: bannerimage
+
+Alternativ sind der also spezialen Banners für Foren (von S33k_100):
 
 	.. Image:: /images/aros-sigbar-user.png
-
-|
+		:align: center
+		:class: bannerimage
 
 	.. Image:: /images/aros-sigbar-coder.png
-
-|
+		:align: center
+		:class: bannerimage
 
 Verlinke bitte direkt mit http://www.aros.org/ und nicht mit einem der Spiegel,
 da sich diese mit der Zeit ändern können. Mache bitte eine Kopie vom Banner,
