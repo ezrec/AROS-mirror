@@ -137,11 +137,7 @@ static int OHCI_Init(LIBBASETYPEPTR LIBBASE)
                 h_Entry:        (IPTR (*)())Enumerator,
                 h_Data:         LIBBASE,
         };
-//
-//        NEWLIST(&LIBBASE->sd.td_list);
-//        InitSemaphore(&LIBBASE->sd.global_lock);
-//        InitSemaphore(&LIBBASE->sd.td_lock);
-//
+
         OOP_ObtainAttrBases(attrbases);
 
         D(bug("[OHCI] Searching for OHCI devices...\n"));
@@ -149,7 +145,7 @@ static int OHCI_Init(LIBBASETYPEPTR LIBBASE)
         HIDD_PCI_EnumDevices(LIBBASE->sd.pci, &FindHook, (struct TagItem *)&tags);
 
         D(bug("[OHCI] Done. OHCI devices found: %d\n", LIBBASE->sd.numDevices));
-#if 0
+
         if (LIBBASE->sd.numDevices > 0)
         {
             LIBBASE->sd.memPool = CreatePool(MEMF_CLEAR | MEMF_PUBLIC | MEMF_SEM_PROTECTED, 8192, 4096);
@@ -157,7 +153,7 @@ static int OHCI_Init(LIBBASETYPEPTR LIBBASE)
             if (LIBBASE->sd.memPool)
                 return TRUE;
         }
-#endif
+
     }
 
     return FALSE;

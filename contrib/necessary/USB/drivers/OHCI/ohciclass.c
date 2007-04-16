@@ -23,11 +23,14 @@
 #include <inttypes.h>
 
 #include <exec/types.h>
+#include <exec/ports.h>
 #include <oop/oop.h>
 #include <usb/usb.h>
 #include <utility/tagitem.h>
 #include <aros/debug.h>
 #include <aros/symbolsets.h>
+
+#include <devices/timer.h>
 
 #include <hidd/hidd.h>
 #include <hidd/pci.h>
@@ -59,8 +62,24 @@ OOP_Object *METHOD(OHCI, Root, New)
     if (o)
     {
         OHCIData *ohci = OOP_INST_DATA(cl, o);
+        NEWLIST(&ohci->intList);
+        
+        NEWLIST(&ohci->timerPort.mp_MsgList);
+        ohci->timerPort.mp_Flags = PA_SOFTINT;
+        ohci->timerPort.mp_Node.ln_Type = NT_MSGPORT;
+        ohci->timerPort.mp_SigTask = &ohci->timerInt;
+        ohci->timerInt.is_Code = OHCI_HubInterrupt;
+        ohci->timerInt.is_Data = ohci;
+        
+        ohci->timerReq = CreateIORequest(&ohci->timerPort, sizeof(struct timerequest));
+        OpenDevice((STRPTR)"timer.device", UNIT_VBLANK, (struct IORequest *)ohci->timerReq, 0);
         
         CopyMem(&hub_descriptor, &ohci->hubDescr, sizeof(usb_hub_descriptor_t));
+        
+        if (ohci->tmp)
+            AddTail(&ohci->intList, &ohci->tmp->is_Node);
+        
+        success = TRUE;
     }
     
     if (!success)
@@ -109,7 +128,7 @@ void METHOD(OHCI, Root, Get)
                 *msg->storage = 0;
                 break;
             case aoHidd_USBDevice_Bus:
-                *msg->storage = (IPTR)o;
+                *msg->storage = (intptr_t)o;
                 break;
             default:
                 OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
@@ -117,6 +136,48 @@ void METHOD(OHCI, Root, Get)
     }
     else
         OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+}
+
+BOOL METHOD(OHCI, Hidd_USBDrv, AddInterrupt)
+{
+    BOOL retval = FALSE;
+    
+    if (msg->pipe == (void *)0xdeadbeef)
+    {
+        OHCIData *ohci = OOP_INST_DATA(cl, o);
+        D(bug("[OHCI] AddInterrupt() local for the OHCI. Intr %p, list %p\n", msg->interrupt, &ohci->intList));
+        
+        if (!ohci->regs)
+            ohci->tmp = msg->interrupt;
+        else
+            AddTail(&ohci->intList, &msg->interrupt->is_Node);
+        
+        retval = TRUE;    
+    }
+    else
+    {
+        D(bug("[OHCI] AddInterrupt()\n"));
+#warning TODO: Complete
+    }
+    D(bug("[OHCI::AddInterrupt] %s\n", retval ? "success":"failure"));
+    
+    //for(;;);
+    
+    return retval;
+}
+
+BOOL METHOD(OHCI, Hidd_USBDrv, RemInterrupt)
+{
+    if (msg->pipe == (void *)0xdeadbeef)
+    {
+        Remove(msg->interrupt);
+        return TRUE;
+    }
+    else
+    {
+#warning TODO:
+        return FALSE;
+    }
 }
 
 
@@ -139,6 +200,7 @@ static int OHCI_InitClass(LIBBASETYPEPTR LIBBASE)
                 { aHidd_OHCI_MemBase,           0UL },
                 { aHidd_OHCI_PCIDevice,         0UL },
                 { aHidd_OHCI_PCIDriver,         0UL },
+                { aHidd_USBHub_NumPorts,        0UL },
                 { aHidd_USBDevice_Address,      1UL },
                 { aHidd_USBHub_IsRoot,          1UL },
                 { TAG_DONE, 0UL },
@@ -149,6 +211,12 @@ static int OHCI_InitClass(LIBBASETYPEPTR LIBBASE)
             tags[0].ti_Data = LIBBASE->sd.ramBase[i];
             tags[1].ti_Data = (intptr_t)LIBBASE->sd.pciDevice[i];
             tags[2].ti_Data = (intptr_t)LIBBASE->sd.pciDriver[i];
+            tags[3].ti_Data = (intptr_t)LIBBASE->sd.numPorts[i];
+            
+            D(bug("[OHCI] Initializing driver object: dev=%p, drv=%p, %d ports @ %p\n",
+                  LIBBASE->sd.pciDevice[i], LIBBASE->sd.pciDriver[i], LIBBASE->sd.numPorts[i],
+                  LIBBASE->sd.ramBase[i]));
+
             LIBBASE->sd.ohciDevice[i] = OOP_NewObject(NULL, (STRPTR)CLID_Drv_USB_OHCI, tags);
             HIDD_USB_AttachDriver(LIBBASE->sd.usb, LIBBASE->sd.ohciDevice[i]);
         }

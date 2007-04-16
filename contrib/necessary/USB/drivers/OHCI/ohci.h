@@ -23,6 +23,8 @@
 
 #include <inttypes.h>
 
+#include <aros/asmcall.h>
+
 #include LC_LIBDEFS_FILE
 
 #define mmio(var) (*(volatile uint32_t *)&(var))
@@ -192,7 +194,13 @@ typedef struct OHCIData {
     volatile ohci_registers_t   *regs;
     ohci_hcca_t                 *hcca;
     usb_hub_descriptor_t        hubDescr;
+    struct List                 intList;
+    struct Interrupt            *tmp;
     
+    struct MsgPort              timerPort;
+    struct Interrupt            timerInt;
+    struct timerequest          *timerReq;
+
 } OHCIData;
 
 #define BASE(lib)((struct ohcibase*)(lib))
@@ -217,5 +225,10 @@ enum {
 #define PCI_BASE_CLASS_SERIAL   0x0c
 #define PCI_SUB_CLASS_USB               0x03
 #define PCI_INTERFACE_OHCI      0x10
+
+AROS_UFP3(void, OHCI_HubInterrupt,
+          AROS_UFPA(APTR, interruptData, A1),
+          AROS_UFPA(APTR, interruptCode, A5),
+          AROS_UFPA(struct ExecBase *, SysBase, A6));
 
 #endif /*OHCI_H_*/
