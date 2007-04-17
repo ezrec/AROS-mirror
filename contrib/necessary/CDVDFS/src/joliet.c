@@ -1,3 +1,4 @@
+#include <aros/macros.h>
 #include <proto/exec.h>
 #include <exec/memory.h>
 #include <stdlib.h>
@@ -48,9 +49,8 @@ int Get_Joliet_Name(char *from, char *to, unsigned char len)
 
 	u_from = (UWORD *)from;
 	for (i = 0; i < len; i+=2) {
-		uc = u_from[l];
+		uc = AROS_BE2WORD(u_from[l]);
 		to[l++] = global->g_unicode_table[uc];
 	}
 	return l;
 }
-   
