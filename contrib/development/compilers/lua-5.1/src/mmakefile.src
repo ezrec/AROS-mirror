@@ -25,7 +25,7 @@ LUACFILES :=	luac print $(COREFILES)
 # files to build the interpreter 'amilua'
 AMILUAFILES :=	amilua $(COREFILES)
 
-HEADERS :=	lua.h luaconf.h lualib.h lauxlib.h lsiamgalib.h lmuilib.h
+HEADERS :=	lua.h luaconf.h lualib.h lauxlib.h lsiamigalib.h lmuilib.h
 
 EXEDIR :=	$(CONTRIBDIR)/Development/Lua
 

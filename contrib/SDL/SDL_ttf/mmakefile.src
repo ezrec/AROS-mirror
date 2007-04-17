@@ -7,7 +7,7 @@ USER_INCLUDES:=-I$(AROS_INCLUDES)/SDL
 
 LIBFILES:=SDL_ttf
 FILES:=showfont
-HEADERS:=SDL_ttf
+HEADERS:=SDL_ttf.h
 
 #MM- contrib-sdl-sdl-ttf : development-sdl-ttf-test
 
