@@ -31,7 +31,7 @@
 #ifdef __AROS__
 
 #include <libraries/mui.h>
-#include <aros/machine.h>
+#include <aros/cpu.h>
 
 #define MGTK_HOOK_OBJECT_POINTER
 #define MGTK_HOOK_APTR
