@@ -4,8 +4,8 @@ Werken met Subversion
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
 :Copyright: Copyright ù 1995-2002, The AROS Development Team
-:Version:   $Revision$
-:Date:      $Date$
+:Version:   $Revision: 25645 $
+:Date:      $Date: 2007-04-02 16:30:17 +0200 (Mon, 02 Apr 2007) $
 :Status:    Done.
 :Abstract: 
     
@@ -219,6 +219,30 @@ SVN zoekt niet automatisch naar nieuw toegevoegde bestanden en mappen; u moet da
 Nadat u het bestand heeft toegevoegd, moet het "commit" commando gebruikt worden
 om deze ook daadwerkelijk aan het archief toe te voegen. 
 
+.. Note::
+
+    Voeg geen gegenereerde bestanden (gebruikelijk *mmakefile*, *strings.h*) toe aan 
+    het archief. Anders zullen deze bestanden niet geupdate worden als de source is veranderd.
+
+
+Eigenschappen instellen
+=======================
+
+Besturingssystemen verschillen met welke code ze gebruiken voor regeleindes. Om er zeker
+van te zijn dat text-bestanden die niet zijn gegenereerd voor Linux, dezelfde regeleindes hebben
+is het nodig het volgende commando uit te voeren::
+
+    svn propset svn:eol-style native <source.c>
+
+Subversion kan ook speciale sleutelwoorden invoegen in source bestanden. Om dit in te stellen
+moet u het volgende commando uitvoeren op het bestand::
+
+    svn propset svn:keywords Author Date Id Revision <main.c>
+
+.. Note::
+
+    U kunt Subversion zodanig configureren dat deze automatisch de eigenschappen instelt
+    van bepaalde bestandstypes. Consuleert u hiervoor uw Subversion documentatie.
 
 Importeren
 ==========
