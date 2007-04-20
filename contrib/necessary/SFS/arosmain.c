@@ -245,10 +245,10 @@ void ASFS_work(struct ASFSBase *asfsbase)
                 sendPacket(asfsbase, iofs->io_PacketEmulation, asfshandle->device->taskmp);
                 error = 0;
                 break;
-
+              
             case FSA_OPEN:
                 {
-                struct ASFSHandle *new;
+                    struct ASFSHandle *new;
 D(bug("[asfs] open: lock %08x (%s) %s\n",
       asfshandle->handle,
       (asfshandle == &asfshandle->device->rootfh) ? "root" : (asfshandle->flags & AHF_IS_LOCK) ? "lock" : "handle", 
@@ -314,14 +314,21 @@ D(bug("[asfs] open: lock = %p\n", new->handle));
                 break;
 
             case FSA_OPEN_FILE:
+                if (iofs->io_Union.io_OPEN_FILE.io_Filename[0] == '\0')
                 {
-                struct ASFSHandle *new;
-                ULONG mode=iofs->io_Union.io_OPEN_FILE.io_FileMode;
-D(bug("[asfs] openfile: %s, %lx, %lx\n", iofs->io_Union.io_OPEN_FILE.io_Filename, mode, iofs->io_Union.io_OPEN_FILE.io_Protection));
+                    error = ERROR_OBJECT_WRONG_TYPE;
+                }
+                else
+                {
+                    struct ASFSHandle *new;
+                    ULONG mode=iofs->io_Union.io_OPEN_FILE.io_FileMode;
+
+
+                    D(bug("[asfs] openfile: %s, %lx, %lx\n", iofs->io_Union.io_OPEN_FILE.io_Filename, mode, iofs->io_Union.io_OPEN_FILE.io_Protection));
                     if (
                             (mode == FMF_MODE_OLDFILE) ||
                             (mode == FMF_READ)
-                        )
+                    )
                         packet.dp_Type = ACTION_FINDINPUT;
                     else if (mode == FMF_MODE_READWRITE)
                         packet.dp_Type = ACTION_FINDUPDATE;
@@ -330,7 +337,7 @@ D(bug("[asfs] openfile: %s, %lx, %lx\n", iofs->io_Union.io_OPEN_FILE.io_Filename
                     else
                     {
                         /* Only write */
-                        if ((mode & (FMF_WRITE|FMF_READ)) == FMF_WRITE)
+                        if (((mode & (FMF_WRITE|FMF_READ)) == FMF_WRITE) || (mode & FMF_CLEAR))
                             packet.dp_Type = ACTION_FINDOUTPUT;
                         /* Read/Write */
                         else if (mode & FMF_WRITE)
@@ -339,38 +346,40 @@ D(bug("[asfs] openfile: %s, %lx, %lx\n", iofs->io_Union.io_OPEN_FILE.io_Filename
                         else
                             packet.dp_Type = ACTION_FINDINPUT;
 
-//                        error = ERROR_BAD_NUMBER;
-//                        break; /* switch statement */
+                        //                        error = ERROR_BAD_NUMBER;
+                        //                        break; /* switch statement */
                     }
                     new = AllocMem(sizeof(struct ASFSHandle), MEMF_PUBLIC | MEMF_CLEAR);
                     if (new)
                     {
-                    struct FileHandle fh=
-                    {
+                        struct FileHandle fh=
+                        {
 #if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
-                        0,{0,0},
+                                0,{0,0},
 #endif
-                        0,
-                        (UBYTE *)-1,(UBYTE *)-1,
-                        0,0,0,0,0
+                                0,
+                                (UBYTE *)-1,(UBYTE *)-1,
+                                0,0,0,0,0
 #if (AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
-                        ,0
+                                ,0
 #endif
-                    };
-		    
+                        };
+
                         packet.dp_Arg1 = (IPTR)MKBADDR(&fh);
                         packet.dp_Arg2 =
                             (asfshandle ==  &asfshandle->device->rootfh) ?
-                            0 :
-                            (IPTR)MKBADDR(asfshandle->handle);
+                                    0 :
+                                        (IPTR)MKBADDR(asfshandle->handle);
                         packet.dp_Arg3 = (IPTR)iofs->io_Union.io_OPEN_FILE.io_Filename;
                         sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
+                        D(bug("[asfs] openfile: dp_Res1=%d dp_Res2=%d\n", packet.dp_Res1, packet.dp_Res2));
+
                         if (packet.dp_Res1)
                         {
                             new->handle = (void *)fh.fh_Arg1;
                             new->flags |= AHF_IS_FH;
                             new->device = asfshandle->device;
-D(bug("[asfs] openfile: handle = %lp\n", new->handle));
+                            D(bug("[asfs] openfile: handle = %lp\n", new->handle));
                             error = 0;
                         }
                         else
