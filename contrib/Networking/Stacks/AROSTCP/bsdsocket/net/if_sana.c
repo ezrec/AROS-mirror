@@ -20,6 +20,9 @@
  *
  */
 
+#define DEBUG 0
+#include <aros/debug.h>
+
 #include <conf.h>
 
 #include <exec/errors.h>
@@ -333,6 +336,11 @@ iface_make(struct ssconfig *ifc)
 				ssc->ss_if.if_flags &= ~(IFF_RUNNING|IFF_UP);
 
 				/* Initialize */ 
+
+D(bug("[AROSTCP] if_sana.c: iface_make: Current IP from config = %s\n", ifc->args[0].a_ip));
+				ifc->args[0].a_ip = "0.0.0.0";
+D(bug("[AROSTCP] if_sana.c: iface_make: IP set to 0.0.0.0\n"));
+
 				ssconfig(ssc, ifc);
 	
 				NewList((struct List*)&ssc->ss_freereq);
