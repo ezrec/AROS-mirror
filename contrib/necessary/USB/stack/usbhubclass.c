@@ -550,9 +550,9 @@ static void hub_process()
         if (sigset & (1 << hub->sigInterrupt))
         {
             D(bug("[USBHub Process] Interrupt signalled\n"));
-            ObtainSemaphore(&sd->global_lock);
+//            ObtainSemaphore(&sd->global_lock);
             hub_explore(cl, o);
-            ReleaseSemaphore(&sd->global_lock);
+//            ReleaseSemaphore(&sd->global_lock);
         }
         
         /* handle messages */
