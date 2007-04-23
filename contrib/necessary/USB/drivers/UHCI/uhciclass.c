@@ -797,6 +797,8 @@ BOOL METHOD(UHCI, Hidd_USBHub, OnOff)
     if (!CheckIO((struct IORequest *)uhci->timereq))
         AbortIO((struct IORequest *)uhci->timereq);
     GetMsg(&uhci->mport);
+
+    uhci->running = msg->on;
     
     if (msg->on)
     {
@@ -807,10 +809,9 @@ BOOL METHOD(UHCI, Hidd_USBHub, OnOff)
     }
     
     OOP_DoSuperMethod(cl,o,(OOP_Msg)msg);
+    
     retval = uhci_run(cl, o, msg->on);
     uhci_sleep(cl, o, 100);
-    
-    uhci->running = msg->on;
     
     return retval;
 }
