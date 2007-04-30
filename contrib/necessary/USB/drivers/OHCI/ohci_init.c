@@ -109,6 +109,9 @@ static int OHCI_Init(LIBBASETYPEPTR LIBBASE)
 
     LIBBASE->sd.usb = OOP_NewObject(NULL, (STRPTR)CLID_Hidd_USB, NULL);
 
+    NEWLIST(&LIBBASE->sd.tdList);
+    InitSemaphore(&LIBBASE->sd.tdLock);
+    
     if (!LIBBASE->sd.usb)
     {
         bug("[OHCI] Cannot create the instance of base USB class\n");

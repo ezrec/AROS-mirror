@@ -82,6 +82,8 @@ OOP_Object *METHOD(OHCI, Root, New)
         ohci->pciDevice = (OOP_Object *)GetTagData(aHidd_OHCI_PCIDevice, 0, msg->attrList);
         ohci->hcca = HIDD_PCIDriver_AllocPCIMem(ohci->pciDriver, 4096);
 
+        mmio(ohci->regs->HcHCCA) = (uint32_t)ohci->hcca;
+        
         D(bug("[OHCI] New(): o=%p, ports=%d, regs=%p, drv=%p, dev=%p, hcca=%p\n", o,
               ohci->hubDescr.bNbrPorts, ohci->regs, ohci->pciDriver, ohci->pciDevice,
               ohci->hcca));

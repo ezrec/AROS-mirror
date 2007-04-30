@@ -25,6 +25,8 @@
 
 #include <aros/asmcall.h>
 
+#include <exec/semaphores.h>
+
 #include LC_LIBDEFS_FILE
 
 #define mmio(var) (*(volatile uint32_t *)&(var))
@@ -134,6 +136,37 @@ typedef struct ohci_hcca {
     uint8_t     hccaRsvd[116];
 } __attribute__((packed)) ohci_hcca_t;
 
+typedef struct ohci_ed {
+    uint32_t    edFlags;
+    uint32_t    edTailP;
+    uint32_t    edHeadP;
+    uint32_t    edNextED;
+} ohci_ed_t;
+
+#define ED_FA_MASK      0x0000007f
+#define ED_EN_MASK      0x00000780
+#define ED_D_MASK       0x00001800
+#define ED_S            0x00002000
+#define ED_K            0x00004000
+#define ED_F            0x00008000
+#define ED_MPS_MASK     0x07ff0000
+#define ED_C            0x00000002
+#define ED_H            0x00000001
+
+typedef struct ohci_td {
+    uint32_t    tdFlags;
+    uint32_t    tdCurrentBufferPointer;
+    uint32_t    tdNextTD;
+    uint32_t    tdBufferEnd;
+} ohci_td_t;
+
+#define TD_R            0x00040000
+#define TD_DP_MASK      0x00180000
+#define TD_DI_MASK      0x00e00000
+#define TD_T_MASK       0x03000000
+#define TD_EC_MASK      0x0c000000
+#define TD_CC_MASK      0xf0000000
+
 #define HC_FSMPS(i) (((i-210) * 6 / 7)<<16)
 #define HC_PERIODIC(i) ((i) * 9 / 10)
 
@@ -173,6 +206,9 @@ struct ohci_staticdata
     
     void                *memPool;
     
+    struct SignalSemaphore      tdLock;
+    struct List                 tdList;
+    
     uint8_t             numDevices;
     intptr_t            ramBase[MAX_OHCI_DEVICES];
     uint8_t             numPorts[MAX_OHCI_DEVICES];
@@ -207,6 +243,12 @@ typedef struct OHCIData {
     
 } OHCIData;
 
+typedef struct td_node {
+    struct MinNode      tdNode;
+    uint32_t            tdBitmap[8];
+    ohci_td_t           *tdPage;
+} td_node_t;
+
 #define BASE(lib)((struct ohcibase*)(lib))
 #define SD(cl) (&BASE(cl->UserData)->sd)
 
@@ -227,7 +269,7 @@ enum {
 #define IS_OHCI_ATTR(attr, idx) (((idx)=(attr)-HiddOHCIAttrBase) < num_Hidd_OHCI_Attrs)
 
 #define PCI_BASE_CLASS_SERIAL   0x0c
-#define PCI_SUB_CLASS_USB               0x03
+#define PCI_SUB_CLASS_USB       0x03
 #define PCI_INTERFACE_OHCI      0x10
 
 AROS_UFP3(void, OHCI_HubInterrupt,
