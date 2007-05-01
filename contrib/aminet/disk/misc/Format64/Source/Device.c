@@ -73,8 +73,8 @@ BOOL volumeToDevName(BPTR volumeLock,char *dev,DriveLayout *layout)
 			(/*devNode->dn_Task ||*/ devNode->dn_Handler /*|| devNode->dn_SegList*/))
 			{
 			/*Get the name of the device*/
-//			temp=(char *)BADDR(devNode->dn_OldName);
-			temp=devNode->dn_NewName;
+//			temp=(char *)BADDR(devNode->dn_Name);
+			temp=devNode->dn_Ext.dn_AROS.dn_DevName;
 
 //			for(c=0;c<temp[0];c++) name[c]=temp[c+1];
 			for(c=0;temp[c];c++) name[c]=temp[c];

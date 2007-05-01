@@ -1433,7 +1433,7 @@ void GetVolName(BPTR lock, char *buf, int maxlen)
 				UBYTE *volname;
 				int len;
 #ifdef __AROS__
-				volname = vol->dl_DevName;
+				volname = vol->dl_Ext.dl_AROS.dl_DevName;
 				len = MIN(maxlen-2,strlen(volname));
 #else
                 volname = BTOC(vol->dl_Name);

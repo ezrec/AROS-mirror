@@ -245,14 +245,14 @@ int len;
 		return;
 
 	new->volume = p_volume;
-	len = AROS_BSTR_strlen(p_volume->dl_OldName);
+	len = AROS_BSTR_strlen(p_volume->dl_Name);
 	new->name = (char*) AllocMem (len + 1, MEMF_PUBLIC);
 	if (!new)
 	{
 		FreeMem (new, sizeof (t_vol_reg_node));
 		return;
 	}
-	CopyMem((char*) AROS_BSTR_ADDR(p_volume->dl_OldName), new->name, len);
+	CopyMem((char*) AROS_BSTR_ADDR(p_volume->dl_Name), new->name, len);
 	new->name[len] = 0;
 	new->next = global->g_volume_list;
 	global->g_volume_list = new;

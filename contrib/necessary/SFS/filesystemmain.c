@@ -62,10 +62,6 @@
 static LONG fillgap(BLCK key);
 LONG step(void);
 
-#ifdef __AROS__
-    #define dn_Name dn_OldName
-#endif
-
 #define BNODE
 
 #define BITMAPFILL 0xFFFFFFFF    /* should be 0xFFFFFFFF !  Carefull.. admin containers are 32 blocks! */
@@ -1574,7 +1570,7 @@ void mainloop(void) {
                       if((errorcode=storecachebuffer(cb))==0 && globals->volumenode!=0) {
                         s=BADDR(globals->packet->dp_Arg1);
 #ifdef __AROS__
-                        d=BADDR(globals->volumenode->dl_OldName);
+                        d=BADDR(globals->volumenode->dl_Name);
                         copystr(s, d, 30);
 #else
                         d=BADDR(globals->volumenode->dl_Name);
@@ -3171,7 +3167,7 @@ LONG req(UBYTE *fmt, UBYTE *gads, ... ) {
      VolumeNode. */
 
   if(globals->volumenode!=0) {
-    *arg++=AROS_BSTR_ADDR(globals->volumenode->dl_OldName);
+    *arg++=AROS_BSTR_ADDR(globals->volumenode->dl_Name);
   }
 
   *arg++=AROS_BSTR_ADDR(globals->devnode->dn_Name);
@@ -3647,12 +3643,13 @@ LONG initdisk() {
           if((vn=(struct DeviceList *)MakeDosEntry("                              ",DLT_VOLUME))!=0) {
             struct SFSMessage *sfsm;
 #ifdef __AROS__
-            UBYTE *d2=(UBYTE *)BADDR(vn->dl_OldName);
+            UBYTE *d2=(UBYTE *)BADDR(vn->dl_Name);
             copystr(oc->object[0].name, d2, 30);
-            vn->dl_Device = &globals->asfsbase->device;
-            vn->dl_Unit = (struct Unit *)&globals->device->rootfh;
+            vn->dl_Ext.dl_AROS.dl_Device = &globals->asfsbase->device;
+            vn->dl_Ext.dl_AROS.dl_Unit = (struct Unit *)&globals->device->rootfh;
 
-_DEBUG(("AddDosEntry: dl_Device=%x dl_Unit=%x\n",vn->dl_Device,vn->dl_Unit));
+_DEBUG(("AddDosEntry: dl_Device=%x dl_Unit=%x\n",
+        vn->dl_Ext.dl_AROS.dl_Device,vn->dl_Ext.dl_AROS.dl_Unit));
             
 #else
             UBYTE *d2=(UBYTE *)BADDR(vn->dl_Name);

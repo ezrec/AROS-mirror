@@ -1281,7 +1281,7 @@ struct DeviceList *dl;
 		Forbid ();
 		global->DevList = dl;
 #ifdef __AROS__
-		dl->dl_Device = &global->acdrbase->device;
+		dl->dl_Ext.dl_AROS.dl_Device = &global->acdrbase->device;
 #else
 		dl->dl_Task = &global->DosProc->pr_MsgPort;
 #endif
@@ -1291,8 +1291,8 @@ struct DeviceList *dl;
 	{
 		global->DevList = dl = (struct DeviceList *)MakeDosEntry(global->g_vol_name+1, DLT_VOLUME);
 #ifdef __AROS__
-		dl->dl_Device = &global->acdrbase->device;
-		dl->dl_Unit = (struct Unit *)&global->device->rootfh;
+		dl->dl_Ext.dl_AROS.dl_Device = &global->acdrbase->device;
+		dl->dl_Ext.dl_AROS.dl_Unit = (struct Unit *)&global->device->rootfh;
 #else
 		dl->dl_Task = &global->DosProc->pr_MsgPort;
 #endif

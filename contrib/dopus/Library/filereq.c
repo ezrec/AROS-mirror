@@ -671,7 +671,7 @@ struct FileReqData *freqdata;
 
 		if (devlist->dl_Type!=DLT_DEVICE || devlist->dl_Task  ) {
 			/* AROS: We don't mess with BSTRs anymore */
-			strncpy(devname, devlist->dl_DevName, 31);
+			strncpy(devname, devlist->dl_Ext.dl_AROS.dl_DevName, 31);
 /*			BtoCStr(devlist->dl_Name,devname,32); */
 			LStrCat(devname,":");
 			addfileentry(freqdata,devname,0,devlist->dl_Type);

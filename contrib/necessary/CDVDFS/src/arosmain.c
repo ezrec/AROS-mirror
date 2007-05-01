@@ -726,8 +726,8 @@ D(bug("[acdr] examine: name=%s ([0]=%x)\n", ead->ed_Name, ead->ed_Name[0]));
                     if (global->DevList && (iofs->io_Union.io_INHIBIT.io_Inhibit == DOSFALSE))
                     {
 #warning "I hope volumenode is always valid"
-                        global->DevList->dl_Device = iofs->IOFS.io_Device;
-                        global->DevList->dl_Unit = (struct Unit *)&acdrhandle->device->rootfh;
+                        global->DevList->dl_Ext.dl_AROS.dl_Device = iofs->IOFS.io_Device;
+                        global->DevList->dl_Ext.dl_AROS.dl_Unit = (struct Unit *)&acdrhandle->device->rootfh;
                     }
                     error = 0;
                 }

@@ -789,8 +789,8 @@ D(bug("[SFS] FSA_RENAME %s %s\n", iofs->io_Union.io_RENAME.io_Filename, iofs->io
                     if (globals->DevList && (iofs->io_Union.io_INHIBIT.io_Inhibit == DOSFALSE))
                     {
 #warning "I hope volumenode is always valid"
-                        global->DevList->dl_Device = iofs->IOFS.io_Device;
-                        global->DevList->dl_Unit = (struct Unit *)&acdrhandle->device->rootfh;
+                        global->DevList->dl_Ext.dl_AROS.dl_Device = iofs->IOFS.io_Device;
+                        global->DevList->dl_Ext.dl_AROS.dl_Unit = (struct Unit *)&acdrhandle->device->rootfh;
                     }
 #endif
                     error = 0;
