@@ -712,7 +712,7 @@ kprintf("listdevices()\n");
 #warning AROS has no dol_Task entry
 		if (dlist->dol_Type!=DLT_DEVICE /* AROS: || dlist->dol_Task */ ) {
 			/* AROS: We don't mess with BSTRs anymore */
-			strncpy(devname, dlist->dol_DevName, 31);
+			strncpy(devname, dlist->dol_Ext.dol_AROS.dol_DevName, 31);
 /*			BtoCStr(devlist->dl_Name,devname,32); */
 			LStrCat(devname,":");
 			addfileentry(freqdata,devname,0,dlist->dol_Type);

@@ -104,13 +104,8 @@ if ((lock=fmlock(list,ptr2))) {
 				ptr1=getstring(MSG_DISKINFO_UNKNOWN);
 				break;
 				}
-				#ifndef AROS
 				siirrabstr((UBYTE*)BADDR(vollist->dol_Name),volname);
 				siirrabstr((UBYTE*)BADDR(doslist->dol_Name),devname);   
-				#else
-				siirrabstr((UBYTE*)(vollist->dol_OldName),volname); 
-				siirrabstr((UBYTE*)(doslist->dol_OldName),devname);
-				#endif
  
 				tsecs=de->de_BlocksPerTrack;
 				longtodatestring(cdate,dstolong(&vollist->dol_misc.dol_volume.dol_VolumeDate));

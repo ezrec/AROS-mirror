@@ -351,15 +351,15 @@ struct DateStamp *ds;
 	
 	/* Get the device name */
 	
-	if (dl->dol_DevName)
+	if (dl->dol_Ext.dol_AROS.dol_DevName)
 	{
-    	    //kprintf("Testing whether %s is a filesystem\n", dl->dol_DevName);
-	    if (!IsFileSystem(dl->dol_DevName))
+    	    //kprintf("Testing whether %s is a filesystem\n", dl->dol_Ext.dol_AROS.dol_DevName);
+	    if (!IsFileSystem(dl->dol_Ext.dol_AROS.dol_DevName))
 	    {
 		kprintf("!!!! NO FILESYSTEM IN getroot()\n");
 		Alert(AT_DeadEnd);
 	    }
-	    strcpy(name, dl->dol_DevName);
+	    strcpy(name, dl->dol_Ext.dol_AROS.dol_DevName);
 	}
 	
 	/* Get the volume date */

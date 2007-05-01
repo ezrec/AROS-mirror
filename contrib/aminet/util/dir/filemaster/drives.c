@@ -77,15 +77,9 @@ if(doslist->dol_Type!=type) return(0);
 
 
 #ifndef AROS
-
 if(type==DLT_DEVICE && !doslist->dol_Task) return(0);
-ptr=siirrabstr((UBYTE*)((doslist->dol_Name)<<2),empty);  
-
-#else
-
-D(bug("drives.c 77 entering.........\n"));
-ptr=siirrabstr((UBYTE*)((doslist->dol_OldName)),empty);
 #endif
+ptr=siirrabstr((UBYTE*)BADDR(doslist->dol_Name),empty);  
 
 *ptr++=':'; *ptr=0;
 

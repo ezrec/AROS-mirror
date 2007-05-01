@@ -252,12 +252,7 @@ if(!lock) {
 	doslist=FindDosEntry(doslist,edit->devname,LDF_DEVICES);
 	if(doslist) apu1=1;
 } else if(finddevice(lock,&doslist,&vollist)) {
-#ifndef AROS
 	siirrabstr((UBYTE*)BADDR(doslist->dol_Name),edit->devname);
-#else
-	 siirrabstr((UBYTE*)(doslist->dol_OldName),edit->devname);
-	
-#endif
 	apu1=1;
 }
 edit->devname[strlen(edit->devname)]=':';

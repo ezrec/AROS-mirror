@@ -1216,7 +1216,7 @@ kprintf("GetDevices()\n");
 #if 0			
 				&& devlist->dl_Task 
 #else
-				&& IsFileSystem(devlist->dol_DevName)
+				&& IsFileSystem(devlist->dol_Ext.dol_AROS.dol_DevName)
 #endif
 				
 				) {
@@ -1227,7 +1227,7 @@ kprintf("GetDevices()\n");
 			BtoCStr((BPTR)devlist->dl_Name,pathname,256);
 			*/
 
-			strncpy(pathname, devlist->dol_DevName, 255);
+			strncpy(pathname, devlist->dol_Ext.dol_AROS.dol_DevName, 255);
 						
 			LStrCat(pathname,":");
 
@@ -1259,7 +1259,7 @@ kprintf("Got device %s\n", pathname);
 				BtoCStr((BPTR)devlist->dl_Name,pathname,256);
 				*/
 
-				strncpy(pathname, devlist->dol_DevName, 255);
+				strncpy(pathname, devlist->dol_Ext.dol_AROS.dol_DevName, 255);
 				
 				LStrCat(pathname,":");
 				strncpy(devname,pathname,15); devname[15]=0;

@@ -184,7 +184,7 @@ int win;
 #if 0					
 					|| devlist->dl_Task
 #else
-					|| IsFileSystem(devlist->dol_DevName)
+					|| IsFileSystem(devlist->dol_Ext.dol_AROS.dol_DevName)
 #endif
 					 ) {
 					
@@ -192,7 +192,7 @@ int win;
 					BtoCStr((BPTR)devlist->dl_Name,devname,32);
 					*/
 					
-					strncpy(devname, devlist->dol_DevName, 31);
+					strncpy(devname, devlist->dol_Ext.dol_AROS.dol_DevName, 31);
 					
 					strcat(devname,":");
 					if (!(addfile(dopus_curwin[win],
