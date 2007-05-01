@@ -80,8 +80,8 @@ LONG main()
                 msgport=CreateMsgPort();
                 IOFS = (struct IOFileSys *)CreateIORequest(msgport, sizeof(struct IOFileSys));
                 IOFS->io_PacketEmulation = AllocVec(sizeof(struct DosPacket), MEMF_PUBLIC|MEMF_CLEAR);
-                IOFS->IOFS.io_Device = dl->dol_Device;
-                IOFS->IOFS.io_Unit   = dl->dol_Unit;
+                IOFS->IOFS.io_Device = dl->dol_Ext.dol_AROS.dol_Device;
+                IOFS->IOFS.io_Unit   = dl->dol_Ext.dol_AROS.dol_Unit;
 #else
                 msgport=dl->dol_Task;
 #endif

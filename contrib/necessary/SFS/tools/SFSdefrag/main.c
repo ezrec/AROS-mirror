@@ -208,8 +208,8 @@ void getDeviceData(STRPTR device)
             { TAG_DONE,         0}
         };
         
-        iofs->IOFS.io_Device = dl->dol_Device;
-        iofs->IOFS.io_Unit   = dl->dol_Unit;
+        iofs->IOFS.io_Device = dl->dol_Ext.dol_AROS.dol_Device;
+        iofs->IOFS.io_Unit   = dl->dol_Ext.dol_AROS.dol_Unit;
         
         UnLockDosList(LDF_DEVICES|LDF_READ);
         
@@ -418,8 +418,8 @@ BOOL GUIinit()
                 { TAG_DONE,         0}
             };
         
-            iofs->IOFS.io_Device = dll->dol_Device;
-            iofs->IOFS.io_Unit   = dll->dol_Unit;
+            iofs->IOFS.io_Device = dll->dol_Ext.dol_AROS.dol_Device;
+            iofs->IOFS.io_Unit   = dll->dol_Ext.dol_AROS.dol_Unit;
             if(AROS_DoPkt(iofs, ACTION_SFS_QUERY, (LONG)&tags, 0, 0, 0, 0)!=DOSFALSE)
             {
                 if(tags[0].ti_Data >= (1<<16) + 83)
