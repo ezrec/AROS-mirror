@@ -612,6 +612,26 @@ D(bug("[asfs] the next one\n"));
                     error = packet.dp_Res2;
                 break;
 
+            case FSA_ADD_NOTIFY:
+                packet.dp_Type = ACTION_ADD_NOTIFY;
+                packet.dp_Arg1 = (IPTR)BADDR(iofs->io_Union.io_NOTIFY.io_NotificationRequest);
+                sendPacket(asfsbase, &packet, asfshandle->device->taskmp);              
+                if (packet.dp_Res1)
+                    error = 0;
+                else
+                    error = packet.dp_Res2;
+                break;
+
+            case FSA_REMOVE_NOTIFY:
+                packet.dp_Type = ACTION_REMOVE_NOTIFY;
+                packet.dp_Arg1 = (IPTR)BADDR(iofs->io_Union.io_NOTIFY.io_NotificationRequest);
+                sendPacket(asfsbase, &packet, asfshandle->device->taskmp);
+                if (packet.dp_Res1)
+                    error = 0;
+                else
+                    error = packet.dp_Res2;
+                break;
+                              
             case FSA_CREATE_DIR:
                 {
                 struct ASFSHandle *new;
