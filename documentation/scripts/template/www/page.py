@@ -191,7 +191,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     page = HTML( [
         Head( [
             Charset( charset ),
-            Title( 'AROS: Amiga® Research Operating System' ),
+            Title( 'AROS Research Operating System' ),
             Link( href = '%(ROOT)saros.css', type = 'text/css', rel = 'stylesheet' ),
             Meta(
                 name    = 'keywords',
