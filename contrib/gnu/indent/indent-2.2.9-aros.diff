@@ -48,3 +48,12 @@ diff -urN indent-2.2.9/Makefile.in indent-2.2.9-aros/Makefile.in
  
  BUILT_SOURCES = 
  
+diff -urN indent-2.2.9/src/indent.h indent-2.2.9-aros/src/indent.h
+--- indent-2.2.9/src/indent.h	2007-05-03 21:14:33.000000000 +0200
++++ indent-2.2.9-aros/src/indent.h	2007-05-03 21:12:39.000000000 +0200
+@@ -97,7 +97,7 @@
+ extern unsigned long in_prog_size;
+ 
+ /* The output file. */
+-extern FILE *output;
++/* extern FILE *output; */
