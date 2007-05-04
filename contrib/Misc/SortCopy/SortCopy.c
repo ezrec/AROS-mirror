@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2000 AROS - The Amiga Research OS
+    Copyright © 2000, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: SortCopy from Thomas Richter

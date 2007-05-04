@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 1997 AROS - The Amiga Research OS
+    Copyright © 1997, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: CGFX Library
