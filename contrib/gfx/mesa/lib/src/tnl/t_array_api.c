@@ -1,4 +1,4 @@
-/* $Id: t_array_api.c,v 1.15 2001/05/11 15:53:06 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

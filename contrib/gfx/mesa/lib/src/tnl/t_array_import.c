@@ -1,4 +1,4 @@
-/* $Id: t_array_import.c,v 1.17 2001/05/17 11:33:33 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

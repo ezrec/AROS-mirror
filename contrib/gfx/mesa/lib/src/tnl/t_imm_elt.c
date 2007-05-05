@@ -1,4 +1,4 @@
-/* $Id: t_imm_elt.c,v 1.11 2001/05/11 08:11:31 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

@@ -1,4 +1,4 @@
-/* $Id: t_vb_points.c,v 1.4 2001/03/12 00:48:44 gareth Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

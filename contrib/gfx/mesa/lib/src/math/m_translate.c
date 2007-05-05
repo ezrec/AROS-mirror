@@ -1,4 +1,4 @@
-/* $Id: m_translate.c,v 1.8 2001/05/09 14:12:34 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

@@ -1,4 +1,4 @@
-/* $Id: s_logic.c,v 1.7 2001/05/10 16:54:12 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

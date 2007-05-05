@@ -1,4 +1,4 @@
-/* $Id: t_vb_texmat.c,v 1.5 2001/03/29 21:16:26 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

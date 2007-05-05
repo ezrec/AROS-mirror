@@ -18,7 +18,7 @@
  * internal use by SQLite and should not be accessed by users of the library.
  *
  * */
-/* $Id: legacy.c,v 1.7 2004/09/06 17:34:13 drh Exp $ */
+/* $Id$ */
 
 #include "sqliteInt.h"
 #include "os.h"

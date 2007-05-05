@@ -1,4 +1,4 @@
-/* $Id: s_alpha.c,v 1.4 2001/03/12 00:48:41 gareth Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

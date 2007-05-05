@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: lib_gethostbyname.c,v 1.3 2002/07/28 14:13:07 sebauer Exp $
+    $Id$
 */
 
 #include <string.h>

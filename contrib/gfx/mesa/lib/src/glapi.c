@@ -1,4 +1,4 @@
-/* $Id: glapi.c,v 1.56 2001/06/06 22:55:28 davem69 Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

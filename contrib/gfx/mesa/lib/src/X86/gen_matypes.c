@@ -1,4 +1,4 @@
-/* $Id: gen_matypes.c,v 1.2 2001/03/29 03:41:40 gareth Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: scale.c 26 2007-01-15 23:32:18Z damato $
+ $Id$
 
 ***************************************************************************/
 

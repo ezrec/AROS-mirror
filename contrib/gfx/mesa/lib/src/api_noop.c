@@ -1,4 +1,4 @@
-/* $Id: api_noop.c,v 1.8 2001/04/28 08:39:17 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: TheBar-Test.c 28 2007-01-16 07:49:10Z damato $
+ $Id$
 
 ***************************************************************************/
 

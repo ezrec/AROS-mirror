@@ -1,4 +1,4 @@
-/* $Id: state.c,v 1.68 2001/06/18 17:26:08 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

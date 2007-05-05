@@ -1,4 +1,4 @@
-/* $Id: t_imm_dlist.c,v 1.20 2001/06/04 16:09:28 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

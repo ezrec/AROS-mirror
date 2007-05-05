@@ -1,4 +1,4 @@
-/* $Id: s_imaging.c,v 1.4 2001/03/19 02:28:59 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

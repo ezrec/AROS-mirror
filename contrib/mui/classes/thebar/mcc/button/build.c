@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: build.c 35 2007-01-20 16:10:53Z damato $
+ $Id$
 
 ***************************************************************************/
 

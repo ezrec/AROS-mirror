@@ -1,4 +1,4 @@
-/* $Id: t_vb_texgen.c,v 1.9 2001/04/26 14:53:48 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

@@ -1,4 +1,4 @@
-/* $Id: m_debug_clip.c,v 1.1 2001/05/21 16:33:41 gareth Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

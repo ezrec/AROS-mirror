@@ -1,4 +1,4 @@
-/* $Id: readpix.c,v 1.3 2000/03/31 01:01:31 brianp Exp $ */
+/* $Id$ */
 
 /*
  * glReadPixels and glCopyPixels test

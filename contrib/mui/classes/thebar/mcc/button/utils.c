@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: utils.c 49 2007-02-27 23:38:13Z damato $
+ $Id$
 
 ***************************************************************************/
 

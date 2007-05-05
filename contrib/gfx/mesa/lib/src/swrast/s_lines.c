@@ -1,4 +1,4 @@
-/* $Id: s_lines.c,v 1.19 2001/06/11 19:44:01 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

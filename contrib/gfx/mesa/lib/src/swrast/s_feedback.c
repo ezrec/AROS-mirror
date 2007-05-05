@@ -1,4 +1,4 @@
-/* $Id: s_feedback.c,v 1.8 2001/06/12 22:06:53 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

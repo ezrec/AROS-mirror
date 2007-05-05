@@ -1,4 +1,4 @@
-/* $Id: api_loopback.c,v 1.8 2001/05/10 15:42:42 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

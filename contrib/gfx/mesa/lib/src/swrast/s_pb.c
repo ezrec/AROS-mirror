@@ -1,4 +1,4 @@
-/* $Id: s_pb.c,v 1.16 2001/06/12 14:16:43 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

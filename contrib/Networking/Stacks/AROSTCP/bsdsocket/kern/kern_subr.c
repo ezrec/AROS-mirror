@@ -37,7 +37,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)kern_subr.c	8.3 (Berkeley) 1/21/94
- * $Id: kern_subr.c,v 1.2 2006/12/15 08:45:23 sonic_amiga Exp $
+ * $Id$
  */
 
 #include <sys/param.h>

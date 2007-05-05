@@ -1,4 +1,4 @@
-/* $Id: multiarb.c,v 1.6 2000/05/23 23:21:00 brianp Exp $ */
+/* $Id$ */
 
 /*
  * GL_ARB_multitexture demo

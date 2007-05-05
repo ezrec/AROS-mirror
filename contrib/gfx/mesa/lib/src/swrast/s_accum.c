@@ -1,4 +1,4 @@
-/* $Id: s_accum.c,v 1.11 2001/04/20 19:21:41 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

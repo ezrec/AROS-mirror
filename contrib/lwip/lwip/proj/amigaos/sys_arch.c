@@ -31,7 +31,7 @@
  * Author: Adam Dunkels <adam@sics.se>
  *         Sebastian Bauer <sebauer@t-online.de>
  *
- * $Id: sys_arch.c,v 1.8 2002/07/20 14:39:37 sebauer Exp $
+ * $Id$
  */
 
 #include <time.h>

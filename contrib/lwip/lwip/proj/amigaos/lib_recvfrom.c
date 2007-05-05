@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: lib_recvfrom.c,v 1.1 2002/07/11 17:59:24 sebauer Exp $
+    $Id$
 */
 
 /* We redefine the timeval here, because lwip defines an own timeval struct,

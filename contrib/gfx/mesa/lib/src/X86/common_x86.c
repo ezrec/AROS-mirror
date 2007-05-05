@@ -1,4 +1,4 @@
-/* $Id: common_x86.c,v 1.16 2001/06/06 18:12:35 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

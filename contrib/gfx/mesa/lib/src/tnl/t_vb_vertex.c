@@ -1,4 +1,4 @@
-/* $Id: t_vb_vertex.c,v 1.9 2001/05/30 10:01:41 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

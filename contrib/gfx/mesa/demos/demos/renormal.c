@@ -1,4 +1,4 @@
-/* $Id: renormal.c,v 1.3 1999/09/17 12:27:01 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Test GL_EXT_rescale_normal extension
@@ -6,7 +6,7 @@
  */
 
 /*
- * $Id: renormal.c,v 1.3 1999/09/17 12:27:01 brianp Exp $
+ * $Id$
  */
 
 

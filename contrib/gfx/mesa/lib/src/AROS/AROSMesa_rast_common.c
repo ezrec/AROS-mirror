@@ -1,4 +1,4 @@
-/* $Id: AROSMesa_rast_common.c 24318 2006-04-15 17:52:01Z NicJA $*/
+/* $Id$*/
 
 /*
  * Mesa 3-D graphics library

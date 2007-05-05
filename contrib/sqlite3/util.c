@@ -18,7 +18,7 @@
  * This file contains functions for allocating memory, comparing strings, and
  * stuff like that.
  * */
-/* $Id: util.c,v 1.136A 2005/07/05 20:08:00 daikane Exp $ */
+/* $Id$ */
 #include "sqliteInt.h"
 #include <stdarg.h>
 #include <ctype.h>

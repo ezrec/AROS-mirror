@@ -1,4 +1,4 @@
-/* $Id: whoami.c,v 1.1 2006/12/15 08:51:40 sonic_amiga Exp $
+/* $Id$
 /*
  * whoami.c ---
  *
@@ -27,7 +27,7 @@ static const char version[] = "$VER: whoami 1.3 (29.09.2005)\n"
         whoami - prints effective current user id
 
    VERSION
-	$Id: whoami.c,v 1.1 2006/12/15 08:51:40 sonic_amiga Exp $
+	$Id$
 
    TEMPLATE
         whoami

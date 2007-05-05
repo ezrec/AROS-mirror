@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: lib_socket.c,v 1.2 2002/07/11 22:52:13 sebauer Exp $
+    $Id$
 */
 
 /* We redefine the timeval here, because lwip defines an own timeval struct,

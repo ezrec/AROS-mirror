@@ -22,7 +22,7 @@
  * internal use by SQLite and should not be accessed by users of the library.
  * 
  * */
-/* $Id: main.c,v 1.293 2005/07/08 00:10:00 daikane Exp $ */
+/* $Id$ */
 #include "sqliteInt.h"
 #include "os.h"
 #include <ctype.h>

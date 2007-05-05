@@ -1,4 +1,4 @@
-/* $Id: t_imm_alloc.c,v 1.8 2001/05/09 13:53:36 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

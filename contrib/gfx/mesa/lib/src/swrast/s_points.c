@@ -1,4 +1,4 @@
-/* $Id: s_points.c,v 1.15 2001/03/12 00:48:42 gareth Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

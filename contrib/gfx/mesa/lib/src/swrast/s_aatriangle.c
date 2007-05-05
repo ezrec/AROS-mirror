@@ -1,4 +1,4 @@
-/* $Id: s_aatriangle.c,v 1.18 2001/05/29 15:23:15 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

@@ -1,4 +1,4 @@
-/* $Id: t_imm_fixup.c,v 1.21 2001/06/13 14:57:55 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

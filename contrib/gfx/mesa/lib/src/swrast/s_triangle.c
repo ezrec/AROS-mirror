@@ -1,4 +1,4 @@
-/* $Id: s_triangle.c,v 1.29 2001/05/17 09:32:17 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

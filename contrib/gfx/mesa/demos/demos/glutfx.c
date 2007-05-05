@@ -1,4 +1,4 @@
-/* $Id: glutfx.c,v 1.2 2000/06/27 17:04:43 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Example of how one might use GLUT with the 3Dfx driver in full-screen mode.

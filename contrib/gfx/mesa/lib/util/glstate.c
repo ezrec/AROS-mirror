@@ -1,4 +1,4 @@
-/* $Id: glstate.c,v 1.1.1.1 1999/08/19 00:55:42 jtg Exp $ */
+/* $Id$ */
 
 /*
  * Print GL state information (for debugging)

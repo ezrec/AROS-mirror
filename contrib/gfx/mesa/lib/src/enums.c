@@ -1,4 +1,4 @@
-/* $Id: enums.c,v 1.20 2001/06/08 20:10:55 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

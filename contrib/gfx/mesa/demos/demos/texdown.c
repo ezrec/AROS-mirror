@@ -1,4 +1,4 @@
-/* $Id: texdown.c,v 1.3 2000/03/29 18:02:52 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Copyright (C) 1999  Brian Paul   All Rights Reserved.

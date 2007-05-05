@@ -1,4 +1,4 @@
-/* $Id: buffers.c,v 1.30 2001/06/18 17:26:08 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

@@ -1,4 +1,4 @@
-/* $Id: config.c,v 1.16 2001/03/12 00:48:37 gareth Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

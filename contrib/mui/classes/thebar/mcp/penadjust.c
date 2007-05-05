@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: penadjust.c 41 2007-01-28 12:02:35Z damato $
+ $Id$
 
 ***************************************************************************/
 

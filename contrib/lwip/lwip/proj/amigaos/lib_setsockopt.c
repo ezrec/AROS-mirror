@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: lib_setsockopt.c,v 1.1 2002/07/11 17:59:24 sebauer Exp $
+    $Id$
 */
 
 #include <exec/types.h>

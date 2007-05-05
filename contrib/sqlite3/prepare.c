@@ -13,7 +13,7 @@
 ** interface, and routines that contribute to loading the database schema
 ** from disk.
 **
-** $Id: prepare.c,v 1.1 2005/05/25 04:11:56 danielk1977 Exp $
+** $Id$
 */
 #include "sqliteInt.h"
 #include "os.h"

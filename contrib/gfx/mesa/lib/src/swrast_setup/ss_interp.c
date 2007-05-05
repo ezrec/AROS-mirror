@@ -1,4 +1,4 @@
-/* $Id: ss_interp.c,v 1.6 2001/04/28 08:39:18 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

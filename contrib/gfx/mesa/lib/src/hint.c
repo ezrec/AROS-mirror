@@ -1,4 +1,4 @@
-/* $Id: hint.c,v 1.10 2001/05/21 16:41:03 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: lib_inet_addr.c,v 1.1 2002/07/27 15:15:48 sebauer Exp $
+    $Id$
 */
 
 /* We redefine the timeval here, because lwip defines an own timeval struct,

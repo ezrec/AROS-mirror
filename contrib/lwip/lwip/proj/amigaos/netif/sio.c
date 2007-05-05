@@ -32,7 +32,7 @@
  *
  * Changes by Sebastian Bauer <sebauer@t-online.de> 
  *
- * $Id: sioslipif.c,v 1.2 2001/12/13 20:43:41 adam Exp $
+ * $Id$
  */
 
 #include "lwip/debug.h"

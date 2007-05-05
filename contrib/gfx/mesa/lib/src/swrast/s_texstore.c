@@ -1,4 +1,4 @@
-/* $Id: s_texstore.c,v 1.5 2001/05/21 16:41:04 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

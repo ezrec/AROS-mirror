@@ -1,6 +1,6 @@
 /*
     Copyright © 2003, The AROS Development Team.
-    $Id: main.c 21189 2004-03-08 15:41:03Z chodorowski $
+    $Id$
 */
 
 #include <exec/types.h>

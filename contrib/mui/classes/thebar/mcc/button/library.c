@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: library.c 44 2007-02-19 07:27:49Z thboeckel $
+ $Id$
 
 ***************************************************************************/
 

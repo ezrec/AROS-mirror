@@ -1,4 +1,4 @@
-/* $Id: drawpix.c,v 1.3 1999/10/28 18:23:29 brianp Exp $ */
+/* $Id$ */
 
 /*
  * glDrawPixels demo/test/benchmark

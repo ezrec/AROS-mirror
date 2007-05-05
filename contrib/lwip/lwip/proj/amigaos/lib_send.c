@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: lib_send.c,v 1.2 2002/07/12 08:38:07 sebauer Exp $
+    $Id$
 */
 
 

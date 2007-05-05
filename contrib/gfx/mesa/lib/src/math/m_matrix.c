@@ -1,4 +1,4 @@
-/* $Id: m_matrix.c,v 1.8 2001/03/12 00:48:41 gareth Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

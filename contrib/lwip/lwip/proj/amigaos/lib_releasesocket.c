@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: lib_releasesocket.c,v 1.1 2002/07/24 10:53:01 sebauer Exp $
+    $Id$
 */
 
 #include <exec/types.h>

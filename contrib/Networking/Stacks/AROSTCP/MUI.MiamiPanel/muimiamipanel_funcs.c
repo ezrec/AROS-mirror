@@ -1,6 +1,6 @@
 /*
     Copyright © 2002-2003, The AROS Development Team. All rights reserved.
-    $Id: miamipanel_funcs.c 19316 2003-08-20 10:35:20Z chodorowski $
+    $Id$
 */
 
 #include <proto/exec.h>

@@ -1,4 +1,4 @@
-/* $Id: dispatch.c,v 1.23 2001/06/05 23:54:00 davem69 Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

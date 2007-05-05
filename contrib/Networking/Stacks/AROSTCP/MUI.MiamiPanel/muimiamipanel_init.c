@@ -2,7 +2,7 @@
     Copyright © 2002-2006, The AROS Development Team. 
     All rights reserved.
     
-    $Id: miamipanel_init.c 24652 2006-08-21 10:35:08Z verhaegs $
+    $Id$
 */
 
 #include <exec/types.h>

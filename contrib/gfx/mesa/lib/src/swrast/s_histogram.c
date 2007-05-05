@@ -1,4 +1,4 @@
-/* $Id: s_histogram.c,v 1.3 2001/04/10 15:25:45 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

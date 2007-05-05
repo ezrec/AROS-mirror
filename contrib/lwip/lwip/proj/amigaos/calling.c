@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: calling.c,v 1.1 2002/07/11 22:52:13 sebauer Exp $
+    $Id$
 */
 
 #include <stdarg.h>

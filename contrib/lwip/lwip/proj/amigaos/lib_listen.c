@@ -2,7 +2,7 @@
     Copyright © 2002, The AROS Development Team. 
     All rights reserved.
     
-    $Id: lib_listen.c,v 1.3 2002/07/12 13:11:20 sebauer Exp $
+    $Id$
 */
 
 /* We redefine the timeval here, because lwip defines an own timeval struct,

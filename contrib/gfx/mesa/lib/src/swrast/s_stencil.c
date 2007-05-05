@@ -1,4 +1,4 @@
-/* $Id: s_stencil.c,v 1.12 2001/05/17 20:18:45 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

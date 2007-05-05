@@ -1,4 +1,4 @@
-/* $Id: ss_vb.c,v 1.12 2001/03/29 21:16:26 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

@@ -1,4 +1,4 @@
-/* $Id: api_eval.c,v 1.1 2001/06/04 13:57:35 keithw Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

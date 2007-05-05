@@ -1,4 +1,4 @@
-/* $Id: s_bitmap.c,v 1.11 2001/06/18 23:55:18 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

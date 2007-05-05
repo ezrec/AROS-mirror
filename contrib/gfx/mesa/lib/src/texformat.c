@@ -1,4 +1,4 @@
-/* $Id: texformat.c,v 1.11 2001/06/15 14:18:46 brianp Exp $ */
+/* $Id$ */
 
 /*
  * Mesa 3-D graphics library

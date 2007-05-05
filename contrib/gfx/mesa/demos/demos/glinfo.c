@@ -1,4 +1,4 @@
-/* $Id: glinfo.c,v 1.1.1.1 1999/08/19 00:55:40 jtg Exp $ */
+/* $Id$ */
 
 /*
  * Print GL, GLU and GLUT version and extension info

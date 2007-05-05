@@ -1,4 +1,4 @@
-/* $Id: cubemap.c,v 1.3 2000/06/27 17:04:43 brianp Exp $ */
+/* $Id$ */
 
 /*
  * GL_ARB_texture_cube_map demo
