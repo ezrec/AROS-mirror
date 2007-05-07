@@ -61,7 +61,9 @@ OOP_Object *METHOD(OHCI, Root, New)
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, (OOP_Msg) msg);
     if (o)
     {
-        OHCIData *ohci = OOP_INST_DATA(cl, o);
+        ohci_data_t *ohci = OOP_INST_DATA(cl, o);
+        int i;
+        
         NEWLIST(&ohci->intList);
         
         NEWLIST(&ohci->timerPort.mp_MsgList);
@@ -82,6 +84,18 @@ OOP_Object *METHOD(OHCI, Root, New)
         ohci->pciDevice = (OOP_Object *)GetTagData(aHidd_OHCI_PCIDevice, 0, msg->attrList);
         ohci->hcca = HIDD_PCIDriver_AllocPCIMem(ohci->pciDriver, 4096);
 
+        OOP_GetAttr(ohci->pciDevice, aHidd_PCIDevice_INTLine, &ohci->irqNum);
+        
+        ohci->irqHandler = AllocPooled(SD(cl)->memPool, sizeof(HIDDT_IRQ_Handler));
+
+        ohci->irqHandler->h_Node.ln_Name = "UHCI Intr";
+        ohci->irqHandler->h_Node.ln_Pri = 127;
+        ohci->irqHandler->h_Code = ohci_Handler;
+        ohci->irqHandler->h_Data = ohci;
+        
+        HIDD_IRQ_AddHandler(SD(cl)->irq, ohci->irqHandler, ohci->irqNum);
+        D(bug("[OHCI] IRQHandler = %08x\n", ohci->irqHandler));
+        
         mmio(ohci->regs->HcHCCA) = (uint32_t)ohci->hcca;
         
         D(bug("[OHCI] New(): o=%p, ports=%d, regs=%p, drv=%p, dev=%p, hcca=%p\n", o,
@@ -92,6 +106,77 @@ OOP_Object *METHOD(OHCI, Root, New)
         
         if (ohci->tmp)
             AddTail(&ohci->intList, &ohci->tmp->is_Node);
+        
+        /* Allocate empty endpoint descriptors for chaining */
+        ohci->ctrl_head = ohci_AllocED(cl, o);
+        ohci->ctrl_head->edFlags = AROS_LONG2LE(ED_K);
+        ohci->ctrl_head->edNextED = 0;
+        
+        ohci->bulk_head = ohci_AllocED(cl, o);
+        ohci->bulk_head->edFlags = AROS_LONG2LE(ED_K);
+        ohci->bulk_head->edNextED = 0;
+        
+        ohci->isoc_head = ohci_AllocED(cl, o);
+        ohci->isoc_head->edFlags = AROS_LONG2LE(ED_K);
+        ohci->isoc_head->edNextED = 0;
+
+        /* 
+         * The endpoints for interrupts.
+         * 
+         * There are 63 endpoint descriptors used for interrupt
+         * transfers. They form a tree, with several pooling rates 
+         * ranging from 1ms to 32ms. The 1ms endpoint points to the
+         * isochronous queue.
+         */
+        ohci->int01 = ohci_AllocED(cl, o);
+        ohci->int01->edFlags = AROS_LONG2LE(ED_K);
+        ohci->int01->edNextED = (uint32_t)ohci->isoc_head;
+        
+        for (i=0; i < 2; i++)
+        {
+            ohci->int02[i] = ohci_AllocED(cl, o);
+            ohci->int02[i]->edFlags = AROS_LONG2LE(ED_K);
+            ohci->int02[i]->edNextED = (uint32_t)ohci->int01;
+        }
+
+        for (i=0; i < 4; i++)
+        {
+            ohci->int04[i] = ohci_AllocED(cl, o);
+            ohci->int04[i]->edFlags = AROS_LONG2LE(ED_K);
+            ohci->int04[i]->edNextED = (uint32_t)ohci->int02[i & 0x01];
+        }
+
+        for (i=0; i < 8; i++)
+        {
+            ohci->int08[i] = ohci_AllocED(cl, o);
+            ohci->int08[i]->edFlags = AROS_LONG2LE(ED_K);
+            ohci->int08[i]->edNextED = (uint32_t)ohci->int04[i & 0x03];
+        }
+
+        for (i=0; i < 16; i++)
+        {
+            ohci->int16[i] = ohci_AllocED(cl, o);
+            ohci->int16[i]->edFlags = AROS_LONG2LE(ED_K);
+            ohci->int16[i]->edNextED = (uint32_t)ohci->int08[i & 0x07];
+        }
+        
+        for (i=0; i < 32; i++)
+        {
+            ohci->int32[i] = ohci_AllocED(cl, o);
+            ohci->int32[i]->edFlags = AROS_LONG2LE(ED_K);
+            ohci->int32[i]->edNextED = (uint32_t)ohci->int16[i & 0x0f];
+            
+            /* Link this pointers with HCCA table */ 
+            ohci->hcca->hccaIntrTab[i] = (uint32_t)ohci->int32[i];
+        }
+        
+        /* Reset OHCI */
+        
+        /* Initial setup of OHCI */
+        
+        /* Start OHCI */
+        
+        /* Enable interrupts */
         
         success = TRUE;
     }
@@ -117,7 +202,7 @@ struct pRoot_Dispose {
 
 void METHOD(OHCI, Root, Dispose)
 {
-    OHCIData *ohci = OOP_INST_DATA(cl, o);
+    ohci_data_t *ohci = OOP_INST_DATA(cl, o);
     struct Library *base = &BASE(cl->UserData)->LibNode;
 
     D(bug("[OHCI] OHCI::Dispose\n"));
@@ -158,7 +243,7 @@ BOOL METHOD(OHCI, Hidd_USBDrv, AddInterrupt)
     
     if (msg->pipe == (void *)0xdeadbeef)
     {
-        OHCIData *ohci = OOP_INST_DATA(cl, o);
+        ohci_data_t *ohci = OOP_INST_DATA(cl, o);
         D(bug("[OHCI] AddInterrupt() local for the OHCI. Intr %p, list %p\n", msg->interrupt, &ohci->intList));
         
         if (!ohci->regs)
@@ -215,8 +300,8 @@ static int OHCI_InitClass(LIBBASETYPEPTR LIBBASE)
                 { aHidd_OHCI_PCIDevice,         0UL },
                 { aHidd_OHCI_PCIDriver,         0UL },
                 { aHidd_USBHub_NumPorts,        0UL },
-                { aHidd_USBDevice_Address,      1UL },
                 { aHidd_USBHub_IsRoot,          1UL },
+                { aHidd_USBDevice_Address,      1UL },
                 { TAG_DONE, 0UL },
         };
 

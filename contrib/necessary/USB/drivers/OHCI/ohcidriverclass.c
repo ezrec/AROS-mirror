@@ -51,7 +51,7 @@
  */
 ohci_td_t *ohci_AllocTD(OOP_Class *cl, OOP_Object *o)
 {
-    OHCIData *ohci = OOP_INST_DATA(cl, o);
+    ohci_data_t *ohci = OOP_INST_DATA(cl, o);
     td_node_t *n;
     uint8_t node_num = 32;
     uint8_t bmp_pos = 8;
@@ -131,7 +131,7 @@ ohci_ed_t *ohci_AllocED(OOP_Class *cl, OOP_Object *o)
  * Mark the Transfer Descriptor free, so that it may be allocated by another one.
  * A quick version which may be called from interrupts.
  */
-void ohci_FreeTDQuick(OHCIData *ohci, ohci_td_t *td)
+void ohci_FreeTDQuick(ohci_data_t *ohci, ohci_td_t *td)
 {
     td_node_t *t;
     
@@ -158,7 +158,7 @@ void ohci_FreeTDQuick(OHCIData *ohci, ohci_td_t *td)
     Enable();
 }
 
-void ohci_FreeEDQuick(OHCIData *uhci, ohci_ed_t *ed)
+void ohci_FreeEDQuick(ohci_data_t *uhci, ohci_ed_t *ed)
 {
     ohci_FreeTDQuick(uhci, (ohci_td_t *)ed);
 }
@@ -170,7 +170,7 @@ void ohci_FreeEDQuick(OHCIData *uhci, ohci_ed_t *ed)
 void ohci_FreeTD(OOP_Class *cl, OOP_Object *o, ohci_td_t *td)
 {
     td_node_t *t, *next;
-    OHCIData *ohci = OOP_INST_DATA(cl, o);
+    ohci_data_t *ohci = OOP_INST_DATA(cl, o);
 
     ObtainSemaphore(&SD(cl)->tdLock);
 
@@ -210,4 +210,9 @@ void ohci_FreeTD(OOP_Class *cl, OOP_Object *o, ohci_td_t *td)
 void ohci_FreeED(OOP_Class *cl, OOP_Object *o, ohci_ed_t *ed)
 {
     ohci_FreeTD(cl, o, (ohci_td_t *)ed);
+}
+
+void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
+{
+    
 }

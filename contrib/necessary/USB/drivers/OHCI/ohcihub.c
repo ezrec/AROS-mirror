@@ -44,14 +44,19 @@
 
 BOOL METHOD(OHCI, Hidd_USBHub, GetHubDescriptor)
 {
-    OHCIData *ohci = OOP_INST_DATA(cl, o);
-    CopyMem(&ohci->hubDescr, msg->descriptor, sizeof(ohci->hubDescr));
-    return TRUE;
+    ohci_data_t *ohci = OOP_INST_DATA(cl, o);
+    
+    if (ohci->hubDescr.bDescriptorType) {
+        CopyMem(&ohci->hubDescr, msg->descriptor, sizeof(ohci->hubDescr));
+        return TRUE;
+    }
+    else
+        return FALSE;
 }
 
 BOOL METHOD(OHCI, Hidd_USBHub, OnOff)
 {
-    OHCIData *ohci = OOP_INST_DATA(cl, o);
+    ohci_data_t *ohci = OOP_INST_DATA(cl, o);
     BOOL retval = FALSE;
     D(bug("[OHCI] USBHub::OnOff(%d)\n", msg->on));
     
@@ -100,7 +105,7 @@ BOOL METHOD(OHCI, Hidd_USBHub, SetHubFeature)
 
 BOOL METHOD(OHCI, Hidd_USBHub, GetPortStatus)
 {
-    OHCIData *ohci = OOP_INST_DATA(cl, o);
+    ohci_data_t *ohci = OOP_INST_DATA(cl, o);
     BOOL retval = FALSE;
     
     if (msg->port >= 1 && msg->port <= ohci->hubDescr.bNbrPorts)
@@ -133,7 +138,7 @@ AROS_UFH3(void, OHCI_HubInterrupt,
 {
     AROS_USERFUNC_INIT
  
-    OHCIData *ohci = interruptData;  
+    ohci_data_t *ohci = interruptData;  
  
     /* Remove self from the msg queue */
     GetMsg(&ohci->timerPort);

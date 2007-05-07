@@ -27,6 +27,8 @@
 
 #include <exec/semaphores.h>
 
+#include <hidd/irq.h>
+
 #include LC_LIBDEFS_FILE
 
 #define mmio(var) (*(volatile uint32_t *)&(var))
@@ -225,7 +227,7 @@ struct ohcibase
     struct ohci_staticdata  sd;
 };
 
-typedef struct OHCIData {
+typedef struct ohci_data {
     struct ohci_staticdata      *sd;
     volatile ohci_registers_t   *regs;
     ohci_hcca_t                 *hcca;
@@ -238,10 +240,24 @@ typedef struct OHCIData {
     struct Interrupt            timerInt;
     struct timerequest          *timerReq;
     
+    HIDDT_IRQ_Handler           *irqHandler;
+    intptr_t                    irqNum;
+    
     OOP_Object                  *pciDriver;
     OOP_Object                  *pciDevice;
     
-} OHCIData;
+    ohci_ed_t                   *ctrl_head;
+    ohci_ed_t                   *bulk_head;
+    ohci_ed_t                   *isoc_head;
+    
+    ohci_ed_t                   *int01;
+    ohci_ed_t                   *int02[2];
+    ohci_ed_t                   *int04[4];
+    ohci_ed_t                   *int08[8];
+    ohci_ed_t                   *int16[16];
+    ohci_ed_t                   *int32[32];
+    
+} ohci_data_t;
 
 typedef struct td_node {
     struct MinNode      tdNode;
@@ -276,5 +292,14 @@ AROS_UFP3(void, OHCI_HubInterrupt,
           AROS_UFPA(APTR, interruptData, A1),
           AROS_UFPA(APTR, interruptCode, A5),
           AROS_UFPA(struct ExecBase *, SysBase, A6));
+
+ohci_td_t *ohci_AllocTD(OOP_Class *cl, OOP_Object *o);
+ohci_ed_t *ohci_AllocED(OOP_Class *cl, OOP_Object *o);
+void ohci_FreeTDQuick(ohci_data_t *ohci, ohci_td_t *td);
+void ohci_FreeEDQuick(ohci_data_t *uhci, ohci_ed_t *ed);
+void ohci_FreeTD(OOP_Class *cl, OOP_Object *o, ohci_td_t *td);
+void ohci_FreeED(OOP_Class *cl, OOP_Object *o, ohci_ed_t *ed);
+
+void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw);
 
 #endif /*OHCI_H_*/
