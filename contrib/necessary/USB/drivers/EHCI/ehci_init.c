@@ -35,7 +35,6 @@
 #include <proto/dos.h>
 #include <aros/debug.h>
 
-
 #include "ehci.h"
 
 #undef SD
@@ -81,12 +80,17 @@ AROS_UFH3(void, Enumerator,
     uint32_t hcc_params = mmio_l(base + 0x08);
     offset = (hcc_params >> 8) & 0xff;                  // Get the address of first capability
     
+    D(bug("[EHCI]  hcc_params=%08x\n", hcc_params));
+    
     D(bug("[EHCI]  Try to perform the BIOS handoff procedure\n"));
+    
     while(offset && count--)
     {
         uint32_t cap;
         rl.reg = offset;
         cap = OOP_DoMethod(driver, &rl.mID);
+        
+        D(bug("[EHCI]  cap=%08x\n", cap));
         
         if ((cap & 0xff) == 1)
         {
@@ -151,6 +155,18 @@ AROS_UFH3(void, Enumerator,
     
     mmio_l(reg_base + 0x08) = 0;                // USBINTR = 0, no interrupts allowed
     mmio_l(reg_base + 0x04) = 0x3f;             // USBSTS flags cleared
+    mmio_l(reg_base + 0x40) = 0;                // Unconfigure the chip
+    
+    mmio_l(reg_base + 0) = 2;
+    Delay(5);
+    mmio_l(reg_base + 0) = 0;
+    
+    hcc_params &= 0xf;
+    
+    while (hcc_params--)
+    {
+        mmio_l(reg_base + 0x44 + 4*hcc_params) = 1 << 13;
+    }
     
     AROS_USERFUNC_EXIT
 }
