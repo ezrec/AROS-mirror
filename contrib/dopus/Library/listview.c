@@ -86,7 +86,6 @@ char nullstring[]="                                                             
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct RastPort *rp;
 	int a,addcount=0;
@@ -245,7 +244,6 @@ char nullstring[]="                                                             
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 
 	USHORT body,gh,ih,min;
@@ -337,7 +335,6 @@ char nullstring[]="                                                             
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 
 	USHORT vert,vh,gh,ih,te,oh;
@@ -421,7 +418,6 @@ char nullstring[]="                                                             
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	int ob,ot,y,old_pen,old_mode;
 	struct Image *image;
@@ -612,7 +608,6 @@ struct DOpusListView *view;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	int i;
 	USHORT vertpot;
@@ -670,7 +665,6 @@ struct DOpusListView *view;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	int gadgetid,list,x,y,rep,xo,histate=0,offset,itemnum,newoffset,lastout=0,temp;
 	ULONG class,idcmpflags;
@@ -1002,7 +996,6 @@ struct DOpusListView *view;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	int realcount=0;
 
@@ -1065,7 +1058,6 @@ struct DOpusListView *view;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 
 	int realcount=0;

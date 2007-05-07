@@ -219,7 +219,6 @@ makeproto SAVEDS ASM VOID BGUI_PostRender(REG(a0) Class *cl, REG(a2) Object *obj
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    AROS_LIBFUNC_EXIT
 }

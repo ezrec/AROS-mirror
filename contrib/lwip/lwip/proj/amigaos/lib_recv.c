@@ -1,5 +1,5 @@
 /*
-    Copyright © 2002, The AROS Development Team. 
+    Copyright © 2002-2007, The AROS Development Team. 
     All rights reserved.
     
     $Id$
@@ -66,7 +66,6 @@ __asm int LIB_recv(register __d0 long s, register __a0 unsigned char *buf, regis
 	  struct Task *t;
 
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
     t = FindTask(NULL);
     ud = t->tc_UserData;

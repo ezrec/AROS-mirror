@@ -84,7 +84,6 @@ char mondays[12]={31,28,31,30,31,30,31,31,30,31,30,31};
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	int day,mon,yr,hr,min,sec,wday,diff;
 	struct DateStamp now;
@@ -252,7 +251,6 @@ int *day,*month,*year;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	int day,mon,yr,hr,min,sec,a,b,wday,c;
 	char *ptr,monstr[20];
@@ -438,7 +436,6 @@ int *retbuf,t;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	if (!date) return(-1);
 	if (!date2) return(1);

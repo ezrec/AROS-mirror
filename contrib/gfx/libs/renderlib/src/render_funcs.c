@@ -11,7 +11,6 @@ AROS_LH1(void, DeleteRMHandler,
     struct Library *, RenderBase, 8, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     DeleteRMHandler(rmh);
     
@@ -23,7 +22,6 @@ AROS_LH1(APTR, CreateRMHandlerA,
     struct Library *, RenderBase, 7, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return CreateRMHandlerA(tags);
     
@@ -36,7 +34,6 @@ AROS_LH2(APTR, AllocRenderMem,
     struct Library *, RenderBase, 9, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return AllocRenderMem(rmh, size);
     
@@ -50,7 +47,6 @@ AROS_LH3(void, FreeRenderMem,
     struct Library *, RenderBase, 10, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     FreeRenderMem(rmh, mem, size);
     
@@ -63,7 +59,6 @@ AROS_LH2(APTR, AllocRenderVec,
     struct Library *, RenderBase, 11, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return AllocRenderVec(rmh, size);
     
@@ -76,7 +71,6 @@ AROS_LH1(void, FreeRenderVec,
     struct Library *, RenderBase, 12, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     FreeRenderVec(mem);
     
@@ -89,7 +83,6 @@ AROS_LH2(APTR, AllocRenderVecClear,
     struct Library *, RenderBase, 51, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return AllocRenderVecClear(rmh, size);
     
@@ -103,7 +96,6 @@ AROS_LH3(void, TurboFillMem,
     struct Library *, RenderBase, 5, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     TurboFillMem(mem, len, val);
     
@@ -117,7 +109,6 @@ AROS_LH3(void, TurboCopyMem,
     struct Library *, RenderBase, 6, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     TurboCopyMem(src, dst, len);
     
@@ -129,7 +120,6 @@ AROS_LH1(APTR, CreateHistogramA,
     struct Library *, RenderBase, 13, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return CreateHistogramA(tags);
     
@@ -141,7 +131,6 @@ AROS_LH1(void, DeleteHistogram,
     struct Library *, RenderBase, 14, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     DeleteHistogram(histo);
     
@@ -155,7 +144,6 @@ AROS_LH3(ULONG, AddRGB,
     struct Library *, RenderBase, 16, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return AddRGB(histo, rgb, count);
     
@@ -168,7 +156,6 @@ AROS_LH2(ULONG, QueryHistogram,
     struct Library *, RenderBase, 15, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return QueryHistogram(histo, tag);
     
@@ -184,7 +171,6 @@ AROS_LH5(ULONG, AddRGBImageA,
     struct Library *, RenderBase, 17, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return AddRGBImageA(histo, rgb, width, height, tags);
     
@@ -196,7 +182,6 @@ AROS_LH1(APTR, CreatePaletteA,
     struct Library *, RenderBase, 29, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return CreatePaletteA(tags);
     
@@ -208,7 +193,6 @@ AROS_LH1(void, DeletePalette,
     struct Library *, RenderBase, 30, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     DeletePalette((RNDPAL *)palette);
     
@@ -224,7 +208,6 @@ AROS_LH4(void, ImportPaletteA,
     struct Library *, RenderBase, 31, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     ImportPaletteA((RNDPAL *)palette, coltab, numcol, tags);
     
@@ -238,7 +221,6 @@ AROS_LH3(void, ExportPaletteA,
     struct Library *, RenderBase, 32, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     ExportPaletteA((RNDPAL *)palette, coltab, tags);
     
@@ -250,7 +232,6 @@ AROS_LH1(void, FlushPalette,
     struct Library *, RenderBase, 35, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     FlushPalette((RNDPAL *)palette);
     
@@ -267,7 +248,6 @@ AROS_LH6(ULONG, AddChunkyImageA,
     struct Library *, RenderBase, 18, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return AddChunkyImageA((RNDHISTO *)histogram, chunky, width, height, (RNDPAL *)palette, tags);
     
@@ -282,7 +262,6 @@ AROS_LH4(ULONG, ExtractPaletteA,
     struct Library *, RenderBase, 19, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return ExtractPaletteA((RNDHISTO *)histogram, (RNDPAL *)palette, numcol, tags);
     
@@ -294,7 +273,6 @@ AROS_LH1(ULONG *, CreateHistogramPointerArray,
     struct Library *, RenderBase, 39, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return (ULONG *)CreateHistogramPointerArray((RNDHISTO *)histogram);
     
@@ -307,7 +285,6 @@ AROS_LH2(ULONG, CountRGB,
     struct Library *, RenderBase, 33, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return CountRGB((RNDHISTO *)histogram, rgb);
     
@@ -320,7 +297,6 @@ AROS_LH2(LONG, BestPen,
     struct Library *, RenderBase, 34, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return BestPen((RNDPAL *)palette, rgb);
     
@@ -333,7 +309,6 @@ AROS_LH2(APTR, CreateMapEngineA,
     struct Library *, RenderBase, 41, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return CreateMapEngineA((RNDPAL *)palette, tags);
     
@@ -345,7 +320,6 @@ AROS_LH1(void, DeleteMapEngine,
     struct Library *, RenderBase, 42, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     DeleteMapEngine((RNDMAP *)mapengine);
     
@@ -363,7 +337,6 @@ AROS_LH6(ULONG, MapRGBArrayA,
     struct Library *, RenderBase, 43, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return MapRGBArrayA((RNDMAP *)engine, rgb, width, height, chunky, tags);
     
@@ -381,7 +354,6 @@ AROS_LH7(ULONG, MapChunkyArrayA,
     struct Library *, RenderBase, 46, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return MapChunkyArrayA((RNDMAP *)engine, src, (RNDPAL *)palette, width, height, dest, tags);
     
@@ -393,7 +365,6 @@ AROS_LH1(ULONG, CountHistogram,
     struct Library *, RenderBase, 40, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return CountHistogram((RNDHISTO *)histo);
     
@@ -407,7 +378,6 @@ AROS_LH3(ULONG, AddHistogramA,
     struct Library *, RenderBase, 37, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return AddHistogramA((RNDHISTO *)dst, (RNDHISTO *)src, tags);
     
@@ -424,7 +394,6 @@ AROS_LH6(ULONG, Chunky2RGBA,
     struct Library *, RenderBase, 22, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return Chunky2RGBA(src, width, height, dst, (RNDPAL *)pal, tags);
     
@@ -439,7 +408,6 @@ AROS_LH4(LONG, RGBArrayDiversityA,
     struct Library *, RenderBase, 44, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return RGBArrayDiversityA(rgb, width, height, tags);
     
@@ -455,7 +423,6 @@ AROS_LH5(LONG, ChunkyArrayDiversityA,
     struct Library *, RenderBase, 45, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return  ChunkyArrayDiversityA(chunky, (RNDPAL *)palette, width, height, tags);
     
@@ -471,7 +438,6 @@ AROS_LH5(void, InsertAlphaChannelA,
     struct Library *, RenderBase, 47, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     InsertAlphaChannelA(chunky, width, height, rgb, tags);
     
@@ -487,7 +453,6 @@ AROS_LH5(void, ExtractAlphaChannelA,
     struct Library *, RenderBase, 48, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     ExtractAlphaChannelA(rgb, width, height, chunky, tags);
     
@@ -503,7 +468,6 @@ AROS_LH5(void, ApplyAlphaChannelA,
     struct Library *, RenderBase, 49, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     ApplyAlphaChannelA(src, width, height, dst, tags);
     
@@ -520,7 +484,6 @@ AROS_LH6(void, MixRGBArrayA,
     struct Library *, RenderBase, 50, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     MixRGBArrayA(src, width, height, dst, ratio, tags);
     
@@ -535,7 +498,6 @@ AROS_LH4(void, CreateAlphaArrayA,
     struct Library *, RenderBase, 52, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     CreateAlphaArrayA(rgb, width, height, tags);
     
@@ -552,7 +514,6 @@ AROS_LH6(void, MixAlphaChannelA,
     struct Library *, RenderBase, 53, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     MixAlphaChannelA(rgb1, rgb2, width, height, dest, tags);
     
@@ -570,7 +531,6 @@ AROS_LH7(void, TintRGBArrayA,
     struct Library *, RenderBase, 54, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     TintRGBArrayA(src, width, height, rgb, ratio, dest, tags);
     
@@ -584,7 +544,6 @@ AROS_LH3(ULONG, SortPaletteA,
     struct Library *, RenderBase, 36, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return SortPaletteA((RNDPAL *)palette, mode, tags);
     
@@ -601,7 +560,6 @@ AROS_LH6(ULONG, RenderA,
     struct Library *, RenderBase, 20, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return RenderA(src, width, height, dst, (RNDPAL *)palette, tags);
     
@@ -619,7 +577,6 @@ AROS_LH7(void, Planar2ChunkyA,
     struct Library *, RenderBase, 21, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     Planar2ChunkyA((UWORD **)planetab, bytewidth, rows, depth, bytesperrow, dst, tags);
     
@@ -639,7 +596,6 @@ AROS_LH9(void, Chunky2BitMapA,
     struct Library *, RenderBase, 23, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     Chunky2BitMapA(src, sx, sy, width, height, bm, dx, dy, tags);
     
@@ -652,7 +608,6 @@ AROS_LH2(ULONG, GetPaletteAttrs,
     struct Library *, RenderBase, 55, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return GetPaletteAttrs((RNDPAL *)pal, args);
     
@@ -669,7 +624,6 @@ AROS_LH6(void, RemapArrayA,
     struct Library *, RenderBase, 56, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     RemapArrayA(src, width, height, dst, pentab, tags);
     
@@ -687,7 +641,6 @@ AROS_LH7(ULONG, ConvertChunkyA,
     struct Library *, RenderBase, 27, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return ConvertChunkyA(src, (RNDPAL *)srcpal, width, height, dst, (RNDPAL *)dstpal, tags);
     
@@ -705,7 +658,6 @@ AROS_LH7(void, CreatePenTableA,
     struct Library *, RenderBase, 28, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     CreatePenTableA(src, (RNDPAL *)srcpal, width, height, (RNDPAL *)newpal, pentab, tags);
     
@@ -721,7 +673,6 @@ AROS_LH5(APTR, CreateScaleEngineA,
     struct Library *, RenderBase, 24, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return CreateScaleEngineA(sw, sh, dw, dh, tags);
     
@@ -733,7 +684,6 @@ AROS_LH1(void, DeleteScaleEngine,
     struct Library *, RenderBase, 25, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     DeleteScaleEngine((RNDSCALE *)sce);
     
@@ -748,7 +698,6 @@ AROS_LH4(ULONG, ScaleA,
     struct Library *, RenderBase, 26, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return ScaleA((RNDSCALE *)sce, src, dst, tags);
     
@@ -762,7 +711,6 @@ AROS_LH3(UWORD, ScaleOrdinate,
     struct Library *, RenderBase, 38, Render)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,RenderBase)
     
     return ScaleOrdinate(start, dest, ordinate);
     

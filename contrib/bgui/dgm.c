@@ -186,7 +186,6 @@ makeproto SAVEDS ASM ULONG BGUI_DoGadgetMethodA( REG(a0) Object *obj, REG(a1) st
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    Object      *dgm;
    ULONG        rc;

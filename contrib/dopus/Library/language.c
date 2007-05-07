@@ -72,7 +72,6 @@ typedef struct {
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	BPTR file;
 
@@ -206,7 +205,6 @@ typedef struct {
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 
 	if (stringdata) {

@@ -36,7 +36,6 @@
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	if (!(gadget->Flags & GFLG_DISABLED)) {
 	
@@ -105,7 +104,6 @@
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	struct StringInfo *si;
 	

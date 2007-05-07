@@ -295,7 +295,6 @@ makeproto SAVEDS ASM ULONG BGUI_RequestA(REG(a0) struct Window *win, REG(a1) str
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    Object         *window;
    struct Screen  *screen;

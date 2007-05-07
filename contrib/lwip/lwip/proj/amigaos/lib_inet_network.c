@@ -1,5 +1,5 @@
 /*
-    Copyright © 2002, The AROS Development Team. 
+    Copyright © 2002-2007, The AROS Development Team. 
     All rights reserved.
     
     $Id$
@@ -50,7 +50,6 @@ __asm int LIB_inet_network(register __a0 char *cp)
 *****************************************************************************/
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
     D(bug("inet_network()\n"));
 

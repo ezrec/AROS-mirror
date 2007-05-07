@@ -1,5 +1,5 @@
 /*
-    Copyright © 2002, The AROS Development Team. 
+    Copyright © 2002-2007, The AROS Development Team. 
     All rights reserved.
     
     $Id$
@@ -130,7 +130,6 @@ __asm int LIB_WaitSelect(register __d0 long nfds, register __a0 fd_set *readfds,
 #warning implement signals parameter
 
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
     amitcp2lwip(nfds,amitcp_readfds,&lwip_readfds);
     amitcp2lwip(nfds,amitcp_writefds,&lwip_writefds);

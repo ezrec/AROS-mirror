@@ -81,7 +81,6 @@ void drawline(struct RastPort *rp,int,int,int,int);
 
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	int x1,y1,x2,y2,x3,y3,x4,y4,xb;
 /* kprintf("DoArrow(rp=%p, x=%d, y=%d, w=%d, h=%d, fg=%d, bg=%d, d=%d)\n"
@@ -174,7 +173,6 @@ sameleftright:
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	SetAPen(rp,hi);
 	drawline(rp,x,y-1,x+w-3,y-1);
@@ -240,7 +238,6 @@ int x1,y1,x2,y2;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct Image *image;
 	short a,b,depth;
@@ -390,7 +387,6 @@ int x1,y1,x2,y2;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct Image *image;
 	int a,b,depth;
@@ -483,7 +479,6 @@ int x1,y1,x2,y2;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	char of,ob;
 	int a,l;
@@ -549,7 +544,6 @@ extern UBYTE /* __chip */ glass_image2[];
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 
 	int x,y;

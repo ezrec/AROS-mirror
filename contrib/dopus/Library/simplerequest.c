@@ -75,7 +75,6 @@ static char *contstring[]={"_Continue"};
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	int
 		textlen,a,b,c,cw,cy,cb,sw,height,maxlen,llen,num,gwidth=0,gspace,gx,ty,ac,ogy,

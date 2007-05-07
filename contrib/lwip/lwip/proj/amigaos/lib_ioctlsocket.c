@@ -1,5 +1,5 @@
 /*
-    Copyright © 2002, The AROS Development Team. 
+    Copyright © 2002-2007, The AROS Development Team. 
     All rights reserved.
     
     $Id$
@@ -48,7 +48,6 @@ __asm int LIB_IoctlSocket(register __d0 long s, register __d1 unsigned long req,
 *****************************************************************************/
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
     return -1;
 

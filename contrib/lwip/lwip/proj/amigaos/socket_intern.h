@@ -40,7 +40,6 @@
 #include <dos.h>
 
 #define AROS_LIBFUNC_INIT
-#define AROS_LIBBASE_EXT_DECL(a,b) a b = (struct Library*)getreg(REG_A6);
 #define AROS_LIBFUNC_EXIT
 
 #endif

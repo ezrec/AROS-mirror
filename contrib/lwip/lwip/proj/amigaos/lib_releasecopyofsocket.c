@@ -1,5 +1,5 @@
 /*
-    Copyright © 2002, The AROS Development Team. 
+    Copyright © 2002-2007, The AROS Development Team. 
     All rights reserved.
     
     $Id$
@@ -51,7 +51,6 @@ __asm int LIB_ReleaseCopyOfSocket(register __d0 long s, register __d1 long id)
 *****************************************************************************/
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
     D(bug("ReleaseCopyOfSocket()\n"));
 

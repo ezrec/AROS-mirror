@@ -78,7 +78,6 @@ int makeusstring(char *,char *,int *,int);
 
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	int num=0,realcount=0,of,ob,a,x,y,b,c,up,xp,yp,bl,len,offset;
 	char buf[80];
@@ -239,7 +238,6 @@ int makeusstring(char *,char *,int *,int);
 
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	ULONG class;
 	USHORT code;
@@ -432,7 +430,6 @@ int *uspos,size;
 
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	int op,a;
 	struct RastPort *rp;
@@ -492,7 +489,6 @@ int *uspos,size;
 
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	int a,x;
 

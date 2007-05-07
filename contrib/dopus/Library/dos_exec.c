@@ -69,7 +69,6 @@ the existing commercial status of Directory Opus 5.
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct StandardPacket *packet;
 	struct MsgPort *repport;
@@ -147,7 +146,6 @@ the existing commercial status of Directory Opus 5.
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct DOpusRemember *node,*cur;
 	size+=sizeof(struct DOpusRemember);
@@ -204,7 +202,6 @@ the existing commercial status of Directory Opus 5.
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct DOpusRemember *node,*cur;
 
@@ -255,7 +252,6 @@ the existing commercial status of Directory Opus 5.
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct DOpusRemember *node,*last=NULL;
 

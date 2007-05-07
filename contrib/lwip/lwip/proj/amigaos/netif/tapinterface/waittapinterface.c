@@ -1,5 +1,5 @@
 /*
-    Copyright © 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright © 2002-2007, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -61,7 +61,6 @@
     fd_set fdset;
 
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *, TapInterfaceBase)
 
     D(bug("tapinterface.library: WaitTapInterface(interface=%p)\n",interface));
 

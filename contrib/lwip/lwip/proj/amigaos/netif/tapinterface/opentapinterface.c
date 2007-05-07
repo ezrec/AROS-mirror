@@ -1,5 +1,5 @@
 /*
-    Copyright © 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright © 2002-2007, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -61,7 +61,6 @@
     char buf[100];
 
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *, TapInterfaceBase)
 
     D(bug("tapinterface.library: OpenTapInterace(addr=%08lx)\n",addr));
 

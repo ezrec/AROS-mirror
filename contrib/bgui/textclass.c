@@ -389,7 +389,6 @@ makeproto SAVEDS ASM VOID BGUI_InfoTextSize(REG(a0) struct RastPort *rp, REG(a1)
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    if (wi) *wi = TotalWidth( rp, text);
    if (wh) *wh = TotalHeight(rp, text);
@@ -415,7 +414,6 @@ makeproto SAVEDS ASM VOID BGUI_InfoText( REG(a0) struct RastPort *rp, REG(a1) UB
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    RenderInfoText(rp, text, PENS(dri), bounds, (UWORD)~0);
 

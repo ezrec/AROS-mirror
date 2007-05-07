@@ -80,7 +80,6 @@ extern struct DOpusBase *DOpusBase;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	return DoMatchPattern(parsepat, str, FALSE);
 	
@@ -124,7 +123,6 @@ extern struct DOpusBase *DOpusBase;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	return DoMatchPattern(parsepat, str, TRUE);
 
@@ -168,7 +166,6 @@ extern struct DOpusBase *DOpusBase;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	return DoParsePattern(pat, parsepat, FALSE);
 	
@@ -213,7 +210,6 @@ extern struct DOpusBase *DOpusBase;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	return DoParsePattern(parsepat, str, TRUE);
 

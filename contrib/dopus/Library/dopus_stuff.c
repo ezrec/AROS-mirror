@@ -76,7 +76,6 @@ void freestring(char *);
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 #warning Does not handle endianess
 	BPTR in;
 	int a,size,pos,b,bk,gad,mv;
@@ -515,7 +514,6 @@ char *str;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 #warning Does not handle endianess	
 	BPTR out;
 	int a,ret=0;
@@ -804,7 +802,6 @@ static short
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 
 	int a,b,h,i;
@@ -1120,7 +1117,6 @@ int size;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 /* AROS: Much of these structures are now private so we must
 	rewrite the whole thing
@@ -1333,7 +1329,6 @@ kprintf("return from GetDevices()\n");
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct dopusgadgetbanks *bank,*temp;
 	int a;
@@ -1402,7 +1397,6 @@ kprintf("return from GetDevices()\n");
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct Config *config;
 
@@ -1495,7 +1489,6 @@ struct dopusfiletype *temp;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	int a;
 	struct Config *config;
@@ -1586,7 +1579,6 @@ char *str;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct Config *config;
 
@@ -1649,7 +1641,6 @@ char *look_dirs[]={
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	char temp[256];
 

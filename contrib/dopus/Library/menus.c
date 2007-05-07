@@ -65,7 +65,6 @@ the existing commercial status of Directory Opus 5.
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct Menu *menu;
 	struct MenuItem *item;

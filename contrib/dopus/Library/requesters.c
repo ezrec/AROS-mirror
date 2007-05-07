@@ -87,7 +87,6 @@ struct TextAttr
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 
 	struct NewWindow newwin;
@@ -330,7 +329,6 @@ struct TextAttr
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	if (reqbase->rb_window) {
 		CloseWindow(reqbase->rb_window);
@@ -379,7 +377,6 @@ struct TextAttr
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct RequesterObject *object=NULL,*tempobject;
 	struct PrivateData *private;
@@ -810,7 +807,6 @@ struct TextAttr
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	USHORT count;
 	struct RastPort *rp;
@@ -962,7 +958,6 @@ struct TextAttr
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct RastPort *rp;
 	short x,y,text_width,text_height,cx,cy,len,got_uscore=-1,uscoreok=1;

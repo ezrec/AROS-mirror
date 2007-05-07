@@ -70,7 +70,6 @@ struct PathList {
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 
 /* AROS: struct DosInfo is private in AROS, so we have to rewrite the whole thing */
@@ -197,7 +196,6 @@ struct PathList {
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 
 	int a,b;
@@ -249,7 +247,6 @@ struct PathList {
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
     	if (NameFromLock(lock, buf, len))
 	{
@@ -346,7 +343,6 @@ struct PathList {
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 
 	int a;
@@ -394,7 +390,6 @@ struct PathList {
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 
 	return SameLock(l1, l2);
@@ -465,7 +460,6 @@ static char *pathlists[7]={
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 
 	struct Process *proc,*myproc;
@@ -549,7 +543,6 @@ static char *pathlists[7]={
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 
 

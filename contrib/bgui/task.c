@@ -984,7 +984,6 @@ REGFUNC_END
    #endif
    {
       AROS_LIBFUNC_INIT
-      AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
      D(bug("BGUI_AllocPoolMem is being called from unknown location\n"));
 	   return(BGUI_AllocPoolMemDebug(size,__FILE__,__LINE__));
@@ -1017,7 +1016,6 @@ REGFUNC_END
    #endif
    {
       AROS_LIBFUNC_INIT
-      AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
      bug("BGUI_AllocPoolMemDebug is being called from (%s,%lu)\n",file ? file : (STRPTR)"unknown",line);
 	   return(BGUI_AllocPoolMem(size));
@@ -1037,7 +1035,6 @@ REGFUNC_END
 
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    APTR        memPtr;
 
@@ -1078,7 +1075,6 @@ REGFUNC_END
    #endif
    {
       AROS_LIBFUNC_INIT
-      AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
       D(bug("BGUI_FreePoolMem is being called from unknown location\n"));
 	   BGUI_FreePoolMemDebug(memPtr,__FILE__,__LINE__);
@@ -1111,7 +1107,6 @@ REGFUNC_END
    #endif
    {
       AROS_LIBFUNC_INIT
-      AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
       bug("BGUI_FreePoolMemDebug is being called from (%s,%lu)\n",file ? file : (STRPTR)"unknown",line);
 	   BGUI_FreePoolMem(memPtr);
@@ -1132,7 +1127,6 @@ REGFUNC_END
 
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    if (memPtr)
    {
@@ -1817,7 +1811,6 @@ makeproto SAVEDS ASM struct TagItem *BGUI_GetDefaultTags(REG(d0) ULONG id)
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    PI             *pi;
    TM             *tm;
@@ -1853,7 +1846,6 @@ makeproto SAVEDS ASM VOID BGUI_DefaultPrefs(VOID)
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    PI        *pi;
    TM        *tm;
@@ -1881,7 +1873,6 @@ makeproto SAVEDS ASM VOID BGUI_LoadPrefs(REG(a0) UBYTE *name)
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    BGUI_DefaultPrefs();
    LoadPrefs(name);

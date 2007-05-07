@@ -389,7 +389,6 @@ makeproto SAVEDS ASM Class *BGUI_GetClassPtr( REG(d0) ULONG classID )
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    CLASSDEF     *cd;
    Class        *cl = NULL;
@@ -451,7 +450,6 @@ makeproto SAVEDS ASM Object *BGUI_NewObjectA( REG(d0) ULONG classID, REG(a0) str
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    Class       *cl;
    Object      *obj = NULL;
@@ -482,7 +480,6 @@ makeproto SAVEDS ASM struct BitMap *BGUI_AllocBitMap( REG(d0) ULONG width, REG(d
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    #ifdef ENHANCED
    return AllocBitMap(width, height, depth, flags | BMF_MINPLANES, fr);
@@ -542,7 +539,6 @@ makeproto SAVEDS ASM VOID BGUI_FreeBitMap( REG(a0) struct BitMap *bm )
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
 #ifdef ENHANCED
    WaitBlit();
@@ -604,7 +600,6 @@ makeproto SAVEDS ASM struct RastPort *BGUI_CreateRPortBitMap( REG(a0) struct Ras
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    struct RastPort   *rp;
    struct Layer_Info *li;
@@ -678,7 +673,6 @@ makeproto SAVEDS ASM VOID BGUI_FreeRPortBitMap( REG(a0) struct RastPort *rp )
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    struct Layer      *l  = rp->Layer;
    struct Layer_Info *li = l->LayerInfo;
@@ -724,7 +718,6 @@ makeproto SAVEDS ASM BOOL BGUI_Help( REG(a0) struct Window *win, REG(a1) UBYTE *
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
 #ifdef __AROS__
 #warning Commented a bunch of lines!!!!!!
@@ -802,7 +795,6 @@ makeproto SAVEDS ASM APTR BGUI_LockWindow( REG(a0) struct Window *win )
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    WINDOWLOCK        *wl;
 
@@ -855,7 +847,6 @@ makeproto SAVEDS ASM VOID BGUI_UnlockWindow( REG(a0) APTR lock )
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    WINDOWLOCK        *wl = ( WINDOWLOCK * )lock;
 
@@ -898,7 +889,6 @@ makeproto SAVEDS ASM STRPTR BGUI_GetLocaleStr( REG(a0) struct bguiLocale *bl, RE
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    STRPTR str = NULL;
    
@@ -933,7 +923,6 @@ makeproto SAVEDS ASM STRPTR BGUI_GetCatalogStr( REG(a0) struct bguiLocale *bl, R
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    struct bguiCatalogStr bcs;
 

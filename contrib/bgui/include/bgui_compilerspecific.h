@@ -341,7 +341,6 @@
 #ifndef __AROS__
 #define AROS_LIBFUNC_INIT
 #define AROS_LIBFUNC_EXIT
-#define AROS_LIBBASE_EXT_DECL(a,b)
 #endif
 
 /*** METHOD macro ***************************************************/

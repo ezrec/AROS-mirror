@@ -12,8 +12,7 @@ AROS_LH4(APTR, MakePictureA,
     struct Library *, GuiGFXBase, 5, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
-    
+
     return MakePictureA(data, totalsourcewidth, totalsourceheight, taglist);
     
     AROS_LIBFUNC_EXIT
@@ -25,7 +24,6 @@ AROS_LH2(APTR, LoadPictureA,
     struct Library *, GuiGFXBase, 6, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return LoadPictureA(filename, taglist);
     
@@ -43,7 +41,6 @@ AROS_LH7(APTR, ReadPictureA,
     struct Library *, GuiGFXBase, 7, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return ReadPictureA(rp, cm, x, y, width, height, taglist);
     
@@ -56,7 +53,6 @@ AROS_LH2(APTR, ClonePictureA,
     struct Library *, GuiGFXBase, 8, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return ClonePictureA(pic, taglist);
     
@@ -68,7 +64,6 @@ AROS_LH1(void, DeletePicture,
     struct Library *, GuiGFXBase, 9, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     DeletePicture(pic);
     
@@ -81,7 +76,6 @@ AROS_LH1(BOOL, UpdatePicture,
     struct Library *, GuiGFXBase, 10, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return UpdatePicture(pic);
     
@@ -95,7 +89,6 @@ AROS_LH3(APTR, AddPictureA,
     struct Library *, GuiGFXBase, 11, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return AddPictureA(psm, pic, taglist);
     
@@ -109,7 +102,6 @@ AROS_LH3(APTR, AddPaletteA,
     struct Library *, GuiGFXBase, 12, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return AddPaletteA(psm, palette, tags);
     
@@ -125,7 +117,6 @@ AROS_LH5(APTR, AddPixelArrayA,
     struct Library *, GuiGFXBase, 13, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return AddPixelArrayA(psm, array, width, height, tags);
     
@@ -137,7 +128,6 @@ AROS_LH1(void, RemColorHandle,
     struct Library *, GuiGFXBase, 14, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     RemColorHandle(ch);
     
@@ -149,7 +139,6 @@ AROS_LH1(APTR, CreatePenShareMapA,
     struct Library *, GuiGFXBase, 15, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return CreatePenShareMapA(taglist);
     
@@ -161,7 +150,6 @@ AROS_LH1(void, DeletePenShareMap,
     struct Library *, GuiGFXBase, 16, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     DeletePenShareMap(psm);
     
@@ -176,7 +164,6 @@ AROS_LH4(APTR, ObtainDrawHandleA,
     struct Library *, GuiGFXBase, 17, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return ObtainDrawHandleA(psm, rp, cm, tags);
     
@@ -188,7 +175,6 @@ AROS_LH1(void, ReleaseDrawHandle,
     struct Library *, GuiGFXBase, 18, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     ReleaseDrawHandle(dh);
     
@@ -204,7 +190,6 @@ AROS_LH5(BOOL, DrawPictureA,
     struct Library *, GuiGFXBase, 19, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return DrawPictureA(dh, pic, x, y, tags);
     
@@ -219,7 +204,6 @@ AROS_LH4(BOOL, MapPaletteA,
     struct Library *, GuiGFXBase, 20, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return MapPaletteA(dh, palette, pentab, tags);
        
@@ -233,7 +217,6 @@ AROS_LH3(LONG, MapPenA,
     struct Library *, GuiGFXBase, 21, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return MapPenA(dh, rgb, tags);
         
@@ -247,7 +230,6 @@ AROS_LH3(struct BitMap *, CreatePictureBitMapA,
     struct Library *, GuiGFXBase, 22, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return CreatePictureBitMapA(dh, pic, tags);
     
@@ -261,7 +243,6 @@ AROS_LH3(ULONG, DoPictureMethodA,
     struct Library *, GuiGFXBase, 23, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return DoPictureMethodA(pic, method, arg);
     
@@ -274,7 +255,6 @@ AROS_LH2(ULONG, GetPictureAttrsA,
     struct Library *, GuiGFXBase, 24, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return GetPictureAttrsA(pic, tags);
     
@@ -288,7 +268,6 @@ AROS_LH3(ULONG, LockPictureA,
     struct Library *, GuiGFXBase, 25, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return LockPictureA(pic, lockmode, arg);
     
@@ -301,7 +280,6 @@ AROS_LH2(void, UnLockPicture,
     struct Library *, GuiGFXBase, 26, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     UnLockPicture(pic, lockmode);
     
@@ -314,7 +292,6 @@ AROS_LH2(BOOL, IsPictureA,
     struct Library *, GuiGFXBase, 27, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return IsPictureA(filename, tags);
     
@@ -331,7 +308,6 @@ AROS_LH6(APTR, CreateDirectDrawHandleA,
     struct Library *, GuiGFXBase, 28, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return CreateDirectDrawHandleA(dh, sourcewidth, sourceheight, destwidth, destheight, tags);
     
@@ -343,7 +319,6 @@ AROS_LH1(void, DeleteDirectDrawHandle,
     struct Library *, GuiGFXBase, 29, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     DeleteDirectDrawHandle(ddh);
     
@@ -360,7 +335,6 @@ AROS_LH5(BOOL, DirectDrawTrueColorA,
     struct Library *, GuiGFXBase, 30, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return DirectDrawTrueColorA(ddh, array, x, y, tags);
         
@@ -375,7 +349,6 @@ AROS_LH4(BOOL, CreatePictureMaskA,
     struct Library *, GuiGFXBase, 31, GuiGFX)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,GuiGFXBase)
     
     return CreatePictureMaskA(pic, array, arraywidth, tags);
     

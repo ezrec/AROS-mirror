@@ -112,7 +112,6 @@ extern char nullstring[];
 
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	struct Library *AslBase;
 
 	if (freq->dirbuf[0] && (CheckExist(freq->dirbuf,NULL)<0)) {

@@ -67,7 +67,6 @@ the existing commercial status of Directory Opus 5.
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	register int a;
 
@@ -114,7 +113,6 @@ the existing commercial status of Directory Opus 5.
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	register int a,b;
 
@@ -166,7 +164,6 @@ the existing commercial status of Directory Opus 5.
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	int a,c,d,e,f;
 

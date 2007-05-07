@@ -1,5 +1,5 @@
 /*
-    Copyright © 2002, The AROS Development Team. 
+    Copyright © 2002-2007, The AROS Development Team. 
     All rights reserved.
     
     $Id$
@@ -51,7 +51,6 @@ __asm int LIB_Inet_MakeAddr(register __d0 unsigned long net, register __d1 unsig
 *****************************************************************************/
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,SocketBase)
 
     D(bug("Inet_MakeAddr()\n"));
 

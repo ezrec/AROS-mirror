@@ -12,7 +12,6 @@ AROS_LH3(APTR, MV_CreateA,
     struct Library *, MysticBase, 5, MysticView)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,MysticBase)
     
     return CreateView(screen, rastport, tags);
     
@@ -24,7 +23,6 @@ AROS_LH1(void, MV_Delete,
     struct Library *, MysticBase, 6, MysticView)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,MysticBase)
     
     return DeleteView(mview);
     
@@ -37,7 +35,6 @@ AROS_LH2(void, MV_SetAttrsA,
     struct Library *, MysticBase, 7, MysticView)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,MysticBase)
     
     return SetViewAttrs(mview, tags);
     
@@ -49,7 +46,6 @@ AROS_LH1(BOOL, MV_DrawOn,
     struct Library *, MysticBase, 8, MysticView)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,MysticBase)
     
     return DrawOn(mview);
     
@@ -61,7 +57,6 @@ AROS_LH1(void, MV_DrawOff,
     struct Library *, MysticBase, 9, MysticView)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,MysticBase)
     
     DrawOff(mview);
     
@@ -74,7 +69,6 @@ AROS_LH1(void, MV_Refresh,
     struct Library *, MysticBase, 10, MysticView)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,MysticBase)
     
     return RefreshView(mview);
     
@@ -87,7 +81,6 @@ AROS_LH2(void, MV_GetAttrsA,
     struct Library *, MysticBase, 11, MysticView)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,MysticBase)
     
     GetViewAttrs(mview, tags);
     
@@ -101,7 +94,6 @@ AROS_LH3(void, MV_SetViewStart,
     struct Library *, MysticBase, 12, MysticView)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,MysticBase)
     
     SetViewStart(mview, x, y);
     
@@ -115,7 +107,6 @@ AROS_LH3(void, MV_SetViewRelative,
     struct Library *, MysticBase, 13, MysticView)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,MysticBase)
     
     SetViewRelative(mview, x, y);
     
@@ -128,7 +119,6 @@ AROS_LH2(void, MV_Lock,
     struct Library *, MysticBase, 14, MysticView)
 {
     AROS_LIBFUNC_INIT
-    AROS_LIBBASE_EXT_DECL(struct Library *,MysticBase)
     
     LockView(mview, lock);
     

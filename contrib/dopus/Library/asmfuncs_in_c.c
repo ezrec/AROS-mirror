@@ -39,7 +39,6 @@
 #define WBSCREEN_NAME "Workbench"
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	struct Screen *scr;
 	
@@ -96,7 +95,6 @@ kprintf("GetWB()\n");
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	srand(seed);	
 	
@@ -139,7 +137,6 @@ kprintf("GetWB()\n");
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	return 1 + (int) (limit * rand() / (RAND_MAX + 1.0));
 	
@@ -183,7 +180,6 @@ kprintf("GetWB()\n");
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	char c;
 	
@@ -229,7 +225,6 @@ kprintf("GetWB()\n");
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	char c;
 	
@@ -279,7 +274,6 @@ kprintf("GetWB()\n");
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	if (!(gad->Flags & GFLG_DISABLED)) {				
 		Forbid();
@@ -331,7 +325,6 @@ kprintf("GetWB()\n");
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	if (gad->Flags & GFLG_DISABLED) {
 		Forbid();
@@ -385,7 +378,6 @@ const UWORD ditherdata[2] = { 0x8888, 0x2222 };
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	ULONG old_drmd;
 	
@@ -421,7 +413,6 @@ const UWORD ditherdata[2] = { 0x8888, 0x2222 };
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	int new_x, new_y;
 	
@@ -533,7 +524,6 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	struct IORequest *io;
 	
@@ -587,7 +577,6 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	struct MsgPort *port;
 	
@@ -644,7 +633,6 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	DeleteIORequest(ioext);
 	
@@ -686,7 +674,6 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	if (NULL != port->mp_Node.ln_Name) {
 		RemPort(port);
@@ -733,7 +720,6 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	if (ch >= 'a' && ch <= 'z') {
 		ch -= 'a' - 'A';
@@ -779,7 +765,6 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	if (ch >= 'A' && ch <= 'z') {
 		ch += 'a' - 'A';
@@ -828,7 +813,6 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	while (*s1)
 		s1 ++;
@@ -877,8 +861,7 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
-	
+
 	while (*s1)
 		s1 ++;
 		
@@ -928,7 +911,6 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	while ( ( *to ++ = *from ++ ))
 		;
@@ -975,7 +957,6 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	while (len-- >= 0)
 	{
@@ -1027,7 +1008,6 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	register char c1, c2, diff, ret;
 	
@@ -1093,7 +1073,6 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	register char c1, c2, diff, ret;
 
@@ -1160,7 +1139,6 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	register char c1, c2, diff, ret;
 	
@@ -1225,7 +1203,6 @@ void LSprintf(char *str, char *fmt, ...)
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	register char c1, c2, diff, ret;
 	

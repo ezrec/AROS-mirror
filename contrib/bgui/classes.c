@@ -356,7 +356,6 @@ makeproto ASM Class *BGUI_MakeClassA(REG(a0) struct TagItem *tags)
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
 #ifdef __AROS__
 #else
@@ -548,7 +547,6 @@ makeproto SAVEDS ASM BOOL BGUI_FreeClass(REG(a0) Class *cl)
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    if (cl)
    {
@@ -871,7 +869,6 @@ makeproto SAVEDS ULONG ASM BGUI_PackStructureTags(REG(a0) APTR pack, REG(a1) ULO
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    #ifdef ENHANCED
 
@@ -905,7 +902,6 @@ makeproto SAVEDS ULONG ASM BGUI_UnpackStructureTags(REG(a0) APTR pack, REG(a1) U
 #endif
 {
    AROS_LIBFUNC_INIT
-   AROS_LIBBASE_EXT_DECL(struct Library *,BGUIBase)
 
    #ifdef ENHANCED
 

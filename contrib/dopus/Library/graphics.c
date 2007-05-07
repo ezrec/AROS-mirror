@@ -46,7 +46,6 @@
 
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	int new_x, new_y, bot_y, right_x;
 	
@@ -130,7 +129,6 @@
 
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	int left_x, top_y, right_x, bot_y;
 	Do3DBox(rp, x - 2, y - 1, w + 4, h + 2, tp, bp);
@@ -214,7 +212,6 @@
 
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	ULONG old_drmd;
 	
@@ -340,7 +337,6 @@ kprintf("CYCLETOP: %p, CYCLEBOT: %p\n"
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	ULONG old_drmd;
 	UBYTE old_apen;
@@ -408,7 +404,6 @@ kprintf("CYCLETOP: %p, CYCLEBOT: %p\n"
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 	
 	ULONG old_drmd;
 	

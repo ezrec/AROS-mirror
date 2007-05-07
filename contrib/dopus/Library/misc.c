@@ -70,7 +70,6 @@ the existing commercial status of Directory Opus 5.
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct InputEvent inev;
 	struct MsgPort *port;
@@ -184,7 +183,6 @@ the existing commercial status of Directory Opus 5.
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct StringInfo *sinfo;
 	int a,b;
@@ -241,7 +239,6 @@ the existing commercial status of Directory Opus 5.
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct StringInfo *sinfo;
 	int a,b;
@@ -300,7 +297,6 @@ the existing commercial status of Directory Opus 5.
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	register int a;
 	register char copy,count;
@@ -363,7 +359,6 @@ extern USHORT /* __chip  */ busydata20[];
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	if (IntuitionBase->LibNode.lib_Version>38)
 		SetWindowPointerA(wind,busytags);

@@ -71,7 +71,6 @@ void fill_out_border(struct Border *,int,int,short *,short *);
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	struct Border *selborder,*unselborder;
 	int width,height;
@@ -150,7 +149,6 @@ void fill_out_border(struct Border *,int,int,short *,short *);
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	short *shine_data,*shadow_data;
 
@@ -250,7 +248,6 @@ short *shine,*shadow;
 *****************************************************************************/
 {
 	AROS_LIBFUNC_INIT
-	AROS_LIBBASE_EXT_DECL(struct Library *,DOpusBase)
 
 	if (gadget->GadgetRender && gadget->SelectRender && !(gadget->Flags&GFLG_GADGIMAGE)) {
 		DrawBorder(window->RPort,gadget->SelectRender,gadget->LeftEdge,gadget->TopEdge);
