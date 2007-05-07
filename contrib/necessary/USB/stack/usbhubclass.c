@@ -81,19 +81,20 @@ OOP_Object *METHOD(USBHub, Root, New)
 
         hub->root = GetTagData(aHidd_USBHub_IsRoot, FALSE, msg->attrList);
         hub->enabled = FALSE;
+        hub->got_descriptor = FALSE;
 
         OOP_GetAttr(o, aHidd_USBDevice_ProductName, (intptr_t *)&name);
 
-        HIDD_USBHub_GetHubDescriptor(o, &hub->descriptor);
-        DumpDescriptor(&hub->descriptor);
-
-        if (hub->descriptor.bNbrPorts == 0)
+        hub->got_descriptor = HIDD_USBHub_GetHubDescriptor(o, &hub->descriptor);
+        
+        if (hub->got_descriptor)
+            DumpDescriptor(&hub->descriptor);
+        else
         {
-            intptr_t nports;
-            D(bug("[USBHub] Hub report descriptor says about 0 ports. Getting the value from the attrList.\n"));
+            D(bug("[USBHub] HUB descriptor not present. I will try later...\n"));
             hub->descriptor.bNbrPorts = GetTagData(aHidd_USBHub_NumPorts, 1, msg->attrList);
         }
-        
+       
         D(bug("[USBHub] %s hub with %d ports\n",
                 hub->root ? "Root" : "A", hub->descriptor.bNbrPorts));
 
@@ -420,6 +421,9 @@ static void hub_enable(OOP_Class *cl, OOP_Object *o)
     HubData *hub = OOP_INST_DATA(cl, o);
     int pwrdly, port;
 
+    if (!hub->got_descriptor)
+        hub->got_descriptor = HIDD_USBHub_GetHubDescriptor(o, &hub->descriptor);
+    
     pwrdly = hub->descriptor.bPwrOn2PwrGood * UHD_PWRON_FACTOR + USB_EXTRA_POWER_UP_TIME;
 
     for (port = 1; port <= hub->descriptor.bNbrPorts; port++)
@@ -435,8 +439,8 @@ static void hub_disable(OOP_Class *cl, OOP_Object *o)
 {
     HubData *hub = OOP_INST_DATA(cl, o);
 
-
-
+    if (!hub->got_descriptor)
+        hub->got_descriptor = HIDD_USBHub_GetHubDescriptor(o, &hub->descriptor);
 } 
 
 static void hub_explore(OOP_Class *cl, OOP_Object *o)
@@ -445,6 +449,9 @@ static void hub_explore(OOP_Class *cl, OOP_Object *o)
     int port;
     
     D(bug("[USBHub Process] hub_explore()\n"));
+    
+    if (!hub->got_descriptor)
+        hub->got_descriptor = HIDD_USBHub_GetHubDescriptor(o, &hub->descriptor);
     
     for (port=1; port <= hub->descriptor.bNbrPorts; port++)
     {

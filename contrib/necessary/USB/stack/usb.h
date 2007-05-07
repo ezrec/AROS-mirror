@@ -124,6 +124,7 @@ typedef struct  {
     struct usb_staticdata       *sd;
     OOP_Object                  **children;
     usb_hub_descriptor_t        descriptor;
+    uint8_t                     got_descriptor;
     
     void                        *intr_pipe;
 
