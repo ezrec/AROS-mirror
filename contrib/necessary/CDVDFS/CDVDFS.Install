@@ -1,10 +1,10 @@
-;$VER: CDVDFS Install 1.0 (01.04.07)
+;$VER: CDVDFS Install 1.2 (06.05.07)
 ;(C) 1994 Thomas Kessler
 ;(C) 2005-2007 Pavel Fedin
 
-(set #amicdrom-version "1.1")
-(set #amicdrom-date "(08-Apr-07)")
-(set #install-version "1.0")
+(set #amicdrom-version "1.2")
+(set #amicdrom-date "(06-May-07)")
+(set #install-version "1.2")
 
 (set old-level @user-level)
 (set @default-dest "SYS:")
@@ -594,17 +594,21 @@
 			(dest	"DEVS:MountList")
 			(if (exists "DEVS:MountList") (include "DEVS:MountList"))
 			(append "\n/* CDVDFS filesystem V"#amicdrom-version" */\n\n"
-				dosdevice"    Handler     = "ldir2"cdrom-handler\n"
-				"        Stacksize   = 10000\n"
-				"        Priority    = 5\n"
-				"        GlobVec     = -1\n"
-				"        Mount       = 1\n"
-				"        Device      = "device"\n"
-				"        Unit        = "unit"\n"
-				"        Buffers     = "std-buf"\n"
-				"        BufMemType  = "memtype"\n"
-				"        DosType     = 0x43444653\n"
-				"        Control     = "startstr"\n"
+				dosdevice"     Handler       = "ldir2"cdrom-handler\n"
+				"        Stacksize      = 10000\n"
+				"        Priority       = 5\n"
+				"        GlobVec        = -1\n"
+				"        Mount          = 1\n"
+				"        Device         = "device"\n"
+				"        Unit           = "unit"\n"
+				"	 LowCyl         = 0\n"
+				"	 HighCyl        = 0\n"
+				"	 Surfaces       = 1\n"
+				"	 BlocksPerTrack = 1\n"
+				"        Buffers        = "std-buf"\n"
+				"        BufMemType     = "memtype"\n"
+				"        DosType        = 0x43444653\n"
+				"        Control        = "startstr"\n"
 				"#\n")
 		)
 		(if auto-mount
@@ -632,17 +636,22 @@
 			(help #na)
 			(dest (tackon dev-dir dev-name))
 			(append "/* CDVDFS filesystem V"#amicdrom-version" */\n\n"
-				" Handler     = "ldir2"cdrom-handler\n"
-				" Stacksize   = 10000\n"
-				" Priority    = 5\n"
-				" GlobVec     = -1\n"
-				" Mount       = 1\n"
-				" Device      = "device"\n"
-				" Unit        = "unit"\n"
-				" Buffers     = "std-buf"\n"
-				" BufMemType  = "memtype"\n"
-				" DosType     = 0x43444653\n"
-				" Control     = "startstr"\n"
+				" Handler        = "ldir2"cdrom-handler\n"
+				" Stacksize      = 10000\n"
+				" Priority       = 5\n"
+				" GlobVec        = -1\n"
+				" Mount          = 1\n"
+				" ForceLoad      = 1\n"
+				" Device         = "device"\n"
+				" Unit           = "unit"\n"
+				" LowCyl         = 0\n"
+				" HighCyl        = 0\n"
+				" Surfaces       = 1\n"
+				" BlocksPerTrack = 1\n"
+				" Buffers        = "std-buf"\n"
+				" BufMemType     = "memtype"\n"
+				" DosType        = 0x43444653\n"
+				" Control        = "startstr"\n"
 			)
 		)
 

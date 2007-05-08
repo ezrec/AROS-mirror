@@ -1,5 +1,12 @@
-#ifndef __AROS__
-#define dl_OldName dl_Name
+#ifdef __AROS__
+
+#include <aros/macros.h>
+#include <dos/bptr.h>
+
+#else
+
+#define AROS_BE2WORD(x) x
+#define AROS_BE2LONG(x) x
 
 #define AROS_BSTR_ADDR(s)        (((STRPTR)BADDR(s))+1)
 #define AROS_BSTR_strlen(s)      (AROS_BSTR_ADDR(s)[-1])

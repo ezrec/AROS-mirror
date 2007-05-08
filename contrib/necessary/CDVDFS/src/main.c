@@ -11,9 +11,11 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 06-May-07  sonic  - Added separate "g" option for listing directories in Joliet format.
+ *                   - Added support for protection bits and file comments.
  * 08-Mar-07  sonic  - Removed redundant "TRACKDISK" option.
- *            sonic  - Removed unneeded dealing with block length.
- * 31-Mar-07  sonic  Added support for Joliet and character set translation
+ *                   - Removed unneeded dealing with block length.
+ * 31-Mar-07  sonic  Added support for Joliet and character set translation.
  * 17-Feb-94   fmu   Fixed typo.
  * 28-Nov-93   fmu   Improved "cdrom d" command.
  * 12-Oct-93   fmu   "Show path table" function removed.
@@ -31,10 +33,6 @@
 #include <clib/dos_protos.h>
 
 #include <proto/exec.h>
-
-#ifdef __MORPHOS__
-#include <emul/emulregs.h>
-#endif
 
 #include "cdrom.h"
 #include "iso9660.h"
@@ -86,6 +84,8 @@ void Usage (void)
     "  e[r[l|L]] dir    Show contents of directory 'dir' (use Rock Ridge names)\n"
     "                   r=also show subdirectories, l=show system use field names\n"
     "                   L=show names and contents of system use fields\n"
+    "  g[rl] dir        Show contents of girectory 'dir' (use Joliet names)\n"
+    "                   r=also show subdirectories, l=show additional information\n"
     "  f dir name       Change to directory 'dir' and try to find object 'name'\n"
     "  i                Check which protocol is used\n"
     "  j [01]           0=start audio, 1=stop motor\n"
@@ -413,6 +413,7 @@ void Try_To_Open (CDROM *p_cd, char *p_directory, char *p_name)
             obj->symlink_f ? "Symbolic link" :
             obj->directory_f ? "Directory" : "File",
     	    p_name, Location (obj));
+    printf ("Protection bits: 0x%08lX\n", obj->protection);
     if (obj->symlink_f) {
       char linkname[256];
       printf ("Link to ");
@@ -428,6 +429,9 @@ void Try_To_Open (CDROM *p_cd, char *p_directory, char *p_name)
     if (CDROM_Info (obj, &info)) {
       printf ("INFO Name = ");
       fwrite (info.name, info.name_length, 1, stdout);
+      printf ("\n");
+      printf ("INFO Comment = ");
+      fwrite (info.comment, info.comment_length, 1, stdout);
       printf ("\n");
     } else
       printf ("CANNOT FIND INFO FOR OBJECT!\n");
@@ -1018,7 +1022,9 @@ int main (int argc, char *argv[])
   else if (argv[1][0] == 'd' && argc == 3)
     Show_Dir_Contents (global->g_cd, argv[2], 0, 0, argv[1]+1);
   else if (argv[1][0] == 'e' && argc == 3)
-    Show_Dir_Contents (global->g_cd, argv[2], 1, 1, argv[1]+1);
+    Show_Dir_Contents (global->g_cd, argv[2], 1, 0, argv[1]+1);
+  else if (argv[1][0] == 'g' && argc == 3)
+    Show_Dir_Contents (global->g_cd, argv[2], 0, 1, argv[1]+1);
   else if (argv[1][0] == 'f' && argc == 4)
     Try_To_Open (global->g_cd, argv[2], argv[3]);
   else if (argv[1][0] == 'i')
@@ -1056,3 +1062,4 @@ int main (int argc, char *argv[])
 
   exit (0);
 }
+

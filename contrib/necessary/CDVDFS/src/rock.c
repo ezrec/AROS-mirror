@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 05-May-07 sonic   Added support for RockRidge protection bits and file comments
  * 05-Feb-94   fmu   Added support for relocated directories.
  * 16-Oct-93   fmu   Adapted to new VOLUME structure.
  * 07-Jul-02 sheutlin  various changes when porting to AROS
@@ -19,13 +20,14 @@
 
 #include <proto/exec.h>
 #include <exec/memory.h>
+#include <sys/stat.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "debug.h"
 #include "rock.h"
 #include "globals.h"
-
+#include "aros_stuff.h"
 #include "clib_stuff.h"
 
 #define VOL(vol,tag) (((t_iso_vol_info *)(vol->vol_info))->tag)
@@ -203,31 +205,115 @@ int total = 0;
 	}
 }
 
-/* Returns 1 if the PX system use field indicates a symbolic link.
+/* Determines the Rock Ridge Amiga priotection bits and file comment of the CDROM object p_obj.
+ * Protection bits will be stored in the p_prot.
+ * The file comment will be stored in the buffer p_buf (with length p_buf_len).
+ * The file comment will NOT be null-terminated. The number of characters in
+ * the file name is returned. If there is no Rock Ridge file comment for
+ * p_obj, then -1 is returned.
  */
 
-int Is_A_Symbolic_Link(VOLUME *p_volume, directory_record *p_dir) {
-struct px_system_use_field {
-	char	  id[2];
-	unsigned char length;
-	unsigned char version;
-	ULONG mode_i;
-	ULONG mode_m;
-	ULONG links_i;
-	ULONG links_m;
-	ULONG user_id_i;
-	ULONG user_id_m;
-	ULONG group_id_i;
-	ULONG group_id_m;
-} px;
+int Get_RR_File_Comment(VOLUME *p_volume, directory_record *p_dir, unsigned long *p_prot, char *p_buf, int p_buf_len)
+{
+
+#define AS_PROTECTION	    0x01
+#define AS_COMMENT	    0x02
+#define AS_COMMENT_CONTINUE 0x04
+	
+        struct as_system_use_field
+        {
+		char	      id[2];
+		unsigned char length;
+		unsigned char version;
+		unsigned char flags;
+		char          data[210];
+	} as;
+	char *ptr;
+	int len, slen;
+	int index = 0;
+	int total = 0;
+	unsigned long pbuf;
+
+	for (;;)
+	{
+		if (!Get_System_Use_Field(p_volume,p_dir,"AS",(char *)&as,sizeof(as),index))
+			return -1;
+
+		ptr = as.data;
+		if (as.flags & AS_PROTECTION) {
+			CopyMem(ptr, &pbuf, 4);
+			ptr += 4;
+			*p_prot = AROS_BE2LONG(pbuf);
+		}
+		if (!(as.flags & AS_COMMENT))
+			return -1;
+		slen = *ptr++ - 1;
+		len = (p_buf_len < slen) ? p_buf_len : slen;
+		if (len)
+			CopyMem(ptr, p_buf, len);
+
+		total += len;
+		if (!(as.flags & AS_COMMENT_CONTINUE))
+			return total;
+
+		p_buf += len;
+		p_buf_len -= len;
+		index++;
+	}
+}
+
+/* Returns 1 if the PX system use field indicates a symbolic link.
+ * amiga_mode is a pointer to storage area for AmigaOS protection bits.
+ */
+
+int Is_A_Symbolic_Link(VOLUME *p_volume, directory_record *p_dir, unsigned long *amiga_mode)
+{
+	struct px_system_use_field {
+		char	  id[2];
+		unsigned char length;
+		unsigned char version;
+		ULONG mode_i;
+		ULONG mode_m;
+		ULONG links_i;
+		ULONG links_m;
+		ULONG user_id_i;
+		ULONG user_id_m;
+		ULONG group_id_i;
+		ULONG group_id_m;
+	} px;
+
+#ifdef AROS_BIG_ENDIAN
+#define mode mode_m
+#else
+#define mode mode_i
+#endif
 
 	if (!Get_System_Use_Field(p_volume,p_dir,"PX",(char *)&px,sizeof(px),0))
 		return 0;
+	*amiga_mode = 0;
+	if (!(px.mode & S_IWUSR))
+		*amiga_mode |= FIBF_DELETE|FIBF_WRITE;
+	if (!(px.mode & S_IXUSR))
+		*amiga_mode |= FIBF_EXECUTE;
+	if (!(px.mode & S_IRUSR))
+		*amiga_mode |= FIBF_READ;
+	if (px.mode & S_IWGRP)
+		*amiga_mode |= FIBF_GRP_DELETE|FIBF_GRP_WRITE;
+	if (px.mode & S_IXGRP)
+		*amiga_mode |= FIBF_GRP_EXECUTE;
+	if (px.mode & S_IRGRP)
+		*amiga_mode |= FIBF_GRP_READ;
+	if (px.mode & S_IWOTH)
+		*amiga_mode |= FIBF_OTR_DELETE|FIBF_OTR_WRITE;
+	if (px.mode & S_IXOTH)
+		*amiga_mode |= FIBF_OTR_EXECUTE;
+	if (px.mode & S_IROTH)
+		*amiga_mode |= FIBF_OTR_READ;
 
 	/*
 		0120000 is the POSIX code for symbolic links:
 	*/
-	return (px.mode_m & 0770000) == 0120000;
+	return (px.mode & 0770000) == 0120000;
 }
 
 /* Read content of SL system use field.

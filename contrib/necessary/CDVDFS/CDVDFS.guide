@@ -5,7 +5,7 @@
 CDVDFS - a CD/DVD filesystem for Amiga family of operaing systems
 -----------------------------------------------------------------
 
-Version 1.1    08-Apr-07   (C) 2007 Pavel Fedin
+Version 1.2    06-May-07   (C) 2007 Pavel Fedin
 			   (sonic_amiga@rambler.ru)
 
 Based on AmiCDROM 1.15     (C) 1993,1994 by Frank Munkert
@@ -27,7 +27,6 @@ Table of Contents:
 	@{"FILENAMES" link "FILENAMES"}	  -  CDROM Filenames (ISO-9660, RockRidge and Joliet)
 	@{"SYMLINKS" link "SYMLINKS"}	  -  Symbolic links on Rockridge disks
 	@{"DISKCHANGE" link "DISKCHANGE"}	  -  Diskchange recognition
-	@{"ATTRIBUTES" link "ATTRIBUTES"}	  -  File Attributes
 	@{"MACHFS" link "MACHFS"}		  -  Macintosh HFS format
 	@{"AUDIO" link "AUDIO"}		  -  Audio disks (CD-DA)
 	@{"MULTISESSION" link "MULTISESSION"}	  -  Multisession Support
@@ -162,7 +161,7 @@ Table of Contents:
    * Amiga ???? + Oktagon 2008 + Teac CD-50 / Pioneer DRM600 / DRM602 +
         AmiCDROM 1.10
    * Pegasos-II + Samsung SM-352N CDRW+DVD-R combo drive + MorphOS 1.4.5 +
-	CDVDFS 1.1
+	CDVDFS 1.3
  
 The following hardware setups have been reported not to work:
 
@@ -211,15 +210,20 @@ and not to work for other users:
 
      Create an entry in DEVS:MountList like this:
 
-     CD0:	Handler    = L:cdrom-handler
-		Stacksize  = 10000
-		Priority   = 5
-		GlobVec    = -1
-		Mount      = 1
-		BufMemType = 0
-		Device     = scsi.device
-		Unit       = 1
-		Control	   = "ROCKRIDGE LOWERCASE" /* see below */
+     CD0:	FileSystem     = L:cdrom-handler
+		Stacksize      = 10000
+		Priority       = 5
+		GlobVec        = -1
+		Mount          = 1
+		BufMemType     = 0
+		Device         = scsi.device
+		Unit           = 1
+		LowCyl         = 0
+		HighCyl        = 0
+		Surfaces       = 1
+		BlocksPerTrack = 1
+		DosType        = 0x43444653
+		Control	       = "ROCKRIDGE LOWERCASE" /* see below */
      #
 
      You can choose any name you like for "CD0".
@@ -273,6 +277,10 @@ and not to work for other users:
      Mount >NIL: MOSSYS:Devs/DOSDrivers/~(#?.info) DEVS:DOSDrivers/~(#?.info)
 
      This assumes that you put CD0 into DEVS:DOSDrivers directory.
+
+     Also, be sure that Mountlist for CDVDFS contains "ForceLoad = 1"
+     parameter,	otherwise builtin MorphOS CD-ROM handler will be used for the
+     device instead of CDVDFS.
 
      If you don't wish to remove MorphOS builtin handler you'll need to
      choose another name for CDVDFS, for example ACD0.
@@ -493,15 +501,6 @@ and not to work for other users:
 
   You may force a diskchange check with the AmigaDOS DISKCHANGE
   command, e.g. "DISKCHANGE CD0:".
-
-@endnode
-
-@node ATTRIBUTES "File Attributes"
-
-  In the current version of CDVDFS, only the "creation date"
-  attribute of a CDROM file is supported (e.g. if you say "list cd0:").
-  
-  Protection bits will be supported in a later version of CDVDFS.
 
 @endnode
 
@@ -863,6 +862,12 @@ Original to-do from Frank Murket:
 @endnode
 
 @node HISTORY "History of CDVDFS"
+
+Changes in V1.2:
+
+* Added support for protection bits and file comments
+* Fixed crash with too long file names (longer than 106 characters).
+* Fixed Mountlist format, now correct and compatible with all systems.
 
 Changes in V1.1:
 

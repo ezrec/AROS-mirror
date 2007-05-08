@@ -7,7 +7,6 @@ include $(TOP)/config/make.cfg
 FILES := \
 	arosmain \
 	cdrom \
-	clib_stuff \
 	device \
 	devsupp \
 	generic \

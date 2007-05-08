@@ -43,6 +43,7 @@ typedef struct VOLUME {
 typedef struct CDROM_OBJ {
   t_bool		directory_f;	/* TRUE iff object is a directory     */
   t_bool		symlink_f;	/* TRUE iff object is a symbolic link */
+  unsigned long		protection;	/* Amiga protection bits              */
   VOLUME		*volume;	/* Pointer to volume node	      */
   unsigned long		pos;		/* Current position (for read & seek) */
   t_path_list		pathlist;	/* List containing full path name     */
@@ -56,6 +57,9 @@ typedef struct CDROM_INFO {
   char			name[256];	/* file name			     */
   unsigned long		date;		/* creation date		     */
   unsigned long		file_length;	/* length of file		     */
+  unsigned long		protection;	/* Amiga protection bits	     */
+  int			comment_length; /* length of file comment	     */
+  char			comment[256];	/* file comment			     */
   void			*suppl_info;	/* supplementary information	     */
 } CDROM_INFO;
 

@@ -1,17 +1,19 @@
-/* CDVDFS filesystem */
+/* CDVDFS filesystem V1.3 */
 
- Filesystem     = L:cdrom-handler
+ FileSystem     = L:cdrom-handler
+ Stacksize      = 10000
+ Priority       = 5
+ GlobVec        = -1
+ ForceLoad      = 1
+ Mount          = 1
+ Device         = ide.device
+ Unit           = 3
  LowCyl         = 0
  HighCyl        = 0
  Surfaces       = 1
  BlocksPerTrack = 1
- Stacksize      = 10000
- Priority       = 10
- GlobVec        = -1
- Mount          = 1
- Device         = ide.device
- Unit           = 3
- Buffers        = 20
+ Buffers        = 5
  BufMemType     = 0
  DosType        = 0x43444653
- Control        = "ML R J"
+ Control        = "R J ML"
+

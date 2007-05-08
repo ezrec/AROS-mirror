@@ -11,6 +11,8 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 06-May-07 sonic   - Rewritten routines dealing wkith object names.
+ *                   - Added support for RockRidge protection bits and file comments.
  * 08-Apr-07 sonic   - removed redundant "TRACKDISK" option
  * 31-Mar-07 sonic   - added Joliet support.
  *                   - removed static buffer in Get_Directory_Record().
@@ -77,14 +79,32 @@ extern struct Globals *global;
 #endif
 #define UtilityBase global->UtilityBase
 
-int Get_Name(char *from, char *to, unsigned char len, t_protocol protocol)
+int Get_Volume_Name(VOLUME *p_volume, char *buf, int buflen)
 {
-	if (protocol == PRO_JOLIET)
-		return Get_Joliet_Name(from, to, len);
+	char *iso_name = VOL(p_volume,pvd).volume_id;
+	if (p_volume->protocol == PRO_JOLIET)
+		return Get_Joliet_Name(iso_name, buf, 32);
 	else {
-		CopyMem(from, to, len);
-		return len;
+		CopyMem(iso_name, buf, 32);
+		return 32;
 	}
+}
+
+int Get_File_Name(VOLUME *volume, directory_record *dir, char *buf, int buflen)
+{
+	int len;
+
+	switch (volume->protocol) {
+	case PRO_ROCK:
+		len = Get_RR_File_Name(volume, dir, buf, buflen);
+		if (len	> 0)
+			return len;
+		break;
+	case PRO_JOLIET:
+		return Get_Joliet_Name(dir->file_id, buf, dir->file_id_length);
+	}
+	CopyMem(dir->file_id, buf, dir->file_id_length);
+	return dir->file_id_length;
 }
 
 /* Check whether the given volume uses the ISO 9660 Protocol.
@@ -312,27 +332,23 @@ CDROM_OBJ *obj;
 	return obj;
 }
 
-/* Test on equality of directory names (ignoring case).
- */
-
-/*int Directory_Names_Equal(char *p_iso_name, int p_length, char *p_name) {
-	return (Strncasecmp(p_iso_name, p_name, p_length)==0 && p_name[p_length]==0);
-}*/
-
-/* Compare the name of the directory entry p_iso_name (with length p_length)
- * with the C string p_name, and return 1 iff both strings are equal.
- * NOTE: p_iso_name may be a file name (with version number) or a directory
+/* Compare the name of the directory entry dir on the volume volume
+ * with the C string p_name, and return 1 if both strings are equal.
+ * NOTE: dir may contain a file name (with version number) or a directory
  *       name (without version number).
  */
 
-int Names_Equal(char *p_iso_name, int p_length, char *p_name, t_protocol protocol) {
-int pos, len;
-char buf[256];
+int Names_Equal(VOLUME *volume, directory_record *dir, char *p_name)
+{
+	int pos, len;
+	char buf[256];
 
-
-	len = Get_Name(p_iso_name, buf, p_length, protocol);
+	len = Get_File_Name(volume, dir, buf, sizeof(buf));
 	if (Strncasecmp(buf, p_name, len) == 0 && p_name[len] == 0)
 		return TRUE;
+
+	if (volume->protocol == PRO_ROCK)
+		return FALSE;
 
 	/* compare without version number: */
 
@@ -431,14 +447,14 @@ unsigned long len;
  * p_name must not contain '/' or ':' characters.
  */
 
-CDROM_OBJ *Iso_Open_Obj_In_Directory(CDROM_OBJ *p_dir, char *p_name) {
-unsigned long loc =
-	OBJ(p_dir,dir)->extent_loc + OBJ(p_dir,dir)->ext_attr_length;
-unsigned long len = OBJ(p_dir,dir)->data_length;
-directory_record *dir;
-int offset;
-CDROM_OBJ *obj;
-long cl;
+CDROM_OBJ *Iso_Open_Obj_In_Directory(CDROM_OBJ *p_dir, char *p_name)
+{
+	unsigned long loc = OBJ(p_dir,dir)->extent_loc + OBJ(p_dir,dir)->ext_attr_length;
+	unsigned long len = OBJ(p_dir,dir)->data_length;
+	directory_record *dir;
+	int offset;
+	CDROM_OBJ *obj;
+	long cl;
 
 	/* skip first two entries: */
 
@@ -468,28 +484,12 @@ long cl;
 			offset = (offset & 0xfffff800) + 2048;
 			continue;
 		}
-		if (p_dir->volume->protocol == PRO_ROCK)
-		{
-		char buf[256];
-		int len;
-
-			if (
-					(len=Get_RR_File_Name(p_dir->volume,dir,buf,sizeof(buf))) > 0 &&
-          		(Strncasecmp(buf, p_name, len) == 0) &&
-					p_name[len] == 0
-				)
-				break;
-		}
-
-		if (Names_Equal(dir->file_id, dir->file_id_length, p_name, p_dir->volume->protocol))
+		if (Names_Equal(p_dir->volume, dir, p_name))
 			break;
 		offset += dir->length;
 	}
 
-	if (
-			p_dir->volume->protocol == PRO_ROCK &&
-      	(cl = RR_Child_Link(p_dir->volume, dir)) >= 0
-		)
+	if (p_dir->volume->protocol == PRO_ROCK && (cl = RR_Child_Link(p_dir->volume, dir)) >= 0)
 		return Iso_Create_Directory_Obj(p_dir->volume, cl);
 
 	obj = Iso_Alloc_Obj(dir->length);
@@ -497,10 +497,8 @@ long cl;
 		return NULL;
 
 	obj->directory_f = (dir->flags & 2);
-	if (
-			p_dir->volume->protocol == PRO_ROCK &&
-			Is_A_Symbolic_Link(p_dir->volume, dir)
-		)
+	obj->protection = 0;
+	if (p_dir->volume->protocol == PRO_ROCK && Is_A_Symbolic_Link(p_dir->volume, dir, &obj->protection))
 	{
 		obj->symlink_f = 1;
 		obj->directory_f = 0;
@@ -634,32 +632,25 @@ int len;
 		p_info->directory_f = TRUE;
 		p_info->file_length = 0;
 		p_info->date = Volume_Creation_Date(p_obj->volume);
+		p_info->protection = 0;
+		p_info->comment_length = 0;
 	}
 	else
 	{
-		if (
-				p_obj->volume->protocol == PRO_ROCK &&
-				(
-					len = Get_RR_File_Name
-						(
-							p_obj->volume, OBJ(p_obj,dir),
-							p_info->name, sizeof (p_info->name)
-						)
-				) > 0
-			)
-		{
-			p_info->name_length = len;
-		}
-		else
-		{
-			directory_record *rec = OBJ(p_obj,dir);
+		directory_record *rec = OBJ(p_obj, dir);
 
-			p_info->name_length = Get_Name(rec->file_id, p_info->name, rec->file_id_length, p_obj->volume->protocol);
-		}
+		p_info->name_length = Get_File_Name(p_obj->volume, rec, p_info->name, sizeof(p_info->name));
 		p_info->directory_f = p_obj->directory_f;
 		p_info->symlink_f = p_obj->symlink_f;
 		p_info->file_length = OBJ(p_obj,dir)->data_length;
 		p_info->date = Extract_Date(OBJ(p_obj,dir));
+		p_info->protection = p_obj->protection;
+
+		if (p_obj->volume->protocol == PRO_ROCK &&
+		    (len = Get_RR_File_Comment(p_obj->volume, rec, &p_info->protection, p_info->comment, sizeof(p_info->comment))) > 0)
+			p_info->comment_length = len;
+		else
+			p_info->comment_length = 0;
 	}
 
 	return 1;
@@ -733,33 +724,16 @@ int len;
 
 	*p_offset += rec->length;
 
-	if (
-			p_dir->volume->protocol == PRO_ROCK &&
-			(
-				len = Get_RR_File_Name
-					(p_dir->volume, rec, p_info->name, sizeof (p_info->name))
-			) > 0
-		)
-	{
-		p_info->name_length = len;
-	}
-	else
-	{
-		p_info->name_length = Get_Name(rec->file_id, p_info->name, rec->file_id_length, p_dir->volume->protocol);
-	}
-	if (
-			p_dir->volume->protocol == PRO_ROCK &&
-			Is_A_Symbolic_Link(p_dir->volume, rec)
-		)
+	p_info->name_length = Get_File_Name(p_dir->volume, rec, p_info->name, sizeof(p_info->name));
+
+	p_info->protection = 0;
+
+	if (p_dir->volume->protocol == PRO_ROCK && Is_A_Symbolic_Link(p_dir->volume, rec, &p_info->protection))
 	{
 		p_info->symlink_f = 1;
 		p_info->directory_f = 0;
 	}
-	else if
-		(
-			p_dir->volume->protocol == PRO_ROCK &&
-			Has_System_Use_Field(p_dir->volume, rec, "CL")
-		)
+	else if (p_dir->volume->protocol == PRO_ROCK &&	Has_System_Use_Field(p_dir->volume, rec, "CL"))
 	{
 		p_info->symlink_f = 0;
 		p_info->directory_f = 1;
@@ -769,8 +743,16 @@ int len;
 		p_info->symlink_f = 0;
 		p_info->directory_f = rec->flags & 2;
 	}
+
 	p_info->file_length = rec->data_length;
 	p_info->date = Extract_Date(rec);
+
+	if (p_dir->volume->protocol == PRO_ROCK &&
+	    (len = Get_RR_File_Comment(p_dir->volume, rec, &p_info->protection, p_info->comment, sizeof(p_info->name))) > 0)
+		p_info->comment_length = len;
+	else
+		p_info->comment_length = 0;
+
 	p_info->suppl_info = rec;
 
 	return 1;
@@ -899,13 +881,13 @@ t_ulong Iso_Block_Size (VOLUME *p_volume)
   return VOL(p_volume,pvd).block_size;
 }
 
-void Iso_Volume_ID(VOLUME *p_volume, char *p_buffer, int p_buf_length) {
-char *iso_name = VOL(p_volume,pvd).volume_id;
-int iso_len;
-int len;
-char buf[32];
+void Iso_Volume_ID(VOLUME *p_volume, char *p_buffer, int p_buf_length)
+{
+	int iso_len;
+	int len;
+	char buf[32];
 
-	iso_len = Get_Name(iso_name, buf, 32, p_volume->protocol);
+	iso_len = Get_Volume_Name(p_volume, buf, sizeof(buf));
 	for (; iso_len; iso_len--)
 	{
 		if (buf[iso_len-1] != ' ')

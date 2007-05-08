@@ -12,6 +12,9 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 06-May-07 sonic     - Added support for protection bits and file comments
+ *                     - Fixed memory trashing when file name length is greater than AmigaOS
+ *                       can accept
  * 08-Apr-07 sonic     - removed redundant "TRACKDISK" option
  * 01-Apr-07 sonic     - seglist unloading is much more safe
  *		       - removed unneeded search in Remove_Volume_Node()
@@ -163,6 +166,14 @@ void Uninstall_TD_Interrupt (void);
 void Remove_Volume_Node (struct DeviceList *);
 LONG handlemessage(ULONG);
 
+#ifdef AROS_FAST_BPTR
+#define MAX_NAME_LEN    107
+#define MAX_COMMENT_LEN 79
+#else
+#define MAX_NAME_LEN 106
+#define MAX_COMMENT_LEN 78
+#endif
+
 #ifdef __MORPHOS__
 ULONG __abox__ = 1;
 #endif
@@ -176,6 +187,8 @@ struct Globals glob;
 struct Globals *global=&glob;
 
 void Remove_Seglist (void);
+
+char __version__[] = "\0$VER: CDVDFS 1.2 (06-May-2007)";
 
 LONG SAVEDS Main(void)
 {
@@ -1186,13 +1199,16 @@ int Check_For_Volume_Name_Prefix (char *p_pathname)
  * directory record of a CD-ROM directory or file.
  */
 
-void Fill_FileInfoBlock (FIB *p_fib, CDROM_INFO *p_info, VOLUME *p_volume) {
-char *src = p_info->name;
-char *dest = p_fib->fib_FileName;
-int len = p_info->name_length;
+void Fill_FileInfoBlock (FIB *p_fib, CDROM_INFO *p_info, VOLUME *p_volume)
+{
+	char *src = p_info->name;
+	char *dest = p_fib->fib_FileName;
+	int len = p_info->name_length;
 
+	if (len > MAX_NAME_LEN)
+		len = MAX_NAME_LEN;
 #ifndef AROS_FAST_BPTR
-	dest++;
+	*dest++ = len;
 #endif
 	if (p_info->symlink_f)
 		p_fib->fib_DirEntryType = ST_SOFTLINK;
@@ -1233,10 +1249,7 @@ int len = p_info->name_length;
 				*cp = ToLower (*cp);
 		}
 	}
-	/* set string length */
-#ifndef AROS_FAST_BPTR
-	p_fib->fib_FileName[0] = len;
-#endif
+	/* terminate string */
 	dest[len] = 0;
 	/* I don't know exactly why I have to set fib_EntryType, but other
 	 * handlers (e.g. DiskHandler by J Toebes et.al.) also do this.
@@ -1244,25 +1257,22 @@ int len = p_info->name_length;
    
 	p_fib->fib_EntryType = p_fib->fib_DirEntryType;
   
-	p_fib->fib_Protection = 0;
+	p_fib->fib_Protection = p_info->protection;
 	p_fib->fib_Size = p_info->file_length;
 	p_fib->fib_NumBlocks = p_info->file_length >> 11;
-	if (p_info->symlink_f)
-	{
-#ifdef AROS_FAST_BPTR
-		strcpy(p_fib->fib_Comment, "Symbolic link");
-#else
-		strcpy (p_fib->fib_Comment, "\x0DSymbolic link");
-#endif
-	}
-	else
-	{
-		p_fib->fib_Comment[0] = 0;
-	}
-
 	p_fib->fib_Date.ds_Days   = p_info->date / (24 * 60 * 60);
 	p_fib->fib_Date.ds_Minute = (p_info->date % (24 * 60 * 60)) / 60;
 	p_fib->fib_Date.ds_Tick   = (p_info->date % 60) * TICKS_PER_SECOND;
+
+	dest = p_fib->fib_Comment;
+	len = p_info->comment_length;
+	if (len > MAX_COMMENT_LEN)
+		len = MAX_COMMENT_LEN;
+#ifndef AROS_FAST_BPTR
+	*dest++ = len;
+#endif
+	strncpy(dest, p_info->comment, len);
+	dest[len] = 0;
 }
 
 /*

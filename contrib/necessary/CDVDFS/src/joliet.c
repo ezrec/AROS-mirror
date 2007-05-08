@@ -1,4 +1,3 @@
-#include <aros/macros.h>
 #include <proto/exec.h>
 #include <exec/memory.h>
 #include <stdlib.h>
@@ -8,7 +7,7 @@
 #include "iso9660.h"
 #include "joliet.h"
 #include "globals.h"
-
+#include "aros_stuff.h"
 #include "clib_stuff.h"
 
 extern struct Globals *global;
@@ -54,3 +53,4 @@ int Get_Joliet_Name(char *from, char *to, unsigned char len)
 	}
 	return l;
 }
+
