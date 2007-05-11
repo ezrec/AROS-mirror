@@ -29,6 +29,7 @@
 #include <exec/types.h>
 #include <exec/lists.h>
 #include <exec/interrupts.h>
+#include <exec/errors.h>
 #include <oop/oop.h>
 
 #include <hidd/hidd.h>
@@ -66,6 +67,12 @@ static AROS_UFH3(void, HubInterrupt,
     /* Remove itself from msg list */
     GetMsg(&uhci->mport);
     
+    if (uhci->timereq->tr_node.io_Error == IOERR_ABORTED)
+    {
+        D(bug("[UHCI] INTR Aborted\n"));
+        return;
+    }
+        
     if (inw(uhci->iobase + UHCI_PORTSC1) & (UHCI_PORTSC_CSC|UHCI_PORTSC_OCIC))
         sts |= 1;
     if (inw(uhci->iobase + UHCI_PORTSC2) & (UHCI_PORTSC_CSC|UHCI_PORTSC_OCIC))
