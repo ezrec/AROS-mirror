@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2002-2006, The AROS Development Team. All rights reserved.
+# Copyright é 2002-2006, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os
@@ -69,7 +69,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 A( _N['ui-style-guide'], href=makeURL( 'documentation/developers/ui', lang ) ),
                 A( _N['documenting'], href=makeURL( 'documentation/developers/documenting', lang ) ),
                 A( _N['porting'], href=makeURL( 'documentation/developers/porting', lang ) ),
-                #A( _N['translating'], href=makeURL( 'documentation/developers/translating', lang ) ),
+                A( _N['translating'], href=makeURL( 'documentation/developers/translating', lang ) ),
                 A( _N['summaries'], href=makeURL( 'documentation/developers/summaries/', lang ) ),
                 A( _N['links'], href=makeURL( 'documentation/developers/links', lang ) )
             ] )
@@ -101,7 +101,55 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     counter = Img(
         src = 'http://www.hepe.com/cgi-bin/wwwcount.cgi?df=aros.dat&dd=C&ft=0'
     )
-    
+
+    menulinks = Table\
+    ( 
+        cellspacing = 5, cellpadding = 0,
+        contents =
+        [
+            TR
+            ( 
+                TD
+                ( 
+                    'Links'
+                )
+            ),
+            TR
+            ( 
+                TD
+                ( 
+                    A
+                    (    
+                        'AROS-Exec',
+                         href = 'http://aros-exec.org/' 
+                    )
+                )
+            ),
+            TR
+            ( 
+                TD
+                (
+                    A
+                    (    
+                        'AROS Archives',
+                        href = 'http://archives.aros-exec.org/' 
+                    )
+                )
+            ),
+            TR
+            (
+                TD
+                (
+                    A
+                    (  
+                        'Team AROS',
+                        href = 'http://www.teamaros.org/'
+                    )
+                )
+            )
+        ] 
+    )
+
     sponsors = Table\
     ( 
         cellspacing = 5, cellpadding = 0,
@@ -158,6 +206,8 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             ),
             TR( valign = 'top', contents = TD( navigation ) ),
             TR( TD(), height=15 ),
+            TR( valign = 'top', contents = TD( align = 'center', contents = menulinks ) ),
+            TR( TD(), height=30 ),
             TR( valign = 'top', contents = TD( align = 'center', contents = counter ) ),
             TR( TD(), height=15 ),
             TR( valign = 'top', contents = TD( align = 'center', contents = sponsors ) ),
@@ -195,7 +245,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             Link( href = '%(ROOT)saros.css', type = 'text/css', rel = 'stylesheet' ),
             Meta(
                 name    = 'keywords',
-                content = 'AROS, Amiga, OS, operating system, research, open source, portage'
+                content = 'AROS, AmigaOS, OS, operating system, research, open source, portage'
             )
         ] ),
         Body( 
