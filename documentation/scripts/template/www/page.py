@@ -104,7 +104,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
 
     menulinks = Table\
     ( 
-        cellspacing = 5, cellpadding = 0,
+        cellspacing = 0, cellpadding = 0,
         contents =
         [
             TR
@@ -121,7 +121,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                     A
                     (    
                         'AROS-Exec',
-                         href = 'http://aros-exec.org/' 
+                        href = 'http://aros-exec.org/' 
                     )
                 )
             ),
@@ -200,7 +200,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         contents = [
             TR( 
                 valign = 'top', contents = [
-                    TD( rowspan = 8, width = 10 ),
+                    TD( rowspan = 9, width = 10 ),
                     TD()
                 ]
             ),

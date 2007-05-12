@@ -41,7 +41,7 @@
 ќднако, они никоим образом не тестируютс€, и при особом невезении могут быть нерабочими 
 или ужасно глючными. ѕравда, как правило, они работают совершенно нормально.
 
-ƒл€ того, чтобы скачать доступные снимки и ночные сборки, посетите нашу `страницу закачек`_.
+ƒл€ того, чтобы скачать доступные снимки и ночные сборки, посетите нашу `страницу закачек <../../download>`__.
 
 
 ”становка
@@ -68,7 +68,7 @@ AROS/i386-linux и AROS/i386-freebsd
 
 Since AROS/i386-linux and AROS/i386-freebsd are hosted flavors of AROS,
 installation is simple. Simply get the appropriate archives for your platform
-from the `страницы закачек`_ and extract them where you want them::
+from the `страницы закачек <../../download>`__ and extract them where you want them::
 
     > tar -vxjf AROS-<version>-i386-<platform>-system.tar.bz2
 
@@ -476,9 +476,6 @@ Footnotes
        very unexperienced users at the moment so this note was done. 
 
 
-.. _`страницу закачек`: ../../download
-
-.. _`страницы закачек`: ../../download
 
 .. _rawrite: http://uranus.it.swin.edu.au/~jn/linux/rawwrite.htm
 
