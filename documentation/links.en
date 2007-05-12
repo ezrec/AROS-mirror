@@ -3,7 +3,7 @@ Links
 =====
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright Š 1995-2007, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -11,6 +11,41 @@ Links
 
 .. Contents::
 
+AROS resources
+==============
+
++ `Team AROS`__ 
+
+  TeamAROS is a grass roots support group for AROS.
+  
++  `AROS-Exec <http://aros-exec.org>`__
+
+  AROS Community website, forums, news, galleries
+
++ `AROS software archive`__
+
++ `AROS Polska`__
+
++ `Map of AROS users`__
+
++ `AROS for Amiga`__
+  
+  AfA OS replaces AmigaOS core libraries with their more advanced AROS counterparts.
+  
++ `AROS World <http://arosworld.org>`__
+  A new AROS website, intended to be the user community website
+                                                               
++ `AROS Aminet Section <http://aros.aminet.net/>`__
+
++ `AROS on WikiPedia <http://en.wikipedia.org/wiki/AROS_Research_Operating_System>`__
+
++ `AROS documentation on WikiBooks <http://en.wikibooks.org/wiki/Aros>`__
+  
+__ http://www.teamaros.org/
+__ http://archives.aros-exec.org/
+__ http://www.aros.bbs.pl/
+__ http://www.frappr.com/arosusers
+__ http://amidevcpp.amiga-world.de/afa_binarie_upload.php
 
 Articles about AROS
 ===================
@@ -110,26 +145,10 @@ Miscellaneous
   computing platforms by working with core and third-party developers and
   providing resources for that development.
 
-+ `Team AROS`__ 
 
-  TeamAROS is a grass roots support group for AROS.
-
-+ `AROS software archive`__
-
-+ `AROS Polska`__
-
-+ `Map of AROS users`__
-
-+ `AROS for Amiga`__
-  
-  AfA OS replaces AmigaOS core libraries with their more advanced AROS counterparts.
 
 
 __ http://phinixi.com/
-__ http://www.thenostromo.com/teamaros/
-__ http://archives.aros-exec.org/
-__ http://www.aros.bbs.pl/
-__ http://www.frappr.com/arosusers
-__ http://amidevcpp.amiga-world.de/afa_binarie_upload.php
+
 
 .. _contact: contact
