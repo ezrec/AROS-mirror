@@ -102,53 +102,17 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         src = 'http://www.hepe.com/cgi-bin/wwwcount.cgi?df=aros.dat&dd=C&ft=0'
     )
 
-    menulinks = Table\
-    ( 
-        cellspacing = 0, cellpadding = 0,
-        contents =
-        [
-            TR
-            ( 
-                TD
-                ( 
-                    'Links'
-                )
-            ),
-            TR
-            ( 
-                TD
-                ( 
-                    A
-                    (    
-                        'AROS-Exec',
-                        href = 'http://aros-exec.org/' 
-                    )
-                )
-            ),
-            TR
-            ( 
-                TD
-                (
-                    A
-                    (    
-                        'AROS Archives',
-                        href = 'http://archives.aros-exec.org/' 
-                    )
-                )
-            ),
-            TR
-            (
-                TD
-                (
-                    A
-                    (  
-                        'Team AROS',
-                        href = 'http://www.teamaros.org/'
-                    )
-                )
-            )
-        ] 
-    )
+    menulinks = Tree \
+    ( [
+        'Related Links',
+        Tree \
+        ( [
+            A( 'AROS-Exec', href = 'http://aros-exec.org/' ),
+            A( 'AROS Archives', href = 'http://archives.aros-exec.org/' ),
+            A( 'Team AROS', href = 'http://www.teamaros.org/' ),
+        ] ),
+        BR(),
+    ] )
 
     sponsors = Table\
     ( 
@@ -200,7 +164,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         contents = [
             TR( 
                 valign = 'top', contents = [
-                    TD( rowspan = 9, width = 10 ),
+                    TD( rowspan = 10, width = 10 ),
                     TD()
                 ]
             ),
