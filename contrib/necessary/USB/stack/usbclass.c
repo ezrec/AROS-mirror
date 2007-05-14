@@ -79,8 +79,6 @@ BOOL METHOD(USB, Hidd_USB, AttachDriver)
     BOOL retval = FALSE;
     D(bug("[USB] USB::AttachDriver(%p)\n", msg->driverObject));
 
-    ObtainSemaphore(&SD(cl)->global_lock);
-
     if (msg->driverObject)
     {	
         struct usb_driver *drv = AllocPooled(SD(cl)->MemPool, sizeof(struct usb_driver));
@@ -96,7 +94,9 @@ BOOL METHOD(USB, Hidd_USB, AttachDriver)
             setBitmap(drv->bitmap, 0);
             setBitmap(drv->bitmap, 1);
 
+            ObtainSemaphore(&SD(cl)->global_lock);
             AddTail(&SD(cl)->driverList, &drv->d_Node);
+            ReleaseSemaphore(&SD(cl)->global_lock);    
             
             HIDD_USBHub_OnOff(drv->d_Driver, TRUE);
 
@@ -104,7 +104,6 @@ BOOL METHOD(USB, Hidd_USB, AttachDriver)
         }
     }
 
-    ReleaseSemaphore(&SD(cl)->global_lock);    
 
     return retval;
 }
