@@ -276,7 +276,7 @@ AROS_UFH3(void, OHCI_HubInterrupt,
     D(bug("[OHCI] INTR: Reenabling the RHSC interrupt\n"));
     
     /* Reenable the RHSC interrupt */
-    mmio(ohci->regs->HcInterruptEnable) = mmio(ohci->regs->HcInterruptEnable) | HC_INTR_RHSC;
+    mmio(ohci->regs->HcInterruptEnable) = HC_INTR_RHSC;
     
     AROS_USERFUNC_EXIT
 }

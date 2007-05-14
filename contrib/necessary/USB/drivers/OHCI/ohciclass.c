@@ -97,7 +97,7 @@ OOP_Object *METHOD(OHCI, Root, New)
         ohci->irqHandler->h_Data = ohci;
         
         HIDD_IRQ_AddHandler(SD(cl)->irq, ohci->irqHandler, ohci->irqNum);
-        D(bug("[OHCI] IRQHandler = %08x\n", ohci->irqHandler));
+        D(bug("[OHCI] IRQHandler = %08x int = %d\n", ohci->irqHandler, ohci->irqNum));
                
         D(bug("[OHCI] New(): o=%p, ports=%d, regs=%p, drv=%p, dev=%p, hcca=%p\n", o,
               ohci->hubDescr.bNbrPorts, ohci->regs, ohci->pciDriver, ohci->pciDevice,

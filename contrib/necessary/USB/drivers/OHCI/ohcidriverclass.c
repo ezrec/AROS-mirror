@@ -18,7 +18,7 @@
     59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#define DEBUG 0
+#define DEBUG 1
 
 #include <inttypes.h>
 
@@ -277,53 +277,36 @@ void ohci_FreeED(OOP_Class *cl, OOP_Object *o, ohci_ed_t *ed)
 void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
 {
     ohci_data_t *ohci = (ohci_data_t *)irq->h_Data;
-    uint32_t intrs;
+    uint32_t intrs = 0;
+    uint32_t done;
     
-    intrs = mmio(ohci->regs->HcInterruptStatus);
+    done = ohci->hcca->hccaDoneHead;
     
-    D(bug("[OHCI] Intr handler %08x\n", intrs));
-    
-    intrs &= ~HC_INTR_MIE;
-    
-    if (intrs & HC_INTR_RHSC)
+    if (done != 0)
     {
-        D(bug("[OHCI] RHSC interrupt. Disabling it for 1 second\n"));
-        
-        mmio(ohci->regs->HcInterruptEnable) = mmio(ohci->regs->HcInterruptEnable) & ~HC_INTR_RHSC;
-        
-        /* Restart the RHSC enable timer */
-        ohci->timerReq->tr_node.io_Command = TR_ADDREQUEST;
-        ohci->timerReq->tr_time.tv_secs = 0;
-        ohci->timerReq->tr_time.tv_micro = 100000;
-        SendIO((struct IORequest *)ohci->timerReq);
-        
-        Disable();
-        if (ohci->running)
+        if (done & ~1)
+            intrs = HC_INTR_WDH;
+        if (done & 1)
+            intrs |= mmio(ohci->regs->HcInterruptStatus);
+        ohci->hcca->hccaDoneHead = 0;
+    }
+    else
+    {
+        intrs = mmio(ohci->regs->HcInterruptStatus);
+        if (intrs & HC_INTR_WDH)
         {
-            struct Interrupt *intr;
-            
-            ForeachNode(&ohci->intList, intr)
-            {
-                Cause(intr);
-            }
+            done = ohci->hcca->hccaDoneHead;
+            ohci->hcca->hccaDoneHead = 0;
         }
-        else
-        {
-            /*
-             * OHCI is not yet in running state, thus posting any interrupts 
-             * down the classes is forbidden. The pending flag will be set in 
-             * order to issue the interrupts as soon as the OHCI will be switched
-             * back to the running state
-             */
-            ohci->pendingRHSC = 1;
-        }
-        Enable();
     }
     
+    D(bug("[OHCI] Intr handler %08x\n", intrs));
+    intrs &= ~HC_INTR_MIE;
+
     if (intrs & HC_INTR_WDH)
     {
-        D(bug("[OHCI] WDH Interrupt, hccaDoneHead=%p\n[OHCI] TD's in hccaDoneHead:\n", ohci->hcca->hccaDoneHead));
-        ohci_td_t *td = (ohci_td_t*)(ohci->hcca->hccaDoneHead & 0xfffffff0);
+        D(bug("[OHCI] WDH Interrupt, hccaDoneHead=%p\n[OHCI] TD's in hccaDoneHead:\n", done));
+        ohci_td_t *td = (ohci_td_t*)(done & 0xfffffff0);
         
         while (td)
         {
@@ -383,11 +366,54 @@ void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
 
         }
         
-        
         ohci->hcca->hccaDoneHead = 0;
+        mmio(ohci->regs->HcInterruptStatus) = HC_INTR_WDH;
+        intrs &= ~HC_INTR_WDH;
     }
     
-    mmio(ohci->regs->HcInterruptStatus) = intrs; 
+    if (intrs & HC_INTR_RHSC)
+    {
+        D(bug("[OHCI] RHSC interrupt. Disabling it for 1 second\n"));
+        
+        mmio(ohci->regs->HcInterruptDisable) = HC_INTR_RHSC;
+        mmio(ohci->regs->HcInterruptStatus) = HC_INTR_RHSC;
+        
+        intrs &= ~HC_INTR_RHSC;
+        
+        /* Restart the RHSC enable timer */
+        ohci->timerReq->tr_node.io_Command = TR_ADDREQUEST;
+        ohci->timerReq->tr_time.tv_secs = 0;
+        ohci->timerReq->tr_time.tv_micro = 900000;
+        SendIO((struct IORequest *)ohci->timerReq);
+        
+        Disable();
+        if (ohci->running)
+        {
+            struct Interrupt *intr;
+            
+            ForeachNode(&ohci->intList, intr)
+            {
+                Cause(intr);
+            }
+        }
+        else
+        {
+            /*
+             * OHCI is not yet in running state, thus posting any interrupts 
+             * down the classes is forbidden. The pending flag will be set in 
+             * order to issue the interrupts as soon as the OHCI will be switched
+             * back to the running state
+             */
+            ohci->pendingRHSC = 1;
+        }
+        Enable();
+    }
+    
+    if (intrs)
+    {
+        mmio(ohci->regs->HcInterruptDisable) = intrs;
+        D(bug("[OHCI] Disabling interrupts %p\n", intrs));
+    }
 }
 
 
