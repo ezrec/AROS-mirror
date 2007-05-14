@@ -85,7 +85,6 @@ OOP_Object *METHOD(OHCI, Root, New)
 
         CopyMem(&hub_descriptor, &ohci->hubDescr, sizeof(usb_hub_descriptor_t));
         ohci->hubDescr.bNbrPorts = GetTagData(aHidd_USBHub_NumPorts, 0, msg->attrList);
-        
 
         OOP_GetAttr(ohci->pciDevice, aHidd_PCIDevice_INTLine, &ohci->irqNum);
         

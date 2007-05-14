@@ -282,7 +282,7 @@ typedef struct ohci_data {
     usb_hub_descriptor_t        hubDescr;
     uint8_t                     running;
     uint8_t                     pendingRHSC;
-    
+        
     struct List                 intList;
     struct Interrupt            *tmp;
     

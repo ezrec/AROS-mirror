@@ -18,7 +18,7 @@
     59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#define DEBUG 1
+#define DEBUG 0
 
 #include <inttypes.h>
 
@@ -302,6 +302,11 @@ void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
     
     D(bug("[OHCI] Intr handler %08x\n", intrs));
     intrs &= ~HC_INTR_MIE;
+    /* Ack interrupts */
+    mmio(ohci->regs->HcInterruptStatus) = intrs;
+    
+    /* Clear disabled interrupts */
+    intrs &= mmio(ohci->regs->HcInterruptEnable);
 
     if (intrs & HC_INTR_WDH)
     {
@@ -383,10 +388,9 @@ void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
         /* Restart the RHSC enable timer */
         ohci->timerReq->tr_node.io_Command = TR_ADDREQUEST;
         ohci->timerReq->tr_time.tv_secs = 0;
-        ohci->timerReq->tr_time.tv_micro = 900000;
+        ohci->timerReq->tr_time.tv_micro = 100000;
         SendIO((struct IORequest *)ohci->timerReq);
         
-        Disable();
         if (ohci->running)
         {
             struct Interrupt *intr;
@@ -406,7 +410,6 @@ void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
              */
             ohci->pendingRHSC = 1;
         }
-        Enable();
     }
     
     if (intrs)
