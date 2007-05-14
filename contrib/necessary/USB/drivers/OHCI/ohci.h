@@ -26,6 +26,7 @@
 #include <aros/asmcall.h>
 
 #include <exec/semaphores.h>
+#include <devices/timer.h>
 
 #include <hidd/irq.h>
 
@@ -91,7 +92,7 @@ typedef struct ohci_registers {
 #define HC_INTR_RD              0x00000008
 #define HC_INTR_UE              0x00000010
 #define HC_INTR_FNO             0x00000020
-#define HC_INTR_RHCS            0x00000040
+#define HC_INTR_RHSC            0x00000040
 #define HC_INTR_OC              0x40000000
 #define HC_INTR_MIE             0x80000000
 
@@ -99,6 +100,9 @@ typedef struct ohci_registers {
 #define HC_FM_GET_IVAL(v)       ((v) & 0x3fff)
 #define HC_FM_GET_FSMPS(v)      (((v) >> 16) & 0x7fff)
 #define HC_FM_FIT               0x80000000
+
+#define HC_FM_FSMPS(v)          ((((i)-210)*6/7) << 16)
+#define HC_PERIODIC(v)          ((i)*9/10)
 
 /* HcRhDescriptorA */
 #define HC_RHA_GET_NDP(v)       ((v) & 0xff)
@@ -131,9 +135,12 @@ typedef struct ohci_registers {
 #define HC_PS_OCIC              0x00080000
 #define HC_PS_PRSC              0x00100000
 
+typedef struct ohci_pipe ohci_pipe_t;
+
 typedef struct ohci_hcca {
     uint32_t    hccaIntrTab[32];
     uint16_t    hccaFrNum;
+    uint16_t    pad;
     uint32_t    hccaDoneHead;
     uint8_t     hccaRsvd[116];
 } __attribute__((packed)) ohci_hcca_t;
@@ -143,7 +150,8 @@ typedef struct ohci_ed {
     uint32_t    edTailP;
     uint32_t    edHeadP;
     uint32_t    edNextED;
-} ohci_ed_t;
+    ohci_pipe_t *edPipe;
+} __attribute__((aligned(32))) ohci_ed_t;
 
 #define ED_FA_MASK      0x0000007f
 #define ED_EN_MASK      0x00000780
@@ -155,12 +163,21 @@ typedef struct ohci_ed {
 #define ED_C            0x00000002
 #define ED_H            0x00000001
 
+#define ED_GET_USAGE(ed) (((ed)->edFlags >> 27) + (((ed)->edTailP & 0x0f) << 5) + (((ed)->edNextED & 0x0f) << 9))
+#define ED_SET_USAGE(ed,u) \
+    do {                        \
+        (ed)->edFlags = ((ed)->edFlags & 0x07ffffff) | ((u) & 0x001f) << 27; \
+        (ed)->edTailP = ((ed)->edTailP & 0xfffffff0) | (((u) & 0x01e0) >> 5);  \
+        (ed)->edNextED= ((ed)->edNextED& 0xfffffff0) | (((u) & 0x1e00) >> 9);  \
+    } while(0)
+
 typedef struct ohci_td {
     uint32_t    tdFlags;
     uint32_t    tdCurrentBufferPointer;
     uint32_t    tdNextTD;
     uint32_t    tdBufferEnd;
-} ohci_td_t;
+    ohci_pipe_t *tdPipe;
+} __attribute__((aligned(32))) ohci_td_t;
 
 #define TD_R            0x00040000
 #define TD_DP_MASK      0x00180000
@@ -190,6 +207,37 @@ typedef struct ohci_td {
 #define HiddAttrBase (SD(cl)->HiddAB)
 
 #define MAX_OHCI_DEVICES        8
+
+typedef struct ohci_intr {
+    struct MinNode      node;
+    struct Interrupt    *intr;
+    ohci_td_t           *td;
+    void                *buffer;
+    uint32_t            length;
+} ohci_intr_t;
+
+struct ohci_pipe {
+    struct Node         node;
+    struct SignalSemaphore lock;
+    
+    ohci_intr_t         *interrupt;
+    ohci_ed_t           *ed;
+    ohci_ed_t           *location;
+    
+    ohci_td_t           *tail;
+    
+    uint8_t             type;
+    uint8_t             interval;
+    uint8_t             endpoint;
+    uint8_t             address;
+    
+    struct timerequest  *timeout;
+    uint32_t            timeoutVal;
+    struct Task         *sigTask;
+    uint8_t             signal;
+    
+    uint32_t            errorCode;
+};
 
 struct ohci_staticdata
 {
@@ -232,6 +280,8 @@ typedef struct ohci_data {
     volatile ohci_registers_t   *regs;
     ohci_hcca_t                 *hcca;
     usb_hub_descriptor_t        hubDescr;
+    uint8_t                     running;
+    uint8_t                     pendingRHSC;
     
     struct List                 intList;
     struct Interrupt            *tmp;
@@ -239,6 +289,8 @@ typedef struct ohci_data {
     struct MsgPort              timerPort;
     struct Interrupt            timerInt;
     struct timerequest          *timerReq;
+    
+    struct timerequest          *tr;
     
     HIDDT_IRQ_Handler           *irqHandler;
     intptr_t                    irqNum;
@@ -261,7 +313,7 @@ typedef struct ohci_data {
 
 typedef struct td_node {
     struct MinNode      tdNode;
-    uint32_t            tdBitmap[8];
+    uint32_t            tdBitmap[4];
     ohci_td_t           *tdPage;
 } td_node_t;
 
@@ -296,10 +348,14 @@ AROS_UFP3(void, OHCI_HubInterrupt,
 ohci_td_t *ohci_AllocTD(OOP_Class *cl, OOP_Object *o);
 ohci_ed_t *ohci_AllocED(OOP_Class *cl, OOP_Object *o);
 void ohci_FreeTDQuick(ohci_data_t *ohci, ohci_td_t *td);
-void ohci_FreeEDQuick(ohci_data_t *uhci, ohci_ed_t *ed);
+void ohci_FreeEDQuick(ohci_data_t *ohci, ohci_ed_t *ed);
 void ohci_FreeTD(OOP_Class *cl, OOP_Object *o, ohci_td_t *td);
 void ohci_FreeED(OOP_Class *cl, OOP_Object *o, ohci_ed_t *ed);
 
 void ohci_Handler(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw);
+
+void ohci_Delay(struct timerequest *tr, uint32_t msec);
+struct timerequest *ohci_CreateTimer();
+void ohci_DeleteTimer(struct timerequest *tr);
 
 #endif /*OHCI_H_*/

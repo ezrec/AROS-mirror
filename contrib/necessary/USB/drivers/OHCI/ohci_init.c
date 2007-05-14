@@ -32,7 +32,6 @@
 
 #include <proto/exec.h>
 #include <proto/oop.h>
-#include <proto/dos.h>
 #include <aros/debug.h>
 
 #include "ohci.h"
@@ -50,6 +49,7 @@ AROS_UFH3(void, Enumerator,
 
     ohci_registers_t *regs;
     static int counter;
+    struct timerequest *tr = ohci_CreateTimer();
 
     if (counter == MAX_OHCI_DEVICES)
         return;
@@ -84,8 +84,8 @@ AROS_UFH3(void, Enumerator,
         /* Loop */
         while ((delay > 0) && (mmio(regs->HcControl) & HC_CTRL_IR))
         {
-            delay -= 40;
-            Delay(2);
+            delay -= 2;
+            ohci_Delay(tr, 2);
         }
         if (delay < 0)
             D(bug("[OHCI]   BIOS handoff failed!\n"));
@@ -99,6 +99,8 @@ AROS_UFH3(void, Enumerator,
     
     LIBBASE->sd.numDevices = ++counter;
 
+    ohci_DeleteTimer(tr);
+    
     AROS_USERFUNC_EXIT
 }
 
@@ -174,7 +176,7 @@ static int OHCI_Expunge(LIBBASETYPEPTR LIBBASE)
     };
 
     OOP_ReleaseAttrBases(attrbases);
-
+    
     return TRUE;        
 }
 

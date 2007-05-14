@@ -64,6 +64,8 @@ OOP_Object *METHOD(OHCI, Root, New)
         ohci_data_t *ohci = OOP_INST_DATA(cl, o);
         int i;
         
+        ohci->tr = ohci_CreateTimer();
+        
         NEWLIST(&ohci->intList);
         
         NEWLIST(&ohci->timerPort.mp_MsgList);
@@ -76,13 +78,14 @@ OOP_Object *METHOD(OHCI, Root, New)
         ohci->timerReq = CreateIORequest(&ohci->timerPort, sizeof(struct timerequest));
         OpenDevice((STRPTR)"timer.device", UNIT_VBLANK, (struct IORequest *)ohci->timerReq, 0);
         
-        CopyMem(&hub_descriptor, &ohci->hubDescr, sizeof(usb_hub_descriptor_t));
-        
-        ohci->hubDescr.bNbrPorts = GetTagData(aHidd_USBHub_NumPorts, 0, msg->attrList);
         ohci->regs = (ohci_registers_t *)GetTagData(aHidd_OHCI_MemBase, 0, msg->attrList);
         ohci->pciDriver = (OOP_Object *)GetTagData(aHidd_OHCI_PCIDriver, 0, msg->attrList);
         ohci->pciDevice = (OOP_Object *)GetTagData(aHidd_OHCI_PCIDevice, 0, msg->attrList);
         ohci->hcca = HIDD_PCIDriver_AllocPCIMem(ohci->pciDriver, 4096);
+
+        CopyMem(&hub_descriptor, &ohci->hubDescr, sizeof(usb_hub_descriptor_t));
+        ohci->hubDescr.bNbrPorts = GetTagData(aHidd_USBHub_NumPorts, 0, msg->attrList);
+        
 
         OOP_GetAttr(ohci->pciDevice, aHidd_PCIDevice_INTLine, &ohci->irqNum);
         
@@ -95,9 +98,7 @@ OOP_Object *METHOD(OHCI, Root, New)
         
         HIDD_IRQ_AddHandler(SD(cl)->irq, ohci->irqHandler, ohci->irqNum);
         D(bug("[OHCI] IRQHandler = %08x\n", ohci->irqHandler));
-        
-        mmio(ohci->regs->HcHCCA) = (uint32_t)ohci->hcca;
-        
+               
         D(bug("[OHCI] New(): o=%p, ports=%d, regs=%p, drv=%p, dev=%p, hcca=%p\n", o,
               ohci->hubDescr.bNbrPorts, ohci->regs, ohci->pciDriver, ohci->pciDevice,
               ohci->hcca));
@@ -172,12 +173,73 @@ OOP_Object *METHOD(OHCI, Root, New)
         
         /* Reset OHCI */
         
+        /* 
+         * Preserve some registers which were set by BIOS. I will have 
+         * to get rid of it pretty soon
+         */
+        uint32_t ctl = mmio(ohci->regs->HcControl);
+        uint32_t rwc = ctl | HC_CTRL_RWC;
+        uint32_t fm = mmio(ohci->regs->HcFmInterval);
+        uint32_t desca = (ohci->regs->HcRhDescriptorA);
+        uint32_t descb = (ohci->regs->HcRhDescriptorB);
+        
+        D(bug("[OHCI] ctl=%08x fm=%08x desca=%08x descb=%08x\n", ctl,fm,desca,descb));
+        
+        mmio(ohci->regs->HcControl) = rwc | HC_CTRL_HCFS_RESET;
+        ohci_Delay(ohci->tr, USB_BUS_RESET_DELAY);
+        
+        mmio(ohci->regs->HcCommandStatus) = HC_CS_HCR;
+        for (i=0; i < 10; i++)
+        {
+            ohci_Delay(ohci->tr, 1);
+            if (!(mmio(ohci->regs->HcCommandStatus) & HC_CS_HCR))
+                break;
+        }
+        
+        if (i==10)
+            D(bug("[OHCI] Reset not ready...\n"));
+        
         /* Initial setup of OHCI */
+        D(bug("[OHCI] Initial setup\n"));
+        
+        mmio(ohci->regs->HcHCCA) = (uint32_t)ohci->hcca;
+        mmio(ohci->regs->HcBulkHeadED) = (uint32_t)ohci->bulk_head;
+        mmio(ohci->regs->HcControlHeadED) = (uint32_t)ohci->ctrl_head;
+        mmio(ohci->regs->HcInterruptDisable) = 0xc000007f;
+        
+        ctl = mmio(ohci->regs->HcControl);
+        ctl &= ~(HC_CTRL_CBSR_MASK | HC_CTRL_HCFS_MASK | HC_CTRL_PLE |
+                 HC_CTRL_IE | HC_CTRL_CLE | HC_CTRL_BLE | HC_CTRL_IR );
+        ctl |= HC_CTRL_PLE | HC_CTRL_IE | HC_CTRL_CLE | HC_CTRL_BLE | 
+               rwc | HC_CTRL_CBSR_1_4 | HC_CTRL_HCFS_SUSPENDED;
         
         /* Start OHCI */
+        mmio(ohci->regs->HcControl) = ctl;
+
+        uint32_t ival = HC_FM_GET_IVAL(fm);
+        fm = (mmio(ohci->regs->HcFmRemaining) & HC_FM_FIT) ^ HC_FM_FIT;
+        fm |= HC_FM_FSMPS(ival) | ival;
+        mmio(ohci->regs->HcFmInterval) = fm;
+        uint32_t per = HC_PERIODIC(ival);
+        mmio(ohci->regs->HcPeriodicStart) = per;
+        
+        mmio(ohci->regs->HcRhDescriptorA) = desca | HC_RHA_NOCP;
+        mmio(ohci->regs->HcRhStatus) = HC_RHS_LPSC;
+        ohci_Delay(ohci->tr, 5);
+        mmio(ohci->regs->HcRhDescriptorA) = desca;
+        mmio(ohci->regs->HcRhDescriptorB) = descb;
+        
+        if (HC_RHA_GET_POTPGT(desca) != 0)
+        {
+            D(bug("[OHCI] delay=%d\n", HC_RHA_GET_POTPGT(desca) * UHD_PWRON_FACTOR));
+            ohci_Delay(ohci->tr, HC_RHA_GET_POTPGT(desca) * UHD_PWRON_FACTOR);
+        }
         
         /* Enable interrupts */
+        mmio(ohci->regs->HcInterruptEnable) = HC_INTR_MIE | HC_INTR_SO | HC_INTR_WDH |
+            HC_INTR_RD | HC_INTR_UE | HC_INTR_RHSC;
         
+        D(bug("[OHCI] OHCI controller up and running.\n"));
         success = TRUE;
     }
     
@@ -205,6 +267,8 @@ void METHOD(OHCI, Root, Dispose)
     ohci_data_t *ohci = OOP_INST_DATA(cl, o);
     struct Library *base = &BASE(cl->UserData)->LibNode;
 
+    ohci_DeleteTimer(ohci->tr);
+    
     D(bug("[OHCI] OHCI::Dispose\n"));
     
     OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
@@ -236,49 +300,6 @@ void METHOD(OHCI, Root, Get)
     else
         OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 }
-
-BOOL METHOD(OHCI, Hidd_USBDrv, AddInterrupt)
-{
-    BOOL retval = FALSE;
-    
-    if (msg->pipe == (void *)0xdeadbeef)
-    {
-        ohci_data_t *ohci = OOP_INST_DATA(cl, o);
-        D(bug("[OHCI] AddInterrupt() local for the OHCI. Intr %p, list %p\n", msg->interrupt, &ohci->intList));
-        
-        if (!ohci->regs)
-            ohci->tmp = msg->interrupt;
-        else
-            AddTail(&ohci->intList, &msg->interrupt->is_Node);
-        
-        retval = TRUE;    
-    }
-    else
-    {
-        D(bug("[OHCI] AddInterrupt()\n"));
-#warning TODO: Complete
-    }
-    D(bug("[OHCI::AddInterrupt] %s\n", retval ? "success":"failure"));
-    
-    //for(;;);
-    
-    return retval;
-}
-
-BOOL METHOD(OHCI, Hidd_USBDrv, RemInterrupt)
-{
-    if (msg->pipe == (void *)0xdeadbeef)
-    {
-        Remove(msg->interrupt);
-        return TRUE;
-    }
-    else
-    {
-#warning TODO:
-        return FALSE;
-    }
-}
-
 
 /* Class initialization and destruction */
 

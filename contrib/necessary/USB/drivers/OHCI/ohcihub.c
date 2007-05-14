@@ -23,6 +23,7 @@
 #include <inttypes.h>
 
 #include <exec/types.h>
+#include <exec/errors.h>
 #include <oop/oop.h>
 #include <usb/usb.h>
 #include <utility/tagitem.h>
@@ -60,32 +61,56 @@ BOOL METHOD(OHCI, Hidd_USBHub, OnOff)
     BOOL retval = FALSE;
     D(bug("[OHCI] USBHub::OnOff(%d)\n", msg->on));
     
-    if (!CheckIO((struct IORequest *)ohci->timerReq))
-        AbortIO((struct IORequest *)ohci->timerReq);
+    uint32_t ctl = mmio(ohci->regs->HcControl);
+    ctl &= ~HC_CTRL_HCFS_MASK;
+    ctl |= msg->on ? HC_CTRL_HCFS_OPERATIONAL : HC_CTRL_HCFS_SUSPENDED;
+    mmio(ohci->regs->HcControl) = ctl;
+    
+    ohci->running = msg->on;
 
-    GetMsg(&ohci->timerPort);
-    
-    if (msg->on)
-    {
-        ohci->timerReq->tr_node.io_Command = TR_ADDREQUEST;
-        ohci->timerReq->tr_time.tv_secs = 0;
-        ohci->timerReq->tr_time.tv_micro = 510000;
-        SendIO((struct IORequest *)ohci->timerReq);
-    }
-    
     OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
 
-//    retval = uhci_run(cl, o, msg->on);
-//    uhci_sleep(cl, o, 100);
-//    
-//    uhci->running = msg->on;
-    
+    /*
+     * Some OHCI Root Hub interrupts pending and the HUB has been just enabled?
+     * Go, fire up the interrupts!
+     */
+    if (msg->on && ohci->pendingRHSC)
+    {
+        ohci->pendingRHSC = 0;
+        struct Interrupt *intr;
+        
+        Disable();
+        ForeachNode(&ohci->intList, intr)
+        {
+            Cause(intr);
+        }
+        Enable();
+    }
+
     return retval;
 }
 
 BOOL METHOD(OHCI, Hidd_USBHub, PortReset)
 {
-    return FALSE;
+    ohci_data_t *ohci = OOP_INST_DATA(cl, o);
+    int i;
+    
+    D(bug("[OHCI] Port %d reset\n", msg->portNummer));
+    
+    mmio(ohci->regs->HcRhPortStatus[msg->portNummer-1]) = UPS_RESET;
+    
+    for (i=0; i < 5; i++)
+    {
+        D(bug("[OHCI] Reset: Waiting for completion\n"));
+        
+        ohci_Delay(ohci->tr, USB_PORT_ROOT_RESET_DELAY);
+        if ((mmio(ohci->regs->HcRhPortStatus[msg->portNummer-1]) & UPS_RESET) == 0)
+            break;
+    }
+    if (i == 5)
+        return FALSE;
+    
+    return TRUE;
 }
 
 BOOL METHOD(OHCI, Hidd_USBHub, GetHubStatus)
@@ -95,6 +120,7 @@ BOOL METHOD(OHCI, Hidd_USBHub, GetHubStatus)
 
 BOOL METHOD(OHCI, Hidd_USBHub, ClearHubFeature)
 {
+    
     return TRUE;
 }
 
@@ -123,12 +149,110 @@ BOOL METHOD(OHCI, Hidd_USBHub, GetPortStatus)
 
 BOOL METHOD(OHCI, Hidd_USBHub, ClearPortFeature)
 {
-    return FALSE;
+    ohci_data_t *ohci = OOP_INST_DATA(cl, o);
+
+    D(bug("[OHCI] ClearPortFeature(). Port=%d, Feature=%08x\n", msg->port, msg->feature));
+
+    if (msg->port > ohci->hubDescr.bNbrPorts)
+        return FALSE;
+    
+    switch (msg->feature)
+    {
+        case UHF_PORT_ENABLE:
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_CURRENT_CONNECT_STATUS;
+            break;
+        
+        case UHF_PORT_SUSPEND:
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_OVERCURRENT_INDICATOR;
+            break;
+            
+        case UHF_PORT_POWER:
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_LOW_SPEED;
+            break;
+        
+        case UHF_C_PORT_CONNECTION:
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_C_CONNECT_STATUS << 16;
+            break;
+            
+        case UHF_C_PORT_ENABLE:
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_C_PORT_ENABLED << 16;
+            break;
+            
+        case UHF_C_PORT_SUSPEND:
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_C_SUSPEND << 16;
+            break;
+     
+        case UHF_C_PORT_OVER_CURRENT:
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_C_OVERCURRENT_INDICATOR << 16;
+            break;
+     
+        case UHF_C_PORT_RESET:
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_C_PORT_RESET << 16;
+            break;
+    }
+    
+    switch (msg->feature)
+    {
+        case UHF_C_PORT_CONNECTION:
+        case UHF_C_PORT_ENABLE:
+        case UHF_C_PORT_SUSPEND:
+        case UHF_C_PORT_OVER_CURRENT:
+        case UHF_C_PORT_RESET:
+            if (!CheckIO((struct IORequest *)ohci->timerReq))
+                AbortIO((struct IORequest *)ohci->timerReq);
+
+            GetMsg(&ohci->timerPort);
+            
+            D(bug("[OHCI] Reenabling the RHSC interrupt\n"));
+            mmio(ohci->regs->HcInterruptEnable) = mmio(ohci->regs->HcInterruptEnable) | HC_INTR_RHSC;
+            break;
+        
+        default:
+            break;
+    }
+    
+    return TRUE;
 }
 
 BOOL METHOD(OHCI, Hidd_USBHub, SetPortFeature)
 {
-    return FALSE;
+    ohci_data_t *ohci = OOP_INST_DATA(cl, o);
+    int i;
+    
+    D(bug("[OHCI] SetPortFeature(). Port=%d, Feature=%08x\n", msg->port, msg->feature));
+
+    if (msg->port > ohci->hubDescr.bNbrPorts)
+        return FALSE;
+
+    switch (msg->feature)
+    {
+        case UHF_PORT_ENABLE:
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_PORT_ENABLED;
+            break;
+            
+        case UHF_PORT_SUSPEND:
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_SUSPEND;
+            break;
+     
+        case UHF_PORT_POWER:
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_PORT_POWER;
+            break;
+     
+        case UHF_PORT_RESET:
+            mmio(ohci->regs->HcRhPortStatus[msg->port-1]) = UPS_RESET;
+            for (i=0; i < 5; i++)
+            {
+                ohci_Delay(ohci->tr, USB_PORT_ROOT_RESET_DELAY);
+                if ((mmio(ohci->regs->HcRhPortStatus[msg->port-1]) & UPS_RESET) == 0)
+                    break;
+            }
+            if (i == 5)
+                return FALSE;
+     
+            break;
+    }
+    
+    return TRUE;
 }
 
 AROS_UFH3(void, OHCI_HubInterrupt,
@@ -143,14 +267,16 @@ AROS_UFH3(void, OHCI_HubInterrupt,
     /* Remove self from the msg queue */
     GetMsg(&ohci->timerPort);
     
-    /* ... */
+    if (ohci->timerReq->tr_node.io_Error == IOERR_ABORTED)
+    {
+        D(bug("[OHCI] INTR: Abrted\n"));
+        return;
+    }
     
+    D(bug("[OHCI] INTR: Reenabling the RHSC interrupt\n"));
     
-    /* Restart the timer */
-    ohci->timerReq->tr_node.io_Command = TR_ADDREQUEST;
-    ohci->timerReq->tr_time.tv_secs = 0;
-    ohci->timerReq->tr_time.tv_micro = 255000;
-    SendIO((struct IORequest *)ohci->timerReq);
+    /* Reenable the RHSC interrupt */
+    mmio(ohci->regs->HcInterruptEnable) = mmio(ohci->regs->HcInterruptEnable) | HC_INTR_RHSC;
     
     AROS_USERFUNC_EXIT
 }
