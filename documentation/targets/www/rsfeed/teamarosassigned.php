@@ -1,13 +1,21 @@
 <?php
 
+include("/home/groups/a/ar/aros/htdocs/rsfeed/Snoopy.class.php");
+
 /*$html = "<b>bold text</b><a href=howdy.html>click me</a><b>bold  
 text</b><a href=howdy.html>click  
 me</a>text<table><tr><td>column1</td><td>column2</ 
 td><tr><table>text<table><tr><td>column1</td><td>column2</ 
 td><tr><table>text";
 */
-$html = 
-implode('',file('http://thenostromo.com/teamaros2/index.php?query=assigned'));
+//$html = 
+//implode('',file('http://thenostromo.com/teamaros2/index.php?query=assigned'));
+
+$snoopy = new snoopy;
+$snoopy->fetch("http://thenostromo.com/teamaros2/index.php?query=assigned");
+
+$html = $snoopy->results;
+
 
 // use this to only match "td" tags
 #preg_match_all ( "/(<(td)>)([^<]*)(<\/\\2>)/", $html, $matches );

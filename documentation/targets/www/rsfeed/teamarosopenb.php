@@ -1,8 +1,7 @@
 <?php
 
-$ch = curl_init(); 
-curl_setopt($ch, CURLOPT_URL, "http://thenostromo.com/teamaros2/index.php?query=open"); 
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+include("/home/groups/a/ar/aros/htdocs/rsfeed/Snoopy.class.php");
+
 require_once("customerror.php");
 set_error_handler("customError");
 
@@ -12,8 +11,12 @@ me</a>text<table><tr><td>column1</td><td>column2</
 td><tr><table>text<table><tr><td>column1</td><td>column2</ 
 td><tr><table>text";
 */
-$html = curl_exec($ch);
-curl_close($ch);
+
+$snoopy = new snoopy;
+$snoopy->fetch("http://thenostromo.com/teamaros2/index.php?query=open");
+
+$html = $snoopy->results;
+
 // use this to only match "td" tags
 #preg_match_all ( "/(<(td)>)([^<]*)(<\/\\2>)/", $html, $matches );
 #preg_match_all ( "/(<(tr)>)([^<]*)(<\/\\2>)/", $html, $matches );
