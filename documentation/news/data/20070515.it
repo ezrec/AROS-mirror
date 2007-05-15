@@ -1,0 +1,69 @@
+=============
+Aggiornamento
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-05-15
+
+Nuovo nome, nuovo sito!
+-----------------------
+
+Benvenuti nella nuova versione del sito AROS.org! AROS ha 
+ufficialmente un nuovo nome e un nuovo sito. Da oggi, AROS 
+significa semplicemente "AROS Research Operating System". Se per 
+caso foste amministratori di un sito web, di una maliling list o 
+di qualcosa del genere, per cortesia aggiornate i riferimenti 
+alla nuova denominazione.
+
+Nella prima metà del 2007, AROS ha fatto considerevoli passi 
+avanti e, anche se non è ancora pronto per la sua versione "1.0", 
+è oggi molto più utilizzabile di quanto non lo fosse soltanto un 
+anno fa. Abbiamo preso decisioni e apportato miglioramenti al 
+progetto originale che hanno dato ad AROS un'identità propria. 
+Nel frattempo, i recenti avvenimenti che hanno coinvolto Amiga 
+Inc. ci hanno convinti che fosse un buon momento per cambiare il 
+nome.
+
+In poche parole: AROS è più forte di prima, perché sebbene i 
+suoi obiettivi rimangano quelli di prima, oggi possiamo 
+concentrare i nostri sforzi solo su di esso.
+
+Ultime novità
+-------------
+
+Michal Schulz ha completato il supporto USB per controller UHCI e 
+OHCI, rendendo di fatto compatibile lo stack di AROS con quasi 
+tutti i computer in circolazione. Per il momento sono supportati 
+solo mouse e tastiere, ma altri tipi di periferiche sono in 
+lavorazione.
+
+Grazie a Nic Andrews, Wanderer può finalmente mostrare tutti i file 
+o le icone soltanto. Nic ha aggiunto anche il supporto per gli 
+sfondi scalabili per il desktop e la navigazione delle finestre con 
+la tastiera.
+
+Robert Norris ha aggiunto la possibilità di scrivere al suo file 
+system FAT per AROS. Montare le partizioni di Windows resta un po' 
+complicato, ma poi tutto funziona più o meno come ci si aspetta. 
+Per il momento, però, fareste meglio a non fare prove su dischi 
+che contengono dati importanti.
+
+AROS su Internet
+----------------
+
+Paul J. Beel ha pubblicato un sacco di interviste su AROS e su altri 
+gradevoli argomenti. Non perdete quelle a `Nic Andrews`__ e a 
+`Bill Panagouleas`__ di DiscreetFX sul sito `The AROS Show`__
+
+Date un'occhiata anche al nuovo portale `AROSWorld`__ di Amigamia e, 
+già che ci siete, perché non comprare una di quelle bellissime 
+magliette, tazze o altri gadget che raffigurano la nostra Kitty? 
+Parte dei vostri soldi verrà impiegata per finanziare lo sviluppo di 
+AROS.
+
+Il nuovo look di AROS.org è opera di Tom Richards.
+
+__ http://arosshow.blogspot.com/2007/05/nick-kalamatee-andrews-interview-hello.html
+__ http://arosshow.blogspot.com/2007/05/bill-panagouleas-interview-what-is.html
+__ http://arosshow.blogspot.com
+__ http://www.arosworld.org
