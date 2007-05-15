@@ -1,6 +1,7 @@
 <?php
 
 require_once("customerror.php");
+//require_once("newtest.php");
 set_error_handler("customError");
 
 $file = fopen('http://archives.aros-exec.org/share/RECENT.readme', 

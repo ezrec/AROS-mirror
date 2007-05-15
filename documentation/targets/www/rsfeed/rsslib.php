@@ -68,7 +68,7 @@ function RSS_Retrieve($url)
 {
 	global $RSS_Content;
 
-	$doc  = new DOMDocument();
+	$doc  = new DOMDocument('1.0', 'iso-8859-1');
 	$doc->load($url);
 
 	$channels = $doc->getElementsByTagName("channel");

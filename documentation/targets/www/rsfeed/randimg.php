@@ -7,7 +7,7 @@ script, copyright © 2006 Henric Blomgren. Please email any comments & patches :
 
 Useage:
 <?php
-include_once($_SERVER['DOCUMENT_ROOT'].'/rsfeed/randimg.php');
+include_once('/home/groups/a/ar/aros/htdocs/rsfeed/randimg.php');
 random_image("images/top/","175","120");
 ?>
 
@@ -29,7 +29,7 @@ http://www.domain.com/file.php?path=<bad path>
 And by doing so potentially access sensetive files.
 */
 function random_image($dir,$w,$h) {
-    $dir2 = $_SERVER['DOCUMENT_ROOT'].$dir;
+    $dir2 = '/home/groups/a/ar/aros/htdocs/'.$dir;
     if(file_exists($dir2) AND !ereg("\.\.",$dir) AND !ereg("\.ht",$dir)) {
         $d = dir("$dir2");
         $i = 0;
