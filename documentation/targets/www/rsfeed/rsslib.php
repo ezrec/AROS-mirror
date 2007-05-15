@@ -87,7 +87,7 @@ function RSS_RetrieveLinks($url)
 {
 	global $RSS_Content;
 
-	$doc  = new DOMDocument('1.0');
+	$doc  = new DOMDocument('<root />');
 	$doc->load($url);
 
 	$channels = $doc->getElementsByTagName("channel");
