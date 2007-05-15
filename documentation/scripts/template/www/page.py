@@ -263,7 +263,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     '''
     statsPHP5= '''
 	<?php
-		include($_SERVER['DOCUMENT_ROOT'].'/rsfeed/browserdetect.php'); 
+		include( /home/groups/a/ar/aros/htdocs/rsfeed/browserdetect.php'); 
 		$win_ie56 = (browser_detection('browser') == 'ie' ) &&
 
   		(browser_detection('number') >= 5 ) &&
