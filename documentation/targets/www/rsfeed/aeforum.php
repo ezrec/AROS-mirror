@@ -1,6 +1,7 @@
 <?php
-	require_once("rsslib.php");
-	require_once("customerror.php");
+	
+        require_once("/home/groups/a/ar/aros/htdocs/rsfeed/rsslib.php");
+	require_once("/home/groups/a/ar/aros/htdocs/rsfeed/customerror.php");
 	set_error_handler("customError");
 ?>
 
