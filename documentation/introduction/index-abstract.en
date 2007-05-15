@@ -6,7 +6,4 @@
 
   <?php include_once($_SERVER['DOCUMENT_ROOT'].'/rsfeed/randimg.php'); random_image("/images/thubs/","100","76"); ?>
 
-AROS is a portable and free desktop operating system aiming at being 
-compatible with AmigaOS 3.1, while improving on it in many areas. The source 
-code is available under an open source license, which allows anyone to freely
-improve upon it. 
+The AROS Research Operating System is a lightweight, efficient and flexible desktop operating system, designed to help you make the most of your computer. It's an independent, portable and free project, aiming at being compatible with AmigaOS 3.1 at the API level (like Wine, unlike UAE), while improving on it in many areas. The source code is available under an open source license, which allows anyone to freely improve upon it.
