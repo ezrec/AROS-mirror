@@ -158,9 +158,9 @@ def makePictures():
                 dst = os.path.join( DSTROOT, lang, root )
             if not os.path.exists( dst ):
                 makedir( dst )
-            file(
-                os.path.join( dst, filename ), 'w'
-            ).write( TEMPLATE_DATA[lang] % strings )
+            file( 
+		os.path.join( dst, filename ), 'w'
+	    ).write( TEMPLATE_DATA[lang] % strings )
 
 
 def makeStatus():
@@ -385,8 +385,7 @@ def copyImages():
             os.path.join( srcpath, 'trustec.png' ),
             os.path.join( srcpath, 'sourceforge.png' ),
             os.path.join( srcpath, 'phoenix.jpeg' ),
-            os.path.join( srcpath, 'bttr.jpeg' ),
-            os.path.join( srcpath, '20070405.jpeg' )
+            os.path.join( srcpath, 'bttr.jpeg' )
         ],
         dstpath
     )
@@ -449,19 +448,42 @@ def buildWWW():
             'targets/www/images/genesi-small.gif',
             'targets/www/images/noeupatents-small.png',
             'targets/www/images/bullet.gif',
-            'targets/www/images/aros.png',
-            'targets/www/images/aros_text.png',
-            'targets/www/images/bright_bg.png',
-            'targets/www/images/dark_bg.png',
-            'targets/www/images/h_arc.png',
-            'targets/www/images/horizontal_border.png',
-            'targets/www/images/kitty_1.png',
-            'targets/www/images/kitty_2.png',
-            'targets/www/images/kitty_3.png',
-            'targets/www/images/v_arc.png',
-            'targets/www/images/vertical_border.png',
-            'targets/www/images/spacer.gif',
-            'targets/www/images/disk.png'
+            'targets/www/images/toplogomenu.png',
+	    'targets/www/images/toplogomenu.gif',
+            'targets/www/images/kittymascot.png',
+	    'targets/www/images/kittymascot.gif',
+            'targets/www/images/backgroundtop.png',
+            'targets/www/images/disk.png',
+            'targets/www/images/arosthubmain.png',
+	    'targets/www/images/bgcolormain.png',
+            'targets/www/images/mainpagespacer.png',
+            'targets/www/images/rsfeed.gif',
+            'targets/www/images/sidespacer.png',
+            'targets/www/images/textdocu.gif',
+	    'targets/www/images/archivedownloadicon.gif',
+	    'targets/www/images/archivedownloadicon.png',
+	    'targets/www/images/bgcolorright.png',
+	    'targets/www/images/bountyicon1.gif',
+	    'targets/www/images/bountyicon1.png',
+	    'targets/www/images/bountyicon2.gif',
+	    'targets/www/images/bountyicon2.png',
+            'targets/www/images/communityicon.gif',
+            'targets/www/images/communityicon.png',
+            'targets/www/images/directdownloadicon.gif',
+            'targets/www/images/directdownloadicon.png',
+            'targets/www/images/englishlogo.png',
+            'targets/www/images/finlandlogo.png',
+            'targets/www/images/francelogo.png',
+            'targets/www/images/germanylogo.png',
+            'targets/www/images/italylogo.png',
+            'targets/www/images/netherlandslogo.png',
+            'targets/www/images/polandlogo.png',
+            'targets/www/images/portugallogo.png',
+            'targets/www/images/rssicon1.gif',
+            'targets/www/images/rssicon1.png',
+            'targets/www/images/russialogo.png',
+            'targets/www/images/swedenlogo.png',
+            'targets/www/images/pointer.png'
         ],
         imagepath
     )
@@ -486,6 +508,17 @@ def buildWWW():
     if os.path.exists( cgi_dest ):
         shutil.rmtree( cgi_dest )
     shutil.copytree( 'targets/www/cgi-bin', cgi_dest )
+
+    thub_dest = os.path.join( DSTROOT, 'images/thubs' )
+    if os.path.exists( thub_dest ):
+       shutil.rmtree ( thub_dest )
+    shutil.copytree( 'targets/www/images/thubs', thub_dest )
+
+
+    rsfeed_dest = os.path.join( DSTROOT, 'rsfeed' )
+    if os.path.exists( rsfeed_dest ):
+       shutil.rmtree ( rsfeed_dest )
+    shutil.copytree( 'targets/www/rsfeed', rsfeed_dest )   
 
     toolpath = os.path.join( DSTROOT, 'tools' )
     makedir( toolpath )

@@ -25,7 +25,6 @@ div.abstract {
   margin: 2em 5em }
 
 div.abstract p.topic-title {
-  font-weight: bold ;
   text-align: center }
 
 div.attention, div.caution, div.danger, div.error, div.hint,
@@ -38,12 +37,11 @@ div.attention p.admonition-title, div.caution p.admonition-title,
 div.danger p.admonition-title, div.error p.admonition-title,
 div.warning p.admonition-title {
   color: red ;
-  font-weight: bold ;
-  font-family: sans-serif }
+  font-family: sans-serif;
+  font-size: 13px }
 
 div.hint p.admonition-title, div.important p.admonition-title,
 div.note p.admonition-title, div.tip p.admonition-title {
-  font-weight: bold ;
   font-family: sans-serif }
 
 div.dedication {
@@ -59,7 +57,7 @@ div.figure {
   margin-left: 2em }
 
 div.footer, div.header {
-  font-size: smaller }
+  font-size: 13px }
 
 div.sidebar {
   margin-left: 1em ;
@@ -83,11 +81,37 @@ div.system-message p.system-message-title {
   color: red ;
   font-weight: bold }
 
+body {
+font-size: 13px;
+}
+
+tr{
+font-size: 13px;
+}
+
+h1 {
+font-size: 15px;
+}
+
+h2 {
+font-size: 14px;
+}
+
+h3 {
+font-size: 14px;
+}
+
+p {
+font-size: 13px;
+}
+
 div.topic {
   margin: 2em }
 
 h1.title {
-  text-align: center }
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold; }
 
 h2.subtitle {
   text-align: center }
@@ -118,7 +142,7 @@ p.caption {
 
 p.credits {
   font-style: italic ;
-  font-size: smaller }
+  font-size: 13px }
 
 p.label {
   white-space: nowrap }
@@ -126,7 +150,7 @@ p.label {
 p.sidebar-title {
   font-family: sans-serif ;
   font-weight: bold ;
-  font-size: larger }
+  font-size: 13px }
 
 p.sidebar-subtitle {
   font-family: sans-serif ;
@@ -139,11 +163,11 @@ pre.address {
   margin-bottom: 0 ;
   margin-top: 0 ;
   font-family: serif ;
-  font-size: 100% }
+  font-size: 13px }
 
 pre.line-block {
   font-family: serif ;
-  font-size: 100% }
+  font-size: 13px }
 
 pre.literal-block, pre.doctest-block {
   margin-left: 2em ;
@@ -199,7 +223,8 @@ th.docinfo-name, th.field-name {
   white-space: nowrap }
 
 h1 tt, h2 tt, h3 tt, h4 tt, h5 tt, h6 tt {
-  font-size: 100% }
+  font-size: 13px;
+  font-weight: bold; }
 
 tt {
   background-color: #eeeeee }

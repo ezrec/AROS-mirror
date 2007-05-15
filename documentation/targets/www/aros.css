@@ -5,22 +5,19 @@ body {
 }
 
 .tree {
-    font-size:   smaller ;
-    font-weight: bold    ;
-    color:       #ffffff }
+    font-size:   13px ;
+    color:       #000000 }
 
 .tree :link {
     text-decoration: none    ;
-    font-weight:     bold    ;
-    color:           #ffffff }
+    color:           #000000 }
     
 .tree :link:hover {
     text-decoration: underline }
     
 .tree :visited {
     text-decoration: none    ;
-    font-weight:     bold    ;
-    color:           #ffffff }
+    color:           #000000 }
 
 .tree :visited:hover {
     text-decoration: underline }
@@ -46,7 +43,7 @@ h1.title {
 h2 {
     padding:            2px               ;
     border:             thin dotted black ;
-    color:              #ffffff           ;
+    color:              #000000           ;
     background:         #d67171           }
   */  
 
@@ -57,6 +54,3 @@ table.layout {
 td.layout, th.layout {
   padding-left:  0 ;
   padding-right: 0 }
-  
-  
-.bannerimage {margin: 14px 0px ;}

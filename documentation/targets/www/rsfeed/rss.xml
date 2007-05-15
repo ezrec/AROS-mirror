@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+  <channel>
+    <title>Xul.fr: Tutorials and Applications of the Web 2.0</title>
+    <link>http://www.xul.fr/</link>
+    <description>Ajax, JavaScript, XUL, RSS, PHP and all technologies of the Web 2.0. Building a CMS, tutorial and application.</description>
+    <copyright>Copyright 2007 xul.fr</copyright>
+    <lastBuildDate>Wed, 07 Feb 2007 14:20:24 GMT</lastBuildDate>
+    <generator>Not released for now</generator>
+    <image>
+      <title>RSS</title>
+      <url>http://www.xul.fr/xml.png</url>
+      <link>http://www.xul.fr</link>
+      <width>36</width>
+      <height>14</height>
+      <description>Ajax and XUL applications</description>
+    </image>
+    <item>
+      <title>Ajax Tutorial</title>
+      <description>Ajax and XMLHttpRequest with the GET, POST method for text, XML or JSON files.</description>
+      <author>Denis Sureau</author>
+      <link>http://www.xul.fr/en-xml-ajax.html</link>
+      <guid isPermaLink="true">http://www.xul.fr/</guid>
+      <pubDate>Wed, 07 Feb 2007 14:20:24 GMT</pubDate>
+    </item>
+    <item>
+      <title>Building a CMS</title>
+      <description>Both a tutorial and an application. Writing the components of a content management system. </description>
+      <author>Sandrine Takis and Denis Sureau</author>
+      <link>http://www.xul.fr/cms/building-a-cms.html</link>
+      <guid isPermaLink="true">http://www.xul.fr/cms/</guid>
+      <pubDate>Wed, 07 Feb 2007 14:20:24 GMT</pubDate>
+    </item>
+    <item>
+      <title>RSS Tutorial</title>
+      <description>How to build an RSS feed, in the 2.0 format. Tools for RSS.</description>
+      <author>Denis Sureau</author>
+      <link>http://www.xul.fr/en-xml-rss.html</link>
+      <guid isPermaLink="true">http://www.xul.fr/</guid>
+      <pubDate>Wed, 07 Feb 2007 14:20:24 GMT</pubDate>
+    </item>
+    <item>
+      <title>Ajax Extensible Page</title>
+      <description>A small library to build pages the reader can summarize or develop at mouse clicks. Each part of the article will be extensible. No programming knowledge is required to use the tool.</description>
+      <author>Denis Sureau</author>
+      <link>http://ajax.xul.fr/extensible/official.html</link>
+      <guid isPermaLink="true">http://ajax.xul.fr/extensible/</guid>
+      <pubDate>Wed, 07 Feb 2007 14:20:24 GMT</pubDate>
+    </item>
+    <item>
+      <title>Displaying an RSS Feed</title>
+      <description>With just one PHP function you can display an RSS 2.0 or RSS RDF feed on any page of you website, from any source.</description>
+      <author>Denis Sureau</author>
+      <link>http://www.xul.fr/rss/displaying.php</link>
+      <guid isPermaLink="true">http://www.xul.fr/rss/</guid>
+      <pubDate>Wed, 07 Feb 2007 14:20:24 GMT</pubDate>
+    </item>
+    <item>
+      <title>Adding Pages Online</title>
+      <description>How to use the FCKEditor to add pages online to your website. This is a part of our CMS tutorial.</description>
+      <author>Sandrine Takis and Denis Sureau</author>
+      <link>http://www.xul.fr/cms/editor-demo.php</link>
+      <guid isPermaLink="true">http://www.xul.fr/cms/</guid>
+      <pubDate>Wed, 07 Feb 2007 14:20:24 GMT</pubDate>
+    </item>
+    <item>
+      <title>Document Object Model</title>
+      <description>Understanding DOM, main functions.</description>
+      <author>Denis Sureau</author>
+      <link>http://www.xul.fr/en-xml-dom.html</link>
+      <guid isPermaLink="true">http://www.xul.fr/</guid>
+      <pubDate>Wed, 07 Feb 2007 14:20:24 GMT</pubDate>
+    </item>
+    <item>
+      <title>JavaScript Case Studies</title>
+      <description>Summary of the syntax and case studies: sending parameters, two-states buttons, scoring articles...</description>
+      <author>Denis Sureau</author>
+      <link>http://www.xul.fr/javascript/tutorial.html</link>
+      <guid isPermaLink="true">http://www.xul.fr/javascript/</guid>
+      <pubDate>Wed, 07 Feb 2007 14:20:24 GMT</pubDate>
+    </item>
+    <item>
+      <title>Ajax Demos</title>
+      <description>Demos of Ajax and XMLHttpRequest: checking for the existence of a file, states of the object, filling a form...</description>
+      <author>Denis Sureau</author>
+      <link>http://www.xul.fr/ajax/demos.html</link>
+      <guid isPermaLink="true">http://www.xul.fr/ajax/</guid>
+      <pubDate>Wed, 07 Feb 2007 14:20:24 GMT</pubDate>
+    </item>
+    <item>
+      <title>Web Application</title>
+      <description>The technologies to build a Web application.</description>
+      <author>Denis Sureau</author>
+      <link>http://www.xul.fr/web-application.html</link>
+      <guid isPermaLink="true">http://www.xul.fr/</guid>
+      <pubDate>Wed, 07 Feb 2007 14:20:24 GMT</pubDate>
+    </item>
+    <item>
+      <title>Blog and Blogosphere</title>
+      <description>An article to know all that you must know about blogs and the blogosphere phenomenon. How people can make (a lot of) money thanks to a blog. How to build a blog. The addresses and the tools. </description>
+      <author>Denis Sureau</author>
+      <link>http://www.xul.fr/blog-blogosphere.html</link>
+      <guid isPermaLink="true">http://www.xul.fr/</guid>
+      <pubDate>Wed, 07 Feb 2007 14:20:24 GMT</pubDate>
+    </item>
+	<item>  
+	<title>Webmaster of the Web 2.0</title>
+      <description>How to reach the top at not expense with a website? Read carefully the articlen the solution is here. </description>
+      <author>Denis Sureau</author>
+      <link>http://www.xul.fr/Web-2.0.html</link>
+      <guid isPermaLink="true">http://www.xul.fr/</guid>
+      <pubDate>Wed, 07 Feb 2007 14:20:24 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

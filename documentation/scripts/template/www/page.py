@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright é 2002-2006, The AROS Development Team. All rights reserved.
+# Copyright © 2002-2006, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os
@@ -9,26 +9,54 @@ from components import *
 
 def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     navigation = Tree \
-    ( [
-        A( _N['home'], href=makeURL( '', lang ) ),
+    ( [	
+	P ( contents = [
+	Img( src = '/images/pointer.png' ),
+	A( _N['home'], href=makeURL( '', lang ))]
+	),
         Tree \
         ( [
-            A( 'English', href='%(BASE)s' ),
-            A( 'Deutsch', href='%(BASE)sde/' ),
-            A( 'Fran&#231;ais', href='%(BASE)sfr/' ),
-            A( 'Italiano', href='%(BASE)sit/' ),
-            A( 'Nederlands', href='%(BASE)snl/' ),
-            A( 'Polski', href='%(BASE)spl/' ),
-            A( 'Portugu&#234;s', href='%(BASE)spt/' ),
-            A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sru/' ),
-            A( 'Suomi', href='%(BASE)sfi/' ),
-            A( 'Svenska', href='%(BASE)ssv/' )
+	    P ( contents = [
+            Img( src = '/images/englishlogo.png' ),
+            A( 'English', href='%(BASE)s' )]),
+	    P ( contents = [
+            Img( src = '/images/germanylogo.png' ),
+            A( 'Deutsch', href='%(BASE)sde/' )]),
+            P ( contents = [
+            Img( src = '/images/francelogo.png' ),
+            A( 'Fran&#231;ais', href='%(BASE)sfr/' )]),
+            P ( contents = [
+            Img( src = '/images/italylogo.png' ),
+            A( 'Italiano', href='%(BASE)sit/' )]),
+            P ( contents = [
+            Img( src = '/images/netherlandslogo.png' ),
+            A( 'Nederlands', href='%(BASE)snl/' )]),
+	    P ( contents = [
+            Img( src = '/images/polandlogo.png' ),
+            A( 'Polski', href='%(BASE)spl/' )]),
+            P ( contents = [
+            Img( src = '/images/portugallogo.png' ),
+            A( 'Portugu&#234;s', href='%(BASE)spt/' )]),
+            P ( contents = [
+            Img( src = '/images/russialogo.png' ),
+            A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sru/' )]),
+	    P ( contents = [
+            Img( src = '/images/finlandlogo.png' ),
+            A( 'Suomi', href='%(BASE)sfi/' )]),
+	    P ( contents = [
+            Img( src = '/images/swedenlogo.png' ),
+            A( 'Svenska', href='%(BASE)ssv/' )])
         ] ),
         BR(),
-        A( _N['news'], href=makeURL( 'news/', lang ) ),
+	P ( contents = [
+        Img( src = '/images/pointer.png' ),	
+        A( _N['news'], href=makeURL( 'news/', lang ) )]),
         Tree ( A( _N['archive'], href=makeURL( 'news/archive/', lang ) ) ),
         BR(),
-        A( _N['introduction'], href=makeURL( 'introduction/', lang ) ),
+	P ( contents = [
+        Img( src = '/images/pointer.png' ),
+        A( _N['introduction'], href=makeURL( 'introduction/', lang ) ) ]),
+	
         Tree \
         ( [
             #A( _N['status'], href=makeURL('introduction/status/everything.html' ),
@@ -37,9 +65,13 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             A( _N['license'], href='%(BASE)slicense.html' )
         ] ),
         BR(),
-        A( _N['download'], href=makeURL( 'download', lang ) ),
+	P ( contents = [
+        Img( src = '/images/pointer.png' ),
+        A(  _N['download'], href=makeURL( 'download', lang ) )]),
         BR(),
-        _N['documentation'],
+	P ( contents = [
+        Img( src = '/images/pointer.png' ),
+        _N['documentation'] ]),
         Tree \
         ( [
             A( _N['users'], href=makeURL( 'documentation/users/', lang ) ),
@@ -69,13 +101,15 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 A( _N['ui-style-guide'], href=makeURL( 'documentation/developers/ui', lang ) ),
                 A( _N['documenting'], href=makeURL( 'documentation/developers/documenting', lang ) ),
                 A( _N['porting'], href=makeURL( 'documentation/developers/porting', lang ) ),
-                A( _N['translating'], href=makeURL( 'documentation/developers/translating', lang ) ),
+                #A( _N['translating'], href=makeURL( 'documentation/developers/translating', lang ) ),
                 A( _N['summaries'], href=makeURL( 'documentation/developers/summaries/', lang ) ),
                 A( _N['links'], href=makeURL( 'documentation/developers/links', lang ) )
             ] )
         ] ),
         BR(),
-        A( _N['contact'], href=makeURL( 'contact', lang ) ),
+	P ( contents = [
+        Img( src = '/images/pointer.png' ),
+        A( _N['contact'], href=makeURL( 'contact', lang ) )]),
         Tree \
         ( [
             A( _N['mailing-lists'], href=makeURL( 'contact', lang, 'mailing-lists' ) ),
@@ -83,37 +117,37 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             A( _N['irc-channels'], href=makeURL( 'contact', lang, 'irc-channels' ) )
         ] ),
         BR(),
-        A( _N['credits'], href=makeURL( 'credits', lang ) ),
-        A( 'Acknowledgements', href=makeURL( 'acknowledgements', lang ) ),
+	P ( contents = [
+        Img( src = '/images/pointer.png' ),
+        A(  _N['credits'], href=makeURL( 'credits', lang ) )]),
+ 	P ( contents = [
+        Img( src = '/images/pointer.png' ),
+        A( 'Acknowledgements', href=makeURL( 'acknowledgements', lang ) )]),
         BR(),
-        _N['pictures'],
+	P ( contents = [
+        Img( src = '/images/pointer.png' ),
+        _N['pictures']]),
         Tree \
         ( [
             A( _N['developers'], href=makeURL( 'pictures/developers/', lang ) ),
             A( _N['developers-together'], href=makeURL( 'pictures/developers-together/', lang ) )
         ] ),
         BR(),
-        A( _N['sponsors'],href=makeURL( 'sponsors', lang ) ),
-        A( _N['linking'], href=makeURL( 'linking', lang ) ),
-        A( _N['links'], href=makeURL( 'links', lang ) )
+	P ( contents = [
+        Img( src = '/images/pointer.png' ),
+        A( _N['sponsors'], href=makeURL( 'sponsors', lang ) )]),
+	P ( contents = [
+        Img( src = '/images/pointer.png' ),
+        A( _N['linking'], href=makeURL( 'linking', lang ) )]),
+	P ( contents = [
+        Img( src = '/images/pointer.png' ),
+        A( _N['links'], href=makeURL( 'links', lang ) )])
     ] )
 
-    counter = Img(
-        src = 'http://www.hepe.com/cgi-bin/wwwcount.cgi?df=aros.dat&dd=C&ft=0'
+    counter = Img( 
+	src = 'http://www.hepe.com/cgi-bin/wwwcount.cgi?df=aros.dat&dd=E&ft=0' 
     )
-
-    menulinks = Tree \
-    ( [
-        'Related Links',
-        Tree \
-        ( [
-            A( 'AROS-Exec', href = 'http://aros-exec.org/' ),
-            A( 'AROS Archives', href = 'http://archives.aros-exec.org/' ),
-            A( 'Team AROS', href = 'http://www.teamaros.org/' ),
-        ] ),
-        BR(),
-    ] )
-
+    
     sponsors = Table\
     ( 
         cellspacing = 5, cellpadding = 0,
@@ -160,18 +194,16 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     )
     
     bar = Table(
-        border = 0, cellpadding = 0, cellspacing = 0, valign = 'top',
+        border = 0, cellpadding = 0, cellspacing = 0, width = 150, valign = 'top',
         contents = [
             TR( 
                 valign = 'top', contents = [
-                    TD( rowspan = 10, width = 10 ),
+                    TD( rowspan = 8, width=15 ),
                     TD()
                 ]
             ),
             TR( valign = 'top', contents = TD( navigation ) ),
             TR( TD(), height=15 ),
-            TR( valign = 'top', contents = TD( align = 'center', contents = menulinks ) ),
-            TR( TD(), height=30 ),
             TR( valign = 'top', contents = TD( align = 'center', contents = counter ) ),
             TR( TD(), height=15 ),
             TR( valign = 'top', contents = TD( align = 'center', contents = sponsors ) ),
@@ -195,12 +227,62 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     )
 
     statsPHP = '''
-        <?php
+        <?php 
             //define("_BBC_PAGE_NAME", "my page title");
             define("_BBCLONE_DIR", "%(ROOT)smybbclone/");
             define("COUNTER", _BBCLONE_DIR."index.php");
             if (file_exists(COUNTER)) include_once(COUNTER);
         ?>
+    '''
+    statsPHP2 = '''
+	<?php echo date("m.d.y");
+	?>
+    '''
+    statsPHP3 = '''
+	<?php
+		echo "<map name=\\"map\\">";
+	      	echo "<area shape=\\"rect\\" coords=\\"11,80,82,95\\" alt=\\"http://www.aros.org\\" href=\\"http://www.aros.org\\">";
+      		echo "<area shape=\\"rect\\" coords=\\"87,78,165,95\\" alt=\\"AROS-Exec\\" href=\\"http://www.aros-exec.org\\">";
+      		echo "<area shape=\\"rect\\" coords=\\"244,77,323,95166,77,240,95\\" alt=\\"Team AROS\\" href=\\"http://www.teamaros.org\\">";
+      		echo "<area shape=\\"rect\\" coords=\\"166,77,240,95\\" alt=\\"AROS-Exec Archives\\" href=\\"http://archives.aros-exec.org\\">";
+	      	echo "</map>"; 
+	?>
+    '''
+    statsPHP4 = '''
+	<?php
+		echo "<table width=\\"100%%\\"><tr><td>";
+		echo "<div style=\\"text-align: right;\\">";
+		echo "<font color=\\"#aaaaaa\\">";		
+	?>
+    '''
+    statsPHP6 = '''
+	<?php
+		echo "</font></div>";
+		echo "</p></tr></td></table>";
+	?>
+    '''
+    statsPHP5= '''
+	<?php
+		include($_SERVER['DOCUMENT_ROOT'].'/rsfeed/browserdetect.php'); 
+		$win_ie56 = (browser_detection('browser') == 'ie' ) &&
+
+  		(browser_detection('number') >= 5 ) &&
+
+            	(browser_detection('number') < 7  );
+	if ($win_ie56) { 
+
+	echo \"<img src=\\"/images/kittymascot.gif\\"  
+        style=\\"float:right\\" border=\\"0\\"></img><img 
+        src=\\"/images/toplogomenu.gif\\" border=\\"0\\" 
+        usemap=\\"#map\\"></img>";
+
+        }
+        else {
+        echo \"<img src=\\"/images/kittymascot.png\\"  
+        style=\\"float:right\\" 
+        border=\\"0\\"></img><img src=\\"/images/toplogomenu.png\\" 
+        border=\\"0\\" usemap=\\"#map\\"></img>";
+        } ?>
     '''
     page = HTML( [
         Head( [
@@ -209,152 +291,64 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             Link( href = '%(ROOT)saros.css', type = 'text/css', rel = 'stylesheet' ),
             Meta(
                 name    = 'keywords',
-                content = 'AROS, AmigaOS, OS, operating system, research, open source, portage'
+                content = 'AROS, OS, operating system, research, open source, portage'
             )
         ] ),
         Body( 
             style = 'margin: 0px;',
             bgcolor = '#ffffff', contents = [
+		statsPHP3,
                 Table(
                     border = 0, cellspacing = 0, cellpadding = 0, 
-                    width = '100%%', height = '100%%', contents = [
+                    width = '100%%', contents = [
                         TR( [
                             TD( 
-                                valign = 'top', width = 184, rowspan = 4,
-                                contents = Img(
-                                    width = 184, height = 190,
-                                    src = '%(ROOT)simages/kitty_1.png'
-                                )
-                            ),
-                            TD(
-                                valign = 'top', width = 65, rowspan = 4,
-                                contents = Img(
-                                    width = 65, height = 190,
-                                    src = '%(ROOT)simages/kitty_2.png'
-                                )
-                            ),
-                            TD(
-                                valign = 'top', width = 53, rowspan = 4,
-                                contents = Img(
-                                    width = 53, height = 190,
-                                    src = '%(ROOT)simages/kitty_3.png'
-                                )
-                            ),
-                            TD(
-                                valign = 'top', align = 'left', width = 344, 
-                                background = '%(ROOT)simages/dark_bg.png',
-                                contents = Img(
-                                    width = 344, height = 81,
-                                    src = '%(ROOT)simages/aros.png'
-                                )
-                            ),
-                            TD(
-                                valign = 'top', align = 'right', width = '100%%',
-                                background = '%(ROOT)simages/dark_bg.png',
-                                #contents = Table(
-                                #    border = 0, cellpadding = 0, cellspacing = 2,
-                                #    contents = [
-                                #        TR( 
-                                #            TD( Font( size = '-2', color = '#ffffff', contents = B( _T['mirrors'] ) ) )
-                                #        ),
-                                #        TR(
-                                #            TD( MIRRORS_DATA )
-                                #        )
-                                #    ]
-                                #)
-                                contents = Img(
-                                    width = '100%%', height = 1,
-                                    src = '%(ROOT)simages/spacer.gif'
-                                )
-                            )
+                                halign = 'top', width = '100%%', height = 109, background='/images/backgroundtop.png' ,rowspan = 4,
+                                contents = statsPHP5)
+
+#				Map(name = 'map')[,
+#				Area(shape ='rect', coords='5,84,87,104', alt = 'AROS.org', href="http://www.aros.org"),
+#				Area(shape ='rect', coords='96,83,177,104', alt = 'AROS-Exec', href="http://www.aros-exec.org"),
+#				Area(shape ='rect', coords='183,84,263,104', alt = 'Team AROS', href="http://www.teamaros.org"),
+#				Area(shape ='rect', coords='271,82,353,104', alt = 'AROS-Exec Archives', href="http://archives.aros-exec.org") ],
+                            
                         ] ),
+			
                         TR(
+        	    Table(
+		    border = 0, cellspacing = 0, cellpadding = 0, 
+                    width = '100%%', contents = [
+   			TR( contents = [
                             TD(
-                                background = '%(ROOT)simages/dark_bg.png',
-                                align = 'center', colspan = 2, contents = Img(
-                                    width = 367, height = 36,
-                                    src = '%(ROOT)simages/aros_text.png'
+                               width = 171, border= 0, cellpadding="1", 
+				cellspacing="1", contents = [ bar ]
                                 )
-                            )
-                        ),
+                           ,
+                            TD( border= 0, width="100%%", cellpadding="1", cellspacing="1", 
+                                contents =  '%(CONTENT)s' 
+                            ),
+                        ]),
+                        ] )), 
                         TR( [
+                           
                             TD(
-                                background = '%(ROOT)simages/horizontal_border.png',
-                                width = 344, contents = Img(
-                                    width = 344, height = 33,
-                                    src = '%(ROOT)simages/h_arc.png'
-                                )
-                            ),
-                            TD( background = '%(ROOT)simages/horizontal_border.png' )
-                        ] ),
-                        TR( 
-                            TD(
-                                width = 1, height = 40, colspan = 2,
-                                bgcolor = '#ffffff', contents = Font(
-                                    size = '-1', color = '#aaaaaa',
-                                    contents = Img(
-                                        width = '100%%', height = 40,
-                                        src = '%(ROOT)simages/spacer.gif'
-                                    )
-                                )
-                            )
-                        ),
-                        TR( [
-                            TD(
-                                rowspan = 2, valign = 'top', width = 184,
-                                height = '100%%',
-                                background = '%(ROOT)simages/bright_bg.png',
-                                style = 'width: 184px; height: 100%%',
-                                contents = [ bar ]
-                            ),
-                            TD(
-                                background = '%(ROOT)simages/vertical_border.png',
-                                width = 65, height = 393, contents = Img(
-                                    width = 65, height = 393, 
-                                    src = '%(ROOT)simages/v_arc.png'
-                                )
-                            ),
-                            TD(
-                                colspan = 3, rowspan = 1, valign = 'top',
-                                height = '100%%',
-                                contents = [
-                                    Img(
-                                        width = '100%%', height = 1,
-                                        src = '%(ROOT)simages/spacer.gif'
-                                    ),
-                                    BR(),
-                                    Table(
-                                        border = 0, cellspacing = 0, 
-                                        cellpadding = 0, width = '100%%',
-                                        bgcolor = '#ffffff',
-                                        contents = TR( TD( '%(CONTENT)s' ) )
-                                    )
-                                ]
-                            )
-                        ] ),
-                        TR( [
-                            TD(
-                                width = 65, height = '100%%', style = 'height: 100%%',
-                                background = '%(ROOT)simages/vertical_border.png',
-                                contents = Img(
-                                    width = 1, height = '100%%',
-                                    src = '%(ROOT)simages/spacer.gif'
-                                )
-                            ),
-                            TD(
-                                colspan = 3, valign = 'bottom', align = 'center',
+                                width = '100%%', colspan = 3, valign = 'bottom', align = 'center',
                                 contents = Font(
                                     size = '-1', color = '#aaaaaa',
                                     contents = [
                                         BR(),
+					statsPHP4,
                                         _M['copyright'],
                                         BR(),
                                         _M['trademarks'],
-                                        BR(), BR()
+					statsPHP6,
+                                        BR(),
+                                        BR()
                                     ]
                                 )
                             )                                
-                        ] )
+                        
+			] )
                     ]
                 ),
                 statsPHP
