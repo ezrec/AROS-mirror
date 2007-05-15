@@ -1,0 +1,61 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-05-15
+
+New name, new site
+------------------
+
+Welcome the the new AROS.org website! AROS has a new official 
+name and a new face on the Internet. From now on, AROS simply 
+means "AROS Research Operating System". If you're running a fan 
+site, a mailing list or so about AROS, please update them to the 
+new denomination.
+
+During this first half of 2007, AROS has greatly increased its 
+features, and even if it isn't ready yet for a "1.0" release, it 
+is far more useable today than it was a year ago. We made decisions 
+and improvements over the original project, that gave AROS its own 
+identity. In the meanwhile, recent events that involved Amiga Inc 
+suggested us it was a good time for a name change.
+
+In a few words: AROS is stronger now, because even if the goals
+of the project remain the same, we can concentrate more efforts 
+on itself.
+
+Latest news
+-----------
+
+Michal Schulz has completed UHCI and OHCI USB supports, this means
+AROS should now support USB almost on every computer. At this stage, 
+only mice and keyboards are supported, but other devices are on the 
+works.
+
+Thanks to Nic Andrews, Wanderer can now show files by icons. He also 
+added scalable wallpapers to the desktop and keyboard navigation in 
+windows.
+
+Robert Norris added write support to FAT filesystem in AROS. 
+Mounting Windows partitions is still little tricky, but it works 
+almost as expected. Please don't try it yet on important datas.
+
+AROS on the web
+---------------
+
+Paul J. Beel has published lots of interesting interviews about AROS 
+and other lovely subjects. Please don't miss `Nic Andrews`__ and 
+DiscreetFX `Bill Panagouleas`__ ones on `The AROS Show`__
+
+Please look also at Amigamia's new community portal `AROSWorld`__ 
+and, if you like, you may buy one of those lovely shirts, mugs and 
+gadget with kitty. Part of your money will be spent to help 
+development.
+
+New site design or AROS.org has been made by Tom Richards.
+
+__ http://arosshow.blogspot.com/2007/05/nick-kalamatee-andrews-interview-hello.html
+__ http://arosshow.blogspot.com/2007/05/bill-panagouleas-interview-what-is.html
+__ http://arosshow.blogspot.com
+__ http://www.arosworld.org
