@@ -317,7 +317,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                         TR(
         	    Table(
 		    border = 0, cellspacing = 0, cellpadding = 0, 
-                    width = '171', contents = [
+                    width = '100%%', contents = [
    			TR( contents = [
                             TD(
                                width = 171, border= 0, cellpadding="2", 
