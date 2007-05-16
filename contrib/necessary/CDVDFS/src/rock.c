@@ -290,6 +290,7 @@ int Is_A_Symbolic_Link(VOLUME *p_volume, directory_record *p_dir, unsigned long 
 
 	if (!Get_System_Use_Field(p_volume,p_dir,"PX",(char *)&px,sizeof(px),0))
 		return 0;
+/* FIXME: A problem was reported, some file become unreadable. This a quick solution to the problem.
 	*amiga_mode = 0;
 	if (!(px.mode & S_IWUSR))
 		*amiga_mode |= FIBF_DELETE|FIBF_WRITE;
@@ -308,7 +309,7 @@ int Is_A_Symbolic_Link(VOLUME *p_volume, directory_record *p_dir, unsigned long 
 	if (px.mode & S_IXOTH)
 		*amiga_mode |= FIBF_OTR_EXECUTE;
 	if (px.mode & S_IROTH)
-		*amiga_mode |= FIBF_OTR_READ;
+		*amiga_mode |= FIBF_OTR_READ;*/
 
 	/*
 		0120000 is the POSIX code for symbolic links:
