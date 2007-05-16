@@ -15,7 +15,7 @@ site, a mailing list or so about AROS, please update them to the
 new denomination.
 
 During this first half of 2007, AROS has greatly increased its 
-features, and even if it isn't ready yet for a "1.0" release, it 
+features, and though it isn't ready yet for a "1.0" release, it 
 is far more useable today than it was a year ago. We made decisions 
 and improvements over the original project, that gave AROS its own 
 identity. In the meanwhile, recent events that involved Amiga Inc 
@@ -33,13 +33,13 @@ AROS should now support USB almost on every computer. At this stage,
 only mice and keyboards are supported, but other devices are on the 
 works.
 
-Thanks to Nic Andrews, Wanderer can now show files by icons. He also 
-added scalable wallpapers to the desktop and keyboard navigation in 
-windows.
+Thanks to Nic Andrews, Wanderer has now option to show files by icons
+instead of showing all files by default. He also added scalable wallpapers 
+to the desktop and keyboard navigation in windows.
 
 Robert Norris added write support to FAT filesystem in AROS. 
 Mounting Windows partitions is still little tricky, but it works 
-almost as expected. Please don't try it yet on important datas.
+almost as expected. Please don't try it yet on important data.
 
 AROS on the web
 ---------------
@@ -50,7 +50,7 @@ DiscreetFX `Bill Panagouleas`__ ones on `The AROS Show`__
 
 Please look also at Amigamia's new community portal `AROSWorld`__ 
 and, if you like, you may buy one of those lovely shirts, mugs and 
-gadget with kitty. Part of your money will be spent to help 
+gadget with Kitty. Part of your money will be spent to help 
 development.
 
 New site design or AROS.org has been made by Tom Richards.
