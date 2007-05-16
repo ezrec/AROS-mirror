@@ -194,7 +194,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     )
     
     bar = Table(
-        border = 0, cellpadding = 0, cellspacing = 0, width = 150, valign = 'top',
+        border = 0, cellpadding = 2, cellspacing = 2, width = 171, valign = 'top',
         contents = [
             TR( 
                 valign = 'top', contents = [
@@ -317,11 +317,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                         TR(
         	    Table(
 		    border = 0, cellspacing = 0, cellpadding = 0, 
-                    width = '100%%', contents = [
+                    width = '171', contents = [
    			TR( contents = [
                             TD(
-                               width = 171, border= 0, cellpadding="1", 
-				cellspacing="1", contents = [ bar ]
+                               width = 171, border= 0, cellpadding="2", 
+				cellspacing="2", contents = [ bar ]
                                 )
                            ,
                             TD( border= 0, width="100%%", cellpadding="1", cellspacing="1", 
