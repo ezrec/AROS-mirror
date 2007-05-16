@@ -345,7 +345,10 @@ int Get_Startup(struct FileSysStartupMsg *fssm) {
 			    Display_Error ("Out of memory");
 			} else
 			  result = TRUE;
+			BUG(dbprintf("Use RockRidge: %ld\n", global->g_use_rock_ridge);)
 			BUG(dbprintf("Use joliet: %ld\n", global->g_use_joliet);)
+			BUG(dbprintf("Force lowercase: %ld\n", global->g_map_to_lowercase);)
+			BUG(dbprintf("Allow lowercase: %ld\n", global->g_maybe_map_to_lowercase);)
 			BUG(dbprintf("Unicode table: %s\n", global->g_unicodetable_name);)
 		}
 	}

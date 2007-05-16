@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 15-May-07 sonic     Show_CDDA_Icon() behaves better if called twice
  * 08-Apr-07 sonic     Removed DEBUG definition
  * 31-Mar-03 sonic     - fixed warnings
  * 07-Jul-02 sheutlin  various changes when porting to AROS
@@ -240,12 +241,13 @@ void Show_CDDA_Icon (void) {
 
 	if (!IconBase || !WorkbenchBase)
 		return;
+	if (global->g_app_icon) {
+		Display_Error("Show_CDDA_Icon called twice!");
+		return;
+	}
 
 	global->g_user_disk_object->do_CurrentX = global->g_xpos;
 	global->g_user_disk_object->do_CurrentY = global->g_ypos;
-
-	if (global->g_app_icon)
-		Display_Error("Show_CDDA_Icon called twice!");
 
 	global->g_app_port = CreateMsgPort ();
 	if (!global->g_app_port)

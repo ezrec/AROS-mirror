@@ -5,9 +5,11 @@
 #include <exec/errors.h>
 #include <exec/memory.h>
 #include <exec/resident.h>
+#include <stddef.h>
 
 #include "acdrbase.h"
 #include "cdrom.h"
+#include "device.h"
 #include "devsupp.h"
 
 #include LC_LIBDEFS_FILE

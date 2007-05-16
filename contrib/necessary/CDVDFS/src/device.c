@@ -12,6 +12,7 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 15-May-07 sonic     - Fixed CDDA handling
  * 06-May-07 sonic     - Added support for protection bits and file comments
  *                     - Fixed memory trashing when file name length is greater than AmigaOS
  *                       can accept
@@ -188,7 +189,7 @@ struct Globals *global=&glob;
 
 void Remove_Seglist (void);
 
-char __version__[] = "\0$VER: CDVDFS 1.2 (06-May-2007)";
+char __version__[] = "\0$VER: CDVDFS 1.3 (15-May-2007)";
 
 LONG SAVEDS Main(void)
 {
@@ -1323,8 +1324,10 @@ void Mount (void)
 {
   char buf[33];
 
-  if (Has_Audio_Tracks (global->g_cd))
+  if (Has_Audio_Tracks (global->g_cd)) {
     Show_CDDA_Icon ();
+    global->g_cd->t_changeint2 = global->g_cd->t_changeint;
+  }
 
   global->g_volume = Open_Volume (global->g_cd, global->g_use_rock_ridge, global->g_use_joliet);
   if (!global->g_volume) {
@@ -1415,8 +1418,6 @@ void Unmount (void)
   global->g_cd->t_changeint2 = global->g_cd->t_changeint;
   Hide_CDDA_Icon ();
 
-  Forbid ();
-
   if (global->DevList) {
 
     BUG(dbprintf("***unmounting*** ");)
@@ -1449,8 +1450,6 @@ void Unmount (void)
    * zero, so the next device access will reload and
    * restart the handler code.
    */
-
-  Permit();
 }
 
 /*
@@ -1468,8 +1467,7 @@ int Mount_Check (void)
     * the first SCSI command after inserting a new disk is
     * always rejected.
     */
-    if (Test_Unit_Ready (global->g_cd) ||
-        Test_Unit_Ready (global->g_cd)) {
+    if (Test_Unit_Ready (global->g_cd)) {
       global->g_disk_inserted = TRUE;
       Mount ();
     } else {
@@ -1570,7 +1568,7 @@ int i;
 ULONG l1, l2;
 
 	BUG(dbprintf ("Checking Disk... ");)
-	i = (Test_Unit_Ready (global->g_cd) || Test_Unit_Ready (global->g_cd));
+	i = Test_Unit_Ready (global->g_cd);
 	l1 = global->g_cd->t_changeint;
 	l2 = global->g_cd->t_changeint2;
 	BUG(if (l1==l2 && i) dbprintf ("no disk change (T %ld)", l1);)
@@ -1590,8 +1588,7 @@ ULONG l1, l2;
 		global->g_disk_inserted = FALSE;
 		BUG(dbprintf ("disk has been removed (T %ld)", l1);)
 		global->playing = FALSE;
-		if (global->DevList)
-			Unmount ();
+		Unmount ();
 		global->g_cd->t_changeint2 = global->g_cd->t_changeint;
 	}
 	BUG(dbprintf ("\n");)
