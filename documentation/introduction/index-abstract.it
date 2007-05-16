@@ -4,6 +4,6 @@
 
 .. raw:: html
 
-  <?php include_once('/home/groups/a/ar/aros/htdocs/rsfeed/randimg.php'); random_image("/images/thubs/","100","76");  ?>
+  <?php include('/home/groups/a/ar/aros/htdocs/rsfeed/randimg.php'); random_image("/images/thubs/","100","76");  ?>
 
 AROS Research Operating System è un sistema operativo per il desktop efficiente, leggero e facile da usare, pensato per rendere produttivo e piacevole l'uso del computer. È un progetto indipendente, libero e indipendente dalla piattaforma, pensato per essere compatibile con AmigaOS 3.1 a livello di API (un po' come Wine, ma non come UAE), ma dotato di caratteristiche più avanzate. Il codice sorgente è distribuito con una licenza open source, che permette a chiunque di migliorarlo come crede. 
