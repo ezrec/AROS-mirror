@@ -1,4 +1,5 @@
 .. raw:: html
+
     <h1>¬ведение<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"></h1>
   
 .. raw:: html
