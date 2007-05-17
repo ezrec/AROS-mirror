@@ -13,7 +13,7 @@
 
 .. raw:: html
 
-   <h1>Введение<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"></h1>
+   <img style="width: 238px; height: 2px;" alt="spacer" src="/home/groups/a/ar/aros/htdocs/images/sidespacer.png">
 
 
 Цели проекта
