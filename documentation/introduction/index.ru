@@ -15,7 +15,7 @@
 
 .. Include:: index-abstract.ru
 
-.. 
+
 Цели проекта
 ============
 

@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2002-2006, The AROS Development Team. All rights reserved.
+# Copyright é 2002-2006, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os
@@ -9,17 +9,17 @@ from components import *
 
 def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     navigation = Tree \
-    ( [	
-	P ( contents = [
-	Img( src = '/images/pointer.png' ),
-	A( _N['home'], href=makeURL( '', lang ))]
-	),
+    ( [    
+    P ( contents = [
+    Img( src = '/images/pointer.png' ),
+    A( _N['home'], href=makeURL( '', lang ))]
+    ),
         Tree \
         ( [
-	    P ( contents = [
+        P ( contents = [
             Img( src = '/images/englishlogo.png' ),
             A( 'English', href='%(BASE)s' )]),
-	    P ( contents = [
+        P ( contents = [
             Img( src = '/images/germanylogo.png' ),
             A( 'Deutsch', href='%(BASE)sde/' )]),
             P ( contents = [
@@ -31,7 +31,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             P ( contents = [
             Img( src = '/images/netherlandslogo.png' ),
             A( 'Nederlands', href='%(BASE)snl/' )]),
-	    P ( contents = [
+        P ( contents = [
             Img( src = '/images/polandlogo.png' ),
             A( 'Polski', href='%(BASE)spl/' )]),
             P ( contents = [
@@ -40,23 +40,23 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             P ( contents = [
             Img( src = '/images/russialogo.png' ),
             A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sru/' )]),
-	    P ( contents = [
+        P ( contents = [
             Img( src = '/images/finlandlogo.png' ),
             A( 'Suomi', href='%(BASE)sfi/' )]),
-	    P ( contents = [
+        P ( contents = [
             Img( src = '/images/swedenlogo.png' ),
             A( 'Svenska', href='%(BASE)ssv/' )])
         ] ),
         BR(),
-	P ( contents = [
-        Img( src = '/images/pointer.png' ),	
+    P ( contents = [
+        Img( src = '/images/pointer.png' ),    
         A( _N['news'], href=makeURL( 'news/', lang ) )]),
         Tree ( A( _N['archive'], href=makeURL( 'news/archive/', lang ) ) ),
         BR(),
-	P ( contents = [
+    P ( contents = [
         Img( src = '/images/pointer.png' ),
         A( _N['introduction'], href=makeURL( 'introduction/', lang ) ) ]),
-	
+    
         Tree \
         ( [
             #A( _N['status'], href=makeURL('introduction/status/everything.html' ),
@@ -65,11 +65,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             A( _N['license'], href='%(BASE)slicense.html' )
         ] ),
         BR(),
-	P ( contents = [
+    P ( contents = [
         Img( src = '/images/pointer.png' ),
         A(  _N['download'], href=makeURL( 'download', lang ) )]),
         BR(),
-	P ( contents = [
+    P ( contents = [
         Img( src = '/images/pointer.png' ),
         _N['documentation'] ]),
         Tree \
@@ -101,13 +101,13 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 A( _N['ui-style-guide'], href=makeURL( 'documentation/developers/ui', lang ) ),
                 A( _N['documenting'], href=makeURL( 'documentation/developers/documenting', lang ) ),
                 A( _N['porting'], href=makeURL( 'documentation/developers/porting', lang ) ),
-                #A( _N['translating'], href=makeURL( 'documentation/developers/translating', lang ) ),
+                A( _N['translating'], href=makeURL( 'documentation/developers/translating', lang ) ),
                 A( _N['summaries'], href=makeURL( 'documentation/developers/summaries/', lang ) ),
                 A( _N['links'], href=makeURL( 'documentation/developers/links', lang ) )
             ] )
         ] ),
         BR(),
-	P ( contents = [
+    P ( contents = [
         Img( src = '/images/pointer.png' ),
         A( _N['contact'], href=makeURL( 'contact', lang ) )]),
         Tree \
@@ -117,14 +117,14 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             A( _N['irc-channels'], href=makeURL( 'contact', lang, 'irc-channels' ) )
         ] ),
         BR(),
-	P ( contents = [
+    P ( contents = [
         Img( src = '/images/pointer.png' ),
         A(  _N['credits'], href=makeURL( 'credits', lang ) )]),
- 	P ( contents = [
+     P ( contents = [
         Img( src = '/images/pointer.png' ),
         A( 'Acknowledgements', href=makeURL( 'acknowledgements', lang ) )]),
         BR(),
-	P ( contents = [
+    P ( contents = [
         Img( src = '/images/pointer.png' ),
         _N['pictures']]),
         Tree \
@@ -133,19 +133,19 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             A( _N['developers-together'], href=makeURL( 'pictures/developers-together/', lang ) )
         ] ),
         BR(),
-	P ( contents = [
+    P ( contents = [
         Img( src = '/images/pointer.png' ),
         A( _N['sponsors'], href=makeURL( 'sponsors', lang ) )]),
-	P ( contents = [
+    P ( contents = [
         Img( src = '/images/pointer.png' ),
         A( _N['linking'], href=makeURL( 'linking', lang ) )]),
-	P ( contents = [
+    P ( contents = [
         Img( src = '/images/pointer.png' ),
         A( _N['links'], href=makeURL( 'links', lang ) )])
     ] )
 
     counter = Img( 
-	src = 'http://www.hepe.com/cgi-bin/wwwcount.cgi?df=aros.dat&dd=E&ft=0' 
+    src = 'http://www.hepe.com/cgi-bin/wwwcount.cgi?df=aros.dat&dd=E&ft=0' 
     )
     
     sponsors = Table\
@@ -235,43 +235,43 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         ?>
     '''
     statsPHP2 = '''
-	<?php echo date("m.d.y");
-	?>
+    <?php echo date("m.d.y");
+    ?>
     '''
     statsPHP3 = '''
-	<?php
-		echo "<map name=\\"map\\">";
-	      	echo "<area shape=\\"rect\\" coords=\\"11,80,82,95\\" alt=\\"http://www.aros.org\\" href=\\"http://www.aros.org\\">";
-      		echo "<area shape=\\"rect\\" coords=\\"87,78,165,95\\" alt=\\"AROS-Exec\\" href=\\"http://www.aros-exec.org\\">";
-      		echo "<area shape=\\"rect\\" coords=\\"244,77,323,95166,77,240,95\\" alt=\\"Team AROS\\" href=\\"http://www.teamaros.org\\">";
-      		echo "<area shape=\\"rect\\" coords=\\"166,77,240,95\\" alt=\\"AROS-Exec Archives\\" href=\\"http://archives.aros-exec.org\\">";
-	      	echo "</map>"; 
-	?>
+    <?php
+        echo "<map name=\\"map\\">";
+              echo "<area shape=\\"rect\\" coords=\\"11,80,82,95\\" alt=\\"http://www.aros.org\\" href=\\"http://www.aros.org\\">";
+              echo "<area shape=\\"rect\\" coords=\\"87,78,165,95\\" alt=\\"AROS-Exec\\" href=\\"http://www.aros-exec.org\\">";
+              echo "<area shape=\\"rect\\" coords=\\"244,77,323,95166,77,240,95\\" alt=\\"Team AROS\\" href=\\"http://www.teamaros.org\\">";
+              echo "<area shape=\\"rect\\" coords=\\"166,77,240,95\\" alt=\\"AROS-Exec Archives\\" href=\\"http://archives.aros-exec.org\\">";
+              echo "</map>"; 
+    ?>
     '''
     statsPHP4 = '''
-	<?php
-		echo "<table width=\\"100%%\\"><tr><td>";
-		echo "<div style=\\"text-align: right;\\">";
-		echo "<font color=\\"#aaaaaa\\">";		
-	?>
+    <?php
+        echo "<table width=\\"100%%\\"><tr><td>";
+        echo "<div style=\\"text-align: right;\\">";
+        echo "<font color=\\"#aaaaaa\\">";        
+    ?>
     '''
     statsPHP6 = '''
-	<?php
-		echo "</font></div>";
-		echo "</p></tr></td></table>";
-	?>
+    <?php
+        echo "</font></div>";
+        echo "</p></tr></td></table>";
+    ?>
     '''
     statsPHP5= '''
-	<?php
-		include( '/home/groups/a/ar/aros/htdocs/rsfeed/browserdetect.php'); 
-		$win_ie56 = (browser_detection('browser') == 'ie' ) &&
+    <?php
+        include( '/home/groups/a/ar/aros/htdocs/rsfeed/browserdetect.php'); 
+        $win_ie56 = (browser_detection('browser') == 'ie' ) &&
 
-  		(browser_detection('number') >= 5 ) &&
+          (browser_detection('number') >= 5 ) &&
 
-            	(browser_detection('number') < 7  );
-	if ($win_ie56) { 
+                (browser_detection('number') < 7  );
+    if ($win_ie56) { 
 
-	echo \"<img src=\\"/images/kittymascot.gif\\"  
+    echo \"<img src=\\"/images/kittymascot.gif\\"  
         style=\\"float:right\\" border=\\"0\\"></img><img 
         src=\\"/images/toplogomenu.gif\\" border=\\"0\\" 
         usemap=\\"#map\\"></img>";
@@ -297,7 +297,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         Body( 
             style = 'margin: 0px;',
             bgcolor = '#ffffff', contents = [
-		statsPHP3,
+        statsPHP3,
                 Table(
                     border = 0, cellspacing = 0, cellpadding = 0, 
                     width = '100%%', contents = [
@@ -306,22 +306,22 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                                 halign = 'top', width = '100%%', height = 109, background='/images/backgroundtop.png' ,rowspan = 4,
                                 contents = statsPHP5)
 
-#				Map(name = 'map')[,
-#				Area(shape ='rect', coords='5,84,87,104', alt = 'AROS.org', href="http://www.aros.org"),
-#				Area(shape ='rect', coords='96,83,177,104', alt = 'AROS-Exec', href="http://www.aros-exec.org"),
-#				Area(shape ='rect', coords='183,84,263,104', alt = 'Team AROS', href="http://www.teamaros.org"),
-#				Area(shape ='rect', coords='271,82,353,104', alt = 'AROS-Exec Archives', href="http://archives.aros-exec.org") ],
+#                Map(name = 'map')[,
+#                Area(shape ='rect', coords='5,84,87,104', alt = 'AROS.org', href="http://www.aros.org"),
+#                Area(shape ='rect', coords='96,83,177,104', alt = 'AROS-Exec', href="http://www.aros-exec.org"),
+#                Area(shape ='rect', coords='183,84,263,104', alt = 'Team AROS', href="http://www.teamaros.org"),
+#                Area(shape ='rect', coords='271,82,353,104', alt = 'AROS-Exec Archives', href="http://archives.aros-exec.org") ],
                             
                         ] ),
-			
+            
                         TR(
-        	    Table(
-		    border = 0, cellspacing = 0, cellpadding = 0, 
+                Table(
+            border = 0, cellspacing = 0, cellpadding = 0, 
                     width = '100%%', contents = [
-   			TR( contents = [
+               TR( contents = [
                             TD(
                                width = 171, border= 0, cellpadding="2", 
-				cellspacing="2", contents = [ bar ]
+                cellspacing="2", contents = [ bar ]
                                 )
                            ,
                             TD( border= 0, width="100%%", cellpadding="1", cellspacing="1", 
@@ -337,18 +337,18 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                                     size = '-1', color = '#aaaaaa',
                                     contents = [
                                         BR(),
-					statsPHP4,
+                    statsPHP4,
                                         _M['copyright'],
                                         BR(),
                                         _M['trademarks'],
-					statsPHP6,
+                    statsPHP6,
                                         BR(),
                                         BR()
                                     ]
                                 )
                             )                                
                         
-			] )
+            ] )
                     ]
                 ),
                 statsPHP
