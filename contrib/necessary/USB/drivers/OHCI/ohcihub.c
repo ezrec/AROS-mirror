@@ -107,8 +107,11 @@ BOOL METHOD(OHCI, Hidd_USBHub, PortReset)
         if ((mmio(ohci->regs->HcRhPortStatus[msg->portNummer-1]) & UPS_RESET) == 0)
             break;
     }
+    
     if (i == 5)
         return FALSE;
+
+    mmio(ohci->regs->HcRhPortStatus[msg->portNummer-1]) = UPS_C_PORT_RESET << 16;
     
     return TRUE;
 }
