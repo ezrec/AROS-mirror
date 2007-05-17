@@ -9,13 +9,13 @@
 :Status:    Almost finished, I think...
 
 
-.. Include:: index-abstract.ru
-
 .. raw:: html
 
-   <img style="width: 238px; height: 2px;" alt="spacer" src="/home/groups/a/ar/aros/htdocs/images/sidespacer.png">
+   <img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png">
 
+.. Include:: index-abstract.ru
 
+.. 
 Цели проекта
 ============
 
