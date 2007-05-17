@@ -1,6 +1,7 @@
+
 .. raw:: html
 
-<table style="text-align: left; width: 100%;" background="images/bgcolormain.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
+   <table style="text-align: left; width: 100%;" background="images/bgcolormain.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
    
 .. Include:: introduction/index-abstract.ru
 
