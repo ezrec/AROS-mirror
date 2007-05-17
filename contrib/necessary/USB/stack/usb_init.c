@@ -62,6 +62,7 @@ static int USB_Init(LIBBASETYPEPTR LIBBASE)
     NEWLIST(&LIBBASE->sd.driverList);
     NEWLIST(&LIBBASE->sd.extClassList);
     InitSemaphore(&LIBBASE->sd.global_lock);
+    InitSemaphore(&LIBBASE->sd.driverListLock);
 
     if (OOP_ObtainAttrBases(attrbases))
     {

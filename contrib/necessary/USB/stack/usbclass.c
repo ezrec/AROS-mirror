@@ -81,12 +81,13 @@ BOOL METHOD(USB, Hidd_USB, AttachDriver)
 
     if (msg->driverObject)
     {	
-        struct usb_driver *drv = AllocPooled(SD(cl)->MemPool, sizeof(struct usb_driver));
+        usb_driver_t *drv = AllocPooled(SD(cl)->MemPool, sizeof(struct usb_driver));
 
         if (drv)
         {
             int i;
             drv->d_Driver = msg->driverObject;
+            InitSemaphore(&drv->d_Lock);
 
             for (i=0; i < (BITMAP_SIZE/32); i++) {
                 drv->bitmap[i] = 0;
@@ -94,9 +95,9 @@ BOOL METHOD(USB, Hidd_USB, AttachDriver)
             setBitmap(drv->bitmap, 0);
             setBitmap(drv->bitmap, 1);
 
-            ObtainSemaphore(&SD(cl)->global_lock);
+            ObtainSemaphore(&SD(cl)->driverListLock);
             AddTail(&SD(cl)->driverList, &drv->d_Node);
-            ReleaseSemaphore(&SD(cl)->global_lock);    
+            ReleaseSemaphore(&SD(cl)->driverListLock);    
             
             HIDD_USBHub_OnOff(drv->d_Driver, TRUE);
 
@@ -150,16 +151,20 @@ uint8_t METHOD(USB, Hidd_USB, AllocAddress)
     struct usb_driver *drv = NULL;
     uint8_t addr = 0;
 
-    ObtainSemaphore(&SD(cl)->global_lock);
+    ObtainSemaphore(&SD(cl)->driverListLock);
     ForeachNode(&SD(cl)->driverList, drv)
     {
         if (drv->d_Driver == msg->driverObject)
             break;
     }
-    ReleaseSemaphore(&SD(cl)->global_lock);
+    ReleaseSemaphore(&SD(cl)->driverListLock);
 
     if (drv)
+    {
+        ObtainSemaphore(&drv->d_Lock);
         addr = allocBitmap(drv->bitmap);
+        ReleaseSemaphore(&drv->d_Lock);
+    }
 
     return addr;
 }
@@ -168,16 +173,20 @@ void METHOD(USB, Hidd_USB, FreeAddress)
 {
     struct usb_driver *drv = NULL;
 
-    ObtainSemaphore(&SD(cl)->global_lock);
+    ObtainSemaphore(&SD(cl)->driverListLock);
     ForeachNode(&SD(cl)->driverList, drv)
     {
         if (drv->d_Driver == msg->driverObject)
             break;
     }
-    ReleaseSemaphore(&SD(cl)->global_lock);    
+    ReleaseSemaphore(&SD(cl)->driverListLock);    
 
     if (drv)
+    {
+        ObtainSemaphore(&drv->d_Lock);
         freeBitmap(drv->bitmap, msg->address);
+        ReleaseSemaphore(&drv->d_Lock);
+    }
 }
 
 OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
@@ -205,6 +214,16 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
     if (bus)
     {
         struct usb_ExtClass *ec;
+        struct usb_driver *drv = NULL;
+
+        ObtainSemaphore(&SD(cl)->driverListLock);
+        ForeachNode(&SD(cl)->driverList, drv)
+        {
+            if (drv->d_Driver == bus)
+                break;
+        }
+        ReleaseSemaphore(&SD(cl)->driverListLock);   
+        ObtainSemaphore(&drv->d_Lock);
         
         pipe = HIDD_USBDrv_CreatePipe(bus, PIPE_Control, msg->fast, 0, 0, 0, 8, 100);
         
@@ -316,6 +335,8 @@ OOP_Object *METHOD(USB, Hidd_USB, NewDevice)
         }
         if (cdesc)
             FreeVecPooled(SD(cl)->MemPool, cdesc);
+        
+        ReleaseSemaphore(&drv->d_Lock);
     }
     
     return new_device;

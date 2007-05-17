@@ -48,11 +48,12 @@ extern OOP_AttrBase HiddAttrBase;
 #define BITMAP_SIZE		128
 #define MAX_HUB_PORTS	256
 
-struct usb_driver {
-    struct Node         d_Node;
-    OOP_Object          *d_Driver;
-    uint32_t            bitmap[BITMAP_SIZE/32];
-};
+typedef struct usb_driver {
+    struct Node                 d_Node;
+    struct SignalSemaphore      d_Lock;
+    OOP_Object                  *d_Driver;
+    uint32_t                    bitmap[BITMAP_SIZE/32];
+} usb_driver_t;
 
 struct usb_ExtClass {
     struct Node         ec_Node;
@@ -67,6 +68,8 @@ struct usb_staticdata
     void                        *MemPool;
 
     struct List                 driverList;
+    struct SignalSemaphore      driverListLock;
+    
     struct List                 extClassList;
 
     struct Process              *usbProcess;
