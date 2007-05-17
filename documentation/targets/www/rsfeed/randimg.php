@@ -49,7 +49,7 @@ function random_image($dir,$w,$h) {
                 echo " width=\"$w\"";
             }
             if(isset($h) AND is_numeric($h)) {
-                echo " height=\"$h\" style=\"float: right;";
+                echo " height=\"$h\" style=\"float: right;\"";
             }
             echo ">";
         } else {
