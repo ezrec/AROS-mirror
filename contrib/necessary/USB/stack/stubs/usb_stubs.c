@@ -407,6 +407,19 @@ BOOL HIDD_USBHub_GetHubDescriptor(OOP_Object *obj, usb_hub_descriptor_t *descrip
     return OOP_DoMethod(obj, &p.mID);
 }
 
+OOP_Object *HIDD_USBHub_GetChild(OOP_Object *obj, uint8_t port)
+{
+    STATIC_MID;
+    struct pHidd_USBHub_GetChild p;
+
+    if (!mid) mid = OOP_GetMethodID((STRPTR)IID_Hidd_USBHub, moHidd_USBHub_GetChild);
+
+    p.mID = mid;
+    p.port = port;
+
+    return OOP_DoMethod(obj, &p.mID);
+   
+}
 
 APTR HIDD_USBDrv_CreatePipe(OOP_Object *obj, enum USB_PipeType	type,
         BOOL fullspeed, uint8_t address, uint8_t endpoint, uint8_t period, uint32_t maxpacket, uint32_t timeout)

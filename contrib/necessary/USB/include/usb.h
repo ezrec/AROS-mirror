@@ -62,6 +62,17 @@ enum {
     NUM_HIDD_USB_METHODS
 };
 
+enum {
+    aoHidd_USB_Bus,
+    
+    num_Hidd_USB_Attrs
+};
+
+#define aHidd_USB_Bus             (HiddUSBAttrBase + aoHidd_USB_Bus)
+
+#define IS_USB_ATTR(attr, idx) \
+    (((idx) = (attr) - HiddUSBAttrBase) < num_Hidd_USB_Attrs)
+
 /// The Method arguments for USB::AttachDriver call
 struct pHidd_USB_AttachDriver {
     OOP_MethodID    mID;
@@ -424,6 +435,7 @@ usb_interface_descriptor_t *HIDD_USBDevice_GetInterface(OOP_Object *obj, uint8_t
 usb_endpoint_descriptor_t *HIDD_USBDevice_GetEndpoint(OOP_Object *obj, uint8_t interface, uint8_t endpoint);
 
 BOOL HIDD_USBHub_OnOff(OOP_Object *obj, BOOL on);
+OOP_Object *HIDD_USBHub_GetChild(OOP_Object *obj, uint8_t port);
 BOOL HIDD_USBHub_PortEnable(OOP_Object *obj, uint8_t port, BOOL enable);
 BOOL HIDD_USBHub_PortReset(OOP_Object *obj, uint8_t port);
 BOOL HIDD_USBHub_GetPortStatus(OOP_Object *obj, uint8_t port, usb_port_status_t *status);
