@@ -235,7 +235,7 @@ void METHOD(USBHub, Root, Set)
 OOP_Object * METHOD(USBHub, Hidd_USBHub, GetChild)
 {
     HubData *hub = OOP_INST_DATA(cl, o);
-    if ((msg->port > 0) && (msg->port < hub->descriptor.bNbrPorts))
+    if ((msg->port > 0) && (msg->port <= hub->descriptor.bNbrPorts))
         return (hub->children[msg->port-1]);
     else
         return NULL;
