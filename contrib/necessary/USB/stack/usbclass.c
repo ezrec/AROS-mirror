@@ -74,6 +74,54 @@ void METHOD(USB, Root, Dispose)
     base->lib_OpenCnt--;
 }
 
+void METHOD(USB, Root, Get)
+{
+    uint32_t idx;
+    D(bug("[USB] USB::Get\n"));
+
+    if (IS_USB_ATTR(msg->attrID, idx))
+    {
+        switch (idx)
+        {
+            case aoHidd_USB_Bus:
+            {
+                D(bug("[USB] USB Get Bus. *msg->storage = %p\n", *msg->storage));
+                usb_driver_t *driver;
+                
+                ObtainSemaphore(&SD(cl)->driverListLock);
+                
+                if (*msg->storage)
+                {
+                    ForeachNode(&SD(cl)->driverList, driver)
+                    {
+                        if (driver->d_Driver == *msg->storage)
+                            break;
+                    }
+                    
+                    if (driver)
+                        driver = GetSucc(&driver->d_Node);
+                }
+                else
+                    driver = GetHead(&SD(cl)->driverList);
+                
+                D(bug("[USB] driver=%p\n", driver));
+                
+                if (driver)
+                    *msg->storage = driver->d_Driver;
+                else
+                    *msg->storage = NULL;    
+                
+                ReleaseSemaphore(&SD(cl)->driverListLock);
+                break;
+            }
+            default:
+                OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+        }
+    }
+    else
+        OOP_DoSuperMethod(cl, o, (OOP_Msg)msg);
+}
+
 BOOL METHOD(USB, Hidd_USB, AttachDriver)
 {
     BOOL retval = FALSE;
