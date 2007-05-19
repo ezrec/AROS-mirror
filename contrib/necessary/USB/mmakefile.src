@@ -1,4 +1,4 @@
-# $Id: mmakefile.src 25712 2007-04-10 22:45:09Z schulz $
+# $Id$
 include $(TOP)/config/make.cfg
 
 #MM- hidd-usb:  linklibs        \
