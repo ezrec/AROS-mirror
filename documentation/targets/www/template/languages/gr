@@ -1,0 +1,64 @@
+[meta]
+
+charset:          iso-8859-7
+
+[titles]
+
+mirrors:          Mirrors
+contents:         Περιεχόμενα
+search:           Αναζήτηση
+visitors:         Επισκέπτες
+sponsors:         Χορηγοί
+
+[navigation]
+
+home:             Κεντρική
+news:             Ειδήσεις
+archive:          Αρχείο
+introduction:     Εισαγωγή
+status:           Στάτους
+screenshots:      Screenshots
+ports:            Μεταφορές
+license:          Άδεια
+download:         Download
+documentation:    Τεκμηρίωση
+users:            Χρήστες
+installation:     Εγκατάσταση
+using:            Χρήση
+shell:            Εντολές φλοιού
+faq:              Συχνές Ερωτήσεις
+developers:       Υπεύθυνοι ανάπτυξης
+contribute:       Συνεισφορά
+bug-tracker:      Bug Tracker
+working-with-subversion: Εργασία με Subversion
+compiling:        Compiling
+application-development-manual: Οδηγός ανάπτυξης εφαρμογών
+zune-application-development-manual: Οδηγός ανάπτυξης εφαρμογών Zune
+system-development-manual:      Οδηγός ανάπτυξης συστήματος
+debugging-manual: Οδηγός Debugging
+reference:        Αναφορά
+specifications:   Προδιαγραφές
+ui-style-guide:   Οδηγός στυλ UI
+documenting:      Τεκμηριώνοντας
+porting:          Μεταφέροντας
+translating:      Μεταφράζοντας
+summaries:        Περιλήψεις
+links:            Συνδέσεις
+contact:          Επικοινωνία
+mailing-lists:    Λίστες ηλεκτρονικού ταχυδρομείου
+forums:           Φόρουμς
+irc-channels:     Κανάλια IRC
+credits:          Credits
+pictures:         Φωτογραφίες
+developers-together: Developers en Masse
+sponsors:         Σπόνσορες
+linking:          Συνδεθείτε μαζί μας
+
+[misc]
+
+go:               Εμπρός
+search:           Αναζήτηση
+copyright:        Copyright © 1995-2007, The AROS Development Team. All rights reserved.
+trademarks:       Amiga® is a trademark of Amiga Inc. All other trademarks belong to their respective owners.
+read-more:        Διαβάστε περισσότερα...
+large-image:      Large version...
