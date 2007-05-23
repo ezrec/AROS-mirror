@@ -8,7 +8,7 @@ mirrors:          Mirrors
 contents:         Περιεχόμενα
 search:           Αναζήτηση
 visitors:         Επισκέπτες
-sponsors:         Χορηγοί
+sponsors:         Σπόνσορες
 
 [navigation]
 
@@ -50,7 +50,7 @@ forums:           Φόρουμς
 irc-channels:     Κανάλια IRC
 credits:          Credits
 pictures:         Φωτογραφίες
-developers-together: Developers en Masse
+developers-together: Οι υπεύθυνοι ανάπτυξης μαζί
 sponsors:         Σπόνσορες
 linking:          Συνδεθείτε μαζί μας
 
@@ -61,4 +61,4 @@ search:           Αναζήτηση
 copyright:        Copyright © 1995-2007, The AROS Development Team. All rights reserved.
 trademarks:       Amiga® is a trademark of Amiga Inc. All other trademarks belong to their respective owners.
 read-more:        Διαβάστε περισσότερα...
-large-image:      Large version...
+large-image:      Μεγαλύτερη έκδοση...
