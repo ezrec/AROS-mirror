@@ -11,50 +11,53 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     navigation = Tree \
     ( [    
     P ( contents = [
-    Img( src = '/images/pointer.png' ),
+    Img( src = '%(ROOT)simages/pointer.png' ),
     A( _N['home'], href=makeURL( '', lang ))]
     ),
         Tree \
         ( [
         P ( contents = [
-            Img( src = '/images/englishlogo.png' ),
+            Img( src = '%(ROOT)simages/englishlogo.png' ),
             A( 'English', href='%(BASE)s' )]),
         P ( contents = [
-            Img( src = '/images/germanylogo.png' ),
+            Img( src = '%(ROOT)simages/germanylogo.png' ),
             A( 'Deutsch', href='%(BASE)sde/' )]),
             P ( contents = [
-            Img( src = '/images/francelogo.png' ),
+            Img( src = '%(ROOT)simages/greecelogo.png' ),
+            A( '&#917;&#955;&#955;&#951;&#965;&#953;&#954;&#940;', href='%(BASE)sgr/' )]),
+            P ( contents = [
+            Img( src = '%(ROOT)simages/francelogo.png' ),
             A( 'Fran&#231;ais', href='%(BASE)sfr/' )]),
             P ( contents = [
-            Img( src = '/images/italylogo.png' ),
+            Img( src = '%(ROOT)simages/italylogo.png' ),
             A( 'Italiano', href='%(BASE)sit/' )]),
             P ( contents = [
-            Img( src = '/images/netherlandslogo.png' ),
+            Img( src = '%(ROOT)simages/netherlandslogo.png' ),
             A( 'Nederlands', href='%(BASE)snl/' )]),
         P ( contents = [
-            Img( src = '/images/polandlogo.png' ),
+            Img( src = '%(ROOT)simages/polandlogo.png' ),
             A( 'Polski', href='%(BASE)spl/' )]),
             P ( contents = [
-            Img( src = '/images/portugallogo.png' ),
+            Img( src = '%(ROOT)simages/portugallogo.png' ),
             A( 'Portugu&#234;s', href='%(BASE)spt/' )]),
             P ( contents = [
-            Img( src = '/images/russialogo.png' ),
+            Img( src = '%(ROOT)simages/russialogo.png' ),
             A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sru/' )]),
         P ( contents = [
-            Img( src = '/images/finlandlogo.png' ),
+            Img( src = '%(ROOT)simages/finlandlogo.png' ),
             A( 'Suomi', href='%(BASE)sfi/' )]),
         P ( contents = [
-            Img( src = '/images/swedenlogo.png' ),
+            Img( src = '%(ROOT)simages/swedenlogo.png' ),
             A( 'Svenska', href='%(BASE)ssv/' )])
         ] ),
         BR(),
     P ( contents = [
-        Img( src = '/images/pointer.png' ),    
+        Img( src = '%(ROOT)simages/pointer.png' ),    
         A( _N['news'], href=makeURL( 'news/', lang ) )]),
         Tree ( A( _N['archive'], href=makeURL( 'news/archive/', lang ) ) ),
         BR(),
     P ( contents = [
-        Img( src = '/images/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png' ),
         A( _N['introduction'], href=makeURL( 'introduction/', lang ) ) ]),
     
         Tree \
@@ -66,11 +69,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         ] ),
         BR(),
     P ( contents = [
-        Img( src = '/images/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png' ),
         A(  _N['download'], href=makeURL( 'download', lang ) )]),
         BR(),
     P ( contents = [
-        Img( src = '/images/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png' ),
         _N['documentation'] ]),
         Tree \
         ( [
@@ -108,7 +111,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         ] ),
         BR(),
     P ( contents = [
-        Img( src = '/images/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png' ),
         A( _N['contact'], href=makeURL( 'contact', lang ) )]),
         Tree \
         ( [
@@ -118,14 +121,14 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         ] ),
         BR(),
     P ( contents = [
-        Img( src = '/images/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png' ),
         A(  _N['credits'], href=makeURL( 'credits', lang ) )]),
      P ( contents = [
-        Img( src = '/images/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png' ),
         A( 'Acknowledgements', href=makeURL( 'acknowledgements', lang ) )]),
         BR(),
     P ( contents = [
-        Img( src = '/images/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png' ),
         _N['pictures']]),
         Tree \
         ( [
@@ -134,13 +137,13 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         ] ),
         BR(),
     P ( contents = [
-        Img( src = '/images/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png' ),
         A( _N['sponsors'], href=makeURL( 'sponsors', lang ) )]),
     P ( contents = [
-        Img( src = '/images/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png' ),
         A( _N['linking'], href=makeURL( 'linking', lang ) )]),
     P ( contents = [
-        Img( src = '/images/pointer.png' ),
+        Img( src = '%(ROOT)simages/pointer.png' ),
         A( _N['links'], href=makeURL( 'links', lang ) )])
     ] )
 
@@ -303,7 +306,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                     width = '100%%', contents = [
                         TR( [
                             TD( 
-                                halign = 'top', width = '100%%', height = 109, background='/images/backgroundtop.png' ,rowspan = 4,
+                                halign = 'top', width = '100%%', height = 109, background='%(ROOT)simages/backgroundtop.png' ,rowspan = 4,
                                 contents = statsPHP5)
 
 #                Map(name = 'map')[,

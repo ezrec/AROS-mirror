@@ -28,7 +28,7 @@ TEMPLATE_DATA = {}
 
 # Languages not supported by docutils yet (but that we have files written in):
 # 'no'
-LANGUAGES  = [ 'en', 'de', 'fi', 'fr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv' ]
+LANGUAGES  = [ 'en', 'de', 'fi', 'fr', 'gr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv' ]
 
 # FIXME: Move this somewhere else...
 if (not os.path.exists( 'credits.en' ) ) \
@@ -236,7 +236,9 @@ def makeNews():
 # Converts a source file into an HTML string.
 
 def convertWWW( src, language, options=None ):
-    if language == 'pl':
+    if language == 'gr':
+        encoding = 'iso-8859-7'
+    elif language == 'pl':
         encoding = 'iso-8859-2'
     elif language == 'ru':
         encoding = 'windows-1251'
@@ -475,6 +477,7 @@ def buildWWW():
             'targets/www/images/finlandlogo.png',
             'targets/www/images/francelogo.png',
             'targets/www/images/germanylogo.png',
+            'targets/www/images/greecelogo.png',
             'targets/www/images/italylogo.png',
             'targets/www/images/netherlandslogo.png',
             'targets/www/images/polandlogo.png',
