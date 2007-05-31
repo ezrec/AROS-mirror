@@ -4,8 +4,8 @@ Werken met Subversion
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
 :Copyright: Copyright ù 1995-2002, The AROS Development Team
-:Version:   $Revision: 25645 $
-:Date:      $Date: 2007-04-02 16:30:17 +0200 (Mon, 02 Apr 2007) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 :Abstract: 
     

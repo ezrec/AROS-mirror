@@ -1,7 +1,7 @@
 # Author: Ioannis Koniaris
 # Contact: ikoniari@csd.auth.gr
-# Revision: $Revision: 24659 $
-# Date: $Date: 2006-08-23 02:45:24 +0300 (\u03a4\u03b5\u03c4, 23 \u0391\u03c5\u03b3 2006) $
+# Revision: $Revision$
+# Date: $Date$
 # Copyright: This module has been placed in the public domain.
 
 # New language mappings are welcome.  Before doing a new translation, please
