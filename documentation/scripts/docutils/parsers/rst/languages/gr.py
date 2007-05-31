@@ -16,8 +16,6 @@ reStructuredText.
 
 __docformat__ = 'reStructuredText'
 
-# XREIAZETAI ANATHEORISI 
-
 directives = {
       '\u03c0\u03c1\u03bf\u03c3\u03bf\u03c7\u03ae': 'attention',
       '\u03c0\u03c1\u03bf\u03c3\u03bf\u03c7\u03ae': 'caution',
