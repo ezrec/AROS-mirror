@@ -29,7 +29,7 @@ shell:            Команды CLI-shell
 faq:              ЧАВО(FAQ)
 developers:       Разработчики
 contribute:       Участие
-bug-tracker:      Найденные ошибки
+bug-tracker:      Сообщить об ошибке
 working-with-subversion: Работа с SVN
 compiling:        Сборка
 application-development-manual: Руководство по разработке приложений
@@ -44,7 +44,7 @@ porting:          Портирование
 translating:      Перевод
 summaries:        Заметки
 links:            Ссылки
-contact:          Contact
+contact:          Как с нами связаться
 mailing-lists:    Списки рассылки
 forums:           Форумы
 irc-channels:     Каналы IRC
