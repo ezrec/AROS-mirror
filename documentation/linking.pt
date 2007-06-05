@@ -2,40 +2,36 @@
 Ligando
 =======
 
-:Autor:   Adam Chodorowski
-:Direito de Cƒpia: Copyright Š 2001, A equipa de desenvolvimento AROS
-:Versóo:  $Revision$
-:Date:   $Date$
-:Estado:  Feito.
+:Autor:			Adam Chodorowski
+:Direito de Cópia:	Copyright © 2001, A equipa de desenvolvimento AROS
+:Versão:		$Revision$
+:Date:			$Date$
+:Estado:		Feito.
 
 Uma grande forma de mostrar o seu suporte para com AROS, e algo que activamente encorajamos,
-ù ligar a este endere÷o atravùz do seu endere÷o. Poderñ usar o seguinte banner
+é ligar a este endereço atravéz do seu endereço. Poderá usar o seguinte banner
 para este proposito, desenhado por Cyb0rg / Resistance:
 
 
- .. Image:: /images/aros-banner.gif
-  :align: center
-  :class: bannerimage
-  
- .. Image:: /images/aros-banner2.png
-  :align: center
-  :class: bannerimage
-
- .. Image:: /images/aros-banner-blue.png
-  :align: center
-  :class: bannerimage
+	.. Image:: /images/aros-banner.gif
+		:align: center
+		:class: bannerimage
+		
+	.. Image:: /images/aros-banner2.png
+		:align: center
+		:class: bannerimage
 
 Forum sigbanners (S33k_100):
 
- .. Image:: /images/aros-sigbar-user.png
-  :align: center
-  :class: bannerimage
+	.. Image:: /images/aros-sigbar-user.png
+		:align: center
+		:class: bannerimage
 
- .. Image:: /images/aros-sigbar-coder.png
-  :align: center
-  :class: bannerimage
-  
+	.. Image:: /images/aros-sigbar-coder.png
+		:align: center
+		:class: bannerimage
+		
 Por favor ligue directamente para http://www.aros.org/ e a nenhum dos espelhos (mirror site/servers), por eles
-poderem alterar com o tempo. Tambùm, se nóo for incomodo fa÷am uma copia local da imagem para reduzir
+poderem alterar com o tempo. Também, se não for incomodo façam uma copia local da imagem para reduzir
 uso na largura de banda.
 
