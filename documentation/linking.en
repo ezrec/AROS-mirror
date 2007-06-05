@@ -3,7 +3,7 @@ Linking
 =======
 
 :Author:    Adam Chodorowski
-:Copyright: Copyright Š 2001, The AROS Development Team
+:Copyright: Copyright ¦ 2001-2007, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -14,7 +14,7 @@ for this purpose, such as the original drawn by Cyb0rg / Resistance and a more r
 one by S33k_100:
 
 
-  .. Image:: /images/aros-banner.gif
+ .. Image:: /images/aros-banner.gif
   :align: center
   :class: bannerimage
   

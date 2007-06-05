@@ -3,7 +3,7 @@
 ============
 
 :Author:    Adam Chodorowski
-:Copyright: Copyright Š 2001, The AROS Development Team
+:Copyright: Copyright Š 2001-2007, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
