@@ -12,19 +12,19 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     ( [	
 	P ( contents = [
 	Img( src = '%(ROOT)simages/pointer.png' ),
-	A( _N['home'], href=makeURL( '', lang ))]
+	A( _N['home'], href=makeURL( '.', lang ))]
 	),
         Tree \
         ( [
 	    P ( contents = [
             Img( src = '%(ROOT)simages/englishlogo.png' ),
-            A( 'English', href='%(BASE)s' )]),
+            A( 'English', href='%(BASE)s.' )]),
 	    P ( contents = [
             Img( src = '%(ROOT)simages/germanylogo.png' ),
             A( 'Deutsch', href='%(BASE)sde/' )]),
             P ( contents = [
             Img( src = '%(ROOT)simages/greecelogo.png' ),
-            A( '&#917;&#955;&#955;&#951;&#965;&#953;&#954;&#940;', href='%(BASE)sgr/' )]),
+            A( '&#917;&#955;&#955;&#951;&#965;&#953;&#954;&#940;', href='%(BASE)sel/' )]),
             P ( contents = [
             Img( src = '%(ROOT)simages/francelogo.png' ),
             A( 'Fran&#231;ais', href='%(BASE)sfr/' )]),
@@ -369,13 +369,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
 def makeURL( file, lang, section='' ):
 
     # Create the URL
+    if file != '.' and file[-1] != '/':
+        file += '.php'
     if lang != 'en':
         file = lang + '/' + file
     url = '%(BASE)s' + file
-    if file != '' and file[-1] != '/':
-        url += '.php'
-    if url == '':
-        url = '/'
 
     # Add the section, if any
     if section != '':

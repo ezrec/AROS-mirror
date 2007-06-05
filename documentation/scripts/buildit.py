@@ -28,7 +28,7 @@ TEMPLATE_DATA = {}
 
 # Languages not supported by docutils yet (but that we have files written in):
 # 'no'
-LANGUAGES  = [ 'en', 'de', 'fi', 'fr', 'gr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv' ]
+LANGUAGES  = [ 'en', 'de', 'el', 'fi', 'fr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv' ]
 
 # FIXME: Move this somewhere else...
 if (not os.path.exists( 'credits.en' ) ) \
@@ -236,7 +236,7 @@ def makeNews():
 # Converts a source file into an HTML string.
 
 def convertWWW( src, language, options=None ):
-    if language == 'gr':
+    if language == 'el':
         encoding = 'iso-8859-7'
     elif language == 'pl':
         encoding = 'iso-8859-2'

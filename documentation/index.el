@@ -2,7 +2,7 @@
 
    <table style="text-align: justify; width: 100%;" background="/images/bgcolormain.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
 
-.. Include:: introduction/index-abstract.gr
+.. Include:: introduction/index-abstract.el
 
 `Διαβάστε περισσότερα... <introduction/index>`__
 
@@ -15,7 +15,7 @@
 
    <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto;" background="/images/bgcolormain.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
 
-.. Include:: documentation/developers/contribute-abstract.gr
+.. Include:: documentation/developers/contribute-abstract.el
 
 `Διαβάστε περισσότερα... <documentation/developers/contribute>`__
 
@@ -28,7 +28,7 @@
 
    <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto;" border="0" cellpadding="1" cellspacing="1"><tr><td>
 
-.. Include:: news/index.gr
+.. Include:: news/index.el
 
 .. raw:: html
 
