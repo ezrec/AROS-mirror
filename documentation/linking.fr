@@ -1,35 +1,39 @@
 =============
-Référencement 
+Rùfùrencement 
 =============
 
 :Author:    Adam Chodorowski
-:Copyright: Copyright © 2001, The AROS Development Team
+:Copyright: Copyright Š 2001, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
 
-Une façon d'encourager le développement d'AROS que nous recommandons
-particulièrement est de référencer ce site web à partir du votre. Vous
-pouvez utiliser les jolies bannières suivantes, réalisées par Cyb0rg / Resistance:
+Une fa÷on d'encourager le dùveloppement d'AROS que nous recommandons
+particuliørement est de rùfùrencer ce site web ð partir du votre. Vous
+pouvez utiliser les jolies banniøres suivantes, rùalisùes par Cyb0rg / Resistance:
 
-	.. Image:: /images/aros-banner.gif
-		:align: center
-		:class: bannerimage
-		
-	.. Image:: /images/aros-banner2.png
-		:align: center
-		:class: bannerimage
+ .. Image:: /images/aros-banner.gif
+  :align: center
+  :class: bannerimage
+  
+ .. Image:: /images/aros-banner2.png
+  :align: center
+  :class: bannerimage
 
-Forum bannières (S33k_100):
+ .. Image:: /images/aros-banner-blue.png
+  :align: center
+  :class: bannerimage
 
-	.. Image:: /images/aros-sigbar-user.png
-		:align: center
-		:class: bannerimage
+Forum banniøres (S33k_100):
 
-	.. Image:: /images/aros-sigbar-coder.png
-		:align: center
-		:class: bannerimage
+ .. Image:: /images/aros-sigbar-user.png
+  :align: center
+  :class: bannerimage
 
-Veuillez référencer directement http://www.aros.org/ et non les sites mirroirs
-qui peuvent changer au cours du temps. Pensez également à effectuer une copie
-locale de l'image de la bannière pour réduire l'utilisation de la bande passante.
+ .. Image:: /images/aros-sigbar-coder.png
+  :align: center
+  :class: bannerimage
+
+Veuillez rùfùrencer directement http://www.aros.org/ et non les sites mirroirs
+qui peuvent changer au cours du temps. Pensez ùgalement ð effectuer une copie
+locale de l'image de la banniøre pour rùduire l'utilisation de la bande passante.

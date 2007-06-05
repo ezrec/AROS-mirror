@@ -3,7 +3,7 @@ Linking
 =======
 
 :Author:    Adam Chodorowski
-:Copyright: Copyright © 2001, The AROS Development Team
+:Copyright: Copyright Š 2001, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -14,23 +14,28 @@ for this purpose, such as the original drawn by Cyb0rg / Resistance and a more r
 one by S33k_100:
 
 
- 	.. Image:: /images/aros-banner.gif
-		:align: center
-		:class: bannerimage
-		
-	.. Image:: /images/aros-banner2.png
-		:align: center
-		:class: bannerimage
+  .. Image:: /images/aros-banner.gif
+  :align: center
+  :class: bannerimage
+  
+ .. Image:: /images/aros-banner2.png
+  :align: center
+  :class: bannerimage
+  
+ .. Image:: /images/aros-banner-blue.png
+  :align: center
+  :class: bannerimage
+
 
 Alternatively there are also sigbanners for use on forums (by S33k_100):
 
-	.. Image:: /images/aros-sigbar-user.png
-		:align: center
-		:class: bannerimage
+ .. Image:: /images/aros-sigbar-user.png
+  :align: center
+  :class: bannerimage
 
-	.. Image:: /images/aros-sigbar-coder.png
-		:align: center
-		:class: bannerimage
+ .. Image:: /images/aros-sigbar-coder.png
+  :align: center
+  :class: bannerimage
 
 Please link directly to http://www.aros.org/ and not any of the mirrors, as they
 might change over time. Also, please make a local copy of the image to reduce

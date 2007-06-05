@@ -20,6 +20,10 @@
     .. Image:: /images/aros-banner2.png
         :align: center
         :class: bannerimage
+    
+    .. Image:: /images/aros-banner-blue.png
+        :align: center
+        :class: bannerimage
 
 Также есть небольшие баннеры, удобные для подписей на форумах (автор S33k_100):
 
