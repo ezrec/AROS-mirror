@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 04-Jun-07 sonic   Fixed endianess check in Is_A_Symbolic_Link()
  * 05-May-07 sonic   Added support for RockRidge protection bits and file comments
  * 05-Feb-94   fmu   Added support for relocated directories.
  * 16-Oct-93   fmu   Adapted to new VOLUME structure.
@@ -282,7 +283,7 @@ int Is_A_Symbolic_Link(VOLUME *p_volume, directory_record *p_dir, unsigned long 
 		ULONG group_id_m;
 	} px;
 
-#ifdef AROS_BIG_ENDIAN
+#if AROS_BIG_ENDIAN
 #define mode mode_m
 #else
 #define mode mode_i
@@ -290,7 +291,6 @@ int Is_A_Symbolic_Link(VOLUME *p_volume, directory_record *p_dir, unsigned long 
 
 	if (!Get_System_Use_Field(p_volume,p_dir,"PX",(char *)&px,sizeof(px),0))
 		return 0;
-/* FIXME: A problem was reported, some file become unreadable. This a quick solution to the problem.
 	*amiga_mode = 0;
 	if (!(px.mode & S_IWUSR))
 		*amiga_mode |= FIBF_DELETE|FIBF_WRITE;
@@ -309,7 +309,8 @@ int Is_A_Symbolic_Link(VOLUME *p_volume, directory_record *p_dir, unsigned long 
 	if (px.mode & S_IXOTH)
 		*amiga_mode |= FIBF_OTR_EXECUTE;
 	if (px.mode & S_IROTH)
-		*amiga_mode |= FIBF_OTR_READ;*/
+		*amiga_mode |= FIBF_OTR_READ;
+	BUG(dbprintf("POSIX protection 0x%08lX translated to Amiga 0x%08lX\n", px.mode, *amiga_mode);)
 
 	/*
 		0120000 is the POSIX code for symbolic links:

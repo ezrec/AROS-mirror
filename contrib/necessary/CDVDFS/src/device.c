@@ -12,6 +12,10 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 29-May-07 sonic     - Replies FileSysStartupMsg and loads character
+ *                       set translation table before mounting volume
+ *                     - Does not unmount volume any more in case of
+ *                       disk read error
  * 15-May-07 sonic     - Fixed CDDA handling
  * 06-May-07 sonic     - Added support for protection bits and file comments
  *                     - Fixed memory trashing when file name length is greater than AmigaOS
@@ -307,15 +311,14 @@ ULONG signals;
     }
 
     global->g_vol_name = AllocVec(128, MEMF_PUBLIC | MEMF_CLEAR);
+    global->g_dos_sigbit = 1L << global->DosProc->pr_MsgPort.mp_SigBit;
+    returnpacket(packet);
+    Prefs_Init();
 
     if (global->g_cd) {
       /* Mount volume (if any disk is inserted): */
       Mount ();
     }
-
-    global->g_dos_sigbit = 1L << global->DosProc->pr_MsgPort.mp_SigBit;
-    returnpacket(packet);
-    Prefs_Init();
 
     /*
      *	Here begins the endless loop, waiting for requests over our
@@ -835,10 +838,7 @@ openbreak:
 				else
 				{
 					if (global->iso_errno == ISOERR_SCSI_ERROR)
-					{
-						error = ERROR_OBJECT_NOT_FOUND;
-						Unmount ();
-					}
+						error = ERROR_SEEK_ERROR;
 					else if (global->iso_errno == ISOERR_ILLEGAL_NAME)
 						error = ERROR_INVALID_COMPONENT_NAME;
 					else if (global->iso_errno == ISOERR_NOT_FOUND)
