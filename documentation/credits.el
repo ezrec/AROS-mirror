@@ -78,8 +78,8 @@ Intuition
 + Flavio Stanchina
 
 
-Εντολές φλοιού
-==============
+Εντολές κελύφους
+================
 
 + Martin Recktenwald
 + Henning Kiel

@@ -12,4 +12,4 @@
 Αυτό το λογισμικό είναι εν μέρει βασισμένο στην εργασία της Catharon Productions, Inc.
 
 Το Graphics Interchange Format(c) αποτελεί πνευματική ιδιοκτησία της CompuServe Incorporated. 
-Το GIF(sm) είναι σήμα κατατεθέν ιδιοκτησία της CompuServe Incorporated.
+Το GIF(sm) είναι εμπορικό σήμα, ιδιοκτησία της CompuServe Incorporated.

@@ -41,7 +41,7 @@
    <?php if ($win_ie56) { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.gif\" align=\"middle\">";} 
    else { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.png\" align=\"middle\">";} ?>Direct Downloads:<br>
    <img style="width: 238px; height: 2px;" alt="spacer" src="images/sidespacer.png"><br>
-   Τα Nightly builds δημιουργούνται αυτόματα κάθε βράδυ, απευθείας από τον πιο πρόσφατο πηγαίο κώδικα. Αν θα θέλατε να δοκιμάσετε ένα AROS live CD, παρακαλούμε "κατεβάστε" το αρχείο "boot ISO" για τη δικιά σας πλατφόρμα (i386 ή PPC).<br><br>
+   Τα Nightly builds δημιουργούνται αυτόματα κάθε βράδυ, απευθείας από τον πιο πρόσφατο πηγαίο κώδικα. Αν θα θέλατε να δοκιμάσετε ένα AROS live CD, παρακαλούμε κάνετε download το αρχείο "boot ISO" για τη δικιά σας πλατφόρμα υλικού (i386 ή PPC).<br><br>
    <?php virtual("/cgi-bin/files2") ?> <br></td></tr></tbody></table>
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.gif\" align=\"middle\">"; } 
@@ -53,7 +53,7 @@
    <td style="vertical-align: top;"><?php if ($win_ie56) { echo "<img alt=\"Open Bounty Icon\" src=\"/images/bountyicon1.gif\" align=\"middle\">";} 
    else { echo "<img alt=\"Open Bounty Icon\" src=\"/images/bountyicon1.png\" align=\"middle\">"; } ?>
    Διαθέσιμα Bounties:<br><img style="width: 177px; height: 2px;" alt="spacer" src="images/sidespacer.png"><br>
-   Η <a href=http://www.teamaros.org>Team AROS</a> είναι η βασική ομάδα υποστήριξης του AROS, προσπαθώντας να ενεργεί ως καταλύτης για την ανάπτυξη του AROS, κυρίως με τη συγκέντρωση χρημάτων μέσω δωρεών για συγκέκριμενη ανάπτυξη έργων.
+   Η <a href=http://www.teamaros.org>Team AROS</a> είναι η βασική ομάδα υποστήριξης του AROS, προσπαθώντας να ενεργεί ως καταλύτης για την ανάπτυξη του, κυρίως με τη συγκέντρωση χρημάτων μέσω δωρεών για συγκέκριμενη ανάπτυξη έργων.
    <?php include("/home/groups/a/ar/aros/htdocs/rsfeed/teamarosopenb.php"); ?><br></td></tr></table>
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
    <?php if ($win_ie56) { echo "<img alt=\"Assigned Bounty Icon\" src=\"/images/bountyicon2.gif\" align=\"middle\">"; } 
@@ -67,7 +67,7 @@
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.png\" align=\"middle\">"; } ?>
-   Τελευταίες υποβολές ΑΡΧΕΙΟΥ:<br><img style="width: 238px; height: 2px;" alt="spacer" src="images/sidespacer.png"><br>
-   Τα <a href=http://archives.aros-exec.org>AROS archives</a> περιέχουν το πιο πρόσφατο περιεχόμενο υποβληθέν από την κοινότητα, και είναι η κύρια περιοχή αναζήτησης εφαρμογών, θεμάτων επιφάνειας εργασίας, γραφικών, και πρόσθετης τεκμηρίωσης.<br><br>
+   Τελευταίες υποβολές ΑΡΧΕΙΟΥ AROS:<br><img style="width: 238px; height: 2px;" alt="spacer" src="images/sidespacer.png"><br>
+   Τα <a href=http://archives.aros-exec.org>AROS archives</a> περιέχουν τον πιο πρόσφατο περιεχόμενο υποβληθέν από την κοινότητα, και είναι η κύρια περιοχή αναζήτησης εφαρμογών, θεμάτων επιφάνειας εργασίας, γραφικών, και πρόσθετης τεκμηρίωσης.<br><br>
    <?php include("/home/groups/a/ar/aros/htdocs/rsfeed/archives.php"); ?><br></td></tr></table></td></tr></table>
    
