@@ -16,7 +16,7 @@ home:             Κεντρική
 news:             Ειδήσεις
 archive:          Αρχείο
 introduction:     Εισαγωγή
-status:           Στάτους
+status:           Κατάσταση
 screenshots:      Screenshots
 ports:            Μεταφορές
 license:          Αδεια
@@ -28,8 +28,8 @@ using:            Χρήση
 shell:            Εντολές κελύφους
 faq:              Συχνές Ερωτήσεις
 developers:       Υπεύθυνοι ανάπτυξης
-contribute:       Συνεισφορά
-bug-tracker:      Bug Tracker
+contribute:       Συνεισφέροντας
+bug-tracker:      Ανιχνευτής Bugs
 working-with-subversion: Εργασία με Subversion
 compiling:        Compiling
 application-development-manual: Οδηγός ανάπτυξης εφαρμογών
@@ -38,7 +38,7 @@ system-development-manual:      Οδηγός ανάπτυξης συστήματος
 debugging-manual: Οδηγός Debugging
 reference:        Αναφορά
 specifications:   Προδιαγραφές
-ui-style-guide:   Οδηγός στυλ UI
+ui-style-guide:   Οδηγός στυλ διασύνδεσης χρήστη
 documenting:      Τεκμηριώνοντας
 porting:          Μεταφέροντας
 translating:      Μεταφράζοντας

@@ -54,7 +54,7 @@ Aρθρα για το AROS
 Τίτλος                                           Συγγραφέας          Ημερομηνία
 ===============================================  ==================  ==========
 `"Onboard the Last Train to Amiga Neverland"`__  Dmitar Butrovski    2006-09-13
-`"AROS"`__ (in German mag Amiga-Magazin)         Martin Steigerwald  2003-09-13
+`"AROS"`__ (στο γερμανικό Amiga-Magazin)         Martin Steigerwald  2003-09-13
 `"If you like Amiga, you'll love AROS"`__        Elwood              Unknown   
 `"AROS: Native AmigaOS For Your PC"`__           John Chandler       2001-10-21 
 `"AROS: The Amiga Research Operating System`__   John Chandler       1999-10-02
