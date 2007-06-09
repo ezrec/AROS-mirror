@@ -48,8 +48,8 @@ If you are running Linux, FreeBSD or any other modern UNIX clone then you
 simply need to install the official SVN software, version 1.0 or higher, for 
 your OS. All common Linux distributions come with SVN packaged.
 
-There`s also an crossplatformed QT GUI frontend to svn called 
-`eSVN <http://esvn.umputun.com/>`__,
+There`s also a cross-platform GUI front-end for the Subversion revision system 
+called `RapidSVN <http://rapidsvn.org/>`__,
 available for Unixes(GNU/Linux distributions, FreeBSD, Sun Solaris and others), 
 Mac OS X and Windows. 
 
@@ -78,7 +78,7 @@ anyway) then you can forget about it, and line ends (EOL) will be automatically 
 Examples of editors known to be able to save such EOL
 include `Notepad++ <http://notepad-plus.sourceforge.net>`__, TigerPad (free 
 enhanced notepad), `DOS Navigator OSP <http://dnosp.com/>`__, and much more.
-Also eSvn client available, as noted above.
+Also RapidSVN client available, as noted above.
 
 __ http://tortoisesvn.sourceforge.net
 
@@ -93,7 +93,7 @@ Note that when using Textwrangler or other Mac text-editors, you will need to ch
 the character encoding from 'Macos roman' to 'ISO latin 1' (ISO8859) for your documents 
 (change this in preferences). For TW all other settings are correct by default. 
 All named applications are freeware and available as Universal Binary for PPC and Intel Macs.
-Also eSvn client available, as noted above.
+Also RapidSVN client available, as noted above.
 
 __ http://www.codingmonkeys.de/mbo/
 __ http://www.lachoseinteractive.net/en/community/subversion/svnx/
