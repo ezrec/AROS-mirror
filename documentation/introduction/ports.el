@@ -2,11 +2,11 @@
 Μεταφορές
 =========
 
-:Authors:   Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright © 1995-2006, The AROS Development Team 
-:Version:   $Revision: 24547 $ 
-:Date:      $Date: 2006-06-15 18:41:03 +0300 (Ξ ΞµΞΌ, 15 Ξ™ΞΏΟ…Ξ½ 2006) $ 
-:Status:    Done. 
+:Authors:   Adam Chodorowski, Matthias Rustler
+:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Version:   $Revision: 24547 $
+:Date:      $Date: 2006-06-15 18:41:03 $
+:Status:    Done.
 
 .. Contents::
 
