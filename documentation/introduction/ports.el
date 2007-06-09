@@ -3,10 +3,10 @@
 =========
 
 :Authors:   Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright � 1995-2006, The AROS Development Team
-:Version:   $Revision: 24547 $
-:Date:      $Date: 2006-06-15 18:41:03 +0300 (Πεμ, 15 Ιουν 2006) $
-:Status:    Done.
+:Copyright: Copyright � 1995-2006, The AROS Development Team 
+:Version:   $Revision: 24547 $ 
+:Date:      $Date: 2006-06-15 18:41:03 +0300 (Πεμ, 15 Ιουν 2006) $ 
+:Status:    Done. 
 
 .. Contents::
 
