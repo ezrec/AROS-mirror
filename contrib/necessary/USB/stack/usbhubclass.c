@@ -135,7 +135,7 @@ OOP_Object *METHOD(USBHub, Root, New)
                 hub->interrupt.is_Data = hub;
                 hub->interrupt.is_Code = HubInterrupt;
                 hub->intr_pipe = HIDD_USBDevice_CreatePipe(o, PIPE_Interrupt, ep->bEndpointAddress, ep->bInterval, 0);
-                HIDD_USBDrv_AddInterrupt(drv, hub->intr_pipe, &hub->status[0], sizeof(hub->status), &hub->interrupt);
+                HIDD_USBDrv_AddInterrupt(drv, hub->intr_pipe, &hub->status[0], ep->wMaxPacketSize, &hub->interrupt);
             }
             
         }
@@ -536,6 +536,7 @@ static void hub_process()
     struct Process *hub_task = (struct Process *)FindTask(NULL);
     struct usb_staticdata *sd = hub->sd;
     OOP_Object *o = NULL;
+    OOP_Object *drv = NULL;
     OOP_Class *cl = sd->hubClass;
     struct usbEvent *ev = NULL;
     uint32_t sigset;
@@ -543,7 +544,7 @@ static void hub_process()
     hub->tr = USBCreateTimer();
 
     D(bug("[USBHub Process] HUB process (%p)\n", FindTask(NULL)));
-
+    
     for (;;)
     {
         D(bug("[USBHub Process] YAWN...\n"));
@@ -553,14 +554,6 @@ static void hub_process()
                      );
         D(bug("[USBHub Process] signals rcvd: %p\n", sigset));
         
-        /* handle signals */
-        if (sigset & (1 << hub->sigInterrupt))
-        {
-            D(bug("[USBHub Process] Interrupt signalled\n"));
-//            ObtainSemaphore(&sd->global_lock);
-            hub_explore(cl, o);
-//            ReleaseSemaphore(&sd->global_lock);
-        }
         
         /* handle messages */
         while ((ev = (struct usbEvent *)GetMsg(&hub_task->pr_MsgPort)) != NULL)
@@ -572,6 +565,7 @@ static void hub_process()
                 case evt_Startup:
                     D(bug("[USBHub Process] Startup MSG\n"));
                     o = ev->ev_Target;
+                    OOP_GetAttr(o, aHidd_USBDevice_Bus, &drv);
                     SetTaskPri(FindTask(NULL), 10);
                     break;
 
@@ -607,6 +601,30 @@ static void hub_process()
 
             if (reply)
                 ReplyMsg(&ev->ev_Message);
+        }
+        
+        /* handle signals */
+        if (sigset & (1 << hub->sigInterrupt))
+        {
+            struct usb_driver *d = NULL;
+            uint8_t addr = 0;
+
+            D(bug("[USBHub Process] Interrupt signalled\n"));
+
+            ObtainSemaphore(&SD(cl)->driverListLock);
+            ForeachNode(&SD(cl)->driverList, d)
+            {
+                if (d->d_Driver == drv)
+                    break;
+            }
+            ReleaseSemaphore(&SD(cl)->driverListLock);
+
+            if (d)
+            {
+                ObtainSemaphore(&d->d_Lock);
+                hub_explore(cl, o);
+                ReleaseSemaphore(&d->d_Lock);
+            }
         }
     }    
 }

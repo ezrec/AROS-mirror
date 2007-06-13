@@ -133,7 +133,7 @@ typedef struct  {
 
     uint8_t                     root;
     uint8_t                     enabled;
-    uint8_t                     status[2];
+    uint8_t                     status[20];
     struct Interrupt            interrupt;
 } HubData;
 
