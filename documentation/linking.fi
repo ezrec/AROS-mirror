@@ -20,6 +20,10 @@ Resistance:n tekemää hienoa banneria:
 	.. Image:: /images/aros-banner2.png
 		:align: center
 		:class: bannerimage
+		
+	.. Image:: /images/aros-banner-blue.png
+		:align: center
+		:class: bannerimage
 
 Keskusteluryhmät "sigbanners" (S33k_100):
 

@@ -17,6 +17,10 @@ Een eenvoudige manier om uw steun te betuigen aan AROS is het plaatsen van een l
 	.. Image:: /images/aros-banner2.png
 		:align: center
 		:class: bannerimage
+		
+	.. Image:: /images/aros-banner-blue.png
+		:align: center
+		:class: bannerimage
 
 Alternatief zijn er ook sigbanners speciaal voor op forums (S33k_100):
 

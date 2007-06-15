@@ -21,6 +21,10 @@ Cyb0rg / Resistance και ένα πιο πρόσφατο από τον S33k_100:
 	.. Image:: /images/aros-banner2.png
 		:align: center
 		:class: bannerimage
+		
+	.. Image:: /images/aros-banner-blue.png
+		:align: center
+		:class: bannerimage
 
 Εναλλακτικά υπάρχουν sigbanners για χρήση σε forums (από τον S33k_100):
 

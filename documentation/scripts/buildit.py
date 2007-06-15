@@ -381,6 +381,7 @@ def copyImages():
         [
             os.path.join( srcpath, 'aros-banner.gif' ),
             os.path.join( srcpath, 'aros-banner2.png' ),
+            os.path.join( srcpath, 'aros-banner-blue.png' ),
             os.path.join( srcpath, 'aros-sigbar-user.png' ),
             os.path.join( srcpath, 'aros-sigbar-coder.png' ),
             os.path.join( srcpath, 'genesi.gif' ),

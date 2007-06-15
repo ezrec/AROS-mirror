@@ -19,6 +19,10 @@ pouvez utiliser les jolies bannières suivantes, réalisées par Cyb0rg / Resistanc
 	.. Image:: /images/aros-banner2.png
 		:align: center
 		:class: bannerimage
+		
+	.. Image:: /images/aros-banner-blue.png
+		:align: center
+		:class: bannerimage
 
 Forum bannières (S33k_100):
 
