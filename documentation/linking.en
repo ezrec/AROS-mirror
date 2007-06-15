@@ -10,34 +10,44 @@ Linking
 
 A great way to show your support for AROS, and one that we actively encourage,
 is to link to this website from your own. You can use one of the following nice banners
-for this purpose, such as the original drawn by Cyb0rg / Resistance and a more recent
-one by S33k_100:
+for this purpose.
+
++------------------------------------------+----------------------+
+| Image                                    | Author               |
++==========================================+======================+
+| .. Image:: /images/aros-banner.gif       | Cyb0rg / Resistance  |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
+| .. Image:: /images/aros-banner2.png      | S33k_100             |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
+| .. Image:: /images/aros-banner-blue.png  | S33k_100             |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
+| .. Image:: /images/aros-banner-pb2.png   | Paolo Besser         |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
 
 
- .. Image:: /images/aros-banner.gif
-  :align: center
-  :class: bannerimage
+Alternatively there are also signature banners for use on forums:
 
- .. Image:: /images/aros-banner2.png
-  :align: center
-  :class: bannerimage
++------------------------------------------+----------------------+
+| Image                                    | Author               |
++==========================================+======================+
+| .. Image:: /images/aros-sigbar-user.png  | S33k_100             |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
+| .. Image:: /images/aros-sigbar-coder.png | S33k_100             |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
 
- .. Image:: /images/aros-banner-blue.png
-  :align: center
-  :class: bannerimage
-
-
-Alternatively there are also signature banners for use on forums (by S33k_100):
-
- .. Image:: /images/aros-sigbar-user.png
-  :align: center
-  :class: bannerimage
-
- .. Image:: /images/aros-sigbar-coder.png
-  :align: center
-  :class: bannerimage
 
 Please link directly to http://www.aros.org/ and not any of the mirrors, as they
 might change over time. Also, please make a local copy of the image to reduce
 bandwidth usage.
-
