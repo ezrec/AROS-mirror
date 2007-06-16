@@ -35,9 +35,9 @@
 enum {NEW=0, OPEN, CUT=3, COPY, PASTE, UNDO };
 enum {BOLD=0, ITALIC, UNDERLINED, LEFT=4, CENTER, RIGHT };
 
-#include <MUI/Toolbar_mcc.h>
+#include <mui/Toolbar_mcc.h>
 #ifdef __AROS__
-#include <MUI/NFloattext_mcc.h>
+#include <mui/NFloattext_mcc.h>
 #endif
 
 struct Library *MUIMasterBase;

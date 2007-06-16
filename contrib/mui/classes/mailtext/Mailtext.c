@@ -58,11 +58,7 @@
 #include "loc/Mailtext_mcc.h"
 #include "URLs.h"
 
-#ifdef __AROS__
-#include <MUI/NList_mcc.h>
-#else
 #include <mui/NList_mcc.h>
-#endif
 
 #define CLASS         MUIC_Mailtext
 #define SUPERCLASS    MUIC_NList

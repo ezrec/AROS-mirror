@@ -24,4 +24,4 @@ FILES := Dispatcher \
 #MM includes-copy
 
 INCLUDE_FILES := ../include/mui/TheBar_mcc.h
-%copy_includes path=MUI dir=../include/mui
+%copy_includes path=mui dir=../include/mui

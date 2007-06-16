@@ -12,7 +12,7 @@
 #include "muimiamipanel_misc.h"
 #include "muimiamipanel_commands.h"
 
-#include <MUI/Busy_mcc.h>
+#include <mui/Busy_mcc.h>
 
 /***********************************************************************/
 

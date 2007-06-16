@@ -42,7 +42,7 @@
 #include <stdlib.h>
 #include <proto/utility.h>
 #include <mui.h>
-#include <MUI/Busy_mcc.h>
+#include <mui/Busy_mcc.h>
 
 #include "debug.h"
 #include "classes.h"

@@ -2,8 +2,8 @@
 
 #include <libraries/mui.h>
 #include <aros/asmcall.h>
-#include <MUI/NListview_mcc.h>
-#include <MUI/NList_mcc.h>
+#include <mui/NListview_mcc.h>
+#include <mui/NList_mcc.h>
 
 #include <proto/alib.h>
 #include <proto/dos.h>

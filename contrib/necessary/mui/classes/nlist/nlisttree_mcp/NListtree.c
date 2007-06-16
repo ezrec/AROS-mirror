@@ -42,9 +42,9 @@
 
 #include "locale.h"
 
-#include <MUI/NFloattext_mcc.h>
-#include <MUI/NListview_mcc.h>
-#include <MUI/NList_mcc.h>
+#include <mui/NFloattext_mcc.h>
+#include <mui/NListview_mcc.h>
+#include <mui/NList_mcc.h>
 
 #include "rev.h"
 #include "private.h"

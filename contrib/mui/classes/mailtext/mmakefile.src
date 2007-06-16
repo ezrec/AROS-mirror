@@ -44,7 +44,7 @@ MCPFILES := MailtextP \
 #MM includes-copy
 
 INCLUDE_FILES := mui/Mailtext_mcc.h
-%copy_includes path=MUI dir=mui
+%copy_includes path=mui dir=mui
 
 #MM- contrib-zune-classes-mailtext-catalogs : contrib-zune-classes-mailtext-mcc-catalogs
 

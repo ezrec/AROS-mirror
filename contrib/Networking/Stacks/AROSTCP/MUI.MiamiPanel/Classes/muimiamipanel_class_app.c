@@ -13,8 +13,8 @@
 #include "muimiamipanel_iffprefs.h"
 #include "muimiamipanel_commands.h"
 
-#include <MUI/BWin_mcc.h>
-#include <MUI/TheBar_mcc.h>
+#include <mui/BWin_mcc.h>
+#include <mui/TheBar_mcc.h>
 
 #include "Classes/muimiamipanel_classes.h"
 

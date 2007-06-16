@@ -53,7 +53,7 @@
  #include "private.h"
 #endif
 
-#include <MUI/NList_mcc.h>
+#include <mui/NList_mcc.h>
 
 #define MUIA_TI_Spec		0xfedc
 #define	MUIA_TI_MaxWidth	0xfedb

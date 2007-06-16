@@ -32,7 +32,7 @@
 
 #ifdef __AROS__
 #include <proto/intuition.h>
-#include <MUI/NFloattext_mcc.h>
+#include <mui/NFloattext_mcc.h>
 #endif
 
 #ifndef MAKE_ID
@@ -46,7 +46,7 @@
 enum {NEW=0, OPEN, CUT=3, COPY, PASTE, UNDO };
 enum {BOLD=0, ITALIC, UNDERLINED, LEFT=4, CENTER, RIGHT };
 
-#include <MUI/Toolbar_mcc.h>
+#include <mui/Toolbar_mcc.h>
 
 #if !defined(__AROS__)
 struct Library *MUIMasterBase;

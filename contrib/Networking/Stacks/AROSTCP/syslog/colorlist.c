@@ -22,7 +22,7 @@
 #include <syslog.h>
 
 #include <libraries/mui.h>
-#include <MUI/NList_mcc.h>
+#include <mui/NList_mcc.h>
 
 #include "main.h"
 #include "colorlist.h"

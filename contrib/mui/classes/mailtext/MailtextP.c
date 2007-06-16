@@ -40,11 +40,8 @@
 #include <libraries/locale.h>
 #include <utility/tagitem.h>
 #include <string.h>
-#ifdef __AROS__
-#include <MUI/NListview_mcc.h>
-#else
+
 #include <mui/NListview_mcc.h>
-#endif
 
 #include "Mailtext_private.h"
 #include "loc/Mailtext_mcp.h"

@@ -60,11 +60,11 @@ extern struct Library *MUIMasterBase;
 #include <proto/utility.h>
 #include <proto/muimaster.h>
 #include <aros/asmcall.h>
-#include <MUI/NList_mcc.h>
+#include <mui/NList_mcc.h>
 #endif
 
-#include <MUI/NListview_mcc.h>
-#include <MUI/NFloattext_mcc.h>
+#include <mui/NListview_mcc.h>
+#include <mui/NFloattext_mcc.h>
 
 #include "NList-Demo3.h"
 

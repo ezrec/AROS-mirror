@@ -78,7 +78,7 @@
                                     /* when your object is disabled or invisible */
 #endif
 
-#include <MUI/NList_mcc.h>
+#include <mui/NList_mcc.h>
 
 #define imgbt(nr)\
   ImageObject,\

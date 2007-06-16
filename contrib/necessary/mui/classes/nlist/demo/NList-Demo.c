@@ -61,12 +61,12 @@ struct Library *MUIMasterBase;
 #ifdef __AROS__
 #define MUIMASTER_VMIN 1
 #include <proto/intuition.h>
-#include <MUI/NList_mcc.h>
+#include <mui/NList_mcc.h>
 #endif
 
-#include <MUI/NListview_mcc.h>
+#include <mui/NListview_mcc.h>
 
-#include <MUI/NFloattext_mcc.h>
+#include <mui/NFloattext_mcc.h>
 
 #include <proto/muimaster.h>
 

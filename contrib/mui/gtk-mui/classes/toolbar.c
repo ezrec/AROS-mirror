@@ -38,7 +38,7 @@
 #include <exec/types.h>
 
 #include <mui.h>
-#include <MUI/Toolbar_mcc.h>
+#include <mui/Toolbar_mcc.h>
 
 #include "classes.h"
 #include "gtk_globals.h"

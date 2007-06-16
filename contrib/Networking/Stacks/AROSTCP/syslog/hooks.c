@@ -10,7 +10,7 @@
 #include <proto/locale.h>
 #include <clib/alib_protos.h>
 #include <libraries/asl.h>
-#include <MUI/NList_mcc.h>
+#include <mui/NList_mcc.h>
 //#include <exec/rawfmt.h>
 #include <string.h>
 #include "main.h"

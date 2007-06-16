@@ -23,10 +23,10 @@
 #include    <clib/alib_protos.h>
 
 #include <libraries/mui.h>
-#include <MUI/NListtree_mcc.h>
-#include <MUI/NListview_mcc.h>
-#include <MUI/NList_mcc.h>
-#include <MUI/BetterString_mcc.h>
+#include <mui/NListtree_mcc.h>
+#include <mui/NListview_mcc.h>
+#include <mui/NList_mcc.h>
+#include <mui/BetterString_mcc.h>
 
 #include <utility/hooks.h>
 

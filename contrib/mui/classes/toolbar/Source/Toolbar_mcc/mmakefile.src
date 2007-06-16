@@ -23,4 +23,4 @@ FILES := Dispatcher \
 #MM includes-copy
 
 INCLUDE_FILES := Toolbar_mcc.h
-%copy_includes path=MUI
+%copy_includes path=mui

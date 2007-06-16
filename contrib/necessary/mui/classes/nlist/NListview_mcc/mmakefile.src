@@ -14,4 +14,4 @@ USER_INCLUDES = -I../commonaros
 #MM includes-copy
 
 INCLUDE_FILES := NListview_mcc.h
-%copy_includes path=MUI
+%copy_includes path=mui

@@ -9,7 +9,7 @@
 #include "muimiamipanel_intern.h"
 #include "muimiamipanel_locale.h"
 
-#include <MUI/TheBar_mcc.h>
+#include <mui/TheBar_mcc.h>
 
 /***********************************************************************/
 

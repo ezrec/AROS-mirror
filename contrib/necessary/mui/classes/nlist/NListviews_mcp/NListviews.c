@@ -59,7 +59,7 @@
 #include "rev.h"
 #include "mcc_common.h"
 
-#include "MUI/NListview_mcc.h"
+#include "mui/NListview_mcc.h"
 
 #ifdef __AROS__
 extern struct Device *ConsoleDevice;
