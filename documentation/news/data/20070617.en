@@ -1,0 +1,35 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-06-17
+
+Latest news
+-----------
+
+AROS globalization continues! Ioannis Koniaris has translated 
+`AROS.org in Greek`__.
+
+In the last weeks we got some technical issues with our build machine,
+so we apologize if you couldn't download an updated nightly. However
+the problem has been resolved with a brand new build machine, set up by
+Robert Norris.
+
+Three new interesting bounties had been recently opened on TeamAROS: 
+please have a look to `AROS on SAM440`__, `disk validator`__ and 
+`creation of a new AROS distro`__.
+
+We'd really like to thank everyone involved in AROS artistry: in the 
+last weeks we got lots of new wallpaper for our `competition`__ and 
+also some new `banners`__. If you're running a website, or actively 
+partecipating to a forum, you may help AROS diffusion by using and 
+linking them to (your language translation of) Aros.org.
+
+
+__ http://www.aros.org/el
+__ http://thenostromo.com/teamaros2/?number=60
+__ http://thenostromo.com/teamaros2/?number=59
+__ http://thenostromo.com/teamaros2/?number=58
+__ http://aros-exec.org/modules/news/article.php?storyid=227
+__ http://aros.sourceforge.net/linking.php

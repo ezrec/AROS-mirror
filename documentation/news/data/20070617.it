@@ -1,0 +1,39 @@
+=============
+Aggiornamento
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-06-17
+
+Latest news
+-----------
+
+La globalizzazione di AROS continua! Ioannis Koniaris ha tradotto 
+`AROS.org in Greco`__.
+
+A causa di alcuni inconvenienti tecnici alla macchina incaricata di 
+realizzare le nightly build, non è stato possibile rendere disponibili 
+alcune build notturne del sistema operativo. Ci scusiamo per 
+l'inconveniente, abilmente risolto da Robert Norris con un nuovo 
+computer dedicato a questo compito.
+
+Sul sito di TeamAROS sono state aperte tre nuove bounty interessanti: 
+per cortesia date un'occhiata a `AROS su SAM440`__, `disk validator`__ 
+e `realizzazione di una nuova distribuzione di AROS`__.
+
+Vorremmo ringraziare tutti coloro che hanno gentilmente fornito 
+materiale grafico per AROS: nelle ultime settimane diversi artisti 
+hanno partecipato alla nostra `competizione`__ per realizzare un 
+fondino ufficiale per Wanderer, e alcuni hanno realizzato anche dei 
+simpatici `banner`__. Se amministrate un sito web o partecipate 
+attivamente ai forum, ci fareste davvero un favore ad aiutare la 
+diffusione di AROS usandoli e linkandoli ad Aros.org (o meglio 
+ancora alla sua traduzione nella vostra lingua)
+
+
+__ http://www.aros.org/el
+__ http://thenostromo.com/teamaros2/?number=60
+__ http://thenostromo.com/teamaros2/?number=59
+__ http://thenostromo.com/teamaros2/?number=58
+__ http://aros-exec.org/modules/news/article.php?storyid=227
+__ http://aros.sourceforge.net/linking.php
