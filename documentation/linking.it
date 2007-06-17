@@ -10,32 +10,45 @@ Linking
 
 Un bel modo per dimostrarci il vostro supporto ad AROS, che vi incoraggiamo 
 caldamente di adottare, è inserire un link a questo sito dal vostro. Potete 
-usare uni di questi banner, disegnati apposta da Cyb0rg / Resistance
-e più recentemente da S33k_100: 
+usare uno di questi banner, disegnati apposta per questo scopo: 
 
-	.. Image:: /images/aros-banner.gif
-		:align: center
-		:class: bannerimage
-		
-	.. Image:: /images/aros-banner2.png
-		:align: center
-		:class: bannerimage
-		
-	.. Image:: /images/aros-banner-blue.png
-		:align: center
-		:class: bannerimage
++------------------------------------------+----------------------+
+| Immagine                                 | Autore               |
++==========================================+======================+
+| .. Image:: /images/aros-banner.gif       | Cyb0rg / Resistance  |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
+| .. Image:: /images/aros-banner2.png      | S33k_100             |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
+| .. Image:: /images/aros-banner-blue.png  | S33k_100             |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
+| .. Image:: /images/aros-banner-pb2.png   | Paolo Besser         |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
 
-Forum (sig)banners (S33k_100):
 
-	.. Image:: /images/aros-sigbar-user.png
-		:align: center
-		:class: bannerimage
+In alternativa, potete usare anche queste nei forum:
 
-	.. Image:: /images/aros-sigbar-coder.png
-		:align: center
-		:class: bannerimage
++------------------------------------------+----------------------+
+| Immagine                                 | Autore               |
++==========================================+======================+
+| .. Image:: /images/aros-sigbar-user.png  | S33k_100             |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
+| .. Image:: /images/aros-sigbar-coder.png | S33k_100             |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
 
-Per cortesia collegatelo a http://www.aros.org/ e a nessun altro mirror, visto 
+
+Per cortesia collegateli a http://www.aros.org/ e a nessun altro mirror, visto 
 che possono cambiare all'improvviso. Usate una copia locale dell'immagine, in modo 
 da ridurre l'impiego di banda.
 
