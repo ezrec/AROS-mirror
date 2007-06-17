@@ -10,31 +10,42 @@
 
 Ένας θαυμάσιος τρόπος για να δείξετε την υποστήριξη σας προς το AROS, και τον οποίο ενθαρρύνουμε ενεργά,
 είναι να δημιουργήσετε μία σύνδεση προς αυτήν την ιστοσελίδα στην δικιά σας. Μπορείτε να χρησιμοποιήσετε 
-ένα από τα ακόλουθα όμορφα banners για αυτόν τον σκοπό, όπως το original που σχεδιάστηκε από τον 
-Cyb0rg / Resistance και ένα πιο πρόσφατο από τον S33k_100:
+ένα από τα ακόλουθα όμορφα banners για αυτόν τον σκοπό:
 
++------------------------------------------+----------------------+
+| Εικόνα                                   | Δημιουργός           |
++==========================================+======================+
+| .. Image:: /images/aros-banner.gif       | Cyb0rg / Resistance  |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
+| .. Image:: /images/aros-banner2.png      | S33k_100             |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
+| .. Image:: /images/aros-banner-blue.png  | S33k_100             |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
+| .. Image:: /images/aros-banner-pb2.png   | Paolo Besser         |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
 
- 	.. Image:: /images/aros-banner.gif
-		:align: center
-		:class: bannerimage
-		
-	.. Image:: /images/aros-banner2.png
-		:align: center
-		:class: bannerimage
-		
-	.. Image:: /images/aros-banner-blue.png
-		:align: center
-		:class: bannerimage
+Εναλλακτικά υπάρχουν sigbanners για χρήση σε forums:
 
-Εναλλακτικά υπάρχουν sigbanners για χρήση σε forums (από τον S33k_100):
++------------------------------------------+----------------------+
+| Εικόνα                                   | Δημιουργός           |
++==========================================+======================+
+| .. Image:: /images/aros-sigbar-user.png  | S33k_100             |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
+| .. Image:: /images/aros-sigbar-coder.png | S33k_100             |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
 
-	.. Image:: /images/aros-sigbar-user.png
-		:align: center
-		:class: bannerimage
-
-	.. Image:: /images/aros-sigbar-coder.png
-		:align: center
-		:class: bannerimage
 
 Παρακαλούμε δημιουργήστε συνδέσεις απευθείας στο http://www.aros.org/ και όχι σε κάποιο από τα mirrors, καθώς
 μπορεί να αλλάξουν με την πάροδο του χρόνου. Επίσης, παρακαλούμε δημιουργήστε ένα τοπικό αντίγραφο της εικόνας
