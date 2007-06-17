@@ -139,24 +139,7 @@ int open_subprocess_connection(const tsd_t *TSD, environpart *ep, void *async_in
   /* Reset everything to NULL or 0 */
   memset(&ai->files[slot], 0, sizeof(FileHandleInfo));
 
-  ai->files[slot].fhin = Open("PIPEFS://unnamedpipe//", FMF_READ|FMF_NONBLOCK);
-  if (ai->files[slot].fhin != NULL)
-  {
-    ai->files[slot].fhout = DupFH(ai->files[slot].fhin, FMF_WRITE);
-    ChangeMode(CHANGE_FH, ai->files[slot].fhin, FMF_READ);
-  }
-  if (ai->files[slot].fhin == NULL || ai->files[slot].fhout == NULL)
-  {
-    if (ai->files[slot].fhin != NULL)
-    {
-      Close(ai->files[slot].fhin);
-      ai->files[slot].fhin = NULL;
-    }
-    if (ai->files[slot].fhout != NULL)
-    {
-      Close(ai->files[slot].fhout);
-      ai->files[slot].fhout = NULL;
-    }
+  if (Pipe("PIPEFS:", &(ai->files[slot].fhin), &(ai->files[slot].fhout)) != DOSTRUE)
     errno = EACCES;
     return -1;
   }
