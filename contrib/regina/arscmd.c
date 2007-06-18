@@ -140,6 +140,7 @@ int open_subprocess_connection(const tsd_t *TSD, environpart *ep, void *async_in
   memset(&ai->files[slot], 0, sizeof(FileHandleInfo));
 
   if (Pipe("PIPEFS:", &(ai->files[slot].fhin), &(ai->files[slot].fhout)) != DOSTRUE)
+  {
     errno = EACCES;
     return -1;
   }
