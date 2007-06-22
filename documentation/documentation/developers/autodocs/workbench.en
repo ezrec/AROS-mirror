@@ -10,10 +10,10 @@ workbench
 
 ======================================= ======================================= ======================================= ======================================= 
 `AddAppIconA`_                          `AddAppMenuItemA`_                      `AddAppWindowA`_                        `AddAppWindowDropZoneA`_                
-`ChangeWorkbenchSelectionA`_            `CloseWorkbenchObjectA`_                `MakeWorkbenchObjectVisibleA`_          `OpenWorkbenchObjectA`_                 
-`RegisterWorkbench`_                    `RemoveAppIcon`_                        `RemoveAppMenuItem`_                    `RemoveAppWindow`_                      
-`RemoveAppWindowDropZone`_              `SendAppWindowMessage`_                 `UnregisterWorkbench`_                  `UpdateWorkbenchObjectA`_               
-`WBInfo`_                               `WorkbenchControlA`_                    
+`ChangeWorkbenchSelectionA`_            `CloseWorkbenchObjectA`_                `GetNextAppIcon`_                       `MakeWorkbenchObjectVisibleA`_          
+`OpenWorkbenchObjectA`_                 `RegisterWorkbench`_                    `RemoveAppIcon`_                        `RemoveAppMenuItem`_                    
+`RemoveAppWindow`_                      `RemoveAppWindowDropZone`_              `SendAppWindowMessage`_                 `UnregisterWorkbench`_                  
+`UpdateWorkbenchObjectA`_               `WBInfo`_                               `WorkbenchControlA`_                    
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -492,6 +492,77 @@ Synopsis
  BOOL CloseWorkbenchObjectA(
           STRPTR name,
           struct TagItem * tags );
+
+
+GetNextAppIcon
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct DiskObject * GetNextAppIcon(
+          struct DiskObject * lastdiskobj,
+          char * text );
+
+Function
+~~~~~~~~
+::
+
+
+ Accesses AppIcon information from workbench.library. This function 
+ is meant for iterations through wblibs´ AppIcon storage as needed 
+ to display those. 
+     Initialised with a NULL as the first argument, it iterates
+ through all AppIcons stored in workbench.library by returning the
+ pointer to the next AppIcon´s DiskObject structure and copies the
+ name of the given AppIcon to the given array. The function returns
+ a NULL if the end of AppIcon list was reached or if no AppIcons 
+ were stored.
+
+
+Inputs
+~~~~~~
+::
+
+
+ lastdiskobj  --  NULL (initial value) or pointer to a DiskObject 
+                  structure stored in workbench.library
+ text         --  char array pointer to store AppIcon´s name in
+
+
+Result
+~~~~~~
+::
+
+
+ A pointer to an DiskObject structure -- which should be used within
+ the next function call to access the next AppIcon -- or NULL if no
+ AppIcons were found or end of list was reached.
+
+
+Example
+~~~~~~~
+::
+
+
+   struct DiskObject *_nb_dob = NULL;
+   char text[32];
+
+   while ( _nb_dob = GetNextAppIcon(_nb_dob, &text) )
+   {
+       printf("appicon found: %s \n", text);
+   }
+
+
+
+See also
+~~~~~~~~
+::
+
+
+ AddAppIconA(), RemoveAppIcon(), WorkbenchControlA(), DrawIconStateA()
+
 
 
 MakeWorkbenchObjectVisibleA

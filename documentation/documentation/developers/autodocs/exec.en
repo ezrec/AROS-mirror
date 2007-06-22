@@ -3830,8 +3830,8 @@ Inputs
 
                                 defaults to WORD, if nothing is specified.
 
-                    type      - 'b' BCPL string. A BPTR to a one byte
-                                    byte count followed by the characters.
+                    type      - 'b' BSTR. It will use the internal representation
+                                    of the BSTR defined by the ABI.
                                 'c' single character.
                                 'd' signed decimal number.
                                 's' C string. NULL terminated.

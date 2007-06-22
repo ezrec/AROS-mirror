@@ -12,7 +12,7 @@ intuition
 `ActivateGadget`_                       `ActivateWindow`_                       `AddClass`_                             `AddGList`_                             
 `AddGadget`_                            `AllocIntuiMessage`_                    `AllocRemember`_                        `AllocScreenBuffer`_                    
 `AlohaWorkbench`_                       `AutoRequest`_                          `BeginRefresh`_                         `BuildEasyRequestArgs`_                 
-`BuildSysRequest`_                      `ChangeDecorationA`_                    `ChangeScreenBuffer`_                   `ChangeWindowBox`_                      
+`BuildSysRequest`_                      `ChangeDecoration`_                     `ChangeScreenBuffer`_                   `ChangeWindowBox`_                      
 `ChangeWindowShape`_                    `ClearDMRequest`_                       `ClearMenuStrip`_                       `ClearPointer`_                         
 `CloseScreen`_                          `CloseWindow`_                          `CloseWorkBench`_                       `CurrentTime`_                          
 `DisplayAlert`_                         `DisplayBeep`_                          `DisposeObject`_                        `DoGadgetMethodA`_                      
@@ -28,22 +28,22 @@ intuition
 `MakeScreen`_                           `ModifyIDCMP`_                          `ModifyProp`_                           `MoveScreen`_                           
 `MoveWindow`_                           `MoveWindowInFrontOf`_                  `NewModifyProp`_                        `NewObjectA`_                           
 `NextObject`_                           `NextPubScreen`_                        `ObtainGIRPort`_                        `OffGadget`_                            
-`OffMenu`_                              `OnGadget`_                             `OnMenu`_                               `OpenScreenTagList`_                    
-`OpenWindow`_                           `OpenWindowTagList`_                    `OpenWorkBench`_                        `PointInImage`_                         
-`PrintIText`_                           `PubScreenStatus`_                      `QueryOverscan`_                        `RefreshGList`_                         
-`RefreshGadgets`_                       `RefreshWindowFrame`_                   `ReleaseGIRPort`_                       `RemakeDisplay`_                        
-`RemoveClass`_                          `RemoveGList`_                          `RemoveGadget`_                         `ReportMouse`_                          
-`Request`_                              `ResetMenuStrip`_                       `RethinkDisplay`_                       `ScreenDepth`_                          
-`ScreenPosition`_                       `ScreenToBack`_                         `ScreenToFront`_                        `ScrollWindowRaster`_                   
-`SendIntuiMessage`_                     `SetAttrsA`_                            `SetDMRequest`_                         `SetDefaultPubScreen`_                  
-`SetDefaultScreenFont`_                 `SetEditHook`_                          `SetGadgetAttrsA`_                      `SetIPrefs`_                            
-`SetMenuStrip`_                         `SetMouseQueue`_                        `SetPointer`_                           `SetPrefs`_                             
-`SetPubScreenModes`_                    `SetWindowPointerA`_                    `SetWindowTitles`_                      `ShowTitle`_                            
-`ShowWindow`_                           `SizeWindow`_                           `StartScreenNotifyTagList`_             `SysReqHandler`_                        
-`TimedDisplayAlert`_                    `UnlockIBase`_                          `UnlockPubScreen`_                      `UnlockPubScreenList`_                  
-`ViewAddress`_                          `ViewPortAddress`_                      `WBenchToBack`_                         `WBenchToFront`_                        
-`WindowLimits`_                         `WindowToBack`_                         `WindowToFront`_                        `ZipWindow`_                            
-`lockPubClass`_                         `unlockPubClass`_                       
+`OffMenu`_                              `OnGadget`_                             `OnMenu`_                               `OpenScreen`_                           
+`OpenScreenTagList`_                    `OpenWindow`_                           `OpenWindowTagList`_                    `OpenWorkBench`_                        
+`PointInImage`_                         `PrintIText`_                           `PubScreenStatus`_                      `QueryOverscan`_                        
+`RefreshGList`_                         `RefreshGadgets`_                       `RefreshWindowFrame`_                   `ReleaseGIRPort`_                       
+`RemakeDisplay`_                        `RemoveClass`_                          `RemoveGList`_                          `RemoveGadget`_                         
+`ReportMouse`_                          `Request`_                              `ResetMenuStrip`_                       `RethinkDisplay`_                       
+`ScreenDepth`_                          `ScreenPosition`_                       `ScreenToBack`_                         `ScreenToFront`_                        
+`ScrollWindowRaster`_                   `SendIntuiMessage`_                     `SetAttrsA`_                            `SetDMRequest`_                         
+`SetDefaultPubScreen`_                  `SetDefaultScreenFont`_                 `SetEditHook`_                          `SetGadgetAttrsA`_                      
+`SetIPrefs`_                            `SetMenuStrip`_                         `SetMouseQueue`_                        `SetPointer`_                           
+`SetPrefs`_                             `SetPubScreenModes`_                    `SetWindowPointerA`_                    `SetWindowTitles`_                      
+`ShowTitle`_                            `ShowWindow`_                           `SizeWindow`_                           `StartScreenNotifyTagList`_             
+`SysReqHandler`_                        `TimedDisplayAlert`_                    `UnlockIBase`_                          `UnlockPubScreen`_                      
+`UnlockPubScreenList`_                  `ViewAddress`_                          `ViewPortAddress`_                      `WBenchToBack`_                         
+`WBenchToFront`_                        `WindowLimits`_                         `WindowToBack`_                         `WindowToFront`_                        
+`ZipWindow`_                            `lockPubClass`_                         `unlockPubClass`_                       
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -619,18 +619,45 @@ See also
 
 
 
-ChangeDecorationA
-=================
+ChangeDecoration
+================
 
 Synopsis
 ~~~~~~~~
 ::
 
- Object * ChangeDecorationA(
-          ULONG which,
-          CONST_STRPTR classID,
-          struct DrawInfo * dri,
-          struct TagItem * tagList );
+ void ChangeDecoration(
+          ULONG ID,
+          struct NewDecorator * nd );
+
+Function
+~~~~~~~~
+::
+
+ setup a new decorator for intuition windows, screens or menus
+
+
+Inputs
+~~~~~~
+::
+
+ ID - identifier for decorations, see screens.h
+ nd -  an ID dependent NewDecorator structure
+
+Result
+~~~~~~
+::
+
+ void - this Function cannot fail, 
+
+
+Notes
+~~~~~
+::
+
+ the function fails if screens are open, use ChangeIntuition() to notify applications that
+ the UI will be changed
+
 
 
 ChangeScreenBuffer
@@ -2577,7 +2604,7 @@ Function
  window is ready.
 
  If you try to lock the Workbench screen or the default public screen
- and there isn'tany, the Workbench screen will be automatically opened
+ and there isn't any, the Workbench screen will be automatically opened
  and locked.
 
 
@@ -3530,6 +3557,17 @@ See also
 
  OffMenu(), ResetMenuStrip()
 
+
+
+OpenScreen
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Screen * OpenScreen(
+          struct NewScreen * newScreen );
 
 
 OpenScreenTagList

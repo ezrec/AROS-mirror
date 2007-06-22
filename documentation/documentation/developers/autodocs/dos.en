@@ -34,20 +34,20 @@ dos
 `MaxCli`_                               `NameFromLock`_                         `NewLoadSeg`_                           `NextDosEntry`_                         
 `Open`_                                 `OpenFromLock`_                         `Output`_                               `ParentDir`_                            
 `ParentOfFH`_                           `ParsePattern`_                         `ParsePatternNoCase`_                   `PathPart`_                             
-`PrintFault`_                           `PutStr`_                               `Read`_                                 `ReadArgs`_                             
-`ReadItem`_                             `ReadLink`_                             `Relabel`_                              `RemAssignList`_                        
-`RemDosEntry`_                          `RemSegment`_                           `Rename`_                               `ReplyPkt`_                             
-`RunCommand`_                           `SameDevice`_                           `SameLock`_                             `Seek`_                                 
-`SelectError`_                          `SelectInput`_                          `SelectOutput`_                         `SendPkt`_                              
-`SetArgStr`_                            `SetComment`_                           `SetConsoleTask`_                       `SetCurrentDirName`_                    
-`SetFileDate`_                          `SetFileSize`_                          `SetFileSysTask`_                       `SetIoErr`_                             
-`SetMode`_                              `SetOwner`_                             `SetProgramDir`_                        `SetProgramName`_                       
-`SetPrompt`_                            `SetProtection`_                        `SetVBuf`_                              `SetVar`_                               
-`SplitName`_                            `StartNotify`_                          `StrToDate`_                            `StrToLong`_                            
-`SystemTagList`_                        `UnGetC`_                               `UnLoadSeg`_                            `UnLockDosList`_                        
-`UnLockRecord`_                         `UnLockRecords`_                        `VFPrintf`_                             `VFWritef`_                             
-`VPrintf`_                              `WaitForChar`_                          `WaitPkt`_                              `Write`_                                
-`WriteChars`_                           
+`Pipe`_                                 `PrintFault`_                           `PutStr`_                               `Read`_                                 
+`ReadArgs`_                             `ReadItem`_                             `ReadLink`_                             `Relabel`_                              
+`RemAssignList`_                        `RemDosEntry`_                          `RemSegment`_                           `Rename`_                               
+`ReplyPkt`_                             `RunCommand`_                           `SameDevice`_                           `SameLock`_                             
+`Seek`_                                 `SelectError`_                          `SelectInput`_                          `SelectOutput`_                         
+`SendPkt`_                              `SetArgStr`_                            `SetComment`_                           `SetConsoleTask`_                       
+`SetCurrentDirName`_                    `SetFileDate`_                          `SetFileSize`_                          `SetFileSysTask`_                       
+`SetIoErr`_                             `SetMode`_                              `SetOwner`_                             `SetProgramDir`_                        
+`SetProgramName`_                       `SetPrompt`_                            `SetProtection`_                        `SetVBuf`_                              
+`SetVar`_                               `SplitName`_                            `StartNotify`_                          `StrToDate`_                            
+`StrToLong`_                            `SystemTagList`_                        `UnGetC`_                               `UnLoadSeg`_                            
+`UnLockDosList`_                        `UnLockRecord`_                         `UnLockRecords`_                        `VFPrintf`_                             
+`VFWritef`_                             `VPrintf`_                              `WaitForChar`_                          `WaitPkt`_                              
+`Write`_                                `WriteChars`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -1247,7 +1247,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- struct Device * DeviceProc(
+ struct MsgPort * DeviceProc(
           CONST_STRPTR name );
 
 Function
@@ -4404,6 +4404,43 @@ Example
 
      PathPart("xxx:yyy/zzz/qqq") would return a pointer to the last '/'.
      PathPart("xxx:yyy") would return a pointer to the first 'y').
+
+
+
+Pipe
+====
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG Pipe(
+          CONST_STRPTR name,
+          BPTR *reader,
+          BPTR *writer );
+
+Function
+~~~~~~~~
+::
+
+     Creates a pair of file handles connected to each other
+
+
+Inputs
+~~~~~~
+::
+
+     name       - NULL-terminated name of the file
+     reader     - Pointer to BPTR to store read handle in
+     writer     - Pointer to BPTR to store write handle in
+
+
+Result
+~~~~~~
+::
+
+     DOSTRUE on success, DOSFALSE on failure. IoErr() gives additional
+     information if the call failed.
 
 
 
