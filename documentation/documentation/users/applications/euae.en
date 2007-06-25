@@ -1,0 +1,106 @@
+=================================================
+Starting classic Amiga applications from Wanderer
+=================================================
+
+:Authors:   Matthias Rustler
+:Copyright: Copyright © 2007, The AROS Development Team
+:Version:   $Revision: $
+:Date:      $Date$
+:Status:    Done.
+
+
+Introduction
+------------
+
+E-UAE emulates classic Amiga hardware and allows running of old applications under modern
+hardware and operating systems. It is even possible to start E-UAE from a Wanderer icon
+in such a way that it loads an application. The trick is to use a script which starts E-UAE
+with certain parameters. This script gets an icon with "iconx" as default tool.
+
+
+Preparing E-UAE
+---------------
+
+E-UAE for AROS is available in the contrib archive of the nightly builds and has the path
+*System:Extras/Emu/E-UAE*.
+
+For E-UAE you need ROM image files. Legal ways to get them is buying the Cloanto Amiga Forever
+or Amiga Classix CD-Roms. Or you can extract them from a real Amiga with the tool "TransRom".
+Copy the image files somewhere to your AROS hard drives. The following example assumes that you have
+created a drawer "uae" on the drive "work:". (Hint: the images from the Cloanto CD are
+encripted. You need additionally the file rom.key.)
+
+Modify the default configuration file *System:Extras/Emu/E-UAE/.uaerc* with an editor. You should
+at least specify the paths to the ROM images. Example::
+
+    amiga.rom_path     = work:uae
+    amiga.use_dither   = false
+    cpu_type           = 68020
+    chipset            = ecs
+    chipmem_size       = 4
+    cachesize          = 4096
+    fastmem_size       = 8
+    gfx_linemode       = double
+    kickstart_rom_file = $(FILE_PATH)/kick13.rom
+    #kickstart_key_file = $(FILE_PATH)/rom.key
+    sound_output       = none
+
+Now its time for a test. Open a shell for the path *System:Extras/Emu/E-UAE* and type *i386-aros-uae*.
+If after some time the request for the Workbench disk appears (e.g. the hand for Kickstart 1.3) then
+you have managed the first hurdle. Even when it works you should look at the error messages and
+try to fix them.
+
+
+Configuration
+-------------
+
+E-UAE has a lot of options which can be specified in configuration files and command line options.
+See the documentation for E-UAE. When you start E-UAE like this:
+``i386-aros-uae -f config1 -option1 -option2``
+it first loads the file *.uaerc*. Then it loads the file specified with -f and overwrites
+previous settings. Then it uses the given command line options, again overwriting the options defined so far.
+
+It's recommended that you create configuration files which emulate real machines:
+
+* a500-13.uaerc: 68000 processor, ecs, kick1.3, no acceleration
+* a1200-31.uaerc: 68020, aga, kick 3.1, additional memory
+* a4000-31.uaerc: no limits
+
+Here is an example for a *a500-13.uaerc*::
+
+    cpu_type=68000
+    cpu_speed=real
+    kickstart_rom_file=$(FILE_PATH)/kick13.rom
+
+Writing configuration files is the most difficult part of this guide. If you have the Amiga Classix
+CDRom you can look in the available configuration files for hints.
+Or you can type ``i386-aros-uae -h >uaecommands`` to get a starting point with all available options.
+
+
+Installing a Game
+-----------------
+
+You need disk image files for the applications you want to run. This images have the extension *.adf*.
+You can store them in an arbitrary place. For our example we are using *work:uae*.
+
+
+Creating a start script with an icon
+------------------------------------
+
+The next step is to create a script file with a text editor which starts E-UAE. Here is an example for
+the game Zarathrusta which comes with 2 disks::
+
+    cd system:emu/e-uae
+    i386-aros-uae -f work:uae/a500-13.uaerc -0 work:uae/Zarathrusta1.adf -1 work:uae/Zarathrusta2.adf
+
+The first line makes the E-UAE directory the actual directory. Then we start E-UAE with the configuration file
+*a500-13.uaerc* and put the disk images in the drives 0 and 1.
+
+Save the file with the name *Zarathrusta* in *work:uae*.
+
+Finally we add an icon to the script. After you have opened the drawer *work:uae* in Wanderer, select the icon of
+the script and choose *Icon/Information* from the menu. Enter *c:iconx* as default tool. (The IconX tool executes
+text files as DOS scripts). On the Tooltypes page of icon information enter WINDOW=con:0/20//600/Zarathrusta/AUTO.
+This makes the output window bigger so that we can read probable error messages.
+
+Double-clicking on the icon should now start E-UAE with your application.

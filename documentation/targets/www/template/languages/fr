@@ -26,6 +26,7 @@ users:            Utilisateurs
 installation:     Installation
 using:            Utilisation
 shell:            Commandes Shell
+applications:     Applications
 faq:              FAQ
 developers:       Développeurs
 contribute:       Contributions

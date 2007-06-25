@@ -26,6 +26,7 @@ users:            Users
 installation:     Installation
 using:            Using
 shell:            Shell commands
+applications:     Applications
 faq:              FAQ
 developers:       Developers
 contribute:       Contribute

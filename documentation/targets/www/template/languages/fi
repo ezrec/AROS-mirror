@@ -26,6 +26,7 @@ users:            Käyttäjät
 installation:     Asennus
 using:            Käyttö
 shell:            Shell commands
+applications:     Applications
 faq:              FAQ
 developers:       Kehittäjät
 contribute:       Osanotto

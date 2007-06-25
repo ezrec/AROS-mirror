@@ -28,6 +28,7 @@ using:            Användning
 faq:              Frågor och svar
 shell:            Shell commands
 # FIXME: above
+applications:     Applications
 developers:       Utvecklare
 contribute:       Medverka
 bug-tracker:      Bug Tracker

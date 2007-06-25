@@ -83,6 +83,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 A( _N['installation'], href=makeURL( 'documentation/users/installation', lang ) ),
                 A( _N['using'], href=makeURL( 'documentation/users/using', lang ) ),
                 A( _N['shell'], href=makeURL( 'documentation/users/shell/index', lang ) ),
+                A( _N['applications'], href=makeURL( 'documentation/users/applications/index', lang ) ),
                 A( _N['faq'], href=makeURL( 'documentation/users/faq', lang ) ),
                 #_N['ports'],
                 #A( _N['links'], href=makeURL( 'documentation/users/links', lang ) )

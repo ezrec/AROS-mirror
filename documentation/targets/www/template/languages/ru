@@ -26,6 +26,7 @@ users:            Пользователи
 installation:     Установка
 using:            Использование
 shell:            Команды CLI-shell
+applications:     Applications
 faq:              ЧАВО(FAQ)
 developers:       Разработчики
 contribute:       Участие
