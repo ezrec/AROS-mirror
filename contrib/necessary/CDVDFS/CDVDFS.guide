@@ -69,15 +69,15 @@ Table of Contents:
 
 @node LEGAL "Copyrights and distribution"
 
-  CDVDFS author is Pavel Fedin (sonic_amiga@rambler.ru)
+  CDVDFS author is Pavel Fedin (sonic_amiga@rambler.ru).
+  CDVDFS is a forked project based on AmiCDROM v1.15.
 
-  CDVDFS is a forked project based on AmiCDROM v1.15 by Frank Munkert
-  (ln_fmu@pki-nbg.philips.de). Frank did not specify any terms under which
-  the source code was released. Some third party sources claim it to be
-  public domain.
+  AmiCDROM 1.15 is (C) Copyright 1993,1994 by Frank Munkert.
+  All rights reserved.
+  This software may be freely distributed and redistributed for
+  non-commercial purposes, provided this notice is included.
 
-  Currently it is assumed that CDVDFS can be distributed freely with or without
-  modifications as long as all history and copyright notices are retained.
+  There are no objections to anyone using or enhancing this code.
 
 @endnode
 
