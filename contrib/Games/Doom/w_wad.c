@@ -85,11 +85,11 @@ void**			lumpcache;
 
 #ifndef __SASC
 #define strcmpi	strcasecmp
-
+/* Removed by Pavel Fedin because conflicts with declaration in sdgstd.h (now included by string.h)
 void strupr (char* s)
 {
     while (*s) { *s = toupper(*s); s++; }
-}
+}*/
 #endif
 
 #ifdef AROS
