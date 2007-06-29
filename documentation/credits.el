@@ -8,8 +8,8 @@ Credits
 + Aaron Digulla
 
 
-Evangelism
-==========
+Προώθηση
+========
 
 + Ola "4pLaY" Jensen
 + Matt Parsons
@@ -91,8 +91,8 @@ Intuition
 + Fabio Alemagna
 
 
-Workbench
-=========
+Σταθμός Εργασίας
+================
 
 + Adam Chodorowski
 + Stefan Berger
