@@ -26,6 +26,7 @@ euae-copy-files : files-copy
 %copy_dir_recursive mmake=euae-amiga-copy src=$(CP_SRC)/amiga dst=$(PROGDIR)/amiga
 
 %copy_files_q files=".uaerc README.AmigaOS" dst=$(PROGDIR)
+%copy_files_q files="arexx.txt" dst=$(PROGDIR)/docs
 
 #MM- contrib-euae-rebuild : contrib-euae-clean contrib-euae
 

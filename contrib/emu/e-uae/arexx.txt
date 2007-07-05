@@ -1,0 +1,199 @@
+AREXX PORT
+===========
+
+AROS hint:
+Commands which should return a value in the variable "RESULT"
+aren't working yet.
+
+
+This section is rather for experienced user or programmers that want to
+enhance UAE or to replace MUIRexx GUI.
+
+UAE provides an AREXX port through which you can set or retrieve
+internal parameters or variables such as the state of the joystick
+emulation or the framerate and so on. Is also implements a "feedback"
+mecanism so that a GUI piloting UAE through the AREXX port can hear
+about dynamical modification of UAE variables such as led states and
+the like. The port name is "UAE". If that port already exists, UAE
+will disable it's AREXX feature (that is to say if you have 2 copies
+of UAE running on your system, only one will have an AREXX port. I
+doubt anyone will try to run 2 UAE in the same time :-).
+
+The commands that need a string argument accepts quoted strings. If
+the string is not quoted then it is the following word that will be
+used. The quotes can be single (') or double ("). They must match (eg.
+if you begin with ('),then you must end your string with (') too).
+Within a string, you can use a backslash (\) to express escape
+sequences. For example, "This 'is' a \"string\"." represents the
+string (This 'is' a "string"). I hope you get it :-)
+
+Here is a list of the available commands:
+
+        * BYE
+        * QUIT
+                This make the emulator exit.
+
+        * RESET
+                This makes a hard-reset of the emulator.
+
+        * DEBUG
+                This forces the emulator to enter in debugging mode.
+
+        * EJECT <num>
+                This will eject the disk in drive <num> (from 0 to 3).
+
+        * INSERT <num> <filename>
+                This will insert the filedisk <filename> in drive unit
+                <num>. 
+
+        * FRAMERATE <num>
+                This sets the framerate to <num> (1 <= <num> <= 20).
+                It is a way to overwrite the -f flag of UAE.
+
+        * VERSION <arg>         (<arg> = NUM | AUTHOR | PORT | STRING)
+                This places in the AREXX 'RESULT' variable some
+                information about UAE's version. 
+
+                NUM returns a numerical value that is to be interpreted
+                as UAEMAJOR*10000 + UAEMINOR*100 + UAESUBREV (ie. uae
+                v0.6.4 will return "604").
+
+                AUTHOR returns the original author of UAE (ie. Bernd
+                Schmidt). 
+
+                PORT returns the name of the port author (that's me!:-)
+                
+                STRINGS returns a summary string made with the above
+                strings. 
+
+        * DISPLAY <arg>         (<arg> = ON | OFF | TOGGLE)
+                This will enable or disable the display rendering.
+
+        * FAKEJOYSTICK <arg>    (<arg> = ON | OFF | TOGGLE)
+                This will enable or disable the joystick emulation. It
+                is a way to overwrite the -J flag from the command
+                line. 
+
+        * SOUND <arg>           (<arg> = ON | OFF | BEST)
+                This sets the state of the sound emulation (see option
+                '-S' on the command line). BEST is the same as using
+                the -S3 switch on the commandline.
+
+        * QUERY <var>
+                This asks UAE's for its internal variables. That
+                state is written in the arexx 'RESULT' variable. So
+                don't forget to put 'OPTIONS RESULTS' in your arexx
+                scripts. 
+
+                <var> can be one of the following:
+
+                * FAKEJOYSTICK => returns "1" if the joystick
+                  emulation is ON and "0" if it is OFF.
+
+                * DISPLAY => returns "1" if the display is not
+                  inhibited and "0" otherwise.
+
+                * FRAMERATE => returns the current framerate (see
+                  option -f).
+
+                * SOUND => returns "0" if the sound is not emulated
+                  (ie. uae -S0 was used). "1" is returned when the
+                  sound is OFF (think about uae -S1). "2" means the
+                  sound emulation is ON and "3" means it is the best
+                  sound-emulation that is used (uae -S3).
+
+                * NAME_DF0
+                * NAME_DF1
+                * NAME_DF2
+                * NAME_DF3 => returns the name of the diskfile used in
+                  the indicated unit.
+                  
+                * LED_DF0
+                * LED_DF1
+                * LED_DF2
+                * LED_DF3 => returns "1" if the drive led is hilighted
+                  and "0" if the led is OFF.
+
+                * LED_POW => returns "1" if the powerled is ON and "0"
+                  otherwise. 
+
+        * UAEEXE [run] <executable> <args>
+                This will make UAE lauch the <executable> provided 
+                you've previouly starded uae_rcli. If <executable> is 
+                "QUIT", then the "uae_rcli" process will exit(). Note 
+                that you must use "run" in order to launch the 
+                executable as an asynchronous command.
+
+        * FEEDBACK <eventname> PORT|ADDRESS <portname>
+                               CMD_ON|CMD|CMD_OFF <cmd> 
+                That command needs a special explanation:
+
+                <eventname> is the name of an internal UAE event. It
+                can be any of:
+                   ON_EXIT (UAE is about to quit),
+                   LED_POW (the power led has changed),
+                   LED_DF0 (led of drive DF0 has changed),
+                   LED_DF1 (the same, but for DF1),
+                   LED_DF2 (well...),
+                   LED_DF3 (guess!),
+                   NAME_DF0 (name of filedisk df0 has changed),
+                   NAME_DF1 (obvious),
+                   NAME_DF2 (ditto),
+                   NAME_DF3 (...).
+
+                <portname> is the name of an AREXX port. It can be
+                "COMMAND" in which case <cmd> is interpreted as DOS
+                command. 
+
+                <cmd> is a string containing a command that UAE will
+                send to <portname> when the event matching <eventname>
+                occur.  
+
+                Each event has 2 available <cmd>s. One is set by the
+                CMD_ON keyword, the other by CMD_OFF. CMD_ON can be
+                abreviated to CMD.
+
+                When the event is the name of a led (LED_POW, LED_DF0,
+                ...), it is the <cmd> associated to CMD_ON that will be
+                sent to <portname> if the led is hilighted. It is the
+                <cmd> of the CMD_OFF argument that will be used if the
+                led is dimmed. I think you need an example to make it
+                clear (no pun intended :)
+
+                If you issue the command:
+
+                        address UAE feedback LED_POW PORT COMMAND
+                        CMD_ON "list t:" CMD_OFF "list s:" 
+
+                Then UAE will issue "list t:" when the led is set to ON
+                and "list s:" when it set to OFF. Note: this feature
+                was not initially meant to transform UAE as a dir-like
+                programm :-) A more serious example can be found in
+                UAEGUI.rexx where you'll find something like:
+
+                        address UAE feedback LED_DF0 PORT UAEGUI,
+                         CMD_ON  "switch ID DF0 ATTRS 0x8042654b 1",
+                         CMD_OFF "switch ID DF0 ATTRS 0x8042654b 0"
+
+                That makes the gui led follow any state changements.
+
+                If <eventname> is not a name of a led (ON_EXIT,
+                NAME_DF0, ...) then UAE will only use the CMD_ON
+                command. For events like NAME_DF0, <cmd> can bear a
+                '%s'. It'll be replaced by the name of the
+                correponding filedisk. For example, the following code:
+
+                        address UAE feedback NAME_DF0 PORT UAEGUI,
+                         CMD "popasl ID NDF0 CONTENT %s"
+
+                Will change the content of the popasl gadged whose ID
+                is NDF0 automatically when the drivename is modified.
+
+                The event ON_EXIT is used when uae is about to exit.
+                You can use it to automatically close an external GUI
+                when UAE ends:
+                
+                        address UAE feedback ON_EXIT PORT UAEGUI,
+                         CMD "quit"
+                        /* sends "quit" to UAEGUI when UAE exits */
+
