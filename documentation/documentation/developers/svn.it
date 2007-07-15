@@ -222,6 +222,32 @@ SVN non esaminerà automaticamente le nuove directory aggiungendone i contenuti;
 dovete farlo voi. Dopo aver aggiunti il file, dovete usare il comando "commit"
 per aggiungerlo definitivamente al repository.
 
+.. Note::
+
+    Non aggiungere file generati (in genere *mmakefile*, *strings.h*) al
+    repository. Altrimenti questi file non saranno aggiornati quando il file
+    sorgente viene modificato.    
+
+    
+Settare le proprietà
+====================
+
+I vari sistemi operativi differiscono nei codici usati per i fine riga. Per
+assicurarsi che i file di testo che non sono generati/modificati su Linux,
+abbiamo il corretto codice di fine riga è necessario lanciare ciò che segue::
+
+    svn propset svn:eol-style native <source.c>
+
+Subversion può sostituire le parole chive speciali nei file sorgente. Per
+abilitare questa funzione è necessario lanciare::
+
+    svn propset svn:keywords Author Date Id Revision <main.c>
+
+.. Note::
+
+    Puoi configurare Subversion affinchè setti automaticamente le proprietà per
+    certi tipi di file. Per favore, consulta la documentazione di Subversion.
+
 
 Importare
 =========
