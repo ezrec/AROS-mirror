@@ -8,6 +8,7 @@ Starting classic Amiga applications from Wanderer
 :Date:      $Date$
 :Status:    Done.
 
+.. Contents::
 
 Introduction
 ------------
@@ -100,7 +101,35 @@ Save the file with the name *Zarathrusta* in *work:uae*.
 
 Finally we add an icon to the script. After you have opened the drawer *work:uae* in Wanderer, select the icon of
 the script and choose *Icon/Information* from the menu. Enter *c:iconx* as default tool. (The IconX tool executes
-text files as DOS scripts). On the Tooltypes page of icon information enter WINDOW=con:0/20//600/Zarathrusta/AUTO.
+text files as DOS scripts). On the Tooltypes page of icon information enter *WINDOW=con:0/20//600/Zarathrusta/AUTO*.
 This makes the output window bigger so that we can read probable error messages.
 
 Double-clicking on the icon should now start E-UAE with your application.
+
+
+Hard Drives
+-----------
+
+E-UAE allows to use directories of the host system and hardfiles as hard drives. You can find detailed
+information about this in the file *Extras/Emu/E-UAE/docs/configuration.txt*. The following example shows
+how you can use the directories *work:uae/workbench* and *work:uae/programs* as hard drive::
+
+    filesystem2=rw,:Workbench:work:uae/workbench,0
+    filesystem2=rw,:Programs:work:uae/programs,-1
+
+You can even install AmigaOS on such a drive and boot from it. The drive from which it should boot must
+have the highest boot priority (the last parameter of the filesystem2 option).
+
+
+Graphics
+--------
+
+Unfortunately, AROS E-UAE doesn't have Picasso emulation, i.e. you are limited to 256 colour screens.
+
+Some hints to get better resolution and performance:
+
++ Use configuration option *chipmem_size = 16*. It enables 16*512 = 8 MB of Chip Ram.
++ Use configuration option *z3mem_size=x* where *x* must be something in the order 1,2,4,6,8,16,32.
++ Select High Res Laced in the screenmode preferences editor.
++ Use the possible maximum in the overscan preferences editor.
++ Install the tool *FBlit*. It enables some patches which uses Fast RAM instead of Chip RAM.
