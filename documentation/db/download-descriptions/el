@@ -23,58 +23,61 @@ decimal-point: ,
 [descriptions]
 
 ChangeLog-AROS:
-    ChangeLog for the AROS core sources.
+    Καταγραφή αλλαγών για το βασικό κώδικα του AROS.
 ChangeLog-contrib:
-    ChangeLog for the contributed programs' sources.
+    Καταγραφή αλλαγών για τον κώδικα των προγραμμάτων που τρίτοι έχουν συνεισφέρει.
 ChangeLog-docs:
-    ChangeLog for the documentation.
+    Καταγραφή αλλαγών για την τεκμηρίωση.
 source:
-    Core AROS sources.
+    Βασικός κώδικας του AROS.
 docs-source:
-    Documentation sources.
+    Πηγαία μορφή τεκμηρίωσης.
 contrib-source:
-    Contributed programs' sources.
+    Κώδικας προγραμμάτων που τρίτοι έχουν συνεισφέρει.
 docs-html:
-    Documentation in HTML format. Contains everything available
-    on the website, but adapted for offline reading.
+    Τεκμηρίωση σε μορφή HTML. Περιέχει οτιδήποτε είναι διαθέσιμο 
+	στην ιστοσελίδα αλλά προσαρμοσμένο για offline διάβασμα.
 i386-freebsd5-system:
-    The hosted version for FreeBSD/i386 5.x. Note that it
-    will not work on FreeBSD 4.x systems.
+    Η hosted έκδοση για FreeBSD/i386 5.x. Σημειώστε ότι δε θα
+    λειτουργήσει σε FreeBSD 4.x συστήματα.
 i386-freebsd-system:
-    The hosted version for FreeBSD/i386 5.x. Note that it
-    will not work on FreeBSD 4.x systems.
+    Η hosted έκδοση για FreeBSD/i386 5.x. Σημειώστε ότι δε θα
+    λειτουργήσει σε FreeBSD 4.x συστήματα.
 i386-linux-system:
-    The hosted version for Linux/i386. This is the most
-    complete and mature port, which means that you can run
-    all included programs and demos with it. This archive
-    contains all AROS system binaries compiled from the Subversion
-    tree.
+    Η hosted έκδοση για Linux/i386. Αυτή είναι η πιο ολοκληρωμένη
+    και ώριμη μεταφορά, το οποίο σημαίνει ότι μπορείτε να εκτελέσετε
+    όλα τα προγράμματα και τα demos που έχουν συμπεριληφθεί σε αυτή.
+    Αυτό το πακέτο περιέχει όλα τα εκτελέσιμα αρχεία συστήματος του AROS 
+	που έγιναν compiled στον Subversion server.
 ppc-linux-system:
-    The hosted version for Linux/PowerPC. This archive contains all AROS
-    system binaries compiled from the Subversion tree.
+    Η hosted έκδοση για Linux/PowerPC. Αυτό το πακέτο περιέχει όλα
+	τα εκτελέσιμα αρχεία συστήματος του AROS που έγιναν compiled 
+	στον Subversion server.
 i386-pc-boot-floppy:
-    The native version for i386-based PC AT computers and
-    compatibles. This archive contains the boot
-    disk floppy image which you can quickly write to a disk
-    and boot AROS with.
+    Η native έκδοση για i386-based PC AT υπολογιστές και συμβατούς.
+    Αυτό το πακέτο περιέχει την εικόνα μιας δισκέτας εκκίνησης
+    την οποία μπορείτε γρήγορα να γράψετε και να εκκινήσετε το
+    AROS με αυτήν.
 i386-pc-boot-iso:
-    The native version for i386-based PC AT computers and
-    compatibles. This is the bootable CDROM ISO image, which
-    contains all AROS system and contributed programs.
+    Η native έκδοση για i386-based PC AT υπολογιστές και συμβατούς.
+    Αυτή είναι μια ISO εικόνα ενός CDROM εκκίνησης, το οποίο περιέχει
+    όλα τα προγράμματα που τρίτοι έχουν συνεισφέρει και το σύστημα AROS.
 i386-all-contrib:
-    This archive contains all the contributed programs
-    compiled for the i386 architecture. They will work in
-    both the appropriate hosted (eg. i386-linux) and native
-    (i386-pc) version.
+    Αυτό το πακέτο περιέχει όλα τα προγράμματα που τρίτοι έχουν
+	συνεισφέρει και έγιναν compiled για i386 αρχιτεκτονική. Θα 
+    λειτουργούν στις κατάλληλες hosted (eg. i386-linux) και native
+    (i386-pc) εκδόσεις.
 ppc-all-contrib:
-    This archive contains all the contributed programs
-    compiled for the PowerPC architecture, for use with the
-    Linux/PowerPC port.
+    Αυτό το πακέτο περιέχει όλα τα προγράμματα που τρίτοι έχουν
+	συνεισφέρει και έγιναν compiled για PowerPC αρχιτεκτονική, 
+	για χρήση με την Linux/PowerPC μεταφορά.
 i386-all-sdk:
-    Set of files and tools to build your own AROS programs
-    on your preferred machine. You'll need also gcc and the
-    binutils configured to produce i386-elf executables.
+    Σετ αρχείων και εργαλείων για να κατασκευάσετε τα δικά σας
+	προγράμματα για το AROS στον υπολογιστή της αρεσκείας σας.
+    Θα χρειαστείτε επίσης το gcc και τα binutils ρυθμισμένα να
+	παράγουν i386-elf εκτελέσιμα αρχεία.
 ppc-all-sdk:
-    Set of files and tools to build your own AROS programs
-    on your preferred machine. You'll need also gcc and the
-    binutils configured to produce ppc-elf executables.
+    Σετ αρχείων και εργαλείων για να κατασκευάσετε τα δικά σας
+	προγράμματα για το AROS στον υπολογιστή της αρεσκείας σας.
+    Θα χρειαστείτε επίσης το gcc και τα binutils ρυθμισμένα να
+	παράγουν ppc-elf εκτελέσιμα αρχεία.

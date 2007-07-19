@@ -35,11 +35,11 @@ Nightly builds
 
 Παρακαλούμε αναφέρετε τυχόν bugs που μπορεί να ανακαλύψετε καθώς χρησιμοποιείτε αυτά τα nightly builds
 μέσω του `bug tracker`__. Για οποιαδήποτε άλλη ανάγκη, παρακαλούμε επικοινωνήστε μαζί μας
-μέσω των `AROS-Exec`__ φόρουμς.
+μέσω του `AROS-Exec`__ φόρουμ.
 
 .. raw:: html
 
-   <?php virtual( "/cgi-bin/files?type=nightly&lang=gr" ); ?>
+   <?php virtual( "/cgi-bin/files?type=nightly&lang=el" ); ?>
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
