@@ -46,7 +46,7 @@
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.png\" align=\"middle\">"; } ?> 
-   Οι τελευταίες δημοσιεύσεις του AROS-EXEC forum:<br><img style="width: 238px; height: 2px;" alt="spacer" src="images/sidespacer.png"><br>
+   Οι τελευταίες δημοσιεύσεις στο AROS-EXEC φόρουμ:<br><img style="width: 238px; height: 2px;" alt="spacer" src="images/sidespacer.png"><br>
    Το <a href=http://www.aros-exec.org>AROS-EXEC</a> αποτελεί τη βασική ιστοσελίδα της κοινότητας. Ζητήστε βοήθεια, μάθετε τι συμβαίνει στην κοινότητα, και δημοσιεύστε τις σκέψεις σας για το AROS.<br><br>
    <?php include("/home/groups/a/ar/aros/htdocs/rsfeed/aeforum.php"); ?><br></td></tr></tbody></table>
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr>
