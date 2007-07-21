@@ -1,7 +1,14 @@
-Einführung
-==========
+.. raw:: html
 
-AROS ist ein portables und freies Betriebssystem. Es hat das Ziel,
-kompatibel zu AmigaOS3.1 zu sein und es dabei auf vielen Gebieten zu verbessern.
-Der Quellkode is unter einer 'Open Source' Lizens frei verfügbar, so dass
-ihn jeder verbessern kann.
+   <h1>Einführung<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"></h1>
+
+.. raw:: html
+
+  <?php include('/home/groups/a/ar/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
+
+Das "AROS Research Operating System" ist ein leichtgewichtiges, effizientes und
+flexibles Desktop-Betriebssystem, entwickelt um das Beste aus Deinem Computer heraus zu holen.
+Es ist ein unabhängiges, portables und freies Projekt mit dem Ziel, zu AmigaOS 3.1 auf der
+API-Ebene kompatibel zu sein (wie Wine, nicht wie UAE) und es dabei in vielen Bereichen
+zu erweitern. Der Quellkode ist unter einer Open-Source-Lizens verfügbar, so dass ihn
+jeder verbessern kann.
