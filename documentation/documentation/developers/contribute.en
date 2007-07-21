@@ -3,7 +3,7 @@ Contribute
 ==========
 
 :Authors:   Adam Chodorowski 
-:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Copyright: Copyright © 1995-2007, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done. 
@@ -44,7 +44,7 @@ Programming
       - S3 Virge
       - Matrox Millenium
     
-    + USB
+    + missing USB classes
     + SCSI
     + Specific IDE chipsets
     + Sound
@@ -52,8 +52,6 @@ Programming
 
   - Generic printer support.
  
-  - Generic sound support.
-
 + Porting to other architectures. Some examples of hardware for which no 
   maintained AROS port exists or has been started:
 
@@ -66,15 +64,10 @@ Programming
 
 + Implementing missing Preferences editors:
 
-  - IControl
   - Overscan
   - Palette
   - Pointer
   - Printer
-  - ScreenMode
-  - Sound
-  - WBPattern
-  - Workbench 
  
 + Improving the C link library
 
@@ -100,12 +93,13 @@ Programming
     + cdxl.datatype
     
   
-+ Porting third party programs:
++ Porting third-party programs:
 
   - Text editors like ViM and Emacs.
   - The development tool chain, which includes GCC, make, binutils and other
     GNU development tools.
-  
+  - AmigaOS Open Source software like SimpleMail, YAM, Jabbwerwocky
+
 
 Documentation
 -------------
@@ -131,10 +125,12 @@ Translation
   - Svenska
   - Norsk
   - Italiano
+  - French
+  - Russian
 
 + Translating the documentation and website to more languages. Currently, it 
   is only completely available in English. Parts have been translated to 
-  Norsk, but there is still much work to do.
+  other languages, but there is still much work to do.
 
 
 Other
