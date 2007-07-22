@@ -1,5 +1,10 @@
-Εισαγωγή
-========
+.. raw:: html
+
+   <h1>Εισαγωγή<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"></h1>
+
+.. raw:: html
+
+  <?php include('/home/groups/a/ar/aros/htdocs/rsfeed/randimg.php');  random_image("/images/thubs/","100","76"); ?>
 
 Το AROS Research Operating System είναι ένα "ελαφρύ", αποτελεσματικό 
 και ευέλικτο λειτουργικό σύστημα, σχεδιασμένο να σας βοηθήσει να εκμεταλευτείτε 

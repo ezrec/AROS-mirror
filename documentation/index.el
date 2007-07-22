@@ -39,7 +39,7 @@
 
    <td style="width: 243px; vertical-align: top;"><table style="text-align: justify; width:100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.gif\" align=\"middle\">";} 
-   else { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.png\" align=\"middle\">";} ?>Direct Downloads:<br>
+   else { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.png\" align=\"middle\">";} ?>Απευθείας Downloads:<br>
    <img style="width: 238px; height: 2px;" alt="spacer" src="images/sidespacer.png"><br>
    Τα Nightly builds δημιουργούνται αυτόματα κάθε βράδυ, απευθείας από τον πιο πρόσφατο πηγαίο κώδικα. Αν θα θέλατε να δοκιμάσετε ένα AROS live CD, παρακαλούμε κάνετε download το αρχείο "boot ISO" για τη δικιά σας πλατφόρμα υλικού (i386 ή PPC).<br><br>
    <?php virtual("/cgi-bin/files2") ?> <br></td></tr></tbody></table>
