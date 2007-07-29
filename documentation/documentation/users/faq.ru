@@ -69,17 +69,23 @@ b) Почему бы вам самим не сделать и не прислать нам патч?
 Насколько AROS совместима с AmigaOS?
 ------------------------------------
 
-Весьма совместима. Мы ожидаем, что под AROS для Амиги без проблем будут работать имеющиеся программы для Амиги. На других платформах эти программы 
-должны быть перекомпилированы. Мы добавим препроцессор, который при проверке вашего кода либо изменит его несовместимые части, либо предупредит о них.
+Весьма совместима. Мы ожидаем, что под AROS для Амиги без проблем будут работать 
+имеющиеся программы для Амиги. На других платформах эти программы должны быть 
+перекомпилированы. Мы добавим препроцессор, который при проверке вашего кода 
+либо изменит его несовместимые части, либо предупредит о них.
 
 Перенос программ с AmigaOS на AROS в настоящее время, скорее, задача простой 
-рекомпиляции, и, возможно, изменения кода в некоторых местах. Разумеестся, есть исключения из сказанного, но это применимо также для многих современных программ.
+рекомпиляции, и, возможно, изменения кода в некоторых местах. Разумеестся, есть 
+исключения из сказанного, но это применимо также для многих современных программ.
 
 
 Для каких процессорных платформ доступна AROS?
 ----------------------------------------------
 
-Сейчас AROS доступна в более-менее пригодном состоянии в native- и hosted-виде (на Linux и FreeBSD) для архитектуры i386 ( то есть IBM PC-AT совместимых компьютеров). Также в разработке находятся порты  различных степенях готовности на SUN SPARC (hosted под Solaris) и Palm-совместимых PDA (native).
+Сейчас AROS доступна в более-менее пригодном состоянии в native- и hosted-виде 
+(на Linux и FreeBSD) для архитектуры i386 (то есть IBM PC-AT совместимых 
+компьютеров). Также в разработке находятся порты  различных степенях готовности 
+на SUN SPARC (hosted под Solaris) и Palm-совместимых PDA (native).
 
 
 Будет ли AROS портирована на PPC? 
@@ -91,9 +97,16 @@ b) Почему бы вам самим не сделать и не прислать нам патч?
 Почему Вы используете Linux и X11?
 ----------------------------------
 
-Мы применяем Linux и X11 для ускорения разработки. Например, если требуется простая новая функция открытия окна, можно написать одну эту функцию, не вводя множество других функций в layers.library, graphics.library, ряд драйверов и другое, что ещё этой функции потребуется.
+Мы применяем Linux и X11 для ускорения разработки. Например, если требуется 
+простая новая функция открытия окна, можно написать одну эту функцию, не вводя 
+множество других функций в layers.library, graphics.library, ряд драйверов и 
+другое, что ещё этой функции потребуется.
 
-Задача AROS, тем не менее, быть всё же независимой от Linux и X11 (но она всё же будет способна, при надобности, работать с ними), и это становится реальностью благодаря native-версиям AROS. Тем не менее, Linux всё ещё нужен при разработке, поскольку ещё не все требуемые инструменты разработки перенесены на AROS.
+Задача AROS, тем не менее, быть всё же независимой от Linux и X11 (но она всё 
+же будет способна, при надобности, работать с ними), и это становится 
+реальностью благодаря native-версиям AROS. Тем не менее, Linux всё ещё нужен 
+при разработке, поскольку ещё не все требуемые инструменты разработки 
+перенесены на AROS.
 
 
 Как же вы собираетесь добиться переносимости AROS?
@@ -148,19 +161,21 @@ __ http://aros-exec.org/
 системы ? Не спешите казнить, дайте объяснить :-) Проблема - не в отказе самой системы,
 а в следующем:
 
-1. Вы не имеете особого представления, почему произошёл сбой. В сущности, попытки выяснения подобны копанию 100-метровой палкой в болоте при густом тумане.
+1. Вы не имеете особого представления, почему произошёл сбой. В сущности, 
+попытки выяснения подобны копанию 100-метровой палкой в болоте при густом тумане.
 2. Вы потеряли ваши данные. Перезагрузка, разумеется, не решает проблемы. 
 
 Что можно попробовать сделать, это разработать систему, которая, по крайней мере,
 будет предупреждать о сомнительных действиях, и способную детально описать сбой 
 системы, которая позволит сохранить данные *перед* сбоем. Также должно быть
-средство, позволяющее выяснить, что именно сохранилось, что позволит быть уверенным, что данные
-остались в целости и можно продолжить работу.
+средство, позволяющее выяснить, что именно сохранилось, что позволит быть 
+уверенным, что данные остались в целости и можно продолжить работу.
 
 То же самое относится и к SVM (swappable virtual memory, выгружаемой виртуальной памяти)
-RT (resource tracking, отслеживание ресурсов), и SMP (symmetric multiprocessing). В настоящее время, мы прикидываем, как внедрить их
-таким образом, чтобы доставить меньше всего хлопот. Тем не менее, сейчас они не 
-считаются приоритетными. Очень простое RT уже было введено.
+RT (resource tracking, отслеживание ресурсов), и SMP (symmetric multiprocessing). 
+В настоящее время, мы прикидываем, как внедрить их таким образом, чтобы 
+доставить меньше всего хлопот. Тем не менее, сейчас они не считаются 
+приоритетными. Очень простое RT уже было введено.
 
 
 Можно ли стать бета-тестером?
@@ -188,7 +203,8 @@ UAE может работать намного быстрее, если некоторые (или все) функции OS заменить
 Amiga.
 
 Поскольку большинство програм не будут доступны под AROS с самого начала, Fabio 
-Alemagna портировал UAE на AROS с тем, чтобы можно было запускать старые программы, по крайней мере, в окне эмуляции.
+Alemagna портировал UAE на AROS с тем, чтобы можно было запускать старые 
+программы, по крайней мере, в окне эмуляции.
 
 
 Какова связь между AROS и Haage & Partner?
@@ -196,22 +212,30 @@ Alemagna портировал UAE на AROS с тем, чтобы можно было запускать старые програм
 
 Haage & Partner использовали фрагменты AROS в AmigaOS 3.5 и 3.9, например, такие
 элементы, как colorwheel и gradientslider и команда SetENV. Это означает, что по
-ходу своего развития, AROS пополнила AmigaOS, став её частью. Но это не означает, что имели место какие-то официальные отношения между AROS и Haage & Partner. AROS - проект с открытым исходным кодом, и любой может использовать наш
+ходу своего развития, AROS пополнила AmigaOS, став её частью. Но это не означает, 
+что имели место какие-то официальные отношения между AROS и Haage & Partner. 
+AROS - проект с открытым исходным кодом, и любой может использовать наш
 код в своих проектах, если будет использовать его в рамках нашей лицензии.
 
 
 Какова связь между AROS и MorphOS?
 ----------------------------------
 
-Отношения между AROS и MorphOS практически те же, что и между AROS и Haage & Partner. MorphOS использует части AROS для ускорения собственных разработок, в рамках нашей лицензии. Как и в случае с Haage & Partner, от этого выигрывают
-обе стороны, поскольку MorphOS получает дополнительный стимул к ускорению разработок, а AROS - дополнения к коду, разработанные для MorphOS. Никаких официальных отношений не существует, такова разработка open source - проектов.
+Отношения между AROS и MorphOS практически те же, что и между AROS и Haage & 
+Partner. MorphOS использует части AROS для ускорения собственных разработок, в 
+рамках нашей лицензии. Как и в случае с Haage & Partner, от этого выигрывают
+обе стороны, поскольку MorphOS получает дополнительный стимул к ускорению 
+разработок, а AROS - дополнения к коду, разработанные для MorphOS. Никаких 
+официальных отношений не существует, такова разработка open source - проектов.
 
 
 Какие есть языки программирования?
 ----------------------------------
 
-Большинство кода для AROS написано для ANSI C с помощью кросс-компилирования под другими ОС, такими, как Linux и FreeBSD. Fabio Alemagna завершил первоначальный порт GCC на i386-native. Однако, пока он не присутствует на 
-образах дисков и не встроен в сборочную систему.
+Большинство кода для AROS написано для ANSI C с помощью кросс-компилирования под 
+другими ОС, такими, как Linux и FreeBSD. Fabio Alemagna завершил первоначальный 
+порт GCC на i386-native. Однако, пока он не присутствует на образах дисков и 
+не внесен в сборочную систему.
 
 Доступные сейчас нативно языки - это Python_, Regina_ и False_:
 
@@ -256,8 +280,8 @@ AROS требует меньше ресурсов, чем прочие системы (что значит, что UAE может полу
 Будет ли в AROS Kickstart ROM? 
 ------------------------------
 
-Такое возможно, если кто-либо сделает native-порт AROS на Amiga и сделает всю прочую работу для создания Kickstart ROM. Пока что, никто не взялся за это.
-
+Такое возможно, если кто-либо сделает native-порт AROS на Amiga и сделает всю 
+прочую работу для создания Kickstart ROM. Пока что никто не взялся за это.
 
 
 "Программные" вопросы (software)
@@ -330,14 +354,15 @@ C:Avail HUMAN.
 Для чего служит команда Wanderer Запомнить <окно/все>? 
 ------------------------------------------------------
 
-Эта команда запоминает расположение иконок одного или всех окон.
+Эта команда должна запомнить расположение иконок одного или всех окон.
 
 
-How do I change the screensaver/background?
--------------------------------------------
+Как изменить использемые хранитель экрана и обои?
+-------------------------------------------------
 
 At the moment the only way to change screensaver is to write your one.
-Blanker commodity could be tuned with Exchange, but it able to do only "starfield" with given amount of stars.
+Blanker commodity could be tuned with Exchange, but it able to do only 
+"starfield" with given amount of stars.
 Background of Wanderer is set by Pref tool Prefs/Wanderer.
 Background of Zune Windows is set by Zune prefs Prefs/Zune. You can also set 
 your chosen application preferences by using the Zune <application> command.
@@ -386,7 +411,217 @@ First and simpliest way is to put files to the ISO image and and connect it to V
 or mkisofs. Second, you can set up the network in AROS and FTP server on your 
 host machine. Then, you can use FTP client for AROS to transfer files. This is 
 tricky enough to stop at this point. User documentation must contain chapter on 
-networking.
+networking.Also, now
+there`s a promising utility (AFS Util), allowing to read (no write support yet) 
+files from AROS AFFS/OFS disks and floppies.  
+
+Compilation Errors
+------------------
+
+Q: I`ve compiled AROS with gcc4 but found that compiled AROS-hosted segfaults 
+with -m > 20 and if I compile AROS-native it does not start (black screen)
+A: Add -fno-strict-aliasing to scripts/aros-gcc.in and try to recompile.
+
+Is it possible to make a DOS script that automatically runs when a package is installed? 
+----------------------------------------------------------------------------------------
+
+This script should do some assigns and add string to the PATH variable.
+
+1) Create a subdir S and add a file with name 'Package-Startup' with the DOS 
+commands to it.
+
+2) Create a variable in the envarc:sys/packages file which contains the path to the S 
+directory of your package.
+
+Example::
+    Directory layout:
+
+    sys:Extras/myappdir
+    sys:Extras/myappdir/S
+    sys:Extras/myappdir/S/Package-Startup
+    
+The variable in envarc:sys/packages could have the name 'myapp' (name doesn't 
+matter), the content would then be 'sys:extras/myappdir'
+
+The Package-Startup script would then be called by the startup-sequence.
+
+This is were it is called::
+
+    If EXISTS ENV:SYS/Packages
+        List ENV:SYS/Packages NOHEAD FILES TO T:P LFORMAT="If EXISTS $SYS/Packages/%s*NCD $SYS/Packages/%s*NIf EXISTS S/Package-Startup*NExecute S/Package-Startup*NEndif*NEndif*N"
+        Execute T:P
+        Delete T:P QUIET
+        CD SYS:
+    EndIf
+    
+How do I clear the shell window? How do I set it permanently?
+-------------------------------------------------------------
+
+Type this command in the shell::
+
+    Echo "*E[0;0H*E[J* "
+    
+You can edit your S:Shell-Startup and insert this line somewhere, so 
+you'll have a new "Cls" command::
+
+    Alias Cls "Echo *"*E[0;0H*E[J*" "
+
+Btw here is my new S:Shell-Startup modified to start the shell in black and 
+with a modified prompt::
+
+    Alias Edit SYS:Tools/Editor
+    Alias Cls "Echo *"*E[0;0H*E[J*" "
+    Echo "*e[>1m*e[32;41m*e[0;0H*e[J"
+    Prompt "*n*e[>1m*e[33;41m*e[1m%N/%R - *e[30;41m%S>*e[0m*e[32;41m "
+    date
+
+More about printer escape sequences::
+
+    Esc[0m
+    Standard Set
+
+    Esc[1m and Esc[22m
+    Bold
+
+    Esc[3m and Esc[23m
+    Italics
+
+    Esc[4m and Esc[24m
+    Underline
+
+    Esc[30m to Esc[39m
+    Set Front Color
+
+    Esc[40m to Esc[49m
+    Set Background Color
+
+Values meanings::
+
+    30 grey char -- 40 grey cell -- >0 grey background ---- 0 all attributes off
+    31 black char - 41 black cell - >1 black background --- 1 boldface
+    32 white char - 42 white cell - >2 white background --- 2 faint
+    33 blue char -- 43 blue cell -- >3 blue background ---- 3 italic
+    34 grey char -- 44 grey cell -- >4 grey background ---- 4 underscore
+    35 black char - 45 black cell - >5 black background --- 7 reverse video
+    36 white char - 46 white cell - >6 white background --- 8 invisible
+    37 blue char -- 47 blue cell -- >7 blue background
+
+The codes can be combined by separating them with a semicolon.
+
+How do I launch AROS-hosted in fullscreen?
+------------------------------------------
+
+Call "export AROS_X11_FULLSCREEN=1" in a shell. Start AROS and change the 
+screen resolution in the screenmode preferences. Quit AROS and start it again.
+
+How to make 2-state AROS Icons?
+-------------------------------
+
+AROS icons is actually renamed PNG files. But if you want icons in two states 
+(free/clicked) use this command::
+
+    join img_1.png img_2.png TO img.info
+    
+How to mount an ISO image on AROS? And can I update my nightly build this way?
+------------------------------------------------------------------------------
+
+Get the ISO into AROS (by wget or else way)
+Copy the ISO into sys:DiskImages (drawer must be created if it isn`t exist). 
+Rename ISO to Unit0 in that dir.
+You must add this to your Devs:Mountlist ::
+
+    ISO:
+    FileSystem = cdrom.handler
+    Device = fdsk.device
+    Unit = 0
+
+Then mount ISO:
+you can copy anything from ISO: Or for example, make a script to update your 
+nightly build like this::
+
+    *Copy ISO:boot/aros-pc-i386.gz sys:boot/
+    *copy ISO:C sys:C all quiet
+    *copy ISO:Classes sys:Classes all quiet
+    *copy *copy ISO:Demos sys:Demos all quiet
+
+and so on for each directory except Prefs, Extras:Networking/Stacks, and 
+devs:mountlist itself. Prefs have to be kept if you want it. Also you can set 
+AROSTcp to keep it`s settings in separate directory.
+
+If you want to write all over, just do::
+
+    copy ISO:C sys:C all quiet newer  
+    
+How to unmount a volume?
+------------------------
+
+Launch these two commands in CLI::
+    
+    assign DOSVOLUME: dismount
+    assign DOSVOLUME: remove
+
+where DOSVOLUME is DH0:, DF0:, etc
+
+How to mount a FAT Floppy with the FAT.handler?
+-----------------------------------------------
+
+Create a mountfile (text file) with the 3 magic lines::
+
+    device = trackdisk.device
+    filesystem = fat.handler
+    unit = 0
+
+Call it somehow, PC0 for example. Set this file default tool to c:mount in 
+properties (or put mountfile to devs:dosdrivers or sys:storage/dosdrivers)
+Double click on it.
+Insert a FAT formatted floppy.
+See the icon appearing on Wanderer`s desktop.
+
+How to mount a real HD FAT partition with the FAT.handler?
+----------------------------------------------------------
+
+First you`d need to read the drive`s geometry and write down some values. 
+You can use HDToolbox or linux fdisk for that. The BlocksPerTrack value is taken 
+from the sectors/track value. Note that it has absolutely nothing to do with 
+the physical disk geometry - FAT only uses it as a multiplier.
+If you get the Cylinders eg from HDToolbox or using the Linux fdisk like this::
+
+    sudo fdisk -u -l /dev/hda, 
+    
+Then you'll need to set BlocksPerTrack=63. 
+To ensure you have numbers in cylinders look for Units=Cylinders in output. If 
+you got fdisk output in sectors (Units=sectors), set BlocksPerTrack=1.
+
+LowCyl and HighCyl is partition`s cylinders seen like::
+
+    mark@ubuntu:~$ sudo fdisk -l -u /dev/hda
+    ...
+    /dev/hda1 * 63 20980889 10490413+ c W95 FAT32 (LBA)
+
+So, LowCyl is 63, and HighCyl is 20980889, blockspertrack=1
+
+Create a mountfile (text file) with these lines::
+
+    
+    device = ata.device
+    filesystem = fat.handler,
+    Unit = 0
+
+    BlocksPerTrack = 1
+    LowCyl = 63
+    HighCyl = 20980889
+    Blocksize=512
+
+Call it somehow, FAT0 for example
+Set this file`s default tool to c:mount in properties
+(or put mountfile to devs:dosdrivers or sys:storage/dosdrivers)
+Double click on it
+See the icon appearing on Wanderer`s desktop
+
+Note: Formulae for counting the blocks
+block = ((highcyl - lowcyl) x surfaces + head) x blockspertrack + sec
+
+
 
 "Железные" вопросы (hardware)
 =============================
