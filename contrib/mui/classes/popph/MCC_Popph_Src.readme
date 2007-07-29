@@ -1,0 +1,185 @@
+Short:    v15.5 - Popup placeholder class (MUI)
+Author:   Marcin Orlowski <carlos@amiga.com.pl>
+Uploader: Marcin Orlowski <carlos@amiga.com.pl>
+Type:     dev/mui
+Version:  15.5
+Replaces: dev/mui/MCC_Popph_Src.*
+WWW:      http://amiga.com.pl/mcc/
+Source:   dev/mui/MCC_Popph_Src.lha
+
+
+  Short
+  -----------------------------------
+
+  Popplaceholder class is a simple but useful class ;) Most applications
+  are fully configurable nowadays, offering wide range of various
+  parameters for further user modifications.  Not only functions options
+  or forms of behaviour are configurable but often most of program
+  strings can now be changed by the user.  The latter applies to
+  internet (communication) related programs mostly, (e.g.  AmIRC,
+  AmTelnet, YAM and so on...) which needs to send various string to
+  other different people.  So they allow you to define e.g.  own welcome
+  phrase or kick reason sentence.  Because e.g.  your welcome phrase for
+  e.g.  John and phrase for Mary will differ only with the name, most of
+  these strings uses so called placeholders, to describe varable,
+  dynamically modified string part (e.g.  mentioned receipient name).
+  For example "On %d, %u wrote:".  The "%d" and "%u" ares just the
+  placeholders, program will replace on use by for instance mail date
+  and the sender's name (of course placeholder can look like "@name" or
+  "%{date}" or "my lovely grandma", but the idea behind remains).
+
+  Unfortunately, most programs forces user to know what placeholder can
+  be user where and which means what.  That's kinda user unfriendly
+  (especially for beginners, or just-users).  Instead of forcing them to
+  type placeholders by hand (in proper syntax!) it would be nicer to let
+  them pick up what they want from the list of available items.  That
+  both eliminates placeholder syntax problems (unless user 'fix' it
+  later by hand of course) as well as disallows to use unsupported
+  placeholder (the above exception applies of course).  And here comes
+  Popplaceholder class.  It features the ordinary string gadget user can
+  type own text in, but it also gives the popup listview, which holds
+  all available placeholders.  User can easily select one from the list
+  either by double click or by neat Drag&Drop.  See the example demo
+  program for better picture of the class' features.
+
+
+  Popplaceholder is freeware software, but it's copyrighted
+  © 1999 by Marcin Orlowski <carlos@amiga.com.pl>
+
+  PS: Yes, I know my english sucks ;)
+
+
+  Software using this class:
+  -----------------------------------
+
+  - AmIRC 3
+  - AmTelnet 2
+  - OpenURL 3
+  - Voyager 3
+  - Golem
+
+  Let me know about your!
+
+
+  History
+  -----------------------------------
+
+  14.0 (Mon Jul 12 10:15:34 1999)
+       - initial version
+
+  14.1 (Mon Jul 12 13:09:21 1999)
+       - Added MUIA_Poplaceholder_Copy attribute
+       - now forwards all list object methods
+         to internal pop up list, increasing
+         flexibility
+
+  14.2 (Tue Jul 13 19:35:58 1999)
+       - shortened all these "MUIx_Popplaceholder_#?"
+         to "MUIx_Popph_#?" for easier programming ;)
+       - added Drag&Drop feature
+
+  14.3 (Wed Jul 14 14:05:34 1999)
+       - first public release
+       - wrote autodocs
+       - added support for existing string gadget
+         replacements (the fallback scheme looks like:
+         Textinput -> Betterstring -> original String)
+       - MUIA_Popph_StringMaxLen is gettable now
+
+  14.4 (oops, I forgot the datestamp)
+       - added support for popup menu when Textinput
+         subclass is used
+       - added MUIA_Popph_ReplaceMode attribute
+
+  14.5 (Sun Jul 25 19:58:25 1999)
+       - Popplaceholder is now 2-in-1 custom class
+         (poplaceholderstr.mcc is now useless and
+         should be wiped out of your disks)
+       - added some internal checks to avoid possible
+         problems with tag/descriptions being longer
+         than predefined max length
+       - Popph object is no longer higher than highest
+         object it uses
+       - MUIA_Popph_StringType added
+       - all TI/BS/String attrubutes are now forwarded
+         to internal string object on OM_SET/OM_GET.
+         Just talk to Popph as to string gadget
+       - added PopAsl alike work mode
+
+  14.6 (Tue Jul 27 16:09:44 1999)
+       - MUIA_Version, MUIA_Revision are now supported
+       - fixed bad enforcer hit "implemented" in 14.5
+       - MUIA_Popph_Avoid added
+       - added MUIA_Popph_StringObject, MUIA_Popph_ListObject
+
+  14.7 (Tue Aug 31 10:28:35 1999)
+       - all list methods and attributes are now forwarded
+         to internal list object. Handle with care.
+       - public release
+
+  15.0 (Sat Nov 06 17:32:28 1999)
+       - now handles the entry even it's incorrect (e.g.
+         plain string, w/o separators etc) for easier
+         debugging (and wider usage ;-)
+       - added MUIA_Popph_PopCycleChain attribute on
+         mouse lovers' request (reported by Grzegorz Kraszewski)
+       - PopPH now correctly handles ASLFR_DrawersOnly, TRUE
+         case in ASL mode (reported by Troels Walsted Hansen)
+       - added MUIA_Popph_Title for easy popup list titles
+       - added single column mode
+
+  15.1 (Tue Nov 23 23:25:45 1999) - sponsored by Thorgal ;-)
+       - fixed MUIA_Popph_Avoid not working correctly
+         (Mike Carter)
+       - pop buttons removed from the cycle chain
+         (MUIA_Popph_PopCycleChain is now FALSE by default)
+         as MUI offers special hotkey (CTRL-P by default)
+         for that, and won't break the AdvanceOnCR adventages
+         (reported by Grzegorz Kraszewski)
+       - full source code released. Read source.readme for
+         closer details
+
+  15.2 (Sat Nov 27 14:47:34 1999) - sponsored by Thorgal ;-)
+       - attached popup listview to the string object, to
+         allow key-driven list navigation (Carlos) (reported
+         by Mike Carter)
+       - now uses all string/list related tags given at
+         Popph creation time while creating internal string
+         nd list object, to allow use of {I..} attributes
+         as well (Carlos) (reported by Mike Carter)
+
+  15.3 (Wed Feb 02 22:53:00 2000) - sponsored by The Hun
+       - some attributes were wrongly DoSuperMethod()ed in
+         OM_GET (Zapek)
+       - fixed bugs when MUI_NewObject()ing without attributes
+         (Zapek)
+
+  15.4 (Sun Feb 06 18:56:00 2000) - sponsored by HardcoreJunky
+       - MUI_DeleteCustomClass() was called with a freed pointer
+         thus nuking when mungwall was running (Zapek)
+       - public release
+
+  15.5 (Thu Jun 29 23:25:18 2000) - sponsored by SilverDream!
+       - minior tweaks (Carlos)
+       - public release
+
+
+
+
+          ___  ___  ___    ________    ___  ___  ___    ___  ___
+         /   \/   \/   \  /        \  /   \/   \/   \  /   \/   \
+        /    /    /    / /         / /    /    /    / /    /    /
+       /    /    /    / /    _____/ /    /    /    / /    /    /
+      /    /    /    / /        \  /    /    /    / /         /
+     /    /    /    / /         / /    /    /    / /         /
+    /    /    /    / /    _____/ /    /    /    / /    /    /
+   /    /    /    / /    /      /    /    /    / /    /    /
+   \___/\___/\___/ /    /       \___/\___/\___/  \___/\___/
+                  /    /
+                  \___/                    W.F.M.H. on-line
+                                         http://wfmh.org.pl
+
+               Amiga software: http://amiga.com.pl/
+
+
+   $Id: MCC_Popph.readme,v 1.8 2000/04/04 17:58:19 carlos Exp $

@@ -1,0 +1,92 @@
+
+; $Id: rel,v 1.1 1999/11/06 22:34:56 carlos Exp $
+;
+; © 1999 Marcin Orlowski <carlos@amiga.com.pl>
+
+
+echo "*n  [3m[4mMAKE POPPH DISTRIBUTION*n[m"
+
+
+echo  >T:base_readme "Short:    v`type .revinfo` - Popup placeholder class (MUI)"
+echo  >T:src_readme  "Short:    v`type .revinfo` - Popup placeholder class (MUI)"
+
+echo "Author:   Marcin Orlowski <carlos@amiga.com.pl>*nUploader: Marcin Orlowski <carlos@amiga.com.pl>*nType:     dev/mui*nVersion:  `type .revinfo`" >>T:base_readme
+echo "Author:   Marcin Orlowski <carlos@amiga.com.pl>*nUploader: Marcin Orlowski <carlos@amiga.com.pl>*nType:     dev/mui*nVersion:  `type .revinfo`" >>T:src_readme
+
+echo "Replaces: dev/mui/MCC_Popph.**" >>T:base_readme
+echo "Replaces: dev/mui/MCC_Popph_Src.**" >>T:src_readme
+
+join T:base_readme MCC_Popph.readme AS T:MCC_Popph.readme
+join T:src_readme  MCC_Popph.readme AS T:MCC_Popph_Src.readme
+
+
+
+
+;echo "Aktualna wersja developerska: `version mui/popplaceholder.mcc`"
+;echo "Aktualna wersja release     : `version MCC_Popph/libs/mui/popplaceholder.mcc`"
+
+echo 
+ask "Create release archive of [2m`version file mui/popplaceholder.mcc`[m? (y/[n]) "
+IF NOT WARN
+	echo "*n****** Aborted!*n"
+	QUIT
+ENDIF
+
+echo "*nSetup is preparing files... (tsk, tsk)"
+
+echo "Creating: MCC_Popph archive..."
+
+	delete >nil: MCC_Popph/libs/mui/#?.mcc
+	delete >nil: MCC_Popph/Developer/C/include/mui/#?.h
+	delete >nil: MCC_Popph/Developer/Autodocs/#?.doc
+	copy >nil: mui/#?.mcc MCC_Popph/libs/mui/
+	copy >nil: popplaceholder_mc?.h  MCC_Popph/Developer/C/include/mui/
+	copy >nil: mcc_popplaceholde?.doc MCC_Popph/Developer/Autodocs/
+
+	delete >nil: MCC_Popph/#?.readme FORCE
+	copy >nil: T:MCC_Popph.readme MCC_Popph/
+
+echo "Creating: MCC_Popph_Src archive..."
+
+	IF EXISTS T:MCC_Popph_Src
+		delete >nil: T:MCC_Popph_Src ALL FORCE
+	ENDIF
+
+	makedir T:MCC_Popph_Src
+	makedir T:MCC_Popph_Src/mui
+	copy >nil:    MCC_Popph.info T:MCC_Popph_Src.info
+
+	copy >nil: #?.(c|h|text) T:MCC_Popph_Src
+	copy >nil: bumpre#? smakefil#? source.readm#? T:MCC_Popph_Src
+	copy >nil: clean go rel .revinfo T:MCC_Popph_Src
+
+	copy >nil: T:MCC_Popph_Src.readme T:MCC_Popph_Src
+	copy >nil: MCC_Popph.readme T:MCC_Popph_Src
+
+	delete >nil: T:MCC_Popph_Src/#?/CVS ALL FORCE
+
+
+; creting demo archive
+
+echo "*nCreating distribution archive on RAM:..."
+
+Delete >nil: RAM:MCC_Popph.(lha|readme)
+Delete >nil: RAM:MCC_Popph_Src.(lha|readme)
+
+echo " LhA..."
+lha >nil:  a -2xr ram:MCC_Popph.lha MCC_Popph MCC_Popph.info
+lha >nil:  a -2xr ram:MCC_Popph_Src.lha T:MCC_Popph_Src T:MCC_Popph_Src.info
+
+echo " Copying .readme..."
+copy >nil: T:#?.readme ram:
+
+; precz ze starym archiwum (coby bajzlu nie bylo...)
+delete >nil: MCC_Popph/#?.readme FORCE
+
+; gotowe
+
+echo ""
+list ram:MCC_Popph#?
+
+echo "*nDone.*n"
+

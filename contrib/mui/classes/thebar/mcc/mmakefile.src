@@ -1,8 +1,7 @@
 #   $Id: mmakefile.src 25066 2006-12-10 20:38:45Z mazze $
 include $(TOP)/config/make.cfg
 
-#MM contrib-zune-classes-thebar-class : includes linklibs
-#MM- contrib-zune-classes-thebar-class-includes : includes includes-copy
+#MM contrib-zune-classes-thebar-mcc : includes linklibs includes includes-copy
 
 USER_INCLUDES = -I../../../../../necessary/mui/classes/nlist/commonaros
 
@@ -15,7 +14,7 @@ FILES := Dispatcher \
 	 SetupCleanup \
 	 ShowHide
 	 
-%build_module_simple mmake=contrib-zune-classes-thebar-class \
+%build_module_simple mmake=contrib-zune-classes-thebar-mcc \
   modname=TheBar modtype=mcc moduledir=$(CONTRIBDIR)/Zune/MCC_TheBar/Classes/Zune \
   files="library $(FILES)" \
   uselibs="amiga mui rom m"

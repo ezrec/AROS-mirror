@@ -1,0 +1,3 @@
+delete *.(o|lnk)
+delete mui/#?.mcc
+delete popph
