@@ -4,12 +4,12 @@ include $(TOP)/config/make.cfg
 FILES	:= lazymines button counter field highscores images layout \
 	    localize requesters timer tooltypes lazymines_strings
 
-EXEDIR	:= $(CONTRIBDIR)/aminet
+EXEDIR	:= $(CONTRIBDIR)/Games/LazyMines
 
 #MM aminet-games-think-lazymines : aminet-dev-src-chunkyiclass setup-aminet-lazymines-catalogs
 
 %build_prog mmake=aminet-games-think-lazymines \
-    progname=lazymines targetdir=$(EXEDIR) \
+    progname=LazyMines targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="chunkyiclass arossupport amiga arosc m"
 
 %common

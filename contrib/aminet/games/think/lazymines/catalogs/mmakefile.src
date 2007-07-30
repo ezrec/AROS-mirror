@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/aminet/Catalogs
+DESTDIR := $(CONTRIBDIR)/Games/LazyMines/Catalogs
 
 CATALOGS    := dansk deutsch italiano norsk polski svenska
 CATDESC     := lazymines

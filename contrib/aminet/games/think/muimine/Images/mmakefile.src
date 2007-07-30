@@ -27,7 +27,7 @@ IMAGES =                        \
 	def_FaceButtonImage     \
 	def_MineFieldImage
 
-EXEDIR := $(CONTRIBDIR)/aminet
+EXEDIR := $(CONTRIBDIR)/Games/MUIMine
 IMAGEDIR := $(EXEDIR)/Images
 DEST_IMAGES := $(foreach f,$(IMAGES),$(IMAGEDIR)/$(f))
 

@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/aminet/Catalogs
+DESTDIR := $(CONTRIBDIR)/Games/Yahzee/Catalogs
 
 CATALOGS := dansk deutsch nederlands suomi svenska
 CATDESC  := yahzee

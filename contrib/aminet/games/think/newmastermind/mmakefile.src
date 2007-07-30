@@ -1,7 +1,9 @@
 include $(TOP)/config/make.cfg
 
+EXEDIR := $(CONTRIBDIR)/Games/NewMasterMind
+
 %build_prog mmake=aminet-games-think-newmastermind \
-    progname=newmastermind targetdir=$(CONTRIBDIR)/aminet \
+    progname=NewMasterMind targetdir=$(EXEDIR) \
     files="draw game layout localize newmastermind requesters tooltypes newmastermind_strings" \
     uselibs="chunkyiclass arossupport amiga arosc m"
 

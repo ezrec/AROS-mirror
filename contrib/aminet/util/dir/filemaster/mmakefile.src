@@ -11,14 +11,14 @@ FILES := about commodity config copy dir diskinfo drives event execute \
 
 # does not work: audio
 
-EXEDIR := $(CONTRIBDIR)/aminet
+EXEDIR := $(CONTRIBDIR)/aminet/FileMaster
 
 USER_CFLAGS := -DAROS -DV39 
 
 #MM aminet-util-dir-filemaster : includes linklibs contrib-bgui setup-filemaster-catalogs
 
 %build_prog mmake=aminet-util-dir-filemaster \
-    progname=filemaster targetdir=$(EXEDIR) \
+    progname=FileMaster targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="bgui reqtoolsstubs arossupport amiga arosc m"
 
 %common

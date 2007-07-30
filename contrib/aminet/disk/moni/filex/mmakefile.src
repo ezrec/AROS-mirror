@@ -39,12 +39,12 @@ USER_CFLAGS := -DUSE_PROTO_INCLUDES \
 	       -D__stdargs="" \
 	       -D__asm=""
 	 	 
-EXEDIR := $(CONTRIBDIR)/aminet
+EXEDIR := $(CONTRIBDIR)/aminet/FileX
 
 #MM aminet-disk-moni-filex : includes linklibs setup-filex-catalogs
 
 %build_prog mmake=aminet-disk-moni-filex \
-    progname=filex targetdir=$(EXEDIR) \
+    progname=FileX targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="reqtoolsstubs arossupport amiga arosc"
 
 %common

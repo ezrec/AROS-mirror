@@ -1,7 +1,9 @@
 include $(TOP)/config/make.cfg
 
+EXEDIR := $(CONTRIBDIR)/Games/Backgammon
+
 %build_prog mmake=aminet-games-board-backgammon \
-    progname=Backgammon targetdir=$(CONTRIBDIR)/aminet \
+    progname=Backgammon targetdir=$(EXEDIR) \
     files="BackEval BackMenu BackScreen Backgammon" \
     uselibs="arossupport amiga arosc m"
 

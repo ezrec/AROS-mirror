@@ -1,5 +1,7 @@
 include $(TOP)/config/make.cfg
 
+EXEDIR := $(CONTRIBDIR)/Games/Inv
+
 %build_prog mmake=aminet-games-shoot-inv \
-    progname=inv targetdir=$(CONTRIBDIR)/aminet \
+    progname=Inv targetdir=$(EXEDIR) \
     files=inv uselibs="arossupport amiga arosc m"
