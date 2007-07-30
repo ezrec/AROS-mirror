@@ -1,7 +1,7 @@
 #   $Id: mmakefile.src 25072 2006-12-11 19:23:54Z mazze $
 include $(TOP)/config/make.cfg
 
-#MM- contrib : contrib-zune-classes-thebar
+##MM- contrib : contrib-zune-classes-thebar
 
 #MM- contrib-zune-classes-thebar :  contrib-zune-classes-thebar-mcc  contrib-zune-classes-thebar-mcp contrib-zune-classes-thebar-demos
 
