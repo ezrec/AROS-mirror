@@ -34,35 +34,46 @@
  *
  */
 
+#if defined(__AROS__)
+#ifndef _UNISTD_H_
+#include "unistd.h"
+#endif
+#else /* !__AROS__ */
 #ifndef _UID_T
 #define _UID_T long
 typedef _UID_T uid_t;
 #endif
-
 #ifndef _GID_T
 #define _GID_T long
 typedef _GID_T gid_t;
 #endif
-
 #ifndef _PID_T
-#ifdef __AROS__
-#define __AROS_PID_T_DECLARED
-#endif
 #define _PID_T struct Task *
-typedef	_PID_T pid_t;			/* process id */
+typedef	_PID_T pid_t;			  // process id
 #endif
+#endif /* __AROS__ */
 
+#if defined(__AROS__)
+#ifndef _FCNTL_H_
+#include "fcntl.h"
+#endif
+#else /* !__AROS__ */
 #ifndef _MODE_T
 #define _MODE_T unsigned short 
 typedef _MODE_T mode_t;
 #endif
+#endif /* __AROS__ */
 
-#ifndef __AROS_TIME_T_DECLARED
+#if defined(__AROS__)
+#ifndef _TIME_H_
+#include "time.h"
+#endif
+#else /* !__AROS__ */
 #ifndef _TIME_T
 #define _TIME_T long
 typedef _TIME_T time_t;
 #endif
-#endif
+#endif /* __AROS__ */
 
 #ifndef NULL
 #define	NULL 0L
