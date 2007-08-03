@@ -2,22 +2,22 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib : contrib-networking-apps-wget
-#MM- contrib-networking-apps-wget : contrib-networking-apps-wget-bin contrib-networking-apps-wget-cpy
+#MM- aros-tcpip-apps : aros-tcpip-apps-wget
+#MM- aros-tcpip-apps-wget : aros-tcpip-apps-wget-bin aros-tcpip-apps-wget-cpy
 
-TARGETDIR := $(AROS_CONTRIB)/Networking/Apps/Wget
+TARGETDIR := $(AROS_CONTRIB)/Networking/Apps/WGet
 
 CPYFILES := AUTHORS ChangeLog ChangeLog.Amiga COPYING NEWS README README.AROS TODO
 DOCFILES := wget.info sample.wgetrc
 
-#MM contrib-networking-apps-wget-cpy
+#MM aros-tcpip-apps-wget-cpy
 
 %copy_files_q files=$(CPYFILES) \
-    src=. dst=$(TARGETDIR) maketarget=contrib-networking-apps-wget-cpy
+    src=. dst=$(TARGETDIR) maketarget=aros-tcpip-apps-wget-cpy
 
 %copy_files_q files=$(DOCFILES) \
-    src=doc dst=$(TARGETDIR)/doc maketarget=contrib-networking-apps-wget-cpy
+    src=doc dst=$(TARGETDIR)/doc maketarget=aros-tcpip-apps-wget-cpy
 
-%copy_dir_recursive mmake=contrib-networking-apps-wget-cpy src=S dst=$(TARGETDIR)/S
+%copy_dir_recursive mmake=aros-tcpip-apps-wget-cpy src=S dst=$(TARGETDIR)/S
 
 %common

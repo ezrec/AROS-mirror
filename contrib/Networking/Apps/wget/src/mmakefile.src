@@ -2,10 +2,10 @@
 
 include $(TOP)/config/make.cfg
 
-#MM contrib-networking-apps-wget-bin : includes linklibs contrib-networking-stacks-arostcp
+#MM aros-tcpip-apps-wget-bin : includes linklibs contrib-networking-stacks-arostcp
 
 EXE := wget
-TARGETDIR := $(AROS_CONTRIB)/Networking/Apps/Wget
+TARGETDIR := $(AROS_CONTRIB)/Networking/Apps/WGet
 
 USER_CFLAGS := -DHAVE_CONFIG_H -DAMIGA -D__amigaos__ -D__BUILDER="\"AROS Dev Team\""
 USER_INCLUDES := -I. -I../aros \
@@ -19,7 +19,7 @@ FILES := cmpt connect convert cookies \
       res retr safe-ctype snprintf url \
       utils version xmalloc
 
-%build_prog mmake=contrib-networking-apps-wget-bin progname=$(EXE) files=$(FILES) \
+%build_prog mmake=aros-tcpip-apps-wget-bin progname=$(EXE) files=$(FILES) \
     targetdir=$(TARGETDIR) uselibs="arosc m" nix=false
 
 %common

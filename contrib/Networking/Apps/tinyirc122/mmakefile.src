@@ -1,13 +1,20 @@
 include $(TOP)/config/make.cfg
 
-#MM contrib-arostcp-tinyirc122a : includes linklibs
+##MM- aros-tcpip-apps : aros-tcpip-apps-tinyirc
+#MM aros-tcpip-apps-tinyirc : includes linklibs
+
 AROSTCPINC=$(TOP)/contrib/Networking/Stacks/AROSTCP/bsdsocket
+
 ##USER_INCLUDES := -isystem $(AROSTCPINC)/../netinclude -isystem  $(AROSTCPINC)/. -isystem $(AROSTCPINC)/protos -isystem $(TOP)/contrib/Networking/Developer/includes 
 USER_INCLUDES := -isystem $(TOP)/contrib/Networking/Developer/includes 
+
 USER_CFLAGS := \
         -Wno-uninitialized -Wno-parentheses \
         -DAMITCP \
         -DDIRECTED_BROADCAST
-%build_prog mmake=contrib-arostcp-tinyirc122a \
-    progname=tinyirc targetdir=$(CONTRIBDIR)/ \
+
+EXEDIR := $(CONTRIBDIR)/Networking/Apps/TinyIRC
+
+%build_prog mmake=aros-tcpip-apps-tinyirc \
+    progname=TinyIRC targetdir=$(EXEDIR)/ \
     files=tinyirc uselibs="arossupport amiga arosc m termcap"

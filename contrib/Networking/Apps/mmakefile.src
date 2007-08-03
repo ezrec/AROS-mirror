@@ -1,0 +1,3 @@
+include $(TOP)/config/make.cfg
+
+#MM- contrib : aros-tcpip-apps
