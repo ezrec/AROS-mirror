@@ -1,0 +1,11 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 25968 2007-05-02 13:23:34Z paolone $
+
+include $(TOP)/config/make.cfg
+
+#MM- themes-gorilla-contrib-icons : themes-gorilla-contrib-icons-extras
+
+ICONS := MultiMedia DOpus Demos Development Games Networking
+
+#MM- themes-gorilla-contrib-icons-clean : themes-gorilla-contrib-icons-extras-clean
+%build_icons mmake=themes-gorilla-contrib-icons-extras icons=$(ICONS) dir=$(CONTRIBDIR)

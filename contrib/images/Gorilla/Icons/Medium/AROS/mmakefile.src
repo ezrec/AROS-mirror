@@ -1,0 +1,12 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 25963 2007-05-02 12:35:25Z paolone $
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-complete : themes-gorilla-contrib-icons
+
+ICONS := Extras
+
+#MM- themes-gorilla-icons-clean : themes-gorilla-contrib-icons-clean
+#MM- themes-gorilla-icons : themes-gorilla-contrib-icons
+%build_icons mmake=themes-gorilla-contrib-icons icons=$(ICONS) dir=$(AROSDIR)
