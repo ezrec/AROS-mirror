@@ -16,7 +16,7 @@ ICONS := AmiChess \
          NewMasterMind \
          Quake \
          Soliton \
-         Xinvaders3D \
+         XInvaders3D \
          Yahzee
 
 #MM- themes-gorilla-contrib-icons-extras-clean : themes-gorilla-contrib-icons-extras-games-clean
