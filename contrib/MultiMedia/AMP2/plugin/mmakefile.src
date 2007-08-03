@@ -13,7 +13,7 @@ include $(TOP)/config/make.cfg
 #MM			contrib-mmedia-amp2-plug-MACE \
 #MM			contrib-mmedia-amp2-plug-IMA4 \
 #MM			contrib-mmedia-amp2-plug-MSVC \
-#MM			contrib-mmedia-amp2-plug-SVQ1 \
+##MM			contrib-mmedia-amp2-plug-SVQ1 \
 #MM			contrib-mmedia-amp2-plug-XANIM \
 #MM			contrib-mmedia-amp2-plug-REAL
 
