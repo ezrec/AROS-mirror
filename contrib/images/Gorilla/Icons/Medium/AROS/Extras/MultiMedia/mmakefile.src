@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 
 #MM- themes-gorilla-contrib-icons-extras : themes-gorilla-contrib-icons-extras-mmedia
 
-ICONS := AMP2
+ICONS := AMP2 Gfx
 
 #MM- themes-gorilla-contrib-icons-extras-clean : themes-gorilla-contrib-icons-extras-mmedia-clean
 %build_icons mmake=themes-gorilla-contrib-icons-extras-mmedia icons=$(ICONS) dir=$(CONTRIBDIR)/MultiMedia
