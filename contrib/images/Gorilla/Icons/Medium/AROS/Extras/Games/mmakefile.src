@@ -11,11 +11,11 @@ ICONS := AmiChess \
          Doom \
          Inv \
          Kiel \
-         LazyMines \
+         LazyMines LBreakout2 \
          Moria3D MUIMine \
          NewMasterMind \
          Quake \
-         Soliton \
+         Soliton Spout \
          XInvaders3D \
          Yahzee
 
