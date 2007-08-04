@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES := untgz
 
-EXEDIR := $(CONTRIBDIR)/aminet
+EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
 
 #MM aminet-util-arc-untgz : includes linklibs
 

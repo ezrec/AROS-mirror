@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-util-moni-memspeed \
-    progname=memspeed targetdir=$(CONTRIBDIR)/aminet \
+    progname=memspeed targetdir=$(CONTRIBDIR)/Misc/aminet \
     files=memspeed uselibs="arossupport amiga arosc m"

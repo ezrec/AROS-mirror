@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-util-pack-unsqsh \
-    progname=unsqsh targetdir=$(CONTRIBDIR)/aminet \
+    progname=unsqsh targetdir=$(CONTRIBDIR)/Misc/aminet \
     files=unsqsh uselibs="arossupport amiga arosc m"

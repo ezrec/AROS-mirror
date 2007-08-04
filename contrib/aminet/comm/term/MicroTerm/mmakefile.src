@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-comm-term-microtem \
-    progname=Microterm targetdir=$(CONTRIBDIR)/aminet \
+    progname=Microterm targetdir=$(CONTRIBDIR)/Misc/aminet \
     files="console globals main serial" \
     uselibs="arossupport amiga arosc m"

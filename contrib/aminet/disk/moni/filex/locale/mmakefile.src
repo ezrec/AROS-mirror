@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/aminet/FileX/Catalogs
+DESTDIR := $(CONTRIBDIR)/Misc/aminet/FileX/Catalogs
 
 CATALOGS 	:= $(basename $(wildcard *.ct))
 CATDESC 	:= FileX

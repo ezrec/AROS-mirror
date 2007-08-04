@@ -135,7 +135,7 @@ FILES := \
 USER_CFLAGS = -DINCLUDEALL -DCPU_ANY
 
 %build_prog mmake=aminet-comm-term-term \
-    progname=Term targetdir=$(CONTRIBDIR)/aminet \
+    progname=Term targetdir=$(CONTRIBDIR)/Misc/aminet \
     files=$(FILES) uselibs="gtlayout arossupport amiga arosc m"
 
 #MM aminet-comm-term-term : aminet-dev-gui-gtlayout aminet-comm-term-xprz aminet-comm-term-xem setup-aminet-comm-term-term

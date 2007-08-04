@@ -11,5 +11,5 @@ FILES := cmath \
 	tree
 
 %build_prog mmake=fish-icalc \
-    progname=icalc targetdir=$(CONTRIBDIR)/fish \
+    progname=icalc targetdir=$(CONTRIBDIR)/Misc/fish \
     files=$(FILES) uselibs="arossupport amiga arosc m"

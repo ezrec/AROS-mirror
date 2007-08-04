@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES := checkstartup functions gadgets windowtool
 
-EXEDIR := $(CONTRIBDIR)/fish
+EXEDIR := $(CONTRIBDIR)/Misc/fish
 
 #MM fish-windowtool : includes linklibs
 

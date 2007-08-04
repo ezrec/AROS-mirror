@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-util-arc-testdms \
-    progname=testdms targetdir=$(CONTRIBDIR)/aminet \
+    progname=testdms targetdir=$(CONTRIBDIR)/Misc/aminet \
     files=testdms uselibs="arossupport amiga arosc m"

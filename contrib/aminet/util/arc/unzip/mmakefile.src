@@ -8,7 +8,7 @@ FILES := unzip crypt envargs explode extract file_io inflate match\
 unreduce unshrink zipinfo unix
 
 
-EXEDIR := $(CONTRIBDIR)/aminet
+EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
 
 USER_CFLAGS := -DUNIX -DNO_ZIPINFO -DBSD -DBSD4_4
 

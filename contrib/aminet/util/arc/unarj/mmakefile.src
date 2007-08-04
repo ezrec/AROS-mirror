@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES := decode environ unarj
 
-EXEDIR := $(CONTRIBDIR)/aminet
+EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
 
 #MM aminet-util-arc-unarj : includes linklibs
 

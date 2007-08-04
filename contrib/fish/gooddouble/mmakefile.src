@@ -1,7 +1,7 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-gooddouble \
-    progname=GoodDouble targetdir=$(CONTRIBDIR)/fish \
+    progname=GoodDouble targetdir=$(CONTRIBDIR)/Misc/fish \
     files="ClickTest GoodDouble GoodDouble2" \
     uselibs="arossupport amiga arosc m"
 

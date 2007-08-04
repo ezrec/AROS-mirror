@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-snowfall \
-    progname=snowfall targetdir=$(CONTRIBDIR)/fish \
+    progname=snowfall targetdir=$(CONTRIBDIR)/Misc/fish \
     files=snowfall uselibs="arossupport amiga arosc m"

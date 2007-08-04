@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES := modifyicon
 
-EXEDIR := $(CONTRIBDIR)/aminet
+EXEDIR := $(CONTRIBDIR)/Misc/aminet
 
 #MM aminet-util-wb-modifyicon : includes linklibs
 

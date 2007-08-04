@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES := unsit updcrc
 
-EXEDIR := $(CONTRIBDIR)/aminet
+EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
 
 USER_CFLAGS := -DAROS -DHAVE_GETOPT=1
 

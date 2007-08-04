@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/aminet
+EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
 FILES := \
 			64bit \
 			Device \

@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 FILES := unrar
 
-EXEDIR := $(CONTRIBDIR)/aminet
+EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
 
 USER_CFLAGS :=-D_UNIX
 
