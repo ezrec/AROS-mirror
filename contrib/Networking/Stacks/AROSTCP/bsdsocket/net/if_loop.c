@@ -120,7 +120,7 @@ void loconfig()
 	struct ifreq ifr = {0};
 	ifr.ifr_addr.sa_len = sizeof(struct sockaddr_in);
 	ifr.ifr_addr.sa_family = AF_INET;
-	((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr.s_addr = 0x7F000001;
+	((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr.s_addr = htonl(0x7F000001);
 	in_control(NULL, SIOCSIFADDR, &ifr, &loif);
 }
 
