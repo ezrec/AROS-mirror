@@ -3,7 +3,7 @@
 ========================
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Sergey Mineychev
-:Copyright: Copyright Š 1995-2004, The AROS Development Team
+:Copyright: Copyright Š 1995-2007, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
