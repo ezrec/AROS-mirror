@@ -11,6 +11,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 18-Aug-07 sonic     - Now builds on AROS.
  * 08-Apr-07 sonic     - Removed "TRACKDISK" option.
  *                     - Removed dealing with block length.
  * 31-Mar-07 sonic     Added support for Joliet and character set translation
@@ -22,14 +23,14 @@
 
 #include <dos/var.h>
 
-#include <clib/dos_protos.h>
-#include <clib/utility_protos.h>
-
+#include <proto/dos.h>
 #include <proto/exec.h>
+#include <proto/utility.h>
 
 #include "cdrom.h"
 #include "iso9660.h"
 #include "rock.h"
+#include "charset.h"
 #include "globals.h"
 
 #ifdef LATTICE
@@ -50,13 +51,24 @@ int g_path_table_records = 0;
 struct Globals glob;
 struct Globals *global = &glob;
 
+#ifdef __MORPHOS__
 struct Library *UtilityBase;
+#else
+struct UtilityBase *UtilityBase;
+#endif
 
 #define TU(x,o)  (t_ulong)(((unsigned char *)(x))[o])
+#if AROS_BIG_ENDIAN
 #define GET721(x) (TU(x,0) + (TU(x,1) << 8))
 #define GET722(x) (TU(x,1) + (TU(x,0) << 8))
 #define GET731(x) (TU(x,0) + (TU(x,1) << 8) + (TU(x,2) << 16) + (TU(x,3) << 24))
 #define GET732(x) (TU(x,3) + (TU(x,2) << 8) + (TU(x,1) << 16) + (TU(x,0) << 24))
+#else
+#define GET721(x) (TU(x,1) + (TU(x,0) << 8))
+#define GET722(x) (TU(x,0) + (TU(x,1) << 8))
+#define GET731(x) (TU(x,3) + (TU(x,2) << 8) + (TU(x,1) << 16) + (TU(x,0) << 24))
+#define GET732(x) (TU(x,0) + (TU(x,1) << 8) + (TU(x,2) << 16) + (TU(x,3) << 24))
+#endif
 
 /* Check consistency of a 7.2.3 field: */
 
@@ -325,8 +337,8 @@ void Check_Subdirectory (CDROM_OBJ *p_home, char *p_name)
 
   printf ("  %s\r", p_name);
   fflush (stdout);
-
-  if (obj = Open_Object (p_home, p_name)) {
+  obj = Open_Object (p_home, p_name);
+  if (obj) {
     unsigned long offset = 0;
 
     while (Examine_Next (obj, &info, &offset)) {
@@ -343,8 +355,8 @@ void Check_Subdirectory (CDROM_OBJ *p_home, char *p_name)
     printf ("ERROR: Object '%s': iso_errno = %d\n", p_name, global->iso_errno);
     return;
   }
-
-  if (obj = Open_Object (p_home, p_name)) {
+  obj = Open_Object (p_home, p_name);
+  if (obj) {
     unsigned long offset = 0;
 
     while (Examine_Next (obj, &info, &offset)) {
@@ -402,7 +414,7 @@ void Cleanup (void)
     Cleanup_CDROM (global->g_cd);
 
   if (UtilityBase)
-    CloseLibrary (UtilityBase);
+    CloseLibrary ((struct Library *)UtilityBase);
 }
 
 int Get_Device_And_Unit (void)
@@ -457,8 +469,8 @@ int main (int argc, char *argv[])
   global->SysBase = SysBase;
   atexit (Cleanup);
 
-  if (!(UtilityBase = (struct Library *)
-         OpenLibrary ((UBYTE *) "utility.library", 37))) {
+  if (!(UtilityBase = (struct UtilityBase *)
+         OpenLibrary ("utility.library", 37))) {
     fprintf (stderr, "cannot open utility.library\n");
     exit (1);
   }

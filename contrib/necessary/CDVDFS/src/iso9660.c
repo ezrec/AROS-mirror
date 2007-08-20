@@ -369,10 +369,12 @@ int Names_Equal(VOLUME *volume, directory_record *dir, char *p_name)
 directory_record *Get_Directory_Record
 	(VOLUME *p_volume, unsigned long p_location, unsigned long p_offset)
 {
-int len;
-int loc;
-  
+	int len;
+	int loc;
+
+	BUG(dbprintf("Get_Directory_Record(%lu, %lu): blockshift = %lu\n", p_location, p_offset, VOL(p_volume, blockshift));)
 	loc = (p_location >> VOL(p_volume,blockshift)) + (p_offset >> 11);
+	BUG(dbprintf("Result sector = %lu\n", loc);)
 	if (!Read_Sector(p_volume->cd, loc))
 	{
 		global->iso_errno = ISOERR_SCSI_ERROR;
@@ -458,6 +460,7 @@ CDROM_OBJ *Iso_Open_Obj_In_Directory(CDROM_OBJ *p_dir, char *p_name)
 
 	/* skip first two entries: */
 
+	BUG(dbprintf("Iso_Open_Obj_In_Directory(%s)\n");)
 	dir = Get_Directory_Record(p_dir->volume, loc, 0);
 	if (!dir)
 		return NULL;

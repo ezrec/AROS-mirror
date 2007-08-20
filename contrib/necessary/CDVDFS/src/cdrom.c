@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 12-Aug-07 sonic     - Added some debug output.
  * 09-Apr-07 sonic     - Disabled DirectSCSI on AROS.
  * 08-Apr-07 sonic     - Removed redundant TRACKDISK option.
  *                     - Added trackdisk64 support.
@@ -271,7 +272,10 @@ int bufs = p_cd->std_buffers + p_cd->file_buffers + 1;
 	DoIO ((struct IORequest *) p_cd->scsireq);
 	if (p_cd->scsireq->io_Error)
 	{
-	int i;
+		int i;
+		BUG(dbprintf("Read_From_Drive(): error %ld\n", p_cd->scsireq->io_Error));
+		BUG(dbprintf("Reading %ld sectors from %ld\n", p_number_of_sectors, p_sector));
+		BUG(dbprintf("(%lu bytes from 0x%08lX%08lX)\n", p_cd->scsireq->io_Length, p_cd->scsireq->io_Actual, p_cd->scsireq->io_Offset));
 		for (i=0; i<bufs; i++)
 			p_cd->current_sectors[i] = -1;
 		return 0;
@@ -320,7 +324,6 @@ int loc;
 				loc = i, oldest_tick = tick;
 		}
 	}
-
 	status = Read_From_Drive(p_cd,p_cd->buffers[loc],SCSI_BUFSIZE, p_sector, 1);
 	if (status)
 	{

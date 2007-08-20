@@ -54,19 +54,19 @@ all:		cdrom-handler cdrom cdcontrol checkcd $(KILLDEV)
 
 cdrom-handler:	$(OBJS1)
 		$(CC) $(LDFLAGS1) -o $@ $(OBJS1) $(LDLIBS1) $(DEBUGLIBS)
-		$(STRIP) $@
+#		 $(STRIP) $@
 		$(NOEXEC) $@
 
 cdrom:		$(OBJS2)
-		$(CC) $(LDFLAGS2) -o $@ $(OBJS2) $(LDLIBS2)
+		$(CC) $(LDFLAGS2) -o $@ $(OBJS2) $(LDLIBS2) $(DEBUGLIBS)
 		$(STRIP) $@
 
 cdcontrol:	$(OBJS3)
-		$(CC) $(LDFLAGS2) -o $@ $(OBJS3) $(LDLIBS2)
+		$(CC) $(LDFLAGS2) -o $@ $(OBJS3) $(LDLIBS2) $(DEBUGLIBS)
 		$(STRIP) $@
 
 checkcd:	$(OBJS4)
-		$(CC) $(LDFLAGS2) -o $@ $(OBJS4) $(LDLIBS2)
+		$(CC) $(LDFLAGS2) -o $@ $(OBJS4) $(LDLIBS2) $(DEBUGLIBS)
 		$(STRIP) $@
 
 KillDevice:	KillDevice.c

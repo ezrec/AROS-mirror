@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 18-Aug-07 sonic   Fixed reading CL and PL fields on little-endian machines
  * 04-Jun-07 sonic   Fixed endianess check in Is_A_Symbolic_Link()
  * 05-May-07 sonic   Added support for RockRidge protection bits and file comments
  * 05-Feb-94   fmu   Added support for relocated directories.
@@ -310,8 +311,6 @@ int Is_A_Symbolic_Link(VOLUME *p_volume, directory_record *p_dir, unsigned long 
 		*amiga_mode |= FIBF_OTR_EXECUTE;
 	if (px.mode & S_IROTH)
 		*amiga_mode |= FIBF_OTR_READ;
-	BUG(dbprintf("POSIX protection 0x%08lX translated to Amiga 0x%08lX\n", px.mode, *amiga_mode);)
-
 	/*
 		0120000 is the POSIX code for symbolic links:
 	*/
@@ -437,7 +436,11 @@ struct cl {
 	if (!Get_System_Use_Field(p_volume, p_dir,"CL",(char *)&buf,sizeof(buf),0))
 		return -1;
 	else
+#if AROS_BIG_ENDIAN
 		return buf.pos_m;
+#else
+		return buf.pos_i;
+#endif
 }
 
 /* Return content of "PL" system use field, or -1, if no such system use field
@@ -456,7 +459,9 @@ struct pl {
 	if (!Get_System_Use_Field(p_volume,p_dir,"PL",(char *)&buf,sizeof(buf),0))
 		return -1;
 	else
-	return buf.pos_m;
+#if AROS_BIG_ENDIAN
+		return buf.pos_m;
+#else
+		return buf.pos_i;
+#endif
 }
-
-

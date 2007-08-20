@@ -11,6 +11,7 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 18-Aug-07  sonic  - Now builds on AROS.
  * 06-May-07  sonic  - Added separate "g" option for listing directories in Joliet format.
  *                   - Added support for protection bits and file comments.
  * 08-Mar-07  sonic  - Removed redundant "TRACKDISK" option.
@@ -30,8 +31,8 @@
 #include <devices/trackdisk.h>
 
 #include <clib/alib_protos.h>
-#include <clib/dos_protos.h>
 
+#include <proto/dos.h>
 #include <proto/exec.h>
 
 #include "cdrom.h"
@@ -406,8 +407,8 @@ void Try_To_Open (CDROM *p_cd, char *p_directory, char *p_name)
       exit (1);
     }
   }
-
-  if (obj = Open_Object (home, p_name)) {
+  obj = Open_Object (home, p_name);
+  if (obj) {
     CDROM_INFO info;
     printf ("%s '%s' found, location = %lu\n",
             obj->symlink_f ? "Symbolic link" :
@@ -478,8 +479,8 @@ void Show_File_Contents (CDROM *p_cd, char *p_name)
     Close_Volume (vol);
     exit (1);
   }
-
-  if (obj = Open_Object (home, p_name)) {
+  obj = Open_Object (home, p_name);
+  if (obj) {
     for (;;) {
       cnt = Read_From_File (obj, buffer, THEBUFSIZE);
       if (cnt == -1) {
@@ -578,8 +579,8 @@ void Show_Subdirectory (CDROM_OBJ *p_home, char *p_name, int p_long_info,
   CDROM_OBJ *obj;
   CDROM_INFO info;
   VOLUME *vol = p_home->volume;
-
-  if (obj = Open_Object (p_home, p_name)) {
+  obj = Open_Object (p_home, p_name);
+  if (obj) {
     unsigned long offset = 0;
 
     while (Examine_Next (obj, &info, &offset)) {
@@ -620,7 +621,8 @@ void Show_Subdirectory (CDROM_OBJ *p_home, char *p_name, int p_long_info,
   }
 
   if (p_recursive) {
-    if (obj = Open_Object (p_home, p_name)) {
+    obj = Open_Object (p_home, p_name);
+    if (obj) {
       unsigned long offset = 0;
     
       while (Examine_Next (obj, &info, &offset)) {
@@ -836,7 +838,7 @@ void Show_Catalog_Node (CDROM *p_cd, t_ulong p_node)
 
   node = HFS_Get_Node (p_cd, blk, &mdb, p_node);
   if (!node) {
-    fprintf (stderr, "cannot find node %d\n", p_node);
+    fprintf (stderr, "cannot find node %lu\n", p_node);
     return;
   }
   
