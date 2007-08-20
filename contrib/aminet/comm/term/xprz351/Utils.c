@@ -118,7 +118,7 @@ struct LocaleInfo li;
 
 struct TagItem LocalTags[3] =
 {
-  OC_BuiltInLanguage, (ULONG) "english",
+  OC_BuiltInLanguage,  "english",
   OC_Version, 1,
   TAG_DONE
 };

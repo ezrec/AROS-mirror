@@ -134,8 +134,8 @@ VOID OpenahiprefsCatalog(VOID)
 
 {
     if (LocaleBase) {
-	static const struct TagItem ahiprefs_tags[] = {
-	  { OC_BuiltInLanguage, (ULONG)"english" },
+	struct TagItem ahiprefs_tags[] = {
+	  { OC_BuiltInLanguage, "english" },
 	  { OC_Version,         4 },
 	  { TAG_DONE,           0  }
 	};

@@ -2260,6 +2260,7 @@ CreateBufferInfo(struct Screen *Parent,BOOL *pSearchForward,BOOL *pIgnoreCase,BO
 
 								if(Parent)
 								{
+									char STR_COLON[] = ":";
 									STATIC ULONG ReviewTags[] =
 									{
 										LAMN_TitleID,			MSG_TERMREVIEW_PROJECT_MEN,
@@ -2279,7 +2280,7 @@ CreateBufferInfo(struct Screen *Parent,BOOL *pSearchForward,BOOL *pIgnoreCase,BO
 												LAMN_UserData,	MEN_QUITBUF,
 
 											LAMN_ItemID,		MSG_CLOSE_WINDOW_TXT,
-												LAMN_KeyText,	(ULONG)":",
+												LAMN_KeyText,	0L,
 												LAMN_UserData,	MEN_QUITBUF,
 
 										LAMN_TitleID,			MSG_TERMBUFFER_EDIT_MEN,
@@ -2297,6 +2298,7 @@ CreateBufferInfo(struct Screen *Parent,BOOL *pSearchForward,BOOL *pIgnoreCase,BO
 
 										TAG_DONE
 									};
+									ReviewTags[25] = STR_COLON;
 
 									MenuTags = ReviewTags;
 								}

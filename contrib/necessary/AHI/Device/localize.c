@@ -45,8 +45,8 @@ const struct FC_Type _msgFreqFmt = { 25, "%lu Hz" };
 
 static struct Catalog *ahi_Catalog = NULL;
 
-static const struct TagItem ahi_tags[] = {
-  { OC_BuiltInLanguage, (ULONG)"english" },
+static struct TagItem ahi_tags[] = {
+  { OC_BuiltInLanguage, "english" },
   { OC_Version,         4 },
   { TAG_DONE,           0  }
 };

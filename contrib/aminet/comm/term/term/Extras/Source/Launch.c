@@ -395,9 +395,9 @@ LaunchSomething(STRPTR OriginalStreamName,BOOL Synchronous,LaunchMsg *Startup)
 
 			STATIC struct TagItem DefaultTags[] =
 			{
-				NP_Entry,		(ULONG)LaunchEntry,
+				NP_Entry,		LaunchEntry,
 				NP_StackSize,	8000,
-				NP_Name,		(ULONG)"term Child Process",
+				NP_Name,		"term Child Process",
 				NP_Cli,			TRUE,
 				NP_Input,		NULL,
 				NP_Output,		NULL,

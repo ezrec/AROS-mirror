@@ -78,10 +78,10 @@ static const LONG Vectors[] = {
     * System interface.
     */
 #ifdef __AROS__
-   (LONG)BGUIGadget_LibOpen,
-   (LONG)BGUIGadget_LibClose,
-   (LONG)BGUIGadget_LibExpunge,
-   (LONG)BGUIGadget_LibVoid,
+   BGUIGadget_LibOpen,
+   BGUIGadget_LibClose,
+   BGUIGadget_LibExpunge,
+   BGUIGadget_LibVoid,
 #else
    (LONG)LibOpen,
    (LONG)LibClose,
@@ -110,9 +110,9 @@ STATIC VOID CloseLibs(void)
 ULONG _LibInit[4] =
 {
    (ULONG)sizeof(struct BGUIClassBase),
-   (ULONG)Vectors,
+   Vectors,
    (ULONG)NULL,
-   (ULONG)LibInit
+   LibInit
 };
 
 #define bcb ((struct BGUIClassBase *)lib)
