@@ -1,0 +1,34 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSNUMERICFILES = Project \
+        numeric \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSNUMERIC_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSNUMERICFILES))))
+
+#MM- feelin-classes : feelin-classes-numeric
+#MM- feelin-classes-numeric : feelin-classes-numeric-setup feelin-classes-numeric-compile feelin-classes-numeric-link
+
+$(CLASSNUMERICFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-numeric-compile : $(CLASSNUMERICFILES)
+
+$(AROSDIR)/Libs/Feelin/Numeric.fc : $(CLASSNUMERIC_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSNUMERIC_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-numeric-link : $(AROSDIR)/Libs/Feelin/Numeric.fc
+
+#MM
+feelin-classes-numeric-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

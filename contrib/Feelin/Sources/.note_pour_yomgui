@@ -1,0 +1,8 @@
+NOTES EN VRAC POUR YOMGUI
+-------------------------
+
+Pourrais-tu utiliser la macro 'INLINE' à la place de  'inline',  car  cette
+directive  n'est  pas  reconnue par SAS/C (qui merge les fonctions comme un
+grand lors  que  c'est  possible).  La  macro  'INLINE'  est  définie  dans
+<feelin/compiler.h>
+

@@ -1,0 +1,21 @@
+## version $VER: FC_Adjust.catalog 02.00 (2005/08/14)
+## language français
+;
+CAT_RENDER
+(rendu)
+;
+CAT_PREVIEW
+Apperçu
+;
+CAT_RENDER_NONE
+(rendu:aucun)
+;
+CAT_SELECT
+(sélection)
+;
+CAT_SELECT_NONE
+(sélection:aucune)
+;
+CAT_CLEAR
+_Effacer
+;

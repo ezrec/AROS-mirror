@@ -1,0 +1,13 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-feelin : feelin-env
+#MM feelin-env
+
+feelin-env : files-copy
+%copy_files_q files="_Global_.gui" \
+    dst=$(AROSDIR)/Prefs/Env-Archive/Feelin
+
+#%common
+

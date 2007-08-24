@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+
+<feelin:objects>
+   <HGroup>
+      <Group Frame="$group-frame" Title="msg:button">
+         <Group Columns="2">
+            <HLabel Text="msg:font" />
+            <PopFont name="cycle-font" />
+            <HLabel Text="msg:preparse" />
+            <PopPreParse name="cycle-preparse" />
+         </Group>
+
+         <Bar />
+ 
+         <Group Rows="2" VSpacing="2">
+            <PopFrame name="cycle-button-frame" Couple="true"/>
+            <PopImage name="cycle-button-back" Couple="true"/>
+            <PopImage name="cycle-image" />
+            <VLabel Text="msg:frame" />
+            <VLabel Text="msg:back" />
+            <VLabel Text="msg:image" />
+         </Group>
+         
+         <Bar Title="Layout" />
+         
+         <Radio name="cycle-layout" Horizontal="true" Entries="dat:layout" />
+      </Group>
+
+      <Group>
+         <Group Columns="2" Frame="$group-frame" Title="msg:control">
+            <HLabel Text="msg:position" />
+            <Cycle name="cycle-position" Entries="dat:positions" EntriesType="Array" />
+            <HLabel Text="msg:level" />
+            <Slider name="cycle-level" Horizontal="true" Min="2" Max="20" Value="val:level" />
+         </Group>
+
+         <HGroup>
+            <Group Rows="2" Frame="$group-frame" Title="Menu" VSpacing="2">
+               <PopFrame name="cycle-menu-frame" />
+               <PopImage name="cycle-menu-back" />
+               <VLabel Text="msg:frame" />
+               <VLabel Text="msg:back" />
+            </Group>
+            
+            <Group Rows="2" Frame="$group-frame" Title="Item" VSpacing="2">
+               <PopFrame name="cycle-item-frame" Couple="true" />
+               <PopImage name="cycle-item-back" />
+               <VLabel Text="msg:frame" />
+               <VLabel Text="msg:back" />
+            </Group> 
+         </HGroup>
+      </Group>
+   </HGroup>
+</feelin:objects>
+

@@ -1,0 +1,18 @@
+#
+# makefile header to compile Feelin classes
+#
+
+SRC  := $(FEELINTOP)/Sources
+DST  := $(FEELINTOP)/Libs/Feelin
+
+COMP := $(AROSCC)
+COPT := -c -O2 -I$(FEELINTOP)/Include $(FEELIN_COPT)
+LINK := $(AROSCC)
+LOPT := -L$(FEELINTOP)/Include/lib -lfeelin_aros -nostartfiles $(FEELIN_LOPT)
+CATS := Catalogs/Français/Feelin
+
+AUTHOR := "written by Olivier LAVIALE (www.gofromiel.com)"
+
+%.o : %.c
+	  @ echo ">>"[1m$(<F)[0m $(COMP) $(COPT) $<
+	   $(COMP) $(COPT) $< -o $@

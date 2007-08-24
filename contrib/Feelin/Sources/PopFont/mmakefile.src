@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSPOPFONTFILES = Project \
+                    object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSPOPFONT_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPOPFONTFILES))))
+
+#MM- feelin-classes : feelin-classes-popfont
+#MM- feelin-classes-popfont : feelin-classes-popfont-setup feelin-classes-popfont-compile feelin-classes-popfont-link
+
+$(CLASSPOPFONTFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-popfont-compile : $(CLASSPOPFONTFILES)
+
+$(AROSDIR)/Libs/Feelin/PopFont.fc : $(CLASSPOPFONT_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSPOPFONT_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-popfont-link : $(AROSDIR)/Libs/Feelin/PopFont.fc
+
+#MM
+feelin-classes-popfont-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

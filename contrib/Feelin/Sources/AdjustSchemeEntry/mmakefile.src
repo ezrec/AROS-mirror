@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSADJUSTSCHEMEENTRYFILES = Project \
+	    object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSADJUSTSCHEMEENTRY_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTSCHEMEENTRYFILES))))
+
+#MM- feelin-classes : feelin-classes-adjustschemeentry
+#MM- feelin-classes-adjustschemeentry : feelin-classes-adjustschemeentry-setup feelin-classes-adjustschemeentry-compile feelin-classes-adjustschemeentry-link
+
+$(CLASSADJUSTSCHEMEENTRYFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-adjustschemeentry-compile : $(CLASSADJUSTSCHEMEENTRYFILES)
+
+$(AROSDIR)/Libs/Feelin/AdjustSchemeEntry.fc : $(CLASSADJUSTSCHEMEENTRY_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSADJUSTSCHEMEENTRY_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-adjustschemeentry-link : $(AROSDIR)/Libs/Feelin/AdjustSchemeEntry.fc
+
+#MM
+feelin-classes-adjustschemeentry-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

@@ -1,0 +1,13 @@
+##stringtype C
+##shortstrings
+/****************************************************************************
+   This file was created automatically by `%fv'
+   from "%f0".
+****************************************************************************/
+
+extern struct FeelinCatalogEntry FCC_CatalogTable[];
+
+enum {
+    %i,
+};
+

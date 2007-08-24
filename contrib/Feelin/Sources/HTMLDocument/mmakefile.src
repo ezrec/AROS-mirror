@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSHTMLDOCUMENTFILES = Project \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSHTMLDOCUMENT_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSHTMLDOCUMENTFILES))))
+
+#MM- feelin-classes : feelin-classes-htmldocument
+#MM- feelin-classes-htmldocument : feelin-classes-htmldocument-setup feelin-classes-htmldocument-compile feelin-classes-htmldocument-link
+
+$(CLASSHTMLDOCUMENTFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-htmldocument-compile : $(CLASSHTMLDOCUMENTFILES)
+
+$(AROSDIR)/Libs/Feelin/HTMLDocument.fc : $(CLASSHTMLDOCUMENT_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSHTMLDOCUMENT_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-htmldocument-link : $(AROSDIR)/Libs/Feelin/HTMLDocument.fc
+
+#MM
+feelin-classes-htmldocument-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

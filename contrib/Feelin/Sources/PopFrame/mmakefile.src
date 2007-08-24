@@ -1,0 +1,32 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSPOPFRAMEFILES = Project
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSPOPFRAME_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPOPFRAMEFILES))))
+
+#MM- feelin-classes : feelin-classes-popframe
+#MM- feelin-classes-popframe : feelin-classes-popframe-setup feelin-classes-popframe-compile feelin-classes-popframe-link
+
+$(CLASSPOPFRAMEFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-popframe-compile : $(CLASSPOPFRAMEFILES)
+
+$(AROSDIR)/Libs/Feelin/PopFrame.fc : $(CLASSPOPFRAME_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSPOPFRAME_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-popframe-link : $(AROSDIR)/Libs/Feelin/PopFrame.fc
+
+#MM
+feelin-classes-popframe-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

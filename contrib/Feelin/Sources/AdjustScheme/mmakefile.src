@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSADJUSTSCHEMEFILES = Project \
+	    object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSADJUSTSCHEME_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTSCHEMEFILES))))
+
+#MM- feelin-classes : feelin-classes-adjustscheme
+#MM- feelin-classes-adjustscheme : feelin-classes-adjustscheme-setup feelin-classes-adjustscheme-compile feelin-classes-adjustscheme-link
+
+$(CLASSADJUSTSCHEMEFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-adjustscheme-compile : $(CLASSADJUSTSCHEMEFILES)
+
+$(AROSDIR)/Libs/Feelin/AdjustScheme.fc : $(CLASSADJUSTSCHEME_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSADJUSTSCHEME_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-adjustscheme-link : $(AROSDIR)/Libs/Feelin/AdjustScheme.fc
+
+#MM
+feelin-classes-adjustscheme-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSPICTUREFILES = Project \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSPICTURE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPICTUREFILES))))
+
+#MM- feelin-classes : feelin-classes-picture
+#MM- feelin-classes-picture : feelin-classes-picture-setup feelin-classes-picture-compile feelin-classes-picture-link
+
+$(CLASSPICTUREFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-picture-compile : $(CLASSPICTUREFILES)
+
+$(AROSDIR)/Libs/Feelin/Picture.fc : $(CLASSPICTURE_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSPICTURE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-picture-link : $(AROSDIR)/Libs/Feelin/Picture.fc
+
+#MM
+feelin-classes-picture-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

@@ -1,0 +1,93 @@
+<?xml version="1.0" ?>
+
+<feelin:objects>
+   <HGroup>
+      <Group>
+         <!--HGroup-->
+            <Group Rows="2" Frame="$group-frame" Title="msg:container" VSpacing="2">
+               <PopFrame name="scrollbar-prop-frame" />
+               <PopImage name="scrollbar-prop-back" />
+               <PopImage name="scrollbar-prop-back-vertical" />
+               <PopScheme name="scrollbar-prop-scheme" />
+               <VLabel Text="msg:frame" />
+               <VLabel Text="msg:back" />
+               <VLabel>vback</VLabel>
+               <VLabel Text="msg:scheme" />
+            </Group>
+
+            <Group Rows="2" Frame="$group-frame" Title="msg:knob" VSpacing="2">
+               <PopFrame name="scrollbar-knob-frame" Couple="true" />
+               <PopImage name="scrollbar-knob-back" Couple="true" />
+               <PopImage name="scrollbar-knob-back-vertical" Couple="true" />
+               <PopScheme name="scrollbar-knob-scheme" />
+               <VLabel Text="msg:frame" />
+               <VLabel Text="msg:back" />
+               <VLabel>vback</VLabel>
+               <VLabel Text="msg:scheme" />
+            </Group>
+         <!--/HGroup-->
+
+         <Group Rows="2" Frame="$group-frame" Title="msg:scrollbar" VSpacing="2">
+            <PopFrame name="scrollbar-frame" />
+            <PopImage name="scrollbar-back" />
+            <PopImage name="scrollbar-back-vertical" />
+            <PopScheme name="scrollbar-scheme" />
+            <VLabel Text="msg:frame" />
+            <VLabel Text="msg:back" />
+               <VLabel>vback</VLabel>
+            <VLabel Text="msg:scheme" />
+         </Group>
+      </Group>
+
+      <Group Frame="$group-frame" Title="Arrows">
+         <Page>
+            <Group Rows="2" PageTitle="Left" VSpacing="2">
+               <PopFrame name="scrollbar-arrow-left-frame" Couple="true" />
+               <PopImage name="scrollbar-arrow-left-back" Couple="true" />
+               <PopImage name="scrollbar-arrow-left-image" Couple="true" />
+               <PopScheme name="scrollbar-arrow-left-scheme" />
+               <VLabel Text="msg:frame" />
+               <VLabel Text="msg:back" />
+               <VLabel Text="msg:image" />
+               <VLabel Text="msg:scheme" />
+            </Group>
+
+            <Group Rows="2" PageTitle="Right" VSpacing="2">
+               <PopFrame name="scrollbar-arrow-right-frame" Couple="true" />
+               <PopImage name="scrollbar-arrow-right-back" Couple="true" />
+               <PopImage name="scrollbar-arrow-right-image" Couple="true" />
+               <PopScheme name="scrollbar-arrow-right-scheme" />
+               <VLabel Text="msg:frame" />
+               <VLabel Text="msg:back" />
+               <VLabel Text="msg:image" />
+               <VLabel Text="msg:scheme" />
+            </Group>
+
+            <Group Rows="2" PageTitle="Top" VSpacing="2">
+               <PopFrame name="scrollbar-arrow-top-frame" Couple="true" />
+               <PopImage name="scrollbar-arrow-top-back" Couple="true" />
+               <PopImage name="scrollbar-arrow-top-image" Couple="true" />
+               <PopScheme name="scrollbar-arrow-top-scheme" />
+               <VLabel Text="msg:frame" />
+               <VLabel Text="msg:back" />
+               <VLabel Text="msg:image" />
+               <VLabel Text="msg:scheme" />
+            </Group>
+
+            <Group Rows="2" PageTitle="Bottom" VSpacing="2">
+               <PopFrame name="scrollbar-arrow-bottom-frame" Couple="true" />
+               <PopImage name="scrollbar-arrow-bottom-back" Couple="true" />
+               <PopImage name="scrollbar-arrow-bottom-image" Couple="true" />
+               <PopScheme name="scrollbar-arrow-bottom-scheme" />
+               <VLabel Text="msg:frame" />
+               <VLabel Text="msg:back" />
+               <VLabel Text="msg:image" />
+               <VLabel Text="msg:scheme" />
+            </Group>
+         </Page>
+
+         <Bar SetMax="Height" Title="Disposition" />
+         <Radio name="scrollbar-type" Columns="2" EntriesType="Objects" Entries="dat:radio-entries" />
+      </Group>
+   </HGroup>
+</feelin:objects>

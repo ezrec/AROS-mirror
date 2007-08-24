@@ -1,0 +1,59 @@
+<?xml version="1.0" ?>
+
+<feelin:objects>
+   <Group>
+      <HGroup>
+         <Group SetMax="Width">
+            <Group Frame="$group-frame" Title="Style">
+               <Group Columns="2" >
+                  <VLabel>Bold</VLabel>
+                  <Checkbox name="style-bold" />
+                  <VLabel>Italic</VLabel>
+                  <Checkbox name="style-italic"/>
+                  <VLabel>Underlined</VLabel>
+                  <Checkbox name="style-underlined" />
+               </Group>
+               
+               <Bar Title="Effects" />
+            
+               <Cycle name="pens-style" Entries="(none)|Emboss|Ghost|Glow|Light|Shadow" />
+            </Group>
+ 
+            
+            <HGroup Frame="$group-frame" Title="Alignment">
+               <Cycle name="align" Entries="Left|Center|Right" />
+            </HGroup>
+         </Group>
+ 
+
+         <Group Frame="$group-frame" Title="Pens">
+            <Group Frame="$group-frame" Title="Text">
+               <PopColor name="pens-text" />
+            </Group>
+            
+            <HGroup>
+               <HGroup Frame="$group-frame" Title="Above (up/down)">
+                  <PopColor name="pens-up" />
+                  <PopColor name="pens-down" />
+               </HGroup>
+               
+               <HGroup Frame="$group-frame" Title="Behind (up/down)">
+                  <PopColor name="pens-light" />
+                  <PopColor name="pens-shadow" />
+               </HGroup>
+            </HGroup>
+         </Group>
+      
+ 
+      </HGroup>
+      
+      <!--Group Rows="2" Frame="$group-frame" Title="Font">
+         <HLabel>Face</HLabel>
+         <PopFont name="font-face" />
+         <HLabel>Color</HLabel>
+         <PopColor name="font-color" />
+      </Group-->
+
+      <Text name="test" Text="Testing Baby !" SetMax="Height" Frame="$text-frame" ColorScheme="$text-scheme" Back="$text-back" />
+   </Group>
+</feelin:objects>

@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSDOSLISTFILES = Project \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSDOSLIST_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSDOSLISTFILES))))
+
+#MM- feelin-classes : feelin-classes-doslist
+#MM- feelin-classes-doslist : feelin-classes-doslist-setup feelin-classes-doslist-compile feelin-classes-doslist-link
+
+$(CLASSDOSLISTFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-doslist-compile : $(CLASSDOSLISTFILES)
+
+$(AROSDIR)/Libs/Feelin/DOSList.fc : $(CLASSDOSLIST_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSDOSLIST_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-doslist-link : $(AROSDIR)/Libs/Feelin/DOSList.fc
+
+#MM
+feelin-classes-doslist-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

@@ -1,0 +1,67 @@
+;
+CAT_P_TITLE (200//)
+Groups
+;
+CAT_P_POS_UPLEFT (//)
+UpLeft
+;
+CAT_P_POS_UPRIGHT (//)
+UpRight
+;
+CAT_P_POS_UPCENTER (//)
+UpCenter
+;
+CAT_P_POS_DOWNLEFT (//)
+DownLeft
+;
+CAT_P_POS_DOWNRIGHT (//)
+DownRight
+;
+CAT_P_POS_DOWNCENTER (//)
+DownCenter
+;
+CAT_P_GROUP (//)
+Group
+;
+CAT_P_PAGE (//)
+Page
+;
+CAT_P_NORMAL (//)
+Normal
+;
+CAT_P_VIRTUAL (//)
+Virtual
+;
+CAT_P_SETTINGS (//)
+Prefs
+;
+CAT_P_POSITION (//)
+Position
+;
+CAT_P_PREPARSE (//)
+PreParse
+;
+CAT_P_ALTPREPARSE (//)
+AltPreParse
+;
+CAT_P_FONT (//)
+Font
+;
+CAT_P_FRAMES (//)
+Frames
+;
+CAT_P_BACKS (//)
+Backgrounds
+;
+CAT_P_SPACING (//)
+Spacing
+;
+CAT_P_HORIZ (//)
+H
+;
+CAT_P_VERTI (//)
+V
+;
+CAT_ER_SETUP (1000//)
+Sub %s.{%08lx} - FAILED !!
+;

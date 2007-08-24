@@ -1,0 +1,13 @@
+##stringtype C
+##shortstrings
+/****************************************************************************
+	This file was created automatically by `%fv'
+	from "%f0".
+****************************************************************************/
+
+struct FeelinCatalogEntry FCC_CatalogTable[] =
+{
+	 { 0x%4x, NULL, %s },
+	 { NULL }
+};
+

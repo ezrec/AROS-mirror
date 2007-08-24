@@ -1,0 +1,92 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../
+
+DEMOFILES = alpha \
+           Class1 \
+           Class2 \
+           ColorCube \
+           CrazyGauges \
+           dialog \
+           DnD \
+           filter \
+           fonts \
+           gradient \
+           Lines \
+           MemoryTest \
+           Strings \
+           SignalHandler \
+           thread \
+           XMLApplication
+
+XMLFILES = areafonts.xml \
+           flatty.xml \
+		   gradient.xml \
+		   hello.xml \
+		   Lines.xml \
+		   notify.xml \
+		   Notify2.xml \
+		   pens.xml \
+		   prefs.xml \
+		   rgb.xml \
+		   states.xml \
+		   strings.xml
+
+DEMOICONFILES = alpha.info \
+           class1.info \
+           class2.info \
+           colorcube.info \
+           crazygauges.info \
+           dialog.info \
+           dnd.info \
+           filter.info \
+           fonts.info \
+           gradient.info \
+           lines.info \
+           strings.info \
+           signalhandler.info
+
+XMLDEMOICONFILES = areafonts.xml.info \
+		   gradient.xml.info \
+		   hello.xml.info \
+		   lines.xml.info \
+		   notify.xml.info \
+		   notify2.xml.info \
+		   prefs.xml.info \
+		   rgb.xml.info \
+		   states.xml.info \
+		   strings.xml.info
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+FEELINDEMODIR = $(CONTRIBDIR)/Feelin/Demos
+
+#MM feelin-demos : includes linklibs feelin-linklib feelin-demos-xml
+#MM feelin-demos : feelin-demos-icons
+#MM feelin-demos-xml : feelin-demos-xml-icons
+
+%build_progs mmake=feelin-demos \
+    files=$(DEMOFILES) targetdir=$(FEELINDEMODIR) \
+    uselibs="FeelinAROS arossupport amiga arosc m"
+
+#MM feelin-demos-xml
+
+feelin-demos-xml : files-copy
+%copy_files_q files="$(XMLFILES)" \
+    dst=$(FEELINDEMODIR)
+
+#MM feelin-demos-icons
+
+feelin-demos-icons : files-copy
+%copy_files_q files="$(DEMOICONFILES)" \
+    dst=$(FEELINDEMODIR)
+
+#MM feelin-demos-xml-icons
+
+feelin-demos-xml-icons : files-copy
+%copy_files_q files="$(XMLDEMOICONFILES)" \
+    dst=$(FEELINDEMODIR)
+
+%common

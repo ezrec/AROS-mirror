@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+
+<!--
+
+   This program allows you to configure the look and feel of the  GUI  part
+   offered  by  Feelin.  As  you  can  see,  it  very  easy  to include the
+   preference editor in an application. If the application has  a  basename
+   (defined  by  FA_Application_Base)  preferences  will be defined for the
+   application, otherwise the preferences are defined globaly. Applications
+   with  a  basename  inherit  items not defined from the global preference
+   object (managed by the shared object "AppServer").
+
+-->
+
+<feelin:application>
+   <Application name='app'
+      Title=      "PreferenceEditor"
+      Version=    "$VER: Preference Editor 1.00 (2004/09/01)"
+      Copyright=  "©2000 - 2004, Olivier LAVIALE"
+      Author=     "Olivier LAVIALE &lt;gofromiel@gofromiel.com&gt;"
+      Description="Configure GUI"
+   >
+
+      <PreferenceEditor name='edt' Open="true" />
+   </Application>
+
+   <notify>
+      <edt attribute="CloseRequest" value="true" target="app" method="Shutdown" />
+   </notify>
+</feelin:application>

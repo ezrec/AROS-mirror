@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSADJUSTCOLORFILES = Project \
+	    object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSADJUSTCOLOR_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTCOLORFILES))))
+
+#MM- feelin-classes : feelin-classes-adjustcolor
+#MM- feelin-classes-adjustcolor : feelin-classes-adjustcolor-setup feelin-classes-adjustcolor-compile feelin-classes-adjustcolor-link
+
+$(CLASSADJUSTCOLORFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-adjustcolor-compile : $(CLASSADJUSTCOLORFILES)
+
+$(AROSDIR)/Libs/Feelin/AdjustColor.fc : $(CLASSADJUSTCOLOR_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSADJUSTCOLOR_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-adjustcolor-link : $(AROSDIR)/Libs/Feelin/AdjustColor.fc
+
+#MM
+feelin-classes-adjustcolor-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

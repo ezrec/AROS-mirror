@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+
+<feelin:application>
+   <Application name="app"
+      Title=        "demo_Gradient"
+      Version=      "$VER: demo_Gradient 1.0 (2005/03/23)"
+      Copyright=    "&copy; 2000-2005 Olivier LAVIALE"
+      Author=       "Olivier LAVIALE &lt;gofromiel@grofromiel.com&gt;"
+      Description=  "Gradient demo"
+      Base=         "demo_Gradient"
+   >
+      <Window name="win" ID="!MAIN" Title="Feelin : Gradient" Open="true">
+         <Group>
+            <class:gradient name="grd" Frame="$gauge-frame" />
+            
+            <Balance />
+            
+            <HGroup>
+               <Text Text="Speed" SetMax="Both" ChainToCycle="false" />
+               <Slider name="spd" ID="!SPED" Horizontal="true" SetMax="Height" Min="5000" Max="100000" Step="1000" />
+            </HGroup>
+            
+            <HGroup Rows="2" Frame="$group-frame" FA_Frame_Title="Colors">
+               <PopColor name="bgn" ID="!SSPC" />
+               <PopColor name="end" ID="!ESPC" />
+               <VLabel>Start</VLabel>
+               <VLabel>End</VLabel>
+            </HGroup>
+         </Group>
+      </Window>
+   </Application>
+   
+   <notify>
+      <win attribute="CloseRequest" value="true" target="app" method="Shutdown" />
+      <spd attribute="Value" value="always" target="grd" method="Set" message="Micro,value" />
+      <bgn attribute="Spec" value="always" target="grd" method="Set" message="SSpec,value" />
+      <end attribute="Spec" value="always" target="grd" method="Set" message="ESpec,value" />
+   </notify>
+</feelin:application>

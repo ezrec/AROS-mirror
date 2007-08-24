@@ -1,0 +1,19 @@
+;
+CAT_ABOUT (100//)
+<b>About</b>
+;
+CAT_TEST (//)
+_Test
+;
+CAT_TITLE_DEFAULT (//)
+Preferences : (default)
+;
+CAT_TITLE (//)
+Preferences : %s
+;
+CAT_TITLE_SCREEN (//)
+Feelin : GUI Preferences
+;
+CAT_ER_CREATE (1000//)
+PreferenceEditor.New() - Unable to create object from %s\n
+;

@@ -1,0 +1,35 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSSLIDERFILES = Project \
+                  area \
+				  layout \
+				  object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSSLIDER_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSSLIDERFILES))))
+
+#MM- feelin-classes : feelin-classes-slider
+#MM- feelin-classes-slider : feelin-classes-slider-setup feelin-classes-slider-compile feelin-classes-slider-link
+
+$(CLASSSLIDERFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-slider-compile : $(CLASSSLIDERFILES)
+
+$(AROSDIR)/Libs/Feelin/Slider.fc : $(CLASSSLIDER_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSSLIDER_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-slider-link : $(AROSDIR)/Libs/Feelin/Slider.fc
+
+#MM
+feelin-classes-slider-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

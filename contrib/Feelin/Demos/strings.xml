@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+
+<!--
+   
+   Written by Olivier LAVIALE (gofromiel@gofromiel.com)
+
+   This demo shows how to use and customise FC_String objects.
+
+-->
+
+<feelin:application>
+   <Application name="app">
+      <Window name="win" Title="Feelin : Strings" Open="true" Width="50%">
+         <Page>
+            <Group PageTitle="Examples">
+               <Group Frame="$group-frame" Title="Numeric">
+                  <String Accept="str:num" Integer="1234" />
+               </Group>
+               
+               <Group Frame="$group-frame" Title="Hexadecimal">
+                  <String Accept="str:hex" Contents="12a4BC" />
+               </Group>
+               
+               <Group Frame="$group-frame" Title="Alphabetic">
+                  <String Contents="str:adv" Reject="str:num" Format="Left" />
+                  <String Contents="str:adv" Reject="str:num" Format="Center" />
+                  <String Contents="str:adv" Reject="str:num" Format="Right" />
+               </Group>
+            </Group>
+
+            <Group SetMax="Height" PageTitle="Custom">
+               <String Font="Garnet/16" Contents="str:adv" Format="Left" BlinkSpeed="10" />
+               <String Back="hook:back" Font="Times/24" Contents="str:adv" Format="Center" BlinkSpeed="10" TextActive="c:0044DD" TextInactive="c:00277F" TextBlock="c:0066EE" Cursor="hook:cursor" Blink="hook:blink" />
+               <String Back="hook:back" Font="Diamond/20" Contents="str:adv" Format="Right" Cursor="hook:cursor2" TextBlock="s:4" />
+            </Group>
+
+            <Group PageTitle="Notification">
+               <Text SetMax="Both" ChainToCycle="no" Shortcut="no" Text="&lt;align=justify&gt;&lt;pens style=shadow&gt;All modifications done in the&lt;br&gt;FC_String object below will be&lt;br&gt;reported to the FC_Text object.&lt;hr&gt;You can enter HTML formating&lt;br&gt;codes to adjust text.&lt;/pens&gt;&lt;br&gt;Try &lt;pens style=ghost&gt;&lt;stop&gt;&lt;align=center&gt;&lt;/stop&gt;&lt;/pens&gt; before your text." />
+               <String name="str" Contents="str:tst" />
+               <Text name="txt" ChainToCycle="no" Frame="$text-frame" Back="$text-back" Font="$font-big" InnerLeft="3" InnerTop="2" InnerRight="3" InnerBottom="2" SetMax="Height" Text="str:tst" />
+            </Group>
+         </Page>
+      </Window>
+   </Application>
+
+   <notify>
+      <str attribute="Contents" value="always" target="txt" method="Set" message="Text,value" />
+      <win attribute="CloseRequest" value="true" target="app" method="Shutdown" />
+   </notify>
+</feelin:application>

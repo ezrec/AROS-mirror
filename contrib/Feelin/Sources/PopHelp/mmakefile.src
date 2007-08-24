@@ -1,0 +1,35 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSPOPHELPFILES = Project \
+				    bubble \
+					open \
+					object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSPOPHELP_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPOPHELPFILES))))
+
+#MM- feelin-classes : feelin-classes-pophelp
+#MM- feelin-classes-pophelp : feelin-classes-pophelp-setup feelin-classes-pophelp-compile feelin-classes-pophelp-link
+
+$(CLASSPOPHELPFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-pophelp-compile : $(CLASSPOPHELPFILES)
+
+$(AROSDIR)/Libs/Feelin/PopHelp.fc : $(CLASSPOPHELP_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSPOPHELP_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-pophelp-link : $(AROSDIR)/Libs/Feelin/PopHelp.fc
+
+#MM
+feelin-classes-pophelp-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

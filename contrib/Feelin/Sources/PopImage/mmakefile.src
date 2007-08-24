@@ -1,0 +1,32 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSPOPIMAGEFILES = Project
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSPOPIMAGE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPOPIMAGEFILES))))
+
+#MM- feelin-classes : feelin-classes-popimage
+#MM- feelin-classes-popimage : feelin-classes-popimage-setup feelin-classes-popimage-compile feelin-classes-popimage-link
+
+$(CLASSPOPIMAGEFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-popimage-compile : $(CLASSPOPIMAGEFILES)
+
+$(AROSDIR)/Libs/Feelin/PopImage.fc : $(CLASSPOPIMAGE_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSPOPIMAGE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-popimage-link : $(AROSDIR)/Libs/Feelin/PopImage.fc
+
+#MM
+feelin-classes-popimage-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

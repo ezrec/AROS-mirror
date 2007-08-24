@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+
+<feelin:objects>
+   <HGroup>
+      <Group Columns="2" Frame="$group-frame" Title="msg:group">
+         <HLabel Text="msg:position" />
+         <Cycle name="group-frame-position" Entries="dat:positions" EntriesType="Array" SetMax="Height" />
+         <HLabel Text="msg:preparse" />
+         <PopPreParse name="group-frame-preparse" />
+         <HLabel Text="msg:font" />
+         <PopFont name="group-frame-font" />
+      </Group>
+
+      <Group Columns="2" Frame="$group-frame" Title="msg:page">
+         <HLabel Text="msg:preparse" />
+         <PopPreParse name="page-preparse-inactive" />
+         <HLabel Text="msg:altpreparse" />
+         <PopPreParse name="page-preparse-active" />
+         <HLabel Text="msg:font" />
+         <PopFont name="page-font" />
+      </Group>
+   </HGroup>
+
+   <HGroup>
+      <Group Rows="2" Frame="$group-frame" Title="msg:frames" VSpacing="2">
+         <PopFrame name="group-frame" />
+         <!--PopFrame name="virtual-frame" /-->
+         <PopFrame name="preference-frame" />
+         <VLabel Text="msg:normal" />
+         <!--VLabel Text="msg:virtual" /-->
+         <VLabel Text="msg:settings" />
+      </Group>
+
+      <Group Rows="2" Frame="$group-frame" Title="msg:backs" VSpacing="2">
+         <PopImage name="group-back" />
+         <PopImage name="page-back" />
+         <VLabel Text="msg:normal" />
+         <VLabel Text="msg:page" />
+      </Group>
+    </HGroup>
+     
+    <Group Rows="2" Frame="$group-frame" Title="msg:spacing" Weight="50">
+        <HLabel Text="msg:horiz" /><Slider name="group-spacing-horizontal" Horizontal="true" Max="32" />
+        <HLabel Text="msg:verti" /><Slider name="group-spacing-vertical" Horizontal="true" Max="32" />
+    </Group>
+</feelin:objects>

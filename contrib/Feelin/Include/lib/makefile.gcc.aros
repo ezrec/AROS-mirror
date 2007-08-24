@@ -1,0 +1,18 @@
+#
+# build library libfeelin_aros.a to be linked with GCC
+#
+
+objs := f_alert.a f_classdo.a f_createclass.a f_createpool.a \
+	f_do.a f_log.a f_makeobj.a f_newobj.a f_strfmt.a \
+	f_strnew.a f_superdo.a
+
+libfeelin_aros.a : $(objs)
+	$(AROSAR) cr $@ $(objs)
+	$(AROSRANLIB) $@
+
+%.a : %.c
+	$(AROSCC) -O2 -c $(FEELIN_COPT) $< -o$@ -I $(FEELINTOP)/Include
+
+clean :
+	rm -f *.a libfeelin_aros.a
+	

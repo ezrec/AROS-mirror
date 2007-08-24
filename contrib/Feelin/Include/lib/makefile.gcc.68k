@@ -1,0 +1,27 @@
+#
+# build library libfeelin_68k.a to be linked with GCC
+#
+
+objs := f_alert.a f_classdo.a f_createclass.a f_createpool.a \
+	f_do.a f_log.a f_makeobj.a f_newobj.a f_strfmt.a \
+	f_strnew.a f_superdo.a
+
+libfeelin_68k.a : $(objs)
+	ar qc $@ $(objs)
+	ranlib $@
+
+%.a : %.c
+	gcc -c $< -o$@ -IFeelin:Include
+
+f_alert.a : f_alert.c
+f_classdo.a : f_classdo.c
+f_createclass.a : f_createclass.c
+f_createpool.a : f_createpool.c
+f_do.a : f_do.c
+f_log.a : f_log.c
+f_makeobj.a : f_makeobj.c
+f_newobj.a : f_newobj.c
+f_strnew.a : f_strnew.c
+f_strtfmt.a : f_strfmt.c
+f_superdo.a : f_superdo.c
+

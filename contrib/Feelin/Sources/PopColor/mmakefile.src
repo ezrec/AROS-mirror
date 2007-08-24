@@ -1,0 +1,32 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSPOPCOLORFILES = Project
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSPOPCOLOR_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPOPCOLORFILES))))
+
+#MM- feelin-classes : feelin-classes-popcolor
+#MM- feelin-classes-popcolor : feelin-classes-popcolor-setup feelin-classes-popcolor-compile feelin-classes-popcolor-link
+
+$(CLASSPOPCOLORFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-popcolor-compile : $(CLASSPOPCOLORFILES)
+
+$(AROSDIR)/Libs/Feelin/PopColor.fc : $(CLASSPOPCOLOR_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSPOPCOLOR_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-popcolor-link : $(AROSDIR)/Libs/Feelin/PopColor.fc
+
+#MM
+feelin-classes-popcolor-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

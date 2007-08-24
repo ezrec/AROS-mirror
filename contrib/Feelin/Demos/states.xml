@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+
+<!--
+
+This example illustrates FA_Disabled and FA_Hidden attributes
+
+-->
+
+<feelin:application>
+   <Application name="app">
+      <Window name="win" Title="Feelin : States" Open="true">
+         <Group>
+            <HGroup>
+               <HGroup FA_Frame_Title='Enabled' Frame='$group-frame'>
+                  <Checkbox name='d1'>true</Checkbox>
+                  <Checkbox name='d2'>true</Checkbox>
+                  <Checkbox name='d3'>true</Checkbox>
+                  <Checkbox name='d4'>true</Checkbox>
+               </HGroup>
+
+               <HGroup FA_Frame_Title='Shown' Frame='$group-frame'>
+                  <Checkbox name='s1'>true</Checkbox>
+                  <Checkbox name='s2'>true</Checkbox>
+                  <Checkbox name='s3'>true</Checkbox>
+                  <Checkbox name='s4'>true</Checkbox>
+               </HGroup>
+            </HGroup>
+
+            <Group>
+               <SimpleButton name='b1'>Button 1</SimpleButton>
+               <SimpleButton name='b2'>Button 2</SimpleButton>
+               <SimpleButton name='b3'>Button 3</SimpleButton>
+               <SimpleButton name='b4'>Button 4</SimpleButton>
+            </Group>
+         </Group>
+      </Window>
+   </Application>
+
+   <notify>
+      <win attribute='CloseRequest' value='true' target='app' method='Shutdown' />
+
+      <d1 attribute='Selected' value='always' target='b1' method='Set' message='Disabled,toggle' />
+      <d2 attribute='Selected' value='always' target='b2' method='Set' message='Disabled,toggle' />
+      <d3 attribute='Selected' value='always' target='b3' method='Set' message='Disabled,toggle' />
+      <d4 attribute='Selected' value='always' target='b4' method='Set' message='Disabled,toggle' />
+
+      <s1 attribute='Selected' value='always' target='b1' method='Set' message='Hidden,toggle' />
+      <s2 attribute='Selected' value='always' target='b2' method='Set' message='Hidden,toggle' />
+      <s3 attribute='Selected' value='always' target='b3' method='Set' message='Hidden,toggle' />
+      <s4 attribute='Selected' value='always' target='b4' method='Set' message='Hidden,toggle' />
+   </notify>
+</feelin:application>
+

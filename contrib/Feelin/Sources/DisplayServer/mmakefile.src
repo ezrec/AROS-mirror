@@ -1,0 +1,34 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSDISPLAYSERVERFILES = Project \
+        thread \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSDISPLAYSERVER_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSDISPLAYSERVERFILES))))
+
+##MM- feelin-classes : feelin-classes-displayserver
+#MM- feelin-classes-displayserver : feelin-classes-displayserver-setup feelin-classes-displayserver-compile feelin-classes-displayserver-link
+
+$(CLASSDISPLAYSERVERFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-displayserver-compile : $(CLASSDISPLAYSERVERFILES)
+
+$(AROSDIR)/Libs/Feelin/DisplayServer.fc : $(CLASSDISPLAYSERVER_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSDISPLAYSERVER_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-displayserver-link : $(AROSDIR)/Libs/Feelin/DisplayServer.fc
+
+#MM
+feelin-classes-displayserver-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

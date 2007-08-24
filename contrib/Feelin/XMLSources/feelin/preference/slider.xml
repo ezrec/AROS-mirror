@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+
+<feelin:objects>
+   <HGroup>
+      <Group Frame="$group-frame" Title="Container">
+         <Group Rows="2" SameWidth="true" VSpacing="2">
+            <PopFrame name="slider-frame" />
+            <PopScheme name="slider-scheme" />
+            <VLabel Text="Frame" />
+            <VLabel Text="Scheme" />
+         </Group>
+
+         <Bar Title="Back" />
+
+         <Group Rows="2" SameWidth="true" VSpacing="2">
+            <PopImage name="slider-back" />
+            <PopImage name="slider-back-vertical" />
+            <VLabel>Horizontal</VLabel>
+            <VLabel>Vertical</VLabel>
+         </Group>
+      </Group>
+
+      <Group Frame="$group-frame" Title="Knob">
+         <Group Columns="2">
+            <HLabel>Font</HLabel>
+            <PopFont name="slider-knob-font" />
+            <HLabel>PreParse</HLabel>
+            <PopPreParse name="slider-knob-preparse" />
+         </Group>
+         
+         <Bar />
+
+         <Group Rows="2" SameWidth="true" VSpacing="2">
+            <PopFrame name="slider-knob-frame" Couple="true" />
+            <PopScheme name="slider-knob-scheme" />
+            <VLabel Text="Frame" />
+            <VLabel Text="Scheme" />
+         </Group>
+
+         <Bar Title="Back" />
+
+         <Group Rows="2" SameWidth="true" VSpacing="2">
+            <PopImage name="slider-knob-back" Couple="true" />
+            <PopImage name="slider-knob-back-vertical" Couple="true" />
+            <VLabel>Horizontal</VLabel>
+            <VLabel>Vertical</VLabel>
+         </Group>
+      </Group>
+   </HGroup>
+
+   <Balance />
+ 
+   <HGroup Frame="$group-frame" Title="Examples" Weight="20">
+      <Group>
+         <Slider Horizontal="true" Min="-10" Max="9" SetMax="Height" />
+         <Slider Horizontal="true" Max="2000" SetMax="Height" />
+      </Group>
+
+      <Slider Min="-10" Max="9" SetMax="Width" />
+      <Slider Max="2000" SetMax="Width" />
+   </HGroup>
+</feelin:objects>
+ 

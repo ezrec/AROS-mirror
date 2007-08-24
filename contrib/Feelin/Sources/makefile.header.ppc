@@ -1,0 +1,22 @@
+#
+# makefile header to compile Feelin classes
+#
+
+export SRC  := /Feelin/Sources
+export DST  := /Feelin/Libs/Feelin
+export COMP := ppc-morphos-gcc -c -pipe
+export COPT := -noixemul -g -Wall -O2 -fomit-frame-pointer \
+            -mcpu=750 -mmultiple -mstring -mfused-madd \
+            -DAROS_ALMOST_COMPATIBLE \
+            -I. -I/Feelin/Include
+export LINK := ppc-morphos-gcc -pipe
+export LINK_LIB := ppc-morphos-gcc -pipe -nostartfiles
+export LOPT := -noixemul -mcpu=750 -LFeelin:Include/lib
+export CATS := Catalogs/Français/Feelin
+export AR := ppc-morphos-ar
+export ARFLAGS := cru
+export AUTHOR := "written by Olivier LAVIALE (www.gofromiel.com)"
+
+%.o : %.c
+   @ echo ">>"[1m$(<F)[0m $(COMP) $(COPT) $<
+   @ $(COMP) $(COPT) $<

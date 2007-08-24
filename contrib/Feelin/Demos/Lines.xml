@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+
+<!-- 'class:line' is a custom class defined within the code part -->
+ 
+<feelin:application>
+   <Application name="app"
+      Title=        "demo_Lines"
+      Version=      "$VER: demo_Lines 1.0 (2005/02/10)"
+      Copyright=    "&copy; 2000-2005 Olivier LAVIALE"
+      Author=       "Olivier LAVIALE &lt;gofromiel@grofromiel.com&gt;"
+      Description=  "FM_Application_AddSignalHandler tutorial"
+      Base=         "demo_Lines"
+   >
+
+      <Window name="win" ID="!MAIN" Title="Feelin : Lines" Open="true">
+         <Page name="grp">
+            <Group PageTitle="One">
+               <class:line />
+
+               <Group
+                  Frame=            "$group-frame"
+                  FA_Frame_Title=   "Controls"
+                  SetMax=           "Height"
+                  ContextHelp=      "Settings made on this page will be reflected<br>to all Lines objects"
+                  Columns=          "2"
+               >
+                  <Text Text="Cycle :" SetMax="Both" ChainToCycle="false" />
+                  <Slider name="ccl" ID="!CYCL" Horizontal="true" Max="200" Value="1" ContextHelp="Adjust the number of lines to draw<br>before a color cyling.<br><br>Setting this to 0 disable cycling." />
+
+                  <Text Text="Trail :" SetMax="Both" ChainToCycle="false" />
+                  <Slider name="trl" ID="!TRAY" Horizontal="true" Min="8" Max="100" Value="16" ContextHelp="Adjust the number of trailing lines." />
+
+                  <Text Text="Micros :" SetMax="Both" ChainToCycle="false" />
+                  <Slider name="spd" ID="!SPED" Horizontal="true" Min="5000" Max="100000" Value="10000" Steps="20" ContextHelp="Adjust the number of micro seconds<br>to wait between each drawing." />
+               </Group>
+            </Group>
+
+            <Group PageTitle="Four" Rows="2">
+               <class:line /> <class:line />
+               <class:line /> <class:line />
+            </Group>
+
+            <Group PageTitle="More" Rows="4">
+               <class:line /> <class:line /> <class:line /> <class:line />
+               <class:line /> <class:line /> <class:line /> <class:line />
+               <class:line /> <class:line /> <class:line /> <class:line />
+               <class:line /> <class:line /> <class:line /> <class:line />
+            </Group>
+         </Page>
+      </Window>
+   </Application>
+</feelin:application>

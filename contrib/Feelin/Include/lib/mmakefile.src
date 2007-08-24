@@ -1,0 +1,17 @@
+# Copyright © 2003, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 25737 2007-04-13 09:37:43Z schulz $
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+FILES = f_alert f_classdo f_createclass f_createpool \
+	f_do f_log f_makeobj f_newobj f_strfmt \
+	f_strnew f_superdo
+
+#MM feelin-linklib : includes linklibs
+
+%build_linklib mmake=feelin-linklib libname=FeelinAROS \
+    files="$(FILES)" objdir=$(GENDIR)/$(CURDIR) cflags="-I$(FEELINTOP)/Include" 
+
+%common

@@ -1,0 +1,36 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSBITMAPFILES = Project \
+        blit \
+		render \
+		scale \
+	    object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSBITMAP_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSBITMAPFILES))))
+
+#MM- feelin-classes : feelin-classes-bitmap
+#MM- feelin-classes-bitmap : feelin-classes-bitmap-setup feelin-classes-bitmap-compile feelin-classes-bitmap-link
+
+$(CLASSBITMAPFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-bitmap-compile : $(CLASSBITMAPFILES)
+
+$(AROSDIR)/Libs/Feelin/BitMap.fc : $(CLASSBITMAP_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSBITMAP_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-bitmap-link : $(AROSDIR)/Libs/Feelin/BitMap.fc
+
+#MM
+feelin-classes-bitmap-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

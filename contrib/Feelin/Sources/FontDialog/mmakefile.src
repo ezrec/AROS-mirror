@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSFONTDIALOGFILES = Project \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSFONTDIALOG_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSFONTDIALOGFILES))))
+
+#MM- feelin-classes : feelin-classes-fontdialog
+#MM- feelin-classes-fontdialog : feelin-classes-fontdialog-setup feelin-classes-fontdialog-compile feelin-classes-fontdialog-link
+
+$(CLASSFONTDIALOGFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-fontdialog-compile : $(CLASSFONTDIALOGFILES)
+
+$(AROSDIR)/Libs/Feelin/FontDialog.fc : $(CLASSFONTDIALOG_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSFONTDIALOG_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-fontdialog-link : $(AROSDIR)/Libs/Feelin/FontDialog.fc
+
+#MM
+feelin-classes-fontdialog-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

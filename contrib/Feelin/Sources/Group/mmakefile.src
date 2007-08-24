@@ -1,0 +1,39 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSGROUPFILES = Project \
+        area \
+		askminmax \
+		draw \
+		family \
+        tree \
+		layout \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSGROUP_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSGROUPFILES))))
+
+#MM- feelin-classes : feelin-classes-group
+#MM- feelin-classes-group : feelin-classes-group-setup feelin-classes-group-compile feelin-classes-group-link
+
+$(CLASSGROUPFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-group-compile : $(CLASSGROUPFILES)
+
+$(AROSDIR)/Libs/Feelin/Group.fc : $(CLASSGROUP_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSGROUP_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-group-link : $(AROSDIR)/Libs/Feelin/Group.fc
+
+#MM
+feelin-classes-group-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

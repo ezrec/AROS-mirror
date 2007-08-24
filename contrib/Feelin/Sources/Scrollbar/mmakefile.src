@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSSCROLLBARFILES = Project \
+				  object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSSCROLLBAR_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSSCROLLBARFILES))))
+
+#MM- feelin-classes : feelin-classes-scrollbar
+#MM- feelin-classes-scrollbar : feelin-classes-scrollbar-setup feelin-classes-scrollbar-compile feelin-classes-scrollbar-link
+
+$(CLASSSCROLLBARFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-scrollbar-compile : $(CLASSSCROLLBARFILES)
+
+$(AROSDIR)/Libs/Feelin/Scrollbar.fc : $(CLASSSCROLLBAR_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSSCROLLBAR_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-scrollbar-link : $(AROSDIR)/Libs/Feelin/Scrollbar.fc
+
+#MM
+feelin-classes-scrollbar-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

@@ -1,0 +1,9 @@
+; $VER: AROSTCP-PackageStartup 1.0 (01/08/06)
+; AROSTCP-PackageStartup (c) The AROS Dev Team.
+;
+
+Assign Feelin: ""
+Assign FONTS: ADD Feelin:Fonts
+If Exists Feelin:Tools 
+Path Feelin:Tools ADD QUIET
+EndIF

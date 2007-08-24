@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSADJUSTRGBFILES = Project \
+	    object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSADJUSTRGB_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTRGBFILES))))
+
+#MM- feelin-classes : feelin-classes-adjustrgb
+#MM- feelin-classes-adjustrgb : feelin-classes-adjustrgb-setup feelin-classes-adjustrgb-compile feelin-classes-adjustrgb-link
+
+$(CLASSADJUSTRGBFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-adjustrgb-compile : $(CLASSADJUSTRGBFILES)
+
+$(AROSDIR)/Libs/Feelin/AdjustRGB.fc : $(CLASSADJUSTRGB_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSADJUSTRGB_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-adjustrgb-link : $(AROSDIR)/Libs/Feelin/AdjustRGB.fc
+
+#MM
+feelin-classes-adjustrgb-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

@@ -1,0 +1,21 @@
+## version $VER: FC_AdjustGradient.catalog 1.0 (2005/07/06)
+## language français
+;
+CAT_GRADIENT
+Dégradé
+;
+CAT_ANGLE
+Angle
+;
+CAT_COLORS
+Couleurs
+;
+CAT_START
+Début
+;
+CAT_MIDDLE
+Millieu
+;
+CAT_END
+Fin
+;

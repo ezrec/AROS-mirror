@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSTHREADFILES = Project \
+				  object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSTHREAD_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSTHREADFILES))))
+
+#MM- feelin-classes : feelin-classes-thread
+#MM- feelin-classes-thread : feelin-classes-thread-setup feelin-classes-thread-compile feelin-classes-thread-link
+
+$(CLASSTHREADFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-thread-compile : $(CLASSTHREADFILES)
+
+$(AROSDIR)/Libs/Feelin/Thread.fc : $(CLASSTHREAD_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSTHREAD_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-thread-link : $(AROSDIR)/Libs/Feelin/Thread.fc
+
+#MM
+feelin-classes-thread-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+                     
+<feelin:application>
+   <Application name="app">
+      <Window name="win" Title="Feelin : Notify" Open="true">
+         <HGroup name="g">
+            <Gauge name="gl" FixWidth="20" Max="100" />
+            <Prop name="pl1" MinWidth="20" MaxWidth="20" Entries="111" Visible="10" />
+            <Prop name="pl2" MinWidth="20" MaxWidth="20" Entries="111" Visible="10" />
+
+            <Group>
+               <Prop name="pc" Horizontal="true" MinWidth="50" FixHeight="10" Entries="111" Visible="10" />
+
+               <HGroup>
+                  <Prop name="pcl" Horizontal="true" MinWidth="50" FixHeight="10" Entries="111" Visible="10" />
+                  <Prop name="pcr" Horizontal="true" MinWidth="50" FixHeight="10" Entries="111" Visible="10" />
+               </HGroup>
+               
+               <Gauge name="gc" Horizontal="true" SetMax="Height" Max="100" />
+
+               <HGroup>
+                  <Text SetMax="Both" ChainToCycle="false" Text="Toggle gauges look" VCenter="true" />
+                  <Checkbox name="tog">false</Checkbox>
+               </HGroup>
+            </Group>
+
+            <Prop name="pr1" MinWidth="20" MaxWidth="20" Entries="111" Visible="10" />
+            <Prop name="pr2" MinWidth="20" MaxWidth="20" Entries="111" Visible="10" />
+            <Gauge name="gr" FixWidth="20" Max="100" />
+         </HGroup>
+      </Window>
+   </Application>
+
+   <notify>
+      <pcl attribute="First" value="always" target="pl1" method="Set" message="First,value" />
+      <pcl attribute="First" value="always" target="pl2" method="Set" message="First,value" />
+      <pcr attribute="First" value="always" target="pr1" method="Set" message="First,value" />
+      <pcr attribute="First" value="always" target="pr2" method="Set" message="First,value" />
+
+      <pc attribute="First" value="always" target="gc" method="Set" message="Value,value" />
+
+      <gc attribute="Value" value="always" target="gl" method="Set" message="Value,value" />
+      <gc attribute="Value" value="always" target="gr" method="Set" message="Value,value" />
+      <gl attribute="Value" value="always" target="pcl" method="Set" message="First,value" />
+      <gr attribute="Value" value="always" target="pcr" method="Set" message="First,value" />
+       
+      <tog attribute="Selected" value="always" target="g" method="Set" message="FA_Gauge_Simple,value,FA_Group_Forward,true" />
+
+      <win attribute="CloseRequest" value="true" target="app" method="Shutdown" />
+   </notify>
+</feelin:application>

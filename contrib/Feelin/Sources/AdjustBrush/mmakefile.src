@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSADJUSTBRUSHFILES = Project \
+	    object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSADJUSTBRUSH_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTBRUSHFILES))))
+
+#MM- feelin-classes : feelin-classes-adjustbrush
+#MM- feelin-classes-adjustbrush : feelin-classes-adjustbrush-setup feelin-classes-adjustbrush-compile feelin-classes-adjustbrush-link
+
+$(CLASSADJUSTBRUSHFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-adjustbrush-compile : $(CLASSADJUSTBRUSHFILES)
+
+$(AROSDIR)/Libs/Feelin/AdjustBrush.fc : $(CLASSADJUSTBRUSH_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSADJUSTBRUSH_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-adjustbrush-link : $(AROSDIR)/Libs/Feelin/AdjustBrush.fc
+
+#MM
+feelin-classes-adjustbrush-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

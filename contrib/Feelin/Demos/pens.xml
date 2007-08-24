@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+
+<feelin:application>
+   <Application name='app'
+      Title=        'demo_Pens'
+      Version=      '$VER: demo_Pens 01.00 (2003/12/15)'
+      Copyright=    '©2000 - 2005, Olivier LAVIALE'
+      Author=       'Olivier LAVIALE - gofromiel@gofromiel.com'
+      Description=  'Pens...'
+      Base=         'DEMO_PENS'>
+
+      <Window name='win' ID='!MAIN' Title='XMLApplication : Pens' Open='true' Back="c:FFBB00" >
+
+<!--
+
+   ColorScheme='' is used to override used preferences, because if the user
+   has defined a color scheme for its buttons, the demos will show nothing.
+
+-->
+ 
+         <HGroup Font='Garnet/16'>
+            <Group ColorScheme="<scheme shine='shine' fill='fill' dark='dark' />">
+               <SimpleButton ColorScheme=''>Lighter...</SimpleButton>
+
+               <Group>
+                  <SimpleButton ColorScheme=''>Lighter...</SimpleButton>
+
+                  <Group>
+                     <SimpleButton ColorScheme=''>Lighter...</SimpleButton>
+
+                     <Group>
+                        <SimpleButton ColorScheme=''>Lighter...</SimpleButton>
+                     </Group>
+                  </Group>
+               </Group>
+            </Group>
+
+            <Group ColorScheme="&lt;scheme shine='halfshine' fill='halfshadow' /&gt;">
+               <HGroup>
+                  <SimpleButton ColorScheme=''>Darker...</SimpleButton>
+               </HGroup>
+
+               <Group ColorScheme="&lt;scheme shine='halfshine' fill='halfshadow' /&gt;">
+                  <HGroup>
+                     <SimpleButton ColorScheme=''>Darker...</SimpleButton>
+                  </HGroup>
+
+                  <Group ColorScheme="&lt;scheme shine='halfshine' fill='halfshadow' /&gt;">
+                     <HGroup>
+                        <SimpleButton ColorScheme=''>Darker...</SimpleButton>
+                     </HGroup>
+
+                     <Group ColorScheme="&lt;scheme shine='halfshine' fill='halfshadow' /&gt;">
+                        <HGroup>
+                           <SimpleButton ColorScheme=''>Darker...</SimpleButton>
+                        </HGroup>
+                     </Group>
+                  </Group>
+               </Group>
+            </Group>
+         </HGroup>
+      </Window>
+   </Application>
+
+   <notify>
+      <win attribute='CloseRequest' value='true' target='app' method='Shutdown' />
+   </notify>
+</feelin:application>

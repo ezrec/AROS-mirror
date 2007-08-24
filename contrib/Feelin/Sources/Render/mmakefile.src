@@ -1,0 +1,34 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSRENDERFILES = Project \
+                  graphics \
+				  object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSRENDER_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSRENDERFILES))))
+
+#MM- feelin-classes : feelin-classes-render
+#MM- feelin-classes-render : feelin-classes-render-setup feelin-classes-render-compile feelin-classes-render-link
+
+$(CLASSRENDERFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-render-compile : $(CLASSRENDERFILES)
+
+$(AROSDIR)/Libs/Feelin/Render.fc : $(CLASSRENDER_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSRENDER_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-render-link : $(AROSDIR)/Libs/Feelin/Render.fc
+
+#MM
+feelin-classes-render-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

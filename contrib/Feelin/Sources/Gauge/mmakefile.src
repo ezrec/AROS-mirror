@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSGAUGEFILES = Project \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSGAUGE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSGAUGEFILES))))
+
+#MM- feelin-classes : feelin-classes-gauge
+#MM- feelin-classes-gauge : feelin-classes-gauge-setup feelin-classes-gauge-compile feelin-classes-gauge-link
+
+$(CLASSGAUGEFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-gauge-compile : $(CLASSGAUGEFILES)
+
+$(AROSDIR)/Libs/Feelin/Gauge.fc : $(CLASSGAUGE_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSGAUGE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-gauge-link : $(AROSDIR)/Libs/Feelin/Gauge.fc
+
+#MM
+feelin-classes-gauge-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

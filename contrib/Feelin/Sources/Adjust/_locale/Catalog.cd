@@ -1,0 +1,19 @@
+;
+CAT_RENDER (100//)
+(render)
+;
+CAT_PREVIEW (//)
+Preview
+;
+CAT_RENDER_NONE (//)
+(render:none)
+;
+CAT_SELECT (//)
+(select)
+;
+CAT_SELECT_NONE (//)
+(select:none)
+;
+CAT_CLEAR (//)
+_Clear
+;

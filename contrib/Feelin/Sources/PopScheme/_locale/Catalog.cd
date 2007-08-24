@@ -1,0 +1,10 @@
+;
+CAT_TITLE (100//)
+Adjust Scheme
+;
+CAT_HELP (//)
+<align="center"><pens shadow="halfshine">Use this button to <b>adjust a scheme</b><hr shine="fill" shadow="halfdark">\
+<align="justify">Clik it to open an adjust window<br>\
+or use <b>drag'n'drop</b> facilities to<br>\
+copy from or to another object.
+;

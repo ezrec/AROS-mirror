@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSRADIOFILES = Project \
+					   object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSRADIO_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSRADIOFILES))))
+
+#MM- feelin-classes : feelin-classes-radio
+#MM- feelin-classes-radio : feelin-classes-radio-setup feelin-classes-radio-compile feelin-classes-radio-link
+
+$(CLASSRADIOFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-radio-compile : $(CLASSRADIOFILES)
+
+$(AROSDIR)/Libs/Feelin/Radio.fc : $(CLASSRADIO_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSRADIO_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-radio-link : $(AROSDIR)/Libs/Feelin/Radio.fc
+
+#MM
+feelin-classes-radio-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

@@ -1,0 +1,19 @@
+;
+CAT_SPACING (100//)
+Spacing
+;
+CAT_HELP (//)
+Space between the content and its border
+;
+CAT_LEFT (//)
+L
+;
+CAT_TOP (//)
+T
+;
+CAT_RIGHT (//)
+R
+;
+CAT_BOTTOM (//)
+B
+;

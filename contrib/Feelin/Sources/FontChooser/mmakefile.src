@@ -1,0 +1,34 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSFONTCHOOSERFILES = Project \
+        availfont \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSFONTCHOOSER_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSFONTCHOOSERFILES))))
+
+#MM- feelin-classes : feelin-classes-fontchooser
+#MM- feelin-classes-fontchooser : feelin-classes-fontchooser-setup feelin-classes-fontchooser-compile feelin-classes-fontchooser-link
+
+$(CLASSFONTCHOOSERFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-fontchooser-compile : $(CLASSFONTCHOOSERFILES)
+
+$(AROSDIR)/Libs/Feelin/FontChooser.fc : $(CLASSFONTCHOOSER_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSFONTCHOOSER_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-fontchooser-link : $(AROSDIR)/Libs/Feelin/FontChooser.fc
+
+#MM
+feelin-classes-fontchooser-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

@@ -1,0 +1,26 @@
+feelin.lib :    f_alert.o f_classdo.o f_createclass.o f_createpool.o \
+								  f_do.o f_log.o f_makeobj.o f_newobj.o f_strfmt.o \
+								  f_strnew.o f_superdo.o
+
+								  Join f_alert.o f_classdo.o f_createclass.o f_createpool.o \
+								  f_do.o f_log.o f_makeobj.o f_newobj.o f_strfmt.o f_strnew.o \
+								  f_superdo.o TO feelin.lib
+								  
+								  Copy feelin.lib QUIET TO vbccm68k:lib/feelin.lib
+
+%.o : %.c
+	  vbccm68k -quiet -c99 $< -o=tmp.s -Ivincludem68k: -Iinclude: -IFeelin:Include
+	  PhxAss QUIET tmp.s TO $@
+
+f_alert.o : f_alert.c
+f_classdo.o : f_classdo.c
+f_createclass.o : f_createclass.c
+f_createpool.o : f_createpool.c
+f_do.o : f_do.c
+f_log.o : f_log.c
+f_makeobj.o : f_makeobj.c
+f_newobj.o : f_newobj.c
+f_strnew.o : f_strnew.c
+f_strtfmt.o : f_strfmt.c
+f_superdo.o : f_superdo.c
+

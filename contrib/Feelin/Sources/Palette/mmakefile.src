@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSPALETTEFILES = Project \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSPALETTE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPALETTEFILES))))
+
+#MM- feelin-classes : feelin-classes-palette
+#MM- feelin-classes-palette : feelin-classes-palette-setup feelin-classes-palette-compile feelin-classes-palette-link
+
+$(CLASSPALETTEFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-palette-compile : $(CLASSPALETTEFILES)
+
+$(AROSDIR)/Libs/Feelin/Palette.fc : $(CLASSPALETTE_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSPALETTE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-palette-link : $(AROSDIR)/Libs/Feelin/Palette.fc
+
+#MM
+feelin-classes-palette-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

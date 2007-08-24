@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSADJUSTPREPARSEFILES = Project \
+	    object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSADJUSTPREPARSE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSADJUSTPREPARSEFILES))))
+
+#MM- feelin-classes : feelin-classes-adjustpreparse
+#MM- feelin-classes-adjustpreparse : feelin-classes-adjustpreparse-setup feelin-classes-adjustpreparse-compile feelin-classes-adjustpreparse-link
+
+$(CLASSADJUSTPREPARSEFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-adjustpreparse-compile : $(CLASSADJUSTPREPARSEFILES)
+
+$(AROSDIR)/Libs/Feelin/AdjustPreParse.fc : $(CLASSADJUSTPREPARSE_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSADJUSTPREPARSE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-adjustpreparse-link : $(AROSDIR)/Libs/Feelin/AdjustPreParse.fc
+
+#MM
+feelin-classes-adjustpreparse-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

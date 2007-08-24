@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+
+<feelin:application>
+   <Application name="app"
+      Title       = 'demo_Notify2'
+      Version     = '$VER: demo_Notify2 04.00 (04/01/2003)'
+      Copyright   = '©2000 - 2003, Olivier LAVIALE'
+      Author      = 'Olivier LAVIALE &lt;a href=&quot;mailto:gofromiel@gofromiel.com&quot;&gt;'
+      Description = 'Testing...'
+      Base        = 'demo_notify'>
+
+      <Window name="win" Title="Feelin : Notify" Open="true">
+         <Group>
+            <Text Text= "&lt;align=justify&gt;&lt;pens style=shadow&gt;Notification example :&lt;br&gt;four Proportionnals,&lt;br&gt;a Slider and a Gauge" SetMax="Both" ChainToCycle="false" />
+
+            <Scrollbar name='p1' Horizontal='true' Entries='32' Visible='16' />
+            <Prop name='p2' Horizontal='true' Entries='32' Visible='8' />
+            <Scrollbar name='p3' Horizontal='true' Entries='32' Visible='4' />
+            <Prop name='p4' Horizontal='true' Entries='32' Visible='2' />
+
+            <Bar />
+
+            <Group SetMax='Height'>
+               <Slider name="s" Horizontal="true" ID="!SLDR" Font="Diamond/12" Max="32" Format="<pens style=emboss shadow=halfshadow>Level: %ld" />
+               <Gauge name='g' Horizontal='true' Max='32' />
+               <Scale />
+            </Group>
+         </Group>
+      </Window>
+   </Application>
+
+   <notify>
+      <p2 attribute='First' value='always' target='p1' method='Set' message='First,value' />
+      <p3 attribute='First' value='always' target='p2' method='Set' message='First,value' />
+      <p4 attribute='First' value='always' target='p3' method='Set' message='First,value' />
+      <s  attribute='Value' value='always' target= 'g' method='Set' message='Value,value' />
+
+      <win attribute='CloseRequest' value='true' target='app' method='Shutdown' />
+   </notify>
+</feelin:application>

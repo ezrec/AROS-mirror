@@ -1,0 +1,27 @@
+## version $VER: FC_Dialog.catalog 1.0 (2005/05/02)
+## language français
+;
+CAT_OK
+_Ok
+;
+CAT_CANCEL
+_Annuler
+;
+CAT_APPLY
+A_ppliquer
+;
+CAT_YES
+_Oui
+;
+CAT_NO
+_No
+;
+CAT_ALL
+Oui pour _Tous
+;
+CAT_SAVE
+_Sauver
+;
+CAT_USE
+_Utiliser
+;

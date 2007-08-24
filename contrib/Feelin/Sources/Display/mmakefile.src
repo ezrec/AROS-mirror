@@ -1,0 +1,35 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSDISPLAYFILES = Project \
+        colors \
+		graphics \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSDISPLAY_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSDISPLAYFILES))))
+
+#MM- feelin-classes : feelin-classes-display
+#MM- feelin-classes-display : feelin-classes-display-setup feelin-classes-display-compile feelin-classes-display-link
+
+$(CLASSDISPLAYFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-display-compile : $(CLASSDISPLAYFILES)
+
+$(AROSDIR)/Libs/Feelin/Display.fc : $(CLASSDISPLAY_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSDISPLAY_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-display-link : $(AROSDIR)/Libs/Feelin/Display.fc
+
+#MM
+feelin-classes-display-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

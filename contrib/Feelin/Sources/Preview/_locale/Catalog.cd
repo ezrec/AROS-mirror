@@ -1,0 +1,10 @@
+;
+CAT_EMPTY (100//)
+(empty)
+;
+CAT_OK (//)
+_Ok
+;
+CAT_CANCEL (//)
+_Cancel
+;

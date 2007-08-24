@@ -1,0 +1,39 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ./
+
+FILES = Prefs
+
+FEELINDIR = $(CONTRIBDIR)/Feelin
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+#MM- contrib-feelin : feelin-linklib feelin-library feelin-classes feelin-prefs feelin-demos feelin-files
+#MM- feelin-classes : feelin-classes-setup
+#MM- feelin-files : feelin-dictionary feelin-fonts feelin-images feelin-resources feelin-xmlsources
+
+%copy_dir_recursive mmake=feelin-dictionary src=dictionary dst=$(FEELINDIR)/dictionary
+%copy_dir_recursive mmake=feelin-fonts src=Fonts dst=$(FEELINDIR)/Fonts
+%copy_dir_recursive mmake=feelin-images src=images dst=$(FEELINDIR)/images
+%copy_dir_recursive mmake=feelin-resources src=resources dst=$(FEELINDIR)/resources
+%copy_dir_recursive mmake=feelin-xmlsources src=XMLSources dst=$(FEELINDIR)/XMLSources
+
+#MM feelin-prefs : includes linklibs feelin-linklib feelin-icons
+
+%build_progs mmake=feelin-prefs \
+    files=$(FILES) targetdir=$(FEELINDIR)/ \
+    uselibs="FeelinAROS arossupport amiga arosc m"
+
+#MM feelin-icons
+
+feelin-icons : files-copy
+%copy_files_q files="prefs.info Demos.info" \
+    dst=$(FEELINDIR)
+
+#MM
+feelin-classes-setup :
+%mkdirs_q $(AROSDIR)/Libs/Feelin
+
+%common

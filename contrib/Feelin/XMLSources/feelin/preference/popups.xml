@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+
+<feelin:objects>
+   <Group>
+      <HGroup>
+         <Group Rows="2" Frame="$group-frame" Title="PopButton" VSpacing="2">
+            <PopFrame name="popbutton-frame" Couple="true"/>
+            <PopImage name="popbutton-back" Couple="true"/>
+            <PopScheme name="popbutton-scheme" />
+            <VLabel>Frame</VLabel>
+            <VLabel>Back</VLabel>
+            <VLabel>Scheme</VLabel>
+         </Group>
+
+         <Group Rows="2" Frame="$group-frame" Title="PopString" VSpacing="2">
+            <PopFrame name="popstring-frame" Couple="true"/>
+            <PopImage name="popstring-back" Couple="true"/>
+            <PopScheme name="popstring-scheme" />
+            <VLabel>Frame</VLabel>
+            <VLabel>Back</VLabel>
+            <VLabel>Scheme</VLabel>
+         </Group>
+      </HGroup>
+                
+      <Group Rows="2" Frame="$group-frame" Title="Images" VSpacing="2">
+         <PopImage name="popfont-image" Couple="true"/>
+         <PopImage name="popfile-image" Couple="true"/>
+         <PopImage name="poppreparse-image" Couple="true"/>
+         <VLabel>Font</VLabel>
+         <VLabel>File</VLabel>
+         <VLabel>PreParse</VLabel>
+      </Group>
+   </Group>
+</feelin:objects>

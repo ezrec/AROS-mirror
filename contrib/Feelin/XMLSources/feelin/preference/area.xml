@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+
+<feelin:objects>
+   <HGroup>
+      <Group Frame="$group-frame" Title="Button">
+         <HGroup>
+            <HLabel Text="Font" />
+            <PopFont name="button-font" />
+         </HGroup>
+         
+         <Bar />
+
+         <Group Rows="2" VSpacing="2">
+            <PopFrame name="button-frame" Couple="true" />
+            <PopImage name="button-back" Couple="true" />
+            <PopScheme name="button-scheme" />
+            <VLabel Text="Frame" />
+            <VLabel Text="Back" />
+            <VLabel Text="Scheme" />
+         </Group>
+
+         <Bar />
+         <SimpleButton Text="Example" />
+      </Group>
+
+      <Group Frame="$group-frame" Title="Text">
+         <HGroup>
+            <HLabel Text="Font" />
+            <PopFont name="text-font" />
+         </HGroup>
+
+         <Bar />
+
+         <Group Rows="2" VSpacing="2">
+            <PopFrame name="text-frame" />
+            <PopImage name="text-back" />
+            <PopScheme name="text-scheme" />
+            <VLabel Text="Frame" />
+            <VLabel Text="Back" />
+            <VLabel Text="Scheme" />
+         </Group>
+
+         <Bar />
+         <Text Frame="$text-frame" Back="$text-back" Font="$text-font" ColorScheme="$text-scheme" PreParse="&lt;align=center&gt;" Text="Example" SetMax="Height" />
+      </Group>
+   </HGroup>
+</feelin:objects>
+

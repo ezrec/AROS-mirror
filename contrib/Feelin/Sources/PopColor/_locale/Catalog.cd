@@ -1,0 +1,10 @@
+;
+CAT_TITLE (100//)
+Adjust Color
+;
+CAT_HELP (//)
+<align="center"><pens shadow="halfshine">Use this button to <b>adjust a color</b><hr shine="fill" shadow="halfdark">\
+<align="justify">Click it to open an adjust window or<br>\
+use <b>drag'n'drop</b> facilities to copy<br>\
+from or to another object.
+;

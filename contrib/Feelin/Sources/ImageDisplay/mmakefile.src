@@ -1,0 +1,41 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSIMAGEDISPLAYFILES = Project \
+        brush \
+		color \
+		double \
+        gradient \
+		hook \
+		picture \
+		raster \
+		support \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSIMAGEDISPLAY_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSIMAGEDISPLAYFILES))))
+
+#MM- feelin-classes : feelin-classes-imagedisplay
+#MM- feelin-classes-imagedisplay : feelin-classes-imagedisplay-setup feelin-classes-imagedisplay-compile feelin-classes-imagedisplay-link
+
+$(CLASSIMAGEDISPLAYFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-imagedisplay-compile : $(CLASSIMAGEDISPLAYFILES)
+
+$(AROSDIR)/Libs/Feelin/ImageDisplay.fc : $(CLASSIMAGEDISPLAY_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSIMAGEDISPLAY_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-imagedisplay-link : $(AROSDIR)/Libs/Feelin/ImageDisplay.fc
+
+#MM
+feelin-classes-imagedisplay-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

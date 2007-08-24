@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSPREVIEWCOLORFILES = Project \
+					   object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSPREVIEWCOLOR_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPREVIEWCOLORFILES))))
+
+#MM- feelin-classes : feelin-classes-previewcolor
+#MM- feelin-classes-previewcolor : feelin-classes-previewcolor-setup feelin-classes-previewcolor-compile feelin-classes-previewcolor-link
+
+$(CLASSPREVIEWCOLORFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-previewcolor-compile : $(CLASSPREVIEWCOLORFILES)
+
+$(AROSDIR)/Libs/Feelin/PreviewColor.fc : $(CLASSPREVIEWCOLOR_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSPREVIEWCOLOR_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-previewcolor-link : $(AROSDIR)/Libs/Feelin/PreviewColor.fc
+
+#MM
+feelin-classes-previewcolor-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

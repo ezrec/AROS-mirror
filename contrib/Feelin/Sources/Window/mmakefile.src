@@ -1,0 +1,38 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSWINDOWFILES = Project \
+                  draw \
+				  events \
+				  layout \
+				  open \
+				  setup \
+				  object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSWINDOW_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSWINDOWFILES))))
+
+#MM- feelin-classes : feelin-classes-window
+#MM- feelin-classes-window : feelin-classes-window-setup feelin-classes-window-compile feelin-classes-window-link
+
+$(CLASSWINDOWFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-window-compile : $(CLASSWINDOWFILES)
+
+$(AROSDIR)/Libs/Feelin/Window.fc : $(CLASSWINDOW_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSWINDOW_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-window-link : $(AROSDIR)/Libs/Feelin/Window.fc
+
+#MM
+feelin-classes-window-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

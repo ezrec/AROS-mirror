@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSPREVIEWIMAGEFILES = Project \
+					   object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSPREVIEWIMAGE_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSPREVIEWIMAGEFILES))))
+
+#MM- feelin-classes : feelin-classes-previewimage
+#MM- feelin-classes-previewimage : feelin-classes-previewimage-setup feelin-classes-previewimage-compile feelin-classes-previewimage-link
+
+$(CLASSPREVIEWIMAGEFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-previewimage-compile : $(CLASSPREVIEWIMAGEFILES)
+
+$(AROSDIR)/Libs/Feelin/PreviewImage.fc : $(CLASSPREVIEWIMAGE_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSPREVIEWIMAGE_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-previewimage-link : $(AROSDIR)/Libs/Feelin/PreviewImage.fc
+
+#MM
+feelin-classes-previewimage-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

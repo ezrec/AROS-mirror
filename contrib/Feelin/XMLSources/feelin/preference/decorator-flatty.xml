@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+
+<feelin:objects>
+    <Group>
+        <HGroup>
+            <Group Columns="2" Frame="$group-frame" Title="Dimensions">
+                <HLabel>H. Spacing</HLabel><Slider name="decorator-flatty-spacing-horizontal" Horizontal="true" Max="32" />
+                <HLabel>V. Spacing</HLabel><Slider name="decorator-flatty-spacing-vertical" Horizontal="true" Max="32" />
+                <HLabel>Sizebar</HLabel><Slider name="decorator-flatty-sizebar-height" Horizontal="true" Max="32" Min="4" />
+            </Group>
+            
+            <!--Balance />
+            
+            <Decorator-Flatty MinWidth="50" MaxWidth="200" /-->
+        </HGroup>
+
+        <HGroup>
+            <Group Rows="2" Frame="$group-frame" Title="Backgrounds">
+                <PopImage name="decorator-flatty-dragbar-back" />
+                <PopImage name="decorator-flatty-sizebar-back" />
+                <HLabel>Dragbar</HLabel>
+                <HLabel>Sizebar</HLabel>
+            </Group>
+
+            <Group Rows="2" Frame="$group-frame" Title="Images" VSpacing="2">
+                <PopImage name="decorator-flatty-image-close" Couple="true" />
+                <PopImage name="decorator-flatty-image-zoom" Couple="true" />
+                <PopImage name="decorator-flatty-image-depth" Couple="true" />
+                <VLabel>Close</VLabel>
+                <VLabel>Zoom</VLabel>
+                <VLabel>Depth</VLabel>
+            </Group>
+        </HGroup>
+    </Group>
+</feelin:objects>

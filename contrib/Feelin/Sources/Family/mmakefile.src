@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSFAMILYFILES = Project \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSFAMILY_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSFAMILYFILES))))
+
+#MM- feelin-classes : feelin-classes-family
+#MM- feelin-classes-family : feelin-classes-family-setup feelin-classes-family-compile feelin-classes-family-link
+
+$(CLASSFAMILYFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-family-compile : $(CLASSFAMILYFILES)
+
+$(AROSDIR)/Libs/Feelin/Family.fc : $(CLASSFAMILY_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSFAMILY_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-family-link : $(AROSDIR)/Libs/Feelin/Family.fc
+
+#MM
+feelin-classes-family-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

@@ -1,0 +1,33 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSDECORATORFILES = Project \
+        prefs
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSDECORATOR_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSDECORATORFILES))))
+
+#MM- feelin-classes : feelin-classes-decorator
+#MM- feelin-classes-decorator : feelin-classes-decorator-setup feelin-classes-decorator-compile feelin-classes-decorator-link
+
+$(CLASSDECORATORFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-decorator-compile : $(CLASSDECORATORFILES)
+
+$(AROSDIR)/Libs/Feelin/Decorator.fc : $(CLASSDECORATOR_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSDECORATOR_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-decorator-link : $(AROSDIR)/Libs/Feelin/Decorator.fc
+
+#MM
+feelin-classes-decorator-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common

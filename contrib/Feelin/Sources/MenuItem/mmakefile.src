@@ -1,0 +1,34 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+
+include $(TOP)/config/make.cfg
+
+FEELINTOP = ../../
+
+CLASSMENUITEMFILES = Project \
+		item \
+		object
+
+USER_CFLAGS := -I$(FEELINTOP)/Include
+
+CLASSMENUITEM_OBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CLASSMENUITEMFILES))))
+
+##MM- feelin-classes : feelin-classes-menuitem
+#MM- feelin-classes-menuitem : feelin-classes-menuitem-setup feelin-classes-menuitem-compile feelin-classes-menuitem-link
+
+$(CLASSMENUITEMFILES) :
+%compile_q opt=$(CFLAGS) from=$@.c to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
+
+#MM
+feelin-classes-menuitem-compile : $(CLASSMENUITEMFILES)
+
+$(AROSDIR)/Libs/Feelin/MenuItem.fc : $(CLASSMENUITEM_OBJS)
+	$(AROS_CC) $(LDFLAGS) $(CLASSMENUITEM_OBJS) -lFeelinAROS -lrom -nostartfiles -o $@
+
+#MM
+feelin-classes-menuitem-link : $(AROSDIR)/Libs/Feelin/MenuItem.fc
+
+#MM
+feelin-classes-menuitem-setup :
+%mkdirs_q $(GENDIR)/$(CURDIR)
+
+%common
