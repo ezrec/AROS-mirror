@@ -80,6 +80,7 @@ static struct quantizenode * histogram_quantize_create(APTR Pool, FHEntry **lowe
         {
             uint32 rgb = (*htp)->rgb;
 
+#warning "TODO: FIXME! These defines cause problems compiling ... pls correct"
 //    	#ifdef __AROS__
 //	#warning "CHECKME: IEEE crap"
 //	#define IEEEDPFlt   	(double)

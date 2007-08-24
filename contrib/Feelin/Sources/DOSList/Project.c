@@ -125,6 +125,7 @@ F_HOOKM(APTR,code_list_construct,FS_List_Construct)
  
         if (le)
         {
+#warning "TODO: FIXME! - Changes to the AROS DOS headers made this attribute disappear .."
 //	#ifdef __AROS__
 //            STRPTR name = BADDR(((struct DosList *)(ler -> Data)) -> dol_DevName - 1);
 //	#else
@@ -135,6 +136,7 @@ F_HOOKM(APTR,code_list_construct,FS_List_Construct)
 
             if (ler -> Type == FV_ENTRY_VOLUME)
             {
+#warning "TODO: FIXME! - This change may still be relevant (pls check!)"
 //	    #ifdef __AROS__
 //                le -> DevName = f_str_newp(FeelinBase,Msg -> Pool,NULL,"%s:", "AROS_FIXME");
 //	    #else
