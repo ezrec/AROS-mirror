@@ -12,7 +12,7 @@ int Get_RR_File_Comment(VOLUME *p_volume, directory_record *p_dir, unsigned long
 int Is_A_Symbolic_Link(VOLUME *p_volume, directory_record *p_dir, unsigned long *amiga_mode);
 t_bool Get_Link_Name(CDROM_OBJ *p_obj, char *p_buf, int p_buf_len);
 int Has_System_Use_Field(VOLUME *p_volume, directory_record *p_dir, char *p_name);
-long RR_Child_Link(VOLUME *p_volume, directory_record *p_dir);
-long RR_Parent_Link(VOLUME *p_volume, directory_record *p_dir);
+LONG RR_Child_Link(VOLUME *p_volume, directory_record *p_dir);
+LONG RR_Parent_Link(VOLUME *p_volume, directory_record *p_dir);
 
 #endif /* _ROCK_H */
