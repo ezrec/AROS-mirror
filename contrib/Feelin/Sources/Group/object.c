@@ -9,7 +9,7 @@
 
 */
 
-void Group_DoA(FClass *Class,FObject Obj,ULONG Method,APTR Msg)
+void Group_DoA(FClass *Class,FObject Obj,uint32 Method,APTR Msg)
 {
    struct LocalObjectData *LOD = F_LOD(Class,Obj);
 

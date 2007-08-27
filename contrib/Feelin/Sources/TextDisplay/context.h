@@ -85,9 +85,9 @@ FTDContext;
 
 FTDContext          * td_context_new(struct FeelinClass *Class,FObject Obj);
 void                  td_context_dispose(FTDContext *Context);
-APTR                  td_context_push(FTDContext *Context,ULONG Type);
-FTDContextContainer * td_context_pop(FTDContext *Context,ULONG Type);
-FTDColor            * td_context_add_color(FTDContext *Context,ULONG Spec,ULONG Type);
+APTR                  td_context_push(FTDContext *Context,uint32 Type);
+FTDContextContainer * td_context_pop(FTDContext *Context,uint32 Type);
+FTDColor            * td_context_add_color(FTDContext *Context,uint32 Spec,uint32 Type);
 
 /*
 

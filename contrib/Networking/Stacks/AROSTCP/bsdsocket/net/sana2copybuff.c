@@ -285,8 +285,8 @@ AROS_UFH3(BOOL, m_copy_to_mbuf,
 }
 
 struct TagItem buffermanagement[3] = {
-    { S2_CopyToBuff,   (ULONG)AROS_ASMSYMNAME(m_copy_to_mbuf) },
-    { S2_CopyFromBuff, (ULONG)AROS_ASMSYMNAME(m_copy_from_mbuf) },
+    { S2_CopyToBuff,   AROS_ASMSYMNAME(m_copy_to_mbuf) },
+    { S2_CopyFromBuff, AROS_ASMSYMNAME(m_copy_from_mbuf) },
     { TAG_END, }
 };
 

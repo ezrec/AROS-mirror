@@ -7,6 +7,9 @@
 #ifdef __i386__
 #define CPU_TYPE "x86"
 #endif
+#ifdef __x86_64__
+#define CPU_TYPE "amd64"
+#endif
 #ifndef CPU_TYPE
 #error Unknown CPU, please define
 #endif

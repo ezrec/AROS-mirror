@@ -105,7 +105,7 @@ void line_compute_dimensions(FClass *Class,FObject Obj,FLine *Line)
 //+
 
 ///list_adjust_first
-void list_adjust_first(FClass *Class,FObject Obj,ULONG first_pos)
+void list_adjust_first(FClass *Class,FObject Obj,uint32 first_pos)
 {
    struct LocalObjectData *LOD = F_LOD(Class,Obj);
 
@@ -157,7 +157,7 @@ void list_adjust_first(FClass *Class,FObject Obj,ULONG first_pos)
 }
 //+
 ///list_update
-void list_update(FClass *Class,FObject Obj,LONG Notify)
+void list_update(FClass *Class,FObject Obj,int32 Notify)
 {
    struct LocalObjectData *LOD = F_LOD(Class,Obj);
 

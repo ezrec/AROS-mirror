@@ -23,7 +23,7 @@ struct FeelinAvailFontHeader
 }; 
 
 void                            f_fontlist_add(struct FeelinAvailFontHeader *Header,struct TextAttr *ta);
-struct FeelinAvailFontHeader *  f_fontlist_create(ULONG Flags);
+struct FeelinAvailFontHeader *  f_fontlist_create(bits32 Flags);
 void                            f_fontlist_delete(struct FeelinAvailFontHeader * Header);
 
 #endif

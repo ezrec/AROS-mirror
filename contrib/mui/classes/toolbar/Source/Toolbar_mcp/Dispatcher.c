@@ -73,7 +73,7 @@ DISPATCHERPROTO(_DispatcherP)
       {
         static const struct TagItem tags[] =
         {
-          { OC_BuiltInLanguage, (ULONG)"english" },
+          { OC_BuiltInLanguage, "english" },
           { OC_Version,         0                },
           { TAG_DONE,           0                }
         };
