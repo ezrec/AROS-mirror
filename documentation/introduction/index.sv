@@ -9,7 +9,14 @@ Kort introduktion till AROS
 :Status:    Almost finished, I think...
 
 
-.. Include:: index-abstract.sv
+.. raw:: html
+
+   <h1>Introduction<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"></h1>
+
+AROS är ett portabelt och fritt operativsystem för desktop med syfte på
+att vara kompatibelt med AmigaOS 3.1, och samtidigt förbättra det i
+många områden. Källkoden är tillgänglig under en open source-licens, vilket
+tillåter alla friheten att förbättra det.
 
 
 Mål
