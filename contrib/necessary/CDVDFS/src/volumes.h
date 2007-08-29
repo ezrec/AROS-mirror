@@ -32,7 +32,7 @@ void Register_File_Handle(CDROM_OBJ *p_obj);
 void Unregister_File_Handle(CDROM_OBJ *p_obj);
 struct DeviceList *Find_Dev_List (CDROM_OBJ *p_obj);
 int Reinstall_File_Handles (void);
-void Register_Volume_Node(struct DeviceList *p_volume);
+void Register_Volume_Node(struct DeviceList *p_volume, char *Name);
 void Unregister_Volume_Node(struct DeviceList *p_volume);
 struct DeviceList *Find_Volume_Node(char *p_name);
 

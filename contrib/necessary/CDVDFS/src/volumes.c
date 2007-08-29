@@ -10,6 +10,7 @@
  * ----------------------------------------------------------------------
  * History:
  * 
+ * 27-Aug-07 sonic   - Register_Volume_Node() now takes separate pointer to a volume name.
  * 19-Sep-94   fmu   Fixed bug in Reinstall_Locks()
  * 22-May-94   fmu   Performance improvement for lock+filehandle processing.
  * 09-Jul-02 sheutlin  various changes when porting to AROS
@@ -236,7 +237,7 @@ t_fh_node *ptr;
 /*  Register a volume node as owned by this handler.
  */
 
-void Register_Volume_Node(struct DeviceList *p_volume) {
+void Register_Volume_Node(struct DeviceList *p_volume, char *Name) {
 t_vol_reg_node *new;
 int len;
   
@@ -245,15 +246,14 @@ int len;
 		return;
 
 	new->volume = p_volume;
-	len = AROS_BSTR_strlen(p_volume->dl_Name);
-	new->name = (char*) AllocMem (len + 1, MEMF_PUBLIC);
+	len = strlen(Name) + 1;
+	new->name = (char*) AllocMem (len, MEMF_PUBLIC);
 	if (!new)
 	{
 		FreeMem (new, sizeof (t_vol_reg_node));
 		return;
 	}
-	CopyMem((char*) AROS_BSTR_ADDR(p_volume->dl_Name), new->name, len);
-	new->name[len] = 0;
+	CopyMem(Name, new->name, len);
 	new->next = global->g_volume_list;
 	global->g_volume_list = new;
 }

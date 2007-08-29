@@ -12,6 +12,8 @@
  * ----------------------------------------------------------------------
  * History:
  *
+ * 27-Aug-07 sonic     - Register_Volume_Node() now takes separate pointer to a volume name.
+ *                     - Now reports correct DOS type for volumes ('CDFS').
  * 29-May-07 sonic     - Replies FileSysStartupMsg and loads character
  *                       set translation table before mounting volume
  *                     - Does not unmount volume any more in case of
@@ -139,6 +141,8 @@
 #include "charset.h"
 #include "prefs.h"
 #include "aros_stuff.h"
+
+#define ID_CDFS_DISK 0x43444653
 
 /*
  *  Since this code might be called several times in a row without being
@@ -1283,8 +1287,9 @@ void Fill_FileInfoBlock (FIB *p_fib, CDROM_INFO *p_info, VOLUME *p_volume)
  */
  
 void Create_Volume_Node (LONG p_disk_type, ULONG p_volume_date) {
-struct DeviceList *dl;
+	struct DeviceList *dl;
 
+	BUG(dbprintf("Inserted volume name: %s\n", global->g_vol_name + 1));
 	dl = Find_Volume_Node (global->g_vol_name + 1);
 	if (dl)
 	{
@@ -1311,8 +1316,17 @@ struct DeviceList *dl;
 		dl->dl_VolumeDate.ds_Days = p_volume_date / (24 * 60 * 60);
 		dl->dl_VolumeDate.ds_Minute = (p_volume_date % (24 * 60 * 60)) / 60;
 		dl->dl_VolumeDate.ds_Tick = (p_volume_date % 60) * TICKS_PER_SECOND;
+		BUG(dbprintf("Name to add: <0x%08lX> %b\n", dl->dl_Name, dl->dl_Name));
 		AddDosEntry((struct DosList *)dl);
-		Register_Volume_Node (dl);
+		BUG(dbprintf("Added name: <0x%08lX> %b\n", dl->dl_Name, dl->dl_Name));
+		/* Under MorphOS AddDosEntry() can modify volume name in case if such a volume
+		   is already present in the DosList. In this case it reallocates the name string,
+		   appends "_%d" to it and modifies dl_Name. In this case we can lose our
+		   volume node if a user removes a disc while some locks are pending and then
+		   puts it back, because we wouldn't be able to find it by name in our list.
+		   A typical case is using CDVDFS under MorphOS along with built-in MorphOS
+		   handler, */
+		Register_Volume_Node (dl, global->g_vol_name + 1);
 	}
 }
 
@@ -1365,7 +1379,7 @@ void Mount (void)
   global->g_volume->locks = Reinstall_Locks ();
   global->g_volume->file_handles = Reinstall_File_Handles ();
 
-  Create_Volume_Node (ID_DOS_DISK, Volume_Creation_Date (global->g_volume));
+  Create_Volume_Node (ID_CDFS_DISK, Volume_Creation_Date (global->g_volume));
   global->g_volume->devlist = global->DevList;
   global->g_cd->t_changeint2 = global->g_cd->t_changeint;
   Send_Event (TRUE);

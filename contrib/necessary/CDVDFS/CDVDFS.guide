@@ -5,7 +5,7 @@
 CDVDFS - a CD/DVD filesystem for Amiga family of operaing systems
 -----------------------------------------------------------------
 
-Version 1.3    18-Aug-07   (C) 2007 Pavel Fedin
+Version 1.3    27-Aug-07   (C) 2007 Pavel Fedin
 			   (sonic_amiga@rambler.ru)
 
 Based on AmiCDROM 1.15     (C) 1993,1994 by Frank Munkert
@@ -865,6 +865,9 @@ Original to-do from Frank Murket:
 
 Changes in V1.3:
 
+* Now reports correct DOS type for volumes.
+* Fixed losing a volume under MorphOS if a disk has been removed with some
+  files or directories open.
 * Fixed some problems with RockRidge volumes on some machines.
 * Fixed disappearing volume upon disc read failure.
 * Fixed broken CDDA handling.
