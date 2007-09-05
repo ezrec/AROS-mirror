@@ -50,6 +50,9 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             Img( src = '%(ROOT)simages/swedenlogo.png' ),
             A( 'Svenska', href='%(BASE)ssv/' )])
         ] ),
+	    P ( contents = [
+            Img( src = '%(ROOT)simages/czechlogo.png' ),
+            A( 'Cesky', href='%(BASE)scz.' )]),
         BR(),
 	P ( contents = [
         Img( src = '%(ROOT)simages/pointer.png' ),    

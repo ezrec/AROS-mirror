@@ -1,0 +1,65 @@
+[meta]
+
+charset:          iso-8859-2
+
+[titles]
+
+mirrors:          Mirrors
+contents:         Contents
+search:           Search
+visitors:         Náv¹tìvníci
+sponsors:         Sponzoøi
+
+[navigation]
+
+home:             Domù
+news:             Novinky
+archive:          Archiv
+introduction:     Úvod
+status:           Status
+screenshots:      Screenshots
+ports:            Ports
+license:          Licence
+download:         Download
+documentation:    Dokumentace
+users:            U¾ivatelé
+installation:     Instalace
+using:            Using
+shell:            Shell commands
+applications:     Applications
+faq:              FAQ
+developers:       Vıvojáøi
+contribute:       Contribute
+bug-tracker:      Bug Tracker
+working-with-subversion: Working with Subversion
+compiling:        Compiling
+application-development-manual: Application Development Manual
+zune-application-development-manual: Zune Application Development Manual
+system-development-manual:      System Development Manual
+debugging-manual: Debugging Manual
+reference:        Reference
+specifications:   Specifications
+ui-style-guide:   UI Style Guide
+documenting:      Documenting
+porting:          Porting
+translating:      Pøekládání
+summaries:        Summaries
+links:            Odkazy
+contact:          Kontakt
+mailing-lists:    Mailing lists
+forums:           Fóra
+irc-channels:     IRC channels
+credits:          Credits
+pictures:         Obrázky
+developers-together: Developers en Masse
+sponsors:         Sponzoøi
+linking:          Linking
+
+[misc]
+
+go:               Go
+search:           Search
+copyright:        Copyright Œ 1995-2007, The AROS Development Team. All rights reserved.
+trademarks:       Amiga is a trademark of Amiga Inc. All other trademarks belong to their respective owners.
+read-more:        Read more...
+large-image:      Large version...

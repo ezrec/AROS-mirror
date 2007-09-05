@@ -242,6 +242,8 @@ def convertWWW( src, language, options=None ):
         encoding = 'iso-8859-2'
     elif language == 'ru':
         encoding = 'windows-1251'
+    elif language == 'cz':
+        encoding = 'iso-8859-2'
     else:
         encoding = 'iso-8859-15'
 
@@ -475,6 +477,7 @@ def buildWWW():
             'targets/www/images/communityicon.png',
             'targets/www/images/directdownloadicon.gif',
             'targets/www/images/directdownloadicon.png',
+            'targets/www/images/czechlogo.png',
             'targets/www/images/englishlogo.png',
             'targets/www/images/finlandlogo.png',
             'targets/www/images/francelogo.png',
