@@ -16,29 +16,29 @@ home:             Domù
 news:             Novinky
 archive:          Archiv
 introduction:     Úvod
-status:           Status
-screenshots:      Screenshots
-ports:            Ports
+status:           Stav
+screenshots:      Snímky obrazovky
+ports:            Porty
 license:          Licence
 download:         Download
 documentation:    Dokumentace
 users:            U¾ivatelé
 installation:     Instalace
-using:            Using
-shell:            Shell commands
+using:            Pou¾ití
+shell:            Pøíkazy shellu
 applications:     Applications
 faq:              FAQ
 developers:       Vývojáøi
-contribute:       Contribute
+contribute:       Spolupráce
 bug-tracker:      Bug Tracker
-working-with-subversion: Working with Subversion
-compiling:        Compiling
+working-with-subversion: Pracování s SVN
+compiling:        Kompilování
 application-development-manual: Application Development Manual
 zune-application-development-manual: Zune Application Development Manual
 system-development-manual:      System Development Manual
 debugging-manual: Debugging Manual
 reference:        Reference
-specifications:   Specifications
+specifications:   Specifikace
 ui-style-guide:   UI Style Guide
 documenting:      Documenting
 porting:          Porting
@@ -48,7 +48,7 @@ links:            Odkazy
 contact:          Kontakt
 mailing-lists:    Mailing lists
 forums:           Fóra
-irc-channels:     IRC channels
+irc-channels:     Kanály IRC
 credits:          Credits
 pictures:         Obrázky
 developers-together: Developers en Masse
