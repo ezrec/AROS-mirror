@@ -1,6 +1,6 @@
 
 ##
-## $Id: smakefile,v 1.5 2000/02/06 18:07:38 zapek Exp $
+## $Id$
 ##
 
 MCCFLAGS = SC BATCH NOICONS SD #ADDSYM

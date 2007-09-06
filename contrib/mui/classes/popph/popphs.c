@@ -1,5 +1,5 @@
 /*
-** $Id: popphs.c,v 1.5 2000/04/04 17:58:19 carlos Exp $
+** $Id$
 **
 ** © 1999-2000 Marcin Orlowski <carlos@amiga.com.pl>
 */

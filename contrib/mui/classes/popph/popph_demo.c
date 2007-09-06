@@ -1,6 +1,6 @@
 
 /*
-** $Id: popph_demo.c,v 1.6 2000/02/06 18:07:37 zapek Exp $
+** $Id$
 **
 ** Popplaceholder.mcc - demonstration program
 ** © 1999 Marcin Orlowski <carlos@amiga.com.pl>

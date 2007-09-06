@@ -1,6 +1,6 @@
 
 /*
-** $Id: popph_clipboard.c,v 1.3 1999/11/25 18:38:56 carlos Exp $
+** $Id$
 **
 ** © 1999 Marcin Orlowski <carlos@amiga.com.pl>
 */
