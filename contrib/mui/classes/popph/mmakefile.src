@@ -1,0 +1,21 @@
+# $Id: mmakefile.src 26282 2007-06-16 12:38:20Z mazze $
+
+include $(TOP)/config/make.cfg
+
+FILES         := popph popphs
+INCLUDE_FILES := popplaceholder_mcc.h
+
+#MM contrib-zune-classes-popph-class : includes linklibs
+#MM- contrib-zune-classes-popph-class-includes : includes includes-copy
+
+%build_module \
+    mmake=workbench-classes-zune-popplaceholder \
+    modname=Popplaceholder modtype=mcc \
+    conffile=popplaceholder.conf \
+    uselibs="amiga rom"
+    
+#%copy_includes path=mui
+    
+%common
+#%include_deps
+

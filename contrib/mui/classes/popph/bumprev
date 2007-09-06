@@ -1,2 +1,0 @@
-echo "** Bumping revision..."
-rx BumpRev.rexx Name "Popplaceholder" File=popph_revision.h version 15 revision 0 increv
