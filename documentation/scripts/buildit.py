@@ -28,7 +28,7 @@ TEMPLATE_DATA = {}
 
 # Languages not supported by docutils yet (but that we have files written in):
 # 'no'
-LANGUAGES  = [ 'en', 'de', 'el', 'fi', 'fr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv' ]
+LANGUAGES  = [ 'en', 'de', 'el', 'fi', 'fr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv', 'cs' ]
 
 # FIXME: Move this somewhere else...
 if (not os.path.exists( 'credits.en' ) ) \
@@ -242,7 +242,7 @@ def convertWWW( src, language, options=None ):
         encoding = 'iso-8859-2'
     elif language == 'ru':
         encoding = 'windows-1251'
-    elif language == 'cz':
+    elif language == 'cs':
         encoding = 'iso-8859-2'
     else:
         encoding = 'iso-8859-15'
