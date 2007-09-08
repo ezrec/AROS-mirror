@@ -48,11 +48,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             A( 'Suomi', href='%(BASE)sfi/' )]),
 	    P ( contents = [
             Img( src = '%(ROOT)simages/swedenlogo.png' ),
-            A( 'Svenska', href='%(BASE)ssv/' )])
-        ] ),
+            A( 'Svenska', href='%(BASE)ssv/' )]),
 	    P ( contents = [
             Img( src = '%(ROOT)simages/czechlogo.png' ),
-            A( 'Cesky', href='%(BASE)scs.' )]),
+            A( 'Cesky', href='%(BASE)scs/' )])		
+        ] ),
         BR(),
 	P ( contents = [
         Img( src = '%(ROOT)simages/pointer.png' ),    
