@@ -1,0 +1,41 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-09-08
+
+Latest news
+-----------
+
+Michal Schulz is working on x86-64 version's low-level parts of 
+exec.library - the scheduler and interrupt handlers. The bootstrap 
+code has changed a lot and he has managed to compile several 
+libraries (thanks to the gigantic effort of Henning Kiel, who fixed 
+sources for 64-bit compatibility) into separate modules. In other 
+words, the 64-bit kernel is about to boot, multitask and start 
+the autoinit route of exec.library soon.
+
+If you have installed an ageing nightly build of AROS, please go to 
+the download section and grab a new one. There had been lots of 
+important bugfixes, and also some nice cosmetic enhancements. 
+After our competition, we have got two "official" wallpapers 
+installed by default: `"AROS rose" by d980`__ for the desktop, and 
+`"AROS"`__ by Wesper for windows.
+
+If you plan to spend some days in Tuscany (Italy) on september 
+22nd and 23rd, don't forget to visit Empoli. On saturday 
+22nd at 16.00h AROS will be presented 
+at `Pianeta Amiga 2007`__ show.
+
+Some other nice applications had been ported on AROS. We've recently 
+got MUIbase, a relational database and `Hively Tracker`__, an AHX 
+format mod editor. You may find both in the `Archives`__ as usual. 
+
+
+__ http://ist-krieg.de/gallery/v/kyynel/projekte/aroswallpapercompetition/preselection/d980-04_aros-rose.jpg.html
+_ http://ist-krieg.de/gallery/v/kyynel/projekte/aroswallpapercompetition/preselection/wesssper-01_aros.png.html
+__ http://www.pianetaamiga.it
+__ http://www.hivelytracker.com/index.php
+__ http://archives.aros-exec.org 
+
