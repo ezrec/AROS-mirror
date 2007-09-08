@@ -1,0 +1,44 @@
+=============
+Aggiornamento
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-09-08
+
+Ultime novità
+-------------
+
+Michal Schulz sta lavorando sulle componenti a basso livello di 
+exec-library nella versione x86-64 di AROS: lo scheduler e i 
+gestori degli interrupt. Il codice per l'avvio del sistema è 
+cambiato parecchio e per tanto ha dovuto adeguare diverse librerie 
+(anche grazie allo sforzo enorme compiuto da Henning Kiel, che 
+ha corretto i sorgenti per renderli compatibili coi 64 bit), 
+separandole in moduli. In altre parole, il kernel a 64 bit è quasi 
+pronto per effettuare il boot, lavorare in multitasking e 
+inizializzare il percorso di autoinit di exec.library.
+
+Se l'ultima nightly build di AROS che avete installato comincia 
+a dare i primi segni del tempo, andate nella sezione download e 
+scaricartene una più recente. Negli ultimi tempi, infatti, sono 
+stati corretti numerosi bug e AROS ha compiuto dei decisi passi 
+avanti in senso estetico. Il nostro contest grafico è terminato 
+e ora abbiamo due nuovi fondini ufficiali per il desktop e per 
+le finestre: `"AROS rose" di d980`__ e `"AROS"`__ di Wesper. 
+
+Se pensate di passare un fine settimana in Toscana, non 
+scordatevi di visitare `Pianeta Amiga 2007`__. La manifestazione 
+si terrà come di consueto a Empoli, il 22 e il 23 settembre. Alle 
+ore 16.00 di sabato 22 si terrà una conferenza su AROS.
+
+Alcune nuove applicazioni sono state convertite per AROS. Stavolta 
+si tratta del database relazionale MUIbase, e dell'editor di mod 
+musicali AHX `Hively Tracker`__. Le trovate negli `Archivi`__. 
+
+
+__ http://ist-krieg.de/gallery/v/kyynel/projekte/aroswallpapercompetition/preselection/d980-04_aros-rose.jpg.html
+_ http://ist-krieg.de/gallery/v/kyynel/projekte/aroswallpapercompetition/preselection/wesssper-01_aros.png.html
+__ http://www.pianetaamiga.it
+__ http://www.hivelytracker.com/index.php
+__ http://archives.aros-exec.org 
+
