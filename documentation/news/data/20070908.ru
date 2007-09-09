@@ -33,7 +33,7 @@ x86-64 -порта AROS  - планировщиком и обработчиком прерываний. Также значительно
 
 
 __ http://ist-krieg.de/gallery/v/kyynel/projekte/aroswallpapercompetition/preselection/d980-04_aros-rose.jpg.html
-_ http://ist-krieg.de/gallery/v/kyynel/projekte/aroswallpapercompetition/preselection/wesssper-01_aros.png.html
+__ http://ist-krieg.de/gallery/v/kyynel/projekte/aroswallpapercompetition/preselection/wesssper-01_aros.png.html
 __ http://www.pianetaamiga.it
 __ http://www.hivelytracker.com/index.php
 __ http://archives.aros-exec.org 

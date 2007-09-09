@@ -33,7 +33,7 @@ mods μορφής AHX. Μπορείτε να τα βρείτε και τα δύο στα `Archives`__ ως συνήθως.
 
 
 __ http://ist-krieg.de/gallery/v/kyynel/projekte/aroswallpapercompetition/preselection/d980-04_aros-rose.jpg.html
-_ http://ist-krieg.de/gallery/v/kyynel/projekte/aroswallpapercompetition/preselection/wesssper-01_aros.png.html
+__ http://ist-krieg.de/gallery/v/kyynel/projekte/aroswallpapercompetition/preselection/wesssper-01_aros.png.html
 __ http://www.pianetaamiga.it
 __ http://www.hivelytracker.com/index.php
 __ http://archives.aros-exec.org 
