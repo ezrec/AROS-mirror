@@ -3,7 +3,7 @@ AROS Documentation Manual
 =========================
 
 :Authors:   Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright Š 1995-2006, The AROS Development Team
+:Copyright: Copyright ¦ 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Work in progress.
@@ -35,7 +35,7 @@ significantly delayed or just absent. Also, most of programmers aren't that good
 in writing documentation, so that what was already written usually isn't very 
 readable. It is needed to combine the developers and users efforts in 
 documenting to reach the goal of an "AROS Ultimate Documentary". 
-So if you know any users that can help us, just let him! =)
+So if you know any users that can help us, just let them! =)
 
 *FIXME: Write more?*
 
@@ -74,15 +74,26 @@ In order to change or write documentation you need a checkout of the
 `subversion archive <svn>`_ 'documentation'. The archive contains:
 
 + some common documents like contact.en, links.en etc.
++ a directory 'db' with some database facts about the project
 + a directory 'documentation' with user and developer documentation
++ a directory 'images' with images used on our pages, like banners and logos. 
+  This directory must be in place, because the scripts look for images here.
++ a directory 'introduction' with introduction to project, found in relevant
+  menu of a website
++ 'misc' directory with some additional stuff
++ a directory 'news' with the news updates which you see on the main page.
+  Filenames in news/data has format of YYYYMMDD.<suffix>
++ a directory 'pictures' with images related to developer`s photos and screenshot
+  gallery
 + a directory 'scripts' with the scripts used to build the HTML and WWW
   targets
++ a directory 'targets' with additional files needed to build targets
 + ...
 
 .. Note::
 
-    Both the subversion archive and the directory with the user and developer
-    manuals have the name 'documentation'. Don't mix them up.
+    Both the subversion archive and the included directory with the user and 
+    developer manuals both have the name 'documentation'. Don't mix them up.
 
 Subdirectories
 --------------
@@ -277,9 +288,8 @@ The generated files will be put in ``../bin/documentation/<target-name>``, e.g..
 ``../bin/documentation/www`` for the ``www`` target. Specific language 
 files are put into ``../bin/documentation/<target-name>/<language-name>``.
 
-Additionally, there is
-a ``clean`` target, which will delete the entire ``../bin/documentation``
-directory.
+Additionally, there is a ``clean`` target, which will delete the entire 
+``../bin/documentation`` directory.
 
 .. Note::
 
