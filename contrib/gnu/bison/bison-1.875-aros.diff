@@ -30,7 +30,7 @@ diff -ur bison-1.875/lib/subpipe.c bison-1.875-aros/lib/subpipe.c
  #endif
  }
 +#ifdef __AROS__
-+void fork() {
++int fork() {
 +	return -1;
 +}
 +#endif /* __AROS__ */
