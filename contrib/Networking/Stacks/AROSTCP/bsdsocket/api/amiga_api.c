@@ -21,7 +21,6 @@
  */
 
 #include <version.h>
-#define RELEASESTRING "Network stack release 4 "
 
 /*
  * NOTE: Exec has turned off task switching while in Open, Close, Expunge and
@@ -52,9 +51,6 @@
 #error AmiTCP/IP currently depends on fd_mask and longword size of 32 bits.
 #endif
 
-#define SOCLIBNAME   "bsdsocket.library"
-#define MIAMILIBNAME "miami.library"
-
 /*
  *  Semaphore to prevent simultaneous access to library functions.
  */
@@ -82,6 +78,7 @@ extern f_void UserLibrary_funcTable[];
 const char wrongTaskErrorFmt[] =
   "Task %ld (%s) attempted to use library base of Task %ld (%s).";
 
+ #if !defined(__AROS__)
 /*
  * Instead of using exec/initializers.h we looked it as a reference
  * and wrote InitTable by hand
@@ -127,9 +124,10 @@ struct LibInitTable Miami_initTable = {
 #undef id_byte
 #undef id_word
 #undef id_long
+#endif
 
 /*
- * Api show and hide functions.. during these calls system is not
+ * API Show and Hide functions.. during these calls system is not
  * inside Forbid()/Permit() pair
  */
 
@@ -140,7 +138,7 @@ enum apistate api_state = API_SCRATCH;
    * new socket Library base prevents ELL_Expunge, the final
    * expunging function to remove library base from memory
    */
-BOOL AmiTCP_lets_you_do_expunge = FALSE;
+BOOL AROSTCP_FLAG_CANEXPUNGE = FALSE;
 
 BOOL SB_Expunged = FALSE; /* boolean value set by ELL_Expunge */
 
@@ -173,11 +171,23 @@ D(bug("[AROSTCP](amiga_api.c) ELL_Open()\n[AROSTCP](amiga_api.c) ELL_Open: versi
    * modified by initializers in initTable.
    */
   newBase = (struct SocketBase *)MakeLibrary(UserLibrary_funcTable,
+#if !defined(__AROS__)
 					     (UWORD *)&Library_initTable,
+#else
+					     NULL,
+#endif
 					     NULL,
 					     sizeof(struct SocketBase),
 					     NULL);
 #if defined(__AROS__)
+  
+  ((struct Library *)newBase)->lib_Node.ln_Type = NT_LIBRARY;
+  ((struct Library *)newBase)->lib_Node.ln_Name = (APTR)SOCLIBNAME;
+  ((struct Library *)newBase)->lib_Flags = (LIBF_SUMUSED|LIBF_CHANGED);
+  ((struct Library *)newBase)->lib_Version = VERSION;
+  ((struct Library *)newBase)->lib_Revision = REVISION;
+  ((struct Library *)newBase)->lib_IdString = (APTR)RELEASESTRING VSTRING;
+  
 D(bug("[AROSTCP](amiga_api.c) ELL_Open: Created user library base @ %08lx\n", newBase));
 #endif
   D(__log(LOG_DEBUG,"Created user library base: %08lx\n", newBase);)
@@ -282,7 +292,7 @@ D(bug("[AROSTCP](amiga_api.c) __ELL_Expunge()\n"));
    * Since every user gets her own library base, Major library base
    * can be removed immediately after 
    */ 
-  if (libPtr->lib_OpenCnt == 0 && AmiTCP_lets_you_do_expunge) {
+  if (libPtr->lib_OpenCnt == 0 && AROSTCP_FLAG_CANEXPUNGE) {
     VOID * freestart;
     ULONG  size;
 
@@ -435,14 +445,25 @@ D(bug("[AROSTCP](amiga_api.c) api_init()\n"));
   if (api_state != API_SCRATCH)
     return TRUE;
 
-  AmiTCP_lets_you_do_expunge = FALSE;
+  AROSTCP_FLAG_CANEXPUNGE = FALSE;
 
   MasterSocketBase = MakeLibrary(ExecLibraryList_funcTable,
+#if !defined(__AROS__)
 				 (UWORD *)&Library_initTable,
+#else
+				NULL,
+#endif
 				 NULL,
 				 sizeof(struct Library),
 				 NULL);
 #if defined(__AROS__)
+  ((struct Library *)MasterSocketBase)->lib_Node.ln_Type = NT_LIBRARY;
+  ((struct Library *)MasterSocketBase)->lib_Node.ln_Name = (APTR)SOCLIBNAME;
+  ((struct Library *)MasterSocketBase)->lib_Flags = (LIBF_SUMUSED|LIBF_CHANGED);
+  ((struct Library *)MasterSocketBase)->lib_Version = VERSION;
+  ((struct Library *)MasterSocketBase)->lib_Revision = REVISION;
+  ((struct Library *)MasterSocketBase)->lib_IdString = (APTR)RELEASESTRING VSTRING;
+  
 D(bug("[AROSTCP](amiga_api.c) api_init: Created master library base: %08lx\n", MasterSocketBase));
 #endif
   D(Printf("Created master library base: %08lx\n", MasterSocketBase);)
@@ -450,10 +471,24 @@ D(bug("[AROSTCP](amiga_api.c) api_init: Created master library base: %08lx\n", M
     return FALSE;
 
   MasterMiamiBase = MakeLibrary(Miami_InitFuncTable,
+#if !defined(__AROS__)
 				(UWORD *)&Miami_initTable,
+#else
+				NULL,
+#endif
 				NULL,
 				sizeof(struct Library),
 				NULL);
+#if defined(__AROS__)
+  ((struct Library *)MasterMiamiBase)->lib_Node.ln_Type = NT_LIBRARY;
+  ((struct Library *)MasterMiamiBase)->lib_Node.ln_Name = (APTR)MIAMILIBNAME;
+  ((struct Library *)MasterMiamiBase)->lib_Flags = (LIBF_SUMUSED|LIBF_CHANGED);
+  ((struct Library *)MasterMiamiBase)->lib_Version = MIAMI_VERSION;
+  ((struct Library *)MasterMiamiBase)->lib_Revision = MIAMI_REVISION;
+  ((struct Library *)MasterMiamiBase)->lib_IdString = (APTR)RELEASESTRING MIAMI_VSTRING;
+
+D(bug("[AROSTCP](amiga_api.c) api_init: Created MIAMI library base: %08lx\n", MasterMiamiBase));
+#endif
   D(Printf("Created master miami.library base: 0x%08lx\n", MasterMiamiBase);)
   if (MasterMiamiBase == NULL)
     return FALSE;
@@ -608,7 +643,7 @@ D(bug("[AROSTCP](amiga_api.c) api_deinit: The calling task of api_deinit() was n
     MasterMiamiBase = NULL;
   }
   if (MasterSocketBase) {
-    AmiTCP_lets_you_do_expunge = TRUE;
+    AROSTCP_FLAG_CANEXPUNGE = TRUE;
     __ELL_Expunge(MasterSocketBase);
     MasterSocketBase = NULL;
     SB_Expunged = TRUE;

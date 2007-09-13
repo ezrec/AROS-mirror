@@ -73,10 +73,24 @@ D(bug("[AROSTCP.MIAMI] miami_api.c: MiamiLIB_Open()\n"));
 		     MasterBase->lib_OpenCnt));
 
   MiamiBase = (struct MiamiBase *)MakeLibrary(Miami_UserFuncTable,
-					     (UWORD *)&Miami_initTable,
+#if !defined(__AROS__)
+				             (UWORD *)&Miami_initTable,
+#else
+					     NULL,
+#endif
 					     NULL,
 					     sizeof(struct MiamiBase),
 					     NULL);
+#if defined(__AROS__)
+  ((struct Library *)MiamiBase)->lib_Node.ln_Type = NT_LIBRARY;
+  ((struct Library *)MiamiBase)->lib_Node.ln_Name = (APTR)MIAMILIBNAME;
+  ((struct Library *)MiamiBase)->lib_Flags = (LIBF_SUMUSED|LIBF_CHANGED);
+  ((struct Library *)MiamiBase)->lib_Version = MIAMI_VERSION;
+  ((struct Library *)MiamiBase)->lib_Revision = MIAMI_REVISION;
+  ((struct Library *)MiamiBase)->lib_IdString = (APTR)RELEASESTRING MIAMI_VSTRING;
+
+D(bug("[AROSTCP](miami_api.c) MiamiLIB_Open: Created MIAMI user library base: %08lx\n", MiamiBase));
+#endif
   D(kprintf("Created user miami.library base: %08lx\n", MiamiBase);)
   if (MiamiBase) {
     for (i = (WORD *)((struct Library *)MiamiBase + 1); i < (WORD *)(MiamiBase + 1); i++)
