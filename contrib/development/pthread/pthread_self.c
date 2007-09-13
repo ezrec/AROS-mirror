@@ -11,5 +11,11 @@
 
 pthread_t pthread_self(void)
 {	
-    return (pthread_t) FindTask(NULL);
+//    return (pthread_t) FindTask(NULL);
+
+#   warning Implement pthread_self()
+    AROS_FUNCTION_NOT_IMPLEMENTED("pthread_self");
+	
+	pthread_t temp;
+	return temp;
 }

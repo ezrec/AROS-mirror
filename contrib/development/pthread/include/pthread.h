@@ -6,9 +6,12 @@
     $Id: $
 */
 
+//#include <proto/pthread.h>
+
 #include <semaphore.h>
 #include <sys/cdefs.h>
 #include <time.h>
+
 
 struct timespec
 {
@@ -20,7 +23,36 @@ struct sched_param {
     int sched_priority;
 };
 
-typedef IPTR pthread_t;
+
+
+typedef void* (*AROSPThreadFunc)(void*);
+
+struct AROSPThreadMessage
+{
+	struct Message msg;	/* standard exec.library message (MUST be the first thing in the message struct!) */
+	AROSPThreadFunc func;	/* function the thread will execute */
+	void *arg;		/* functions arguments for the thread function */
+	void *ret;		/* return value of the thread function */
+};
+
+struct aros_pthread_t
+{
+	struct MsgPort *replyport;
+	struct AROSPThreadMessage msg;
+	struct Task *task;
+	int count;
+
+};
+
+
+//typedef IPTR pthread_t;
+typedef struct pthread_t pthread_t;
+
+struct pthread_t {
+    struct aros_pthread_t * p;	/* pointer to actual object */
+    unsigned int x;		/* extra information - reuse count etc */    
+};
+
 
 typedef struct
 {

@@ -52,7 +52,11 @@ COMMON_OBJ := $(foreach f,$(COMMON),$(OBJDIR)/$(f).o)
 %build_module mmake=contrib-development-libs-pthread \
     modname=pthread modtype=library \
     files="$(COMMON)" \
-    uselibs="amiga rom"
+    uselibs="amiga arosc rom"
+
+%build_prog mmake=contrib-development-libs-pthread-test \
+    progname=pthreadtest targetdir=$(AROS_TESTS) \
+    files=pthreadtest uselibs="pthread mui arossupport amiga arosc"
 
 #MM
 contrib-development-linklibs-pthreadlib-quick : contrib-development-linklibs-pthreadlib
