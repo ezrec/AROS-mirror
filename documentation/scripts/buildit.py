@@ -28,7 +28,7 @@ TEMPLATE_DATA = {}
 
 # Languages not supported by docutils yet (but that we have files written in):
 # 'no'
-LANGUAGES  = [ 'en', 'de', 'el', 'es', 'fi', 'fr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv' ]
+LANGUAGES  = [ 'en', 'de', 'cs', 'el', 'es', 'fi', 'fr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv' ]
 
 # FIXME: Move this somewhere else...
 if (not os.path.exists( 'credits.en' ) ) \
@@ -242,6 +242,8 @@ def convertWWW( src, language, options=None ):
         encoding = 'iso-8859-2'
     elif language == 'ru':
         encoding = 'windows-1251'
+    elif language == 'cs':
+        encoding = 'iso-8859-2'
     else:
         encoding = 'iso-8859-15'
 
@@ -475,6 +477,7 @@ def buildWWW():
             'targets/www/images/communityicon.png',
             'targets/www/images/directdownloadicon.gif',
             'targets/www/images/directdownloadicon.png',
+            'targets/www/images/czechlogo.png',
             'targets/www/images/englishlogo.png',
             'targets/www/images/finlandlogo.png',
             'targets/www/images/francelogo.png',
