@@ -1,0 +1,67 @@
+[meta]
+
+charset:          iso-8859-15
+
+[titles]
+
+mirrors:          Servidores Espejo
+contents:         Contenidos
+search:           Búsqueda
+visitors:         Visitantes
+sponsors:         Auspiciantes
+
+[navigation]
+
+home:             Portada
+news:             Noticias
+archive:          Archivo
+introduction:     Introdución
+status:           Estado
+screenshots:      Capturas de Pantalla
+ports:            Puertos
+license:          Licencia
+download:         Descargas
+documentation:    Documentación
+users:            Usuarios
+installation:     Instalación
+using:            Modo de Uso
+shell:            Comandos del Shell
+applications:     Aplicaciones
+faq:              FAQ
+developers:       Desarrolladores
+contribute:       Contribución
+bug-tracker:      Rastreo de Errores
+working-with-subversion: Trabajando con Subversion
+compiling:        Compilación
+application-development-manual: Manual para el desarrollo de aplicaciones
+zune-application-development-manual: Manual para el desarrollo de aplicaciones con Zune
+system-development-manual:      Manual para el desarrollo del sistema
+debugging-manual: Manual para la depuración
+reference:        Referencia
+specifications:   Especificaciones
+ui-style-guide:   Guía de Estilo de la IU
+documenting:      Documentación
+porting:          Porting
+translating:      Traducción
+summaries:        Resúmenes
+links:            Enlaces
+contact:          Contacto
+mailing-lists:    Listas de correo
+forums:           Foros
+irc-channels:     Canales de IRC
+credits:          Créditos
+acknowlegments:   Reconocimientos
+roadmap:          Itinerario
+pictures:         Fotografías
+developers-together: Los Desarrolladores en grupo
+sponsors:         Auspiciantes
+linking:          Vinculación
+
+[misc]
+
+go:               Ir a
+search:           Buscar
+copyright:        Copyright © 1995-2007, The AROS Development Team. All rights reserved.
+trademarks:       Amiga® is a trademark of Amiga Inc. All other trademarks belong to their respective owners.
+read-more:        Leer más...
+large-image:      Tamaño grande...
