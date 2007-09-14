@@ -44,6 +44,9 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             Img( src = '%(ROOT)simages/russialogo.png' ),
             A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sru/' )]),
 	    P ( contents = [
+            Img( src = '%(ROOT)simages/spanishlogo.png' ),
+            A( 'Espa&#241ol', href='%(BASE)ses/' )]),
+		P ( contents = [
             Img( src = '%(ROOT)simages/finlandlogo.png' ),
             A( 'Suomi', href='%(BASE)sfi/' )]),
 	    P ( contents = [
