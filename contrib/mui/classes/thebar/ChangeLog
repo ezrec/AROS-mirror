@@ -2,8 +2,118 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
-$Id: ChangeLog 63 2007-03-23 05:31:45Z thboeckel $
+$Id: ChangeLog 98 2007-09-02 13:51:02Z pbobbenb $
 $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/ChangeLog $
+
+2007-09-02  Pär Boberg <pbobbenb@spray.se>
+
+  * mcp/locale/svenska.ct: Just bumped the version number to match v21.4
+    release.
+
+2007-08-29  Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/mui/TheBar_mcc.h, mcc/class.c: renamed the "class" member in struct
+    MUIS_TheBar_Button to "_class" to avoid problems with the reserved word
+    "class" in C++. This fixes bug #1781948.
+
+2007-08-19 Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mccinit.c: updated to latest 1.10 version
+
+#### v21.4 RELEASE ############################################################
+
+2007-07-25  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/Makefile: adapted pathes for normal and virtual subclasses.
+  * #?/library.c: now really uses the 3 parameter version of GETINTERFACE()
+    defined in mccinit.c instead of the old obsolete version in mcc_common.h.
+    The user definable functions (i.e. ClassInit()) must be declared before
+    the inclusion of mccinit.c.
+  * include/mccinit.c: updated to latest 1.8 version which really uses the
+    GETINTERFACE() macro with 3 parameters.
+
+2007-07-25 Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mccinit.c: updated to latest 1.7 version
+
+2007-07-24  Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/mccinit.c: updated to latest 1.6 version which fixes an unbalanced
+    if statement.
+
+2007-07-23 Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mccinit.c: updated to latest 1.5 version which should take care
+    of stack issues.
+
+2007-07-05 Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mccinit.c: updated to latest 1.4 version and adapted all our
+    library.c files to make use out of the new stack enforcing mechanisms.
+
+2007-06-29  Thore Böckelmann <tboeckel@gmx.de>
+
+  * doc/MCC_TheBar.doc: corrected example code for mutual exclusive buttons. The
+    old version used the image index for mutual exclusion instead of the button
+    ID.
+
+2007-06-28  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/Debug.c: changed wrong final output of debug flags.
+  * demo/#?: modified all demos to be buildable for all supported plattforms.
+
+2007-06-27  Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/demo[248].c: applied patches kindly provided by Thomas Klein.
+
+2007-06-22  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale/francais.ct: updated french translation which was kindly provided
+    by Alexandre Balaban.
+  * mcc/scale.c, mcc/button/scale.c: replaced all floating point calculations
+    by fixed point integer calculations. First this is much faster (because of
+    being integer math only) and second it saves the headaches of dealing with
+    the various math libraries and all their problems. This also fixes bug
+    #1724177 which was triggered by non-initalized math library bases.
+  * mcc/button/Debug.c: readded accidently removed GUI debug flag.
+
+2007-06-21  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/Debug.c: removed superflous debug flags.
+  * mcc/Debug.c, mcc/button/Debug.c mcc/scale.c, mcc/button/scale.c: added
+    SCALE debug flag for debugging the image scaling stuff.
+  * mcc/TheBar-Test.c: added an UNUSED qualifiert to the qual parameter as it is
+    only used in the debug statement.
+  * mcc/button/Makefile: removed the TestButton target, as the button cannot be
+    tested as a stand-alone-component. Anyway, there has never been a TestButton
+    program so far.
+  * mcc/Makefile: added -lm to the linker flags for all platforms.
+
+2007-06-13  Thore Böckelmann <tboeckel@gmx.de>
+
+  * #?/Debug.c: unified the _DPRINTF() functions for all platforms.
+
+2007-06-10 Jens Langner <Jens.Langner@light-speed.de>
+
+  * #?/Makefile: minor update/optimization on Makefiles.
+  * include/mccinit.c: updated to latest 1.1 version which should fix possible
+    stack issues during the LibInit() phase. Custom libraries will now be opened
+    during the LibOpen() phase instead while maintaining an own mutual exclusive
+    locking variable.
+
+2007-06-09 Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mccinit.c, mcc/library.c, mcp/library.c: replaced the old obsolete
+    mccheader.c by the new mccinit.c which should come with a much more clear
+    interface and documentation on how to use it for a basis of a MUI custom
+    class. This should significantly reduce the possibility of race conditions
+    in the mcc/library init code.
+
+2007-05-29  Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/mccheader.c: reworked the LibOpen() and LibClose() functions to
+    increment/decrement the lib_Open counter before obtaining the semaphore to
+    prevent a possible race condition with LibExpunge().
 
 2007-03-23  Thore Böckelmann <tboeckel@gmx.de>
 
@@ -58,7 +168,7 @@ $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/ChangeLog $
 2007-01-28  Jens Langner <Jens.Langner@light-speed.de>
 
   * mcp: renamed the GetStr() locale translation function to the much shorter
-    tr() naming and also fixed bug #1640924 where we did use the wrong 
+    tr() naming and also fixed bug #1640924 where we did use the wrong
     catalog file naming.
 
 2007-01-27  Jens Langner <Jens.Langner@light-speed.de>

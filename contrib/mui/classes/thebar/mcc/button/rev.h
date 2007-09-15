@@ -16,15 +16,15 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: rev.h 57 2007-03-06 07:28:58Z damato $
+ $Id: rev.h 91 2007-07-29 16:27:18Z damato $
 
 ***************************************************************************/
 
 #define LIB_VERSION    21
-#define LIB_REVISION   3
+#define LIB_REVISION   4
 
-#define LIB_REV_STRING "21.3"
-#define LIB_DATE       "06.03.2007"
+#define LIB_REV_STRING "21.4"
+#define LIB_DATE       "29.07.2007"
 
 #if defined(__PPC__)
   #if defined(__MORPHOS__)

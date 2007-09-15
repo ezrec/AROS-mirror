@@ -1,17 +1,13 @@
-## chunk AUTH Christophe GENRE <cgenre.dev@free.fr>
-## version $VER: TheBar.catalog 21.2 (06.03.07)
-## codeset 0
+## version $VER: TheBar.catalog 1.1 (17.02.2007)
 ## language français
+## codeset 111
+## chunk AUTH Alexandre Balaban
 ;
-;   28/05/2005   Version 20.3   Première traduction (par Christophe GENRE) 
+; based on TheBar_mcp.cd v23
 ;
 Msg_Reg_Colors
 Couleurs
 ; Colors
-;
-Msg_Reg_Appearance
-Aspect
-; Appearance
 ;
 Msg_Reg_Spacing
 Espacement
@@ -22,48 +18,60 @@ Options
 ; Options
 ;
 Msg_Title_Backgrounds
-Fonds
+Arrière-plans
 ; Backgrounds
 ;
 Msg_GroupBackground
 Barre
-; _Bar
+; Bar
 ;
 Msg_GroupBackground_Help
-Définit le fond de la barre.
+Arrière-plan de la barre.
 ; Bar background.
 ;
 Msg_GroupBackground_Title
-Fond de la barre
+Arrière-plan de la barre
 ; Bar background
 ;
 Msg_UseGroupBackground
-Activé
-; A_ctive
+Actif
+; Active
 ;
 Msg_UseGroupBackground_Help
-Si sélectionné, la barre\nutilise le fond définit ici,\nsinon elle hérite du fond de l'objet parent.
-; If selected, the bar gets\nyour preferred background,\notherwise it gets its\nparent background.
+Avec cette option, la barre\n\
+utilise toujours l'arrière-plan\n\
+configuré, sinon elle utilise\n\
+celui de son parent.
+; If selected, the bar gets\n\
+; your preferred background,\n\
+; otherwise it gets its\n\
+; parent background.
 ;
 Msg_ButtonBackground
 Boutons
-; B_uttons
+; Buttons
 ;
 Msg_ButtonBackground_Help
-Active le fond des boutons.
+Arrière-plan des boutons actifs.
 ; Active buttons background.
 ;
 Msg_ButtonBackground_Title
-Active le fond des boutons
+Arrière-plan des boutons actifs
 ; Active buttons background
 ;
 Msg_UseButtonBackground
-Activé
-; Ac_tive
+Actif
+; Active
 ;
 Msg_UseButtonBackground_Help
-Si sélectionné, les boutons\nutilisent le fond définit ici,\nsinon ils héritent du fond de l'objet parent.
-; If selected, the buttons get\nyour preferred background,\notherwise they get their\nparent background.
+Avec cette option, les boutons\n\
+utilisent toujours l'arrière-plan\n\
+configuré, sinon ils utilisent\n\
+celui de leur parent.
+; If selected, the buttons get\n\
+; your preferred background,\n\
+; otherwise they get their\n\
+; parent background.
 ;
 Msg_Title_Frame
 Cadre des boutons
@@ -71,10 +79,10 @@ Cadre des boutons
 ;
 Msg_FrameShinePen
 Brillant
-; _Shine
+; Shine
 ;
 Msg_FrameShinePen_Help
-Définit le stylo du bord brillant des boutons.
+Stylo utilisé pour le bord brillant du cadre des boutons actifs.
 ; Active buttons frame shine pen.
 ;
 Msg_FrameShinePen_Title
@@ -83,18 +91,18 @@ Stylo du bord brillant
 ;
 Msg_FrameShadowPen
 Ombré
-; S_hadow
+; Shadow
 ;
 Msg_FrameShadowPen_Help
-Définit le stylo du bord ombré des boutons.
+Stylo utilisé pour le bord ombré du cadre des boutons actifs.
 ; Active buttons frame shadow pen.
 ;
 Msg_FrameShadowPen_Title
-Stylo du bord ombré
+Stylo du bord foncé
 ; Frame shadow pen
 ;
 Msg_FrameStyle_Recessed
-Encastré
+Enfoncé
 ; Recessed
 ;
 Msg_FrameStyle_Normal
@@ -103,23 +111,26 @@ Normal
 ;
 Msg_FrameStyle
 Style
-; Sty_le
+; Style
 ;
 Msg_FrameStyle_Help
-Définit le style du cadre des boutons.
+Style de cadre des boutons actifs.
 ; Active buttons frame style.
 ;
 Msg_Title_Disabled
-Boutons désactivés
+Boutons inactifs
 ; Disabled buttons
 ;
 Msg_DisabledBody
 Corps
-; Bod_y
+; Body
 ;
 Msg_DisabledBody_Help
-Stylo du corps des boutons désactivés.\nUtilisé comme stylo principal pour les boutons\navec cadre et comme stylo de grille\npour les boutons désactivés par grille.
-; Disabled buttons body pen. It is used as\nmain pen for disabled buttons in Shape\nmode and as grid pen for disabled\nbuttons in Grid modes.
+Stylo du corps des boutons inactifs. Il est\nutilisé comme stylo principal pour les\nboutons désactivés en mode Forme\net comme stylo de grille dans les modes « Grille ».
+; Disabled buttons body pen. It is used as\n\
+; main pen for disabled buttons in Shape\n\
+; mode and as grid pen for disabled\n\
+; buttons in Grid modes.
 ;
 Msg_DisabledBody_Title
 Stylo du corps
@@ -127,42 +138,45 @@ Stylo du corps
 ;
 Msg_DisabledShadow
 Ombre
-; Sh_adow
+; Shadow
 ;
 Msg_DisabledShadow_Help
-Stylo de l'ombre des boutons désactivés.\nUtilisé comme stylo secondaire pour les boutons\navec cadre et comme stylo de texte\npour les boutons désactivés par grille.
-; Disabled buttons shadow pen. It is used as\nsecondary pen for disabled buttons in Shape\nmode and as text pen for disabled buttons\nin Grid modes.
+Stylo de l'ombre des boutons inactifs. Il est\nutilisé comme stylo secondaire pour les boutons\ninactifs en mode « Forme » et come stylo\nde texte des boutons inactifs dans les\nmodes « Grille ».
+; Disabled buttons shadow pen. It is used as\n\
+; secondary pen for disabled buttons in Shape\n\
+; mode and as text pen for disabled buttons\n\
+; in Grid modes.
 ;
 Msg_DisabledShadow_Title
 Stylo de l'ombre
 ; Shadow pen
 ;
 Msg_Title_BarSpacer
-Séparateur de boutons
+Séparateur
 ; Bar spacer
 ;
 Msg_BarSpacerShinePen
 Brillant
-; Sh_ine
+; Shine
 ;
 Msg_BarSpacerShinePen_Help
-Stylo brillant du séparateur de boutons.
+Stylo du bord brillant des séparateurs.
 ; Bar spacer shine pen.
 ;
 Msg_BarSpacerShinePen_Title
-Stylo brillant du séparateur
+Stylo brillant des séparateurs
 ; Spacer shine pen
 ;
 Msg_BarSpacerShadowPen
 Ombre
-; Sha_dow
+; Shadow
 ;
 Msg_BarSpacerShadowPen_Help
-Stylo ombré du séparateur de boutons.
+Stylo du bord ombré des séparateurs.
 ; Bar spacer shadow pen.
 ;
 Msg_BarSpacerShadowPen_Title
-Stylo ombré du séparateur
+Stylo ombré des séparateurs
 ; Spacer shadow pen
 ;
 Msg_Title_BarFrame
@@ -171,82 +185,83 @@ Cadre de la barre
 ;
 Msg_BarFrameShine
 Brillant
-; Shi_ne
+; Shine
 ;
 Msg_BarFrameShine_Help
-Stylo brillant du cadre de la barre.
+Stylo du bord brillant de la barre
 ; Bar frame shine pen.
 ;
 Msg_BarFrameShine_Title
-Stylo brillant du cadre
+Stylo brillant de la barre
 ; Frame shine pen
 ;
 Msg_BarFrameShadow
 Ombre
-; Shad_ow
+; Shadow
 ;
 Msg_BarFrameShadow_Help
-Stylo ombré du cadre de la barre.
+Stylo du bord ombré de la barre.
 ; Bar frame shadow pen.
 ;
 Msg_BarFrameShadow_Title
-Stylo ombré du cadre
+Stylo ombré de la barre
 ; Frame shadow pen
 ;
 Msg_Title_DragBar
-Barre de saisie
+Barre de déplacement
 ; DragBar
 ;
 Msg_DragBarShine
 Brillant
-; Shin_e
+; Shine
 ;
 Msg_DragBarShine_Help
-Stylo brillant de la barre\nde saisie.
+Stylo du bord brillant de la barre de déplacement.
 ; DragBar shine pen.
 ;
 Msg_DragBarShine_Title
-Stylo brillant de la barre de saisie
+Stylo brillant de la barre de déplacement
 ; DragBar shine pen
 ;
 Msg_DragBarShadow
 Ombre
-; Shado_w
+; Shadow
 ;
 Msg_DragBarShadow_Help
-Stylo ombré de la barre\nde saisie.
+Stylo du bord ombré de la barre de déplacement.
 ; DragBar shadow pen.
 ;
 Msg_DragBarShadow_Title
-Stylo ombré de la barre de saisie
+Stylo ombré de la barre de déplacement
 ; DragBar shadow pen
 ;
 Msg_DragBarFill
 Remplissage
-; _Fill
+; Fill
 ;
 Msg_DragBarFill_Help
-Stylo de remplissage de la barre\nde saisie.
+Stylo de remplissage de la barre de déplacement.
 ; DragBar fill pen.
 ;
 Msg_DragBarFill_Title
-Stylo de remplissage
+Stylo de remplissage de la barre de déplacement
 ; DragBar fill pen
 ;
 Msg_UseDragBarFill
-Stylo pour remplir la barre de saisie
+Utiliser
 ; Use
 ;
 Msg_UseDragBarFill_Help
-Si sélectionné, le stylo de remplissage\nde la barre de saisie est utilisé.
-; If selected, the dragbar fill\npen is used.
+Cette option active le remplissage\nde la barre de déplacement.
+; If selected, the dragbar fill\n\
+; pen is used.
 ;
 Msg_Frame
 Cadre
-; _Frame
+; Frame
 ;
 Msg_Frame_Help
-Cadre de la barre.
+Cadre de la barre
 ; Bar frame
 ;
 Msg_Frame_Title
@@ -255,390 +270,414 @@ Cadre de la barre
 ;
 Msg_TextFont
 Texte
-; _Text
+; Text
 ;
 Msg_TextFont_Help
-Police des boutons avec\nuniquement du texte.
+Police des boutons « texte seul ».
 ; Text only buttons font.
 ;
 Msg_TextGfxFont
-Texte & image
-; T_extGfx
+TexteGfx
+; TextGfx
 ;
 Msg_TextGfxFont_Help
-Police des boutons avec\ntexte et image.
+Police des boutons « Texte et image »
 ; Text and image buttons font.
 ;
 Msg_ViewMode
-Type de bouton
-; _View mode
+Type
+; View mode
 ;
 Msg_ViewMode_Help
-Définit l'aspect des boutons.
+Configure le type d'apparence des boutons.
 ; Adjust the appareance of the buttons.
-;
-Msg_Appearance_Text
-Les options suivantes sont utilisées par la classe TheBar uniquement si l'objet les exploite lors de sa création. Cela signifie que si le programmeur n'en teint pas compte, ils sont simplement ignorés.
-; The options below are used by TheBar if and only if the object requested for it at creation time. It means that if the programmer didn't decide otherwise, they are simply ignored.
 ;
 Msg_TextGfx
 Icône et texte
 ; Icons and text
 ;
 Msg_Gfx
-Icône uniquement
+Icône seul
 ; Icons only
 ;
 Msg_Text
-Texte uniquement
+Texte seul
 ; Text only
 ;
 Msg_Borderless
-Sans cadre
-; _Borderless
+Sans bord
+; Borderless
 ;
 Msg_Borderless_Help
-Si sélectionné, les boutons n'ont pas de cadre.
+Avec cette option, les boutons n'ont pas de bordure.
 ; If selected, buttons are borderless.
 ;
 Msg_Sunny
-Illuminer au passage de la souris
-; _Highlight
+Surbrillance au passage de la souris
+; Highlight
 ;
 Msg_Sunny_Help
-Si sélectionné, les boutons affichés en\ngris, sont colorés\nlors du passage de la souris.
-; If selected, buttons, normally in black\nand white, are colored when the\nmouse is over them.
+Avec cette option, les boutons sont affichés en noir et blanc à l'état normal et deviennent colorés au passage de la souris.
+; If selected, buttons, normally in black\n\
+; and white, are colored when the\n\
+; mouse is over them.
 ;
 Msg_Raised
-Soulever au passage de la souris
-; _Raised
+Encadrer au passage de la souris
+; Raised
 ;
 Msg_Raised_Help
-Si sélectionné, les boutons affichés\nsans cadre, sont encadrés lors du\npassage de la souris.
-; If selected, buttons, normally frameless,\nare framed when the mouse is over them.
+Avec cette option, les boutons sont affichés sans bord à l'état normal, et deviennent encadrés au passage de la souris.
+; If selected, buttons, normally frameless,\n\
+; are framed when the mouse is over them.
 ;
 Msg_Scaled
 Redimensionner
-; S_caled
+; Scaled
 ;
 Msg_Scaled_Help
-Si sélectionné, les boutons sont redimensionnés.
+Avec cette option, les boutons sont redimensionnés.
 ; If selected, buttons are scaled.
 ;
 Msg_BarSpacer
-Utiliser un séparateur de barre comme séparateur de bouton
-; Bar s_pacer
+Utiliser un séparateur de barre
+; Bar spacer
 ;
 Msg_BarSpacer_Help
-Si sélectionné, un séparateur de barre\nest utilisé comme séparateur de boutons.
-; If selected, a bar spacer is used\nas buttons separator.
+Avec cette option, un séparateur de barre est utilisé pour séparer les boutons.
+; If selected, a bar spacer is used\n\
+; as buttons separator.
 ;
 Msg_EnableKeys
-Activer les raccoucis
-; E_nable keys
+Activer les raccourcis clavier
+; Enable keys
 ;
 Msg_EnableKeys_Help
-Si sélectionné, les raccourcis\nde boutons sont actifs.
-; If selected, buttons short cuts\nare active.
+Avec cette option, les raccourcis claviers des boutons sont activés.
+; If selected, buttons short cuts\n\
+; are active.
 ;
 Msg_LabelPos
-Position du texte
-; _Labels at
+Labels
+; Labels at
 ;
 Msg_LabelPos_Help
-Définit la position du texte par\nrapport à l'icône dans les boutons.
-; Adjust the position of text in\nIcons and text buttons.
+Configure la position du texte dans les boutons « Icônes et texte »
+; Adjust the position of text in\n\
+; Icons and text buttons.
 ;
 Msg_LabelPos_Bottom
-En bas
+en Bas
 ; Bottom
 ;
 Msg_LabelPos_Top
-En haut
+en Haut
 ; Top
 ;
 Msg_LabelPos_Right
-A droite
+à Droite
 ; Right
 ;
 Msg_LabelPos_Left
-A gauche
+à Gauche
 ; Left
 ;
 Msg_Title_GroupSpacing
-Espace dans la barre
+Barre
 ; Bar
 ;
 Msg_HorizGroupSpacing
-Horizontal
-; _Horiz
+Horiz.
+; Horiz
 ;
 Msg_HorizGroupSpacing_Help
-Nombre de pixels entre deux boutons\nsur une même ligne de la barre.
+Nombre de pixels entre deux boutons sur une même ligne.
 ; Pixels between two buttons in a bar row.
 ;
 Msg_VertGroupSpacing
-Vertical
-; _Vert
+Vert.
+; Vert
 ;
 Msg_VertGroupSpacing_Help
-Nombre de pixels entre deux\nlignes de boutons de la barre.
+Nombre de pixels entre deux lignes.
 ; Pixels between two bar rows.
 ;
 Msg_BarSpacerSpacing
 Séparateur
-; _Bar
+; Bar
 ;
 Msg_BarSpacerSpacing_Help
-Nombre de pixels entre un séparateur\net l'objet précédent ou suivant.
-; Pixels between a Bar spacer\nand the previous/next object.
+Nombre de pixels entre un séparateur et les objets précédents et suivants.
+; Pixels between a Bar spacer\n\
+; and the previous/next object.
 ;
 Msg_Title_InnerSpacing
-Espace cadre/contenu des boutons
+Boutons
 ; Buttons
 ;
 Msg_HorizInnerSpacing
-Horizontal
-; Ho_riz
+Horiz.
+; Horiz
 ;
 Msg_HorizInnerSpacing_Help
-Nombre de pixels à droite et à\ngauche, entre le cadre et\nle contenu du bouton.
-; Pixels between the left/right frame\nborder and the button contents.
+Nombre de pixels entre les bords gauche/droite du cadre des boutons et leur contenu.
+; Pixels between the left/right frame\n\
+; border and the button contents.
 ;
 Msg_TopInnerSpacing
 Haut
-; _Top
+; Top
 ;
 Msg_TopInnerSpacing_Help
-Nombre de pixels, entre le bord supérieur\ndu cadre et le contenu du bouton.
-; Pixels between the top frame border\nand the button contents.
+Nombre de pixels entre le bord haut des boutons et leur contenu.
+; Pixels between the top frame border\n\
+; and the button contents.
 ;
 Msg_BottomInnerSpacing
 Bas
-; B_ottom
+; Bottom
 ;
 Msg_BottomInnerSpacing_Help
-Nombre de pixels, entre le bord inférieur\ndu cadre et le contenu du bouton.
-; Pixels between the bottom frame border\nand the button contents.
+Nombre de pixels entre le bord bas des boutons et leur contenu.
+; Pixels between the bottom frame border\n\
+; and the button contents.
 ;
 Msg_Title_BarFrameSpacing
 Cadre de la barre
 ; Bar frame
 ;
 Msg_LeftBarFrameSpacing
-Espace de gauche
-; Le_ft
+Gauche
+; Left
 ;
 Msg_LeftBarFrameSpacing_Help
-Nombre de pixels entre le bord gauche du\ncadre et le contenu de la barre.
-; Pixels between the left frame border\nand the bar contents.
+Nombre de pixels entre le bord gauche de la barre et son contenu.
+; Pixels between the left frame border\n\
+; and the bar contents.
 ;
 Msg_RightBarFrameSpacing
-Espace de droite
-; R_ight
+Droite
+; Right
 ;
 Msg_RightBarFrameSpacing_Help
-Nombre de pixels entre le bord droit du\ncadre et le contenu de la barre.
-; Pixels between the right frame border\nand the bar contents.
+Nombre de pixels entre le bord droit de la barre et son contenu.
+; Pixels between the right frame border\n\
+; and the bar contents.
 ;
 Msg_TopBarFrameSpacing
-Espace supérieur
-; To_p
+Haut
+; Top
 ;
 Msg_TopBarFrameSpacing_Help
-Nombre de pixels entre le bord supérieur du\ncadre et le contenu de la barre.
-; Pixels between the top frame border\nand the bar contents.
+Nombre de pixels entre le bord haut de la barre et son contenu.
+; Pixels between the top frame border\n\
+; and the bar contents.
 ;
 Msg_BottomBarFrameSpacing
-Espace inférieur
-; Botto_m
+Bas
+; Bottom
 ;
 Msg_BottomBarFrameSpacing_Help
-Nombre de pixels entre le bord inférieur du\ncadre et le contenu de la barre.
-; Pixels between the bottom frame border\nand the bar contents.
+Nombre de pixels entre le bord bas de la barre et son contenu.
+; Pixels between the bottom frame border\n\
+; and the bar contents.
 ;
 Msg_Title_TextGfxSpacing
-Espace texte/icône des boutons
+Icône/Texte
 ; Text/Gfx
 ;
 Msg_HorizTextGfxSpacing
-Horizontal
-; Hori_z
+Horiz.
+; Horiz
 ;
 Msg_HorizTextGfxSpacing_Help
-Nombre de pixels entre un texte\nà droite ou à gauche et l'icône.
-; Pixels between an image and\nits left/right placed label.
+Nombre de pixels entre un icône et son label placé à gauche ou à droite.
+; Pixels between an image and\n\
+; its left/right placed label.
 ;
 Msg_VertTextGfxSpacing
-Vertical
-; V_ert
+Vert.
+; Vert
 ;
 Msg_VertTextGfxSpacing_Help
-Nombre de pixels entre un texte\nen haut ou en bas et l'icône.
-; Pixels between an image and\nits bottom/top placed label.
+Nombre de pixels entre un icône et son label placé au dessus ou en dessous.
+; Pixels between an image and\n\
+; its bottom/top placed label.
 ;
 Msg_Precision_Gui
-Interface
+Mauvais
 ; Bad
 ;
 Msg_Precision_Icon
-Icône
+Pauvre
 ; Poor
 ;
 Msg_Precision_Image
-Image
+Bon
 ; Good
 ;
 Msg_Precision_Exact
-Exacte
+Meilleur
 ; Best
 ;
 Msg_Precision
-Précision des couleurs
-; _Quality
+Qualité
+; Quality
 ;
 Msg_Precision_Help
-Définit la précision souhaitée pour l'obtension des stylos.
+Précision à utiliser lors de l'obtention des stylos.
 ; Precision to use when obtaining pens.
 ;
 Msg_Event_IntuiTicks
-Ticks intuition
+IntuiTicks
 ; IntuiTicks
 ;
 Msg_Event_MouseMove
-Mouvement de la souris
+Mouvement de souris
 ; MouseMove
 ;
 Msg_Event
-Evénement bouton
-; _Event
+Evènements
+; Event
 ;
 Msg_Event_Help
-Définit le principe de détection de la souris sur un bouton:\n- Ticks intuition: vérification périodique\n- Mouvement de la souris: vérification à chaque mouvement\n- Souris sur objet: vérification lorsque la souris arrive\nsur un nouvel objet
-; How to verify if the mouse is over a button:\n- IntuiTicks: it is verified periodically\n- MouseMove: it is verified at every mouse move\n- MouseObject, it is verified at when the mouse\nover a new object
+Méthode pour vérifier si la souris est au dessus d'un bouton:\n-IntuiTicks : vérification périodique,\n- Mouvement de souris: vérification à chaque déplacement de souris,\n- Objet Souris : vérification lorsque la souris change d'objet
+; How to verify if the mouse is over a button:\n\
+; - IntuiTicks: it is verified periodically\n\
+; - MouseMove: it is verified at every mouse move\n\
+; - MouseObject, it is verified at when the mouse\n\
+; over a new object
 ;
 Msg_Scale
-Echelle des icônes
-; _Scale
+Redimensionner
+; Scale
 ;
 Msg_Scale_Help
 Facteur d'échelle pour les icônes redimensionnés.
 ; Scale factor for scaled images.
 ;
 Msg_SpecialSelect
-Mouvement sur les boutons sélectionnés ou activés
-; S_pecial select
+Sélection spéciale
+; Special select
 ;
 Msg_SpecialSelect_Help
-Si sélectionné, le contenu des boutons est déplacé\nlorsqu'ils sont sélectionnés ou activés.
-; If selected, buttons contents is moved\nwhen they are selected or active.
+Avec cette option, le contenu des boutons est déplacé lorsqu'ils sont sélectionnés ou activés.
+; If selected, buttons contents is moved\n\
+; when they are selected or active.
 ;
 Msg_TextOverUseShine
-Texte brillant sur les boutons activés
-; Spe_cial text
+Texte spécial
+; Special text
 ;
 Msg_TextOverUseShine_Help
-Si sélectionné, le texte des boutons activés est tracé avec le stylo brillant.
-; If selected, active buttons labels\nare drawn with the shine pen.
+Avec cette option, les labels des boutons activés sont affichés avec le stylo brillant.
+; If selected, active buttons labels\n\
+; are drawn with the shine pen.
 ;
 Msg_IgnoreSelImages
-Ignorer les images de l'état sélectionné
-; _Ignore selected images
+Ignorer les images de l'état « sélectionné »
+; Ignore selected images
 ;
 Msg_IgnoreSelImages_Help
-Si sélectionné, les images de l'état sélectionné sont ignorées.
-; If selected, selected images\nare ignored.
+Avec cette option, les images pour l'état « sélectionné » ne sont pas prises en compte.
+; If selected, selected images\n\
+; are ignored.
 ;
 Msg_IgnoreDisImages
-Ignorer les images de l'état désactivé
-; I_gnore disabled images
+Ignorer les images de l'état « désactivé »
+; Ignore disabled images
 ;
 Msg_IgnoreDisImages_Help
-Si sélectionné, les images de l'état désactivé sont ignorées.
-; If selected, disabled images\nare ignored.
+Avec cette option, les images pour l'état « désactivé » ne sont pas prises en compte.
+; If selected, disabled images\n\
+; are ignored.
 ;
 Msg_DisMode_Shape
-Image érodée
+Forme
 ; Shape
 ;
 Msg_DisMode_Grid
-Grille sur l'image
+Grille
 ; Grid
 ;
 Msg_DisMode_FullGrid
-Grille sur tout le bouton
+Grille complète
 ; Full grid
 ;
 Msg_DisMode
-Rendu des boutons désactivés
-; _Disable
+Rendu désactivé
+; Disable
 ;
 Msg_DisMode_Help
-Définit le principe de rendu des boutons désactivés.
+Méthode de d'affichage des boutons inactifs.
 ; How to render disabled buttons.
 ;
 Msg_DontMove
-Pas de mouvement sur les boutons activés
-; D_ont move
+Ne pas déplacer
+; Don't move
 ;
 Msg_DontMove_Help
-Si sélectionné, le contenu des boutons\nn'est pas déplacé quand ils sont activés.
-; If selected, the contents of the buttons\nis not moved when they are active.
+Avec cette option, le contenu des boutons n'est pas déplacé lorsqu'ils sont actifs.
+; If selected, the contents of the buttons\n\
+; is not moved when they are active.
 ;
 Msg_DisMode_Sunny
-Image grisée
+Grisé
 ; Grey
 ;
 Msg_NtRaiseActive
-Ne pas soulever les boutons activés
-; Don't _raise active buttons
+Ne pas encadrer les boutons activés
+; Don't raise active buttons
 ;
 Msg_NtRaiseActive_Help
-Si sélectionné, les boutons activés ne sont pas soulevés.
+Avec cette option les boutons activés ne sont pas encadrés.
 ; If selected, active buttons are not raised.
 ;
 Msg_SpacersSize
-Taille du séparateur
-; Sp_acers size
+Taille des séparateurs
+; Spacers size
 ;
 Msg_SpacersSize_Help
-Définit la taille des séparateurs de barre.
+Taille des séparateurs.
 ; Size of spacers.
 ;
 Msg_SpacersSize_Quarter
-Quart de celle d'un bouton
+1/4 bouton
 ; Quarter of a button
 ;
 Msg_SpacersSize_Half
-Moitié de celle d'un bouton
+1/2 bouton
 ; Half of a button
 ;
 Msg_SpacersSize_One
-Identique à celle d'un bouton
+bouton
 ; As a button
 ;
 Msg_Event_MouseObject
-Souris sur chaque nouvel objet
+Objet Souris
 ; MouseObject
 ;
 Msg_Item_Defaults
-Restaurer ceux par défaut
+Réinitialiser
 ; Reset to defaults
 ;
 Msg_NoMUI20Event_Help
-Définit le principe de détection de la souris sur un bouton:\n- Ticks intuition: vérification périodique\n- Mouvement de la souris: vérification à chaque mouvement
-; How to verify if the mouse is over a button:\n- IntuiTicks: it is verified periodically\n- MouseMove: it is verified at every mouse move
+Méthode pour vérifier si la souris est au dessus d'un bouton:\n-IntuiTicks : vérification périodique,\n- Mouvement de souris: vérification à chaque déplacement de souris
+; How to verify if the mouse is over a button:\n\
+; - IntuiTicks: it is verified periodically\n\
+; - MouseMove: it is verified at every mouse move
+;
 ;
 Msg_Info_Translator
-Traduction française par Christophe GENRE <cgenre.dev@free.fr>
-; 
+Traduction française par Alexandre Balaban <alexandre@balaban.fr>
+;
 ;
 Msg_Item_Globals
-Initialiser pour le globales
+Valeurs globales
 ; Reset to global
 ;
 Msg_Item_LastSaved
-Dernière sauvegarde
+Derniers sauvés
 ; Last saved
 ;
 Msg_Item_Restore
@@ -646,19 +685,19 @@ Restaurer
 ; Restore
 ;
 Msg_Pop_OK
-_Ok
-; _OK
+Ok
+; OK
 ;
 Msg_Pop_OK_Help
-Accepter les modifications.
+Accepter les changements
 ; Accept changes.
 ;
 Msg_Pop_Cancel
-_Annuler
-; _Cancel
+Annuler
+; Cancel
 ;
 Msg_Pop_Cancel_Help
-Sortir sans modification.
+Quitter sans changer.
 ; Exit without changing.
 ;
 Msg_Popback_Pattern
@@ -682,31 +721,33 @@ Horizontal
 ; Horizontal
 ;
 Msg_Popback_HorizGradientHelp
-Si sélectionné, vous obtenez undégradé horizontal.
-; If selected, you get a\nhorizontal gradient.
+Avec cette option, un dégradé horizontal est obtenu.
+; If selected, you get a\n\
+; horizontal gradient.
 ;
 Msg_Popback_VertGradient
 Vertical
 ; Vertical
 ;
 Msg_Popback_VertGradientHelp
-Si sélectionné, vous obtenez un dégradé vertical.
-; If selected, you get a\nvertical gradient.
+Avec cette option, un dégradé vertical est obtenu.
+; If selected, you get a\n\
+; vertical gradient.
 ;
 Msg_Popback_From
-Depuis la couleur
+Couleur source
 ; From color
 ;
 Msg_Popback_To
-Vers la couleur
+Couleur cible
 ; To color
 ;
 Msg_Popback_Swap
 Echanger
-; _Swap
+; Swap
 ;
 Msg_Popback_SwapHelp
-Echanges depuis/vers les couleurs.
+Echanger les couleurs source/cible.
 ; Swaps from/to colors.
 ;
 Msg_Poppen_MUI
@@ -714,7 +755,7 @@ MUI
 ; MUI
 ;
 Msg_Poppen_Colormap
-Palette
+Colormap
 ; Colormap
 ;
 Msg_Poppen_RGB
@@ -726,15 +767,15 @@ Brillant
 ; Shine
 ;
 Msg_Poppen_Halfshine
-Semi-brillant
+Demi-brillant
 ; Halfshine
 ;
 Msg_Poppen_Background
-Fond
+Arrière-plan
 ; Background
 ;
 Msg_Poppen_Halfshadow
-Semi-ombre
+Demi-Ombre
 ; Halfshadow
 ;
 Msg_Poppen_Shadow
@@ -746,50 +787,50 @@ Texte
 ; Text
 ;
 Msg_Poppen_Fill
-Rempli
+Remplissage
 ; Fill
 ;
 Msg_Poppen_Mark
-Marque
+Sélection
 ; Mark
 ;
 Msg_Poppen_ColorMapHelp
-Choisir une couleur à l'écran.
+Sélectionnez une couleur écran.
 ; Select a screen color entry.
 ;
 Msg_ColoradjustRed
 Rouge
-; _Red
+; Red
 ;
 Msg_Coloradjust_RedHelp
-Définit la composante rouge de la couleur.
+Composante rouge de la couleur.
 ; The red component of the color.
 ;
 Msg_ColoradjustGreen
 Vert
-; _Green
+; Green
 ;
 Msg_Coloradjust_GreenHelp
-Définit la composante verte de la couleur.
+Composante verte de la couleur.
 ; The green component of the color.
 ;
 Msg_ColoradjustBlue
 Bleu
-; _Blue
+; Blue
 ;
 Msg_Coloradjust_BlueHelp
-Définit la composante bleue de la couleur.
+Composante bleue de la couleur.
 ; The blue component of the color.
 ;
 Msg_Coloradjust_WheelAbbr
-GCBMRY
+VCBMRJ
 ; GCBMRY
 ;
 Msg_Coloradjust_WheelHelp
-Déplacé la souris pour choisir une couleur.
+Déplacez la souris pour sélectionner une couleur.
 ; Move the mouse to select a color.
 ;
 Msg_Coloradjust_GradientHelp
-Définit la luminosité de la couleur.
+La luminosité de la couleur.
 ; The brightness of the color.
 ;

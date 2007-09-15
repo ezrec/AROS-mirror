@@ -1,8 +1,8 @@
 /***************************************************************************
 
- TextEditor.mcc - Textediting MUI Custom Class
- Copyright (C) 1997-2000 Allan Odgaard
- Copyright (C) 2005 by TextEditor Open Source Team
+ TheBar.mcc - Next Generation Toolbar MUI Custom Class
+ Copyright (C) 2003-2005 Alfonso Ranieri
+ Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -14,9 +14,9 @@
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  Lesser General Public License for more details.
 
- TextEditor class Support Site:  http://www.sf.net/projects/texteditor_mcc
+ TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: mcc_common.h 143 2005-06-24 18:10:57Z gnikl $
+ $Id: README 22 2007-01-02 21:30:56Z damato $
 
 ***************************************************************************/
 

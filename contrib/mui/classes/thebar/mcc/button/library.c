@@ -47,14 +47,16 @@
 
 #define INSTDATA      InstData
 
-#define UserLibID     "$VER: " CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID     CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION 19
 
 #define USEDCLASSESP  used_classesP
 static const char * const used_classesP[] = { "TheBar.mcp", NULL };
 
-#define ClassInit
-#define ClassExit
+#define CLASSINIT
+#define CLASSEXPUNGE
+
+#define MIN_STACKSIZE 8192
 
 struct Library *DataTypesBase = NULL;
 struct Library *CyberGfxBase = NULL;
@@ -72,7 +74,21 @@ APTR  lib_pool = NULL;
 ULONG lib_flags = 0;
 ULONG lib_alpha = 0xffffffff;
 
-BOOL ClassInitFunc(UNUSED struct Library *base)
+/******************************************************************************/
+/* define the functions used by the startup code ahead of including mccinit.c */
+/******************************************************************************/
+static BOOL ClassInit(UNUSED struct Library *base);
+static VOID ClassExpunge(UNUSED struct Library *base);
+
+/******************************************************************************/
+/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
+/******************************************************************************/
+#include "mccinit.c"
+
+/******************************************************************************/
+/* define all implementations of our user functions                           */
+/******************************************************************************/
+static BOOL ClassInit(UNUSED struct Library *base)
 {
   ENTER();
 
@@ -81,17 +97,17 @@ BOOL ClassInitFunc(UNUSED struct Library *base)
     InitSemaphore(&lib_poolSem);
 
     if((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
-       GETINTERFACE(IDataTypes, DataTypesBase))
+       GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
     {
       if((DiskfontBase = OpenLibrary("diskfont.library", 37)) &&
-         GETINTERFACE(IDiskfont, DiskfontBase))
+         GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
       {
         STRPTR buf[16];
 
         // we open the cybgraphics.library but without failing if
         // it doesn't exist
         if((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
-           GETINTERFACE(ICyberGfx, CyberGfxBase))
+           GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
         { }
 
         // check the version of MUI)
@@ -120,8 +136,7 @@ BOOL ClassInitFunc(UNUSED struct Library *base)
   return(FALSE);
 }
 
-
-VOID ClassExitFunc(UNUSED struct Library *base)
+static VOID ClassExpunge(UNUSED struct Library *base)
 {
   ENTER();
 
@@ -150,12 +165,3 @@ VOID ClassExitFunc(UNUSED struct Library *base)
 
   LEAVE();
 }
-
-/******************************************************************************/
-/*                                                                            */
-/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/*                                                                            */
-/******************************************************************************/
-
-#define USE_UTILITYBASE
-#include "mccheader.c"

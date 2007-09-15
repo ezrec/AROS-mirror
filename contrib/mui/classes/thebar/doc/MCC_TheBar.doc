@@ -82,7 +82,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
     *******************************************************************
     Copyright (c) 2006-2007 by TheBar.mcc Open Source Team
-    $Id: MCC_TheBar.doc 32 2007-01-20 15:34:32Z damato $
+    $Id: MCC_TheBar.doc 82 2007-06-29 06:42:20Z thboeckel $
     $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/doc/MCC_TheBar.doc $
 
     TheBar.mcc is a MUI custom class which provides facilities to
@@ -435,8 +435,8 @@ TheBar.mcc/MUIM_TheBar_Sort
 
        To create a 2 buttons mutual exclude group:
        ...
-       {5, 4, "_Matches", "Matches page.", MUIV_TheBar_ButtonFlag_Immediate|MUIV_TheBar_ButtonFlag_Selected, 1<<6},
-       {6, 5, "_Edit", "Edit page.", MUIV_TheBar_ButtonFlag_Immediate, 1<<5},
+       {0, 4, "_Matches", "Matches page.", MUIV_TheBar_ButtonFlag_Immediate|MUIV_TheBar_ButtonFlag_Selected, 1<<5},
+       {1, 5, "_Edit", "Edit page.", MUIV_TheBar_ButtonFlag_Immediate, 1<<4},
        ...
 
     EXAMPLE
@@ -447,8 +447,8 @@ TheBar.mcc/MUIM_TheBar_Sort
      struct MUIS_TheBar_Button buttons[] =
      {
        ...
-       { 5, 4, "_Matches", "Matches page.", MUIV_TheBar_ButtonFlag_Selected,  1<<6 },
-       { 6, 5, "_Edit",    "Edit page.",    MUIV_TheBar_ButtonFlag_Immediate, 1<<5 },
+       { 0, 4, "_Matches", "Matches page.", MUIV_TheBar_ButtonFlag_Selected,  1<<5 },
+       { 1, 5, "_Edit",    "Edit page.",    MUIV_TheBar_ButtonFlag_Immediate, 1<<4 },
        ...
        { MUIV_TheBar_End, -1, NULL, NULL, 0, 0, NULL, NULL },
      };
@@ -1117,7 +1117,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
     NAME
      MUIA_TheBar_MouseOver -- ULONG, [ISGN], v18
-     
+
     FUNCTION
      If MUIA_TheBar_Raised or MUIA_TheBar_Sunny is TRUE,
      this attribute contains the id of the last button
@@ -1127,13 +1127,13 @@ TheBar.mcc/MUIM_TheBar_Sort
 
     NAME
      MUIA_TheBar_NtRaiseActive -- BOOL, [ISGN], v18
-     
+
     FUNCTION
-     If FALSE, a frame is drawn around borderless and 
+     If FALSE, a frame is drawn around borderless and
      sunny or raised buttons. If TRUE, no frame is
      used.
-     
-     Useful to active a button when the mouse is over 
+
+     Useful to active a button when the mouse is over
      and so change page in a page-mode group.
 
      Default: FALSE

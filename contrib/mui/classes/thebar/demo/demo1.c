@@ -6,12 +6,20 @@
 #include <mui/TheBar_mcc.h>
 #include <string.h>
 #include <stdio.h>
+#include "SDI_compiler.h"
 
 /***********************************************************************/
 
 long __stack = 8192;
+#if defined(__amigaos4__)
+struct Library *IntuitionBase;
+struct Library *MUIMasterBase;
+struct IntuitionIFace *IIntuition;
+struct MUIMasterIFace *IMUIMaster;
+#else
 struct IntuitionBase *IntuitionBase;
 struct Library *MUIMasterBase;
+#endif
 
 /***********************************************************************/
 
@@ -21,35 +29,49 @@ struct Library *MUIMasterBase;
 
 /***********************************************************************/
 
+#if defined(__amigaos4__)
+#define CLOSELIB(lib, iface)              { if((iface) && (lib)) { DropInterface((APTR)(iface)); iface = NULL; CloseLibrary((struct Library *)lib); lib = NULL; } }
+#define GETINTERFACE(iname, iface, base)  ((iface) = (APTR)GetInterface((struct Library *)(base), (iname), 1L, NULL))
+#define DROPINTERFACE(iface)              { DropInterface((APTR)(iface)); iface = NULL; }
+#else
+#define CLOSELIB(lib, iface)              { if((lib)) { CloseLibrary((struct Library *)lib); lib = NULL; } }
+#define GETINTERFACE(iname, iface, base)  TRUE
+#define DROPINTERFACE(iface)              ((void)0)
+#endif
+
+/***********************************************************************/
+
 struct MUIS_TheBar_Button buttons[] =
 {
-    {0, 0, "_Pred", "Pread mail."},
-    {1, 1, "_Next", "Next mail."},
-    {2, 2, "_Move", "Move somewhere."},
-    {MUIV_TheBar_BarSpacer, 3},
-    {3, 4, "_Forw", "Forward somewhere."},
-    {4, 5, "F_ind", "Find something."},
-    {5, 6, "_Save", "Save mail."},
-    {MUIV_TheBar_End},
+    {0, 0, "_Pred", "Pread mail.", 0, 0, NULL, NULL},
+    {1, 1, "_Next", "Next mail.", 0, 0, NULL, NULL},
+    {2, 2, "_Move", "Move somewhere.", 0, 0, NULL, NULL},
+    {MUIV_TheBar_BarSpacer, 3, NULL, NULL, 0, 0, NULL, NULL},
+    {3, 4, "_Forw", "Forward somewhere.", 0, 0, NULL, NULL},
+    {4, 5, "F_ind", "Find something.", 0, 0, NULL, NULL},
+    {5, 6, "_Save", "Save mail.", 0, 0, NULL, NULL},
+    {MUIV_TheBar_End, 0, NULL, NULL, 0, 0, NULL, NULL},
 };
 
 /***********************************************************************/
 
-char *appearances[] = {"Images and text","Images","Text",NULL};
-char *labelPoss[] = {"Bottom","Top","Right","Left",NULL};
+const char *appearances[] = {"Images and text","Images","Text",NULL};
+const char *labelPoss[] = {"Bottom","Top","Right","Left",NULL};
 
 int
-main(int argc,char **argv)
+main(UNUSED int argc,char **argv)
 {
     int res;
 
-    if (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",39))
+    if ((IntuitionBase = (APTR)OpenLibrary("intuition.library",39)) != NULL &&
+        GETINTERFACE("main", IIntuition, IntuitionBase))
     {
-        if (MUIMasterBase = OpenLibrary("muimaster.library",19))
+        if ((MUIMasterBase = OpenLibrary("muimaster.library",19)) != NULL &&
+            GETINTERFACE("main", IMUIMaster, MUIMasterBase))
         {
             Object *app, *win, *sb, *appearance, *labelPos, *borderless, *sunny, *raised, *scaled, *update;
 
-            if (app = ApplicationObject,
+            if ((app = ApplicationObject,
                     MUIA_Application_Title,         "TheBar Demo1",
                     MUIA_Application_Version,       "$VER: TheBarDemo1 1.0 (24.6.2003)",
                     MUIA_Application_Copyright,     "Copyright 2003 by Alfonso Ranieri",
@@ -98,9 +120,10 @@ main(int argc,char **argv)
                             Child, update = MUI_MakeObject(MUIO_Button,"_Update"),
                         End,
                     End,
-                End)
+                End) != NULL)
             {
-                ULONG sigs = 0, id;
+                ULONG sigs = 0;
+                LONG id;
 
                 DoMethod(win,MUIM_Notify,MUIA_Window_CloseRequest,TRUE,MUIV_Notify_Application,2,MUIM_Application_ReturnID,MUIV_Application_ReturnID_Quit);
                 DoMethod(update,MUIM_Notify,MUIA_Pressed,FALSE,app,2,MUIM_Application_ReturnID,TAG_USER);
@@ -109,7 +132,7 @@ main(int argc,char **argv)
 
                 while ((id = DoMethod(app,MUIM_Application_NewInput,&sigs))!=MUIV_Application_ReturnID_Quit)
                 {
-                    if (id==TAG_USER)
+                    if (id==(LONG)TAG_USER)
                     {
                         ULONG appearanceV, labelPosV, borderlessV, sunnyV, raisedV, scaledV;
 
@@ -146,13 +169,15 @@ main(int argc,char **argv)
                 res = RETURN_FAIL;
             }
 
-            CloseLibrary(MUIMasterBase);
+            CLOSELIB(MUIMasterBase, IMUIMaster);
         }
         else
         {
             printf("%s: Can't open muimaster.library ver 19 or higher\n",argv[0]);
             res = RETURN_ERROR;
         }
+
+        CLOSELIB(IntuitionBase, IIntuition);
     }
     else
     {

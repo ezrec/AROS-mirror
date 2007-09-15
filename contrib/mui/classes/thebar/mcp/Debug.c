@@ -71,11 +71,11 @@ void SetupDebug(void)
 {
   char var[256];
 
-  kprintf("** TheBar.mcc v" LIB_REV_STRING " startup **********************\n");
+  kprintf("** TheBar.mcp v" LIB_REV_STRING " startup **********************\n");
   kprintf("Exec version: v%ld.%ld\n", ((struct Library *)SysBase)->lib_Version, ((struct Library *)SysBase)->lib_Revision);
   kprintf("Initializing runtime debugging:\n");
 
-  if(GetVar("thebar.mcc.debug", var, sizeof(var), 0) > 0)
+  if(GetVar("thebar.mcp.debug", var, sizeof(var), 0) > 0)
   {
     char *s = var;
 
@@ -98,9 +98,6 @@ void SetupDebug(void)
     {
       { "always",    DBF_ALWAYS    },
       { "startup",   DBF_STARTUP   },
-      { "input",     DBF_INPUT     },
-      { "rexx",      DBF_REXX      },
-      { "clipboard", DBF_CLIPBOARD },
       { "all",       DBF_ALL       },
       { NULL,        0             }
     };
@@ -189,7 +186,7 @@ void SetupDebug(void)
     }
   }
 
-  kprintf("set debug classes/flags (env:yamdebug): %08lx/%08lx\n", debug_classes, debug_flags);
+  kprintf("set debug classes/flags (env:thebar.mcp.debug): %08lx/%08lx\n", debug_classes, debug_flags);
   kprintf("** Normal processing follows ***************************************\n");
 }
 
@@ -388,7 +385,6 @@ void _SHOWMSG(unsigned long dclass, unsigned long dflags, const char *msg, const
 
 /****************************************************************************/
 
-#if defined(__amigaos4__)
 void _DPRINTF(unsigned long dclass, unsigned long dflags, const char *file, int line, const char *format, ...)
 {
   if((isFlagSet(debug_classes, dclass) && isFlagSet(debug_flags, dflags)) ||
@@ -418,60 +414,12 @@ void _DPRINTF(unsigned long dclass, unsigned long dflags, const char *file, int 
         case DBC_WARNING: highlight = ANSI_ESC_FG_PURPLE;break;
       }
 
-      IExec->DebugPrintF("%s%s:%ld:%s%s\n", highlight, file, line, buf, ANSI_ESC_CLR);
+      kprintf("%s%s:%ld:%s%s\n", highlight, file, line, buf, ANSI_ESC_CLR);
     }
     else
-      IExec->DebugPrintF("%s:%ld:%s\n", file, line, buf);
+      kprintf("%s:%ld:%s\n", file, line, buf);
   }
 }
-
-#else
-
-void _DPRINTF(unsigned long dclass, unsigned long dflags, const char *file, int line, const char *format, ...)
-{
-  if((isFlagSet(debug_classes, dclass) && isFlagSet(debug_flags, dflags)) ||
-     (isFlagSet(dclass, DBC_ERROR) || isFlagSet(dclass, DBC_WARNING)))
-  {
-    va_list args;
-
-    _INDENT();
-
-    va_start(args, format);
-
-    if(ansi_output)
-    {
-      const char *highlight = ANSI_ESC_FG_GREEN;
-  
-      switch(dclass)
-      {
-        case DBC_CTRACE:  highlight = ANSI_ESC_FG_BROWN; break;
-        case DBC_REPORT:  highlight = ANSI_ESC_FG_GREEN; break;
-        case DBC_ASSERT:  highlight = ANSI_ESC_FG_RED;   break;
-        case DBC_TIMEVAL: highlight = ANSI_ESC_FG_GREEN; break;
-        case DBC_DEBUG:   highlight = ANSI_ESC_FG_GREEN; break;
-        case DBC_ERROR:   highlight = ANSI_ESC_FG_RED;   break;
-        case DBC_WARNING: highlight = ANSI_ESC_FG_PURPLE;break;
-      }
-
-      kprintf("%s%s:%ld:", highlight, file, line);
-
-      KPutFmt((char *)format, args);
-
-      kprintf("%s\n", ANSI_ESC_CLR);
-    }
-    else
-    {
-      kprintf("%s:%ld:", file, line);
-
-      KPutFmt((char *)format, args);
-
-      kprintf("\n");
-    }
-
-    va_end(args);
-  }
-}
-#endif
 
 /****************************************************************************/
 

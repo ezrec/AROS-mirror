@@ -19,7 +19,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: private.h 42 2007-01-31 08:40:34Z damato $
+ $Id: private.h 67 2007-06-09 11:25:14Z damato $
 
 ***************************************************************************/
 
@@ -33,7 +33,7 @@
 
 extern ULONG lib_flags;
 
-extern struct MUI_CustomClass *ThisClass;
+extern struct MUI_CustomClass *lib_thisClass;
 extern struct MUI_CustomClass *lib_spacerClass;
 extern struct MUI_CustomClass *lib_dragBarClass;
 

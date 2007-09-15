@@ -136,10 +136,11 @@ TESTTARGET= $(BINDIR)/TheBar-Test
 WARN     = -W -Wall -Wwrite-strings
 OPTFLAGS = -O3 -fomit-frame-pointer -funroll-loops
 DEBUG    = -DDEBUG -O0
+DEBUGSYM = -gstabs
 CFLAGS   = -I. -I../mcp -I../include $(CPU) $(WARN) $(OPTFLAGS) \
-           $(DEBUG) -g -c
-LDFLAGS  = $(CPU) -nostartfiles
-LDLIBS   =
+           $(DEBUG) $(DEBUGSYM) -c
+LDFLAGS  = $(CPU) $(DEBUGSYM) -nostartfiles
+LDLIBS   = -lm
 
 # different options per target OS
 ifeq ($(OS), os4)
@@ -154,8 +155,9 @@ ifeq ($(OS), os4)
 
   # Compiler/Linker flags
   CRT      = newlib
-  CPU      = -mcpu=604e -mmultiple -Wa,-mregnames
-  CFLAGS   += -mcrt=$(CRT) -D__USE_INLINE__ -D__NEW_TIMEVAL_DEFINITION_USED__ -DNO_PPCINLINE_STDARG
+  CPU      = -mcpu=powerpc
+  CFLAGS   += -mcrt=$(CRT) -D__USE_INLINE__ -D__NEW_TIMEVAL_DEFINITION_USED__ \
+              -DNO_PPCINLINE_STDARG -Wa,-mregnames
   LDFLAGS  += -mcrt=$(CRT)
 
   # additional object files required
@@ -176,7 +178,7 @@ ifeq ($(OS), os3)
   CPU	    = -m68020-60 -msoft-float
   CFLAGS  += -noixemul -DNO_INLINE_STDARG
   LDFLAGS += -noixemul
-  LDLIBS  += -ldebug -lmui -lm
+  LDLIBS  += -ldebug -lmui
 
 else
 ifeq ($(OS), mos)
@@ -190,7 +192,7 @@ ifeq ($(OS), mos)
   OBJDUMP = ppc-morphos-objdump
 
   # Compiler/Linker flags
-  CPU     = -mcpu=750 -mmultiple
+  CPU     = -mcpu=powerpc
   CFLAGS  += -noixemul -DNO_PPCINLINE_STDARG
   LDFLAGS += -noixemul
   LDLIBS  += -ldebug
@@ -269,7 +271,7 @@ $(BINDIR):
 
 $(OBJDIR)/%.o: %.c
 	@printf '\033[32mCompiling $<\033[0m\n'
-	@$(CC) $(CFLAGS) $< -o $@ 
+	@$(CC) $(CFLAGS) $< -o $@
 
 $(OBJDIR)/mcc/%.o: %.c
 	@printf '\033[32mCompiling $<\033[0m\n'
@@ -287,27 +289,33 @@ $(OBJDIR)/mccclass_68k.o: ../include/mccclass_68k.c
 
 $(MCCTARGET): $(M68KSTUBS) $(MCCOBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) $(LDFLAGS) -o $@.debug $(MCCOBJS) $(M68KSTUBS) $(LDLIBS)
-	@$(STRIP) -R .comment -S -o $@ $@.debug
+	@$(CC) $(LDFLAGS) -o $@.debug $(MCCOBJS) $(M68KSTUBS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(MCCVTARGET): $(M68KSTUBS) $(MCCVOBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) $(LDFLAGS) -o $@.debug $(MCCVOBJS) $(M68KSTUBS) $(LDLIBS)
-	@$(STRIP) -R .comment -S -o $@ $@.debug
+	@$(CC) $(LDFLAGS) -o $@.debug $(MCCVOBJS) $(M68KSTUBS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(TESTTARGET): $(TESTOBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) -noixemul -o $@.debug $(TESTOBJS) $(LDLIBS)
-	@$(STRIP) -R .comment -S -o $@ $@.debug
+	@$(CC) -noixemul -o $@.debug $(TESTOBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
-$(OBJDIR)/library.o: library.c ../include/mccheader.c \
+$(OBJDIR)/mcc/library.o: library.c ../include/mccinit.c \
+  ../include/mui/TheBar_mcc.h private.h rev.h
+
+$(OBJDIR)/mccv/library.o: library.c ../include/mccinit.c \
   ../include/mui/TheBar_mcc.h private.h rev.h
 
 #
 
 .PHONY: clean
 clean:
-	-$(RM) $(MCCTARGET) $(MCCTARGET).debug $(MCCVTARGET) $(MCCVTARGET).debug $(TESTTARGET) $(TESTTARGET).debug $(MCCOBJS) $(MCCVOBJS) $(TESTOBJS) $(M68KSTUBS)
+	-$(RM) $(MCCTARGET) $(MCCTARGET).debug $(MCCTARGET).map
+	-$(RM) $(MCCVTARGET) $(MCCVTARGET).debug $(MCCVTARGET).map
+	-$(RM) $(TESTTARGET) $(TESTTARGET).debug $(TESTTARGET).map
+	-$(RM) $(MCCOBJS) $(MCCVOBJS) $(TESTOBJS) $(M68KSTUBS)
 
 .PHONY: distclean
 distclean: clean

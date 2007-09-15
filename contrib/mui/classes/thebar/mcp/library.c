@@ -48,11 +48,12 @@
 
 #define INSTDATAP     InstData
 
-#define UserLibID     "$VER: " CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
+#define USERLIBID     CLASS " " LIB_REV_STRING CPU " (" LIB_DATE ") " LIB_COPYRIGHT
 #define MASTERVERSION 19
 
-#define ClassInit
-#define ClassExit
+#define CLASSINIT
+#define CLASSEXPUNGE
+#define MIN_STACKSIZE 8192
 
 struct Library *DataTypesBase = NULL;
 struct Library *CyberGfxBase = NULL;
@@ -81,19 +82,49 @@ struct MUI_CustomClass *lib_popbackground = NULL;
 #endif
 ULONG lib_flags = 0;
 
-BOOL ClassInitFunc(UNUSED struct Library *base)
+/******************************************************************************/
+/* define the functions used by the startup code ahead of including mccinit.c */
+/******************************************************************************/
+static BOOL ClassInit(UNUSED struct Library *base);
+static VOID ClassExpunge(UNUSED struct Library *base);
+
+/******************************************************************************/
+/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
+/******************************************************************************/
+#define USE_PREFSIMAGE_COLORS
+#define USE_PREFSIMAGE_BODY
+#define PREFSIMAGEOBJECT \
+  BodychunkObject,\
+    MUIA_FixWidth,              IMAGE_WIDTH,\
+    MUIA_FixHeight,             IMAGE_HEIGHT,\
+    MUIA_Bitmap_Width,          IMAGE_WIDTH ,\
+    MUIA_Bitmap_Height,         IMAGE_HEIGHT,\
+    MUIA_Bodychunk_Depth,       IMAGE_DEPTH,\
+    MUIA_Bodychunk_Body,        (UBYTE *)image_body,\
+    MUIA_Bodychunk_Compression, IMAGE_COMPRESSION,\
+    MUIA_Bodychunk_Masking,     IMAGE_MASKING,\
+    MUIA_Bitmap_SourceColors,   (ULONG *)image_palette,\
+    MUIA_Bitmap_Transparent,    0,\
+  End
+#include "icon.bh"
+#include "mccinit.c"
+
+/******************************************************************************/
+/* define all implementations of our user functions                           */
+/******************************************************************************/
+static BOOL ClassInit(UNUSED struct Library *base)
 {
   ENTER();
 
   if((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
-     GETINTERFACE(IDataTypes, DataTypesBase))
+     GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
   {
     if((IFFParseBase = OpenLibrary("iffparse.library", 37)) &&
-       GETINTERFACE(IIFFParse, IFFParseBase))
+       GETINTERFACE(IIFFParse, struct IFFParseIFace *, IFFParseBase))
     {
       // open the locale library which is not mandatory of course
       if((LocaleBase = (APTR)OpenLibrary("locale.library", 36)) &&
-         GETINTERFACE(ILocale, LocaleBase))
+         GETINTERFACE(ILocale, struct LocaleIFace *, LocaleBase))
       {
         // open the TextEditor.mcp catalog
         OpenCat();
@@ -102,7 +133,7 @@ BOOL ClassInitFunc(UNUSED struct Library *base)
       // we open the cybgraphics.library but without failing if
       // it doesn't exist
       if((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
-         GETINTERFACE(ICyberGfx, CyberGfxBase))
+         GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
       { }
 
       // check the version of MUI
@@ -154,7 +185,7 @@ BOOL ClassInitFunc(UNUSED struct Library *base)
 }
 
 
-VOID ClassExitFunc(UNUSED struct Library *base)
+static VOID ClassExpunge(UNUSED struct Library *base)
 {
   ENTER();
 
@@ -201,30 +232,3 @@ VOID ClassExitFunc(UNUSED struct Library *base)
 
   LEAVE();
 }
-
-/******************************************************************************/
-/*                                                                            */
-/* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
-/*                                                                            */
-/******************************************************************************/
-#define USE_PREFSIMAGE_COLORS
-#define USE_PREFSIMAGE_BODY
-#include "icon.bh"
-
-#define PREFSIMAGEOBJECT \
-  BodychunkObject,\
-    MUIA_FixWidth,              IMAGE_WIDTH,\
-    MUIA_FixHeight,             IMAGE_HEIGHT,\
-    MUIA_Bitmap_Width,          IMAGE_WIDTH ,\
-    MUIA_Bitmap_Height,         IMAGE_HEIGHT,\
-    MUIA_Bodychunk_Depth,       IMAGE_DEPTH,\
-    MUIA_Bodychunk_Body,        (UBYTE *)image_body,\
-    MUIA_Bodychunk_Compression, IMAGE_COMPRESSION,\
-    MUIA_Bodychunk_Masking,     IMAGE_MASKING,\
-    MUIA_Bitmap_SourceColors,   (ULONG *)image_palette,\
-    MUIA_Bitmap_Transparent,    0,\
-  End
-
-
-#define USE_UTILITYBASE
-#include "mccheader.c"

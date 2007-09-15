@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: Debug.h 22 2007-01-02 21:30:56Z damato $
+ $Id: Debug.h 75 2007-06-21 13:36:42Z thboeckel $
 
 ***************************************************************************/
 
@@ -56,9 +56,6 @@
 // debug flags
 #define DBF_ALWAYS    (1<<0)
 #define DBF_STARTUP   (1<<1)     // for startup/shutdown events
-#define DBF_INPUT     (1<<2)     // HandleInput.c
-#define DBF_REXX      (1<<3)     // HandleARexx.c
-#define DBF_CLIPBOARD (1<<4)     // EditorStuff.c, BlockOperators.c
 #define DBF_ALL       0xffffffff
 
 void SetupDebug(void);

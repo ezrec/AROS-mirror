@@ -6,12 +6,21 @@
 #include <mui/TheBar_mcc.h>
 #include <string.h>
 #include <stdio.h>
+#include "SDI_compiler.h"
+#include "SDI_hook.h"
 
 /***********************************************************************/
 
 long __stack = 8192;
+#if defined(__amigaos4__)
+struct Library *IntuitionBase;
 struct Library *MUIMasterBase;
+struct IntuitionIFace *IIntuition;
+struct MUIMasterIFace *IMUIMaster;
+#else
 struct IntuitionBase *IntuitionBase;
+struct Library *MUIMasterBase;
+#endif
 
 /***********************************************************************/
 
@@ -19,29 +28,21 @@ struct IntuitionBase *IntuitionBase;
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
 #endif
 
-#ifdef __SASC_60
-#define SAVEDS   __saveds
-#define ASM      __asm
-#define REGARGS  __regargs
-#define STDARGS  __stdargs
-#define INLINE   __inline
-#define REG(x,p) register __ ## x p
-#define REGARRAY register
-#else
-#ifndef SAVEDS
-#define SAVEDS  __saveds
-#endif
-#define ASM
-#define REGARGS  __regargs
-#define STDARGS  __attribute__((stkparm))
-#define INLINE   __inline
-#define REG(x,p) p __asm( #x )
-#define REGARRAY
-#endif /* __SASC_60 */
-
 #define mainGroupObject NewObject(mainGroupClass->mcc_Class,NULL
 
 #define DD_FACT 5
+
+/***********************************************************************/
+
+#if defined(__amigaos4__)
+#define CLOSELIB(lib, iface)              { if((iface) && (lib)) { DropInterface((APTR)(iface)); iface = NULL; CloseLibrary((struct Library *)lib); lib = NULL; } }
+#define GETINTERFACE(iname, iface, base)  ((iface) = (APTR)GetInterface((struct Library *)(base), (iname), 1L, NULL))
+#define DROPINTERFACE(iface)              { DropInterface((APTR)(iface)); iface = NULL; }
+#else
+#define CLOSELIB(lib, iface)              { if((lib)) { CloseLibrary((struct Library *)lib); lib = NULL; } }
+#define GETINTERFACE(iname, iface, base)  TRUE
+#define DROPINTERFACE(iface)              ((void)0)
+#endif
 
 /***********************************************************************/
 
@@ -74,17 +75,17 @@ enum
 
 struct MUIS_TheBar_Button buttons[] =
 {
-    {7,  0, "_Face",  "Just a face."     },
-    {14, 1, "_Mouse", "Your mouse."      },
-    {17, 2, "_Tree",  "Mind takes place."},
-    {MUIV_TheBar_BarSpacer, -1},
-    {26, 3, "_Help",  "Read this!."      },
-    {34, 4, "_ARexx", "ARexx for ever!." },
-    {1,  5, "_Host",  "Your computer."   },
-    {MUIV_TheBar_End},
+    {7,  0, "_Face",  "Just a face."     , 0, 0, NULL, NULL},
+    {14, 1, "_Mouse", "Your mouse."      , 0, 0, NULL, NULL},
+    {17, 2, "_Tree",  "Mind takes place.", 0, 0, NULL, NULL},
+    {MUIV_TheBar_BarSpacer, -1, NULL, NULL, 0, 0, NULL, NULL},
+    {26, 3, "_Help",  "Read this!."      , 0, 0, NULL, NULL},
+    {34, 4, "_ARexx", "ARexx for ever!." , 0, 0, NULL, NULL},
+    {1,  5, "_Host",  "Your computer."   , 0, 0, NULL, NULL},
+    {MUIV_TheBar_End, 0, NULL, NULL, 0, 0, NULL, NULL},
 };
 
-#define TEXT "\
+#define SAMPLETEXT "\
 This example shows how to move the bar around.\n\n\
 Of course, this is only a semplification of a real situation, where more than four positions are available and many objects are involved.\n\n\
 Programmers should always avoid to Init/Exit Change and to set Horiz on groups or whatever when not strictly needed!\
@@ -101,7 +102,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     Object *bar, *list;
 
-    if (obj = (Object *)DoSuperNew(cl,obj,
+    if ((obj = (Object *)DoSuperNew(cl,obj,
 
             Child, (ULONG)(bar = TheBarVirtObject,
         	FRAME
@@ -111,8 +112,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 MUIA_TheBar_Strip,           (ULONG)"symbols",
                 MUIA_TheBar_StripCols,       16,
                 MUIA_TheBar_StripRows,       3,
-                MUIA_TheBar_StripHorizSpace, 0,
-                MUIA_TheBar_StripVertSpace,  0,
+                MUIA_TheBar_StripHSpace,     0,
+                MUIA_TheBar_StripVSpace,     0,
                 MUIA_TheBar_DragBar,         TRUE,
                 MUIA_TheBar_EnableKeys,      TRUE,
             End),
@@ -121,11 +122,11 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 MUIA_Listview_List,  FloattextObject,
                     TextFrame,
                     MUIA_Background,     MUII_TextBack,
-                    MUIA_Floattext_Text, TEXT,
+                    MUIA_Floattext_Text, SAMPLETEXT,
                 End,
             End),
 
-            TAG_MORE, (ULONG)msg->ops_AttrList))
+            TAG_MORE, (ULONG)msg->ops_AttrList)) != NULL)
     {
         struct data *data = INST_DATA(cl,obj);
 
@@ -150,7 +151,7 @@ mDragQuery(struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 /***********************************************************************/
 
 ULONG
-mDragBegin(struct IClass *cl,Object *obj,struct MUIP_DragBegin *msg)
+mDragBegin(UNUSED struct IClass *cl,UNUSED Object *obj,UNUSED struct MUIP_DragBegin *msg)
 {
     return 0;
 }
@@ -161,7 +162,7 @@ ULONG
 findPos(Object *obj,ULONG obPos,ULONG mx,ULONG my)
 {
     ULONG bPos;
-    LONG  l, t, r, b, w, h;
+    ULONG  l, t, r, b, w, h;
 
     l = _mleft(obj);
     t = _mtop(obj);
@@ -253,7 +254,7 @@ mDragReport(struct IClass *cl,Object *obj,struct MUIP_DragReport *msg)
 /***********************************************************************/
 
 ULONG
-mDragFinish(struct IClass *cl,Object *obj,struct MUIP_DragFinish *msg)
+mDragFinish(UNUSED struct IClass *cl,UNUSED Object *obj,UNUSED struct MUIP_DragFinish *msg)
 {
     return 0;
 }
@@ -261,24 +262,15 @@ mDragFinish(struct IClass *cl,Object *obj,struct MUIP_DragFinish *msg)
 /***********************************************************************/
 
 ULONG
-mDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
+mDragDrop(UNUSED struct IClass *cl,UNUSED Object *obj,UNUSED struct MUIP_DragDrop *msg)
 {
     return 0;
 }
 
 /***********************************************************************/
 
-#ifdef __MORPHOS__
-ULONG dispatcher(void)
+DISPATCHER(_dispatcher)
 {
-    struct IClass *cl = (struct IClass *)REG_A0;
-    Object        *obj = (Object *)REG_A2;
-    Msg            msg  = (Msg)REG_A1;
-#else
-ULONG ASM SAVEDS dispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
-{
-#endif
-
     switch(msg->MethodID)
     {
         case OM_NEW:          return mNew(cl,obj,(APTR)msg);
@@ -291,30 +283,24 @@ ULONG ASM SAVEDS dispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1
     }
 }
 
-#ifdef __MORPHOS__
-static struct EmulLibEntry dispatcherTrap = {TRAP_LIB,0,(void *)&dispatcher};
-#endif
-
 int
-main(int argc,char **argv)
+main(UNUSED int argc,char **argv)
 {
     int res;
 
-    if (IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library",37))
+    if ((IntuitionBase = (APTR)OpenLibrary("intuition.library",39)) != NULL &&
+        GETINTERFACE("main", IIntuition, IntuitionBase))
     {
-        if (MUIMasterBase = OpenLibrary("muimaster.library",19))
+        if ((MUIMasterBase = OpenLibrary("muimaster.library",19)) != NULL &&
+            GETINTERFACE("main", IMUIMaster, MUIMasterBase))
         {
             struct MUI_CustomClass *mainGroupClass;
 
-#ifdef __MORPHOS__
-            if (mainGroupClass = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,sizeof(struct data),(APTR)&dispatcherTrap))
-#else
-            if (mainGroupClass = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,sizeof(struct data),dispatcher))
-#endif
+            if ((mainGroupClass = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,sizeof(struct data),ENTRY(_dispatcher))) != NULL)
             {
                 Object *app, *win;
 
-                if (app = ApplicationObject,
+                if ((app = ApplicationObject,
                         MUIA_Application_Title,         "TheBar Demo7",
                         MUIA_Application_Version,       "$VER: TheBarDemo7 1.0 (24.6.2003)",
                         MUIA_Application_Copyright,     "Copyright 2003 by Alfonso Ranieri",
@@ -329,7 +315,7 @@ main(int argc,char **argv)
                                 Child, mainGroupObject, End,
                             End,
                         End,
-                    End)
+                    End) != NULL)
                 {
                     ULONG sigs = 0;
 
@@ -337,7 +323,7 @@ main(int argc,char **argv)
 
                     set(win,MUIA_Window_Open,TRUE);
 
-                    while (DoMethod(app,MUIM_Application_NewInput,&sigs)!=MUIV_Application_ReturnID_Quit)
+                    while ((LONG)DoMethod(app,MUIM_Application_NewInput,&sigs)!=MUIV_Application_ReturnID_Quit)
                     {
                         if (sigs)
                         {
@@ -364,7 +350,7 @@ main(int argc,char **argv)
                 res = RETURN_FAIL;
             }
 
-            CloseLibrary(MUIMasterBase);
+            CLOSELIB(MUIMasterBase, IMUIMaster);
         }
         else
         {
@@ -372,7 +358,7 @@ main(int argc,char **argv)
             res = RETURN_ERROR;
         }
 
-        CloseLibrary((struct Library *)IntuitionBase);
+        CLOSELIB(IntuitionBase, IIntuition);
     }
     else
     {

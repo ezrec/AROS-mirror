@@ -22,139 +22,171 @@
 
 #include "class.h"
 
-#include <math.h>
-
-/*
-#if !defined(_FFP)
-#ifndef __MORPHOS__
-void STDARGS _CXFERR(int code) {}
-#endif
-double __except(int a,const char *b,double c,double e,double f) { return f; }
-#endif
-*/
+#include "Debug.h"
 
 /***********************************************************************/
 
 struct scaleData
 {
-    LONG  cy;
-    FLOAT sourcey;
-    FLOAT deltax;
-    FLOAT deltay;
+  LONG cy;      // LONG
+  LONG sourcey; // fixed point value
+  LONG deltax;  // fixed point value
+  LONG deltay;  // fixed point value
 };
 
 /***********************************************************************/
 
-static void
-scaleLine(struct scale *sce,struct scaleData *data,UBYTE *src,UBYTE *dst)
+/// fixed_div
+// calculate a/b and return the quotient as a fixed point value
+static LONG fixed_div(LONG a, LONG b)
 {
-    LONG w8 = (sce->dw>>3)+1, cx = 0, dx = data->deltax*65536;
+  // Intermediate results may become larger than 32bit,
+  // hence we need 64bit values temporarily. The result
+  // is a 16.16 fixed point value fitting into a 32bit
+  // variable.
+  // The two intermediate values must be declared as volatile,
+  // else GCC's optimizer will always "optimize" the result to
+  // zero.
+  volatile long long _a;
+  volatile long long _b;
 
-    src += sce->sl+(data->cy+sce->st)*sce->tw;
+  // prescale a by the double amount of fraction bits
+  // the additional 16 bits will vanish again upon division
+  _a = a;
+  _a <<= 32;
+  // prescale b by the normal amount of fraction bits
+  _b = b;
+  _b <<= 16;
 
-    switch (sce->dw & 7)
-    {
-        do
-        {
-                    *dst++ = src[cx>>16]; cx += dx;
-            case 7: *dst++ = src[cx>>16]; cx += dx;
-            case 6: *dst++ = src[cx>>16]; cx += dx;
-            case 5: *dst++ = src[cx>>16]; cx += dx;
-            case 4: *dst++ = src[cx>>16]; cx += dx;
-            case 3: *dst++ = src[cx>>16]; cx += dx;
-            case 2: *dst++ = src[cx>>16]; cx += dx;
-            case 1: *dst++ = src[cx>>16]; cx += dx;
-            case 0: w8--;
-
-        } while (w8);
-    }
-
-    data->cy = data->sourcey += data->deltay;
+  return (LONG)(_a / _b);
 }
 
 /***********************************************************************/
 
-void
-scale(struct scale *sce,UBYTE *src,UBYTE *dst)
+static void scaleLine(struct scale *sce, struct scaleData *data, UBYTE *src, UBYTE *dst)
 {
-    if (sce && src && dst && sce->dw-1>0 && sce->dh-1>0)
+  LONG w8 = (sce->dw>>3)+1;
+  LONG cx = 0;
+  LONG dx = data->deltax;
+
+  ENTER();
+
+  src += sce->sl+(data->cy+sce->st)*sce->tw;
+
+  switch(sce->dw & 7)
+  {
+    do
     {
-        struct scaleData scdata;
-        LONG             y;
+              *dst++ = src[cx>>16]; cx += dx;
+      case 7: *dst++ = src[cx>>16]; cx += dx;
+      case 6: *dst++ = src[cx>>16]; cx += dx;
+      case 5: *dst++ = src[cx>>16]; cx += dx;
+      case 4: *dst++ = src[cx>>16]; cx += dx;
+      case 3: *dst++ = src[cx>>16]; cx += dx;
+      case 2: *dst++ = src[cx>>16]; cx += dx;
+      case 1: *dst++ = src[cx>>16]; cx += dx;
+      case 0: w8--;
+    } while(w8);
+  }
 
-        scdata.cy       = 0;
-        scdata.sourcey  = 0;
+  data->sourcey += data->deltay;
+  // convert back to normal integers
+  data->cy = data->sourcey >> 16;
 
-        scdata.deltax   = sce->sw-1;
-        scdata.deltax  /= (sce->dw-1);
-
-        scdata.deltay   = sce->sh-1;
-        scdata.deltay  /= (sce->dh-1);
-
-        for (y = 0; y<sce->dh; y++)
-        {
-            scaleLine(sce,&scdata,src,dst);
-            dst += sce->dw;
-        }
-    }
+  LEAVE();
 }
 
 /***********************************************************************/
 
-static void
-scaleLineRGB(struct scale *sce,struct scaleData *data,ULONG *src,ULONG *dst)
+void scale(struct scale *sce, UBYTE *src, UBYTE *dst)
 {
-    LONG w8 = (sce->dw>>3)+1, cx = 0, dx = data->deltax*65536;
+  ENTER();
 
-    src = (ULONG *)((UBYTE *)src+4*sce->sl+(data->cy+sce->st)*sce->tw);
+  if(sce && src && dst && sce->dw-1>0 && sce->dh-1>0)
+  {
+    struct scaleData scdata;
+    LONG y;
 
-    //kprintf("src:%lx dst:%lx\n",src,dst);
+    D(DBF_SCALE, "sw=%d sh=%d dw=%d dh=%d", sce->sw, sce->sh, sce->dw, sce->dh);
 
-    switch (sce->dw & 7)
+    scdata.cy = 0;
+    scdata.sourcey = 0;
+    // calculate the scale factor
+    scdata.deltax = fixed_div(sce->sw-1, sce->dw-1);
+    scdata.deltay = fixed_div(sce->sh-1, sce->dh-1);
+
+    for(y = 0; y<sce->dh; y++)
     {
-        do
-        {
-                    *dst++ = src[cx>>16]; cx += dx;
-            case 7: *dst++ = src[cx>>16]; cx += dx;
-            case 6: *dst++ = src[cx>>16]; cx += dx;
-            case 5: *dst++ = src[cx>>16]; cx += dx;
-            case 4: *dst++ = src[cx>>16]; cx += dx;
-            case 3: *dst++ = src[cx>>16]; cx += dx;
-            case 2: *dst++ = src[cx>>16]; cx += dx;
-            case 1: *dst++ = src[cx>>16]; cx += dx;
-            case 0: w8--;
-
-        } while (w8);
+      scaleLine(sce, &scdata, src, dst);
+      dst += sce->dw;
     }
+  }
 
-    data->cy = data->sourcey += data->deltay;
+  LEAVE();
 }
 
 /***********************************************************************/
 
-void
-scaleRGB(struct scale *sce,ULONG *src,ULONG *dst)
+static void scaleLineRGB(struct scale *sce, struct scaleData *data, ULONG *src, ULONG *dst)
 {
-    if (sce && src && dst && sce->dw-1>0 && sce->dh-1>0)
+  LONG w8 = (sce->dw>>3)+1;
+  LONG cx = 0;
+  LONG dx = data->deltax;
+
+  ENTER();
+
+  src = (ULONG *)((UBYTE *)src+4*sce->sl+(data->cy+sce->st)*sce->tw);
+
+  switch(sce->dw & 7)
+  {
+    do
     {
-        struct scaleData scdata;
-        LONG             y;
+              *dst++ = src[cx>>16]; cx += dx;
+      case 7: *dst++ = src[cx>>16]; cx += dx;
+      case 6: *dst++ = src[cx>>16]; cx += dx;
+      case 5: *dst++ = src[cx>>16]; cx += dx;
+      case 4: *dst++ = src[cx>>16]; cx += dx;
+      case 3: *dst++ = src[cx>>16]; cx += dx;
+      case 2: *dst++ = src[cx>>16]; cx += dx;
+      case 1: *dst++ = src[cx>>16]; cx += dx;
+      case 0: w8--;
+    } while(w8);
+  }
 
-        scdata.cy       = 0;
-        scdata.sourcey  = 0;
+  data->sourcey += data->deltay;
+  // convert back to normal integers
+  data->cy = data->sourcey >> 16;
 
-        scdata.deltax   = sce->sw-1;
-        scdata.deltax  /= (sce->dw-1);
+  LEAVE();
+}
 
-        scdata.deltay   = sce->sh-1;
-        scdata.deltay  /= (sce->dh-1);
+/***********************************************************************/
 
-        for (y = 0; y<sce->dh; y++)
-        {
-            scaleLineRGB(sce,&scdata,src,dst);
-            dst += sce->dw;
-        }
+void scaleRGB(struct scale *sce, ULONG *src, ULONG *dst)
+{
+  ENTER();
+
+  if(sce && src && dst && sce->dw-1>0 && sce->dh-1>0)
+  {
+    struct scaleData scdata;
+    LONG y;
+
+    D(DBF_SCALE, "sw=%d sh=%d dw=%d dh=%d", sce->sw, sce->sh, sce->dw, sce->dh);
+
+    scdata.cy = 0;
+    scdata.sourcey = 0;
+    // calculate the scale factor
+    scdata.deltax = fixed_div(sce->sw-1, sce->dw-1);
+    scdata.deltay = fixed_div(sce->sh-1, sce->dh-1);
+
+    for(y = 0; y<sce->dh; y++)
+    {
+      scaleLineRGB(sce, &scdata, src, dst);
+      dst += sce->dw;
     }
+  }
+
+  LEAVE();
 }
 
 /***********************************************************************/
