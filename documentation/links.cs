@@ -1,6 +1,6 @@
-=====
-Links
-=====
+======
+Odkazy
+======
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Matthias Rustler 
 :Copyright: Copyright ¦ 1995-2007, The AROS Development Team
@@ -20,7 +20,7 @@ AROS resources
   
 +  `AROS-Exec <http://aros-exec.org>`__
 
-  AROS Community website, forums, news, galleries
+  AROS komunitní web, fóra, novinky, galerie
 
 + `AROS software archive`__
 

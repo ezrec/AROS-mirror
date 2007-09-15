@@ -1,4 +1,4 @@
-Sponsors
+Sponzoøi
 ========
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
@@ -8,7 +8,7 @@ Sponsors
 :Status:    Done.
 
 
-Následující spoleènosti, organizace a jednotlivci poskytli prostøedky:
+Následující spoleènosti, organizace a jednotlivci poskytli tyto prostøedky:
 
 + Trustec__
    
@@ -16,9 +16,9 @@ Následující spoleènosti, organizace a jednotlivci poskytli prostøedky:
      
      <a href="http://www.trustsec.de/"><img border="0" src="/images/trustec.png"></a>
     
-  The nice people at Trustec poskytli prostor a pásmo pro the AROS 
-  webserver, CVS server, FTP server a nìkolik mailing listù. If you need 
-  Java development or courses in Germany, contact them!
+  Ochotní lidé z Trustec poskytli prostor a ¹íøku pásma (bandwidth) pro
+  webový server AROS, CVS server, FTP server a nìkolik mailing listù. Pokud
+  potøebujete vývoj nebo kurzy v Javì v Nìmecku, kontaktuje je!
 
 + Genesi__
 
@@ -26,8 +26,8 @@ Následující spoleènosti, organizace a jednotlivci poskytli prostøedky:
   
      <a href="http://www.pegasosppc.com/"><img border="0" src="/images/genesi.gif"></a>
 
-  Genesi have generously donated a Pegasos motherboard, in an effort to bring
-  AROS to that hardware platform. Thanks!
+  Genesi ¹tìdøe darovalo základní desku Pegasos, se snahou pøivést AROS
+  i na tuto hardwarovou platformu. Díky!
 
 + SourceForge__
 
@@ -35,15 +35,15 @@ Následující spoleènosti, organizace a jednotlivci poskytli prostøedky:
   
      <a href="http://www.sourceforge.net/"><img border="0" src="/images/sourceforge.png"></a>
 
-  SourceForge provides us with several services like a web server with 
-  scripting extensions and SQL database, mailing lists, bug database and 
-  distributed file release system.  
+  SourceForge nám zaji¹»uje nìkolik slu¾eb jako webový server se
+  skriptovacím roz¹íøením a SQL databází, mailing listy, databázi chyb
+  a decentralizovaný systém vydání souborù (distributed file release system).
 
 + Yann Vernier
 + Randal Vice
 
 
-The following organizations and individuals have sponsored development work:
+Následující organizace a jednotlivci sponzorovali vývojáøskou práci:
 
 + `Team AROS`__
 + `Norsk Amigaforening`__
