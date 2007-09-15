@@ -1,0 +1,62 @@
+Short:    TheBar.mcc - The MUI Toolbar custom class
+Author:   TheBar.mcc Open Source Team
+Uploader: Jens Langner <Jens.Langner@light-speed.de>
+Version:  21.4
+Type:     dev/mui
+Requires: AmigaOS 3.0+ or MorphOS, MUI 3.8+, 68020+/PPC604e+
+Replaces: dev/mui/MCC_TheBar-21.3.lha
+Architecture: ppc-amigaos >= 4.0.0; m68k-amigaos >= 3.0; ppc-morphos >= 1.4.2
+
+Introduction
+~~~~~~~~~~~~
+TheBar.mcc is a MUI custom class for management of multiple buttons in a
+toolbar-like environment. It allows to group multiple button together, allows
+to hide/sleep/disable a specific button as well as send notifications in case
+a button was pressed by the user. It features a multitude of different
+settings and the majority of these are configurable for the user via the MUI
+preferences system.
+
+TheBar.mcc class was originally developed by Alfonso Ranieri. Since November
+2005 it was released under the LGPL license and is now freely available and
+further developed by an indepdent open source developer group.
+
+TheBar.mcc is available for OS3, OS4 and MorphOS.
+
+The TheBar.mcc class project is hosted on SourceForge. Its project
+name is "thebar".
+
+To report bugs use the bug tracker at
+
+http://www.sf.net/projects/thebar/
+
+Manual Installation
+~~~~~~~~~~~~~~~~~~~
+1) Extract the archive to a temporary directory.
+
+   > cd RAM:
+   > lha x MCC_TheBar.lha
+
+2) Go to the "MCC_TheBar/Libs/MUI/<OS>" directory where <OS> is the directory
+   matching the operating system you want to install TheBar.mcc for:
+
+   > cd MCC_TheBar/Libs/MUI/AmigaOS4
+
+3) copy all #?.mcc and #?.mcp files found in that <OS> directory to the
+   global "MUI:libs/mui/" directory on your system partition:
+
+   > copy #?.mcc MUI:Libs/mui/
+   > copy #?.mcp MUI:Libs/mui/
+
+4) reboot and enjoy the new version ;)
+
+History
+~~~~~~~
+The detailed change log can be found in the ChangeLog file.
+
+         __
+        / /
+   __  / /   Only Amiga makes it possible...
+   \ \/ /
+    \__/
+
+Amiga is a trademark of Amiga, Inc.
