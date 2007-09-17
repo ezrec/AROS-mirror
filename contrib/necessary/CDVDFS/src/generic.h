@@ -5,7 +5,7 @@
 
 #include "cdrom.h"
 
-typedef unsigned long t_ulong;
+typedef uint32_t t_ulong;
 typedef unsigned short t_ushort;
 typedef unsigned char t_uchar;
 typedef int t_bool;
@@ -43,9 +43,9 @@ typedef struct VOLUME {
 typedef struct CDROM_OBJ {
   t_bool		directory_f;	/* TRUE iff object is a directory     */
   t_bool		symlink_f;	/* TRUE iff object is a symbolic link */
-  unsigned long		protection;	/* Amiga protection bits              */
+  uint32_t		protection;	/* Amiga protection bits              */
   VOLUME		*volume;	/* Pointer to volume node	      */
-  unsigned long		pos;		/* Current position (for read & seek) */
+  uint32_t		pos;		/* Current position (for read & seek) */
   t_path_list		pathlist;	/* List containing full path name     */
   void			*obj_info;	/* Depends on protocol		      */
 } CDROM_OBJ;
@@ -55,9 +55,9 @@ typedef struct CDROM_INFO {
   t_bool		symlink_f;	/* TRUE if object is a symbolic link */
   int			name_length;	/* length of file name		     */
   char			name[256];	/* file name			     */
-  unsigned long		date;		/* creation date		     */
-  unsigned long		file_length;	/* length of file		     */
-  unsigned long		protection;	/* Amiga protection bits	     */
+  uint32_t		date;		/* creation date		     */
+  uint32_t		file_length;	/* length of file		     */
+  uint32_t		protection;	/* Amiga protection bits	     */
   int			comment_length; /* length of file comment	     */
   char			comment[256];	/* file comment			     */
   void			*suppl_info;	/* supplementary information	     */
@@ -75,7 +75,7 @@ typedef struct handler {
   /*M*/ void       (*close_obj)(CDROM_OBJ *);
   /*M*/ int        (*read_from_file)(CDROM_OBJ *, char *, int);
   /*M*/ t_bool     (*cdrom_info)(CDROM_OBJ *, CDROM_INFO *);
-  /*M*/ t_bool     (*examine_next)(CDROM_OBJ *, CDROM_INFO *, unsigned long *);
+  /*M*/ t_bool     (*examine_next)(CDROM_OBJ *, CDROM_INFO *, uint32_t *);
   /*M*/ void      *(*clone_obj_info)(void *);
   /*M*/ t_bool     (*is_top_level_obj)(CDROM_OBJ *);
   /*M*/ t_bool     (*same_objects)(CDROM_OBJ *, CDROM_OBJ *);
@@ -119,7 +119,7 @@ int Read_From_File(CDROM_OBJ *p_file, char *p_buffer, int p_buffer_length);
 
 int CDROM_Info(CDROM_OBJ *p_obj, CDROM_INFO *p_info);
 t_bool Examine_Next
-	(CDROM_OBJ *p_dir, CDROM_INFO *p_info, unsigned long *p_offset);
+	(CDROM_OBJ *p_dir, CDROM_INFO *p_info, uint32_t *p_offset);
 
 CDROM_OBJ *Clone_Object(CDROM_OBJ *p_object);
 CDROM_OBJ *Find_Parent(CDROM_OBJ *p_object);

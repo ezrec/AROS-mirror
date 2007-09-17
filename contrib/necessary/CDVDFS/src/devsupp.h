@@ -6,7 +6,7 @@
 
 extern char g_device[80];
 extern short g_unit;
-extern unsigned long g_memory_type;
+extern uint32_t g_memory_type;
 extern short g_map_to_lowercase;
 extern short g_use_rock_ridge;
 extern int g_trackdisk;

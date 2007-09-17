@@ -293,7 +293,7 @@ int CDROM_Info(CDROM_OBJ *p_obj, CDROM_INFO *p_info) {
 }
 
 t_bool Examine_Next
-	(CDROM_OBJ *p_dir, CDROM_INFO *p_info, unsigned long *p_offset)
+	(CDROM_OBJ *p_dir, CDROM_INFO *p_info, uint32_t *p_offset)
 {
 	return HAN(p_dir->volume, examine_next)(p_dir, p_info, p_offset);
 }

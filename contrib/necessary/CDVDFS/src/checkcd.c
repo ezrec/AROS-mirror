@@ -339,7 +339,7 @@ void Check_Subdirectory (CDROM_OBJ *p_home, char *p_name)
   fflush (stdout);
   obj = Open_Object (p_home, p_name);
   if (obj) {
-    unsigned long offset = 0;
+    uint32_t offset = 0;
 
     while (Examine_Next (obj, &info, &offset)) {
       directory_record *dir = info.suppl_info;
@@ -357,7 +357,7 @@ void Check_Subdirectory (CDROM_OBJ *p_home, char *p_name)
   }
   obj = Open_Object (p_home, p_name);
   if (obj) {
-    unsigned long offset = 0;
+    uint32_t offset = 0;
 
     while (Examine_Next (obj, &info, &offset)) {
       if (info.directory_f) {

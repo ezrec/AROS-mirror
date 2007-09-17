@@ -367,7 +367,7 @@ int Names_Equal(VOLUME *volume, directory_record *dir, char *p_name)
  */
 
 directory_record *Get_Directory_Record
-	(VOLUME *p_volume, unsigned long p_location, unsigned long p_offset)
+	(VOLUME *p_volume, uint32_t p_location, uint32_t p_offset)
 {
 	int len;
 	int loc;
@@ -394,12 +394,12 @@ directory_record *Get_Directory_Record
  * at sector p_location.
  */
 
-CDROM_OBJ *Iso_Create_Directory_Obj(VOLUME *p_volume, unsigned long p_location){
+CDROM_OBJ *Iso_Create_Directory_Obj(VOLUME *p_volume, uint32_t p_location){
 directory_record *dir;
-unsigned long loc;
+uint32_t loc;
 int offset = 0;
 CDROM_OBJ *obj;
-unsigned long len;
+uint32_t len;
 
 	if (p_location == VOL(p_volume,pvd).root.extent_loc)
 		 return Iso_Open_Top_Level_Directory(p_volume);
@@ -451,8 +451,8 @@ unsigned long len;
 
 CDROM_OBJ *Iso_Open_Obj_In_Directory(CDROM_OBJ *p_dir, char *p_name)
 {
-	unsigned long loc = OBJ(p_dir,dir)->extent_loc + OBJ(p_dir,dir)->ext_attr_length;
-	unsigned long len = OBJ(p_dir,dir)->data_length;
+	uint32_t loc = OBJ(p_dir,dir)->extent_loc + OBJ(p_dir,dir)->ext_attr_length;
+	uint32_t len = OBJ(p_dir,dir)->data_length;
 	directory_record *dir;
 	int offset;
 	CDROM_OBJ *obj;
@@ -528,17 +528,17 @@ void Iso_Close_Obj(CDROM_OBJ *p_object) {
  */
 
 int Iso_Read_From_File(CDROM_OBJ *p_file, char *p_buffer, int p_buffer_length) {
-unsigned long loc;
+uint32_t loc;
 int remain_block, remain_file, remain;
 int len;
 VOLUME *vol = p_file->volume;
 CDROM *cd = vol->cd;
 int buf_pos = 0;
 int todo;
-unsigned long last_loc, ext_loc;
+uint32_t last_loc, ext_loc;
 short blockshift;
 int offset;
-unsigned long firstblock;
+uint32_t firstblock;
 
 	if (p_file->pos == OBJ(p_file,dir)->data_length)
 	{
@@ -663,9 +663,9 @@ int len;
  */
 
 int Iso_Examine_Next
-	(CDROM_OBJ *p_dir, CDROM_INFO *p_info, unsigned long *p_offset)
+	(CDROM_OBJ *p_dir, CDROM_INFO *p_info, uint32_t *p_offset)
 {
-unsigned long offset;
+uint32_t offset;
 directory_record *rec;
 int len;
 
@@ -790,7 +790,7 @@ t_iso_obj_info *new;
 
 CDROM_OBJ *Iso_Find_Parent(CDROM_OBJ *p_object) {
 directory_record *dir;
-unsigned long dir_loc;
+uint32_t dir_loc;
 long pl;
 
 	if (p_object->directory_f)

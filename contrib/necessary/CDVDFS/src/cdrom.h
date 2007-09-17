@@ -8,6 +8,8 @@
 #include <exec/io.h>
 #include <devices/scsidisk.h>
 
+#include <inttypes.h>
+
 #define VERSION "CDROM-Handler 1.15 (03.11.94)"
 
 #define SCSI_BUFSIZE 2048
@@ -27,11 +29,11 @@ typedef struct CDROM {
   short			lun;
   short			std_buffers;
   short			file_buffers;
-  unsigned long		t_changeint;
-  unsigned long		t_changeint2;
+  uint32_t		t_changeint;
+  uint32_t		t_changeint2;
   long 			*current_sectors;
-  unsigned long		*last_used;
-  unsigned long		tick;
+  uint32_t		*last_used;
+  uint32_t		tick;
   struct MsgPort 	*port;
   struct IOStdReq	*scsireq;
   struct SCSICmd	cmd;
@@ -62,14 +64,14 @@ typedef struct toc_data {
   unsigned char flags;
   unsigned char	track_number;
   char		reserved2;
-  unsigned long address;
+  uint32_t address;
 } t_toc_data;
 
 CDROM *Open_CDROM
 	(
 		char *p_device,
 		int p_scsi_id,
-		unsigned long p_memory_type,
+		uint32_t p_memory_type,
 		int p_std_buffers,
 		int p_file_buffers
 	);
@@ -91,13 +93,13 @@ t_toc_data *Read_TOC
 		t_toc_header *p_toc_header
 	);
 int Has_Audio_Tracks(CDROM *p_cd);
-int Data_Tracks(CDROM *p_cd, unsigned long** p_buf);
-void block2msf (unsigned long blk, unsigned char *msf);
+int Data_Tracks(CDROM *p_cd, uint32_t** p_buf);
+void block2msf (uint32_t blk, unsigned char *msf);
 int Start_Play_Audio(CDROM *p_cd);
 int Stop_Play_Audio(CDROM *p_cd);
 int Block_Length(CDROM *p_cd);
 void Clear_Sector_Buffers (CDROM *p_cd);
-int Find_Last_Session(CDROM *p_cd, unsigned long *p_result);
+int Find_Last_Session(CDROM *p_cd, uint32_t *p_result);
 
 extern int g_cdrom_errno;
 extern int g_ignore_blocklength;

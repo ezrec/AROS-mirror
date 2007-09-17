@@ -215,7 +215,7 @@ int total = 0;
  * p_obj, then -1 is returned.
  */
 
-int Get_RR_File_Comment(VOLUME *p_volume, directory_record *p_dir, unsigned long *p_prot, char *p_buf, int p_buf_len)
+int Get_RR_File_Comment(VOLUME *p_volume, directory_record *p_dir, uint32_t *p_prot, char *p_buf, int p_buf_len)
 {
 
 #define AS_PROTECTION	    0x01
@@ -234,7 +234,7 @@ int Get_RR_File_Comment(VOLUME *p_volume, directory_record *p_dir, unsigned long
 	int len, slen;
 	int index = 0;
 	int total = 0;
-	unsigned long pbuf;
+	uint32_t pbuf;
 
 	for (;;)
 	{
@@ -268,7 +268,7 @@ int Get_RR_File_Comment(VOLUME *p_volume, directory_record *p_dir, unsigned long
  * amiga_mode is a pointer to storage area for AmigaOS protection bits.
  */
 
-int Is_A_Symbolic_Link(VOLUME *p_volume, directory_record *p_dir, unsigned long *amiga_mode)
+int Is_A_Symbolic_Link(VOLUME *p_volume, directory_record *p_dir, uint32_t *amiga_mode)
 {
 	struct px_system_use_field {
 		char	  id[2];

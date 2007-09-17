@@ -14,18 +14,18 @@ typedef struct directory_record {
   unsigned char         length;
   unsigned char         ext_attr_length;
 #if !AROS_BIG_ENDIAN
-  unsigned long         extent_loc;
-  unsigned long         extent_loc_m;
+  uint32_t         extent_loc;
+  uint32_t         extent_loc_m;
 #else
-  unsigned long         extent_loc_i;
-  unsigned long         extent_loc;
+  uint32_t         extent_loc_i;
+  uint32_t         extent_loc;
 #endif
 #if !AROS_BIG_ENDIAN
-  unsigned long		data_length;
-  unsigned long		data_length_m;
+  uint32_t		data_length;
+  uint32_t		data_length_m;
 #else
-  unsigned long		data_length_i;
-  unsigned long		data_length;
+  uint32_t		data_length_i;
+  uint32_t		data_length;
 #endif
   unsigned char		year;
   unsigned char		month;
@@ -59,11 +59,11 @@ typedef struct prim_vol_desc {
   char			volume_id[32];
   char			pad2[8];
 #if !AROS_BIG_ENDIAN
-  unsigned long		space_size;
-  unsigned long		space_size_m;
+  uint32_t		space_size;
+  uint32_t		space_size_m;
 #else
-  unsigned long		space_size_i;
-  unsigned long		space_size;
+  uint32_t		space_size_i;
+  uint32_t		space_size;
 #endif
   char			pad3[32];
 #if !AROS_BIG_ENDIAN
@@ -88,22 +88,22 @@ typedef struct prim_vol_desc {
   unsigned short	block_size;
 #endif
 #if !AROS_BIG_ENDIAN
-  unsigned long		path_size;
-  unsigned long		path_size_m;
+  uint32_t		path_size;
+  uint32_t		path_size_m;
 #else
-  unsigned long		path_size_i;
-  unsigned long		path_size;
+  uint32_t		path_size_i;
+  uint32_t		path_size;
 #endif
 #if !AROS_BIG_ENDIAN
-  unsigned long         table;
-  unsigned long         opt_table;
-  unsigned long         m_table;
-  unsigned long         opt_m_table;
+  uint32_t         table;
+  uint32_t         opt_table;
+  uint32_t         m_table;
+  uint32_t         opt_m_table;
 #else
-  unsigned long         i_table;
-  unsigned long         opt_i_table;
-  unsigned long         table;
-  unsigned long         opt_table;
+  uint32_t         i_table;
+  uint32_t         opt_i_table;
+  uint32_t         table;
+  uint32_t         opt_table;
 #endif
   directory_record      root;
   char			volume_set_id[128];
@@ -133,15 +133,15 @@ typedef struct iso_vol_info {
 
 typedef struct iso_obj_info {
   directory_record	*dir;
-  unsigned long		parent_loc; /* for files only */
+  uint32_t		parent_loc; /* for files only */
 } t_iso_obj_info;
 
 t_bool Iso_Init_Vol_Info(VOLUME *p_volume, int p_skip, t_ulong p_offset, t_ulong svd_offset);
 t_bool Uses_Iso_Protocol(CDROM *p_cdrom, t_ulong *p_offset);
 t_bool Uses_High_Sierra_Protocol(CDROM *p_cdrom);
 directory_record *Get_Directory_Record
-	(VOLUME *p_volume, unsigned long p_location, unsigned long p_offset);
-CDROM_OBJ *Iso_Create_Directory_Obj(VOLUME *p_volume, unsigned long p_location);
+	(VOLUME *p_volume, uint32_t p_location, uint32_t p_offset);
+CDROM_OBJ *Iso_Create_Directory_Obj(VOLUME *p_volume, uint32_t p_location);
 
 #if !AROS_BIG_ENDIAN
 #define l_table m_table

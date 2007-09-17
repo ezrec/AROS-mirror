@@ -7,11 +7,11 @@ typedef struct sup_vol_desc {
   char			volume_id[32];
   char			pad2[8];
 #if !AROS_BIG_ENDIAN
-  unsigned long		space_size;
-  unsigned long		space_size_m;
+  uint32_t		space_size;
+  uint32_t		space_size_m;
 #else
-  unsigned long		space_size_i;
-  unsigned long		space_size;
+  uint32_t		space_size_i;
+  uint32_t		space_size;
 #endif
   char			escape[32];
 #if !AROS_BIG_ENDIAN
@@ -36,22 +36,22 @@ typedef struct sup_vol_desc {
   unsigned short	block_size;
 #endif
 #if !AROS_BIG_ENDIAN
-  unsigned long		path_size;
-  unsigned long		path_size_m;
+  uint32_t		path_size;
+  uint32_t		path_size_m;
 #else
-  unsigned long		path_size_i;
-  unsigned long		path_size;
+  uint32_t		path_size_i;
+  uint32_t		path_size;
 #endif
 #if !AROS_BIG_ENDIAN
-  unsigned long         table;
-  unsigned long         opt_table;
-  unsigned long         m_table;
-  unsigned long         opt_m_table;
+  uint32_t         table;
+  uint32_t         opt_table;
+  uint32_t         m_table;
+  uint32_t         opt_m_table;
 #else
-  unsigned long         i_table;
-  unsigned long         opt_i_table;
-  unsigned long         table;
-  unsigned long         opt_table;
+  uint32_t         i_table;
+  uint32_t         opt_i_table;
+  uint32_t         table;
+  uint32_t         opt_table;
 #endif
   directory_record      root;
   char			volume_set_id[128];

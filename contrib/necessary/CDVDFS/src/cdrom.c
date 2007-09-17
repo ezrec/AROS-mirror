@@ -103,7 +103,7 @@ CDROM *Open_CDROM
 	(
 		char *p_device,
 		int p_scsi_id,
-		unsigned long p_memory_type,
+		uint32_t p_memory_type,
 		int p_std_buffers,
 		int p_file_buffers
 	)
@@ -143,7 +143,7 @@ int bufs = p_std_buffers + p_file_buffers + 1;
 		return NULL;
 	}
 
-	cd->last_used = AllocMem (sizeof (unsigned long) * p_std_buffers, MEMF_PUBLIC | MEMF_CLEAR);
+	cd->last_used = AllocMem (sizeof (uint32_t) * p_std_buffers, MEMF_PUBLIC | MEMF_CLEAR);
 	if (!cd->last_used)
 	{
 		Cleanup_CDROM(cd);
@@ -314,8 +314,8 @@ int loc;
 			no free buffer position; remove the buffer that is unused
 			for the longest time:
 		*/
-	unsigned long oldest_tick = ULONG_MAX;
-	unsigned long tick;
+	uint32_t oldest_tick = ULONG_MAX;
+	uint32_t tick;
 
 		for (loc=0, i=0; i<maxbuf; i++)
 		{
@@ -492,7 +492,7 @@ int i, len;
  *  number of tracks or -1 on error.
  */
 
-int Data_Tracks(CDROM *p_cd, unsigned long** p_buf) {
+int Data_Tracks(CDROM *p_cd, uint32_t** p_buf) {
 int cnt=0;
 t_toc_header hdr;
 t_toc_data *toc;
@@ -513,7 +513,7 @@ int i, j, len;
 		return 0;
 
 	/* allocate memory for output buffer: */
-	*p_buf = (unsigned long*) AllocVec (cnt * sizeof (unsigned long*), MEMF_PUBLIC);
+	*p_buf = (uint32_t*) AllocVec (cnt * sizeof (uint32_t*), MEMF_PUBLIC);
 	if (!*p_buf)
 		return -1;
 
@@ -525,7 +525,7 @@ int i, j, len;
 	return cnt;
 }
 
-inline void block2msf (unsigned long blk, unsigned char *msf)
+inline void block2msf (uint32_t blk, unsigned char *msf)
 {
 	blk = (blk+150) & 0xffffff;
 	msf[0] = blk / 4500;        /* 4500 = 60 seconds * 75 frames */
@@ -538,7 +538,7 @@ int Start_Play_Audio(CDROM *p_cd) {
 static unsigned char cmd[10] = { 0x47, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;
-unsigned long start,end;
+uint32_t start,end;
 t_toc_header hdr;
 t_toc_data *toc;
 int i, len;
@@ -588,7 +588,7 @@ int bufs = p_cd->std_buffers + p_cd->file_buffers + 1;
 	if (p_cd->port)
 		DeleteMsgPort (p_cd->port);
 	if (p_cd->last_used)
-		FreeMem (p_cd->last_used, sizeof (unsigned long) * p_cd->std_buffers);
+		FreeMem (p_cd->last_used, sizeof (uint32_t) * p_cd->std_buffers);
 	if (p_cd->current_sectors)
 		FreeMem (p_cd->current_sectors, sizeof (long) * bufs);
 	if (p_cd->buffers)
@@ -614,7 +614,7 @@ void Clear_Sector_Buffers (CDROM *p_cd)
  *          - TRUE if the offset of the last session has been determined.
  */
 
-int Find_Last_Session(CDROM *p_cd, unsigned long *p_result)
+int Find_Last_Session(CDROM *p_cd, uint32_t *p_result)
 {
 static unsigned char cmd[10] = { 0xC7, 3, 0, 0, 0, 0, 0, 0, 0, 0 };
 int dummy_buf = p_cd->std_buffers + p_cd->file_buffers;

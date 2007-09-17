@@ -167,7 +167,7 @@ void Show_Directory_Record (directory_record *p_dir)
 
 void Find_Block_Starting_With (CDROM *p_cd, int p_val)
 {
-  unsigned long sec = 0;
+  uint32_t sec = 0;
   int cmp;
   int i;
   
@@ -300,7 +300,7 @@ void Show_Primary_Volume_Descriptor (CDROM *p_cd)
   }
 }
 
-void Show_Directory (CDROM *p_cd, unsigned long p_location, unsigned long p_length)
+void Show_Directory (CDROM *p_cd, uint32_t p_location, uint32_t p_length)
 {
   int cnt = 0;
   int pos = 0;
@@ -508,7 +508,7 @@ void Print_System_Use_Fields (CDROM *p_cd, directory_record *p_dir,
 {
   int system_use_pos;
   int slen;
-  unsigned long length = p_dir->length;
+  uint32_t length = p_dir->length;
   unsigned char *buf = (unsigned char *) p_dir;
 
   printf ("   system use fields: ");
@@ -526,7 +526,7 @@ void Print_System_Use_Fields (CDROM *p_cd, directory_record *p_dir,
     /* look for continuation area: */
     if (buf[system_use_pos] == 'C' &&
         buf[system_use_pos+1] == 'E') {
-      unsigned long newloc, offset;
+      uint32_t newloc, offset;
       printf ("/ ");
       memcpy (&newloc, buf + system_use_pos + 8, 4);
       memcpy (&offset, buf + system_use_pos + 16, 4);
@@ -581,7 +581,7 @@ void Show_Subdirectory (CDROM_OBJ *p_home, char *p_name, int p_long_info,
   VOLUME *vol = p_home->volume;
   obj = Open_Object (p_home, p_name);
   if (obj) {
-    unsigned long offset = 0;
+    uint32_t offset = 0;
 
     while (Examine_Next (obj, &info, &offset)) {
      directory_record *dir = info.suppl_info;
@@ -623,7 +623,7 @@ void Show_Subdirectory (CDROM_OBJ *p_home, char *p_name, int p_long_info,
   if (p_recursive) {
     obj = Open_Object (p_home, p_name);
     if (obj) {
-      unsigned long offset = 0;
+      uint32_t offset = 0;
     
       while (Examine_Next (obj, &info, &offset)) {
         if (info.directory_f) {
@@ -942,7 +942,7 @@ void Play_Audio (CDROM *p_cd, int p_stop)
 
 void Find_Offset_Of_Last_Session (CDROM *p_cd)
 {
-  unsigned long last;
+  uint32_t last;
   
   if (!Find_Last_Session (p_cd, &last)) {
     fprintf (stderr, "cannot determine offset of last session\n");

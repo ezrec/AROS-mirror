@@ -630,7 +630,7 @@ void HFS_Close_Obj(CDROM_OBJ *p_obj)
 }
 
 int HFS_Read_From_File(CDROM_OBJ *p_file, char *p_buffer, int p_buffer_length) {
-unsigned long block;
+uint32_t block;
 int remain_block, remain_file, remain;
 int len;
 CDROM *cd;
@@ -726,7 +726,7 @@ t_bool HFS_Cdrom_Info(CDROM_OBJ *p_obj, CDROM_INFO *p_info) {
  */
 
 t_bool HFS_Examine_Next
-	(CDROM_OBJ *p_obj, CDROM_INFO *p_info, unsigned long *p_offset)
+	(CDROM_OBJ *p_obj, CDROM_INFO *p_info, uint32_t *p_offset)
 {
 t_leaf_record_pos leaf;
 short fork = 3;

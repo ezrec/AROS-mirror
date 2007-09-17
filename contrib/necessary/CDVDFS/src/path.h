@@ -2,7 +2,7 @@
 #define ACDR_PATH_H
 
 typedef struct path_node {
-  unsigned long references;
+  uint32_t references;
   char *name;
   struct path_node *next;
 } t_path_node;
