@@ -40,12 +40,12 @@ void SAVEDS Prefs_Process (void)
     PutMsg(global->Dback,&global->DummyMsg);	      /*  Kill handshake  */
 }
 
-ULONG PrefsProcTags[] = {
-	NP_Entry, (ULONG)Prefs_Process,
-	NP_Name, (ULONG)"CDVDFS prefs monitor",
-	NP_StackSize, 4096,
+struct TagItem PrefsProcTags[] = {
+	{NP_Entry, Prefs_Process},
+	{NP_Name, "CDVDFS prefs monitor"},
+	{NP_StackSize, 4096},
 #ifdef __MORPHOS__
-	NP_CodeType, CODETYPE_PPC,
+	{NP_CodeType, CODETYPE_PPC},
 #endif
 	TAG_DONE
 };
