@@ -15,7 +15,7 @@ Las siguientes compañías, organizaciones e individuos han donado recursos:
      
      <a href="http://www.trustsec.de/"><img border="0" src="/images/trustec.png"></a>
 
-  La buena gente de Trustec donó espacio de disco y ancho d banda para el 
+  La buena gente de Trustec donó espacio de disco y ancho de banda para el 
   servidor web de AROS, el servidor CVS, el servidor FTP y varias listas de 
   correo. Si necesitas desarrollo o cursos en Java en Alemania, ¡contáctalos!
 
