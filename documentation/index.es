@@ -4,7 +4,7 @@
 
 .. Include:: introduction/index-abstract.es
 
-`Lea más... <introduction/index>`__
+`Lee más... <introduction/index>`__
 
 .. raw:: html
 
@@ -17,7 +17,7 @@
 
 .. Include:: documentation/developers/contribute-abstract.es
 
-`Lea más... <documentation/developers/contribute>`__
+`Lee más... <documentation/developers/contribute>`__
 
 .. raw:: html
 
@@ -42,7 +42,7 @@
    else { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.png\" align=\"middle\">";} ?>Direct Downloads:<br>
    <img style="width: 238px; height: 2px;" alt="spacer" src="images/sidespacer.png"><br>
    Las builds nocturnas se hacen automáticamente cada noche, directamente del más 
-   reciente código fuente. Si te gustaría probar un LiveCD de AROS, por favor elige 
+   reciente código fuente. Si gustaras probar un LiveCD de AROS, por favor elige 
    el archivo "boot ISO" para tu plataforma (i386 or PPC).<br><br>
    <?php virtual("/cgi-bin/files2") ?> <br></td></tr></tbody></table>
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
