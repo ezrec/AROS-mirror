@@ -93,7 +93,7 @@ __ http://lists.sourceforge.net/mailman/listinfo/aros-bootlogs
 
 
 Fóra
-======
+====
 
 AROS-Exec__ je oficiální komunitní portál pro AROS. Zde mù¾ete najít poslední
 novinky týkající se AROS, online diskuzní fóra, obrázkové galerie a mnoho
@@ -103,7 +103,7 @@ __ http://aros-exec.org/
 
 
 IRC kanály
-============
+==========
 
 Existuje oficiální IRC kanál pro AROS, neèekanì nazvaný `#aros`__, na síti
 FreeNode__. Pøipojte se k `irc.freenode.net`__, který vás pøesmìruje 
