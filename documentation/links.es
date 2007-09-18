@@ -50,15 +50,15 @@ __ http://amidevcpp.amiga-world.de/afa_binarie_upload.php
 
 Artículos sobre AROS
 ====================
-================================================  ==================  ==========
+================================================  ==================  ===========
 Título                                            Autor               Fecha
-================================================  ==================  ==========
+================================================  ==================  ===========
 `"Onboard the Last Train to Amiga Neverland"`__   Dmitar Butrovski    2006-09-13
 `"AROS"`__ (en la revista alemana Amiga-Magazin)  Martin Steigerwald  2003-09-13
-`"If you like Amiga, you'll love AROS"`__         Elwood              Unknown   
+`"If you like Amiga, you'll love AROS"`__         Elwood              Desconocida   
 `"AROS: Native AmigaOS For Your PC"`__            John Chandler       2001-10-21 
 `"AROS: The Amiga Research Operating System"`__   John Chandler       1999-10-02
-================================================  ==================  ==========
+================================================  ==================  ===========
 
 __ http://www.osnews.com/story.php?news_id=15819
 __ http://www.amiga-magazin.de/magazin/a09-03/aros/index.html
@@ -66,17 +66,15 @@ __ http://elwoodb.free.fr/articles/AROS/
 __ http://www.suite101.com/article.cfm/amiga/82949 
 __ http://www.suite101.com/article.cfm/amiga/26509
 
-If you know some article about AROS that we haven't mentioned listed, please 
-contact_ us so we can add it. Thanks. 
 Si conoces algún artículo sobre AROS que nosotros no hemos mencionado 
 en la lista, por favor contáctanos así podamos añadirlo. Gracias.
 
 Artículos que mencionan a AROS
 ==============================
 
-===============================================  ==============  ==========
-Título                                            Autor          Fecha
-===============================================  ==============  ==========
+===============================================  ==============  ===========
+Título                                           Autor           Fecha
+===============================================  ==============  ===========
 `"Climbing the Kernel Mountain"`__               Emmanuel Marty  2002-08-13
 `Entrevista a Martin Blom`__                     Johan Forsberg  Desconocida
 `"A Nudge In The Right Direction"`__             John Chandler   2002-07-02
@@ -88,7 +86,7 @@ Título                                            Autor          Fecha
 `"And So It Begins..."`__                        John Chandler   2000-01-10
 `"We're In This Together Now (Part II)"`__       John Chandler   1999-12-05
 `"Open Source AmigaOS?"`__                       John Chandler   1999-03-01
-===============================================  ==============  ==========
+===============================================  ==============  ===========
 
 __ http://www.osnews.com/story.php?news_id=1532&page=1
 __ http://www.kicker.nu/amigarulez/html/sections.php?op=viewarticle&artid=3
