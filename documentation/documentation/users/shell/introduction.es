@@ -146,9 +146,9 @@ es usar el dispositivo falso 'in:'::
 Los dispositivos especiales
 ---------------------------
 + ram: puedes usar el disco ram como una unidad de disco rígido. Pero
-después de un reset su contenido se pierde.
+  después de un reset su contenido se pierde.
 + nil: si no quieres que se muestren los mensajes de un comando en
-la ventana puedes usar el dispositivo 'nil:'. Ejemplo: delete #? >nil:
+  la ventana puedes usar el dispositivo 'nil:'. Ejemplo: delete #? >nil:
 
 La ejecución en segundo plano
 -----------------------------

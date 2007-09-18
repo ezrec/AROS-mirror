@@ -13,8 +13,7 @@ Las siguientes compañías, organizaciones e individuos han donado recursos:
    
   .. RAW:: html
      
-     <a href="http://www.trustsec.de/"><img border="0" 
-src="/images/trustec.png"></a>
+     <a href="http://www.trustsec.de/"><img border="0" src="/images/trustec.png"></a>
 
   La buena gente de Trustec donó espacio de disco y ancho d banda para el 
   servidor web de AROS, el servidor CVS, el servidor FTP y varias listas de 

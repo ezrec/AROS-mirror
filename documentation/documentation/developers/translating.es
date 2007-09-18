@@ -32,12 +32,12 @@ parcialmente. Los pocos traductores disponibles y la cantidad de trabajo son una
 causas de esto. También, sucede que la mayoría de los traductores y escritores son los 
 desarrolladores (principales); absorber sus tareas aquí (incluso parcialmente) puede
 ayudarles a maximizar sus esfuerzos en la codificación o escritura de nueva documentación.
-Entonces si estás interesado en ayudarnos, por favor `contact us`_. Incluso el mínimo esfuerzo
+Entonces si estás interesado en ayudarnos, por favor `contáctanos`_. Incluso el mínimo esfuerzo
 puede ayudarnos enormemente.
 
 
 Dónde empezar
-------------
+-------------
 Primero, por favor `contáctanos`_ para verificar si puedes contribuir (sólo para estar en el
 lado seguro).
 
@@ -87,16 +87,15 @@ archivo online de SVN. Éstos son más tarde puestos en una plantilla, creando el
 sitio web de AROS que conoces.
 
 Para resumir, se recomienda mucho que tú:
-+ hagas conocer tus intenciones a la LC (lista de correo) del desarrollador y veas
-  si tus servicios son necesarios (para estar en el lado seguro)
++ hagas conocer tus intenciones a la LC (lista de correo) del desarrollador y veas si tus servicios son necesarios (para estar en el lado seguro)
 + leas entera esta página
-+ leas la `Working with SVN page`_
++ leas la `página Trabajando con SVN`_
 + solicites acceso a SVN
 + te anotes en las LC del desarrollador y del sitio web.
 
 *SVN*
 
-Si no estás familiarizado con SVN, lee sobre eso en la `Working with SVN page`_ 
+Si no estás familiarizado con SVN, lee sobre eso en la `página Trabajando con SVN`_ 
 como ya se dijo. En pocas palabras, SVN funciona como un tipo de FTP que se
 enfoca solamente en los archivos. Sin embargo, en vez de mover los archivos de
 a uno como lo hace FTP, mantienes una completa (y sincronizada) copia de los
@@ -363,6 +362,6 @@ Cuando actualices los catálogos del OS, se sigue lo mismo respecto a los
 registros de cambios de SVN, excepto que ahora tienes a Flexcat, que probará
 ser una herramienta indispensable.
 
-.. _`contact us`: http://aros.sourceforge.net/contact.php#mailing-lists
-.. _`Working with SVN page`: svn
-.. _`documenting page`: documenting
+.. _`contáctanos`: http://aros.sourceforge.net/contact.php#mailing-lists
+.. _`página Trabajando con SVN`: svn
+.. _`página de documentación`: documenting

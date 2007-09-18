@@ -342,7 +342,7 @@ los recursos por tí mismo. Aquí encontrarás algunas herramientas que te
 ayudarán a comprobar que tu programa esté limpio.
 
 Siguiendo a la memoria con Mungwall
-================================
+===================================
 
 Si está configurado con ``--enable-debug``, AROS habilita ``Mungwall``.
 que vigila una pequeña zona antes y después de tus asignaciones para verificar

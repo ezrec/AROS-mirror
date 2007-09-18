@@ -71,7 +71,7 @@ de AROS::
     > ./configure
 
 Puedes especificar varias opciones a configure. Están disponibles las
-siguientes opciones para todos los targets::
+siguientes opciones para todos los targets:
 
 ``--enable-debug=LIST [default: none]`` 
     Habilita los diferentes tipos de depuración. Se pueden usar comas o
@@ -117,7 +117,7 @@ No puedes hacer la compilación cruzada de estos puertos.
 Native AROS/i386-pc
 """""""""""""""""""
 
-Para compilar el puerto i386-pc, necesitas pasar ``--target=pc-i386
+Para compilar el puerto i386-pc, necesitas pasar ``--target=pc-i386``
 a configure. Además, están disponibles las siguientes opciones específicas
 para i386-pc:
 

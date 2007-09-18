@@ -12,7 +12,7 @@ Kontaktní informace
 
 
 Kontaktní osoba
-==============
+===============
 
 Hlavní kontaktní osoba pro AROS vývojový tým je Aaron "Optimizer"
 Digulla. Pokud se chcete obrátit na tým jako celek, napø. chcete nabídnout

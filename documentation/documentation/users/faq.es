@@ -26,7 +26,7 @@ las respuestas de los usuarios, aunque el foro permanece más actual.
 
 Por favor lee la introducción_.
 
-.. _introduction: ../../introduction/index
+.. _introducción: ../../introduction/index
 
 
 ¿Cuál es el estado legal de AROS?
@@ -67,7 +67,7 @@ positivo. Desafortunadamente, todavía no hubo ningún acuerdo que sonara legal,
 a pesar de las buenas intenciones de ambas partes.
 
 ¿Por qué solamente apuntan a ser compatibles con AmigaOS 3.1?
-------------------------------------------------------------
+-------------------------------------------------------------
 
 Hubo discusiones acerca de escribir un avanzado OS con las característica de AmigaOS. 
 Se ha dejado esto por una buena razón. Primero, todos están de acuerdo que el 

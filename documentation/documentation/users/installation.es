@@ -8,8 +8,8 @@ Guía para la instalación de AROS
 :Date:      $Date: 2007-04-07 07:21:50 +1000 (Sat, 07 Apr 2007) $
 :Status:    Needs to be updated for some AROS ports. Can be translated.
 :Abstract:
-	Este manual te guiará por los pasos necesarios para instalar los 
-	diferentes sabores de AROS.
+    Este manual te guiará por los pasos necesarios para instalar los 
+    diferentes sabores de AROS.
     .. Warning:: 
     
         AROS es un software de calidad alfa. Esto significa que en este momento
@@ -60,7 +60,7 @@ Requerimientos
 Para ejecutar AROS/i386-linux o AROS/i386-freebsd necesitarás lo siguiente:
 
 + Una instalación FreeBSD 5.x o Linux que funcione (no importa qué distribución
-uses, mientras que sea reciente).
+  uses, mientras que sea reciente).
 + Un servidor X configurado y funcionando (por ejemplo X.Org o XFree86).
 
 Eso es todo.
@@ -134,7 +134,7 @@ En caso de problemas revisa el FAQ para información relativa a tu tipo de hardwa
     
     Todavía no recomendamos la instalación de AROS/i386-pc en el disco duro [#]_  Aunque
     necesitarás sí o sí instalar AROS para probar algunas de sus características y workarounds. 
-	Por favor fíjate que **no deberìas** usar install en tu máquina de trabajo,
+    Por favor fíjate que **no deberìas** usar install en tu máquina de trabajo,
     ¡cuyo disco duro contiene los valiosos datos!
     No estamos asumiendo alguna responsabilidad por cualquier pérdida de datos ocurrida
     durante la instalación. Es bienvenido cualquier informe sobre errores en la instalación.
@@ -174,8 +174,8 @@ Simplemente pon el CD en la primera unidad de CDROM y reinicia la computadora. E
 es automático, y si todo va bien deberías ver una agradable pantalla después de una cierta
 espera.
 
-Si tu computadora no soporta arrancar desde CDROM, entonces puedes crear un disquete
-de arranque_ y usarlo junto con el CDROM. Simplemente inserta ambos en sus unidades y
+Si tu computadora no soporta arrancar desde CDROM, entonces puedes crear un disquete_
+de arranque y usarlo junto con el CDROM. Simplemente inserta ambos en sus unidades y
 reinicia. AROS arrancará desde el disquete, pero después de que las cosas importantes 
 se hayan cargado en memoria (incluyendo el manejador del sistema de archivo de CDROM), 
 continuará el proceso desde el CDROM.
@@ -349,7 +349,7 @@ botón relevante y las casillas de verificación: *Bootable: Yes* y
 *Automount: Yes*. Guarda los cambios después de subir dos niveles de nuevo,
 confirma y reinicia.
 
-*¿Cuánto resta? Bien, estamos más allá de la mitad del camino. Después de
+*¿Cuánto resta?* Bien, estamos más allá de la mitad del camino. Después de
 arrancar y revisar todas las configuraciones para HD0, debemos ver su OK.
 Así que podemos salir del HDToolbox sin que quede ninguna duda. Este es el
 momento para algo de la magia del CLI.
@@ -448,7 +448,8 @@ adecuada.
         <uncheck it, we're installing all-on-one>
     Copy Extras and Developer Files to Work?    [] 
         <same as above>
-    Work drive ... <skipped>
+    Work drive ...
+        <skipped>
     
 Después de desmarcarla, aprieta *Proceed*. Aparece la ventana con las opciones 
 del cargador de arranque. Aquí solamente podemos marcar si GRUB, el *GRand 

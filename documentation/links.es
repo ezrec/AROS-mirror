@@ -50,15 +50,15 @@ __ http://amidevcpp.amiga-world.de/afa_binarie_upload.php
 
 Artículos sobre AROS
 ====================
-===============================================  ==================  ==========
-Título                                            Autor              Fecha
-===============================================  ==================  ==========
-`"Onboard the Last Train to Amiga Neverland"`__  Dmitar Butrovski    2006-09-13
-`"AROS"`__ (en la revista alemana Amiga-Magazin) Martin Steigerwald  2003-09-13
-`"If you like Amiga, you'll love AROS"`__        Elwood              Unknown   
-`"AROS: Native AmigaOS For Your PC"`__           John Chandler       2001-10-21 
-`"AROS: The Amiga Research Operating System"`__  John Chandler       1999-10-02
-===============================================  ==================  ==========
+================================================  ==================  ==========
+Título                                            Autor               Fecha
+================================================  ==================  ==========
+`"Onboard the Last Train to Amiga Neverland"`__   Dmitar Butrovski    2006-09-13
+`"AROS"`__ (en la revista alemana Amiga-Magazin)  Martin Steigerwald  2003-09-13
+`"If you like Amiga, you'll love AROS"`__         Elwood              Unknown   
+`"AROS: Native AmigaOS For Your PC"`__            John Chandler       2001-10-21 
+`"AROS: The Amiga Research Operating System"`__   John Chandler       1999-10-02
+================================================  ==================  ==========
 
 __ http://www.osnews.com/story.php?news_id=15819
 __ http://www.amiga-magazin.de/magazin/a09-03/aros/index.html

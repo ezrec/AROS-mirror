@@ -195,7 +195,7 @@ Cambiemos es contenido de nuestra cadena::
 
     SetAttrs(string, MUIA_String_Contents, (IPTR)"hello", TAG_DONE);
 
-+ Los parámetros puntero deben ser convertidos a `IPTR`para evitar
++ Los parámetros puntero deben ser convertidos a `IPTR` para evitar
   las advertencias.
 + Después del parámetro de objeto, se pasa una taglist a `SetAttrs`
   y así debe terminar con `TAG_DONE`.

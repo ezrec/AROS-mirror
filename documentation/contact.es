@@ -47,8 +47,8 @@ que tienen los desarrolladores. Están disponibles las siguientes listas de corre
 
   .. Note:: Los pedidos de suscripción a esta lista no se manejan automáticamente, 
             sino que cada pedido es verificado por el administrador de la lista. 
-			Así que podría haber alguna demora desde el momento en que tú envías 
-			un pedido de suscripción hasta que en realidad te conviertes en miembro.
+            Así que podría haber alguna demora desde el momento en que tú envías 
+            un pedido de suscripción hasta que en realidad te conviertes en miembro.
 
 + `AROS Bugs`__
 

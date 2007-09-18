@@ -126,7 +126,7 @@ El código de muestra
 
 El directorio 'documentation/developers/samplecode' está para los ejemplos
 en código fuente. El contenido se copia sin modificar a los targets.
- 
+           
 Las imágenes
 ------------
 
@@ -140,7 +140,7 @@ Envío
 -----
 
 Antes que envíes los documentos nuevos o modificados deberías 
-`build`_ ambos targets HTML y WWW localmente. Busca los mensajes de
+`build`__ ambos targets HTML y WWW localmente. Busca los mensajes de
 error y repáralos. Comprueba el resultado en un navegador web. Lo normal
 es que los cambios sean aplicados a http://www.aros.org algunas horas
 después de su envío.

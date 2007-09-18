@@ -183,7 +183,7 @@ support booting from CD or on some really obsolete PC`s. But it`s still maitaned
 ''''''
 
 To create the boot floppy, you will need to download the disk image from
-the `d<../../download>`__, extract the archive, and write the boot image to a floppy
+the `страницы закачек`_, extract the archive, and write the boot image to a floppy
 disk. If you are using a UNIX-like operating system (such as Linux or FreeBSD), 
 you can do this with the following command::
 
@@ -476,6 +476,7 @@ Footnotes
        very unexperienced users at the moment so this note was done. 
 
 
+.. _`страницы закачек`: ../../download
 
 .. _rawrite: http://uranus.it.swin.edu.au/~jn/linux/rawwrite.htm
 

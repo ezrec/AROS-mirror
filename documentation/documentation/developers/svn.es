@@ -73,7 +73,7 @@ __ http://main.aminet.net/
 Windows
 -------
 
-Si ejecutars Microsoft Windows (TM) puedes usar el cliente SVN TortoisseSVN___, especialmente si
+Si ejecutars Microsoft Windows (TM) puedes usar el cliente SVN TortoisseSVN__, especialmente si
 te gusta usar Windows Explorer. Este programa es de fuente abierta y gratuito, con muchas características
 y un buen soporte. Por favor asegúrate también que presentas los archivos con los fin de renglón estilo UNIX,
 de otro modo puedes *romper* la generación de código.
@@ -253,7 +253,7 @@ Para habilitar esto necesitas hacer::
 
 
 Importar
-=======
+========
 
 Cuando quieras agregar una gran colección de archivos, por ej. el código fuente
 de algún software existente, "svn add" se vuelve rápidamente fastidioso. Para
