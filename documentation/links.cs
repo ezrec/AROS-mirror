@@ -11,35 +11,35 @@ Odkazy
 
 .. Contents::
 
-AROS resources
-==============
+AROS zdroje
+===========
 
 + `Team AROS`__ 
 
-  TeamAROS is a grass roots support group for AROS.
+  TeamAROS je seskupení obyèejných lidí podporujích AROS.
   
 +  `AROS-Exec <http://aros-exec.org>`__
 
   AROS komunitní web, fóra, novinky, galerie
 
-+ `AROS software archive`__
++ `Archiv softwaru pro AROS`__
 
 + `AROS Polska`__
 
-+ `Map of AROS users`__
++ `Mapa u¾ivatelù AROS`__
 
-+ `AROS for Amiga`__
++ `AROS pro Amigu`__
   
-  AfA OS replaces AmigaOS core libraries with their more advanced AROS counterparts.
+  AfA OS nahrazuje AmigaOS core libraries with their more advanced AROS counterparts.
   
 + `AROS World <http://arosworld.org>`__
-  A new AROS website, intended to be the user community website
+  Nový web AROS, intended to be the user community website
                                                                
 + `AROS Aminet Section <http://aros.aminet.net/>`__
 
-+ `AROS on WikiPedia <http://en.wikipedia.org/wiki/AROS_Research_Operating_System>`__
++ `AROS na WikiPedii <http://en.wikipedia.org/wiki/AROS_Research_Operating_System>`__
 
-+ `AROS documentation on WikiBooks <http://en.wikibooks.org/wiki/Aros>`__
++ `AROS dokumentace on WikiBooks <http://en.wikibooks.org/wiki/Aros>`__
   
 __ http://www.teamaros.org/
 __ http://archives.aros-exec.org/
@@ -47,17 +47,17 @@ __ http://www.aros.bbs.pl/
 __ http://www.frappr.com/arosusers
 __ http://amidevcpp.amiga-world.de/afa_binarie_upload.php
 
-Articles about AROS
-===================
+Èlánky o AROS
+=============
 
 ===============================================  ==================  ==========
-Title                                            Author              Date
+Název                                            Autor               Datum
 ===============================================  ==================  ==========
-`"Onboard the Last Train to Amiga Neverland"`__  Dmitar Butrovski    2006-09-13
-`"AROS"`__ (in German mag Amiga-Magazin)         Martin Steigerwald  2003-09-13
-`"If you like Amiga, you'll love AROS"`__        Elwood              Unknown   
-`"AROS: Native AmigaOS For Your PC"`__           John Chandler       2001-10-21 
-`"AROS: The Amiga Research Operating System`__   John Chandler       1999-10-02
+`"Onboard the Last Train to Amiga Neverland"`__  Dmitar Butrovski    13.09.2006
+`"AROS"`__ (in German mag Amiga-Magazin)         Martin Steigerwald  13.09.2003
+`"If you like Amiga, you'll love AROS"`__        Elwood              Neznámé   
+`"AROS: Native AmigaOS For Your PC"`__           John Chandler       21.10.2001 
+`"AROS: The Amiga Research Operating System`__   John Chandler       02.10.1999
 ===============================================  ==================  ==========
 
 __ http://www.osnews.com/story.php?news_id=15819
@@ -66,27 +66,27 @@ __ http://elwoodb.free.fr/articles/AROS/
 __ http://www.suite101.com/article.cfm/amiga/82949 
 __ http://www.suite101.com/article.cfm/amiga/26509
 
-If you know some article about AROS that we haven't mentioned listed, please 
-contact_ us so we can add it. Thanks. 
+Pokud znáte nìjaké èlánky o AROS, které tu nejsou uvedeny, kontaktujte nás
+prosím a my je pøidáme. Díky. 
 
 
-Articles that mention AROS
-==========================
+Èlánky týkající se AROS
+=======================
 
 ===============================================  ==============  ==========
-Title                                            Author          Date
+Název                                            Autor           Datum
 ===============================================  ==============  ==========
-`"Climbing the Kernel Mountain"`__               Emmanuel Marty  2002-08-13
-`Interview with Martin Blom`__                   Johan Forsberg  Unknown
-`"A Nudge In The Right Direction"`__             John Chandler   2002-07-02
-`"What Are The Odds...?"`__                      John Chandler   2001-07-31
-`"May Update"`__                                 John Chandler   2001-05-07
-`"This Is Reality Control"`__                    John Chandler   2001-02-07
-`"Open Amiga Foundation Update"`__               John Chandler   2000-07-02
-`"Gui4Cli"`__                                    John Chandler   2000-03-01
-`"And So It Begins..."`__                        John Chandler   2000-01-10
-`"We're In This Together Now (Part II)"`__       John Chandler   1999-12-05
-`"Open Source AmigaOS?"`__                       John Chandler   1999-03-01
+`"Climbing the Kernel Mountain"`__               Emmanuel Marty  13.08.2002
+`Interview with Martin Blom`__                   Johan Forsberg  Neznámé
+`"A Nudge In The Right Direction"`__             John Chandler   02.07.2002
+`"What Are The Odds...?"`__                      John Chandler   31.07.2001
+`"May Update"`__                                 John Chandler   07.05.2001
+`"This Is Reality Control"`__                    John Chandler   07.02.2001
+`"Open Amiga Foundation Update"`__               John Chandler   02.07.2000
+`"Gui4Cli"`__                                    John Chandler   01.03.2000
+`"And So It Begins..."`__                        John Chandler   10.01.2000
+`"We're In This Together Now (Part II)"`__       John Chandler   05.12.1999
+`"Open Source AmigaOS?"`__                       John Chandler   01.03.1999
 ===============================================  ==============  ==========
 
 __ http://www.osnews.com/story.php?news_id=1532&page=1
@@ -101,12 +101,12 @@ __ http://www.suite101.com/article.cfm/amiga/31482
 __ http://www.suite101.com/article.cfm/amiga/29763
 __ http://www.suite101.com/article.cfm/amiga/16364
 
-If you know some article that mentions AROS that we haven't listed here,
-please contact_ us so we can add it. Thanks.
+Pokud znáte nìjaké èlánky, které se týkají AROS a nemáme je tu zaøazeny,
+kontaktujte nás prosím a my je pøidáme. Díky.
 
 
-Homepages of developers
-=======================
+Homepage vývojáøù
+=================
 
 + `Aaron Digulla`__
 + `Adam Chodorowski`__
@@ -135,16 +135,16 @@ __ http://homes.hallertau.net/~oli/
 __ http://www.in-berlin.de/User/jroger/index.html
 
 
-Miscellaneous
-=============
+Rùzné
+=====
 
 + `Phoenix Developer Consortium`__
 
   .. Image:: images/phoenix.jpeg
   
-  The Phoenix Developer Consortium supports the development of alternative
-  computing platforms by working with core and third-party developers and
-  providing resources for that development.
+  Phoenix Developer Consortium podporuje vývoj alternativních poèítaèových
+  platforem prací s jádrem a vývojáøi tøetích stran a poskytováním zdrojù
+  pro jejich vývoj.
 
 
 

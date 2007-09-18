@@ -18,7 +18,7 @@ Následující spoleènosti, organizace a jednotlivci poskytli tyto prostøedky:
     
   Ochotní lidé z Trustec poskytli prostor a ¹íøku pásma (bandwidth) pro
   webový server AROS, CVS server, FTP server a nìkolik mailing listù. Pokud
-  potøebujete vývoj nebo kurzy v Javì v Nìmecku, kontaktuje je!
+  máte zájem o vývoj nebo kurzy v Javì v Nìmecku, kontaktuje je!
 
 + Genesi__
 
@@ -26,7 +26,7 @@ Následující spoleènosti, organizace a jednotlivci poskytli tyto prostøedky:
   
      <a href="http://www.pegasosppc.com/"><img border="0" src="/images/genesi.gif"></a>
 
-  Genesi ¹tìdøe darovalo základní desku Pegasos, se snahou pøivést AROS
+  Genesi nás ¹tìdøe obdarovalo základní deskou Pegasos, se snahou pøivést AROS
   i na tuto hardwarovou platformu. Díky!
 
 + SourceForge__
@@ -43,7 +43,7 @@ Následující spoleènosti, organizace a jednotlivci poskytli tyto prostøedky:
 + Randal Vice
 
 
-Následující organizace a jednotlivci sponzorovali vývojáøskou práci:
+Vývojáøskou práci sponzorovali následující jednotlivci a organizace:
 
 + `Team AROS`__
 + `Norsk Amigaforening`__
