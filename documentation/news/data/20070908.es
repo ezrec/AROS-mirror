@@ -8,7 +8,7 @@ Status Update
 Últimas noticias
 ----------------
 
-Michael Schulz está trabajando en las partes de bajo nivel de la
+Michal Schulz está trabajando en las partes de bajo nivel de la
 versión x86-64 de la biblioteca exec.library - el planificador
 (scheduler) y los manejadores de interrupción. El código de
 bootstrap ha cambiado un poco y se las arregló para compilar
