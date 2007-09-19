@@ -1,14 +1,14 @@
-We need your help!
-==================
+Potøebujeme va¹i pomoc!
+=======================
 
-We have quite few active developers, which unfortunately means that progress is
-quite slow. We simply need more people to help us out! There is a huge number
-of tasks that are in need of a dedicated developer. They range from large
-projects to small ones, from hardware hacking, through high-level system to
-application programming.  There is basically something for everyone that wishes
-to contribute, regardless of how proficient you are in coding!
+Máme docela málo aktivních vývojáøù, co¾ bohu¾el znamená, ¾e vývoj je celkem
+pomalý. Zkrátka potøebujeme více lidí, co by nám pomohli! Pro obrovský poèet
+úkolù jsou potøeba horliví vývojáøi. Pohybují se od velkých projektù k malým,
+od hardwarového hackování, pøes high-level systém k programování aplikací.
+V podstatì se nìco najde pro v¹echny, kdo si pøejí pøispívat, bez ohledu na to,
+jak dokonalí jsou v kódování!
 
-For those of you who aren't programmers, there are still plenty of tasks that
-you can help with! This includes writing documentation, translating programs 
-and documentation to other languages, creating nice graphics and hunting bugs. 
-These tasks are just as important as coding!
+Pro ty z vás, kdo nejsou programátoøi, jsou stále spousty úkolù, s kterými
+nám mù¾ete pomoci! Napøíklad psaní dokumentace, pøekládání programù
+a dokumentace do dal¹ích jazykù, vytváøení hezké grafiky a odchytávání chyb.
+Tyto úkoly jsou stejnì dùle¾ité jako kódování!

@@ -30,16 +30,16 @@ AROS zdroje
 
 + `AROS pro Amigu`__
   
-  AfA OS nahrazuje AmigaOS core libraries with their more advanced AROS counterparts.
+  AfA OS nahrazuje hlavní knihovny AmigaOS jejich pokroèilej¹ími AROS protìj¹ky.
   
 + `AROS World <http://arosworld.org>`__
-  Nový web AROS, intended to be the user community website
+  Nový web AROS urèený pro stránky komunity u¾ivatelù
                                                                
-+ `AROS Aminet Section <http://aros.aminet.net/>`__
++ `Sekce AROS na Aminetu <http://aros.aminet.net/>`__
 
 + `AROS na WikiPedii <http://en.wikipedia.org/wiki/AROS_Research_Operating_System>`__
 
-+ `AROS dokumentace on WikiBooks <http://en.wikibooks.org/wiki/Aros>`__
++ `AROS dokumentace na WikiBooks <http://en.wikibooks.org/wiki/Aros>`__
   
 __ http://www.teamaros.org/
 __ http://archives.aros-exec.org/
