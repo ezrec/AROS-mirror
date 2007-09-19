@@ -71,17 +71,11 @@ ppc-all-contrib:
     compilados para la arquitectura PowerPC, para usar con 
     el puerto Linux/PowerPC.
 i386-all-sdk:
-    Set of files and tools to build your own AROS programs
-    on your preferred machine. You'll need also gcc and the
-    binutils configured to produce i386-elf executables.
     El conjunto de archivos y herramientas para construir tus
     propios programas AROS en tu máquina preferida. También
     necesitarás gcc y binutils configurados para producir
     ejecutables i386-elf.
 ppc-all-sdk:
-    Set of files and tools to build your own AROS programs
-    on your preferred machine. You'll need also gcc and the
-    binutils configured to produce ppc-elf executables.
     El conjunto de archivos y herramientas para construir tus
     propios programas AROS en tu máquina preferida. También
     necesitarás gcc y binutils configurados para producir
