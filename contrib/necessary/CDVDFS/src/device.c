@@ -373,10 +373,10 @@ ULONG signals;
 #endif
 #define UtilityBase global->UtilityBase
 
-ULONG PlayTags[] = {
-	SYS_Input, NULL,
-	SYS_Output, NULL,
-	SYS_Asynch, TRUE,
+struct TagItem PlayTags[] = {
+	{SYS_Input, NULL},
+	{SYS_Output, NULL},
+	{SYS_Asynch, TRUE},
 	TAG_END
 };
 
@@ -432,8 +432,8 @@ UBYTE   notdone = 1;
 		{
 			ReplyMsg (msg);
 			if (global->g_play_cdda_command[0]) {
-				PlayTags[1] = (ULONG)Open ("NIL:", MODE_OLDFILE);
-				System(global->g_play_cdda_command, (struct TagItem *)PlayTags);
+				PlayTags[0].ti_Data = Open ("NIL:", MODE_OLDFILE);
+				System(global->g_play_cdda_command, PlayTags);
 			}
 			else
 			{

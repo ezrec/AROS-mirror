@@ -52,7 +52,7 @@ struct TagItem PrefsProcTags[] = {
 
 void Prefs_Init (void)
 {
-    global->PrefsProc = (struct Task *)CreateNewProc((struct TagItem *)PrefsProcTags);
+    global->PrefsProc = (struct Task *)CreateNewProc(PrefsProcTags);
     if (global->PrefsProc) {
       WaitPort(global->Dback);				    /* handshake startup    */
       GetMsg(global->Dback);				    /* remove dummy msg     */
