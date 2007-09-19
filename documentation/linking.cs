@@ -31,6 +31,10 @@ z následujích hezkých banerù.
 |  :align: center                          |                      |
 |  :class: bannerimage                     |                      |
 +------------------------------------------+----------------------+
+| .. Image:: /images/aros-banner-peta.png  | Petr Novak           |
+|  :align: center                          |                      |
+|  :class: bannerimage                     |                      |
++------------------------------------------+----------------------+
 
 
 Jsou zde také "podpisové" banery k pou¾ití na fórech:

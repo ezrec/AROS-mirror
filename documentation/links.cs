@@ -16,7 +16,7 @@ AROS zdroje
 
 + `Team AROS`__ 
 
-  TeamAROS je seskupení obyèejných lidí podporujích AROS.
+  TeamAROS je skupina obyèejných lidí podporujích AROS.
   
 +  `AROS-Exec <http://aros-exec.org>`__
 
