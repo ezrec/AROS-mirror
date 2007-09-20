@@ -181,8 +181,8 @@ para instrucciones.
 	páginas que todavía no has traducido, el sitio mostrará la versión en inglés,
 	incluso cuando navegues con tu lenguaje específico.
 
-Revisando tu trabajo
-~~~~~~~~~~~~~~~~~~~~
+Revisa tu trabajo
+~~~~~~~~~~~~~~~~~
 
 Se aconseja que revises tus textos respecto a dos asuntos: ortografía y errores de
 las marcas.
@@ -216,18 +216,18 @@ terminen en el sitio web? Compilar el sitio web por tí mismo también, igual
 que se hace en el servidor. Esto requiere que instales algo de software extra
 (Python), pero después puedes revisar tu trabajo con el mismo guión que
 crea los archivos HTML del sitio web en el servidor; no es magia =).
-Tu trabajas de un modo más eficiente de esta manera,mantienes el sitio ordenado
+Trabajas de un modo más eficiente de esta manera, mantienes el sitio ordenado
 y ahorras el tiempo de los otros desarrolladores.
 Para intrucciones sobre cómo compilar localmente y las herramientas necesarias, revisa
 la `página de documentación`_. 
 
-Como con los arreglos, las nuevas páginas deberáin mostrarse en unas pocas horas
+Como con los arreglos, las nuevas páginas deberían mostrarse en unas pocas horas
 (a un máximo de un día) en el sitio web.
 
-Localizando AROS o las aplicaciones
-====================================
+Localizar AROS o las aplicaciones
+=================================
 Localizar el OS y sus aplicaciones agrega mucho de la usabilidad y 
-experiencia de los usuarios no angloparlantes, quizás incluso hace que AROS
+experiencia a los usuarios no angloparlantes, quizás incluso hace que AROS
 pueda ser usado por ellos en primer lugar. El procedimiento para localizar el OS es básicamente
 el mismo que para el sitio, pero difiere en sus detalles.
 Como con el sitio web incluso una traducción básica basta, limitándose al
@@ -260,21 +260,21 @@ el trabajo. Si estás confundido, no dudes en pedir ayuda en AROS-exec o en la LC
 
 *Definiciones del idioma y de las fuentes*
 
-Primero, debes revisar por tu país en Locale/Countries y el archivo de
-definición del lenguaje en Locale/Languages. La mayoría de los lenguajes
-ya fueron agregados por si acaso. Si no puedes encontrar algo como <tu_lenguaje>.c
+Primero, debes buscar tu país en Locale/Countries y el archivo de
+definición del idioma en Locale/Languages. La mayoría de los idiomas
+ya fueron agregados por si acaso. Si no puedes encontrar algo como <tu_idioma>.c
 ahí, entonces debes crearlo. Intenta evitar los caracteres especiales en el
 nombre del archivo, esto puede ayudar a evitar problemas con algunos
 programas no-utf (recuerda, AROS pretende ser portátil). Puedes buscar el 
-más completo lang.c y copiarlo a tu_lang.c. Entonces, abre el archivo
-en tu editor de texto y traduce todas las cadenas de texto que neceistes.
+más completo lang.c y copiarlo a tu_idioma.c. Entonces, abre el archivo
+en tu editor de texto y traduce todas las cadenas de texto que necesites.
 Esto incluye las unidades usuales como días, meses, moneda, etc. Puedes
-encontrar tablas con descripciones de los caracteres en estos archivos
-(tablas de collation), puedes saltarlas al principio. Después de compilar,
+buscar tablas con descripciones de los caracteres usados en estos archivos
+(tablas de collation), o puedes saltarlas al empezar. Después de compilar,
 tu locale debe aparecer en la lista de locales del Pref Locale.
 
 ¿Qué sigue? Si tu lenguaje usa fuentes no-ISO, las necesitas.
-Busca en Internet para la Fuentes bitmap de AmigaOS o True Type de
+Busca en Internet las fuentes bitmap de AmigaOS o True Type de
 fuente abierta, que pueden ser incluídas al sistema. Pónlas en /Fonts
 o /Fonst/TrueType y arregla el mmakefile (¡se **cuidadoso** con los
 mmakefiles!)
@@ -289,15 +289,14 @@ ser tocados a menos que sepas que cambiaste el programa mismo.
 Los archivos .CT contienen todas las cadenas traducidas, y son el objeto de 
 tu trabajo. Navega el árbol SVN por estos archivos y tradúcelos: encuentra
 el archivo <nombre>.ct más reciente (mira laversión y la fecha en la 
-cabecera), copia tu <tu_lang>.ct (es mucho más fácil que traducirlos del
+cabecera), copia tu <tu_idioma>.ct (es mucho más fácil que traducirlos del
 archivo <lang>.cd) y edítalo. Intenta poner las palabras en los lugares correctos,
 para lo que necesitarás revisar dónde se usan.
 
-AmigaOS or Linux. You can also check Aminet or ask the Developer ML.
 Para ayudarte con este trabajo de copia y cambio de nombre, hay una aplicación
 CLI/Terminal llamada Flexcat. Puede generar los archivos .CT para tu idioma 
 de modo automático de los archivos .CD. Es útil que también comente el texto
-original (para inspección) y que cree renglones vacíos para que traduzcas. 
+original (para inspección) y que cree renglones vacíos para que llenes con tu traducción. 
 También ofrece las opciones de compilación necesarias para probar los
 catálogos, que se trata más adelante. Flexcat se puede encontrar en AROSTrunk/Tools
 pero necesita que se lo compile para AmigaOS o Linux. Puedes también revisar
@@ -313,7 +312,7 @@ de su original archivo .CD usando el siguiente comando::
 	FlexCat <application>.cd NEWCTFILE=deutsch.ct
 
 Esto te dará un archivo deustch.ct listo para traducir. A menudo no se agrega
-la información sobre la versión; cópiala manualmente del archivo original.
+la información sobre la versión; cópiala a mano del archivo original.
 Traduce sus contenidos y cuando esté listo, envía el archivo al depósito.
 
 Un nota especial sobre actualizar los archivos de catálogo más viejos - se
@@ -324,11 +323,11 @@ puede hacer eficiéntemente con Flexcat usando el siguiente comando::
 Esto conservará las cadenas viejas e insertará nuevas donde las encuentre. La
 documentación de Flexcat tiene información adicional.
 
-Revisando tu trabajo
-~~~~~~~~~~~~~~~~~~~~
+Revisa tu trabajo
+~~~~~~~~~~~~~~~~~
 De nuevo, ejecuta las correcciones ortográficas y relecturas de los textos como
 ya se mencionó. La prueba es posible de varias maneras: (1) envíalos al 
-servidor SVN y espera la siguiente nightly build. O (2), que es más inmediata,
+servidor SVN y espera la siguiente nightly build. O (2), que es la más inmediata,
 compila los locales por tí mismo usando Flexcat, luego cópialos al cajón
 Locale de AROS y revísalos con las aplicaciones interesadas.
 La compilacióon de los archivos catálogo 'finales' con Flexcat se hace
