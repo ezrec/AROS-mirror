@@ -3,7 +3,7 @@
 include $(TOP)/config/make.cfg
 
 # The apps target points back to config/$(ARCH)/mmakefile:
-#MM- contrib : includes linklibs contrib-$(ARCH)
+#MM- contrib : includes linklibs contrib-complete
 
 #MM- contrib-complete : contrib-aminet
 #MM- contrib-complete : contrib-fish
