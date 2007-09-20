@@ -1,5 +1,5 @@
-¡Necesiamos tu ayuda!
-=====================
+¡Necesitamos tu ayuda!
+======================
 
 Tenemos muy pocos desarrolladores, lo que desafortunadamente significa que el
 progreso es bastante lento. ¡Simplemente necesitamos más gente para ayudarnos!
