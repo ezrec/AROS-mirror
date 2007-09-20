@@ -1,6 +1,6 @@
-=====
-Links
-=====
+=======
+Enlaces
+=======
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
 :Copyright: Copyright © 1995-2006, The AROS Development Team
@@ -10,8 +10,8 @@ Links
 
 .. Contents::
 
-Device drivers development
---------------------------
+El desarrollo de los controladores de dispositivo
+-------------------------------------------------
 + `USB 2.0 specifications`__
 
   The official source of USB information. Not really easy to grasp, but
@@ -30,8 +30,8 @@ Device drivers development
 __ http://www.usb.org/developers/docs/
 __ http://www.beyondlogic.org/usbnutshell/usb1.htm
 
-Executable file formats
------------------------
+El formato de los archivos ejecutables
+--------------------------------------
 
 + `ELF - Executable and Linking Format - Specification v1.2 - pdf version`__
 
@@ -57,8 +57,8 @@ __ http://www.cs.ucdavis.edu/~haungs/paper/node10.html
 __ http://greywire.8m.com/greywire/amigasde.htm
 
 
-Miscellaneous Operating System resources
-----------------------------------------
+Recursos misceláneos sobre Sistemas Operativos
+----------------------------------------------
 
 + `The Operating System Resource Center`__
 
@@ -91,8 +91,8 @@ __ http://my.execpc.com/~geezer/osd/index.htm
 __ http://www.mega-tokyo.com/osfaq2/
 
 
-Tools
------
+Herramientas
+------------
 
 + `Object Oriented Programming For All (OOP4A)`__
 
@@ -125,8 +125,8 @@ __ http://www.lysator.liu.se/~lcs/files/gg-cross/
 __ http://www.zerohero.se/cross/aros.html
 __ http://www.whoosh777.pwp.blueyonder.co.uk/amiga-68k-x-x86-aros-gcc.html
 
-Miscellaneous
--------------
+Misceláneo
+----------
 
 + `Documentation for many Amiga related libraries`__
 
