@@ -16,8 +16,8 @@ PORTING GUIDE
 Introductión
 ============
 
-Esta guía es acerca de transferir el software que viene con configure o escribir
-guiones para AROS.
+Esta guía es sobre la transferencia del software que viene con guionees 
+configure o make a AROS.
 Esto es verdad para la mayoría del software de fuente abierta del mundo Linux.
 Se basa en un `documento`__ escrito por Johan Samuellson para el AmigaOS4.
 
@@ -197,7 +197,7 @@ Ahora finalmente podemos hacer ``make install``, que instalará el juego en
 */PROGDIR*. Como éste no es un buen lugar tenemos que copiarlo a un lugar en
 donde AROS pueda alcanzarlo (por ej. cp -r /PROGDIR ~/AROS/games/ltris).
 
-Recuerda en hacer ``rm -rf /PROGDIR/*`` antes de que compiles otro proyecto.
+Recuerda hacer ``rm -rf /PROGDIR/*`` antes de compilar otro proyecto.
 
 
 Errores comunes que pueden ocurrir cuando configures
@@ -272,28 +272,30 @@ agrega algunas bibliotecas de enlazado.
 Aquí está la explicación de lo que significan las banderas.
  
 CC
-    The name of the C compiler executeable.
+    El nombre del ejecutable del compilador de C.
 
 RM
-    The name of the delete command.
+    El nombre del comando delete.
 
 STRIP
     The name of the strip command (used to remove debug data from exe files).
 
 CFLAGS
     Tells the compiler where to find the includes (-I) etc.
+    Indica al compilador dónde hallar los includes (-I) etc.
 
 LDFLAGS
-    Tells the linker what libraries to include (-l) and were
-    to find them (-L). 
+    Indica al enlazador qué bibliotecas incluir (-l) y dónde
+    hallarlas (-L).
 
 OBJS
-    The compiler (GCC/G++) compiles object files (#?.o) from your .c
-    files that are later linked together to become an executable file.
-    Specify the object file names here.
+    El compilador (GCC/G++) compila a archivos objeto (#?.o) de tus
+    archivos .c que después son enlazados juntos para convertirse en
+    un archivo ejecutable. Especifica aquí los nombres de los archivos
+    objeto.
 
 OUTPUT
-    The name of the final executable file.
+    El nombre del archivo ejecutable final.
 
 ::
 
@@ -318,32 +320,33 @@ OUTPUT
   clean:
           $(RM) -f $(OBJS) $(OUTPUT)
 
-Remember that you have to use tabulator chars before the command.
+Recuerda que tienes que usar caracteres tabulador antes del comando.
 
 
-Using the build system
-======================
+Usar el build system
+====================
 
-The build system contains some scripts for configuring of packages. The big advantage
-when using the build system is that you can easily port to different AROS flavours.
+El build system contiene algunos guiones para configurar los paquetes. La gran 
+ventaja de usar el build system es que puedes transferir fácilmente a diferentes 
+sabores de AROS.
 
 + %build_with_configure
 + %fetch_and_build
 + %fetch_and_build_gnu_development
 
-Look in the file $(TOP)/config/make.tmpl for an explanation of the arguments. In
-*$(TOP)/contrib/gnu* you can already find a lot of GNU packages.
+Mira en el archivo $(TOP/config/make.tmpl para una explicación de los argumentos. En
+*$(TOP)/contrib/gnu* ahora puedes hallar muchos paquetes GNU.
 
 
 Misc
 ====
 
-Converting unix paths to AROS paths
------------------------------------
+Convertir las rutas unix a rutas AROS
+-------------------------------------
 
-How do I convert UNIX paths into AROS paths? Exchange *getenv("HOME")* by *"/PROGDIR/"*
+¿Cómo convierto las rutas Unix en rutas AROS? Intercambia *getenv("HOME")* por *"/PROGDIR/"*
 
-Examples::
+Ejemplos::
 
     old: strcpy(path, getenv("HOME"));
     new: strcpy(path, "/PROGDIR/");
@@ -354,21 +357,21 @@ Examples::
     old: sprintf(rc_dir, "%s/.gngeo/romrc.d", getenv("HOME"));
     new: sprintf(rc_dir, "%sgngeo/romrc.d", "/PROGDIR/");
 
-Notice that I removed "/." in the last example.
+Fíjate que quité "/." en el último ejemplo.
 
-Paths to datadirs are often set during the configure process by issuing 
-*-DDATADIR=*. If this is the case set it to *-DDATADIR=/PROGDIR/*
-It's also common that the datadir are set in the makefiles. Locate *DATADIR=*
-and change it to *DATADIR=/PROGDIR/*
+Las rutas a los directorios de los datos a menudo se establecen durante 
+el proceso de configure haciendo *-DDATADIR=*. Si éste es el caso establece a
+*-DDATADIR=/PROGDIR/*. También es común que el directorio de los datos 
+se establezca en los makefiles. Ubica *DATADIR=* y cámbialo a *DDATADIR=/PROGDIR/*
 
 
 Defines
 -------
 
-Defines are often set in *config.h*, if something is configured wrongly, you can
-often change it here by using *#define* and *#undef*.
+Los defines se establecen en general en *config.h*, si algo está mal configurado,
+puedes cambiarlo ahí usando *#define* y *#undef*.
 
-A define example that considers all AmigaOS flavours::
+Un ejemplo de define que considera todos los sabores de AmigaOS::
 
   #ifdef __AMIGA__
 	  blah blah blah
@@ -376,7 +379,7 @@ A define example that considers all AmigaOS flavours::
           blah blah blah
   #endif
 
-A define example that only considers AROS::
+Un ejemplo de define que sólo considera a AROS::
 
   #ifdef __AROS__
 	  blah blah blah
@@ -384,11 +387,11 @@ A define example that only considers AROS::
           blah blah blah
   #endif
 
-A define example, that considers BeOS and AROS::
+Un ejemplo de define que considera a BeOS y a AROS::
 
   #if !defined(__BEOS__) && !defined(__AROS__)
 
-An example of a more complex #ifdef::
+Un ejemplo más complejo::
 
   #ifdef GP2X
 	char *gngeo_dir="save/";
@@ -398,82 +401,83 @@ An example of a more complex #ifdef::
 	char *gngeo_dir=get_gngeo_dir();
   #endif
 
-Some open source packages are already adopted to Amiga-like operating systems.
-If you find something like *#ifdef __AMIGA__* in the source you can try to add
-the define to the config options (e.g. CFLAGS="-nix -D__AMIGA__").
+Algunos paquetes de fuente abierta ya han adoptado a los sistemas operativos
+de la familia Amiga. Si encuentras algo como *#ifdef __AMIGA* en el fuente
+puedes probar agregar el define a las opciones de configuración (por ej.
+CFLAGS="-nix -D__AMIGA__").
 
 
-Understanding error messages
-----------------------------
+Entender los mensajes de error
+------------------------------
 
 Error: No return statement in function returning non-void 
-  There is no *return* in a function that needs a return.
+  No hay un *return* en una función que necesita uno.
 
 Error: Control reaches end of non-void function
-  It is reaching the end of a function that needs to return a value, but there is no return.
+  Se llegó al final de una función que necesita devolver un valor, pero no hay ningun *return*.
 
 Error: May be used uninitialized in this function
-  The variable is not initialized. 
+  La variable no está inicializada.
 
 Warning: implicit declaration of function 'blah blah'
-  You need to include a header.
+  Necesitas incluir una cabecera.
 
 
-Common errors
--------------
+Errores comunes
+---------------
 
 warning: incompatible implicit declaration of built-in function 'exit';
 warning: incompatible implicit declaration of built-in function 'abort'::
   
-    solution: #include <stdlib.h>
+    solución: #include <stdlib.h>
 
 warning: implicit declaration of function 'strlen';
 warning: incompatible implicit declaration of built-in function 'strlen'::
 
-    solution: #include <string.h>
+    solución: #include <string.h>
 
 warning: implicit declaration of function 'memcpy';
 warning: incompatible implicit declaration of built-in function 'memcpy'::
 
-    solution: #include <string.h>
+    solución: #include <string.h>
 
 error: memory.h: No such file or directory::
 
-    solution: #include <string.h>
+    solución: #include <string.h>
 
 error: malloc.h: No such file or directory::
 
-    solution: #include <stdlib.h>
+    solución: #include <stdlib.h>
 
 warning: incompatible implicit declaration of built-in function 'printf'::
 
-    solution: #include <stdio.h>
+    solución: #include <stdio.h>
 
 warning: implicit declaration of function 'MyRemove'::
 
-    solution: #define MyRemove Remove
+    solución: #define MyRemove Remove
 
 
-Tips and tricks
----------------
+Consejos y trucos
+-----------------
 
-How do I search for text strings using GREP?
+¿Cómo hago una búsqueda de cadenas de texto usando GREP?
 
 ::
 
   grep -R "I am looking for this" *
 
-How do I make a DIFF file with my changes?
+¿Cómo hago un archivo DIFF con mis cambios?
 
 ::
 
   diff originalfile.c mychangedfile.c >./originalfile.patch
 
-My executeable is crashing, how do I debug it?
-  Look in `Debugging manual <debugging>`_. You can use sys:utilities/snoopy to find out
-  what your application tries to do.
+Mi ejecutable se cuelga, ¿cómo lo depuro?
+  Mira en el `Manual para la Depuración <debugging>`_. Puedes usar sys:utilites/snoopy
+  para descubrir qué intenta hacer tu aplicación.
 
-How do I redirect GCC warnings and errors to a text file?
+¿Cómo dirigo las advertencias y errores de GCC a un archivo de texto?
 
 ::
 
