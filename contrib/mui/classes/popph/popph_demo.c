@@ -19,13 +19,13 @@
 #include <proto/exec.h>
 #include <proto/muimaster.h>
 
-#include "Popplaceholder_mcc.h"
+#include <mui/Popplaceholder_mcc.h>
 
 LONG __stack = 18192;
 
-#define SAVEDS __saveds
-#define ASM __asm
-#define REG(x) register __ ## x
+//#define SAVEDS __saveds
+//#define ASM __asm
+//#define REG(x) register __ ## x
 
 //|
 

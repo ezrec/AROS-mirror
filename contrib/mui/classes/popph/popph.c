@@ -4,16 +4,14 @@
 ** © 1999-2000 Marcin Orlowski <carlos@amiga.com.pl>
 */
 
-#include "popplaceholder_mcc.h"
+#include <aros/debug.h>
+
+#include "Popplaceholder_mcc.h"
 #include "popph_private.h"
 
-#define CLASS       MUIC_Popplaceholder
-#define SUPERCLASS  MUIC_Group
-
-#define UserLibID VERSTAG " © 1999-2000 Marcin Orlowski <carlos@amiga.com.pl>"
-#define MASTERVERSION 14
-
 #include <mui/BetterString_mcc.h>
+#include <libraries/asl.h>
+#include <proto/utility.h>
 
 #define list_format_single "P=\033l"
 #define list_format_multi  "P=\033r BAR,"
@@ -27,7 +25,7 @@ AROS_UFH3(void, WindowFunc,
 {
     AROS_USERFUNC_INIT
 
-    struct Data *data = hook->h_Data;
+    struct Popplaceholder_Data *data = hook->h_Data;
     set( window, MUIA_Window_ActiveObject, data->lv );
 
     AROS_USERFUNC_EXIT
@@ -41,7 +39,7 @@ AROS_UFH3(void *, ObjStrFunc,
 {
     AROS_USERFUNC_INIT
 
-    struct Data *data = hook->h_Data;
+    struct Popplaceholder_Data *data = hook->h_Data;
 
     char *list_entry;
     char *current_string;
@@ -89,7 +87,7 @@ AROS_UFH3(void *, ObjStrFunc,
 	    D(bug( "ObjStrFunc: BufferPos: %ld\n", pos ));
 	    D(bug( "ObjStrFunc: AllocVec( %ld+%ld+5 bytes )\n", keylen, stringlen ));
 
-	    if( buffer = AllocVec( keylen + stringlen + 5, MEMF_CLEAR ) )
+	    if( ( buffer = AllocVec( keylen + stringlen + 5, MEMF_CLEAR ) ) )
 	    {
 		CopyMem( current_string, buffer, pos );
 		CopyMem( key, buffer + pos, keylen );
@@ -122,7 +120,7 @@ AROS_UFH3(void *, DisplayFunc,
     static char key[ POPPH_MAX_KEY_LEN ];
     static char *info;
 
-    struct Data *data = hook->h_Data;
+    struct Popplaceholder_Data *data = hook->h_Data;
 
 
     if( node )
@@ -160,13 +158,12 @@ AROS_UFH3(void *, DisplayFunc,
 /// _OpenAsl
 IPTR Popph__MUIM_OpenAsl(struct IClass *cl, Object *obj, struct opSet *msg)
 {
-    struct Data *data = INST_DATA(cl,obj);
+    struct Popplaceholder_Data *data = INST_DATA(cl,obj);
 
-
-    Object *app = (Object *)xget( obj, MUIA_ApplicationObject );
+    Object *app = (Object *)XGET( obj, MUIA_ApplicationObject );
     struct Window *win;
     APTR   req = data->asl_req;
-    ULONG  res=NULL;
+    ULONG  res=0;
 
     char buf[ POPPH_MAX_STRING_LEN * 2 ];
     char *path;
@@ -176,7 +173,7 @@ IPTR Popph__MUIM_OpenAsl(struct IClass *cl, Object *obj, struct opSet *msg)
     set( app, MUIA_Application_Sleep, TRUE );
     get( obj, MUIA_Window, &win );      
 
-    path = (char *)xget( obj, MUIA_Popph_Contents );
+    path = (char *)XGET( obj, MUIA_Popph_Contents );
     path_part = PathPart( path );
     CopyMem( path, buf, path_part - path );
     buf[ path_part - path ] = 0;
@@ -211,9 +208,9 @@ IPTR Popph__MUIM_OpenAsl(struct IClass *cl, Object *obj, struct opSet *msg)
 }
 
 // OM_NEW
-IPTR Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
+Object * Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 {
-    struct Data *data;
+    struct Popplaceholder_Data *data;
 
     Object *group, *popobj, *popbutton, *string;
     Object *lv, *list;
@@ -263,6 +260,7 @@ IPTR Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 
     //D(bug(__NAME ": _Avoid_: %lx\n", avoid, ));
 
+#ifdef HAVE_TEXTINPUT_MCC
     if( (!string) && (!(avoid & MUIV_Popph_Avoid_Textinput )) )
     {
 	if( (string = TextinputObject, End ) )
@@ -277,6 +275,7 @@ IPTR Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 	    use_our_string_class = TRUE;
 	}
     }
+#endif
 
     if( ( (!string) && (!(avoid & MUIV_Popph_Avoid_Betterstring)) ) )
     {
@@ -308,7 +307,7 @@ IPTR Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 	else
 	{
 	    D(bug(__NAME ": No string object class available!?\n"));
-	    return( 0 );
+	    return NULL;
 	}
     }
 
@@ -318,7 +317,7 @@ IPTR Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 	if( !(CL_String = MUI_CreateCustomClass(NULL, string_class, NULL, sizeof(struct PPHS_Data), PPHS_Dispatcher)) )
 	{
 	    D(bug(__NAME ": Can't create '%s' custom class\n", string_class ));
-	    return( NULL );
+	    return NULL;
 	}
 
 	D(bug(__NAME ": CustomClass created: %lx (%s)\n", CL_String, string_class));
@@ -368,7 +367,7 @@ IPTR Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 	D(bug(__NAME ": CustomStringObject created: %lx\n", string ));
     }
 
-    obj = (Object *)DoSuperNew(cl, obj,
+    obj = (Object *)DoSuperNewTags(cl, obj,
 	MUIA_Group_Horiz, TRUE,
 	Child, group = HGroup,
 	    MUIA_Group_Spacing, 0,
@@ -461,7 +460,7 @@ IPTR Popph__OM_NEW(struct IClass *cl, Object *obj, Msg msg)
 	msg->MethodID = OM_NEW;
     }
 
-    return (ULONG)obj;
+    return obj;
 
 cleanup:
 
@@ -482,10 +481,10 @@ cleanup:
 }
 
 // OM_DISPOSE
-IPTR Popph__OM_Dispose(struct IClass *cl, Object *obj, struct opSet *msg)
+IPTR Popph__OM_DISPOSE(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     APTR cl_string;
-    struct Data *data = INST_DATA(cl,obj);
+    struct Popplaceholder_Data *data = INST_DATA(cl,obj);
 
     D(bug(__NAME ": OM_DISPOSE\n"));
     D(bug(__NAME ": data->asl_req: %lx\n", data->asl_req ));
@@ -513,10 +512,10 @@ IPTR Popph__OM_Dispose(struct IClass *cl, Object *obj, struct opSet *msg)
 /// OM_SET
 IPTR Popph__OM_SET(struct IClass *cl, Object *obj, Msg msg)
 {
-    struct Data *data = INST_DATA(cl,obj);
+    struct Popplaceholder_Data *data = INST_DATA(cl,obj);
     struct TagItem *tags,*tag;
 
-    for(tags=((struct opSet *)msg)->ops_AttrList; tag=NextTagItem(&tags); )
+    for( ( tags=((struct opSet *)msg)->ops_AttrList ) ; ( tag=NextTagItem(&tags) ) ; )
     {
 	switch(tag->ti_Tag)
 	{
@@ -535,6 +534,7 @@ IPTR Popph__OM_SET(struct IClass *cl, Object *obj, Msg msg)
 	    case MUIA_String_Reject:
 	    case MUIA_String_Secret:
 
+#if HAVE_TEXTINPUT_MCC
 	    //   case MUIA_Textinput_...:
 	    case MUIA_Textinput_Multiline:
 	    case MUIA_Textinput_MaxLen:
@@ -587,6 +587,7 @@ IPTR Popph__OM_SET(struct IClass *cl, Object *obj, Msg msg)
 	    case MUIA_Textinput_Bookmark3:
 	    case MUIA_Textinput_CursorSize:
 	    case MUIA_Textinput_TopLine:
+#endif
 
 	    //   case MUIA_BetterString_...:
 	    case MUIA_BetterString_SelectSize:
@@ -640,7 +641,9 @@ IPTR Popph__OM_SET(struct IClass *cl, Object *obj, Msg msg)
 		DoMethod( data->lv, MUIM_List_Insert, tag->ti_Data, -1, MUIV_List_Insert_Bottom );
 		break;
 
+#if HAVE_TEXTINPUT_MCC
 	    case MUIA_Textinput_Contents:
+#endif
 	    case MUIA_String_Contents:
 	    case MUIA_Popph_Contents:
 		set( data->str, MUIA_Popph_Contents, tag->ti_Data );
@@ -747,7 +750,7 @@ IPTR Popph__OM_SET(struct IClass *cl, Object *obj, Msg msg)
 /// OM_GET
 IPTR Popph__OM_GET(struct IClass *cl, Object *obj, Msg msg)
 {
-    struct Data *data = INST_DATA(cl,obj);
+    struct Popplaceholder_Data *data = INST_DATA(cl,obj);
     ULONG  *store = ((struct opGet *)msg)->opg_Storage;
 
     //    D(bug(__NAME ": GET\n"));
@@ -769,6 +772,7 @@ IPTR Popph__OM_GET(struct IClass *cl, Object *obj, Msg msg)
 	case MUIA_String_Reject:
 	case MUIA_String_Secret:
 
+#ifdef HAVE_TEXTINPUT_MCC
 	//   case MUIA_Textinput_...:
 	case MUIA_Textinput_Multiline:
 	case MUIA_Textinput_MaxLen:
@@ -821,6 +825,8 @@ IPTR Popph__OM_GET(struct IClass *cl, Object *obj, Msg msg)
 	case MUIA_Textinput_Bookmark3:
 	case MUIA_Textinput_CursorSize:
 	case MUIA_Textinput_TopLine:
+#endif
+
 	//   case MUIA_BetterString_...:
 	case MUIA_BetterString_SelectSize:
 	case MUIA_BetterString_StayActive:
@@ -829,7 +835,7 @@ IPTR Popph__OM_GET(struct IClass *cl, Object *obj, Msg msg)
 	case MUIA_Popph_ContextMenu:
 	case MUIA_Popph_StringMaxLen:
 	case MUIA_Popph_StringType:
-	    *store = xget( data->str, ((struct opGet *)msg)->opg_AttrID );
+	    *store = XGET( data->str, ((struct opGet *)msg)->opg_AttrID );
 	    break;
 
 	//   case MUIA_List_...:
@@ -868,79 +874,73 @@ IPTR Popph__OM_GET(struct IClass *cl, Object *obj, Msg msg)
 	case MUIA_Listview_MultiSelect:
 	case MUIA_Listview_ScrollerPos:
 	case MUIA_Listview_SelectChange:
-	    *store = xget( data->lv, ((struct opGet *)msg)->opg_AttrID );
+	    *store = XGET( data->lv, ((struct opGet *)msg)->opg_AttrID );
 	    break;
 
+#ifdef HAVE_TEXTINPUT_MCC
 	case MUIA_Textinput_Contents:
+#endif
 	case MUIA_String_Contents:
 	case MUIA_Popph_Contents:
 	    //            D(bug(__NAME "MUIA_Popph_Contents\n"));
-	    *store = xget( data->str, MUIA_Popph_Contents );
-	    return(TRUE);
+	    *store = XGET( data->str, MUIA_Popph_Contents );
+	    return TRUE;
 
 	case MUIA_Popph_Separator:
 	    //            D(bug(__NAME "MUIA_Popph_Separator\n"));
 	    *store = data->separator;
-	    return(TRUE);
+	    return TRUE;
 
 	case MUIA_Popph_CopyEntries:
 	    //            D(bug(__NAME "MUIA_Popph_CopyEntries\n"));
 	    *store = data->copyentries;
-	    return(TRUE);
+	    return TRUE;
 
 	case MUIA_Popph_ReplaceMode:
 	    *store = data->replacemode;
-	    return(TRUE);
+	    return TRUE;
 
 	case MUIA_Popasl_Active:
 	case MUIA_Popph_AslActive:
 	    *store = data->asl_active;
-	    return(TRUE);
+	    return TRUE;
 
 	case MUIA_Popasl_Type:
 	case MUIA_Popph_AslType:
 	    *store = data->asl_type;
-	    return(TRUE);
-
-	case MUIA_Version:
-	    *store = (ULONG)VERSION;
-	    return(TRUE);
-
-	case MUIA_Revision:
-	    *store = (ULONG)REVISION;
-	    return(TRUE);
+	    return TRUE;
 
 	case MUIA_Popph_StringObject:
 	    *store = (ULONG)data->str;
-	    return(TRUE);
+	    return TRUE;
 
 	case MUIA_Popph_ListObject:
 	    *store = (ULONG)data->lv;
-	    return(TRUE);
+	    return TRUE;
 
 	case MUIA_Popph_PopCycleChain:
-	    *store = xget( data->popbutton, MUIA_CycleChain);
-	    return(TRUE);
+	    *store = XGET( data->popbutton, MUIA_CycleChain);
+	    return TRUE;
 
 	case MUIA_Popph_SingleColumn:
 	    *store = data->singlecolumn;
-	    return(TRUE);
+	    return TRUE;
 
     }
     return DoSuperMethodA(cl, obj, msg);
 }
 
 // Dispatcher
-ULONG _Dispatcher(struct IClass *cl, Object *obj, Msg msg)
+BOOPSI_DISPATCHER(IPTR, _Dispatcher, cl, obj, msg)
 {
     switch (msg->MethodID)
     {
-	case OM_NEW    : return _New     (cl, obj, (APTR)msg);
-	case OM_DISPOSE: return _Dispose (cl, obj, (APTR)msg);
-	case OM_SET    : return _Set     (cl, obj, (APTR)msg);
-	case OM_GET    : return _Get     (cl, obj, (APTR)msg);
+	case OM_NEW    : return Popph__OM_NEW     (cl, obj, (APTR)msg);
+	case OM_DISPOSE: return Popph__OM_DISPOSE (cl, obj, (APTR)msg);
+	case OM_SET    : return Popph__OM_SET     (cl, obj, (APTR)msg);
+	case OM_GET    : return Popph__OM_GET     (cl, obj, (APTR)msg);
 
-	case MUIM_Popph_OpenAsl : return _OpenAsl (cl, obj, (APTR)msg);
+	case MUIM_Popph_OpenAsl : return Popph__MUIM_OpenAsl (cl, obj, (APTR)msg);
 
   	//  case MUIM_List_...:
 	case MUIM_List_Clear:
@@ -958,12 +958,12 @@ ULONG _Dispatcher(struct IClass *cl, Object *obj, Msg msg)
 	case MUIM_List_Select:
 	case MUIM_List_Sort:
 	case MUIM_List_TestPos:
-				  {
-				      struct Data *data = INST_DATA(cl,obj);
-				      return DoMethodA( data->lv, msg );
-				  }
+	    {
+		struct Popplaceholder_Data *data = INST_DATA(cl,obj);
+		return DoMethodA( data->lv, msg );
+	    }
     }
 
-    return (ULONG)DoSuperMethodA(cl, obj, msg);
+    return DoSuperMethodA(cl, obj, msg);
 }
-
+BOOPSI_DISPATCHER_END

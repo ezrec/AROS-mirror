@@ -4,13 +4,19 @@
 ** © 1999-2000 Marcin Orlowski <carlos@amiga.com.pl>
 */
 
-#include "popplacholder_mcc.h"
-#include "popph_intern.h"
+#include <aros/debug.h>
+
+#include "Popplaceholder_mcc.h"
+#include "popph_private.h"
+
+#include <mui/BetterString_mcc.h>
+
+#include <proto/utility.h>
 
 // _DoCopy
 int _DoCopy( Object *obj, struct PPHS_Data *data  )
 {
-    char *buf = (char *)xget( obj, data->tag_contents );
+    char *buf = (char *)XGET( obj, data->tag_contents );
     int  len = strlen( buf );
 
     return _WriteClip( buf, len, data->clip_device );
@@ -36,8 +42,8 @@ IPTR PPHS__MUIM_DoCopy( struct IClass *cl, Object *obj, struct opSet *msg )
     {
 	case MUIV_Popph_StringType_Betterstring:
 	    {
-		char *buf = (char *)(xget( obj, data->tag_contents ) + xget( obj, data->tag_bufpos ));
-		int  len = xget( obj, MUIA_BetterString_SelectSize );
+		char *buf = (char *)(XGET( obj, data->tag_contents ) + XGET( obj, data->tag_bufpos ));
+		int  len = XGET( obj, MUIA_BetterString_SelectSize );
 
 		// we do cut marked area only if there's any...
 		if( len != 0 )
@@ -55,16 +61,17 @@ IPTR PPHS__MUIM_DoCopy( struct IClass *cl, Object *obj, struct opSet *msg )
 		}
 	    }
 	    break;
-
+#ifdef HAVE_TEXTINPUT_MCC
 	case MUIV_Popph_StringType_Textinput:
 	    {
 		DoMethod( obj, MUIM_Textinput_DoCopy );
 	    }
 	    break;
+#endif
 	    //       case MUIV_Popph_StringType_String:
 	default:
 	    {
-		char *buf = (char *)xget( obj, data->tag_contents );
+		char *buf = (char *)XGET( obj, data->tag_contents );
 		int  len = strlen( buf );
 
 		_WriteClip( buf, len, data->clip_device );
@@ -90,7 +97,7 @@ IPTR PPHS__MUIM_DoCut( struct IClass *cl, Object *obj, struct opSet *msg )
 
 	case MUIV_Popph_StringType_Betterstring:
 	    {
-		if( xget( obj, MUIA_BetterString_SelectSize ) == 0 )
+		if( XGET( obj, MUIA_BetterString_SelectSize ) == 0 )
 		    set( obj, data->tag_contents, "" );
 		else
 		    DoMethod( obj, MUIM_BetterString_ClearSelected );
@@ -108,7 +115,7 @@ IPTR PPHS__MUIM_DoCut( struct IClass *cl, Object *obj, struct opSet *msg )
 }
 
 // OM_NEW
-IPTR PPHS__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
+Object * PPHS__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 {
     struct PPHS_Data *data;
 
@@ -130,16 +137,20 @@ IPTR PPHS__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 	    tag_maxlen   = MUIA_String_MaxLen;
 	    break;
 
+#ifdef HAVE_TEXTINPUT_MCC
 	// MUIC_Textinput
 	case MUIV_Popph_StringType_Textinput:
 	    tag_contents = MUIA_Textinput_Contents;
 	    tag_bufpos   = MUIA_Textinput_CursorPos;
 	    tag_maxlen   = MUIA_Textinput_MaxLen;
 	    break;
+#endif
     }
 
-    obj = (Object *)DoSuperNew(cl,obj,
+    obj = (Object *)DoSuperNewTags(cl,obj,
+#ifdef HAVE_TEXTINPUT_MCC
 	    MUIA_Textinput_DefaultPopup, FALSE,
+#endif
 	    tag_maxlen, strmaxlen,
 	    TAG_MORE, msg->ops_AttrList);
 
@@ -169,7 +180,7 @@ IPTR PPHS__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
 	DoMethodA(obj, (Msg)msg);
 	msg->MethodID = OM_NEW;
     }
-    return (ULONG)obj;
+    return obj;
 }
 
 // OM_DISPOSE
@@ -191,7 +202,7 @@ IPTR PPHS__OM_SET(struct IClass *cl, Object *obj, Msg msg)
     struct PPHS_Data *data = INST_DATA(cl,obj);
     struct TagItem *tags, *tag;
 
-    for(tags=((struct opSet *)msg)->ops_AttrList; tag=NextTagItem(&tags); )
+    for( (tags=((struct opSet *)msg)->ops_AttrList); (tag=NextTagItem(&tags)); )
     {
 	//       D(bug(__NAME ": OM_SET Tag: %lx\n", tag->ti_Tag));
 
@@ -242,28 +253,28 @@ IPTR PPHS__OM_GET(struct IClass *cl, Object *obj, Msg msg)
     switch(((struct opGet *)msg)->opg_AttrID)
     {
 	case MUIA_Popph_Contents:
-	    *store = xget( obj, data->tag_contents );
-	    return(TRUE);
+	    *store = XGET( obj, data->tag_contents );
+	    return TRUE;
 
 	case MUIA_Popph_BufferPos:
-	    *store = xget( obj, data->tag_bufpos );
-	    return(TRUE);
+	    *store = XGET( obj, data->tag_bufpos );
+	    return TRUE;
 
 	case MUIA_Popph_Separator:
 	    *store = data->separator;
-	    return(TRUE);
+	    return TRUE;
 
 	case MUIA_Popph_StringMaxLen:
-	    *store = xget( obj, data->tag_maxlen );
-	    return(TRUE);
+	    *store = XGET( obj, data->tag_maxlen );
+	    return TRUE;
 
 	case MUIA_Popph_StringType:
 	    *store = data->stringtype;
-	    return(TRUE);
+	    return TRUE;
 
 	case MUIA_Popph_ContextMenu:
 	    *store = data->cmenu_enabled;
-	    return(TRUE);
+	    return TRUE;
 
     }
     return DoSuperMethodA(cl, obj, msg);
@@ -323,7 +334,7 @@ IPTR PPHS__MUIM_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg
 	    get( obj, MUIA_Popph_Contents, &current_string );
 	    stringlen = _strlen( current_string, 0 );
 
-	    if( buffer = AllocVec( keylen + stringlen + 5, MEMF_CLEAR ) )
+	    if( ( buffer = AllocVec( keylen + stringlen + 5, MEMF_CLEAR ) ) )
 	    {
 		CopyMem( current_string, buffer, pos );
 		CopyMem( key, buffer + pos, keylen );
@@ -340,22 +351,19 @@ IPTR PPHS__MUIM_DragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg
 }
 
 // Dispatcher
-ULONG PPHS_Dispatcher(struct IClass *cl, Object *obj, Msg msg)
+BOOPSI_DISPATCHER(IPTR, PPHS_Dispatcher, cl, obj, msg)
 {
-    //    D(bug(__NAME ": Disp: %lx\n", msg->MethodID ));
-
     switch( msg->MethodID )
     {
-	case OM_NEW    : return(PPHS_New     (cl, obj, (APTR)msg));
-	case OM_DISPOSE: return(PPHS_Dispose (cl, obj, (APTR)msg));
-	case OM_SET    : return(PPHS_Set     (cl, obj, (APTR)msg));
-	case OM_GET    : return(PPHS_Get     (cl, obj, (APTR)msg));
-	case MUIM_Popph_DoCut   :  return(PPHS_DoCut (cl, obj, (APTR)msg));
-	case MUIM_Popph_DoCopy  :  return(PPHS_DoCut (cl, obj, (APTR)msg));
-	case MUIM_DragQuery: return(PPHS_DragQuery (cl, obj, (APTR)msg));
-	case MUIM_DragDrop : return(PPHS_DragDrop  (cl, obj, (APTR)msg));
+	case OM_NEW            : return PPHS__OM_NEW         (cl, obj, (APTR)msg);
+	case OM_DISPOSE        : return PPHS__OM_DISPOSE     (cl, obj, (APTR)msg);
+	case OM_SET            : return PPHS__OM_SET         (cl, obj, (APTR)msg);
+	case OM_GET            : return PPHS__OM_GET         (cl, obj, (APTR)msg);
+	case MUIM_Popph_DoCut  : return PPHS__MUIM_DoCut     (cl, obj, (APTR)msg);
+	case MUIM_Popph_DoCopy : return PPHS__MUIM_DoCut     (cl, obj, (APTR)msg);
+	case MUIM_DragQuery    : return PPHS__MUIM_DragQuery (cl, obj, (APTR)msg);
+	case MUIM_DragDrop     : return PPHS__MUIM_DragDrop  (cl, obj, (APTR)msg);
     }
-
-    return (ULONG)DoSuperMethodA(cl,obj,msg);
+    return DoSuperMethodA(cl,obj,msg);
 }
-
+BOOPSI_DISPATCHER_END

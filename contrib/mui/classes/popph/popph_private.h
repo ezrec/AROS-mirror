@@ -8,6 +8,10 @@
 
 #include <exec/types.h>
 #include <utility/date.h>
+#include <utility/hooks.h>
+#include <libraries/mui.h>
+
+#include "Popplaceholder_mcc.h"
 
 /*** Instance data **********************************************************/
 struct Popplaceholder_Data
@@ -57,5 +61,12 @@ struct PPHS_Data
     ULONG  clip_device;
 };
 
-#endif /* POPPLACEHOLDER_PRIVATE_H */
 
+int _strlen( char *str, char stop );
+char *_strchr( char *buf, char key );
+
+int _WriteClip( char *data, int len, int clip_device );
+
+BOOPSI_DISPATCHER_PROTO(IPTR, PPHS_Dispatcher, cl, obj, msg);
+
+#endif /* POPPLACEHOLDER_PRIVATE_H */
