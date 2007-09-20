@@ -41,7 +41,7 @@
    <?php if ($win_ie56) { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.gif\" align=\"middle\">";} 
    else { echo "<img alt=\"Direct download Icon\" src=\"/images/directdownloadicon.png\" align=\"middle\">";} ?>Direct Downloads:<br>
    <img style="width: 238px; height: 2px;" alt="spacer" src="images/sidespacer.png"><br>
-   Las builds nocturnas se hacen automáticamente cada noche, directamente del más 
+   Las nightly builds se hacen automáticamente cada noche, directamente del más 
    reciente código fuente. Si gustaras probar un LiveCD de AROS, por favor elige 
    el archivo "boot ISO" para tu plataforma (i386 or PPC).<br><br>
    <?php virtual("/cgi-bin/files2") ?> <br></td></tr></tbody></table>
