@@ -1,6 +1,6 @@
-==========
-Contribuir
-==========
+============
+Contribución
+============
 
 :Authors:   Adam Chodorowski 
 :Copyright: Copyright © 1995-2007, The AROS Development Team
@@ -10,7 +10,7 @@ Contribuir
 
 .. Contents::
 
-.. Include:: contribute-abstract.en
+.. Include:: contribute-abstract.es
 
 
 Tareas disponibles
