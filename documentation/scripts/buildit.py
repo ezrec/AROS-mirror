@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2002-2006, The AROS Development Team. All rights reserved.
+# Copyright © 2002-2007, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os, sys, shutil, glob
@@ -385,6 +385,7 @@ def copyImages():
             os.path.join( srcpath, 'aros-banner2.png' ),
             os.path.join( srcpath, 'aros-banner-blue.png' ),
             os.path.join( srcpath, 'aros-banner-pb2.png' ),
+            os.path.join( srcpath, 'aros-banner-peta.png' ),
             os.path.join( srcpath, 'aros-sigbar-user.png' ),
             os.path.join( srcpath, 'aros-sigbar-coder.png' ),
             os.path.join( srcpath, 'genesi.gif' ),
