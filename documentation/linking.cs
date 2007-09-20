@@ -12,29 +12,29 @@ Skvìlý zpùsob jak ukázat va¹i podporu pro AROS a zpùsob, co aktivnì doporuèujeme
 je odkázání na tento web z va¹eho. Pro tento úèel mù¾ete pou¾ít nìkterý
 z následujích hezkých banerù.
 
-+------------------------------------------+----------------------+
-| Obrázek                                  | Autor                |
-+==========================================+======================+
-| .. Image:: /images/aros-banner.gif       | Cyb0rg / Resistance  |
-|  :align: center                          |                      |
-|  :class: bannerimage                     |                      |
-+------------------------------------------+----------------------+
-| .. Image:: /images/aros-banner2.png      | S33k_100             |
-|  :align: center                          |                      |
-|  :class: bannerimage                     |                      |
-+------------------------------------------+----------------------+
-| .. Image:: /images/aros-banner-blue.png  | S33k_100             |
-|  :align: center                          |                      |
-|  :class: bannerimage                     |                      |
-+------------------------------------------+----------------------+
-| .. Image:: /images/aros-banner-pb2.png   | Paolo Besser         |
-|  :align: center                          |                      |
-|  :class: bannerimage                     |                      |
-+------------------------------------------+----------------------+
-| .. Image:: /images/aros-banner-peta.png  | Petr Novak           |
-|  :align: center                          |                      |
-|  :class: bannerimage                     |                      |
-+------------------------------------------+----------------------+
++-----------------------------------------------------------+----------------------+
+| Obrázek                                                   | Autor                |
++===========================================================+======================+
+| .. Image:: /images/aros-banner.gif                        | Cyb0rg / Resistance  |
+|  :align: center                                           |                      |
+|  :class: bannerimage                                      |                      |
++-----------------------------------------------------------+----------------------+
+| .. Image:: /images/aros-banner2.png                       | S33k_100             |
+|  :align: center                                           |                      |
+|  :class: bannerimage                                      |                      |
++-----------------------------------------------------------+----------------------+
+| .. Image:: /images/aros-banner-blue.png                   | S33k_100             |
+|  :align: center                                           |                      |
+|  :class: bannerimage                                      |                      |
++-----------------------------------------------------------+----------------------+
+| .. Image:: /images/aros-banner-pb2.png                    | Paolo Besser         |
+|  :align: center                                           |                      |
+|  :class: bannerimage                                      |                      |
++-----------------------------------------------------------+----------------------+
+| .. Image:: http://www.leemet.com/obr/aros-banner-peta.png | Petr Novak           |
+|  :align: center                                           |                      |
+|  :class: bannerimage                                      |                      |
++-----------------------------------------------------------+----------------------+
 
 
 Jsou zde také "podpisové" banery k pou¾ití na fórech:
