@@ -15,7 +15,7 @@ INCLUDE_FILES := Popplaceholder_mcc.h
     mmake=contrib-zune-classes-popph-class \
     modname=Popplaceholder modtype=mcc \
     files=$(FILES) conffile=popph.conf \
-    moduledir=$(AROS_CONTRIB)/Zune/MCC_Popph/Classes/Zune \
+    moduledir=Extras/Zune/MCC_Popph/Classes/Zune \
     uselibs="amiga rom mui"
 
 #MM includes-copy
@@ -25,5 +25,13 @@ INCLUDE_FILES := Popplaceholder_mcc.h
 %build_prog mmake=contrib-zune-classes-popph-demo progname=Popph-Demo \
     files="popph_demo" targetdir=$(AROS_CONTRIB)/Zune/MCC_Popph/Demos \
     uselibs="amiga mui"
+
+#MM contrib-zune-classes-popph-clean : contrib-zune-classes-popph-class-clean
+
+#MM
+contrib-zune-classes-popph-clean :
+	$(RM) $(AROS_CONTRIB)/Zune/MCC_Popph
+	$(RM) $(AROS_DEVELOPMENT)/$(INCLUDE_FILES)
+	$(RM) $(AROS_PACKAGES)/MCC_Popph
 
 %common

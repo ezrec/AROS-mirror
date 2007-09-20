@@ -1,0 +1,12 @@
+#   $Id: mmakefile.src 25554 2007-03-24 19:41:20Z NicJA $
+include $(TOP)/config/make.cfg
+
+FILES := Package-Startup Package-Shutdown
+
+#MM- contrib-zune-classes-popph-class      : contrib-zune-classes-popph-startup
+
+#MM
+contrib-zune-classes-popph-startup :
+	$(ECHO) "SYS:Extras/Zune/MCC_Popph" >$(AROS_PACKAGES)/MCC_Popph
+
+%copy_files_q dst=$(CONTRIBDIR)/Zune/MCC_Popph/S maketarget=contrib-zune-classes-popph-startup
