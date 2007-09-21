@@ -58,9 +58,9 @@ struct TagItem
 		{RO_Height,1},
 		{RO_TextNum,STR_RENAME},
 		{RO_TextPos,TEXTPOS_ABOVE},
-		{RO_StringBuf,(ULONG)oldname_buffer},
+		{RO_StringBuf,(IPTR)oldname_buffer},
 		{RO_StringLen,32},
-		{RO_StringUndo,(ULONG)str_undobuffer},
+		{RO_StringUndo,(IPTR)str_undobuffer},
 		{TAG_END,0}},
 	rename_newname_gadget[]={
 		{RO_Type,OBJECT_GADGET},
@@ -73,9 +73,9 @@ struct TagItem
 		{RO_Height,1},
 		{RO_TextNum,STR_AS},
 		{RO_TextPos,TEXTPOS_ABOVE},
-		{RO_StringBuf,(ULONG)newname_buffer},
+		{RO_StringBuf,(IPTR)newname_buffer},
 		{RO_StringLen,32},
-		{RO_StringUndo,(ULONG)str_undobuffer},
+		{RO_StringUndo,(IPTR)str_undobuffer},
 		{TAG_END,0}},
 	rename_okay_gadget[]={
 		{RO_Type,OBJECT_GADGET},

@@ -63,7 +63,7 @@ struct TagItem
 		{RO_Height,1},
 		{RO_StringLen,80},
 		{RO_StringBuf,0},
-		{RO_StringUndo,(ULONG)str_undobuffer},
+		{RO_StringUndo,(IPTR)str_undobuffer},
 		{TAG_END,0}},
 
 	search_case_gadget[]={

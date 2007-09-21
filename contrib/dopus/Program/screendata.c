@@ -50,8 +50,8 @@ UWORD zoom_data[]={0,0,640,200};          /* Zoom gadget data */
 struct TagItem
 	mainscreen_tags[]={                     /* Tags for the main screen */
 		{SA_DisplayID,0},
-		{SA_Pens,(ULONG)scr_drawinfo},
-		{SA_PubName,(ULONG)str_arexx_portname},
+		{SA_Pens,(IPTR)scr_drawinfo},
+		{SA_PubName,(IPTR)str_arexx_portname},
 		{SA_Overscan,OSCAN_TEXT},
 		{SA_AutoScroll,TRUE},
 		{SA_Interleaved,TRUE},
@@ -61,13 +61,13 @@ struct TagItem
 
 	stdscreen_tags[]={                      /* Tags for a standard HIRES screen */
 		{SA_DisplayID,HIRES_KEY},
-		{SA_Pens,(ULONG)scr_drawinfo},
+		{SA_Pens,(IPTR)scr_drawinfo},
 		{TAG_DONE,0}},
 
 	mainwindow_tags[]={                     /* Tags for the main window */
 		{WA_PubScreen,0},
 		{WA_AutoAdjust,TRUE},
-		{WA_Zoom,(ULONG)zoom_data},
+		{WA_Zoom,(IPTR)zoom_data},
 		{TAG_DONE,0}};
 
 /* NewScreen structures */

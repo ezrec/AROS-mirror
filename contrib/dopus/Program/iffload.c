@@ -81,7 +81,7 @@ struct AnimFrame {
 static struct TagItem
 	loresscreentags[3]={
 		{SA_DisplayID,LORES_KEY},
-		{SA_Pens,(ULONG)scr_drawinfo},
+		{SA_Pens,(IPTR)scr_drawinfo},
 		{0,0}};
 
 static struct ExtNewScreen

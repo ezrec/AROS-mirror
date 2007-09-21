@@ -69,9 +69,9 @@ struct TagItem
 		{RO_Left,6},
 		{RO_LeftFine,30},
 		{RO_Width,30},
-		{RO_StringBuf,(ULONG)sel_patternbuf},
+		{RO_StringBuf,(IPTR)sel_patternbuf},
 		{RO_StringLen,79},
-		{RO_StringUndo,(ULONG)str_undobuffer},
+		{RO_StringUndo,(IPTR)str_undobuffer},
 		{TAG_END,0}},
 
 	select_okay_gadget[]={

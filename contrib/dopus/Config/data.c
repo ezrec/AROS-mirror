@@ -49,7 +49,7 @@ UWORD drawinfo[]={
 
 struct TagItem
 	taglist[]={
-		{SA_Pens,(ULONG)drawinfo},
+		{SA_Pens,(IPTR)drawinfo},
 		{TAG_END,0}};
 
 struct ExtNewScreen configscr={
