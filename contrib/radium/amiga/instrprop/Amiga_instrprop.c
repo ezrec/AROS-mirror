@@ -36,7 +36,9 @@
 
 #include "Amiga_instrprop.h"
 
+#if !defined(__AROS__)
 #define CopyMem(a,b,c) memcpy(b,a,c)
+#endif
 
 struct Screen         *Scr = NULL;
 UBYTE                 *PubScreenName = NULL;
@@ -333,8 +335,8 @@ struct NewGadget CPPWindowNGad[] = {
 	74, 49, 87, 13, NULL, NULL, GD_Channel, 0, NULL, (APTR)ChannelClicked
 };
 
-ULONG CPPWindowGTags[] = {
-	(GTST_String), (ULONG)"No Patch", (GTST_MaxChars), 50, (GA_Disabled), TRUE, (TAG_DONE),
+IPTR CPPWindowGTags[] = {
+	(GTST_String), (IPTR)"No Patch", (GTST_MaxChars), 50, (GA_Disabled), TRUE, (TAG_DONE),
 	(TAG_DONE),
 	(GTST_MaxChars), 256, (GA_Disabled), TRUE, (TAG_DONE),
 	(GTIN_Number), 0, (GTIN_MaxChars), 3, (STRINGA_Justification), (GACT_STRINGCENTER), (GA_Disabled), TRUE, (TAG_DONE),
@@ -362,7 +364,7 @@ ULONG CPPWindowGTags[] = {
 	(GA_Disabled), TRUE, (TAG_DONE),
 	(GA_Disabled), TRUE, (TAG_DONE),
 	(GA_Disabled), TRUE, (TAG_DONE),
-	(GTSL_Min), 1, (GTSL_Max), 16, (GTSL_MaxLevelLen), 12, (GTSL_LevelFormat), (ULONG)"Channel %ld", (GTSL_LevelPlace), (PLACETEXT_ABOVE), (PGA_Freedom), LORIENT_HORIZ, (GA_Immediate), TRUE, (GA_RelVerify), TRUE, (GA_Disabled), TRUE, (TAG_DONE)
+	(GTSL_Min), 1, (GTSL_Max), 16, (GTSL_MaxLevelLen), 12, (GTSL_LevelFormat), (IPTR)"Channel %ld", (GTSL_LevelPlace), (PLACETEXT_ABOVE), (PGA_Freedom), LORIENT_HORIZ, (GA_Immediate), TRUE, (GA_RelVerify), TRUE, (GA_Disabled), TRUE, (TAG_DONE)
 };
 
 int SetupScreen( void )

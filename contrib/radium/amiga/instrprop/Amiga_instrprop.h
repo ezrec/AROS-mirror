@@ -103,7 +103,7 @@ extern struct NewMenu        CPPWindowNewMenu[];
 extern struct NewMenu        HelpNewMenu[];
 extern UWORD                 CPPWindowGTypes[];
 extern struct NewGadget      CPPWindowNGad[];
-extern ULONG                 CPPWindowGTags[];
+extern IPTR                 CPPWindowGTags[];
 
 extern int nameClicked( void );
 extern int NewClicked( void );
