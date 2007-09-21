@@ -51,7 +51,7 @@ struct TagItem    WindowTags[] = {
     {WA_IDCMP,         IDCMP_GADGETUP|IDCMP_MENUPICK|IDCMP_VANILLAKEY|IDCMP_CLOSEWINDOW|IDCMP_REFRESHWINDOW|IDCMP_CHANGEWINDOW},
     {WA_Flags,         WFLG_DRAGBAR|WFLG_DEPTHGADGET|WFLG_CLOSEGADGET|WFLG_SMART_REFRESH|WFLG_ACTIVATE},
     {WA_Gadgets,       0l},
-    {WA_Title,         (LONG)windowtitle},
+    {WA_Title,         (IPTR)windowtitle},
     {WA_MinWidth,      200},
     {WA_MinHeight,     11},
     {WA_MaxWidth,      611},
