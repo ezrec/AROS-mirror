@@ -93,7 +93,7 @@ struct NewGadget Project0NGad[] = {
   133, 2, 118, 16, NULL, NULL, GD_mode, 0, NULL, (APTR)modeClicked
 };
 
-ULONG Project0GTags[] = {
+IPTR Project0GTags[] = {
 	(GA_Disabled),TRUE,(GTST_MaxChars), 256, (TAG_DONE),
 	(GTLV_ShowSelected), 1L, (TAG_DONE),
 	(GA_Disabled),TRUE,(GTST_MaxChars), 256, (TAG_DONE),
@@ -108,7 +108,7 @@ ULONG Project0GTags[] = {
 	(GT_Underscore),'_',(GA_Disabled),TRUE,(TAG_DONE),
 	(GT_Underscore),'_',(GA_Disabled),TRUE,(TAG_DONE),
 	(GT_Underscore),'_',(GA_Disabled),TRUE,(TAG_DONE),
-	(GTCY_Labels), (ULONG)&mode0Labels[ 0 ], (GT_Underscore), '_', (TAG_DONE)
+	(GTCY_Labels), (IPTR)&mode0Labels[ 0 ], (GT_Underscore), '_', (TAG_DONE)
 };
 
 static UWORD ComputeX( UWORD value )

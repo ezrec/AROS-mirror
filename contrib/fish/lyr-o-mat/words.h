@@ -131,7 +131,7 @@ extern struct Library       *IconBase;
 extern struct NewMenu        Project0NewMenu[];
 extern UWORD                 Project0GTypes[];
 extern struct NewGadget      Project0NGad[];
-extern ULONG                 Project0GTags[];
+extern IPTR                 Project0GTags[];
 
 extern int templatestringClicked( void );
 extern int wordlistClicked( void );
@@ -242,7 +242,7 @@ extern struct ed        edit;
 extern __far ULONG            RangeSeed;
 
       
-ULONG __stdargs FastRand( unsigned long seed );
+ULONG __stdargs FastRand(ULONG seed );
 /*UWORD __stdargs RangeRand( unsigned long maxValue );*/
 void  __stdargs main(int argc,union wbstart argv);
 void newpattern(UBYTE *name);
