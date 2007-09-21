@@ -629,7 +629,7 @@ Class *
 init_chunkyiclass (void)
 {
    Class         *cl;
-   extern ULONG   HookEntry();
+   extern IPTR   HookEntry();
    
    if (cl = MakeClass (NULL, "imageclass", NULL,
                        sizeof (struct chunkyidata), 0))
