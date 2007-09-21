@@ -425,9 +425,9 @@ static void CleanExit(char *msg, int code)
 
 static void Open_Sana_Device(char *name, int unit, int flags)
 {
-  static ULONG SanaTags[] = {
-    S2_CopyToBuff, (ULONG)MemCopy,
-    S2_CopyFromBuff, (ULONG)MemCopy,
+  static IPTR SanaTags[] = {
+    S2_CopyToBuff, (IPTR)MemCopy,
+    S2_CopyFromBuff, (IPTR)MemCopy,
     TAG_DONE, 0
   };
 
