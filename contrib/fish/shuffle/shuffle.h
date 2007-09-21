@@ -97,7 +97,7 @@ extern UBYTE                *tiles0Labels[];
 extern UBYTE                *shuffle0Labels[];
 extern UWORD                 Project0GTypes[];
 extern struct NewGadget      Project0NGad[];
-extern ULONG                 Project0GTags[];
+extern IPTR                 Project0GTags[];
 extern struct NewMenu        Project0NewMenu[];
 
 

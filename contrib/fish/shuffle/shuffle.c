@@ -78,12 +78,12 @@ struct NewGadget Project0NGad[] = {
 	14, 41, 136, 15, (UBYTE *)"_Mode", NULL, GD_mode, PLACETEXT_RIGHT, NULL, (APTR)modeClicked
 };
 
-ULONG Project0GTags[] = {
+IPTR Project0GTags[] = {
 	(GT_Underscore), '_', (TAG_DONE),
-	(GTCY_Labels), (ULONG)&tiles0Labels[ 0 ], (GT_Underscore), '_', (TAG_DONE),
-	(GTCY_Labels), (ULONG)&shuffle0Labels[ 0 ], (GT_Underscore), '_', (TAG_DONE),
+	(GTCY_Labels), (IPTR)&tiles0Labels[ 0 ], (GT_Underscore), '_', (TAG_DONE),
+	(GTCY_Labels), (IPTR)&shuffle0Labels[ 0 ], (GT_Underscore), '_', (TAG_DONE),
 	(GTCB_Checked), TRUE, (GT_Underscore), '_', (TAG_DONE),
-	(GTCY_Labels), (ULONG)&mode0Labels[ 0 ], (GT_Underscore), '_', (TAG_DONE)
+	(GTCY_Labels), (IPTR)&mode0Labels[ 0 ], (GT_Underscore), '_', (TAG_DONE)
 };
 
 

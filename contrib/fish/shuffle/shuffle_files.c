@@ -117,7 +117,7 @@ struct TagItem       FRTags[] =
                       ASL_LeftEdge,0L,
                       ASL_TopEdge,0L,
                       ASL_Dir,0L,
-                      ASL_Pattern,(ULONG)"~(#?.info)",
+                      ASL_Pattern,(IPTR)"~(#?.info)",
                       ASL_File,0L,
                       TAG_DONE,0L
                      };
