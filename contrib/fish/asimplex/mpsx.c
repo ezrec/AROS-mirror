@@ -42,7 +42,7 @@
 IMPORT VOID   SetM();
 IMPORT FILE   *fopen();
 IMPORT INT    fseek();
-IMPORT LONG   ftell()/*, time()*/;
+IMPORT long int ftell()/*, time()*/;
 
 GLOBAL DOUBLE  INFINITE;
 GLOBAL BOOL    minimize;
