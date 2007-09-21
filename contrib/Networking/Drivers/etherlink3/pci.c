@@ -109,20 +109,20 @@ const UWORD product_codes[] =
 
 static const struct TagItem unit_tags[] =
 {
-   {IOTAG_ByteIn, (UPINT)ByteInHook},
-   {IOTAG_LongIn, (UPINT)LongInHook},
-   {IOTAG_ByteOut, (UPINT)ByteOutHook},
-   {IOTAG_WordOut, (UPINT)WordOutHook},
-   {IOTAG_LongOut, (UPINT)LongOutHook},
-   {IOTAG_LongsIn, (UPINT)LongsInHook},
-   {IOTAG_LongsOut, (UPINT)LongsOutHook},
-   {IOTAG_BEWordOut, (UPINT)BEWordOutHook},
-   {IOTAG_LEWordIn, (UPINT)LEWordInHook},
-   {IOTAG_LELongIn, (UPINT)LELongInHook},
-   {IOTAG_LEWordOut, (UPINT)LEWordOutHook},
-   {IOTAG_LELongOut, (UPINT)LELongOutHook},
-   {IOTAG_AllocDMAMem, (UPINT)AllocDMAMemHook},
-   {IOTAG_FreeDMAMem, (UPINT)FreeDMAMemHook},
+   {IOTAG_ByteIn, (IPTR)ByteInHook},
+   {IOTAG_LongIn, (IPTR)LongInHook},
+   {IOTAG_ByteOut, (IPTR)ByteOutHook},
+   {IOTAG_WordOut, (IPTR)WordOutHook},
+   {IOTAG_LongOut, (IPTR)LongOutHook},
+   {IOTAG_LongsIn, (IPTR)LongsInHook},
+   {IOTAG_LongsOut, (IPTR)LongsOutHook},
+   {IOTAG_BEWordOut, (IPTR)BEWordOutHook},
+   {IOTAG_LEWordIn, (IPTR)LEWordInHook},
+   {IOTAG_LELongIn, (IPTR)LELongInHook},
+   {IOTAG_LEWordOut, (IPTR)LEWordOutHook},
+   {IOTAG_LELongOut, (IPTR)LELongOutHook},
+   {IOTAG_AllocDMAMem, (IPTR)AllocDMAMemHook},
+   {IOTAG_FreeDMAMem, (IPTR)FreeDMAMemHook},
    {TAG_END, 0}
 };
 

@@ -195,7 +195,7 @@ LONG DevOpen(REG(a1, struct IOSana2Req *req), REG(d0, LONG unit),
   REG(d1, LONG flags), REG(a6, struct DevData *dd));
 APTR DevClose(REG(a1, struct IOSana2Req *req), REG(a6, struct DevData *dd));
 APTR DevExpunge(REG(a6, struct DevData *dd));
-long DevReserved(void);
+LONG DevReserved(void);
 void DevBeginIO(REG(a1, struct IOSana2Req *req),
   REG(a6, struct DevData *dd));
 ULONG DevAbortIO(REG(a1, struct IOSana2Req *req),
