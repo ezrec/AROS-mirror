@@ -100,7 +100,7 @@ struct TagItem roachWindowTags[] = {
 // 	{WA_SimpleRefresh, TRUE},	/* -> faster, but garbage on screen */
  	{WA_SmartRefresh, TRUE},
 	{WA_IDCMP, IDCMP_MOUSEBUTTONS},
-	{WA_PubScreenName, (ULONG) PubScreen},
+	{WA_PubScreenName, (IPTR) PubScreen},
     {WA_PubScreenFallBack, TRUE},
 	{TAG_DONE, NULL}
 };
@@ -115,8 +115,8 @@ struct TagItem userWindowTags[] = {
 	{WA_MaxHeight, -1},
 	{WA_IDCMP, IDCMP_CLOSEWINDOW},
 	{WA_Flags, WFLG_CLOSEGADGET + WFLG_DRAGBAR + WFLG_SIZEGADGET + WFLG_DEPTHGADGET + WFLG_RMBTRAP},
-	{WA_Title, (ULONG) "ARoach"},
-	{WA_PubScreenName, (ULONG) PubScreen},
+	{WA_Title, (IPTR) "ARoach"},
+	{WA_PubScreenName, (IPTR) PubScreen},
     {WA_PubScreenFallBack, TRUE},
 	{TAG_DONE, NULL}
 };
