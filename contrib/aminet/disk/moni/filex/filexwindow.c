@@ -437,7 +437,7 @@ int NewOpenAWindow( struct WindowData *WD, UBYTE *Title )
 			{GTSL_Max, 0},
 			{GTSL_Level, 0},
 			{GTSL_MaxLevelLen, 6},
-			{GTSL_LevelFormat, (LONG)"%4.ld"},
+			{GTSL_LevelFormat, (IPTR)"%4.ld"},
 			{PGA_Freedom, LORIENT_HORIZ},
 			{GA_RelVerify, TRUE},
 			{GTSL_LevelPlace, PLACETEXT_RIGHT},

@@ -463,7 +463,7 @@ static int MakeCalcGadgets( UWORD Breite )
 
 	{
 	static struct TagItem StringTags[6] =
-	{{GTST_String, 0}, {GTST_MaxChars, 0},{STRINGA_Justification, GACT_STRINGRIGHT}, {GTST_EditHook, (LONG) &CalcHook}, {TAG_DONE}};
+	{{GTST_String, 0}, {GTST_MaxChars, 0},{STRINGA_Justification, GACT_STRINGRIGHT}, {GTST_EditHook, (IPTR) &CalcHook}, {TAG_DONE}};
 	ng.ng_GadgetText = 0;
 	ng.ng_TopEdge = Scr->RastPort.TxHeight + Scr->WBorTop + 1 + BORDERY + BEVELY + BUTTONY;
 	ng.ng_LeftEdge = Scr->WBorLeft + BORDERX + BEVELX + BUTTONX;
