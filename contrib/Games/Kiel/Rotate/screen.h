@@ -1,7 +1,7 @@
 extern struct GfxBase *GfxBase;
 struct Screen   *Screen=NULL;
 struct Window   *Window=NULL,*iWindow=NULL;
-struct RastPort *rp,*irp;
+struct RastPort *rp, *irp;
 ULONG iflags;
 
 struct TextAttr StdFont = {"XEN.font",9,0,0};
@@ -10,14 +10,15 @@ struct TextAttr StdFont = {"XEN.font",9,0,0};
 UWORD Pens_3D[] = {-1};
 
 struct TagItem ScreenItem[] =
-{ {SA_Title,     (ULONG)((ULONG *)"Rotate!")},
+{
+  {SA_Title,     (IPTR)"Rotate!"},
   {SA_Width,     724},
   {SA_Height,    480},
   {SA_Depth,     MAXBITMAP},
-  {SA_Font,      (ULONG) &StdFont},
+  {SA_Font,      (IPTR) &StdFont},
   {SA_Type,      CUSTOMSCREEN},
 /*  {SA_DisplayID, NTSC_MONITOR_ID|HIRESLACE_KEY}, */
-  {SA_Pens,      (ULONG) Pens_3D},
+  {SA_Pens,      (IPTR) Pens_3D},
 /*  {SA_Overscan,  OSCAN_MAX}, */
   {TAG_DONE,0L}
 };
@@ -90,8 +91,8 @@ struct TagItem InfoWindowItem[] =
 /*  {WA_PubScreen,  NULL}, */
   {WA_IDCMP,      IDCMP_CLOSEWINDOW|IDCMP_GADGETUP},
   {WA_Flags,      WFLG_ACTIVATE|WFLG_SMART_REFRESH|WFLG_CLOSEGADGET|WFLG_DEPTHGADGET|WFLG_DRAGBAR|WFLG_RMBTRAP},
-  {WA_Title,      (ULONG)((ULONG *)"Preferences")},
-  {WA_Gadgets,    (ULONG)((struct Gadget *)&numbergad)},
+  {WA_Title,      (IPTR)"Preferences"},
+  {WA_Gadgets,    (IPTR)&numbergad},
   {TAG_DONE,0L}
 };
 
@@ -109,8 +110,8 @@ struct TagItem ResultWindowItem[] =
 /*  {WA_PubScreen,  NULL}, */
   {WA_IDCMP,      IDCMP_CLOSEWINDOW|IDCMP_GADGETUP},
   {WA_Flags,      WFLG_ACTIVATE|WFLG_SMART_REFRESH|WFLG_CLOSEGADGET|WFLG_DEPTHGADGET|WFLG_DRAGBAR|WFLG_RMBTRAP},
-  {WA_Gadgets,    (ULONG)((struct Gadget *)&okgad)},
-  {WA_Title,      (ULONG)((ULONG *)"Result")},
+  {WA_Gadgets,    (IPTR)&okgad},
+  {WA_Title,      (IPTR)"Result"},
   {TAG_DONE,0L}
 };
 
@@ -122,7 +123,7 @@ struct TagItem WindowItem[] =
   {WA_Height,    480},
   {WA_IDCMP,      IDCMP_CLOSEWINDOW|IDCMP_GADGETUP|IDCMP_MOUSEBUTTONS|IDCMP_MENUPICK},
   {WA_Flags,      WFLG_ACTIVATE|WFLG_SMART_REFRESH|WFLG_CLOSEGADGET|WFLG_DEPTHGADGET},
-  {WA_Title,      (ULONG)((ULONG *)"Rotate!")},
+  {WA_Title,      (IPTR)"Rotate!"},
   {WA_NewLookMenus,TRUE},
   {TAG_DONE,0L}
 };
