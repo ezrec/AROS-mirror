@@ -7,7 +7,7 @@
 
 LONG initcachebuffers(void);
 
-LONG readcachebuffer(struct CacheBuffer **,ULONG);
+LONG readcachebuffer(struct CacheBuffer **, BLCK);
 LONG writecachebuffer(struct CacheBuffer *cb);
 
 LONG readoriginalcachebuffer(struct CacheBuffer **returned_cb,BLCK blckno);
