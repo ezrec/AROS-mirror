@@ -180,104 +180,104 @@ AROS_LD0(LONG, LibVoid,
 /*
  * Library function table.
  */
-STATIC const LONG Vectors[] = {
+STATIC const IPTR Vectors[] = {
 #ifdef __AROS__
    /*
     * System interface.
     */
-   (LONG)BGUI_LibOpen,
-   (LONG)BGUI_LibClose,
-   (LONG)BGUI_LibExpunge,
-   (LONG)BGUI_LibVoid,
+   (IPTR)BGUI_LibOpen,
+   (IPTR)BGUI_LibClose,
+   (IPTR)BGUI_LibExpunge,
+   (IPTR)BGUI_LibVoid,
    /*
     * Public routines.
     */
-   (LONG)BGUI_BGUI_GetClassPtr,
-   (LONG)BGUI_BGUI_NewObjectA,
-   (LONG)BGUI_BGUI_RequestA,
-   (LONG)BGUI_BGUI_Help,
-   (LONG)BGUI_BGUI_LockWindow,
-   (LONG)BGUI_BGUI_UnlockWindow,
-   (LONG)BGUI_BGUI_DoGadgetMethodA,
+   (IPTR)BGUI_BGUI_GetClassPtr,
+   (IPTR)BGUI_BGUI_NewObjectA,
+   (IPTR)BGUI_BGUI_RequestA,
+   (IPTR)BGUI_BGUI_Help,
+   (IPTR)BGUI_BGUI_LockWindow,
+   (IPTR)BGUI_BGUI_UnlockWindow,
+   (IPTR)BGUI_BGUI_DoGadgetMethodA,
    /*
     * Private routines.
     */
-   (LONG)BGUI_BGUI_AllocPoolMem,
-   (LONG)BGUI_BGUI_FreePoolMem,
+   (IPTR)BGUI_BGUI_AllocPoolMem,
+   (IPTR)BGUI_BGUI_FreePoolMem,
    /*
     * Public routines.
     */
-   (LONG)BGUI_BGUI_AllocBitMap,
-   (LONG)BGUI_BGUI_FreeBitMap,
-   (LONG)BGUI_BGUI_CreateRPortBitMap,
-   (LONG)BGUI_BGUI_FreeRPortBitMap,
-   (LONG)BGUI_BGUI_InfoTextSize,
-   (LONG)BGUI_BGUI_InfoText,
-   (LONG)BGUI_BGUI_GetLocaleStr,
-   (LONG)BGUI_BGUI_GetCatalogStr,
-   (LONG)BGUI_BGUI_FillRectPattern,
-   (LONG)BGUI_BGUI_PostRender,
-   (LONG)BGUI_BGUI_MakeClassA,
-   (LONG)BGUI_BGUI_FreeClass,
-   (LONG)BGUI_BGUI_PackStructureTags,
-   (LONG)BGUI_BGUI_UnpackStructureTags,
+   (IPTR)BGUI_BGUI_AllocBitMap,
+   (IPTR)BGUI_BGUI_FreeBitMap,
+   (IPTR)BGUI_BGUI_CreateRPortBitMap,
+   (IPTR)BGUI_BGUI_FreeRPortBitMap,
+   (IPTR)BGUI_BGUI_InfoTextSize,
+   (IPTR)BGUI_BGUI_InfoText,
+   (IPTR)BGUI_BGUI_GetLocaleStr,
+   (IPTR)BGUI_BGUI_GetCatalogStr,
+   (IPTR)BGUI_BGUI_FillRectPattern,
+   (IPTR)BGUI_BGUI_PostRender,
+   (IPTR)BGUI_BGUI_MakeClassA,
+   (IPTR)BGUI_BGUI_FreeClass,
+   (IPTR)BGUI_BGUI_PackStructureTags,
+   (IPTR)BGUI_BGUI_UnpackStructureTags,
    /*
     * Private routines.
     */
-   (LONG)BGUI_BGUI_GetDefaultTags,
-   (LONG)BGUI_BGUI_DefaultPrefs,
-   (LONG)BGUI_BGUI_LoadPrefs,
-   (LONG)BGUI_BGUI_AllocPoolMemDebug,
-   (LONG)BGUI_BGUI_FreePoolMemDebug,
+   (IPTR)BGUI_BGUI_GetDefaultTags,
+   (IPTR)BGUI_BGUI_DefaultPrefs,
+   (IPTR)BGUI_BGUI_LoadPrefs,
+   (IPTR)BGUI_BGUI_AllocPoolMemDebug,
+   (IPTR)BGUI_BGUI_FreePoolMemDebug,
 #else
    /*
     * System interface.
     */
-   (LONG)LibOpen,
-   (LONG)LibClose,
-   (LONG)LibExpunge,
-   (LONG)LibVoid,
+   (IPTR)LibOpen,
+   (IPTR)LibClose,
+   (IPTR)LibExpunge,
+   (IPTR)LibVoid,
    /*
     * Public routines.
     */
 
-   (LONG)BGUI_GetClassPtr,
-   (LONG)BGUI_NewObjectA,
-   (LONG)BGUI_RequestA,
-   (LONG)BGUI_Help,
-   (LONG)BGUI_LockWindow,
-   (LONG)BGUI_UnlockWindow,
-   (LONG)BGUI_DoGadgetMethodA,
+   (IPTR)BGUI_GetClassPtr,
+   (IPTR)BGUI_NewObjectA,
+   (IPTR)BGUI_RequestA,
+   (IPTR)BGUI_Help,
+   (IPTR)BGUI_LockWindow,
+   (IPTR)BGUI_UnlockWindow,
+   (IPTR)BGUI_DoGadgetMethodA,
    /*
     * Private routines.
     */
-   (LONG)BGUI_AllocPoolMem,
-   (LONG)BGUI_FreePoolMem,
+   (IPTR)BGUI_AllocPoolMem,
+   (IPTR)BGUI_FreePoolMem,
    /*
     * Public routines.
     */
-   (LONG)BGUI_AllocBitMap,
-   (LONG)BGUI_FreeBitMap,
-   (LONG)BGUI_CreateRPortBitMap,
-   (LONG)BGUI_FreeRPortBitMap,
-   (LONG)BGUI_InfoTextSize,
-   (LONG)BGUI_InfoText,
-   (LONG)BGUI_GetLocaleStr,
-   (LONG)BGUI_GetCatalogStr,
-   (LONG)BGUI_FillRectPattern,
-   (LONG)BGUI_PostRender,
+   (IPTR)BGUI_AllocBitMap,
+   (IPTR)BGUI_FreeBitMap,
+   (IPTR)BGUI_CreateRPortBitMap,
+   (IPTR)BGUI_FreeRPortBitMap,
+   (IPTR)BGUI_InfoTextSize,
+   (IPTR)BGUI_InfoText,
+   (IPTR)BGUI_GetLocaleStr,
+   (IPTR)BGUI_GetCatalogStr,
+   (IPTR)BGUI_FillRectPattern,
+   (IPTR)BGUI_PostRender,
    (LONG)BGUI_MakeClassA,
-   (LONG)BGUI_FreeClass,
-   (LONG)BGUI_PackStructureTags,
-   (LONG)BGUI_UnpackStructureTags,
+   (IPTR)BGUI_FreeClass,
+   (IPTR)BGUI_PackStructureTags,
+   (IPTR)BGUI_UnpackStructureTags,
    /*
     * Private routines.
     */
-   (LONG)BGUI_GetDefaultTags,
-   (LONG)BGUI_DefaultPrefs,
-   (LONG)BGUI_LoadPrefs,
-   (LONG)BGUI_AllocPoolMemDebug,
-   (LONG)BGUI_FreePoolMemDebug,
+   (IPTR)BGUI_GetDefaultTags,
+   (IPTR)BGUI_DefaultPrefs,
+   (IPTR)BGUI_LoadPrefs,
+   (IPTR)BGUI_AllocPoolMemDebug,
+   (IPTR)BGUI_FreePoolMemDebug,
 #endif
    /*
     * Table end marker.
