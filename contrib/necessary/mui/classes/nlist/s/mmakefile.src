@@ -3,7 +3,11 @@ include $(TOP)/config/make.cfg
 
 FILES := Package-Startup Package-Shutdown
 
-#MM contrib-zune-classes-nlist-startup :
+#MM contrib-zune-classes-nlist-startup : workbench-prefs-envarc
+
+#MM
+contrib-zune-classes-nlist-startup :
+	$(ECHO) "SYS:Extras/Zune/MCC_NList" >$(AROS_PACKAGES)/MCC_NList
 
 #MM- contrib-zune-classes-nlist-class      : contrib-zune-classes-nlist-startup
 #MM- contrib-zune-classes-nlistview-class  : contrib-zune-classes-nlist-startup
@@ -13,5 +17,5 @@ FILES := Package-Startup Package-Shutdown
 #MM- contrib-zune-classes-nlistviews-mcp : contrib-zune-classes-nlist-startup
 #MM- contrib-zune-classes-nlisttree-mcp : contrib-zune-classes-nlist-startup
 
-%copy_files_q dst=$(CONTRIBDIR)/Zune/MCC_NList/S maketarget=contrib-zune-classes-nlist-startup
+%copy_files_q dst=$(CONTRIBDIR)/Zune/MCC_NList/s maketarget=contrib-zune-classes-nlist-startup
 
