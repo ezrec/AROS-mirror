@@ -11,3 +11,7 @@ contrib-dopus : $(SFILES:%=$(DOPUSDIR)/S/%)
 $(DOPUSDIR)/S/% : S/%
 	@$(MKDIR) $(dir $@)
 	@$(CP) $< $@
+
+#MM
+contrib-dopus :
+	$(ECHO) "SYS:Extras/DOpus" >$(AROS_PACKAGES)/DOpus
