@@ -1,0 +1,12 @@
+#   $Id: mmakefile.src 26744 2007-09-20 01:45:45Z mazze $
+include $(TOP)/config/make.cfg
+
+FILES := Package-Startup
+
+#MM- aros-tcpip-apps-wget : aros-tcpip-apps-wget-startup
+
+#MM
+aros-tcpip-apps-wget-startup :
+	$(ECHO) "SYS:Extras/Networking/Apps/Wget" >$(AROS_PACKAGES)/wget
+
+%copy_files_q dst=$(AROS_CONTRIB)/Networking/apps/wget/S maketarget=aros-tcpip-apps-wget-startup

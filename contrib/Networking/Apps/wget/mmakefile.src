@@ -18,6 +18,4 @@ DOCFILES := wget.info sample.wgetrc
 %copy_files_q files=$(DOCFILES) \
     src=doc dst=$(TARGETDIR)/doc maketarget=aros-tcpip-apps-wget-cpy
 
-%copy_dir_recursive mmake=aros-tcpip-apps-wget-cpy src=S dst=$(TARGETDIR)/S
-
 %common
