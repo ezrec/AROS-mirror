@@ -73,7 +73,7 @@ SAVEDS LONG LibVoid(void);
 /*
  * Library function table.
  */
-static const LONG Vectors[] = {
+static const IPTR Vectors[] = {
    /*
     * System interface.
     */
@@ -107,11 +107,11 @@ STATIC VOID CloseLibs(void)
    if (DOSBase)       CloseLibrary((struct Library *)DOSBase);
 }
 
-ULONG _LibInit[4] =
+IPTR _LibInit[4] =
 {
-   (ULONG)sizeof(struct BGUIClassBase),
+   (IPTR)sizeof(struct BGUIClassBase),
    Vectors,
-   (ULONG)NULL,
+   (IPTR)NULL,
    LibInit
 };
 
