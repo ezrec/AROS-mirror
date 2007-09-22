@@ -4,9 +4,9 @@ charset:          iso-8859-2
 
 [titles]
 
-mirrors:          Mirrors
-contents:         Contents
-search:           Search
+mirrors:          Zrcadla
+contents:         Obsah
+search:           Hledání
 visitors:         Náv¹tìvníci
 sponsors:         Sponzoøi
 
@@ -26,40 +26,40 @@ users:            U¾ivatelé
 installation:     Instalace
 using:            Pou¾ití
 shell:            Pøíkazy shellu
-applications:     Applications
+applications:     Aplikace
 faq:              FAQ
 developers:       Vıvojáøi
 contribute:       Spolupráce
-bug-tracker:      Bug Tracker
-working-with-subversion: Pracování s SVN
+bug-tracker:      Sledovaè chyb
+working-with-subversion: Práce se Subversion
 compiling:        Kompilování
-application-development-manual: Application Development Manual
-zune-application-development-manual: Zune Application Development Manual
-system-development-manual:      System Development Manual
-debugging-manual: Debugging Manual
+application-development-manual: Manuál pro vıvoj aplikací
+zune-application-development-manual: Manuál pro vıvoj aplikací se Zune
+system-development-manual:      Manuál pro vıvoj systému
+debugging-manual: Manuál pro ladìní
 reference:        Reference
 specifications:   Specifikace
-ui-style-guide:   UI Style Guide
-documenting:      Documenting
-porting:          Porting
+ui-style-guide:   Pøíruèka stylu UI
+documenting:      Dokumentace
+porting:          Portování
 translating:      Pøekládání
-summaries:        Summaries
+summaries:        Souhrny
 links:            Odkazy
 contact:          Kontakt
-mailing-lists:    Mailing lists
+mailing-lists:    Mailing listy
 forums:           Fóra
 irc-channels:     Kanály IRC
-credits:          Credits
-pictures:         Obrázky
+credits:          Zásluhy
+pictures:         Fotografie
 developers-together: Vıvojáøi spoleènì
 sponsors:         Sponzoøi
 linking:          Odkazování
 
 [misc]
 
-go:               Go
+go:               Jít na
 search:           Hledat
-copyright:        Copyright Œ 1995-2007, The AROS Development Team. V¹echna práva vyhrazena.
+copyright:        Copyright Œ 1995-2007, The AROS Development Team. All rights reserved.
 trademarks:       Amiga is a trademark of Amiga Inc. All other trademarks belong to their respective owners.
 read-more:        Èíst více...
-large-image:      Large version...
+large-image:      Zvìt¹it...
