@@ -1,0 +1,12 @@
+#   $Id: mmakefile.src 26744 2007-09-20 01:45:45Z mazze $
+include $(TOP)/config/make.cfg
+
+FILES := Package-Startup Package-Shutdown
+
+#MM- contrib-development-lua : contrib-development-lua-startup
+
+#MM
+contrib-development-lua-startup :
+	$(ECHO) "SYS:Extras/Development/Lua" >$(AROS_PACKAGES)/Lua
+
+%copy_files_q dst=$(AROS_CONTRIB)/Development/Lua/S maketarget=contrib-development-lua-startup
