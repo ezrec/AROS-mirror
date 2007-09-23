@@ -436,7 +436,7 @@ compartido o enlazado a otros módulos.
   un parámetro "input". El concepto de los parámetros de entrada 
   está implícito en la descripción de la función. Por ejemplo,
   el nombre de archivo pasado a `Open()` claramente es una variable
-  de entrada y `Open() no debe mess con ella, incluso si va a 
+  de entrada y `Open()` no debe mess con ella, incluso si va a 
   dejarla como estaba después. Ten en cuenta, que el búfer podría
   estar en una memoria de solo-lectura o compartida entre varias
   instancias de un programa residente o multihilo.
