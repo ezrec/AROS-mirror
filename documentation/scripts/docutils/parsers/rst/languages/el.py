@@ -1,5 +1,5 @@
 # Author: Ioannis Koniaris
-# Contact: ikoniari@csd.auth.gr
+# Contact: ikoniaris@gmail.com
 # Revision: $Revision$
 # Date: $Date$
 # Copyright: This module has been placed in the public domain.
