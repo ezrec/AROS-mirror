@@ -25,7 +25,7 @@ decimal-point: ,
 ChangeLog-AROS:
     Záznam zmìn pro zdroje jádra AROS.
 ChangeLog-contrib:
-    Záznam zmìn pro zdroje pøispìných programù.
+    Záznam zmìn pro zdroje programù od pøispìvovatelù.
 ChangeLog-docs:
     Záznam zmìn pro dokumentaci.
 source:
@@ -33,10 +33,10 @@ source:
 docs-source:
     Dokumentace zdrojù.
 contrib-source:
-    Zdroje pøispìných programù.
+    Zdroje programù od pøispìvovatelù.
 docs-html:
     Dokumentace v HTML formátu. Obsahuje v¹e, co je dostupné
-    na webových stránkách, ale pøizpùsobeno pro offline ètení.
+    na webových stránkách, ale je pøizpùsobena pro offline ètení.
 i386-freebsd5-system:
     Hostovaná verze pro FreeBSD/i386 5.x. V¹imnìte si, ¾e
     nepracuje na systémech FreeBSD 4.x.
@@ -44,37 +44,37 @@ i386-freebsd-system:
     Hostovaná verze pro FreeBSD/i386 5.x. V¹imnìte si, ¾e
     nepracuje na systémech FreeBSD 4.x.
 i386-linux-system:
-    Hostovaná verze pro Linux/i386. This is the most
-    complete and mature port, co¾ znamená, that you can run
-    all included programs and demos with it. Tento archiv
-    obsahuje all AROS system binaries compiled from the Subversion
-    tree.
+    Hostovaná verze pro Linux/i386. Toto je nejvíce
+    kompletní a dokonalý port, co¾ znamená, ¾e s ním mù¾ete spustit
+    v¹echny obsa¾ené programy a demonstraèní verze. Tento archiv
+    obsahuje v¹echny binárky systému AROS kompilované ze Subversion
+    stromu.
 ppc-linux-system:
-    Hostovaná verze pro Linux/PowerPC. Tento archiv obsahuje all AROS
-    system binaries compiled from the Subversion tree.
+    Hostovaná verze pro Linux/PowerPC. Tento archiv obsahuje v¹echny binárky
+    systému AROS kompilované ze Subversion stromu.
 i386-pc-boot-floppy:
-    The native version for i386-based PC AT computers and
-    compatibles. This archive contains the boot
-    disk floppy image which you can quickly write to a disk
-    and boot AROS with.
+    Nativní verze pro i386-based PC AT computers a
+    kompatibilní. Tento archiv obsahuje obraz bootovací diskety,
+    který mù¾ete rychle zapsat na disketu
+    a zavést s ním AROS.
 i386-pc-boot-iso:
-    The native version for i386-based PC AT computers and
-    compatibles. This is the bootable CDROM ISO image, which
-    contains all AROS system and contributed programs.
+    Nativní verze pro i386-based PC AT computers a
+    kompatibilní. Jedná se o bootovatelný obraz CDROM ISO, který
+    obsahuje celý AROS systém a programy od pøispìvovatelù.
 i386-all-contrib:
-    This archive contains all the contributed programs
-    compiled for the i386 architecture. They will work in
-    both the appropriate hosted (eg. i386-linux) and native
-    (i386-pc) version.
+    Tento archiv obsahuje v¹echny programy od pøispìvovatelù
+    kompilované pro architekturu i386. Budou pracovat v
+    obou pøíslu¹ných verzích - hostované (eg. i386-linux) a nativní
+    (i386-pc).
 ppc-all-contrib:
-    This archive contains all the contributed programs
-    compiled for the PowerPC architecture, for use with the
-    Linux/PowerPC port.
+    Tento archiv obsahuje v¹echny programy od pøispìvovatelù
+    kompilované pro architekturu PowerPC k pou¾ití s portem
+    Linux/PowerPC.
 i386-all-sdk:
-    Set of files and tools to build your own AROS programs
-    on your preferred machine. You'll need also gcc and the
-    binutils configured to produce i386-elf executables.
+    Sada souborù a nástrojù k vytvoøení va¹ich vlastních AROS programù
+    na vámi preferovaném stroji. Také budete potøebovat gcc a
+    binutils nastavené k vytváøení i386-elf spustitelných souborù.
 ppc-all-sdk:
-    Set of files and tools to build your own AROS programs
-    on your preferred machine. You'll need also gcc and the
-    binutils configured to produce ppc-elf executables.
+    Sada souborù a nástrojù k vytvoøení va¹ich vlastních AROS programù
+    na vámi preferovaném stroji. Také budete potøebovat gcc a
+    binutils nastavené k vytváøení ppc-elf spustitelných souborù.

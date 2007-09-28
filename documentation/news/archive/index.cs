@@ -1,9 +1,9 @@
-===============
-Novinky archivù
-===============
+==============
+Archiv novinek
+==============
 
-Zde mù¾ete najtí staré zpravodajské èlánky, které byly publikovány na tomto webu
-bìhem tohoto roku a døívìj¹ích let. Jsou dostupné èlánky z následujících let:
+Zde mù¾ete najít staré zpravodajské èlánky, které byly publikovány na tomto webu
+bìhem tohoto roku a døívìj¹ích let. Dostupné jsou èlánky z následujících let:
 
 + `2007 <2007>`__
 + `2006 <2006>`__
