@@ -3,7 +3,7 @@ Links
 =====
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright ¦ 1995-2007, The AROS Development Team
+:Copyright: Copyright © 1995-2007, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -18,13 +18,19 @@ AROS resources
 
   TeamAROS is a grass roots support group for AROS.
   
-+  `AROS-Exec <http://aros-exec.org>`__
++  `AROS-Exec`__
 
   AROS Community website, forums, news, galleries
 
 + `AROS software archive`__
 
++ `AROS Aminet Section`__
+
 + `AROS Polska`__
+
++ `AROS on ohloh.net`__
+
+  Ohlow is showing AROS development activity in a nice graphical way.
 
 + `Map of AROS users`__
 
@@ -32,20 +38,25 @@ AROS resources
   
   AfA OS replaces AmigaOS core libraries with their more advanced AROS counterparts.
   
-+ `AROS World <http://arosworld.org>`__
++ `AROS World`__
   A new AROS website, intended to be the user community website
-                                                               
-+ `AROS Aminet Section <http://aros.aminet.net/>`__
 
-+ `AROS on WikiPedia <http://en.wikipedia.org/wiki/AROS_Research_Operating_System>`__
++ `AROS on WikiPedia`__
 
-+ `AROS documentation on WikiBooks <http://en.wikibooks.org/wiki/Aros>`__
++ `AROS documentation on WikiBooks`__
   
 __ http://www.teamaros.org/
+__ http://aros-exec.org
 __ http://archives.aros-exec.org/
+__ http://aros.aminet.net/
 __ http://www.aros.bbs.pl/
+__ http://www.ohloh.net/projects/6056?p=AROS
 __ http://www.frappr.com/arosusers
 __ http://amidevcpp.amiga-world.de/afa_binarie_upload.php
+__ http://arosworld.org
+__ http://en.wikipedia.org/wiki/AROS_Research_Operating_System
+__ http://en.wikibooks.org/wiki/Aros
+
 
 Articles about AROS
 ===================
@@ -110,46 +121,47 @@ Homepages of developers
 
 + `Aaron Digulla`__
 + `Adam Chodorowski`__
-+ `Adam Olivier`__
 + `Henrik Berglund`__
 + `Johan Alfredsson`__
 + `Lennard voor den Dag`__
 + `Martin Steigerwald`__
 + `Matt 'Crazy' Parsons`__
 + `Matthias Rustler`__
++ `Michal Schulz`__
++ `Nic Andrews`__
++ `Olivier Adam`__
 + `Oliver Brunner`__
++ `Robert Norris`__
 + `Sebastian Rittau`__
-+ `Michal Schulz <http://msaros.blogspot.com>`__
 
 
 __ http://www.philmann-dark.de/
 __ http://www.chodorowski.com/
-__ http://reziztanzia.free.fr/
 __ http://www.mds.mdh.se/~adb94hbd/
 __ http://www.dtek.chalmers.se/~d95duvan/
 __ http://www.xs4all.nl/~ldp/
 __ http://www.lichtvoll.de
 __ http://www.troubled-mind.com
 __ http://www.mazze-online.de/
+__ http://msaros.blogspot.com
+__ http://kalamatee.125mb.com/
 __ http://homes.hallertau.net/~oli/
+__ http://reziztanzia.free.fr/
+__ http://cataclysm.cx/
 __ http://www.in-berlin.de/User/jroger/index.html
 
 
 Miscellaneous
 =============
 
-+ `Phoenix Developer Consortium`__
++ `Back to the Roots`__
 
-  .. Image:: images/phoenix.jpeg
-  
-  The Phoenix Developer Consortium supports the development of alternative
-  computing platforms by working with core and third-party developers and
-  providing resources for that development.
+  .. Image:: images/bttr.jpeg
+
+  A great nostalgia site where you can find licensed and free Amiga games.
 
 
-
-
-__ http://phinixi.com/
+__ http://www.back2roots.org/
 
 
 .. _contact: contact

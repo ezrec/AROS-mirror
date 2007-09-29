@@ -295,7 +295,7 @@ sources under a different OS, e.g. Linux or FreeBSD. Fabio Alemagna has
 completed an initial port of GCC to i386 native. However, it is not
 currently on the ISO or integrated into the build system.
 
-The languages that are available natively are Python_, Regina_, Lua_ and False_:
+The languages that are available natively are Python_, Regina_, Lua_, Hollywood_ and False_:
 
 + Python is a scripting language which has become quite popular, because of 
   its nice design and features (object-oriented programming, module system,
@@ -311,12 +311,16 @@ The languages that are available natively are Python_, Regina_, Lua_ and False_:
   port has been extented by two modules: siamiga and zulu. The first one has
   some simple graphics commands, the latter is an interface to Zune.
 
++ Hollywood is a commercial programming language for multimedia applications
+  including games. The CD-ROM contains a version for i386-aros.
+
 + False can be classified as an exotic language, so it will most likely not be 
   used for serious development, although it can be lots of fun. :-) 
 
 .. _Python: http://www.python.org/
 .. _Regina: http://regina-rexx.sourceforge.net/
 .. _Lua: http://www.lua.org/
+.. _Hollywood: http://www.airsoftsoftwair.com/
 .. _False:  http://wouter.fov120.com/false/
 
 
@@ -388,11 +392,13 @@ standard on AmigaOS. Zune is the preferred GUI toolkit to develop
 native AROS applications. As for the name itself, it means nothing,
 but sounds good.
 
+
 How can I restore my Prefs to defaults?
 ---------------------------------------
 
 In AROS, open CLI shell, go to Envarc: and delete relevant files for the 
 pref you want to restore.
+
 
 What is the Graphical and other memory in Wanderer?
 ---------------------------------------------------
@@ -415,10 +421,12 @@ memory.
 
 Use C:Avail HUMAN command for memory info.
 
+
 What do the Wanderer Snapshot <all/window> action actually do? 
 --------------------------------------------------------------
 
 This command remembers icon's placement of all (or one) windows.
+
 
 How do I change the screensaver/background?
 -------------------------------------------
@@ -430,6 +438,7 @@ Background of Wanderer is set by Pref tool Prefs/Wanderer.
 Background of Zune Windows is set by Zune prefs Prefs/Zune. You can also set 
 your chosen application preferences by using the Zune <application> command.
 
+
 I've launched AROS-hosted but it's failed
 -----------------------------------------
 
@@ -438,10 +447,12 @@ If you are root and AROS crashes at launch, do "xhost +" before
 shown. The space between "-m" and the value is important. Also don't forget
 about BackingStore option in section Device of your xorg.conf.
 
+
 What are the command line options for AROS-hosted executable?
 -------------------------------------------------------------
 
 You can get a list of them by running ./aros -h command.
+
 
 How can I make windows refresh from black on AROS-hosted?
 ---------------------------------------------------------
@@ -453,7 +464,8 @@ your /etc/X11/xorg.conf (or XFree.conf)::
 
 See Installation__ for details.
 
-__ installation.php#running
+__ installation#running
+
 
 What are the AROS-native kernel options used in GRUB line?
 ----------------------------------------------------------
@@ -461,14 +473,15 @@ What are the AROS-native kernel options used in GRUB line?
 Here's some::
 
     nofdc           - Disables the floppy driver completely.
-    noclick         - Disabled the floppy disk change detection (and clicking)
+    noclick         - Disables the floppy disk change detection (and clicking)
     ATA=32bit       - Enables 32-bit I/O in the hdd driver (safe)
     forcedma        - Forces DMA to be active in the hdd driver (should be safe, but       
                       might not be)
-    gfx=<hidd name> - Use the named hidd as the gfx driver
-    lib=<name>      - Load and initiate the named library/hidd
+    gfx=<hidd name> - Use the named HIDD as the gfx driver
+    lib=<name>      - Load and initiate the named library/HIDD
 
 Please note that they are case-sensitive.
+
 
 How can I transfer files to virtual machine with AROS?
 ------------------------------------------------------
@@ -482,13 +495,15 @@ documentation contains a chapter about networking, go for it. Also, now
 there`s a promising utility (AFS Util), allowing to read (no write support yet) 
 files from AROS AFFS/OFS disks and floppies.  
 
+
 Compilation Errors
 ------------------
 
 Q: I`ve compiled AROS with gcc4 but found that compiled AROS-hosted segfaults 
-   with -m > 20 and if I compile AROS-native it does not start (black screen)
+with -m > 20 and if I compile AROS-native it does not start (black screen)
 
 A: Add -fno-strict-aliasing to scripts/aros-gcc.in and try to recompile.
+
 
 Is it possible to make a DOS script that automatically runs when a package is installed? 
 ----------------------------------------------------------------------------------------
@@ -511,16 +526,8 @@ The variable in envarc:sys/packages could have the name 'myapp' (name doesn't
 matter), the content would then be 'sys:extras/myappdir'
 
 The Package-Startup script would then be called by the startup-sequence.
-
-This is were it is called::
-
-    If EXISTS ENV:SYS/Packages
-        List ENV:SYS/Packages NOHEAD FILES TO T:P LFORMAT="If EXISTS $SYS/Packages/%s*NCD $SYS/Packages/%s*NIf EXISTS S/Package-Startup*NExecute S/Package-Startup*NEndif*NEndif*N"
-        Execute T:P
-        Delete T:P QUIET
-        CD SYS:
-    EndIf
     
+
 How do I clear the shell window? How do I set it permanently?
 -------------------------------------------------------------
 
@@ -575,11 +582,13 @@ Values meanings::
 
 The codes can be combined by separating them with a semicolon.
 
+
 How do I launch AROS-hosted in fullscreen?
 ------------------------------------------
 
 Call "export AROS_X11_FULLSCREEN=1" in a shell. Start AROS and change the 
 screen resolution in the screenmode preferences. Quit AROS and start it again.
+
 
 How to make 2-state AROS Icons?
 -------------------------------
@@ -589,6 +598,7 @@ AROS icons are actually renamed PNG files. But if you want icons in two states
 
     join img_1.png img_2.png TO img.info
     
+
 How to mount an ISO image on AROS? And can I update my nightly build this way?
 ------------------------------------------------------------------------------
 
@@ -602,9 +612,9 @@ How to mount an ISO image on AROS? And can I update my nightly build this way?
     Device = fdsk.device
     Unit = 0
 
-Then mount ISO:
-    You can copy anything from ISO:. Additionally, you can create a script to update your 
-    nightly build like this::
++ Then mount ISO:
+  You can copy anything from ISO:. Additionally, you can create a script to update your 
+  nightly build like this::
 
         copy ISO:boot/aros-pc-i386.gz sys:boot/
         copy ISO:C sys:C all quiet
@@ -629,6 +639,7 @@ Launch these two commands in CLI::
 
 where DOSVOLUME is DH0:, DF0:, etc
 
+
 How to mount a FAT Floppy with the FAT.handler?
 -----------------------------------------------
 
@@ -643,6 +654,7 @@ Create a mountfile (text file) with the 3 magic lines::
 + Double click on it.
 + Insert a FAT formatted floppy.
 + See the icon appearing on Wanderer`s desktop.
+
 
 How to mount a real HD FAT partition with the FAT.handler?
 ----------------------------------------------------------
@@ -659,7 +671,7 @@ Then you'll need to set BlocksPerTrack=63.
 To ensure you have numbers in cylinders look for Units=Cylinders in output. If 
 you got fdisk output in sectors (Units=sectors), set BlocksPerTrack=1.
 
-LowCyl and HighCyl is partition`s cylinders seen like::
+LowCyl and HighCyl are partition`s cylinders like::
 
     mark@ubuntu:~$ sudo fdisk -l -u /dev/hda
     ...
@@ -688,6 +700,7 @@ Create a mountfile (text file) with these lines::
 Note: Formula for counting the blocks:
 block = ((highcyl - lowcyl) x surfaces + head) x blockspertrack + sec
 
+
 Hardware questions
 ==================
 
@@ -697,12 +710,14 @@ Where can I find an AROS Hardware Compatibility List?
 You can find one on the `AROS Wiki <http://en.wikibooks.org/wiki/Aros/Platforms/x86_support>`__ 
 page. There can be another lists made by the AROS users.
 
+
 Why AROS can't boot from my drive set as the SLAVE on IDE channel?
 ------------------------------------------------------------------
 
 Well, AROS should boot if the drive is SLAVE but ONLY if there's a drive also 
 on MASTER. That's appeared to be a correct connection respecting to the IDE 
 specification, and AROS follows it.
+
 
 My system hangs with red cursor on screen or a blank screen
 -----------------------------------------------------------
