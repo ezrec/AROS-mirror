@@ -252,9 +252,7 @@ A set of pre-installed or empty diskimages is available to make running AROS und
 VM a bit easier. WinAros is a preinstalled AROS environment installed on a HD image, 
 compatible with famous virtual machines QEMU and Microsoft VirtualPC, both 
 freely available on the net. You may download both Winaros versons on a
-`website <http://amidevcpp.amiga-world.de/afa_binarie_upload.php>`__.
-QEMU Winaros is `here <http://amidevcpp.amiga-world.de/WinAros/WinAros_Light_QEMU.zip>`__ 
-and VirtualPC one `here <http://amidevcpp.amiga-world.de/WinAros/WinAros_Light_VPC.zip>`__ .
+`website`__. QEMU Winaros is `here`__ and VirtualPC one `here`__ .
 
 Installation Kit for AROS (IKAROS) is a set of virtual disk images for 
 different virtualisers, including QEMU and VMware, already partitioned, 
@@ -263,8 +261,13 @@ size, as it doesn't include large amount of files, and the possbility to
 install fresh AROS versions, which make it useful for testing the nightly 
 builds. It allows easy installation of new versions without messing with 
 partition setup. Installation instructions included. Please check 
-`Aros-Exec Archives <http://archives.aros-exec.org/index.php?function=browse&cat=emulation/misc>`__ 
-in (emu/misc) section for the recent updates.
+`Aros-Exec Archives`__ in (emu/misc) section for the recent updates.
+
+__ http://amidevcpp.amiga-world.de/afa_binarie_upload.php
+__ http://amidevcpp.amiga-world.de/WinAros/WinAros_Light_QEMU.zip
+__ http://amidevcpp.amiga-world.de/WinAros/WinAros_Light_VPC.zip
+__ http://archives.aros-exec.org/index.php?function=browse&cat=emulation/misc
+
 
 Using the AfA on m68k
 ---------------------
