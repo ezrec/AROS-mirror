@@ -3,7 +3,7 @@ U¾ivatelské zdroje
 ==================
 
 + `Jak na instalaci`__
-+ `Jak na pou¾ívání`__
++ `Pou¾ívání`__
 + `Pøíkazy Shellu`__
 + `Aplikace`__
 + `FAQ`__

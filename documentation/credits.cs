@@ -1,5 +1,5 @@
 =======
-Credits
+Zásluhy
 =======
 
 Koordinace:

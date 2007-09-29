@@ -8,16 +8,16 @@ AROS prùvodce instalací
 :Date:      $Date: 2007-04-06 23:21:50 +0200 (pÃ¡, 06 IV 2007) $
 :Status:    Needs to be updated for some AROS ports. Can be translated.
 :Abstract:
-    This manual will guide you through the necessary steps for installing 
-    different AROS flavours.
+    Tento manuál vás provede pøes nezbytné kroky pro nainstalování
+    rùzných druhù AROS.
 
     .. Warning:: 
     
-        AROS is alpha quality software. This means that it is currently mostly
-        fun to play with and cool to develop for. If you came here because you
-        thought AROS was a finished, complete and fully usable operating 
-        system, you will most likely be disappointed. AROS isn't there yet, 
-        but we're slowly moving in the right direction.
+        AROS je software alfa kvality. To znamená, ¾e je v souèasné dobì spí¹e
+        zábava k hraní a cool pro vyvíjení. Pokud jste sem pøi¹li, proto¾e
+        si myslíte, ¾e AROS je dokonèený, kompletní a plnì pou¾itelný operaèní
+        systém, budete nejspí¹ zklamáni. AROS takový je¹tì není, 
+        ale pomalu se pohybujeme správným smìrem.
 
 
 .. Contents::
@@ -26,7 +26,7 @@ AROS prùvodce instalací
 Stahování
 =========
 
-AROS is currently under heavy development. The result is that you have to choose
+AROS je aktuálnì pod tvrdým vývojem. The result is that you have to choose
 between stability and features. Currently there are two types of binary packages
 available for download: snapshots and nightly builds. 
 
@@ -55,8 +55,8 @@ Instalace
 AROS/i386-linux a AROS/i386-freebsd
 -----------------------------------
 
-Requirements
-""""""""""""
+Po¾adavky
+"""""""""
 
 To run AROS/i386-linux or AROS/i386-freebsd you will need the following:
 
@@ -117,8 +117,8 @@ After having extracted all files you can launch AROS like this::
 AROS/i386-pc
 ------------
 
-Requirements
-""""""""""""
+Po¾adavky
+"""""""""
 
 You will need an average PC (i486 or Pentum-based) with *PS/2 mouse* and PS/2 or AT keyboard, 
 IDE hard disk and CD-ROM, (S)VGA video card and monitor. Also any available PC-compatible VM 
@@ -181,8 +181,8 @@ booting from the floppy, but after the most important things have been loaded
 CDROM.
 
 
-Floppy
-^^^^^^
+Disketa
+^^^^^^^
 
 These days floppies can be found useful only to boot if your PC`s BIOS doesn`t 
 support booting from CD or on some really obsolete PC`s. But it`s still maitaned.
@@ -211,8 +211,8 @@ Simply insert the boot floppy into the drive and reboot the computer. The boot
 is fully automatic, and if everything works you should see a nice screen after
 a while.
 
-Installing to hard drive
-""""""""""""""""""""""""
+Instalace na pevný disk
+"""""""""""""""""""""""
 
 Well, note that you have been **WARNED** that HD installation is
 incomplete now and is **dangerous** to any data, so make sure the PC
@@ -393,7 +393,7 @@ That's it. Time for the pre-installation reboot.
           version of AROS. 
 
 
-Copying the system
+Kopírování systému
 ^^^^^^^^^^^^^^^^^^
 
 After reboot, you may notice that you can see our AROS HD on the desktop
@@ -458,8 +458,8 @@ screen and *Reboot* checkbox. Leave this checked and click Proceed. No,
 that isn't all yet - wait till the last step remaining. Now our machine
 will reboot with the same settings as before, from Live CD.
 
-Installing the bootloader
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Instalace zavadìèe
+^^^^^^^^^^^^^^^^^^
 
 Now we still see our AROS disk, and all files are there. Haven`t we
 already installed the bootloader in previous steps, what are we
@@ -497,28 +497,28 @@ booting from CD in VM) and check it out. Hear the drum roll? ;)
 
 If something goes wrong, there can be some answers...
 
-Troubleshooting
+Øe¹ení problémù
 ^^^^^^^^^^^^^^^
 
 Installation process is the one of most frequently ones asked about on forums,
 mostly by newbees. You can check the FAQ if there an answer to your questions.
 Any additions ? ...
 
-Installing AROS along with the other systems
-""""""""""""""""""""""""""""""""""""""""""""
+Instalace AROS spolu s dal¹ími systémy
+""""""""""""""""""""""""""""""""""""""
 
 In the steps described before we had installed AROS as the *only* system on HD.
 But can it be installed to multiboot with other systems on HDD? Yes. But 
 again this task will be difficult. 
 
-AROS and Windows
+AROS a Windows
 
 Let`s consider the situation when you have only Windows(tm) XP installed and 
 want to put AROS to this HDD.
-Windows NT systems can be installed on both FAT and NTFS filesystems. 
-While NTFS is way more secure and robust, it`s not supported by GRUB (unfortunately)
+Systémy Windows NT mohou být instalovány na oba souborové systémy FAT a NTFS. 
+Zatímco NTFS je systém bezpeènìj¹í a robustnìj¹í, GRUB jej nepodporuje (bohu¾el)
 
-AROS and Linux (and other OS which uses GRUB bootloader)
+AROS a Linux (a ostatní OS, které pou¾ívají zavadìè GRUB)
 
 Lets consider the situation when you want to have 3 systems on your HDD -
 Windows, Linux and AROS.  
@@ -530,8 +530,8 @@ To be continued ...
 AROS/i386-PPC-hosted
 --------------------
 
-Requirements
-""""""""""""
+Po¾adavky
+"""""""""
 
 To be written by someone.
 
@@ -542,13 +542,13 @@ This is not usual native/hosted flavour of AROS, but a thing that can be called
 a *backport*. Actually, it`s a set of libraries and binaries to enhance 
 the capabilities of original AmigaOS. AfA stands for AROS for Amigas. 
 
-Requirements
-""""""""""""
+Po¾adavky
+"""""""""
 
 To be written by someone.
 
-Installation
-""""""""""""
+Instalace
+"""""""""
 
 Installation:
 
