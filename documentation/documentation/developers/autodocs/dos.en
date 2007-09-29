@@ -4637,8 +4637,8 @@ Function
 ::
 
      Read an item from a given character source. Items are words
-     or quoted strings seperated by whitespace or '=' just like on
-     the commandline. The seperator is unread and the read string
+     or quoted strings separated by whitespace or '=' just like on
+     the commandline. The separator is unread and the output string
      is terminated by a NUL character.
 
 
@@ -4647,7 +4647,8 @@ Inputs
 ::
 
      buffer   - Buffer to be filled.
-     maxchars - Size of the buffer. Must be at least 1 (for the terminator).
+     maxchars - Size of the buffer. Must be at least 1 (for the NUL
+                terminator).
      input    - A ready to use CSource structure or NULL which means
                 "read from the input stream".
 

@@ -9,11 +9,11 @@ commodities
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`ActivateCxObj`_                        `AddIEvents`_                           `AttachCxObj`_                          `ClearCxObjError`_                      
-`CreateCxObj`_                          `CxBroker`_                             `CxMsgData`_                            `CxMsgID`_                              
-`CxMsgType`_                            `CxNotify`_                             `CxObjError`_                           `CxObjType`_                            
-`DeleteCxObj`_                          `DeleteCxObjAll`_                       `DisposeCxMsg`_                         `DivertCxMsg`_                          
-`EnqueueCxObj`_                         `FreeBrokerList`_                       `GetBrokerList`_                        `InsertCxObj`_                          
+`ActivateCxObj`_                        `AddIEvents`_                           `AttachCxObj`_                          `BrokerCommand`_                        
+`ClearCxObjError`_                      `CopyBrokerList`_                       `CreateCxObj`_                          `CxBroker`_                             
+`CxMsgData`_                            `CxMsgID`_                              `CxMsgType`_                            `CxObjError`_                           
+`CxObjType`_                            `DeleteCxObj`_                          `DeleteCxObjAll`_                       `DisposeCxMsg`_                         
+`DivertCxMsg`_                          `EnqueueCxObj`_                         `FreeBrokerList`_                       `InsertCxObj`_                          
 `InvertKeyMap`_                         `MatchIX`_                              `ParseIX`_                              `RemoveCxObj`_                          
 `RouteCxMsg`_                           `SetCxObjPri`_                          `SetFilter`_                            `SetFilterIX`_                          
 `SetTranslate`_                         `events`_                               
@@ -151,6 +151,54 @@ See also
 
 
 
+BrokerCommand
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG BrokerCommand(
+          STRPTR name,
+          ULONG command );
+
+Function
+~~~~~~~~
+::
+
+
+ Notify a task connected to a certain broker of a state change.
+
+
+Inputs
+~~~~~~
+::
+
+
+ name     --  The name of the broker
+ command  --  What to tell the task
+
+
+Result
+~~~~~~
+::
+
+
+ 0 if everything was OK, a negative value otherwise:
+ -1    --   Unknown broker 'name'
+ -2    --   No broker message port
+ -3    --   No memory for operation
+
+
+Notes
+~~~~~
+::
+
+
+ This function is present in AmigaOS too but undocumented.
+
+
+
 ClearCxObjError
 ===============
 
@@ -194,6 +242,50 @@ See also
 
 
  CxObjError()
+
+
+
+CopyBrokerList
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ LONG CopyBrokerList(
+          struct List * CopyofList );
+
+Function
+~~~~~~~~
+::
+
+
+ Get a copy of the internal list of brokers.
+
+
+Inputs
+~~~~~~
+::
+
+
+ CopyofList -- pointer to a list
+
+
+Result
+~~~~~~
+::
+
+
+ The number of brokers in the list. The elements of the input list will
+ be deallocated.
+
+
+Notes
+~~~~~
+::
+
+
+ This function is present in AmigaOS too but undocumented.
 
 
 
@@ -450,46 +542,6 @@ Result
 
  The type of 'cxm'. The available types of commodity messages is defined
  in <libraries/commodities.h>.
-
-
-
-CxNotify
-========
-
-Synopsis
-~~~~~~~~
-::
-
- ULONG CxNotify(
-          STRPTR name,
-          ULONG command );
-
-Function
-~~~~~~~~
-::
-
-
- Notify a task connected to a certain broker of a state change.
-
-
-Inputs
-~~~~~~
-::
-
-
- name     --  The name of the broker
- command  --  What to tell the task
-
-
-Result
-~~~~~~
-::
-
-
- 0 if everything was OK, a negative value otherwise:
- -1    --   Unknown broker 'name'
- -2    --   No broker message port
- -3    --   No memory for operation
 
 
 
@@ -859,48 +911,20 @@ Inputs
                  nodes).
 
 
+Notes
+~~~~~
+::
+
+
+ This function is present in AmigaOS too, but undocumented.
+
+
 See also
 ~~~~~~~~
 ::
 
 
  cxintern.h
-
-
-
-GetBrokerList
-=============
-
-Synopsis
-~~~~~~~~
-::
-
- LONG GetBrokerList(
-          struct List * CopyofList );
-
-Function
-~~~~~~~~
-::
-
-
- Get a copy of the internal list of brokers.
-
-
-Inputs
-~~~~~~
-::
-
-
- CopyofList -- pointer to a list
-
-
-Result
-~~~~~~
-::
-
-
- The number of brokers in the list. The elements of the input list will
- be deallocated.
 
 
 

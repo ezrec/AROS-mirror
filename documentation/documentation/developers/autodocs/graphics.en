@@ -5039,18 +5039,35 @@ Synopsis
  ULONG MrgCop(
           struct View * view );
 
+Function
+~~~~~~~~
+::
+
+     Merge together the display, color, sprite and user coprocessor
+             instructions into a single coprocessor instruction stream.
+             
+
 Inputs
 ~~~~~~
 ::
 
-     view -
+     view - a pointer to the view structure whos coprocessor instructions
+                    are to be merged.
 
 
 Result
 ~~~~~~
 ::
 
-     error -
+     error - ULONG error value indicating either lack of memory to build the system copper lists,
+                     or that MrgCop() has no work to do - ie there where no viewPorts in the list.
+
+
+Notes
+~~~~~
+::
+
+     Pre-v39 AmigaOS returns void.
 
 
 
