@@ -16,9 +16,12 @@ Common questions
 Can I ask a question?
 ---------------------
 
-Of course you can. Please go to `AROS-Exec forum <http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=1636&start=0>`__ and 
+Of course you can. Please go to `AROS-Exec forum`__ and 
 read the threads and ask everything you want. This FAQ will be updated with the 
 user's questions, but the forum still remains more recent.
+
+__ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=1636&start=0
+
 
 What is AROS all about? 
 -----------------------
@@ -55,7 +58,7 @@ However, code that uses such algorithms that are patented in the USA could not
 be imported to the USA. Examples of patented algorithms in AmigaOS include
 screen dragging and the specific way menus work. Therefore we avoid implementing
 these features in exactly the same way. Header files on the other hand must be
-compatible but as different as possible from the orignal.
+compatible but as different as possible from the original.
 
 To avoid any trouble we applied for an official OK from Amiga Inc. They are
 quite positive about the effort but they are very uneasy about the legal
@@ -128,7 +131,7 @@ What hardware architectures is AROS available for?
 --------------------------------------------------
 
 Currently AROS is available in a quite usable state as native and hosted
-(under Linux, and FreeBSD) for the i386 architecture (ie. IBM PC AT
+(under Linux, and FreeBSD) for the i386 architecture (i.e. IBM PC AT
 compatible clones). There are ports under way at varying degrees of
 completeness to SUN SPARC (hosted under Solaris) and Palm compatible
 handhelds (native).
@@ -254,12 +257,18 @@ the other hand, AROS could benefit from having an integrated Amiga emulation.
 Since most programs won't be available on AROS from the start, Fabio Alemagna
 has ported UAE to AROS so you can run old programs at least in an emulation box.
 
+Also available in Contrib is `E-UAE`__, which is UAE improved by some features
+from `WinUAE`__.
+
+__ http://www.rcdrummond.net/uae/
+__ http://www.winuae.net/
+
 
 What is the relation between AROS and Haage & Partner?
 ------------------------------------------------------
 
 Haage & Partner used parts of AROS in AmigaOS 3.5 and 3.9, for example the
-colorwheel and gradientslider gadgets and the SetENV command. This means that in
+Colorwheel and Gradientslider gadgets and the SetENV command. This means that in
 a way, AROS has become part of the official AmigaOS. This does not imply that
 there is any formal relation between AROS and Haage & Partner. AROS is an open
 source project, and anyone can use our code in their own projects provided they
@@ -282,11 +291,11 @@ What programming languages are available?
 -----------------------------------------
 
 Most development for AROS is done using ANSI C by crosscompiling the
-sources under a different OS, eg. Linux or FreeBSD. Fabio Alemagna has
+sources under a different OS, e.g. Linux or FreeBSD. Fabio Alemagna has
 completed an initial port of GCC to i386 native. However, it is not
 currently on the ISO or integrated into the build system.
 
-The languages that are available natively are Python_, Regina_ and False_:
+The languages that are available natively are Python_, Regina_, Lua_ and False_:
 
 + Python is a scripting language which has become quite popular, because of 
   its nice design and features (object-oriented programming, module system,
@@ -298,11 +307,16 @@ The languages that are available natively are Python_, Regina_ and False_:
   port is to be compatible with the ARexx interpreter for the classic
   AmigaOS.
 
++ Lua is a powerful, fast, light-weight, embeddable scripting language. The AROS
+  port has been extented by two modules: siamiga and zulu. The first one has
+  some simple graphics commands, the latter is an interface to Zune.
+
 + False can be classified as an exotic language, so it will most likely not be 
   used for serious development, although it can be lots of fun. :-) 
 
 .. _Python: http://www.python.org/
 .. _Regina: http://regina-rexx.sourceforge.net/
+.. _Lua: http://www.lua.org/
 .. _False:  http://wouter.fov120.com/false/
 
 
@@ -357,7 +371,7 @@ The geometry of the hardfile is as follows::
 How do I access AROS's disk images from hosted flavors of AROS?
 ---------------------------------------------------------------
 
-Copy the disk image to the DiskImages directory in AROS (SYS:DiskImages, eg.
+Copy the disk image to the DiskImages directory in AROS (SYS:DiskImages, e.g.
 bin/linux-i386/AROS/DiskImages) and rename it to "Unit0". After starting AROS,
 you can mount the disk image with::
 
@@ -393,7 +407,7 @@ Native AROS, GFX can have a max of 16MB, although it wouldn't reflect the state
 of the graphic adapter memory...  It has no relation to the amount of memory 
 on your graphics card.
 
-*The longwinded answer*
+*The long-winded answer*
 Graphics memory in i386-native signifies the lower 16MB of memory 
 in the system. That lower 16MB is the area where ISA cards can do DMA. Allocating 
 memory with MEMF_DMA or MEMF_CHIP will end up there, the rest in the other (fast)
@@ -404,59 +418,62 @@ Use C:Avail HUMAN command for memory info.
 What do the Wanderer Snapshot <all/window> action actually do? 
 --------------------------------------------------------------
 
-This conmmand remembers icon's placement of all (or one) windows.
+This command remembers icon's placement of all (or one) windows.
 
 How do I change the screensaver/background?
 -------------------------------------------
 
-At the moment the only way to change screensaver is to write your one.
+At the moment the only way to change screensaver is to write your own one.
 Blanker commodity could be tuned with Exchange, but it is able to do only 
 "starfield" with given amount of stars.
 Background of Wanderer is set by Pref tool Prefs/Wanderer.
 Background of Zune Windows is set by Zune prefs Prefs/Zune. You can also set 
 your chosen application preferences by using the Zune <application> command.
 
-I've launch AROS-hosted but it's failed
----------------------------------------
+I've launched AROS-hosted but it's failed
+-----------------------------------------
 
-This could be probably fixed by creating a WBStartup directory in the AROS 
-directory. If you are root and AROS crashes at launch, do "xhost +" before 
+If you are root and AROS crashes at launch, do "xhost +" before 
 "sudo && ./aros -m 20". You must also give it some memory with -m option as 
-shown. Also don't forget about BackingStore option in section Device of your 
-xorg.conf.
+shown. The space between "-m" and the value is important. Also don't forget
+about BackingStore option in section Device of your xorg.conf.
 
 What are the command line options for AROS-hosted executable?
 -------------------------------------------------------------
 
-You can get a list of them by rinning ./aros -h command.
+You can get a list of them by running ./aros -h command.
 
 How can I make windows refresh from black on AROS-hosted?
 ---------------------------------------------------------
 
-You must supply the following string (as is!) to your /etc/X11/xorg.conf
-(or XFree.conf)::
+You must supply the following string (as is!) to the "Device" section of
+your /etc/X11/xorg.conf (or XFree.conf)::
     
     Option  "BackingStore"
+
+See Installation__ for details.
+
+__ installation.php#running
 
 What are the AROS-native kernel options used in GRUB line?
 ----------------------------------------------------------
 
 Here's some::
 
-    nofdc - Disables the floppy driver completely.
-    noclick - Disabled the floppy disk change detection (and clicking)
-    ATA=32bit - Enables 32-bit I/O in the hdd driver (safe)
-    forcedma - Forces DMA to be active in the hdd driver (should be safe, but       
-    might not be)
+    nofdc           - Disables the floppy driver completely.
+    noclick         - Disabled the floppy disk change detection (and clicking)
+    ATA=32bit       - Enables 32-bit I/O in the hdd driver (safe)
+    forcedma        - Forces DMA to be active in the hdd driver (should be safe, but       
+                      might not be)
     gfx=<hidd name> - Use the named hidd as the gfx driver
-    lib=<name> - Load and init the named library/hidd
+    lib=<name>      - Load and initiate the named library/hidd
 
 Please note that they are case-sensitive.
 
 How can I transfer files to virtual machine with AROS?
 ------------------------------------------------------
 
-First and simpliest way is to put files to the ISO image and and connect it to VM. 
+First and simplest way is to put files to the ISO image and and connect it to VM. 
 There's a lot of programs able to create/edit ISO's like UltraISO, WinImage, 
 or mkisofs. Second, you can set up the network in AROS and FTP server on your 
 host machine. Then you can use FTP client for AROS to transfer files
@@ -469,7 +486,8 @@ Compilation Errors
 ------------------
 
 Q: I`ve compiled AROS with gcc4 but found that compiled AROS-hosted segfaults 
-with -m > 20 and if I compile AROS-native it does not start (black screen)
+   with -m > 20 and if I compile AROS-native it does not start (black screen)
+
 A: Add -fno-strict-aliasing to scripts/aros-gcc.in and try to recompile.
 
 Is it possible to make a DOS script that automatically runs when a package is installed? 
@@ -477,14 +495,13 @@ Is it possible to make a DOS script that automatically runs when a package is in
 
 This script should do some assigns and add string to the PATH variable.
 
-1) Create a subdir S and add a file with name 'Package-Startup' with the DOS 
+1) Create a sub-directory S and add a file with name 'Package-Startup' with the DOS 
 commands to it.
 
 2) Create a variable in the envarc:sys/packages file which contains the path to the S 
 directory of your package.
 
-Example::
-    Directory layout:
+Example directory layout::
 
     sys:Extras/myappdir
     sys:Extras/myappdir/S
@@ -516,7 +533,7 @@ you'll have a new "Cls" command::
 
     Alias Cls "Echo *"*E[0;0H*E[J*" "
 
-Btw here is my new S:Shell-Startup modified to start the shell in black and 
+BTW: here is my new S:Shell-Startup modified to start the shell in black and 
 with a modified prompt::
 
     Alias Edit SYS:Tools/Editor
@@ -567,18 +584,18 @@ screen resolution in the screenmode preferences. Quit AROS and start it again.
 How to make 2-state AROS Icons?
 -------------------------------
 
-AROS icons is actually renamed PNG files. But if you want icons in two states 
-(free/clicked) use this command::
+AROS icons are actually renamed PNG files. But if you want icons in two states 
+(normal/selected) use this command::
 
     join img_1.png img_2.png TO img.info
     
 How to mount an ISO image on AROS? And can I update my nightly build this way?
 ------------------------------------------------------------------------------
 
-Get the ISO into AROS (by wget or else way)
-Copy the ISO into sys:DiskImages (drawer must be created if it isn`t exist). 
-Rename ISO to Unit0 in that dir.
-You must add this to your Devs:Mountlist ::
++ Get the ISO into AROS (by wget or else way)
++ Copy the ISO into sys:DiskImages (drawer must be created if it isn`t exist). 
++ Rename ISO to Unit0 in that dir.
++ You must add this to your Devs:Mountlist ::
 
     ISO:
     FileSystem = cdrom.handler
@@ -586,17 +603,17 @@ You must add this to your Devs:Mountlist ::
     Unit = 0
 
 Then mount ISO:
-you can copy anything from ISO: Or for example, make a script to update your 
-nightly build like this::
+    You can copy anything from ISO:. Additionally, you can create a script to update your 
+    nightly build like this::
 
-    *Copy ISO:boot/aros-pc-i386.gz sys:boot/
-    *copy ISO:C sys:C all quiet
-    *copy ISO:Classes sys:Classes all quiet
-    *copy *copy ISO:Demos sys:Demos all quiet
+        copy ISO:boot/aros-pc-i386.gz sys:boot/
+        copy ISO:C sys:C all quiet
+        copy ISO:Classes sys:Classes all quiet
+        copy ISO:Demos sys:Demos all quiet
 
-and so on for each directory except Prefs, Extras:Networking/Stacks, and 
+And so on for each directory except Prefs, Extras:Networking/Stacks, and 
 devs:mountlist itself. Prefs have to be kept if you want it. Also you can set 
-AROSTcp to keep it`s settings in separate directory.
+AROSTcp to keep its settings in separate directory.
 
 If you want to write all over, just do::
 
@@ -621,20 +638,20 @@ Create a mountfile (text file) with the 3 magic lines::
     filesystem = fat.handler
     unit = 0
 
-Call it somehow, PC0 for example. Set this file default tool to c:mount in 
-properties (or put mountfile to devs:dosdrivers or sys:storage/dosdrivers)
-Double click on it.
-Insert a FAT formatted floppy.
-See the icon appearing on Wanderer`s desktop.
++ Call it somehow, PC0 for example. Set this file default tool to c:mount in 
+  properties (or put mountfile to devs:dosdrivers or sys:storage/dosdrivers)
++ Double click on it.
++ Insert a FAT formatted floppy.
++ See the icon appearing on Wanderer`s desktop.
 
 How to mount a real HD FAT partition with the FAT.handler?
 ----------------------------------------------------------
 
 First you`d need to read the drive`s geometry and write down some values. 
-You can use HDToolbox or linux fdisk for that. The BlocksPerTrack value is taken 
+You can use HDToolbox or Linux fdisk for that. The BlocksPerTrack value is taken 
 from the sectors/track value. Note that it has absolutely nothing to do with 
 the physical disk geometry - FAT only uses it as a multiplier.
-If you get the Cylinders eg from HDToolbox or using the Linux fdisk like this::
+If you get the Cylinders e.g. from HDToolbox or using the Linux fdisk like this::
 
     sudo fdisk -u -l /dev/hda, 
     
@@ -662,13 +679,13 @@ Create a mountfile (text file) with these lines::
     HighCyl = 20980889
     Blocksize=512
 
-Call it somehow, FAT0 for example
-Set this file`s default tool to c:mount in properties
-(or put mountfile to devs:dosdrivers or sys:storage/dosdrivers)
-Double click on it
-See the icon appearing on Wanderer`s desktop
++ Call it somehow, FAT0 for example
++ Set this file`s default tool to c:mount in properties
+  (or put mountfile to devs:dosdrivers or sys:storage/dosdrivers)
++ Double click on it
++ See the icon appearing on Wanderer`s desktop
 
-Note: Formulae for counting the blocks
+Note: Formula for counting the blocks:
 block = ((highcyl - lowcyl) x surfaces + head) x blockspertrack + sec
 
 Hardware questions
@@ -680,7 +697,7 @@ Where can I find an AROS Hardware Compatibility List?
 You can find one on the `AROS Wiki <http://en.wikibooks.org/wiki/Aros/Platforms/x86_support>`__ 
 page. There can be another lists made by the AROS users.
 
-Why Aros can't boot from my drive set as the SLAVE on IDE channel?
+Why AROS can't boot from my drive set as the SLAVE on IDE channel?
 ------------------------------------------------------------------
 
 Well, AROS should boot if the drive is SLAVE but ONLY if there's a drive also 
