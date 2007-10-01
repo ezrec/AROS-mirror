@@ -17,9 +17,9 @@ Ecco le nuove caratteristiche:
 - La partizione Work adesso viene creata correttamente.
 - Si possono specificare le dimensioni delle partizioni e quelle già esistenti vengono preservate.
 - Qualora venissero rilevate, le partizioni di Windows vengono aggiunte automaticamente al menu d'avvio di GRUB.
-- 
 
-Il software, tuttavia, è ancora in fase beta: ecco alcune 
+
+Il software, tuttavia, è ancora in beta. Ecco alcune 
 raccomandazioni dello stesso Neil: "Il nuovo installer è incluso 
 nelle nightly build e pronto per essere testato. Tuttavia, attualmente 
 c'è un bug (in Wanderer o nel filesystem FFS) su cui bisogna ancora 
