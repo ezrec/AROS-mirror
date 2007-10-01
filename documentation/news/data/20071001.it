@@ -1,0 +1,60 @@
+=============
+Aggiornamento
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-10-01
+
+Ultime news
+-----------
+
+Bloccate le rotative! Neil Cafferkey ha realizzato un nuovo 
+`installer`__ per AROS, che consente di installare il sistema 
+operativo su disco fisso in modo più sicuro ed efficiente. 
+Ecco le nuove caratteristiche:
+
+- Si possono specificare il disco e la partizione di installazione.
+- La partizione Work adesso viene creata correttamente.
+- Si possono specificare le dimensioni delle partizioni e quelle già esistenti vengono preservate.
+- Qualora venissero rilevate, le partizioni di Windows vengono aggiunte automaticamente al menu d'avvio di GRUB.
+- 
+
+Il software, tuttavia, è ancora in fase beta: ecco alcune 
+raccomandazioni dello stesso Neil: "Il nuovo installer è incluso 
+nelle nightly build e pronto per essere testato. Tuttavia, attualmente 
+c'è un bug (in Wanderer o nel filesystem FFS) su cui bisogna ancora 
+lavorare. Dopo aver lanciato l'installer, per formattare correttamente 
+le partizioni dovete chiudere Wanderer prima di proseguire. Siate 
+più prudenti che mai con questa versione dell'installer, per capirci 
+non usatela su un disco fisso che contiene dati di valore, soprattutto 
+se non avete ancora eseguito un backup. Dovrebbe preservare tutte le 
+partizioni già esistenti, ma nessuno ha ancora provato il funzionamento 
+a parte me."
+
+Se disponete di una macchina per i test, senza dati importanti, ci 
+fareste davvero una cortesia se scaricaste una nightly build recente, 
+a partire da quella del primo ottobre 2007, allo scopo di rilevare 
+eventuali bug e malfunzionamenti. Potete usare il bugtracker per le 
+segnalazioni, oppure lasciare un commento su questo `topic`__ di 
+AROS-Exec.
+
+
+Una dimostrazione di AROS
+-------------------------
+
+Come precedentemente annunciato su questo sito, AROS è stata una delle 
+star di `Pianeta Amiga 2007`__. Nel corso dell'evento, 
+Paolo Besser ha presentato AROS a una nicchia di fedelissimi utenti  
+Amiga. La notizia era stata diffusa anche da numerosi siti sull'IT 
+come i popolari `TGM Online`__ e `HW Upgrade`__. Un report dell'evento  
+è stato pubblicato da `The AROS Show`__ (sotto forma di `intervista`__) 
+C'è anche un grazioso `video`__ su YouTube.
+
+__ http://mama.indstate.edu/users/nova/installer.jpg
+__ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=2319
+__ http://www.pianetaamiga.it
+__ http://tgmonline.futuregamer.it/news/settembre2007/20070910111905
+__ http://www.hwupgrade.it/news/videogiochi/presentazione-italiana-per-l-os-indipendente-aros_22619-0.html
+__ http://arosshow.blogspot.com
+__ http://arosshow.blogspot.com/2007/09/pianeta-amiga-2007-report-from-paolo.html
+__ http://video.google.it/videoplay?docid=-3563710058663289244
