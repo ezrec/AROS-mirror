@@ -1,0 +1,57 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-10-01
+
+Latest news
+-----------
+
+Breaking News! Neil Cafferkey has commited a brand new `installer`__ 
+for AROS, allowing a cleaner and safer installation on hard disks. 
+New features are the following:
+
+- Installation drive and partitions can now be specified.
+- Creation of Work partition now works.
+- Partition sizes can now be specified and existing partitions can be 
+preserved.
+- Windows now added to GRUB boot menu if a likely Windows system 
+partition is found
+
+Please notice, however, that this is still beta software: here are 
+some warnings from Neil: "The new HD installer is now included on the 
+nightly ISO and is ready for testing. However, there's currently a bug 
+in either Wanderer or FFS that needs to be worked around. After startng 
+the installer, you need to quit Wanderer before continuing (unless 
+you're not going to format any partitions).
+Be even more careful than usual with this version of the installer, ie. 
+don't expose a machine with unbacked-up valuable data to it. It should 
+preserve all existing partitions if requested, but no one has tested 
+this so far besides me."
+
+If you have a test machine with no important data on it, you'd be very
+smart downloading 10-01 nightly build (or later) and help us finding 
+bugs. You may use the Bug Tracker or post a message in this AROS-Exec 
+`discussion`__. 
+
+
+Demonstrating AROS
+------------------
+
+As previously anticipated on this website, AROS has been a guest 
+star of `Pianeta Amiga 2007`__. During the popular Amiga show, 
+Paolo Besser has presented AROS to a niche of interested Amiga 
+fellows. The event has been anticipated by some important IT news
+sites like `TGM Online`__ and `HW Upgrade`__. A report of the 
+show has been published by `The AROS Show`__ (read it `here`__) You may 
+also see a nice `video`__ on YouTube.
+
+__ http://mama.indstate.edu/users/nova/installer.jpg
+__ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=2319
+__ http://www.pianetaamiga.it/2007/eng/
+__ http://tgmonline.futuregamer.it/news/settembre2007/20070910111905
+__ http://www.hwupgrade.it/news/videogiochi/presentazione-italiana-per-l-os-indipendente-aros_22619-0.html
+__ http://arosshow.blogspot.com
+__ http://arosshow.blogspot.com/2007/09/pianeta-amiga-2007-report-from-paolo.html
+__ http://video.google.it/videoplay?docid=-3563710058663289244
