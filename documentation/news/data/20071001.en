@@ -14,12 +14,11 @@ New features are the following:
 
 - Installation drive and partitions can now be specified.
 - Creation of Work partition now works.
-- Partition sizes can now be specified and existing partitions can be 
-preserved.
-- Windows now added to GRUB boot menu if a likely Windows system 
-partition is found
+- Partition sizes can now be specified and existing partitions can be preserved.
+- Windows now added to GRUB boot menu if a likely Windows system partition is found
 
-Please notice, however, that this is still beta software: here are 
+
+Please notice, however, that this is still beta software. Here are 
 some warnings from Neil: "The new HD installer is now included on the 
 nightly ISO and is ready for testing. However, there's currently a bug 
 in either Wanderer or FFS that needs to be worked around. After startng 
