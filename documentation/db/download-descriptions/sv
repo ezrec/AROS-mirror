@@ -1,0 +1,80 @@
+[headings]
+
+package: Paket
+documentation: Dokumentation
+sources: Källkod
+binaries: Binaries
+development-tools: Utvecklingsverktyg
+date: Datum
+
+[links]
+
+build-logs: build logs
+download: Ladda ner
+
+[units]
+
+byte-unit: B
+kilobyte-unit: kB
+megabyte-unit: MB
+gigabyte-unit: GB
+decimal-point: ,
+
+[descriptions]
+
+ChangeLog-AROS:
+    ChangeLog för källkoden till AROS kärna.
+ChangeLog-contrib:
+    ChangeLog för källkoden till bidragande program.
+ChangeLog-docs:
+    ChangeLog för dokumentationen.
+source:
+    Källkoden för AROS kärna.
+docs-source:
+    Källkoden för dokumentationen.
+contrib-source:
+    Källkoden till bidragande program.
+docs-html:
+    Dokumentation i HTML-format. Innehåller allt som finns
+    tillgängligt på hemsidan, men anpassat för offline-läsning.
+i386-freebsd5-system:
+    Hostad version för FreeBSD/i386 5.x. Notera att det inte
+    kommer att fungera på FreeBSD 4.x-system.
+i386-freebsd-system:
+    Hostad version för FreeBSD/i386 5.x. Notera att det inte
+    kommer att fungera på FreeBSD 4.x-system.
+i386-linux-system:
+    Hostad version för Linux/i386. Det här är den mest
+    kompletta och mogna versionen, vilket menas att du kan
+    köra alla inkluderade program och demon med den. Det här
+    arkivet innehåller alla AROS system binaries kompilerade från
+    subversions-trädet.
+ppc-linux-system:
+    Hostad version för Linux/PowerPC. Det här arkivet innehåller alla
+    AROS system binaries kompilerade från subversions-trädet.
+i386-pc-boot-floppy:
+    Native version för i386-baserade PC AT datorer och kompatibla.
+    Det här arkivet innehåller en startdiskett-image som du snabbt
+    kan skriva till diskett och starta upp AROS med.
+i386-pc-boot-iso:
+    Native version för i386-baserade PC AT datorer och kompatibla.
+    Detta är en bootbar CDROM ISO image, som innehåller alla
+    AROS-system och bidragande program. 
+i386-all-contrib:
+    Detta arkiv innehåller alla bidragande program komplierade
+    för i386-arkitekturen. Dom fungerar både i (i386-linux)
+    och native (i386-pc) versioner.
+ppc-all-contrib:
+    Detta arkiv innehåller alla bidragande program
+    kompilerade för PowerPC-arkitekturen, för användning
+    med Linux/PowerPC portningen.
+i386-all-sdk:
+    Ett antal filer och verktyg för att utveckla dina egna
+    AROS-program på valfri dator och operativ. Du måste även ha
+    gcc och binutils konfigurerade för att producera 
+    i386-elf exekverbara filer.
+ppc-all-sdk:
+    Ett antal filer och verktyg för att utveckla dina egna
+    AROS-program på valfri dator och operativ. Du mååste även ha
+    gcc och binutils konfigurerade för att producera
+    ppc-elf exekverbara filer.
