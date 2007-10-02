@@ -157,7 +157,7 @@ __ http://www.in-berlin.de/User/jroger/index.html
 
 + `Back to the Roots`__
 
-  .. Image:: images/bttr.jpeg
+  .. Image:: ./images/bttr.jpeg
 
   En suverän nostalgi-sida där du kan hitta licensierade och fria Amiga-spel.
 
