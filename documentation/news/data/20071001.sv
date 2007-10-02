@@ -8,41 +8,41 @@ Status Update
 Senaste nyheter
 ---------------
 
-Nyhet! Neil Cafferkey har bidragit med en helt ny `installer`__ fÃ¶r
-AROS, vilket mÃ¶jliggÃ¶r en renare och sÃ¤krare installation pÃ¥ hÃ¥rddiskar.
+Nyhet! Neil Cafferkey har bidragit med en helt ny `installer`__ för
+AROS, vilket möjliggör en renare och säkrare installation på hårddiskar.
 Nya finnesser enligt nedan:
 
 - Installationsdisk och partitioner kan nu anges.
 - Skapandet av en Work-partition fungerar.
-- Partitionsstorlekar kan anges och existerande partitioner kan behÃ¥llas.
-- Windows Ã¤r tillagd till GRUB boot menu om en existerande Windows-partition hittas.
+- Partitionsstorlekar kan anges och existerande partitioner kan behållas.
+- Windows är tillagd till GRUB boot menu om en existerande Windows-partition hittas.
 
 
-Notera dock, att detta fortfarande Ã¤r en beta-version. HÃ¤r fÃ¶ljer nÃ¥gra
-varningar frÃ¥n Neil: " Den nya hÃ¥rddisk-installern Ã¤r nu inkluderad
-i "Nightly ISO" och Ã¤r fÃ¤rdig fÃ¶r testning. Men, det finns fÃ¶r tillfÃ¤llet
-en bug i antingen Wanderer eller FFS som mÃ¥ste Ã¥tgÃ¤rdas. Efter att man startat
-installern, sÃ¥ mÃ¥ste du avsluta Wanderer innan du fortsÃ¤tter (om du inte
-kommer att formatera nÃ¥gon partition).
-Var extra fÃ¶rsiktig Ã¤n vanligt med denna version av installern, utsÃ¤tt inte
-datorn med ej sÃ¤kerhetskopierad data. Den borde behÃ¥lla alla existerande
-partitioner, men inte sÃ¥ mÃ¥nga har testat detta fÃ¶rutom jag."
+Notera dock, att detta fortfarande är en beta-version. Här följer några
+varningar från Neil: " Den nya hårddisk-installern är nu inkluderad
+i "Nightly ISO" och är färdig för testning. Men, det finns för tillfället
+en bug i antingen Wanderer eller FFS som måste åtgärdas. Efter att man startat
+installern, så måste du avsluta Wanderer innan du fortsätter (om du inte
+kommer att formatera någon partition).
+Var extra försiktig än vanligt med denna version av installern, utsätt inte
+datorn med ej säkerhetskopierad data. Den borde behålla alla existerande
+partitioner, men inte så många har testat detta förutom jag."
 
-Om du har en testdator med ej viktig data pÃ¥, sÃ¥ vore det bÃ¤sta om du
-laddar ner 10-01 "nightly build (eller senare) och hjÃ¤lper oss att hitta
-buggar. Du kan anvÃ¤nda Bug Tracker eller skicka ett meddelande i detta
+Om du har en testdator med ej viktig data på, så vore det bästa om du
+laddar ner 10-01 "nightly build (eller senare) och hjälper oss att hitta
+buggar. Du kan använda Bug Tracker eller skicka ett meddelande i detta
 AROS-Exec `discussion`__. 
 
 Demonstration av AROS
 ---------------------
 
-Som tidigare nÃ¤mnt pÃ¥ denna hemsida sÃ¥ har AROS varit en gÃ¤ststjÃ¤rna pÃ¥
-`Pianeta Amiga 2007`__.  Under den populÃ¤ra amigashowen sÃ¥ har
-Paulo Besser presenterat AROS till en del intresserade Amiga-anhÃ¤ngare.
-Evenemanget har nÃ¤mnts i nÃ¥gra stÃ¶rre IT-nyhets-hemsidor som `TGM Online`__
+Som tidigare nämnt på denna hemsida så har AROS varit en gäststjärna på
+`Pianeta Amiga 2007`__.  Under den populära amigashowen så har
+Paulo Besser presenterat AROS till en del intresserade Amiga-anhängare.
+Evenemanget har nämnts i några större IT-nyhets-hemsidor som `TGM Online`__
 och `HW Upgrade`__. En rapport av evenemanget har blivit publicerad av 
-`The AROS Show`__ (LÃ¤s denna `here`__) Du kan Ã¤ven se en trevlig `video`__
-pÃ¥ YouTube.
+`The AROS Show`__ (Läs denna `here`__) Du kan även se en trevlig `video`__
+på YouTube.
 
 __ http://mama.indstate.edu/users/nova/installer.jpg
 __ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=2319
