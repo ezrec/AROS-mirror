@@ -36,7 +36,6 @@ AROS källor
 
 + `AROS for Amiga`__
   
-  AfA OS replaces AmigaOS core libraries with their more advanced AROS counterparts.
   AfA OS byter ut AmigaIS core libraries med deras mer avancerade motsvarighet i AROS.
   
 + `AROS World`__
