@@ -22,7 +22,7 @@ New features are the following:
 Please notice, however, that this is still beta software. Here are 
 some warnings from Neil: "The new HD installer is now included on the 
 nightly ISO and is ready for testing. However, there's currently a bug 
-in either Wanderer or FFS that needs to be worked around. After startng 
+in either Wanderer or FFS that needs to be worked around. After starting 
 the installer, you need to quit Wanderer before continuing (unless 
 you're not going to format any partitions).
 Be even more careful than usual with this version of the installer, ie. 
@@ -44,7 +44,7 @@ star of `Pianeta Amiga 2007`__. During the popular Amiga show,
 Paolo Besser has presented AROS to a niche of interested Amiga 
 fellows. The event has been anticipated by some important IT news
 sites like `TGM Online`__ and `HW Upgrade`__. A report of the 
-show has been published by `The AROS Show`__ (read it `here`__) You may 
+show has been published by `The AROS Show`__ (read it `here`__). You may 
 also see a nice `video`__ on YouTube.
 
 AROS Worldwide
