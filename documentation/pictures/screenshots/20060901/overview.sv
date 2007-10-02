@@ -1,4 +1,4 @@
 2006-09-01
 ----------
 
-HÃ¤r Ã¤r en del projekt frÃ¥n 2006. AROS visar vÃ¥rat frÃ¤na ritprogram av Hogne "M0ns00n" Titlestad, Lunapaint v0.2.3.  AROS-program har Ã¤ven blivit Ã¶versatta till ryska. Ett annat projekt av Kalamatee: Konceptiellt GUI fÃ¶r W.I.P AROSTCP Config Tool and MesaGL. Ã„ven kommande GUI FTP Client av Suppah (aka voidstar).
+Här är en del projekt från 2006. AROS visar vårat fräna ritprogram av Hogne "M0ns00n" Titlestad, Lunapaint v0.2.3.  AROS-program har även blivit översatta till ryska. Ett annat projekt av Kalamatee: Konceptiellt GUI för W.I.P AROSTCP Config Tool and MesaGL. Även kommande GUI FTP Client av Suppah (aka voidstar).

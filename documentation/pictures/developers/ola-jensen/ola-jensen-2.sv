@@ -1,1 +1,1 @@
-En till bild av Ola utanfÃ¶r sitt hem i Norge.
+En till bild av Ola utanför sitt hem i Norge.

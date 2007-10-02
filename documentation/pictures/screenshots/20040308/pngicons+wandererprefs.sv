@@ -1,7 +1,7 @@
-Adam Chodorowski har tagit sig tid att gÃ¶ra ett bra paket av PNG-ikoner, baserade
-pÃ¥ Gnome "Gorilla"-ikonpaket, fÃ¶r att visa denna nya AROS-funktion. Du kan Ã¤ven
-se det nya "Wanderer preference program", som just nu lÃ¥ter dig Ã¤ndra bakgrunden
-av skrivbordet och mappar i fÃ¶nster, som Ã¤ven senare kommer tillÃ¥ta att Ã¤ndra
+Adam Chodorowski har tagit sig tid att göra ett bra paket av PNG-ikoner, baserade
+på Gnome "Gorilla"-ikonpaket, för att visa denna nya AROS-funktion. Du kan även
+se det nya "Wanderer preference program", som just nu låter dig ändra bakgrunden
+av skrivbordet och mappar i fönster, som även senare kommer tillåta att ändra
 alla andra funktioner i Wanderer.
 
-Notera Ã¤ven att alla typsnitt anvÃ¤nder antialias.
+Notera även att alla typsnitt använder antialias.

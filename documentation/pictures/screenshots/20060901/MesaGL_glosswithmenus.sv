@@ -1,1 +1,1 @@
-MesaGL v 6.5 alpha som utvecklas av Kalamatee. Inte sÃ¥ vacker skÃ¤rmdump, men den senaste dock.
+MesaGL v 6.5 alpha som utvecklas av Kalamatee. Inte så vacker skärmdump, men den senaste dock.

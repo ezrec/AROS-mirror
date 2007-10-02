@@ -1,3 +1,3 @@
-Tack vare Michal Schultz sÃ¥ har AROS nu ett fungerande PCI-stÃ¶d. Denna skÃ¤rmdump
-visar PCITool, ett program som lÃ¥ter dig browsa i en lista av alla PCI-devices
+Tack vare Michal Schultz så har AROS nu ett fungerande PCI-stöd. Denna skärmdump
+visar PCITool, ett program som låter dig browsa i en lista av alla PCI-devices
 som sitter i din dator.

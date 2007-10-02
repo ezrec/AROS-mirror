@@ -1,1 +1,1 @@
-H√§r √§r arbeten av Kalamatee: Konceptionellt GUI f√∂r W.I.P AROSTCP Config Tool. Profilsidan l√•ter dig v√§lja/importera/exportera en komplett n√§tverksprofil/konfiguration. Den till√•ter √§ven inst√§llningar i Env-variablerna vilket p√•verkar AROSTCP.
+H‰r ‰r arbeten av Kalamatee: Konceptionellt GUI fˆr W.I.P AROSTCP Config Tool. Profilsidan lÂter dig v‰lja/importera/exportera en komplett n‰tverksprofil/konfiguration. Den tillÂter ‰ven inst‰llningar i Env-variablerna vilket pÂverkar AROSTCP.

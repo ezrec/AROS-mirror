@@ -1,1 +1,1 @@
-VÃ¤ntar som mÃ¥nga andra pÃ¥ Amiga Inc pÃ¥ WoA 1999.
+Väntar som många andra på Amiga Inc på WoA 1999.

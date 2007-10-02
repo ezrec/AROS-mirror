@@ -1,2 +1,2 @@
 Michael Schultz arbetandes i MADIREL-laboratoriet i Marsiell/Frankrike med
-nÃ¥gon typ av elektroder.
+någon typ av elektroder.

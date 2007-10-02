@@ -1,1 +1,1 @@
-Om du nÃ¥gonsin undrat Ã¶ver hur Fabias ansikte ser ut, sÃ¥ vet du det nu! :)
+Om du någonsin undrat över hur Fabias ansikte ser ut, så vet du det nu! :)

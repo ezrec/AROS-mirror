@@ -1,2 +1,2 @@
-Adam Chodorowski poserar fÃ¶r kameran; iklÃ¤dd sina hemska
-solglasÃ¶gon som han insisterar att de inte Ã¤r hans egna. ;-)
+Adam Chodorowski poserar för kameran; iklädd sina hemska
+solglasögon som han insisterar att de inte är hans egna. ;-)

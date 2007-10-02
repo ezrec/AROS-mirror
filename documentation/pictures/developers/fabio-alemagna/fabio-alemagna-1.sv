@@ -1,2 +1,2 @@
-Fabio Alemagna i sin trÃ¤dgÃ¥rd som tar kort mest fÃ¶r skoj skull (Ã„ven om han inte verkar tycka
-det Ã¤r sÃ¥ kul...) :)
+Fabio Alemagna i sin trädgård som tar kort mest för skoj skull (Även om han inte verkar tycka
+det är så kul...) :)
