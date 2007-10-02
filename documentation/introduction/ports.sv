@@ -1,6 +1,6 @@
-=====
+==========
 Portningar
-=====
+==========
 
 :Authors:   Adam Chodorowski, Matthias Rustler 
 :Copyright: Copyright © 1995-2006, The AROS Development Team
@@ -20,7 +20,7 @@ AROS portad till en specifik plattform.
 
 
 Smaker
---------
+------
 
 Portningar är uppdelade i två större grupper, eller "smaker" inom AROS termioligi,
 dessa är "native" och "hosted".
@@ -39,7 +39,7 @@ programmeringen, eftersom vi kan köra utvecklingsmiljön och AROS sida-vid-sida u
 att ödsla tid på konstanta omstarter för att testa ny kod. 
 
 Namngivning
-------
+-----------
 
 De olika AROS-portningarna är namngivna i formen <cpu>-<platform>, där <cpu> är
 CPU-arkitekturen och <platform> är ett symboliskt namn av plattformen. Plattformen
@@ -51,14 +51,14 @@ vilket t.ex. kan ge namnet "AROS/i386-pc".
 
 
 Portnings-kompabilitet
------------
+----------------------
 
 AROS exekverbara filer för en specifik CPU är kompatibla över alla portningar
 som använder den CPU:n, vilket betyder att exekverbara filer för "i386-pc" kommer
 att fungera på "i386-linux" och "i386-freebsd".
 
 Existerande portningar
-==============
+======================
 
 Nedan finns en lista på alla AROS portningar som fungerar och/eller aktivt
 utvecklas. Alla av dessa är inte tillgängliga för nerladdning, eftersom dom
@@ -154,7 +154,7 @@ Omkompilering kräver en patchad gcc3.4.3. Diff-filen finns i contrib/gnu/gcc.
 __ http://sourceforge.net/project/showfiles.php?group_id=43586&package_id=194077
 
 Fotnot
-=========
+======
 
 .. [#] Ja, vi vet att Linux bara är en kärna och inte ett helt OS, men det är mycket
        kortare att skriva än "operativsystem baserat på Linux-kärnan, en del av

@@ -1,6 +1,6 @@
-=====
+======
 Länkar
-=====
+======
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Matthias Rustler 
 :Copyright: Copyright © 1995-2007, The AROS Development Team
@@ -12,7 +12,7 @@ Länkar
 .. Contents::
 
 AROS källor
-==============
+===========
 
 + `Team AROS`__ 
 
@@ -60,7 +60,7 @@ __ http://en.wikibooks.org/wiki/Aros
 
 
 Artiklar om AROS
-===================
+================
 
 ===============================================  ==================  ==========
 Titel                                            Författare          Datum
@@ -85,7 +85,7 @@ så vi kan lägga till den. Tack.
 
 
 Artiklar som nämner AROS
-==========================
+========================
 
 ===============================================  ==============  ==========
 Titel                                            Författare      Datum
@@ -119,7 +119,7 @@ Om du känner till någon artikel om AROS som inte finns med, contact_ oss
 så vi kan lägga till den. Tack.
 
 Utvecklarnas hemsidor
-=======================
+=====================
 
 + `Aaron Digulla`__
 + `Adam Chodorowski`__
@@ -154,7 +154,7 @@ __ http://www.in-berlin.de/User/jroger/index.html
 
 
 Övrigt
-=============
+======
 
 + `Back to the Roots`__
 

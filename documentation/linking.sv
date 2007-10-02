@@ -1,6 +1,6 @@
-=======
+========
 Länkning
-=======
+========
 
 :Author:    Adam Chodorowski
 :Copyright: Copyright ¦ 2001-2007, The AROS Development Team
