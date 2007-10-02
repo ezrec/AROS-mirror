@@ -16,6 +16,7 @@ New features are the following:
 - Creation of Work partition now works.
 - Partition sizes can now be specified and existing partitions can be preserved.
 - Windows now added to GRUB boot menu if a likely Windows system partition is found
+- Locale can be set during the installation
 
 
 Please notice, however, that this is still beta software. Here are 
@@ -45,6 +46,15 @@ fellows. The event has been anticipated by some important IT news
 sites like `TGM Online`__ and `HW Upgrade`__. A report of the 
 show has been published by `The AROS Show`__ (read it `here`__) You may 
 also see a nice `video`__ on YouTube.
+
+AROS Worldwide
+--------------
+
+Our website have got some new documentation translations - namely, to Greek (by
+Ioannis Koniaris), Spanish (by Ariel Gomez) and Czech (by Petr Novak), with
+usual and necessary help from Neil Cafferkey. Swedish (by Jon Anderson) and 
+Russian (by Softy) translation updates coming soon. Also more updates in more 
+languages are coming (by... you?). 
 
 __ http://mama.indstate.edu/users/nova/installer.jpg
 __ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=2319
