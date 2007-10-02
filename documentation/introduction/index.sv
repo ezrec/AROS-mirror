@@ -49,31 +49,30 @@ samtidigt.
 Historia
 ========
 
-Some time back in the year 1993, the situation for the Amiga looked somewhat 
-worse than usual and some Amiga fans got together and discussed what should be 
-done to increase the acceptance of our beloved machine. Immediately the main 
-reason for the missing success of the Amiga became clear: it was propagation,
-or rather the lack thereof. The Amiga should get a more widespread basis to 
-make it more attractive for everyone to use and to develop for. So plans were
-made to reach this goal. One of the plans was to fix the bugs of the AmigaOS, 
-another was to make it an modern operating system. The AOS project was born.
+Runt 1993 såg situationen för Amiga värre ut än någonsin och hängivna supportrar
+samlades för att diskutera vad som kunde göras för att öka acceptansen för vår
+älskade maskin. Ganska så snart var det uppenbart vad huvudorsaken
+av misslyckandet berodde på: spridningen, eller snarare avsaknaden av detta.
+Amiga borde ha en mer utbredd marknad för att bli mer attraktiv för alla att
+använda och utveckla i.  Planer utvecklades för att uppnå detta mål. En av
+dessa planer var att åtgärda buggarna i AmigaOS, en annan var att utveckla
+AmigaOS till ett modernt operativsystem. AOS-projektet var skapat.
 
-But exactly what was a bug? And how should the bugs be fixed? What are the
-features a so-called *modern* OS must have? And how should they be implemented 
-into the AmigaOS?
+Men vad var egentligen en bug? Hur skulle buggarna åtgärdas? Vad är det för
+finesser som ett så kallat *modernt* operativsystem måste ha? Hur skulle de
+implementeras i AmigaOS?
 
-Two years later, people were still arguing about this and not even one line of 
-code had been written (or at least no one had ever seen that code). Discussions 
-were still of the pattern where someone stated that "we must have ..." and 
-someone answered "read the old mails" or "this is impossible to do, because ..."
-which was shortly followed by "you're wrong because ..." and so on. 
+Två år senare så var debatten fortfarande aktuell och inte en enda rad kod
+hade skrivits (åtminstone så hade ingen sett någon kod). Diskussioner
+handlade fortfarande om "Vi måste ha ..." då en annan svarade "läs de gamla mailen"
+eller "detta är omöjligt att utföra, eftersom ..." som följdes av "Du har fel
+för att ..." och så vidare.
 
-In the winter of 1995, Aaron Digulla got fed up with this situation and posted 
-an RFC (request for comments) to the AOS mailing list in which he asked what the
-minimal common ground might be. Several options were given and the conclusion 
-was that almost everyone would like to see an open OS which is compatible with
-AmigaOS 3.1 (Kickstart 40.68) on which further discussions could be based, 
-to see what is possible and what is not.
+Vintern 1995, var Aaron Digulla trött på situationen och postade en RFC 
+(reguest for comments) till AOS e-postlista där han frågade vad den minimala
+gemensamma grunden för operativystemet borde vara. Flera alternativ presenterades
+och sammanfattningsvis så ville i princip alla se ett öppet operativsystem som
+är kompatibelt med AmigaOS 3.1 (Kickstart 40.68), under vilka fortsatta diskussioner
+kunde baseras, för att kontrollera vad som var möjligt och inte.
 
-So the work began and AROS was born.
-
+Arbetet startade och så var AROS fött.
