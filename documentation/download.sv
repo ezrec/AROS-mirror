@@ -6,19 +6,19 @@ Nerladdning
 
 .. Note::
 
-   NÃ¤r du laddar ner "nightly builds", sÃ¥ mÃ¥ste du anvÃ¤nda en nerladdnings-
-   hanterare sÃ¥ att du kan Ã¥teruppta en avbruten nerladdning, eller en
-   textbaserad applikation som t.ex. wget (Du kan anvÃ¤nda "wget -c" fÃ¶r
-   att Ã¥teruppta nerladdningen av en fil som Ã¤r nerladdad av ett annat program).
+   När du laddar ner "nightly builds", så måste du använda en nerladdnings-
+   hanterare så att du kan återuppta en avbruten nerladdning, eller en
+   textbaserad applikation som t.ex. wget (Du kan använda "wget -c" för
+   att återuppta nerladdningen av en fil som är nerladdad av ett annat program).
 
 Snapshots
 =========
 
-FrÃ¥n den 1:a mars 2007 Ã¤r snapshots av AROS inte lÃ¤ngre tillgÃ¤ngliga. Vi
+Från den 1:a mars 2007 är snapshots av AROS inte längre tillgängliga. Vi
 uppmanar alla som vill testa AROS att ladda ner den senaste "nightly build"
-istÃ¤llet. AROS vÃ¤xer vÃ¤ldigt fort, och snapshots innehÃ¥ller oftast
-fÃ¶rÃ¥ldad kod. Vi tror ocksÃ¥ att "nightly builds" Ã¤r mer anvÃ¤ndbara med 
-tanke pÃ¥ betatestningen: anvÃ¤nd gÃ¤rna `bug tracker`__ fÃ¶r att rapportera buggar.
+istället. AROS växer väldigt fort, och snapshots innehåller oftast
+föråldad kod. Vi tror också att "nightly builds" är mer användbara med 
+tanke på betatestningen: använd gärna `bug tracker`__ för att rapportera buggar.
 
 __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 
@@ -26,12 +26,12 @@ __ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 Nightly builds
 ==============
 
-"Nightly builds" gÃ¶rs, som man ser pÃ¥ namnet, automatiskt varje natt direkt
-frÃ¥n subversions-trÃ¤det och innehÃ¥ller den senaste koden. Men dessa har inte
-blivit testade och kan innehÃ¥lla buggar. Dock fungerar dom fÃ¶r det mesta bra.
+"Nightly builds" görs, som man ser på namnet, automatiskt varje natt direkt
+från subversions-trädet och innehåller den senaste koden. Men dessa har inte
+blivit testade och kan innehålla buggar. Dock fungerar dom för det mesta bra.
 
-Rapportera gÃ¤rna buggar som du hittar nÃ¤r du anvÃ¤nder "nightly builds" till
-`bug tracker`__. FÃ¶r Ã¶vriga Ã¤renden eller frÃ¥gor, kontakta oss via
+Rapportera gärna buggar som du hittar när du använder "nightly builds" till
+`bug tracker`__. För övriga ärenden eller frågor, kontakta oss via
 `AROS-Exec`__ forumen.
 
 .. raw:: html
