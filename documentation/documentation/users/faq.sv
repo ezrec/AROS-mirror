@@ -167,152 +167,150 @@ operativsystemets kärna inte direkt med hårdvaran, utan går via HIDD. vilket är
 kodat med hjälp av ett objektorienterat system som gör det enkelt att byta ut
 HIDD och återanvända koden.
 
-Why do you think AROS will make it? 
------------------------------------
+Varför tror ni att AROS kommer att lyckas?
+------------------------------------------
 
-We hear all the day from a lot of people that AROS won't make it. Most of them
-either don't know what we are doing or they think the Amiga is already dead.
-After we explained what we do to the former, most agree that it is possible. The
-latter make more problems. Well, is Amiga dead right now? Those who are still
-using their Amigas will probably tell you that it isn't. Did your A500 or A4000
-blow up when Commodore went bankrupt? Did it blow up when Amiga Technologies
-did?
+Varje dag hör vi från massor av människor som tror att AROS inte kommer att lyckas.
+De flesta vet inte vad vi egentligen håller på med eller att de tror att Amigan
+redan är död. Efter att vi har förklarat vad vi sysslat med så håller de flesta med
+om att det är möjligt, men det sistnämnda är svårare att förklara. Är Amigan död?
+Dom som fortfarande använder Amigan kommer troligen säga att den inte är död.
+Slutade din A500 eller A4000 att fungera när Commodore gick i konkurs? Gick den
+sönder när Amiga Technologies konkursade?
 
-The fact is that there is quite little new software developed for the Amiga
-(although Aminet still chugs along quite nicely) and that hardware is also
-developed at a lower speed (but the most amazing gadgets seem appear right now).
-The Amiga community (which is still alive) seems to be sitting and waiting. And
-if someone releases a product which is a bit like the Amiga back in 1984, then
-that machine will boom again. And who knows, maybe you will get a CD along with
-the machine labeled "AROS". :-)
+Faktum är att det idag inte utvecklas så mycket ny mjukvara för Amiga (även om
+Aminet fortfarande tuffar och går rätt så fint) och att ny hårdvara även utvecklas
+mycket långsammare (men de coolaste pryttlarna verkar dyka upp nu).  Amigas Community
+(Som fortfarande existerar) verkar sitta och vänta och om någon släpper en produkt som
+liknar Amigan från 1984, då kommer den datorn att få en revival. Vem vet, kanske får du en
+CD med din nya dator märkt med "AROS". :-)
 
 
-What do I do if AROS won't compile?
------------------------------------
+Vad gör jag om AROS inte vill compileras?
+-----------------------------------------
 
-Please post a message with details (for example, the error messages you
-get) on the Help forum at `AROS-Exec`__ or become a developer and
-subscribe to the AROS Developer list and post it there, and someone will
-try to help you.
+Skicka ett meddelande med detaljer (Till exempel, felmeddelandena som du får)
+i hjälpforumet på `AROS-Exec`__ eller bli en utvecklare och prenumerera
+på "AROS Developer list" och skicka meddelandet där, så får du hjälp.
 
 __ http://aros-exec.org/
 
 
-Will AROS have memory protection, SVM, RT, ...?
------------------------------------------------
+Kommer AROS ha minnesskydd (memory protection), SVM, RT, ...?
+-------------------------------------------------------------
 
-Several hundred Amiga experts (that's what they thought of themselves at least)
-tried for three years to find a way to implement memory protection (MP) for
-AmigaOS. They failed. You should take it as a fact that the normal AmigaOS will
-never have MP like Unix or Windows NT.
+Flera hundra Amigaexperter (det är iallafall vad de säger om sig själva) försökte
+för tre år sedan att finna en lösning för att implementera minnesskydd (MP) för
+AmigaOS. Dom misslyckades. Faktum är att AmigaOS aldig kommer att ha MP som
+Unix eller Windows NT.
 
-But all is not lost. There are plans to integrate a variant of MP into AROS
-which will allows protection of at least new programs which know about it. Some
-efforts in this area look really promising. Also, is it really a problem if your
-machine crashes? Let me explain, before you nail me to a tree. :-) The problem
-is not that the machine crashes, but rather: 
+Men man ska inte hoppa över ån förrens man sagt hej. Det finns planer att
+integrera en variant av MP i AROS, som kommer tillåta minnesskydd för åtminstone nya
+program med stöd för detta. En del försök med detta ser verkligen lovande ut. Är det även
+ett stort problem om din dator krashar? Låt mig förklara innan du spikar upp mig
+på ett träd. :-) Problemet är inte att datorn krashar, utan snarare:
 
-1. You have no good idea why it crashed. Basically, you end up having to poke 
-   with a 100ft pole into a swamp with a thick fog. 
-2. You lose your work. Rebooting the machine is really no issue.
+1. Du har ingen aning om varför den krashade, egentligen så slutar det med att
+du försöker peta med en 30 meter lång påle i ett träsk med tjock dimma.
+2. Du tappar allt du jobbat med, omstart av datorn är inte något stort problem.
 
-What we could try to construct is a system which will at least alert if
-something dubious is happening and which can tell you in great detail what was
-happening when the machine crashed and which will allow you to save your work
-and *then* crash. There will also be a means to check what has been saved so you
-can be sure that you don't continue with corrupted data.
+Något som vi kunde försöka konstruera är ett system som åtminstone varnar om
+något suspekt händer och som kan säga dig i detalj om vad som hände när datorn
+kraschade, som tillåter dig att spara ditt arbete och *sen* krascha. Det kommer
+även finnas funktioner för att kontrollera vad som har sparats så att du kan vara
+säker på att du inte får korrupt data.
 
-The same thing goes for SVM (swappable virtual memory), RT (resource tracking)
-and SMP (symmetric multiprocessing). We are currently planning how to implement
-them, making sure that adding these features will be painless. However, they do
-not have the highest priority right now. Very basic RT has been added, though.
-
-
-Can I become a beta tester?
----------------------------
-
-Sure, no problem. In fact, we want as many beta testers as possible, so
-everyone is welcome! We don't keep a list of beta testers though, so all
-you have to do is to download AROS, test whatever you want and send us a
-report.
+Samma sak gäller för SVM (swappable virtual memory), RT (resource tracking)
+och SMP (symmetric multiprocessing). Vi planerar för tillfället om hur vi ska
+implementera dom, så vi är säkra på att lägga till dessa processer kommer att
+bli relativt smärtfritt. Men, dom har inte högsta prioritet just nu, dock har 
+en väldigt enkel RT utvecklats.
 
 
-What is the relation between AROS and UAE?
-------------------------------------------
+Kan jag bli betatestare?
+------------------------
 
-UAE is an Amiga emulator, and as such has somewhat different goals than AROS.
-UAE wants to be binary compatible even for games and hardware hitting code,
-while AROS wants to have native applications. Therefore AROS is much faster than
-UAE, but you can run more software under UAE.
+Absolut, inga problem. Faktiskt vill vi ha så många betatestare som möjligt,
+så alla är välkomna! Vi för dock ingen lista över betatestare, så allt du
+behöver göra är att tanka hem AROS, testa precis vad du vill och skicka oss
+en rapport.
 
-We are in loose contact with the author of UAE and there is a good chance that
-code for UAE will appear in AROS and vice versa. For example, the UAE developers
-are interested in the source for the OS because UAE could run some applications
-much faster if some or all OS functions could be replaced with native code. On
-the other hand, AROS could benefit from having an integrated Amiga emulation.
+Vad har AROS och UAE för relation till varandra?
+------------------------------------------------
 
-Since most programs won't be available on AROS from the start, Fabio Alemagna
-has ported UAE to AROS so you can run old programs at least in an emulation box.
+UAE är en amiga-emulator, och har därför lite andra mål än vad AROS har.
+UAE vill bli binär-kompatibel även för spel och kod med direktåtkomst till hårdvaran,
+medans AROS vill ha native-applikationer. Därför är AROS mycket snabbare än
+UAE, men du kan köra mer mjukvara i UAE.
 
-Also available in Contrib is `E-UAE`__, which is UAE improved by some features
-from `WinUAE`__.
+Vi har viss kontakt med utvecklaren av UAE och därför finns det stora
+möjligheter att koden för UAE kommer att finnas i AROS och vice versa. Till exempel,
+UAE-utvecklarna är intresserade av källkoden i AROS eftersom UAE skulle kunna köra
+applikationer mycket snabbare om en del OS-funktioner kunde ersättas med
+native kod. Å andra sidan, AROS kan dra fördel av att ha en integrerad Amiga-emulator.
+
+Eftersom de flesta program inte kommer att vara tillgängliga på AROS i början så
+har Fabio Alemagna portat UAE till AROS så att du åtminstone kan köra gamla program i en
+emuleringsbox.
+
+Även `E-UAE`__ finns tillgängligt, vilket är UAE som är förbättrat med några
+funktioner från `WinUAE`__.
 
 __ http://www.rcdrummond.net/uae/
 __ http://www.winuae.net/
 
 
-What is the relation between AROS and Haage & Partner?
-------------------------------------------------------
+Vad har AROS och Haage & Partner för relation till varandra?
+------------------------------------------------------------
 
-Haage & Partner used parts of AROS in AmigaOS 3.5 and 3.9, for example the
-Colorwheel and Gradientslider gadgets and the SetENV command. This means that in
-a way, AROS has become part of the official AmigaOS. This does not imply that
-there is any formal relation between AROS and Haage & Partner. AROS is an open
-source project, and anyone can use our code in their own projects provided they
-follow the license.
-
-
-What is the relation between AROS and MorphOS?
-----------------------------------------------
-
-The relationship between AROS and MorphOS is basically the same as between AROS
-and Haage & Partner. MorphOS uses parts of AROS to speed up their development
-effort; under the terms of our license. As with Haage & Partner, this is good
-for both the teams, since the MorphOS team gets a boost to their development
-from AROS and AROS gets good improvements to our source code from the MorphOS
-team. There is no formal relation between AROS and MorphOS; this is simply how
-open source development works.
+Haage & Partner har använt delar i AROS i AmigaOS 3.5 och 3.9, till exempel
+Colorwheel och Gradientslider gadgets samt SetEnv-kommandot. I princip betyder
+detta att AROS har blivit en del av det officiella AmigaOS. Detta betyder dock
+inte att det finns en formell överenskommelse mellan AROS och Haage & Partner.
+AROS är ett open source-projekt, därför kan vem som helst använda våran kod
+i sina egna projekt förutsatt att de efterföljer licensavtalet.
 
 
-What programming languages are available?
------------------------------------------
+Vad har AROS och MorphOS för relation till varandra?
+----------------------------------------------------
 
-Most development for AROS is done using ANSI C by crosscompiling the
-sources under a different OS, e.g. Linux or FreeBSD. Fabio Alemagna has
-completed an initial port of GCC to i386 native. However, it is not
-currently on the ISO or integrated into the build system.
+Relationen mellan AROS och MorphOS är i princip densamma som mellan AROS
+och Haage & Partner. MorphOS använder delar i AROS för att snabba upp deras
+utveckling; enligt licensvillkoren. Precis som med Haage & Partner så är detta
+bra för båda parter eftersom MorphOS kan snabba upp deras utveckling från AROS
+och AROS i sin tur får förbättringar till vår källkod från MorphOS. Det finns
+inget formellt avtal skrivet mellan AROS och MorphOS; detta är hur 
+open source-utveckling fungerar.
 
-The languages that are available natively are Python_, Regina_, Lua_, Hollywood_ and False_:
 
-+ Python is a scripting language which has become quite popular, because of 
-  its nice design and features (object-oriented programming, module system,
-  many useful modules included, clean syntax, ...). A separate project has 
-  been started for the AROS port and can be found at 
+Vilka programmeringsspråk finns tillgängliga?
+---------------------------------------------
+
+Mest utveckling i AROS sker med hjälp av ANSI C genom att crosskompila
+källkoderna i ett annat operativsystem, som till exempel Linux eller FreeBSD.
+Fabio alemagna har gjort klart en initial portning av GCC till i386 native. Men den
+finns för tillfället inte i ISO:n eller integrerad i build-systemet.
+
+De språk som finns tillgängliga i native är Python_, Regina_, Lua_, Hollywood: och False_:
+
++ Python är ett skriptspråk som har blivit ganska så populärt, pga designen
+  och funktionerna (objektorienterad programmering, modult system, många
+  användbara moduler inkluderade, ren syntax, ...) Ett separat projekt har
+  startat för AROS-portning och kan hittas på
   http://pyaros.sourceforge.net/.
 
-+ Regina is a portable ANSI compliant REXX interpreter. The goal for the AROS
-  port is to be compatible with the ARexx interpreter for the classic
-  AmigaOS.
++ Regina är en portabel ANSI compilant REXX interpreter. Målet för AROS-portningen
+  är att bli kompatibel med ARexx interpreter i AmigaOS.
 
-+ Lua is a powerful, fast, light-weight, embeddable scripting language. The AROS
-  port has been extented by two modules: siamiga and zulu. The first one has
-  some simple graphics commands, the latter is an interface to Zune.
++ Lua är en kraftfull, snabb, liten, embedded skriptspråk. AROS-portningen
+  har blivit förbättrad med två moduler: Siamiga och Zulu. Siamiga har några enkla
+  grafik-kommandon, Zulu är ett interface till Zune.
 
-+ Hollywood is a commercial programming language for multimedia applications
-  including games. The CD-ROM contains a version for i386-aros.
++ Hollywood är ett kommersiellt programmeringsspråk för multimediaapplikationer
+  som inkluderar spel. CD-ROM:en innehåller en version för i386-AROS.
 
-+ False can be classified as an exotic language, so it will most likely not be 
-  used for serious development, although it can be lots of fun. :-) 
++ False kan klassifieras som ett exotiskt språk och kommer mest troligt att
+  inte användas för seriös utveckling, men det är ganska kul. :-)
 
 .. _Python: http://www.python.org/
 .. _Regina: http://regina-rexx.sourceforge.net/
@@ -321,35 +319,33 @@ The languages that are available natively are Python_, Regina_, Lua_, Hollywood_
 .. _False:  http://wouter.fov120.com/false/
 
 
-Why is there no m68k emulator in AROS?
---------------------------------------
+Varför finns det ingen m68k-emulator i AROS?
+--------------------------------------------
 
-To make old Amiga programs run on AROS, we have ported UAE_ to AROS. AROS's
-version of UAE will probably be a bit faster than other versions UAE since AROS
-needs less resources than other operating systems (which means UAE will get more
-CPU time), and we'll try to patch the Kickstart ROM in UAE to call AROS
-functions which will give another small improvement. Of course, this only
-applies to the native flavors of AROS and not the hosted flavors.
+För att kunna få gamla program att köras i AROS så har vi protat UAE: till AROS.
+AROS version av UAE kommer troligtvis att vara lite snabbare än äldre versioner
+av UAE eftersom AROS behöver färre resurser än andra operativsystem. (vilket betyder
+att UAE kommer att få mer CPU-tid). Vi kommer även att försöka att patcha Kickstart ROM
+i UAE för att ropa på AROS funktioner som ger en liten förbättring. Naturligtvis
+så gäller detta endast native-versionerna av AROS och inte hosted.
 
-But why don't we simply implement a virtual m68k CPU to run software directly on
-AROS? Well, the problem here is that m68k software expects the data to be in big
-endian format while AROS also runs on little endian CPUs. The problem here is
-that the little endian routines in the AROS core would have to work with the big
-endian data in the emulation. Automatic conversion seems to be impossible (just
-an example: there is a field in a structure in the AmigaOS which sometimes
-contains one ULONG and sometimes two WORDs) because we cannot tell how a couple
-of bytes in RAM are encoded.
+Men varför implementerar vi inte en virtuell m68k CPU vilket gör att vi kan köra
+mjukvaran direkt i AROS? Problemet är att m68k-mjukvara förväntar att datan att
+vara i "big endian format" när AROS även kör "little endian CPU". Problemet är att
+"little endian"-rutiner i AROS kärna skulle behöva arbete med "big endian"-data i
+emuleringen. Atumatisk konvertering verkar i princip vara omöjligt (Till exempel:
+Det finns ett fält i strukturen i AmigaOS vilket ibland innehåller ULONG och ibland
+två WORD) eftersom vi inte kan säga hur ett par bytes i RAM är enkodade.
 
 .. _UAE: http://www.freiburg.linux.de/~uae/
 
 
-Will there be an AROS Kickstart ROM? 
-------------------------------------
+Kommer det att finnas en AROS Kickstart ROM?
+--------------------------------------------
 
-There might be, if someone creates a native Amiga port of AROS and does all the
-other work needed to create a Kickstart ROM. Currently, no one has applied for
-the job. 
-
+Eventuellt om någon skapar en native Amiga-portning av AROS och gör allt det andra
+jobbet som behövs för att skapa en Kickstart ROM. För tillfället så är det ingen
+som har ansökt om jobbet.
 
 Software questions
 ==================
