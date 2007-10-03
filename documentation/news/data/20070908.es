@@ -15,7 +15,7 @@ bootstrap ha cambiado un poco y se las arregló para compilar
 varias bibliotecas (gracias al gigantesco esfuerzo de Henning
 Kiel, que arregló los fuentes para la compatibilidad con los 64 bits)
 en módulos separados. En otras palabras, el núcleo de 64 bits
-está cerca para arrancar, hacer multitarea y comenzar la ruta
+está cerca de arrancar, hacer multitarea y comenzar la ruta
 de autoinicio de exec.library pronto.
 
 Si has instalado una nightly build antigua, por favor vé a la

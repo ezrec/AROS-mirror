@@ -19,7 +19,7 @@ discos duros. Tiene las siguientes características nuevas:
 - Se añadió Windows al menú de arranque de GRUB si hay alguna partición de ese sistema.
 - Se puede establecer el locale durante la instalación.
 
-Sin embargo, fíjese que es un programa todavía en etapa beta. Neil hizo
+Sin embargo, fíjate que es un programa todavía en etapa beta. Neil hizo
 las siguientes advertencias: "El nuevo instalador de HD está incluido en
 la ISO nightly listo para ser probado. No obstante, hay un defecto o en
 el Wanderer o en el FFS que necesita ser esquivado. Después de iniciar
@@ -50,8 +50,8 @@ informe de `The AROS Show`__ (léelo `aquí`__). Puedes ver un lindo
 AROS en el mundo
 ----------------
 
-Nuestro sitio web ha tenido algunas nuevas traducciones de la documentación
-- a saber, al griego (por Ioannis Koniaris), al español (por Darío Gómez) y
+Nuestro sitio web tiene nuevas traducciones de la documentación
+- a saber, al griego (por Ioannis Koniaris), al español (por Ariel Gómez) y
 al checo (por Petr Novak), con la ayuda usual y necesaria de Neil Cafferkey.
 Las actualizaciones de las traducciones al sueco (por Jon Anderson) y al
 ruso (por Softy) vendrán pronto. También les seguirán las actualizaciones

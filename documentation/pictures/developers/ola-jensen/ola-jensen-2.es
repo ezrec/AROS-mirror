@@ -1,0 +1,1 @@
+Otra fotografía de Ola afuera de su casa en Noruega.
