@@ -34,7 +34,7 @@ Läs gärna denna introduktion_.
 Vad säger lagen om AROS?
 ------------------------
 
-Europeisk lag säger att det är lagligt att använde omvänd utvecklingsteknik 
+Europeisk lag säger att det är lagligt att använda omvänd utvecklingsteknik 
 (reverse engineering) för att få kompabilitet. Den säger även att det är
 olagligt att distribuera kunskapen som man får av dessa tekniker. Det som
 egentligen menas med detta är att du får dissemblera eller studera vilken
@@ -45,16 +45,16 @@ ett program som kan konvertera Word-dokument till ASCII-text).
 Det finns naturligtvis undantag: du får inte dissemblera mjukvaran om informationen
 som du är ute efter går att få tag på med andra sätt. Du får heller inte informera
 andra om vad du har lärt dig. En bok med titeln "Windows inside" är därför
-olagligt eller åtminstone tvivelaktigt laglig.
+olaglig eller åtminstone tvivelaktigt laglig.
 
 Eftersom vi undviker dissembleringstekniker och istället använder den kunskap
-som redan finns (vilket inkluderar programmeringsmanualer)  som inte går under
+som redan finns (vilket inkluderar programmeringsmanualer) vilka inte går under
 någon liknande lag, så kan man inte applicera detta med AROS. Det som räknas här
 är intentionerna i lagen: det är lagligt att skriva mjukvara som är kompatibel
 med annan mjukvara. Därför är våran övertygelse att AROS är skyddat av lagen.
 
 Patent och header files är ett annat ämne. Vi kan använda patenterade algoritmer
-i europe eftersom europesik lag inte tillåter patent på algoritmer.
+i europa eftersom europeisk lag inte tillåter patent på algoritmer.
 Dock får kod som använder algoritmer som är patenterade i USA inte importeras
 till USA. Exempel på patenterade algoritmer i AmigaOS är t.ex. skärmdragning
 och hur t.ex. menyer fungerar. Därför undviker vi att implementera dessa
@@ -62,7 +62,7 @@ funktioner på exakt samma sätt. Header files måste å andra sidan vara kompatibla
 men så olika orginalet som möjligt.
 
 För att undvika problem så har vi frågat om ett officiellt OK från Amiga Inc. De
-är ganska positiva till vårat arbete men väldigt obekväma angående den lagliga
+är ganska positiva till vårat arbete men känner sig väldigt obekväma angående den lagliga
 innebörden. Vi vill uppmärksamma dig på det faktum att Amiga Inc inte har
 skickat oss brev där de uppmanat oss att fortsätta eller upphöra med utvecklingen.
 Olyckligtvis så har ingen överenskommelse ännu blivit gjord, förutom att båda parter
@@ -82,14 +82,14 @@ tillgänglig mjukvara och hastighetssänkningar).
 
 I slutändan så har diskussionerna slutat i heta diskussioner eller återgång till
 samma argument om och om igen. Så vi beslutade att starta med någonting som
-vi viste att vi kunde hantera. Sen när vi har erfarenheter för att se vad som
+vi visste att vi kunde hantera. Sen när vi har erfarenheter för att se vad som
 är möjligt eller inte, så kan vi besluta om förbättringar.
 
-Vi vill även ha binär kompabilitet med AmigaOS på Amigadatorer. Anledningen till
+Vi vill även ha binär kompabilitet med AmigaOS. Anledningen till
 detta är just att ett nytt operativsystem utan program inte har någon chans att
 överleva. Därför försöker vi att få övergången från AmigaOS till det nya att gå
 så smärtfritt som möjligt (men inte till den grad att vi inte kan förbättra AROS
-i efterhand). Som vanligt, allting har sitt pris och försöker att göra genomtänkta
+i efterhand). Som vanligt, allting har sitt pris och vi försöker att göra genomtänkta
 beslut om vilket pris som det kostar och om alla andra är villiga att betala det.
 
 Kan ni inte implementera funktionen XYZ?
@@ -102,7 +102,7 @@ b) Varför inte göra det själv och skicka patchen till oss?
 
 Anledningen till denna attityd är att det finns väldigt många som tycker att deras
 funktion är viktigast och att AROS inte har någon framtid om inte funktionen 
-omedelbart implementeras. Våran ståndpunkt är att AmigaOS, som AROS siktar på att
+omedelbart implementeras. Vår ståndpunkt är att AmigaOS, som AROS siktar på att
 implementera, kan göra allting som ett modernt operativsystem kan göra. Vi ser
 att det finns områden där AmigaOS skulle behöva förbättras inom, men om vi gör det,
 vem skulle skriva resten av operativsystemet? I slutändan så skulle vi då ha en massa
@@ -111,14 +111,14 @@ redan existerande mjukvara, eftersom resten av operativystemet skulle saknas.
 
 Därför har vi beslutat att vänta med varje försök till att implementera stora
 nya funktioner i operatisystemet tills att operativsystemet är mer eller mindre
-klart. Vi har kommit ganska så nära målet nu och det har utvecklats en del funktioner
+klart. Vi har kommit ganska så nära målet nu och det har faktisktutvecklats en del funktioner
 i AROS som inte finns tillgängligt i AmigaOS.
 
 
 Hur kompatibelt är AROS med AmigaOS?
 ------------------------------------
 
-Väldigt kompatibelt. Vi förväntar oss att AROS kommer att köra existerande
+Väldigt kompatibelt. Vi förväntar oss att AROS kommer att kunna köra existerande
 mjukvara på Amigan utan problem. På annan hårdvara så måste mjukvaran
 rekompileras. Vi kommer att erbjuda en preprocessor som du kan använda på din
 kod som kommer ändra eventuell kod som eventuellt krashar med AROS och/eller
@@ -186,7 +186,7 @@ liknar Amigan från 1984, då kommer den datorn att få en revival. Vem vet, kanske
 CD med din nya dator märkt med "AROS". :-)
 
 
-Vad gör jag om AROS inte vill compileras?
+Vad gör jag om AROS inte vill kompileras?
 -----------------------------------------
 
 Skicka ett meddelande med detaljer (Till exempel, felmeddelandena som du får)
@@ -201,7 +201,7 @@ Kommer AROS ha minnesskydd (memory protection), SVM, RT, ...?
 
 Flera hundra Amigaexperter (det är iallafall vad de säger om sig själva) försökte
 för tre år sedan att finna en lösning för att implementera minnesskydd (MP) för
-AmigaOS. Dom misslyckades. Faktum är att AmigaOS aldig kommer att ha MP som
+AmigaOS. Dom misslyckades. Faktum är att AmigaOS aldrig kommer att ha MP som
 Unix eller Windows NT.
 
 Men man ska inte hoppa över ån förrens man sagt hej. Det finns planer att
