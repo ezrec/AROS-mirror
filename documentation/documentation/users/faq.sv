@@ -347,17 +347,18 @@ Eventuellt om någon skapar en native Amiga-portning av AROS och gör allt det and
 jobbet som behövs för att skapa en Kickstart ROM. För tillfället så är det ingen
 som har ansökt om jobbet.
 
-Software questions
-==================
+Mjukvarufrågor
+==============
 
-How do I access AROS's disk images from UAE?
---------------------------------------------
+Hur accessar jag AROS disk-images från UAE?
+-------------------------------------------
 
-The floppy disk image can be mounted as a hardfile and then used as a 1.4 MB
-harddisk within UAE. After you have put the files you want on the hardfile disk
-image (or whatever you wanted to do), you can write it to a floppy.
+Diskett-imagen kan mountas som en file på hårddisken och sen användas som en
+1.4 MB hårddisk i UAE. Efter att du har lagt i filerna i hårddisksfilsimagen 
+(harfile disk image) (Eller vad du nu vill göra), så kan du skriva den till en
+diskett.
 
-The geometry of the hardfile is as follows::
+Geometrin i hårddiskfilen är enligt nedan::
 
     Sectors    = 32
     Surfaces   = 1
@@ -365,176 +366,169 @@ The geometry of the hardfile is as follows::
     Block Size = 90
 
 
-How do I access AROS's disk images from hosted flavors of AROS?
----------------------------------------------------------------
+Hur accessar jag AROS disk images från hosted-versioner av AROS?
+----------------------------------------------------------------
 
-Copy the disk image to the DiskImages directory in AROS (SYS:DiskImages, e.g.
-bin/linux-i386/AROS/DiskImages) and rename it to "Unit0". After starting AROS,
-you can mount the disk image with::
+Kopiera disk-imagen till Diskimages-mappen i AROS (SYS:DiskImages, 
+bin/linux-i386/AROS/DiskImages) och döp om den till "Unit0". Efter att ha
+startat AROS så kan du mounta imagen med::
 
     > mount AFD0: 
 
 
-What is Zune?
--------------
+Vad är Zune?
+------------
 
-In case you read on this site about Zune, it's simply an open-source
-reimplementation of MUI, which is a powerful (as in user- and
-developer-friendly) object-oriented shareware GUI toolkit and de-facto
-standard on AmigaOS. Zune is the preferred GUI toolkit to develop
-native AROS applications. As for the name itself, it means nothing,
-but sounds good.
-
-
-How can I restore my Prefs to defaults?
----------------------------------------
-
-In AROS, open CLI shell, go to Envarc: and delete relevant files for the 
-pref you want to restore.
+Om det är på denna hemsida som du läst om Zune, så är det egentligen bara
+en open-source återimplementation av MUI, vilket är ett kraftfullt
+(som i användar- och -utvecklingsvänligt) objektorienterad shareware
+GUI toolkit för att utveckla native AROS applikationer med. Angående
+namnet i fråga, så betyder det ingenting, det låter bara bra.
 
 
-What is the Graphical and other memory in Wanderer?
----------------------------------------------------
+Hur kan jag återställa mina inställningar (Prefs) till default?
+---------------------------------------------------------------
 
-This memory division is mostly a relic from Amiga past, when graphical memory 
-was application memory before you added some other, called FAST RAM, a memory where 
-applications ended, while the graphics, sounds and some system structures were 
-still in graphic memory.
+I AROS, öppna ett CLI-fönster, gå till Envarc: och ta bort relevanta filer
+för den inställning (pref) som du vill få tillbaka till default.
 
-In AROS-hosted, there isn't such kind of memory as Other (FAST), but only GFX, when on 
-Native AROS, GFX can have a max of 16MB, although it wouldn't reflect the state 
-of the graphic adapter memory...  It has no relation to the amount of memory 
-on your graphics card.
+Vad är Graphical(Grafiskt) och other(annat) memory(minne) i Wanderer?
+---------------------------------------------------------------------
 
-*The long-winded answer*
-Graphics memory in i386-native signifies the lower 16MB of memory 
-in the system. That lower 16MB is the area where ISA cards can do DMA. Allocating 
-memory with MEMF_DMA or MEMF_CHIP will end up there, the rest in the other (fast)
-memory.
+Denna minnesupdelning är mest en relik från Amigans ursprung, när grafiskt minne
+var applikationsminne innan du lade till mer minne, FAST RAM, ett minne där applikationerna
+hamnade, medans grafiken, ljudet och en del system-strukturer fortfarande residerade
+i grafikminnet.
 
-Use C:Avail HUMAN command for memory info.
+I AROS-hosted så finns det inte något minne som Oter (FAST), men endast GFX, medans
+det på Native AROS, GFX kan ha max 16MB, men detta återspeglar ej minnesstorleken på
+grafikkortet... Det har ingen koppling till hur stort minnet är på ditt grafikkort.
 
+*Det utförligare svaret*
+Grafikminnet i i386-native visar de lägsta 16MB minnet i systemet. Det lägsta 16MB är
+i området där ISA-kort kan utföra DMA. Allokering av minne med MEMF_DMA eller MEF_CHIP
+kommer att hamna där, resterande hamnar i oter (fast) -minnet.
 
-What do the Wanderer Snapshot <all/window> action actually do? 
---------------------------------------------------------------
-
-This command remembers icon's placement of all (or one) windows.
+Använd C:Avail HUMAN -kommandot för minnes-info.
 
 
-How do I change the screensaver/background?
+Vad gör egentligen Wanderer Snapshot <all/window>? 
+--------------------------------------------------
+
+Detta kommando sparar ikonernas placering av alla (eller ett) fönster.
+
+
+Hur ändrar jag skärmsläckare/bakgrundsbild?
 -------------------------------------------
 
-At the moment the only way to change screensaver is to write your own one.
-Blanker commodity could be tuned with Exchange, but it is able to do only 
-"starfield" with given amount of stars.
-Background of Wanderer is set by Pref tool Prefs/Wanderer.
-Background of Zune Windows is set by Zune prefs Prefs/Zune. You can also set 
-your chosen application preferences by using the Zune <application> command.
+För tillfället så är det enda sätt att ändra skärmsläckare att skriva din egen.
+Blanker commodity kan ändras med Exchange, men den finns endast till för
+att ändra "starfield" med hur många stjärnor man vill ha.
+Bakgrundsbilden i Wanderer ställs in med Pref-verktyget Prefs/Wanderer.
+Bakgrundsbilden i Zune Windows ställs in med Zune-verktyget Prefs/Zune
+
+Jag har startat AROS-hosted med den hänger sig
+----------------------------------------------
+
+Om du är root och AROS krashar vid uppstart, kör "xhost +" innan
+du kör "sudo && ./aros -m 20". Du måste även ge programmet minne med -m
+optinen enl. instruktion. Mellanslaget mellan "-m" och värdet är viktigt.
+Glöm även inte BackingStore-valen i sektionen Device i din xorg.conf.
 
 
-I've launched AROS-hosted but it's failed
------------------------------------------
+Vad finns det för command line options för AROS-hosted exekverbara filer?
+-------------------------------------------------------------------------
 
-If you are root and AROS crashes at launch, do "xhost +" before 
-"sudo && ./aros -m 20". You must also give it some memory with -m option as 
-shown. The space between "-m" and the value is important. Also don't forget
-about BackingStore option in section Device of your xorg.conf.
+Du kan få en lista på dessa genom att köra ./aros -h kommandot.
 
 
-What are the command line options for AROS-hosted executable?
--------------------------------------------------------------
+Hur kan jag få fönsterna att uppdateras från svart på AROS-hosted?
+------------------------------------------------------------------
 
-You can get a list of them by running ./aros -h command.
-
-
-How can I make windows refresh from black on AROS-hosted?
----------------------------------------------------------
-
-You must supply the following string (as is!) to the "Device" section of
-your /etc/X11/xorg.conf (or XFree.conf)::
+Du måste skriva nedanstående sträng (precis som den är!) till "Device"-delen
+av din /etc/X11/xorg.conf (eller Xfree.conf)::
     
     Option  "BackingStore"
 
-See Installation__ for details.
+Läs Installation__ för detaljer.
 
 __ installation#running
 
 
-What are the AROS-native kernel options used in GRUB line?
-----------------------------------------------------------
+Vad finns det för optioner till AROS-native kernel i GRUB line?
+---------------------------------------------------------------
 
-Here's some::
+Här är några::
 
-    nofdc           - Disables the floppy driver completely.
-    noclick         - Disables the floppy disk change detection (and clicking)
-    ATA=32bit       - Enables 32-bit I/O in the hdd driver (safe)
-    forcedma        - Forces DMA to be active in the hdd driver (should be safe, but       
-                      might not be)
-    gfx=<hidd name> - Use the named HIDD as the gfx driver
-    lib=<name>      - Load and initiate the named library/HIDD
+    nofdc           - Avaktiverar floppy driver fullständigt.
+    noclick         - Avaktiverar floppy disk change detection (och klickande)
+    ATA=32bit       - Aktiverar 32-bit I/O i hdd driver (säkert)
+    forcedma        - Tvingar DMA att vara aktivt i hdd driver (borde vara säkert, men inte 100%)
+    gfx=<hidd name> - Använder namngiven HIDD som gfx-drivrutin
+    lib=<name>      - Laddar och initierar namngett library/HIDD
 
-Please note that they are case-sensitive.
+Kom ihåg att kommandona är skiftlägeskänsliga (case-sensitive)
 
 
-How can I transfer files to virtual machine with AROS?
+Hur överför jag filer till en virtuell dator med AROS?
 ------------------------------------------------------
 
-First and simplest way is to put files to the ISO image and and connect it to VM. 
-There's a lot of programs able to create/edit ISO's like UltraISO, WinImage, 
-or mkisofs. Second, you can set up the network in AROS and FTP server on your 
-host machine. Then you can use FTP client for AROS to transfer files
-(look for MarranoFTP). This is tricky enough to stop at this point. User 
-documentation contains a chapter about networking, go for it. Also, now
-there`s a promising utility (AFS Util), allowing to read (no write support yet) 
-files from AROS AFFS/OFS disks and floppies.  
+Det första och enklaste sättat är att lägga i filer i ISO-imagen och ansluta den
+till VM. Det finns massvis med program som man kan använda för att skapa/editera
+ISO som t.ex. UltraISO, WinImage, eller mkisofs. Nummer två är att sätta upp ett
+nätverk i AROS och en ftp-server på din lokala dator.  Då kan du använda
+ftp-klienten i AROS för att överföra filer (leta efter MarranoFTP). Det kan vara
+ganska så krångligt. Användardokumentationen innehåller ett kapitel om nätverk,
+kolla i denna. Nu finns det även ett lovande verktyg (AFS Util) som gör det 
+möjligt att läsa (går inte att skriva ännu) filer från AROS AFFS/OFS hårddiskar och
+disketter.
 
 
-Compilation Errors
+Kompileringsfel
 ------------------
 
-Q: I`ve compiled AROS with gcc4 but found that compiled AROS-hosted segfaults 
-with -m > 20 and if I compile AROS-native it does not start (black screen)
+Q: Jag har kompilat AROS med gcc4 men sett kompilerade AROS-hosted segfaults 
+med -m > 20, och om jag kompilerar AROS-native så startar den inte (svart skärm)
 
-A: Add -fno-strict-aliasing to scripts/aros-gcc.in and try to recompile.
+A: Lägg till -fni-strict-aliasing till scripts/aros-gcc.in och försök kompila igen.
 
 
-Is it possible to make a DOS script that automatically runs when a package is installed? 
-----------------------------------------------------------------------------------------
+Är det möjligt att göra ett DOS-skript som automatiskt körs när ett paket(package) är installerat?
+--------------------------------------------------------------------------------------------------
 
-This script should do some assigns and add string to the PATH variable.
+Det här skriptet borde göra en del assigns, lägg även till värderna i PATH.
 
-1) Create a sub-directory S and add a file with name 'Package-Startup' with the DOS 
-commands to it.
+1) Skapa ett underbibliotek S och lägg till en fil med namnet 'Package-Startup med DOS
+kommando till det.
 
-2) Create a variable in the envarc:sys/packages file which contains the path to the S 
-directory of your package.
+2) Skapa en variabel i envarc:sys/packages -filen som innehåller sökvägen till S-biblioteket.
 
-Example directory layout::
+Exempel på mappstruktur::
 
     sys:Extras/myappdir
     sys:Extras/myappdir/S
     sys:Extras/myappdir/S/Package-Startup
     
-The variable in envarc:sys/packages could have the name 'myapp' (name doesn't 
-matter), the content would then be 'sys:extras/myappdir'
+Variablen i envarc:sys/packages kan ha namnet 'myapp' (namn spelar ingen roll),
+innehållet är sedan 'sys:extras/myappdir'
 
-The Package-Startup script would then be called by the startup-sequence.
+Package-Startup-skriptet blir sedan anropat av startup-sequence.
     
 
-How do I clear the shell window? How do I set it permanently?
--------------------------------------------------------------
+Hur rensar jag shell-fönstret? Hur gör jag det permanent?
+---------------------------------------------------------
 
-Type this command in the shell::
+Skriv detta kommandi i shell::
 
     Echo "*E[0;0H*E[J* "
     
-You can edit your S:Shell-Startup and insert this line somewhere, so 
-you'll have a new "Cls" command::
+Du kan editera ditt s:Shell-Startup och lägga till denna rad någonstans, så
+att du har ett nytt "Cls" kommand::
 
     Alias Cls "Echo *"*E[0;0H*E[J*" "
 
-BTW: here is my new S:Shell-Startup modified to start the shell in black and 
-with a modified prompt::
+Här är förresten mitt egen s:Shell-Startup modifierat för att starta shell i svart
+och med en modifierad prompt::
 
     Alias Edit SYS:Tools/Editor
     Alias Cls "Echo *"*E[0;0H*E[J*" "
@@ -542,137 +536,139 @@ with a modified prompt::
     Prompt "*n*e[>1m*e[33;41m*e[1m%N/%R - *e[30;41m%S>*e[0m*e[32;41m "
     date
 
-More about printer escape sequences::
+Lite om printer escape sequences::
 
     Esc[0m
     Standard Set
 
     Esc[1m and Esc[22m
-    Bold
+    Fetstil
 
     Esc[3m and Esc[23m
-    Italics
+    Kursiv
 
     Esc[4m and Esc[24m
-    Underline
+    Understruket
 
     Esc[30m to Esc[39m
-    Set Front Color
+    Välj front-färg
 
     Esc[40m to Esc[49m
-    Set Background Color
+    Välj bakgrundsfärg
 
-Values meanings::
+Med värderna menas::
 
-    30 grey char -- 40 grey cell -- >0 grey background ---- 0 all attributes off
-    31 black char - 41 black cell - >1 black background --- 1 boldface
-    32 white char - 42 white cell - >2 white background --- 2 faint
-    33 blue char -- 43 blue cell -- >3 blue background ---- 3 italic
-    34 grey char -- 44 grey cell -- >4 grey background ---- 4 underscore
-    35 black char - 45 black cell - >5 black background --- 7 reverse video
-    36 white char - 46 white cell - >6 white background --- 8 invisible
-    37 blue char -- 47 blue cell -- >7 blue background
+    30 grå tecken    -- 40 grå cell   -- >0 grå bakgrund   ---- 0 alla attribut av
+    31 svarta tecken  - 41 svart cell  - >1 svart bakgrund  --- 1 fetstil
+    32 vita tecken    - 42 vit cell    - >2 vit bakgrund    --- 2 faint
+    33 blå tecken    -- 43 blå cell   -- >3 blå bakgrund   ---- 3 kursiv
+    34 grå tecken    -- 44 grå cell   -- >4 grå bakgrund   ---- 4 underscore
+    35 svarta tecken  - 45 svart cell  - >5 svart bakgrund  --- 7 reverse video
+    36 vita tecken    - 46 vit cell    - >6 vit bakgrund    --- 8 osynlig
+    37 blå tecken    -- 47 blå cell   -- >7 blå bakgrund
 
-The codes can be combined by separating them with a semicolon.
-
-
-How do I launch AROS-hosted in fullscreen?
-------------------------------------------
-
-Call "export AROS_X11_FULLSCREEN=1" in a shell. Start AROS and change the 
-screen resolution in the screenmode preferences. Quit AROS and start it again.
+Koderna kan kombineras genom att separera dom med semikolon.
 
 
-How to make 2-state AROS Icons?
+Hur startar jag AROS-hosted i helskärm?
+---------------------------------------
+
+Anropa "export AROS_X11_FULLSCREEN=1" i ett shell. Starta AROS och ändra
+skärmupplösningen i screenmode preferenses. Avsluta AROS och starta igen.
+
+
+Hur gör jag 2-status AROS ikoner?
 -------------------------------
 
-AROS icons are actually renamed PNG files. But if you want icons in two states 
-(normal/selected) use this command::
+AROS-ikoner är faktiskt omdöpta PNG-filer. Men om du vill ha ikoner i 2-status
+(normal/vald) använd detta kommando::
 
     join img_1.png img_2.png TO img.info
     
 
-How to mount an ISO image on AROS? And can I update my nightly build this way?
-------------------------------------------------------------------------------
+Hur mountar jag en ISO-image i AROS? Kan jag uppdatera nightly build på detta sätt?
+-----------------------------------------------------------------------------------
 
-+ Get the ISO into AROS (by wget or else way)
-+ Copy the ISO into sys:DiskImages (drawer must be created if it isn`t exist). 
-+ Rename ISO to Unit0 in that dir.
-+ You must add this to your Devs:Mountlist ::
++ Lägg in ISO:n i AROS (med hjälp av wget eller annat)
++ Kopiera ISO:n till sys:DiskImages (mappen måste bli skapad om den inte finns).
++ Döp om ISO:n till Unit0 i den mappen.
++ Du måste lägga till detta till din Devs:Mountlist ::
 
     ISO:
     FileSystem = cdrom.handler
     Device = fdsk.device
     Unit = 0
 
-+ Then mount ISO:
-  You can copy anything from ISO:. Additionally, you can create a script to update your 
-  nightly build like this::
++ Mounta sedan ISO:n:
+  Du kan kopiera allting från ISO:. Du kan även skapa ett skript för att uppdatera dina
+  nightly builds::
 
         copy ISO:boot/aros-pc-i386.gz sys:boot/
         copy ISO:C sys:C all quiet
         copy ISO:Classes sys:Classes all quiet
         copy ISO:Demos sys:Demos all quiet
 
-And so on for each directory except Prefs, Extras:Networking/Stacks, and 
-devs:mountlist itself. Prefs have to be kept if you want it. Also you can set 
-AROSTcp to keep its settings in separate directory.
+Och så vidare för varje mapp förutom Prefs, Extras:Networking/Stacks, och
+devs:mountlist. Prefs måste behållas om du vill ha det. Du kan även ställa in
+AROSTcp att spara inställningarna i en separat mapp.
 
-If you want to write all over, just do::
+Om du vill skriva över allting::
 
     copy ISO:C sys:C all quiet newer  
     
-How to unmount a volume?
-------------------------
+Hur gör jag en unmount på en volym?
+-----------------------------------
 
-Launch these two commands in CLI::
+Kör dessa två kommandon i CLI::
     
     assign DOSVOLUME: dismount
     assign DOSVOLUME: remove
 
-where DOSVOLUME is DH0:, DF0:, etc
+där DOSVOLUME är DH0:, DF0:, etc.
 
 
-How to mount a FAT Floppy with the FAT.handler?
------------------------------------------------
+Hur mountar jag en FAT floppy med FAT.handler?
+----------------------------------------------
 
-Create a mountfile (text file) with the 3 magic lines::
+Skapa en mountfile (textfil) med de 3 magiska raderna::
 
     device = trackdisk.device
     filesystem = fat.handler
     unit = 0
 
-+ Call it somehow, PC0 for example. Set this file default tool to c:mount in 
-  properties (or put mountfile to devs:dosdrivers or sys:storage/dosdrivers)
-+ Double click on it.
-+ Insert a FAT formatted floppy.
-+ See the icon appearing on Wanderer`s desktop.
++ Anropa med t.ex. PCO. Sätt denna fils default tool till c:mount i properties
+  (eller lägg mountfile i devs:dosdrivers eller sys:storage/dosdrivers)
++ Dubbelklicka på filen
++ Sätt i en FAT-floppy.
++ Se ikonen framträda på Wanderer skrivbordet.
 
 
-How to mount a real HD FAT partition with the FAT.handler?
+Hur mountar jag en HD FAT partition med FAT.handler?
 ----------------------------------------------------------
 
-First you`d need to read the drive`s geometry and write down some values. 
-You can use HDToolbox or Linux fdisk for that. The BlocksPerTrack value is taken 
-from the sectors/track value. Note that it has absolutely nothing to do with 
-the physical disk geometry - FAT only uses it as a multiplier.
-If you get the Cylinders e.g. from HDToolbox or using the Linux fdisk like this::
+Först så måste du läsa hårddiskens geometri och skriva ner värdena.
+Du kan använda HDToolbox eller Linux fdisk. BlocksPerTrack-värdet tas från
+sectors/track-värdet. Notera att det inte har någonting att göra med den fysiska
+diskens geometri -  Fat använder endast detta som en multiplier.
+Om du kan få värderna för antal cylindrar från HDToolbox eller med hjälp av
+Linux fdisk::
 
     sudo fdisk -u -l /dev/hda, 
     
-Then you'll need to set BlocksPerTrack=63. 
-To ensure you have numbers in cylinders look for Units=Cylinders in output. If 
-you got fdisk output in sectors (Units=sectors), set BlocksPerTrack=1.
+Sen så måste du ange värderna BlocksPerTrack=63
+För att vara säker på värderna om cylindrar, leta efter Units=Cylinders. Om 
+du har fått fdisk att visa resultatet i sektorer (sectors)(Units=sectors), ange
+värdet BlocksPerTrack=1.
 
-LowCyl and HighCyl are partition`s cylinders like::
+LowCyl och HighCyl är partitionens cylindrar::
 
     mark@ubuntu:~$ sudo fdisk -l -u /dev/hda
     ...
     /dev/hda1 * 63 20980889 10490413+ c W95 FAT32 (LBA)
 
-So, LowCyl is 63, and HighCyl is 20980889, blockspertrack=1
+Sammanfattningsvis, LowCyl är 63 och HighCyl är 20980889, blockspertrack=1
 
-Create a mountfile (text file) with these lines::
+Skapa en mountfile (textfil) med dessa rader::
 
     
     device = ata.device
@@ -684,37 +680,36 @@ Create a mountfile (text file) with these lines::
     HighCyl = 20980889
     Blocksize=512
 
-+ Call it somehow, FAT0 for example
-+ Set this file`s default tool to c:mount in properties
-  (or put mountfile to devs:dosdrivers or sys:storage/dosdrivers)
-+ Double click on it
-+ See the icon appearing on Wanderer`s desktop
++ Anropa den på valfritt sätt, FAT0 till exempel
++ Sätt värderna på filens defautl toll till c:mount i properties
+  (eller lägg mountfile i devs:dosdrivers eller sys:storage/dosdrivers)
++ Dubbelklicka på filen
++ Se ikonen framträda på Wanderers skrivbord
 
-Note: Formula for counting the blocks:
+Notering: Formel för att räkna antal blocks:
 block = ((highcyl - lowcyl) x surfaces + head) x blockspertrack + sec
 
 
-Hardware questions
-==================
+Hårdvarufrågor
+==============
 
-Where can I find an AROS Hardware Compatibility List?                   
+Var kan jag hitta en AROS Hardware Compability List?                   
 -----------------------------------------------------
 
-You can find one on the `AROS Wiki <http://en.wikibooks.org/wiki/Aros/Platforms/x86_support>`__ 
-page. There can be another lists made by the AROS users.
+Du kan finna en på `AROS Wiki <http://en.wikibooks.org/wiki/Aros/Platforms/x86_support>`__ .
+Det kan även finnas andra listor av AROS-användare.
 
+Varför kan inte AROS boota från hårddisken om hårddisken är satt som SLAVE?
+---------------------------------------------------------------------------
 
-Why AROS can't boot from my drive set as the SLAVE on IDE channel?
-------------------------------------------------------------------
+AROS kan boota om hårddisken sitter på SLAVE med ENDAST om det även sitter en
+hårddisk på MASTER. Detta är en korrekt anslutning vilket efterföljer IDE-specifikationerna,
+och AROS efterföljer dessa.
 
-Well, AROS should boot if the drive is SLAVE but ONLY if there's a drive also 
-on MASTER. That's appeared to be a correct connection respecting to the IDE 
-specification, and AROS follows it.
+Min dator hänger sig med en röd markör på skärmen eller en svart skärm
+----------------------------------------------------------------------
 
-
-My system hangs with red cursor on screen or a blank screen
------------------------------------------------------------
-
-One reason for this can be use of the serial mouse (these is not supported yet).
-You must use PS/2 mouse with AROS at the moment. Another can be if you've chosen
-a video mode unsupported by your hardware in boot menu. Reboot and try a different one.
+En anledning till detta kan vara att man använder en seriell mus (dessa är inte supportade
+ännu). Du måste använda PS/2-mus med AROS för tillfället. En annan anledning kan vara
+att du valt en upplösning i boot-menyn som inte är stöds av din hårdvara. Starta om
+och testa med en annan.
