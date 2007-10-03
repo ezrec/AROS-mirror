@@ -1,6 +1,6 @@
-==========================
-Frequently Asked Questions
-==========================
+=====================
+Frågor och svar (FAQ)
+=====================
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Sergey Mineychev, AROS-Exec.org
 :Copyright: Copyright Š 1995-2007, The AROS Development Team
@@ -13,7 +13,7 @@ Frequently Asked Questions
 Vanliga frågor
 ==============
 
-Får jag fråga en fråga?
+Får jag ställa en fråga?
 -----------------------
 
 Naturligtvis! Gå till `AROS-Exec forum`__ och läs trådarna
@@ -232,13 +232,13 @@ Kan jag bli betatestare?
 
 Absolut, inga problem. Faktiskt vill vi ha så många betatestare som möjligt,
 så alla är välkomna! Vi för dock ingen lista över betatestare, så allt du
-behöver göra är att tanka hem AROS, testa precis vad du vill och skicka oss
-en rapport.
+behöver göra är att tanka hem AROS, testa precis vad du vill och skicka 
+en rapport till oss.
 
 Vad har AROS och UAE för relation till varandra?
 ------------------------------------------------
 
-UAE är en amiga-emulator, och har därför lite andra mål än vad AROS har.
+UAE är en Amiga-emulator, och har därför lite andra mål än vad AROS har.
 UAE vill bli binär-kompatibel även för spel och kod med direktåtkomst till hårdvaran,
 medans AROS vill ha native-applikationer. Därför är AROS mycket snabbare än
 UAE, men du kan köra mer mjukvara i UAE.
@@ -279,7 +279,7 @@ och Haage & Partner. MorphOS använder delar i AROS för att snabba upp deras
 utveckling; enligt licensvillkoren. Precis som med Haage & Partner så är detta
 bra för båda parter eftersom MorphOS kan snabba upp deras utveckling från AROS
 och AROS i sin tur får förbättringar till vår källkod från MorphOS. Det finns
-inget formellt avtal skrivet mellan AROS och MorphOS; detta är hur 
+ingen formell överenskommelse mellan AROS och MorphOS; detta är hur 
 open source-utveckling fungerar.
 
 
@@ -288,7 +288,7 @@ Vilka programmeringsspråk finns tillgängliga?
 
 Mest utveckling i AROS sker med hjälp av ANSI C genom att crosskompila
 källkoderna i ett annat operativsystem, som till exempel Linux eller FreeBSD.
-Fabio alemagna har gjort klart en initial portning av GCC till i386 native. Men den
+Fabio Alemagna har gjort klart en initial portning av GCC till i386 native. Men den
 finns för tillfället inte i ISO:n eller integrerad i build-systemet.
 
 De språk som finns tillgängliga i native är Python_, Regina_, Lua_, Hollywood: och False_:
@@ -322,7 +322,7 @@ De språk som finns tillgängliga i native är Python_, Regina_, Lua_, Hollywood: o
 Varför finns det ingen m68k-emulator i AROS?
 --------------------------------------------
 
-För att kunna få gamla program att köras i AROS så har vi protat UAE: till AROS.
+För att kunna få gamla program att köras i AROS så har vi portat UAE: till AROS.
 AROS version av UAE kommer troligtvis att vara lite snabbare än äldre versioner
 av UAE eftersom AROS behöver färre resurser än andra operativsystem. (vilket betyder
 att UAE kommer att få mer CPU-tid). Vi kommer även att försöka att patcha Kickstart ROM
@@ -330,10 +330,10 @@ i UAE för att ropa på AROS funktioner som ger en liten förbättring. Naturligtvis
 så gäller detta endast native-versionerna av AROS och inte hosted.
 
 Men varför implementerar vi inte en virtuell m68k CPU vilket gör att vi kan köra
-mjukvaran direkt i AROS? Problemet är att m68k-mjukvara förväntar att datan att
+mjukvaran direkt i AROS? Problemet är att m68k-mjukvaran förväntar att datan ska
 vara i "big endian format" när AROS även kör "little endian CPU". Problemet är att
-"little endian"-rutiner i AROS kärna skulle behöva arbete med "big endian"-data i
-emuleringen. Atumatisk konvertering verkar i princip vara omöjligt (Till exempel:
+"little endian"-rutiner i AROS kärna skulle behöva arbeta med "big endian"-data i
+emuleringen. Automatisk konvertering verkar i princip vara omöjligt (Till exempel:
 Det finns ett fält i strukturen i AmigaOS vilket ibland innehåller ULONG och ibland
 två WORD) eftersom vi inte kan säga hur ett par bytes i RAM är enkodade.
 
@@ -353,12 +353,11 @@ Mjukvarufrågor
 Hur accessar jag AROS disk-images från UAE?
 -------------------------------------------
 
-Diskett-imagen kan mountas som en file på hårddisken och sen användas som en
-1.4 MB hårddisk i UAE. Efter att du har lagt i filerna i hårddisksfilsimagen 
-(harfile disk image) (Eller vad du nu vill göra), så kan du skriva den till en
-diskett.
+Diskett-imagen kan mountas som en fil på hårddisken och sen användas som en
+1.4 MB hårddisk i UAE. Efter att du har lagt i filerna i disk-imagen 
+(Eller vad du nu vill göra), så kan du skriva den till en diskett.
 
-Geometrin i hårddiskfilen är enligt nedan::
+Geometrin i disk-imagen är enligt nedan::
 
     Sectors    = 32
     Surfaces   = 1
@@ -382,7 +381,7 @@ Vad är Zune?
 Om det är på denna hemsida som du läst om Zune, så är det egentligen bara
 en open-source återimplementation av MUI, vilket är ett kraftfullt
 (som i användar- och -utvecklingsvänligt) objektorienterad shareware
-GUI toolkit för att utveckla native AROS applikationer med. Angående
+GUI toolkit för att utveckla native AROS-applikationer med. Angående
 namnet i fråga, så betyder det ingenting, det låter bara bra.
 
 
@@ -400,14 +399,14 @@ var applikationsminne innan du lade till mer minne, FAST RAM, ett minne där appl
 hamnade, medans grafiken, ljudet och en del system-strukturer fortfarande residerade
 i grafikminnet.
 
-I AROS-hosted så finns det inte något minne som Oter (FAST), men endast GFX, medans
-det på Native AROS, GFX kan ha max 16MB, men detta återspeglar ej minnesstorleken på
+I AROS-hosted så finns det inte något minne som Other (FAST), endast GFX, medans
+det finns på Native AROS, GFX kan ha max 16MB, men detta återspeglar ej minnesstorleken på
 grafikkortet... Det har ingen koppling till hur stort minnet är på ditt grafikkort.
 
 *Det utförligare svaret*
-Grafikminnet i i386-native visar de lägsta 16MB minnet i systemet. Det lägsta 16MB är
+Grafikminnet i i386-native visar det undre 16MB minnet i systemet. De undre 16MB är
 i området där ISA-kort kan utföra DMA. Allokering av minne med MEMF_DMA eller MEF_CHIP
-kommer att hamna där, resterande hamnar i oter (fast) -minnet.
+kommer att hamna där, resterande hamnar i other (fast) -minnet.
 
 Använd C:Avail HUMAN -kommandot för minnes-info.
 
@@ -421,7 +420,7 @@ Detta kommando sparar ikonernas placering av alla (eller ett) fönster.
 Hur ändrar jag skärmsläckare/bakgrundsbild?
 -------------------------------------------
 
-För tillfället så är det enda sätt att ändra skärmsläckare att skriva din egen.
+För tillfället är det enda sättet att ändra skärmsläckare att skriva din egen.
 Blanker commodity kan ändras med Exchange, men den finns endast till för
 att ändra "starfield" med hur många stjärnor man vill ha.
 Bakgrundsbilden i Wanderer ställs in med Pref-verktyget Prefs/Wanderer.
@@ -485,7 +484,7 @@ disketter.
 
 
 Kompileringsfel
-------------------
+---------------
 
 Q: Jag har kompilat AROS med gcc4 men sett kompilerade AROS-hosted segfaults 
 med -m > 20, och om jag kompilerar AROS-native så startar den inte (svart skärm)
@@ -578,7 +577,7 @@ skärmupplösningen i screenmode preferenses. Avsluta AROS och starta igen.
 
 
 Hur gör jag 2-status AROS ikoner?
--------------------------------
+---------------------------------
 
 AROS-ikoner är faktiskt omdöpta PNG-filer. Men om du vill ha ikoner i 2-status
 (normal/vald) använd detta kommando::
@@ -644,7 +643,7 @@ Skapa en mountfile (textfil) med de 3 magiska raderna::
 
 
 Hur mountar jag en HD FAT partition med FAT.handler?
-----------------------------------------------------------
+----------------------------------------------------
 
 Först så måste du läsa hårddiskens geometri och skriva ner värdena.
 Du kan använda HDToolbox eller Linux fdisk. BlocksPerTrack-värdet tas från
@@ -694,7 +693,7 @@ Hårdvarufrågor
 ==============
 
 Var kan jag hitta en AROS Hardware Compability List?                   
------------------------------------------------------
+----------------------------------------------------
 
 Du kan finna en på `AROS Wiki <http://en.wikibooks.org/wiki/Aros/Platforms/x86_support>`__ .
 Det kan även finnas andra listor av AROS-användare.
