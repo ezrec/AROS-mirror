@@ -14,7 +14,7 @@ Vanliga frågor
 ==============
 
 Får jag ställa en fråga?
------------------------
+------------------------
 
 Naturligtvis! Gå till `AROS-Exec forum`__ och läs trådarna
 och fråga allting som du vill. Den här FAQ är uppdaterad med användarfrågor,
