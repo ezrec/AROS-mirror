@@ -5,7 +5,7 @@ Status Update
 :Autor:   Paolo Besser
 :Fecha:     2007-06-17
 
-Las últimas noticias
+Últimas noticias
 --------------------
 
 ¡La globalización de AROS continúa! Ioannis Koniaris ha traducido

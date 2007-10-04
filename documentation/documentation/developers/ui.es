@@ -21,7 +21,6 @@ Guía de Estilo de la Interfaz de Usuario
 Las ventanas
 ------------
 
-============
 Preferencias
 ============
 
