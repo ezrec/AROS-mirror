@@ -165,7 +165,7 @@ AROS_LP3(void, FreePoolMemDebug,
 /* varargs */
 Object *BGUI_NewObject( ULONG, Tag, ... );
 ULONG BGUI_Request( struct Window *, struct bguiRequest *, ... );
-ULONG BGUI_DoGadgetMethod( Object *, struct Window *, struct Requester *, ULONG, ... );
+ULONG BGUI_DoGadgetMethod( Object *, struct Window *, struct Requester *, IPTR, ... );
 Class *BGUI_MakeClass( Tag, ... );
 
 

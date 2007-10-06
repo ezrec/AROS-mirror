@@ -83,6 +83,6 @@ ULONG BGUI_UnpackStructureTags( APTR pack, ULONG *packTable, struct TagItem *tag
 /* varargs */
 Object *BGUI_NewObject( ULONG, Tag, ... );
 ULONG BGUI_Request( struct Window *, struct bguiRequest *, ... );
-ULONG BGUI_DoGadgetMethod( Object *, struct Window *, struct Requester *, ULONG, ... );
+ULONG BGUI_DoGadgetMethod( Object *, struct Window *, struct Requester *, IPTR, ... );
 Class *BGUI_MakeClass( Tag, ... );
 #endif

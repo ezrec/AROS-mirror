@@ -23,7 +23,7 @@ extern struct Library * BGUIBase;
 	Object * obj,
 	struct Window * win,
 	struct Requester * req,
-	ULONG MethodID, 
+	IPTR MethodID, 
 	...)
 
 /*  FUNCTION
@@ -46,9 +46,9 @@ extern struct Library * BGUIBase;
 
 *****************************************************************************/
 {
-    AROS_SLOWSTACKTAGS_PRE(tag1)
+    AROS_SLOWSTACKMETHODS_PRE(MethodID)
 
     retval = BGUI_DoGadgetMethodA(obj, win, req, AROS_SLOWSTACKMETHODS_ARG(MethodID));
 
-    AROS_SLOWSTACKTAGS_POST
+    AROS_SLOWSTACKMETHODS_POST
 } /* BGUI_DoGadgetMethod */
