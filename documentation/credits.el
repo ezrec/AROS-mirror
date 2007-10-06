@@ -28,7 +28,7 @@ Credits
 + Sven Drieling
 
 
-Intuition
+Διαίσθηση
 =========
 
 + Stefan Berger
