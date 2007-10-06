@@ -28,8 +28,7 @@ LT_CreateHandleTags(struct Screen *Screen, Tag tag1,...)
 VOID
 LT_AddL(LayoutHandle *handle,LONG type,ULONG labelID,LONG id, Tag tag1, ...)
 {
-#define AROS_SLOWSTACKNORETURN
-	AROS_SLOWSTACKTAGS_PRE(tag1)
+	AROS_NR_SLOWSTACKTAGS_PRE(tag1)
 
 	if(handle)
 	{
@@ -45,18 +44,15 @@ LT_AddL(LayoutHandle *handle,LONG type,ULONG labelID,LONG id, Tag tag1, ...)
 			handle->Failed = TRUE;
 	}
 
-	AROS_SLOWSTACKTAGS_POST
-#undef AROS_SLOWSTACKNORETURN
+	AROS_NR_SLOWSTACKTAGS_POST
 }
 
 VOID
 LT_New(LayoutHandle *handle, Tag tag1,...)	/* link library only */
 {
-#define AROS_SLOWSTACKNORETURN
-	AROS_SLOWSTACKTAGS_PRE(tag1)
+	AROS_NR_SLOWSTACKTAGS_PRE(tag1)
 	LT_NewA(handle, AROS_SLOWSTACKTAGS_ARG(tag1));
-	AROS_SLOWSTACKTAGS_POST
-#undef AROS_SLOWSTACKNORETURN
+	AROS_NR_SLOWSTACKTAGS_POST
 }
 
 VOID
@@ -68,11 +64,9 @@ LT_Add(
 	Tag                     tag1,
 					...)	/* link library only */
 {
-#define AROS_SLOWSTACKNORETURN
-	AROS_SLOWSTACKTAGS_PRE(tag1)
+	AROS_NR_SLOWSTACKTAGS_PRE(tag1)
 	LT_AddA(Handle, Type, Label, ID, AROS_SLOWSTACKTAGS_ARG(tag1));
-	AROS_SLOWSTACKTAGS_POST
-#undef AROS_SLOWSTACKNORETURN
+	AROS_NR_SLOWSTACKTAGS_POST
 }
 
 #define AROS_TAGRETURNTYPE struct Window *
@@ -124,11 +118,9 @@ LT_Build(LayoutHandle *Handle, Tag tag1, ...)
 VOID
 LT_SetAttributes(LayoutHandle *handle, LONG id, Tag tag1,...)
 {
-#define AROS_SLOWSTACKNORETURN
-	AROS_SLOWSTACKTAGS_PRE(tag1)
+	AROS_NR_SLOWSTACKTAGS_PRE(tag1)
 	LT_SetAttributesA(handle, id, AROS_SLOWSTACKTAGS_ARG(tag1));
-	AROS_SLOWSTACKTAGS_POST
-#undef AROS_SLOWSTACKNORETURN
+	AROS_NR_SLOWSTACKTAGS_POST
 }
 
 #define AROS_TAGRETURNTYPE LONG
@@ -154,11 +146,9 @@ LT_RebuildTags(LayoutHandle *Handle, BOOL Clear, Tag tag1,...)
 VOID
 LT_MenuControlTags(struct Window *Window, struct Menu *Menu, Tag tag1,...)
 {
-#define AROS_SLOWSTACKNORETURN
-	AROS_SLOWSTACKTAGS_PRE(tag1)
+	AROS_NR_SLOWSTACKTAGS_PRE(tag1)
 	LT_MenuControlTagList(Window, Menu, AROS_SLOWSTACKTAGS_ARG(tag1));
-	AROS_SLOWSTACKTAGS_POST
-#undef AROS_SLOWSTACKNORETURN
+	AROS_NR_SLOWSTACKTAGS_POST
 }
 
 #define AROS_TAGRETURNTYPE struct Menu *
