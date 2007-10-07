@@ -3,10 +3,10 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright ² 1995-2006, The AROS Development Team
+:Copyright: Copyright Â 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
-:Status:    Needs to be updated for some AROS ports. Can be translated.
+:Status:    Needs to be updated for some AROS ports. In works, being updating to the current status.
 :Abstract:
     This manual will guide you through the necessary steps for installing 
     different AROS flavours.
@@ -52,8 +52,8 @@ nightly builds are available and how to download them.
 Installation
 ============
 
-AROS/i386-linux and AROS/i386-freebsd
--------------------------------------
+AROS/i386-linux and AROS/i386-freebsd-hosted
+--------------------------------------------
 
 Requirements
 """"""""""""
@@ -112,31 +112,37 @@ After having extracted all files you can launch AROS like this::
             BusID           "PCI:1:0:0"
             Option          "backingstore"
         EndSection
+        
+Also there`s an sdl.hidd, allowing you to run AROS-Hosted without any X-server 
+ever installed. It`s known to be working, but is in testing stage.
 
 
-AROS/i386-pc
-------------
+AROS/i386-pc and AROS/X86-64x Native
+------------------------------------
 
 Requirements
 """"""""""""
 
-You will need an average PC (i486 or Pentum-based) with *PS/2 mouse* and PS/2 or AT keyboard, 
-IDE hard disk and CD-ROM, (S)VGA video card and monitor. Also any available PC-compatible VM 
-(virtual machine) can be used.
+You will need an average PC (i486 or Pentum-based) with *PS/2 mouse* and PS/2 
+or AT keyboard, IDE hard disk and CD-ROM, (S)VGA video card and monitor. 
+Also almost any available PC-compatible VM (virtual machine) can be used.
 At least 16 MB of RAM and VESA-compliant VGA card is recommended. 
-There`s a generic accelerated drivers (HIDD`s) for ATI and nVidia cards. Also you can add
-the networking interface card (there`s some supported) to try networking in AROS.
-In trouble check the FAQ if it contains any information on your kind of hardware.
+There`s a generic accelerated drivers (HIDD`s) for ATI and nVidia cards. 
+Also you can add the networking interface card (there`s some supported) to 
+try networking in AROS. If in trouble check the FAQ if it contains any information 
+on your kind of hardware.
 
 
 .. Note:: 
     
-    We currently do not recommend installation of AROS/i386-pc onto a harddrive
-    [#]_. But you definitely would need to install AROS to test some of 
-    it`s features and workarounds must be advised. Please note that you **should 
-    not** use install on your working machine, which HD contains precious data!
-    We`re taking no responsibility for any data loss occured during the installation. 
-    Any bug reports on installation is welcome.
+    Although AROS can be installed to the harddrive, please remember, that 
+    installer is still in testing stage. It`s must not remove or wipe any
+    partitions if not asked to do so, but this still presents some risk. 
+    As the testing goes, the process will become much more stable and robust.
+    So please note that you **should not** use install on your working machine, 
+    which HD contains precious data! We`re taking no responsibility for any 
+    data loss occured during the installation. Any bug reports on installation 
+    process will be appreciated!
 
 Installation media
 """"""""""""""""""
@@ -215,14 +221,15 @@ Installing to hard drive
 """"""""""""""""""""""""
 
 Well, note that you have been **WARNED** that HD installation is
-incomplete now and is **dangerous** to any data, so make sure the PC
-you're using does not contain any useful data. Using a virtual machine
-is recommended, as it minimises any possible risk and allows AROS to be
-used and tested on a working machine. There are many free VM`s available
-now, such as QEMU and VMWare.
+in testing stage at the moment and can be **dangerous** to your data, so make 
+sure the PC you're using for install does not contain any useful data or have 
+a full backup. Using a virtual machine is recommended, as it minimises any 
+possible risk and allows AROS to be used and tested on any working machine. 
+There are many free VM`s available now, such as VirtualPC, Q, QEMU and VMWare, 
+which are known to work with AROS. 
 
-Setting up the HD
-^^^^^^^^^^^^^^^^^
+Getting ready
+^^^^^^^^^^^^^
 
 First, set up your HD - either real or a virtual drive image - for use.
 For a real drive, this may involve plugging it into the machine (always
@@ -238,8 +245,61 @@ Installing AROS along with another OS is possible, but will require more
 skills and is not covered here. For the moment, we will learn how to
 install AROS as the only system on the HD.
 
+Currently the installation is meant to be made by meands of InstallAROS
+program, which is located in the *Tools* drawer on your BootCD. Please launch
+it by clicking on it`s icon. See it`s launched up and showing you the 
+prompt.
+
+*Currently* there`s a bug in Wanderer when discovering new volumes (this issue
+is known and to be fixed soon), that quits InstallAROS from formatting drives.
+So please enter the Wanderer menu, select Exit and confirm before proceeding.
+Then click PROCEED buton in InstallAROS window.
+
+Installing AROS Only
+^^^^^^^^^^^^^^^^^^^^
+
+TODO
+
+Installing AROS along with Windows(R)/DOS(R)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+TODO
+
+Installing AROS along with Linux/BSD
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+TODO
+
+Installing AROS along with other systems
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+TODO
+
+Manual install 
+^^^^^^^^^^^^^^
+*(almost deprecated)*
+As the InstallAROS is useful now, the following information is kind of
+deprecated but still can be of some interest, so it`s have been kept here for 
+the infomational purposes.
+     
+(OLD Notes)::
+    We currently do not recommend installation of AROS/i386-pc onto a harddrive
+    [#]. But you definitely would need to install AROS to test some of 
+    it`s features and workarounds must be advised. Please note that you **should 
+    not** use install on your working machine, which HD contains precious data!
+    We`re taking no responsibility for any data loss occured during the installation. 
+    Any bug reports on installation is welcome.
+    
+    [#]It *is* actually possible to install AROS/i386-pc onto a harddrive, but
+    the procedure is far from being automated and user-friendly and the
+    necessary tools are still being heavily developed and might be quite
+    buggy. Therefore we officially do not recommend harddisk installation for
+    unexperienced users at the moment so this note was written. 
+
+     
+
 Partitioning
-^^^^^^^^^^^^
+''''''''''''
 
 Single partition install
 
@@ -347,7 +407,7 @@ OK now. So now we can exit HDToolbox with no hesitation left. Now it's
 time for some CLI magic.
 
 Formatting
-^^^^^^^^^^
+''''''''''
 
 We must format our created DH0 drive to make it usable. Currently AROS have
 a choice of two filesystems - Fast FileSystem(FFS) and Smart FileSystem(SFS). 
@@ -394,7 +454,7 @@ That's it. Time for the pre-installation reboot.
 
 
 Copying the system
-^^^^^^^^^^^^^^^^^^
+''''''''''''''''''
 
 After reboot, you may notice that you can see our AROS HD on the desktop
 now, and it's empty. Now we need to fill it with files.
@@ -459,7 +519,7 @@ that isn't all yet - wait till the last step remaining. Now our machine
 will reboot with the same settings as before, from Live CD.
 
 Installing the bootloader
-^^^^^^^^^^^^^^^^^^^^^^^^^
+'''''''''''''''''''''''''
 
 Now we still see our AROS disk, and all files are there. Haven`t we
 already installed the bootloader in previous steps, what are we
@@ -489,7 +549,7 @@ bootloader will be installed.
 
 
 Preparing to boot
-^^^^^^^^^^^^^^^^^
+'''''''''''''''''
 
 We have just done our first installation alchemy course, and AROS should
 be ready now. We must remove the Live CD from the CD drive (or disable
@@ -498,14 +558,14 @@ booting from CD in VM) and check it out. Hear the drum roll? ;)
 If something goes wrong, there can be some answers...
 
 Troubleshooting
-^^^^^^^^^^^^^^^
+'''''''''''''''
 
 Installation process is the one of most frequently ones asked about on forums,
 mostly by newbees. You can check the FAQ if there an answer to your questions.
 Any additions ? ...
 
 Installing AROS along with the other systems
-""""""""""""""""""""""""""""""""""""""""""""
+''''''''''''''''''''''''''''''''''''''''''''
 
 In the steps described before we had installed AROS as the *only* system on HD.
 But can it be installed to multiboot with other systems on HDD? Yes. But 
@@ -524,7 +584,7 @@ Lets consider the situation when you want to have 3 systems on your HDD -
 Windows, Linux and AROS.  
 
 Preparing the HDD
-^^^^^^^^^^^^^^^^^
+
 To be continued ...
 
 AROS/i386-PPC-hosted
@@ -577,13 +637,6 @@ see aatext source code, but I hope it is fast enough to be usable even on a
 
 Footnotes
 =========
-
-.. [#] It *is* actually possible to install AROS/i386-pc onto a harddrive, but
-       the procedure is far from being automated and user-friendly and the
-       necessary tools are still being heavily developed and might be quite
-       buggy. Therefore we officially do not recommend harddisk installation for
-       unexperienced users at the moment so this note was written. 
-
 
 .. _`download page`: ../../download
 

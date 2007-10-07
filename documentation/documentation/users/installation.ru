@@ -6,7 +6,7 @@
 :Copyright: Copyright Љ 1995-2004, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
-:Status:    In works. 
+:Status:    Устарело. 
 :Abstract:
     Данное руководство посвятит вас в необходимые шаги для установки различных версий AROS.
     
