@@ -1,5 +1,5 @@
 #ifndef _BITS_MATHINLINE_H
-#if defined(__i386__) || defined(__PPC__)
+#if defined(__i386__) || defined(__PPC__) || defined(__x86_64__)
 /*A bit of gcc magic:) */
 #include <math.h>
 #ifndef __GLIBC__
