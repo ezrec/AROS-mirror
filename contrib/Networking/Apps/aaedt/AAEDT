@@ -1,0 +1,371 @@
+-- $Id$
+
+-- AAEDT.alua -- archives.aros-exec download tool
+-- This is Public Domain software; use at your own risk
+-- Send bug reports to mrustler@gmx.de
+
+
+-- =========== Configuration ====================
+
+archives = {}
+
+archives[0] = {
+    -- Title string for radio gadget
+    caption = 'AROS Exec Recent' ;
+    -- url of index file
+    index = 'http://archives.aros-exec.org/share/RECENT.readme' ;
+    -- local path of index file
+    loc = 'ram:ae-recent.readme' ;
+    -- base path for downloads
+    basepath = 'http://archives.aros-exec.org/share/'
+}
+
+archives[1] = {
+    caption = 'AROS Exec Full' ;
+    index = 'http://archives.aros-exec.org/share/FULLINDEX.readme' ;
+    loc = 'ram:ae-full.readme' ;
+    basepath = 'http://archives.aros-exec.org/share/'
+}
+
+archives[2] = {
+    caption = 'OS4 Depot Recent' ;
+    index = 'http://os4depot.net/share/RECENT.readme' ;
+    loc = 'ram:os4-recent.readme' ;
+    basepath = 'http://os4depot.net/share/'
+}
+
+archives[3] = {
+    caption = 'OS4 Depot Full' ;
+    index = 'http://os4depot.net/share/FULLINDEX.readme' ;
+    loc = 'ram:os4-full.readme' ;
+    basepath = 'http://os4depot.net/share/'
+}
+
+-- target path for archive downloads
+target = 'ram:'
+
+-- target path for readme file
+readme_target = 'ram:aaedt.readme'
+
+-- path of the wget command followed by a space
+wget_command = 'c:wget '
+
+-- pattern for parsing index file
+pattern = '^(.-)%s+(.-)%s+(%d-)%s+(.-)%s+(.*):(.*)$'
+
+-- ==============================================
+
+require "muidefs"
+require "muifuncs"
+require "muiasl"
+
+-- table with parsed entries
+entries = {}
+
+-- message IDs
+dl_id = 1
+index_id = 2
+parse_id = 3
+list_id = 4
+dl_rm_id = 5
+show_rm_id = 6
+
+-- Public GUI objects
+app = nil
+window = nil
+listobject = nil
+cat_str = nil
+file_str = nil
+size_str = nil
+date_str = nil
+version_str = nil
+desc_str = nil
+idx_rdio = nil
+parse_rdio = nil
+index_btn = nil
+parse_btn = nil
+dl_btn = nil
+dl_rm_btn = nil
+show_rm_btn = nil
+
+
+-- strings for radio gadgets
+rdio_entries = strarray.new(archives[0].caption, archives[1].caption, archives[2].caption, archives[3].caption)
+
+
+function parse_content()
+  -- parses index file and fill list gadget
+  local line, idx, loc, file
+
+  entries = {}
+  listobject:doint(mui.MUIM_List_Clear)
+
+  idx = parse_rdio:getint(mui.MUIA_Radio_Active)
+  loc = archives[idx].loc
+
+  file = io.open(loc, "r")
+  if file then
+    listobject:set(mui.MUIA_List_Quiet, true)
+    for line in file:lines(loc) do
+      local p1, p2, p3, p4, p5, p6 = string.match(line, pattern)
+      if p1~=nil and p2~=nil then
+        local newentry = {
+          ['category'] = p1,
+          ['filename'] = p2,
+          ['size'] = p3,
+          ['date'] = p4,
+          ['version'] = p5,
+          ['description'] = p6,
+          ['caption'] = p1 .. '/' .. p2  
+        }    
+        table.insert(entries, newentry)
+        listobject:doint(mui.MUIM_List_InsertSingle, newentry.caption, mui.MUIV_List_Insert_Bottom)
+      end
+    end
+    listobject:set(mui.MUIA_List_Quiet, false)
+    file:close()
+
+    entries.current_idx = idx -- remember current index
+
+  else
+    app:request(window, 0, "Error", "OK", "Can't open index file")
+  end
+  set_info()
+end
+
+
+function set_info()
+  -- fills text gadgets with info about selected entry
+  local current = listobject:getint(mui.MUIA_List_Active)
+  if current ~= -1 then
+    local currententry = entries[current + 1]
+    cat_str:set(mui.MUIA_Text_Contents, currententry.category)
+    file_str:set(mui.MUIA_Text_Contents, currententry.filename)
+    size_str:set(mui.MUIA_Text_Contents, currententry.size)
+    date_str:set(mui.MUIA_Text_Contents, currententry.date)
+    version_str:set(mui.MUIA_Text_Contents, currententry.version)
+    desc_str:set(mui.MUIA_Text_Contents, currententry.description)
+    dl_btn:set(mui.MUIA_Disabled, false)
+    dl_rm_btn:set(mui.MUIA_Disabled, false)
+  else
+    cat_str:set(mui.MUIA_Text_Contents, "")
+    file_str:set(mui.MUIA_Text_Contents, "")
+    size_str:set(mui.MUIA_Text_Contents, "")
+    date_str:set(mui.MUIA_Text_Contents, "")
+    version_str:set(mui.MUIA_Text_Contents, "")
+    desc_str:set(mui.MUIA_Text_Contents, "")
+    dl_btn:set(mui.MUIA_Disabled, true)
+    dl_rm_btn:set(mui.MUIA_Disabled, true)
+   end
+end
+
+
+function download_archive()
+  -- download selected entry
+  local current = listobject:getint(mui.MUIA_List_Active)
+  if current ~= -1 then
+    local currententry = entries[current + 1]
+
+    local save_in = mui.filerequest(
+      mui.ASLFR_TitleText,       "Save archive in",
+      mui.ASLFR_DoSaveMode,      true,
+      mui.ASLFR_RejectIcons,     true,
+      mui.ASLFR_DoPatterns,      true,
+      mui.ASLFR_InitialFile,     currententry.filename,
+      mui.ASLFR_InitialDrawer,   target
+    )
+
+    if save_in then
+      local command = wget_command .. archives[entries.current_idx].basepath ..
+        currententry.category .. '/' .. currententry.filename ..
+        ' -O' .. save_in
+
+      print("\n*** Executing command: " .. command)
+      local retval = os.execute(command)
+      print("\n*** Done")
+      if retval > 0 then
+        app:request(window, 0, "Error", "OK", "wget returned error code " .. retval)
+      end
+    else
+      print ("Saving cancelled")
+    end
+  end
+end
+
+
+function download_readme()
+  -- download readme of selected entry
+  local current = listobject:getint(mui.MUIA_List_Active)
+  if current ~= -1 then
+    local currententry = entries[current + 1]
+    local readme = string.gsub(currententry.filename, "^(.+)(%.)(.-)$", "%1_%3") -- replace last dot by underline
+
+    local command = wget_command .. archives[entries.current_idx].basepath ..
+      currententry.category .. '/' .. readme .. '.readme' ..
+      ' -O' .. readme_target
+
+    print("\n*** Executing command: " .. command)
+    local retval = os.execute(command)
+    print("\n*** Done")
+    if retval > 0 then
+      app:request(window, 0, "Error", "OK", "wget returned error code " .. retval)
+    end
+  end
+  local file = io.open(readme_target, "r")
+  if file then
+    show_rm_btn:set(mui.MUIA_Disabled, false)
+    file:close()
+  end
+end
+
+
+function download_index()
+  -- download full or recent index file
+  local idx = idx_rdio:getint(mui.MUIA_Radio_Active)
+  local url = archives[idx].index
+  local loc = archives[idx].loc
+
+  local command = wget_command .. url .. ' -O' .. loc
+  print("\n*** Executing command: " .. command)
+  local retval = os.execute(command)
+  print("\n*** Done")
+  if retval > 0 then
+    app:request(window, 0, "Error", "OK", "wget returned error code " .. retval)
+  end
+end
+
+
+function show_readme()
+  -- show latest downloaded readme file
+  local retval = os.execute('run sys:utilities/multiview "' .. readme_target .. '"')
+  if retval > 0 then
+    app:request(window, 0, "Error", "OK", "'run multiview' returned error code " .. retval)
+  end
+end
+
+
+function main()
+  index_btn = mui.SimpleButton("Download Index")
+  parse_btn = mui.SimpleButton("Parse Index")
+  dl_btn = mui.SimpleButton("Download Archive...")
+  dl_rm_btn = mui.SimpleButton("Download README")
+  show_rm_btn = mui.SimpleButton("Show README")
+
+  listobject = mui.ListObject(
+    mui.MUIA_Frame, mui.MUIV_Frame_ReadList
+  )
+  cat_str = mui.TextObject(mui.MUIA_Frame, mui.MUIV_Frame_Text)
+  file_str = mui.TextObject(mui.MUIA_Frame, mui.MUIV_Frame_Text)
+  size_str = mui.TextObject(mui.MUIA_Frame, mui.MUIV_Frame_Text)
+  date_str = mui.TextObject(mui.MUIA_Frame, mui.MUIV_Frame_Text)
+  version_str = mui.TextObject(mui.MUIA_Frame, mui.MUIV_Frame_Text)
+  desc_str = mui.TextObject(mui.MUIA_Frame, mui.MUIV_Frame_Text)
+
+  idx_rdio = mui.RadioObject(mui.MUIA_Radio_Entries, rdio_entries)
+  parse_rdio = mui.RadioObject(mui.MUIA_Radio_Entries, rdio_entries)
+  
+  window = mui.WindowObject(
+    mui.MUIA_Window_Title, "Archives AROS Exec Download Tool",
+    mui.MUIA_Window_RootObject, mui.VGroup(
+      mui.Child, mui.HGroup(
+        mui.Child, mui.VGroup(
+          mui.MUIA_Frame, mui.MUIV_Frame_Group,
+          mui.Child, idx_rdio,
+          mui.Child, index_btn
+        ),
+        mui.Child, mui.VGroup(
+          mui.MUIA_Frame, mui.MUIV_Frame_Group,
+          mui.Child, parse_rdio,
+          mui.Child, parse_btn
+        )
+      ),
+      mui.Child, mui.ListviewObject(
+        mui.MUIA_Listview_List, listobject
+      ),
+      mui.Child, mui.RectangleObject( 
+        mui.MUIA_Rectangle_HBar, true,
+        mui.MUIA_FixHeight,      2
+      ),
+      mui.Child, mui.ColGroup(2,
+        mui.MUIA_FrameTitle, "Information",
+        mui.MUIA_Frame, mui.MUIV_Frame_Group,
+        mui.Child, mui.Label("Category"),
+        mui.Child, cat_str,
+        mui.Child, mui.Label("Filename"),
+        mui.Child, file_str,
+        mui.Child, mui.Label("Size"),
+        mui.Child, size_str,
+        mui.Child, mui.Label("Date"),
+        mui.Child, date_str,
+        mui.Child, mui.Label("Version"),
+        mui.Child, version_str,
+        mui.Child, mui.Label("Description"),
+        mui.Child, desc_str
+      ),
+      mui.Child, mui.HGroup(
+        mui.Child, dl_rm_btn,
+        mui.Child, show_rm_btn,
+        mui.Child, dl_btn
+      )
+    )
+  )
+  app = mui.ApplicationObject(
+    mui.MUIA_Application_Author     , "Matthias Rustler",
+    mui.MUIA_Application_Description, "Download tool for archives.aros-exec",
+    mui.MUIA_Application_Title      , "AAEDT",
+    mui.MUIA_Application_Version    , "$VER: AAEDT 1.1 (05.04.2007)",
+    mui.MUIA_Application_Base       , "AAEDT",
+
+    mui.MUIA_Application_Window, window
+  )
+  assert(app:check(), "Cant create application")
+  window:doint(mui.MUIM_Notify, mui.MUIA_Window_CloseRequest, true,
+    app, 2, mui.MUIM_Application_ReturnID, mui.MUIV_Application_ReturnID_Quit)
+
+  dl_btn:doint(mui.MUIM_Notify, mui.MUIA_Pressed, false, app, 2, mui.MUIM_Application_ReturnID, dl_id)
+  dl_rm_btn:doint(mui.MUIM_Notify, mui.MUIA_Pressed, false, app, 2, mui.MUIM_Application_ReturnID, dl_rm_id)
+  show_rm_btn:doint(mui.MUIM_Notify, mui.MUIA_Pressed, false, app, 2, mui.MUIM_Application_ReturnID, show_rm_id)
+  index_btn:doint(mui.MUIM_Notify, mui.MUIA_Pressed, false, app, 2, mui.MUIM_Application_ReturnID, index_id)
+  parse_btn:doint(mui.MUIM_Notify, mui.MUIA_Pressed, false, app, 2, mui.MUIM_Application_ReturnID, parse_id)
+  listobject:doint(mui.MUIM_Notify, mui.MUIA_List_Active, mui.MUIV_EveryTime,
+    mui.MUIV_Notify_Application, 2, mui.MUIM_Application_ReturnID, list_id)  
+
+  dl_btn:set(mui.MUIA_Disabled, true)
+  dl_rm_btn:set(mui.MUIA_Disabled, true)
+  show_rm_btn:set(mui.MUIA_Disabled, true)
+
+  window:set(mui.MUIA_Window_Open, true)
+  assert(window:getbool(mui.MUIA_Window_Open), "Can't open window")
+
+  local running = true
+  local id,signals
+
+  while running do
+    id, signals = app:input()
+    if id == mui.MUIV_Application_ReturnID_Quit then
+      running = false
+    elseif id == dl_id then
+      download_archive()
+    elseif id == dl_rm_id then
+      download_readme()
+    elseif id == show_rm_id then
+      show_readme()
+    elseif id == index_id then
+      download_index()
+    elseif id == parse_id then
+      parse_content()
+    elseif id == list_id then
+      set_info()
+    end
+    if running then mui.wait(signals) end
+  end
+end
+
+-- main()
+_, err = pcall(main)
+if err then print("Error: " .. err) end
+
+if app then app:dispose() end
+if idx_rdio_entries then idx_rdio_entries:dispose() end
+if parse_rdio_entries then parse_rdio_entries:dispose() end
+

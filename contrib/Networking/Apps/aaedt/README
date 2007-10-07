@@ -1,0 +1,42 @@
+Archives AROS Exec Download Tool
+--------------------------------
+
+AAEDT.alua is an AmiLua script for downloading files from
+archives.aros-exec.org and os4depot.net. It uses 'wget' for
+downloading the index and the archive files.
+
+
+Installation
+------------
+
+The script calls wget as 'c:wget'. This means you have either to
+copy wget to C: or do 'assign c: <path>/wget add'.
+
+The script copies the index and the archives to 'ram:'. But you can
+easily change this by editing the script.
+
+
+Using
+-----
+
+Select an archive type and press 'Download Index' to fetch the
+index file. You can download all index files if you want.
+
+Choosing 'Parse Index' reads the selected index file, parses
+its content and fills the list gadget with the entries.
+
+Clicking on an entry shows information about it.
+
+'Download README' downloads the README file of the selected archive.
+
+'Show README' shows the latest downloaded README file with MultiView.
+
+'Download Archive' opens a file requester for downloading the selected
+archive a disk.
+
+
+History
+-------
+
+1.1 download from os4depot, download/view of README file, bugfixes
+1.0 initial release

@@ -1,0 +1,10 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+ICONS := AAEDT
+
+%build_icons mmake=aros-tcpip-apps-aaedt-icons \
+             icons=$(ICONS) dir=$(AROS_CONTRIB)/Networking/Apps
+
