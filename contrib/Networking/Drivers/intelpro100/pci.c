@@ -102,14 +102,14 @@ const UWORD product_codes[] =
 
 static const struct TagItem unit_tags[] =
 {
-   {IOTAG_ByteIn, (IPTR)ByteInHook},
-   {IOTAG_ByteOut, (IPTR)ByteOutHook},
-   {IOTAG_LEWordIn, (IPTR)LEWordInHook},
-   {IOTAG_LELongIn, (IPTR)LELongInHook},
-   {IOTAG_LEWordOut, (IPTR)LEWordOutHook},
-   {IOTAG_LELongOut, (IPTR)LELongOutHook},
-   {IOTAG_AllocDMAMem, (IPTR)AllocDMAMemHook},
-   {IOTAG_FreeDMAMem, (IPTR)FreeDMAMemHook},
+   {IOTAG_ByteIn, (UPINT)ByteInHook},
+   {IOTAG_ByteOut, (UPINT)ByteOutHook},
+   {IOTAG_LEWordIn, (UPINT)LEWordInHook},
+   {IOTAG_LELongIn, (UPINT)LELongInHook},
+   {IOTAG_LEWordOut, (UPINT)LEWordOutHook},
+   {IOTAG_LELongOut, (UPINT)LELongOutHook},
+   {IOTAG_AllocDMAMem, (UPINT)AllocDMAMemHook},
+   {IOTAG_FreeDMAMem, (UPINT)FreeDMAMemHook},
    {TAG_END, 0}
 };
 

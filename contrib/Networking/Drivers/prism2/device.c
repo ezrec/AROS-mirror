@@ -106,7 +106,7 @@ static const APTR vectors[] =
    (APTR)-1
 };
 
-#if !defined(__AROS__)
+
 #ifdef __MORPHOS__
 #pragma pack(2)
 #endif
@@ -133,17 +133,13 @@ init_data =
 #ifdef __MORPHOS__
 #pragma pack()
 #endif
-#endif
+
 
 const APTR init_table[] =
 {
    (APTR)sizeof(struct DevBase),
    (APTR)vectors,
-#if !defined(__AROS__)
    (APTR)&init_data,
-#else
-   (APTR)NULL,
-#endif
    (APTR)DevInit
 };
 

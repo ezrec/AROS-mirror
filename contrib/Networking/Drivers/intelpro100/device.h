@@ -47,8 +47,13 @@ MA 02111-1307, USA.
 #define OPENPCI_VERSION 1
 
 #ifndef UPINT
+#ifdef __AROS__
+typedef IPTR UPINT;
+typedef SIPTR PINT;
+#else
 typedef ULONG UPINT;
 typedef LONG PINT;
+#endif
 #endif
 
 #ifndef REG

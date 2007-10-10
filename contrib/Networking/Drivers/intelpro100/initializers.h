@@ -1,7 +1,7 @@
 /*
 
-$VER: initializers.h 41.4 (21.11.2003)
-Copyright (C) 2000-2003 Neil Cafferkey
+$VER: initializers.h 41.5 (30.9.2007)
+Copyright (C) 2000-2007 Neil Cafferkey
 
 This file is free software; you can redistribute it and/or modify it
 under the terms of the GNU Lesser General Public License as
@@ -33,7 +33,7 @@ MA 02111-1307, USA.
 #undef OFFSET
 #endif
 */
-#define OFFSET(struct_name,struct_field) \
+#define OFFSET(struct_name, struct_field) \
    ((ULONG)(&(((struct struct_name *)0)->struct_field)))
 
 /* Use the following macros in the structure definition */
@@ -62,6 +62,10 @@ MA 02111-1307, USA.
 
 #define INITENDDEF UBYTE the_end
 
+/* Private macro */
+
+#define PINTSIZECODE (((sizeof(PINT) == sizeof(ULONG)) ? 0 : 3) << 4)
+
 /* Use the following macros to fill in a structure */
 
 #define NEWINITBYTE(offset, value) \
@@ -74,8 +78,8 @@ MA 02111-1307, USA.
    0xc0, (UBYTE)((offset) >> 16), (UBYTE)((offset) >> 8), (UBYTE)(offset), \
    (ULONG)(value)
 #define INITPINT(offset, value) \
-   0xc0, (UBYTE)((offset) >> 16), (UBYTE)((offset) >> 8), (UBYTE)(offset), \
-   (UPINT)(value)
+   0xc0 | PINTSIZECODE, (UBYTE)((offset) >> 16), (UBYTE)((offset) >> 8), \
+   (UBYTE)(offset), (UPINT)(value)
 
 #define SMALLINITBYTE(offset, value) \
    0xa0, (offset), (UBYTE)(value), 0
@@ -84,7 +88,7 @@ MA 02111-1307, USA.
 #define SMALLINITLONG(offset, value) \
    0x80, (offset), (ULONG)(value)
 #define SMALLINITPINT(offset, value) \
-   0x80, (offset), (UPINT)(value)
+   0x80 | PINTSIZECODE, (offset), (UPINT)(value)
 
 #define INITEND 0
 

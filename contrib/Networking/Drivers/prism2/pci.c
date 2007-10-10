@@ -102,22 +102,22 @@ const UWORD product_codes[] =
 
 static const struct TagItem unit_tags[] =
 {
-   {IOTAG_WordsIn, (IPTR)WordsInHook},
-   {IOTAG_WordsOut, (IPTR)WordsOutHook},
-   {IOTAG_BEWordOut, (IPTR)BEWordOutHook},
-   {IOTAG_LEWordIn, (IPTR)LEWordInHook},
-   {IOTAG_LEWordOut, (IPTR)LEWordOutHook},
+   {IOTAG_WordsIn, (UPINT)WordsInHook},
+   {IOTAG_WordsOut, (UPINT)WordsOutHook},
+   {IOTAG_BEWordOut, (UPINT)BEWordOutHook},
+   {IOTAG_LEWordIn, (UPINT)LEWordInHook},
+   {IOTAG_LEWordOut, (UPINT)LEWordOutHook},
    {TAG_END, 0}
 };
 
 
 static const struct TagItem bridge_unit_tags[] =
 {
-   {IOTAG_WordsIn, (IPTR)WordsInIOHook},
-   {IOTAG_WordsOut, (IPTR)WordsOutIOHook},
-   {IOTAG_BEWordOut, (IPTR)BEWordOutIOHook},
-   {IOTAG_LEWordIn, (IPTR)LEWordInIOHook},
-   {IOTAG_LEWordOut, (IPTR)LEWordOutIOHook},
+   {IOTAG_WordsIn, (UPINT)WordsInIOHook},
+   {IOTAG_WordsOut, (UPINT)WordsOutIOHook},
+   {IOTAG_BEWordOut, (UPINT)BEWordOutIOHook},
+   {IOTAG_LEWordIn, (UPINT)LEWordInIOHook},
+   {IOTAG_LEWordOut, (UPINT)LEWordOutIOHook},
    {TAG_END, 0}
 };
 
