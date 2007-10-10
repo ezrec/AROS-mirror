@@ -1,0 +1,485 @@
+================================
+GUIDA AL PORTING DI APPLICAZIONI
+================================
+
+:Authors:   Johann Samuellson, Matthias Rustler
+:Copyright: Copyright © 2006, The AROS Development Team
+:Version:   $Revision: 25114 $
+:Date:      $Date: 2006-12-28 20:39:31 +0100 (gio, 28 dic 2006) $
+:Status:    Beta
+:ToDo:      Some real world examples
+
+
+.. Contents::
+
+
+Introduzione
+============
+
+Questa guida riguarda il porting di software su AROS che abbia script configure
+o make, come per la maggioranza del software open source dal mondo linux. E'
+basata su un `documento`__ scritto da Johan Samuellson per AmigaOS4. 
+
+__ http://utilitybase.com/article?action=show&id=210
+
+Cosa portare?
+-------------
+
+* Il linguaggio di programmazione più supportato è il C. Al C++ mancano ancora
+  alcune cose.
+
+* Controllate di quali pacchetti aggiuntivi ha bisogno il software che volete
+  portare. Non potete fare un semplice porting quando c'è bisogno di toolkit
+  GUI come GTK o QT. Solo software che gira su console può essere portato
+  direttamente.
+
+* Se volete portare dei giochi, controllate che utilizzino le `libSDL`__.
+  Evitate software che ha bisogno di OpenGL.
+
+__ http://www.libsdl.org
+
+Aggiornare l'SDK
+----------------
+
+Il modo più semplice di portare software su AROS è da una Linux box, poichè è
+generalmente dotata di tutti gli strumenti di sviluppo necessari. Guardate nella
+`Guida allo sviluppo`__ per le indicazioni su come installare l'SDK.
+
+__ app-dev/introduction.php#compiling-on-linux-with-gcc
+
+
+Le basi
+-------
+
+La prima cosa da fare è controllare come fare il build del progetto.
+Se c'è un file chiamato *configure* nella directory base dell'archivio,
+significa che dovete configurarlo per la vostra piattaforma. Leggete il
+prossimo capitolo per vedere come fare.
+
+Dopo che il progetto è stato configurato correttamente, viene il momento di
+far lavorare il compilatore. Lanciate il build del progetto scrivendo ``make``.
+
+Comunque, se non c'è nessun file chiamato *configure*, cercate un file chiamato
+*Makefile*. Modificato in modo da adattarsi ad AROS e fate il build del progetto
+con ``make``.
+
+Se tutto è stato compilato e linkato correttamente, siete pronti a testare il
+vostro porting. Un problema molto comune è che il programma non riesce a trovare
+i file file dati e crasha. Sistemate i path come spiegato nel capitolo sul
+fix del path e provate a lanciarlo di nuovo.
+
+Fate lo strip dei binari, in modo da eliminare informazioni di debug e renderli
+più piccoli.
+
+Bene, avete finito. Uploadate il tutto su http://archives.aros-exec.org e http://www.aminet.net!
+
+
+Come configurare
+================
+
+Su Linux, i pacchetti con uno script di configure vengono generalmente
+installati in 3 passi::
+
+    ./configure
+    make
+    sudo make install
+
+Quello che rende la configurazione su AROS più difficile rispetto a quella, ad
+esempio, su AmigaOS4 è il fatto che stiamo usando un cross compiler.
+
+Lanciate ``./configure --help`` per vedere le opzioni disponibili. Se il
+configure fallisce, possiamo provare a disabilitare alcune opzioni.
+
+
+Un semplice esempio
+-------------------
+
+::
+
+    ./configure CC=i386-aros-gcc \
+    --build=local --host=i686-aros
+    --disable-nls --without-x --without-pic --disable-shared
+
+.. Hint::
+
+    E' sensato scrivere l'istruzione di configure in un file di testo. In
+    questo modo possiamo facilmente rilanciarla con ``sh build.sh``. Ma prima
+    di rilanciare lo script dobbiamo lanciare il comando ``rm -f config.cache``
+    in modo da resettare il processo di configurazione.
+
+
+Ecco una spiegazione delle opzioni che abbiamo usato:
+
+``CC=i386-aros-gcc``
+    Vogliamo usare il compilatore AROS. Altrimenti otterremmo un binario Linux.
+
+``--build=local --host=i686-aros``
+    Indica allo script di configure di fare il cross-compiling a i686-aros.
+
+``--disable-nls --without-x --without-pic --disable-shared``
+    Disabilita alcune funzioni che non sono supportate da AROS.
+
+
+.. Warning::
+
+    Non lanciate ``sudo make install`` perchè il comando installerebbe la
+    applicazione nei path di Linux come */usr/local*.
+
+
+Esempio SDL (installazione manuale)
+-----------------------------------
+
+Il seguente esempio riguarda `Ltris`__, ma dovrebbe andare bene anche per altre
+applicazioni SDL::
+
+    ./configure CC=i386-aros-gcc  LDFLAGS="-nix" \
+    --prefix=/PROGDIR \
+    --build=local --host=i686-aros \
+    --disable-nls --without-x --without-pic --disable-shared \
+    --with-sdl-prefix=/usr/local/aros-sdk/i386-aros
+
+``LDLAGS="-nix"``
+    Questo abilita le semantiche linux per i percorsi. Le applicazioni Linux
+    usano spesso percorsi assoluti per i loro file dei dati. Ma un percorso
+    assoluto Linux come */usr/local/app* per AROS significa: sali di un livello,
+    e quindi entra nella directory *usr*.
+
+``--prefix=/PROGDIR``
+    Aggiunge il prefisso */PROGDIR* a tutti i percorsi. Insieme all'opzione *-nix*
+    permette di usare i percorsi di Linux durante la compilazione e i percorsi
+    di AROS durante l'esecuzione.
+
+``--with-sdl-prefix=/usr/local/aros-sdk/i386-aros``
+    Lo script di configure chiama *sdl_config* per recuperare i CFLAGS e gli
+    LDFLAGS richiesti dalle applicazioni SDL. Senza questa opzione lo script
+    chiamerebbe la versione Linux di *sdl_config*, che restituirebbe dei
+    risultati errati.
+
+Dopo un lancio riuscito dello script di configure e del *make* dobbiamo copiare
+il binario ltris e i suoi file dati in modo tale che il binario trovi i file
+dati::
+
+    ltris
+        ltris (binary)
+        share
+	    ltris
+	        gfx
+		sounds
+
+
+__ http://lgames.sourceforge.net/index.php?project=LTris
+
+
+Esempio SDL (installazione semi-automatica)
+-------------------------------------------
+
+Possiamo usare più o meno le stesse opzioni di prima::
+
+    ./configure CC=i386-aros-gcc  LDFLAGS="-nix" \
+    --prefix=/PROGDIR --bindir=/PROGDIR \
+    --build=local --host=i686-aros \
+    --disable-nls --without-x --without-pic --disable-shared \
+    --with-sdl-prefix=/usr/local/aros-sdk/i386-aros
+
+``--bindir=/PROGDIR`` 
+    Impedisce che venga creata una sottodirectory *bin*.
+
+Non dimenticate mai l'opzione *--prefix* o i file di AROS verranno installati
+in qualche path di Linux.
+
+Adesso potete rifare il build del vostro progetto (``make distclean``, lanciate
+lo script configure, ``make``). Adesso possiamo lanciare ``sudo make install``.
+Ma è meglio fare prima i seguenti passaggi:
+
++ sudo mkdir /PROGDIR
++ sudo chmod a+rwx /PROGDIR
+
+Questo ha il vantaggio che possiamo accedere a */PROGDIR* senza i permessi di
+root. Adesso possiamo finalmente lanciare ``make install`` che installerà il
+gioco in */PROGDIR*. Siccome questo non sarebbe un posto adatto dobbiamo copiare
+il tutto in un punto in cui AROS possa raggiungerlo (es cp -r /PROGDIR ~/AROS/games/ltris).
+
+Ricordate di lanciare ``rm -rf /PROGDIR/*`` prima di fare il build di un'altro
+progetto.
+
+
+Errori comuni che si fanno nella configurazione
+-----------------------------------------------
+
+Errori del tipo target or host i686-aros isn't available.
+
+Soluzione:
+  Probabilmente lo script *config.sub* è vecchio o non esiste. Lanciate
+  ``autoconf`` nella directory base del pacchetto. Se non è servito a nulla,
+  copiate la versione attuale del file *config.sub* da, per esempio,
+  */usr/share/automake*.
+
+.. _autoconf: http://ftp.gnu.org/gnu/autoconf/
+
+Errori come questi:
+  checking for IMG_Load in -lSDL_image... no
+
+Soluzione:
+  Stiamo facendo il link con librerie statiche, e bisogna specificare esattamente
+  cosa linkare. Trovate questa riga nello script di configure::
+
+    LIBS="-lSDL_image $LIBS"
+
+  SDL_image dipende da altre librerie per funzionare correttamente, aggiungetele
+  in questo modo::
+
+    LIBS="-lSDL_image -lpng -ljpeg -lz $LIBS"
+
+
+Errori come questi:
+  checking for Mix_OpenAudio in -lSDL_mixer... no
+
+Soluzione:
+  Stiamo facendo il link con librerie statiche, e bisogna specificare esattamente
+  cosa linkare. Trovate questa riga nello script di configure::
+
+    LIBS="-lSDL_mixer $LIBS"
+
+  SDL_mixer dipende da altre librerie per funzionare correttamente, aggiungetele
+  in questo modo::
+
+    LIBS="-lSDL_mixer -lvorbisfile -lvorbis -logg $LIBS"
+
+
+La stessa cosa accade spesso quando il configure cerca SDL_ttf, ora sapete
+perchè. Dobbiamo specificare altre librerie da cui dipende SDL_ttf. Ha bisogno
+di -lfreetype e -lz. Lascerò il resto a voi per esercizio.
+
+Se avete aggiunto le dipendenze richieste nello script di configure e ancora non
+funzione, può essere dovuto alla mancanza di file nell'SDK. Per esempio, le
+librerie SDL non sono incluse.
+
+Se ancora non funziona, e siete sicuri di avere le librerie installate, provate
+a rimuovere l'intera sezione dal file di configure dove va a cercare la libreria
+incriminata. Non è una tecnica raccomandata, ma se non c'è altra soluzione...
+
+Adesso dovreste essere pronti a fare il build del vostro progetto. Quando fate
+il porting di applicazioni unix lanciate sempre il ``make``.
+
+
+Creare un makefile a mano
+=========================
+
+Potete usare questo makefile se il build system è un macello e volete
+semplificarlo un po', modificatelo a seconda delle vostre esigenze.
+In genere avrete solo bisogno di modificare il makefile esistente, cambiare il
+nome del compilatore C (altrimenti creerà dei binari per Linux) e aggiungere
+alcune librerie.
+
+Ecco una spiegazione di cosa fanno i vari flag.
+ 
+CC
+    Il nome dell'eseguibile del compilatore C.
+
+RM
+    Il nome del comando di cancellazione file.
+
+STRIP
+    Il nome del comando strip (usato per rimuovere dati di debug dai file exe).
+
+CFLAGS
+    Dice al compilatore dove trovare i file include (-I) ecc...
+
+LDFLAGS
+    Dice al linker quali librerie includere (-l) e dove trovarle (-L).
+
+OBJS
+    Il compilatore (GCC/G++) compile in file oggetto (#?.o) dai vostri file .c
+    che vengono collegati per diventare un file eseguibile. Specificate qui i
+    file oggetto.
+
+OUTPUT
+    Il nome del file eseguibile finale.
+
+::
+
+  CC      = i386-aros-gcc
+  RM      = rm
+  STRIP   = i386-aros-strip --strip-unneeded --remove-section .comment
+  CFLAGS  = -Wall -O2 
+  LDFLAGS = -nix -lsmpeg -lSDL_gfx -lSDL_net -lSDL_image -lpng -ljpeg -lz -lSDL_mixer \
+            -lvorbisfile -lvorbis -logg -lSDL_ttf -lfreetype -lz -lsdl -lauto -lpthread -lm
+  OBJS    = a.o b.o c.o
+  OUTPUT  = test.exe
+
+  all: $(OBJS)
+          $(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) -o $(OUTPUT) 
+
+  main.o: main.cpp main.h 
+          $(CC) $(CFLAGS) -c main.cpp
+
+  strip:
+          $(STRIP) $(OUTPUT)
+        
+  clean:
+          $(RM) -f $(OBJS) $(OUTPUT)
+
+Ricordate di usare il carattere di TAB prima dei comandi.
+
+
+Usare il build system
+=====================
+
+Il build system contiene alcuni script per la configurazione dei pacchetti. Il
+grande vantaggio di usare il build system è quello che potete fare il porting
+su diverse versioni di AROS.
+
++ %build_with_configure
++ %fetch_and_build
++ %fetch_and_build_gnu_development
+
+Guardate nel file $(TOP)/config/make.tmpl per una spiegazione degli argomenti.
+In *$(TOP)/contrib/gnu* potrete trovare un gran numero di pacchetti GNU.
+
+
+Miscellanea
+===========
+
+Convertire i percorsi unix in percorsi AROS
+-------------------------------------------
+
+Come faccio a convertire i percorsi UNIX in percorsi AROS? Scambiate *getenv("HOME")*
+con *"/PROGDIR/"*
+
+Esempi::
+
+    old: strcpy(path, getenv("HOME"));
+    new: strcpy(path, "/PROGDIR/");
+
+    old: strcpy(home,getenv("HOME"));
+    new: strcpy(home,"/PROGDIR/");
+
+    old: sprintf(rc_dir, "%s/.gngeo/romrc.d", getenv("HOME"));
+    new: sprintf(rc_dir, "%sgngeo/romrc.d", "/PROGDIR/");
+
+Notate che abbiamo tolto "/." nell'ultimo esempio.
+
+I path alle directory dei dati vengono spesso impostati durante il processo di
+configure utilizzando *-DDATADIR=*. In questo caso, impostatelo a *-DDATADIR=/PROGDIR/*.
+E' anche molto comune che i datadir siano settati nei makefile. Localizzate
+*DATADIR=* e cambiatelo in *DATADIR=/PROGDIR/*.
+
+
+Define
+------
+
+I define vengono spesso impostati in *config.h*, se qualcosa è configurato in
+modo sbagliato, potete spesso modificarla usando *#define* e *#undef*.
+
+Un esempio di define che considera tutte le varianti di AmigaOS::
+
+  #ifdef __AMIGA__
+	  blah blah blah
+  #else 
+          blah blah blah
+  #endif
+
+Un esempio di define che considera solo AROS::
+
+  #ifdef __AROS__
+	  blah blah blah
+  #else 
+          blah blah blah
+  #endif
+
+Un esempio di define che considera BeOS e AROS::
+
+  #if !defined(__BEOS__) && !defined(__AROS__)
+
+Un esempio di #ifdef più complesso::
+
+  #ifdef GP2X
+	char *gngeo_dir="save/";
+  #elif defined __AROS__
+	char *gngeo_dir="/PROGDIR/save/";
+  #else
+	char *gngeo_dir=get_gngeo_dir();
+  #endif
+
+Alcuni pacchetti open source hanno già adottato i sistemi operativi Amiga-like.
+Se trovate qualcosa del tipo *#ifdef __AMIGA__* nel sorgente, potete provare ad
+aggiungere il define alle opzioni di config (es. CFLAGS="-nix -D__AMIGA__").
+
+
+Comprendere i messaggi di errore
+--------------------------------
+
+Error: No return statement in function returning non-void 
+  Non c'è alcuna istruzione *return* in una funzione che ritorna un valore.
+
+Error: Control reaches end of non-void function
+  E' stata raggiunta la fine di una funzione che deve ritornare un valore, ma
+  non c'è alcuna istruzione di return.
+
+Error: May be used uninitialized in this function
+  La variabile non è inizializzata.
+
+Warning: implicit declaration of function 'blah blah'
+  Dovete includere un file header.
+
+
+Errori comuni
+-------------
+
+warning: incompatible implicit declaration of built-in function 'exit';
+warning: incompatible implicit declaration of built-in function 'abort'::
+  
+    soluzione: #include <stdlib.h>
+
+warning: implicit declaration of function 'strlen';
+warning: incompatible implicit declaration of built-in function 'strlen'::
+
+    soluzione: #include <string.h>
+
+warning: implicit declaration of function 'memcpy';
+warning: incompatible implicit declaration of built-in function 'memcpy'::
+
+    soluzione: #include <string.h>
+
+error: memory.h: No such file or directory::
+
+    soluzione: #include <string.h>
+
+error: malloc.h: No such file or directory::
+
+    soluzione: #include <stdlib.h>
+
+warning: incompatible implicit declaration of built-in function 'printf'::
+
+    soluzione: #include <stdio.h>
+
+warning: implicit declaration of function 'MyRemove'::
+
+    soluzione: #define MyRemove Remove
+
+
+Tips and tricks
+---------------
+
+Come faccio a cercare una stringa di testo usando GREP?
+
+::
+
+  grep -R "Sto cercando questo" *
+
+Come faccio a creare un file DIFF con le mie modifiche?
+
+::
+
+  diff fileoriginale.c miofilemodificato.c >./fileoriginale.patch
+
+Il mio eseguibile crasha, come faccio a farne il debug?
+  Guardate nel `Manuale di debug <debugging>`_. Potete usare sys:utilities/snoopy
+  per scoprire cosa sta cercando di fare la vostra applicazione.
+
+Come faccio a dirottare in un file i messaggi di warning e di errore di GCC?
+
+::
+
+  make 2>warnings.txt
+
