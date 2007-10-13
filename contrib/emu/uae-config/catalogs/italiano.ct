@@ -1,0 +1,413 @@
+## version $VER: XX.catalog XX.XX ($TODAY)
+## language x
+## codeset 0
+;
+;
+MSG_WINDOW_TITLE_DISPLAY
+Emulatore: Display
+; Emulator: Display
+;
+MSG_WINDOW_TITLE_CFG
+Emulatore: Configurazione
+; Emulator: Configuration
+;
+MSG_MENU_PROJECT
+Progetto
+; Project
+;
+MSG_MENU_PROJECT_ABOUT
+Informazioni...
+; ?\0About...
+;
+MSG_MENU_PROJECT_QUIT
+Esci
+; Q\0Quit
+;
+MSG_TB_STOP_SH
+Ferma l'emulazione
+; Stop
+;
+MSG_TB_PAUSE_SH
+Metti in pausa
+; Pause
+;
+MSG_TB_START_SH
+Fai partire l'emulazione
+; Start
+;
+MSG_TB_RESTART_SH
+Resetta
+; Restart
+;
+MSG_TB_SAVE_STATE_SH
+Salva lo stato dell'emulazione...
+; Save state...
+;
+MSG_TB_LOAD_STATE_SH
+Carica lo stato dell'emulazione...
+; Load state...
+;
+MSG_TB_FULLSCREEN_SH
+Metti a schermo intero
+; Fullscreen
+;
+MSG_DC_INSERT
+Inserisci...
+; Insert...
+;
+MSG_DC_EJECT
+Eietta
+; Eject
+;
+;MSG_CFG_CPU
+;
+; CPU
+;
+MSG_CFG_MEMORY
+Memoria
+; Memory
+;
+MSG_CFG_GRAPHICS
+Grafica
+; Graphics
+;
+MSG_CFG_SOUND
+Sonoro
+; Sound
+;
+;MSG_CFG_DRIVES
+;
+; Drives
+;
+MSG_CFG_PORTS
+Porte
+; Ports
+;
+MSG_CFG_CPU_TYPE
+Tipo:
+; Type:
+;
+MSG_CFG_CPU_SPEED
+Velocità:
+; Speed:
+;
+MSG_CFG_CPU_SPEED_FAST
+Veloce
+; Fast
+;
+MSG_CFG_CPU_SPEED_COMPATIBLE
+Compatibile
+; Compatible
+;
+MSG_CFG_CPU_SPEED_ADJUSTABLE
+Aggiustabile
+; Adjustable
+;
+MSG_CFG_CPU_RATIO
+Rapporto:
+; Ratio:
+;
+MSG_CFG_CPU_RATIO_FORMAT
+%ld cicli / istruzioni
+; %ld cycles / insn
+;
+MSG_CFG_CPU_24BIT
+Spazio di indirizzamento a 24 bit
+; 24 bit address space
+;
+MSG_CFG_CPU_SLOW_COMPATIBLE
+Lento ma compatibile
+; Slow but compatible
+;
+;MSG_CFG_MEM_ROM
+;
+; ROM
+;
+;MSG_CFG_MEM_RAM
+;
+; RAM
+;
+;MSG_CFG_MEM_ROM_KICKSTART
+;
+; Kickstart:
+;
+MSG_CFG_MEM_ROM_KEY
+Chiave:
+; Key:
+;
+MSG_CFG_MEM_NONE
+Niente
+; None
+;
+;MSG_CFG_MEM_RAM_CHIP
+;
+; Chip:
+;
+;MSG_CFG_MEM_RAM_SLOW
+;
+; Slow:
+;
+;MSG_CFG_MEM_RAM_FAST
+;
+; Fast:
+;
+;MSG_CFG_MEM_RAM_Z3
+;
+; Zorro III:
+;
+;MSG_CFG_GFX_CHIPSET
+;
+; Chipset:
+;
+;MSG_CFG_GFX_CHIPSET_OCS
+;
+; OCS
+;
+;MSG_CFG_GFX_CHIPSET_ECS_AGNUS
+;
+; ECS Agnus
+;
+;MSG_CFG_GFX_CHIPSET_ECS_FULL
+;
+; Full ECS
+;
+;MSG_CFG_GFX_CHIPSET_AGA
+;
+; AGA
+;
+MSG_CFG_GFX_SPRITECOLLISIONS
+Collisione degl sprite:
+; Sprite collisions:
+;
+MSG_CFG_GFX_SC_NONE
+Nessuna
+; None
+;
+MSG_CFG_GFX_SC_SPRITES
+Sprite
+; Sprites
+;
+MSG_CFG_GFX_SC_SPRITES_AND_PLAYFIELDS
+Sprite e playfield
+; Sprites and playfields
+;
+MSG_CFG_GFX_SC_FULL
+Schermo intero
+; Full
+;
+MSG_CFG_GFX_COPPER_SPEEDUP
+Velocizza il copper
+; Speedup copper
+;
+MSG_CFG_GFX_IMMEDIATE_BLITS
+Blit immediati
+; Immediate blits
+;
+MSG_CFG_GFX_FRAMERATE
+Frequenza di aggiornamento:
+; Framerate:
+;
+;MSG_CFG_GFX_P96RAM
+;
+; P96 Video RAM:
+;
+MSG_CFG_SND_MODE
+Modo
+; Mode:
+;
+MSG_CFG_SND_MODE_NONE
+Non emulato
+; None
+;
+MSG_CFG_SND_MODE_MUTED
+Muto
+; Muted
+;
+MSG_CFG_SND_MODE_NORMAL
+Normale
+; Normal
+;
+MSG_CFG_SND_MODE_ACCURATE
+Accurato
+; Accurate
+;
+MSG_CFG_SND_CHANNELS
+Canali:
+; Channels:
+;
+;MSG_CFG_SND_CHANNELS_MONO
+;
+; Mono
+;
+;MSG_CFG_SND_CHANNELS_STEREO
+;
+; Stereo
+;
+MSG_CFG_SND_CHANNELS_MIXED
+Mixato
+; Mixed
+;
+MSG_CFG_SND_RESOLUTION
+Risoluzione:
+; Resolution:
+;
+;MSG_CFG_SND_RESOLUTION_8BIT
+;
+; 8 bit
+;
+;MSG_CFG_SND_RESOLUTION_16BIT
+;
+; 16 bit
+;
+;MSG_CFG_DRV_FLOPPY
+;
+; Floppy
+;
+MSG_CFG_DRV_FLOPPY_MORE
+Di più
+; More
+;
+MSG_CFG_DRV_FLOPPY_LESS
+Di meno
+; Less
+;
+;MSG_CFG_DRV_HARD
+;
+; Hard
+;
+MSG_CFG_PRT_GAMEPORT1
+Porta giochi 1:
+; Gameport 1:
+;
+MSG_CFG_PRT_GAMEPORT2
+Porta giochi 2:
+; Gameport 2:
+;
+MSG_CFG_PRT_GAMEPORT_JOYSTICK0
+Joystick 0
+; Joystick 0
+;
+MSG_CFG_PRT_GAMEPORT_JOYSTICK1
+Joystick 1
+; Joystick 1
+;
+MSG_CFG_PRT_GAMEPORT_MOUSE
+Mouse
+; Mouse
+;
+MSG_CFG_PRT_GAMEPORT_NUMERIC
+Tastierino numerico
+; Numeric pad
+;
+MSG_CFG_PRT_GAMEPORT_KEYS0
+Cursori/CTRL di destra
+; Cursors/RCTRL
+;
+MSG_CFG_PRT_GAMEPORT_KEYS1
+T/F/H/B/ALT di sinistra
+; T/F/H/B/LALT
+;
+MSG_CFG_DRV_DLE_ADD
+Aggiungi
+; Add...
+;
+MSG_CFG_DRV_DLE_EDIT
+Modifica
+; Edit...
+;
+MSG_CFG_DRV_DLE_REMOVE
+Rimuovi
+; Remove
+;
+MSG_CFG_DRV_DL_PATH
+Percorso
+; Path
+;
+MSG_CFG_DRV_DL_TYPE
+Tipo
+; Type
+;
+MSG_CFG_DRV_DL_TYPE_HARDFILE
+File immagine
+; Hardfile
+;
+;MSG_CFG_DRV_DL_TYPE_FILESYSTEM
+;
+; Filesystem
+;
+MSG_CFG_DRV_DL_MODE
+Modo
+; Mode
+;
+MSG_CFG_DRV_DL_MODE_RO
+Sola lettura
+; RO
+;
+MSG_CFG_DRV_DL_MODE_RW
+Lettura/Scrittura
+; RW
+;
+MSG_CFG_DRV_DE_TITLE
+Modifica le caratteristiche del drive
+; Edit drive...
+;
+MSG_CFG_DRV_DE_TYPE
+Tipo:
+; Type:
+;
+MSG_CFG_DRV_DE_TYPE_HARDFILE
+File immagine
+; Hardfile
+;
+;MSG_CFG_DRV_DE_TYPE_FILESYSTEM
+;
+; Filesystem
+;
+MSG_CFG_DRV_DE_MODE
+Modo
+; Mode:
+;
+MSG_CFG_DRV_DE_MODE_READONLY
+Sola lettura
+; Readonly
+;
+MSG_CFG_DRV_DE_MODE_READWRITE
+Lettuta/Scrittura
+; Read/Write
+;
+MSG_CFG_DRV_DE_PATH
+Percorso:
+; Path:
+;
+MSG_CFG_DRV_DE_VOLUME
+Nome del volume:
+; Volume:
+;
+;MSG_CFG_DRV_DE_VOLUME_DEFAULT
+;
+; Volume
+;
+MSG_CFG_DRV_DE_SECTORS
+Settori per traccia:
+; Sectors:
+;
+MSG_CFG_DRV_DE_HEADS
+Testine:
+; Heads:
+;
+MSG_CFG_DRV_DE_RESERVED
+Settori riservati:
+; Reserved:
+;
+;MSG_OK
+;
+; OK
+;
+MSG_CANCEL
+Cancella
+; Cancel
+;
+MSG_ERROR_CLASSES
+Non è stato possibile inizializzare una o più classi.
+; Can't initialize custom classes.
+;

@@ -1,0 +1,21 @@
+# Copyright © 2003, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+EXE := UAE-Config
+EXEDIR := $(AROS_CONTRIB)/Emu/UAE-Config
+
+FILES  := \
+    asl support locale emulator emulatorwindow configurationeditor \
+    devicecontrol toolbar drive drivelist drivelisteditor driveeditor uaedisplay
+
+#MM- contrib-uaeconfig : contrib-uaeconfig-bin
+
+#MM contrib-uaeconfig-bin : includes linklibs contrib-uaeconfig-catalogs
+
+%build_prog mmake=contrib-uaeconfig \
+    progname=$(EXE) targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="amiga arossupport mui"
+
+%common

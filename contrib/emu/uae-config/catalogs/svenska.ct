@@ -1,0 +1,17 @@
+## version $VER: UAE.catalog 1.0 (27.11.2003)
+## language svenska
+## codeset 0
+;
+;
+MSG_WINDOW_TITLE_DISPLAY
+Emulator: Visning
+; Emulator: Display
+;
+MSG_WINDOW_TITLE_CFG
+Emulator: Inställningar
+; Emulator: Configuration
+;
+MSG_ERROR_CLASSES
+Kan inte initiera klasser.
+; Can't initialize classes.
+;

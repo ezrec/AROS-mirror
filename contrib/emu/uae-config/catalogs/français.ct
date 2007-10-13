@@ -1,0 +1,315 @@
+## version $VER: uae.catalog 1.0 ($TODAY)
+## language français
+## codeset 0
+;
+;
+MSG_WINDOW_TITLE_DISPLAY
+Émulateur : Écran
+;Emulator: Display
+;
+MSG_WINDOW_TITLE_CFG
+Émulateur : Configuration
+;Emulator: Configuration
+;
+MSG_MENU_PROJECT
+Projet
+;Project
+;
+MSG_MENU_PROJECT_ABOUT
+?\0À propos...
+;
+MSG_MENU_PROJECT_QUIT
+Q\0Quitter
+;
+MSG_TB_STOP_SH
+Stop
+;
+MSG_TB_PAUSE_SH
+Pause
+;
+MSG_TB_START_SH
+Départ
+;
+MSG_TB_RESTART_SH
+Redémarrer
+;
+MSG_TB_SAVE_STATE_SH
+Sauver l'état...
+;
+MSG_TB_LOAD_STATE_SH
+Charger l'état...
+;
+MSG_TB_FULLSCREEN_SH
+Plein écran
+;
+MSG_DC_INSERT
+Inserer...
+;
+MSG_DC_EJECT
+Ejecter
+;
+MSG_CFG_CPU
+CPU
+;
+MSG_CFG_MEMORY
+Mémoire
+;
+MSG_CFG_GRAPHICS
+Graphiques
+;
+MSG_CFG_SOUND
+Son
+;
+MSG_CFG_DRIVES
+Lecteurs
+;
+MSG_CFG_PORTS
+Ports
+;
+MSG_CFG_CPU_TYPE
+Type :
+;
+MSG_CFG_CPU_SPEED
+Vitesse :
+;
+MSG_CFG_CPU_SPEED_FAST
+Rapide
+;
+MSG_CFG_CPU_SPEED_COMPATIBLE
+Compatible
+;
+MSG_CFG_CPU_SPEED_ADJUSTABLE
+Ajustable
+;
+MSG_CFG_CPU_RATIO
+Ratio :
+;
+MSG_CFG_CPU_RATIO_FORMAT
+%ld cycles / insn
+;
+MSG_CFG_CPU_24BIT
+adresses 24 bit
+;
+MSG_CFG_CPU_SLOW_COMPATIBLE
+Lent mais compatible
+;
+MSG_CFG_MEM_ROM
+ROM
+;
+MSG_CFG_MEM_RAM
+RAM
+;
+MSG_CFG_MEM_ROM_KICKSTART
+Kickstart :
+;
+MSG_CFG_MEM_ROM_KEY
+Clé :
+;
+MSG_CFG_MEM_NONE
+Aucune
+;
+MSG_CFG_MEM_RAM_CHIP
+Chip :
+;
+MSG_CFG_MEM_RAM_SLOW
+Slow :
+;
+MSG_CFG_MEM_RAM_FAST
+Fast :
+;
+MSG_CFG_MEM_RAM_Z3
+Zorro III :
+;
+MSG_CFG_GFX_CHIPSET
+Chipset :
+;
+MSG_CFG_GFX_CHIPSET_OCS
+OCS
+;
+MSG_CFG_GFX_CHIPSET_ECS_AGNUS
+ECS Agnus
+;
+MSG_CFG_GFX_CHIPSET_ECS_FULL
+ECS Complet
+;
+MSG_CFG_GFX_CHIPSET_AGA
+AGA
+;
+MSG_CFG_GFX_SPRITECOLLISIONS
+Collisions de Sprites :
+;
+MSG_CFG_GFX_SC_NONE
+Aucun
+;
+MSG_CFG_GFX_SC_SPRITES
+Sprites
+;
+MSG_CFG_GFX_SC_SPRITES_AND_PLAYFIELDS
+Sprites et playfields
+;
+MSG_CFG_GFX_SC_FULL
+Complet
+;
+MSG_CFG_GFX_COPPER_SPEEDUP
+Accellérer le copper
+;
+MSG_CFG_GFX_IMMEDIATE_BLITS
+Blits immédiats
+;
+MSG_CFG_GFX_FRAMERATE
+Vitesse de défilement :
+;
+MSG_CFG_GFX_P96RAM
+RAM Video P96 :
+;
+MSG_CFG_SND_MODE
+Mode :
+;
+MSG_CFG_SND_MODE_NONE
+Aucun
+;
+MSG_CFG_SND_MODE_MUTED
+Muet
+;
+MSG_CFG_SND_MODE_NORMAL
+Normal
+;
+MSG_CFG_SND_MODE_ACCURATE
+Précis
+;
+MSG_CFG_SND_CHANNELS
+Canaux :
+;
+MSG_CFG_SND_CHANNELS_MONO
+Mono
+;
+MSG_CFG_SND_CHANNELS_STEREO
+Stéréo
+;
+MSG_CFG_SND_CHANNELS_MIXED
+Mixé
+;
+MSG_CFG_SND_RESOLUTION
+Résolution :
+;
+MSG_CFG_SND_RESOLUTION_8BIT
+8 bit
+;
+MSG_CFG_SND_RESOLUTION_16BIT
+16 bit
+;
+MSG_CFG_DRV_FLOPPY
+Disquette
+;
+MSG_CFG_DRV_FLOPPY_MORE
+Plus
+;
+MSG_CFG_DRV_FLOPPY_LESS
+Moins
+;
+MSG_CFG_DRV_HARD
+Matériel
+;
+MSG_CFG_PRT_GAMEPORT1
+Port jeux 1 :
+;
+MSG_CFG_PRT_GAMEPORT2
+Port jeux 2 :
+;
+MSG_CFG_PRT_GAMEPORT_JOYSTICK0
+Joystick 0
+;
+MSG_CFG_PRT_GAMEPORT_JOYSTICK1
+Joystick 1
+;
+MSG_CFG_PRT_GAMEPORT_MOUSE
+Souris
+;
+MSG_CFG_PRT_GAMEPORT_NUMERIC
+Pavé numerique
+;
+MSG_CFG_PRT_GAMEPORT_KEYS0
+Curseurs/RCTRL
+;
+MSG_CFG_PRT_GAMEPORT_KEYS1
+T/F/H/B/LALT
+;
+MSG_CFG_DRV_DLE_ADD
+Ajouter...
+;
+MSG_CFG_DRV_DLE_EDIT
+Modifier...
+;
+MSG_CFG_DRV_DLE_REMOVE
+Retirer
+;
+MSG_CFG_DRV_DL_PATH
+Chemin
+;
+MSG_CFG_DRV_DL_TYPE
+Type
+;
+MSG_CFG_DRV_DL_TYPE_HARDFILE
+Fichier image
+;
+MSG_CFG_DRV_DL_TYPE_FILESYSTEM
+Système de fichiers
+;
+MSG_CFG_DRV_DL_MODE
+Mode
+;
+MSG_CFG_DRV_DL_MODE_RO
+RO
+;
+MSG_CFG_DRV_DL_MODE_RW
+RW
+;
+MSG_CFG_DRV_DE_TITLE
+Modifier le lecteur...
+;
+MSG_CFG_DRV_DE_TYPE
+Type :
+;
+MSG_CFG_DRV_DE_TYPE_HARDFILE
+Fichier image
+;
+MSG_CFG_DRV_DE_TYPE_FILESYSTEM
+Système de fichiers
+;
+MSG_CFG_DRV_DE_MODE
+Mode :
+;
+MSG_CFG_DRV_DE_MODE_READONLY
+Lecture seule
+;
+MSG_CFG_DRV_DE_MODE_READWRITE
+Lecture/Écriture
+;
+MSG_CFG_DRV_DE_PATH
+Chemin :
+;
+MSG_CFG_DRV_DE_VOLUME
+Volume :
+;
+MSG_CFG_DRV_DE_VOLUME_DEFAULT
+Volume
+;
+MSG_CFG_DRV_DE_SECTORS
+Secteurs :
+;
+MSG_CFG_DRV_DE_HEADS
+Têtes :
+;
+MSG_CFG_DRV_DE_RESERVED
+Réservé :
+;
+MSG_OK
+OK
+;
+MSG_CANCEL
+Annule
+;
+MSG_ERROR_CLASSES
+Impossible d'initialiser les classes.
+;Can't initialize custom classes.
+;
