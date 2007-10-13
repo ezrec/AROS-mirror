@@ -19,7 +19,6 @@
 #include <proto/muimaster.h>
 
 #include "locale.h"
-#include "emulator.h"
 #include "drivelisteditor.h"
 
 STRPTR pageLabels[7];

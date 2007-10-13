@@ -3,5 +3,5 @@
 
 include $(TOP)/config/make.cfg
 
-%build_catalogs mmake=contrib-uaeconfig-catalogs name=uaeconfig subdir= \
-                source=../locale.c
+%build_catalogs mmake=contrib-uaeconfig-catalogs name=uaeconfig subdir=
+

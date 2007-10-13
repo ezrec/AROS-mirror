@@ -22,7 +22,6 @@
 #include "locale.h"
 #include "support.h"
 #include "toolbar.h"
-#include "emulator.h"
 
 /*** Macros *****************************************************************/
 #define StopButton()       MakeToggleButton("\eI[1:20]", _(MSG_TB_STOP_SH))

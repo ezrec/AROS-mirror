@@ -7,14 +7,14 @@ EXE := UAE-Config
 EXEDIR := $(AROS_CONTRIB)/Emu/UAE-Config
 
 FILES  := \
-    asl support locale emulator emulatorwindow configurationeditor \
-    devicecontrol toolbar drive drivelist drivelisteditor driveeditor uaedisplay
+    main asl support locale configurationeditor \
+    devicecontrol drive drivelist drivelisteditor driveeditor
 
 #MM- contrib-uaeconfig : contrib-uaeconfig-bin
 
 #MM contrib-uaeconfig-bin : includes linklibs contrib-uaeconfig-catalogs
 
-%build_prog mmake=contrib-uaeconfig \
+%build_prog mmake=contrib-uaeconfig-bin \
     progname=$(EXE) targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="amiga arossupport mui"
 
