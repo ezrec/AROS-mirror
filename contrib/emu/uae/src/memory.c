@@ -753,6 +753,11 @@ static int decode_cloanto_rom (uae_u8 *mem, int size, int real_size)
     }
 
     p = (uae_u8 *) xmalloc (524288);
+    if (! p) {
+	write_log ("Out of memory error in decode_cloanto_rom().\n");
+	return 0;
+    }
+
     keysize = fread (p, 1, 524288, keyf);
     for (t = cnt = 0; cnt < size; cnt++, t = (t + 1) % keysize) {
 	mem[cnt] ^= p[t];
@@ -798,6 +803,11 @@ static int read_kickstart (FILE *f, uae_u8 *mem, int size, int dochecksum, int *
     i = fread (mem, 1, size, f);
     if (i == 8192) {
 	a1000_bootrom = malloc (8192);
+	if (! a1000_bootrom) {
+	    write_log ("Out of memory error in read_kickstart().\n");
+	    return 0;
+	}
+
 	memcpy (a1000_bootrom, kickmemory, 8192);
 	a1000_handle_kickstart (1);
     } else if (i == size / 2) {
@@ -849,6 +859,11 @@ static int load_extendedkickstart (void)
 	extendedkickmem_bank.baseaddr = (uae_u8 *) extendedkickmemory;
 	break;
     }
+    if (! extendedkickmemory) {
+	write_log ("Out of memory error in load_extendedkickstart().\n");
+	return 0;
+    }
+
     read_kickstart (f, extendedkickmemory, 524288, 0, 0);
     fclose (f);
     return 1;
@@ -1006,6 +1021,11 @@ static void add_shmmaps (uae_u32 start, addrbank *what)
     if (!x)
 	return;
     y = malloc (sizeof (shmpiece));
+    if (! y) {
+	write_log ("Out of memory error in add_shmmaps().\n");
+	return 0;
+    }
+
     *y = *x;
     base = ((uae_u8 *) NATMEM_OFFSET) + start;
     y->native_address = shmat (y->id, base, 0);
@@ -1221,6 +1241,11 @@ void memory_init (void)
     bogomemory = 0;
 
     kickmemory = mapped_malloc (kickmem_size, "kick");
+    if (! kickmemory) {
+	write_log ("Out of memory error in memory init().\n");
+	return;
+    }
+
     kickmem_bank.baseaddr = kickmemory;
 
     load_extendedkickstart ();

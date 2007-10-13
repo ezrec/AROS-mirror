@@ -133,6 +133,7 @@ int graphics_init(void)
 
     fixup_prefs_dimensions (&currprefs);
 
+#if 0
     if
     (
        !SetAttrs
@@ -148,6 +149,16 @@ int graphics_init(void)
         __showerror("Failed to SetAttrs() on uaedisplay(%lp - %lp)", (const IPTR []){(IPTR)uaedisplay, (IPTR)&uaedisplay});
         return 0;
     }
+#else
+    SetAttrs
+    (
+	uaedisplay,
+	MUIA_UAEDisplay_Width,        currprefs.gfx_width,
+	MUIA_UAEDisplay_Height,       currprefs.gfx_height,
+	MUIA_UAEDisplay_EventHandler, (IPTR)uaedisplay_eventhandler,
+	TAG_DONE
+    );
+#endif
     
     gfxvidinfo.emergmem = 0;
     gfxvidinfo.linemem = 0;
