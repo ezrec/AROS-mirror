@@ -5,7 +5,9 @@
 
 #define MUIMASTER_YES_INLINE_STDARG
 
+#define DEBUG 1
 #include <aros/debug.h>
+
 #include <exec/types.h>
 #include <utility/tagitem.h>
 #include <libraries/mui.h>
@@ -18,8 +20,12 @@
 #include <proto/utility.h>
 #include <proto/muimaster.h>
 
+#include "configurationeditor.h"
 #include "locale.h"
 #include "drivelisteditor.h"
+#include "support.h"
+#include "asl.h"
+#include "config.h"
 
 STRPTR pageLabels[7];
 
@@ -37,12 +43,24 @@ static CONST_STRPTR PRT_Gameport[7];
 static CONST_STRPTR SND_Resolution[3];
 static CONST_STRPTR GFX_SpriteCollisions[5];
 
+#define StartUAEButton()   MakePushButton("\eI[1:17]", _(MSG_TB_START_SH))
+#define StartEUAEButton()  MakePushButton("\eI[1:17]", _(MSG_TB_START_SH))
+#define ResetButton()      MakePushButton("\eI[1:21]", _(MSG_TB_RESTART_SH))
+#define LoadStateButton()  MakePushButton("\eI[1:10]", _(MSG_TB_LOAD_STATE_SH))
+#define SaveStateButton()  MakePushButton("\eI[1:12]", _(MSG_TB_SAVE_STATE_SH))
+#define ToolbarSpace()     HSpace(5)
+
 /*** Private methods ********************************************************/
 #define MUIM_ConfigurationEditor_AddFloppyDrive (TAG_USER | 0x13000000)
 #define MUIM_ConfigurationEditor_RemFloppyDrive (TAG_USER | 0x13000001)
 #define MUIM_ConfigurationEditor_UpdateCPU      (TAG_USER | 0x13000002)
 #define MUIM_ConfigurationEditor_UpdateMemory   (TAG_USER | 0x13000003)
 #define MUIM_ConfigurationEditor_UpdateSound    (TAG_USER | 0x13000004)
+#define MUIM_ConfigurationEditor_LoadState      (TAG_USER | 0x13000005)
+#define MUIM_ConfigurationEditor_SaveState      (TAG_USER | 0x13000006)
+#define MUIM_ConfigurationEditor_ResetState     (TAG_USER | 0x13000007)
+#define MUIM_ConfigurationEditor_StartUAE       (TAG_USER | 0x13000008)
+#define MUIM_ConfigurationEditor_StartEUAE      (TAG_USER | 0x13000009)
 
 /*** Instance data **********************************************************/
 struct ConfigurationEditor_DATA
@@ -82,7 +100,10 @@ struct ConfigurationEditor_DATA
     
     Object *ced_PRT_Gameport0,
            *ced_PRT_Gameport1;
+
+    struct UAEConfigdata configdata;
 };
+
 
 /*** Methods ****************************************************************/
 IPTR ConfigurationEditor__OM_NEW
@@ -122,6 +143,11 @@ IPTR ConfigurationEditor__OM_NEW
            *drv_ListEditor;
     Object *prt_Gameport0,
            *prt_Gameport1;
+    Object *startUAEButton,
+	   *startEUAEButton,
+	   *saveStateButton,
+	   *loadStateButton;
+
     
     /*== Localize strings ==================================================*/
     pageLabels[0]  = _(MSG_CFG_CPU);
@@ -183,8 +209,24 @@ IPTR ConfigurationEditor__OM_NEW
         CLASS, self, NULL,
         
         InnerSpacing(4, 4),
-        MUIA_Group_Horiz, TRUE,
-        
+        Child, HGroup,
+            ButtonFrame,
+            MUIA_Group_Horiz, TRUE,
+            MUIA_Background,  MUII_GroupBack,
+
+                Child, (IPTR) HGroup,
+                GroupSpacing(2),
+                MUIA_Weight,         0,
+                MUIA_Group_SameSize, TRUE,
+
+                Child, (IPTR) (loadStateButton = LoadStateButton()),
+                Child, (IPTR) (saveStateButton = SaveStateButton()),
+                Child, (IPTR) ToolbarSpace(),
+                Child, (IPTR) (startUAEButton = StartUAEButton()),
+                Child, (IPTR) (startEUAEButton = StartEUAEButton()),
+            End,
+            Child, (IPTR) HVSpace,
+        End,
         Child, (IPTR) RegisterGroup(pageLabels),
             Child, (IPTR) VGroup,
                 /*-- CPU ---------------------------------------------------*/
@@ -330,10 +372,10 @@ IPTR ConfigurationEditor__OM_NEW
                         End),
                     End),
                     Child, (IPTR) VGroup,
-		        MUIA_Weight, 0,
+                        MUIA_Weight, 0,
                         Child, (IPTR) (drv_FloppyMore = SimpleButton(_(MSG_CFG_DRV_FLOPPY_MORE))),
                         Child, (IPTR) (drv_FloppyLess = SimpleButton(_(MSG_CFG_DRV_FLOPPY_LESS))),
-			Child, (IPTR) VSpace(),
+                        Child, (IPTR) VSpace(),
                     End,
                 End,
                 
@@ -439,6 +481,26 @@ IPTR ConfigurationEditor__OM_NEW
             snd_Mode, MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
             (IPTR) self, 1, MUIM_ConfigurationEditor_UpdateSound
         );
+        DoMethod
+        (
+            loadStateButton, MUIM_Notify, MUIA_Pressed, FALSE,
+            (IPTR) self, 1, MUIM_ConfigurationEditor_LoadState
+        );
+        DoMethod
+        (
+            saveStateButton, MUIM_Notify, MUIA_Pressed, FALSE,
+            (IPTR) self, 1, MUIM_ConfigurationEditor_SaveState
+        );
+        DoMethod
+        (
+            startUAEButton, MUIM_Notify, MUIA_Pressed, FALSE,
+            (IPTR) self, 1, MUIM_ConfigurationEditor_StartUAE
+        );
+        DoMethod
+        (
+            startEUAEButton, MUIM_Notify, MUIA_Pressed, FALSE,
+            (IPTR) self, 1, MUIM_ConfigurationEditor_StartEUAE
+        );
         
         /*-- Sensible defaults ---------------------------------------------*/
         SET(mem_Chip, MUIA_Cycle_Active, 3);
@@ -452,7 +514,7 @@ IPTR ConfigurationEditor__OM_NEW
         SET(prt_Gameport0, MUIA_Cycle_Active, 2);
         
         /*-- Miscellanous initialization -----------------------------------*/
-        SET(drv_FloppyMore, MUIA_Disabled, TRUE);        
+        SET(drv_FloppyMore, MUIA_Disabled, TRUE);
     }
     
     return (IPTR) self;
@@ -594,14 +656,86 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_UpdateSound
     return TRUE;
 }
 
-/*** Setup ******************************************************************/
-ZUNE_CUSTOMCLASS_6
+IPTR ConfigurationEditor__MUIM_ConfigurationEditor_LoadState
 (
-    ConfigurationEditor, NULL, MUIC_Group, NULL,
-    OM_NEW,                                  struct opSet *,
-    MUIM_ConfigurationEditor_AddFloppyDrive, Msg,
-    MUIM_ConfigurationEditor_RemFloppyDrive, Msg,
-    MUIM_ConfigurationEditor_UpdateCPU,      Msg,
-    MUIM_ConfigurationEditor_UpdateMemory,   Msg,
-    MUIM_ConfigurationEditor_UpdateSound,    Msg
-);
+    Class *CLASS, Object *self, Msg message
+)
+{
+    struct ConfigurationEditor_DATA *data = INST_DATA(CLASS, self);
+
+    STRPTR filename = ASL_SelectFile(AM_LOAD);
+    if (filename != NULL)
+    {
+        config_read(&data->configdata, filename);
+        // TODO translate config to GUI
+        FreeVec(filename);
+    }
+    
+    return 0;
+}
+
+IPTR ConfigurationEditor__MUIM_ConfigurationEditor_SaveState
+(
+    Class *CLASS, Object *self, Msg message
+)
+{
+    struct ConfigurationEditor_DATA *data = INST_DATA(CLASS, self);
+
+    STRPTR filename = ASL_SelectFile(AM_SAVE);
+    if (filename != NULL)
+    {
+        data->configdata.cpu_type = XGET(data->ced_CPU_Type, MUIA_Cycle_Active);
+        // TODO translate GUI to config
+        config_write(&data->configdata, filename);
+        
+        FreeVec(filename);
+    }
+
+    return 0;
+}
+
+IPTR ConfigurationEditor__MUIM_ConfigurationEditor_StartUAE
+(
+    Class *CLASS, Object *self, Msg message
+)
+{
+    SystemTags
+    (
+        "SYS:Extras/Emu/UAE/uae",
+        SYS_Asynch, TRUE,
+        SYS_Input, "CON:",
+        TAG_DONE
+    );
+    return 0;
+}
+
+IPTR ConfigurationEditor__MUIM_ConfigurationEditor_StartEUAE
+(
+    Class *CLASS, Object *self, Msg message
+)
+{
+    SystemTags
+    (
+        "SYS:Extras/Emu/E-UAE/i386-aros-uae",
+        SYS_Asynch, TRUE,
+        SYS_Input, "CON:",
+        SYS_Output, NULL,
+        TAG_DONE
+    );
+    return 0;
+}
+
+/*** Setup ******************************************************************/
+__ZUNE_CUSTOMCLASS_START(ConfigurationEditor)
+__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__OM_NEW, OM_NEW, struct opSet *);
+__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_AddFloppyDrive, MUIM_ConfigurationEditor_AddFloppyDrive, Msg);
+__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_RemFloppyDrive, MUIM_ConfigurationEditor_RemFloppyDrive, Msg);
+__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_UpdateCPU, MUIM_ConfigurationEditor_UpdateCPU, Msg);
+__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_UpdateMemory, MUIM_ConfigurationEditor_UpdateMemory, Msg);
+__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_UpdateSound, MUIM_ConfigurationEditor_UpdateSound, Msg);
+__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_LoadState, MUIM_ConfigurationEditor_LoadState, Msg);
+__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_SaveState, MUIM_ConfigurationEditor_SaveState, Msg);
+__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_StartUAE, MUIM_ConfigurationEditor_StartUAE, Msg);
+__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_StartEUAE, MUIM_ConfigurationEditor_StartEUAE, Msg);
+__ZUNE_CUSTOMCLASS_END(ConfigurationEditor, NULL, MUIC_Group, NULL)
+

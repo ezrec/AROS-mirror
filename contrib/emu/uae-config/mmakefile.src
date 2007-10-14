@@ -1,4 +1,4 @@
-# Copyright © 2003, The AROS Development Team. All rights reserved.
+# Copyright © 2007, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(TOP)/config/make.cfg
@@ -7,15 +7,27 @@ EXE := UAE-Config
 EXEDIR := $(AROS_CONTRIB)/Emu/UAE-Config
 
 FILES  := \
-    main asl support locale configurationeditor \
+    main asl support locale configurationeditor config \
     devicecontrol drive drivelist drivelisteditor driveeditor
+
+IMGFILES := CDROMDrive FloppyDrive HardDrive
 
 #MM- contrib-uaeconfig : contrib-uaeconfig-bin
 
-#MM contrib-uaeconfig-bin : includes linklibs contrib-uaeconfig-catalogs
+#MM contrib-uaeconfig-bin : includes linklibs contrib-uaeconfig-images \
+#MM contrib-uaeconfig-catalogs contrib-uaeconfig-icons
 
 %build_prog mmake=contrib-uaeconfig-bin \
     progname=$(EXE) targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="amiga arossupport mui"
+
+#MM contrib-uaeconfig-images :
+
+%copy_files_q files=$(IMGFILES) src=images dst=$(EXEDIR)/Images maketarget=contrib-uaeconfig-images
+
+#MM
+contrib-uaeconfig-clean :
+	$(RM) $(EXEDIR)
+	$(RM) $(GENDIR)/$(CURDIR)
 
 %common
