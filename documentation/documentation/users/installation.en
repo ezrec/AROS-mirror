@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright Â 1995-2006, The AROS Development Team
+:Copyright: Copyright Ò 1995-2007, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. In works, being updating to the current status.
@@ -27,17 +27,12 @@ Downloading
 ===========
 
 AROS is currently under heavy development. The result is that you have to choose
-between stability and features. Currently there are two types of binary packages
-available for download: snapshots and nightly builds. 
+between stability and features. There are two types of binary packages
+possible: snapshots and nightly builds. 
 
-Snapshots are done manually quite infrequently, mostly when there have been
-a larger amount of useful changes done to AROS since the last snapshot and
-someone feels motivated to create a new snapshot. In short, there is currently
-no regular release schedule. Even though they are made infrequently and that we
-try to pick times when AROS is particularly stable, there is no guarantee they
-will be bug-free or work on your particular machine. That said, we try to
-test snapshots on a wider variety of machines, so in practice they should work
-relatively well.
+Currently, there`s no snapshots available, because the ones existed before has
+been too obsoleted to reflect the current status. So the users are encouraged 
+to download the nightly builds instead.
 
 Nightly builds are done, as the name implies, automatically every night directly
 from the Subversion tree and contain the latest code. However, they have not
@@ -45,8 +40,8 @@ been tested in any way and can be horribly broken, extremely buggy and may even
 destroy your system if you're very unlucky. Most of the time though, they work
 fine.
 
-Please see the `download page`_ for more information on which snapshots and
-nightly builds are available and how to download them.
+Please see the `download page`_ for more information on nightly builds 
+available and how to download them.
 
 
 Installation
@@ -62,7 +57,8 @@ To run AROS/i386-linux or AROS/i386-freebsd you will need the following:
 
 + A working FreeBSD 5.x or Linux installation (doesn't really matter which
   distribution you run, as long as it's relatively recent).
-+ A configured and working X server (for example X.Org or XFree86).
++ A configured and working X server (for example X.Org or XFree86) for x11.hidd 
+  or libsdl installed (for sdl.hidd).
 
 That's it. 
 
@@ -123,9 +119,10 @@ AROS/i386-pc and AROS/X86-64x Native
 Requirements
 """"""""""""
 
-You will need an average PC (i486 or Pentum-based) with *PS/2 mouse* and PS/2 
-or AT keyboard, IDE hard disk and CD-ROM, (S)VGA video card and monitor. 
-Also almost any available PC-compatible VM (virtual machine) can be used.
+You will need an average *PCI-based* PC (i486 or Pentum) with *PS/2 mouse* 
+and PS/2 or AT keyboard, IDE hard disk and CD-ROM, (S)VGA video card and monitor. 
+Also most of available PC-compatible VM (virtual machine) can be used. QEMU, 
+VmVare, Q, Bochs, MS VPC are known to work.
 At least 16 MB of RAM and VESA-compliant VGA card is recommended. 
 There`s a generic accelerated drivers (HIDD`s) for ATI and nVidia cards. 
 Also you can add the networking interface card (there`s some supported) to 
@@ -251,14 +248,17 @@ it by clicking on it`s icon. See it`s launched up and showing you the
 prompt.
 
 *Currently* there`s a bug in Wanderer when discovering new volumes (this issue
-is known and to be fixed soon), that quits InstallAROS from formatting drives.
+seems to be bypassed already), that quits InstallAROS from formatting drives.
 So please enter the Wanderer menu, select Exit and confirm before proceeding.
-Then click PROCEED buton in InstallAROS window.
+Then click PROCEED buton in InstallAROS window, to get a screen with installing
+options.
 
 Installing AROS Only
 ^^^^^^^^^^^^^^^^^^^^
 
-TODO
+The most simple situation is AROS alone on the whole disk. Your disk can be 
+new or with an unneeded data on it. Select *Wipe disk* to **erase** existing 
+data on hard drive.
 
 Installing AROS along with Windows(R)/DOS(R)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
