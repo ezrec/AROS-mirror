@@ -89,6 +89,7 @@ void config_init(struct UAEConfigdata *cfg)
     mem_gfx[MGFX_4]    = "4";
     mem_gfx[MGFX_8]    = "8";
     mem_gfx[MGFX_16]   = "16";
+    mem_gfx[MGFX_32]   = "32";
 
     chip_type[CHP_OCS]      = "ocs";
     chip_type[CHP_ECSAGNUS] = "ecs_agnus";

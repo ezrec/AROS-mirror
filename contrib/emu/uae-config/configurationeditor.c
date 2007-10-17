@@ -27,14 +27,15 @@
 #include "asl.h"
 #include "config.h"
 
-STRPTR pageLabels[7];
+CONST_STRPTR pageLabels[7];
 
-static CONST_STRPTR MEM_Z3[]     = {NULL, "1 MiB", "2 MiB", "4 MiB", "8 MiB", "16 MiB", "32 MiB", "64 MiB", "128 MiB", "256 MiB", "512 MiB", NULL};
-static CONST_STRPTR CPU_Type[]   = {"68000", "68010", "68020", "68020+68881", "68040", NULL};
-static CONST_STRPTR MEM_Chip[]   = {"256 kiB", "512 kiB", "1 MiB", "2 MiB", "4 MiB", "8 MiB", NULL};
-static CONST_STRPTR MEM_Fast[]   = {NULL, "1 MiB", "2 MiB", "4 MiB", "8 MiB", NULL};
-static CONST_STRPTR MEM_Slow[]   = {NULL, "512 kiB", "1 MiB", "1.5 MiB", NULL};
-static CONST_STRPTR GFX_Memory[] = {NULL, "1 MiB", "2 MiB", "4 MiB", "8 MiB", "16 MiB", "32 MiB", NULL};
+/* You need an additional entry for the NULL */
+static CONST_STRPTR MEM_Z3[12];
+static CONST_STRPTR CPU_Type[6];
+static CONST_STRPTR MEM_Chip[7];
+static CONST_STRPTR MEM_Fast[6];
+static CONST_STRPTR MEM_Slow[5];
+static CONST_STRPTR GFX_Memory[8];
 static CONST_STRPTR SND_Mode[5];
 static CONST_STRPTR CPU_Speed[4];
 static CONST_STRPTR GFX_Chipset[5];
@@ -105,6 +106,38 @@ struct ConfigurationEditor_DATA
 };
 
 
+static void config2gui(struct ConfigurationEditor_DATA *data)
+{
+    SET(data->ced_CPU_Type, MUIA_Cycle_Active, data->configdata.cpu_type);
+    SET(data->ced_CPU_Speed, MUIA_Cycle_Active, data->configdata.cpu_speed);
+    SET(data->ced_CPU_Ratio, MUIA_Numeric_Value, data->configdata.cpu_ratio);
+    SET(data->ced_CPU_Compatible, MUIA_Selected, data->configdata.cpu_compatible);
+
+    SET(data->ced_MEM_Kickstart, MUIA_String_Contents, data->configdata.mem_kickstart);
+    SET(data->ced_MEM_KickstartKey, MUIA_String_Contents, data->configdata.mem_kickstart_key);
+    SET(data->ced_MEM_Chip, MUIA_Cycle_Active, data->configdata.mem_chip);
+    SET(data->ced_MEM_Fast, MUIA_Cycle_Active, data->configdata.mem_fast);
+    SET(data->ced_MEM_Slow, MUIA_Cycle_Active, data->configdata.mem_slow);
+    SET(data->ced_MEM_Z3, MUIA_Cycle_Active, data->configdata.mem_z3);
+
+    SET(data->ced_GFX_Chipset, MUIA_Cycle_Active, data->configdata.gfx_chipset);
+    SET(data->ced_GFX_SpriteCollisions, MUIA_Cycle_Active, data->configdata.gfx_sprite_collisions);
+    SET(data->ced_GFX_Memory, MUIA_Cycle_Active, data->configdata.gfx_memory);
+    SET(data->ced_GFX_ImmediateBlits, MUIA_Cycle_Active, data->configdata.gfx_immediate_blits);
+    SET(data->ced_GFX_Framerate, MUIA_Numeric_Value, data->configdata.gfx_framerate);
+
+    SET(data->ced_SND_Mode, MUIA_Cycle_Active, data->configdata.snd_mode);
+    SET(data->ced_SND_Channels, MUIA_Cycle_Active, data->configdata.snd_channels);
+    SET(data->ced_SND_Resolution, MUIA_Cycle_Active, data->configdata.snd_resolution);
+
+    data->ced_DRV_FloppyCount = data->configdata.drv_floppy_count ;
+
+    // TODO Drives and Floppies
+
+    SET(data->ced_PRT_Gameport0, MUIA_Cycle_Active, data->configdata.prt_gameport0);
+    SET(data->ced_PRT_Gameport1, MUIA_Cycle_Active, data->configdata.prt_gameport1);
+}
+
 /*** Methods ****************************************************************/
 IPTR ConfigurationEditor__OM_NEW
 (
@@ -149,7 +182,7 @@ IPTR ConfigurationEditor__OM_NEW
 	   *loadStateButton;
 
     
-    /*== Localize strings ==================================================*/
+    /*== Init/Localize strings =============================================*/
     pageLabels[0]  = _(MSG_CFG_CPU);
     pageLabels[1]  = _(MSG_CFG_MEMORY);
     pageLabels[2]  = _(MSG_CFG_GRAPHICS);
@@ -157,51 +190,96 @@ IPTR ConfigurationEditor__OM_NEW
     pageLabels[4]  = _(MSG_CFG_DRIVES);
     pageLabels[5]  = _(MSG_CFG_PORTS);
     pageLabels[6]  = NULL;
-    
-    CPU_Speed[0]   = _(MSG_CFG_CPU_SPEED_FAST);
-    CPU_Speed[1]   = _(MSG_CFG_CPU_SPEED_COMPATIBLE);
-    CPU_Speed[2]   = _(MSG_CFG_CPU_SPEED_ADJUSTABLE);
-    CPU_Speed[3]   = NULL;
-    
-    MEM_Fast[0]    = _(MSG_CFG_MEM_NONE);
-    MEM_Slow[0]    = _(MSG_CFG_MEM_NONE);
-    MEM_Z3[0]      = _(MSG_CFG_MEM_NONE);
-    
-    GFX_Memory[0]  = _(MSG_CFG_MEM_NONE);
-    GFX_Chipset[0] = _(MSG_CFG_GFX_CHIPSET_OCS);
-    GFX_Chipset[1] = _(MSG_CFG_GFX_CHIPSET_ECS_AGNUS);
-    GFX_Chipset[2] = _(MSG_CFG_GFX_CHIPSET_ECS_FULL);
-    GFX_Chipset[3] = _(MSG_CFG_GFX_CHIPSET_AGA);
-    GFX_Chipset[4] = NULL;
 
-    GFX_SpriteCollisions[0] = _(MSG_CFG_GFX_SC_NONE);
-    GFX_SpriteCollisions[1] = _(MSG_CFG_GFX_SC_SPRITES);
-    GFX_SpriteCollisions[2] = _(MSG_CFG_GFX_SC_SPRITES_AND_PLAYFIELDS);
-    GFX_SpriteCollisions[3] = _(MSG_CFG_GFX_SC_FULL);
-    GFX_SpriteCollisions[4] = NULL;
+    CPU_Type[CPU_68000]    = "68000";
+    CPU_Type[CPU_68010]    = "68010";
+    CPU_Type[CPU_68020]    = "68020";
+    CPU_Type[CPU_68020_81] = "68020+68881";
+    CPU_Type[CPU_68040]    = "68040";
+    CPU_Type[CPU_CNT]      = NULL;
+
+    CPU_Speed[SPD_MAX]     = _(MSG_CFG_CPU_SPEED_FAST);
+    CPU_Speed[SPD_REAL]    = _(MSG_CFG_CPU_SPEED_COMPATIBLE);
+    CPU_Speed[SPD_COMP]    = _(MSG_CFG_CPU_SPEED_ADJUSTABLE);
+    CPU_Speed[SPD_CNT]     = NULL;
+
+    MEM_Chip[MCHP_256]     = "256 kiB";
+    MEM_Chip[MCHP_512]     = "512 kiB";
+    MEM_Chip[MCHP_1M]      = "1 MiB";
+    MEM_Chip[MCHP_2M]      = "2 MiB";
+    MEM_Chip[MCHP_4M]      = "4 MiB";
+    MEM_Chip[MCHP_8M]      = "8 MiB";
+    MEM_Chip[MCHP_CNT]     = NULL;
+
+    MEM_Fast[MFST_NONE]    = _(MSG_CFG_MEM_NONE);
+    MEM_Fast[MFST_1]       = "1 MiB";
+    MEM_Fast[MFST_2]       = "2 MiB";
+    MEM_Fast[MFST_4]       = "4 MiB";
+    MEM_Fast[MFST_8]       = "8 MiB";
+    MEM_Fast[MFST_CNT]     = NULL;
+
+    MEM_Slow[MSLW_NONE]    = _(MSG_CFG_MEM_NONE);
+    MEM_Slow[MSLW_512]     = "512 kiB";
+    MEM_Slow[MSLW_1M]      = "1 MiB";
+    MEM_Slow[MSLW_1_5M]    = "1.5 MiB";
+    MEM_Slow[MSLW_CNT]     = NULL;
+
+    MEM_Z3[MZ3_NONE]       = _(MSG_CFG_MEM_NONE);
+    MEM_Z3[MZ3_1]          = "1 MiB";
+    MEM_Z3[MZ3_2]          = "2 MiB";
+    MEM_Z3[MZ3_4]          = "4 MiB";
+    MEM_Z3[MZ3_8]          = "8 MiB";
+    MEM_Z3[MZ3_16]         = "16 MiB";
+    MEM_Z3[MZ3_32]         = "32 MiB";
+    MEM_Z3[MZ3_64]         = "64 MiB";
+    MEM_Z3[MZ3_128]        = "128 MiB";
+    MEM_Z3[MZ3_256]        = "256 MiB";
+    MEM_Z3[MZ3_512]        = "512 MiB";
+    MEM_Z3[MZ3_CNT]        = NULL;
+
+    GFX_Memory[MGFX_NONE]  = _(MSG_CFG_MEM_NONE);
+    GFX_Memory[MGFX_1]     = "1 MiB";
+    GFX_Memory[MGFX_2]     = "2 MiB";
+    GFX_Memory[MGFX_4]     = "4 MiB";
+    GFX_Memory[MGFX_8]     = "8 MiB";
+    GFX_Memory[MGFX_16]    = "16 MiB";
+    GFX_Memory[MGFX_32]    = "32 MiB";
+    GFX_Memory[MGFX_CNT]   = NULL;
+
+    GFX_Chipset[CHP_OCS]      = _(MSG_CFG_GFX_CHIPSET_OCS);
+    GFX_Chipset[CHP_ECSAGNUS] = _(MSG_CFG_GFX_CHIPSET_ECS_AGNUS);
+    GFX_Chipset[CHP_ECSFULL]  = _(MSG_CFG_GFX_CHIPSET_ECS_FULL);
+    GFX_Chipset[CHP_AGA]      = _(MSG_CFG_GFX_CHIPSET_AGA);
+    GFX_Chipset[CHP_CNT]      = NULL;
+
+    GFX_SpriteCollisions[COLL_NONE]       = _(MSG_CFG_GFX_SC_NONE);
+    GFX_SpriteCollisions[COLL_SPRITES]    = _(MSG_CFG_GFX_SC_SPRITES);
+    GFX_SpriteCollisions[COLL_PLAYFIELDS] = _(MSG_CFG_GFX_SC_SPRITES_AND_PLAYFIELDS);
+    GFX_SpriteCollisions[COLL_FULL]       = _(MSG_CFG_GFX_SC_FULL);
+    GFX_SpriteCollisions[COLL_CNT]        = NULL;
         
-    SND_Mode[0] = _(MSG_CFG_SND_MODE_NONE);
-    SND_Mode[1] = _(MSG_CFG_SND_MODE_MUTED);
-    SND_Mode[2] = _(MSG_CFG_SND_MODE_NORMAL);
-    SND_Mode[3] = _(MSG_CFG_SND_MODE_ACCURATE);
-    SND_Mode[4] = NULL;
+    SND_Mode[SND_NONE]         = _(MSG_CFG_SND_MODE_NONE);
+    SND_Mode[SND_MUTED]        = _(MSG_CFG_SND_MODE_MUTED);
+    SND_Mode[SND_NORMAL]       = _(MSG_CFG_SND_MODE_NORMAL);
+    SND_Mode[SND_EXACT]        = _(MSG_CFG_SND_MODE_ACCURATE);
+    SND_Mode[SND_CNT]          = NULL;
     
-    SND_Channels[0] = _(MSG_CFG_SND_CHANNELS_MONO);
-    SND_Channels[1] = _(MSG_CFG_SND_CHANNELS_STEREO);
-    SND_Channels[2] = _(MSG_CFG_SND_CHANNELS_MIXED);
-    SND_Channels[3] = NULL;
+    SND_Channels[SNDCH_MONO]   = _(MSG_CFG_SND_CHANNELS_MONO);
+    SND_Channels[SNDCH_STEREO] = _(MSG_CFG_SND_CHANNELS_STEREO);
+    SND_Channels[SNDCH_MIXED]  = _(MSG_CFG_SND_CHANNELS_MIXED);
+    SND_Channels[SNDCH_CNT]    = NULL;
     
-    SND_Resolution[0] = _(MSG_CFG_SND_RESOLUTION_8BIT);
-    SND_Resolution[1] = _(MSG_CFG_SND_RESOLUTION_16BIT);
-    SND_Resolution[2] = NULL;
+    SND_Resolution[SNDBIT_8]   = _(MSG_CFG_SND_RESOLUTION_8BIT);
+    SND_Resolution[SNDBIT_16]  = _(MSG_CFG_SND_RESOLUTION_16BIT);
+    SND_Resolution[SNDBIT_CNT] = NULL;
     
-    PRT_Gameport[0] = _(MSG_CFG_PRT_GAMEPORT_JOYSTICK0);
-    PRT_Gameport[1] = _(MSG_CFG_PRT_GAMEPORT_JOYSTICK1);
-    PRT_Gameport[2] = _(MSG_CFG_PRT_GAMEPORT_MOUSE);
-    PRT_Gameport[3] = _(MSG_CFG_PRT_GAMEPORT_NUMERIC);
-    PRT_Gameport[4] = _(MSG_CFG_PRT_GAMEPORT_KEYS0);
-    PRT_Gameport[5] = _(MSG_CFG_PRT_GAMEPORT_KEYS1);
-    PRT_Gameport[6] = NULL;
+    PRT_Gameport[JP_JOY0]    = _(MSG_CFG_PRT_GAMEPORT_JOYSTICK0);
+    PRT_Gameport[JP_JOY1]    = _(MSG_CFG_PRT_GAMEPORT_JOYSTICK1);
+    PRT_Gameport[JP_MOUSE]   = _(MSG_CFG_PRT_GAMEPORT_MOUSE);
+    PRT_Gameport[JP_NUMERIC] = _(MSG_CFG_PRT_GAMEPORT_NUMERIC);
+    PRT_Gameport[JP_KEYS0]   = _(MSG_CFG_PRT_GAMEPORT_KEYS0);
+    PRT_Gameport[JP_KEYS1]   = _(MSG_CFG_PRT_GAMEPORT_KEYS1);
+    PRT_Gameport[JP_CNT]     = NULL;
     
     /*== Create objects and layot ==========================================*/
     self = (Object *) DoSuperNewTags
@@ -503,15 +581,8 @@ IPTR ConfigurationEditor__OM_NEW
         );
         
         /*-- Sensible defaults ---------------------------------------------*/
-        SET(mem_Chip, MUIA_Cycle_Active, 3);
-        SET(cpu_Type, MUIA_Cycle_Active, 3);
-        SET(cpu_Speed, MUIA_Cycle_Active, 0);
-        SET(gfx_Chipset, MUIA_Cycle_Active, 2);
-        SET(gfx_SpriteCollisions, MUIA_Cycle_Active, 1);
-        SET(gfx_CopperSpeedup, MUIA_Selected, TRUE);
-        SET(gfx_ImmediateBlits, MUIA_Selected, TRUE);
-        SET(snd_Mode, MUIA_Cycle_Active, 0);
-        SET(prt_Gameport0, MUIA_Cycle_Active, 2);
+        config_init(&data->configdata);
+        DoMethod(self, MUIM_ConfigurationEditor_ResetState);
         
         /*-- Miscellanous initialization -----------------------------------*/
         SET(drv_FloppyMore, MUIA_Disabled, TRUE);
@@ -667,7 +738,8 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_LoadState
     if (filename != NULL)
     {
         config_read(&data->configdata, filename);
-        // TODO translate config to GUI
+        config2gui(data);
+
         FreeVec(filename);
     }
     
@@ -685,11 +757,54 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_SaveState
     if (filename != NULL)
     {
         data->configdata.cpu_type = XGET(data->ced_CPU_Type, MUIA_Cycle_Active);
-        // TODO translate GUI to config
+        data->configdata.cpu_speed = XGET(data->ced_CPU_Speed, MUIA_Cycle_Active);
+        data->configdata.cpu_ratio = XGET(data->ced_CPU_Ratio, MUIA_Numeric_Value);
+        data->configdata.cpu_compatible = XGET(data->ced_CPU_Compatible, MUIA_Selected);
+
+        data->configdata.mem_kickstart = StrDup((STRPTR)XGET(data->ced_MEM_Kickstart, MUIA_String_Contents));
+        data->configdata.mem_kickstart_key =
+            StrDup((STRPTR)XGET(data->ced_MEM_KickstartKey, MUIA_String_Contents));
+        data->configdata.mem_chip = XGET(data->ced_MEM_Chip, MUIA_Cycle_Active);
+        data->configdata.mem_fast = XGET(data->ced_MEM_Fast, MUIA_Cycle_Active);
+        data->configdata.mem_slow = XGET(data->ced_MEM_Slow, MUIA_Cycle_Active);
+        data->configdata.mem_z3   = XGET(data->ced_MEM_Z3, MUIA_Cycle_Active);
+
+        data->configdata.gfx_chipset = XGET(data->ced_GFX_Chipset, MUIA_Cycle_Active);
+        data->configdata.gfx_sprite_collisions =
+            XGET(data->ced_GFX_SpriteCollisions, MUIA_Cycle_Active);
+        data->configdata.gfx_memory = XGET(data->ced_GFX_Memory, MUIA_Cycle_Active);
+        data->configdata.gfx_immediate_blits = XGET(data->ced_GFX_ImmediateBlits, MUIA_Cycle_Active);
+        data->configdata.gfx_framerate = XGET(data->ced_GFX_Framerate, MUIA_Numeric_Value);
+
+        data->configdata.snd_mode = XGET(data->ced_SND_Mode, MUIA_Cycle_Active);
+        data->configdata.snd_channels = XGET(data->ced_SND_Channels, MUIA_Cycle_Active);
+        data->configdata.snd_resolution = XGET(data->ced_SND_Resolution, MUIA_Cycle_Active);
+
+        data->configdata.drv_floppy_count = data->ced_DRV_FloppyCount;
+
+        // TODO Drives and Floppies
+
+        data->configdata.prt_gameport0 = XGET(data->ced_PRT_Gameport0, MUIA_Cycle_Active);
+        data->configdata.prt_gameport1 = XGET(data->ced_PRT_Gameport1, MUIA_Cycle_Active);
+
         config_write(&data->configdata, filename);
         
         FreeVec(filename);
     }
+
+    return 0;
+}
+
+
+IPTR ConfigurationEditor__MUIM_ConfigurationEditor_ResetState
+(
+    Class *CLASS, Object *self, Msg message
+)
+{
+    struct ConfigurationEditor_DATA *data = INST_DATA(CLASS, self);
+
+    config_reset(&data->configdata);
+    config2gui(data);
 
     return 0;
 }
@@ -735,6 +850,7 @@ __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_UpdateMe
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_UpdateSound, MUIM_ConfigurationEditor_UpdateSound, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_LoadState, MUIM_ConfigurationEditor_LoadState, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_SaveState, MUIM_ConfigurationEditor_SaveState, Msg);
+__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_ResetState, MUIM_ConfigurationEditor_ResetState, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_StartUAE, MUIM_ConfigurationEditor_StartUAE, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_StartEUAE, MUIM_ConfigurationEditor_StartEUAE, Msg);
 __ZUNE_CUSTOMCLASS_END(ConfigurationEditor, NULL, MUIC_Group, NULL)
