@@ -9,7 +9,7 @@
 AROS Research Operating System je jednoduchý, výkonný a pøizpùsobitelný 
 desktopový operaèní systém navr¾ený k tomu, aby vám pomohl vytì¾it maximum
 z va¹eho poèítaèe. 
-Je to nezávislý, pøenosný a svobodný projekt, pomáhající být kompatibilní
+Je to nezávislý, pøenosný a svobodný projekt, sna¾ící se být kompatibilní
 s AmigaOS 3.1 na API levelu (jako Wine, ne jako UAE), pøi souèasném zlep¹ování
 v mnoha oblastech. Zdrojový kód je dostupný pod open source licencí, 
 která ho dovoluje komukoli zdokonalovat.
