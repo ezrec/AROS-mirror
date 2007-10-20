@@ -17,43 +17,43 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         Tree \
         ( [
 	    P ( contents = [
-            Img( src = '%(ROOT)simages/englishlogo.png' ),
+            Img( src = '%(ROOT)simages/englishlogo.png', width = 16, height = 10),
             A( 'English', href='%(BASE)s.' )]),
 	    P ( contents = [
-            Img( src = '%(ROOT)simages/germanylogo.png' ),
+            Img( src = '%(ROOT)simages/germanylogo.png', width = 16, height = 10),
             A( 'Deutsch', href='%(BASE)sde/' )]),
             P ( contents = [
-            Img( src = '%(ROOT)simages/greecelogo.png' ),
+            Img( src = '%(ROOT)simages/greecelogo.png', width = 16, height = 10),
             A( '&#917;&#955;&#955;&#951;&#965;&#953;&#954;&#940;', href='%(BASE)sel/' )]),
             P ( contents = [
-            Img( src = '%(ROOT)simages/francelogo.png' ),
+            Img( src = '%(ROOT)simages/francelogo.png', width = 16, height = 10),
             A( 'Fran&#231;ais', href='%(BASE)sfr/' )]),
             P ( contents = [
-            Img( src = '%(ROOT)simages/italylogo.png' ),
+            Img( src = '%(ROOT)simages/italylogo.png', width = 16, height = 10),
             A( 'Italiano', href='%(BASE)sit/' )]),
             P ( contents = [
-            Img( src = '%(ROOT)simages/netherlandslogo.png' ),
+            Img( src = '%(ROOT)simages/netherlandslogo.png', width = 16, height = 10),
             A( 'Nederlands', href='%(BASE)snl/' )]),
 	    P ( contents = [
-            Img( src = '%(ROOT)simages/polandlogo.png' ),
+            Img( src = '%(ROOT)simages/polandlogo.png', width = 16, height = 10),
             A( 'Polski', href='%(BASE)spl/' )]),
             P ( contents = [
-            Img( src = '%(ROOT)simages/portugallogo.png' ),
+            Img( src = '%(ROOT)simages/portugallogo.png', width = 16, height = 10),
             A( 'Portugu&#234;s', href='%(BASE)spt/' )]),
             P ( contents = [
-            Img( src = '%(ROOT)simages/russialogo.png' ),
+            Img( src = '%(ROOT)simages/russialogo.png', width = 16, height = 10),
             A( '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;', href='%(BASE)sru/' )]),
 	    P ( contents = [
-            Img( src = '%(ROOT)simages/spanishlogo.png' ),
+            Img( src = '%(ROOT)simages/spanishlogo.png', width = 16, height = 10),
             A( 'Espa&#241ol', href='%(BASE)ses/' )]),
 		P ( contents = [
-            Img( src = '%(ROOT)simages/finlandlogo.png' ),
+            Img( src = '%(ROOT)simages/finlandlogo.png', width = 16, height = 10),
             A( 'Suomi', href='%(BASE)sfi/' )]),
 	    P ( contents = [
-            Img( src = '%(ROOT)simages/swedenlogo.png' ),
+            Img( src = '%(ROOT)simages/swedenlogo.png', width = 16, height = 10),
             A( 'Svenska', href='%(BASE)ssv/' )]),
 	    P ( contents = [
-            Img( src = '%(ROOT)simages/czechlogo.png' ),
+            Img( src = '%(ROOT)simages/czechlogo.png', width = 16, height = 10),
             A( '&#268;esky', href='%(BASE)scs/' )])		
         ] ),
         BR(),
