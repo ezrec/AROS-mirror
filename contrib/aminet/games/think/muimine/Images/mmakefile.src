@@ -1,6 +1,6 @@
 #   $Id$
 #
-#   Makefile to make Soliton.
+#   Makefile to make MUIMine/Images.
 
 include $(TOP)/config/make.cfg
 
@@ -29,11 +29,7 @@ IMAGES =                        \
 
 EXEDIR := $(CONTRIBDIR)/Games/MUIMine
 IMAGEDIR := $(EXEDIR)/Images
-DEST_IMAGES := $(foreach f,$(IMAGES),$(IMAGEDIR)/$(f))
 
 #MM setup-aminet-games-think-muimine-images
-setup-aminet-games-think-muimine-images : images
 
-images ::
-	@$(IF) $(TEST) ! -d $(IMAGEDIR) ; then $(MKDIR) $(IMAGEDIR) ; else $(NOP) ; fi
-	@$(CP) $(IMAGES) $(IMAGEDIR)
+%copy_files_q files=$(IMAGES) src=. dst=$(IMAGEDIR) maketarget=setup-aminet-games-think-muimine-images
