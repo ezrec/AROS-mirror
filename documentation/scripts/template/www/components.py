@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2002, The AROS Development Team. All rights reserved.
+# Copyright © 2002-2007, The AROS Development Team. All rights reserved.
 # $Id$
 
 from html import *
@@ -36,7 +36,7 @@ class Tree( Container ):
                     #tr.append( TD( '+', width=Tree.INDENT ) )
                     tr.append( 
                         TD( 
-                            Img( src='%(ROOT)simages/bullet.gif' ), 
+                            Img( src='%(ROOT)simages/bullet.gif', width=5, height=11 ), 
                             align = 'right', valign = 'middle', width=Tree.INDENT 
                         ) 
                     )
