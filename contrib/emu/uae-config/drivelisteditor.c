@@ -287,6 +287,55 @@ IPTR DriveListEditor__MUIM_DriveListEditor_Add
     return 0;
 }
 
+IPTR DriveListEditor__MUIM_DriveListEditor_AddDrive
+(
+    Class *CLASS, Object *self, struct MUIP_DriveListEditor_AddDrive * message
+)
+{
+    struct DriveListEditor_DATA *data  = INST_DATA(CLASS, self);
+    struct Drive                *drive = Drive_Create();
+    
+    if (drive != NULL)
+    {
+        *drive = *message->drive;
+        drive->d_Path = StrDup(message->drive->d_Path);
+        if (drive->d_Type == DT_FILESYSTEM)
+        {
+            drive->d_Parameters.FS.VolumeName = StrDup(message->drive->d_Parameters.FS.VolumeName);
+        }
+        DoMethod
+        (
+            data->dle_List, MUIM_List_InsertSingle, 
+                (IPTR) drive, MUIV_List_Insert_Bottom
+        );
+    }
+    else
+    {
+        // FIXME: error message
+    }
+    
+    return 0;
+}
+
+IPTR DriveListEditor__MUIM_DriveListEditor_RemoveAll
+(
+    Class *CLASS, Object *self, Msg message
+)
+{
+    struct DriveListEditor_DATA *data  = INST_DATA(CLASS, self);
+    struct Drive                *drive = NULL;
+    ULONG                        i;
+    
+    for (i = 0; i < XGET(data->dle_List, MUIA_List_Entries); i++)
+    {
+        DoMethod(data->dle_List, MUIM_List_GetEntry, i, (IPTR) &drive);
+        DoMethod(data->dle_List, MUIM_List_Remove, i);
+        
+        if (drive != NULL) Drive_Destroy(drive);
+    }
+    return 0;
+}
+
 IPTR DriveListEditor__MUIM_DriveListEditor_Edit
 (
     Class *CLASS, Object *self, Msg message
@@ -381,11 +430,13 @@ IPTR DriveListEditor__MUIM_DriveListEditor_MoveDown
 }
 
 /*** Setup ******************************************************************/
-ZUNE_CUSTOMCLASS_8
+ZUNE_CUSTOMCLASS_10
 (
     DriveListEditor, NULL, MUIC_Group, NULL,
     OM_NEW,                             struct opSet *,
     OM_DISPOSE,                         Msg,
+    MUIM_DriveListEditor_AddDrive,      struct MUIP_DriveListEditor_AddDrive *,
+    MUIM_DriveListEditor_RemoveAll,     Msg,
     MUIM_DriveListEditor_UpdateButtons, Msg,
     MUIM_DriveListEditor_Add,           Msg,
     MUIM_DriveListEditor_Edit,          Msg,

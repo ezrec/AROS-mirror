@@ -23,6 +23,7 @@
 #include "configurationeditor.h"
 #include "locale.h"
 #include "drivelisteditor.h"
+#include "drive.h"
 #include "support.h"
 #include "asl.h"
 #include "config.h"
@@ -108,6 +109,8 @@ struct ConfigurationEditor_DATA
 
 static void config2gui(struct ConfigurationEditor_DATA *data)
 {
+    ULONG i;
+
     SET(data->ced_CPU_Type, MUIA_Cycle_Active, data->configdata.cpu_type);
     SET(data->ced_CPU_Speed, MUIA_Cycle_Active, data->configdata.cpu_speed);
     SET(data->ced_CPU_Ratio, MUIA_Numeric_Value, data->configdata.cpu_ratio);
@@ -130,9 +133,22 @@ static void config2gui(struct ConfigurationEditor_DATA *data)
     SET(data->ced_SND_Channels, MUIA_Cycle_Active, data->configdata.snd_channels);
     SET(data->ced_SND_Resolution, MUIA_Cycle_Active, data->configdata.snd_resolution);
 
-    data->ced_DRV_FloppyCount = data->configdata.drv_floppy_count ;
+    data->ced_DRV_FloppyCount = data->configdata.drv_floppy_count;
+    for (i=0 ; i<4 ; i++)
+    {
+        SET(data->ced_DRV_Floppies[i], MUIA_String_Contents, data->configdata.drv_floppy_path[i]);
+    }
 
-    // TODO Drives and Floppies
+    DoMethod(data->ced_DRV_ListEditor, MUIM_DriveListEditor_RemoveAll);
+    for (i=0 ; i<data->configdata.drv_drive_count ; i++)
+    {
+        DoMethod
+        (
+            data->ced_DRV_ListEditor,
+            MUIM_DriveListEditor_AddDrive,
+            &data->configdata.drv_drive[i]
+        );
+    }
 
     SET(data->ced_PRT_Gameport0, MUIA_Cycle_Active, data->configdata.prt_gameport0);
     SET(data->ced_PRT_Gameport1, MUIA_Cycle_Active, data->configdata.prt_gameport1);
@@ -200,7 +216,7 @@ IPTR ConfigurationEditor__OM_NEW
 
     CPU_Speed[SPD_MAX]     = _(MSG_CFG_CPU_SPEED_FAST);
     CPU_Speed[SPD_REAL]    = _(MSG_CFG_CPU_SPEED_COMPATIBLE);
-    CPU_Speed[SPD_COMP]    = _(MSG_CFG_CPU_SPEED_ADJUSTABLE);
+    CPU_Speed[SPD_ADJ]     = _(MSG_CFG_CPU_SPEED_ADJUSTABLE);
     CPU_Speed[SPD_CNT]     = NULL;
 
     MEM_Chip[MCHP_256]     = "256 kiB";
@@ -591,6 +607,16 @@ IPTR ConfigurationEditor__OM_NEW
     return (IPTR) self;
 }
 
+IPTR ConfigurationEditor__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
+{
+    struct ConfigurationEditor_DATA *data = INST_DATA(cl, obj);
+
+    config_dispose(&data->configdata);
+
+    return DoSuperMethodA(cl, obj, msg);
+}
+
+
 IPTR ConfigurationEditor__MUIM_ConfigurationEditor_AddFloppyDrive
 (
     Class *CLASS, Object *self, Msg message
@@ -753,6 +779,7 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_SaveState
 {
     struct ConfigurationEditor_DATA *data = INST_DATA(CLASS, self);
 
+    ULONG i;
     STRPTR filename = ASL_SelectFile(AM_SAVE);
     if (filename != NULL)
     {
@@ -781,8 +808,27 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_SaveState
         data->configdata.snd_resolution = XGET(data->ced_SND_Resolution, MUIA_Cycle_Active);
 
         data->configdata.drv_floppy_count = data->ced_DRV_FloppyCount;
+        for (i=0 ; i<4 ; i++)
+        {
+            data->configdata.drv_floppy_path[i] = StrDup((STRPTR)XGET(data->ced_DRV_Floppies[i], MUIA_String_Contents));
+        }
 
-        // TODO Drives and Floppies
+        data->configdata.drv_drive_count = XGET(data->ced_DRV_ListEditor, MUIA_List_Entries);
+        if (data->configdata.drv_drive_count > MAX_DRIVE_CNT)
+        {
+            data->configdata.drv_drive_count = MAX_DRIVE_CNT;
+        }
+        for (i=0 ; i<data->configdata.drv_drive_count ; i++)
+        {
+            struct Drive *drv;
+            DoMethod(data->ced_DRV_ListEditor, MUIM_List_GetEntry, i, &drv);
+            data->configdata.drv_drive[i] = *drv;
+            data->configdata.drv_drive[i].d_Path = StrDup(drv->d_Path);
+            if (drv->d_Type == DT_FILESYSTEM)
+            {
+                data->configdata.drv_drive[i].d_Parameters.FS.VolumeName = StrDup(drv->d_Parameters.FS.VolumeName);
+            }
+        }
 
         data->configdata.prt_gameport0 = XGET(data->ced_PRT_Gameport0, MUIA_Cycle_Active);
         data->configdata.prt_gameport1 = XGET(data->ced_PRT_Gameport1, MUIA_Cycle_Active);
@@ -843,6 +889,7 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_StartEUAE
 /*** Setup ******************************************************************/
 __ZUNE_CUSTOMCLASS_START(ConfigurationEditor)
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__OM_NEW, OM_NEW, struct opSet *);
+__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__OM_DISPOSE, OM_DISPOSE, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_AddFloppyDrive, MUIM_ConfigurationEditor_AddFloppyDrive, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_RemFloppyDrive, MUIM_ConfigurationEditor_RemFloppyDrive, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_UpdateCPU, MUIM_ConfigurationEditor_UpdateCPU, Msg);

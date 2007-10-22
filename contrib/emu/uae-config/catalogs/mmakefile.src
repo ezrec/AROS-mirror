@@ -3,5 +3,8 @@
 
 include $(TOP)/config/make.cfg
 
-%build_catalogs mmake=contrib-uaeconfig-catalogs name=uaeconfig subdir=
+CATDIR := $(AROS_CONTRIB)/Emu/UAE-Config/Catalogs
+
+%build_catalogs mmake=contrib-uaeconfig-catalogs \
+    name=uaeconfig subdir= dir=$(CATDIR)
 

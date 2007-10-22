@@ -6,10 +6,14 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "drive.h"
+
 #include <exec/types.h>
 
+#define MAX_DRIVE_CNT (20)
+
 enum {CPU_68000, CPU_68010, CPU_68020, CPU_68020_81, CPU_68040, CPU_CNT};
-enum {SPD_MAX, SPD_REAL, SPD_COMP, SPD_CNT};
+enum {SPD_MAX, SPD_REAL, SPD_ADJ, SPD_CNT};
 enum {MZ3_NONE, MZ3_1, MZ3_2, MZ3_4, MZ3_8, MZ3_16, MZ3_32, MZ3_64, MZ3_128, MZ3_256, MZ3_512, MZ3_CNT};
 enum {MCHP_256, MCHP_512, MCHP_1M, MCHP_2M, MCHP_4M, MCHP_8M, MCHP_CNT};
 enum {MFST_NONE, MFST_1, MFST_2, MFST_4, MFST_8, MFST_CNT};
@@ -48,7 +52,10 @@ struct UAEConfigdata
     ULONG snd_resolution;
     
     ULONG drv_floppy_count;
-    
+    STRPTR drv_floppy_path[4];
+    ULONG drv_drive_count;
+    struct Drive drv_drive[MAX_DRIVE_CNT];
+
     ULONG prt_gameport0;
     ULONG prt_gameport1;
 };
