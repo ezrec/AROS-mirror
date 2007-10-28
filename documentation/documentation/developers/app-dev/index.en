@@ -30,6 +30,7 @@ Table of Contents
 + `Resource tracking`__
 + `Multitasking`__
 + `Localization`__
++ `Writing portable software`__
 + `Appendix`__
 
 __ introduction
@@ -41,4 +42,5 @@ __ intuition-library
 __ resource-tracking
 __ multitasking
 __ localization
+__ portable
 __ appendix

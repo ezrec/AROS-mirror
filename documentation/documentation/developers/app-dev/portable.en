@@ -1,0 +1,207 @@
+=========================
+Writing portable Software
+=========================
+
+:Authors:   Matthias Rustler
+:Copyright: Copyright © 2007, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+:Status:    Work in progress.
+:Abstract:  
+    This document will explain how to write software so that it can be compiled
+    for different AROS flavours.
+
+.. Contents::
+
+
+Introduction
+============
+
+Back in the old days it was easy: both integer and address types had a size of
+32 bit and the bytes were ordered in big endian. But because AROS is a portable,
+developers have to take care about some things or their source code will not run
+on all AROS flavours.
+
+
+Endianness
+==========
+
+Computer architectures differ in the order the bytes of integer values are stored
+in memory, i.e. their endianness_. On little endian systems the least significant
+byte is stored first, i.e. on systems where a byte has 8 bits the bits 0 to 7 are
+stored in address n, 8 to 15 in address n+1, 16 to 23 in n+2 and so on. On big endian
+it's the other way round.
+
+Endianess becomes important when you store
+binary data to files or try to access hardware like graphics cards etc.
+
+You can query the endianness this way::
+
+    #include <aros/cpu.h>
+    ...
+    if (AROS_BIG_ENDIAN) {
+        Puts("We are big endian.\n");
+    } else {
+        Puts("We are little endian.\n");
+    }
+
+
+AROS_BIG_ENDIAN is always defined if you include cpu.h. It has a value of 1 on big
+endian systems and 0 on little endian systems. This makes it possible to query the
+define with both C "if" and preprocessor "#if".
+
+You can find some conversion macros like *AROS_WORD2BE* in the header *aros/macros.h*.
+If you need some peek and poke functions with build-in endianness conversion look in
+*aros/io.h*.
+
+.. _Endianness: http://en.wikipedia.org/wiki/Endianness
+
+
+Data Types
+==========
+
+Some notes about the AROS data types which are defined in the header <exec/types.h>:
+
+The fundamental data types have a defined size on both 32 and 64 bit systems:
+
+===========  ============
+Type         sizeof(Type)
+===========  ============
+BYTE, UBYTE       1
+WORD, UWORD       2
+LONG, ULONG       4
+QUAD, UQUAD       8
+===========  ============
+
+This is opposed to C types like *int* and *long* which are depending on hardware.
+
+*IPTR* is defined as unsigned integer type which is large enough to store a pointer.
+You must use it when you want to store an address in an integer type.
+The following source code::
+
+    ...
+    ULONG address;
+    GetAttr(obj, Gimme_Address, &address);
+    ...
+
+has to be translated for AROS to::
+
+    ...
+    IPTR address;
+    GetAttr(obj, Gimme_Address, &address);
+    ...
+
+There are other cases like the argument array of ReadArgs(), the return values
+of OM_Get of BOOPSI/Zune classes etc.
+
+
+Hooks
+=====
+
+Hooks are used when a function needs a pointer to a function as argument. They are needed
+quite often in Zune user interfaces. There are two ways how you can define them:
+
+Register based::
+
+    #include <utility/hooks.h>
+    ...
+    static struct Hook myhook;
+    ...
+    AROS_UFH3S(ULONG, myfunction,
+    AROS_UFHA(struct Hook *, h, A0),
+    AROS_UFHA(Object *, object, A2),
+    AROS_UFHA(APTR, msg, A1))
+    {
+        AROS_USERFUNC_INIT
+        ....
+        return retval;
+        AROS_USERFUNC_EXIT
+    }
+    
+    int main(void)
+    {
+        myhook.h_Entry = (HOOKFUNC)myfunction;
+	myhook.h_SubEntry = 0;
+        ...
+        DoMethod(button, MUIM_Notify, MUIA_Pressed, FALSE,
+            (IPTR)app, 2, MUIM_CallHook, (IPTR)&myhook);
+        ...
+    }
+
+
+Stack based::
+
+    #include <proto/alib.h>
+    #include <utility/hooks.h>
+    ...
+    static struct Hook myhook;
+    ...
+    static ULONG myfunc(struct Hook *hook, Object *object, APTR msg)
+    {
+        ...
+        return retval;
+    }
+    
+    int main(void)
+    {
+        myhook.h_Entry = HookEntry;
+        myhook.h_SubEntry = (HOOKFUNC)myfunc;
+        ...
+        DoMethod(button, MUIM_Notify, MUIA_Pressed, FALSE,
+            (IPTR)app, 2, MUIM_CallHook, (IPTR)&myhook);
+        ...
+    }
+
+*HookEntry* is defined in amiga.lib. This function forwards the stack arguments
+to registers.
+
+
+Variadic Structure Parameters
+=============================
+
+Messages for BOOPSI methods are defined as structs, e.g.::
+
+    struct MUIP_Application_SetMenuCheck { ULONG MethodID; ULONG MenuID; LONG stat; };
+
+This causes problems when the method is called with the variadic *DoMethod*, because on some
+architecutes the parameters are passed on stack, in registers, or even in both.::
+
+    DoMethod(obj, MUIM_Application_SetMenuCheck, 10, 20);
+
+The solution is to prefix all elements in the struct with *STACKED*::
+
+    struct MUIP_Application_SetMenuCheck { STACKED ULONG MethodID; STACKED ULONG MenuID; STACKED LONG stat; };
+
+
+Include files
+=============
+
+Include headers for shared libraries from *proto*, e.g.::
+
+    #include <proto/intuition.h>
+
+
+Porting from AmigaOS
+====================
+
+AmigaOS source code often contains compiler attributes like *__asm* and  *__saveds* to use register
+for parameters etc. Sometimes even macros like *ASM* and *SAVEDS* are used to get some platform/compiler independence.
+
+The following macros/attributes can be removed or replaced by empty macros:
+
++ SAVEDS/__saveds/__geta4
++ ASM/__asm
++ CHIP/__chip
++ STDARGS/__stdargs
+
+VARARGS68K is for variadic functions and has to be defined this way::
+
+    #define VARARG68K __stackparm
+
+TODO
+====
+
+TODO: write something about SDI
+
+TODO: the appendix has already a chapter about differences between AmigaOS and AROS. Keep it or move
+its content in this document?
