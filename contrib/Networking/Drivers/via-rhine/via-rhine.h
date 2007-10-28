@@ -61,8 +61,6 @@ extern struct Library *OOPBase;
 
 struct VIARHINEBase {
     struct Device       rhineb_Device;
-    struct ExecBase     *rhineb_SysBase;
-    BPTR                rhineb_SegList;
     struct Library      *rhineb_UtilityBase;
     struct MsgPort      *rhineb_syncport;
 

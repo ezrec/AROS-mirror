@@ -81,7 +81,6 @@ typedef struct {
 
 struct uhci_staticdata
 {
-    struct ExecBase         *sysbase;
     struct SignalSemaphore  global_lock;
     
     APTR                    MemPool;
@@ -116,8 +115,6 @@ struct TDNode {
 struct uhcibase
 {
     struct Library          LibNode;
-    struct ExecBase         *sysbase;
-    BPTR                    seglist;
     struct uhci_staticdata   sd;
 };
 

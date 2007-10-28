@@ -270,8 +270,6 @@ struct ohci_staticdata
 struct ohcibase
 {
     struct Library          LibNode;
-    struct ExecBase         *sysbase;
-    BPTR                    seglist;
     struct ohci_staticdata  sd;
 };
 

@@ -52,8 +52,6 @@ extern struct Library *OOPBase;
 
 struct PCN32Base {
     struct Device       pcnb_Device;
-    struct ExecBase     *pcnb_SysBase;
-    BPTR                pcnb_SegList;
     struct Library      *pcnb_UtilityBase;
     struct MsgPort      *pcnb_syncport;
 

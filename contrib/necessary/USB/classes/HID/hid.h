@@ -90,8 +90,6 @@ struct hid_staticdata
 struct hidbase
 {
     struct Library          LibNode;
-    struct ExecBase         *sysbase;
-    BPTR                    seglist;
     struct hid_staticdata   sd;
 };
 

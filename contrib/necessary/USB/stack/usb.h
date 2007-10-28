@@ -63,7 +63,6 @@ struct usb_ExtClass {
 
 struct usb_staticdata
 {
-    struct ExecBase             *sysbase;
     struct SignalSemaphore      global_lock;
     void                        *MemPool;
 
@@ -140,8 +139,6 @@ typedef struct  {
 struct usbbase
 {
     struct Library          LibNode;
-    struct ExecBase         *sysbase;
-    BPTR                    seglist;
     struct usb_staticdata   sd;
 };
 

@@ -1,0 +1,307 @@
+;
+MSG_WINDOW_TITLE_DISPLAY (//)
+Emulator: Display
+;
+MSG_WINDOW_TITLE_CFG (//)
+Emulator: Configuration
+;
+MSG_MENU_PROJECT (//)
+Project
+;
+MSG_MENU_PROJECT_ABOUT (//)
+?\0About...
+;
+MSG_MENU_PROJECT_QUIT (//)
+Q\0Quit
+;
+MSG_TB_STOP_SH (//)
+Stop
+;
+MSG_TB_PAUSE_SH (//)
+Pause
+;
+MSG_TB_START_SH (//)
+Start
+;
+MSG_TB_RESTART_SH (//)
+Restart
+;
+MSG_TB_SAVE_STATE_SH (//)
+Save state...
+;
+MSG_TB_LOAD_STATE_SH (//)
+Load state...
+;
+MSG_TB_FULLSCREEN_SH (//)
+Fullscreen
+;
+MSG_DC_INSERT (//)
+Insert...
+;
+MSG_DC_EJECT (//)
+Eject
+;
+MSG_CFG_CPU (//)
+CPU
+;
+MSG_CFG_MEMORY (//)
+Memory
+;
+MSG_CFG_GRAPHICS (//)
+Graphics
+;
+MSG_CFG_SOUND (//)
+Sound
+;
+MSG_CFG_DRIVES (//)
+Drives
+;
+MSG_CFG_PORTS (//)
+Ports
+;
+MSG_CFG_CPU_TYPE (//)
+Type:
+;
+MSG_CFG_CPU_SPEED (//)
+Speed:
+;
+MSG_CFG_CPU_SPEED_FAST (//)
+Fast
+;
+MSG_CFG_CPU_SPEED_COMPATIBLE (//)
+Compatible
+;
+MSG_CFG_CPU_SPEED_ADJUSTABLE (//)
+Adjustable
+;
+MSG_CFG_CPU_RATIO (//)
+Ratio:
+;
+MSG_CFG_CPU_RATIO_FORMAT (//)
+%ld cycles / insn
+;
+MSG_CFG_CPU_24BIT (//)
+24 bit address space
+;
+MSG_CFG_CPU_SLOW_COMPATIBLE (//)
+Slow but compatible
+;
+MSG_CFG_MEM_ROM (//)
+ROM
+;
+MSG_CFG_MEM_RAM (//)
+RAM
+;
+MSG_CFG_MEM_ROM_KICKSTART (//)
+Kickstart:
+;
+MSG_CFG_MEM_ROM_KEY (//)
+Key:
+;
+MSG_CFG_MEM_NONE (//)
+None
+;
+MSG_CFG_MEM_RAM_CHIP (//)
+Chip:
+;
+MSG_CFG_MEM_RAM_SLOW (//)
+Slow:
+;
+MSG_CFG_MEM_RAM_FAST (//)
+Fast:
+;
+MSG_CFG_MEM_RAM_Z3 (//)
+Zorro III:
+;
+MSG_CFG_GFX_CHIPSET (//)
+Chipset:
+;
+MSG_CFG_GFX_CHIPSET_OCS (//)
+OCS
+;
+MSG_CFG_GFX_CHIPSET_ECS_AGNUS (//)
+ECS Agnus
+;
+MSG_CFG_GFX_CHIPSET_ECS_FULL (//)
+Full ECS
+;
+MSG_CFG_GFX_CHIPSET_AGA (//)
+AGA
+;
+MSG_CFG_GFX_SPRITECOLLISIONS (//)
+Sprite collisions:
+;
+MSG_CFG_GFX_SC_NONE (//)
+None
+;
+MSG_CFG_GFX_SC_SPRITES (//)
+Sprites
+;
+MSG_CFG_GFX_SC_SPRITES_AND_PLAYFIELDS (//)
+Sprites and playfields
+;
+MSG_CFG_GFX_SC_FULL (//)
+Full
+;
+MSG_CFG_GFX_COPPER_SPEEDUP (//)
+Speedup copper
+;
+MSG_CFG_GFX_IMMEDIATE_BLITS (//)
+Immediate blits
+;
+MSG_CFG_GFX_FRAMERATE (//)
+Framerate:
+;
+MSG_CFG_GFX_P96RAM (//)
+P96 Video RAM:
+;
+MSG_CFG_SND_MODE (//)
+Mode:
+;
+MSG_CFG_SND_MODE_NONE (//)
+None
+;
+MSG_CFG_SND_MODE_MUTED (//)
+Muted
+;
+MSG_CFG_SND_MODE_NORMAL (//)
+Normal
+;
+MSG_CFG_SND_MODE_ACCURATE (//)
+Accurate
+;
+MSG_CFG_SND_CHANNELS (//)
+Channels:
+;
+MSG_CFG_SND_CHANNELS_MONO (//)
+Mono
+;
+MSG_CFG_SND_CHANNELS_STEREO (//)
+Stereo
+;
+MSG_CFG_SND_CHANNELS_MIXED (//)
+Mixed
+;
+MSG_CFG_SND_RESOLUTION (//)
+Resolution:
+;
+MSG_CFG_SND_RESOLUTION_8BIT (//)
+8 bit
+;
+MSG_CFG_SND_RESOLUTION_16BIT (//)
+16 bit
+;
+MSG_CFG_DRV_FLOPPY (//)
+Floppy
+;
+MSG_CFG_DRV_FLOPPY_MORE (//)
+More
+;
+MSG_CFG_DRV_FLOPPY_LESS (//)
+Less
+;
+MSG_CFG_DRV_HARD (//)
+Hard
+;
+MSG_CFG_PRT_GAMEPORT1 (//)
+Gameport 1:
+;
+MSG_CFG_PRT_GAMEPORT2 (//)
+Gameport 2:
+;
+MSG_CFG_PRT_GAMEPORT_JOYSTICK0 (//)
+Joystick 0
+;
+MSG_CFG_PRT_GAMEPORT_JOYSTICK1 (//)
+Joystick 1
+;
+MSG_CFG_PRT_GAMEPORT_MOUSE (//)
+Mouse
+;
+MSG_CFG_PRT_GAMEPORT_NUMERIC (//)
+Numeric pad
+;
+MSG_CFG_PRT_GAMEPORT_KEYS0 (//)
+Cursors/RCTRL
+;
+MSG_CFG_PRT_GAMEPORT_KEYS1 (//)
+T/F/H/B/LALT
+;
+MSG_CFG_DRV_DLE_ADD (//)
+Add...
+;
+MSG_CFG_DRV_DLE_EDIT (//)
+Edit...
+;
+MSG_CFG_DRV_DLE_REMOVE (//)
+Remove
+;
+MSG_CFG_DRV_DL_PATH (//)
+Path
+;
+MSG_CFG_DRV_DL_TYPE (//)
+Type
+;
+MSG_CFG_DRV_DL_TYPE_HARDFILE (//)
+Hardfile
+;
+MSG_CFG_DRV_DL_TYPE_FILESYSTEM (//)
+Filesystem
+;
+MSG_CFG_DRV_DL_MODE (//)
+Mode
+;
+MSG_CFG_DRV_DL_MODE_RO (//)
+RO
+;
+MSG_CFG_DRV_DL_MODE_RW (//)
+RW
+;
+MSG_CFG_DRV_DE_TITLE (//)
+Edit drive...
+;
+MSG_CFG_DRV_DE_TYPE (//)
+Type:
+;
+MSG_CFG_DRV_DE_TYPE_HARDFILE (//)
+Hardfile
+;
+MSG_CFG_DRV_DE_TYPE_FILESYSTEM (//)
+Filesystem
+;
+MSG_CFG_DRV_DE_MODE (//)
+Mode:
+;
+MSG_CFG_DRV_DE_MODE_READONLY (//)
+Readonly
+;
+MSG_CFG_DRV_DE_MODE_READWRITE (//)
+Read/Write
+;
+MSG_CFG_DRV_DE_PATH (//)
+Path:
+;
+MSG_CFG_DRV_DE_VOLUME (//)
+Volume:
+;
+MSG_CFG_DRV_DE_VOLUME_DEFAULT (//)
+Volume
+;
+MSG_CFG_DRV_DE_SECTORS (//)
+Sectors:
+;
+MSG_CFG_DRV_DE_HEADS (//)
+Heads:
+;
+MSG_CFG_DRV_DE_RESERVED (//)
+Reserved:
+;
+MSG_OK (//)
+OK
+;
+MSG_CANCEL (//)
+Cancel
+;
+MSG_ERROR_CLASSES (//)
+Can't initialize custom classes.
+;

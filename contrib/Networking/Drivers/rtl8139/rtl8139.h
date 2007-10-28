@@ -68,8 +68,6 @@ extern struct Library *OOPBase;
 
 struct RTL8139Base {
     struct Device       rtl8139b_Device;
-    struct ExecBase     *rtl8139b_SysBase;
-    BPTR                rtl8139b_SegList;
     struct Library      *rtl8139b_UtilityBase;
     struct MsgPort      *rtl8139b_syncport;
 

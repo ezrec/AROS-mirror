@@ -75,8 +75,6 @@ struct ehci_staticdata
 struct ehcibase
 {
     struct Library          LibNode;
-    struct ExecBase         *sysbase;
-    BPTR                    seglist;
     struct ehci_staticdata  sd;
 };
 

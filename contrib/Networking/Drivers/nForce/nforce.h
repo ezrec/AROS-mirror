@@ -49,8 +49,6 @@ extern struct Library *OOPBase;
 
 struct NFBase {
     struct Device       nf_Device;
-    struct ExecBase     *nf_SysBase;
-    BPTR                nf_SegList;
     struct Library      *nf_UtilityBase;
     struct MsgPort      *nf_syncport;
 
