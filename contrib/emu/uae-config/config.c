@@ -19,7 +19,6 @@
 
 #define TEST
 
-static TEXT buffer[255];
 static TEXT intbuf[20];
 
 static CONST_STRPTR cpu_type[CPU_CNT];
@@ -36,14 +35,15 @@ static CONST_STRPTR sound_ch[SNDCH_CNT];
 static CONST_STRPTR sound_bit[SNDBIT_CNT];
 static CONST_STRPTR joyport[JP_CNT];
 
-static BOOL config_parse_line(char *buffer, char **variable, char **value);
-static BOOL config_search_array(ULONG *var, char *value, CONST_STRPTR *array, LONG count);
-static BOOL config_check_bool(char *value);
+static BOOL config_parse_line(TEXT *buffer, TEXT **variable, TEXT **value);
+static BOOL config_search_array(ULONG *var, TEXT *value, CONST_STRPTR *array, LONG count);
+static BOOL config_check_bool(TEXT *value);
 static void config_write_bool(BPTR fh, CONST_STRPTR var, LONG val);
 static void config_write_string(BPTR fh, CONST_STRPTR var, CONST_STRPTR val);
 static void config_write_int(BPTR fh, CONST_STRPTR var, ULONG val, STRPTR buffer);
 static void config_write_drive(BPTR fh, struct Drive *drv);
 static BOOL config_parse_filesystem2(struct Drive *drv, CONST_STRPTR value);
+static TEXT * getarg(TEXT *dst, TEXT *src, LONG bufsize, TEXT sep);
 
 void config_init(struct UAEConfigdata *cfg)
 {
@@ -156,13 +156,25 @@ void config_reset(struct UAEConfigdata *cfg)
     cfg->snd_channels   = SNDCH_MONO;
     cfg->snd_resolution = SNDBIT_8;
     
-    cfg->drv_floppy_count = 2;
     for (i=0; i<4 ;i++)
     {
         FreeVec(cfg->drv_floppy_path[i]);
         cfg->drv_floppy_path[i] = NULL;
     }
 
+    for (i=0; i < cfg->drv_drive_count ; i++)
+    {        
+        FreeVec(cfg->drv_drive[i].d_Path);
+        cfg->drv_drive[i].d_Path = NULL;
+        if (cfg->drv_drive[i].d_Type == DT_FILESYSTEM)
+        {
+            FreeVec(cfg->drv_drive[i].d_Parameters.FS.VolumeName);
+            cfg->drv_drive[i].d_Parameters.FS.VolumeName = NULL;
+        }
+    }
+
+    cfg->drv_drive_count = 0;
+    
     cfg->prt_gameport0 = JP_MOUSE;
     cfg->prt_gameport1 = JP_KEYS0;
 }
@@ -182,6 +194,16 @@ void config_dispose(struct UAEConfigdata *cfg)
         cfg->drv_floppy_path[i] = NULL;
     }
 
+    for (i=0; i < cfg->drv_drive_count ; i++)
+    {        
+        FreeVec(cfg->drv_drive[i].d_Path);
+        cfg->drv_drive[i].d_Path = NULL;
+        if (cfg->drv_drive[i].d_Type == DT_FILESYSTEM)
+        {
+            FreeVec(cfg->drv_drive[i].d_Parameters.FS.VolumeName);
+            cfg->drv_drive[i].d_Parameters.FS.VolumeName = NULL;
+        }
+    }
 }
 
 BOOL config_write(struct UAEConfigdata *cfg, STRPTR filename)
@@ -239,7 +261,6 @@ BOOL config_write(struct UAEConfigdata *cfg, STRPTR filename)
         config_write_string(fh, "sound_bits", sound_bit[cfg->snd_resolution]);
         
         /* Drives */
-        config_write_int(fh, "nr_floppies", cfg->drv_floppy_count, intbuf);
         if (cfg->drv_floppy_path[0])
         {
             config_write_string(fh, "floppy0", cfg->drv_floppy_path[0]);
@@ -273,8 +294,9 @@ BOOL config_write(struct UAEConfigdata *cfg, STRPTR filename)
 
 BOOL config_read(struct UAEConfigdata *cfg, STRPTR filename)
 {
-    char *variable;
-    char *value;
+    static TEXT buffer[255];
+    TEXT *variable;
+    TEXT *value;
 #ifdef TEST
     filename = "RAM:test.uaerc";
 #endif
@@ -369,10 +391,6 @@ BOOL config_read(struct UAEConfigdata *cfg, STRPTR filename)
                 }
                 
                 /* Drives */
-                else if (!strcmp(variable, "nr_floppies"))
-                {
-                    cfg->drv_floppy_count = atoi(value);
-                }
                 else if (!strcmp(variable, "floppy0"))
                 {
                     cfg->drv_floppy_path[0] = StrDup(value);
@@ -415,12 +433,12 @@ BOOL config_read(struct UAEConfigdata *cfg, STRPTR filename)
 }
 
 
-static BOOL config_parse_line(char *buffer, char **variable, char **value)
+static BOOL config_parse_line(TEXT *buffer, TEXT **variable, TEXT **value)
 {
     *variable = buffer;
     *value = NULL;
 
-    char *equal = strchr(buffer, '=');
+    TEXT *equal = strchr(buffer, '=');
     if (equal)
     {
         *equal = '\0';
@@ -449,7 +467,7 @@ static BOOL config_parse_line(char *buffer, char **variable, char **value)
     return FALSE;
 }
 
-static BOOL config_search_array(ULONG *var, char *value, CONST_STRPTR *array, LONG count)
+static BOOL config_search_array(ULONG *var, TEXT *value, CONST_STRPTR *array, LONG count)
 {
     LONG index = 0;
     while (index < count)
@@ -464,7 +482,7 @@ static BOOL config_search_array(ULONG *var, char *value, CONST_STRPTR *array, LO
     return FALSE;
 }
 
-static BOOL config_check_bool(char *value)
+static BOOL config_check_bool(TEXT *value)
 {
     if (!strcmp(value, "yes"))
     {
@@ -507,7 +525,7 @@ static void config_write_int(BPTR fh, CONST_STRPTR var, ULONG val, STRPTR buffer
 
 static void config_write_drive(BPTR fh, struct Drive *drv)
 {
-    static char buf[1000];
+    static TEXT buf[300];
 
     if (drv->d_Type == DT_FILESYSTEM)
     {
@@ -515,14 +533,14 @@ static void config_write_drive(BPTR fh, struct Drive *drv)
         // filesystem2=<access>,<device>:<volume>:<path>,<bootpri>
         // filesystem=<access>,<volume>:<path>
 
-        sprintf
+        snprintf
         (
-            buf, "filesystem2 = %s,%s:%s:%s,%d\n",
+            buf, sizeof(buf), "filesystem2 = %s,%s:%s:%s,%ld\n",
             drv->d_Mode == DM_READWRITE ? "rw" : "ro",
             "",
             drv->d_Parameters.FS.VolumeName,
             drv->d_Path,
-            0
+            drv->d_Priority
         );
     }
     else
@@ -537,23 +555,59 @@ static void config_write_drive(BPTR fh, struct Drive *drv)
 
 static BOOL config_parse_filesystem2(struct Drive *drv, CONST_STRPTR val)
 {
-    char access[3];
-    char device[20];
-    char volume[100];
-    char path[200];
-    LONG bootpri;
-    LONG argcnt;
-    // TODO: should we allow whitespace between the parameters?
-    argcnt = sscanf(val, "%2s,%19[^:]:%99[^:]:%199s,%ld", access, device, volume, path, &bootpri);
-bug("argcnt %d\n", argcnt);
-bug("access %s device %s volume %s path %s pri %ld\n", access, device, volume, path, bootpri);
-    if (argcnt == 5)
+    TEXT access[5];
+    TEXT device[20];
+    TEXT volume[100];
+    TEXT path[200];
+    TEXT bootpri[5];
+    TEXT *next;
+
+    if ((next = getarg(access, (TEXT*)val, sizeof(access), ',')))
     {
-        drv->d_Path = StrDup(path);
-        drv->d_Type = DT_FILESYSTEM;
-        drv->d_Mode = !strcmp(access, "ro") ? DM_READONLY : DM_READWRITE;
-        drv->d_Parameters.FS.VolumeName = StrDup(volume);
-        return TRUE;
+        if ((next = getarg(device, next + 1, sizeof(device), ':')))
+        {
+            if ((next = getarg(volume, next + 1, sizeof(volume), ':')))
+            {
+                if ((next = getarg(path, next + 1, sizeof(path), ',')))
+                {
+                    if ((next = getarg(bootpri, next + 1, sizeof(bootpri), '\0')))
+                    {
+                        D(bug("access %s device %s volume %s path %s pri %s\n",
+                            access, device, volume, path, bootpri));
+                        drv->d_Path = StrDup(path);
+                        drv->d_Type = DT_FILESYSTEM;
+                        drv->d_Mode = !strcmp(access, "ro") ? DM_READONLY : DM_READWRITE;
+                        drv->d_Parameters.FS.VolumeName = StrDup(volume);
+                        drv->d_Priority = atoi(bootpri);
+                        return TRUE;
+                    }
+                }
+            }
+        }
     }
     return FALSE;
+}
+
+static TEXT * getarg(TEXT *dst, TEXT *src, LONG bufsize, TEXT sep)
+{
+    if (!dst || !src || (bufsize < 2))
+    {
+        D(bug("[UAE-Config] getarg wrong arguments\n"));
+        return NULL;
+    }
+    
+    TEXT *end = dst + bufsize - 1;
+    while ((*src != '\0') && (*src != '\n') && (*src != sep))
+    {
+        if (dst >= end)
+        {
+            D(bug("[UAE-Config] getarg buffer too short\n"));
+            return NULL;
+        }
+        *dst = *src;
+        dst++;
+        src++;
+    }
+    *dst = '\0';
+    return src;
 }

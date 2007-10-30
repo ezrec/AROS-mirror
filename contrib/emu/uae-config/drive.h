@@ -2,7 +2,7 @@
 #define _DRIVE_H_
 
 /*
-    Copyright © 2003, The AROS Development Team. All rights reserved.
+    Copyright © 2007, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -23,7 +23,7 @@ struct Drive
     STRPTR         d_Path;      /* path to file or directory */
     enum DriveType d_Type;      /* type of drive, see above */
     enum DriveMode d_Mode;      /* access mode, see above */
-    
+    LONG           d_Priority;  /* boot priority */
     union
     {
         struct

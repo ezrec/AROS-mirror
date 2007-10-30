@@ -48,6 +48,8 @@ struct DriveEditor_DATA
                  *ded_HeadsString, 
                  *ded_ReservedLabel,
                  *ded_ReservedString,
+                 *ded_PriorityLabel,
+                 *ded_PrioritySlider,
                  *ded_OKButton,
                  *ded_CancelButton;
     ULONG         ded_Type;
@@ -60,6 +62,7 @@ IPTR DriveEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
     Object *typeCycle, *modeCycle, *pathString, *volumeString, *volumeLabel,
            *sectorsString, *headsString, *reservedString, 
            *sectorsLabel, *headsLabel, *reservedLabel,
+           *priorityLabel, *prioritySlider,
            *okButton, *cancelButton, *group;
     
     /*-- Localize strings --------------------------------------------------*/
@@ -112,6 +115,11 @@ IPTR DriveEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                     StringFrame,
                     MUIA_String_Accept, (IPTR) DIGITS,
                 End),
+                Child, (IPTR) (priorityLabel = Label2(_(MSG_CFG_DRV_DE_PRIORITY))),
+                Child, (IPTR) (prioritySlider = SliderObject,
+                    MUIA_Numeric_Min, -128,
+                    MUIA_Numeric_Max, 127,
+                End),
             End),
             Child, (IPTR) HVSpace,
             Child, (IPTR) RectangleObject, 
@@ -148,9 +156,11 @@ IPTR DriveEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         data->ded_HeadsString    = headsString;
         data->ded_ReservedLabel  = reservedLabel;
         data->ded_ReservedString = reservedString;
+        data->ded_PriorityLabel  = priorityLabel;
+        data->ded_PrioritySlider = prioritySlider;
         data->ded_OKButton       = okButton;
         data->ded_CancelButton   = cancelButton;
-	data->ded_Type           = 0;
+        data->ded_Type           = 0;
         
         /*-- Setup notifications -------------------------------------------*/
         DoMethod
@@ -164,6 +174,7 @@ IPTR DriveEditor__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
         SET(sectorsString,  MUIA_String_Integer, 32);
         SET(headsString,    MUIA_String_Integer,  1);
         SET(reservedString, MUIA_String_Integer,  2);
+        SET(prioritySlider, MUIA_Numeric_Value,    0);
 
         /*-- Miscellanous initialization -----------------------------------*/
         DoMethod(group, OM_REMMEMBER, (IPTR) sectorsLabel);
@@ -225,6 +236,7 @@ IPTR DriveEditor__OM_SET(Class *CLASS, Object *self, struct opSet *message)
                 SET(data->ded_TypeCycle, MUIA_Cycle_Active, data->ded_Drive->d_Type);
                 SET(data->ded_ModeCycle, MUIA_Cycle_Active, data->ded_Drive->d_Mode);
                 SET(data->ded_PathString, MUIA_String_Contents, data->ded_Drive->d_Path);
+                SET(data->ded_PrioritySlider, MUIA_Numeric_Value, data->ded_Drive->d_Priority);
                 
                 if (data->ded_Drive->d_Type == DT_FILESYSTEM)
                 {
@@ -338,12 +350,12 @@ IPTR DriveEditor__MUIM_DriveEditor_UpdateGadgets
     if (type != 0)
     {
         hfAction = OM_ADDMEMBER;
-	fsAction = OM_REMMEMBER;
+        fsAction = OM_REMMEMBER;
     }
     else
     {
         hfAction = OM_REMMEMBER;
-	fsAction = OM_ADDMEMBER;
+        fsAction = OM_ADDMEMBER;
     }
 
     DoMethod(data->ded_Group, MUIM_Group_InitChange);
@@ -394,6 +406,7 @@ IPTR DriveEditor__MUIM_DriveEditor_OK
         
         data->ded_Drive->d_Type = XGET(data->ded_TypeCycle, MUIA_Cycle_Active);
         data->ded_Drive->d_Mode = XGET(data->ded_ModeCycle, MUIA_Cycle_Active);
+        data->ded_Drive->d_Priority = XGET(data->ded_PrioritySlider, MUIA_Numeric_Value);
                 
         data->ded_Drive->d_Path = StrDup
         (

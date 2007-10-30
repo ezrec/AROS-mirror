@@ -51,7 +51,6 @@ struct UAEConfigdata
     ULONG snd_channels;
     ULONG snd_resolution;
     
-    ULONG drv_floppy_count;
     STRPTR drv_floppy_path[4];
     ULONG drv_drive_count;
     struct Drive drv_drive[MAX_DRIVE_CNT];

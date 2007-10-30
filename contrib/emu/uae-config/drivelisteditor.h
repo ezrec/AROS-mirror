@@ -2,7 +2,7 @@
 #define _DRIVELISTEDITOR_H_
 
 /*
-    Copyright © 2003, The AROS Development Team. All rights reserved.
+    Copyright © 2007, The AROS Development Team. All rights reserved.
     $Id$
 */
 

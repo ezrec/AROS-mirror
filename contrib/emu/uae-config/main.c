@@ -19,27 +19,27 @@ int main(void)
 {
     Object *application, *window;
     application = ApplicationObject,
-        MUIA_Application_Title      , "UAE Config",
-        MUIA_Application_Version    , "$VER: UAE-Config 1.0 (14.10.2007)",
-        MUIA_Application_Copyright  , "©2007 The AROS Dev Team",
-        MUIA_Application_Author     , "The AROS Dev Team",
-        MUIA_Application_Description, "UAE Configuration File Editor",
-        MUIA_Application_Base       , "UAECONFIG",
+        MUIA_Application_Title      , (IPTR)"UAE Config",
+        MUIA_Application_Version    , (IPTR)"$VER: UAE-Config 1.0 (14.10.2007)",
+        MUIA_Application_Copyright  , (IPTR)"©2007 The AROS Dev Team",
+        MUIA_Application_Author     , (IPTR)"The AROS Dev Team",
+        MUIA_Application_Description, __(MSG_APP_DESCRIPTION),
+        MUIA_Application_Base       , (IPTR)"UAECONFIG",
 
-        SubWindow, window = WindowObject,
-            MUIA_Window_Title    , "UAE Config",
+        SubWindow, (IPTR)(window = WindowObject,
+            MUIA_Window_Title    , __(MSG_WINDOW_TITLE),
             MUIA_Window_ID       , MAKE_ID('U','A','E','C'),
 
-            WindowContents, VGroup,
-                Child, ConfigurationEditorObject,
-                End,
-            End,
-        End,
+            WindowContents, (IPTR)(VGroup,
+                Child, (IPTR)(ConfigurationEditorObject,
+                End),
+            End),
+        End),
     End;
     
     if (!application)
     {
-        PutStr(_(MSG_ERROR_CLASSES));
+        MUI_Request(NULL, NULL, 0, _(MSG_ERROR_TITLE), _(MSG_OK), _(MSG_ERROR_CLASSES));
         return RETURN_ERROR;
     }
     DoMethod(window, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,

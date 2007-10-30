@@ -140,11 +140,12 @@ IPTR DriveListEditor__OM_DISPOSE(Class *CLASS, Object *self, Msg message)
     struct DriveListEditor_DATA *data  = INST_DATA(CLASS, self);
     struct Drive                *drive = NULL;
     ULONG                        i;
+    ULONG                        cnt   = XGET(data->dle_List, MUIA_List_Entries);
     
-    for (i = 0; i < XGET(data->dle_List, MUIA_List_Entries); i++)
+    for (i = 0; i < cnt; i++)
     {
-        DoMethod(data->dle_List, MUIM_List_Remove, i);
-        DoMethod(data->dle_List, MUIM_List_GetEntry, i, (IPTR) &drive);
+        DoMethod(data->dle_List, MUIM_List_GetEntry, 0, (IPTR) &drive);
+        DoMethod(data->dle_List, MUIM_List_Remove, 0);
         
         if (drive != NULL) Drive_Destroy(drive);
     }
@@ -281,7 +282,7 @@ IPTR DriveListEditor__MUIM_DriveListEditor_Add
     }
     else
     {
-        // FIXME: error message
+        bug("[UAE-Config] Not enough memory for Drive_Create()\n");
     }
     
     return 0;
@@ -306,12 +307,12 @@ IPTR DriveListEditor__MUIM_DriveListEditor_AddDrive
         DoMethod
         (
             data->dle_List, MUIM_List_InsertSingle, 
-                (IPTR) drive, MUIV_List_Insert_Bottom
+            (IPTR) drive, MUIV_List_Insert_Bottom
         );
     }
     else
     {
-        // FIXME: error message
+        bug("[UAE-Config] Not enough memory for Drive_Create()\n");
     }
     
     return 0;
@@ -325,11 +326,12 @@ IPTR DriveListEditor__MUIM_DriveListEditor_RemoveAll
     struct DriveListEditor_DATA *data  = INST_DATA(CLASS, self);
     struct Drive                *drive = NULL;
     ULONG                        i;
-    
-    for (i = 0; i < XGET(data->dle_List, MUIA_List_Entries); i++)
+    ULONG                        cnt   = XGET(data->dle_List, MUIA_List_Entries);
+
+    for (i = 0; i < cnt; i++)
     {
-        DoMethod(data->dle_List, MUIM_List_GetEntry, i, (IPTR) &drive);
-        DoMethod(data->dle_List, MUIM_List_Remove, i);
+        DoMethod(data->dle_List, MUIM_List_GetEntry, 0, (IPTR) &drive);
+        DoMethod(data->dle_List, MUIM_List_Remove, 0);
         
         if (drive != NULL) Drive_Destroy(drive);
     }

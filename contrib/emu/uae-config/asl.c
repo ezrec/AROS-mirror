@@ -5,6 +5,8 @@
 
 #define MUIMASTER_YES_INLINE_STDARG
 
+#include <aros/debug.h>
+
 #include <exec/memory.h>
 #include <libraries/mui.h>
 #include <libraries/asl.h>
@@ -38,7 +40,8 @@ STRPTR ASL_SelectFile(enum ASLMode mode)
     if (request == NULL)
     {
         /* Allocation failed */
-        /* FIXME: error dialog? */
+        bug("[UAE-Config] Can't allocate memory\n");
+
         return NULL;
     }
      
@@ -49,8 +52,8 @@ STRPTR ASL_SelectFile(enum ASLMode mode)
             request,
             
             ASL_Hail, mode == AM_SAVE ?
-                (IPTR) "Save state..." : 
-                (IPTR) "Load state...",
+                _(MSG_TB_SAVE_STATE_SH) : 
+                _(MSG_TB_LOAD_STATE_SH),
             
             TAG_DONE
         )
@@ -67,12 +70,12 @@ STRPTR ASL_SelectFile(enum ASLMode mode)
             strlcat(filename, request->rf_Dir, length);
             if (!AddPart(filename, request->rf_File, length))
             {
-                /* FIXME: Error dialog? */
+                bug("[UAE-Config] AddPart failed\n");
             }
         }
         else
         {
-            /* FIXME: Error dialog */
+            bug("[UAE-Config] Can't allocate memory\n");
         }
     }
     

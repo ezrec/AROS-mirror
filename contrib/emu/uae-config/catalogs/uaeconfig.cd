@@ -1,10 +1,11 @@
+; ==== Application ====================
+MSG_APP_DESCRIPTION (//)
+UAE Configuration File Editor
 ;
-MSG_WINDOW_TITLE_DISPLAY (//)
-Emulator: Display
+MSG_WINDOW_TITLE (//)
+UAE-Config
 ;
-MSG_WINDOW_TITLE_CFG (//)
-Emulator: Configuration
-;
+; ==== Menu ===========================
 MSG_MENU_PROJECT (//)
 Project
 ;
@@ -14,6 +15,7 @@ MSG_MENU_PROJECT_ABOUT (//)
 MSG_MENU_PROJECT_QUIT (//)
 Q\0Quit
 ;
+; ==== Toolbar ========================
 MSG_TB_STOP_SH (//)
 Stop
 ;
@@ -35,12 +37,7 @@ Load state...
 MSG_TB_FULLSCREEN_SH (//)
 Fullscreen
 ;
-MSG_DC_INSERT (//)
-Insert...
-;
-MSG_DC_EJECT (//)
-Eject
-;
+; ==== Page Labels ====================
 MSG_CFG_CPU (//)
 CPU
 ;
@@ -59,6 +56,7 @@ Drives
 MSG_CFG_PORTS (//)
 Ports
 ;
+; ==== CPU ============================
 MSG_CFG_CPU_TYPE (//)
 Type:
 ;
@@ -86,6 +84,7 @@ MSG_CFG_CPU_24BIT (//)
 MSG_CFG_CPU_SLOW_COMPATIBLE (//)
 Slow but compatible
 ;
+; ==== Memory =========================
 MSG_CFG_MEM_ROM (//)
 ROM
 ;
@@ -113,6 +112,7 @@ Fast:
 MSG_CFG_MEM_RAM_Z3 (//)
 Zorro III:
 ;
+; ==== Graphics =======================
 MSG_CFG_GFX_CHIPSET (//)
 Chipset:
 ;
@@ -155,6 +155,7 @@ Framerate:
 MSG_CFG_GFX_P96RAM (//)
 P96 Video RAM:
 ;
+; ==== Sound ==========================
 MSG_CFG_SND_MODE (//)
 Mode:
 ;
@@ -191,6 +192,7 @@ MSG_CFG_SND_RESOLUTION_8BIT (//)
 MSG_CFG_SND_RESOLUTION_16BIT (//)
 16 bit
 ;
+; ==== Drives =========================
 MSG_CFG_DRV_FLOPPY (//)
 Floppy
 ;
@@ -203,6 +205,13 @@ Less
 MSG_CFG_DRV_HARD (//)
 Hard
 ;
+MSG_DC_INSERT (//)
+Insert...
+;
+MSG_DC_EJECT (//)
+Eject
+;
+; ==== Ports ==========================
 MSG_CFG_PRT_GAMEPORT1 (//)
 Gameport 1:
 ;
@@ -227,6 +236,7 @@ Cursors/RCTRL
 MSG_CFG_PRT_GAMEPORT_KEYS1 (//)
 T/F/H/B/LALT
 ;
+; ==== Drive List======================
 MSG_CFG_DRV_DLE_ADD (//)
 Add...
 ;
@@ -257,6 +267,7 @@ RO
 MSG_CFG_DRV_DL_MODE_RW (//)
 RW
 ;
+; ==== Drive Editor ===================
 MSG_CFG_DRV_DE_TITLE (//)
 Edit drive...
 ;
@@ -281,6 +292,9 @@ Read/Write
 MSG_CFG_DRV_DE_PATH (//)
 Path:
 ;
+MSG_CFG_DRV_DE_PRIORITY (//)
+Priority
+;
 MSG_CFG_DRV_DE_VOLUME (//)
 Volume:
 ;
@@ -296,12 +310,20 @@ Heads:
 MSG_CFG_DRV_DE_RESERVED (//)
 Reserved:
 ;
+; ==== Errors =========================
+MSG_ERROR_CLASSES (//)
+Can't initialize custom classes.
+;
+MSG_ERROR_TITLE (//)
+UAE-Config error
+;
+MSG_ERROR_MEMORY (//)
+Not enough memory
+;
+; ==== Misc ===========================
 MSG_OK (//)
 OK
 ;
 MSG_CANCEL (//)
 Cancel
-;
-MSG_ERROR_CLASSES (//)
-Can't initialize custom classes.
 ;

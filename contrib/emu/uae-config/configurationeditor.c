@@ -53,8 +53,6 @@ static CONST_STRPTR GFX_SpriteCollisions[5];
 #define ToolbarSpace()     HSpace(5)
 
 /*** Private methods ********************************************************/
-#define MUIM_ConfigurationEditor_AddFloppyDrive (TAG_USER | 0x13000000)
-#define MUIM_ConfigurationEditor_RemFloppyDrive (TAG_USER | 0x13000001)
 #define MUIM_ConfigurationEditor_UpdateCPU      (TAG_USER | 0x13000002)
 #define MUIM_ConfigurationEditor_UpdateMemory   (TAG_USER | 0x13000003)
 #define MUIM_ConfigurationEditor_UpdateSound    (TAG_USER | 0x13000004)
@@ -96,8 +94,6 @@ struct ConfigurationEditor_DATA
            *ced_DRV_Floppies[4],
            *ced_DRV_FloppyLabels[4],
            *ced_DRV_FloppyPopasls[4],
-           *ced_DRV_FloppyMore,
-           *ced_DRV_FloppyLess,
            *ced_DRV_ListEditor;
     
     Object *ced_PRT_Gameport0,
@@ -133,7 +129,6 @@ static void config2gui(struct ConfigurationEditor_DATA *data)
     SET(data->ced_SND_Channels, MUIA_Cycle_Active, data->configdata.snd_channels);
     SET(data->ced_SND_Resolution, MUIA_Cycle_Active, data->configdata.snd_resolution);
 
-    data->ced_DRV_FloppyCount = data->configdata.drv_floppy_count;
     for (i=0 ; i<4 ; i++)
     {
         SET(data->ced_DRV_Floppies[i], MUIA_String_Contents, data->configdata.drv_floppy_path[i]);
@@ -187,8 +182,6 @@ IPTR ConfigurationEditor__OM_NEW
            *drv_Floppies[4],
            *drv_FloppyLabels[4],
            *drv_FloppyPopasls[4],
-           *drv_FloppyMore,
-           *drv_FloppyLess,
            *drv_ListEditor;
     Object *prt_Gameport0,
            *prt_Gameport1;
@@ -465,12 +458,6 @@ IPTR ConfigurationEditor__OM_NEW
                             MUIA_Popstring_Button, (IPTR) PopButton(MUII_PopFile),
                         End),
                     End),
-                    Child, (IPTR) VGroup,
-                        MUIA_Weight, 0,
-                        Child, (IPTR) (drv_FloppyMore = SimpleButton(_(MSG_CFG_DRV_FLOPPY_MORE))),
-                        Child, (IPTR) (drv_FloppyLess = SimpleButton(_(MSG_CFG_DRV_FLOPPY_LESS))),
-                        Child, (IPTR) VSpace(),
-                    End,
                 End,
                 
                 Child, (IPTR) VGroup,
@@ -527,8 +514,6 @@ IPTR ConfigurationEditor__OM_NEW
     
         data->ced_DRV_FloppyCount      = 4;
         data->ced_DRV_FloppyRootGroup  = drv_FloppyRootGroup;
-        data->ced_DRV_FloppyMore       = drv_FloppyMore;
-        data->ced_DRV_FloppyLess       = drv_FloppyLess;
         data->ced_DRV_ListEditor       = drv_ListEditor;
         
         for (i = 0; i < 4; i++)
@@ -542,17 +527,6 @@ IPTR ConfigurationEditor__OM_NEW
         data->ced_PRT_Gameport1        = prt_Gameport1;
         
         /*-- Setup notifications -------------------------------------------*/
-        DoMethod
-        (
-            drv_FloppyMore, MUIM_Notify, MUIA_Pressed, FALSE,
-            (IPTR) self, 1, MUIM_ConfigurationEditor_AddFloppyDrive
-        );
-        DoMethod
-        (
-            drv_FloppyLess, MUIM_Notify, MUIA_Pressed, FALSE,
-            (IPTR) self, 1, MUIM_ConfigurationEditor_RemFloppyDrive
-        );
-        
         DoMethod
         (
             cpu_Type, MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
@@ -600,8 +574,6 @@ IPTR ConfigurationEditor__OM_NEW
         config_init(&data->configdata);
         DoMethod(self, MUIM_ConfigurationEditor_ResetState);
         
-        /*-- Miscellanous initialization -----------------------------------*/
-        SET(drv_FloppyMore, MUIA_Disabled, TRUE);
     }
     
     return (IPTR) self;
@@ -616,76 +588,6 @@ IPTR ConfigurationEditor__OM_DISPOSE(struct IClass *cl, Object *obj, Msg msg)
     return DoSuperMethodA(cl, obj, msg);
 }
 
-
-IPTR ConfigurationEditor__MUIM_ConfigurationEditor_AddFloppyDrive
-(
-    Class *CLASS, Object *self, Msg message
-)
-{
-    struct ConfigurationEditor_DATA *data = INST_DATA(CLASS, self);
-    
-    if (data->ced_DRV_FloppyCount >= 0 && data->ced_DRV_FloppyCount <= 3)
-    {
-        DoMethod(data->ced_DRV_FloppyRootGroup, MUIM_Group_InitChange);
-        
-        DoMethod
-        (
-            data->ced_DRV_FloppyRootGroup, OM_ADDMEMBER,
-            (IPTR) data->ced_DRV_FloppyLabels[data->ced_DRV_FloppyCount]
-        );
-        DoMethod
-        (
-            data->ced_DRV_FloppyRootGroup, OM_ADDMEMBER,
-            (IPTR) data->ced_DRV_FloppyPopasls[data->ced_DRV_FloppyCount]
-        );
-              
-        DoMethod(data->ced_DRV_FloppyRootGroup, MUIM_Group_ExitChange);
-        
-        data->ced_DRV_FloppyCount++;
-        if (data->ced_DRV_FloppyCount >= 4)
-        {
-            SET(data->ced_DRV_FloppyMore, MUIA_Disabled, TRUE);
-        }
-        SET(data->ced_DRV_FloppyLess, MUIA_Disabled, FALSE);
-    }
-    
-    return TRUE;
-}
-
-IPTR ConfigurationEditor__MUIM_ConfigurationEditor_RemFloppyDrive
-(
-    Class *CLASS, Object *self, Msg message
-)
-{
-    struct ConfigurationEditor_DATA *data = INST_DATA(CLASS, self);
-    
-    if (data->ced_DRV_FloppyCount >= 2 && data->ced_DRV_FloppyCount <= 4)
-    {
-        DoMethod(data->ced_DRV_FloppyRootGroup, MUIM_Group_InitChange);
-
-        DoMethod
-        (
-            data->ced_DRV_FloppyRootGroup, OM_REMMEMBER,
-            (IPTR) data->ced_DRV_FloppyPopasls[data->ced_DRV_FloppyCount - 1]
-        );
-        DoMethod
-        (
-            data->ced_DRV_FloppyRootGroup, OM_REMMEMBER,
-            (IPTR) data->ced_DRV_FloppyLabels[data->ced_DRV_FloppyCount - 1]
-        );
-        
-        DoMethod(data->ced_DRV_FloppyRootGroup, MUIM_Group_ExitChange);
-        
-        data->ced_DRV_FloppyCount--;
-        if (data->ced_DRV_FloppyCount <= 1)
-        {
-            SET(data->ced_DRV_FloppyLess, MUIA_Disabled, TRUE);
-        }
-        SET(data->ced_DRV_FloppyMore, MUIA_Disabled, FALSE);
-    }
-    
-    return TRUE;
-}
 
 IPTR ConfigurationEditor__MUIM_ConfigurationEditor_UpdateCPU
 (
@@ -807,7 +709,6 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_SaveState
         data->configdata.snd_channels = XGET(data->ced_SND_Channels, MUIA_Cycle_Active);
         data->configdata.snd_resolution = XGET(data->ced_SND_Resolution, MUIA_Cycle_Active);
 
-        data->configdata.drv_floppy_count = data->ced_DRV_FloppyCount;
         for (i=0 ; i<4 ; i++)
         {
             data->configdata.drv_floppy_path[i] = StrDup((STRPTR)XGET(data->ced_DRV_Floppies[i], MUIA_String_Contents));
@@ -862,9 +763,10 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_StartUAE
 {
     SystemTags
     (
-        "SYS:Extras/Emu/UAE/uae",
+        "SYS:Extras/Emu/UAE/uae -f ram:test.uaerc",
         SYS_Asynch, TRUE,
         SYS_Input, "CON:",
+        SYS_Output, NULL,
         TAG_DONE
     );
     return 0;
@@ -877,7 +779,7 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_StartEUAE
 {
     SystemTags
     (
-        "SYS:Extras/Emu/E-UAE/i386-aros-uae",
+        "SYS:Extras/Emu/E-UAE/i386-aros-uae -f ram:test.uaerc",
         SYS_Asynch, TRUE,
         SYS_Input, "CON:",
         SYS_Output, NULL,
@@ -890,8 +792,6 @@ IPTR ConfigurationEditor__MUIM_ConfigurationEditor_StartEUAE
 __ZUNE_CUSTOMCLASS_START(ConfigurationEditor)
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__OM_NEW, OM_NEW, struct opSet *);
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__OM_DISPOSE, OM_DISPOSE, Msg);
-__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_AddFloppyDrive, MUIM_ConfigurationEditor_AddFloppyDrive, Msg);
-__ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_RemFloppyDrive, MUIM_ConfigurationEditor_RemFloppyDrive, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_UpdateCPU, MUIM_ConfigurationEditor_UpdateCPU, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_UpdateMemory, MUIM_ConfigurationEditor_UpdateMemory, Msg);
 __ZUNE_CUSTOMCLASS_METHOD(ConfigurationEditor__MUIM_ConfigurationEditor_UpdateSound, MUIM_ConfigurationEditor_UpdateSound, Msg);
