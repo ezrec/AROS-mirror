@@ -1,0 +1,12 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-wazp3d : contrib-wazp3d-settings contrib-wazp3d-lib
+
+#MM contrib-wazp3d-clean : contrib-wazp3d-lib-clean
+
+#MM
+contrib-wazp3d-clean
+	$(RM) $(GENDIR)/contrib/gfx/libs/wazp3d
+

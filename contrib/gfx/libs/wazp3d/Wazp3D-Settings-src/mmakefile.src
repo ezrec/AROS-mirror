@@ -1,0 +1,12 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-wazp3d-settings : includes linklibs contrib-wazp3d-lib
+
+EXE := Wazp3D-Settings
+TARGETDIR := $(AROS_PREFS)
+
+%build_prog mmake=contrib-wazp3d-settings progname=$(EXE) files=$(FILES) \
+    targetdir=$(TARGETDIR) \
+    uselibs="amiga aros-c warp3d"

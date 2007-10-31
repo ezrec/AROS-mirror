@@ -1,5 +1,10 @@
 #define NOWAZP3DDEBUG 1
 #define MOTOROLAORDER 1
+
+#if defined(__AROS__) && (AROS_BIG_ENDIAN == 0)
+#undef MOTOROLAORDER
+#endif
+
 /*==================================================================================*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,7 +23,8 @@
 #include <clib/Warp3D_protos.h>
 #include <proto/cybergraphics.h>
 #include <cybergraphx/cybergraphics.h>
-#ifndef __PPC__
+
+#if !defined(__PPC__) && !defined(__AROS__)
 #include <inline/cybergraphics.h>
 #endif
 
@@ -27,6 +33,7 @@
 #pragma msg 193 ignore
 #pragma msg  93 ignore
 #endif
+
 /*==================================================================================*/
 #define MAXPNB 10000
 LONG tempf;                    /* Used to emulate printf("%f") */
@@ -398,12 +405,19 @@ struct SOFT3D_texture{
 #define  ERROR(val,doc) if(error == val) {Libprintf(" "); if(Wazp3D.DebugVar.ON) Libprintf("Error="); Libprintf(#val); if(Wazp3D.DebugDoc.ON) Libprintf(", " #doc); Libprintf("\n");}
 #define   WRETURN(error) return(PrintError(error));
 /*==================================================================================*/
+#ifdef __AROS__
+AROS_UFP3(BOOL, ScreenModeFilter,
+AROS_UFHA(struct Hook *, h      , A0),
+AROS_UFHA(APTR         , object , A2),
+AROS_UFHA(APTR         , message, A1));
+#else
 BOOL ScreenModeFilter(struct Hook* hook __asm("a0"), APTR object __asm("a2"),APTR message __asm("a1"));
+#endif
 struct SOFT3D_context *SOFT3D_Start(WORD large,WORD high,ULONG *Image,WORD *Zbuffer16,UBYTE *Stencil);
 UBYTE *Libstrcat(UBYTE *s1,UBYTE *s2);
 UBYTE *Libstrcpy(UBYTE *s1,UBYTE *s2);
 ULONG Libstrlen(UBYTE *string);
-ULONG STACKReadPixelArray(APTR  destRect,UWORD  destX,UWORD  destY,UWORD  destMod,struct RastPort *  RastPort,UWORD  SrcX, UWORD  SrcY, UWORD  SizeX, UWORD  SizeY, UBYTE  DestFormat );    ;
+ULONG STACKReadPixelArray(APTR  destRect,UWORD  destX,UWORD  destY,UWORD  destMod,struct RastPort *  RastPort,UWORD  SrcX, UWORD  SrcY, UWORD  SizeX, UWORD  SizeY, UBYTE  DestFormat );
 ULONG W3D_AllocStencilBuffer(W3D_Context *context);
 ULONG W3D_AllocZBuffer(W3D_Context *context);
 ULONG W3D_BindTexture(W3D_Context* context, ULONG tmu, W3D_Texture *texture);
@@ -3408,7 +3422,7 @@ WORD n;
     VAR(T->driver)
 }
 /*==================================================================================*/
-WAZP3D_Init()
+void WAZP3D_Init()
 {
 WORD n;
 #define TRUECOLORFORMATS W3D_FMT_R5G5B5+W3D_FMT_B5G5R5+W3D_FMT_R5G5B5PC+W3D_FMT_B5G5R5PC+W3D_FMT_R5G6B5+W3D_FMT_B5G6R5+W3D_FMT_R5G6B5PC+W3D_FMT_B5G6R5PC+W3D_FMT_R8G8B8+W3D_FMT_B8G8R8+W3D_FMT_A8R8G8B8+W3D_FMT_A8B8G8R8+W3D_FMT_R8G8B8A8+W3D_FMT_B8G8R8A8
@@ -3609,7 +3623,7 @@ WORD n;
         }
 }
 /*==================================================================================*/
-WAZP3D_Close()
+void WAZP3D_Close()
 {
 WORD n;
 
@@ -5119,8 +5133,17 @@ ULONG support;
     return(support);
 }
 /*==========================================================================*/
+#ifdef __AROS__
+AROS_UFH3(BOOL, ScreenModeFilter,
+AROS_UFHA(struct Hook *, h      , A0),
+AROS_UFHA(APTR         , object , A2),
+AROS_UFHA(APTR         , message, A1))
+{
+    AROS_USERFUNC_INIT
+#else
 BOOL ScreenModeFilter(struct Hook* hook __asm("a0"), APTR object __asm("a2"),APTR message __asm("a1"))
 {
+#endif
 ULONG ID=(ULONG)message;
 struct DimensionInfo dims;
 UWORD large,high,bits;
@@ -5154,6 +5177,9 @@ REMP("ScreenModeFilter[%ld]%ld X %ld X %ld\n",ID,large,high,bits);
 
     return  TRUE;
     }
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 /*==========================================================================*/
 ULONG W3D_RequestMode(struct TagItem *taglist)
