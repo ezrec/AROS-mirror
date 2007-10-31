@@ -1,0 +1,82 @@
+The Wazp3D.library FAQ
+======================
+
+> i try to test it on my winuae config (2.4 / geforce).
+GeForce wont help as it is a CPU only rendering. 
+
+>Found this bug: it's run not always from first time.  esc/ rerun, and it works.
+I noticed it too : it is perhaps due to the JIT itself ?!?
+Better to start WinUAE without JIT then activate the JIT during running of the 3Dprog
+
+>6-7 fps only is here. It's pretty strange, becouse 2.4 cpu i think very powerfull for this little calculations.
+One thing to keep in mind : there is few calculations in the 3Dprog "gears"
+BUT on his side Wazp3D do a lot of work only to draw a pixel (texturing)
+
+>Gears full screen, and .. it's like crazy slideshow :)
+>1 fps maybe + i just can see any redrawing and screen-buffer fliping.
+Yes there is still a problem with full-screen-refreshing 
+    - Warp3D draw directly in the bitmap 
+    - Wazp3D draw all in an internal RGBA32 buffer then try to detect the best moment to copy
+    the buffer to the bitmap (ie when the 3Dprog have really finished to draw)
+Sometime it works well cause the 3Dprog software call FlushFrame() or SetDrawRegion() or ClearZBuffer()
+to finish the drawing... Sometime it dont works... (1)
+
+>It's must be like this or it must be fast on my configuration ?
+It is slow : just keeep in mind that it is the 68040 (JIT-emulation) that compute each pixel one per one 
+(Wazp3D it NOT an UAE hack ===> it dont use directly the Intel CPU but the 68040 emulated one)
+Have you ever seen a fast CPU only 3D program on an Amiga4040 ? (2) 
+
+>Maybe i need setup somethink correctly ? I am very in interest about 
+>this library. hope you can help me a bit with it :)
+In my case some WinUAE versions seems (why !?!?) to be faster with Wazp3D
+especially the very old WinUAE 0.8.22, release 4 that is much faster
+Also some PC hardware (CPU) seems to be faster in WinUAE-JIT
+
+>Why "gears" (screen) dont display ?
+This 3Dprog seems to be poorly designed (no double-buffering): it draw all 
+then immediately clear all in the same screen
+    Disable "Use BGcolor Hack"
+    Disable "Use Minimal DR"
+    Disable "Use ClearDrawR"
+Then it will begin to appear (but still not perfect yet)
+
+>Fog looks like not perfect ?
+Seems that the fog-formula used is not the same as the Warp3D one
+If someone know how Warp3D compute the fog ...??
+
+>Why "Engine" is distorted ?
+Wazp3D-beta31 was lacking perspective-correction 
+Beta32 looks better  
+Also "Engine" seems to compute no Z values for vertices (?)
+
+>What the difference with QuarkTex ?
+QuarkTex is a nice WinUAE hack but it need WinUAE and OpenGL and a 3D card. Also it dont works for everyone...
+(it never works perfectly for me :-/ ) but is much faster as it use the 3D hardware
+
+Warp3D:  3Dprog-->Warp3D-->AmigaOS-->Driver-->3Dcard
+QuarkTex:3Dprog-->Warp3D-->AmigaOS-->WinUAE-(Windows)->Warp3D.alib-->OpenGL-->Driver-->3Dcard
+Wazp3D:  3Dprog-->Warp3D-->AmigaOS-->68040
+
+> There are lots of Warnings when recompiling
+Sorry 
+No more warnings with beta32 : code has been cleaned :-)
+
+>Why a beta 32
+Much (and more than i imagined :-) ) people seems to be interested in the Wazp3D beta31
+So i tried to remove some bugs for all those people that said "Wazp3D is Cool"
+
+> What is new with beta 32 ?
+Mainly no more warnings when recompiling
+See Wazp3D.readme for list of new features
+
+
+
+
+
+(1) I hope someone will enhance Wazp3D as i have no time left to work anymore on this project
+(2) Perhaps a very smart ASM programmer will enhance speed a few but there will be no miracle :-)
+
+
+
+
+
