@@ -1,4 +1,4 @@
-/* ezSysLog Listview hooks */
+/* SysLog Listview hooks */
 
 #if !defined(__AROS__)
 #define __NOLIBBASE__

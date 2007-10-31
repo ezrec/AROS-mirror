@@ -228,9 +228,9 @@ AROS_UFH3(
   SetAttrs(Win, MUIA_Window_Sleep, TRUE, TAG_END);
   MainLoop(SWin);
   SetAttrs(Win, MUIA_Window_Sleep, FALSE, TAG_END);
+#if !defined(__AROS__)
   return 0;
-
-#if defined(__AROS__)
+#else
     AROS_USERFUNC_EXIT
 #endif
 }
@@ -290,7 +290,7 @@ BOOL BuildGui(void)
 	 MUIA_Application_Description, (ULONG)"AROSTCP syslog viewer",
    MUIA_Application_SingleTask, TRUE,
 	 MUIA_Application_Title, (ULONG)"SysLog",
-	 MUIA_Application_Version, (ULONG)"$VER: ezSysLog 1.2 (15.11.2005)\n",
+	 MUIA_Application_Version, (ULONG)"$VER: SysLog 1.2 (15.11.2005)\n",
    MUIA_Application_Menustrip, (ULONG)CreateMenu(),
    MUIA_Application_Window, (ULONG)(Win = MUI_NewObject(MUIC_Window,
 		MUIA_Window_Title, (ULONG)"AROSTCP syslog viewer",

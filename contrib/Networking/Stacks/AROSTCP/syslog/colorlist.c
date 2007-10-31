@@ -55,14 +55,8 @@ LONG d_ColorList(void)
   Object *obj = (Object*)REG_A2;
   Msg msg = (Msg)REG_A1;
 #else
-AROS_UFH3(
-    LONG, d_ColorList,
-    AROS_UFHA(Class *,    cl,   A0),
-    AROS_UFHA(Object *,           obj,    A2),
-    AROS_UFHA(Msg,             msg,  A1)
-)
+BOOPSI_DISPATCHER(IPTR, d_ColorList, cl, obj, msg)
 {
-    AROS_USERFUNC_INIT
 #endif
 
   switch (msg->MethodID)
@@ -203,10 +197,10 @@ AROS_UFH3(
 
     default: return DoSuperMethodA(cl, obj, msg);
   }
-#if defined(__AROS__)
-    AROS_USERFUNC_EXIT
-#endif
 }
+#if defined(__AROS__)
+BOOPSI_DISPATCHER_END
+#endif
 
 #if !defined(__AROS__)
 struct EmulLibEntry g_ColorList =
@@ -219,8 +213,8 @@ struct MUI_CustomClass *CreateColorListClass(void)
 #if !defined(__AROS__)
                (APTR)&g_ColorList
 #else
-				d_ColorList
-  ));
+		d_ColorList
 #endif
+  ));
 }
 
