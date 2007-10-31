@@ -1,0 +1,169 @@
+
+                        NTPSync V2.3 (03-Feb-2006)
+
+
+1. INTRODUCTION
+
+Network Time Protocol (NTP) is a protocol for synchronizing clocks in the
+Internet. NTPSync is a program that adjusts your Amiga's clock according
+to a specified NTP server. Plese see http://www.eecis.udel.edu/~ntp for
+more information on NTP and a list of public NTP servers worldwide.
+
+
+2. REQUIREMENTS
+
+- an Amiga with a kickstart V37 (2.0) or higher (only tested with 3.x),
+  or a PPC-Amiga with AmigaOS 4.x or MorphOS 1.x
+- an AmiTCP 4.0 compatible TCP/IP stack (like Miami, AmiTCP, Genesis,
+  Roadshow (OS4) or MOSNet (MOS))
+
+
+3. USAGE
+
+Please read the Disclaimer-section before installing the program.
+
+Select the appropriate binary and rename it into "NTPSync", while
+copying it to your disk.
+- NTPSync_68k: AmigaOS 2.x/3.x 68k-version
+- NTPSync_OS4: AmigaOS 4.x PPC-version
+- NTPSync_MOS: MorphOS 1.x PPC-version
+
+Usage: NTPSync [options] <1st server>[:port] [2nd server][:port] [...]
+
+Where options is one or more of the following:
+   -h          = Print a quick help.
+
+   -v          = Turn on verbose mode. Causes NTPSync to print some messages
+                 while sending the requests and more information about the
+                 server it connected, and the offset it set the clock and
+                 the roundtrip delay.
+
+   -c          = Set the battery-clock as well as the system clock, no need
+                 for "SetClock SAVE" anymore.
+
+   -d<UTCDiff> = Difference from UTC (= GMT) in minutes.
+
+   -t<timeout> = Time to wait for replies in seconds.
+                 Note that this timeout doesn't work work for the name-server,
+                 so you might prefer to specifiy the IP address instead.
+
+For example, to set your clock according to nic.funet.fi, you would use the
+following line:
+
+NTPSync nic.funet.fi
+
+Or if your locale.library is lying about the UTC offset, which is +2 hours:
+
+NTPSync -d120 nic.funet.fi
+
+Or to set the time according to ntp1.hut.fi or ntp2.hut.fi, whichever replies
+first:
+
+NTPSync ntp1.hut.fi ntp2.hut.fi
+
+
+4. COMPILING
+
+The current version is no longer compiled with SAS/C but with vbcc 0.8i
+(using SAS/C for the 68k-version should still work, though). Use the
+supplied Makefile to generate versions for all architectures.
+
+
+5. KNOWN BUGS
+
+There is a problem with the Daylight Saving Time. The time is set incorrectly
+when the DST is in use. You must use the -d option to fix the problem
+manually. If you have an idea on how to make this better, please send me
+some mail.
+
+Also, I wasn't quite sure how to use the battery.resource. I can open it OK,
+but I don't know if it should be closed too somehow. Anyway, it shouldn't
+cause any trouble.
+
+
+6. THE AUTHOR
+
+If you find any bugs, have any ideas, have trouble with the program, want
+to say your opinion on it etc., don't hesitate to contact me by email or
+normal post. You can also get the newest version directly from me. A simple
+NTP server program is also in work (or actually I made one already for
+debugging NTPSync).
+
+Any feedback is welcome!
+
+Snail-mail: Heikki Linnakangas   (if you can't use E-Mail)
+            Porvoonkatu 19 A 25
+            00510 Helsinki
+            Finland
+
+EMail: Heikki.Linnakangas@iki.fi (the better way)
+
+Check my WWW page at http://www.iki.fi/~hlinnaka for my PGP public key, if
+you prefer encrypting your mail.
+
+Author of the OS4 and MorphOS ports:
+   Frank Wille
+   EMail: frank@phoenix.owl.de
+
+
+7. HISTORY
+
+--- V2.3  - ported to AmigaOS4 and MorphOS (Frank Wille).
+
+--- V2.2  - now supports multiple servers
+          - added the verbose option
+          - added the timeout option
+          - can now set the battery-backed clock too
+          - changed a bit the way the roundtrip delay is calculated
+          - some other minor changes in the source code
+          - some changes to the documentation
+          - the documentation is now .txt, not .doc
+
+--- V2.1  - fixed the date, was one day behind. I thought I fixed that in
+            an older version already, but now it should be fixed for real
+
+--- V2.0  - fixed a bug that caused the clock run very fast sometimes
+          - now tries to use another port if 123 is already in use
+          - now asks the local.library for the UTC diff if not given
+          - some other minor changes
+          - now takes the network delay into account
+
+--- V1.1  - added version information for the 'version' command
+          - added some integrity checks to the reply
+          - added support for different ports
+          - now prints stratum of the server when time is set
+          - added the COMPILATION-section to the document
+          - better error handling
+          - fixed a small bug in receiving the reply
+          - fixed the version number in the document
+          - date was set incorrectly
+          - file lengths were incorrect in the document
+
+--- V1.0  - the initial release
+
+
+8. DISCLAIMER
+
+THE AUTHOR IS NOT LIABLE IN ANY WAY FOR ANY DAMAGE ARISING OUT OF
+THE USE OR INABILITY TO USE THE PROGRAM. USE AT YOUR OWN RISK.
+
+This program is FreeWare. You may use and distribute it unless told to not
+do so by the author. You may charge a nominal fee to recover distribution
+costs. The distribution fee must not exceed 15 FIM nor 3 USD + distribution
+expenses. The distribution of an incomplete or changed package is prohibited.
+
+This program may be included in commercial magazines or archives, if a free
+copy is sent to the author, or the author is given free access to the archive.
+
+You may copy and distribute this package, as long as the contents of the
+package are not changed in any way. The package must include the following
+files:
+
+  Makefile
+  NTPSync
+  NTPSync.txt
+  NTPSync.c
+
+Distribution of modified versions of any of the files is forbidden. If you
+make any enhancements to program, please send the source code to me, and
+I will make a new release.
