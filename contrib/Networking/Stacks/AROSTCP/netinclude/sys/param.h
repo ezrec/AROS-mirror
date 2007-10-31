@@ -40,7 +40,7 @@
 #if defined(__PPC__) || defined(__m68000)
 #define	BIG_ENDIAN	4321	/* MSB first */
 #define	BYTE_ORDER	BIG_ENDIAN
-#elif defined(__i386__)
+#elif defined(__i386__) || defined(__x86_64__)
 #define	LITTLE_ENDIAN	1234	/* LSB first */
 #define	BYTE_ORDER	LITTLE_ENDIAN
 #else
