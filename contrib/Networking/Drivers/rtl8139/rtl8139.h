@@ -45,6 +45,8 @@
 
 #include LC_LIBDEFS_FILE
 
+#define net_device RTL8139Unit
+
 #define RTL8139_TASK_NAME	"RTL8139.task"
 #define RTL8139_PORT_NAME	"RTL8139.port"
 
@@ -416,19 +418,20 @@ struct fe_priv {
 	unsigned short    advertising;  //NWay media advertising
 
 	unsigned int          rx_config;
-	struct   eth_frame   *rx_buffer;
+	UBYTE                       *rx_buffer;
 	unsigned int          rx_buf_len;
 	int                           rx_current;
 
 	int                           tx_flag;
-	struct   eth_frame    *tx_buffer;
+	UBYTE                       *tx_buffer;
 	unsigned char       *tx_pbuf[NUM_TX_DESC];
 	unsigned char       *tx_buf[NUM_TX_DESC];
 	int                            tx_dirty;
 	int                            tx_current;
 /* End - rtl new */
 	
-	ULONG   cur_rx, refill_rx;
+	unsigned short    cur_rx;
+	ULONG                     refill_rx;
 
 	ULONG   next_tx, nic_tx;
 	ULONG   tx_flags;
@@ -481,6 +484,7 @@ void rtl8139nic_get_functions(struct RTL8139Unit *Unit);
 /*     OLD PCNET32 DEFINES       */
 /* **************************** */
 
+/*
 #ifndef PCNET32_LOG_TX_BUFFERS
 #define PCNET32_LOG_TX_BUFFERS      3
 #define PCNET32_LOG_RX_BUFFERS      4
@@ -493,6 +497,7 @@ void rtl8139nic_get_functions(struct RTL8139Unit *Unit);
 #define RX_RING_SIZE                (1 << (PCNET32_LOG_RX_BUFFERS))
 #define RX_RING_MOD_MASK            (RX_RING_SIZE - 1)
 #define RX_RING_LEN_BITS            ((PCNET32_LOG_RX_BUFFERS) << 4)
+*/
 
 /* ***************************** */
 /*     REAL RTL8139 DEFINES       */
@@ -687,5 +692,6 @@ enum rtl_cscrbits
 
 #define mdio_delay(mdio_addr) LONGIN(mdio_addr)
 
-#endif
+int rtl8139nic_set_rxmode(struct net_device *dev);
 
+#endif

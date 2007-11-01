@@ -57,8 +57,6 @@
 #undef LIBBASE
 #define LIBBASE (dev->rtl8139u_device)
 
-#define net_device RTL8139Unit
-
 #define TIMER_RPROK 3599597124UL
 
 static ULONG usec2tick(ULONG usec)
@@ -340,9 +338,9 @@ static void rtl8139nic_drain_rx(struct net_device *dev)
 {
 	struct fe_priv *np = get_pcnpriv(dev);
 	int i;
-	for (i = 0; i < RX_RING_SIZE; i++) {
+//	for (i = 0; i < RX_RING_SIZE; i++) {
 #warning "TODO: rtl8139nic_drain_rx does nothing atm."
-	}
+//	}
 }
 
 
