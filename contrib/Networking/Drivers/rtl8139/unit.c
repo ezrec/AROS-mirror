@@ -157,6 +157,8 @@ AROS_UFH3(void, RTL8139_RX_IntF,
 
 	struct RTL8139Base *RTL8139DeviceBase = unit->rtl8139u_device;
 	struct fe_priv *np = unit->rtl8139u_fe_priv;
+	UBYTE *base = unit->rtl8139u_BaseMem;
+
 	UWORD Flags;
 	struct TypeStats *tracker;
 	ULONG packet_type;
@@ -165,162 +167,187 @@ AROS_UFH3(void, RTL8139_RX_IntF,
 	BOOL accepted, is_orphan;
 
 D(bug("%s: RTL8139_RX_IntF() !!!!\n", unit->rtl8139u_name));
-	np->cur_rx = 0;
+	unsigned short cur_rx = np->cur_rx;
 
 	/* Endless loop, with break from inside */
-	for(;;)
+	while((BYTEIN(base + RTLr_ChipCmd) & RxBufEmpty) == 0)
 	{
 		int i;
 		UWORD len=0;
 		struct eth_frame *frame;
 
-		if (np->cur_rx >= RX_RING_SIZE)
-			break;	/* we scanned the whole ring - do not continue */
+		unsigned int ring_offset = cur_rx % np->rx_buf_len;
+		unsigned long rx_status = *(unsigned long *)(np->rx_buffer + ring_offset);
+		unsigned int rx_size = rx_status >> 16;
 
-		/* Get the in-queue number */
-		i = np->cur_rx % RX_RING_SIZE;
-		Flags = ((struct rx_ring_desc *)np->ring_addr)[i].BufferStatus;
-		len = ((struct rx_ring_desc *)np->ring_addr)[i].BufferMsgLength;
-
-D(bug("%s: RTL8139_RX_IntF: looking at packet %d:%d, Flags 0x%x, len %d\n",
-			unit->rtl8139u_name, np->cur_rx, i, Flags, len));
-
-		/* Do we own the packet or the chipset? */
-		if ((Flags & (1 << 15))!=0)
+D(bug("%s: RTL8139_RX_IntF: cur_rx=%d, ring_offset=%x, rx_status=%8.8x rx_size=%d\n",
+			unit->rtl8139u_name, np->cur_rx, ring_offset, rx_status, rx_size));
+		
+		if (rx_status & (RxBadSymbol | RxRunt | RxTooLong | RxCRCErr | RxBadAlign))
 		{
-D(bug("%s: RTL8139_RX_IntF: packet owned by chipset\n", unit->rtl8139u_name));
-			goto next_pkt;	 /* still owned by hardware, */
+D(bug("%s: RTL8139_RX_IntF: Ethernet frame had errors, status %8.8x\n",
+			unit->rtl8139u_name, rx_status));
+
+			
+			
+			
 		}
+		else
+		{
+			len = rx_size - 4;
+			frame = (np->rx_buffer + ring_offset + 4);
+D(bug("%s: RTL8139_RX_IntF: frame=%x, len=%d\n", unit->rtl8139u_name, frame, len));
+	/*
+			if (np->cur_rx >= RX_RING_SIZE)
+				break;	// we scanned the whole ring - do not continue
 
-D(bug("%s: RTL8139_RX_IntF: packet is for us\n", unit->rtl8139u_name));
 
-		/* the packet is for us - get it :) */
+			// Get the in-queue number 
+			i = np->cur_rx % RX_RING_SIZE;
+			Flags = ((struct rx_ring_desc *)np->ring_addr)[i].BufferStatus;
+			len = ((struct rx_ring_desc *)np->ring_addr)[i].BufferMsgLength;
 
-		if (Flags & (1 << 7)) { // Bus Parity Error
-D(bug("%s: RTL8139_RX_IntF: packet has Bus Parity error!\n", unit->rtl8139u_name));
-			ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
-			unit->rtl8139u_stats.BadData++;
-			goto next_pkt;
-		}
+	D(bug("%s: RTL8139_RX_IntF: looking at packet %d:%d, Flags 0x%x, len %d\n",
+				unit->rtl8139u_name, np->cur_rx, i, Flags, len));
 
-		if (Flags & (1 << 8)) { // End of Packet
-D(bug("%s: RTL8139_RX_IntF: END of Packet\n", unit->rtl8139u_name));
-		}
-		if (Flags & (1 << 9)) { // Start of Packet
-D(bug("%s: RTL8139_RX_IntF: START of Packet\n", unit->rtl8139u_name));
-		}
-
-		if (Flags & (1 << 10)) { // Buffer Error
-D(bug("%s: RTL8139_RX_IntF: packet has CRC error!\n", unit->rtl8139u_name));
-			ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
-			unit->rtl8139u_stats.BadData++;
-			goto next_pkt;
-		}
-		if (Flags & (1 << 11)) { // CRC Error
-D(bug("%s: RTL8139_RX_IntF: packet has CRC error!\n", unit->rtl8139u_name));
-			ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
-			unit->rtl8139u_stats.BadData++;
-			goto next_pkt;
-		}
-		if (Flags & (1 << 12)) { // OVERFLOW Error
-D(bug("%s: RTL8139_RX_IntF: packet has OVERFLOW error!\n", unit->rtl8139u_name));
-			ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
-			unit->rtl8139u_stats.BadData++;
-			goto next_pkt;
-		}
-		if (Flags & (1 << 13)) { // Framing Error
-			ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
-			unit->rtl8139u_stats.BadData++;
-			goto next_pkt;
-		}
-
-D(bug("%s: RTL8139_RX_IntF: packet doesnt report errors\n", unit->rtl8139u_name));
-
-		/* got a valid packet - forward it to the network core */
-		frame = &np->rx_buffer[i];
-		is_orphan = TRUE;
-
-		/* Dump contents of frame if DEBUG enabled */
-#ifdef DEBUG
-				{
-			int j;
-			for (j=0; j<64; j++) {
-				if ((j%16) == 0)
-					D(bug("\n%03x:", j));
-
-				D(bug(" %02x", ((unsigned char*)frame)[j]));
+			// Do we own the packet or the chipset?
+			if ((Flags & (1 << 15))!=0)
+			{
+	D(bug("%s: RTL8139_RX_IntF: packet owned by chipset\n", unit->rtl8139u_name));
+				goto next_pkt;	 // still owned by hardware,
 			}
-			D(bug("\n"));
+
+	D(bug("%s: RTL8139_RX_IntF: packet is for us\n", unit->rtl8139u_name));
+
+			// the packet is for us - get it :)
+
+			if (Flags & (1 << 7)) { // Bus Parity Error
+	D(bug("%s: RTL8139_RX_IntF: packet has Bus Parity error!\n", unit->rtl8139u_name));
+				ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
+				unit->rtl8139u_stats.BadData++;
+				goto next_pkt;
+			}
+
+			if (Flags & (1 << 8)) { // End of Packet
+	D(bug("%s: RTL8139_RX_IntF: END of Packet\n", unit->rtl8139u_name));
+			}
+			if (Flags & (1 << 9)) { // Start of Packet
+	D(bug("%s: RTL8139_RX_IntF: START of Packet\n", unit->rtl8139u_name));
+			}
+
+			if (Flags & (1 << 10)) { // Buffer Error
+	D(bug("%s: RTL8139_RX_IntF: packet has CRC error!\n", unit->rtl8139u_name));
+				ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
+				unit->rtl8139u_stats.BadData++;
+				goto next_pkt;
+			}
+			if (Flags & (1 << 11)) { // CRC Error
+	D(bug("%s: RTL8139_RX_IntF: packet has CRC error!\n", unit->rtl8139u_name));
+				ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
+				unit->rtl8139u_stats.BadData++;
+				goto next_pkt;
+			}
+			if (Flags & (1 << 12)) { // OVERFLOW Error
+	D(bug("%s: RTL8139_RX_IntF: packet has OVERFLOW error!\n", unit->rtl8139u_name));
+				ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
+				unit->rtl8139u_stats.BadData++;
+				goto next_pkt;
+			}
+			if (Flags & (1 << 13)) { // Framing Error
+				ReportEvents(LIBBASE, unit, S2EVENT_ERROR | S2EVENT_HARDWARE | S2EVENT_RX);
+				unit->rtl8139u_stats.BadData++;
+				goto next_pkt;
+			}
+
+	D(bug("%s: RTL8139_RX_IntF: packet doesnt report errors\n", unit->rtl8139u_name));
+	*/
+
+			/* got a valid packet - forward it to the network core */
+			is_orphan = TRUE;
+
+			/* Dump contents of frame if DEBUG enabled */
+#ifdef DEBUG
+			{
+				int j;
+				for (j=0; j<64; j++) {
+					if ((j%16) == 0)
+						D(bug("\n%03x:", j));
+
+					D(bug(" %02x", ((unsigned char*)frame)[j]));
 				}
+				D(bug("\n"));
+			}
 #endif
 
-		/* Check for address validity */
-		if(AddressFilter(LIBBASE, unit, frame->eth_packet_dest))
-		{
-			/* Packet is addressed to this driver */
-			packet_type = frame->eth_packet_type;
+			/* Check for address validity */
+			if(AddressFilter(LIBBASE, unit, frame->eth_packet_dest))
+			{
+				/* Packet is addressed to this driver */
+				packet_type = frame->eth_packet_type;
 D(bug("%s: RTL8139_RX_IntF: Packet IP accepted with type = %d\n", unit->rtl8139u_name, packet_type));
 
-			opener = (APTR)unit->rtl8139u_Openers.mlh_Head;
-			opener_tail = (APTR)&unit->rtl8139u_Openers.mlh_Tail;
+				opener = (APTR)unit->rtl8139u_Openers.mlh_Head;
+				opener_tail = (APTR)&unit->rtl8139u_Openers.mlh_Tail;
 
-			/* Offer packet to every opener */
-			while(opener != opener_tail)
-			{
-				request = (APTR)opener->read_port.mp_MsgList.lh_Head;
-				request_tail = (APTR)&opener->read_port.mp_MsgList.lh_Tail;
-				accepted = FALSE;
-
-				/* Offer packet to each request until it's accepted */
-				while((request != request_tail) && !accepted)
+				/* Offer packet to every opener */
+				while(opener != opener_tail)
 				{
-					if((request->ios2_PacketType == packet_type)
-					  || ((request->ios2_PacketType <= ETH_MTU)
-					  && (packet_type <= ETH_MTU)))
+					request = (APTR)opener->read_port.mp_MsgList.lh_Head;
+					request_tail = (APTR)&opener->read_port.mp_MsgList.lh_Tail;
+					accepted = FALSE;
+
+					/* Offer packet to each request until it's accepted */
+					while((request != request_tail) && !accepted)
 					{
+						if((request->ios2_PacketType == packet_type)
+						  || ((request->ios2_PacketType <= ETH_MTU)
+						  && (packet_type <= ETH_MTU)))
+						{
 D(bug("%s: RTL8139_RX_IntF: copy packet for opener ..\n", unit->rtl8139u_name));
-						CopyPacket(LIBBASE, unit, request, len, packet_type, frame);
-						accepted = TRUE;
+							CopyPacket(LIBBASE, unit, request, len, packet_type, frame);
+							accepted = TRUE;
+						}
+						request = (struct IOSana2Req *)request->ios2_Req.io_Message.mn_Node.ln_Succ;
 					}
-					request = (struct IOSana2Req *)request->ios2_Req.io_Message.mn_Node.ln_Succ;
+
+					if(accepted)
+						is_orphan = FALSE;
+
+					opener = (APTR)opener->node.mln_Succ;
 				}
 
-				if(accepted)
-					is_orphan = FALSE;
-
-				opener = (APTR)opener->node.mln_Succ;
-			}
-
-			/* If packet was unwanted, give it to S2_READORPHAN request */
-			if(is_orphan)
-			{
-				unit->rtl8139u_stats.UnknownTypesReceived++;
-
-				if(!IsMsgPortEmpty(unit->rtl8139u_request_ports[ADOPT_QUEUE]))
+				/* If packet was unwanted, give it to S2_READORPHAN request */
+				if(is_orphan)
 				{
-					CopyPacket(LIBBASE, unit,
-					  (APTR)unit->rtl8139u_request_ports[ADOPT_QUEUE]->
-					  mp_MsgList.lh_Head, len, packet_type, frame);
+					unit->rtl8139u_stats.UnknownTypesReceived++;
+
+					if(!IsMsgPortEmpty(unit->rtl8139u_request_ports[ADOPT_QUEUE]))
+					{
+						CopyPacket(LIBBASE, unit,
+						  (APTR)unit->rtl8139u_request_ports[ADOPT_QUEUE]->
+						  mp_MsgList.lh_Head, len, packet_type, frame);
 D(bug("%s: RTL8139_RX_IntF: packet copied to orphan queue\n", unit->rtl8139u_name));
+					}
+				}
+
+				/* Update remaining statistics */
+
+				tracker =  FindTypeStats(LIBBASE, unit, &unit->rtl8139u_type_trackers, packet_type);
+
+				if(tracker != NULL)
+				{
+					tracker->stats.PacketsReceived++;
+					tracker->stats.BytesReceived += len;
 				}
 			}
 
-			/* Update remaining statistics */
-
-			tracker =  FindTypeStats(LIBBASE, unit, &unit->rtl8139u_type_trackers, packet_type);
-
-			if(tracker != NULL)
-			{
-				tracker->stats.PacketsReceived++;
-				tracker->stats.BytesReceived += len;
-			}
+			unit->rtl8139u_stats.PacketsReceived++;
 		}
-
-		unit->rtl8139u_stats.PacketsReceived++;
-		((struct rx_ring_desc *)np->ring_addr)[i].BufferStatus = ((1 << 8)|(1 << 9)|(1 << 15)); // Mark packet as available again
-next_pkt:
-		np->cur_rx++;
+		cur_rx = (cur_rx + rx_size + 4 + 3) & ~3;
+		WORDOUT(base + RTLr_RxBufPtr, cur_rx - 16);
 	}
+
+	np->cur_rx = cur_rx;
 
 	AROS_USERFUNC_EXIT
 }
@@ -355,7 +382,7 @@ AROS_UFH3(void, RTL8139_TX_IntF,
 		struct TypeStats *tracker;
 
 		proceed = TRUE; /* Success by default */
-			UBYTE *base = (UBYTE*) unit->rtl8139u_BaseMem;
+		UBYTE *base = (UBYTE*) unit->rtl8139u_BaseMem;
 		port = unit->rtl8139u_request_ports[WRITE_QUEUE];
 
 		/* Still no error and there are packets to be sent? */
