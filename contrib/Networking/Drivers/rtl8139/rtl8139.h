@@ -6,23 +6,24 @@
  */
 
 /*
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful, but
-    WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    General Public License for more details.
+	This program is distributed in the hope that it will be useful, but
+	WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+	General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-    MA 02111-1307, USA.
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+	MA 02111-1307, USA.
 */
 
 #define DEBUG 1
+#include <aros/debug.h>
 
 #include <exec/types.h>
 #include <exec/libraries.h>
@@ -41,12 +42,11 @@
 #include <devices/sana2specialstats.h>
 
 #include <proto/exec.h>
-#include <aros/debug.h>
 
 #include LC_LIBDEFS_FILE
 
-#define RTL8139_TASK_NAME	"RTL8139 task"
-#define RTL8139_PORT_NAME	"RTL8139 port"
+#define RTL8139_TASK_NAME	"RTL8139.task"
+#define RTL8139_PORT_NAME	"RTL8139.port"
 
 /** Operational parameters that are set at compile time **/
 #define ETH_ZLEN  60 // Min. octets in frame sans FCS
@@ -67,19 +67,19 @@
 extern struct Library *OOPBase;
 
 struct RTL8139Base {
-    struct Device       rtl8139b_Device;
-    struct Library      *rtl8139b_UtilityBase;
-    struct MsgPort      *rtl8139b_syncport;
+	struct Device       rtl8139b_Device;
+	struct Library      *rtl8139b_UtilityBase;
+	struct MsgPort      *rtl8139b_syncport;
 
-    OOP_Object          *rtl8139b_pci;
-    OOP_Object          *rtl8139b_irq;
-    OOP_AttrBase        rtl8139b_pciDeviceAttrBase;
+	OOP_Object          *rtl8139b_pci;
+	OOP_Object          *rtl8139b_irq;
+	OOP_AttrBase        rtl8139b_pciDeviceAttrBase;
 
-    struct Sana2DeviceQuery  rtl8139b_Sana2Info;
-    struct RTL8139Unit            *rtl8139b_unit;
+	struct Sana2DeviceQuery  rtl8139b_Sana2Info;
+	struct RTL8139Unit            *rtl8139b_unit;
 
-    /* UnitCount is used to assign unit ID's to found hardware ..*/
-    unsigned int                    rtl8139b_UnitCount;
+	/* UnitCount is used to assign unit ID's to found hardware ..*/
+	unsigned int                    rtl8139b_UnitCount;
 };
 
 #define UtilityBase (LIBBASE->rtl8139b_UtilityBase)
@@ -88,94 +88,94 @@ struct RTL8139Base {
 #define HiddPCIDeviceAttrBase   (LIBBASE->rtl8139b_pciDeviceAttrBase)
 
 enum {
-    WRITE_QUEUE,
-    ADOPT_QUEUE,
-    EVENT_QUEUE,
-    GENERAL_QUEUE,
-    REQUEST_QUEUE_COUNT
+	WRITE_QUEUE,
+	ADOPT_QUEUE,
+	EVENT_QUEUE,
+	GENERAL_QUEUE,
+	REQUEST_QUEUE_COUNT
 };
 
 struct Opener
 {
-    struct MinNode  node;
-    struct MsgPort  read_port;
-    BOOL            (*rx_function)(APTR, APTR, ULONG);
-    BOOL            (*tx_function)(APTR, APTR, ULONG);
-    struct Hook     *filter_hook;
-    struct MinList  initial_stats;
+	struct MinNode  node;
+	struct MsgPort  read_port;
+	BOOL            (*rx_function)(APTR, APTR, ULONG);
+	BOOL            (*tx_function)(APTR, APTR, ULONG);
+	struct Hook     *filter_hook;
+	struct MinList  initial_stats;
 };
 
 struct TypeStats
 {
-    struct MinNode node;
-    ULONG packet_type;
-    struct Sana2PacketTypeStats stats;
+	struct MinNode node;
+	ULONG packet_type;
+	struct Sana2PacketTypeStats stats;
 };
 
 
 struct TypeTracker
 {
-    struct MinNode node;
-    ULONG packet_type;
-    struct Sana2PacketTypeStats stats;
-    ULONG user_count;
+	struct MinNode node;
+	ULONG packet_type;
+	struct Sana2PacketTypeStats stats;
+	ULONG user_count;
 };
 
 
 struct AddressRange
 {
-    struct MinNode node;
-    ULONG add_count;
-    ULONG lower_bound_left;
-    ULONG upper_bound_left;
-    UWORD lower_bound_right;
-    UWORD upper_bound_right;
+	struct MinNode node;
+	ULONG add_count;
+	ULONG lower_bound_left;
+	ULONG upper_bound_left;
+	UWORD lower_bound_right;
+	UWORD upper_bound_right;
 };
 
 /* Big endian: should work, but is untested */
 
 struct rx_ring_desc
 {
-    IPTR    PacketBuffer;
-    UWORD   BufferLength;
-    UWORD   BufferStatus;
-    ULONG   BufferMsgLength;
-    ULONG   Reserved;
+	IPTR    PacketBuffer;
+	UWORD   BufferLength;
+	UWORD   BufferStatus;
+	ULONG   BufferMsgLength;
+	ULONG   Reserved;
 };
 
 struct tx_ring_desc
 {
-    IPTR    PacketBuffer;
-    UWORD   BufferLength;
-    UWORD   BufferStatus;
-    ULONG   Misc;
-    ULONG   Reserved;
+	IPTR    PacketBuffer;
+	UWORD   BufferLength;
+	UWORD   BufferStatus;
+	ULONG   Misc;
+	ULONG   Reserved;
 };
 
 #define STAT_COUNT 3
 
 struct RTL8139Unit {
-    struct MinNode          *rtl8139u_Node;
-    struct MinList          rtl8139u_Openers;
-    struct MinList          rtl8139u_multicast_ranges;
-    struct MinList          rtl8139u_type_trackers;
-    ULONG                   rtl8139u_UnitNum;
-    LONG                    rtl8139u_range_count;
+	struct MinNode          *rtl8139u_Node;
+	struct MinList          rtl8139u_Openers;
+	struct MinList          rtl8139u_multicast_ranges;
+	struct MinList          rtl8139u_type_trackers;
+	ULONG                   rtl8139u_UnitNum;
+	LONG                    rtl8139u_range_count;
 
-    OOP_Object              *rtl8139u_PCIDevice;
-    OOP_Object              *rtl8139u_PCIDriver;
+	OOP_Object              *rtl8139u_PCIDevice;
+	OOP_Object              *rtl8139u_PCIDriver;
 
-    struct timeval          rtl8139u_toutPOLL;
-    BOOL                    rtl8139u_toutNEED;
+	struct timeval          rtl8139u_toutPOLL;
+	BOOL                    rtl8139u_toutNEED;
 
-    struct MsgPort          *rtl8139u_TimerSlowPort;
-    struct timerequest      *rtl8139u_TimerSlowReq;
+	struct MsgPort          *rtl8139u_TimerSlowPort;
+	struct timerequest      *rtl8139u_TimerSlowReq;
 
-    struct MsgPort          *rtl8139u_TimerFastPort;
-    struct timerequest      *rtl8139u_TimerFastReq;
+	struct MsgPort          *rtl8139u_TimerFastPort;
+	struct timerequest      *rtl8139u_TimerFastReq;
 
-    struct Sana2DeviceStats rtl8139u_stats;
-    ULONG                   rtl8139u_special_stats[STAT_COUNT];
+	struct Sana2DeviceStats rtl8139u_stats;
+	ULONG                   rtl8139u_special_stats[STAT_COUNT];
 
 	char                    *rtl8139u_rtl_cardname;
 	char                    *rtl8139u_rtl_chipname;
@@ -188,65 +188,65 @@ struct RTL8139Unit {
 #define support_ltint   (1 << 3)
 #define support_dxsuflo (1 << 4)
 /* Card Funcs */
-    void                    (*initialize)(struct RTL8139Unit *);
-    void                    (*deinitialize)(struct RTL8139Unit *);
-    int                     (*start)(struct RTL8139Unit *);
-    int                     (*stop)(struct RTL8139Unit *);
-    int                     (*alloc_rx)(struct RTL8139Unit *);
-    void                    (*set_mac_address)(struct RTL8139Unit *);
-    void                    (*linkchange)(struct RTL8139Unit *);
-    void                    (*linkirq)(struct RTL8139Unit *);
+	void                    (*initialize)(struct RTL8139Unit *);
+	void                    (*deinitialize)(struct RTL8139Unit *);
+	int                     (*start)(struct RTL8139Unit *);
+	int                     (*stop)(struct RTL8139Unit *);
+	int                     (*alloc_rx)(struct RTL8139Unit *);
+	void                    (*set_mac_address)(struct RTL8139Unit *);
+	void                    (*linkchange)(struct RTL8139Unit *);
+	void                    (*linkirq)(struct RTL8139Unit *);
 //    ULONG                   (*descr_getlength)(struct ring_desc *prd, ULONG v);
-    void                    (*set_multicast)(struct RTL8139Unit *);
+	void                    (*set_multicast)(struct RTL8139Unit *);
 
-    int                     rtl8139u_open_count;
-    struct SignalSemaphore  rtl8139u_unit_lock;
+	int                     rtl8139u_open_count;
+	struct SignalSemaphore  rtl8139u_unit_lock;
 
-    struct Process          *rtl8139u_Process;
+	struct Process          *rtl8139u_Process;
 
-    struct RTL8139Base    *rtl8139u_device;
-    HIDDT_IRQ_Handler       *rtl8139u_irqhandler;
-    HIDDT_IRQ_Handler       *rtl8139u_touthandler;
-    IPTR	                  rtl8139u_DeviceID;
-    IPTR                    rtl8139u_DriverFlags;
-    IPTR                    rtl8139u_IRQ;
-    IPTR                    rtl8139u_BaseMem;
-    IPTR                    rtl8139u_SizeMem;
-    IPTR	                  rtl8139u_BaseIO;
+	struct RTL8139Base    *rtl8139u_device;
+	HIDDT_IRQ_Handler       *rtl8139u_irqhandler;
+	HIDDT_IRQ_Handler       *rtl8139u_touthandler;
+	IPTR	                  rtl8139u_DeviceID;
+	IPTR                    rtl8139u_DriverFlags;
+	IPTR                    rtl8139u_IRQ;
+	IPTR                    rtl8139u_BaseMem;
+	IPTR                    rtl8139u_SizeMem;
+	IPTR	                  rtl8139u_BaseIO;
 
-    BYTE                    rtl8139u_signal_0;
-    BYTE                    rtl8139u_signal_1;
-    BYTE                    rtl8139u_signal_2;
-    BYTE                    rtl8139u_signal_3;
+	BYTE                    rtl8139u_signal_0;
+	BYTE                    rtl8139u_signal_1;
+	BYTE                    rtl8139u_signal_2;
+	BYTE                    rtl8139u_signal_3;
 
-    struct MsgPort          *rtl8139u_input_port;
+	struct MsgPort          *rtl8139u_input_port;
 
-    struct MsgPort          *rtl8139u_request_ports[REQUEST_QUEUE_COUNT];
+	struct MsgPort          *rtl8139u_request_ports[REQUEST_QUEUE_COUNT];
 
-    struct Interrupt        rtl8139u_rx_int;
-    struct Interrupt        rtl8139u_tx_int;
+	struct Interrupt        rtl8139u_rx_int;
+	struct Interrupt        rtl8139u_tx_int;
 
-    STRPTR                  rtl8139u_name;
-    ULONG                   rtl8139u_mtu;
-    ULONG                   rtl8139u_flags;
-    ULONG                   rtl8139u_state;
-    APTR                    rtl8139u_mc_list;
-    UBYTE                   rtl8139u_dev_addr[6];
-    UBYTE                   rtl8139u_org_addr[6];
-    struct fe_priv          *rtl8139u_fe_priv;
+	STRPTR                  rtl8139u_name;
+	ULONG                   rtl8139u_mtu;
+	ULONG                   rtl8139u_flags;
+	ULONG                   rtl8139u_state;
+	APTR                    rtl8139u_mc_list;
+	UBYTE                   rtl8139u_dev_addr[6];
+	UBYTE                   rtl8139u_org_addr[6];
+	struct fe_priv          *rtl8139u_fe_priv;
 };
 
 void handle_request(LIBBASETYPEPTR, struct IOSana2Req *);
 
 /* Media selection options. */
 enum {
-        IF_PORT_UNKNOWN = 0,
-        IF_PORT_10BASE2,
-        IF_PORT_10BASET,
-        IF_PORT_AUI,
-        IF_PORT_100BASET,
-        IF_PORT_100BASETX,
-        IF_PORT_100BASEFX
+		IF_PORT_UNKNOWN = 0,
+		IF_PORT_10BASE2,
+		IF_PORT_10BASET,
+		IF_PORT_AUI,
+		IF_PORT_100BASET,
+		IF_PORT_100BASETX,
+		IF_PORT_100BASEFX
 };
 
 /* These flag bits are private to the generic network queueing
@@ -256,101 +256,101 @@ enum {
 
 enum netdev_state_t
 {
-        __LINK_STATE_XOFF=0,
-        __LINK_STATE_START,
-        __LINK_STATE_PRESENT,
-        __LINK_STATE_SCHED,
-        __LINK_STATE_NOCARRIER,
-        __LINK_STATE_RX_SCHED,
-        __LINK_STATE_LINKWATCH_PENDING
+		__LINK_STATE_XOFF=0,
+		__LINK_STATE_START,
+		__LINK_STATE_PRESENT,
+		__LINK_STATE_SCHED,
+		__LINK_STATE_NOCARRIER,
+		__LINK_STATE_RX_SCHED,
+		__LINK_STATE_LINKWATCH_PENDING
 };
 
 static inline int test_bit(int nr, const volatile unsigned long *addr)
 {
-    return ((1UL << (nr & 31)) & (addr[nr >> 5])) != 0;
+	return ((1UL << (nr & 31)) & (addr[nr >> 5])) != 0;
 }
 
 static inline void set_bit(int nr, volatile unsigned long *addr)
 {
-    addr[nr >> 5] |= 1UL << (nr & 31);
+	addr[nr >> 5] |= 1UL << (nr & 31);
 }
 
 static inline void clear_bit(int nr, volatile unsigned long *addr)
 {
-    addr[nr >> 5] &= ~(1UL << (nr & 31));
+	addr[nr >> 5] &= ~(1UL << (nr & 31));
 }
 
 static inline int test_and_set_bit(int nr, volatile unsigned long *addr)
 {
-    int oldbit = test_bit(nr, addr);
-    set_bit(nr, addr);
-    return oldbit;
+	int oldbit = test_bit(nr, addr);
+	set_bit(nr, addr);
+	return oldbit;
 }
 
 static inline int test_and_clear_bit(int nr, volatile unsigned long *addr)
 {
-    int oldbit = test_bit(nr, addr);
-    clear_bit(nr, addr);
-    return oldbit;
+	int oldbit = test_bit(nr, addr);
+	clear_bit(nr, addr);
+	return oldbit;
 }
 
 static inline void netif_schedule(struct RTL8139Unit *dev)
 {
-    if (!test_bit(__LINK_STATE_XOFF, &dev->rtl8139u_state)) {
-        Cause(&dev->rtl8139u_tx_int);
-    }
+	if (!test_bit(__LINK_STATE_XOFF, &dev->rtl8139u_state)) {
+		Cause(&dev->rtl8139u_tx_int);
+	}
 }
 
 
 static inline void netif_start_queue(struct RTL8139Unit *dev)
 {
-    clear_bit(__LINK_STATE_XOFF, &dev->rtl8139u_state);
+	clear_bit(__LINK_STATE_XOFF, &dev->rtl8139u_state);
 }
 
 static inline void netif_wake_queue(struct RTL8139Unit *dev)
 {
-    if (test_and_clear_bit(__LINK_STATE_XOFF, &dev->rtl8139u_state)) {
-        Cause(&dev->rtl8139u_tx_int);
-    }
+	if (test_and_clear_bit(__LINK_STATE_XOFF, &dev->rtl8139u_state)) {
+		Cause(&dev->rtl8139u_tx_int);
+	}
 }
 
 static inline void netif_stop_queue(struct RTL8139Unit *dev)
 {
-    set_bit(__LINK_STATE_XOFF, &dev->rtl8139u_state);
+	set_bit(__LINK_STATE_XOFF, &dev->rtl8139u_state);
 }
 
 static inline int netif_queue_stopped(const struct RTL8139Unit *dev)
 {
-    return test_bit(__LINK_STATE_XOFF, &dev->rtl8139u_state);
+	return test_bit(__LINK_STATE_XOFF, &dev->rtl8139u_state);
 }
 
 static inline int netif_running(const struct RTL8139Unit *dev)
 {
-    return test_bit(__LINK_STATE_START, &dev->rtl8139u_state);
+	return test_bit(__LINK_STATE_START, &dev->rtl8139u_state);
 }
 
 static inline int netif_carrier_ok(const struct RTL8139Unit *dev)
 {
-    return !test_bit(__LINK_STATE_NOCARRIER, &dev->rtl8139u_state);
+	return !test_bit(__LINK_STATE_NOCARRIER, &dev->rtl8139u_state);
 }
 
 extern void __netdev_watchdog_up(struct RTL8139Unit *dev);
 
 static inline void netif_carrier_on(struct RTL8139Unit *dev)
 {
-    if (test_and_clear_bit(__LINK_STATE_NOCARRIER, &dev->rtl8139u_state)) {
+	if (test_and_clear_bit(__LINK_STATE_NOCARRIER, &dev->rtl8139u_state)) {
 //                linkwatch_fire_event(dev);
-    }
-    if (netif_running(dev)) {
+	}
+	if (netif_running(dev)) {
 //                __netdev_watchdog_up(dev);
-    }
+	}
 }
 
 static inline void netif_carrier_off(struct RTL8139Unit *dev)
 {
-    if (!test_and_set_bit(__LINK_STATE_NOCARRIER, &dev->rtl8139u_state)) {
+	if (!test_and_set_bit(__LINK_STATE_NOCARRIER, &dev->rtl8139u_state)) {
 //                linkwatch_fire_event(dev);
-    }
+	}
 }
 
 /* Standard interface flags (netdevice->flags). */
@@ -386,57 +386,57 @@ static inline void netif_carrier_off(struct RTL8139Unit *dev)
 
 struct dev_mc_list
 {
-    struct dev_mc_list      *next;
-    UBYTE                   dmi_addr[MAX_ADDR_LEN];
-    unsigned char           dmi_addrlen;
-    int                     dmi_users;
-    int                     dmi_gusers;
+	struct dev_mc_list      *next;
+	UBYTE                   dmi_addr[MAX_ADDR_LEN];
+	unsigned char           dmi_addrlen;
+	int                     dmi_users;
+	int                     dmi_gusers;
 };
 
 struct fe_priv {
-    struct RTL8139Unit   *pci_dev;
-    int     in_shutdown;
-    ULONG   linkspeed;
-    int     duplex;
-    int     autoneg;
-    int     fixed_mode;
-    int     phyaddr;
-    int     wolenabled;
-    unsigned int phy_oui;
-    UWORD   gigabit;
-    ULONG   desc_ver;
-    struct SignalSemaphore  lock;
+	struct RTL8139Unit   *pci_dev;
+	int     in_shutdown;
+	ULONG   linkspeed;
+	int     duplex;
+	int     autoneg;
+	int     fixed_mode;
+	int     phyaddr;
+	int     wolenabled;
+	unsigned int phy_oui;
+	UWORD   gigabit;
+	ULONG   desc_ver;
+	struct SignalSemaphore  lock;
 
-    IPTR     ring_addr;
+	IPTR     ring_addr;
 
 /* Start - rtl new */
-    int                           full_duplex;
+	int                           full_duplex;
 
 	char                       mii_phys[4]; //MII device address
 	unsigned short    advertising;  //NWay media advertising
 
 	unsigned int          rx_config;
-    struct   eth_frame   *rx_buffer;
+	struct   eth_frame   *rx_buffer;
 	unsigned int          rx_buf_len;
 	int                           rx_current;
 
 	int                           tx_flag;
-    struct   eth_frame    *tx_buffer;
+	struct   eth_frame    *tx_buffer;
 	unsigned char       *tx_pbuf[NUM_TX_DESC];
 	unsigned char       *tx_buf[NUM_TX_DESC];
 	int                            tx_dirty;
 	int                            tx_current;
 /* End - rtl new */
 	
-    ULONG   cur_rx, refill_rx;
+	ULONG   cur_rx, refill_rx;
 
-    ULONG   next_tx, nic_tx;
-    ULONG   tx_flags;
+	ULONG   next_tx, nic_tx;
+	ULONG   tx_flags;
 
-    ULONG   irqmask;
-    ULONG   need_linktimer;
-    struct  timeval link_timeout;
-    UBYTE   orig_mac[6];
+	ULONG   irqmask;
+	ULONG   need_linktimer;
+	struct  timeval link_timeout;
+	UBYTE   orig_mac[6];
 };
 
 #define pci_name(unit)  (unit->rtl8139u_name)
@@ -466,12 +466,12 @@ struct fe_priv {
 #define TX_LIMIT_START  62
 
 struct eth_frame {
-    UBYTE eth_packet_dest[6];
-    UBYTE eth_packet_source[6];
-    UWORD eth_packet_type;
-    UBYTE eth_packet_data[ETH_MTU];
-    UBYTE eth_packet_crc[4];
-    UBYTE eth_pad[RXTX_ALLOC_BUFSIZE - ETH_MAXPACKETSIZE];
+	UBYTE eth_packet_dest[6];
+	UBYTE eth_packet_source[6];
+	UWORD eth_packet_type;
+	UBYTE eth_packet_data[ETH_MTU];
+	UBYTE eth_packet_crc[4];
+	UBYTE eth_pad[RXTX_ALLOC_BUFSIZE - ETH_MAXPACKETSIZE];
 } __attribute__((packed));
 #define eth_packet_ieeelen eth_packet_type
 
@@ -616,8 +616,8 @@ enum rtl_txconfigbits
 	TxIFG92 = (2<<TxIFGShift), /* 9.2us / 920ns */
 	TxIFG96 = (3<<TxIFGShift), /* 9.6us / 960ns */
 
-    TxLoopBack = (1<<18) | (1<<17),  /* Enable loopback test mode */
-    TxCRC          = (1<<16),                  /* Disable appending CRC to end of Tx Packet */
+	TxLoopBack = (1<<18) | (1<<17),  /* Enable loopback test mode */
+	TxCRC          = (1<<16),                  /* Disable appending CRC to end of Tx Packet */
 	TxClearAbt   = (1<<0),                    /* Clear abort (WO) */
 	TxDMAShift = 8,                               /* DMA burst value (0-7) is shifted this many bits */
 	TxRetryShift = 4,                              /* TXRR value (0-15) is shifted this many bits */
