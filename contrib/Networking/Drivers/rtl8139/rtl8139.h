@@ -480,27 +480,8 @@ struct eth_frame {
 
 void rtl8139nic_get_functions(struct RTL8139Unit *Unit);
 
-/* **************************** */
-/*     OLD PCNET32 DEFINES       */
-/* **************************** */
-
-/*
-#ifndef PCNET32_LOG_TX_BUFFERS
-#define PCNET32_LOG_TX_BUFFERS      3
-#define PCNET32_LOG_RX_BUFFERS      4
-#endif
-
-#define TX_RING_SIZE                (1 << (PCNET32_LOG_TX_BUFFERS))
-#define TX_RING_MOD_MASK            (TX_RING_SIZE - 1)
-#define TX_RING_LEN_BITS            ((PCNET32_LOG_TX_BUFFERS) << 12)
-
-#define RX_RING_SIZE                (1 << (PCNET32_LOG_RX_BUFFERS))
-#define RX_RING_MOD_MASK            (RX_RING_SIZE - 1)
-#define RX_RING_LEN_BITS            ((PCNET32_LOG_RX_BUFFERS) << 4)
-*/
-
 /* ***************************** */
-/*     REAL RTL8139 DEFINES       */
+/*       RTL8139 DEFINES         */
 /* ***************************** */
 
 enum rtl_boardcapabilities 
@@ -576,6 +557,8 @@ enum rtl_intrstatusbits
   PCSTimeout = 0x4000,
   PCIErr     = 0x8000, 
 };
+
+#define RxAckBits (RxFIFOOver | RxOverflow | RxOK)
 
 enum rtl_txstatusbits 
 {

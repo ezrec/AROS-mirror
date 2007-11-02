@@ -148,13 +148,8 @@ D(bug("%s unit.FlushUnit\n", unit->rtl8139u_name));
  * the forcedeth driver (IFF_ALLMULTI flag) and etherling3 driver (AddressMatch
  * filter function).
  */
-AROS_UFH3(void, RTL8139_RX_IntF,
-	AROS_UFHA(struct RTL8139Unit *,  unit, A1),
-	AROS_UFHA(APTR,             dummy, A5),
-	AROS_UFHA(struct ExecBase *,SysBase, A6))
+void RTL8139_RX_Process(struct RTL8139Unit *unit)
 {
-	AROS_USERFUNC_INIT
-
 	struct RTL8139Base *RTL8139DeviceBase = unit->rtl8139u_device;
 	struct fe_priv *np = unit->rtl8139u_fe_priv;
 	UBYTE *base = unit->rtl8139u_BaseMem;
@@ -165,7 +160,7 @@ AROS_UFH3(void, RTL8139_RX_IntF,
 	struct IOSana2Req *request, *request_tail;
 	BOOL accepted, is_orphan;
 
-D(bug("%s: RTL8139_RX_IntF() !!!!\n", unit->rtl8139u_name));
+D(bug("%s: RTL8139_RX_Process() !!!!\n", unit->rtl8139u_name));
 	unsigned short cur_rx = np->cur_rx;
 
 	while((BYTEIN(base + RTLr_ChipCmd) & RxBufEmpty) == 0)
@@ -177,29 +172,26 @@ D(bug("%s: RTL8139_RX_IntF() !!!!\n", unit->rtl8139u_name));
 		unsigned long rx_status = *(unsigned long *)(np->rx_buffer + ring_offset);
 		unsigned int rx_size = rx_status >> 16;
 
-D(bug("%s: RTL8139_RX_IntF: np->rx_buffer  = %x\n",
+D(bug("%s: RTL8139_RX_Process: np->rx_buffer  = %x\n",
 			unit->rtl8139u_name, np->rx_buffer));
 		
-D(bug("%s: RTL8139_RX_IntF: cur_rx=%d, ring_offset=%4.4x, rx_status=%8.8x rx_size=%d\n",
+D(bug("%s: RTL8139_RX_Process: cur_rx=%d, ring_offset=%4.4x, rx_status=%8.8x rx_size=%d\n",
 			unit->rtl8139u_name, cur_rx, ring_offset, rx_status, rx_size));
 		
-		if ((!(rx_status & RxStatusOK)) | (rx_status & (RxBadSymbol | RxRunt | RxTooLong | RxCRCErr | RxBadAlign)))
+		if (rx_status & (RxBadSymbol | RxRunt | RxTooLong | RxCRCErr | RxBadAlign))
 		{
-			if (!(rx_status & RxStatusOK))
-			{
-D(bug("%s: RTL8139_RX_IntF: Ethernet frame had errors, Status %8.8x\n",
+D(bug("%s: RTL8139_RX_Process: Ethernet frame had errors, Status %8.8x\n",
 			unit->rtl8139u_name, rx_status));
-			}
 
 			if (rx_status == 0xffffffff)
 			{
-D(bug("%s: RTL8139_RX_IntF: Invalid Recieve Status\n", unit->rtl8139u_name));
+D(bug("%s: RTL8139_RX_Process: Invalid Recieve Status\n", unit->rtl8139u_name));
 				rx_status = 0;
 			}
 
 			if (rx_status & RxTooLong)
 			{
-D(bug("%s: RTL8139_RX_IntF: Oversized Ethernet Frame\n", unit->rtl8139u_name));
+D(bug("%s: RTL8139_RX_Process: Oversized Ethernet Frame\n", unit->rtl8139u_name));
 			}
 
 			/* Reset the reciever */
@@ -209,11 +201,11 @@ D(bug("%s: RTL8139_RX_IntF: Oversized Ethernet Frame\n", unit->rtl8139u_name));
 			rtl8139nic_set_rxmode(RTL8139DeviceBase);
 			BYTEOUT(base + RTLr_ChipCmd, CmdRxEnb | CmdTxEnb);
 		}
-		else
+		else if (rx_status & RxStatusOK)
 		{
 			len = rx_size - 4;
 			frame = ((UBYTE *)np->rx_buffer + ring_offset + 4);
-D(bug("%s: RTL8139_RX_IntF: frame=%x, len=%d\n", unit->rtl8139u_name, frame, len));
+D(bug("%s: RTL8139_RX_Process: frame=%x, len=%d\n", unit->rtl8139u_name, frame, len));
 
 			/* got a valid packet - forward it to the network core */
 			is_orphan = TRUE;
@@ -221,7 +213,7 @@ D(bug("%s: RTL8139_RX_IntF: frame=%x, len=%d\n", unit->rtl8139u_name, frame, len
 			if (ring_offset + rx_size > np->rx_buf_len)
 			{
 				overspill = (ring_offset + rx_size) - np->rx_buf_len;
-D(bug("%s: RTL8139_RX_IntF: WRAPPED Frame! (%d bytes overspill)\n", unit->rtl8139u_name, overspill));
+D(bug("%s: RTL8139_RX_Process: WRAPPED Frame! (%d bytes overspill)\n", unit->rtl8139u_name, overspill));
 				len = len - overspill;
 #warning "TODO: We need to copy the wrapped buffer into a temp buff to pass to listeners!"
 			}
@@ -244,8 +236,8 @@ D(bug("%s: RTL8139_RX_IntF: WRAPPED Frame! (%d bytes overspill)\n", unit->rtl813
 			if(AddressFilter(LIBBASE, unit, frame->eth_packet_dest))
 			{
 				/* Packet is addressed to this driver */
-				packet_type = frame->eth_packet_type;
-D(bug("%s: RTL8139_RX_IntF: Packet IP accepted with type = %d\n", unit->rtl8139u_name, packet_type));
+				packet_type = AROS_BE2WORD(frame->eth_packet_type);
+D(bug("%s: RTL8139_RX_Process: Packet IP accepted with type = %d\n", unit->rtl8139u_name, packet_type));
 
 				opener = (APTR)unit->rtl8139u_Openers.mlh_Head;
 				opener_tail = (APTR)&unit->rtl8139u_Openers.mlh_Tail;
@@ -264,7 +256,7 @@ D(bug("%s: RTL8139_RX_IntF: Packet IP accepted with type = %d\n", unit->rtl8139u
 						  || ((request->ios2_PacketType <= ETH_MTU)
 						  && (packet_type <= ETH_MTU)))
 						{
-D(bug("%s: RTL8139_RX_IntF: copy packet for opener ..\n", unit->rtl8139u_name));
+D(bug("%s: RTL8139_RX_Process: copy packet for opener ..\n", unit->rtl8139u_name));
 							CopyPacket(LIBBASE, unit, request, len, packet_type, frame);
 							accepted = TRUE;
 						}
@@ -287,7 +279,7 @@ D(bug("%s: RTL8139_RX_IntF: copy packet for opener ..\n", unit->rtl8139u_name));
 						CopyPacket(LIBBASE, unit,
 						  (APTR)unit->rtl8139u_request_ports[ADOPT_QUEUE]->
 						  mp_MsgList.lh_Head, len, packet_type, frame);
-D(bug("%s: RTL8139_RX_IntF: packet copied to orphan queue\n", unit->rtl8139u_name));
+D(bug("%s: RTL8139_RX_Process: packet copied to orphan queue\n", unit->rtl8139u_name));
 					}
 				}
 
@@ -304,13 +296,22 @@ D(bug("%s: RTL8139_RX_IntF: packet copied to orphan queue\n", unit->rtl8139u_nam
 
 			unit->rtl8139u_stats.PacketsReceived++;
 		}
+		else
+		{
+D(bug("%s: RTL8139_RX_Process: Rx Packet Processing complete\n", unit->rtl8139u_name));
+		}
 		cur_rx = (cur_rx + rx_size + 4 + 3) & ~3;
 		WORDOUT(base + RTLr_RxBufPtr, cur_rx - 16);
+
+		UWORD status = WORDIN(base + RTLr_IntrStatus) & RxAckBits;
+
+		if (status)
+		{
+			WORDOUT(base + RTLr_IntrStatus, RxAckBits);
+		}
 	}
 
 	np->cur_rx = cur_rx;
-
-	AROS_USERFUNC_EXIT
 }
 
 /*
@@ -365,7 +366,7 @@ AROS_UFH3(void, RTL8139_TX_IntF,
 					packet_size += ETH_PACKET_DATA;
 					CopyMem(request->ios2_DstAddr, &((struct eth_frame *)np->tx_buf[nr])->eth_packet_dest, ETH_ADDRESSSIZE);
 					CopyMem(unit->rtl8139u_dev_addr, &((struct eth_frame *)np->tx_buf[nr])->eth_packet_source, ETH_ADDRESSSIZE);
-					((struct eth_frame *)np->tx_buf[nr])->eth_packet_type = request->ios2_PacketType;
+					((struct eth_frame *)np->tx_buf[nr])->eth_packet_type = AROS_WORD2BE(request->ios2_PacketType);
 
 					buffer = &((struct eth_frame *)np->tx_buf[nr])->eth_packet_data;
 				}
@@ -385,7 +386,7 @@ AROS_UFH3(void, RTL8139_TX_IntF,
 				if (error == 0)
 				{
 					Disable();
-D(bug("%s: RTL8139_TX_IntF: packet %d  @ %x [type = %d] queued for transmission.", unit->rtl8139u_name, nr, np->tx_buf[nr], ((struct eth_frame *)np->tx_buf[nr])->eth_packet_type));
+D(bug("%s: RTL8139_TX_IntF: packet %d  @ %p [type = %d] queued for transmission.", unit->rtl8139u_name, nr, np->tx_buf[nr], AROS_BE2WORD(((struct eth_frame *)np->tx_buf[nr])->eth_packet_type)));
 
 				  /* DEBUG? Dump frame if so */
 #ifdef DEBUG
@@ -503,7 +504,7 @@ D(bug("%s: RTL8139_IntHandlerF()!!!!!!!\n", dev->rtl8139u_name));
 D(bug("%s: RTL8139_IntHandlerF: Link Change : %d\n", dev->rtl8139u_name, link_changed));
 		}
 
-		WORDOUT(base + RTLr_IntrStatus, status);
+		WORDOUT(base + RTLr_IntrStatus, (status & ~(RxAckBits | TxErr)));
 
 		if ((status & (RxOK | RxErr | RxUnderrun | RxOverflow | RxFIFOOver | TxOK | TxErr | PCIErr | PCSTimeout))==0)
 		{
@@ -514,7 +515,7 @@ D(bug("%s: RTL8139_IntHandlerF: No work to process..\n", dev->rtl8139u_name));
 		if ( status & (RxOK | RxErr | RxUnderrun | RxOverflow | RxFIFOOver) ) // Chipset has Recieved packet(s)
 		{
 D(bug("%s: RTL8139_IntHandlerF: Packet Reception Attempt detected!\n", dev->rtl8139u_name));
-			Cause(&dev->rtl8139u_rx_int);
+			RTL8139_RX_Process(dev);
 		}
 
 		if ( status & (TxOK | TxErr) ) // Chipset has attempted to Send packet(s)
@@ -919,7 +920,7 @@ D(bug("%s CreateUnit:   PCI_BaseMem @ %x\n", unit->rtl8139u_name, unit->rtl8139u
 					unit->rtl8139u_touthandler->h_Data = unit;
 
 					unit->rtl8139u_rx_int.is_Node.ln_Name = unit->rtl8139u_name;
-					unit->rtl8139u_rx_int.is_Code = RTL8139_RX_IntF;
+					//unit->rtl8139u_rx_int.is_Code = RTL8139_RX_IntF;
 					unit->rtl8139u_rx_int.is_Data = unit;
 
 					unit->rtl8139u_tx_int.is_Node.ln_Name = unit->rtl8139u_name;
