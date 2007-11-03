@@ -30,7 +30,6 @@ static void CloseAmigaLibraries();
 void LibAlert(UBYTE *t);
 
 /*======================================================================================*/
-struct ExecBase *SysBase=NULL;
 // auto opening Intuition doesn't work. 
 // struct IntuitionBase *IntuitionBase=NULL;
 struct DosLibrary *DOSBase=NULL;
