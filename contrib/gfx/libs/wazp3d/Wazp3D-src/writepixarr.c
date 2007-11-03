@@ -1,6 +1,12 @@
 #include <cybergraphx/cybergraphics.h>        
+#ifdef __AROS__
+#include <proto/cybergraphics.h>
+#else
 #include <inline/cybergraphics.h>        
-   
+#endif
+
+/* FIXME: do we really need this file for AROS? */
+
 /* stack functions calls only for GCC */
    
 void STACKWritePixelArray(APTR image,UWORD  SrcX, UWORD  SrcY, UWORD  SrcMod, struct RastPort *  RastPort, UWORD  DestX, UWORD  DestY, UWORD  SizeX, UWORD  SizeY, UBYTE  SrcFormat )        

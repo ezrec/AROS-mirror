@@ -1,0 +1,16 @@
+# $Id: mmakefile.src 27127 2007-10-31 23:19:24Z mazze $
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-wazp3d-test : includes linklibs contrib-wazp3d-lib
+
+EXE := WarpTest
+TARGETDIR := $(AROS_CONTRIB)/Demos
+FILES := WarpTest
+
+%build_prog mmake=contrib-wazp3d-test progname=$(EXE) files=$(FILES) \
+    targetdir=$(TARGETDIR) \
+    uselibs="amiga arosc Warp3D"
+
+%common
+

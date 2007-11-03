@@ -1,0 +1,174 @@
+# $Id: mmakefile.src 27127 2007-10-31 23:19:24Z mazze $
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-wazp3d-test : includes linklibs contrib-wazp3d-lib
+
+EXE := WarpTest
+TARGETDIR := $(AROS_CONTRIB)/Demos
+FILES := WarpTest
+
+
+.PHONY : contrib-wazp3d-test
+
+BDID := $(BDID)_
+ifneq ($(filter $(TARGET),contrib-wazp3d-test contrib-wazp3d-test-clean contrib-wazp3d-test-quick),)
+BDTARGETID := $(BDID)
+endif
+
+BD_PROGNAME$(BDID)  := $(EXE)
+BD_OBJDIR$(BDID)    := $(GENDIR)/$(CURDIR)
+BD_TARGETDIR$(BDID) := $(TARGETDIR)
+
+BD_FILES$(BDID)     := $(FILES)
+BD_ASMFILES$(BDID)  := 
+BD_OBJS$(BDID)      := $(addsuffix .o,$(addprefix $(BD_OBJDIR$(BDID))/,$(BD_FILES$(BDID)) $(BD_ASMFILES$(BDID))))
+BD_DEPS$(BDID)      := $(addsuffix .d,$(addprefix $(BD_OBJDIR$(BDID))/,$(BD_FILES$(BDID))))
+
+BD_CFLAGS$(BDID)    := $(CFLAGS)
+BD_AFLAGS$(BDID)    := $(AFLAGS)
+BD_DFLAGS$(BDID)    := $(BD_CFLAGS$(BDID))
+BD_LDFLAGS$(BDID)   := $(LDFLAGS)
+
+#MM
+contrib-wazp3d-test-quick : contrib-wazp3d-test
+
+#MM contrib-wazp3d-test : includes-generate-deps
+contrib-wazp3d-test : $(BD_TARGETDIR$(BDID))/$(BD_PROGNAME$(BDID))
+
+ifneq ($(filter $(TARGET),contrib-wazp3d-test contrib-wazp3d-test-quick),)
+
+ifeq ($(BD_OBJDIR$(BDID)),)
+  TMP_TARGETBASE := %
+else
+  TMP_TARGETBASE := $(BD_OBJDIR$(BDID))/$(notdir %)
+endif
+
+ifeq ($(findstring target,host target),)
+  $(error unknown compiler target)
+endif
+ifeq (target,target)
+$(TMP_TARGETBASE).o : TMP_CMD:=$(TARGET_CC)
+$(TMP_TARGETBASE).d : TMP_CMD:=$(TARGET_CC)
+endif
+ifeq (target,host)
+$(TMP_TARGETBASE).o : TMP_CMD:=$(HOST_CC)
+$(TMP_TARGETBASE).d : TMP_CMD:=$(HOST_CC)
+endif
+
+$(TMP_TARGETBASE).o : %.c
+	@$(ECHO) "Compiling $(notdir $<)"
+	@$(IF) $(TMP_CMD) $(BD_CFLAGS$(BDID)) -c $< -o $@ > $(GENDIR)/cerrors 2>&1 ; then \
+	    $(IF) $(TEST) -s $(GENDIR)/cerrors ; then \
+		$(ECHO) "$<: $(TMP_CMD) $(BD_CFLAGS$(BDID)) -c $< -o $@" >> $(GENDIR)/errors ; \
+		tee < $(GENDIR)/cerrors -a $(GENDIR)/errors ; \
+	    else \
+		$(NOP) ; \
+	    fi ; \
+	else \
+	    $(ECHO) "Compile failed: $(TMP_CMD) $(BD_CFLAGS$(BDID)) -c $< -o $@" 1>&2 ; \
+	    tee < $(GENDIR)/cerrors -a $(GENDIR)/errors 1>&2 ; \
+	    exit 1 ; \
+	fi
+
+ifeq ($(BD_DFLAGS$(BDID)),)
+$(TMP_TARGETBASE).d : TMP_DFLAGS:=$(BD_CFLAGS$(BDID))
+else
+$(TMP_TARGETBASE).d : TMP_DFLAGS:=$(BD_DFLAGS$(BDID))
+endif
+$(TMP_TARGETBASE).d : %.c
+	@$(IF) $(TEST) ! -d $(dir $@) ; then $(MKDIR) $(dir $@) ; else $(NOP) ; fi
+	@$(ECHO) "Makedepend $(CURDIR)/$(notdir $<)..."
+	@AROS_CC="$(TMP_CMD)" $(MKDEPEND) $(TMP_DFLAGS) $< -o $@
+
+ifeq ($(BD_OBJDIR$(BDID)),)
+TMP_TARGETS := $(addsuffix .o,$(BD_ASMFILES$(BDID)))
+TMP_WILDCARD := %
+else
+TMP_TARGETS := $(addsuffix .o,$(addprefix $(BD_OBJDIR$(BDID))/,$(notdir $(BD_ASMFILES$(BDID)))))
+TMP_WILDCARD := $(BD_OBJDIR$(BDID))/%
+
+# Be sure that all .s files are generated
+$(TMP_TARGETS) : | $(addsuffix .s,$(BD_ASMFILES$(BDID)))
+
+# Be sure that all .c files are found
+TMP_DIRS := $(filter-out ./,$(sort $(dir $(BD_ASMFILES$(BDID)))))
+ifneq ($(TMP_DIRS),)
+    vpath %.s $(TMP_DIRS)
+endif
+
+endif
+
+$(TMP_TARGETS) : AFLAGS := $(BD_AFLAGS$(BDID))
+$(TMP_TARGETS) : $(TMP_WILDCARD).o : %.s
+	@$(ECHO) "Assembling $(notdir $<)..."
+	@$(IF) $(CC) $(AFLAGS) $< -o $@ > $(GENDIR)/cerrors 2>&1 ; then \
+	    $(IF) $(TEST) -s $(GENDIR)/cerrors ; then \
+		$(ECHO) "$(notdir $<): $(CC) $(AFLAGS) $< -o $@" >> $(GENDIR)/errors ; \
+		$(CAT) $(GENDIR)/cerrors >> $(GENDIR)/errors ; \
+	    else \
+		$(NOP) ; \
+	    fi ; \
+	else \
+	    $(ECHO) "Assemble failed: $(CC) $(AFLAGS) $< -o $@" 1>&2 ; \
+	    tee < $(GENDIR)/cerrors -a $(GENDIR)/errors 1>&2 ; \
+	    exit 1 ; \
+	fi
+
+
+TMP_EXTRA_LDFLAGS := 
+ifeq (no,yes)
+    TMP_EXTRA_LDFLAGS += $(NIX_LDFLAGS)
+endif
+ifeq (yes,no)
+    TMP_EXTRA_LDFLAGS += $(NOSTARTUP_LDFLAGS)
+endif
+ifeq (no,yes)
+    TMP_EXTRA_LDFLAGS += $(DETACH_LDFLAGS)
+endif
+$(BD_TARGETDIR$(BDID))/$(BD_PROGNAME$(BDID)) : EXTRA_LDFLAGS:=$(TMP_EXTRA_LDFLAGS)
+
+$(BD_TARGETDIR$(BDID))/$(BD_PROGNAME$(BDID)) : $(BD_OBJS$(BDID)) $(addprefix $(LIBDIR)/lib,$(addsuffix .a,amiga arosc Warp3D libinit autoinit))
+	@$(ECHO) "Linking $@..."
+	@$(IF) $(AROS_CC) $(BD_LDFLAGS$(BDID)) $(EXTRA_LDFLAGS) $(BD_OBJS$(BDID)) -o $@ $(addprefix -l,amiga arosc Warp3D) $(addprefix -l,) 2>&1 > $(GENDIR)/cerrors 2>&1 ; then \
+		$(IF) $(TEST) -s $(GENDIR)/cerrors ; then \
+				$(ECHO) "$@: $(AROS_CC) $(BD_LDFLAGS$(BDID)) $(EXTRA_LDFLAGS) $(BD_OBJS$(BDID)) -o $@ $(addprefix -l,amiga arosc Warp3D) $(addprefix -l,)" >> $(GENDIR)/errors ; \
+				$(CAT) $(GENDIR)/cerrors >> $(GENDIR)/errors ; \
+	   	else \
+			$(NOP) ; \
+    		fi ; \
+	else \
+	    $(ECHO) "Link failed: $(AROS_CC) $(BD_LDFLAGS$(BDID)) $(EXTRA_LDFLAGS) $(BD_OBJS$(BDID)) -o $@ $(addprefix -l,amiga arosc Warp3D) $(addprefix -l,)" 1>&2 ; \
+	    tee < $(GENDIR)/cerrors -a $(GENDIR)/errors 1>&2 ; \
+	    exit 1 ; \
+	fi; \
+	$(STRIP) $@
+
+endif
+
+ifneq ($(BD_DEPS$(BDID)),)
+  ifneq (contrib-wazp3d-test contrib-wazp3d-test-quick,)
+    ifneq ($(findstring $(TARGET),contrib-wazp3d-test contrib-wazp3d-test-quick),)
+      -include $(BD_DEPS$(BDID))
+    endif
+  else
+    ifeq (,$(filter clean% %clean %clean% setup% includes% %setup,$(TARGET)))
+      -include $(BD_DEPS$(BDID))
+    endif
+  endif
+endif
+
+$(BD_OBJS$(BDID)) $(BD_DEPS$(BDID)) : | $(BD_OBJDIR$(BDID))
+$(BD_TARGETDIR$(BDID))/$(BD_PROGNAME$(BDID)) : | $(BD_TARGETDIR$(BDID))
+GLOB_MKDIRS += $(BD_OBJDIR$(BDID)) $(BD_TARGETDIR$(BDID))
+
+
+# Delete generated makefiles
+#MM
+clean ::
+	@$(RM) $(TOP)/$(CURDIR)/mmakefile $(TOP)/$(CURDIR)/mmakefile.bak
+
+include $(TOP)/config/make.tail
+
+BDID := $(BDTARGETID)
+

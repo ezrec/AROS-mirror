@@ -4,11 +4,10 @@
 
 struct Library *Warp3DBase;
 
-#include <inline/macros.h>
-
 #ifdef __AROS__
-#include <Warp3D/Warp3D.h>
+#include <proto/Warp3D.h>
 #else
+#include <inline/macros.h>
 #define W3D_Settings() LP0(24,ULONG,W3D_Settings,,Warp3DBase)
 #endif
 

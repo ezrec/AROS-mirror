@@ -6,7 +6,10 @@ include $(TOP)/config/make.cfg
 
 EXE := Wazp3D-Settings
 TARGETDIR := $(AROS_PREFS)
+FILES := Wazp3D-Settings
 
 %build_prog mmake=contrib-wazp3d-settings progname=$(EXE) files=$(FILES) \
     targetdir=$(TARGETDIR) \
-    uselibs="amiga aros-c warp3d"
+    uselibs="amiga arosc Warp3D"
+
+%common
