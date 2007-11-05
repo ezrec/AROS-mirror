@@ -5560,20 +5560,23 @@ ULONG W3D_SetTexEnv(W3D_Context *context, W3D_Texture *texture,ULONG envparam, W
 struct WAZP3D_texture *WT=texture->driver;
 
     WAZP3D_Function(28);
-    WT->TexEnvRGBA[0]=envcolor->r * 255.0;
-    WT->TexEnvRGBA[1]=envcolor->g * 255.0;
-    WT->TexEnvRGBA[2]=envcolor->b * 255.0;
-    WT->TexEnvRGBA[3]=envcolor->a * 255.0;
+    if (envcolor)
+    {
+        WT->TexEnvRGBA[0]=envcolor->r * 255.0;
+        WT->TexEnvRGBA[1]=envcolor->g * 255.0;
+        WT->TexEnvRGBA[2]=envcolor->b * 255.0;
+        WT->TexEnvRGBA[3]=envcolor->a * 255.0;
+    }
     WT->TexEnvMode=envparam;
     PrintRGBA((UBYTE *)& WT->TexEnvRGBA );
 
     if(StateON(W3D_GLOBALTEXENV))
     {
-    context->globaltexenvmode=envparam;        /* Global texture environment mode */
-    context->globaltexenvcolor[0]=envcolor->r;    /* global texture env color */
-    context->globaltexenvcolor[1]=envcolor->g;
-    context->globaltexenvcolor[2]=envcolor->b;
-    context->globaltexenvcolor[3]=envcolor->a;
+        context->globaltexenvmode=envparam;        /* Global texture environment mode */
+        context->globaltexenvcolor[0]=envcolor->r;    /* global texture env color */
+        context->globaltexenvcolor[1]=envcolor->g;
+        context->globaltexenvcolor[2]=envcolor->b;
+        context->globaltexenvcolor[3]=envcolor->a;
     }
 
     WINFO(envparam,W3D_REPLACE,"unlit texturing ")
@@ -5592,10 +5595,13 @@ struct WAZP3D_texture *WT=texture->driver;
     WAZP3D_Function(29);
     WT->WrapRepeatX=(s_mode==W3D_REPEAT);
     WT->WrapRepeatY=(t_mode==W3D_REPEAT);
-    WT->WrapRGBA[0]=bordercolor->r * 255.0;
-    WT->WrapRGBA[1]=bordercolor->g * 255.0;
-    WT->WrapRGBA[2]=bordercolor->b * 255.0;
-    WT->WrapRGBA[3]=bordercolor->a * 255.0;
+    if (bordercolor)
+    {
+        WT->WrapRGBA[0]=bordercolor->r * 255.0;
+        WT->WrapRGBA[1]=bordercolor->g * 255.0;
+        WT->WrapRGBA[2]=bordercolor->b * 255.0;
+        WT->WrapRGBA[3]=bordercolor->a * 255.0;
+    }
 
     WINFO(s_mode,W3D_REPEAT,"texture is repeated ")
     WINFO(s_mode,W3D_CLAMP,"texture is clamped")

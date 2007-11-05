@@ -2,15 +2,22 @@
 
 include $(TOP)/config/make.cfg
 
-#MM contrib-wazp3d-test : includes linklibs contrib-wazp3d-lib
+#MM contrib-wazp3d-test : includes linklibs contrib-wazp3d-lib contrib-wazp3d-test-cpy
 
 EXE := WarpTest
-TARGETDIR := $(AROS_CONTRIB)/Demos
+TARGETDIR := $(AROS_CONTRIB)/Demos/Wazp3D
 FILES := WarpTest
 
 %build_prog mmake=contrib-wazp3d-test progname=$(EXE) files=$(FILES) \
     targetdir=$(TARGETDIR) \
     uselibs="amiga arosc Warp3D"
+
+#MM
+contrib-wazp3d-test-cpy : $(TARGETDIR)/wall.ppm
+
+$(TARGETDIR)/wall.ppm : wall.ppm
+	$(MKDIR) $(TARGETDIR)
+	$(CP) $< $@
 
 %common
 
