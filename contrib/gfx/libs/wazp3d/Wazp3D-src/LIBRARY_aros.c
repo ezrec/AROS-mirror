@@ -1,6 +1,5 @@
-#ifdef __AROS__
 #include <aros/symbolsets.h>
-#endif
+#include <proto/arossupport.h>
 
 #include <proto/exec.h>
 #include <proto/intuition.h>
@@ -18,9 +17,6 @@
 #include <stdarg.h> /* for varargs */
 #include <stdio.h>
 #include <stdlib.h>
-#include <devices/timer.h>
-#include <clib/timer_protos.h>
-#include <pragmas/timer_pragmas.h>
 #include <cybergraphx/cybergraphics.h>
 
 /*======================================================================================*/
@@ -30,22 +26,10 @@ static void CloseAmigaLibraries();
 void LibAlert(UBYTE *t);
 
 /*======================================================================================*/
-// auto opening Intuition doesn't work. 
-// struct IntuitionBase *IntuitionBase=NULL;
-struct DosLibrary *DOSBase=NULL;
-struct GfxBase *GfxBase=NULL;
-struct Library *CyberGfxBase=NULL;
-struct Library *CGXVideoBase=NULL;
-struct Library *MathIeeeSingBasBase=NULL;
-struct Library *MathIeeeDoubBasBase=NULL;
-struct Library *AslBase=NULL;
-struct Library *UtilityBase=NULL;
-struct Library *GadToolsBase;
-struct Library *TimerBase=NULL;
-struct timerequest *tr;
 BOOL LibDebug;
 void WAZP3D_Settings();
 void WAZP3D_Init();
+void WAZP3D_Close();
 
 /*==================================================================================*/
 void LibAlert(UBYTE *t)
@@ -125,15 +109,12 @@ UBYTE *s=string;
 /*==================================================================================*/
 void Libprintf(UBYTE *string, ...)
 {
-UBYTE buffer[256];
 va_list args;
 
     if(!LibDebug ) return;
-    if(SysBase==0) return;
     va_start(args, string);
-    RawDoFmt(string, args, (void (*))"\x16\xc0\x4e\x75", buffer);
+    vkprintf(string, args);
     va_end(args);
-    Write(Output(), buffer, Libstrlen(buffer));
 }
 
 /*==================================================================================*/
@@ -154,24 +135,6 @@ static int OpenAmigaLibraries(struct Library *lh)
 /* Initialize the standards libraries We assume that ROM libraries open OK */
 
 REM(OpenAmigaLibraries)
-    DOSBase=(struct DosLibrary *)    OpenLibrary("dos.library",36L);
-    GfxBase= (struct GfxBase *)    OpenLibrary("graphics.library",0L);
-    //IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 0L);
-    AslBase=                OpenLibrary("asl.library", 36L);
-    MathIeeeSingBasBase=        OpenLibrary("mathieeesingbas.library",34);
-    MathIeeeDoubBasBase=        OpenLibrary("mathieeedoubbas.library",34);
-    UtilityBase=(struct Library *)OpenLibrary("utility.library",36L);
-    GadToolsBase =             OpenLibrary("gadtools.library", 37);
-
-    CyberGfxBase =            OpenLibrary("cybergraphics.library", 0L);
-    if (CyberGfxBase==NULL)
-        {REM(Error opening cybergraphics.library);return(FALSE);}
-
-    tr = (struct timerequest *)calloc(1, sizeof(struct timerequest));
-    if (OpenDevice(TIMERNAME, UNIT_MICROHZ, (struct IORequest *) tr, 0L) != 0)
-        {REM(Error opening timer.device);return(FALSE);}
-    TimerBase = (struct Library *)tr->tr_node.io_Device;
-
     WAZP3D_Init();
     return(TRUE);
 }
@@ -180,21 +143,13 @@ REM(OpenAmigaLibraries)
 static void CloseAmigaLibraries(struct Library *lh)
 {
 #define LIBCLOSE(Lbase)     if(Lbase!=NULL)    {CloseLibrary( ((struct Library *)Lbase) );Lbase=NULL;}
-
-    CloseDevice((struct IORequest *)tr);Libfree(tr);
-    LIBCLOSE(CyberGfxBase)
-    //LIBCLOSE(IntuitionBase)
-    LIBCLOSE(GfxBase)
-    LIBCLOSE(UtilityBase)
-    LIBCLOSE(AslBase)
-    LIBCLOSE(MathIeeeDoubBasBase)
-    LIBCLOSE(MathIeeeSingBasBase)
-    LIBCLOSE(DOSBase)
+    
+    WAZP3D_Close();
     LibDebug=FALSE;    /* with OS libraries closed cant print anymore */
 }
 
-ADD2OPENLIB(OpenAmigaLibraries, 0);
+ADD2INITLIB(OpenAmigaLibraries, 0);
 
-ADD2CLOSELIB(CloseAmigaLibraries, 0);
+ADD2EXPUNGELIB(CloseAmigaLibraries, 0);
 
 

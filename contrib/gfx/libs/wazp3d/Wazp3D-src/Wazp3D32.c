@@ -1,4 +1,4 @@
-#define NOWAZP3DDEBUG 1
+//#define NOWAZP3DDEBUG 1
 #define MOTOROLAORDER 1
 
 #if defined(__AROS__) && (AROS_BIG_ENDIAN == 0)
@@ -15,7 +15,7 @@
 
 #include <proto/exec.h>
 #include <proto/dos.h>
-#include <proto/timer.h>
+//#include <proto/timer.h>
 #include <proto/intuition.h>
 #include <proto/graphics.h>
 #include <proto/asl.h>
@@ -3577,7 +3577,7 @@ WORD n;
     Wazp3D.UseFog.ON=FALSE;
     Wazp3D.UseAntiScreen.ON=FALSE;
 
-    Wazp3D.DebugFunction.ON=FALSE;        /* print Debug texts */
+    Wazp3D.DebugFunction.ON=TRUE;        /* print Debug texts */
     Wazp3D.DebugVal.ON=FALSE;
     Wazp3D.DebugPoint.ON=FALSE;
     Wazp3D.DebugCalls.ON=FALSE;
@@ -3592,7 +3592,7 @@ WORD n;
     Wazp3D.DebugST.ON=FALSE;
     Wazp3D.DebugClipper.ON=FALSE;
     Wazp3D.StepCopyImage.ON=FALSE;
-    Wazp3D.DebugMemList.ON=FALSE;
+    Wazp3D.DebugMemList.ON=TRUE;
     Wazp3D.DebugMemUsage.ON=FALSE;
     Wazp3D.DebugDoc.ON=FALSE;
     Wazp3D.DebugVar.ON=FALSE;
@@ -3600,7 +3600,7 @@ WORD n;
 
     Wazp3D.StepFunction.ON=FALSE;        /* Step at functions call */
     Wazp3D.StepSOFT3D.ON=FALSE;
-    LibDebug=FALSE;
+    LibDebug=TRUE;
 
     Wazp3D.smode=(W3D_ScreenMode *)&Wazp3D.smodelist;
     Wazp3D.drivertype=W3D_DRIVER_CPU;
@@ -6882,21 +6882,9 @@ UWORD Culling;
 }
 /*==========================================================================*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#ifdef __AROS__
+void W3D_Settings(void)
+{
+    void WAZP3D_Settings();
+}
+#endif
