@@ -1,5 +1,10 @@
 #define WAZP3DDEBUG 1
 #define MOTOROLAORDER 1
+
+#if defined(__AROS__) && (AROS_BIG_ENDIAN == 0)
+#undef MOTOROLAORDER
+#endif
+
 /*==================================================================================*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +15,9 @@
 
 #include <proto/exec.h>
 #include <proto/dos.h>
+#ifndef __AROS__
 #include <proto/timer.h>
+#endif
 #include <proto/intuition.h>
 #include <proto/graphics.h>
 #include <proto/asl.h>
@@ -388,7 +395,14 @@ struct SOFT3D_texture{
 #define  ERROR(val,doc) if(error == val) {Libprintf(" "); if(Wazp3D.DebugVar.ON) Libprintf("Error="); Libprintf(#val); if(Wazp3D.DebugDoc.ON) Libprintf(", " #doc); Libprintf("\n");}
 #define   WRETURN(error) return(PrintError(error));
 /*==================================================================================*/
+#ifdef __AROS__
+AROS_UFP3(BOOL, ScreenModeFilter,
+AROS_UFHA(struct Hook *, h      , A0),
+AROS_UFHA(APTR         , object , A2),
+AROS_UFHA(APTR         , message, A1));
+#else
 BOOL ScreenModeFilter(struct Hook* hook __asm("a0"), APTR object __asm("a2"),APTR message __asm("a1"));
+#endif
 struct SOFT3D_context *SOFT3D_Start(WORD large,WORD high,ULONG *Image);
 UBYTE *Libstrcat(UBYTE *s1,UBYTE *s2);
 UBYTE *Libstrcpy(UBYTE *s1,UBYTE *s2);
@@ -5142,8 +5156,17 @@ ULONG support;
 	return(support);
 }
 /*==========================================================================*/
+#ifdef __AROS__
+AROS_UFH3(BOOL, ScreenModeFilter,
+AROS_UFHA(struct Hook *, h      , A0),
+AROS_UFHA(APTR         , object , A2),
+AROS_UFHA(APTR         , message, A1))
+{
+    AROS_USERFUNC_INIT
+#else
 BOOL ScreenModeFilter(struct Hook* hook __asm("a0"), APTR object __asm("a2"),APTR message __asm("a1"))
 {
+#endif
 ULONG ID=(ULONG)message;
 struct DimensionInfo dims;
 UWORD large,high,bits;
@@ -5177,6 +5200,9 @@ REMP("ScreenModeFilter[%ld]%ld X %ld X %ld\n",ID,large,high,bits);
 
 	return  TRUE;
 	}
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 /*==========================================================================*/
 ULONG W3D_RequestMode(struct TagItem *taglist)
@@ -6875,22 +6901,9 @@ UWORD Culling;
 	SOFT3D_SetCulling(WC->SC,Culling);
 }
 /*==========================================================================*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#ifdef __AROS__
+void W3D_Settings(void)
+{
+    void WAZP3D_Settings();
+}
+#endif
