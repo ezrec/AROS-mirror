@@ -6904,6 +6904,6 @@ UWORD Culling;
 #ifdef __AROS__
 void W3D_Settings(void)
 {
-    void WAZP3D_Settings();
+    WAZP3D_Settings();
 }
 #endif

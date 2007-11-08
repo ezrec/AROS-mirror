@@ -1,7 +1,11 @@
-2007-11-08
-Wazp3DLib: Settings GUI doesn't work.
+2007-11-09
+Crash when WarpDemo is closed and started again while the settings
+GUI is open.
 
+2007-11-08
 WarpDemo: Heavy flickering
+(Solution: choose another method for double buffering;
+the current method with double hight Screen and ScrollVPort()
+doesn't work)
 
 WarpDemo: Colors are wrong. Image is too "yellowish"
-
