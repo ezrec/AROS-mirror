@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 #MM contrib-wazp3d-lib : includes linklibs
 
 LIB := Warp3D
-FILES := Wazp3D32 LIBRARY_settings LIBRARY_aros writepixarr
+FILES := Wazp3D LIBRARY_settings LIBRARY_aros writepixarr
 
 %build_module mmake=contrib-wazp3d-lib modname=$(LIB) modtype=library \
   files=$(FILES) uselibs="arossupport amiga rom m"
