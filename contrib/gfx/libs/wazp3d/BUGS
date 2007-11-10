@@ -1,7 +1,3 @@
-2007-11-09
-Crash when WarpDemo is closed and started again while the settings
-GUI is open.
-
 2007-11-08
 WarpDemo: Heavy flickering
 (Solution: choose another method for double buffering;

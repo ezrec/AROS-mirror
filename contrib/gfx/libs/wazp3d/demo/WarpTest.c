@@ -1003,24 +1003,25 @@ void SwitchBuffer(W3D_Context *context, struct BitMap *bm, struct Screen *scr, B
 		s.height = 300;
 	}
 
-	if (bufnum == 0) {
-		W3D_SetDrawRegion(context, bm, 0, &s);
-		vp->RasInfo->RyOffset = 480;
-		ScrollVPort(vp);
+//	if (bufnum == 0) {
+//		W3D_SetDrawRegion(context, bm, 0, &s);
+//		vp->RasInfo->RyOffset = 480;
+//		ScrollVPort(vp);
 // AROS doesn't have WaitBOPVP(). So we're just using Delay() to decrease flickering
-		Delay(3);
+//		Delay(3);
 		//WaitBOVP(vp);
+//		bufnum = 1-bufnum;
+//		if (clip)   W3D_SetScissor(context, &s);
+//	} else {
+		W3D_SetDrawRegion(context, bm, 0, &s);
+//		vp->RasInfo->RyOffset = 0;
+//		ScrollVPort(vp);
+//		Delay(3);
+		//WaitBOVP(vp);
+		WaitTOF();
 		bufnum = 1-bufnum;
 		if (clip)   W3D_SetScissor(context, &s);
-	} else {
-		W3D_SetDrawRegion(context, bm, 480, &s);
-		vp->RasInfo->RyOffset = 0;
-		ScrollVPort(vp);
-		Delay(3);
-		//WaitBOVP(vp);
-		bufnum = 1-bufnum;
-		if (clip)   W3D_SetScissor(context, &s);
-	}
+//	}
 
 }
 ;;//
