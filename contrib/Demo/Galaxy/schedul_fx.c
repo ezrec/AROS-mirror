@@ -13,12 +13,6 @@
 
 unsigned long int frame_count;
 
-static void timerclear(struct timeval *tv)
-{
-  tv->tv_sec = 0;
-  tv->tv_usec = 0;
-}
-
 void opti_sched_init(){
   gettimeofday( &demo_start_time, NULL);
   sequence_start_time = 
