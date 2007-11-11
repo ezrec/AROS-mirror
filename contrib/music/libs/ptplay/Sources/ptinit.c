@@ -3,12 +3,15 @@
 #include	<proto/exec.h>
 #include	<proto/utility.h>
 
+#ifndef __AROS__
 #include	"declgate.h"
 #include	"LibHeader.h"
-#include "ptplay_priv.h"
 
 #define	SysBase		LibBase->MySysBase
 #define	UtilityBase	LibBase->MyUtilBase
+#endif
+
+#include "ptplay_priv.h"
 
 #ifdef	__MORPHOS__
 #if 0
@@ -31,9 +34,19 @@ UWORD __dputch[5] = {0xCD4B, 0x4EAE, 0xFDFC, 0xCD4B, 0x4E75};
 **		boolean and indicates whether initialization succeeded.
 */
 
-ULONG NATDECLFUNC_3(PtTest, a0, STRPTR, filename, a1, UBYTE *, buf, d0, LONG, bufsize)
+#ifdef __AROS__
+AROS_LH3(ULONG, PtTest,
+	AROS_LHA(STRPTR, filename, A0),
+	AROS_LHA(UBYTE *, buf, A1),
+	AROS_LHA(LONG, bufsize, D0),
+	struct PtPlayLibrary *, LibBase, 7, Ptplay)
 {
+	AROS_LIBFUNC_INIT
+#else
+ULONG NATDECLFUNC_3(PtTest, a0, STRPTR, filename, a1, UBYTE *, buf, d0, LONG, bufsize)
+{	
 	DECLARG_4(a0, STRPTR, filename, a1, UBYTE *, buf, d0, LONG, bufsize, a6, struct PtPlayLibrary *, LibBase)
+#endif
 
 	ULONG	result;
 
@@ -101,6 +114,9 @@ ULONG NATDECLFUNC_3(PtTest, a0, STRPTR, filename, a1, UBYTE *, buf, d0, LONG, bu
 
 pois:
 	return result;
+#ifdef __AROS__
+	AROS_LIBFUNC_EXIT
+#endif
 }
 
 static inline VOID clr_l(ULONG *src, ULONG longs)
@@ -198,9 +214,18 @@ static ULONG pt_getlen(pt_mod_s *mod)
 	PtSeek
 **************************************************************************/
 
+#ifdef __AROS__
+AROS_LH2(ULONG, PtSeek,
+	AROS_LHA(pt_mod_s *, mod, A0),
+	AROS_LHA(ULONG, time, D0),
+	struct PtPlayLibrary *, LibBase, 11, Ptplay)
+{
+	AROS_LIBFUNC_INIT
+#else
 ULONG NATDECLFUNC_2(PtSeek, a0, pt_mod_s *, mod, d0, ULONG, time)
 {
 	DECLARG_3(a0, pt_mod_s *, mod, d0, ULONG, time, a6, struct PtPlayLibrary *, LibBase)
+#endif
 	pt_channel_s	*c;
 	ULONG	i, length, freq, frames;
 
@@ -293,6 +318,9 @@ ULONG NATDECLFUNC_2(PtSeek, a0, pt_mod_s *, mod, d0, ULONG, time)
 	mod->freq	= freq;
 
 	return time;
+#ifdef __AROS__
+	AROS_LIBFUNC_EXIT
+#endif
 }
 
 /**************************************************************************
@@ -393,7 +421,11 @@ static VOID GetPattsAndPtrs(pt_mod_s *mod, UBYTE *bp, UBYTE *endptr, struct PtPl
 **	APTR = PtInit(buf, bufsize)
 */
 
+#ifdef __AROS__
+static pt_mod_s *PtXInit(UBYTE *buf, ULONG bufsize, ULONG freq, struct PtPlayLibrary *LibBase)
+#else
 static pt_mod_s *PtInit(UBYTE *buf, ULONG bufsize, ULONG freq, struct PtPlayLibrary *LibBase)
+#endif
 {
 	pt_mod_s	*mod;
 	UBYTE *bp;
@@ -785,14 +817,29 @@ static pt_mod_s *SFXInit(UBYTE *buf, ULONG bufsize, ULONG freq, struct PtPlayLib
 **		boolean and indicates whether initialization succeeded.
 */
 
+#ifdef __AROS__
+AROS_LH4(ULONG, PtInit,
+	AROS_LHA(UBYTE *, buf, A1),
+	AROS_LHA(LONG, bufsize, D0),
+	AROS_LHA(LONG, freq, D1),
+	AROS_LHA(ULONG, modtype, D2),
+	struct PtPlayLibrary *, LibBase, 5, Ptplay)
+	{
+	AROS_LIBFUNC_INIT
+#else
 pt_mod_s *NATDECLFUNC_5(Init, a1, UBYTE *, buf, d0, LONG, bufsize, d1, LONG, freq, d2, ULONG, modtype, a6, struct PtPlayLibrary *, LibBase)
 {
 	DECLARG_5(a1, UBYTE *, buf, d0, LONG, bufsize, d1, LONG, freq, d2, ULONG, modtype, a6, struct PtPlayLibrary *, LibBase)
+#endif
 	pt_mod_s	*mod	= NULL;
 
 	switch (modtype)
 	{
+#ifdef __AROS__
+		case PT_MOD_PROTRACKER		: mod	= PtXInit(buf, bufsize, freq, LibBase); break;
+#else
 		case PT_MOD_PROTRACKER		: mod	= PtInit(buf, bufsize, freq, LibBase); break;
+#endif
 		case PT_MOD_SOUNDTRACKER	: mod	= StInit(buf, bufsize, freq, LibBase); break;
 		case PT_MOD_SOUNDFX			: mod	= SFXInit(buf, bufsize, freq, LibBase); break;
 	}
@@ -804,6 +851,9 @@ pt_mod_s *NATDECLFUNC_5(Init, a1, UBYTE *, buf, d0, LONG, bufsize, d1, LONG, fre
 	}
 
 	return mod;
+#ifdef __AROS__
+	AROS_LIBFUNC_EXIT
+#endif
 }
 
 /**************************************************************************
@@ -812,21 +862,42 @@ pt_mod_s *NATDECLFUNC_5(Init, a1, UBYTE *, buf, d0, LONG, bufsize, d1, LONG, fre
 **		Disposes the mod structure
 */
 
+#ifdef __AROS__
+AROS_LH1(VOID, PtCleanup,
+	AROS_LHA(pt_mod_s *, mod, A0),
+	struct PtPlayLibrary *, LibBase, 8, Ptplay)
+{
+	AROS_LIBFUNC_INIT
+#else
 VOID NATDECLFUNC_2(PtCleanup, a0, pt_mod_s *, mod, a6, struct PtPlayLibrary *, LibBase)
 {
 	DECLARG_2(a0, pt_mod_s *, mod, a6, struct PtPlayLibrary *, LibBase)
-
+#endif
+	
 	if (mod != NULL)
 		FreeVecTaskPooled(mod);
+
+#ifdef __AROS__
+	AROS_LIBFUNC_EXIT
+#endif
 }
 
 /**********************************************************************
 	PtSetAttrs
 **********************************************************************/
 
+#ifdef __AROS__
+AROS_LH2(VOID, PtSetAttrs,
+	AROS_LHA(pt_mod_s *, mod, A0),
+	AROS_LHA(struct TagItem *, taglist, A1),
+	struct PtPlayLibrary *, LibBase, 9, Ptplay)
+{
+	AROS_LIBFUNC_INIT
+#else
 VOID NATDECLFUNC_3(PtSetAttrs, a0, pt_mod_s *, mod, a1, struct TagItem *, taglist, a6, struct PtPlayLibrary *, LibBase)
 {
 	DECLARG_3(a0, pt_mod_s *, mod, a1, struct TagItem *, taglist, a6, struct PtPlayLibrary *, LibBase)
+#endif
 
 	struct TagItem *tags, *tag;
 
@@ -843,11 +914,24 @@ VOID NATDECLFUNC_3(PtSetAttrs, a0, pt_mod_s *, mod, a1, struct TagItem *, taglis
 			case	PTPLAY_SongPosition		: mod->spos				= tag->ti_Data; break;
 		}
 	}
+#ifdef __AROS__
+	AROS_LIBFUNC_EXIT
+#endif
 }
 
+#ifdef __AROS__
+AROS_LH3(ULONG, PtGetAttr,
+	AROS_LHA(pt_mod_s *, mod, A0),
+	AROS_LHA(ULONG, tagitem, D0),
+	AROS_LHA(ULONG *, StoragePtr, A1),
+	struct PtPlayLibrary *, LibBase, 10, Ptplay)
+{
+	AROS_LIBFUNC_INIT
+#else
 ULONG NATDECLFUNC_3(PtGetAttr, a0, pt_mod_s *, mod, d0, ULONG, tagitem, a1, ULONG *, StoragePtr)
 {
 	DECLARG_3(a0, pt_mod_s *, mod, d0, ULONG, tagitem, a1, ULONG *, StoragePtr)
+#endif
 
 	ULONG	store, result	= FALSE;
 
@@ -875,4 +959,7 @@ ULONG NATDECLFUNC_3(PtGetAttr, a0, pt_mod_s *, mod, d0, ULONG, tagitem, a1, ULON
 
 pois:
 	return result;
+#ifdef __AROS__
+	AROS_LIBFUNC_EXIT
+#endif
 }

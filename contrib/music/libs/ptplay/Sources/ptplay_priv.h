@@ -134,4 +134,13 @@ typedef struct
 
 pt_mod_s *pt_init(unsigned char *buf, int bufsize, int freq);
 
+#ifdef __AROS__
+#include <exec/libraries.h>
+struct PtPlayLibrary
+{
+	struct Library lib;
+};
+
+#endif
+
 #endif

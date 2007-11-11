@@ -60,7 +60,11 @@ UWORD __dputch[5] = {0xCD4B, 0x4EAE, 0xFDFC, 0xCD4B, 0x4E75};
 
 /*****************************************************************************/
 
+#ifdef __AROS__
+#include <aros/libcall.h>
+#else
 #include	"LibHeader.h"
+#endif
 #include "ptplay_priv.h"
 #include <string.h>
 #include <math.h>
@@ -1227,9 +1231,24 @@ chperdone:
 **		channels:	1, 2	mono or stereo
 */
 
+#ifdef __AROS__
+AROS_LH8(VOID, PtRender,
+	AROS_LHA(pt_mod_s *, mod, A0),
+	AROS_LHA(BYTE *, buf, A1),
+	AROS_LHA(BYTE *, buf2, A2),
+	AROS_LHA(LONG, bufmodulo, D0),
+	AROS_LHA(LONG, numsmp, D1),
+	AROS_LHA(LONG, scale, D2),
+	AROS_LHA(LONG, depth, D3),
+	AROS_LHA(LONG, channels, D4),
+	struct PtPlayLibrary *, LibBase, 6, Ptplay)
+{
+	AROS_LIBFUNC_INIT
+#else
 VOID NATDECLFUNC_8(PtRender, a0, pt_mod_s *, mod, a1, BYTE *, buf, a2, BYTE *, buf2, d0, LONG, bufmodulo, d1, LONG, numsmp, d2, LONG, scale, d3, LONG, depth, d4, LONG, channels)
 {
 	DECLARG_8(a0, pt_mod_s *, mod, a1, BYTE *, buf, a2, BYTE *, buf2, d0, LONG, bufmodulo, d1, LONG, numsmp, d2, LONG, scale, d3, LONG, depth, d4, LONG, channels)
+#endif
 
 	int writeselect = 0;
 	int accul = 0;
@@ -1536,6 +1555,9 @@ VOID NATDECLFUNC_8(PtRender, a0, pt_mod_s *, mod, a1, BYTE *, buf, a2, BYTE *, b
 		buf += bufmodulo;
 		buf2 += bufmodulo;
 	}
+#ifdef __AROS__
+	AROS_LIBFUNC_EXIT
+#endif
 }
 
 /*****************************************************************************/

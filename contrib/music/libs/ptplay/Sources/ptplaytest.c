@@ -6,7 +6,9 @@
 **
 */
 
+#ifndef __AROS__
 #include	"LibHeader.h"
+#endif
 #include "ptplay_priv.h"
 #include <string.h>
 #include <math.h>
