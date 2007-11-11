@@ -1,0 +1,14 @@
+Short:        Simple CLI based module player
+Author:       Ilkka Lehtoranta <ilkleht@isoveli.org>
+Uploader:     Ilkka Lehtoranta <ilkleht@isoveli.org>
+Type:         mus/play
+Version:      1.0
+Requires:     mus/play/PTPlayLibrary.lha
+Architecture: ppc-morphos
+
+ShellPlayer is simple command line tool to play ProTracker and SounTracker
+modules. It uses ptplay.library based on work by Ronald Hof, Timm S. Mueller
+and Per Johansson which is available in the separate archive.
+
+Source code included.
+
