@@ -3,7 +3,9 @@
 
 include $(TOP)/config/make.cfg
 
-#MM contrib-shellplayer : includes linklibs contrib-ptplay-lib
+#MM- contrib : contrib-shellplayer
+
+#MM contrib-shellplayer : includes linklibs contrib-ptplay-lib contrib-shellplayer-cpy
 
 EXE    := ShellPlayer
 EXEDIR := $(AROS_CONTRIB)/MultiMedia/Audio/Shellplayer
@@ -13,5 +15,12 @@ FILES  := ShellPlayer
 %build_prog mmake=contrib-shellplayer \
     progname=$(EXE) targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="amiga arosc ptplay"
+
+#MM
+contrib-shellplayer-cpy : $(EXEDIR)/README.aros
+
+$(EXEDIR)/README.aros : README.aros
+	$(MKDIR) $(EXEDIR)
+	$(CP) $< $@
 
 %common
