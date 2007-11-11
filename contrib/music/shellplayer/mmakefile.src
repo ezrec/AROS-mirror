@@ -1,0 +1,17 @@
+# Copyright © 2007, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-shellplayer : includes linklibs contrib-ptplay-lib
+
+EXE    := ShellPlayer
+EXEDIR := $(AROS_CONTRIB)/MultiMedia/Audio/Shellplayer
+
+FILES  := ShellPlayer
+
+%build_prog mmake=contrib-shellplayer \
+    progname=$(EXE) targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="amiga arosc ptplay"
+
+%common
