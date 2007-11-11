@@ -3,13 +3,19 @@
 #include	<proto/exec.h>
 #include	<proto/utility.h>
 
-#ifndef __AROS__
+#ifdef __AROS__
+
+#include <aros/macros.h>
+
+#else /* __AROS__ */
+
 #include	"declgate.h"
 #include	"LibHeader.h"
 
 #define	SysBase		LibBase->MySysBase
 #define	UtilityBase	LibBase->MyUtilBase
-#endif
+
+#endif /* __AROS__ */
 
 #include "ptplay_priv.h"
 
@@ -62,13 +68,13 @@ ULONG NATDECLFUNC_3(PtTest, a0, STRPTR, filename, a1, UBYTE *, buf, d0, LONG, bu
 		tmp		= (ULONG *)buf;
 		result	= PT_MOD_PROTRACKER;
 
-		if (tmp[ 1080/4 ] != MAKE_ID('M','.','K','.'))
-		if (tmp[ 1080/4 ] != MAKE_ID('M','!','K','!'))
-		if (tmp[ 1080/4 ] != MAKE_ID('F','L','T','4'))
+		if (AROS_BE2LONG(tmp[ 1080/4 ]) != MAKE_ID('M','.','K','.'))
+		if (AROS_BE2LONG(tmp[ 1080/4 ]) != MAKE_ID('M','!','K','!'))
+		if (AROS_BE2LONG(tmp[ 1080/4 ]) != MAKE_ID('F','L','T','4'))
 		{
 //			result	= PT_MOD_SOUNDFX;
 
-			if (tmp[ 60/4 ] != MAKE_ID('S','O','N','G'))		/* SoundFX 1.3	*/
+			if (AROS_BE2LONG(tmp[ 60/4 ]) != MAKE_ID('S','O','N','G'))		/* SoundFX 1.3	*/
 			{
 				UBYTE	songlen;
 
@@ -818,7 +824,7 @@ static pt_mod_s *SFXInit(UBYTE *buf, ULONG bufsize, ULONG freq, struct PtPlayLib
 */
 
 #ifdef __AROS__
-AROS_LH4(ULONG, PtInit,
+AROS_LH4(APTR, PtInit,
 	AROS_LHA(UBYTE *, buf, A1),
 	AROS_LHA(LONG, bufsize, D0),
 	AROS_LHA(LONG, freq, D1),
