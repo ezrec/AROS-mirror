@@ -89,6 +89,7 @@ struct MyButton HackRGBA2;
 struct MyButton UseAntiScreen;
 struct MyButton UseClipper;
 struct MyButton UsePerspective;
+struct MyButton ClampUV;
 
 struct MyButton DebugWazp3D;		/* print debug on/off */
 struct MyButton DebugFunction;	/* print debug what*/
@@ -721,7 +722,7 @@ void PrintRGBA(UBYTE *RGBA)
 void PrintP(struct point3D *P)
 	{
 	if (!Wazp3D.DebugPoint.ON) return;
-	Libprintf(" XYZ %ld %ld %ld UV %ld %ld ",(WORD)P->x,(WORD)P->y,(WORD)(1024.0*P->z),(WORD)(256.0*P->u),(WORD)(256.0*P->v));
+	Libprintf("P XYZ %ld %ld %ld UV %ld %ld ",(WORD)P->x,(WORD)P->y,(WORD)(1024.0*P->z),(WORD)(256.0*P->u),(WORD)(256.0*P->v));
 /*	Libprintf(" XYZ %2.2f %2.2f %2.2f UV %2.2f %2.2f",P->x,P->y,P->z,P->u,P->v);*/
 	if (Wazp3D.DebugVal.ON)
 		PrintRGBA((UBYTE *)&P->RGBA);
@@ -747,7 +748,7 @@ void PrintPIXfull(union pixel3D *PIX)
 {
 	if (!Wazp3D.DebugPoint.ON)  return;
 	if (!Wazp3D.DebugSOFT3D.ON) return;
-	Libprintf(" XYZ %ld.%ld %ld.%ld %ld.%ld \tTexUV %ld.%ld %ld.%ld ",PIX->W.x,PIX->W.xlow,PIX->W.y,PIX->W.ylow,PIX->W.z,PIX->W.zlow,PIX->W.u,PIX->W.u3,PIX->W.v,PIX->W.v3);
+	Libprintf(" PIX XYZ %ld.%ld %ld.%ld %ld.%ld \tUV %ld.%ld %ld.%ld ",PIX->W.x,PIX->W.xlow,PIX->W.y,PIX->W.ylow,PIX->W.z,PIX->W.zlow,PIX->W.u,PIX->W.u3,PIX->W.v,PIX->W.v3);
 	Libprintf("RGBA %ld.%ld %ld.%ld %ld.%ld %ld.%ld large %ld\n",PIX->W.R,PIX->W.R3,PIX->W.G,PIX->W.G3,PIX->W.B,PIX->W.B3,PIX->W.A,PIX->W.A3,PIX->W.large);
 }
 /*=================================================================*/
@@ -755,7 +756,7 @@ void PrintPIX(union pixel3D *PIX)
 {
 	if (!Wazp3D.DebugPoint.ON)  return;
 	if (!Wazp3D.DebugSOFT3D.ON) return;
-	Libprintf("XYZ %ld %ld %ld \tTexUV %ld %ld ",PIX->W.x,PIX->W.y,PIX->W.z,PIX->W.u,PIX->W.v);
+	Libprintf(" PIX XYZ %ld %ld %ld \tUV %ld %ld ",PIX->W.x,PIX->W.y,PIX->W.z,PIX->W.u,PIX->W.v);
 	Libprintf("RGBA %ld %ld %ld %ld large %ld\n",PIX->W.R,PIX->W.G,PIX->W.B,PIX->W.A,PIX->W.large);
 }
 /*==========================================================================*/
@@ -2596,10 +2597,14 @@ if(Pnb>=3)
 
 	NLOOP(Pnb)
 	{
+
+	if(Wazp3D.ClampUV.ON)
+	{	
 	if(0.999 < P->u) P->u=0.999;
 	if(0.999 < P->v) P->v=0.999;
 	if(P->u  < 0.0 ) P->u=0.0;
 	if(P->v  < 0.0 ) P->v=0.0;
+	}
 
 	if (P->z < 0.0)	P->z=0.0;
 	if (0.999 < P->z)	P->z=0.999;
@@ -2693,6 +2698,10 @@ register WORD x,y;
 	RGBA[0]=RGBA[1]=RGBA[2]=RGBA[3]=0;
 	if(ST==NULL) return;
 PrintST(ST);
+	if(0.999 < u) u=0.999;
+	if(0.999 < v) v=0.999;
+	if(u  < 0.0 ) u=0.0;
+	if(v  < 0.0 ) v=0.0;
 VARF(u)
 VARF(v)
 	x=(WORD)(((float)ST->large) * u);
@@ -3530,8 +3539,8 @@ WORD n;
 
 	Libstrcpy(Wazp3D.HardwareLie.name,"HardwareDriver Lie");
 	Libstrcpy(Wazp3D.OnlyRGB24.name,"Only Fast RGB24");
-	Libstrcpy(Wazp3D.UsePolyHack.name,   "Use	Poly Hack");
-	Libstrcpy(Wazp3D.UseColorHack.name,  "Use BGcolor Hack");
+	Libstrcpy(Wazp3D.UsePolyHack.name,"Use Poly Hack");
+	Libstrcpy(Wazp3D.UseColorHack.name,"Use BGcolor Hack");
 	Libstrcpy(Wazp3D.UseCullingHack.name,"Use Culling Hack");
 	Libstrcpy(Wazp3D.UseFog.name,"Use Fog");
 	Libstrcpy(Wazp3D.UseClearDrawRegion.name,"Use ClearDrawRegion");
@@ -3543,10 +3552,12 @@ WORD n;
 	Libstrcpy(Wazp3D.UseAntiScreen.name,"AntiAlias Screen");
 	Libstrcpy(Wazp3D.UseClipper.name,"Use Clipper");
 	Libstrcpy(Wazp3D.UsePerspective.name,"Use Persp.Correct");
+	Libstrcpy(Wazp3D.ClampUV.name,"Clamp UV[0.0 1.0]");
+
 
 	Libstrcpy(Wazp3D.DebugWazp3D.name,">>> Enable Debugger >>>");
 	Libstrcpy(Wazp3D.DebugFunction.name,"Debug Function");
-	Libstrcpy(Wazp3D.StepFunction.name, "Step  Function");
+	Libstrcpy(Wazp3D.StepFunction.name, "[Step]  Function");
 	Libstrcpy(Wazp3D.DebugCalls.name,"Debug Calls");
 	Libstrcpy(Wazp3D.DebugVar.name,"Debug Var name ");
 	Libstrcpy(Wazp3D.DebugVal.name,"Debug Var value");
@@ -3560,11 +3571,11 @@ WORD n;
 	Libstrcpy(Wazp3D.DebugWC.name,"Debug WC");
 	Libstrcpy(Wazp3D.DebugWT.name,"Debug WT");
 	Libstrcpy(Wazp3D.DebugSOFT3D.name,"Debug SOFT3D");
-	Libstrcpy(Wazp3D.StepSOFT3D.name, "Step  SOFT3D");
+	Libstrcpy(Wazp3D.StepCopyImage.name,"[Step] CopyImage");
+	Libstrcpy(Wazp3D.StepSOFT3D.name, "[Step]  SOFT3D");
 	Libstrcpy(Wazp3D.DebugSC.name,"Debug SC");
 	Libstrcpy(Wazp3D.DebugST.name,"Debug ST");
 	Libstrcpy(Wazp3D.DebugClipper.name,"Debug Clipper");
-	Libstrcpy(Wazp3D.StepCopyImage.name,"Step CopyImage");
 	Libstrcpy(Wazp3D.DebugMemList.name,"Debug MemList");
 	Libstrcpy(Wazp3D.DebugMemUsage.name,"Debug MemUsage");
 
@@ -3582,6 +3593,7 @@ WORD n;
 	Wazp3D.UseFog.ON=FALSE;
 	Wazp3D.UseAntiScreen.ON=FALSE;
 	Wazp3D.UsePerspective.ON=FALSE;
+	Wazp3D.ClampUV.ON=TRUE;
 
 	Wazp3D.DebugFunction.ON=FALSE;		/* print Debug texts */
 	Wazp3D.DebugVal.ON=FALSE;
@@ -5126,21 +5138,25 @@ ULONG W3D_GetDriverTexFmtInfo(W3D_Driver* driver, ULONG texfmt, ULONG destfmt)
 ULONG support;
 
 	WAZP3D_Function(18);
-	support=W3D_TEXFMT_UNSUPPORTED;
 
-	if((destfmt & Wazp3D.driver.formats)!=0)
-	{
 	if(texfmt==W3D_R8G8B8)
-		support=W3D_TEXFMT_FAST +W3D_TEXFMT_ARGBFAST+W3D_TEXFMT_SUPPORTED;
+		support=W3D_TEXFMT_FAST + W3D_TEXFMT_ARGBFAST + W3D_TEXFMT_SUPPORTED;
 	if(texfmt==W3D_R8G8B8A8)
-		support=W3D_TEXFMT_FAST +W3D_TEXFMT_ARGBFAST+W3D_TEXFMT_SUPPORTED;
-	}
+		support=W3D_TEXFMT_FAST + W3D_TEXFMT_ARGBFAST + W3D_TEXFMT_SUPPORTED;
 
-	WINFO(support,W3D_TEXFMT_SUPPORTED,"format is supported,although it may be converted")
-	WINFO(support,W3D_TEXFMT_FAST,"format directly supported ")
-	WINFO(support,W3D_TEXFMT_CLUTFAST,"format is directly supported on LUT8 screens")
-	WINFO(support,W3D_TEXFMT_ARGBFAST,"format is directly supported on 16/24 bit screens")
-	WINFO(support,W3D_TEXFMT_UNSUPPORTED,"this format is unsupported,and can't be simulated")
+	if(Wazp3D.UseAnyTexFmt.ON)
+		support=W3D_TEXFMT_FAST + W3D_TEXFMT_ARGBFAST + W3D_TEXFMT_SUPPORTED;
+
+	if((destfmt & Wazp3D.driver.formats)==0)
+		support=W3D_TEXFMT_UNSUPPORTED;
+
+	VAR(texfmt)
+	VAR(destfmt)
+	WINFOB(support,W3D_TEXFMT_SUPPORTED,"format is supported,although it may be converted")
+	WINFOB(support,W3D_TEXFMT_FAST,"format directly supported ")
+	WINFOB(support,W3D_TEXFMT_CLUTFAST,"format is directly supported on LUT8 screens")
+	WINFOB(support,W3D_TEXFMT_ARGBFAST,"format is directly supported on 16/24 bit screens")
+	WINFOB(support,W3D_TEXFMT_UNSUPPORTED,"this format is unsupported,and can't be simulated")
 
 	return(support);
 }
