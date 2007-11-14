@@ -365,13 +365,13 @@ struct SOFT3D_context{
 };
 /*=================================================================*/
 struct SOFT3D_texture{
-	UBYTE *pt;
-	UBYTE *pt2;
+	LONG   Tex8U[256];
+	UBYTE *Tex8V[256];	/* adresse of the texture at this line */
+	UBYTE *pt;		/* original data from 3Dprog */
+	UBYTE *pt2;		/* converted data RGB RGBA */
 	UWORD large,high,bits,DrawMode;
 	UBYTE mipmapped,TexMode;
 	void *nextST;
-	LONG TindexX[256];
-	LONG TindexY[256];
 };
 /*==================================================================================*/
 #define STEP(message) Libprintf(#message"\n");
@@ -516,7 +516,6 @@ void LibAlert(UBYTE *t);
 void Libfree(void *p);
 void Libprintf(UBYTE *string, ...);
 void LibSettings(struct MyButton *ButtonList,WORD ButtonCount);
-void mipmap_index(void *texture);
 void MYfree(void *pt);
 void Pixels_Color24(struct SOFT3D_context *SC);
 void Pixels_Color32(struct SOFT3D_context *SC);
@@ -745,7 +744,7 @@ void PrintST(struct SOFT3D_texture *ST)
 {
 	if (!Wazp3D.DebugPoint.ON) return;
 	if (!Wazp3D.DebugST.ON) return;
-	Libprintf("SOFT3D_texture(%ld) %ldX%ldX%ld  pt %ld pt2 %ld NextST(%ld) Mip %ld DrawM:%ld TexM:%ld IndexXY %ld %ld\n",ST,ST->large,ST->high,ST->bits,ST->pt,ST->pt2,ST->nextST,ST->mipmapped,ST->DrawMode,ST->TexMode,ST->TindexX,ST->TindexY);
+	Libprintf("SOFT3D_texture(%ld) %ldX%ldX%ld  pt %ld pt2 %ld NextST(%ld) Mip %ld DrawM:%ld TexM:%ld IndexXY %ld %ld\n",ST,ST->large,ST->high,ST->bits,ST->pt,ST->pt2,ST->nextST,ST->mipmapped,ST->DrawMode,ST->TexMode,ST->Tex8U,ST->Tex8V);
 }
 /*=================================================================*/
 void PrintPIXfull(union pixel3D *PIX)
@@ -1461,7 +1460,7 @@ register UBYTE *Image8;
 register WORD  *Zbuffer16;
 register union pixel3D *Pix=SC->Pix;
 register union pixel3D *Xdelta=SC->Xdelta;
-register ULONG *TindexXY=SC->ST->TindexX;
+register struct SOFT3D_texture *ST=SC->ST;
 register struct buffer3D *PixBuffer=SC->PixBufferDone;
 
 register WORD high  =SC->PolyHigh;
@@ -1478,7 +1477,7 @@ register WORD large;
 	if(Zbuffer16[0] > Pix->W.z)
 		{
 		Zbuffer16[0]=Pix->W.z;
-		Tex8=(UBYTE *) (TindexXY[Pix->W.u ]+TindexXY[Pix->W.v+256]);
+		Tex8=ST->Tex8U[Pix->W.u]+ST->Tex8V[Pix->W.v];
 		PixBuffer->Image8=Image8;
 		PixBuffer->Tex8=Tex8;
 		PixBuffer++;
@@ -1504,7 +1503,7 @@ register UBYTE *Image8;
 register WORD  *Zbuffer16;
 register union pixel3D *Pix=SC->Pix;
 register union pixel3D *Xdelta=SC->Xdelta;
-register ULONG *TindexXY=SC->ST->TindexX;
+register struct SOFT3D_texture *ST=SC->ST;
 register struct buffer3D *PixBuffer=SC->PixBufferDone;
 
 register WORD high  =SC->PolyHigh;
@@ -1522,7 +1521,7 @@ REM(Fill_Ztest_Tex)
 	{
 	if(Zbuffer16[0] > Pix->W.z)
 		{
-		Tex8=(UBYTE *) (TindexXY[Pix->W.u ]+TindexXY[Pix->W.v+256]);
+		Tex8=ST->Tex8U[Pix->W.u]+ST->Tex8V[Pix->W.v];
 		PixBuffer->Image8=Image8;
 		PixBuffer->Tex8=Tex8;
 		PixBuffer++;
@@ -1546,7 +1545,7 @@ register UBYTE *Image8;
 register WORD  *Zbuffer16;
 register union pixel3D *Pix=SC->Pix;
 register union pixel3D *Xdelta=SC->Xdelta;
-register ULONG *TindexXY=SC->ST->TindexX;
+register struct SOFT3D_texture *ST=SC->ST;
 register struct buffer3D *PixBuffer=SC->PixBufferDone;
 
 register WORD high  =SC->PolyHigh;
@@ -1565,7 +1564,7 @@ REM(Fill_Zwrite_Tex_Fog)
 	if(Zbuffer16[0] > Pix->W.z)
 		{
 		Zbuffer16[0]=Pix->W.z;
-		Tex8=(UBYTE *) (TindexXY[Pix->W.u ]+TindexXY[Pix->W.v+256]);
+		Tex8=ST->Tex8U[Pix->W.u]+ST->Tex8V[Pix->W.v];
 		PixBuffer->Fog8=(UBYTE*)&(SC->Fog32[Pix->W.z/16] );
 		PixBuffer->Image8=Image8;
 		PixBuffer->Tex8=Tex8;
@@ -1591,7 +1590,7 @@ register UBYTE *Image8;
 register WORD  *Zbuffer16;
 register union pixel3D *Pix=SC->Pix;
 register union pixel3D *Xdelta=SC->Xdelta;
-register ULONG *TindexXY=SC->ST->TindexX;
+register struct SOFT3D_texture *ST=SC->ST;
 register struct buffer3D *PixBuffer=SC->PixBufferDone;
 
 register WORD high  =SC->PolyHigh;
@@ -1607,7 +1606,7 @@ register WORD large;
 	{
 	if(Zbuffer16[0] > Pix->W.z)
 		{
-		Tex8=(UBYTE *) (TindexXY[Pix->W.u ]+TindexXY[Pix->W.v+256]);
+		Tex8=ST->Tex8U[Pix->W.u]+ST->Tex8V[Pix->W.v];
 		PixBuffer->Fog8=(UBYTE*)&(SC->Fog32[Pix->W.z/16] );
 		PixBuffer->Image8=Image8;
 		PixBuffer->Tex8=Tex8;
@@ -1632,7 +1631,7 @@ register UBYTE *Tex8;
 register UBYTE *Image8;
 register union pixel3D *Pix=SC->Pix;
 register union pixel3D *Xdelta=SC->Xdelta;
-register ULONG *TindexXY=SC->ST->TindexX;
+register struct SOFT3D_texture *ST=SC->ST;
 register struct buffer3D *PixBuffer=SC->PixBufferDone;
 
 register WORD high  =SC->PolyHigh;
@@ -1646,7 +1645,7 @@ REM(Fill_Zoff_Tex_Fog)
 	large	=Pix->W.large;
 	while(0<large--)
 	{
-		Tex8=(UBYTE *) (TindexXY[Pix->W.u ]+TindexXY[Pix->W.v+256]);
+		Tex8=ST->Tex8U[Pix->W.u]+ST->Tex8V[Pix->W.v];
 		PixBuffer->Fog8=(UBYTE*)&(SC->Fog32[Pix->W.z/16] );
 		PixBuffer->Image8=Image8;
 		PixBuffer->Tex8=Tex8;
@@ -1669,7 +1668,7 @@ register UBYTE *Image8;
 register WORD  *Zbuffer16;
 register union pixel3D *Pix=SC->Pix;
 register union pixel3D *Xdelta=SC->Xdelta;
-register ULONG *TindexXY=SC->ST->TindexX;
+register struct SOFT3D_texture *ST=SC->ST;
 register struct buffer3D *PixBuffer=SC->PixBufferDone;
 
 register WORD high  =SC->PolyHigh;
@@ -1686,7 +1685,7 @@ register WORD large;
 	if(Zbuffer16[0] > Pix->W.z)
 		{
 		Zbuffer16[0]=Pix->W.z;
-		Tex8=(UBYTE *) (TindexXY[Pix->W.u ]+TindexXY[Pix->W.v+256]);
+		Tex8=ST->Tex8U[Pix->W.u]+ST->Tex8V[Pix->W.v];
 		PixBuffer->Fog8=(UBYTE*)&(SC->Fog32[Pix->W.z/16] );
 		PixBuffer->Image8=Image8;
 		PixBuffer->Tex8=Tex8;
@@ -1720,7 +1719,7 @@ register UBYTE *Image8;
 register WORD  *Zbuffer16;
 register union pixel3D *Pix=SC->Pix;
 register union pixel3D *Xdelta=SC->Xdelta;
-register ULONG *TindexXY=SC->ST->TindexX;
+register struct SOFT3D_texture *ST=SC->ST;
 register struct buffer3D *PixBuffer=SC->PixBufferDone;
 
 register WORD high  =SC->PolyHigh;
@@ -1737,7 +1736,7 @@ REM(Fill_Ztest_Tex_Color_Fog)
 	{
 	if(Zbuffer16[0] > Pix->W.z)
 		{
-		Tex8=(UBYTE *) (TindexXY[Pix->W.u ]+TindexXY[Pix->W.v+256]);
+		Tex8=ST->Tex8U[Pix->W.u]+ST->Tex8V[Pix->W.v];
 		PixBuffer->Fog8=(UBYTE*)&(SC->Fog32[Pix->W.z/16] );
 		PixBuffer->Image8=Image8;
 		PixBuffer->Tex8=Tex8;
@@ -2037,7 +2036,7 @@ register UBYTE *Image8;
 register WORD  *Zbuffer16;
 register union pixel3D *Pix=SC->Pix;
 register union pixel3D *Xdelta=SC->Xdelta;
-register ULONG *TindexXY=SC->ST->TindexX;
+register struct SOFT3D_texture *ST=SC->ST;
 
 register WORD high  =SC->PolyHigh;
 register WORD large;
@@ -2053,7 +2052,7 @@ REM(FillPixels_Zwrite_Tex24)
 	if(Zbuffer16[0] > Pix->W.z)
 		{
 		Zbuffer16[0]=Pix->W.z;
-		Tex8=(UBYTE *) (TindexXY[Pix->W.u ]+TindexXY[Pix->W.v+256]);
+		Tex8=ST->Tex8U[Pix->W.u]+ST->Tex8V[Pix->W.v];
 		Image8[0]= Tex8[0];
 		Image8[1]= Tex8[1];
 		Image8[2]= Tex8[2];
@@ -2075,7 +2074,7 @@ register UBYTE *Tex8;
 register UBYTE *Image8;
 register union pixel3D *Pix=SC->Pix;
 register union pixel3D *Xdelta=SC->Xdelta;
-register ULONG *TindexXY=SC->ST->TindexX;
+register struct SOFT3D_texture *ST=SC->ST;
 
 register WORD high  =SC->PolyHigh;
 register WORD large;
@@ -2087,7 +2086,7 @@ REM(FillPixels_Zoff_Tex24)
 	large	   =Pix->W.large;
 	while(0<large--)
 	{
-	Tex8=(UBYTE *) (TindexXY[Pix->W.u ]+TindexXY[Pix->W.v+256]);
+	Tex8=ST->Tex8U[Pix->W.u]+ST->Tex8V[Pix->W.v];
 	Image8[0]= Tex8[0];
 	Image8[1]= Tex8[1];
 	Image8[2]= Tex8[2];
@@ -2107,8 +2106,7 @@ register UBYTE *Image8;
 register WORD  *Zbuffer16;
 register union pixel3D *Pix=SC->Pix;
 register union pixel3D *Xdelta=SC->Xdelta;
-register ULONG *TindexXY=SC->ST->TindexX;
-
+register struct SOFT3D_texture *ST=SC->ST;
 
 register WORD high  =SC->PolyHigh;
 register WORD large;
@@ -2125,10 +2123,8 @@ REM(FillPixels_Tex32a)
 	while(0<large--)
 	{
 	if(*Zbuffer16++ > Pix->W.z)
-	 {
-	Blend.B.Color=Pix->W.u;
-	Blend.B.Alpha=Pix->W.v;
-	Tex8=(UBYTE *) (TindexXY[Pix->W.u ]+TindexXY[Pix->W.v+256]);
+	{
+	Tex8=ST->Tex8U[Pix->W.u]+ST->Tex8V[Pix->W.v];
 	if (Tex8[alpha] > ALPHAMIN)					/* if texture visible ? */
 		{
 		Image8[0]= Tex8[0];
@@ -2604,7 +2600,7 @@ if(Pnb>=3)
 	{
 
 	if(Wazp3D.ClampUV.ON)
-	{	
+	{
 	if(0.999 < P->u) P->u=0.999;
 	if(0.999 < P->v) P->v=0.999;
 	if(P->u  < 0.0 ) P->u=0.0;
@@ -2873,8 +2869,8 @@ SFUNCTION(SOFT3D_SetDrawMode)
 	if(ST==NULL)
 		DrawMode=COLOR24;
 
-	if(ST!=NULL)  
-		{PrintST(ST);SC->TexMode=SC->ST->TexMode;}
+	if(ST!=NULL)
+		{PrintST(ST);SC->TexMode=ST->TexMode;}
 	else
 		{REM(No texture);SC->TexMode='0';}
 	SC->DrawMode=DrawMode;
@@ -3078,73 +3074,14 @@ SFUNCTION(TextureAlphaUsage)
 	if(Wazp3D.DebugSOFT3D.ON)
 		Libprintf("T [%ld] %ld bytes(A0:%ld A255:%ld) AllAnb %ld RatioA %ld %\n",ST->TexMode,size,Anb[0],Anb[255],AllAnb,RatioA);
 }
-/*=============================================================*/
-void mipmap_index(void *texture)
-{
-struct SOFT3D_texture *ST=texture;
-ULONG *TindexX=ST->TindexX;
-ULONG *TindexY=ST->TindexY;
-WORD rx,ry,m,n,xbytes,ybytes;
-ULONG xval,yval;
-UBYTE *pt;
-ULONG size;
-UWORD large;
-
-SFUNCTION(mipmap_index)
-
-	if(ST->large <= 256)
-		{rx=256/ST->large;	xbytes=ST->bits/8;}
-	else
-		{rx=1;	xbytes=ST->large/256 * ST->bits/8;}
-
-	if(ST->high <= 256)
-		{ry=256/ST->high;	ybytes=ST->large*ST->bits/8;}
-	else
-		{ry=1;	ybytes=ST->high/256  * ST->large*ST->bits/8;}
-
-	pt=ST->pt;
-	size=ST->large * ST->high * ST->bits / 8;
-
-next_mipmap:
-	xval=(ULONG)0 ;
-	yval=(ULONG)pt;
-
-	MLOOP(256)
-		{
-		NLOOP(rx)
-			*TindexX++ = xval;
-		xval+=xbytes;
-		}
-
-	MLOOP(256)
-		{
-		NLOOP(ry)
-			*TindexY++ = yval;
-		yval+=ybytes;
-		}
-
-	rx=rx*2;
-	ry=ry*2;
-	ybytes=ybytes/2;
-	large=large/2;
-	size=size/4;
-	pt=&(pt[size]);
-
-	if (ST->mipmapped==1)
-	if (large>0) goto next_mipmap;
-
-}
 /*==================================================================*/
 void *SOFT3D_CreateTexture(struct SOFT3D_context *SC,UBYTE *pt,UWORD large,UWORD high,UWORD bits,UWORD DrawMode,BOOL GotMipmaps)
 {
 struct SOFT3D_texture *ST;
-ULONG *TindexX;
-ULONG *TindexY;
-WORD rx,ry,m,n,xbytes,ybytes;
-ULONG xval,yval;
-WORD x,y;
-UBYTE *RGB;
-LONG grey;
+LONG   Tex8U;
+UBYTE *Tex8V;
+float Xratio,Yratio,nf;
+UWORD Nbytes,n;
 UBYTE texturename[256];
 
 SFUNCTION(SOFT3D_CreateTexture)
@@ -3161,63 +3098,36 @@ SFUNCTION(SOFT3D_CreateTexture)
 	ST->nextST =SC->firstST;
 	SC->firstST=ST;
 
-	TindexX=(ULONG *)&ST->TindexX;
-	TindexY=(ULONG *)&ST->TindexY;
 
-	if(ST->TexMode=='?')	 TextureAlphaUsage(ST);
+
+	if(ST->TexMode=='?')	TextureAlphaUsage(ST);
 /*	if(ST->TexMode=='A')	TextureAlphaToRGB(SC,ST); */
 
 REM(Create tex index)
-	if(ST->large <= 256)
-		{rx=256/ST->large;	xbytes=ST->bits/8;}
-	else
-		{rx=1;	xbytes=ST->large/256 * ST->bits/8;}
+	Nbytes=bits/8;
+	Xratio=((float)ST->large)/256.0;
+	Yratio=((float)ST->high )/256.0;
+	Tex8U=0;
+	Tex8V=ST->pt;
 
-	if(ST->high <= 256)
-		{ry=256/ST->high;	ybytes=ST->large*ST->bits/8;}
-	else
-		{ry=1;	ybytes=ST->high/256  * ST->large*ST->bits/8;}
-
-	xval=0;
-	yval=(ULONG) ST->pt;
-
-	MLOOP(256/rx)
+	NLOOP(256)
 		{
-		NLOOP(rx)
-			*TindexX++ = xval;
-		xval+=xbytes;
+		nf=(float)n;
+		ST->Tex8U[n]=Tex8U +(ULONG)(           Nbytes*(UWORD)(Xratio*nf));
+		ST->Tex8V[n]=Tex8V +(ULONG)( ST->large*Nbytes*(UWORD)(Yratio*nf));
 		}
-
-	MLOOP(256/ry)
-		{
-		NLOOP(ry)
-			*TindexY++ = yval;
-		yval+=ybytes;
-		}
-
-
-	RGB=ST->pt;
-	if (Wazp3D.DebugST.ON)
-	YLOOP(32)
-	{
-	XLOOP(ST->large)
-		{
-		grey= RGB[0] + RGB[1] + RGB[2];
-		Libprintf("%ld",grey/(3*256/8));
-		RGB+=ST->bits/8;
-		}
-	Libprintf("|\n");
-	}
-	PrintST(ST);
 
 	if (Wazp3D.DebugST.ON)
+		{
+		PrintST(ST);
 		LibAlert("Texture done");
+		}
 
 	SC->Tnum++;
 	if (Wazp3D.DumpTextures.ON)
 		{
 		Libsprintf(texturename,"RAM:Texture%ldX%ldX%ld_%ld.RAW",ST->large,ST->high,ST->bits,SC->Tnum);
-		Libsavefile(texturename,ST->pt,ST->large*ST->high*ST->bits/8); 
+		Libsavefile(texturename,ST->pt,ST->large*ST->high*Nbytes);
 		}
 
 	return( (void *) ST);
@@ -4185,7 +4095,7 @@ LONG r,g,b,a;
 LONG ratio2;
 LONG offset;
 
-if(Wazp3D.DebugSOFT3D.ON) Libprintf("ReduceBitmap/%ld %ldX%ld %ldbits >>from %ld to %ld\n",ratio,large,high,bits,pt,pt2);
+if(Wazp3D.DebugSOFT3D.ON) Libprintf("ReduceBitmap/%ld %ldX%ld %ldbits >from %ld to %ld\n",ratio,large,high,bits,pt,pt2);
 	if(pt ==NULL) return;
 	if(pt2==NULL) return;
 	L=large * bits /8;

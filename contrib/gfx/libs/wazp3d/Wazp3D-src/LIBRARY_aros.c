@@ -122,6 +122,7 @@ void Libsprintf(UBYTE *buffer,UBYTE *string, ...)
 {
 va_list args;
 
+    if(!LibDebug ) return;
     va_start(args, string);
     vsprintf(buffer, string, args);
     va_end(args);
