@@ -111,6 +111,7 @@ struct MyButton StepSOFT3D;
 struct MyButton DebugSC;
 struct MyButton DebugST;
 struct MyButton DebugClipper;
+struct MyButton DumpTextures;
 struct MyButton StepCopyImage;
 struct MyButton DebugMemList;
 struct MyButton DebugMemUsage;
@@ -357,8 +358,10 @@ struct SOFT3D_context{
 	struct point3D T2[100];
 	void *firstST;
 	UBYTE lines[4*1024*2];
-	WORD Pxmin,Pxmax,Pymin,Pymax;			/* really updated region */
+	WORD Pxmin,Pxmax,Pymin,Pymax;				/* really updated region */
 	WORD xUpdate,largeUpdate,yUpdate,highUpdate;	/* really updated region previous frame*/
+	UWORD Tnum;
+	UBYTE TexMode;
 };
 /*=================================================================*/
 struct SOFT3D_texture{
@@ -570,6 +573,8 @@ void AntiAliasImage3X3(struct SOFT3D_context *SC);
 BOOL SetState(W3D_Context *context,ULONG state,BOOL set);
 void SOFT3D_SetPointSize(struct SOFT3D_context *SC,UWORD PointSize);
 void SOFT3D_SetZbuffer(struct SOFT3D_context *SC,WORD *Zbuffer16);
+void Libsprintf(UBYTE *buffer,UBYTE *string, ...);
+void Libsavefile(UBYTE *filename,void *pt,ULONG size);
 /*==================================================================================*/
 void PrintME(struct memory3D *ME)
 {
@@ -741,7 +746,6 @@ void PrintST(struct SOFT3D_texture *ST)
 	if (!Wazp3D.DebugPoint.ON) return;
 	if (!Wazp3D.DebugST.ON) return;
 	Libprintf("SOFT3D_texture(%ld) %ldX%ldX%ld  pt %ld pt2 %ld NextST(%ld) Mip %ld DrawM:%ld TexM:%ld IndexXY %ld %ld\n",ST,ST->large,ST->high,ST->bits,ST->pt,ST->pt2,ST->nextST,ST->mipmapped,ST->DrawMode,ST->TexMode,ST->TindexX,ST->TindexY);
-/*	Libsavefile("Texture.raw",ST->pt,ST->large*ST->high*ST->bits/8); */
 }
 /*=================================================================*/
 void PrintPIXfull(union pixel3D *PIX)
@@ -823,6 +827,7 @@ SFUNCTION(SOFT3D_Start)
 	SC->Pymin=0;
 	SC->Pxmax=large-1;
 	SC->Pymax=high -1;
+	SC->Tnum=0;		/* texture number */
 	return(SC);
 }
 /*=============================================================*/
@@ -2862,19 +2867,20 @@ SFUNCTION(SOFT3D_SetDrawMode)
 	if(SC->DrawMode==DrawMode)
 		return;
 */
+	if(SC->PixBuffer < SC->PixBufferDone)  SC->PixelsFunction(SC);
 
 	if(DrawMode!=NODRAW)
 	if(ST==NULL)
 		DrawMode=COLOR24;
 
-	if(ST!=NULL)  PrintST(ST);
-
-	if(SC->PixBuffer < SC->PixBufferDone)  SC->PixelsFunction(SC);
-
+	if(ST!=NULL)  
+		{PrintST(ST);SC->TexMode=SC->ST->TexMode;}
+	else
+		{REM(No texture);SC->TexMode='0';}
 	SC->DrawMode=DrawMode;
 	SC->ST=ST;
 
-REMP("DrawMode%ld FogEnabled%ld TexMode%ld -> ",SC->DrawMode,SC->FogEnabled,SC->ST->TexMode,SC->ST->TexMode);
+REMP("DrawMode%ld FogEnabled%ld TexMode%ld -> ",SC->DrawMode,SC->FogEnabled,SC->TexMode);
 	if(DrawMode==NODRAW)
 		{
 		REM(NODRAW)
@@ -2930,17 +2936,17 @@ REMP("DrawMode%ld FogEnabled%ld TexMode%ld -> ",SC->DrawMode,SC->FogEnabled,SC->
 	REM(TEX32)
 	if(SC->FogEnabled==FALSE)
 		{
-		if(SC->ST->TexMode=='A')
+		if(SC->TexMode=='A')
 			{
 			SC->FillFunction=  (HOOKEDFUNCTION)Fill_Ztest_Tex;
 			SC->PixelsFunction=(HOOKEDFUNCTION)Pixels_Tex32A;
 			}
-		if(SC->ST->TexMode=='B')
+		if(SC->TexMode=='B')
 			{
 			SC->FillFunction=  (HOOKEDFUNCTION)Fill_Ztest_Tex;
 			SC->PixelsFunction=(HOOKEDFUNCTION)Pixels_Tex32B;
 			}
-		if(SC->ST->TexMode=='a')
+		if(SC->TexMode=='a')
 			{
 			SC->FillFunction=  (HOOKEDFUNCTION)FillPixels_Tex32a;
 			SC->PixelsFunction=(HOOKEDFUNCTION)Pixels_Nothing;
@@ -2949,17 +2955,17 @@ REMP("DrawMode%ld FogEnabled%ld TexMode%ld -> ",SC->DrawMode,SC->FogEnabled,SC->
 		}
 	else		/* if fog */
 		{
-		if(SC->ST->TexMode=='A')
+		if(SC->TexMode=='A')
 			{
 			SC->FillFunction=  (HOOKEDFUNCTION)Fill_Ztest_Tex_Fog;
 			SC->PixelsFunction=(HOOKEDFUNCTION)Pixels_Tex32A_Fog;
 			}
-		if(SC->ST->TexMode=='B')
+		if(SC->TexMode=='B')
 			{
 			SC->FillFunction=  (HOOKEDFUNCTION)Fill_Ztest_Tex_Fog;
 			SC->PixelsFunction=(HOOKEDFUNCTION)Pixels_Tex32B_Fog;
 			}
-		if(SC->ST->TexMode=='a')
+		if(SC->TexMode=='a')
 			{
 			SC->FillFunction=  (HOOKEDFUNCTION)Fill_Ztest_Tex_Fog;
 			SC->PixelsFunction=(HOOKEDFUNCTION)Pixels_Tex32a_Fog;
@@ -3139,6 +3145,7 @@ ULONG xval,yval;
 WORD x,y;
 UBYTE *RGB;
 LONG grey;
+UBYTE texturename[256];
 
 SFUNCTION(SOFT3D_CreateTexture)
 	ST=MYmalloc(sizeof(struct SOFT3D_texture),"SOFT3D_texture");
@@ -3205,6 +3212,14 @@ REM(Create tex index)
 
 	if (Wazp3D.DebugST.ON)
 		LibAlert("Texture done");
+
+	SC->Tnum++;
+	if (Wazp3D.DumpTextures.ON)
+		{
+		Libsprintf(texturename,"RAM:Texture%ldX%ldX%ld_%ld.RAW",ST->large,ST->high,ST->bits,SC->Tnum);
+		Libsavefile(texturename,ST->pt,ST->large*ST->high*ST->bits/8); 
+		}
+
 	return( (void *) ST);
 }
 /*==================================================================*/
@@ -3576,6 +3591,7 @@ WORD n;
 	Libstrcpy(Wazp3D.DebugSC.name,"Debug SC");
 	Libstrcpy(Wazp3D.DebugST.name,"Debug ST");
 	Libstrcpy(Wazp3D.DebugClipper.name,"Debug Clipper");
+	Libstrcpy(Wazp3D.DumpTextures.name,"Dump Textures");
 	Libstrcpy(Wazp3D.DebugMemList.name,"Debug MemList");
 	Libstrcpy(Wazp3D.DebugMemUsage.name,"Debug MemUsage");
 
@@ -3609,6 +3625,7 @@ WORD n;
 	Wazp3D.DebugSC.ON=FALSE;
 	Wazp3D.DebugST.ON=FALSE;
 	Wazp3D.DebugClipper.ON=FALSE;
+	Wazp3D.DumpTextures.ON=FALSE;
 	Wazp3D.StepCopyImage.ON=FALSE;
 	Wazp3D.DebugMemList.ON=FALSE;
 	Wazp3D.DebugMemUsage.ON=FALSE;

@@ -118,6 +118,16 @@ va_list args;
 }
 
 /*==================================================================================*/
+void Libsprintf(UBYTE *buffer,UBYTE *string, ...)
+{
+va_list args;
+
+    va_start(args, string);
+    vsprintf(buffer, string, args);
+    va_end(args);
+}
+
+/*==================================================================================*/
 void Libsavefile(UBYTE *filename,void *pt,ULONG size)
 {
 BPTR file;
