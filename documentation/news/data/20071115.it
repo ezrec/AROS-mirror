@@ -10,7 +10,7 @@ Ultime novità
 
 Nelle ultime settimane, AROS è stato oggetto di correzioni e 
 migliorie di ogni genere. Per esempio, Neil Cafferkey ha corretto 
-alcuni bub piuttosto pesanti di `InstallAros`__; Nic Andrews ha lavorato sul suo driver di rete RTL8139; e Robert Norris ha corretto 
+alcuni bug piuttosto pesanti di `InstallAros`__; Nic Andrews ha lavorato sul suo driver di rete RTL8139; e Robert Norris ha corretto 
 un bug nella notifica dei file, che aveva reso inagibili le 
 preferenze. Ma questi sono solo i più importanti.
 
@@ -27,7 +27,7 @@ moduli di Protracker in file audio. Per di più, ha convertito anche
 ShellPlayer, un semplice lettore. Saranno inclusi nelle build 
 notturne, nel cassetto Extras/MultiMedia/Audio.
 
-Matthias Rustler ha cominciato anche il portgin di `Wazp3D`__ 
+Matthias Rustler ha cominciato anche il porting di `Wazp3D`__ 
 di Alain Thellier, una libreria che intende essere compatibile con 
 la famosa Warp3D.library per AmigaOS 68040. Dovrebbe rendere più 
 semplice il porting di alcuni giochi 3D per Amiga. Wazp3D può 
