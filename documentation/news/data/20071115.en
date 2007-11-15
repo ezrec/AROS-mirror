@@ -1,0 +1,46 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-11-15
+
+Latest news
+-----------
+
+AROS has gained lots of bugfixes and improvements in the lastest 
+weeks. For istance, Neil Cafferkey has corrected some important bugs
+is his beloved `AROS Installer`__; Nic Andrews has worked on his 
+RTL8139 network driver; and Robert Norris has fixed file 
+notifications, which previously broke preferences, just to name 
+three. 
+
+Robert Norris has added a SDL driver for linux hosted AROS. This 
+lets you build a hosted AROS that doesn't require X (you don't even need it installed to build anymore). In theory this could help with getting hosted running on other platforms (anywhere SDL exists), however it's a little slower than the X driver.
+
+Matthias Rustler has ported ptplay.library to AROS. It renders 
+Protracker modules into sound samples. Additionally he also ported 
+ShellPlayer, a simple example player. They will be in nightly
+builds, in Extras/MultiMedia/Audio drawer.
+
+Matthias Rustler also made an initial port of Alain Thellier's 
+`Wazp3D`__ to AROS. Wazp3D is a library intended to be compatible 
+with the famous Warp3D.library for AmigaOS 68040, and it makes easier 
+to port some 3D Amiga games to AROS. Wazp3D can also work as a 
+software renderer, fooling applications looking for a 3D hardware 
+driver.
+
+Michal Schulz has made some big steps further with his 
+`x86-64`__ port of AROS. The day of 64 bit AROS computing is 
+getting near. In the meanwhile, Michal added also SSE instructions 
+support to AROS.
+
+Petr Novak has translated `aros.org in Czech`__.
+
+
+__ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=2319
+__ http://ftp.ticklers.org/pub/aminet/driver/video/Wazp3D.readme
+__ http://msaros.blogspot.com/2007/10/very-close.html
+__ http://www.aros.org/cs
+
+

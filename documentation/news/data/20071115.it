@@ -1,0 +1,50 @@
+=============
+Aggiornamento
+=============
+
+:Author:   Paolo Besser
+:Date:     15-11-2007
+
+Ultime novità
+-------------
+
+Nelle ultime settimane, AROS è stato oggetto di correzioni e 
+migliorie di ogni genere. Per esempio, Neil Cafferkey ha corretto 
+alcuni bub piuttosto pesanti di `InstallAros`__; Nic Andrews ha lavorato sul suo driver di rete RTL8139; e Robert Norris ha corretto 
+un bug nella notifica dei file, che aveva reso inagibili le 
+preferenze. Ma questi sono solo i più importanti.
+
+Robert Norris ha aggiunto un driver SDL per la versione linux hosted 
+di AROS. Ora è possibile compilare AROS hosted in modo che non 
+necessiti del server X (non serve nemmeno più che sia installato per 
+compilare). In teoria questo dovrebbe aiutare anche il porting di 
+AROS hosted pure su tutte le altre piattaforme, o comunque su tutte 
+quelle che dispongono delle librerie SDL. Tuttavia, per il momento 
+questo driver è più lento di quello per il server X.
+
+Matthias Rustler ha portato ptplay.library su AROS. Trasforma i 
+moduli di Protracker in file audio. Per di più, ha convertito anche  
+ShellPlayer, un semplice lettore. Saranno inclusi nelle build 
+notturne, nel cassetto Extras/MultiMedia/Audio.
+
+Matthias Rustler ha cominciato anche il portgin di `Wazp3D`__ 
+di Alain Thellier, una libreria che intende essere compatibile con 
+la famosa Warp3D.library per AmigaOS 68040. Dovrebbe rendere più 
+semplice il porting di alcuni giochi 3D per Amiga. Wazp3D può 
+lavorare anche come renderer software, facendo credere alle 
+applicazioni che sia installata una scheda video accelerata.
+
+Michal Schulz ha fatto alcuni importanti progressi nella sua versione  
+`x86-64`__ di AROS. Il giorno in cui sarà possibile lavorare con 
+AROS a 64 bit si avvicina sempre di più. Nel frattempo, Michal ha 
+aggiunto il supporto delle istruzioni SSE al sistema operativo.
+
+Petr Novak ha tradotto `aros.org in Ceco`__.
+
+
+__ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=2319
+__ http://ftp.ticklers.org/pub/aminet/driver/video/Wazp3D.readme
+__ http://msaros.blogspot.com/2007/10/very-close.html
+__ http://www.aros.org/cs
+
+
