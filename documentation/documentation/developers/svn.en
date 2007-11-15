@@ -56,8 +56,6 @@ Mac OS X and Windows.
 .. Note:: The server runs Subversion 1.1 which can be accessed by a
           client with the version 1.0, 1.1 or 1.2.
 
-SVN doesn't work with UTF-8 localisation. You have to switch the locale to ISO8859
-before any SVN action.
 
 AmigaOS
 -------
@@ -71,7 +69,8 @@ __ http://main.aminet.net/
 Windows
 -------
 
-If you run Microsoft Windows (TM) you can use TortoiseSVN__ SVN client, especially if you like using Windows Explorer. This program is Open Source and free, feature rich and good supported. Please make sure also that files you 
+If you run Microsoft Windows (TM) you can use TortoiseSVN__ SVN client, especially if you like using Windows Explorer.
+This program is Open Source and free, feature rich and good supported. Please make sure also that files you 
 submitting has UNIX-style line ends, otherwise you can *break* code generation.
 If files you`re changing has eol-style:native SVN property set (not new files
 anyway) then you can forget about it, and line ends (EOL) will be automatically converted.
@@ -125,6 +124,7 @@ To get a copy of the AROS sources you use the "checkout" command, like this::
 
 This will create a directory called AROS and populate it with all the sources,
 which might take quite some time if you have a slow network connection.
+
 The "contrib" module contains third party programs that have been ported to AROS.
 You have to checkout it in order to build all AROS flavours::
 
