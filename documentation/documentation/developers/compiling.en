@@ -203,25 +203,9 @@ Getting the needed packages
 
 Because the Live CD misses needed packages we have to get them from internet::
 
-    > sudo apt-get install subversion gcc-3.4 gawk bison flex netpbm autoconf automake1.4 libx11-dev
+    > sudo apt-get install subversion gcc-3.4 gawk bison flex netpbm autoconf automake1.4 libx11-dev libc6-dev
 
 You will need to enter your user password at the prompt.
-
-Setting the locale to ISO8859 
-"""""""""""""""""""""""""""""
-
-We will need to set the locale to use AROS sources and compile them
-Just find the en_US iso 8859-1 string in list provided by the
-following applications and choose it)::
-
-     > sudo apt-get install localeconf
-     > sudo dpkg-reconfigure localeconf
-
-Then we will set the console`s locale::
-
-     > sudo locale-gen "en_US"
-     > sudo dpkg-reconfigure locales
-     > export LANG="en_US.ISO-8859-1"
 
 Installing make v. 3.80
 """""""""""""""""""""""
@@ -253,7 +237,7 @@ right window and set version by ''package>force version..'' "3.80 (breezy)".
 Get the sources 
 """""""""""""""
 
-To find out more instruction on How to use our SVN Repository
+To find out more instruction on how to use our SVN Repository
 please refer to `Working with Subversion <svn.php>`__
 
 In brief, the commands you must use is like the following::
@@ -270,9 +254,6 @@ First we will set parameters and configure::
 
       > export CC="gcc-3.4"
       > ./configure
-
-You might need to reopen console when ./confugure encounters problems with c
-compiler.
 
 Finally, type::
 
