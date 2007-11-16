@@ -3,7 +3,7 @@ Ports
 =====
 
 :Authors:   Adam Chodorowski, Matthias Rustler 
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright Š 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -67,17 +67,18 @@ either be not complete enough or have compilation requirements that we can't
 always meet due to limited resources.
 
 
-AROS/i386-pc
-------------
+AROS/i386-pc and x86-64
+-----------------------
 
 :Flavour:    Native
 :Status:     Working, incomplete driver support
 :Maintained: Yes
 
 AROS/i386-pc is the native port of AROS to the common IBM PC AT computers and
-compatibles using the x86 family of processors. The name is actually a bit
+compatibles using the x86 (or x86-64) family of processors. The name is actually a bit
 misleading since AROS/i386-pc actually requires at least a 486 class CPU due to
-usage of some instructions not available on the 386.
+usage of some instructions not available on the 386. This machine also must be 
+based on PCI bus.
 
 This port works quite well, but we only have the most basic driver
 support.  One of the biggest limitations is that we currently only have
