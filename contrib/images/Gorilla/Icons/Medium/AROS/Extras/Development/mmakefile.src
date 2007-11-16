@@ -1,0 +1,11 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 22359 2004-09-06 10:24:52Z NicJA $
+
+include $(TOP)/config/make.cfg
+
+#MM- themes-gorilla-contrib-icons-extras : themes-gorilla-contrib-icons-extras-development
+
+ICONS := Build False Lua nasm
+
+#MM- themes-gorilla-contrib-icons-extras-clean : themes-gorilla-contrib-icons-extras-development-clean
+%build_icons mmake=themes-gorilla-contrib-icons-extras-development icons=$(ICONS) dir=$(CONTRIBDIR)/Development

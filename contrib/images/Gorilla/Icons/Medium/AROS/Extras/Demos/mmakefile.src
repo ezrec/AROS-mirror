@@ -1,0 +1,26 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 25968 2007-05-02 13:23:34Z paolone $
+
+include $(TOP)/config/make.cfg
+
+#MM- themes-gorilla-contrib-icons-extras : themes-gorilla-contrib-icons-extras-demos
+
+ICONS := BlackHole \
+         DawaFire \
+         Firework \
+         Flamme \
+         FTunnel \
+         kdp \
+         Kitty \
+         Galaxy \
+         InfPlane \
+         Metaballs \
+         NewVox \
+         Parallax \
+         PowerZoom \
+         RubberStrings \
+         Tunnel \
+         Voxel
+
+#MM- themes-gorilla-contrib-icons-extras-clean : themes-gorilla-contrib-icons-extras-demos-clean
+%build_icons mmake=themes-gorilla-contrib-icons-extras-demos icons=$(ICONS) dir=$(CONTRIBDIR)/Demos
