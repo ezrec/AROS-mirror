@@ -8,7 +8,7 @@ Compiling AROS
             + Lennard voor den Dag
             + Aaron Digulla
             + Adam Chodorowski
-:Copyright: Copyright ² 2001-2003, The AROS Development Team
+:Copyright: Copyright © 2001-2007, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -206,32 +206,6 @@ Because the Live CD misses needed packages we have to get them from internet::
     > sudo apt-get install subversion gcc-3.4 gawk bison flex netpbm autoconf automake1.4 libx11-dev libc6-dev
 
 You will need to enter your user password at the prompt.
-
-Installing make v. 3.80
-"""""""""""""""""""""""
-
-To install version of make we`re need, the additional Ubuntu
-repositories must be added. Launch the console and run::
-
-     > sudo nano /etc/apt/sources.list
-
-Add those two lines there::
-
-    deb http://us.archive.ubuntu.com/ubuntu breezy main restricted
-    deb http://us.archive.ubuntu.com/ubuntu dapper main restricted
-    (save and exit nano via "ctrl-x")
-
-Now get the list of available programs updated::
-
-     > sudo apt-get update
-
-Now we will use the Synaptic package manager. Go launch it in menu::
-
-    System > Administration > Synaptic package manager
-
-After that search for "make" package, choose "make" in the 
-right window and set version by ''package>force version..'' "3.80 (breezy)".
-
 
 
 Get the sources 
