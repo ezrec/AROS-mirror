@@ -1,0 +1,11 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 22359 2004-09-06 10:24:52Z Paolone $
+
+include $(TOP)/config/make.cfg
+
+#MM- themes-gorilla-contrib-icons-extras : themes-gorilla-contrib-icons-extras-emu-uae
+
+ICONS := uae
+
+#MM- themes-gorilla-contrib-icons-extras-clean : themes-gorilla-contrib-icons-extras-emu-uae-clean
+%build_icons mmake=themes-gorilla-contrib-icons-extras-emu-uae icons=$(ICONS) dir=$(CONTRIBDIR)/Emu/UAE
