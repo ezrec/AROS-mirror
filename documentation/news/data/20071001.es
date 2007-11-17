@@ -8,7 +8,7 @@ Status Update
 Últimas noticias
 ----------------
 
-¡De hace un minuto! Neil Cafferkey ha enviado un nuevo `instalador`__
+¡Presten atención! Neil Cafferkey ha enviado un nuevo `instalador`__
 para AROS, que permite una instalación más limpia y segura en los
 discos duros. Tiene las siguientes características nuevas:
 
