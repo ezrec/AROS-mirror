@@ -371,6 +371,7 @@ struct SOFT3D_texture{
 	UBYTE *pt2;		/* converted data RGB RGBA */
 	UWORD large,high,bits,DrawMode;
 	UBYTE mipmapped,TexMode;
+	UBYTE name[40];
 	void *nextST;
 };
 /*==================================================================================*/
@@ -726,7 +727,7 @@ void PrintRGBA(UBYTE *RGBA)
 void PrintP(struct point3D *P)
 	{
 	if (!Wazp3D.DebugPoint.ON) return;
-	Libprintf("P XYZ %ld %ld %ld UV %ld %ld ",(WORD)P->x,(WORD)P->y,(WORD)(1024.0*P->z),(WORD)(256.0*P->u),(WORD)(256.0*P->v));
+	Libprintf(" P XYZ %ld %ld %ld UV %ld %ld ",(WORD)P->x,(WORD)P->y,(WORD)(1024.0*P->z),(WORD)(256.0*P->u),(WORD)(256.0*P->v));
 /*	Libprintf(" XYZ %2.2f %2.2f %2.2f UV %2.2f %2.2f",P->x,P->y,P->z,P->u,P->v);*/
 	if (Wazp3D.DebugVal.ON)
 		PrintRGBA((UBYTE *)&P->RGBA);
@@ -818,7 +819,10 @@ SFUNCTION(SOFT3D_Start)
 	SC->Blending8[Blend.L.Index]=((x*y)/255);
 	}
 
-	SC->FlatRGBA[0]=100;SC->FlatRGBA[1]=200;SC->FlatRGBA[2]=255;SC->FlatRGBA[3]=100;
+	SC->FlatRGBA[0]=100;
+	SC->FlatRGBA[1]=150;
+	SC->FlatRGBA[2]=200;
+	SC->FlatRGBA[3]=100;
 	SOFT3D_SetDrawMode(SC,NULL,NODRAW);
 	SOFT3D_SetClipping(SC,m,(float)(large-1)-m,m,(float)(high-1)-m,0.0,0.999);
 	SOFT3D_SetPointSize(SC,1);
@@ -2532,7 +2536,7 @@ struct point3D *P=SC->PolyP;
 register union blend3D Blend;
 register UBYTE *Blending8=SC->Blending8;
 float PolyZmin,PolyZmax;
-float resizeuv=254.0;
+float resizeuv=255.0;
 float resizez=ZMAX;
 BOOL BlendColor=FALSE;
 WORD Pnb,n;
@@ -3082,7 +3086,6 @@ LONG   Tex8U;
 UBYTE *Tex8V;
 float Xratio,Yratio,nf;
 UWORD Nbytes,n;
-UBYTE texturename[256];
 
 SFUNCTION(SOFT3D_CreateTexture)
 	ST=MYmalloc(sizeof(struct SOFT3D_texture),"SOFT3D_texture");
@@ -3124,11 +3127,11 @@ REM(Create tex index)
 		}
 
 	SC->Tnum++;
-	if (Wazp3D.DumpTextures.ON)
-		{
-		Libsprintf(texturename,"RAM:Texture%ldX%ldX%ld_%ld.RAW",ST->large,ST->high,ST->bits,SC->Tnum);
-		Libsavefile(texturename,ST->pt,ST->large*ST->high*Nbytes);
-		}
+	Libsprintf(ST->name,"RAM:Texture%ldX%ldX%ld_%ld.RAW",ST->large,ST->high,ST->bits,SC->Tnum);
+
+	if(Wazp3D.DebugWazp3D.ON) 
+	if(Wazp3D.DumpTextures.ON)
+		Libsavefile(ST->name,ST->pt,ST->large*ST->high*Nbytes);
 
 	return( (void *) ST);
 }
@@ -3797,22 +3800,21 @@ if(format==W3D_I8)
 
 }
 /*==================================================================================*/
-ULONG ConvertFullTexture(W3D_Texture *texture)
+ULONG MakeNewTexdata(W3D_Texture *texture)
 {
 UWORD high,large,bpp2;
 ULONG format=texture->texfmtsrc;
 
-SFUNCTION(ConvertFullTexture)
+SFUNCTION(MakeNewTexdata)
 
+	high =texture->texheight;
+	large=texture->texwidth;
 	bpp2=32/8;
 	if(format==W3D_R8G8B8)	bpp2=24/8;
 	if(format==W3D_R5G6B5)	bpp2=24/8;
 	if(format==W3D_L8)	bpp2=24/8;
 
 
-
-	high =texture->texheight;
-	large=texture->texwidth;
 VAR(bpp2)
 VAR(high)
 VAR(large)
@@ -5328,7 +5330,7 @@ ULONG mask=1;
 
 	if(Wazp3D.UseAnyTexFmt.ON)
 	if(!texture->matchfmt)
-		bits=ConvertFullTexture(texture);
+		bits=MakeNewTexdata(texture);
 
 	if(!Wazp3D.UseAnyTexFmt.ON)
 	if(!texture->matchfmt)
@@ -5632,15 +5634,17 @@ VAR(RGB2)
 	RGB2+=offset2;
 	}
 
+/* should convert only the updated part */
+/*
 	RGB1=(UBYTE *)texture->texsource;
 	RGB2=(UBYTE *)texture->texdata;
 	RGB1=(UBYTE *)&RGB1[(y*Tlarge + x)*bpp1];
 	RGB2=(UBYTE *)&RGB2[(y*Tlarge + x)*bpp2];
 	offset2=(Tlarge-large)*bpp2;
-VAR(offset2)
-ConvertFullTexture(texture);
-/*	ConvertBitmap(format,RGB1,RGB2,high,large,offset1,offset2,texture->palette); */
+*/
 
+/* re-convert all texture pixels texsource->texdata */
+	ConvertBitmap(texture->texfmtsrc,texture->texsource,texture->texdata,texture->texheight,texture->texwidth,0,0,(UBYTE *)texture->palette);
 	WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -6663,6 +6667,8 @@ struct WAZP3D_texture *WT;
 WORD DrawMode=0;
 BOOL fog,color,blend,tex,zbuf;
 
+struct SOFT3D_texture *ST;
+
 	WAZP3D_Function(85);
 	VAR(tmu)
 	VAR(texture)
@@ -6694,8 +6700,8 @@ REM(TEXTURE_NULL)
 REM(TEXTURE_NOT_NULL)
 		WT=texture->driver;
 		WC->WT=WT;
-		WC->uresize=(float)(WT->high );
-		WC->vresize=(float)(WT->large);
+		WC->uresize=(float)(WT->large );
+		WC->vresize=(float)(WT->high  );
 		PrintWT(WT);
 		}
 
@@ -6735,6 +6741,9 @@ REM(TEXTURE_NOT_NULL)
 		DrawMode=COLOR32;
 
 REMP("fog%ld color%ld tex%ld zbuf%ld blend%ld -> DrawMode%ld \n",fog,color,tex,zbuf,blend,DrawMode);
+
+ST=WT->ST;
+REMP(" %s\n",ST->name);
 
 	SOFT3D_SetDrawMode(WC->SC,WT->ST,DrawMode);
 	WRETURN(W3D_SUCCESS);
