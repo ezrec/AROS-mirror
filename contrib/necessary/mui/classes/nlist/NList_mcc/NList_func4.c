@@ -680,7 +680,7 @@ ULONG NL_CreateImage(Object *obj,struct NLData *data,Object *imgobj,ULONG flags)
   if (!imgobj)
     return(0);
 
-  if ((flags == ~0L) || !get(imgobj,MUIA_Bitmap_Width,&CI_BM_Width))
+  if ((flags == (ULONG)~0) || !get(imgobj,MUIA_Bitmap_Width,&CI_BM_Width))
     return (NL_CreateImage2(obj,data,imgobj,flags));
 
   if (imgobj && data->SETUP)
