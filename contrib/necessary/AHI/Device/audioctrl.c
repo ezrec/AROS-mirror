@@ -221,7 +221,7 @@ CreateAudioCtrl(struct TagItem *tags)
     if(audioctrl->ac.ahiac_MaxPlayerFreq < 65536)
       audioctrl->ac.ahiac_MaxPlayerFreq <<= 16;
 
-    if(audioctrl->ac.ahiac_AntiClickSamples == ~0UL)
+    if(audioctrl->ac.ahiac_AntiClickSamples == ~0)
       audioctrl->ac.ahiac_AntiClickSamples = 
           ( AHIBase->ahib_AntiClickTime * audioctrl->ac.ahiac_MixFreq ) >> 16;
 
