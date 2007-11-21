@@ -723,9 +723,9 @@ main (int argc, char *const *argv)
   atexit(__close_bsdsocket);
 #endif
   
-  if( SocketBaseTags(SBTM_SETVAL(SBTC_ERRNOPTR(sizeof(errno))), (ULONG)&errno,
-  		     SBTM_SETVAL(SBTC_HERRNOLONGPTR), (ULONG)&h_errno,
-  		     SBTM_SETVAL(SBTC_LOGTAGPTR), (ULONG)"Wget", TAG_DONE )) {
+  if( SocketBaseTags(SBTM_SETVAL(SBTC_ERRNOPTR(sizeof(errno))), (IPTR)&errno,
+  		     SBTM_SETVAL(SBTC_HERRNOLONGPTR), (IPTR)&h_errno,
+  		     SBTM_SETVAL(SBTC_LOGTAGPTR), (IPTR)"Wget", TAG_DONE )) {
   	
   	fprintf( stderr, "Error initializing bsdsocket\n\a");
   	return 10;
