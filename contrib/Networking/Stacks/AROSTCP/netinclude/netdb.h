@@ -45,6 +45,8 @@
 
 #include <sys/types.h>
 
+#include <sys/socket.h>     /* for socklen_t */
+
 /*
  * Structures returned by network data base library.  All addresses are
  * supplied in host order, and returned in network order (suitable for

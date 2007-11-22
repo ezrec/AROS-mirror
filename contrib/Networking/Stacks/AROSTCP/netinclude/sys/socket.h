@@ -5,6 +5,11 @@
 #include <sys/types.h>
 #endif
 
+#ifndef __AROS_SOCKLEN_T_DECLARED
+#define __AROS_SOCKLEN_T_DECLARED
+typedef __socklen_t     socklen_t;
+#endif
+
 /*
  * AmiTCP asynchronous event definitions
  */
