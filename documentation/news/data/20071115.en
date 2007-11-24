@@ -10,7 +10,7 @@ Latest news
 
 AROS has gained lots of bugfixes and improvements in the lastest 
 weeks. For istance, Neil Cafferkey has corrected some important bugs
-is his beloved `AROS Installer`__; Nic Andrews has worked on his 
+in his beloved `AROS Installer`__; Nic Andrews has worked on his 
 RTL8139 network driver; and Robert Norris has fixed file 
 notifications, which previously broke preferences, just to name 
 three. 
