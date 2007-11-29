@@ -1,0 +1,53 @@
+=============
+Status Update
+=============
+
+:Author:   Paolo Besser
+:Date:     2007-11-29
+
+64-BIT AROS!
+------------
+
+`Michal Schulz`__ has made the miracle, and a whole new chapter in AROS
+history begins. Starting from today, you can grab the 64 bit native
+flavour of AROS from our website. This new version is obviously more
+advanced than the usual one, and has limited memory protection and
+GRUB loading modules. A initial wall for 4 GB of RAM will be removed
+as soon as proper MMU handling is done. In order to run the 64 bit
+native version of AROS a 64-bit x86 processor like AMD Athlon 64s or 
+latest Intel Core2s is needed.
+
+
+VmwAROS
+-------
+
+A new AROS distribution has born. `VmwAROS`__ is a pre-installed and 
+pre-configured AROS environment for VMware, compatible with Windows
+and Linux versions of VMware Player, Server and Workstation (v5 or 6).
+This distribuion is still far from being complete, however a initial
+`beta`__ has been realeased for everyone enough smart to download and test it. VmwAROS targets to everyday's users and coders, and anyone enough interested in trying AROS, but not enough brave to install it 
+on his (or her) hard drive. Click `here for more`__.
+
+
+Other news
+----------
+
+Aros-Exec's user Fishy_fis has announced a new AROS distribution 
+called `Velocity`__. An initial beta should be released soon. "Velocity 
+will come initially in both a live booting installable cd and a VMWare 
+hard disk image and contains considerably more (and custom configured) 
+software than the nightly build ISOs". Screenshots are included.
+
+Robert Norris is working on an AROS browser based on Webkit, called
+Traveller. While working on it, he has updated lots of AROS libraries
+and already ported some useful pieces of code, like libxml2, cURL, 
+OpenSSL, SQLite and more. Some informations in `his blog`__.
+
+
+__ http://msaros.blogspot.com
+__ http://www.vmwaros.org
+__ http://vmwaros.blogspot.com/2007/11/vmwaros-beta-01-released.html
+__ http://vmwaros.blogspot.com/2007/11/here-we-go.html
+__ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=2434
+__ http://cataclysm.cx
+

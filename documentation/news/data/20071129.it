@@ -1,0 +1,59 @@
+=============
+Aggiornamento
+=============
+
+:Author:   Paolo Besser
+:Date:     29-11-2007
+
+AROS A 64-BIT!
+--------------
+
+`Michal Schulz`__ ha compiuto il miracolo, e si apre un nuovo 
+capitolo nella storia di AROS: a partire da oggi, infatti, è possibile
+scaricare da questo sito la versione nativa a 64 bit di AROS. Questa 
+nuova versione è ovviamente più avanzata rispetto alle altre, dispone
+di una protezione preliminare della memoria e GRUB può caricare i 
+moduli. Un limite iniziale di 4 GB per la RAM sarà rimosso non 
+appena AROS avrà una gestione corretta della MMU. Per eseguire AROS a 
+64 bit occorre un processore x86 che ne sia capace, come un Athlon 64
+di AMD o uno dei recenti Core2 di Intel.
+
+
+VmwAROS
+-------
+
+È nata una nuova distribuzione. `VmwAROS`__ è un sistema AROS 
+pre-installato e pre-configurato per VMware, compatibile con le 
+versioni per Windows e per Linux di VMware Player, Server e 
+Workstation (v5 o 6). Il pacchetto è ancora lontano dalla completezza, 
+tuttavia una `beta`__ iniziale è stata messa a disposizione di chiunque
+sia così bravo da scaricarla e provarla personalmente. VmwAROS è 
+pensata per gli utenti di ogni giorno e per i programmatori, e per 
+chiunque sia incuriosito da AROS, ma non abbastanza coraggioso da 
+installarlo sul proprio disco fisso. `Qui`__ trovate qualche 
+informazione in più.
+
+
+Altre novità
+------------
+
+L'utente di Aros-Exec's Fishy_fis ha annunciato una nuova distribuzione 
+di AROS chiamata `Velocity`__. Presto dovrebbe rilasciarne una beta. 
+"Velocity sarà distribuita sia come live-cd installabile, sia come 
+disco immagine per VMware, e conterrà molti più programmi 
+di quelli disponibili nelle nightly build". Sono incluse alcune foto.
+
+Robert Norris è al lavoro su un browser per AROS basato su Webkit, che
+si chiamerà Traveller. Nel frattempo, ha aggiornato un sacco di 
+librerie e ha portato alcune componenti davvero apprezzabili come 
+libxml2, cURL, OpenSSL, SQLite e altre. Altre informazioni nel 
+`suo blog`__.
+
+
+__ http://msaros.blogspot.com
+__ http://www.vmwaros.org
+__ http://vmwaros.blogspot.com/2007/11/vmwaros-beta-01-released.html
+__ http://vmwaros.blogspot.com/2007/11/here-we-go.html
+__ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=2434
+__ http://cataclysm.cx
+
