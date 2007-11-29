@@ -25,8 +25,10 @@ A new AROS distribution has born. `VmwAROS`__ is a pre-installed and
 pre-configured AROS environment for VMware, compatible with Windows
 and Linux versions of VMware Player, Server and Workstation (v5 or 6).
 This distribuion is still far from being complete, however a initial
-`beta`__ has been realeased for everyone enough smart to download and test it. VmwAROS targets to everyday's users and coders, and anyone enough interested in trying AROS, but not enough brave to install it 
-on his (or her) hard drive. Click `here for more`__.
+`beta`__ has been realeased for everyone daring to download and test it.
+VmwAROS targets everyday's users and coders, and anyone interested in
+trying AROS, but don't want to jeopardize the data on their hard drive.
+Click `here for more`__.
 
 
 Other news
@@ -34,7 +36,7 @@ Other news
 
 Aros-Exec's user Fishy_fis has announced a new AROS distribution 
 called `Velocity`__. An initial beta should be released soon. "Velocity 
-will come initially in both a live booting installable cd and a VMWare 
+will come initially in both a live booting installable CD and a VMWare 
 hard disk image and contains considerably more (and custom configured) 
 software than the nightly build ISOs". Screenshots are included.
 
