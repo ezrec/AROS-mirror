@@ -83,4 +83,8 @@ ppc-all-sdk:
     Een set van bestanden en tools waarmee u eigen AROS programma's kunt
     bouwen op een machine naar uw keuze. Benodigd zijn ook gcc en binutils,
     beiden geconfigureerd voor het produceren van ppc-elf executables.
+x86_64-all-sdk:
+    Set of files and tools to build your own AROS programs
+    on your preferred machine. You'll need also gcc and the
+    binutils configured to produce x86_64-elf executables.
 

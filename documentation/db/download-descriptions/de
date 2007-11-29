@@ -84,3 +84,7 @@ ppc-all-sdk:
     auf Deiner Maschine zu erstellen. Gcc und die Binutils
     müssen so konfiguriert sein, dass sie Programme im
     ppc-elf-Format erzeugen.
+x86_64-all-sdk:
+    Set of files and tools to build your own AROS programs
+    on your preferred machine. You'll need also gcc and the
+    binutils configured to produce x86_64-elf executables.
