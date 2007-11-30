@@ -35,7 +35,7 @@ working-with-subversion: Trabajando con Subversion
 compiling:        Compilación
 application-development-manual: Manual para el desarrollo de aplicaciones
 zune-application-development-manual: Manual para el desarrollo de aplicaciones con Zune
-system-development-manual:      Manual para el desarrollo del sistema
+system-development-manual: Manual para el desarrollo del sistema
 debugging-manual: Manual para la depuración
 reference:        Referencia
 specifications:   Especificaciones
@@ -50,7 +50,7 @@ mailing-lists:    Listas de correo
 forums:           Foros
 irc-channels:     Canales de IRC
 credits:          Créditos
-acknowledgements:   Reconocimientos
+acknowledgements: Reconocimientos
 roadmap:          Itinerario
 pictures:         Fotografías
 developers-together: Los Desarrolladores en grupo
