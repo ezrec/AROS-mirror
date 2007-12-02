@@ -12,10 +12,10 @@ Status Update
 history begins. Starting from today, you can grab the 64 bit native
 flavour of AROS from our website. This new version is obviously more
 advanced than the usual one, and has limited memory protection and
-GRUB loading modules. A initial wall for 4 GB of RAM will be removed
+loading boot modules. A initial wall for 4 GB of RAM will be removed
 as soon as proper MMU handling is done. In order to run the 64 bit
-native version of AROS a 64-bit x86 processor like AMD Athlon 64s or 
-latest Intel Core2s is needed.
+native version of AROS a 64-bit x86 processor like AMD Athlon 64 or 
+latest Intel Core2 is needed.
 
 
 VmwAROS
@@ -25,7 +25,7 @@ A new AROS distribution has born. `VmwAROS`__ is a pre-installed and
 pre-configured AROS environment for VMware, compatible with Windows
 and Linux versions of VMware Player, Server and Workstation (v5 or 6).
 This distribuion is still far from being complete, however a initial
-`beta`__ has been realeased for everyone daring to download and test it.
+`beta`__ has been released for everyone daring to download and test it.
 VmwAROS targets everyday's users and coders, and anyone interested in
 trying AROS, but don't want to jeopardize the data on their hard drive.
 Click `here for more`__.

@@ -64,13 +64,12 @@ i386-all-contrib:
     архитектуры i386. Они также будут работать и на соответствующих hosted-
     (например, i386-linux) and native(i386-pc)- версиях.
 x86_64-pc-boot-iso:
-    The native version for 64-bit (x86_64, amd64) PC computers.
-    This is the bootable CDROM ISO image, which
-    contains all AROS system and contributed programs.
+    Native-версия для компьютеров на базе 64-битных (x86_64, amd64) компьютеров PC.
+    Это загрузочный образ CDROM ISO, содержащий систему AROS и
+    все дополнительные программы.
 x86-64-all-contrib:
-    This archive contains all the contributed programs
-    compiled for the x86_64 architecture, for use with the
-    x86_64 native version.
+    В этом архиве содержатся все дополнительные программы, собранные для 
+    архитектуры x86_64, и предназначенные для использования с x86_64 native-версией.
 ppc-all-contrib:
     В этом архиве содержатся все дополнительные программы, собранные для 
     архитектуры PowerPC.
@@ -83,6 +82,6 @@ ppc-all-sdk:
     избранной платформы. Для этого также понадобятся gcc и binutils, 
     настроенные на компиляцию исполняемых файлов ppc-elf.
 x86_64-all-sdk:
-    Set of files and tools to build your own AROS programs
-    on your preferred machine. You'll need also gcc and the
-    binutils configured to produce x86_64-elf executables.
+    Набор файлов и инструментов для сборки ваших собственных программ AROS для 
+    избранной платформы. Для этого также понадобятся gcc и binutils, 
+    настроенные на компиляцию исполняемых файлов x86_64-elf.
