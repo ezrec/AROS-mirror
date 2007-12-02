@@ -65,9 +65,9 @@ i386-all-contrib:
     de i386 architectuur. Deze werken zowel in de gehoste (bijv. i386-linux)
     als native (i386-pc) versies. 
 x86_64-pc-boot-iso:
-    The native version for 64-bit (x86_64, amd64) PC computers.
-    This is the bootable CDROM ISO image, which
-    contains all AROS system and contributed programs.
+    De native versie voor 64-bit (x86_64, amd64) PC computers. Dit omvat een
+    opstartbare CD-ROM ISO image, welke alle AROS systeem en contributie
+    programmatuur bevat.
 x86-64-all-contrib:
     This archive contains all the contributed programs
     compiled for the x86_64 architecture, for use with the
@@ -84,7 +84,6 @@ ppc-all-sdk:
     bouwen op een machine naar uw keuze. Benodigd zijn ook gcc en binutils,
     beiden geconfigureerd voor het produceren van ppc-elf executables.
 x86_64-all-sdk:
-    Set of files and tools to build your own AROS programs
-    on your preferred machine. You'll need also gcc and the
-    binutils configured to produce x86_64-elf executables.
-
+    Een set van bestanden en tools waarmee u eigen AROS programma's kunt
+    bouwen op een machine naar uw keuze. Benodigd zijn ook gcc en binutils,
+    beiden geconfigureerd voor het produceren van x86_64-elf executables.
