@@ -5,7 +5,7 @@ FILES := Package-Startup Package-Shutdown
 
 #MM
 contrib-zune-classes-mailtext-startup :
-	$(ECHO) "SYS:Extras/Zune/MCC_MailText" >$(AROS_PACKAGES)/MCC_MailText
+	$(ECHO) "Extras:Zune/MCC_MailText" >$(AROS_PACKAGES)/MCC_MailText
 
 #MM- contrib-zune-classes-mailtext-class      : contrib-zune-classes-mailtext-startup
 #MM- contrib-zune-classes-mailtext-mcp      : contrib-zune-classes-mailtext-startup

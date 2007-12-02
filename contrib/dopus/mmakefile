@@ -14,4 +14,4 @@ $(DOPUSDIR)/S/% : S/%
 
 #MM
 contrib-dopus :
-	$(ECHO) "SYS:Extras/DOpus" >$(AROS_PACKAGES)/DOpus
+	$(ECHO) "Extras:DOpus" >$(AROS_PACKAGES)/DOpus

@@ -101,7 +101,7 @@ bgui-setup : makedirs
 	@$(CP) s/Package-Startup $(BGUISDIR)
 	@$(CP) s/Package-Shutdown $(BGUISDIR)
 	$(MKDIR) $(AROS_PACKAGES)
-	$(ECHO) "SYS:Extras/BGUI" >$(AROS_PACKAGES)/BGUI
+	$(ECHO) "Extras:BGUI" >$(AROS_PACKAGES)/BGUI
         
 #MM bgui-includes-copy
 bgui-includes-copy : $(INCLUDE_FILES)

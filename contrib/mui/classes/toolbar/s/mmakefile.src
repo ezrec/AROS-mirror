@@ -5,7 +5,7 @@ FILES := Package-Startup Package-Shutdown
 
 #MM
 contrib-zune-classes-toolbar-startup :
-	$(ECHO) "SYS:Extras/Zune/MCC_Toolbar" >$(AROS_PACKAGES)/MCC_Toolbar
+	$(ECHO) "Extras:Zune/MCC_Toolbar" >$(AROS_PACKAGES)/MCC_Toolbar
 
 #MM- contrib-zune-classes-toolbar-class      : contrib-zune-classes-toolbar-startup
 #MM- contrib-zune-classes-toolbar-mcp      : contrib-zune-classes-toolbar-startup

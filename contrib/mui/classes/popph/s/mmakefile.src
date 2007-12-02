@@ -7,6 +7,6 @@ FILES := Package-Startup Package-Shutdown
 
 #MM
 contrib-zune-classes-popph-startup :
-	$(ECHO) "SYS:Extras/Zune/MCC_Popph" >$(AROS_PACKAGES)/MCC_Popph
+	$(ECHO) "Extras:Zune/MCC_Popph" >$(AROS_PACKAGES)/MCC_Popph
 
 %copy_files_q dst=$(CONTRIBDIR)/Zune/MCC_Popph/S maketarget=contrib-zune-classes-popph-startup
