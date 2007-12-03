@@ -1,4 +1,4 @@
-2007-10-01
+2007-11-30
 ----------
 
 En el otoño del 2007 AROS consiguió un nuevo aspecto con los temas personalizados y

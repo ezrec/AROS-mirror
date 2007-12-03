@@ -1,4 +1,4 @@
-2007-10-01
+2007-11-30
 ----------
 
 Under hösten 2007 har AROS fått ett nytt utseende med teman och nya bakgrundsbilder,
