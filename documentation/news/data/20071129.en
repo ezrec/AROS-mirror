@@ -40,7 +40,7 @@ will come initially in both a live booting installable CD and a VMWare
 hard disk image and contains considerably more (and custom configured) 
 software than the nightly build ISOs". Screenshots are included.
 
-Robert Norris is working on an AROS browser based on Webkit, called
+Robert Norris is working on an AROS Web-browser based on Webkit, called
 Traveller. While working on it, he has updated lots of AROS libraries
 and already ported some useful pieces of code, like libxml2, cURL, 
 OpenSSL, SQLite and more. Some informations in `his blog`__.
