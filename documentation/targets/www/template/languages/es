@@ -30,6 +30,7 @@ applications:     Aplicaciones
 faq:              FAQ
 developers:       Desarrolladores
 contribute:       Contribución
+roadmap:          Roadmap
 bug-tracker:      Rastreo de Errores
 working-with-subversion: Trabajando con Subversion
 compiling:        Compilación

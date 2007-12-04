@@ -30,6 +30,7 @@ applications:     Applications
 faq:              Veel gestelde vragen (FAQ)
 developers:       Ontwikkelaars
 contribute:       Meehelpen
+roadmap:          Roadmap
 bug-tracker:      Fouten melden
 working-with-subversion: Werken met Subversion
 compiling:        Compileren

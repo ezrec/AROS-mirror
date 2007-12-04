@@ -30,6 +30,7 @@ applications:     Applications
 faq:              ЧАВО(FAQ)
 developers:       Разработчики
 contribute:       Участие
+roadmap:          План развития
 bug-tracker:      Сообщить об ошибке
 working-with-subversion: Работа с SVN
 compiling:        Сборка

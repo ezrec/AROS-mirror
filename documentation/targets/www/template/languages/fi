@@ -30,6 +30,7 @@ applications:     Applications
 faq:              FAQ
 developers:       Kehittäjät
 contribute:       Osanotto
+roadmap:          Roadmap
 bug-tracker:      Bugien seuranta
 working-with-subversion: Subversion:n kanssa työskentely
 compiling:        Kääntö

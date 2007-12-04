@@ -98,7 +98,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             Tree \
             ( [
                 A( _N['contribute'], href=makeURL( 'documentation/developers/contribute', lang ) ),
-                A( 'Roadmap', href=makeURL( 'documentation/developers/roadmap', lang ) ),
+                A( _N['roadmap'], href=makeURL( 'documentation/developers/roadmap', lang ) ),
                 A( _N['bug-tracker'], href='http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse' ),
                 A( _N['working-with-subversion'], href=makeURL( 'documentation/developers/svn', lang ) ),
                 A( _N['compiling'],  href=makeURL( 'documentation/developers/compiling', lang ) ),
