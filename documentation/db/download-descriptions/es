@@ -70,7 +70,7 @@ x86_64-pc-boot-iso:
 	La versión nativa para las computadoras PC de 64-bit (amd64, x86_64).
 	Ésta es la imagen ISO de CDROM de arranque, que 
 	contiene todo el sistema AROS más los programas contribuídos.
-x86-64-all-contrib:
+x86_64-all-contrib:
 	Este archivo contiene todos los programas contribuídos
 	compilados para la arquitectura x86_64, para usar con la
 	versión nativa x86_64.
