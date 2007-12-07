@@ -1,32 +1,55 @@
-Short:  Wazp3D library is a CPU only Warp3D v4.2 implementation
+Short: Wazp3D library is a CPU only Warp3D v4.2 implementation
 Author:  thellier@free.fr (Alain Thellier)
 Uploader:  thellier@free.fr
 Type:  driver/video
-Version:  beta 32 (24/10/2007)
+Version:  beta 34 (04/12/2007)
 Requires:  RTG system,68040
 Architecture: m68k-amigaos >= 3.0.0;
+http://aminet.net/package/driver/video/Wazp3D
 
 DESCRIPTION
-Wazp3D beta 32 : Alain THELLIER - Paris - FRANCE - (November 2006 to October 2007)
+Wazp3D beta 34 : Alain THELLIER - Paris - FRANCE - (November 2006 to December 2007)
 Wazp3D is a library intended to be compatible with the famous Warp3D.library for AmigaOS 68040
 
 LICENSE
 GNU General Public License (GNU GPL)
 
 MOST IMPORTANT FEATURES
+o Full documentation at http://thellier.free.fr/Wazp3D.htm
 o Compatible with the famous Warp3D.library for AmigaOS 68040
 o The 88 functions from the latest Warp3D.library v4.2 are presents :-)
-o Sources included (...so you are free to adapt Wazp3D to AROS)
+o Sources included (...so Wazp3D has been ported to AROS)
 o Software only (=slow) : no need to have 3D hardware
-o Work in UAE so can serve to test your 3D softwares inside UAE 
-o The Wazp3D driver can lie and pretend to be a "perfect hardware driver" 
-  so the 3D-softwares will not fail due to a lacking feature.
+o Work in UAE so can serve to test your 3D softwares inside UAE
+o The Wazp3D driver can lie and pretend to be a "perfect hardware driver"
+so the 3D-softwares will not fail due to a lacking feature.
 
 HISTORY
 Wazp3D was first created to test the "Tales of Tamar"'s 3D Map inside WinUAE.
 I have no time left to work more on this Wazp3D project. So i release the source & library
 
-CHANGES 
+CHANGES
+Since Beta 33
+o Brand new pixels functions that allow to render lighted textures :-) so looks now very nice
+o Corrected a very bad bug  concerning pixels-buffering.
+o New Bug has appeared :-/ so 4D-clock & other StormMesa stuffs now crash...
+o Library is smaller :-)
+
+Since Beta 32
+o Full Documentation at http://thellier.free.fr/Wazp3D.htm
+o Corrected a very bad bug introduced in beta 32 concerning memory freeing (beta 32 line 644)
+o Corrected a very bad bug in W3D_UpdateTexSubImage
+o AROS port from Matthias Rustler
+o Various pointer==NULL bugs corrected by Matthias Rustler
+o ClampUV (if disabled allow texture_repeat)
+o Perspective correction (disabling)
+o Zbuffer enhanced = ReadZSpan/WriteZSpan/etc...
+o Code CleanUp (no more ULONG used as pointers to texture)
+o Bug fix in GetDriverTexFmtInfo : now if use UseAnyTexFmt is ON then return supported
+o More compatible with new 3Dprogs (BattleZone,Lamintro,4D-Clock,StormMesa examples, etc)
+o Support rectangular textures
+o Bug fix in Alpha blending on 32 bits texture with no zbuffer
+
 Since Beta 31
 o No more warnings when recompiling
 o Perspective correction (cant be disabled)
@@ -35,30 +58,44 @@ o Less bugs (even some few fatals one)
 o Fog works (not perfect)
 o First Culling (CCW/CW face order) implementation (still bugged)
 o "Hack1 tex RGBA" works (draw a textured-triangle as a Gouraud untextured one = faster)
-o "Hack2 tex RGBA" works (draw a textured-triangle as a   Flat  untextured one = faster)
-o "AntiAlias Screen" new & works (4x4 median per pixel) (slow)
+o "Hack2 tex RGBA" works (draw a textured-triangle as a   Flat  untexturedone = faster)
+o "AntiAlias Screen" new & works (3x3 median per pixel) (slow)
 o Library is smaller :-)
 o More compatible with new 3Dprogs
 
+Since Beta 30
+o New tracked memory allocation
+o Project's name changed to "Wazp3D"
+
+KNOWN BUGS
+o Fog or coloring on partially transparent faces (like trees in TOT3D)
+o Use of  MinUpdate region when clearing Wazp3D internal RGAB buffer (but SOFT3D_ClearImage is patched)
+o Texturing in Bzone
+o Refresh display problem (sKulpt, Gears screen)
+o StormMesa & Enforce crashs
+o Fog is still not good
+o Hack1 & Hack2 tex RGBA dont works in beta34
 
 IMPORTANT
 This Wazp3D binary is intended to be used within a very fast UAE emulator with JIT (like WinUAE)
-This Wazp3D binary is compiled for 68040-68881 (adjust your WinUAE settings) 
+This Wazp3D binary is compiled for 68040-68881 (adjust your WinUAE settings)
 Also need "full screen RTG" & JIT both to be activated to obtain enough speed 
 (also need picasso 96/cybergraphics and an RGB24 screen)
 Wazp3D is NOT an UAE hack and so (should) not depend on a particular UAE version
 But it only need much speed for his software rendering
+Some 3Dprogs need a big stack to be able to run without crash (glsokoban,etc...)
 
-IMPLEMENTED FEATURES 
+IMPLEMENTED FEATURES
     Texturing
     Zbuffer (Zbuffer > z)
-    Goureaud shading 
+    Goureaud shading
     Alpha blending (1 - Alpha)
+    Color blending (DECAL)
     All Fogs
     All primitives
     All vertex formats,etc...
 
-UNIMPLEMENTED FEATURES 
+UNIMPLEMENTED FEATURES
     Stencil masking
     Color masking
     Alpha masking
@@ -68,131 +105,13 @@ UNIMPLEMENTED FEATURES
     Mipmapping
     Filtering, etc...
 
+TESTED SOFTWARES & GRABS & FAQ
+See full documentation at http://thellier.free.fr/Wazp3D.htm
+
 INSTALLATION
   copy LIBS:Warp3D.library TO LIBS:Warp3D.library.sav
   copy Wazp3D.library TO LIBS:Warp3D.library
 
 WAZP3D-SETTINGS
-The Wazp3D-Settings tool allow to change some parameters of the Wazp3D library emulation :
-
-HardwareDriverLie    Pretend to be a perfect hardware driver that can do all perfectly (more compatible)  
-Only Fast RGB24    Only use RGB screens (formats=W3D_FMT_R8G8B8) (faster)
-Use    Poly Hack    Convert trifan & tristrip to quad as Wazp3D can draw true quad. (faster)
-Use BGcolor Hack    Guess current background color from bitmap. (nicer)
-Use Culling Hack    Use CW/CW face order  (faster)
-Use Fog        Fog emulation (slower but nicer)
-Use ClearDrawR    Use W3D_ClearDrawRegion() Clear the screen or not (faster)
-Use Minimal DR    Minimal DrawRegion. Update only the rectangle that Wazp3D has drawn (faster)
-Use any texFmt    Use (convert) any texfmt else use only texs that are texfmt=W3D_R8G8B8 or W3D_R8G8B8A8 (more compatible)       
-Hack1 tex RGBA    Draw all textured-triangles as Gouraud untextured ones (faster)
-Hack2 tex RGBA    Draw all textured-triangles as Gouraud untextured ones (faster)  
-AntiAlias Screen    Smooth the whole Wazp3D buffer (slower but nicer)   
-Use Clipper           Cut the 3D drawings to screen size (=scissor) (slower but safer)
-
-
-TESTED SOFTWARES
-"WarpTest"              almost works (lack Blending functions)
-"Engine"                  works (still a few distorted)
-"Sokoban"                works
-"Gears_68k-window"        works
-"Gears_68k-small"            works
-"Gears_68k(screen)"         works still an update display bug
-"Tales of Tamar"'s 3D Map    almost works
-"Skulpt68k"             no more crash (but still dont display correctly).
-"TheVague DiskMag"         work but still some display bugs :-)
-
-
-IMPLEMENTED FUNCTIONS
-Some of the Warp3D implemented functions do (in fact) nothing 
-(except updating the internal context/textures structure datas/flags ) 
-
-Function  Status
-------------------------------
-CreateContext  works  
-CreateContextTags  works  
-DestroyContext  works  
-GetState  works  
-SetState  works partially  
-Hint  works  
-CheckDriver  works  
-LockHardware  works (There is no hardware so do nothing)  
-UnLockHardware  works (There is no hardware so do nothing)  
-WaitIdle  works (There is no hardware so do nothing)  
-CheckIdle  works (There is no hardware so do nothing)  
-Query  works  
-GetTexFmtInfo  works  
-GetDriverState  works (There is no hardware so do nothing)  
-GetDestFmt  works  
-GetDrivers  works (only one driver)  
-QueryDriver  works (only one driver)  
-GetDriverTexFmtInfo  works (only one driver)  
-RequestMode  works  
-RequestModeTags  works  
-TestMode  works  
-AllocTexObj  works partially
-AllocTexObjTags  works partially  
-FreeTexObj    works  
-ReleaseTexture  works  
-FlushTextures  works  
-SetFilter  do nothing usefull (=only update internal settings)  
-SetTexEnv  works partially  
-SetWrapMode  do nothing usefull (=only update internal settings)  
-UpdateTexImage  works  
-UpdateTexSubImage  works  
-UploadTexture  works  
-FreeAllTexObj  works  
-SetChromaTestBounds  do nothing usefull (=only update internal settings)  
-DrawLine  works  
-DrawPoint  works  
-DrawTriangle  works  
-DrawTriFan  works  
-DrawTriStrip  works  
-Flush  works  
-DrawLineStrip  works  
-DrawLineLoop  works  
-ClearDrawRegion  works  
-SetAlphaMode  do nothing usefull (=only update internal settings)  
-SetBlendMode  works partially  
-SetDrawRegion  works  
-SetDrawRegionWBM  works  
-SetFogParams  works  
-SetLogicOp  do nothing usefull (=only update internal settings)  
-SetColorMask  do nothing usefull (=only update internal settings)  
-SetPenMask  do nothing usefull (=only update internal settings)  
-SetCurrentColor  do nothing usefull (=only update internal settings)  
-SetCurrentPen  do nothing usefull (=only update internal settings)  
-SetScissor  works  
-FlushFrame  works  
-AllocZBuffer  works  
-FreeZBuffer  works  
-ClearZBuffer  works  
-ReadZPixel  not yet  
-ReadZSpan  not yet  
-SetZCompareMode  do nothing usefull (=only update internal settings)  
-WriteZPixel  not yet  
-WriteZSpan  not yet  
-AllocStencilBuffer  do nothing usefull (=only update internal settings)  
-ClearStencilBuffer  do nothing usefull (=only update internal settings)  
-FillStencilBuffer  do nothing usefull (=only update internal settings)  
-FreeStencilBuffer  do nothing usefull (=only update internal settings)  
-ReadStencilPixel  do nothing usefull (=only update internal settings)  
-ReadStencilSpan  do nothing usefull (=only update internal settings)  
-SetStencilFunc  do nothing usefull (=only update internal settings)  
-SetStencilOp  do nothing usefull (=only update internal settings)  
-SetWriteMask  do nothing usefull (=only update internal settings)  
-WriteStencilPixel  do nothing usefull (=only update internal settings)  
-WriteStencilSpan  do nothing usefull (=only update internal settings)  
-DrawTriangleV  works  
-DrawTriFanV  works  
-DrawTriStripV  works  
-GetScreenmodeList  works  
-FreeScreenmodeList  works  
-BestModeID  works  
-BestModeIDTags  works  
-VertexPointer  works  
-TexCoordPointer  works  
-ColorPointer  works  
-BindTexture  works  
-DrawArray  works  
-DrawElements  works  
-SetFrontFace  almost works
+The Wazp3D-Settings tool allow to change some parameters of the Wazp3D
+library emulation: see full documentation at http://thellier.free.fr/Wazp3D.htm
