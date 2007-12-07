@@ -1667,10 +1667,13 @@ REM(SOFT3D_SetDrawFunctions)
     if(FillMode==14)    SC->FillFunction=(HOOKEDFUNCTION)Fill_Zwrite_Tex;
     if(FillMode==15)    SC->FillFunction=(HOOKEDFUNCTION)Fill_Zwrite_Tex_Color;
 
-    if(SC->ST->bits==24)
-    if(TexMode=='T')    SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels24T;
-    if(SC->ST->bits==32)
-    if(TexMode=='T')    SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels32T;
+    if(TexMode=='T')
+    {
+        if(SC->ST->bits==24)
+            SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels24T;
+        if(SC->ST->bits==32)
+            SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels32T;
+    }
     if(TexMode=='A')    SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels32A;
     if(TexMode=='B')    SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels32B;
     if(TexMode=='a')    SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels32a;

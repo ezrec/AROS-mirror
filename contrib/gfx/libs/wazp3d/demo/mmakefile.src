@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 #MM contrib-wazp3d-test : includes linklibs contrib-wazp3d-lib contrib-wazp3d-test-cpy
 
 EXE := WarpTest
-TARGETDIR := $(AROS_CONTRIB)/Demos/Wazp3D
+TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Wazp3D
 FILES := WarpTest
 
 %build_prog mmake=contrib-wazp3d-test progname=$(EXE) files=$(FILES) \

@@ -326,7 +326,11 @@ UBYTE *LoadTextureFromPPM(APTR where, char *filename, UBYTE Opacity, int *w, int
 			r=(UBYTE)fgetc(f);
 			g=(UBYTE)fgetc(f);
 			b=(UBYTE)fgetc(f);
+#if AROS_BIG_ENDIAN			
 			*map = (Opacity<<24) | ((r&0xFF)<<16) | ((g&0xFF)<<8) | (b&0xFF);
+#else
+			*map = (Opacity&0xFF) | ((r&0xFF)<<8) | ((g&0xFF)<<16) | ((b&0xFF)<<24);
+#endif
 //            *map = (Opacity<<8) | ((r&0xFF)) | ((g&0xFF)<<24) | (b&0xFF)<<16;
 			map++;
 		}
