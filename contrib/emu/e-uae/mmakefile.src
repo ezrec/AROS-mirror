@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-#MM- contrib-complete : contrib-euae
+##MM- contrib-complete : contrib-euae
 
 PROGDIR := $(CONTRIBDIR)/Emu/E-UAE
 PACKAGE := e-uae
@@ -16,7 +16,7 @@ PKG_VER := $(PACKAGE)-$(VERSION)
 
 CP_SRC := $(PORTSDIR)/$(PACKAGE)/$(PKG_VER)
 
-#MM euae-copy-files : euae-docs-copy euae-amiga-copy
+##MM euae-copy-files : euae-docs-copy euae-amiga-copy
 euae-copy-files : files-copy
 	$(CP) $(CP_SRC)/ChangeLog $(PROGDIR)
 	$(CP) $(CP_SRC)/COPYING   $(PROGDIR)
@@ -28,9 +28,9 @@ euae-copy-files : files-copy
 %copy_files_q files=".uaerc README.AmigaOS" dst=$(PROGDIR)
 %copy_files_q files="arexx.txt" dst=$(PROGDIR)/docs
 
-#MM- contrib-euae-rebuild : contrib-euae-clean contrib-euae
+##MM- contrib-euae-rebuild : contrib-euae-clean contrib-euae
 
-#MM
+##MM
 contrib-euae-clean :
 	$(RM) $(PROGDIR) $(OBJDIR) $(PACKAGES_DIR)/$(PKG_VER)*
 
