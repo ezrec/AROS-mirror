@@ -85,28 +85,28 @@ ULONG utTable[] =
     PACK_ENDTABLE
 };
 
-static ULONG ASM
+static IPTR ASM
 mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     struct urltextPackTags  ut = {0};
     struct TagItem *attrs = msg->ops_AttrList,
-                            tags[] = {MUIA_InnerBottom,0,
-                                      MUIA_InnerLeft,0,
-                                      MUIA_InnerRight,0,
-                                      MUIA_InnerTop,0,
-                                      MUIA_Weight,0,
-                                      MUIA_InputMode,MUIV_InputMode_Immediate,
-                                      MUIA_ShowSelState,FALSE,
-                                      TAG_MORE,0};
+                            tags[] = {{MUIA_InnerBottom,0},
+                                      {MUIA_InnerLeft,0},
+                                      {MUIA_InnerRight,0},
+                                      {MUIA_InnerTop,0},
+                                      {MUIA_Weight,0},
+                                      {MUIA_InputMode,MUIV_InputMode_Immediate},
+                                      {MUIA_ShowSelState,FALSE},
+                                      {TAG_MORE,0}};
 
     PackStructureTags(&ut,utTable,attrs);
 
     if (!ut.url) return 0;
 
-    tags[7].ti_Data = (ULONG)attrs;
+    tags[7].ti_Data = (IPTR)attrs;
     msg->ops_AttrList = tags;
 
-    if (obj = (Object *)DoSuperMethodA(cl,obj,(APTR)msg))
+    if ((obj = (Object *)DoSuperMethodA(cl,obj,(APTR)msg)))
     {
         struct data    *data = INST_DATA(cl,obj);
         ULONG          flags = ut.flags;
@@ -125,24 +125,34 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
         data->tf           = NULL;
 
         if (!(flags & UTFLG_UserDoVisitedPen))
+        {
             if (DEFAULT_DOVISITEDPEN) flags |= UTFLG_DoVisitedPen;
             else flags &= ~UTFLG_DoVisitedPen;
+        }
 
         if (!(flags & UTFLG_UserFallback))
+        {
             if (DEFAULT_FALLBACK) flags |= UTFLG_Fallback;
             else flags &= ~UTFLG_Fallback;
+        }
 
         if (!(flags & UTFLG_UserUnderline))
+        {
             if (DEFAULT_UNDERLINE) flags |= UTFLG_Underline;
             else flags &= ~UTFLG_Underline;
+        }
 
         if (!(flags & UTFLG_UserSetMax))
+        {
             if (DEFAULT_SETMAX) flags |= UTFLG_SetMax;
             else flags &= ~UTFLG_SetMax;
+        }
 
         if (!(flags & UTFLG_UserDoOpenURL))
+        {
             if (DEFAULT_SETMAX) flags |= UTFLG_DoOpenURL;
             else flags &= ~UTFLG_DoOpenURL;
+        }
 
         if (OpenURLBase)
         {
@@ -156,9 +166,9 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
             Object *menu;
             BPTR   lock;
 
-            if (lock = Lock("SYS:Prefs/OpenURL",SHARED_LOCK)) UnLock(lock);
+            if ((lock = Lock("SYS:Prefs/OpenURL",SHARED_LOCK))) UnLock(lock);
 
-            if (menu = MenustripObject,
+            if ((menu = MenustripObject,
                 MUIA_Family_Child, MenuObjectT("Urltext"),
                     MUIA_Family_Child, MenuitemObject,
                         MUIA_Menuitem_Title, getString(Msg_Send),
@@ -178,7 +188,7 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
                         MUIA_UserData, Msg_OpenURLPrefs,
                     End,
                 End,
-            End) set(obj,MUIA_ContextMenu,data->menu = menu);
+            End)) set(obj,MUIA_ContextMenu,data->menu = menu);
         }
 
         data->flags = flags;
@@ -186,17 +196,17 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 
     msg->ops_AttrList = attrs;
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***********************************************************************/
 
-static ASM ULONG
+static ASM IPTR
 mDispose(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
     struct data    *data = INST_DATA(cl,obj);
     Object         *menu = data->menu;
-    ULONG          res;
+    IPTR           res;
 
     res = DoSuperMethodA(cl,obj,msg);
 
@@ -207,20 +217,20 @@ mDispose(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 
 /***********************************************************************/
 
-static ASM ULONG
+static ASM IPTR
 mGet(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opGet *msg)
 {
     struct data *data = INST_DATA(cl,obj);
 
     switch(msg->opg_AttrID)
     {
-        case MUIA_Urltext_Url:      *msg->opg_Storage = (ULONG)data->url; return TRUE;
-        case MUIA_Urltext_Text:     *msg->opg_Storage = (ULONG)data->text; return TRUE;
+        case MUIA_Urltext_Url:      *msg->opg_Storage = (IPTR)data->url; return TRUE;
+        case MUIA_Urltext_Text:     *msg->opg_Storage = (IPTR)data->text; return TRUE;
         case MUIA_Urltext_Active:   *msg->opg_Storage = (data->flags & UTFLG_Active) ? TRUE : FALSE; return TRUE;
         case MUIA_Urltext_Visited:  *msg->opg_Storage = (data->flags & UTFLG_Visited) ? TRUE : FALSE; return TRUE;
         case MUIA_Version:          *msg->opg_Storage = VERSION; return TRUE;
         case MUIA_Revision:         *msg->opg_Storage = REVISION; return TRUE;
-        case MUIA_Urltext_Version:  *msg->opg_Storage = (ULONG)VERSTAG+7;
+        case MUIA_Urltext_Version:  *msg->opg_Storage = (IPTR)VERSTAG+7;
         default: return DoSuperMethodA(cl,obj,(APTR)msg);
     }
 }
@@ -229,7 +239,7 @@ mGet(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opGet *msg)
 
 #define BOOLSAME(a,b) (((BOOL)(a) && (BOOL)(b)) || ((!(BOOL)(a)) && (!(BOOL)(b))))
 
-static ULONG ASM
+static IPTR ASM
 mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
@@ -240,9 +250,9 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
     flags = data->flags;
     redraw = notifyUrl = over = 0;
 
-    for (tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
+    for (tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        ULONG tidata = tag->ti_Data;
+        IPTR tidata = tag->ti_Data;
 
         switch (tag->ti_Tag)
         {
@@ -362,14 +372,14 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 
 /***********************************************************************/
 
-static ASM ULONG
+static ASM IPTR
 mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *msg)
 {
     struct data        *data = INST_DATA(cl,obj);
     struct TextFont    *df;
     Object                      *parent;
     ULONG              flags = data->flags, v;
-    ULONG                       p;
+    IPTR                        p;
 
     if (!DoSuperMethodA(cl,obj,(APTR)msg)) return FALSE;
 
@@ -390,7 +400,7 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *
 
     if (!(flags & UTFLG_UserDoVisitedPen))
     {
-        if (DoMethod(obj,MUIM_GetConfigItem,MUIA_Urltext_DoVisitedPen,&p)) v = *(ULONG *)p;
+        if (DoMethod(obj,MUIM_GetConfigItem,MUIA_Urltext_DoVisitedPen,&p)) v = *(IPTR *)p;
         else v = DEFAULT_DOVISITEDPEN;
 
         if (v) data->flags |= UTFLG_DoVisitedPen;
@@ -399,7 +409,7 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *
 
     if (!(flags & UTFLG_UserFallback))
     {
-        if (DoMethod(obj,MUIM_GetConfigItem,MUIA_Urltext_FallBack,&p)) v = *(ULONG *)p;
+        if (DoMethod(obj,MUIM_GetConfigItem,MUIA_Urltext_FallBack,&p)) v = *(IPTR *)p;
         else v = DEFAULT_FALLBACK;
 
         if (v) data->flags |= UTFLG_Fallback;
@@ -408,7 +418,7 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *
 
     if (!(flags & UTFLG_UserUnderline))
     {
-        if (DoMethod(obj,MUIM_GetConfigItem,MUIA_Urltext_Underline,&p)) v = *(ULONG *)p;
+        if (DoMethod(obj,MUIM_GetConfigItem,MUIA_Urltext_Underline,&p)) v = *(IPTR *)p;
         else v = DEFAULT_UNDERLINE;
 
         if (v) data->flags |= UTFLG_Underline;
@@ -424,7 +434,7 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *
 
         strcpy(buf,(STRPTR)p);
 
-        if (t = strchr(buf,'/'))
+        if ((t = strchr(buf,'/')))
         {
             *t++ = 0;
             if (!stcd_l(t,&ys) || ys<=0) ys = 8;
@@ -439,7 +449,7 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *
         ta.ta_Style = 0;
         ta.ta_Flags = 0;
 
-        if (data->tf = OpenDiskFont(&ta)) data->flags |= UTFLG_CloseFont;
+        if ((data->tf = OpenDiskFont(&ta))) data->flags |= UTFLG_CloseFont;
         else data->tf = df;
     }
     else data->tf = df;
@@ -474,7 +484,7 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *
 
 /***********************************************************************/
 
-static ASM ULONG
+static ASM IPTR
 mCleanup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -493,7 +503,7 @@ mCleanup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup
 
 /***********************************************************************/
 
-static ASM ULONG
+static ASM IPTR
 mAskMinMax(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_AskMinMax *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
@@ -530,20 +540,20 @@ mAskMinMax(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Ask
 
 /***********************************************************************/
 
-static ASM ULONG
+static ASM IPTR
 mShow(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
     struct data    *data = INST_DATA(cl,obj);
-    ULONG          res;
+    IPTR          res;
 
-    if (res = DoSuperMethodA(cl,obj,msg)) data->flags |= UTFLG_Show;
+    if ((res = DoSuperMethodA(cl,obj,msg))) data->flags |= UTFLG_Show;
 
     return res;
 }
 
 /***********************************************************************/
 
-static ASM ULONG
+static ASM IPTR
 mHide(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -555,7 +565,7 @@ mHide(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 
 /***********************************************************************/
 
-static ASM ULONG
+static ASM IPTR
 mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
@@ -601,7 +611,7 @@ mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *ms
 #define _isinobject(obj,x,y)        (_between(_mleft(obj),(x),_mright(obj)) && _between(_mtop(obj),(y),_mbottom(obj)))
 #define _isinobjectr(obj,r,x,y)     (_between(_mleft(obj),(x),(r)) && _between(_mtop(obj),(y),_mbottom(obj)))
 
-static ASM ULONG
+static ASM IPTR
 mHandleEvent(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_HandleEvent *msg)
 {
     if (msg->imsg && msg->imsg->Class==IDCMP_MOUSEMOVE)
@@ -637,12 +647,13 @@ mHandleEvent(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_H
 
 /***********************************************************************/
 
-static ASM ULONG
+static ASM IPTR
 mOpenURL(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Urltext_OpenURL *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
     STRPTR         url = data->url;
-    ULONG          flags = data->flags, res = FALSE;
+    ULONG          flags = data->flags;
+    IPTR           res = FALSE;
 
     if (url && *url && OpenURLBase && !UTFLG_IsDisabled(flags) &&
         ((msg->flags & MUIV_Urltext_OpenURL_CheckOver) ? (data->flags & (UTFLG_MouseOver|UTFLG_ActiveObject)) : 1))
@@ -656,17 +667,18 @@ mOpenURL(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Urlte
 
 /***********************************************************************/
 
-static ASM ULONG
+static ASM IPTR
 mCopy(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Urltext_Copy *msg)
 {
     struct data        *data = INST_DATA(cl,obj);
     struct IFFHandle   *iff;
     STRPTR             url = data->url;
-    ULONG              unit = msg->unit, res = 0, len;
+    ULONG              unit = msg->unit, len;
+    IPTR               res = 0;
 
-    if (iff = AllocIFF())
+    if ((iff = AllocIFF()))
     {
-        if (iff->iff_Stream = (LONG)OpenClipboard(unit))
+        if ((iff->iff_Stream = (LONG)OpenClipboard(unit)))
         {
             InitIFFasClip(iff);
 
@@ -691,7 +703,7 @@ mCopy(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Urltext_
 
 /***********************************************************************/
 
-static ASM ULONG
+static ASM IPTR
 mOpenURLPrefs(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
     BPTR in, out;
@@ -715,7 +727,7 @@ mOpenURLPrefs(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 
 /***********************************************************************/
 
-static ULONG SAVEDS ASM
+static IPTR SAVEDS ASM
 mContextMenuChoice(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_ContextMenuChoice *msg)
 {
     switch (muiUserData(msg->item))
@@ -738,7 +750,7 @@ mContextMenuChoice(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct 
 
 /***********************************************************************/
 
-static ULONG SAVEDS ASM
+static IPTR SAVEDS ASM
 mActive(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -750,7 +762,7 @@ mActive(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 
 /***********************************************************************/
 
-static ULONG SAVEDS ASM
+static IPTR SAVEDS ASM
 mInactive(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -800,7 +812,7 @@ BOOPSI_DISPATCHER_END
 BOOL ASM
 initMCC(REG(a0) struct UrltextBase *base)
 {
-    if (base->mcc = MUI_CreateCustomClass((struct Library *)base,MUIC_Area,NULL,sizeof(struct data),dispatcher))
+    if ((base->mcc = MUI_CreateCustomClass((struct Library *)base,MUIC_Area,NULL,sizeof(struct data),dispatcher)))
     {
         if (MUIMasterBase->lib_Version>=20)
             base->mcc->mcc_Class->cl_ID = PRG;

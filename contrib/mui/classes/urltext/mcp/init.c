@@ -6,16 +6,16 @@
 
 /****************************************************************************/
 
-SAVEDS ASM ULONG
+SAVEDS ASM IPTR
 query(REG(d0) LONG which)
 {
     switch (which)
     {
         case 1:
-            return (ULONG)UrltextBase->mcp;
+            return (IPTR)UrltextBase->mcp;
 
         case 2:
-            return (ULONG)BodychunkObject,
+            return (IPTR)BodychunkObject,
                 MUIA_FixWidth,              LINK_WIDTH,
                 MUIA_FixHeight,             LINK_HEIGHT,
                 MUIA_Bitmap_Width,          LINK_WIDTH,

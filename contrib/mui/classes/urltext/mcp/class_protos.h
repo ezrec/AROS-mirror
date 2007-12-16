@@ -4,7 +4,7 @@
 #include <intuition/classusr.h>
 
 /* init.c */
-SAVEDS ASM ULONG query ( REG (d0 )LONG which );
+SAVEDS ASM IPTR query ( REG (d0 )LONG which );
 void ASM freeBase ( REG (a0 )struct UrltextBase *base );
 BOOL ASM initBase ( REG (a0 )struct UrltextBase *base );
 

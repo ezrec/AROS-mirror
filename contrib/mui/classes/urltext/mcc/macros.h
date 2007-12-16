@@ -25,6 +25,9 @@
 
 #else /* __AROS__ */
 
+// integer which is large enough to hold a pointer
+typedef ULONG IPTR;
+
 #ifndef SAVEDS
 #define SAVEDS  __saveds
 #endif

@@ -10,13 +10,13 @@
 
 /****************************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
     char           copyright[256], *l;
     struct data    *data;
     Object         *info, *popb;
-    ULONG                   ver;
+    STRPTR                 ver;
 
     if (!(obj = (Object *)DoSuperMethodA(cl, obj, msg)))
         return 0;
@@ -144,12 +144,12 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
     DoMethod(data->doVisitedPen,MUIM_Notify,MUIA_Selected,MUIV_EveryTime,
         data->email,3,MUIM_Set,MUIA_Urltext_PDoVisitedPen,MUIV_TriggerValue);
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGet(struct IClass *cl, Object *obj, struct opGet *msg)
 {
     switch (msg->opg_AttrID)
@@ -162,7 +162,7 @@ mGet(struct IClass *cl, Object *obj, struct opGet *msg)
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mDispose(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
     return DoSuperMethodA(cl,obj,msg);
@@ -170,11 +170,11 @@ mDispose(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
-    ULONG                   p;
+    IPTR                   p;
 
     if (!DoSuperMethodA(cl,obj,(APTR)msg)) return FALSE;
 
@@ -192,7 +192,7 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Settingsgroup_ConfigToGadgets *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
@@ -202,7 +202,7 @@ mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
 
     po = MUI_NewObject(MUIC_Pendisplay,TAG_DONE);
 
-    if (p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_MouseOutPen))
+    if ((p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_MouseOutPen)))
         set(data->mouseOutPen,MUIA_Pendisplay_Spec,p);
     else
         if (po)
@@ -212,7 +212,7 @@ mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
             set(data->mouseOutPen,MUIA_Pendisplay_Spec,pen);
         }
 
-    if (p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_MouseOverPen))
+    if ((p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_MouseOverPen)))
         set(data->mouseOverPen,MUIA_Pendisplay_Spec,p);
     else
         if (po)
@@ -222,7 +222,7 @@ mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
             set(data->mouseOverPen,MUIA_Pendisplay_Spec,pen);
         }
 
-    if (p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_VisitedPen))
+    if ((p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_VisitedPen)))
         set(data->visitedPen,MUIA_Pendisplay_Spec,p);
     else
         if (po)
@@ -232,19 +232,19 @@ mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
             set(data->visitedPen,MUIA_Pendisplay_Spec,pen);
         }
 
-    if (p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_Underline))
+    if ((p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_Underline)))
         set(data->underline,MUIA_Selected,*(ULONG *)p);
     else set(data->underline,MUIA_Selected,DEFAULT_UNDERLINE);
 
-    if (p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_FallBack))
+    if ((p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_FallBack)))
         set(data->fallBack,MUIA_Selected,*(ULONG *)p);
     else set(data->fallBack,MUIA_Selected,DEFAULT_FALLBACK);
 
-    if (p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_DoVisitedPen))
+    if ((p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_DoVisitedPen)))
         set(data->doVisitedPen,MUIA_Selected,*(ULONG *)p);
     set(data->doVisitedPen,MUIA_Selected,DEFAULT_DOVISITEDPEN);
 
-    if (p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_Font))
+    if ((p = DoMethod(msg->configdata,MUIM_Dataspace_Find,MUIA_Urltext_Font)))
         set(data->font,MUIA_String_Contents,p);
 
     if (po) MUI_DisposeObject(po);
@@ -254,11 +254,11 @@ mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mGadgetsToConfig(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Settingsgroup_GadgetsToConfig *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
-    ULONG                   p;
+    IPTR                    p;
 
     get(data->mouseOutPen,MUIA_Pendisplay_Spec,&p);
     if (p) DoMethod(msg->configdata,MUIM_Dataspace_Add,p,sizeof(struct MUI_PenSpec),MUIA_Urltext_MouseOutPen);
@@ -313,7 +313,7 @@ BOOPSI_DISPATCHER_END
 BOOL ASM
 initMCP(REG(a0) struct UrltextBase *base)
 {
-    if (base->mcp = MUI_CreateCustomClass((struct Library *)base,MUIC_Mccprefs,NULL,sizeof(struct data),dispatcher))
+    if ((base->mcp = MUI_CreateCustomClass((struct Library *)base,MUIC_Mccprefs,NULL,sizeof(struct data),dispatcher)))
     {
         if (MUIMasterBase->lib_Version>=20)
             base->mcp->mcc_Class->cl_ID = PRG;

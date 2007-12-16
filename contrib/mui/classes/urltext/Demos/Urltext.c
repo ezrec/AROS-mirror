@@ -6,6 +6,10 @@
 #include <proto/muimaster.h>
 #include <mui/Urltext_mcc.h>
 
+#ifndef __AROS__
+typedef ULONG IPTR;
+#endif
+
 /***********************************************************************/
 
 long __stack = 8192;
@@ -44,7 +48,7 @@ int main(void)
     {
         APTR app, mwin, u0, u1, u2, u3, t0;
 
-        if (app = ApplicationObject,
+        if ((app = ApplicationObject,
             MUIA_Application_Title,         "Urltext",
             MUIA_Application_Version,       "$VER: Urltext 1.2 (16.12.2001)",
             MUIA_Application_Copyright,     "Copyright 2000-2001 Alfonso Ranieri",
@@ -76,11 +80,11 @@ int main(void)
                     Child, t0 = TextObject,
                         MUIA_Frame,         MUIV_Frame_Text,
                         MUIA_Background,    MUII_TextBack,
-                        MUIA_Text_PreParse, (ULONG)"\33c",
+                        MUIA_Text_PreParse, (IPTR)"\33c",
                     End,
                 End,
             End,
-        End)
+        End))
         {
             ULONG sigs;
 

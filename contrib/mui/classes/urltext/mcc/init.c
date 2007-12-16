@@ -3,13 +3,13 @@
 
 /****************************************************************************/
 
-SAVEDS ASM ULONG
+SAVEDS ASM IPTR
 query(REG(d0) LONG which)
 {
     switch (which)
     {
         case 0:
-            return (ULONG)UrltextBase->mcc;
+            return (IPTR)UrltextBase->mcc;
 
         default:
             return 0;
@@ -83,7 +83,7 @@ initBase(REG(a0) struct UrltextBase *base)
 
         base->openURLBase  = OpenLibrary("openurl.library",0);
 
-        if (base->localeBase = OpenLibrary("locale.library",0))
+        if ((base->localeBase = OpenLibrary("locale.library",0)))
             base->cat = OpenCatalogA(NULL,CATNAME,NULL);
 
         base->flags |= BASEFLG_INIT;

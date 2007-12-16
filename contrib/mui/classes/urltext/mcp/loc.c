@@ -41,29 +41,29 @@ struct message
 
 struct message messages[] =
 {
-    Msg_Colours,            Msg_Colours_STR,
-    Msg_Out,                Msg_Out_STR,
-    Msg_Out_Help,           Msg_Out_Help_STR,
-    Msg_OutPenTitle,        Msg_OutPenTitle_STR,
-    Msg_Over,               Msg_Over_STR,
-    Msg_Over_Help,          Msg_Over_Help_STR,
-    Msg_OverPenTitle,       Msg_OverPenTitle_STR,
-    Msg_Visited,            Msg_Visited_STR,
-    Msg_Visited_Help,       Msg_Visited_Help_STR,
-    Msg_VisitedPenTitle,    Msg_VisitedPenTitle_STR,
-    Msg_Settings,           Msg_Settings_STR,
-    Msg_Underline,          Msg_Underline_STR,
-    Msg_Underline_Help,     Msg_Underline_Help_STR,
-    Msg_Fallback,           Msg_Fallback_STR,
-    Msg_Fallback_Help,      Msg_Fallback_Help_STR,
-    Msg_DoVisitedPen,       Msg_DoVisitedPen_STR,
-    Msg_DoVisitedPen_Help,  Msg_DoVisitedPen_Help_STR,
-    Msg_Examples,           Msg_Examples_STR,
-    Msg_Copyright,          Msg_Copyright_STR,
-    Msg_Font,               Msg_Font_STR,
-    Msg_Font_Help,          Msg_Font_Help_STR,
+    {Msg_Colours,            Msg_Colours_STR},
+    {Msg_Out,                Msg_Out_STR},
+    {Msg_Out_Help,           Msg_Out_Help_STR},
+    {Msg_OutPenTitle,        Msg_OutPenTitle_STR},
+    {Msg_Over,               Msg_Over_STR},
+    {Msg_Over_Help,          Msg_Over_Help_STR},
+    {Msg_OverPenTitle,       Msg_OverPenTitle_STR},
+    {Msg_Visited,            Msg_Visited_STR},
+    {Msg_Visited_Help,       Msg_Visited_Help_STR},
+    {Msg_VisitedPenTitle,    Msg_VisitedPenTitle_STR},
+    {Msg_Settings,           Msg_Settings_STR},
+    {Msg_Underline,          Msg_Underline_STR},
+    {Msg_Underline_Help,     Msg_Underline_Help_STR},
+    {Msg_Fallback,           Msg_Fallback_STR},
+    {Msg_Fallback_Help,      Msg_Fallback_Help_STR},
+    {Msg_DoVisitedPen,       Msg_DoVisitedPen_STR},
+    {Msg_DoVisitedPen_Help,  Msg_DoVisitedPen_Help_STR},
+    {Msg_Examples,           Msg_Examples_STR},
+    {Msg_Copyright,          Msg_Copyright_STR},
+    {Msg_Font,               Msg_Font_STR},
+    {Msg_Font_Help,          Msg_Font_Help_STR},
 
-    NULL
+    {NULL}
 };
 
 /****************************************************************************/
@@ -71,8 +71,8 @@ struct message messages[] =
 STRPTR ASM
 getString(REG(d0) ULONG id)
 {
-    register struct message *array;
-    register STRPTR         string;
+    struct message *array;
+    STRPTR         string;
 
     for (array = messages;
          array->string && (array->id!=id);

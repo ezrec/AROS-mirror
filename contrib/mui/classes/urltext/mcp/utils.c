@@ -26,7 +26,7 @@ keyCheckmark(REG(a0) STRPTR key,REG(d0) ULONG help)
 {
     register Object *obj;
 
-    if (obj = MUI_MakeObject(MUIO_Checkmark,key))
+    if ((obj = MUI_MakeObject(MUIO_Checkmark,key)))
         SetAttrs(obj,MUIA_CycleChain,1,
                      MUIA_ShortHelp,getString(help),
                      TAG_DONE);

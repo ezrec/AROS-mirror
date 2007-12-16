@@ -17,6 +17,10 @@
 #include <libraries/mui.h>
 #endif
 
+#ifndef __AROS__
+#define STACKED
+#endif
+
 /***********************************************************************/
 
 #define MUIC_Urltext       "Urltext.mcc"
@@ -72,16 +76,16 @@ enum
 
 struct MUIP_Urltext_OpenURL
 {
-    ULONG   MethodID;
-    ULONG   flags;
+    STACKED ULONG   MethodID;
+    STACKED ULONG   flags;
 };
 
 #define MUIV_Urltext_OpenURL_CheckOver  0x00000001
 
 struct MUIP_Urltext_Copy
 {
-    ULONG   MethodID;
-    ULONG   unit;
+    STACKED ULONG   MethodID;
+    STACKED ULONG   unit;
 };
 
 /***********************************************************************/

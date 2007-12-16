@@ -35,8 +35,8 @@ struct message messages[] =
 STRPTR ASM
 getString(REG(d0) ULONG id)
 {
-    register struct message *array;
-    register STRPTR         string;
+    struct message *array;
+    STRPTR         string;
 
     for (array = messages;
          array->string && (array->id!=id);
