@@ -10,28 +10,12 @@
 
 /****************************************************************************/
 
-struct data
-{
-    Object *prefs;
-    Object *mouseOutPen;
-    Object *mouseOverPen;
-    Object *visitedPen;
-    Object *underline;
-    Object *fallBack;
-    Object *doVisitedPen;
-    Object *font;
-    Object *url;
-    Object *email;
-};
-
-/****************************************************************************/
-
 static ULONG ASM
 mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register char           copyright[256], *l;
-    register struct data    *data;
-    register Object         *info, *popb;
+    char           copyright[256], *l;
+    struct data    *data;
+    Object         *info, *popb;
     ULONG                   ver;
 
     if (!(obj = (Object *)DoSuperMethodA(cl, obj, msg)))
@@ -189,7 +173,7 @@ mDispose(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 static ULONG ASM
 mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
+    struct data    *data = INST_DATA(cl,obj);
     ULONG                   p;
 
     if (!DoSuperMethodA(cl,obj,(APTR)msg)) return FALSE;
@@ -211,9 +195,9 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *
 static ULONG ASM
 mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Settingsgroup_ConfigToGadgets *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
+    struct data    *data = INST_DATA(cl,obj);
     struct MUI_PenSpec      *pen;
-    register Object         *po;
+    Object         *po;
     ULONG                   p;
 
     po = MUI_NewObject(MUIC_Pendisplay,TAG_DONE);
@@ -273,7 +257,7 @@ mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
 static ULONG ASM
 mGadgetsToConfig(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Settingsgroup_GadgetsToConfig *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
+    struct data    *data = INST_DATA(cl,obj);
     ULONG                   p;
 
     get(data->mouseOutPen,MUIA_Pendisplay_Spec,&p);
@@ -302,8 +286,12 @@ mGadgetsToConfig(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
 
 /***********************************************************************/
 
-static ULONG SAVEDS ASM
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,dispatcher,cl,obj,msg)
+#else
+static SAVEDS ASM ULONG
 dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
+#endif
 {
     switch(msg->MethodID)
     {
@@ -316,6 +304,9 @@ dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
         default:                                    return DoSuperMethodA(cl,obj,msg);
     }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 

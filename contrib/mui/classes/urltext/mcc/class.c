@@ -8,22 +8,6 @@
 
 /****************************************************************************/
 
-struct data
-{
-    char                        url[256];
-    char                        text[256];
-    int                         tLen;
-    struct MUI_RenderInfo       *mri;
-    struct TextExtent           te;
-    Object                      *menu;
-    struct TextFont             *tf;
-    ULONG                       flags;
-    LONG                        mouseOutPen;
-    LONG                        mouseOverPen;
-    LONG                        visitedPen;
-    LONG                        textpen;
-    struct MUI_EventHandlerNode he;
-};
 
 enum
 {
@@ -105,7 +89,7 @@ static ULONG ASM
 mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     struct urltextPackTags  ut = {0};
-    register struct TagItem *attrs = msg->ops_AttrList,
+    struct TagItem *attrs = msg->ops_AttrList,
                             tags[] = {MUIA_InnerBottom,0,
                                       MUIA_InnerLeft,0,
                                       MUIA_InnerRight,0,
@@ -124,8 +108,8 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 
     if (obj = (Object *)DoSuperMethodA(cl,obj,(APTR)msg))
     {
-        register struct data    *data = INST_DATA(cl,obj);
-        register ULONG          flags = ut.flags;
+        struct data    *data = INST_DATA(cl,obj);
+        ULONG          flags = ut.flags;
 
         stccpy(data->url,ut.url,sizeof(data->url));
 
@@ -169,8 +153,8 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 
         if (!(flags & UTFLG_NoMenu))
         {
-            register Object *menu;
-            register BPTR   lock;
+            Object *menu;
+            BPTR   lock;
 
             if (lock = Lock("SYS:Prefs/OpenURL",SHARED_LOCK)) UnLock(lock);
 
@@ -210,9 +194,9 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 static ASM ULONG
 mDispose(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
-    register Object         *menu = data->menu;
-    register ULONG          res;
+    struct data    *data = INST_DATA(cl,obj);
+    Object         *menu = data->menu;
+    ULONG          res;
 
     res = DoSuperMethodA(cl,obj,msg);
 
@@ -226,7 +210,7 @@ mDispose(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 static ASM ULONG
 mGet(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opGet *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     switch(msg->opg_AttrID)
     {
@@ -248,17 +232,17 @@ mGet(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opGet *msg)
 static ULONG ASM
 mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
-    register struct TagItem *tag;
+    struct data    *data = INST_DATA(cl,obj);
+    struct TagItem *tag;
     struct TagItem          *tstate;
-    register ULONG          flags, redraw, notifyUrl, over;
+    ULONG          flags, redraw, notifyUrl, over;
 
     flags = data->flags;
     redraw = notifyUrl = over = 0;
 
     for (tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch (tag->ti_Tag)
         {
@@ -302,7 +286,7 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
             case MUIA_Urltext_MouseOutPen:
                 if (data->mri)
                 {
-                    register LONG pen;
+                    LONG pen;
 
                     if ((pen = MUI_ObtainPen(data->mri,(struct MUI_PenSpec *)tidata,0))!=-1)
                     {
@@ -317,7 +301,7 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
             case MUIA_Urltext_MouseOverPen:
                 if (data->mri)
                 {
-                    register LONG pen;
+                    LONG pen;
 
                     if ((pen = MUI_ObtainPen(data->mri,(struct MUI_PenSpec *)tidata,0))!=-1)
                     {
@@ -332,7 +316,7 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
             case MUIA_Urltext_VisitedPen:
                 if (data->mri)
                 {
-                    register LONG pen;
+                    LONG pen;
 
                     if ((pen = MUI_ObtainPen(data->mri,(struct MUI_PenSpec *)tidata,0))!=-1)
                     {
@@ -381,10 +365,10 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 static ASM ULONG
 mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *msg)
 {
-    register struct data        *data = INST_DATA(cl,obj);
-    register struct TextFont    *df;
+    struct data        *data = INST_DATA(cl,obj);
+    struct TextFont    *df;
     Object                      *parent;
-    register ULONG              flags = data->flags, v;
+    ULONG              flags = data->flags, v;
     ULONG                       p;
 
     if (!DoSuperMethodA(cl,obj,(APTR)msg)) return FALSE;
@@ -434,7 +418,7 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *
     df = _font(obj);
     if (DoMethod(obj,MUIM_GetConfigItem,MUIA_Urltext_Font,&p))
     {
-        register char   buf[256], *t, *s;
+        char   buf[256], *t, *s;
         struct TextAttr ta;
         long            ys;
 
@@ -493,7 +477,7 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *
 static ASM ULONG
 mCleanup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     if (data->flags & UTFLG_Input) DoMethod(_win(obj),MUIM_Window_RemEventHandler,&data->he);
     if (data->flags & UTFLG_CloseFont) CloseFont(data->tf);
@@ -512,9 +496,9 @@ mCleanup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Setup
 static ASM ULONG
 mAskMinMax(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_AskMinMax *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
+    struct data    *data = INST_DATA(cl,obj);
     struct RastPort         rp;
-    register WORD           w, h;
+    WORD           w, h;
 
     DoSuperMethodA(cl,obj,(APTR)msg);
 
@@ -537,8 +521,8 @@ mAskMinMax(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Ask
     }
     else
     {
-        msg->MinMaxInfo->MaxWidth  += MBQ_MUI_MAXMAX;
-        msg->MinMaxInfo->MaxHeight += MBQ_MUI_MAXMAX;
+        msg->MinMaxInfo->MaxWidth  += MUI_MAXMAX;
+        msg->MinMaxInfo->MaxHeight += MUI_MAXMAX;
     }
 
     return 0;
@@ -549,8 +533,8 @@ mAskMinMax(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Ask
 static ASM ULONG
 mShow(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
-    register ULONG          res;
+    struct data    *data = INST_DATA(cl,obj);
+    ULONG          res;
 
     if (res = DoSuperMethodA(cl,obj,msg)) data->flags |= UTFLG_Show;
 
@@ -562,7 +546,7 @@ mShow(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 static ASM ULONG
 mHide(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     data->flags &= ~UTFLG_Show;
 
@@ -574,16 +558,16 @@ mHide(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 static ASM ULONG
 mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
-    register ULONG          flags = data->flags;
+    struct data    *data = INST_DATA(cl,obj);
+    ULONG          flags = data->flags;
 
     DoSuperMethodA(cl,obj,(APTR)msg);
 
     if (UTFLG_IsToShow(flags) && (msg->flags & MADF_DRAWOBJECT))
     {
-        register struct RastPort    *rp = _rp(obj);
+        struct RastPort    *rp = _rp(obj);
         struct TextFont             *tf;
-        register SHORT              l = _mtop(obj)-data->te.te_Extent.MinY;
+        WORD               l = _mtop(obj)-data->te.te_Extent.MinY;
 
         SetAPen(rp,
             (UTFLG_IsToUse(flags) && !UTFLG_IsDisabled(flags)) ?
@@ -622,9 +606,9 @@ mHandleEvent(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_H
 {
     if (msg->imsg && msg->imsg->Class==IDCMP_MOUSEMOVE)
     {
-        register struct data    *data = INST_DATA(cl,obj);
-        register ULONG          over;
-        register WORD           r, x = msg->imsg->MouseX, y = msg->imsg->MouseY;
+        struct data    *data = INST_DATA(cl,obj);
+        ULONG          over;
+        WORD           r, x = msg->imsg->MouseX, y = msg->imsg->MouseY;
 
         r = UTFLG_IsSetMax(data->flags) ? _mright(obj) : _mleft(obj)+data->te.te_Width;
 
@@ -656,9 +640,9 @@ mHandleEvent(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_H
 static ASM ULONG
 mOpenURL(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Urltext_OpenURL *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
-    register STRPTR         url = data->url;
-    register ULONG          flags = data->flags, res = FALSE;
+    struct data    *data = INST_DATA(cl,obj);
+    STRPTR         url = data->url;
+    ULONG          flags = data->flags, res = FALSE;
 
     if (url && *url && OpenURLBase && !UTFLG_IsDisabled(flags) &&
         ((msg->flags & MUIV_Urltext_OpenURL_CheckOver) ? (data->flags & (UTFLG_MouseOver|UTFLG_ActiveObject)) : 1))
@@ -675,10 +659,10 @@ mOpenURL(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Urlte
 static ASM ULONG
 mCopy(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Urltext_Copy *msg)
 {
-    register struct data        *data = INST_DATA(cl,obj);
-    register struct IFFHandle   *iff;
-    register STRPTR             url = data->url;
-    register ULONG              unit = msg->unit, res = 0, len;
+    struct data        *data = INST_DATA(cl,obj);
+    struct IFFHandle   *iff;
+    STRPTR             url = data->url;
+    ULONG              unit = msg->unit, res = 0, len;
 
     if (iff = AllocIFF())
     {
@@ -710,7 +694,7 @@ mCopy(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Urltext_
 static ASM ULONG
 mOpenURLPrefs(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register BPTR in, out;
+    BPTR in, out;
 
     if ((in  = Open("NIL:",MODE_OLDFILE)) &&
         (out = Open("NIL:",MODE_OLDFILE)))
@@ -757,7 +741,7 @@ mContextMenuChoice(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct 
 static ULONG SAVEDS ASM
 mActive(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     data->flags |= UTFLG_ActiveObject;
 
@@ -769,7 +753,7 @@ mActive(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 static ULONG SAVEDS ASM
 mInactive(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     data->flags &= ~UTFLG_ActiveObject;
 
@@ -778,8 +762,12 @@ mInactive(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,dispatcher,cl,obj,msg)
+#else
 static SAVEDS ASM ULONG
 dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
+#endif
 {
     switch(msg->MethodID)
     {
@@ -803,6 +791,9 @@ dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
         default:                        return DoSuperMethodA(cl,obj,msg);
     }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 

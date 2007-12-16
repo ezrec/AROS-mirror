@@ -1,7 +1,9 @@
 #   $Id: mmakefile.src 25072 2006-12-11 19:23:54Z mazze $
+
 include $(TOP)/config/make.cfg
 
 #MM- contrib : contrib-zune-classes-urltext
 
-#MM- contrib-zune-classes-urltext :  contrib-zune-classes-urltext-mcc  contrib-zune-classes-urltext-mcp contrib-zune-classes-urltext-demos
+#MM- contrib-zune-classes-urltext : \
+#MM  contrib-zune-classes-urltext-mcc  contrib-zune-classes-urltext-mcp contrib-zune-classes-urltext-demos
 

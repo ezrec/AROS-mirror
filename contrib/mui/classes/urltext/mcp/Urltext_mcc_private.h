@@ -29,6 +29,22 @@
 
 /***********************************************************************/
 
+struct data
+{
+    Object *prefs;
+    Object *mouseOutPen;
+    Object *mouseOverPen;
+    Object *visitedPen;
+    Object *underline;
+    Object *fallBack;
+    Object *doVisitedPen;
+    Object *font;
+    Object *url;
+    Object *email;
+};
+
+/***********************************************************************/
+
 /* attributes - Scheme is: [ISGN] */
 enum
 {

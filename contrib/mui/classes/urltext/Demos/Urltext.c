@@ -4,7 +4,7 @@
 #include <proto/dos.h>
 #include <proto/intuition.h>
 #include <proto/muimaster.h>
-#include <mui/urltext_mcc.h>
+#include <mui/Urltext_mcc.h>
 
 /***********************************************************************/
 
@@ -12,7 +12,9 @@ long __stack = 8192;
 
 /***********************************************************************/
 
+#ifndef __AROS__
 ULONG DoMethod(APTR,unsigned long MethodID,...);
+#endif
 
 /***********************************************************************/
 
@@ -34,13 +36,13 @@ urlTextObject(struct Library *MUIMasterBase,STRPTR url,STRPTR text,ULONG font)
 
 /***********************************************************************/
 
-void main(void)
+int main(void)
 {
-    register struct Library *MUIMasterBase;
+    struct Library *MUIMasterBase;
 
-    if (MUIMasterBase = OpenLibrary("muimaster.library",19))
+    if ((MUIMasterBase = OpenLibrary("muimaster.library",19)))
     {
-        register APTR app, mwin, u0, u1, u2, u3, t0;
+        APTR app, mwin, u0, u1, u2, u3, t0;
 
         if (app = ApplicationObject,
             MUIA_Application_Title,         "Urltext",
@@ -102,6 +104,8 @@ void main(void)
         CloseLibrary(MUIMasterBase);
     }
     else Printf("Can't open muimaster.library version 19 or higher\n");
+
+    return 0;
 }
 
 /***********************************************************************/

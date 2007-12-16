@@ -97,4 +97,21 @@ struct MUIP_Urltext_Copy
 
 /***********************************************************************/
 
+struct data
+{
+    char                        url[256];
+    char                        text[256];
+    int                         tLen;
+    struct MUI_RenderInfo       *mri;
+    struct TextExtent           te;
+    Object                      *menu;
+    struct TextFont             *tf;
+    ULONG                       flags;
+    LONG                        mouseOutPen;
+    LONG                        mouseOverPen;
+    LONG                        visitedPen;
+    LONG                        textpen;
+    struct MUI_EventHandlerNode he;
+};
+
 #endif /* _URLTEXT_PRIVATE_MCC_H */

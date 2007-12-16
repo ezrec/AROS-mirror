@@ -11,7 +11,10 @@ BOOL ASM initMCC ( REG (a0 )struct UrltextBase *base );
 
 /* utils */
 char ASM getKeyChar ( REG (a0 )STRPTR string );
+
+#ifndef __AROS__
 int STDARGS snprintf ( char *buf , int size , char *fmt , ...);
+#endif
 
 /* loc.c */
 STRPTR ASM getString ( REG (d0 )ULONG id );

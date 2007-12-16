@@ -16,6 +16,15 @@
 
 /****************************************************************************/
 
+#ifdef __AROS__
+
+#define SAVEDS
+#define ASM
+#define STDARGS
+#define REG(x)
+
+#else /* __AROS__ */
+
 #ifndef SAVEDS
 #define SAVEDS  __saveds
 #endif
@@ -39,6 +48,8 @@
 #ifndef REG
 #define REG(x)  register __ ## x
 #endif
+
+#endif /* __AROS__ */
 
 #ifndef NODE
 #define NODE(a) ((struct Node *)(a))

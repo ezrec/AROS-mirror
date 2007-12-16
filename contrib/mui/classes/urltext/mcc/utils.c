@@ -21,6 +21,8 @@ getKeyChar(REG(a0) STRPTR string)
 
 /***********************************************************************/
 
+#ifndef __AROS__
+
 struct stream
 {
     char    *buf;
@@ -57,5 +59,6 @@ snprintf(char *buf,int size,char *fmt,...)
 
     return s.counter-1;
 }
+#endif
 
 /****************************************************************************/

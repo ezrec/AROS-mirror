@@ -13,11 +13,14 @@
 #include <proto/iffparse.h>
 
 #include <clib/alib_protos.h>
+
+#ifndef __AROS__
 #include <clib/debug_protos.h>
 
 #include <mui/muiundoc.h>
 #include <dos.h>
 #include <string.h>
+#endif
 
 #include "Urltext_mcc_private.h"
 #include "msg.h"
@@ -25,6 +28,7 @@
 
 /***********************************************************************/
 
+#ifndef __AROS__
 #define SysBase         (UrltextBase->sysBase)
 #define DOSBase         (UrltextBase->dosBase)
 #define IntuitionBase   (UrltextBase->intuitionBase)
@@ -35,6 +39,7 @@
 #define MUIMasterBase   (UrltextBase->muiMasterBase)
 #define IFFParseBase    (UrltextBase->iFFParseBase)
 #define DiskfontBase    (UrltextBase->diskFontBase)
+#endif
 
 extern struct UrltextBase *UrltextBase;
 extern char libName[];

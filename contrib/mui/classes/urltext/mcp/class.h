@@ -9,10 +9,13 @@
 #include <proto/locale.h>
 
 #include <clib/alib_protos.h>
-#include <clib/debug_protos.h>
 
+#ifndef __AROS__
+#include <clib/debug_protos.h>
 #include <mui/muiundoc.h>
 #include <dos.h>
+#endif /* __AROS__ */
+
 #include <string.h>
 
 #include "Urltext_mcc_private.h"
@@ -21,6 +24,7 @@
 
 /***********************************************************************/
 
+#ifndef __AROS__
 #define SysBase         (UrltextBase->sysBase)
 #define DOSBase         (UrltextBase->dosBase)
 #define IntuitionBase   (UrltextBase->intuitionBase)
@@ -28,6 +32,7 @@
 #define LocaleBase      (UrltextBase->localeBase)
 #define OpenURLBase     (UrltextBase->openURLBase)
 #define MUIMasterBase   (UrltextBase->muiMasterBase)
+#endif
 
 extern struct UrltextBase *UrltextBase;
 extern char libName[];

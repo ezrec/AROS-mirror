@@ -86,7 +86,7 @@ initBase(REG(a0) struct UrltextBase *base)
 
         base->openURLBase  = OpenLibrary("openurl.library",0);
 
-        if (base->localeBase = OpenLibrary("locale.library",0))
+        if ((base->localeBase = OpenLibrary("locale.library",0)))
             base->cat = OpenCatalogA(NULL,CATNAME,NULL);
 
         base->flags |= BASEFLG_INIT;

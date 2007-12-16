@@ -63,6 +63,7 @@ urltext(REG(a0) STRPTR url,REG(a1) STRPTR text)
 
 /****************************************************************************/
 
+#ifndef __AROS__
 struct stream
 {
     char    *buf;
@@ -99,5 +100,6 @@ snprintf(char *buf,int size,char *fmt,...)
 
     return s.counter-1;
 }
+#endif /* !__AROS__ */
 
 /****************************************************************************/
