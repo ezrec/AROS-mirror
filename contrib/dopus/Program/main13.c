@@ -71,7 +71,7 @@ struct DateStamp *date;
 
 	wsave=main_proc->pr_WindowPtr;
 	main_proc->pr_WindowPtr=(APTR)-1;
-
+#if 0
 	if ((handler=(struct MsgPort *)DeviceProc(name))) {
 		if ((lock=Lock(name,ACCESS_READ))) {
 			parentlock=ParentDir(lock);
@@ -88,7 +88,9 @@ struct DateStamp *date;
 			UnLock(parentlock);
 		}
 	}
-
+#else
+	rc = SetFileDate(name, date) ? 1 : 0;
+#endif
 	main_proc->pr_WindowPtr=wsave;
 	return(rc?1:IoErr());
 }
