@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM contrib-zune-classes-urltext-mcp : includes linklibs
+#MM contrib-zune-classes-urltext-mcp : includes linklibs workbench-libs-openurl
 
 FILES := libinit-aros \
 	 init \
