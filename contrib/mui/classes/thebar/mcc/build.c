@@ -423,7 +423,7 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
                             aflag = 1;
                         }
 
-                        #ifdef __MORPHOS__
+                        #if defined(WITH_ALPHA)
     	                if (useAlpha) hi = *src<0xFF;
                         #else
             	        if (useAlpha) hi = !(c & 0xFF000000);
@@ -509,7 +509,7 @@ RGBToRGB(struct InstData *data,struct MUIS_TheBar_Brush *image,struct copy *copy
                             aflag = 1;
                         }
 
-                        #ifdef __MORPHOS__
+			            #if defined(WITH_ALPHA)
                         if (useAlpha) hi = *src<0xFF;
                         #else
                         if (useAlpha) hi = !(c & 0xFF000000);
@@ -1073,7 +1073,7 @@ buildBitMapsCyber(struct InstData *data)
         WaitBlit();
     }
 
-    #ifdef __MORPHOS__
+    #if defined(WITH_ALPHA)
     if (data->image.flags & BRFLG_AlphaMask)
     {
     	data->strip.nchunky  = make->chunky;
@@ -1085,13 +1085,10 @@ buildBitMapsCyber(struct InstData *data)
         data->strip.dnchunky = make->dchunky;
 	    data->strip.dgchunky = make->dgchunky;
     }
-    else
     #else
-    {
-        if (make->chunky)  freeVecPooled(data->pool,make->chunky);
-        if (make->schunky) freeVecPooled(data->pool,make->schunky);
-        if (make->dchunky) freeVecPooled(data->pool,make->dchunky);
-    }
+    if (make->chunky)  freeVecPooled(data->pool,make->chunky);
+    if (make->schunky) freeVecPooled(data->pool,make->schunky);
+    if (make->dchunky) freeVecPooled(data->pool,make->dchunky);
     #endif
 
     freeVecPooled(data->pool,make);
@@ -1343,7 +1340,7 @@ freeBitMaps(struct InstData *data)
 
     ENTER();
 
-    #ifdef __MORPHOS__
+    #if defined(WITH_ALPHA)
     if (data->image.flags & BRFLG_AlphaMask)
     {
     	if (data->strip.nchunky)

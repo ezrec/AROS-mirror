@@ -1,6 +1,6 @@
 ## chunk AUTH Pär Boberg
 ## language svenska
-## version $VER: TheBar_mcp.ct 21.4 (02.09.07)
+## version $VER: TheBar_mcp.ct 21.5 (26.11.07)
 Msg_Reg_Colors
 Färger
 ;#DEF Colors
@@ -625,10 +625,22 @@ Msg_NoMUI20Event_Help
 Hur vi verifierar att muspekaren är över en knapp:\n- IntuiTicks: verifieras periodiskt\n- Musflyttning: verifieras vid varje musflyttning
 ;#DEF How to verify if the mouse is over a button:\n- IntuiTicks: it is verified periodically\n- MouseMove: it is verified at every mouse move
 ;#SET (502//)
+Msg_Info_First
+%s\nKopieringsrätt (c) 2003-2005 Alfonso Ranieri\nKopieringsrätt (c) 2005-2007 av TheBar Open Source Team
+;#DEF %s\nCopyright (c) 2003-2005 Alfonso Ranieri\nCopyright (c) 2005-2007 TheBar Open Source Team
+;#SET (600//)
+Msg_Info_Reserved
+Distribuerad under termerna av LGPL2.
+;#DEF Distributed under the terms of the LGPL2.
+;#SET (//)
+Msg_Info_Rest
+För senaste versioner och uppdateringar:\nhttp://www.sourceforge.net/projects/thebar
+;#DEF For recent versions and updates visit:\nhttp://www.sourceforge.net/projects/thebar
+;#SET (//)
 Msg_Info_Translator
 Svenska av: Pär Boberg
 ;#DEF 
-;#SET (603//)
+;#SET (//)
 Msg_Item_Globals
 Återställ till globala
 ;#DEF Reset to global

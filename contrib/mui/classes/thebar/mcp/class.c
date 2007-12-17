@@ -76,9 +76,13 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     if((obj = (Object *)DoSuperMethodA(cl,obj,(APTR)msg)))
     {
-        struct InstData    *data = INST_DATA(cl,obj);
+        struct InstData *data = INST_DATA(cl,obj);
         const char *t;
-        Object         *prefs, *trans, *groups[16], *hidden[16];
+        char buf[128];
+        Object *prefs;
+        Object *trans;
+        Object *groups[16];
+        Object *hidden[16];
 
         static const char *regs[5];
         static const char *frames[3];
@@ -124,7 +128,9 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         labelPoss[1] = tr(Msg_LabelPos_Top);
         labelPoss[2] = tr(Msg_LabelPos_Right);
         labelPoss[3] = tr(Msg_LabelPos_Left);
-        labelPoss[4] = NULL;
+    		labelPoss[4] = NULL;
+
+        snprintf(buf, sizeof(buf), tr(Msg_Info_First), "\33bTheBar " LIB_REV_STRING "\33n (" LIB_DATE ")\33n");
 
         if((t = tr(Msg_Info_Translator)) && *t)
         {
@@ -146,6 +152,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         if((prefs = VGroup,
 
             Child, RegisterGroup(regs), // Register
+
+                MUIA_CycleChain, TRUE,
 
                 Child, groups[0] = VGroup,
                     MUIA_Group_Columns, 2,
@@ -274,7 +282,6 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                 End, // <Colors
 
                 Child, VGroup, // >Appearance
-                    MUIA_Frame, MUIV_Frame_Virtual,
                     Child, ColGroup(2),
                         Child, olabel2(Msg_TextFont),
                         Child, PopaslObject,
@@ -450,21 +457,38 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             End, // <Register
 
             Child, CrawlingObject, // >Crawling
-                MUIA_FixHeightTxt, "\n",
+                MUIA_FixHeightTxt, "\n\n",
                 TextFrame,
                 MUIA_Background, "m1",
 
                 Child, TextObject,
+                	MUIA_Text_Copy,     TRUE,
                     MUIA_Text_PreParse, "\033c",
-                    MUIA_Text_Contents, "\33bTheBar " LIB_REV_STRING "\33n (" LIB_DATE ")\33n\n"
-                                        LIB_COPYRIGHT "\n\n"
-                                        "For recent versions and updates visit:\n"
-                                        "http://www.sourceforge.net/projects/thebar/\n\n",
+                    MUIA_Text_Contents, buf,
+
+                End,
+
+                Child, TextObject,
+                    MUIA_Text_PreParse, "\033c",
+                    MUIA_Text_Contents, tr(Msg_Info_Reserved),
+                End,
+
+                Child, ofhspace("a"),
+
+                Child, TextObject,
+                	MUIA_Text_Copy,     TRUE,
+                    MUIA_Text_PreParse, "\033c",
+                    MUIA_Text_Contents, tr(Msg_Info_Rest),
                 End,
 
                 Child, ofhspace("a"),
 
                 trans ? Child : TAG_IGNORE, trans,
+
+                Child, TextObject,
+                    MUIA_Text_PreParse, "\033c",
+                    MUIA_Text_Contents, buf,
+                End,
 
             End, // <Crawling
 
@@ -484,7 +508,8 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                 DoMethod(groups[0],OM_REMMEMBER,(ULONG)hidden[2]);
 
-                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->groupBack,MUICFG_TheBar_GroupBack,1,(ULONG)tr(Msg_GroupBackground));
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->groupBack,MUICFG_TheBar_GroupBack,2,(ULONG)tr(Msg_GroupBackground),MUIA_Imagedisplay_Spec);
+                DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->groupBack,MUICFG_TheBar_GroupBack,2,(ULONG)tr(Msg_GroupBackground),MUIA_Framedisplay_Spec);
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->buttonBack,MUICFG_TheBar_ButtonBack,1,(ULONG)tr(Msg_ButtonBackground));
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->frameShinePen,MUICFG_TheBar_FrameShinePen,1,(ULONG)tr(Msg_FrameShinePen));
                 DoSuperMethod(cl,obj,MUIM_Mccprefs_RegisterGadget,(ULONG)data->frameShadowPen,MUICFG_TheBar_FrameShadowPen,1,(ULONG)tr(Msg_FrameShadowPen));

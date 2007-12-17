@@ -2,8 +2,78 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
-$Id: ChangeLog 98 2007-09-02 13:51:02Z pbobbenb $
+$Id: ChangeLog 134 2007-12-03 23:12:52Z damato $
 $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/ChangeLog $
+
+2007-12-04 Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/button/build.c: fixed a possible crash bug where a NUL pointer
+    was being accessed in case a textonly toolbar was opened and
+    data->image was accessed uninitalized.
+
+2007-12-03  Vit Sindlar <sindlarv at centrum dot cz>
+
+  * mcp/locale/czech.ct: added Czech catalog translation
+
+2007-12-01  Pär Boberg <pbobbenb@spray.se>
+
+  * mcp/locale/svenska.ct: Minor update.
+
+2007-11-07  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/build.c, mcc/button/class.c, mcc/button/build.c: replaced several
+    system specific #ifdef's concering alpha channel handling by a simple
+    #ifdef which is set according to whether a system can handle an alpha
+    channel or not. This makes the dynamic compilation more easier to
+    understand.
+
+2007-11-06  Alfonso Ranieri <alforan@tin.it>
+
+  * I discovered that WritePixelArrayAlpha() is in
+    OS4 too. So I managed various parts of the code
+    to make PNG pics to display their wonderfull
+    shadow on OS4 too. I make it to compile and work
+    on a friend (THanks Shinkuro) with OS4 on IRC.
+    Please test if it works there.
+
+2007-11-05  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/penadjust.c: fixed a typo.
+
+2007-11-03 Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcp: removed a virtual frame where no virtual frame was necessary.
+
+2007-11-03  Pär Boberg <pbobbenb@spray.se>
+
+  * mcp/locale/svenska.ct: Updated according to changes.
+
+2007-11-02 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/class.c: added the register group to the cycle chain.
+
+2007-10-31 Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/button/Makefile: changed dependency management to use an
+    automatically generated Makefile.depend file instead of having fixed
+    include dependencies in the main Makefile.
+  * mcc,mcp: replaced all stccpy() uses by the more secure strlcpy() uses.
+  * mcc/Makefile, Makefile.depend: changed dependency management to use an
+    automatically generated Makefile.depend file instead of having fixed
+    include dependencies in the main Makefile.
+  * mcp/class.c, utils.c: removed the recently added properitary msnprintf()
+    function and replaced it by a general snprintf() as using it with %ld
+    should always be fine. So please use snprintf() instead.
+  * mcp/locale/TheBar_mcp.cd: fixed some recently added typos and changed
+    the copyright text to be formatted in a more standard way.
+  * mcp/Makefile.depend: added automatically generated dependency file which
+    will be included by the main Makefile on each run. This should fix all
+    dependency issues.
+
+2007-10-05  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/backgroundadjust.c, mcp/penadjust.c, mcp/popbackground.c, mcp/poppen.c:
+    fixed some compiler warnings.
 
 2007-09-02  Pär Boberg <pbobbenb@spray.se>
 

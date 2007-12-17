@@ -866,7 +866,7 @@ mColoradjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *
             if (im) x +=2;
             else x++;
 
-            stccpy(spec,x,sizeof(spec));
+            strlcpy(spec, x, sizeof(spec));
 
             if((p = strchr(spec,',')))
             {

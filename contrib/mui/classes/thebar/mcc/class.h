@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: class.h 22 2007-01-02 21:30:56Z damato $
+ $Id: class.h 131 2007-11-07 10:41:18Z thboeckel $
 
 ***************************************************************************/
 
@@ -44,6 +44,11 @@
 #include <mui/TheBar_mcc.h>
 
 #include "SDI_compiler.h"
+
+// these systems are able to handle alpha channel information
+#if defined(__MORPHOS__) || defined(__amigaos4__)
+	#define WITH_ALPHA			1
+#endif
 
 /***********************************************************************/
 

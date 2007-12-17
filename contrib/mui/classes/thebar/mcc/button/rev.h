@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: rev.h 91 2007-07-29 16:27:18Z damato $
+ $Id: rev.h 123 2007-11-03 16:23:31Z damato $
 
 ***************************************************************************/
 
@@ -44,4 +44,4 @@
   #define CPU ""
 #endif
 
-#define LIB_COPYRIGHT  "Copyright (C) 2005-2007 TheBar.mcc Open Source Team"
+#define LIB_COPYRIGHT  "Copyright (c) 2005-2007 TheBar Open Source Team"

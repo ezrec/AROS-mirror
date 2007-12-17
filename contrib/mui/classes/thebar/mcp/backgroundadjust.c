@@ -263,7 +263,7 @@ mPatternsGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec
 
     if (data->pattern>=0)
     {
-        sprintf(msg->spec,"0:%ld",data->pattern+MUII_BACKGROUND);
+        sprintf(msg->spec, "0:%ld", data->pattern+MUII_BACKGROUND);
         return MUIV_Popbackground_GetSpec_Spec;
     }
 
@@ -473,9 +473,10 @@ mDTPicSets(struct IClass *cl,Object *obj,struct opSet *msg)
             case MUIA_Popbackground_File:
             {
                 if(tidata)
-                  stccpy(data->file,(STRPTR)tidata,sizeof(data->file));
+                  strlcpy(data->file, (STRPTR)tidata, sizeof(data->file));
                 else
-                  *data->file = 0;
+                  *data->file = '\0';
+
                 rebuild = TRUE;
             }
             break;
@@ -1237,7 +1238,7 @@ mBackNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
     data = INST_DATA(cl,obj);
 
-    pop = (Object *)GetTagData(MUIA_Popbackground_PopObj,NULL,msg->ops_AttrList);
+    pop = (Object *)GetTagData(MUIA_Popbackground_PopObj, (ULONG)NULL, msg->ops_AttrList);
 
     if (!(data->pages[0] = patternsObject, MUIA_Popbackground_PopObj, pop, MUIA_Popbackground_BackObj, obj, End))
     {
@@ -1297,16 +1298,22 @@ specToGadgets(struct IClass *cl,Object *obj,STRPTR spec,struct MUIS_TheBar_Gradi
                 continue;
 
             case MUIV_Popbackground_SetSpec_Spec:
-                stccpy(data->spec,spec,sizeof(data->spec));
+            {
+                strlcpy(data->spec, spec, sizeof(data->spec));
                 set(obj,MUIA_Group_ActivePage,i);
                 data->flags &= ~FLG_GradientMode;
+
                 return TRUE;
+            }
 
             case MUIV_Popbackground_SetSpec_Grad:
+            {
                 copymem(&data->grad,grad,sizeof(data->grad));
                 set(obj,MUIA_Group_ActivePage,i);
                 data->flags |= FLG_GradientMode;
+
                 return TRUE;
+            }
         }
     }
 
@@ -1414,7 +1421,7 @@ static ULONG
 mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
     struct backData *data = INST_DATA(cl,obj);
-    ULONG                    x = NULL;
+    ULONG x = (ULONG)NULL;
 
     if ((data->flags & FLG_Gradient) && get(msg->obj,MUIA_Popbackground_Grad,&x))
         set(obj,MUIA_Popbackground_Grad,x);

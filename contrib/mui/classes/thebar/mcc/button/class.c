@@ -36,8 +36,6 @@
 
 /***********************************************************************/
 
-// MorphOS seems to have a cybergraphics.library which can deal with
-// alpha channels, so lets prepare a define for that.
 #ifdef __MORPHOS__
 ULONG WritePixelArrayAlpha(APTR, UWORD, UWORD, UWORD, struct RastPort *, UWORD, UWORD, UWORD, UWORD, ULONG);
 #define WritePixelArrayAlpha(__p0, __p1, __p2, __p3, __p4, __p5, __p6, __p7, __p8, __p9) \
@@ -53,6 +51,8 @@ ULONG WritePixelArrayAlpha(APTR, UWORD, UWORD, UWORD, struct RastPort *, UWORD, 
 		UWORD ,            __p8, d6, \
 		ULONG ,            __p9, d7, \
 		, CyberGfxBase, 0, 0, 0, 0, 0, 0)
+#elif defined(__amigaos4__)
+#define WritePixelArrayAlpha(srcRect, SrcX, SrcY, SrcMod, RastPort, DestX, DestY, SizeX, SizeY, globalAlpha) ICyberGfx->WritePixelArrayAlpha(srcRect, SrcX, SrcY, SrcMod, RastPort, DestX, DestY, SizeX, SizeY, globalAlpha)
 #endif
 
 /***********************************************************************/
@@ -1291,7 +1291,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 struct BitMap *bm;
                 APTR          mask;
                 UWORD         x, y;
-                #ifdef __MORPHOS__
+                #if defined(WITH_ALPHA)
                 UBYTE	        *chunky = NULL;
                 ULONG	        useChunky = data->image->flags & BRFLG_AlphaMask;
                 #endif
@@ -1300,7 +1300,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 {
                     if (strip)
                     {
-                        #ifdef __MORPHOS__
+                        #if defined(WITH_ALPHA)
                         if (useChunky) chunky = data->strip->dgchunky;
                         #endif
 
@@ -1314,7 +1314,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     }
                     else
                     {
-                        #ifdef __MORPHOS__
+                        #if defined(WITH_ALPHA)
                         if (useChunky) chunky = data->dgchunky;
                         #endif
 
@@ -1332,7 +1332,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     {
                         if (strip)
                         {
-                            #ifdef __MORPHOS__
+                            #if defined(WITH_ALPHA)
     	                    if (useChunky) chunky = data->strip->gchunky;
                             #endif
 
@@ -1344,7 +1344,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         }
                         else
                         {
-                            #ifdef __MORPHOS__
+                            #if defined(WITH_ALPHA)
     	                    if (useChunky) chunky = data->gchunky;
                             #endif
 
@@ -1357,7 +1357,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     else
                         if (strip)
                         {
-                            #ifdef __MORPHOS__
+                            #if defined(WITH_ALPHA)
     	                    if (useChunky) chunky = data->strip->dnchunky;
                             #endif
 
@@ -1371,7 +1371,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         }
                         else
                         {
-                            #ifdef __MORPHOS__
+                            #if defined(WITH_ALPHA)
     	                    if (useChunky) chunky = data->dnchunky;
                             #endif
 
@@ -1384,14 +1384,14 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         }
                 }
 
-                #ifdef __MORPHOS__
+                #if defined(WITH_ALPHA)
                 if((done = (bm || chunky)))
                 #else
                 if((done = (ULONG)bm))
                 #endif
                 {
                     //NewRawDoFmt(">>> 1 %lx %lx %lx %ld\n",1,1,bm,chunky,mask,data->disMode);
-                    #ifdef __MORPHOS__
+                    #if defined(WITH_ALPHA)
                     if (chunky)
                     {
 	                    if(data->image->flags & BRFLG_EmpytAlpha)
@@ -1481,7 +1481,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 struct BitMap *bm;
                 APTR          mask;
                 UWORD         x = 0, y = 0;
-                #ifdef __MORPHOS__
+                #if defined(WITH_ALPHA)
                 UBYTE	        *chunky = NULL;
                 ULONG	        useChunky = data->image->flags & BRFLG_AlphaMask;
                 #endif
@@ -1490,7 +1490,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 {
 	                if (data->flags & FLG_Scaled)
                     {
-                        #ifdef __MORPHOS__
+                        #if defined(WITH_ALPHA)
                         if (useChunky) chunky = data->nchunky;
                         #endif
 
@@ -1499,7 +1499,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     }
                     else
                     {
-                        #ifdef __MORPHOS__
+                        #if defined(WITH_ALPHA)
                         if (useChunky) chunky = data->strip->nchunky;
                         #endif
 
@@ -1512,7 +1512,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                 }
                 else
                 {
-                    #ifdef __MORPHOS__
+                    #if defined(WITH_ALPHA)
                     if (useChunky) chunky = data->nchunky;
                     #endif
 
@@ -1526,7 +1526,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     {
     	                if (data->flags & FLG_Scaled)
                         {
-                            #ifdef __MORPHOS__
+                            #if defined(WITH_ALPHA)
                             if (useChunky) chunky = data->snchunky;
                             #endif
 
@@ -1540,8 +1540,8 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         {
                             if (data->strip->snormalBM)
                             {
-                                #ifdef __MORPHOS__
-        	                    if (useChunky) chunky = data->strip->snchunky;
+                                #if defined(WITH_ALPHA)
+        	                if (useChunky) chunky = data->strip->snchunky;
                                 #endif
 
                                 bm = data->strip->snormalBM;
@@ -1553,7 +1553,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                     {
                         if (data->snormalBM)
                         {
-                            #ifdef __MORPHOS__
+                            #if defined(WITH_ALPHA)
     	                    if (useChunky) chunky = data->snchunky;
                             #endif
 
@@ -1568,7 +1568,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         {
         	                if (data->flags & FLG_Scaled)
                             {
-                                #ifdef __MORPHOS__
+                                #if defined(WITH_ALPHA)
                                 if (useChunky) chunky = data->gchunky;
                                 #endif
 
@@ -1579,7 +1579,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                             }
                             else
                             {
-                                #ifdef __MORPHOS__
+                                #if defined(WITH_ALPHA)
                                 if (useChunky) if (data->strip->gchunky) chunky = data->strip->gchunky;
                                 #endif
 
@@ -1588,7 +1588,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         }
                         else
                         {
-                            #ifdef __MORPHOS__
+                            #if defined(WITH_ALPHA)
                             if (useChunky) if (data->gchunky) chunky = data->gchunky;
                             #endif
 
@@ -1596,7 +1596,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                         }
                 }
 
-                #ifdef __MORPHOS__
+                #if defined(WITH_ALPHA)
                 if (bm || chunky)
                 #else
                 if (bm)
@@ -1665,9 +1665,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
                     if (!done)
                     {
-                        //NewRawDoFmt(">>> 2 %lx %lx %lx %ld\n",1,1,bm,chunky,mask,data->disMode);
-                        #ifdef __MORPHOS__
-    	                //if (chunky) WritePixelArrayAlpha(chunky,x,y,iw+iw+iw+iw,rp,ixp,iyp,iw,ih,0xffffffff);
+                        #if defined(WITH_ALPHA)
     	                if (chunky)
                         {
 	                        if (data->image->flags & BRFLG_EmpytAlpha) WritePixelArray(chunky,x,y,(data->flags & FLG_Scaled) ? iw*4 : data->image->dataWidth*4,rp,ixp,iyp,iw,ih,RECTFMT_ARGB);
@@ -2060,7 +2058,7 @@ mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
 
-    if (lib_flags & BASEFLG_MUI20) return DoSuperMethodA(cl,obj,(Msg)msg);
+    //if (lib_flags & BASEFLG_MUI20) return DoSuperMethodA(cl,obj,(Msg)msg);
 
 
     if (data->tb &&

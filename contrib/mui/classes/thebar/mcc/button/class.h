@@ -40,6 +40,11 @@
 
 #include "SDI_compiler.h"
 
+// these systems are able to handle alpha channel information
+#if defined(__MORPHOS__) || defined(__amigaos4__)
+	#define WITH_ALPHA			1
+#endif
+
 /****************************************************************************/
 
 #define _riflags(obj) (muiRenderInfo(obj)->mri_Flags)

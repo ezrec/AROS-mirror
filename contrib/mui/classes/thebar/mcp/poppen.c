@@ -65,7 +65,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     {
         struct data *data = INST_DATA(cl,obj);
 
-        data->title = (STRPTR)GetTagData(MUIA_Window_Title,NULL,msg->ops_AttrList);
+        data->title = (STRPTR)GetTagData(MUIA_Window_Title, (ULONG)NULL, msg->ops_AttrList);
 
         DoMethod(obj,MUIM_Notify,MUIA_Pressed,FALSE,obj,1,MUIM_Popbackground_Open);
     }
@@ -108,9 +108,11 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
         switch(tag->ti_Tag)
         {
             case MUIA_Pendisplay_Spec:
-                stccpy(data->spec,(STRPTR)tidata,sizeof(data->spec));
-                redraw = TRUE;
-                break;
+            {
+              strlcpy(data->spec, (STRPTR)tidata, sizeof(data->spec));
+              redraw = TRUE;
+            }
+            break;
         }
     }
 

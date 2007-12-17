@@ -527,7 +527,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         else
                           lm->lm_MinMax.MinHeight += _minheight(data->db)+data->vertSpacing;
 
-                        #ifndef __MORPHOS__
+                        #if !defined(__MORPHOS__) && !defined(__amigaos4__)
                         lm->lm_MinMax.MinHeight += (data->flags & FLG_Framed) ? 4 : 0;
                         #endif
                     }
@@ -537,7 +537,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                     if (data->db)
                     {
                         width += _minwidth(data->db)+data->horizSpacing;
-                        #ifndef __MORPHOS__
+                        #if !defined(__MORPHOS__) && !defined(__amigaos4__)
                         width += (data->flags & FLG_Framed) ? 4 : 0;
                         #endif
                     }
@@ -546,13 +546,13 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                     lm->lm_MinMax.MinHeight = butMaxMinHeight;
                 }
 
-		        #ifndef __MORPHOS__
+                #if !defined(__MORPHOS__) && !defined(__amigaos4__)
                 if (data->flags & FLG_Framed)
                 {
                     lm->lm_MinMax.MinWidth  += data->leftBarFrameSpacing+data->rightBarFrameSpacing+2;
                     lm->lm_MinMax.MinHeight += data->topBarFrameSpacing+data->bottomBarFrameSpacing+2;
                 }
-        		#endif
+      		#endif
 
                 lm->lm_MinMax.MaxWidth  = (data->flags & FLG_FreeHoriz) ? MUI_MAXMAX : lm->lm_MinMax.MinWidth;
                 lm->lm_MinMax.MaxHeight = (data->flags & FLG_FreeVert) ? MUI_MAXMAX : lm->lm_MinMax.MinHeight;
@@ -562,7 +562,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                 if (data->db)
                 {
                     height += _minheight(data->db)+data->vertSpacing;
-                    #ifndef __MORPHOS__
+                    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
                     height += (data->flags & FLG_Framed) ? 4 : 0;
                     #endif
                 }
@@ -570,7 +570,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                 lm->lm_MinMax.MinWidth  = butMaxMinWidth;
                 lm->lm_MinMax.MinHeight = height;
 
-                #ifndef __MORPHOS__
+                #if !defined(__MORPHOS__) && !defined(__amigaos4__)
                 if (data->flags & FLG_Framed)
                 {
                     lm->lm_MinMax.MinWidth  += data->leftBarFrameSpacing+data->rightBarFrameSpacing+2;
@@ -589,17 +589,17 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             data->height = lm->lm_MinMax.MinHeight;
 
             #if defined(VIRTUAL)
-	            #if defined(__MORPHOS__)
+              #if defined(__MORPHOS__) || defined(__amigaos4__)
               data->objWidth  = lm->lm_MinMax.MinWidth;
               data->objHeight = lm->lm_MinMax.MinHeight;
-	            #else
-    	        if(!(data->flags & FLG_Framed))
+              #else
+              if(!(data->flags & FLG_Framed))
               {
-                data->objWidth  = lm->lm_MinMax.MinWidth;
+                  data->objWidth  = lm->lm_MinMax.MinWidth;
     	          data->objHeight = lm->lm_MinMax.MinHeight;
-    	        }
-	            #endif
-	          #endif
+    	      }
+	      #endif
+	     #endif
 
             data->lcols = cols;
             data->lrows = rows;
@@ -658,7 +658,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         break;
                 }
 
-                #ifndef __MORPHOS__
+                #if !defined(__MORPHOS__) && !defined(__amigaos4__)
                 if (data->flags & FLG_Framed) x += data->leftBarFrameSpacing+1;
                 #endif
 
@@ -720,7 +720,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                 width  = _minwidth(child);
                                 height = _mheight(obj);
 
-                                #ifdef __MORPHOS__
+                                #if defined(__MORPHOS__) || defined(__amigaos4__)
                                 xx = y = 0;
                                 #else
                                 if (data->flags & FLG_Framed)
@@ -751,7 +751,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 				                    width  = _mwidth(obj);
                                     height = _minheight(child);
 
-                                    #ifdef __MORPHOS__
+                                    #if defined(__MORPHOS__) || defined(__amigaos4__)
                                     xx = y = 0;
                                     #else
                                     if (data->flags & FLG_Framed)
@@ -780,7 +780,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                     width  = _minwidth(child);
                                     height = _mheight(obj);
 
-                                    #ifdef __MORPHOS__
+                                    #if defined(__MORPHOS__) || defined(__amigaos4__)
                                     xx = y = 0;
                                     #else
                                     if (data->flags & FLG_Framed)
@@ -809,9 +809,9 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
                     if (height<data->buttonHeight) y += (data->buttonHeight-height)>>1;
 
-            	    #ifndef __MORPHOS__
+                    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
                     if (data->flags & FLG_Framed) y += data->topBarFrameSpacing+1;
-		            #endif
+                    #endif
 
                     if (data->flags & FLG_Table)
                     {
@@ -865,7 +865,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         break;
                 }
 
-        		#ifndef __MORPHOS__
+                #if !defined(__MORPHOS__) && !defined(__amigaos4__)
                 if (data->flags & FLG_Framed) y += data->topBarFrameSpacing+1;
                 #endif
 
@@ -921,7 +921,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                             height = _minheight(child);
                             width  = _mwidth(obj);
 
-                            #ifdef __MORPHOS__
+                            #if defined(__MORPHOS__) || defined(__amigaos4__)
                             x = yy = 0;
                             #else
                             if (data->flags & FLG_Framed)
@@ -948,9 +948,9 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                     if (width<data->buttonWidth) x = (data->buttonWidth - _minwidth(child)) >> 1;
                     else x = 0;
 
-        		    #ifndef __MORPHOS__
+                    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
                     if (data->flags & FLG_Framed) x += data->leftBarFrameSpacing+1;
-		            #endif
+	            #endif
 
                     if(!MUI_Layout(child,x,y,width,height,0))
                     {
@@ -1024,10 +1024,10 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                 {
                   res = DoMethod(dto,PDTM_READPIXELARRAY,(ULONG)chunky,PBPAFMT_ARGB,width<<2,0,0,width,height);
 
-                  #ifdef __MORPHOS__
+                  #if defined(__MORPHOS__) || defined(__amigaos4__)
                   res = TRUE;
                   #endif
-        		    }
+        	}
                 else
                   res = DoMethod(dto,PDTM_READPIXELARRAY,(ULONG)chunky,PBPAFMT_LUT8,width,0,0,width,height);
 
@@ -1100,7 +1100,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
 
                                 brush->trColor = ((colors[tc] & 0xFF000000)>>8) | ((colors[tc+1] & 0xFF000000)>>16) | ((colors[tc+2] & 0xFF000000)>>24);
                             }
-                            #ifdef __MORPHOS__
+                            #if defined(__MORPHOS__) || defined(__amigaos4__)
                             else brush->flags |= BRFLG_AlphaMask;
                             #else
                             {
@@ -1315,7 +1315,7 @@ struct pack
     ULONG                       scale;
     ULONG                       disMode;
     ULONG                       spacersSize;
-    #ifdef __MORPHOS__
+    #if defined(__MORPHOS__) || defined(__amigaos4__)
     ULONG                       userFrame;
     #endif
 };
@@ -1368,7 +1368,7 @@ ULONG ptable[] =
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_Sunny,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_Sunny),
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_EnableKeys,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_EnableKeys),
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_DragBar,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_DragBar),
-    #ifndef __MORPHOS__
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_Frame,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_Framed),
     #endif
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_BarSpacer,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_BarSpacer),
@@ -1435,7 +1435,7 @@ ULONG ptable[] =
     PACK_NEWOFFSET(MUIA_Background),
     PACK_LONGBIT(MUIA_Background,MUIA_Background,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_Background),
 
-    #ifdef __MORPHOS__
+    #if defined(__MORPHOS__) || defined(__amigaos4__)
     PACK_NEWOFFSET(MUIA_Frame),
     PACK_LONGBIT(MUIA_Frame,MUIA_Frame,pack,userFlags2,PKCTRL_BIT|PKCTRL_PACKONLY|PSTF_EXISTS,UFLG2_UserFrame),
     PACK_ENTRY(MUIA_Frame,MUIA_Frame,pack,userFrame,PKCTRL_LONG|PKCTRL_PACKONLY),
@@ -1802,7 +1802,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         data->remove    = pt.remove;
         data->cols      = pt.cols;
         data->rows      = pt.rows;
-        #ifdef __MORPHOS__
+        #if defined(__MORPHOS__) || defined(__amigaos4__)
     	data->userFrame = pt.userFrame;
         #endif
         data->sortMsgID = MUIM_Group_Sort;
@@ -2049,7 +2049,7 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_TheBar_FreeVert:         *msg->opg_Storage = (data->flags & FLG_FreeVert) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_BarSpacer:        *msg->opg_Storage = (data->flags & FLG_BarSpacer) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_RemoveSpacers:    *msg->opg_Storage = data->remove; result=TRUE; break;
-    #ifdef __MORPHOS__
+    #if defined(__MORPHOS__) || defined(__amigaos4__)
     case MUIA_TheBar_Frame:            *msg->opg_Storage = FALSE; result=TRUE; break;
     #else
     case MUIA_TheBar_Frame:            *msg->opg_Storage = (data->flags & FLG_Framed) ? TRUE : FALSE; result=TRUE; break;
@@ -2073,7 +2073,7 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 
 /***********************************************************************/
 
-#ifndef __MORPHOS__
+#if !defined(__MORPHOS__) && !defined(__amigaos4__)
 static void
 allocateFramePens(Object *obj,struct InstData *data)
 {
@@ -2199,7 +2199,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 }
                 break;
 
-	        #ifndef __MORPHOS__
+            #if !defined(__MORPHOS__) && !defined(__amigaos4__)
             case MUIA_TheBar_Frame:
                 if (!BOOLSAME(tidata,data->flags & FLG_Framed))
                 {
@@ -2664,22 +2664,23 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         }
     }
 
-    #ifdef __MORPHOS__
-    if (getconfigitem(cl,obj,MUICFG_TheBar_Frame,&ptr))
-    {
-        memcpy(&data->frameSpec,ptr,sizeof(data->frameSpec));
-        SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(ULONG)&data->frameSpec,TAG_DONE);
-    }
-    else
-        if (data->userFlags2 & UFLG2_UserFrame) SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,data->userFrame,TAG_DONE);
-    	else SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,MUIV_Frame_None,TAG_DONE);
-    #endif
-
     if(!DoSuperMethodA(cl,obj,msg))
     {
       RETURN(FALSE);
       return FALSE;
     }
+
+    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    if (getconfigitem(cl,obj,MUICFG_TheBar_Frame,&ptr))
+    {
+      strlcpy(data->frameSpec, ptr, sizeof(data->frameSpec));
+      SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(ULONG)data->frameSpec,TAG_DONE);
+    }
+    else if (data->userFlags2 & UFLG2_UserFrame)
+      SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,data->userFrame,TAG_DONE);
+    else
+      SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,MUIV_Frame_None,TAG_DONE);
+    #endif
 
     if (!(data->userFlags & UFLG_UserHorizSpacing))
     {
@@ -2749,7 +2750,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         else data->userFlags2 &= ~UFLG2_NtRaiseActive;
     }
 
-    #ifndef __MORPHOS__
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
     /* Frame pens */
     if (data->flags & FLG_Framed) allocateFramePens(obj,data);
     #endif
@@ -2827,7 +2828,7 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 
     ENTER();
 
-    #ifndef __MORPHOS__
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
     if (data->flags & FLG_Framed) freeFramePens(obj,data);
     #endif
 
@@ -3080,7 +3081,7 @@ mHide(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-#ifndef __MORPHOS__
+#if !defined(__MORPHOS__) && !defined(__amigaos4__)
 static ULONG
 mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
@@ -3125,14 +3126,12 @@ mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 
   ENTER();
 
-  if(lib_flags & BASEFLG_MUI20)
+  /*if(lib_flags & BASEFLG_MUI20)
   {
     result = DoSuperMethodA(cl,obj,(Msg)msg);
   }
-  else
+  else*/
   {
-    //Printf("BackFill %lx %ld %ld %ld %ld %ld %ld %ld\n",lib_flags & BASEFLG_MUI20,msg->left,msg->top,msg->right,msg->bottom,msg->xoffset,msg->yoffset);
-
     if(data->gradbm)
       BltBitMapRastPort(data->gradbm,msg->left-_left(obj),msg->top-_top(obj),_rp(obj),msg->left,msg->top,msg->right-msg->left+1,msg->bottom-msg->top+1,0xc0);
     else
@@ -4032,7 +4031,7 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
         }
         else
         {
-	        #ifdef __MORPHOS__
+            #if defined(__MORPHOS__) || defined(__amigaos4__)
             data->di.width  = data->buttonWidth;
             data->di.height = data->buttonHeight;
             #else
@@ -4086,7 +4085,7 @@ DISPATCHER(_Dispatcher)
     case MUIM_Cleanup:                  return mCleanup(cl,obj,(APTR)msg);
     case MUIM_Show:                     return mShow(cl,obj,(APTR)msg);
     case MUIM_Hide:                     return mHide(cl,obj,(APTR)msg);
-    #ifndef __MORPHOS__
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
     case MUIM_Draw:                     return mDraw(cl,obj,(APTR)msg);
     #endif
     case MUIM_CustomBackfill:           return mCustomBackfill(cl,obj,(APTR)msg);
