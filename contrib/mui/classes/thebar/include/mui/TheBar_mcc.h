@@ -38,6 +38,13 @@
 
 /***********************************************************************/
 
+#ifndef __AROS__
+// STACKED ensures proper alignment on 64 bit systems
+#define STACKED
+#endif
+
+/***********************************************************************/
+
 #define MUIC_TheButton    "TheButton.mcc"
 #define TheButtonObject   MUI_NewObject(MUIC_TheButton
 
@@ -81,17 +88,17 @@
 ** TheBar.mcc Methods structures
 */
 
-struct MUIP_TheBar_AddButton       { ULONG MethodID; struct MUIS_TheBar_Button *button; };
-struct MUIP_TheBar_AddSpacer       { ULONG MethodID; ULONG ID; ULONG type; };
-struct MUIP_TheBar_GetObject       { ULONG MethodID; ULONG ID; };
-struct MUIP_TheBar_DoOnButton      { ULONG MethodID; ULONG ID; ULONG method; /* ...args... */ };
-struct MUIP_TheBar_SetAttr         { ULONG MethodID; ULONG ID; Tag attr; ULONG value; };
-struct MUIP_TheBar_GetAttr         { ULONG MethodID; ULONG ID; Tag attr; ULONG *storage; };
-struct MUIP_TheBar_Sort            { ULONG MethodID; LONG obj[1]; };
-struct MUIP_TheBar_Remove          { ULONG MethodID; ULONG ID; };
-struct MUIP_TheBar_GetDragImage    { ULONG MethodID; ULONG horiz; ULONG flags; };
-struct MUIP_TheBar_Notify          { ULONG MethodID; ULONG ID; Tag attr; ULONG value; Object *dest; ULONG followParams; /* ... */ };
-struct MUIP_TheBar_KillNotify      { ULONG MethodID; ULONG ID; Tag attr; Object *dest; };
+struct MUIP_TheBar_AddButton       { STACKED ULONG MethodID; STACKED struct MUIS_TheBar_Button *button; };
+struct MUIP_TheBar_AddSpacer       { STACKED ULONG MethodID; STACKED ULONG ID; STACKED ULONG type; };
+struct MUIP_TheBar_GetObject       { STACKED ULONG MethodID; STACKED ULONG ID; };
+struct MUIP_TheBar_DoOnButton      { STACKED ULONG MethodID; STACKED ULONG ID; STACKED ULONG method; /* ...args... */ };
+struct MUIP_TheBar_SetAttr         { STACKED ULONG MethodID; STACKED ULONG ID; STACKED Tag attr; STACKED ULONG value; };
+struct MUIP_TheBar_GetAttr         { STACKED ULONG MethodID; STACKED ULONG ID; STACKED Tag attr; STACKED ULONG *storage; };
+struct MUIP_TheBar_Sort            { STACKED ULONG MethodID; STACKED LONG obj[1]; };
+struct MUIP_TheBar_Remove          { STACKED ULONG MethodID; STACKED ULONG ID; };
+struct MUIP_TheBar_GetDragImage    { STACKED ULONG MethodID; STACKED ULONG horiz; STACKED ULONG flags; };
+struct MUIP_TheBar_Notify          { STACKED ULONG MethodID; STACKED ULONG ID; STACKED Tag attr; STACKED ULONG value; STACKED Object *dest; STACKED ULONG followParams; /* ... */ };
+struct MUIP_TheBar_KillNotify      { STACKED ULONG MethodID; STACKED ULONG ID; STACKED Tag attr; STACKED Object *dest; };
 
 /* MUIM_TheBar_SetAttr, MUIM_TheBar_GetAttr attributes */
 #define MUIA_TheBar_Attr_Hide      (TBTAGBASE+0) /* v11 */
@@ -391,7 +398,7 @@ enum
 #define MUIM_TheButton_Build               (TBUTTAGBASE+0)   /* v13         */
 #define MUIM_TheButton_SendNotify          (TBUTTAGBASE+1)   /* v21 PRIVATE */
 
-struct MUIP_TheButton_SendNotify           { ULONG MethodID; APTR notify; };
+struct MUIP_TheButton_SendNotify           { STACKED ULONG MethodID; STACKED APTR notify; };
 
 /***********************************************************************/
 /*

@@ -33,7 +33,11 @@
 #include <proto/muimaster.h>
 
 #include <clib/alib_protos.h>
+
+#ifndef __AROS__
 #include <clib/debug_protos.h>
+#endif
+
 #include <libraries/gadtools.h>
 
 #include <string.h>
@@ -264,7 +268,10 @@ ULONG xget(Object *obj, const ULONG attr);
 /****************************************************************************/
 
 /* utils.c */
-#ifndef __MORPHOS__
+#ifdef __MORPHOS__
+#elif defined(__AROS__)
+Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
+#else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 ULONG stch_l(char *chr_ptr, ULONG *u_ptr);
 #endif

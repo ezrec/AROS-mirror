@@ -1,0 +1,26 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+##MM contrib-zune-classes-thebar-mcp : includes linklibs
+
+FILES := backgroundadjust \
+	 class \
+	 Debug \
+	 penadjust \
+	 popbackground \
+	 poppen \
+	 utils
+
+USER_INCLUDES := -I../include/aros
+
+%build_module mmake=contrib-zune-classes-thebar-mcp \
+  modname=TheBar modtype=mcp moduledir=Extras/Zune/MCC_TheBar/Classes/Zune \
+  files=$(FILES) \
+  uselibs="amiga mui rom m"
+
+
+#MM includes-copy
+
+INCLUDE_FILES := ../include/mui/TheBar_mcc.h
+%copy_includes path=mui dir=../include/mui

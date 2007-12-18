@@ -28,6 +28,7 @@
 #include <clib/alib_protos.h>
 
 #include <graphics/rpattr.h>
+#include <graphics/scale.h>
 #include <utility/pack.h>
 #include <datatypes/pictureclass.h>
 #include <cybergraphx/cybergraphics.h>
@@ -103,7 +104,10 @@ ULONG xget(Object *obj, const ULONG attr);
 /***********************************************************************/
 
 /* utils.c */
-#ifndef __MORPHOS__
+#ifdef __MORPHOS__
+#elif defined(__AROS__)
+Object *DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
+#else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #endif
 APTR allocVecPooled(APTR pool, ULONG size);
@@ -117,7 +121,7 @@ void freeArbitrateVecPooled(APTR mem);
 ULONG peekQualifier(void);
 
 /* brc1.c */
-USHORT BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG dstBytes0);
+UWORD BRCUnpack(signed char *pSource, signed char *pDest, LONG srcBytes0, LONG dstBytes0);
 
 /* scale.c */
 void scale(struct scale *sce , UBYTE *src , UBYTE *dst);

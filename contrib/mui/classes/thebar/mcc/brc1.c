@@ -34,14 +34,14 @@
 
 /***********************************************************************/
 
-USHORT
+UWORD
 BRCUnpack(signed char *pSource,signed char *pDest,LONG srcBytes0,LONG dstBytes0)
 {
     signed char *source = pSource, *dest = pDest, c;
-    SHORT n;
+    WORD n;
     LONG  srcBytes = srcBytes0, dstBytes = dstBytes0;
-    USHORT         error = TRUE;
-    SHORT          minus128 = -128;
+    UWORD          error = TRUE;
+    WORD           minus128 = -128;
 
     ENTER();
 

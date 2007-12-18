@@ -1103,8 +1103,8 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
     msg->MinMaxInfo->MinWidth  = msg->MinMaxInfo->DefWidth  = msg->MinMaxInfo->MaxWidth  = mw;
     msg->MinMaxInfo->MinHeight = msg->MinMaxInfo->DefHeight = msg->MinMaxInfo->MaxHeight = mh;
 
-    msg->MinMaxInfo->MaxWidth  = MBQ_MUI_MAXMAX;
-    msg->MinMaxInfo->MaxHeight = MBQ_MUI_MAXMAX;
+    msg->MinMaxInfo->MaxWidth  = MUI_MAXMAX;
+    msg->MinMaxInfo->MaxHeight = MUI_MAXMAX;
 
     /*NewRawDoFmt("AskMinMax: %lx - %ld %ld %ld %ld %ld %ld\n",1,1,obj,
         msg->MinMaxInfo->MinWidth,msg->MinMaxInfo->DefWidth,msg->MinMaxInfo->MaxWidth,
@@ -1634,7 +1634,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
                             if (tmask)
                             {
                                 struct RastPort trp;
-                                USHORT grid[] = { 0x5555, 0xAAAA };
+                                UWORD grid[] = { 0x5555, 0xAAAA };
 
                                 BltBitMap(bm,x,y,tbm,0,0,iw,ih,0xc0,0xff,NULL);
 
@@ -1686,7 +1686,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
                         if (di)
                         {
-                            USHORT grid[] = { 0x5555, 0xAAAA };
+                            UWORD grid[] = { 0x5555, 0xAAAA };
 
                             SetAPen(rp,MUIPEN(data->disBodyPen));
                             SetAfPt(rp,grid,1);
@@ -1702,7 +1702,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
             {
                 if (di && (data->disMode==MUIV_TheButton_DisMode_Grid || data->disMode==MUIV_TheButton_DisMode_FullGrid))
                 {
-                    USHORT grid[] = { 0x5555, 0xAAAA };
+                    UWORD grid[] = { 0x5555, 0xAAAA };
 
                     SetAPen(rp,MUIPEN(data->disBodyPen));
                     SetAfPt(rp,grid,1);
@@ -2085,7 +2085,11 @@ mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,_Dispatcher,cl,obj,msg)
+#else
 DISPATCHER(_Dispatcher)
+#endif
 {
   switch(msg->MethodID)
   {
@@ -2114,5 +2118,8 @@ DISPATCHER(_Dispatcher)
       return DoSuperMethodA(cl, obj, msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/

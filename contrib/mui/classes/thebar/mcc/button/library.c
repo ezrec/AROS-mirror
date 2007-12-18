@@ -78,7 +78,7 @@ ULONG lib_alpha = 0xffffffff;
 /* define the functions used by the startup code ahead of including mccinit.c */
 /******************************************************************************/
 static BOOL ClassInit(UNUSED struct Library *base);
-static VOID ClassExpunge(UNUSED struct Library *base);
+static BOOL ClassExpunge(UNUSED struct Library *base);
 
 /******************************************************************************/
 /* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
@@ -136,7 +136,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
   return(FALSE);
 }
 
-static VOID ClassExpunge(UNUSED struct Library *base)
+static BOOL ClassExpunge(UNUSED struct Library *base)
 {
   ENTER();
 
@@ -163,5 +163,14 @@ static VOID ClassExpunge(UNUSED struct Library *base)
 
   lib_flags &= ~(BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
 
-  LEAVE();
+  RETURN(TRUE);
+  return(TRUE);
 }
+
+#ifdef __AROS__
+#include <aros/symbolsets.h>
+
+ADD2INITLIB(ClassInit, 0);
+ADD2EXPUNGELIB(ClassExpunge, 0);
+
+#endif

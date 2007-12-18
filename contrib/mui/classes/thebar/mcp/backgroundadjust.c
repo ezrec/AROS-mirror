@@ -292,7 +292,11 @@ mPatternsSelectPattern(struct IClass *cl,Object *obj,struct MUIP_Popbackground_S
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,patternsDispatcher,cl,obj,msg)
+#else
 DISPATCHER(patternsDispatcher)
+#endif
 {
   switch (msg->MethodID)
   {
@@ -306,6 +310,9 @@ DISPATCHER(patternsDispatcher)
     default:                               return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 
@@ -567,8 +574,8 @@ mDTPicAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
         mi->DefHeight += data->bmhd->bmh_Height;
     }
 
-    mi->MaxWidth  += MBQ_MUI_MAXMAX;
-    mi->MaxHeight += MBQ_MUI_MAXMAX;
+    mi->MaxWidth  += MUI_MAXMAX;
+    mi->MaxHeight += MUI_MAXMAX;
 
     return 0;
 }
@@ -605,7 +612,11 @@ mDTPicDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,dtpicDispatcher,cl,obj,msg)
+#else
 DISPATCHER(dtpicDispatcher)
+#endif
 {
   switch(msg->MethodID)
   {
@@ -619,6 +630,9 @@ DISPATCHER(dtpicDispatcher)
     default:             return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 
@@ -742,8 +756,12 @@ mBitmapShowBitmap(struct IClass *cl,Object *obj, UNUSED Msg msg)
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,bitmapDispatcher,cl,obj,msg)
+#else
 static ULONG SAVEDS ASM
 bitmapDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+#endif
 {
     switch (msg->MethodID)
     {
@@ -754,6 +772,9 @@ bitmapDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
         default:                            return DoSuperMethodA(cl,obj,msg);
     }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 
@@ -898,7 +919,11 @@ mGradientFieldDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,gradientFieldDispatcher,cl,obj,msg)
+#else
 DISPATCHER(gradientFieldDispatcher)
+#endif
 {
   switch (msg->MethodID)
   {
@@ -909,6 +934,9 @@ DISPATCHER(gradientFieldDispatcher)
     default:         return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 
@@ -1124,7 +1152,11 @@ mGradientSwap(struct IClass *cl,Object *obj, UNUSED Msg msg)
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,gradientDispatcher,cl,obj,msg)
+#else
 DISPATCHER(gradientDispatcher)
+#endif
 {
   switch (msg->MethodID)
   {
@@ -1136,6 +1168,9 @@ DISPATCHER(gradientDispatcher)
     default:                             return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 
@@ -1441,8 +1476,12 @@ mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,backDispatcher,cl,obj,msg)
+#else
 static ULONG SAVEDS ASM
 backDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+#endif
 {
     switch (msg->MethodID)
     {
@@ -1454,6 +1493,9 @@ backDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
         default:             return DoSuperMethodA(cl,obj,msg);
     }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 

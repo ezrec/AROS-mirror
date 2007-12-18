@@ -33,7 +33,10 @@
 #include <proto/muimaster.h>
 
 #include <clib/alib_protos.h>
+
+#ifndef __AROS__
 #include <clib/debug_protos.h>
+#endif
 
 #include <datatypes/pictureclass.h>
 #include <utility/pack.h>
@@ -101,7 +104,7 @@ APTR allocVecPooled(APTR pool, ULONG size);
 void freeVecPooled (APTR pool, APTR mem);
 
 /* brc1.c */
-USHORT BRCUnpack ( signed char *pSource , signed char *pDest , LONG srcBytes0 , LONG dstBytes0 );
+UWORD BRCUnpack ( signed char *pSource , signed char *pDest , LONG srcBytes0 , LONG dstBytes0 );
 
 /* spacer.c */
 BOOL initSpacerClass(void);
