@@ -14,7 +14,7 @@
 #include <aros/preprocessor/variadic/cast2iptr.hpp>
 
 #define __MiamiSysCtl_WB(__MiamiBase) \
-        AROS_LC7(void, MiamiSysCtl, \
+        AROS_LC7NR(void, MiamiSysCtl, \
                   AROS_LCA(LONG *, (__arg1), A0), \
                   AROS_LCA(ULONG, (__arg2), D0), \
                   AROS_LCA(void *, (__arg3), A1), \
@@ -28,14 +28,14 @@
     __MiamiSysCtl_WB(MiamiBase, (arg1), (arg2), (arg3), (arg4), (arg5), (arg6), (arg7))
 
 #define __SetSysLogPort_WB(__MiamiBase) \
-        AROS_LC0(void, SetSysLogPort, \
+        AROS_LC0NR(void, SetSysLogPort, \
         struct Library *, (__MiamiBase), 6, Miami)
 
 #define SetSysLogPort() \
     __SetSysLogPort_WB(MiamiBase)
 
 #define __QueryInterfaceTagList_WB(__MiamiBase) \
-        AROS_LC2(void, QueryInterfaceTagList, \
+        AROS_LC2NR(void, QueryInterfaceTagList, \
                   AROS_LCA(STRPTR, (__arg1), A0), \
                   AROS_LCA(struct TagItem *, (__arg2), A1), \
         struct Library *, (__MiamiBase), 7, Miami)
@@ -44,7 +44,7 @@
     __QueryInterfaceTagList_WB(MiamiBase, (arg1), (arg2))
 
 #define __ClearDynNameServ_WB(__MiamiBase) \
-        AROS_LC0(void, ClearDynNameServ, \
+        AROS_LC0NR(void, ClearDynNameServ, \
         struct Library *, (__MiamiBase), 9, Miami)
 
 #define ClearDynNameServ() \
@@ -58,7 +58,7 @@
     __gethostent_WB(MiamiBase)
 
 #define __MiamiDisallowDNS_WB(__MiamiBase, __arg1) \
-        AROS_LC1(void, MiamiDisallowDNS, \
+        AROS_LC1NR(void, MiamiDisallowDNS, \
                   AROS_LCA(LONG, (__arg1), D0), \
         struct Library *, (__MiamiBase), 11, Miami)
 
@@ -66,7 +66,7 @@
     __MiamiDisallowDNS_WB(MiamiBase, (arg1))
 
 #define __endhostent_WB(__MiamiBase) \
-        AROS_LC0(void, endhostent, \
+        AROS_LC0NR(void, endhostent, \
         struct Library *, (__MiamiBase), 12, Miami)
 
 #define endhostent() \
@@ -87,7 +87,7 @@
     __getprotoent_WB(MiamiBase)
 
 #define __endprotoent_WB(__MiamiBase) \
-        AROS_LC0(void, endprotoent, \
+        AROS_LC0NR(void, endprotoent, \
         struct Library *, (__MiamiBase), 15, Miami)
 
 #define endprotoent() \
@@ -104,7 +104,7 @@
     __MiamiPFAddHook_WB(MiamiBase, (arg1), (arg2), (arg3))
 
 #define __MiamiPFRemoveHook_WB(__MiamiBase, __arg1) \
-        AROS_LC1(void, MiamiPFRemoveHook, \
+        AROS_LC1NR(void, MiamiPFRemoveHook, \
                   AROS_LCA(APTR, (__arg1), A0), \
         struct Library *, (__MiamiBase), 17, Miami)
 
@@ -120,14 +120,14 @@
     __MiamiGetHardwareLen_WB(MiamiBase, (arg1))
 
 #define __EndDynDomain_WB(__MiamiBase) \
-        AROS_LC0(void, EndDynDomain, \
+        AROS_LC0NR(void, EndDynDomain, \
         struct Library *, (__MiamiBase), 19, Miami)
 
 #define EndDynDomain() \
     __EndDynDomain_WB(MiamiBase)
 
 #define __EndDynNameServ_WB(__MiamiBase) \
-        AROS_LC0(void, EndDynNameServ, \
+        AROS_LC0NR(void, EndDynNameServ, \
         struct Library *, (__MiamiBase), 20, Miami)
 
 #define EndDynNameServ() \
@@ -159,7 +159,7 @@
     __sethostname_WB(MiamiBase, (arg1), (arg2))
 
 #define __ClearDynDomain_WB(__MiamiBase) \
-        AROS_LC0(void, ClearDynDomain, \
+        AROS_LC0NR(void, ClearDynDomain, \
         struct Library *, (__MiamiBase), 24, Miami)
 
 #define ClearDynDomain() \
@@ -174,7 +174,7 @@
     __MiamiOpenSSL_WB(MiamiBase, (arg1))
 
 #define __MiamiCloseSSL_WB(__MiamiBase) \
-        AROS_LC0(void, MiamiCloseSSL, \
+        AROS_LC0NR(void, MiamiCloseSSL, \
         struct Library *, (__MiamiBase), 26, Miami)
 
 #define MiamiCloseSSL() \
@@ -198,7 +198,7 @@
     __MiamiIsOnline_WB(MiamiBase, (arg1))
 
 #define __MiamiOnOffline_WB(__MiamiBase, __arg1, __arg2) \
-        AROS_LC2(void, MiamiOnOffline, \
+        AROS_LC2NR(void, MiamiOnOffline, \
                   AROS_LCA(char *, (__arg1), A0), \
                   AROS_LCA(int, (__arg2), D0), \
         struct Library *, (__MiamiBase), 36, Miami)
@@ -254,7 +254,7 @@
     __gai_strerror_WB(MiamiBase, (arg1))
 
 #define __freeaddrinfo_WB(__MiamiBase, __arg1) \
-        AROS_LC1(void, freeaddrinfo, \
+        AROS_LC1NR(void, freeaddrinfo, \
                   AROS_LCA(struct addrinfo *, (__arg1), A0), \
         struct Library *, (__MiamiBase), 43, Miami)
 
@@ -311,7 +311,7 @@
     __if_nameindex_WB(MiamiBase)
 
 #define __if_freenameindex_WB(__MiamiBase, __arg1) \
-        AROS_LC1(void, if_freenameindex, \
+        AROS_LC1NR(void, if_freenameindex, \
                   AROS_LCA(struct if_nameindex *, (__arg1), D0), \
         struct Library *, (__MiamiBase), 49, Miami)
 
@@ -333,7 +333,7 @@
     __MiamiGetResOptions_WB(MiamiBase)
 
 #define __MiamiSetResOptions_WB(__MiamiBase, __arg1) \
-        AROS_LC1(void, MiamiSetResOptions, \
+        AROS_LC1NR(void, MiamiSetResOptions, \
                   AROS_LCA(LONG, (__arg1), D0), \
         struct Library *, (__MiamiBase), 52, Miami)
 
@@ -349,7 +349,7 @@
     __sockatmark_WB(MiamiBase, (arg1))
 
 #define __MiamiSupportedCPUs_WB(__MiamiBase, __arg1, __arg2, __arg3) \
-        AROS_LC3(void, MiamiSupportedCPUs, \
+        AROS_LC3NR(void, MiamiSupportedCPUs, \
                   AROS_LCA(ULONG *, (__arg1), A0), \
                   AROS_LCA(ULONG *, (__arg2), A1), \
                   AROS_LCA(ULONG *, (__arg3), A2), \

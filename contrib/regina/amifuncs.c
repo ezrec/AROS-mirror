@@ -50,7 +50,7 @@
 #define CallRsrcFunc(libbase, offset, rsrc) \
   ({ \
     int _offset=abs(offset)/6; \
-    AROS_LC1(VOID, CallLibFunc, \
+    AROS_LC1NR(VOID, CallLibFunc, \
 	     AROS_LCA(struct RexxRsrc *, rsrc, A0), \
 	     struct Library *, libbase, _offset, rexxcall); \
   })

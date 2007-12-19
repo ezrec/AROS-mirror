@@ -13,7 +13,7 @@
 
 #ifndef XEmulatorCleanup
 #define XEmulatorCleanup(io) \
-	AROS_LC1(VOID  ,XEmulatorCleanup, \
+	AROS_LC1NR(VOID  ,XEmulatorCleanup, \
 	AROS_LCA(  struct XEM_IO *,io,A0),\
 	struct XEmulatorBase *, XEmulatorBase, 8, XEmulatorBase)
 #endif
@@ -27,14 +27,14 @@
 
 #ifndef XEmulatorCloseConsole
 #define XEmulatorCloseConsole(io) \
-	AROS_LC1(VOID  ,XEmulatorCloseConsole, \
+	AROS_LC1NR(VOID  ,XEmulatorCloseConsole, \
 	AROS_LCA(  struct XEM_IO *,io,A0),\
 	struct XEmulatorBase *, XEmulatorBase, 7, XEmulatorBase)
 #endif
 
 #ifndef XEmulatorWrite
 #define XEmulatorWrite(io,buff,buflen) \
-	AROS_LC3(VOID  ,XEmulatorWrite, \
+	AROS_LC3NR(VOID  ,XEmulatorWrite, \
 	AROS_LCA(  struct XEM_IO *,io,A0),\
 	AROS_LCA(  UBYTE *,buff,A1),\
 	AROS_LCA(  ULONG,buflen,D0),\
@@ -138,7 +138,7 @@
 
 #ifndef XEmulatorNewSize
 #define XEmulatorNewSize(io,frame) \
-	AROS_LC2(VOID  ,XEmulatorNewSize, \
+	AROS_LC2NR(VOID  ,XEmulatorNewSize, \
 	AROS_LCA(  struct XEM_IO *,io,A0),\
 	AROS_LCA(  struct IBox *,frame,A1),\
 	struct XEmulatorBase *, XEmulatorBase, 22, XEmulatorBase)
