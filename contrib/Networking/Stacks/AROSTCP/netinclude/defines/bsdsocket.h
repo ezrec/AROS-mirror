@@ -527,7 +527,7 @@
                   AROS_LCA(struct TagItem *, (__arg1), A0), \
         struct Library *, (__SocketBase), 67, BSDSocket)
 
-        AROS_LC1I(void, FreeRouteInfo, \
+        AROS_LC1(void, FreeRouteInfo, \
                   AROS_LCA(struct rt_msghdr *, (__arg1), A0), \
         struct Library *, (__SocketBase), 68, BSDSocket)
 
@@ -548,11 +548,11 @@
                   AROS_LCA(struct TagItem *, (__arg2), A1), \
         struct Library *, (__SocketBase), 71, BSDSocket)
 
-        AROS_LC1I(void, ReleaseInterfaceList, \
+        AROS_LC1(void, ReleaseInterfaceList, \
                   AROS_LCA(struct List *, (__arg1), A0), \
         struct Library *, (__SocketBase), 72, BSDSocket)
 
-        AROS_LC0I(struct List *, ObtainInterfaceList, \
+        AROS_LC0(struct List *, ObtainInterfaceList, \
         struct Library *, (__SocketBase), 73, BSDSocket)
 */
 #define __QueryInterfaceTagList_WB(__SocketBase, __arg1, __arg2) \
@@ -564,7 +564,7 @@
 #define QueryInterfaceTagList(arg1, arg2) \
     __QueryInterfaceTagList_WB(SocketBase, (arg1), (arg2))
 /*
-        AROS_LC5I(LONG, CreateAddrAllocMessageA, \
+        AROS_LC5(LONG, CreateAddrAllocMessageA, \
                   AROS_LCA(LONG, (__arg1), D0), \
                   AROS_LCA(LONG, (__arg2), D1), \
                   AROS_LCA(STRPTR, (__arg3), A0), \
@@ -572,15 +572,15 @@
                   AROS_LCA(struct TagItem *, (__arg5), A2), \
         struct Library *, (__SocketBase), 75, BSDSocket)
 
-        AROS_LC1I(void, DeleteAddrAllocMessage, \
+        AROS_LC1(void, DeleteAddrAllocMessage, \
                   AROS_LCA(struct AddressAllocationMessage *, (__arg1), A0), \
         struct Library *, (__SocketBase), 76, BSDSocket)
 
-        AROS_LC1I(void, BeginInterfaceConfig, \
+        AROS_LC1(void, BeginInterfaceConfig, \
                   AROS_LCA(struct AddressAllocationMessage *, (__arg1), A0), \
         struct Library *, (__SocketBase), 77, BSDSocket)
 
-        AROS_LC1I(void, AbortInterfaceConfig, \
+        AROS_LC1(void, AbortInterfaceConfig, \
                   AROS_LCA(struct AddressAllocationMessage *, (__arg1), A0), \
         struct Library *, (__SocketBase), 78, BSDSocket)
 
@@ -590,7 +590,7 @@
                   AROS_LCA(struct TagItem *, (__arg3), A1), \
         struct Library *, (__SocketBase), 79, BSDSocket)
 
-        AROS_LC1I(void, RemoveNetMonitorHook, \
+        AROS_LC1(void, RemoveNetMonitorHook, \
                   AROS_LCA(struct Hook *, (__arg1), A0), \
         struct Library *, (__SocketBase), 80, BSDSocket)
 
@@ -609,24 +609,24 @@
                   AROS_LCA(STRPTR, (__arg1), A0), \
         struct Library *, (__SocketBase), 83, BSDSocket)
 
-        AROS_LC1I(void, ReleaseDomainNameServerList, \
+        AROS_LC1(void, ReleaseDomainNameServerList, \
                   AROS_LCA(struct List *, (__arg1), A0), \
         struct Library *, (__SocketBase), 84, BSDSocket)
 
-        AROS_LC0I(struct List *, ObtainDomainNameServerList, \
+        AROS_LC0(struct List *, ObtainDomainNameServerList, \
         struct Library *, (__SocketBase), 85, BSDSocket)
 
-        AROS_LC1I(void, setnetent, \
+        AROS_LC1(void, setnetent, \
                   AROS_LCA(int, (__arg1), D0), \
         struct Library *, (__SocketBase), 86, BSDSocket)
 
-        AROS_LC0I(void, endnetent, \
+        AROS_LC0(void, endnetent, \
         struct Library *, (__SocketBase), 87, BSDSocket)
 
-        AROS_LC0I(struct netent *, getnetent, \
+        AROS_LC0(struct netent *, getnetent, \
         struct Library *, (__SocketBase), 88, BSDSocket)
 
-        AROS_LC1I(void, setprotoent, \
+        AROS_LC1(void, setprotoent, \
                   AROS_LCA(int, (__arg1), D0), \
         struct Library *, (__SocketBase), 89, BSDSocket)
 */
@@ -646,14 +646,14 @@
     __getprotoent_WB(SocketBase)
 
 /*
-        AROS_LC1I(void, setservent, \
+        AROS_LC1(void, setservent, \
                   AROS_LCA(int, (__arg1), D0), \
         struct Library *, (__SocketBase), 92, BSDSocket)
 
-        AROS_LC0I(void, endservent, \
+        AROS_LC0(void, endservent, \
         struct Library *, (__SocketBase), 93, BSDSocket)
 
-        AROS_LC0I(struct servent *, getservent, \
+        AROS_LC0(struct servent *, getservent, \
         struct Library *, (__SocketBase), 94, BSDSocket)
 
 */
