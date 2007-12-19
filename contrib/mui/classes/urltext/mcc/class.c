@@ -188,11 +188,7 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
                         MUIA_UserData, Msg_OpenURLPrefs,
                     End,
                 End,
-            End))
-            {
-                data->menu = menu;
-                set(obj,MUIA_ContextMenu, menu);
-            }
+            End)) set(obj,MUIA_ContextMenu, data->menu = menu);
         }
 
         data->flags = flags;
