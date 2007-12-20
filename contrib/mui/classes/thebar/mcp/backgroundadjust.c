@@ -20,6 +20,10 @@
 
 ***************************************************************************/
 
+#ifdef __AROS__
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
+
 #include "class.h"
 #include "private.h"
 #include "locale.h"
@@ -38,19 +42,39 @@
 /***********************************************************************/
 
 static struct MUI_CustomClass *patterns = NULL;
+#ifdef __AROS__
+#define patternsObject BOOPSIOBJMACRO_START(patterns->mcc_Class)
+#else
 #define patternsObject NewObject(patterns->mcc_Class,NULL
+#endif
 
 static struct MUI_CustomClass *dtpic = NULL;
+#ifdef __AROS__
+#define dtpicObject BOOPSIOBJMACRO_START(dtpic->mcc_Class)
+#else
 #define dtpicObject NewObject(dtpic->mcc_Class,NULL
+#endif
 
 static struct MUI_CustomClass *bitmap = NULL;
+#ifdef __AROS__
+#define bitmapObject BOOPSIOBJMACRO_START(bitmap->mcc_Class)
+#else
 #define bitmapObject NewObject(bitmap->mcc_Class,NULL
+#endif
 
 static struct MUI_CustomClass *gradientfield;
+#ifdef __AROS__
+#define gradientfieldObject BOOPSIOBJMACRO_START(gradientfield->mcc_Class)
+#else
 #define gradientfieldObject NewObject(gradientfield->mcc_Class,NULL
+#endif
 
 static struct MUI_CustomClass *gradient = NULL;
+#ifdef __AROS__
+#define gradientObject BOOPSIOBJMACRO_START(gradient->mcc_Class)
+#else
 #define gradientObject NewObject(gradient->mcc_Class,NULL
+#endif
 
 /***********************************************************************/
 

@@ -31,10 +31,10 @@
 #define %b_LOCALE_H
 #include <exec/types.h>
 
-extern const char *tr(const void *);
-extern char GetKeyChar(const char *);
-extern BOOL OpenCat(void);
-extern void CloseCat(void);
+const char *tr(const void *);
+char GetKeyChar(const char *);
+BOOL OpenCat(void);
+void CloseCat(void);
 
 // const pointers to internal strings
 extern const void* const _%i;

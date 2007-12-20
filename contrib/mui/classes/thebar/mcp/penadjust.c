@@ -20,6 +20,10 @@
 
 ***************************************************************************/
 
+#ifdef __AROS__
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
+
 #include "class.h"
 
 #include <stdlib.h>
@@ -36,7 +40,11 @@
 
 static struct MUI_CustomClass *penslist = NULL;
 
+#ifdef __AROS__
+#define penslistObject BOOPSIOBJMACRO_START(penslist->mcc_Class)
+#else
 #define penslistObject NewObject(penslist->mcc_Class,NULL
+#endif
 
 /***********************************************************************/
 
@@ -198,7 +206,11 @@ mPenslistShow(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,penslistDispatcher,cl,obj,msg)
+#else
 DISPATCHER(penslistDispatcher)
+#endif
 {
   switch (msg->MethodID)
   {
@@ -210,6 +222,9 @@ DISPATCHER(penslistDispatcher)
     default:           return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 
@@ -521,7 +536,11 @@ mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpe
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,penadjustDispatcher,cl,obj,msg)
+#else
 DISPATCHER(penadjustDispatcher)
+#endif
 {
   switch (msg->MethodID)
   {
@@ -535,6 +554,9 @@ DISPATCHER(penadjustDispatcher)
     default:                         return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 

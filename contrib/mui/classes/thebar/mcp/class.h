@@ -23,6 +23,10 @@
 #ifndef _CLASS_H
 #define _CLASS_H
 
+#ifdef __AROS__
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
+
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/graphics.h>
@@ -193,11 +197,19 @@ struct MUIS_Popbackground_Status
 ** MUI macros
 */
 
+#ifdef __AROS__
+#define coloradjustObject       BOOPSIOBJMACRO_START(lib_coloradjust->mcc_Class)
+#define penadjustObject         BOOPSIOBJMACRO_START(lib_penadjust->mcc_Class)
+#define backgroundadjustObject  BOOPSIOBJMACRO_START(lib_backgroundadjust->mcc_Class)
+#define poppenObject            BOOPSIOBJMACRO_START(lib_poppen->mcc_Class)
+#define popbackObject           BOOPSIOBJMACRO_START(lib_popbackground->mcc_Class)
+#else
 #define coloradjustObject       NewObject(lib_coloradjust->mcc_Class,NULL
 #define penadjustObject         NewObject(lib_penadjust->mcc_Class,NULL
 #define backgroundadjustObject  NewObject(lib_backgroundadjust->mcc_Class,NULL
 #define poppenObject            NewObject(lib_poppen->mcc_Class,NULL
 #define popbackObject           NewObject(lib_popbackground->mcc_Class,NULL
+#endif
 
 /***********************************************************************/
 /*
@@ -256,6 +268,9 @@ struct MUIS_Popbackground_Status
 
 // xget()
 // Gets an attribute value from a MUI object
+#ifdef __AROS__
+#define xget XGET
+#else
 ULONG xget(Object *obj, const ULONG attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
@@ -263,6 +278,7 @@ ULONG xget(Object *obj, const ULONG attr);
   // when they are supported by the object. But setting b=0 right before
   // the GetAttr() should catch the case when attr doesn't exist at all
   #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
+#endif
 #endif
 
 /****************************************************************************/

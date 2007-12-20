@@ -398,7 +398,11 @@ mDragDrop(struct IClass *cl, Object *obj,struct MUIP_DragDrop *msg)
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,PopbackgroundDispatcher,cl,obj,msg)
+#else
 DISPATCHER(PopbackgroundDispatcher)
+#endif
 {
   switch (msg->MethodID)
   {
@@ -419,6 +423,9 @@ DISPATCHER(PopbackgroundDispatcher)
     default:                       return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 

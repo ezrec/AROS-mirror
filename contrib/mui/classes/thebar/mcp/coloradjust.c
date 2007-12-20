@@ -20,6 +20,10 @@
 
 ***************************************************************************/
 
+#ifdef __AROS__
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
+
 #include "class.h"
 
 #include <proto/colorwheel.h>
@@ -41,10 +45,18 @@ struct Library *ColorWheelBase = NULL;
 struct Library *GradientSliderBase = NULL;
 
 static struct MUI_CustomClass *gradientslider = NULL;
+#ifdef __AROS__
+#define gradientsliderObject BOOPSIOBJMACRO_START(gradientslider->mcc_Class)
+#else
 #define gradientsliderObject NewObject(gradientslider->mcc_Class,NULL
+#endif
 
 static struct MUI_CustomClass *colorwheel = NULL;
+#ifdef __AROS__
+#define colorwheelObject BOOPSIOBJMACRO_START(colorwheel->mcc_Class)
+#else
 #define colorwheelObject NewObject(colorwheel->mcc_Class,NULL
+#endif
 
 /***********************************************************************/
 
@@ -201,7 +213,11 @@ mColorWheelHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEv
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,colorWheelDispatcher,cl,obj,msg)
+#else
 DISPATCHER(colorWheelDispatcher)
+#endif
 {
   switch (msg->MethodID)
   {
@@ -213,6 +229,9 @@ DISPATCHER(colorWheelDispatcher)
     default:               return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 
@@ -258,7 +277,7 @@ mGradientSliderNew(struct IClass *cl,Object *obj,struct opSet *msg)
             MUIA_Boopsi_MaxWidth,  18,
             GRAD_CurVal,           0xffff,
             GRAD_PenArray,         pens,
-            PGA_FREEDOM,           LORIENT_VERT,
+            PGA_Freedom,           LORIENT_VERT,
             GRAD_KnobPixels,       6,
             GA_Left,               0,
             GA_Top,                0,
@@ -447,7 +466,11 @@ mGradientSliderHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_Hand
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,gradientSliderDispatcher,cl,obj,msg)
+#else
 DISPATCHER(gradientSliderDispatcher)
+#endif
 {
   switch (msg->MethodID)
   {
@@ -462,6 +485,9 @@ DISPATCHER(gradientSliderDispatcher)
     default:               return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 
@@ -553,7 +579,7 @@ mColoradjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
         data->rgb.cw_Green = 0xffffffff;
         data->rgb.cw_Blue  = 0xffffffff;
 
-        DoSuperMethod(cl,obj,MUIM_MultiSet,MUIA_Slider_Level,255,data->red,data->green,data->blue,NULL);
+        DoSuperMethod(cl,obj,MUIM_MultiSet,MUIA_Numeric_Value,255,data->red,data->green,data->blue,NULL);
         if (data->color) set(data->color,MUIA_Colorfield_RGB,&data->rgb);
 
         msg->MethodID = OM_SET;
@@ -566,9 +592,9 @@ mColoradjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
         DoMethod(data->slider,MUIM_Notify,GRAD_CurVal,MUIV_EveryTime,obj,3,MUIM_Set,GRAD_CurVal,MUIV_TriggerValue);
 
-        DoMethod(data->red,MUIM_Notify,MUIA_Slider_Level,MUIV_EveryTime,obj,3,MUIM_Set,MUIA_Coloradj_RedComp,MUIV_TriggerValue);
-        DoMethod(data->green,MUIM_Notify,MUIA_Slider_Level,MUIV_EveryTime,obj,3,MUIM_Set,MUIA_Coloradj_GreenComp,MUIV_TriggerValue);
-        DoMethod(data->blue,MUIM_Notify,MUIA_Slider_Level,MUIV_EveryTime,obj,3,MUIM_Set,MUIA_Coloradj_BlueComp,MUIV_TriggerValue);
+        DoMethod(data->red,MUIM_Notify,MUIA_Numeric_Value,MUIV_EveryTime,obj,3,MUIM_Set,MUIA_Coloradj_RedComp,MUIV_TriggerValue);
+        DoMethod(data->green,MUIM_Notify,MUIA_Numeric_Value,MUIV_EveryTime,obj,3,MUIM_Set,MUIA_Coloradj_GreenComp,MUIV_TriggerValue);
+        DoMethod(data->blue,MUIM_Notify,MUIA_Numeric_Value,MUIV_EveryTime,obj,3,MUIM_Set,MUIA_Coloradj_BlueComp,MUIV_TriggerValue);
     }
 
     return (ULONG)obj;
@@ -754,9 +780,9 @@ mColoradjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
         if (!comp)
         {
-            nnset(data->red,MUIA_Slider_Level,data->rgb.cw_Red>>24);
-            nnset(data->green,MUIA_Slider_Level,data->rgb.cw_Green>>24);
-            nnset(data->blue,MUIA_Slider_Level,data->rgb.cw_Blue>>24);
+            nnset(data->red,MUIA_Numeric_Value,data->rgb.cw_Red>>24);
+            nnset(data->green,MUIA_Numeric_Value,data->rgb.cw_Green>>24);
+            nnset(data->blue,MUIA_Numeric_Value,data->rgb.cw_Blue>>24);
         }
 
         if (!wheel) nnset(data->colorwheel,WHEEL_HSB,&data->hsb);
@@ -912,7 +938,11 @@ mColoradjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,coloradjustDispatcher,cl,obj,msg)
+#else
 DISPATCHER(coloradjustDispatcher)
+#endif
 {
   switch (msg->MethodID)
   {
@@ -926,6 +956,9 @@ DISPATCHER(coloradjustDispatcher)
     default:             return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 

@@ -2,11 +2,14 @@
 
 include $(TOP)/config/make.cfg
 
-##MM contrib-zune-classes-thebar-mcp : includes linklibs
+#MM contrib-zune-classes-thebar-mcp : includes linklibs contrib-zune-classes-thebar-mcp-catalogs
 
 FILES := backgroundadjust \
 	 class \
+	 coloradjust \
 	 Debug \
+	 library \
+	 locale \
 	 penadjust \
 	 popbackground \
 	 poppen \
@@ -24,3 +27,11 @@ USER_INCLUDES := -I../include/aros
 
 INCLUDE_FILES := ../include/mui/TheBar_mcc.h
 %copy_includes path=mui dir=../include/mui
+
+
+#MM
+contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c
+
+locale.h: locale.c
+locale.c: locale/TheBar_mcp.cd C_h.sd C_c.sd
+	@$(FLEXCAT) locale/TheBar_mcp.cd locale.h=C_h.sd locale.c=C_c.sd

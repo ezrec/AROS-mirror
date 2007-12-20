@@ -36,6 +36,10 @@
 
 #include "SDI_hook.h"
 
+#ifdef __AROS__
+#define MUIA_Text_Copy TAG_IGNORE
+#endif
+
 /***********************************************************************/
 /*
 ** alfie's prefs
@@ -849,7 +853,12 @@ mConfigToGadgets(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_ConfigT
 
 /***********************************************************************/
 
+#ifdef __AROS__
+// FIXME: struct Imagespec doesn't exist on AROS
+#define SIZEOF(ptr,spec) (strlen((STRPTR)ptr)+1)
+#else
 #define SIZEOF(ptr,spec) ((lib_flags & BASEFLG_MUI20) ? sizeof(struct spec) : strlen((STRPTR)ptr)+1)
+#endif
 
 static ULONG
 mGadgetsToConfig(struct IClass *cl,Object *obj,struct MUIP_Settingsgroup_GadgetsToConfig *msg)
@@ -1186,7 +1195,11 @@ mContextMenuChoice(struct IClass *cl,Object *obj,struct MUIP_ContextMenuChoice *
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,_DispatcherP,cl,obj,msg)
+#else
 DISPATCHER(_DispatcherP)
+#endif
 {
   switch (msg->MethodID)
   {
@@ -1201,5 +1214,8 @@ DISPATCHER(_DispatcherP)
     default:                                    return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
