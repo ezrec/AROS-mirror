@@ -17,7 +17,7 @@ BYTE DosDoIO(struct IORequest * iORequest, struct ExecBase * SysBase)
     iORequest->io_Message.mn_Node.ln_Type=0;
 
     /* Call BeginIO() vector */
-    AROS_LVO_CALL1NR(
+    AROS_LVO_CALL1NR(void,
 	AROS_LCA(struct IORequest *,iORequest,A1),
 	struct Device *,iORequest->io_Device,5,
     );
