@@ -261,7 +261,7 @@ if(apu1) {
 	fssm=(struct FileSysStartupMsg*)BADDR(doslist->dol_misc.dol_handler.dol_Startup);
 	if(fssm) {
 
-		de=edit->dosenv=BADDR(struct DosEnvec*)(fssm->fssm_Environ);
+		de=edit->dosenv=(struct DosEnvec*)BADDR(fssm->fssm_Environ);
 
 		edit->blocklen=edit->dosenv->de_SizeBlock<<2;
 
