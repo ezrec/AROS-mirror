@@ -186,7 +186,8 @@ mColorWheelHide(struct IClass *cl,Object *obj,Msg msg)
 {
     struct colorWheelData *data = INST_DATA(cl,obj);
 
-    get(obj,WHEEL_HSB,&data->hsb);
+    // AROS's get() doesn't like a structure as storage pointer
+    GetAttr(obj,WHEEL_HSB,&data->hsb);
 
     DoMethod(_win(obj),MUIM_Window_RemEventHandler,&data->eh);
 
@@ -204,7 +205,8 @@ mColorWheelHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEv
     {
         struct ColorWheelHSB hsb;
 
-        get(obj,WHEEL_HSB,&hsb);
+        // AROS's get() doesn't like a structure as storage pointer
+        GetAttr(obj,WHEEL_HSB,&hsb);
         SetAttrs(obj,WHEEL_Hue,hsb.cw_Hue,WHEEL_Saturation,hsb.cw_Saturation,WHEEL_Brightness,hsb.cw_Brightness,TAG_DONE);
     }
 

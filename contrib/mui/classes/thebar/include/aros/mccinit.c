@@ -13,13 +13,6 @@
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 
-struct Library        *MUIMasterBase = NULL;
-struct ExecBase       *SysBase       = NULL;
-struct UtilityBase    *UtilityBase   = NULL;
-struct DosLibrary     *DOSBase       = NULL;
-struct GfxBase        *GfxBase       = NULL;
-struct IntuitionBase  *IntuitionBase = NULL;
-
 #define GETINTERFACE(iface, type, base)	TRUE
 #define DROPINTERFACE(iface)
 

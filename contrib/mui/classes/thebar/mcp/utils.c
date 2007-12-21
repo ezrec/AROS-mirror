@@ -161,7 +161,7 @@ opop(ULONG type, const void *key)
 Object *
 opoppen(const void *key, const void *title, const void *help)
 {
-    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     return PoppenObject,
         MUIA_Window_Title, (ULONG)tr(title),
         MUIA_ControlChar,  (ULONG)GetKeyChar(tr(key)),
