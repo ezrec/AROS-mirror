@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM contrib-zune-classes-thebbutton-mcc : includes linklibs
+#MM contrib-zune-classes-thebutton-mcc : includes linklibs
 
 FILES := library \
 	 brc1 \

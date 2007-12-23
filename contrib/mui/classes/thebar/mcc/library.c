@@ -120,11 +120,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
       }
 
       lib_flags |= BASEFLG_Init;
-#ifdef __AROS__
-      lib_thisClass = 0; //FIXME: how can I get the class pointer?
-#else
       lib_thisClass = ThisClass;
-#endif
 
       RETURN(TRUE);
       return(TRUE);

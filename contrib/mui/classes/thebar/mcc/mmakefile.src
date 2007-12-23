@@ -4,6 +4,8 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-zune-classes-thebar-mcc : includes linklibs
 
+#MM contrib-zune-classes-thebar-mccv : includes linklibs
+
 FILES := brc1 \
 	 build \
 	 class \
@@ -18,7 +20,15 @@ USER_INCLUDES := -I../mcp -I../include/aros
 
 %build_module mmake=contrib-zune-classes-thebar-mcc \
   modname=TheBar modtype=mcc moduledir=Extras/Zune/MCC_TheBar/Classes/Zune \
-  files=$(FILES) \
+  objdir=$(GENDIR)/$(CURDIR)/mcc files=$(FILES) conffile=TheBar.conf \
+  uselibs="amiga mui rom m"
+
+
+USER_CFLAGS := -DVIRTUAL
+
+%build_module mmake=contrib-zune-classes-thebar-mccv \
+  modname=TheBarVirt modtype=mcc moduledir=Extras/Zune/MCC_TheBar/Classes/Zune \
+  objdir=$(GENDIR)/$(CURDIR)/mccv files=$(FILES) conffile=TheBarV.conf \
   uselibs="amiga mui rom m"
 
 
@@ -26,3 +36,5 @@ USER_INCLUDES := -I../mcp -I../include/aros
 
 INCLUDE_FILES := ../include/mui/TheBar_mcc.h
 %copy_includes path=mui dir=../include/mui
+
+%common

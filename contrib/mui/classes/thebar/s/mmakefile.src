@@ -1,0 +1,16 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+FILES := Package-Startup Package-Shutdown
+
+#MM
+contrib-zune-classes-thebar-startup :
+	$(ECHO) "Extras:Zune/MCC_TheBar" >$(AROS_PACKAGES)/MCC_TheBar
+
+#MM- contrib-zune-classes-thebar-mcc      : contrib-zune-classes-thebar-startup
+#MM- contrib-zune-classes-thebar-mccv     : contrib-zune-classes-thebar-startup
+#MM- contrib-zune-classes-thebar-mcp      : contrib-zune-classes-thebar-startup
+
+%copy_files_q dst=$(CONTRIBDIR)/Zune/MCC_TheBar/s maketarget=contrib-zune-classes-thebar-startup
+

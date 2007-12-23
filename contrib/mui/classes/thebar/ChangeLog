@@ -5,6 +5,10 @@ MUI TheBar MCC class - ChangeLog
 $Id: ChangeLog 134 2007-12-03 23:12:52Z damato $
 $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/ChangeLog $
 
+2007-12-23 Matthias Rustler <mrustler@gmx.de>
+
+  * AROS port
+
 2007-12-04 Jens Langner <Jens.Langner@light-speed.de>
 
   * mcc/button/build.c: fixed a possible crash bug where a NUL pointer

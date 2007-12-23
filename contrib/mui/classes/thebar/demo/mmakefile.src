@@ -2,7 +2,11 @@
 
 include $(TOP)/config/make.cfg
 
-#MM contrib-zune-classes-thebar-demos : includes linklibs contrib-zune-classes-thebar-mcc
+#MM contrib-zune-classes-thebar-demos : includes linklibs \
+#MM contrib-zune-classes-thebar-mcc contrib-zune-classes-thebar-mccv \
+#MM contrib-zune-classes-thebar-pics
+
+TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_TheBar/Demos
 
 FILES := demo1 \
 	 demo2 \
@@ -17,7 +21,11 @@ FILES := demo1 \
 USER_INCLUDES := -I../include/aros
 
 %build_progs mmake=contrib-zune-classes-thebar-demos files=$(FILES) \
-    targetdir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Demos \
+    targetdir=$(TARGETDIR) \
     uselibs="amiga mui"
+
+#MM
+contrib-zune-classes-thebar-pics :
+%copy_dir_recursive mmake=contrib-zune-classes-thebar-pics src=pics dst=$(TARGETDIR)/Pics
 
 %common
