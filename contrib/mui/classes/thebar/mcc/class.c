@@ -20,6 +20,10 @@
 
 ***************************************************************************/
 
+#ifdef __AROS__
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
+
 #include "class.h"
 #include "private.h"
 
@@ -333,8 +337,17 @@ orderButtons(struct IClass *cl,Object *obj,struct InstData *data)
 
 /***********************************************************************/
 
+#ifdef __AROS__
+AROS_UFH3S(ULONG, LayoutFunc,
+AROS_UFHA(struct Hook *         , h  , A0),
+AROS_UFHA(Object *              , obj, A2),
+AROS_UFHA(struct MUI_LayoutMsg *, lm , A1))
+{
+    AROS_USERFUNC_INIT
+#else
 HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 {
+#endif
     struct InstData *data = INST_DATA(lib_thisClass->mcc_Class,obj);
 
     ENTER();
@@ -969,6 +982,9 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
     RETURN(MUILM_UNKNOWN);
     return MUILM_UNKNOWN;
+#ifdef __AROS__
+    AROS_USERFUNC_EXIT
+#endif
 }
 MakeStaticHook(LayoutHook, LayoutFunc);
 
@@ -4072,7 +4088,11 @@ mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,_Dispatcher,cl,obj,msg)
+#else
 DISPATCHER(_Dispatcher)
+#endif
 {
   switch(msg->MethodID)
   {
@@ -4115,5 +4135,8 @@ DISPATCHER(_Dispatcher)
     default:                            return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /**********************************************************************/

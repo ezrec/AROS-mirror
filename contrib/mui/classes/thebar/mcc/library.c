@@ -64,7 +64,7 @@ static const char * const used_classesP[] = { "TheBar.mcp", NULL };
 static BOOL ClassInit(UNUSED struct Library *base);
 
 #define CLASSEXPUNGE
-static VOID ClassExpunge(UNUSED struct Library *base);
+static BOOL ClassExpunge(UNUSED struct Library *base);
 
 struct Library *DataTypesBase = NULL;
 struct Library *CyberGfxBase = NULL;
@@ -84,7 +84,7 @@ ULONG lib_flags = 0;
 /* define the functions used by the startup code ahead of including mccinit.c */
 /******************************************************************************/
 static BOOL ClassInit(UNUSED struct Library *base);
-static VOID ClassExpunge(UNUSED struct Library *base);
+static BOOL ClassExpunge(UNUSED struct Library *base);
 
 /******************************************************************************/
 /* include the lib startup code for the mcc/mcp  (and muimaster inlines)      */
@@ -120,7 +120,11 @@ static BOOL ClassInit(UNUSED struct Library *base)
       }
 
       lib_flags |= BASEFLG_Init;
+#ifdef __AROS__
+      lib_thisClass = 0; //FIXME: how can I get the class pointer?
+#else
       lib_thisClass = ThisClass;
+#endif
 
       RETURN(TRUE);
       return(TRUE);
@@ -132,7 +136,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
 }
 
 
-static VOID ClassExpunge(UNUSED struct Library *base)
+static BOOL ClassExpunge(UNUSED struct Library *base)
 {
   ENTER();
 
@@ -166,5 +170,15 @@ static VOID ClassExpunge(UNUSED struct Library *base)
   lib_flags &= ~(BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
 
   LEAVE();
+
+  RETURN(TRUE);
+  return(TRUE);
 }
 
+#ifdef __AROS__
+#include <aros/symbolsets.h>
+
+ADD2INITLIB(ClassInit, 0);
+ADD2EXPUNGELIB(ClassExpunge, 0);
+
+#endif

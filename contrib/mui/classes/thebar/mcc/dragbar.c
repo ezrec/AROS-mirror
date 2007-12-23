@@ -216,7 +216,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
     msg->MinMaxInfo->MinWidth  += 9;
     msg->MinMaxInfo->DefWidth  += 9;
     msg->MinMaxInfo->MaxWidth  += 9;
-    msg->MinMaxInfo->MaxHeight  = MBQ_MUI_MAXMAX;
+    msg->MinMaxInfo->MaxHeight  = MUI_MAXMAX;
 
     #if defined(VIRTUAL)
     msg->MinMaxInfo->MinHeight += 4;
@@ -227,7 +227,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
   {
     msg->MinMaxInfo->MinHeight += 9;
     msg->MinMaxInfo->DefHeight += 9;
-    msg->MinMaxInfo->MaxWidth   = MBQ_MUI_MAXMAX;
+    msg->MinMaxInfo->MaxWidth   = MUI_MAXMAX;
     msg->MinMaxInfo->MaxHeight += 9;
 
     #if defined(VIRTUAL)
@@ -342,7 +342,11 @@ mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,DragBarDispatcher,cl,obj,msg)
+#else
 DISPATCHER(DragBarDispatcher)
+#endif
 {
   switch(msg->MethodID)
   {
@@ -357,6 +361,9 @@ DISPATCHER(DragBarDispatcher)
     default:                  return DoSuperMethodA(cl,obj,msg);
   }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 

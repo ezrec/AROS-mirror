@@ -46,13 +46,18 @@
 /***********************************************************************/
 
 #define MUIC_TheButton    "TheButton.mcc"
-#define TheButtonObject   MUI_NewObject(MUIC_TheButton
-
 #define MUIC_TheBar       "TheBar.mcc"
-#define TheBarObject      MUI_NewObject(MUIC_TheBar
-
 #define MUIC_TheBarVirt   "TheBarVirt.mcc"
+
+#ifdef __AROS__
+#define TheButtonObject   MUIOBJMACRO_START(MUIC_TheButton)
+#define TheBarObject      MUIOBJMACRO_START(MUIC_TheBar)
+#define TheBarVirtObject  MUIOBJMACRO_START(MUIC_TheBarVirt)
+#else
+#define TheButtonObject   MUI_NewObject(MUIC_TheButton
+#define TheBarObject      MUI_NewObject(MUIC_TheBar
 #define TheBarVirtObject  MUI_NewObject(MUIC_TheBarVirt
+#endif
 
 #define THEBAR_VERSION     21
 #define THEBARVIRT_VERSION 21

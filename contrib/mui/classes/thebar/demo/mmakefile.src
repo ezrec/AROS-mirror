@@ -1,0 +1,23 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-zune-classes-thebar-demos : includes linklibs contrib-zune-classes-thebar-mcc
+
+FILES := demo1 \
+	 demo2 \
+	 demo3 \
+	 demo4 \
+	 demo5 \
+	 demo6 \
+	 demo7 \
+	 demo8 \
+	 demo9
+
+USER_INCLUDES := -I../include/aros
+
+%build_progs mmake=contrib-zune-classes-thebar-demos files=$(FILES) \
+    targetdir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Demos \
+    uselibs="amiga mui"
+
+%common

@@ -26,9 +26,18 @@
 
 /***********************************************************************/
 
-#ifndef __MORPHOS__
 // DoSuperNew()
 // Calls parent NEW method within a subclass
+#ifdef __MORPHOS__
+
+#elif defined(__AROS__)
+Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
+{
+  AROS_SLOWSTACKTAGS_PRE(tag1)
+  retval = DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1));
+  AROS_SLOWSTACKTAGS_POST
+}
+#else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;

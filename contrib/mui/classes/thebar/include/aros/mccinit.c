@@ -21,3 +21,7 @@
 #ifndef MASTERVERSION
 #define MASTERVERSION MUIMASTER_VMIN
 #endif
+
+struct MUI_CustomClass *ThisClass = NULL;
+
+extern struct Library * TheBarBase;

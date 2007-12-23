@@ -27,9 +27,7 @@
 
 #include "TheBar_mcp.h"
 
-#ifndef __AROS__
 #include <mui/muiundoc.h>
-#endif
 
 /***************************************************************************/
 

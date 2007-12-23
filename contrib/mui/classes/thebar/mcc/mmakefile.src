@@ -2,12 +2,13 @@
 
 include $(TOP)/config/make.cfg
 
-##MM contrib-zune-classes-thebar-mcc : includes linklibs
+#MM contrib-zune-classes-thebar-mcc : includes linklibs
 
 FILES := brc1 \
 	 build \
 	 class \
 	 Debug \
+	 library \
 	 dragbar \
 	 scale \
 	 spacer \

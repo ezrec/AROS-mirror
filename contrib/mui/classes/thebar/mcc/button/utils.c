@@ -92,7 +92,7 @@ void stripUnderscore(STRPTR dest, STRPTR from, ULONG mode)
 
 /***********************************************************************/
 
-#ifndef __MORPHOS__
+#if !defined(__MORPHOS__) && !defined(__AROS__)
 
 static int stcd_l(const char *in, long *value)
 {

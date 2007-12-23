@@ -1,3 +1,6 @@
+#ifdef __AROS__
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
 
 #include <proto/exec.h>
 #include <proto/dos.h>
@@ -28,7 +31,11 @@ struct Library *MUIMasterBase;
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
 #endif
 
+#ifdef __AROS__
+#define mainGroupObject BOOPSIOBJMACRO_START(mainGroupClass->mcc_Class)
+#else
 #define mainGroupObject NewObject(mainGroupClass->mcc_Class,NULL
+#endif
 
 #define DD_FACT 5
 
@@ -269,7 +276,11 @@ mDragDrop(UNUSED struct IClass *cl,UNUSED Object *obj,UNUSED struct MUIP_DragDro
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,_dispatcher,cl,obj,msg)
+#else
 DISPATCHER(_dispatcher)
+#endif
 {
     switch(msg->MethodID)
     {
@@ -282,6 +293,9 @@ DISPATCHER(_dispatcher)
         default:              return DoSuperMethodA(cl,obj,msg);
     }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 int
 main(UNUSED int argc,char **argv)
