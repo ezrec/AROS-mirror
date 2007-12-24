@@ -24,22 +24,25 @@ AROS to manage FAT partitions. AROS got also an improved TCP/IP
 stack, with a new version of AROSTCP, and USB support.
 
 April: Wanderer got a new decoration system, allowing windows to 
-be customized with themes. Support for LUA and ARexx scripts had 
+be customized with themes. Support for LUA and ARexx scripts has 
 been improved too.
 
-May: AROS changed its name in 'AROS Research Operating System' and aros.org got an heavy face-lift. Wanderer started showing only icons or all files, and a new community-driven site has born, ArosWorld.org.
+May: AROS changed its name in 'AROS Research Operating System' and
+aros.org got an heavy face-lift. Wanderer started showing only icons
+or all files, and a new community-driven site has born, ArosWorld.org.
 
-June: AROS users decided the official windows and desktop wallpapers, through an amusing competition.
+June: AROS users decided the official windows and desktop wallpapers
+in an amusing competition.
 
 September: AROS has been presented to the Amiga community 
-in a conference at Pianeta Amiga. MUIbase and HivelyTracker had been
+in a conference at Pianeta Amiga. MUIbase and HivelyTracker have been
 ported too.
 
 October: AROS got a new installer that made installation on hard 
 disk easier. Now AROS can safely live on a disk together with 
 Microsoft Windows.
 
-November: AROS has made a huge step ahead with its new 64-bit 
+November: AROS made a huge step ahead with its new 64-bit 
 flavour.
 
 December: Two new AROS distributions have been announced, Velocity 
