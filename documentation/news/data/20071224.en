@@ -1,0 +1,47 @@
+===========
+Xmas update
+===========
+
+:Author:   Paolo Besser
+:Date:     2007-12-24
+
+Merry Christmas and Happy New Year to everyone! It has been an 
+important year for AROS development, profile and diffusion, 
+and we'd really like to thank every AROS fan, tester and contributor 
+for the magnificent results (y)our operating system has gained.
+
+Here are some examples of 2007 AROS "milestones".
+
+January: after years of struggling with shell commands and 
+DOpus actions, copying files became easy with Wanderer drag'n'drop.
+
+February: a tap interface has been added to AROS hosted, 
+completing network support.
+ 
+March: AROS got packet file-systems support, increasing 
+compatibility and coherency with original AmigaOS, and allowing 
+AROS to manage FAT partitions. AROS got also an improved TCP/IP 
+stack, with a new version of AROSTCP, and USB support.
+
+April: Wanderer got a new decoration system, allowing windows to 
+be customized with themes. Support for LUA and ARexx scripts had 
+been improved too.
+
+May: AROS changed its name in 'AROS Research Operating System' and aros.org got an heavy face-lift. Wanderer started showing only icons or all files, and a new community-driven site has born, ArosWorld.org.
+
+June: AROS users decided the official windows and desktop wallpapers, through an amusing competition.
+
+September: AROS has been presented to the Amiga community 
+in a conference at Pianeta Amiga. MUIbase and HivelyTracker had been
+ported too.
+
+October: AROS got a new installer that made installation on hard 
+disk easier. Now AROS can safely live on a disk together with 
+Microsoft Windows.
+
+November: AROS has made a huge step ahead with its new 64-bit 
+flavour.
+
+December: Two new AROS distributions have been announced, Velocity 
+and VmwAROS.
+
