@@ -20,7 +20,7 @@ status:           Κατάσταση
 screenshots:      Screenshots
 ports:            Μεταφορές
 license:          Αδεια
-download:         Download
+download:         Λήψη
 documentation:    Τεκμηρίωση
 users:            Χρήστες
 installation:     Εγκατάσταση
@@ -31,7 +31,7 @@ faq:              Συχνές Ερωτήσεις
 developers:       Υπεύθυνοι ανάπτυξης
 contribute:       Συνεισφέροντας
 roadmap:          Roadmap
-bug-tracker:      Ανιχνευτής Bugs
+bug-tracker:      Ανιχνευτής Σφαλμάτων
 working-with-subversion: Εργασία με Subversion
 compiling:        Compiling
 application-development-manual: Οδηγός ανάπτυξης εφαρμογών
@@ -51,7 +51,7 @@ mailing-lists:    Λίστες ηλεκτρονικού ταχυδρομείου
 forums:           Φόρουμς
 irc-channels:     Κανάλια IRC
 credits:          Συντελεστές
-acknowledgements: Acknowledgements
+acknowledgements: Αναγνωρίσεις
 pictures:         Φωτογραφίες
 developers-together: Οι υπεύθυνοι ανάπτυξης μαζί
 sponsors:         Σπόνσορες
@@ -61,7 +61,7 @@ linking:          Συνδεθείτε μαζί μας
 
 go:               Εμπρός
 search:           Αναζήτηση
-copyright:        Copyright © 1995-2007, The AROS Development Team. All rights reserved.
+copyright:        Πνευματικά Δικαιώματα © 1995-2007, Η Ομάδα Ανάπτυξης του AROS (The AROS Development Team). All rights reserved.
 trademarks:       Amiga&reg; is a trademark of Amiga Inc. All other trademarks belong to their respective owners.
 read-more:        Διαβάστε περισσότερα...
 large-image:      Μεγαλύτερη έκδοση...
