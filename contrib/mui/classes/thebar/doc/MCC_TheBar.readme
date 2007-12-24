@@ -1,10 +1,10 @@
 Short:    TheBar.mcc - The MUI Toolbar custom class
 Author:   TheBar.mcc Open Source Team
 Uploader: Jens Langner <Jens.Langner@light-speed.de>
-Version:  21.4
+Version:  21.5
 Type:     dev/mui
 Requires: AmigaOS 3.0+ or MorphOS, MUI 3.8+, 68020+/PPC604e+
-Replaces: dev/mui/MCC_TheBar-21.3.lha
+Replaces: dev/mui/MCC_TheBar-21.4.lha
 Architecture: ppc-amigaos >= 4.0.0; m68k-amigaos >= 3.0; ppc-morphos >= 1.4.2
 
 Introduction
