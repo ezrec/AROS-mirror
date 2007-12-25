@@ -172,10 +172,12 @@ int Get_Startup(struct FileSysStartupMsg *fssm) {
 
 	if (fssm != (struct FileSysStartupMsg *)-1)
 	{
-		if (strlen(AROS_BSTR_ADDR(fssm->fssm_Device))<sizeof(global->g_device))
+                len = AROS_BSTR_strlen(fssm->fssm_Device);
+		if (len<sizeof(global->g_device))
 		{
                         de = (struct DosEnvec *)BADDR(fssm->fssm_Environ);
-			strcpy(global->g_device, AROS_BSTR_ADDR(fssm->fssm_Device));
+			CopyMem(AROS_BSTR_ADDR(fssm->fssm_Device), global->g_device, len);
+                	global->g_device[len] = 0;
 			global->g_unit = fssm->fssm_Unit;
 			global->g_std_buffers = de->de_NumBuffers;
 			global->g_file_buffers = de->de_NumBuffers;

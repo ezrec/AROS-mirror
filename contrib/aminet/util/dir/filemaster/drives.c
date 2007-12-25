@@ -45,7 +45,7 @@ extern struct FMList fmlist[];
 
 void getkeybytes(void); /* HC */
 
-UBYTE* siirrabstr(UBYTE *ptr1,UBYTE *ptr2)
+UBYTE* siirrabstr(BSTR ptr1,UBYTE *ptr2)
 {
 
   UBYTE *tmpp;
@@ -79,7 +79,7 @@ if(doslist->dol_Type!=type) return(0);
 #ifndef AROS
 if(type==DLT_DEVICE && !doslist->dol_Task) return(0);
 #endif
-ptr=siirrabstr((UBYTE*)BADDR(doslist->dol_Name),empty);  
+ptr=siirrabstr(doslist->dol_Name,empty);  
 
 *ptr++=':'; *ptr=0;
 

@@ -10,7 +10,7 @@ date: Ημερομηνία
 [links]
 
 build-logs: build logs
-download: Download
+download: Λήψη
 
 [units]
 
@@ -68,13 +68,13 @@ i386-all-contrib:
     λειτουργούν στις κατάλληλες hosted (eg. i386-linux) και native
     (i386-pc) εκδόσεις.
 x86_64-pc-boot-iso:
-    The native version for 64-bit (x86_64, amd64) PC computers.
-    This is the bootable CDROM ISO image, which
-    contains all AROS system and contributed programs.
+    Η native έκδοση για 64-bit (x86_64, amd64) υπολογιστές.
+    Αυτή είναι μια ISO εικόνα ενός CDROM εκκίνησης, το οποίο περιέχει
+    όλα τα προγράμματα που τρίτοι έχουν συνεισφέρει και το σύστημα AROS.
 x86_64-all-contrib:
-    This archive contains all the contributed programs
-    compiled for the x86_64 architecture, for use with the
-    x86_64 native version.
+    Αυτό το πακέτο περιέχει όλα τα προγράμματα που τρίτοι έχουν
+	συνεισφέρει και έγιναν compiled για x64_86 αρχιτεκτονική, 
+	για χρήση με την x86_64 native έκδοση.
 ppc-all-contrib:
     Αυτό το πακέτο περιέχει όλα τα προγράμματα που τρίτοι έχουν
 	συνεισφέρει και έγιναν compiled για PowerPC αρχιτεκτονική, 
@@ -90,6 +90,7 @@ ppc-all-sdk:
     Θα χρειαστείτε επίσης το gcc και τα binutils ρυθμισμένα να
 	παράγουν ppc-elf εκτελέσιμα αρχεία.
 x86_64-all-sdk:
-    Set of files and tools to build your own AROS programs
-    on your preferred machine. You'll need also gcc and the
-    binutils configured to produce x86_64-elf executables.
+    Σετ αρχείων και εργαλείων για να κατασκευάσετε τα δικά σας
+	προγράμματα για το AROS στον υπολογιστή της αρεσκείας σας.
+    Θα χρειαστείτε επίσης το gcc και τα binutils ρυθμισμένα να
+	παράγουν x86_64-elf εκτελέσιμα αρχεία.
