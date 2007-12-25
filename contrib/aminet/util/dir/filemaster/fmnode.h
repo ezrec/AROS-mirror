@@ -572,7 +572,7 @@ void updadirmeter(struct FMList*);
 void dirmeters(void);
 void siirran(UBYTE*,UBYTE*,WORD);
 void fittext(struct RastPort*,UBYTE*,WORD,WORD,WORD,WORD,WORD);
-UBYTE* siirrabstr(UBYTE*,UBYTE*);
+UBYTE* siirrabstr(BSTR,UBYTE*);
 void textextent(struct RastPort*,UBYTE*,WORD*,WORD*);
 WORD strtohex(UBYTE*);
 void sethockeys(void);

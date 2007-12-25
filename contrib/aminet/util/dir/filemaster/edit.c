@@ -252,7 +252,7 @@ if(!lock) {
 	doslist=FindDosEntry(doslist,edit->devname,LDF_DEVICES);
 	if(doslist) apu1=1;
 } else if(finddevice(lock,&doslist,&vollist)) {
-	siirrabstr((UBYTE*)BADDR(doslist->dol_Name),edit->devname);
+	siirrabstr(doslist->dol_Name,edit->devname);
 	apu1=1;
 }
 edit->devname[strlen(edit->devname)]=':';
@@ -1099,7 +1099,7 @@ dtype=MSG_FDEDIT_DISKUNKNOWN;
 if(type1==2&&type2==1) {
 	dtype=MSG_FDEDIT_DISKROOT3;
 	if(edit->changed) {
-		siirrabstr(edit->buffer+0x1b0,name);	
+		siirrabstr((BSTR)MKBADDR(edit->buffer+0x1b0),name);	
 		longtodatestring(date1,dstolong((struct DateStamp*)(edit->buffer+0x1a4)));
 		longtodatestring(date2,dstolong((struct DateStamp*)(edit->buffer+0x1e4)));
 		sformatmsg(list->fmmessage1,MSG_FDEDIT_DISKROOT1,name,date2,date1);
@@ -1109,7 +1109,7 @@ if(type1==2&&type2==1) {
 if(type1==2&&type2==0xfffffffd) {
 	dtype=MSG_FDEDIT_DISKFILE3;
 	if(edit->changed) {
-		siirrabstr(edit->buffer+0x1b0,name);
+		siirrabstr((BSTR)MKBADDR(edit->buffer+0x1b0),name);
 		longtodatestring(date1,dstolong((struct DateStamp*)(edit->buffer+0x1a4)));
 		sformatmsg(list->fmmessage1,MSG_FDEDIT_DISKFILE1,name,ptr[81],date1);
 		sformatmsg(list->fmmessage2,MSG_FDEDIT_DISKFILE2,ptr[2],ptr[4],ptr[124],ptr[125],ptr[126]);
@@ -1118,7 +1118,7 @@ if(type1==2&&type2==0xfffffffd) {
 if(type1==2&&type2==2) {
 	dtype=MSG_FDEDIT_DISKDIR3;
 	if(edit->changed) {
-		siirrabstr(edit->buffer+0x1b0,name);
+		siirrabstr((BSTR)MKBADDR(edit->buffer+0x1b0),name);
 		longtodatestring(date1,dstolong((struct DateStamp*)(edit->buffer+0x1a4)));
 		sformatmsg(list->fmmessage1,MSG_FDEDIT_DISKDIR1,name,date1);
 		sformatmsg(list->fmmessage2,MSG_FDEDIT_DISKDIR2,ptr[124],ptr[125]);
