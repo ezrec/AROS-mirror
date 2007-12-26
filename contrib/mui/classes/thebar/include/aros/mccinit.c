@@ -23,5 +23,3 @@
 #endif
 
 struct MUI_CustomClass *ThisClass = NULL;
-
-extern struct Library * TheBarBase;

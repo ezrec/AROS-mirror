@@ -144,7 +144,7 @@ struct InstData
     ULONG			                     objHeight;
     #endif
 
-    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     ULONG			                     userFrame;
     char          		             frameSpec[256];
     #endif
@@ -286,7 +286,7 @@ void freeBitMaps(struct InstData *data);
 // some general macros
 #define RAWIDTH(w)                      ((((UWORD)(w))+15)>>3 & 0xFFFE)
 #define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
-#define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(ULONG)ptr)
+#define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(IPTR)ptr)
 
 #if !defined(IsMinListEmpty)
 #define IsMinListEmpty(x)     (((x)->mlh_TailPred) == (struct MinNode *)(x))

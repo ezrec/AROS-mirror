@@ -92,6 +92,9 @@ struct scale
 
 // xget()
 // Gets an attribute value from a MUI object
+#ifdef __AROS__
+#define xget XGET
+#else
 ULONG xget(Object *obj, const ULONG attr);
 #if defined(__GNUC__)
   // please note that we do not evaluate the return value of GetAttr()
@@ -100,6 +103,7 @@ ULONG xget(Object *obj, const ULONG attr);
   // the GetAttr() should catch the case when attr doesn't exist at all
   #define xget(OBJ, ATTR) ({ULONG b=0; GetAttr(ATTR, OBJ, &b); b;})
 #endif
+#endif /* __AROS__ */
 
 /***********************************************************************/
 

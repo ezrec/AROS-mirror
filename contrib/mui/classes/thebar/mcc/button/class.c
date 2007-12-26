@@ -167,7 +167,7 @@ ULONG packTable[] =
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     APTR pool;
@@ -212,7 +212,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
             MUIA_Font, (pack.vMode==MUIV_TheButton_ViewMode_Text) ? MUIV_Font_Button : MUIV_Font_Tiny,
             (lib_flags & BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, pack.flags & FLG_Borderless,
             //MUIA_Background,     MUII_ButtonBack,
-            TAG_MORE,(ULONG)attrs)))
+            TAG_MORE,(IPTR)attrs)))
     {
         struct InstData *data = INST_DATA(cl,obj);
         STRPTR      label;
@@ -315,18 +315,18 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
       DeletePool(pool);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mDispose(struct IClass *cl, Object *obj, Msg msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
   struct MinNode *node;
   APTR  pool = data->pool;
-  ULONG res;
+  IPTR res;
 
   ENTER();
 
@@ -357,7 +357,7 @@ mDispose(struct IClass *cl, Object *obj, Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
@@ -368,7 +368,7 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_ShowMe:                  *msg->opg_Storage = (data->flags & FLG_ShowMe) ? TRUE : FALSE; return TRUE;
 
     case MUIA_TheButton_Spacer:        *msg->opg_Storage = (data->flags & FLG_IsSpacer) ? MUIV_TheButton_Spacer_Image : MUIV_TheButton_Spacer_None; return TRUE;
-    case MUIA_TheButton_TheBar:        *msg->opg_Storage = (ULONG)data->tb; return TRUE;
+    case MUIA_TheButton_TheBar:        *msg->opg_Storage = (IPTR)data->tb; return TRUE;
     case MUIA_TheButton_ViewMode:      *msg->opg_Storage = data->vMode; return TRUE;
     case MUIA_TheButton_Raised:        *msg->opg_Storage = (data->flags & FLG_Raised) ? TRUE : FALSE; return TRUE;
     case MUIA_TheButton_Scaled:        *msg->opg_Storage = (data->flags & FLG_Scaled) ? TRUE : FALSE; return TRUE;
@@ -376,7 +376,7 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_TheButton_EnableKey:     *msg->opg_Storage = (data->flags & FLG_EnableKey) ? TRUE : FALSE; return TRUE;
     case MUIA_TheButton_DisMode:       *msg->opg_Storage = data->disMode; return TRUE;
     case MUIA_TheButton_NtRaiseActive: *msg->opg_Storage = (data->userFlags & UFLG_NtRaiseActive) ? TRUE : FALSE; return TRUE;
-    case MUIA_TheButton_NotifyList:    *msg->opg_Storage = (ULONG)&data->notifyList; return TRUE;
+    case MUIA_TheButton_NotifyList:    *msg->opg_Storage = (IPTR)&data->notifyList; return TRUE;
 
     case MUIA_Version:                 *msg->opg_Storage = LIB_VERSION; return TRUE;
     case MUIA_Revision:                *msg->opg_Storage = LIB_REVISION; return TRUE;
@@ -412,7 +412,7 @@ addRemEventHandler(struct IClass *cl, Object *obj, struct InstData *data)
       // in case a handler is already installed we have to remove it
       // previously
       if(data->flags & FLG_Handler)
-        DoMethod(_win(obj), MUIM_Window_RemEventHandler, (ULONG)&data->eh);
+        DoMethod(_win(obj), MUIM_Window_RemEventHandler, (IPTR)&data->eh);
 
       // now add the new handler
       data->eh.ehn_Priority = 0;
@@ -420,7 +420,7 @@ addRemEventHandler(struct IClass *cl, Object *obj, struct InstData *data)
       data->eh.ehn_Object   = obj;
       data->eh.ehn_Class    = cl;
       data->eh.ehn_Events   = catchableEvents | IDCMP_RAWKEY | IDCMP_MOUSEBUTTONS; // always catch RAWKEY&MOUSEBUTTONS
-      DoMethod(_win(obj), MUIM_Window_AddEventHandler, (ULONG)&data->eh);
+      DoMethod(_win(obj), MUIM_Window_AddEventHandler, (IPTR)&data->eh);
 
       // flag the event handler as being installed
       data->flags |= FLG_Handler;
@@ -465,20 +465,21 @@ checkIn(Object *obj,struct InstData *data,WORD x,WORD y)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct InstData    *data = INST_DATA(cl,obj);
     struct TagItem *tag, *vmt, *rat, *sct, *sut, *lpt, *ekt, *ract;
     struct TagItem          *tstate;
-    ULONG          redraw, setidcmp, back, sel, res, pressed, over;
+    ULONG          redraw, setidcmp, back, sel, pressed, over;
+    IPTR   res;
 
     redraw = setidcmp = back = sel = pressed = over = FALSE;
     vmt = rat = sct = sut = lpt = ekt = ract = NULL;
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        ULONG tidata = tag->ti_Data;
+        IPTR tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -727,13 +728,13 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mSetup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct InstData    *data = INST_DATA(cl,obj);
     Object                  *parent;
     APTR                    pen;
-    ULONG                   *val;
+    ULONG                   *val; // TODO: do we need IPTR here?
 
     /* Background (BEFORE SUPER METHOD!) */
     superget(cl,obj,MUIA_Parent,&parent);
@@ -942,7 +943,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mBuild(struct IClass *cl,Object *obj,UNUSED Msg msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
@@ -954,7 +955,7 @@ mBuild(struct IClass *cl,Object *obj,UNUSED Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -981,11 +982,11 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mShow(struct IClass *cl,Object *obj,Msg msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  ULONG result = FALSE;
+  IPTR result = FALSE;
 
   ENTER();
 
@@ -1008,17 +1009,17 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mHide(struct IClass *cl,Object *obj,Msg msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
   // remove the event handler if installed
   if(data->flags & FLG_Handler)
-    DoMethod(_win(obj),MUIM_Window_RemEventHandler,(ULONG)&data->eh);
+    DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
 
   data->flags &= ~(FLG_Visible|FLG_Handler);
 
@@ -1030,7 +1031,7 @@ mHide(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -1145,7 +1146,7 @@ drawText(struct InstData *data,struct RastPort *rp)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
     struct InstData    *data = INST_DATA(cl,obj);
@@ -1772,7 +1773,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
@@ -1818,11 +1819,11 @@ mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  ULONG result = 0;
+  IPTR result = 0;
 
   ENTER();
 
@@ -1869,11 +1870,11 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_Notify *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mKillNotify(struct IClass *cl, Object *obj, struct MUIP_KillNotify *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  ULONG result;
+  IPTR result;
   struct MinNode *node;
 
   ENTER();
@@ -1910,11 +1911,11 @@ mKillNotify(struct IClass *cl, Object *obj, struct MUIP_KillNotify *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mKillNotifyObj(struct IClass *cl, Object *obj, struct MUIP_KillNotifyObj *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  ULONG result;
+  IPTR result;
   struct MinNode *node;
 
   ENTER();
@@ -1952,7 +1953,7 @@ mKillNotifyObj(struct IClass *cl, Object *obj, struct MUIP_KillNotifyObj *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
@@ -2053,7 +2054,7 @@ mSendNotify(struct IClass *cl, Object *obj, struct MUIP_TheButton_SendNotify *ms
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);

@@ -215,7 +215,7 @@ opopfri(const void *key, const void *title, const void *help)
 Object *
 opopback(UNUSED ULONG gradient, const void *key, const void *title, const void *help)
 {
-    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     return MUI_NewObject(MUIC_Popimage,
         MUIA_Imageadjust_Type, MUIV_Imageadjust_Type_Background,
         MUIA_Window_Title,     (ULONG)tr(title),
@@ -270,7 +270,7 @@ opopframe(const void *key, const void *title, const void *help)
 
 /***********************************************************************/
 
-#ifndef __MORPHOS__
+#if !defined(__MORPHOS__) || !defined(__AROS__)
 void
 drawGradient(Object *obj,struct MUIS_TheBar_Gradient *grad)
 {

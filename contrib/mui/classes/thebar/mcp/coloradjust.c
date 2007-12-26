@@ -78,7 +78,7 @@ struct colorWheelData
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mColorWheelNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     if((obj = (Object *)DoSuperNew(cl,obj,
@@ -107,12 +107,12 @@ mColorWheelNew(struct IClass *cl,Object *obj,struct opSet *msg)
         msg->MethodID = OM_NEW;
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mColorWheelSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct colorWheelData *data = INST_DATA(cl,obj);
@@ -121,7 +121,7 @@ mColorWheelSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        ULONG tidata = tag->ti_Data;
+        IPTR tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -155,7 +155,7 @@ mColorWheelSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mColorWheelShow(struct IClass *cl,Object *obj,Msg msg)
 {
     struct colorWheelData *data = INST_DATA(cl,obj);
@@ -181,13 +181,13 @@ mColorWheelShow(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mColorWheelHide(struct IClass *cl,Object *obj,Msg msg)
 {
     struct colorWheelData *data = INST_DATA(cl,obj);
 
     // AROS's get() doesn't like a structure as storage pointer
-    GetAttr(obj,WHEEL_HSB,&data->hsb);
+    GetAttr(obj,WHEEL_HSB,(IPTR*)&data->hsb);
 
     DoMethod(_win(obj),MUIM_Window_RemEventHandler,&data->eh);
 
@@ -198,7 +198,7 @@ mColorWheelHide(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mColorWheelHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
 {
     if ((msg->imsg->Class==IDCMP_MOUSEMOVE) || (msg->imsg->Class==IDCMP_INTUITICKS))
@@ -206,7 +206,7 @@ mColorWheelHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEv
         struct ColorWheelHSB hsb;
 
         // AROS's get() doesn't like a structure as storage pointer
-        GetAttr(obj,WHEEL_HSB,&hsb);
+        GetAttr(obj,WHEEL_HSB,(IPTR*)&hsb);
         SetAttrs(obj,WHEEL_Hue,hsb.cw_Hue,WHEEL_Saturation,hsb.cw_Saturation,WHEEL_Brightness,hsb.cw_Brightness,TAG_DONE);
     }
 
@@ -264,7 +264,7 @@ struct gradientSliderData
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGradientSliderNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     UWORD *pens;
@@ -303,12 +303,12 @@ mGradientSliderNew(struct IClass *cl,Object *obj,struct opSet *msg)
     }
     else if (pens) FreeMem(pens,sizeof(UWORD)*4);
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGradientSliderDispose(struct IClass *cl,Object *obj,Msg msg)
 {
     struct gradientSliderData *data = INST_DATA(cl,obj);
@@ -320,7 +320,7 @@ mGradientSliderDispose(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGradientSliderSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct gradientSliderData *data = INST_DATA(cl,obj);
@@ -330,7 +330,7 @@ mGradientSliderSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        ULONG tidata = tag->ti_Data;
+        IPTR tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -378,7 +378,7 @@ mGradientSliderSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGradientSliderSetup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct gradientSliderData *data = INST_DATA(cl,obj);
@@ -398,7 +398,7 @@ mGradientSliderSetup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGradientSliderCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct gradientSliderData *data = INST_DATA(cl,obj);
@@ -416,7 +416,7 @@ mGradientSliderCleanup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGradientSliderShow(struct IClass *cl,Object *obj,Msg msg)
 {
     struct gradientSliderData *data = INST_DATA(cl,obj);
@@ -438,7 +438,7 @@ mGradientSliderShow(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGradientSliderHide(struct IClass *cl,Object *obj,Msg msg)
 {
     struct gradientSliderData *data = INST_DATA(cl,obj);
@@ -452,12 +452,12 @@ mGradientSliderHide(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGradientSliderHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
 {
     if ((msg->imsg->Class==IDCMP_MOUSEMOVE) || (msg->imsg->Class==IDCMP_MOUSEBUTTONS))
     {
-        ULONG x;
+        IPTR x;
 
         get(obj,GRAD_CurVal,&x);
         set(obj,GRAD_CurVal,x);
@@ -524,7 +524,7 @@ struct coloradjustData
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mColoradjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     if((obj = (Object *)DoSuperNew(cl,obj,MUIA_Group_Horiz,TRUE,TAG_MORE,msg->ops_AttrList)))
@@ -557,9 +557,9 @@ mColoradjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
         }
 
         o = VGroup,
-            Child, data->red   = oslider(0,Msg_Coloradjust_RedHelp,0,255),
-            Child, data->green = oslider(0,Msg_Coloradjust_GreenHelp,0,255),
-            Child, data->blue  = oslider(0,Msg_Coloradjust_BlueHelp,0,255),
+            Child, (IPTR)(data->red   = oslider(0,Msg_Coloradjust_RedHelp,0,255)),
+            Child, (IPTR)(data->green = oslider(0,Msg_Coloradjust_GreenHelp,0,255)),
+            Child, (IPTR)(data->blue  = oslider(0,Msg_Coloradjust_BlueHelp,0,255)),
             Child, HGroup,
                 MUIA_Group_HorizSpacing, 1,
                 Child, data->colorwheel = colorwheelObject, End,
@@ -599,12 +599,12 @@ mColoradjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
         DoMethod(data->blue,MUIM_Notify,MUIA_Numeric_Value,MUIV_EveryTime,obj,3,MUIM_Set,MUIA_Coloradj_BlueComp,MUIV_TriggerValue);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mColoradjustGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
     struct coloradjustData *data = INST_DATA(cl,obj);
@@ -612,7 +612,7 @@ mColoradjustGet(struct IClass *cl,Object *obj,struct opGet *msg)
     switch (msg->opg_AttrID)
     {
         case MUIA_Coloradjust_RGB:
-            *msg->opg_Storage = (ULONG)&data->rgb;
+            *msg->opg_Storage = (IPTR)&data->rgb;
             return TRUE;
 
         case MUIA_Coloradjust_Red:
@@ -634,7 +634,7 @@ mColoradjustGet(struct IClass *cl,Object *obj,struct opGet *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mColoradjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct coloradjustData *data = INST_DATA(cl,obj);
@@ -644,7 +644,7 @@ mColoradjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        ULONG tidata = tag->ti_Data;
+        IPTR tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -804,7 +804,7 @@ mColoradjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mColoradjustSetup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct coloradjustData *data = INST_DATA(cl,obj);
@@ -834,7 +834,7 @@ mColoradjustSetup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mColoradjustShow(struct IClass *cl,Object *obj,Msg msg)
 {
     struct coloradjustData *data = INST_DATA(cl,obj);
@@ -848,7 +848,7 @@ mColoradjustShow(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mColoradjustDragQuery(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 {
     STRPTR x;
@@ -870,7 +870,7 @@ mColoradjustDragQuery(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragQuery
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mColoradjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
     STRPTR x;

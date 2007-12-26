@@ -162,7 +162,7 @@ static BOOL ClassInit(UNUSED struct Library *base)
 */
       // on MUI 3.1 system's we do have to
       // initialize our subclasses as well
-      #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+      #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
       if(!(lib_flags & BASEFLG_MUI20))
       {
         initColoradjust();
@@ -189,7 +189,7 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
 {
   ENTER();
 
-  #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+  #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
   if(!(lib_flags & BASEFLG_MUI20))
   {
     freePopbackground();

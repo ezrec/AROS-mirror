@@ -48,7 +48,7 @@ enum
 
 /***********************************************************************/
 
-static ULONG mNew(struct IClass *cl,Object *obj,struct opSet *msg)
+static IPTR mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   ENTER();
 
@@ -65,13 +65,13 @@ static ULONG mNew(struct IClass *cl,Object *obj,struct opSet *msg)
                   (GetTagData(MUIA_ShowMe,TRUE,msg->ops_AttrList) ? FLG_DB_ShowMe : 0);
   }
 
-  RETURN((ULONG)obj);
-  return (ULONG)obj;
+  RETURN((IPTR)obj);
+  return (IPTR)obj;
 }
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
   struct data *data = INST_DATA(cl,obj);
@@ -92,19 +92,19 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
     struct TagItem *tag;
     struct TagItem *tstate;
-    ULONG result = 0;
+    IPTR result = 0;
 
     ENTER();
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        ULONG tidata = tag->ti_Data;
+        IPTR tidata = tag->ti_Data;
 
         switch (tag->ti_Tag)
         {
@@ -112,7 +112,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 if (tidata)
                 {
                     struct Window *window = (struct Window *)xget(_win(obj), MUIA_Window_Window);
-                    DoMethod(_app(obj),MUIM_Application_PushMethod,(ULONG)data->bar,4,MUIM_DoDrag,window->MouseX-_mleft(obj),window->MouseY-_mtop(obj),0);
+                    DoMethod(_app(obj),MUIM_Application_PushMethod,(IPTR)data->bar,4,MUIM_DoDrag,window->MouseX-_mleft(obj),window->MouseY-_mtop(obj),0);
                 }
                 break;
 
@@ -140,7 +140,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mSetup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -178,11 +178,11 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
-    ULONG result = 0;
+    IPTR result = 0;
 
     ENTER();
 
@@ -202,7 +202,7 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
   struct data *data = INST_DATA(cl,obj);
@@ -242,7 +242,7 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -307,11 +307,11 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 {
   struct data *data = INST_DATA(cl,obj);
-  ULONG result = 0;
+  IPTR result = 0;
 
   ENTER();
 
