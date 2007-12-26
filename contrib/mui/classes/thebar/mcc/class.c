@@ -67,18 +67,18 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
          (o = TheButtonObject,
                MUIA_TheButton_MinVer,                                       16,
                MUIA_Group_Horiz,                                            flags & FLG_Horiz,
-               MUIA_TheButton_TheBar,                                       (ULONG)obj,
+               MUIA_TheButton_TheBar,                                       (IPTR)obj,
                MUIA_TheButton_NoClick,                                      TRUE,
-               MUIA_TheButton_Image,                                        (ULONG)data->brushes[data->spacer],
-               data->sbrushes ? MUIA_TheButton_SelImage : TAG_IGNORE,       (ULONG)(data->sbrushes ? data->sbrushes[data->spacer] : NULL),
-               data->dbrushes ? MUIA_TheButton_DisImage : TAG_IGNORE,       (ULONG)(data->dbrushes ? data->dbrushes[data->spacer] : NULL),
+               MUIA_TheButton_Image,                                        (IPTR)data->brushes[data->spacer],
+               data->sbrushes ? MUIA_TheButton_SelImage : TAG_IGNORE,       (IPTR)(data->sbrushes ? data->sbrushes[data->spacer] : NULL),
+               data->dbrushes ? MUIA_TheButton_DisImage : TAG_IGNORE,       (IPTR)(data->dbrushes ? data->dbrushes[data->spacer] : NULL),
                MUIA_TheButton_ViewMode,                                     MUIV_TheButton_ViewMode_Gfx,
                MUIA_TheButton_Borderless,                                   TRUE,
                MUIA_TheButton_Raised,                                       FALSE,
                MUIA_TheButton_Sunny,                                        flags & FLG_Sunny,
                MUIA_TheButton_Scaled,                                       flags & FLG_Scaled,
                MUIA_TheButton_Spacer,                                       MUIV_TheButton_Spacer_Image,
-               (flags & FLG_FreeStrip) ? MUIA_TheButton_Strip : TAG_IGNORE, (ULONG)&data->strip,
+               (flags & FLG_FreeStrip) ? MUIA_TheButton_Strip : TAG_IGNORE, (IPTR)&data->strip,
           End))
       {
         return o;
@@ -132,15 +132,15 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     attrs[4].ti_Tag   = MUIA_TheButton_MinVer;
     attrs[4].ti_Data  = 16;
     attrs[5].ti_Tag   = MUIA_TheButton_TheBar;
-    attrs[5].ti_Data  = (ULONG)obj;
+    attrs[5].ti_Data  = (IPTR)obj;
     attrs[6].ti_Tag   = MUIA_TheButton_Image;
-    attrs[6].ti_Data  = (ULONG)brush;
+    attrs[6].ti_Data  = (IPTR)brush;
     attrs[7].ti_Tag   = MUIA_TheButton_SelImage;
-    attrs[7].ti_Data  = (ULONG)sbrush;
+    attrs[7].ti_Data  = (IPTR)sbrush;
     attrs[8].ti_Tag   = MUIA_TheButton_DisImage;
-    attrs[8].ti_Data  = (ULONG)dbrush;
+    attrs[8].ti_Data  = (IPTR)dbrush;
     attrs[9].ti_Tag   = MUIA_TheButton_Label;
-    attrs[9].ti_Data  = (ULONG)button->text;
+    attrs[9].ti_Data  = (IPTR)button->text;
     attrs[10].ti_Tag  = MUIA_TheButton_Immediate;
     attrs[10].ti_Data = bflags & BFLG_Immediate;
     attrs[11].ti_Tag  = MUIA_TheButton_Toggle;
@@ -165,14 +165,14 @@ makeButton(struct Button *button,Object *obj,struct InstData *data)
     if (button->help)
     {
         attrs[20].ti_Tag  = MUIA_ShortHelp;
-        attrs[20].ti_Data = (ULONG)button->help;
+        attrs[20].ti_Data = (IPTR)button->help;
     }
     else attrs[20].ti_Tag = TAG_IGNORE;
 
     if (flags & FLG_FreeStrip)
     {
         attrs[21].ti_Tag  = MUIA_TheButton_Strip;
-        attrs[21].ti_Data = (ULONG)&data->strip;
+        attrs[21].ti_Data = (IPTR)&data->strip;
     }
     else attrs[21].ti_Tag = TAG_IGNORE;
 
@@ -540,7 +540,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         else
                           lm->lm_MinMax.MinHeight += _minheight(data->db)+data->vertSpacing;
 
-                        #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+                        #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                         lm->lm_MinMax.MinHeight += (data->flags & FLG_Framed) ? 4 : 0;
                         #endif
                     }
@@ -550,7 +550,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                     if (data->db)
                     {
                         width += _minwidth(data->db)+data->horizSpacing;
-                        #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+                        #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                         width += (data->flags & FLG_Framed) ? 4 : 0;
                         #endif
                     }
@@ -559,7 +559,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                     lm->lm_MinMax.MinHeight = butMaxMinHeight;
                 }
 
-                #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+                #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                 if (data->flags & FLG_Framed)
                 {
                     lm->lm_MinMax.MinWidth  += data->leftBarFrameSpacing+data->rightBarFrameSpacing+2;
@@ -575,7 +575,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                 if (data->db)
                 {
                     height += _minheight(data->db)+data->vertSpacing;
-                    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+                    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                     height += (data->flags & FLG_Framed) ? 4 : 0;
                     #endif
                 }
@@ -583,7 +583,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                 lm->lm_MinMax.MinWidth  = butMaxMinWidth;
                 lm->lm_MinMax.MinHeight = height;
 
-                #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+                #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                 if (data->flags & FLG_Framed)
                 {
                     lm->lm_MinMax.MinWidth  += data->leftBarFrameSpacing+data->rightBarFrameSpacing+2;
@@ -602,7 +602,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
             data->height = lm->lm_MinMax.MinHeight;
 
             #if defined(VIRTUAL)
-              #if defined(__MORPHOS__) || defined(__amigaos4__)
+              #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
               data->objWidth  = lm->lm_MinMax.MinWidth;
               data->objHeight = lm->lm_MinMax.MinHeight;
               #else
@@ -671,7 +671,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         break;
                 }
 
-                #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+                #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                 if (data->flags & FLG_Framed) x += data->leftBarFrameSpacing+1;
                 #endif
 
@@ -733,7 +733,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                 width  = _minwidth(child);
                                 height = _mheight(obj);
 
-                                #if defined(__MORPHOS__) || defined(__amigaos4__)
+                                #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
                                 xx = y = 0;
                                 #else
                                 if (data->flags & FLG_Framed)
@@ -764,7 +764,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 				                    width  = _mwidth(obj);
                                     height = _minheight(child);
 
-                                    #if defined(__MORPHOS__) || defined(__amigaos4__)
+                                    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
                                     xx = y = 0;
                                     #else
                                     if (data->flags & FLG_Framed)
@@ -793,7 +793,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                                     width  = _minwidth(child);
                                     height = _mheight(obj);
 
-                                    #if defined(__MORPHOS__) || defined(__amigaos4__)
+                                    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
                                     xx = y = 0;
                                     #else
                                     if (data->flags & FLG_Framed)
@@ -822,7 +822,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
 
                     if (height<data->buttonHeight) y += (data->buttonHeight-height)>>1;
 
-                    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+                    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                     if (data->flags & FLG_Framed) y += data->topBarFrameSpacing+1;
                     #endif
 
@@ -878,7 +878,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                         break;
                 }
 
-                #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+                #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                 if (data->flags & FLG_Framed) y += data->topBarFrameSpacing+1;
                 #endif
 
@@ -934,7 +934,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                             height = _minheight(child);
                             width  = _mwidth(obj);
 
-                            #if defined(__MORPHOS__) || defined(__amigaos4__)
+                            #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
                             x = yy = 0;
                             #else
                             if (data->flags & FLG_Framed)
@@ -961,7 +961,7 @@ HOOKPROTONH(LayoutFunc, ULONG, Object *obj, struct MUI_LayoutMsg *lm)
                     if (width<data->buttonWidth) x = (data->buttonWidth - _minwidth(child)) >> 1;
                     else x = 0;
 
-                    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+                    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
                     if (data->flags & FLG_Framed) x += data->leftBarFrameSpacing+1;
 	            #endif
 
@@ -1009,7 +1009,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
         struct BitMapHeader *bmh;
         ULONG               *colors, numColors;
 
-        if (GetDTAttrs(dto,PDTA_CRegs,(ULONG)&colors,PDTA_NumColors,(ULONG)&numColors,PDTA_BitMapHeader,(ULONG)&bmh,TAG_DONE)==3)
+        if (GetDTAttrs(dto,PDTA_CRegs,(IPTR)&colors,PDTA_NumColors,(IPTR)&numColors,PDTA_BitMapHeader,(IPTR)&bmh,TAG_DONE)==3)
         {
             UBYTE *chunky;
             ULONG width, height, cdepth, tw, size, csize;
@@ -1038,14 +1038,14 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
 
                 if (cdepth)
                 {
-                  res = DoMethod(dto,PDTM_READPIXELARRAY,(ULONG)chunky,PBPAFMT_ARGB,width<<2,0,0,width,height);
+                  res = DoMethod(dto,PDTM_READPIXELARRAY,(IPTR)chunky,PBPAFMT_ARGB,width<<2,0,0,width,height);
 
-                  #if defined(__MORPHOS__) || defined(__amigaos4__)
+                  #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
                   res = TRUE;
                   #endif
         	}
                 else
-                  res = DoMethod(dto,PDTM_READPIXELARRAY,(ULONG)chunky,PBPAFMT_LUT8,width,0,0,width,height);
+                  res = DoMethod(dto,PDTM_READPIXELARRAY,(IPTR)chunky,PBPAFMT_LUT8,width,0,0,width,height);
 
                 if (!res)
                 {
@@ -1053,7 +1053,7 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
                     {
                         struct BitMap *bm;
 
-                        if (GetDTAttrs(dto,PDTA_BitMap,(ULONG)&bm,TAG_DONE))
+                        if (GetDTAttrs(dto,PDTA_BitMap,(IPTR)&bm,TAG_DONE))
                         {
                             struct RastPort trp;
 
@@ -1116,13 +1116,13 @@ loadDTBrush(APTR pool,struct MUIS_TheBar_Brush *brush,STRPTR file)
 
                                 brush->trColor = ((colors[tc] & 0xFF000000)>>8) | ((colors[tc+1] & 0xFF000000)>>16) | ((colors[tc+2] & 0xFF000000)>>24);
                             }
-                            #if defined(__MORPHOS__) || defined(__amigaos4__)
+                            #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
                             else brush->flags |= BRFLG_AlphaMask;
                             #else
                             {
                                 APTR p = NULL;
 
-                                if (GetDTAttrs(dto,PDTA_MaskPlane,(ULONG)&p,TAG_DONE) && p)
+                                if (GetDTAttrs(dto,PDTA_MaskPlane,(IPTR)&p,TAG_DONE) && p)
                                     brush->flags |= BRFLG_AlphaMask;
                             }
                             #endif
@@ -1193,7 +1193,7 @@ removeButton(struct IClass *cl, Object *obj, struct Button *button)
     // if the button is not hided it might still be a member of
     // the thebar object hierarchy
     if(!(button->flags & BFLG_Hide))
-      DoSuperMethod(cl, obj, OM_REMMEMBER, (ULONG)button->obj);
+      DoSuperMethod(cl, obj, OM_REMMEMBER, (IPTR)button->obj);
 
     MUI_DisposeObject(button->obj);
     button->obj = NULL;
@@ -1251,7 +1251,7 @@ updateRemove(struct IClass *cl,Object *obj,struct InstData *data)
         {
             if (!(button->flags & BFLG_Hide))
             {
-                DoSuperMethod(cl,obj,OM_REMMEMBER,(ULONG)button->obj);
+                DoSuperMethod(cl,obj,OM_REMMEMBER,(IPTR)button->obj);
                 button->flags |= BFLG_Hide|BFLG_TableHide;
             }
         }
@@ -1259,11 +1259,11 @@ updateRemove(struct IClass *cl,Object *obj,struct InstData *data)
             if (button->flags & BFLG_TableHide)
             {
                 button->flags &= ~(BFLG_Hide|BFLG_TableHide);
-                DoSuperMethod(cl,obj,OM_ADDMEMBER,(ULONG)button->obj);
+                DoSuperMethod(cl,obj,OM_ADDMEMBER,(IPTR)button->obj);
 
                 if (!orderButtons(cl,obj,data))
                 {
-                    DoSuperMethod(cl,obj,OM_REMMEMBER,(ULONG)button->obj);
+                    DoSuperMethod(cl,obj,OM_REMMEMBER,(IPTR)button->obj);
                     button->flags |= BFLG_Hide;
                 }
             }
@@ -1331,7 +1331,7 @@ struct pack
     ULONG                       scale;
     ULONG                       disMode;
     ULONG                       spacersSize;
-    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     ULONG                       userFrame;
     #endif
 };
@@ -1384,7 +1384,7 @@ ULONG ptable[] =
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_Sunny,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_Sunny),
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_EnableKeys,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_EnableKeys),
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_DragBar,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_DragBar),
-    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_Frame,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_Framed),
     #endif
     PACK_LONGBIT(TBTAGBASE,MUIA_TheBar_BarSpacer,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_BarSpacer),
@@ -1451,7 +1451,7 @@ ULONG ptable[] =
     PACK_NEWOFFSET(MUIA_Background),
     PACK_LONGBIT(MUIA_Background,MUIA_Background,pack,flags,PKCTRL_BIT|PKCTRL_PACKONLY,FLG_Background),
 
-    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     PACK_NEWOFFSET(MUIA_Frame),
     PACK_LONGBIT(MUIA_Frame,MUIA_Frame,pack,userFlags2,PKCTRL_BIT|PKCTRL_PACKONLY|PSTF_EXISTS,UFLG2_UserFrame),
     PACK_ENTRY(MUIA_Frame,MUIA_Frame,pack,userFrame,PKCTRL_LONG|PKCTRL_PACKONLY),
@@ -1464,7 +1464,7 @@ ULONG ptable[] =
     PACK_ENDTABLE
 };
 
-static ULONG
+static IPTR
 mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct pack                        pt;
@@ -1796,11 +1796,11 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     }
 
     if((obj = (Object *)DoSuperNew(cl,obj,
-            MUIA_Group_LayoutHook,   (ULONG)&LayoutHook,
+            MUIA_Group_LayoutHook,   (IPTR)&LayoutHook,
             MUIA_Group_HorizSpacing, 0,
             MUIA_Group_VertSpacing,  0,
             (lib_flags & BASEFLG_MUI20) ? TAG_IGNORE : MUIA_CustomBackfill, TRUE,
-            TAG_MORE,(ULONG)attrs)))
+            TAG_MORE,(IPTR)attrs)))
     {
         struct InstData *data = INST_DATA(cl,obj);
 
@@ -1818,7 +1818,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         data->remove    = pt.remove;
         data->cols      = pt.cols;
         data->rows      = pt.rows;
-        #if defined(__MORPHOS__) || defined(__amigaos4__)
+        #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     	data->userFrame = pt.userFrame;
         #endif
         data->sortMsgID = MUIM_Group_Sort;
@@ -1960,10 +1960,10 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         {
             if((data->db = dragBarObject,
                     MUIA_Group_Horiz,      data->flags & FLG_Horiz,
-                    MUIA_TheButton_TheBar, obj,
+                    MUIA_TheButton_TheBar, (IPTR)obj,
                 End))
             {
-              DoSuperMethod(cl,obj,OM_ADDMEMBER,(ULONG)data->db);
+              DoSuperMethod(cl,obj,OM_ADDMEMBER,(IPTR)data->db);
             }
         }
 
@@ -1971,7 +1971,7 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         {
             while (buttons->img!=MUIV_TheBar_End)
             {
-                DoMethod(obj,MUIM_TheBar_AddButton,(ULONG)buttons);
+                DoMethod(obj,MUIM_TheBar_AddButton,(IPTR)buttons);
 
                 if (buttons->exclude && (buttons->flags & BFLG_Selected))
                     data->active = buttons->ID;
@@ -1993,19 +1993,19 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
         DeletePool(pool);
     }
 
-    RETURN((ULONG)obj);
-    return (ULONG)obj;
+    RETURN((IPTR)obj);
+    return (IPTR)obj;
 }
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mDispose(struct IClass *cl, Object *obj, Msg msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
   struct MinNode *node;
   APTR pool = data->pool;
-  ULONG res;
+  IPTR res;
 
   ENTER();
 
@@ -2033,7 +2033,7 @@ mDispose(struct IClass *cl, Object *obj, Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
@@ -2044,9 +2044,9 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
   switch(msg->opg_AttrID)
   {
     case MUIA_TheBar_MouseOver:        *msg->opg_Storage = data->id; result=TRUE; break;
-    case MUIA_TheBar_Images:           *msg->opg_Storage = (ULONG)data->brushes; result=TRUE; break;
-    case MUIA_TheBar_DisImages:        *msg->opg_Storage = (ULONG)data->dbrushes; result=TRUE; break;
-    case MUIA_TheBar_SelImages:        *msg->opg_Storage = (ULONG)data->sbrushes; result=TRUE; break;
+    case MUIA_TheBar_Images:           *msg->opg_Storage = (IPTR)data->brushes; result=TRUE; break;
+    case MUIA_TheBar_DisImages:        *msg->opg_Storage = (IPTR)data->dbrushes; result=TRUE; break;
+    case MUIA_TheBar_SelImages:        *msg->opg_Storage = (IPTR)data->sbrushes; result=TRUE; break;
     case MUIA_TheBar_ViewMode:         *msg->opg_Storage = data->viewMode; result=TRUE; break;
     case MUIA_TheBar_Borderless:       *msg->opg_Storage = (data->flags & FLG_Borderless) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_Raised:           *msg->opg_Storage = (data->flags & FLG_Raised) ? TRUE : FALSE; result=TRUE; break;
@@ -2065,7 +2065,7 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
     case MUIA_TheBar_FreeVert:         *msg->opg_Storage = (data->flags & FLG_FreeVert) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_BarSpacer:        *msg->opg_Storage = (data->flags & FLG_BarSpacer) ? TRUE : FALSE; result=TRUE; break;
     case MUIA_TheBar_RemoveSpacers:    *msg->opg_Storage = data->remove; result=TRUE; break;
-    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     case MUIA_TheBar_Frame:            *msg->opg_Storage = FALSE; result=TRUE; break;
     #else
     case MUIA_TheBar_Frame:            *msg->opg_Storage = (data->flags & FLG_Framed) ? TRUE : FALSE; result=TRUE; break;
@@ -2089,7 +2089,7 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 
 /***********************************************************************/
 
-#if !defined(__MORPHOS__) && !defined(__amigaos4__)
+#if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
 static void
 allocateFramePens(Object *obj,struct InstData *data)
 {
@@ -2146,7 +2146,7 @@ enum
     SFLG_ButtonAttrs   = SFLG_ViewMode|SFLG_Scaled|SFLG_Sunny|SFLG_Raised|SFLG_LabelPos|SFLG_EnableKeys|SFLG_NtRaiseActive,
 };
 
-static ULONG
+static IPTR
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -2158,7 +2158,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        ULONG tidata = tag->ti_Data;
+        IPTR tidata = tag->ti_Data;
 
         switch (tag->ti_Tag)
         {
@@ -2215,7 +2215,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 }
                 break;
 
-            #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+            #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
             case MUIA_TheBar_Frame:
                 if (!BOOLSAME(tidata,data->flags & FLG_Framed))
                 {
@@ -2247,10 +2247,10 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
                         if((data->db = dragBarObject,
                             	MUIA_Group_Horiz,      data->flags & FLG_Horiz,
-                            	MUIA_TheButton_TheBar, obj,
+                            	MUIA_TheButton_TheBar, (IPTR)obj,
                             End))
                         {
-                            DoSuperMethod(cl,obj,OM_ADDMEMBER,(ULONG)data->db);
+                            DoSuperMethod(cl,obj,OM_ADDMEMBER,(IPTR)data->db);
                             flags |= SFLG_Rebuild;
                         }
                     }
@@ -2258,7 +2258,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                     {
                         data->flags &= ~FLG_DragBar;
 
-                        DoSuperMethod(cl,obj,OM_REMMEMBER,(ULONG)data->db);
+                        DoSuperMethod(cl,obj,OM_REMMEMBER,(IPTR)data->db);
                         MUI_DisposeObject(data->db);
                         data->db = NULL;
                     }
@@ -2586,10 +2586,10 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
                 attrs[6].ti_Data = (data->userFlags2 & UFLG2_NtRaiseActive) ? TRUE : FALSE;
             }
 
-            DoSuperMethod(cl,obj,OM_SET,(ULONG)attrs,NULL);
+            DoSuperMethod(cl,obj,OM_SET,(IPTR)attrs,NULL);
 
             for(button = (struct Button *)(data->buttons.mlh_Head); (succ = (struct Button *)(button->node.mln_Succ)); button = succ)
-                if (!(button->flags & BFLG_Sleep)) DoMethod(button->obj,OM_SET,(ULONG)attrs,NULL);
+                if (!(button->flags & BFLG_Sleep)) DoMethod(button->obj,OM_SET,(IPTR)attrs,NULL);
         }
 
     res = DoSuperMethodA(cl,obj,(Msg)msg);
@@ -2608,7 +2608,7 @@ static struct MUIS_TheBar_Appearance staticAp = { MUIDEF_TheBar_Appearance_ViewM
                                                   { 0, 0 }
                                                 };
 
-static ULONG
+static IPTR
 mSetup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -2630,12 +2630,12 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
         SetAttrs(obj,MUIA_TheBar_ViewMode,     ap->viewMode,
                      MUIA_TheBar_LabelPos,     ap->labelPos,
-                     MUIA_TheBar_Borderless,   (ULONG)(ap->flags & MUIV_TheBar_Appearance_Borderless),
-                     MUIA_TheBar_Raised,       (ULONG)(ap->flags & MUIV_TheBar_Appearance_Raised),
-                     MUIA_TheBar_Sunny,        (ULONG)(ap->flags & MUIV_TheBar_Appearance_Sunny),
-                     MUIA_TheBar_Scaled,       (ULONG)(ap->flags & MUIV_TheBar_Appearance_Scaled),
-                     MUIA_TheBar_BarSpacer,    (ULONG)(ap->flags & MUIV_TheBar_Appearance_BarSpacer),
-                     MUIA_TheBar_EnableKeys,   (ULONG)(ap->flags & MUIV_TheBar_Appearance_EnableKeys),
+                     MUIA_TheBar_Borderless,   (IPTR)(ap->flags & MUIV_TheBar_Appearance_Borderless),
+                     MUIA_TheBar_Raised,       (IPTR)(ap->flags & MUIV_TheBar_Appearance_Raised),
+                     MUIA_TheBar_Sunny,        (IPTR)(ap->flags & MUIV_TheBar_Appearance_Sunny),
+                     MUIA_TheBar_Scaled,       (IPTR)(ap->flags & MUIV_TheBar_Appearance_Scaled),
+                     MUIA_TheBar_BarSpacer,    (IPTR)(ap->flags & MUIV_TheBar_Appearance_BarSpacer),
+                     MUIA_TheBar_EnableKeys,   (IPTR)(ap->flags & MUIV_TheBar_Appearance_EnableKeys),
                      TAG_DONE);
     }
 
@@ -2647,7 +2647,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         {
             if (getconfigitem(cl,obj,MUICFG_TheBar_GroupBack,&ptr))
             {
-                SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,(ULONG)ptr,TAG_DONE);
+                SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,(IPTR)ptr,TAG_DONE);
                 done = TRUE;
             }
         }
@@ -2666,7 +2666,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
                 {
                     if (getconfigitem(cl,obj,MUICFG_TheBar_GroupBack,&ptr))
                     {
-                        SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,(ULONG)ptr,TAG_DONE);
+                        SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,(IPTR)ptr,TAG_DONE);
                         done = TRUE;
                     }
                 }
@@ -2675,8 +2675,8 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
         if (!done)
         {
-            DoSuperMethod(cl,obj,OM_GET,MUIA_Parent,(ULONG)&ptr);
-            SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,ptr ? (ULONG)_backspec(ptr) : MUII_WindowBack,TAG_DONE);
+            DoSuperMethod(cl,obj,OM_GET,MUIA_Parent,(IPTR)&ptr);
+            SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Background,ptr ? (IPTR)_backspec(ptr) : MUII_WindowBack,TAG_DONE);
         }
     }
 
@@ -2686,11 +2686,11 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
       return FALSE;
     }
 
-    #if defined(__MORPHOS__) || defined(__amigaos4__)
+    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
     if (getconfigitem(cl,obj,MUICFG_TheBar_Frame,&ptr))
     {
       strlcpy(data->frameSpec, ptr, sizeof(data->frameSpec));
-      SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(ULONG)data->frameSpec,TAG_DONE);
+      SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,(IPTR)data->frameSpec,TAG_DONE);
     }
     else if (data->userFlags2 & UFLG2_UserFrame)
       SetSuperAttrs(cl,obj,MUIA_Group_Forward,FALSE,MUIA_Frame,data->userFrame,TAG_DONE);
@@ -2766,7 +2766,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
         else data->userFlags2 &= ~UFLG2_NtRaiseActive;
     }
 
-    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     /* Frame pens */
     if (data->flags & FLG_Framed) allocateFramePens(obj,data);
     #endif
@@ -2810,7 +2810,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
     data->eh.ehn_Class  = cl;
     data->eh.ehn_Object = obj;
     data->eh.ehn_Events = IDCMP_ACTIVEWINDOW|IDCMP_INACTIVEWINDOW;
-    DoMethod(_win(obj),MUIM_Window_AddEventHandler,(ULONG)&data->eh);
+    DoMethod(_win(obj),MUIM_Window_AddEventHandler,(IPTR)&data->eh);
 
     #if defined(VIRTUAL)
     data->flags |= FLG_IsInVirtgroup;
@@ -2836,19 +2836,19 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
-    ULONG result = 0;
+    IPTR result = 0;
 
     ENTER();
 
-    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     if (data->flags & FLG_Framed) freeFramePens(obj,data);
     #endif
 
-    DoMethod(_win(obj),MUIM_Window_RemEventHandler,(ULONG)&data->eh);
+    DoMethod(_win(obj),MUIM_Window_RemEventHandler,(IPTR)&data->eh);
 
     if (data->flags & FLG_FreeStrip) freeBitMaps(data);
 
@@ -2863,7 +2863,7 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mShow(struct IClass *cl,Object *obj,Msg msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -3077,11 +3077,11 @@ mShow(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mHide(struct IClass *cl,Object *obj,Msg msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
-    ULONG result = 0;
+    IPTR result = 0;
 
     if (data->gradbm)
     {
@@ -3097,8 +3097,8 @@ mHide(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-#if !defined(__MORPHOS__) && !defined(__amigaos4__)
-static ULONG
+#if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+static IPTR
 mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -3134,11 +3134,11 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  ULONG result = 0;
+  IPTR result = 0;
 
   ENTER();
 
@@ -3160,7 +3160,7 @@ mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mCreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -3169,17 +3169,17 @@ mCreateDragImage(struct IClass *cl,Object *obj,struct MUIP_CreateDragImage *msg)
 
     data->dm = (struct MUI_DragImage *)DoSuperMethodA(cl,obj,(Msg)msg);
 
-    RETURN((ULONG)data->dm);
-    return (ULONG)data->dm;
+    RETURN((IPTR)data->dm);
+    return (IPTR)data->dm;
 }
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mDeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
-    ULONG result;
+    IPTR result;
 
     ENTER();
 
@@ -3193,11 +3193,11 @@ mDeleteDragImage(struct IClass *cl,Object *obj,struct MUIP_DeleteDragImage *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mInitChange(struct IClass *cl,Object *obj,Msg msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -3209,11 +3209,11 @@ mInitChange(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mExitChange(struct IClass *cl,Object *obj,Msg msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -3225,7 +3225,7 @@ mExitChange(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
@@ -3261,7 +3261,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
     // remove object from group if necessary
     if(!(button->flags & BFLG_Hide))
-      DoSuperMethod(cl, obj, OM_REMMEMBER, (ULONG)button->obj);
+      DoSuperMethod(cl, obj, OM_REMMEMBER, (IPTR)button->obj);
 
     // before we finally dispose the button object we have to create a clone
     // of the notifyList it currently maintains.
@@ -3280,7 +3280,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
         struct ButtonNotify *clone;
         ULONG size;
 
-        size = sizeof(struct ButtonNotify)+sizeof(ULONG)*notify->msg.FollowParams;
+        size = sizeof(struct ButtonNotify)+sizeof(IPTR)*notify->msg.FollowParams;
 
         // clone
         if((clone = allocVecPooled(data->pool, size)))
@@ -3332,7 +3332,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
       // add the button object to our group
       // if it isn't flagged as being hided
       if(!(button->flags & BFLG_Hide))
-        DoSuperMethod(cl, obj, OM_ADDMEMBER, (ULONG)button->obj);
+        DoSuperMethod(cl, obj, OM_ADDMEMBER, (IPTR)button->obj);
 
       // now we put the notifies from our clone list
       // back active for the new button
@@ -3366,7 +3366,7 @@ mRebuild(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
 /***********************************************************************/
 
-static BOOL
+static IPTR
 mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
@@ -3388,7 +3388,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
 
       // lets allocate a temporary buffer for sending
       // the notify method to the button correctly.
-      if((notify = allocVecPooled(data->pool, sizeof(struct MUIP_Notify)+(sizeof(ULONG)*msg->followParams))))
+      if((notify = allocVecPooled(data->pool, sizeof(struct MUIP_Notify)+(sizeof(IPTR)*msg->followParams))))
       {
         // now we fill the notify structure
         notify->MethodID      = MUIM_Notify;
@@ -3397,7 +3397,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
         notify->DestObj       = msg->dest;
 
         // fill the rest with memcpy
-        memcpy(&notify->FollowParams, &msg->followParams, sizeof(ULONG)*(msg->followParams+1));
+        memcpy(&notify->FollowParams, &msg->followParams, sizeof(IPTR)*(msg->followParams+1));
 
         // now we set the notify as we have identifed the button
         result = DoMethodA(button->obj, (Msg)notify);
@@ -3416,7 +3416,7 @@ mNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_Notify *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mKillNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_KillNotify *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
@@ -3450,7 +3450,7 @@ mKillNotify(struct IClass *cl, Object *obj, struct MUIP_TheBar_KillNotify *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -3496,7 +3496,7 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
                 if (!(button->flags & BFLG_Hide))
                 {
                     if (data->flags & FLG_Setup) DoMethod(obj,MUIM_Group_InitChange);
-                    DoSuperMethod(cl,obj,OM_ADDMEMBER,(ULONG)button->obj);
+                    DoSuperMethod(cl,obj,OM_ADDMEMBER,(IPTR)button->obj);
                     if (data->flags & FLG_Setup)
                     {
                         if (data->flags & FLG_FreeStrip) DoMethod(button->obj,MUIM_TheButton_Build);
@@ -3504,7 +3504,7 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
                     }
                 }
 
-                if (button->exclude) DoMethod(button->obj,MUIM_Notify,MUIA_Selected,TRUE,(ULONG)obj,3,MUIM_Set,MUIA_TheBar_Active,button->ID);
+                if (button->exclude) DoMethod(button->obj,MUIM_Notify,MUIA_Selected,TRUE,(IPTR)obj,3,MUIM_Set,MUIA_TheBar_Active,button->ID);
 
                 msg->button->obj = button->obj;
             }
@@ -3516,13 +3516,13 @@ mAddButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_AddButton *msg)
         }
     }
 
-    RETURN((ULONG)button);
-    return (ULONG)button;
+    RETURN((IPTR)button);
+    return (IPTR)button;
 }
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetAttr *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
@@ -3592,7 +3592,7 @@ hideButton(struct IClass *cl,Object *obj,struct InstData *data,struct Button *bt
 
         if (value)
         {
-            DoSuperMethod(cl,obj,OM_REMMEMBER,(ULONG)bt->obj);
+            DoSuperMethod(cl,obj,OM_REMMEMBER,(IPTR)bt->obj);
             bt->flags |= BFLG_Hide;
             res = TRUE;
         }
@@ -3781,18 +3781,18 @@ sleepButton(struct IClass *cl, Object *obj, struct InstData *data, struct Button
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
     struct Button *bt;
-    ULONG         res = FALSE;
+    IPTR         res = FALSE;
 
     ENTER();
 
     if((bt = findButton(data,msg->ID)))
     {
-        ULONG value = msg->value;
+        IPTR value = msg->value;
 
         switch (msg->attr)
         {
@@ -3827,7 +3827,7 @@ mSetAttr(struct IClass *cl,Object *obj,struct MUIP_TheBar_SetAttr *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mRemove(struct IClass *cl, Object *obj, struct MUIP_TheBar_Remove *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
@@ -3860,7 +3860,7 @@ mRemove(struct IClass *cl, Object *obj, struct MUIP_TheBar_Remove *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGetObject(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetObject *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
@@ -3871,18 +3871,18 @@ mGetObject(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetObject *msg)
 
   result = (button = findButton(data,msg->ID)) ? button->obj : NULL;
 
-  RETURN((ULONG)result);
-  return (ULONG)result;
+  RETURN((IPTR)result);
+  return (IPTR)result;
 }
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mDoOnButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_DoOnButton *msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
   struct Button *button;
-  ULONG result;
+  IPTR result;
 
   ENTER();
 
@@ -3894,7 +3894,7 @@ mDoOnButton(struct IClass *cl,Object *obj,struct MUIP_TheBar_DoOnButton *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mClear(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
   struct InstData *data = INST_DATA(cl,obj);
@@ -3925,7 +3925,7 @@ mClear(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mDeActivate(struct IClass *cl, Object *obj, UNUSED Msg msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -3945,7 +3945,7 @@ mDeActivate(struct IClass *cl, Object *obj, UNUSED Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -4030,11 +4030,11 @@ mSort(struct IClass *cl,Object *obj,struct MUIP_TheBar_Sort *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
-    ULONG result = 0;
+    IPTR result = 0;
 
     ENTER();
 
@@ -4047,7 +4047,7 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
         }
         else
         {
-            #if defined(__MORPHOS__) || defined(__amigaos4__)
+            #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
             data->di.width  = data->buttonWidth;
             data->di.height = data->buttonHeight;
             #else
@@ -4059,7 +4059,7 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
         data->di.di = data->dm;
 
 
-        result = (ULONG)&data->di;
+        result = (IPTR)&data->di;
     }
 
     RETURN(result);
@@ -4068,7 +4068,7 @@ mGetDragImage(struct IClass *cl,Object *obj,struct MUIP_TheBar_GetDragImage *msg
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mHandleEvent(struct IClass *cl, Object *obj, UNUSED struct MUIP_HandleEvent *msg)
 {
     struct InstData *data = INST_DATA(cl,obj);
@@ -4105,7 +4105,7 @@ DISPATCHER(_Dispatcher)
     case MUIM_Cleanup:                  return mCleanup(cl,obj,(APTR)msg);
     case MUIM_Show:                     return mShow(cl,obj,(APTR)msg);
     case MUIM_Hide:                     return mHide(cl,obj,(APTR)msg);
-    #if !defined(__MORPHOS__) && !defined(__amigaos4__)
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
     case MUIM_Draw:                     return mDraw(cl,obj,(APTR)msg);
     #endif
     case MUIM_CustomBackfill:           return mCustomBackfill(cl,obj,(APTR)msg);

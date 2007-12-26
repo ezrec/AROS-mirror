@@ -58,7 +58,7 @@ struct penslistData
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mPenslistNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     Object *list;
@@ -79,12 +79,12 @@ mPenslistNew(struct IClass *cl,Object *obj,struct opSet *msg)
         data->active = -1;
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mPenslistSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct penslistData *data = INST_DATA(cl,obj);
@@ -93,7 +93,7 @@ mPenslistSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        ULONG tidata = tag->ti_Data;
+        IPTR tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -108,7 +108,7 @@ mPenslistSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct penslistData *data = INST_DATA(cl,obj);
@@ -149,7 +149,7 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
             MUIA_Image_FreeVert,  TRUE,
             MUIA_FixWidth,        w,
             MUIA_FixHeight,       h,
-            MUIA_Image_Spec,      buf,
+            MUIA_Image_Spec,      (IPTR)buf,
         End;
 
         if (data->pens[i])
@@ -167,7 +167,7 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mPenslistCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct penslistData *data = INST_DATA(cl,obj);
@@ -195,7 +195,7 @@ mPenslistCleanup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mPenslistShow(struct IClass *cl,Object *obj,Msg msg)
 {
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
@@ -264,7 +264,7 @@ struct penadjustData
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     Object *mui, *colormap, *rgb;
@@ -286,7 +286,7 @@ mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
             /* Colormap */
             Child, VGroup,
                 Child, owspace(1),
-                Child, colormap = oslider(0,Msg_Poppen_ColorMapHelp,-128,127),
+                Child, (IPTR)(colormap = oslider(0,Msg_Poppen_ColorMapHelp,-128,127)),
                 Child, owspace(1),
             End,
 
@@ -306,7 +306,7 @@ mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
         DoMethod(mui,MUIM_Notify,MUIA_Listview_DoubleClick,MUIV_EveryTime,MUIV_Notify_Application,5,MUIM_Application_PushMethod,pop,2,MUIM_Popbackground_Close,TRUE);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***********************************************************************/
@@ -340,7 +340,7 @@ mPenadjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        ULONG tidata = tag->ti_Data;
+        IPTR tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -358,7 +358,7 @@ mPenadjustSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mPenadjustDragQuery(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 {
     STRPTR x;
@@ -377,7 +377,7 @@ mPenadjustDragQuery(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragQuery *
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mPenadjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
     STRPTR x;
@@ -405,7 +405,7 @@ mPenadjustDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *ms
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mPenadjustSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpec *msg)
 {
     struct penadjustData *data = INST_DATA(cl,obj);
@@ -481,12 +481,12 @@ mPenadjustSetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_SetSpe
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mPenadjustGetSpec(struct IClass *cl,Object *obj,struct MUIP_Popbackground_GetSpec *msg)
 {
     struct penadjustData *data = INST_DATA(cl,obj);
     char spec[32];
-    ULONG res = MUIV_Popbackground_GetSpec_Spec;
+    IPTR res = MUIV_Popbackground_GetSpec_Spec;
     LONG x;
 
     superget(cl,obj,MUIA_Group_ActivePage,&x);

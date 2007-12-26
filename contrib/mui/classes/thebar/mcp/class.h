@@ -257,9 +257,9 @@ struct MUIS_Popbackground_Status
 
 /***********************************************************************/
 
-#define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(ULONG)(storage))
-#define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(ULONG)(val),TAG_DONE)
-#define addconfigitem(cfg,value,size,item) DoMethod(cfg,MUIM_Dataspace_Add,(ULONG)(value),size,item)
+#define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(IPTR)(storage))
+#define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(IPTR)(val),TAG_DONE)
+#define addconfigitem(cfg,value,size,item) DoMethod(cfg,MUIM_Dataspace_Add,(IPTR)(value),size,item)
 #define copymem(to,from,len)            memcpy((to), (from), (len))
 
 #define MUIVER20 20

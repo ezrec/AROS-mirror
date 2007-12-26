@@ -49,7 +49,7 @@
 #include "SDI_compiler.h"
 
 // these systems are able to handle alpha channel information
-#if defined(__MORPHOS__) || defined(__amigaos4__)
+#if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
 	#define WITH_ALPHA			1
 #endif
 
@@ -107,6 +107,7 @@ ULONG xget(Object *obj, const ULONG attr);
 
 /* utils.c */
 #ifdef __MORPHOS__
+
 #elif defined(__AROS__)
 Object *DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
 #else

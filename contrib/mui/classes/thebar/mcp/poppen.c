@@ -51,7 +51,7 @@ enum
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     if((obj = (Object *)DoSuperNew(cl,obj,
@@ -65,17 +65,17 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     {
         struct data *data = INST_DATA(cl,obj);
 
-        data->title = (STRPTR)GetTagData(MUIA_Window_Title, (ULONG)NULL, msg->ops_AttrList);
+        data->title = (STRPTR)GetTagData(MUIA_Window_Title, (IPTR)NULL, msg->ops_AttrList);
 
         DoMethod(obj,MUIM_Notify,MUIA_Pressed,FALSE,obj,1,MUIM_Popbackground_Open);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -83,7 +83,7 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
     switch (msg->opg_AttrID)
     {
         case MUIA_Pendisplay_Spec:
-            *msg->opg_Storage = (ULONG)data->spec;
+            *msg->opg_Storage = (IPTR)data->spec;
             return TRUE;
 
         default:
@@ -93,7 +93,7 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     struct data    *data = INST_DATA(cl,obj);
@@ -103,7 +103,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
     for(tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        ULONG tidata = tag->ti_Data;
+        IPTR tidata = tag->ti_Data;
 
         switch(tag->ti_Tag)
         {
@@ -129,7 +129,7 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mCleanup(struct IClass *cl,Object *obj,Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -147,7 +147,7 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mOpen(struct IClass *cl,Object *obj, UNUSED Msg msg)
 {
     struct data *data = INST_DATA(cl,obj);
@@ -157,10 +157,10 @@ mOpen(struct IClass *cl,Object *obj, UNUSED Msg msg)
         Object *ok, *cancel;
 
         data->win = WindowObject,
-            MUIA_Window_Title,          data->title,
+            MUIA_Window_Title,          (IPTR)data->title,
             MUIA_Window_LeftEdge,       _left(obj),
             MUIA_Window_TopEdge,        _bottom(obj)+1,
-            MUIA_Window_RefWindow,      _win(obj),
+            MUIA_Window_RefWindow,      (IPTR)_win(obj),
             MUIA_Window_Width,          MUIV_Window_Width_MinMax(16),
             MUIA_Window_Height,         MUIV_Window_Height_MinMax(16),
             MUIA_Window_MenuGadget,     FALSE,
@@ -170,12 +170,12 @@ mOpen(struct IClass *cl,Object *obj, UNUSED Msg msg)
 
             WindowContents, VGroup,
                 Child, data->pen = penadjustObject,
-                    MUIA_Popbackground_PopObj, obj,
+                    MUIA_Popbackground_PopObj, (IPTR)obj,
                 End,
                 Child, HGroup,
-                    Child, ok = obutton(Msg_Pop_OK,Msg_Pop_OK_Help),
-                    Child, HSpace(0),
-                    Child, cancel = obutton(Msg_Pop_Cancel,Msg_Pop_Cancel_Help),
+                    Child, (IPTR)(ok = obutton(Msg_Pop_OK,Msg_Pop_OK_Help)),
+                    Child, (IPTR)HSpace(0),
+                    Child, (IPTR)(cancel = obutton(Msg_Pop_Cancel,Msg_Pop_Cancel_Help)),
                 End,
             End,
         End;
@@ -203,14 +203,14 @@ mOpen(struct IClass *cl,Object *obj, UNUSED Msg msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mClose(struct IClass *cl,Object *obj,struct MUIP_Popbackground_Close *msg)
 {
     struct data *data = INST_DATA(cl,obj);
 
     if (msg->success)
     {
-        ULONG x;
+        IPTR x;
 
         data->flags |= FLG_Closing;
         if (get(data->pen,MUIA_Pendisplay_Spec,&x)) set(obj,MUIA_Pendisplay_Spec,x);
@@ -227,7 +227,7 @@ mClose(struct IClass *cl,Object *obj,struct MUIP_Popbackground_Close *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mDragQuery(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 {
     STRPTR x;
@@ -246,7 +246,7 @@ mDragQuery(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragQuery *msg)
 
 /***********************************************************************/
 
-static ULONG
+static IPTR
 mDragDrop(UNUSED struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 {
     STRPTR x;

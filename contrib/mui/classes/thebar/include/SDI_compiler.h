@@ -43,6 +43,9 @@
  1.23  30.04.06 : modified to get it compatible to AROS. (Guido Mersmann)
  1.24  06.05.06 : __linearvarargs is only valid for vbcc and PPC, so I moved VARARGS68K
                   to prevent problems with 68K and i86 targets. (Guido Mersmann)
+ 1.25  24.12.07 : added some AROS features for non-AROS platforms:
+		  - IPTR (integer type which is large enough to store a pointer)
+		  - STACKED for proper alignment of structure elements for DoMethod
 */
 
 /*
@@ -208,6 +211,13 @@
 
   #undef ASM
   #define ASM
+
+#else
+
+  #include <exec/types.h>
+  typedef ULONG IPTR;
+  typedef LONG  SIPTR;
+  #define STACKED
 
 #endif /* __AROS__ */
 

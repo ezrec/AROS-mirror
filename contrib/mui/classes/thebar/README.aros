@@ -1,7 +1,7 @@
 README.aros
 ===========
 
-The codesets.library is hosted on Sourceforge:
+MCC TheBar is hosted on Sourceforge:
 http://sourceforge.net/projects/thebar/
 
 Please ensure that all modifications for the AROS port flow back to its
@@ -9,9 +9,7 @@ origin on Sourceforge.
 
 TODO
 ----
-* MCC: the demos1 and 7 crash
-* MCP: clicking on the top left buttons causes segfault
-* ULONG -> IPTR for 64 bit compatibility
+* MCC: some demos crash
 * create Catalogs
 
 LEGAL

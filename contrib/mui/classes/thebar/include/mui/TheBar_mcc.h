@@ -38,8 +38,8 @@
 
 /***********************************************************************/
 
-#ifndef __AROS__
-// STACKED ensures proper alignment on 64 bit systems
+#ifndef __STACKED__
+// STACKED ensures proper alignment on AROS 64 bit systems
 #define STACKED
 #endif
 
