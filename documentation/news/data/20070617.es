@@ -6,7 +6,7 @@ Status Update
 :Fecha:     2007-06-17
 
 Últimas noticias
---------------------
+----------------
 
 ¡La globalización de AROS continúa! Ioannis Koniaris ha traducido
 `AROS.org al griego`__.
