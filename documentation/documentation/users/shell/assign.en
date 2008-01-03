@@ -34,7 +34,7 @@ Function
 ::
 
 
-     ASSIGN creates a reference to a file or directory. The reference 
+     ASSIGN creates a reference to a file or directory. The reference
      is a logical device name which makes it very convenient to specify
      assigned objects using the reference instead of their paths.
 
@@ -56,7 +56,7 @@ Inputs
      NAME      --  the name that should be assigned to a file or directory
      TARGET    --  one or more files or directories to assign the NAME to
      LIST      --  list all assigns made
-     EXISTS    --  if NAME isn`t already assigned, set the condition flag to
+     EXISTS    --  if NAME is not assigned, set the condition flag to
                    WARN
      DISMOUNT  --  remove the volume or device NAME from the dos list
      DEFER     --  make an ASSIGN to a path or directory that not need to
@@ -72,6 +72,6 @@ Inputs
      VOLS      --  show assigned volumes if in LIST mode
      DIRS      --  show assigned directories if in LIST mode
      DEVICES   --  show assigned devices if in LIST mode
-     
+
 
 

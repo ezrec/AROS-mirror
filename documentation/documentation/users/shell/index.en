@@ -17,6 +17,7 @@ Shell commands
 `ChangeTaskPri`__
 `Copy`__
 `Date`__
+`Delay`__
 `Delete`__
 `Dir`__
 `Echo`__
@@ -31,6 +32,7 @@ Shell commands
 `Filenote`__
 `Get`__
 `Getenv`__
+`IconX`__
 `If`__
 `Info`__
 `Join`__
@@ -80,6 +82,7 @@ __ cd
 __ changetaskpri
 __ copy
 __ date
+__ delay
 __ delete
 __ dir
 __ echo
@@ -94,6 +97,7 @@ __ fault
 __ filenote
 __ get
 __ getenv
+__ iconx
 __ if
 __ info
 __ join
@@ -131,4 +135,3 @@ __ version
 __ wait
 __ which
 __ why
-

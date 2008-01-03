@@ -17,7 +17,7 @@ Synopsis
 ::
 
 
-     DISKS/S, VOLS=VOLUMES/S, GOODONLY/S, BLOCKS/S, DEVICES/M
+     DISKS/S, VOLS=VOLUMES/S, ALL/S, BLOCKS/S, DEVICES/M
 
 
 Location
@@ -46,7 +46,7 @@ Inputs
 
  DISKS     --  show information on file system devices
  VOLS      --  show information on volumes
- GOODONLY  --  don't show any information on bad devices or volumes
+ ALL       --  show information on bad devices or volumes
  BLOCKS    --  show additional block size and usage information
  DEVICES   --  device names to show information about
 

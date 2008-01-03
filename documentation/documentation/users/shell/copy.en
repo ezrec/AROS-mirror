@@ -23,7 +23,7 @@ Synopsis
      PAT=PATTERN/K, DIRECT/S,SILENT/S, ERRWARN/S, MAKEDIR/S, MOVE/S,
      DELETE/S, HARD=HARDLINK/S, SOFT=SOFTLINK/S, FOLNK=FORCELINK/S,
      FODEL=FORCEDELETE/S, FOOVR=FORCEOVERWRITE/S, DONTOVR=DONTOVERWRITE/S,
-     FORCE/S
+     FORCE/S,NEWER/S
 
 
 Location
@@ -56,7 +56,7 @@ Inputs
      CLONE     --  copy comment, protection bits and date as well
      DATES     --  copy dates
      NOPRO     --  do not copy protection bits
-     COMMENT   --  copy filecomment
+             COMMENT   --  copy file comment
      NOREQ     --  suppress requesters
 
      PATTERN   --  a pattern the filenames must match
@@ -73,6 +73,7 @@ Inputs
      FOOVR     --  also overwrite protected files
      DONTOVR   --  do never overwrite destination
      FORCE     --  DO NOT USE. Call compatibility only.
+             NEWER     --  compare version strings and only overwrites older files.
 
 
  More detailed descriptions:
@@ -190,6 +191,9 @@ Inputs
  DONTOVR=DONTOVERWRITE:
  This option prevents overwriting of destination files.
 
+     NEWER:
+     This option scans the version strings of the source and destination files and
+     only overwrites if the source file is newer than the destination file.
 
 
 See also

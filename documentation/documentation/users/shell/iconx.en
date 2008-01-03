@@ -1,0 +1,45 @@
+=====
+IconX
+=====
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <getenv>`_ `Next <if>`_ 
+
+---------------
+
+::
+
+ IconX 
+
+Location
+~~~~~~~~
+::
+
+
+     Workbench:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Starts DOS scripts from Workbench. In order to use it you need an icon for
+     your script. Set 'IconX' as default tool.
+
+
+Inputs
+~~~~~~
+::
+
+
+     Tooltypes for script icon:
+         WINDOW            -- Specification of the shell window
+                              default: con:0/50//80/IconX/Auto
+         STACK=n           -- default: 40960
+         USERSHELL=YES|NO  -- default: YES
+         WAIT=n            -- Wait n seconds before closing window (default 2)
+         DELAY=n           -- Wait n/50 seconds before closing window
+
+
