@@ -91,7 +91,7 @@ Inputs
                          is NULL).
 
      deviceNode  -   DOS device node for this device. Typically created
-                     my MakeDosNode().
+                     by MakeDosNode().
 
      configDev   -   A valid expansion board ConfigDev structure, this
                      is required for an autoboot before DOS is running.
@@ -532,15 +532,15 @@ Inputs
 ~~~~~~
 ::
 
-     parmPacket  -   a longword array containing the device parameters
+     parmPacket  -   an IPTR array containing the device parameters
                      required to initialize the structures. This is a
                      variable length structure. See also the DosEnvec
                      structure in dos/filehandler.h
 
-         longword    description
+         Index       Description
          --------    -----------
-         0           Exec string with dos handler name (eg ffs.handler)
-         1           Exec string with exec device name (eg fdsk.device)
+         0           Exec string with dos device name (eg. DH0)
+         1           Exec string with exec device name (eg. fdsk.device)
          2           unit number of device to open
          3           flags (for OpenDevice())
          4           length of the remaining data

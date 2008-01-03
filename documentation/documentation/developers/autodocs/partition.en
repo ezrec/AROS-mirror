@@ -32,7 +32,7 @@ Function
 ~~~~~~~~
 ::
 
- add a new partition
+ Add a new partition.
 
 
 Inputs
@@ -165,7 +165,7 @@ Function
 ~~~~~~~~
 ::
 
- delete a partition with it's subpartitions
+ Delete a partition with its subpartitions
 
 
 Inputs
@@ -190,7 +190,7 @@ Function
 ~~~~~~~~
 ::
 
- Destroy a partition table by immediatly overwriting table data on disk.
+ Destroy a partition table by immediately overwriting table data on disk.
 
 
 Inputs
@@ -213,7 +213,7 @@ Notes
 
  After calling this function the state of the PartitionHandle will be the
  same as before calling OpenPartitionTable(). Therefore do not reference
- any children PartitionHandles anymore.
+ any child PartitionHandles any more.
 
 
 
@@ -242,8 +242,8 @@ Inputs
  ph      - PartitionHandle
  taglist - list of attributes; unknown tags are ignored
      PT_DOSENVEC - struct DosEnvec *; get DosEnvec values
-     PT_TYPE     - LONG *           ; get partition type (MBR-PC)
-     PT_POSITION - LONG *           ; position of partition (MBR-PC)
+     PT_TYPE     - struct PartitionType *           ; get partition type (MBR-PC)
+     PT_POSITION - ULONG *           ; position of partition (MBR-PC)
      PT_ACTIVE   - LONG *           ; is partition active
 
 
@@ -271,9 +271,9 @@ Inputs
 
  ph      - PartitionHandle of the partition table
  taglist - list of attributes; unknown tags are ignored
-     PTT_DOSENVEC - struct DosEnvec *; get DosEnvec values
-     PTT_TYPE     - LONG *           ; get partition table type
-     PTT_RESERVED - LONG *           ; get number of reserved blocks
+     PTT_TYPE     - ULONG *           ; get partition table type
+     PTT_MAXLEADIN     - LONG *
+     PTT_RESERVED - ULONG *           ; get number of reserved blocks
 
 
 
@@ -292,7 +292,7 @@ Function
 ::
 
      Open a partition table. On success root->list will be filled with a
-     list of PartitionHandle's. If one partition contains more
+     list of PartitionHandles. If one partition contains more
      subpartitions, the caller should call OpenPartitionTable() on the
      PartitionHandle recursively.
 
@@ -327,7 +327,7 @@ Function
 ~~~~~~~~
 ::
 
- create a root handle, open device/unit
+ Create a root handle by opening a trackdisk-compatible device.
 
 
 Inputs
@@ -481,7 +481,7 @@ Function
 ~~~~~~~~
 ::
 
- write a partition table; writing this partition table doesn't affect
+ Write a partition table; writing this partition table doesn't affect
  subpartition tables
 
 

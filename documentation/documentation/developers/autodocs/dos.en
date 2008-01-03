@@ -1500,7 +1500,7 @@ Synopsis
  BOOL ErrorReport(
           LONG code,
           LONG type,
-          ULONG arg1,
+          IPTR arg1,
           struct MsgPort * device );
 
 Inputs
@@ -3220,9 +3220,9 @@ Inputs
 
      fh            : Filehandle to load from
      table         : ignored
-     functionarray : Array of function to be used fro read, alloc and free
-        FuncTable[0] -> bytes  = ReadFunc(readhandle, buffer, length),DOSBase
-                        D0                D1          A0      D0      A6
+     functionarray : array of functions to be used for read, alloc and free
+        FuncTable[0] -> bytes  = ReadFunc(readhandle, buffer, length), DOSBase
+                        D0                D1          A0      D0       A6
         FuncTable[1] -> Memory = AllocFunc(size,flags), ExecBase
                         D0                 D0   D1      A6
         FuncTable[2] -> FreeFunc(memory, size), ExecBase
@@ -5948,7 +5948,7 @@ Synopsis
 ::
 
  LONG SplitName(
-          STRPTR name,
+          CONST_STRPTR name,
           ULONG seperator,
           STRPTR buf,
           LONG oldpos,

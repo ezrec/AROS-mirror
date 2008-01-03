@@ -403,7 +403,29 @@ Synopsis
 
  struct DiskObject * GetIconTagList(
           CONST_STRPTR name,
-          struct TagItem * tags );
+          const struct TagItem * tags );
+
+Inputs
+~~~~~~
+::
+
+
+ TAGS
+     ICONA_ErrorCode (LONG *)
+     ICONGETA_GetDefaultType (LONG) - Default icon type to get. This
+             overrides the "name" paramter.
+     ICONGETA_GetDefaultName (STRPTR) - Name of default icon to get. This
+             overrides the "name" paramter.
+     ICONGETA_FailIfUnavailable (BOOL)
+     ICONGETA_GetPaletteMappedIcon (BOOL)
+     ICONGETA_IsDefaultIcon (LONG *) - Upon completion of this function, the
+         referenced LONG will be set to a boolean value indicating whether
+         the returned icon is a default icon.
+     ICONGETA_RemapIcon (BOOL)
+     ICONGETA_GenerateImageMasks (BOOL)
+     ICONGETA_Label (STRPTR)
+     ICONGETA_Screen (struct Screen *)
+
 
 
 IconControlA
