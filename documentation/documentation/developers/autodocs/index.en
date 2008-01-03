@@ -43,4 +43,5 @@ Autodocs for Libraries
 + `thread <thread>`_
 + `timer <timer>`_
 + `utility <utility>`_
++ `uuid <uuid>`_
 + `workbench <workbench>`_
