@@ -1,0 +1,3966 @@
+
+# /
+/mmakefile
+/makefile
+/XDME
+/ix
+/*.lha
+/*.info
+/*.gz
+/xpk*
+/Moria3D.org
+
+# Demo
+
+# Demo/BlackHole
+/Demo/BlackHole/mmakefile
+
+# Demo/DawaFire
+/Demo/DawaFire/mmakefile
+
+# Demo/DawaFire/icons
+
+# Demo/FTunnel
+/Demo/FTunnel/mmakefile
+
+# Demo/Firework
+/Demo/Firework/mmakefile
+
+# Demo/Firework/icons
+
+# Demo/Flamme
+/Demo/Flamme/mmakefile
+
+# Demo/Flamme/icons
+
+# Demo/Galaxy
+/Demo/Galaxy/mmakefile
+
+# Demo/Galaxy/icons
+
+# Demo/InfPlane
+/Demo/InfPlane/mmakefile
+
+# Demo/InfPlane/icons
+
+# Demo/Kitty
+/Demo/Kitty/mmakefile
+/Demo/Kitty/kittysprite_image.c
+
+# Demo/Kitty/icons
+
+# Demo/Kitty/pics
+
+# Demo/Metaballs
+/Demo/Metaballs/mmakefile
+
+# Demo/Metaballs/icons
+
+# Demo/NewVox
+/Demo/NewVox/mmakefile
+
+# Demo/NewVox/icons
+
+# Demo/Parallax
+/Demo/Parallax/mmakefile
+
+# Demo/Parallax/icons
+
+# Demo/PowerZoom
+/Demo/PowerZoom/mmakefile
+
+# Demo/RubberStrings
+/Demo/RubberStrings/mmakefile
+
+# Demo/RubberStrings/icons
+
+# Demo/Tunnel
+/Demo/Tunnel/mmakefile
+
+# Demo/Tunnel/icons
+
+# Demo/Voxel
+/Demo/Voxel/mmakefile
+
+# Demo/Voxel/icons
+
+# Demo/kdp
+/Demo/kdp/mmakefile
+
+# Demo/kdp/objects
+
+# DiskSpeed
+/DiskSpeed/mmakefile
+/DiskSpeed/locale.c
+
+# DiskSpeed/catalogs
+/DiskSpeed/catalogs/mmakefile
+
+# DiskSpeed/diskspeed
+
+# DiskSpeed/icons
+
+# DiskSpeed/scsispeed
+
+# Feelin
+/Feelin/mmakefile
+
+# Feelin/AROS
+/Feelin/AROS/mmakefile
+
+# Feelin/AROS/Icon
+/Feelin/AROS/Icon/mmakefile
+
+# Feelin/Demos
+/Feelin/Demos/mmakefile
+
+# Feelin/ENVARC
+
+# Feelin/ENVARC/Feelin
+/Feelin/ENVARC/Feelin/mmakefile
+
+# Feelin/Fonts
+
+# Feelin/Fonts/Mario
+
+# Feelin/Fonts/Nokia
+
+# Feelin/Fonts/XHelvetica
+
+# Feelin/Include
+
+# Feelin/Include/clib
+
+# Feelin/Include/defines
+
+# Feelin/Include/fd
+
+# Feelin/Include/feelin
+
+# Feelin/Include/inline
+
+# Feelin/Include/lib
+/Feelin/Include/lib/mmakefile
+
+# Feelin/Include/libraries
+
+# Feelin/Include/ppcinline
+
+# Feelin/Include/pragma
+
+# Feelin/Include/proto
+
+# Feelin/Sources
+
+# Feelin/Sources/Adjust
+/Feelin/Sources/Adjust/mmakefile
+
+# Feelin/Sources/Adjust/_locale
+
+# Feelin/Sources/AdjustBrush
+/Feelin/Sources/AdjustBrush/mmakefile
+
+# Feelin/Sources/AdjustColor
+/Feelin/Sources/AdjustColor/mmakefile
+
+# Feelin/Sources/AdjustColor/_locale
+
+# Feelin/Sources/AdjustFrame
+/Feelin/Sources/AdjustFrame/mmakefile
+
+# Feelin/Sources/AdjustFrame/_locale
+
+# Feelin/Sources/AdjustGradient
+/Feelin/Sources/AdjustGradient/mmakefile
+
+# Feelin/Sources/AdjustGradient/_locale
+
+# Feelin/Sources/AdjustImage
+/Feelin/Sources/AdjustImage/mmakefile
+
+# Feelin/Sources/AdjustPen
+/Feelin/Sources/AdjustPen/mmakefile
+
+# Feelin/Sources/AdjustPicture
+/Feelin/Sources/AdjustPicture/mmakefile
+
+# Feelin/Sources/AdjustPreParse
+/Feelin/Sources/AdjustPreParse/mmakefile
+
+# Feelin/Sources/AdjustRGB
+/Feelin/Sources/AdjustRGB/mmakefile
+
+# Feelin/Sources/AdjustRGB/_locale
+
+# Feelin/Sources/AdjustRaster
+/Feelin/Sources/AdjustRaster/mmakefile
+
+# Feelin/Sources/AdjustScheme
+/Feelin/Sources/AdjustScheme/mmakefile
+
+# Feelin/Sources/AdjustSchemeEntry
+/Feelin/Sources/AdjustSchemeEntry/mmakefile
+
+# Feelin/Sources/AdjustSpacing
+/Feelin/Sources/AdjustSpacing/mmakefile
+
+# Feelin/Sources/AdjustSpacing/_locale
+
+# Feelin/Sources/AppServer
+/Feelin/Sources/AppServer/mmakefile
+
+# Feelin/Sources/Application
+/Feelin/Sources/Application/mmakefile
+
+# Feelin/Sources/Area
+/Feelin/Sources/Area/mmakefile
+
+# Feelin/Sources/Balance
+/Feelin/Sources/Balance/mmakefile
+
+# Feelin/Sources/Bar
+/Feelin/Sources/Bar/mmakefile
+
+# Feelin/Sources/BitMap
+/Feelin/Sources/BitMap/mmakefile
+
+# Feelin/Sources/CorePNG
+/Feelin/Sources/CorePNG/mmakefile
+
+# Feelin/Sources/Crawler
+/Feelin/Sources/Crawler/mmakefile
+
+# Feelin/Sources/Cycle
+/Feelin/Sources/Cycle/mmakefile
+
+# Feelin/Sources/DOSList
+/Feelin/Sources/DOSList/mmakefile
+
+# Feelin/Sources/DOSNotify
+/Feelin/Sources/DOSNotify/mmakefile
+
+# Feelin/Sources/Dataspace
+/Feelin/Sources/Dataspace/mmakefile
+
+# Feelin/Sources/Decorator
+/Feelin/Sources/Decorator/mmakefile
+
+# Feelin/Sources/Decorator-Flatty
+/Feelin/Sources/Decorator-Flatty/mmakefile
+
+# Feelin/Sources/Decorator-Shade
+/Feelin/Sources/Decorator-Shade/mmakefile
+
+# Feelin/Sources/Dialog
+/Feelin/Sources/Dialog/mmakefile
+
+# Feelin/Sources/Dialog/_locale
+
+# Feelin/Sources/Display
+/Feelin/Sources/Display/mmakefile
+
+# Feelin/Sources/DisplayServer
+/Feelin/Sources/DisplayServer/mmakefile
+
+# Feelin/Sources/Document
+/Feelin/Sources/Document/mmakefile
+
+# Feelin/Sources/Family
+/Feelin/Sources/Family/mmakefile
+
+# Feelin/Sources/FileChooser
+/Feelin/Sources/FileChooser/mmakefile
+
+# Feelin/Sources/FontChooser
+/Feelin/Sources/FontChooser/mmakefile
+
+# Feelin/Sources/FontDialog
+/Feelin/Sources/FontDialog/mmakefile
+
+# Feelin/Sources/FontDialog/_locale
+
+# Feelin/Sources/Frame
+/Feelin/Sources/Frame/mmakefile
+
+# Feelin/Sources/Gauge
+/Feelin/Sources/Gauge/mmakefile
+
+# Feelin/Sources/Group
+/Feelin/Sources/Group/mmakefile
+
+# Feelin/Sources/Group/_locale
+
+# Feelin/Sources/HTMLDocument
+/Feelin/Sources/HTMLDocument/mmakefile
+
+# Feelin/Sources/Histogram
+/Feelin/Sources/Histogram/mmakefile
+
+# Feelin/Sources/Image
+/Feelin/Sources/Image/mmakefile
+
+# Feelin/Sources/ImageDisplay
+/Feelin/Sources/ImageDisplay/mmakefile
+
+# Feelin/Sources/List
+/Feelin/Sources/List/mmakefile
+
+# Feelin/Sources/Listview
+/Feelin/Sources/Listview/mmakefile
+
+# Feelin/Sources/Menu
+/Feelin/Sources/Menu/mmakefile
+
+# Feelin/Sources/MenuItem
+/Feelin/Sources/MenuItem/mmakefile
+
+# Feelin/Sources/ModulesList
+/Feelin/Sources/ModulesList/mmakefile
+
+# Feelin/Sources/Numeric
+/Feelin/Sources/Numeric/mmakefile
+
+# Feelin/Sources/Palette
+/Feelin/Sources/Palette/mmakefile
+
+# Feelin/Sources/Picture
+/Feelin/Sources/Picture/mmakefile
+
+# Feelin/Sources/PopBrush
+/Feelin/Sources/PopBrush/mmakefile
+
+# Feelin/Sources/PopBrush/_locale
+
+# Feelin/Sources/PopColor
+/Feelin/Sources/PopColor/mmakefile
+
+# Feelin/Sources/PopColor/_locale
+
+# Feelin/Sources/PopFile
+/Feelin/Sources/PopFile/mmakefile
+
+# Feelin/Sources/PopFile/_locale
+
+# Feelin/Sources/PopFont
+/Feelin/Sources/PopFont/mmakefile
+
+# Feelin/Sources/PopFont/_locale
+
+# Feelin/Sources/PopFrame
+/Feelin/Sources/PopFrame/mmakefile
+
+# Feelin/Sources/PopFrame/_locale
+
+# Feelin/Sources/PopHelp
+/Feelin/Sources/PopHelp/mmakefile
+
+# Feelin/Sources/PopImage
+/Feelin/Sources/PopImage/mmakefile
+
+# Feelin/Sources/PopImage/_locale
+
+# Feelin/Sources/PopPicture
+/Feelin/Sources/PopPicture/mmakefile
+
+# Feelin/Sources/PopPicture/_locale
+
+# Feelin/Sources/PopPreParse
+/Feelin/Sources/PopPreParse/mmakefile
+
+# Feelin/Sources/PopPreParse/_locale
+
+# Feelin/Sources/PopScheme
+/Feelin/Sources/PopScheme/mmakefile
+
+# Feelin/Sources/PopScheme/_locale
+
+# Feelin/Sources/Preference
+/Feelin/Sources/Preference/mmakefile
+
+# Feelin/Sources/PreferenceEditor
+/Feelin/Sources/PreferenceEditor/mmakefile
+
+# Feelin/Sources/PreferenceEditor/_locale
+
+# Feelin/Sources/PreferenceGroup
+/Feelin/Sources/PreferenceGroup/mmakefile
+
+# Feelin/Sources/Preview
+/Feelin/Sources/Preview/mmakefile
+
+# Feelin/Sources/Preview/_locale
+
+# Feelin/Sources/PreviewColor
+/Feelin/Sources/PreviewColor/mmakefile
+
+# Feelin/Sources/PreviewFrame
+/Feelin/Sources/PreviewFrame/mmakefile
+
+# Feelin/Sources/PreviewImage
+/Feelin/Sources/PreviewImage/mmakefile
+
+# Feelin/Sources/PreviewScheme
+/Feelin/Sources/PreviewScheme/mmakefile
+
+# Feelin/Sources/Prop
+/Feelin/Sources/Prop/mmakefile
+
+# Feelin/Sources/Radio
+/Feelin/Sources/Radio/mmakefile
+
+# Feelin/Sources/Render
+/Feelin/Sources/Render/mmakefile
+
+# Feelin/Sources/Scale
+/Feelin/Sources/Scale/mmakefile
+
+# Feelin/Sources/Scrollbar
+/Feelin/Sources/Scrollbar/mmakefile
+
+# Feelin/Sources/Slider
+/Feelin/Sources/Slider/mmakefile
+
+# Feelin/Sources/String
+/Feelin/Sources/String/mmakefile
+
+# Feelin/Sources/Text
+/Feelin/Sources/Text/mmakefile
+
+# Feelin/Sources/TextDisplay
+/Feelin/Sources/TextDisplay/mmakefile
+
+# Feelin/Sources/Thread
+/Feelin/Sources/Thread/mmakefile
+
+# Feelin/Sources/Window
+/Feelin/Sources/Window/mmakefile
+
+# Feelin/Sources/Window/_locale
+
+# Feelin/Sources/XMLApplication
+/Feelin/Sources/XMLApplication/mmakefile
+
+# Feelin/Sources/XMLDocument
+/Feelin/Sources/XMLDocument/mmakefile
+
+# Feelin/Sources/XMLObject
+/Feelin/Sources/XMLObject/mmakefile
+
+# Feelin/Sources/_future
+
+# Feelin/Sources/_future/Font
+
+# Feelin/Sources/_future/NFileChooser
+
+# Feelin/Sources/_locale
+
+# Feelin/Sources/_scripts
+
+# Feelin/Sources/_support
+
+# Feelin/Sources/_template
+
+# Feelin/Sources/_template/_locale
+
+# Feelin/Sources/feelin
+/Feelin/Sources/feelin/mmakefile
+
+# Feelin/Sources/feelin/deprecated
+
+# Feelin/Tools
+/Feelin/Tools/mmakefile
+
+# Feelin/Tools/back
+
+# Feelin/Tools/deprecated
+
+# Feelin/XMLSources
+
+# Feelin/XMLSources/feelin
+
+# Feelin/XMLSources/feelin/preference
+
+# Feelin/dictionary
+
+# Feelin/images
+
+# Feelin/images/Be
+
+# Feelin/images/defaults
+
+# Feelin/images/filechooser
+
+# Feelin/resources
+
+# Feelin/resources/decorators
+
+# Feelin/resources/decorators/flatty
+
+# Feelin/resources/images
+
+# Feelin/resources/system
+
+# Feelin/resources/themes
+
+# Feelin/resources/themes/aqua
+
+# Games
+
+# Games/Bomber
+/Games/Bomber/mmakefile
+
+# Games/Doom
+/Games/Doom/mmakefile
+
+# Games/Doom/icons
+
+# Games/Doom/startscripts
+
+# Games/Kiel
+
+# Games/Kiel/Jump
+/Games/Kiel/Jump/mmakefile
+
+# Games/Kiel/Mine
+/Games/Kiel/Mine/mmakefile
+/Games/Kiel/Mine/strings.h
+
+# Games/Kiel/Mine/catalogs
+/Games/Kiel/Mine/catalogs/mmakefile
+
+# Games/Kiel/Quad
+/Games/Kiel/Quad/mmakefile
+
+# Games/Kiel/Rotate
+/Games/Kiel/Rotate/mmakefile
+
+# Games/Kiel/Wumpus
+/Games/Kiel/Wumpus/mmakefile
+/Games/Kiel/Wumpus/strings.h
+
+# Games/Kiel/Wumpus/catalogs
+/Games/Kiel/Wumpus/catalogs/mmakefile
+
+# Games/Moria3D
+/Games/Moria3D/mmakefile
+/Games/Moria3D/MakeProject
+/Games/Moria3D/*.info
+/Games/Moria3D/*030*
+/Games/Moria3D/*040*
+/Games/Moria3D/bin
+
+# Games/Moria3D/Levels
+/Games/Moria3D/Levels/*.info
+
+# Games/Moria3D/Source
+/Games/Moria3D/Source/*.o
+/Games/Moria3D/Source/*.info
+/Games/Moria3D/Source/Moria3D.Linux
+
+# Games/Moria3D/Textures
+
+# Games/Quake
+/Games/Quake/mmakefile
+/Games/Quake/*.err
+
+# Games/XInvaders3D
+/Games/XInvaders3D/mmakefile
+
+# Games/cxhextris
+/Games/cxhextris/mmakefile
+
+# Games/lbreakout2
+/Games/lbreakout2/mmakefile
+/Games/lbreakout2/.files-touched
+
+# Games/lbreakout2/client
+
+# Games/lbreakout2/client/gfx
+
+# Games/lbreakout2/client/gfx/AbsoluteB
+
+# Games/lbreakout2/client/gfx/Classic
+
+# Games/lbreakout2/client/gfx/Moiree
+
+# Games/lbreakout2/client/gfx/Oz
+
+# Games/lbreakout2/client/gui_theme
+
+# Games/lbreakout2/client/levels
+
+# Games/lbreakout2/client/sounds
+
+# Games/lbreakout2/common
+
+# Games/lbreakout2/docs
+
+# Games/lbreakout2/gui
+
+# Games/lbreakout2/server
+
+# Games/spout
+/Games/spout/mmakefile
+/Games/spout/.files-touched
+
+# Games/wumpus
+/Games/wumpus/mmakefile
+
+# Misc
+
+# Misc/Bench
+
+# Misc/Bench/Dhrystone
+/Misc/Bench/Dhrystone/mmakefile
+
+# Misc/DDemo7
+/Misc/DDemo7/mmakefile
+
+# Misc/Linie12
+/Misc/Linie12/mmakefile
+
+# Misc/SWitch
+/Misc/SWitch/mmakefile
+
+# Misc/SortCopy
+/Misc/SortCopy/mmakefile
+
+# Misc/berger
+/Misc/berger/*.add
+/Misc/berger/mmakefile
+
+# Misc/berger/samples
+
+# MultiMedia
+
+# MultiMedia/AMP2
+/MultiMedia/AMP2/mmakefile
+
+# MultiMedia/AMP2/amigaos
+
+# MultiMedia/AMP2/aros
+
+# MultiMedia/AMP2/audio
+
+# MultiMedia/AMP2/common
+
+# MultiMedia/AMP2/main
+
+# MultiMedia/AMP2/parser
+
+# MultiMedia/AMP2/parser/avi
+
+# MultiMedia/AMP2/parser/dvd
+
+# MultiMedia/AMP2/parser/dvd/dvdcss
+
+# MultiMedia/AMP2/parser/dvd/dvdnav
+
+# MultiMedia/AMP2/parser/dvd/dvdread
+
+# MultiMedia/AMP2/parser/mpeg
+
+# MultiMedia/AMP2/parser/qt
+
+# MultiMedia/AMP2/parser/rm
+
+# MultiMedia/AMP2/parser/stream
+
+# MultiMedia/AMP2/parser/vcd
+
+# MultiMedia/AMP2/plugin
+/MultiMedia/AMP2/plugin/mmakefile
+
+# MultiMedia/AMP2/plugin/a52
+/MultiMedia/AMP2/plugin/a52/mmakefile
+
+# MultiMedia/AMP2/plugin/cvid
+/MultiMedia/AMP2/plugin/cvid/mmakefile
+
+# MultiMedia/AMP2/plugin/h263
+/MultiMedia/AMP2/plugin/h263/mmakefile
+
+# MultiMedia/AMP2/plugin/ima4
+/MultiMedia/AMP2/plugin/ima4/mmakefile
+
+# MultiMedia/AMP2/plugin/mace
+/MultiMedia/AMP2/plugin/mace/mmakefile
+
+# MultiMedia/AMP2/plugin/mpega
+/MultiMedia/AMP2/plugin/mpega/mmakefile
+
+# MultiMedia/AMP2/plugin/mpegv
+/MultiMedia/AMP2/plugin/mpegv/mmakefile
+
+# MultiMedia/AMP2/plugin/mpegvlo
+/MultiMedia/AMP2/plugin/mpegvlo/mmakefile
+
+# MultiMedia/AMP2/plugin/msvc
+/MultiMedia/AMP2/plugin/msvc/mmakefile
+
+# MultiMedia/AMP2/plugin/pcm
+/MultiMedia/AMP2/plugin/pcm/mmakefile
+
+# MultiMedia/AMP2/plugin/real
+/MultiMedia/AMP2/plugin/real/mmakefile
+
+# MultiMedia/AMP2/plugin/svq1
+/MultiMedia/AMP2/plugin/svq1/mmakefile
+
+# MultiMedia/AMP2/plugin/twos
+/MultiMedia/AMP2/plugin/twos/mmakefile
+
+# MultiMedia/AMP2/plugin/xanim
+/MultiMedia/AMP2/plugin/xanim/mmakefile
+
+# MultiMedia/AMP2/refresh
+
+# Networking
+
+# Networking/Apps
+/Networking/Apps/mmakefile
+
+# Networking/Apps/AiRcOS
+/Networking/Apps/AiRcOS/mmakefile
+/Networking/Apps/AiRcOS/strings.h
+
+# Networking/Apps/AiRcOS/catalogs
+/Networking/Apps/AiRcOS/catalogs/mmakefile
+
+# Networking/Apps/AiRcOS/icon
+/Networking/Apps/AiRcOS/icon/mmakefile
+
+# Networking/Apps/AiRcOS/icons
+/Networking/Apps/AiRcOS/icons/mmakefile
+
+# Networking/Apps/aaedt
+
+# Networking/Apps/aaedt/icons
+/Networking/Apps/aaedt/icons/mmakefile
+
+# Networking/Apps/telnet
+
+# Networking/Apps/telnet/ttel
+/Networking/Apps/telnet/ttel/mmakefile
+
+# Networking/Apps/tinyirc122
+/Networking/Apps/tinyirc122/mmakefile
+
+# Networking/Apps/wget
+/Networking/Apps/wget/mmakefile
+
+# Networking/Apps/wget/S
+/Networking/Apps/wget/S/mmakefile
+
+# Networking/Apps/wget/aros
+
+# Networking/Apps/wget/doc
+
+# Networking/Apps/wget/m4
+
+# Networking/Apps/wget/po
+
+# Networking/Apps/wget/src
+/Networking/Apps/wget/src/mmakefile
+
+# Networking/Apps/wget/util
+
+# Networking/Apps/wget/windows
+
+# Networking/Developer
+/Networking/Developer/_borken
+
+# Networking/Developer/Tests
+/Networking/Developer/Tests/mmakefile
+
+# Networking/Developer/Tests/basics
+/Networking/Developer/Tests/basics/mmakefile
+
+# Networking/Developer/includes
+/Networking/Developer/includes/mmakefile
+
+# Networking/Developer/includes/amitcp
+
+# Networking/Developer/includes/arpa
+
+# Networking/Developer/includes/clib
+
+# Networking/Developer/includes/devices
+
+# Networking/Developer/includes/inline
+
+# Networking/Developer/includes/libraries
+
+# Networking/Developer/includes/machine
+
+# Networking/Developer/includes/net
+
+# Networking/Developer/includes/netinet
+
+# Networking/Developer/includes/pragmas
+
+# Networking/Developer/includes/proto
+
+# Networking/Developer/includes/protocols
+
+# Networking/Developer/includes/rpc
+
+# Networking/Developer/includes/rpcsvc
+
+# Networking/Developer/includes/sys
+
+# Networking/Drivers
+
+# Networking/Drivers/etherlink3
+/Networking/Drivers/etherlink3/mmakefile
+
+# Networking/Drivers/intelpro100
+/Networking/Drivers/intelpro100/mmakefile
+
+# Networking/Drivers/nForce
+/Networking/Drivers/nForce/mmakefile
+
+# Networking/Drivers/pcnet32
+/Networking/Drivers/pcnet32/mmakefile
+
+# Networking/Drivers/prism2
+/Networking/Drivers/prism2/mmakefile
+
+# Networking/Drivers/rtl8029
+/Networking/Drivers/rtl8029/mmakefile
+
+# Networking/Drivers/rtl8139
+/Networking/Drivers/rtl8139/mmakefile
+
+# Networking/Drivers/via-rhine
+/Networking/Drivers/via-rhine/mmakefile
+
+# Networking/Stacks
+
+# Networking/Stacks/AROSTCP
+/Networking/Stacks/AROSTCP/mmakefile
+
+# Networking/Stacks/AROSTCP/C
+/Networking/Stacks/AROSTCP/C/mmakefile
+
+# Networking/Stacks/AROSTCP/C/netstat
+/Networking/Stacks/AROSTCP/C/netstat/mmakefile
+
+# Networking/Stacks/AROSTCP/MUI.MiamiPanel
+/Networking/Stacks/AROSTCP/MUI.MiamiPanel/mmakefile
+
+# Networking/Stacks/AROSTCP/MUI.MiamiPanel/Catalogs
+/Networking/Stacks/AROSTCP/MUI.MiamiPanel/Catalogs/mmakefile
+
+# Networking/Stacks/AROSTCP/MUI.MiamiPanel/Classes
+
+# Networking/Stacks/AROSTCP/MUI.MiamiPanel/include
+
+# Networking/Stacks/AROSTCP/MUI.MiamiPanel/include/clib
+
+# Networking/Stacks/AROSTCP/MUI.MiamiPanel/include/defines
+
+# Networking/Stacks/AROSTCP/MUI.MiamiPanel/include/proto
+
+# Networking/Stacks/AROSTCP/S
+/Networking/Stacks/AROSTCP/S/mmakefile
+
+# Networking/Stacks/AROSTCP/bsdsocket
+/Networking/Stacks/AROSTCP/bsdsocket/mmakefile
+
+# Networking/Stacks/AROSTCP/bsdsocket/api
+
+# Networking/Stacks/AROSTCP/bsdsocket/conf
+
+# Networking/Stacks/AROSTCP/bsdsocket/kern
+
+# Networking/Stacks/AROSTCP/bsdsocket/net
+
+# Networking/Stacks/AROSTCP/bsdsocket/netinet
+
+# Networking/Stacks/AROSTCP/bsdsocket/protos
+
+# Networking/Stacks/AROSTCP/bsdsocket/protos/kern
+
+# Networking/Stacks/AROSTCP/bsdsocket/protos/net
+
+# Networking/Stacks/AROSTCP/bsdsocket/protos/netinet
+
+# Networking/Stacks/AROSTCP/bsdsocket/sys
+
+# Networking/Stacks/AROSTCP/db
+/Networking/Stacks/AROSTCP/db/mmakefile
+
+# Networking/Stacks/AROSTCP/dhcp
+
+# Networking/Stacks/AROSTCP/dhcp/client
+
+# Networking/Stacks/AROSTCP/dhcp/client/scripts
+
+# Networking/Stacks/AROSTCP/dhcp/common
+
+# Networking/Stacks/AROSTCP/dhcp/contrib
+
+# Networking/Stacks/AROSTCP/dhcp/contrib/ms2isc
+
+# Networking/Stacks/AROSTCP/dhcp/dhcpctl
+
+# Networking/Stacks/AROSTCP/dhcp/doc
+
+# Networking/Stacks/AROSTCP/dhcp/doc/ja_JP.eucJP
+
+# Networking/Stacks/AROSTCP/dhcp/dst
+
+# Networking/Stacks/AROSTCP/dhcp/includes
+
+# Networking/Stacks/AROSTCP/dhcp/includes/arpa
+
+# Networking/Stacks/AROSTCP/dhcp/includes/cf
+
+# Networking/Stacks/AROSTCP/dhcp/includes/isc-dhcp
+
+# Networking/Stacks/AROSTCP/dhcp/includes/minires
+
+# Networking/Stacks/AROSTCP/dhcp/includes/netinet
+
+# Networking/Stacks/AROSTCP/dhcp/includes/omapip
+
+# Networking/Stacks/AROSTCP/dhcp/minires
+
+# Networking/Stacks/AROSTCP/dhcp/omapip
+
+# Networking/Stacks/AROSTCP/dhcp/relay
+
+# Networking/Stacks/AROSTCP/dhcp/server
+
+# Networking/Stacks/AROSTCP/dhcp/tests
+
+# Networking/Stacks/AROSTCP/dhcp/tests/failover
+
+# Networking/Stacks/AROSTCP/libkvm
+
+# Networking/Stacks/AROSTCP/netinclude
+/Networking/Stacks/AROSTCP/netinclude/mmakefile
+
+# Networking/Stacks/AROSTCP/netinclude/arpa
+
+# Networking/Stacks/AROSTCP/netinclude/bsdsocket
+
+# Networking/Stacks/AROSTCP/netinclude/clib
+
+# Networking/Stacks/AROSTCP/netinclude/defines
+
+# Networking/Stacks/AROSTCP/netinclude/libraries
+
+# Networking/Stacks/AROSTCP/netinclude/net
+
+# Networking/Stacks/AROSTCP/netinclude/netinet
+
+# Networking/Stacks/AROSTCP/netinclude/proto
+
+# Networking/Stacks/AROSTCP/netinclude/sys
+
+# Networking/Stacks/AROSTCP/netlib
+/Networking/Stacks/AROSTCP/netlib/mmakefile
+
+# Networking/Stacks/AROSTCP/syslog
+/Networking/Stacks/AROSTCP/syslog/mmakefile
+
+# Networking/Stacks/AROSTCP/usergroup
+
+# Networking/Utils
+
+# Networking/Utils/NTPSync
+/Networking/Utils/NTPSync/mmakefile
+
+# Networking/Utils/SANAUtil
+/Networking/Utils/SANAUtil/mmakefile
+
+# Networking/Utils/daytime
+/Networking/Utils/daytime/mmakefile
+
+# SDL
+/SDL/mmakefile
+
+# SDL/SDL_gfx
+/SDL/SDL_gfx/mmakefile
+
+# SDL/SDL_image
+/SDL/SDL_image/mmakefile
+
+# SDL/SDL_mixer
+/SDL/SDL_mixer/mmakefile
+
+# SDL/SDL_ttf
+/SDL/SDL_ttf/mmakefile
+
+# SDL/tests
+/SDL/tests/mmakefile
+
+# ScalosV2
+/ScalosV2/mmakefile
+
+# ScalosV2/include
+
+# ScalosV2/include/clib
+
+# ScalosV2/include/guigfx
+
+# ScalosV2/include/pragma
+
+# ScalosV2/include/pragmas
+
+# ScalosV2/include/proto
+
+# ScalosV2/include/render
+
+# ScalosV2/include/scalos
+
+# aminet
+
+# aminet/GadgetTest
+/aminet/GadgetTest/mmakefile
+
+# aminet/comm
+
+# aminet/comm/amitcp
+/aminet/comm/amitcp/mmakefile
+
+# aminet/comm/amitcp/amitcp
+
+# aminet/comm/amitcp/api
+
+# aminet/comm/amitcp/arpa
+
+# aminet/comm/amitcp/clib
+
+# aminet/comm/amitcp/conf
+
+# aminet/comm/amitcp/devices
+
+# aminet/comm/amitcp/fd
+
+# aminet/comm/amitcp/inline
+
+# aminet/comm/amitcp/kern
+
+# aminet/comm/amitcp/left-over
+
+# aminet/comm/amitcp/lib
+
+# aminet/comm/amitcp/libraries
+
+# aminet/comm/amitcp/machine
+
+# aminet/comm/amitcp/net
+
+# aminet/comm/amitcp/netinet
+
+# aminet/comm/amitcp/netlib
+
+# aminet/comm/amitcp/pragmas
+
+# aminet/comm/amitcp/proto
+
+# aminet/comm/amitcp/protocols
+
+# aminet/comm/amitcp/rpc
+
+# aminet/comm/amitcp/rpcsvc
+
+# aminet/comm/amitcp/stubs
+
+# aminet/comm/amitcp/sys
+
+# aminet/comm/term
+
+# aminet/comm/term/MicroTerm
+/aminet/comm/term/MicroTerm/mmakefile
+
+# aminet/comm/term/TinyTerminal
+/aminet/comm/term/TinyTerminal/mmakefile
+
+# aminet/comm/term/amigaterm
+/aminet/comm/term/amigaterm/mmakefile
+
+# aminet/comm/term/term
+
+# aminet/comm/term/term/Extras
+
+# aminet/comm/term/term/Extras/Source
+/aminet/comm/term/term/Extras/Source/mmakefile
+
+# aminet/comm/term/term/Extras/Source/Glue
+
+# aminet/comm/term/term/bootdisk
+/aminet/comm/term/term/bootdisk/mmakefile
+
+# aminet/comm/term/term/bootdisk/s
+
+# aminet/comm/term/termLite
+/aminet/comm/term/termLite/mmakefile
+
+# aminet/comm/term/xemlibs
+
+# aminet/comm/term/xemlibs/xem
+/aminet/comm/term/xemlibs/xem/mmakefile
+
+# aminet/comm/term/xemlibs/xem/aros
+/aminet/comm/term/xemlibs/xem/aros/xem_defines_aros.h
+
+# aminet/comm/term/xemlibs/xem/env
+
+# aminet/comm/term/xemlibs/xem/env/xem
+
+# aminet/comm/term/xemlibs/xem/include
+
+# aminet/comm/term/xemlibs/xem/source
+
+# aminet/comm/term/xemlibs/xem/source/ASCII
+
+# aminet/comm/term/xemlibs/xem/source/Amiga
+
+# aminet/comm/term/xemlibs/xem/source/BBS
+
+# aminet/comm/term/xemlibs/xem/source/VT340
+
+# aminet/comm/term/xemlibs/xem/source/VT340/unused
+
+# aminet/comm/term/xprz351
+/aminet/comm/term/xprz351/mmakefile
+/aminet/comm/term/xprz351/libdefs.h
+
+# aminet/comm/term/xprz351/aros
+/aminet/comm/term/xprz351/aros/xpr_defines_aros.h
+
+# aminet/comm/term/xprz351/docs
+
+# aminet/dev
+
+# aminet/dev/basic
+
+# aminet/dev/basic/bwBASIC
+/aminet/dev/basic/bwBASIC/mmakefile
+
+# aminet/dev/c
+
+# aminet/dev/c/indent
+/aminet/dev/c/indent/mmakefile
+
+# aminet/dev/c/indent/Docs
+
+# aminet/dev/gui
+
+# aminet/dev/gui/gtlayout
+
+# aminet/dev/gui/gtlayout/AutoDocs
+
+# aminet/dev/gui/gtlayout/Include
+
+# aminet/dev/gui/gtlayout/Source
+/aminet/dev/gui/gtlayout/Source/mmakefile
+/aminet/dev/gui/gtlayout/Source/gtlayout.library
+/aminet/dev/gui/gtlayout/Source/test_aros
+/aminet/dev/gui/gtlayout/Source/*.o
+/aminet/dev/gui/gtlayout/Source/*.ol
+
+# aminet/dev/gui/gtlayout/Source/test
+
+# aminet/dev/src
+
+# aminet/dev/src/HexDump
+/aminet/dev/src/HexDump/mmakefile
+/aminet/dev/src/HexDump/newmastermind_strings.h
+/aminet/dev/src/HexDump/newmastermind_strings.c
+/aminet/dev/src/HexDump/strings.h
+
+# aminet/dev/src/RABLe
+
+# aminet/dev/src/RABLe/compile
+/aminet/dev/src/RABLe/compile/mmakefile
+/aminet/dev/src/RABLe/compile/newmastermind_strings.h
+/aminet/dev/src/RABLe/compile/newmastermind_strings.c
+/aminet/dev/src/RABLe/compile/strings.h
+
+# aminet/dev/src/chunkyiclass
+/aminet/dev/src/chunkyiclass/mmakefile
+/aminet/dev/src/chunkyiclass/strings.h
+/aminet/dev/src/chunkyiclass/strings.c
+
+# aminet/disk
+
+# aminet/disk/cdrom
+
+# aminet/disk/misc
+
+# aminet/disk/misc/Format64
+
+# aminet/disk/misc/Format64/Source
+/aminet/disk/misc/Format64/Source/mmakefile
+
+# aminet/disk/misc/Format64/Source/Assembly
+
+# aminet/disk/misc/Mtools-2.0.7
+/aminet/disk/misc/Mtools-2.0.7/mmakefile
+
+# aminet/disk/misc/Mtools-2.0.7/docs
+
+# aminet/disk/misc/Mtools-2.0.7/src
+
+# aminet/disk/moni
+
+# aminet/disk/moni/filex
+/aminet/disk/moni/filex/mmakefile
+/aminet/disk/moni/filex/filexstrings.h
+
+# aminet/disk/moni/filex/dok
+
+# aminet/disk/moni/filex/dok/deutsch
+
+# aminet/disk/moni/filex/dok/english
+
+# aminet/disk/moni/filex/locale
+/aminet/disk/moni/filex/locale/mmakefile
+
+# aminet/disk/moni/filex/rexx
+
+# aminet/disk/moni/filex/txt
+
+# aminet/games
+
+# aminet/games/board
+
+# aminet/games/board/Backgammon
+/aminet/games/board/Backgammon/mmakefile
+
+# aminet/games/shoot
+
+# aminet/games/shoot/inv
+/aminet/games/shoot/inv/mmakefile
+
+# aminet/games/think
+
+# aminet/games/think/amichess
+/aminet/games/think/amichess/mmakefile
+
+# aminet/games/think/amichess/Boards
+
+# aminet/games/think/amichess/Boards/Crystal
+
+# aminet/games/think/amichess/Boards/Default
+
+# aminet/games/think/amichess/Boards/Fire
+
+# aminet/games/think/amichess/Boards/Ice
+
+# aminet/games/think/amichess/Boards/MarbleBrown
+
+# aminet/games/think/amichess/Boards/MarbleGrey
+
+# aminet/games/think/amichess/Boards/Metal
+
+# aminet/games/think/amichess/Boards/Plasma
+
+# aminet/games/think/amichess/Boards/Redwood
+
+# aminet/games/think/amichess/Boards/Water
+
+# aminet/games/think/amichess/Boards/Wood1
+
+# aminet/games/think/amichess/Boards/Wood2
+
+# aminet/games/think/amichess/Pieces
+
+# aminet/games/think/amichess/Pieces/1024
+
+# aminet/games/think/amichess/Pieces/800
+
+# aminet/games/think/amichess/Promote
+
+# aminet/games/think/amichess/icons
+
+# aminet/games/think/amichess/src
+/aminet/games/think/amichess/src/mmakefile
+
+# aminet/games/think/lazymines
+/aminet/games/think/lazymines/mmakefile
+/aminet/games/think/lazymines/lazymines_strings.h
+/aminet/games/think/lazymines/lazymines_strings.c
+/aminet/games/think/lazymines/strings.h
+
+# aminet/games/think/lazymines/catalogs
+/aminet/games/think/lazymines/catalogs/mmakefile
+
+# aminet/games/think/lazymines/misc
+
+# aminet/games/think/muimine
+/aminet/games/think/muimine/SCOPTIONS
+/aminet/games/think/muimine/*.o
+/aminet/games/think/muimine/*.info
+/aminet/games/think/muimine/*.bak
+/aminet/games/think/muimine/*.lnk
+/aminet/games/think/muimine/MUIMine
+/aminet/games/think/muimine/MUIMineLevelData
+/aminet/games/think/muimine/mmakefile
+
+# aminet/games/think/muimine/Images
+/aminet/games/think/muimine/Images/mmakefile
+
+# aminet/games/think/newmastermind
+/aminet/games/think/newmastermind/mmakefile
+/aminet/games/think/newmastermind/newmastermind_strings.h
+/aminet/games/think/newmastermind/newmastermind_strings.c
+/aminet/games/think/newmastermind/strings.h
+
+# aminet/games/think/newmastermind/catalogs
+/aminet/games/think/newmastermind/catalogs/mmakefile
+
+# aminet/games/think/soliton
+
+# aminet/games/think/soliton/common
+/aminet/games/think/soliton/common/mmakefile
+/aminet/games/think/soliton/common/Catalog.h
+
+# aminet/games/think/soliton/images
+
+# aminet/games/think/soliton/locale
+/aminet/games/think/soliton/locale/mmakefile
+
+# aminet/games/think/soliton/releasefiles
+/aminet/games/think/soliton/releasefiles/mmakefile
+
+# aminet/games/think/soliton/releasefiles/Docs
+
+# aminet/games/think/soliton/releasefiles/Docs/Català
+
+# aminet/games/think/soliton/releasefiles/Docs/Deutsch
+
+# aminet/games/think/soliton/releasefiles/Docs/English
+
+# aminet/games/think/soliton/releasefiles/Docs/Polski
+
+# aminet/games/think/soliton/releasefiles/Graphics
+
+# aminet/games/think/soliton/releasefiles/Scripts
+
+# aminet/games/think/yahzee
+/aminet/games/think/yahzee/mmakefile
+/aminet/games/think/yahzee/yahzee_strings.h
+/aminet/games/think/yahzee/yahzee_strings.c
+/aminet/games/think/yahzee/strings.h
+
+# aminet/games/think/yahzee/catalogs
+/aminet/games/think/yahzee/catalogs/mmakefile
+
+# aminet/mus
+
+# aminet/mus/midi
+
+# aminet/mus/midi/CAMD_Toolkit
+
+# aminet/mus/midi/CAMD_Toolkit/Fireworks
+
+# aminet/mus/midi/CAMD_Toolkit/Fireworks/Source
+/aminet/mus/midi/CAMD_Toolkit/Fireworks/Source/mmakefile
+
+# aminet/mus/midi/CAMD_Toolkit/PlayMF
+/aminet/mus/midi/CAMD_Toolkit/PlayMF/mmakefile
+
+# aminet/mus/midi/CAMD_Toolkit/PlayMF/Source
+/aminet/mus/midi/CAMD_Toolkit/PlayMF/Source/mmakefile
+
+# aminet/text
+
+# aminet/text/edit
+
+# aminet/text/edit/janoeditor
+
+# aminet/text/edit/xdme
+/aminet/text/edit/xdme/mmakefile
+
+# aminet/text/edit/xdme/Docs
+/aminet/text/edit/xdme/Docs/xdme_cmds_guide.src
+/aminet/text/edit/xdme/Docs/xdme_cmds.guide
+
+# aminet/text/edit/xdme/S
+
+# aminet/text/edit/xdme/Src
+
+# aminet/text/edit/xdme/Src/Key
+
+# aminet/text/edit/xdme/Src/Menu
+
+# aminet/text/edit/xdme/Src/Mod
+
+# aminet/text/edit/xdme/Src/Var
+
+# aminet/text/edit/xdme/Util
+
+# aminet/text/edit/xdme/Util/BinUtils
+
+# aminet/text/edit/xdme/Util/CnvConfig
+
+# aminet/text/edit/xdme/Util/cag
+/aminet/text/edit/xdme/Util/cag/cag
+
+# aminet/text/edit/xdme/Util/extract
+/aminet/text/edit/xdme/Util/extract/extract
+
+# aminet/text/edit/xdme/Util/var
+/aminet/text/edit/xdme/Util/var/Yacc.tab.c
+/aminet/text/edit/xdme/Util/var/Yacc.tab.h
+/aminet/text/edit/xdme/Util/var/Parser
+/aminet/text/edit/xdme/Util/var/mmakefile
+
+# aminet/text/edit/xdme/done
+
+# aminet/text/edit/xdme/icons
+
+# aminet/text/edit/xdme/include
+/aminet/text/edit/xdme/include/commands.h
+/aminet/text/edit/xdme/include/prog-protos.h
+
+# aminet/text/edit/xdme/todo
+
+# aminet/text/misc
+
+# aminet/text/misc/Typeface
+/aminet/text/misc/Typeface/mmakefile
+/aminet/text/misc/Typeface/locale.h
+
+# aminet/text/misc/Typeface/catalogs
+/aminet/text/misc/Typeface/catalogs/mmakefile
+
+# aminet/text/misc/Typeface/docs
+
+# aminet/util
+
+# aminet/util/arc
+
+# aminet/util/arc/bzip2
+/aminet/util/arc/bzip2/mmakefile
+
+# aminet/util/arc/lha
+/aminet/util/arc/lha/mmakefile
+
+# aminet/util/arc/lha/doc
+
+# aminet/util/arc/testdms
+/aminet/util/arc/testdms/mmakefile
+
+# aminet/util/arc/unace
+/aminet/util/arc/unace/mmakefile
+
+# aminet/util/arc/unarj
+/aminet/util/arc/unarj/mmakefile
+
+# aminet/util/arc/undms
+/aminet/util/arc/undms/mmakefile
+
+# aminet/util/arc/unlzx
+/aminet/util/arc/unlzx/mmakefile
+
+# aminet/util/arc/unrar
+/aminet/util/arc/unrar/mmakefile
+
+# aminet/util/arc/unshar
+/aminet/util/arc/unshar/mmakefile
+
+# aminet/util/arc/unsit
+/aminet/util/arc/unsit/mmakefile
+
+# aminet/util/arc/unsit/docs
+
+# aminet/util/arc/untar
+/aminet/util/arc/untar/mmakefile
+
+# aminet/util/arc/untgz
+/aminet/util/arc/untgz/mmakefile
+
+# aminet/util/arc/unzip
+/aminet/util/arc/unzip/mmakefile
+
+# aminet/util/arc/unzip/amiga
+
+# aminet/util/arc/unzip/atari
+
+# aminet/util/arc/unzip/human68k
+
+# aminet/util/arc/unzip/mac
+
+# aminet/util/arc/unzip/manifests
+
+# aminet/util/arc/unzip/msdos
+
+# aminet/util/arc/unzip/nt
+
+# aminet/util/arc/unzip/os2
+
+# aminet/util/arc/unzip/ram
+
+# aminet/util/arc/unzip/tops20
+
+# aminet/util/arc/unzip/unix
+
+# aminet/util/arc/unzip/vms
+
+# aminet/util/arc/zoo
+/aminet/util/arc/zoo/mmakefile
+
+# aminet/util/arc/zoo/doc
+
+# aminet/util/cli
+
+# aminet/util/cli/sploiner
+/aminet/util/cli/sploiner/mmakefile
+/aminet/util/cli/sploiner/bcheck.o
+
+# aminet/util/dir
+
+# aminet/util/dir/filemaster
+/aminet/util/dir/filemaster/mmakefile
+/aminet/util/dir/filemaster/filemaster_strings.h
+
+# aminet/util/dir/filemaster/catalogs
+/aminet/util/dir/filemaster/catalogs/mmakefile
+
+# aminet/util/dir/filemaster/doc
+
+# aminet/util/dir/filemaster/old
+
+# aminet/util/misc
+
+# aminet/util/misc/Shutdown2_3
+
+# aminet/util/misc/Shutdown2_3/Shutdown
+/aminet/util/misc/Shutdown2_3/Shutdown/*.o
+/aminet/util/misc/Shutdown2_3/Shutdown/*_aros.c
+/aminet/util/misc/Shutdown2_3/Shutdown/shutdown.h
+
+# aminet/util/misc/reqattack
+/aminet/util/misc/reqattack/mmakefile
+
+# aminet/util/moni
+
+# aminet/util/moni/SnoopDos
+/aminet/util/moni/SnoopDos/mmakefile
+
+# aminet/util/moni/memspeed
+/aminet/util/moni/memspeed/mmakefile
+
+# aminet/util/moni/nbench
+/aminet/util/moni/nbench/mmakefile
+
+# aminet/util/pack
+
+# aminet/util/pack/compress
+/aminet/util/pack/compress/mmakefile
+
+# aminet/util/pack/ppunpack
+/aminet/util/pack/ppunpack/mmakefile
+
+# aminet/util/pack/unhqx
+/aminet/util/pack/unhqx/mmakefile
+
+# aminet/util/pack/unsqsh
+/aminet/util/pack/unsqsh/mmakefile
+
+# aminet/util/wb
+
+# aminet/util/wb/modifyicon
+/aminet/util/wb/modifyicon/mmakefile
+
+# amosaic
+
+# amosaic/libwww2
+/amosaic/libwww2/mmakefile
+
+# amosaic/libwww2/Unused
+
+# amosaic/src
+/amosaic/src/mmakefile
+/amosaic/src/*.bak
+/amosaic/src/*.o
+
+# amosaic/src/bitmaps
+
+# amosaic/src/catalogs
+
+# amosaic/src/catalogs/deutsch
+
+# amosaic/src/catalogs/svenska
+
+# audio
+
+# audio/sox
+
+# bgui
+
+# bgui/CAD
+
+# bgui/CAD/doc
+/bgui/CAD/doc/*.doc
+/bgui/CAD/doc/*.guide
+/bgui/CAD/doc/*.html
+
+# bgui/CAD/doc/doc
+/bgui/CAD/doc/doc/*.doc
+
+# bgui/CAD/doc/guide
+/bgui/CAD/doc/guide/*.guide
+
+# bgui/CAD/doc/html
+/bgui/CAD/doc/html/*.html
+
+# bgui/Prefs
+/bgui/Prefs/mmakefile
+
+# bgui/RexxBGUI
+/bgui/RexxBGUI/rexxbgui.library
+/bgui/RexxBGUI/stricmp.m
+/bgui/RexxBGUI/strchr.m
+/bgui/RexxBGUI/makedoc
+/bgui/RexxBGUI/RexxBGUI.doc
+/bgui/RexxBGUI/makefunc
+/bgui/RexxBGUI/Functions.doc
+/bgui/RexxBGUI/MakeImage
+
+# bgui/bin
+/bgui/bin/MakeProto
+/bgui/bin/bgui.library.D
+/bgui/bin/bgui.library.S
+/bgui/bin/bgui.library.E
+/bgui/bin/test2
+/bgui/bin/KillBGUI
+/bgui/bin/test1
+/bgui/bin/AddButtons
+/bgui/bin/ColorWheel
+/bgui/bin/Area
+/bgui/bin/BGUIDemo
+/bgui/bin/Colors
+/bgui/bin/CXDemo
+/bgui/bin/Useless
+/bgui/bin/StringHook
+/bgui/bin/IDCMPHook
+/bgui/bin/MultiSelect
+/bgui/bin/Images
+/bgui/bin/Backdrop
+/bgui/bin/MultiFont
+/bgui/bin/FieldList
+/bgui/bin/FileRequester
+/bgui/bin/List
+/bgui/bin/MultiColumn
+/bgui/bin/test3
+/bgui/bin/test4
+/bgui/bin/test5
+/bgui/bin/CAD
+/bgui/bin/BGUI
+/bgui/bin/Tap
+/bgui/bin/ARexxDemo
+/bgui/bin/ViewGroup
+/bgui/bin/test6
+/bgui/bin/test7
+/bgui/bin/test8
+/bgui/bin/test9
+/bgui/bin/PaletteDemo
+/bgui/bin/PopButtonDemo
+/bgui/bin/TestTreeView
+/bgui/bin/TreeViewDemo
+/bgui/bin/TextField
+/bgui/bin/test10
+/bgui/bin/test11
+/bgui/bin/test13
+/bgui/bin/LayoutGroupDemo
+/bgui/bin/BarDemo
+
+# bgui/bugs
+
+# bgui/examples
+/bgui/examples/AddButtons
+/bgui/examples/Area
+/bgui/examples/Backdrop
+/bgui/examples/BGUIDemo
+/bgui/examples/CXDemo
+/bgui/examples/FieldList
+/bgui/examples/FileRequester
+/bgui/examples/IDCMPHook
+/bgui/examples/Images
+/bgui/examples/List
+/bgui/examples/MultiColumn
+/bgui/examples/MultiFont
+/bgui/examples/MultiSelect
+/bgui/examples/StringHook
+/bgui/examples/Useless
+/bgui/examples/ViewGroup
+/bgui/examples/mmakefile
+
+# bgui/gadgets
+/bgui/gadgets/bgui_popbutton.gadget
+/bgui/gadgets/bgui_palette.gadget
+/bgui/gadgets/bgui_treeview.gadget
+/bgui/gadgets/bgui_layoutgroup.gadget
+/bgui/gadgets/bgui_bar.gadget
+
+# bgui/gadgets/Bar
+/bgui/gadgets/Bar/BarDemo
+/bgui/gadgets/Bar/*.o
+/bgui/gadgets/Bar/*.gadget
+
+# bgui/gadgets/Bar/include
+
+# bgui/gadgets/LayoutGroup
+/bgui/gadgets/LayoutGroup/LayoutGroupDemo
+/bgui/gadgets/LayoutGroup/*.o
+/bgui/gadgets/LayoutGroup/*.gadget
+
+# bgui/gadgets/LayoutGroup/include
+
+# bgui/gadgets/Palette
+/bgui/gadgets/Palette/PaletteDemo
+/bgui/gadgets/Palette/*.o
+/bgui/gadgets/Palette/*.gadget
+
+# bgui/gadgets/PopButton
+/bgui/gadgets/PopButton/PopButtonDemo
+/bgui/gadgets/PopButton/*.o
+/bgui/gadgets/PopButton/*.gadget
+
+# bgui/gadgets/TreeView
+/bgui/gadgets/TreeView/TreeViewDemo
+/bgui/gadgets/TreeView/*.o
+/bgui/gadgets/TreeView/*.gadget
+
+# bgui/gadgets/TreeView/include
+
+# bgui/gadgets/common
+/bgui/gadgets/common/*.o
+/bgui/gadgets/common/mmakefile
+
+# bgui/icons
+
+# bgui/include
+
+# bgui/include/aros
+
+# bgui/include/inline
+
+# bgui/include/pragma
+
+# bgui/o
+/bgui/o/class-protos.h
+/bgui/o/bgui.library_rev.rev
+/bgui/o/bgui.library_rev.h
+/bgui/o/bgui.library_rev.i
+/bgui/o/*.lo
+/bgui/o/*.o
+/bgui/o/*.err
+
+# bgui/s
+
+# bgui/staticlib
+/bgui/staticlib/mmakefile
+
+# bgui/test
+/bgui/test/test1.bgb
+/bgui/test/test1
+/bgui/test/test2
+/bgui/test/test3
+/bgui/test/test4
+/bgui/test/test5
+/bgui/test/test6
+/bgui/test/test7
+/bgui/test/test8
+/bgui/test/test9
+/bgui/test/test10
+/bgui/test/test11
+/bgui/test/test12
+/bgui/test/test13
+/bgui/test/mmakefile
+
+# bgui/website
+/bgui/website/dist.tar.gz
+/bgui/website/files
+/bgui/website/passwd
+/bgui/website/bugs_passwd
+/bgui/website/bugs
+/bgui/website/cvsroot
+
+# bgui/website/bgui_documentation
+/bgui/website/bgui_documentation/*.html
+/bgui/website/bgui_documentation/LICENSE
+
+# bgui/website/bin
+/bgui/website/bin/bgui.lha
+/bgui/website/bin/bgui_src.lha
+/bgui/website/bin/bgui_dev.lha
+/bgui/website/bin/bgui_e.lha
+/bgui/website/bin/bgui_rexx.lha
+/bgui/website/bin/bgui_html_documentation.lha
+/bgui/website/bin/bgui_guide_documentation.lha
+
+# bgui/website/graphics
+
+# bgui/workbench
+
+# bgui/workbench/tools
+/bgui/workbench/tools/mmakefile
+
+# development
+/development/mmakefile
+
+# development/build
+
+# development/build/makedepend
+/development/build/makedepend/mmakefile
+
+# development/compilers
+
+# development/compilers/false
+/development/compilers/false/mmakefile
+
+# development/compilers/false/contrib
+/development/compilers/false/contrib/mmakefile
+
+# development/compilers/false/contrib/Ben_Schaeffer
+/development/compilers/false/contrib/Ben_Schaeffer/mmakefile
+
+# development/compilers/false/contrib/Ed_Mackey
+/development/compilers/false/contrib/Ed_Mackey/mmakefile
+
+# development/compilers/false/contrib/Eelko_de_Vos
+/development/compilers/false/contrib/Eelko_de_Vos/mmakefile
+
+# development/compilers/false/contrib/Herb_Wollman
+/development/compilers/false/contrib/Herb_Wollman/mmakefile
+
+# development/compilers/false/contrib/Lionel_Vintenat
+/development/compilers/false/contrib/Lionel_Vintenat/mmakefile
+
+# development/compilers/false/contrib/Marcel_van_Kervinck
+/development/compilers/false/contrib/Marcel_van_Kervinck/mmakefile
+
+# development/compilers/false/contrib/Peter_Bengtsson
+/development/compilers/false/contrib/Peter_Bengtsson/mmakefile
+
+# development/compilers/false/contrib/Steinar_Knutsen
+/development/compilers/false/contrib/Steinar_Knutsen/mmakefile
+
+# development/compilers/false/contrib/Thomas_Fischbacher
+/development/compilers/false/contrib/Thomas_Fischbacher/mmakefile
+
+# development/compilers/false/contrib/Tomas_Partl
+/development/compilers/false/contrib/Tomas_Partl/mmakefile
+
+# development/compilers/false/examples
+/development/compilers/false/examples/mmakefile
+
+# development/compilers/freepascal
+
+# development/compilers/lcc
+
+# development/compilers/lcc/alpha
+
+# development/compilers/lcc/alpha/osf
+
+# development/compilers/lcc/alpha/osf/tst
+
+# development/compilers/lcc/cpp
+/development/compilers/lcc/cpp/mmakefile
+
+# development/compilers/lcc/doc
+
+# development/compilers/lcc/etc
+/development/compilers/lcc/etc/mmakefile
+
+# development/compilers/lcc/include
+
+# development/compilers/lcc/include/alpha
+
+# development/compilers/lcc/include/alpha/osf
+
+# development/compilers/lcc/include/mips
+
+# development/compilers/lcc/include/mips/irix
+
+# development/compilers/lcc/include/sparc
+
+# development/compilers/lcc/include/sparc/solaris
+
+# development/compilers/lcc/include/x86
+
+# development/compilers/lcc/include/x86/linux
+
+# development/compilers/lcc/lburg
+
+# development/compilers/lcc/lib
+/development/compilers/lcc/lib/mmakefile
+
+# development/compilers/lcc/lib/liblcc
+/development/compilers/lcc/lib/liblcc/mmakefile
+
+# development/compilers/lcc/mips
+
+# development/compilers/lcc/mips/irix
+
+# development/compilers/lcc/mips/irix/tst
+
+# development/compilers/lcc/sparc
+
+# development/compilers/lcc/sparc/solaris
+
+# development/compilers/lcc/sparc/solaris/tst
+
+# development/compilers/lcc/src
+
+# development/compilers/lcc/tst
+
+# development/compilers/lcc/x86
+
+# development/compilers/lcc/x86/linux
+
+# development/compilers/lcc/x86/linux/tst
+
+# development/compilers/lcc/x86/win32
+
+# development/compilers/lcc/x86/win32/tst
+
+# development/compilers/lua-5.1
+/development/compilers/lua-5.1/mmakefile
+
+# development/compilers/lua-5.1/S
+/development/compilers/lua-5.1/S/mmakefile
+
+# development/compilers/lua-5.1/doc
+
+# development/compilers/lua-5.1/etc
+
+# development/compilers/lua-5.1/icons
+/development/compilers/lua-5.1/icons/mmakefile
+
+# development/compilers/lua-5.1/lualibs
+
+# development/compilers/lua-5.1/src
+/development/compilers/lua-5.1/src/mmakefile
+
+# development/compilers/lua-5.1/test
+
+# development/compilers/lua-5.1/test-amilua
+
+# development/compilers/lua-5.1/test-mui
+
+# development/compilers/nasm
+/development/compilers/nasm/mmakefile
+
+# development/compilers/nasm/Mkfiles
+
+# development/compilers/nasm/doc
+/development/compilers/nasm/doc/nasmdoc.texi
+/development/compilers/nasm/doc/nasmdoc.ps
+/development/compilers/nasm/doc/nasmdoc.hpj
+/development/compilers/nasm/doc/html
+/development/compilers/nasm/doc/info
+/development/compilers/nasm/doc/nasmdoc.rtf
+/development/compilers/nasm/doc/nasmdoc.txt
+
+# development/compilers/nasm/lcc
+
+# development/compilers/nasm/misc
+
+# development/compilers/nasm/rdoff
+
+# development/compilers/nasm/rdoff/test
+
+# development/compilers/nasm/rdoff/v1
+
+# development/compilers/nasm/test
+
+# development/compilers/tcc
+/development/compilers/tcc/mmakefile
+
+# development/compilers/tcc/docs
+
+# development/compilers/tcc/libtcc1
+/development/compilers/tcc/libtcc1/mmakefile
+
+# development/compilers/tcc-0.9.19
+/development/compilers/tcc-0.9.19/mmakefile
+/development/compilers/tcc-0.9.19/bcheck.o
+
+# development/compilers/tcc-0.9.19/libtcc1
+/development/compilers/tcc-0.9.19/libtcc1/mmakefile
+
+# development/compilers/vbcc
+/development/compilers/vbcc/mmakefile
+/development/compilers/vbcc/tmp.c
+/development/compilers/vbcc/dt.h
+/development/compilers/vbcc/dt.c
+
+# development/compilers/vbcc/aros
+/development/compilers/vbcc/aros/mmakefile
+
+# development/compilers/vbcc/datatypes
+/development/compilers/vbcc/datatypes/mmakefile
+
+# development/compilers/vbcc/frontend
+/development/compilers/vbcc/frontend/mmakefile
+
+# development/compilers/vbcc/vprof
+/development/compilers/vbcc/vprof/mmakefile
+
+# development/gui
+
+# development/gui/pui
+/development/gui/pui/mmakefile
+
+# development/parsers
+
+# development/parsers/expat
+
+# development/parsers/expat/conftools
+
+# development/parsers/expat/doc
+
+# development/parsers/expat/examples
+
+# development/parsers/expat/lib
+/development/parsers/expat/lib/mmakefile
+
+# development/parsers/expat/xmlwf
+
+# development/parsers/pcre
+/development/parsers/pcre/mmakefile
+/development/parsers/pcre/.files-touched
+
+# development/parsers/pcre/doc
+
+# development/parsers/pcre/doc/html
+
+# development/parsers/pcre/testdata
+
+# development/pthread
+/development/pthread/mmakefile
+
+# development/pthread/include
+
+# dopus
+
+# dopus/Config
+/dopus/Config/*.err
+/dopus/Config/mmakefile
+
+# dopus/DOpus_Disk
+
+# dopus/DOpus_Icon
+
+# dopus/DOpus_Print
+
+# dopus/Library
+/dopus/Library/*.err
+/dopus/Library/functable.c
+/dopus/Library/dopus_endtag.c
+/dopus/Library/mmakefile
+/dopus/Library/libdefs.h
+
+# dopus/Program
+/dopus/Program/*.err
+/dopus/Program/mmakefile
+
+# dopus/S
+
+# emu
+
+# emu/e-uae
+/emu/e-uae/mmakefile
+
+# emu/mame
+/emu/mame/mmakefile
+/emu/mame/makefile
+/emu/mame/gamelist.txt
+/emu/mame/readme.txt
+/emu/mame/whatsnew.txt
+
+# emu/mame/src
+/emu/mame/src/*.h
+/emu/mame/src/*.c
+/emu/mame/src/*.txt
+/emu/mame/src/cpu
+/emu/mame/src/msdos
+/emu/mame/src/sndhrdw
+/emu/mame/src/machine
+/emu/mame/src/drivers
+/emu/mame/src/vidhrdw
+/emu/mame/src/sound
+
+# emu/mame/src/aros
+
+# emu/mame/src/aros/stripcr
+
+# emu/uae
+/emu/uae/mmakefile
+/emu/uae/od-joy.c
+/emu/uae/md-fpp.h
+/emu/uae/cpufast.s
+/emu/uae/gencpu
+/emu/uae/blitfunc.h
+/emu/uae/build68k
+/emu/uae/cpudefs.c
+/emu/uae/genblitter
+/emu/uae/target.h
+/emu/uae/blitfunc.c
+/emu/uae/cpustbl.c
+/emu/uae/blit.h
+/emu/uae/md-support.c
+/emu/uae/blittable.c
+/emu/uae/sd-sound.h
+/emu/uae/cputbl.h
+/emu/uae/cpuopti
+/emu/uae/sd-sound.c
+/emu/uae/cpuemu.c
+
+# emu/uae/Uae.app
+
+# emu/uae/Uae.app/Uae.nib
+
+# emu/uae/amiga
+
+# emu/uae/amiga/devs
+
+# emu/uae/amiga/devs/AHI
+
+# emu/uae/amiga/devs/AudioModes
+
+# emu/uae/amiga/source
+
+# emu/uae/docs
+
+# emu/uae/docs/AmigaOS
+
+# emu/uae/docs/BeOS
+
+# emu/uae/docs/pOS
+
+# emu/uae/docs/translated
+
+# emu/uae/docs/unix
+
+# emu/uae/src
+/emu/uae/src/mmakefile
+/emu/uae/src/machdep
+/emu/uae/src/osdep
+/emu/uae/src/sounddep
+/emu/uae/src/threaddep
+/emu/uae/src/od-joy.c
+/emu/uae/src/md-fpp.h
+/emu/uae/src/td-thread.c
+/emu/uae/src/cpufast.s
+/emu/uae/src/gencpu
+/emu/uae/src/blitfunc.h
+/emu/uae/src/build68k
+/emu/uae/src/cpudefs.c
+/emu/uae/src/genblitter
+/emu/uae/src/target.h
+/emu/uae/src/blitfunc.c
+/emu/uae/src/cpustbl.c
+/emu/uae/src/blit.h
+/emu/uae/src/md-support.c
+/emu/uae/src/blittable.c
+/emu/uae/src/sd-sound.h
+/emu/uae/src/cputbl.h
+/emu/uae/src/cpuopti
+/emu/uae/src/sd-sound.c
+/emu/uae/src/cpuemu.c
+
+# emu/uae/src/include
+
+# emu/uae/src/md-68k
+
+# emu/uae/src/md-arm
+
+# emu/uae/src/md-generic
+
+# emu/uae/src/md-i386-gcc
+
+# emu/uae/src/md-i386-watcom
+
+# emu/uae/src/md-ppc
+
+# emu/uae/src/md-ppc-gcc
+
+# emu/uae/src/od-acorn
+
+# emu/uae/src/od-amiga
+
+# emu/uae/src/od-aros
+/emu/uae/src/od-aros/mmakefile
+
+# emu/uae/src/od-aros/uae-gui
+/emu/uae/src/od-aros/uae-gui/mmakefile
+
+# emu/uae/src/od-aros/uae-gui/catalogs
+/emu/uae/src/od-aros/uae-gui/catalogs/mmakefile
+
+# emu/uae/src/od-aros/uae-gui/images
+
+# emu/uae/src/od-beos
+
+# emu/uae/src/od-dos
+
+# emu/uae/src/od-dos/misc
+
+# emu/uae/src/od-dos/sound
+
+# emu/uae/src/od-dos/video
+
+# emu/uae/src/od-generic
+
+# emu/uae/src/od-linux
+
+# emu/uae/src/od-macos
+
+# emu/uae/src/od-pOS
+
+# emu/uae/src/od-win32
+
+# emu/uae/src/od-win32/resources
+
+# emu/uae/src/sd-af
+
+# emu/uae/src/sd-file
+
+# emu/uae/src/sd-generic
+
+# emu/uae/src/sd-mme
+
+# emu/uae/src/sd-sdl
+
+# emu/uae/src/sd-sgi
+
+# emu/uae/src/sd-solaris
+
+# emu/uae/src/sd-uss
+
+# emu/uae/src/targets
+
+# emu/uae/src/td-amigaos
+
+# emu/uae/src/td-none
+
+# emu/uae/src/td-posix
+
+# emu/uae/src/td-sdl
+
+# emu/uae/src/tools
+
+# emu/uae-config
+/emu/uae-config/mmakefile
+
+# emu/uae-config/catalogs
+/emu/uae-config/catalogs/mmakefile
+
+# emu/uae-config/icons
+/emu/uae-config/icons/mmakefile
+
+# emu/uae-config/images
+
+# fish
+
+# fish/304_clines
+/fish/304_clines/mmakefile
+
+# fish/304_lines
+/fish/304_lines/mmakefile
+
+# fish/362_rubik
+/fish/362_rubik/mmakefile
+
+# fish/371_fractal
+/fish/371_fractal/mmakefile
+
+# fish/aroach
+/fish/aroach/mmakefile
+
+# fish/aroach/xbm
+
+# fish/asimplex
+/fish/asimplex/mmakefile
+
+# fish/bezier
+
+# fish/bezier/bouncing
+/fish/bezier/bouncing/mmakefile
+
+# fish/bezier/cubic
+/fish/bezier/cubic/mmakefile
+
+# fish/bezier/orig
+/fish/bezier/orig/mmakefile
+
+# fish/cfn
+/fish/cfn/mmakefile
+
+# fish/cube
+/fish/cube/mmakefile
+
+# fish/egypt
+/fish/egypt/mmakefile
+
+# fish/eval
+/fish/eval/mmakefile
+
+# fish/find
+/fish/find/mmakefile
+/fish/find/*.err
+
+# fish/fiveinline
+/fish/fiveinline/mmakefile
+
+# fish/gooddouble
+/fish/gooddouble/mmakefile
+
+# fish/grep
+/fish/grep/mmakefile
+
+# fish/henon
+/fish/henon/mmakefile
+
+# fish/icalc
+/fish/icalc/mmakefile
+
+# fish/icon2c
+/fish/icon2c/mmakefile
+
+# fish/input
+/fish/input/mmakefile
+
+# fish/layers
+/fish/layers/mmakefile
+
+# fish/lines
+/fish/lines/mmakefile
+
+# fish/lotto
+/fish/lotto/mmakefile
+
+# fish/lyr-o-mat
+/fish/lyr-o-mat/mmakefile
+
+# fish/mandel
+/fish/mandel/mmakefile
+
+# fish/memeter
+/fish/memeter/mmakefile
+
+# fish/memomaster
+/fish/memomaster/mmakefile
+
+# fish/memsnap
+/fish/memsnap/mmakefile
+
+# fish/microemacs
+/fish/microemacs/mmakefile
+
+# fish/mosaic
+/fish/mosaic/mmakefile
+
+# fish/rubik
+/fish/rubik/mmakefile
+
+# fish/screenzap
+/fish/screenzap/mmakefile
+
+# fish/shuffle
+/fish/shuffle/mmakefile
+
+# fish/snowfall
+/fish/snowfall/mmakefile
+
+# fish/sunmaze
+/fish/sunmaze/mmakefile
+
+# fish/surf
+/fish/surf/mmakefile
+
+# fish/touch
+/fish/touch/mmakefile
+
+# fish/tree
+/fish/tree/mmakefile
+
+# fish/watchman
+/fish/watchman/mmakefile
+
+# fish/windowtool
+/fish/windowtool/mmakefile
+
+# fish/worldtime
+/fish/worldtime/mmakefile
+
+# fish/yachtc
+/fish/yachtc/mmakefile
+
+# freetype1
+/freetype1/config.cache
+/freetype1/MakeSub
+/freetype1/Makefile
+/freetype1/config.status
+/freetype1/libtool
+/freetype1/ft_conf.h
+/freetype1/config.log
+
+# freetype1/contrib
+
+# freetype1/contrib/amigaos
+
+# freetype1/contrib/amigaos/ttfinstall
+/freetype1/contrib/amigaos/ttfinstall/mmakefile
+
+# freetype1/contrib/ftos2
+
+# freetype1/contrib/ftos2/ifi
+
+# freetype1/contrib/ftos2/lib
+
+# freetype1/contrib/ftos2/lib/arch
+
+# freetype1/contrib/ftos2/lib/arch/os2
+
+# freetype1/contrib/mac
+
+# freetype1/contrib/ttf2bdf
+/freetype1/contrib/ttf2bdf/ttf2bdf
+/freetype1/contrib/ttf2bdf/config.status
+/freetype1/contrib/ttf2bdf/config.cache
+/freetype1/contrib/ttf2bdf/config.log
+/freetype1/contrib/ttf2bdf/Makefile
+
+# freetype1/contrib/ttf2bdf/contrib
+
+# freetype1/contrib/ttf2bdf/maps
+
+# freetype1/contrib/ttf2pfb
+/freetype1/contrib/ttf2pfb/t1asm
+/freetype1/contrib/ttf2pfb/ttf2pfb
+/freetype1/contrib/ttf2pfb/Makefile
+
+# freetype1/contrib/ttf2pk
+/freetype1/contrib/ttf2pk/ttf2tfm
+/freetype1/contrib/ttf2pk/ttf2pk
+/freetype1/contrib/ttf2pk/.libs
+/freetype1/contrib/ttf2pk/MakeSub
+/freetype1/contrib/ttf2pk/config.status
+/freetype1/contrib/ttf2pk/config.cache
+/freetype1/contrib/ttf2pk/config.log
+/freetype1/contrib/ttf2pk/Makefile
+
+# freetype1/contrib/ttf2pk/data
+
+# freetype1/contrib/ttf2pk/scripts
+
+# freetype1/contrib/ttf2pk/scripts/teTeX-0.4
+
+# freetype1/contrib/ttf2pk/scripts/web2c-6.1
+
+# freetype1/contrib/ttf2pk/scripts/web2c-7.0
+
+# freetype1/contrib/ttf2pk/scripts/web2c-7.1
+
+# freetype1/contrib/ttf2pk/scripts/web2c-7.2
+
+# freetype1/contrib/ttfbanner
+/freetype1/contrib/ttfbanner/ttfbanner
+/freetype1/contrib/ttfbanner/Makefile
+
+# freetype1/contrib/win32
+
+# freetype1/contrib/win32/res
+
+# freetype1/docs
+
+# freetype1/docs/image
+
+# freetype1/howto
+
+# freetype1/lib
+/freetype1/lib/.libs
+/freetype1/lib/*.lo
+/freetype1/lib/libttf.la
+/freetype1/lib/mmakefile
+
+# freetype1/lib/arch
+
+# freetype1/lib/arch/amigaos
+
+# freetype1/lib/arch/ansi
+
+# freetype1/lib/arch/debugger
+
+# freetype1/lib/arch/mac
+
+# freetype1/lib/arch/msdos
+
+# freetype1/lib/arch/os2
+
+# freetype1/lib/arch/unix
+/freetype1/lib/arch/unix/Makefile
+
+# freetype1/lib/arch/vms
+
+# freetype1/lib/arch/win16
+
+# freetype1/lib/arch/win32
+
+# freetype1/lib/extend
+/freetype1/lib/extend/mmakefile
+
+# freetype1/pascal
+
+# freetype1/pascal/lib
+
+# freetype1/pascal/test
+
+# freetype1/po
+/freetype1/po/*.gmo
+/freetype1/po/*.mo
+/freetype1/po/Makefile
+/freetype1/po/Makefile.in
+/freetype1/po/POTFILES
+/freetype1/po/cat-id-tbl.c
+/freetype1/po/freetype.pot
+/freetype1/po/stamp-cat-id
+
+# freetype1/test
+/freetype1/test/.libs
+/freetype1/test/ftview
+/freetype1/test/fttimer
+/freetype1/test/ftlint
+/freetype1/test/ftdump
+/freetype1/test/ftzoom
+/freetype1/test/ftstring
+/freetype1/test/ftstrpnm
+/freetype1/test/fterror
+/freetype1/test/ftsbit
+/freetype1/test/ftmetric
+/freetype1/test/ftstrtto
+/freetype1/test/mmakefile
+
+# freetype1/test/arch
+
+# freetype1/test/arch/amigaos
+
+# freetype1/test/arch/debugger
+
+# freetype1/test/arch/msdos
+
+# freetype1/test/arch/os2
+
+# freetype1/test/arch/unix
+/freetype1/test/arch/unix/Makefile
+
+# freetype1/test/arch/win16
+
+# freetype1/test/arch/win32
+
+# gc
+/gc/mmakefile
+
+# gc/cord
+
+# gc/doc
+
+# gc/include
+
+# gc/include/private
+
+# gc/tests
+
+# gfx
+
+# gfx/4p
+
+# gfx/4p/Docs
+
+# gfx/4p/Images
+
+# gfx/4p/Palettes
+
+# gfx/4p/archs
+
+# gfx/4p/archs/BeOS
+
+# gfx/4p/archs/Darwin
+
+# gfx/4p/archs/Darwin/Resources
+
+# gfx/4p/archs/Darwin/Resources/English.lproj
+
+# gfx/4p/archs/Darwin/Resources/SDLMain.nib
+
+# gfx/4p/archs/Linux
+
+# gfx/4p/archs/SunOS
+
+# gfx/4p/src
+
+# gfx/4p/src/archs
+
+# gfx/4p/src/archs/darwin
+
+# gfx/4p/src/dialogs
+
+# gfx/4p/src/jsui
+
+# gfx/4p/src/jsui/gfx
+
+# gfx/4p/src/jsui/gui
+
+# gfx/4p/src/jsui/gui/widgets
+
+# gfx/4p/src/paint
+
+# gfx/4p/src/paint/iff
+
+# gfx/4p/src/paint/tools
+
+# gfx/XaoS
+/gfx/XaoS/mmakefile
+
+# gfx/XaoS/bin
+
+# gfx/XaoS/catalogs
+
+# gfx/XaoS/doc
+
+# gfx/XaoS/doc/speed
+
+# gfx/XaoS/examples
+
+# gfx/XaoS/icons
+
+# gfx/XaoS/src
+/gfx/XaoS/src/mmakefile
+
+# gfx/XaoS/src/engine
+/gfx/XaoS/src/engine/mmakefile
+
+# gfx/XaoS/src/filter
+/gfx/XaoS/src/filter/mmakefile
+
+# gfx/XaoS/src/include
+/gfx/XaoS/src/include/config.h
+/gfx/XaoS/src/include/aconfig.h
+
+# gfx/XaoS/src/include/config
+
+# gfx/XaoS/src/include/i386
+
+# gfx/XaoS/src/include/mac
+
+# gfx/XaoS/src/ui
+/gfx/XaoS/src/ui/mmakefile
+
+# gfx/XaoS/src/ui/ui-drv
+
+# gfx/XaoS/src/ui/ui-drv/BeOS
+
+# gfx/XaoS/src/ui/ui-drv/aa
+
+# gfx/XaoS/src/ui/ui-drv/aros
+/gfx/XaoS/src/ui/ui-drv/aros/mmakefile
+
+# gfx/XaoS/src/ui/ui-drv/curses
+
+# gfx/XaoS/src/ui/ui-drv/dos
+
+# gfx/XaoS/src/ui/ui-drv/mac
+
+# gfx/XaoS/src/ui/ui-drv/os2
+
+# gfx/XaoS/src/ui/ui-drv/plan9
+
+# gfx/XaoS/src/ui/ui-drv/svga
+
+# gfx/XaoS/src/ui/ui-drv/template
+
+# gfx/XaoS/src/ui/ui-drv/x11
+
+# gfx/XaoS/src/util
+/gfx/XaoS/src/util/mmakefile
+
+# gfx/XaoS/tutorial
+
+# gfx/lcms
+
+# gfx/lcms/doc
+
+# gfx/lcms/include
+
+# gfx/lcms/jpegicc
+
+# gfx/lcms/samples
+
+# gfx/lcms/src
+
+# gfx/lcms/testbed
+
+# gfx/lcms/tifficc
+
+# gfx/libs
+
+# gfx/libs/guigfxlib
+
+# gfx/libs/guigfxlib/doc
+
+# gfx/libs/guigfxlib/doc/autodoc
+
+# gfx/libs/guigfxlib/include
+/gfx/libs/guigfxlib/include/mmakefile
+
+# gfx/libs/guigfxlib/include/guigfx
+
+# gfx/libs/guigfxlib/src
+/gfx/libs/guigfxlib/src/*_end.c
+/gfx/libs/guigfxlib/src/*_endtag.c
+/gfx/libs/guigfxlib/src/libdefs.h
+/gfx/libs/guigfxlib/src/mmakefile
+/gfx/libs/guigfxlib/src/*.bak
+/gfx/libs/guigfxlib/src/*.info
+/gfx/libs/guigfxlib/src/SCOPTIONS
+/gfx/libs/guigfxlib/src/test
+/gfx/libs/guigfxlib/src/*.o
+/gfx/libs/guigfxlib/src/*.lnk
+/gfx/libs/guigfxlib/src/*.gst
+/gfx/libs/guigfxlib/src/*.mdbi
+/gfx/libs/guigfxlib/src/buildincludes
+/gfx/libs/guigfxlib/src/muimaster.lib
+/gfx/libs/guigfxlib/src/test2
+/gfx/libs/guigfxlib/src/include
+/gfx/libs/guigfxlib/src/wb
+/gfx/libs/guigfxlib/src/*.map
+
+# gfx/libs/mysticlib
+
+# gfx/libs/mysticlib/doc
+
+# gfx/libs/mysticlib/include
+/gfx/libs/mysticlib/include/mmakefile
+
+# gfx/libs/mysticlib/include/libraries
+
+# gfx/libs/mysticlib/src
+/gfx/libs/mysticlib/src/*_end.c
+/gfx/libs/mysticlib/src/*_endtag.c
+/gfx/libs/mysticlib/src/libdefs.h
+/gfx/libs/mysticlib/src/mmakefile
+/gfx/libs/mysticlib/src/*.bak
+/gfx/libs/mysticlib/src/*.info
+/gfx/libs/mysticlib/src/SCOPTIONS
+/gfx/libs/mysticlib/src/test
+/gfx/libs/mysticlib/src/*.o
+/gfx/libs/mysticlib/src/*.lnk
+/gfx/libs/mysticlib/src/*.gst
+/gfx/libs/mysticlib/src/*.mdbi
+/gfx/libs/mysticlib/src/buildincludes
+/gfx/libs/mysticlib/src/muimaster.lib
+/gfx/libs/mysticlib/src/test2
+/gfx/libs/mysticlib/src/include
+/gfx/libs/mysticlib/src/wb
+/gfx/libs/mysticlib/src/*.map
+
+# gfx/libs/renderlib
+
+# gfx/libs/renderlib/doc
+
+# gfx/libs/renderlib/include
+/gfx/libs/renderlib/include/mmakefile
+
+# gfx/libs/renderlib/include/render
+
+# gfx/libs/renderlib/src
+/gfx/libs/renderlib/src/mmakefile
+/gfx/libs/renderlib/src/*.bak
+/gfx/libs/renderlib/src/*.info
+/gfx/libs/renderlib/src/SCOPTIONS
+/gfx/libs/renderlib/src/test
+/gfx/libs/renderlib/src/*.o
+/gfx/libs/renderlib/src/*.lnk
+/gfx/libs/renderlib/src/*.gst
+/gfx/libs/renderlib/src/*.mdbi
+/gfx/libs/renderlib/src/buildincludes
+/gfx/libs/renderlib/src/muimaster.lib
+/gfx/libs/renderlib/src/test2
+/gfx/libs/renderlib/src/include
+/gfx/libs/renderlib/src/wb
+/gfx/libs/renderlib/src/*.map
+
+# gfx/libs/wazp3d
+/gfx/libs/wazp3d/mmakefile
+
+# gfx/libs/wazp3d/Warp3D
+
+# gfx/libs/wazp3d/Wazp3D-Settings-src
+/gfx/libs/wazp3d/Wazp3D-Settings-src/mmakefile
+
+# gfx/libs/wazp3d/Wazp3D-src
+/gfx/libs/wazp3d/Wazp3D-src/mmakefile
+
+# gfx/libs/wazp3d/demo
+/gfx/libs/wazp3d/demo/mmakefile
+
+# gfx/mesa
+
+# gfx/mesa/demos
+/gfx/mesa/demos/mmakefile
+
+# gfx/mesa/demos/book
+/gfx/mesa/demos/book/mmakefile
+
+# gfx/mesa/demos/demos
+/gfx/mesa/demos/demos/mmakefile
+
+# gfx/mesa/demos/images
+/gfx/mesa/demos/images/mmakefile
+
+# gfx/mesa/demos/include
+
+# gfx/mesa/demos/include/GL
+
+# gfx/mesa/demos/samples
+/gfx/mesa/demos/samples/mmakefile
+
+# gfx/mesa/demos/src-aux
+/gfx/mesa/demos/src-aux/mmakefile
+
+# gfx/mesa/demos/src-glut
+/gfx/mesa/demos/src-glut/mmakefile
+
+# gfx/mesa/demos/src-tk
+/gfx/mesa/demos/src-tk/mmakefile
+
+# gfx/mesa/lib
+/gfx/mesa/lib/mmakefile
+
+# gfx/mesa/lib/aros
+
+# gfx/mesa/lib/aros/misc
+
+# gfx/mesa/lib/bin
+
+# gfx/mesa/lib/docs
+
+# gfx/mesa/lib/include
+
+# gfx/mesa/lib/include/GL
+
+# gfx/mesa/lib/include/GL/internal
+
+# gfx/mesa/lib/m4
+
+# gfx/mesa/lib/si-glu
+/gfx/mesa/lib/si-glu/mmakefile
+
+# gfx/mesa/lib/si-glu/include
+
+# gfx/mesa/lib/si-glu/libnurbs
+
+# gfx/mesa/lib/si-glu/libnurbs/interface
+
+# gfx/mesa/lib/si-glu/libnurbs/internals
+
+# gfx/mesa/lib/si-glu/libnurbs/nurbtess
+
+# gfx/mesa/lib/si-glu/libtess
+
+# gfx/mesa/lib/si-glu/libutil
+
+# gfx/mesa/lib/src
+
+# gfx/mesa/lib/src/AROS
+
+# gfx/mesa/lib/src/OSmesa
+
+# gfx/mesa/lib/src/Trace
+
+# gfx/mesa/lib/src/X86
+
+# gfx/mesa/lib/src/array_cache
+
+# gfx/mesa/lib/src/math
+
+# gfx/mesa/lib/src/swrast
+
+# gfx/mesa/lib/src/swrast_setup
+
+# gfx/mesa/lib/src/tnl
+
+# gfx/mesa/lib/src-glu
+/gfx/mesa/lib/src-glu/mmakefile
+
+# gfx/mesa/lib/util
+
+# gfx/mesa/misc
+/gfx/mesa/misc/mmakefile
+
+# gfx/mysticube
+/gfx/mysticube/mmakefile
+
+# gfx/mysticview
+
+# gfx/mysticview/src
+/gfx/mysticview/src/mmakefile
+
+# gfx/povray
+/gfx/povray/mmakefile
+
+# gnu
+
+# gnu/FriBidi
+/gnu/FriBidi/mmakefile
+
+# gnu/bc
+/gnu/bc/mmakefile
+/gnu/bc/.files-touched
+
+# gnu/binutils
+/gnu/binutils/mmakefile
+/gnu/binutils/.files-touched
+
+# gnu/bison
+/gnu/bison/mmakefile
+/gnu/bison/.files-touched
+
+# gnu/cpuid
+/gnu/cpuid/mmakefile
+
+# gnu/diffutils
+/gnu/diffutils/mmakefile
+/gnu/diffutils/.files-touched
+
+# gnu/ed
+/gnu/ed/mmakefile
+/gnu/ed/.files-touched
+
+# gnu/fileutils
+/gnu/fileutils/mmakefile
+/gnu/fileutils/.files-touched
+
+# gnu/findutils
+/gnu/findutils/mmakefile
+/gnu/findutils/.files-touched
+
+# gnu/flex
+/gnu/flex/mmakefile
+/gnu/flex/.files-touched
+
+# gnu/gawk
+/gnu/gawk/mmakefile
+/gnu/gawk/.files-touched
+
+# gnu/gcc
+/gnu/gcc/mmakefile
+/gnu/gcc/.files-touched
+
+# gnu/grep
+/gnu/grep/.files-touched
+/gnu/grep/mmakefile
+/gnu/grep/*.gmo
+/gnu/grep/Makefile
+/gnu/grep/acinclude.m4
+/gnu/grep/config.cache
+/gnu/grep/config.h
+/gnu/grep/config.log
+/gnu/grep/config.status
+/gnu/grep/stamp-h
+
+# gnu/gzip
+/gnu/gzip/mmakefile
+/gnu/gzip/.files-touched
+
+# gnu/indent
+/gnu/indent/mmakefile
+/gnu/indent/.files-touched
+
+# gnu/m4
+/gnu/m4/.files-touched
+/gnu/m4/mmakefile
+
+# gnu/make
+/gnu/make/mmakefile
+/gnu/make/.files-touched
+
+# gnu/make/config
+/gnu/make/config/*.m4
+/gnu/make/config/config.*
+/gnu/make/config/mkinstalldirs
+/gnu/make/config/Makefile
+/gnu/make/config/Makefile.in
+
+# gnu/make/doc
+/gnu/make/doc/Makefile
+/gnu/make/doc/Makefile.in
+/gnu/make/doc/fdl.texi
+/gnu/make/doc/make-stds.texi
+/gnu/make/doc/texinfo.tex
+/gnu/make/doc/make.info*
+/gnu/make/doc/make*.html
+/gnu/make/doc/make.aux
+/gnu/make/doc/make.cp
+/gnu/make/doc/make.cps
+/gnu/make/doc/make.fn
+/gnu/make/doc/make.fns
+/gnu/make/doc/make.ky
+/gnu/make/doc/make.pg
+/gnu/make/doc/make.toc
+/gnu/make/doc/make.tp
+/gnu/make/doc/make.vr
+/gnu/make/doc/make.log
+/gnu/make/doc/make.dvi
+/gnu/make/doc/make.ps
+/gnu/make/doc/make.pdf
+
+# gnu/make/glob
+/gnu/make/glob/Makefile
+/gnu/make/glob/Makefile.in
+/gnu/make/glob/.deps
+
+# gnu/make/po
+/gnu/make/po/*.gmo
+/gnu/make/po/*.mo
+/gnu/make/po/*.pot
+/gnu/make/po/*.po
+/gnu/make/po/Makefile
+/gnu/make/po/Makefile.in
+/gnu/make/po/Makefile.in.in
+/gnu/make/po/Makevars.template
+/gnu/make/po/Rules-quot
+/gnu/make/po/stamp-po
+/gnu/make/po/*.sed
+/gnu/make/po/*.sin
+/gnu/make/po/*.header
+/gnu/make/po/POTFILES
+
+# gnu/make/tests
+/gnu/make/tests/work
+
+# gnu/patch
+/gnu/patch/.files-touched
+/gnu/patch/mmakefile
+
+# gnu/pdksh
+/gnu/pdksh/mmakefile
+/gnu/pdksh/.files-touched
+
+# gnu/sed
+/gnu/sed/mmakefile
+/gnu/sed/.files-touched
+
+# gnu/termcap
+/gnu/termcap/mmakefile
+
+# gnu/textutils
+/gnu/textutils/mmakefile
+/gnu/textutils/.files-touched
+
+# gnu/which
+/gnu/which/mmakefile
+/gnu/which/.files-touched
+
+# images
+
+# images/Gorilla
+
+# images/Gorilla/Icons
+
+# images/Gorilla/Icons/Medium
+
+# images/Gorilla/Icons/Medium/AROS
+/images/Gorilla/Icons/Medium/AROS/mmakefile
+
+# images/Gorilla/Icons/Medium/AROS/Extras
+/images/Gorilla/Icons/Medium/AROS/Extras/mmakefile
+
+# images/Gorilla/Icons/Medium/AROS/Extras/DOpus
+/images/Gorilla/Icons/Medium/AROS/Extras/DOpus/mmakefile
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos
+/images/Gorilla/Icons/Medium/AROS/Extras/Demos/mmakefile
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/BlackHole
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/DawaFire
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/FTunnel
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/Firework
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/Flamme
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/Galaxy
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/InfPlane
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/Kitty
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/Metaballs
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/NewVox
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/Parallax
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/PowerZoom
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/RubberStrings
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/Tunnel
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/Voxel
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Demos/kdp
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Development
+/images/Gorilla/Icons/Medium/AROS/Extras/Development/mmakefile
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Emu
+/images/Gorilla/Icons/Medium/AROS/Extras/Emu/mmakefile
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Emu/E-UAE
+/images/Gorilla/Icons/Medium/AROS/Extras/Emu/E-UAE/mmakefile
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Emu/UAE
+/images/Gorilla/Icons/Medium/AROS/Extras/Emu/UAE/mmakefile
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Games
+/images/Gorilla/Icons/Medium/AROS/Extras/Games/mmakefile
+
+# images/Gorilla/Icons/Medium/AROS/Extras/MultiMedia
+/images/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/mmakefile
+
+# images/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/AMP2
+/images/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/AMP2/mmakefile
+
+# images/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/Gfx
+/images/Gorilla/Icons/Medium/AROS/Extras/MultiMedia/Gfx/mmakefile
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Networking
+/images/Gorilla/Icons/Medium/AROS/Extras/Networking/mmakefile
+
+# images/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps
+/images/Gorilla/Icons/Medium/AROS/Extras/Networking/Apps/mmakefile
+
+# libini
+/libini/mmakefile
+
+# libini/include
+
+# lwip
+
+# lwip/lwip
+
+# lwip/lwip/doc
+
+# lwip/lwip/proj
+
+# lwip/lwip/proj/amigaos
+/lwip/lwip/proj/amigaos/SCOPTIONS
+/lwip/lwip/proj/amigaos/*.o
+/lwip/lwip/proj/amigaos/*.bak
+/lwip/lwip/proj/amigaos/*.info
+/lwip/lwip/proj/amigaos/*.lnk
+/lwip/lwip/proj/amigaos/test
+/lwip/lwip/proj/amigaos/testserver
+/lwip/lwip/proj/amigaos/testclient
+/lwip/lwip/proj/amigaos/simpleping
+/lwip/lwip/proj/amigaos/testgethostbyname
+/lwip/lwip/proj/amigaos/ping
+/lwip/lwip/proj/amigaos/mmakefile
+
+# lwip/lwip/proj/amigaos/include
+
+# lwip/lwip/proj/amigaos/include/arch
+/lwip/lwip/proj/amigaos/include/arch/*.info
+/lwip/lwip/proj/amigaos/include/arch/*.bak
+
+# lwip/lwip/proj/amigaos/include/netif
+/lwip/lwip/proj/amigaos/include/netif/*.bak
+/lwip/lwip/proj/amigaos/include/netif/*.info
+
+# lwip/lwip/proj/amigaos/include/sys
+
+# lwip/lwip/proj/amigaos/netif
+/lwip/lwip/proj/amigaos/netif/*.o
+/lwip/lwip/proj/amigaos/netif/*.bak
+/lwip/lwip/proj/amigaos/netif/*.info
+
+# lwip/lwip/proj/amigaos/netif/tapinterface
+/lwip/lwip/proj/amigaos/netif/tapinterface/mmakefile
+
+# lwip/lwip/proj/aros
+
+# lwip/lwip/src
+
+# lwip/lwip/src/api
+/lwip/lwip/src/api/*.o
+/lwip/lwip/src/api/*.info
+/lwip/lwip/src/api/*.bak
+
+# lwip/lwip/src/core
+/lwip/lwip/src/core/*.o
+/lwip/lwip/src/core/*.bak
+/lwip/lwip/src/core/*.info
+
+# lwip/lwip/src/core/ipv4
+/lwip/lwip/src/core/ipv4/*.o
+/lwip/lwip/src/core/ipv4/*.bak
+/lwip/lwip/src/core/ipv4/*.info
+
+# lwip/lwip/src/core/ipv6
+
+# lwip/lwip/src/include
+
+# lwip/lwip/src/include/ipv4
+
+# lwip/lwip/src/include/ipv4/lwip
+
+# lwip/lwip/src/include/ipv6
+
+# lwip/lwip/src/include/ipv6/lwip
+
+# lwip/lwip/src/include/lwip
+
+# lwip/lwip/src/include/netif
+
+# lwip/lwip/src/netif
+/lwip/lwip/src/netif/*.o
+/lwip/lwip/src/netif/*.bak
+/lwip/lwip/src/netif/*.info
+
+# lwip/lwip/src/netif/ppp
+
+# mui
+
+# mui/classes
+
+# mui/classes/BWins
+/mui/classes/BWins/mmakefile
+
+# mui/classes/BWins/Demos
+
+# mui/classes/BWins/include
+
+# mui/classes/BWins/include/MUI
+
+# mui/classes/BWins/localization
+
+# mui/classes/BWins/localization/espaÂ±ol
+
+# mui/classes/BWins/localization/italiano
+
+# mui/classes/BWins/localization/magyar
+
+# mui/classes/BWins/mcc
+/mui/classes/BWins/mcc/mmakefile
+
+# mui/classes/BWins/mcp
+
+# mui/classes/mailtext
+/mui/classes/mailtext/mmakefile
+/mui/classes/mailtext/Mailtext_mcp_locale.c
+/mui/classes/mailtext/Mailtext_mcc_locale.c
+
+# mui/classes/mailtext/aros
+
+# mui/classes/mailtext/gst
+
+# mui/classes/mailtext/icons
+
+# mui/classes/mailtext/loc
+/mui/classes/mailtext/loc/Mailtext_mcc.h
+/mui/classes/mailtext/loc/Mailtext_mcp.h
+
+# mui/classes/mailtext/mui
+
+# mui/classes/mailtext/obj
+
+# mui/classes/mailtext/rev
+
+# mui/classes/mailtext/s
+/mui/classes/mailtext/s/mmakefile
+
+# mui/classes/popph
+/mui/classes/popph/mmakefile
+
+# mui/classes/popph/s
+/mui/classes/popph/s/mmakefile
+
+# mui/classes/thebar
+/mui/classes/thebar/mmakefile
+
+# mui/classes/thebar/aros
+
+# mui/classes/thebar/aros/s
+/mui/classes/thebar/aros/s/mmakefile
+
+# mui/classes/thebar/demo
+/mui/classes/thebar/demo/mmakefile
+
+# mui/classes/thebar/demo/b2chunky
+
+# mui/classes/thebar/demo/pics
+
+# mui/classes/thebar/doc
+
+# mui/classes/thebar/include
+
+# mui/classes/thebar/include/aros
+
+# mui/classes/thebar/include/aros/mui
+
+# mui/classes/thebar/include/clib
+
+# mui/classes/thebar/include/cybergraphx
+
+# mui/classes/thebar/include/inline
+
+# mui/classes/thebar/include/inline4
+
+# mui/classes/thebar/include/interfaces
+
+# mui/classes/thebar/include/libraries
+
+# mui/classes/thebar/include/mui
+
+# mui/classes/thebar/include/proto
+
+# mui/classes/thebar/mcc
+/mui/classes/thebar/mcc/mmakefile
+
+# mui/classes/thebar/mcc/button
+/mui/classes/thebar/mcc/button/mmakefile
+
+# mui/classes/thebar/mcp
+/mui/classes/thebar/mcp/mmakefile
+/mui/classes/thebar/mcp/locale.c
+/mui/classes/thebar/mcp/locale.h
+
+# mui/classes/thebar/mcp/locale
+/mui/classes/thebar/mcp/locale/mmakefile
+
+# mui/classes/toolbar
+/mui/classes/toolbar/mmakefile
+
+# mui/classes/toolbar/Demos
+/mui/classes/toolbar/Demos/mmakefile
+
+# mui/classes/toolbar/Demos/Images
+
+# mui/classes/toolbar/Developer
+
+# mui/classes/toolbar/Developer/Autodocs
+
+# mui/classes/toolbar/Developer/C
+
+# mui/classes/toolbar/Developer/C/Examples
+/mui/classes/toolbar/Developer/C/Examples/mmakefile
+
+# mui/classes/toolbar/Docs
+
+# mui/classes/toolbar/Source
+
+# mui/classes/toolbar/Source/Toolbar_mcc
+/mui/classes/toolbar/Source/Toolbar_mcc/mmakefile
+
+# mui/classes/toolbar/Source/Toolbar_mcp
+/mui/classes/toolbar/Source/Toolbar_mcp/mmakefile
+
+# mui/classes/toolbar/s
+/mui/classes/toolbar/s/mmakefile
+
+# mui/classes/urltext
+/mui/classes/urltext/mmakefile
+
+# mui/classes/urltext/Demos
+/mui/classes/urltext/Demos/mmakefile
+
+# mui/classes/urltext/Include
+
+# mui/classes/urltext/Include/MUI
+
+# mui/classes/urltext/mcc
+/mui/classes/urltext/mcc/mmakefile
+
+# mui/classes/urltext/mcp
+/mui/classes/urltext/mcp/mmakefile
+
+# mui/classes/urltext/s
+/mui/classes/urltext/s/mmakefile
+
+# mui/madmatrix
+/mui/madmatrix/SCOPTIONS
+/mui/madmatrix/*.o
+/mui/madmatrix/MadMatrix
+/mui/madmatrix/*.info
+/mui/madmatrix/*.bak
+/mui/madmatrix/*.lnk
+/mui/madmatrix/mmakefile
+
+# music
+
+# music/libs
+
+# music/libs/ptplay
+
+# music/libs/ptplay/Include
+
+# music/libs/ptplay/Include/fd
+
+# music/libs/ptplay/Sources
+/music/libs/ptplay/Sources/mmakefile
+
+# music/mad
+/music/mad/mmakefile
+
+# music/mad/doc
+
+# music/notation
+
+# music/notation/abcm2ps
+/music/notation/abcm2ps/mmakefile
+
+# music/shellplayer
+/music/shellplayer/mmakefile
+
+# necessary
+
+# necessary/AHI
+/necessary/AHI/mmakefile
+/necessary/AHI/.files-touched
+
+# necessary/AHI/AHI
+
+# necessary/AHI/AHI/translations
+
+# necessary/AHI/AHI-Handler
+
+# necessary/AHI/AddAudioModes
+
+# necessary/AHI/Device
+
+# necessary/AHI/Device/translations
+
+# necessary/AHI/Docs
+
+# necessary/AHI/Drivers
+
+# necessary/AHI/Drivers/AROS
+
+# necessary/AHI/Drivers/Aura
+
+# necessary/AHI/Drivers/Common
+
+# necessary/AHI/Drivers/Device
+
+# necessary/AHI/Drivers/EMU10kx
+
+# necessary/AHI/Drivers/EMU10kx/CAMD
+
+# necessary/AHI/Drivers/Filesave
+
+# necessary/AHI/Drivers/Paula
+
+# necessary/AHI/Drivers/SoundBlasterAWE
+
+# necessary/AHI/Drivers/Toccata
+
+# necessary/AHI/Drivers/Void
+
+# necessary/AHI/Drivers/Wavetools
+
+# necessary/AHI/Drivers/ac97
+
+# necessary/AHI/Examples
+
+# necessary/AHI/Examples/Device
+
+# necessary/AHI/Examples/Device/PlayTest
+
+# necessary/AHI/Examples/Device/RecordTest
+
+# necessary/AHI/Examples/Extras
+
+# necessary/AHI/Examples/Extras/CheckAHIPrefs
+
+# necessary/AHI/Examples/Extras/CloneAudioModes
+
+# necessary/AHI/Examples/Low-level
+
+# necessary/AHI/Examples/Low-level/3rd party
+
+# necessary/AHI/Examples/Low-level/3rd party/DetectPaulaAudio
+
+# necessary/AHI/Examples/Low-level/3rd party/GetAudioID
+
+# necessary/AHI/Examples/Low-level/3rd party/GetAudioID/Catalogs
+
+# necessary/AHI/Examples/Low-level/3rd party/GetAudioID/Catalogs/italiano
+
+# necessary/AHI/Examples/Low-level/3rd party/GetAudioID/Catalogs/suomi
+
+# necessary/AHI/Examples/Low-level/3rd party/GetAudioID/Source
+
+# necessary/AHI/Examples/Low-level/BestAudioID
+
+# necessary/AHI/Examples/Low-level/DoubleBuffer
+
+# necessary/AHI/Examples/Low-level/HardDiskRecord
+
+# necessary/AHI/Examples/Low-level/HardDiskRecord/Catalogs
+
+# necessary/AHI/Examples/Low-level/HardDiskRecord/Catalogs/deutsch
+
+# necessary/AHI/Examples/Low-level/HardDiskRecord/Catalogs/italiano
+
+# necessary/AHI/Examples/Low-level/PT-AHIPlay
+
+# necessary/AHI/Examples/Low-level/PTdatatype
+
+# necessary/AHI/Examples/Low-level/PTdatatype/ProtrackerDT
+
+# necessary/AHI/Examples/Low-level/PTdatatype/ProtrackerDT/Classes
+
+# necessary/AHI/Examples/Low-level/PTdatatype/ProtrackerDT/Classes/Datatypes
+
+# necessary/AHI/Examples/Low-level/PTdatatype/ProtrackerDT/Devs
+
+# necessary/AHI/Examples/Low-level/PTdatatype/ProtrackerDT/Devs/DataTypes
+
+# necessary/AHI/Examples/Low-level/PTdatatype/ProtrackerDT/ENV
+
+# necessary/AHI/Examples/Low-level/PTdatatype/ProtrackerDT/ENV/DataTypes
+
+# necessary/AHI/Examples/Low-level/PlaySineEverywhere
+
+# necessary/AHI/Examples/Low-level/RecordTestQnD
+
+# necessary/AHI/Examples/Low-level/Req-test
+
+# necessary/AHI/Examples/Low-level/ScanAudioModes
+
+# necessary/AHI/Examples/Low-level/SimplePlay
+
+# necessary/AHI/Examples/Low-level/Test-7.1
+
+# necessary/AHI/Examples/Low-level/lib
+
+# necessary/AHI/Include
+
+# necessary/AHI/Include/Asm
+
+# necessary/AHI/Include/Asm/devices
+
+# necessary/AHI/Include/Asm/libraries
+
+# necessary/AHI/Include/C
+
+# necessary/AHI/Include/C/devices
+
+# necessary/AHI/Include/C/libraries
+
+# necessary/AHI/Include/SFD
+
+# necessary/AHI/PackageFiles
+
+# necessary/AHI/PackageFiles/Packages
+/necessary/AHI/PackageFiles/Packages/mmakefile
+
+# necessary/AHI/PackageFiles/S
+/necessary/AHI/PackageFiles/S/mmakefile
+
+# necessary/AHI/Test
+
+# necessary/AHI/Test/asmtest
+
+# necessary/AHI/Test/examine_ahi
+
+# necessary/AHI/Toccata
+
+# necessary/CDVDFS
+
+# necessary/CDVDFS/Charsets
+
+# necessary/CDVDFS/c
+
+# necessary/CDVDFS/src
+/necessary/CDVDFS/src/mmakefile
+
+# necessary/SFS
+/necessary/SFS/mmakefile
+
+# necessary/SFS/tools
+/necessary/SFS/tools/mmakefile
+
+# necessary/SFS/tools/SFScheck
+
+# necessary/SFS/tools/SFSchecksum
+
+# necessary/SFS/tools/SFSdefrag
+/necessary/SFS/tools/SFSdefrag/mmakefile
+/necessary/SFS/tools/SFSdefrag/strings.h
+
+# necessary/SFS/tools/SFSdefrag/Catalogs
+/necessary/SFS/tools/SFSdefrag/Catalogs/mmakefile
+
+# necessary/SFS/tools/SFSdefrag/Icons
+/necessary/SFS/tools/SFSdefrag/Icons/mmakefile
+
+# necessary/SFS/tools/SFSdefragmentGUI
+/necessary/SFS/tools/SFSdefragmentGUI/mmakefile
+
+# necessary/SFS/tools/SFSdisplay
+
+# necessary/SFS/tools/SFSdumpblock
+
+# necessary/SFS/tools/SFSfindobjects
+
+# necessary/SFS/tools/SFSformat
+/necessary/SFS/tools/SFSformat/mmakefile
+
+# necessary/SFS/tools/SFSquery
+/necessary/SFS/tools/SFSquery/mmakefile
+
+# necessary/SFS/tools/SetCache
+/necessary/SFS/tools/SetCache/mmakefile
+
+# necessary/USB
+/necessary/USB/.cdtproject
+/necessary/USB/.project
+/necessary/USB/.settings
+/necessary/USB/mmakefile
+
+# necessary/USB/classes
+/necessary/USB/classes/mmakefile
+
+# necessary/USB/classes/HID
+/necessary/USB/classes/HID/mmakefile
+
+# necessary/USB/classes/HID/include
+/necessary/USB/classes/HID/include/mmakefile
+
+# necessary/USB/drivers
+/necessary/USB/drivers/mmakefile
+
+# necessary/USB/drivers/EHCI
+/necessary/USB/drivers/EHCI/mmakefile
+
+# necessary/USB/drivers/OHCI
+/necessary/USB/drivers/OHCI/mmakefile
+
+# necessary/USB/drivers/UHCI
+/necessary/USB/drivers/UHCI/mmakefile
+
+# necessary/USB/include
+/necessary/USB/include/mmakefile
+
+# necessary/USB/stack
+/necessary/USB/stack/mmakefile
+
+# necessary/USB/stack/stubs
+/necessary/USB/stack/stubs/mmakefile
+
+# necessary/USB/tools
+/necessary/USB/tools/mmakefile
+
+# necessary/USB/tools/lsusb
+/necessary/USB/tools/lsusb/mmakefile
+
+# necessary/mui
+
+# necessary/mui/classes
+
+# necessary/mui/classes/nlist
+/necessary/mui/classes/nlist/*.o
+/necessary/mui/classes/nlist/*.oPPC
+/necessary/mui/classes/nlist/*.mcc
+/necessary/mui/classes/nlist/*.mcc.elf
+/necessary/mui/classes/nlist/*.mcp
+/necessary/mui/classes/nlist/*.mcp.elf
+/necessary/mui/classes/nlist/Test
+/necessary/mui/classes/nlist/*.rej
+/necessary/mui/classes/nlist/*.orig
+/necessary/mui/classes/nlist/mmakefile
+
+# necessary/mui/classes/nlist/Floattext_mui
+/necessary/mui/classes/nlist/Floattext_mui/*.o
+/necessary/mui/classes/nlist/Floattext_mui/*.oPPC
+/necessary/mui/classes/nlist/Floattext_mui/*.mcc
+/necessary/mui/classes/nlist/Floattext_mui/*.mcc.elf
+/necessary/mui/classes/nlist/Floattext_mui/SCOPTIONS
+
+# necessary/mui/classes/nlist/NFloattext_mcc
+/necessary/mui/classes/nlist/NFloattext_mcc/*.o
+/necessary/mui/classes/nlist/NFloattext_mcc/*.oPPC
+/necessary/mui/classes/nlist/NFloattext_mcc/*.mcc
+/necessary/mui/classes/nlist/NFloattext_mcc/*.mcc.elf
+/necessary/mui/classes/nlist/NFloattext_mcc/SCOPTIONS
+/necessary/mui/classes/nlist/NFloattext_mcc/mmakefile
+
+# necessary/mui/classes/nlist/NList_mcc
+/necessary/mui/classes/nlist/NList_mcc/*.o
+/necessary/mui/classes/nlist/NList_mcc/*.oPPC
+/necessary/mui/classes/nlist/NList_mcc/*.mcc
+/necessary/mui/classes/nlist/NList_mcc/*.mcc.elf
+/necessary/mui/classes/nlist/NList_mcc/*.old
+/necessary/mui/classes/nlist/NList_mcc/SCOPTIONS
+/necessary/mui/classes/nlist/NList_mcc/*.bak
+/necessary/mui/classes/nlist/NList_mcc/*.info
+/necessary/mui/classes/nlist/NList_mcc/nlist.mcc.lib
+/necessary/mui/classes/nlist/NList_mcc/mmakefile
+
+# necessary/mui/classes/nlist/NListview_mcc
+/necessary/mui/classes/nlist/NListview_mcc/*.o
+/necessary/mui/classes/nlist/NListview_mcc/*.oPPC
+/necessary/mui/classes/nlist/NListview_mcc/*.mcc
+/necessary/mui/classes/nlist/NListview_mcc/*.mcc.elf
+/necessary/mui/classes/nlist/NListview_mcc/SCOPTIONS
+/necessary/mui/classes/nlist/NListview_mcc/*.info
+/necessary/mui/classes/nlist/NListview_mcc/*.bak
+/necessary/mui/classes/nlist/NListview_mcc/*.mdbi
+/necessary/mui/classes/nlist/NListview_mcc/nlistview.mcc.lib
+/necessary/mui/classes/nlist/NListview_mcc/mmakefile
+
+# necessary/mui/classes/nlist/NListviews_mcp
+/necessary/mui/classes/nlist/NListviews_mcp/*.o
+/necessary/mui/classes/nlist/NListviews_mcp/*.oPPC
+/necessary/mui/classes/nlist/NListviews_mcp/*.mcc
+/necessary/mui/classes/nlist/NListviews_mcp/*.mcc.elf
+/necessary/mui/classes/nlist/NListviews_mcp/SCOPTIONS
+/necessary/mui/classes/nlist/NListviews_mcp/mmakefile
+
+# necessary/mui/classes/nlist/common
+/necessary/mui/classes/nlist/common/*.o
+/necessary/mui/classes/nlist/common/*.oPPC
+/necessary/mui/classes/nlist/common/*.info
+/necessary/mui/classes/nlist/common/*.bak
+
+# necessary/mui/classes/nlist/commonaros
+/necessary/mui/classes/nlist/commonaros/*.o
+/necessary/mui/classes/nlist/commonaros/*.oPPC
+/necessary/mui/classes/nlist/commonaros/*.info
+/necessary/mui/classes/nlist/commonaros/*.bak
+
+# necessary/mui/classes/nlist/demo
+/necessary/mui/classes/nlist/demo/*.o
+/necessary/mui/classes/nlist/demo/*.oPPC
+/necessary/mui/classes/nlist/demo/NList-Demo
+/necessary/mui/classes/nlist/demo/mmakefile
+
+# necessary/mui/classes/nlist/docs
+
+# necessary/mui/classes/nlist/misc
+/necessary/mui/classes/nlist/misc/*.o
+/necessary/mui/classes/nlist/misc/*.oPPC
+/necessary/mui/classes/nlist/misc/*.mui
+/necessary/mui/classes/nlist/misc/TEST0
+
+# necessary/mui/classes/nlist/nlisttree_mcc
+/necessary/mui/classes/nlist/nlisttree_mcc/mmakefile
+
+# necessary/mui/classes/nlist/nlisttree_mcp
+/necessary/mui/classes/nlist/nlisttree_mcp/mmakefile
+
+# necessary/mui/classes/nlist/s
+/necessary/mui/classes/nlist/s/mmakefile
+
+# pack
+
+# pack/libxad
+
+# pack/libxad/amiga
+
+# pack/libxad/amiga/docs
+
+# pack/libxad/amiga/docs/english
+
+# pack/libxad/amiga/docs/french
+
+# pack/libxad/amiga/docs/german
+
+# pack/libxad/amiga/docs/polish
+
+# pack/libxad/amiga/include
+
+# pack/libxad/amiga/include/ASM
+
+# pack/libxad/amiga/include/ASM/libraries
+
+# pack/libxad/amiga/include/ASM/lvo
+
+# pack/libxad/amiga/include/AmigaE
+
+# pack/libxad/amiga/include/AmigaE/libraries
+
+# pack/libxad/amiga/include/Autodocs
+
+# pack/libxad/amiga/include/C
+
+# pack/libxad/amiga/include/C/clib
+
+# pack/libxad/amiga/include/C/inline
+
+# pack/libxad/amiga/include/C/libraries
+
+# pack/libxad/amiga/include/C/pragma
+
+# pack/libxad/amiga/include/C/proto
+
+# pack/libxad/amiga/include/FD
+
+# pack/libxad/amiga/include/SFD
+
+# pack/libxad/amiga/source
+
+# pack/libxad/amiga/source/DropArc
+
+# pack/libxad/amiga/source/DropArc/locale
+
+# pack/libxad/amiga/source/clients
+
+# pack/libxad/amiga/source/test
+
+# pack/libxad/amiga/source/tools
+
+# pack/libxad/portable
+/pack/libxad/portable/mmakefile
+
+# pack/libxad/portable/amiga
+
+# pack/libxad/portable/clients
+
+# pack/libxad/portable/include
+
+# pack/libxad/portable/morphos
+
+# pack/libxad/portable/test
+
+# pack/libxad/portable/tools
+
+# pack/libxad/portable/unix
+
+# play
+/play/play
+
+# play/libavcodec
+/play/libavcodec/Makefile.*
+/play/libavcodec/.depend
+/play/libavcodec/libavcodec.a
+
+# play/libavcodec/alpha
+
+# play/libavcodec/armv4l
+
+# play/libavcodec/i386
+
+# play/libavcodec/liba52
+
+# play/libavcodec/libpostproc
+
+# play/libavcodec/mlib
+
+# play/libavcodec/ppc
+
+# play/libavcodec/ps2
+
+# play/libavcodec/sh4
+
+# play/libavcodec/sparc
+
+# play/libavformat
+/play/libavformat/config.h
+/play/libavformat/config.mak
+/play/libavformat/*ffmpeg
+/play/libavformat/ffserver
+/play/libavformat/Makefile.*
+/play/libavformat/.depend
+/play/libavformat/libavformat.a
+
+# play/obj
+
+# radium
+/radium/mmakefile
+
+# radium/Qt
+
+# radium/amiga
+
+# radium/amiga/instrprop
+
+# radium/amiga/plug-ins
+
+# radium/aros
+
+# radium/common
+
+# radium/common/new
+
+# radium/dummies
+
+# radium/midi
+
+# radium/mmd2loader
+
+# regina
+/regina/mmakefile
+
+# regina/arexx_test
+
+# regina/contrib
+
+# regina/demo
+
+# regina/epoc32
+
+# regina/epoc32/bmarm
+
+# regina/epoc32/bwins
+
+# regina/epoc32/recrexx
+
+# regina/ntservice
+
+# regina/rexxmast
+/regina/rexxmast/mmakefile
+
+# regina/trip
+/regina/trip/mmakefile
+
+# rexx
+
+# rexx/bsub
+
+# rexx/inc
+
+# rexx/lib
+
+# rexx/lstring
+/rexx/lstring/mmakefile
+
+# rexx/progs
+/rexx/progs/mmakefile
+
+# rexx/src
+/rexx/src/mmakefile
+
+# sqlite3
+/sqlite3/mmakefile
+
+# sqlite3/art
+
+# sqlite3/art/tmp
+
+# sqlite3/contrib
+
+# sqlite3/notes
+
+# sqlite3/test
+
+# sqlite3/tool
+
+# sqlite3/www
