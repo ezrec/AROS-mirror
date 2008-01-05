@@ -2,8 +2,33 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
-$Id: ChangeLog 134 2007-12-03 23:12:52Z damato $
+$Id: ChangeLog 146 2008-01-04 11:10:36Z sindlarv $
 $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/ChangeLog $
+
+2008-01-04  Vit Sindlar <sindlarv at centrum dot cz>
+
+  * mcp/locale/czech.ct: updated Czech catalog translation
+
+2008-01-03  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale/#?.ct: changed all .ct file names to english names instead of
+    translated ones.
+
+2007-12-28  Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/demo7.c: fixed broken DoSuperNew() function for OS3 and OS4. This
+    should fix the crashes that some people experienced.
+
+2007-12-27 Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/SDI_compiler.h: adapted SDI macros to not produce warnings on a
+    MorphOS compile.
+
+2007-12-27  Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/Makefile: modified Makefile to build with newlib.library instead of
+    clib2 on OS4.
+  * mcp/C_c.sd: added missing "SDI_compiler.h" include
 
 2007-12-23 Matthias Rustler <mrustler@gmx.de>
 

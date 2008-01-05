@@ -115,10 +115,8 @@ static BOOL ClassInit(UNUSED struct Library *base)
         {
           lib_flags |= BASEFLG_MUI20;
 
-#ifndef __AROS__
           if(MUIMasterBase->lib_Version > MUIVER20 || MUIMasterBase->lib_Revision >= 5341)
             lib_flags |= BASEFLG_MUI4;
-#endif
         }
 
         if(GetVar("MUI/TheBarAlpha", (STRPTR)buf, sizeof(buf), GVF_GLOBAL_ONLY) > 0)

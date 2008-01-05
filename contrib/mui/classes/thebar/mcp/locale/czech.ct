@@ -1,6 +1,6 @@
-## version $VER: TheBar_mcp.catalog 21.1 (28.11.2007)
+## version $VER: TheBar_mcp.catalog 21.3 (4.1.2008)
 ## language czech
-## codeset 0
+## codeset 5
 ;
 ;
 ; CATCOMP TheBar.cd CFILE loc.h
@@ -19,7 +19,7 @@ Odstup
 ; Spacing
 ;
 Msg_Reg_Options
-Ostatní
+Mo¾nosti
 ; Options
 ;
 Msg_Title_Backgrounds
@@ -31,11 +31,11 @@ Panel
 ; Bar
 ;
 Msg_GroupBackground_Help
-Pozadí panelu.
+Definuje pozadí panelu.
 ; Bar background.
 ;
 Msg_GroupBackground_Title
-Pozadí panelu
+Vyberte pozadí panelu
 ; Bar background
 ;
 Msg_UseGroupBackground
@@ -43,7 +43,7 @@ Aktivní
 ; Active
 ;
 Msg_UseGroupBackground_Help
-Definuje vlastní pozadí panelu.
+Aktivuje definované pozadí panelu.
 ; If selected, the bar gets\n\
 ; your preferred background,\n\
 ; otherwise it gets its\n\
@@ -54,11 +54,11 @@ Tlaèítka
 ; Buttons
 ;
 Msg_ButtonBackground_Help
-Pozadí aktivních tlaèítek.
+Definuje pozadí aktivních tlaèítek.
 ; Active buttons background.
 ;
 Msg_ButtonBackground_Title
-Pozadí aktivních tlaèítek
+Vyberte pozadí aktivních tlaèítek
 ; Active buttons background
 ;
 Msg_UseButtonBackground
@@ -66,48 +66,46 @@ Aktivní
 ; Active
 ;
 Msg_UseButtonBackground_Help
-Definuje vlastní pozadí tlaèítek.
+Aktivuje definované pozadí tlaèítek.
 ; If selected, the buttons get\n\
 ; your preferred background,\n\
 ; otherwise they get their\n\
 ; parent background.
 ;
 Msg_Title_Frame
-Rámeèek tlaèítek
+Rámeèek tlaèítka
 ; Buttons frame
 ;
 Msg_FrameShinePen
-Svìtlé hrany
+Svìtlá\nhrana
 ; Shine
 ;
 Msg_FrameShinePen_Help
-Definuje pero pro vykreslení svìtlých hran\n\
-aktivních tlaèítek.
+Definuje barvu svìtlé hrany aktivního tlaèítka.
 ; Active buttons frame shine pen.
 ;
 Msg_FrameShinePen_Title
-Pero pro svìtlé hrany
+Vyberte barvu svìtlé hrany
 ; Frame shine pen
 ;
 Msg_FrameShadowPen
-Tmavé hrany
+Tmavá\nhrana
 ; Shadow
 ;
 Msg_FrameShadowPen_Help
-Definuje pero pro vykreslení tmavých hran\n\
-aktivních tlaèítek.
+Definuje barvu tmavé hrany aktivního tlaèítka.
 ; Active buttons frame shadow pen.
 ;
 Msg_FrameShadowPen_Title
-Pero pro tmavé hrany
+Vyberte barvu tmavé hrany
 ; Frame shadow pen
 ;
 Msg_FrameStyle_Recessed
-Vtlaèené
+Vtlaèený rámeèek
 ; Recessed
 ;
 Msg_FrameStyle_Normal
-Normální
+Normální rámeèek
 ; Normal
 ;
 Msg_FrameStyle
@@ -115,7 +113,7 @@ Styl
 ; Style
 ;
 Msg_FrameStyle_Help
-Styl rámeèku aktivních tlaèítek.
+Definuje styl rámeèku aktivních tlaèítek.
 ; Active buttons frame style.
 ;
 Msg_Title_Disabled
@@ -123,33 +121,34 @@ Neaktivní tlaèítka
 ; Disabled buttons
 ;
 Msg_DisabledBody
-Tìlo
+Plocha
 ; Body
 ;
 Msg_DisabledBody_Help
-Definuje pero pro pozadí neaktivních tlaèítek.
+Definuje barvu pozadí neaktivního tlaèítka, která\n\
+posléze urèuje jeho výsledný vzhled.
 ; Disabled buttons body pen. It is used as\n\
 ; main pen for disabled buttons in Shape\n\
 ; mode and as grid pen for disabled\n\
 ; buttons in Grid modes.
 ;
 Msg_DisabledBody_Title
-Pero tìla
+Vyberte barvu plochy neaktivního tlaèítka
 ; Body pen
 ;
 Msg_DisabledShadow
-Tmavé hrany
+Tmavá\nhrany
 ; Shadow
 ;
 Msg_DisabledShadow_Help
-Definuje pero pro tmavé hrany neaktivních tlaèítek.
+Definuje barvu tmavé hrany neaktivního tlaèítka.
 ; Disabled buttons shadow pen. It is used as\n\
 ; secondary pen for disabled buttons in Shape\n\
 ; mode and as text pen for disabled buttons\n\
 ; in Grid modes.
 ;
 Msg_DisabledShadow_Title
-Pero pro tmavé hrany
+Vyberte barvu tmavé hrany neaktivního tlaèítka
 ; Shadow pen
 ;
 Msg_Title_BarSpacer
@@ -157,27 +156,27 @@ Oddìlovaè
 ; Bar spacer
 ;
 Msg_BarSpacerShinePen
-Svìtlé
+Svìtlá\nhrana
 ; Shine
 ;
 Msg_BarSpacerShinePen_Help
-Definuje pero pro svìtlé hrany oddìlovaèe.
+Definuje barvu svìtlé hrany oddìlovaèe.
 ; Bar spacer shine pen.
 ;
 Msg_BarSpacerShinePen_Title
-Pero pro svìtlé hrany oddìlovaèe
+Vyberte barvu svìtlé hrany oddìlovaèe
 ; Spacer shine pen
 ;
 Msg_BarSpacerShadowPen
-Tmavé
+Tmavá\nhrana
 ; Shadow
 ;
 Msg_BarSpacerShadowPen_Help
-Definuje pero pro tmavé hrany oddìlovaèe.
+Definuje barvu tmavé hrany oddìlovaèe.
 ; Bar spacer shadow pen.
 ;
 Msg_BarSpacerShadowPen_Title
-Pero pro tmavé hrany oddìlovaèe
+Vyberte barvu tmavé hrany oddìlovaèe
 ; Spacer shadow pen
 ;
 Msg_Title_BarFrame
@@ -185,59 +184,59 @@ Rámeèek panelu
 ; Bar frame
 ;
 Msg_BarFrameShine
-Svìtlé
+Svìtlá\nhrana
 ; Shine
 ;
 Msg_BarFrameShine_Help
-Definuje pero pro svìtlé hrany panelu.
+Definuje barvu svìtlé hrany panelu.
 ; Bar frame shine pen.
 ;
 Msg_BarFrameShine_Title
-Pero pro svìtlé hrany
+Vyberte barvu svìtlé hrany panelu
 ; Frame shine pen
 ;
 Msg_BarFrameShadow
-Tmavé
+Tmavá\nhrana
 ; Shadow
 ;
 Msg_BarFrameShadow_Help
-Definuje pero pro tmavé hrany panelu.
+Definuje barvu tmavé hrany panelu.
 ; Bar frame shadow pen.
 ;
 Msg_BarFrameShadow_Title
-Pero pro tmavé hrany
+Vyberte barvu tmavé hrany panelu
 ; Frame shadow pen
 ;
 Msg_Title_DragBar
-Li¹ta
+Táhlo
 ; DragBar
 ;
 Msg_DragBarShine
-Svìtlé
+Svìtlá\nhrana
 ; Shine
 ;
 Msg_DragBarShine_Help
-Pero pro svìtlé hrany li¹ty.
+Definuje barvu svìtlé hrany li¹ty.
 ; DragBar shine pen.
 ;
 Msg_DragBarShine_Title
-Pero pro svìtlé hrany
+Vyberte barvu svìtlé hrany li¹ty
 ; DragBar shine pen
 ;
 Msg_DragBarShadow
-Tmavé
+Tmavá\nhrana
 ; Shadow
 ;
 Msg_DragBarShadow_Help
-Pero pro tmavé hrany li¹ty.
+Definuje barvu tmavé hrany li¹ty.
 ; DragBar shadow pen.
 ;
 Msg_DragBarShadow_Title
-Pero pro tmavé hrany
+Vyberte barvu tmavé hrany li¹ty
 ; DragBar shadow pen
 ;
 Msg_DragBarFill
-Výplòové
+Výplòová\nbarva
 ; Fill
 ;
 Msg_DragBarFill_Help
@@ -253,7 +252,7 @@ Pou¾ít
 ; Use
 ;
 Msg_UseDragBarFill_Help
-Umo¾ní pou¾ití vybrané výplòové barvy.
+Aktivuje zobrazené vybrané výplòové barvy.
 ; If selected, the dragbar fill\n\
 ; pen is used.
 ;
@@ -262,19 +261,19 @@ Rámeèek
 ; Frame
 ;
 Msg_Frame_Help
-Rámeèek panelu
+Definuje vzhled rámeèku panelu.
 ; Bar frame
 ;
 Msg_Frame_Title
-Rámeèek panelu
+Vyberte rámeèek panelu
 ; Bar frame
 ;
 Msg_TextFont
-Samotný text
+Textová tlaèítka
 ; Text
 ;
 Msg_TextFont_Help
-Písmo pro textová tlaèítka.
+Definuje písmo pro textová tlaèítka.
 ; Text only buttons font.
 ;
 Msg_TextGfxFont
@@ -282,7 +281,7 @@ Ikony s textem
 ; TextGfx
 ;
 Msg_TextGfxFont_Help
-Písmo pro kombinaci ikon s textem.
+Definuje písmo pro kombinaci ikon s textem.
 ; Text and image buttons font.
 ;
 Msg_ViewMode
@@ -314,53 +313,55 @@ Pouze text
 ; Text only
 ;
 Msg_Borderless
-Bez okraje
+Zobrazit tlaèítka bez rámeèku
 ; Borderless
 ;
 Msg_Borderless_Help
-Vypne zobrazení okraje panelu.
+Vypne zobrazení rámeèku okolo tlaèítek.
 ; If selected, buttons are borderless.
 ;
 Msg_Sunny
-Zvýraznìní
+Obarvit vybrané tlaèítko
 ; Highlight
 ;
 Msg_Sunny_Help
-Pøi najetí ¹ipkou my¹i se vybrané tlaèítko (standardnì\n\
-èernobílé) obarví.
+Obarví vybrané tlaèítko (tj. takové, na které\n\
+najedete ¹ipkou my¹i).
 ; If selected, buttons, normally in black\n\
 ; and white, are colored when the\n\
 ; mouse is over them.
 ;
 Msg_Raised
-Orámování
+Orámovat vybrané tlaèítko
 ; Raised
 ;
 Msg_Raised_Help
-Pøi najetí ¹ipkou my¹i se kolem vybraného tlaèítka\n\
-zobrazí rámeèek.
+Orámuje vybrané tlaèítko (tj. takové, na které\n\
+najedete ¹ipkou my¹i).
 ; If selected, buttons, normally frameless,\n\
 ; are framed when the mouse is over them.
 ;
 Msg_Scaled
-Zvìt¹ení
+Zvìt¹it vybrané tlaèítko
 ; Scaled
 ;
 Msg_Scaled_Help
-Pøi najetí ¹ipkou my¹i se vybrané tlaèítko zvìt¹í.
+Zvìt¹í vybrané tlaèítko (tj. takové, na které\n\
+najedete ¹ipkou my¹i).
 ; If selected, buttons are scaled.
 ;
 Msg_BarSpacer
-Oddìlovaè
+Zobrazit oddìlovaè
 ; Bar spacer
 ;
 Msg_BarSpacer_Help
-Umo¾ní vizuální oddìlení jednotlivých tlaèítek.
+Oddìlovaè usnadní vizuálnì oddìlit jednotlivá\n\
+tlaèítka na panelu.
 ; If selected, a bar spacer is used\n\
 ; as buttons separator.
 ;
 Msg_EnableKeys
-Zapnout klávesové zkratky
+Zobrazit klávesové zkratky
 ; Enable keys
 ;
 Msg_EnableKeys_Help
@@ -398,15 +399,15 @@ Panel
 ; Bar
 ;
 Msg_HorizGroupSpacing
-Vodorovný
+Vodorovnì
 ; Horiz
 ;
 Msg_HorizGroupSpacing_Help
-Definuje odstup mezi dvìma tlaèítky na jednom øádku.
+Definuje odstup dvou tlaèítek na panelu.
 ; Pixels between two buttons in a bar row.
 ;
 Msg_VertGroupSpacing
-Svislý
+Svisle
 ; Vert
 ;
 Msg_VertGroupSpacing_Help
@@ -414,11 +415,11 @@ Definuje odstup mezi dvìma panely.
 ; Pixels between two bar rows.
 ;
 Msg_BarSpacerSpacing
-Panel
+Oddìlovaè
 ; Bar
 ;
 Msg_BarSpacerSpacing_Help
-Definuje odstup mezi oddìlovaèem a vedlej¹ím objektem.
+Definuje odstup oddìlovaèe od vedlej¹ího objektu.
 ; Pixels between a Bar spacer\n\
 ; and the previous/next object.
 ;
@@ -427,12 +428,12 @@ Tlaèítka
 ; Buttons
 ;
 Msg_HorizInnerSpacing
-Vodorovný
+Vodorovnì
 ; Horiz
 ;
 Msg_HorizInnerSpacing_Help
-Definuje odstup mezi levým/pravým okrajem rámeèku\n\
-a obsahem tlaèítka.
+Definuje odstup levého, pøíp. pravého okraje\n\
+rámeèku tlaèítka od obrázku èi textu uvnitø.
 ; Pixels between the left/right frame\n\
 ; border and the button contents.
 ;
@@ -441,8 +442,8 @@ Shora
 ; Top
 ;
 Msg_TopInnerSpacing_Help
-Definuje odstup mezi horním okrajem rámeèku\n\
-a obsahem tlaèítka.
+Definuje odstup horního okraje rámeèku tlaèítka\n\
+od obrázku èi textu uvnitø.
 ; Pixels between the top frame border\n\
 ; and the button contents.
 ;
@@ -451,8 +452,8 @@ Zdola
 ; Bottom
 ;
 Msg_BottomInnerSpacing_Help
-Definuje odstup mezi dolním okrajem rámeèku\n\
-a obsahem tlaèítka.
+Definuje odstup dolního okraje rámeèku tlaèítka\n\
+od obrázku èi textu uvnitø.
 ; Pixels between the bottom frame border\n\
 ; and the button contents.
 ;
@@ -465,8 +466,8 @@ Zleva
 ; Left
 ;
 Msg_LeftBarFrameSpacing_Help
-Definuje odstup mezi levým okrajem rámeèku\n\
-a obsahem panelu.
+Definuje odstup levého okraje rámeèku panelu\n\
+od obsahu, tj. tlaèítek uvnitø.
 ; Pixels between the left frame border\n\
 ; and the bar contents.
 ;
@@ -475,8 +476,8 @@ Zprava
 ; Right
 ;
 Msg_RightBarFrameSpacing_Help
-Definuje odstup mezi pravým okrajem rámeèku\n\
-a obsahem panelu.
+Definuje odstup pravého okraje rámeèku panelu\n\
+od obsahu, tj. tlaèítek uvnitø.
 ; Pixels between the right frame border\n\
 ; and the bar contents.
 ;
@@ -485,8 +486,8 @@ Shora
 ; Top
 ;
 Msg_TopBarFrameSpacing_Help
-Definuje odstup mezi horním okrajem rámeèku\n\
-a obsahem panelu.
+Definuje odstup horního okraje rámeèku panelu\n\
+od obsahu, tj. tlaèítek uvnitø.
 ; Pixels between the top frame border\n\
 ; and the bar contents.
 ;
@@ -495,8 +496,8 @@ Zdola
 ; Bottom
 ;
 Msg_BottomBarFrameSpacing_Help
-Definuje odstup mezi dolním okrajem rámeèku\n\
-a obsahem panelu.
+Definuje odstup dolního okraje rámeèku panelu\n\
+od obsahu, tj. tlaèítek uvnitø.
 ; Pixels between the bottom frame border\n\
 ; and the bar contents.
 ;
@@ -509,8 +510,8 @@ Vodorovnì
 ; Horiz
 ;
 Msg_HorizTextGfxSpacing_Help
-Definuje odstup mezi obrázkem a textovým popiskem\n\
-umístìným vlevo nebo vpravo.
+Definuje odstup obrázku od textového popisku\n\
+umístìného vlevo, pøíp. vpravo.
 ; Pixels between an image and\n\
 ; its left/right placed label.
 ;
@@ -519,8 +520,8 @@ Svisle
 ; Vert
 ;
 Msg_VertTextGfxSpacing_Help
-Definuje odstup mezi obrázkem a textovým popiskem\n\
-umístìným nahoøe nebo dole.
+Definuje odstup obrázku od textového popisku\n\
+umístìného dole, pøíp. nahoøe.
 ; Pixels between an image and\n\
 ; its bottom/top placed label.
 ;
@@ -537,15 +538,15 @@ Dobrá
 ; Good
 ;
 Msg_Precision_Exact
-Nejlep¹í
+Nejvy¹¹í
 ; Best
 ;
 Msg_Precision
-Kvalita
+Kvalita obrázku
 ; Quality
 ;
 Msg_Precision_Help
-Definuje zpùsob pøidìlování barev (=per).
+Definuje zpùsob pøidìlování barev obrázku.
 ; Precision to use when obtaining pens.
 ;
 Msg_Event_IntuiTicks
@@ -572,29 +573,29 @@ Metoda zji¹»ování pozice my¹i nad tlaèítky.\n\
 ; over a new object
 ;
 Msg_Scale
-Mìøítko
+Míra zvìt¹ení
 ; Scale
 ;
 Msg_Scale_Help
-Úroveò zmen¹ení/zvìt¹ení pro obrázky.
+Definuje míru zmìny velikosti 'zvìt¹ených' obrázkù.
 ; Scale factor for scaled images.
 ;
 Msg_SpecialSelect
-Speciální výbìr
+Posunout obsah vybraného tlaèítka
 ; Special select
 ;
 Msg_SpecialSelect_Help
-Umo¾ní posun tlaèítek pøi výbìru nebo aktivaci.
-; If selected, buttons contents is moved\n\
+Zapne posun tlaèítka pøi výbìru nebo aktivaci.
+; If selected, buttons contents is moved\n\
 ; when they are selected or active.
 ;
 Msg_TextOverUseShine
-Speciální text
+Zvýraznit text aktivního tlaèítka
 ; Special text
 ;
 Msg_TextOverUseShine_Help
-Zapne vykreslování popisu aktivních tlaèítek\n\
-pomocí pera pro svìtlé hrany.
+Zapne zvýraznìní textového popisku aktivního\n\
+tlaèítka barvou urèenou pro svìtlé hrany.
 ; If selected, active buttons labels\n\
 ; are drawn with the shine pen.
 ;
@@ -603,7 +604,7 @@ Ignorovat vybrané obrazky
 ; Ignore selected images
 ;
 Msg_IgnoreSelImages_Help
-Ignoruje vybrané obrazky.
+Zapne ignorování vybraných obrázkù.
 ; If selected, selected images\n\
 ; are ignored.
 ;
@@ -612,32 +613,32 @@ Ignorovat neaktivní obrázky
 ; Ignore disabled images
 ;
 Msg_IgnoreDisImages_Help
-Ignoruje neaktivní obrázky.
+Zapne ignorování neaktivních obrázkù.
 ; If selected, disabled images\n\
 ; are ignored.
 ;
 Msg_DisMode_Shape
-Model
+Pøekrýt vzorem
 ; Shape
 ;
 Msg_DisMode_Grid
-Møí¾ka
+Pøekrýt prostou møí¾kou
 ; Grid
 ;
 Msg_DisMode_FullGrid
-Plná møí¾ka
+Pøekrýt plnou møí¾kou
 ; Full grid
 ;
 Msg_DisMode
-Neaktivní
+Neaktivní tlaèítka
 ; Disable
 ;
 Msg_DisMode_Help
-Zpùsob vykreslování neaktivních tlaèítek.
+Definuje zpùsob zobrazení neaktivních tlaèítek.
 ; How to render disabled buttons.
 ;
 Msg_DontMove
-Vypnout posunutí
+Neposouvat obsah tlaèítka pøi aktivaci
 ; Don't move
 ;
 Msg_DontMove_Help
@@ -646,15 +647,15 @@ Vypne posunutí obsahu tlaèítka pøi aktivaci.
 ; is not moved when they are active.
 ;
 Msg_DisMode_Sunny
-Ze¹ednutí
+Ze¹ednout
 ; Grey
 ;
 Msg_NtRaiseActive
-Vypnout orámování tlaèítek
+Vypnout orámování aktivních tlaèítek
 ; Don't raise active buttons
 ;
 Msg_NtRaiseActive_Help
-Vypne zobrazení rámeèku kolem aktivního rámeèku.
+Vypne zobrazení rámeèku kolem aktivního tlaèítka.
 ; If selected, active buttons are not raised.
 ;
 Msg_SpacersSize
@@ -662,7 +663,7 @@ Velikost oddìlovaèe
 ; Spacers size
 ;
 Msg_SpacersSize_Help
-Definuje velikost oddìlovaèù.
+Definuje ¹íøku oddìlovaèe vzhledem k tlaèítku.
 ; Size of spacers.
 ;
 Msg_SpacersSize_Quarter
@@ -713,7 +714,7 @@ http://www.sourceforge.net/projects/thebar
 ; http://www.sourceforge.net/projects/thebar
 ;
 Msg_Info_Translator
-Èeský pøeklad: Ondøej Zima
+Èeský pøeklad: Vít ©indláø
 ; 
 ;
 Msg_Item_Globals
@@ -745,7 +746,7 @@ Ukonèí program bez provedených zmìny.
 ; Exit without changing.
 ;
 Msg_Popback_Pattern
-Maska
+Vzor
 ; Pattern
 ;
 Msg_Popback_Color

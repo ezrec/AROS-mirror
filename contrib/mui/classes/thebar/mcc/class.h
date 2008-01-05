@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: class.h 131 2007-11-07 10:41:18Z thboeckel $
+ $Id: class.h 140 2007-12-26 09:55:26Z marust $
 
 ***************************************************************************/
 

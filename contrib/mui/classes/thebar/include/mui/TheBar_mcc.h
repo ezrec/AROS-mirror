@@ -19,7 +19,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: TheBar_mcc.h 97 2007-08-29 08:30:25Z thboeckel $
+ $Id: TheBar_mcc.h 140 2007-12-26 09:55:26Z marust $
  $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/include/mui/TheBar_mcc.h $
 
 ***************************************************************************/

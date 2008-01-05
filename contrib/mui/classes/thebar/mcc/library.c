@@ -114,10 +114,9 @@ static BOOL ClassInit(UNUSED struct Library *base)
       if(MUIMasterBase->lib_Version >= MUIVER20)
       {
         lib_flags |= BASEFLG_MUI20;
-#ifndef __AROS__
+
         if(MUIMasterBase->lib_Version > MUIVER20 || MUIMasterBase->lib_Revision >= 5341)
           lib_flags |= BASEFLG_MUI4;
-#endif
       }
 
       lib_flags |= BASEFLG_Init;

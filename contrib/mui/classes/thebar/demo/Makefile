@@ -16,7 +16,7 @@
 #
 # TheBar class Support Site:  http://www.sf.net/projects/thebar
 #
-# $Id: Makefile 91 2007-07-29 16:27:18Z damato $
+# $Id: Makefile 142 2007-12-27 13:02:42Z thboeckel $
 #
 #***************************************************************************/
 
@@ -153,7 +153,7 @@ DEBUG    = -DDEBUG -O0
 DEBUGSYM = -gstabs
 CFLAGS   = -I. -I../include $(CPU) $(WARN) $(OPTFLAGS) \
            $(DEBUG) $(DEBUGSYM) -c
-LDFLAGS  = $(CPU) $(DEBUGSYM) -nostartfiles
+LDFLAGS  = $(CPU) $(DEBUGSYM)
 LDLIBS   =
 
 # different options per target OS
@@ -274,47 +274,47 @@ $(OBJDIR)/%.o: %.c
 
 $(DEMO1TARGET): $(DEMO1OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) -noixemul -o $@.debug $(DEMO1OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO1OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO2TARGET): $(DEMO2OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) -noixemul -o $@.debug $(DEMO2OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO2OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO3TARGET): $(DEMO3OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) -noixemul -o $@.debug $(DEMO3OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO3OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO4TARGET): $(DEMO4OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) -noixemul -o $@.debug $(DEMO4OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO4OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO5TARGET): $(DEMO5OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) -noixemul -o $@.debug $(DEMO5OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO5OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO6TARGET): $(DEMO6OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) -noixemul -o $@.debug $(DEMO6OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO6OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO7TARGET): $(DEMO7OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) -noixemul -o $@.debug $(DEMO7OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO7OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO8TARGET): $(DEMO8OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) -noixemul -o $@.debug $(DEMO8OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO8OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 $(DEMO9TARGET): $(DEMO9OBJS)
 	@printf '\033[32mLinking \033[1m$@\033[0m\n'
-	@$(CC) -noixemul -o $@.debug $(DEMO9OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO9OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
 #

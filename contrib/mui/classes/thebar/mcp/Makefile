@@ -234,10 +234,10 @@ MCCOBJS = $(OBJDIR)/library.o \
           $(OBJDIR)/Debug.o
 
 # available catalog translations
-CATALOGS = $(LOCALE)/deutsch.catalog \
-           $(LOCALE)/francais.catalog \
-			  $(LOCALE)/svenska.catalog \
-			  $(LOCALE)/czech.catalog
+CATALOGS = $(LOCALE)/germand.catalog \
+           $(LOCALE)/frensh.catalog \
+           $(LOCALE)/swedish.catalog \
+           $(LOCALE)/czech.catalog
 
 #
 

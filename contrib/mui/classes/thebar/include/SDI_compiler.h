@@ -4,7 +4,7 @@
 /* Includeheader
 
         Name:           SDI_compiler.h
-        Versionstring:  $VER: SDI_compiler.h 1.24 (06.05.2006)
+        Versionstring:  $VER: SDI_compiler.h 1.26 (27.12.2007)
         Author:         Dirk Stöcker & Jens Langner
         Distribution:   PD
         Project page:   http://www.sf.net/projects/sditools/
@@ -44,8 +44,10 @@
  1.24  06.05.06 : __linearvarargs is only valid for vbcc and PPC, so I moved VARARGS68K
                   to prevent problems with 68K and i86 targets. (Guido Mersmann)
  1.25  24.12.07 : added some AROS features for non-AROS platforms:
-		  - IPTR (integer type which is large enough to store a pointer)
-		  - STACKED for proper alignment of structure elements for DoMethod
+                  - IPTR (integer type which is large enough to store a pointer)
+                  - STACKED for proper alignment of structure elements for DoMethod
+ 1.26  27.12.07 : reworked all AROS dependent stuff to not set IPTR and SIPTR when
+                  compiling for MORPHOS. MorphOS defines its own IPTR/SIPTR.
 */
 
 /*
@@ -55,7 +57,7 @@
 **
 ** To keep confusion level low: When changing this file, please note it in
 ** above history list and indicate that the change was not made by myself
-** (e.g. add your name or nick name).
+** (e.g. add your name or nick name).
 **
 ** Find the latest version of this file at:
 ** http://cvs.sourceforge.net/viewcvs.py/sditools/sditools/headers/
@@ -134,7 +136,12 @@
     #define INTERRUPT
     #define CHIP
   #else
-    #define REG(reg,arg) arg __asm(#reg)
+    #if defined(__AROS__)
+      #define REG(reg, arg) arg
+      #define SAVEDS
+    #else
+      #define REG(reg,arg) arg __asm(#reg)
+    #endif
     #define LREG(reg,arg) register REG(reg,arg)
   #endif
   #define FAR
@@ -199,26 +206,20 @@
 #if !defined(USED_VAR)
   #define USED_VAR
 #endif
+#if !defined(STACKED)
+  #define STACKED
+#endif
 
 /*************************************************************************/
-#ifdef __AROS__
 
-  #undef REG
-  #define REG(reg, arg) arg
-
-  #undef SAVEDS
-  #define SAVEDS
-
-  #undef ASM
-  #define ASM
-
-#else
+#if !defined(__AROS__) && !defined(__MORPHOS__)
 
   #include <exec/types.h>
   typedef ULONG IPTR;
   typedef LONG  SIPTR;
-  #define STACKED
 
-#endif /* __AROS__ */
+#endif /* !__AROS__ && !__MORPHOS__ */
+
+/*************************************************************************/
 
 #endif /* SDI_COMPILER_H */

@@ -10,7 +10,12 @@
 #include <string.h>
 #include <stdio.h>
 #include "SDI_compiler.h"
+#include "SDI_stdarg.h"
 #include "SDI_hook.h"
+
+#if !defined(__amigaos4__)
+#include <clib/alib_protos.h>
+#endif
 
 /***********************************************************************/
 
@@ -54,10 +59,16 @@ struct Library *MUIMasterBase;
 /***********************************************************************/
 
 #ifndef __MORPHOS__
-ULONG
-DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
+Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
-    return DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL);
+  Object *rc;
+  VA_LIST args;
+
+  VA_START(args, obj);
+  rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
+  VA_END(args);
+
+  return rc;
 }
 #endif
 
@@ -80,16 +91,27 @@ enum
 
 /***********************************************************************/
 
+#define ROWS      3
+#define COLS     16
+#define HSPACE    0
+#define VSPACE    0
+#define PIC(x,y) (x+y*COLS)
+
+#define BAR {MUIV_TheBar_BarSpacer, -1, NULL, NULL, 0, 0, NULL, NULL}
+
 struct MUIS_TheBar_Button buttons[] =
 {
-    {7,  0, "_Face",  "Just a face."     , 0, 0, NULL, NULL},
-    {14, 1, "_Mouse", "Your mouse."      , 0, 0, NULL, NULL},
-    {17, 2, "_Tree",  "Mind takes place.", 0, 0, NULL, NULL},
-    {MUIV_TheBar_BarSpacer, -1, NULL, NULL, 0, 0, NULL, NULL},
-    {26, 3, "_Help",  "Read this!."      , 0, 0, NULL, NULL},
-    {34, 4, "_ARexx", "ARexx for ever!." , 0, 0, NULL, NULL},
-    {1,  5, "_Host",  "Your computer."   , 0, 0, NULL, NULL},
-    {MUIV_TheBar_End, 0, NULL, NULL, 0, 0, NULL, NULL},
+    {PIC(7,0),  1, "_Face",  "Just a face.", 0, 0, NULL, NULL},
+    {PIC(14,0), 2, "_Mouse", "Your mouse.", 0, 0, NULL, NULL},
+    {PIC(1,1),  3, "_Tree",  "Mind takes place.", 0, 0, NULL, NULL},
+
+    BAR,
+
+    {PIC(10,1), 4, "_Help",  "Read this!.", 0, 0, NULL, NULL},
+    {PIC(2,2),  5, "_ARexx", "ARexx for ever!.", 0, 0, NULL, NULL},
+    {PIC(1,0),  6, "_Host",  "Your computer.", 0, 0, NULL, NULL},
+
+    {MUIV_TheBar_End, 0, NULL, NULL, 0, 0, NULL, NULL}
 };
 
 #define SAMPLETEXT "\
@@ -109,29 +131,30 @@ mNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     Object *bar, *list;
 
+    Printf("new()\n");
     if ((obj = (Object *)DoSuperNew(cl,obj,
 
-            Child, (ULONG)(bar = TheBarVirtObject,
+            Child, bar = TheBarVirtObject,
         	FRAME
                 MUIA_Group_Horiz,            TRUE,
-                MUIA_TheBar_Buttons,         (ULONG)buttons,
-                MUIA_TheBar_PicsDrawer,      (ULONG)"PROGDIR:Pics",
-                MUIA_TheBar_Strip,           (ULONG)"symbols",
-                MUIA_TheBar_StripCols,       16,
-                MUIA_TheBar_StripRows,       3,
-                MUIA_TheBar_StripHSpace,     0,
-                MUIA_TheBar_StripVSpace,     0,
+                MUIA_TheBar_Buttons,         buttons,
+                MUIA_TheBar_PicsDrawer,      "PROGDIR:Pics",
+                MUIA_TheBar_Strip,           "symbols",
+                MUIA_TheBar_StripCols,       COLS,
+                MUIA_TheBar_StripRows,       ROWS,
+                MUIA_TheBar_StripHSpace,     HSPACE,
+                MUIA_TheBar_StripVSpace,     VSPACE,
                 MUIA_TheBar_DragBar,         TRUE,
                 MUIA_TheBar_EnableKeys,      TRUE,
-            End),
+            End,
 
-            Child, (ULONG)(list = ListviewObject,
+            Child, list = ListviewObject,
                 MUIA_Listview_List,  FloattextObject,
                     TextFrame,
                     MUIA_Background,     MUII_TextBack,
                     MUIA_Floattext_Text, SAMPLETEXT,
                 End,
-            End),
+            End,
 
             TAG_MORE, (ULONG)msg->ops_AttrList)) != NULL)
     {
@@ -282,6 +305,7 @@ BOOPSI_DISPATCHER(IPTR,_dispatcher,cl,obj,msg)
 DISPATCHER(_dispatcher)
 #endif
 {
+    Printf("dispatcher()\n");
     switch(msg->MethodID)
     {
         case OM_NEW:          return mNew(cl,obj,(APTR)msg);

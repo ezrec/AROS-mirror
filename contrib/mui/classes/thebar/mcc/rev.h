@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: rev.h 123 2007-11-03 16:23:31Z damato $
+ $Id: rev.h 135 2007-12-21 12:03:18Z damato $
 
 ***************************************************************************/
 

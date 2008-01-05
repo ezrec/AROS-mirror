@@ -19,7 +19,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: private.h 134 2007-12-03 23:12:52Z damato $
+ $Id: private.h 140 2007-12-26 09:55:26Z marust $
 
 ***************************************************************************/
 

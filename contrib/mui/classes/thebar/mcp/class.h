@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: class.h 114 2007-10-31 17:34:35Z damato $
+ $Id: class.h 140 2007-12-26 09:55:26Z marust $
 
 ***************************************************************************/
 
