@@ -29,9 +29,32 @@ INCLUDE_FILES := ../include/mui/TheBar_mcc.h
 %copy_includes path=mui dir=../include/mui
 
 
+TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_TheBar/Locale/Catalogs
+
 #MM
-contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c
+contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c \
+    $(TARGETDIR)/deutsch/TheBar_mcp.catalog \
+    $(TARGETDIR)/czech/TheBar_mcp.catalog \
+    $(TARGETDIR)/français/TheBar_mcp.catalog \
+    $(TARGETDIR)/svenska/TheBar_mcp.catalog
 
 locale.h: locale.c
 locale.c: locale/TheBar_mcp.cd C_h.sd C_c.sd
 	@$(FLEXCAT) locale/TheBar_mcp.cd locale.h=C_h.sd locale.c=C_c.sd
+
+$(TARGETDIR)/deutsch/TheBar_mcp.catalog: locale/german.ct
+	@$(MKDIR) $(TARGETDIR)/deutsch
+	@$(FLEXCAT) locale/TheBar_mcp.cd $< CATALOG $@
+
+$(TARGETDIR)/czech/TheBar_mcp.catalog: locale/czech.ct
+	@$(MKDIR) $(TARGETDIR)/czech
+	@$(FLEXCAT) locale/TheBar_mcp.cd $< CATALOG $@
+
+# The following works only on UTF-8 build machines
+$(TARGETDIR)/français/TheBar_mcp.catalog: locale/french.ct
+	@$(MKDIR) $(TARGETDIR)/français
+	@$(FLEXCAT) locale/TheBar_mcp.cd $< CATALOG $@
+
+$(TARGETDIR)/svenska/TheBar_mcp.catalog: locale/swedish.ct
+	@$(MKDIR) $(TARGETDIR)/svenska
+	@$(FLEXCAT) locale/TheBar_mcp.cd $< CATALOG $@
