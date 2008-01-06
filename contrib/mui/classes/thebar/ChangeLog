@@ -5,6 +5,11 @@ MUI TheBar MCC class - ChangeLog
 $Id: ChangeLog 146 2008-01-04 11:10:36Z sindlarv $
 $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/ChangeLog $
 
+2008-01-06  Matthias Rustler <mrustler@gmx.de>
+
+  * Catalog creation for AROS port.
+  * demo7: AROS version of DoSuperNew()
+
 2008-01-04  Vit Sindlar <sindlarv at centrum dot cz>
 
   * mcp/locale/czech.ct: updated Czech catalog translation

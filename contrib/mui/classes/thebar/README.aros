@@ -9,8 +9,8 @@ origin on Sourceforge.
 
 TODO
 ----
-* MCC: some demos crash
-* create Catalogs
+* MCC: the demos 2, 3, 8 and 9 crash in MakeSourcesRGB()
+* Catalogs: Find solution for french catalog which works on both UTF-8/ISO8859 build machines.
 
 LEGAL
 -----
