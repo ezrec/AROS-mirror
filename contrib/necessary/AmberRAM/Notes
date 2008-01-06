@@ -1,0 +1,31 @@
+TO DO:
+
+ - Make into resident module? [AmigaOS]
+ - Allow deletion of hard-linked objects while they are locked?
+ - Sort out problems relating to ACTION_WRITE result (prevents "disk full"
+   requester being displayed) (DOS bug?). [AmigaOS].
+ - Implement record locking.
+ - Fix rollback problems in ACTION_RENAME_DISK.
+ - Implement soft links?
+ - Respect R and W flags for directories?
+ - Should opening with MODE_READWRITE succeed when disc is locked?
+
+
+DESIGN NOTES:
+
+File blocks:
+
+All of a file's blocks will be full except perhaps the last one.
+The 'end_length' field keeps track of how much of the last block is used.
+A file handle must never be located one position past the end of a block; it
+must be at the start of the following block instead.
+
+Hard links implementation:
+
+If a real object is linked, the object and its links are linked, via their
+"hard_link" node, into the "elements" list of one of the links. The link
+whose list is used is called the master link. The linked object is always
+first in the list and the master link is always second. An object without
+links has both fields of "hard_link" set to NULL.
+
+
