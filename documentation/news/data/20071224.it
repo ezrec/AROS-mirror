@@ -1,0 +1,51 @@
+=======================
+Aggiornamento natalizio
+=======================
+
+:Author:   Paolo Besser
+:Date:     2007-12-24
+
+Buon Natale e Felice Anno Nuovo a tutti! È stato un anno molto 
+importante per lo sviluppo di AROS, per la sua immagine pubblica e per
+la sua diffusione, e vorremmo rigraziare davvero tutti i fan, i beta
+tester e coloro che hanno contribuito economicamente per i magnifici
+risultati che il nostro/vostro sistema operativo ha raggiunto.
+
+Ecco alcuni risultati importanti ottenuti nel corso del 2007:
+
+Gennaio: dopo anni di lotte con i comandi della shell e con i mille 
+problemi di DOpus, copiare i file è diventato più semplice con il
+drag'n'drop di Wanderer.
+
+Febbraio: un'interfaccia di rete TAP è stata inserita nella versione
+hosted di AROS, completanto di fatto il suo supporto di rete.
+
+Marzo: AROS può ora supportare anche i file-system a pacchetti,
+aumentando la compatibilità e la coerenza con l'AmigaOS originale. 
+Ciò ha permesso ad AROS di gestire anche le partizioni FAT. È stato
+inoltre migliorato lo stack TCP/IP, e introdotto il supporto USB.
+
+Aprile: Wanderer ha un nuovo sistema di decorazioni, che permette
+di personalizzare le finestre con i temi. È stato inoltre migliorato
+il supporto agli script Arexx e LUA.
+
+Maggio: AROS cambia nome in 'AROS Research Operating System' e il sito
+ufficiale aros.org viene completamente rinnovato. Wanderer può ora
+visualizzare solo le icone o tutti i file. Nasce inoltre un nuovo 
+portale per la community: Arosworld.org.
+
+Giugno: Gli utenti di AROS decidono quali fondini adottare per 
+workbench e finestre, con un divertente concorso.
+
+Settembre: AROS viene presentato alla comunità Amiga in una conferenza
+a Pianeta Amiga. Viene effettuato anche il porting di MUIbase e 
+HyvelyTracker.
+
+Ottobre: AROS ha un nuovo installer e la sua installazione su disco
+fisso si fa più semplice. AROS può dunque convivere pacificamente con
+Microsoft Windows sullo stesso disco fisso.
+
+Novembre: AROS fa un balzo avanti nel futuro, con la sua nuova
+versione nativa a 64 bit.
+
+Dicembre: Vengono annunciate due nuove distribuzioni, Velocity e VmwAROS.
