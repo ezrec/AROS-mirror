@@ -1,0 +1,18 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-zune-classes-bwin-demos : includes linklibs \
+#MM contrib-zune-classes-bwin-mcc
+
+TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_BWin/Demos
+
+FILES := demo1 \
+	 demo2 \
+	 demo3
+
+%build_progs mmake=contrib-zune-classes-bwin-demos files=$(FILES) \
+    targetdir=$(TARGETDIR) \
+    uselibs="amiga mui"
+
+%common

@@ -17,7 +17,11 @@
 
 extern struct ExecBase        *SysBase;
 extern struct DosLibrary      *DOSBase;
+#ifdef __AROS__
+extern struct UtilityBase     *UtilityBase;
+#else
 extern struct Library         *UtilityBase;
+#endif
 extern struct IntuitionBase   *IntuitionBase;
 extern struct LocaleBase      *LocaleBase;
 extern struct Library         *MUIMasterBase;

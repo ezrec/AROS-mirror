@@ -16,6 +16,14 @@
 
 /****************************************************************************/
 
+#ifdef __AROS__
+
+#define ASM
+#define STDARGS
+#define REG(x)
+
+#else
+
 #ifndef SAVEDS
 #define SAVEDS  __saveds
 #endif
@@ -39,6 +47,11 @@
 #ifndef REG
 #define REG(x)  register __ ## x
 #endif
+
+typedef ULONG IPTR;
+#define STACKED
+
+#endif /* __AROS__ */
 
 #ifndef NODE
 #define NODE(a) ((struct Node *)(a))

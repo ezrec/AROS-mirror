@@ -7,7 +7,9 @@ void ASM freeBase ( void );
 BOOL ASM initBase ( void );
 
 /* snprintf.c */
+#ifndef __AROS__
 int STDARGS snprintf ( char *buf , int size , char *fmt , ...);
+#endif
 
 /* loc.c */
 void ASM initStrings ( void );

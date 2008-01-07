@@ -1,7 +1,15 @@
 #   $Id: mmakefile.src 25072 2006-12-11 19:23:54Z mazze $
+
 include $(TOP)/config/make.cfg
 
-#MM- contrib : contrib-zune-classes-bwin
+##MM- contrib : contrib-zune-classes-bwin
 
-#MM- contrib-zune-classes-bwin :  contrib-zune-classes-bwin-mcc  contrib-zune-classes-bwin-mcp contrib-zune-classes-bwin-demos
+#MM- contrib-zune-classes-bwin : contrib-zune-classes-bwin-mcc \
+#MM  contrib-zune-classes-bwin-mcp contrib-zune-classes-bwin-demos
 
+TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_Bwin
+
+#MM
+contrib-zune-classes-bwin-clean :
+	$(RM) $(GENDIR)/contrib/mui/classes/BWins
+	$(RM) $(TARGETDIR)

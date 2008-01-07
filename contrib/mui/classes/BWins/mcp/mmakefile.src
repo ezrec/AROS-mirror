@@ -1,0 +1,20 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-zune-classes-bwin-mcp : includes linklibs
+
+FILES := libinit_aros \
+	 init \
+	 loc \
+	 shape \
+	 class
+
+USER_INCLUDES := -I../include
+
+%build_module mmake=contrib-zune-classes-bwin-mcp \
+  modname=BWin modtype=mcp moduledir=Extras/Zune/MCC_BWin/Classes/Zune \
+  files=$(FILES) \
+  uselibs="amiga mui rom"
+
+%common

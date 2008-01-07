@@ -1,4 +1,6 @@
 
+#define MUIMASTER_YES_INLINE_STDARG
+
 #include "class.h"
 #include <utility/pack.h>
 #include <libraries/gadtools.h>
@@ -55,15 +57,15 @@ enum
 static ULONG ASM SAVEDS
 layoutFun(REG(a0) struct Hook *h,REG(a2) Object *obj,REG(a1) struct MUI_LayoutMsg *lm)
 {
-    register struct data *data = INST_DATA(lib_contents->mcc_Class,obj);
+    struct data *data = INST_DATA(lib_contents->mcc_Class,obj);
 
     switch (lm->lm_Type)
     {
         case MUILM_MINMAX:
         {
-            register ULONG ls, rs, ts, bs, dragBar, size, dbt;
+            ULONG ls, rs, ts, bs, dragBar, size, dbt;
             ULONG          root;
-            register UWORD minWidth, defWidth, maxWidth, minHeight, defHeight, maxHeight, over;
+            UWORD minWidth, defWidth, maxWidth, minHeight, defHeight, maxHeight, over;
 
             ls = (data->ls>=0) ? data->ls : data->uls;
             rs = (data->rs>=0) ? data->rs : data->urs;
@@ -134,10 +136,10 @@ layoutFun(REG(a0) struct Hook *h,REG(a2) Object *obj,REG(a1) struct MUI_LayoutMs
 
         case MUILM_LAYOUT:
         {
-            register Object *o;
-            register ULONG  ls, rs, ts, bs, x, y, width, height, dragBar, dbt, size, tw, th;
+            Object *o;
+            ULONG  ls, rs, ts, bs, x, y, width, height, dragBar, dbt, size, tw, th;
             ULONG           root;
-            register UWORD  over;
+            UWORD  over;
 
             ls = (data->ls>=0) ? data->ls : data->uls;
             rs = (data->rs>=0) ? data->rs : data->urs;
@@ -203,7 +205,7 @@ layoutFun(REG(a0) struct Hook *h,REG(a2) Object *obj,REG(a1) struct MUI_LayoutMs
 
             if (size)
             {
-                register ULONG x, y;
+                ULONG x, y;
 
                 o = data->size;
 
@@ -313,8 +315,8 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     struct pack             pack;
     struct data             temp;
-    register struct TagItem *attrs = msg->ops_AttrList;
-    register ULONG          flags;
+    struct TagItem *attrs = msg->ops_AttrList;
+    ULONG          flags;
 
     memset(&pack,0,sizeof(pack));
     pack.ls = pack.rs = pack.ts = pack.bs = -1;
@@ -347,8 +349,8 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 
            TAG_MORE, attrs))
     {
-        register struct data *data = INST_DATA(cl,obj);
-        register APTR        menu;
+        struct data *data = INST_DATA(cl,obj);
+        APTR        menu;
 
         *data = temp;
 
@@ -369,21 +371,21 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 
         if (PopupMenuBase &&
             (menu = PMMenu(nmenu[0].nm_Label),
-                PMItem(nmenu[1].nm_Label), PM_ID, nmenu[1].nm_UserData, PMEnd,
-                PMItem(nmenu[2].nm_Label), PM_ID, nmenu[2].nm_UserData, PMEnd,
-                PMDBar(MBAR1),
-                PMItem(nmenu[4].nm_Label), PM_ID, nmenu[4].nm_UserData, PMEnd,
-                PMItem(nmenu[5].nm_Label), PM_ID, nmenu[5].nm_UserData, PMEnd,
-                PMDBar(MBAR2),
-                (flags & FLG_NoDragBar) ? TAG_IGNORE : PMCheckItem(nmenu[7].nm_Label,nmenu[7].nm_UserData), PMEnd,
-                ((flags & FLG_NoDragBar) && (flags & FLG_NoSize)) ? TAG_IGNORE : PMCheckItem(nmenu[8].nm_Label,nmenu[8].nm_UserData),   PMEnd,
-                (flags & FLG_NoDragBar) ? TAG_IGNORE : PMCheckItem(nmenu[9].nm_Label,nmenu[9].nm_UserData),   PMEnd,
-                (flags & FLG_NoSize) ? TAG_IGNORE : PMCheckItem(nmenu[10].nm_Label,nmenu[10].nm_UserData), PMEnd,
-                ((flags & FLG_NoDragBar) && (flags & FLG_NoSize)) ? TAG_IGNORE : PMDBar(MBAR3),
-                PMItem(nmenu[12].nm_Label), PM_ID, nmenu[12].nm_UserData, PMEnd,
-                PMItem(nmenu[13].nm_Label), PM_ID, nmenu[13].nm_UserData, PMEnd,
-                PMDBar(MBAR4),
-                PMItem(nmenu[15].nm_Label), PM_ID, nmenu[15].nm_UserData, PMEnd,
+                //PMItem(nmenu[1].nm_Label), PM_ID, nmenu[1].nm_UserData, PMEnd,
+                //PMItem(nmenu[2].nm_Label), PM_ID, nmenu[2].nm_UserData, PMEnd,
+                //PMDBar(MBAR1),
+                //PMItem(nmenu[4].nm_Label), PM_ID, nmenu[4].nm_UserData, PMEnd,
+                //PMItem(nmenu[5].nm_Label), PM_ID, nmenu[5].nm_UserData, PMEnd,
+                //PMDBar(MBAR2),
+                //(flags & FLG_NoDragBar) ? TAG_IGNORE : PMCheckItem(nmenu[7].nm_Label,nmenu[7].nm_UserData), PMEnd,
+                //((flags & FLG_NoDragBar) && (flags & FLG_NoSize)) ? TAG_IGNORE : PMCheckItem(nmenu[8].nm_Label,nmenu[8].nm_UserData),   PMEnd,
+                //(flags & FLG_NoDragBar) ? TAG_IGNORE : PMCheckItem(nmenu[9].nm_Label,nmenu[9].nm_UserData),   PMEnd,
+                //(flags & FLG_NoSize) ? TAG_IGNORE : PMCheckItem(nmenu[10].nm_Label,nmenu[10].nm_UserData), PMEnd,
+                //((flags & FLG_NoDragBar) && (flags & FLG_NoSize)) ? TAG_IGNORE : PMDBar(MBAR3),
+                //PMItem(nmenu[12].nm_Label), PM_ID, nmenu[12].nm_UserData, PMEnd,
+                //PMItem(nmenu[13].nm_Label), PM_ID, nmenu[13].nm_UserData, PMEnd,
+                //PMDBar(MBAR4),
+                //PMItem(nmenu[15].nm_Label), PM_ID, nmenu[15].nm_UserData, PMEnd,
              PMEnd))
         {
             data->flags |= FLG_PMenu;
@@ -392,7 +394,7 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
         {
             if (menu = MUI_MakeObject(MUIO_MenustripNM,nmenu,0))
             {
-                register Object *o;
+                Object *o;
 
                 data->mparent = (Object *)DoMethod(menu,MUIM_FindUData,MCCMSG_BWin);
 
@@ -456,7 +458,7 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 static ULONG ASM
 mDispose(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     if (data->menu)
         if (data->flags & FLG_PMenu) PM_FreePopupMenu(data->menu);
@@ -470,14 +472,14 @@ mDispose(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 static ULONG ASM
 mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
-    register struct TagItem *tag;
+    struct data    *data = INST_DATA(cl,obj);
+    struct TagItem *tag;
     struct TagItem          *tstate;
-    register ULONG          au, show, layout, res;
+    ULONG          au, show, layout, res;
 
     for (au = layout = FALSE, tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch (tag->ti_Tag)
         {
@@ -678,9 +680,9 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 static ULONG ASM
 mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
     APTR                 pen;
-    register ULONG       v, top;
+    ULONG       v, top;
     ULONG                *val;
 
     if (!data->root) return FALSE;
@@ -716,7 +718,7 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 static ULONG ASM
 mCleanup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     MUI_ReleasePen(muiRenderInfo(obj),data->shadow);
     MUI_ReleasePen(muiRenderInfo(obj),data->shine);
@@ -731,7 +733,7 @@ mCleanup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 static ULONG SAVEDS ASM
 menuChoice(REG(a0) struct data *data,REG(d0) ULONG id)
 {
-    register Object *obj = data->this;
+    Object *obj = data->this;
 
     switch (id)
     {
@@ -803,9 +805,9 @@ pmenuFunc(REG(a0) struct Hook *hook,REG(a2) struct PopupMenu *pm,REG(a1) APTR ms
 static ULONG SAVEDS ASM
 mContextMenuBuild(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_ContextMenuBuild *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
-    register APTR        menu = data->menu;
-    register ULONG       flags = data->flags;
+    struct data *data = INST_DATA(cl,obj);
+    APTR        menu = data->menu;
+    ULONG       flags = data->flags;
 
     if (!menu) return DoSuperMethodA(cl,obj,(Msg)msg);
 
@@ -927,14 +929,14 @@ mContextMenuChoice(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct 
 static ULONG ASM
 mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     DoSuperMethodA(cl,obj,(APTR)msg);
 
     if (!(data->flags & FLG_Borders) && (msg->flags & MADF_DRAWOBJECT))
     {
-        register struct RastPort *rp = _rp(obj);
-        register UWORD           xofs, yofs;
+        struct RastPort *rp = _rp(obj);
+        UWORD           xofs, yofs;
 
         xofs = yofs = 0;
         if (!(data->flags & FLG_NoDragBar) && (data->flags & FLG_ShowDragBar) && (data->flags & FLG_Over))
@@ -965,8 +967,8 @@ mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *ms
 static ULONG ASM
 mAddUserItem(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_BWin_AddUserItem *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
-    register APTR        o;
+    struct data *data = INST_DATA(cl,obj);
+    APTR        o;
 
     if (!data->menu) return 0;
 
@@ -1072,14 +1074,14 @@ mAddUserItem(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_B
 static ULONG ASM
 mRemoveUserItem(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_BWin_RemoveUserItem *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
-    register ULONG       res = FALSE;
+    struct data *data = INST_DATA(cl,obj);
+    ULONG       res = FALSE;
 
     if (!data->menu) return FALSE;
 
     if (data->flags & FLG_PMenu)
     {
-        register struct PopupMenu *item;
+        struct PopupMenu *item;
 
         if (item = PM_FindItem(data->usub,msg->id))
         {
@@ -1100,7 +1102,7 @@ mRemoveUserItem(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUI
     }
     else
     {
-        register Object *item;
+        Object *item;
 
         if (item = (Object *)DoMethod(data->umenu,MUIM_FindUData,msg->id))
         {

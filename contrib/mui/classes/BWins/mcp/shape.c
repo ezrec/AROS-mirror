@@ -3,7 +3,7 @@
 
 /***********************************************************************/
 
-struct data
+struct shape_data
 {
     char  buf[16];
     ULONG type;
@@ -23,15 +23,15 @@ DoSuperNew(struct IClass *cl,Object *obj,ULONG tag1,...)
 static ULONG ASM
 mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
-    register struct TagItem *attrs = msg->ops_AttrList;
+    struct TagItem *attrs = msg->ops_AttrList;
 
-    if (obj = (Object *)DoSuperNew(cl,obj,
+    if ((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_CycleChain,  TRUE,
             MUIA_Numeric_Min, 0,
             MUIA_Numeric_Max, 3,
-            TAG_MORE, attrs))
+            TAG_MORE, attrs)))
     {
-        register struct data *data = INST_DATA(cl,obj);
+        struct shape_data *data = INST_DATA(cl,obj);
 
         data->type = GetTagData(MUIA_BWin_Type,MUIDEF_BWin_Type,attrs);
     }
@@ -44,7 +44,7 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 static SAVEDS ULONG ASM
 mStringify(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Numeric_Stringify *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct shape_data *data = INST_DATA(cl,obj);
 
     switch(msg->value)
     {
@@ -70,8 +70,12 @@ mStringify(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Num
 
 /***************************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,shape_dispatcher,cl,obj,msg)
+#else
 static ULONG ASM SAVEDS
-dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
+shape_dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
+#endif
 {
     switch(msg->MethodID)
     {
@@ -80,13 +84,16 @@ dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
         default:                     return DoSuperMethodA(cl,obj,msg);
     }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***************************************************************************/
 
 BOOL ASM
 initShape(void)
 {
-    if (lib_shape = MUI_CreateCustomClass(NULL,MUIC_Slider,NULL,sizeof(struct data),dispatcher))
+    if ((lib_shape = MUI_CreateCustomClass(NULL,MUIC_Slider,NULL,sizeof(struct shape_data),shape_dispatcher)))
     {
         if (MUIMasterBase->lib_Version>=20)
             lib_shape->mcc_Class->cl_ID = "BWinShape";

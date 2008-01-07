@@ -1,23 +1,11 @@
+#define MUIMASTER_YES_INLINE_STDARG
 
 #include "class.h"
 #include <utility/pack.h>
 
 /****************************************************************************/
 
-struct data
-{
-    Object *root;
-    Object *contents;
-    ULONG  ID;
-    ULONG  lastid;
-    ULONG  save;
-    ULONG  flags;
-
-    LONG   ls;
-    LONG   rs;
-    LONG   ts;
-    LONG   bs;
-};
+#include "bwin_private.h"
 
 /***********************************************************************/
 
@@ -75,9 +63,9 @@ static ULONG ASM
 mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     struct pack             pack;
-    register struct TagItem *attrs = msg->ops_AttrList, *contTag, *titleTag;
-    register Object         *contents;
-    register ULONG          flags, borders;
+    struct TagItem *attrs = msg->ops_AttrList, *contTag, *titleTag;
+    Object         *contents;
+    ULONG          flags, borders;
 
     pack.root  = NULL;
     pack.ID    = 0;
@@ -89,21 +77,21 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 
     flags = pack.flags;
 
-    if (borders = flags & FLG_Borders)
+    if ((borders = flags & FLG_Borders))
     {
         flags |= FLG_NoDragBar;
         titleTag = NULL;
     }
-    else if (titleTag = FindTagItem(MUIA_Window_Title,attrs)) titleTag->ti_Tag = TAG_IGNORE;
+    else if ((titleTag = FindTagItem(MUIA_Window_Title,attrs))) titleTag->ti_Tag = TAG_IGNORE;
 
 
-    if (contTag = FindTagItem(WindowContents,attrs)) contTag->ti_Tag = TAG_IGNORE;
+    if ((contTag = FindTagItem(WindowContents,attrs))) contTag->ti_Tag = TAG_IGNORE;
 
     if (flags & FLG_NoDragBar) flags &= ~FLG_ShowDragBar;
     if (flags & FLG_NoSize) flags &= ~FLG_ShowSize;
     if (flags & FLG_NoClose) flags &= ~FLG_ShowClose;
 
-    if (obj = (Object *)DoSuperNew(cl,obj,
+    if ((obj = (Object *)DoSuperNew(cl,obj,
             borders ? TAG_IGNORE : MUIA_Window_Borderless,   TRUE,
             borders ? TAG_IGNORE : MUIA_Window_CloseGadget,  FALSE,
             borders ? TAG_IGNORE : MUIA_Window_DragBar,      FALSE,
@@ -121,9 +109,9 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
                 MUIA_BWin_InnerBottom, pack.bs,
             End,
 
-            TAG_MORE, attrs))
+            TAG_MORE, attrs)))
     {
-        register struct data *data = INST_DATA(cl,obj);
+        struct data *data = INST_DATA(cl,obj);
 
         data->root     = pack.root;
         data->contents = contents;
@@ -147,7 +135,7 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 static ULONG ASM
 mGet(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opGet *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     switch(msg->opg_AttrID)
     {
@@ -184,13 +172,13 @@ mGet(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opGet *msg)
 static ULONG ASM
 mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
-    register struct TagItem *tag;
+    struct data    *data = INST_DATA(cl,obj);
+    struct TagItem *tag;
     struct TagItem          *tstate;
 
-    for (tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
+    for (tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch (tag->ti_Tag)
         {
@@ -350,7 +338,7 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 static ULONG ASM
 mDoContentsMethod(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     return DoMethodA(data->contents,msg);
 }
@@ -369,8 +357,8 @@ enum
 static ULONG ASM
 mExport(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Export *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
-    register ULONG       id;
+    struct data *data = INST_DATA(cl,obj);
+    ULONG       id;
 
     if (data->save && (id = (muiNotifyData(obj)->mnd_ObjectID)))
     {
@@ -402,16 +390,16 @@ mExport(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Export
 static ULONG ASM
 mImport(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Import *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
-    register ULONG       id;
+    struct data *data = INST_DATA(cl,obj);
+    ULONG       id;
 
     if (data->save && (id = (muiNotifyData(obj)->mnd_ObjectID)))
     {
-        register ULONG *e;
+        ULONG *e;
 
-        if (e = (ULONG *)DoMethod(msg->dataspace,MUIM_Dataspace_Find,id))
+        if ((e = (ULONG *)DoMethod(msg->dataspace,MUIM_Dataspace_Find,id)))
         {
-            register ULONG v = *e;
+            ULONG v = *e;
 
             if (data->save & MUIV_BWin_Save_DragBarTop)
                 set(obj,MUIA_BWin_DragBarTop,v & EFLG_DragBarTop);
@@ -435,8 +423,12 @@ mImport(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Import
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,dispatcher,cl,obj,msg)
+#else
 static ULONG ASM SAVEDS
 dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
+#endif
 {
     switch(msg->MethodID)
     {
@@ -453,13 +445,16 @@ dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
         default:                       return DoSuperMethodA(cl,obj,msg);
     }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 
 BOOL ASM
 initMCC(void)
 {
-    if (lib_mcc = MUI_CreateCustomClass(lib_base,MUIC_Window,NULL,sizeof(struct data),dispatcher))
+    if ((lib_mcc = MUI_CreateCustomClass(lib_base,MUIC_Window,NULL,sizeof(struct data),dispatcher)))
     {
         if (MUIMasterBase->lib_Version>=20)
             lib_mcc->mcc_Class->cl_ID = PRG;

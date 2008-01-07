@@ -16,6 +16,10 @@
 #include <libraries/mui.h>
 #endif
 
+#ifdef __AROS__
+#define STACKED
+#endif
+
 /***********************************************************************/
 
 #define MUIC_BWin  "BWin.mcc"
@@ -80,16 +84,16 @@ enum
 
 struct MUIP_BWin_AddUserItem
 {
-    ULONG  MethodID;
-    STRPTR title;
+    STACKED ULONG  MethodID;
+    STACKED STRPTR title;
 };
 
 #define MUIV_BWin_AddUserItem_Bar ((STRPTR)-1)
 
 struct MUIP_BWin_RemoveUserItem
 {
-    ULONG MethodID;
-    ULONG id;
+    STACKED ULONG MethodID;
+    STACKED ULONG id;
 };
 
 /***********************************************************************/

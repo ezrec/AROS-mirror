@@ -4,43 +4,7 @@
 
 /***********************************************************************/
 
-struct data
-{
-    Object *sg;
-
-    Object *menu;
-
-    Object *winShinePen;
-    Object *winShadowPen;
-    Object *over;
-
-    Object *dragBarShinePen;
-    Object *dragBarShadowPen;
-    Object *dragBarBack;
-    Object *useDragBarBack;
-    Object *dragBarType;
-    Object *nadragBarShinePen;
-    Object *nadragBarShadowPen;
-    Object *nadragBarBack;
-    Object *nauseDragBarBack;
-    Object *nadragBarType;
-
-    Object *sizeShinePen;
-    Object *sizeShadowPen;
-    Object *sizeForegroundPen;
-    Object *useSizeForeground;
-    Object *sizeType;
-    Object *nasizeShinePen;
-    Object *nasizeShadowPen;
-    Object *nasizeForegroundPen;
-    Object *nauseSizeForeground;
-    Object *nasizeType;
-
-    Object *leftSp;
-    Object *topSp;
-    Object *rightSp;
-    Object *bottomSp;
-};
+#include "bwin_private.h"
 
 /***********************************************************************/
 
@@ -63,7 +27,7 @@ oflabel(REG(d0) ULONG text)
 static Object * ASM
 ocheckmark(REG(d0) ULONG key,REG(d1) ULONG help)
 {
-    register Object *obj;
+    Object *obj;
 
     if (obj = MUI_MakeObject(MUIO_Checkmark,getString(key)))
         SetAttrs(obj,MUIA_CycleChain,TRUE,help ? MUIA_ShortHelp : TAG_IGNORE,help ? getString(help) : NULL,TAG_DONE);
@@ -89,7 +53,7 @@ ocycle(REG(a0) STRPTR *array,REG(a1) STRPTR key,REG(d0) ULONG help)
 static Object * ASM
 oslider(REG(d0) ULONG key,REG(d1) ULONG help,REG(d2) LONG min,REG(d3) LONG max)
 {
-    register Object *obj;
+    Object *obj;
 
     if (obj = MUI_MakeObject(MUIO_Slider,getString(key),min,max))
         SetAttrs(obj,MUIA_CycleChain,TRUE,help ? MUIA_ShortHelp : TAG_IGNORE,help ? getString(help) : NULL,TAG_DONE);
@@ -114,7 +78,7 @@ opopPen(REG(d0) ULONG key,REG(d1) ULONG title,REG(d2) ULONG help)
 /***********************************************************************/
 
 static Object * ASM
-opopImage(REG(d0) type,REG(d1) ULONG key,REG(d2) ULONG title,REG(d3) ULONG help)
+opopImage(REG(d0) ULONG type,REG(d1) ULONG key,REG(d2) ULONG title,REG(d3) ULONG help)
 {
     return MUI_NewObject(MUIC_Popimage,
         MUIA_Imageadjust_Type, type,
@@ -133,9 +97,9 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     if (obj = (Object *)DoSuperMethodA(cl,obj,(APTR)msg))
     {
-        register struct data *data = INST_DATA(cl,obj);
-        register char        buf[128], *t;
-        register Object      *prefs, *trans;
+        struct data *data = INST_DATA(cl,obj);
+        char        buf[128], *t;
+        Object      *prefs, *trans;
 
         snprintf(buf,sizeof(buf),getString(MCPMSG_Info_First),"\33bBWin " VRSTRING "\33n (" DATE ")\33n");
 
@@ -420,7 +384,7 @@ mGet(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opGet *msg)
 static ULONG ASM
 mDispose(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     if (data->menu) MUI_DisposeObject(data->menu);
 
@@ -432,10 +396,10 @@ mDispose(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 static ULONG ASM
 mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Settingsgroup_ConfigToGadgets *msg)
 {
-    register struct data *data = INST_DATA(cl, obj );
-    register Object      *cfg = msg->configdata;
+    struct data *data = INST_DATA(cl, obj );
+    Object      *cfg = msg->configdata;
     APTR                 ptr;
-    register ULONG       *val, v;
+    ULONG       *val, v;
 
     /*if (lib_flags & BASEFLG_Avoid)
     {
@@ -539,8 +503,8 @@ mConfigToGadgets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
 static ULONG ASM
 mGadgetsToConfig(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Settingsgroup_GadgetsToConfig *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
-    register Object      *cfg = msg->configdata;
+    struct data *data = INST_DATA(cl,obj);
+    Object      *cfg = msg->configdata;
     APTR                 ptr;
     ULONG                val, v;
 
@@ -570,9 +534,12 @@ mGadgetsToConfig(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
     get(data->dragBarShadowPen,MUIA_Pendisplay_Spec,&ptr);
     if (ptr) DoMethod(cfg,MUIM_Dataspace_Add,ptr,sizeof(struct MUI_PenSpec),MUICFG_BWin_DragBarShadowPen);
 
+#ifndef __AROS__
+    // FIXME: AROS?
     /* dragBarBack */
     get(data->dragBarBack,MUIA_Imagedisplay_Spec,&ptr);
     if (ptr) DoMethod(cfg,MUIM_Dataspace_Add,ptr,sizeof(struct MUI_ImageSpec),MUICFG_BWin_DragBarBack);
+#endif
 
     /* nadragBarShinePen */
     get(data->nadragBarShinePen,MUIA_Pendisplay_Spec,&ptr);
@@ -582,9 +549,12 @@ mGadgetsToConfig(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
     get(data->nadragBarShadowPen,MUIA_Pendisplay_Spec,&ptr);
     if (ptr) DoMethod(cfg,MUIM_Dataspace_Add,ptr,sizeof(struct MUI_PenSpec),MUICFG_BWin_NADragBarShadowPen);
 
+#ifndef __AROS__
+    // FIXME: AROS?
     /* nadragBarBack */
     get(data->nadragBarBack,MUIA_Imagedisplay_Spec,&ptr);
     if (ptr) DoMethod(cfg,MUIM_Dataspace_Add,ptr,sizeof(struct MUI_ImageSpec),MUICFG_BWin_NADragBarBack);
+#endif
 
     /* sizeShinePen */
     get(data->sizeShinePen,MUIA_Pendisplay_Spec,&ptr);
@@ -652,7 +622,7 @@ mGadgetsToConfig(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
 static ULONG ASM
 mContextMenuChoice(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_ContextMenuChoice *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     switch (muiUserData(msg->item))
     {
@@ -723,7 +693,7 @@ mContextMenuChoice(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct 
 static ULONG ASM
 mShow(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
 
@@ -744,8 +714,12 @@ mHide(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 
 /***********************************************************************/
 
+#ifdef __AROS__
+BOOPSI_DISPATCHER(IPTR,dispatcher,cl,obj,msg)
+#else
 static ULONG ASM SAVEDS
 dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
+#endif
 {
     switch (msg->MethodID)
     {
@@ -760,6 +734,9 @@ dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
         default:                                 return DoSuperMethodA(cl,obj,msg);
     }
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 
 /***********************************************************************/
 

@@ -49,7 +49,7 @@ enum
 static ULONG ASM
 mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
-    if (obj = (Object *)DoSuperNew(cl,obj,
+    if ((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_Boopsi_Class, lib_sgad,
             MUIA_Boopsi_Smart, TRUE,
             GA_Left,           0,
@@ -57,9 +57,9 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
             GA_Width,          0,
             GA_Height,         0,
             MUIA_FillArea,     TRUE,
-            TAG_MORE,          msg->ops_AttrList))
+            TAG_MORE,          msg->ops_AttrList)))
     {
-        register struct data *data = INST_DATA(cl,obj);
+        struct data *data = INST_DATA(cl,obj);
 
         data->type = GetTagData(MUIA_BWin_Type,MUIDEF_BWin_Type,msg->ops_AttrList);
 
@@ -78,13 +78,13 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 static ULONG ASM
 mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
-    register struct data    *data = INST_DATA(cl,obj);
-    register struct TagItem *tag;
+    struct data    *data = INST_DATA(cl,obj);
+    struct TagItem *tag;
     struct TagItem          *tstate;
 
-    for (tstate = msg->ops_AttrList; tag = NextTagItem(&tstate); )
+    for (tstate = msg->ops_AttrList; (tag = NextTagItem(&tstate)); )
     {
-        register ULONG tidata = tag->ti_Data;
+        ULONG tidata = tag->ti_Data;
 
         switch (tag->ti_Tag)
         {
@@ -98,7 +98,7 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
             case MUIA_BWin_Activate:
                 if ((data->flags & BFLG_UseNA) && !BOOLSAME(data->flags & BFLG_Activate,tidata))
                 {
-                    register APTR back = NULL;
+                    APTR back = NULL;
 
                     if (tidata)
                     {
@@ -140,9 +140,9 @@ mSets(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 static ULONG ASM
 mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
     APTR                 ptr;
-    register ULONG       types;
+    ULONG       types;
     ULONG                *v;
 
     types = DoSuperMethod(cl,obj,MUIM_GetConfigItem,MUICFG_BWin_Types,&v) ? *v : MUIDEF_BWin_Types;
@@ -300,7 +300,7 @@ mSetup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 static ULONG ASM
 mCleanup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
 
     if (data->flags & BFLG_UseNAForeground) MUI_ReleasePen(muiRenderInfo(obj),data->naforeground);
     if (data->flags & BFLG_UseForeground) MUI_ReleasePen(muiRenderInfo(obj),data->foreground);
@@ -319,7 +319,7 @@ mCleanup(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 static ULONG ASM
 mAskMinMax(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_AskMinMax *msg)
 {
-    register struct data *data = INST_DATA(cl,obj);
+    struct data *data = INST_DATA(cl,obj);
     struct RastPort      rp;
     struct TextExtent    te;
 
@@ -334,7 +334,7 @@ mAskMinMax(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Ask
         case GTYP_WDRAGGING:
             if (data->flags & BFLG_Horiz)
             {
-                register UWORD h, nah;
+                UWORD h, nah;
 
                 switch(data->shape)
                 {
@@ -370,7 +370,7 @@ mAskMinMax(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Ask
             }
             else
             {
-                register UWORD w, naw;
+                UWORD w, naw;
 
                 switch(data->shape)
                 {
@@ -408,7 +408,7 @@ mAskMinMax(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Ask
 
         case GTYP_SIZING:
         {
-            register UWORD h = MAX(te.te_Width,8);
+            UWORD h = MAX(te.te_Width,8);
 
             h = 9;
 
@@ -431,12 +431,12 @@ mAskMinMax(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Ask
 static ULONG ASM
 mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *msg)
 {
-    register struct data     *data = INST_DATA(cl,obj);
+    struct data     *data = INST_DATA(cl,obj);
     struct RastPort          srp;
-    register struct RastPort *rp;
-    register ULONG           activate = data->flags & BFLG_Activate;
-    register WORD            l, t, r, b, w, h;
-    register UBYTE           shine = MUIPEN(activate ? data->shine : data->nashine),
+    struct RastPort *rp;
+    ULONG           activate = data->flags & BFLG_Activate;
+    WORD            l, t, r, b, w, h;
+    UBYTE           shine = MUIPEN(activate ? data->shine : data->nashine),
                              shadow = MUIPEN(activate ? data->shadow : data->nashadow);
 
     if (data->flags & BFLG_NTRedraw) return 0;
@@ -464,7 +464,7 @@ mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *ms
 
                 case MUIV_BWin_Shape_Original:
                 {
-                    USHORT d[] = {0xAAAA, 0x0000};
+                    UWORD d[] = {0xAAAA, 0x0000};
 
                     SetDrMd(rp,JAM1);
 
@@ -484,7 +484,7 @@ mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *ms
                 {
                     if (data->flags & BFLG_Horiz)
                     {
-                        register WORD delta = r-l;
+                        WORD delta = r-l;
 
                         if (delta>16) delta = 4;
                         else if (delta>8) delta = 2;
@@ -508,7 +508,7 @@ mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *ms
                     }
                     else
                     {
-                        register WORD delta = b-t;
+                        WORD delta = b-t;
 
                         if (delta>16) delta = 4;
                         else if (delta>8) delta = 2;
@@ -545,7 +545,7 @@ mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *ms
 
         case GTYP_SIZING:
         {
-            register UBYTE useForeground = data->flags & (activate ? BFLG_UseForeground : BFLG_UseNAForeground),
+            UBYTE useForeground = data->flags & (activate ? BFLG_UseForeground : BFLG_UseNAForeground),
                            foreground = MUIPEN(activate ? data->foreground : data->naforeground);
 
             switch (activate ? data->shape : data->nashape)
@@ -555,7 +555,7 @@ mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *ms
 
                 case MUIV_BWin_Shape_Original:
                 {
-                    register WORD i, c;
+                    WORD i, c;
 
                     if (useForeground)
                     {
@@ -575,7 +575,7 @@ mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *ms
 
                 case MUIV_BWin_Shape_Line:
                 {
-                    register WORD i, c;
+                    WORD i, c;
 
                     for (c = 0, i = h-1; i>=0; i--, c++)
                     {
@@ -604,7 +604,7 @@ mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *ms
 
                 case MUIV_BWin_Shape_Solid:
                 {
-                    register WORD i;
+                    WORD i;
 
                     SetAPen(rp,shine);
 
@@ -645,7 +645,7 @@ dispatcher(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) Msg msg)
 BOOL ASM
 initBoopsi(void)
 {
-    if (lib_boopsi = MUI_CreateCustomClass(NULL,MUIC_Boopsi,NULL,sizeof(struct data),dispatcher))
+    if ((lib_boopsi = MUI_CreateCustomClass(NULL,MUIC_Boopsi,NULL,sizeof(struct data),dispatcher)))
     {
         if (MUIMasterBase->lib_Version>=20)
             lib_boopsi->mcc_Class->cl_ID = "BWinBoopsi";

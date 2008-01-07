@@ -9,10 +9,13 @@
 #include <proto/muimaster.h>
 #include <proto/graphics.h>
 #include <proto/locale.h>
+#ifdef __AROS__
+#include <proto/popupmenu.h>
+#else
 #include <proto/pm.h>
+#endif
 
 #include <clib/alib_protos.h>
-#include <clib/debug_protos.h>
 
 #include <intuition/gadgetclass.h>
 #include <intuition/imageclass.h>
@@ -23,9 +26,12 @@
 
 #include <libraries/gadtools.h>
 
+#ifndef __AROS__
+#include <clib/debug_protos.h>
 #include <mui/muiundoc.h>
-
 #include <dos.h>
+#endif
+
 #include <string.h>
 
 #include <BWin_private_mcc.h>
@@ -47,15 +53,22 @@ extern char author[];
 ** MCCs macros
 */
 
+#ifdef __AROS__
+#define ContentsObject BOOPSIOBJMACRO_START(lib_contents->mcc_Class)
+#define SysGadObject   BOOPSIOBJMACRO_START(lib_boopsi->mcc_Class)
+#else
 #define ContentsObject NewObject(lib_contents->mcc_Class,NULL
 #define SysGadObject   NewObject(lib_boopsi->mcc_Class,NULL
+#endif
 
 /***********************************************************************/
 /*
 ** MUI macros
 */
 
+#ifndef nfset
 #define nfset(obj,attr,value) SetAttrs(obj,MUIA_Group_Forward,FALSE,attr,value,TAG_DONE)
+#endif
 
 /* This is a MUI hack! */
 #define _backspec(obj) ((APTR)(*((ULONG *)(((char *)(obj))+80))))

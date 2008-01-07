@@ -10,10 +10,14 @@
 #include <proto/locale.h>
 
 #include <clib/alib_protos.h>
+
+#ifndef __AROS__
 #include <clib/debug_protos.h>
 
 #include <mui/muiundoc.h>
 #include <dos.h>
+#endif
+
 #include <string.h>
 
 #include <BWin_private_mcc.h>

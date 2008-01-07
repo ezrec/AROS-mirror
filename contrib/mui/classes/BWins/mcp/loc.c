@@ -12,21 +12,21 @@ STRPTR shapeStrings[sizeof(shapeIds)/sizeof(ULONG)];
 void ASM
 initStrings(void)
 {
-    register STRPTR *f;
-    register ULONG  *ids;
+    STRPTR *f;
+    ULONG  *ids;
 
     if ((LocaleBase = (struct LocaleBase *)OpenLibrary("locale.library",0)) &&
         (lib_cat = OpenCatalogA(NULL,CATNAME,NULL)))
     {
-        register struct Catalog             *cat = lib_cat;
-        register struct CatCompArrayType    *cca;
-        register int                        cnt;
+        struct Catalog             *cat = lib_cat;
+        struct CatCompArrayType    *cca;
+        int                        cnt;
 
         for (cnt = (sizeof(CatCompArray)/sizeof(struct CatCompArrayType))-1, cca = (struct CatCompArrayType *)CatCompArray+cnt;
              cnt>=0;
              cnt--, cca--)
         {
-            register STRPTR s;
+            STRPTR s;
 
             if (s = GetCatalogStr(cat,cca->cca_ID,cca->cca_Str)) cca->cca_Str = s;
         }
@@ -41,8 +41,8 @@ initStrings(void)
 STRPTR ASM
 getString(REG(d0) ULONG id)
 {
-    register struct CatCompArrayType    *cca;
-    register int                        cnt;
+    struct CatCompArrayType    *cca;
+    int                        cnt;
 
     for (cnt = (sizeof(CatCompArray)/sizeof(struct CatCompArrayType))-1, cca = (struct CatCompArrayType *)CatCompArray+cnt;
          cnt>=0;
@@ -56,7 +56,7 @@ getString(REG(d0) ULONG id)
 ULONG ASM
 getKeyChar(REG(a0) STRPTR string)
 {
-    register ULONG res = 0;
+    ULONG res = 0;
 
     if (string)
     {
