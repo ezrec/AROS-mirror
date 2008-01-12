@@ -1,0 +1,54 @@
+======
+Iprefs
+======
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <install-i386-pc>`_ `Next <join>`_ 
+
+---------------
+
+::
+
+ Iprefs 
+
+Synopsis
+~~~~~~~~
+::
+
+
+     (N/A)
+
+
+Location
+~~~~~~~~
+::
+
+
+     Sys:C
+
+
+Function
+~~~~~~~~
+::
+
+
+ Initialises preferences files on startup.
+
+
+Notes
+~~~~~
+::
+
+ This is a command executed on startup by the s:startup-sequence script file.
+ So no actual need of the command afterwards.
+     
+
+See also
+~~~~~~~~
+::
+
+     
+ Decoration
+     
+

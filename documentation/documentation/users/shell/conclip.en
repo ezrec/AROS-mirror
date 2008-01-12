@@ -1,0 +1,60 @@
+=======
+Conclip
+=======
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <changetaskpri>`_ `Next <copy>`_ 
+
+---------------
+
+::
+
+ Conclip 
+
+Synopsis
+~~~~~~~~
+::
+
+
+     CLIPUNIT=UNIT/N, ON/S, OFF/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Sys:C
+
+
+Function
+~~~~~~~~
+::
+
+
+       Enable clipboard cut/copy/paste functionality in console windows
+   and string gadgets. This enables the use of a system global clipboard.
+
+
+Inputs
+~~~~~~
+::
+
+
+     CLIPUNIT=UNIT -- the number associated to the clipboard exchange unit
+     ON/S    --  Activates conclip (default unit will be set to 1)
+     OFF/S   --  Deactivates Conclip
+
+
+Example
+~~~~~~~
+::
+
+
+     Conclip CLIPUNIT=1
+
+     This will set the global clipboard unit to 1. The available clipboards
+     can be checked in clips: dirDir Clips:
+
+

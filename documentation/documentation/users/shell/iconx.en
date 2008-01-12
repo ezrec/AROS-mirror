@@ -4,7 +4,7 @@ IconX
 
 .. This document is automatically generated. Don't edit it!
 
-`Index <index>`_ `Prev <getenv>`_ `Next <if>`_ 
+`Index <index>`_ `Prev <getenv>`_ `Next <identify>`_ 
 
 ---------------
 
@@ -12,12 +12,20 @@ IconX
 
  IconX 
 
+Synopsis
+~~~~~~~~
+::
+
+
+     FILE/A
+
+
 Location
 ~~~~~~~~
 ::
 
 
-     Workbench:C
+     Sys:C
 
 
 Function
@@ -34,6 +42,8 @@ Inputs
 ::
 
 
+     FILE - The script filename to execute.
+     
      Tooltypes for script icon:
          WINDOW            -- Specification of the shell window
                               default: con:0/50//80/IconX/Auto
@@ -42,4 +52,12 @@ Inputs
          WAIT=n            -- Wait n seconds before closing window (default 2)
          DELAY=n           -- Wait n/50 seconds before closing window
 
+
+See also
+~~~~~~~~
+::
+
+
+     Execute
+     
 

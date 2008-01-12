@@ -4,7 +4,7 @@ Info
 
 .. This document is automatically generated. Don't edit it!
 
-`Index <index>`_ `Prev <if>`_ `Next <join>`_ 
+`Index <index>`_ `Prev <if>`_ `Next <install>`_ 
 
 ---------------
 
@@ -25,7 +25,7 @@ Location
 ::
 
 
-     Workbench:C
+     Sys:C
 
 
 Function
@@ -59,7 +59,7 @@ Example
  Info
 
  Unit                 Size    Used    Free Full Errs   State    Type Name
- Foreign harddisk:  964.1M  776.7M  187.4M  81%    0 read/write  OFS Workbench
+ Harddisk:        964.1M  776.7M  187.4M  81%    0 read/write  OFS AROS
  RAM:                 8.0M    7.1M    7.1M  12%    0 read/write  OFS Ram Disk
 
 

@@ -1,0 +1,66 @@
+========
+Identify
+========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <iconx>`_ `Next <if>`_ 
+
+---------------
+
+::
+
+ Identify 
+
+Synopsis
+~~~~~~~~
+::
+
+
+     FILE/M/A, VERBOSE/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Sys:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Identifies the file type or directory
+
+
+Inputs
+~~~~~~
+::
+
+
+     FILE    -- file to be recognized
+     VERBOSE   -- activates verbose output
+
+
+Example
+~~~~~~~
+::
+
+
+     Identify s:startup-sequenceS:startup-sequence        
+     > Text/Ascii    
+     
+     (This will identify the startup-sequence as a text file.)
+     
+
+See also
+~~~~~~~~
+::
+
+
+     AddDatatypes
+     
+

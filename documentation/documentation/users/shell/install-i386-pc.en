@@ -1,0 +1,66 @@
+===============
+Install-i386-pc
+===============
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <install>`_ `Next <iprefs>`_ 
+
+---------------
+
+::
+
+ Install-i386-pc 
+
+Synopsis
+~~~~~~~~
+::
+
+
+     DEVICE/A, UNIT/N/K/A, PARTITIONNUMBER=PN/K/N, GRUB/K/A, FORCELBA/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     SYS:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     Installs the GRUB bootloader to the bootblock of the specified disk.
+
+
+Inputs
+~~~~~~
+::
+
+
+     DEVICE --  Device name (eg. ata.device)
+     UNIT  --  Unit number
+     PN  --  Partition number (advice: the first AROS FFS partition)
+     GRUB -- Path to GRUB directory.
+     FORCELBA --  Force use of LBA mode.
+
+
+Example
+~~~~~~~
+::
+
+
+     install-i386-pc device ata.device unit 0 PN 1 grub dh0:boot/grub
+
+
+See also
+~~~~~~~~
+::
+
+
+     Partition, Format
+     
+

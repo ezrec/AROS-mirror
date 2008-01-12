@@ -7,6 +7,7 @@ Shell commands
 `Introduction <introduction>`_
 
 `AddBuffers`__
+`AddDatatypes`__
 `Alias`__
 `Ask`__
 `Assign`__
@@ -15,11 +16,13 @@ Shell commands
 `Break`__
 `CD`__
 `ChangeTaskPri`__
+`Conclip`__
 `Copy`__
 `Date`__
 `Delay`__
 `Delete`__
 `Dir`__
+`Diskchange`__
 `Echo`__
 `Else`__
 `EndCli`__
@@ -30,17 +33,23 @@ Shell commands
 `FailAt`__
 `Fault`__
 `Filenote`__
+`Format`__
 `Get`__
 `Getenv`__
 `IconX`__
+`Identify`__
 `If`__
 `Info`__
+`Install`__
+`Install-i386-pc`__
+`Iprefs`__
 `Join`__
 `Lab`__
 `List`__
 `Lock`__
 `MakeDir`__
 `MakeLink`__
+`Mount`__
 `NewShell`__
 `Path`__
 `Prompt`__
@@ -66,12 +75,14 @@ Shell commands
 `Unalias`__
 `Unset`__
 `Unsetenv`__
+`UUIDGen`__
 `Version`__
 `Wait`__
 `Which`__
 `Why`__
 
 __ addbuffers
+__ adddatatypes
 __ alias
 __ ask
 __ assign
@@ -80,11 +91,13 @@ __ beep
 __ break
 __ cd
 __ changetaskpri
+__ conclip
 __ copy
 __ date
 __ delay
 __ delete
 __ dir
+__ diskchange
 __ echo
 __ else
 __ endcli
@@ -95,17 +108,23 @@ __ execute
 __ failat
 __ fault
 __ filenote
+__ format
 __ get
 __ getenv
 __ iconx
+__ identify
 __ if
 __ info
+__ install
+__ install-i386-pc
+__ iprefs
 __ join
 __ lab
 __ list
 __ lock
 __ makedir
 __ makelink
+__ mount
 __ newshell
 __ path
 __ prompt
@@ -131,6 +150,7 @@ __ type
 __ unalias
 __ unset
 __ unsetenv
+__ uuidgen
 __ version
 __ wait
 __ which
