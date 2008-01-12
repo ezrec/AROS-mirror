@@ -35,7 +35,7 @@ TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_TheBar/Locale/Catalogs
 contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c \
     $(TARGETDIR)/deutsch/TheBar_mcp.catalog \
     $(TARGETDIR)/czech/TheBar_mcp.catalog \
-    $(TARGETDIR)/franÃ§ais/TheBar_mcp.catalog \
+    $(TARGETDIR)/français/TheBar_mcp.catalog \
     $(TARGETDIR)/svenska/TheBar_mcp.catalog
 
 locale.h: locale.c
@@ -50,9 +50,8 @@ $(TARGETDIR)/czech/TheBar_mcp.catalog: locale/czech.ct
 	@$(MKDIR) $(TARGETDIR)/czech
 	@$(FLEXCAT) locale/TheBar_mcp.cd $< CATALOG $@
 
-# The following works only on UTF-8 build machines
-$(TARGETDIR)/franÃ§ais/TheBar_mcp.catalog: locale/french.ct
-	@$(MKDIR) $(TARGETDIR)/franÃ§ais
+$(TARGETDIR)/français/TheBar_mcp.catalog: locale/french.ct
+	@$(MKDIR) $(TARGETDIR)/français
 	@$(FLEXCAT) locale/TheBar_mcp.cd $< CATALOG $@
 
 $(TARGETDIR)/svenska/TheBar_mcp.catalog: locale/swedish.ct
