@@ -11,32 +11,32 @@ Aktuelle news
 In den letzten Wochen hat AROS viele Bugbehebungen und Verbesserungen
 erhalten. Zum Beispiel hat Neil Cafferkey einige Fehler in seinem
 geliebten `AROS Installer`__ behoben; Nic Andrews hat an seinem
-Netzwerktreiber fÃ¼r RTL8139 gearbeitet; und Robert Norris hat Probleme
+Netzwerktreiber für RTL8139 gearbeitet; und Robert Norris hat Probleme
 in den Dateibenachrichtigungen behoben, die noch vor kurzem die
-Voreinsteller zerstÃ¶rt hatten - nur um drei davon zu nennen.
+Voreinsteller zerstört hatten - nur um drei davon zu nennen.
 
-Robert Norris hat einen SDL Treiber fÃ¼r AROS unter Linux hinzugefÃ¼gt.
-Damit kÃ¶nnen Sie ein gehostetes AROS erstellen das X nicht mehr benÃ¶tigt (es muss nicht mal mehr installiert sein, um AROS zu erstellen). Theoretisch kann dies hilfreich sein um AROS auf anderen Platformen (Ã¼berall wo SDL existiert) hosten zu lassen, allerdings ist es etwas langsamer als der X Treiber.
+Robert Norris hat einen SDL Treiber für AROS unter Linux hinzugefügt.
+Damit können Sie ein gehostetes AROS erstellen das X nicht mehr benötigt (es muss nicht mal mehr installiert sein, um AROS zu erstellen). Theoretisch kann dies hilfreich sein um AROS auf anderen Platformen (überall wo SDL existiert) hosten zu lassen, allerdings ist es etwas langsamer als der X Treiber.
 
 Matthias Rustler hat die ptplay.library nach AROS portiert. Sie
-wandelt Protracker Module in sound samples. ZusÃ¤tzlich hat er das
+wandelt Protracker Module in sound samples. Zusätzlich hat er das
 einfache Beispielabspieler ShellPlayer portiert. Sie werden sich
-in den nÃ¤chtlichen builds unter dem Ordner Extras/MultiMedia/Audio befinden.
+in den nächtlichen builds unter dem Ordner Extras/MultiMedia/Audio befinden.
 
 Matthias Rustler hat auch eine erste Portierung von `Wazp3D`__
 von Alain Theller erstellt. Wazp3D ist eine Bibliothek, die als
-kompatibel mit der bekannten Warp3D.library fÃ¼r AmigaOS 68040
+kompatibel mit der bekannten Warp3D.library für AmigaOS 68040
 gedacht ist und die Portierung einiger 3D Amiga Spiele auf AROS
 vereinfacht. Wazp3D kann auch als Software Renderer eingesetzt
-werden, um Anwendungen zu tÃ¤uschen die nach einem 3D Hardware 
+werden, um Anwendungen zu täuschen die nach einem 3D Hardware 
 Treiber suchen.
 
 Michal Schulz kam mit seiner `x86-64`__ Portierung von AROS einige 
-groÃŸe Schritte voran. Der Tag fÃ¼r den Einsatz von 64 Bit AROS
-kommt nÃ¤her. Inzwischen hat Michal auch SSE BefehlsunterstÃ¼tzung
-in AROS hinzugefÃ¼gt.
+große Schritte voran. Der Tag für den Einsatz von 64 Bit AROS
+kommt näher. Inzwischen hat Michal auch SSE Befehlsunterstützung
+in AROS hinzugefügt.
 
-Petr Novak hat 'aros.org in teschechisch'__ Ã¼bersetzt.
+Petr Novak hat `aros.org in teschechisch`__ übersetzt.
 
 
 __ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=2319

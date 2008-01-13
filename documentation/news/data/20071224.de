@@ -5,10 +5,10 @@ Weihnachtsupdate
 :Autor:   Paolo Besser
 :Datum:   2007-12-24
 
-FrÃ¶hliche Weihnachten und ein glÃ¼ckliches neues Jahr fÃ¼r jeden!
-Es war ein wichtiges Jahr fÃ¼r die Entwicklung von AROS - sowohl Profilierung
-als auch Verwirrung - und wir mÃ¶chten an dieser Stelle jedem AROS Fan,
-Tester und Mitwirkendem fÃ¼r die ausgezeichneten Ergebnisse danken,
+Fröhliche Weihnachten und ein glückliches neues Jahr für jeden!
+Es war ein wichtiges Jahr für die Entwicklung von AROS - sowohl Profilierung
+als auch Verwirrung - und wir möchten an dieser Stelle jedem AROS Fan,
+Tester und Mitwirkendem für die ausgezeichneten Ergebnisse danken,
 die (euer)unser Betriebssystem erreicht hat.
 
 Hier einige Beispiele aus den "Meilensteinen" von AROS aus dem Jahr 2007.
@@ -17,26 +17,26 @@ Januar: Nach Jahren des Kampfes mit Shell Kommandos und DOpus Aktionen
 wurde das Kopieren von Dateien mit der Drag'n'drop Funktion in Wanderer
 zum Kinderspiel.
 
-Februar: Eine tap Schnittstelle wurde in AROS hosted hinzugefÃ¼gt,
-mit der nun die NetzerkunterstÃ¼tzung komplett ist.
+Februar: Eine tap Schnittstelle wurde in AROS hosted hinzugefügt,
+mit der nun die Netzerkunterstützung komplett ist.
 
-MÃ¤rz: AROS erhielt das paketierte Dateisystem, das die KompatibilitÃ¤t
-und Vergleichbarkeit mit dem ursprÃ¼nglichen AmigaOS erhÃ¶ht und AROS
-nun die MÃ¶glichkeit zur Verwaltung von FAT Paritionen erÃ¶ffnet. Weiterhin
+März: AROS erhielt das paketierte Dateisystem, das die Kompatibilität
+und Vergleichbarkeit mit dem ursprünglichen AmigaOS erhöht und AROS
+nun die Möglichkeit zur Verwaltung von FAT Paritionen eröffnet. Weiterhin
 hat AROS einen verbesserten TCP/IP Stack mit einer neuen Version von
-AROSTCP sowie USB UnterstÃ¼tzung erhalten.
+AROSTCP sowie USB Unterstützung erhalten.
 
-April: Wanderer erhielt ein neues Skinning System, das es ermÃ¶glicht
-die FensteroberflÃ¤chen mit benutzerdefinierten Layouts zu versehen.
-Die UnterstÃ¼tzung fÃ¼r LUA und ARexx Skripte wurde ebenfalls verbessert.
+April: Wanderer erhielt ein neues Skinning System, das es ermöglicht
+die Fensteroberflächen mit benutzerdefinierten Layouts zu versehen.
+Die Unterstützung für LUA und ARexx Skripte wurde ebenfalls verbessert.
 
-Mai: Der Name AROS wurde in "AROS Research Operating System" geÃ¤ndert
+Mai: Der Name AROS wurde in "AROS Research Operating System" geändert
 und aros.org erhielt ein grundlegendes Facelifting. Wanderer zeigte nun
 nur noch Icons oder alle Dateien eines Ordners an und eine neue
 durch die Community gepflegte Webseite wurde geboren, ArosWorld.org.
 
-Juni: Die AROS Anwender haben in einem amÃ¼santen Wettbewerb die offiziellen
-Fenster- und Desktop Hintergrundbilder gewÃ¤hlt.
+Juni: Die AROS Anwender haben in einem amüsanten Wettbewerb die offiziellen
+Fenster- und Desktop Hintergrundbilder gewählt.
 
 September: AROS wurde in einer Konferenz auf der Pianeta Amiga der Amiga
 Community vorgestellt. MUIBase und HivelyTracker wurden ebenfalls portiert.
@@ -45,9 +45,9 @@ Oktober: AROS erhielt einen neuen Installer, der die Installation auf
 Festplatten vereinfacht. Jetzt kann AROS ohne Probleme auf einer Festplatte 
 gemeinsam mit Microsoft Windows installiert sein.
 
-November: AROS hat mit seinem "64-Bit Flavour" einen groÃŸen Sprung vorwÃ¤rts
+November: AROS hat mit seinem "64-Bit Flavour" einen großen Sprung vorwärts
 gemacht. 
 
-Dezember: Zwei neue AROS Distributionen wurden angekÃ¼ndigt, Velocity 
+Dezember: Zwei neue AROS Distributionen wurden angekündigt, Velocity 
 und VmwAROS.
 
