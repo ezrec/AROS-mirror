@@ -8,9 +8,9 @@ Status Update
 64-BIT AROS!
 ------------
 
-`Michal Schulz`__ hat das wunder vollbracht und ein komplett neues Kapitel
-beginnt in der Geschichte von AROS. Ab heute können Sie sich das native
-64 Bit "flavour" von AROS auf unserer Webseite herunterladen. Diese
+`Michal Schulz`__ hat das Wunder vollbracht und ein komplett neues Kapitel
+beginnt in der Geschichte von AROS. Ab heute können Sie sich den nativen
+64 Bit "Flavour" von AROS auf unserer Webseite herunterladen. Diese
 neue Version ist offensichtlich fortgeschrittener als die normale und
 verfügt über begrenzten Speicherschutz und das Laden von Startmodulen.
 Eine vorläufige Sperre bis 4GB RAM wird entfernt, sobald eine saubere
@@ -44,9 +44,9 @@ live Boot CD als auch in einem VMWare Festplattenimage verfügbar sein
 und enthält beträchtlich mehr (und benutzerdefiniert eingerichtete)
 Software als die nächtlichen ISOs". Bildschirmfotos sind enthalten.
 
-Robert Norris arbeitet an einem Traveller genannten AROS WebBrowser basierend 
-auf WebKit. Es wurden viele AROS Libraries aktualisiert während er daran
-gearbeitet hat und hat bereits einige nützliche Programme portiert wie
+Robert Norris arbeitet an einem Traveller genannten und auf WebKit basierenden
+AROS WebBrowser. Es wurden viele AROS Bibliotheken aktualisiert während er daran
+gearbeitet hat und er hat bereits einige nützliche Programme portiert wie
 libxml2, cURL, OpenSSL, SQLite und weitere. Einige Informationen finden
 Sie in `seinem Blog`__.
 
