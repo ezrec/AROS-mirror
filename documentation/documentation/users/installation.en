@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright © 1995-2007, The AROS Development Team
+:Copyright: Copyright Š 1995-2007, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. In works, being updating to the current status.
@@ -119,15 +119,24 @@ AROS/i386-pc and AROS/X86-64x Native
 Requirements
 """"""""""""
 
-You will need an average *PCI-based* PC (i486 or Pentum) with *PS/2 mouse* 
-and PS/2 or AT keyboard, IDE hard disk and CD-ROM, (S)VGA video card and monitor. 
+You will need an average *PCI-based* PC-AT (based on i486 or later) with PS/2 
+or USB mouse, PS/2,AT or USB keyboard, IDE hard disk and CD-ROM on parallel ATA, 
+(S)VGA video card and monitor. 
 Also most of available PC-compatible VM (virtual machine) can be used. QEMU, 
-VmVare, Q, Bochs, MS VPC are known to work.
-At least 16 MB of RAM and VESA-compliant VGA card is recommended. 
+VmVare (Server/Workstation/Fusion), Q, Bochs, MS VPC are known to work.
+At least 24 MB of RAM and VESA-compliant VGA card is recommended. 
 There`s a generic accelerated drivers (HIDD`s) for ATI and nVidia cards. 
-Also you can add the networking interface card (there`s some supported) to 
-try networking in AROS. If in trouble check the FAQ if it contains any information 
-on your kind of hardware.
+
+You can add the PCI networking interface card (like pcnet32 or intel e100) to 
+try AROS networking. If in trouble please check the FAQ if it contains any 
+information on support of your hardware.
+
+If you want to try sound on AROS, the best choice at this moment must be 
+Creative 10k-based sound cards.
+
+X86-64x port has the similar requirements, assuming that 64-bit capable Intel/AMD
+CPU is used. Chipset support currently is limited. This port is early, please 
+report bugs.
 
 
 .. Note:: 

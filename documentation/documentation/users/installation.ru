@@ -3,7 +3,7 @@
 =============================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright Љ 1995-2004, The AROS Development Team
+:Copyright: Copyright Љ 1995-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Дополняется. 
@@ -29,19 +29,17 @@
 выбор между стабильностью и возможностями. В настоящее время существует 2 типа бинарных 
 пакетов (и исходников), доступных для скачивания: снимки и ночные сборки.
 
-Снимки делаются довольно редко, в основном, когда вносится значительное количество полезных изменений 
-в код AROS со времени последнего снимка и кто-либо чувствует потребность в новом снимке. 
-Вкратце, сейчас не существует какого-либо графика создания снимков. Даже несмотря на то, что они 
-делаются нечасто, и мы стараемся выбрать стабильнейшие состояния AROS, всё же нет гарантии, что они 
-будут свободными от ошибок или работать на конкретно вашей машине. Однако, мы стараемся тестировать 
-снимки на широком спектре различных машин, так что на практике они работают сравнительно хорошо.
+Снимки (более стабильные и частично тетированные сборки) более недоступны, поскольку
+начали слишком быстро устаревать, отставая от развития ОС. Всем желающим рекомендуется
+взамен их использовать ночные сборки.
 
 Ночные сборки, соответственно названию, собираются автоматически каждую ночь прямо 
 из исходников в репозитории Subversion и содержат все последние изменения. 
 Однако, они никоим образом не тестируются, и при особом невезении могут быть нерабочими 
 или ужасно глючными. Правда, как правило, они работают совершенно нормально.
 
-Для того, чтобы скачать доступные снимки и ночные сборки, посетите нашу `страницу закачек <../../download>`__.
+Для того, чтобы скачать доступные снимки и ночные сборки, посетите нашу 
+`страницу закачек <../../download>`__.
 
 
 Установка
@@ -57,22 +55,24 @@ AROS/i386-linux и AROS/i386-freebsd
 
 
 + Рабочая инсталляция FreeBSD 5.x или Linux (не имеет особого значения, какой дистрибутив
-    вы используете, если он относительно свежий)
+  вы используете, если он относительно свежий)
 
-+ Настроенный и функционирующий X-сервер (например, X.Org или XFree86).
++ Настроенный и функционирующий X-сервер (например, X.Org или XFree86) для работы 
+  x11.hidd или установленную библиотеку libsdl (для sdl.hidd).
 
 Собственно, всё.
 
 Извлечение
 """"""""""
 
-Since AROS/i386-linux and AROS/i386-freebsd are hosted flavors of AROS,
-installation is simple. Simply get the appropriate archives for your platform
-from the `страницы закачек <../../download>`__ and extract them where you want them::
+Поскольку AROS/i386-linux и AROS/i386-freebsd - hosted-виды AROS, работающие
+на основе других ОС, их установка весьма проста. Просто скачайте соответствующие 
+архивы для вашей архитектуры со `страницы закачек <../../download>`__ 
+и распакуйте в удобное для вас место::
 
     > tar -vxjf AROS-<version>-i386-<platform>-system.tar.bz2
 
-If you downloaded the contrib archive, you may want to extract it too::
+Если вы скачали дополнительный архив программ, вы можете распаковать и его::
 
     > tar -vxjf AROS-<version>-i386-all-contrib.tar.bz2
 
@@ -80,26 +80,25 @@ If you downloaded the contrib archive, you may want to extract it too::
 Запуск
 """""""
 
-After having extracted all files you can launch AROS like this::
+После распаковки всех файлов, запустите AROS::
 
     > cd AROS
-    > ./aros
+    > ./aros -m <количество предоставляемой памяти в МБ, число>
 
 
-.. Note:: 
+.. Примечание:: 
     
-    Unless you are running XFree86 3.x or earlier, you may notice that the
-    AROS window does not refresh properly (for example when a different window
-    passes over it). This is due to the fact that AROS uses the "backingstore"
-    functionality of X, which is turned off by default in XFree86 4.0 and later.
-    To turn it on, add the following line to the device section of your
-    graphics card in the X configuration file (commonly named
-    ``/etc/X11/xorg.conf``, ``/etc/X11/XF86Config-4`` or
-    ``/etc/X11/XF86Config``)::
-
+    Если используемый XFree86 версии 3.x или более старой, возможно нарушение 
+    нормального обновления окон AROS (например, после того, как они закрываются
+    окнами других приложений). Это следствие того, что AROS использует функцию
+    "backingstore" X-сервера, по умолчанию выключенную в XFree86 4.0 и более 
+    поздних. Чтобы включить эту опцию, добавьте следующую строчку к разделу 
+    *Device* видеокарты в файле конфигурации X-сервера (обычно он называется 
+    ``/etc/X11/xorg.conf``, ``/etc/X11/XF86Config-4`` или ``/etc/X11/XF86Config``)::
+    
         Option "backingstore"
 
-    A complete device section might then look like this::
+    В результате, секция устройства может выглядеть следующим образом::
 
         Section "Device"
             Identifier      "Matrox G450"
@@ -112,18 +111,28 @@ After having extracted all files you can launch AROS like this::
 AROS/i386-pc and AROS/X86-64x Native
 ------------------------------------
 
-Требования
-""""""""""
+Аппаратные требования
+"""""""""""""""""""""
 
-You will need an average *PCI-based* PC (i486 or Pentum) with *PS/2 mouse* 
-and PS/2 or AT keyboard, IDE hard disk and CD-ROM, (S)VGA video card and monitor. 
+AROS достаточно "среднего" PC-AT (на базе i486 или выше) с шиной *PCI*,  мышью
+PS/2 или USB, клавиатурой AT,PS/2 или USB, жёстким диском IDE и CDROM на PATA,
+видеокартой (S)VGA и соответствующим монитором.
+
 Also most of available PC-compatible VM (virtual machine) can be used. QEMU, 
-VmVare, Q, Bochs, MS VPC are known to work.
-At least 16 MB of RAM and VESA-compliant VGA card is recommended. 
+VmVare (Server/Workstation/Fusion), Q, Bochs, MS VPC are known to work.
+At least 24 MB of RAM and VESA-compliant VGA card is recommended. 
 There`s a generic accelerated drivers (HIDD`s) for ATI and nVidia cards. 
-Also you can add the networking interface card (there`s some supported) to 
-try networking in AROS. If in trouble check the FAQ if it contains any information 
-on your kind of hardware.
+
+You can add the PCI networking interface card (like pcnet32 or intel e100) to 
+try AROS networking. If in trouble please check the FAQ if it contains any 
+information on support of your hardware.
+
+If you want to try sound on AROS, the best choice at this moment must be 
+Creative 10k-based sound cards.
+
+X86-64x port has the similar requirements, assuming that 64-bit capable Intel/AMD
+CPU is used. Chipset support currently is limited. This port is early, please 
+report bugs.
 
 
 .. Note:: 
@@ -137,8 +146,8 @@ on your kind of hardware.
     data loss occured during the installation. Any bug reports on installation 
     process will be appreciated!
 
-Installation media
-""""""""""""""""""
+Установочные носители
+"""""""""""""""""""""
 
 The recommended installation media for AROS/i386-pc is CDROM, since we can fit
 the whole system onto a single disc (and also all the contributed software).
@@ -152,8 +161,8 @@ you will need access to a CD burner to create the installation disk yourself.
 CDROM
 ^^^^^
 
-Writing
-'''''''
+Запись
+''''''
 
 Simply download the ISO image from the `download page`_ and burn it to a CD
 using your favorite CD burning program. There`s a number of freeware 
@@ -162,8 +171,8 @@ cd burning programs for any system, and we can point Windows users to the
 it`s small and fast, and it`s just Nero-killing simple. 
 
 
-Booting
-'''''''
+Загрузка
+''''''''
 
 The easiest way to boot from the AROS installation CD is if you have a computer
 that supports booting from CDROM. It might require some fiddling in the BIOS
@@ -187,8 +196,8 @@ These days floppies can be found useful only to boot if your PC`s BIOS doesn`t
 support booting from CD or on some really obsolete PC`s. But it`s still maitaned.
 
 
-Writing
-'''''''
+Запись
+''''''
 
 To create the boot floppy, you will need to download the disk image from
 the `download page`_, extract the archive, and write the boot image to a floppy
@@ -203,15 +212,15 @@ a floppy. Please see the documentation of rawrite_ for information on how to use
 it. There`s also an GUI version called rawwritewin.
 
 
-Booting
-'''''''
+Загрузка
+''''''''
 
 Simply insert the boot floppy into the drive and reboot the computer. The boot
 is fully automatic, and if everything works you should see a nice screen after
 a while.
 
-Installing to hard drive
-""""""""""""""""""""""""
+Установка на жёсткий диск
+"""""""""""""""""""""""""
 
 Well, note that you have been **WARNED** that HD installation is
 in testing stage at the moment and can be **dangerous** to your data, so make 
@@ -221,8 +230,8 @@ possible risk and allows AROS to be used and tested on any working machine.
 There are many free VM`s available now, such as VirtualPC, Q, QEMU and VMWare, 
 which are known to work with AROS. 
 
-Getting ready
-^^^^^^^^^^^^^
+Подготовка
+^^^^^^^^^^
 
 First, set up your HD - either real or a virtual drive image - for use.
 For a real drive, this may involve plugging it into the machine (always
@@ -249,36 +258,37 @@ So please enter the Wanderer menu, select Exit and confirm before proceeding.
 Then click PROCEED buton in InstallAROS window, to get a screen with installing
 options.
 
-Installing AROS Only
-^^^^^^^^^^^^^^^^^^^^
+
+Установка AROS без других ОС
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The most simple situation is AROS alone on the whole disk. Your disk can be 
 new or with an unneeded data on it. Select *Wipe disk* to **erase** existing 
 data on hard drive.
 
-Installing AROS along with Windows(R)/DOS(R)
+Установка AROS совместно с Windows(R)/DOS(R)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 TODO
 
-Installing AROS along with Linux/BSD
+Установка AROS совместно с Linux/BSD
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 TODO
 
-Installing AROS along with other systems
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Установка AROS совместно с другими ОС
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 TODO
 
-Manual install 
-^^^^^^^^^^^^^^
-*(almost deprecated)*
-As the InstallAROS is useful now, the following information is kind of
-deprecated but still can be of some interest, so it`s have been kept here for 
-the infomational purposes.
+Ручная установка
+^^^^^^^^^^^^^^^^
+*(устарело)*
+Поскольку InstallAROS теперь функционален, эта информация является устаревшей, 
+однако может представлять некоторый интерес, поэтому она сохранена для 
+изучения.
      
-(OLD Notes)::
+(Прежние замечания)::
     We currently do not recommend installation of AROS/i386-pc onto a harddrive
     [#]. But you definitely would need to install AROS to test some of 
     it`s features and workarounds must be advised. Please note that you **should 
@@ -294,62 +304,56 @@ the infomational purposes.
 
      
 
-Partitioning
-''''''''''''
+Разбиение на разделы
+''''''''''''''''''''
 
-Single partition install
+*Установка на единственный раздел*
 
-Here he will learn how to install AROS as the only system on PC and
-being placed on a single partition.
-This is an easier case to install.
+Здесь мы изучим установку AROS как единственной системы на PC в единственный 
+раздел. Это самый простой способ.
 
-This chapter can be found a bit tricky, as install feature is incomplete. 
-First, remember a *common rule* for this process - *reboot* after any
-significant change made to the filesystem (we will note where it is
-needed). Rebooting means closing the HDToolbox window if it's open and
-restarting the computer or VM, so it`s an hard reset. You can also try a soft 
-reset by typing <reboot> ENTER in CLI window.
+Нас подстерегает множество неожиданностей, так как процедура еще не полностью 
+проработана. Во-первых общее правило для этого процесса - перегрузка после любых 
+значительных изменений при создании файловой системы (мы будем отмечать, где 
+это необходимо). Перегрузка закрывает окно программы HDToolbox,если оно открыто 
+и происходит так называемый hard reset компьютера или виртуальной машины. Вы 
+также можете осуществить soft reset набирая <reboot> в окне CLI и нажимая ENTER .
 
-First, find a tool on the AROS CD called *HDToolBox*. It's located in the
-Tools drawer. This is your HD tormenter for a while. When you run it,
-you will see a window with a device-type selector. In this example (here
-and further on), we are using a real or virtual IDE hard drive (also
-known as an ATA hard drive). So, clicking on the *ata.device* entry will
-show Devices:1 in the left window. So, this is our HD. By clicking on
-this entry we will enter the available HD list.
+Для начала найдите утилиту на AROS CD под названием HDToolBox, которая находится 
+в ящике Tools. На первое время она станет основным "мучителем" Вашего винчестера. 
+Запустив её, вы увидите в окне диалог выбора типа устройства для разметки. В 
+этом примере (здесь и далее), мы используем реальный или виртуальный IDE диск 
+(их также называют ATA). Итак, щелчок по ata.device вход покажет Devices:1 
+в окне слева, это число доступных дисков. Щёлкнув по этому пункту, мы увидим  
+их список. Если это виртуальный HD, мы можем увидеть, например,QEMU Harddisk 
+или что-то похожее для VMWare. Если это настоящий HD, Вы увидите его имя, 
+если нет - ещё раз попробуйте произвести подготовку винчестера. Щёлкнув на 
+названии диска мы увидим::
 
-So here we should see our HD listed. If it`s a virtual HD, we will see
-something like *QEMU Harddisk* or the equivalent VMWare one. If your HD is
-real, you should see its name. If this doesn't happen, you must make
-sure you've correctly prepared your HD. Clicking on the HD name will
-give us some information::
+    Size: <Размер HD>
+    Partition Table: <тип текущей таблицы разделов; может быть неизвестен после очистки>
+    Partitions: <число разделов на винте; равно 0, поскольку они ещё не созданы>
 
-    Size: <Size of HD>
-    Partition Table: <type of current PT; must be unknown after cleanup>
-    Partitions: <count of partitions on HD; must be 0 as we've just started>
+Теперь нужно создать новую таблицу разделов, для PC это таблица типа *PC-MBR*. 
+Для этого нажмите кнопку *CreateTable* и выберите *PC-MBR* из списка. Щелкните OK.
 
-Well, now we must create a new partition table. Here, for a PC we must
-create a *PC-MBR* type of table. To do this, please press the *Create
-Table* button and choose *PC-MBR* from the list. Click OK.
+Настало время внести изменения. Сделайте это, выделив имя Вашего винчестера и 
+нажав *Save Changes*. Выберите *Yes* в открывшемся диалоговом окне. Закройте 
+окно HDToolbox и перезагрузите систему с Live CD.
 
-Then we must write the changes to disk. To do this, click on the HD's
-name and press *Save Changes*. Answer *Yes* in the confirmation dialog.
-Close the HDToolbox window and reboot the system from the Live CD.
+После загрузки вновь запустите HDToolbox. Теперь при выборе *ata.device* вы должны 
+увидеть информацию "Partition table: PC-MBR, Partitions:0". Время создать разделы,
+щелкните по имени HD, чтобы вывести список разделов, пока пустой. Нажмите кнопку 
+*Create Entry*, выберите все доступное пространство, щелкнув в свободном месте 
+и подтвердите *OK*. Теперь в списке Вы увидите "Partition 0" , выделив её, 
+увидим в боковом окне::
 
-After the system boots up, run HDToolbox again. Now, after entering the
-*ata.device* entry we must see the info "Partition table: PC-MBR,
-Partitions:0". That's OK, we set no partitions yet. Let's do it now. 
-Click on the HD's name to go to the partitions list. The list is empty
-now. Click on *Create Entry* button, choose all the space by clicking on
-unselected empty space and click *OK*. Now in the list you should see a
-"Partition 0" entry. Choose it by clicking to get this information::
-
-    Size: <Partition size. Almost equal to HD size>
-    Partition table: Unknown <Not created yet>
-    Partition type: AROS RDB Partition table <That's OK>
-    Active: No <Not active>
-    Bootable: No <Not bootable>
-    Automount: No <Will not mount on system startup>
+    Size: <размер раздела, практически равен емкости HD>
+    Partition table: Unknown <Пока не создана>
+    Partition type: AROS RDB Partition table <OK>
+    Active: No <Не активен>
+    Bootable: No <Не загружаем>
+    Automount: No <Не монтируется при старте>
 
 Here can be some difference - make a partition in RDB table or as usual PC-MBR
 partition. RDB (Rigid Disk Block) is the choice of compatibility and was used 
@@ -359,10 +363,11 @@ like FAT/NTFS/etc. Second way can be considered somewhat more modern and more
 compatible to some new AROS programs. Let`s consider both.
 
 *FFS in RDB*
-Now, click on *Create Table* button, select *RDB table* and click OK. To
-save changes, go *one level* up by clicking the *Parent* button, select the
-HD name again and click the *Save Changes* button. Answer *Yes* in the
-confirmation dialog twice. Exit from HDToolbox and reboot the machine. 
+
+Нажмите кнопку *Create Table* , выберите *RDB table* и щелкните *OK*. Для 
+сохранения изменений перейдите уровнем выше, нажав кнопку *Parent*, выберите 
+снова имя HD и щелкните кнопку *Save Changes*. Ответьте *Yes* в открывающихся 
+диалогах дважды. Закройте HDToolbox и перегрузитесь снова.
 
 *FFS in MBR*
 ...to be added
@@ -402,8 +407,8 @@ After booting up and checking all the settings for DH0, we must see it's
 OK now. So now we can exit HDToolbox with no hesitation left. Now it's
 time for some CLI magic.
 
-Formatting
-''''''''''
+Форматирование
+''''''''''''''
 
 We must format our created DH0 drive to make it usable. Currently AROS have
 a choice of two filesystems - Fast FileSystem(FFS) and Smart FileSystem(SFS). 
