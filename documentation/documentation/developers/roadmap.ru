@@ -2,12 +2,12 @@
 Маршрут к AROS 1.0
 ==================
 
-:Authors:   Adam Chodorowski
+:Авторы:    Adam Chodorowski
 :Copyright: Copyright Љ 2003, The AROS Development Team
-:Version:   $Revision$
-:Date:      $Date$
+:Версия:    $Revision$
+:Дата:      $Date$
 
-:Abstract:  
+:Описание:  
     
     Намеченный здесь путь введен с целью описать все требования, которые 
     необходимо выполнить, преджде чем будет выпущена AROS 1.0. Цель его *не*

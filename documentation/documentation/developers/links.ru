@@ -1,14 +1,14 @@
-======
-Ссылки
-======
+===============
+Полезные ссылки
+===============
 
-:Authors:   Aaron Digulla, Adam Chodorowski 
+:Авторы:    Aaron Digulla, Adam Chodorowski 
 :Copyright: Copyright © 1995-2006, The AROS Development Team
-:Version:   $Revision: 25105 $
-:Date:      $Date: 2006-12-25 01:51:32 +0700 (РџРЅ, 25 РґРµРє 2006) $
-:Status:    Завершено.
+:Версия:    $Revision: 25105 $
+:Дата:      $Date: 2006-12-25 01:51:32 +0700 (РџРЅ, 25 РґРµРє 2006) $
+:Статус:    Завершено.
 
-.. Contents::
+.. Содержание::
 
 Разработка драйверов устройств
 ------------------------------

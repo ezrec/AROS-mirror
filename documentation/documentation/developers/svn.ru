@@ -2,12 +2,12 @@
 Работа с Subversion (SVN)
 =========================
 
-:Authors:   Aaron Digulla, Adam Chodorowski, Sergey Mineychev 
+:Авторы:    Aaron Digulla, Adam Chodorowski, Sergey Mineychev 
 :Copyright: Copyright щ 1995-2002, The AROS Development Team
-:Version:   $Revision$
-:Date:      $Date$
-:Status:    Done.
-:Abstract: 
+:Версия:    $Revision$
+:Дата:      $Date$
+:Статус:    Завершено.
+:Описание: 
     Subversion (кратко, SVN) - это инструмент контроля версий 
     файлов, входящих в проект. SVN позволяет отслеживать и управлять 
     изменениями каждого отдельного файла: какие и когда были сделаны изменения, 
@@ -21,7 +21,7 @@
     другими и предоставляя доступ к этим возможностям по сетям Интернет. 
     Разумеется, мы используем SVN в работе над AROS.
     
-.. Contents::
+.. Содержание::
 
 
 Введение

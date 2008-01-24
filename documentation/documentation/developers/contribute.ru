@@ -1,14 +1,14 @@
-=======
-Участие
-=======
+===============
+Как участвовать
+===============
 
-:Authors:   Adam Chodorowski 
+:Авторы:    Adam Chodorowski 
 :Copyright: Copyright Љ 1995-2002, The AROS Development Team
-:Version:   $Revision$
-:Date:      $Date$
-:Status:    Done. 
+:Версия:    $Revision$
+:Дата:      $Date$
+:Статус:    Завершено. 
 
-.. Contents::
+.. Содержание::
 
 .. Include:: contribute-abstract.ru
 

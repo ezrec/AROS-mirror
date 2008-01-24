@@ -2,10 +2,10 @@
 Руководство по системному программированию AROS 
 ================================================
 
-:Authors:   Aaron Digulla, Bernardo Innocenti
+:Авторы:    Aaron Digulla, Bernardo Innocenti
 :Copyright: Copyright © 2008, The AROS Development Team
-:Version:   $Revision: 23374 $
-:Date:      $Date: 2008-01-23 16:41:00 +0800 (Пт, 17 июн 2005) $
+:Версия:    $Revision: 23374 $
+:Дата:      $Date: 2008-01-23 16:41:00 +0800 (Пт, 17 июн 2005) $
 
 .. Предупреждение::
 

@@ -1,10 +1,10 @@
 =======
 Перевод
 =======
-:Authors:   Mineychev Sergey
+:Авторы:    Mineychev Sergey
 :Copyright: Copyright Љ 2006, The AROS Development Team
-:Version:   $Revision$
-:Date:      $Date$
+:Версия:    $Revision$
+:Дата:      $Date$
 
 .. Warning::
 

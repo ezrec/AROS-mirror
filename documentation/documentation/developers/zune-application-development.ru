@@ -2,15 +2,15 @@
 Руководство разработчика приложений Zune
 ========================================
 
-:Authors:   David Le Corfec
+:Авторы:    David Le Corfec
 :Copyright: Copyright Љ 2004, The AROS Development Team
-:Version:   $Revision$
-:Date:      $Date$
-:Status:    Unfinished;
-:ToDo:      All
+:Версия:    $Revision$
+:Дата:      $Date$
+:Статус:    Не завершено;
+:ToDo:      Всё.
 
 
-.. Contents::
+.. Содержание::
 
 
 ------------

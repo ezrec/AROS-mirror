@@ -2,11 +2,11 @@
 Руководство по документированию AROS
 ====================================
 
-:Авторы:   Adam Chodorowski, Matthias Rustler
+:Авторы:    Adam Chodorowski, Matthias Rustler
 :Copyright: Copyright Љ 1995-2007, The AROS Development Team
-:Версия:   $Revision: 25052 $
+:Версия:    $Revision: 25052 $
 :Дата:      $Date: 20067-09-09 19:46:24 +0700 (РџС‚, 08 РґРµРє 2006) $
-:Статус:    не завершено. переведено.
+:Статус:    Не завершено.
 
 .. Предупреждение::
 

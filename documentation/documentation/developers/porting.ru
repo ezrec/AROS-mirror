@@ -2,15 +2,15 @@
 Руководство по портированию
 ===========================
 
-:Authors:   Johann Samuellson, Matthias Rustler
+:Авторы:    Johann Samuellson, Matthias Rustler
 :Copyright: Copyright © 2007, The AROS Development Team
-:Version:   $Revision: 25114 $
-:Date:      $Date: 2006-12-29 02:39:31 +0700 (РџС‚, 29 РґРµРє 2006) $
-:Status:    Beta
-:ToDo:      Добавить несколько реальных примеров
+:Версия:    $Revision: 25114 $
+:Дата:      $Date: 2006-12-29 02:39:31 +0700 (Пт, 29 декабря 2006) $
+:Статус:    Beta
+:ToDo:      Добавить несколько реальных примеров.
 
 
-.. Contents:: 
+.. Содержание:: 
 
 Введение
 ========
