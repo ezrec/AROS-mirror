@@ -29,7 +29,7 @@ Was ist AROS?
 
 Bitte lesen Sie die Einführung_.
 
-.. _introduction: ../../introduction/index
+.. _einführung: ../../introduction/index
 
 
 Was ist der rechtliche Status von AROS?
@@ -403,7 +403,7 @@ Kopieren Sie das Diskettenabbild vom DiskImages Verzeichnis in AROS (Sys:DiskIma
 z.B. bin/linux-i386/AROS/DiskImages) und benennen Sie es um in "Unit0". Nach dem
 Start von AROS können Sie das Diskettenabbild mounten mit::
 
-    > mount AFD0: 
+    > mount ADF0: 
 
 
 Was ist Zune?
@@ -495,7 +495,7 @@ __ installation#running
 
 
 Welche AROS-nativen Kernel Optionen werden in der GRUB Zeile verwendet?
-----------------------------------------------------------------------
+-----------------------------------------------------------------------
 
 Hier einige::
 

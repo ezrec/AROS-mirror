@@ -1,0 +1,687 @@
+===========================
+AROS Installationsanleitung
+===========================
+
+:Autoren:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
+:Copyright: Copyright ? 1995-2007, The AROS Development Team
+:Version:   $Revision: 27070 $
+:Datum:     $Date: 2007-10-15 21:24:10 +0200 (Mo, 15 Okt 2007) $
+:Status:    Muss für einige AROS Portierungen aktualisiert werden. In Arbeit zur Aktualisierung auf aktuellen Status.
+:Abstrakt:
+    Diese Anleitung wird Sie durch die notwendigen Schritte zur Installation
+    unterschliedlicher AROS "Flavours" führen.
+
+    .. Warnung:: 
+    
+        AROS ist im Alphastadium. Das bedeutet es macht im Moment meistens
+        Spaß damit zu spielen und es ist cool dafür zu Entwickeln. Wenn Sie
+        an diese Stelle kommen weil Sie glauben AROS wäre ein fertiges, vollständiges
+        und uneingeschränkt nutzbares Betriebssystem werden Sie höchstwahrscheinlich
+        enttäuscht. AROS befindet sich noch nicht an dieser Stelle aber wir bewegen
+        uns langsam in die richtige Richtung.
+
+
+.. Inhalt::
+
+
+Herunterladen
+=============
+
+AROS befindet sich im Moment unter starker Entwicklung. Das Ergebnis ist dass Sie sich zwischen
+Stabilität und Funktionen entscheiden müssen. Es sind zwei Arten Binärer Pakete möglich:
+Snapshots und nächtliche Builds.
+
+Momentan sind keine Snapshots verfügbar, da die zuvor Vorhandenen zu überholt waren
+um den aktuellen Zustand darstellen zu können. Daher sind die Benutzer angehalten
+stattdessen die nächtlichen Builds herunterzuladen.
+
+Nächtliche Builds werden wie der Name verrät jede Nacht automatisch aus dem
+Subversion Baum erstellt und enthalten den neuesten Quellcode. Allerdings wurden
+sie in keiner Weise getestet und können furchtbar defekt und extrem fehlerhaft sein
+und Sie können mit viel Pech Ihr System zerstören. Meistens jedoch funktionieren
+Sie gut.
+
+Bitte lesen Sie auf der `Download Seite`_ für weitere Informationen über verfügbare
+nächtliche Builds und wie sie herunter zu laden sind.
+
+
+Installation
+============
+
+AROS/i386-linux und AROS/i386-freebsd gehostet
+----------------------------------------------
+
+Anforderungen
+"""""""""""""
+
+Um AROS/i386-linux oder AROS/i386-freebsd zu starten benötigen Sie folgendes:
+
++ Eine funktionierende FreeBSD 5.x oder Linux Installation (es macht nicht wirklich einen Unterschied
+  welche Distribution gefahren wird, solange sie relativ neu ist).
++ Ein konfigurierter und funktionierender X server (zum Beispiel X.Org oder XFree86) für x11.hidd 
+  oder eine installierte libsdl (für sdl.hidd).
+
+Das war's. 
+
+
+Auspacken
+"""""""""
+
+Die Installation ist einfach, da AROS/i386-linux und AROS/i386-freebsd gehostete 
+"Flavours" von AROS sind. Holen Sie einfach die passenden Archive für Ihre Platform
+von der `Download Seite`_ und entpacken Sie diese wo Sie möchten::
+
+    > tar -vxjf AROS-<version>-i386-<platform>-system.tar.bz2
+
+Wenn Sie das Contrib Archiv heruntergeladen haben möchten Sie es womöglich
+ebenfalls entpacken (allerdings sind dessen Inhalte jetzt bereits im System
+Archiv und auf der LiveCD enthalten)::
+
+    > tar -vxjf AROS-<version>-i386-all-contrib.tar.bz2
+
+
+Ausführen
+"""""""""
+
+Nach dem entpacken aller Dateien können Sie AROS wie folgt ausführen::
+
+    > cd AROS
+    > ./aros
+
+
+.. Anmerkung:: 
+    
+    Solange Sie XFree86 3.x oder frühere Versionen einsetzen könnten Sie feststellen, 
+    dass das AROS Fenster nicht ordnungsgemäß aktualisiert wird (zum Beispiel wenn 
+    sich ein anderes Fenster darüber bewegt).  Dies stamm aus der Tatsache dass AROS die
+    "backingstore" Funktion von X einsetzt, die im Standard in XFree86 4.0 und neuer
+    deaktiviert ist. Um es einzuschalten fügen Sie folgende Zeile in den Abschnitt
+    device ihrer Grafikkarte in die X Konfigurationsdatei (normalerweise 
+    ``/etc/X11/xorg.conf``, ``/etc/X11/XF86Config-4`` oder ``/etc/X11/XF86Config``)
+    ein::
+
+        Option "backingstore"
+
+    Ein vollständiger Device Abschnitt könnte wie folgt aussehen::
+
+        Section "Device"
+            Identifier      "Matrox G450"
+            Driver          "mga"
+            BusID           "PCI:1:0:0"
+            Option          "backingstore"
+        EndSection
+        
+Weiterhin gibt es einen sdl.hidd, der es erlaubt AROS gehostet ohne die Installation 
+eines X-Servers auszuführen. Es sollte funktionieren, befindet sich allerdings im
+Testzustand.
+
+
+AROS/i386-pc und AROS/X86-64x nativ
+-----------------------------------
+
+Anforderungen
+"""""""""""""
+
+Sie benötigen einen durchschnittlichen *PCI-basierten* PC (i486 oder Pentium) mit
+einer *PS/2 Maus* und PS/2 oder AT Tastatur, IDE Festplatte und CD-ROM, (S)VGA
+Grafikkarte und Monitor. Auch die meisten PC-kompatiblen VM (virtuellen Maschine)
+können zum Einsatz kommen. QEMU, VMWare, Q, Bochs, MS VPC sollten funktionieren.
+Es sind mindestens 16 MB RAM und eine VESA kompatible VGA Karte empfohlen.
+Es existieren generische beschleunigte Treiber für ATI und nVidia Karten. Sie können
+auch die Netzwerkschnittstellenkarte verwenden (es gibt einige Unterstützte) um
+Netzwerkfunktionen in AROS auszuprobieren. Wenn Sie auf Probleme stoßen lesen Sie
+bitte das FAQ, ob es Informationen über Ihren Hardwaretyp enthalten.
+
+
+.. Anmerkung:: 
+    
+    Obwohl AROS auf eine Festplatte installiert werden kann denken Sie bitte
+    daran, dass sich der Installer im Teststatus befindet. Er darf keine
+    Partitionen entfernen oder löschen solange er dazu nicht aufgefordert
+    wurde, aber es stellt immer noch etwas Risiko dar. Je weiter das Testen
+    voranschreitet desto stabiler und robuster wird der Prozess. Also bitte
+    denken Sie daran den Installer nicht auf Ihrer produktiven Umgebung mit
+    wertvollen Daten zu verwenden! Wir übernehmen keine Verantwortung für
+    jedlichen Datenverlust der während der Installation auftritt. Jeden
+    Fehlerbericht über den Installationsprozess wissen wir zu schätzen!
+
+
+Installationsmedien
+"""""""""""""""""""
+
+Das empfohlene Installationsmedium für AROS/i386-pc ist die CD, solange wir
+das gesamte System auf eine einzelne CD bekommen (mit der beigesteuerten
+Software). Das vereinfacht auch die Installation da Sie nicht zum übertragen
+der Software auf viele Disketten als Diskjockey auftreten müssen.
+
+Da im Moment noch keiner AROS auf CD verkauft (oder auf irgend einem anderen
+Medium zu diesem Zweck) benötigen Sie Zugriff auf einen CD Brenner um selbst
+eine Installations CD zu erstellen.
+
+
+CDROM
+^^^^^
+
+Schreiben
+'''''''''
+
+Laden sie einfach das ISO Abbild von der `download Seite`_ herunter und brennen
+Sie es mit Ihrem bevorzugten CD Brennprogramm auf eine CD. Es gibt viele Freeware
+CD Brennprogramme für alle Systeme und wir können Windows Anwender auf den 
+`InfraRecorder <http://infrarecorder.sourceforge.net>`__ aufmerksam machen -
+er ist kostenlos, klein und schnell und es ist sehr viel einfacher als Nero.
+
+
+Starten
+'''''''
+
+Der einfachste Weg von der AROS Installations-CD zu starten ist es, wenn Sie
+einen Rechner besitzem. der den Start von CD-ROM unterstützt. Um das starten
+von CD-ROM zu ermöglichen könnte etwas fummelei im BIOS Setup erforderlich
+sein, da es meistens standardmäßig deaktiviert ist. Legen Sie einfach die
+CD in das erste CD Laufwerk ein und starten Sie den Rechner neu. Der Startvorgang
+ist voll automatisch und wenn alles funktioniert sollten Sie nach einer
+kurzen Zeit einen netten Bildschirm sehen.
+
+Wenn Ihr Rechner den direkten Start von CD-ROM nicht unterstützt können Sie eine
+Startdiskette_ erstellen und diese zusammen mit der CD-ROM benutzen. Legen Sie einfach
+sowohl die Diskette als auch die CD in die passenden Laufwerke und starten Sie neu.
+AROS wird anfangen von der Diskette zu starten wird dann jedoch nachdem die 
+wichtigsten Dinge geladen wurden (inkl. dem CD-ROM Dateisystemtreiber) den
+Start von der CD-ROM fortsetzen.
+
+
+Diskette
+^^^^^^^^
+
+Heutzutage sind Disketten nur noch nützlich um zu Starten, falls das BIOS
+ihres PC keinen Start von CD erlaubt oder auf einigen wirklich alten PC's.
+Aber es wird immer noch unterstützt.
+
+
+Schreiben
+'''''''''
+
+Um eine Startdiskette zu erstellen müssen Sie das Diskettenabbild von der
+`Download Seite'_ herunterladen, das Archiv entpacken und das Startimage
+auf eine Diskette übertragen. Wenn Sie ein UNIX-ähnliches Betriebssystem
+wie Linux oder FreeBSD nutzen können Sie das mit folgendem Kommando
+erledigen:
+
+    > cd AROS-<version>-i386-pc-boot-floppy
+    > dd if=aros.bin of=/dev/fd0
+
+Wenn Sie Windows nutzen müssen Sie sich rawrite_ besorgen um das Abbild auf
+eine Diskette schreiben zu können. Bitte lesen Sie die Dokumentation zu
+rawrite_ um mehr über dessen Verwendung zu erfahren. Es existiert auch eine
+grafische Benutzeroberläche mit Namen rawwritewin.
+
+
+Starten
+'''''''
+
+Legen Sie einfach die Startdiskette in das Laufwerk und starten Sie den Rechner
+neu. Der Start ist voll autmatisch und wenn alles funktioniert sollten Sie nach
+einer weile einen netten Bildschirm sehen können.
+
+Installation auf Festplatte
+"""""""""""""""""""""""""""
+
+Seien Sie **GEWARNT** dass sich die HD Installation im Moment in 
+Teststatus befindet und für Ihre Daten **gefährlich** sein kann.
+Also stellen Sie sicher, dass der PC den Sie für die Installation verwenden
+keine produktiven Daten enthält oder dass Sie über ein vollständiges Backup
+verfügen. Der Einsatz einer virtuellen Maschine wird empfohlen, da es
+jedes mögliche Risiko minimiert und den Einsatz und Test von AROS auf
+jeder funktionierenden Maschine ermöglicht. Es gibt inzwischen viele freie
+VMs die bekanntermaßen mit AROS fuktionieren wie VirtualPC, Q, QEMU und VMWare.
+
+
+Vorbereitung
+^^^^^^^^^^^^
+
+Richten Sie zuerst Ihre Festplatte ein - entweder eine physische oder ein
+virtuelles Abbild. Bei einem echten Laufwerk könnte das den Einbau
+in der Maschine (immer ein guter Anfang) und das Einrichten des BIOS
+beinhalten. Bei der Festplatte eines Virtualisierers oder Emulators müssen
+Sie wahrscheinlich nur eine Option auswählen um ein neues Laufwerksabbild
+zu erstellen und es als Startgerät des virtuellen PC einrichten (Das
+CD Laufwerk muß jedoch während der Installation von AROS das erste Startgerät
+sein).
+
+Ein weiterer Schritt wird die Bereinigung der Festplatte von allen vorhandenen
+Partitionen sein, um alles zu entfernen was die erfolgreiche Partitionserstellung
+verhindern könnte. Die Installation von AROS zusammen mit einem anderen
+Betriebssystem ist möglich erfordert jedoch mehr Fähigkeiten und wird hier
+nicht behandelt. Hier werden wir lernen wie AROS als einziges System auf
+der Festplatte zu installieren ist.
+
+Momentan ist die Installationdurchsführung durch das InstallAROS Program
+repräsentiert, das sich im Verzeichnis *Tools* auf Ihrer StartCS befindet.
+Bitte starten Sie es durch einen Klick auf sein Icon. Es wird gestartet
+und zeigt Ihnen die Eingabemaske.
+
+*Aktuell* gibt es während der Laufwerkserkennung einen Fehler in Wanderer
+der AROS von der Laufwerksformatierung abhält (dieses Thema scheint bereits 
+umgangen zu sein). Also gehen Sie bitte in das Wanderer Menü, wählen Sie Beenden
+und bestätigen Sie bevor Sie weitermachen. Dann klicken Sie die WEITERMACHEN
+Schaltfläche im Fenster von InstallAROS um einen Bildschirm mit Installations-
+optionen zu erhalten.
+
+
+Nur AROS installieren
+^^^^^^^^^^^^^^^^^^^^^
+
+Die einfachste Situation ist nur AROS auf der Platte. Ihre Platte kann neuw
+oder mit nicht beötigten Datend darauf sein. Wählen Sie *Platte löschen*, um
+die vorhandenen Daten auf dem Laufwerk zu **löschen**.
+
+
+Installation von AROS zusammen mit Windows(R)/DOS(R)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+TODO
+
+Installation von AROS zusammen mit Linux/BSD
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+TODO
+
+Installation von AROS zusammen mit anderen Systemen
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+TODO
+
+Manuelle Installation
+^^^^^^^^^^^^^^^^^^^^^
+*(fast veraltet)*
+Da InstallAROS nun verwendbar ist, ist die folgende Information etwas
+veraltet aber könnte immer noch von einigem Interesse sein. Also wird
+sie hier aus Gründen der Information beibehalten.
+     
+(ALTE Anmerkungen)::
+    Wir empfehlen im Moment die Installation von AROS/i386-pc nicht auf einer
+    Festplatte[#]. Zum testen einiger seiner Funktionen müssen Sie AROS definitiv 
+    installieren und Workarounds werden empfohlen. Bitte beachten Sie, dass Sie
+    **auf keinen Fall** install auf Ihrer Arbeitsmaschine mit wertvollen Daten
+    auf der Festplatte verwenden sollten. Wir übernehmen keine Verantwortung für
+    jeglichen Datenverlust, der während der Installation auftritt. Jede 
+    Fehlermeldung zur Installation ist willkommen.
+    
+    [#]Es *ist* momentan möglich AROS/i386-pc auf einer Festplatte zu installieren,
+    aber die Vorgehensweise ist weit davon entfernt automatisch oder benutzerfreundlich 
+    abzulaufen und die erforderlichen Werkzeuge befinden sich immer noch sehr stark
+    unter Entwicklung und könnten sehr fehleranfällig sein. Daher empfehlen wir
+    zum Zeitpunkt als diese Anmerkung geschrieben wurde offiziell für unerfahrene 
+
+     
+
+Partitionierung
+'''''''''''''''
+
+Installation auf einer Partition
+
+Hier erfahren Sie wie AROS als einziges System auf dem PC und auf einer
+Partition installiert wird.
+Dies ist eine einfachere Installationsart.
+
+Dieses Kapitel könnte als etwas schwierig empfunden werden, da die install
+Funktion noch unvollständig ist. Zunächst merken Sie sich eine *allgemeine Regel*
+für diesen Prozess - *Neustart* nach jeder maßgeblichen Änderung am
+Dateisystem (Wir werden die entsprechenden Stellen kennzeichnen). Neustart
+bedeutet das schließen des HDToolbox Fensters wenn es geöffnet ist und
+Neustart des Rechners oder der VM als harter Reset. Sie können auch einen
+Soft Reset ausprobieren, indem Sie <reboot> EINGABETASTE im CLI Fenster eingeben.
+
+Zunächst suchen Sie ein Werkzeug auf der AROS CD mit dem Namen *HDToolbox*.
+Es befindet sich im Ordner Tools. Das ist für eine Weile ihr Festplattenquäler.
+Wenn Sie ihn starten werden Sie ein Fenster mit der Gerätetyp Auswahl sehen.
+In diesem Beispiel (hier und weiter unten) werden wir eine echte oder
+virtuelle IDE Festplatte (auch bekannt als ATA Festplatte) verwenden. Also
+wird beim klicken auf den *ata.device* Eintrag Devices:1 im linken Fenster
+angezeigt. Das ist Ihre Festplatte. Durch klicken auf diesen Eintrag werden
+Sie in die Liste der verfügbaren Festplatten wechseln.
+
+Also sollten wir hier unsere Festplatte gelistet sehen. Wenn es sich um eine
+virtuelle Festplatte handelt wird etwas wie  *QEMU Festplatte* oder das VMWare
+Gegenstück erscheinen. Wenn dies nicht der Fall ist müssen Sie sicherstellen,
+dass Ihre Festplatte korrekt vorbereitet ist. Ein Klick auf den Festplattennamen
+liefert uns einige Informationen::
+
+    Size: <Größe der Festplatte>
+    Partition Table: <Typ der aktuellen Partitionstabelle; muß nach dem löschen unbekannt lauten>
+    Partitions: <Anzahl der Parititonen auf der Festplatte; muß 0 sein da wir gerade angefangen haben>
+
+Nun müssen wir eine neue Partitionstabelle erstellen. Hier auf einem PC
+müssen wir eine Tabelle vom Typ *PC-MBR* erstellen. Um das zu tun drücken
+Sie bitte die Schaltfläche *Tabelle erstellen* und wählen Sie *PC-MBR* aus
+der Liste. Klicken Sie OK.
+
+Anschließend müssen wir die Änderungen auf die Platte speichern. Um das zu
+tun klicken Sie auf den Namen der Festplatte und klicken Sie *Änderungen speichern*.
+Beantworten Sie den Bestätigungsdialog mit *Ja*. Schließen Sie das HDToolbox
+Fenster und starten Sie das System erneut von der Live CD.
+
+Nachdem das System gestartet ist öffnen wieder Sie die HDToolbox. Nachdem wir
+wieder im Eintrag *ata.device* angekommen sind müssen wir jetzt die Information
+"Partitionstabelle: PC-MBR, Partitionen:0" sehen. Das ist in Ordnung, wir
+haben noch keine Parititionen definiert. Lassen Sie uns das jetzt machen.
+Klicken Sie auf den Namen der Festplatte um in die Parititionsliste zu gelangen.
+Die Liste ist noch leer. Klicken Sie auf die Schaltfläche *Eintrag erstellen*,
+wählen Sie den gesamten Platz durch einen Klick auf den nicht ausgewählten leeren
+Platz und einen Klick auf *OK*. Jetzt sollten Sie in der Liste einen Eintrag
+"Paritition 0" sehen. Wählen Sie ihn durch einen Klick aus, um diese Information
+zu erhalten::
+
+    Size: <Größe der Partition. Meistens entsprechend der Festplattengröße>
+    Partition table: Unknown <Noch nicht erstellt>
+    Partition type: AROS RDB Partition table <Das ist in Ordnung>
+    Active: No <Nicht aktiv>
+    Bootable: No <Nicht startfähig>
+    Automount: No <Wird nicht beim Systemstart gemountet>
+
+Hier kann es einige Unterschiede geben - erstellen Sie eine Partition als
+RDB Tabelle oder als gewöhnliche PC-MBR Partition. RDB (Rigid Disk Block)
+ist die kompatible Wahl und wurde für die Festplattenparititionierung des
+Amiga verwendet und wir können Sie auch verwenden. Allerdings unterstützt AROS 
+FFS Partitionen, die in einer allgemeinen PC-MBR Tabelle erstellt wurden wie
+normale FAT/NTFS/etc. Partitionen. Der zweite Weg kann als etwas moderner und
+kompatibler zu einigen neuen AROS Programmen betrachtet werden. Lassen Sie uns
+Beides betrachten.
+
+*FFS in RDB*
+Klicken Sie jetzt auf die Schaltfläche *Tabelle erstellen*, wählen Sie *RDB Tabelle*
+und klicken Sie OK. Um die Änderungen zu speichern gehen Sie *eine Ebene* nach
+oben durch klicken der Schaltfläche *Übergeordnet*, wählen Sie nochmals den
+Namen der Festplatte und klicken Sie die Schaltfläche *Änderungen sichern*.
+Beantworten Sie den Bestätigungsdialog zwei mal mit *Ja*. Verlassen Sie die
+HDToolbox und starten Sie die Maschine neu.
+
+*FFS in MBR*
+...fehlt noch
+
+Nach dem Start öffnen Sie die HDToolbox (Sie haben es bereits geraten). Die Information
+für unsere Partition 0 ist nun identisch außer dass die Partitionstabelle nun RDB
+ist (oder nicht). Diese Partition muß als Aktiv gesetzt werden. Um dies zu tun klicken
+Sie auf die Schaltfläche *Schalter*, wählen Sie das Auswahlkästchen *Aktiv* und klicken
+Sie *OK*. Was jetzt? Ja, speichern Sie die Änderungen indem Sie eine Ebene nach oben
+gehen und die Schaltfläche klicken. Beenden Sie und starten Sie neu.
+
+Warum starten wir so oft neu? Nun, die HDToolbox und die Systembibliotheken
+sind immer noch nicht fertig und sehr fehlerbehaftet. Das neu starten nach jedem
+Schritt hilft diese in einen initialen Zustand zurück zu versetzen.
+
+Nach dem Start muss uns die HDToolbox anzeigen dass die Paritition 0 aktiv
+geworden ist. Das ist in Ordnung, jetzt müssen wir die Platte erstellen auf der
+AROS installiert wird. Gehen Sie durch klicken des Eintrags "Partition 0" eine Ebene
+tiefer. Was jetzt? Genau, klicken Sie auf die Schaltfläche "Eintrag hinzufügen" und
+wählen Sie den gesamten freien Platz. Jetzt sehen Sie dort einen Eintrag "DH0" der
+usere Platte darstellt. Ein Klick darauf zeigt uns die Information::
+
+    Size: <nun...>
+    Partition Table: Unknown (es ist in Ordnung)
+    Partition Type: Fast Filesystem Intl <OK>
+    Active: No <OK>
+    Bootable: No <Wir müssen das auf Ja umschalten>
+    Automount: No <Wir müssen das auf Ja umschalten>
+
+Jetzt gehen Sie *2 Ebenen nach oben* zum Namen der Festplatte, klicken
+"Änderungen sichern", "Bestätigen", beenden und neu starten. Was sollten wir
+nach dem Neustart (sehr langweilig, nicht wahr?) tun? Ja, wir müssen die
+Schalter für DH0 in der HDToolbox setzen. Wir wechseln auf den Eintrag DH0
+und setzen die Schalter mit dem zugehörigen Schaltfläche und Auswahlkästchen:
+*Startfähig: Ja* und *Automount: Ja*. Speichern Sie die Änderungen nachdem
+Sie erneut 2 Ebenen nahj oben gegangen sind, bestätigen und starten Sie neu.
+
+*Wie lange müssen wir noch machen?* Nun, wir sind nun auf der hälfte des Wegs
+zum Erfolg. Nach dem neustart und überprüfen aller Einstellungen für DH0 müssen
+wir erkennen ob es jetzt in Ordnung ist. Dann können wir die HDToolbox beenden
+ohne dass Zweifel bestehen. Jetzt ist es Zeit für etwas CLI Magie.
+
+Formatierung
+''''''''''''
+
+Wir müssen das erstellte Laufwerk DH0 formatieren um es verwenden zu können. Momentan
+gibt es in AROS die Auswahlmöglichkeit zwischen zwei Dateisystemen - Fast FileSystem (FFS)
+und Smart FileSystem (SFS). FFS ist bekannt dafür etwas stabiler und kompatibel mit den
+meisten Anwendungen zu sein. SFS ist ausfallsicherer und fortgeschritten hat aber einige
+Probleme mit einigen Programmen. Momentan müssen wir es auf FFS setzen, da der
+GRUB Bootloader SFS nicht unterstützt (GRUB2 wird es unterstützen). Beachten Sie
+auch dass Sie Probleme beim Einsatz einiger portierter Anwendungen (wie beispielweise gcc) 
+mit SFS haben könnten. Öffnen Sie also jetzt das CLI Fenster (Rechtsklick auf das obere
+Menü und wählen Sie Shell aus dem ersten Wanderer Menü). In der Eingabeaufforderung
+geben Sie das Info Kommando (tippen Sie ``info`` und EINGABETASTE). Sie sollten
+unsere unsere DH0 in der Liste als ``DH0: Keine gültige DOS Platte`` sehen. Jetzt
+werden wir sie formatieren mit dem Kommando::
+
+    >format DRIVE=DH0: NAME=AROS FFS INTL
+    About to format drive DH0:. This will destroy all data on the drive. Are 
+    you sure ? (y/N)
+
+Geben Sie "y" und EINGABETASTE ein und warten Sie eine Sekunde. Sie sollten den
+Text ``Formatierung...beendet`` sehen. Wenn Sie einen Fehler erhalten prüfen
+Sie alle Partitionseinstellunegn in der HDToolbox da etwas fehlen könnte und
+versuchen Sie es erneut.
+
+Wenn Sie auf Probleme bei der Formatierung stoßen (wie FEHLERmeldungen, insbesondere
+wenn Sie Partitionen in RDB verwenden), was unwahrscheinlich ist, dann können Sie
+das gute alte FORMAT64 Werkzeug des Amiga verwenden::
+
+    >extras/aminet/format64 DRIVE DH0: Name AROS FFS INTL
+
+
+Jetzt sollte das Kommando folgendes anzeigen::
+
+    >DH0: <size>  <used> <free> <full 0%> <errors> <r/w state> <FFS> <AROS>
+
+Das war es. Zeit für den Neustart vor der Installation.
+
+.. Anmerkung:: Wenn Ihnen dies alles so langweilig erscheint dass Sie es kaum aushalten, dann
+          gibt es Abhilfe wenn Sie beabsichtigen AROS nur auf einer virtuellen Maschine zu
+          verwenden. Zunächst können Sie ein vorinstalliertes Paket wie *WinAROS/WinAROS Lite*
+          besorgen - Dieses System ist bereits installiert aber könnte veraltet sein. Zweitens
+          können Sie in den `AROS Archives`_ nach einem *Installationskit* suchen, das
+          vorgefertigte virtuelle Festplatten entgält die bereits fertig und bereit zur
+          Installation sind damit sie die vorangehende Prozedur überspringen und eine
+          aktuelle AROS Version installieren können.
+
+
+Kopieren des Systems
+''''''''''''''''''''
+
+Nach dem Neustart werden Sie feststellen, dass Sie unsere AROS Festplatte auf
+dem Desktop sehen können und dass sie leer ist. Jetzt müssen wir sie mit Dateien
+befüllen.
+
+Nachdem nun die Drag'n'Drop Unterstützung in AROS entwickelt wurde kann das
+gesamte System einfach von der LiveCD nur durch ziehen der Dateien in den
+DH0: Ordner kopiert werden. Es muss dann nur noch die Datei dh0:boot/grub/menu.lst
+mit dh0:boot/grub/menu_dh.lst.DH0 ersetzt werden.
+
+Es gibt einen installer in AROS der so unvollständig wie die HDToolbox ist, aber
+er kann verwendet werden. Zumindest können wir es versuchen. Also hier der erste
+Weg zu installieren.
+
+1. Starten Sie *InstallAROS* aus dem Ordner Tools. Sie werden den Willkommensbildschirm
+sehen der Ihnen das selbe sagt wie ich - Wir verwenden die Alpha Version. Lasst
+uns etwas daraus machen ;). Es gibt eine Schaltfläche *Vorwärts* die sie anklicken
+können. Danach werden Sie die AROS Public License sehen und Sie sollten sie
+akzeptieren um weitermachen zu können. Dann werden Sie das Fenster mit Installationsoptionen
+sehen (Wenn Nein angegeben ist das betreffende Kästchen deaktivieren)::
+
+
+    Partitionierungsoptionen anzeigen...    []
+        <Nein. Weil wir das bereits eledigt haben>
+    Partitionen formatieren                 []
+        <Nein. Das haben wir bereits erledigt>
+    Wählen Sie Sprachoptionen               []
+        <Nein. Das machen Sie besser später>
+    Installation des AROS Kernsystems       [V]
+        <Ja, wir benötigen das. Wir sind hier um das zu erledigen>
+    Weitere Software installieren           [V] 
+        <Ja. Deaktivieren Sie nur wenn Sie eine kleine Installation wünschen>
+    Entwicklungssoftware installieren       []
+        <Nein. Das ist momentan hauptsächlich ein Platzhalter>
+    Bootloader Optionen anzeigen            [V]
+        <Ja, der Bootloader wird ansonsten nicht installiert>
+
+Lassen sie mich anmerken, dass *Partitionsoptionen anzeigen* nicht auswählbar
+und ausgegraut sein kann, wenn der installer keine passende Partition finden kann.
+Klicken Sie *Weiter* wenn sie alles an/abgewählt haben was wir benötigen.
+Das nächste Fenster zeigt uns mögliche Installationsziele an::
+
+    Ziellaufwerk
+    [default:DH0]
+    
+    DH0  <Das ist korrekt>
+    
+    Verwende 'Work' Partition                               [] 
+        <Wählen Sie es ab, wir installieren alles auf eins>
+    Kopieren von Extras und Entwicklerdateien nach Work?    [] 
+        <Das selbe wie zuvor>
+    Work Laufwerk ... <übersprungen>
+    
+Nachdem wir es ketzt abgewählt haben klicken Sie *Weiter*. Das Fenster mit den
+Bootloader Optionen erscheint. Hier können wir nur prüfen, ob GRUB (*GRand Unified Bootloader*)
+auf DH0 installiert werden soll und auf welchem Gerät. Klicken Sie erneut *Weiter*.
+
+Jetzt sagt uns das Fenster dass wir bereit zur Installtaion sind. Klicken Sie
+noch einmal auf *Weiter*. Mögen Sie diese hübsche Schaltfläche? ;)
+
+Danach erscheint der Fortschrittsbalken zum Kopiervorgang während Dateien
+kopiert werden. Warten Sie ein wenig bis der Prozess beendet ist. Danach erhalten
+Sie den Abschlußbildschirm und ein Auswahlkästchen *Neustart*. Lassen Sie es
+ausgewählt und klicken Sie auf *Weiter*. Nein das war es noch nicht - warten Sie
+bis zum letzten offenen Schritt. Jetzt startet unsere Maschine neu von der Live CD
+mit den selben Einstellungen wie zuvor.
+
+Installation des Bootloader
+'''''''''''''''''''''''''''
+
+Wir sehen immer noch unsere AROS Platte und alle Dateien darauf. Haben wir
+in den vorangegangenen Schritten nicht bereits den Bootloader installiert?
+Was fehlt noch? Nun wenn Sie einen neuen nächtlichen Build verwenden, dann
+sollte 'GRUB <http://en.wikipedia.org/wiki/GRUB>'__ bereits installiert und
+einsatzbereit sein. Sie können diesen Schritt überspringen. Falls nicht
+lesen Sie bitte.
+
+Für ältere Versionen (vor November 2006)
+es gab einen Fehler in GRUB der die korrekte Installation beim ersten Versuch
+verhinderte. Wenn Sie jetzt nicht starten können un Meldungen wie GRUB GRUB GRUB
+usw. erhalten, dann lesen Sie das folgende.
+Die Neuinstallation im zweiten Versuch behebt dies für gewöhnlich. Also benötigen
+wir nochmal InstallAROS. Wiederholen Sie alle vorangegangenen Schritte ab Punkt 1
+aber deaktivieren Sie alle Auswahlkästchen. Nach dem letzten Klick auf *Weiter* wird
+GRUB erneut installiert und ein Fenster wird angezeigt, das Sie auffordert den
+Schreibvorgang zu bestätigen. Antworten Sie Ja so oft das erforderlich ist. Und auf
+der letzten deaktivieren Sie das Auswahlkästchen Neustart, beenden das 
+Installationsprogramm und schalten die Maschine aus.
+
+Alternativ kann GRUB aus der Shell mit folgendem Kommando installiert werden::
+
+    c:install-i386-pc device ata.device unit 0 PN <pn> grub dh0:boot/grub kernel dh0:boot/aros-i386.gz
+
+wobei PN <pn> (oder PARTITIONNUMBER <pn>) die nummer der Partition ist auf der GRUB
+installiert wird.
+
+
+Vorbereitung zum Start
+''''''''''''''''''''''
+
+Wir haben nun den ersten Kurs der Installationsalchemie abgeschlossen und
+AROS sollte nun bereit sein. Wir müssen die Live CD aus dem CD Laufwerk
+entfernen (oder den Start von CD in der VM deaktivieren) und es prüfen.
+Hören Sie den Trommelwirbel? ;)
+
+Wenn etwas schief geht kann es einige Antworten geben...
+
+
+Fehlerbehebung
+''''''''''''''
+
+Der Installationsprozess ist einer der am meisten durch Neulinge Hinterfragte
+in Foren. Sie können auch im FAQ lesen, falls es dort eine Antwort auf Ihre
+Fragen gibt. Irgendwelche Anmerkungen? ...
+
+Installation von AROS neben anderen Systemen
+''''''''''''''''''''''''''''''''''''''''''''
+
+In den zuvor beschriebenen Schritten  haben wir AROS als das *einzige* System auf
+Festplatte installiert. Aber kann es mit Multiboot mit anderen Systemen auf Festplatte
+installiert werden? Ja. Aber wieder wird diese Aufgabe schwierig sein.
+
+AROS und Windows
+
+Lassen Sie uns die Situation betrachten wenn Sie nur Windows(tm) XP installiert
+haben und AROS auf diese Festplatte bringen wollen.
+Windows NT System können sowohl auf FAT als auch NTFS Dateisystemen installiert
+werden. Obwohl NTFS sicherer und robuster ist wird es (leider) nicht von GRUB 
+unterstützt.
+
+AROS und Linux (und andere Betriebssysteme die den GRUB Bootloader verwenden)
+
+Betrachten wir die Situation wenn Sie 3 Systeme auf Ihrer Festplatte betreiben
+möchten - Windows, Linux und AROS.
+
+Vorbereiten der Festplatte
+
+Fortsetzung folgt ...
+
+AROS/i386-PPC-gehostet
+----------------------
+
+Voraussetzungen
+"""""""""""""""
+
+Durch jemanden zu schreiben.
+
+AROS/m68k-Rückportierung bekannt als AfA
+----------------------------------------
+
+Dies ist keine üblicher nativer/gehosteter Flavour von AROS aber etwas das man
+als *Rückportierung* bezeichnen kann. Aktuell handelt es sich um einen Satz
+Bibliotheken und Binärdateien welche die Fähigkeiten des original AmigaOS
+verbessern. AfA steht für AROS für Amigas.
+
+Voraussetzungen
+"""""""""""""""
+
+Durch jemanden zu schreiben.
+
+Installation
+""""""""""""
+
+Installation:
+
++ kopieren Sie das Verzeichnis AfA_OS_Libs in Ihre sys: Startlpartition des
+  Amigalaufwerks. Wenn Sie es hier nicht mögen können Sie es irgendwo hinkopieren
+  und AfA_OS: dem Verzeichnis zuweisen in dem die AfA_IS_Libs abgelegt sind.
+  Kopieren Sie Libs:freetype2.library in Ihr sys:libs Verzeichnis.
++ Kopieren Sie C:AfA_OS_Loader in Ihr sys:fonts Verzeichnis
++ Kopieren Sie Fonts: in Ihr sys:fonts Verzeichnis. Wenn Sie weitere
+  Schriftarten benötigen, dann verwenden Sie ide Zeichensätze von AROS oder MOS.
++ Kopieren Sie prefs: in Ihr sys:prefs Verzeichnis.
+
+Um es während des Startvorgangs zu starten fügen Sie AfA_OS_Loader in Ihre
+S:startup-sequence direkt for IPrefs ein. Es muß nach dem Patchen der Werkzeuge
+wie MCP oder picasso96/cgx eingefügt werden, da diese die AfA_OS Funktionen
+zurück patchen.
+
+Wenn Sie es mit dem Parameter MOUSESTART (muss Großgeschrieben sein) starten,
+dann müssen Sie während des Startvorgangs die linke Maustaste gedrückt halten
+um die Module zu laden anstatt Sie zu überspringen.
+
+Um zu sehen dass alles funktioniert starten Sie das Programm "TextBench" aus
+diesem Archiv. Die Geschwindigkeit des TTF Antialiasing ist kein Gewinner bei
+der Textdarstellung, es ist nicht optimiert (Lesen Sie im aatext Quellcode),
+aber ich hoffe es ist schnell genug um auch auf einem 060/50 MHz verwendbar zu sein.
+
+
+Fußnoten
+========
+
+.. _`Download Seite`: ../../download
+
+.. _rawrite: http://uranus.it.swin.edu.au/~jn/linux/rawwrite.htm
+
+.. _`AROS Archives`: http://archives.aros-exec.org
