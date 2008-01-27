@@ -1,0 +1,67 @@
+=============
+Status Update
+=============
+
+:Autor:     Paolo Besser
+:Datum:     2007-10-01
+
+Aktuelle Neuigkeiten
+--------------------
+
+Brandheiße Neuigkeiten! Neil Cafferkey hat einen brandneuen 'installer'__
+für AROS ausgeliefert das klarere und sichere Installationen auf Festplatten
+ermöglicht. Folgendes sind die neuen Funktionen:
+
+- Installationslaufwerk und Partitionen können jetzt angegeben werden.
+- Das Erstellen von Arbeitspartitionen funktioniert jetzt.
+- Parititionsgrößen können nun angegeben werden und vorhandene Partitionen werden nicht geändert.
+- Windows wird nun zum GRUB Startmenü hinzugefügt, wenn eine vorhandene Windows Systempartition gefunden wird
+- Die Spracheinstellungen können während der Installation angegeben werden.
+
+
+Bitte beachten Sie dennoch dass es Sich um Beta Software handelt. Anbei einige
+Warnungen von Neil: "Der neue Festplatten Installer ist ab sofort auf der
+nächtlichen ISO enthalten und bereit zum testen. Allerdings gibt es aktuell
+einen Fehler entweder in Wanderer oder FFS der umgangen werden muß. Nach dem
+Starten des Installer müssen Sie Wanderer beenden bevor Sie weitermachen (es
+sei denn Sie möchten keine Parititonen formatieren).
+Seien Sie sehr vorsichtig mit dieser Installer Version, z.B. bieten
+Sie ihm keine Maschine mit nicht gesicherten wertvollen Daten an. Er sollte
+alle vorhandenen Partitionen beibehalten wenn es gefordert ist, aber keiner
+außer mir hat das bislang getestet."
+
+Wenn Sie eine Testmaschine ohne wichtige Daten darauf haben, dann wäre es
+sehr tüchtig von Ihnen den nächtlichen Build von 10-01 (oder neuer) herunter zu
+laden und uns dabei zu helfen Fehler zu finden. Sie können den Bug Tracker
+verwenden oder eine Nachricht in dieser AROS-Exec `Diskussion`__ hinterlassen.
+
+
+Präsentation von AROS
+---------------------
+
+Wie zuvor auf dieser Webseite angekündigt war AROS ein Gaststar
+auf der `Pianeta Amiga 2007`__. Während der bekannten Amiga Show
+hat Paolo Besser AROS einer Nische interessierter Amiga Anhänger
+vorgestellt. Das Eriegnis wurde von einigen wichtigen IT News
+Seiten wie `TGM Online`__ und`HW Upgrade`__ begleitet. Ein Bericht
+der Show wurde von der `The AROS Show`__ (Lesen Sie es `hier`__)
+veröffentlicht. Sie können sich auch auf YouTube ein nettes `Video`__ 
+ansehen.
+
+AROS Weltweit
+-------------
+
+Unsere Webseite hat einige neue Dokumentationsübersetzungen erhalten - namentlich
+in Griechisch (von Ioannis Koniaris), Spanisch (von Ariel Gomez) und Tschechisch
+(von  Petr Novak), mit der üblichen und erforderlichen Hilfe von Neil Cafferkey.
+Schwedische (von Jon Anderson) und russische (von Softy) Übersetzungen kommen
+demnächst. Auch kommen weitere Updates in weiteren Sprachen (von... Ihnen!?).
+
+__ http://mama.indstate.edu/users/nova/installer.jpg
+__ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=2319
+__ http://www.pianetaamiga.it/2007/eng/
+__ http://tgmonline.futuregamer.it/news/settembre2007/20070910111905
+__ http://www.hwupgrade.it/news/videogiochi/presentazione-italiana-per-l-os-indipendente-aros_22619-0.html
+__ http://arosshow.blogspot.com
+__ http://arosshow.blogspot.com/2007/09/pianeta-amiga-2007-report-from-paolo.html
+__ http://video.google.it/videoplay?docid=-3563710058663289244
