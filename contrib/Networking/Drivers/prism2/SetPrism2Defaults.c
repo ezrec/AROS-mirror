@@ -33,8 +33,13 @@ MA 02111-1307, USA.
 
 
 #ifndef UPINT
+#ifdef __AROS__
+typedef IPTR UPINT;
+typedef SIPTR PINT;
+#else
 typedef ULONG UPINT;
 typedef LONG PINT;
+#endif
 #endif
 
 #define UTILITY_VERSION 39
@@ -53,7 +58,7 @@ static UPINT StrLen(const TEXT *s);
 
 const TEXT template[] =
    "SSID/K,KEY/K,TEXTKEY/K,NOKEY/S,MANAGED/S,ADHOC/S,CHANNEL/K/N";
-const TEXT version_string[] = "$VER: SetPrism2Defaults 1.1 (1.5.2005)";
+const TEXT version_string[] = "$VER: SetPrism2Defaults 1.2 (23.7.2005)";
 const TEXT dos_name[] = DOSNAME;
 const TEXT utility_name[] = UTILITYNAME;
 const TEXT options_name[] = "Prism 2 options";

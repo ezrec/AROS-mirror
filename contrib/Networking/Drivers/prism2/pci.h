@@ -40,6 +40,7 @@ struct BusContext
    const struct TagItem *unit_tags;
    UWORD bus_type;
    BOOL have_card;
+   APTR reset_handler;
 };
 
 

@@ -2,7 +2,7 @@
 
 File: unit.c
 Author: Neil Cafferkey
-Copyright (C) 2001-2005 Neil Cafferkey
+Copyright (C) 2001-2006 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ MA 02111-1307, USA.
 #include <clib/alib_protos.h>
 #endif
 #include <proto/utility.h>
+#include <proto/dos.h>
 #include <proto/timer.h>
 
 #include "device.h"
@@ -46,6 +47,9 @@ MA 02111-1307, USA.
 #define STACK_SIZE 4096
 #define INT_MASK \
    (P2_EVENTF_INFO | P2_EVENTF_ALLOCMEM | P2_EVENTF_TXFAIL | P2_EVENTF_RX)
+#define MAX_S_REC_SIZE 50
+#define LUCENT_DBM_OFFSET   149
+#define INTERSIL_DBM_OFFSET 100
 
 
 #ifndef AbsExecBase
@@ -67,6 +71,7 @@ static VOID TXInt(REG(a1, struct DevUnit *unit), REG(a6, APTR int_code));
 static VOID InfoInt(REG(a1, struct DevUnit *unit), REG(a6, APTR int_code));
 static VOID ReportEvents(struct DevUnit *unit, ULONG events,
    struct DevBase *base);
+static BOOL LoadFirmware(struct DevUnit *unit, struct DevBase *base);
 static VOID P2DoCmd(struct DevUnit *unit, UWORD command, UWORD param,
    struct DevBase *base);
 static BOOL P2Seek(struct DevUnit *unit, UWORD path_no, UWORD rec_no,
@@ -87,7 +92,8 @@ static UPINT StrLen(const TEXT *s);
 
 
 static const UBYTE snap_stuff[] = {0xaa, 0xaa, 0x03, 0x00, 0x00, 0x00};
-static const UBYTE options_name[] = "Prism 2 options";
+static const TEXT options_name[] = "Prism 2 options";
+static const TEXT firmware_file_name[] = "DEVS:Firmware/HermesII";
 
 
 #ifdef __amigaos4__
@@ -164,7 +170,7 @@ struct DevUnit *CreateUnit(ULONG index, APTR card,
    if(success)
    {
       InitSemaphore(&unit->access_lock);
-      InitialiseAdapter(unit, FALSE, base);
+      success = InitialiseAdapter(unit, FALSE, base);
       unit->flags |= UNITF_HAVEADAPTER;
 
       /* Create the message ports for queuing requests */
@@ -204,19 +210,23 @@ struct DevUnit *CreateUnit(ULONG index, APTR card,
 
       /* Initialise status, transmit, receive and stats interrupts */
 
-      unit->status_int.is_Node.ln_Name = (TEXT *)device_name;
+      unit->status_int.is_Node.ln_Name =
+         base->device.dd_Library.lib_Node.ln_Name;
       unit->status_int.is_Code = (APTR)StatusInt;
       unit->status_int.is_Data = unit;
 
-      unit->rx_int.is_Node.ln_Name = (TEXT *)device_name;
+      unit->rx_int.is_Node.ln_Name =
+         base->device.dd_Library.lib_Node.ln_Name;
       unit->rx_int.is_Code = (APTR)RXInt;
       unit->rx_int.is_Data = unit;
 
-      unit->tx_int.is_Node.ln_Name = (TEXT *)device_name;
+      unit->tx_int.is_Node.ln_Name =
+         base->device.dd_Library.lib_Node.ln_Name;
       unit->tx_int.is_Code = (APTR)TXInt;
       unit->tx_int.is_Data = unit;
 
-      unit->info_int.is_Node.ln_Name = (TEXT *)device_name;
+      unit->info_int.is_Node.ln_Name =
+         base->device.dd_Library.lib_Node.ln_Name;
       unit->info_int.is_Code = (APTR)InfoInt;
       unit->info_int.is_Data = unit;
 
@@ -246,7 +256,7 @@ struct DevUnit *CreateUnit(ULONG index, APTR card,
 
       task->tc_Node.ln_Type = NT_TASK;
       task->tc_Node.ln_Pri = TASK_PRIORITY;
-      task->tc_Node.ln_Name = (APTR)device_name;
+      task->tc_Node.ln_Name = base->device.dd_Library.lib_Node.ln_Name;
       task->tc_SPUpper = stack + STACK_SIZE;
       task->tc_SPLower = stack;
       task->tc_SPReg = stack + STACK_SIZE;
@@ -342,20 +352,21 @@ VOID DeleteUnit(struct DevUnit *unit, struct DevBase *base)
 /****i* prism2.device/InitialiseAdapter ************************************
 *
 *   NAME
-*	InitialiseAdapter -- .
+*	InitialiseAdapter
 *
 *   SYNOPSIS
-*	InitialiseAdapter(unit)
+*	success = InitialiseAdapter(unit, reinsertion)
 *
-*	VOID InitialiseAdapter(struct DevUnit *);
+*	BOOL InitialiseAdapter(struct DevUnit *, BOOL);
 *
 *   FUNCTION
 *
 *   INPUTS
 *	unit
+*	reinsertion
 *
 *   RESULT
-*	None.
+*	success - Success indicator.
 *
 ****************************************************************************
 *
@@ -367,6 +378,7 @@ BOOL InitialiseAdapter(struct DevUnit *unit, BOOL reinsertion,
    UWORD vendor, version, revision, i;
    BOOL success = TRUE;
    UBYTE address[ETH_ADDRESSSIZE];
+   WORD length;
 
    /* Reset card */
 
@@ -382,53 +394,71 @@ BOOL InitialiseAdapter(struct DevUnit *unit, BOOL reinsertion,
 
    P2DoCmd(unit, P2_CMD_INIT, 0, base);
 
-   /* Determine firmware type */
+   /* Determine firmware type and download firmware if necessary */
 
-   P2DoCmd(unit, P2_CMD_ACCESS, P2_REC_STAIDENTITY, base);
-
-   P2Seek(unit, 1, P2_REC_STAIDENTITY, 4, base);
-   unit->LEWordIn(unit->card, P2_REG_DATA1);
-   vendor = unit->LEWordIn(unit->card, P2_REG_DATA1);
-   version = unit->LEWordIn(unit->card, P2_REG_DATA1);
-   revision = unit->LEWordIn(unit->card, P2_REG_DATA1);
-
-   if(vendor == 1)
-      unit->firmware_type = LUCENT_FIRMWARE;
-   else if(vendor == 2 && (version == 1 || version == 2) && revision == 1)
-      unit->firmware_type = SYMBOL_FIRMWARE;
-   else
-      unit->firmware_type = INTERSIL_FIRMWARE;
-
-   /* Get card capabilities and default values */
-
-   if(P2GetWord(unit, P2_REC_HASWEP, base) != 0)
-      unit->flags |= UNITF_HASWEP;
-   unit->channel = P2GetWord(unit, P2_REC_OWNCHNL, base);
-
-   /* Get default MAC address */
-
-   P2DoCmd(unit, P2_CMD_ACCESS, P2_REC_ADDRESS, base);
-
-   P2Seek(unit, 1, P2_REC_ADDRESS, 4, base);
-   unit->WordsIn(unit->card, P2_REG_DATA1, (UWORD *)address,
-      ETH_ADDRESSSIZE / 2);
-
-   /* If card has been re-inserted, check it has the same address as
-      before */
-
-   if(reinsertion)
+   P2DoCmd(unit, P2_CMD_ACCESS, P2_REC_PRIIDENTITY, base);
+   P2Seek(unit, 1, P2_REC_PRIIDENTITY, 0, base);
+   length = unit->LEWordIn(unit->card, P2_REG_DATA1);
+   if(length != 5)
    {
-      for(i = 0; i < ETH_ADDRESSSIZE; i++)
-         if(address[i] != unit->default_address[i])
-            success = FALSE;
+      unit->firmware_type = HERMES2_FIRMWARE;
+      success = LoadFirmware(unit, base);
    }
+   else
+   {
+      P2DoCmd(unit, P2_CMD_ACCESS, P2_REC_STAIDENTITY, base);
+
+      P2Seek(unit, 1, P2_REC_STAIDENTITY, 4, base);
+      unit->LEWordIn(unit->card, P2_REG_DATA1);
+      vendor = unit->LEWordIn(unit->card, P2_REG_DATA1);
+      version = unit->LEWordIn(unit->card, P2_REG_DATA1);
+      revision = unit->LEWordIn(unit->card, P2_REG_DATA1);
+
+      if(vendor == 1)
+         unit->firmware_type = LUCENT_FIRMWARE;
+      else if(vendor == 2 && (version == 1 || version == 2)
+         && revision == 1)
+         unit->firmware_type = SYMBOL_FIRMWARE;
+      else
+         unit->firmware_type = INTERSIL_FIRMWARE;
+   }
+
    if(success)
+   {
+      /* Get card capabilities and default values */
+
+      if(P2GetWord(unit, P2_REC_HASWEP, base) != 0)
+         unit->flags |= UNITF_HASWEP;
+      unit->channel = P2GetWord(unit, P2_REC_OWNCHNL, base);
+
+      /* Get default MAC address */
+
+      P2DoCmd(unit, P2_CMD_ACCESS, P2_REC_ADDRESS, base);
+
+      P2Seek(unit, 1, P2_REC_ADDRESS, 4, base);
+      unit->WordsIn(unit->card, P2_REG_DATA1, (UWORD *)address,
+         ETH_ADDRESSSIZE / 2);
+
+      /* If card has been re-inserted, check it has the same address as
+         before */
+
+      if(reinsertion)
+      {
+         for(i = 0; i < ETH_ADDRESSSIZE; i++)
+            if(address[i] != unit->default_address[i])
+               success = FALSE;
+      }
+   }
+
+   if(success)
+   {
       CopyMem(address, unit->default_address, ETH_ADDRESSSIZE);
 
-   /* Get initial on-card TX buffer */
+      /* Get initial on-card TX buffer */
 
-   unit->tx_frame_id = P2AllocMem(unit,
-      P2_FRM_ETHFRAME + ETH_SNAPHEADERSIZE + ETH_MTU, base);
+      unit->tx_frame_id = P2AllocMem(unit,
+         P2_H2FRM_ETHFRAME + ETH_SNAPHEADERSIZE + ETH_MTU, base);
+   }
 
    /* Return */
 
@@ -454,8 +484,7 @@ BOOL InitialiseAdapter(struct DevUnit *unit, BOOL reinsertion,
 VOID ConfigureAdapter(struct DevUnit *unit, struct DevBase *base)
 {
    UWORD i, key_length, port_type;
-   UPINT data_reg;
-   struct WEPKey *keys;
+   const struct WEPKey *keys;
 
    /* Set MAC address */
 
@@ -481,26 +510,32 @@ VOID ConfigureAdapter(struct DevUnit *unit, struct DevBase *base)
    P2SetID(unit, P2_REC_DESIREDSSID, unit->ssid, unit->ssid_length,
       base);
 
+   /* Transmit at 11Mbps, with fallback */
+
+   if(unit->firmware_type == INTERSIL_FIRMWARE
+      || unit->firmware_type == SYMBOL_FIRMWARE)
+      P2SetWord(unit, P2_REC_TXRATE, 0xf, base);
+
    /* Configure encryption */
 
    if(unit->encryption == S2ENC_WEP)
    {
-      if(unit->firmware_type == LUCENT_FIRMWARE)
+      if(unit->firmware_type == LUCENT_FIRMWARE
+         || unit->firmware_type == HERMES2_FIRMWARE)
       {
          P2SetWord(unit, P2_REC_ALTENCRYPTION, TRUE, base);
          P2SetWord(unit, P2_REC_ALTTXCRYPTKEY, 0, base);
          P2Seek(unit, 1, P2_REC_DEFLTCRYPTKEYS, 0, base);
-         data_reg = P2_REG_DATA1;
-         unit->LEWordOut(unit->card, data_reg, P2_ALTWEPRECLEN);
-         unit->LEWordOut(unit->card, data_reg, P2_REC_DEFLTCRYPTKEYS);
+         unit->LEWordOut(unit->card, P2_REG_DATA1, P2_ALTWEPRECLEN);
+         unit->LEWordOut(unit->card, P2_REG_DATA1, P2_REC_DEFLTCRYPTKEYS);
          keys = unit->keys;
          for(i = 0; i < IEEE802_11_WEPKEYCOUNT; i++)
          {
             key_length = keys[i].length;
             if(key_length == 0)
                key_length = IEEE802_11_WEP64LEN;
-            unit->LEWordOut(unit->card, data_reg, key_length);
-            unit->WordsOut(unit->card, data_reg, (UWORD *)keys[i].key,
+            unit->LEWordOut(unit->card, P2_REG_DATA1, key_length);
+            unit->WordsOut(unit->card, P2_REG_DATA1, (UWORD *)keys[i].key,
                (key_length + 1) / 2);
          }
 
@@ -528,7 +563,8 @@ VOID ConfigureAdapter(struct DevUnit *unit, struct DevBase *base)
    }
    else
    {
-      if(unit->firmware_type == LUCENT_FIRMWARE)
+      if(unit->firmware_type == LUCENT_FIRMWARE
+         || unit->firmware_type == HERMES2_FIRMWARE)
          P2SetWord(unit, P2_REC_ALTENCRYPTION, FALSE, base);
       else
          P2SetWord(unit, P2_REC_ENCRYPTION,
@@ -833,12 +869,12 @@ static struct AddressRange *FindMulticastRange(struct DevUnit *unit,
    range = (APTR)unit->multicast_ranges.mlh_Head;
    tail = (APTR)&unit->multicast_ranges.mlh_Tail;
 
-   while((range != tail) && !found)
+   while(range != tail && !found)
    {
-      if((lower_bound_left == range->lower_bound_left) &&
-         (lower_bound_right == range->lower_bound_right) &&
-         (upper_bound_left == range->upper_bound_left) &&
-         (upper_bound_right == range->upper_bound_right))
+      if(lower_bound_left == range->lower_bound_left &&
+         lower_bound_right == range->lower_bound_right &&
+         upper_bound_left == range->upper_bound_left &&
+         upper_bound_right == range->upper_bound_right)
          found = TRUE;
       else
          range = (APTR)range->node.mln_Succ;
@@ -868,7 +904,6 @@ static struct AddressRange *FindMulticastRange(struct DevUnit *unit,
 
 static VOID SetMulticast(struct DevUnit *unit, struct DevBase *base)
 {
-   UPINT data_reg;
    ULONG address_left;
    UWORD address_right, i = 0;
    struct AddressRange *range, *tail;
@@ -877,7 +912,6 @@ static VOID SetMulticast(struct DevUnit *unit, struct DevBase *base)
    /* Fill in multicast list */
 
    P2Seek(unit, 1, P2_REC_MCASTLIST, 4, base);
-   data_reg = P2_REG_DATA1;
 
    range = (APTR)unit->multicast_ranges.mlh_Head;
    tail = (APTR)&unit->multicast_ranges.mlh_Tail;
@@ -890,9 +924,10 @@ static VOID SetMulticast(struct DevUnit *unit, struct DevBase *base)
 
       while(!range_ended && i++ < P2_MAXMCASTENTRIES)
       {
-         unit->BEWordOut(unit->card, data_reg, (UWORD)(address_left >> 16));
-         unit->BEWordOut(unit->card, data_reg, (UWORD)address_left);
-         unit->BEWordOut(unit->card, data_reg, (UWORD)address_right);
+         unit->BEWordOut(unit->card, P2_REG_DATA1,
+            (UWORD)(address_left >> 16));
+         unit->BEWordOut(unit->card, P2_REG_DATA1, (UWORD)address_left);
+         unit->BEWordOut(unit->card, P2_REG_DATA1, (UWORD)address_right);
 
          if(address_left == range->upper_bound_left &&
             address_right == range->upper_bound_right)
@@ -929,8 +964,9 @@ static VOID SetMulticast(struct DevUnit *unit, struct DevBase *base)
          /* Only commit multicast list if promiscuity is off */
 
          P2Seek(unit, 1, P2_REC_MCASTLIST, 0, base);
-         unit->LEWordOut(unit->card, data_reg, 1 + ETH_ADDRESSSIZE / 2 * i);
-         unit->LEWordOut(unit->card, data_reg, P2_REC_MCASTLIST);
+         unit->LEWordOut(unit->card, P2_REG_DATA1,
+            1 + ETH_ADDRESSSIZE / 2 * i);
+         unit->LEWordOut(unit->card, P2_REG_DATA1, P2_REC_MCASTLIST);
          P2DoCmd(unit, P2_CMD_ACCESS | P2_CMDF_WRITE, P2_REC_MCASTLIST,
             base);
       }
@@ -1143,7 +1179,7 @@ BOOL StatusInt(REG(a1, struct DevUnit *unit), REG(a6, APTR int_code))
 
 static VOID RXInt(REG(a1, struct DevUnit *unit), REG(a6, APTR int_code))
 {
-   UWORD frame_status, packet_size, frame_id, message_type;
+   UWORD frame_status, offset, packet_size, frame_id, message_type;
    struct DevBase *base;
    BOOL is_orphan, accepted, is_snap;
    ULONG packet_type;
@@ -1168,7 +1204,11 @@ static VOID RXInt(REG(a1, struct DevUnit *unit), REG(a6, APTR int_code))
          /* Read packet header */
 
          is_orphan = TRUE;
-         P2Seek(unit, 1, frame_id, P2_FRM_ETHFRAME, base);
+         if(unit->firmware_type == HERMES2_FIRMWARE)
+            offset = P2_H2FRM_ETHFRAME;
+         else
+            offset = P2_FRM_ETHFRAME;
+         P2Seek(unit, 1, frame_id, offset, base);
          unit->WordsIn(unit->card, P2_REG_DATA1, (UWORD *)buffer,
             ETH_SNAPHEADERSIZE / 2);
 
@@ -1508,14 +1548,22 @@ static VOID TXInt(REG(a1, struct DevUnit *unit), REG(a6, APTR int_code))
 
          /* Write packet descriptor */
 
-         P2Seek(unit, 0, unit->tx_frame_id, 0, base);
-         for(i = 0; i < P2_FRM_HEADER / 2; i++)
-            unit->LEWordOut(unit->card, P2_REG_DATA0, 0);
-         unit->LEWordOut(unit->card, P2_REG_DATA0,
-            IEEE802_11_FRMTYPE_DATA << IEEE802_11_FRM_CONTROLB_TYPE);
-         for(i = P2_FRM_HEADER + IEEE802_11_FRM_DURATION;
-            i < P2_FRM_ETHFRAME; i += 2)
-            unit->LEWordOut(unit->card, P2_REG_DATA0, 0);
+         if(unit->firmware_type == HERMES2_FIRMWARE)
+         {
+            P2Seek(unit, 0, unit->tx_frame_id, 0, base);
+            for(i = 0; i < P2_H2FRM_ETHFRAME / 2; i++)
+               unit->LEWordOut(unit->card, P2_REG_DATA0, 0);
+         }
+         else
+         {
+            P2Seek(unit, 0, unit->tx_frame_id, 0, base);
+            for(i = 0; i < P2_FRM_HEADER / 2; i++)
+               unit->LEWordOut(unit->card, P2_REG_DATA0, 0);
+            unit->LEWordOut(unit->card, P2_REG_DATA0,
+               IEEE802_11_FRMTYPE_DATA << IEEE802_11_FRM_CONTROLB_TYPE);
+            for(i++; i < P2_FRM_ETHFRAME / 2; i++)
+               unit->LEWordOut(unit->card, P2_REG_DATA0, 0);
+         }
 
          /* Write packet header */
 
@@ -1781,6 +1829,258 @@ static VOID ReportEvents(struct DevUnit *unit, ULONG events,
 
 
 
+/****i* prism2.device/UpdateSignalQuality **********************************
+*
+*   NAME
+*	UpdateSignalQuality -- Read signal quality from card.
+*
+*   SYNOPSIS
+*	UpdateSignalQuality(unit)
+*
+*	VOID UpdateSignalQuality(struct DevUnit *);
+*
+*   FUNCTION
+*
+*   INPUTS
+*	unit - A unit of this device.
+*
+*   RESULT
+*	None.
+*
+****************************************************************************
+*
+*/
+
+VOID UpdateSignalQuality(struct DevUnit *unit, struct DevBase *base)
+{
+   UWORD signal_level, noise_level;
+
+   P2DoCmd(unit, P2_CMD_ACCESS, P2_REC_LINKQUALITY, base);
+   P2Seek(unit, 1, P2_REC_LINKQUALITY, 6, base);
+   signal_level = unit->LEWordIn(unit->card, P2_REG_DATA1);
+   noise_level = unit->LEWordIn(unit->card, P2_REG_DATA1);
+
+   if(unit->firmware_type == LUCENT_FIRMWARE)
+   {
+      unit->signal_quality.SignalLevel = signal_level - LUCENT_DBM_OFFSET;
+      unit->signal_quality.NoiseLevel = noise_level - LUCENT_DBM_OFFSET;
+   }
+   else
+   {
+      unit->signal_quality.SignalLevel =
+         signal_level / 3 - INTERSIL_DBM_OFFSET;
+      unit->signal_quality.NoiseLevel =
+         noise_level / 3 - INTERSIL_DBM_OFFSET;
+   }
+
+   return;
+}
+
+
+
+/****i* prism2.device/LoadFirmware *****************************************
+*
+*   NAME
+*	LoadFirmware
+*
+*   SYNOPSIS
+*	success = LoadFirmware(unit)
+*
+*	BOOL LoadFirmware(struct DevUnit *);
+*
+*   FUNCTION
+*
+*   INPUTS
+*	unit - A unit of this device.
+*
+*   RESULT
+*	success - Success indicator.
+*
+****************************************************************************
+*
+*/
+
+static BOOL LoadFirmware(struct DevUnit *unit, struct DevBase *base)
+{
+   BOOL success = TRUE;
+   struct FileInfoBlock *info = NULL;
+   UWORD control_reg;
+   ULONG location, length, start_address;
+   BPTR file;
+   UBYTE *data = NULL;
+   LONG ch;
+   UBYTE *buffer = NULL, *p, *end, *q;
+   UBYTE n = 0, type;
+   UWORD i;
+
+   /* Read firmware file */
+
+   file = Open(firmware_file_name, MODE_OLDFILE);
+   if(file == NULL)
+      success = FALSE;
+
+   if(success)
+   {
+      info = AllocDosObject(DOS_FIB, NULL);
+      if(info == NULL)
+         success = FALSE;
+   }
+
+   if(success)
+   {
+      if(!ExamineFH(file, info))
+         success = FALSE;
+   }
+
+   if(success)
+   {
+      buffer = AllocVec(info->fib_Size, MEMF_ANY);
+      end = buffer + info->fib_Size;
+      data = AllocVec(MAX_S_REC_SIZE, MEMF_ANY);
+      if(buffer == NULL || data == NULL)
+         success = FALSE;
+   }
+
+   if(success)
+   {
+      if(Read(file, buffer, info->fib_Size) == -1)
+         success = FALSE;
+   }
+
+   if(success)
+   {
+      /* Enable auxiliary ports */
+
+      unit->LEWordOut(unit->card, P2_REG_PARAM0, 0xfe01);
+      unit->LEWordOut(unit->card, P2_REG_PARAM1, 0xdc23);
+      unit->LEWordOut(unit->card, P2_REG_PARAM2, 0xba45);
+
+      control_reg = unit->LEWordIn(unit->card, P2_REG_CONTROL);
+      control_reg =
+         control_reg & ~P2_REG_CONTROLF_AUX | P2_REG_CONTROL_ENABLEAUX;
+      unit->LEWordOut(unit->card, P2_REG_CONTROL, control_reg);
+
+      BusyMilliDelay(5, base);
+      while(
+         (unit->LEWordIn(unit->card, P2_REG_CONTROL) & P2_REG_CONTROLF_AUX)
+         != P2_REG_CONTROL_AUXENABLED);
+
+      /* Write firmware to card */
+
+      unit->LEWordOut(unit->card, P2_REG_PARAM1, 0);
+      P2DoCmd(unit, P2_CMD_PROGRAM | P2_CMDF_WRITE, 0, base);
+
+      p = buffer;
+      while(p < end)
+      {
+         /* Find start of next record */
+
+         ch = *p++;
+         if(ch == 'S')
+         {
+            /* Get record type */
+
+            type = *p++;
+
+            /* Skip length field to keep alignment easy */
+
+            p += 2;
+
+            /* Parse hexadecimal portion of record */
+
+            q = data;
+            i = 0;
+            while((ch = *p++) >= '0')
+            {
+               n <<= 4;
+
+               if(ch >= 'A')
+                  n |= ch - 'A' + 10;
+               else
+                  n |= ch - '0';
+
+               if((++i & 0x1) == 0)
+               {
+                  *q++ = n;
+                  n = 0;
+               }
+            }
+            length = i >> 1;
+
+            switch(type)
+            {
+            case '3':
+
+               /* Get location in card memory to store record's data */
+
+               location = (data[0] << 24) + (data[1] << 16) + (data[2] << 8)
+                  + data[3];
+               length -= 5;
+
+               /* Write data to card */
+
+               if(unit->firmware_type != HERMES2_FIRMWARE)
+               {
+                  unit->LEWordOut(unit->card, P2_REG_PARAM1,
+                     location >> 16);
+                  P2DoCmd(unit, P2_CMD_PROGRAM | P2_CMDF_WRITE, location,
+                     base);
+               }
+
+               unit->LEWordOut(unit->card, P2_REG_AUXPAGE, location >> 7);
+               unit->LEWordOut(unit->card, P2_REG_AUXOFFSET,
+                  location & (1 << 7) - 1);
+
+               unit->WordsOut(unit->card, P2_REG_AUXDATA,
+                  (UWORD *)(data + 4), length >> 1);
+               break;
+
+            case '7':
+
+               /* Get location in card memory to begin execution of new
+                  firmware at */
+
+               start_address = (data[0] << 24) + (data[1] << 16)
+                  + (data[2] << 8) + data[3];
+            }
+         }
+      }
+
+      /* Disable auxiliary ports */
+
+      control_reg = unit->LEWordIn(unit->card, P2_REG_CONTROL);
+      control_reg =
+         control_reg & ~P2_REG_CONTROLF_AUX | P2_REG_CONTROL_DISABLEAUX;
+      unit->LEWordOut(unit->card, P2_REG_CONTROL, control_reg);
+
+      /* Execute downloaded firmware */
+
+      if(unit->firmware_type == HERMES2_FIRMWARE)
+      {
+         unit->LEWordOut(unit->card, P2_REG_PARAM1, start_address >> 16);
+         P2DoCmd(unit, P2_CMD_EXECUTE, start_address, base);
+      }
+      else
+      {
+         unit->LEWordOut(unit->card, P2_REG_PARAM1, start_address >> 16);
+         P2DoCmd(unit, P2_CMD_PROGRAM, start_address, base);
+         P2DoCmd(unit, P2_CMD_INIT, 0, base);
+      }
+   }
+
+   /* Free Resources */
+
+   FreeVec(buffer);
+   FreeVec(data);
+   FreeDosObject(DOS_FIB, info);
+   if(file != NULL)
+      Close(file);
+
+   return success;
+}
+
+
+
 /****i* prism2.device/P2DoCmd **********************************************
 *
 *   NAME
@@ -1796,8 +2096,6 @@ static VOID P2DoCmd(struct DevUnit *unit, UWORD command, UWORD param,
    struct DevBase *base)
 {
    unit->LEWordOut(unit->card, P2_REG_PARAM0, param);
-   unit->LEWordOut(unit->card, P2_REG_PARAM1, 0);
-   unit->LEWordOut(unit->card, P2_REG_PARAM2, 0);
    unit->LEWordOut(unit->card, P2_REG_COMMAND, command);
    while((unit->LEWordIn(unit->card, P2_REG_EVENTS)
       & P2_EVENTF_CMD) == 0);
@@ -1845,15 +2143,12 @@ static BOOL P2Seek(struct DevUnit *unit, UWORD path_no, UWORD rec_no,
 static VOID P2SetID(struct DevUnit *unit, UWORD rec_no, const UBYTE *id,
    UWORD length, struct DevBase *base)
 {
-   UPINT data_reg;
-
    P2Seek(unit, 1, rec_no, 0, base);
 
-   data_reg = P2_REG_DATA1;
-   unit->LEWordOut(unit->card, data_reg, length / 2 + 3);
-   unit->LEWordOut(unit->card, data_reg, rec_no);
-   unit->LEWordOut(unit->card, data_reg, length);   /* ??? */
-   unit->WordsOut(unit->card, data_reg, (UWORD *)id, (length + 1) / 2);
+   unit->LEWordOut(unit->card, P2_REG_DATA1, length / 2 + 3);
+   unit->LEWordOut(unit->card, P2_REG_DATA1, rec_no);
+   unit->LEWordOut(unit->card, P2_REG_DATA1, length);   /* ??? */
+   unit->WordsOut(unit->card, P2_REG_DATA1, (UWORD *)id, (length + 1) / 2);
 
    P2DoCmd(unit, P2_CMD_ACCESS | P2_CMDF_WRITE, rec_no, base);
 
@@ -1874,14 +2169,11 @@ static VOID P2SetID(struct DevUnit *unit, UWORD rec_no, const UBYTE *id,
 static VOID P2SetWord(struct DevUnit *unit, UWORD rec_no, UWORD value,
    struct DevBase *base)
 {
-   UPINT data_reg;
-
    P2Seek(unit, 1, rec_no, 0, base);
 
-   data_reg = P2_REG_DATA1;
-   unit->LEWordOut(unit->card, data_reg, 2);
-   unit->LEWordOut(unit->card, data_reg, rec_no);
-   unit->LEWordOut(unit->card, data_reg, value);
+   unit->LEWordOut(unit->card, P2_REG_DATA1, 2);
+   unit->LEWordOut(unit->card, P2_REG_DATA1, rec_no);
+   unit->LEWordOut(unit->card, P2_REG_DATA1, value);
 
    P2DoCmd(unit, P2_CMD_ACCESS | P2_CMDF_WRITE, rec_no, base);
 
@@ -1946,15 +2238,12 @@ static UWORD P2AllocMem(struct DevUnit *unit, UWORD size,
 static VOID P2SetData(struct DevUnit *unit, UWORD rec_no, const UBYTE *data,
    UWORD length, struct DevBase *base)
 {
-   UPINT data_reg;
-
    length = (length + 1) / 2;
    P2Seek(unit, 1, rec_no, 0, base);
 
-   data_reg = P2_REG_DATA1;
-   unit->LEWordOut(unit->card, data_reg, 1 + length);
-   unit->LEWordOut(unit->card, data_reg, rec_no);
-   unit->WordsOut(unit->card, data_reg, (const UWORD *)data, length);
+   unit->LEWordOut(unit->card, P2_REG_DATA1, 1 + length);
+   unit->LEWordOut(unit->card, P2_REG_DATA1, rec_no);
+   unit->WordsOut(unit->card, P2_REG_DATA1, (const UWORD *)data, length);
 
    P2DoCmd(unit, P2_CMD_ACCESS | P2_CMDF_WRITE, rec_no, base);
 

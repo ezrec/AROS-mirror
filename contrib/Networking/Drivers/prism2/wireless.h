@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2005 Neil Cafferkey
+Copyright (C) 2005,2006 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -66,13 +66,21 @@ MA 02111-1307, USA.
 #define S2PORT_MANAGED 7
 #define S2PORT_ADHOC   8
 
+#define P2_GETSIGNALQUALITY 0x8000
+
+struct Sana2SignalQuality
+{
+   LONG SignalLevel;   /* signal level in dBm */
+   LONG NoiseLevel;   /* noise level in dBm */
+};
+
 
 /* Support for SetPrism2Defualts command */
 
 struct WEPKey
 {
-   UBYTE length;
    UBYTE key[13];
+   UBYTE length;
 };
 
 #define P2OPT_SSID (TAG_USER + 0)

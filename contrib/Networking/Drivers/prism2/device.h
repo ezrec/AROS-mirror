@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2001-2005 Neil Cafferkey
+Copyright (C) 2001-2007 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,14 +30,15 @@ MA 02111-1307, USA.
 #include <devices/sana2.h>
 #include <devices/sana2specialstats.h>
 #include <devices/timer.h>
+#include <dos/dosextens.h>
 
 #include "wireless.h"
 #include "io.h"
 
 #define DEVICE_NAME "prism2.device"
 #define VERSION 1
-#define REVISION 2
-#define DATE "16.6.2005"
+#define REVISION 7
+#define DATE "29.10.2007"
 
 #define UTILITY_VERSION 39
 #define PROMETHEUS_VERSION 2
@@ -45,6 +46,7 @@ MA 02111-1307, USA.
 #define EXPANSION_VERSION 50
 #define OPENPCI_VERSION 1
 #define PCCARD_VERSION 1
+#define DOS_VERSION 36
 
 #ifndef UPINT
 #ifdef __AROS__
@@ -84,6 +86,7 @@ struct DevBase
    struct Library *openpci_base;
    struct Library *pccard_base;
    APTR card_base;
+   struct DosLibrary *dos_base;
    struct MinList pci_units;
    struct MinList pccard_units;
    struct timerequest timer_request;
@@ -92,6 +95,7 @@ struct DevBase
    struct ExecIFace *i_exec;
    struct UtilityIFace *i_utility;
    struct PCIIFace *i_pci;
+   struct DOSIFace *i_dos;
    struct TimerIFace *i_timer;
 #endif
    VOID (*wrapper_int_code)();
@@ -120,6 +124,7 @@ enum
    LUCENT_FIRMWARE,
    INTERSIL_FIRMWARE,
    SYMBOL_FIRMWARE,
+   HERMES2_FIRMWARE,
    AIRONET_FIRMWARE
 };
 
@@ -177,6 +182,7 @@ struct DevUnit
    struct Sana2DeviceStats stats;
    ULONG special_stats[STAT_COUNT];
    ULONG speed;
+   struct Sana2SignalQuality signal_quality;
    struct SignalSemaphore access_lock;
    UWORD encryption;
    UWORD tx_frame_id;
@@ -244,9 +250,6 @@ struct AddressRange
 #define UNITF_WASONLINE (1 << 6)   /* card was online at time of removal */
 #define UNITF_HASWEP (1 << 7)
 #define UNITF_ALLMCAST (1 << 8)
-
-
-IMPORT const TEXT device_name[];
 
 
 /* Endianness macros */
@@ -317,11 +320,13 @@ IMPORT const TEXT device_name[];
 #define PrometheusBase (base->prometheus_base)
 #define PowerPCIBase (base->powerpci_base)
 #define PCCardBase (base->pccard_base)
+#define DOSBase (base->dos_base)
 #define TimerBase (base->timer_request.tr_node.io_Device)
 
 #ifdef __amigaos4__
 #define IExec (base->i_exec)
 #define IUtility (base->i_utility)
+#define IDOS (base->i_dos)
 #define ITimer (base->i_timer)
 #endif
 

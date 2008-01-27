@@ -2,7 +2,7 @@
 
 File: device.c
 Author: Neil Cafferkey
-Copyright (C) 2000-2005 Neil Cafferkey
+Copyright (C) 2000-2006 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ MA 02111-1307, USA.
 #include <exec/types.h>
 #include <exec/resident.h>
 #include <exec/errors.h>
+#include <dos/dos.h>
 #include <utility/utility.h>
 #include "initializers.h"
 
@@ -57,9 +58,6 @@ static VOID DevAbortIO(REG(a1, struct IOSana2Req *request),
 static VOID DeleteDevice(struct DevBase *base);
 static struct DevUnit *GetUnit(ULONG unit_num, struct DevBase *base);
 
-/* extern const APTR vectors[]; */
-extern const APTR init_table[];
-
 
 /* Return an error immediately if someone tries to run the device */
 
@@ -69,7 +67,7 @@ LONG Main()
 }
 
 
-const TEXT device_name[] = DEVICE_NAME;
+static const TEXT device_name[] = DEVICE_NAME;
 static const TEXT version_string[] =
    DEVICE_NAME " " STR(VERSION) "." STR(REVISION) " (" DATE ")\n";
 static const TEXT utility_name[] = UTILITYNAME;
@@ -77,22 +75,8 @@ static const TEXT prometheus_name[] = "prometheus.library";
 static const TEXT powerpci_name[] = "powerpci.library";
 static const TEXT pccard_name[] = "pccard.library";
 static const TEXT card_name[] = "card.resource";
+static const TEXT dos_name[] = DOSNAME;
 static const TEXT timer_name[] = TIMERNAME;
-
-
-const struct Resident rom_tag =
-{
-   RTC_MATCHWORD,
-   (struct Resident *)&rom_tag,
-   (APTR)(&rom_tag + 1),
-   RTF_AUTOINIT,
-   VERSION,
-   NT_DEVICE,
-   0,
-   (STRPTR)device_name,
-   (STRPTR)version_string,
-   (APTR)init_table
-};
 
 
 static const APTR vectors[] =
@@ -135,12 +119,27 @@ init_data =
 #endif
 
 
-const APTR init_table[] =
+static const APTR init_table[] =
 {
    (APTR)sizeof(struct DevBase),
    (APTR)vectors,
    (APTR)&init_data,
    (APTR)DevInit
+};
+
+
+const struct Resident rom_tag =
+{
+   RTC_MATCHWORD,
+   (struct Resident *)&rom_tag,
+   (APTR)(&rom_tag + 1),
+   RTF_AUTOINIT,
+   VERSION,
+   NT_DEVICE,
+   0,
+   (STRPTR)device_name,
+   (STRPTR)version_string,
+   (APTR)init_table
 };
 
 
@@ -199,14 +198,16 @@ static struct DevBase *DevInit(REG(d0, struct DevBase *dev_base),
    base->pccard_base = OpenLibrary(pccard_name, PCCARD_VERSION);
    if(base->pccard_base != NULL)
       base->card_base = OpenResource(card_name);
+   base->dos_base = (APTR)OpenLibrary(dos_name, DOS_VERSION);
 
    if(base->utility_base == NULL || base->prometheus_base == NULL
       && base->powerpci_base == NULL && base->openpci_base == NULL
-      && (base->pccard_base == NULL || base->card_base == NULL))
+      && (base->pccard_base == NULL || base->card_base == NULL)
+      || base->dos_base == NULL)
       success = FALSE;
 
-   if(OpenDevice(timer_name, UNIT_VBLANK, (APTR)&base->timer_request, 0) !=
-      0)
+   if(OpenDevice(timer_name, UNIT_VBLANK, (APTR)&base->timer_request, 0)
+      != 0)
       success = FALSE;
 
 #ifdef __MORPHOS__
@@ -230,9 +231,9 @@ static struct DevBase *DevInit(REG(d0, struct DevBase *dev_base),
 *	DevOpen
 *
 *   SYNOPSIS
-*	error = DevOpen(unit_num, request, flags)
+*	error = DevOpen(request, unit_num, flags)
 *
-*	BYTE DevOpen(ULONG, struct IOSana2Req *, ULONG);
+*	BYTE DevOpen(struct IOSana2Req *, ULONG, ULONG);
 *
 ****************************************************************************
 *
@@ -273,8 +274,8 @@ static BYTE DevOpen(REG(a1, struct IOSana2Req *request),
 
    if(error == 0)
    {
-      if(unit->open_count != 0 && ((unit->flags & UNITF_SHARED) == 0 ||
-         (flags & SANA2OPF_MINE) != 0))
+      if(unit->open_count != 0 && ((unit->flags & UNITF_SHARED) == 0
+         || (flags & SANA2OPF_MINE) != 0))
          error = IOERR_UNITBUSY;
       unit->open_count++;
    }
@@ -555,6 +556,8 @@ VOID DeleteDevice(struct DevBase *base)
 
    /* Close libraries */
 
+   if(base->dos_base != NULL)
+      CloseLibrary((APTR)base->dos_base);
    if(base->openpci_base != NULL)
       CloseLibrary(base->openpci_base);
    if(base->pccard_base != NULL)

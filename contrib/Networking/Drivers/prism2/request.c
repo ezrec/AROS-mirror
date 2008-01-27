@@ -2,7 +2,7 @@
 
 File: request.c
 Author: Neil Cafferkey
-Copyright (C) 2001-2004 Neil Cafferkey
+Copyright (C) 2001-2006 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ MA 02111-1307, USA.
 
 #include <exec/types.h>
 #include <exec/errors.h>
-#include "initializers.h"
+#include <exec/initializers.h>
 #include <devices/newstyle.h>
 
 #include <proto/exec.h>
@@ -74,6 +74,8 @@ static BOOL CmdAddMulticastAddresses(struct IOSana2Req *request,
    struct DevBase *base);
 static BOOL CmdDelMulticastAddresses(struct IOSana2Req *request,
    struct DevBase *base);
+static BOOL CmdGetSignalQuality(struct IOSana2Req *request,
+   struct DevBase *base);
 
 
 static const UWORD supported_commands[] =
@@ -100,6 +102,7 @@ static const UWORD supported_commands[] =
    NSCMD_DEVICEQUERY,
    S2_ADDMULTICASTADDRESSES,
    S2_DELMULTICASTADDRESSES,
+   P2_GETSIGNALQUALITY,
    0
 };
 
@@ -120,7 +123,6 @@ static const struct Sana2DeviceQuery sana2_info =
 const TEXT badmulticast_name[] = "Bad multicasts";
 const TEXT retries_name[] = "Retries";
 const TEXT fifo_underruns_name[] = "Underruns";
-const TEXT debug_stat_name[] = "Debug";
 
 
 const TEXT *const special_stat_names[] =
@@ -181,64 +183,67 @@ VOID ServiceRequest(struct IOSana2Req *request, struct DevBase *base)
       complete = CmdFlush((APTR)request, base);
       break;
    case S2_DEVICEQUERY:
-      complete = CmdS2DeviceQuery((APTR)request, base);
+      complete = CmdS2DeviceQuery(request, base);
       break;
    case S2_GETSTATIONADDRESS:
-      complete = CmdGetStationAddress((APTR)request, base);
+      complete = CmdGetStationAddress(request, base);
       break;
    case S2_CONFIGINTERFACE:
-      complete = CmdConfigInterface((APTR)request, base);
+      complete = CmdConfigInterface(request, base);
       break;
    case S2_ADDMULTICASTADDRESS:
-      complete = CmdAddMulticastAddresses((APTR)request, base);
+      complete = CmdAddMulticastAddresses(request, base);
       break;
    case S2_DELMULTICASTADDRESS:
-      complete = CmdDelMulticastAddresses((APTR)request, base);
+      complete = CmdDelMulticastAddresses(request, base);
       break;
    case S2_MULTICAST:
-      complete = CmdWrite((APTR)request, base);
+      complete = CmdWrite(request, base);
       break;
    case S2_BROADCAST:
-      complete = CmdBroadcast((APTR)request, base);
+      complete = CmdBroadcast(request, base);
       break;
    case S2_TRACKTYPE:
-      complete = CmdTrackType((APTR)request, base);
+      complete = CmdTrackType(request, base);
       break;
    case S2_UNTRACKTYPE:
-      complete = CmdUntrackType((APTR)request, base);
+      complete = CmdUntrackType(request, base);
       break;
    case S2_GETTYPESTATS:
-      complete = CmdGetTypeStats((APTR)request, base);
+      complete = CmdGetTypeStats(request, base);
       break;
    case S2_GETSPECIALSTATS:
-      complete = CmdGetSpecialStats((APTR)request, base);
+      complete = CmdGetSpecialStats(request, base);
       break;
    case S2_GETGLOBALSTATS:
-      complete = CmdGetGlobalStats((APTR)request, base);
+      complete = CmdGetGlobalStats(request, base);
       break;
    case S2_ONEVENT:
-      complete = CmdOnEvent((APTR)request, base);
+      complete = CmdOnEvent(request, base);
       break;
    case S2_READORPHAN:
-      complete = CmdReadOrphan((APTR)request, base);
+      complete = CmdReadOrphan(request, base);
       break;
    case S2_ONLINE:
-      complete = CmdOnline((APTR)request, base);
+      complete = CmdOnline(request, base);
       break;
    case S2_OFFLINE:
-      complete = CmdOffline((APTR)request, base);
+      complete = CmdOffline(request, base);
       break;
    case NSCMD_DEVICEQUERY:
       complete = CmdDeviceQuery((APTR)request, base);
       break;
    case S2_ADDMULTICASTADDRESSES:
-      complete = CmdAddMulticastAddresses((APTR)request, base);
+      complete = CmdAddMulticastAddresses(request, base);
       break;
    case S2_DELMULTICASTADDRESSES:
-      complete = CmdDelMulticastAddresses((APTR)request, base);
+      complete = CmdDelMulticastAddresses(request, base);
+      break;
+   case P2_GETSIGNALQUALITY:
+      complete = CmdGetSignalQuality(request, base);
       break;
    default:
-      complete = CmdInvalid((APTR)request, base);
+      complete = CmdInvalid(request, base);
    }
 
    if(complete && ((request->ios2_Req.io_Flags & IOF_QUICK) == 0))
@@ -449,7 +454,7 @@ static BOOL CmdWrite(struct IOSana2Req *request, struct DevBase *base)
 /****** prism2.device/CMD_FLUSH ********************************************
 *
 *   NAME
-*	CMD_FLUSH -- .
+*	CMD_FLUSH
 *
 *   FUNCTION
 *
@@ -651,7 +656,7 @@ static BOOL CmdConfigInterface(struct IOSana2Req *request,
 /****** prism2.device/S2_BROADCAST *****************************************
 *
 *   NAME
-*	S2_BROADCAST --
+*	S2_BROADCAST
 *
 *   FUNCTION
 *
@@ -695,7 +700,7 @@ static BOOL CmdBroadcast(struct IOSana2Req *request,
 /****** prism2.device/S2_TRACKTYPE *****************************************
 *
 *   NAME
-*	S2_TRACKTYPE --
+*	S2_TRACKTYPE
 *
 *   FUNCTION
 *
@@ -743,7 +748,7 @@ static BOOL CmdTrackType(struct IOSana2Req *request,
    else
    {
       tracker =
-         AllocMem(sizeof(struct TypeTracker), MEMF_PUBLIC|MEMF_CLEAR);
+         AllocMem(sizeof(struct TypeTracker), MEMF_PUBLIC | MEMF_CLEAR);
       if(tracker != NULL)
       {
          tracker->packet_type = packet_type;
@@ -795,7 +800,7 @@ static BOOL CmdTrackType(struct IOSana2Req *request,
 /****** prism2.device/S2_UNTRACKTYPE ***************************************
 *
 *   NAME
-*	S2_UNTRACKTYPE --
+*	S2_UNTRACKTYPE
 *
 *   FUNCTION
 *
@@ -871,7 +876,7 @@ static BOOL CmdUntrackType(struct IOSana2Req *request,
 /****** prism2.device/S2_GETTYPESTATS **************************************
 *
 *   NAME
-*	S2_GETTYPESTATS --
+*	S2_GETTYPESTATS
 *
 *   FUNCTION
 *
@@ -942,7 +947,7 @@ static BOOL CmdGetTypeStats(struct IOSana2Req *request,
 /****** prism2.device/S2_GETSPECIALSTATS ***********************************
 *
 *   NAME
-*	S2_GETSPECIALSTATS --
+*	S2_GETSPECIALSTATS
 *
 *   FUNCTION
 *
@@ -1003,7 +1008,7 @@ static BOOL CmdGetSpecialStats(struct IOSana2Req *request,
 /****** prism2.device/S2_GETGLOBALSTATS ************************************
 *
 *   NAME
-*	S2_GETGLOBALSTATS --
+*	S2_GETGLOBALSTATS
 *
 *   FUNCTION
 *
@@ -1049,7 +1054,7 @@ static BOOL CmdGetGlobalStats(struct IOSana2Req *request,
 /****** prism2.device/S2_ONEVENT *******************************************
 *
 *   NAME
-*	S2_ONEVENT --
+*	S2_ONEVENT
 *
 *   FUNCTION
 *
@@ -1117,7 +1122,7 @@ static BOOL CmdOnEvent(struct IOSana2Req *request, struct DevBase *base)
 /****** prism2.device/S2_READORPHAN ****************************************
 *
 *   NAME
-*	S2_READORPHAN --
+*	S2_READORPHAN
 *
 *   FUNCTION
 *
@@ -1186,7 +1191,7 @@ static BOOL CmdReadOrphan(struct IOSana2Req *request,
 /****** prism2.device/S2_ONLINE ********************************************
 *
 *   NAME
-*	S2_ONLINE --
+*	S2_ONLINE
 *
 *   FUNCTION
 *
@@ -1259,7 +1264,7 @@ static BOOL CmdOnline(struct IOSana2Req *request, struct DevBase *base)
 /****** prism2.device/S2_OFFLINE *******************************************
 *
 *   NAME
-*	S2_OFFLINE --
+*	S2_OFFLINE
 *
 *   FUNCTION
 *
@@ -1337,7 +1342,7 @@ static BOOL CmdDeviceQuery(struct IOStdReq *request,
 
    info = request->io_Data;
    request->io_Actual = info->SizeAvailable =
-      OFFSET(NSDeviceQueryResult, SupportedCommands) + sizeof(APTR);
+      (ULONG)OFFSET(NSDeviceQueryResult, SupportedCommands) + sizeof(APTR);
 
    /* Report device details */
 
@@ -1356,7 +1361,7 @@ static BOOL CmdDeviceQuery(struct IOStdReq *request,
 /****** prism2.device/S2_ADDMULTICASTADDRESS *******************************
 *
 *   NAME
-*	S2_ADDMULTICASTADDRESS --
+*	S2_ADDMULTICASTADDRESS
 *
 *   FUNCTION
 *
@@ -1382,7 +1387,7 @@ static BOOL CmdDeviceQuery(struct IOStdReq *request,
 /****** prism2.device/S2_ADDMULTICASTADDRESSES *****************************
 *
 *   NAME
-*	S2_ADDMULTICASTADDRESSES --
+*	S2_ADDMULTICASTADDRESSES
 *
 *   FUNCTION
 *
@@ -1436,7 +1441,7 @@ static BOOL CmdAddMulticastAddresses(struct IOSana2Req *request,
 /****** prism2.device/S2_DELMULTICASTADDRESS *******************************
 *
 *   NAME
-*	S2_DELMULTICASTADDRESS --
+*	S2_DELMULTICASTADDRESS
 *
 *   FUNCTION
 *
@@ -1462,7 +1467,7 @@ static BOOL CmdAddMulticastAddresses(struct IOSana2Req *request,
 /****** prism2.device/S2_DELMULTICASTADDRESSES *****************************
 *
 *   NAME
-*	S2_DELMULTICASTADDRESSES --
+*	S2_DELMULTICASTADDRESSES
 *
 *   FUNCTION
 *
@@ -1513,10 +1518,60 @@ static BOOL CmdDelMulticastAddresses(struct IOSana2Req *request,
 
 
 
+/****** prism2.device/P2_GETSIGNALQUALITY **********************************
+*
+*   NAME
+*	P2_GETSIGNALQUALITY -- Get signal quality statistics.
+*
+*   FUNCTION
+*	This command fills in the supplied Sana2SignalQuality structure with
+*	current signal and noise levels. The unit for these figures is dBm.
+*	Typically, they are negative values.
+*
+*   INPUTS
+*	ios2_StatData - Pointer to Sana2SignalQuality structure.
+*
+*   RESULTS
+*	io_Error - Zero if successful; non-zero otherwise.
+*	ios2_WireError - More specific error code.
+*
+****************************************************************************
+*
+*/
+
+static BOOL CmdGetSignalQuality(struct IOSana2Req *request,
+   struct DevBase *base)
+{
+   struct DevUnit *unit;
+
+   /* Update and copy stats */
+
+   unit = (APTR)request->ios2_Req.io_Unit;
+   if((unit->flags & UNITF_ONLINE) != 0)
+   {
+      if((unit->flags & UNITF_ONLINE) != 0)
+         UpdateSignalQuality(unit, base);
+      CopyMem(&unit->signal_quality, request->ios2_StatData,
+         sizeof(struct Sana2SignalQuality));
+   }
+   else
+   {
+      request->ios2_Req.io_Error = S2ERR_OUTOFSERVICE;
+      request->ios2_WireError = S2WERR_UNIT_OFFLINE;
+   }
+
+
+   /* Return */
+
+   return TRUE;
+}
+
+
+
 /****i* prism2.device/PutRequest *******************************************
 *
 *   NAME
-*	PutRequest -- .
+*	PutRequest
 *
 *   SYNOPSIS
 *	PutRequest(port, request)

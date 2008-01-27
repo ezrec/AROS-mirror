@@ -1,6 +1,6 @@
 /*
 
-Copyright (C) 2004,2005 Neil Cafferkey
+Copyright (C) 2004-2006 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,10 +31,6 @@ MA 02111-1307, USA.
 #define P2_AIROWEPRECLEN   0x1c
 #define P2_ALTWEPRECLEN    0x21
 
-#define P2_RATE_1M   0
-#define P2_RATE_2M   1
-#define P2_RATE_AUTO 2
-
 #define P2_MSGTYPE_RFC1042 1
 #define P2_MSGTYPE_TUNNEL  2
 #define P2_MSGTYPE_WMPMSG  3
@@ -53,6 +49,7 @@ MA 02111-1307, USA.
 #define P2_REG_RESP1     0xC
 #define P2_REG_RESP2     0xE
 #define P2_REG_INFOFID   0x10
+#define P2_REG_CONTROL   0x14
 #define P2_REG_SELECT0   0x18
 #define P2_REG_SELECT1   0x1A
 #define P2_REG_OFFSET0   0x1C
@@ -66,6 +63,9 @@ MA 02111-1307, USA.
 #define P2_REG_ACKEVENTS 0x34
 #define P2_REG_DATA0     0x36
 #define P2_REG_DATA1     0x38
+#define P2_REG_AUXPAGE   0x3A
+#define P2_REG_AUXOFFSET 0x3C
+#define P2_REG_AUXDATA   0x3E
 
 
 /* Events */
@@ -103,6 +103,7 @@ MA 02111-1307, USA.
 #define P2_CMD_ENABLE   0x0001
 #define P2_CMD_DISABLE  0x0002
 #define P2_CMD_DIAG     0x0003
+#define P2_CMD_EXECUTE  0x0004
 #define P2_CMD_ALLOCMEM 0x000A
 #define P2_CMD_TX       0x000B
 #define P2_CMD_NOTIFY   0x0010
@@ -137,7 +138,9 @@ MA 02111-1307, USA.
 #define P2_REC_RTSTHRESH   0xFC83
 #define P2_REC_TXRATE      0xFC84   /* ??? */
 #define P2_REC_PROMISC     0xFC85
+#define P2_REC_PRIIDENTITY 0xFD02
 #define P2_REC_STAIDENTITY 0xFD20
+#define P2_REC_LINKQUALITY 0xFD43
 #define P2_REC_CURTXRATE   0xFD44   /* ??? */
 #define P2_REC_HASWEP      0xFD4F
 
@@ -149,6 +152,7 @@ MA 02111-1307, USA.
 #define P2_REC_CRYPTKEY2      0xFC26
 #define P2_REC_CRYPTKEY3      0xFC27
 #define P2_REC_ENCRYPTION     0xFC28
+#define P2_REC_DBMOFFSET      0xFC46
 /*#define P2_REC_PRIMARYID      0xFD02*/ /* ??? */
 
 /* Lucent-specific records */
@@ -225,6 +229,17 @@ MA 02111-1307, USA.
 #define P2_REG_OFFSETF_BUSY  (1 << P2_REG_OFFSETB_BUSY)
 #define P2_REG_OFFSETF_ERROR (1 << P2_REG_OFFSETB_ERROR)
 
+/* Control Register */
+
+#define P2_REG_CONTROLB_AUX 14
+
+#define P2_REG_CONTROLF_AUX (0x3 << P2_REG_CONTROLB_AUX)
+
+#define P2_REG_CONTROL_AUXDISABLED (0 << P2_REG_CONTROLB_AUX)
+#define P2_REG_CONTROL_DISABLEAUX  (1 << P2_REG_CONTROLB_AUX)
+#define P2_REG_CONTROL_ENABLEAUX   (2 << P2_REG_CONTROLB_AUX)
+#define P2_REG_CONTROL_AUXENABLED  (3 << P2_REG_CONTROLB_AUX)
+
 
 /* Record Details */
 /* ============== */
@@ -252,8 +267,9 @@ MA 02111-1307, USA.
 
 #define P2_FRM_STATUS    0x0
 #define P2_FRM_HEADER    0xe
-#define P2_FRM_DATALEN  0x2c
 #define P2_FRM_ETHFRAME 0x2e
+
+#define P2_H2FRM_ETHFRAME 0x3a
 
 #define P2_AIROFRM_STATUS  0x4
 #define P2_AIROFRM_FRAME  0x14

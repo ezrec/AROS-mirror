@@ -45,6 +45,7 @@ VOID FlushUnit(struct DevUnit *unit, UBYTE last_queue, BYTE error,
    struct DevBase *base);
 BOOL StatusInt(REG(a1, struct DevUnit *unit), REG(a6, APTR int_code));
 VOID UpdateStats(struct DevUnit *unit, struct DevBase *base);
+VOID UpdateSignalQuality(struct DevUnit *unit, struct DevBase *base);
 
 
 #endif

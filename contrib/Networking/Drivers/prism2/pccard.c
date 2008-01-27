@@ -2,7 +2,7 @@
 
 File: pccard.c
 Author: Neil Cafferkey
-Copyright (C) 2000-2004 Neil Cafferkey
+Copyright (C) 2000-2006 Neil Cafferkey
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -110,6 +110,7 @@ static const ULONG product_codes[] =
    0x02d20001,
    0x16680101,
    0xc0010008,
+   0xc00f0000,
    0xc2500002,
    0xd6010002,
    0xd6010004,
@@ -379,7 +380,8 @@ static struct BusContext *AllocCard(struct DevBase *base)
       /* Set up card handle */
 
       card_handle->cah_CardNode.ln_Pri = HANDLE_PRIORITY;
-      card_handle->cah_CardNode.ln_Name = (APTR)device_name;
+      card_handle->cah_CardNode.ln_Name =
+         base->device.dd_Library.lib_Node.ln_Name;
       card_handle->cah_CardFlags = CARDF_POSTSTATUS;
 
       card_handle->cah_CardRemoved = card_removed_int =
@@ -608,7 +610,7 @@ static BOOL InitialiseCard(struct BusContext *context,
 
       window_count = GetTagData(PCCARD_IOWinCount, 0, tuple_tags);
 
-      for(i = 0; (i < window_count) && (io_base_offset == 0); i++)
+      for(i = 0; i < window_count && io_base_offset == 0; i++)
          if(io_lengths[i] == IO_WINDOW_SIZE)
             io_base_offset = io_bases[i];
    }
