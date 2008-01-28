@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright ² 1995-2008, The AROS Development Team
+:Copyright: Copyright Â 1995-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. In works, being updating to the current status.
@@ -84,7 +84,7 @@ Running
 After having extracted all files you can launch AROS like this::
 
     > cd AROS
-    > ./aros
+    > ./aros -m <size of mem, used for AROS in MB, number>
 
 
 .. Note:: 
@@ -397,10 +397,10 @@ the infomational purposes.
 
      
 
-Partitioning
-''''''''''''
+**Partitioning**
 
-Single partition install
+
+*Single partition install*
 
 Here he will learn how to install AROS as the only system on PC and
 being placed on a single partition.
@@ -505,8 +505,8 @@ After booting up and checking all the settings for DH0, we must see it's
 OK now. So now we can exit HDToolbox with no hesitation left. Now it's
 time for some CLI magic.
 
-Formatting
-''''''''''
+**Formatting**
+
 
 We must format our created DH0 drive to make it usable. Currently AROS have
 a choice of two filesystems - Fast FileSystem(FFS) and Smart FileSystem(SFS). 
@@ -552,8 +552,8 @@ That's it. Time for the pre-installation reboot.
           version of AROS. 
 
 
-Copying the system
-''''''''''''''''''
+**Copying the system**
+
 
 After reboot, you may notice that you can see our AROS HD on the desktop
 now, and it's empty. Now we need to fill it with files.
@@ -617,8 +617,8 @@ screen and *Reboot* checkbox. Leave this checked and click Proceed. No,
 that isn't all yet - wait till the last step remaining. Now our machine
 will reboot with the same settings as before, from Live CD.
 
-Installing the bootloader
-'''''''''''''''''''''''''
+**Installing the bootloader**
+
 
 Now we still see our AROS disk, and all files are there. Haven`t we
 already installed the bootloader in previous steps, what are we
@@ -647,8 +647,8 @@ where PN <pn> (or PARTITIONNUMBER <pn>) is the number of partition where GRUB
 bootloader will be installed.
 
 
-Preparing to boot
-'''''''''''''''''
+**Preparing to boot**
+
 
 We have just done our first installation alchemy course, and AROS should
 be ready now. We must remove the Live CD from the CD drive (or disable
@@ -656,8 +656,8 @@ booting from CD in VM) and check it out. Hear the drum roll? ;)
 
 If something goes wrong, there can be some answers...
 
-Troubleshooting
-'''''''''''''''
+**Troubleshooting**
+
 
 Installation process is the one of most frequently ones asked about on forums,
 mostly by newbees. You can check the FAQ if there an answer to your questions.

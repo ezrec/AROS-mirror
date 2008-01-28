@@ -4,7 +4,7 @@ AROS Application Development Manual
 
 :Authors:   Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
             Adam Chodorowski, Fabio Alemagna, Matthias Rustler
-:Copyright: Copyright Š 1995-2006, The AROS Development Team
+:Copyright: Copyright ¦ 1995-2006, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; integration started (looong way left to go).
@@ -107,7 +107,7 @@ of AROS (i386-linux-system) or you compile the source yourself:
 + self-compiled
 
   The AROS compiler has the path `AROS/bin/linux-i386/tools`. Add this path as shown above.
-  The name if the compiler is `i386-linux-aros-gcc`.
+  The name of the compiler is `i386-linux-aros-gcc`.
   
 You can compile the program with the following
 command from a Linux shell::
@@ -445,7 +445,7 @@ Shared libraries may evolve over time and new features may be introduced.
 When now a program uses a feature of a more recent and it is run on a machine
 that has an older version of the library this will most likely lead to a
 crash. Therefor versioning of libraries is introduced so programs can check if
-the version of a library and quit gracefully or reduce the functionality
+the version of a library is adequate and quit gracefully or reduce the functionality
 accordingly. On AROS and amiga-like systems the version is determined by a
 major number an a minor number (also resp. called version and revision).
 A new major number indicates the introduction of new features and an
@@ -506,7 +506,7 @@ On AROS the dynamic link libraries are relocatable ELF objects. The first
 time a library is opened it is loaded from disk and relocated with the start
 address it was loaded to. AROS and amiga like systems share one big memory
 region between all code running on the system. This means all programs can
-use the library loaded at the memory it wad loaded to.
+use the library loaded at the memory it was loaded to.
 
 Other systems, including Windows and UNIX, have a different virtual address
 space for each process. Here also the OS tries to load the shared library

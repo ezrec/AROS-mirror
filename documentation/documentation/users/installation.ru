@@ -389,8 +389,7 @@ TODO
 
      
 
-Разбиение на разделы
-''''''''''''''''''''
+**Разбиение на разделы**
 
 *Установка на единственный раздел*
 
@@ -495,8 +494,8 @@ After booting up and checking all the settings for DH0, we must see it's
 OK now. So now we can exit HDToolbox with no hesitation left. Now it's
 time for some CLI magic.
 
-Форматирование
-''''''''''''''
+**Форматирование**
+
 
 We must format our created DH0 drive to make it usable. Currently AROS have
 a choice of two filesystems - Fast FileSystem(FFS) and Smart FileSystem(SFS). 
@@ -542,8 +541,8 @@ That's it. Time for the pre-installation reboot.
           version of AROS. 
 
 
-Копирование системы
-'''''''''''''''''''
+**Копирование системы**
+
 
 After reboot, you may notice that you can see our AROS HD on the desktop
 now, and it's empty. Now we need to fill it with files.
@@ -607,8 +606,8 @@ screen and *Reboot* checkbox. Leave this checked and click Proceed. No,
 that isn't all yet - wait till the last step remaining. Now our machine
 will reboot with the same settings as before, from Live CD.
 
-Установка загрузчика
-''''''''''''''''''''
+**Установка загрузчика**
+
 
 Now we still see our AROS disk, and all files are there. Haven`t we
 already installed the bootloader in previous steps, what are we
@@ -637,8 +636,8 @@ where PN <pn> (or PARTITIONNUMBER <pn>) is the number of partition where GRUB
 bootloader will be installed.
 
 
-Подготовления к запуску
-'''''''''''''''''''''''
+**Подготовления к запуску**
+
 
 We have just done our first installation alchemy course, and AROS should
 be ready now. We must remove the Live CD from the CD drive (or disable
@@ -646,8 +645,8 @@ booting from CD in VM) and check it out. Hear the drum roll? ;)
 
 If something goes wrong, there can be some answers...
 
-Разрешение проблем
-''''''''''''''''''
+**Разрешение проблем**
+
 
 Installation process is the one of most frequently ones asked about on forums,
 mostly by newbees. You can check the FAQ if there an answer to your questions.
