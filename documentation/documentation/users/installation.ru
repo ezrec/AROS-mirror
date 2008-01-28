@@ -241,50 +241,132 @@ create a new drive image, and set it as one of the virtual PC's boot
 devices (the CD drive must be the first boot device during installtion
 of AROS however).
 
-Another step will be cleaning the HD of any existing partitions, to
-remove anything that can prevent our partition creation succeeding.
-Installing AROS along with another OS is possible, but will require more
-skills and is not covered here. For the moment, we will learn how to
-install AROS as the only system on the HD.
-
-Currently the installation is meant to be made by meands of InstallAROS
-program, which is located in the *Tools* drawer on your BootCD. Please launch
-it by clicking on it`s icon. See it`s launched up and showing you the 
-prompt.
-
-*Currently* there`s a bug in Wanderer when discovering new volumes (this issue
-seems to be bypassed already), that quits InstallAROS from formatting drives.
-So please enter the Wanderer menu, select Exit and confirm before proceeding.
-Then click PROCEED buton in InstallAROS window, to get a screen with installing
-options.
-
+The following options are depending on what you want to do.
 
 Установка AROS без других ОС
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The most simple situation is AROS alone on the whole disk. Your disk can be 
-new or with an unneeded data on it. Select *Wipe disk* to **erase** existing 
-data on hard drive.
+The most simple situation is that with AROS alone on the whole disk. Your 
+disk can be new or with an unneeded data on it. Select *Wipe disk* to **erase** 
+existing data on hard drive. If this step fails, you can use any tool from any 
+LiveCD you prefer.
+
+Currently the installation is meant to be made by means of InstallAROS
+program, which is located in the *Tools* drawer on your BootCD. Please launch
+it by clicking on it`s icon. See it`s launched up and showing you the 
+prompt. Then click PROCEED button in InstallAROS window, to get a screen with 
+installing options. The option "Only use free space" must be checked. You can 
+set the size of new AROS partition if you wish, and add an extra WORK partition
+to install programs on it. After you click "Proceed" button, AROS going to 
+make partitions and ask you to reboot. After reboot please run InstallAROS again.
+
+Now you must see the option "Use existing AROS partitions" is selected. Proceed 
+with this. You will see some extra options (defaults shown) in a window::
+
+    [ ] Choose language Options
+    [x] Install AROS Core System
+    [x] Install Extra Software
+    [ ] Install Development Software
+    [x] Install Bootloader
+    
+The first, "Choose language Options" allow you to select locale of your new
+installed system (by launching /Extras/Locale program). "Install AROS Core System"
+allows installing of all AROS base programs, needed for OS to work. 
+"Install Extra Software" allows installing an additional programs (located on
+in /Extras drawer and, if selected, on WORK partition). "Install Development Software"
+allows installing of some development software like some programming languages.
+"Install Bootloader: enables installing of GRUB bootloader to MBR of HD (there
+can be some situations when you don`t need to install it). Make your choice and
+click "Proceed" button. 
+
+On the next installer screen you can choose which partitions you want to format,
+and to copy files on, whether WORK partition is used to copy files on it::
+
+    Destination Partition     [x] Format Partition
+    DH0
+    
+    [ ] Use 'WORK' Partition
+    [ ] Copy Extras and Development Files to Work
+    
+    Work Partition            [ ] Format Partition
+    DH1
+    
+
+After you make your choice and proceed installer will show the GRUB installation
+device and path to GRUB files for you to check it. Proceeding, you will see 
+the las screen before installation, that warns you about pre-alpha status of
+AROS install process. The last clicking "Proceed" and you will see installer
+doing it`s work. You can be asked to select your keyboard type and locale 
+settings, then the files are being copied. Please wait a while. 
+
+After the install finishes you can remove AROS Live CD out of CD drive an
+reboot into your new installed system.
 
 Установка AROS совместно с Windows(R)/DOS(R)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-TODO
+Installing AROS along with Windows must be an easy task. Generally, you`ll need to 
+just follow the installer prompts as shown above to make this working. Installer 
+is designed to detect your Windows installation and put it to GRUB menu 
+automatically.
+
+ 
+There can be problems with some older and newer Windows versions (like 95/98 and Vista). 
+For Vista you must use steps, similar to the ones for Linux with GRUB installer.
+This involves use of some programs like BCD.
+
+TODO more...
 
 Установка AROS совместно с Linux/BSD
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-TODO
+Installing AROS along with Linux or BSD systems is almost the same as the one 
+for Windows. You`d need to create a free space for AROS with available tools.
+Then use InstallAROS to do the partitioning and formatting the AROS partition
+and copy system to it (you can use additional WORK partition if you want to), 
+but it`s better to not install the bootloader (uncheck the corresponding checkbox)::
+
+    todo
+
+After the installer has finished copying the files, it will ask you to reboot.
+After the reboot you`d need to boot your Linux/BSD again, to set up the 
+bootloader.
+AROS uses patched GRUB bootloader, able to load kernel from AFFS. But you don`t
+have to use it, if you put AROS kernel to the place, where your system kernel is 
+(usually /boot) and use a conventional GRUB from your distribution. Just copy 
+/boot/aros-i386.gz from AROS LiveCD to /boot. Then put some new lines to the end 
+of /boot/grub/menu.lst file to enable AROS menu entry::
+
+    title AROS VBE  640x480  16bpp
+    root (hd0,0)
+    kernel /boot/aros-pc-i386.gz vesa=640x480x16 ATA=32bit,forcedma nofdc
+    quiet
+    boot
+
+Use root
+You can change the kernel`s parameters to set the screen resolution.
+
+If you happen to use lilo or any other booloader, this trick won`t be that easy.
+(lilo is too hard to make AROS kernel booting). You will need to somehow 
+chainload AROS GRUB and set it to start up a kernel.
+
+After the reboot, you must be able to see AROS entry in GRUB menu and boot it.
+
 
 Установка AROS совместно с другими ОС
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There`s a lot of another systems out there on the platforms AROS 
+supports. IF your system uses GRUB bootloader the process must be fairly similar 
+to the one of Linux. If not, please remember that all you need for AROS to boot 
+is just to place it`s files on a partition and boot it`s kernel. 
 
 TODO
 
 Ручная установка
 ^^^^^^^^^^^^^^^^
-*(устарело)*
-Поскольку InstallAROS теперь функционален, эта информация является устаревшей, 
+*(Сведения устарели)*
+Поскольку InstallAROS теперь вполне функционален, эта информация является устаревшей, 
 однако может представлять некоторый интерес, поэтому она сохранена для 
 изучения.
      
