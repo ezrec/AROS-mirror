@@ -3,7 +3,7 @@ AROS Users Guide
 ================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Sergey Mineychev
-:Copyright: Copyright 1995-2006, The AROS Development Team
+:Copyright: Copyright 1995-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished; only converted to reST. Needs heavy updating. In works!
@@ -142,10 +142,9 @@ CD, look at system basics until you get bored. Also it`s possible to add
 files to ISO image and get some extra software written for AROS, and
 rewrite the LiveCD. For now here end simple part of using an
 AROS-native. To test all other features it`s required to install_ the
-system to the hard disk (real or virtual). This process can`t be called
-easy, and must be treated as experimental. It has beed desribed in
-Installation Doc. Anyway, remeber that work continues and soon you can
-get more from native AROS - keep in touch! 
+system to the hard disk (real or virtual). This process must be still treated 
+as experimental. It has beed desribed in Installation Doc. Anyway, remember 
+that work continues and soon you can get more from native AROS - keep in touch! 
 
 Using "native" AROS i386 in Virtual Machines
 --------------------------------------------
@@ -173,7 +172,8 @@ on Debian/Ubuntu/Knoppix/DSL or use any other package manager for other
 distributions or download and unpack the archive manually. You can get the
 archive from the `QEMU Website <http://fabrice.bellard.free.fr/qemu/>`__. 
 
-Also there`s an VMware VM available for Linux. Check the `VMWare website <http://www.vmware.com>`__.
+Also there`s an VMware VM available for Linux. Check the `VMWare website 
+<http://www.vmware.com>`__.
 
 VM for Windows
 """"""""""""""

@@ -187,7 +187,7 @@ k3B, Brasero для Linux. На Amiga (и, возможно, вскоре и на AROS) есть FryingPan.
 в порядке, вскоре вы увидите экран ОС.
 
 Если загрузка с CD не поддерживается на вашем PC, можно создать загрузочную 
-дискету_ и использовать её для загрузки с CD. Достаточно просто вставить носители
+дискету и использовать её для загрузки с CD. Достаточно просто вставить носители
 соответствующие устройства и перезагрузиться. Начнётся загрузка с дискеты,
 и после того, как некоторые важные части (например, хэндлер файловой системы CDROM) 
 будут загружены, загрузка продолжится с CD.
@@ -234,19 +234,18 @@ a while.
 Подготовка
 ^^^^^^^^^^
 
-First, set up your HD - either real or a virtual drive image - for use.
-For a real drive, this may involve plugging it into the machine (always
-a good start) and setting it up in the BIOS. For a virtualiser's or
-emulator's virtual drive, you probably just need to select an option to
-create a new drive image, and set it as one of the virtual PC's boot
-devices (the CD drive must be the first boot device during installtion
-of AROS however).
+Сперва, подготовьте ваш жёсткимй диск (реальный или виртуальный) к использованию.
+Настоящий диск может потребовать установки перемычек, подключению к компьютеру
+и настройки в BIOS. Для виртуального диска, скорее всего, потребуется лишь 
+создать новый образ диска, и указать его как одно из возможных устройств загрузки
+виртуальной машины (однако CD-привод всё же должен быть первым в этом списке
+до того, как вы установите систему).
 
-The following options are depending on what you want to do.
+Дальнейшие действия зависят от ваших потребностей.
 
 Установка AROS без других ОС
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
+*пока не переведено, может измениться*
 The most simple situation is that with AROS alone on the whole disk, new or 
 with some unneeded data on it.
 
@@ -369,6 +368,7 @@ TODO
 Ручная установка
 ^^^^^^^^^^^^^^^^
 *(Сведения устарели)*
+
 Поскольку InstallAROS теперь вполне функционален, эта информация является устаревшей, 
 однако может представлять некоторый интерес, поэтому она сохранена для 
 изучения.
@@ -706,7 +706,7 @@ see aatext source code, but I hope it is fast enough to be usable even on a
 Footnotes
 =========
 
-.. _`download page`: ../../download
+.. _`страницы закачек`: ../../download
 
 .. _rawrite: http://uranus.it.swin.edu.au/~jn/linux/rawwrite.htm
 
