@@ -89,7 +89,7 @@ Nach dem entpacken aller Dateien können Sie AROS wie folgt ausführen::
     > ./aros
 
 
-.. Anmerkung:: 
+.. Note:: 
     
     Solange Sie XFree86 3.x oder frühere Versionen einsetzen könnten Sie feststellen, 
     dass das AROS Fenster nicht ordnungsgemäß aktualisiert wird (zum Beispiel wenn 
@@ -133,7 +133,7 @@ Netzwerkfunktionen in AROS auszuprobieren. Wenn Sie auf Probleme stoßen lesen Si
 bitte das FAQ, ob es Informationen über Ihren Hardwaretyp enthalten.
 
 
-.. Anmerkung:: 
+.. Note:: 
     
     Obwohl AROS auf eine Festplatte installiert werden kann denken Sie bitte
     daran, dass sich der Installer im Teststatus befindet. Er darf keine
@@ -203,7 +203,7 @@ Schreiben
 '''''''''
 
 Um eine Startdiskette zu erstellen müssen Sie das Diskettenabbild von der
-`Download Seite'_ herunterladen, das Archiv entpacken und das Startimage
+`Download Seite`_ herunterladen, das Archiv entpacken und das Startimage
 auf eine Diskette übertragen. Wenn Sie ein UNIX-ähnliches Betriebssystem
 wie Linux oder FreeBSD nutzen können Sie das mit folgendem Kommando
 erledigen:
@@ -476,7 +476,7 @@ Jetzt sollte das Kommando folgendes anzeigen::
 
 Das war es. Zeit für den Neustart vor der Installation.
 
-.. Anmerkung:: Wenn Ihnen dies alles so langweilig erscheint dass Sie es kaum aushalten, dann
+.. Note:: Wenn Ihnen dies alles so langweilig erscheint dass Sie es kaum aushalten, dann
           gibt es Abhilfe wenn Sie beabsichtigen AROS nur auf einer virtuellen Maschine zu
           verwenden. Zunächst können Sie ein vorinstalliertes Paket wie *WinAROS/WinAROS Lite*
           besorgen - Dieses System ist bereits installiert aber könnte veraltet sein. Zweitens
