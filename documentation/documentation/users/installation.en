@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright Ò 1995-2008, The AROS Development Team
+:Copyright: Copyright â 1995-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. In works, being updating to the current status.
@@ -258,18 +258,23 @@ Installing AROS Only
 ^^^^^^^^^^^^^^^^^^^^
 
 The most simple situation is that with AROS alone on the whole disk, new or 
-with some unneeded data on it.
+with some unneeded data on it. Also you can use an additional HDD for AROS.
 
 Currently the installation is meant to be made by means of InstallAROS
 program, which is located in the *Tools* drawer on your BootCD. Please launch
 it by clicking on it`s icon. See it`s launched up and showing you the 
 greeting screen. Then click ``Proceed`` button in installer to get 
-a screen with installing options. The option ``Only use free space`` must be 
-checked if you want to keep current partitions as is or ``Wipe disk`` 
+a screen with installing options. 
+
+You can see the current installing device (ata.device) and it`s unit (0), 
+which is your first HDD. If you intend to install on additional disk, please 
+change this number. To find out the number, you can use an */Tools/HDToolbox*
+utility. The option ``Only use free space`` must be checked if you want to 
+keep current partitions as is or select ``Wipe disk`` 
 to **erase** existing data on hard drive. You can set the size of new AROS 
 partition if you wish, and add an extra WORK partition to install programs on 
-it. After you click ``Proceed`` button again, AROS going to make partitions 
-and ask you to reboot. After reboot please run InstallAROS again.
+it. After you click ``Proceed`` button again, installAROS will make partitions 
+and ask you to reboot. After reboot done please run InstallAROS again.
 
 Now you must see the option ``Use existing AROS partitions`` is selected. 
 ``Proceed`` with this. You will see some extra options (defaults shown) 

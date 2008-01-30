@@ -202,31 +202,29 @@ BIOS которого не поддерживает загрузку с CD, однако их образы по-прежнему
 Запись
 ''''''
 
-To create the boot floppy, you will need to download the disk image from
-the `страницы закачек`_, extract the archive, and write the boot image to a floppy
-disk. If you are using a UNIX-like operating system (such as Linux or FreeBSD), 
-you can do this with the following command::
+Чтобы создать загрузочную дискету, вам потребуется скачать образ дискеты со
+`страницы закачек <../../download>`__,распаковать архив, и записать образ на 
+дискету. В случае использования ОС семейства UNIX (например, Linux или FreeBSD), 
+это можно сделать следующим образом::
 
     > cd AROS-<version>-i386-pc-boot-floppy
     > dd if=aros.bin of=/dev/fd0
 
-If you are using Windows, you will need to get rawrite_ to write the image to
-a floppy. Please see the documentation of rawrite_ for information on how to use
-it. There`s also an GUI version called rawwritewin.
+Если вы работаете в Windows, для записи образа на дискету вам понадобится 
+программа rawrite_. Пожалуйста, следуйте её документаци по её использованию. 
+Также существует её версия с графическим интерфейсом - rawwritewin.
 
 
 Загрузка
 ''''''''
-
-Simply insert the boot floppy into the drive and reboot the computer. The boot
-is fully automatic, and if everything works you should see a nice screen after
-a while.
+Вставьте дискету в дисковод и перезагрузите компьютер. Загрузка полностью
+автоматизирована, и если всё в порядке, вскоре вы увидите рабочий стол AROS.
 
 Установка на жёсткий диск
 """""""""""""""""""""""""
 
 Ранее мы уже предупреждали вас, что установка AROS находится в стадии 
-тестирования и может быть **опасной** для ваших данных, поэтому 
+*тестирования* и может быть **опасной** для ваших данных, поэтому 
 необходимо убедиться в их отсутствии или сделать полную резервную копию.
 Рекомендуется использовать виртуализацию, поскольку она практически безопасна
 и позволяет использовать AROS практически на любом компьютере.  
@@ -234,7 +232,7 @@ a while.
 Подготовка
 ^^^^^^^^^^
 
-Сперва, подготовьте ваш жёсткимй диск (реальный или виртуальный) к использованию.
+Сперва, подготовьте ваш жёсткий диск (реальный или виртуальный) к использованию.
 Настоящий диск может потребовать установки перемычек, подключению к компьютеру
 и настройки в BIOS. Для виртуального диска, скорее всего, потребуется лишь 
 создать новый образ диска, и указать его как одно из возможных устройств загрузки
@@ -245,20 +243,28 @@ a while.
 
 Установка AROS без других ОС
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-*пока не переведено, может измениться*
-The most simple situation is that with AROS alone on the whole disk, new or 
-with some unneeded data on it.
 
-Currently the installation is meant to be made by means of InstallAROS
-program, which is located in the *Tools* drawer on your BootCD. Please launch
-it by clicking on it`s icon. See it`s launched up and showing you the 
-greeting screen. Then click ``Proceed`` button in installer to get 
-a screen with installing options. The option ``Only use free space`` must be 
-checked if you want to keep current partitions as is or ``Wipe disk`` 
-to **erase** existing data on hard drive. You can set the size of new AROS 
-partition if you wish, and add an extra WORK partition to install programs on 
-it. After you click "Proceed" button, AROS going to make partitions and ask you 
-to reboot. After reboot please run InstallAROS again.
+Наиболее простой случай имеет место, если необходимо установиьт только AROS
+на один жёсткий диск, новый или с некими ненужными данными. Также вы можете 
+использовать под AROS дополнительный жёсткий диск.
+
+В настоящее время, установка должна производиться при помощи инструмента
+InstallAROS, расположенного в директории *Tools* на LiveCD. Запустите её
+двойным щелчком по её иконке. Когда она запустится и покажет вам пригласительное
+окно, нажмите кнопку ``Proceed`` для перехода к окну с вариантами установки. 
+
+Здесь вы можете увидеть тип текущего устройства для установки (ata.device) и его
+номер (0). Если вы хотите произвести установку на дополнительный диск, номер 
+следует изменить. Узнать необходимый номер можно с помощью утилиты */Tools/HDToolbox*.
+Если вы хотите сохранить разделы на диске как есть и лишь использовать имеющееся 
+на нём свободное от разделов место, выберите вариант ``Only use free space``,
+или, если диск следует **очистить**, то выберите ``Wipe disk``. Вы также можете 
+задать размер создаваемого раздела, и включить создание дополнительного раздела 
+WORK для установки программ. После нажатия кнопки "Proceed", инсталятор AROS
+создаст разделы и выдаст запрос на перезагрузку. После загрузки следует снова
+запустить InstallAROS.
+
+*пока не переведено, может измениться*
 
 Now you must see the option "Use existing AROS partitions" is selected. Proceed 
 with this. You will see some extra options (defaults shown) in a window::
@@ -706,7 +712,7 @@ see aatext source code, but I hope it is fast enough to be usable even on a
 Footnotes
 =========
 
-.. _`страницы закачек`: ../../download
+.. _`download page`: ../../download
 
 .. _rawrite: http://uranus.it.swin.edu.au/~jn/linux/rawwrite.htm
 
