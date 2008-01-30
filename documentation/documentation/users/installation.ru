@@ -108,8 +108,8 @@ AROS/i386-linux и AROS/i386-freebsd
         EndSection
 
 
-AROS/i386-pc and AROS/X86-64x Native
-------------------------------------
+AROS/i386-pc и AROS/X86-64x Native
+----------------------------------
 
 .. Примечание:: 
     
@@ -134,9 +134,9 @@ PS/2 или USB, клавиатурой AT,PS/2 или USB, жёстким диском IDE и CDROM на PATA,
 ATI и nVidia.
 
 Также могут быть использованы большинство из доступных виртуальных машин (VM).
-Достоврно известно, что с AROS работают: QEMU, VmVare (Server/Workstation/Fusion), 
+Достоверно известно, что с AROS работают: QEMU, VmVare (Server/Workstation/Fusion), 
 Q, Bochs, MS VPC. Существует дистрибутив AROS под названием 
-`VmwAROS <http://vmwaros.org>`, который содержит AROS и ряд програм, 
+`VmwAROS <http://vmwaros.org>`_, который содержит AROS и ряд програм, 
 предустановленных в виртуальной машине VmWare.
 
 Чтобы опробовать возможности AROS в работе с сетями можно использовать 
@@ -169,13 +169,13 @@ CDROM
 Запись
 ''''''
 
-Сперва скачайте ISO-образ LiveCD с AROS со `страницы закачек`_ и запишите его
-на CD-диск с помощью любой доступной программы записи. Существует множество 
-различных программ для записи дисков, пользователям Windows мы можем 
+Сперва скачайте ISO-образ LiveCD с AROS со `страницы закачек <../../download>`__ 
+и запишите его на CD-диск с помощью любой доступной программы записи. Существует 
+множество различных программ для записи дисков, пользователям Windows мы можем 
 посоветовать `InfraRecorder <http://infrarecorder.sourceforge.net>`__ - простую,
 небольшую и удобную свободную программу для записи дисков. Также есть и другие
 программы для записи дисков, например CDBurnerXP, DeepBurn, AstroBurn для Windows,
-k3B, Brasero для Linux. На Amiga (и, возможно, вскоре и на AROS) есть FryingPan.
+k3B, Brasero для Linux. Для Amiga и AROS есть программа FryingPan.
 
 Загрузка
 ''''''''
@@ -203,7 +203,7 @@ BIOS которого не поддерживает загрузку с CD, однако их образы по-прежнему
 ''''''
 
 Чтобы создать загрузочную дискету, вам потребуется скачать образ дискеты со
-`страницы закачек <../../download>`__,распаковать архив, и записать образ на 
+`страницы закачек <../../download>`__, распаковать архив и записать образ на 
 дискету. В случае использования ОС семейства UNIX (например, Linux или FreeBSD), 
 это можно сделать следующим образом::
 
@@ -211,9 +211,8 @@ BIOS которого не поддерживает загрузку с CD, однако их образы по-прежнему
     > dd if=aros.bin of=/dev/fd0
 
 Если вы работаете в Windows, для записи образа на дискету вам понадобится 
-программа rawrite_. Пожалуйста, следуйте её документаци по её использованию. 
-Также существует её версия с графическим интерфейсом - rawwritewin.
-
+программа rawrite_. Пожалуйста, следуйте её документации по использованию. 
+Также существует версия с графическим интерфейсом - rawwritewin.
 
 Загрузка
 ''''''''
@@ -244,7 +243,7 @@ BIOS которого не поддерживает загрузку с CD, однако их образы по-прежнему
 Установка AROS без других ОС
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Наиболее простой случай имеет место, если необходимо установиьт только AROS
+Наиболее простой случай имеет место, если необходимо установить только AROS
 на один жёсткий диск, новый или с некими ненужными данными. Также вы можете 
 использовать под AROS дополнительный жёсткий диск.
 
@@ -312,11 +311,10 @@ reboot into your new installed system.
 Установка AROS совместно с Windows(R)/DOS(R)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Installing AROS along with Windows must be an easy task. Generally, you`ll need to 
-just follow the installer prompts as shown above to make this working. Installer 
-is designed to detect your Windows installation and put it to GRUB menu 
-automatically.
-
+Установка AROS с Windows довольно проста. В общем и целом, необходимо лишь 
+следовать подсказкам инсталятора (как было описано ранее). Инсталятор 
+способен определить наличие установки Windows на диске и в этом случае 
+автоматически добавит Windows к загрузочному меню GRUB.
  
 There can be problems with some older and newer Windows versions (like 95/98 and Vista). 
 For Vista you must use steps, similar to the ones for Linux with GRUB installer.
@@ -661,30 +659,35 @@ Any additions ? ...
 
 
 
-AROS/i386-PPC-hosted
---------------------
+AROS-PPC-linux
+--------------
 
-Requirements
-""""""""""""
-
-To be written by someone.
-
-AROS/m68k-backport aka AfA
---------------------------
-
-This is not usual native/hosted flavour of AROS, but a thing that can be called
-a *backport*. Actually, it`s a set of libraries and binaries to enhance 
-the capabilities of original AmigaOS. AfA stands for AROS for Amigas. 
-
-Requirements
-""""""""""""
+Требования
+""""""""""
 
 To be written by someone.
 
-Installation
-""""""""""""
+Установка
+"""""""""
 
-Installation:
+To be written by someone.
+
+AROS/m68k-backport (AfA)
+------------------------
+
+Это не вполне обычный вид AROS, а скорее нечто, что принято называть *бэкпортом*,
+т.е. набор библиотек и исполняемых файлов для расширения возможностей 
+оригинальной AmigaOS. AfA означает AROS for Amigas (AROS для Амиги). AfA
+разрабатывается Bernd Roesch и может быть найдена 
+`здесь <http://amidevcpp.amiga-world.de/afa_binarie_upload.php>`_.
+
+Требования
+""""""""""
+
+To be written by someone.
+
+Установка
+"""""""""
 
 + copy the directory AfA_OS_Libs to your sys: Amigadrive Bootpartition.
   If you dont like it here you can copy it elsewhere and assign AfA_OS: 

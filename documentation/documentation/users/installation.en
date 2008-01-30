@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright â 1995-2008, The AROS Development Team
+:Copyright: Copyright ò 1995-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. In works, being updating to the current status.
@@ -672,20 +672,8 @@ mostly by newbees. You can check the FAQ if there an answer to your questions.
 Any additions ? ...
 
 
-AROS/i386-PPC-hosted
---------------------
-
-Requirements
-""""""""""""
-
-To be written by someone.
-
-AROS/m68k-backport aka AfA
---------------------------
-
-This is not usual native/hosted flavour of AROS, but a thing that can be called
-a *backport*. Actually, it`s a set of libraries and binaries to enhance 
-the capabilities of original AmigaOS. AfA stands for AROS for Amigas. 
+AROS-PPC-linux
+--------------
 
 Requirements
 """"""""""""
@@ -695,7 +683,24 @@ To be written by someone.
 Installation
 """"""""""""
 
-Installation:
+To be written by someone.
+
+AROS/m68k-backport (AfA)
+------------------------
+
+This is not usual native/hosted flavour of AROS, but a thing that can be called
+a *backport*. Actually, it`s a set of libraries and binaries to enhance 
+the capabilities of original AmigaOS. AfA stands for AROS for Amigas. 
+AfA is developed by Bernd Roesch and can be found 
+`here <http://amidevcpp.amiga-world.de/afa_binarie_upload.php>`_.
+
+Requirements
+""""""""""""
+
+To be written by someone.
+
+Installation
+""""""""""""
 
 + copy the directory AfA_OS_Libs to your sys: Amigadrive Bootpartition.
   If you dont like it here you can copy it elsewhere and assign AfA_OS: 
