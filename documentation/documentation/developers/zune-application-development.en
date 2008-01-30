@@ -3,7 +3,7 @@ Zune Application Development Manual
 ===================================
 
 :Authors:   David Le Corfec
-:Copyright: Copyright © 2004, The AROS Development Team
+:Copyright: Copyright Š 2004, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Unfinished;
@@ -233,55 +233,55 @@ Let's study our first real life example::
         Object *wnd, *app, *but;
     
         // GUI creation
-    	app = ApplicationObject,
-    	    SubWindow, wnd = WindowObject,
-    		MUIA_Window_Title, "Hello world!",
-    		WindowContents, VGroup,
-    		    Child, TextObject,
-    			MUIA_Text_Contents, "\33cHello world!\nHow are you?",
-    			End,
-    		    Child, but = SimpleButton("_Ok"),
-    		    End,
-    		End,
-    	    End;
+        app = ApplicationObject,
+            SubWindow, wnd = WindowObject,
+            MUIA_Window_Title, "Hello world!",
+            WindowContents, VGroup,
+                Child, TextObject,
+                MUIA_Text_Contents, "\33cHello world!\nHow are you?",
+                End,
+                Child, but = SimpleButton("_Ok"),
+                End,
+            End,
+            End;
     
-    	if (app != NULL)
-    	{
-    	    ULONG sigs = 0;
+        if (app != NULL)
+        {
+            ULONG sigs = 0;
     
             // Click Close gadget or hit Escape to quit
-    	    DoMethod(wnd, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
+            DoMethod(wnd, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
                      (IPTR)app, 2,
                      MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
     
             // Click the button to quit
-    	    DoMethod(but, MUIM_Notify, MUIA_Pressed, FALSE,
+            DoMethod(but, MUIM_Notify, MUIA_Pressed, FALSE,
                      (IPTR)app, 2,
                      MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
     
             // Open the window
-    	    set(wnd, MUIA_Window_Open, TRUE);
+            set(wnd, MUIA_Window_Open, TRUE);
 
             // Check that the window opened
-    	    if (XGET(wnd, MUIA_Window_Open))
-    	    {
+            if (XGET(wnd, MUIA_Window_Open))
+            {
                 // Main loop
-    		while((LONG)DoMethod(app, MUIM_Application_NewInput, (IPTR)&sigs)
-    		      != MUIV_Application_ReturnID_Quit)
-    		{
-    		    if (sigs)
-    		    {
-    			sigs = Wait(sigs | SIGBREAKF_CTRL_C);
-    			if (sigs & SIGBREAKF_CTRL_C)
-    			    break;
-    		    }
-    		}
-    	    }
-	    // Destroy our application and all its objects
-    	    MUI_DisposeObject(app);
-    	}
-    	
-    	return 0;
+            while((LONG)DoMethod(app, MUIM_Application_NewInput, (IPTR)&sigs)
+                  != MUIV_Application_ReturnID_Quit)
+            {
+                if (sigs)
+                {
+                sigs = Wait(sigs | SIGBREAKF_CTRL_C);
+                if (sigs & SIGBREAKF_CTRL_C)
+                    break;
+                }
+            }
+            }
+        // Destroy our application and all its objects
+            MUI_DisposeObject(app);
+        }
+        
+        return 0;
     }
 
 
@@ -299,49 +299,49 @@ GUI creation
 We use a macro-based language to easily build our GUI.
 A Zune application has always 1 and only 1 Application object::
 
-    :	app = ApplicationObject,
+    :    app = ApplicationObject,
 
 An application can have 0, 1 or more Window objects. Most often a single one::
 
-    :	    SubWindow, wnd = WindowObject,
+    :        SubWindow, wnd = WindowObject,
 
 Be nice, give a title to the window::
 
-    :		MUIA_Window_Title, "Hello world!",
+    :        MUIA_Window_Title, "Hello world!",
 
 A window must have 1 and only 1 child, usually a group. This one is vertical,
 that means that its children will be arranged vertically::
 
-    :		WindowContents, VGroup,
+    :        WindowContents, VGroup,
 
 A group must have at least 1 child, here it's just a text::
 
-    :		    Child, TextObject,
+    :            Child, TextObject,
 
 Zune accepts various escape codes (here, to center the text) and newlines::
 
-    :			MUIA_Text_Contents, "\33cHello world!\nHow are you?",
+    :            MUIA_Text_Contents, "\33cHello world!\nHow are you?",
 
 An ``End`` macro must match every ``xxxObject`` macro (here, TextObject)::
 
-    :			End,
+    :            End,
 
 Let's add a second child to our group, a button! With a keyboard shortcut ``o``
 indicated by an underscore::
 
-    :		    Child, but = SimpleButton("_Ok"),
+    :            Child, but = SimpleButton("_Ok"),
 
 Finish the group::
 
-    :		    End,
+    :            End,
 
 Finish the window::
 
-    :		End,
+    :        End,
 
 Finish the application::
 
-    :	    End;
+    :        End;
 
 So, who still needs a GUI builder? :-)
 
@@ -353,17 +353,17 @@ If any of the object in the application tree can't be created, Zune destroys
 all the objects already created and application creation fails. If not, you
 have a fully working application::
 
-    :	if (app != NULL)
-    :	{
-    :	    ...
+    :    if (app != NULL)
+    :    {
+    :        ...
 
 When you're done, just call ``MUI_DisposeObject()`` on your application
 object to destroy all the objects currently in the application, and
 free all the resources::
 
     :       ...
-    :	    MUI_DisposeObject(app);
-    :	}
+    :        MUI_DisposeObject(app);
+    :    }
 
 
 Notifications
@@ -449,7 +449,15 @@ Conclusion
 ----------
 
 This program gets you started with Zune, and allows you to toy with
-GUI design, but not more.
+GUI design, but not more.  
+
+Compiling
+---------
+
+To compile this simple program with i386-aros-gcc cross-compiler please use 
+this command::
+
+    i386-aros-gcc -o hello -D__AROS__ hello.c -lmui
 
 
 --------------------

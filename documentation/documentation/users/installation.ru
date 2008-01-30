@@ -203,7 +203,7 @@ BIOS которого не поддерживает загрузку с CD, однако их образы по-прежнему
 ''''''
 
 To create the boot floppy, you will need to download the disk image from
-the `download page`_, extract the archive, and write the boot image to a floppy
+the `страницы закачек`_, extract the archive, and write the boot image to a floppy
 disk. If you are using a UNIX-like operating system (such as Linux or FreeBSD), 
 you can do this with the following command::
 

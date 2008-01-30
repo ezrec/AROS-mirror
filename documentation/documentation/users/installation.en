@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright Â 1995-2008, The AROS Development Team
+:Copyright: Copyright Ò 1995-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. In works, being updating to the current status.
@@ -268,11 +268,12 @@ a screen with installing options. The option ``Only use free space`` must be
 checked if you want to keep current partitions as is or ``Wipe disk`` 
 to **erase** existing data on hard drive. You can set the size of new AROS 
 partition if you wish, and add an extra WORK partition to install programs on 
-it. After you click "Proceed" button, AROS going to make partitions and ask you 
-to reboot. After reboot please run InstallAROS again.
+it. After you click ``Proceed`` button again, AROS going to make partitions 
+and ask you to reboot. After reboot please run InstallAROS again.
 
-Now you must see the option "Use existing AROS partitions" is selected. Proceed 
-with this. You will see some extra options (defaults shown) in a window::
+Now you must see the option ``Use existing AROS partitions`` is selected. 
+``Proceed`` with this. You will see some extra options (defaults shown) 
+in a window::
 
     [ ] Choose language Options
     [x] Install AROS Core System
@@ -280,15 +281,15 @@ with this. You will see some extra options (defaults shown) in a window::
     [ ] Install Development Software
     [x] Install Bootloader
     
-The first, "Choose language Options" allow you to select locale of your new
-installed system (by launching /Extras/Locale program). "Install AROS Core System"
+The first one, ``Choose language Options`` allow you to select locale of your new
+installed system (by launching /Extras/Locale program). ``Install AROS Core System``
 allows installing of all AROS base programs, needed for OS to work. 
-"Install Extra Software" allows installing an additional programs (located on
-in /Extras drawer and, if selected, on WORK partition). "Install Development Software"
+``Install Extra Software`` allows installing an additional programs (located on
+in /Extras drawer and, if selected, on WORK partition). ``Install Development Software``
 allows installing of some development software like some programming languages.
-"Install Bootloader: enables installing of GRUB bootloader to MBR of HD (there
+``Install Bootloader`` enables installing of GRUB bootloader to the MBR of HD (there
 can be some situations when you don`t need to install it). Make your choice and
-click "Proceed" button. 
+click ``Proceed`` button. 
 
 On the next installer screen you can choose which partitions you want to format,
 and to copy files on, whether WORK partition is used to copy files on it::
@@ -305,8 +306,8 @@ and to copy files on, whether WORK partition is used to copy files on it::
 
 After you made your choice and proceed installer will show the GRUB installation
 device and path to GRUB files for you to check it. Proceeding, you will see 
-the las screen before installation, that warns you about pre-alpha status of
-AROS install process. The last clicking "Proceed" and you will see installer
+the last screen before installation, that warns you about pre-alpha status of
+AROS install process. The last clicking ``Proceed`` and you will see installer
 doing it`s work. You can be asked to select your keyboard type and locale 
 settings, then the files are being copied. Please wait a while. 
 
@@ -319,7 +320,9 @@ Installing AROS along with Windows(R)/DOS(R)
 Installing AROS along with Windows must be an easy task. Generally, you`ll need to 
 just follow the installer prompts as shown above to make this working. Installer 
 is designed to detect your Windows installation and put it to GRUB menu 
-automatically.
+automatically. If you ever need to restore previous NT loader, you can use 
+fixmbr command in recovery console from your Windows installation CD.
+
  
 There can be problems with some older and newer Windows versions (like 95/98 and Vista). 
 For Vista you must use steps, similar to the ones for Linux with GRUB installer.
@@ -344,8 +347,8 @@ bootloader.
 AROS uses patched GRUB bootloader, able to load kernel from AFFS. But you don`t
 have to use it, if you put AROS kernel to the place, where your system kernel is 
 (usually /boot) and use a conventional GRUB from your distribution. Just copy 
-/boot/aros-i386.gz from AROS LiveCD to /boot. Then put some new lines to the end 
-of /boot/grub/menu.lst file to enable AROS menu entry::
+``/boot/aros-i386.gz`` from AROS LiveCD to ``/boot``. Then put some new lines 
+to the end of your ``/boot/grub/menu.lst`` file to enable AROS menu entry::
 
     title AROS VBE  640x480  16bpp
     root (hd0,0)
