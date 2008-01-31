@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright ê 1995-2008, The AROS Development Team
+:Copyright: Copyright © 1995-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. In works, being updating to the current status.
@@ -44,8 +44,10 @@ available and how to download them.
 Installation
 ============
 
+
 AROS/i386-linux and AROS/i386-freebsd-hosted
 --------------------------------------------
+
 
 Requirements
 """"""""""""
@@ -111,7 +113,8 @@ ever installed. It`s known to be working, but is in testing stage.
 
 
 AROS/i386-pc and AROS/X86-64x Native
-------------------------------------
+-----------------------------------
+
 
 Requirements
 """"""""""""
@@ -149,6 +152,7 @@ X86-64x port has the similar requirements, assuming that 64-bit capable Intel/AM
 CPU is used. Chipset support currently limited. This port is early, please 
 report bugs.
 
+
 Installation media
 """"""""""""""""""
 
@@ -164,6 +168,7 @@ you will need access to a CD burner to create the installation disk yourself.
 CDROM
 ^^^^^
 
+
 Writing
 '''''''
 
@@ -175,7 +180,6 @@ cd burning programs for any system, and we can point Windows users to the
 small and fast, and it`s just simple. Another examples
 are CDBurnerXP, DeepBurn, AstroBurn, and in linux world there`s  k3B, Brasero 
 and others. On Amiga (and hopefully, AROS soon) you can use FryingPan.
-
 
 
 Booting
@@ -226,6 +230,7 @@ Simply insert the boot floppy into the drive and reboot the computer. The boot
 is fully automatic, and if everything works you should see a nice screen after
 a while.
 
+
 Installing to hard drive
 """"""""""""""""""""""""
 
@@ -237,6 +242,7 @@ possible risk and allows AROS to be used and tested on any working machine.
 There are many free VM`s available now, such as VirtualPC, Q, QEMU and VMWare, 
 which are known to work with AROS. You can also use VmwAROS preinstalled 
 environment to try it out.
+
 
 Getting ready
 ^^^^^^^^^^^^^
@@ -250,6 +256,7 @@ devices (the CD drive must be the first boot device during installtion
 of AROS however).
 
 The following options are depending on what you want to do.
+
 
 Installing AROS Only
 ^^^^^^^^^^^^^^^^^^^^
@@ -316,21 +323,34 @@ settings, then the files are being copied. Please wait a while.
 After the install finishes you can remove AROS Live CD out of CD drive an
 reboot into your new installed system.
 
+
 Installing AROS along with Windows(R)/DOS(R)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Installing AROS along with Windows must be an easy task. Generally, you`ll need to 
+Installing AROS along with Windows must be an easy task (assuming you use 
+Windows XP). Generally, you`ll need to 
 just follow the installer prompts as shown above to make this working. Installer 
 is designed to detect your Windows installation and put it to GRUB menu 
-automatically. If you ever need to restore previous NT loader, you can use 
-fixmbr command in recovery console from your Windows installation CD.
+automatically. Check the chapter above about standalone AROS installation to do 
+this. If you ever need to restore previous NT loader, you can use 
+``fixmbr`` command in recovery console from your Windows installation CD.
 
  
 There can be problems with some older and newer Windows versions (like 95/98 and Vista). 
-For Vista you must use steps, similar to the ones for Linux with GRUB installer.
-This involves use of some programs like BCD.
+For installing over Vista you can use steps, similar to the ones for Linux with 
+GRUB installer. In some cases Grub can installed and used to boot Vista, you`d 
+just need to add a menu entry to your /boot/grub/menu.lst::
+
+    title Windows Vista
+    root (hd0,0)
+    makeactive
+    chainloader +1
+
+If you prefer to use Vista bootloader, you can use some programs like EasyBCD
+to manage it`s behaviour.
 
 TODO more...
+
 
 Installing AROS along with Linux/BSD
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -368,6 +388,7 @@ chainload AROS GRUB and set it to start up a kernel.
 
 After the reboot, you must be able to see AROS entry in GRUB menu and boot it.
 
+
 Installing AROS along with other systems
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -377,11 +398,14 @@ to the one of Linux. If not, please remember that all you need for AROS to boot
 is just to place it`s files on a partition where GRUB can find it 
 and boot the kernel. 
 
-TODO
+TODO more...
+
 
 Manual install 
 ^^^^^^^^^^^^^^
-*(almost deprecated)*
+
+*(almost deprecated)*  Using InstallAROS is recommended.
+
 As the InstallAROS is useful now, the following information is kind of
 deprecated but still can be of some interest, so it`s have been kept here for 
 the infomational purposes.
@@ -510,8 +534,8 @@ After booting up and checking all the settings for DH0, we must see it's
 OK now. So now we can exit HDToolbox with no hesitation left. Now it's
 time for some CLI magic.
 
-**Formatting**
 
+**Formatting**
 
 We must format our created DH0 drive to make it usable. Currently AROS have
 a choice of two filesystems - Fast FileSystem(FFS) and Smart FileSystem(SFS). 
@@ -555,10 +579,9 @@ That's it. Time for the pre-installation reboot.
           ready-made virtual HD's that are already made and ready for install,
           so you can skip the previous procedure and install a fresh
           version of AROS. 
-
+          
 
 **Copying the system**
-
 
 After reboot, you may notice that you can see our AROS HD on the desktop
 now, and it's empty. Now we need to fill it with files.
@@ -622,8 +645,8 @@ screen and *Reboot* checkbox. Leave this checked and click Proceed. No,
 that isn't all yet - wait till the last step remaining. Now our machine
 will reboot with the same settings as before, from Live CD.
 
-**Installing the bootloader**
 
+**Installing the bootloader**
 
 Now we still see our AROS disk, and all files are there. Haven`t we
 already installed the bootloader in previous steps, what are we
@@ -654,12 +677,10 @@ bootloader will be installed.
 
 **Preparing to boot**
 
-
 We have just done our first installation alchemy course, and AROS should
 be ready now. We must remove the Live CD from the CD drive (or disable
 booting from CD in VM) and check it out. Hear the drum roll? ;)
 
-If something goes wrong, there can be some answers...
 
 **Troubleshooting**
 
@@ -692,6 +713,7 @@ Running
 """""""
 
 To be written by someone.
+
 
 AROS/m68k-backport (AfA)
 ------------------------
