@@ -3,7 +3,7 @@ AROS Installation Guide
 =======================
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
-:Copyright: Copyright ò 1995-2008, The AROS Development Team
+:Copyright: Copyright  1995-2008, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. In works, being updating to the current status.
@@ -26,12 +26,9 @@ AROS Installation Guide
 Downloading
 ===========
 
-AROS is currently under heavy development. The result is that you have to choose
-between stability and features. There are two types of binary packages
-possible: snapshots and nightly builds. 
-
-Currently, there`s no snapshots available, because the ones existed before has
-been too obsoleted to reflect the current status. So the users are encouraged 
+AROS is currently under heavy development, and there`s no more stable snapshots 
+available at this time, because the ones existed before become too obsolete
+and not reflected the current status of AROS. The users are encouraged 
 to download the nightly builds instead.
 
 Nightly builds are done, as the name implies, automatically every night directly
@@ -666,13 +663,11 @@ If something goes wrong, there can be some answers...
 
 **Troubleshooting**
 
-
 Installation process is the one of most frequently ones asked about on forums,
 mostly by newbees. You can check the FAQ if there an answer to your questions.
-Any additions ? ...
 
 
-AROS-PPC-linux
+AROS/PPC-linux
 --------------
 
 Requirements
@@ -680,8 +675,21 @@ Requirements
 
 To be written by someone.
 
-Installation
-""""""""""""
+Extracting
+""""""""""
+
+Simply get the appropriate archives for your platform
+from the `download page`_ and extract them where you want them::
+
+    > tar -vxjf AROS-<version>-ppc-<platform>-system.tar.bz2
+
+If you downloaded the contrib archive, you may want to extract it too (but
+now it`s contents is already included in the system archive and LiveCD)::
+
+    > tar -vxjf AROS-<version>-ppc-all-contrib.tar.bz2
+
+Running
+"""""""
 
 To be written by someone.
 
@@ -695,7 +703,7 @@ AfA is developed by Bernd Roesch and can be found
 `here <http://amidevcpp.amiga-world.de/afa_binarie_upload.php>`_.
 
 Requirements
-""""""""""""
+"""""""""""" 
 
 To be written by someone.
 
@@ -703,9 +711,9 @@ Installation
 """"""""""""
 
 + copy the directory AfA_OS_Libs to your sys: Amigadrive Bootpartition.
-  If you dont like it here you can copy it elsewhere and assign AfA_OS: 
-  to the directory where the AfA_OS_Libs are located
-  copy Libs:freetype2.library in your sys:libs directory
+  If you don`t like it there you can copy it elsewhere and assign AfA_OS: 
+  to the directory where the AfA_OS_Libs are located.
++ copy Libs:freetype2.library to your sys:libs directory
 + copy C:AfA_OS_Loader to your sys:fonts directory
 + copy Fonts: to your sys:fonts directory. If you want to have more 
   fonts, use the Fonts from AROS or MOS
@@ -715,14 +723,14 @@ To start it on boot time, insert AfA_OS_Loader in your S:startup-sequence,
 short before IPrefs. It must be inserted after patching tools like MCP 
 or picasso96/cgx, because they patch the AfA_OS Functions back.
 
-If you start it with the parameter MOUSESTART (must uppercase written), 
+If you start it with the parameter MOUSESTART (must be written in uppercase), 
 you must hold the left mousebutton during boot time to load the modules, 
 instead of skipping them.
 
 To see if all works well, start the "TextBench" program found in this archive.
-TTF antialiased speed is currently not a text render winner, it is not optimized,
-see aatext source code, but I hope it is fast enough to be usable even on a 
-060/50MHz.
+Antialiased TTF fonts rendering speed is currently not the best, it is not 
+optimized (see aatext source code), but there`s a hope it is fast enough 
+to be usable even on a 060/50MHz.
 
 
 Footnotes
