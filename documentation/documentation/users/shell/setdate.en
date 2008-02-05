@@ -1,0 +1,97 @@
+=======
+SetDate
+=======
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <setclock>`_ `Next <setdefaultfont>`_ 
+
+---------------
+
+::
+
+ SetDate 
+
+Format
+~~~~~~
+::
+
+
+     SetDate (file | pattern) [(weekday)] [(date)] [(time)] [ALL]
+
+
+Synopsis
+~~~~~~~~
+::
+
+
+     FILE/A,WEEKDAY,DATE,TIME,ALL/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Sys:c
+
+
+Function
+~~~~~~~~
+::
+
+
+     Changes the the date and time of the creation or last change of a
+     file or directory. With option ALL, it changes the date and time of
+     all files and directories (and files and subdirectories to those)
+     matching the specified pattern.
+         You may use the output from Date as input to SetDate.
+ 
+
+Inputs
+~~~~~~
+::
+
+
+     FILE     --  File (or pattern) to change the date of.
+
+     WEEKDAY  --  Specification of the day of the date. This is locale
+                  sensitive, and you may use standard keywords as
+                  'Tomorrow' and 'Yesterday' (in the language used, of
+                  course).
+
+     DATE     --  A date described according to the locale specification
+                  of the currently used language.
+
+     TIME     --  Time string in localized format.
+
+     ALL      --  Recurse through subdirectories.
+
+
+Result
+~~~~~~
+::
+
+
+     Standard DOS return codes
+
+
+Example
+~~~~~~~
+::
+
+
+     SetDate #? `Date` ALL
+
+     Sets the date for all files and directories in the current directory
+     and its subdirectories to the current date.
+
+
+See also
+~~~~~~~~
+::
+
+
+     Date
+
+

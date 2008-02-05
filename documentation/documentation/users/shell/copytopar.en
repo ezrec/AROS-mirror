@@ -1,0 +1,56 @@
+=========
+CopytoPAR
+=========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <copy>`_ `Next <date>`_ 
+
+---------------
+
+::
+
+ CopytoPAR 
+
+Synopsis
+~~~~~~~~
+::
+
+
+     FILE/A,QUIET/S
+
+
+Location
+~~~~~~~~
+::
+
+
+     Sys:c
+
+
+Function
+~~~~~~~~
+::
+
+
+     Copies (or sends a) file to parallel.device.
+     
+
+Inputs
+~~~~~~
+::
+
+
+     FILE   --  Either a file, a directory or a pattern to match.
+
+     QUIET  --  Suppresses any output to the shell.
+
+
+Result
+~~~~~~
+::
+
+
+     Standard DOS return codes.
+
+

@@ -18,6 +18,7 @@ Shell commands
 `ChangeTaskPri`__
 `Conclip`__
 `Copy`__
+`CopytoPAR`__
 `Date`__
 `Delay`__
 `Delete`__
@@ -55,6 +56,8 @@ Shell commands
 `Prompt`__
 `Protect`__
 `Quit`__
+`QuitAROS`__
+`Reboot`__
 `Relabel`__
 `Rename`__
 `RequestChoice`__
@@ -63,6 +66,7 @@ Shell commands
 `Search`__
 `Set`__
 `SetClock`__
+`SetDate`__
 `SetDefaultFont`__
 `Setenv`__
 `SetKeyboard`__
@@ -93,6 +97,7 @@ __ cd
 __ changetaskpri
 __ conclip
 __ copy
+__ copytopar
 __ date
 __ delay
 __ delete
@@ -130,6 +135,8 @@ __ path
 __ prompt
 __ protect
 __ quit
+__ quitaros
+__ reboot
 __ relabel
 __ rename
 __ requestchoice
@@ -138,6 +145,7 @@ __ run
 __ search
 __ set
 __ setclock
+__ setdate
 __ setdefaultfont
 __ setenv
 __ setkeyboard

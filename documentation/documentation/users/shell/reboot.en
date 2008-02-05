@@ -1,0 +1,57 @@
+======
+Reboot
+======
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_ `Prev <quitaros>`_ `Next <relabel>`_ 
+
+---------------
+
+::
+
+ Reboot 
+
+Synopsis
+~~~~~~~~
+::
+
+
+     (N/A)
+
+
+Location
+~~~~~~~~
+::
+
+
+     Sys:C
+
+
+Function
+~~~~~~~~
+::
+
+
+     It reboots the machine ( performs a cold reboot - Coldreboot() )
+
+
+Notes
+~~~~~
+::
+
+
+     Any programs and data in memory will be lost and all disk
+     activity will cease – Make sure no disk access is being 
+     carried out by your computer.
+
+
+
+See also
+~~~~~~~~
+::
+
+
+     QuitAROS
+
+
