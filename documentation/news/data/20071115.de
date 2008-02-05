@@ -15,21 +15,23 @@ Netzwerktreiber für RTL8139 gearbeitet; und Robert Norris hat Probleme
 in den Dateibenachrichtigungen behoben, die noch vor kurzem die
 Voreinsteller zerstört hatten - nur um drei davon zu nennen.
 
-Robert Norris hat einen SDL Treiber für AROS unter Linux hinzugefügt.
-Damit können Sie ein gehostetes AROS erstellen das X nicht mehr benötigt (es muss nicht mal mehr installiert sein, um AROS zu erstellen). Theoretisch kann dies hilfreich sein um AROS auf anderen Platformen (überall wo SDL existiert) hosten zu lassen, allerdings ist es etwas langsamer als der X Treiber.
+Robert Norris hat einen SDL-Treiber für AROS unter Linux hinzugefügt.
+Damit können Sie ein gehostetes AROS erstellen das X nicht mehr benötigt
+(es muss nicht mal mehr installiert sein, um AROS zu erstellen). Theoretisch kann dies
+hilfreich sein um AROS auf anderen Plattformen (überall wo SDL existiert) hosten zu lassen,
+allerdings ist es etwas langsamer als der X Treiber.
 
 Matthias Rustler hat die ptplay.library nach AROS portiert. Sie
-wandelt Protracker Module in sound samples. Zusätzlich hat er das
-einfache Beispielabspieler ShellPlayer portiert. Sie werden sich
-in den nächtlichen builds unter dem Ordner Extras/MultiMedia/Audio befinden.
+wandelt Protracker Module in Soundsamples. Zusätzlich hat er den
+einfachen Beispielabspieler ShellPlayer portiert. Sie werden sich
+in den nächtlichen Builds unter dem Ordner Extras/MultiMedia/Audio befinden.
 
 Matthias Rustler hat auch eine erste Portierung von `Wazp3D`__
 von Alain Theller erstellt. Wazp3D ist eine Bibliothek, die als
 kompatibel mit der bekannten Warp3D.library für AmigaOS 68040
 gedacht ist und die Portierung einiger 3D Amiga Spiele auf AROS
-vereinfacht. Wazp3D kann auch als Software Renderer eingesetzt
-werden, um Anwendungen zu täuschen die nach einem 3D Hardware 
-Treiber suchen.
+vereinfacht. Wazp3D kann auch als Softwarerenderer eingesetzt
+werden, um Anwendungen zu täuschen die nach einem 3D-Hardwaretreiber suchen.
 
 Michal Schulz kam mit seiner `x86-64`__ Portierung von AROS einige 
 große Schritte voran. Der Tag für den Einsatz von 64 Bit AROS
@@ -43,5 +45,3 @@ __ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=2319
 __ http://ftp.ticklers.org/pub/aminet/driver/video/Wazp3D.readme
 __ http://msaros.blogspot.com/2007/10/very-close.html
 __ http://www.aros.org/cs
-
-

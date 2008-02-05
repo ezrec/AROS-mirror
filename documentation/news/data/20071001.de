@@ -15,24 +15,24 @@ ermöglicht. Folgendes sind die neuen Funktionen:
 - Installationslaufwerk und Partitionen können jetzt angegeben werden.
 - Das Erstellen von Arbeitspartitionen funktioniert jetzt.
 - Parititionsgrößen können nun angegeben werden und vorhandene Partitionen werden nicht geändert.
-- Windows wird nun zum GRUB Startmenü hinzugefügt, wenn eine vorhandene Windows Systempartition gefunden wird
+- Windows wird nun zum GRUB-Startmenü hinzugefügt, wenn eine vorhandene Windows-Systempartition gefunden wird
 - Die Spracheinstellungen können während der Installation angegeben werden.
 
 
-Bitte beachten Sie dennoch dass es Sich um Beta Software handelt. Anbei einige
-Warnungen von Neil: "Der neue Festplatten Installer ist ab sofort auf der
-nächtlichen ISO enthalten und bereit zum testen. Allerdings gibt es aktuell
-einen Fehler entweder in Wanderer oder FFS der umgangen werden muß. Nach dem
-Starten des Installer müssen Sie Wanderer beenden bevor Sie weitermachen (es
-sei denn Sie möchten keine Parititonen formatieren).
-Seien Sie sehr vorsichtig mit dieser Installer Version, z.B. bieten
+Bitte beachten Sie dennoch dass es sich um Beta Software handelt. Anbei einige
+Warnungen von Neil: "Der neue Festplatteninstaller ist ab sofort auf der
+nächtlichen ISO enthalten und bereit zum Testen. Allerdings gibt es aktuell
+einen Fehler entweder in Wanderer oder FFS der umgangen werden muss. Nach dem
+Starten des Installers müssen Sie Wanderer beenden bevor Sie weitermachen (es
+sei denn Sie möchten keine Partitionen formatieren).
+Seien Sie sehr vorsichtig mit dieser Installer-Version, z.B. bieten
 Sie ihm keine Maschine mit nicht gesicherten wertvollen Daten an. Er sollte
 alle vorhandenen Partitionen beibehalten wenn es gefordert ist, aber keiner
 außer mir hat das bislang getestet."
 
 Wenn Sie eine Testmaschine ohne wichtige Daten darauf haben, dann wäre es
 sehr tüchtig von Ihnen den nächtlichen Build von 10-01 (oder neuer) herunter zu
-laden und uns dabei zu helfen Fehler zu finden. Sie können den Bug Tracker
+laden und uns dabei zu helfen Fehler zu finden. Sie können den Bugtracker
 verwenden oder eine Nachricht in dieser AROS-Exec `Diskussion`__ hinterlassen.
 
 
@@ -41,8 +41,8 @@ Präsentation von AROS
 
 Wie zuvor auf dieser Webseite angekündigt war AROS ein Gaststar
 auf der `Pianeta Amiga 2007`__. Während der bekannten Amiga Show
-hat Paolo Besser AROS einer Nische interessierter Amiga Anhänger
-vorgestellt. Das Eriegnis wurde von einigen wichtigen IT News
+hat Paolo Besser AROS einer Nische interessierter Amigaanhänger
+vorgestellt. Das Ereignis wurde von einigen wichtigen IT News
 Seiten wie `TGM Online`__ und `HW Upgrade`__ begleitet. Ein Bericht
 der Show wurde von der `The AROS Show`__ (Lesen Sie es `hier`__)
 veröffentlicht. Sie können sich auch auf YouTube ein nettes `Video`__ 
@@ -52,7 +52,7 @@ AROS Weltweit
 -------------
 
 Unsere Webseite hat einige neue Dokumentationsübersetzungen erhalten - namentlich
-in Griechisch (von Ioannis Koniaris), Spanisch (von Ariel Gomez) und Tschechisch
+in griechisch (von Ioannis Koniaris), spanisch (von Ariel Gomez) und tschechisch
 (von  Petr Novak), mit der üblichen und erforderlichen Hilfe von Neil Cafferkey.
 Schwedische (von Jon Anderson) und russische (von Softy) Übersetzungen kommen
 demnächst. Auch kommen weitere Updates in weiteren Sprachen (von... Ihnen!?).

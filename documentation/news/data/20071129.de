@@ -10,11 +10,11 @@ Status Update
 
 `Michal Schulz`__ hat das Wunder vollbracht und ein komplett neues Kapitel
 beginnt in der Geschichte von AROS. Ab heute können Sie sich den nativen
-64 Bit "Flavour" von AROS auf unserer Webseite herunterladen. Diese
+64-Bit "Flavour" von AROS auf unserer Webseite herunterladen. Diese
 neue Version ist offensichtlich fortgeschrittener als die normale und
 verfügt über begrenzten Speicherschutz und das Laden von Startmodulen.
 Eine vorläufige Sperre bis 4GB RAM wird entfernt, sobald eine saubere
-MMU Umsetzung durchgeführt wird. Um die 64 Bit Version von AROS zu 
+MMU-Umsetzung durchgeführt wird. Um die 64 Bit Version von AROS zu 
 betreiben wird ein 64-Bit x86 Prozessor wie ein AMD Athlon 64 oder
 der neueste Intel Core2 benötigt!
 
@@ -22,7 +22,7 @@ der neueste Intel Core2 benötigt!
 VmwAROS
 -------
 
-Eine neue AROS Distribution wurde geboren. `VmwAROS`__ ist eine vorinstallierte
+Eine neue AROS-Distribution wurde geboren. `VmwAROS`__ ist eine vorinstallierte
 und vorkonfigurierte AROS Umgebung für VMWare, die kompatibel mit
 den Windows- und Linuxversionen von VMWare Player, Server und Workstation 
 (v5 oder v6) ist. Diese Distribution ist noch lange nicht vollständig,
@@ -34,18 +34,18 @@ Daten oder Festplatte zu gefährden.
 `Klicken Sie hier`__ für mehr.
 
 
-Weitere news
+Weitere News
 ------------
 
-Der Aros-Exec Benutzer Fishy_fis hat eine neue `Velocity`__ genannte 
-AROS Distribution angekündigt. Eine erste Betaversion wird in Kürze
+Der Aros-Exec-Benutzer Fishy_fis hat eine neue `Velocity`__ genannte 
+AROS-Distribution angekündigt. Eine erste Betaversion wird in Kürze
 veröffentlicht. "Velocity wird zunächst sowohl als installierbare 
 live Boot CD als auch in einem VMWare Festplattenimage verfügbar sein
 und enthält beträchtlich mehr (und benutzerdefiniert eingerichtete)
 Software als die nächtlichen ISOs". Bildschirmfotos sind enthalten.
 
 Robert Norris arbeitet an einem Traveller genannten und auf WebKit basierenden
-AROS WebBrowser. Es wurden viele AROS Bibliotheken aktualisiert während er daran
+AROS WebBrowser. Es wurden viele AROS-Bibliotheken aktualisiert während er daran
 gearbeitet hat und er hat bereits einige nützliche Programme portiert wie
 libxml2, cURL, OpenSSL, SQLite und weitere. Einige Informationen finden
 Sie in `seinem Blog`__.
@@ -57,4 +57,3 @@ __ http://vmwaros.blogspot.com/2007/11/vmwaros-beta-01-released.html
 __ http://vmwaros.blogspot.com/2007/11/here-we-go.html
 __ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=2434
 __ http://cataclysm.cx
-

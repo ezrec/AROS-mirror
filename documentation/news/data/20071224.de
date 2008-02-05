@@ -13,33 +13,33 @@ die (euer)unser Betriebssystem erreicht hat.
 
 Hier einige Beispiele aus den "Meilensteinen" von AROS aus dem Jahr 2007.
 
-Januar: Nach Jahren des Kampfes mit Shell Kommandos und DOpus Aktionen
+Januar: Nach Jahren des Kampfes mit Shell-Kommandos und DOpus-Aktionen
 wurde das Kopieren von Dateien mit der Drag'n'drop Funktion in Wanderer
 zum Kinderspiel.
 
-Februar: Eine tap Schnittstelle wurde in AROS hosted hinzugefügt,
-mit der nun die Netzerkunterstützung komplett ist.
+Februar: Eine tap-Schnittstelle wurde in AROS/hosted hinzugefügt,
+mit der nun die Netzwerkunterstützung komplett ist.
 
 März: AROS erhielt das paketierte Dateisystem, das die Kompatibilität
 und Vergleichbarkeit mit dem ursprünglichen AmigaOS erhöht und AROS
-nun die Möglichkeit zur Verwaltung von FAT Paritionen eröffnet. Weiterhin
+nun die Möglichkeit zur Verwaltung von FAT-Partitionen eröffnet. Weiterhin
 hat AROS einen verbesserten TCP/IP Stack mit einer neuen Version von
-AROSTCP sowie USB Unterstützung erhalten.
+AROSTCP sowie USB-Unterstützung erhalten.
 
-April: Wanderer erhielt ein neues Skinning System, das es ermöglicht
+April: Wanderer erhielt ein neues Skinning-System, das es ermöglicht
 die Fensteroberflächen mit benutzerdefinierten Layouts zu versehen.
-Die Unterstützung für LUA und ARexx Skripte wurde ebenfalls verbessert.
+Die Unterstützung für Lua- und ARexx-Skripte wurde ebenfalls verbessert.
 
 Mai: Der Name AROS wurde in "AROS Research Operating System" geändert
 und aros.org erhielt ein grundlegendes Facelifting. Wanderer zeigte nun
 nur noch Icons oder alle Dateien eines Ordners an und eine neue
 durch die Community gepflegte Webseite wurde geboren, ArosWorld.org.
 
-Juni: Die AROS Anwender haben in einem amüsanten Wettbewerb die offiziellen
-Fenster- und Desktop Hintergrundbilder gewählt.
+Juni: Die AROS-Anwender haben in einem amüsanten Wettbewerb die offiziellen
+Fenster- und Desktop-Hintergrundbilder gewählt.
 
-September: AROS wurde in einer Konferenz auf der Pianeta Amiga der Amiga
-Community vorgestellt. MUIBase und HivelyTracker wurden ebenfalls portiert.
+September: AROS wurde in einer Konferenz auf der Pianeta Amiga der Amiga-Community
+vorgestellt. MUIbase und HivelyTracker wurden ebenfalls portiert.
 
 Oktober: AROS erhielt einen neuen Installer, der die Installation auf
 Festplatten vereinfacht. Jetzt kann AROS ohne Probleme auf einer Festplatte 
@@ -48,6 +48,5 @@ gemeinsam mit Microsoft Windows installiert sein.
 November: AROS hat mit seinem "64-Bit Flavour" einen großen Sprung vorwärts
 gemacht. 
 
-Dezember: Zwei neue AROS Distributionen wurden angekündigt, Velocity 
+Dezember: Zwei neue AROS-Distributionen wurden angekündigt, Velocity 
 und VmwAROS.
-
