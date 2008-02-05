@@ -215,6 +215,7 @@ This file is read by GDB on startup, and contains the following commands::
     taskwait - List of tasks currently waiting for an event
     modlist - List of all the modules currently loaded in memory
     printtaglist - Display the given taglist
+    loadseg - Findaddr & add-symbol-file
 
 Of this list, ``findaddr`` is essential for proper debugging of non-ROM
 code (shared libraries, applications ...)
@@ -293,6 +294,9 @@ So hopefully you can find the error::
     107             set(3243243, MUIA_Window_Open, TRUE);
 
 Repeat for the remaining addresses you wish to resolve.
+
+There is the new ``loadseg`` function which makes ``findaddr`` and ``add-symbol-file``
+in one step. Use it with the address argument which you'd use with ``findaddr``.
 
 Using thistask
 --------------
