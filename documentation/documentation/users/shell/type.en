@@ -25,7 +25,7 @@ Location
 ::
 
 
-     Sys:C
+     C:
 
 
 Function
@@ -54,7 +54,7 @@ Example
 ::
 
 
-     type abc.txt
-     type xyz.dat hex
-     
+     Type abc.txt
+     Type xyz.dat HEX
+
 
