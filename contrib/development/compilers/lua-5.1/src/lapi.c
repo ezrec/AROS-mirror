@@ -123,6 +123,11 @@ LUA_API void lua_xmove (lua_State *from, lua_State *to, int n) {
 }
 
 
+LUA_API void lua_setlevel (lua_State *from, lua_State *to) {
+  to->nCcalls = from->nCcalls;
+}
+
+
 LUA_API lua_CFunction lua_atpanic (lua_State *L, lua_CFunction panicf) {
   lua_CFunction old;
   lua_lock(L);
@@ -749,7 +754,7 @@ LUA_API int lua_setfenv (lua_State *L, int idx) {
       res = 0;
       break;
   }
-  luaC_objbarrier(L, gcvalue(o), hvalue(L->top - 1));
+  if (res) luaC_objbarrier(L, gcvalue(o), hvalue(L->top - 1));
   L->top--;
   lua_unlock(L);
   return res;
