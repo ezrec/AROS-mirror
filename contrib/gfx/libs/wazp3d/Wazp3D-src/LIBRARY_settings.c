@@ -1,21 +1,19 @@
-#include <utility/hooks.h>
-#include <utility/tagitem.h>
-#include <proto/exec.h>
-#include <exec/types.h>
-#include <exec/memory.h>
-#include <proto/intuition.h>
+#include <graphics/text.h>
 #include <intuition/intuition.h>
-#include <intuition/classes.h>
+#include <libraries/gadtools.h>
+#include <proto/intuition.h>
 #include <proto/gadtools.h>
+#include <proto/exec.h>
 
 struct MyButton{
     BOOL ON;
     UBYTE name[30];
     };
 #define NLOOP(nbre) for(n=0;n<nbre;n++)
-struct TextAttr Topaz80 = { "topaz.font", 8, 0, 0, };
+static const struct TextAttr Topaz80 = { "topaz.font", 8, 0, 0, };
 
-VOID process_window_events(struct Window *mywin,struct MyButton *ButtonList)
+static void
+process_window_events(struct Window *mywin,struct MyButton *ButtonList)
 {
 struct IntuiMessage *imsg;
 struct Gadget *gad;
@@ -51,7 +49,9 @@ while (!terminated)
         }
     }
 }
-void LibSettings(struct MyButton *ButtonList,WORD ButtonCount)
+
+void
+LibSettings(struct MyButton *ButtonList,WORD ButtonCount)
 {
 struct Screen    *mysc;
 struct Window    *mywin;
@@ -84,7 +84,6 @@ NLOOP(ButtonCount)
     gad = CreateGadget(CHECKBOX_KIND, gad, &ng, GT_Underscore, '_',  GTCB_Scaled, TRUE,GTCB_Checked,ButtonList[n].ON,TAG_DONE);
 }
 
-
         if (gad != NULL)
             {
             if ( (mywin = OpenWindowTags(NULL,
@@ -114,5 +113,3 @@ NLOOP(ButtonCount)
     UnlockPubScreen(NULL, mysc);
     }
 }
-
-

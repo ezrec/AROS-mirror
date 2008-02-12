@@ -2,115 +2,85 @@ Short: Wazp3D library is a CPU only Warp3D v4.2 implementation
 Author:  thellier@free.fr (Alain Thellier)
 Uploader:  thellier@free.fr
 Type:  driver/video
-Version:  beta 34 (04/12/2007)
+Version:  beta 35 (11/02/2008)
 Requires:  RTG system,68040
 Architecture: m68k-amigaos >= 3.0.0;
 http://aminet.net/package/driver/video/Wazp3D
 
-DESCRIPTION
-Wazp3D beta 34 : Alain THELLIER - Paris - FRANCE - (November 2006 to December 2007)
-Wazp3D is a library intended to be compatible with the famous Warp3D.library for AmigaOS 68040
+DESCRIPTION 
+Wazp3D beta 35 : Alain THELLIER - Paris - FRANCE - (November 2006 to February 2008) 
+Wazp3D is a library intended to be compatible with the famous Warp3D.library for AmigaOS 68040 
 
-LICENSE
-GNU General Public License (GNU GPL)
+LICENSE 
+GNU General Public License (GNU GPL) 
 
-MOST IMPORTANT FEATURES
-o Full documentation at http://thellier.free.fr/Wazp3D.htm
-o Compatible with the famous Warp3D.library for AmigaOS 68040
-o The 88 functions from the latest Warp3D.library v4.2 are presents :-)
-o Sources included (...so Wazp3D has been ported to AROS)
-o Software only (=slow) : no need to have 3D hardware
-o Work in UAE so can serve to test your 3D softwares inside UAE
-o The Wazp3D driver can lie and pretend to be a "perfect hardware driver"
-so the 3D-softwares will not fail due to a lacking feature.
+MOST IMPORTANT FEATURES 
+o Compatible with the famous Warp3D.library for AmigaOS 68040 
+o The 88 functions from the latest Warp3D.library v4.2 are presents :-) 
+o Sources included (...so Wazp3D has been ported to AROS) 
+o Software only (=slow) : no need to have 3D hardware 
+o Work in UAE so can serve to test your 3D softwares inside UAE 
+o The Wazp3D driver can lie and pretend to be a "perfect hardware driver" so the 3D-softwares will not fail due to a lacking feature. 
+o Full Documentation, faq and grabs at http://thellier.free.fr/Wazp3D.htm 
+o Unlike QuarkTex you can run multiple Warp3D applications concurrently 
+o Built-in debugger 
 
-HISTORY
-Wazp3D was first created to test the "Tales of Tamar"'s 3D Map inside WinUAE.
-I have no time left to work more on this Wazp3D project. So i release the source & library
+HISTORY 
+Wazp3D was first created to test the "Tales of Tamar"'s 3D Map inside WinUAE. 
+I have no time left to work more on this Wazp3D project. So i release the source & library 
 
-CHANGES
-Since Beta 33
-o Brand new pixels functions that allow to render lighted textures :-) so looks now very nice
-o Corrected a very bad bug  concerning pixels-buffering.
-o New Bug has appeared :-/ so 4D-clock & other StormMesa stuffs now crash...
-o Library is smaller :-)
+CHANGES 
 
-Since Beta 32
-o Full Documentation at http://thellier.free.fr/Wazp3D.htm
-o Corrected a very bad bug introduced in beta 32 concerning memory freeing (beta 32 line 644)
-o Corrected a very bad bug in W3D_UpdateTexSubImage
-o AROS port from Matthias Rustler
-o Various pointer==NULL bugs corrected by Matthias Rustler
-o ClampUV (if disabled allow texture_repeat)
-o Perspective correction (disabling)
-o Zbuffer enhanced = ReadZSpan/WriteZSpan/etc...
-o Code CleanUp (no more ULONG used as pointers to texture)
-o Bug fix in GetDriverTexFmtInfo : now if use UseAnyTexFmt is ON then return supported
-o More compatible with new 3Dprogs (BattleZone,Lamintro,4D-Clock,StormMesa examples, etc)
-o Support rectangular textures
-o Bug fix in Alpha blending on 32 bits texture with no zbuffer
+Since Beta 34 
+o Code clean-up and library enhancements from Gunther Nikl 
+o "Hack1 tex RGBA" works again (draw a textured-triangle as a Gouraud untextured one = faster) 
+o "Hack2 tex RGBA" works again (draw a textured-triangle as a Flat untextured one = faster) 
 
-Since Beta 31
-o No more warnings when recompiling
-o Perspective correction (cant be disabled)
-o 3D-Clipper works
-o Less bugs (even some few fatals one)
-o Fog works (not perfect)
-o First Culling (CCW/CW face order) implementation (still bugged)
-o "Hack1 tex RGBA" works (draw a textured-triangle as a Gouraud untextured one = faster)
-o "Hack2 tex RGBA" works (draw a textured-triangle as a   Flat  untexturedone = faster)
-o "AntiAlias Screen" new & works (3x3 median per pixel) (slow)
-o Library is smaller :-)
-o More compatible with new 3Dprogs
+Since Beta 33 
+o Brand new pixels functions that allow to render lighted textures :-) so looks now very nice 
+o Corrected a very bad bug concerning pixels-buffering. 
+o New Bug has appeared :-/ so 4D-clock & other StormMesa stuffs now crash... 
+o Library is smaller :-) 
 
-Since Beta 30
-o New tracked memory allocation
-o Project's name changed to "Wazp3D"
+Since Beta 32 
+o Full Documentation at http://thellier.free.fr/Wazp3D.htm 
+o Corrected a very bad bug introduced in beta 32 concerning memory freeing (beta 32 line 644) 
+o Corrected a very bad bug in W3D_UpdateTexSubImage 
+o AROS port from Matthias Rustler 
+o Various pointer==NULL bugs corrected by Matthias Rustler 
+o ClampUV (if disabled allow texture_repeat) 
+o Perspective correction (disabling) 
+o Zbuffer enhanced = ReadZSpan/WriteZSpan/etc... 
+o Code CleanUp (no more ULONG used as pointers to texture) 
+o Bug fix in GetDriverTexFmtInfo : now if use UseAnyTexFmt is ON then return supported 
+o More compatible with new 3Dprogs (BattleZone,Lamintro,4D-Clock,StormMesa examples, etc) 
+o Support rectangular textures 
+o Bug fix in Alpha blending on 32 bits texture but no zbuffer 
 
-KNOWN BUGS
-o Fog or coloring on partially transparent faces (like trees in TOT3D)
-o Use of  MinUpdate region when clearing Wazp3D internal RGAB buffer (but SOFT3D_ClearImage is patched)
-o Texturing in Bzone
-o Refresh display problem (sKulpt, Gears screen)
-o StormMesa & Enforce crashs
-o Fog is still not good
-o Hack1 & Hack2 tex RGBA dont works in beta34
+Since Beta 31 
+o No more warnings when recompiling 
+o Perspective correction (cant be disabled) 
+o 3D-Clipper works 
+o Less bugs (even some few fatals one) 
+o Fog works (not perfect) 
+o First Culling (CCW/CW face order) implementation (still bugged) 
+o "Hack1 tex RGBA" works (draw a textured-triangle as a Gouraud untextured one = faster) 
+o "Hack2 tex RGBA" works (draw a textured-triangle as a Flat untextured one = faster) 
+o "AntiAlias Screen" new & works (3x3 median per pixel) (slow) 
+o Library is smaller :-) 
+o More compatible with new 3Dprogs 
 
-IMPORTANT
-This Wazp3D binary is intended to be used within a very fast UAE emulator with JIT (like WinUAE)
-This Wazp3D binary is compiled for 68040-68881 (adjust your WinUAE settings)
-Also need "full screen RTG" & JIT both to be activated to obtain enough speed 
-(also need picasso 96/cybergraphics and an RGB24 screen)
-Wazp3D is NOT an UAE hack and so (should) not depend on a particular UAE version
-But it only need much speed for his software rendering
-Some 3Dprogs need a big stack to be able to run without crash (glsokoban,etc...)
+Since Beta 30 
+o New tracked memory allocation 
+o Project's name changed to "Wazp3D" 
 
-IMPLEMENTED FEATURES
-    Texturing
-    Zbuffer (Zbuffer > z)
-    Goureaud shading
-    Alpha blending (1 - Alpha)
-    Color blending (DECAL)
-    All Fogs
-    All primitives
-    All vertex formats,etc...
-
-UNIMPLEMENTED FEATURES
-    Stencil masking
-    Color masking
-    Alpha masking
-    Zbuffer Functions
-    Blending functions
-    Stippling
-    Mipmapping
-    Filtering, etc...
-
-TESTED SOFTWARES & GRABS & FAQ
-See full documentation at http://thellier.free.fr/Wazp3D.htm
-
-INSTALLATION
-  copy LIBS:Warp3D.library TO LIBS:Warp3D.library.sav
-  copy Wazp3D.library TO LIBS:Warp3D.library
+KNOWN BUGS 
+o Fog or coloring on partially transparent faces (like trees in TOT3D) 
+o SOFT3D_ClearImage (= clearing Wazp3D internal RGBA buffer) dont use well the MinUpdate region (This bug is patched) 
+o Texturing in Bzone 
+o Refresh display problem (sKulpt, Gears screen) 
+o StormMesa & Enforce crashs 
+o Fog is still not good 
 
 WAZP3D-SETTINGS
 The Wazp3D-Settings tool allow to change some parameters of the Wazp3D
