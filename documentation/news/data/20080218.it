@@ -1,0 +1,91 @@
+=============
+Aggiornamento
+=============
+
+:Author:   Paolo Besser
+:Date:     18-02-2008
+
+Ultime novità
+-------------
+
+Michal Shulz sta lavorando alacremente al porting di AROS sulla
+piattaforma SAM440 di Acube Systems. Ha pubblicato i `risultati`__
+ottenuti fin'ora nel suo `blog`__: "Ho deciso di separare il kernel
+(e le librerie caricate insieme a esso) dallo spazio utente. Il kernel
+viene caricato da qualche parte entro i primi 16 MB di RAM e quindi
+rilocato a un indirizzo virtuale all'inizio dello spazio di 
+indirizzamento a 32 bit. Il caricamento del sistema avviene come 
+nella versione x86_64, mettendo tutti i dati di sola lettura al di
+sopra della base del kernel e tutti i dati modificabili al di sotto
+di essa. Dato che sono cattivo per definizione, il nocciolo del mio
+AROS per SAM440 riserverà per se stesso tutto lo spazio al di sotto
+della sua collocazione fisica. Questa memoria (pochi megabyte) sarà
+impiegata come un pool locale per il kernel e sarà impedito qualsiasi
+tipo di accesso da parte dell'utente."
+
+Nic Andrews sta lavorando su Wanderer, allo scopo di migliorarlo e di
+eliminare alcuni bug fastidiosi. Adesso sta "smanettando un po' per 
+riscrivere il codice per il rendering della classe iconslist di 
+Wanderer. Il traguardo a breve termine consiste nel permettere alle
+finestre delle icone di bufferizzare il disegno di icone e sfondo, 
+in modo che, per esempio, usare la modalità tiled rendering per gli
+sfondi di iconlist non causi un visibile tremolio, come avviene
+adesso". È possibile leggere informazioni più dettagliate sul 
+`suo blog`__.
+
+
+Navighiamo su Internet
+----------------------
+
+Michael Grunditz ha pubblicato le prime beta di `SimpleMail`__ 0.32 
+per l'AROS Research Operating System. SimpleMail dispone di quasi tutte 
+le caratteristiche necessarie in un programma di posta elettronica
+moderno, e sta ancora crescendo. Si può scaricare la versione corrente
+dal sito degli `Archivi`__.
+
+Robert Norris sta facendo enormi progressi con Traveller, il suo 
+browser web basato su Webkit. Per farlo funzionare correttamente, deve
+ancora realizzare alcune feature mancanti e portare librerie, tuttavia
+il suo porting di Cairo.library è a buon punto ed è già riuscito a
+visualizzare alcune pagine web quasi correttamente. Una `foto molto
+promettente`__ si trova sul `suo blog`__.
+
+
+Altre news
+----------
+
+João "Hardwired" Ralha sta realizzando alcuni manuali su AROS in 
+formato PDF (in Inglese). Tuttavia, non sono ancora terminati ed è in 
+cerca di aiuto. I odcumenti disponibili per il download sono il `Manuale per l'utente di AROS`__ (completo al 50%), il
+`Manuale della Shell di AROS`__ (70%) e la `Guida all'installazione 
+di AROS`__ (25%). L'autore può essere contattato attraverso il `suo
+sito`__.
+
+Alain Greppin ha portato TeXlive su AROS, incassando una bounty. 
+Informazioni più dettagliate sul `suo sito`__.
+
+Tomek 'Error' Wiszkowski ha realizzato Frying Pan, un'applicazione
+per scrivere CD e DVD. Ha pubblicato anche `alcune foto`__ su AROS-Exec.org.
+La versione 1.3 (shareware) per AROS può essere scaricata dal 
+`suo sito`__. Per farla funzionare, ha apportato anche alcune 
+modifiche al device ATA di AROS.
+
+...e, per chiunque non se ne fosse ancora accorto, il filesystem 
+FFS ora dispone di una procedura di validazione automatica. Mai più
+partizioni di sistema a sola lettura, pressocché inutilizzabili!
+
+
+__ http://msaros.blogspot.com/2008/01/ive-promised-to-show-you-some.html
+__ http://msaros.blogspot.com
+__ http://kalamatee.blogspot.com/
+__ http://simplemail.sourceforge.net/index.php?body=screenshots
+__ http://archives.aros-exec.org/index.php?function=showfile&file=network/email/simplemail_beta_aros-i386.tgz
+__ http://cataclysm.cx/2008/02/18/cow-launched
+__ http://cataclysm.cx
+__ http://www.mediafire.com/?2wyfczygxvt
+__ http://www.mediafire.com/?ezgcp2bot9p
+__ http://www.mediafire.com/?ey1mnggbtjt
+__ http://aros-wandering.blogspot.com
+__ http://www.chilibi.org/aros/texlive
+__ http://aros-exec.org/modules/newbb/viewtopic.php?viewmode=flat&topic_id=2569&forum=2
+__ http://www.tbs-software.com/fp/welcome.phtml
