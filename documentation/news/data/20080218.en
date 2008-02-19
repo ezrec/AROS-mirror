@@ -8,7 +8,7 @@ Status Update
 Latest news
 -----------
 
-Michal Schulz is working hard on porting AROS to Acube Systems 
+Michal Schulz is working hard on porting AROS to Acube System's 
 SAM440 board, and he got some interesting `results`__. Here are some
 words from a recent post on `his blog`__: "I have decided to separate 
 the kernel (and libraries loaded together with it) from user space. The 
@@ -26,7 +26,7 @@ Nic Andrews is working on Wanderer, in order to improve it and fix
 some annoying bugs. He is now "slowly hacking away at reworking the 
 rendering code for wanderer iconlist class. The intermediate goal is to 
 allow icon windows to buffer the icon/background rendering so, for 
-instance, using the tiled rendering mode for iconlist backgrounds wont 
+instance, using the tiled rendering mode for iconlist backgrounds won't 
 cause noticable icon flickering as it currently does". More detailed
 informations about his job are published on `his blog`__.
 
@@ -39,11 +39,11 @@ betas for the AROS Research Operating System. SimpleMail has most of
 the features currently needed in a modern email client, and it's still
 growing. The AROS port can be downloaded from the `Archives`__.
 
-Robert Norris is fastly progressing with Traveller, his Webkit-based
-web browser for AROS. In order to make it work, he still need to code
+Robert Norris made a lot of progress with Traveller, his Webkit-based
+web browser for AROS. In order to make it work, he still needs to code
 some missing features and libraries, however his Cairo.library port is
-at good point and he succeeded in rendering some web pages almost 
-correctly. A really `promising screenshot`__ is published on `his 
+at a good point and he succeeded in rendering some web pages mostly 
+correct. A really `promising screenshot`__ was published in `his 
 blog`__.
 
 
@@ -53,15 +53,15 @@ Other news
 João "Hardwired" Ralha has recently written some good manuals for AROS.
 However, they are not finished, and he is currently looking for help. 
 Available documents are the `AROS User Manual`__ (50% complete), the
-`AROS Shell Manual`__ (70%) and the `AROS Istall Manual`__ (25%). The
+`AROS Shell Manual`__ (70%) and the `AROS Install Manual`__ (25%). The
 author can be reached at `his website`__.
 
 Alain Greppin has ported TeXlive to AROS, completing a bounty. More
-informations about it in `his website`__.
+informations about it at `his website`__.
 
 Tomek 'Error' Wiszkowski has been working on Frying Pan, a CD/DVD
 burner application. He posted `some screenshots`__ on AROS-Exec.org.
-AROS version 1.3 (shareware) can be downloaded from the `application's
+Version 1.3 for AROS (shareware) can be downloaded from the `application's
 website`__. In order to make it work, he also fixed some bugs in AROS ATA device.
 
 ...and, for anyone that missed this: AROS FFS filesystem recently got
