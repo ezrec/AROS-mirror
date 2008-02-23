@@ -50,7 +50,7 @@ BRCUnpack(APTR pSource, APTR pDest, LONG srcBytes0, LONG dstBytes0)
 
   while(dstBytes > 0)
   {
-    SHORT n;
+    WORD n;
 
     if(--srcBytes < 0)
     {
