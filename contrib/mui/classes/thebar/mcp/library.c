@@ -114,74 +114,69 @@ static BOOL ClassExpunge(UNUSED struct Library *base);
 /******************************************************************************/
 static BOOL ClassInit(UNUSED struct Library *base)
 {
-  ENTER();
+	ENTER();
 
-  if((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
-     GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
-  {
-    if((IFFParseBase = OpenLibrary("iffparse.library", 37)) &&
-       GETINTERFACE(IIFFParse, struct IFFParseIFace *, IFFParseBase))
-    {
-      // open the locale library which is not mandatory of course
-      if((LocaleBase = (APTR)OpenLibrary("locale.library", 36)) &&
-         GETINTERFACE(ILocale, struct LocaleIFace *, LocaleBase))
-      {
-        // open the TextEditor.mcp catalog
-        OpenCat();
-      }
+	if ((DataTypesBase = OpenLibrary("datatypes.library", 37)) &&
+        GETINTERFACE(IDataTypes, struct DataTypesIFace *, DataTypesBase))
+  	{
+    	if ((IFFParseBase = OpenLibrary("iffparse.library", 37)) &&
+    	    GETINTERFACE(IIFFParse, struct IFFParseIFace *, IFFParseBase))
+    	{
+    		ULONG success = TRUE;
 
-      // we open the cybgraphics.library but without failing if
-      // it doesn't exist
-      if((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
-         GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
-      { }
+      		// check for MUI 3.9+
+      		if (MUIMasterBase->lib_Version >= MUIVER20)
+      		{
+        		lib_flags |= BASEFLG_MUI20;
 
-      // check the version of MUI
-      if(MUIMasterBase->lib_Version >= MUIVER20)
-      {
-        lib_flags |= BASEFLG_MUI20;
+        		// check for MUI 4.0+
+        		if (MUIMasterBase->lib_Version>MUIVER20 || MUIMasterBase->lib_Revision>=5341)
+          			lib_flags |= BASEFLG_MUI4;
+      		}
 
-        if(MUIMasterBase->lib_Version > MUIVER20 || MUIMasterBase->lib_Revision >= 5341)
-          lib_flags |= BASEFLG_MUI4;
-      }
+      		// on MUI 3.1 system's we do have to
+      		// initialize our subclasses as well
+      		#if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+      		if (!(lib_flags & BASEFLG_MUI20))
+      		{
+        		if (!initColoradjust() ||
+            		!initPenadjust() ||
+            		!initBackgroundadjust() ||
+            		!initPoppen() ||
+            		!initPopbackground())
+				{
+					success = FALSE;
+				}
+		    }
+			#endif
 
-/*      // initialize the locale translation
-      initStrings();
+		  	if (success)
+	  		{
+      			// open the locale library which is not mandatory of course
+      			if ((LocaleBase = (APTR)OpenLibrary("locale.library", 36)) &&
+         			GETINTERFACE(ILocale, struct LocaleIFace *, LocaleBase))
+      			{
+        			OpenCat();
+      			}
 
-      // localize some arrrays
-      localizeArray(regs, regIDs);
-      localizeArray(frames, frameIDs);
-      localizeArray(precisions, precisionIDs);
-      localizeArray(dismodes, dismodeIDs);
-      localizeArray(spacersSizes, spacersSizeIDs);
-      localizeArray(viewModes, viewModeIDs);
-      localizeArray(labelPoss, labelPosIDs);
+	      		// we open the cybgraphics.library but without failing if
+      			// it doesn't exist
+      			if ((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
+            		GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
+	      		{ }
 
-      if(!(lib_flags & BASEFLG_MUI4))
-        localizeMenus(menu,menuIDs);
-*/
-      // on MUI 3.1 system's we do have to
-      // initialize our subclasses as well
-      #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
-      if(!(lib_flags & BASEFLG_MUI20))
-      {
-        initColoradjust();
-        initPenadjust();
-        initBackgroundadjust();
-        initPoppen();
-        initPopbackground();
-      }
-      #endif
+        		lib_flags |= BASEFLG_Init;
 
-      lib_flags |= BASEFLG_Init;
+        		RETURN(TRUE);
+        		return(TRUE);
+      		}
+  		}
+	}
+  
+	ClassExpunge(base);
 
-      RETURN(TRUE);
-      return(TRUE);
-    }
-  }
-
-  RETURN(FALSE);
-  return(FALSE);
+	RETURN(FALSE);
+	return(FALSE);
 }
 
 
@@ -209,6 +204,7 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
 
   if(LocaleBase)
   {
+    CloseCat();
     DROPINTERFACE(ILocale);
     CloseLibrary((struct Library *)LocaleBase);
     LocaleBase = NULL;

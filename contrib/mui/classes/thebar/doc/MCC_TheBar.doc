@@ -80,10 +80,9 @@ TheBar.mcc/MUIM_TheBar_Sort
 
 TheBar.mcc/TheBar.mcc
 
-    *******************************************************************
-    Copyright (c) 2006-2007 by TheBar.mcc Open Source Team
-    $Id: MCC_TheBar.doc 82 2007-06-29 06:42:20Z thboeckel $
-    $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/doc/MCC_TheBar.doc $
+    Copyright (c) 2003-2008 by Alfonso Ranieri
+
+    TheBar is developed by TheBar.mcc Open Source Team
 
     TheBar.mcc is a MUI custom class which provides facilities to
     generate a dynamic graphical toolbar for MUI applications. Beside
@@ -97,9 +96,8 @@ TheBar.mcc/MUIM_TheBar_Sort
     It is released and distributed under the terms of the GNU Lesser
     General Public License (LGPL) and available free of charge.
 
-    Please visit http://www.sf.net/projects/thebar/ for
-    the very latest version and information regarding TheBar.mcc
-    *******************************************************************
+    Please visit http://www.sf.net/projects/thebar/ for the very
+    latest version and information regarding TheBar.mcc
 
     For some short introduction on how to use TheBar.mcc and its
     associated sub-classes, the following pharagraph should provide a
@@ -107,30 +105,31 @@ TheBar.mcc/MUIM_TheBar_Sort
     enable your MUI application to display a toolbar with embedded
     images and allow the user to press a gadget.
 
-    However, before we start going in detail, please read the following
-    important notes on what you should definitly avoid in your
-    application:
+    However, before we start going in detail, please read the
+    following important notes on what you should definitly avoid in
+    your application:
 
     1) NEVER cache single button object pointers:
 
-       That means, even if you are able to receive each point of
-       a single toolbar button via MUIM_TheBar_GetObject, you should
+       That means, even if you are able to receive each point of a
+       single toolbar button via MUIM_TheBar_GetObject, you should
        *never* cache them in your application to directly access them
-       later on. So something like the following is NOT allowed at all:
+       later on. So something like the following is NOT allowed at
+       all:
 
-       set(button, MUIA_Disabled, TRUE);
+       set(button,MUIA_Disabled,TRUE);
 
     2) NEVER remove/add a toolbar button yourself:
 
        The reason is, that only TheBar should maintain the internals
        of the buttons. So in case you want to remove a button from
-       your toolbar, use e.g. MUIM_TheBar_Remove instead of
-       directly trying to remove/adding a button via OM_REMMEMBER.
+       your toolbar, use e.g. MUIM_TheBar_Remove instead of directly
+       trying to remove/adding a button via OM_REMMEMBER.
 
     3) NEVER use MUI's own attributes like MUIA_ShowMe:
 
-       If you want to hide, remove or get a button to sleep please
-       use the method TheBar provides and don't try to use e.g.
+       If you want to hide, remove or get a button to sleep please use
+       the method TheBar provides and don't try to use e.g.
        MUIA_ShowMe directly on a button object. That really isn't
        supported and should be avoided.
 
@@ -141,9 +140,9 @@ TheBar.mcc/MUIM_TheBar_Sort
     and don't try to be smarter than what this documentation suggests.
     Especially if the included header files may contain attributes or
     methods that are marked with /* PRIVATE */, please take it
-    seriously and don't try to use them in your own applications.
-    They may automatically vanish without a further notice. They are
-    only for internal use of TheBar itself.
+    seriously and don't try to use them in your own applications. They
+    may automatically vanish without a further notice. They are only
+    for internal use of TheBar itself.
 
 TheBar.mcc/MUIA_TheBar_Active
 
@@ -166,7 +165,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      -- cut here --
      ULONG id=0;
 
-     get(toolbar, MUIA_TheBar_Active, &id);
+     get(toolbar,MUIA_TheBar_Active,&id);
      -- cut here --
 
     SEE ALSO
@@ -211,7 +210,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      -- cut here --
      struct MUIS_TheBar_Appearance appearance;
 
-     get(toolbar, MUIA_TheBar_Appearance, &appearance);
+     get(toolbar,MUIA_TheBar_Appearance,&appearance);
      -- cut here --
 
     SEE ALSO
@@ -239,7 +238,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      To set a toolbar to position it's button centered:
 
      -- cut here --
-     set(toolbar, MUIA_TheBar_Pos, MUIV_TheBar_BarPos_Center);
+     set(toolbar,MUIA_TheBar_Pos,MUIV_TheBar_BarPos_Center);
 
 TheBar.mcc/MUIA_TheBar_BarSpacer
 
@@ -350,7 +349,7 @@ TheBar.mcc/MUIM_TheBar_Sort
        STRPTR          help;
        ULONG           flags;
        ULONG           exclude;
-       struct IClass   *class;
+       struct IClass   *_class;
        Object          *obj;
      };
 
@@ -376,10 +375,11 @@ TheBar.mcc/MUIM_TheBar_Sort
            specified, a bar spacer is used.
 
        ULONG ID
+
          The id of the object; any value may be used, but if the
-         button is in a mutual exclude group, it must be 1<<x,
-         where x = 0,...,23. That also means that you may have up
-         to 24 total mutual exclude buttons in a single bar.
+         button is in a mutual exclude group, it must be x, where
+         x = 0,...,23. That also means that you may have up to 24
+         total mutual exclude buttons in a single bar.
 
        STRPTR text
          The button label, max 32 chars long; it is copied!
@@ -420,9 +420,10 @@ TheBar.mcc/MUIM_TheBar_Sort
        ULONG exclude
          Allows to specify a mutual exlusive mask to link up to 24
          button together. The mask must be specified as a bit
-         operation of the type 1<<x where x = 0,...,23
+         operation of the type 1<<x where x = 0,...,23 is the ID of
+         the button it the mutual exclude mask
 
-       struct IClass *class
+       struct IClass *_class
          If you want to subclass TheButton.mcc to add drag'n'drop
          or what else, place the pointer to your class here: TheBar
          will know how to recreate your buttons correctly.
@@ -515,6 +516,14 @@ TheBar.mcc/MUIM_TheBar_Sort
        MUIV_TheBar_DisMode_Sunny
          Converts the image into a greyscale image and
          displays it
+
+       MUIV_TheBar_DisMode_Blend
+         The disabled image is somehow blended. It requires a true
+         color image with an active alpha channel and a system capable
+         to render it.
+
+       MUIV_TheBar_DisMode_BlendGray
+         As the above, but rendered as gray.
 
     NOTE
      This overwrites the user preferences and so must be used
@@ -1013,10 +1022,19 @@ TheBar.mcc/MUIM_TheBar_Sort
       toolbar, the following list is the order of preference
       for TheBar:
 
-       1) MUIA_TheBar_Images
-       2) MUIA_TheBar_StripBrush
-       3) MUIA_TheBar_Strip
-       4) MUIA_TheBar_Pics
+       1. A disk based strip is opened, if MUIA_TheBar_Strip was
+          specified
+
+       2. Disk based pics are opened, if MUIA_TheBar_Pics was
+          specified
+
+       3. A ram based strip is used if MUIA_TheBar_StripBrush was
+          specified
+
+       4. Finally, ram bases pics are used, if MUIA_TheBar_Images
+          was specifid
+
+       5. If all of the above fails, the bar becomes a Text only one.
 
     SEE ALSO
      MUIA_TheBar_DisPics
@@ -1184,10 +1202,19 @@ TheBar.mcc/MUIM_TheBar_Sort
       toolbar, the following list is the order of preference
       for TheBar:
 
-       1) MUIA_TheBar_Images
-       2) MUIA_TheBar_StripBrush
-       3) MUIA_TheBar_Strip
-       4) MUIA_TheBar_Pics
+       1. A disk based strip is opened, if MUIA_TheBar_Strip was
+          specified
+
+       2. Disk based pics are opened, if MUIA_TheBar_Pics was
+          specified
+
+       3. A ram based strip is used if MUIA_TheBar_StripBrush was
+          specified
+
+       4. Finally, ram bases pics are used, if MUIA_TheBar_Images
+          was specifid
+
+       5. If all of the above fails, the bar becomes a Text only one.
 
     SEE ALSO
      MUIA_TheBar_DisPics
@@ -1385,11 +1412,19 @@ TheBar.mcc/MUIM_TheBar_Sort
       toolbar, the following list is the order of preference
       for TheBar:
 
-       1) MUIA_TheBar_SelImages
-       2) MUIA_TheBar_SelStripBrush
-       3) MUIA_TheBar_SelStrip
-       4) MUIA_TheBar_SelPics
+       1. A disk based strip is opened, if MUIA_TheBar_Strip was
+          specified
 
+       2. Disk based pics are opened, if MUIA_TheBar_Pics was
+          specified
+
+       3. A ram based strip is used if MUIA_TheBar_StripBrush was
+          specified
+
+       4. Finally, ram bases pics are used, if MUIA_TheBar_Images
+          was specifid
+
+       5. If all of the above fails, the bar becomes a Text only one.
 
     SEE ALSO
      MUIA_TheBar_Images
@@ -1411,10 +1446,19 @@ TheBar.mcc/MUIM_TheBar_Sort
       toolbar, the following list is the order of preference
       for TheBar:
 
-       1) MUIA_TheBar_SelImages
-       2) MUIA_TheBar_SelStripBrush
-       3) MUIA_TheBar_SelStrip
-       4) MUIA_TheBar_SelPics
+       1. A disk based strip is opened, if MUIA_TheBar_Strip was
+          specified
+
+       2. Disk based pics are opened, if MUIA_TheBar_Pics was
+          specified
+
+       3. A ram based strip is used if MUIA_TheBar_StripBrush was
+          specified
+
+       4. Finally, ram bases pics are used, if MUIA_TheBar_Images
+          was specifid
+
+       5. If all of the above fails, the bar becomes a Text only one.
 
     SEE ALSO
      MUIA_TheBar_Pics
@@ -1534,10 +1578,19 @@ TheBar.mcc/MUIM_TheBar_Sort
       toolbar, the following list is the order of preference
       for TheBar:
 
-       1) MUIA_TheBar_Images
-       2) MUIA_TheBar_StripBrush
-       3) MUIA_TheBar_Strip
-       4) MUIA_TheBar_Pics
+       1. A disk based strip is opened, if MUIA_TheBar_Strip was
+          specified
+
+       2. Disk based pics are opened, if MUIA_TheBar_Pics was
+          specified
+
+       3. A ram based strip is used if MUIA_TheBar_StripBrush was
+          specified
+
+       4. Finally, ram bases pics are used, if MUIA_TheBar_Images
+          was specifid
+
+       5. If all of the above fails, the bar becomes a Text only one.
 
     SEE ALSO
      MUIA_TheBar_DisPics
@@ -1578,10 +1631,19 @@ TheBar.mcc/MUIM_TheBar_Sort
       toolbar, the following list is the order of preference
       for TheBar:
 
-       1) MUIA_TheBar_Images
-       2) MUIA_TheBar_StripBrush
-       3) MUIA_TheBar_Strip
-       4) MUIA_TheBar_Pics
+       1. A disk based strip is opened, if MUIA_TheBar_Strip was
+          specified
+
+       2. Disk based pics are opened, if MUIA_TheBar_Pics was
+          specified
+
+       3. A ram based strip is used if MUIA_TheBar_StripBrush was
+          specified
+
+       4. Finally, ram bases pics are used, if MUIA_TheBar_Images
+          was specifid
+
+       5. If all of the above fails, the bar becomes a Text only one.
 
     SEE ALSO
      MUIA_TheBar_DisPics
@@ -1830,7 +1892,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
 
     SYNOPSIS
-     Object *o = DoMethod(obj, MUIM_TheBar_AddButton, struct MUIS_TheBar_Button *button);
+     Object *o = DoMethod(obj,MUIM_TheBar_AddButton,struct MUIS_TheBar_Button *button);
 
 
     FUNCTION
@@ -1862,7 +1924,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
 
     SYNOPSIS
-     DoMethod(obj, MUIM_TheBar_Clear);
+     DoMethod(obj,MUIM_TheBar_Clear);
 
 
     FUNCTION
@@ -1880,7 +1942,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
 
     SYNOPSIS
-     ULONG res = DoMethod(obj, MUIM_TheBar_DoOnButton, ULONG ID, ULONG method, ...);
+     ULONG res = DoMethod(obj,MUIM_TheBar_DoOnButton,ULONG ID,ULONG method,...);
 
 
     FUNCTION
@@ -1909,7 +1971,7 @@ TheBar.mcc/MUIM_TheBar_Sort
      so instead.
 
      -- cut here --
-     DoMethod(toolbar, MUIM_TheBar_DoOnButton, 1, MUIM_Set, MUIA_Selected, FALSE);
+     DoMethod(toolbar,MUIM_TheBar_DoOnButton,1,MUIM_Set,MUIA_Selected,FALSE);
      -- cut here --
 
     SEE ALSO
@@ -1922,7 +1984,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
 
     SYNOPSIS
-     res = DoMethod(bar, MUIM_TheBar_GetAttr, ULONG ID, Tag attr, ULONG *storage);
+     res = DoMethod(bar,MUIM_TheBar_GetAttr,ULONG ID,Tag attr,ULONG *storage);
 
 
     FUNCTION
@@ -1930,10 +1992,10 @@ TheBar.mcc/MUIM_TheBar_Sort
      allowed attributes for a specified button with the
      identifier (ID):
 
-      MUIA_TheBar_Attr_Hide
-      MUIA_TheBar_Attr_Sleep
-      MUIA_TheBar_Attr_Disabled
-      MUIA_TheBar_Attr_Selected
+       MUIV_TheBar_Attr_Hide      (for compatibily, MUIA_TheBar_Attr_Hide)
+       MUIV_TheBar_Attr_Sleep     (for compatibily, MUIA_TheBar_Attr_Sleep)
+       MUIV_TheBar_Attr_Disabled  (for compatibily, MUIA_TheBar_Attr_Disabled)
+       MUIV_TheBar_Attr_Selected  (for compatibily, MUIA_TheBar_Attr_Selected)
 
      Use this function rather that reading the attribute directly
      on the object via GetAttr(), especially for Hide, Sleep and
@@ -1960,7 +2022,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
 
     SYNOPSIS
-     struct MUIS_TheBar_DragImage *di = DoMethod(bar, MUIM_TheBar_GetDragImage, ULONG horiz, ULONG flags);
+     struct MUIS_TheBar_DragImage *di = DoMethod(bar,MUIM_TheBar_GetDragImage,ULONG horiz,ULONG flags);
 
 
     FUNCTION
@@ -1992,7 +2054,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
 
     SYNOPSIS
-     Object *obj = DoMethod(bar, MUIM_TheBar_GetObject, ULONG ID);
+     Object *obj = DoMethod(bar,MUIM_TheBar_GetObject,ULONG ID);
 
 
     FUNCTION
@@ -2025,7 +2087,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
 
     SYNOPSIS
-     res = DoMethod(bar, MUIM_TheBar_KillNotify, ULONG ID, Tag attr, Object *dest);
+     res = DoMethod(bar,MUIM_TheBar_KillNotify,ULONG ID,Tag attr,Object *dest);
 
 
     FUNCTION
@@ -2061,11 +2123,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
 
     SYNOPSIS
-     res = DoMethod(bar, MUIM_TheBar_Notify, ULONG ID,
-                                             Tag attr,
-                                             ULONG value,
-                                             Object *dest,
-                                             ULONG followParams, ...);
+     res = DoMethod(bar, MUIM_TheBar_Notify,ULONG ID,Tag attr,ULONG value,Object *dest,ULONG followParams,...);
 
 
     FUNCTION
@@ -2119,8 +2177,8 @@ TheBar.mcc/MUIM_TheBar_Sort
      when a user clicked/activated the button.
 
      -- cut here --
-     DoMethod(bar, MUIM_TheBar_Notify, 1, MUIA_Pressed, FALSE, MUIV_Notify_Application,
-                                          MUIM_CallHook, &buttonHook, MUIV_TheBar_Qualifier);
+     DoMethod(bar,MUIM_TheBar_Notify,1,MUIA_Pressed,FALSE,MUIV_Notify_Application,
+                                       MUIM_CallHook,&buttonHook,1);
      -- cut here --
 
      As soon as the button is clicked, the application object will
@@ -2138,7 +2196,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
 
     SYNOPSIS
-     ULONG res = DoMethod(bar, MUIM_TheBar_Remove, ULONG ID);
+     ULONG res = DoMethod(bar,MUIM_TheBar_Remove,ULONG ID);
 
 
     FUNCTION
@@ -2165,7 +2223,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
 
     SYNOPSIS
-     res = DoMethod(bar, MUIM_TheBar_SetAttr, ULONG ID, Tag attr, ULONG value);
+     res = DoMethod(bar,MUIM_TheBar_SetAttr,ULONG ID,Tag attr,ULONG value);
 
 
     FUNCTION
@@ -2173,10 +2231,10 @@ TheBar.mcc/MUIM_TheBar_Sort
      allowed attributes for a specified button with the
      identifier (ID):
 
-      MUIA_TheBar_Attr_Hide
-      MUIA_TheBar_Attr_Sleep
-      MUIA_TheBar_Attr_Disabled
-      MUIA_TheBar_Attr_Selected
+       MUIV_TheBar_Attr_Hide      (for compatibily, MUIA_TheBar_Attr_Hide)
+       MUIV_TheBar_Attr_Sleep     (for compatibily, MUIA_TheBar_Attr_Sleep)
+       MUIV_TheBar_Attr_Disabled  (for compatibily, MUIA_TheBar_Attr_Disabled)
+       MUIV_TheBar_Attr_Selected  (for compatibily, MUIA_TheBar_Attr_Selected)
 
      Use this function rather that setting the attribute directly
      on the object via SetAttrs(), especially for Hide, Sleep and
@@ -2203,7 +2261,7 @@ TheBar.mcc/MUIM_TheBar_Sort
 
 
     SYNOPSIS
-     ULONG res = DoMethod(bar, MUIM_TheBar_Sort, LONG obj[1]);
+     ULONG res = DoMethod(bar,MUIM_TheBar_Sort,LONG obj[1]);
 
 
     FUNCTION
@@ -2231,7 +2289,7 @@ TheBar.mcc/MUIM_TheBar_Sort
       rearranged accordingly:
 
       -- cut here --
-      DoMethod(bar, MUIM_TheBar_Sort, 5,1,3, -1);
+      DoMethod(bar,MUIM_TheBar_Sort,5,1,3,-1);
       -- cut here --
 
       Afterwards the new order will be (by IDs) (5,1,3,0,2,4,6,7)

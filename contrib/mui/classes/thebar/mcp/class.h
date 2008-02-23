@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: class.h 140 2007-12-26 09:55:26Z marust $
+ $Id: class.h 218 2008-02-23 12:57:32Z alforan $
 
 ***************************************************************************/
 
@@ -260,7 +260,12 @@ struct MUIS_Popbackground_Status
 #define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(IPTR)(storage))
 #define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(IPTR)(val),TAG_DONE)
 #define addconfigitem(cfg,value,size,item) DoMethod(cfg,MUIM_Dataspace_Add,(IPTR)(value),size,item)
-#define copymem(to,from,len)            memcpy((to), (from), (len))
+
+#if defined(__MORPHOS__)
+#define copymem(to,from,len)            CopyMem((APTR)(from),(APTR)(to),(ULONG)(len))
+#else
+#define copymem(to,from,len)            memcpy((to),(from),(len));
+#endif
 
 #define MUIVER20 20
 
@@ -289,7 +294,7 @@ ULONG xget(Object *obj, const ULONG attr);
 Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
 #else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
-ULONG stch_l(char *chr_ptr, ULONG *u_ptr);
+int stch_l(const char *chr_ptr, long *u_ptr);
 #endif
 
 /* utils.c */

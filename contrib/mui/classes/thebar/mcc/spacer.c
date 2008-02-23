@@ -66,15 +66,19 @@ static IPTR mNew(struct IClass *cl, Object *obj, struct opSet *msg)
     struct TagItem *tag;
 
     data->bar   = (Object *)GetTagData(MUIA_TheButton_TheBar,FALSE,msg->ops_AttrList);
-    data->flags = (GetTagData(MUIA_Group_Horiz,FALSE,msg->ops_AttrList) ? FLG_SP_Horiz : 0) |
-                  ((GetTagData(MUIA_TheButton_Spacer,MUIV_TheButton_Spacer_Bar,msg->ops_AttrList)==MUIV_TheButton_Spacer_Bar) ? FLG_SP_Bar : 0) |
-                  (GetTagData(MUIA_ShowMe,TRUE,msg->ops_AttrList) ? FLG_SP_ShowMe : 0);
+    data->flags = 0;
+    if(GetTagData(MUIA_Group_Horiz,FALSE,msg->ops_AttrList))
+        setFlag(data->flags, FLG_SP_Horiz);
+    if(GetTagData(MUIA_TheButton_Spacer,MUIV_TheButton_Spacer_Bar,msg->ops_AttrList)==MUIV_TheButton_Spacer_Bar)
+        setFlag(data->flags, FLG_SP_Bar);
+    if(GetTagData(MUIA_ShowMe,TRUE,msg->ops_AttrList))
+        setFlag(data->flags, FLG_SP_ShowMe);
 
     if((tag = FindTagItem(MUIA_TheBar_BarSpacerSpacing,msg->ops_AttrList)) &&
        ((int)tag->ti_Data>=0 && (int)tag->ti_Data<=16))
     {
       data->sp = tag->ti_Data;
-      data->flags |= FLG_SP_UserBarSpacerSpacing;
+      setFlag(data->flags, FLG_SP_UserBarSpacerSpacing);
     }
   }
 
@@ -90,10 +94,12 @@ mGet(struct IClass *cl,Object *obj,struct opGet *msg)
   struct data *data = INST_DATA(cl,obj);
   BOOL result = FALSE;
 
+  ENTER();
+
   switch (msg->opg_AttrID)
   {
-    case MUIA_TheButton_Spacer: *msg->opg_Storage = (data->flags & FLG_SP_Bar) ? MUIV_TheButton_Spacer_Bar : MUIV_TheButton_Spacer_Button; result=TRUE; break;
-    case MUIA_ShowMe:           *msg->opg_Storage = (data->flags & FLG_SP_ShowMe) ? TRUE : FALSE; result=TRUE; break;
+    case MUIA_TheButton_Spacer: *msg->opg_Storage = isFlagSet(data->flags, FLG_SP_Bar) ? MUIV_TheButton_Spacer_Bar : MUIV_TheButton_Spacer_Button; result=TRUE; break;
+    case MUIA_ShowMe:           *msg->opg_Storage = isFlagSet(data->flags, FLG_SP_ShowMe) ? TRUE : FALSE; result=TRUE; break;
     default:                    result=DoSuperMethodA(cl,obj,(Msg)msg);
   }
 
@@ -120,21 +126,28 @@ mSets(struct IClass *cl,Object *obj,struct opSet *msg)
         switch (tag->ti_Tag)
         {
             case MUIA_Group_Horiz:
-                if (tidata) data->flags |= FLG_SP_Horiz;
-                else data->flags &= ~FLG_SP_Horiz;
+                if (tidata)
+                    setFlag(data->flags, FLG_SP_Horiz);
+                else
+                    clearFlag(data->flags, FLG_SP_Horiz);
                 break;
 
             case MUIA_TheButton_Spacer:
-                if (tidata==MUIV_TheButton_Spacer_Bar) data->flags |= FLG_SP_Bar;
-                else data->flags &= ~FLG_SP_Bar;
+                if (tidata==MUIV_TheButton_Spacer_Bar)
+                    setFlag(data->flags, FLG_SP_Bar);
+                else
+                    clearFlag(data->flags, FLG_SP_Bar);
                 break;
 
             case MUIA_ShowMe:
-                if (BOOLSAME(data->flags & FLG_SP_ShowMe,tidata)) tag->ti_Data = TAG_IGNORE;
+                if (BOOLSAME(isFlagSet(data->flags, FLG_SP_ShowMe), tidata))
+                    tag->ti_Data = TAG_IGNORE;
                 else
                 {
-                    if (tidata) data->flags |= FLG_SP_ShowMe;
-                    else data->flags &= ~FLG_SP_ShowMe;
+                    if (tidata)
+                        setFlag(data->flags,FLG_SP_ShowMe);
+                    else
+                        clearFlag(data->flags, FLG_SP_ShowMe);
                 }
                 break;
         }
@@ -163,7 +176,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
       return FALSE;
     }
 
-    if (data->flags & FLG_SP_Bar)
+    if (isFlagSet(data->flags, FLG_SP_Bar))
     {
         if (!getconfigitem(cl,obj,MUICFG_TheBar_BarSpacerShinePen,&pen))
             pen = MUIDEF_TheBar_BarSpacerShinePen;
@@ -173,7 +186,7 @@ mSetup(struct IClass *cl,Object *obj,Msg msg)
             pen = MUIDEF_TheBar_BarSpacerShadowPen;
         data->pshadow = MUI_ObtainPen(muiRenderInfo(obj),(struct MUI_PenSpec *)pen,0);
 
-        if (!(data->flags & FLG_SP_UserBarSpacerSpacing))
+        if (isFlagClear(data->flags, FLG_SP_UserBarSpacerSpacing))
         {
             data->sp = getconfigitem(cl,obj,MUICFG_TheBar_BarSpacerSpacing,&val) ?
                 *val : MUIDEF_TheBar_BarSpacerSpacing;
@@ -194,7 +207,7 @@ mCleanup(struct IClass *cl,Object *obj,Msg msg)
 
     ENTER();
 
-    if (data->flags & FLG_SP_Bar)
+    if (isFlagSet(data->flags, FLG_SP_Bar))
     {
         MUI_ReleasePen(muiRenderInfo(obj),data->pshine);
         MUI_ReleasePen(muiRenderInfo(obj),data->pshadow);
@@ -218,11 +231,12 @@ mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
-    if (data->flags & FLG_SP_Bar)
+    if (isFlagSet(data->flags, FLG_SP_Bar))
     {
-        if (data->flags & FLG_SP_Horiz)
+        if (isFlagSet(data->flags, FLG_SP_Horiz))
         {
-            if (_riflags(obj) & MUIMRI_THINFRAMES) delta += 2;
+            if (isFlagSet(_riflags(obj), MUIMRI_THINFRAMES))
+                delta += 2;
 
             msg->MinMaxInfo->MinWidth  += delta;
             msg->MinMaxInfo->DefWidth  += delta;
@@ -258,13 +272,13 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
     DoSuperMethodA(cl,obj,(Msg)msg);
 
-    if ((data->flags & FLG_SP_Bar) && (msg->flags & (MADF_DRAWOBJECT|MADF_DRAWOBJECT)))
+    if (isFlagSet(data->flags, FLG_SP_Bar) && (isFlagSet(msg->flags, MADF_DRAWOBJECT) || isFlagSet(msg->flags, MADF_DRAWOBJECT)))
     {
         struct RastPort *rp = _rp(obj);
 
-        if (data->flags & FLG_SP_Horiz)
+        if (isFlagSet(data->flags, FLG_SP_Horiz))
         {
-            UWORD l, t, b, fw = (_riflags(obj) & MUIMRI_THINFRAMES) ? 1 : 2;
+            UWORD l, t, b, fw = isFlagSet(_riflags(obj), MUIMRI_THINFRAMES) ? 1 : 2;
 
             l = _mleft(obj)+(_mwidth(obj)>>1)-fw;
             t = _mtop(obj)+1;
@@ -299,7 +313,7 @@ mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 /***********************************************************************/
 
 static IPTR
-mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
+mBackfill(struct IClass *cl,Object *obj,struct MUIP_Backfill *msg)
 {
   struct data *data = INST_DATA(cl,obj);
   IPTR result = 0;
@@ -308,13 +322,13 @@ mCustomBackfill(struct IClass *cl,Object *obj,struct MUIP_CustomBackfill *msg)
 
   if(data->bar)
   {
-    result = DoMethod(data->bar, MUIM_CustomBackfill, msg->left,
-                                                      msg->top,
-                                                      msg->right,
-                                                      msg->bottom,
-                                                      msg->left+msg->xoffset,
-                                                      msg->top+msg->yoffset,
-                                                      0);
+    result = DoMethod(data->bar, MUIM_Backfill, msg->left,
+                                                msg->top,
+                                                msg->right,
+                                                msg->bottom,
+                                                msg->left+msg->xoffset,
+                                                msg->top+msg->yoffset,
+                                                0);
   }
   else
   {
@@ -348,7 +362,7 @@ DISPATCHER(SpacerDispatcher)
     case MUIM_Draw:           return mDraw(cl,obj,(APTR)msg);
     case MUIM_Setup:          return mSetup(cl,obj,(APTR)msg);
     case MUIM_Cleanup:        return mCleanup(cl,obj,(APTR)msg);
-    case MUIM_CustomBackfill: return mCustomBackfill(cl,obj,(APTR)msg);
+    case MUIM_Backfill:       return mBackfill(cl,obj,(APTR)msg);
     default:                  return DoSuperMethodA(cl,obj,msg);
   }
 }
@@ -361,11 +375,12 @@ BOOPSI_DISPATCHER_END
 BOOL initSpacerClass(void)
 {
   BOOL result = FALSE;
+
   ENTER();
 
   if((lib_spacerClass = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Area, NULL, sizeof(struct data), ENTRY(SpacerDispatcher))))
   {
-    if(lib_flags & BASEFLG_MUI20)
+    if(isFlagSet(lib_flags, BASEFLG_MUI20))
       lib_spacerClass->mcc_Class->cl_ID = (STRPTR)"TheBar_Spacer";
 
     result = TRUE;

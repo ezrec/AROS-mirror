@@ -126,26 +126,49 @@ mColorWheelSets(struct IClass *cl,Object *obj,struct opSet *msg)
         switch(tag->ti_Tag)
         {
             case WHEEL_HSB:
-                if (data->hsb.cw_Hue!=((struct ColorWheelHSB *)tidata)->cw_Hue ||
-                    data->hsb.cw_Saturation!=((struct ColorWheelHSB *)tidata)->cw_Saturation ||
-                    data->hsb.cw_Brightness!=((struct ColorWheelHSB *)tidata)->cw_Brightness)
-                    copymem(&data->hsb,(struct ColorWheelHSB *)tidata,sizeof(data->hsb));
-                else tag->ti_Tag = TAG_IGNORE;
+                if(data->hsb.cw_Hue != ((struct ColorWheelHSB *)tidata)->cw_Hue ||
+                   data->hsb.cw_Saturation != ((struct ColorWheelHSB *)tidata)->cw_Saturation ||
+                   data->hsb.cw_Brightness != ((struct ColorWheelHSB *)tidata)->cw_Brightness)
+                {
+                  copymem(&data->hsb,(struct ColorWheelHSB *)tidata,sizeof(data->hsb));
+                }
+                else
+                {
+                  tag->ti_Tag = TAG_IGNORE;
+                }
                 break;
 
             case WHEEL_Hue:
-                if (data->hsb.cw_Hue!=tidata) data->hsb.cw_Hue = tidata;
-                else tag->ti_Tag = TAG_IGNORE;
+                if(data->hsb.cw_Hue !=tidata)
+                {
+                  data->hsb.cw_Hue = tidata;
+                }
+                else
+                {
+                  tag->ti_Tag = TAG_IGNORE;
+                }
                 break;
 
             case WHEEL_Saturation:
-                if (data->hsb.cw_Saturation!=tidata) data->hsb.cw_Saturation = tidata;
-                else tag->ti_Tag = TAG_IGNORE;
+                if(data->hsb.cw_Saturation != tidata)
+                {
+                  data->hsb.cw_Saturation = tidata;
+                }
+                else
+                {
+                  tag->ti_Tag = TAG_IGNORE;
+                }
                 break;
 
             case WHEEL_Brightness:
-                if (data->hsb.cw_Brightness!=tidata) data->hsb.cw_Brightness = tidata;
-                else tag->ti_Tag = TAG_IGNORE;
+                if(data->hsb.cw_Brightness != tidata)
+                {
+                  data->hsb.cw_Brightness = tidata;
+                }
+                else
+                {
+                  tag->ti_Tag = TAG_IGNORE;
+                }
                 break;
         }
     }
@@ -166,7 +189,7 @@ mColorWheelShow(struct IClass *cl,Object *obj,Msg msg)
     copymem(&hsb,&data->hsb,sizeof(hsb));
     if (data->hsb.cw_Hue) data->hsb.cw_Hue = 0;
     else data->hsb.cw_Hue = 1;
-    SetSuperAttrs(cl,obj,WHEEL_HSB,&hsb,TAG_DONE);
+    SetSuperAttrs(cl, obj, WHEEL_HSB, &hsb, TAG_DONE);
 
     memset(&data->eh,0,sizeof(data->eh));
     data->eh.ehn_Class  = cl;
@@ -186,8 +209,12 @@ mColorWheelHide(struct IClass *cl,Object *obj,Msg msg)
 {
     struct colorWheelData *data = INST_DATA(cl,obj);
 
+    #ifdef __AROS__
     // AROS's get() doesn't like a structure as storage pointer
-    GetAttr(obj,WHEEL_HSB,(IPTR*)&data->hsb);
+    GetAttr(obj,WHEEL_HSB, (IPTR*)&data->hsb);
+	#else
+    get(obj,WHEEL_HSB, (ULONG)&data->hsb);
+    #endif
 
     DoMethod(_win(obj),MUIM_Window_RemEventHandler,&data->eh);
 
@@ -205,8 +232,12 @@ mColorWheelHandleEvent(UNUSED struct IClass *cl,Object *obj,struct MUIP_HandleEv
     {
         struct ColorWheelHSB hsb;
 
-        // AROS's get() doesn't like a structure as storage pointer
+        #ifdef __AROS__
+		// AROS's get() doesn't like a structure as storage pointer
         GetAttr(obj,WHEEL_HSB,(IPTR*)&hsb);
+		#else
+		get(obj,WHEEL_HSB,(ULONG)&hsb);
+		#endif
         SetAttrs(obj,WHEEL_Hue,hsb.cw_Hue,WHEEL_Saturation,hsb.cw_Saturation,WHEEL_Brightness,hsb.cw_Brightness,TAG_DONE);
     }
 

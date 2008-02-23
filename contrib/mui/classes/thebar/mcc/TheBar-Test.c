@@ -48,6 +48,7 @@ struct Library *MUIMasterBase = NULL;
 struct Library *UtilityBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
+struct Library *PictureDTBase = NULL;
 #elif defined(__MORPHOS__)
 struct GfxBase *GfxBase = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
@@ -55,6 +56,7 @@ struct Library *MUIMasterBase = NULL;
 struct Library *UtilityBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
+struct Library *PictureDTBase = NULL;
 #else
 struct GfxBase *GfxBase = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
@@ -62,6 +64,7 @@ struct Library *MUIMasterBase = NULL;
 struct Library *UtilityBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DataTypesBase = NULL;
+struct Library *PictureDTBase = NULL;
 #endif
 
 #if defined(__amigaos4__)
@@ -152,7 +155,7 @@ int main(void)
       initSpacerClass();
       initDragBarClass();
 
-      lib_thisClass = MUI_CreateCustomClass(NULL, MUIC_Group, NULL, sizeof(struct InstData), ENTRY(_Dispatcher));
+      lib_thisClass = MUI_CreateCustomClass(NULL, (STRPTR)MUIC_Group, NULL, sizeof(struct InstData), ENTRY(_Dispatcher));
 
       if(lib_thisClass && (app = ApplicationObject,
                          MUIA_Application_Title,         "TheBar Demo1",

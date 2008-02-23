@@ -19,7 +19,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: private.h 140 2007-12-26 09:55:26Z marust $
+ $Id: private.h 218 2008-02-23 12:57:32Z alforan $
 
 ***************************************************************************/
 
@@ -37,11 +37,14 @@ extern struct MUI_CustomClass *lib_thisClass;
 extern struct MUI_CustomClass *lib_spacerClass;
 extern struct MUI_CustomClass *lib_dragBarClass;
 
+extern struct Library *PictureDTBase;
+
 enum
 {
-  BASEFLG_Init  = 1<<0,
-  BASEFLG_MUI20 = 1<<1,
-  BASEFLG_MUI4  = 1<<2,
+  BASEFLG_Init         = 1<<0,
+  BASEFLG_MUI20        = 1<<1,
+  BASEFLG_MUI4         = 1<<2,
+  BASEFLG_BROKENMOSPDT = 1<<3,
 };
 
 /***************************************************************************/
@@ -140,13 +143,17 @@ struct InstData
     ULONG                          spacersSize;
 
     #if defined(VIRTUAL)
-    ULONG			                     objWidth;
-    ULONG			                     objHeight;
+    ULONG			               objWidth;
+    ULONG			               objMWidth;
+    ULONG			               objHeight;
+    ULONG			               objMHeight;
     #endif
 
-    #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-    ULONG			                     userFrame;
-    char          		             frameSpec[256];
+    char          		           frameSpec[256];
+    ULONG			               userFrame;
+
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+    ULONG                          allowAlphaChannel;
     #endif
 
     ULONG                          flags;
@@ -288,9 +295,21 @@ void freeBitMaps(struct InstData *data);
 #define BOOLSAME(a,b)                   (((a) ? TRUE : FALSE)==((b) ? TRUE : FALSE))
 #define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(IPTR)ptr)
 
+#if defined(__MORPHOS__)
+#define copymem(to,from,len)            CopyMem((APTR)(from),(APTR)(to),(ULONG)(len))
+#else
+#define copymem(to,from,len)            memcpy((to),(from),(len));
+#endif
+
 #if !defined(IsMinListEmpty)
 #define IsMinListEmpty(x)     (((x)->mlh_TailPred) == (struct MinNode *)(x))
 #endif
+
+#define setFlag(mask, flag)             (mask) |= (flag)
+#define clearFlag(mask, flag)           (mask) &= ~(flag)
+#define isAnyFlagSet(mask, flag)        (((mask) & (flag)) != 0)
+#define isFlagSet(mask, flag)           (((mask) & (flag)) == (flag))
+#define isFlagClear(mask, flag)         (((mask) & (flag)) == 0)
 
 #endif /* _PRIVATE_H */
 

@@ -19,7 +19,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: private.h 140 2007-12-26 09:55:26Z marust $
+ $Id: private.h 195 2008-02-18 12:11:32Z alforan $
 
 ***************************************************************************/
 
@@ -58,10 +58,12 @@ struct InstData
 
   Object  *groupBack;
   Object  *useGroupBack;
+  Object  *frame;
+  Object  *barFrameShinePen;
+  Object  *barFrameShadowPen;
 
   Object  *buttonBack;
   Object  *useButtonBack;
-
   Object  *frameShinePen;
   Object  *frameShadowPen;
   Object  *frameStyle;
@@ -71,13 +73,6 @@ struct InstData
 
   Object  *barSpacerShinePen;
   Object  *barSpacerShadowPen;
-
-  #if defined(__MORPHOS__) || defined(__amigaos4__) || defined(__AROS__)
-  Object  *frame;
-  #else
-  Object  *barFrameShinePen;
-  Object  *barFrameShadowPen;
-  #endif
 
   Object  *dragBarShinePen;
   Object  *dragBarShadowPen;
@@ -104,12 +99,10 @@ struct InstData
   Object  *topInnerSpacing;
   Object  *bottomInnerSpacing;
 
-  #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
   Object  *leftBarFrameSpacing;
   Object  *rightBarFrameSpacing;
   Object  *topBarFrameSpacing;
   Object  *bottomBarFrameSpacing;
-  #endif
 
   Object  *horizTexGfxSpacing;
   Object  *vertTexGfxSpacing;

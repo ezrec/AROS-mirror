@@ -186,7 +186,7 @@ main(UNUSED int argc,char **argv)
 
                 set(rows,MUIA_Group_Horiz,TRUE);
                 set(cols,MUIA_Group_Horiz,TRUE);
-                set(viewMode,MUIA_Cycle_Active,1);
+                set(viewMode,MUIA_Cycle_Active,0);
 
                 DoMethod(bwin,MUIM_Notify,MUIA_Window_CloseRequest,TRUE,MUIV_Notify_Application,2,MUIM_Application_ReturnID,MUIV_Application_ReturnID_Quit);
                 DoMethod(cwin,MUIM_Notify,MUIA_Window_CloseRequest,TRUE,MUIV_Notify_Application,2,MUIM_Application_ReturnID,MUIV_Application_ReturnID_Quit);

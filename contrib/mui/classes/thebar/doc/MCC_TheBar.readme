@@ -1,5 +1,5 @@
-Short:    TheBar.mcc - The MUI Toolbar custom class
-Author:   TheBar.mcc Open Source Team
+Short:    TheBar.mcc - Next Generation Toolbar MUI Custom Class
+Author:   Alfonso Ranieri and TheBar.mcc Open Source Team
 Uploader: Jens Langner <Jens.Langner@light-speed.de>
 Version:  21.5
 Type:     dev/mui
@@ -9,6 +9,10 @@ Architecture: ppc-amigaos >= 4.0.0; m68k-amigaos >= 3.0; ppc-morphos >= 1.4.2
 
 Introduction
 ~~~~~~~~~~~~
+Copyright (c) 2003-2008 by Alfonso Ranieri
+
+TheBar is developed by TheBar.mcc Open Source Team
+
 TheBar.mcc is a MUI custom class for management of multiple buttons in a
 toolbar-like environment. It allows to group multiple button together, allows
 to hide/sleep/disable a specific button as well as send notifications in case
@@ -49,14 +53,3 @@ Manual Installation
 
 4) reboot and enjoy the new version ;)
 
-History
-~~~~~~~
-The detailed change log can be found in the ChangeLog file.
-
-         __
-        / /
-   __  / /   Only Amiga makes it possible...
-   \ \/ /
-    \__/
-
-Amiga is a trademark of Amiga, Inc.

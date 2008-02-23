@@ -19,7 +19,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: TheBar_mcp.h 33 2007-01-20 15:48:07Z damato $
+ $Id: TheBar_mcp.h 159 2008-01-14 23:29:30Z damato $
 
 ***************************************************************************/
 
@@ -93,6 +93,7 @@
 #define MUICFG_TheBar_Appearance            (TBPTAGBASE+83)  /* v19 struct Appearance */
 
 #define MUICFG_TheBar_Frame                 (TBPTAGBASE+84)  /* v19 struct Framespec  */
+#define MUICFG_TheBar_ButtonFrame           (TBPTAGBASE+85)  /* v19 struct Framespec  */
 
 struct MUIS_TheBar_Gradient
 {
@@ -114,21 +115,27 @@ enum
 
 #define MUIDEF_TheBar_GroupBack             ((APTR)"2:m1")
 #define MUIDEF_TheBar_UseGroupBack          FALSE
+#define MUIDEF_TheBar_Frame                 ((APTR)"000000")
 #define MUIDEF_TheBar_ButtonBack            ((APTR)"2:m1")
 #define MUIDEF_TheBar_UseButtonBack         FALSE
-#define MUIDEF_TheBar_FrameShinePen         ((APTR)"rFFFFFFFF,FFFFFFFF,FFFFFFFF")
-#define MUIDEF_TheBar_FrameShadowPen        ((APTR)"r00000000,00000000,00000000")
-#define MUIDEF_TheBar_FrameStyle            MUIV_TheButton_FrameStyle_Normal
+#define MUIDEF_TheBar_ButtonFrame           ((APTR)"602222")
+
 #define MUIDEF_TheBar_DisBodyPen            ((APTR)"r44444444,44444444,44444444")
 #define MUIDEF_TheBar_DisShadowPen          ((APTR)"rdddddddd,dddddddd,dddddddd")
+
 #define MUIDEF_TheBar_BarSpacerShinePen     ((APTR)"rFFFFFFFF,FFFFFFFF,FFFFFFFF")
 #define MUIDEF_TheBar_BarSpacerShadowPen    ((APTR)"r00000000,00000000,00000000")
 #define MUIDEF_TheBar_BarFrameShinePen      ((APTR)"rFFFFFFFF,FFFFFFFF,FFFFFFFF")
 #define MUIDEF_TheBar_BarFrameShadowPen     ((APTR)"r00000000,00000000,00000000")
+
 #define MUIDEF_TheBar_DragBarShinePen       ((APTR)"rFFFFFFFF,FFFFFFFF,FFFFFFFF")
 #define MUIDEF_TheBar_DragBarShadowPen      ((APTR)"r00000000,00000000,00000000")
 #define MUIDEF_TheBar_DragBarFillPen        ((APTR)"rCCCCCCCC,CCCCCCCC,CCCCCCCC")
 #define MUIDEF_TheBar_UseDragBarFillPen     FALSE
+
+#define MUIDEF_TheBar_FrameShinePen         ((APTR)"rFFFFFFFF,FFFFFFFF,FFFFFFFF")
+#define MUIDEF_TheBar_FrameShadowPen        ((APTR)"r00000000,00000000,00000000")
+#define MUIDEF_TheBar_FrameStyle            MUIV_TheButton_FrameStyle_Normal
 
 #define MUIDEF_TheBar_TextFont              NULL
 #define MUIDEF_TheBar_TextGfxFont           NULL
@@ -137,8 +144,8 @@ enum
 #define MUIDEF_TheBar_VertSpacing           1
 #define MUIDEF_TheBar_BarSpacerSpacing      4
 #define MUIDEF_TheBar_HorizInnerSpacing     1
-#define MUIDEF_TheBar_TopInnerSpacing       1
-#define MUIDEF_TheBar_BottomInnerSpacing    1
+#define MUIDEF_TheBar_TopInnerSpacing       0
+#define MUIDEF_TheBar_BottomInnerSpacing    0
 #define MUIDEF_TheBar_LeftBarFrameSpacing   2
 #define MUIDEF_TheBar_RightBarFrameSpacing  2
 #define MUIDEF_TheBar_TopBarFrameSpacing    2
@@ -146,7 +153,7 @@ enum
 #define MUIDEF_TheBar_HorizTextGfxSpacing   1
 #define MUIDEF_TheBar_VertTextGfxSpacing    1
 
-#define MUIDEF_TheBar_Precision             MUIV_TheBar_Precision_Image
+#define MUIDEF_TheBar_Precision             MUIV_TheBar_Precision_GUI
 #define MUIDEF_TheBar_NotMUI20Event         MUIV_TheBar_Event_MouseMove
 #define MUIDEF_TheBar_Event                 MUIV_TheBar_Event_MouseObject
 #define MUIDEF_TheBar_Scale                 66
@@ -163,8 +170,6 @@ enum
 #define MUIDEF_TheBar_Appearance_ViewMode   MUIV_TheBar_ViewMode_TextGfx
 #define MUIDEF_TheBar_Appearance_LabelPos   MUIV_TheBar_LabelPos_Bottom
 #define MUIDEF_TheBar_Appearance_Flags      MUIV_TheBar_Appearance_EnableKeys
-
-#define MUIDEF_TheBar_Frame                 ((APTR)"000000")
 
 /***********************************************************************/
 

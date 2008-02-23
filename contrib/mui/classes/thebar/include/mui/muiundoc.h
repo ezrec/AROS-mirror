@@ -158,9 +158,9 @@ extern char MUIC_Crawling[];
 #define MUIM_DeleteDragImage 0x80423037 /* V18 */ /* Custom Class */
 #define MUIM_GoActive        0x8042491a
 #define MUIM_GoInactive      0x80422c0c
-#define MUIM_CustomBackfill  0x80428d73
+#define MUIM_Backfill        0x80428d73
 
-struct  MUIP_CustomBackfill  { ULONG MethodID; LONG left; LONG top; LONG right; LONG bottom; LONG xoffset; LONG yoffset; };
+struct  MUIP_Backfill        { ULONG MethodID; LONG left; LONG top; LONG right; LONG bottom; LONG xoffset; LONG yoffset; LONG lum; };
 struct  MUIP_DeleteDragImage { ULONG MethodID; struct MUI_DragImage *di; };              /* Custom Class */
 struct  MUIP_CreateDragImage { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* Custom Class */
 //struct  MUIP_DoDrag          { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* Custom Class */
@@ -169,6 +169,9 @@ struct  MUIP_CreateDragImage { ULONG MethodID; LONG touchx; LONG touchy; ULONG f
 
 #define MUIA_CustomBackfill  0x80420a63
 
+/* For MUI < 3.9 the backfill method was often called "CustomBackfill" */
+#define MUIM_CustomBackfill  MUIM_Backfill
+#define MUIP_CustomBackfill  MUIP_Backfill
 
 #define MUIV_CreateBubble_DontHidePointer (1<<0)
 

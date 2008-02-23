@@ -61,6 +61,7 @@ static const char * const used_classesP[] = { "TheBar.mcp", NULL };
 struct Library *DataTypesBase = NULL;
 struct Library *CyberGfxBase = NULL;
 struct Library *DiskfontBase = NULL;
+struct Library *PictureDTBase = NULL;
 
 #if defined(__amigaos4__)
 struct DataTypesIFace *IDataTypes = NULL;
@@ -102,35 +103,32 @@ static BOOL ClassInit(UNUSED struct Library *base)
       if((DiskfontBase = OpenLibrary("diskfont.library", 37)) &&
          GETINTERFACE(IDiskfont, struct DiskfontIFace *, DiskfontBase))
       {
-        STRPTR buf[16];
-
         // we open the cybgraphics.library but without failing if
         // it doesn't exist
         if((CyberGfxBase = OpenLibrary("cybergraphics.library", 41)) &&
            GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
         { }
 
+        PictureDTBase = OpenLibrary("picture.datatype", 0);
+
         // check the version of MUI)
         if(MUIMasterBase->lib_Version >= MUIVER20)
         {
-          lib_flags |= BASEFLG_MUI20;
+          setFlag(lib_flags, BASEFLG_MUI20);
 
           if(MUIMasterBase->lib_Version > MUIVER20 || MUIMasterBase->lib_Revision >= 5341)
-            lib_flags |= BASEFLG_MUI4;
+            setFlag(lib_flags, BASEFLG_MUI4);
         }
 
-        if(GetVar("MUI/TheBarAlpha", (STRPTR)buf, sizeof(buf), GVF_GLOBAL_ONLY) > 0)
-    	    lib_alpha = strtoul((char*)buf, NULL, sizeof(buf));
-        else
-          lib_alpha = 0xffffffff;
-
-        lib_flags |= BASEFLG_Init;
+        setFlag(lib_flags, BASEFLG_Init);
 
         RETURN(TRUE);
         return(TRUE);
       }
     }
   }
+
+  ClassExpunge(base);
 
   RETURN(FALSE);
   return(FALSE);
@@ -139,6 +137,12 @@ static BOOL ClassInit(UNUSED struct Library *base)
 static BOOL ClassExpunge(UNUSED struct Library *base)
 {
   ENTER();
+
+  if(PictureDTBase)
+  {
+    CloseLibrary(PictureDTBase);
+    PictureDTBase = NULL;
+  }
 
   if(CyberGfxBase)
   {
@@ -161,7 +165,7 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
     DataTypesBase = NULL;
   }
 
-  lib_flags &= ~(BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
+  clearFlag(lib_flags, BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
 
   RETURN(TRUE);
   return(TRUE);

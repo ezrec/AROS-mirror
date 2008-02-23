@@ -16,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: class.h 140 2007-12-26 09:55:26Z marust $
+ $Id: class.h 205 2008-02-19 08:38:17Z thboeckel $
 
 ***************************************************************************/
 
@@ -115,9 +115,10 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 #endif
 APTR allocVecPooled(APTR pool, ULONG size);
 void freeVecPooled (APTR pool, APTR mem);
+APTR reallocVecPooledNC(APTR pool,APTR mem,ULONG size);
 
 /* brc1.c */
-UWORD BRCUnpack ( signed char *pSource , signed char *pDest , LONG srcBytes0 , LONG dstBytes0 );
+int BRCUnpack(APTR pSource, APTR pDest, LONG srcBytes0, LONG dstBytes0);
 
 /* spacer.c */
 BOOL initSpacerClass(void);

@@ -19,7 +19,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: private.h 26 2007-01-15 23:32:18Z damato $
+ $Id: private.h 218 2008-02-23 12:57:32Z alforan $
 
 ***************************************************************************/
 
@@ -28,13 +28,14 @@
 extern struct SignalSemaphore  lib_poolSem;
 extern APTR                    lib_pool;
 extern ULONG                   lib_flags;
-extern ULONG		               lib_alpha;
+
+extern struct Library *PictureDTBase;
 
 enum
 {
-    BASEFLG_Init    = 1<<0,
-    BASEFLG_MUI20   = 1<<1,
-    BASEFLG_MUI4    = 1<<2,
+    BASEFLG_Init  = 1<<0,
+    BASEFLG_MUI20 = 1<<1,
+    BASEFLG_MUI4  = 1<<2,
 };
 
 /***************************************************************************/
@@ -136,6 +137,10 @@ struct InstData
     struct MinList              notifyList;             // list of set notifies on the button
 
     ULONG                       qualifier;              // cureently active RAWKEY-Qualifiers
+
+    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+    ULONG                       allowAlphaChannel;
+	#endif
 };
 
 /* flags */
@@ -225,6 +230,19 @@ struct ButtonNotify
 #define getconfigitem(cl,obj,item,ptr)  DoSuperMethod(cl,obj,MUIM_GetConfigItem,item,(ULONG)ptr)
 #define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(ULONG)(val),TAG_DONE)
 #define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(ULONG)(storage))
+#define nnsuperset(cl,obj,tag,val)      SetSuperAttrs(cl,obj,tag,(ULONG)(val),MUIA_NoNotify,TRUE,TAG_DONE)
 #define IDCMP_MOUSEOBJECT               0x40000000
+
+#if defined(__MORPHOS__)
+#define copymem(to,from,len)            CopyMem((APTR)(from),(APTR)(to),(ULONG)(len))
+#else
+#define copymem(to,from,len)            memcpy((to),(from),(len));
+#endif
+
+#define setFlag(mask, flag)             (mask) |= (flag)
+#define clearFlag(mask, flag)           (mask) &= ~(flag)
+#define isAnyFlagSet(mask, flag)        (((mask) & (flag)) != 0)
+#define isFlagSet(mask, flag)           (((mask) & (flag)) == (flag))
+#define isFlagClear(mask, flag)         (((mask) & (flag)) == 0)
 
 #endif /* _PRIVATE_H */

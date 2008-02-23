@@ -16,14 +16,12 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: Debug.h 74 2007-06-21 13:29:16Z thboeckel $
+ $Id: Debug.h 208 2008-02-19 13:13:56Z damato $
 
 ***************************************************************************/
 
 #ifndef DEBUG_H
 #define DEBUG_H
-
-#include <stdlib.h>
 
 // first we make sure all previously defined symbols are undefined now so
 // that no other debug system interferes with ours.
@@ -42,6 +40,8 @@
 #undef ASSERT
 
 #if defined(DEBUG)
+
+#include <assert.h>
 
 // debug classes
 #define DBC_CTRACE    (1<<0) // call tracing (ENTER/LEAVE etc.)
@@ -84,14 +84,14 @@ void _DPRINTF(unsigned long dclass, unsigned long dflags, const char *file, int 
 #define ASSERT(expression)      \
   ((void)                       \
    ((expression) ? 0 :          \
-    (                            \
+    (                           \
      _DPRINTF(DBC_ASSERT,       \
               DBF_ALWAYS,       \
               __FILE__,         \
               __LINE__,         \
               "failed assertion '%s'", \
               #expression),     \
-     abort(),                   \
+     assert(#expression),       \
      0                          \
     )                           \
    )                            \

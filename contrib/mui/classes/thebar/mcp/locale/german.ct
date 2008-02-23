@@ -575,7 +575,7 @@ Gitter
 ; Grid
 ;
 Msg_DisMode_FullGrid
-Volles Gitter
+volles Gitter
 ; Full grid
 ;
 Msg_DisMode
@@ -630,6 +630,12 @@ Msg_Event_MouseObject
 Mausobjekt
 ; MouseObject
 ;
+Msg_DisMode_Blend
+Angleichen
+;
+Msg_DisMode_BlendGrey
+Angleichen/Grau
+;
 Msg_Item_Defaults
 Grundeinstellungen
 ; Reset to defaults
@@ -638,10 +644,31 @@ Msg_NoMUI20Event_Help
 Wie die Maus über einem Knopf abgefragt wird:\n- IntuiTicks: Es wird periodisch abgefragt\n- Mausbewegung: jede Mausbewegung wird abgefragt
 ; How to verify if the mouse is over a button:\n- IntuiTicks: it is verified periodically\n- MouseMove: it is verified at every mouse move
 ;
+Msg_SpacersSize_None
+keiner
+;
+Msg_SpacersSize_OnePoint
+ein Pixel
+;
+Msg_SpacersSize_TwoPoint
+zwei Pixer
+;
+;
+Msg_Info_First
+%s\n\
+Copyright (c) 2003-2008 Alfonso Ranieri\n\
+and TheBar Open Source Team
+;
+Msg_Info_Reserved
+Distributed under the terms of the LGPL2.
+;
+Msg_Info_Rest
+For recent versions and updates visit:\n\
+http://www.sourceforge.net/projects/thebar
 ;
 Msg_Info_Translator
 Deutsch : Jens Langner, Hans-Jörg Ottinger
-; 
+;
 ;
 Msg_Item_Globals
 Zurücksetzen

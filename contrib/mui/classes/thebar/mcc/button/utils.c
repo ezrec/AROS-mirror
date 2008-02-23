@@ -58,6 +58,70 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 }
 #endif
 
+
+/***********************************************************************/
+
+// own strlcpy/strlcat are only required for classic OS3 compiles and also
+// only when libnix is used. clib2 and the newer libnix of MorphOS already
+// has those functions.
+#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__) && defined(__libnix__)
+
+size_t
+strlcpy(char *dst, const char *src, size_t siz)
+{
+        char *d = dst;
+        const char *s = src;
+        size_t n = siz;
+
+        /* Copy as many bytes as will fit */
+        if (n != 0) {
+                while (--n != 0) {
+                        if ((*d++ = *s++) == '\0')
+                                break;
+                }
+        }
+
+        /* Not enough room in dst, add NUL and traverse rest of src */
+        if (n == 0) {
+                if (siz != 0)
+                        *d = '\0';                /* NUL-terminate dst */
+                while (*s++)
+                        ;
+        }
+
+        return(s - src - 1);        /* count does not include NUL */
+}
+
+size_t
+strlcat(char *dst, const char *src, size_t siz)
+{
+        char *d = dst;
+        const char *s = src;
+        size_t n = siz;
+        size_t dlen;
+
+        /* Find the end of dst and adjust bytes left but don't go past end */
+        while (n-- != 0 && *d != '\0')
+                d++;
+        dlen = d - dst;
+        n = siz - dlen;
+
+        if (n == 0)
+                return(dlen + strlen(s));
+        while (*s != '\0') {
+                if (n != 1) {
+                        *d++ = *s;
+                        n--;
+                }
+                s++;
+        }
+        *d = '\0';
+
+        return(dlen + (s - src));        /* count does not include NUL */
+}
+
+#endif
+
 /***********************************************************************/
 
 void stripUnderscore(STRPTR dest, STRPTR from, ULONG mode)
@@ -96,6 +160,8 @@ void stripUnderscore(STRPTR dest, STRPTR from, ULONG mode)
 
 static int stcd_l(const char *in, long *value)
 {
+  ENTER();
+
   if(in)
   {
     char *ptr;
@@ -114,14 +180,22 @@ static int stcd_l(const char *in, long *value)
       case '7':
       case '8':
       case '9':
+      {
+        int ret;
+
         *value = strtol(in, &ptr, 10);
-        return ptr - in;
+        ret = ptr-in;
+
+        RETURN(ret);
+        return ret;
+      }
       break;
     }
   }
 
   *value = 0;
 
+  RETURN(0);
   return 0;
 }
 
@@ -176,6 +250,9 @@ struct TextFont *openFont(STRPTR name)
 
 APTR allocVecPooled(APTR pool, ULONG size)
 {
+#if defined(__amigaos4__) || defined(__MORPHOS__)
+  return AllocVecPooled(pool, size);
+#else
   ULONG *mem;
 
   ENTER();
@@ -187,51 +264,27 @@ APTR allocVecPooled(APTR pool, ULONG size)
 
   RETURN(mem);
   return mem;
+#endif
 }
 
 /****************************************************************************/
 
 void freeVecPooled(APTR pool, APTR mem)
 {
+#if defined(__amigaos4__) || defined(__MORPHOS__)
+  FreeVecPooled(pool, mem);
+#else
   ENTER();
 
   FreePooled(pool, (LONG *)mem-1, *((LONG *)mem-1));
 
   LEAVE();
-}
-
-/****************************************************************************/
-
-APTR allocArbitratePooled(ULONG size)
-{
-  APTR mem;
-
-  ENTER();
-
-  ObtainSemaphore(&lib_poolSem);
-  mem = AllocPooled(lib_pool,size);
-  ReleaseSemaphore(&lib_poolSem);
-
-  RETURN(mem);
-  return mem;
+#endif
 }
 
 /***********************************************************************/
 
-void freeArbitratePooled(APTR mem, ULONG size)
-{
-  ENTER();
-
-  ObtainSemaphore(&lib_poolSem);
-  FreePooled(lib_pool,mem,size);
-  ReleaseSemaphore(&lib_poolSem);
-
-  LEAVE();
-}
-
-/***********************************************************************/
-
-APTR allocArbitrateVecPooled(ULONG size)
+APTR gmalloc(ULONG size)
 {
   APTR mem;
 
@@ -247,7 +300,7 @@ APTR allocArbitrateVecPooled(ULONG size)
 
 /***********************************************************************/
 
-void freeArbitrateVecPooled(APTR mem)
+void gfree(APTR mem)
 {
   ENTER();
 

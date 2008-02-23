@@ -24,6 +24,8 @@
 
 #include "SDI_stdarg.h"
 
+#include "Debug.h"
+
 /***********************************************************************/
 
 // DoSuperNew()
@@ -58,19 +60,69 @@ allocVecPooled(APTR pool,ULONG size)
 {
   ULONG *mem;
 
-  if((mem = AllocPooled(pool,size = size+sizeof(ULONG))))
+  ENTER();
+
+  size += sizeof(ULONG);
+
+  if((mem = AllocPooled(pool, size)) != NULL)
     *mem++ = size;
 
+  RETURN(mem);
   return mem;
 }
 
 /****************************************************************************/
 
 void
-freeVecPooled(APTR pool,APTR mem)
+freeVecPooled(APTR pool, APTR mem)
 {
-  FreePooled(pool,(LONG *)mem-1,*((LONG *)mem-1));
+  ENTER();
+
+  if(mem != NULL)
+  {
+    ULONG *_mem = (ULONG *)mem;
+
+    FreePooled(pool, &_mem[-1], _mem[-1]);
+  }
+
+  LEAVE();
 }
 
 /****************************************************************************/
 
+APTR
+reallocVecPooledNC(APTR pool, APTR mem, ULONG size)
+{
+  APTR newmem = NULL;
+
+  ENTER();
+
+  if(pool != NULL && size != 0)
+  {
+    if(mem != NULL)
+    {
+      ULONG *_mem = (ULONG *)mem;
+
+      if(_mem[-1] - sizeof(ULONG) >= size)
+      {
+        // the previous allocation has at least the size of the
+        // new required space, so we just return the old memory block
+        RETURN(mem);
+        return(mem);
+      }
+      else
+      {
+        // free the old block...
+        freeVecPooled(pool, mem);
+      }
+    }
+
+    // ...and allocate a new one
+    newmem = allocVecPooled(pool, size);
+  }
+
+  RETURN(newmem);
+  return newmem;
+}
+
+/****************************************************************************/

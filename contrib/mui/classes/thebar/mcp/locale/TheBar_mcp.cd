@@ -505,6 +505,12 @@ As a button
 Msg_Event_MouseObject (//)
 MouseObject
 ;
+Msg_DisMode_Blend (//)
+Blend
+;
+Msg_DisMode_BlendGrey (//)
+Blend grey
+;
 Msg_Item_Defaults (500//)
 Reset to defaults
 ;
@@ -513,11 +519,20 @@ How to verify if the mouse is over a button:\n\
 - IntuiTicks: it is verified periodically\n\
 - MouseMove: it is verified at every mouse move
 ;
+Msg_SpacersSize_None (//)
+None
+;
+Msg_SpacersSize_OnePoint (//)
+One point
+;
+Msg_SpacersSize_TwoPoint (//)
+Two points
+;
 ;
 Msg_Info_First (600//)
 %s\n\
-Copyright (c) 2003-2005 Alfonso Ranieri\n\
-Copyright (c) 2005-2007 TheBar Open Source Team
+Copyright (c) 2003-2008 Alfonso Ranieri\n\
+and TheBar Open Source Team
 ;
 Msg_Info_Reserved (//)
 Distributed under the terms of the LGPL2.

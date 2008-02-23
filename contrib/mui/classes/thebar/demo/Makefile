@@ -16,7 +16,7 @@
 #
 # TheBar class Support Site:  http://www.sf.net/projects/thebar
 #
-# $Id: Makefile 142 2007-12-27 13:02:42Z thboeckel $
+# $Id: Makefile 182 2008-02-01 20:50:57Z alforan $
 #
 #***************************************************************************/
 
@@ -128,23 +128,25 @@ OBJDIR = .obj_$(OS)
 BINDIR = bin_$(OS)
 
 # target definition
-DEMO1TARGET = $(BINDIR)/demo1
+DEMO1TARGET  = $(BINDIR)/demo1
 
-DEMO2TARGET = $(BINDIR)/demo2
+DEMO2TARGET  = $(BINDIR)/demo2
 
-DEMO3TARGET = $(BINDIR)/demo3
+DEMO3TARGET  = $(BINDIR)/demo3
 
-DEMO4TARGET = $(BINDIR)/demo4
+DEMO4TARGET  = $(BINDIR)/demo4
 
-DEMO5TARGET = $(BINDIR)/demo5
+DEMO5TARGET  = $(BINDIR)/demo5
 
-DEMO6TARGET = $(BINDIR)/demo6
+DEMO6TARGET  = $(BINDIR)/demo6
 
-DEMO7TARGET = $(BINDIR)/demo7
+DEMO7TARGET  = $(BINDIR)/demo7
 
-DEMO8TARGET = $(BINDIR)/demo8
+DEMO8TARGET  = $(BINDIR)/demo8
 
-DEMO9TARGET = $(BINDIR)/demo9
+DEMO9TARGET  = $(BINDIR)/demo9
+
+DEMO10TARGET = $(BINDIR)/demo10
 
 # Common compiler/linker flags
 WARN     = -W -Wall -Wwrite-strings
@@ -231,27 +233,29 @@ endif
 # Here starts all stuff that is common for all target platforms and
 # hosts.
 
-DEMO1OBJS= $(OBJDIR)/demo1.o
+DEMO1OBJS  = $(OBJDIR)/demo1.o
 
-DEMO2OBJS= $(OBJDIR)/demo2.o
+DEMO2OBJS  = $(OBJDIR)/demo2.o
 
-DEMO3OBJS= $(OBJDIR)/demo3.o
+DEMO3OBJS  = $(OBJDIR)/demo3.o
 
-DEMO4OBJS= $(OBJDIR)/demo4.o
+DEMO4OBJS  = $(OBJDIR)/demo4.o
 
-DEMO5OBJS= $(OBJDIR)/demo5.o
+DEMO5OBJS  = $(OBJDIR)/demo5.o
 
-DEMO6OBJS= $(OBJDIR)/demo6.o
+DEMO6OBJS  = $(OBJDIR)/demo6.o
 
-DEMO7OBJS= $(OBJDIR)/demo7.o
+DEMO7OBJS  = $(OBJDIR)/demo7.o
 
-DEMO8OBJS= $(OBJDIR)/demo8.o
+DEMO8OBJS  = $(OBJDIR)/demo8.o
 
-DEMO9OBJS= $(OBJDIR)/demo9.o
+DEMO9OBJS  = $(OBJDIR)/demo9.o
+
+DEMO10OBJS = $(OBJDIR)/demo10.o
 
 #
 
-all: $(BINDIR) $(OBJDIR) $(DEMO1TARGET) $(DEMO2TARGET) $(DEMO3TARGET) $(DEMO4TARGET) $(DEMO5TARGET) $(DEMO6TARGET) $(DEMO7TARGET) $(DEMO8TARGET) $(DEMO9TARGET)
+all: $(BINDIR) $(OBJDIR) $(DEMO1TARGET) $(DEMO2TARGET) $(DEMO3TARGET) $(DEMO4TARGET) $(DEMO5TARGET) $(DEMO6TARGET) $(DEMO7TARGET) $(DEMO8TARGET) $(DEMO9TARGET) $(DEMO10TARGET)
 
 # make the object directories
 $(OBJDIR):
@@ -317,6 +321,11 @@ $(DEMO9TARGET): $(DEMO9OBJS)
 	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO9OBJS) $(LDLIBS) -Wl,-Map,$@.map
 	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
 
+$(DEMO10TARGET): $(DEMO10OBJS)
+	@printf '\033[32mLinking \033[1m$@\033[0m\n'
+	@$(CC) $(LDFLAGS) -o $@.debug $(DEMO10OBJS) $(LDLIBS) -Wl,-Map,$@.map
+	@$(STRIP) --preserve-dates -R.comment -R.sdata2 -S -o $@ $@.debug
+
 #
 
 .PHONY: clean
@@ -330,6 +339,7 @@ clean:
 	-$(RM) $(DEMO7OBJS) $(DEMO7TARGET) $(DEMO7TARGET).debug $(DEMO7TARGET).map
 	-$(RM) $(DEMO8OBJS) $(DEMO8TARGET) $(DEMO8TARGET).debug $(DEMO8TARGET).map
 	-$(RM) $(DEMO9OBJS) $(DEMO9TARGET) $(DEMO9TARGET).debug $(DEMO9TARGET).map
+	-$(RM) $(DEMO10OBJS) $(DEMO10TARGET) $(DEMO10TARGET).debug $(DEMO10TARGET).map
 
 .PHONY: distclean
 distclean: clean

@@ -1,8 +1,9 @@
 /***************************************************************************
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
- Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2007 by TheBar.mcc Open Source Team
+ Copyright (C) 2003-2008 Alfonso Ranieri
+
+ TheBar is developed by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -16,7 +17,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: AUTHORS 50 2007-02-27 23:45:40Z damato $
+ $Id: AUTHORS 168 2008-01-19 17:52:48Z alforan $
 
 ***************************************************************************/
 

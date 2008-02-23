@@ -308,7 +308,7 @@ mOpen(struct IClass *cl,Object *obj, UNUSED Msg msg)
 
     if (data->win)
     {
-        if (data->flags & FLG_GradientMode) SetAttrs(data->back,MUIA_Popbackground_Grad,&data->grad);
+        if (data->flags & FLG_GradientMode) set(data->back,MUIA_Popbackground_Grad,&data->grad);
         else set(data->back,MUIA_Imagedisplay_Spec,data->spec);
 
         set(data->win,MUIA_Window_Open,TRUE);

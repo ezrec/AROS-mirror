@@ -68,6 +68,7 @@ static BOOL ClassExpunge(UNUSED struct Library *base);
 
 struct Library *DataTypesBase = NULL;
 struct Library *CyberGfxBase = NULL;
+struct Library *PictureDTBase = NULL;
 
 #if defined(__amigaos4__)
 struct DataTypesIFace *IDataTypes = NULL;
@@ -110,22 +111,39 @@ static BOOL ClassInit(UNUSED struct Library *base)
          GETINTERFACE(ICyberGfx, struct CyberGfxIFace *, CyberGfxBase))
       { }
 
+      PictureDTBase = OpenLibrary("picture.datatype", 0);
+
+      #if !defined(__amigaos4__) && !defined(__AROS__)
+      {
+        struct Resident *mos = FindResident("MorphOS");
+
+        if (mos)
+        {
+          if ((PictureDTBase->lib_Version<50) ||
+              (PictureDTBase->lib_Version==50 && PictureDTBase->lib_Revision<17))
+          	  setFlag(lib_flags,BASEFLG_BROKENMOSPDT);
+	    }
+  	  }
+      #endif
+
       // check the version of MUI)
       if(MUIMasterBase->lib_Version >= MUIVER20)
       {
-        lib_flags |= BASEFLG_MUI20;
+        setFlag(lib_flags, BASEFLG_MUI20);
 
         if(MUIMasterBase->lib_Version > MUIVER20 || MUIMasterBase->lib_Revision >= 5341)
-          lib_flags |= BASEFLG_MUI4;
+          setFlag(lib_flags, BASEFLG_MUI4);
       }
 
-      lib_flags |= BASEFLG_Init;
+      setFlag(lib_flags, BASEFLG_Init);
       lib_thisClass = ThisClass;
 
       RETURN(TRUE);
       return(TRUE);
     }
   }
+
+  ClassExpunge(base);
 
   RETURN(FALSE);
   return(FALSE);
@@ -149,6 +167,12 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
     lib_dragBarClass = NULL;
   }
 
+  if(PictureDTBase)
+  {
+    CloseLibrary(PictureDTBase);
+    PictureDTBase = NULL;
+  }
+
   if(CyberGfxBase)
   {
     DROPINTERFACE(ICyberGfx);
@@ -163,7 +187,7 @@ static BOOL ClassExpunge(UNUSED struct Library *base)
     DataTypesBase = NULL;
   }
 
-  lib_flags &= ~(BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4);
+  clearFlag(lib_flags, BASEFLG_Init|BASEFLG_MUI20|BASEFLG_MUI4|BASEFLG_BROKENMOSPDT);
 
   LEAVE();
 

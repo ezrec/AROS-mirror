@@ -1,7 +1,7 @@
 /*******************************************************************************
 
         Name:           mccinit.c
-        Versionstring:  $VER: mccinit.c 1.9 (09.08.2007)
+        Versionstring:  $VER: mccinit.c 1.11 (01.02.2008)
         Author:         Jens Langner <Jens.Langner@light-speed.de>
         Distribution:   PD (public domain)
         Description:    library init file for easy generation of a MUI
@@ -40,6 +40,8 @@
                      stack which will be swapped later, because swapping it back
                      will access the wrong place in memory. Hence this structure
                      is allocated from global memory now.
+  1.11  01.02.2008 : fixed some minor compiler warnings when compiled using the
+                     MorphOS SDK.
 
  About:
 
@@ -258,7 +260,7 @@ DISPATCHERPROTO(_DispatcherP);
 
 /* Our library structure, consisting of a struct Library, a segment pointer */
 /* and a semaphore. We need the semaphore to protect init/exit stuff in our */
-/* open/close functions */
+/* open/close fuSnctions */
 struct LibraryHeader
 {
   struct Library         lh_Library;
@@ -623,6 +625,7 @@ static ULONG mccLibInit(struct LibraryHeader *base)
 {
   // now that this library/class is going to be initialized for the first time
   // we go and open all necessary libraries on our own
+  #if defined(__amigaos4__)
   if((DOSBase = OpenLibrary("dos.library", 36)) &&
      GETINTERFACE(IDOS, struct DOSIFace *, DOSBase))
   if((GfxBase = OpenLibrary("graphics.library", 36)) &&
@@ -631,6 +634,12 @@ static ULONG mccLibInit(struct LibraryHeader *base)
      GETINTERFACE(IIntuition, struct IntuitionIFace *, IntuitionBase))
   if((UtilityBase = OpenLibrary("utility.library", 36)) &&
      GETINTERFACE(IUtility, struct UtilityIFace *, UtilityBase))
+  #else
+  if((DOSBase = (struct DosLibrary*)OpenLibrary("dos.library", 36)) &&
+     (GfxBase = (struct GfxBase*)OpenLibrary("graphics.library", 36)) &&
+     (IntuitionBase = (struct IntuitionBase*)OpenLibrary("intuition.library", 36)) &&
+     (UtilityBase = OpenLibrary("utility.library", 36)))
+  #endif
   {
     // we have to please the internal utilitybase
     // pointers of libnix and clib2
@@ -653,12 +662,12 @@ static ULONG mccLibInit(struct LibraryHeader *base)
       #endif
       {
         #ifdef SUPERCLASS
-        ThisClass = MUI_CreateCustomClass(&base->lh_Library, SUPERCLASS, NULL, sizeof(struct INSTDATA), ENTRY(_Dispatcher));
+        ThisClass = MUI_CreateCustomClass(&base->lh_Library, (STRPTR)SUPERCLASS, NULL, sizeof(struct INSTDATA), ENTRY(_Dispatcher));
         if(ThisClass)
         #endif
         {
           #ifdef SUPERCLASSP
-          if((ThisClassP = MUI_CreateCustomClass(&base->lh_Library, SUPERCLASSP, NULL, sizeof(struct INSTDATAP), ENTRY(_DispatcherP))))
+          if((ThisClassP = MUI_CreateCustomClass(&base->lh_Library, (STRPTR)SUPERCLASSP, NULL, sizeof(struct INSTDATAP), ENTRY(_DispatcherP))))
           #endif
           {
             #ifdef SUPERCLASS

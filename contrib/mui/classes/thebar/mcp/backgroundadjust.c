@@ -784,8 +784,7 @@ mBitmapShowBitmap(struct IClass *cl,Object *obj, UNUSED Msg msg)
 #ifdef __AROS__
 BOOPSI_DISPATCHER(IPTR,bitmapDispatcher,cl,obj,msg)
 #else
-static ULONG SAVEDS ASM
-bitmapDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+DISPATCHER(bitmapDispatcher)
 #endif
 {
     switch (msg->MethodID)
@@ -821,7 +820,7 @@ static ULONG
 initBitmap(void)
 {
     if (initDTPic() &&
-        (bitmap = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,sizeof(struct bitmapData),bitmapDispatcher)))
+        (bitmap = MUI_CreateCustomClass(NULL,MUIC_Group,NULL,sizeof(struct bitmapData),ENTRY(bitmapDispatcher))))
     {
         if (lib_flags & BASEFLG_MUI20)
             bitmap->mcc_Class->cl_ID = (STRPTR)"Backgroundadjust_Bitmap";
@@ -1504,8 +1503,7 @@ mBackDragDrop(struct IClass *cl,Object *obj,struct MUIP_DragDrop *msg)
 #ifdef __AROS__
 BOOPSI_DISPATCHER(IPTR,backDispatcher,cl,obj,msg)
 #else
-static ULONG SAVEDS ASM
-backDispatcher(REG(a0,struct IClass *cl),REG(a2,Object *obj),REG(a1,Msg msg))
+DISPATCHER(backDispatcher)
 #endif
 {
     switch (msg->MethodID)
@@ -1546,7 +1544,7 @@ initBackgroundadjust(void)
     if (initPatterns() &&
         initBitmap() &&
         initGradient() &&
-        (lib_backgroundadjust = MUI_CreateCustomClass(NULL,MUIC_Register,NULL,sizeof(struct backData),backDispatcher)))
+        (lib_backgroundadjust = MUI_CreateCustomClass(NULL,MUIC_Register,NULL,sizeof(struct backData),ENTRY(backDispatcher))))
     {
         if (lib_flags & BASEFLG_MUI20)
             lib_backgroundadjust->mcc_Class->cl_ID = (STRPTR)"Backgroundadjust";

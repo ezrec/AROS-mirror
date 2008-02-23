@@ -2,8 +2,344 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
-$Id: ChangeLog 146 2008-01-04 11:10:36Z sindlarv $
-$URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/ChangeLog $
+2008-02-22  Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mui/muiundoc.h: Added aliases for the MUIM_Backfill and
+    MUIP_Backfill definitions which were often called "CustomBackfill"
+    for MUI versions prior to 3.9.
+
+2008-02-22  Alfonso Ranieri <alforan@tin.it>
+
+  * Fixed mcc/library.c mos broken dt check
+  * OK, last fixes. It now works on MOS/MUI3.9
+    MOS/MUI4 classic/MUI3.8. Please don't add
+    any feature or whatever, but consider it
+    frozen.
+  * mcp/utils.c - changed stch_l(); it must be
+    int stch_l(const char *chr_ptr,long *u_ptr);
+    returning the number of the converted chars,
+    otherwise os3 mcp classes are all not working well
+  * mcp/library.c - added a ClassExpunge() call if ClassInit()
+    fails
+  * mcp/class.c - fixed group frame gadget to prefs os3
+    section
+  * mcc/private.h - added BASEFLG_BROKENMOSPDT flags
+    for that damned morphos broken picdt
+  * mcc/class.c - loadDTBrush() does a better check for
+    MorphOS now; mSetup() start a handler for MUI3.8 so
+    that borderless-raised buttons can be deactivated if
+    the window becomes inactive
+  * mcc/library.c - added a ClassExpunge() call if ClassInit()
+    fails
+  * there must be something else I don't remember
+
+2008-02-21  Alfonso Ranieri <alforan@tin.it>
+
+  * mcc/build.c , button/build.c - in freeBitMaps() it must be
+    "if(strip->normalBM)" and not "if(!strip->normalBM)",
+    (again, who changed that?)
+  * mcc/class.c - fixed hits in makePicsFun() because not checking
+    some stuff (who changed that?)
+
+2008-02-20  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcp/library.c: fixed incorrect MUI3.9 version check because 20*20 is
+    definitly not 20 :)
+
+2008-02-20  Alfonso Ranieri <alforan@tin.it>
+
+  * mcp/popbackground.c - fixed dispatchers definitions and some broken SetAttrs
+  * mcp/library.c - fixed os3 classes init with no check 
+  * mcp/coloradjust.c - those GetAttr() made it crashes on various systems. Not 
+    investigated just put under #ifdef
+  * mcp/backgroundadjust.c - fixed dispatchers definitions
+  
+  While doing all that bug fixing work, I realized that the actual form of TheBar sources 
+  are in a strange form. I really think SDI should be rewritten for a better information 
+  incapsulation. Sharing all istance data, methods, dispatchers everywhere is a *bad* MUI
+  programming practice and something I always avoid. Now, let's fix it and then will see...
+  
+2008-02-20  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale/german.ct: updated german translation to latest changes.
+  * mcc/class.c, mcc/button/class.c: reverted some of Alfonso's latest changes
+    as these were based on old code. Alfonso, please learn how to use SubVersion
+    properly. Otherwise our changes will get lost without comment.
+
+2008-02-20  Alfonso Ranieri <alforan@tin.it>
+
+  * mcp/class.c - some changes to make it works on any MUI
+  * mcp/locale/TheBar_mcp.cd - added more space spacer strings
+  * mcc/class.c - again layout changes and added more space spacer
+  * mcc/button/class.c - many changes, expecially to mDraw()
+  * include/mui/TheBar_mcc.h - added more space spacer definitions
+  Works fine on MorphOS/MUI4 and MorphOS/MUI3.9 - Compiles on gentoo
+  cross for OS4, but TheBar-Test.c (see later); to test on classic.
+  Is TheBar-Test.c really needed? There are many demos that it could
+  be removed.
+
+--- Log for TheBar-Test ---
+.obj_os4/TheBar-Test.o(.sbss+0xc): In function `SaveFunc':
+TheBar-Test.c:103: multiple definition of `UtilityBase'
+/usr/local/amiga/ppc-amigaos/SDK/newlib/lib/crtbegin.o(.sbss+0x8): first defined here
+.obj_os4/TheBar-Test.o(.sbss+0x28): In function `SaveFunc':
+TheBar-Test.c:104: multiple definition of `IUtility'
+/usr/local/amiga/ppc-amigaos/SDK/newlib/lib/crtbegin.o(.sbss+0x4): first defined here
+collect2: ld returned 1 exit status
+make: *** [bin_os4/TheBar-Test] Error 1
+---
+
+
+2008-02-19  Alfonso Ranieri <alforan@tin.it>
+
+  * Some little change to mcc/class.c and mcc/private.h
+    I noted a strange group layout happening in very rare
+    condition on MUI<4 and Virtual. Find a solution simply
+    forcing askMinMax. Example: strange on 68K, press the
+    search button; bar height is incresed by one!
+
+    Now the last part: I did't have a gcc 68K installed on MOS
+    neither on gentoo. I grabbed one, but I am not able to compile
+    TheBar with that. If someone could address me what I need for a
+    safe 68K compilation... (I use SASC on MorphOS and atm TheBar
+    seems very difficoult to compile with sas).
+
+2008-02-19  Jens Langner <Jens.Langner@light-speed.de>
+
+  * Debug.h: replaced all abort() usages in our ASSERT() macros with the
+    respective calls to assert(). This should prevent the MorphOS compile
+    from not linking and be a bit more intuitiv IMHO. :)
+
+2008-02-19  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/build.c: removed some left over debug macros.
+  * demo/demo[2345].c: fixed some demos to let the appearance cycle show the
+    actual default mode.
+  * mcc/class.c, mcc/button/class.c, mcc/button/build.c: some code cleanup.
+  * mcc/brc1.c, mcc/button/brc1.c: fixed a bug in the ByteRun1 decoder which
+    caused internal images to be not drawn at all (like in demo5 and demo8).
+
+2008-02-18  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/button/utils.c: the own strlcpy() and strlcat() functions are only
+    required for OS3 compiles where the old libnix version is used. For our
+    normal clib2 compiles and also for MorphOS compiles they are not required
+    as the newer libnix already has them.
+
+2008-02-18  Alfonso Ranieri <alforan@tin.it>
+
+  *  ARGGGGGGGGGGG!
+  *  OK, We are near something to be called "stable";
+     still to test on classic...
+  *  OK, now the hard part: making button/class.c to work again
+     everywhere. This would take time...
+  *  trunk/mcp/class.c - Fixes again
+
+2008-02-18  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale/german.ct: updated german translation to latest changes.
+  * mcp/library.c: the catalog was never closed upon expunge.
+  * mcc/class.c: some minor code cleanup.
+  * mcc/button/class.c: the OS4 build now uses the new BltBitMapTags() function
+    for all blit operations.
+  * mcc/button/class.c: used the isFlagSet/Clear() were they were not used yet
+    and restructured the source a little bit to better make clear which "if()"
+    causes which reactions. Also fixed the partly screwed up ChangeLog.
+  * mcc/private.h: fixed broken OS3 build.
+
+2008-02-18  Alfonso Ranieri <alforan@tin.it>
+
+  * trunk/mcp/class.c - Trying to make it work with any MUI. Not sure if it is totally
+    fixed at the moment. Should be tested on MUI3.9/OS4 and classic
+  * trunk/mcp/locale/TheBar_mcp.cd - added some missing definition
+  * trunk/mcp/private.h - Removed some conditional preprocessor definition
+  * trunk/mcc/build.c - free bit maps now clear some fields, otherwise switching screen
+    might cause the class to use non existing stuff
+  * trunk/mcc/class.c - it was broken on MUI3.9/MOS (f.e. YAM freezes creating the write
+    window); seem fixed now
+  * trunk/mcc/button/build.c - as for build.c in mcc
+  * trunk/mcc/button/utils.c - some little changes
+  * trunk/mcc/button/class.c - Button background is used as default ad OM_NEW
+
+
+2008-02-14  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/private.h, mcc/class.c: added isAnyFlagSet() macro to check if at least
+    one of the given flags is set.
+  * mcc/button/class.c: setting the bar's frame attribute is now only done for
+    MUI4 as this caused unwantend additional frames with MUI3.x after a button
+    was hidden and shown again at least once.
+  * mcc/button/class.c: MUIA_FrameDynamic/Visible is now only modified with
+    at least MUI3.9 as MUI3.8 doesn't know these attributes.
+  * mcc/class.c: made the centered layout consistent between virtual and normal
+    bars.
+
+2008-02-12  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: sorting of more than 31 buttons was broken as the MethodID of
+    the message was never set in this case.
+
+2008-02-07  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: replaced some left over "value & flag" style bit checks.
+
+2008-02-06  Thore Böckelmann <tboeckel@gmx.de>
+
+  * #?.c: replaced all "value & flag" style bit checks and manipulations by
+    isFlagSet() and setFlag() style macros. This should make the source a lot
+    more readable and less error prone to wrong checks.
+
+2008-02-02  Jens Langner <Jens.Langner@light-speed.de>
+
+  * TheBar-Test.c: fixed another minor compiler warning.
+  * mccinit.c: updated to latest available version which fixes some minor
+    compiler warnings when used with the MorphOS SDK.
+
+2008-02-02  Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo10.c: fixed several things to make it compilable for OS4.
+
+2008-02-01  Alfonso Ranieri <alforan@tin.it>
+
+  * Fixed demo10.c and demos Makefile. There is still something  that
+    prevents demo10.c NTRaiseActive to make it works fine in main trunk
+    code; too tired to find it now.
+  * brc1.c were (in mcc/ and in button/) broken. Fixed with my version.
+    Last release was OK, while those in the actual svn didn't make
+    any compressed image to work (see demo4 f.e.). Note that is
+    a function returning (an int) 0 for success, 1 otherwise; so
+    defining it as returning a BOOL might be quite confusing.
+  * Changed makebutton() in mcc/class.c to something more reasonable
+    (attrs[i] changed to tag-> to make the code faster and more readable)
+  * Fixed layout hook in class.c; when the bar was vertical and the
+    position was at right (bottom), the last button could be drawn in a non
+    correct way; it MUST be tested on 68K.
+  * Added demo10.c in the demo drawer, because it is cute :)
+    So modified Makefile and added pics/Balls.png
+  * Note that the TheBarDemo doesn't compile for OS4 on linux cross
+
+2008-01-30  Alfonso Ranieri <alforan@tin.it>
+
+  * If you set up a notification on <attr,MUIV_Everytime>, there was no
+    way to obtain a real value of attr in the invoked method. MUIV_TriggerValue
+    was always returned. Fixed, extenting MUIP_SendNotify.
+
+2008-01-30  Jens Langner <Jens.Langner@light-speed.de>
+
+  * include/mui/TheBar_mcc.h: added the required "STACKED" attribute to the
+    extended MUIP_TheButton_SendNotify structure. This is required for AROS
+    compatibility.
+  * mcc/button/class.c: fixed an illegal access to _window() which happened
+    due to recent changes where a the visible status of a button was not
+    properly checked.
+
+2008-01-30  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: the event handler was no longer added in MUIM_Setup, but it
+    was removed in MUIM_Cleanup, which caused instant crashes.
+  * mcc/button/class.c: added the button ID to the AskMinMax debug output, as
+    this makes the output easier to read.
+  * mcc/utils.c: added the usual ENTER()/RETURN() macro calls to the memory
+    allocation functions.
+  * mcc/class.c: replaced a custom button search by a call to findButton().
+
+2008-01-29  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: backported the lastest changes done in the mui4 branch to our
+    trunk. The changes include:
+    - changed all memcpy() back to copymem() while copymem() is a macro
+      again which defaults to CopyMem() for MorphOS now.
+    - introduced new reallocVecPooledNC() function and used it in the
+      MUIM_Notify method of TheBar.mcc
+    - the allocVecPooled/freeVecPooled function use AllocPooled() and
+      FreePooled() for all platforms again.
+    - disabled MUIM_HandleEvent and Window event handler for TheBar.mcc
+    - use IDCMP_MOUSEOBJECT instead of IDCMP_MOUSEMOVE for the button
+      event handler.
+    - changes to the FLG_MouseOver handling in TheButton.mcc
+    - we skip the MUIM_Backfill method for MUI4 systems.
+
+2008-01-28  Alfonso Ranieri <alforan@tin.it>
+
+  * Bumped MOS/MUI branch to the last one
+  * mcc/class.c: Fixed MUIM_TheButton_Build called on TheBar object in Hide
+    and Sleep of TheBar mcc
+
+2008-01-20  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: fixed a "pointer to int without cast" warning and added the
+    usual ENTER()/RETURN macro calls.
+
+2008-01-19  Alfonso Ranieri <alforan@tin.it>
+
+  * Various docs update
+
+2008-01-17  Alfonso Ranieri <alforan@tin.it>
+
+  * mcc/class.c: pics are now load in a different order
+    that should be the natural order of loading since
+    the beginning but I was too lazy to do that :P
+    I will update documentation asap
+
+2008-01-17  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/class.c: changed variable type for checkIn() result usage.
+  * mcc/button/class.c: fixed possibly random return value of checkIn().
+
+2008-01-15  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: fixed two "type punned pointer violates strict alias rules"
+    warnings.
+  * misc: added ENTER() and RETURN()/LEAVE() macros where they were still
+    missing.
+
+2008-01-14  Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: merged the major changes done in the mosmui4 branch onto our main
+    trunk and bumped our trunk version to v26. The major changes found on
+    the mosmui4 branch seem to be:
+    - new MUIV_TheButton_DisMode_Blend && MUIV_TheButton_DisMode_BlendGrey
+      value of the DisMode attribute.
+    - standard frame type for a button is now MUIV_Frame_Button
+    - use MUIA_FrameDynamic and disable MUIA_FrameVisible on MUI4 to care
+      for all the frame handling instead of doing frame stuff ourself.
+    - added own overloading backfill method (MUIM_Backfill)
+    - removed the ENV variable for setting the alpha channel value of EPAA
+      calls dynamically.
+    - default color precision is now "GUI" instead of "Image".
+    While the above changes seem to be only the major changes, there might
+    be some smaller ones I may have forgotten during the merge. So please
+    everyone please have a look what might not work anymore or not as
+    expected and report back. In addition, please every MUI4 user/developer
+    should have a look if the MUI4 changes applied to the main trunk work
+    now like with the old sources of the mosmui4 branch. And please stop
+    using thge mosmui4 branch. Every MUI4 specialities should be done using
+    a "if(lib_flags & BASEFLG_MUI4)" or respective #ifdef statement.
+
+2008-01-14  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/library.c: added missing PictureDTBase pointer.
+  * mcc/build.c, mcc/button/build.c: fixed a memory leak.
+
+2008-01-12  Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/brc1.c, mcc/button/brc1.c: rework to not use any goto statement and
+    return a BOOL instead.
+  * mcc/button/class.c: fixed broken OS4 compile as the current SDK of OS4
+    miss the inline4 define for the WritePixelArrayAlpha() function.
+
+2008-01-09  Alfonso Ranieri <alforan@tin.it>
+
+  * branches/mosmui4: Comitted the last changes to mosmui4 branch. Please use
+    that for MOS release.
+
+2008-01-09  Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/class.c: fixed broken OS4 build.
+  * mcc/misc: the OS3 build now has full true alpha channel support if at least
+    cybergraphics.library V45 and picture.datatype V46 are available. This is
+    true with AfA 3.96+ installed. This makes the wrong backgrounds vanish in
+    YAM's toolbars.
 
 2008-01-06  Matthias Rustler <mrustler@gmx.de>
 

@@ -16,15 +16,15 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: rev.h 135 2007-12-21 12:03:18Z damato $
+ $Id: rev.h 172 2008-01-29 08:08:17Z damato $
 
 ***************************************************************************/
 
-#define LIB_VERSION    21
-#define LIB_REVISION   5
+#define LIB_VERSION    26
+#define LIB_REVISION   1
 
-#define LIB_REV_STRING "21.5"
-#define LIB_DATE       "21.12.2007"
+#define LIB_REV_STRING "26.1"
+#define LIB_DATE       "29.01.2008"
 
 #if defined(__PPC__)
   #if defined(__MORPHOS__)
@@ -44,4 +44,4 @@
   #define CPU ""
 #endif
 
-#define LIB_COPYRIGHT  "Copyright (c) 2005-2007 TheBar Open Source Team"
+#define LIB_COPYRIGHT  "Copyright (c) 2005-2008 TheBar Open Source Team"

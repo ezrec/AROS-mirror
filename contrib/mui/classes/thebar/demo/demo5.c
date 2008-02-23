@@ -137,7 +137,7 @@ main(UNUSED int argc,char **argv)
                 ULONG sigs = 0;
                 LONG id;
 
-                set(appearance,MUIA_Cycle_Active,1);
+                set(appearance,MUIA_Cycle_Active,0);
 
                 DoMethod(win,MUIM_Notify,MUIA_Window_CloseRequest,TRUE,MUIV_Notify_Application,2,MUIM_Application_ReturnID,MUIV_Application_ReturnID_Quit);
                 DoMethod(update,MUIM_Notify,MUIA_Pressed,FALSE,app,2,MUIM_Application_ReturnID,TAG_USER);
