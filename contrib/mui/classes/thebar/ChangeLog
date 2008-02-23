@@ -2,6 +2,9 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
+2008-02-23  Matthias Rustler <mrustler@gmx.de>
+  * Update of AROS port
+
 2008-02-22  Jens Langner <Jens.Langner@light-speed.de>
 
   * include/mui/muiundoc.h: Added aliases for the MUIM_Backfill and
