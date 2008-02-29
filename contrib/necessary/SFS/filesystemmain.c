@@ -1257,7 +1257,7 @@ void mainloop(void) {
         default:
           if(handlesimplepackets(globals->packet)==0) {
 
-            if(globals->disktype==ID_DOS_DISK) {
+            if(globals->disktype == DOSTYPE_ID) {
               switch(globals->packet->dp_Type) {
               case ACTION_MAKE_LINK:
                 _DEBUG(("ACTION_MAKE_LINK\n"));
@@ -3559,7 +3559,7 @@ LONG initdisk() {
           if(errorcode==0) {
             _DEBUG(("Initdisk: A valid DOS disk\n"));
 
-            newdisktype=ID_DOS_DISK;
+            newdisktype = DOSTYPE_ID;
 
             #ifdef STARTDEBUG
               dreq("There is a valid SFS disk present!");
@@ -3996,7 +3996,7 @@ static void fillinfodata(struct InfoData *id) {
 
   usedblocks=id->id_NumBlocks;
 
-  if(globals->disktype==ID_DOS_DISK) {
+  if(globals->disktype == DOSTYPE_ID) {
     ULONG deletedfiles, deletedblocks;
 
     getusedblocks(&usedblocks);
