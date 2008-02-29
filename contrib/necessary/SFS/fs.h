@@ -13,7 +13,7 @@
 
 #define CHECKCODE
 // #define CHECKCODE_SLOW
-#define CHECKCODE_BNODES
+//#define CHECKCODE_BNODES
 // #define CHECKCODE_TRANSACTIONS  // MagicValue, also uncomment stuff in redblacktree.h
 
 // #define CHECKCHECKSUMSALWAYS
@@ -68,9 +68,9 @@
 #define addheadm(l,n) (n)->mln_Succ=(l)->mlh_Head; (n)->mln_Pred=(struct MinNode *)(l); (l)->mlh_Head->mln_Pred=(n); (l)->mlh_Head=(n);
 
 #ifdef SFS_BE
-#define DOSTYPE_ID      AROS_LONG2BE(MAKE_ID('S','F','S',0))
+#define DOSTYPE_ID      MAKE_ID('S','F','S',0)
 #else
-#define DOSTYPE_ID      AROS_LONG2BE(MAKE_ID('s','f','s',0))
+#define DOSTYPE_ID      MAKE_ID('s','f','s',0)
 #endif
 
 /* HASHENTRY(x) is used to determine which hashchain to use for
