@@ -66,9 +66,9 @@
 #define addheadm(l,n) (n)->mln_Succ=(l)->mlh_Head; (n)->mln_Pred=(struct MinNode *)(l); (l)->mlh_Head->mln_Pred=(n); (l)->mlh_Head=(n);
 
 #if SFS_BE
-#define DOSTYPE_ID      AROS_MAKE_ID('S','F','S',0)
+#define DOSTYPE_ID      AROS_LONG2BE(AROS_MAKE_ID('S','F','S',0))
 #else
-#define DOSTYPE_ID      AROS_MAKE_ID('s','f','s',0)
+#define DOSTYPE_ID      AROS_LONG2BE(AROS_MAKE_ID('s','f','s',0))
 #endif
 
 /* HASHENTRY(x) is used to determine which hashchain to use for
