@@ -3,13 +3,11 @@
 
 #include <exec/types.h>
 #include <libraries/iffparse.h>
-#ifdef __AROS__
-#include <dos/bptr.h>
-#else
 #include <dos/dos.h>
-#endif
 
-// #define SFS_BE
+#ifndef SFS_BE
+#define SFS_BE 1
+#endif
 
 #define CHECKCODE
 // #define CHECKCODE_SLOW
@@ -67,10 +65,10 @@
 #define addtailm(l,n) (n)->mln_Succ=(l)->mlh_TailPred->mln_Succ; (l)->mlh_TailPred->mln_Succ=(n); (n)->mln_Pred=(l)->mlh_TailPred; (l)->mlh_TailPred=(n)
 #define addheadm(l,n) (n)->mln_Succ=(l)->mlh_Head; (n)->mln_Pred=(struct MinNode *)(l); (l)->mlh_Head->mln_Pred=(n); (l)->mlh_Head=(n);
 
-#ifdef SFS_BE
-#define DOSTYPE_ID      MAKE_ID('S','F','S',0)
+#if SFS_BE
+#define DOSTYPE_ID      AROS_MAKE_ID('S','F','S',0)
 #else
-#define DOSTYPE_ID      MAKE_ID('s','f','s',0)
+#define DOSTYPE_ID      AROS_MAKE_ID('s','f','s',0)
 #endif
 
 /* HASHENTRY(x) is used to determine which hashchain to use for
