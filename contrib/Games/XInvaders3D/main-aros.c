@@ -33,6 +33,17 @@
 
 /*================================================================*/
 
+/* Cohan-Sutherland clipping algorithm */
+
+#define CLIPLEFT  1
+#define CLIPRIGHT 2
+#define CLIPLOWER 4
+#define CLIPUPPER 8
+
+int clipline(int *px1, int *py1, int *px2, int *py2);
+
+/*================================================================*/
+
 struct GfxBase 		*GfxBase;
 struct IntuitionBase 	*IntuitionBase;
 struct Screen 		*scr;
@@ -43,6 +54,7 @@ struct RastPort 	*win_rp, *draw_rp;
 ULONG 			coltable[256 * 3 + 2];
 
 int 			window_width, window_height;
+int                     XMax, YMax, XMin, YMin;
 
 /*------------------------------------------------------------------
  * main
@@ -102,6 +114,11 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
    window_width  = win_width;
    window_height = win_height;
 
+   XMin = 0;
+   YMin = 0;
+   XMax = win_width - 1;
+   YMax = win_height - 1;
+
    scr = OpenScreenTags(0, SA_Width	, window_width	,
    			   SA_Height	, window_height	,
 			   SA_Depth	, 8		,
@@ -134,7 +151,7 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
    }
    
    draw_rp->BitMap = draw_bm;
-   
+
    win = OpenWindowTags(0, WA_CustomScreen	, (IPTR) scr	,
    			   WA_Left		, 0		,
    			   WA_Top		, 0		,
@@ -324,23 +341,25 @@ int Handle_events ( void )
 
 /*================================================================*/
 
-#warning No clipping, although rendering is done in non-layered rastport. Can cause crashes!
-#warning 100 % on the Amiga, but actually not in AROS Linux/X11, becaue of the AROS graphics.library
-#warning and the HIDD using X functions and X offscreen bitmaps (pixmaps)
-
 void Draw_line ( int x0, int y0, int x1, int y1, unsigned int color )
 {
-   SetAPen(draw_rp, color);
-   Move(draw_rp, x0, y0);
-   Draw(draw_rp, x1, y1);
+   if (clipline(&x0, &y0, &x1, &y1))
+   {
+      SetAPen(draw_rp, color);
+      Move(draw_rp, x0, y0);
+      Draw(draw_rp, x1, y1);
+   }
 }
 
 /*================================================================*/
 
 void Draw_point ( int x0, int y0, unsigned int color )
 {
-   SetAPen(draw_rp, color);
-   RectFill(draw_rp, x0 - 3, y0 + 3, x0 - 3 + 3 - 1, y0 + 3 + 3 - 1);	 
+   if ( x0 > 2 && y0 > -2 && x0 < XMax && y0 < YMax - 5 )
+   {
+      SetAPen(draw_rp, color);
+      RectFill(draw_rp, x0 - 3, y0 + 3, x0 - 3 + 3 - 1, y0 + 3 + 3 - 1);
+   }
 }
 
 /*================================================================*/
@@ -398,6 +417,105 @@ long Timer_msec ( TIMER *t )
    t->t0.tv_usec = t->t1.tv_usec;
 
    return msec;
+}
+
+/*================================================================*/
+
+int clipline(int *px1, int *py1, int *px2, int *py2)
+{
+   int x1, y1, x2, y2;
+   int K1=0,K2=0;
+   int dx,dy;
+
+   x1 = *px1; y1 = *py1; x2 = *px2; y2 = *py2;
+
+   dx=x2-x1;
+   dy=y2-y1;
+
+   if(y1<YMin) K1 =CLIPLOWER;
+   if(y1>YMax) K1 =CLIPUPPER;
+   if(x1<XMin) K1|=CLIPLEFT;
+   if(x1>XMax) K1|=CLIPRIGHT;
+
+   if(y2<YMin) K2 =CLIPLOWER;
+   if(y2>YMax) K2 =CLIPUPPER;
+   if(x2<XMin) K2|=CLIPLEFT;
+   if(x2>XMax) K2|=CLIPRIGHT;
+
+   while(K1 || K2)
+   {
+
+      if(K1 & K2)
+	 return FALSE;
+
+      if(K1)
+      {
+	 if(K1 & CLIPLEFT)
+	 {
+	    y1+=(XMin-x1)*dy/dx;
+	    x1=XMin;
+         }
+	 else if(K1 & CLIPRIGHT)
+	 {
+            y1+=(XMax-x1)*dy/dx;
+	    x1=XMax;
+         }
+
+         if(K1 & CLIPLOWER)
+         {
+	    x1+=(YMin-y1)*dx/dy;
+            y1=YMin;
+	 }
+         else if(K1 & CLIPUPPER)
+         {
+            x1+=(YMax-y1)*dx/dy;
+            y1=YMax;
+	 }
+         K1 = 0;
+
+         if(y1<YMin) K1 =CLIPLOWER;
+         if(y1>YMax) K1 =CLIPUPPER;
+         if(x1<XMin) K1|=CLIPLEFT;
+         if(x1>XMax) K1|=CLIPRIGHT;
+      }
+
+      if(K1 & K2)
+         return FALSE;
+
+      if(K2)
+      {
+	 if(K2 & CLIPLEFT)
+    	 {
+            y2+=(XMin-x2)*dy/dx;
+            x2=XMin;
+         }
+         else if(K2 & CLIPRIGHT)
+         {
+            y2+=(XMax-x2)*dy/dx;
+            x2=XMax;
+         }
+	 
+	 if(K2 & CLIPLOWER)
+         {
+            x2+=(YMin-y2)*dx/dy;
+	    y2=YMin;
+         }
+         else if(K2 & CLIPUPPER)
+         {
+            x2+=(YMax-y2)*dx/dy;
+            y2=YMax;
+         }
+
+         K2 = 0;
+         if(y2<YMin) K2 =CLIPLOWER;
+         if(y2>YMax) K2 =CLIPUPPER;
+         if(x2<XMin) K2|=CLIPLEFT;
+         if(x2>XMax) K2|=CLIPRIGHT;
+      }
+   }
+
+   *px1 = x1; *py1 = y1; *px2 = x2; *py2 = y2;
+   return TRUE;
 }
 
 /*================================================================*/
