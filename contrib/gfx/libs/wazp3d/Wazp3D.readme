@@ -1,14 +1,14 @@
-Short: Wazp3D library is a CPU only Warp3D v4.2 implementation
-Author:  thellier@free.fr (Alain Thellier)
-Uploader:  thellier@free.fr
-Type:  driver/video
-Version:  beta 35 (11/02/2008)
-Requires:  RTG system,68040
-Architecture: m68k-amigaos >= 3.0.0;
-http://aminet.net/package/driver/video/Wazp3D
+Short: Wazp3D library is a CPU only Warp3D v4.2 implementation 
+Author: thellier@free.fr (Alain Thellier) 
+Uploader: thellier@free.fr 
+Type: driver/video 
+Version: beta 36 (March 2008) 
+Requires: RTG system,68040 
+Architecture: m68k-amigaos >= 3.0.0; 
+http://aminet.net/package/driver/video/Wazp3D     
 
 DESCRIPTION 
-Wazp3D beta 35 : Alain THELLIER - Paris - FRANCE - (November 2006 to February 2008) 
+Wazp3D beta 36 : Alain THELLIER - Paris - FRANCE - (November 2006 to March 2008) 
 Wazp3D is a library intended to be compatible with the famous Warp3D.library for AmigaOS 68040 
 
 LICENSE 
@@ -28,21 +28,32 @@ o Built-in debugger
 HISTORY 
 Wazp3D was first created to test the "Tales of Tamar"'s 3D Map inside WinUAE. 
 I have no time left to work more on this Wazp3D project. So i release the source & library 
+ 
+VERSIONS HISTORY 
+Beta 36  
+Changes since previous one: 
+o Nicer & a few faster with some new optimised pixels functions 
+o Texture-repeat works (Bzone) 
+o Smooth Textures options (nice)
+o More compatible : Fog or coloring works now on partially transparent faces (like trees in TOT3D) = new pixels functions 
+o Fog works better (not perfect yet) 
+o New options "Use ClearImage" & "Update At UnlockHardware " to enhance update for some programs like gears(screen),Engine, sKulpt or TheVague. 
 
-CHANGES 
-
-Since Beta 34 
+Beta 35 
+Changes since previous one: 
 o Code clean-up and library enhancements from Gunther Nikl 
 o "Hack1 tex RGBA" works again (draw a textured-triangle as a Gouraud untextured one = faster) 
 o "Hack2 tex RGBA" works again (draw a textured-triangle as a Flat untextured one = faster) 
 
-Since Beta 33 
+Beta 34 
+Changes since previous one: 
 o Brand new pixels functions that allow to render lighted textures :-) so looks now very nice 
 o Corrected a very bad bug concerning pixels-buffering. 
 o New Bug has appeared :-/ so 4D-clock & other StormMesa stuffs now crash... 
 o Library is smaller :-) 
 
-Since Beta 32 
+Beta 33 
+Changes since previous one: 
 o Full Documentation at http://thellier.free.fr/Wazp3D.htm 
 o Corrected a very bad bug introduced in beta 32 concerning memory freeing (beta 32 line 644) 
 o Corrected a very bad bug in W3D_UpdateTexSubImage 
@@ -57,7 +68,8 @@ o More compatible with new 3Dprogs (BattleZone,Lamintro,4D-Clock,StormMesa examp
 o Support rectangular textures 
 o Bug fix in Alpha blending on 32 bits texture but no zbuffer 
 
-Since Beta 31 
+Beta 32 
+Changes since previous one: 
 o No more warnings when recompiling 
 o Perspective correction (cant be disabled) 
 o 3D-Clipper works 
@@ -70,17 +82,53 @@ o "AntiAlias Screen" new & works (3x3 median per pixel) (slow)
 o Library is smaller :-) 
 o More compatible with new 3Dprogs 
 
-Since Beta 30 
+Beta 31 (first public one) 
+Changes since previous one: 
 o New tracked memory allocation 
 o Project's name changed to "Wazp3D" 
 
 KNOWN BUGS 
-o Fog or coloring on partially transparent faces (like trees in TOT3D) 
 o SOFT3D_ClearImage (= clearing Wazp3D internal RGBA buffer) dont use well the MinUpdate region (This bug is patched) 
-o Texturing in Bzone 
-o Refresh display problem (sKulpt, Gears screen) 
-o StormMesa & Enforce crashs 
-o Fog is still not good 
+o Refresh display problem (sKulpt) 
+o StormMesa crashs 
+o Fog still not perfect 
+ 
+IMPORTANT 
+Wazp3D is not perfect but it was good enough for me :-) 
+This Wazp3D binary is intended to be used within a very fast 68040 AmigaOS (= UAE emulator with JIT like WinUAE) 
+This Wazp3D binary is compiled for 68040-68881 (adjust your WinUAE settings) 
+Also need "full screen RTG" & JIT both to be activated to obtain enough speed 
+(also need picasso 96/cybergraphics and an RGB24 screen) 
+Wazp3D is NOT an UAE hack and so (should) not depend on a particular UAE version 
+But it only need much speed for his software rendering 
+Some 3Dprogs need a big stack to be able to run without crash (glsokoban,etc...) 
+
+IMPLEMENTED FEATURES 
+Texturing 
+Zbuffer (Zbuffer > z) 
+Goureaud shading 
+Alpha blending (1 - Alpha) 
+Color blending (DECAL) 
+All Fogs 
+All primitives 
+All vertex formats,etc... 
+ 
+UNIMPLEMENTED FEATURES 
+Stencil masking 
+Color masking 
+Alpha masking 
+Zbuffer Functions 
+Blending functions 
+Stippling 
+Mipmapping 
+Filtering, etc... 
+
+TESTED AND WORKING SOFTWARES     
+see full documentation at http://thellier.free.fr/Wazp3D.htm
+
+INSTALLATION 
+copy LIBS:Warp3D.library TO LIBS:Warp3D.library.sav 
+copy Wazp3D.library TO LIBS:Warp3D.library 
 
 WAZP3D-SETTINGS
 The Wazp3D-Settings tool allow to change some parameters of the Wazp3D

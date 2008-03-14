@@ -1,7 +1,8 @@
-/* Wazp3D beta 35 : Alain THELLIER - Paris - FRANCE - (November 2006 to January 2008) */
+/* Wazp3D beta 36 : Alain THELLIER - Paris - FRANCE - (November 2006 to March 2008)   */
 /* Adaptation to AROS from Matthias Rustler                                           */
 /* Code clean-up and library enhancements from Gunther Nikl                           */
 /* LICENSE: GNU General Public License (GNU GPL) for this file                        */
+
 
 #define WAZP3DDEBUG 1
 #define MOTOROLAORDER 1
@@ -16,7 +17,6 @@
 #include <math.h>
 #include <string.h>
 #include <stdarg.h>
-
 #include <cybergraphx/cybergraphics.h>
 #include <libraries/asl.h>
 #include <Warp3D/Warp3D.h>
@@ -72,6 +72,7 @@ W3D_ScreenMode smodelist[50];
 BOOL  ASLsize;
 ULONG ASLminX,ASLmaxX,ASLminY,ASLmaxY;
 struct MyButton HardwareLie;        /* pretend to be a perfect hardware driver */
+struct MyButton TexFmtLie;
 struct MyButton OnlyRGB24;        /* only use fast RGB 24 screens */
 struct MyButton UsePolyHack;
 struct MyButton UseColorHack;
@@ -79,11 +80,13 @@ struct MyButton UseCullingHack;
 struct MyButton UseFog;
 struct MyButton UseColoring;
 struct MyButton UseClearDrawRegion;
+struct MyButton UseClearImage;
 struct MyButton UseMinUpdate;
-struct MyButton UseAnyTexFmt;
+struct MyButton DrawAtUnlock;
 struct MyButton HackRGBA1;
 struct MyButton HackRGBA2;
 struct MyButton UseAntiScreen;
+struct MyButton SmoothTextures;
 struct MyButton UseClipper;
 struct MyButton UsePerspective;
 struct MyButton ClampUV;
@@ -214,7 +217,6 @@ struct pixel3DL{
 
 #ifdef MOTOROLAORDER
 struct pixel3DW{
-
     WORD  z,zlow;
     UBYTE u1,u,u3,u4;
     UBYTE v1,v,v3,v4;
@@ -312,8 +314,8 @@ struct SOFT3D_context{
     union pixel3D side2[1024];
     union pixel3D delta[1024];
     HOOKEDFUNCTION FillFunction;
-    HOOKEDFUNCTION PixelsFunction1;
-    HOOKEDFUNCTION PixelsFunction2;
+    HOOKEDFUNCTION PixelsFunctionTex;
+    HOOKEDFUNCTION PixelsFunctionCol;
     struct pixbuffer3D PixBuffer[PIXBUFFERSIZE];
     struct pixbuffer3D *PixBufferDone;
     struct pixbuffer3D *PixBufferMaxi;
@@ -330,8 +332,8 @@ struct SOFT3D_context{
     UBYTE AliasedLines[4*1024*2];
     WORD Pxmin,Pxmax,Pymin,Pymax;                    /* really updated region */
     WORD xUpdate,largeUpdate,yUpdate,highUpdate;    /* really updated region previous frame*/
-    UWORD Tnb;            
-    ULONG DumpedFnb,DumpedPnb;    /* Faces & Points count. TODO: count & dump what has been drawn*/
+    UWORD Tnb;
+    ULONG MaxFnb,MaxPnb,DumpedFnb,DumpedPnb;    /* Faces & Points count. TODO: count & dump what has been drawn*/
     struct  face3D *DumpedF;
     struct point3D *DumpedP;
     UBYTE ColMode;
@@ -490,6 +492,8 @@ void Libfree(void *p);
 void Libprintf(const char *string, ...);
 void LibSettings(struct MyButton *ButtonList,WORD ButtonCount);
 void MYfree(void *pt);
+void Pixels24M (struct SOFT3D_context *SC);
+void Pixels32M (struct SOFT3D_context *SC);
 void Pixels24R (struct SOFT3D_context *SC);
 void Pixels32R (struct SOFT3D_context *SC);
 void Pixels32A (struct SOFT3D_context *SC);
@@ -497,7 +501,11 @@ void Pixels32AA(struct SOFT3D_context *SC);
 void Pixels32B (struct SOFT3D_context *SC);
 void Pixels32BB(struct SOFT3D_context *SC);
 void Pixels32a (struct SOFT3D_context *SC);
-void Pixels32M (struct SOFT3D_context *SC);
+void Pixels32Aq (struct SOFT3D_context *SC);
+void Pixels32AAq(struct SOFT3D_context *SC);
+void Pixels32Bq (struct SOFT3D_context *SC);
+void Pixels32BBq(struct SOFT3D_context *SC);
+void Pixels32aq (struct SOFT3D_context *SC);
 void PrintContext(W3D_Context *C);
 void PrintDriver(W3D_Driver *D);
 void PrintME(struct memory3D *ME);
@@ -536,7 +544,10 @@ void W3D_WaitIdle(W3D_Context *context);
 void W3D_WriteZPixel(W3D_Context *context, ULONG x, ULONG y,W3D_Double *z);
 void W3D_WriteZSpan(W3D_Context *context, ULONG x, ULONG y,ULONG n, W3D_Double *z, UBYTE *mask);
 void WAZP3D_Settings();
-void AntiAliasImage3X3(struct SOFT3D_context *SC);
+void AntiAliasImage24_2X2(void *image,UWORD large,UWORD high);
+void AntiAliasImage24_3X3(void *image,UWORD large,UWORD high,UBYTE *AliasedLines);
+void AntiAliasImage32_2X2(void *image,UWORD large,UWORD high);
+void AntiAliasImage32_3X3(void *image,UWORD large,UWORD high,UBYTE *AliasedLines);
 BOOL SetState(W3D_Context *context,ULONG state,BOOL set);
 void SOFT3D_SetPointSize(struct SOFT3D_context *SC,UWORD PointSize);
 void SOFT3D_SetZbuffer(struct SOFT3D_context *SC,WORD *Zbuffer16);
@@ -753,6 +764,7 @@ register union blend3D Blend;
 struct SOFT3D_context *SC;
 WORD x,y;
 ULONG n;
+UBYTE FogRGBA[4];
 float m=5.0;    /* set a margin for clipper so show if 3Dprog never setted scissor */
 
 SFUNCTION(SOFT3D_Start)
@@ -792,6 +804,9 @@ SFUNCTION(SOFT3D_Start)
     SOFT3D_SetClipping(SC,m,(float)(large-1)-m,m,(float)(high-1)-m,0.0,0.999);
     SOFT3D_SetPointSize(SC,1);
     SOFT3D_SetDrawFunctions(SC,NULL,'0',1,FALSE,'R');     /* default notex nofog nozbuffer just color */
+    FogRGBA[0]=FogRGBA[1]=FogRGBA[2]=FogRGBA[3]=32;
+    SOFT3D_Fog(SC,0,0.0,0.999,0.1,FogRGBA);        /* default no fog */
+    SOFT3D_SetPointSize(SC,1);                /* default simpler point = 1 pixel */
 
     SC->Pxmin=0;
     SC->Pymin=0;
@@ -896,15 +911,14 @@ void Pixels24R(struct SOFT3D_context *SC)
 register struct rgbabuffer3D* Src=SC->Src;
 register struct rgbabuffer3D* Dst=SC->Dst;
 register struct rgbabuffer3D* End=SC->End;
+register UBYTE flat=255;
 
 REM(Pixels24R)
 Pixels:
-    Dst->RGBA[0]=Src->RGBA[0];
-    Dst->RGBA[1]=Src->RGBA[1];
-    Dst->RGBA[2]=Src->RGBA[2];
-    Dst->RGBA[3]=255;
-    Src++;
+    COPYRGBA(Dst->RGBA,Src->RGBA);
+    Dst->RGBA[3]=flat;
     Dst++;
+    Src++;
     if(Dst!=End)     goto Pixels;
 }
 /*=============================================================*/
@@ -918,8 +932,8 @@ register struct rgbabuffer3D* End=SC->End;
 REM(Pixels32R)
 Pixels:
     COPYRGBA(Dst->RGBA,Src->RGBA);
-    Src++;
     Dst++;
+    Src++;
     if(Dst!=End)     goto Pixels;
 }
 /*=============================================================*/
@@ -929,16 +943,51 @@ void Pixels24M(struct SOFT3D_context *SC)
 register struct rgbabuffer3D* Src=SC->Src;
 register struct rgbabuffer3D* Buf=SC->Buf;
 register struct rgbabuffer3D* Dst=SC->Dst;
+register UBYTE *DstRGBA;
+register UBYTE *SrcRGBA;
+register UBYTE *BufRGBA;
 register struct rgbabuffer3D* End=SC->End;
+register ULONG  one=1;
+register UBYTE flat=255;
 
 REM(Pixels24M)
 Pixels:
-    Dst->RGBA[0]= Src->RGBA[0]/2+Buf->RGBA[0]/2;
-    Dst->RGBA[1]= Src->RGBA[1]/2+Buf->RGBA[1]/2;
-    Dst->RGBA[2]= Src->RGBA[2]/2+Buf->RGBA[2]/2;
+    /* generate better ASM like that */
+    SrcRGBA=Src->RGBA; BufRGBA=Buf->RGBA; DstRGBA=Dst->RGBA; 
+    DstRGBA[0]= ( (ULONG) SrcRGBA[0] + (ULONG)BufRGBA[0] )>>one;
+    DstRGBA[1]= ( (ULONG) SrcRGBA[1] + (ULONG)BufRGBA[1] )>>one;
+    DstRGBA[2]= ( (ULONG) SrcRGBA[2] + (ULONG)BufRGBA[2] )>>one;
+    DstRGBA[3]= flat;
+    Dst++;
     Src++;
     Buf++;
+    if(Dst!=End)     goto Pixels;
+
+}
+/*=============================================================*/
+void Pixels32M(struct SOFT3D_context *SC)
+{
+/* make median value with source & buffer (allways)*/
+register struct rgbabuffer3D* Src=SC->Src;
+register struct rgbabuffer3D* Buf=SC->Buf;
+register struct rgbabuffer3D* Dst=SC->Dst;
+register struct rgbabuffer3D* End=SC->End;
+register UBYTE *DstRGBA;
+register UBYTE *SrcRGBA;
+register UBYTE *BufRGBA;
+register ULONG one=1;
+
+REM(Pixels32M)
+Pixels:
+    /* generate better ASM like that */
+    SrcRGBA=Src->RGBA; BufRGBA=Buf->RGBA; DstRGBA=Dst->RGBA; 
+    DstRGBA[0]= ( (ULONG) SrcRGBA[0] + (ULONG)BufRGBA[0] )>>one;
+    DstRGBA[1]= ( (ULONG) SrcRGBA[1] + (ULONG)BufRGBA[1] )>>one;
+    DstRGBA[2]= ( (ULONG) SrcRGBA[2] + (ULONG)BufRGBA[2] )>>one;
+    DstRGBA[3]=  BufRGBA[3];
     Dst++;
+    Src++;
+    Buf++;
     if(Dst!=End)     goto Pixels;
 
 }
@@ -948,24 +997,25 @@ void Pixels32AA(struct SOFT3D_context *SC)
 /* blend source & buffer (allways)*/
 register struct rgbabuffer3D* Src=SC->Src;
 register struct rgbabuffer3D* Buf=SC->Buf;
-register struct rgbabuffer3D* Dst=SC->Dst;
 register struct rgbabuffer3D* End=SC->End;
 register UBYTE *Blending8=SC->Blending8;
+register struct rgbabuffer3D* Dst=SC->Dst;
 register union blend3D BlendSrc;
 register union blend3D BlendBuf;
+register UBYTE flat=255;
 
 REM(Pixels32AA)
     BlendSrc.L.Index=BlendBuf.L.Index=0;
 Pixels:
-    BlendSrc.B.Alpha=Src->RGBA[3];            /* Alpha( A ) blend Source */
-    BlendBuf.B.Alpha=255-BlendSrc.B.Alpha;    /* Alpha(1-A) blend Buffer */
+    BlendSrc.B.Alpha= Src->RGBA[3];            /* Alpha( A ) blend Source */
+    BlendBuf.B.Alpha=!BlendSrc.B.Alpha;        /* Alpha(1-A) blend Buffer */
     BLEND8A(Src->RGBA[0],Buf->RGBA[0],Dst->RGBA[0])
     BLEND8A(Src->RGBA[1],Buf->RGBA[1],Dst->RGBA[1])
     BLEND8A(Src->RGBA[2],Buf->RGBA[2],Dst->RGBA[2])
-    Dst->RGBA[3]=255;
+    Dst->RGBA[3]=flat;
+    Dst++;
     Src++;
     Buf++;
-    Dst++;
     if(Dst!=End)     goto Pixels;
 
 }
@@ -980,6 +1030,7 @@ register struct rgbabuffer3D* End=SC->End;
 register UBYTE *Blending8=SC->Blending8;
 register union blend3D BlendSrc;
 register union blend3D BlendBuf;
+register UBYTE flat=255;
 
 REM(Pixels32A)
     BlendSrc.L.Index=BlendBuf.L.Index=0;
@@ -989,12 +1040,12 @@ Pixels:
     {
         if(Src->RGBA[3] < ALPHAMAX)                /* if source not solid ? */
         {
-        BlendSrc.B.Alpha=Src->RGBA[3];            /* Alpha( A ) blend Source */
-        BlendBuf.B.Alpha=255-BlendSrc.B.Alpha;        /* Alpha(1-A) blend Buffer */
+        BlendSrc.B.Alpha= Src->RGBA[3];            /* Alpha( A ) blend Source */
+        BlendBuf.B.Alpha=!BlendSrc.B.Alpha;        /* Alpha(1-A) blend Buffer */
         BLEND8A(Src->RGBA[0],Buf->RGBA[0],Dst->RGBA[0])
         BLEND8A(Src->RGBA[1],Buf->RGBA[1],Dst->RGBA[1])
         BLEND8A(Src->RGBA[2],Buf->RGBA[2],Dst->RGBA[2])
-        Dst->RGBA[3]=255;
+        Dst->RGBA[3]=flat;
         }
         else
         {
@@ -1002,9 +1053,9 @@ Pixels:
         }
 
     }
+    Dst++;
     Src++;
     Buf++;
-    Dst++;
     if(Dst!=End)     goto Pixels;
 
 }
@@ -1018,6 +1069,7 @@ register struct rgbabuffer3D* Dst=SC->Dst;
 register struct rgbabuffer3D* End=SC->End;
 register UBYTE *Blending8=SC->Blending8;
 register union blend3D BlendBuf;
+register UBYTE flat=255;
 
 REM(Pixels32B)
     BlendBuf.L.Index=0;
@@ -1031,7 +1083,7 @@ Pixels:
         BLEND8B(Src->RGBA[0],Buf->RGBA[0],Dst->RGBA[0])
         BLEND8B(Src->RGBA[1],Buf->RGBA[1],Dst->RGBA[1])
         BLEND8B(Src->RGBA[2],Buf->RGBA[2],Dst->RGBA[2])
-        Dst->RGBA[3]=255;
+        Dst->RGBA[3]=flat;
         }
         else
         {
@@ -1039,9 +1091,9 @@ Pixels:
         }
 
     }
+    Dst++;
     Src++;
     Buf++;
-    Dst++;
     if(Dst!=End)     goto Pixels;
 
 }
@@ -1055,6 +1107,7 @@ register struct rgbabuffer3D* Dst=SC->Dst;
 register struct rgbabuffer3D* End=SC->End;
 register UBYTE *Blending8=SC->Blending8;
 register union blend3D BlendBuf;
+register UBYTE flat=255;
 
 REM(Pixels32BB)
     BlendBuf.L.Index=0;
@@ -1063,11 +1116,10 @@ Pixels:
     BLEND8B(Src->RGBA[0],Buf->RGBA[0],Dst->RGBA[0])
     BLEND8B(Src->RGBA[1],Buf->RGBA[1],Dst->RGBA[1])
     BLEND8B(Src->RGBA[2],Buf->RGBA[2],Dst->RGBA[2])
-    Dst->RGBA[3]=255;
-
+    Dst->RGBA[3]=flat;
+    Dst++;
     Src++;
     Buf++;
-    Dst++;
     if(Dst!=End)     goto Pixels;
 }
 /*=============================================================*/
@@ -1084,9 +1136,162 @@ Pixels:
     COPYRGBA(Dst->RGBA,Buf->RGBA);
     if (Src->RGBA[3] > ALPHAMIN)                    /* if source visible ? */
         COPYRGBA(Dst->RGBA,Src->RGBA);
+    Dst++;
     Src++;
     Buf++;
+    if(Dst!=End)     goto Pixels;
+}
+/*=============================================================*/
+void Pixels32AAq(struct SOFT3D_context *SC)
+{
+/* blend source & dest (allways)*/
+register struct rgbabuffer3D* Src=SC->Src;
+register struct rgbabuffer3D* Dst=SC->Dst;
+register UBYTE *Blending8=SC->Blending8;
+register UBYTE *DstRGBA;
+register UBYTE *SrcRGBA;
+register union blend3D BlendSrc;
+register union blend3D BlendBuf;
+register struct rgbabuffer3D* End=SC->End;
+register UBYTE flat=255;
+
+REM(Pixels32AAq)
+    BlendSrc.L.Index=BlendBuf.L.Index=0;
+Pixels:
+/* generate better ASM like that */
+    DstRGBA=Dst->RGBA; SrcRGBA=Src->RGBA;
+    BlendSrc.B.Alpha= SrcRGBA[3];            /* Alpha( A ) blend Source */
+    BlendBuf.B.Alpha=!BlendSrc.B.Alpha;        /* Alpha(1-A) blend Destination */
+    BLEND8A(SrcRGBA[0],DstRGBA[0],DstRGBA[0])
+    BLEND8A(SrcRGBA[1],DstRGBA[1],DstRGBA[1])
+    BLEND8A(SrcRGBA[2],DstRGBA[2],DstRGBA[2])
+    DstRGBA[3]=flat;
     Dst++;
+    Src++;
+    if(Dst!=End)     goto Pixels;
+
+}
+/*=============================================================*/
+void Pixels32Aq(struct SOFT3D_context *SC)
+{
+/* blend source & dest (if source not solid nor transparent)*/
+register struct rgbabuffer3D* Src=SC->Src;
+register struct rgbabuffer3D* Dst=SC->Dst;
+register UBYTE *Blending8=SC->Blending8;
+register UBYTE *DstRGBA;
+register UBYTE *SrcRGBA;
+register union blend3D BlendSrc;
+register union blend3D BlendBuf;
+register struct rgbabuffer3D* End=SC->End;
+register UBYTE flat=255;
+
+REM(Pixels32Aq)
+    BlendSrc.L.Index=BlendBuf.L.Index=0;
+Pixels:
+/* generate better ASM like that */
+    DstRGBA=Dst->RGBA; SrcRGBA=Src->RGBA;
+    if (SrcRGBA[3] > ALPHAMIN)                    /* if source visible ? */
+    {
+        if(SrcRGBA[3] < ALPHAMAX)                /* if source not solid ? */
+        {
+        BlendSrc.B.Alpha= SrcRGBA[3];            /* Alpha( A ) blend Source */
+        BlendBuf.B.Alpha=!BlendSrc.B.Alpha;        /* Alpha(1-A) blend Destination */
+        BLEND8A(SrcRGBA[0],DstRGBA[0],DstRGBA[0])
+        BLEND8A(SrcRGBA[1],DstRGBA[1],DstRGBA[1])
+        BLEND8A(SrcRGBA[2],DstRGBA[2],DstRGBA[2])
+        DstRGBA[3]=flat;
+        }
+        else
+        {
+        COPYRGBA(Dst->RGBA,Src->RGBA);
+        }
+
+    }
+    Dst++;
+    Src++;
+    if(Dst!=End)     goto Pixels;
+}
+/*=============================================================*/
+void Pixels32Bq(struct SOFT3D_context *SC)
+{
+/* blend source (already blended) & dest (if source not solid nor transparent)*/
+register struct rgbabuffer3D* Src=SC->Src;
+register struct rgbabuffer3D* Dst=SC->Dst;
+register UBYTE *Blending8=SC->Blending8;
+register UBYTE *DstRGBA;
+register UBYTE *SrcRGBA;
+register union blend3D BlendBuf;
+register struct rgbabuffer3D* End=SC->End;
+register UBYTE flat=255;
+
+REM(Pixels32Bq)
+    BlendBuf.L.Index=0;
+Pixels:
+/* generate better ASM like that */
+    DstRGBA=Dst->RGBA; SrcRGBA=Src->RGBA;
+    if (SrcRGBA[3] > ALPHAMIN)                        /* if source visible ? */
+    {
+        if(SrcRGBA[3] < ALPHAMAX)                    /* if source not solid ? */
+        {
+        BlendBuf.B.Alpha= SrcRGBA[3];                /* Alpha(1-A) blend Destination */
+        BLEND8B(SrcRGBA[0],DstRGBA[0],DstRGBA[0])
+        BLEND8B(SrcRGBA[1],DstRGBA[1],DstRGBA[1])
+        BLEND8B(SrcRGBA[2],DstRGBA[2],DstRGBA[2])
+        DstRGBA[3]=flat;
+        }
+        else
+        {
+        COPYRGBA(Dst->RGBA,Src->RGBA);
+        }
+
+    }
+    Dst++;
+    Src++;
+    if(Dst!=End)     goto Pixels;
+
+}
+/*=============================================================*/
+void Pixels32BBq(struct SOFT3D_context *SC)
+{
+/* blend source (already blended) & dest (allways)*/
+register struct rgbabuffer3D* Src=SC->Src;
+register struct rgbabuffer3D* Dst=SC->Dst;
+register UBYTE *Blending8=SC->Blending8;
+register UBYTE *DstRGBA;
+register UBYTE *SrcRGBA;
+register union blend3D BlendBuf;
+register struct rgbabuffer3D* End=SC->End;
+register UBYTE flat=255;
+
+REM(Pixels32BBq)
+    BlendBuf.L.Index=0;
+Pixels:
+/* generate better ASM like that */
+    DstRGBA=Dst->RGBA; SrcRGBA=Src->RGBA;
+    BlendBuf.B.Alpha= SrcRGBA[3];            /* Alpha(1-A) blend Destination */
+    BLEND8B(SrcRGBA[0],DstRGBA[0],DstRGBA[0])
+    BLEND8B(SrcRGBA[1],DstRGBA[1],DstRGBA[1])
+    BLEND8B(SrcRGBA[2],DstRGBA[2],DstRGBA[2])
+    DstRGBA[3]=flat;
+
+    Dst++;
+    Src++;
+    if(Dst!=End)     goto Pixels;
+}
+/*=============================================================*/
+void Pixels32aq(struct SOFT3D_context *SC)
+{
+/* copy source to dest (if source not transparent)*/
+register struct rgbabuffer3D* Src=SC->Src;
+register struct rgbabuffer3D* Dst=SC->Dst;
+register struct rgbabuffer3D* End=SC->End;
+
+REM(Pixels32aq)
+Pixels:
+    if (Src->RGBA[3] > ALPHAMIN)                    /* if source visible ? */
+        COPYRGBA(Dst->RGBA,Src->RGBA);
+    Dst++;
+    Src++;
     if(Dst!=End)     goto Pixels;
 }
 /*=============================================================*/
@@ -1616,18 +1821,24 @@ REM(SOFT3D_SetDrawFunctions)
         TexMode=ST->TexMode;    /* if blended ==> use current tex blendmode (A/B/a) */
 
     if(FogSet)
-        ColMode='A';        /* if fog ==> neeed to blend anyway */
+    {
+    if(TexMode!='0')
+        ColMode='M';        /* if fog ==> mix tex and fog */
+    else
+        ColMode='A';        /* if fog ==> use fog as a color and alpha-blend it */
+    }
 
     FillMode=ZMode*4+(TexMode!='0')*2+(ColMode!='0');
 VAR(ZMode)
+VAR(FogSet)
 VAR(TexMode)
 VAR(ColMode)
 VAR(FillMode)
     SC->FillFunction=(HOOKEDFUNCTION)Fill_Nothing;
-    SC->PixelsFunction1= NULL;
-    SC->PixelsFunction2= NULL;
+    SC->PixelsFunctionTex= NULL;
+    SC->PixelsFunctionCol= NULL;
 
-    if(FillMode==0 )    SC->FillFunction=(HOOKEDFUNCTION)Fill_Nothing;
+    if(FillMode==0 )    SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff;
     if(FillMode==1 )    SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff_Color;
     if(FillMode==2 )    SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff_Tex;
     if(FillMode==3 )    SC->FillFunction=(HOOKEDFUNCTION)Fill_Zoff_Tex_Color;
@@ -1650,32 +1861,41 @@ VAR(FillMode)
     if(TexMode=='R')
     {
     if(SC->ST->bits==24)
-        SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels24R;
+        SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels24R;
     if(SC->ST->bits==32)
-        SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels32R;
+        SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels32R;
     }
-    if(TexMode=='A')    SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels32A;
-    if(TexMode=='B')    SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels32B;
-    if(TexMode=='a')    SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels32a;
 
-    if(ColMode=='R')    SC->PixelsFunction2=(HOOKEDFUNCTION)Pixels32R;
-    if(ColMode=='A')    SC->PixelsFunction2=(HOOKEDFUNCTION)Pixels32A;
-    if(ColMode=='B')    SC->PixelsFunction2=(HOOKEDFUNCTION)Pixels32B;
-    if(ColMode=='a')    SC->PixelsFunction2=(HOOKEDFUNCTION)Pixels32a;
-    if(ColMode=='M')    SC->PixelsFunction2=(HOOKEDFUNCTION)Pixels24M;
+    if(TexMode=='A')    SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels32Aq;
+    if(TexMode=='B')    SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels32Bq;
+    if(TexMode=='a')    SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels32aq;
+
+    if(ColMode=='R')    SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32R;
+    if(ColMode=='A')    SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32A;
+    if(ColMode=='B')    SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32B;
+    if(ColMode=='a')    SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32a;
+
+    if(ColMode=='M')    
+    {
+    if(SC->PixelsFunctionTex==(HOOKEDFUNCTION)Pixels24R) 
+            SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels24M;    /* ignore alpha = set it to 255 */
+    else
+            SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32M;
+    }
 
     if(!Wazp3D.UseAlphaMinMax)
     {
-    if(TexMode=='A')    SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels32AA;
-    if(TexMode=='B')    SC->PixelsFunction1=(HOOKEDFUNCTION)Pixels32BB;
+    if(TexMode=='A')    SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels32AAq;
+    if(TexMode=='B')    SC->PixelsFunctionTex=(HOOKEDFUNCTION)Pixels32BBq;
 
-    if(ColMode=='A')    SC->PixelsFunction2=(HOOKEDFUNCTION)Pixels32AA;
-    if(ColMode=='B')    SC->PixelsFunction2=(HOOKEDFUNCTION)Pixels32BB;
+    if(ColMode=='A')    SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32AA;
+    if(ColMode=='B')    SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32BB;
     }
 
-    if(SC->PixelsFunction1==NULL)
-    if(SC->PixelsFunction2==NULL)                        /* ie no color=flat */
-        SC->PixelsFunction2=(HOOKEDFUNCTION)Pixels32R;
+    if(SC->PixelsFunctionTex==NULL)
+    if(SC->PixelsFunctionCol==NULL)                        /* ie no color=flat */
+        SC->PixelsFunctionCol=(HOOKEDFUNCTION)Pixels32R;
+
 }
 /*=============================================================*/
 void SOFT3D_DrawPixels(struct SOFT3D_context *SC)
@@ -1688,30 +1908,38 @@ REM(SOFT3D_DrawPixels)
     PixBufferSize=SC->PixBufferDone - SC->PixBuffer;
     VAR(PixBufferSize)
 
-/* Pass 1: texturing */
-    if(SC->PixelsFunction1!=NULL)
+/* Pass 1: color X fog X light */
+    if(SC->PixelsFunctionCol!=NULL)
     {
-REM(PixelsFunction1)
-    SC->Src=(struct rgbabuffer3D *)&PixBuffer->Tex8;
+REM(PixelsFunctionCol)
+    SC->Src=(struct rgbabuffer3D *)&PixBuffer->Color8;
+
     SC->Buf=(struct rgbabuffer3D *)&PixBuffer->Image8;
+    if(SC->PixelsFunctionTex!=NULL)
+        SC->Buf=(struct rgbabuffer3D *)&PixBuffer->Tex8;
+
     SC->Dst=(struct rgbabuffer3D *)&PixBuffer->Image8;
-    if(SC->PixelsFunction2!=NULL)
+    if(SC->PixelsFunctionTex!=NULL)
         SC->Dst=(struct rgbabuffer3D *)&PixBuffer->Buffer8;
+
     SC->End=SC->Dst+PixBufferSize;
-    SC->PixelsFunction1(SC);
+    SC->PixelsFunctionCol(SC);
     }
 
-/* Pass 2: color X fog X light */
-    if(SC->PixelsFunction2!=NULL)
+/* Pass 2: texturing */
+    if(SC->PixelsFunctionTex!=NULL)
     {
-REM(PixelsFunction2)
-    SC->Src=(struct rgbabuffer3D *)&PixBuffer->Color8;
+REM(PixelsFunctionTex)
+    SC->Src=(struct rgbabuffer3D *)&PixBuffer->Tex8;
+    if(SC->PixelsFunctionCol!=NULL)
+        SC->Src=(struct rgbabuffer3D *)&PixBuffer->Buffer8;
+
     SC->Buf=(struct rgbabuffer3D *)&PixBuffer->Image8;
-    if(SC->PixelsFunction1!=NULL)
-        SC->Buf=(struct rgbabuffer3D *)&PixBuffer->Buffer8;
+
     SC->Dst=(struct rgbabuffer3D *)&PixBuffer->Image8;
+
     SC->End=SC->Dst+PixBufferSize;
-    SC->PixelsFunction2(SC);
+    SC->PixelsFunctionTex(SC);
     }
 
     SC->PixBufferDone=SC->PixBuffer;
@@ -2028,7 +2256,7 @@ tracer_suivante:
 /*==================================================================================*/
 void SOFT3D_Fog(struct SOFT3D_context *SC,WORD FogMode,float FogZmin,float FogZmax,float FogDensity,UBYTE *FogRGBA)
 {
-register UBYTE *ThisFogRGBA;
+register UBYTE *RGBA;
 register float d,z,f;
 register union blend3D Blend;
 register UBYTE *Blending8=SC->Blending8;
@@ -2053,6 +2281,7 @@ SFUNCTION(SOFT3D_Fog)
     case 1:  REM(GL_LINEAR)    break;
     case 2:  REM(GL_EXP)    break;
     case 3:  REM(GL_EXP2)    break;
+    case 4:  REM(FOG_INTERPOLATED)    break;
     default: REM(BadFogMode) return;
     }
 
@@ -2071,7 +2300,8 @@ SFUNCTION(SOFT3D_Fog)
     NLOOP(1024)
     {
     z=(((float)n)/1024.0);
-    ThisFogRGBA=(UBYTE *)&SC->Fog32[n];
+    RGBA=(UBYTE *)&SC->Fog32[1023-n];
+    COPYRGBA(RGBA,FogRGBA);     /* fog color */
     switch (FogMode)
     {
     case 1:
@@ -2089,17 +2319,8 @@ SFUNCTION(SOFT3D_Fog)
     }
 
     f = CLAMP( f, 0.0F, 1.0F );
-    ThisFogRGBA[3] =(UBYTE) (255.0 * f);
-    Blend.B.Alpha=ThisFogRGBA[3];
-    Blend.B.Color=FogRGBA[0];
-    ThisFogRGBA[0]=Blending8[Blend.L.Index];
-    Blend.B.Color=FogRGBA[1];
-    ThisFogRGBA[1]=Blending8[Blend.L.Index];
-    Blend.B.Color=FogRGBA[2];
-    ThisFogRGBA[2]=Blending8[Blend.L.Index];
-    ThisFogRGBA[3]=255-ThisFogRGBA[3];
-
-    if(Wazp3D.DebugSOFT3D.ON) Libprintf("[%ld] %ld %ld %ld %ld\n",n,ThisFogRGBA[0],ThisFogRGBA[1],ThisFogRGBA[2],ThisFogRGBA[3]);
+    RGBA[3] =(UBYTE) (255.0 * f);    /* transparency = fog value */
+    if(Wazp3D.DebugSOFT3D.ON) Libprintf("[%ld] %ld \n",n,RGBA[3]);
     }
 
 }
@@ -2109,7 +2330,7 @@ void DrawPolyP(struct SOFT3D_context *SC)
 union   pixel3D *PIX=SC->PolyPIX;
 struct point3D *P=SC->PolyP;
 float PolyZmin,PolyZmax;
-float resizeuv=255.0;
+float resizeuv=255.0*256.0*256.0;
 float resizez=ZMAX;
 //BOOL BlendColor=FALSE;
 WORD Pnb,n;
@@ -2118,6 +2339,7 @@ BOOL BackFace=FALSE;
 UBYTE *FogRGBA;
 register UBYTE *Blending8=SC->Blending8;
 register union blend3D BlendBuf;
+register union blend3D BlendSrc;
 
 SFUNCTION(DrawPolyP)
 if(Wazp3D.DebugSOFT3D.ON) Libprintf("DrawPolyP Pnb %ld  \n",SC->PolyPnb);
@@ -2139,16 +2361,15 @@ if(SC->PolyPnb > 1)
 
     if(Wazp3D.UseCullingHack.ON)
     if(BackFace==TRUE)
-        {if(Wazp3D.DebugSOFT3D.ON) Libprintf("Back face removed Pnb %ld\n",Pnb); return;}
+        return;
 
     if(SC->Culling==1)
     if(BackFace==TRUE)
-        {if(Wazp3D.DebugSOFT3D.ON) Libprintf("Back face removed Pnb %ld\n",Pnb); return;}
+        return;
 
     if(SC->Culling==2)
     if(BackFace==FALSE)
-        {if(Wazp3D.DebugSOFT3D.ON) Libprintf("Front face removed Pnb %ld\n",Pnb); return;}
-
+        return;
 
     memset(PIX,0,Pnb*sizeof(union pixel3D));
 
@@ -2181,14 +2402,14 @@ if(Pnb>=3)
     PIX->W.x    = P->x;
     PIX->W.y    = P->y;
     PIX->W.z    = P->z *  resizez;
-    PIX->W.u    = P->u *  resizeuv;
-    PIX->W.v    = P->v *  resizeuv;
+    PIX->L.u    = P->u *  resizeuv;
+    PIX->L.v    = P->v *  resizeuv;
     PIX->W.R    = P->RGBA[0];
     PIX->W.G    = P->RGBA[1];
     PIX->W.B    = P->RGBA[2];
     PIX->W.A    = P->RGBA[3];
 
-/* update drawed area */
+/* new update-area */
     if(PIX->W.x < SC->Pxmin) SC->Pxmin=PIX->W.x;
     if(SC->Pxmax < PIX->W.x) SC->Pxmax=PIX->W.x;
     if(PIX->W.y < SC->Pymin) SC->Pymin=PIX->W.y;
@@ -2203,8 +2424,8 @@ if(Pnb>=3)
     if(SC->FogMode==0)    FogThisFace=FALSE;
     if(SC->FogMode==1)
     {
-    if(PolyZmax < SC->FogZmin) FogThisFace=FALSE;
-    if(SC->FogZmax   < PolyZmin) FogThisFace=FALSE;      /* end of fogging area */
+    if(PolyZmax    < SC->FogZmin) FogThisFace=FALSE;
+    if(SC->FogZmax <    PolyZmin) FogThisFace=FALSE;      /* end of fogging area */
     }
 
     if(!Wazp3D.UseFog.ON) FogThisFace=FALSE;
@@ -2218,27 +2439,31 @@ REMP("FogMode %ld FogZmin %ld FogZmax %ld  PolyZmin %ld PolyZmax %ld --> FogThis
     BlendBuf.L.Index=0;
 
     if(FogThisFace)
-    if(SC->ColMode=='A')
-    NLOOP(Pnb)
+    {
+    REMP("FogThisFace (ColMode%ld)\n",SC->ColMode);
+
+    if(SC->ColMode=='M')
+    NLOOP(Pnb)            /* then add fog to vertices-color */
     {
     FogRGBA=(UBYTE*)&(SC->Fog32[PIX->W.z/16] );
-    BlendBuf.B.Alpha=FogRGBA[3];                /* Fog Alpha(1-A) blend color */
-    BLEND8B(FogRGBA[0],PIX->W.R,PIX->W.R)
-    BLEND8B(FogRGBA[1],PIX->W.G,PIX->W.G)
-    BLEND8B(FogRGBA[2],PIX->W.B,PIX->W.B)
+    BlendSrc.B.Alpha= FogRGBA[3];            /* Alpha( A ) blend Source */
+    BlendBuf.B.Alpha=!BlendSrc.B.Alpha;      /* Alpha(1-A) blend Buffer */
+    BLEND8A(FogRGBA[0],PIX->W.R,PIX->W.R)
+    BLEND8A(FogRGBA[1],PIX->W.G,PIX->W.G)
+    BLEND8A(FogRGBA[2],PIX->W.B,PIX->W.B)
     PIX++;
     }
 
-    if(FogThisFace)
-    if(SC->ColMode!='A')
+    if(SC->ColMode=='0')
     NLOOP(Pnb)
     {
     FogRGBA=(UBYTE*)&(SC->Fog32[PIX->W.z/16] );
-    PIX->W.R=FogRGBA[0];                    /* Fog -> color */
+    PIX->W.R=FogRGBA[0];                /* Color=Fog  */
     PIX->W.G=FogRGBA[1];
     PIX->W.B=FogRGBA[2];
     PIX->W.A=FogRGBA[3];
     PIX++;
+    }
     }
 
     switch(Pnb)
@@ -2293,6 +2518,9 @@ WORD n,nb;
 
     SFUNCTION(SOFT3D_DrawPrimitive)
     if(Wazp3D.DebugSOFT3D.ON) Libprintf("SOFT3D_DrawPrimitive Pnb %ld (%ld)\n",Pnb,primitive);
+
+    SC->DumpedFnb+=1;
+    SC->DumpedPnb+=Pnb;
 
     SINFO(primitive,W3D_PRIMITIVE_TRIANGLES)
     SINFO(primitive,W3D_PRIMITIVE_TRIFAN)
@@ -2542,6 +2770,15 @@ REM(Create tex index)
 
     SC->Tnb++;
     Libsprintf(ST->name,"RAM:Texture%ldX%ldX%ld_%ld.RAW",ST->large,ST->high,ST->bits,SC->Tnb);
+
+    if(Wazp3D.SmoothTextures.ON)
+    {
+    if(ST->bits==24)
+        AntiAliasImage24_3X3(ST->pt,ST->large,ST->high,SC->AliasedLines);
+    if(ST->bits==32)
+        AntiAliasImage32_3X3(ST->pt,ST->large,ST->high,SC->AliasedLines);
+    }
+
 
     if(Wazp3D.DebugWazp3D.ON)
     if(Wazp3D.DumpTextures.ON)
@@ -2880,6 +3117,7 @@ WORD n;
     Libstrcat(Wazp3D.FunctionName[88],"SetFrontFace");
 
     Libstrcpy(Wazp3D.HardwareLie.name,"HardwareDriver Lie");
+    Libstrcpy(Wazp3D.TexFmtLie.name,"TexFmt Lie");
     Libstrcpy(Wazp3D.OnlyRGB24.name,"Only Fast RGB24");
     Libstrcpy(Wazp3D.UsePolyHack.name,"Use Poly Hack");
     Libstrcpy(Wazp3D.UseColorHack.name,"Use BGcolor Hack");
@@ -2887,12 +3125,14 @@ WORD n;
     Libstrcpy(Wazp3D.UseFog.name,"Use Fog");
     Libstrcpy(Wazp3D.UseColoring.name,"Use Coloring");
     Libstrcpy(Wazp3D.UseClearDrawRegion.name,"Use ClearDrawRegion");
+    Libstrcpy(Wazp3D.UseClearImage.name,"Use ClearImage");
     Libstrcpy(Wazp3D.UseMinUpdate.name,"Use Min. Update");
+    Libstrcpy(Wazp3D.DrawAtUnlock.name,"Update At UnlockHardware");
 
-    Libstrcpy(Wazp3D.UseAnyTexFmt.name,"Use any texFmt");
     Libstrcpy(Wazp3D.HackRGBA1.name,"Tex as RGBA1 Hack");
     Libstrcpy(Wazp3D.HackRGBA2.name,"Tex as RGBA2 Hack");
     Libstrcpy(Wazp3D.UseAntiScreen.name,"AntiAlias Screen");
+    Libstrcpy(Wazp3D.SmoothTextures.name,"Smooth Textures");
     Libstrcpy(Wazp3D.UseClipper.name,"Use Clipper");
     Libstrcpy(Wazp3D.UsePerspective.name,"Use Persp.Correct");
     Libstrcpy(Wazp3D.ClampUV.name,"Clamp UV[0.0 1.0]");
@@ -2924,19 +3164,23 @@ WORD n;
     Libstrcpy(Wazp3D.DebugMemUsage.name,"Debug MemUsage");
 
     Wazp3D.HardwareLie.ON=TRUE;        /* pretend to be a perfect hardware driver */
+    Wazp3D.TexFmtLie.ON=TRUE;
     Wazp3D.OnlyRGB24.ON=FALSE;        /* only use fast RGB screens */
-    Wazp3D.UseAnyTexFmt.ON=TRUE;
     Wazp3D.UsePolyHack.ON=TRUE;        /* convert trifan & tristrip to quad */
     Wazp3D.UseColorHack.ON=TRUE;        /* get background color from bitmap */
-    Wazp3D.UseClearDrawRegion.ON=TRUE;
+    Wazp3D.UseClearDrawRegion.ON=TRUE;    /* let Warp3D clear his bitmap */
+    Wazp3D.UseClearImage.ON=TRUE;        /* let Wazp3D clear his RGBA buffer */
     Wazp3D.UseClipper.ON=TRUE;
     Wazp3D.UseMinUpdate.ON=TRUE;
+    Wazp3D.DrawAtUnlock.ON=FALSE;
+
     Wazp3D.UseCullingHack.ON=FALSE;
     Wazp3D.HackRGBA1.ON=FALSE;
     Wazp3D.HackRGBA2.ON=FALSE;
     Wazp3D.UseFog.ON=FALSE;
     Wazp3D.UseColoring.ON=FALSE;
     Wazp3D.UseAntiScreen.ON=FALSE;
+    Wazp3D.SmoothTextures.ON=FALSE;
     Wazp3D.UsePerspective.ON=FALSE;
     Wazp3D.ClampUV.ON=TRUE;
 
@@ -2972,7 +3216,7 @@ WORD n;
     Wazp3D.DriverList[0]=&Wazp3D.driver;
     Wazp3D.DriverList[1]=NULL;
 
-    Libstrcpy(Wazp3D.DriverName,"Wazp3D soft renderer - Alain Thellier - Paris France 2007 - Beta 35");
+    Libstrcpy(Wazp3D.DriverName,"Wazp3D soft renderer - Alain Thellier - Paris France 2008 - Beta 36");
     Wazp3D.driver.name    =Wazp3D.DriverName;
     Wazp3D.driver.ChipID    =W3D_CHIP_UNKNOWN;
     Wazp3D.driver.formats    =TRUECOLORFORMATS;
@@ -3626,7 +3870,7 @@ struct VertexDDD *ddd;
 
     P=&(WC->P[WC->Pnb]);
     P->x=P->y=P->z=P->u=P->v=0.0;
-    COPYRGBA(P->RGBA,WC->CurrentRGBA);
+    COPYRGBA(P->RGBA,WC->CurrentRGBA);    /* default = point use current color */
     WC->Pnb++;
 
 /* recover XYZ values */
@@ -3715,20 +3959,19 @@ WORD y;
      LINE(x3,y3,x1,y1);
 }
 /*==========================================================================*/
-void AntiAliasImage2X2(struct SOFT3D_context *SC)
+void AntiAliasImage24_2X2(void *image,UWORD large,UWORD high)
 {
-register UBYTE *RGBA0=(UBYTE *)SC->Image32;
+register UBYTE *RGBA0=(UBYTE *)image;
 register UBYTE *RGBA1;
 UBYTE TmpDiv7[7*256];
 register UBYTE *div7=(UBYTE *)TmpDiv7;
 register UWORD r,g,b,x,y;
-UWORD large=SC->large;
-UWORD high =SC->high;
+#define B24 24/8
 
     XLOOP(7*256)
         div7[x]=x/7;
 
-    RGBA1=RGBA0+large*4;
+    RGBA1=RGBA0+large*B24;
     large=large-1;
     high =high -1;
 
@@ -3739,81 +3982,180 @@ UWORD high =SC->high;
     r=RGBA0[0]; r=r+r; r=r+r;
     g=RGBA0[1]; g=g+g; g=g+g;
     b=RGBA0[2]; b=b+b; b=b+b;
-    r=r+RGBA0[0+4]+RGBA1[0]+RGBA1[0+4];RGBA0[0]=div7[r];
-    g=g+RGBA0[1+4]+RGBA1[1]+RGBA1[1+4];RGBA0[1]=div7[g];
-    b=b+RGBA0[2+4]+RGBA1[2]+RGBA1[2+4];RGBA0[2]=div7[b];
-    RGBA0+=4;
-    RGBA1+=4;
+    r=r+RGBA0[0+B24]+RGBA1[0]+RGBA1[0+B24];RGBA0[0]=div7[r];
+    g=g+RGBA0[1+B24]+RGBA1[1]+RGBA1[1+B24];RGBA0[1]=div7[g];
+    b=b+RGBA0[2+B24]+RGBA1[2]+RGBA1[2+B24];RGBA0[2]=div7[b];
+    RGBA0+=B24;
+    RGBA1+=B24;
     }
-    RGBA0+=4;
-    RGBA1+=4;
+    RGBA0+=B24;
+    RGBA1+=B24;
     }
 
 }
 /*==========================================================================*/
-void AntiAliasImage3X3(struct SOFT3D_context *SC)
+void AntiAliasImage24_3X3(void *image,UWORD large,UWORD high,UBYTE *AliasedLines)
 {
 register UWORD r,g,b,x,y;
-register UBYTE *RGBA0=(UBYTE *)SC->Image32;
+register UBYTE *RGBA0=(UBYTE *)image;
 register UBYTE *RGBA1;
 register UBYTE *RGBA2;
 register UBYTE *line0;
 register UBYTE *line1;
-UWORD large=SC->large;
-UWORD high =SC->high;
 UBYTE *temp;
 
-    line0=(UBYTE *) &SC->AliasedLines[4*1024*0];
-    line1=(UBYTE *) &SC->AliasedLines[4*1024*1];
-    RGBA1=RGBA0+large*4;
-    RGBA2=RGBA1+large*4;
+    if (large>1024) return;
+    line0=(UBYTE *) &AliasedLines[B24*1024*0];
+    line1=(UBYTE *) &AliasedLines[B24*1024*1];
+    RGBA1=RGBA0+large*B24;
+    RGBA2=RGBA1+large*B24;
     large=large-2;
     high =high -2;
 
     XLOOP(large)
     {
-    line0[0+4]=RGBA0[0+4];
-    line0[1+4]=RGBA0[1+4];
-    line0[2+4]=RGBA0[2+4];
-    line0+=4;
-    RGBA0+=4;
+    line0[0+B24]=RGBA0[0+B24];
+    line0[1+B24]=RGBA0[1+B24];
+    line0[2+B24]=RGBA0[2+B24];
+    line0+=B24;
+    RGBA0+=B24;
     }
-    line1=(UBYTE *)&SC->AliasedLines[4*1024*1];
-    RGBA0=(UBYTE *) SC->Image32;
+    line1=(UBYTE *)&AliasedLines[B24*1024*1];
+    RGBA0=(UBYTE *)image;
 
     YLOOP(high)
     {
-    line0=(UBYTE *) &SC->AliasedLines[4*1024*0];
-    line1=(UBYTE *) &SC->AliasedLines[4*1024*1];
+    line0=(UBYTE *) &AliasedLines[B24*1024*0];
+    line1=(UBYTE *) &AliasedLines[B24*1024*1];
     if(y&1)
         SWAP(line0,line1)
         XLOOP(large)
         {
-        r=RGBA1[0+4]; r=r+r; r=r+r; r=r+r;
-        g=RGBA1[1+4]; g=g+g; g=g+g; g=g+g;
-        b=RGBA1[2+4]; b=b+b; b=b+b; b=b+b;
-        r=r+RGBA0[0+0]+RGBA0[0+4]+RGBA0[0+8]+RGBA1[0+0]+RGBA1[0+8]+RGBA2[0+0]+RGBA2[0+4]+RGBA2[0+8];
-        g=g+RGBA0[1+0]+RGBA0[1+4]+RGBA0[1+8]+RGBA1[1+0]+RGBA1[1+8]+RGBA2[1+0]+RGBA2[1+4]+RGBA2[1+8];
-        b=b+RGBA0[2+0]+RGBA0[2+4]+RGBA0[2+8]+RGBA1[2+0]+RGBA1[2+8]+RGBA2[2+0]+RGBA2[2+4]+RGBA2[2+8];
+        r=RGBA1[0+B24]; r=r+r; r=r+r; r=r+r;
+        g=RGBA1[1+B24]; g=g+g; g=g+g; g=g+g;
+        b=RGBA1[2+B24]; b=b+b; b=b+b; b=b+b;
+        r=r+RGBA0[0+0]+RGBA0[0+B24]+RGBA0[0+B24*2]+RGBA1[0+0]+RGBA1[0+B24*2]+RGBA2[0+0]+RGBA2[0+B24]+RGBA2[0+B24*2];
+        g=g+RGBA0[1+0]+RGBA0[1+B24]+RGBA0[1+B24*2]+RGBA1[1+0]+RGBA1[1+B24*2]+RGBA2[1+0]+RGBA2[1+B24]+RGBA2[1+B24*2];
+        b=b+RGBA0[2+0]+RGBA0[2+B24]+RGBA0[2+B24*2]+RGBA1[2+0]+RGBA1[2+B24*2]+RGBA2[2+0]+RGBA2[2+B24]+RGBA2[2+B24*2];
 
-        line1[0+4]=r>>4;
-        line1[1+4]=g>>4;
-        line1[2+4]=b>>4;
+        line1[0+B24]=r>>4;
+        line1[1+B24]=g>>4;
+        line1[2+B24]=b>>4;
 
-        RGBA0[0+4]=line0[0+4];
-        RGBA0[1+4]=line0[1+4];
-        RGBA0[2+4]=line0[2+4];
+        RGBA0[0+B24]=line0[0+B24];
+        RGBA0[1+B24]=line0[1+B24];
+        RGBA0[2+B24]=line0[2+B24];
 
-        line0+=4;
-        line1+=4;
-        RGBA0+=4;
-        RGBA1+=4;
-        RGBA2+=4;
+        line0+=B24;
+        line1+=B24;
+        RGBA0+=B24;
+        RGBA1+=B24;
+        RGBA2+=B24;
         }
 
-    RGBA0+=4*2;
-    RGBA1+=4*2;
-    RGBA2+=4*2;
+    RGBA0+=B24*2;
+    RGBA1+=B24*2;
+    RGBA2+=B24*2;
+    }
+}
+/*==========================================================================*/
+void AntiAliasImage32_2X2(void *image,UWORD large,UWORD high)
+{
+register UBYTE *RGBA0=(UBYTE *)image;
+register UBYTE *RGBA1;
+UBYTE TmpDiv7[7*256];
+register UBYTE *div7=(UBYTE *)TmpDiv7;
+register UWORD r,g,b,x,y;
+#define B32 32/8
+
+    XLOOP(7*256)
+        div7[x]=x/7;
+
+    RGBA1=RGBA0+large*B32;
+    large=large-1;
+    high =high -1;
+
+    YLOOP(high)
+    {
+    XLOOP(large)
+    {
+    r=RGBA0[0]; r=r+r; r=r+r;
+    g=RGBA0[1]; g=g+g; g=g+g;
+    b=RGBA0[2]; b=b+b; b=b+b;
+    r=r+RGBA0[0+B32]+RGBA1[0]+RGBA1[0+B32];RGBA0[0]=div7[r];
+    g=g+RGBA0[1+B32]+RGBA1[1]+RGBA1[1+B32];RGBA0[1]=div7[g];
+    b=b+RGBA0[2+B32]+RGBA1[2]+RGBA1[2+B32];RGBA0[2]=div7[b];
+    RGBA0+=B32;
+    RGBA1+=B32;
+    }
+    RGBA0+=B32;
+    RGBA1+=B32;
+    }
+
+}
+/*==========================================================================*/
+void AntiAliasImage32_3X3(void *image,UWORD large,UWORD high,UBYTE *AliasedLines)
+{
+register UWORD r,g,b,x,y;
+register UBYTE *RGBA0=(UBYTE *)image;
+register UBYTE *RGBA1;
+register UBYTE *RGBA2;
+register UBYTE *line0;
+register UBYTE *line1;
+UBYTE *temp;
+
+    if (large>1024) return;
+    line0=(UBYTE *) &AliasedLines[B32*1024*0];
+    line1=(UBYTE *) &AliasedLines[B32*1024*1];
+    RGBA1=RGBA0+large*B32;
+    RGBA2=RGBA1+large*B32;
+    large=large-2;
+    high =high -2;
+
+    XLOOP(large)
+    {
+    line0[0+B32]=RGBA0[0+B32];
+    line0[1+B32]=RGBA0[1+B32];
+    line0[2+B32]=RGBA0[2+B32];
+    line0+=B32;
+    RGBA0+=B32;
+    }
+    line1=(UBYTE *)&AliasedLines[B32*1024*1];
+    RGBA0=(UBYTE *)image;
+
+    YLOOP(high)
+    {
+    line0=(UBYTE *) &AliasedLines[B32*1024*0];
+    line1=(UBYTE *) &AliasedLines[B32*1024*1];
+    if(y&1)
+        SWAP(line0,line1)
+        XLOOP(large)
+        {
+        r=RGBA1[0+B32]; r=r+r; r=r+r; r=r+r;
+        g=RGBA1[1+B32]; g=g+g; g=g+g; g=g+g;
+        b=RGBA1[2+B32]; b=b+b; b=b+b; b=b+b;
+        r=r+RGBA0[0+0]+RGBA0[0+B32]+RGBA0[0+B32*2]+RGBA1[0+0]+RGBA1[0+B32*2]+RGBA2[0+0]+RGBA2[0+B32]+RGBA2[0+B32*2];
+        g=g+RGBA0[1+0]+RGBA0[1+B32]+RGBA0[1+B32*2]+RGBA1[1+0]+RGBA1[1+B32*2]+RGBA2[1+0]+RGBA2[1+B32]+RGBA2[1+B32*2];
+        b=b+RGBA0[2+0]+RGBA0[2+B32]+RGBA0[2+B32*2]+RGBA1[2+0]+RGBA1[2+B32*2]+RGBA2[2+0]+RGBA2[2+B32]+RGBA2[2+B32*2];
+
+        line1[0+B32]=r>>4;
+        line1[1+B32]=g>>4;
+        line1[2+B32]=b>>4;
+
+        RGBA0[0+B32]=line0[0+B32];
+        RGBA0[1+B32]=line0[1+B32];
+        RGBA0[2+B32]=line0[2+B32];
+
+        line0+=B32;
+        line1+=B32;
+        RGBA0+=B32;
+        RGBA1+=B32;
+        RGBA2+=B32;
+        }
+
+    RGBA0+=B32*2;
+    RGBA1+=B32*2;
+    RGBA2+=B32*2;
     }
 }
 /*==========================================================================*/
@@ -3858,7 +4200,7 @@ REM(CopyImageToDrawRegion-------------------------)
         }
 
     if(Wazp3D.UseAntiScreen.ON)
-        AntiAliasImage3X3(WC->SC);
+        AntiAliasImage32_3X3(SC->Image32,SC->large,SC->high,SC->AliasedLines);
 
     if(0<SC->largeUpdate)
     if(SC->largeUpdate<=WC->large)
@@ -3872,13 +4214,18 @@ REM(CopyImageToDrawRegion-------------------------)
     VAR(SC->highUpdate)
     STACKWritePixelArray(WC->Image8,SC->xUpdate,SC->yUpdate,WC->large*(32/8),&WC->rastport,SC->xUpdate,SC->yUpdate+context->yoffset,SC->largeUpdate,SC->highUpdate,RECTFMT_RGBA);
 /*    SOFT3D_ClearImage(WC->SC,SC->xUpdate,SC->yUpdate,SC->largeUpdate,SC->highUpdate); bug in this case */
-    SOFT3D_ClearImage(WC->SC,0,0,SC->large,SC->high);
+    if(Wazp3D.UseClearImage.ON)
+        SOFT3D_ClearImage(WC->SC,0,0,SC->large,SC->high);
     }
 
     SC->Pxmin=WC->large-1;
     SC->Pymin=WC->high -1;
     SC->Pxmax=0;
     SC->Pymax=0;
+
+    VAR(SC->DumpedFnb)
+    VAR(SC->DumpedPnb)
+    SC->DumpedFnb=SC->DumpedPnb=0;
 
 REM(CopyImageToDrawRegionOK)
     if(Wazp3D.DebugContext.ON) LibAlert("OK");
@@ -4112,6 +4459,7 @@ REM( Warp3Ds default context state values )
 
     WC->large=context->width ;
     WC->high =context->height;
+
     if(StateON(W3D_DOUBLEHEIGHT)) WC->high=WC->high/2;
 
     WC->Image8=MYmalloc(WC->large*WC->high*32/8,"SOFT3D_ImageBuffer");
@@ -4120,6 +4468,7 @@ REM( Warp3Ds default context state values )
     WC->rastport.BitMap=context->drawregion;
     WC->firstWT=NULL;
     WC->CallFlushFrame=WC->CallSetDrawRegion=WC->CallClearZBuffer=FALSE;
+    WC->PointSize=1.0;
 
     WC->SC=SOFT3D_Start(WC->large,WC->high,(ULONG *)WC->Image8);
     Wazp3D.UseAntiScreen.ON=StateON(W3D_ANTI_FULLSCREEN);
@@ -4345,6 +4694,8 @@ void W3D_UnLockHardware(W3D_Context *context)
 {
     WAZP3D_Function(9);
     context->HWlocked=FALSE;
+    if(Wazp3D.DrawAtUnlock.ON)
+            CopyImageToDrawRegion(context);    /*draw the image if any */
 }
 /*==========================================================================*/
 void W3D_WaitIdle(W3D_Context *context)
@@ -4499,7 +4850,7 @@ ULONG supported=W3D_TEXFMT_SUPPORTED+W3D_TEXFMT_FAST+W3D_TEXFMT_ARGBFAST;
     if(texfmt==W3D_R8G8B8A8)
         support=supported;
 
-    if(Wazp3D.UseAnyTexFmt.ON)
+    if(Wazp3D.TexFmtLie.ON)
         support=supported;
 
     if(destfmt !=0)                /* stormmesa use this undocumented 0 value */
@@ -4763,11 +5114,11 @@ ULONG mask=1;
         {bits=32;texture->matchfmt=TRUE;}
 
 
-    if(Wazp3D.UseAnyTexFmt.ON)
+    if(Wazp3D.TexFmtLie.ON)
     if(!texture->matchfmt)
         bits=MakeNewTexdata(texture);
 
-    if(!Wazp3D.UseAnyTexFmt.ON)
+    if(!Wazp3D.TexFmtLie.ON)
     if(!texture->matchfmt)
         {MYfree(WT); *error=W3D_UNSUPPORTEDTEXFMT; return(NULL); }
 
@@ -4811,9 +5162,11 @@ ULONG mask=1;
     else
         WT->pt     =texture->texdata;
 
-    WT->large    =texture->texwidth ;
-    WT->high    =texture->texheight;
-    WT->bits    =bits;
+    WT->large     =texture->texwidth ;
+    WT->high      =texture->texheight;
+    WT->bits      =bits;
+    WT->TexEnvMode=W3D_DECAL;        /* ie colored texture */
+
     PrintTexture(texture);
 
     WINFO(texture->texfmtsrc,W3D_CHUNKY,"palettized ")
@@ -5157,6 +5510,7 @@ struct WAZP3D_context *WC=context->driver;
 
     WAZP3D_Function(36);
     WC->PointSize=point->pointsize;
+     if(WC->PointSize==0.0)    WC->PointSize=1.0;    /* patch for skult */
     WC->Pnb=0;
     W3D_BindTexture(context,0,point->tex);
     GetVertex(WC,&point->v1);
@@ -5357,9 +5711,16 @@ ULONG W3D_SetDrawRegion(W3D_Context *context, struct BitMap *bm,int yoffset, W3D
 struct WAZP3D_context *WC=context->driver;
 
     WAZP3D_Function(46);
-    VAR(yoffset)
-
     WC->CallSetDrawRegion=TRUE;
+    if(context->drawregion     ==bm             )
+    if(context->yoffset        ==yoffset        )
+    if(context->scissor.left   ==scissor->left  )
+    if(context->scissor.top    ==scissor->top   )
+    if(context->scissor.width  ==scissor->width )
+    if(context->scissor.height ==scissor->height)
+    WRETURN(W3D_SUCCESS);        /* nothing to do ===> return */
+
+    VAR(yoffset)
     CopyImageToDrawRegion(context);    /*draw the image if any */
 
     context->yoffset=yoffset;
@@ -5410,8 +5771,8 @@ struct WAZP3D_context *WC=context->driver;
     WC->FogRGBA[1]    =fogparams->fog_color.g*255.0;
     WC->FogRGBA[2]    =fogparams->fog_color.b*255.0;
     WC->FogRGBA[3]    =255;
-    WC->FogZmin        =fogparams->fog_end;        /* end is zmin !!! */
-    WC->FogZmax        =fogparams->fog_start;
+    WC->FogZmin       =fogparams->fog_end;        /* end is zmin !!! */
+    WC->FogZmax       =fogparams->fog_start;
     WC->FogDensity    =fogparams->fog_density;
     Libmemcpy(&context->fog,fogparams,sizeof(W3D_Fog));
 
@@ -5479,6 +5840,7 @@ struct WAZP3D_context *WC=context->driver;
 ULONG W3D_SetCurrentColor(W3D_Context *context, W3D_Color *color)
 {
 struct WAZP3D_context *WC=context->driver;
+struct SOFT3D_context *SC=WC->SC;
 
     WAZP3D_Function(52);
     if(color!=NULL)
@@ -5489,6 +5851,8 @@ struct WAZP3D_context *WC=context->driver;
     WC->CurrentRGBA[3]=color->a * 255.0;
     }
     PrintRGBA((UBYTE *) WC->CurrentRGBA);
+
+    COPYRGBA(SC->FlatRGBA,WC->CurrentRGBA);
     WRETURN(W3D_SUCCESS);
 }
 /*==========================================================================*/
@@ -6150,19 +6514,19 @@ REM(TEXTURE_NOT_NULL)
     if(textured)
         {
         if(blended)
-            TexMode='A';    /* alpha blended*/
+            TexMode='A';    /* alpha blended tex */
         else
-            TexMode='R';    /* simple texture */
+            TexMode='R';    /* simple tex */
         if(Wazp3D.UseColoring.ON)        /* In this case use color for lighting*/
         if(WT->TexEnvMode!=W3D_REPLACE)
-            ColMode='M';            /* then Mix color & texture */
+            ColMode='M';            /* then Mix color & tex */
         }
     else
         {
         if(blended)
-            ColMode='A';    /* alpha blended*/
+            ColMode='A';    /* alpha blended color */
         else
-            ColMode='R';    /* simple tex */
+            ColMode='R';    /* simple color */
         if(!blended)
         if(!StateON(W3D_GOURAUD))
             ColMode='0';    /* no color=flat */
