@@ -46,7 +46,6 @@
 #include <utility/tagitem.h>
 #include <errno.h>
 #include <limits.h>
-#include <paths.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <stdlib.h>
