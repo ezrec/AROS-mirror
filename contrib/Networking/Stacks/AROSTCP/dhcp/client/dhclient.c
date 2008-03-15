@@ -39,6 +39,7 @@ static char ocopyright[] =
 #include "version.h"
 
 #ifdef AMIGA
+#include <proto/dos.h>
 #include <proto/exec.h>
 #endif
 
@@ -181,6 +182,22 @@ int main (argc, argv, envp)
 		return RETURN_FAIL;
 	}
 	atexit(__close_bsdsocket);
+
+	static TEXT dh_conf[256];
+	static TEXT dh_db[256];
+	LONG len;
+
+	dh_conf[0] = dh_db[0] = '\0';
+
+	if ((len = GetVar("AROSTCP/Config", dh_conf, 256, 0)) > 0)
+	{
+		sprintf(dh_db, "%s/dhclient.lease", dh_conf);
+		strcpy(dh_conf + len, "/dhclient.conf");
+
+		path_dhclient_conf = dh_conf;
+		path_dhclient_db = dh_db;
+
+	}
 #endif
 
 #ifdef SYSLOG_4_2
@@ -193,6 +210,11 @@ int main (argc, argv, envp)
 #if !(defined (DEBUG) || defined (SYSLOG_4_2) || defined (__CYGWIN32__))
 	setlogmask (LOG_UPTO (LOG_INFO));
 #endif	
+
+#if defined (DEBUG)
+	log_debug("conf: %s", path_dhclient_conf);
+	log_debug("db:   %s", path_dhclient_db);
+#endif
 
 	/* Set up the OMAPI. */
 	status = omapi_init ();

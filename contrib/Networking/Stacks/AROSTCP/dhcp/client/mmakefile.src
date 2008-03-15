@@ -1,7 +1,11 @@
 include $(TOP)/config/make.cfg
 
+#MM- contrib-networking :	contrib-dhcp-client
+
 #MM contrib-dhcp-client :	arostcp-includes	\
-#MM				contrib-dhcp-libdhcp	\
+#MM				contrib-dhcp-client-quick
+
+#MM contrib-dhcp-client-quick :	contrib-dhcp-libdhcp	\
 #MM				contrib-dhcp-libdst	\
 #MM				contrib-dhcp-libomapip	\
 #MM				contrib-dhcp-libminires

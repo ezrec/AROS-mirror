@@ -24,7 +24,7 @@
 /* Define this to see dumps of incoming and outgoing packets.    This
    slows things down quite a bit... */
 
-#define DEBUG_PACKET
+/* #define DEBUG_PACKET */
 
 /* Define this if you want to see dumps of expression evaluation. */
 

@@ -83,14 +83,23 @@ extern int h_errno;
 #define SOCKLEN_T LONG
 #define INADDR_LOOPBACK 0x7f000001
 
-#define _PATH_DHCPD_PID		"Net:T/dhcpd.pid"
-#define _PATH_DHCPD_DB		"Net:db/dhcpd.leases"
-#define _PATH_DHCPD_CONF	"Net:db/dhcpd.conf"
-#define _PATH_DHCLIENT_PID	"Net:T/dhclient.pid"
-#define _PATH_DHCLIENT_DB	"Net:db/dhclient.leases"
-#define _PATH_DHCLIENT_CONF	"Net:db/dhclient.conf"
-#define _PATH_RESOLV_CONF	"Net:db/resolv.conf"
-#define _PATH_DHCRELAY_PID	"Net:T/dhcrelay.pid"
+#ifndef AROSTCP_DB
+/* this is the default path, overridable with ENV:AROTCP/Config */
+#define	AROSTCP_DB "Extras:Networking/Stacks/AROSTCP/db/"
+#endif
+
+#ifndef AROSTCP_T
+#define AROSTCP_T "T:"
+#endif
+
+#define _PATH_DHCPD_PID		AROSTCP_T  "dhcpd.pid"
+#define _PATH_DHCPD_DB		AROSTCP_DB "dhcpd.leases"
+#define _PATH_DHCPD_CONF	AROSTCP_DB "dhcpd.conf"
+#define _PATH_DHCLIENT_PID	AROSTCP_T  "dhclient.pid"
+#define _PATH_DHCLIENT_DB	AROSTCP_DB "dhclient.leases"
+#define _PATH_DHCLIENT_CONF	AROSTCP_DB "dhclient.conf"
+#define _PATH_RESOLV_CONF	AROSTCP_DB "resolv.conf"
+#define _PATH_DHCRELAY_PID	AROSTCP_T  "T:dhcrelay.pid"
 
 #define EOL	'\n'
 #define VOIDPTR void *
