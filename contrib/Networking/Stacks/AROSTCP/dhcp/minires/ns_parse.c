@@ -38,6 +38,12 @@ static const char rcsid[] = "$Id: ns_parse.c,v 1.1.1.1 2005/12/07 10:50:33 sonic
 #include "minires/minires.h"
 #include "arpa/nameser.h"
 
+#if 0//??AGR
+#include "omapip/convert.h"
+int dn_skipname (const u_char *, const u_char *);
+int dn_expand (const u_char *, const u_char *, const u_char *, char *, int);
+#endif
+
 /* Forward. */
 
 static void	setsection(ns_msg *msg, ns_sect sect);

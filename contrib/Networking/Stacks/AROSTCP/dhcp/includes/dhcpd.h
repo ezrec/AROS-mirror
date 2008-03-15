@@ -52,7 +52,7 @@
 #include <time.h>
 
 #include "cdefs.h"
-#include "osdep.h"
+#include "dhcp_osdep.h"
 
 #include "arpa/nameser.h"
 #if defined (NSUPDATE)
@@ -1734,7 +1734,9 @@ extern void (*bootp_packet_handler) PROTO ((struct interface_info *,
 					    struct dhcp_packet *, unsigned,
 					    unsigned int,
 					    struct iaddr, struct hardware *));
+#if 0 /* this can be private to common/dispatch.c */
 extern struct timeout *timeouts;
+#endif
 extern omapi_object_type_t *dhcp_type_interface;
 #if defined (TRACING)
 trace_type_t *interface_trace;

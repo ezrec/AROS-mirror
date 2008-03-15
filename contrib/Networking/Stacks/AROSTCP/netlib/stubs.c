@@ -23,6 +23,8 @@
 
 #include <netinet/ip.h>
 
+#undef select
+
 int 
 select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exeptfds,
 	 struct timeval *timeout)
@@ -31,11 +33,15 @@ select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exeptfds,
   return WaitSelect(nfds, readfds, writefds, exeptfds, timeout, NULL);
 }
 
+#undef inet_ntoa
+
 char * 
 inet_ntoa(struct in_addr addr) 
 {
   return Inet_NtoA(addr.s_addr);
 }
+
+#undef inet_makeaddr
 
 struct in_addr 
 inet_makeaddr(int net, int host)
@@ -45,11 +51,15 @@ inet_makeaddr(int net, int host)
   return addr;
 }
 
+#undef inet_lnaof
+
 unsigned long 
 inet_lnaof(struct in_addr addr) 
 {
   return Inet_LnaOf(addr.s_addr);
 }
+
+#undef inet_netof
 
 unsigned long   
 inet_netof(struct in_addr addr)

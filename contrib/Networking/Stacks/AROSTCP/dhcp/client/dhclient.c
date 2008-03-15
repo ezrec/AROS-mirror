@@ -38,6 +38,42 @@ static char ocopyright[] =
 #include "dhcpd.h"
 #include "version.h"
 
+#ifdef AMIGA
+#include <proto/exec.h>
+#endif
+
+#ifdef __AROS__
+int h_errno = 0;
+struct Library *MiamiBase  = NULL;
+struct Library *SocketBase = NULL;
+
+static void __close_bsdsocket()
+{
+AGR
+	if (MiamiBase)
+	{
+		CloseLibrary(MiamiBase);
+		MiamiBase = NULL;
+	}
+	if (SocketBase)
+	{
+		CloseLibrary(SocketBase);
+		SocketBase = NULL;
+	}
+}
+
+void  openlog(const char *ident, int logstat, int logfac)
+{
+	kprintf("openlog %s %d %d\n", ident, logstat, logfac);
+}
+
+int   setlogmask(int pmask)
+{
+	kprintf("setlogmask %d\n", pmask);
+	return -1;
+}
+#endif
+
 TIME default_lease_time = 43200; /* 12 hours... */
 TIME max_lease_time = 86400; /* 24 hours... */
 
@@ -131,6 +167,20 @@ int main (argc, argv, envp)
 		log_perror = 0; /* No sense logging to /dev/null. */
 	} else if (i != -1)
 		close (i);
+#endif
+
+#ifdef __AROS__
+	if (!(SocketBase = OpenLibrary("bsdsocket.library", 4)))
+	{
+        	fprintf(stderr, "No TCP/IP Stack running!\n");
+	        return RETURN_FAIL;
+	}
+	if (!(MiamiBase = OpenLibrary("miami.library", 0)))
+	{
+        	fprintf(stderr, "No miami avalailable !\n");
+		return RETURN_FAIL;
+	}
+	atexit(__close_bsdsocket);
 #endif
 
 #ifdef SYSLOG_4_2
@@ -320,7 +370,9 @@ int main (argc, argv, envp)
 			else
 				local_port = ent -> s_port;
 #ifndef __CYGWIN32__
+#ifndef __AROS__
 			endservent ();
+#endif
 #endif
 		}
 	}
@@ -2785,7 +2837,7 @@ int interface_bind (struct client_state *client)
 		if (new_gateways) {
 			delroute (INADDR_ANY);
 			if (new_gateways_data.data)
-				addroute (INADDR_ANY, getULong (new_gateways_data.data), RTF_UP | RTF_GATEWAY);
+				addroute (INADDR_ANY, htonl(getULong(new_gateways_data.data)), RTF_UP | RTF_GATEWAY);
 			/* TODO: process all gateways not only first one */
 		}
 		if (new_hostname && new_hostname_data.data) {

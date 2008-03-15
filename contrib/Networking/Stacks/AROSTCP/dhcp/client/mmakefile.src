@@ -1,0 +1,19 @@
+include $(TOP)/config/make.cfg
+
+#MM contrib-dhcp-client :	arostcp-includes	\
+#MM				contrib-dhcp-libdhcp	\
+#MM				contrib-dhcp-libdst	\
+#MM				contrib-dhcp-libomapip	\
+#MM				contrib-dhcp-libminires
+
+USER_CFLAGS :=	-iquote ../includes -I../includes	\
+		-I$(AROS_DEVELOPMENT)/netinclude	\
+		-DCLIENT_PATH="Net:C/dhclient"
+
+FILES :=	dhclient clparse
+
+%build_prog mmake=contrib-dhcp-client nix=yes			\
+	targetdir="$(AROS_CONTRIB)/Networking/Stacks/AROSTCP/C"	\
+	progname=dhclient					\
+	files="$(FILES)"					\
+	uselibs="arossupport amiga arosc dhcp minires omapip dst"

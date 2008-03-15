@@ -14,7 +14,7 @@
    syslog().   This also makes dhcpd use the dhcpd.conf in its working
    directory and write the dhcpd.leases file there. */
 
-/* #define DEBUG */
+#define DEBUG 1
 
 /* Define this to see what the parser is parsing.   You probably don't
    want to see this. */
@@ -24,7 +24,7 @@
 /* Define this to see dumps of incoming and outgoing packets.    This
    slows things down quite a bit... */
 
-/* #define DEBUG_PACKET */
+#define DEBUG_PACKET
 
 /* Define this if you want to see dumps of expression evaluation. */
 

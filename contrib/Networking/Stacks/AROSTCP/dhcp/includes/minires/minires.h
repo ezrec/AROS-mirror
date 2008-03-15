@@ -22,7 +22,7 @@
  */
 
 #include "cdefs.h"
-#include "osdep.h"
+#include "dhcp_osdep.h"
 
 #define _ns_flagdata MR_ns_flagdata
 

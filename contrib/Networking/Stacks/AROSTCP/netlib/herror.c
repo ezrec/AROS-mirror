@@ -39,7 +39,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <proto/socket.h>
-#include <amitcp/socketbasetags.h>
+#include <bsdsocket/socketbasetags.h>
 
 void 
 herror(const char *banner)

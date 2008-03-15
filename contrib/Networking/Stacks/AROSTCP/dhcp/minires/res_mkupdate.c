@@ -944,6 +944,7 @@ res_buildservicelist() {
 	setservent(1);
 #endif
 #endif
+#ifndef __AROS__
 	while ((sp = getservent()) != NULL) {
 		slp = (struct valuelist *)malloc(sizeof(struct valuelist));
 		if (!slp)
@@ -964,6 +965,7 @@ res_buildservicelist() {
 		servicelist = slp;
 	}
 	endservent();
+#endif
 }
 
 void

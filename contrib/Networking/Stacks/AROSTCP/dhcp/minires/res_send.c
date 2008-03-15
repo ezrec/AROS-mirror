@@ -103,6 +103,21 @@ static const char rcsid[] = "$Id: res_send.c,v 1.1.1.1 2005/12/07 10:50:33 sonic
 #include "minires/minires.h"
 #include "arpa/nameser.h"
 
+#ifdef __AROS__
+#include <aros/debug.h>
+#endif
+
+/* Prototypes */
+int trace_mr_socket (int, int, int);
+int trace_mr_connect (int s, struct sockaddr *, SOCKLEN_T);
+ssize_t trace_mr_read (int, void *, size_t);
+ssize_t trace_mr_send (int, void *, size_t, int);
+int trace_mr_close (int);
+int trace_mr_bind (int, struct sockaddr *, SOCKLEN_T);
+int trace_mr_select (int, fd_set *, fd_set *, fd_set *, struct timeval *);
+ssize_t trace_mr_recvfrom (int s, void *, size_t, int,
+                           struct sockaddr *, SOCKLEN_T *);
+
 /* Rename the I/O functions in case we're tracing. */
 #undef send
 #undef recvfrom
@@ -390,6 +405,9 @@ res_nsend(res_state statp,
 			iov[0].iov_len = INT16SZ;
 			iov[1].iov_base = (const caddr_t)buf;
 			iov[1].iov_len = buflen;
+#ifdef __AROS__
+bug("DONT HAVE writev\n");
+#else
 			if (writev(statp->_sock, iov, 2) !=
 			    (INT16SZ + buflen)) {
 				terrno = uerr2isc (errno);
@@ -398,6 +416,7 @@ res_nsend(res_state statp,
 				res_nclose(statp);
 				goto next_ns;
 			}
+#endif
 			/*
 			 * Receive length & response
 			 */

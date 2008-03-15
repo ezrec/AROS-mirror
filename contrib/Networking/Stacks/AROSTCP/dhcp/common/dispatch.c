@@ -39,8 +39,8 @@ static char copyright[] =
 
 #include "dhcpd.h"
 
-struct timeout *timeouts;
-static struct timeout *free_timeouts;
+static struct timeout *timeouts = NULL;
+static struct timeout *free_timeouts = NULL;
 
 void set_time (u_int32_t t)
 {

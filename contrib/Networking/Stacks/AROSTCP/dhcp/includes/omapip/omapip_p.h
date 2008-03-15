@@ -58,7 +58,7 @@
 #include <time.h>
 
 #include "cdefs.h"
-#include "osdep.h"
+#include "dhcp_osdep.h"
 
 #include <isc-dhcp/dst.h>
 #include <isc-dhcp/result.h>

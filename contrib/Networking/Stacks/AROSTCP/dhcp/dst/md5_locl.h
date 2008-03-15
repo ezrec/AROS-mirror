@@ -60,7 +60,7 @@
 #include <string.h>
 #include "md5.h"
 
-#define ULONG	unsigned long
+#define ULONGx	unsigned long
 #define UCHAR	unsigned char
 #define UINT	unsigned int
 

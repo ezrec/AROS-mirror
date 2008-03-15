@@ -6,6 +6,9 @@ Path "C" "S" ADD QUIET
 Protect S/startnet s add quiet
 Protect S/stopnet s add quiet
 
+; DHCP client configuration
+Assign Net: ""
+
 if $AROSTCP/AutoRun eq "True"
   C:execute S/startnet
 EndIf

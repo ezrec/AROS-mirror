@@ -12,7 +12,7 @@
 #include <sys/syslog.h>
 
 #include <proto/socket.h>
-#include <amitcp/socketbasetags.h>
+#include <bsdsocket/socketbasetags.h>
 
 /****** net.lib/syslog *********************************************
 *

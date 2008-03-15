@@ -98,9 +98,9 @@ MD5_CTX *c;
 const register unsigned char *data;
 unsigned long len;
 	{
-	register ULONG *p;
+	register ULONGx *p;
 	int sw,sc;
-	ULONG l;
+	ULONGx l;
 
 	if (len == 0) return;
 
@@ -214,9 +214,9 @@ unsigned long len;
 
 static void md5_block(c, X)
 MD5_CTX *c;
-register ULONG *X;
+register ULONGx *X;
 	{
-	register ULONG A,B,C,D;
+	register ULONGx A,B,C,D;
 
 	A=c->A;
 	B=c->B;
@@ -303,8 +303,8 @@ unsigned char *md;
 MD5_CTX *c;
 	{
 	register int i,j;
-	register ULONG l;
-	register ULONG *p;
+	register ULONGx l;
+	register ULONGx *p;
 	static unsigned char end[4]={0x80,0x00,0x00,0x00};
 	unsigned char *cp=end;
 

@@ -125,6 +125,10 @@
 #  include "cf/cygwin32.h"
 #endif
 
+#ifdef __AROS__
+#  include "cf/aros.h"
+#endif
+
 #ifdef __MORPHOS__
 #  include "cf/morphos.h"
 #endif
