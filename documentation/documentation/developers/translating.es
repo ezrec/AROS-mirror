@@ -4,8 +4,8 @@ Traducción
 
 :Authors:   William Ouwehand, Keen
 :Copyright: Copyright © 1995-2007, The AROS Development Team
-:Version:   $Revision: 26225 $
-:Date:      $Date: 2007-05-27 23:50:30 +1000 (Sun, 27 May 2007) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Work in progress.
 
 .. Warning:: 

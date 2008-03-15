@@ -4,8 +4,8 @@ Puertos
 
 :Authors:   Adam Chodorowski, Matthias Rustler 
 :Copyright: Copyright © 1995-2006, The AROS Development Team
-:Version:   $Revision: 24547 $
-:Date:      $Date: 2006-06-16 01:41:03 +1000 (Fri, 16 Jun 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 .. Contents::

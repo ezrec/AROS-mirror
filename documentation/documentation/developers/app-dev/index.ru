@@ -5,8 +5,8 @@ AROS Руководство по разработке приложений
 :Авторы:    Staf Verhaegen, Sebastian Rittau, Stefan Rieken, Matt Parsons,
             Adam Chodorowski, Fabio Alemagna, Matthias Rustler
 :Copyright: Copyright © 1995-2007, The AROS Development Team
-:Версия:    $Revision: 27103 $
-:Дата:      $Date: 2007-10-28 08:53:54 +0700 (Вс, 28 окт 2007) $
+:Версия:    $Revision$
+:Дата:      $Date$
 :Статус:    Не завершено; в процессе объединения (впереди долгий путь).
 :Сделать:   Объединить разные части. Обновить и проверить. Завершить...
 

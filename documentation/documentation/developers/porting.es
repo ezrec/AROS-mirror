@@ -4,8 +4,8 @@ PORTING GUIDE
 
 :Authors:   Johann Samuellson, Matthias Rustler
 :Copyright: Copyright © 2006, The AROS Development Team
-:Version:   $Revision: 25114 $
-:Date:      $Date: 2006-12-29 06:39:31 +1100 (Fri, 29 Dec 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Beta
 :ToDo:      Some real world examples
 

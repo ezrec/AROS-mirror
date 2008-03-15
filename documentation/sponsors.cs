@@ -3,8 +3,8 @@ Sponzoøi
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
 :Copyright: Copyright © 1995-2002, The AROS Development Team
-:Version:   $Revision: 25097 $
-:Date:      $Date: 2006-12-22 14:30:46 +0100 (pÃ¡, 22 XII 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 

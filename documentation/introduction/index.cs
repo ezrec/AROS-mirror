@@ -4,8 +4,8 @@ Short introduction to AROS
 
 :Authors:   Aaron Digulla, Stefan Rieken, Matt Parsons, Adam Chodorowski 
 :Copyright: Copyright © 1995-2002, The AROS Development Team
-:Version:   $Revision: 26120 $
-:Date:      $Date: 2007-05-16 03:40:10 +0200 (st, 16 V 2007) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Almost finished, I think...
 
 

@@ -4,8 +4,8 @@ Manual para la Documentación de AROS
 
 :Authors:   Adam Chodorowski, Matthias Rustler 
 :Copyright: Copyright Š 1995-2006, The AROS Development Team
-:Version:   $Revision: 25052 $
-:Date:      $Date: 2006-12-08 23:46:24 +1100 (Fri, 08 Dec 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Work in progress.
 
 .. Warning::

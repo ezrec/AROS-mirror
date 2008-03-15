@@ -4,8 +4,8 @@
 
 :Авторы:    Johann Samuellson, Matthias Rustler
 :Copyright: Copyright © 2007, The AROS Development Team
-:Версия:    $Revision: 25114 $
-:Дата:      $Date: 2006-12-29 02:39:31 +0700 (Пт, 29 декабря 2006) $
+:Версия:    $Revision$
+:Дата:      $Date$
 :Статус:    Beta
 :ToDo:      Добавить несколько реальных примеров.
 

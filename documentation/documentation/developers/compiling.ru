@@ -9,8 +9,8 @@
             + Aaron Digulla
             + Adam Chodorowski
 :Copyright: Copyright 2001-2007, The AROS Development Team
-:Версия:    $Revision: 25526 $
-:Дата:      $Date: 2007-03-22 18:42:15 +0700 (аЇб™, 22 аМаАб• 2007) $
+:Версия:    $Revision$
+:Дата:      $Date$
 :Статус:    Завершено.
 :Описание: 
     Этот документ описывает процесс компилирования AROS. Разработка AROS 

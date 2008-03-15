@@ -4,8 +4,8 @@ Manual para el Desarrollo del Sistema AROS
 
 :Authors:   Aaron Digulla, Bernardo Innocenti
 :Copyright: Copyright © 2001, The AROS Development Team
-:Version:   $Revision: 23374 $
-:Date:      $Date: 2005-06-17 18:41:00 +1000 (Fri, 17 Jun 2005) $
+:Version:   $Revision$
+:Date:      $Date$
 
 .. Warning::
 

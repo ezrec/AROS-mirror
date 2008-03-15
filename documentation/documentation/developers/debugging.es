@@ -4,8 +4,8 @@ Manual para la Depuración de AROS
 
 :Authors:   David Le Corfec
 :Copyright: Copyright © 2004, The AROS Development Team
-:Version:   $Revision: 20980 $
-:Date:      $Date: 2004-02-19 15:01:55 +1100 (Thu, 19 Feb 2004) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Work in progress.
 
 Este manual explica las varias opciones para la depuración de AROS.

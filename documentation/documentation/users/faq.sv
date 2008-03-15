@@ -3,9 +3,9 @@ Frågor och svar (FAQ)
 =====================
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Sergey Mineychev, AROS-Exec.org
-:Copyright: Copyright Š 1995-2007, The AROS Development Team
-:Version:   $Revision: 26886 $
-:Date:      $Date: 2007-09-29 17:05:46 +0200 (Sat, 29 Sep 2007) $
+:Copyright: Copyright © 1995-2007, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 .. Contents::

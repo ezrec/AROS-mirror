@@ -9,8 +9,8 @@ Cómo compilar AROS
             + Aaron Digulla
             + Adam Chodorowski
 :Copyright: Copyright ² 2001-2003, The AROS Development Team
-:Version:   $Revision: 25526 $
-:Date:      $Date: 2007-03-22 22:42:15 +1100 (Thu, 22 Mar 2007) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 :Abstract:  
     Este documento explicará cómo compilar AROS. En la actualidad el

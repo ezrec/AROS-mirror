@@ -3,9 +3,9 @@ Respuestas a las Preguntas Frecuentes
 =====================================
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Sergey Mineychev, AROS-Exec.org
-:Copyright: Copyright Š 1995-2007, The AROS Development Team
-:Version:   $Revision: 26368 $
-:Date:      $Date: 2007-07-30 06:31:59 +1000 (Mon, 30 Jul 2007) $
+:Copyright: Copyright © 1995-2007, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 .. Contents::

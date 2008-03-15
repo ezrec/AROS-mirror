@@ -4,8 +4,8 @@ Manual para el Desarrollo de Aplicaciones con Zune
 
 :Authors:   David Le Corfec
 :Copyright: Copyright © 2004, The AROS Development Team
-:Version:   $Revision: 24429 $
-:Date:      $Date: 2006-05-08 03:24:40 +1000 (Mon, 08 May 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Unfinished;
 :ToDo:      All
 

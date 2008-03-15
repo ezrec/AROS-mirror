@@ -3,9 +3,9 @@
 ====================
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Sergey Mineychev, AROS-Exec.org
-:Copyright: Copyright Š 1995-2007, The AROS Development Team
-:Version:   $Revision: 26368 $
-:Date:      $Date: 2007-07-29 22:31:59 +0200 (ne, 29 VII 2007) $
+:Copyright: Copyright © 1995-2007, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 .. Contents::

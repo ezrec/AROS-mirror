@@ -4,8 +4,8 @@ AROS u¾ivatelský prùvodce
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Sergey Mineychev
 :Copyright: Copyright 1995-2006, The AROS Development Team
-:Version:   $Revision: 25137 $
-:Date:      $Date: 2007-01-04 22:21:43 +0100 (èt, 04 I 2007) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Unfinished; only converted to reST. Needs heavy updating. In works!
 
 .. Warning::

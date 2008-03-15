@@ -1,8 +1,8 @@
 
 :Authors:   Aaron Digulla, Stefan Rieken, Matt Parsons, Adam Chodorowski 
 :Copyright: Copyright © 1995-2002, The AROS Development Team
-:Version:   $Revision: 26120 $
-:Date:      $Date: 2007-05-16 11:40:10 +1000 (Wed, 16 May 2007) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Casi terminado, creo...
 
 

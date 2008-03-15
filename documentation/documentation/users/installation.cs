@@ -4,8 +4,8 @@ AROS prùvodce instalací
 
 :Authors:   Stefan Rieken, Matt Parsons, Adam Chodorowski, Neil Cafferkey, Sergey Mineychev
 :Copyright: Copyright ² 1995-2006, The AROS Development Team
-:Version:   $Revision: 25677 $
-:Date:      $Date: 2007-04-06 23:21:50 +0200 (pÃ¡, 06 IV 2007) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Needs to be updated for some AROS ports. Can be translated.
 :Abstract:
     Tento manuál vás provede pøes nezbytné kroky pro nainstalování

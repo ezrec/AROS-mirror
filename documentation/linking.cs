@@ -4,8 +4,8 @@ Odkazování
 
 :Author:    Adam Chodorowski
 :Copyright: Copyright ¦ 2001-2007, The AROS Development Team
-:Version:   $Revision: 26281 $
-:Date:      $Date: 2007-06-15 23:24:48 +0200 (pÃ¡, 15 VI 2007) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 Skvìlý zpùsob jak ukázat va¹i podporu pro AROS a zpùsob, co aktivnì doporuèujeme,

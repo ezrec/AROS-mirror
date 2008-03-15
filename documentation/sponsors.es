@@ -3,8 +3,8 @@ Auspiciantes
 
 :Authors:   Aaron Digulla, Adam Chodorowski 
 :Copyright: Copyright © 1995-2002, The AROS Development Team
-:Version:   $Revision: 25097 $
-:Date:      $Date: 2006-12-23 00:30:46 +1100 (Sat, 23 Dec 2006) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 Las siguientes compañías, organizaciones e individuos han donado recursos:

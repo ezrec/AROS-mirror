@@ -4,8 +4,8 @@
 
 :Авторы:    Aaron Digulla, Bernardo Innocenti
 :Copyright: Copyright © 2008, The AROS Development Team
-:Версия:    $Revision: 23374 $
-:Дата:      $Date: 2008-01-23 16:41:00 +0800 (Пт, 17 июн 2005) $
+:Версия:    $Revision$
+:Дата:      $Date$
 
 .. Предупреждение::
 

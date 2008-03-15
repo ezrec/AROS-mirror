@@ -4,8 +4,8 @@ Enlaces
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Matthias Rustler 
 :Copyright: Copyright ¦ 1995-2007, The AROS Development Team
-:Version:   $Revision: 26052 $
-:Date:      $Date: 2007-05-13 07:56:46 +1000 (Sun, 13 May 2007) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 

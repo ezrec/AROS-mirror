@@ -4,8 +4,8 @@ Guía de Estilo de la Interfaz de Usuario
 
 :Authors:   Adam Chodorowski
 :Copyright: Copyright © 2003, The AROS Development Team
-:Version:   $Revision: 17270 $
-:Date:      $Date: 2003-04-22 00:18:21 +1000 (Tue, 22 Apr 2003) $
+:Version:   $Revision$
+:Date:      $Date$
 
 .. FIXME: Introduction here...
 

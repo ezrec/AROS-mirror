@@ -4,8 +4,8 @@ Odkazy
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Matthias Rustler 
 :Copyright: Copyright ¦ 1995-2007, The AROS Development Team
-:Version:   $Revision: 26052 $
-:Date:      $Date: 2007-05-12 23:56:46 +0200 (so, 12 V 2007) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    Done.
 
 
