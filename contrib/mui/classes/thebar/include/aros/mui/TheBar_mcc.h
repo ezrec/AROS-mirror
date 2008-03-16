@@ -19,7 +19,7 @@
 **
 ** TheBar class Support Site: http://www.sf.net/projects/thebar
 **
-** $Id: TheBar_mcc.h 230 2008-03-01 14:26:26Z damato $
+** $Id$
 ** $URL: https://thebar.svn.sourceforge.net/svnroot/thebar/trunk/include/mui/TheBar_mcc.h $
 **
 **/

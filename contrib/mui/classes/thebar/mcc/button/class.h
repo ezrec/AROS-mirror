@@ -207,6 +207,14 @@ struct  MUIP_Backfill        { ULONG MethodID; LONG left; LONG top; LONG right; 
 #define IDCMP_MOUSEOBJECT 0x40000000
 #endif
 
+#ifndef MUIA_FrameDynamic
+#define MUIA_FrameDynamic 0x804223c9
+#endif
+
+#ifndef MUIA_FrameVisible
+#define MUIA_FrameVisible 0x80426498
+#endif
+
 /***********************************************************************/
 
 #include "class_protos.h"

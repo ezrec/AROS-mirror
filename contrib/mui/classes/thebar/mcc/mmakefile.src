@@ -9,7 +9,7 @@ include $(TOP)/config/make.cfg
 FILES := brc1 \
 	 build \
 	 class \
-	 Debug \
+	 debug \
 	 library \
 	 dragbar \
 	 scale \

@@ -8,11 +8,11 @@ FILES := library \
 	 brc1 \
 	 build \
 	 class \
-	 Debug \
+	 debug \
 	 scale \
 	 utils
 
-USER_INCLUDES := -I../../mcp -I../../include/aros
+USER_INCLUDES := -I../../include/aros
 
 %build_module mmake=contrib-zune-classes-thebutton-mcc \
   modname=TheButton modtype=mcc moduledir=Extras/Zune/MCC_TheBar/Classes/Zune \

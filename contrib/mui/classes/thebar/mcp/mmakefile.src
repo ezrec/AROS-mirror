@@ -7,9 +7,9 @@ include $(TOP)/config/make.cfg
 FILES := backgroundadjust \
 	 class \
 	 coloradjust \
-	 Debug \
+	 debug \
 	 library \
-	 locale \
+	 loc \
 	 penadjust \
 	 popbackground \
 	 poppen \
@@ -32,7 +32,7 @@ INCLUDE_FILES := ../include/mui/TheBar_mcc.h
 TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_TheBar/Locale/Catalogs
 
 #MM
-contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c \
+contrib-zune-classes-thebar-mcp-catalogs : loc.h loc.c \
     $(TARGETDIR)/deutsch/TheBar.catalog \
     $(TARGETDIR)/czech/TheBar.catalog \
     $(TARGETDIR)/français/TheBar.catalog \
@@ -40,22 +40,25 @@ contrib-zune-classes-thebar-mcp-catalogs : locale.h locale.c \
     $(TARGETDIR)/italiano/TheBar.catalog
 
 
-locale.h: locale.c
-locale.c: locale/TheBar.cd C_h.sd C_c.sd
-	@$(FLEXCAT) locale/TheBar.cd locale.h=C_h.sd locale.c=C_c.sd
+loc.h: TheBar.cd loc_h.sd
+	@$(FLEXCAT) TheBar.cd loc.h=loc_h.sd
 
 $(TARGETDIR)/deutsch/TheBar.catalog: locale/german.ct
 	@$(MKDIR) $(TARGETDIR)/deutsch
-	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/czech/TheBar.catalog: locale/czech.ct
 	@$(MKDIR) $(TARGETDIR)/czech
-	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/français/TheBar.catalog: locale/french.ct
 	@$(MKDIR) $(TARGETDIR)/français
-	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) TheBar.cd $< CATALOG $@
 
 $(TARGETDIR)/svenska/TheBar.catalog: locale/swedish.ct
 	@$(MKDIR) $(TARGETDIR)/svenska
-	@$(FLEXCAT) locale/TheBar.cd $< CATALOG $@
+	@$(FLEXCAT) TheBar.cd $< CATALOG $@
+
+$(TARGETDIR)/italiano/TheBar.catalog: locale/italian.ct
+	@$(MKDIR) $(TARGETDIR)/italiano
+	@$(FLEXCAT) TheBar.cd $< CATALOG $@

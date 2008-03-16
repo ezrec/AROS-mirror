@@ -181,6 +181,10 @@ enum
 ** MUI undocs
 */
 
+#ifndef MBQ_MUI_MAXMAX
+#define MBQ_MUI_MAXMAX MUI_MAXMAX
+#endif
+
 #ifndef MUIM_Backfill
 #define MUIM_Backfill 0x80428d73
 struct  MUIP_Backfill        { ULONG MethodID; LONG left; LONG top; LONG right; LONG bottom; LONG xoffset; LONG yoffset; LONG lum; };
